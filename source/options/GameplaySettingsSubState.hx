@@ -77,6 +77,13 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			false);
 		addOption(option);
 
+		var option:Option = new Option('Disable Anti-Spam',
+			"Like Dave and Bambi, if checked, you can spam notes\nwithout getting a miss.",
+			'noAntiSpam',
+			'bool',
+			false);
+		addOption(option);
+
 		var option:Option = new Option('Hitsound Volume',
 			'Funny notes does \"Tick!\" when you hit them."',
 			'hitsoundVolume',

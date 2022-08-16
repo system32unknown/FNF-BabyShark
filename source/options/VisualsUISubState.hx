@@ -56,6 +56,15 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
 		addOption(option);
 
+		var option:Option = new Option('Icon Bounce:',
+			"What should the Icon Bounces?",
+			'Vanilla',
+			'Psych',
+			'Andromeda',
+			'Custom',
+			['Vanilla', 'Psych', 'Andromeda', 'Custom']);
+		addOption(option);
+
 		var option:Option = new Option('Flashing Lights',
 			"Uncheck this if you're sensitive to flashing lights!",
 			'flashing',
@@ -73,6 +82,41 @@ class VisualsUISubState extends BaseOptionsMenu
 		var option:Option = new Option('Score Text Zoom on Hit',
 			"If unchecked, disables the Score text zooming\neverytime you hit a note.",
 			'scoreZoom',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option('Show Combo Counter',
+			'If checked, the combo counter will be shown.',
+			'showComboCounter',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option('Show NPS Counter',
+			'If checked, the NPS counter will be shown.',
+			'showNPSCounter',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option('Show ms Counter',
+			'If checked, the ms counter will be shown.',
+			'showMsCounter',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option('Show Late/Early Counter',
+			'If checked, the Late/Early counter will be shown.',
+			'showLateEarlyCounter',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option('Show Judgement Counter',
+			'If checked, the Judgement counter will be shown.\nLike Andromeda Engine.',
+			'showJudgementCounter',
 			'bool',
 			true);
 		addOption(option);

@@ -46,13 +46,14 @@ class FPS extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("_sans", 14, color);
+		defaultTextFormat = new TextFormat(Paths.font("vcr.ttf"), 10, color);
 		autoSize = LEFT;
 		multiline = true;
 		text = "FPS: ";
 
 		cacheCount = 0;
 		currentTime = 0;
+		peakMEM = 0;
 		times = [];
 
 		#if flash
@@ -87,7 +88,9 @@ class FPS extends TextField
 			
 			#if openfl
 			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
-			text += "\nMemory: " + memoryMegas + " MB";
+			if (memoryMegas > peakMEM) peakMEM = memoryMegas;
+			text += "\nMEM: " + memoryMegas + " MB";
+			text += "\nMEM Peak: " + peakMEM + " MB";
 			#end
 
 			textColor = 0xFFFFFFFF;
