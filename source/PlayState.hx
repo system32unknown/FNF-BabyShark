@@ -256,6 +256,7 @@ class PlayState extends MusicBeatState
 	var foregroundSprites:FlxTypedGroup<BGSprite>;
 
 	public var songScore:Int = 0;
+	public var botScore:Int = 0;
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
@@ -1034,11 +1035,11 @@ class PlayState extends MusicBeatState
 		timeBarBG.xAdd = -4;
 		timeBarBG.yAdd = -4;
 		add(timeBarBG);
-
+		
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
 			'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
-		timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
+		timeBar.createFilledBar(0xFF000000, FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]));
 		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
@@ -2270,12 +2271,12 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
-		scoreTxt.text = 'Score: ' + songScore
-		+ ' | Misses: ' + songMisses
-		+ ' | Rating: ' + ratingName
-		+ (ratingName != '?' ? ' (${Highscore.floorDecimal(ratingPercent * 100, 2)}%) - $ratingFC' : '');
+		scoreTxt.text = (!cpuControlled ? 'Score:' + songScore : 'Bot Score:' + botScore)
+		+ ' | Misses:' + songMisses
+		+ ' | Acc.:' + '${Highscore.floorDecimal(ratingPercent * 100, 2)}%'
+		+ (ratingName != '?' ? ' [$ratingName] - $ratingFC' : ' [Sick!] - SFC');
 
-		if(ClientPrefs.scoreZoom && !miss && !cpuControlled)
+		if(ClientPrefs.scoreZoom && !miss)
 		{
 			if(scoreTxtTween != null) {
 				scoreTxtTween.cancel();
@@ -4125,6 +4126,16 @@ class PlayState extends MusicBeatState
 				RecalculateRating(false);
 			}
 		}
+		else if (cpuControlled) {
+			botScore += 350;
+	
+			if(!note.ratingDisabled)
+			{
+				songHits++;
+				totalPlayed++;
+				RecalculateRating(false);
+			}
+		}
 
 		var pixelShitPart1:String = "";
 		var pixelShitPart2:String = '';
@@ -4298,22 +4309,22 @@ class PlayState extends MusicBeatState
 					timeShown++;
 				}
 			});
-
-			FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
-				onComplete: function(tween:FlxTween)
-				{
-					coolText.destroy();
-					comboSpr.destroy();
-					if (currentTimingShown != null && timeShown >= 20)
-					{
-						remove(currentTimingShown);
-						currentTimingShown = null;
-					}
-					rating.destroy();
-				},
-				startDelay: Conductor.crochet * 0.002
-			});
 		}
+
+		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
+			onComplete: function(tween:FlxTween)
+			{
+				coolText.destroy();
+				comboSpr.destroy();
+				if (currentTimingShown != null && timeShown >= 20 && ClientPrefs.ShowMsTiming)
+				{
+					remove(currentTimingShown);
+					currentTimingShown = null;
+				}
+				rating.destroy();
+			},
+			startDelay: Conductor.crochet * 0.002
+		});
 	}
 
 	public var strumsBlocked:Array<Bool> = [];

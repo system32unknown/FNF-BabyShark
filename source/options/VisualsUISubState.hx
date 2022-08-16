@@ -53,7 +53,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'timeBarType',
 			'string',
 			'Time Left',
-			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
+			['Time Left', 'Time Elapsed', 'Song Name', 'Elapsed/Position', 'Left/Position', 'Disabled']);
 		addOption(option);
 
 		var option:Option = new Option('Icon Bounce:',

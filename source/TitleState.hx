@@ -769,7 +769,7 @@ class TitleState extends MusicBeatState
 				remove(ngSpr);
 				remove(credGroup);
 				FlxG.camera.flash(FlxColor.WHITE, 4);
-				FlxTween.tween(logoBl, {x: titleJSON.titlex}, 1.4, {ease: FlxEase.sineInOut});
+				FlxTween.tween(logoBl, {x: titleJSON.titlex}, 1.4, {ease: FlxEase.expoInOut});
 
 				var easteregg:String = FlxG.save.data.psychDevsEasterEgg;
 				if (easteregg == null) easteregg = '';
