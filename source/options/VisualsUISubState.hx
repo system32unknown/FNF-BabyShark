@@ -58,11 +58,10 @@ class VisualsUISubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Icon Bounce:',
 			"What should the Icon Bounces?",
-			'Vanilla',
+			'IconBounceType',
+			'string',
 			'Psych',
-			'Andromeda',
-			'Custom',
-			['Vanilla', 'Psych', 'Andromeda', 'Custom']);
+			['Vanilla', 'Psych', 'Andromeda', 'Custom', 'DaveAndBambi']);
 		addOption(option);
 
 		var option:Option = new Option('Flashing Lights',
@@ -88,35 +87,35 @@ class VisualsUISubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Show Combo Counter',
 			'If checked, the combo counter will be shown.',
-			'showComboCounter',
+			'ShowCombo',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option('Show NPS Counter',
 			'If checked, the NPS counter will be shown.',
-			'showNPSCounter',
+			'ShowNPS',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Show ms Counter',
-			'If checked, the ms counter will be shown.',
-			'showMsCounter',
+		var option:Option = new Option('Show ms Timing',
+			'If checked, the ms timing will be shown.',
+			'ShowMsTiming',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option('Show Late/Early Counter',
 			'If checked, the Late/Early counter will be shown.',
-			'showLateEarlyCounter',
+			'ShowLateEarly',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option('Show Judgement Counter',
 			'If checked, the Judgement counter will be shown.\nLike Andromeda Engine.',
-			'showJudgementCounter',
+			'ShowJudgementCount',
 			'bool',
 			true);
 		addOption(option);

@@ -4,6 +4,7 @@ import flixel.graphics.FlxGraphic;
 #if desktop
 import Discord.DiscordClient;
 #end
+import HelperFunctions;
 import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
@@ -1182,9 +1183,9 @@ class PlayState extends MusicBeatState
 		reloadHealthBarColors();
 
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
-		scoreTxt.borderSize = 1.25;
+		scoreTxt.borderSize = 1;
 		scoreTxt.visible = !ClientPrefs.hideHud;
 		add(scoreTxt);
 
@@ -3010,12 +3011,34 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
-		iconP1.scale.set(mult, mult);
-		iconP1.updateHitbox();
+		switch(ClientPrefs.IconBounceType) {
+			case "Vanilla": // Stolen from Vanilla Engine
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.50)));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.50)));
 
-		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
-		iconP2.scale.set(mult, mult);
+			case "Psych":
+				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
+				iconP1.scale.set(mult, mult);
+
+				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
+				iconP2.scale.set(mult, mult);
+
+			case "Andromeda": // Stolen from Andromeda Engine
+				var mult:Int = Std.int(FlxMath.lerp(iconP1.width, 150, Main.adjustFPS(0.1)));
+				iconP1.setGraphicSize(mult);
+
+				var mult:Int = Std.int(FlxMath.lerp(iconP2.width, 150, Main.adjustFPS(0.1)));
+				iconP2.setGraphicSize(mult);
+
+			case "DaveAndBambi": // Stolen from Dave And Bambi
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.8)),Std.int(FlxMath.lerp(150, iconP1.height, 0.8)));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.8)),Std.int(FlxMath.lerp(150, iconP2.height, 0.8)));
+
+			case "Custom":
+				callOnLuas('onBounceUpdate', []);
+		}
+
+		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
 		var iconOffset:Int = 26;
@@ -4029,7 +4052,7 @@ class PlayState extends MusicBeatState
 	public var totalPlayed:Int = 0;
 	public var totalNotesHit:Float = 0.0;
 
-	public var showCombo:Bool = false;
+	public var showCombo:Bool = ClientPrefs.ShowCombo;
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
 
@@ -4054,9 +4077,16 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	var timeShown = 0;
+	var currentTimingShown:FlxText = null;
+
 	private function popUpScore(note:Note = null):Void
 	{
-		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.ratingOffset);
+		var noteDiff:Float;
+		if (note != null)
+			noteDiff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.ratingOffset);
+		else
+			noteDiff = Conductor.safeZoneOffset;
 		//trace(noteDiff, ' ' + Math.abs(note.strumTime - Conductor.songPosition));
 
 		// boyfriend.playAnim('hey');
@@ -4106,7 +4136,9 @@ class PlayState extends MusicBeatState
 		}
 
 		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2));
-		rating.cameras = [camHUD];
+		if (ClientPrefs.RatingTypes == "Static"){
+			rating.cameras = [camHUD];
+		}
 		rating.screenCenter();
 		rating.x = coolText.x - 40;
 		rating.y -= 60;
@@ -4117,17 +4149,55 @@ class PlayState extends MusicBeatState
 		rating.x += ClientPrefs.comboOffset[0];
 		rating.y -= ClientPrefs.comboOffset[1];
 
+		if (ClientPrefs.ShowMsTiming) {
+			var msTiming = HelperFunctions.truncateFloat(noteDiff / 1.0, 3);
+
+			if (currentTimingShown != null)
+				remove(currentTimingShown);
+	
+			currentTimingShown = new FlxText(0, 0, 0, msTiming + "ms");
+			currentTimingShown.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			currentTimingShown.borderSize = 1;
+			currentTimingShown.cameras = [camHUD];
+			if (currentTimingShown.alpha != 1)
+				currentTimingShown.alpha = 1;
+	
+			timeShown = 0;
+			switch (daRating.name)
+			{
+				case 'shit' | 'bad':
+					currentTimingShown.color = FlxColor.RED;
+				case 'good':
+					currentTimingShown.color = FlxColor.GREEN;
+				case 'sick':
+					currentTimingShown.color = FlxColor.CYAN;
+			}
+	
+			add(currentTimingShown);
+		}
+
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
-		comboSpr.cameras = [camHUD];
+		if (ClientPrefs.RatingTypes == "Static"){
+			comboSpr.cameras = [camHUD];
+		}
 		comboSpr.screenCenter();
 		comboSpr.x = coolText.x;
 		comboSpr.acceleration.y = FlxG.random.int(200, 300);
 		comboSpr.velocity.y -= FlxG.random.int(140, 160);
-		comboSpr.visible = (!ClientPrefs.hideHud && showCombo);
+		comboSpr.visible = ((!ClientPrefs.hideHud && showCombo) && combo >= 10);
 		comboSpr.x += ClientPrefs.comboOffset[0];
 		comboSpr.y -= ClientPrefs.comboOffset[1];
 		comboSpr.y += 60;
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
+
+		if (ClientPrefs.ShowMsTiming) {
+			currentTimingShown.screenCenter();
+			if (ClientPrefs.ShowCombo){
+				currentTimingShown.x = comboSpr.x + 100;
+			}
+			currentTimingShown.y = rating.y + 100;
+			currentTimingShown.updateHitbox();
+		}
 
 		insert(members.indexOf(strumLineNotes), rating);
 
@@ -4143,7 +4213,6 @@ class PlayState extends MusicBeatState
 			rating.setGraphicSize(Std.int(rating.width * daPixelZoom * 0.85));
 			comboSpr.setGraphicSize(Std.int(comboSpr.width * daPixelZoom * 0.85));
 		}
-
 		comboSpr.updateHitbox();
 		rating.updateHitbox();
 
@@ -4165,7 +4234,9 @@ class PlayState extends MusicBeatState
 		for (i in seperatedScore)
 		{
 			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
-			numScore.cameras = [camHUD];
+			if (ClientPrefs.RatingTypes == "Static"){
+				numScore.cameras = [camHUD];
+			}
 			numScore.screenCenter();
 			numScore.x = coolText.x + (43 * daLoop) - 90;
 			numScore.y += 80;
@@ -4217,16 +4288,32 @@ class PlayState extends MusicBeatState
 			startDelay: Conductor.crochet * 0.001
 		});
 
-		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
-			onComplete: function(tween:FlxTween)
-			{
-				coolText.destroy();
-				comboSpr.destroy();
+		if (ClientPrefs.ShowMsTiming) {
+			FlxTween.tween(rating, {alpha: 0}, 0.2, {
+				startDelay: Conductor.crochet * 0.001,
+				onUpdate: function(tween:FlxTween)
+				{
+					if (currentTimingShown != null)
+						currentTimingShown.alpha -= 0.02;
+					timeShown++;
+				}
+			});
 
-				rating.destroy();
-			},
-			startDelay: Conductor.crochet * 0.002
-		});
+			FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
+				onComplete: function(tween:FlxTween)
+				{
+					coolText.destroy();
+					comboSpr.destroy();
+					if (currentTimingShown != null && timeShown >= 20)
+					{
+						remove(currentTimingShown);
+						currentTimingShown = null;
+					}
+					rating.destroy();
+				},
+				startDelay: Conductor.crochet * 0.002
+			});
+		}
 	}
 
 	public var strumsBlocked:Array<Bool> = [];
@@ -4261,7 +4348,11 @@ class PlayState extends MusicBeatState
 							sortedNotesList.push(daNote);
 							//notesDatas.push(daNote.noteData);
 						}
-						canMiss = true;
+						if (ClientPrefs.NoAntiSpam){
+							canMiss = false;
+						}else{
+							canMiss = true;
+						}
 					}
 				});
 				sortedNotesList.sort(sortHitNotes);
@@ -4952,9 +5043,24 @@ class PlayState extends MusicBeatState
 		{
 			notes.sort(FlxSort.byY, ClientPrefs.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		}
+		
+		switch (ClientPrefs.IconBounceType)
+		{
+			case 'Vanilla' | 'Andromeda':
+				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
+				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+			case "Psych":
+				iconP1.scale.set(1.2, 1.2);
+				iconP2.scale.set(1.2, 1.2);
+			case "DaveAndBambi":
+				var funny:Float = (healthBar.percent * 0.01) + 0.01;
 
-		iconP1.scale.set(1.2, 1.2);
-		iconP2.scale.set(1.2, 1.2);
+				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * funny)),Std.int(iconP2.height - (25 * funny)));
+				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))),Std.int(iconP2.height - (25 * (2 - funny))));
+			case "Custom":
+				callOnLuas('onBounceBeat', []);
+		}
+
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();

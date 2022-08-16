@@ -35,6 +35,7 @@ class FPS extends TextField
 	@:noCompletion private var cacheCount:Int;
 	@:noCompletion private var currentTime:Float;
 	@:noCompletion private var times:Array<Float>;
+	@:noCompletion private var peakMegas:Float = 0;
 
 	public function new(x:Float = 10, y:Float = 10, color:Int = 0x000000)
 	{
@@ -46,14 +47,14 @@ class FPS extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat(Paths.font("vcr.ttf"), 10, color);
+		
+		defaultTextFormat = new TextFormat("VCR OSD Mono", 14, color);
 		autoSize = LEFT;
 		multiline = true;
 		text = "FPS: ";
 
 		cacheCount = 0;
 		currentTime = 0;
-		peakMEM = 0;
 		times = [];
 
 		#if flash
@@ -88,9 +89,9 @@ class FPS extends TextField
 			
 			#if openfl
 			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
-			if (memoryMegas > peakMEM) peakMEM = memoryMegas;
+			if (memoryMegas > peakMegas) peakMegas = memoryMegas;
 			text += "\nMEM: " + memoryMegas + " MB";
-			text += "\nMEM Peak: " + peakMEM + " MB";
+			text += "\nMEM Peak: " + peakMegas + " MB";
 			#end
 
 			textColor = 0xFFFFFFFF;

@@ -77,9 +77,9 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Disable Anti-Spam',
+		var option:Option = new Option('Disable Anti Mesh',
 			"Like Dave and Bambi, if checked, you can spam notes\nwithout getting a miss.",
-			'noAntiSpam',
+			'NoAntiSpam',
 			'bool',
 			false);
 		addOption(option);
@@ -96,6 +96,14 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.changeValue = 0.1;
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
+
+		var option:Option = new Option('Rating Type:',
+			'Choose the type of rating you want to see.',
+			'RatingTypes',
+			'string',
+			'Static',
+			['Static', 'Global']);
+		addOption(option);
 
 		var option:Option = new Option('Rating Offset',
 			'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.',

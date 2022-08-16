@@ -21,6 +21,14 @@ class ClientPrefs {
 	public static var violence:Bool = true;
 	public static var camZooms:Bool = true;
 	public static var hideHud:Bool = false;
+	public static var ShowMsTiming:Bool = false;
+	public static var ShowCombo:Bool = false;
+	public static var ShowLateEarly:Bool = false;
+	public static var ShowNPS:Bool = false;
+	public static var ShowJudgementCount:Bool = false;
+	public static var IconBounceType:String = 'Psych';
+	public static var RatingTypes:String = 'Static';
+	public static var NoAntiSpam:Bool = false;
 	public static var noteOffset:Int = 0;
 	public static var arrowHSV:Array<Array<Int>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
 	public static var ghostTapping:Bool = true;
@@ -117,7 +125,14 @@ class ClientPrefs {
 		FlxG.save.data.comboOffset = comboOffset;
 		FlxG.save.data.achievementsMap = Achievements.achievementsMap;
 		FlxG.save.data.henchmenDeath = Achievements.henchmenDeath;
-
+		FlxG.save.data.ShowMsTiming = ShowMsTiming;
+		FlxG.save.data.ShowCombo = ShowCombo;
+		FlxG.save.data.ShowLateEarly = ShowLateEarly;
+		FlxG.save.data.ShowNPS = ShowNPS;
+		FlxG.save.data.ShowJudgementCount = ShowJudgementCount;
+		FlxG.save.data.IconBounceType = IconBounceType;
+		FlxG.save.data.NoAntiSpam = NoAntiSpam;
+		FlxG.save.data.RatingTypes = RatingTypes;
 		FlxG.save.data.ratingOffset = ratingOffset;
 		FlxG.save.data.sickWindow = sickWindow;
 		FlxG.save.data.goodWindow = goodWindow;
@@ -205,6 +220,30 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.scoreZoom != null) {
 			scoreZoom = FlxG.save.data.scoreZoom;
+		}
+		if(FlxG.save.data.ShowMsTiming != null) {
+			ShowMsTiming = FlxG.save.data.ShowMsTiming;
+		}
+		if(FlxG.save.data.ShowCombo != null) {
+			ShowCombo = FlxG.save.data.ShowCombo;
+		}
+		if(FlxG.save.data.ShowLateEarly != null) {
+			ShowLateEarly = FlxG.save.data.ShowLateEarly;
+		}
+		if(FlxG.save.data.ShowNPS != null) {
+			ShowNPS = FlxG.save.data.ShowNPS;
+		}
+		if(FlxG.save.data.ShowJudgementCount != null) {
+			ShowJudgementCount = FlxG.save.data.ShowJudgementCount;
+		}
+		if(FlxG.save.data.IconBounceType != null) {
+			IconBounceType = FlxG.save.data.IconBounceType;
+		}
+		if(FlxG.save.data.NoAntiSpam != null) {
+			NoAntiSpam = FlxG.save.data.NoAntiSpam;
+		}
+		if(FlxG.save.data.RatingTypes != null) {
+			RatingTypes = FlxG.save.data.RatingTypes;
 		}
 		if(FlxG.save.data.noReset != null) {
 			noReset = FlxG.save.data.noReset;
