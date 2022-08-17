@@ -2177,7 +2177,7 @@ class PlayState extends MusicBeatState
 						countdownReady.screenCenter();
 						countdownReady.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownReady);
-						FlxTween.tween(countdownReady, {/*y: countdownReady.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+						FlxTween.tween(countdownReady, {y: countdownReady.y + 100, alpha: 0}, Conductor.crochet / 1000, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
 							{
@@ -2197,7 +2197,7 @@ class PlayState extends MusicBeatState
 						countdownSet.screenCenter();
 						countdownSet.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownSet);
-						FlxTween.tween(countdownSet, {/*y: countdownSet.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+						FlxTween.tween(countdownSet, {y: countdownSet.y + 100, alpha: 0}, Conductor.crochet / 1000, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
 							{
@@ -2219,7 +2219,7 @@ class PlayState extends MusicBeatState
 						countdownGo.screenCenter();
 						countdownGo.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownGo);
-						FlxTween.tween(countdownGo, {/*y: countdownGo.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+						FlxTween.tween(countdownGo, {y: countdownGo.y + 100, alpha: 0}, Conductor.crochet / 1000, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
 							{
@@ -4130,9 +4130,9 @@ class PlayState extends MusicBeatState
 		var coolText:FlxText = new FlxText(0, 0, 0, placement, 32);
 		coolText.screenCenter();
 		coolText.x = FlxG.width * 0.35;
-		//
 
 		var rating:FlxSprite = new FlxSprite();
+		var timing:FlxSprite = new FlxSprite();
 		var score:Int = 350;
 
 		//tryna do MS based judgment due to popular demand
@@ -4198,7 +4198,10 @@ class PlayState extends MusicBeatState
 		rating.x += ClientPrefs.comboOffset[0];
 		rating.y -= ClientPrefs.comboOffset[1];
 
-		timing.loadGraphic(Paths.image(pixelShitPart1 + daTiming + pixelShitPart2));
+		if (daTiming != "")
+		{
+			timing.loadGraphic(Paths.image(pixelShitPart1 + daTiming.toLowerCase() + pixelShitPart2));
+		}
 		if (ClientPrefs.RatingTypes == "Static"){
 			timing.cameras = [camHUD];
 		}
@@ -4246,7 +4249,7 @@ class PlayState extends MusicBeatState
 
 		if (ClientPrefs.ShowMsTiming) {
 			MsTimingTxt.screenCenter();
-			if (showCombo){
+			if (showCombo) {
 				if (comboSpr.visible) {
 					MsTimingTxt.x = comboSpr.x + 100;
 					MsTimingTxt.y = comboSpr.y + 100;
@@ -4260,9 +4263,6 @@ class PlayState extends MusicBeatState
 			}
 			MsTimingTxt.updateHitbox();
 		}
-
-		if (daTiming != "" && ClientPrefs.ShowMsTiming) {
-			add(timing);
 
 		insert(members.indexOf(strumLineNotes), rating);
 
@@ -4353,9 +4353,13 @@ class PlayState extends MusicBeatState
 			startDelay: Conductor.crochet * 0.001
 		});
 
-		if (ClientPrefs.ShowLateEarly){
+		if (ClientPrefs.ShowLateEarly) {
 			FlxTween.tween(timing, {alpha: 0}, 0.2, {
-				startDelay: Conductor.crochet * 0.001
+				startDelay: Conductor.crochet * 0.001,
+				onComplete: function(tween:FlxTween)
+				{
+					timing.destroy();
+				}
 			});
 		}
 
@@ -4380,9 +4384,6 @@ class PlayState extends MusicBeatState
 				coolText.destroy();
 				comboSpr.destroy();
 				rating.destroy();
-				if (ClientPrefs.ShowLateEarly){
-					timing.destroy();
-				}
 			},
 			startDelay: Conductor.crochet * 0.002
 		});
@@ -4446,10 +4447,9 @@ class PlayState extends MusicBeatState
 							goodNoteHit(epicNote);
 							pressNotes.push(epicNote);
 						}
-
 					}
 				}
-				else{
+				else {
 					callOnLuas('onGhostTap', [key]);
 					if (canMiss) {
 						noteMissPress(key);
