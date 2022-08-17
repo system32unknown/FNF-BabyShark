@@ -24,7 +24,7 @@ class ClientPrefs {
 	public static var ShowMsTiming:Bool = false;
 	public static var ShowCombo:Bool = false;
 	public static var ShowLateEarly:Bool = false;
-	public static var ShowNPS:Bool = false;
+	//public static var ShowNPS:Bool = false;
 	public static var ShowJudgementCount:Bool = false;
 	public static var IconBounceType:String = 'Psych';
 	public static var RatingTypes:String = 'Static';
@@ -128,7 +128,7 @@ class ClientPrefs {
 		FlxG.save.data.ShowMsTiming = ShowMsTiming;
 		FlxG.save.data.ShowCombo = ShowCombo;
 		FlxG.save.data.ShowLateEarly = ShowLateEarly;
-		FlxG.save.data.ShowNPS = ShowNPS;
+		//FlxG.save.data.ShowNPS = ShowNPS;
 		FlxG.save.data.ShowJudgementCount = ShowJudgementCount;
 		FlxG.save.data.IconBounceType = IconBounceType;
 		FlxG.save.data.NoAntiSpam = NoAntiSpam;
@@ -230,9 +230,9 @@ class ClientPrefs {
 		if(FlxG.save.data.ShowLateEarly != null) {
 			ShowLateEarly = FlxG.save.data.ShowLateEarly;
 		}
-		if(FlxG.save.data.ShowNPS != null) {
+		/*if(FlxG.save.data.ShowNPS != null) {
 			ShowNPS = FlxG.save.data.ShowNPS;
-		}
+		}*/
 		if(FlxG.save.data.ShowJudgementCount != null) {
 			ShowJudgementCount = FlxG.save.data.ShowJudgementCount;
 		}

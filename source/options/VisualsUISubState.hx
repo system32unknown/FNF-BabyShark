@@ -53,7 +53,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'timeBarType',
 			'string',
 			'Time Left',
-			['Time Left', 'Time Elapsed', 'Song Name', 'Elapsed/Position', 'Left/Position', 'Disabled']);
+			['Time Left', 'Time Elapsed', 'Song Name', 'ElapsedPosition', 'LeftPosition', 'Disabled']);
 		addOption(option);
 
 		var option:Option = new Option('Icon Bounce:',
@@ -61,7 +61,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'IconBounceType',
 			'string',
 			'Psych',
-			['Vanilla', 'Psych', 'Andromeda', 'Custom', 'DaveAndBambi']);
+			['Vanilla', 'Psych', 'Andromeda', 'DaveAndBambi', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Flashing Lights',
@@ -91,13 +91,13 @@ class VisualsUISubState extends BaseOptionsMenu
 			'bool',
 			true);
 		addOption(option);
-
-		var option:Option = new Option('Show NPS Counter',
+		
+		/*var option:Option = new Option('Show NPS Counter',
 			'If checked, the NPS counter will be shown.',
 			'ShowNPS',
 			'bool',
 			true);
-		addOption(option);
+		addOption(option);*/
 
 		var option:Option = new Option('Show ms Timing',
 			'If checked, the ms timing will be shown.',

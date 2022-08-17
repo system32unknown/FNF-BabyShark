@@ -262,6 +262,8 @@ class PlayState extends MusicBeatState
 	public var scoreTxt:FlxText;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
+	var MsTimingTxt:FlxText = new FlxText(0, 0, 0, "NaN ms", 22);
+	var MsTimingTween:FlxTween;
 
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
@@ -1012,10 +1014,10 @@ class PlayState extends MusicBeatState
 
 		var showTime:Bool = (ClientPrefs.timeBarType != 'Disabled');
 		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 19, 400, "", 32);
-		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		timeTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
-		timeTxt.borderSize = 2;
+		timeTxt.borderSize = 1;
 		timeTxt.visible = showTime;
 		if(ClientPrefs.downScroll) timeTxt.y = FlxG.height - 44;
 
@@ -1200,6 +1202,30 @@ class PlayState extends MusicBeatState
 			botplayTxt.y = timeBarBG.y - 78;
 		}
 
+		var textYPos:Float = FlxG.height * .9 + 52;
+		var EngineArray:Array<String> = [
+			'Altertoriel', 'Baby Shark', 'Ollie', //Main Character
+			'Brooklyn', 'Pinkfong', 'Sharki B',
+			'Shadow', 'William', 'Mommy Shark',
+			'Nate', 'Daddy Shark', 'Teensy',
+			'Hank', 'Lala', 'Chucks', 'Rayna', 'Chichi',
+			'Dave', 'Bambi', 'Tristan', 'Bandu', 'Expunged' //D&B and GApple
+		];
+		var engineName:String = EngineArray[FlxG.random.int(0, EngineArray.length - 1)];
+
+		var SongNameText = new FlxText(2, textYPos, 0, SONG.song + " - " + storyDifficultyText, 16);
+		SongNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		SongNameText.scrollFactor.set();
+		SongNameText.borderSize = 1;
+		add(SongNameText);
+
+		var EngineText = new FlxText(0, textYPos, 0, engineName + " Engine (PE " + MainMenuState.psychEngineVersion +")", 16);
+		EngineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		EngineText.scrollFactor.set();
+		EngineText.borderSize = 1;
+		EngineText.x = FlxG.width - EngineText.width;
+		add(EngineText);
+
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
@@ -1212,6 +1238,8 @@ class PlayState extends MusicBeatState
 		timeBar.cameras = [camHUD];
 		timeBarBG.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
+		SongNameText.cameras = [camHUD];
+		EngineText.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
@@ -2272,9 +2300,9 @@ class PlayState extends MusicBeatState
 	public function updateScore(miss:Bool = false)
 	{
 		scoreTxt.text = (!cpuControlled ? 'Score:' + songScore : 'Bot Score:' + botScore)
-		+ ' | Misses:' + songMisses
+		+ (!cpuControlled ? ' | Misses:' + songMisses : '')
 		+ ' | Acc.:' + '${Highscore.floorDecimal(ratingPercent * 100, 2)}%'
-		+ (ratingName != '?' ? ' [$ratingName] - $ratingFC' : ' [Sick!] - SFC');
+		+ (ratingName != '?' ? ' [$ratingName] - $ratingFC' : ' [?] - N/A');
 
 		if(ClientPrefs.scoreZoom && !miss)
 		{
@@ -3100,13 +3128,20 @@ class PlayState extends MusicBeatState
 					songPercent = (curTime / songLength);
 
 					var songCalc:Float = (songLength - curTime);
-					if(ClientPrefs.timeBarType == 'Time Elapsed') songCalc = curTime;
+					if(ClientPrefs.timeBarType == 'Time Elapsed' || ClientPrefs.timeBarType == 'ElapsedPosition') songCalc = curTime;
 
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
 					if(secondsTotal < 0) secondsTotal = 0;
 
 					if(ClientPrefs.timeBarType != 'Song Name')
-						timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
+						switch (ClientPrefs.timeBarType){
+							case 'Time Left' | 'Time Elapsed':
+								timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
+
+							case 'ElapsedPosition' | 'LeftPosition':
+								timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false) + " / " + FlxStringUtil.formatTime(Math.floor(songLength / 1000), false);
+						}
+						
 				}
 			}
 
@@ -4078,9 +4113,6 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	var timeShown = 0;
-	var currentTimingShown:FlxText = null;
-
 	private function popUpScore(note:Note = null):Void
 	{
 		var noteDiff:Float;
@@ -4105,6 +4137,7 @@ class PlayState extends MusicBeatState
 
 		//tryna do MS based judgment due to popular demand
 		var daRating:Rating = Conductor.judgeNote(note, noteDiff);
+		var daTiming:String = "";
 
 		totalNotesHit += daRating.ratingMod;
 		note.ratingMod = daRating.ratingMod;
@@ -4116,6 +4149,11 @@ class PlayState extends MusicBeatState
 		{
 			spawnNoteSplashOnNote(note);
 		}
+
+		if (noteDiff > Conductor.safeZoneOffset * 0.1)
+			daTiming = "early";
+		else if (noteDiff < Conductor.safeZoneOffset * -0.1)
+			daTiming = "late";
 
 		if(!practiceMode && !cpuControlled) {
 			songScore += score;
@@ -4160,31 +4198,36 @@ class PlayState extends MusicBeatState
 		rating.x += ClientPrefs.comboOffset[0];
 		rating.y -= ClientPrefs.comboOffset[1];
 
+		timing.loadGraphic(Paths.image(pixelShitPart1 + daTiming + pixelShitPart2));
+		if (ClientPrefs.RatingTypes == "Static"){
+			timing.cameras = [camHUD];
+		}
+		timing.screenCenter();
+		timing.x = rating.x - 80;
+		timing.y = rating.y + 80;
+		timing.acceleration.y = 550;
+		timing.velocity.y -= FlxG.random.int(140, 175);
+		timing.velocity.x -= FlxG.random.int(0, 10);
+
 		if (ClientPrefs.ShowMsTiming) {
 			var msTiming = HelperFunctions.truncateFloat(noteDiff / 1.0, 3);
-
-			if (currentTimingShown != null)
-				remove(currentTimingShown);
 	
-			currentTimingShown = new FlxText(0, 0, 0, msTiming + "ms");
-			currentTimingShown.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			currentTimingShown.borderSize = 1;
-			currentTimingShown.cameras = [camHUD];
-			if (currentTimingShown.alpha != 1)
-				currentTimingShown.alpha = 1;
+			MsTimingTxt.text = msTiming + "ms";
+			MsTimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			MsTimingTxt.borderSize = 1;
+			MsTimingTxt.cameras = [camHUD];
 	
-			timeShown = 0;
 			switch (daRating.name)
 			{
 				case 'shit' | 'bad':
-					currentTimingShown.color = FlxColor.RED;
+					MsTimingTxt.color = FlxColor.RED;
 				case 'good':
-					currentTimingShown.color = FlxColor.GREEN;
+					MsTimingTxt.color = FlxColor.GREEN;
 				case 'sick':
-					currentTimingShown.color = FlxColor.CYAN;
+					MsTimingTxt.color = FlxColor.CYAN;
 			}
 	
-			add(currentTimingShown);
+			add(MsTimingTxt);
 		}
 
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
@@ -4193,22 +4236,33 @@ class PlayState extends MusicBeatState
 		}
 		comboSpr.screenCenter();
 		comboSpr.x = coolText.x;
+		comboSpr.y += 60;
 		comboSpr.acceleration.y = FlxG.random.int(200, 300);
 		comboSpr.velocity.y -= FlxG.random.int(140, 160);
-		comboSpr.visible = ((!ClientPrefs.hideHud && showCombo) && combo >= 10);
-		comboSpr.x += ClientPrefs.comboOffset[0];
-		comboSpr.y -= ClientPrefs.comboOffset[1];
-		comboSpr.y += 60;
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
+		comboSpr.visible = ((!ClientPrefs.hideHud && showCombo) && combo >= 10);
+		comboSpr.x += ClientPrefs.comboOffset[4];
+		comboSpr.y -= ClientPrefs.comboOffset[5];
 
 		if (ClientPrefs.ShowMsTiming) {
-			currentTimingShown.screenCenter();
-			if (ClientPrefs.ShowCombo){
-				currentTimingShown.x = comboSpr.x + 100;
+			MsTimingTxt.screenCenter();
+			if (showCombo){
+				if (comboSpr.visible) {
+					MsTimingTxt.x = comboSpr.x + 100;
+					MsTimingTxt.y = comboSpr.y + 100;
+				} else {
+					MsTimingTxt.x = rating.x + 100;
+					MsTimingTxt.y = rating.y + 100;
+				}
+			} else {
+				MsTimingTxt.x = rating.x + 100;
+				MsTimingTxt.y = rating.y + 100;
 			}
-			currentTimingShown.y = rating.y + 100;
-			currentTimingShown.updateHitbox();
+			MsTimingTxt.updateHitbox();
 		}
+
+		if (daTiming != "" && ClientPrefs.ShowMsTiming) {
+			add(timing);
 
 		insert(members.indexOf(strumLineNotes), rating);
 
@@ -4218,14 +4272,19 @@ class PlayState extends MusicBeatState
 			rating.antialiasing = ClientPrefs.globalAntialiasing;
 			comboSpr.setGraphicSize(Std.int(comboSpr.width * 0.7));
 			comboSpr.antialiasing = ClientPrefs.globalAntialiasing;
+			timing.setGraphicSize(Std.int(timing.width * 0.7));
+			timing.antialiasing = true;
 		}
 		else
 		{
 			rating.setGraphicSize(Std.int(rating.width * daPixelZoom * 0.85));
 			comboSpr.setGraphicSize(Std.int(comboSpr.width * daPixelZoom * 0.85));
+			timing.setGraphicSize(Std.int(timing.width * daPixelZoom * 0.85));
 		}
+
 		comboSpr.updateHitbox();
 		rating.updateHitbox();
+		timing.updateHitbox();
 
 		var seperatedScore:Array<Int> = [];
 
@@ -4287,11 +4346,6 @@ class PlayState extends MusicBeatState
 			if(numScore.x > xThing) xThing = numScore.x;
 		}
 		comboSpr.x = xThing + 50;
-		/*
-			trace(combo);
-			trace(seperatedScore);
-		 */
-
 		coolText.text = Std.string(seperatedScore);
 		// add(coolText);
 
@@ -4299,16 +4353,25 @@ class PlayState extends MusicBeatState
 			startDelay: Conductor.crochet * 0.001
 		});
 
-		if (ClientPrefs.ShowMsTiming) {
-			FlxTween.tween(rating, {alpha: 0}, 0.2, {
-				startDelay: Conductor.crochet * 0.001,
-				onUpdate: function(tween:FlxTween)
-				{
-					if (currentTimingShown != null)
-						currentTimingShown.alpha -= 0.02;
-					timeShown++;
-				}
+		if (ClientPrefs.ShowLateEarly){
+			FlxTween.tween(timing, {alpha: 0}, 0.2, {
+				startDelay: Conductor.crochet * 0.001
 			});
+		}
+
+		if (ClientPrefs.ShowMsTiming) {
+			if (MsTimingTween == null) {
+				MsTimingTween = FlxTween.tween(MsTimingTxt, {alpha: 0}, 0.2, {
+					startDelay: Conductor.crochet * 0.001
+				});
+			} else {
+				MsTimingTxt.alpha = 1;
+				MsTimingTween.cancel();
+
+				MsTimingTween = FlxTween.tween(MsTimingTxt, {alpha: 0}, 0.2, {
+					startDelay: Conductor.crochet * 0.001
+				});
+			}
 		}
 
 		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
@@ -4316,12 +4379,10 @@ class PlayState extends MusicBeatState
 			{
 				coolText.destroy();
 				comboSpr.destroy();
-				if (currentTimingShown != null && timeShown >= 20 && ClientPrefs.ShowMsTiming)
-				{
-					remove(currentTimingShown);
-					currentTimingShown = null;
-				}
 				rating.destroy();
+				if (ClientPrefs.ShowLateEarly){
+					timing.destroy();
+				}
 			},
 			startDelay: Conductor.crochet * 0.002
 		});
