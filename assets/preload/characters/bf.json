@@ -167,13 +167,13 @@
 		}
 	],
 	"no_antialiasing": false,
-	"winningicon": true,
 	"image": "characters/BOYFRIEND",
 	"position": [
 		0,
 		350
 	],
 	"healthicon": "bf",
+	"winningicon": true,
 	"flip_x": true,
 	"healthbar_colors": [
 		49,
