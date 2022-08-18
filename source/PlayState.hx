@@ -4274,7 +4274,7 @@ class PlayState extends MusicBeatState
 		if (ClientPrefs.ShowMsTiming) {
 			MsTimingTxt.screenCenter();
 			if (showCombo) {
-				if (comboSpr.visible) {
+				if (combo >= 10) {
 					MsTimingTxt.x = comboSpr.x + 100;
 					MsTimingTxt.y = comboSpr.y + 80;
 				} else {
@@ -4350,13 +4350,12 @@ class PlayState extends MusicBeatState
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 			numScore.visible = (!ClientPrefs.hideHud && showComboNum);
 
-			//if (combo >= 10 || combo == 0)
 			if(combo >= 10)
 			{
 				insert(members.indexOf(strumLineNotes), comboSpr);
-				insert(members.indexOf(strumLineNotes), numScore);
 			}
 			insert(members.indexOf(strumLineNotes), rating);
+			insert(members.indexOf(strumLineNotes), numScore);
 
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 				onComplete: function(tween:FlxTween)
@@ -4369,7 +4368,6 @@ class PlayState extends MusicBeatState
 			daLoop++;
 		}
 		coolText.text = Std.string(seperatedScore);
-		// add(coolText);
 
 		FlxTween.tween(rating, {alpha: 0}, 0.2, {
 			startDelay: Conductor.crochet * 0.001
