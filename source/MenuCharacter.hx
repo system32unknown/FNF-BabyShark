@@ -11,6 +11,7 @@ typedef MenuCharacterFile = {
 	var image:String;
 	var scale:Float;
 	var position:Array<Int>;
+	var confirmPosition:Array<Float>;
 	var idle_anim:String;
 	var confirm_anim:String;
 	var flipX:Bool;
@@ -21,6 +22,7 @@ class MenuCharacter extends FlxSprite
 	public var character:String;
 	public var hasConfirmAnimation:Bool = false;
 	private static var DEFAULT_CHARACTER:String = 'bf';
+	public var confirmPosition:Array<Float> = [0, 0];
 
 	public function new(x:Float, character:String = 'bf')
 	{
@@ -72,14 +74,19 @@ class MenuCharacter extends FlxSprite
 				var charFile:MenuCharacterFile = cast Json.parse(rawJson);
 				frames = Paths.getSparrowAtlas('menucharacters/' + charFile.image);
 				animation.addByPrefix('idle', charFile.idle_anim, 24);
+				confirmPosition = charFile.confirmPosition;
 
 				var confirmAnim:String = charFile.confirm_anim;
 				if(confirmAnim != null && confirmAnim != charFile.idle_anim)
 				{
 					animation.addByPrefix('confirm', confirmAnim, 24, false);
-					if (animation.getByName('confirm') != null) //check for invalid animation
-						hasConfirmAnimation = true;
 				}
+
+				#if (flixel >= "4.11.0")
+				hasConfirmAnimation = animation.exists('confirm');
+				#else
+				hasConfirmAnimation = animation.getByName('confirm') != null;
+				#end
 
 				flipX = (charFile.flipX == true);
 
@@ -90,5 +97,20 @@ class MenuCharacter extends FlxSprite
 				offset.set(charFile.position[0], charFile.position[1]);
 				animation.play('idle');
 		}
+	}
+
+	public function playAnim(name:String = 'confirm')
+	{
+		if 
+		( 	#if (flixel >= "4.11.0")
+			animation.exists(name)
+			#else
+			animation.getByName(name) != null
+			#end
+		)
+		
+		animation.play(name);
+		if (confirmPosition.length > 0 && name == 'confirm' && hasConfirmAnimation)
+			offset.set(offset.x + confirmPosition[0], offset.y + confirmPosition[1]);
 	}
 }
