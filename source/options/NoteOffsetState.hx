@@ -24,8 +24,8 @@ class NoteOffsetState extends MusicBeatState
 	public var camOther:FlxCamera;
 
 	var coolText:FlxText;
+	var combo:FlxSprite;
 	var rating:FlxSprite;
-	var comboSpr:FlxSprite;
 	var comboNums:FlxSpriteGroup;
 	var dumbTexts:FlxTypedGroup<FlxText>;
 
@@ -114,12 +114,12 @@ class NoteOffsetState extends MusicBeatState
 		comboNums.cameras = [camHUD];
 		add(comboNums);
 
-		comboSpr = new FlxSprite().loadGraphic(Paths.image('combo'));
-		comboSpr.cameras = [camHUD];
-		comboSpr.setGraphicSize(Std.int(comboSpr.width * 0.7));
-		comboSpr.updateHitbox();
-		comboSpr.antialiasing = ClientPrefs.globalAntialiasing;
-		add(comboSpr);
+		combo = new FlxSprite().loadGraphic(Paths.image('combo'));
+		combo.cameras = [camHUD];
+		combo.setGraphicSize(Std.int(combo.width * 0.7));
+		combo.updateHitbox();
+		combo.antialiasing = ClientPrefs.globalAntialiasing;
+		add(combo);
 
 		var seperatedScore:Array<Int> = [];
 		for (i in 0...3)
@@ -207,7 +207,7 @@ class NoteOffsetState extends MusicBeatState
 
 	var holdTime:Float = 0;
 	var onComboMenu:Bool = true;
-	var holdingObjectType:Int = -1;
+	var holdingObjectType:String = '';
 
 	var startMousePos:FlxPoint = new FlxPoint();
 	var startComboOffset:FlxPoint = new FlxPoint();
@@ -282,36 +282,46 @@ class NoteOffsetState extends MusicBeatState
 				if (startMousePos.x - comboNums.x >= 0 && startMousePos.x - comboNums.x <= comboNums.width &&
 					startMousePos.y - comboNums.y >= 0 && startMousePos.y - comboNums.y <= comboNums.height)
 				{
-					holdingObjectType = 2;
+					holdingObjectType = 'numscore';
 					startComboOffset.x = ClientPrefs.comboOffset[2];
 					startComboOffset.y = ClientPrefs.comboOffset[3];
 				}
 				else if (startMousePos.x - rating.x >= 0 && startMousePos.x - rating.x <= rating.width &&
 						 startMousePos.y - rating.y >= 0 && startMousePos.y - rating.y <= rating.height)
 				{
-					holdingObjectType = 0;
+					holdingObjectType = 'rating';
 					startComboOffset.x = ClientPrefs.comboOffset[0];
 					startComboOffset.y = ClientPrefs.comboOffset[1];
 				}
 				else if (startMousePos.x - comboSpr.x >= 0 && startMousePos.x - comboSpr.x <= comboSpr.width &&
 						 startMousePos.y - comboSpr.y >= 0 && startMousePos.y - comboSpr.y <= comboSpr.height)
 				{
-					holdingObjectType = 4;
+					holdingObjectType = 'combo';
 					startComboOffset.x = ClientPrefs.comboOffset[4];
 					startComboOffset.y = ClientPrefs.comboOffset[5];
 				}
 			}
 			if(FlxG.mouse.justReleased) {
-				holdingObjectType = -1;
+				holdingObjectType = null;
 			}
 
-			if(holdingObjectType != -1)
+			if(holdingObjectType != null)
 			{
 				if(FlxG.mouse.justMoved)
 				{
 					var mousePos:FlxPoint = FlxG.mouse.getScreenPosition(camHUD);
-					ClientPrefs.comboOffset[holdingObjectType + 0] = Math.round((mousePos.x - startMousePos.x) + startComboOffset.x);
-					ClientPrefs.comboOffset[holdingObjectType + 1] = -Math.round((mousePos.y - startMousePos.y) - startComboOffset.y);
+					switch (holdingObjectType)
+					{
+						case 'combo':
+							ClientPrefs.comboOffset[4] = Math.round((mousePos.x - startMousePos.x) + startComboOffset.x);
+							ClientPrefs.comboOffset[5] = -Math.round((mousePos.y - startMousePos.y) - startComboOffset.y);
+						case 'rating':
+							ClientPrefs.comboOffset[0] = Math.round((mousePos.x - startMousePos.x) + startComboOffset.x);
+							ClientPrefs.comboOffset[1] = -Math.round((mousePos.y - startMousePos.y) - startComboOffset.y);
+						case 'numscore':
+							ClientPrefs.comboOffset[2] = Math.round((mousePos.x - startMousePos.x) + startComboOffset.x);
+							ClientPrefs.comboOffset[3] = -Math.round((mousePos.y - startMousePos.y) - startComboOffset.y);
+					}
 					repositionCombo();
 				}
 			}
@@ -436,9 +446,9 @@ class NoteOffsetState extends MusicBeatState
 		comboNums.x = coolText.x - 90 + ClientPrefs.comboOffset[2];
 		comboNums.y += 80 - ClientPrefs.comboOffset[3];
 
-		comboSpr.screenCenter();
-		comboSpr.x = coolText.x + ClientPrefs.comboOffset[4];
-		comboSpr.y += 60 - ClientPrefs.comboOffset[5];
+		combo.screenCenter();
+		combo.x = coolText.x + ClientPrefs.comboOffset[4];
+		combo.y -= ClientPrefs.comboOffset[5];
 		reloadTexts();
 	}
 
@@ -453,9 +463,12 @@ class NoteOffsetState extends MusicBeatState
 			dumbTexts.add(text);
 			text.cameras = [camHUD];
 
-			if(i > 1)
+			switch(i)
 			{
-				text.y += 24;
+				case 2 | 3:
+					text.y += 24;
+				case 4 | 5:
+					text.y += 48;
 			}
 		}
 	}
@@ -486,7 +499,7 @@ class NoteOffsetState extends MusicBeatState
 	{
 		rating.visible = onComboMenu;
 		comboNums.visible = onComboMenu;
-		comboSpr.visible = onComboMenu;
+		combo.visible = onComboMenu;
 		dumbTexts.visible = onComboMenu;
 		
 		timeBarBG.visible = !onComboMenu;

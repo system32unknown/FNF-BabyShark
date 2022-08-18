@@ -70,8 +70,8 @@ class MenuCharacterEditorState extends MusicBeatState
 
 		var tipText:FlxText = new FlxText(0, 540, FlxG.width,
 			"Arrow Keys - Change Current Offset (Hold shift for 10x speed)
-			\nSpace - Play \"Start Press\" animation (Boyfriend Character Type)
-			\nPress 2 to Adjust Confirm Animation Offset (if exists)
+			\nSpace - Play \"Confirm\" animation
+			\nPress 2 to Adjust Confirm Animation Offset (If exists)
 			\nPress 1 to Adjust Character Offset", 16);
 		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		tipText.scrollFactor.set();
@@ -190,7 +190,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		
 		scaleStepper = new FlxUINumericStepper(140, imageInputText.y, 0.05, 1, 0.1, 30, 2);
 
-		confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Start Press animation on the .XML:');
+		confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Confirm animation on the .XML:');
 		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Image file name:'));
 		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Idle animation on the .XML:'));
 		tab_group.add(new FlxText(scaleStepper.x, scaleStepper.y - 18, 0, 'Scale:'));
@@ -237,7 +237,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		char.alpha = 1;
 		char.frames = Paths.getSparrowAtlas('menucharacters/' + characterFile.image);
 		char.animation.addByPrefix('idle', characterFile.idle_anim, 24);
-		if(characterFile.confirm_anim != null && characterFile.confirm_anim != '') char.animation.addByPrefix('confirm', characterFile.confirm_anim, 24, false);
+		if(characterFile.confirm_anim != null && characterFile.confirm_anim != '' && characterFile.confirm_anim != characterFile.idle_anim) char.animation.addByPrefix('confirm', characterFile.confirm_anim, 24, false);
 		char.flipX = (characterFile.flipX == true);
 
 		char.scale.set(characterFile.scale, characterFile.scale);
@@ -315,7 +315,7 @@ class MenuCharacterEditorState extends MusicBeatState
 
 			if(FlxG.keys.justPressed.LEFT) 
 			{
-				if (offsetType < 1)
+				if (offsetType < 2)
 				{
 					characterFile.position[0] += shiftMult;
 					updateOffset();
@@ -328,7 +328,7 @@ class MenuCharacterEditorState extends MusicBeatState
 			}
 			if(FlxG.keys.justPressed.RIGHT) 
 			{
-				if (offsetType < 1)
+				if (offsetType < 2)
 				{
 					characterFile.position[0] -= shiftMult;
 					updateOffset();
@@ -341,7 +341,7 @@ class MenuCharacterEditorState extends MusicBeatState
 			}
 			if(FlxG.keys.justPressed.UP) 
 			{
-				if (offsetType < 1)
+				if (offsetType < 2)
 				{
 					characterFile.position[1] += shiftMult;
 					updateOffset();
@@ -354,7 +354,7 @@ class MenuCharacterEditorState extends MusicBeatState
 			}
 			if (FlxG.keys.justPressed.DOWN) 
 			{
-				if (offsetType < 1)
+				if (offsetType < 2)
 				{
 					characterFile.position[1] -= shiftMult;
 					updateOffset();
@@ -367,23 +367,21 @@ class MenuCharacterEditorState extends MusicBeatState
 			}
 
 			if(FlxG.keys.justPressed.SPACE && grpWeekCharacters.members[curTypeSelected].hasConfirmAnimation) {
-				grpWeekCharacters.members[curTypeSelected].playAnim();
+				updateConfirmOffset();
 			}
 		}
 
 		updateText();
 
-		var chars:Array<MenuCharacter> = grpWeekCharacters.members;
+		var charMenuCharacter = grpWeekCharacters.members[curTypeSelected];
 
-		for (char in chars)
-			if (chars.indexOf(char) == curTypeSelected)
-				if (char.animation.curAnim != null && char.animation.curAnim.name == 'confirm' && char.animation.curAnim.finished) 
-				{
-					updateOffset();
-					char.animation.play('idle', true);
-				}
+		if (char.animation.curAnim != null && char.animation.curAnim.name == 'confirm' && char.animation.curAnim.finished) 
+		{
+			updateOffset();
+			char.animation.play('idle', true);
+		}
 
-		if (FlxG.keys.justPressed.TWO)
+		if (FlxG.keys.justPressed.TWO && char.hasConfirmAnimation)
 			offsetType = 2;
 		else if (FlxG.keys.justPressed.ONE)
 			offsetType = 1;
@@ -399,7 +397,8 @@ class MenuCharacterEditorState extends MusicBeatState
 		char.playAnim();
 	}
 
-	function updateOffset() {
+	function updateOffset() {				var loadedChar:MenuCharacterFile = Json.parse(rawJson);
+		if (loadedChar.idle_anim != null && loadedChar.confirm_anim != null) //Make sure it's really a character
 		var char:MenuCharacter = grpWeekCharacters.members[curTypeSelected];
 		char.offset.set(characterFile.position[0], characterFile.position[1]);
 		txtOffsets.text = '' + characterFile.position;
@@ -408,7 +407,7 @@ class MenuCharacterEditorState extends MusicBeatState
 	function updateText() {
 		var char:MenuCharacter = grpWeekCharacters.members[curTypeSelected];
 
-		if (offsetType < 1)
+		if (offsetType < 2)
 			txtOffsets.text = 'Character Offsets: ' + beautifyOffset(characterFile.position);
 		else
 			txtOffsets.text = 'Confirm Animation Offsets: ${beautifyOffset(char.confirmPosition)}';
@@ -438,16 +437,16 @@ class MenuCharacterEditorState extends MusicBeatState
 		if(fullPath != null) {
 			var rawJson:String = File.getContent(fullPath);
 			if(rawJson != null) {
-				var loadedChar:MenuCharacterFile = cast Json.parse(rawJson);
-				if(loadedChar.idle_anim != null && loadedChar.confirm_anim != null) //Make sure it's really a character
+				var loadedChar:MenuCharacterFile = Json.parse(rawJson);
+				if (loadedChar.idle_anim != null && loadedChar.confirm_anim != null) // Make sure it's really a character
 				{
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
 					trace("Successfully loaded file: " + cutName);
 					characterFile = loadedChar;
 					reloadSelectedCharacter();
 					imageInputText.text = characterFile.image;
-					idleInputText.text = characterFile.image;
-					confirmInputText.text = characterFile.image;
+					idleInputText.text = characterFile.idle_anim;
+					confirmInputText.text = characterFile.confirm_anim;
 					scaleStepper.value = characterFile.scale;
 					updateConfirmOffset();
 					updateOffset();
