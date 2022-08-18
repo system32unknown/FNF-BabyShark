@@ -25,6 +25,7 @@ class ClientPrefs {
 	public static var ShowCombo:Bool = false;
 	public static var ShowLateEarly:Bool = false;
 	//public static var ShowNPS:Bool = false;
+	public static var NoteDiffTypes:String = "Psych";
 	public static var ShowJudgementCount:Bool = false;
 	public static var IconBounceType:String = 'Psych';
 	public static var RatingTypes:String = 'Static';
@@ -129,6 +130,7 @@ class ClientPrefs {
 		FlxG.save.data.ShowCombo = ShowCombo;
 		FlxG.save.data.ShowLateEarly = ShowLateEarly;
 		//FlxG.save.data.ShowNPS = ShowNPS;
+		FlxG.save.data.NoteDiffTypes = NoteDiffTypes;
 		FlxG.save.data.ShowJudgementCount = ShowJudgementCount;
 		FlxG.save.data.IconBounceType = IconBounceType;
 		FlxG.save.data.NoAntiSpam = NoAntiSpam;
@@ -200,6 +202,9 @@ class ClientPrefs {
 		if(FlxG.save.data.violence != null) {
 			violence = FlxG.save.data.violence;
 		}*/
+		if(FlxG.save.data.NoteDiffTypes != null) {
+			NoteDiffTypes = FlxG.save.data.NoteDiffTypes;
+		}
 		if(FlxG.save.data.camZooms != null) {
 			camZooms = FlxG.save.data.camZooms;
 		}

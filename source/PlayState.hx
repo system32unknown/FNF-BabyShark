@@ -2177,7 +2177,7 @@ class PlayState extends MusicBeatState
 						countdownReady.screenCenter();
 						countdownReady.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownReady);
-						FlxTween.tween(countdownReady, {y: countdownReady.y + 100, alpha: 0}, Conductor.crochet / 1000, {
+						FlxTween.tween(countdownReady, {/*y: countdownReady.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
 							{
@@ -2197,7 +2197,7 @@ class PlayState extends MusicBeatState
 						countdownSet.screenCenter();
 						countdownSet.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownSet);
-						FlxTween.tween(countdownSet, {y: countdownSet.y + 100, alpha: 0}, Conductor.crochet / 1000, {
+						FlxTween.tween(countdownSet, {/*y: countdownReady.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
 							{
@@ -2219,7 +2219,7 @@ class PlayState extends MusicBeatState
 						countdownGo.screenCenter();
 						countdownGo.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownGo);
-						FlxTween.tween(countdownGo, {y: countdownGo.y + 100, alpha: 0}, Conductor.crochet / 1000, {
+						FlxTween.tween(countdownGo, {/*y: countdownReady.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
 							{
@@ -2865,10 +2865,6 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
-		/*if (FlxG.keys.justPressed.NINE)
-		{
-			iconP1.swapOldIcon();
-		}*/
 		callOnLuas('onUpdate', [elapsed]);
 
 		switch (curStage)
@@ -3080,11 +3076,15 @@ class PlayState extends MusicBeatState
 
 		if (healthBar.percent < 20)
 			iconP1.animation.curAnim.curFrame = 1;
+		else if (healthBar.percent > 80 && iconP1.WinningIcon)
+			iconP1.animation.curAnim.curFrame = 2;
 		else
 			iconP1.animation.curAnim.curFrame = 0;
 
 		if (healthBar.percent > 80)
 			iconP2.animation.curAnim.curFrame = 1;
+		else if (healthBar.percent < 20 && iconP2.WinningIcon)
+			iconP2.animation.curAnim.curFrame = 2;
 		else
 			iconP2.animation.curAnim.curFrame = 0;
 
@@ -4113,13 +4113,21 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	private var noteDiff:Float = 0.0;
 	private function popUpScore(note:Note = null):Void
 	{
-		var noteDiff:Float;
-		if (note != null)
-			noteDiff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.ratingOffset);
-		else
-			noteDiff = Conductor.safeZoneOffset;
+		switch(ClientPrefs.NoteDiffTypes)
+		{
+			case 'Psych':
+				noteDiff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.ratingOffset);
+			case 'Kade':
+				if (note != null)
+					noteDiff = -(note.strumTime - Conductor.songPosition);
+				else
+					noteDiff = Conductor.safeZoneOffset;
+			case 'MicdUp' | 'Andromeda':
+				noteDiff = note.strumTime - Conductor.songPosition;
+		}
 		//trace(noteDiff, ' ' + Math.abs(note.strumTime - Conductor.songPosition));
 
 		// boyfriend.playAnim('hey');
@@ -4209,6 +4217,7 @@ class PlayState extends MusicBeatState
 		timing.x = rating.x - 80;
 		timing.y = rating.y + 80;
 		timing.acceleration.y = 550;
+		timing.visible = (!ClientPrefs.hideHud && ClientPrefs.ShowLateEarly);
 		timing.velocity.y -= FlxG.random.int(140, 175);
 		timing.velocity.x -= FlxG.random.int(0, 10);
 
@@ -4218,6 +4227,7 @@ class PlayState extends MusicBeatState
 			MsTimingTxt.text = msTiming + "ms";
 			MsTimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			MsTimingTxt.borderSize = 1;
+			MsTimingTxt.visible = (!ClientPrefs.hideHud && ClientPrefs.ShowMsTiming);
 			MsTimingTxt.cameras = [camHUD];
 	
 			switch (daRating.name)
@@ -4265,6 +4275,9 @@ class PlayState extends MusicBeatState
 		}
 
 		insert(members.indexOf(strumLineNotes), rating);
+
+		if (daTiming != "" && ClientPrefs.ShowLateEarly)
+			add(timing);
 
 		if (!PlayState.isPixelStage)
 		{

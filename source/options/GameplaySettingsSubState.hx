@@ -105,6 +105,14 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			['Static', 'Global']);
 		addOption(option);
 
+		var option:Option = new Option('Note Different Type:',
+			'Choose the type of note you want to see.',
+			'NoteDiffTypes',
+			'string',
+			'Psych',
+			['Psych', 'Kade', 'Andromeda', 'MicdUp']);
+		addOption(option);
+
 		var option:Option = new Option('Rating Offset',
 			'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.',
 			'ratingOffset',
