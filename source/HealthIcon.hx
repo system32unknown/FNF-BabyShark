@@ -37,8 +37,10 @@ class HealthIcon extends FlxSprite
 			var file:Dynamic = Paths.image(name);
 
 			loadGraphic(file); //Load stupidly first for getting the file size
-			loadGraphic(file, true, Math.floor(width / 2), Math.floor(height)); //Then load it fr
-			iconOffsets[0] = (width - 150) / 2;
+			loadGraphic(file, true, (winningicon ? 150 : Math.floor(width / 2)), Math.floor(height)); //Then load it fr
+			if (!winningicon) {
+				iconOffsets[0] = (width - 150) / 2;
+			}
 			iconOffsets[1] = (width - 150) / 2;
 			updateHitbox();
 
@@ -56,7 +58,9 @@ class HealthIcon extends FlxSprite
 	override function updateHitbox()
 	{
 		super.updateHitbox();
-		offset.x = iconOffsets[0];
+		if (!winningicon) {
+			offset.x = iconOffsets[0];
+		}
 		offset.y = iconOffsets[1];
 	}
 

@@ -123,6 +123,7 @@ class CharacterEditorState extends MusicBeatState
 		leHealthIcon.y = FlxG.height - 150;
 		add(leHealthIcon);
 		leHealthIcon.cameras = [camHUD];
+		leHealthIcon.winningicon = char.winningicon;
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
 		add(dumbTexts);
