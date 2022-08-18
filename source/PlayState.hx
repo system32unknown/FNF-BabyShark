@@ -4,7 +4,6 @@ import flixel.graphics.FlxGraphic;
 #if desktop
 import Discord.DiscordClient;
 #end
-import HelperFunctions;
 import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
@@ -1013,13 +1012,13 @@ class PlayState extends MusicBeatState
 		strumLine.scrollFactor.set();
 
 		var showTime:Bool = (ClientPrefs.timeBarType != 'Disabled');
-		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 19, 400, "", 32);
+		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 18, 400, "", 32);
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
 		timeTxt.borderSize = 1;
 		timeTxt.visible = showTime;
-		if(ClientPrefs.downScroll) timeTxt.y = FlxG.height - 44;
+		if(ClientPrefs.downScroll) timeTxt.y = FlxG.height - 42;
 
 		if(ClientPrefs.timeBarType == 'Song Name')
 		{
@@ -1506,10 +1505,13 @@ class PlayState extends MusicBeatState
 	}
 
 	public function reloadHealthBarColors() {
-		healthBar.createFilledBar(FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]),
+		var dadColor:FlxColor = FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]);
+		healthBar.createFilledBar(dadColor,
 			FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]));
+		timeBar.createFilledBar(0xFF000000, dadColor);
 
 		healthBar.updateBar();
+		timeBar.updateBar();
 	}
 
 	public function addCharacterToList(newCharacter:String, type:Int) {
@@ -2403,7 +2405,6 @@ class PlayState extends MusicBeatState
 	private var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
 	private function generateSong(dataPath:String):Void
 	{
-		// FlxG.log.add(ChartParser.parse());
 		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype','multiplicative');
 
 		switch(songSpeedType)
@@ -4189,7 +4190,6 @@ class PlayState extends MusicBeatState
 		}
 		else if (cpuControlled) {
 			botScore += 350;
-	
 			if(!note.ratingDisabled)
 			{
 				songHits++;
@@ -4237,9 +4237,9 @@ class PlayState extends MusicBeatState
 		timing.velocity.x -= FlxG.random.int(0, 10);
 
 		if (ClientPrefs.ShowMsTiming) {
-			var msTiming = HelperFunctions.truncateFloat(noteDiff / 1.0, 3);
+			var msTiming = CoolUtil.truncateFloat(noteDiff / 1.0, 3);
 	
-			MsTimingTxt.text = msTiming + "ms";
+			MsTimingTxt.text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
 			MsTimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			MsTimingTxt.borderSize = 1;
 			MsTimingTxt.visible = (!ClientPrefs.hideHud && ClientPrefs.ShowMsTiming);
