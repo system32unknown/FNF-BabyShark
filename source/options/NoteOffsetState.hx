@@ -277,7 +277,7 @@ class NoteOffsetState extends MusicBeatState
 			// probably there's a better way to do this but, oh well.
 			if (FlxG.mouse.justPressed)
 			{
-				holdingObjectType = -1;
+				holdingObjectType = null;
 				FlxG.mouse.getScreenPosition(camHUD, startMousePos);
 				if (startMousePos.x - comboNums.x >= 0 && startMousePos.x - comboNums.x <= comboNums.width &&
 					startMousePos.y - comboNums.y >= 0 && startMousePos.y - comboNums.y <= comboNums.height)
@@ -293,8 +293,8 @@ class NoteOffsetState extends MusicBeatState
 					startComboOffset.x = ClientPrefs.comboOffset[0];
 					startComboOffset.y = ClientPrefs.comboOffset[1];
 				}
-				else if (startMousePos.x - comboSpr.x >= 0 && startMousePos.x - comboSpr.x <= comboSpr.width &&
-						 startMousePos.y - comboSpr.y >= 0 && startMousePos.y - comboSpr.y <= comboSpr.height)
+				else if (startMousePos.x - combo.x >= 0 && startMousePos.x - combo.x <= combo.width &&
+						 startMousePos.y - combo.y >= 0 && startMousePos.y - combo.y <= combo.height)
 				{
 					holdingObjectType = 'combo';
 					startComboOffset.x = ClientPrefs.comboOffset[4];

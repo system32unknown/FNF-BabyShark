@@ -373,7 +373,7 @@ class MenuCharacterEditorState extends MusicBeatState
 
 		updateText();
 
-		var charMenuCharacter = grpWeekCharacters.members[curTypeSelected];
+		var char:MenuCharacter = grpWeekCharacters.members[curTypeSelected];
 
 		if (char.animation.curAnim != null && char.animation.curAnim.name == 'confirm' && char.animation.curAnim.finished) 
 		{
@@ -397,8 +397,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		char.playAnim();
 	}
 
-	function updateOffset() {				var loadedChar:MenuCharacterFile = Json.parse(rawJson);
-		if (loadedChar.idle_anim != null && loadedChar.confirm_anim != null) //Make sure it's really a character
+	function updateOffset() {
 		var char:MenuCharacter = grpWeekCharacters.members[curTypeSelected];
 		char.offset.set(characterFile.position[0], characterFile.position[1]);
 		txtOffsets.text = '' + characterFile.position;
@@ -438,7 +437,7 @@ class MenuCharacterEditorState extends MusicBeatState
 			var rawJson:String = File.getContent(fullPath);
 			if(rawJson != null) {
 				var loadedChar:MenuCharacterFile = Json.parse(rawJson);
-				if (loadedChar.idle_anim != null && loadedChar.confirm_anim != null) // Make sure it's really a character
+				if (loadedChar.idle_anim != null && loadedChar.confirm_anim != null) //Make sure it's really a character
 				{
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
 					trace("Successfully loaded file: " + cutName);
