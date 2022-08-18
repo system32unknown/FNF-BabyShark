@@ -4214,7 +4214,7 @@ class PlayState extends MusicBeatState
 			timing.cameras = [camHUD];
 		}
 		timing.screenCenter();
-		timing.x = rating.x - 80;
+		timing.x = rating.x - 120;
 		timing.y = rating.y + 80;
 		timing.acceleration.y = 550;
 		timing.visible = (!ClientPrefs.hideHud && ClientPrefs.ShowLateEarly);
@@ -4262,7 +4262,7 @@ class PlayState extends MusicBeatState
 			if (showCombo) {
 				if (comboSpr.visible) {
 					MsTimingTxt.x = comboSpr.x + 100;
-					MsTimingTxt.y = comboSpr.y + 100;
+					MsTimingTxt.y = comboSpr.y + 80;
 				} else {
 					MsTimingTxt.x = rating.x + 100;
 					MsTimingTxt.y = rating.y + 100;

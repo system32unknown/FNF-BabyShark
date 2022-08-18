@@ -112,6 +112,7 @@
 		-125
 	],
 	"healthicon": "pico",
+	"winningIcon": false,
 	"flip_x": false,
 	"healthbar_colors": [
 		183,

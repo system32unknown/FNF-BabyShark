@@ -26,6 +26,7 @@ typedef CharacterFile = {
 	var scale:Float;
 	var sing_duration:Float;
 	var healthicon:String;
+	var winningicon:Bool;
 
 	var position:Array<Float>;
 	var camera_position:Array<Float>;
@@ -65,6 +66,7 @@ class Character extends FlxSprite
 
 	public var healthIcon:String = 'face';
 	public var animationsArray:Array<AnimArray> = [];
+	public var winningicon:Bool = false;
 
 	public var positionArray:Array<Float> = [0, 0];
 	public var cameraPosition:Array<Float> = [0, 0];

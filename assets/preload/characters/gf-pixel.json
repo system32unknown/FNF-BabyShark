@@ -74,6 +74,7 @@
 		0
 	],
 	"healthicon": "gf",
+	"winningIcon": false,
 	"flip_x": false,
 	"healthbar_colors": [
 		165,

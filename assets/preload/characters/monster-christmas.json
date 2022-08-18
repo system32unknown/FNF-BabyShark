@@ -138,6 +138,7 @@
 		130
 	],
 	"healthicon": "monster",
+	"winningIcon": false,
 	"flip_x": false,
 	"healthbar_colors": [
 		243,

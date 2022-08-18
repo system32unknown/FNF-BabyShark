@@ -107,6 +107,7 @@
 		480
 	],
 	"healthicon": "bf-pixel",
+	"winningIcon": false,
 	"flip_x": true,
 	"healthbar_colors": [
 		123,
