@@ -1012,13 +1012,13 @@ class PlayState extends MusicBeatState
 		strumLine.scrollFactor.set();
 
 		var showTime:Bool = (ClientPrefs.timeBarType != 'Disabled');
-		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 250, 18, 400, "", 32);
+		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 20, 400, "", 32);
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
 		timeTxt.borderSize = 1;
 		timeTxt.visible = showTime;
-		if(ClientPrefs.downScroll) timeTxt.y = (FlxG.height - 44) - 5;
+		if(ClientPrefs.downScroll) timeTxt.y = FlxG.height - 35;
 
 		if(ClientPrefs.timeBarType == 'Song Name')
 		{
@@ -1028,7 +1028,7 @@ class PlayState extends MusicBeatState
 
 		timeBarBG = new AttachedSprite('timeBar');
 		timeBarBG.x = timeTxt.x;
-		timeBarBG.y = timeTxt.y + (timeTxt.height / 4);
+		timeBarBG.y = timeTxt.y + (timeTxt.height / 4) - 2;
 		timeBarBG.scrollFactor.set();
 		timeBarBG.alpha = 0;
 		timeBarBG.visible = showTime;
