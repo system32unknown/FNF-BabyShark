@@ -956,13 +956,11 @@ class PlayState extends MusicBeatState
 		}
 
 		dad = new Character(0, 0, SONG.player2);
-		iconP2.winningicon = dad.winningicon;
 		startCharacterPos(dad, true);
 		dadGroup.add(dad);
 		startCharacterLua(dad.curCharacter);
 
 		boyfriend = new Boyfriend(0, 0, SONG.player1);
-		iconP1.winningicon = boyfriend.winningicon;
 		startCharacterPos(boyfriend);
 		boyfriendGroup.add(boyfriend);
 		startCharacterLua(boyfriend.curCharacter);
@@ -1178,12 +1176,14 @@ class PlayState extends MusicBeatState
 		iconP1.y = healthBar.y - 75;
 		iconP1.visible = !ClientPrefs.hideHud;
 		iconP1.alpha = ClientPrefs.healthBarAlpha;
+		iconP1.winningicon = boyfriend.winningicon;
 		add(iconP1);
 
 		iconP2 = new HealthIcon(dad.healthIcon, false);
 		iconP2.y = healthBar.y - 75;
 		iconP2.visible = !ClientPrefs.hideHud;
 		iconP2.alpha = ClientPrefs.healthBarAlpha;
+		iconP2.winningicon = dad.winningicon;
 		add(iconP2);
 		reloadHealthBarColors();
 
