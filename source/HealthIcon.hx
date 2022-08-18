@@ -10,7 +10,7 @@ class HealthIcon extends FlxSprite
 	public var sprTracker:FlxSprite;
 	private var isPlayer:Bool = false;
 	private var char:String = '';
-	public var WinningIcon:Bool = false;
+	public var winningicon:Bool = false;
 
 	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
@@ -42,7 +42,7 @@ class HealthIcon extends FlxSprite
 			iconOffsets[1] = (width - 150) / 2;
 			updateHitbox();
 
-			animation.add(char, (WinningIcon ? [0, 1, 2] : [0, 1]), 0, false, isPlayer);
+			animation.add(char, (winningicon ? [0, 1, 2] : [0, 1]), 0, false, isPlayer);
 			animation.play(char);
 			this.char = char;
 

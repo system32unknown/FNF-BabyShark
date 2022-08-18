@@ -179,6 +179,8 @@ class Character extends FlxSprite
 				positionArray = json.position;
 				cameraPosition = json.camera_position;
 
+				winningicon = json.winningicon;
+
 				healthIcon = json.healthicon;
 				singDuration = json.sing_duration;
 				flipX = !!json.flip_x;

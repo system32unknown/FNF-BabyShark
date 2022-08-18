@@ -397,7 +397,7 @@ class CharacterEditorState extends MusicBeatState
 				0
 			],
 			"healthicon": "face",
-			"winningIcon": false,
+			"winningicon": false,
 			"flip_x": false,
 			"healthbar_colors": [
 				161,
@@ -506,7 +506,7 @@ class CharacterEditorState extends MusicBeatState
 
 	var flipXCheckBox:FlxUICheckBox;
 	var noAntialiasingCheckBox:FlxUICheckBox;
-	var WinningIconCheckBox:FlxUICheckBox;
+	var winningiconCheckBox:FlxUICheckBox;
 
 	var healthColorStepperR:FlxUINumericStepper;
 	var healthColorStepperG:FlxUINumericStepper;
@@ -554,11 +554,10 @@ class CharacterEditorState extends MusicBeatState
 			ghostChar.flipX = char.flipX;
 		};
 
-		WinningIconCheckBox = new FlxUICheckBox(singDurationStepper.x + 80, flipXCheckBox.y + 40, null, null, "Winning Icon", 50);
-		WinningIconCheckBox.checked = char.winningicon;
-		WinningIconCheckBox.callback = function() {
+		winningiconCheckBox = new FlxUICheckBox(singDurationStepper.x + 80, flipXCheckBox.y + 20, null, null, "Winning Icon", 50);
+		winningiconCheckBox.checked = char.winningicon;
+		winningiconCheckBox.callback = function() {
 			char.winningicon = !char.winningicon;
-			leHealthIcon.WinningIcon = char.winningicon;
 		};
 
 		noAntialiasingCheckBox = new FlxUICheckBox(flipXCheckBox.x, flipXCheckBox.y + 40, null, null, "No Antialiasing", 80);
@@ -600,7 +599,7 @@ class CharacterEditorState extends MusicBeatState
 		tab_group.add(singDurationStepper);
 		tab_group.add(scaleStepper);
 		tab_group.add(flipXCheckBox);
-		tab_group.add(WinningIconCheckBox);
+		tab_group.add(winningiconCheckBox);
 		tab_group.add(noAntialiasingCheckBox);
 		tab_group.add(positionXStepper);
 		tab_group.add(positionYStepper);
@@ -990,7 +989,7 @@ class CharacterEditorState extends MusicBeatState
 			singDurationStepper.value = char.singDuration;
 			scaleStepper.value = char.jsonScale;
 			flipXCheckBox.checked = char.originalFlipX;
-			WinningIconCheckBox.checked = char.WinningIcon;
+			winningiconCheckBox.checked = char.winningicon;
 			noAntialiasingCheckBox.checked = char.noAntialiasing;
 			resetHealthBarColor();
 			leHealthIcon.changeIcon(healthIconInputText.text);
@@ -1284,7 +1283,7 @@ class CharacterEditorState extends MusicBeatState
 			"scale": char.jsonScale,
 			"sing_duration": char.singDuration,
 			"healthicon": char.healthIcon,
-			"winningicon": char.WinningIcon,
+			"winningicon": char.winningicon,
 
 			"position":	char.positionArray,
 			"camera_position": char.cameraPosition,
