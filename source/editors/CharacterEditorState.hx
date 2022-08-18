@@ -771,6 +771,7 @@ class CharacterEditorState extends MusicBeatState
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
 			if(sender == healthIconInputText) {
 				leHealthIcon.changeIcon(healthIconInputText.text);
+				leHealthIcon.winningicon = char.winningicon;
 				char.healthIcon = healthIconInputText.text;
 				updatePresence();
 			}
@@ -994,6 +995,7 @@ class CharacterEditorState extends MusicBeatState
 			noAntialiasingCheckBox.checked = char.noAntialiasing;
 			resetHealthBarColor();
 			leHealthIcon.changeIcon(healthIconInputText.text);
+			leHealthIcon.winningicon = char.winningicon;
 			positionXStepper.value = char.positionArray[0];
 			positionYStepper.value = char.positionArray[1];
 			positionCameraXStepper.value = char.cameraPosition[0];

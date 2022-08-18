@@ -36,12 +36,10 @@ class HealthIcon extends FlxSprite
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
 			var file:Dynamic = Paths.image(name);
 
-			loadGraphic(file); //Load stupidly first for getting the file size
-			loadGraphic(file, true, (winningicon ? 150 : Math.floor(width / 2)), Math.floor(height)); //Then load it fr
-			if (!winningicon) {
-				iconOffsets[0] = (width - 150) / 2;
-			}
-			iconOffsets[1] = (width - 150) / 2;
+			loadGraphic(file);
+			loadGraphic(file, true, (winningicon ? Math.floor(width / 3) : Math.floor(width / 2)), Math.floor(height)); //Then load it fr
+			iconOffsets[0] = (winningicon ? (width - 150) / 3 : (width - 150) / 2);
+			iconOffsets[1] = (winningicon ? (width - 150) / 3 : (width - 150) / 2);
 			updateHitbox();
 
 			animation.add(char, (winningicon ? [0, 1, 2] : [0, 1]), 0, false, isPlayer);
@@ -58,9 +56,7 @@ class HealthIcon extends FlxSprite
 	override function updateHitbox()
 	{
 		super.updateHitbox();
-		if (!winningicon) {
-			offset.x = iconOffsets[0];
-		}
+		offset.x = iconOffsets[0];
 		offset.y = iconOffsets[1];
 	}
 
