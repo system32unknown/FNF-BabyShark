@@ -554,7 +554,7 @@ class CharacterEditorState extends MusicBeatState
 			ghostChar.flipX = char.flipX;
 		};
 
-		winningiconCheckBox = new FlxUICheckBox(singDurationStepper.x + 80, flipXCheckBox.y + 20, null, null, "Winning Icon", 50);
+		winningiconCheckBox = new FlxUICheckBox(singDurationStepper.x + 80, flipXCheckBox.y + 20, null, null, "Winning Icon", 80);
 		winningiconCheckBox.checked = char.winningicon;
 		winningiconCheckBox.callback = function() {
 			char.winningicon = !char.winningicon;
