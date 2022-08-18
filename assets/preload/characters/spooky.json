@@ -94,7 +94,6 @@
 		200
 	],
 	"healthicon": "spooky",
-	"winningIcon": false,
 	"flip_x": false,
 	"healthbar_colors": [
 		213,
