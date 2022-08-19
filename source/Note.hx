@@ -206,7 +206,7 @@ class Note extends FlxSprite
 		}
 
 		if(unfairNote) {
-			if (FlxG.random.int(0, 120) == 1)
+			if (FlxG.random.bool(120))
 			{
 				LocalScrollSpeed = 0.1;
 			}
