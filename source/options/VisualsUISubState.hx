@@ -68,13 +68,6 @@ class VisualsUISubState extends BaseOptionsMenu
 			'bool',
 			true);
 		addOption(option);
-		
-		/*var option:Option = new Option('Show NPS Counter',
-			'If checked, the NPS counter will be shown.',
-			'ShowNPS',
-			'bool',
-			true);
-		addOption(option);*/
 
 		var option:Option = new Option('Show ms Timing',
 			'If checked, the ms timing will be shown.',
@@ -83,16 +76,23 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Show Late/Early Counter',
+		var option:Option = new Option('Show Late/Early',
 			'If checked, the Late/Early counter will be shown.',
 			'ShowLateEarly',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Show Judgement Counter',
-			'If checked, the Judgement counter will be shown.\nLike Andromeda Engine.',
+		var option:Option = new Option('Show Judgements Counter',
+			'If checked, the Judgements counter will be shown.\nLike Andromeda Engine.',
 			'ShowJudgementCount',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option('Show Max Combo',
+			'If checked, the Max Combo counter will be shown.',
+			'ShowMaxCombo',
 			'bool',
 			true);
 		addOption(option);

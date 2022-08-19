@@ -453,6 +453,9 @@ class TitleState extends MusicBeatState
 
 				transitioning = true;
 
+				MainMenuState.firstStart = true;
+				MainMenuState.finishedFunnyMove = false;
+
 				new FlxTimer().start(1, function(tmr:FlxTimer)
 				{
 					if (mustUpdate) {

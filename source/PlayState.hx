@@ -1181,7 +1181,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.scrollFactor.set();
 		judgementCounter.cameras = [camHUD];
 		judgementCounter.screenCenter(Y);
-		judgementCounter.text = 'Max Combos:${maxCombo}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		judgementCounter.text = (ClientPrefs.ShowMaxCombo ? 'Max Combos: ${MaxCombo}\n' : '') + 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
 		if (ClientPrefs.ShowJudgementCount) {
 			add(judgementCounter);
 		}
@@ -2296,7 +2296,7 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
-		judgementCounter.text = 'Max Combos: ${maxCombo}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		judgementCounter.text = (ClientPrefs.ShowMaxCombo ? 'Max Combos: ${MaxCombo}\n' : '') + 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
 		var Accuracy:Float = Highscore.floorDecimal(ratingPercent * 100, 2);
 		scoreTxt.text = (!cpuControlled ? 'Score:' + songScore : 'Bot Score:' + botScore)
 		+ (!cpuControlled ? ' | Misses:' + songMisses : '')
