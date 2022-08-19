@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxSprite;
 import editors.ChartingState;
+import flixel.FlxG;
 
 using StringTools;
 
@@ -205,14 +206,13 @@ class Note extends FlxSprite
 		}
 
 		if(unfairNote) {
-			var rng:FlxRandom = new FlxRandom();
-			if (rng.int(0, 120) == 1)
+			if (FlxG.random.int(0, 120) == 1)
 			{
 				LocalScrollSpeed = 0.1;
 			}
 			else
 			{
-				LocalScrollSpeed = rng.float(1,3);
+				LocalScrollSpeed = FlxG.random.float(1, 3);
 			}
 		}
 

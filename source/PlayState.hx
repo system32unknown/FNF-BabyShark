@@ -3231,18 +3231,12 @@ class PlayState extends MusicBeatState
 				strumAngle += daNote.offsetAngle;
 				strumAlpha *= daNote.multAlpha;
 
-				if (daNote.unfairNote)
-				{
+				if (note.noteType == 'Randomized Note'){
 					daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed) * FlxMath.roundDecimal(SONG.speed * daNote.LocalScrollSpeed, 2);
-				}
-				else
-				{
-					if (strumScroll) //Downscroll
-					{
+				} else {
+					if (strumScroll) { //Downscroll
 						daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
-					}
-					else //Upscroll
-					{
+					} else { //Upscroll
 						daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
 					}
 				}
@@ -3257,7 +3251,7 @@ class PlayState extends MusicBeatState
 				if(daNote.copyX)
 					daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
 
-				if(daNote.copyY)
+				if(daNote.copyY) {
 					daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
 
 					//Jesus fuck this took me so much mother fucking time AAAAAAAAAA
