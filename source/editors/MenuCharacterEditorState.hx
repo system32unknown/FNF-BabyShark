@@ -6,7 +6,6 @@ import Discord.DiscordClient;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.input.keyboard.FlxKey;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.addons.ui.FlxUI;

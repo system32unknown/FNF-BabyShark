@@ -6,10 +6,6 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import openfl.geom.Rectangle;
 
-/**
- * ...
- * @author 
- */
 class Prompt extends MusicBeatSubstate
 {
 	var selected = 0;

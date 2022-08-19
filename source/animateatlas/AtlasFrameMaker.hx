@@ -12,10 +12,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxColor;
-#if !desktop
-import js.html.FileSystem;
-import js.html.File;
-#end
 
 using StringTools;
 class AtlasFrameMaker extends FlxFramesCollection

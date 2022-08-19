@@ -1,23 +1,17 @@
 package;
 
-import flixel.graphics.FlxGraphic;
 #if desktop
 import Discord.DiscordClient;
 #end
 import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
-import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxGame;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.FlxSubState;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.effects.FlxTrail;
-import flixel.addons.effects.FlxTrailArea;
 import flixel.addons.effects.chainable.FlxEffectSprite;
 import flixel.addons.effects.chainable.FlxWaveEffect;
 import flixel.addons.transition.FlxTransitionableState;
@@ -32,17 +26,13 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
-import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import haxe.Json;
 import lime.utils.Assets;
-import openfl.Lib;
 import openfl.display.BlendMode;
-import openfl.display.StageQuality;
-import openfl.filters.BitmapFilter;
 import openfl.utils.Assets as OpenFlAssets;
 import editors.ChartingState;
 import editors.CharacterEditorState;
@@ -50,8 +40,6 @@ import flixel.group.FlxSpriteGroup;
 import flixel.input.keyboard.FlxKey;
 import Note.EventNote;
 import openfl.events.KeyboardEvent;
-import flixel.effects.particles.FlxEmitter;
-import flixel.effects.particles.FlxParticle;
 import flixel.util.FlxSave;
 import animateatlas.AtlasFrameMaker;
 import Achievements;
@@ -170,6 +158,7 @@ class PlayState extends MusicBeatState
 	public var gfSpeed:Int = 1;
 	public var health:Float = 1;
 	public var combo:Int = 0;
+	public var MaxCombo:Int = 0;
 
 	private var healthBarBG:AttachedSprite;
 	public var healthBar:FlxBar;
@@ -1192,7 +1181,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.scrollFactor.set();
 		judgementCounter.cameras = [camHUD];
 		judgementCounter.screenCenter(Y);
-		judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}';
+		judgementCounter.text = 'Max Combos:${maxCombo}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
 		if (ClientPrefs.ShowJudgementCount) {
 			add(judgementCounter);
 		}
@@ -2307,8 +2296,8 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
+		judgementCounter.text = 'Max Combos: ${maxCombo}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
 		var Accuracy:Float = Highscore.floorDecimal(ratingPercent * 100, 2);
-		judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}';
 		scoreTxt.text = (!cpuControlled ? 'Score:' + songScore : 'Bot Score:' + botScore)
 		+ (!cpuControlled ? ' | Misses:' + songMisses : '')
 		+ ' | Acc.:' + '${Accuracy}%'
@@ -4629,6 +4618,12 @@ class PlayState extends MusicBeatState
 				note.destroy();
 			}
 		});
+
+		if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
+		{
+			gf.playAnim('sad');
+		}
+
 		combo = 0;
 		health -= daNote.missHealth * healthLoss;
 		
@@ -4679,6 +4674,7 @@ class PlayState extends MusicBeatState
 				gf.playAnim('sad');
 			}
 			combo = 0;
+
 
 			if(!practiceMode) songScore -= 10;
 			if(!endingSong) {
@@ -4790,6 +4786,8 @@ class PlayState extends MusicBeatState
 			if (!note.isSustainNote)
 			{
 				combo += 1;
+				if (combo > MaxCombo)
+					MaxCombo = combo;
 				if(combo > 9999) combo = 9999;
 				popUpScore(note);
 			}

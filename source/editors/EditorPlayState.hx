@@ -1,9 +1,7 @@
 package editors;
 
 import Section.SwagSection;
-import Song.SwagSong;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
 import flixel.FlxG;
@@ -11,14 +9,12 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxSound;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
-import FunkinLua;
 
 using StringTools;
 
