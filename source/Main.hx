@@ -101,7 +101,7 @@ class Main extends Sprite
 		#end
 	}
 
-	public static function adjustFPS(num:Float):Float{
+	public static function adjustFPS(num:Float):Float {
 		return FlxG.elapsed / (1 / 60) * num;
 	}
 

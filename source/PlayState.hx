@@ -260,6 +260,7 @@ class PlayState extends MusicBeatState
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
 	var timeTxt:FlxText;
+	var judgementCounter:FlxText;
 	var scoreTxtTween:FlxTween;
 	var MsTimingTxt:FlxText = new FlxText(0, 0, 0, "NaN ms", 22);
 	var MsTimingTween:FlxTween;
@@ -1184,6 +1185,17 @@ class PlayState extends MusicBeatState
 		scoreTxt.borderSize = 1;
 		scoreTxt.visible = !ClientPrefs.hideHud;
 		add(scoreTxt);
+
+		judgementCounter = new FlxText(10, 0, 0, "", 16);
+		judgementCounter.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		judgementCounter.borderSize = 1;
+		judgementCounter.scrollFactor.set();
+		judgementCounter.cameras = [camHUD];
+		judgementCounter.screenCenter(Y);
+		judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}';
+		if (ClientPrefs.ShowJudgementCount) {
+			add(judgementCounter);
+		}
 
 		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -2295,10 +2307,12 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false)
 	{
+		var Accuracy:Float = Highscore.floorDecimal(ratingPercent * 100, 2);
+		judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}';
 		scoreTxt.text = (!cpuControlled ? 'Score:' + songScore : 'Bot Score:' + botScore)
 		+ (!cpuControlled ? ' | Misses:' + songMisses : '')
-		+ ' | Acc.:' + '${Highscore.floorDecimal(ratingPercent * 100, 2)}%'
-		+ (ratingName != '?' ? ' [$ratingName] - $ratingFC' : ' [?] - N/A');
+		+ ' | Acc.:' + '${Accuracy}%'
+		+ (ratingName != '?' ? ' [$ratingName, ${CoolUtil.GenerateLetterRank(Accuracy)}] - $ratingFC' : ' [?, N/A] - ?');
 
 		if(ClientPrefs.scoreZoom && !miss)
 		{
@@ -3030,9 +3044,6 @@ class PlayState extends MusicBeatState
 			openChartEditor();
 		}
 
-		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
-		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
-
 		switch(ClientPrefs.IconBounceType) {
 			case "Vanilla": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.5)));
@@ -3044,14 +3055,11 @@ class PlayState extends MusicBeatState
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
 				iconP2.scale.set(mult, mult);
 			case "Andromeda": // Stolen from Andromeda Engine
-				var mult:Int = Std.int(FlxMath.lerp(iconP1.width, 150, Main.adjustFPS(0.1)));
-				iconP1.setGraphicSize(mult);
-
-				var mult:Int = Std.int(FlxMath.lerp(iconP2.width, 150, Main.adjustFPS(0.1)));
-				iconP2.setGraphicSize(mult);
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, Main.adjustFPS(0.1))));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, Main.adjustFPS(0.1))));
 			case "Micdup": // Stolen from FNF Mic'd Up
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, 0.09 / Main.adjustFPS(0.1))));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, 0.09 / Main.adjustFPS(0.1))));
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
 			case "DaveAndBambi": // Stolen from Dave And Bambi
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.8)), Std.int(FlxMath.lerp(150, iconP1.height, 0.8)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.8)), Std.int(FlxMath.lerp(150, iconP2.height, 0.8)));
