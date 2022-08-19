@@ -148,9 +148,9 @@ class FunkinLua {
 		set('version', MainMenuState.psychEngineVersion.trim());
 
 		set('inGameOver', false);
-		set('mustHitSection', false);
-		set('altAnim', false);
-		set('gfSection', false);
+		set('mustHitSection', PlayState.SONG.notes[0].mustHitSection);
+		set('altAnim', PlayState.SONG.notes[0].altAnim);
+		set('gfSection', PlayState.SONG.notes[0].gfSection);
 
 		// Gameplay settings
 		set('healthGainMult', PlayState.instance.healthGain);
@@ -262,7 +262,6 @@ class FunkinLua {
 			}
 			return false;
 		});
-
 
 		Lua_helper.add_callback(lua, "getShaderBool", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
@@ -1254,6 +1253,15 @@ class FunkinLua {
 			}
 		});
 
+		Lua_helper.add_callback(lua, "getColorFromRGB", function(color:String) {
+			var bitch:Array<String> = color.split(',');
+			var ass:Array<Int> = [];
+			for (i in 0...bitch.length) {
+				ass.push(Std.parseInt(bitch[i]));
+			}
+			return FlxColor.fromRGB(ass[0], ass[1], ass[2]);
+		});
+
 		Lua_helper.add_callback(lua, "cancelTween", function(tag:String) {
 			cancelTween(tag);
 		});
@@ -1952,6 +1960,31 @@ class FunkinLua {
 				pee.destroy();
 				PlayState.instance.modchartSprites.remove(tag);
 			}
+		});
+
+		Lua_helper.add_callback(lua, "setColorSwap", function(obj:String, hue:Float = 0, saturation:Float = 0, brightness:Float = 0) {
+			var real = PlayState.instance.getLuaObject(obj);
+			var color:ColorSwap = new ColorSwap();
+			color.hue = hue;
+			color.saturation = saturation;
+			color.brightness = brightness;
+			if(real!=null) {
+				real.shader = color.shader;
+				return true;
+			}
+
+			var killMe:Array<String> = obj.split('.');
+			var object:FlxSprite = getObjectDirectly(killMe[0]);
+			if(killMe.length > 1) {
+				object = getVarInArray(getPropertyLoopThingWhatever(killMe), killMe[killMe.length-1]);
+			}
+
+			if(object != null) {
+				object.shader = color.shader;
+				return true;
+			}
+			luaTrace("Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
 		});
 
 		Lua_helper.add_callback(lua, "luaSpriteExists", function(tag:String) {
@@ -3050,24 +3083,6 @@ class FunkinLua {
 		#end
 	}
 
-	// some fuckery fucks with linc_luajit
-	function getResult(l:State, result:Int):Any {
-		var ret:Any = null;
-
-		switch(Lua.type(l, result)) {
-			case Lua.LUA_TNIL:
-				ret = null;
-			case Lua.LUA_TBOOLEAN:
-				ret = Lua.toboolean(l, -1);
-			case Lua.LUA_TNUMBER:
-				ret = Lua.tonumber(l, -1);
-			case Lua.LUA_TSTRING:
-				ret = Lua.tostring(l, -1);
-		}
-		
-		return ret;
-	}
-
 	var lastCalledFunction:String = '';
 	public function call(func:String, args:Array<Dynamic>): Dynamic{
 		#if LUA_ALLOWED
@@ -3075,11 +3090,15 @@ class FunkinLua {
 
 		lastCalledFunction = func;
 		try {
-			if(lua == null) return Function_Continue;
+			if(lua == null) {
+				Lua.pop(lua, 1);
+				return Function_Continue;
+			}
 
 			Lua.getglobal(lua, func);
 			var type:Int = Lua.type(lua, -1);
 			if (type != Lua.LUA_TFUNCTION) {
+				Lua.pop(lua, 1);
 				return Function_Continue;
 			}
 			
@@ -3089,18 +3108,14 @@ class FunkinLua {
 
 			var result:Null<Int> = Lua.pcall(lua, args.length, 1, 0);
 			var error:Dynamic = getErrorMessage();
-			if(!resultIsAllowed(lua, result))
-			{
-				Lua.pop(lua, 1);
-				if(error != null) luaTrace("ERROR (" + func + "): " + error, false, false, FlxColor.RED);
-			}
-			else
-			{
-				var conv:Dynamic = cast getResult(lua, result);
+			if(error != null) luaTrace("ERROR (" + func + "): " + error, false, false, FlxColor.RED);
+			if(resultIsAllowed(lua, -1)) {
+				var conv:Dynamic = cast Convert.fromLua(lua, -1);
 				Lua.pop(lua, 1);
 				if(conv == null) conv = Function_Continue;
 				return conv;
 			}
+			Lua.pop(lua, 1);
 			return Function_Continue;
 		}
 		catch (e:Dynamic) {

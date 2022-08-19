@@ -480,7 +480,7 @@ class FlxInputText extends FlxText
 	/**
 	 * Inserts a substring into a string at a specific index
 	 *
-	 * @param	Insert			The string to have something inserted into
+	 * @param	Original		The string to have something inserted into
 	 * @param	Insert			The string to insert
 	 * @param	Index			The index to insert at
 	 * @return					Returns the joined string for chaining.
@@ -593,11 +593,9 @@ class FlxInputText extends FlxText
 				switch (getAlignStr())
 				{
 					case RIGHT:
-						X = X - textField.width + textField.textWidth
-							;
+						X = X - textField.width + textField.textWidth;
 					case CENTER:
-						X = X - textField.width / 2 + textField.textWidth / 2
-							;
+						X = X - textField.width / 2 + textField.textWidth / 2;
 					default:
 				}
 			}

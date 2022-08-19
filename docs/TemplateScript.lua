@@ -161,6 +161,7 @@ function onTimerCompleted(tag, loops, loopsLeft)
 	-- loops = how many loops it will have done when it ends completely
 	-- loopsLeft = how many are remaining
 end
+
 function onCheckForAchievement(name)
 	
 	--deals with achievement checks

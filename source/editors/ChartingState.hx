@@ -65,7 +65,8 @@ class ChartingState extends MusicBeatState
 		'Hey!',
 		'Hurt Note',
 		'GF Sing',
-		'No Animation'
+		'No Animation',
+		'Randomized Note'
 	];
 	private var noteTypeIntMap:Map<Int, String> = new Map<Int, String>();
 	private var noteTypeMap:Map<String, Null<Int>> = new Map<String, Null<Int>>();
@@ -75,7 +76,7 @@ class ChartingState extends MusicBeatState
 	var eventStuff:Array<Dynamic> =
 	[
 		['', "Nothing. Yep, that's right."],
-		['Dadbattle Spotlight', "Used in Dad Battle,\nValue 1: 0/1 = ON/OFF,\n2 = Target Dad\n3 = Target BF"],
+		['Dadbattle Spotlight', "Used in Dad Battle,\nValue 1: 0/1 = ON/OFF,\n2 = Target Dad\n3 = Target BF\n \nDoes not work outside of Week 1 Stage."],
 		['Hey!', "Plays the \"Hey!\" animation from Bopeebo,\nValue 1: BF = Only Boyfriend, GF = Only Girlfriend,\nSomething else = Both.\nValue 2: Custom animation duration,\nleave it blank for 0.6s"],
 		['Set GF Speed', "Sets GF head bopping speed,\nValue 1: 1 = Normal speed,\n2 = 1/2 speed, 4 = 1/4 speed etc.\nUsed on Fresh during the beatbox parts.\n\nWarning: Value must be integer!"],
 		['Philly Glow', "Exclusive to Week 3\nValue 1: 0/1/2 = OFF/ON/Reset Gradient\n \nNo, i won't add it to other weeks."],
@@ -93,7 +94,6 @@ class ChartingState extends MusicBeatState
 	];
 
 	var _file:FileReference;
-
 	var UI_box:FlxUITabMenu;
 
 	public static var goToPlayState:Bool = false;
@@ -550,8 +550,9 @@ class ChartingState extends MusicBeatState
 		#end
 
 		tempMap.clear();
-		var stageFile:Array<String> = CoolUtil.coolTextFile(Paths.txt('stageList'));
 		var stages:Array<String> = [];
+		// Psych
+		var stageFile:Array<String> = CoolUtil.coolTextFile(Paths.txt('stageList'));
 		for (i in 0...stageFile.length) { //Prevent duplicates
 			var stageToCheck:String = stageFile[i];
 			if(!tempMap.exists(stageToCheck)) {
@@ -585,6 +586,20 @@ class ChartingState extends MusicBeatState
 		});
 		stageDropDown.selectedLabel = _song.stage;
 		blockPressWhileScrolling.push(stageDropDown);
+
+		CoolUtil.difficulties = CoolUtil.defaultDifficulties.copy();
+		var difficultyDropDown = new FlxUIDropDownMenuCustom(stageDropDown.x, gfVersionDropDown.y, FlxUIDropDownMenuCustom.makeStrIdLabelArray(CoolUtil.defaultDifficulties, true), function(difficulty:String)
+		{
+			PlayState.storyDifficulty = Std.parseInt(difficulty);
+			try {
+				PlayState.SONG = Song.loadFromJson(_song.song.toLowerCase() + (CoolUtil.getDifficultyFilePath() == null ? CoolUtil.getDifficultyFilePath() : ''), _song.song.toLowerCase());
+				MusicBeatState.resetState();
+			} catch (e:Any) {
+				trace("File " + _song.song.toLowerCase() + (CoolUtil.getDifficultyFilePath() == null ? CoolUtil.getDifficultyFilePath() : '') + " is not found.");
+			}
+		});
+		difficultyDropDown.selectedLabel = CoolUtil.difficulties[PlayState.storyDifficulty];
+		blockPressWhileScrolling.push(difficultyDropDown);
 
 		var skin = PlayState.SONG.arrowSkin;
 		if(skin == null) skin = '';
@@ -622,12 +637,14 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(new FlxText(stepperSpeed.x, stepperSpeed.y - 15, 0, 'Song Speed:'));
 		tab_group_song.add(new FlxText(player2DropDown.x, player2DropDown.y - 15, 0, 'Opponent:'));
 		tab_group_song.add(new FlxText(gfVersionDropDown.x, gfVersionDropDown.y - 15, 0, 'Girlfriend:'));
+		tab_group_song.add(new FlxText(difficultyDropDown.x, difficultyDropDown.y - 15, 0, 'Difficulty:'));
 		tab_group_song.add(new FlxText(player1DropDown.x, player1DropDown.y - 15, 0, 'Boyfriend:'));
 		tab_group_song.add(new FlxText(stageDropDown.x, stageDropDown.y - 15, 0, 'Stage:'));
 		tab_group_song.add(new FlxText(noteSkinInputText.x, noteSkinInputText.y - 15, 0, 'Note Texture:'));
 		tab_group_song.add(new FlxText(noteSplashesInputText.x, noteSplashesInputText.y - 15, 0, 'Note Splashes Texture:'));
 		tab_group_song.add(player2DropDown);
 		tab_group_song.add(gfVersionDropDown);
+		tab_group_song.add(difficultyDropDown);
 		tab_group_song.add(player1DropDown);
 		tab_group_song.add(stageDropDown);
 
@@ -2909,14 +2926,47 @@ class ChartingState extends MusicBeatState
 		} else {
 			//shitty null fix, i fucking hate it when this happens
 			//make it look sexier if possible
-			if (CoolUtil.difficulties[PlayState.storyDifficulty] != CoolUtil.defaultDifficulty) {
-				if(CoolUtil.difficulties[PlayState.storyDifficulty] == null){
-					PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
-				} else {
-					PlayState.SONG = Song.loadFromJson(song.toLowerCase() + "-" + CoolUtil.difficulties[PlayState.storyDifficulty], song.toLowerCase());
+			try {
+				var defaultDiff:String = CoolUtil.defaultDifficulty.toLowerCase();
+				var songLower:String = song.toLowerCase();
+
+				var ind:Int = song.lastIndexOf("-");
+				var success:Bool = false;
+				if (ind != -1) {
+					try {
+						PlayState.SONG = Song.loadFromJson(songLower, songLower.substring(0, ind));
+						success = true;
+
+						var diff:String = songLower.substring(ind + 1);
+						var ind:Int = CoolUtil.lowerDifficulties.indexOf(diff);
+						if (ind != -1) PlayState.storyDifficulty = ind;
+					}
+					catch(e) {}
 				}
-			} else {
-				PlayState.SONG = Song.loadFromJson(song.toLowerCase() + "-" + CoolUtil.difficulties[PlayState.storyDifficulty], song.toLowerCase());
+				if (!success) {
+					var diff:String = CoolUtil.difficulties[PlayState.storyDifficulty];
+					if (diff != null) diff = diff.toLowerCase();
+	
+					var success:Bool = false;
+					if (diff != null && diff != defaultDiff) {
+						try {
+							PlayState.SONG = Song.loadFromJson(songLower + "-" + diff, songLower);
+							success = true;
+						}
+						catch(e) {}
+					}
+					if (!success) {
+						PlayState.SONG = Song.loadFromJson(songLower, songLower);
+	
+						// after loaded
+						var ind:Int = CoolUtil.lowerDifficulties.indexOf(defaultDiff);
+						if (ind != -1) PlayState.storyDifficulty = ind;
+					}
+				}
+			}
+			catch(e) {
+				trace("Problem with Loading Song \"" + song.toLowerCase() + "\"");
+				return;
 			}
 			MusicBeatState.resetState();
 		}
@@ -2950,7 +3000,7 @@ class ChartingState extends MusicBeatState
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data.trim(), Paths.formatToSongPath(_song.song) + ".json");
+			_file.save(data.trim(), Paths.formatToSongPath(_song.song) + (CoolUtil.getDifficultyFilePath() == null ? CoolUtil.getDifficultyFilePath() : '') + ".json");
 		}
 	}
 
@@ -3020,6 +3070,15 @@ class ChartingState extends MusicBeatState
 		
 		if(_song.notes[section] != null) val = _song.notes[section].sectionBeats;
 		return val != null ? val : 4;
+	}
+
+	override function updateCurStep():Void 
+	{
+		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
+
+		var shit = (Conductor.songPosition - lastChange.songTime) / lastChange.stepCrochet;
+		curDecStep = lastChange.stepTime + shit;
+		curStep = lastChange.stepTime + Math.floor(shit);
 	}
 }
 

@@ -2595,60 +2595,62 @@ class PlayState extends MusicBeatState
 				addCharacterToList(newCharacter, charType);
 
 			case 'Dadbattle Spotlight':
-				dadbattleBlack = new BGSprite(null, -800, -400, 0, 0);
-				dadbattleBlack.makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
-				dadbattleBlack.alpha = 0.25;
-				dadbattleBlack.visible = false;
-				add(dadbattleBlack);
+				if (WeekData.getWeekFileName() == 'week1' && curStage == 'stage') {
+					dadbattleBlack = new BGSprite(null, -800, -400, 0, 0);
+					dadbattleBlack.makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
+					dadbattleBlack.alpha = 0.25;
+					dadbattleBlack.visible = false;
+					add(dadbattleBlack);
 
-				dadbattleLight = new BGSprite('spotlight', 400, -400);
-				dadbattleLight.alpha = 0.375;
-				dadbattleLight.blend = ADD;
-				dadbattleLight.visible = false;
+					dadbattleLight = new BGSprite('spotlight', 400, -400);
+					dadbattleLight.alpha = 0.375;
+					dadbattleLight.blend = ADD;
+					dadbattleLight.visible = false;
 
-				dadbattleSmokes.alpha = 0.7;
-				dadbattleSmokes.blend = ADD;
-				dadbattleSmokes.visible = false;
-				add(dadbattleLight);
-				add(dadbattleSmokes);
+					dadbattleSmokes.alpha = 0.7;
+					dadbattleSmokes.blend = ADD;
+					dadbattleSmokes.visible = false;
+					add(dadbattleLight);
+					add(dadbattleSmokes);
 
-				var offsetX = 200;
-				var smoke:BGSprite = new BGSprite('smoke', -1550 + offsetX, 660 + FlxG.random.float(-20, 20), 1.2, 1.05);
-				smoke.setGraphicSize(Std.int(smoke.width * FlxG.random.float(1.1, 1.22)));
-				smoke.updateHitbox();
-				smoke.velocity.x = FlxG.random.float(15, 22);
-				smoke.active = true;
-				dadbattleSmokes.add(smoke);
-				var smoke:BGSprite = new BGSprite('smoke', 1550 + offsetX, 660 + FlxG.random.float(-20, 20), 1.2, 1.05);
-				smoke.setGraphicSize(Std.int(smoke.width * FlxG.random.float(1.1, 1.22)));
-				smoke.updateHitbox();
-				smoke.velocity.x = FlxG.random.float(-15, -22);
-				smoke.active = true;
-				smoke.flipX = true;
-				dadbattleSmokes.add(smoke);
-
+					var offsetX = 200;
+					var smoke:BGSprite = new BGSprite('smoke', -1550 + offsetX, 660 + FlxG.random.float(-20, 20), 1.2, 1.05);
+					smoke.setGraphicSize(Std.int(smoke.width * FlxG.random.float(1.1, 1.22)));
+					smoke.updateHitbox();
+					smoke.velocity.x = FlxG.random.float(15, 22);
+					smoke.active = true;
+					dadbattleSmokes.add(smoke);
+					var smoke:BGSprite = new BGSprite('smoke', 1550 + offsetX, 660 + FlxG.random.float(-20, 20), 1.2, 1.05);
+					smoke.setGraphicSize(Std.int(smoke.width * FlxG.random.float(1.1, 1.22)));
+					smoke.updateHitbox();
+					smoke.velocity.x = FlxG.random.float(-15, -22);
+					smoke.active = true;
+					smoke.flipX = true;
+					dadbattleSmokes.add(smoke);
+				}
 
 			case 'Philly Glow':
-				blammedLightsBlack = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5).makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
-				blammedLightsBlack.visible = false;
-				insert(members.indexOf(phillyStreet), blammedLightsBlack);
+				if (WeekData.getWeekFileName() == 'week3' && curStage == 'philly') {
+					blammedLightsBlack = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5).makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
+					blammedLightsBlack.visible = false;
+					insert(members.indexOf(phillyStreet), blammedLightsBlack);
 
-				phillyWindowEvent = new BGSprite('philly/window', phillyWindow.x, phillyWindow.y, 0.3, 0.3);
-				phillyWindowEvent.setGraphicSize(Std.int(phillyWindowEvent.width * 0.85));
-				phillyWindowEvent.updateHitbox();
-				phillyWindowEvent.visible = false;
-				insert(members.indexOf(blammedLightsBlack) + 1, phillyWindowEvent);
+					phillyWindowEvent = new BGSprite('philly/window', phillyWindow.x, phillyWindow.y, 0.3, 0.3);
+					phillyWindowEvent.setGraphicSize(Std.int(phillyWindowEvent.width * 0.85));
+					phillyWindowEvent.updateHitbox();
+					phillyWindowEvent.visible = false;
+					insert(members.indexOf(blammedLightsBlack) + 1, phillyWindowEvent);
 
+					phillyGlowGradient = new PhillyGlow.PhillyGlowGradient(-400, 225); //This shit was refusing to properly load FlxGradient so fuck it
+					phillyGlowGradient.visible = false;
+					insert(members.indexOf(blammedLightsBlack) + 1, phillyGlowGradient);
+					if(!ClientPrefs.flashing) phillyGlowGradient.intendedAlpha = 0.7;
 
-				phillyGlowGradient = new PhillyGlow.PhillyGlowGradient(-400, 225); //This shit was refusing to properly load FlxGradient so fuck it
-				phillyGlowGradient.visible = false;
-				insert(members.indexOf(blammedLightsBlack) + 1, phillyGlowGradient);
-				if(!ClientPrefs.flashing) phillyGlowGradient.intendedAlpha = 0.7;
-
-				precacheList.set('philly/particle', 'image'); //precache particle image
-				phillyGlowParticles = new FlxTypedGroup<PhillyGlow.PhillyGlowParticle>();
-				phillyGlowParticles.visible = false;
-				insert(members.indexOf(phillyGlowGradient) + 1, phillyGlowParticles);
+					precacheList.set('philly/particle', 'image'); //precache particle image
+					phillyGlowParticles = new FlxTypedGroup<PhillyGlow.PhillyGlowParticle>();
+					phillyGlowParticles.visible = false;
+					insert(members.indexOf(phillyGlowGradient) + 1, phillyGlowParticles);
+				}
 		}
 
 		if(!eventPushedMap.exists(event.event)) {
@@ -3229,15 +3231,20 @@ class PlayState extends MusicBeatState
 				strumAngle += daNote.offsetAngle;
 				strumAlpha *= daNote.multAlpha;
 
-				if (strumScroll) //Downscroll
+				if (daNote.unfairNote)
 				{
-					//daNote.y = (strumY + 0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed);
-					daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+					daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed) * FlxMath.roundDecimal(SONG.speed * daNote.LocalScrollSpeed, 2);
 				}
-				else //Upscroll
+				else
 				{
-					//daNote.y = (strumY - 0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed);
-					daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+					if (strumScroll) //Downscroll
+					{
+						daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+					}
+					else //Upscroll
+					{
+						daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+					}
 				}
 
 				var angleDir = strumDirection * Math.PI / 180;
@@ -3251,7 +3258,6 @@ class PlayState extends MusicBeatState
 					daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
 
 				if(daNote.copyY)
-				{
 					daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
 
 					//Jesus fuck this took me so much mother fucking time AAAAAAAAAA
@@ -3456,37 +3462,39 @@ class PlayState extends MusicBeatState
 	public function triggerEventNote(eventName:String, value1:String, value2:String) {
 		switch(eventName) {
 			case 'Dadbattle Spotlight':
-				var val:Null<Int> = Std.parseInt(value1);
-				if(val == null) val = 0;
+				if (WeekData.getWeekFileName() == 'week1' && curStage == 'stage') {
+					var val:Null<Int> = Std.parseInt(value1);
+					if(val == null) val = 0;
 
-				switch(Std.parseInt(value1))
-				{
-					case 1, 2, 3: //enable and target dad
-						if(val == 1) //enable
-						{
-							dadbattleBlack.visible = true;
-							dadbattleLight.visible = true;
-							dadbattleSmokes.visible = true;
-							defaultCamZoom += 0.12;
-						}
+					switch(Std.parseInt(value1))
+					{
+						case 1, 2, 3: //enable and target dad
+							if(val == 1) //enable
+							{
+								dadbattleBlack.visible = true;
+								dadbattleLight.visible = true;
+								dadbattleSmokes.visible = true;
+								defaultCamZoom += 0.12;
+							}
 
-						var who:Character = dad;
-						if(val > 2) who = boyfriend;
-						//2 only targets dad
-						dadbattleLight.alpha = 0;
-						new FlxTimer().start(0.12, function(tmr:FlxTimer) {
-							dadbattleLight.alpha = 0.375;
-						});
-						dadbattleLight.setPosition(who.getGraphicMidpoint().x - dadbattleLight.width / 2, who.y + who.height - dadbattleLight.height + 50);
+							var who:Character = dad;
+							if(val > 2) who = boyfriend;
+							//2 only targets dad
+							dadbattleLight.alpha = 0;
+							new FlxTimer().start(0.12, function(tmr:FlxTimer) {
+								dadbattleLight.alpha = 0.375;
+							});
+							dadbattleLight.setPosition(who.getGraphicMidpoint().x - dadbattleLight.width / 2, who.y + who.height - dadbattleLight.height + 50);
 
-					default:
-						dadbattleBlack.visible = false;
-						dadbattleLight.visible = false;
-						defaultCamZoom -= 0.12;
-						FlxTween.tween(dadbattleSmokes, {alpha: 0}, 1, {onComplete: function(twn:FlxTween)
-						{
-							dadbattleSmokes.visible = false;
-						}});
+						default:
+							dadbattleBlack.visible = false;
+							dadbattleLight.visible = false;
+							defaultCamZoom -= 0.12;
+							FlxTween.tween(dadbattleSmokes, {alpha: 0}, 1, {onComplete: function(twn:FlxTween)
+							{
+								dadbattleSmokes.visible = false;
+							}});
+					}
 				}
 
 			case 'Hey!':
@@ -3529,102 +3537,104 @@ class PlayState extends MusicBeatState
 				gfSpeed = value;
 
 			case 'Philly Glow':
-				var lightId:Int = Std.parseInt(value1);
-				if(Math.isNaN(lightId)) lightId = 0;
+				if (WeekData.getWeekFileName() == 'week3' && curStage == 'philly') {
+					var lightId:Int = Std.parseInt(value1);
+					if(Math.isNaN(lightId)) lightId = 0;
 
-				var doFlash:Void->Void = function() {
-					var color:FlxColor = FlxColor.WHITE;
-					if(!ClientPrefs.flashing) color.alphaFloat = 0.5;
+					var doFlash:Void->Void = function() {
+						var color:FlxColor = FlxColor.WHITE;
+						if(!ClientPrefs.flashing) color.alphaFloat = 0.5;
 
-					FlxG.camera.flash(color, 0.15, null, true);
-				};
-
-				var chars:Array<Character> = [boyfriend, gf, dad];
-				switch(lightId)
-				{
-					case 0:
-						if(phillyGlowGradient.visible)
-						{
-							doFlash();
-							if(ClientPrefs.camZooms)
+						FlxG.camera.flash(color, 0.15, null, true);
+					};
+					
+					var chars:Array<Character> = [boyfriend, gf, dad];
+					switch(lightId)
+					{
+						case 0:
+							if(phillyGlowGradient.visible)
 							{
-								FlxG.camera.zoom += 0.5;
-								camHUD.zoom += 0.1;
+								doFlash();
+								if(ClientPrefs.camZooms)
+								{
+									FlxG.camera.zoom += 0.5;
+									camHUD.zoom += 0.1;
+								}
+
+								blammedLightsBlack.visible = false;
+								phillyWindowEvent.visible = false;
+								phillyGlowGradient.visible = false;
+								phillyGlowParticles.visible = false;
+								curLightEvent = -1;
+
+								for (who in chars)
+								{
+									who.color = FlxColor.WHITE;
+								}
+								phillyStreet.color = FlxColor.WHITE;
 							}
 
-							blammedLightsBlack.visible = false;
-							phillyWindowEvent.visible = false;
-							phillyGlowGradient.visible = false;
-							phillyGlowParticles.visible = false;
-							curLightEvent = -1;
+						case 1: //turn on
+							curLightEvent = FlxG.random.int(0, phillyLightsColors.length-1, [curLightEvent]);
+							var color:FlxColor = phillyLightsColors[curLightEvent];
+
+							if(!phillyGlowGradient.visible)
+							{
+								doFlash();
+								if(ClientPrefs.camZooms)
+								{
+									FlxG.camera.zoom += 0.5;
+									camHUD.zoom += 0.1;
+								}
+
+								blammedLightsBlack.visible = true;
+								blammedLightsBlack.alpha = 1;
+								phillyWindowEvent.visible = true;
+								phillyGlowGradient.visible = true;
+								phillyGlowParticles.visible = true;
+							}
+							else if(ClientPrefs.flashing)
+							{
+								var colorButLower:FlxColor = color;
+								colorButLower.alphaFloat = 0.25;
+								FlxG.camera.flash(colorButLower, 0.5, null, true);
+							}
+
+							var charColor:FlxColor = color;
+							if(!ClientPrefs.flashing) charColor.saturation *= 0.5;
+							else charColor.saturation *= 0.75;
 
 							for (who in chars)
 							{
-								who.color = FlxColor.WHITE;
+								who.color = charColor;
 							}
-							phillyStreet.color = FlxColor.WHITE;
-						}
-
-					case 1: //turn on
-						curLightEvent = FlxG.random.int(0, phillyLightsColors.length-1, [curLightEvent]);
-						var color:FlxColor = phillyLightsColors[curLightEvent];
-
-						if(!phillyGlowGradient.visible)
-						{
-							doFlash();
-							if(ClientPrefs.camZooms)
+							phillyGlowParticles.forEachAlive(function(particle:PhillyGlow.PhillyGlowParticle)
 							{
-								FlxG.camera.zoom += 0.5;
-								camHUD.zoom += 0.1;
-							}
+								particle.color = color;
+							});
+							phillyGlowGradient.color = color;
+							phillyWindowEvent.color = color;
 
-							blammedLightsBlack.visible = true;
-							blammedLightsBlack.alpha = 1;
-							phillyWindowEvent.visible = true;
-							phillyGlowGradient.visible = true;
-							phillyGlowParticles.visible = true;
-						}
-						else if(ClientPrefs.flashing)
-						{
-							var colorButLower:FlxColor = color;
-							colorButLower.alphaFloat = 0.25;
-							FlxG.camera.flash(colorButLower, 0.5, null, true);
-						}
+							color.brightness *= 0.5;
+							phillyStreet.color = color;
 
-						var charColor:FlxColor = color;
-						if(!ClientPrefs.flashing) charColor.saturation *= 0.5;
-						else charColor.saturation *= 0.75;
-
-						for (who in chars)
-						{
-							who.color = charColor;
-						}
-						phillyGlowParticles.forEachAlive(function(particle:PhillyGlow.PhillyGlowParticle)
-						{
-							particle.color = color;
-						});
-						phillyGlowGradient.color = color;
-						phillyWindowEvent.color = color;
-
-						color.brightness *= 0.5;
-						phillyStreet.color = color;
-
-					case 2: // spawn particles
-						if(!ClientPrefs.lowQuality)
-						{
-							var particlesNum:Int = FlxG.random.int(8, 12);
-							var width:Float = (2000 / particlesNum);
-							var color:FlxColor = phillyLightsColors[curLightEvent];
-							for (j in 0...3)
+						case 2: // spawn particles
+							if(!ClientPrefs.lowQuality)
 							{
-								for (i in 0...particlesNum)
+								var particlesNum:Int = FlxG.random.int(8, 12);
+								var width:Float = (2000 / particlesNum);
+								var color:FlxColor = phillyLightsColors[curLightEvent];
+								for (j in 0...3)
 								{
-									var particle:PhillyGlow.PhillyGlowParticle = new PhillyGlow.PhillyGlowParticle(-400 + width * i + FlxG.random.float(-width / 5, width / 5), phillyGlowGradient.originalY + 200 + (FlxG.random.float(0, 125) + j * 40), color);
-									phillyGlowParticles.add(particle);
+									for (i in 0...particlesNum)
+									{
+										var particle:PhillyGlow.PhillyGlowParticle = new PhillyGlow.PhillyGlowParticle(-400 + width * i + FlxG.random.float(-width / 5, width / 5), phillyGlowGradient.originalY + 200 + (FlxG.random.float(0, 125) + j * 40), color);
+										phillyGlowParticles.add(particle);
+									}
 								}
 							}
-						}
-						phillyGlowGradient.bop();
+							phillyGlowGradient.bop();
+					}
 				}
 
 			case 'Kill Henchmen':
@@ -4144,9 +4154,7 @@ class PlayState extends MusicBeatState
 			case 'MicdUp' | 'Andromeda':
 				noteDiff = note.strumTime - Conductor.songPosition;
 		}
-		//trace(noteDiff, ' ' + Math.abs(note.strumTime - Conductor.songPosition));
 
-		// boyfriend.playAnim('hey');
 		vocals.volume = 1;
 
 		var placement:String = Std.string(combo);
@@ -4243,7 +4251,9 @@ class PlayState extends MusicBeatState
 			MsTimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			MsTimingTxt.borderSize = 1;
 			MsTimingTxt.visible = (!ClientPrefs.hideHud && ClientPrefs.ShowMsTiming);
-			MsTimingTxt.cameras = [camHUD];
+			if (ClientPrefs.RatingTypes == "Static"){
+				MsTimingTxt.cameras = [camHUD];
+			}
 	
 			switch (daRating.name)
 			{
@@ -4350,7 +4360,7 @@ class PlayState extends MusicBeatState
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 			numScore.visible = (!ClientPrefs.hideHud && showComboNum);
 
-			if(combo >= 10)
+			if(combo >= 10 && showCombo)
 			{
 				insert(members.indexOf(strumLineNotes), comboSpr);
 			}
@@ -5276,7 +5286,7 @@ class PlayState extends MusicBeatState
 			
 			// had to do this because there is a bug in haxe where Stop != Continue doesnt work
 			var bool:Bool = ret == FunkinLua.Function_Continue;
-			if(!bool) {
+			if(!bool && ret != 0) {
 				returnVal = cast ret;
 			}
 		}
@@ -5368,30 +5378,14 @@ class PlayState extends MusicBeatState
 			var achievementName:String = achievesToCheck[i];
 			if(!Achievements.isAchievementUnlocked(achievementName) && !cpuControlled) {
 				var unlock:Bool = false;
+				if (achievementName.contains(WeekData.getWeekFileName()) && achievementName.endsWith('nomiss')) // any FC achievements, name should be "weekFileName_nomiss", e.g: "weekd_nomiss";
+				{
+					if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'HARD'
+						&& storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice)
+						unlock = true;
+				}
 				switch(achievementName)
 				{
-					case 'week1_nomiss' | 'week2_nomiss' | 'week3_nomiss' | 'week4_nomiss' | 'week5_nomiss' | 'week6_nomiss' | 'week7_nomiss':
-						if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'HARD' && storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice)
-						{
-							var weekName:String = WeekData.getWeekFileName();
-							switch(weekName) //I know this is a lot of duplicated code, but it's easier readable and you can add weeks with different names than the achievement tag
-							{
-								case 'week1':
-									if(achievementName == 'week1_nomiss') unlock = true;
-								case 'week2':
-									if(achievementName == 'week2_nomiss') unlock = true;
-								case 'week3':
-									if(achievementName == 'week3_nomiss') unlock = true;
-								case 'week4':
-									if(achievementName == 'week4_nomiss') unlock = true;
-								case 'week5':
-									if(achievementName == 'week5_nomiss') unlock = true;
-								case 'week6':
-									if(achievementName == 'week6_nomiss') unlock = true;
-								case 'week7':
-									if(achievementName == 'week7_nomiss') unlock = true;
-							}
-						}
 					case 'ur_bad':
 						if(ratingPercent < 0.2 && !practiceMode) {
 							unlock = true;

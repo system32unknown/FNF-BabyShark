@@ -90,6 +90,9 @@ class Note extends FlxSprite
 	public var distance:Float = 2000; //plan on doing scroll directions soon -bb
 
 	public var hitsoundDisabled:Bool = false;
+	
+	public var unfairNote:Bool = false;
+	public var LocalScrollSpeed:Float = 1;
 
 	private function set_multSpeed(value:Float):Float {
 		resizeByRatio(value / multSpeed);
@@ -148,6 +151,8 @@ class Note extends FlxSprite
 					noMissAnimation = true;
 				case 'GF Sing':
 					gfNote = true;
+				case 'Randomized Note':
+					unfairNote = true;
 			}
 			noteType = value;
 		}
@@ -199,7 +204,17 @@ class Note extends FlxSprite
 			}
 		}
 
-		// trace(prevNote);
+		if(unfairNote) {
+			var rng:FlxRandom = new FlxRandom();
+			if (rng.int(0, 120) == 1)
+			{
+				LocalScrollSpeed = 0.1;
+			}
+			else
+			{
+				LocalScrollSpeed = rng.float(1,3);
+			}
+		}
 
 		if(prevNote!=null)
 			prevNote.nextNote = this;
