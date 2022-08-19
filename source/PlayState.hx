@@ -1052,12 +1052,6 @@ class PlayState extends MusicBeatState
 		add(strumLineNotes);
 		add(grpNoteSplashes);
 
-		if(ClientPrefs.timeBarType == 'Song Name')
-		{
-			timeTxt.size = 24;
-			timeTxt.y += 3;
-		}
-
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
 		grpNoteSplashes.add(splash);
 		splash.alpha = 0.0;
@@ -3041,26 +3035,26 @@ class PlayState extends MusicBeatState
 
 		switch(ClientPrefs.IconBounceType) {
 			case "Vanilla": // Stolen from Vanilla Engine
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.50)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.50)));
-
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.5)));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.5)));
 			case "Psych":
 				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
 				iconP1.scale.set(mult, mult);
 
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
 				iconP2.scale.set(mult, mult);
-
 			case "Andromeda": // Stolen from Andromeda Engine
 				var mult:Int = Std.int(FlxMath.lerp(iconP1.width, 150, Main.adjustFPS(0.1)));
 				iconP1.setGraphicSize(mult);
 
 				var mult:Int = Std.int(FlxMath.lerp(iconP2.width, 150, Main.adjustFPS(0.1)));
 				iconP2.setGraphicSize(mult);
-
+			case "Micdup": // Stolen from FNF Mic'd Up
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, 0.09 / Main.adjustFPS(0.1))));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, 0.09 / Main.adjustFPS(0.1))));
 			case "DaveAndBambi": // Stolen from Dave And Bambi
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.8)),Std.int(FlxMath.lerp(150, iconP1.height, 0.8)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.8)),Std.int(FlxMath.lerp(150, iconP2.height, 0.8)));
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.8)), Std.int(FlxMath.lerp(150, iconP1.height, 0.8)));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.8)), Std.int(FlxMath.lerp(150, iconP2.height, 0.8)));
 
 			case "Custom":
 				callOnLuas('onBounceUpdate', []);
@@ -3137,8 +3131,6 @@ class PlayState extends MusicBeatState
 				{
 					songTime = (songTime + Conductor.songPosition) / 2;
 					Conductor.lastSongPos = Conductor.songPosition;
-					// Conductor.songPosition += FlxG.elapsed * 1000;
-					// trace('MISSED FRAME');
 				}
 
 				if(updateTime) {
@@ -3153,17 +3145,18 @@ class PlayState extends MusicBeatState
 					if(secondsTotal < 0) secondsTotal = 0;
 
 					if(ClientPrefs.timeBarType != 'Song Name')
-						switch (ClientPrefs.timeBarType){
+						switch (ClientPrefs.timeBarType) {
 							case 'Time Left' | 'Time Elapsed':
 								timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
 
 							case 'ElapsedPosition' | 'LeftPosition':
 								timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false) + " / " + FlxStringUtil.formatTime(Math.floor(songLength / 1000), false);
+
+							case 'NameLeft' | 'NameElapsed':
+								timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal, false) + ")";
 						}
 				}
 			}
-
-			// Conductor.lastSongPos = FlxG.sound.music.time;
 		}
 
 		if (camZooming)
@@ -4145,7 +4138,7 @@ class PlayState extends MusicBeatState
 					noteDiff = -(note.strumTime - Conductor.songPosition);
 				else
 					noteDiff = Conductor.safeZoneOffset;
-			case 'MicdUp' | 'Andromeda':
+			case 'Andromeda':
 				noteDiff = note.strumTime - Conductor.songPosition;
 		}
 
@@ -4687,16 +4680,6 @@ class PlayState extends MusicBeatState
 			RecalculateRating(true);
 
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
-			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
-			// FlxG.log.add('played imss note');
-
-			/*boyfriend.stunned = true;
-
-			// get stunned for 1/60 of a second, makes you able to
-			new FlxTimer().start(1 / 60, function(tmr:FlxTimer)
-			{
-				boyfriend.stunned = false;
-			});*/
 
 			if(boyfriend.hasMissAnimations) {
 				boyfriend.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss', true);
@@ -5150,8 +5133,11 @@ class PlayState extends MusicBeatState
 			case "DaveAndBambi":
 				var funny:Float = (healthBar.percent * 0.01) + 0.01;
 
-				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * funny)),Std.int(iconP2.height - (25 * funny)));
-				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))),Std.int(iconP2.height - (25 * (2 - funny))));
+				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * funny)), Std.int(iconP2.height - (25 * funny)));
+				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
+			case "Micdup":
+				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
+				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 			case "Custom":
 				callOnLuas('onBounceBeat', []);
 		}

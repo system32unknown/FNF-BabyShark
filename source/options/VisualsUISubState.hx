@@ -30,7 +30,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'timeBarType',
 			'string',
 			'Time Left',
-			['Time Left', 'Time Elapsed', 'Song Name', 'ElapsedPosition', 'LeftPosition', 'Disabled']);
+			['Time Left', 'Time Elapsed', 'Song Name', 'ElapsedPosition', 'LeftPosition', 'NameLeft', 'NameElapsed', 'Disabled']);
 		addOption(option);
 
 		var option:Option = new Option('Icon Bounce:',
@@ -38,7 +38,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'IconBounceType',
 			'string',
 			'Psych',
-			['Vanilla', 'Psych', 'Andromeda', 'DaveAndBambi', 'Custom']);
+			['Vanilla', 'Psych', 'Andromeda', 'DaveAndBambi', 'Micdup', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Flashing Lights',
