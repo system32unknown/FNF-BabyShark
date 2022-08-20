@@ -5126,7 +5126,7 @@ class PlayState extends MusicBeatState
 			notes.sort(FlxSort.byY, ClientPrefs.getPref('downScroll') ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		}
 		
-		switch (IconBounceType)
+		switch (IconBounceType) {
 			case 'Vanilla' | 'Andromeda':
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));

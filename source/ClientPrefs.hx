@@ -140,7 +140,10 @@ class ClientPrefs {
 	public static function saveSettings() {
 		var save:Dynamic = FlxG.save.data;
 
-		for (setting => value in prefs) Reflect.setField(save, setting, value);
+		for (setting => value in prefs) {
+			if (!separateSaves.contains(setting))
+				Reflect.setField(save, setting, value);
+		}
 		for (savedAs => map in mapData) {
 			if (!separateSaves.contains(savedAs))
 				Reflect.setField(save, savedAs, Reflect.field(map[0], map[1]));
@@ -171,7 +174,7 @@ class ClientPrefs {
 		var save:Dynamic = FlxG.save.data;
 		for (setting in prefs.keys()) {
 			var value:Dynamic = Reflect.getProperty(save, setting);
-			if (value != null) {
+			if (value != null && !separateSaves.contains(setting)) {
 				prefs.set(setting, value);
 				if (loadFunctions.exists(setting)) loadFunctions.get(setting)(value); // Call the load function
 			}
@@ -204,12 +207,12 @@ class ClientPrefs {
 				var data:Dynamic = Reflect.field(save.data, name);
 				if (data != null) {
 					if (prefs.exists(name)) {
-						prefs.set(prefs, name, data);
+						prefs.set(name, data);
 						continue;
 					}
 					if (mapData.exists(name)) {
 						var map:Array<Dynamic> = mapData.get(name);
-						var loadTo:Dynamic = Reflect.prefs.set(map[0], map[1]);
+						var loadTo:Dynamic = Reflect.field(map[0], map[1]);
 
 						for (name => value in cast(data, Map<Dynamic, Dynamic>)) {
 							if (loadTo.exists(name))

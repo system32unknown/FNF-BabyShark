@@ -109,7 +109,7 @@ class TitleState extends MusicBeatState
 		}
 
 		FlxG.mouse.visible = false;
-		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
+		if(ClientPrefs.getPref('flashing') == null && !FlashingState.leftState) {
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
@@ -190,7 +190,7 @@ class TitleState extends MusicBeatState
 			newTitle = true;
 			
 			titleText.animation.addByPrefix('idle', "ENTER IDLE", 24);
-			titleText.animation.addByPrefix('press', ClientPrefs.flashing ? "ENTER PRESSED" : "ENTER FREEZE", 24);
+			titleText.animation.addByPrefix('press', ClientPrefs.getPref('flashing') ? "ENTER PRESSED" : "ENTER FREEZE", 24);
 		}
 		else {
 			newTitle = false;
