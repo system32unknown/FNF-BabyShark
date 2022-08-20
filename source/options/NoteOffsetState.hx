@@ -30,7 +30,7 @@ class NoteOffsetState extends MusicBeatState
 	var dumbTexts:FlxTypedGroup<FlxText>;
 
 	var barPercent:Float = 0;
-	var delayMin:Int = 0;
+	var delayMin:Int = -500;
 	var delayMax:Int = 500;
 	var timeBarBG:FlxSprite;
 	var timeBar:FlxBar;
@@ -39,6 +39,9 @@ class NoteOffsetState extends MusicBeatState
 	var beatTween:FlxTween;
 
 	var changeModeText:FlxText;
+
+	var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
+	var comboOffset:Array<Int> = ClientPrefs.getPref('comboOffset');
 
 	override public function create()
 	{
@@ -97,8 +100,6 @@ class NoteOffsetState extends MusicBeatState
 		add(boyfriend);
 
 		// Combo stuff
-		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
-
 		coolText = new FlxText(0, 0, 0, '', 32);
 		coolText.screenCenter();
 		coolText.x = FlxG.width * 0.35;
@@ -108,7 +109,6 @@ class NoteOffsetState extends MusicBeatState
 		rating.setGraphicSize(Std.int(rating.width * 0.7));
 		rating.updateHitbox();
 		rating.antialiasing = globalAntialiasing;
-		
 		add(rating);
 
 		comboNums = new FlxSpriteGroup();
@@ -237,7 +237,6 @@ class NoteOffsetState extends MusicBeatState
 				FlxG.keys.justPressed.G
 			];
 
-			var comboOffset:Array<Int> = ClientPrefs.getPref('comboOffset');
 			if(controlArray.contains(true))
 			{
 				for (i in 0...controlArray.length)

@@ -48,7 +48,6 @@ import Conductor.Rating;
 
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
-import openfl.filters.ShaderFilter;
 #end
 
 #if sys
@@ -297,6 +296,21 @@ class PlayState extends MusicBeatState
 	private var controlArray:Array<String>;
 
 	var precacheList:Map<String, String> = new Map<String, String>();
+
+	private var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
+	private var downScroll:Bool = ClientPrefs.getPref('downScroll');
+	private var hideHud:Bool = ClientPrefs.getPref('hideHud');
+	private var healthBarAlpha:Float = ClientPrefs.getPref('healthBarAlpha');
+	private var ShowMaxCombo:Bool = ClientPrefs.getPref('ShowMaxCombo');
+	private var ShowJudgementCount:Bool = ClientPrefs.getPref('ShowJudgementCount');
+	private var NoAntiSpam:Bool = ClientPrefs.getPref('NoAntiSpam');
+	private var NoteDiffTypes:String = ClientPrefs.getPref('NoteDiffTypes');
+	private var RatingTypes:String = ClientPrefs.getPref('RatingTypes');
+	private var ShowLateEarly:Bool = ClientPrefs.getPref('ShowLateEarly');
+	private var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
+	private var ShowMsTiming:Bool = ClientPrefs.getPref('ShowMsTiming');
+	private var IconBounceType:String = ClientPrefs.getPref('IconBounceType');
+	private var WinningIcon:Bool = ClientPrefs.getPref('WinningIcon');
 
 	override public function create()
 	{
@@ -1133,11 +1147,6 @@ class PlayState extends MusicBeatState
 		FlxG.fixedTimestep = false;
 		moveCameraSection();
 
-		var downScroll:Bool = ClientPrefs.getPref('downScroll');
-
-		var hideHud:Bool = ClientPrefs.getPref('hideHud');
-		var healthBarAlpha:Float = ClientPrefs.getPref('healthBarAlpha');
-
 		healthBarBG = new AttachedSprite('healthBar');
 		healthBarBG.y = FlxG.height * 0.89;
 		healthBarBG.screenCenter(X);
@@ -1183,8 +1192,8 @@ class PlayState extends MusicBeatState
 		judgementCounter.scrollFactor.set();
 		judgementCounter.cameras = [camHUD];
 		judgementCounter.screenCenter(Y);
-		judgementCounter.text = (ClientPrefs.ShowMaxCombo ? 'Max Combos: ${MaxCombo}\n' : '') + 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
-		if (ClientPrefs.ShowJudgementCount) {
+		judgementCounter.text = (ShowMaxCombo ? 'Max Combos: ${MaxCombo}\n' : '') + 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		if (ShowJudgementCount) {
 			add(judgementCounter);
 		}
 
@@ -1292,8 +1301,7 @@ class PlayState extends MusicBeatState
 					FlxTween.tween(whiteScreen, {alpha: 0}, 1, {
 						startDelay: 0.1,
 						ease: FlxEase.linear,
-						onComplete: function(twn:FlxTween)
-						{
+						onComplete: function(twn:FlxTween) {
 							camHUD.visible = true;
 							remove(whiteScreen);
 							startCountdown();
@@ -1771,25 +1779,25 @@ class PlayState extends MusicBeatState
 
 		var tankman:FlxSprite = new FlxSprite(-20, 320);
 		tankman.frames = Paths.getSparrowAtlas('cutscenes/' + songName);
-		tankman.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		tankman.antialiasing = globalAntialiasing;
 		addBehindDad(tankman);
 		cutsceneHandler.push(tankman);
 
 		var tankman2:FlxSprite = new FlxSprite(16, 312);
-		tankman2.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		tankman2.antialiasing = globalAntialiasing;
 		tankman2.alpha = 0.000001;
 		cutsceneHandler.push(tankman2);
 		var gfDance:FlxSprite = new FlxSprite(gf.x - 107, gf.y + 140);
-		gfDance.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		gfDance.antialiasing = globalAntialiasing;
 		cutsceneHandler.push(gfDance);
 		var gfCutscene:FlxSprite = new FlxSprite(gf.x - 104, gf.y + 122);
-		gfCutscene.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		gfCutscene.antialiasing = globalAntialiasing;
 		cutsceneHandler.push(gfCutscene);
 		var picoCutscene:FlxSprite = new FlxSprite(gf.x - 849, gf.y - 264);
-		picoCutscene.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		picoCutscene.antialiasing = globalAntialiasing;
 		cutsceneHandler.push(picoCutscene);
 		var boyfriendCutscene:FlxSprite = new FlxSprite(boyfriend.x + 5, boyfriend.y + 20);
-		boyfriendCutscene.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		boyfriendCutscene.antialiasing = globalAntialiasing;
 		cutsceneHandler.push(boyfriendCutscene);
 
 		cutsceneHandler.finishCallback = function()
@@ -2145,7 +2153,7 @@ class PlayState extends MusicBeatState
 				introAssets.set('pixel', ['pixelUI/ready-pixel', 'pixelUI/set-pixel', 'pixelUI/date-pixel']);
 
 				var introAlts:Array<String> = introAssets.get('default');
-				var antialias:Bool = ClientPrefs.getPref('globalAntialiasing');
+				var antialias:Bool = globalAntialiasing;
 				if(isPixelStage) {
 					introAlts = introAssets.get('pixel');
 					antialias = false;
@@ -3034,7 +3042,7 @@ class PlayState extends MusicBeatState
 			openChartEditor();
 		}
 
-		switch(ClientPrefs.IconBounceType) {
+		switch(IconBounceType) {
 			case "Vanilla": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.5)));
@@ -3072,7 +3080,7 @@ class PlayState extends MusicBeatState
 		{
 			if (healthBar.percent < 20)
 				iconP1.animation.curAnim.curFrame = 1;
-			else if (healthBar.percent > 80 && ClientPrefs.WinningIcon)
+			else if (healthBar.percent > 80 && WinningIcon)
 				iconP1.animation.curAnim.curFrame = 2;
 			else
 				iconP1.animation.curAnim.curFrame = 0;
@@ -3087,7 +3095,7 @@ class PlayState extends MusicBeatState
 		{
 			if (healthBar.percent > 80)
 				iconP2.animation.curAnim.curFrame = 1;
-			else if (healthBar.percent < 20 && ClientPrefs.WinningIcon)
+			else if (healthBar.percent < 20 && WinningIcon)
 				iconP2.animation.curAnim.curFrame = 2;
 			else
 				iconP2.animation.curAnim.curFrame = 0;
@@ -4099,7 +4107,6 @@ class PlayState extends MusicBeatState
 	public var totalPlayed:Int = 0;
 	public var totalNotesHit:Float = 0.0;
 
-	public var showCombo:Bool = ClientPrefs.ShowCombo;
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
 
@@ -4127,7 +4134,7 @@ class PlayState extends MusicBeatState
 	private var noteDiff:Float = 0.0;
 	private function popUpScore(note:Note = null):Void
 	{
-		switch(ClientPrefs.NoteDiffTypes)
+		switch(NoteDiffTypes)
 		{
 			case 'Psych':
 				noteDiff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
@@ -4203,7 +4210,7 @@ class PlayState extends MusicBeatState
 		var comboOffset:Array<Int> = ClientPrefs.getPref('comboOffset');
 
 		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2));
-		if (ClientPrefs.RatingTypes == "Static"){
+		if (RatingTypes == "Static"){
 			rating.cameras = [camHUD];
 		}
 		rating.screenCenter();
@@ -4212,7 +4219,7 @@ class PlayState extends MusicBeatState
 		rating.acceleration.y = 550;
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
-		rating.visible = (!ClientPrefs.getPref('hideHud') && showRating);
+		rating.visible = (!hideHud && showRating);
 		rating.x += comboOffset[0];
 		rating.y -= comboOffset[1];
 
@@ -4220,25 +4227,25 @@ class PlayState extends MusicBeatState
 		{
 			timing.loadGraphic(Paths.image(pixelShitPart1 + daTiming.toLowerCase() + pixelShitPart2));
 		}
-		if (ClientPrefs.RatingTypes == "Static") {
+		if (RatingTypes == "Static") {
 			timing.cameras = [camHUD];
 		}
 		timing.screenCenter();
 		timing.x = rating.x - 120;
 		timing.y = rating.y + 80;
 		timing.acceleration.y = 550;
-		timing.visible = (!ClientPrefs.getPref('hideHud') && ClientPrefs.ShowLateEarly);
+		timing.visible = (!hideHud && ShowLateEarly);
 		timing.velocity.y -= FlxG.random.int(140, 175);
 		timing.velocity.x -= FlxG.random.int(0, 10);
 
-		if (ClientPrefs.ShowMsTiming) {
+		if (ShowMsTiming) {
 			var msTiming = CoolUtil.truncateFloat(noteDiff / 1.0, 3);
 	
 			MsTimingTxt.text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
 			MsTimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			MsTimingTxt.borderSize = 1;
-			MsTimingTxt.visible = (!ClientPrefs.getPref('hideHud') && ClientPrefs.ShowMsTiming);
-			if (ClientPrefs.RatingTypes == "Static"){
+			MsTimingTxt.visible = (!hideHud && ShowMsTiming);
+			if (RatingTypes == "Static"){
 				MsTimingTxt.cameras = [camHUD];
 			}
 	
@@ -4256,7 +4263,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
-		if (ClientPrefs.RatingTypes == "Static"){
+		if (RatingTypes == "Static"){
 			comboSpr.cameras = [camHUD];
 		}
 		comboSpr.screenCenter();
@@ -4264,11 +4271,11 @@ class PlayState extends MusicBeatState
 		comboSpr.acceleration.y = FlxG.random.int(200, 300);
 		comboSpr.velocity.y -= FlxG.random.int(140, 160);
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
-		comboSpr.visible = (!ClientPrefs.getPref('hideHud') && showCombo);
+		comboSpr.visible = (!hideHud && showCombo);
 		comboSpr.x += comboOffset[4];
 		comboSpr.y -= comboOffset[5];
 
-		if (ClientPrefs.ShowMsTiming) {
+		if (ShowMsTiming) {
 			MsTimingTxt.screenCenter();
 			if (showCombo) {
 				if (combo >= 10) {
@@ -4285,17 +4292,17 @@ class PlayState extends MusicBeatState
 			MsTimingTxt.updateHitbox();
 		}
 
-		if (daTiming != "" && ClientPrefs.ShowLateEarly)
+		if (daTiming != "" && ShowLateEarly)
 			add(timing);
 
 		if (!PlayState.isPixelStage)
 		{
 			rating.setGraphicSize(Std.int(rating.width * 0.7));
-			rating.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+			rating.antialiasing = globalAntialiasing;
 			comboSpr.setGraphicSize(Std.int(comboSpr.width * 0.7));
-			comboSpr.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+			comboSpr.antialiasing = globalAntialiasing;
 			timing.setGraphicSize(Std.int(timing.width * 0.7));
-			timing.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+			timing.antialiasing = globalAntialiasing;
 		}
 		else
 		{
@@ -4321,7 +4328,7 @@ class PlayState extends MusicBeatState
 		for (i in seperatedScore)
 		{
 			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
-			if (ClientPrefs.RatingTypes == "Static") {
+			if (RatingTypes == "Static") {
 				numScore.cameras = [camHUD];
 			}
 			numScore.screenCenter();
@@ -4333,7 +4340,7 @@ class PlayState extends MusicBeatState
 
 			if (!PlayState.isPixelStage)
 			{
-				numScore.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+				numScore.antialiasing = globalAntialiasing;
 				numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 			}
 			else
@@ -4370,17 +4377,16 @@ class PlayState extends MusicBeatState
 			startDelay: Conductor.crochet * 0.001
 		});
 
-		if (ClientPrefs.ShowLateEarly) {
+		if (ShowLateEarly) {
 			FlxTween.tween(timing, {alpha: 0}, 0.2, {
 				startDelay: Conductor.crochet * 0.001,
-				onComplete: function(tween:FlxTween)
-				{
+				onComplete: function(tween:FlxTween) {
 					timing.destroy();
 				}
 			});
 		}
 
-		if (ClientPrefs.ShowMsTiming) {
+		if (ShowMsTiming) {
 			if (MsTimingTween == null) {
 				MsTimingTween = FlxTween.tween(MsTimingTxt, {alpha: 0}, 0.2, {
 					startDelay: Conductor.crochet * 0.001
@@ -4411,7 +4417,6 @@ class PlayState extends MusicBeatState
 	{
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = getKeyFromEvent(eventKey);
-		//trace('Pressed: ' + eventKey);
 
 		if (!cpuControlled && startedCountdown && !paused && key > -1 && (FlxG.keys.checkStatus(eventKey, JUST_PRESSED) || ClientPrefs.getPref('controllerMode')))
 		{
@@ -4425,7 +4430,6 @@ class PlayState extends MusicBeatState
 
 				// heavily based on my own code LOL if it aint broke dont fix it
 				var pressNotes:Array<Note> = [];
-				//var notesDatas:Array<Int> = [];
 				var notesStopped:Bool = false;
 
 				var sortedNotesList:Array<Note> = [];
@@ -4436,11 +4440,7 @@ class PlayState extends MusicBeatState
 						{
 							sortedNotesList.push(daNote);
 						}
-						if (ClientPrefs.NoAntiSpam){
-							canMiss = false;
-						}else{
-							canMiss = true;
-						}
+						canMiss = !NoAntiSpam;
 					}
 				});
 				sortedNotesList.sort(sortHitNotes);
@@ -4581,7 +4581,6 @@ class PlayState extends MusicBeatState
 			else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * 0.0011 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 			{
 				boyfriend.dance();
-				//boyfriend.animation.curAnim.finish();
 			}
 		}
 
@@ -5127,8 +5126,7 @@ class PlayState extends MusicBeatState
 			notes.sort(FlxSort.byY, ClientPrefs.getPref('downScroll') ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		}
 		
-		switch (ClientPrefs.IconBounceType)
-		{
+		switch (IconBounceType)
 			case 'Vanilla' | 'Andromeda':
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
@@ -5404,7 +5402,7 @@ class PlayState extends MusicBeatState
 							}
 						}
 					case 'toastie':
-						if(ClientPrefs.getPref('lowQuality') && !ClientPrefs.globalAntialiasing && !ClientPrefs.getPref('shaders')) {
+						if(ClientPrefs.getPref('lowQuality') && !globalAntialiasing && !ClientPrefs.getPref('shaders')) {
 							unlock = true;
 						}
 					case 'debugger':
