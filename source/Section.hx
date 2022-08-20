@@ -11,19 +11,3 @@ typedef SwagSection =
 	var changeBPM:Bool;
 	var altAnim:Bool;
 }
-
-class Section
-{
-	public var sectionNotes:Array<Dynamic> = [];
-
-	public var sectionBeats:Float = 4;
-	public var gfSection:Bool = false;
-	public var typeOfSection:Int = 0;
-	public var mustHitSection:Bool = true;
-
-	public function new(sectionBeats:Float = 4)
-	{
-		this.sectionBeats = sectionBeats;
-		trace('test created section: ' + sectionBeats);
-	}
-}

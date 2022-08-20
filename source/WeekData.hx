@@ -8,8 +8,7 @@ import haxe.Json;
 
 using StringTools;
 
-typedef WeekFile =
-{
+typedef WeekFile = {
 	// JSON variables
 	var songs:Array<Dynamic>;
 	var weekCharacters:Array<String>;
