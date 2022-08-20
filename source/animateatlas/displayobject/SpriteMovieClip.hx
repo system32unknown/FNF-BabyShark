@@ -28,7 +28,6 @@ class SpriteMovieClip extends Sprite {
 	}
 
 	public function update(dt:Int) {
-		//
 		var frameDuration:Float = 1000 / framerate;
 		frameElapsed += dt;
 

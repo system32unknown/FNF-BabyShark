@@ -501,14 +501,12 @@ class EditorPlayState extends MusicBeatState
 	override public function onFocus():Void
 	{
 		vocals.play();
-
 		super.onFocus();
 	}
 	
 	override public function onFocusLost():Void
 	{
 		vocals.pause();
-
 		super.onFocusLost();
 	}
 
