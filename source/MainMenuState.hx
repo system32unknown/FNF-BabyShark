@@ -85,14 +85,16 @@ class MainMenuState extends MusicBeatState
 		WShader.waveSpeed = 0.8;
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
+		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
+
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('3dMenu'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
 		bg.screenCenter();
-		if (ClientPrefs.shaders)
+		if (ClientPrefs.getPref('shaders'))
 			bg.shader = WShader.shader;
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		bg.antialiasing = globalAntialiasing;
 		add(bg);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
@@ -129,7 +131,7 @@ class MainMenuState extends MusicBeatState
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
 			menuItem.scrollFactor.set(0, scr);
-			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			menuItem.antialiasing = globalAntialiasing;
 			menuItem.updateHitbox();
 			if (firstStart)
 				FlxTween.tween(menuItem, {y: (i * 140) + offset}, 1 + (i * 0.25), {
@@ -143,8 +145,6 @@ class MainMenuState extends MusicBeatState
 			else
 				menuItem.y = (i * 140) + offset;
 		}
-
-		
 
 		firstStart = false;
 
@@ -198,7 +198,7 @@ class MainMenuState extends MusicBeatState
 		var lerpVal:Float = CoolUtil.boundTo(elapsed * 7.5, 0, 1);
 		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 
-		if (ClientPrefs.shaders)
+		if (ClientPrefs.getPref('shaders'))
 			WShader.update(elapsed * 2);
 
 		if (!selectedSomethin)
@@ -222,37 +222,26 @@ class MainMenuState extends MusicBeatState
 				MusicBeatState.switchState(new TitleState());
 			}
 
-			if (controls.ACCEPT)
-			{
-				if (optionShit[curSelected] == 'donate')
-				{
+			if (controls.ACCEPT) {
+				if (optionShit[curSelected] == 'donate') {
 					CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
-				}
-				else
-				{
+				} else {
 					selectedSomethin = true;
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 
-					menuItems.forEach(function(spr:FlxSprite)
-					{
-						if (curSelected != spr.ID)
-						{
+					menuItems.forEach(function(spr:FlxSprite) {
+						if (curSelected != spr.ID) {
 							FlxTween.tween(spr, {alpha: 0}, 0.4, {
 								ease: FlxEase.quadOut,
-								onComplete: function(twn:FlxTween)
-								{
+								onComplete: function(twn:FlxTween) {
 									spr.kill();
 								}
 							});
-						}
-						else
-						{
-							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
-							{
+						} else {
+							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker) {
 								var daChoice:String = optionShit[curSelected];
 
-								switch (daChoice)
-								{
+								switch (daChoice) {
 									case 'story_mode':
 										MusicBeatState.switchState(new StoryMenuState());
 									case 'freeplay':
@@ -296,13 +285,11 @@ class MainMenuState extends MusicBeatState
 			if (curSelected < 0)
 				curSelected = menuItems.length - 1;
 		}
-		menuItems.forEach(function(spr:FlxSprite)
-		{
+		menuItems.forEach(function(spr:FlxSprite) {
 			spr.animation.play('idle');
 			spr.updateHitbox();
 
-			if (spr.ID == curSelected && finishedFunnyMove)
-			{
+			if (spr.ID == curSelected && finishedFunnyMove) {
 				spr.animation.play('selected');
 				var add:Float = 0;
 				if(menuItems.length > 4) {

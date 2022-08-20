@@ -32,9 +32,6 @@ class EditorLua {
 		LuaL.openlibs(lua);
 		Lua.init_callbacks(lua);
 
-		//trace('Lua version: ' + Lua.version());
-		//trace("LuaJIT version: " + Lua.versionJIT());
-
 		var result:Dynamic = LuaL.dofile(lua, script);
 		var resultStr:String = Lua.tostring(lua, result);
 		if(resultStr != null && result != 0) {
@@ -68,8 +65,8 @@ class EditorLua {
 			set('defaultOpponentStrumY' + i, 0);
 		}
 
-		set('downscroll', ClientPrefs.downScroll);
-		set('middlescroll', ClientPrefs.middleScroll);
+		set('downscroll', ClientPrefs.getPref('downScroll'));
+		set('middlescroll', ClientPrefs.getPref('middleScroll'));
 
 		//stuff 4 noobz like you B)
 		Lua_helper.add_callback(lua, "getProperty", function(variable:String) {

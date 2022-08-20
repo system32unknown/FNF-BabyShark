@@ -31,11 +31,12 @@ class FPS extends TextField
 		The current frame rate, expressed using frames-per-second
 	**/
 	public var currentFPS(default, null):Int;
+	private var memoryMegas:Float = 0;
+	private var peakMegas:Float = 0;
 
 	@:noCompletion private var cacheCount:Int;
 	@:noCompletion private var currentTime:Float;
 	@:noCompletion private var times:Array<Float>;
-	@:noCompletion private var peakMegas:Float = 0;
 
 	public function new(x:Float = 10, y:Float = 10, color:Int = 0x000000)
 	{
@@ -51,7 +52,6 @@ class FPS extends TextField
 		defaultTextFormat = new TextFormat("VCR OSD Mono", 14, color);
 		autoSize = LEFT;
 		multiline = true;
-		text = "FPS: ";
 
 		cacheCount = 0;
 		currentTime = 0;
@@ -80,22 +80,30 @@ class FPS extends TextField
 
 		var currentCount = times.length;
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
-		if (currentFPS > ClientPrefs.framerate) currentFPS = ClientPrefs.framerate;
+		if (currentFPS > ClientPrefs.getPref('framerate')) currentFPS = ClientPrefs.getPref('framerate');
 
-		if (currentCount != cacheCount /*&& visible*/)
+		if (currentCount != cacheCount)
 		{
-			text = "FPS: " + currentFPS;
-			var memoryMegas:Float = 0;
+			text = '';
+			text += (ClientPrefs.getPref('showFPS') ? "FPS: " + currentFPS + "\n" : "");
+			if (ClientPrefs.getPref('showMEM')) {
+				text += "MEM: " + memoryMegas + " MB\n";
+				text += "MEM Peak: " + peakMegas + " MB";
+			}
 			
 			#if openfl
 			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 			if (memoryMegas > peakMegas) peakMegas = memoryMegas;
-			text += "\nMEM: " + memoryMegas + " MB";
-			text += "\nMEM Peak: " + peakMegas + " MB";
 			#end
 
+			if (text != null || text != '')
+			{
+				if (Main.fpsVar != null)
+					Main.fpsVar.visible = ClientPrefs.getPref('showFPS');
+			}
+
 			textColor = 0xFFFFFFFF;
-			if (memoryMegas > 3000 || currentFPS <= ClientPrefs.framerate / 2)
+			if (memoryMegas > 3000 || currentFPS <= ClientPrefs.getPref('framerate') / 2)
 			{
 				textColor = 0xFFFF0000;
 			}

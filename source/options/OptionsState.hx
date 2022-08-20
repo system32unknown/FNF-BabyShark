@@ -49,7 +49,7 @@ class OptionsState extends MusicBeatState
 		bg.updateHitbox();
 
 		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
+		bg.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(bg);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();

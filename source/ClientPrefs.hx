@@ -6,44 +6,88 @@ import flixel.input.keyboard.FlxKey;
 import Controls;
 
 class ClientPrefs {
-	public static var downScroll:Bool = false;
-	public static var middleScroll:Bool = false;
-	public static var opponentStrums:Bool = true;
-	public static var showFPS:Bool = true;
-	public static var flashing:Bool = true;
-	public static var globalAntialiasing:Bool = true;
-	public static var noteSplashes:Bool = true;
-	public static var lowQuality:Bool = false;
-	public static var shaders:Bool = true;
-	public static var framerate:Int = 60;
-	public static var cursing:Bool = true;
-	public static var violence:Bool = true;
-	public static var camZooms:Bool = true;
-	public static var hideHud:Bool = false;
-	public static var ShowMsTiming:Bool = false;
-	public static var ShowCombo:Bool = false;
-	public static var ShowLateEarly:Bool = false;
-	public static var WinningIcon:Bool = false;
-	public static var ShowMaxCombo:Bool = false;
-	public static var NoteDiffTypes:String = "Psych";
-	public static var ShowJudgementCount:Bool = false;
-	public static var IconBounceType:String = 'Psych';
-	public static var RatingTypes:String = 'Static';
-	public static var NoAntiSpam:Bool = false;
-	public static var noteOffset:Int = 0;
-	public static var arrowHSV:Array<Array<Int>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
-	public static var ghostTapping:Bool = true;
-	public static var timeBarType:String = 'Time Left';
-	public static var scoreZoom:Bool = true;
-	public static var noReset:Bool = false;
-	public static var healthBarAlpha:Float = 1;
-	public static var controllerMode:Bool = false;
-	public static var hitsoundVolume:Float = 0;
-	public static var pauseMusic:String = 'Tea Time';
-	public static var checkForUpdates:Bool = true;
+	public static var prefs:Map<String, Dynamic> = [
+		'downscroll' => false,
+		'middlescroll' => false,
+		'opponentstrums' => true,
+		'showfps' => true,
+		'showMEM' => true,
+		'flashing' => true,
+		'globalAntialiasing' => true,
+		'noteSplashes' => true,
+		'lowQuality' => false,
+		'shaders' => true,
+		'framerate' => 60,
+		'camZooms' => true,
+		'hideHud' => false,
+		'ShowMsTiming' => false,
+		'ShowCombo' => false,
+		'ShowLateEarly' => false,
+		'WinningIcon' => false,
+		'ShowMaxCombo' => false,
+		'NoteDiffTypes' => "Psych",
+		'ShowJudgementCount' => false,
+		'IconBounceType' => 'Psych',
+		'RatingTypes' => 'Static',
+		'NoAntiSpam' => false,
+		'noteOffset' => 0,
+		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
+		'ghostTapping' => true,
+		'timeBarType' => 'Time Left',
+		'scoreZoom' => true,
+		'noReset' => false,
+		'healthBarAlpha' => 1,
+		'controllerMode' => false,
+		'hitsoundVolume' => 0,
+		'pauseMusic' => 'Tea Time',
+		// Gameplay settings
+		'comboOffset' => [0, 0, 0, 0],
+		'ratingOffset' => 0,
+		'sickWindow' => 45,
+		'goodWindow' => 90,
+		'badWindow' => 135,
+		'safeFrames' => 10
+	];
+
+	// For custom functions after the save data is loaded
+	public static var loadFunctions:Map<String, (Dynamic) -> Void> = [
+		'framerate' => function(framerate:Int) {
+			if (framerate > FlxG.drawFramerate) {
+				FlxG.updateFramerate = framerate;
+				FlxG.drawFramerate = framerate;
+			} else {
+				FlxG.drawFramerate = framerate;
+				FlxG.updateFramerate = framerate;
+			}
+		},
+		'customControls' => function(controls:Map<String, Array<FlxKey>>) {
+			reloadControls();
+		}
+	];
+
+	// Flixel data to load, i.e 'mute' or 'volume'
+	public static var flixelData:Map<String, String> = [
+		'volume' => 'volume',
+		'mute' => 'muted'
+	];
+
+	// Maps like gameplaySettings
+	public static var mapData:Map<String, Array<Dynamic>> = [
+		'gameplaySettings' => [ClientPrefs, 'gameplaySettings'],
+		'customControls' => [ClientPrefs, 'keyBinds'],
+
+		'achievementsMap' => [Achievements, 'achievementsMap'],
+		'henchmenDeath' => [Achievements, 'henchmenDeath']
+	];
+
+	// For stuff that needs to be in the controls_v2 save
+	public static var separateSaves:Array<String> = [
+		'customControls'
+	];
+
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
-		'scrolltype' => 'multiplicative', 
+		'scrolltype' => 'multiplicative',
 		// anyone reading this, amod is multiplicative speed mod, cmod is constant speed mod, and xmod is bpm based speed mod.
 		// an amod example would be chartSpeed * multiplier
 		// cmod would just be constantSpeed = chartSpeed
@@ -61,13 +105,6 @@ class ClientPrefs {
 		'botplay' => false,
 		'opponentplay' => false
 	];
-
-	public static var comboOffset:Array<Int> = [0, 0, 0, 0, 0, 0];
-	public static var ratingOffset:Int = 0;
-	public static var sickWindow:Int = 45;
-	public static var goodWindow:Int = 90;
-	public static var badWindow:Int = 135;
-	public static var safeFrames:Float = 10;
 
 	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
@@ -98,232 +135,101 @@ class ClientPrefs {
 
 	public static function loadDefaultKeys() {
 		defaultKeys = keyBinds.copy();
-		//trace(defaultKeys);
 	}
 
 	public static function saveSettings() {
-		FlxG.save.data.downScroll = downScroll;
-		FlxG.save.data.middleScroll = middleScroll;
-		FlxG.save.data.opponentStrums = opponentStrums;
-		FlxG.save.data.showFPS = showFPS;
-		FlxG.save.data.flashing = flashing;
-		FlxG.save.data.globalAntialiasing = globalAntialiasing;
-		FlxG.save.data.noteSplashes = noteSplashes;
-		FlxG.save.data.lowQuality = lowQuality;
-		FlxG.save.data.shaders = shaders;
-		FlxG.save.data.framerate = framerate;
-		//FlxG.save.data.cursing = cursing;
-		//FlxG.save.data.violence = violence;
-		FlxG.save.data.camZooms = camZooms;
-		FlxG.save.data.noteOffset = noteOffset;
-		FlxG.save.data.hideHud = hideHud;
-		FlxG.save.data.arrowHSV = arrowHSV;
-		FlxG.save.data.ghostTapping = ghostTapping;
-		FlxG.save.data.timeBarType = timeBarType;
-		FlxG.save.data.scoreZoom = scoreZoom;
-		FlxG.save.data.noReset = noReset;
-		FlxG.save.data.healthBarAlpha = healthBarAlpha;
-		FlxG.save.data.comboOffset = comboOffset;
-		FlxG.save.data.achievementsMap = Achievements.achievementsMap;
-		FlxG.save.data.henchmenDeath = Achievements.henchmenDeath;
-		FlxG.save.data.ShowMsTiming = ShowMsTiming;
-		FlxG.save.data.ShowCombo = ShowCombo;
-		FlxG.save.data.ShowLateEarly = ShowLateEarly;
-		FlxG.save.data.WinningIcon = WinningIcon;
-		FlxG.save.data.NoteDiffTypes = NoteDiffTypes;
-		FlxG.save.data.ShowJudgementCount = ShowJudgementCount;
-		FlxG.save.data.IconBounceType = IconBounceType;
-		FlxG.save.data.ShowMaxCombo = ShowMaxCombo;
-		FlxG.save.data.NoAntiSpam = NoAntiSpam;
-		FlxG.save.data.RatingTypes = RatingTypes;
-		FlxG.save.data.ratingOffset = ratingOffset;
-		FlxG.save.data.sickWindow = sickWindow;
-		FlxG.save.data.goodWindow = goodWindow;
-		FlxG.save.data.badWindow = badWindow;
-		FlxG.save.data.safeFrames = safeFrames;
-		FlxG.save.data.gameplaySettings = gameplaySettings;
-		FlxG.save.data.controllerMode = controllerMode;
-		FlxG.save.data.hitsoundVolume = hitsoundVolume;
-		FlxG.save.data.pauseMusic = pauseMusic;
-		FlxG.save.data.checkForUpdates = checkForUpdates;
+		var save:Dynamic = FlxG.save.data;
+
+		for (setting => value in prefs) Reflect.setField(save, setting, value);
+		for (savedAs => map in mapData) {
+			if (!separateSaves.contains(savedAs))
+				Reflect.setField(save, savedAs, Reflect.field(map[0], map[1]));
+		}
 	
 		FlxG.save.flush();
 
 		var save:FlxSave = new FlxSave();
 		save.bind('controls_v2', 'ninjamuffin99'); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
-		save.data.customControls = keyBinds;
+
+		for (name in separateSaves) {
+			if (prefs.exists(name)) {
+				Reflect.setField(save.data, name, prefs.get(name));
+				continue;
+			}
+			if (mapData.exists(name)) {
+				var map:Array<Dynamic> = mapData.get(name);
+				Reflect.setField(save.data, name, Reflect.field(map[0], map[1]));
+				continue;
+			}
+		}
+
 		save.flush();
 		FlxG.log.add("Settings saved!");
 	}
 
 	public static function loadPrefs() {
-		if(FlxG.save.data.downScroll != null) {
-			downScroll = FlxG.save.data.downScroll;
-		}
-		if(FlxG.save.data.middleScroll != null) {
-			middleScroll = FlxG.save.data.middleScroll;
-		}
-		if(FlxG.save.data.opponentStrums != null) {
-			opponentStrums = FlxG.save.data.opponentStrums;
-		}
-		if(FlxG.save.data.showFPS != null) {
-			showFPS = FlxG.save.data.showFPS;
-			if(Main.fpsVar != null) {
-				Main.fpsVar.visible = showFPS;
-			}
-		}
-		if(FlxG.save.data.flashing != null) {
-			flashing = FlxG.save.data.flashing;
-		}
-		if(FlxG.save.data.globalAntialiasing != null) {
-			globalAntialiasing = FlxG.save.data.globalAntialiasing;
-		}
-		if(FlxG.save.data.noteSplashes != null) {
-			noteSplashes = FlxG.save.data.noteSplashes;
-		}
-		if(FlxG.save.data.lowQuality != null) {
-			lowQuality = FlxG.save.data.lowQuality;
-		}
-		if(FlxG.save.data.shaders != null) {
-			shaders = FlxG.save.data.shaders;
-		}
-		if(FlxG.save.data.framerate != null) {
-			framerate = FlxG.save.data.framerate;
-			if(framerate > FlxG.drawFramerate) {
-				FlxG.updateFramerate = framerate;
-				FlxG.drawFramerate = framerate;
-			} else {
-				FlxG.drawFramerate = framerate;
-				FlxG.updateFramerate = framerate;
-			}
-		}
-		/*if(FlxG.save.data.cursing != null) {
-			cursing = FlxG.save.data.cursing;
-		}
-		if(FlxG.save.data.violence != null) {
-			violence = FlxG.save.data.violence;
-		}*/
-		if(FlxG.save.data.NoteDiffTypes != null) {
-			NoteDiffTypes = FlxG.save.data.NoteDiffTypes;
-		}
-		if(FlxG.save.data.camZooms != null) {
-			camZooms = FlxG.save.data.camZooms;
-		}
-		if(FlxG.save.data.hideHud != null) {
-			hideHud = FlxG.save.data.hideHud;
-		}
-		if(FlxG.save.data.noteOffset != null) {
-			noteOffset = FlxG.save.data.noteOffset;
-		}
-		if(FlxG.save.data.arrowHSV != null) {
-			arrowHSV = FlxG.save.data.arrowHSV;
-		}
-		if(FlxG.save.data.ghostTapping != null) {
-			ghostTapping = FlxG.save.data.ghostTapping;
-		}
-		if(FlxG.save.data.timeBarType != null) {
-			timeBarType = FlxG.save.data.timeBarType;
-		}
-		if(FlxG.save.data.ShowMaxCombo != null) {
-			ShowMaxCombo = FlxG.save.data.ShowMaxCombo;
-		}
-		if(FlxG.save.data.scoreZoom != null) {
-			scoreZoom = FlxG.save.data.scoreZoom;
-		}
-		if(FlxG.save.data.ShowMsTiming != null) {
-			ShowMsTiming = FlxG.save.data.ShowMsTiming;
-		}
-		if(FlxG.save.data.ShowCombo != null) {
-			ShowCombo = FlxG.save.data.ShowCombo;
-		}
-		if(FlxG.save.data.ShowLateEarly != null) {
-			ShowLateEarly = FlxG.save.data.ShowLateEarly;
-		}
-		if(FlxG.save.data.WinningIcon != null) {
-			WinningIcon = FlxG.save.data.WinningIcon;
-		}
-		if(FlxG.save.data.ShowJudgementCount != null) {
-			ShowJudgementCount = FlxG.save.data.ShowJudgementCount;
-		}
-		if(FlxG.save.data.IconBounceType != null) {
-			IconBounceType = FlxG.save.data.IconBounceType;
-		}
-		if(FlxG.save.data.NoAntiSpam != null) {
-			NoAntiSpam = FlxG.save.data.NoAntiSpam;
-		}
-		if(FlxG.save.data.RatingTypes != null) {
-			RatingTypes = FlxG.save.data.RatingTypes;
-		}
-		if(FlxG.save.data.noReset != null) {
-			noReset = FlxG.save.data.noReset;
-		}
-		if(FlxG.save.data.healthBarAlpha != null) {
-			healthBarAlpha = FlxG.save.data.healthBarAlpha;
-		}
-		if(FlxG.save.data.comboOffset != null) {
-			comboOffset = FlxG.save.data.comboOffset;
-		}
-		
-		if(FlxG.save.data.ratingOffset != null) {
-			ratingOffset = FlxG.save.data.ratingOffset;
-		}
-		if(FlxG.save.data.sickWindow != null) {
-			sickWindow = FlxG.save.data.sickWindow;
-		}
-		if(FlxG.save.data.goodWindow != null) {
-			goodWindow = FlxG.save.data.goodWindow;
-		}
-		if(FlxG.save.data.badWindow != null) {
-			badWindow = FlxG.save.data.badWindow;
-		}
-		if(FlxG.save.data.safeFrames != null) {
-			safeFrames = FlxG.save.data.safeFrames;
-		}
-		if(FlxG.save.data.controllerMode != null) {
-			controllerMode = FlxG.save.data.controllerMode;
-		}
-		if(FlxG.save.data.hitsoundVolume != null) {
-			hitsoundVolume = FlxG.save.data.hitsoundVolume;
-		}
-		if(FlxG.save.data.pauseMusic != null) {
-			pauseMusic = FlxG.save.data.pauseMusic;
-		}
-		if(FlxG.save.data.gameplaySettings != null)
-		{
-			var savedMap:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
-			for (name => value in savedMap)
-			{
-				gameplaySettings.set(name, value);
+		var save:Dynamic = FlxG.save.data;
+		for (setting in prefs.keys()) {
+			var value:Dynamic = Reflect.getProperty(save, setting);
+			if (value != null) {
+				prefs.set(setting, value);
+				if (loadFunctions.exists(setting)) loadFunctions.get(setting)(value); // Call the load function
 			}
 		}
 		
-		// flixel automatically saves your volume!
-		if(FlxG.save.data.volume != null)
-		{
-			FlxG.sound.volume = FlxG.save.data.volume;
+		for (setting => name in flixelData) {
+			var value:Dynamic = Reflect.field(save, setting);
+			if (value != null) Reflect.setField(FlxG.sound, name, value);
 		}
-		if (FlxG.save.data.mute != null)
-		{
-			FlxG.sound.muted = FlxG.save.data.mute;
-		}
-		if (FlxG.save.data.checkForUpdates != null)
-		{
-			checkForUpdates = FlxG.save.data.checkForUpdates;
+
+		for (savedAs => map in mapData) {
+			if (!separateSaves.contains(savedAs)) {
+				var data:Map<Dynamic, Dynamic> = Reflect.field(save, savedAs);
+				if (data != null) {
+					var loadTo:Dynamic = Reflect.field(map[0], map[1]);
+					for (name => value in data) {
+						if (loadTo.exists(name))
+							loadTo.set(name, value);
+					}
+					if (loadFunctions.exists(savedAs)) loadFunctions.get(savedAs)(loadTo); // Call the load function
+				}
+			}
 		}
 
 		var save:FlxSave = new FlxSave();
 		save.bind('controls_v2', 'ninjamuffin99');
-		if(save != null && save.data.customControls != null) {
-			var loadedControls:Map<String, Array<FlxKey>> = save.data.customControls;
-			for (control => keys in loadedControls) {
-				keyBinds.set(control, keys);
+		if (save != null)
+		{
+			for (name in separateSaves) {
+				var data:Dynamic = Reflect.field(save.data, name);
+				if (data != null) {
+					if (prefs.exists(name)) {
+						prefs.set(prefs, name, data);
+						continue;
+					}
+					if (mapData.exists(name)) {
+						var map:Array<Dynamic> = mapData.get(name);
+						var loadTo:Dynamic = Reflect.prefs.set(map[0], map[1]);
+
+						for (name => value in cast(data, Map<Dynamic, Dynamic>)) {
+							if (loadTo.exists(name))
+								loadTo.set(name, value);
+						}
+						if (loadFunctions.exists(name)) loadFunctions.get(name)(loadTo); // Call the load function
+						continue;
+					}
+				}
 			}
-			reloadControls();
 		}
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic):Dynamic {
-		return /*PlayState.isStoryMode ? defaultValue : */ (gameplaySettings.exists(name) ? gameplaySettings.get(name) : defaultValue);
+		return (gameplaySettings.exists(name) ? gameplaySettings.get(name) : defaultValue);
+	}
+
+	inline public static function getPref(name:String, ?defaultValue:Dynamic):Dynamic {
+		if (prefs.exists(name)) return prefs.get(name);
+		return defaultValue;
 	}
 
 	public static function reloadControls() {
@@ -338,13 +244,13 @@ class ClientPrefs {
 	}
 	public static function copyKey(arrayToCopy:Array<FlxKey>):Array<FlxKey> {
 		var copiedArray:Array<FlxKey> = arrayToCopy.copy();
-		var i:Int = 0;
 		var len:Int = copiedArray.length;
+		var i:Int = 0;
 
 		while (i < len) {
-			if(copiedArray[i] == NONE) {
+			if (copiedArray[i] == NONE) {
 				copiedArray.remove(NONE);
-				--i;
+				i--;
 			}
 			i++;
 			len = copiedArray.length;

@@ -13,12 +13,18 @@ class MiscellaneousSubState extends BaseOptionsMenu
 
 		#if !mobile
 		var option:Option = new Option('FPS Counter',
-			'If unchecked, hides FPS Counter.',
+			'If unchecked, hides the FPS Counter.',
 			'showFPS',
 			'bool',
 			true);
 		addOption(option);
-		option.onChange = onChangeFPSCounter;
+
+		var option:Option = new Option('Memory Counter',
+			'If unchecked, hides the Memory Counter.',
+			'showMEM',
+			'bool',
+			true);
+		addOption(option);
 		#end
 
 		var option:Option = new Option('Flashing Lights',
@@ -30,12 +36,4 @@ class MiscellaneousSubState extends BaseOptionsMenu
 
 		super();
 	}
-
-	#if !mobile
-	function onChangeFPSCounter()
-	{
-		if(Main.fpsVar != null)
-			Main.fpsVar.visible = ClientPrefs.showFPS;
-	}
-	#end
 }

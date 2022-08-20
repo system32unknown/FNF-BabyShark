@@ -85,7 +85,7 @@ class Character extends FlxSprite
 		#end
 		curCharacter = character;
 		this.isPlayer = isPlayer;
-		antialiasing = ClientPrefs.globalAntialiasing;
+		antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		var library:String = null;
 		switch (curCharacter)
 		{
@@ -151,7 +151,6 @@ class Character extends FlxSprite
 				}
 
 				switch (spriteType){
-					
 					case "packer":
 						frames = Paths.getPackerAtlas(json.image);
 					
