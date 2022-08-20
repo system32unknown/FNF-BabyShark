@@ -13,16 +13,16 @@ import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
+import flixel.util.FlxColor;
+import flixel.util.FlxSave;
+import openfl.utils.Assets;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
-import flixel.util.FlxColor;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import openfl.display.BlendMode;
-import openfl.utils.Assets;
 import flixel.math.FlxMath;
-import flixel.util.FlxSave;
 import flixel.addons.transition.FlxTransitionableState;
 
 #if !flash

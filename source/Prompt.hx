@@ -1,5 +1,5 @@
 package;
-import flixel.*;
+import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIPopup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;

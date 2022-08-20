@@ -1,5 +1,6 @@
 package;
 
+import WiggleEffect.WiggleEffectType;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -18,6 +19,7 @@ import flixel.util.FlxColor;
 import Achievements;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
+import WiggleEffect;
 
 using StringTools;
 
@@ -37,14 +39,15 @@ class MainMenuState extends MusicBeatState
 		#if MODS_ALLOWED 'mods', #end
 		#if ACHIEVEMENTS_ALLOWED 'awards', #end
 		'credits',
-		#if !switch 'donate', #end
+		//#if !switch 'donate', #end
 		'options'
 	];
 
-	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
+
+	var WShader:WiggleEffect = new WiggleEffect();
 
 	//Stolen from Kade Engine
 	public static var firstStart:Bool = true;
@@ -76,12 +79,19 @@ class MainMenuState extends MusicBeatState
 
 		persistentUpdate = persistentDraw = true;
 
+		WShader.effectType = WiggleEffectType.HEAT_WAVE_HORIZONTAL;
+		WShader.waveAmplitude = 0.01;
+		WShader.waveFrequency = 60;
+		WShader.waveSpeed = 0.8;
+
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('3dMenu'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
 		bg.screenCenter();
+		if (ClientPrefs.shaders)
+			bg.shader = WShader.shader;
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 
@@ -90,38 +100,37 @@ class MainMenuState extends MusicBeatState
 		add(camFollow);
 		add(camFollowPos);
 
-		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
-		magenta.scrollFactor.set(0, yScroll);
-		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
-		magenta.updateHitbox();
-		magenta.screenCenter();
-		magenta.visible = false;
-		magenta.antialiasing = ClientPrefs.globalAntialiasing;
-		magenta.color = 0xFFfd719b;
-		add(magenta);
+		var menuCover:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width - 480, FlxG.height * 2);
+		menuCover.alpha = 0.5;
+		menuCover.color = FlxColor.WHITE;
+		menuCover.scrollFactor.set();
+		add(menuCover);
+
+		var menuCover:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width - 500, FlxG.height * 2);
+		menuCover.alpha = 0.7;
+		menuCover.color = FlxColor.BLACK;
+		menuCover.scrollFactor.set();
+		add(menuCover);
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
-		var scale:Float = 1;
-
 		for (i in 0...optionShit.length)
 		{
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
-			var menuItem:FlxSprite = new FlxSprite(0, FlxG.height * 1.6);
-			menuItem.scale.x = scale;
-			menuItem.scale.y = scale;
+			var menuItem:FlxSprite = new FlxSprite(100, FlxG.height * 1.6);
 			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
-			menuItem.screenCenter(X);
+			//menuItem.screenCenter(X);
 			menuItems.add(menuItem);
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
 			menuItem.scrollFactor.set(0, scr);
 			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			menuItem.updateHitbox();
 			if (firstStart)
 				FlxTween.tween(menuItem, {y: (i * 140) + offset}, 1 + (i * 0.25), {
 					ease: FlxEase.expoInOut,
@@ -133,21 +142,20 @@ class MainMenuState extends MusicBeatState
 				});
 			else
 				menuItem.y = (i * 140) + offset;
-			menuItem.updateHitbox();
 		}
+
+		
 
 		firstStart = false;
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(10, FlxG.height - 44, 0, "Altertoriel Engine (PE v" + psychEngineVersion + ")", 12);
+		var versionShit:FlxText = new FlxText(FlxG.width - 280, FlxG.height - 36, 0, 
+			'Altertoriel Engine (PE v$psychEngineVersion)\n' +
+			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
+			12);
 		versionShit.scrollFactor.set();
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(versionShit);
-
-		var versionShit:FlxText = new FlxText(10, FlxG.height - 24, 0, "Baby Shark's Funkin' v" + BabySharkVersion, 12);
-		versionShit.scrollFactor.set();
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
 
 		changeItem();
@@ -190,6 +198,9 @@ class MainMenuState extends MusicBeatState
 		var lerpVal:Float = CoolUtil.boundTo(elapsed * 7.5, 0, 1);
 		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 
+		if (ClientPrefs.shaders)
+			WShader.update(elapsed * 2);
+
 		if (!selectedSomethin)
 		{
 			if (controls.UI_UP_P)
@@ -221,8 +232,6 @@ class MainMenuState extends MusicBeatState
 				{
 					selectedSomethin = true;
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-
-					if(ClientPrefs.flashing) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
 					menuItems.forEach(function(spr:FlxSprite)
 					{
@@ -274,11 +283,6 @@ class MainMenuState extends MusicBeatState
 		}
 
 		super.update(elapsed);
-
-		menuItems.forEach(function(spr:FlxSprite)
-		{
-			spr.screenCenter(X);
-		});
 	}
 
 	function changeItem(huh:Int = 0)
