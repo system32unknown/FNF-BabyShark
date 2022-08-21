@@ -79,7 +79,7 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		WShader.effectType = WiggleEffectType.HEAT_WAVE_HORIZONTAL;
-		WShader.waveAmplitude = 0.01;
+		WShader.waveAmplitude = 0.001;
 		WShader.waveFrequency = 60;
 		WShader.waveSpeed = 0.8;
 
