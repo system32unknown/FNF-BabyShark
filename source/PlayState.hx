@@ -241,13 +241,14 @@ class PlayState extends MusicBeatState
 
 	public var songScore:Int = 0;
 	public var botScore:Int = 0;
+
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
 	var scoreTxtTween:FlxTween;
-	var MsTimingTxt:FlxText = new FlxText(0, 0, 0, "NaN ms", 22);
+	var MsTimingTxt:FlxText = new FlxText(0, 0, 0, "0 ms", 22);
 	var MsTimingTween:FlxTween;
 
 	public static var campaignScore:Int = 0;
@@ -311,6 +312,7 @@ class PlayState extends MusicBeatState
 	private var ShowMsTiming:Bool = ClientPrefs.getPref('ShowMsTiming');
 	private var IconBounceType:String = ClientPrefs.getPref('IconBounceType');
 	private var WinningIcon:Bool = ClientPrefs.getPref('WinningIcon');
+	private var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 
 	override public function create()
 	{
@@ -402,12 +404,9 @@ class PlayState extends MusicBeatState
 		storyDifficultyText = CoolUtil.difficulties[storyDifficulty];
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
-		if (isStoryMode)
-		{
+		if (isStoryMode) {
 			detailsText = "Story Mode: " + WeekData.getCurrentWeek().weekName;
-		}
-		else
-		{
+		} else {
 			detailsText = "Freeplay";
 		}
 
@@ -492,7 +491,6 @@ class PlayState extends MusicBeatState
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
-		var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 		switch (curStage)
 		{
 			case 'stage': //Week 1
@@ -1906,7 +1904,6 @@ class PlayState extends MusicBeatState
 				tankman2.frames = Paths.getSparrowAtlas('cutscenes/stress2');
 				addBehindDad(tankman2);
 
-				var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 				if (!lowQuality)
 				{
 					gfDance.frames = Paths.getSparrowAtlas('characters/gfTankmen');
@@ -2868,7 +2865,6 @@ class PlayState extends MusicBeatState
 	{
 		callOnLuas('onUpdate', [elapsed]);
 
-		var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 		switch (curStage)
 		{
 			case 'tank':
@@ -5152,7 +5148,6 @@ class PlayState extends MusicBeatState
 			dad.dance();
 		}
 
-		var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 		switch (curStage)
 		{
 			case 'tank':
