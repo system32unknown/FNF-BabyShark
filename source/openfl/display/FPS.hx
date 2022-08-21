@@ -99,7 +99,7 @@ class FPS extends TextField
 			if (text != null || text != '')
 			{
 				if (Main.fpsVar != null)
-					Main.fpsVar.visible = ClientPrefs.getPref('showFPS');
+					Main.fpsVar.visible = true;
 			}
 
 			textColor = 0xFFFFFFFF;
