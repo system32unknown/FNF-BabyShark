@@ -7,10 +7,10 @@ import Controls;
 
 class ClientPrefs {
 	public static var prefs:Map<String, Dynamic> = [
-		'downscroll' => false,
-		'middlescroll' => false,
-		'opponentstrums' => true,
-		'showfps' => true,
+		'downScroll' => false,
+		'middleScroll' => false,
+		'opponentStrums' => true,
+		'showFPS' => true,
 		'showMEM' => true,
 		'flashing' => true,
 		'globalAntialiasing' => true,
@@ -236,7 +236,7 @@ class ClientPrefs {
 	}
 
 	public static function reloadControls() {
-		PlayerSettings.player1.controls.setKeyboardScheme(KeyboardScheme.Solo);
+		PlayerSettings.player.controls.setKeyboardScheme(KeyboardScheme.Solo);
 
 		TitleState.muteKeys = copyKey(keyBinds.get('volume_mute'));
 		TitleState.volumeDownKeys = copyKey(keyBinds.get('volume_down'));

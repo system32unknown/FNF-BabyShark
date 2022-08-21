@@ -34,7 +34,6 @@ class Main extends Sprite
 	public static var fpsVar:FPS;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
-
 	public static function main():Void
 	{
 		Lib.current.addChild(new Main());
@@ -44,12 +43,9 @@ class Main extends Sprite
 	{
 		super();
 
-		if (stage != null)
-		{
+		if (stage != null) {
 			init();
-		}
-		else
-		{
+		} else {
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 	}

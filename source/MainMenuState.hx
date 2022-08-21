@@ -1,6 +1,6 @@
 package;
 
-import WiggleEffect.WiggleEffectType;
+import WiggleEffect.*;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -19,7 +19,6 @@ import flixel.util.FlxColor;
 import Achievements;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
-import WiggleEffect;
 
 using StringTools;
 
@@ -79,8 +78,8 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		WShader.effectType = WiggleEffectType.HEAT_WAVE_HORIZONTAL;
-		WShader.waveAmplitude = 0.001;
-		WShader.waveFrequency = 60;
+		WShader.waveAmplitude = 0.01;
+		WShader.waveFrequency = 80;
 		WShader.waveSpeed = 0.8;
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
@@ -125,7 +124,6 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
-			//menuItem.screenCenter(X);
 			menuItems.add(menuItem);
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;

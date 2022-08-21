@@ -24,8 +24,7 @@ class DiscordClient
 		});
 		trace("Discord Client started.");
 
-		while (true)
-		{
+		while (true) {
 			DiscordRpc.process();
 			sleep(2);
 		}
@@ -60,8 +59,7 @@ class DiscordClient
 
 	public static function initialize()
 	{
-		var DiscordDaemon = sys.thread.Thread.create(() ->
-		{
+		var DiscordDaemon = sys.thread.Thread.create(() -> {
 			new DiscordClient();
 		});
 		trace("Discord Client initialized");

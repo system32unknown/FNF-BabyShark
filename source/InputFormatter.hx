@@ -71,14 +71,10 @@ class InputFormatter {
 				return ",";
 			case PERIOD:
 				return ".";
-			//case SLASH:
-			//	return "/";
 			case GRAVEACCENT:
 				return "`";
 			case LBRACKET:
 				return "[";
-			//case BACKSLASH:
-			//	return "\\";
 			case RBRACKET:
 				return "]";
 			case QUOTE:

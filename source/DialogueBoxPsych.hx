@@ -274,8 +274,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 	var scrollSpeed = 4500;
 	var daText:Alphabet = null;
 	var ignoreThisFrame:Bool = true; //First frame is reserved for loading dialogue images
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		if(ignoreThisFrame) {
 			ignoreThisFrame = false;
 			super.update(elapsed);
@@ -286,7 +285,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 			bgFade.alpha += 0.5 * elapsed;
 			if(bgFade.alpha > 0.5) bgFade.alpha = 0.5;
 
-			if(PlayerSettings.player1.controls.ACCEPT) {
+			if(PlayerSettings.player.controls.ACCEPT) {
 				if(!daText.finishedText) {
 					if(daText != null) {
 						daText.killTheTimer();
@@ -324,7 +323,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 					startNextDialog();
 				}
 				FlxG.sound.play(Paths.sound('dialogueClose'));
-			} else if(daText.finishedText) {
+			} else if (daText.finishedText) {
 				var char:DialogueCharacter = arrayCharacters[lastCharacter];
 				if(char != null && char.animation.curAnim != null && char.animationIsLoop() && char.animation.finished) {
 					char.playAnim(char.animation.curAnim.name, true);
@@ -386,14 +385,14 @@ class DialogueBoxPsych extends FlxSpriteGroup
 				}
 			}
 		} else { //Dialogue ending
-			if(box != null && box.animation.curAnim.curFrame <= 0) {
+			if (box != null && box.animation.curAnim.curFrame <= 0) {
 				box.kill();
 				remove(box);
 				box.destroy();
 				box = null;
 			}
 
-			if(bgFade != null) {
+			if (bgFade != null) {
 				bgFade.alpha -= 0.5 * elapsed;
 				if(bgFade.alpha <= 0) {
 					bgFade.kill();
@@ -405,7 +404,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 
 			for (i in 0...arrayCharacters.length) {
 				var leChar:DialogueCharacter = arrayCharacters[i];
-				if(leChar != null) {
+				if (leChar != null) {
 					switch(arrayCharacters[i].jsonFile.dialogue_pos) {
 						case 'left':
 							leChar.x -= scrollSpeed * elapsed;

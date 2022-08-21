@@ -56,11 +56,11 @@ class CreditsState extends MusicBeatState
 			var leMods:Array<String> = CoolUtil.coolTextFile(path);
 			for (i in 0...leMods.length)
 			{
-				if(leMods.length > 1 && leMods[0].length > 0) {
+				if (leMods.length > 1 && leMods[0].length > 0) {
 					var modSplit:Array<String> = leMods[i].split('|');
-					if(!Paths.ignoreModFolders.contains(modSplit[0].toLowerCase()) && !modsAdded.contains(modSplit[0]))
+					if (!Paths.ignoreModFolders.contains(modSplit[0].toLowerCase()) && !modsAdded.contains(modSplit[0]))
 					{
-						if(modSplit[1] == '1')
+						if (modSplit[1] == '1')
 							pushModCreditsToList(modSplit[0]);
 						else
 							modsAdded.push(modSplit[0]);
@@ -117,7 +117,6 @@ class CreditsState extends MusicBeatState
 				optionText.x -= 70;
 			}
 			optionText.forceX = optionText.x;
-			//optionText.yMult = 90;
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
@@ -272,7 +271,7 @@ class CreditsState extends MusicBeatState
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			if(!unselectableCheck(bullShit-1)) {
+			if(!unselectableCheck(bullShit - 1)) {
 				item.alpha = 0.6;
 				if (item.targetY == 0) {
 					item.alpha = 1;
@@ -294,17 +293,15 @@ class CreditsState extends MusicBeatState
 	private var modsAdded:Array<String> = [];
 	function pushModCreditsToList(folder:String)
 	{
-		if(modsAdded.contains(folder)) return;
+		if (modsAdded.contains(folder)) return;
 
 		var creditsFile:String = null;
-		if(folder != null && folder.trim().length > 0) creditsFile = Paths.mods(folder + '/data/credits.txt');
+		if (folder != null && folder.trim().length > 0) creditsFile = Paths.mods(folder + '/data/credits.txt');
 		else creditsFile = Paths.mods('data/credits.txt');
 
-		if (FileSystem.exists(creditsFile))
-		{
+		if (FileSystem.exists(creditsFile)) {
 			var firstarray:Array<String> = File.getContent(creditsFile).split('\n');
-			for(i in firstarray)
-			{
+			for (i in firstarray) {
 				var arr:Array<String> = i.replace('\\n', '\n').split("::");
 				if(arr.length >= 5) arr.push(folder);
 				creditsStuff.push(arr);

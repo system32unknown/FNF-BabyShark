@@ -18,8 +18,7 @@ class CutsceneHandler extends FlxBasic
 	{
 		super();
 
-		timer(0, function()
-		{
+		timer(0, function() {
 			if(music != null)
 			{
 				FlxG.sound.playMusic(Paths.music(music), 0, false);

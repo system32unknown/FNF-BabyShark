@@ -19,7 +19,6 @@ class Conductor
 	public static var lastSongPos:Float;
 	public static var offset:Float = 0;
 
-	//public static var safeFrames:Int = 10;
 	public static var safeZoneOffset:Float = (ClientPrefs.getPref('safeFrames') / 60) * 1000; // is calculated in create(), is safeFrames in milliseconds
 
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
@@ -39,7 +38,7 @@ class Conductor
 
 	public static function getCrotchetAtTime(time:Float){
 		var lastChange = getBPMFromSeconds(time);
-		return lastChange.stepCrochet*4;
+		return lastChange.stepCrochet * 4;
 	}
 
 	public static function getBPMFromSeconds(time:Float){
@@ -91,7 +90,7 @@ class Conductor
 	}
 
 	public static function getBeat(time:Float){
-		return getStep(time)/4;
+		return getStep(time) / 4;
 	}
 
 	public static function getBeatRounded(time:Float):Int{
@@ -134,7 +133,7 @@ class Conductor
 	}
 
 	inline public static function calculateCrochet(bpm:Float){
-		return (60/bpm)*1000;
+		return (60 / bpm) * 1000;
 	}
 
 	public static function changeBPM(newBpm:Float)

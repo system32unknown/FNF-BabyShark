@@ -412,7 +412,7 @@ class StoryMenuState extends MusicBeatState
 					diffs[i] = diffs[i].trim();
 					if(diffs[i].length < 1) diffs.remove(diffs[i]);
 				}
-				--i;
+				i--;
 			}
 
 			if(diffs.length > 0 && diffs[0].length > 0)

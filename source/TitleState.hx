@@ -57,8 +57,6 @@ class TitleState extends MusicBeatState
 
 	var titleJSON:TitleData;
 
-	public static var updateVersion:String = '';
-
 	override public function create():Void
 	{
 		Paths.clearStoredMemory();
@@ -126,8 +124,7 @@ class TitleState extends MusicBeatState
 			if (initialized)
 				startIntro();
 			else {
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
+				new FlxTimer().start(1, function(tmr:FlxTimer) {
 					startIntro();
 				});
 			}
