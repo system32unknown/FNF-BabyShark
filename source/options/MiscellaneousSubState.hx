@@ -11,7 +11,6 @@ class MiscellaneousSubState extends BaseOptionsMenu
 		title = 'Miscellaneous';
 		rpcTitle = 'Miscellaneous Menu'; //for Discord Rich Presence
 
-		#if !mobile
 		var option:Option = new Option('FPS Counter',
 			'If unchecked, hides the FPS Counter.',
 			'showFPS',
@@ -25,7 +24,6 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			'bool',
 			true);
 		addOption(option);
-		#end
 
 		var option:Option = new Option('Flashing Lights',
 			"Uncheck this if you're sensitive to flashing lights!",
