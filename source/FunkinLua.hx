@@ -203,12 +203,6 @@ class FunkinLua {
 		set('buildTarget', 'linux');
 		#elseif mac
 		set('buildTarget', 'mac');
-		#elseif html5
-		set('buildTarget', 'browser');
-		#elseif android
-		set('buildTarget', 'android');
-		#else
-		set('buildTarget', 'unknown');
 		#end
 
 		// shader shit

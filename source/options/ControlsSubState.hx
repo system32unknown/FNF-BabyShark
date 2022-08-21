@@ -13,7 +13,6 @@ class ControlsSubState extends MusicBeatSubstate {
 	private static var curAlt:Bool = false;
 
 	private static var defaultKey:String = 'Reset to Default Keys';
-	private var bindLength:Int = 0;
 
 	var optionShit:Array<Dynamic> = [
 		['NOTES'],
@@ -86,7 +85,6 @@ class ControlsSubState extends MusicBeatSubstate {
 
 			if(!isCentered) {
 				addBindTexts(optionText, i);
-				bindLength++;
 				if(curSelected < 0) curSelected = i;
 			}
 		}

@@ -54,9 +54,7 @@ class TankmenBG extends FlxSprite
 				x = (0.02 * FlxG.width - endingOffset) + speed;
 			else
 				x = (0.74 * FlxG.width + endingOffset) - speed;
-		}
-		else if(animation.curAnim.finished)
-		{
+		} else if (animation.curAnim.finished) {
 			kill();
 		}
 

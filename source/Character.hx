@@ -42,6 +42,7 @@ typedef AnimArray = {
 class Character extends FlxSprite
 {
 	public var animOffsets:Map<String, Array<Dynamic>>;
+	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = DEFAULT_CHARACTER;
@@ -220,7 +221,7 @@ class Character extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if(animation.curAnim != null)
+		if(!debugMode && animation.curAnim != null)
 		{
 			if(heyTimer > 0)
 			{
@@ -284,7 +285,7 @@ class Character extends FlxSprite
 	 */
 	public function dance()
 	{
-		if (!skipDance && !specialAnim)
+		if (!debugMode && !skipDance && !specialAnim)
 		{
 			if(danceIdle)
 			{

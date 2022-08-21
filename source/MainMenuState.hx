@@ -1,6 +1,7 @@
 package;
 
 import WiggleEffect.*;
+import WiggleEffect.WiggleEffectType;
 #if desktop
 import Discord.DiscordClient;
 #end
