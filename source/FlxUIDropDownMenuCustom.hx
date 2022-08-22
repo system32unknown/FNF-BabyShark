@@ -19,7 +19,6 @@ import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.StrNameLabel;
 import flixel.addons.ui.FlxUI;
 
-
 /*
 
 THIS IS AN EDIT OF FlxUIDropDownMenu I'VE MADE BECAUSE I'M TIRED OF IT NOT SUPPORTING SCROLLING UP/DOWN
@@ -30,8 +29,6 @@ The differences are the following:
 * THe default drop direction is "Down" instead of "Automatic"
 
 */
-
-
 
 /**
  * @author larsiusprime

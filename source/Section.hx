@@ -1,7 +1,6 @@
 package;
 
-typedef SwagSection =
-{
+typedef SwagSection = {
 	var sectionNotes:Array<Dynamic>;
 	var sectionBeats:Float;
 	var typeOfSection:Int;

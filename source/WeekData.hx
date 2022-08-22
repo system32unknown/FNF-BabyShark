@@ -96,18 +96,13 @@ class WeekData {
 			for (i in 0...stuff.length)
 			{
 				var splitName:Array<String> = stuff[i].trim().split('|');
-				if(splitName[1] == '0') // Disable mod
-				{
+				if(splitName[1] == '0') { // Disable mod
 					disabledMods.push(splitName[0]);
-				}
-				else // Sort mod loading order based on modsList.txt file
-				{
+				} else { // Sort mod loading order based on modsList.txt file
 					var path = haxe.io.Path.join([Paths.mods(), splitName[0]]);
-					//trace('trying to push: ' + splitName[0]);
 					if (sys.FileSystem.isDirectory(path) && !Paths.ignoreModFolders.contains(splitName[0]) && !disabledMods.contains(splitName[0]) && !directories.contains(path + '/'))
 					{
 						directories.push(path + '/');
-						//trace('pushed Directory: ' + splitName[0]);
 					}
 				}
 			}
@@ -120,7 +115,6 @@ class WeekData {
 			if (!disabledMods.contains(folder) && !directories.contains(pathThing))
 			{
 				directories.push(pathThing);
-				//trace('pushed Directory: ' + folder);
 			}
 		}
 		#else

@@ -305,20 +305,12 @@ class ModsMenuState extends MusicBeatState
 		super.create();
 	}
 
-	/*function getIntArray(max:Int):Array<Int>{
-		var arr:Array<Int> = [];
-		for (i in 0...max) {
-			arr.push(i);
-		}
-		return arr;
-	}*/
 	function addToModsList(values:Array<Dynamic>)
 	{
 		for (i in 0...modsList.length)
 		{
 			if(modsList[i][0] == values[0])
 			{
-				//trace(modsList[i][0], values[0]);
 				return;
 			}
 		}
@@ -327,13 +319,10 @@ class ModsMenuState extends MusicBeatState
 
 	function updateButtonToggle()
 	{
-		if (modsList[curSelected][1])
-		{
+		if (modsList[curSelected][1]) {
 			buttonToggle.label.text = 'ON';
 			buttonToggle.color = FlxColor.GREEN;
-		}
-		else
-		{
+		} else {
 			buttonToggle.label.text = 'OFF';
 			buttonToggle.color = FlxColor.RED;
 		}
@@ -346,18 +335,13 @@ class ModsMenuState extends MusicBeatState
 			var doRestart:Bool = (mods[0].restart);
 
 			var newPos:Int = curSelected + change;
-			if(newPos < 0)
-			{
+			if(newPos < 0) {
 				modsList.push(modsList.shift());
 				mods.push(mods.shift());
-			}
-			else if(newPos >= mods.length)
-			{
+			} else if(newPos >= mods.length) {
 				modsList.insert(0, modsList.pop());
 				mods.insert(0, mods.pop());
-			}
-			else
-			{
+			} else {
 				var lastArray:Array<Dynamic> = modsList[curSelected];
 				modsList[curSelected] = modsList[newPos];
 				modsList[newPos] = lastArray;
@@ -407,7 +391,6 @@ class ModsMenuState extends MusicBeatState
 			saveTxt();
 			if(needaReset)
 			{
-				//MusicBeatState.switchState(new TitleState());
 				TitleState.initialized = false;
 				TitleState.closedState = false;
 				FlxG.sound.music.fadeOut(0.3);
