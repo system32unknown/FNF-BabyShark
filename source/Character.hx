@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxSort;
+import flixel.util.FlxColor;
 import Section.SwagSection;
 #if MODS_ALLOWED
 import sys.io.File;
@@ -381,5 +382,10 @@ class Character extends FlxSprite
 	public function quickAnimAdd(name:String, anim:String)
 	{
 		animation.addByPrefix(name, anim, 24, false);
+	}
+
+	public function getColor():FlxColor
+	{
+		return FlxColor.fromRGB(healthColorArray[0], healthColorArray[1], healthColorArray[2]);
 	}
 }

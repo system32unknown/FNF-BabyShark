@@ -67,15 +67,15 @@ class CustomFadeTransition extends MusicBeatSubstate {
 			transBlack.y = transGradient.y - transBlack.height;
 		}
 		super.update(elapsed);
-		if(isTransIn) {
+		/*if(isTransIn) {
 			transBlack.y = transGradient.y + transGradient.height;
 		} else {
 			transBlack.y = transGradient.y - transBlack.height;
-		}
+		}*/
 	}
 
 	override function destroy() {
-		if(leTween != null) {
+		if (leTween != null) {
 			finishCallback();
 			leTween.cancel();
 		}
