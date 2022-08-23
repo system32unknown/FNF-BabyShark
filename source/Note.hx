@@ -273,7 +273,6 @@ class Note extends FlxSprite
 					prevNote.scale.y *= (6 / height); //Auto adjust note size
 				}
 				prevNote.updateHitbox();
-				// prevNote.setGraphicSize();
 			}
 
 			if(PlayState.isPixelStage) {
