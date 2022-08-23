@@ -2978,8 +2978,6 @@ class PlayState extends MusicBeatState
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(0.1))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(0.1))));
 			case "Micdup": // Stolen from FNF Mic'd Up
-				iconP1.scrollFactor.set();
-				iconP2.scrollFactor.set();
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
 			case "DaveAndBambi": // Stolen from Dave And Bambi
