@@ -2046,14 +2046,14 @@ class PlayState extends MusicBeatState
 
 	public function startCountdown():Void
 	{
-		if(startedCountdown) {
+		if (startedCountdown) {
 			callOnLuas('onStartCountdown', []);
 			return;
 		}
 
 		inCutscene = false;
 		var ret:Dynamic = callOnLuas('onStartCountdown', [], false);
-		if(ret != FunkinLua.Function_Stop) {
+		if (ret != FunkinLua.Function_Stop) {
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
 
 			generateStaticArrows(0);
@@ -2139,8 +2139,7 @@ class PlayState extends MusicBeatState
 						insert(members.indexOf(notes), countdownReady);
 						FlxTween.tween(countdownReady, {alpha: 0}, Conductor.crochet / 1000, {
 							ease: FlxEase.cubeInOut,
-							onComplete: function(twn:FlxTween)
-							{
+							onComplete: function(twn:FlxTween) {
 								remove(countdownReady);
 								countdownReady.destroy();
 							}
@@ -2159,8 +2158,7 @@ class PlayState extends MusicBeatState
 						insert(members.indexOf(notes), countdownSet);
 						FlxTween.tween(countdownSet, {alpha: 0}, Conductor.crochet / 1000, {
 							ease: FlxEase.cubeInOut,
-							onComplete: function(twn:FlxTween)
-							{
+							onComplete: function(twn:FlxTween) {
 								remove(countdownSet);
 								countdownSet.destroy();
 							}
@@ -2191,8 +2189,7 @@ class PlayState extends MusicBeatState
 				}
 
 				notes.forEachAlive(function(note:Note) {
-					if(ClientPrefs.getPref('opponentStrums') || note.mustPress)
-					{
+					if(ClientPrefs.getPref('opponentStrums') || note.mustPress) {
 						note.copyAlpha = false;
 						note.alpha = note.multAlpha;
 						if(ClientPrefs.getPref('middleScroll') && !note.mustPress) {
@@ -2636,7 +2633,6 @@ class PlayState extends MusicBeatState
 	{
 		for (i in 0...4)
 		{
-			// FlxG.log.add(i);
 			var targetAlpha:Float = 1;
 			if (player < 1) {
 				if (!ClientPrefs.getPref('opponentStrums')) targetAlpha = 0;
@@ -2652,11 +2648,10 @@ class PlayState extends MusicBeatState
 				babyArrow.alpha = targetAlpha;
 			}
 
-			if (player == 1)
-			{
+			if (player == 1) {
 				playerStrums.add(babyArrow);
 			} else {
-				if(ClientPrefs.getPref('middleScroll'))
+				if (ClientPrefs.getPref('middleScroll'))
 				{
 					babyArrow.x += 310;
 					if(i > 1) { //Up and Right

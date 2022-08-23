@@ -79,9 +79,9 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		WShader.effectType = WiggleEffectType.HEAT_WAVE_HORIZONTAL;
-		WShader.waveAmplitude = 0.01;
-		WShader.waveFrequency = 80;
-		WShader.waveSpeed = 0.8;
+		WShader.waveAmplitude = 0.007;
+		WShader.waveFrequency = 70;
+		WShader.waveSpeed = 0.9;
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
 		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
