@@ -1,6 +1,6 @@
 package;
 
-if LUA_ALLOWED
+#if LUA_ALLOWED
 import llua.Lua;
 import llua.LuaL;
 import llua.State;
@@ -758,7 +758,6 @@ class FunkinLua {
 		});
 
 		Lua_helper.add_callback(lua, "runHaxeCode", function(codeToRun:String) {
-			#if hscript
 			var retVal:Dynamic = null;
 
 			#if hscript
@@ -811,8 +810,7 @@ class FunkinLua {
 
 			FlxG.sound.music.pause();
 			FlxG.sound.music.volume = 0;
-			if(PlayState.instance.vocals != null)
-			{
+			if(PlayState.instance.vocals != null) {
 				PlayState.instance.vocals.pause();
 				PlayState.instance.vocals.volume = 0;
 			}
@@ -821,9 +819,9 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "loadGraphic", function(variable:String, image:String, ?gridX:Int, ?gridY:Int) {
 			var killMe:Array<String> = variable.split('.');
 			var spr:FlxSprite = getObjectDirectly(killMe[0]);
-			var gX = gridX==null?0:gridX;
-			var gY = gridY==null?0:gridY;
-			var animated = gX!=0 || gY!=0;
+			var gX = gridX == null ? 0 : gridX;
+			var gY = gridY == null ? 0 : gridY;
+			var animated = gX != 0 || gY != 0;
 
 			if(killMe.length > 1) {
 				spr = getVarInArray(getPropertyLoopThingWhatever(killMe), killMe[killMe.length-1]);
@@ -857,17 +855,17 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "getProperty", function(variable:String) {
 			var result:Dynamic = null;
 			var killMe:Array<String> = variable.split('.');
-			if(killMe.length > 1)
+			if (killMe.length > 1)
 				result = getVarInArray(getPropertyLoopThingWhatever(killMe), killMe[killMe.length-1]);
 			else
 				result = getVarInArray(getInstance(), variable);
 
-			if(result == null) Lua.pushnil(lua);
+			if (result == null) Lua.pushnil(lua);
 			return result;
 		});
 		Lua_helper.add_callback(lua, "setProperty", function(variable:String, value:Dynamic) {
 			var killMe:Array<String> = variable.split('.');
-			if(killMe.length > 1) {
+			if (killMe.length > 1) {
 				setVarInArray(getPropertyLoopThingWhatever(killMe), killMe[killMe.length-1], value);
 				return true;
 			}
@@ -880,22 +878,21 @@ class FunkinLua {
 			if(shitMyPants.length>1)
 				realObject = getPropertyLoopThingWhatever(shitMyPants, true, false);
 
-			if(Std.isOfType(realObject, FlxTypedGroup))
-			{
+			if (Std.isOfType(realObject, FlxTypedGroup)) {
 				var result:Dynamic = getGroupStuff(realObject.members[index], variable);
 				if(result == null) Lua.pushnil(lua);
 				return result;
 			}
 
 			var leArray:Dynamic = realObject[index];
-			if(leArray != null) {
+			if (leArray != null) {
 				var result:Dynamic = null;
 				if(Type.typeof(variable) == ValueType.TInt)
 					result = leArray[variable];
 				else
 					result = getGroupStuff(leArray, variable);
 
-				if(result == null) Lua.pushnil(lua);
+				if (result == null) Lua.pushnil(lua);
 				return result;
 			}
 			luaTrace("Object #" + index + " from group: " + obj + " doesn't exist!", false, false, FlxColor.RED);
@@ -905,10 +902,10 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "setPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic, value:Dynamic) {
 			var shitMyPants:Array<String> = obj.split('.');
 			var realObject:Dynamic = Reflect.getProperty(getInstance(), obj);
-			if(shitMyPants.length>1)
+			if (shitMyPants.length>1)
 				realObject = getPropertyLoopThingWhatever(shitMyPants, true, false);
 
-			if(Std.isOfType(realObject, FlxTypedGroup)) {
+			if (Std.isOfType(realObject, FlxTypedGroup)) {
 				setGroupStuff(realObject.members[index], variable, value);
 				return;
 			}

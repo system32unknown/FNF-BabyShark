@@ -2978,6 +2978,8 @@ class PlayState extends MusicBeatState
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(0.1))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(0.1))));
 			case "Micdup": // Stolen from FNF Mic'd Up
+				iconP1.scrollFactor.set();
+				iconP2.scrollFactor.set();
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
 			case "DaveAndBambi": // Stolen from Dave And Bambi
@@ -3035,27 +3037,21 @@ class PlayState extends MusicBeatState
 			MusicBeatState.switchState(new CharacterEditorState(SONG.player2));
 		}
 
-		if (startingSong)
-		{
-			if (startedCountdown)
-			{
+		if (startingSong) {
+			if (startedCountdown) {
 				Conductor.songPosition += FlxG.elapsed * 1000;
 				if (Conductor.songPosition >= 0)
 					startSong();
 			}
-		}
-		else
-		{
+		} else {
 			Conductor.songPosition += FlxG.elapsed * 1000;
 
-			if (!paused)
-			{
+			if (!paused) {
 				songTime += FlxG.game.ticks - previousFrameTime;
 				previousFrameTime = FlxG.game.ticks;
 
 				// Interpolation type beat
-				if (Conductor.lastSongPos != Conductor.songPosition)
-				{
+				if (Conductor.lastSongPos != Conductor.songPosition) {
 					songTime = (songTime + Conductor.songPosition) / 2;
 					Conductor.lastSongPos = Conductor.songPosition;
 				}
@@ -3070,9 +3066,9 @@ class PlayState extends MusicBeatState
 					if(timebarType == 'Time Elapsed' || ClientPrefs.getPref('timeBarType') == 'ElapsedPosition') songCalc = curTime;
 
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
-					if(secondsTotal < 0) secondsTotal = 0;
+					if (secondsTotal < 0) secondsTotal = 0;
 
-					if(timebarType != 'Song Name')
+					if (timebarType != 'Song Name')
 						switch (timebarType) {
 							case 'Time Left' | 'Time Elapsed':
 								timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
@@ -3273,20 +3269,11 @@ class PlayState extends MusicBeatState
 		persistentDraw = true;
 		paused = true;
 
-		// 1 / 1000 chance for Gitaroo Man easter egg
-		/*if (FlxG.random.bool(0.1))
-		{
-			// gitaroo man easter egg
-			cancelMusicFadeTween();
-			MusicBeatState.switchState(new GitarooPause());
-		}
-		else {*/
 		if(FlxG.sound.music != null) {
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
 		openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-		//}
 
 		#if desktop
 		DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
@@ -3397,8 +3384,7 @@ class PlayState extends MusicBeatState
 							dadbattleBlack.visible = false;
 							dadbattleLight.visible = false;
 							defaultCamZoom -= 0.12;
-							FlxTween.tween(dadbattleSmokes, {alpha: 0}, 1, {onComplete: function(twn:FlxTween)
-							{
+							FlxTween.tween(dadbattleSmokes, {alpha: 0}, 1, {onComplete: function(twn:FlxTween) {
 								dadbattleSmokes.visible = false;
 							}});
 					}

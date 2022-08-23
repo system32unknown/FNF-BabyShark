@@ -37,8 +37,7 @@ class HealthIcon extends FlxSprite
 
 			loadGraphic(file);
 			var temp_width = width;
-			if (width == 450)
-			{
+			if (width == 450) {
 				winningicon = true;
 				loadGraphic(file, true, Math.floor(width / 3), Math.floor(height)); //Then load it fr
 				iconOffsets[0] = (width - 150) / 3;
