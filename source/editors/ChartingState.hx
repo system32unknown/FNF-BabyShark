@@ -837,7 +837,7 @@ class ChartingState extends MusicBeatState
 
 			updateGrid();
 		});
-		var RandomButton:FlxButton = new FlxButton(mirrorButton.x + 100, mirrorButton.y, "Randomize Notes", function() {
+		var randomButton:FlxButton = new FlxButton(mirrorButton.x + 100, mirrorButton.y, "Randomize Notes", function() {
 			for (note in _song.notes[curSec].sectionNotes)
 			{
 				note[1] = FlxG.random.int(1, 4);
@@ -863,6 +863,7 @@ class ChartingState extends MusicBeatState
 		tab_group_section.add(copyLastButton);
 		tab_group_section.add(duetButton);
 		tab_group_section.add(mirrorButton);
+		tab_group_section.add(randomButton);
 
 		UI_box.addGroup(tab_group_section);
 	}
