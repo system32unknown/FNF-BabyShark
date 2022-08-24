@@ -252,8 +252,7 @@ class StoryMenuState extends MusicBeatState
 
 		super.update(elapsed);
 
-		grpLocks.forEach(function(lock:FlxSprite)
-		{
+		grpLocks.forEach(function(lock:FlxSprite) {
 			lock.y = grpWeekText.members[lock.ID].y;
 			lock.visible = (lock.y > FlxG.height / 2);
 		});

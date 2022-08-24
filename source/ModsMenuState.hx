@@ -111,8 +111,7 @@ class ModsMenuState extends MusicBeatState
 		//attached buttons
 		var startX:Int = 1120;
 
-		buttonToggle = new FlxButton(startX, 0, "ON", function()
-		{
+		buttonToggle = new FlxButton(startX, 0, "ON", function() {
 			if(mods[curSelected].restart)
 			{
 				needaReset = true;

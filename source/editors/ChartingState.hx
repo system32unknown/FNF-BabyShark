@@ -774,7 +774,6 @@ class ChartingState extends MusicBeatState
 			{
 				var strum = note[0] + Conductor.stepCrochet * (getSectionBeats(daSec) * 4 * value);
 
-
 				var copiedNote:Array<Dynamic> = [strum, note[1], note[2], note[3]];
 				_song.notes[daSec].sectionNotes.push(copiedNote);
 			}
@@ -834,15 +833,6 @@ class ChartingState extends MusicBeatState
 				if (note[1] > 3) boob += 4;
 				note[1] = boob;
 			}
-
-			updateGrid();
-		});
-		var randomButton:FlxButton = new FlxButton(mirrorButton.x + 100, mirrorButton.y, "Randomize Notes", function() {
-			for (note in _song.notes[curSec].sectionNotes)
-			{
-				note[1] = FlxG.random.int(1, 4);
-			}
-
 			updateGrid();
 		});
 

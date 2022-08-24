@@ -44,7 +44,6 @@ class CharacterEditorState extends MusicBeatState
 	var bgLayer:FlxTypedGroup<FlxSprite>;
 	var charLayer:FlxTypedGroup<Character>;
 	var dumbTexts:FlxTypedGroup<FlxText>;
-	//var animList:Array<String> = [];
 	var curAnim:Int = 0;
 	var daAnim:String = 'spooky';
 	var goToPlayState:Bool = true;
@@ -73,8 +72,6 @@ class CharacterEditorState extends MusicBeatState
 
 	override function create()
 	{
-		//FlxG.sound.playMusic(Paths.music('breakfast'), 0.5);
-
 		camEditor = new FlxCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
@@ -98,8 +95,7 @@ class CharacterEditorState extends MusicBeatState
 		cameraFollowPointer.color = FlxColor.WHITE;
 		add(cameraFollowPointer);
 
-		changeBGbutton = new FlxButton(FlxG.width - 360, 25, "", function()
-		{
+		changeBGbutton = new FlxButton(FlxG.width - 360, 25, "", function() {
 			onPixelBG = !onPixelBG;
 			reloadBGs();
 		});
@@ -157,7 +153,6 @@ class CharacterEditorState extends MusicBeatState
 		FlxG.camera.follow(camFollow);
 
 		var tabs = [
-			//{name: 'Offsets', label: 'Offsets'},
 			{name: 'Settings', label: 'Settings'},
 		];
 
@@ -184,7 +179,6 @@ class CharacterEditorState extends MusicBeatState
 		add(UI_box);
 		add(changeBGbutton);
 
-		//addOffsetsUI();
 		addSettingsUI();
 
 		addCharacterUI();
