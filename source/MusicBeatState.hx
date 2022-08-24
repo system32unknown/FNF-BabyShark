@@ -119,12 +119,10 @@ class MusicBeatState extends FlxUIState
 				CustomFadeTransition.finishCallback = function() {
 					FlxG.resetState();
 				};
-				//trace('resetted');
 			} else {
 				CustomFadeTransition.finishCallback = function() {
 					FlxG.switchState(nextState);
 				};
-				//trace('changed state');
 			}
 			return;
 		}
