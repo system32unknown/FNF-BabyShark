@@ -38,7 +38,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'IconBounceType',
 			'string',
 			'Psych',
-			['Vanilla', 'Psych', 'Andromeda', 'DaveAndBambi', 'Micdup', 'Custom']);
+			['Vanilla', 'Psych', 'Andromeda', 'DaveAndBambi', 'Micdup', 'RadicalOne', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Camera Zooms',

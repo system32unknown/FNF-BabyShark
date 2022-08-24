@@ -3850,14 +3850,14 @@ class PlayState extends MusicBeatState
 		seenCutscene = false;
 
 		#if ACHIEVEMENTS_ALLOWED
-		if(achievementObj != null) {
+		if (achievementObj != null) {
 			return;
 		} else {
 			var achieve:String = checkForAchievement(['week1_nomiss', 'week2_nomiss', 'week3_nomiss', 'week4_nomiss',
 				'week5_nomiss', 'week6_nomiss', 'week7_nomiss', 'ur_bad',
 				'ur_good', 'hype', 'two_keys', 'toastie', 'debugger']);
 
-			if(achieve != null) {
+			if (achieve != null) {
 				startAchievement(achieve);
 				return;
 			}
@@ -3897,7 +3897,6 @@ class PlayState extends MusicBeatState
 					}
 					MusicBeatState.switchState(new StoryMenuState());
 
-					// if ()
 					if(!ClientPrefs.getGameplaySetting('practice', false) && !ClientPrefs.getGameplaySetting('botplay', false)) {
 						StoryMenuState.weekCompleted.set(WeekData.weeksList[storyWeek], true);
 
@@ -5017,6 +5016,14 @@ class PlayState extends MusicBeatState
 			case "Micdup":
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+			case "RadicalOne":
+				FlxTween.cancelTweensOf(iconP1);
+				iconP1.scale.set(1.3, 1.3);
+				FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
+		
+				FlxTween.cancelTweensOf(iconP2);
+				iconP2.scale.set(1.3, 1.3);
+				FlxTween.tween(iconP2, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
 			case "Custom":
 				callOnLuas('onBounceBeat', []);
 		}
