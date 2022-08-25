@@ -4222,13 +4222,10 @@ class PlayState extends MusicBeatState
 			numScore.x += comboOffset[2];
 			numScore.y -= comboOffset[3];
 
-			if (!PlayState.isPixelStage)
-			{
+			if (!PlayState.isPixelStage) {
 				numScore.antialiasing = globalAntialiasing;
 				numScore.setGraphicSize(Std.int(numScore.width * 0.5));
-			}
-			else
-			{
+			} else {
 				numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
 			}
 			numScore.updateHitbox();

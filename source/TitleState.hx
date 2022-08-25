@@ -45,6 +45,11 @@ class TitleState extends MusicBeatState
 	var credGroup:FlxGroup;
 	var textGroup:FlxGroup;
 	
+	var logoBl:FlxSprite;
+	var logoBlTwo:FlxSprite;
+	var titleLogos:Array<FlxSprite> = [];
+	var titleText:FlxSprite;
+
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	var titleTextAlphas:Array<Float> = [1, .64];
 
@@ -73,8 +78,6 @@ class TitleState extends MusicBeatState
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
-		// DEBUG BULLSHIT
-		swagShader = new ColorSwap();
 		super.create();
 
 		FlxG.save.bind('funkin', 'ninjamuffin99');
@@ -90,8 +93,7 @@ class TitleState extends MusicBeatState
 			persistentDraw = true;
 		}
 
-		if (FlxG.save.data.weekCompleted != null)
-		{
+		if (FlxG.save.data.weekCompleted != null) {
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
 
@@ -102,8 +104,7 @@ class TitleState extends MusicBeatState
 			MusicBeatState.switchState(new FlashingState());
 		} else {
 			#if desktop
-			if (!DiscordClient.isInitialized)
-			{
+			if (!DiscordClient.isInitialized) {
 				DiscordClient.initialize();
 				Application.current.onExit.add(function(exitCode) {
 					DiscordClient.shutdown();
@@ -121,10 +122,6 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	var logoBl:FlxSprite;
-	var titleText:FlxSprite;
-	var swagShader:ColorSwap = null;
-
 	function startIntro()
 	{
 		if (!initialized) {
@@ -136,34 +133,27 @@ class TitleState extends MusicBeatState
 		Conductor.changeBPM(150);
 		persistentUpdate = true;
 
-		swagShader = new ColorSwap();
-
 		var bg:FlxSprite = new FlxSprite();
 		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
-		logoBl = new FlxSprite(200, 1500);
+		logoBl = new FlxSprite(140, 1500);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 		logoBl.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		logoBl.animation.play('bump');
 		logoBl.updateHitbox();
-		logoBl.shader = swagShader.shader;
 		add(logoBl);
+		titleLogos.push(logoBl);
+
+		logoBlTwo = new FlxSprite(440, 1500);
+		logoBlTwo.loadGraphic(Paths.image('BSF3D'));
+		logoBlTwo.updateHitbox();
+		add(logoBlTwo);
+		titleLogos.push(logoBlTwo);
 
 		titleText = new FlxSprite(125, 576);
-		#if (desktop && MODS_ALLOWED)
-		var path = "mods/" + Paths.currentModDirectory + "/images/titleEnter.png";
-		if (!FileSystem.exists(path)) {
-			path = "mods/images/titleEnter.png";
-		}
-		if (!FileSystem.exists(path)) {
-			path = "assets/images/titleEnter.png";
-		}
-		titleText.frames = FlxAtlasFrames.fromSparrow(BitmapData.fromFile(path),File.getContent(StringTools.replace(path,".png",".xml")));
-		#else
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
-		#end
 		var animFrames:Array<FlxFrame> = [];
 		@:privateAccess {
 			titleText.animation.findByPrefix(animFrames, "ENTER IDLE");
@@ -290,12 +280,6 @@ class TitleState extends MusicBeatState
 			skipIntro();
 		}
 
-		if(swagShader != null)
-		{
-			if(controls.UI_LEFT) swagShader.hue -= elapsed * 0.1;
-			if(controls.UI_RIGHT) swagShader.hue += elapsed * 0.1;
-		}
-
 		super.update(elapsed);
 	}
 
@@ -353,19 +337,19 @@ class TitleState extends MusicBeatState
 				case 1:
 					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
-					createCoolText(['Vs Dave and Bambi Created:']);
+					createCoolText(['Vs Dave and Bambi Created by:']);
 				case 2:
 					addMoreText('Vs Dave and Bambi Team');
 				case 3:
 					deleteCoolText();
 				case 4:
-					createCoolText(['Baby Shark\'s Big Show Created:']);
+					createCoolText(['Baby Shark\'s Big Show Created by:']);
 				case 5:
 					addMoreText('Pinkfong and Nickelodeon');
 				case 6:
 					deleteCoolText();
 				case 7:
-					createCoolText(['Altertoriel Engine Created:']);
+					createCoolText(['Altertoriel Engine Created by:']);
 				case 8:
 					addMoreText('Altertoriel');
 				case 9:
@@ -393,6 +377,7 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
+			var logoInt:Int = 0;
 			gradientBar = FlxGradient.createGradientFlxSprite(Math.round(FlxG.width), 512, [0x00, 0x553D0468, 0xC4FFE600], 1, 90, true);
 	    	gradientBar.y = FlxG.height - gradientBar.height;
 	     	gradientBar.scale.y = 0;
@@ -402,14 +387,17 @@ class TitleState extends MusicBeatState
 
 			remove(credGroup);
 			FlxG.camera.flash(FlxColor.WHITE, 4);
-			FlxTween.tween(logoBl, {y: -100}, 1.4, {ease: FlxEase.expoInOut});
-			logoBl.angle = -4;
-			new FlxTimer().start(0.01, function(tmr:FlxTimer) {
-				if (logoBl.angle == -4)
-					FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
-				if (logoBl.angle == 4)
-					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
-			}, 0);
+			for (logo in titleLogos) {
+				logoInt++;
+				FlxTween.tween(logo, {y: ((logoInt % 2 == 0) ? -20: -100)}, 1.4, {ease: FlxEase.expoInOut});
+				logo.angle = ((logoInt % 2 == 0) ? -4 : 4);
+				new FlxTimer().start(0.01, function(tmr:FlxTimer) {
+					if (logo.angle == ((logoInt % 2 == 0) ? -4 : 4))
+						FlxTween.angle(logo, logo.angle, ((logoInt % 2 == 0) ? 4 : -4), 4, {ease: FlxEase.quartInOut});
+					if (logo.angle == ((logoInt % 2 == 0) ? 4 : -4))
+						FlxTween.angle(logo, logo.angle, ((logoInt % 2 == 0) ? -4 : 4), 4, {ease: FlxEase.quartInOut});
+				}, 0);
+			}
 			skippedIntro = true;
 		}
 	}

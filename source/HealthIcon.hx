@@ -36,7 +36,7 @@ class HealthIcon extends FlxSprite
 			var file:Dynamic = Paths.image(name);
 
 			loadGraphic(file);
-			winningicon = (width == 450)
+			winningicon = (width == 450);
 			loadGraphic(file, true, Math.floor(width / (winningicon ? 3 : 2)), Math.floor(height)); //Then load it fr
 			iconOffsets[0] = (width - 150) / (winningicon ? 3 : 2);
 			iconOffsets[1] = (width - 150) / (winningicon ? 3 : 2);

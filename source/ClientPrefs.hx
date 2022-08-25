@@ -200,8 +200,7 @@ class ClientPrefs {
 
 		var save:FlxSave = new FlxSave();
 		save.bind('controls_v2', 'ninjamuffin99');
-		if (save != null)
-		{
+		if (save != null) {
 			for (name in separateSaves) {
 				var data:Dynamic = Reflect.field(save.data, name);
 				if (data != null) {

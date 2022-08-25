@@ -853,7 +853,6 @@ class ChartingState extends MusicBeatState
 		tab_group_section.add(copyLastButton);
 		tab_group_section.add(duetButton);
 		tab_group_section.add(mirrorButton);
-		tab_group_section.add(randomButton);
 
 		UI_box.addGroup(tab_group_section);
 	}
@@ -1032,11 +1031,6 @@ class ChartingState extends MusicBeatState
 				updateGrid();
 			}
 		});
-		removeButton.setGraphicSize(Std.int(removeButton.height), Std.int(removeButton.height));
-		removeButton.updateHitbox();
-		removeButton.color = FlxColor.RED;
-		removeButton.label.color = FlxColor.WHITE;
-		removeButton.label.size = 12;
 		setAllLabelsOffset(removeButton, -30, 0);
 		tab_group_event.add(removeButton);
 
