@@ -1208,18 +1208,18 @@ class PlayState extends MusicBeatState
 		];
 		var engineName:String = EngineArray[FlxG.random.int(0, EngineArray.length - 1)];
 
-		var SongNameText = new FlxText(2, textYPos, 0, SONG.song + " - " + storyDifficultyText, 16);
-		SongNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		SongNameText.scrollFactor.set();
-		SongNameText.borderSize = 1;
-		add(SongNameText);
+		var songNameText = new FlxText(2, textYPos, 0, SONG.song + " - " + storyDifficultyText, 16);
+		songNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		songNameText.scrollFactor.set();
+		songNameText.borderSize = 1;
+		add(songNameText);
 
-		var EngineText = new FlxText(0, textYPos, 0, engineName + " Engine (PE " + MainMenuState.psychEngineVersion +")", 16);
-		EngineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		EngineText.scrollFactor.set();
-		EngineText.borderSize = 1;
-		EngineText.x = FlxG.width - EngineText.width;
-		add(EngineText);
+		var engineText = new FlxText(0, textYPos, 0, engineName + " Engine (PE " + MainMenuState.psychEngineVersion +")", 16);
+		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		engineText.scrollFactor.set();
+		engineText.borderSize = 1;
+		engineText.x = FlxG.width - engineText.width;
+		add(engineText);
 
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
@@ -1233,8 +1233,8 @@ class PlayState extends MusicBeatState
 		timeBar.cameras = [camHUD];
 		timeBarBG.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
-		SongNameText.cameras = [camHUD];
-		EngineText.cameras = [camHUD];
+		songNameText.cameras = [camHUD];
+		engineText.cameras = [camHUD];
 		judgementCounter.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
@@ -4492,10 +4492,11 @@ class PlayState extends MusicBeatState
 			}
 		});
 
-		if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
-		{
+		if (combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
 			gf.playAnim('sad');
 		}
+		if (combo > MaxCombo)
+			MaxCombo = combo;
 		combo = 0;
 		health -= daNote.missHealth * healthLoss;
 		
@@ -4539,12 +4540,12 @@ class PlayState extends MusicBeatState
 				doDeathCheck(true);
 			}
 
-			if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
-			{
+			if (combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
 				gf.playAnim('sad');
 			}
+			if (combo > MaxCombo)
+				MaxCombo = combo;
 			combo = 0;
-
 
 			if(!practiceMode) songScore -= 10;
 			if(!endingSong) {
@@ -4572,7 +4573,7 @@ class PlayState extends MusicBeatState
 			dad.playAnim('hey', true);
 			dad.specialAnim = true;
 			dad.heyTimer = 0.6;
-		} else if(!note.noAnimation) {
+		} else if (!note.noAnimation) {
 			var altAnim:String = note.animSuffix;
 
 			if (SONG.notes[curSection] != null)
@@ -4656,8 +4657,6 @@ class PlayState extends MusicBeatState
 			if (!note.isSustainNote)
 			{
 				combo += 1;
-				if (combo > MaxCombo)
-					MaxCombo = combo;
 				if(combo > 9999) combo = 9999;
 				popUpScore(note);
 			}
@@ -4999,7 +4998,7 @@ class PlayState extends MusicBeatState
 		}
 		
 		switch (IconBounceType) {
-			case 'Vanilla' | 'Andromeda':
+			case 'Vanilla' | 'Andromeda' | 'Micdup':
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 			case "Psych":
@@ -5010,16 +5009,14 @@ class PlayState extends MusicBeatState
 
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * funny)), Std.int(iconP2.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
-			case "Micdup":
-				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 			case "RadicalOne":
 				FlxTween.cancelTweensOf(iconP1);
-				iconP1.scale.set(1.3, 1.3);
-				FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
-		
 				FlxTween.cancelTweensOf(iconP2);
+
+				iconP1.scale.set(1.3, 1.3);
 				iconP2.scale.set(1.3, 1.3);
+
+				FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
 				FlxTween.tween(iconP2, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
 			case "Custom":
 				callOnLuas('onBounceBeat', []);
@@ -5195,15 +5192,12 @@ class PlayState extends MusicBeatState
 			{
 				// Rating Percent
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
-				//trace((totalNotesHit / totalPlayed) + ', Total: ' + totalPlayed + ', notes hit: ' + totalNotesHit);
 
 				// Rating Name
 				if(ratingPercent >= 1)
 				{
 					ratingName = ratingStuff[ratingStuff.length-1][0]; //Uses last string
-				}
-				else
-				{
+				} else {
 					for (i in 0...ratingStuff.length-1)
 					{
 						if(ratingPercent < ratingStuff[i][1])

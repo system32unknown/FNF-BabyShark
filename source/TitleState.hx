@@ -137,17 +137,19 @@ class TitleState extends MusicBeatState
 		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
-		logoBl = new FlxSprite(140, 1500);
+		logoBl = new FlxSprite(100, 1500);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 		logoBl.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		logoBl.setGraphicSize(Std.int(logoBl.width * .7));
 		logoBl.animation.play('bump');
 		logoBl.updateHitbox();
 		add(logoBl);
 		titleLogos.push(logoBl);
 
-		logoBlTwo = new FlxSprite(440, 1500);
+		logoBlTwo = new FlxSprite(560, 1500);
 		logoBlTwo.loadGraphic(Paths.image('BSF3D'));
+		logoBlTwo.setGraphicSize(Std.int(logoBlTwo.width * .7));
 		logoBlTwo.updateHitbox();
 		add(logoBlTwo);
 		titleLogos.push(logoBlTwo);
