@@ -257,6 +257,7 @@ class TitleState extends MusicBeatState
 			
 			if(pressedEnter)
 			{
+				var logoInt:Int = 0;
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
 				
@@ -269,6 +270,11 @@ class TitleState extends MusicBeatState
 
 				MainMenuState.firstStart = true;
 				MainMenuState.finishedFunnyMove = false;
+
+				for (logo in titleLogos) {
+					logoInt++;
+					FlxTween.tween(logo, {x: ((logoInt % 2 == 0) ? 2000: -2000)}, 2.2, {ease: FlxEase.circInOut});
+				}
 
 				new FlxTimer().start(1, function(tmr:FlxTimer) {
 					MusicBeatState.switchState(new MainMenuState());
@@ -344,22 +350,31 @@ class TitleState extends MusicBeatState
 					addMoreText('Vs Dave and Bambi Team');
 				case 3:
 					deleteCoolText();
-				case 4:
 					createCoolText(['Baby Shark\'s Big Show Created by:']);
-				case 5:
+				case 4:
 					addMoreText('Pinkfong and Nickelodeon');
-				case 6:
+				case 5:
 					deleteCoolText();
-				case 7:
 					createCoolText(['Altertoriel Engine Created by:']);
-				case 8:
+				case 6:
 					addMoreText('Altertoriel');
+				case 7:
+					deleteCoolText();
+					createCoolText(['Psych Engine Created by:']);
+				case 8:
+					addMoreText('Shadow Mario', 15);
+					addMoreText('RiverOaken', 15);
+					addMoreText('YoShubs', 15);
 				case 9:
 					deleteCoolText();
-				case 10:
 					createCoolText([curWacky[0]]);
-				case 12:
+				case 10:
 					addMoreText(curWacky[1]);
+				case 11:
+					deleteCoolText();
+					createCoolText(['Today is ']);	
+				case 12:
+					addMoreText(Date.now().toString());
 				case 13:
 					deleteCoolText();
 				case 14:
@@ -391,7 +406,7 @@ class TitleState extends MusicBeatState
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			for (logo in titleLogos) {
 				logoInt++;
-				FlxTween.tween(logo, {y: ((logoInt % 2 == 0) ? -20: -10)}, 1.4, {ease: FlxEase.expoInOut});
+				FlxTween.tween(logo, {y: ((logoInt % 2 == 0) ? 100: 200)}, 1.4, {ease: FlxEase.expoInOut});
 				logo.angle = ((logoInt % 2 == 0) ? -4 : 4);
 				new FlxTimer().start(0.01, function(tmr:FlxTimer) {
 					if (logo.angle == ((logoInt % 2 == 0) ? -4 : 4))

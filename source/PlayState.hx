@@ -1198,22 +1198,15 @@ class PlayState extends MusicBeatState
 		}
 
 		var textYPos:Float = FlxG.height * .9 + 52;
-		var EngineArray:Array<String> = [
-			'Altertoriel', 'Baby Shark', 'Ollie', //Main Character
-			'Brooklyn', 'Pinkfong', 'Sharki B',
-			'Shadow', 'William', 'Mommy Shark',
-			'Nate', 'Daddy Shark', 'Teensy',
-			'Hank', 'Lala', 'Chucks', 'Rayna', 'Chichi',
-			'Dave', 'Bambi', 'Tristan', 'Bandu', 'Expunged' //D&B and GApple
-		];
-		var engineName:String = EngineArray[FlxG.random.int(0, EngineArray.length - 1)];
+
+		var EngineFile:String = (OpenFlAssets.exists(Paths.txt('EngineList')) ? OpenFlAssets.getText(Paths.txt('EngineList')) : "nothing\nnull");
+		var engineName:String = FlxG.random.getObject(EngineFile.split('\n'));
 
 		var songNameText = new FlxText(2, textYPos, 0, SONG.song + " - " + storyDifficultyText, 16);
 		songNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		songNameText.scrollFactor.set();
 		songNameText.borderSize = 1;
 		add(songNameText);
-
 
 		var engineText = new FlxText(0, textYPos, 0, engineName + " Engine (PE " + MainMenuState.psychEngineVersion +")", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
