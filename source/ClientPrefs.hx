@@ -39,6 +39,7 @@ class ClientPrefs {
 		'healthBarAlpha' => 1,
 		'controllerMode' => false,
 		'hitsoundVolume' => 0,
+		'ShowWatermark' => true,
 		'pauseMusic' => 'Tea Time',
 		// Gameplay settings
 		'comboOffset' => [0, 0, 0, 0],

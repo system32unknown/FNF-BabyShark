@@ -90,14 +90,10 @@ class Note extends FlxSprite
 	public var distance:Float = 2000; //plan on doing scroll directions soon -bb
 
 	public var hitsoundDisabled:Bool = false;
-	
-	public var unfairNote:Bool = false;
-	public var LocalScrollSpeed:Float = 1;
 
 	private function set_multSpeed(value:Float):Float {
 		resizeByRatio(value / multSpeed);
 		multSpeed = value;
-		//trace('fuck cock');
 		return value;
 	}
 
@@ -152,8 +148,6 @@ class Note extends FlxSprite
 					noMissAnimation = true;
 				case 'GF Sing':
 					gfNote = true;
-				case 'Randomized Note':
-					unfairNote = true;
 			}
 			noteType = value;
 		}
@@ -202,17 +196,6 @@ class Note extends FlxSprite
 						animToPlay = 'red';
 				}
 				animation.play(animToPlay + 'Scroll');
-			}
-		}
-
-		if(unfairNote) {
-			if (FlxG.random.bool(120))
-			{
-				LocalScrollSpeed = 0.1;
-			}
-			else
-			{
-				LocalScrollSpeed = FlxG.random.float(1., 3.);
 			}
 		}
 
@@ -286,7 +269,6 @@ class Note extends FlxSprite
 	}
 
 	var lastNoteOffsetXForPixelAutoAdjusting:Float = 0;
-	var lastNoteScaleToo:Float = 1;
 	public var originalHeightForCalcs:Float = 6;
 	function reloadNote(?prefix:String = '', ?texture:String = '', ?suffix:String = '') {
 		if(prefix == null) prefix = '';
@@ -409,9 +391,7 @@ class Note extends FlxSprite
 
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 				tooLate = true;
-		}
-		else
-		{
+		} else {
 			canBeHit = false;
 
 			if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))

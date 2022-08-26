@@ -32,6 +32,13 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Watermarks',
+			"If checked, enables all watermarks from the engine.",
+			'ShowWatermark',
+			'bool',
+			true);
+		addOption(option);
+
 		super();
 	}
 }

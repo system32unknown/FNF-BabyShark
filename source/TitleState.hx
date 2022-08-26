@@ -55,7 +55,7 @@ class TitleState extends MusicBeatState
 
 	var curWacky:Array<String> = [];
 
-	var Timer:Float = 0;
+	var gradtimer:Float = 0;
 
 	override public function create():Void
 	{
@@ -221,8 +221,8 @@ class TitleState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 
-		Timer += 1;
-		gradientBar.scale.y += Math.sin(Timer / 10) * 0.001;
+		gradtimer += 1;
+		gradientBar.scale.y += Math.sin(gradtimer / 10) * 0.001;
 		gradientBar.updateHitbox();
 		gradientBar.y = FlxG.height - gradientBar.height;
 
@@ -391,7 +391,7 @@ class TitleState extends MusicBeatState
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			for (logo in titleLogos) {
 				logoInt++;
-				FlxTween.tween(logo, {y: ((logoInt % 2 == 0) ? -20: -100)}, 1.4, {ease: FlxEase.expoInOut});
+				FlxTween.tween(logo, {y: ((logoInt % 2 == 0) ? -20: -10)}, 1.4, {ease: FlxEase.expoInOut});
 				logo.angle = ((logoInt % 2 == 0) ? -4 : 4);
 				new FlxTimer().start(0.01, function(tmr:FlxTimer) {
 					if (logo.angle == ((logoInt % 2 == 0) ? -4 : 4))

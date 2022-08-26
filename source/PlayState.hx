@@ -245,10 +245,10 @@ class PlayState extends MusicBeatState
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
+	var scoreTxtTween:FlxTween;
 	var timeTxt:FlxText;
 	var timeTxtTween:FlxTween;
 	var judgementCounter:FlxText;
-	var scoreTxtTween:FlxTween;
 	var MsTimingTxt:FlxText = new FlxText(0, 0, 0, "0 ms", 22);
 	var MsTimingTween:FlxTween;
 
@@ -1214,11 +1214,13 @@ class PlayState extends MusicBeatState
 		songNameText.borderSize = 1;
 		add(songNameText);
 
+
 		var engineText = new FlxText(0, textYPos, 0, engineName + " Engine (PE " + MainMenuState.psychEngineVersion +")", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		engineText.scrollFactor.set();
 		engineText.borderSize = 1;
 		engineText.x = FlxG.width - engineText.width;
+		engineText.visible = ClientPrefs.getPref('ShowWatermark');
 		add(engineText);
 
 		strumLineNotes.cameras = [camHUD];
@@ -3548,7 +3550,6 @@ class PlayState extends MusicBeatState
 				}
 
 			case 'Play Animation':
-				//trace('Anim to play: ' + value1);
 				var char:Character = dad;
 				switch(value2.toLowerCase().trim()) {
 					case 'bf' | 'boyfriend':
@@ -3707,12 +3708,9 @@ class PlayState extends MusicBeatState
 
 				var newValue:Float = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1) * val1;
 
-				if(val2 <= 0)
-				{
+				if(val2 <= 0) {
 					songSpeed = newValue;
-				}
-				else
-				{
+				} else {
 					songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, val2, {ease: FlxEase.linear, 
 						onComplete: function (twn:FlxTween) {
 							songSpeedTween = null;
@@ -3744,13 +3742,10 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		if (!SONG.notes[curSection].mustHitSection)
-		{
+		if (!SONG.notes[curSection].mustHitSection) {
 			moveCamera(true);
 			callOnLuas('onMoveCamera', ['dad']);
-		}
-		else
-		{
+		} else {
 			moveCamera(false);
 			callOnLuas('onMoveCamera', ['boyfriend']);
 		}
@@ -4772,13 +4767,11 @@ class PlayState extends MusicBeatState
 	var carTimer:FlxTimer;
 	function fastCarDrive()
 	{
-		//trace('Car drive');
 		FlxG.sound.play(Paths.soundRandom('carPass', 0, 1), 0.7);
 
 		fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed) * 3;
 		fastCarCanDrive = false;
-		carTimer = new FlxTimer().start(2, function(tmr:FlxTimer)
-		{
+		carTimer = new FlxTimer().start(2, function(tmr:FlxTimer) {
 			resetFastCar();
 			carTimer = null;
 		});
@@ -4840,8 +4833,6 @@ class PlayState extends MusicBeatState
 		}
 		phillyTrain.x = FlxG.width + 200;
 		trainMoving = false;
-		// trainSound.stop();
-		// trainSound.time = 0;
 		trainCars = 8;
 		trainFinishing = false;
 		startedMoving = false;
@@ -5149,7 +5140,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-		//trace(event, returnVal);
 		return returnVal;
 	}
 
