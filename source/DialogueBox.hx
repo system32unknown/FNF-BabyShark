@@ -126,12 +126,6 @@ class DialogueBox extends FlxSpriteGroup
 		handSelect.visible = false;
 		add(handSelect);
 
-
-		if (!talkingRight)
-		{
-			// box.flipX = true;
-		}
-
 		dropText = new FlxText(242, 502, Std.int(FlxG.width * 0.6), "", 32);
 		dropText.font = 'Pixel Arial 11 Bold';
 		dropText.color = 0xFFD89494;
@@ -144,8 +138,6 @@ class DialogueBox extends FlxSpriteGroup
 		add(swagDialogue);
 
 		dialogue = new Alphabet(0, 80, "", false, true);
-		// dialogue.x = 90;
-		// add(dialogue);
 	}
 
 	var dialogueOpened:Bool = false;
@@ -157,8 +149,7 @@ class DialogueBox extends FlxSpriteGroup
 		// HARD CODING CUZ IM STUPDI
 		if (PlayState.SONG.song.toLowerCase() == 'roses')
 			portraitLeft.visible = false;
-		if (PlayState.SONG.song.toLowerCase() == 'thorns')
-		{
+		if (PlayState.SONG.song.toLowerCase() == 'thorns') {
 			portraitLeft.visible = false;
 			swagDialogue.color = FlxColor.WHITE;
 			dropText.color = FlxColor.BLACK;
@@ -166,38 +157,30 @@ class DialogueBox extends FlxSpriteGroup
 
 		dropText.text = swagDialogue.text;
 
-		if (box.animation.curAnim != null)
-		{
-			if (box.animation.curAnim.name == 'normalOpen' && box.animation.curAnim.finished)
-			{
+		if (box.animation.curAnim != null) {
+			if (box.animation.curAnim.name == 'normalOpen' && box.animation.curAnim.finished) {
 				box.animation.play('normal');
 				dialogueOpened = true;
 			}
 		}
 
-		if (dialogueOpened && !dialogueStarted)
-		{
+		if (dialogueOpened && !dialogueStarted) {
 			startDialogue();
 			dialogueStarted = true;
 		}
 
-		if(PlayerSettings.player.controls.ACCEPT)
-		{
-			if (dialogueEnded)
-			{
+		if(PlayerSettings.player.controls.ACCEPT) {
+			if (dialogueEnded) {
 				remove(dialogue);
-				if (dialogueList[1] == null && dialogueList[0] != null)
-				{
-					if (!isEnding)
-					{
+				if (dialogueList[1] == null && dialogueList[0] != null) {
+					if (!isEnding) {
 						isEnding = true;
 						FlxG.sound.play(Paths.sound('clickText'), 0.8);	
 
 						if (PlayState.SONG.song.toLowerCase() == 'senpai' || PlayState.SONG.song.toLowerCase() == 'thorns')
 							FlxG.sound.music.fadeOut(1.5, 0);
 
-						new FlxTimer().start(0.2, function(tmr:FlxTimer)
-						{
+						new FlxTimer().start(0.2, function(tmr:FlxTimer) {
 							box.alpha -= 1 / 5;
 							bgFade.alpha -= 1 / 5 * 0.7;
 							portraitLeft.visible = false;
@@ -207,22 +190,17 @@ class DialogueBox extends FlxSpriteGroup
 							dropText.alpha = swagDialogue.alpha;
 						}, 5);
 
-						new FlxTimer().start(1.5, function(tmr:FlxTimer)
-						{
+						new FlxTimer().start(1.5, function(tmr:FlxTimer) {
 							finishThing();
 							kill();
 						});
 					}
-				}
-				else
-				{
+				} else {
 					dialogueList.remove(dialogueList[0]);
 					startDialogue();
 					FlxG.sound.play(Paths.sound('clickText'), 0.8);
 				}
-			}
-			else if (dialogueStarted)
-			{
+			} else if (dialogueStarted) {
 				FlxG.sound.play(Paths.sound('clickText'), 0.8);
 				swagDialogue.skip();
 				
@@ -240,11 +218,7 @@ class DialogueBox extends FlxSpriteGroup
 	function startDialogue():Void
 	{
 		cleanDialog();
-		// var theDialog:Alphabet = new Alphabet(0, 70, dialogueList[0], false, true);
-		// dialogue = theDialog;
-		// add(theDialog);
 
-		// swagDialogue.text = ;
 		swagDialogue.resetText(dialogueList[0]);
 		swagDialogue.start(0.04, true);
 		swagDialogue.completeCallback = function() {
@@ -258,15 +232,13 @@ class DialogueBox extends FlxSpriteGroup
 		{
 			case 'dad':
 				portraitRight.visible = false;
-				if (!portraitLeft.visible)
-				{
+				if (!portraitLeft.visible) {
 					if (PlayState.SONG.song.toLowerCase() == 'senpai') portraitLeft.visible = true;
 					portraitLeft.animation.play('enter');
 				}
 			case 'bf':
 				portraitLeft.visible = false;
-				if (!portraitRight.visible)
-				{
+				if (!portraitRight.visible) {
 					portraitRight.visible = true;
 					portraitRight.animation.play('enter');
 				}
@@ -276,8 +248,7 @@ class DialogueBox extends FlxSpriteGroup
 		}
 	}
 
-	function cleanDialog():Void
-	{
+	function cleanDialog():Void {
 		var splitName:Array<String> = dialogueList[0].split(":");
 		curCharacter = splitName[1];
 		dialogueList[0] = dialogueList[0].substr(splitName[1].length + 2).trim();

@@ -42,7 +42,6 @@ import DialogueBoxPsych;
 #if hscript
 import hscript.Parser;
 import hscript.Interp;
-import hscript.Expr;
 #end
 
 #if desktop
@@ -489,16 +488,12 @@ class FunkinLua {
 			if(luaFile.endsWith(".lua"))cervix=luaFile;
 			var doPush = false;
 			#if MODS_ALLOWED
-			if (FileSystem.exists(Paths.modFolders(cervix)))
-			{
+			if (FileSystem.exists(Paths.modFolders(cervix))) {
 				cervix = Paths.modFolders(cervix);
 				doPush = true;
-			}
-			else if (FileSystem.exists(cervix))
-			{
+			} else if (FileSystem.exists(cervix)) {
 				doPush = true;
-			}
-			else {
+			} else {
 				cervix = Paths.getPreloadPath(cervix);
 				if(FileSystem.exists(cervix)) {
 					doPush = true;
@@ -526,13 +521,13 @@ class FunkinLua {
 		});
 
 		Lua_helper.add_callback(lua, "getGlobalFromScript", function(?luaFile:String, ?global:String){ // returns the global from a script
-			if(luaFile==null){
+			if(luaFile==null) {
 				#if (linc_luajit >= "0.0.6")
 				LuaL.error(lua, "bad argument #1 to 'getGlobalFromScript' (string expected, got nil)");
 				#end
 				return;
 			}
-			if(global==null){
+			if(global==null) {
 				#if (linc_luajit >= "0.0.6")
 				LuaL.error(lua, "bad argument #2 to 'getGlobalFromScript' (string expected, got nil)");
 				#end
@@ -1880,7 +1875,7 @@ class FunkinLua {
 			color.hue = hue;
 			color.saturation = saturation;
 			color.brightness = brightness;
-			if(real!=null) {
+			if(real != null) {
 				real.shader = color.shader;
 				return true;
 			}
@@ -1971,7 +1966,7 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "screenCenter", function(obj:String, pos:String = 'xy') {
 			var spr:FlxSprite = PlayState.instance.getLuaObject(obj);
 
-			if(spr==null){
+			if(spr == null) {
 				var killMe:Array<String> = obj.split('.');
 				spr = getObjectDirectly(killMe[0]);
 				if(killMe.length > 1) {
@@ -1979,19 +1974,11 @@ class FunkinLua {
 				}
 			}
 
-			if(spr != null)
-			{
-				switch(pos.trim().toLowerCase())
-				{
-					case 'x':
-						spr.screenCenter(X);
-						return;
-					case 'y':
-						spr.screenCenter(Y);
-						return;
-					default:
-						spr.screenCenter(XY);
-						return;
+			if(spr != null) {
+				switch(pos.trim().toLowerCase()) {
+					case 'x': spr.screenCenter(X); return;
+					case 'y': spr.screenCenter(Y); return;
+					default: spr.screenCenter(XY); return;
 				}
 			}
 			luaTrace("Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
@@ -1999,8 +1986,7 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "objectsOverlap", function(obj1:String, obj2:String) {
 			var namesArray:Array<String> = [obj1, obj2];
 			var objectsArray:Array<FlxSprite> = [];
-			for (i in 0...namesArray.length)
-			{
+			for (i in 0...namesArray.length) {
 				var real = PlayState.instance.getLuaObject(namesArray[i]);
 				if(real!=null) {
 					objectsArray.push(real);
@@ -2009,8 +1995,7 @@ class FunkinLua {
 				}
 			}
 
-			if(!objectsArray.contains(null) && FlxG.overlap(objectsArray[0], objectsArray[1]))
-			{
+			if(!objectsArray.contains(null) && FlxG.overlap(objectsArray[0], objectsArray[1])) {
 				return true;
 			}
 			return false;
@@ -2022,8 +2007,7 @@ class FunkinLua {
 				spr = getVarInArray(getPropertyLoopThingWhatever(killMe), killMe[killMe.length-1]);
 			}
 
-			if(spr != null)
-			{
+			if(spr != null) {
 				if(spr.framePixels != null) spr.framePixels.getPixel32(x, y);
 				return spr.pixels.getPixel32(x, y);
 			}
@@ -2294,10 +2278,8 @@ class FunkinLua {
 				obj.alignment = LEFT;
 				switch(alignment.trim().toLowerCase())
 				{
-					case 'right':
-						obj.alignment = RIGHT;
-					case 'center':
-						obj.alignment = CENTER;
+					case 'right': obj.alignment = RIGHT;
+					case 'center': obj.alignment = CENTER;
 				}
 			}
 		});
@@ -2343,7 +2325,6 @@ class FunkinLua {
 				if(!shit.wasAdded) {
 					getInstance().add(shit);
 					shit.wasAdded = true;
-					//trace('added a thing: ' + tag);
 				}
 			}
 		});
@@ -2652,22 +2633,17 @@ class FunkinLua {
 
 	public function initHaxeModule()
 	{
-		if(hscript == null)
-		{
-			//trace('initializing haxe interp for: $scriptName');
+		if(hscript == null) {
 			hscript = new HScript();
 		}
 	}
 	#end
 
-	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic):Any
-	{
+	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic):Any {
 		var shit:Array<String> = variable.split('[');
-		if(shit.length > 1)
-		{
+		if(shit.length > 1) {
 			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
-			for (i in 1...shit.length)
-			{
+			for (i in 1...shit.length) {
 				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
 				if(i >= shit.length-1) //Last array
 					blah[leNum] = value;
@@ -2683,11 +2659,9 @@ class FunkinLua {
 	public static function getVarInArray(instance:Dynamic, variable:String):Any
 	{
 		var shit:Array<String> = variable.split('[');
-		if(shit.length > 1)
-		{
+		if(shit.length > 1) {
 			var blah:Dynamic = Reflect.getProperty(instance, shit[0]);
-			for (i in 1...shit.length)
-			{
+			for (i in 1...shit.length) {
 				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
 				blah = blah[leNum];
 			}
@@ -2742,24 +2716,20 @@ class FunkinLua {
 				var frag:String = folder + name + '.frag';
 				var vert:String = folder + name + '.vert';
 				var found:Bool = false;
-				if(FileSystem.exists(frag))
-				{
+				if(FileSystem.exists(frag)) {
 					frag = File.getContent(frag);
 					found = true;
 				}
 				else frag = null;
 
-				if (FileSystem.exists(vert))
-				{
+				if (FileSystem.exists(vert)) {
 					vert = File.getContent(vert);
 					found = true;
 				}
 				else vert = null;
 
-				if(found)
-				{
+				if(found) {
 					PlayState.instance.runtimeShaders.set(name, [frag, vert]);
-					//trace('Found shader $name!');
 					return true;
 				}
 			}
@@ -3086,38 +3056,36 @@ class FunkinLua {
 	}
 
 	public function setVars():Void
-		{
-			FunkinLua.hscriptVars.set('FlxG', FlxG);
-			FunkinLua.hscriptVars.set('FlxSprite', FlxSprite);
-			FunkinLua.hscriptVars.set('FlxCamera', FlxCamera);
-			FunkinLua.hscriptVars.set('FlxTimer', FlxTimer);
-			FunkinLua.hscriptVars.set('FlxTween', FlxTween);
-			FunkinLua.hscriptVars.set('FlxEase', FlxEase);
-			FunkinLua.hscriptVars.set('PlayState', PlayState);
-			FunkinLua.hscriptVars.set('game', PlayState.instance);
-			FunkinLua.hscriptVars.set('Paths', Paths);
-			FunkinLua.hscriptVars.set('Conductor', Conductor);
-			FunkinLua.hscriptVars.set('ClientPrefs', ClientPrefs);
-			FunkinLua.hscriptVars.set('Character', Character);
-			FunkinLua.hscriptVars.set('Alphabet', Alphabet);
-			FunkinLua.hscriptVars.set('CustomSubstate', CustomSubstate);
-			#if !flash
-			FunkinLua.hscriptVars.set('FlxRuntimeShader', FlxRuntimeShader);
-			FunkinLua.hscriptVars.set('ShaderFilter', openfl.filters.ShaderFilter);
-			#end
-			FunkinLua.hscriptVars.set('StringTools', StringTools);
-	
-			FunkinLua.hscriptVars.set('setVar', function(name:String, value:Dynamic)
-			{
-				PlayState.instance.variables.set(name, value);
-			});
-			FunkinLua.hscriptVars.set('getVar', function(name:String)
-			{
-				var result:Dynamic = null;
-				if(PlayState.instance.variables.exists(name)) result = PlayState.instance.variables.get(name);
-				return result;
-			});
-		}
+	{
+		FunkinLua.hscriptVars.set('FlxG', FlxG);
+		FunkinLua.hscriptVars.set('FlxSprite', FlxSprite);
+		FunkinLua.hscriptVars.set('FlxCamera', FlxCamera);
+		FunkinLua.hscriptVars.set('FlxTimer', FlxTimer);
+		FunkinLua.hscriptVars.set('FlxTween', FlxTween);
+		FunkinLua.hscriptVars.set('FlxEase', FlxEase);
+		FunkinLua.hscriptVars.set('PlayState', PlayState);
+		FunkinLua.hscriptVars.set('game', PlayState.instance);
+		FunkinLua.hscriptVars.set('Paths', Paths);
+		FunkinLua.hscriptVars.set('Conductor', Conductor);
+		FunkinLua.hscriptVars.set('ClientPrefs', ClientPrefs);
+		FunkinLua.hscriptVars.set('Character', Character);
+		FunkinLua.hscriptVars.set('Alphabet', Alphabet);
+		FunkinLua.hscriptVars.set('CustomSubstate', CustomSubstate);
+		#if !flash
+		FunkinLua.hscriptVars.set('FlxRuntimeShader', FlxRuntimeShader);
+		FunkinLua.hscriptVars.set('ShaderFilter', openfl.filters.ShaderFilter);
+		#end
+		FunkinLua.hscriptVars.set('StringTools', StringTools);
+
+		FunkinLua.hscriptVars.set('setVar', function(name:String, value:Dynamic) {
+			PlayState.instance.variables.set(name, value);
+		});
+		FunkinLua.hscriptVars.set('getVar', function(name:String) {
+			var result:Dynamic = null;
+			if(PlayState.instance.variables.exists(name)) result = PlayState.instance.variables.get(name);
+			return result;
+		});
+	}
 
 	#if LUA_ALLOWED
 	public function getBool(variable:String) {
@@ -3159,8 +3127,7 @@ class ModchartSprite extends FlxSprite
 	public var wasAdded:Bool = false;
 	public var animOffsets:Map<String, Array<Float>> = new Map<String, Array<Float>>();
 
-	public function new(?x:Float = 0, ?y:Float = 0)
-	{
+	public function new(?x:Float = 0, ?y:Float = 0) {
 		super(x, y);
 		antialiasing = ClientPrefs.getPref('globalAntialiasing');
 	}
@@ -3169,8 +3136,7 @@ class ModchartSprite extends FlxSprite
 class ModchartText extends FlxText
 {
 	public var wasAdded:Bool = false;
-	public function new(x:Float, y:Float, text:String, width:Float)
-	{
+	public function new(x:Float, y:Float, text:String, width:Float) {
 		super(x, y, width, text, 16);
 		setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		cameras = [PlayState.instance.camHUD];

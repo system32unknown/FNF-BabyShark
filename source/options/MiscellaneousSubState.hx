@@ -39,6 +39,13 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Dynamic Camera Movement',
+			"If unchecked, \nthe camera won't move in the direction in which the characters sing.",
+			'camMovement', 
+			'bool',
+			true);
+		addOption(option);
+
 		super();
 	}
 }

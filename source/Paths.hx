@@ -48,8 +48,7 @@ class Paths
 			dumpExclusions.push(key);
 	}
 
-	public static var dumpExclusions:Array<String> =
-	[
+	public static var dumpExclusions:Array<String> = [
 		'assets/music/freakyMenu.$SOUND_EXT',
 		'assets/shared/music/breakfast.$SOUND_EXT',
 		'assets/shared/music/tea-time.$SOUND_EXT',
@@ -81,8 +80,7 @@ class Paths
 	public static function clearStoredMemory(?cleanUnused:Bool = false) {
 		// clear anything not in the tracked assets list
 		@:privateAccess
-		for (key in FlxG.bitmap._cache.keys())
-		{
+		for (key in FlxG.bitmap._cache.keys()) {
 			var obj = FlxG.bitmap._cache.get(key);
 			if (obj != null && !currentTrackedAssets.exists(key)) {
 				openfl.Assets.cache.removeBitmapData(key);
@@ -95,7 +93,6 @@ class Paths
 		for (key in currentTrackedSounds.keys()) {
 			if (!localTrackedAssets.contains(key)
 			&& !dumpExclusions.contains(key) && key != null) {
-				//trace('test: ' + dumpExclusions, key);
 				Assets.cache.clear(key);
 				currentTrackedSounds.remove(key);
 			}
@@ -117,8 +114,7 @@ class Paths
 		if (library != null)
 			return getLibraryPath(file, library);
 
-		if (currentLevel != null)
-		{
+		if (currentLevel != null) {
 			var levelPath:String = '';
 			if(currentLevel != 'shared') {
 				levelPath = getLibraryPathForce(file, currentLevel);
@@ -134,19 +130,16 @@ class Paths
 		return getPreloadPath(file);
 	}
 
-	static public function getLibraryPath(file:String, library = "preload")
-	{
+	static public function getLibraryPath(file:String, library = "preload") {
 		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
 	}
 
-	inline static function getLibraryPathForce(file:String, library:String)
-	{
+	inline static function getLibraryPathForce(file:String, library:String) {
 		var returnPath = '$library:assets/$library/$file';
 		return returnPath;
 	}
 
-	inline public static function getPreloadPath(file:String = '')
-	{
+	inline public static function getPreloadPath(file:String = '') {
 		return 'assets/$file';
 	}
 
@@ -243,8 +236,7 @@ class Paths
 		if (FileSystem.exists(getPreloadPath(key)))
 			return File.getContent(getPreloadPath(key));
 
-		if (currentLevel != null)
-		{
+		if (currentLevel != null) {
 			var levelPath:String = '';
 			if(currentLevel != 'shared') {
 				levelPath = getLibraryPathForce(key, currentLevel);
@@ -370,7 +362,6 @@ class Paths
 		// I hate this so god damn much
 		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
 		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
-		// trace(gottenPath);
 		if(!currentTrackedSounds.exists(gottenPath))
 		#if MODS_ALLOWED
 			currentTrackedSounds.set(gottenPath, Sound.fromFile('./' + gottenPath));
@@ -427,7 +418,7 @@ class Paths
 			}
 		}
 
-		for(mod in getGlobalMods()){
+		for(mod in getGlobalMods()) {
 			var fileToCheck:String = mods(mod + '/' + key);
 			if(FileSystem.exists(fileToCheck))
 				return fileToCheck;
@@ -445,14 +436,11 @@ class Paths
 	{
 		globalMods = [];
 		var path:String = 'modsList.txt';
-		if(FileSystem.exists(path))
-		{
+		if(FileSystem.exists(path)) {
 			var list:Array<String> = CoolUtil.coolTextFile(path);
-			for (i in list)
-			{
+			for (i in list) {
 				var dat = i.split("|");
-				if (dat[1] == "1")
-				{
+				if (dat[1] == "1") {
 					var folder = dat[0];
 					var path = Paths.mods(folder + '/pack.json');
 					if(FileSystem.exists(path)) {
@@ -463,7 +451,7 @@ class Paths
 								var global:Bool = Reflect.getProperty(stuff, "runsGlobally");
 								if(global)globalMods.push(dat[0]);
 							}
-						} catch(e:Dynamic){
+						} catch(e:Dynamic) {
 							trace(e);
 						}
 					}

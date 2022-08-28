@@ -16,8 +16,7 @@ class PhillyGlowParticle extends FlxSprite
 		antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		lifeTime = FlxG.random.float(0.6, 0.9);
 		decay = FlxG.random.float(0.8, 1);
-		if(!ClientPrefs.getPref('flashing'))
-		{
+		if(!ClientPrefs.getPref('flashing')) {
 			decay *= 0.5;
 			alpha = 0.5;
 		}

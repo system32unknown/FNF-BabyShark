@@ -39,12 +39,9 @@ class CoolUtil
 		if(num == null) num = PlayState.storyDifficulty;
 
 		var fileSuffix:String = difficulties[num];
-		if(fileSuffix != defaultDifficulty)
-		{
+		if(fileSuffix != defaultDifficulty) {
 			fileSuffix = '-' + fileSuffix;
-		}
-		else
-		{
+		} else {
 			fileSuffix = '';
 		}
 		return Paths.formatToSongPath(fileSuffix);
@@ -68,8 +65,7 @@ class CoolUtil
 		if(Assets.exists(path)) daList = Assets.getText(path).trim().split('\n');
 		#end
 
-		for (i in 0...daList.length)
-		{
+		for (i in 0...daList.length) {
 			daList[i] = daList[i].trim();
 		}
 
@@ -80,8 +76,7 @@ class CoolUtil
 		var daList:Array<String> = [];
 		daList = string.trim().split('\n');
 
-		for (i in 0...daList.length)
-		{
+		for (i in 0...daList.length) {
 			daList[i] = daList[i].trim();
 		}
 
@@ -96,7 +91,7 @@ class CoolUtil
 					if(countByColor.exists(colorOfThisPixel)) {
 					    countByColor[colorOfThisPixel] =  countByColor[colorOfThisPixel] + 1;
 					} else if(countByColor[colorOfThisPixel] != 13520687 - (2*13520687)) {
-						 countByColor[colorOfThisPixel] = 1;
+						countByColor[colorOfThisPixel] = 1;
 					}
 			  	}
 			}
@@ -104,8 +99,8 @@ class CoolUtil
 		var maxCount = 0;
 		var maxKey:Int = 0;//after the loop this will store the max color
 		countByColor[flixel.util.FlxColor.BLACK] = 0;
-			for(key in countByColor.keys()){
-			if(countByColor[key] >= maxCount){
+			for(key in countByColor.keys()) {
+			if(countByColor[key] >= maxCount) {
 				maxCount = countByColor[key];
 				maxKey = key;
 			}
@@ -113,11 +108,9 @@ class CoolUtil
 		return maxKey;
 	}
 
-	public static function numberArray(max:Int, ?min = 0):Array<Int>
-	{
+	public static function numberArray(max:Int, ?min = 0):Array<Int> {
 		var dumbArray:Array<Int> = [];
-		for (i in min...max)
-		{
+		for (i in min...max) {
 			dumbArray.push(i);
 		}
 		return dumbArray;
@@ -148,8 +141,7 @@ class CoolUtil
 		return num;
 	}
 
-	public static function GenerateLetterRank(accuracy:Float) // generate a letter ranking
-	{
+	public static function GenerateLetterRank(accuracy:Float) { // generate a letter rankings
 		var ranking:String = "N/A";
 		var wifeConditions:Array<Bool> = [
 			accuracy >= 99.9935, // AAAAA
@@ -170,56 +162,51 @@ class CoolUtil
 			accuracy < 60 // D
 		];
 
-		for (i in 0...wifeConditions.length)
-		{
-			if (wifeConditions[i])
-			{
-				switch (i)
-				{
-					case 0:
-						ranking = "AAAAA";
-					case 1:
-						ranking = "AAAA:";
-					case 2:
-						ranking = "AAAA.";
-					case 3:
-						ranking = "AAAA";
-					case 4:
-						ranking = "AAA:";
-					case 5:
-						ranking = "AAA.";
-					case 6:
-						ranking = "AAA";
-					case 7:
-						ranking = "AA:";
-					case 8:
-						ranking = "AA.";
-					case 9:
-						ranking = "AA";
-					case 10:
-						ranking = "A:";
-					case 11:
-						ranking = "A.";
-					case 12:
-						ranking = "A";
-					case 13:
-						ranking = "B";
-					case 14:
-						ranking = "C";
-					case 15:
-						ranking = "D";
+		for (i in 0...wifeConditions.length) {
+			if (wifeConditions[i]) {
+				switch (i) {
+					case 0: ranking = "AAAAA";
+					case 1: ranking = "AAAA:";
+					case 2: ranking = "AAAA.";
+					case 3: ranking = "AAAA";
+					case 4: ranking = "AAA:";
+					case 5: ranking = "AAA.";
+					case 6: ranking = "AAA";
+					case 7: ranking = "AA:";
+					case 8: ranking = "AA.";
+					case 9: ranking = "AA";
+					case 10: ranking = "A:";
+					case 11: ranking = "A.";
+					case 12: ranking = "A";
+					case 13: ranking = "B";
+					case 14: ranking = "C";
+					case 15: ranking = "D";
 				}
 				break;
 			}
 		}
 
-		if (accuracy == 0)
-			ranking = "N/A";
-
+		if (accuracy == 0) ranking = "N/A";
 		return ranking;
 	}
 
 	public static function adjustFPS(num:Float):Float {
 		return FlxG.elapsed / (1 / 60) * num;
+	}
+
+	public static function getSpilttext(path:String):Array<String>
+	{
+		var firstArray:Array<String> = [];
+		#if sys
+		if(FileSystem.exists(path)) firstArray = File.getContent(path).trim().split('\n');
+		#else
+		if(Assets.exists(path)) firstArray = Assets.getText(path).trim().split('\n');
+		#end
+
+		for (i in 0...firstArray.length) {
+			firstArray[i] = firstArray[i].trim().replace("-", " ");
+		}
+
+		return firstArray;
 	}
 }

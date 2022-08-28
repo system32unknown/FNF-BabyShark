@@ -35,16 +35,13 @@ class PlayerSettings
 		controls.setKeyboardScheme(scheme);
 	}
 
-	static public function init():Void
-	{
-		if (player == null)
-		{
+	static public function init():Void {
+		if (player == null) {
 			player = new PlayerSettings(0, Solo);
 		}
 
 		var numGamepads = FlxG.gamepads.numActiveGamepads;
-		if (numGamepads > 0)
-		{
+		if (numGamepads > 0) {
 			var gamepad = FlxG.gamepads.getByID(0);
 			if (gamepad == null)
 				throw 'Unexpected null gamepad. id:0';
@@ -53,8 +50,7 @@ class PlayerSettings
 		}
 	}
 
-	static public function reset()
-	{
+	static public function reset() {
 		player = null;
 	}
 }

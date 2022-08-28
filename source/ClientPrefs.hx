@@ -19,6 +19,7 @@ class ClientPrefs {
 		'shaders' => true,
 		'framerate' => 60,
 		'camZooms' => true,
+		'camMovement' => true,
 		'hideHud' => false,
 		'ShowMsTiming' => false,
 		'ShowCombo' => false,
@@ -97,8 +98,6 @@ class ClientPrefs {
 		// bps is calculated by bpm / 60
 		// oh yeah and you'd have to actually convert the difference to seconds which I already do, because this is based on beats and stuff. but it should work
 		// just fine. but I wont implement it because I don't know how you handle sustains and other stuff like that.
-		// oh yeah when you calculate the bps divide it by the songSpeed or rate because it wont scroll correctly when speeds exist.
-		'songspeed' => 1.0,
 		'healthgain' => 1.0,
 		'healthloss' => 1.0,
 		'instakill' => false,

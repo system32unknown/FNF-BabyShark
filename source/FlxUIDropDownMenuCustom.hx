@@ -209,7 +209,6 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 			btn.visible = false;
 		}
 
-		// _ui_control_callback = UIControlCallback;
 		header.button.onUp.callback = onDropdown;
 		add(header);
 	}

@@ -255,8 +255,7 @@ class TitleState extends MusicBeatState
 				titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
 			}
 			
-			if(pressedEnter)
-			{
+			if(pressedEnter) {
 				var logoInt:Int = 0;
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
@@ -347,7 +346,10 @@ class TitleState extends MusicBeatState
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
 					createCoolText(['Vs Dave and Bambi Created by:']);
 				case 2:
-					addMoreText('Vs Dave and Bambi Team');
+					addMoreText('MoldyGH, MTM101', -60);
+					addMoreText('Rapparep lol, TheBuilderXD', -60);
+					addMoreText('T5mpler, Erizur, Billy Bobbo', -60);
+					addMoreText('Marcello_TIMEnice30', -60);
 				case 3:
 					deleteCoolText();
 					createCoolText(['Baby Shark\'s Big Show Created by:']);
@@ -372,7 +374,7 @@ class TitleState extends MusicBeatState
 					addMoreText(curWacky[1]);
 				case 11:
 					deleteCoolText();
-					createCoolText(['Today is ']);	
+					createCoolText(['Current Time is ']);	
 				case 12:
 					addMoreText(Date.now().toString());
 				case 13:

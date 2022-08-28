@@ -183,8 +183,7 @@ class ChartingState extends MusicBeatState
 	{
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
-		else
-		{
+		else {
 			CoolUtil.difficulties = CoolUtil.defaultDifficulties.copy();
 
 			_song = {
@@ -279,7 +278,7 @@ class ChartingState extends MusicBeatState
 		add(quant);
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
-		for (i in 0...8){
+		for (i in 0...8) {
 			var note:StrumNote = new StrumNote(GRID_SIZE * (i+1), strumLine.y, i % 4, 0);
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			note.updateHitbox();
@@ -310,8 +309,7 @@ class ChartingState extends MusicBeatState
 		UI_box.y = 25;
 		UI_box.scrollFactor.set();
 
-		text =
-		"W/S or Mouse Wheel - Change Conductor's strum time
+		text = "W/S or Mouse Wheel - Change Conductor's strum time
 		\nA/D - Go to the previous/next section
 		\nLeft/Right - Change Snap
 		\nUp/Down - Change Conductor's Strum Time with Snapping
@@ -509,7 +507,6 @@ class ChartingState extends MusicBeatState
 
 		tempMap.clear();
 		var stages:Array<String> = [];
-		// Psych
 		var stageFile:Array<String> = CoolUtil.coolTextFile(Paths.txt('stageList'));
 		for (i in 0...stageFile.length) { //Prevent duplicates
 			var stageToCheck:String = stageFile[i];
@@ -656,8 +653,7 @@ class ChartingState extends MusicBeatState
 
 		var check_eventsSec:FlxUICheckBox = null;
 		var check_notesSec:FlxUICheckBox = null;
-		var copyButton:FlxButton = new FlxButton(10, 190, "Copy Section", function()
-		{
+		var copyButton:FlxButton = new FlxButton(10, 190, "Copy Section", function() {
 			notesCopied = [];
 			sectionToCopy = curSec;
 			for (i in 0..._song.notes[curSec].sectionNotes.length)
@@ -668,14 +664,11 @@ class ChartingState extends MusicBeatState
 
 			var startThing:Float = sectionStartTime();
 			var endThing:Float = sectionStartTime(1);
-			for (event in _song.events)
-			{
+			for (event in _song.events) {
 				var strumTime:Float = event[0];
-				if(endThing > event[0] && event[0] >= startThing)
-				{
+				if(endThing > event[0] && event[0] >= startThing) {
 					var copiedEventArray:Array<Dynamic> = [];
-					for (i in 0...event[1].length)
-					{
+					for (i in 0...event[1].length) {
 						var eventToPush:Array<Dynamic> = event[1][i];
 						copiedEventArray.push([eventToPush[0], eventToPush[1], eventToPush[2]]);
 					}
@@ -684,17 +677,14 @@ class ChartingState extends MusicBeatState
 			}
 		});
 
-		var pasteButton:FlxButton = new FlxButton(copyButton.x + 100, copyButton.y, "Paste Section", function()
-		{
-			if(notesCopied == null || notesCopied.length < 1)
-			{
+		var pasteButton:FlxButton = new FlxButton(copyButton.x + 100, copyButton.y, "Paste Section", function() {
+			if(notesCopied == null || notesCopied.length < 1) {
 				return;
 			}
 
 			var addToTime:Float = Conductor.stepCrochet * (getSectionBeats() * 4 * (curSec - sectionToCopy));
 
-			for (note in notesCopied)
-			{
+			for (note in notesCopied) {
 				var copiedNote:Array<Dynamic> = [];
 				var newStrumTime:Float = note[0] + addToTime;
 				if(note[1] < 0) {
@@ -720,15 +710,12 @@ class ChartingState extends MusicBeatState
 			updateGrid();
 		});
 
-		var clearSectionButton:FlxButton = new FlxButton(pasteButton.x + 100, pasteButton.y, "Clear", function()
-		{
-			if(check_notesSec.checked)
-			{
+		var clearSectionButton:FlxButton = new FlxButton(pasteButton.x + 100, pasteButton.y, "Clear", function() {
+			if(check_notesSec.checked) {
 				_song.notes[curSec].sectionNotes = [];
 			}
 
-			if(check_eventsSec.checked)
-			{
+			if(check_eventsSec.checked) {
 				var i:Int = _song.events.length - 1;
 				var startThing:Float = sectionStartTime();
 				var endThing:Float = sectionStartTime(1);
@@ -819,7 +806,7 @@ class ChartingState extends MusicBeatState
 				duetNotes.push(copiedNote);
 			}
 
-			for (i in duetNotes){
+			for (i in duetNotes) {
 				_song.notes[curSec].sectionNotes.push(i);
 			}
 

@@ -53,8 +53,7 @@ class Highscore {
 				setScore(daSong, score);
 				if(rating >= 0) setRating(daSong, rating);
 			}
-		}
-		else {
+		} else {
 			setScore(daSong, score);
 			if(rating >= 0) setRating(daSong, rating);
 		}

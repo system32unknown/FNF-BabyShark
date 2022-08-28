@@ -47,8 +47,7 @@ class MasterEditorMenu extends MusicBeatState
 		grpTexts = new FlxTypedGroup<Alphabet>();
 		add(grpTexts);
 
-		for (i in 0...options.length)
-		{
+		for (i in 0...options.length) {
 			var leText:Alphabet = new Alphabet(0, (70 * i) + 30, options[i], true, false);
 			leText.isMenuItem = true;
 			leText.targetY = i;
@@ -65,8 +64,7 @@ class MasterEditorMenu extends MusicBeatState
 		directoryTxt.scrollFactor.set();
 		add(directoryTxt);
 		
-		for (folder in Paths.getModDirectories())
-		{
+		for (folder in Paths.getModDirectories()) {
 			directories.push(folder);
 		}
 
@@ -82,32 +80,26 @@ class MasterEditorMenu extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (controls.UI_UP_P)
-		{
+		if (controls.UI_UP_P) {
 			changeSelection(-1);
 		}
-		if (controls.UI_DOWN_P)
-		{
+		if (controls.UI_DOWN_P) {
 			changeSelection(1);
 		}
 		#if MODS_ALLOWED
-		if(controls.UI_LEFT_P)
-		{
+		if(controls.UI_LEFT_P) {
 			changeDirectory(-1);
 		}
-		if(controls.UI_RIGHT_P)
-		{
+		if(controls.UI_RIGHT_P) {
 			changeDirectory(1);
 		}
 		#end
 
-		if (controls.BACK)
-		{
+		if (controls.BACK) {
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
-		if (controls.ACCEPT)
-		{
+		if (controls.ACCEPT) {
 			switch(options[curSelected]) {
 				case 'Character Editor':
 					LoadingState.loadAndSwitchState(new CharacterEditorState(Character.DEFAULT_CHARACTER, false));
@@ -129,8 +121,7 @@ class MasterEditorMenu extends MusicBeatState
 		}
 		
 		var bullShit:Int = 0;
-		for (item in grpTexts.members)
-		{
+		for (item in grpTexts.members) {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 

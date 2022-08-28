@@ -49,8 +49,7 @@ class CharacterEditorState extends MusicBeatState
 	var goToPlayState:Bool = true;
 	var camFollow:FlxObject;
 
-	public function new(daAnim:String = 'spooky', goToPlayState:Bool = true)
-	{
+	public function new(daAnim:String = 'spooky', goToPlayState:Bool = true) {
 		super();
 		this.daAnim = daAnim;
 		this.goToPlayState = goToPlayState;
@@ -346,8 +345,7 @@ class CharacterEditorState extends MusicBeatState
 
 		var check_player = new FlxUICheckBox(10, 60, null, null, "Playable Character", 100);
 		check_player.checked = daAnim.startsWith('bf');
-		check_player.callback = function()
-		{
+		check_player.callback = function() {
 			char.isPlayer = !char.isPlayer;
 			char.flipX = !char.flipX;
 			updatePointerPos();
@@ -355,8 +353,7 @@ class CharacterEditorState extends MusicBeatState
 			ghostChar.flipX = char.flipX;
 		};
 
-		charDropDown = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(character:String)
-		{
+		charDropDown = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(character:String) {
 			daAnim = characterList[Std.parseInt(character)];
 			check_player.checked = daAnim.startsWith('bf');
 			loadChar(!check_player.checked);
@@ -366,18 +363,15 @@ class CharacterEditorState extends MusicBeatState
 		charDropDown.selectedLabel = daAnim;
 		reloadCharacterDropDown();
 
-		var reloadCharacter:FlxButton = new FlxButton(140, 20, "Reload Char", function()
-		{
+		var reloadCharacter:FlxButton = new FlxButton(140, 20, "Reload Char", function() {
 			loadChar(!check_player.checked);
 			reloadCharacterDropDown();
 		});
 
-		var templateCharacter:FlxButton = new FlxButton(140, 50, "Load Template", function()
-		{
+		var templateCharacter:FlxButton = new FlxButton(140, 50, "Load Template", function() {
 			var parsedJson:CharacterFile = cast Json.parse(TemplateCharacter);
 			var characters:Array<Character> = [char, ghostChar];
-			for (character in characters)
-			{
+			for (character in characters) {
 				character.animOffsets.clear();
 				character.animationsArray = parsedJson.animations;
 				for (anim in character.animationsArray)

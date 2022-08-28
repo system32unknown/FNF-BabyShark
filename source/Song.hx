@@ -23,10 +23,12 @@ typedef SwagSong =
 	var player2:String;
 	var gfVersion:String;
 	var stage:String;
+	var validScore:Bool;
+
+	var mania:Null<Int>;
 
 	var arrowSkin:String;
 	var splashSkin:String;
-	var validScore:Bool;
 }
 
 class Song
@@ -36,13 +38,26 @@ class Song
 	public var events:Array<Dynamic>;
 	public var bpm:Float;
 	public var needsVoices:Bool = true;
+	public var speed:Float = 1;
+
 	public var arrowSkin:String;
 	public var splashSkin:String;
-	public var speed:Float = 1;
+
 	public var stage:String;
+
 	public var player1:String = 'bf';
 	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
+
+	public var keyCount:Null<Int> = 4;
+	public var playerKeyCount:Null<Int> = 4;
+
+	public function new(song, notes, bpm)
+	{
+		this.song = song;
+		this.notes = notes;
+		this.bpm = bpm;
+	}
 
 	private static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
 	{
@@ -51,6 +66,26 @@ class Song
 			songJson.gfVersion = songJson.player3;
 			songJson.player3 = null;
 		}
+
+		if(Std.string(songJson.keyCount) == "null")
+			songJson.keyCount = 4;
+
+		if(Std.string(songJson.playerKeyCount) == "null")
+			songJson.playerKeyCount = songJson.keyCount;
+
+		if(Std.string(songJson.mania) != "null") {
+			switch(songJson.mania) {
+				case 0: songJson.keyCount = 4;
+				case 1: songJson.keyCount = 6;
+				case 2: songJson.keyCount = 7;
+				case 3: songJson.keyCount = 9;
+			}
+		}
+
+		songJson.mania = null;
+
+		if(songJson.keyCount > Note.maxMania)
+			songJson.keyCount = Note.maxMania;
 
 		if(songJson.events == null)
 		{
@@ -62,11 +97,9 @@ class Song
 				var i:Int = 0;
 				var notes:Array<Dynamic> = sec.sectionNotes;
 				var len:Int = notes.length;
-				while(i < len)
-				{
+				while(i < len) {
 					var note:Array<Dynamic> = notes[i];
-					if(note[1] < 0)
-					{
+					if(note[1] < 0) {
 						songJson.events.push([note[0], [[note[2], note[3], note[4]]]]);
 						notes.remove(note);
 						len = notes.length;
@@ -75,13 +108,6 @@ class Song
 				}
 			}
 		}
-	}
-
-	public function new(song, notes, bpm)
-	{
-		this.song = song;
-		this.notes = notes;
-		this.bpm = bpm;
 	}
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
@@ -121,6 +147,7 @@ class Song
 	{
 		var swagShit:SwagSong = cast Json.parse(rawJson).song;
 		swagShit.validScore = true;
+
 		return swagShit;
 	}
 }

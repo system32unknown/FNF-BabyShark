@@ -114,8 +114,7 @@ class GameOverSubstate extends MusicBeatSubstate
 					coolStartDeath(0.2);
 
 					FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25)), 1, false, null, true, function() {
-						if(!isEnding)
-						{
+						if(!isEnding) {
 							FlxG.sound.music.fadeIn(0.2, 1, 4);
 						}
 					});
@@ -128,8 +127,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			}
 		}
 
-		if (FlxG.sound.music.playing)
-		{
+		if (FlxG.sound.music.playing) {
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
 		PlayState.instance.callOnLuas('onUpdatePost', [elapsed]);

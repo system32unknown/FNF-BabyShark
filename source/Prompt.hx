@@ -1,6 +1,5 @@
 package;
 import flixel.FlxSprite;
-import flixel.addons.ui.FlxUIPopup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
@@ -11,10 +10,8 @@ class Prompt extends MusicBeatSubstate
 	var selected = 0;
 	public var okc:Void->Void;
 	public var cancelc:Void->Void;
-	var buttons:FlxSprite = new FlxSprite(473.3, 450);
 	var theText:String = '';
 	var goAnyway:Bool = false;
-	var UI_box:FlxUIPopup;
 	var panel:FlxSprite;
 	var panelbg:FlxSprite;
 	var buttonAccept:FlxButton;
@@ -33,10 +30,14 @@ class Prompt extends MusicBeatSubstate
 		
 		if (option1 != null) op1 = option1;
 		if (option2 != null) op2 = option2;
-		buttonAccept = new FlxButton(473.3, 450, op1, function() {if(okc != null) okc();
-		close();});
-		buttonNo = new FlxButton(633.3,450,op2, function() {if(cancelc != null) cancelc();
-		close();});
+		buttonAccept = new FlxButton(473.3, 450, op1, function() {
+			if(okc != null) okc();
+			close();
+		});
+		buttonNo = new FlxButton(633.3,450, op2, function() {
+			if(cancelc != null) cancelc();
+			close();
+		});
 		super();	
 	}
 	
@@ -74,24 +75,24 @@ class Prompt extends MusicBeatSubstate
 		}
 	}
 	
-	function makeSelectorGraphic(panel:FlxSprite,w,h,color:FlxColor)
+	function makeSelectorGraphic(panel:FlxSprite, w, h, color:FlxColor)
 	{
 		panel.makeGraphic(w, h, color);
 		panel.pixels.fillRect(new Rectangle(0, 190, panel.width, 5), 0x0);
 		
 		// Why did i do this? Because i'm a lmao stupid, of course
 		// also i wanted to understand better how fillRect works so i did this shit lol???
-		panel.pixels.fillRect(new Rectangle(0, 0, cornerSize, cornerSize), 0x0);														 //top left
+		panel.pixels.fillRect(new Rectangle(0, 0, cornerSize, cornerSize), 0x0);												//top left
 		drawCircleCornerOnSelector(panel,false, false,color);
-		panel.pixels.fillRect(new Rectangle(panel.width - cornerSize, 0, cornerSize, cornerSize), 0x0);							 //top right
+		panel.pixels.fillRect(new Rectangle(panel.width - cornerSize, 0, cornerSize, cornerSize), 0x0);						 	//top right
 		drawCircleCornerOnSelector(panel,true, false,color);
-		panel.pixels.fillRect(new Rectangle(0, panel.height - cornerSize, cornerSize, cornerSize), 0x0);							 //bottom left
+		panel.pixels.fillRect(new Rectangle(0, panel.height - cornerSize, cornerSize, cornerSize), 0x0);						//bottom left
 		drawCircleCornerOnSelector(panel,false, true,color);
 		panel.pixels.fillRect(new Rectangle(panel.width - cornerSize, panel.height - cornerSize, cornerSize, cornerSize), 0x0); //bottom right
 		drawCircleCornerOnSelector(panel,true, true,color);
 	}
 
-	function drawCircleCornerOnSelector(panel:FlxSprite,flipX:Bool, flipY:Bool,color:FlxColor)
+	function drawCircleCornerOnSelector(panel:FlxSprite, flipX:Bool, flipY:Bool, color:FlxColor)
 	{
 		var antiX:Float = (panel.width - cornerSize);
 		var antiY:Float = flipY ? (panel.height - 1) : 0;
