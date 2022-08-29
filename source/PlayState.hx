@@ -2350,11 +2350,11 @@ class PlayState extends MusicBeatState
 		for (section in noteData) {
 			for (songNotes in section.sectionNotes) {
 				var daStrumTime:Float = songNotes[0];
-				var daNoteData:Int = Std.int(songNotes[1] % 4);
+				var daNoteData:Int = Std.int(songNotes[1] % Note.ammo[mania]);
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
-				if (songNotes[1] > 3)
+				if (songNotes[1] > (Note.ammo[mania] - 1))
 				{
 					gottaHitNote = !section.mustHitSection;
 				}
@@ -2386,7 +2386,7 @@ class PlayState extends MusicBeatState
 
 						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + (Conductor.stepCrochet / FlxMath.roundDecimal(songSpeed, 2)), daNoteData, oldNote, true);
 						sustainNote.mustPress = gottaHitNote;
-						sustainNote.gfNote = (section.gfSection && (songNotes[1]<4));
+						sustainNote.gfNote = (section.gfSection && (songNotes[1] < Note.ammo[mania])));
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
 						swagNote.tail.push(sustainNote);
@@ -2552,8 +2552,13 @@ class PlayState extends MusicBeatState
 	}
 
 	public var skipArrowStartTween:Bool = false; //for lua
-	private function generateStaticArrows(player:Int):Void {
-		for (i in 0...4) {
+	private function generateStaticArrows(player:Int, ?isPlayer:Bool = false):Void {
+		var usedKeyCount = SONG.keyCount;
+
+		if (isPlayer)
+			usedKeyCount = SONG.playerKeyCount;
+
+		for (i in 0...usedKeyCount) {
 			var targetAlpha:Float = 1;
 			if (player < 1) {
 				if (!ClientPrefs.getPref('opponentStrums')) targetAlpha = 0;
@@ -2574,8 +2579,9 @@ class PlayState extends MusicBeatState
 			} else {
 				if (ClientPrefs.getPref('middleScroll'))
 				{
+					var separator:Int = Note.separator[mania];
 					babyArrow.x += 310;
-					if(i > 1) { //Up and Right
+					if(i > separator) { //Up and Right
 						babyArrow.x += FlxG.width / 2 + 25;
 					}
 				}
@@ -2585,6 +2591,50 @@ class PlayState extends MusicBeatState
 			strumLineNotes.add(babyArrow);
 			babyArrow.postAddedToGroup();
 		}
+	}
+
+	function changeMania(newValue:Int)
+	{
+		for (i in 0...playerStrums.members.length) {
+			var oldStrum:FlxSprite = playerStrums.members[i].clone();
+			oldStrum.x = playerStrums.members[i].x;
+			oldStrum.y = playerStrums.members[i].y;
+			oldStrum.alpha = playerStrums.members[i].alpha;
+			oldStrum.scrollFactor.set();
+			oldStrum.cameras = [camHUD];
+			oldStrum.setGraphicSize(Std.int(oldStrum.width * Note.scales[mania]));
+			oldStrum.updateHitbox();
+			add(oldStrum);
+
+			FlxTween.tween(oldStrum, {alpha: 0}, 1, {onComplete: function(_) {
+				remove(oldStrum);
+			}});
+		}
+
+		for (i in 0...opponentStrums.members.length) {
+			var oldStrum:FlxSprite = opponentStrums.members[i].clone();
+			oldStrum.x = opponentStrums.members[i].x;
+			oldStrum.y = opponentStrums.members[i].y;
+			oldStrum.alpha = opponentStrums.members[i].alpha;
+			oldStrum.scrollFactor.set();
+			oldStrum.cameras = [camHUD];
+			oldStrum.setGraphicSize(Std.int(oldStrum.width * Note.scales[mania]));
+			oldStrum.updateHitbox();
+			add(oldStrum);
+
+			FlxTween.tween(oldStrum, {alpha: 0}, 1, {onComplete: function(_) {
+				remove(oldStrum);
+			}});
+		}
+		
+		mania = newValue;
+
+		playerStrums.clear();
+		opponentStrums.clear();
+		strumLineNotes.clear();
+
+		generateStaticArrows(0);
+		generateStaticArrows(1);
 	}
 
 	override function openSubState(SubState:FlxSubState)
