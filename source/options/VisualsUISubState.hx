@@ -76,6 +76,13 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Show NPS Display',
+			'If checked, Shows your current Notes Per Second on the info bar.',
+			'ShowNPSCounter',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Show Judgements Counter',
 			'If checked, the Judgements counter will be shown.\nLike Andromeda Engine.',
 			'ShowJudgementCount',

@@ -42,12 +42,9 @@ class Option
 		{
 			switch(type)
 			{
-				case 'bool':
-					defaultValue = false;
-				case 'int' | 'float':
-					defaultValue = 0;
-				case 'percent':
-					defaultValue = 1;
+				case 'bool': defaultValue = false;
+				case 'int' | 'float': defaultValue = 0;
+				case 'percent': defaultValue = 1;
 				case 'string':
 					defaultValue = '';
 					if(options.length > 0) {

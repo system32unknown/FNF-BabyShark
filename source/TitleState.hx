@@ -47,7 +47,7 @@ class TitleState extends MusicBeatState
 	
 	var logoBl:FlxSprite;
 	var logoBlTwo:FlxSprite;
-	var titleLogos:Array<FlxSprite> = [];
+	var titleLogos:Array<FlxSprite> = [new FlxSprite(100, 1500), new FlxSprite(100, 1500)];
 	var titleText:FlxSprite;
 
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
@@ -122,8 +122,7 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	function startIntro()
-	{
+	function startIntro() {
 		if (!initialized) {
 			if(FlxG.sound.music == null) {
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
@@ -137,22 +136,18 @@ class TitleState extends MusicBeatState
 		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
-		logoBl = new FlxSprite(100, 1500);
-		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
-		logoBl.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
-		logoBl.setGraphicSize(Std.int(logoBl.width * .7));
-		logoBl.animation.play('bump');
-		logoBl.updateHitbox();
-		add(logoBl);
-		titleLogos.push(logoBl);
+		titleLogos[0].frames = Paths.getSparrowAtlas('logoBumpin');
+		titleLogos[0].animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		titleLogos[0].animation.play('bump');
 
-		logoBlTwo = new FlxSprite(560, 1500);
-		logoBlTwo.loadGraphic(Paths.image('BSF3D'));
-		logoBlTwo.setGraphicSize(Std.int(logoBlTwo.width * .7));
-		logoBlTwo.updateHitbox();
-		add(logoBlTwo);
-		titleLogos.push(logoBlTwo);
+		titleLogos[1].loadGraphic(Paths.image('BSF3D'));
+		
+		for (logo in titleLogos) {
+			logo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+			logo.setGraphicSize(Std.int(logo.width * .7));
+			logo.updateHitbox();
+			add(logo);
+		}
 
 		titleText = new FlxSprite(125, 576);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
@@ -282,18 +277,15 @@ class TitleState extends MusicBeatState
 			}
 		}
 
-		if (initialized && pressedEnter && !skippedIntro)
-		{
+		if (initialized && pressedEnter && !skippedIntro) {
 			skipIntro();
 		}
 
 		super.update(elapsed);
 	}
 
-	function createCoolText(textArray:Array<String>, ?offset:Float = 0)
-	{
-		for (i in 0...textArray.length)
-		{
+	function createCoolText(textArray:Array<String>, ?offset:Float = 0) {
+		for (i in 0...textArray.length) {
 			var money:FlxText = new FlxText(0, 0, FlxG.width, textArray[i], 48);
 			money.setFormat(Paths.font('comic.ttf'), 48, FlxColor.WHITE, CENTER);
 			money.screenCenter(X);
@@ -305,8 +297,7 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	function addMoreText(text:String, ?offset:Float = 0)
-	{
+	function addMoreText(text:String, ?offset:Float = 0) {
 		if(textGroup != null && credGroup != null) {
 			var coolText:FlxText = new FlxText(0, 0, FlxG.width, text, 48);
 			coolText.setFormat(Paths.font('comic.ttf'), 48, FlxColor.WHITE, CENTER);
@@ -317,10 +308,8 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	function deleteCoolText()
-	{
-		while (textGroup.members.length > 0)
-		{
+	function deleteCoolText() {
+		while (textGroup.members.length > 0) {
 			credGroup.remove(textGroup.members[0], true);
 			textGroup.remove(textGroup.members[0], true);
 		}
@@ -374,7 +363,7 @@ class TitleState extends MusicBeatState
 					addMoreText(curWacky[1]);
 				case 11:
 					deleteCoolText();
-					createCoolText(['Current Time is ']);	
+					createCoolText(['Current Time is..']);	
 				case 12:
 					addMoreText(Date.now().toString());
 				case 13:

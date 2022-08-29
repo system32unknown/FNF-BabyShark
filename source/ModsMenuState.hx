@@ -304,12 +304,9 @@ class ModsMenuState extends MusicBeatState
 		super.create();
 	}
 
-	function addToModsList(values:Array<Dynamic>)
-	{
-		for (i in 0...modsList.length)
-		{
-			if(modsList[i][0] == values[0])
-			{
+	function addToModsList(values:Array<Dynamic>) {
+		for (i in 0...modsList.length) {
+			if(modsList[i][0] == values[0]) {
 				return;
 			}
 		}
@@ -359,8 +356,7 @@ class ModsMenuState extends MusicBeatState
 	function saveTxt()
 	{
 		var fileStr:String = '';
-		for (values in modsList)
-		{
+		for (values in modsList) {
 			if(fileStr.length > 0) fileStr += '\n';
 			fileStr += values[0] + '|' + (values[1] ? '1' : '0');
 		}
@@ -498,12 +494,9 @@ class ModsMenuState extends MusicBeatState
 		{
 			var intendedPos:Float = (i - curSelected) * 225 + 200;
 			if(i > curSelected) intendedPos += 225;
-			if(elapsed == -1)
-			{
+			if(elapsed == -1) {
 				mod.alphabet.y = intendedPos;
-			}
-			else
-			{
+			} else {
 				mod.alphabet.y = FlxMath.lerp(mod.alphabet.y, intendedPos, CoolUtil.boundTo(elapsed * 12, 0, 1));
 			}
 
