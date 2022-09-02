@@ -1,4 +1,4 @@
-package;
+package game;
 
 typedef SwagSection = {
 	var sectionNotes:Array<Dynamic>;

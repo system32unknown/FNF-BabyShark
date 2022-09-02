@@ -1,9 +1,9 @@
-package;
+package utils;
 
 import flixel.FlxG;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
-import Controls;
+import utils.Controls;
 
 class ClientPrefs {
 	public static var prefs:Map<String, Dynamic> = [

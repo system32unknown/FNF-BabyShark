@@ -1,4 +1,4 @@
-package;
+package utils;
 
 #if LUA_ALLOWED
 import llua.Lua;

@@ -1,4 +1,4 @@
-package;
+package game;
 
 import Section.SwagSection;
 import haxe.Json;

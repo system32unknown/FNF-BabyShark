@@ -1,4 +1,4 @@
-package;
+package substates;
 
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;

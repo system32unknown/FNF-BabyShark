@@ -1,4 +1,4 @@
-package;
+package utils;
 
 import flixel.FlxG;
 import flixel.tweens.FlxEase;

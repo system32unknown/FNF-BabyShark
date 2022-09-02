@@ -1,4 +1,4 @@
-package;
+package states;
 
 import WiggleEffect.*;
 import WiggleEffect.WiggleEffectType;

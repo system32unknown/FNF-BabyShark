@@ -1,4 +1,4 @@
-package;
+package data;
 
 #if MODS_ALLOWED
 import sys.io.File;

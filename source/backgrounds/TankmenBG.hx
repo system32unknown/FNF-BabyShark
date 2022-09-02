@@ -1,4 +1,4 @@
-package;
+package backgrounds;
 
 import flixel.FlxG;
 import flixel.FlxSprite;

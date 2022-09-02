@@ -1,4 +1,4 @@
-package;
+package states;
 
 import haxe.io.Path;
 #if desktop

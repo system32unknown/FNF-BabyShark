@@ -1,4 +1,4 @@
-package;
+package utils;
 
 import flixel.FlxG;
 #if sys

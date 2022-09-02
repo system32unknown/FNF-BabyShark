@@ -1,4 +1,4 @@
-package;
+package game;
 
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;

@@ -1,4 +1,4 @@
-package;
+package utils;
 
 import Controls;
 import flixel.FlxG;

@@ -1,4 +1,5 @@
-package;
+package ui;
+
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
