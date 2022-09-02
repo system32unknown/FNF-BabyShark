@@ -191,7 +191,7 @@ class CoolUtil
 	}
 
 	public static function adjustFPS(num:Float):Float {
-		return FlxG.elapsed / (1 / 60) * num;
+		return FlxG.elapsed / (1 / ClientPrefs.getPref('framerate')) * num;
 	}
 
 	public static function getSpilttext(path:String):Array<String>

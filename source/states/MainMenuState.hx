@@ -149,7 +149,7 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollowPos, null, 1);
 
 		var versionShit:FlxText = new FlxText(FlxG.width - 280, FlxG.height - 36, 0, 
-			'Altertoriel Engine (PE v$psychEngineVersion)\n' +
+			'Alter Engine (PE v$psychEngineVersion)\n' +
 			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
 			12);
 		versionShit.scrollFactor.set();
@@ -253,14 +253,10 @@ class MainMenuState extends MusicBeatState
 						});
 					}
 				});
-			}
-			#if desktop
-			else if (FlxG.keys.anyJustPressed(debugKeys))
-			{
+			} else if (FlxG.keys.anyJustPressed(debugKeys)) {
 				selectedSomethin = true;
 				MusicBeatState.switchState(new MasterEditorMenu());
 			}
-			#end
 		}
 
 		super.update(elapsed);
@@ -268,8 +264,7 @@ class MainMenuState extends MusicBeatState
 
 	function changeItem(huh:Int = 0)
 	{
-		if (finishedFunnyMove)
-		{
+		if (finishedFunnyMove) {
 			curSelected += huh;
 
 			if (curSelected >= menuItems.length)

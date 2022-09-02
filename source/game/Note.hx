@@ -1,8 +1,8 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import editors.ChartingState;
-import flixel.FlxG;
 
 using StringTools;
 
@@ -15,6 +15,7 @@ typedef EventNote = {
 
 class Note extends FlxSprite
 {
+	public var extraData:Map<String,Dynamic> = [];
 	var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 
 	'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
 
@@ -150,6 +151,12 @@ class Note extends FlxSprite
 		}
 	}
 
+	private function set_multSpeed(value:Float):Float {
+		resizeByRatio(value / multSpeed);
+		multSpeed = value;
+		return value;
+	}
+
 	private function set_texture(value:String):String {
 		if(texture != value) {
 			reloadNote('', value);
@@ -163,9 +170,9 @@ class Note extends FlxSprite
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 		if (noteData > -1 && noteData < arrowHSV.length)
 		{
-			colorSwap.hue = arrowHSV[td.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][0] / 360;
-			colorSwap.saturation = arrowHSV[td.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][1] / 100;
-			colorSwap.brightness = arrowHSV[td.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][2] / 100;
+			colorSwap.hue = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][0] / 360;
+			colorSwap.saturation = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][1] / 100;
+			colorSwap.brightness = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][2] / 100;
 		}
 
 		if(noteData > -1 && noteType != value) {
@@ -349,15 +356,17 @@ class Note extends FlxSprite
 	}
 
 	function loadNoteAnims() {
-		animation.addByPrefix(gfxLetter[i], gfxLetter[i] + '0');
+		for (i in 0...gfxLetter.length) {
+			animation.addByPrefix(gfxLetter[i], gfxLetter[i] + '0');
 
-		if (isSustainNote) {
-			animation.addByPrefix(gfxLetter[i] + ' hold', gfxLetter[i] + ' hold');
-			animation.addByPrefix(gfxLetter[i] + ' tail', gfxLetter[i] + ' tail');
+			if (isSustainNote) {
+				animation.addByPrefix(gfxLetter[i] + ' hold', gfxLetter[i] + ' hold');
+				animation.addByPrefix(gfxLetter[i] + ' tail', gfxLetter[i] + ' tail');
+			}
+
+			setGraphicSize(Std.int(width * 0.7));
+			updateHitbox();
 		}
-
-		setGraphicSize(Std.int(width * 0.7));
-		updateHitbox();
 	}
 
 	function loadPixelNoteAnims() {

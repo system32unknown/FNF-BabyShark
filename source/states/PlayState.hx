@@ -165,6 +165,12 @@ class PlayState extends MusicBeatState
 	public var bads:Int = 0;
 	public var shits:Int = 0;
 
+	public static var Playermania:Int = 0;
+	public static var Oppomania:Int = 0;
+
+	public var ogPlayerKeyCount:Int = 4;
+	public var ogKeyCount:Int = 4;
+
 	private var generatedMusic:Bool = false;
 	public var endingSong:Bool = false;
 	public var startingSong:Bool = false;
@@ -237,15 +243,25 @@ class PlayState extends MusicBeatState
 	public var songScore:Int = 0;
 	public var botScore:Int = 0;
 
+	var notesHitArray:Array<Date> = [];
+	var nps:Int = 0;
+	var maxNPS:Int = 0;
+
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
 	var scoreTxtTween:FlxTween;
+
+	var divider:String = "|";
+	
 	var timeTxt:FlxText;
-	var timeTxtTween:FlxTween;
 	var judgementCounter:FlxText;
-	var MsTimingTxt:FlxText = new FlxText(0, 0, 0, "0 ms", 22);
+
+	var MsTimingTxt:FlxText;
 	var MsTimingTween:FlxTween;
+
+	var songNameText:FlxText;
+	var engineText:FlxText;
 
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
@@ -387,10 +403,6 @@ class PlayState extends MusicBeatState
 
 		persistentUpdate = true;
 		persistentDraw = true;
-
-		mania = SONG.mania;
-		if (mania < Note.minMania || mania > Note.maxMania)
-			mania = Note.defaultMania;
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
@@ -1059,9 +1071,7 @@ class PlayState extends MusicBeatState
 			if(FileSystem.exists(luaToLoad))
 			{
 				luaArray.push(new FunkinLua(luaToLoad));
-			}
-			else
-			{
+			} else {
 				luaToLoad = Paths.getPreloadPath('custom_notetypes/' + notetype + '.lua');
 				if(FileSystem.exists(luaToLoad))
 				{
@@ -1168,6 +1178,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1;
 		scoreTxt.visible = !hideHud;
+		scoreTxt.screenCenter(X);
 		add(scoreTxt);
 
 		judgementCounter = new FlxText(10, 0, 0, "", 16);
@@ -1193,13 +1204,13 @@ class PlayState extends MusicBeatState
 		var textYPos:Float = FlxG.height * .9 + 52;
 
 		var engineName:Array<String> = CoolUtil.getSpilttext(Paths.txt('EngineList'));
-		var songNameText = new FlxText(2, textYPos, 0, SONG.song + " - " + storyDifficultyText, 16);
+		songNameText = new FlxText(2, textYPos, 0, SONG.song + " - " + storyDifficultyText, 16);
 		songNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		songNameText.scrollFactor.set();
 		songNameText.borderSize = 1;
 		add(songNameText);
 
-		var engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (PE " + MainMenuState.psychEngineVersion +")", 16);
+		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (PE " + MainMenuState.psychEngineVersion +")", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		engineText.scrollFactor.set();
 		engineText.borderSize = 1;
@@ -1459,7 +1470,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function reloadHealthBarColors() {
-		healthBar.createFilledBar(dad.getColor(), boyfriend.getColor());
+		healthBar.createGradientBar([dad.getColor()], [boyfriend.getColor()], 1, 0);
 		timeBar.createGradientBar([0xFF000000], [dad.getColor(), boyfriend.getColor()], 1, 90);
 
 		healthBar.updateBar();
@@ -2196,7 +2207,7 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false) {
 		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${MaxCombo}\n' : '') + 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
-		if (!ClientPrefs.getPref('ShowMaxCombo')) {
+		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
 		}
 		if(ClientPrefs.getPref('scoreZoom') && !miss) {
@@ -2350,11 +2361,11 @@ class PlayState extends MusicBeatState
 		for (section in noteData) {
 			for (songNotes in section.sectionNotes) {
 				var daStrumTime:Float = songNotes[0];
-				var daNoteData:Int = Std.int(songNotes[1] % Note.ammo[mania]);
+				var daNoteData:Int = Std.int(songNotes[1] % SONG.playerKeyCount);
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
-				if (songNotes[1] > (Note.ammo[mania] - 1))
+				if (songNotes[1] > (SONG.playerKeyCount - 1))
 				{
 					gottaHitNote = !section.mustHitSection;
 				}
@@ -2386,7 +2397,7 @@ class PlayState extends MusicBeatState
 
 						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + (Conductor.stepCrochet / FlxMath.roundDecimal(songSpeed, 2)), daNoteData, oldNote, true);
 						sustainNote.mustPress = gottaHitNote;
-						sustainNote.gfNote = (section.gfSection && (songNotes[1] < Note.ammo[mania])));
+						sustainNote.gfNote = (section.gfSection && (songNotes[1] < Note.ammo[mania]));
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
 						swagNote.tail.push(sustainNote);
@@ -2579,7 +2590,7 @@ class PlayState extends MusicBeatState
 			} else {
 				if (ClientPrefs.getPref('middleScroll'))
 				{
-					var separator:Int = Note.separator[mania];
+					var separator:Int = Note.separator[SONG.playerKeyCount];
 					babyArrow.x += 310;
 					if(i > separator) { //Up and Right
 						babyArrow.x += FlxG.width / 2 + 25;
@@ -2920,7 +2931,20 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		if (ClientPrefs.getPref('ShowMaxCombo')) {
+		if (ClientPrefs.getPref('ShowNPSCounter')) {
+			var balls = notesHitArray.length - 1;
+			while (balls >= 0) {
+				var cock:Date = notesHitArray[balls];
+				if (cock != null && cock.getTime() + 1000 < Date.now().getTime())
+					notesHitArray.remove(cock);
+				else
+					balls = 0;
+				balls--;
+			}
+			nps = notesHitArray.length;
+			if (nps > maxNPS)
+				maxNPS = nps;
+			
 			UpdateScoreText();
 		}
 
@@ -3979,12 +4003,12 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	private function UpdateScoreText()
-	{
+	private function UpdateScoreText() {
 		var Accuracy:Float = Highscore.floorDecimal(ratingPercent * 100, 2);
-		scoreTxt.text = (!cpuControlled ? 'Score:' + songScore : 'Bot Score:' + botScore)
-		+ (!cpuControlled ? ' | Misses:' + songMisses : '')
-		+ ' | Acc.:' + '${Accuracy}%'
+		scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS: ${nps}(${maxNPS}) ' + divider + ' ' : '')
+		+ (!cpuControlled ? 'Score:' + songScore : 'Bot Score:' + botScore)
+		+ (!cpuControlled ? ' ' + divider + ' Misses:' + songMisses : '')
+		+ divider + ' Acc.:' + '${Accuracy}%'
 		+ (ratingName != '?' ? ' [$ratingName, ${CoolUtil.GenerateLetterRank(Accuracy)}] - $ratingFC' : ' [N/A, N/A] - ?');
 	}
 
@@ -4088,8 +4112,7 @@ class PlayState extends MusicBeatState
 				MsTimingTxt.cameras = [camHUD];
 			}
 	
-			switch (daRating.name)
-			{
+			switch (daRating.name) {
 				case 'shit' | 'bad':
 					MsTimingTxt.color = FlxColor.RED;
 				case 'good':
@@ -4187,8 +4210,7 @@ class PlayState extends MusicBeatState
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 			numScore.visible = (!hideHud && showComboNum);
 
-			if(combo >= 10 && showCombo)
-			{
+			if(combo >= 10 && showCombo) {
 				insert(members.indexOf(strumLineNotes), comboSpr);
 			}
 			insert(members.indexOf(strumLineNotes), rating);
@@ -4258,7 +4280,7 @@ class PlayState extends MusicBeatState
 				noteInputDiff = note.strumTime - Conductor.songPosition;
 		}
 
-		return noteInputDiff
+		return noteInputDiff;
 	}
 
 	public var strumsBlocked:Array<Bool> = [];
@@ -4631,7 +4653,10 @@ class PlayState extends MusicBeatState
 			var strumGroup:FlxTypedGroup<StrumNote> = playerStrums;
 			if(!note.mustPress) strumGroup = opponentStrums;
 
-			var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
+			if (!note.isSustainNote)
+				notesHitArray.unshift(Date.now());
+
+			var animToPlay:String = 'sing' + Note.keysShit.get(SONG.playerKeyCount).get('anims')[note.noteData];
 			var camTimer:FlxTimer;
 
 			if (ClientPrefs.camMovement) {
@@ -5198,6 +5223,15 @@ class PlayState extends MusicBeatState
 			spr.playAnim('confirm', true);
 			spr.resetAnim = time;
 		}
+	}
+
+	private function ChangeAllFonts(font:String) {
+		scoreTxt.fonts = font;
+		botplayTxt.fonts = font;
+		judgementCounter.fonts = font;
+		timeTxt.fonts = font;
+		songNameText.fonts = font;
+		engineText.fonts = font;
 	}
 
 	public var ratingName:String = '?';

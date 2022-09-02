@@ -726,8 +726,7 @@ class EditorPlayState extends MusicBeatState
 				songHits++;
 			}
 
-			playerStrums.forEach(function(spr:StrumNote)
-			{
+			playerStrums.forEach(function(spr:StrumNote) {
 				if (Math.abs(note.noteData) == spr.ID)
 				{
 					spr.playAnim('confirm', true);

@@ -199,10 +199,7 @@ class Alphabet extends FlxSpriteGroup
 		_finalText = text;
 		doSplitWords();
 
-		// trace(arrayShit);
-
-		if(soundDialog == null)
-		{
+		if(soundDialog == null) {
 			Alphabet.setDialogueSound();
 		}
 
@@ -270,21 +267,15 @@ class Alphabet extends FlxSpriteGroup
 				}
 				consecutiveSpaces = 0;
 
-				// var letter:AlphaCharacter = new AlphaCharacter(30 * loopNum, 0, textSize);
 				var letter:AlphaCharacter = new AlphaCharacter(xPos, 55 * yMulti, textSize);
 				letter.row = curRow;
 				if (isBold)
 				{
-					if (isNumber)
-					{
+					if (isNumber) {
 						letter.createBoldNumber(splitWords[loopNum]);
-					}
-					else if (isSymbol)
-					{
+					} else if (isSymbol) {
 						letter.createBoldSymbol(splitWords[loopNum]);
-					}
-					else
-					{
+					} else {
 						letter.createBoldLetter(splitWords[loopNum]);
 					}
 				}

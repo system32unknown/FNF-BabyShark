@@ -16,7 +16,6 @@ class BackgroundDancer extends FlxSprite
 	}
 
 	var danceDir:Bool = false;
-
 	public function dance():Void
 	{
 		danceDir = !danceDir;

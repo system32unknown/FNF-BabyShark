@@ -25,7 +25,8 @@ typedef SwagSong =
 	var stage:String;
 	var validScore:Bool;
 
-	var mania:Null<Int>;
+	var keyCount:Null<Int>;
+	var playerKeyCount:Null<Int>;
 
 	var arrowSkin:String;
 	var splashSkin:String;
