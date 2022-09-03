@@ -3,7 +3,8 @@ package utils;
 import flixel.FlxG;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
-import utils.Controls;
+import states.TitleState;
+import game.Achievements;
 
 class ClientPrefs {
 	public static var prefs:Map<String, Dynamic> = [
@@ -27,7 +28,7 @@ class ClientPrefs {
 		'ShowLateEarly' => false,
 		'WinningIcon' => false,
 		'ShowMaxCombo' => false,
-		'NoteDiffTypes' => "Psych",
+		'MstimingTypes' => "Psych",
 		'ShowJudgementCount' => false,
 		'IconBounceType' => 'Psych',
 		'RatingTypes' => 'Static',

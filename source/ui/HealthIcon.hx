@@ -9,7 +9,9 @@ class HealthIcon extends FlxSprite
 	public var sprTracker:FlxSprite;
 	private var isPlayer:Bool = false;
 	private var char:String = '';
-	public var winningicon:Bool = false;
+	public var icontype:String = 'classic';
+	private var iconnum:Int = 0;
+	private var iconarray:Array<Int>;
 
 	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
@@ -36,14 +38,28 @@ class HealthIcon extends FlxSprite
 			var file:Dynamic = Paths.image(name);
 
 			loadGraphic(file);
-			winningicon = (width == 450);
-			loadGraphic(file, true, Math.floor(width / (winningicon ? 3 : 2)), Math.floor(height)); //Then load it fr
-			iconOffsets[0] = (width - 150) / (winningicon ? 3 : 2);
-			iconOffsets[1] = (width - 150) / (winningicon ? 3 : 2);
+			switch (width) {
+				case 150: 
+					icontype = 'single';
+					iconnum = 1;
+					iconarray = [0];
+				case 300: 
+					icontype = 'classic';
+					iconnum = 2;
+					iconarray = [0, 1];
+				case 450: 
+					icontype = 'winning';
+					iconnum = 3;
+					iconarray = [0, 1, 2];
+			}
+			
+			loadGraphic(file, true, Math.floor(width / iconnum), Math.floor(height)); //Then load it fr
+			iconOffsets[0] = (width - 150) / iconnum;
+			iconOffsets[1] = (width - 150) / iconnum;
 			
 			updateHitbox();
 
-			animation.add(char, (winningicon ? [0, 1, 2] : [0, 1]), 0, false, isPlayer);
+			animation.add(char, iconarray, 0, false, isPlayer);
 			animation.play(char);
 			this.char = char;
 

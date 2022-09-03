@@ -1,14 +1,13 @@
 package states;
 
 import haxe.io.Path;
+import haxe.Json;
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.input.keyboard.FlxKey;
 import flixel.addons.transition.FlxTransitionableState;
-import haxe.Json;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 #if MODS_ALLOWED
@@ -18,6 +17,7 @@ import sys.io.File;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
+import flixel.input.keyboard.FlxKey;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxMath;
 import flixel.system.FlxSound;
@@ -29,6 +29,10 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxGradient;
 import lime.app.Application;
 import openfl.Assets;
+import data.WeekData;
+import utils.PlayerSettings;
+import utils.ClientPrefs;
+import game.Highscore;
 
 using StringTools;
 

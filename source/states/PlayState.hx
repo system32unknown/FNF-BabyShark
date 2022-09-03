@@ -1,10 +1,8 @@
 package states;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
-import Section.SwagSection;
-import Song.SwagSong;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -32,15 +30,18 @@ import editors.ChartingState;
 import editors.CharacterEditorState;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.keyboard.FlxKey;
-import Note.EventNote;
 import openfl.events.KeyboardEvent;
 import flixel.util.FlxSave;
 import animateatlas.AtlasFrameMaker;
-import Achievements;
-import StageData;
-import FunkinLua;
-import DialogueBoxPsych;
-import Conductor.Rating;
+import game.Section.SwagSection;
+import game.Song.SwagSong;
+import game.Note.EventNote;
+import game.Achievements;
+import game.Conductor.Rating;
+import data.StageData;
+import utils.FunkinLua;
+import ui.DialogueBoxPsych;
+import ui.HealthIcon;
 
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
@@ -317,7 +318,6 @@ class PlayState extends MusicBeatState
 	private var ShowMaxCombo:Bool = ClientPrefs.getPref('ShowMaxCombo');
 	private var ShowJudgementCount:Bool = ClientPrefs.getPref('ShowJudgementCount');
 	private var NoAntiSpam:Bool = ClientPrefs.getPref('NoAntiSpam');
-	private var NoteDiffTypes:String = ClientPrefs.getPref('NoteDiffTypes');
 	private var RatingTypes:String = ClientPrefs.getPref('RatingTypes');
 	private var ShowLateEarly:Bool = ClientPrefs.getPref('ShowLateEarly');
 	private var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
@@ -3003,7 +3003,7 @@ class PlayState extends MusicBeatState
 		if (iconP1.winningicon) {
 			if (healthBar.percent < 20)
 				iconP1.animation.curAnim.curFrame = 1;
-			else if (healthBar.percent > 80 && WinningIcon)
+			else if (healthBar.percent > 80 && (iconP1.icontype == "winning" && WinningIcon))
 				iconP1.animation.curAnim.curFrame = 2;
 			else
 				iconP1.animation.curAnim.curFrame = 0;
@@ -4013,7 +4013,7 @@ class PlayState extends MusicBeatState
 	}
 
 	private function popUpScore(note:Note = null):Void {
-		var noteDiff:Float = getNoteDiff(note);
+		var noteDiff:Float = getMsTiming(note);
 
 		vocals.volume = 1;
 
@@ -4265,22 +4265,22 @@ class PlayState extends MusicBeatState
 		});
 	}
 
-	private function getNoteDiff(note:Note = null):Float {
-		var noteInputDiff:Float = 0;
-		switch(NoteDiffTypes)
+	private function getMsTiming(note:Note = null):Float {
+		var noteDiff:Float = 0;
+		switch(ClientPrefs.getPref('MstimingTypes'))
 		{
 			case 'Psych':
-				noteInputDiff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
+				noteDiff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
 			case 'Kade':
 				if (note != null)
-					noteInputDiff = -(note.strumTime - Conductor.songPosition);
+					noteDiff = -(note.strumTime - Conductor.songPosition);
 				else
-					noteInputDiff = Conductor.safeZoneOffset;
+					noteDiff = Conductor.safeZoneOffset;
 			case 'Andromeda':
-				noteInputDiff = note.strumTime - Conductor.songPosition;
+				noteDiff = note.strumTime - Conductor.songPosition;
 		}
 
-		return noteInputDiff;
+		return noteDiff;
 	}
 
 	public var strumsBlocked:Array<Bool> = [];
@@ -4410,20 +4410,16 @@ class PlayState extends MusicBeatState
 		var controllerMode:Bool = ClientPrefs.getPref('controllerMode');
 
 		// TO DO: Find a better way to handle controller inputs, this should work for now
-		if(controllerMode)
-		{
+		if(controllerMode) {
 			var parsedArray:Array<Bool> = parseKeys('_P');
-			if(parsedArray.contains(true))
-			{
-				for (i in 0...parsedArray.length)
-				{
+			if(parsedArray.contains(true)) {
+				for (i in 0...parsedArray.length) {
 					if(parsedArray[i] && strumsBlocked[i] != true)
 						onKeyPress(new KeyboardEvent(KeyboardEvent.KEY_DOWN, true, true, -1, keysArray[i][0]));
 				}
 			}
 		}
 
-		// FlxG.watch.addQuick('asdfa', upP);
 		if (startedCountdown && !boyfriend.stunned && generatedMusic)
 		{
 			// rewritten inputs???
@@ -4442,21 +4438,16 @@ class PlayState extends MusicBeatState
 					startAchievement(achieve);
 				}
 				#end
-			}
-			else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * 0.0011 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
-			{
+			} else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * 0.0011 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss')) {
 				boyfriend.dance();
 			}
 		}
 
 		// TO DO: Find a better way to handle controller inputs, this should work for now
-		if(controllerMode || strumsBlocked.contains(true))
-		{
+		if(controllerMode || strumsBlocked.contains(true)) {
 			var parsedArray:Array<Bool> = parseKeys('_R');
-			if(parsedArray.contains(true))
-			{
-				for (i in 0...parsedArray.length)
-				{
+			if(parsedArray.contains(true)) {
+				for (i in 0...parsedArray.length) {
 					if(parsedArray[i] || strumsBlocked[i] == true)
 						onKeyRelease(new KeyboardEvent(KeyboardEvent.KEY_UP, true, true, -1, keysArray[i][0]));
 				}
@@ -4467,8 +4458,7 @@ class PlayState extends MusicBeatState
 	private function parseKeys(?suffix:String = ''):Array<Bool>
 	{
 		var ret:Array<Bool> = [];
-		for (i in 0...controlArray.length)
-		{
+		for (i in 0...controlArray.length) {
 			ret[i] = Reflect.getProperty(controls, controlArray[i] + suffix);
 		}
 		return ret;
@@ -4492,8 +4482,7 @@ class PlayState extends MusicBeatState
 		combo = 0;
 		health -= daNote.missHealth * healthLoss;
 		
-		if(instakillOnMiss)
-		{
+		if(instakillOnMiss) {
 			vocals.volume = 0;
 			doDeathCheck(true);
 		}

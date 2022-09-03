@@ -88,9 +88,9 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			['Static', 'Global']);
 		addOption(option);
 
-		var option:Option = new Option('Note Different Type:',
-			'Choose the type of note you want to see.',
-			'NoteDiffTypes',
+		var option:Option = new Option('Ms Timing Type:',
+			'Choose the type of Ms timing.',
+			'MstimingTypes',
 			'string',
 			'Psych',
 			['Psych', 'Kade', 'Andromeda']);

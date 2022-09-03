@@ -5,6 +5,8 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 import haxe.Json;
+import utils.CoolUtil;
+import states.PlayState;
 
 using StringTools;
 

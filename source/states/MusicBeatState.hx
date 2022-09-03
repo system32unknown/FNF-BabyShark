@@ -5,9 +5,12 @@ import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
 import flixel.FlxCamera;
+import utils.Controls;
+import utils.PlayerSettings;
+import utils.CustomFadeTransition;
+import game.Conductor;
 
-class MusicBeatState extends FlxUIState
-{
+class MusicBeatState extends FlxUIState {
 	private var curSection:Int = 0;
 	private var stepsToDo:Int = 0;
 

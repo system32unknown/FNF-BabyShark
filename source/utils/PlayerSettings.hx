@@ -1,6 +1,6 @@
 package utils;
 
-import Controls;
+import utils.Controls;
 import flixel.FlxG;
 import flixel.util.FlxSignal;
 

@@ -9,6 +9,8 @@ import flixel.math.FlxMath;
 import openfl.Lib;
 #end
 
+import utils.ClientPrefs;
+
 #if openfl
 import openfl.system.System;
 #end
