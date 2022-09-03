@@ -191,6 +191,7 @@ class PlayState extends MusicBeatState
 
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
+
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
@@ -315,15 +316,8 @@ class PlayState extends MusicBeatState
 	private var downScroll:Bool = ClientPrefs.getPref('downScroll');
 	private var hideHud:Bool = ClientPrefs.getPref('hideHud');
 	private var healthBarAlpha:Float = ClientPrefs.getPref('healthBarAlpha');
-	private var ShowMaxCombo:Bool = ClientPrefs.getPref('ShowMaxCombo');
-	private var ShowJudgementCount:Bool = ClientPrefs.getPref('ShowJudgementCount');
-	private var NoAntiSpam:Bool = ClientPrefs.getPref('NoAntiSpam');
 	private var RatingTypes:String = ClientPrefs.getPref('RatingTypes');
-	private var ShowLateEarly:Bool = ClientPrefs.getPref('ShowLateEarly');
 	private var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
-	private var ShowMsTiming:Bool = ClientPrefs.getPref('ShowMsTiming');
-	private var IconBounceType:String = ClientPrefs.getPref('IconBounceType');
-	private var WinningIcon:Bool = ClientPrefs.getPref('WinningIcon');
 	private var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 
 	override public function create()
@@ -1186,8 +1180,8 @@ class PlayState extends MusicBeatState
 		judgementCounter.borderSize = 1;
 		judgementCounter.scrollFactor.set();
 		judgementCounter.screenCenter(Y);
-		judgementCounter.text = (ShowMaxCombo ? 'Max Combos: ${MaxCombo}\n' : '') + 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
-		if (ShowJudgementCount) {
+		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${MaxCombo}\n' : '') + 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		if (ClientPrefs.getPref('ShowJudgementCount')) {
 			add(judgementCounter);
 		}
 
@@ -2967,7 +2961,7 @@ class PlayState extends MusicBeatState
 			openChartEditor();
 		}
 
-		switch(IconBounceType) {
+		switch(ClientPrefs.getPref('IconBounceType')) {
 			case "Vanilla": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.5)));
@@ -3000,34 +2994,19 @@ class PlayState extends MusicBeatState
 		if (health > 2)
 			health = 2;
 
-		if (iconP1.winningicon) {
-			if (healthBar.percent < 20)
-				iconP1.animation.curAnim.curFrame = 1;
-			else if (healthBar.percent > 80 && (iconP1.icontype == "winning" && WinningIcon))
-				iconP1.animation.curAnim.curFrame = 2;
-			else
-				iconP1.animation.curAnim.curFrame = 0;
-		} else {
-			if (healthBar.percent < 20)
-				iconP1.animation.curAnim.curFrame = 1;
-			else
-				iconP1.animation.curAnim.curFrame = 0;
-		}
+		if (healthBar.percent < 20 && iconP1.icontype != "single")
+			iconP1.animation.curAnim.curFrame = 1;
+		else if (healthBar.percent > 80 && (iconP1.icontype == "winning" && ClientPrefs.getPref('WinningIcon')))
+			iconP1.animation.curAnim.curFrame = 2;
+		else
+			iconP1.animation.curAnim.curFrame = 0;
 
-		if (iconP2.winningicon)
-		{
-			if (healthBar.percent > 80)
-				iconP2.animation.curAnim.curFrame = 1;
-			else if (healthBar.percent < 20 && WinningIcon)
-				iconP2.animation.curAnim.curFrame = 2;
-			else
-				iconP2.animation.curAnim.curFrame = 0;
-		} else {
-			if (healthBar.percent > 80)
-				iconP2.animation.curAnim.curFrame = 1;
-			else
-				iconP2.animation.curAnim.curFrame = 0;
-		}
+		if (healthBar.percent > 80 && iconP2.icontype != "single")
+			iconP2.animation.curAnim.curFrame = 1;
+		else if (healthBar.percent < 20 && (iconP2.icontype == "winning" && ClientPrefs.getPref('WinningIcon')))
+			iconP2.animation.curAnim.curFrame = 2;
+		else
+			iconP2.animation.curAnim.curFrame = 0;
 
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {
 			persistentUpdate = false;
@@ -4005,11 +3984,30 @@ class PlayState extends MusicBeatState
 
 	private function UpdateScoreText() {
 		var Accuracy:Float = Highscore.floorDecimal(ratingPercent * 100, 2);
-		scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS: ${nps}(${maxNPS}) ' + divider + ' ' : '')
-		+ (!cpuControlled ? 'Score:' + songScore : 'Bot Score:' + botScore)
-		+ (!cpuControlled ? ' ' + divider + ' Misses:' + songMisses : '')
-		+ divider + ' Acc.:' + '${Accuracy}%'
-		+ (ratingName != '?' ? ' [$ratingName, ${CoolUtil.GenerateLetterRank(Accuracy)}] - $ratingFC' : ' [N/A, N/A] - ?');
+		switch (ClientPrefs.getPref('ScoreTextStyle')) {
+			case 'Kade':
+				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS: $nps(Max: $maxNPS) ' + divider : '')
+				+ ' Score:' + (!cpuControlled ? songScore : botScore) + ' '
+				+ divider + ' Combo Breaks:' + songMisses + ' '
+				+ divider + ' Accuracy:' + '$Accuracy%' + ' '
+				+ divider + ' ($ratingFC) ${CoolUtil.GenerateLetterRank(Accuracy)}';
+			case 'Psych':
+				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS: $nps ($maxNPS) ' + divider : '')
+				+ ' Score: ' + (!cpuControlled ? songScore : botScore) + ' '
+				+ divider + ' Misses: ' + songMisses + ' '
+				+ divider + ' Rating: $ratingName ($Accuracy%) - $ratingFC';
+			case 'BabyShark':
+				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) ' + divider : '')
+				+ (!cpuControlled ? ' Score:' + songScore : ' Bot Score:' + botScore)
+				+ (!cpuControlled ? ' ' + divider + ' Misses:' + songMisses : ' ')
+				+ divider + ' Acc.:' + '$Accuracy%'
+				+ (ratingName != '?' ? ' [$ratingName, ${CoolUtil.GenerateLetterRank(Accuracy)}] - $ratingFC' : ' [N/A, N/A] - ?');
+			case 'FPSPlus':
+				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS: $nps(Max: $maxNPS) ' + divider : '')
+				+ ' Score:' + (!cpuControlled ? songScore : botScore) + ' '
+				+ divider + ' Misses:' + songMisses + ' '
+				+ divider + ' Accuracy: $ratingName ($Accuracy%) - ${ratingFC}';
+		}
 	}
 
 	private function popUpScore(note:Note = null):Void {
@@ -4075,7 +4073,7 @@ class PlayState extends MusicBeatState
 		var comboOffset:Array<Int> = ClientPrefs.getPref('comboOffset');
 
 		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2));
-		if (RatingTypes == "Static"){
+		if (RatingTypes == "Static") {
 			rating.cameras = [camHUD];
 		}
 		rating.screenCenter();
@@ -4097,17 +4095,17 @@ class PlayState extends MusicBeatState
 		timing.screenCenter();
 		timing.x = rating.x - 120;
 		timing.y = rating.y + 80;
-		timing.visible = (!hideHud && ShowLateEarly);
+		timing.visible = (!hideHud && ClientPrefs.getPref('ShowLateEarly'));
 		timing.acceleration.y = 550;
 		timing.velocity.x -= FlxG.random.int(0, 10);
 		timing.velocity.y -= FlxG.random.int(140, 175);
 
-		if (ShowMsTiming) {
+		if (ClientPrefs.getPref('ShowMsTiming')) {
 			var msTiming = CoolUtil.truncateFloat(noteDiff / 1.0, 3);
 			MsTimingTxt.text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
 			MsTimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			MsTimingTxt.borderSize = 1;
-			MsTimingTxt.visible = (!hideHud && ShowMsTiming);
+			MsTimingTxt.visible = (!hideHud);
 			if (RatingTypes == "Static"){
 				MsTimingTxt.cameras = [camHUD];
 			}
@@ -4137,7 +4135,7 @@ class PlayState extends MusicBeatState
 		comboSpr.x += comboOffset[4];
 		comboSpr.y -= comboOffset[5];
 
-		if (ShowMsTiming) {
+		if (ClientPrefs.getPref('ShowMsTiming')) {
 			MsTimingTxt.screenCenter();
 			if (showCombo) {
 				if (combo >= 10) {
@@ -4154,7 +4152,7 @@ class PlayState extends MusicBeatState
 			MsTimingTxt.updateHitbox();
 		}
 
-		if (daTiming != "" && ShowLateEarly)
+		if (daTiming != "" && ClientPrefs.getPref('ShowLateEarly'))
 			add(timing);
 
 		if (!PlayState.isPixelStage) {
@@ -4231,7 +4229,7 @@ class PlayState extends MusicBeatState
 			startDelay: Conductor.crochet * 0.001
 		});
 
-		if (ShowLateEarly) {
+		if (ClientPrefs.getPref('ShowLateEarly')) {
 			FlxTween.tween(timing, {alpha: 0}, 0.2, {
 				startDelay: Conductor.crochet * 0.001,
 				onComplete: function(tween:FlxTween) {
@@ -4240,7 +4238,7 @@ class PlayState extends MusicBeatState
 			});
 		}
 
-		if (ShowMsTiming) {
+		if (ClientPrefs.getPref('ShowMsTiming')) {
 			if (MsTimingTween == null) {
 				MsTimingTween = FlxTween.tween(MsTimingTxt, {alpha: 0}, 0.2, {
 					startDelay: Conductor.crochet * 0.001
@@ -4308,7 +4306,7 @@ class PlayState extends MusicBeatState
 						if (daNote.noteData == key) {
 							sortedNotesList.push(daNote);
 						}
-						canMiss = !NoAntiSpam;
+						canMiss = !ClientPrefs.getPref('NoAntiSpam');
 					}
 				});
 				sortedNotesList.sort(sortHitNotes);
@@ -5037,7 +5035,7 @@ class PlayState extends MusicBeatState
 			notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		}
 		
-		switch (IconBounceType) {
+		switch (ClientPrefs.getPref('IconBounceType')) {
 			case 'Vanilla' | 'Andromeda' | 'Micdup':
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));

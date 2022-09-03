@@ -862,15 +862,6 @@ class CharacterEditorState extends MusicBeatState
 
 		char.setPosition(char.positionArray[0] + OFFSET_X + 100, char.positionArray[1]);
 
-		/* THIS FUNCTION WAS USED TO PUT THE .TXT OFFSETS INTO THE .JSON
-
-		for (anim => offset in char.animOffsets) {
-			var leAnim:AnimArray = findAnimationByName(anim);
-			if(leAnim != null) {
-				leAnim.offsets = [offset[0], offset[1]];
-			}
-		}*/
-
 		if(blahBlahBlah) {
 			genBoyOffsets();
 		}
@@ -1139,7 +1130,6 @@ class CharacterEditorState extends MusicBeatState
 				}
 			}
 		}
-		//camMenu.zoom = FlxG.camera.zoom;
 		ghostChar.setPosition(char.x, char.y);
 		super.update(elapsed);
 	}
@@ -1204,15 +1194,5 @@ class CharacterEditorState extends MusicBeatState
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data, daAnim + ".json");
 		}
-	}
-
-	function ClipboardAdd(prefix:String = ''):String {
-		if(prefix.toLowerCase().endsWith('v')) //probably copy paste attempt
-		{
-			prefix = prefix.substring(0, prefix.length-1);
-		}
-
-		var text:String = prefix + Clipboard.text.replace('\n', '');
-		return text;
 	}
 }

@@ -41,6 +41,14 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Vanilla', 'Psych', 'Andromeda', 'DaveAndBambi', 'Micdup', 'RadicalOne', 'Custom']);
 		addOption(option);
 
+		var option:Option = new Option('Score Styles:',
+			"What should change the Score Text?",
+			'ScoreTextStyle',
+			'string',
+			'BabyShark',
+			['Kade', 'Psych', 'BabyShark', 'FPSPlus']);
+		addOption(option);
+
 		var option:Option = new Option('Camera Zooms',
 			"If unchecked, the camera won't zoom in on a beat hit.",
 			'camZooms',

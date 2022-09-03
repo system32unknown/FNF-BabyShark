@@ -57,22 +57,22 @@ class Prompt extends MusicBeatSubstate
 			panel.screenCenter();
 			panelbg.scrollFactor.set();
 			panelbg.screenCenter();
-			
+			var textshit:FlxText = new FlxText(buttonNo.width * 2, panel.y, 300, theText, 16);
+			textshit.alignment = 'center';
+			textshit.scrollFactor.set();
+			textshit.screenCenter();
 			add(panelbg);
 			add(panel);
 			add(buttonAccept);
 			add(buttonNo);
-			var textshit:FlxText = new FlxText(buttonNo.width * 2, panel.y, 300, theText, 16);
-			textshit.alignment = 'center';
 			add(textshit);
-			textshit.screenCenter();
+			
 			buttonAccept.screenCenter();
 			buttonNo.screenCenter();
 			buttonAccept.x -= buttonNo.width / 1.5;
 			buttonAccept.y = panel.y + panel.height - 30;
 			buttonNo.x += buttonNo.width / 1.5;
 			buttonNo.y = panel.y + panel.height - 30;
-			textshit.scrollFactor.set();
 		}
 	}
 	

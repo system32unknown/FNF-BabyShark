@@ -373,8 +373,7 @@ class Note extends FlxSprite
 		for (i in 0...gfxLetter.length) {
 			animation.addByPrefix(gfxLetter[i], gfxLetter[i] + '0');
 
-			if (isSustainNote)
-			{
+			if (isSustainNote) {
 				animation.addByPrefix(gfxLetter[i] + ' hold', gfxLetter[i] + ' hold');
 				animation.addByPrefix(gfxLetter[i] + ' tail', gfxLetter[i] + ' tail');
 			}

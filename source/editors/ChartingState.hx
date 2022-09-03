@@ -1,11 +1,11 @@
 package editors;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
-import Conductor.BPMChangeEvent;
-import Section.SwagSection;
-import Song.SwagSong;
+import game.Conductor.BPMChangeEvent;
+import game.Section.SwagSection;
+import game.Song.SwagSong;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxObject;
@@ -16,7 +16,6 @@ import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
@@ -98,7 +97,6 @@ class ChartingState extends MusicBeatState
 	var strumLine:FlxSprite;
 	var quant:AttachedSprite;
 	var strumLineNotes:FlxTypedGroup<StrumNote>;
-	var bullshitUI:FlxGroup;
 
 	public static var GRID_SIZE:Int = 40;
 	var CAM_OFFSET:Int = 360;
@@ -1304,18 +1302,6 @@ class ChartingState extends MusicBeatState
 		};
 	}
 
-	function generateUI():Void
-	{
-		while (bullshitUI.members.length > 0)
-		{
-			bullshitUI.remove(bullshitUI.members[0], true);
-		}
-
-		// general shit
-		var title:FlxText = new FlxText(UI_box.x + 20, UI_box.y + 20, 0);
-		bullshitUI.add(title);
-	}
-
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>)
 	{
 		if (id == FlxUICheckBox.CLICK_EVENT)
@@ -1495,23 +1481,15 @@ class ChartingState extends MusicBeatState
 		{
 			if (FlxG.mouse.overlaps(curRenderedNotes))
 			{
-				curRenderedNotes.forEachAlive(function(note:Note)
-				{
-					if (FlxG.mouse.overlaps(note))
-					{
-						if (FlxG.keys.pressed.CONTROL)
-						{
+				curRenderedNotes.forEachAlive(function(note:Note) {
+					if (FlxG.mouse.overlaps(note)) {
+						if (FlxG.keys.pressed.CONTROL) {
 							selectNote(note);
-						}
-						else if (FlxG.keys.pressed.ALT)
-						{
+						} else if (FlxG.keys.pressed.ALT) {
 							selectNote(note);
 							curSelectedNote[3] = noteTypeIntMap.get(currentType);
 							updateGrid();
-						}
-						else
-						{
-							//trace('tryin to delete note...');
+						} else {
 							deleteNote(note);
 						}
 					}
@@ -2627,14 +2605,11 @@ class ChartingState extends MusicBeatState
 				if (i[0] == note.strumTime && i[1] == noteDataToCheck)
 				{
 					if(i == curSelectedNote) curSelectedNote = null;
-					//FlxG.log.add('FOUND EVIL NOTE');
 					_song.notes[curSec].sectionNotes.remove(i);
 					break;
 				}
 			}
-		}
-		else //Events
-		{
+		} else { //Events
 			for (i in _song.events)
 			{
 				if(i[0] == note.strumTime)
@@ -2644,7 +2619,6 @@ class ChartingState extends MusicBeatState
 						curSelectedNote = null;
 						changeEventSelected();
 					}
-					//FlxG.log.add('FOUND EVIL EVENT');
 					_song.events.remove(i);
 					break;
 				}
@@ -2671,21 +2645,9 @@ class ChartingState extends MusicBeatState
 			addNote(cs, d, style);
 		}
 	}
-	function clearSong():Void
-	{
-		for (daSection in 0..._song.notes.length)
-		{
-			_song.notes[daSection].sectionNotes = [];
-		}
-
-		updateGrid();
-	}
 
 	private function addNote(strum:Null<Float> = null, data:Null<Int> = null, type:Null<Int> = null):Void
 	{
-		//curUndoIndex++;
-		//var newsong = _song.notes;
-		//	undos.push(newsong);
 		var noteStrum = getStrumTime(dummyArrow.y, false) + sectionStartTime();
 		var noteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
 		var noteSus = 0;
@@ -2717,7 +2679,6 @@ class ChartingState extends MusicBeatState
 			_song.notes[curSec].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, noteTypeIntMap.get(daType)]);
 		}
 
-		//trace(noteData + ', ' + noteStrum + ', ' + curSec);
 		strumTimeInputText.text = '' + curSelectedNote[0];
 
 		updateGrid();
@@ -2757,18 +2718,6 @@ class ChartingState extends MusicBeatState
 	{
 		var value:Float = strumTime / (beats * 4 * Conductor.stepCrochet);
 		return GRID_SIZE * beats * 4 * zoomList[curZoom] * value + gridBG.y;
-	}
-
-	function getNotes():Array<Dynamic>
-	{
-		var noteData:Array<Dynamic> = [];
-
-		for (i in _song.notes)
-		{
-			noteData.push(i.sectionNotes);
-		}
-
-		return noteData;
 	}
 
 	function loadJson(song:String):Void

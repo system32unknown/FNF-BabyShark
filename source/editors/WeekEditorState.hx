@@ -83,8 +83,7 @@ class WeekEditorState extends MusicBeatState
 		add(missingFileText);
 		
 		var charArray:Array<String> = weekFile.weekCharacters;
-		for (char in 0...3)
-		{
+		for (char in 0...3) {
 			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, charArray[char]);
 			weekCharacterThing.y += 70;
 			grpWeekCharacters.add(weekCharacterThing);
@@ -140,7 +139,6 @@ class WeekEditorState extends MusicBeatState
 		
 		var freeplayButton:FlxButton = new FlxButton(0, 650, "Freeplay", function() {
 			MusicBeatState.switchState(new WeekEditorFreeplayState(weekFile));
-			
 		});
 		freeplayButton.screenCenter(X);
 		add(freeplayButton);
@@ -184,7 +182,6 @@ class WeekEditorState extends MusicBeatState
 		backgroundInputText = new FlxUIInputText(10, opponentInputText.y + 40, 120, '', 8);
 		blockPressWhileTypingOn.push(backgroundInputText);
 		
-
 		displayNameInputText = new FlxUIInputText(10, backgroundInputText.y + 60, 200, '', 8);
 		blockPressWhileTypingOn.push(backgroundInputText);
 
@@ -196,8 +193,7 @@ class WeekEditorState extends MusicBeatState
 		reloadWeekThing();
 
 		hideCheckbox = new FlxUICheckBox(10, weekFileInputText.y + 40, null, null, "Hide Week from Story Mode?", 100);
-		hideCheckbox.callback = function()
-		{
+		hideCheckbox.callback = function() {
 			weekFile.hideStoryMode = hideCheckbox.checked;
 		};
 
@@ -231,16 +227,14 @@ class WeekEditorState extends MusicBeatState
 		tab_group.name = "Other";
 
 		lockedCheckbox = new FlxUICheckBox(10, 30, null, null, "Week starts Locked", 100);
-		lockedCheckbox.callback = function()
-		{
+		lockedCheckbox.callback = function() {
 			weekFile.startUnlocked = !lockedCheckbox.checked;
 			lock.visible = lockedCheckbox.checked;
 			hiddenUntilUnlockCheckbox.alpha = 0.4 + 0.6 * (lockedCheckbox.checked ? 1 : 0);
 		};
 
 		hiddenUntilUnlockCheckbox = new FlxUICheckBox(10, lockedCheckbox.y + 25, null, null, "Hidden until Unlocked", 110);
-		hiddenUntilUnlockCheckbox.callback = function()
-		{
+		hiddenUntilUnlockCheckbox.callback = function() {
 			weekFile.hiddenUntilUnlocked = hiddenUntilUnlockCheckbox.checked;
 		};
 		hiddenUntilUnlockCheckbox.alpha = 0.4;
@@ -746,8 +740,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 		var hideFreeplayCheckbox:FlxUICheckBox = new FlxUICheckBox(10, iconInputText.y + 30, null, null, "Hide Week from Freeplay?", 100);
 		hideFreeplayCheckbox.checked = weekFile.hideFreeplay;
-		hideFreeplayCheckbox.callback = function()
-		{
+		hideFreeplayCheckbox.callback = function() {
 			weekFile.hideFreeplay = hideFreeplayCheckbox.checked;
 		};
 		
@@ -781,26 +774,20 @@ class WeekEditorFreeplayState extends MusicBeatState
 			curSelected = 0;
 
 		var bullShit:Int = 0;
-		for (i in 0...iconArray.length)
-		{
+		for (i in 0...iconArray.length) {
 			iconArray[i].alpha = 0.6;
 		}
 
 		iconArray[curSelected].alpha = 1;
 
-		for (item in grpSongs.members)
-		{
+		for (item in grpSongs.members) {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0.6;
-			// item.setGraphicSize(Std.int(item.width * 0.8));
 
 			if (item.targetY == 0)
-			{
 				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
-			}
 		}
 		trace(weekFile.songs[curSelected]);
 		iconInputText.text = weekFile.songs[curSelected][1];
