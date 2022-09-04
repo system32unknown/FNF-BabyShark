@@ -7,7 +7,7 @@ import sys.FileSystem;
 import openfl.utils.Assets;
 #end
 import haxe.Json;
-import Song;
+import game.Song;
 
 using StringTools;
 

@@ -37,7 +37,7 @@ import sys.io.File;
 #end
 
 import Type.ValueType;
-import DialogueBoxPsych;
+import ui.DialogueBoxPsych;
 
 #if hscript
 import hscript.Parser;
@@ -45,7 +45,7 @@ import hscript.Interp;
 #end
 
 #if desktop
-import Discord;
+import utils.Discord;
 #end
 
 using StringTools;
@@ -3079,7 +3079,7 @@ class ModchartText extends FlxText
 		setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		cameras = [PlayState.instance.camHUD];
 		scrollFactor.set();
-		borderSize = 2;
+		borderSize = 1;
 	}
 }
 

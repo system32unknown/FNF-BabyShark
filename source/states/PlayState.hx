@@ -11,6 +11,8 @@ import flixel.FlxSubState;
 import flixel.addons.effects.FlxTrail;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
+import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -23,25 +25,24 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
+import flixel.util.FlxSave;
 import haxe.Json;
 import lime.utils.Assets;
 import openfl.utils.Assets as OpenFlAssets;
+import openfl.events.KeyboardEvent;
 import editors.ChartingState;
 import editors.CharacterEditorState;
-import flixel.group.FlxSpriteGroup;
-import flixel.input.keyboard.FlxKey;
-import openfl.events.KeyboardEvent;
-import flixel.util.FlxSave;
 import animateatlas.AtlasFrameMaker;
-import game.Section.SwagSection;
 import game.Song.SwagSong;
 import game.Note.EventNote;
-import game.Achievements;
 import game.Conductor.Rating;
+import game.Achievements.AchievementObject;
+import game.*;
+import utils.*;
+import shaders.*;
+import backgrounds.*;
+import ui.*;
 import data.StageData;
-import utils.FunkinLua;
-import ui.DialogueBoxPsych;
-import ui.HealthIcon;
 
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
@@ -75,10 +76,10 @@ class PlayState extends MusicBeatState
 		['Sick!', 1] //From 90% to 99%
 	];
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
-	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
+	public var modChartSprites:Map<String, FunkinLua.ModchartSprite> = new Map<String, FunkinLua.ModchartSprite>();
 	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
-	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
+	public var modchartTexts:Map<String, FunkinLua.ModchartText> = new Map<String, FunkinLua.ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
 
 	//event variables
@@ -112,7 +113,7 @@ class PlayState extends MusicBeatState
 	public var gfGroup:FlxSpriteGroup;
 	public static var curStage:String = '';
 	public static var isPixelStage:Bool = false;
-	public static var SONG:SwagSong = null;
+	public static var SONG:Song.SwagSong = null;
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
@@ -198,7 +199,7 @@ class PlayState extends MusicBeatState
 	public var cameraSpeed:Float = 1;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
-	var dialogueJson:DialogueFile = null;
+	var dialogueJson:DialogueBoxPsych.DialogueFile = null;
 
 	var dadbattleBlack:BGSprite;
 	var dadbattleLight:BGSprite;
@@ -299,7 +300,7 @@ class PlayState extends MusicBeatState
 	// Lua shit
 	public static var instance:PlayState;
 	public var luaArray:Array<FunkinLua> = [];
-	private var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
+	private var luaDebugGroup:FlxTypedGroup<FunkinLua.DebugLuaText>;
 	public var introSoundsSuffix:String = '';
 
 	// Debug buttons
@@ -1538,7 +1539,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function getLuaObject(tag:String, text:Bool=true):FlxSprite {
-		if(modchartSprites.exists(tag)) return modchartSprites.get(tag);
+		if(modChartSprites.exists(tag)) return modChartSprites.get(tag);
 		if(text && modchartTexts.exists(tag)) return modchartTexts.get(tag);
 		return null;
 	}
@@ -1594,7 +1595,7 @@ class PlayState extends MusicBeatState
 	var dialogueCount:Int = 0;
 	public var psychDialogue:DialogueBoxPsych;
 	//You don't have to add a song, just saying. You can just do "startDialogue(dialogueJson);" and it should work
-	public function startDialogue(dialogueFile:DialogueFile, ?song:String = null):Void
+	public function startDialogue(dialogueFile:DialogueBoxPsych.DialogueFile, ?song:String = null):Void
 	{
 		// TO DO: Make this more flexible, maybe?
 		if(psychDialogue != null) return;

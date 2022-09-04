@@ -1,6 +1,6 @@
 package game;
 
-import Section.SwagSection;
+import game.Section.SwagSection;
 import haxe.Json;
 
 #if sys
@@ -10,8 +10,7 @@ import sys.FileSystem;
 
 using StringTools;
 
-typedef SwagSong =
-{
+typedef SwagSong = {
 	var song:String;
 	var notes:Array<SwagSection>;
 	var events:Array<Dynamic>;
@@ -32,8 +31,7 @@ typedef SwagSong =
 	var splashSkin:String;
 }
 
-class Song
-{
+class Song {
 	public var song:String;
 	public var notes:Array<SwagSection>;
 	public var events:Array<Dynamic>;

@@ -125,14 +125,6 @@ class CoolUtil
 		Paths.music(sound, library);
 	}
 
-	public static function browserLoad(site:String) {
-		#if linux
-		Sys.command('/usr/bin/xdg-open', [site]);
-		#else
-		FlxG.openURL(site);
-		#end
-	}
-
 	public static function truncateFloat(number:Float, precision:Int):Float
 	{
 		var num = number;

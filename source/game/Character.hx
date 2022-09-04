@@ -6,13 +6,15 @@ import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxSort;
 import flixel.util.FlxColor;
-import Section.SwagSection;
 #if MODS_ALLOWED
 import sys.io.File;
 import sys.FileSystem;
 #end
 import openfl.utils.Assets;
 import haxe.Json;
+
+import game.Section.SwagSection;
+import game.Song;
 
 using StringTools;
 

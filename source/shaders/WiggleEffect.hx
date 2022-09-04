@@ -67,7 +67,6 @@ class WiggleShader extends FlxShader
 {
 	@:glFragmentSource('
 		#pragma header
-		//uniform float tx, ty; // x,y waves phase
 		uniform float uTime;
 		
 		const int EFFECT_TYPE_DREAMY = 0;
@@ -78,19 +77,19 @@ class WiggleShader extends FlxShader
 		
 		uniform int effectType;
 		
-		/**
+		/*
 		 * How fast the waves move over time
-		 */
+		*/
 		uniform float uSpeed;
 		
-		/**
+		/*
 		 * Number of waves over time
-		 */
+		*/
 		uniform float uFrequency;
 		
-		/**
+		/*
 		 * How much the pixels are going to stretch over the waves
-		 */
+		*/
 		uniform float uWaveAmplitude;
 
 		vec2 sineWave(vec2 pt)
