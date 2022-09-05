@@ -1,4 +1,4 @@
-package flixel.addons.ui;
+package flixel.custom.ui;
 
 import flash.geom.Rectangle;
 import flixel.addons.ui.interfaces.IFlxUIClickable;
@@ -20,20 +20,18 @@ import flixel.addons.ui.StrNameLabel;
 import flixel.addons.ui.FlxUI;
 
 /*
-
-THIS IS AN EDIT OF FlxUIDropDownMenu I'VE MADE BECAUSE I'M TIRED OF IT NOT SUPPORTING SCROLLING UP/DOWN
-BAH!
-
-The differences are the following:
-* Support to scrolling up/down with mouse wheel or arrow keys
-* THe default drop direction is "Down" instead of "Automatic"
-
+	THIS IS AN EDIT OF FlxUIDropDownMenu I'VE MADE BECAUSE I'M TIRED OF IT NOT SUPPORTING SCROLLING UP/DOWN
+	BAH!
+	
+	The differences are the following:
+	* Support to scrolling up/down with mouse wheel or arrow keys
+	* THe default drop direction is "Down" instead of "Automatic"
 */
 
 /**
  * @author larsiusprime
  */
-class FlxUIDropDownMenu extends FlxUIGroup implements IFlxUIWidget implements IFlxUIClickable implements IHasParams
+class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget implements IFlxUIClickable implements IHasParams
 {
 	public var skipButtonUpdate(default, set):Bool;
 

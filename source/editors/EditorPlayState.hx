@@ -75,8 +75,7 @@ class EditorPlayState extends MusicBeatState
 			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_right'))
 		];
 		
-		strumLine = new FlxSprite(ClientPrefs.getPref('middleScroll') ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, 50).makeGraphic(FlxG.width, 10);
-		if(ClientPrefs.getPref('downScroll')) strumLine.y = FlxG.height - 150;
+		strumLine = new FlxSprite(ClientPrefs.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, (ClientPrefs.downScroll ? FlxG.height - 150 : 50)).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
 		
 		comboGroup = new FlxTypedGroup<FlxSprite>();
@@ -150,7 +149,6 @@ class EditorPlayState extends MusicBeatState
 		add(tipText);
 		FlxG.mouse.visible = false;
 
-		//sayGo();
 		if(!ClientPrefs.getPref('controllerMode'))
 		{
 			FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
@@ -159,26 +157,6 @@ class EditorPlayState extends MusicBeatState
 		super.create();
 	}
 
-	function sayGo() {
-		var go:FlxSprite = new FlxSprite().loadGraphic(Paths.image('go'));
-		go.scrollFactor.set();
-
-		go.updateHitbox();
-
-		go.screenCenter();
-		go.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		add(go);
-		FlxTween.tween(go, {y: go.y += 100, alpha: 0}, Conductor.crochet / 1000, {
-			ease: FlxEase.cubeInOut,
-			onComplete: function(twn:FlxTween)
-			{
-				go.destroy();
-			}
-		});
-		FlxG.sound.play(Paths.sound('introGo'), 0.6);
-	}
-
-	//var songScore:Int = 0;
 	var songHits:Int = 0;
 	var songMisses:Int = 0;
 	var startingSong:Bool = true;
@@ -258,8 +236,7 @@ class EditorPlayState extends MusicBeatState
 								else if(ClientPrefs.getPref('middleScroll'))
 								{
 									sustainNote.x += 310;
-									if(daNoteData > 1)
-									{ //Up and Right
+									if(daNoteData > 1) {
 										sustainNote.x += FlxG.width / 2 + 25;
 									}
 								}
@@ -273,8 +250,7 @@ class EditorPlayState extends MusicBeatState
 						else if(ClientPrefs.getPref('middleScroll'))
 						{
 							swagNote.x += 310;
-							if(daNoteData > 1) //Up and Right
-							{
+							if(daNoteData > 1) { //Up and Right
 								swagNote.x += FlxG.width / 2 + 25;
 							}
 						}
@@ -551,9 +527,7 @@ class EditorPlayState extends MusicBeatState
 					if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.isSustainNote)
 					{
 						if(daNote.noteData == key)
-						{
 							sortedNotesList.push(daNote);
-						}
 						canMiss = true;
 					}
 				});
@@ -696,26 +670,25 @@ class EditorPlayState extends MusicBeatState
 	{
 		if (!note.wasGoodHit)
 		{
-			switch(note.noteType) {
-				case 'Hurt Note': //Hurt note
-					noteMiss();
-					--songMisses;
-					if(!note.isSustainNote) {
-						if(!note.noteSplashDisabled) {
-							spawnNoteSplashOnNote(note);
-						}
-					}
-
-					note.wasGoodHit = true;
-					vocals.volume = 0;
-
-					if (!note.isSustainNote)
-					{
-						note.kill();
-						notes.remove(note, true);
-						note.destroy();
-					}
-					return;
+			if (ClientPrefs.hitsoundVolume > 0 && !note.hitsoundDisabled)
+			{
+				FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.hitsoundVolume);
+			}
+			if(note.hitCausesMiss) {
+				noteMiss();
+				--songMisses;
+				if(!note.noteSplashDisabled && !note.isSustainNote) {
+					spawnNoteSplashOnNote(note);
+				}
+				note.wasGoodHit = true;
+				vocals.volume = 0;
+				if (!note.isSustainNote)
+				{
+					note.kill();
+					notes.remove(note, true);
+					note.destroy();
+				}
+				return;
 			}
 
 			if (!note.isSustainNote)
@@ -757,20 +730,17 @@ class EditorPlayState extends MusicBeatState
 
 	var COMBO_X:Float = 400;
 	var COMBO_Y:Float = 340;
-	private function popUpScore(note:Note = null):Void
+	private function popUpScore(note:Note):Void
 	{
 		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
-
-		vocals.volume = 1;
-
 		var placement:String = Std.string(combo);
 
 		var coolText:FlxText = new FlxText(0, 0, 0, placement, 32);
 		coolText.x = COMBO_X;
 		coolText.y = COMBO_Y;
 
+		vocals.volume = 1;
 		var rating:FlxSprite = new FlxSprite();
-
 		var daRating:String = "sick";
 
 		if (noteDiff > Conductor.safeZoneOffset * 0.75)
@@ -823,15 +793,12 @@ class EditorPlayState extends MusicBeatState
 		comboSpr.y -= comboOffset[5];
 
 		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
-		if (!PlayState.isPixelStage)
-		{
+		if (!PlayState.isPixelStage) {
 			rating.setGraphicSize(Std.int(rating.width * 0.7));
 			rating.antialiasing = globalAntialiasing;
 			comboSpr.setGraphicSize(Std.int(comboSpr.width * 0.7));
 			comboSpr.antialiasing = globalAntialiasing;
-		}
-		else
-		{
+		} else {
 			rating.setGraphicSize(Std.int(rating.width * PlayState.daPixelZoom * 0.85));
 			comboSpr.setGraphicSize(Std.int(comboSpr.width * PlayState.daPixelZoom * 0.85));
 		}

@@ -54,7 +54,7 @@ import sys.io.File;
 #end
 
 #if VIDEOS_ALLOWED
-import vlc.MP4Handler;
+import VideoHandler;
 #end
 
 using StringTools;
@@ -312,6 +312,13 @@ class PlayState extends MusicBeatState
 	private var controlArray:Array<String>;
 
 	var precacheList:Map<String, String> = new Map<String, String>();
+
+	// stores the last judgement object
+	public static var lastRating:FlxSprite;
+	// stores the last combo sprite object
+	public static var lastCombo:FlxSprite;
+	// stores the last combo score objects in an array
+	public static var lastScore:Array<FlxSprite> = [];
 
 	private var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
 	private var downScroll:Bool = ClientPrefs.getPref('downScroll');
@@ -1571,7 +1578,7 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		var video:MP4Handler = new MP4Handler();
+		var video:VideoHandler = new VideoHandler();
 		video.playVideo(filepath);
 		video.finishCallback = function() {
 			startAndEnd();
@@ -4156,6 +4163,11 @@ class PlayState extends MusicBeatState
 		if (daTiming != "" && ClientPrefs.getPref('ShowLateEarly'))
 			add(timing);
 
+		if (!ClientPrefs.comboStacking) {
+			if (lastRating != null) lastRating.kill();
+			lastRating = rating;
+		}
+
 		if (!PlayState.isPixelStage) {
 			rating.setGraphicSize(Std.int(rating.width * 0.7));
 			rating.antialiasing = globalAntialiasing;
@@ -4182,6 +4194,20 @@ class PlayState extends MusicBeatState
 		seperatedScore.push(Math.floor(combo / 10) % 10);
 		seperatedScore.push(combo % 10);
 
+		if (!ClientPrefs.comboStacking)
+		{
+			if (lastCombo != null) lastCombo.kill();
+			lastCombo = comboSpr;
+		}
+		if (lastScore != null)
+		{
+			while (lastScore.length > 0)
+			{
+				lastScore[0].kill();
+				lastScore.remove(lastScore[0]);
+			}
+		}
+
 		var daLoop:Int = 0;
 		for (i in seperatedScore)
 		{
@@ -4195,6 +4221,9 @@ class PlayState extends MusicBeatState
 
 			numScore.x += comboOffset[2];
 			numScore.y -= comboOffset[3];
+
+			if (!ClientPrefs.comboStacking)
+				lastScore.push(numScore);
 
 			if (!PlayState.isPixelStage) {
 				numScore.antialiasing = globalAntialiasing;

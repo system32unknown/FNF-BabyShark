@@ -39,6 +39,8 @@ import sys.io.File;
 import sys.FileSystem;
 import flash.media.Sound;
 #end
+import utils.AttachedSprite;
+import states.MusicBeatState;
 
 using StringTools;
 
@@ -47,8 +49,7 @@ using StringTools;
 
 class ChartingState extends MusicBeatState
 {
-	public static var noteTypeList:Array<String> = //Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
-	[
+	public static var noteTypeList:Array<String> = [ //Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
 		'',
 		'Alt Animation',
 		'Hey!',
@@ -117,7 +118,7 @@ class ChartingState extends MusicBeatState
 	var curUndoIndex = 0;
 	var curRedoIndex = 0;
 	var _song:SwagSong;
-	/*
+	/**
 	 * WILL BE THE CURRENT / LAST PLACED NOTE
 	**/
 	var curSelectedNote:Array<Dynamic> = null;

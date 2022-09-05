@@ -2,6 +2,9 @@ package game;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import shaders.ColorSwap;
+import utils.ClientPrefs;
+import states.PlayState;
 
 using StringTools;
 

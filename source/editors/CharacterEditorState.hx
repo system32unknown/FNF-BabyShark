@@ -17,15 +17,18 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
+import flixel.custom.ui.FlxUIDropDownMenuCustom;
 import flixel.ui.FlxButton;
+import flixel.animation.FlxAnimation;
+import flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-import haxe.Json;
-import flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
 import lime.system.Clipboard;
-import flixel.animation.FlxAnimation;
+import haxe.Json;
 import game.Character;
+import states.MusicBeatState;
+import ui.HealthIcon;
 
 #if MODS_ALLOWED
 import sys.FileSystem;
@@ -33,9 +36,9 @@ import sys.FileSystem;
 
 using StringTools;
 
-/**
+/*
 	*DEBUG MODE
- */
+*/
 class CharacterEditorState extends MusicBeatState
 {
 	var char:Character;
@@ -446,15 +449,15 @@ class CharacterEditorState extends MusicBeatState
 		});
 
 		var decideIconColor:FlxButton = new FlxButton(reloadImage.x, reloadImage.y + 30, "Get Icon Color", function()
-			{
-				var coolColor = FlxColor.fromInt(CoolUtil.dominantColor(leHealthIcon));
-				healthColorStepperR.value = coolColor.red;
-				healthColorStepperG.value = coolColor.green;
-				healthColorStepperB.value = coolColor.blue;
-				getEvent(FlxUINumericStepper.CHANGE_EVENT, healthColorStepperR, null);
-				getEvent(FlxUINumericStepper.CHANGE_EVENT, healthColorStepperG, null);
-				getEvent(FlxUINumericStepper.CHANGE_EVENT, healthColorStepperB, null);
-			});
+		{
+			var coolColor = FlxColor.fromInt(CoolUtil.dominantColor(leHealthIcon));
+			healthColorStepperR.value = coolColor.red;
+			healthColorStepperG.value = coolColor.green;
+			healthColorStepperB.value = coolColor.blue;
+			getEvent(FlxUINumericStepper.CHANGE_EVENT, healthColorStepperR, null);
+			getEvent(FlxUINumericStepper.CHANGE_EVENT, healthColorStepperG, null);
+			getEvent(FlxUINumericStepper.CHANGE_EVENT, healthColorStepperB, null);
+		});
 
 		healthIconInputText = new FlxUIInputText(15, imageInputText.y + 35, 75, leHealthIcon.getCharacter(), 8);
 
@@ -1145,9 +1148,9 @@ class CharacterEditorState extends MusicBeatState
 		FlxG.log.notice("Successfully saved file.");
 	}
 
-	/**
+	/*
 		* Called when the save file dialog is cancelled.
-		*/
+	*/
 	function onSaveCancel(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -1156,9 +1159,9 @@ class CharacterEditorState extends MusicBeatState
 		_file = null;
 	}
 
-	/**
+	/*
 		* Called if there is an error while saving the gameplay recording.
-		*/
+	*/
 	function onSaveError(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);

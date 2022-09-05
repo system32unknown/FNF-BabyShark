@@ -202,8 +202,7 @@ class TitleState extends MusicBeatState
 		var firstArray:Array<String> = fullText.split('\n');
 		var swagGoodArray:Array<Array<String>> = [];
 
-		for (i in firstArray)
-		{
+		for (i in firstArray) {
 			swagGoodArray.push(i.split('--'));
 		}
 
@@ -339,8 +338,8 @@ class TitleState extends MusicBeatState
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
 					createCoolText(['Vs Dave and Bambi Created by:']);
 				case 2:
-					addMoreText('MoldyGH, MTM101', -60);
-					addMoreText('Rapparep lol, TheBuilderXD', -60);
+					addMoreText('MoldyGH, MTM101, Stats45', -60);
+					addMoreText('Rapparep lol, TheBuilderXD, Edival', -60);
 					addMoreText('T5mpler, Erizur, Billy Bobbo', -60);
 					addMoreText('Marcello_TIMEnice30', -60);
 				case 3:
@@ -360,6 +359,7 @@ class TitleState extends MusicBeatState
 					addMoreText('Shadow Mario', 15);
 					addMoreText('RiverOaken', 15);
 					addMoreText('YoShubs', 15);
+					addMoreText('And Psych Engine Contributors!', 15);
 				case 9:
 					deleteCoolText();
 					createCoolText([curWacky[0]]);
@@ -367,9 +367,9 @@ class TitleState extends MusicBeatState
 					addMoreText(curWacky[1]);
 				case 11:
 					deleteCoolText();
-					createCoolText(['Current Time is..']);	
+					createCoolText(['Are you ready for']);	
 				case 12:
-					addMoreText(Date.now().toString());
+					addMoreText('Gaming? :troll:');
 				case 13:
 					deleteCoolText();
 				case 14:
@@ -401,13 +401,14 @@ class TitleState extends MusicBeatState
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			for (logo in titleLogos) {
 				logoInt++;
-				FlxTween.tween(logo, {y: ((logoInt % 2 == 0) ? 100: 200)}, 1.4, {ease: FlxEase.expoInOut});
-				logo.angle = ((logoInt % 2 == 0) ? -4 : 4);
+				var islogoalt:Bool = (logoInt % 2 == 0);
+				FlxTween.tween(logo, {y: (islogoalt ? 100: 200)}, 1.4, {ease: FlxEase.expoInOut});
+				logo.angle = (islogoalt ? -4 : 4);
 				new FlxTimer().start(0.01, function(tmr:FlxTimer) {
-					if (logo.angle == ((logoInt % 2 == 0) ? -4 : 4))
-						FlxTween.angle(logo, logo.angle, ((logoInt % 2 == 0) ? 4 : -4), 4, {ease: FlxEase.quartInOut});
-					if (logo.angle == ((logoInt % 2 == 0) ? 4 : -4))
-						FlxTween.angle(logo, logo.angle, ((logoInt % 2 == 0) ? -4 : 4), 4, {ease: FlxEase.quartInOut});
+					if (logo.angle == (islogoalt ? -4 : 4))
+						FlxTween.angle(logo, logo.angle, (islogoalt ? 4 : -4), 4, {ease: FlxEase.quartInOut});
+					if (logo.angle == (islogoalt ? 4 : -4))
+						FlxTween.angle(logo, logo.angle, (islogoalt ? -4 : 4), 4, {ease: FlxEase.quartInOut});
 				}, 0);
 			}
 			skippedIntro = true;

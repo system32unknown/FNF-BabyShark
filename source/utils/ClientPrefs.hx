@@ -32,6 +32,7 @@ class ClientPrefs {
 		'ShowJudgementCount' => false,
 		'IconBounceType' => 'Psych',
 		'RatingTypes' => 'Static',
+		'comboStacking' => true,
 		'NoAntiSpam' => false,
 		'noteOffset' => 0,
 		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],

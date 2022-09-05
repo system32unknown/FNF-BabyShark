@@ -3,6 +3,9 @@ package game;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import editors.ChartingState;
+import shaders.ColorSwap;
+import utils.ClientPrefs;
+import states.PlayState;
 
 using StringTools;
 
@@ -212,8 +215,6 @@ class Note extends FlxSprite
 	{
 		super();
 
-		mania = mustPress ? PlayState.Playermania : PlayState.Oppomania;
-
 		if (prevNote == null)
 			prevNote = this;
 
@@ -242,7 +243,7 @@ class Note extends FlxSprite
 			}
 		}
 
-		if(prevNote!=null)
+		if(prevNote != null)
 			prevNote.nextNote = this;
 
 		if (isSustainNote && prevNote != null)

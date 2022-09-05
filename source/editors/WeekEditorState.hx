@@ -1,7 +1,7 @@
 package editors;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -26,7 +26,8 @@ import haxe.Json;
 import sys.io.File;
 import sys.FileSystem;
 #end
-import WeekData;
+import data.WeekData;
+import states.MusicBeatState;
 
 using StringTools;
 
@@ -529,8 +530,8 @@ class WeekEditorState extends MusicBeatState
 
 	/**
 		* Called when the save file dialog is cancelled.
-		*/
-		private static function onLoadCancel(_):Void
+	*/
+	private static function onLoadCancel(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
@@ -541,7 +542,7 @@ class WeekEditorState extends MusicBeatState
 
 	/**
 		* Called if there is an error while saving the gameplay recording.
-		*/
+	**/
 	private static function onLoadError(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
@@ -574,8 +575,8 @@ class WeekEditorState extends MusicBeatState
 
 	/**
 		* Called when the save file dialog is cancelled.
-		*/
-		private static function onSaveCancel(_):Void
+	**/
+	private static function onSaveCancel(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -585,7 +586,7 @@ class WeekEditorState extends MusicBeatState
 
 	/**
 		* Called if there is an error while saving the gameplay recording.
-		*/
+	**/
 	private static function onSaveError(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -635,10 +636,6 @@ class WeekEditorFreeplayState extends MusicBeatState
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
 			add(icon);
-
-			// songText.x += 40;
-			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
-			// songText.screenCenter(X);
 		}
 
 		addEditorBox();
@@ -675,7 +672,6 @@ class WeekEditorFreeplayState extends MusicBeatState
 		
 		var storyModeButton:FlxButton = new FlxButton(0, 685, "Story Mode", function() {
 			MusicBeatState.switchState(new WeekEditorState(weekFile));
-			
 		});
 		storyModeButton.screenCenter(X);
 		add(storyModeButton);
