@@ -8,6 +8,7 @@ import flixel.FlxCamera;
 import utils.Controls;
 import utils.PlayerSettings;
 import utils.CustomFadeTransition;
+import utils.ClientPrefs;
 import game.Conductor;
 
 class MusicBeatState extends FlxUIState {

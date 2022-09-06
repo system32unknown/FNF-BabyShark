@@ -1188,7 +1188,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.borderSize = 1;
 		judgementCounter.scrollFactor.set();
 		judgementCounter.screenCenter(Y);
-		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${MaxCombo}\n' : '') + 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${MaxCombo}\n' : '') + 'Perfects: ${sicks}\nNices: ${goods}\nToo Bads: ${bads}\nBruhs: ${shits}\n';
 		if (ClientPrefs.getPref('ShowJudgementCount')) {
 			add(judgementCounter);
 		}

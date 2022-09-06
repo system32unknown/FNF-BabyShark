@@ -2,6 +2,7 @@ package substates;
 
 import flixel.FlxSubState;
 import utils.Controls;
+import utils.ClientPrefs;
 import game.Conductor;
 
 class MusicBeatSubstate extends FlxSubState

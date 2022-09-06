@@ -5,7 +5,19 @@ import utils.Discord.DiscordClient;
 #end
 import game.Conductor.BPMChangeEvent;
 import game.Section.SwagSection;
+import game.Song;
 import game.Song.SwagSong;
+import game.Conductor;
+import game.StrumNote;
+import game.Note;
+import data.StageData;
+import utils.AttachedSprite;
+import utils.CoolUtil;
+import states.MusicBeatState;
+import states.LoadingState;
+import states.PlayState;
+import ui.HealthIcon;
+import ui.Prompt;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxObject;
@@ -15,6 +27,7 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
+import flixel.custom.ui.FlxUIDropDownMenuCustom;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
@@ -39,8 +52,6 @@ import sys.io.File;
 import sys.FileSystem;
 import flash.media.Sound;
 #end
-import utils.AttachedSprite;
-import states.MusicBeatState;
 
 using StringTools;
 
@@ -71,6 +82,7 @@ class ChartingState extends MusicBeatState
 		['Philly Glow', "Exclusive to Week 3\nValue 1: 0/1/2 = OFF/ON/Reset Gradient\n \nNo, i won't add it to other weeks."],
 		['Kill Henchmen', "For Mom's songs, don't use this please, i love them :("],
 		['Add Camera Zoom', "Used on MILF on that one \"hard\" part\nValue 1: Camera zoom add (Default: 0.015)\nValue 2: UI zoom add (Default: 0.03)\nLeave the values blank if you want to use Default."],
+		['Set Camera Zoom', "Used to set the default camera zoom to a constant value\nValue 1: Camera zoom set (Default: 1.05)\nValue 2: UI zoom set (Default: 1)\nLeave the values blank if you want to use Default."],
 		['BG Freaks Expression', "Should be used only in \"school\" Stage!"],
 		['Trigger BG Ghouls', "Should be used only in \"schoolEvil\" Stage!"],
 		['Play Animation', "Plays an animation on a Character,\nonce the animation is completed,\nthe animation changes to Idle\n\nValue 1: Animation to play.\nValue 2: Character (Dad, BF, GF)"],
@@ -79,6 +91,7 @@ class ChartingState extends MusicBeatState
 		['Screen Shake', "Value 1: Camera shake\nValue 2: HUD shake\n\nEvery value works as the following example: \"1, 0.05\".\nThe first number (1) is the duration.\nThe second number (0.05) is the intensity."],
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
+		['Change Mania', "Value 1: The new mania value (min: 0; max: 9)"],
 		['Set Property', "Value 1: Variable name\nValue 2: New value"]
 	];
 
@@ -197,7 +210,8 @@ class ChartingState extends MusicBeatState
 				gfVersion: 'gf',
 				speed: 1,
 				stage: 'stage',
-				validScore: false
+				validScore: false,
+				mania: Note.defaultMania
 			};
 			addSection();
 			PlayState.SONG = _song;

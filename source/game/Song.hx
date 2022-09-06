@@ -1,6 +1,8 @@
 package game;
 
 import game.Section.SwagSection;
+import data.StageData;
+import game.Note;
 import haxe.Json;
 
 #if sys
@@ -24,8 +26,7 @@ typedef SwagSong = {
 	var stage:String;
 	var validScore:Bool;
 
-	var keyCount:Null<Int>;
-	var playerKeyCount:Null<Int>;
+	var mania:Int;
 
 	var arrowSkin:String;
 	var splashSkin:String;

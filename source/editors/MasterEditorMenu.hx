@@ -1,7 +1,11 @@
 package editors;
 
+import states.MusicBeatState;
+import states.LoadingState;
+import data.WeekData;
+import ui.Alphabet;
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;

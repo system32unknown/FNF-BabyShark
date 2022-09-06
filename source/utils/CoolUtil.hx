@@ -7,6 +7,7 @@ import sys.FileSystem;
 #else
 import openfl.utils.Assets;
 #end
+import states.PlayState;
 
 using StringTools;
 

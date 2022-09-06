@@ -33,6 +33,8 @@ import data.WeekData;
 import utils.PlayerSettings;
 import utils.ClientPrefs;
 import game.Highscore;
+import game.Conductor;
+import states.MainMenuState;
 
 using StringTools;
 

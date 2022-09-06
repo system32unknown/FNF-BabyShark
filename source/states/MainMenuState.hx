@@ -1,9 +1,9 @@
 package states;
 
-import WiggleEffect.*;
-import WiggleEffect.WiggleEffectType;
+import shaders.WiggleEffect.WiggleEffect;
+import shaders.WiggleEffect.WiggleEffectType;
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -17,7 +17,7 @@ import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import Achievements;
+import game.Achievements;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
 
