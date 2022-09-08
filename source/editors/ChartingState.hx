@@ -4,6 +4,8 @@ package editors;
 import utils.Discord.DiscordClient;
 #end
 import game.Conductor.BPMChangeEvent;
+import game.Character.CharacterFile;
+import game.Character;
 import game.Section.SwagSection;
 import game.Song;
 import game.Song.SwagSong;
@@ -16,6 +18,7 @@ import utils.CoolUtil;
 import states.MusicBeatState;
 import states.LoadingState;
 import states.PlayState;
+import states.TitleState;
 import ui.HealthIcon;
 import ui.Prompt;
 import flixel.FlxG;
@@ -1563,8 +1566,7 @@ class ChartingState extends MusicBeatState
 
 		if (!blockInput)
 		{
-			if (FlxG.keys.justPressed.ESCAPE)
-			{
+			if (FlxG.keys.justPressed.ESCAPE) {
 				autosaveSong();
 				LoadingState.loadAndSwitchState(new editors.EditorPlayState(sectionStartTime()));
 			}
@@ -1576,7 +1578,6 @@ class ChartingState extends MusicBeatState
 				FlxG.sound.music.stop();
 				if(vocals != null) vocals.stop();
 
-				//if(_song.stage == null) _song.stage = stageDropDown.selectedLabel;
 				StageData.loadDirectory(_song);
 				LoadingState.loadAndSwitchState(new PlayState());
 			}
@@ -1594,19 +1595,16 @@ class ChartingState extends MusicBeatState
 
 
 			if (FlxG.keys.justPressed.BACKSPACE) {
-				//if(onMasterEditor) {
-					MusicBeatState.switchState(new editors.MasterEditorMenu());
-					FlxG.sound.playMusic(Paths.music('freakyMenu'));
-				//}
+				PlayState.chartingMode = false;
+				MusicBeatState.switchState(new MasterEditorMenu());
+				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				FlxG.mouse.visible = false;
 				return;
 			}
 
-
 			if(FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL) {
 				undo();
 			}
-
 
 			if(FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL) {
 				--curZoom;
@@ -1624,9 +1622,7 @@ class ChartingState extends MusicBeatState
 					UI_box.selected_tab -= 1;
 					if (UI_box.selected_tab < 0)
 						UI_box.selected_tab = 2;
-				}
-				else
-				{
+				} else {
 					UI_box.selected_tab += 1;
 					if (UI_box.selected_tab >= 3)
 						UI_box.selected_tab = 0;
@@ -2355,7 +2351,7 @@ class ChartingState extends MusicBeatState
 		var rawJson = OpenFlAssets.getText(path);
 		#end
 
-		var json:Character.CharacterFile = cast Json.parse(rawJson);
+		var json:CharacterFile = cast Json.parse(rawJson);
 		return json.healthicon;
 	}
 

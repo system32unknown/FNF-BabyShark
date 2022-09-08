@@ -26,6 +26,7 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import lime.system.Clipboard;
 import haxe.Json;
+import backgrounds.BGSprite;
 import game.Character;
 import states.MusicBeatState;
 import ui.HealthIcon;

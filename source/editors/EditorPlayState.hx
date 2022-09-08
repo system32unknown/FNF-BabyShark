@@ -1,6 +1,15 @@
 package editors;
 
-import Section.SwagSection;
+import game.Section;
+import game.Section.SwagSection;
+import game.StrumNote;
+import game.NoteSplash;
+import game.Conductor;
+import game.Note;
+import utils.ClientPrefs;
+import states.MusicBeatState;
+import states.PlayState;
+import states.LoadingState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
@@ -75,7 +84,7 @@ class EditorPlayState extends MusicBeatState
 			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_right'))
 		];
 		
-		strumLine = new FlxSprite(ClientPrefs.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, (ClientPrefs.downScroll ? FlxG.height - 150 : 50)).makeGraphic(FlxG.width, 10);
+		strumLine = new FlxSprite(ClientPrefs.getPref('middleScroll') ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, (ClientPrefs.getPref('downScroll') ? FlxG.height - 150 : 50)).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
 		
 		comboGroup = new FlxTypedGroup<FlxSprite>();
@@ -670,9 +679,9 @@ class EditorPlayState extends MusicBeatState
 	{
 		if (!note.wasGoodHit)
 		{
-			if (ClientPrefs.hitsoundVolume > 0 && !note.hitsoundDisabled)
+			if (ClientPrefs.getPref('hitsoundVolume')  > 0 && !note.hitsoundDisabled)
 			{
-				FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.hitsoundVolume);
+				FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.getPref('hitsoundVolume') );
 			}
 			if(note.hitCausesMiss) {
 				noteMiss();
@@ -700,8 +709,7 @@ class EditorPlayState extends MusicBeatState
 			}
 
 			playerStrums.forEach(function(spr:StrumNote) {
-				if (Math.abs(note.noteData) == spr.ID)
-				{
+				if (Math.abs(note.noteData) == spr.ID) {
 					spr.playAnim('confirm', true);
 				}
 			});

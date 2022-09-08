@@ -62,7 +62,6 @@ class DialogueCharacter extends FlxSprite
 	public var startingPos:Float = 0; //For center characters, it works as the starting Y, for everything else it works as starting X
 	public var isGhost:Bool = false; //For the editor
 	public var curCharacter:String = 'bf';
-	public var skipping = 0;
 	public function new(x:Float = 0, y:Float = 0, character:String = null)
 	{
 		super(x, y);
@@ -136,10 +135,8 @@ class DialogueCharacter extends FlxSprite
 			var anim:DialogueAnimArray = dialogueAnimations.get(leAnim);
 			if(playIdle) {
 				offset.set(anim.idle_offsets[0], anim.idle_offsets[1]);
-				//trace('Setting idle offsets: ' + anim.idle_offsets);
 			} else {
 				offset.set(anim.loop_offsets[0], anim.loop_offsets[1]);
-				//trace('Setting loop offsets: ' + anim.loop_offsets);
 			}
 		} else {
 			offset.set(0, 0);
@@ -214,7 +211,6 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		startNextDialog();
 	}
 
-	var dialogueStarted:Bool = false;
 	var dialogueEnded:Bool = false;
 
 	public static var LEFT_CHAR_X:Float = -60;

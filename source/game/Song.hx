@@ -49,8 +49,7 @@ class Song {
 	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
 
-	public var keyCount:Null<Int> = 4;
-	public var playerKeyCount:Null<Int> = 4;
+
 
 	public function new(song, notes, bpm)
 	{

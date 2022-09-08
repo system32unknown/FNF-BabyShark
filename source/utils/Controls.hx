@@ -3,10 +3,8 @@ package utils;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.input.actions.FlxAction;
-import flixel.input.actions.FlxActionInput;
 import flixel.input.actions.FlxActionManager;
 import flixel.input.actions.FlxActionSet;
-import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 
 #if (haxe >= "4.0.0")
@@ -76,12 +74,6 @@ abstract Action(String) to String from String
 }
 #end
 
-enum Device
-{
-	Keys;
-	Gamepad(id:Int);
-}
-
 /**
  * Since, in many cases multiple actions should use similar keys, we don't want the
  * rebinding UI to list every action. ActionBinders are what the user percieves as
@@ -107,7 +99,6 @@ enum KeyboardScheme
 {
 	Solo;
 	None;
-	Custom;
 }
 
 /**
@@ -151,7 +142,6 @@ class Controls extends FlxActionSet
 	var byName:Map<String, FlxActionDigital> = new Map<String, FlxActionDigital>();
 	#end
 
-	public var gamepadsAdded:Array<Int> = [];
 	public var keyboardScheme = KeyboardScheme.None;
 
 	public var UI_UP(get, never):Bool;
@@ -392,7 +382,6 @@ class Controls extends FlxActionSet
 		return switch input.device
 		{
 			case KEYBOARD: return '[${(input.inputID : FlxKey)}]';
-			case GAMEPAD: return '(${(input.inputID : FlxGamepadInputID)})';
 			case device: throw 'unhandled device: $device';
 		}
 	}
@@ -480,90 +469,15 @@ class Controls extends FlxActionSet
 		}
 	}
 
-	public function replaceBinding(control:Control, device:Device, ?toAdd:Int, ?toRemove:Int)
+	public function replaceBinding(control:Control, ?toAdd:Int, ?toRemove:Int)
 	{
 		if (toAdd == toRemove)
 			return;
 
-		switch (device)
-		{
-			case Keys:
-				if (toRemove != null)
-					unbindKeys(control, [toRemove]);
-				if (toAdd != null)
-					bindKeys(control, [toAdd]);
-
-			case Gamepad(id):
-				if (toRemove != null)
-					unbindButtons(control, id, [toRemove]);
-				if (toAdd != null)
-					bindButtons(control, id, [toAdd]);
-		}
-	}
-
-	public function copyFrom(controls:Controls, ?device:Device)
-	{
-		#if (haxe >= "4.0.0")
-		for (name => action in controls.byName)
-		{
-			for (input in action.inputs)
-			{
-				if (device == null || isDevice(input, device))
-					byName[name].add(cast input);
-			}
-		}
-		#else
-		for (name in controls.byName.keys())
-		{
-			var action = controls.byName[name];
-			for (input in action.inputs)
-			{
-				if (device == null || isDevice(input, device))
-				byName[name].add(cast input);
-			}
-		}
-		#end
-
-		switch (device)
-		{
-			case null:
-				// add all
-				#if (haxe >= "4.0.0")
-				for (gamepad in controls.gamepadsAdded)
-					if (!gamepadsAdded.contains(gamepad))
-						gamepadsAdded.push(gamepad);
-				#else
-				for (gamepad in controls.gamepadsAdded)
-					if (gamepadsAdded.indexOf(gamepad) == -1)
-					  gamepadsAdded.push(gamepad);
-				#end
-
-				mergeKeyboardScheme(controls.keyboardScheme);
-
-			case Gamepad(id):
-				gamepadsAdded.push(id);
-			case Keys:
-				mergeKeyboardScheme(controls.keyboardScheme);
-		}
-	}
-
-	inline public function copyTo(controls:Controls, ?device:Device)
-	{
-		controls.copyFrom(this, device);
-	}
-
-	function mergeKeyboardScheme(scheme:KeyboardScheme):Void
-	{
-		if (scheme != None)
-		{
-			switch (keyboardScheme)
-			{
-				case None:
-					keyboardScheme = scheme;
-				default:
-					keyboardScheme = Custom;
-			}
-		}
+		if (toRemove != null)
+			unbindKeys(control, [toRemove]);
+		if (toAdd != null)
+			bindKeys(control, [toAdd]);
 	}
 
 	/**
@@ -646,7 +560,6 @@ class Controls extends FlxActionSet
 				inline bindKeys(Control.PAUSE, keysMap.get('pause'));
 				inline bindKeys(Control.RESET, keysMap.get('reset'));
 			case None: // nothing
-			case Custom: // nothing
 		}
 		#else
 		switch (scheme)
@@ -665,169 +578,18 @@ class Controls extends FlxActionSet
 				bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
 				bindKeys(Control.RESET, [R]);
 			case None: // nothing
-			case Custom: // nothing
 		}
 		#end
 	}
 
-	function removeKeyboard()
-	{
-		for (action in this.digitalActions)
-		{
+	function removeKeyboard() {
+		for (action in this.digitalActions) {
 			var i = action.inputs.length;
-			while (i-- > 0)
-			{
+			while (i-- > 0) {
 				var input = action.inputs[i];
 				if (input.device == KEYBOARD)
 					action.remove(input);
 			}
 		}
-	}
-
-	public function addGamepad(id:Int, ?buttonMap:Map<Control, Array<FlxGamepadInputID>>):Void
-	{
-		gamepadsAdded.push(id);
-		
-		#if (haxe >= "4.0.0")
-		for (control => buttons in buttonMap)
-			inline bindButtons(control, id, buttons);
-		#else
-		for (control in buttonMap.keys())
-			bindButtons(control, id, buttonMap[control]);
-		#end
-	}
-
-	inline function addGamepadLiteral(id:Int, ?buttonMap:Map<Control, Array<FlxGamepadInputID>>):Void
-	{
-		gamepadsAdded.push(id);
-
-		#if (haxe >= "4.0.0")
-		for (control => buttons in buttonMap)
-			inline bindButtons(control, id, buttons);
-		#else
-		for (control in buttonMap.keys())
-			bindButtons(control, id, buttonMap[control]);
-		#end
-	}
-
-	public function removeGamepad(deviceID:Int = FlxInputDeviceID.ALL):Void
-	{
-		for (action in this.digitalActions)
-		{
-			var i = action.inputs.length;
-			while (i-- > 0)
-			{
-				var input = action.inputs[i];
-				if (input.device == GAMEPAD && (deviceID == FlxInputDeviceID.ALL || input.deviceID == deviceID))
-					action.remove(input);
-			}
-		}
-
-		gamepadsAdded.remove(deviceID);
-	}
-
-	public function addDefaultGamepad(id):Void
-	{
-		addGamepadLiteral(id, [
-			Control.ACCEPT => [A, START],
-			Control.BACK => [B],
-			Control.UI_UP => [DPAD_UP, LEFT_STICK_DIGITAL_UP],
-			Control.UI_DOWN => [DPAD_DOWN, LEFT_STICK_DIGITAL_DOWN],
-			Control.UI_LEFT => [DPAD_LEFT, LEFT_STICK_DIGITAL_LEFT],
-			Control.UI_RIGHT => [DPAD_RIGHT, LEFT_STICK_DIGITAL_RIGHT],
-			Control.NOTE_UP => [DPAD_UP, LEFT_STICK_DIGITAL_UP, RIGHT_STICK_DIGITAL_UP, Y],
-			Control.NOTE_DOWN => [DPAD_DOWN, LEFT_STICK_DIGITAL_DOWN, RIGHT_STICK_DIGITAL_DOWN, A],
-			Control.NOTE_LEFT => [DPAD_LEFT, LEFT_STICK_DIGITAL_LEFT, RIGHT_STICK_DIGITAL_LEFT, X],
-			Control.NOTE_RIGHT => [DPAD_RIGHT, LEFT_STICK_DIGITAL_RIGHT, RIGHT_STICK_DIGITAL_RIGHT, B],
-			Control.PAUSE => [START],
-			Control.RESET => [8]
-		]);
-	}
-
-	/*
-	 * Sets all actions that pertain to the binder to trigger when the supplied keys are used.
-	 * If binder is a literal you can inline this
-	*/
-	public function bindButtons(control:Control, id, buttons)
-	{
-		#if (haxe >= "4.0.0")
-		inline forEachBound(control, (action, state) -> addButtons(action, buttons, state, id));
-		#else
-		forEachBound(control, function(action, state) addButtons(action, buttons, state, id));
-		#end
-	}
-
-	/*
-	 * Sets all actions that pertain to the binder to trigger when the supplied keys are used.
-	 * If binder is a literal you can inline this
-	*/
-	public function unbindButtons(control:Control, gamepadID:Int, buttons)
-	{
-		#if (haxe >= "4.0.0")
-		inline forEachBound(control, (action, _) -> removeButtons(action, gamepadID, buttons));
-		#else
-		forEachBound(control, function(action, _) removeButtons(action, gamepadID, buttons));
-		#end
-	}
-
-	inline static function addButtons(action:FlxActionDigital, buttons:Array<FlxGamepadInputID>, state, id)
-	{
-		for (button in buttons)
-			action.addGamepad(button, state, id);
-	}
-
-	static function removeButtons(action:FlxActionDigital, gamepadID:Int, buttons:Array<FlxGamepadInputID>)
-	{
-		var i = action.inputs.length;
-		while (i-- > 0)
-		{
-			var input = action.inputs[i];
-			if (isGamepad(input, gamepadID) && buttons.indexOf(cast input.inputID) != -1)
-				action.remove(input);
-		}
-	}
-
-	public function getInputsFor(control:Control, device:Device, ?list:Array<Int>):Array<Int>
-	{
-		if (list == null)
-			list = [];
-
-		switch (device) {
-			case Keys:
-				for (input in getActionFromControl(control).inputs) {
-					if (input.device == KEYBOARD)
-						list.push(input.inputID);
-				}
-			case Gamepad(id):
-				for (input in getActionFromControl(control).inputs) {
-					if (input.deviceID == id)
-						list.push(input.inputID);
-				}
-		}
-		return list;
-	}
-
-	public function removeDevice(device:Device)
-	{
-		switch (device) {
-			case Keys:
-				setKeyboardScheme(None);
-			case Gamepad(id):
-				removeGamepad(id);
-		}
-	}
-
-	static function isDevice(input:FlxActionInput, device:Device)
-	{
-		return switch device
-		{
-			case Keys: input.device == KEYBOARD;
-			case Gamepad(id): isGamepad(input, id);
-		}
-	}
-
-	inline static function isGamepad(input:FlxActionInput, deviceID:Int)
-	{
-		return input.device == GAMEPAD && (deviceID == FlxInputDeviceID.ALL || input.deviceID == deviceID);
 	}
 }

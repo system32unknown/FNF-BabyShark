@@ -5,6 +5,7 @@ import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 import states.TitleState;
 import game.Achievements;
+import utils.Controls.KeyboardScheme;
 
 class ClientPrefs {
 	public static var prefs:Map<String, Dynamic> = [
@@ -23,7 +24,7 @@ class ClientPrefs {
 		'camMovement' => true,
 		'hideHud' => false,
 		'ShowMsTiming' => false,
-		'ShowCombo' => false,
+		'ShowCombo' => true,
 		'ShowNPSCounter' => false,
 		'ShowLateEarly' => false,
 		'WinningIcon' => false,

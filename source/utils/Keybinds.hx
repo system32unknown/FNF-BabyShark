@@ -1,4 +1,6 @@
 package utils;
+
+class Keybinds
 {
     public static function fill():Array<Array<Dynamic>>
     {

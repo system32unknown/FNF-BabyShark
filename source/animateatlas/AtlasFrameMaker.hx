@@ -1,4 +1,5 @@
 package animateatlas;
+
 import openfl.geom.Rectangle;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -12,13 +13,11 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxColor;
+import states.PlayState;
 
 using StringTools;
 class AtlasFrameMaker extends FlxFramesCollection
 {
-	//public static var widthoffset:Int = 0;
-	//public static var heightoffset:Int = 0;
-	//public static var excludeArray:Array<String>;
 	/**
 	
 	* Creates Frames from TextureAtlas(very early and broken ok) Originally made for FNF HD by Smokey and Rozebud
@@ -30,9 +29,6 @@ class AtlasFrameMaker extends FlxFramesCollection
 
 	public static function construct(key:String,?_excludeArray:Array<String> = null, ?noAntialiasing:Bool = false):FlxFramesCollection
 	{
-		// widthoffset = _widthoffset;
-		// heightoffset = _heightoffset;
-
 		var frameCollection:FlxFramesCollection;
 		var frameArray:Array<Array<FlxFrame>> = [];
 
@@ -49,23 +45,18 @@ class AtlasFrameMaker extends FlxFramesCollection
 		var graphic:FlxGraphic = Paths.image('$key/spritemap');
 		var ss:SpriteAnimationLibrary = new SpriteAnimationLibrary(animationData, atlasData, graphic.bitmap);
 		var t:SpriteMovieClip = ss.createAnimation(noAntialiasing);
-		if(_excludeArray == null)
-		{
+		if(_excludeArray == null) {
 			_excludeArray = t.getFrameLabels();
-			//trace('creating all anims');
 		}
 		trace('Creating: ' + _excludeArray);
 
 		frameCollection = new FlxFramesCollection(graphic, FlxFrameCollectionType.IMAGE);
-		for(x in _excludeArray)
-		{
+		for(x in _excludeArray) {
 			frameArray.push(getFramesArray(t, x));
 		}
 
-		for(x in frameArray)
-		{
-			for(y in x)
-			{
+		for(x in frameArray) {
+			for(y in x) {
 				frameCollection.pushFrame(y);
 			}
 		}
@@ -91,8 +82,7 @@ class AtlasFrameMaker extends FlxFramesCollection
 				bitmapShit.draw(t, null, null, null, null, true);
 				bitMapArray.push(bitmapShit);
 
-				if (firstPass)
-				{
+				if (firstPass) {
 					frameSize.set(bitmapShit.width,bitmapShit.height);
 					firstPass = false;
 				}
@@ -109,7 +99,6 @@ class AtlasFrameMaker extends FlxFramesCollection
 			theFrame.sourceSize.set(frameSize.x,frameSize.y);
 			theFrame.frame = new FlxRect(0, 0, bitMapArray[i].width, bitMapArray[i].height);
 			daFramez.push(theFrame);
-			//trace(daFramez);
 		}
 		return daFramez;
 	}

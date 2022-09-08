@@ -17,9 +17,6 @@ class StrumNote extends FlxSprite
 	public var direction:Float = 90;//plan on doing scroll directions soon -bb
 	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
 	public var sustainReduce:Bool = true;
-
-	public var mania_size:Array<String>;
-	public var keyCount:Int;
 	
 	private var player:Int;
 
@@ -37,17 +34,13 @@ class StrumNote extends FlxSprite
 	public function new(x:Float, y:Float, leData:Int, player:Int) {
 		colorSwap = new ColorSwap();
 		shader = colorSwap.shader;
-
-		if (keyCount == null)
-			keyCount = PlayState.SONG.playerKeyCount;
-
 		noteData = leData;
 		this.player = player;
 		this.noteData = leData;
 		super(x, y);
 
-		var stat:String = Note.keysShit.get(keyCount).get('strumAnims')[leData];
-		var pres:String = Note.keysShit.get(keyCount).get('letters')[leData];
+		var stat:String = Note.keysShit.get(PlayState.mania).get('strumAnims')[leData];
+		var pres:String = Note.keysShit.get(PlayState.mania).get('letters')[leData];
 		skinThing[0] = stat;
 		skinThing[1] = pres;
 
@@ -69,9 +62,9 @@ class StrumNote extends FlxSprite
 			height = height / 5;
 			antialiasing = false;
 			loadGraphic(Paths.image('pixelUI/' + texture), true, Math.floor(width), Math.floor(height));
-			var daFrames:Array<Int> = Note.keysShit.get(keyCount).get('pixelAnimIndex');
+			var daFrames:Array<Int> = Note.keysShit.get(PlayState.mania).get('pixelAnimIndex');
 
-			setGraphicSize(Std.int(width * PlayState.daPixelZoom * Note.pixelScales[keyCount]));
+			setGraphicSize(Std.int(width * PlayState.daPixelZoom * Note.pixelScales[PlayState.mania]));
 			updateHitbox();
 			antialiasing = false;
 			animation.add('static', [daFrames[noteData]]);
@@ -82,7 +75,7 @@ class StrumNote extends FlxSprite
 
 			antialiasing = ClientPrefs.getPref('globalAntialiasing');
 
-			setGraphicSize(Std.int(width * Note.scales[keyCount]));
+			setGraphicSize(Std.int(width * Note.scales[PlayState.mania]));
 	
 			animation.addByPrefix('static', 'arrow' + skinThing[0]);
 			animation.addByPrefix('pressed', skinThing[1] + ' press', 24, false);
@@ -99,19 +92,19 @@ class StrumNote extends FlxSprite
 	public function postAddedToGroup() {
 		playAnim('static');
 
-		switch (keyCount)
+		switch (PlayState.mania)
 		{
 			case 0 | 1 | 2: x += width * noteData;
 			case 3: x += (Note.swagWidth * noteData);
-			default: x += ((width - Note.lessX[keyCount]) * noteData);
+			default: x += ((width - Note.lessX[PlayState.mania]) * noteData);
 		}
 
-		x += Note.xtra[keyCount];
+		x += Note.xtra[PlayState.mania];
 
 		x += 50;
 		x += ((FlxG.width / 2) * player);
 		ID = noteData;
-		x -= Note.posRest[keyCount];
+		x -= Note.posRest[PlayState.mania];
 	}
 
 	override function update(elapsed:Float) {
@@ -144,9 +137,9 @@ class StrumNote extends FlxSprite
 		} else {
 			if (noteData > -1 && noteData < arrowHSV.length)
 			{
-				colorSwap.hue = arrowHSV[Std.int(Note.keysShit.get(keyCount).get('pixelAnimIndex')[noteData] % Note.ammo[keyCount])][0] / 360;
-				colorSwap.saturation = arrowHSV[Std.int(Note.keysShit.get(keyCount).get('pixelAnimIndex')[noteData] % Note.ammo[keyCount])][1] / 100;
-				colorSwap.brightness = arrowHSV[Std.int(Note.keysShit.get(keyCount).get('pixelAnimIndex')[noteData] % Note.ammo[keyCount])][2] / 100;
+				colorSwap.hue = arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][0] / 360;
+				colorSwap.saturation = arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][1] / 100;
+				colorSwap.brightness = arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][2] / 100;
 			}
 
 			if(animation.curAnim.name == 'confirm' && !PlayState.isPixelStage) {

@@ -3,6 +3,9 @@ package backgrounds;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
+import utils.ClientPrefs;
+import game.Conductor;
+
 class TankmenBG extends FlxSprite
 {
 	public static var animationNotes:Array<Dynamic> = [];
@@ -47,8 +50,7 @@ class TankmenBG extends FlxSprite
 
 		visible = (x > -0.5 * FlxG.width && x < 1.2 * FlxG.width);
 
-		if(animation.curAnim.name == "run")
-		{
+		if(animation.curAnim.name == "run") {
 			var speed:Float = (Conductor.songPosition - strumTime) * tankSpeed;
 			if(goingRight)
 				x = (0.02 * FlxG.width - endingOffset) + speed;
@@ -58,11 +60,9 @@ class TankmenBG extends FlxSprite
 			kill();
 		}
 
-		if(Conductor.songPosition > strumTime)
-		{
+		if(Conductor.songPosition > strumTime) {
 			animation.play('shot');
-			if(goingRight)
-			{
+			if(goingRight) {
 				offset.x = 300;
 				offset.y = 200;
 			}

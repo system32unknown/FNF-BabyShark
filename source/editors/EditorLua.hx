@@ -13,8 +13,11 @@ import flixel.FlxSprite;
 import Type.ValueType;
 
 #if desktop
-import Discord;
+import utils.Discord.DiscordClient;
 #end
+import utils.ClientPrefs;
+import game.Conductor;
+import states.PlayState;
 
 using StringTools;
 
@@ -162,7 +165,7 @@ class EditorLua {
 			}
 		});
 
-		Discord.DiscordClient.addLuaCallbacks(lua);
+		utils.DiscordClient.addLuaCallbacks(lua);
 
 		call('onCreate', []);
 		#end
