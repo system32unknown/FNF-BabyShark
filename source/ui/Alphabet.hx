@@ -8,6 +8,8 @@ import flixel.util.FlxTimer;
 import flixel.system.FlxSound;
 import flash.media.Sound;
 
+import utils.ClientPrefs;
+
 using StringTools;
 
 class Alphabet extends FlxSpriteGroup
@@ -93,8 +95,7 @@ class Alphabet extends FlxSpriteGroup
 		}
 
 		if (text != "") {
-			if (typed)
-			{
+			if (typed) {
 				startTypedText(typingSpeed);
 			} else {
 				addText();

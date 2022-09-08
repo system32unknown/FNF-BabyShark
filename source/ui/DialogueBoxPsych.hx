@@ -11,6 +11,9 @@ import sys.io.File;
 #end
 import openfl.utils.Assets;
 
+import utils.ClientPrefs;
+import utils.PlayerSettings;
+
 using StringTools;
 
 typedef DialogueCharacterFile = {

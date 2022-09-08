@@ -26,9 +26,12 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import lime.system.Clipboard;
 import haxe.Json;
+import utils.CoolUtil;
+import utils.ClientPrefs;
 import backgrounds.BGSprite;
 import game.Character;
 import states.MusicBeatState;
+import states.TitleState;
 import ui.HealthIcon;
 
 #if MODS_ALLOWED
@@ -37,9 +40,9 @@ import sys.FileSystem;
 
 using StringTools;
 
-/*
+/**
 	*DEBUG MODE
-*/
+**/
 class CharacterEditorState extends MusicBeatState
 {
 	var char:Character;
@@ -1036,7 +1039,7 @@ class CharacterEditorState extends MusicBeatState
 		if(!charDropDown.dropPanel.visible) {
 			if (FlxG.keys.justPressed.ESCAPE) {
 				if(goToPlayState) {
-					MusicBeatState.switchState(new PlayState());
+					MusicBeatState.switchState(new states.PlayState());
 				} else {
 					MusicBeatState.switchState(new editors.MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));

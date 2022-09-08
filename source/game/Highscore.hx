@@ -1,6 +1,7 @@
 package game;
 
 import flixel.FlxG;
+import utils.CoolUtil;
 
 using StringTools;
 

@@ -5,6 +5,10 @@ import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import ui.Alphabet;
+import ui.CheckboxThingie;
+import ui.AttachedText;
+import utils.ClientPrefs;
 
 using StringTools;
 

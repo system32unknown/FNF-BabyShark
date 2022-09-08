@@ -5,6 +5,9 @@ import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 
+import utils.ClientPrefs;
+import utils.CoolUtil;
+
 class MenuItem extends FlxSprite
 {
 	public var targetY:Float = 0;

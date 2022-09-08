@@ -1,7 +1,7 @@
 package states;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import editors.ChartingState;
 import flixel.FlxG;
@@ -12,7 +12,15 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
-import WeekData;
+import data.WeekData;
+import utils.ClientPrefs;
+import utils.CoolUtil;
+import game.Highscore;
+import game.Song;
+import substates.ResetScoreSubState;
+import substates.GameplayChangersSubstate;
+import ui.HealthIcon;
+import ui.Alphabet;
 
 using StringTools;
 
@@ -441,17 +449,13 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		
-		if(CoolUtil.difficulties.contains(CoolUtil.defaultDifficulty))
-		{
+		if(CoolUtil.difficulties.contains(CoolUtil.defaultDifficulty)) {
 			curDifficulty = Math.round(Math.max(0, CoolUtil.defaultDifficulties.indexOf(CoolUtil.defaultDifficulty)));
-		}
-		else
-		{
+		} else {
 			curDifficulty = 0;
 		}
 
 		var newPos:Int = CoolUtil.difficulties.indexOf(lastDifficultyName);
-		//trace('Pos of ' + lastDifficultyName + ' is ' + newPos);
 		if(newPos > -1)
 		{
 			curDifficulty = newPos;

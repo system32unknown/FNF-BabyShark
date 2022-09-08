@@ -6,6 +6,14 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import game.Boyfriend;
+import game.Conductor;
+import states.PlayState;
+import states.MusicBeatState;
+import states.StoryMenuState;
+import states.FreeplayState;
+import utils.CoolUtil;
+import data.WeekData;
 
 class GameOverSubstate extends MusicBeatSubstate
 {

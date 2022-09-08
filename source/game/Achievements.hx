@@ -8,6 +8,8 @@ import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 import flixel.text.FlxText;
 
+import utils.ClientPrefs;
+
 using StringTools;
 
 class Achievements {

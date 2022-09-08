@@ -6,6 +6,7 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 import haxe.Json;
+import utils.ClientPrefs;
 
 typedef MenuCharacterFile = {
 	var image:String;

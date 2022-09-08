@@ -29,7 +29,14 @@ import openfl.utils.Assets;
 import flixel.addons.display.FlxRuntimeShader;
 #end
 import substates.MusicBeatSubstate;
+import substates.GameOverSubstate;
 import states.PlayState;
+import states.MainMenuState;
+import states.LoadingState;
+import game.Highscore;
+import game.Conductor;
+import game.StrumNote;
+import game.Song;
 import data.WeekData;
 
 #if sys
@@ -2948,8 +2955,8 @@ class FunkinLua {
 		FunkinLua.hscriptVars.set('Paths', Paths);
 		FunkinLua.hscriptVars.set('Conductor', Conductor);
 		FunkinLua.hscriptVars.set('ClientPrefs', ClientPrefs);
-		FunkinLua.hscriptVars.set('Character', Character);
-		FunkinLua.hscriptVars.set('Alphabet', Alphabet);
+		FunkinLua.hscriptVars.set('Character', game.Character);
+		FunkinLua.hscriptVars.set('Alphabet', ui.Alphabet);
 		FunkinLua.hscriptVars.set('CustomSubstate', CustomSubstate);
 		#if !flash
 		FunkinLua.hscriptVars.set('FlxRuntimeShader', FlxRuntimeShader);

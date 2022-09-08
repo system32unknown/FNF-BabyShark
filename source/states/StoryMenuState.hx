@@ -1,7 +1,7 @@
 package states;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -13,7 +13,15 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.graphics.FlxGraphic;
-import WeekData;
+import data.WeekData;
+import utils.CoolUtil;
+import utils.ClientPrefs;
+import game.Highscore;
+import game.Song;
+import substates.ResetScoreSubState;
+import substates.GameplayChangersSubstate;
+import ui.MenuItem;
+import ui.MenuCharacter;
 
 using StringTools;
 
@@ -237,8 +245,7 @@ class StoryMenuState extends MusicBeatState
 			}
 		}
 
-		if (controls.BACK && !movedBack && !selectedWeek)
-		{
+		if (controls.BACK && !movedBack && !selectedWeek) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
 			MusicBeatState.switchState(new MainMenuState());

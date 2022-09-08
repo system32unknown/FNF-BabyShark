@@ -42,7 +42,7 @@ import utils.*;
 import shaders.*;
 import backgrounds.*;
 import ui.*;
-import data.StageData;
+import data.*;
 
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
