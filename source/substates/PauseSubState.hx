@@ -11,6 +11,18 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 
+import ui.Alphabet;
+import utils.ClientPrefs;
+import utils.CoolUtil;
+import game.Conductor;
+import game.Highscore;
+import game.Song;
+import states.PlayState;
+import states.MusicBeatState;
+import states.StoryMenuState;
+import states.FreeplayState;
+import data.WeekData;
+
 class PauseSubState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;

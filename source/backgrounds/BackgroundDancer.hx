@@ -1,6 +1,7 @@
 package backgrounds;
 
 import flixel.FlxSprite;
+import utils.ClientPrefs;
 
 class BackgroundDancer extends FlxSprite
 {

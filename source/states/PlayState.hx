@@ -33,15 +33,19 @@ import openfl.events.KeyboardEvent;
 import editors.ChartingState;
 import editors.CharacterEditorState;
 import animateatlas.AtlasFrameMaker;
+import substates.GameOverSubstate;
+import substates.PauseSubState;
 import game.Song.SwagSong;
 import game.Note.EventNote;
 import game.Conductor.Rating;
 import game.Achievements.AchievementObject;
+import game.Section.SwagSection;
 import game.*;
 import utils.*;
 import shaders.*;
 import backgrounds.*;
 import ui.*;
+import data.StageData.StageFile;
 import data.*;
 
 #if !flash 
@@ -75,13 +79,6 @@ class PlayState extends MusicBeatState
 		['Great', 0.9], //From 80% to 89%
 		['Sick!', 1] //From 90% to 99%
 	];
-	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
-	public var modChartSprites:Map<String, FunkinLua.ModchartSprite> = new Map<String, FunkinLua.ModchartSprite>();
-	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
-	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
-	public var modchartTexts:Map<String, FunkinLua.ModchartText> = new Map<String, FunkinLua.ModchartText>();
-	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
-
 	//event variables
 	private var isCameraOnForcedPos:Bool = false;
 	#if (haxe >= "4.0.0")
@@ -89,11 +86,25 @@ class PlayState extends MusicBeatState
 	public var dadMap:Map<String, Character> = new Map();
 	public var gfMap:Map<String, Character> = new Map();
 	public var variables:Map<String, Dynamic> = new Map();
+	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
+	public var modChartSprites:Map<String, FunkinLua.ModchartSprite> = new Map<String, FunkinLua.ModchartSprite>();
+	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
+	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
+	public var modchartTexts:Map<String, FunkinLua.ModchartText> = new Map<String, FunkinLua.ModchartText>();
+	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
+	public var modchartGroups:Map<String, FunkinLua.ModchartGroup> = new Map();
 	#else
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
 	public var gfMap:Map<String, Character> = new Map<String, Character>();
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
+	public var modchartTweens:Map<String, FlxTween> = new Map();
+	public var modChartSprites:Map<String, FunkinLua.ModchartSprite> = new Map();
+	public var modchartTimers:Map<String, FlxTimer> = new Map();
+	public var modchartSounds:Map<String, FlxSound> = new Map();
+	public var modchartTexts:Map<String, FunkinLua.ModchartText> = new Map();
+	public var modchartSaves:Map<String, FlxSave> = new Map();
+	public var modchartGroups:Map<String, FunkinLua.ModchartGroup> = new Map();
 	#end
 
 	public var BF_X:Float = 770;
@@ -268,6 +279,7 @@ class PlayState extends MusicBeatState
 	public static var deathCounter:Int = 0;
 
 	public var defaultCamZoom:Float = 1.05;
+	public var defaultHudCamZoom:Float = 1.0;
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
@@ -847,7 +859,7 @@ class PlayState extends MusicBeatState
 		}
 
 		#if LUA_ALLOWED
-		luaDebugGroup = new FlxTypedGroup<DebugLuaText>();
+		luaDebugGroup = new FlxTypedGroup<FunkinLua.DebugLuaText>();
 		luaDebugGroup.cameras = [camOther];
 		add(luaDebugGroup);
 		#end
@@ -2361,7 +2373,7 @@ class PlayState extends MusicBeatState
 		for (section in noteData) {
 			for (songNotes in section.sectionNotes) {
 				var daStrumTime:Float = songNotes[0];
-				var daNoteData:Int = Std.int(songNotes[1] % SONG.playerKeyCount);
+				var daNoteData:Int = Std.int(songNotes[1] % SONG.mania);
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
@@ -2774,7 +2786,7 @@ class PlayState extends MusicBeatState
 	override public function update(elapsed:Float) {
 		callOnLuas('onUpdate', [elapsed]);
 
-		if(ClientPrefs.camMovement) {
+		if(ClientPrefs.getPref('camMovement')) {
 			if(camlock) {
 				camFollow.x = camlockx;
 				camFollow.y = camlocky;
@@ -3064,7 +3076,7 @@ class PlayState extends MusicBeatState
 		if (camZooming)
 		{
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
-			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
+			camHUD.zoom = FlxMath.lerp(defaultHudCamZoom, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
 		}
 
 		FlxG.watch.addQuick("secShit", curSection);
@@ -3724,7 +3736,7 @@ class PlayState extends MusicBeatState
 
 		if (!SONG.notes[curSection].mustHitSection) {
 			moveCamera(true);
-			if(ClientPrefs.camMovement) {
+			if(ClientPrefs.getPref('camMovement')) {
 				campointx = camFollow.x;
 				campointy = camFollow.y;
 				bfturn = false;
@@ -3734,7 +3746,7 @@ class PlayState extends MusicBeatState
 			callOnLuas('onMoveCamera', ['dad']);
 		} else {
 			moveCamera(false);
-			if(ClientPrefs.camMovement) {
+			if(ClientPrefs.getPref('camMovement')) {
 				campointx = camFollow.x;
 				campointy = camFollow.y;	
 				bfturn = true;
@@ -4002,12 +4014,12 @@ class PlayState extends MusicBeatState
 	}
 
 	private function ChangeAllFonts(font:String) {
-		scoreTxt.fonts = font;
-		botplayTxt.fonts = font;
-		judgementCounter.fonts = font;
-		timeTxt.fonts = font;
-		songNameText.fonts = font;
-		engineText.fonts = font;
+		scoreTxt.font = font;
+		botplayTxt.font = font;
+		judgementCounter.font = font;
+		timeTxt.font = font;
+		songNameText.font = font;
+		engineText.font = font;
 	}
 
 	private function UpdateScoreText() {
@@ -4187,7 +4199,7 @@ class PlayState extends MusicBeatState
 		if (daTiming != "" && ClientPrefs.getPref('ShowLateEarly'))
 			add(timing);
 
-		if (!ClientPrefs.comboStacking) {
+		if (!ClientPrefs.getPref('comboStacking')) {
 			if (lastRating != null) lastRating.kill();
 			lastRating = rating;
 		}
@@ -4218,7 +4230,7 @@ class PlayState extends MusicBeatState
 		seperatedScore.push(Math.floor(combo / 10) % 10);
 		seperatedScore.push(combo % 10);
 
-		if (!ClientPrefs.comboStacking)
+		if (!ClientPrefs.getPref('comboStacking'))
 		{
 			if (lastCombo != null) lastCombo.kill();
 			lastCombo = comboSpr;
@@ -4246,7 +4258,7 @@ class PlayState extends MusicBeatState
 			numScore.x += comboOffset[2];
 			numScore.y -= comboOffset[3];
 
-			if (!ClientPrefs.comboStacking)
+			if (!ClientPrefs.getPref('comboStacking'))
 				lastScore.push(numScore);
 
 			if (!PlayState.isPixelStage) {
@@ -4633,7 +4645,7 @@ class PlayState extends MusicBeatState
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
 		var camTimer:FlxTimer;
 
-		if (ClientPrefs.camMovement) {
+		if (ClientPrefs.getPref('camMovement')) {
 			if(!bfturn) {
 				if(animToPlay == "singLEFT") {
 					camlockx = campointx - camMovement;
@@ -4691,7 +4703,7 @@ class PlayState extends MusicBeatState
 			var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
 			var camTimer:FlxTimer;
 
-			if (ClientPrefs.camMovement) {
+			if (ClientPrefs.getPref('camMovement')) {
 				if(bfturn) {
 					if(animToPlay == "singLEFT") {
 						camlockx = campointx - camMovement;

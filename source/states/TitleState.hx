@@ -32,6 +32,7 @@ import openfl.Assets;
 import data.WeekData;
 import utils.PlayerSettings;
 import utils.ClientPrefs;
+import utils.CoolUtil;
 import game.Highscore;
 import game.Conductor;
 import states.MainMenuState;

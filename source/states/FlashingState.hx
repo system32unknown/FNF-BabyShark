@@ -9,6 +9,8 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 
+import utils.ClientPrefs;
+
 class FlashingState extends MusicBeatState
 {
 	public static var leftState:Bool = false;

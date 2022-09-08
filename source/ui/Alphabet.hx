@@ -9,6 +9,8 @@ import flixel.system.FlxSound;
 import flash.media.Sound;
 
 import utils.ClientPrefs;
+import utils.CoolUtil;
+import ui.Alphabet;
 
 using StringTools;
 

@@ -17,12 +17,13 @@ import haxe.Json;
 import openfl.display.BitmapData;
 import flash.geom.Rectangle;
 
+import data.WeekData;
 import ui.AttachedSprite;
 import ui.Alphabet;
 import utils.ClientPrefs;
+import utils.CoolUtil;
 import states.TitleState;
 import states.FreeplayState;
-import states.MusicBeatState;
 
 using StringTools;
 

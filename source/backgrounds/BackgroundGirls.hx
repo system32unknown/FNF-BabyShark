@@ -1,6 +1,7 @@
 package backgrounds;
 
 import flixel.FlxSprite;
+import utils.CoolUtil;
 
 class BackgroundGirls extends FlxSprite
 {
