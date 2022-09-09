@@ -1,7 +1,7 @@
 package options;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -9,7 +9,13 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import Controls;
+import utils.Controls;
+import utils.ClientPrefs;
+import substates.MusicBeatSubstate;
+import ui.AttachedText;
+import ui.CheckboxThingie;
+import ui.Alphabet;
+import game.Character;
 
 using StringTools;
 
@@ -193,7 +199,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 									curOption.curOption = num;
 									curOption.setValue(curOption.options[num]); //lol
-									//trace(curOption.options[num]);
 							}
 							updateTextFrom(curOption);
 							curOption.change();
@@ -207,7 +212,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 							{
 								case 'int':
 									curOption.setValue(Math.round(holdValue));
-								
 								case 'float' | 'percent':
 									curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
 							}

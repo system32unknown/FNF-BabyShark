@@ -3,6 +3,7 @@ package options;
 import flixel.text.FlxText;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import utils.ClientPrefs;
 
 using StringTools;
 
@@ -66,13 +67,10 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 
 	function onChangeFramerate()
 	{
-		if(ClientPrefs.getPref('framerate') > FlxG.drawFramerate)
-		{
+		if(ClientPrefs.getPref('framerate') > FlxG.drawFramerate) {
 			FlxG.updateFramerate = ClientPrefs.getPref('framerate');
 			FlxG.drawFramerate = ClientPrefs.getPref('framerate');
-		}
-		else
-		{
+		} else {
 			FlxG.drawFramerate = ClientPrefs.getPref('framerate');
 			FlxG.updateFramerate = ClientPrefs.getPref('framerate');
 		}

@@ -1596,7 +1596,7 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.BACKSPACE) {
 				PlayState.chartingMode = false;
-				MusicBeatState.switchState(new MasterEditorMenu());
+				MusicBeatState.switchState(new editors.MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				FlxG.mouse.visible = false;
 				return;
@@ -2733,13 +2733,7 @@ class ChartingState extends MusicBeatState
 
 	function loadJson(song:String):Void
 	{
-		var forbidden:Array<String> = ['AUX', 'CON', 'PRN', 'NUL']; // thanks kingyomoma
-		for (i in 1...9) {
-			forbidden.push('COM$i');
-			forbidden.push('LPT$i');
-		}
-		for(donot in forbidden)
-		if (song == donot) {
+		if (Paths.checkReservedFile(song)) {
 			return;
 		} else {
 			//shitty null fix, i fucking hate it when this happens

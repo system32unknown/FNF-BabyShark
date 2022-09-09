@@ -1,6 +1,7 @@
 package options;
 
 import flixel.FlxG;
+import utils.ClientPrefs;
 
 using StringTools;
 

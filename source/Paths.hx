@@ -111,6 +111,21 @@ class Paths
 		currentLevel = name.toLowerCase();
 	}
 
+	public static function checkReservedFile(text:String):Bool {
+		var forbidden:Array<String> = ['AUX', 'CON', 'PRN', 'NUL']; // thanks kingyomoma
+		for (i in 1...9) {
+			forbidden.push('COM$i');
+			forbidden.push('LPT$i');
+		}
+		for (donot in forbidden) {
+			if (text == donot) {
+				return true;
+				break;
+			}
+		}
+		return false;
+	}
+
 	public static function getPath(file:String, type:AssetType, ?library:Null<String> = null)
 	{
 		if (library != null)

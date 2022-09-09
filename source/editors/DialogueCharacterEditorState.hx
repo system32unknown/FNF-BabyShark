@@ -1,10 +1,12 @@
 package editors;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxCamera;
+import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.addons.ui.FlxUI;
@@ -12,16 +14,18 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
+import flixel.custom.ui.FlxUIDropDownMenuCustom;
 import flixel.ui.FlxButton;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
 import haxe.Json;
-import DialogueBoxPsych;
-import flixel.FlxCamera;
-import flixel.group.FlxSpriteGroup;
 import lime.system.Clipboard;
+import ui.DialogueBoxPsych;
+import ui.Alphabet;
+import states.MusicBeatState;
+import states.TitleState;
 #if sys
 import sys.io.File;
 #end
@@ -478,14 +482,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if(id == FlxUIInputText.CHANGE_EVENT && sender == imageInputText) {
-			var forbidden:Array<String> = ['AUX', 'CON', 'PRN', 'NUL']; // thanks kingyomoma
-			for (i in 1...9) {
-				forbidden.push('COM$i');
-				forbidden.push('LPT$i');
-			}
-            for(donot in forbidden) {
-				if(sender.text == donot) return;
-			}
+			if(Paths.checkReservedFile(sender.text)) return;
 			character.jsonFile.image = imageInputText.text;
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
 			if(sender == scaleStepper) {

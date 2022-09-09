@@ -12,6 +12,14 @@ import flixel.FlxG;
 import flixel.ui.FlxBar;
 import flixel.math.FlxPoint;
 
+import states.MusicBeatState;
+import game.Character;
+import game.Conductor;
+import utils.CustomFadeTransition;
+import utils.ClientPrefs;
+import backgrounds.BGSprite;
+import ui.Alphabet;
+
 using StringTools;
 
 class NoteOffsetState extends MusicBeatState
@@ -412,13 +420,11 @@ class NoteOffsetState extends MusicBeatState
 			gf.dance();
 		}
 		
-		if(curBeat % 4 == 2)
-		{
+		if(curBeat % 4 == 2) {
 			FlxG.camera.zoom = 1.15;
 
 			if(zoomTween != null) zoomTween.cancel();
-			zoomTween = FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.circOut, onComplete: function(twn:FlxTween)
-				{
+			zoomTween = FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.circOut, onComplete: function(twn:FlxTween) {
 					zoomTween = null;
 				}
 			});
@@ -427,8 +433,7 @@ class NoteOffsetState extends MusicBeatState
 			beatText.y = 320;
 			beatText.velocity.y = -150;
 			if(beatTween != null) beatTween.cancel();
-			beatTween = FlxTween.tween(beatText, {alpha: 0}, 1, {ease: FlxEase.sineIn, onComplete: function(twn:FlxTween)
-				{
+			beatTween = FlxTween.tween(beatText, {alpha: 0}, 1, {ease: FlxEase.sineIn, onComplete: function(twn:FlxTween) {
 					beatTween = null;
 				}
 			});

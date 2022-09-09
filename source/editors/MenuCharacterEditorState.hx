@@ -1,7 +1,7 @@
 package editors;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -14,7 +14,6 @@ import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.ui.FlxButton;
-import MenuCharacter;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
@@ -23,6 +22,9 @@ import haxe.Json;
 #if sys
 import sys.io.File;
 #end
+import ui.MenuCharacter;
+import states.TitleState;
+import states.MusicBeatState;
 
 using StringTools;
 
@@ -255,26 +257,15 @@ class MenuCharacterEditorState extends MusicBeatState
 	}
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
-		var forbidden:Array<String> = ['AUX', 'CON', 'PRN', 'NUL']; // thanks kingyomoma
-		for (i in 1...9) {
-			forbidden.push('COM$i');
-			forbidden.push('LPT$i');
-		}
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
 			if(sender == imageInputText) {
-				for(donot in forbidden){
-					if(sender.text == donot) return;
-				}
+				if(Paths.checkReservedFile(sender.text)) return;
 				characterFile.image = imageInputText.text;
 			} else if(sender == idleInputText) {
-				for(donot in forbidden){
-					if(sender.text == donot) return;
-				}
+				if(Paths.checkReservedFile(sender.text)) return;
 				characterFile.idle_anim = idleInputText.text;
 			} else if(sender == confirmInputText) {
-				for(donot in forbidden){
-					if(sender.text == donot) return;
-				}
+				if(Paths.checkReservedFile(sender.text)) return;
 				characterFile.confirm_anim = confirmInputText.text;
 			}
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {

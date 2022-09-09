@@ -4,7 +4,12 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
-import Controls;
+import utils.ClientPrefs;
+import utils.Controls;
+import substates.MusicBeatSubstate;
+import ui.InputFormatter;
+import ui.AttachedText;
+import ui.Alphabet;
 
 using StringTools;
 

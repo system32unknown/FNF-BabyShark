@@ -1,9 +1,5 @@
 package editors;
 
-import states.MusicBeatState;
-import states.LoadingState;
-import data.WeekData;
-import ui.Alphabet;
 #if desktop
 import utils.Discord.DiscordClient;
 #end
@@ -15,11 +11,16 @@ import flixel.util.FlxColor;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
+import states.MusicBeatState;
+import states.LoadingState;
+import states.MainMenuState;
+import data.WeekData;
+import game.Character;
+import ui.Alphabet;
 
 using StringTools;
 
-class MasterEditorMenu extends MusicBeatState
-{
+class MasterEditorMenu extends MusicBeatState {
 	var options:Array<String> = [
 		'Week Editor',
 		'Menu Character Editor',

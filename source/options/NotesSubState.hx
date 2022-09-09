@@ -4,7 +4,11 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
-import Controls;
+import substates.MusicBeatSubstate;
+import utils.Controls;
+import utils.ClientPrefs;
+import shaders.ColorSwap;
+import ui.Alphabet;
 
 using StringTools;
 
