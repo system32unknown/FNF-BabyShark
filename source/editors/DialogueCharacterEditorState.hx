@@ -22,6 +22,7 @@ import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
 import haxe.Json;
 import lime.system.Clipboard;
+import utils.ClientPrefs;
 import ui.DialogueBoxPsych;
 import ui.Alphabet;
 import states.MusicBeatState;

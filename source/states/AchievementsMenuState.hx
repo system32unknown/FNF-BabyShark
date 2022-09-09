@@ -1,14 +1,16 @@
 package states;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import Achievements;
+import game.Achievements;
+import utils.ClientPrefs;
+import ui.Alphabet;
 
 using StringTools;
 

@@ -14,6 +14,7 @@ import sys.FileSystem;
 import states.MusicBeatState;
 import states.LoadingState;
 import states.MainMenuState;
+import states.FreeplayState;
 import data.WeekData;
 import game.Character;
 import ui.Alphabet;

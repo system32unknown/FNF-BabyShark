@@ -1,7 +1,7 @@
 package states;
 
 #if desktop
-import Discord.DiscordClient;
+import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -15,6 +15,9 @@ import flixel.tweens.FlxEase;
 import sys.FileSystem;
 import sys.io.File;
 #end
+import ui.Alphabet;
+import ui.AttachedSprite;
+import utils.CoolUtil;
 
 using StringTools;
 

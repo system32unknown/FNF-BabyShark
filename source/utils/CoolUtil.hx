@@ -202,4 +202,12 @@ class CoolUtil
 
 		return firstArray;
 	}
+
+	public static function browserLoad(site:String) {
+		#if linux
+		Sys.command('/usr/bin/xdg-open', [site]);
+		#else
+		FlxG.openURL(site);
+		#end
+	}
 }
