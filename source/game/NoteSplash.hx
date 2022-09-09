@@ -49,7 +49,7 @@ class NoteSplash extends FlxSprite
 		offset.set(offsets[0], offsets[1]);
 
 		var animNum:Int = FlxG.random.int(1, 2);
-		animation.play('note' + note + '-' + animNum, true);
+		animation.play('note' + Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[note] + '-' + animNum, true);
 		if(animation.curAnim != null)animation.curAnim.frameRate = 24 + FlxG.random.int(-2, 2);
 	}
 

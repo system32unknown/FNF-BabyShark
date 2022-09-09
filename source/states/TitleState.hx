@@ -54,7 +54,7 @@ class TitleState extends MusicBeatState
 	
 	var logoBl:FlxSprite;
 	var logoBlTwo:FlxSprite;
-	var titleLogos:Array<FlxSprite> = [new FlxSprite(100, 1500), new FlxSprite(100, 1500)];
+	var titleLogos:Array<FlxSprite> = [new FlxSprite(100, 1500), new FlxSprite(-200, 1500)];
 	var titleText:FlxSprite;
 
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];

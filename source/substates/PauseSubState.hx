@@ -196,7 +196,7 @@ class PauseSubState extends MusicBeatSubstate
 				}
 		}
 
-		if (accepted && (cantUnpause <= 0 || !ClientPrefs.getPref('controllerMode')))
+		if (accepted && cantUnpause <= 0)
 		{
 			if (menuItems == difficultyChoices)
 			{

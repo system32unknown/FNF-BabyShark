@@ -1364,10 +1364,8 @@ class PlayState extends MusicBeatState
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
 		#end
 
-		if (!ClientPrefs.getPref('controllerMode')) {
-			FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
-			FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-		}
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 
 		Conductor.safeZoneOffset = (ClientPrefs.getPref('safeFrames') / 60) * 1000;
 		callOnLuas('onCreatePost', []);
@@ -2373,7 +2371,7 @@ class PlayState extends MusicBeatState
 		for (section in noteData) {
 			for (songNotes in section.sectionNotes) {
 				var daStrumTime:Float = songNotes[0];
-				var daNoteData:Int = Std.int(songNotes[1] % SONG.mania);
+				var daNoteData:Int = Std.int(songNotes[1] % Note.ammo[mania]);
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
@@ -4027,7 +4025,6 @@ class PlayState extends MusicBeatState
 		var Ranks:String = CoolUtil.GenerateLetterRank(Accuracy);
 		switch (ClientPrefs.getPref('ScoreTextStyle')) {
 			case 'Kade':
-				scoreTxt.y = healthBarBG.y + 50;
 				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS: $nps(Max: $maxNPS) ' + divider : '')
 				+ ' Score:' + (!cpuControlled ? songScore : botScore) + ' '
 				+ divider + ' Combo Breaks:' + songMisses + ' '
@@ -4353,7 +4350,7 @@ class PlayState extends MusicBeatState
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = getKeyFromEvent(eventKey);
 
-		if (!cpuControlled && startedCountdown && !paused && key > -1 && (FlxG.keys.checkStatus(eventKey, JUST_PRESSED) || ClientPrefs.getPref('controllerMode')))
+		if (!cpuControlled && startedCountdown && !paused && key > -1 && FlxG.keys.checkStatus(eventKey, JUST_PRESSED))
 		{
 			if(!boyfriend.stunned && generatedMusic && !endingSong) {
 				//more accurate hit time for the ratings?
@@ -5038,10 +5035,8 @@ class PlayState extends MusicBeatState
 		}
 		luaArray = [];
 
-		if(!ClientPrefs.getPref('controllerMode')) {
-			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
-			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-		}
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		super.destroy();
 	}
 

@@ -24,12 +24,12 @@ typedef SwagSong = {
 	var player2:String;
 	var gfVersion:String;
 	var stage:String;
-	var validScore:Bool;
 
-	var mania:Int;
+	var mania:Null<Int>;
 
 	var arrowSkin:String;
 	var splashSkin:String;
+	var validScore:Bool;
 }
 
 class Song {
@@ -49,8 +49,6 @@ class Song {
 	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
 
-
-
 	public function new(song, notes, bpm)
 	{
 		this.song = song;
@@ -64,26 +62,6 @@ class Song {
 			songJson.gfVersion = songJson.player3;
 			songJson.player3 = null;
 		}
-
-		if(Std.string(songJson.keyCount) == "null")
-			songJson.keyCount = 4;
-
-		if(Std.string(songJson.playerKeyCount) == "null")
-			songJson.playerKeyCount = songJson.keyCount;
-
-		if(Std.string(songJson.mania) != "null") {
-			switch(songJson.mania) {
-				case 0: songJson.keyCount = 4;
-				case 1: songJson.keyCount = 6;
-				case 2: songJson.keyCount = 7;
-				case 3: songJson.keyCount = 9;
-			}
-		}
-
-		songJson.mania = null;
-
-		if(songJson.keyCount > Note.maxMania)
-			songJson.keyCount = Note.maxMania;
 
 		if(songJson.events == null)
 		{
@@ -106,6 +84,11 @@ class Song {
 				}
 			}
 		}
+
+		if (songJson.mania == null)
+        {
+            songJson.mania = Note.defaultMania;
+        }
 	}
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
@@ -145,7 +128,6 @@ class Song {
 	{
 		var swagShit:SwagSong = cast Json.parse(rawJson).song;
 		swagShit.validScore = true;
-
 		return swagShit;
 	}
 }

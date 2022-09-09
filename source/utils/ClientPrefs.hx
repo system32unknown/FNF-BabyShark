@@ -42,7 +42,6 @@ class ClientPrefs {
 		'scoreZoom' => true,
 		'noReset' => false,
 		'healthBarAlpha' => 1,
-		'controllerMode' => false,
 		'hitsoundVolume' => 0,
 		'ShowWatermark' => true,
 		'pauseMusic' => 'Tea Time',

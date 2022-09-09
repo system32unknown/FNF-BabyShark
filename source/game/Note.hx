@@ -18,7 +18,6 @@ typedef EventNote = {
 
 class Note extends FlxSprite
 {
-	public var extraData:Map<String,Dynamic> = [];
 	var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 
 	'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
 
@@ -28,25 +27,11 @@ class Note extends FlxSprite
 	public static var xtra:Array<Int> = [150, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 	public static var posRest:Array<Int> = [0, 0, 0, 0, 25, 32, 46, 52, 60, 40, 30];
 	public static var gridSizes:Array<Int> = [40, 40, 40, 40, 40, 40, 40, 40, 40, 35, 30];
-	public static var offsets:Array<Dynamic> = [
-		[20, 10],
-		[10, 10],
-		[10, 10],
-		[10, 10],
-		[10, 10],
-		[10, 10],
-		[10, 10],
-		[10, 10],
-		[10, 10],
-		[10, 20],
-		[10, 10],
-		[10, 10]
-	];
+	public static var offsets:Array<Dynamic> = [[20, 10], [10, 10], [10, 10], [10, 10], [10, 10], [10, 10], [10, 10], [10, 10], [10, 10], [10, 20], [10, 10], [10, 10]];
 
 	public static var minMania:Int = 0;
 	public static var maxMania:Int = 9;
 	public static var defaultMania:Int = 3;
-	public var mania:Int = 1;
 
 	public static var keysShit:Map<Int, Map<String, Dynamic>> = [
 		0 => ["letters" => ["E"], "anims" => ["UP"], "strumAnims" => ["SPACE"], "pixelAnimIndex" => [4]],
@@ -76,6 +61,7 @@ class Note extends FlxSprite
 	public static var pixelScales:Array<Float> = [1.2, 1.15, 1.1, 1, 0.9, 0.83, 0.8, 0.74, 0.7, 0.6, 0.55];
 
 	public var strumTime:Float = 0;
+
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
 	public var canBeHit:Bool = false;
@@ -215,6 +201,8 @@ class Note extends FlxSprite
 	{
 		super();
 
+		mania = PlayState.mania;
+
 		if (prevNote == null)
 			prevNote = this;
 
@@ -235,7 +223,7 @@ class Note extends FlxSprite
 			colorSwap = new ColorSwap();
 			shader = colorSwap.shader;
 
-			x += swagWidth * (noteData);
+			x += swagWidth * (noteData % Note.ammo[mania]);
 			if(!isSustainNote && noteData > -1 && noteData < 4) { //Doing this 'if' check to fix the warnings on Senpai songs
 				var animToPlay:String = '';
 				animToPlay = Note.keysShit.get(mania).get('letters')[noteData % 4];
@@ -365,6 +353,11 @@ class Note extends FlxSprite
 				animation.addByPrefix(gfxLetter[i] + ' tail', gfxLetter[i] + ' tail');
 			}
 
+			if (!isSustainNote)
+				setGraphicSize(Std.int(defaultWidth * scales[mania]));
+			else
+				setGraphicSize(Std.int(defaultWidth * scales[mania]), Std.int(defaultHeight * scales[0]));
+
 			setGraphicSize(Std.int(width * 0.7));
 			updateHitbox();
 		}
@@ -415,6 +408,8 @@ class Note extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		mania = PlayState.mania;
 
 		if (mustPress) {
 			// ok river
