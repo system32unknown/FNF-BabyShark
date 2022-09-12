@@ -95,8 +95,8 @@ class StrumNote extends FlxSprite
 		switch (PlayState.mania)
 		{
 			case 0 | 1 | 2: x += width * noteData;
-			case 3: x += (Note.swagWidth * noteData);
-			default: x += ((width - Note.lessX[PlayState.mania]) * noteData);
+			case 3: x += Note.swagWidth * noteData;
+			default: x += (width - Note.lessX[PlayState.mania]) * noteData;
 		}
 
 		x += Note.xtra[PlayState.mania];
@@ -135,8 +135,7 @@ class StrumNote extends FlxSprite
 			colorSwap.saturation = 0;
 			colorSwap.brightness = 0;
 		} else {
-			if (noteData > -1 && noteData < arrowHSV.length)
-			{
+			if (noteData > -1 && noteData < arrowHSV.length) {
 				colorSwap.hue = arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][0] / 360;
 				colorSwap.saturation = arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][1] / 100;
 				colorSwap.brightness = arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][2] / 100;

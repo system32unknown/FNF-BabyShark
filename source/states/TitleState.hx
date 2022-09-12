@@ -54,7 +54,7 @@ class TitleState extends MusicBeatState
 	
 	var logoBl:FlxSprite;
 	var logoBlTwo:FlxSprite;
-	var titleLogos:Array<FlxSprite> = [new FlxSprite(100, 1500), new FlxSprite(-200, 1500)];
+	var titleLogos:Array<FlxSprite> = [new FlxSprite(100, 1500), new FlxSprite(600, 1500)];
 	var titleText:FlxSprite;
 
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
@@ -87,7 +87,7 @@ class TitleState extends MusicBeatState
 
 		super.create();
 
-		FlxG.save.bind('funkin', 'ninjamuffin99');
+		FlxG.save.bind('funkin', 'altertoriel');
 
 		ClientPrefs.loadPrefs();
 		Highscore.load();
@@ -341,10 +341,10 @@ class TitleState extends MusicBeatState
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
 					createCoolText(['Vs Dave and Bambi Created by:']);
 				case 2:
-					addMoreText('MoldyGH, MTM101, Stats45', -60);
-					addMoreText('Rapparep lol, TheBuilderXD, Edival', -60);
-					addMoreText('T5mpler, Erizur, Billy Bobbo', -60);
-					addMoreText('Marcello_TIMEnice30', -60);
+					addMoreText('MoldyGH, MTM101, Stats45');
+					addMoreText('Rapparep lol, TheBuilderXD, Edival');
+					addMoreText('T5mpler, Erizur, Billy Bobbo');
+					addMoreText('Marcello_TIMEnice30');
 				case 3:
 					deleteCoolText();
 					createCoolText(['Baby Shark\'s Big Show Created by:']);
@@ -352,9 +352,9 @@ class TitleState extends MusicBeatState
 					addMoreText('Pinkfong and Nickelodeon');
 				case 5:
 					deleteCoolText();
-					createCoolText(['Altertoriel Engine Created by:']);
+					createCoolText(['Psych Engine EK Created by:']);
 				case 6:
-					addMoreText('Altertoriel');
+					addMoreText('tposejank');
 				case 7:
 					deleteCoolText();
 					createCoolText(['Psych Engine Created by:']);

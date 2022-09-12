@@ -55,10 +55,25 @@ class NoteSplash extends FlxSprite
 
 	function loadAnims(skin:String) {
 		frames = Paths.getSparrowAtlas(skin);
-		for (i in 0...17) {
-			for (j in 1...3) {
-				animation.addByPrefix('note${i}-' + j, 'note splash ${String.fromCharCode(i + 1)} ' + j, 24, false);
-			}
+		for (i in 1...3) {
+			animation.addByPrefix('note0-' + i, 'note splash A ' + i, 24, false);
+			animation.addByPrefix('note1-' + i, 'note splash B ' + i, 24, false);
+			animation.addByPrefix('note2-' + i, 'note splash C ' + i, 24, false);
+			animation.addByPrefix('note3-' + i, 'note splash D ' + i, 24, false);
+			animation.addByPrefix('note4-' + i, 'note splash E ' + i, 24, false);
+			animation.addByPrefix('note5-' + i, 'note splash F ' + i, 24, false);
+			animation.addByPrefix('note6-' + i, 'note splash G ' + i, 24, false);
+			animation.addByPrefix('note7-' + i, 'note splash H ' + i, 24, false);
+			animation.addByPrefix('note8-' + i, 'note splash I ' + i, 24, false);
+			animation.addByPrefix('note9-' + i, 'note splash J ' + i, 24, false);
+			animation.addByPrefix('note10-' + i, 'note splash K ' + i, 24, false);
+			animation.addByPrefix('note11-' + i, 'note splash L ' + i, 24, false);
+			animation.addByPrefix('note12-' + i, 'note splash M ' + i, 24, false);
+			animation.addByPrefix('note13-' + i, 'note splash N ' + i, 24, false);
+			animation.addByPrefix('note14-' + i, 'note splash O ' + i, 24, false);
+			animation.addByPrefix('note15-' + i, 'note splash P ' + i, 24, false);
+			animation.addByPrefix('note16-' + i, 'note splash Q ' + i, 24, false);
+			animation.addByPrefix('note17-' + i, 'note splash R ' + i, 24, false);
 		}
 	}
 

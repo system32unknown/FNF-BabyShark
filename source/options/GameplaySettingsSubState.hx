@@ -47,11 +47,11 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Disable Anti Mesh',
-			"Like Dave and Bambi, if checked, you can spam notes\nwithout getting a miss.",
-			'NoAntiSpam',
+		var option:Option = new Option('Antimash',
+			"If unchecked, antimash will not do anything.",
+			'AntiMash',
 			'bool',
-			false);
+			true);
 		addOption(option);
 
 		var option:Option = new Option('Winning Icons',

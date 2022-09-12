@@ -46,6 +46,13 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Always convert non-EK charts',
+			'If unchecked, charts that are not EK will be converted.',
+			'convertEK',
+			'bool',
+			true);
+		addOption(option);
+
 		super();
 	}
 }

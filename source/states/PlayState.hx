@@ -267,7 +267,7 @@ class PlayState extends MusicBeatState
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
 
-	var MsTimingTxt:FlxText;
+	var MsTimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
 	var MsTimingTween:FlxTween;
 
 	var songNameText:FlxText;
@@ -1162,6 +1162,7 @@ class PlayState extends MusicBeatState
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
+		healthBar.createGradientBar([dad.getColor()], [boyfriend.getColor()], 1, 0);
 		healthBar.scrollFactor.set();
 		// healthBar
 		healthBar.visible = !hideHud;
@@ -1185,8 +1186,10 @@ class PlayState extends MusicBeatState
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		switch (ClientPrefs.getPref('ScoreTextStyle')) {
-			case 'FPSPlus' | 'Psych':
+			case 'FPSPlus':
 				scoreTxt.size = 22;
+			case 'Psych':
+				scoreTxt.size = 20;
 		}
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1;
@@ -1223,7 +1226,7 @@ class PlayState extends MusicBeatState
 		songNameText.borderSize = 1;
 		add(songNameText);
 
-		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (PE " + MainMenuState.psychEngineVersion +")", 16);
+		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (PE " + MainMenuState.psychEngineVersion +") EK", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		engineText.scrollFactor.set();
 		engineText.borderSize = 1;
@@ -2375,7 +2378,7 @@ class PlayState extends MusicBeatState
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
-				if (songNotes[1] > (Note.ammo[mania] - 1))
+				if (songNotes[1] > Note.ammo[mania] - 1)
 				{
 					gottaHitNote = !section.mustHitSection;
 				}
@@ -2396,7 +2399,6 @@ class PlayState extends MusicBeatState
 				swagNote.scrollFactor.set();
 
 				var susLength:Float = swagNote.sustainLength;
-
 				susLength = susLength / Conductor.stepCrochet;
 				unspawnNotes.push(swagNote);
 
@@ -2998,9 +3000,14 @@ class PlayState extends MusicBeatState
 
 		var iconOffset:Int = 26;
 
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
-
+		switch(ClientPrefs.getPref('HealthTypes')) {
+			case "Vanilla": // Stolen from Vanilla Engine
+				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
+				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+			case "Psych":
+				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
+				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
+		}
 		if (health > 2)
 			health = 2;
 
@@ -3106,8 +3113,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (generatedMusic)
-		{
+		if (generatedMusic) {
 			if (!inCutscene) {
 				if(!cpuControlled) {
 					keyShit();
@@ -4025,34 +4031,32 @@ class PlayState extends MusicBeatState
 		var Ranks:String = CoolUtil.GenerateLetterRank(Accuracy);
 		switch (ClientPrefs.getPref('ScoreTextStyle')) {
 			case 'Kade':
-				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS: $nps(Max: $maxNPS) ' + divider : '')
+				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps(Max:$maxNPS) ' + divider : '')
 				+ ' Score:' + (!cpuControlled ? songScore : botScore) + ' '
 				+ divider + ' Combo Breaks:' + songMisses + ' '
 				+ divider + ' Accuracy:' + '$Accuracy%' + ' '
 				+ divider + ' ($ratingFC) $Ranks';
 			case 'Psych':
-				scoreTxt.size = 22;
 				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS: $nps ($maxNPS) ' + divider : '')
 				+ ' Score: ' + (!cpuControlled ? songScore : botScore) + ' '
 				+ divider + ' Misses: ' + songMisses + ' '
 				+ divider + ' Rating: $ratingName ($Accuracy%) - $ratingFC';
 			case 'BabyShark':
-				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) ' + divider : '')
+				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps($maxNPS) ' + divider : '')
 				+ (!cpuControlled ? ' Score:' + songScore : ' Bot Score:' + botScore)
-				+ (!cpuControlled ? ' ' + divider + ' Misses:' + songMisses : ' ')
+				+ (!cpuControlled ? ' ' + divider + ' Misses:' + songMisses + ' ' : ' ')
 				+ divider + ' Acc.:' + '$Accuracy%'
 				+ (ratingName != '?' ? ' [$ratingName, $Ranks] - $ratingFC' : ' [N/A, N/A] - ?');
 			case 'FPSPlus':
-				scoreTxt.size = 22;
-				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS: $nps(Max: $maxNPS) ' + divider : '')
+				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps(Max:$maxNPS) ' + divider : '')
 				+ ' Score:' + (!cpuControlled ? songScore : botScore) + ' '
 				+ divider + ' Misses:' + songMisses + ' '
-				+ divider + ' Accuracy: $Accuracy%';
+				+ divider + ' Accuracy:$Accuracy%';
 		}
 	}
 
 	private function popUpScore(note:Note = null):Void {
-		var noteDiff:Float = getMsTiming(note);
+		var noteDiff = getMsTiming(note);
 
 		vocals.volume = 1;
 
@@ -4141,7 +4145,7 @@ class PlayState extends MusicBeatState
 		timing.velocity.x -= FlxG.random.int(0, 10);
 		timing.velocity.y -= FlxG.random.int(140, 175);
 
-		if (ClientPrefs.getPref('ShowMsTiming')) {
+		if (ClientPrefs.getPref('ShowMsTiming') && MsTimingTxt != null) {
 			var msTiming = CoolUtil.truncateFloat(noteDiff / 1.0, 3);
 			MsTimingTxt.text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
 			MsTimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -4196,6 +4200,9 @@ class PlayState extends MusicBeatState
 		if (daTiming != "" && ClientPrefs.getPref('ShowLateEarly'))
 			add(timing);
 
+			if (!ClientPrefs.getPref('comboStacking'))
+				lastScore.push(timing);
+
 		if (!ClientPrefs.getPref('comboStacking')) {
 			if (lastRating != null) lastRating.kill();
 			lastRating = rating;
@@ -4227,8 +4234,7 @@ class PlayState extends MusicBeatState
 		seperatedScore.push(Math.floor(combo / 10) % 10);
 		seperatedScore.push(combo % 10);
 
-		if (!ClientPrefs.getPref('comboStacking'))
-		{
+		if (!ClientPrefs.getPref('comboStacking')) {
 			if (lastCombo != null) lastCombo.kill();
 			lastCombo = comboSpr;
 		}
@@ -4327,21 +4333,21 @@ class PlayState extends MusicBeatState
 	}
 
 	private function getMsTiming(note:Note = null):Float {
-		var noteDiff:Float = 0;
+		var TempnoteDiff:Float = 0;
 		switch(ClientPrefs.getPref('MstimingTypes'))
 		{
 			case 'Psych':
-				noteDiff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
+				TempnoteDiff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
 			case 'Kade':
 				if (note != null)
-					noteDiff = -(note.strumTime - Conductor.songPosition);
+					TempnoteDiff = -(note.strumTime - Conductor.songPosition);
 				else
-					noteDiff = Conductor.safeZoneOffset;
+					TempnoteDiff = Conductor.safeZoneOffset;
 			case 'Andromeda':
-				noteDiff = note.strumTime - Conductor.songPosition;
+				TempnoteDiff = note.strumTime - Conductor.songPosition;
 		}
 
-		return noteDiff;
+		return TempnoteDiff;
 	}
 
 	public var strumsBlocked:Array<Bool> = [];
@@ -4369,7 +4375,7 @@ class PlayState extends MusicBeatState
 						if (daNote.noteData == key) {
 							sortedNotesList.push(daNote);
 						}
-						canMiss = !ClientPrefs.getPref('NoAntiSpam');
+						canMiss = !ClientPrefs.getPref('AntiMash');
 					}
 				});
 				sortedNotesList.sort(sortHitNotes);
@@ -4505,15 +4511,6 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	private function parseKeys(?suffix:String = ''):Array<Bool>
-	{
-		var ret:Array<Bool> = [];
-		for (i in 0...controlArray.length) {
-			ret[i] = Reflect.getProperty(controls, controlArray[i] + suffix);
-		}
-		return ret;
-	}
-
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		//Dupe note remove
 		notes.forEachAlive(function(note:Note) {
@@ -4642,7 +4639,7 @@ class PlayState extends MusicBeatState
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
 		var camTimer:FlxTimer;
 
-		if (ClientPrefs.getPref('camMovement')) {
+		if (ClientPrefs.getPref('camMovement') && !PlayState.isPixelStage) {
 			if(!bfturn) {
 				if(animToPlay == "singLEFT") {
 					camlockx = campointx - camMovement;

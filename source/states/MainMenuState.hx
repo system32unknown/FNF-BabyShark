@@ -152,7 +152,7 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollowPos, null, 1);
 
 		var versionShit:FlxText = new FlxText(FlxG.width - 280, FlxG.height - 36, 0, 
-			'Alter Engine (PE v$psychEngineVersion)\n' +
+			'Alter Engine (PE v$psychEngineVersion) EK\n' +
 			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
 			12);
 		versionShit.scrollFactor.set();

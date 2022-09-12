@@ -34,11 +34,13 @@ class ClientPrefs {
 		'IconBounceType' => 'Psych',
 		'RatingTypes' => 'Static',
 		'comboStacking' => true,
-		'NoAntiSpam' => false,
+		'AntiMash' => false,
 		'noteOffset' => 0,
 		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
 		'ghostTapping' => true,
+		'HealthTypes' => 'Psych',
 		'timeBarType' => 'Time Left',
+		'ScoreTextStyle' => 'BabyShark',
 		'scoreZoom' => true,
 		'noReset' => false,
 		'healthBarAlpha' => 1,
@@ -46,7 +48,7 @@ class ClientPrefs {
 		'ShowWatermark' => true,
 		'pauseMusic' => 'Tea Time',
 		// Gameplay settings
-		'comboOffset' => [0, 0, 0, 0],
+		'comboOffset' => [0, 0, 0, 0, 0, 0],
 		'ratingOffset' => 0,
 		'sickWindow' => 45,
 		'goodWindow' => 90,
@@ -274,7 +276,7 @@ class ClientPrefs {
 		}
 
 		var save:FlxSave = new FlxSave();
-		save.bind('controls_v2', 'ninjamuffin99');
+		save.bind('controls_v2', 'altertoriel');
 		if (save != null) {
 			for (name in separateSaves) {
 				var data:Dynamic = Reflect.field(save.data, name);

@@ -642,13 +642,9 @@ class EditorPlayState extends MusicBeatState
 		if (generatedMusic) {
 			// rewritten inputs???
 			notes.forEachAlive(function(daNote:Note) {
-				if(!ClientPrefs.keyboardMode) {
-					// hold note functions
-					if (daNote.isSustainNote && dataKeyIsPressed(daNote.noteData)
-					&& daNote.canBeHit && daNote.mustPress && !daNote.tooLate 
-					&& !daNote.wasGoodHit) {
-					   goodNoteHit(daNote);
-				}
+				// hold note functions
+				if (daNote.isSustainNote && dataKeyIsPressed(daNote.noteData) && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit)
+				   goodNoteHit(daNote);
 			});
 		}
 	}

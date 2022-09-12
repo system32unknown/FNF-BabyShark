@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import substates.MusicBeatSubstate;
+import game.Note;
 import utils.Controls;
 import utils.ClientPrefs;
 import shaders.ColorSwap;
@@ -57,8 +58,8 @@ class NotesSubState extends MusicBeatSubstate
 
 			var note:FlxSprite = new FlxSprite(posX, yPos);
 			note.frames = Paths.getSparrowAtlas('NOTE_assets');
-			var animations:Array<String> = ['purple0', 'blue0', 'green0', 'red0'];
-			note.animation.addByPrefix('idle', animations[i]);
+			var animation:String = Note.keysShit.get(Note.maxMania).get('letters')[i] + '0';
+			note.animation.addByPrefix('idle', animation);
 			note.animation.play('idle');
 			note.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 			grpNotes.add(note);

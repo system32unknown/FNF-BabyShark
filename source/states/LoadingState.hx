@@ -91,7 +91,6 @@ class LoadingState extends MusicBeatState
 	}
 	
 	function checkLibrary(library:String) {
-		trace(Assets.hasLibrary(library));
 		if (Assets.getLibrary(library) == null)
 		{
 			@:privateAccess
@@ -154,7 +153,6 @@ class LoadingState extends MusicBeatState
 		Paths.setCurrentLevel(directory);
 		trace('Setting asset folder to ' + directory);
 
-		#if NO_PRELOAD_ALL
 		var loaded:Bool = false;
 		if (PlayState.SONG != null) {
 			loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && isLibraryLoaded(directory);
@@ -162,14 +160,13 @@ class LoadingState extends MusicBeatState
 		
 		if (!loaded)
 			return new LoadingState(target, stopMusic, directory);
-		#end
+
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		
 		return target;
 	}
 	
-	#if NO_PRELOAD_ALL
 	static function isSoundLoaded(path:String):Bool
 	{
 		return Assets.cache.hasSound(path);
@@ -179,12 +176,10 @@ class LoadingState extends MusicBeatState
 	{
 		return Assets.getLibrary(library) != null;
 	}
-	#end
 	
 	override function destroy()
 	{
 		super.destroy();
-		
 		callbacks = null;
 	}
 	
@@ -205,49 +200,37 @@ class LoadingState extends MusicBeatState
 
 		@:privateAccess
 		var libraryPaths = LimeAssets.libraryPaths;
-		if (libraryPaths.exists(id))
-		{
+		if (libraryPaths.exists(id)) {
 			path = libraryPaths[id];
 			rootPath = Path.directory(path);
-		}
-		else
-		{
-			if (StringTools.endsWith(path, ".bundle"))
-			{
+		} else {
+			if (StringTools.endsWith(path, ".bundle")) {
 				rootPath = path;
 				path += "/library.json";
-			}
-			else
-			{
+			} else {
 				rootPath = Path.directory(path);
 			}
 			@:privateAccess
 			path = LimeAssets.__cacheBreak(path);
 		}
 
-		AssetManifest.loadFromFile(path, rootPath).onComplete(function(manifest)
-		{
-			if (manifest == null)
-			{
+		AssetManifest.loadFromFile(path, rootPath).onComplete(function(manifest) {
+			if (manifest == null) {
 				promise.error("Cannot parse asset manifest for library \"" + id + "\"");
 				return;
 			}
 
 			var library = AssetLibrary.fromManifest(manifest);
 
-			if (library == null)
-			{
+			if (library == null) {
 				promise.error("Cannot open library \"" + id + "\"");
-			}
-			else
-			{
+			} else {
 				@:privateAccess
 				LimeAssets.libraries.set(id, library);
 				library.onChange.add(LimeAssets.onChange.dispatch);
 				promise.completeWith(Future.withValue(library));
 			}
-		}).onError(function(_)
-		{
+		}).onError(function(_) {
 			promise.error("There is no asset library with an ID of \"" + id + "\"");
 		});
 
@@ -265,8 +248,7 @@ class MultiCallback
 	var unfired = new Map<String, Void->Void>();
 	var fired = new Array<String>();
 	
-	public function new (callback:Void->Void, logId:String = null)
-	{
+	public function new(callback:Void->Void, logId:String = null) {
 		this.callback = callback;
 		this.logId = logId;
 	}

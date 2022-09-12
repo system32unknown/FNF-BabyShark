@@ -42,6 +42,14 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Vanilla', 'Psych', 'Andromeda', 'DaveAndBambi', 'Micdup', 'RadicalOne', 'Custom']);
 		addOption(option);
 
+		var option:Option = new Option('Health Types:',
+			"What should the Health Types?",
+			'HealthTypes',
+			'string',
+			'Psych',
+			['Vanilla', 'Psych']);
+		addOption(option);
+
 		var option:Option = new Option('Score Styles:',
 			"What should change the Score Text?",
 			'ScoreTextStyle',
