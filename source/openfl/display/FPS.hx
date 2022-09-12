@@ -70,8 +70,7 @@ class FPS extends TextField
 		currentTime += deltaTime;
 		times.push(currentTime);
 
-		while (times[0] < currentTime - 1000)
-		{
+		while (times[0] < currentTime - 1000) {
 			times.shift();
 		}
 
@@ -79,8 +78,7 @@ class FPS extends TextField
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
 		if (currentFPS > ClientPrefs.getPref('framerate')) currentFPS = ClientPrefs.getPref('framerate');
 
-		if (currentCount != cacheCount)
-		{
+		if (currentCount != cacheCount) {
 			text = '';
 			text += (ClientPrefs.getPref('showFPS') ? "FPS: " + currentFPS + "\n" : "");
 			if (ClientPrefs.getPref('showMEM')) {
@@ -93,15 +91,13 @@ class FPS extends TextField
 			if (memoryMegas > peakMegas) peakMegas = memoryMegas;
 			#end
 
-			if (text != null || text != '')
-			{
+			if (text != null || text != '') {
 				if (Main.fpsVar != null)
 					Main.fpsVar.visible = true;
 			}
 
 			textColor = 0xFFFFFFFF;
-			if (memoryMegas > 3000 || currentFPS <= ClientPrefs.getPref('framerate') / 2)
-			{
+			if (memoryMegas > 3000 || currentFPS <= ClientPrefs.getPref('framerate') / 2) {
 				textColor = 0xFFFF0000;
 			}
 

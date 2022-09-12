@@ -22,8 +22,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	private var checkboxGroup:FlxTypedGroup<CheckboxThingie>;
 	private var grpTexts:FlxTypedGroup<AttachedText>;
 
-	function getOptions()
-	{
+	function getOptions() {
 		var goption:GameplayOption = new GameplayOption('Scroll Type', 'scrolltype', 'string', 'multiplicative', ["multiplicative", "constant"]);
 		optionsArray.push(goption);
 
@@ -31,13 +30,10 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		option.scrollSpeed = 1.5;
 		option.minValue = 0.5;
 		option.changeValue = 0.1;
-		if (goption.getValue() != "constant")
-		{
+		if (goption.getValue() != "constant") {
 			option.displayFormat = '%vX';
 			option.maxValue = 3;
-		}
-		else
-		{
+		} else {
 			option.displayFormat = "%v";
 			option.maxValue = 6;
 		}
@@ -69,10 +65,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		optionsArray.push(option);
 	}
 
-	public function getOptionByName(name:String)
-	{
-		for(i in optionsArray)
-		{
+	public function getOptionByName(name:String) {
+		for(i in optionsArray) {
 			var opt:GameplayOption = i;
 			if (opt.name == name)
 				return opt;
@@ -100,8 +94,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		
 		getOptions();
 
-		for (i in 0...optionsArray.length)
-		{
+		for (i in 0...optionsArray.length) {
 			var optionText:Alphabet = new Alphabet(0, 70 * i, optionsArray[i].name, true, false, 0.05, 0.8);
 			optionText.isMenuItem = true;
 			optionText.x += 300;
@@ -136,12 +129,10 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	var holdValue:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if (controls.UI_UP_P)
-		{
+		if (controls.UI_UP_P) {
 			changeSelection(-1);
 		}
-		if (controls.UI_DOWN_P)
-		{
+		if (controls.UI_DOWN_P) {
 			changeSelection(1);
 		}
 
@@ -154,13 +145,11 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		if(nextAccept <= 0)
 		{
 			var usesCheckbox = true;
-			if(curOption.type != 'bool')
-			{
+			if(curOption.type != 'bool') {
 				usesCheckbox = false;
 			}
 
-			if(usesCheckbox)
-			{
+			if(usesCheckbox) {
 				if(controls.ACCEPT)
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -185,8 +174,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 									if(holdValue < curOption.minValue) holdValue = curOption.minValue;
 									else if (holdValue > curOption.maxValue) holdValue = curOption.maxValue;
 
-									switch(curOption.type)
-									{
+									switch(curOption.type) {
 										case 'int':
 											holdValue = Math.round(holdValue);
 											curOption.setValue(holdValue);
@@ -210,18 +198,13 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 									curOption.curOption = num;
 									curOption.setValue(curOption.options[num]); //lol
 									
-									if (curOption.name == "Scroll Type")
-									{
+									if (curOption.name == "Scroll Type") {
 										var oOption:GameplayOption = getOptionByName("Scroll Speed");
-										if (oOption != null)
-										{
-											if (curOption.getValue() == "constant")
-											{
+										if (oOption != null) {
+											if (curOption.getValue() == "constant") {
 												oOption.displayFormat = "%v";
 												oOption.maxValue = 6;
-											}
-											else
-											{
+											} else {
 												oOption.displayFormat = "%vX";
 												oOption.maxValue = 3;
 												if(oOption.getValue() > 3) oOption.setValue(3);
@@ -229,7 +212,6 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 											updateTextFrom(oOption);
 										}
 									}
-									//trace(curOption.options[num]);
 							}
 							updateTextFrom(curOption);
 							curOption.change();
@@ -383,10 +365,8 @@ class GameplayOption
 		this.defaultValue = defaultValue;
 		this.options = options;
 
-		if(defaultValue == 'null variable value')
-		{
-			switch(type)
-			{
+		if(defaultValue == 'null variable value') {
+			switch(type) {
 				case 'bool':
 					defaultValue = false;
 				case 'int' | 'float':

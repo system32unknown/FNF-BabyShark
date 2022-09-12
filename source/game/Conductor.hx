@@ -28,10 +28,8 @@ class Conductor
 	public static function judgeNote(note:Note, diff:Float=0):Rating // die
 	{
 		var data:Array<Rating> = PlayState.instance.ratingsData; //shortening cuz fuck u
-		for(i in 0...data.length-1) //skips last window (Shit)
-		{
-			if (diff <= data[i].hitWindow)
-			{
+		for(i in 0...data.length-1)  { //skips last window (Shit)
+			if (diff <= data[i].hitWindow) {
 				return data[i];
 			}
 		}
@@ -50,8 +48,7 @@ class Conductor
 			bpm: bpm,
 			stepCrochet: stepCrochet
 		}
-		for (i in 0...Conductor.bpmChangeMap.length)
-		{
+		for (i in 0...Conductor.bpmChangeMap.length) {
 			if (time >= Conductor.bpmChangeMap[i].songTime)
 				lastChange = Conductor.bpmChangeMap[i];
 		}
@@ -138,8 +135,7 @@ class Conductor
 		return (60 / bpm) * 1000;
 	}
 
-	public static function changeBPM(newBpm:Float)
-	{
+	public static function changeBPM(newBpm:Float) {
 		bpm = newBpm;
 
 		crochet = calculateCrochet(bpm);

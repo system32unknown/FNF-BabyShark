@@ -224,7 +224,7 @@ class Note extends FlxSprite
 			shader = colorSwap.shader;
 
 			x += swagWidth * (noteData % Note.ammo[mania]);
-			if(!isSustainNote) { //Doing this 'if' check to fix the warnings on Senpai songs
+			if(!isSustainNote && noteData > -1 && noteData < Note.maxManiaUI_integer) { //Doing this 'if' check to fix the warnings on Senpai songs
 				var animToPlay:String = '';
 				animToPlay = Note.keysShit.get(mania).get('letters')[noteData % 4];
 				animation.play(animToPlay);
@@ -389,7 +389,7 @@ class Note extends FlxSprite
 
 		if (!isSustainNote) {
 			var animToPlay:String = '';
-			animToPlay = Note.keysShit.get(mania).get('letters')[noteData];
+			animToPlay = Note.keysShit.get(mania).get('letters')[noteData % Note.ammo[mania]];
 			animation.play(animToPlay);
 		}
 

@@ -1,6 +1,7 @@
 package game;
 
 import game.Section.SwagSection;
+import utils.ClientPrefs;
 import data.StageData;
 import game.Note;
 import haxe.Json;
@@ -85,7 +86,7 @@ class Song {
 			}
 		}
 
-		if (songJson.mania == null)
+		if (songJson.mania == null && ClientPrefs.getPref('convertEK'))
         {
             songJson.mania = Note.defaultMania;
         }

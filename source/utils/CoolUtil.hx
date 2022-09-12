@@ -1,5 +1,6 @@
 package utils;
 
+import cpp.abi.Abi;
 import flixel.FlxG;
 #if sys
 import sys.io.File;
@@ -8,6 +9,7 @@ import sys.FileSystem;
 import openfl.utils.Assets;
 #end
 import states.PlayState;
+import lime.app.Application;
 
 using StringTools;
 
@@ -208,5 +210,9 @@ class CoolUtil
 		#else
 		FlxG.openURL(site);
 		#end
+	}
+
+	public static function changeTitle(newTitle:String) {
+		Application.current.window.title = newTitle;
 	}
 }

@@ -68,8 +68,6 @@ class ChartingState extends MusicBeatState
 		'Alt Animation',
 		'Hey!',
 		'Hurt Note',
-		'Danger Note',
-		'Kill Note',
 		'GF Sing',
 		'No Animation'
 	];
@@ -106,7 +104,7 @@ class ChartingState extends MusicBeatState
 	/**
 	 * Array of notes showing when each section STARTS in STEPS
 	 * Usually rounded up??
-	 */
+	*/
 	public static var curSec:Int = 0;
 	private static var lastSong:String = '';
 
@@ -1027,8 +1025,7 @@ class ChartingState extends MusicBeatState
 		tab_group_event.add(removeButton);
 
 		var addButton:FlxButton = new FlxButton(removeButton.x + removeButton.width + 10, removeButton.y, '+', function() {
-			if(curSelectedNote != null && curSelectedNote[2] == null) //Is event note {
-
+			if(curSelectedNote != null && curSelectedNote[2] == null) { //Is event note
 				changeEventSelected(1);
 				updateGrid();
 			}
@@ -1414,17 +1411,15 @@ class ChartingState extends MusicBeatState
 		_song.song = UI_songTitle.text;
 
 		strumLineUpdateY();
-		for (i in 0...8){
+		for (i in 0...strumLineNotes.members.length) {
 			strumLineNotes.members[i].y = strumLine.y;
 		}
 
-		FlxG.mouse.visible = true;//cause reasons. trust me
+		FlxG.mouse.visible = true; //cause reasons. trust me
 		camPos.y = strumLine.y;
 		if(!disableAutoScrolling.checked) {
-			if (Math.ceil(strumLine.y) >= gridBG.height)
-			{
-				if (_song.notes[curSec + 1] == null)
-				{
+			if (Math.ceil(strumLine.y) >= gridBG.height) {
+				if (_song.notes[curSec + 1] == null) {
 					addSection();
 				}
 
@@ -1813,7 +1808,7 @@ class ChartingState extends MusicBeatState
 		Conductor.songPosition = FlxG.sound.music.time;
 		strumLineUpdateY();
 		camPos.y = strumLine.y;
-		for (i in 0...8){
+		for (i in 0...strumLineNotes.members.length) {
 			strumLineNotes.members[i].y = strumLine.y;
 			strumLineNotes.members[i].alpha = FlxG.sound.music.playing ? 1 : 0.35;
 		}
@@ -1845,7 +1840,7 @@ class ChartingState extends MusicBeatState
 				if(note.strumTime > lastConductorPos && FlxG.sound.music.playing && note.noteData > -1) {
 					var data:Int = note.noteData % 4;
 					var noteDataToCheck:Int = note.noteData;
-					if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection) noteDataToCheck += 4;
+					if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection) noteDataToCheck += Note.ammo[_song.mania];
 						strumLineNotes.members[noteDataToCheck].playAnim('confirm', true);
 						strumLineNotes.members[noteDataToCheck].resetAnim = (note.sustainLength / 1000) + 0.15;
 					if(!playedSound[data]) {
@@ -1860,8 +1855,7 @@ class ChartingState extends MusicBeatState
 						}
 
 						data = note.noteData;
-						if(note.mustPress != _song.notes[curSec].mustHitSection)
-						{
+						if(note.mustPress != _song.notes[curSec].mustHitSection) {
 							data += 4;
 						}
 					}
