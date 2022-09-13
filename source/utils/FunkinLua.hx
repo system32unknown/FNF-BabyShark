@@ -102,7 +102,6 @@ class FunkinLua {
 		}
 		scriptName = script;
 		initHaxeModule();
-		setVars();
 
 		trace('lua file loaded succesfully:' + script);
 
@@ -979,19 +978,17 @@ class FunkinLua {
 		});
 
 		// gay ass tweens
-		Lua_helper.add_callback(lua, "doTween", function(tag:String, property:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			var penisExam:Dynamic = tweenShit(tag, vars);
-			var gayAssAnon = {}
-			Reflect.setField(gayAssAnon, property, value);
+		Lua_helper.add_callback(lua, "doTween", function(tag:String, variable:String, fieldsNValues:Dynamic, duration:Float, ease:String) {
+			var penisExam:Dynamic = tweenShit(tag, variable);
 			if(penisExam != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, gayAssAnon, duration, {ease: getFlxEaseByString(ease),
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, fieldsNValues, duration, {ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
 						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
 					}
 				}));
-			} else {
-				luaTrace('Couldnt find object: ' + vars, false, false, FlxColor.RED);
+			}else{
+				luaTrace('Couldnt find object: ' + variable, false, false, FlxColor.RED);
 			}
 		});
 		Lua_helper.add_callback(lua, "doTweenColor", function(tag:String, vars:String, targetColor:String, duration:Float, ease:String) {
@@ -1014,15 +1011,13 @@ class FunkinLua {
 		});
 
 		// bisexual note tween
-		Lua_helper.add_callback(lua, "noteTween", function(tag:String, property:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+		Lua_helper.add_callback(lua, "noteTween", function(tag:String, note:Int, fieldsNValues:Dynamic, duration:Float, ease:String) {
 			cancelTween(tag);
-			var gayAssAnon = {}
-			Reflect.setField(gayAssAnon, property, value);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
 
 			if(testicle != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, gayAssAnon, duration, {ease: getFlxEaseByString(ease),
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, fieldsNValues, duration, {ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
 						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
@@ -1175,34 +1170,27 @@ class FunkinLua {
 			return Std.parseInt(color);
 		});
 
-		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String)
-		{
+		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String) {
 			return Reflect.getProperty(FlxG.keys.justPressed, name);
 		});
-		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String)
-		{
+		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String) {
 			return Reflect.getProperty(FlxG.keys.pressed, name);
 		});
-		Lua_helper.add_callback(lua, "keyboardReleased", function(name:String)
-		{
+		Lua_helper.add_callback(lua, "keyboardReleased", function(name:String) {
 			return Reflect.getProperty(FlxG.keys.justReleased, name);
 		});
 
-		Lua_helper.add_callback(lua, "anyGamepadJustPressed", function(name:String)
-		{
+		Lua_helper.add_callback(lua, "anyGamepadJustPressed", function(name:String) {
 			return FlxG.gamepads.anyJustPressed(name);
 		});
-		Lua_helper.add_callback(lua, "anyGamepadPressed", function(name:String)
-		{
+		Lua_helper.add_callback(lua, "anyGamepadPressed", function(name:String) {
 			return FlxG.gamepads.anyPressed(name);
 		});
-		Lua_helper.add_callback(lua, "anyGamepadReleased", function(name:String)
-		{
+		Lua_helper.add_callback(lua, "anyGamepadReleased", function(name:String) {
 			return FlxG.gamepads.anyJustReleased(name);
 		});
 
-		Lua_helper.add_callback(lua, "gamepadAnalogX", function(id:Int, ?leftStick:Bool = true)
-		{
+		Lua_helper.add_callback(lua, "gamepadAnalogX", function(id:Int, ?leftStick:Bool = true) {
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null)
 			{
@@ -1210,8 +1198,7 @@ class FunkinLua {
 			}
 			return controller.getXAxis(leftStick ? LEFT_ANALOG_STICK : RIGHT_ANALOG_STICK);
 		});
-		Lua_helper.add_callback(lua, "gamepadAnalogY", function(id:Int, ?leftStick:Bool = true)
-		{
+		Lua_helper.add_callback(lua, "gamepadAnalogY", function(id:Int, ?leftStick:Bool = true) {
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null)
 			{
@@ -1219,8 +1206,7 @@ class FunkinLua {
 			}
 			return controller.getYAxis(leftStick ? LEFT_ANALOG_STICK : RIGHT_ANALOG_STICK);
 		});
-		Lua_helper.add_callback(lua, "gamepadJustPressed", function(id:Int, name:String)
-		{
+		Lua_helper.add_callback(lua, "gamepadJustPressed", function(id:Int, name:String) {
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null)
 			{
@@ -1228,8 +1214,7 @@ class FunkinLua {
 			}
 			return Reflect.getProperty(controller.justPressed, name) == true;
 		});
-		Lua_helper.add_callback(lua, "gamepadPressed", function(id:Int, name:String)
-		{
+		Lua_helper.add_callback(lua, "gamepadPressed", function(id:Int, name:String) {
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null)
 			{
@@ -1237,8 +1222,7 @@ class FunkinLua {
 			}
 			return Reflect.getProperty(controller.pressed, name) == true;
 		});
-		Lua_helper.add_callback(lua, "gamepadReleased", function(id:Int, name:String)
-		{
+		Lua_helper.add_callback(lua, "gamepadReleased", function(id:Int, name:String) {
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null)
 			{
@@ -1401,15 +1385,15 @@ class FunkinLua {
 			cameraFromString(camera).shake(intensity, duration);
 		});
 
-		Lua_helper.add_callback(lua, "cameraFlash", function(camera:String, color:String, duration:Float,forced:Bool) {
+		Lua_helper.add_callback(lua, "cameraFlash", function(camera:String, color:String, duration:Float, forced:Bool) {
 			var colorNum:Int = Std.parseInt(color);
 			if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
-			cameraFromString(camera).flash(colorNum, duration,null,forced);
+			cameraFromString(camera).flash(colorNum, duration, null, forced);
 		});
-		Lua_helper.add_callback(lua, "cameraFade", function(camera:String, color:String, duration:Float,forced:Bool) {
+		Lua_helper.add_callback(lua, "cameraFade", function(camera:String, color:String, duration:Float, forced:Bool) {
 			var colorNum:Int = Std.parseInt(color);
 			if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
-			cameraFromString(camera).fade(colorNum, duration,false,null,forced);
+			cameraFromString(camera).fade(colorNum, duration, false, null, forced);
 		});
 		Lua_helper.add_callback(lua, "setRatingPercent", function(value:Float) {
 			PlayState.instance.ratingPercent = value;
@@ -1836,7 +1820,7 @@ class FunkinLua {
 				}
 			}
 		});
-		Lua_helper.add_callback(lua, "removLuaSprite", function(tag:String, destroy:Bool = true) {
+		Lua_helper.add_callback(lua, "removeLuaSprite", function(tag:String, destroy:Bool = true) {
 			if(!PlayState.instance.modChartSprites.exists(tag)) {
 				return;
 			}
@@ -3036,6 +3020,18 @@ class FunkinLua {
 		return true;
 	}
 	#end
+
+	public function set(variable:String, data:Dynamic) {
+		#if LUA_ALLOWED
+		if(lua == null) {
+			return;
+		}
+
+		Convert.toLua(lua, data);
+		Lua.setglobal(lua, variable);
+		hscript.setVar(variable, data);
+		#end
+	}
 
 	#if LUA_ALLOWED
 	public function getBool(variable:String) {

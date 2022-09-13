@@ -226,13 +226,10 @@ class Note extends FlxSprite
 			x += swagWidth * (noteData % Note.ammo[mania]);
 			if(!isSustainNote && noteData > -1 && noteData < Note.maxManiaUI_integer) { //Doing this 'if' check to fix the warnings on Senpai songs
 				var animToPlay:String = '';
-				animToPlay = Note.keysShit.get(mania).get('letters')[noteData % 4];
+				animToPlay = Note.keysShit.get(mania).get('letters')[noteData];
 				animation.play(animToPlay);
 			}
 		}
-
-		if(prevNote != null)
-			prevNote.nextNote = this;
 
 		if (isSustainNote && prevNote != null)
 		{
@@ -244,7 +241,7 @@ class Note extends FlxSprite
 			offsetX += width / 2;
 			copyAngle = false;
 
-			animation.play(Note.keysShit.get(mania).get('letters')[noteData % 4] + ' tail');
+			animation.play(Note.keysShit.get(mania).get('letters')[noteData] + ' tail');
 
 			updateHitbox();
 

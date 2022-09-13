@@ -96,7 +96,7 @@ class StrumNote extends FlxSprite
 		{
 			case 0 | 1 | 2: x += width * noteData;
 			case 3: x += Note.swagWidth * noteData;
-			default: x += (width - Note.lessX[PlayState.mania]) * noteData;
+			default: x += ((width - Note.lessX[PlayState.mania]) * noteData);
 		}
 
 		x += Note.xtra[PlayState.mania];

@@ -4,9 +4,11 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
+import flixel.math.FlxMath;
 import substates.MusicBeatSubstate;
 import game.Note;
 import utils.Controls;
+import utils.CoolUtil;
 import utils.ClientPrefs;
 import shaders.ColorSwap;
 import ui.Alphabet;
@@ -22,13 +24,13 @@ class NotesSubState extends MusicBeatSubstate
 	private var shaderArray:Array<ColorSwap> = [];
 	var curValue:Float = 0;
 	var holdTime:Float = 0;
+	var scrollHoldTime:Float = 0;
 	var nextAccept:Int = 5;
 
 	var blackBG:FlxSprite;
 	var hsbText:Alphabet;
 
 	var posX = 230;
-
 	var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 	public function new() {
 		super();
@@ -39,7 +41,7 @@ class NotesSubState extends MusicBeatSubstate
 		bg.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(bg);
 		
-		blackBG = new FlxSprite(posX - 25).makeGraphic(870, 200, FlxColor.BLACK);
+		blackBG = new FlxSprite(posX - 25).makeGraphic(1140, 200, FlxColor.BLACK);
 		blackBG.alpha = 0.4;
 		add(blackBG);
 
@@ -63,6 +65,7 @@ class NotesSubState extends MusicBeatSubstate
 			note.animation.addByPrefix('idle', animation + '0');
 			note.animation.play('idle');
 			note.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+			note.ID = i;
 			grpNotes.add(note);
 
 			var newShader:ColorSwap = new ColorSwap();
@@ -77,6 +80,7 @@ class NotesSubState extends MusicBeatSubstate
 		hsbText.x = posX + 330;
 		add(hsbText);
 
+		doMessage("Hold your UI UP key and UI DOWN key to scroll faster.\nHold your UI LEFT key and UI RIGHT key when changing a\nnote value to change it faster.\nHold your SHIFT key to skip 3.", 8);
 		changeSelection();
 	}
 
@@ -137,12 +141,17 @@ class NotesSubState extends MusicBeatSubstate
 				}
 			}
 		} else {
+			var shiftMult:Int = 1;
+			if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
+
 			if (controls.UI_UP_P) {
-				changeSelection(-1);
+				scrollHoldTime = 0;
+				changeSelection(-shiftMult);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			if (controls.UI_DOWN_P) {
-				changeSelection(1);
+				scrollHoldTime = 0;
+				changeSelection(shiftMult);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			if (controls.UI_LEFT_P) {
@@ -152,6 +161,16 @@ class NotesSubState extends MusicBeatSubstate
 			if (controls.UI_RIGHT_P) {
 				changeType(1);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
+			}
+			if(controls.UI_DOWN || controls.UI_UP) {
+				var checkLastHold:Int = Math.floor((scrollHoldTime - 0.5) * 10);
+				scrollHoldTime += elapsed;
+				var checkNewHold:Int = Math.floor((scrollHoldTime - 0.5) * 10);
+
+				if(scrollHoldTime > 0.5 && checkNewHold - checkLastHold > 0)
+				{
+					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
+				}
 			}
 			if(controls.RESET) {
 				for (i in 0...3) {
@@ -286,7 +305,7 @@ class NotesSubState extends MusicBeatSubstate
 			curValue = max;
 		}
 		roundedValue = Math.round(curValue);
-		[curSelected][typeSelected] = roundedValue;
+		arrowHSV[curSelected][typeSelected] = roundedValue;
 
 		switch(typeSelected) {
 			case 0: shaderArray[curSelected].hue = roundedValue / 360;

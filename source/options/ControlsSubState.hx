@@ -4,7 +4,9 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
+import flixel.math.FlxMath;
 import utils.ClientPrefs;
+import utils.CoolUtil;
 import utils.Controls;
 import substates.MusicBeatSubstate;
 import ui.InputFormatter;
@@ -18,6 +20,8 @@ class ControlsSubState extends MusicBeatSubstate {
 	private static var curAlt:Bool = false;
 
 	private static var defaultKey:String = 'Reset to Default Keys';
+	private var bindLength:Int = 0;
+	var holdTime:Float = 0;
 
 	var optionShit:Array<Dynamic> = [
 		['NOTES'],
@@ -85,9 +89,6 @@ class ControlsSubState extends MusicBeatSubstate {
 		['Up 2', 'note_nine8'],
 		['Right 2', 'note_nine9'],
 		[''],
-		['Try to figure out'],
-		['these ones.'],
-		[''],
 		['10 KEYS'],
 		['Left 1', 'note_ten1'],
 		['Down 1', 'note_ten2'],
@@ -99,6 +100,23 @@ class ControlsSubState extends MusicBeatSubstate {
 		['Down 2', 'note_ten8'],
 		['Up 2', 'note_ten9'],
 		['Right 2', 'note_ten10'],
+		[''],
+		['UI'],
+		['Left', 'ui_left'],
+		['Down', 'ui_down'],
+		['Up', 'ui_up'],
+		['Right', 'ui_right'],
+		[''],
+		['Reset', 'reset'],
+		['Accept', 'accept'],
+		['Back', 'back'],
+		['Pause', 'pause'],
+		[''],
+		['VOLUME'],
+		['Mute', 'volume_mute'],
+		['Up', 'volume_up'],
+		['Down', 'volume_down'],
+		[''],
 		['DEBUG'],
 		['Key 1', 'debug_1'],
 		['Key 2', 'debug_2']
@@ -150,6 +168,8 @@ class ControlsSubState extends MusicBeatSubstate {
 				if(curSelected < 0) curSelected = i;
 			}
 		}
+
+		doMessage("Hold your UI UP key and UI DOWN key to scroll faster.\nHold your SHIFT key to skip 3.");
 		changeSelection();
 	}
 
@@ -157,14 +177,32 @@ class ControlsSubState extends MusicBeatSubstate {
 	var bindingTime:Float = 0;
 	override function update(elapsed:Float) {
 		if(!rebindingKey) {
+
+			var shiftMult:Int = 1;
+			if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
+
 			if (controls.UI_UP_P) {
+				holdTime = 0;
 				changeSelection(-1);
 			}
 			if (controls.UI_DOWN_P) {
+				holdTime = 0;
 				changeSelection(1);
 			}
 			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
 				changeAlt();
+			}
+
+			if(controls.UI_DOWN || controls.UI_UP)
+			{
+				var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
+				holdTime += elapsed;
+				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+
+				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+				{
+					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
+				}
 			}
 
 			if (controls.BACK) {
@@ -198,6 +236,7 @@ class ControlsSubState extends MusicBeatSubstate {
 
 				var opposite:Int = (curAlt ? 0 : 1);
 				if(keysArray[opposite] == keysArray[1 - opposite]) {
+					doMessage("You cannot repeat the same key.", 2);
 					keysArray[opposite] = NONE;
 				}
 				ClientPrefs.keyBinds.set(optionShit[curSelected][1], keysArray);
@@ -258,7 +297,7 @@ class ControlsSubState extends MusicBeatSubstate {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			if(!unselectableCheck(bullShit-1)) {
+			if(!unselectableCheck(bullShit - 1)) {
 				item.alpha = 0.6;
 				if (item.targetY == 0) {
 					item.alpha = 1;
@@ -341,8 +380,6 @@ class ControlsSubState extends MusicBeatSubstate {
 			grpInputsAlt.remove(item);
 			item.destroy();
 		}
-
-		trace('Reloaded keys: ' + ClientPrefs.keyBinds);
 
 		for (i in 0...grpOptions.length) {
 			if(!unselectableCheck(i, true)) {

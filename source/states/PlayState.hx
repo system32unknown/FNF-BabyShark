@@ -325,6 +325,8 @@ class PlayState extends MusicBeatState
 	public static var lastRating:FlxSprite;
 	// stores the last combo sprite object
 	public static var lastCombo:FlxSprite;
+	// stores the last combo sprite object
+	public static var lastLateEarly:FlxSprite;
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
 
@@ -2039,6 +2041,8 @@ class PlayState extends MusicBeatState
 				setOnLuas('defaultOpponentStrumY' + i, opponentStrums.members[i].y);
 			}
 
+			setOnLuas('defaultMania', SONG.mania);
+
 			startedCountdown = true;
 			Conductor.songPosition = 0;
 			Conductor.songPosition -= Conductor.crochet * 5;
@@ -2982,6 +2986,9 @@ class PlayState extends MusicBeatState
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
 				iconP1.scale.set(mult, mult);
 				iconP2.scale.set(mult, mult);
+			case "PsychOld":
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, CoolUtil.boundTo(1 - (elapsed * 30), 0, 1))));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, CoolUtil.boundTo(1 - (elapsed * 30), 0, 1))));
 			case "Andromeda": // Stolen from Andromeda Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(0.1))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(0.1))));
@@ -3004,10 +3011,14 @@ class PlayState extends MusicBeatState
 			case "Vanilla": // Stolen from Vanilla Engine
 				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+			case "Exe": // Stolen from Sonic Exe
+				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset) - iconP1.offset.x;
+				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset) - iconP2.offset.x;
 			case "Psych":
 				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
 				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
 		}
+
 		if (health > 2)
 			health = 2;
 
@@ -4042,7 +4053,7 @@ class PlayState extends MusicBeatState
 				+ divider + ' Misses: ' + songMisses + ' '
 				+ divider + ' Rating: $ratingName ($Accuracy%) - $ratingFC';
 			case 'BabyShark':
-				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps($maxNPS) ' + divider : '')
+				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps/$maxNPS ' + divider : '')
 				+ (!cpuControlled ? ' Score:' + songScore : ' Bot Score:' + botScore)
 				+ (!cpuControlled ? ' ' + divider + ' Misses:' + songMisses + ' ' : ' ')
 				+ divider + ' Acc.:' + '$Accuracy%'
@@ -4200,12 +4211,12 @@ class PlayState extends MusicBeatState
 		if (daTiming != "" && ClientPrefs.getPref('ShowLateEarly'))
 			add(timing);
 
-			if (!ClientPrefs.getPref('comboStacking'))
-				lastScore.push(timing);
-
 		if (!ClientPrefs.getPref('comboStacking')) {
 			if (lastRating != null) lastRating.kill();
 			lastRating = rating;
+
+			if (lastLateEarly != null) lastLateEarly.kill();
+			lastLateEarly = timing;
 		}
 
 		if (!PlayState.isPixelStage) {
@@ -4238,10 +4249,8 @@ class PlayState extends MusicBeatState
 			if (lastCombo != null) lastCombo.kill();
 			lastCombo = comboSpr;
 		}
-		if (lastScore != null)
-		{
-			while (lastScore.length > 0)
-			{
+		if (lastScore != null) {
+			while (lastScore.length > 0) {
 				lastScore[0].kill();
 				lastScore.remove(lastScore[0]);
 			}
@@ -4334,8 +4343,7 @@ class PlayState extends MusicBeatState
 
 	private function getMsTiming(note:Note = null):Float {
 		var TempnoteDiff:Float = 0;
-		switch(ClientPrefs.getPref('MstimingTypes'))
-		{
+		switch(ClientPrefs.getPref('MstimingTypes')) {
 			case 'Psych':
 				TempnoteDiff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
 			case 'Kade':
@@ -4547,10 +4555,7 @@ class PlayState extends MusicBeatState
 
 		if(char != null && !daNote.noMissAnimation && char.hasMissAnimations)
 		{
-			var daAlt = '';
-			if(daNote.noteType == 'Alt Animation') daAlt = '-alt';
-
-			var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[daNote.noteData] + 'miss' + daAlt;
+			var animToPlay:String = Note.keysShit.get(mania).get('anims')[daNote.noteData] + 'miss' + daNote.animSuffix;
 			char.playAnim(animToPlay, true);
 		}
 
@@ -5085,7 +5090,7 @@ class PlayState extends MusicBeatState
 		}
 		
 		switch (ClientPrefs.getPref('IconBounceType')) {
-			case 'Vanilla' | 'Andromeda' | 'Micdup':
+			case 'Vanilla' | 'Andromeda' | 'Micdup' | 'PsychOld':
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 			case "Psych":

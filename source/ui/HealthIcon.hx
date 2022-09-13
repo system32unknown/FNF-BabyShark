@@ -1,6 +1,7 @@
 package ui;
 
 import flixel.FlxSprite;
+import flixel.math.FlxMath;
 import utils.ClientPrefs;
 
 using StringTools;
@@ -74,8 +75,10 @@ class HealthIcon extends FlxSprite
 	override function updateHitbox()
 	{
 		super.updateHitbox();
-		offset.x = iconOffsets[0];
-		offset.y = iconOffsets[1];
+		if (ClientPrefs.getPref('HealthTypes') != "Exe") {
+			offset.x = iconOffsets[0];
+			offset.y = iconOffsets[1];
+		}
 	}
 
 	public function getCharacter():String {

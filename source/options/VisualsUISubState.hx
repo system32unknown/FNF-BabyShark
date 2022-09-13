@@ -39,7 +39,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'IconBounceType',
 			'string',
 			'Psych',
-			['Vanilla', 'Psych', 'Andromeda', 'DaveAndBambi', 'Micdup', 'RadicalOne', 'Custom']);
+			['Vanilla', 'Psych', 'PsychOld', 'Andromeda', 'DaveAndBambi', 'Micdup', 'RadicalOne', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Health Types:',
@@ -47,7 +47,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'HealthTypes',
 			'string',
 			'Psych',
-			['Vanilla', 'Psych']);
+			['Vanilla', 'Psych', 'Exe']);
 		addOption(option);
 
 		var option:Option = new Option('Score Styles:',

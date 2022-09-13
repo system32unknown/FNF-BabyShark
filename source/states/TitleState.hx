@@ -327,7 +327,7 @@ class TitleState extends MusicBeatState
 	{
 		super.beatHit();
 		
-		FlxTween.tween(FlxG.camera, {zoom:1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
+		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
 
 		if(logoBl != null)
 			logoBl.animation.play('bump', true);
@@ -349,7 +349,8 @@ class TitleState extends MusicBeatState
 					deleteCoolText();
 					createCoolText(['Baby Shark\'s Big Show Created by:']);
 				case 4:
-					addMoreText('Pinkfong and Nickelodeon');
+					addMoreText('Pinkfong');
+					addMoreText('Nickelodeon');
 				case 5:
 					deleteCoolText();
 					createCoolText(['Psych Engine EK Created by:']);
@@ -359,20 +360,20 @@ class TitleState extends MusicBeatState
 					deleteCoolText();
 					createCoolText(['Psych Engine Created by:']);
 				case 8:
-					addMoreText('Shadow Mario', 15);
-					addMoreText('RiverOaken', 15);
-					addMoreText('YoShubs', 15);
-					addMoreText('And Psych Engine Contributors!', 15);
+					addMoreText('Shadow Mario');
+					addMoreText('RiverOaken');
+					addMoreText('YoShubs');
+					addMoreText('And Psych Engine Contributors!');
 				case 9:
 					deleteCoolText();
-					createCoolText([curWacky[0]]);
+					createCoolText(['A Biggest Collaboration']);
 				case 10:
-					addMoreText(curWacky[1]);
+					addMoreText('Mod Ever');
 				case 11:
 					deleteCoolText();
-					createCoolText(['Are you ready for']);	
+					createCoolText([curWacky[0]]);
 				case 12:
-					addMoreText('Gaming? :troll:');
+					addMoreText(curWacky[1]);
 				case 13:
 					deleteCoolText();
 				case 14:
@@ -392,7 +393,6 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
-			var logoInt:Int = 0;
 			gradientBar = FlxGradient.createGradientFlxSprite(Math.round(FlxG.width), 512, [0x00, 0x553D0468, 0xC4FFE600], 1, 90, true);
 	    	gradientBar.y = FlxG.height - gradientBar.height;
 	     	gradientBar.scale.y = 0;
@@ -402,6 +402,7 @@ class TitleState extends MusicBeatState
 
 			remove(credGroup);
 			FlxG.camera.flash(FlxColor.WHITE, 4);
+			var logoInt:Int = 0;
 			for (logo in titleLogos) {
 				logoInt++;
 				var islogoalt:Bool = (logoInt % 2 == 0);

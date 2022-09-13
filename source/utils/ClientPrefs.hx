@@ -36,7 +36,7 @@ class ClientPrefs {
 		'comboStacking' => true,
 		'AntiMash' => false,
 		'noteOffset' => 0,
-		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
+		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
 		'ghostTapping' => true,
 		'HealthTypes' => 'Psych',
 		'timeBarType' => 'Time Left',
