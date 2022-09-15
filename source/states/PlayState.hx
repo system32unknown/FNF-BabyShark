@@ -150,6 +150,9 @@ class PlayState extends MusicBeatState
 	private static var prevCamFollow:FlxPoint;
 	private static var prevCamFollowPos:FlxObject;
 
+	private var laneunderlay:FlxSprite;
+	private var laneunderlayOpponent:FlxSprite;
+
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
@@ -317,7 +320,6 @@ class PlayState extends MusicBeatState
 
 	// Less laggy controls
 	private var keysArray:Array<Dynamic>;
-	private var controlArray:Array<String>;
 
 	var precacheList:Map<String, String> = new Map<String, String>();
 
@@ -350,13 +352,6 @@ class PlayState extends MusicBeatState
 		PauseSubState.songName = null; //Reset to default
 
 		keysArray = Keybinds.fill();
-
-		controlArray = [
-			'NOTE_LEFT',
-			'NOTE_DOWN',
-			'NOTE_UP',
-			'NOTE_RIGHT'
-		];
 
 		//Ratings
 		ratingsData.push(new Rating('sick')); //default rating
@@ -411,12 +406,12 @@ class PlayState extends MusicBeatState
 		persistentUpdate = true;
 		persistentDraw = true;
 
+		if (SONG == null)
+			SONG = Song.loadFromJson('tutorial');
+
 		mania = SONG.mania;
 		if (mania < Note.minMania || mania > Note.maxMania)
 			mania = Note.defaultMania;
-
-		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial');
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -1025,6 +1020,23 @@ class PlayState extends MusicBeatState
 		if(downScroll) strumLine.y = FlxG.height - 150;
 		strumLine.scrollFactor.set();
 
+		laneunderlayOpponent = new FlxSprite().makeGraphic(110 * 4 + 50, FlxG.height * 2);
+		laneunderlayOpponent.alpha = ClientPrefs.getPref('LUAlpha');
+		laneunderlayOpponent.color = FlxColor.BLACK;
+		laneunderlayOpponent.scrollFactor.set();
+
+		laneunderlay = new FlxSprite().makeGraphic(110 * 4 + 50, FlxG.height * 2);
+		laneunderlay.alpha = ClientPrefs.getPref('LUAlpha');
+		laneunderlay.color = FlxColor.BLACK;
+		laneunderlay.scrollFactor.set();
+
+		if (ClientPrefs.getPref('ShowLU')) {
+			if (!ClientPrefs.getPref('HiddenOppLU') || !ClientPrefs.getPref('middleScroll')) {
+				add(laneunderlayOpponent);
+			}
+			add(laneunderlayOpponent);
+		}
+
 		var showTime:Bool = (ClientPrefs.getPref('timeBarType') != 'Disabled');
 		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 20, 400, "", 32);
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1034,8 +1046,7 @@ class PlayState extends MusicBeatState
 		timeTxt.visible = showTime;
 		if(downScroll) timeTxt.y = FlxG.height - 35;
 
-		if(ClientPrefs.getPref('timeBarType') == 'Song Name')
-		{
+		if(ClientPrefs.getPref('timeBarType') == 'Song Name') {
 			timeTxt.text = SONG.song;
 		}
 		updateTime = showTime;
@@ -2995,7 +3006,7 @@ class PlayState extends MusicBeatState
 			case "Micdup": // Stolen from FNF Mic'd Up
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
-			case "DaveAndBambi": // Stolen from Dave And Bambi
+			case "DaveAndBambi" | "Purgatory": // Stolen from Dave And Bambi
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.8)), Std.int(FlxMath.lerp(150, iconP1.height, 0.8)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.8)), Std.int(FlxMath.lerp(150, iconP2.height, 0.8)));
 			case "Custom":
@@ -3138,7 +3149,8 @@ class PlayState extends MusicBeatState
 				var strumGroup:FlxTypedGroup<StrumNote> = playerStrums;
 				if(!daNote.mustPress) strumGroup = opponentStrums;
 
-				if (mania != SONG.mania && !daNote.isSustainNote) {
+				if (mania != SONG.mania) {
+					if (daNote.mania != mania) daNote.mania = mania;
 					daNote.applyManiaChange();
 				}
 
@@ -4053,7 +4065,7 @@ class PlayState extends MusicBeatState
 				+ divider + ' Misses: ' + songMisses + ' '
 				+ divider + ' Rating: $ratingName ($Accuracy%) - $ratingFC';
 			case 'BabyShark':
-				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps/$maxNPS ' + divider : '')
+				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) ' + divider : '')
 				+ (!cpuControlled ? ' Score:' + songScore : ' Bot Score:' + botScore)
 				+ (!cpuControlled ? ' ' + divider + ' Misses:' + songMisses + ' ' : ' ')
 				+ divider + ' Acc.:' + '$Accuracy%'
@@ -4126,7 +4138,7 @@ class PlayState extends MusicBeatState
 			pixelShitPart2 = '-pixel';
 		}
 
-		var comboOffset:Array<Int> = ClientPrefs.getPref('comboOffset');
+		var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 
 		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2));
 		if (RatingTypes == "Static") {
@@ -4139,8 +4151,8 @@ class PlayState extends MusicBeatState
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
 		rating.visible = (!hideHud && showRating);
-		rating.x += comboOffset[0];
-		rating.y -= comboOffset[1];
+		rating.x += comboOffset[0][0];
+		rating.y -= comboOffset[0][1];
 
 		if (daTiming != "") {
 			timing.loadGraphic(Paths.image(pixelShitPart1 + daTiming.toLowerCase() + pixelShitPart2));
@@ -4188,8 +4200,8 @@ class PlayState extends MusicBeatState
 		comboSpr.velocity.y -= FlxG.random.int(140, 160);
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
 		comboSpr.visible = (!hideHud && showCombo);
-		comboSpr.x += comboOffset[4];
-		comboSpr.y -= comboOffset[5];
+		comboSpr.x += comboOffset[2][0];
+		comboSpr.y -= comboOffset[2][1];
 
 		if (ClientPrefs.getPref('ShowMsTiming')) {
 			MsTimingTxt.screenCenter();
@@ -4267,8 +4279,8 @@ class PlayState extends MusicBeatState
 			numScore.x = coolText.x + (43 * daLoop) - 90;
 			numScore.y += 80;
 
-			numScore.x += comboOffset[2];
-			numScore.y -= comboOffset[3];
+			numScore.x += comboOffset[1][0];
+			numScore.y -= comboOffset[1][1];
 
 			if (!ClientPrefs.getPref('comboStacking'))
 				lastScore.push(numScore);
@@ -4498,8 +4510,8 @@ class PlayState extends MusicBeatState
 			// rewritten inputs???
 			notes.forEachAlive(function(daNote:Note) {
 				// hold note functions
-				if (daNote.isSustainNote && dataKeyIsPressed(daNote.noteData) && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit) {
-				   goodNoteHit(daNote);
+				if (strumsBlocked[daNote.noteData] != true && daNote.isSustainNote && dataKeyIsPressed(daNote.noteData % Note.ammo[mania]) && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit) {
+					goodNoteHit(daNote);
 				}
 			});
 
@@ -4511,7 +4523,7 @@ class PlayState extends MusicBeatState
 				}
 				#end
 			}
-			else if (boyfriend.holdTimer > Conductor.stepCrochet * 0.001 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
+			else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * 0.001 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 			{
 				boyfriend.dance();
 			}
@@ -4553,9 +4565,8 @@ class PlayState extends MusicBeatState
 			char = gf;
 		}
 
-		if(char != null && !daNote.noMissAnimation && char.hasMissAnimations)
-		{
-			var animToPlay:String = Note.keysShit.get(mania).get('anims')[daNote.noteData] + 'miss' + daNote.animSuffix;
+		if(char != null && !daNote.noMissAnimation && char.hasMissAnimations) {
+			var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[daNote.noteData] + 'miss' + daNote.animSuffix;
 			char.playAnim(animToPlay, true);
 		}
 
@@ -5096,11 +5107,21 @@ class PlayState extends MusicBeatState
 			case "Psych":
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
-			case "DaveAndBambi":
+			case "DaveAndBambi" | "Purgatory":
 				var funny:Float = (healthBar.percent * 0.01) + 0.01;
 
-				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * funny)), Std.int(iconP2.height - (25 * funny)));
+				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
+
+				if (curBeat % 4 == 0 && (ClientPrefs.getPref('IconBounceType') == "Purgatory")) {
+					FlxTween.cancelTweensOf(iconP1);
+					iconP1.angle = -24;
+					FlxTween.tween(iconP1, {"angle": 0}, .8, {ease: FlxEase.linear});
+					
+					FlxTween.cancelTweensOf(iconP2);
+					iconP2.angle = 24;
+					FlxTween.tween(iconP2, {"angle": 0}, .8, {ease: FlxEase.linear});
+				}
 			case "RadicalOne":
 				FlxTween.cancelTweensOf(iconP1);
 				FlxTween.cancelTweensOf(iconP2);
