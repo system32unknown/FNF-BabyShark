@@ -59,7 +59,9 @@ class HealthIcon extends FlxSprite
 			iconOffsets[0] = (width - 150) / iconnum;
 			iconOffsets[1] = (width - 150) / iconnum;
 			
-			updateHitbox();
+			if (ClientPrefs.getPref('HealthTypes') != 'Vanilla') {
+				updateHitbox();
+			}
 
 			animation.add(char, iconarray, 0, false, isPlayer);
 			animation.play(char);

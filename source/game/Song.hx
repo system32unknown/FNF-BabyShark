@@ -86,7 +86,7 @@ class Song {
 			}
 		}
 
-		if (songJson.mania == null && ClientPrefs.getPref('convertEK'))
+		if (songJson.mania == null && !ClientPrefs.getPref('convertEK'))
         {
             songJson.mania = Note.defaultMania;
         }

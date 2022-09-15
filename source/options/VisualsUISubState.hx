@@ -39,7 +39,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'IconBounceType',
 			'string',
 			'Psych',
-			['Vanilla', 'Psych', 'PsychOld', 'Andromeda', 'DaveAndBambi', 'Micdup', 'RadicalOne', 'Custom']);
+			['Vanilla', 'Psych', 'PsychOld', 'Andromeda', 'DaveAndBambi', 'Purgatory', 'Micdup', 'RadicalOne', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Health Types:',
@@ -107,11 +107,41 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Show Max Combo',
-			'If checked, the Max Combo counter will be shown.',
-			'ShowMaxCombo',
+		if (ClientPrefs.getPref('ShowJudgementCount')) {
+			var option:Option = new Option('Show Max Combo',
+				'If checked, the Max Combo will be shown.',
+				'ShowMaxCombo',
+				'bool',
+				true);
+			addOption(option);
+		}
+
+		var option:Option = new Option('Show Lane Underlay',
+			'If checked, the Lane underlay will be shown.',
+			'ShowLU',
 			'bool',
 			true);
+		addOption(option);
+
+		if (ClientPrefs.getPref('ShowLU')) {
+			var option:Option = new Option('Hide Opponent LU',
+			'If checked, the Opponent LU will be hidden.',
+			'HiddenOppLU',
+			'bool',
+			true);
+			addOption(option);
+		}
+
+		var option:Option = new Option('Lane Underlay Transparency',
+			'How transparent your lane is, higher = more visible.',
+			'LUAlpha',
+			'percent',
+			1);
+		option.scrollSpeed = 1.6;
+		option.minValue = 0.0;
+		option.maxValue = 1;
+		option.changeValue = 0.1;
+		option.decimals = 1;
 		addOption(option);
 
 		var option:Option = new Option('Combo Stacking',
@@ -146,8 +176,7 @@ class VisualsUISubState extends BaseOptionsMenu
 	}
 
 	var changedMusic:Bool = false;
-	function onChangePauseMusic()
-	{
+	function onChangePauseMusic() {
 		if(ClientPrefs.getPref('pauseMusic') == 'None')
 			FlxG.sound.music.volume = 0;
 		else
