@@ -61,30 +61,17 @@ class LoadingState extends MusicBeatState
 		loadBar.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(loadBar);
 		
-		initSongsManifest().onComplete(function (lib) {
-				callbacks = new MultiCallback(onLoad);
-				var introComplete = callbacks.add("introComplete");
-				checkLibrary("shared");
-				if(directory != null && directory.length > 0 && directory != 'shared') {
-					checkLibrary(directory);
-				}
-
-				var fadeTime = 0.5;
-				FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
-				new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
+		initSongsManifest().onComplete(function(lib) {
+			callbacks = new MultiCallback(onLoad);
+			var introComplete = callbacks.add("introComplete");
+			checkLibrary("shared");
+			if(directory != null && directory.length > 0 && directory != 'shared') {
+				checkLibrary(directory);
 			}
-		);
-	}
-	
-	function checkLoadSong(path:String)
-	{
-		if (!Assets.cache.hasSound(path))
-		{
-			var library = Assets.getLibrary("songs");
-			final symbolPath = path.split(":").pop();
-			var callback = callbacks.add("song:" + path);
-			Assets.loadSound(path).onComplete(function (_) { callback(); });
-		}
+			var fadeTime = 0.5;
+			FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
+			new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
+		});
 	}
 	
 	function checkLibrary(library:String) {
@@ -99,13 +86,11 @@ class LoadingState extends MusicBeatState
 		}
 	}
 	
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 		funkay.setGraphicSize(Std.int(0.88 * FlxG.width + 0.9 * (funkay.width - 0.88 * FlxG.width)));
 		funkay.updateHitbox();
-		if(controls.ACCEPT)
-		{
+		if(controls.ACCEPT) {
 			funkay.setGraphicSize(Std.int(funkay.width + 60));
 			funkay.updateHitbox();
 		}
@@ -116,16 +101,14 @@ class LoadingState extends MusicBeatState
 		}
 	}
 	
-	function onLoad()
-	{
+	function onLoad() {
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		
 		MusicBeatState.switchState(target);
 	}
 	
-	static function getSongPath()
-	{
+	static function getSongPath() {
 		return Paths.inst(PlayState.SONG.song);
 	}
 	
@@ -134,13 +117,11 @@ class LoadingState extends MusicBeatState
 		return Paths.voices(PlayState.SONG.song);
 	}
 	
-	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false)
-	{
+	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false) {
 		MusicBeatState.switchState(getNextState(target, stopMusic));
 	}
 	
-	static function getNextState(target:FlxState, stopMusic = false):FlxState
-	{
+	static function getNextState(target:FlxState, stopMusic = false):FlxState {
 		var directory:String = 'shared';
 		var weekDir:String = StageData.forceNextDirectory;
 		StageData.forceNextDirectory = null;

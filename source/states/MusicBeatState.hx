@@ -137,12 +137,6 @@ class MusicBeatState extends FlxUIState {
 		MusicBeatState.switchState(FlxG.state);
 	}
 
-	public static function getState():MusicBeatState {
-		var curState:Dynamic = FlxG.state;
-		var leState:MusicBeatState = curState;
-		return leState;
-	}
-
 	public function stepHit():Void
 	{
 		if (curStep % 4 == 0)

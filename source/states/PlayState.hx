@@ -3013,6 +3013,9 @@ class PlayState extends MusicBeatState
 			case "DaveAndBambi" | "Purgatory": // Stolen from Dave And Bambi
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.8)), Std.int(FlxMath.lerp(150, iconP1.height, 0.8)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.8)), Std.int(FlxMath.lerp(150, iconP2.height, 0.8)));
+			case "GoldenApple": // Stolen from Dave And Bambi
+				iconP1.centerOffsets();
+				iconP2.centerOffsets();
 			case "Custom":
 				callOnLuas('onBounceUpdate', []);
 		}
@@ -3574,10 +3577,8 @@ class PlayState extends MusicBeatState
 			case 'Play Animation':
 				var char:Character = dad;
 				switch(value2.toLowerCase().trim()) {
-					case 'bf' | 'boyfriend':
-						char = boyfriend;
-					case 'gf' | 'girlfriend':
-						char = gf;
+					case 'bf' | 'boyfriend': char = boyfriend;
+					case 'gf' | 'girlfriend': char = gf;
 					default:
 						var val2:Int = Std.parseInt(value2);
 						if(Math.isNaN(val2)) val2 = 0;
@@ -3841,7 +3842,6 @@ class PlayState extends MusicBeatState
 			});
 		}
 	}
-
 
 	public var transitioning = false;
 	public function endSong():Void {
@@ -5132,6 +5132,23 @@ class PlayState extends MusicBeatState
 
 				FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
 				FlxTween.tween(iconP2, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
+			case "GoldenApple":
+				curBeat % 2 == 0 ? {
+					iconP1.scale.set(1.1, 0.8);
+					iconP2.scale.set(1.1, 1.3);
+	
+					FlxTween.angle(iconP1, -15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+					FlxTween.angle(iconP2, 15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+				} : {
+					iconP1.scale.set(1.1, 1.3);
+					iconP2.scale.set(1.1, 0.8);
+	
+					FlxTween.angle(iconP2, -15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+					FlxTween.angle(iconP1, 15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+				}
+	
+				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
+				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 			case "Custom":
 				callOnLuas('onBounceBeat', []);
 		}

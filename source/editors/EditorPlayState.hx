@@ -489,7 +489,6 @@ class EditorPlayState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-
 		if (generatedMusic)
 		{
 			notes.sort(FlxSort.byY, ClientPrefs.getPref('downScroll') ? FlxSort.ASCENDING : FlxSort.DESCENDING);
@@ -535,8 +534,7 @@ class EditorPlayState extends MusicBeatState
 
 				var sortedNotesList:Array<Note> = [];
 				notes.forEachAlive(function(daNote:Note) {
-					if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.isSustainNote)
-					{
+					if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.isSustainNote) {
 						if(daNote.noteData == key)
 							sortedNotesList.push(daNote);
 						canMiss = true;
@@ -615,17 +613,6 @@ class EditorPlayState extends MusicBeatState
 			}
 		}
 		return -1;
-	}
-
-	private function keysArePressed():Bool
-	{
-		for (i in 0...keysArray[songMania].length) {
-			for (j in 0...keysArray[songMania][i].length) {
-				if (FlxG.keys.checkStatus(keysArray[songMania][i][j], PRESSED)) return true;
-			}
-		}
-
-		return false;
 	}
 
 	private function dataKeyIsPressed(data:Int):Bool
@@ -750,7 +737,7 @@ class EditorPlayState extends MusicBeatState
 			pixelShitPart1 = 'pixelUI/';
 			pixelShitPart2 = '-pixel';
 		}
-		var comboOffset:Array<Int> = ClientPrefs.getPref('comboOffset');
+		var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 
 		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
 		rating.screenCenter();
@@ -760,8 +747,8 @@ class EditorPlayState extends MusicBeatState
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
 		rating.visible = !ClientPrefs.getPref('hideHud');
-		rating.x += comboOffset[0];
-		rating.y -= comboOffset[1];
+		rating.x += comboOffset[0][0];
+		rating.y -= comboOffset[0][1];
 
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
 		comboSpr.screenCenter();
@@ -770,8 +757,8 @@ class EditorPlayState extends MusicBeatState
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
 		comboSpr.velocity.y -= FlxG.random.int(140, 160);
 		comboSpr.visible = !ClientPrefs.getPref('hideHud');
-		comboSpr.x += comboOffset[4];
-		comboSpr.y -= comboOffset[5];
+		comboSpr.x += comboOffset[2][0];
+		comboSpr.y -= comboOffset[2][1];
 
 		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
 		if (!PlayState.isPixelStage) {
@@ -805,8 +792,8 @@ class EditorPlayState extends MusicBeatState
 			numScore.x = coolText.x + (43 * daLoop) - 90;
 			numScore.y += 80;
 
-			numScore.x += comboOffset[2];
-			numScore.y -= comboOffset[3];
+			numScore.x += comboOffset[1][0];
+			numScore.y -= comboOffset[1][1];
 
 			if (!PlayState.isPixelStage)
 			{
@@ -849,8 +836,7 @@ class EditorPlayState extends MusicBeatState
 		});
 
 		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
-			onComplete: function(tween:FlxTween)
-			{
+			onComplete: function(tween:FlxTween) {
 				coolText.destroy();
 				comboSpr.destroy();
 				rating.destroy();
@@ -861,7 +847,7 @@ class EditorPlayState extends MusicBeatState
 
 	private function generateStaticArrows(player:Int):Void
 	{
-		for (i in 0...4)
+		for (i in 0...Note.ammo[PlayState.mania])
 		{
 			var targetAlpha:Float = 1;
 			if (player < 1)
@@ -873,14 +859,10 @@ class EditorPlayState extends MusicBeatState
 			var babyArrow:StrumNote = new StrumNote(ClientPrefs.getPref('middleScroll') ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, strumLine.y, i, player);
 			babyArrow.alpha = targetAlpha;
 
-			if (player == 1)
-			{
+			if (player == 1) {
 				playerStrums.add(babyArrow);
-			}
-			else
-			{
-				if(ClientPrefs.getPref('middleScroll'))
-				{
+			} else {
+				if(ClientPrefs.getPref('middleScroll')) {
 					babyArrow.x += 310;
 					if(i > 1) { //Up and Right
 						babyArrow.x += FlxG.width / 2 + 25;

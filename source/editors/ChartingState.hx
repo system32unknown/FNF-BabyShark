@@ -109,7 +109,6 @@ class ChartingState extends MusicBeatState
 	private static var lastSong:String = '';
 
 	var bpmTxt:FlxText;
-
 	var camPos:FlxObject;
 	var strumLine:FlxSprite;
 	var quant:AttachedSprite;
@@ -129,7 +128,6 @@ class ChartingState extends MusicBeatState
 
 	var gridBG:FlxSprite;
 	var nextGridBG:FlxSprite;
-	var gridMult:Int = 2;
 
 	var curEventSelected:Int = 0;
 	var curUndoIndex = 0;

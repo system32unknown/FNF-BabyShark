@@ -23,7 +23,6 @@ import ui.DialogueBoxPsych;
 import ui.Alphabet;
 import states.MusicBeatState;
 import states.TitleState;
-import lime.system.Clipboard;
 #if sys
 import sys.io.File;
 #end
@@ -480,7 +479,7 @@ class DialogueEditorState extends MusicBeatState
 
 	/**
 		* Called when the save file dialog is cancelled.
-		*/
+	*/
 	function onLoadCancel(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
@@ -492,7 +491,7 @@ class DialogueEditorState extends MusicBeatState
 
 	/**
 		* Called if there is an error while saving the gameplay recording.
-		*/
+	*/
 	function onLoadError(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
@@ -525,7 +524,7 @@ class DialogueEditorState extends MusicBeatState
 
 	/**
 		* Called when the save file dialog is cancelled.
-		*/
+	*/
 	function onSaveCancel(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -536,7 +535,7 @@ class DialogueEditorState extends MusicBeatState
 
 	/**
 		* Called if there is an error while saving the gameplay recording.
-		*/
+	*/
 	function onSaveError(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);

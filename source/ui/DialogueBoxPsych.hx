@@ -156,7 +156,6 @@ class DialogueCharacter extends FlxSprite
 // TO DO: Clean code? Maybe? idk
 class DialogueBoxPsych extends FlxSpriteGroup
 {
-	var dialogue:Alphabet;
 	var dialogueList:DialogueFile = null;
 
 	public var finishThing:Void->Void;
@@ -173,7 +172,6 @@ class DialogueBoxPsych extends FlxSpriteGroup
 
 	var textBoxTypes:Array<String> = ['normal', 'angry'];
 	
-	var curCharacter:String = "";
 
 	public function new(dialogueList:DialogueFile, ?song:String = null)
 	{

@@ -80,15 +80,12 @@ class ModsMenuState extends MusicBeatState
 		visibleWhenNoMods.push(noModsTxt);
 
 		var path:String = 'modsList.txt';
-		if(FileSystem.exists(path))
-		{
+		if(FileSystem.exists(path)) {
 			var leMods:Array<String> = CoolUtil.coolTextFile(path);
-			for (i in 0...leMods.length)
-			{
+			for (i in 0...leMods.length) {
 				if(leMods.length > 1 && leMods[0].length > 0) {
 					var modSplit:Array<String> = leMods[i].split('|');
-					if(!Paths.ignoreModFolders.contains(modSplit[0].toLowerCase()))
-					{
+					if(!Paths.ignoreModFolders.contains(modSplit[0].toLowerCase())) {
 						addToModsList([modSplit[0], (modSplit[1] == '1')]);
 					}
 				}
@@ -96,12 +93,9 @@ class ModsMenuState extends MusicBeatState
 		}
 
 		// FIND MOD FOLDERS
-		var boolshit = true;
 		if (FileSystem.exists("modsList.txt")){
-			for (folder in Paths.getModDirectories())
-			{
-				if(!Paths.ignoreModFolders.contains(folder))
-				{
+			for (folder in Paths.getModDirectories()) {
+				if(!Paths.ignoreModFolders.contains(folder)) {
 					addToModsList([folder, true]); //i like it false by default. -bb //Well, i like it True! -Shadow
 				}
 			}
@@ -120,8 +114,7 @@ class ModsMenuState extends MusicBeatState
 		var startX:Int = 1120;
 
 		buttonToggle = new FlxButton(startX, 0, "ON", function() {
-			if(mods[curSelected].restart)
-			{
+			if(mods[curSelected].restart) {
 				needaReset = true;
 			}
 			modsList[curSelected][1] = !modsList[curSelected][1];
@@ -138,8 +131,7 @@ class ModsMenuState extends MusicBeatState
 		setAllLabelsOffset(buttonToggle, -15, 10);
 		startX -= 70;
 
-		buttonUp = new FlxButton(startX, 0, "/\\", function()
-		{
+		buttonUp = new FlxButton(startX, 0, "/\\", function() {
 			moveMod(-1);
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 		});
@@ -167,13 +159,11 @@ class ModsMenuState extends MusicBeatState
 		startX -= 100;
 		buttonTop = new FlxButton(startX, 0, "TOP", function() {
 			var doRestart:Bool = (mods[0].restart || mods[curSelected].restart);
-			for (i in 0...curSelected) //so it shifts to the top instead of replacing the top one
-			{
+			for (i in 0...curSelected)  { //so it shifts to the top instead of replacing the top one
 				moveMod(-1, true);
 			}
 
-			if(doRestart)
-			{
+			if(doRestart) {
 				needaReset = true;
 			}
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
@@ -186,17 +176,13 @@ class ModsMenuState extends MusicBeatState
 		buttonsArray.push(buttonTop);
 		visibleWhenHasMods.push(buttonTop);
 
-
 		startX -= 190;
 		buttonDisableAll = new FlxButton(startX, 0, "DISABLE ALL", function() {
-			for (i in modsList)
-			{
+			for (i in modsList) {
 				i[1] = false;
 			}
-			for (mod in mods)
-			{
-				if (mod.restart)
-				{
+			for (mod in mods) {
+				if (mod.restart) {
 					needaReset = true;
 					break;
 				}
@@ -215,14 +201,11 @@ class ModsMenuState extends MusicBeatState
 
 		startX -= 190;
 		buttonEnableAll = new FlxButton(startX, 0, "ENABLE ALL", function() {
-			for (i in modsList)
-			{
+			for (i in modsList) {
 				i[1] = true;
 			}
-			for (mod in mods)
-			{
-				if (mod.restart)
-				{
+			for (mod in mods) {
+				if (mod.restart) {
 					needaReset = true;
 					break;
 				}
@@ -249,12 +232,9 @@ class ModsMenuState extends MusicBeatState
 		visibleWhenHasMods.push(descriptionTxt);
 
 		var i:Int = 0;
-		var len:Int = modsList.length;
-		while (i < modsList.length)
-		{
+		while (i < modsList.length) {
 			var values:Array<Dynamic> = modsList[i];
-			if(!FileSystem.exists(Paths.mods(values[0])))
-			{
+			if(!FileSystem.exists(Paths.mods(values[0]))) {
 				modsList.remove(modsList[i]);
 				continue;
 			}
@@ -271,21 +251,17 @@ class ModsMenuState extends MusicBeatState
 			//Don't ever cache the icons, it's a waste of loaded memory
 			var loadedIcon:BitmapData = null;
 			var iconToUse:String = Paths.mods(values[0] + '/pack.png');
-			if(FileSystem.exists(iconToUse))
-			{
+			if(FileSystem.exists(iconToUse)) {
 				loadedIcon = BitmapData.fromFile(iconToUse);
 			}
 
 			newMod.icon = new AttachedSprite();
-			if(loadedIcon != null)
-			{
+			if(loadedIcon != null) {
 				newMod.icon.loadGraphic(loadedIcon, true, 150, 150);//animated icon support
 				var totalFrames = Math.floor(loadedIcon.width / 150) * Math.floor(loadedIcon.height / 150);
 				newMod.icon.animation.add("icon", [for (i in 0...totalFrames) i],10);
 				newMod.icon.animation.play("icon");
-			}
-			else
-			{
+			} else {
 				newMod.icon.loadGraphic(Paths.image('unknownMod'));
 			}
 			newMod.icon.sprTracker = newMod.alphabet;
@@ -331,10 +307,8 @@ class ModsMenuState extends MusicBeatState
 		}
 	}
 
-	function moveMod(change:Int, skipResetCheck:Bool = false)
-	{
-		if(mods.length > 1)
-		{
+	function moveMod(change:Int, skipResetCheck:Bool = false) {
+		if(mods.length > 1) {
 			var doRestart:Bool = (mods[0].restart);
 
 			var newPos:Int = curSelected + change;
@@ -360,8 +334,7 @@ class ModsMenuState extends MusicBeatState
 		}
 	}
 
-	function saveTxt()
-	{
+	function saveTxt() {
 		var fileStr:String = '';
 		for (values in modsList) {
 			if(fileStr.length > 0) fileStr += '\n';
@@ -374,7 +347,6 @@ class ModsMenuState extends MusicBeatState
 	}
 
 	var noModsSine:Float = 0;
-	var canExit:Bool = true;
 	override function update(elapsed:Float)
 	{
 		if(noModsTxt.visible)
@@ -383,8 +355,7 @@ class ModsMenuState extends MusicBeatState
 			noModsTxt.alpha = 1 - Math.sin((Math.PI * noModsSine) / 180);
 		}
 
-		if(canExit && controls.BACK)
-		{
+		if(controls.BACK) {
 			if(colorTween != null) {
 				colorTween.cancel();
 			}
@@ -423,10 +394,8 @@ class ModsMenuState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	function setAllLabelsOffset(button:FlxButton, x:Float, y:Float)
-	{
-		for (point in button.labelOffsets)
-		{
+	function setAllLabelsOffset(button:FlxButton, x:Float, y:Float) {
+		for (point in button.labelOffsets) {
 			point.set(x, y);
 		}
 	}
@@ -497,8 +466,7 @@ class ModsMenuState extends MusicBeatState
 	function updatePosition(elapsed:Float = -1)
 	{
 		var i:Int = 0;
-		for (mod in mods)
-		{
+		for (mod in mods) {
 			var intendedPos:Float = (i - curSelected) * 225 + 200;
 			if(i > curSelected) intendedPos += 225;
 			if(elapsed == -1) {
@@ -507,11 +475,9 @@ class ModsMenuState extends MusicBeatState
 				mod.alphabet.y = FlxMath.lerp(mod.alphabet.y, intendedPos, CoolUtil.boundTo(elapsed * 12, 0, 1));
 			}
 
-			if(i == curSelected)
-			{
+			if(i == curSelected) {
 				descriptionTxt.y = mod.alphabet.y + 160;
-				for (button in buttonsArray)
-				{
+				for (button in buttonsArray) {
 					button.y = mod.alphabet.y + 320;
 				}
 			}
@@ -564,8 +530,7 @@ class ModMetadata
 	public var alphabet:Alphabet;
 	public var icon:AttachedSprite;
 
-	public function new(folder:String)
-	{
+	public function new(folder:String) {
 		this.folder = folder;
 		this.name = folder;
 		this.description = "No description provided.";

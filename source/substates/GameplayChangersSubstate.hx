@@ -223,11 +223,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 							switch(curOption.type)
 							{
-								case 'int':
-									curOption.setValue(Math.round(holdValue));
-								
-								case 'float' | 'percent':
-									curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
+								case 'int': curOption.setValue(Math.round(holdValue));	
+								case 'float' | 'percent': curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
 							}
 							updateTextFrom(curOption);
 							curOption.change();

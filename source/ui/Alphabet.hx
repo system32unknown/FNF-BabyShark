@@ -388,20 +388,13 @@ class AlphaCharacter extends FlxSprite
 	{
 		switch (letter)
 		{
-			case '.':
-				animation.addByPrefix(letter, 'PERIOD bold', 24);
-			case "'":
-				animation.addByPrefix(letter, 'APOSTRAPHIE bold', 24);
-			case "?":
-				animation.addByPrefix(letter, 'QUESTION MARK bold', 24);
-			case "!":
-				animation.addByPrefix(letter, 'EXCLAMATION POINT bold', 24);
-			case "(":
-				animation.addByPrefix(letter, 'bold (', 24);
-			case ")":
-				animation.addByPrefix(letter, 'bold )', 24);
-			default:
-				animation.addByPrefix(letter, 'bold ' + letter, 24);
+			case '.': animation.addByPrefix(letter, 'PERIOD bold', 24);
+			case "'": animation.addByPrefix(letter, 'APOSTRAPHIE bold', 24);
+			case "?": animation.addByPrefix(letter, 'QUESTION MARK bold', 24);
+			case "!": animation.addByPrefix(letter, 'EXCLAMATION POINT bold', 24);
+			case "(": animation.addByPrefix(letter, 'bold (', 24);
+			case ")": animation.addByPrefix(letter, 'bold )', 24);
+			default: animation.addByPrefix(letter, 'bold ' + letter, 24);
 		}
 		animation.play(letter);
 		updateHitbox();

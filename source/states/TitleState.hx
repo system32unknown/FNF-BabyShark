@@ -53,7 +53,6 @@ class TitleState extends MusicBeatState
 	var textGroup:FlxGroup;
 	
 	var logoBl:FlxSprite;
-	var logoBlTwo:FlxSprite;
 	var titleLogos:Array<FlxSprite> = [new FlxSprite(100, 1500), new FlxSprite(600, 1500)];
 	var titleText:FlxSprite;
 

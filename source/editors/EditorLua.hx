@@ -17,6 +17,7 @@ import utils.Discord.DiscordClient;
 #end
 import utils.ClientPrefs;
 import game.Conductor;
+import game.Note;
 import states.PlayState;
 
 using StringTools;
@@ -61,7 +62,7 @@ class EditorLua {
 		set('screenWidth', FlxG.width);
 		set('screenHeight', FlxG.height);
 
-		for (i in 0...4) {
+		for (i in 0...Note.ammo[PlayState.mania]) {
 			set('defaultPlayerStrumX' + i, 0);
 			set('defaultPlayerStrumY' + i, 0);
 			set('defaultOpponentStrumX' + i, 0);

@@ -27,6 +27,9 @@ class HealthIcon extends FlxSprite
 	{
 		super.update(elapsed);
 
+		if (ClientPrefs.getPref('IconBounceType') == "DaveAndBambi" || ClientPrefs.getPref('IconBounceType') == "Purgatory" || ClientPrefs.getPref('IconBounceType') == "GoldenApple")
+			offset.set(Std.int(FlxMath.bound(width - 150, 0)),Std.int(FlxMath.bound(height - 150, 0)));
+
 		if (sprTracker != null)
 			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
 	}
@@ -59,7 +62,7 @@ class HealthIcon extends FlxSprite
 			iconOffsets[0] = (width - 150) / iconnum;
 			iconOffsets[1] = (width - 150) / iconnum;
 			
-			if (ClientPrefs.getPref('HealthTypes') != 'Vanilla') {
+			if (ClientPrefs.getPref('HealthTypes') != 'Vanilla' || ClientPrefs.getPref('HealthTypes') != "Exe") {
 				updateHitbox();
 			}
 
@@ -77,10 +80,8 @@ class HealthIcon extends FlxSprite
 	override function updateHitbox()
 	{
 		super.updateHitbox();
-		if (ClientPrefs.getPref('HealthTypes') != "Exe") {
-			offset.x = iconOffsets[0];
-			offset.y = iconOffsets[1];
-		}
+		offset.x = iconOffsets[0];
+		offset.y = iconOffsets[1];
 	}
 
 	public function getCharacter():String {

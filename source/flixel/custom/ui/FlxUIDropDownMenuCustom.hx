@@ -456,7 +456,6 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 		dropPanel = FlxDestroyUtil.destroy(dropPanel);
 
 		list = FlxDestroyUtil.destroyArray(list);
-		// _ui_control_callback = null;
 		callback = null;
 	}
 

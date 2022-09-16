@@ -199,22 +199,19 @@ class DialogueCharacterEditorState extends MusicBeatState
 		tab_group.name = "Character Type";
 
 		leftCheckbox = new FlxUICheckBox(10, 20, null, null, "Left", 100);
-		leftCheckbox.callback = function()
-		{
+		leftCheckbox.callback = function() {
 			character.jsonFile.dialogue_pos = 'left';
 			updateCharTypeBox();
 		};
 
 		centerCheckbox = new FlxUICheckBox(leftCheckbox.x, leftCheckbox.y + 40, null, null, "Center", 100);
-		centerCheckbox.callback = function()
-		{
+		centerCheckbox.callback = function() {
 			character.jsonFile.dialogue_pos = 'center';
 			updateCharTypeBox();
 		};
 
 		rightCheckbox = new FlxUICheckBox(centerCheckbox.x, centerCheckbox.y + 40, null, null, "Right", 100);
-		rightCheckbox.callback = function()
-		{
+		rightCheckbox.callback = function() {
 			character.jsonFile.dialogue_pos = 'right';
 			updateCharTypeBox();
 		};
@@ -279,9 +276,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 					ghostLoop.playAnim(theAnim);
 					ghostIdle.playAnim(theAnim, true);
 				}
-			}
-			else //Add
-			{
+			} else { //Add
 				var newAnim:DialogueAnimArray = {
 					anim: theAnim,
 					loop_name: loopInputText.text,
@@ -402,12 +397,9 @@ class DialogueCharacterEditorState extends MusicBeatState
 		rightCheckbox.checked = false;
 
 		switch(character.jsonFile.dialogue_pos) {
-			case 'left':
-				leftCheckbox.checked = true;
-			case 'center':
-				centerCheckbox.checked = true;
-			case 'right':
-				rightCheckbox.checked = true;
+			case 'left': leftCheckbox.checked = true;
+			case 'center': centerCheckbox.checked = true;
+			case 'right': rightCheckbox.checked = true;
 		}
 		reloadCharacter();
 		updateTextBox();
@@ -745,7 +737,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 	/**
 		* Called when the save file dialog is cancelled.
-		*/
+	*/
 	function onLoadCancel(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
@@ -757,7 +749,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 	/**
 		* Called if there is an error while saving the gameplay recording.
-		*/
+	*/
 	function onLoadError(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
@@ -793,7 +785,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 	/**
 		* Called when the save file dialog is cancelled.
-		*/
+	*/
 	function onSaveCancel(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -804,7 +796,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 	/**
 		* Called if there is an error while saving the gameplay recording.
-		*/
+	*/
 	function onSaveError(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);

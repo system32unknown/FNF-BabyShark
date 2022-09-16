@@ -884,15 +884,6 @@ class CharacterEditorState extends MusicBeatState
 		cameraFollowPointer.setPosition(x, y);
 	}
 
-	function findAnimationByName(name:String):AnimArray {
-		for (anim in char.animationsArray) {
-			if(anim.anim == name) {
-				return anim;
-			}
-		}
-		return null;
-	}
-
 	function reloadCharacterOptions() {
 		if(UI_characterbox != null) {
 			imageInputText.text = char.imageFile;
@@ -1144,9 +1135,9 @@ class CharacterEditorState extends MusicBeatState
 		FlxG.log.notice("Successfully saved file.");
 	}
 
-	/*
+	/**
 		* Called when the save file dialog is cancelled.
-	*/
+	**/
 	function onSaveCancel(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -1155,9 +1146,9 @@ class CharacterEditorState extends MusicBeatState
 		_file = null;
 	}
 
-	/*
-		* Called if there is an error while saving the gameplay recording.
-	*/
+	/**
+	Called if there is an error while saving the gameplay recording.
+	**/
 	function onSaveError(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);

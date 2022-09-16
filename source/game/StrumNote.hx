@@ -92,8 +92,7 @@ class StrumNote extends FlxSprite
 	public function postAddedToGroup() {
 		playAnim('static');
 
-		switch (PlayState.mania)
-		{
+		switch (PlayState.mania) {
 			case 0 | 1 | 2: x += width * noteData;
 			case 3: x += Note.swagWidth * noteData;
 			default: x += ((width - Note.lessX[PlayState.mania]) * noteData);
