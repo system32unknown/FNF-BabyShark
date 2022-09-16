@@ -286,7 +286,6 @@ class PlayState extends MusicBeatState
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
-	private var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 
 	public var inCutscene:Bool = false;
 	public var skipCountdown:Bool = false;
@@ -296,9 +295,9 @@ class PlayState extends MusicBeatState
 	public var opponentCameraOffset:Array<Float> = null;
 	public var girlfriendCameraOffset:Array<Float> = null;
 
+	var storyDifficultyText:String = "";
 	#if desktop
 	// Discord RPC variables
-	var storyDifficultyText:String = "";
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
 	#end
@@ -849,10 +848,8 @@ class PlayState extends MusicBeatState
 
 		switch(curStage)
 		{
-			case 'spooky':
-				add(halloweenWhite);
-			case 'tank':
-				add(foregroundSprites);
+			case 'spooky': add(halloweenWhite);
+			case 'tank': add(foregroundSprites);
 		}
 
 		#if LUA_ALLOWED
@@ -890,7 +887,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-
 
 		// STAGE SCRIPTS
 		#if (MODS_ALLOWED && LUA_ALLOWED)
@@ -1020,21 +1016,23 @@ class PlayState extends MusicBeatState
 		if(downScroll) strumLine.y = FlxG.height - 150;
 		strumLine.scrollFactor.set();
 
-		laneunderlayOpponent = new FlxSprite().makeGraphic(110 * 4 + 50, FlxG.height * 2);
+		laneunderlayOpponent = new FlxSprite().makeGraphic((110 * 4) + 50, FlxG.height * 2);
 		laneunderlayOpponent.alpha = ClientPrefs.getPref('LUAlpha');
 		laneunderlayOpponent.color = FlxColor.BLACK;
 		laneunderlayOpponent.scrollFactor.set();
+		laneunderlayOpponent.cameras = [camHUD];
 
-		laneunderlay = new FlxSprite().makeGraphic(110 * 4 + 50, FlxG.height * 2);
+		laneunderlay = new FlxSprite().makeGraphic((110 * 4) + 50, FlxG.height * 2);
 		laneunderlay.alpha = ClientPrefs.getPref('LUAlpha');
 		laneunderlay.color = FlxColor.BLACK;
 		laneunderlay.scrollFactor.set();
+		laneunderlay.cameras = [camHUD];
 
 		if (ClientPrefs.getPref('ShowLU')) {
-			if (!ClientPrefs.getPref('HiddenOppLU') || !ClientPrefs.getPref('middleScroll')) {
+			if (!ClientPrefs.getPref('HiddenOppLU') && !ClientPrefs.getPref('middleScroll')) {
 				add(laneunderlayOpponent);
 			}
-			add(laneunderlayOpponent);
+			add(laneunderlay);
 		}
 
 		var showTime:Bool = (ClientPrefs.getPref('timeBarType') != 'Disabled');
@@ -1175,7 +1173,6 @@ class PlayState extends MusicBeatState
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
-		healthBar.createGradientBar([dad.getColor()], [boyfriend.getColor()], 1, 0);
 		healthBar.scrollFactor.set();
 		// healthBar
 		healthBar.visible = !hideHud;
@@ -1225,6 +1222,7 @@ class PlayState extends MusicBeatState
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1;
 		botplayTxt.visible = cpuControlled;
+		botplayTxt.screenCenter(X);
 		add(botplayTxt);
 		if (downScroll) {
 			botplayTxt.y = timeBarBG.y - 78;
@@ -1427,8 +1425,7 @@ class PlayState extends MusicBeatState
 	{
 		if(!ClientPrefs.getPref('shaders')) return false;
 
-		if(runtimeShaders.exists(name))
-		{
+		if(runtimeShaders.exists(name)) {
 			FlxG.log.warn('Shader $name was already initialized!');
 			return true;
 		}
@@ -1468,8 +1465,7 @@ class PlayState extends MusicBeatState
 	}
 	#end
 
-	function set_songSpeed(value:Float):Float
-	{
+	function set_songSpeed(value:Float):Float {
 		if(generatedMusic) {
 			var ratio:Float = value / songSpeed; //funny word huh
 			for (note in notes) note.resizeByRatio(ratio);
@@ -1496,8 +1492,8 @@ class PlayState extends MusicBeatState
 	}
 
 	public function reloadHealthBarColors() {
-		healthBar.createGradientBar([dad.getColor()], [boyfriend.getColor()], 1, 0);
-		timeBar.createGradientBar([0xFF000000], [dad.getColor(), boyfriend.getColor()], 1, 90);
+		healthBar.createFilledBar(dad.getColor(), boyfriend.getColor());
+		timeBar.createGradientBar([FlxColor.BLACK], [dad.getColor(), boyfriend.getColor()], 1, 90);
 
 		healthBar.updateBar();
 		timeBar.updateBar();
@@ -2043,6 +2039,13 @@ class PlayState extends MusicBeatState
 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
+
+			laneunderlay.x = playerStrums.members[0].x - 25;
+			laneunderlayOpponent.x = opponentStrums.members[0].x - 25;
+	
+			laneunderlay.screenCenter(Y);
+			laneunderlayOpponent.screenCenter(Y);
+
 			for (i in 0...playerStrums.length) {
 				setOnLuas('defaultPlayerStrumX' + i, playerStrums.members[i].x);
 				setOnLuas('defaultPlayerStrumY' + i, playerStrums.members[i].y);
@@ -2623,6 +2626,7 @@ class PlayState extends MusicBeatState
 			strumLineNotes.add(babyArrow);
 			babyArrow.postAddedToGroup();
 		}
+		
 	}
 
 	function changeMania(newValue:Int)
@@ -3113,7 +3117,6 @@ class PlayState extends MusicBeatState
 		// RESET = Quick Game Over Screen
 		if (!ClientPrefs.getPref('noReset') && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong) {
 			health = 0;
-			trace("RESET = True");
 		}
 		doDeathCheck();
 
@@ -4161,12 +4164,13 @@ class PlayState extends MusicBeatState
 			timing.cameras = [camHUD];
 		}
 		timing.screenCenter();
-		timing.x = rating.x - 120;
-		timing.y = rating.y + 80;
-		timing.visible = (!hideHud && ClientPrefs.getPref('ShowLateEarly'));
+		timing.x = coolText.x - 130;
 		timing.acceleration.y = 550;
 		timing.velocity.x -= FlxG.random.int(0, 10);
 		timing.velocity.y -= FlxG.random.int(140, 175);
+		timing.visible = (!hideHud && ClientPrefs.getPref('ShowLateEarly'));
+		timing.x += comboOffset[3][0];
+		timing.y -= comboOffset[3][1];
 
 		if (ClientPrefs.getPref('ShowMsTiming') && MsTimingTxt != null) {
 			var msTiming = CoolUtil.truncateFloat(noteDiff / 1.0, 3);
@@ -4179,12 +4183,9 @@ class PlayState extends MusicBeatState
 			}
 	
 			switch (daRating.name) {
-				case 'shit' | 'bad':
-					MsTimingTxt.color = FlxColor.RED;
-				case 'good':
-					MsTimingTxt.color = FlxColor.GREEN;
-				case 'sick':
-					MsTimingTxt.color = FlxColor.CYAN;
+				case 'shit' | 'bad': MsTimingTxt.color = FlxColor.RED;
+				case 'good': MsTimingTxt.color = FlxColor.GREEN;
+				case 'sick': MsTimingTxt.color = FlxColor.CYAN;
 			}
 	
 			add(MsTimingTxt);

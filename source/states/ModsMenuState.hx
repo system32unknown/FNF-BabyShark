@@ -321,8 +321,7 @@ class ModsMenuState extends MusicBeatState
 		modsList.push(values);
 	}
 
-	function updateButtonToggle()
-	{
+	function updateButtonToggle() {
 		if (modsList[curSelected][1]) {
 			buttonToggle.label.text = 'ON';
 			buttonToggle.color = FlxColor.GREEN;

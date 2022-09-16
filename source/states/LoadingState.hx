@@ -61,10 +61,7 @@ class LoadingState extends MusicBeatState
 		loadBar.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(loadBar);
 		
-		initSongsManifest().onComplete
-		(
-			function (lib)
-			{
+		initSongsManifest().onComplete(function (lib) {
 				callbacks = new MultiCallback(onLoad);
 				var introComplete = callbacks.add("introComplete");
 				checkLibrary("shared");

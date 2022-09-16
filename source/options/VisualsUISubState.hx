@@ -107,14 +107,12 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		if (ClientPrefs.getPref('ShowJudgementCount')) {
-			var option:Option = new Option('Show Max Combo',
-				'If checked, the Max Combo will be shown.',
-				'ShowMaxCombo',
-				'bool',
-				true);
-			addOption(option);
-		}
+		var option:Option = new Option('Show Max Combo',
+			'If checked, the Max Combo will be shown.',
+			'ShowMaxCombo',
+			'bool',
+			true);
+		addOption(option);
 
 		var option:Option = new Option('Show Lane Underlay',
 			'If checked, the Lane underlay will be shown.',
@@ -123,14 +121,12 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		if (ClientPrefs.getPref('ShowLU')) {
-			var option:Option = new Option('Hide Opponent LU',
+		var option:Option = new Option('Hide Opponent LU',
 			'If checked, the Opponent LU will be hidden.',
 			'HiddenOppLU',
 			'bool',
 			true);
-			addOption(option);
-		}
+		addOption(option);
 
 		var option:Option = new Option('Lane Underlay Transparency',
 			'How transparent your lane is, higher = more visible.',
