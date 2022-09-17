@@ -1,26 +1,17 @@
 package states;
 
-import haxe.io.Path;
-import haxe.Json;
 #if desktop
 import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
-import openfl.display.Bitmap;
-import openfl.display.BitmapData;
-#if MODS_ALLOWED
-import sys.FileSystem;
-import sys.io.File;
-#end
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxMath;
-import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -52,7 +43,7 @@ class TitleState extends MusicBeatState
 	var credGroup:FlxGroup;
 	var textGroup:FlxGroup;
 	
-	var logoBl:FlxSprite;
+	var titlestatebg:FlxBackdrop;
 	var titleLogos:Array<FlxSprite> = [new FlxSprite(100, 1500), new FlxSprite(600, 1500)];
 	var titleText:FlxSprite;
 
@@ -154,6 +145,13 @@ class TitleState extends MusicBeatState
 			logo.updateHitbox();
 			add(logo);
 		}
+
+		titlestatebg = new FlxBackdrop(Paths.image('thechecker'), 0, 0.2, true, true);
+		titlestatebg.velocity.set(0, 110);
+		titlestatebg.updateHitbox();
+		titlestatebg.alpha = 0.5;
+		titlestatebg.screenCenter(X);
+		add(titlestatebg);
 
 		titleText = new FlxSprite(125, 576);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
@@ -328,8 +326,8 @@ class TitleState extends MusicBeatState
 		
 		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
 
-		if(logoBl != null)
-			logoBl.animation.play('bump', true);
+		if(titleLogos[0] != null)
+			titleLogos[0].animation.play('bump', true);
 
 		if(!closedState) {
 			sickBeats++;
@@ -350,6 +348,7 @@ class TitleState extends MusicBeatState
 				case 4:
 					addMoreText('Pinkfong');
 					addMoreText('Nickelodeon');
+					addMoreText('SmartStudy');
 				case 5:
 					deleteCoolText();
 					createCoolText(['Psych Engine EK Created by:']);

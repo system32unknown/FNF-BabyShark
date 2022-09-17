@@ -24,20 +24,13 @@ class OptionsState extends MusicBeatState
 
 	function openSelectedSubstate(label:String) {
 		switch(label) {
-			case 'Note Colors':
-				openSubState(new options.NotesSubState());
-			case 'Controls':
-				openSubState(new options.ControlsSubState());
-			case 'Graphics':
-				openSubState(new options.GraphicsSettingsSubState());
-			case 'Visuals and UI':
-				openSubState(new options.VisualsUISubState());
-			case 'Gameplay':
-				openSubState(new options.GameplaySettingsSubState());
-			case 'Miscellaneous':
-				openSubState(new options.MiscellaneousSubState());
-			case 'Adjust Delay and Combo':
-				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
+			case 'Note Colors': openSubState(new options.NotesSubState());
+			case 'Controls': openSubState(new options.ControlsSubState());
+			case 'Graphics': openSubState(new options.GraphicsSettingsSubState());
+			case 'Visuals and UI': openSubState(new options.VisualsUISubState());
+			case 'Gameplay': openSubState(new options.GameplaySettingsSubState());
+			case 'Miscellaneous': openSubState(new options.MiscellaneousSubState());
+			case 'Adjust Delay and Combo': LoadingState.loadAndSwitchState(new options.NoteOffsetState());
 		}
 	}
 
@@ -62,15 +55,15 @@ class OptionsState extends MusicBeatState
 
 		for (i in 0...options.length)
 		{
-			var optionText:Alphabet = new Alphabet(0, 0, options[i], true, false);
+			var optionText:Alphabet = new Alphabet(0, 0, options[i], true);
 			optionText.screenCenter();
 			optionText.y += (100 * (i - (options.length / 2))) + 50;
 			grpOptions.add(optionText);
 		}
 
-		selectorLeft = new Alphabet(0, 0, '>', true, false);
+		selectorLeft = new Alphabet(0, 0, '>', true);
 		add(selectorLeft);
-		selectorRight = new Alphabet(0, 0, '<', true, false);
+		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
 		changeSelection();

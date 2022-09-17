@@ -1568,6 +1568,7 @@ class PlayState extends MusicBeatState
 	public function getLuaObject(tag:String, text:Bool=true):FlxSprite {
 		if(modChartSprites.exists(tag)) return modChartSprites.get(tag);
 		if(text && modchartTexts.exists(tag)) return modchartTexts.get(tag);
+		if(variables.exists(tag)) return variables.get(tag);
 		return null;
 	}
 
@@ -2040,8 +2041,8 @@ class PlayState extends MusicBeatState
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 
-			laneunderlay.x = playerStrums.members[0].x - 25;
-			laneunderlayOpponent.x = opponentStrums.members[0].x - 25;
+			laneunderlay.x = playerStrums.members[0].x - 24;
+			laneunderlayOpponent.x = opponentStrums.members[0].x - 24;
 	
 			laneunderlay.screenCenter(Y);
 			laneunderlayOpponent.screenCenter(Y);
@@ -3093,13 +3094,12 @@ class PlayState extends MusicBeatState
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
 					if (secondsTotal < 0) secondsTotal = 0;
 
+					pauseTimeTxt = FlxStringUtil.formatTime(secondsTotal, false) + " / " + FlxStringUtil.formatTime(Math.floor(songLength / 1000), false);
 					if (timebarType != 'Song Name')
 						switch (timebarType) {
 							case 'Time Left' | 'Time Elapsed': timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
-							case 'ElapsedPosition' | 'LeftPosition': timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false) + " / " + FlxStringUtil.formatTime(Math.floor(songLength / 1000), false);
-							case 'NameLeft' | 'NameElapsed':
-								pauseTimeTxt = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal, false) + ")";
-								timeTxt.text = pauseTimeTxt;
+							case 'ElapsedPosition' | 'LeftPosition': timeTxt.text = pauseTimeTxt;
+							case 'NameLeft' | 'NameElapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal, false) + ")";
 						}
 				}
 			}

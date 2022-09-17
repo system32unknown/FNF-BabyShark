@@ -31,7 +31,7 @@ class HealthIcon extends FlxSprite
 			offset.set(Std.int(FlxMath.bound(width - 150, 0)),Std.int(FlxMath.bound(height - 150, 0)));
 
 		if (sprTracker != null)
-			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
+			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 	}
 
 	private var iconOffsets:Array<Float> = [0, 0];

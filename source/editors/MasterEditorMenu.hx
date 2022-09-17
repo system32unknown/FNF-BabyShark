@@ -54,10 +54,11 @@ class MasterEditorMenu extends MusicBeatState {
 		add(grpTexts);
 
 		for (i in 0...options.length) {
-			var leText:Alphabet = new Alphabet(0, (70 * i) + 30, options[i], true, false);
+			var leText:Alphabet = new Alphabet(90, 320, options[i], true);
 			leText.isMenuItem = true;
 			leText.targetY = i;
 			grpTexts.add(leText);
+			leText.snapToPosition();
 		}
 		
 		#if MODS_ALLOWED
@@ -107,18 +108,12 @@ class MasterEditorMenu extends MusicBeatState {
 
 		if (controls.ACCEPT) {
 			switch(options[curSelected]) {
-				case 'Character Editor':
-					LoadingState.loadAndSwitchState(new CharacterEditorState(Character.DEFAULT_CHARACTER, false));
-				case 'Week Editor':
-					MusicBeatState.switchState(new WeekEditorState());
-				case 'Menu Character Editor':
-					MusicBeatState.switchState(new MenuCharacterEditorState());
-				case 'Dialogue Portrait Editor':
-					LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), false);
-				case 'Dialogue Editor':
-					LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
-				case 'Chart Editor'://felt it would be cool maybe
-					LoadingState.loadAndSwitchState(new ChartingState(), false);
+				case 'Character Editor': LoadingState.loadAndSwitchState(new CharacterEditorState(Character.DEFAULT_CHARACTER, false));
+				case 'Week Editor': MusicBeatState.switchState(new WeekEditorState());
+				case 'Menu Character Editor': MusicBeatState.switchState(new MenuCharacterEditorState());
+				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), false);
+				case 'Dialogue Editor' :LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
+				case 'Chart Editor': LoadingState.loadAndSwitchState(new ChartingState(), false); //felt it would be cool maybe
 			}
 			FlxG.sound.music.volume = 0;
 			#if PRELOAD_ALL

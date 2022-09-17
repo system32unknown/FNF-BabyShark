@@ -93,7 +93,7 @@ class Conductor
 	}
 
 	public static function getBeatRounded(time:Float):Int{
-		return Math.floor(getStepRounded(time)/4);
+		return Math.floor(getStepRounded(time) / 4);
 	}
 
 	public static function mapBPMChanges(song:SwagSong)

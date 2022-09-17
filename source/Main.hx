@@ -105,14 +105,10 @@ class Main extends Sprite
 
 		path = "./crash/" + "PsychEngine_" + dateNow + ".txt";
 
-		for (stackItem in callStack)
-		{
-			switch (stackItem)
-			{
-				case FilePos(s, file, line, column):
-					errMsg += file + " (line " + line + ")\n";
-				default:
-					Sys.println(stackItem);
+		for (stackItem in callStack) {
+			switch (stackItem) {
+				case FilePos(s, file, line, column): errMsg += file + " (line " + line + ")\n";
+				default: Sys.println(stackItem);
 			}
 		}
 

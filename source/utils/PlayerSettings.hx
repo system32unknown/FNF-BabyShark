@@ -1,7 +1,5 @@
 package utils;
 
-import utils.Controls;
-
 class PlayerSettings
 {
 	static public var player(default, null):PlayerSettings;
