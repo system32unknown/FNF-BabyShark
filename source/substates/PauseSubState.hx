@@ -104,6 +104,13 @@ class PauseSubState extends MusicBeatSubstate
 		blueballedTxt.updateHitbox();
 		add(blueballedTxt);
 
+		var timerTxt:FlxText = new FlxText(20, 15 + 96, 0, "", 32);
+		timerTxt.text = PlayState.pauseTimeTxt;
+		timerTxt.scrollFactor.set();
+		timerTxt.setFormat(Paths.font('vcr.ttf'), 32);
+		timerTxt.updateHitbox();
+		add(timerTxt);
+
 		practiceText = new FlxText(20, 15 + 101, 0, "PRACTICE MODE", 32);
 		practiceText.scrollFactor.set();
 		practiceText.setFormat(Paths.font('vcr.ttf'), 32);

@@ -131,10 +131,8 @@ class Note extends FlxSprite
 	var defaultWidth:Float = 0;
 	var defaultHeight:Float = 0;
 
-	public function resizeByRatio(ratio:Float) //haha funny twitter shit
-	{
-		if(isSustainNote && !animation.curAnim.name.endsWith('end'))
-		{
+	public function resizeByRatio(ratio:Float) { //haha funny twitter shit
+		if(isSustainNote && !animation.curAnim.name.endsWith('end')) {
 			scale.y *= ratio;
 			updateHitbox();
 		}

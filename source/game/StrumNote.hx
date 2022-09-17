@@ -94,15 +94,15 @@ class StrumNote extends FlxSprite
 
 		switch (PlayState.mania) {
 			case 0 | 1 | 2: x += width * noteData;
-			case 3: x += Note.swagWidth * noteData;
+			case 3: x += (Note.swagWidth * noteData);
 			default: x += ((width - Note.lessX[PlayState.mania]) * noteData);
 		}
 
 		x += Note.xtra[PlayState.mania];
-
 		x += 50;
 		x += ((FlxG.width / 2) * player);
 		ID = noteData;
+		
 		x -= Note.posRest[PlayState.mania];
 	}
 

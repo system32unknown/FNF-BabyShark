@@ -450,21 +450,15 @@ class AlphaCharacter extends FlxSprite
 	{
 		switch (letter)
 		{
-			case '#':
-				animation.addByPrefix(letter, 'hashtag', 24);
-			case '.':
-				animation.addByPrefix(letter, 'period', 24);
+			case '#': animation.addByPrefix(letter, 'hashtag', 24);
+			case '.': animation.addByPrefix(letter, 'period', 24);
 			case "'":
 				animation.addByPrefix(letter, 'apostraphie', 24);
 				y -= 50;
-			case "?":
-				animation.addByPrefix(letter, 'question mark', 24);
-			case "!":
-				animation.addByPrefix(letter, 'exclamation point', 24);
-			case ",":
-				animation.addByPrefix(letter, 'comma', 24);
-			default:
-				animation.addByPrefix(letter, letter, 24);
+			case "?": animation.addByPrefix(letter, 'question mark', 24);
+			case "!": animation.addByPrefix(letter, 'exclamation point', 24);
+			case ",": animation.addByPrefix(letter, 'comma', 24);
+			default: animation.addByPrefix(letter, letter, 24);
 		}
 		animation.play(letter);
 
@@ -474,10 +468,8 @@ class AlphaCharacter extends FlxSprite
 		y += row * 60;
 		switch (letter)
 		{
-			case "'":
-				y -= 20;
-			case '-':
-				y -= 16;
+			case "'": y -= 20;
+			case '-': y -= 16;
 		}
 	}
 }

@@ -366,16 +366,6 @@ class Controls extends FlxActionSet
 	}
 	#end
 
-	// inline
-	public function checkByName(name:Action):Bool
-	{
-		#if debug
-		if (!byName.exists(name))
-			throw 'Invalid name: $name';
-		#end
-		return byName[name].check();
-	}
-
 	public function getDialogueName(action:FlxActionDigital):String
 	{
 		var input = action.inputs[0];

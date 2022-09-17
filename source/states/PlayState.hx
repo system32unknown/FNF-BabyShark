@@ -281,6 +281,8 @@ class PlayState extends MusicBeatState
 	public static var seenCutscene:Bool = false;
 	public static var deathCounter:Int = 0;
 
+	public static var pauseTimeTxt:String = "00:00 / 00:00";
+
 	public var defaultCamZoom:Float = 1.05;
 	public var defaultHudCamZoom:Float = 1.0;
 
@@ -1196,8 +1198,6 @@ class PlayState extends MusicBeatState
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		switch (ClientPrefs.getPref('ScoreTextStyle')) {
-			case 'FPSPlus':
-				scoreTxt.size = 22;
 			case 'Psych':
 				scoreTxt.size = 20;
 		}
@@ -2603,6 +2603,7 @@ class PlayState extends MusicBeatState
 
 			var babyArrow:StrumNote = new StrumNote(ClientPrefs.getPref('middleScroll') ? STRUM_X_MIDDLESCROLL : STRUM_X, strumLine.y, i, player);
 			babyArrow.downScroll = downScroll;
+			babyArrow.scrollFactor.set();
 			if (!isStoryMode && !skipArrowStartTween) {
 				babyArrow.alpha = 0;
 				FlxTween.tween(babyArrow, {alpha: targetAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
@@ -3094,14 +3095,11 @@ class PlayState extends MusicBeatState
 
 					if (timebarType != 'Song Name')
 						switch (timebarType) {
-							case 'Time Left' | 'Time Elapsed':
-								timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
-
-							case 'ElapsedPosition' | 'LeftPosition':
-								timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false) + " / " + FlxStringUtil.formatTime(Math.floor(songLength / 1000), false);
-
+							case 'Time Left' | 'Time Elapsed': timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
+							case 'ElapsedPosition' | 'LeftPosition': timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false) + " / " + FlxStringUtil.formatTime(Math.floor(songLength / 1000), false);
 							case 'NameLeft' | 'NameElapsed':
-								timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal, false) + ")";
+								pauseTimeTxt = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal, false) + ")";
+								timeTxt.text = pauseTimeTxt;
 						}
 				}
 			}
@@ -4073,11 +4071,6 @@ class PlayState extends MusicBeatState
 				+ (!cpuControlled ? ' ' + divider + ' Misses:' + songMisses + ' ' : ' ')
 				+ divider + ' Acc.:' + '$Accuracy%'
 				+ (ratingName != '?' ? ' [$ratingName, $Ranks] - $ratingFC' : ' [N/A, N/A] - ?');
-			case 'FPSPlus':
-				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps(Max:$maxNPS) ' + divider : '')
-				+ ' Score:' + (!cpuControlled ? songScore : botScore) + ' '
-				+ divider + ' Misses:' + songMisses + ' '
-				+ divider + ' Accuracy:$Accuracy%';
 		}
 	}
 

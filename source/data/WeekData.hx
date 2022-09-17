@@ -7,7 +7,6 @@ import sys.FileSystem;
 import haxe.Json;
 import utils.CoolUtil;
 import states.PlayState;
-import substates.MusicBeatSubstate;
 
 using StringTools;
 
