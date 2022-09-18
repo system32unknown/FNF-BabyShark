@@ -49,6 +49,7 @@ class ClientPrefs {
 		'noReset' => false,
 		'healthBarAlpha' => 1,
 		'hitsoundVolume' => 0,
+		'hitsoundTypes' => 'Psych',
 		'ShowWatermark' => true,
 		'pauseMusic' => 'Tea Time',
 		// Gameplay settings

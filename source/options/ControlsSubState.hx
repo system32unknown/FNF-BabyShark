@@ -20,7 +20,6 @@ class ControlsSubState extends MusicBeatSubstate {
 	private static var curAlt:Bool = false;
 
 	private static var defaultKey:String = 'Reset to Default Keys';
-	private var bindLength:Int = 0;
 	var holdTime:Float = 0;
 
 	var optionShit:Array<Dynamic> = [
@@ -173,7 +172,6 @@ class ControlsSubState extends MusicBeatSubstate {
 		changeSelection();
 	}
 
-	var leaving:Bool = false;
 	var bindingTime:Float = 0;
 	override function update(elapsed:Float) {
 		if(!rebindingKey) {

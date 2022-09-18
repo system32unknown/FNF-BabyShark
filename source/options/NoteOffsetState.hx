@@ -510,8 +510,7 @@ class NoteOffsetState extends MusicBeatState
 		timeTxt.text = 'Current offset: ' + Math.floor(barPercent) + ' ms';
 	}
 
-	function updateMode()
-	{
+	function updateMode() {
 		rating.visible = onComboMenu;
 		comboNums.visible = onComboMenu;
 		combo.visible = onComboMenu;

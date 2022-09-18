@@ -150,8 +150,7 @@ class Alphabet extends FlxSpriteGroup
 
 	override function update(elapsed:Float)
 	{
-		if (isMenuItem)
-		{
+		if (isMenuItem) {
 			var lerpVal:Float = CoolUtil.boundTo(elapsed * 9.6, 0, 1);
 			if(changeX)
 				x = FlxMath.lerp(x, (targetY * distancePerItem.x) + startPosition.x, lerpVal);
@@ -161,10 +160,8 @@ class Alphabet extends FlxSpriteGroup
 		super.update(elapsed);
 	}
 
-	public function snapToPosition()
-	{
-		if (isMenuItem)
-		{
+	public function snapToPosition() {
+		if (isMenuItem) {
 			if(changeX)
 				x = (targetY * distancePerItem.x) + startPosition.x;
 			if(changeY)
@@ -172,7 +169,6 @@ class Alphabet extends FlxSpriteGroup
 		}
 	}
 
-	private static var LONG_TEXT_ADD:Float = 34; //text is over 2 rows long, make it go up a bit
 	private static var Y_PER_ROW:Float = 85;
 	private function createLetters(newText:String)
 	{
@@ -181,21 +177,15 @@ class Alphabet extends FlxSpriteGroup
 		var xPos:Float = 0;
 		var rowData:Array<Float> = [];
 		rows = 0;
-		for (character in newText.split(''))
-		{
-			
-			if(character != '\n')
-			{
+		for (character in newText.split('')) {
+			if(character != '\n') {
 				var spaceChar:Bool = (character == " " || (bold && character == "_"));
 				if (spaceChar) consecutiveSpaces++;
 
-				if (AlphaCharacter.allLetters.exists(character.toLowerCase()) && (!bold || !spaceChar))
-				{
-					if (consecutiveSpaces > 0)
-					{
+				if (AlphaCharacter.allLetters.exists(character.toLowerCase()) && (!bold || !spaceChar)) {
+					if (consecutiveSpaces > 0) {
 						xPos += 28 * consecutiveSpaces * scaleX;
-						if(!bold && xPos >= FlxG.width * 0.65)
-						{
+						if(!bold && xPos >= FlxG.width * 0.65) {
 							xPos = 0;
 							rows++;
 						}
@@ -391,8 +381,7 @@ class AlphaCharacter extends FlxSprite
 	{
 		if (animation.curAnim == null) return;
 
-		if(!animation.curAnim.name.endsWith('bold'))
-		{
+		if(!animation.curAnim.name.endsWith('bold')) {
 			offset.y += -(110 - height);
 		}
 	}

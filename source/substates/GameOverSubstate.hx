@@ -2,6 +2,9 @@ package substates;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
@@ -17,6 +20,9 @@ import data.WeekData;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
+	var restartsprite:FlxSprite;
+	var restarttween:FlxTween = null;
+
 	public var boyfriend:Boyfriend;
 	var camFollow:FlxPoint;
 	var camFollowPos:FlxObject;
@@ -37,10 +43,18 @@ class GameOverSubstate extends MusicBeatSubstate
 		endSoundName = 'gameOverEnd';
 	}
 
-	override function create()
-	{
+	override function create() {
 		instance = this;
+
+		restartsprite = new FlxSprite(500, 50).loadGraphic(Paths.image('restart'));
+		restartsprite.setGraphicSize(Std.int(restartsprite.width * 0.7));
+		restartsprite.updateHitbox();
+		restartsprite.antialiasing = true;
+		add(restartsprite);
+
 		PlayState.instance.callOnLuas('onGameOverStart', []);
+		if (restarttween == null)
+			restarttween = FlxTween.tween(restartsprite, {y: restartsprite.y + 40}, 5, {ease: FlxEase.quartInOut});
 
 		super.create();
 	}
@@ -83,8 +97,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 		}
 
-		if (controls.ACCEPT)
-		{
+		if (controls.ACCEPT) {
 			endBullshit();
 		}
 
@@ -116,8 +129,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 			if (boyfriend.animation.curAnim.finished && !playingDeathSound)
 			{
-				if (PlayState.SONG.stage == 'tank')
-				{
+				if (PlayState.SONG.stage == 'tank') {
 					playingDeathSound = true;
 					coolStartDeath(0.2);
 
@@ -126,9 +138,7 @@ class GameOverSubstate extends MusicBeatSubstate
 							FlxG.sound.music.fadeIn(0.2, 1, 4);
 						}
 					});
-				}
-				else
-				{
+				} else {
 					coolStartDeath();
 				}
 				boyfriend.startedDeath = true;
@@ -143,15 +153,21 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	var isEnding:Bool = false;
 
-	function coolStartDeath(?volume:Float = 1):Void
-	{
+	function coolStartDeath(?volume:Float = 1):Void {
 		FlxG.sound.playMusic(Paths.music(loopSoundName), volume);
 	}
 
 	function endBullshit():Void
 	{
-		if (!isEnding)
-		{
+		if (!isEnding) {
+			if (restarttween != null)
+				restarttween = FlxTween.tween(restartsprite, {y: restartsprite.y - 80}, 7, {ease: FlxEase.backInOut,
+					onComplete: function(_) {
+						restarttween = null;
+						restartsprite.destroy();
+					}
+				});
+
 			isEnding = true;
 			boyfriend.playAnim('deathConfirm', true);
 			FlxG.sound.music.stop();

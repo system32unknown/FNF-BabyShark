@@ -61,6 +61,15 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			false);
 		addOption(option);
 
+		var option:Option = new Option('Hitsound Type',
+			"What should the hitsounds like?",
+			'hitsoundTypes',
+			'string',
+			'Psych',
+			['Tick', 'Snap', 'DaveAndBambi']);
+		addOption(option);
+		option.onChange = onChangeHitsoundVolume;
+
 		var option:Option = new Option('Hitsound Volume',
 			'Funny notes does \"Tick!\" when you hit them."',
 			'hitsoundVolume',
@@ -148,8 +157,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		super();
 	}
 
-	function onChangeHitsoundVolume()
-	{
-		FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.getPref('hitsoundVolume'));
+	function onChangeHitsoundVolume() {
+		FlxG.sound.play(Paths.sound('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}'), ClientPrefs.getPref('hitsoundVolume'));
 	}
 }

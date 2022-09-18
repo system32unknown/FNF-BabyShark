@@ -12,15 +12,13 @@ class TypedAlphabet extends Alphabet
 	public var sound:String = 'dialogue';
 	public var volume:Float = 1;
 
-	public function new(x:Float, y:Float, text:String = "", ?delay:Float = 0.05, ?bold:Bool = false)
-	{
+	public function new(x:Float, y:Float, text:String = "", ?delay:Float = 0.05, ?bold:Bool = false) {
 		super(x, y, text, bold);
 
 		this.delay = delay;
 	}
 
-	override private function set_text(newText:String)
-	{
+	override private function set_text(newText:String) {
 		super.set_text(newText);
 
 		resetDialogue();
@@ -29,10 +27,8 @@ class TypedAlphabet extends Alphabet
 
 	private var _curLetter:Int = -1;
 	private var _timeToUpdate:Float = 0;
-	override function update(elapsed:Float)
-	{
-		if(!finishedText)
-		{
+	override function update(elapsed:Float) {
+		if(!finishedText) {
 			var playedSound:Bool = false;
 			_timeToUpdate += elapsed;
 			while(_timeToUpdate >= delay) {
@@ -56,8 +52,7 @@ class TypedAlphabet extends Alphabet
 		super.update(elapsed);
 	}
 
-	public function showCharacterUpTo(upTo:Int)
-	{
+	public function showCharacterUpTo(upTo:Int) {
 		var start:Int = _curLetter;
 		if(start < 0) start = 0;
 
@@ -66,8 +61,7 @@ class TypedAlphabet extends Alphabet
 		}
 	}
 
-	public function resetDialogue()
-	{
+	public function resetDialogue() {
 		_curLetter = -1;
 		finishedText = false;
 		_timeToUpdate = 0;
@@ -76,8 +70,7 @@ class TypedAlphabet extends Alphabet
 		}
 	}
 
-	public function finishText()
-	{
+	public function finishText() {
 		if(finishedText) return;
 
 		showCharacterUpTo(letters.length - 1);

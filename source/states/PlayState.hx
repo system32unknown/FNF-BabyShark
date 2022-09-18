@@ -1018,13 +1018,13 @@ class PlayState extends MusicBeatState
 		if(downScroll) strumLine.y = FlxG.height - 150;
 		strumLine.scrollFactor.set();
 
-		laneunderlayOpponent = new FlxSprite().makeGraphic((110 * 4) + 50, FlxG.height * 2);
+		laneunderlayOpponent = new FlxSprite().makeGraphic(490, FlxG.height * 2);
 		laneunderlayOpponent.alpha = ClientPrefs.getPref('LUAlpha');
 		laneunderlayOpponent.color = FlxColor.BLACK;
 		laneunderlayOpponent.scrollFactor.set();
 		laneunderlayOpponent.cameras = [camHUD];
 
-		laneunderlay = new FlxSprite().makeGraphic((110 * 4) + 50, FlxG.height * 2);
+		laneunderlay = new FlxSprite().makeGraphic(490, FlxG.height * 2);
 		laneunderlay.alpha = ClientPrefs.getPref('LUAlpha');
 		laneunderlay.color = FlxColor.BLACK;
 		laneunderlay.scrollFactor.set();
@@ -1360,7 +1360,7 @@ class PlayState extends MusicBeatState
 		RecalculateRating();
 
 		//PRECACHING MISS SOUNDS BECAUSE I THINK THEY CAN LAG PEOPLE AND FUCK THEM UP IDK HOW HAXE WORKS
-		if(ClientPrefs.getPref('hitsoundVolume') > 0) precacheList.set('hitsound', 'sound');
+		if(ClientPrefs.getPref('hitsoundVolume') > 0) precacheList.set('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}', 'sound');
 		precacheList.set('missnote1', 'sound');
 		precacheList.set('missnote2', 'sound');
 		precacheList.set('missnote3', 'sound');
@@ -4692,9 +4692,8 @@ class PlayState extends MusicBeatState
 		{
 			if(cpuControlled && (note.ignoreNote || note.hitCausesMiss)) return;
 
-			if (ClientPrefs.getPref('hitsoundVolume') > 0 && !note.hitsoundDisabled)
-			{
-				FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.getPref('hitsoundVolume'));
+			if (ClientPrefs.getPref('hitsoundVolume') > 0 && !note.hitsoundDisabled) {
+				FlxG.sound.play(Paths.sound('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}'), ClientPrefs.getPref('hitsoundVolume'));
 			}
 
 			var strumGroup:FlxTypedGroup<StrumNote> = playerStrums;
@@ -4741,8 +4740,7 @@ class PlayState extends MusicBeatState
 					spawnNoteSplashOnNote(note);
 				}
 
-				if(!note.noMissAnimation)
-				{
+				if(!note.noMissAnimation) {
 					switch(note.noteType) {
 						case 'Hurt Note': //Hurt note
 							if(boyfriend.animation.getByName('hurt') != null) {
@@ -4753,8 +4751,7 @@ class PlayState extends MusicBeatState
 				}
 
 				note.wasGoodHit = true;
-				if (!note.isSustainNote)
-				{
+				if (!note.isSustainNote) {
 					note.kill();
 					notes.remove(note, true);
 					note.destroy();
@@ -4773,16 +4770,12 @@ class PlayState extends MusicBeatState
 			if(!note.noAnimation) {
 				var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
 
-				if(note.gfNote)
-				{
-					if(gf != null)
-					{
+				if(note.gfNote) {
+					if(gf != null) {
 						gf.playAnim(animToPlay + note.animSuffix, true);
 						gf.holdTimer = 0;
 					}
-				}
-				else
-				{
+				} else {
 					boyfriend.playAnim(animToPlay + note.animSuffix, true);
 					boyfriend.holdTimer = 0;
 				}
@@ -4849,9 +4842,7 @@ class PlayState extends MusicBeatState
 		var hue:Float = 0;
 		var sat:Float = 0;
 		var brt:Float = 0;
-		if (data > -1 && data < arrowHSV.length)
-		{
-
+		if (data > -1 && data < arrowHSV.length) {
 			var hue:Float = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[data] % Note.ammo[mania])][0] / 360;
 			var sat:Float = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[data] % Note.ammo[mania])][1] / 100;
 			var brt:Float = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[data] % Note.ammo[mania])][2] / 100;

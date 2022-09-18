@@ -193,7 +193,7 @@ class CreditsState extends MusicBeatState
 
 				if (upP)
 				{
-					changeSelection(shiftMult);
+					changeSelection(-shiftMult);
 					holdTime = 0;
 				}
 				if (downP)
