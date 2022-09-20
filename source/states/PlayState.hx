@@ -209,7 +209,6 @@ class PlayState extends MusicBeatState
 	public var cameraSpeed:Float = 1;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
-	var dialogueJson:DialogueBoxPsych.DialogueFile = null;
 
 	var dadbattleBlack:BGSprite;
 	var dadbattleLight:BGSprite;
@@ -265,7 +264,7 @@ class PlayState extends MusicBeatState
 	public var scoreTxt:FlxText;
 	var scoreTxtTween:FlxTween;
 
-	var divider:String = "|";
+	public var divider:String = "|";
 	
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
@@ -974,8 +973,7 @@ class PlayState extends MusicBeatState
 		startCharacterLua(boyfriend.curCharacter);
 
 		var camPos:FlxPoint = new FlxPoint(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
-		if(gf != null)
-		{
+		if(gf != null) {
 			camPos.x += gf.getGraphicMidpoint().x + gf.cameraPosition[0];
 			camPos.y += gf.getGraphicMidpoint().y + gf.cameraPosition[1];
 		}
@@ -995,11 +993,6 @@ class PlayState extends MusicBeatState
 			case 'schoolEvil':
 				var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069); //nice
 				addBehindDad(evilTrail);
-		}
-
-		var file:String = Paths.json(songName + '/dialogue'); //Checks for json/Psych Engine dialogue
-		if (OpenFlAssets.exists(file)) {
-			dialogueJson = DialogueBoxPsych.parseDialogue(file);
 		}
 
 		var file:String = Paths.txt(songName + '/' + songName + 'Dialogue'); //Checks for vanilla/Senpai dialogue
@@ -1112,22 +1105,17 @@ class PlayState extends MusicBeatState
 		{
 			#if MODS_ALLOWED
 			var luaToLoad:String = Paths.modFolders('custom_events/' + event + '.lua');
-			if(FileSystem.exists(luaToLoad))
-			{
+			if(FileSystem.exists(luaToLoad)) {
 				luaArray.push(new FunkinLua(luaToLoad));
-			}
-			else
-			{
+			} else {
 				luaToLoad = Paths.getPreloadPath('custom_events/' + event + '.lua');
-				if(FileSystem.exists(luaToLoad))
-				{
+				if(FileSystem.exists(luaToLoad)) {
 					luaArray.push(new FunkinLua(luaToLoad));
 				}
 			}
 			#elseif sys
 			var luaToLoad:String = Paths.getPreloadPath('custom_events/' + event + '.lua');
-			if(OpenFlAssets.exists(luaToLoad))
-			{
+			if(OpenFlAssets.exists(luaToLoad)) {
 				luaArray.push(new FunkinLua(luaToLoad));
 			}
 			#end
@@ -1142,13 +1130,11 @@ class PlayState extends MusicBeatState
 		camFollowPos = new FlxObject(0, 0, 1, 1);
 
 		snapCamFollowToPos(camPos.x, camPos.y);
-		if (prevCamFollow != null)
-		{
+		if (prevCamFollow != null) {
 			camFollow = prevCamFollow;
 			prevCamFollow = null;
 		}
-		if (prevCamFollowPos != null)
-		{
+		if (prevCamFollowPos != null) {
 			camFollowPos = prevCamFollowPos;
 			prevCamFollowPos = null;
 		}
@@ -1198,8 +1184,7 @@ class PlayState extends MusicBeatState
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		switch (ClientPrefs.getPref('ScoreTextStyle')) {
-			case 'Psych':
-				scoreTxt.size = 20;
+			case 'Psych': scoreTxt.size = 20;
 		}
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1;
@@ -1407,8 +1392,7 @@ class PlayState extends MusicBeatState
 		if(!ClientPrefs.getPref('shaders')) return new FlxRuntimeShader();
 
 		#if (!flash && MODS_ALLOWED && sys)
-		if(!runtimeShaders.exists(name) && !initLuaShader(name))
-		{
+		if(!runtimeShaders.exists(name) && !initLuaShader(name)) {
 			FlxG.log.warn('Shader $name is missing!');
 			return new FlxRuntimeShader();
 		}
@@ -1421,8 +1405,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	public function initLuaShader(name:String, ?glslVersion:Int = 120)
-	{
+	public function initLuaShader(name:String, ?glslVersion:Int = 120) {
 		if(!ClientPrefs.getPref('shaders')) return false;
 
 		if(runtimeShaders.exists(name)) {
@@ -1612,8 +1595,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	function startAndEnd()
-	{
+	function startAndEnd() {
 		if(endingSong)
 			endSong();
 		else
@@ -1682,8 +1664,7 @@ class PlayState extends MusicBeatState
 		if (songName == 'roses' || songName == 'thorns') {
 			remove(black);
 
-			if (songName == 'thorns')
-			{
+			if (songName == 'thorns') {
 				add(red);
 				camHUD.visible = false;
 			}
@@ -2008,8 +1989,7 @@ class PlayState extends MusicBeatState
 	public var camlock:Bool = false;
 	public var bfturn:Bool = false;
 
-	function cacheCountdown()
-	{
+	function cacheCountdown() {
 		var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 		introAssets.set('default', ['ready', 'set', 'go']);
 		introAssets.set('pixel', ['pixelUI/ready-pixel', 'pixelUI/set-pixel', 'pixelUI/date-pixel']);
@@ -2267,8 +2247,7 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.time = time;
 		FlxG.sound.music.play();
 
-		if (Conductor.songPosition <= vocals.length)
-		{
+		if (Conductor.songPosition <= vocals.length) {
 			vocals.time = time;
 		}
 		vocals.play();
@@ -2288,8 +2267,7 @@ class PlayState extends MusicBeatState
 	var previousFrameTime:Int = 0;
 	var songTime:Float = 0;
 
-	function startSong():Void
-	{
+	function startSong():Void {
 		startingSong = false;
 
 		previousFrameTime = FlxG.game.ticks;
@@ -2331,16 +2309,12 @@ class PlayState extends MusicBeatState
 
 	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
 	private var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
-	private function generateSong(dataPath:String):Void
-	{
+	private function generateSong(dataPath:String):Void {
 		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype','multiplicative');
 
-		switch(songSpeedType)
-		{
-			case "multiplicative":
-				songSpeed = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1);
-			case "constant":
-				songSpeed = ClientPrefs.getGameplaySetting('scrollspeed', 1);
+		switch(songSpeedType) {
+			case "multiplicative": songSpeed = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1);
+			case "constant": songSpeed = ClientPrefs.getGameplaySetting('scrollspeed', 1);
 		}
 
 		var songData = SONG;
@@ -2372,10 +2346,8 @@ class PlayState extends MusicBeatState
 		if (OpenFlAssets.exists(file)) {
 		#end
 			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
-			for (event in eventsData) //Event Notes
-			{
-				for (i in 0...event[1].length)
-				{
+			for (event in eventsData) { //Event Notes
+				for (i in 0...event[1].length) {
 					var newEventNote:Array<Dynamic> = [event[0], event[1][i][0], event[1][i][1], event[1][i][2]];
 					var subEvent:EventNote = {
 						strumTime: newEventNote[0] + ClientPrefs.getPref('noteOffset'),
@@ -2397,8 +2369,7 @@ class PlayState extends MusicBeatState
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
-				if (songNotes[1] > Note.ammo[mania] - 1)
-				{
+				if (songNotes[1] > Note.ammo[mania] - 1) {
 					gottaHitNote = !section.mustHitSection;
 				}
 
@@ -5212,25 +5183,20 @@ class PlayState extends MusicBeatState
 		callOnLuas('onBeatHit', []);
 	}
 
-	override function sectionHit()
-	{
+	override function sectionHit() {
 		super.sectionHit();
 
-		if (SONG.notes[curSection] != null)
-		{
-			if (generatedMusic && !endingSong && !isCameraOnForcedPos)
-			{
+		if (SONG.notes[curSection] != null) {
+			if (generatedMusic && !endingSong && !isCameraOnForcedPos) {
 				moveCameraSection();
 			}
 
-			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.getPref('camZooms'))
-			{
+			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.getPref('camZooms')) {
 				FlxG.camera.zoom += 0.015 * camZoomingMult;
 				camHUD.zoom += 0.03 * camZoomingMult;
 			}
 
-			if (SONG.notes[curSection].changeBPM)
-			{
+			if (SONG.notes[curSection].changeBPM) {
 				Conductor.changeBPM(SONG.notes[curSection].bpm);
 				setOnLuas('curBpm', Conductor.bpm);
 				setOnLuas('crochet', Conductor.crochet);

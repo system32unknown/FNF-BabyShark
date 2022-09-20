@@ -154,8 +154,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 			}
 
 			if(usesCheckbox) {
-				if(controls.ACCEPT)
-				{
+				if(controls.ACCEPT) {
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					curOption.setValue((curOption.getValue() == true) ? false : true);
 					curOption.change();

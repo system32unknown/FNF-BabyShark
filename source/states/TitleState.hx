@@ -10,7 +10,6 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
-import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -39,11 +38,10 @@ class TitleState extends MusicBeatState
 	public static var initialized:Bool = false;
 
 	var blackScreen:FlxSprite;
-	var gradientBar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 1, 0xFF0F5FFF);
 	var credGroup:FlxGroup;
 	var textGroup:FlxGroup;
 	
-	var titlestatebg:FlxBackdrop;
+	var titlebg:FlxBackdrop;
 	var titleLogos:Array<FlxSprite> = [new FlxSprite(100, 1500), new FlxSprite(600, 1500)];
 	var titleText:FlxSprite;
 
@@ -52,6 +50,7 @@ class TitleState extends MusicBeatState
 
 	var curWacky:Array<String> = [];
 
+	var gradientBar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 1, 0xFF0F5FFF);
 	var gradtimer:Float = 0;
 
 	override public function create():Void
@@ -133,6 +132,13 @@ class TitleState extends MusicBeatState
 		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
+		titlebg = new FlxBackdrop(Paths.image('thechecker'), 0, 0.2, true, true);
+		titlebg.velocity.set(0, 110);
+		titlebg.updateHitbox();
+		titlebg.alpha = 0.5;
+		titlebg.screenCenter(X);
+		add(titlebg);
+
 		titleLogos[0].frames = Paths.getSparrowAtlas('logoBumpin');
 		titleLogos[0].animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		titleLogos[0].animation.play('bump');
@@ -145,13 +151,6 @@ class TitleState extends MusicBeatState
 			logo.updateHitbox();
 			add(logo);
 		}
-
-		titlestatebg = new FlxBackdrop(Paths.image('thechecker'), 0, 0.2, true, true);
-		titlestatebg.velocity.set(0, 110);
-		titlestatebg.updateHitbox();
-		titlestatebg.alpha = 0.5;
-		titlestatebg.screenCenter(X);
-		add(titlestatebg);
 
 		titleText = new FlxSprite(125, 576);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
@@ -225,24 +224,14 @@ class TitleState extends MusicBeatState
 		gradientBar.y = FlxG.height - gradientBar.height;
 
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER || controls.ACCEPT;
-
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-
-		if (gamepad != null)
-		{
-			if (gamepad.justPressed.START)
-				pressedEnter = true;
-		}
 		
 		if (newTitle) {
 			titleTimer += CoolUtil.boundTo(elapsed, 0, 1);
 			if (titleTimer > 2) titleTimer -= 2;
 		}
 
-		if (initialized && !transitioning && skippedIntro)
-		{
-			if (newTitle && !pressedEnter)
-			{
+		if (initialized && !transitioning && skippedIntro) {
+			if (newTitle && !pressedEnter) {
 				var timer:Float = titleTimer;
 				if (timer >= 1)
 					timer = (-timer) + 2;

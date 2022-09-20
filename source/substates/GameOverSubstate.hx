@@ -54,7 +54,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		PlayState.instance.callOnLuas('onGameOverStart', []);
 		if (restarttween == null)
-			restarttween = FlxTween.tween(restartsprite, {y: restartsprite.y + 40}, 5, {ease: FlxEase.quartInOut});
+			restarttween = FlxTween.tween(restartsprite, {y: restartsprite.y - 70}, 5, {ease: FlxEase.quartInOut});
 
 		super.create();
 	}

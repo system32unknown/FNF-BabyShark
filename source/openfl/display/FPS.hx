@@ -1,19 +1,13 @@
 package openfl.display;
 
-import haxe.Timer;
-import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import flixel.math.FlxMath;
-#if flash
-import openfl.Lib;
-#end
-
-import utils.ClientPrefs;
-
 #if openfl
 import openfl.system.System;
 #end
+import flixel.math.FlxMath;
+
+import utils.ClientPrefs;
 
 /**
 	The FPS class provides an easy-to-use monitor to display
@@ -54,18 +48,11 @@ class FPS extends TextField
 		cacheCount = 0;
 		currentTime = 0;
 		times = [];
-
-		#if flash
-		addEventListener(Event.ENTER_FRAME, function(e) {
-			var time = Lib.getTimer();
-			__enterFrame(time - currentTime);
-		});
-		#end
 	}
 
 	// Event Handlers
 	@:noCompletion
-	private #if !flash override #end function __enterFrame(deltaTime:Float):Void
+	private override function __enterFrame(deltaTime:Float):Void
 	{
 		currentTime += deltaTime;
 		times.push(currentTime);

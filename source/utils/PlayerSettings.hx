@@ -10,8 +10,7 @@ class PlayerSettings
 	public var controls:Controls;
 	#end
 
-	function new(scheme)
-	{
+	function new(scheme) {
 		this.controls = new Controls('player', scheme);
 	}
 

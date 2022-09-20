@@ -1,7 +1,5 @@
 package states;
 
-import shaders.WiggleEffect.WiggleEffect;
-import shaders.WiggleEffect.WiggleEffectType;
 #if desktop
 import utils.Discord.DiscordClient;
 #end
@@ -10,6 +8,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.display.FlxBackdrop;
 import flixel.effects.FlxFlicker;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
@@ -22,6 +21,8 @@ import game.Achievements;
 import editors.MasterEditorMenu;
 import utils.ClientPrefs;
 import utils.CoolUtil;
+import shaders.WiggleEffect.WiggleEffect;
+import shaders.WiggleEffect.WiggleEffectType;
 import data.WeekData;
 
 using StringTools;
@@ -99,6 +100,16 @@ class MainMenuState extends MusicBeatState
 		bg.antialiasing = globalAntialiasing;
 		add(bg);
 
+		var bg:FlxBackdrop = new FlxBackdrop(Paths.image('thechecker'), 0.4, 0.3, true, true);
+		bg.scrollFactor.set(0, yScroll);
+		bg.velocity.set(30, 110);
+		bg.alpha = .5;
+		bg.color = 0xFFFF0000;
+		bg.updateHitbox();
+		bg.screenCenter();
+		bg.antialiasing = globalAntialiasing;
+		add(bg);
+
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollowPos = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
@@ -119,8 +130,7 @@ class MainMenuState extends MusicBeatState
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
-		for (i in 0...optionShit.length)
-		{
+		for (i in 0...optionShit.length) {
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
 			var menuItem:FlxSprite = new FlxSprite(100, FlxG.height * 1.6);
 			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
@@ -129,6 +139,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
 			menuItems.add(menuItem);
+
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
 			menuItem.scrollFactor.set(0, scr);
@@ -143,8 +154,7 @@ class MainMenuState extends MusicBeatState
 						changeItem();
 					}
 				});
-			else
-				menuItem.y = (i * 140) + offset;
+			else menuItem.y = (i * 140) + offset;
 		}
 
 		firstStart = false;
@@ -237,20 +247,14 @@ class MainMenuState extends MusicBeatState
 						FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker) {
 							var daChoice:String = optionShit[curSelected];
 							switch (daChoice) {
-								case 'story_mode':
-									MusicBeatState.switchState(new StoryMenuState());
-								case 'freeplay':
-									MusicBeatState.switchState(new FreeplayState());
+								case 'story_mode': MusicBeatState.switchState(new StoryMenuState());
+								case 'freeplay': MusicBeatState.switchState(new FreeplayState());
 								#if MODS_ALLOWED
-								case 'mods':
-									MusicBeatState.switchState(new ModsMenuState());
+								case 'mods': MusicBeatState.switchState(new ModsMenuState());
 								#end
-								case 'awards':
-									MusicBeatState.switchState(new AchievementsMenuState());
-								case 'credits':
-									MusicBeatState.switchState(new CreditsState());
-								case 'options':
-									LoadingState.loadAndSwitchState(new options.OptionsState());
+								case 'awards': MusicBeatState.switchState(new AchievementsMenuState());
+								case 'credits': MusicBeatState.switchState(new CreditsState());
+								case 'options': LoadingState.loadAndSwitchState(new options.OptionsState());
 							}
 						});
 					}

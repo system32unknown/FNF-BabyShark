@@ -163,7 +163,6 @@ class DialogueBoxPsych extends FlxSpriteGroup
 	public var skipDialogueThing:Void->Void = null;
 	var bgFade:FlxSprite = null;
 	var box:FlxSprite;
-	var textToType:String = '';
 
 	var arrayCharacters:Array<DialogueCharacter> = [];
 

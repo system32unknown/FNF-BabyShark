@@ -322,20 +322,16 @@ class PauseSubState extends MusicBeatSubstate
 			curSelected = 0;
 
 		var bullShit:Int = 0;
-
-		for (item in grpMenuShit.members)
-		{
+		for (item in grpMenuShit.members) {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0.6;
 
-			if (item.targetY == 0)
-			{
+			if (item.targetY == 0) {
 				item.alpha = 1;
 
-				if(item == skipTimeTracker)
-				{
+				if(item == skipTimeTracker) {
 					curTime = Math.max(0, Conductor.songPosition);
 					updateSkipTimeText();
 				}

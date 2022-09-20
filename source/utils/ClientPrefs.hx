@@ -47,9 +47,10 @@ class ClientPrefs {
 		'ScoreTextStyle' => 'BabyShark',
 		'scoreZoom' => true,
 		'noReset' => false,
+		'AltDiscordImg' => false,
 		'healthBarAlpha' => 1,
 		'hitsoundVolume' => 0,
-		'hitsoundTypes' => 'Psych',
+		'hitsoundTypes' => 'Tick',
 		'ShowWatermark' => true,
 		'pauseMusic' => 'Tea Time',
 		// Gameplay settings

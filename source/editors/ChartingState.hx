@@ -130,8 +130,6 @@ class ChartingState extends MusicBeatState
 	var nextGridBG:FlxSprite;
 
 	var curEventSelected:Int = 0;
-	var curUndoIndex = 0;
-	var curRedoIndex = 0;
 	var _song:SwagSong;
 	/**
 	 * WILL BE THE CURRENT / LAST PLACED NOTE
@@ -379,7 +377,7 @@ class ChartingState extends MusicBeatState
 		});
 
 		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function() {
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', 0, function() {loadJson(_song.song.toLowerCase()); }, null,ignoreWarnings));
+			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {loadJson(_song.song.toLowerCase()); }, null,ignoreWarnings));
 		});
 
 		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, 'Load Autosave', function() {
@@ -408,13 +406,13 @@ class ChartingState extends MusicBeatState
 		});
 
 		var clear_events:FlxButton = new FlxButton(320, 310, 'Clear events', function() {
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', 0, clearEvents, null,ignoreWarnings));
+			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', clearEvents, null, ignoreWarnings));
 		});
 		clear_events.color = FlxColor.RED;
 		clear_events.label.color = FlxColor.WHITE;
 
 		var clear_notes:FlxButton = new FlxButton(320, clear_events.y + 30, 'Clear notes', function() {
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', 0, function() {
+			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
 				for (sec in 0..._song.notes.length) {
 					_song.notes[sec].sectionNotes = [];
 				}
@@ -1553,9 +1551,9 @@ class ChartingState extends MusicBeatState
 				return;
 			}
 
-			if(FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL) {
-				undo();
-			}
+			//if(FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL) {
+			//	undo();
+			//}
 
 			if(FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL) {
 				--curZoom;
@@ -1568,8 +1566,7 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.TAB)
 			{
-				if (FlxG.keys.pressed.SHIFT)
-				{
+				if (FlxG.keys.pressed.SHIFT) {
 					UI_box.selected_tab -= 1;
 					if (UI_box.selected_tab < 0)
 						UI_box.selected_tab = 2;
@@ -1582,13 +1579,10 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.SPACE)
 			{
-				if (FlxG.sound.music.playing)
-				{
+				if (FlxG.sound.music.playing) {
 					FlxG.sound.music.pause();
 					if(vocals != null) vocals.pause();
-				}
-				else
-				{
+				} else {
 					if(vocals != null) {
 						vocals.play();
 						vocals.pause();
@@ -1599,22 +1593,19 @@ class ChartingState extends MusicBeatState
 				}
 			}
 
-			if (FlxG.keys.justPressed.R)
-			{
+			if (FlxG.keys.justPressed.R) {
 				if (FlxG.keys.pressed.SHIFT)
 					resetSection(true);
 				else
 					resetSection();
 			}
 
-			if (FlxG.mouse.wheel != 0)
-			{
+			if (FlxG.mouse.wheel != 0) {
 				FlxG.sound.music.pause();
 				if (!mouseQuant)
 					FlxG.sound.music.time -= (FlxG.mouse.wheel * Conductor.stepCrochet*0.8);
 				else
 					{
-						var time:Float = FlxG.sound.music.time;
 						var beat:Float = curDecBeat;
 						var snap:Float = quantization / 4;
 						var increase:Float = 1 / snap;
@@ -1657,12 +1648,11 @@ class ChartingState extends MusicBeatState
 				}
 			}
 
-			if(!vortex){
+			if(!vortex) {
 				if (FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN  )
 				{
 					FlxG.sound.music.pause();
 					updateCurStep();
-					var time:Float = FlxG.sound.music.time;
 					var beat:Float = curDecBeat;
 					var snap:Float = quantization / 4;
 					var increase:Float = 1 / snap;
@@ -1724,7 +1714,6 @@ class ChartingState extends MusicBeatState
 					FlxG.sound.music.pause();
 
 					updateCurStep();
-					var time:Float = FlxG.sound.music.time;
 					var beat:Float = curDecBeat;
 					var snap:Float = quantization / 4;
 					var increase:Float = 1 / snap;
@@ -1755,9 +1744,7 @@ class ChartingState extends MusicBeatState
 						var controlArray:Array<Bool> = [FlxG.keys.pressed.ONE, FlxG.keys.pressed.TWO, FlxG.keys.pressed.THREE, FlxG.keys.pressed.FOUR,
 													   FlxG.keys.pressed.FIVE, FlxG.keys.pressed.SIX, FlxG.keys.pressed.SEVEN, FlxG.keys.pressed.EIGHT];
 
-						if(controlArray.contains(true))
-						{
-
+						if(controlArray.contains(true)) {
 							for (i in 0...controlArray.length)
 							{
 								if(controlArray[i])
@@ -2142,8 +2129,7 @@ class ChartingState extends MusicBeatState
 
 					if (gotIndex > array[1][1].length) array[1][1].push(rRMax);
 						else array[1][1][gotIndex - 1] = array[1][1][gotIndex - 1] + rRMax;
-				}
-				else {
+				} else {
 					if (gotIndex > array[1][0].length) array[1][0].push(lRMin);
 						else array[1][0][gotIndex - 1] = array[1][0][gotIndex - 1] + lRMin;
 
@@ -2598,7 +2584,6 @@ class ChartingState extends MusicBeatState
 		var noteStrum = getStrumTime(dummyArrow.y, false) + sectionStartTime();
 		var noteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
 		var noteSus = 0;
-		var daAlt = false;
 		var daType = currentType;
 
 		if (strum != null) noteStrum = strum;
@@ -2637,7 +2622,7 @@ class ChartingState extends MusicBeatState
 	function undo()
 	{
 		//redos.push(_song);
-		undos.pop();
+		//undos.pop();
 		//_song.notes = undos[undos.length - 1];
 		///trace(_song.notes);
 		//updateGrid();

@@ -366,21 +366,6 @@ class Controls extends FlxActionSet
 	}
 	#end
 
-	public function getDialogueName(action:FlxActionDigital):String
-	{
-		var input = action.inputs[0];
-		return switch input.device
-		{
-			case KEYBOARD: return '[${(input.inputID : FlxKey)}]';
-			case device: throw 'unhandled device: $device';
-		}
-	}
-
-	public function getDialogueNameFromToken(token:String):String
-	{
-		return getDialogueName(getActionFromControl(Control.createByName(token.toUpperCase())));
-	}
-
 	function getActionFromControl(control:Control):FlxActionDigital
 	{
 		return switch (control)

@@ -53,6 +53,13 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Alternate Discord Large Image',
+			'lol',
+			'AltDiscordImg',
+			'bool',
+			true);
+		addOption(option);
+
 		super();
 	}
 }

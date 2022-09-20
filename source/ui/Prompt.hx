@@ -9,7 +9,6 @@ import substates.MusicBeatSubstate;
 
 class Prompt extends MusicBeatSubstate
 {
-	var selected = 0;
 	public var okc:Void->Void;
 	public var cancelc:Void->Void;
 	var theText:String = '';
@@ -20,9 +19,8 @@ class Prompt extends MusicBeatSubstate
 	var buttonNo:FlxButton;
 	var cornerSize:Int = 10;
 	
-	public function new(promptText:String='', defaultSelected:Int = 0, okCallback:Void->Void, cancelCallback:Void->Void,acceptOnDefault:Bool=false,option1:String=null,option2:String=null) 
+	public function new(promptText:String='', okCallback:Void->Void, cancelCallback:Void->Void, acceptOnDefault:Bool=false, option1:String=null, option2:String=null) 
 	{
-		selected = defaultSelected;
 		okc = okCallback;
 		cancelc = cancelCallback;
 		theText = promptText;

@@ -34,8 +34,7 @@ class LoadingState extends MusicBeatState
 	var callbacks:MultiCallback;
 	var targetShit:Float = 0;
 
-	function new(target:FlxState, stopMusic:Bool, directory:String)
-	{
+	function new(target:FlxState, stopMusic:Bool, directory:String) {
 		super();
 		this.target = target;
 		this.stopMusic = stopMusic;
@@ -88,12 +87,6 @@ class LoadingState extends MusicBeatState
 	
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		funkay.setGraphicSize(Std.int(0.88 * FlxG.width + 0.9 * (funkay.width - 0.88 * FlxG.width)));
-		funkay.updateHitbox();
-		if(controls.ACCEPT) {
-			funkay.setGraphicSize(Std.int(funkay.width + 60));
-			funkay.updateHitbox();
-		}
 
 		if(callbacks != null) {
 			targetShit = FlxMath.remapToRange(callbacks.numRemaining / callbacks.length, 1, 0, 0, 1);
@@ -145,31 +138,26 @@ class LoadingState extends MusicBeatState
 		return target;
 	}
 	
-	static function isSoundLoaded(path:String):Bool
-	{
+	static function isSoundLoaded(path:String):Bool {
 		return Assets.cache.hasSound(path);
 	}
 	
-	static function isLibraryLoaded(library:String):Bool
-	{
+	static function isLibraryLoaded(library:String):Bool {
 		return Assets.getLibrary(library) != null;
 	}
 	
-	override function destroy()
-	{
+	override function destroy() {
 		super.destroy();
 		callbacks = null;
 	}
 	
-	static function initSongsManifest()
-	{
+	static function initSongsManifest() {
 		var id = "songs";
 		var promise = new Promise<AssetLibrary>();
 
 		var library = LimeAssets.getLibrary(id);
 
-		if (library != null)
-		{
+		if (library != null) {
 			return Future.withValue(library);
 		}
 
@@ -237,10 +225,8 @@ class MultiCallback
 		length++;
 		numRemaining++;
 		var func:Void->Void = null;
-		func = function ()
-		{
-			if (unfired.exists(id))
-			{
+		func = function () {
+			if (unfired.exists(id)) {
 				unfired.remove(id);
 				fired.push(id);
 				numRemaining--;
