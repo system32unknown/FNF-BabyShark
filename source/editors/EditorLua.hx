@@ -222,21 +222,6 @@ class EditorLua {
 		#end
 	}
 
-	#if LUA_ALLOWED
-	public function getBool(variable:String) {
-		var result:String = null;
-		Lua.getglobal(lua, variable);
-		result = Convert.fromLua(lua, -1);
-		Lua.pop(lua, 1);
-
-		if(result == null) {
-			return false;
-		}
-
-		return (result == 'true');
-	}
-	#end
-
 	public function stop() {
 		#if LUA_ALLOWED
 		if(lua == null) {

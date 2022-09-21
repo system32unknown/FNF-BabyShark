@@ -123,8 +123,7 @@ class CreditsState extends MusicBeatState
 			creditsStuff.push(i);
 		}
 	
-		for (i in 0...creditsStuff.length)
-		{
+		for (i in 0...creditsStuff.length) {
 			var isSelectable:Bool = !unselectableCheck(i);
 			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 300, creditsStuff[i][0], !isSelectable);
 			optionText.isMenuItem = true;
@@ -191,13 +190,11 @@ class CreditsState extends MusicBeatState
 				var upP = controls.UI_UP_P;
 				var downP = controls.UI_DOWN_P;
 
-				if (upP)
-				{
+				if (upP) {
 					changeSelection(-shiftMult);
 					holdTime = 0;
 				}
-				if (downP)
-				{
+				if (downP) {
 					changeSelection(shiftMult);
 					holdTime = 0;
 				}

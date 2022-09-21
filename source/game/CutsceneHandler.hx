@@ -44,13 +44,11 @@ class CutsceneHandler extends FlxBasic
 		}
 
 		cutsceneTime += elapsed;
-		if(endTime <= cutsceneTime)
-		{
+		if(endTime <= cutsceneTime) {
 			finishCallback();
 			if(finishCallback2 != null) finishCallback2();
 
-			for (spr in objects)
-			{
+			for (spr in objects) {
 				spr.kill();
 				PlayState.instance.remove(spr);
 				spr.destroy();
@@ -61,8 +59,7 @@ class CutsceneHandler extends FlxBasic
 			PlayState.instance.remove(this);
 		}
 		
-		while(timedEvents.length > 0 && timedEvents[0][0] <= cutsceneTime)
-		{
+		while(timedEvents.length > 0 && timedEvents[0][0] <= cutsceneTime) {
 			timedEvents[0][1]();
 			timedEvents.splice(0, 1);
 		}
@@ -79,8 +76,7 @@ class CutsceneHandler extends FlxBasic
 		timedEvents.sort(sortByTime);
 	}
 
-	function sortByTime(Obj1:Array<Dynamic>, Obj2:Array<Dynamic>):Int
-	{
+	function sortByTime(Obj1:Array<Dynamic>, Obj2:Array<Dynamic>):Int {
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1[0], Obj2[0]);
 	}
 }

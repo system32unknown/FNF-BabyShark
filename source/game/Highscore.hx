@@ -31,14 +31,12 @@ class Highscore {
 
 	public static function floorDecimal(value:Float, decimals:Int):Float
 	{
-		if(decimals < 1)
-		{
+		if(decimals < 1) {
 			return Math.floor(value);
 		}
 
 		var tempMult:Float = 1;
-		for (i in 0...decimals)
-		{
+		for (i in 0...decimals) {
 			tempMult *= 10;
 		}
 		var newValue:Float = Math.floor(value * tempMult);
@@ -64,13 +62,10 @@ class Highscore {
 	{
 		var daWeek:String = formatSong(week, diff);
 
-		if (weekScores.exists(daWeek))
-		{
+		if (weekScores.exists(daWeek)) {
 			if (weekScores.get(daWeek) < score)
 				setWeekScore(daWeek, score);
-		}
-		else
-			setWeekScore(daWeek, score);
+		} else setWeekScore(daWeek, score);
 	}
 
 	/**
@@ -131,18 +126,14 @@ class Highscore {
 		return weekScores.get(daWeek);
 	}
 
-	public static function load():Void
-	{
-		if (FlxG.save.data.weekScores != null)
-		{
+	public static function load():Void {
+		if (FlxG.save.data.weekScores != null) {
 			weekScores = FlxG.save.data.weekScores;
 		}
-		if (FlxG.save.data.songScores != null)
-		{
+		if (FlxG.save.data.songScores != null) {
 			songScores = FlxG.save.data.songScores;
 		}
-		if (FlxG.save.data.songRating != null)
-		{
+		if (FlxG.save.data.songRating != null) {
 			songRating = FlxG.save.data.songRating;
 		}
 	}

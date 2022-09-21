@@ -1,6 +1,5 @@
 package game;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
 import editors.ChartingState;
 import shaders.ColorSwap;
@@ -30,7 +29,6 @@ class Note extends FlxSprite
 	public static var minMania:Int = 0;
 	public static var maxMania:Int = 9;
 
-	public static var minManiaUI_integer:Int = minMania + 1;
 	public static var maxManiaUI_integer:Int = maxMania + 1;
 	public static var defaultMania:Int = 3;
 
@@ -67,7 +65,6 @@ class Note extends FlxSprite
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;
 	public var prevNote:Note;
-	public var nextNote:Note;
 
 	public var spawned:Bool = false;
 

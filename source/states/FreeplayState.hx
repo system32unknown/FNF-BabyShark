@@ -221,13 +221,11 @@ class FreeplayState extends MusicBeatState
 
 		if(songs.length > 1)
 		{
-			if (upP)
-			{
+			if (upP) {
 				changeSelection(-shiftMult);
 				holdTime = 0;
 			}
-			if (downP)
-			{
+			if (downP) {
 				changeSelection(shiftMult);
 				holdTime = 0;
 			}
@@ -259,8 +257,7 @@ class FreeplayState extends MusicBeatState
 			changeDiff(1);
 		else if (upP || downP) changeDiff();
 
-		if (controls.BACK)
-		{
+		if (controls.BACK) {
 			persistentUpdate = false;
 			if(colorTween != null) {
 				colorTween.cancel();
@@ -269,15 +266,16 @@ class FreeplayState extends MusicBeatState
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
-		if(ctrl)
-		{
+		if (FlxG.keys.justPressed.NINE) {
+			persistentUpdate = false;
+			LoadingState.loadAndSwitchState(new CharacterSelectState());
+		}
+
+		if(ctrl) {
 			persistentUpdate = false;
 			openSubState(new GameplayChangersSubstate());
-		}
-		else if(space)
-		{
-			if(instPlaying != curSelected)
-			{
+		} else if(space) {
+			if(instPlaying != curSelected) {
 				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
@@ -300,8 +298,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		else if (accepted)
-		{
+		else if (accepted) {
 			persistentUpdate = false;
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 			if (songLowercase == "") /*trace("Empty Song Found!");*/ return;

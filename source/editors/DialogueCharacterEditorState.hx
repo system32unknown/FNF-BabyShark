@@ -363,8 +363,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 		var noAntialiasingCheckbox:FlxUICheckBox = new FlxUICheckBox(scaleStepper.x + 80, scaleStepper.y, null, null, "No Antialiasing", 100);
 		noAntialiasingCheckbox.checked = (character.jsonFile.no_antialiasing == true);
-		noAntialiasingCheckbox.callback = function()
-		{
+		noAntialiasingCheckbox.callback = function() {
 			character.jsonFile.no_antialiasing = noAntialiasingCheckbox.checked;
 			character.antialiasing = !character.jsonFile.no_antialiasing;
 		};
@@ -423,8 +422,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 		character.y = DialogueBoxPsych.DEFAULT_CHAR_Y;
 
 		switch(character.jsonFile.dialogue_pos) {
-			case 'right':
-				character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;
+			case 'right': character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;
 			
 			case 'center':
 				character.x = FlxG.width / 2;
@@ -455,10 +453,8 @@ class DialogueCharacterEditorState extends MusicBeatState
 		box.flipX = false;
 		var anim:String = 'normal';
 		switch(character.jsonFile.dialogue_pos) {
-			case 'left':
-				box.flipX = true;
-			case 'center':
-				anim = 'center';
+			case 'left': box.flipX = true;
+			case 'center': anim = 'center';
 		}
 		box.animation.play(anim, true);
 		DialogueBoxPsych.updateBoxOffsets(box);

@@ -191,14 +191,10 @@ class EditorPlayState extends MusicBeatState
 		// NEW SHIT
 		noteData = songData.notes;
 
-		var playerCounter:Int = 0;
-
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
 
-		for (section in noteData)
-		{
-			for (songNotes in section.sectionNotes)
-			{
+		for (section in noteData) {
+			for (songNotes in section.sectionNotes) {
 				if(songNotes[1] > -1) { //Real notes
 					var daStrumTime:Float = songNotes[0];
 					if(daStrumTime >= startPos) {
@@ -206,8 +202,7 @@ class EditorPlayState extends MusicBeatState
 
 						var gottaHitNote:Bool = section.mustHitSection;
 
-						if (songNotes[1] > Note.ammo[songMania])
-						{
+						if (songNotes[1] > Note.ammo[songMania] - 1) {
 							gottaHitNote = !section.mustHitSection;
 						}
 
@@ -231,7 +226,7 @@ class EditorPlayState extends MusicBeatState
 
 						var floorSus:Int = Math.floor(susLength);
 						if(floorSus > 0) {
-							for (susNote in 0...floorSus+1)
+							for (susNote in 0...floorSus + 1)
 							{
 								oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
@@ -241,12 +236,9 @@ class EditorPlayState extends MusicBeatState
 								sustainNote.scrollFactor.set();
 								unspawnNotes.push(sustainNote);
 
-								if (sustainNote.mustPress)
-								{
+								if (sustainNote.mustPress) {
 									sustainNote.x += FlxG.width / 2; // general offset
-								}
-								else if(ClientPrefs.getPref('middleScroll'))
-								{
+								} else if(ClientPrefs.getPref('middleScroll')) {
 									sustainNote.x += 310;
 									if(daNoteData > 1) {
 										sustainNote.x += FlxG.width / 2 + 25;
@@ -255,19 +247,16 @@ class EditorPlayState extends MusicBeatState
 							}
 						}
 
-						if (swagNote.mustPress)
-						{
+						if (swagNote.mustPress) {
 							swagNote.x += FlxG.width / 2; // general offset
-						}
-						else if(ClientPrefs.getPref('middleScroll'))
-						{
+						} else if(ClientPrefs.getPref('middleScroll')) {
 							swagNote.x += 310;
 							if(daNoteData > 1) { //Up and Right
 								swagNote.x += FlxG.width / 2 + 25;
 							}
 						}
 						
-						if(!noteTypeMap.exists(swagNote.noteType)) {
+						if (!noteTypeMap.exists(swagNote.noteType)) {
 							noteTypeMap.set(swagNote.noteType, true);
 						}
 					}
@@ -615,8 +604,7 @@ class EditorPlayState extends MusicBeatState
 		return -1;
 	}
 
-	private function dataKeyIsPressed(data:Int):Bool
-	{
+	private function dataKeyIsPressed(data:Int):Bool {
 		for (i in 0...keysArray[songMania][data].length) {
 			if (FlxG.keys.checkStatus(keysArray[songMania][data][i], PRESSED)) return true;
 		}
@@ -864,7 +852,7 @@ class EditorPlayState extends MusicBeatState
 			} else {
 				if(ClientPrefs.getPref('middleScroll')) {
 					babyArrow.x += 310;
-					if(i > 1) { //Up and Right
+					if(i > Note.ammo[PlayState.mania]) { //Up and Right
 						babyArrow.x += FlxG.width / 2 + 25;
 					}
 				}

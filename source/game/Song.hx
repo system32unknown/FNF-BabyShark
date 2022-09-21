@@ -36,22 +36,9 @@ typedef SwagSong = {
 class Song {
 	public var song:String;
 	public var notes:Array<SwagSection>;
-	public var events:Array<Dynamic>;
 	public var bpm:Float;
-	public var needsVoices:Bool = true;
-	public var speed:Float = 1;
 
-	public var arrowSkin:String;
-	public var splashSkin:String;
-
-	public var stage:String;
-
-	public var player1:String = 'bf';
-	public var player2:String = 'dad';
-	public var gfVersion:String = 'gf';
-
-	public function new(song, notes, bpm)
-	{
+	public function new(song, notes, bpm) {
 		this.song = song;
 		this.notes = notes;
 		this.bpm = bpm;
@@ -113,8 +100,7 @@ class Song {
 			#end
 		}
 
-		while (!rawJson.endsWith("}"))
-		{
+		while (!rawJson.endsWith("}")) {
 			rawJson = rawJson.substr(0, rawJson.length - 1);
 			// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
 		}

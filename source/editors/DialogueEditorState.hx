@@ -133,8 +133,7 @@ class DialogueEditorState extends MusicBeatState
 		speedStepper = new FlxUINumericStepper(10, characterInputText.y + 40, 0.005, 0.05, 0, 0.5, 3);
 
 		angryCheckbox = new FlxUICheckBox(speedStepper.x + 120, speedStepper.y, null, null, "Angry Textbox", 200);
-		angryCheckbox.callback = function()
-		{
+		angryCheckbox.callback = function() {
 			updateTextBox();
 			dialogueFile.dialogue[curSelected].boxState = (angryCheckbox.checked ? 'angry' : 'normal');
 		};
@@ -207,8 +206,7 @@ class DialogueEditorState extends MusicBeatState
 		character.y = DialogueBoxPsych.DEFAULT_CHAR_Y;
 
 		switch(character.jsonFile.dialogue_pos) {
-			case 'right':
-				character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;
+			case 'right': character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;
 			
 			case 'center':
 				character.x = FlxG.width / 2;
@@ -227,7 +225,6 @@ class DialogueEditorState extends MusicBeatState
 	}
 
 	private static var DEFAULT_TEXT:String = "coolswag";
-	private static var DEFAULT_SPEED:Float = 0.05;
 	private static var DEFAULT_BUBBLETYPE:String = "normal";
 	function reloadText(skipDialogue:Bool) {
 
