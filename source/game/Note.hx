@@ -162,7 +162,7 @@ class Note extends FlxSprite
 		if(noteData > -1 && noteType != value) {
 			switch(value) {
 				case 'Hurt Note':
-					ignoreNote = mustPress;
+					ignoreNote = true;
 					reloadNote('HURT');
 					noteSplashTexture = 'HURTnoteSplashes';
 					colorSwap.hue = 0;
@@ -175,6 +175,28 @@ class Note extends FlxSprite
 					} else {
 						missHealth = 0.3;
 					}
+					hitCausesMiss = true;
+				case 'Danger Note':
+					reloadNote('DANGER');
+					noteSplashTexture = 'DANGERnoteSplashes';
+					colorSwap.hue = 0;
+					colorSwap.saturation = 0;
+					colorSwap.brightness = 0;
+					noMissAnimation = true;
+					if(isSustainNote) {
+						missHealth = 0.3;
+					} else {
+						missHealth = 0.5;
+					}
+					hitCausesMiss = false;
+				case 'Kill Note':
+					ignoreNote = true;
+					reloadNote('KILL');
+					noteSplashTexture = 'HURTnoteSplashes';
+					colorSwap.hue = 0;
+					colorSwap.saturation = 0;
+					colorSwap.brightness = 0;
+					missHealth = 1;
 					hitCausesMiss = true;
 				case 'Alt Animation':
 					animSuffix = '-alt';

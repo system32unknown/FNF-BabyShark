@@ -26,8 +26,6 @@ import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import flixel.util.FlxSave;
-import haxe.Json;
-import lime.utils.Assets;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.KeyboardEvent;
 import editors.ChartingState;
@@ -35,7 +33,6 @@ import editors.CharacterEditorState;
 import animateatlas.AtlasFrameMaker;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
-import game.Song.SwagSong;
 import game.Note.EventNote;
 import game.Conductor.Rating;
 import game.Achievements.AchievementObject;
@@ -3899,9 +3896,7 @@ class PlayState extends MusicBeatState
 						FlxG.save.flush();
 					}
 					changedDifficulty = false;
-				}
-				else
-				{
+				} else {
 					var difficulty:String = CoolUtil.getDifficultyFilePath();
 
 					trace('LOADING NEXT SONG');
@@ -3938,9 +3933,7 @@ class PlayState extends MusicBeatState
 						LoadingState.loadAndSwitchState(new PlayState());
 					}
 				}
-			}
-			else
-			{
+			} else {
 				trace('WENT BACK TO FREEPLAY??');
 				WeekData.loadTheFirstEnabledMod();
 				cancelMusicFadeTween();
@@ -5005,6 +4998,9 @@ class PlayState extends MusicBeatState
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
+
+
+
 		super.destroy();
 	}
 

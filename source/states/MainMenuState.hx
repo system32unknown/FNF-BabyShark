@@ -29,9 +29,12 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var BabySharkVersion:String = '0.1 BETA'; //This is also used for Discord RPC
+	private var BabySharkVersion:String = '0.1 BETA'; //This is also used for Discord RPC
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
+
+	var menuCover:FlxSprite;
+	var menuCoverAlt:FlxSprite;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
@@ -115,17 +118,18 @@ class MainMenuState extends MusicBeatState
 		add(camFollow);
 		add(camFollowPos);
 
-		var menuCover:FlxSprite = new FlxSprite().makeGraphic(FlxG.width - 480, FlxG.height * 2);
+		menuCover = new FlxSprite().makeGraphic(FlxG.width - 480, FlxG.height * 2);
 		menuCover.alpha = 0.5;
 		menuCover.color = FlxColor.WHITE;
 		menuCover.scrollFactor.set();
 		add(menuCover);
 
-		var menuCover:FlxSprite = new FlxSprite().makeGraphic(FlxG.width - 500, FlxG.height * 2);
-		menuCover.alpha = 0.7;
-		menuCover.color = FlxColor.BLACK;
-		menuCover.scrollFactor.set();
-		add(menuCover);
+		menuCoverAlt = new FlxSprite().makeGraphic(FlxG.width - 500, FlxG.height * 2);
+		menuCoverAlt.x = menuCover.x + 10;
+		menuCoverAlt.alpha = 0.7;
+		menuCoverAlt.color = FlxColor.BLACK;
+		menuCoverAlt.scrollFactor.set();
+		add(menuCoverAlt);
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
@@ -148,8 +152,7 @@ class MainMenuState extends MusicBeatState
 			if (firstStart)
 				FlxTween.tween(menuItem, {y: (i * 140) + offset}, 1 + (i * 0.25), {
 					ease: FlxEase.expoInOut,
-					onComplete: function(flxTween:FlxTween)
-					{
+					onComplete: function(flxTween:FlxTween) {
 						finishedFunnyMove = true;
 						changeItem();
 					}
@@ -211,39 +214,38 @@ class MainMenuState extends MusicBeatState
 		if (ClientPrefs.getPref('shaders'))
 			WShader.update(elapsed * 2);
 
-		if (!selectedSomethin)
-		{
-			if (controls.UI_UP_P)
-			{
+		if (!selectedSomethin) {
+			if (controls.UI_UP_P) {
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(-1);
 			}
 
-			if (controls.UI_DOWN_P)
-			{
+			if (controls.UI_DOWN_P) {
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(1);
 			}
 
-			if (controls.BACK)
-			{
+			if (controls.BACK) {
 				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new TitleState());
 			}
 
+			var numMenu = 0;
 			if (controls.ACCEPT) {
 				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 				menuItems.forEach(function(spr:FlxSprite) {
 					if (curSelected != spr.ID) {
-						FlxTween.tween(spr, {alpha: 0}, 0.4, {
+						numMenu++;
+						FlxTween.tween(spr, {alpha: 0, x: -100 + spr.x}, .1 * numMenu, {
 							ease: FlxEase.quadOut,
 							onComplete: function(twn:FlxTween) {
 								spr.kill();
 							}
 						});
 					} else {
+						FlxTween.tween(spr, {"scale.x": 1.2, "scale.y": 1.2}, .4, {ease: FlxEase.sineInOut});
 						FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker) {
 							var daChoice:String = optionShit[curSelected];
 							switch (daChoice) {

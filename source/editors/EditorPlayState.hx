@@ -7,6 +7,7 @@ import game.NoteSplash;
 import game.Conductor;
 import game.Note;
 import utils.ClientPrefs;
+import utils.Keybinds;
 import states.MusicBeatState;
 import states.PlayState;
 import states.LoadingState;
@@ -80,12 +81,7 @@ class EditorPlayState extends MusicBeatState
 		bg.color = FlxColor.fromHSB(FlxG.random.int(0, 359), FlxG.random.float(0, 0.8), FlxG.random.float(0.3, 1));
 		add(bg);
 
-		keysArray = [
-			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_left')),
-			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_down')),
-			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_up')),
-			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_right'))
-		];
+		keysArray = Keybinds.fill();
 		
 		strumLine = new FlxSprite(ClientPrefs.getPref('middleScroll') ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, (ClientPrefs.getPref('downScroll') ? FlxG.height - 150 : 50)).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
@@ -403,8 +399,7 @@ class EditorPlayState extends MusicBeatState
 					}
 				}
 
-				if (!daNote.mustPress && daNote.wasGoodHit && !daNote.hitByOpponent && !daNote.ignoreNote)
-				{
+				if (!daNote.mustPress && daNote.wasGoodHit && !daNote.hitByOpponent && !daNote.ignoreNote) {
 					if (PlayState.SONG.needsVoices)
 						vocals.volume = 1;
 
@@ -593,9 +588,9 @@ class EditorPlayState extends MusicBeatState
 
 	private function getKeyFromEvent(key:FlxKey):Int {
 		if(key != NONE) {
-			for (i in 0...keysArray.length) {
-				for (j in 0...keysArray[i].length) {
-					if(key == keysArray[i][j]) {
+			for (i in 0...keysArray[songMania].length) {
+				for (j in 0...keysArray[songMania][i].length) {
+					if(key == keysArray[songMania][i][j]) {
 						return i;
 					}
 				}
@@ -612,8 +607,7 @@ class EditorPlayState extends MusicBeatState
 		return false;
 	}
 
-	private function keyShit():Void
-	{
+	private function keyShit():Void {
 		if (generatedMusic) {
 			// rewritten inputs???
 			notes.forEachAlive(function(daNote:Note) {
@@ -629,10 +623,11 @@ class EditorPlayState extends MusicBeatState
 	{
 		if (!note.wasGoodHit)
 		{
-			if (ClientPrefs.getPref('hitsoundVolume')  > 0 && !note.hitsoundDisabled)
+			if (ClientPrefs.getPref('hitsoundVolume') > 0 && !note.hitsoundDisabled)
 			{
 				FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.getPref('hitsoundVolume') );
 			}
+
 			if(note.hitCausesMiss) {
 				noteMiss();
 				--songMisses;
@@ -676,8 +671,7 @@ class EditorPlayState extends MusicBeatState
 		}
 	}
 
-	function noteMiss():Void
-	{
+	function noteMiss():Void {
 		combo = 0;
 		songMisses++;
 		FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
