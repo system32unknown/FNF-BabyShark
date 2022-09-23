@@ -89,7 +89,7 @@ class PlayState extends MusicBeatState
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, FunkinLua.ModchartText> = new Map<String, FunkinLua.ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
-	public var modchartGroups:Map<String, FunkinLua.ModchartGroup> = new Map();
+	public var modchartGroups:Map<String, FunkinLua.ModchartGroup> = new Map<String, FunkinLua.ModchartGroup>();
 	#else
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
@@ -4800,7 +4800,7 @@ class PlayState extends MusicBeatState
 
 	public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
 		var skin:String = 'noteSplashes';
-		if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
+		if((PlayState.SONG.splashSkin != null || PlayState.SONG.splashSkin != '') && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 
 		var hue:Float = 0;
@@ -5214,6 +5214,9 @@ class PlayState extends MusicBeatState
 		for (script in luaArray) {
 			if(exclusions.contains(script.scriptName))
 				continue;
+
+			var scriptContent:String = '' + File.getContent(script.scriptName);
+			if (!scriptContent.contains('function $event')) continue;
 
 			var ret:Dynamic = script.call(event, args);
 			if(ret == FunkinLua.Function_StopLua && !ignoreStops)

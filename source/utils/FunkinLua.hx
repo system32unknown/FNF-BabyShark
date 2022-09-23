@@ -204,6 +204,8 @@ class FunkinLua {
 		set('lowQuality', ClientPrefs.getPref('lowQuality'));
 		set('shadersEnabled', ClientPrefs.getPref('shadersEnabled'));
 		set('scriptName', scriptName);
+		set('isPixelStage', PlayState.isPixelStage);
+		set('curStage', PlayState.curStage);
 		set('currentModDirectory', Paths.currentModDirectory);
 
 		#if windows
@@ -1472,6 +1474,13 @@ class FunkinLua {
 			loadFrames(leSprite, image, spriteType);
 			leSprite.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 			PlayState.instance.modChartSprites.set(tag, leSprite);
+		});
+		Lua_helper.add_callback(lua, "makeLuaSpriteGroup", function(tag:String, ?x:Float = 0, ?y:Float = 0, ?maxSize:Int = 0) {
+			tag = tag.replace('.', '');
+			resetSpriteTag(tag);
+
+			var leGroup:ModchartGroup = new ModchartGroup(x, y, maxSize);
+			PlayState.instance.modchartGroups.set(tag, leGroup);
 		});
 
 		Lua_helper.add_callback(lua, "makeGraphic", function(obj:String, width:Int, height:Int, color:String) {
@@ -3071,14 +3080,16 @@ class FunkinLua {
 			}
 
 			var result:Null<Int> = Lua.pcall(lua, args.length, 1, 0);
+			var hscriptResult:Dynamic = hscript.call(func, args);
+
 			var error:Dynamic = getErrorMessage();
-			if(error != null) luaTrace("ERROR (" + func + "): " + error, false, false, FlxColor.RED);
 			if(resultIsAllowed(lua, -1)) {
 				var conv:Dynamic = cast Convert.fromLua(lua, -1);
 				Lua.pop(lua, 1);
 				if(conv == null) conv = Function_Continue;
 				return conv;
 			}
+			else if(error != null) luaTrace("ERROR (" + func + "): " + error, false, false, FlxColor.RED);
 			Lua.pop(lua, 1);
 			return Function_Continue;
 		} catch (e:haxe.Exception) {
@@ -3144,12 +3155,13 @@ class FunkinLua {
 	}
 
 	function isErrorAllowed(error:String) {
+		error = error.trim();
 		switch(error)
 		{
 			case 'attempt to call a nil value' | 'C++ exception':
 				return false;
 		}
-		return true;
+		return error.length > 6;
 	}
 	#end
 
@@ -3322,8 +3334,7 @@ class HScript
 		return Reflect.callMethod(this, functionField, args);
 	}
 
-	public function execute(codeToRun:String):Dynamic
-	{
+	public function execute(codeToRun:String):Dynamic {
 		@:privateAccess
 		parser.line = 1;
 		parser.allowTypes = true;

@@ -266,11 +266,6 @@ class FreeplayState extends MusicBeatState
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
-		if (FlxG.keys.justPressed.NINE) {
-			persistentUpdate = false;
-			LoadingState.loadAndSwitchState(new CharacterSelectState());
-		}
-
 		if(ctrl) {
 			persistentUpdate = false;
 			openSubState(new GameplayChangersSubstate());
