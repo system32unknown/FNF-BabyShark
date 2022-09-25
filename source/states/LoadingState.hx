@@ -74,8 +74,7 @@ class LoadingState extends MusicBeatState
 	}
 	
 	function checkLibrary(library:String) {
-		if (Assets.getLibrary(library) == null)
-		{
+		if (Assets.getLibrary(library) == null) {
 			@:privateAccess
 			if (!LimeAssets.libraryPaths.exists(library))
 				throw "Missing library: " + library;
@@ -105,8 +104,7 @@ class LoadingState extends MusicBeatState
 		return Paths.inst(PlayState.SONG.song);
 	}
 	
-	static function getVocalPath()
-	{
+	static function getVocalPath() {
 		return Paths.voices(PlayState.SONG.song);
 	}
 	

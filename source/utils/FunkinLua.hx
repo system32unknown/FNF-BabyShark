@@ -7,7 +7,6 @@ import llua.State;
 import llua.Convert;
 #end
 
-import haxe.Constraints.Function;
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -69,7 +68,7 @@ class FunkinLua {
 	public var closed:Bool = false;
 
 	#if hscript
-	public var hscript:HScript = null;
+	public var hscript:HScript;
 	public static var hscriptVars:Map<String, Dynamic> = new Map();
 	#end	
 	
@@ -442,6 +441,19 @@ class FunkinLua {
 			#end
 		});
 
+		Lua_helper.add_callback(lua, "setShaderSampler2D", function(obj:String, prop:String, bitmapdataPath:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			if(shader == null) return;
+
+			var value = Paths.image(bitmapdataPath);
+			if(value != null && value.bitmap != null)
+				shader.setSampler2D(prop, value.bitmap);
+			#else
+			luaTrace("setShaderSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+		});
+
 		Lua_helper.add_callback(lua, "getRunningScripts", function(){
 			var runningScripts:Array<String> = [];
 			for (idx in 0...PlayState.instance.luaArray.length)
@@ -750,7 +762,6 @@ class FunkinLua {
 			if(retVal == null) Lua.pushnil(lua);
 			return retVal;
 		});
-
 		Lua_helper.add_callback(lua, "addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
 			#if hscript
 			initHaxeModule();
@@ -1141,6 +1152,9 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "getColorFromHex", function(color:String) {
 			if(!color.startsWith('0x')) color = '0xff' + color;
 			return Std.parseInt(color);
+		});
+		Lua_helper.add_callback(lua, "getColorFromRgb", function(r:Int, g:Int, b:Int) {
+			return FlxColor.fromRGB(r, g, b);
 		});
 
 		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String) {
@@ -2727,8 +2741,7 @@ class FunkinLua {
 		return false;
 	}
 
-	public function initHaxeModule()
-	{
+	public function initHaxeModule() {
 		if(hscript == null) {
 			hscript = new HScript();
 		}
@@ -3080,7 +3093,6 @@ class FunkinLua {
 			}
 
 			var result:Null<Int> = Lua.pcall(lua, args.length, 1, 0);
-			var hscriptResult:Dynamic = hscript.call(func, args);
 
 			var error:Dynamic = getErrorMessage();
 			if(resultIsAllowed(lua, -1)) {
@@ -3201,6 +3213,7 @@ class FunkinLua {
 		if(hscript != null) hscript = null;
 		#end
 
+		hscript = null;
 		Lua.close(lua);
 		lua = null;
 		#end
@@ -3269,8 +3282,7 @@ class CustomSubstate extends MusicBeatSubstate
 	public static var name:String = 'unnamed';
 	public static var instance:CustomSubstate;
 
-	override function create()
-	{
+	override function create() {
 		instance = this;
 
 		PlayState.instance.callOnLuas('onCustomSubstateCreate', [name]);
@@ -3278,22 +3290,19 @@ class CustomSubstate extends MusicBeatSubstate
 		PlayState.instance.callOnLuas('onCustomSubstateCreatePost', [name]);
 	}
 
-	public function new(name:String)
-	{
+	public function new(name:String) {
 		CustomSubstate.name = name;
 		super();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		PlayState.instance.callOnLuas('onCustomSubstateUpdate', [name, elapsed]);
 		super.update(elapsed);
 		PlayState.instance.callOnLuas('onCustomSubstateUpdatePost', [name, elapsed]);
 	}
 
-	override function destroy()
-	{
+	override function destroy() {
 		PlayState.instance.callOnLuas('onCustomSubstateDestroy', [name]);
 		super.destroy();
 	}
@@ -3303,10 +3312,9 @@ class CustomSubstate extends MusicBeatSubstate
 class HScript
 {
 	var parser:Parser;
-	public var interp:Interp;
+	var interp:Interp;
 
-	public function new()
-	{
+	public function new() {
 		interp = new Interp();
 		parser = new Parser();
 		setVars();
@@ -3322,16 +3330,8 @@ class HScript
 		return interp.variables;
 	}
 
-	public function exists(i:String):Bool {
+	function exists(i:String):Bool {
 		return interp.variables.exists(i);
-	}
-
-	public function call(key:String, args:Array<Dynamic>):Dynamic {
-		if (!interp.variables.exists(key))
-			return -1;
-
-		var functionField:Function = interp.variables.get(key);
-		return Reflect.callMethod(this, functionField, args);
 	}
 
 	public function execute(codeToRun:String):Dynamic {
@@ -3341,8 +3341,7 @@ class HScript
 		return interp.execute(parser.parseString(codeToRun));
 	}
 
-	public function setVars():Void
-	{
+	function setVars():Void {
 		setVar('FlxG', FlxG);
 		setVar('FlxSprite', FlxSprite);
 		setVar('FlxCamera', FlxCamera);

@@ -1,17 +1,17 @@
 package;
 
-import openfl.system.System;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
+import openfl.system.System;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
+import openfl.display.BitmapData;
 import lime.utils.Assets;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
 #end
-import openfl.display.BitmapData;
 import haxe.Json;
 
 import utils.CoolUtil;

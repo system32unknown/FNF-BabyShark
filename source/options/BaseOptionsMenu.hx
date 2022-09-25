@@ -146,8 +146,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 				usesCheckbox = false;
 			}
 
-			if(usesCheckbox)
-			{
+			if(usesCheckbox) {
 				if(controls.ACCEPT)
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
