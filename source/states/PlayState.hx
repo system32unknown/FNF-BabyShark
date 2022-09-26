@@ -20,6 +20,7 @@ import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.tweens.misc.VarTween;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
@@ -261,13 +262,20 @@ class PlayState extends MusicBeatState
 	public var scoreTxt:FlxText;
 	var scoreTxtTween:FlxTween;
 
+	var allNotesMs:Float = 0;
+	var averageMs:Float = 0;
+
 	public var divider:String = "|";
 	
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
 
-	var msTimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
-	var MsTimingTween:FlxTween;
+	var timingTxtArrays:Array<FlxText> = [
+		new FlxText(0, 0, 0, "0ms"), // Note Ms
+		new FlxText(0, 0, 0, "0ms"), // Average Ms
+	];
+	var msTimingTween:VarTween;
+	var msAverageTween:VarTween;
 
 	var songNameText:FlxText;
 	var engineText:FlxText;
@@ -4003,6 +4011,8 @@ class PlayState extends MusicBeatState
 
 	private function popUpScore(note:Note = null):Void {
 		var noteDiff = getMsTiming(note);
+		allNotesMs += noteDiff;
+		averageMs = allNotesMs / songHits;
 
 		vocals.volume = 1;
 
@@ -4092,23 +4102,34 @@ class PlayState extends MusicBeatState
 		timing.x += comboOffset[3][0];
 		timing.y -= comboOffset[3][1];
 
-		if (ClientPrefs.getPref('ShowMsTiming') && msTimingTxt != null) {
+		if (ClientPrefs.getPref('ShowMsTiming') && timingTxtArrays[0] != null) {
 			var msTiming = CoolUtil.truncateFloat(noteDiff / 1.0, 3);
-			msTimingTxt.text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
-			msTimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			msTimingTxt.borderSize = 1;
-			msTimingTxt.visible = (!hideHud);
+			timingTxtArrays[0].text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
+			timingTxtArrays[0].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			timingTxtArrays[0].borderSize = 1;
+			timingTxtArrays[0].visible = (!hideHud);
 			if (RatingTypes == "Static"){
-				msTimingTxt.cameras = [camHUD];
+				timingTxtArrays[0].cameras = [camHUD];
 			}
 	
 			switch (daRating.name) {
-				case 'shit' | 'bad': msTimingTxt.color = FlxColor.RED;
-				case 'good': msTimingTxt.color = FlxColor.GREEN;
-				case 'sick': msTimingTxt.color = FlxColor.CYAN;
+				case 'shit' | 'bad': timingTxtArrays[0].color = FlxColor.RED;
+				case 'good': timingTxtArrays[0].color = FlxColor.GREEN;
+				case 'sick': timingTxtArrays[0].color = FlxColor.CYAN;
 			}
 	
-			add(msTimingTxt);
+			add(timingTxtArrays[0]);
+		}
+
+		if (ClientPrefs.getPref('ShowAverage') && timingTxtArrays[0] != null) {
+			timingTxtArrays[1].text = "Average: " + averageMs + "ms";
+			timingTxtArrays[1].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			timingTxtArrays[1].borderSize = 1;
+			timingTxtArrays[1].visible = (!hideHud);
+			if (RatingTypes == "Static"){
+				timingTxtArrays[1].cameras = [camHUD];
+			}
+			add(timingTxtArrays[1]);
 		}
 
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
@@ -4125,20 +4146,46 @@ class PlayState extends MusicBeatState
 		comboSpr.y -= comboOffset[2][1];
 
 		if (ClientPrefs.getPref('ShowMsTiming')) {
-			msTimingTxt.screenCenter();
+			timingTxtArrays[0].screenCenter();
 			if (showCombo) {
 				if (combo >= 10) {
-					msTimingTxt.x = comboSpr.x + 100;
-					msTimingTxt.y = comboSpr.y + 80;
+					timingTxtArrays[0].x = comboSpr.x + 100;
+					timingTxtArrays[0].y = comboSpr.y + 80;
 				} else {
-					msTimingTxt.x = rating.x + 100;
-					msTimingTxt.y = rating.y + 100;
+					timingTxtArrays[0].x = rating.x + 100;
+					timingTxtArrays[0].y = rating.y + 100;
 				}
 			} else {
-				msTimingTxt.x = rating.x + 100;
-				msTimingTxt.y = rating.y + 100;
+				timingTxtArrays[0].x = rating.x + 100;
+				timingTxtArrays[0].y = rating.y + 100;
 			}
-			msTimingTxt.updateHitbox();
+			timingTxtArrays[0].updateHitbox();
+		}
+
+		if (ClientPrefs.getPref('ShowAverage')) {
+			timingTxtArrays[1].screenCenter();
+			if (showCombo) {
+				if (combo >= 10) {
+					timingTxtArrays[1].x = comboSpr.x + 100;
+					if (ClientPrefs.getPref('ShowMsTiming'))
+						timingTxtArrays[1].y = timingTxtArrays[0].y + 80;
+					else
+						timingTxtArrays[1].y = comboSpr.y + 80;
+				} else {
+					timingTxtArrays[1].x = rating.x + 100;
+					if (ClientPrefs.getPref('ShowMsTiming'))
+						timingTxtArrays[1].y = timingTxtArrays[0].y + 100;
+					else
+						timingTxtArrays[1].y = rating.y + 100;
+				}
+			} else {
+				timingTxtArrays[1].x = rating.x + 100;
+				if (ClientPrefs.getPref('ShowMsTiming'))
+					timingTxtArrays[1].y = timingTxtArrays[0].y + 100;
+				else
+					timingTxtArrays[1].y = rating.y + 100;
+			}
+			timingTxtArrays[1].updateHitbox();
 		}
 
 		if (daTiming != "" && ClientPrefs.getPref('ShowLateEarly'))
@@ -4250,15 +4297,30 @@ class PlayState extends MusicBeatState
 		}
 
 		if (ClientPrefs.getPref('ShowMsTiming')) {
-			if (MsTimingTween == null) {
-				MsTimingTween = FlxTween.tween(msTimingTxt, {alpha: 0}, 0.2, {
+			if (msTimingTween == null) {
+				msTimingTween = FlxTween.tween(timingTxtArrays[0], {alpha: 0}, 0.2, {
 					startDelay: Conductor.crochet * 0.001
 				});
 			} else {
-				msTimingTxt.alpha = 1;
-				MsTimingTween.cancel();
+				timingTxtArrays[0].alpha = 1;
+				msTimingTween.cancel();
 
-				MsTimingTween = FlxTween.tween(msTimingTxt, {alpha: 0}, 0.2, {
+				msTimingTween = FlxTween.tween(timingTxtArrays[0], {alpha: 0}, 0.2, {
+					startDelay: Conductor.crochet * 0.001
+				});
+			}
+		}
+
+		if (ClientPrefs.getPref('ShowAverage')) {
+			if (msAverageTween == null) {
+				msAverageTween = FlxTween.tween(timingTxtArrays[1], {alpha: 0}, 0.2, {
+					startDelay: Conductor.crochet * 0.001
+				});
+			} else {
+				timingTxtArrays[1].alpha = 1;
+				msAverageTween.cancel();
+
+				msAverageTween = FlxTween.tween(timingTxtArrays[1], {alpha: 0}, 0.2, {
 					startDelay: Conductor.crochet * 0.001
 				});
 			}
@@ -4275,20 +4337,20 @@ class PlayState extends MusicBeatState
 	}
 
 	public static function getMsTiming(note:Note = null):Float {
-		var TempnoteDiff:Float = 0;
+		var notediff:Float = 0;
 		switch(ClientPrefs.getPref('MstimingTypes')) {
 			case 'Psych':
-				TempnoteDiff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
+				notediff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
 			case 'Kade':
 				if (note != null)
-					TempnoteDiff = -(note.strumTime - Conductor.songPosition);
+					notediff = -(note.strumTime - Conductor.songPosition);
 				else
-					TempnoteDiff = Conductor.safeZoneOffset;
+					notediff = Conductor.safeZoneOffset;
 			case 'Andromeda':
-				TempnoteDiff = note.strumTime - Conductor.songPosition;
+				notediff = note.strumTime - Conductor.songPosition;
 		}
 
-		return TempnoteDiff;
+		return notediff;
 	}
 
 	public var strumsBlocked:Array<Bool> = [];

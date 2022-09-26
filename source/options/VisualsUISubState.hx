@@ -86,6 +86,13 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Show Average Timing',
+			'If checked, the average timing will be shown.',
+			'ShowAverage',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Show Late/Early',
 			'If checked, the Late/Early counter will be shown.',
 			'ShowLateEarly',
