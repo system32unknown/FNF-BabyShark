@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
+import data.EkData.Keybinds;
 import utils.ClientPrefs;
 import utils.CoolUtil;
 import utils.Controls;
@@ -16,116 +17,23 @@ import ui.Alphabet;
 using StringTools;
 
 class ControlsSubState extends MusicBeatSubstate {
-	private static var curSelected:Int = -1;
+	private static var curSelected:Int = 1;
 	private static var curAlt:Bool = false;
 
 	private static var defaultKey:String = 'Reset to Default Keys';
-	var holdTime:Float = 0;
+	private var bindLength:Int = 0;
 
-	var optionShit:Array<Dynamic> = [
-		['NOTES'],
-		[''],
-		['1 KEY'],
-		['Center', 'note_one1'],
-		[''],
-		['2 KEYS'],
-		['Left', 'note_two1'],
-		['Right', 'note_two2'],
-		[''],
-		['3 KEYS'],
-		['Left', 'note_three1'],
-		['Center', 'note_three2'],
-		['Right', 'note_three3'],
-		[''],
-		['4 KEYS'],
-		['Left', 'note_left'],
-		['Down', 'note_down'],
-		['Up', 'note_up'],
-		['Right', 'note_right'],
-		[''],
-		['5 KEYS'],
-		['Left', 'note_five1'],
-		['Down', 'note_five2'],
-		['Center', 'note_five3'],
-		['Up', 'note_five4'],
-		['Right', 'note_five5'],
-		[''],
-		['6 KEYS'],
-		['Left 1', 'note_six1'],
-		['Up', 'note_six2'],
-		['Right 1', 'note_six3'],
-		['Left 2', 'note_six4'],
-		['Down', 'note_six5'],
-		['Right 2', 'note_six6'],
-		[''],
-		['7 KEYS'],
-		['Left 1', 'note_seven1'],
-		['Up', 'note_seven2'],
-		['Right 1', 'note_seven3'],
-		['Center', 'note_seven4'],
-		['Left 2', 'note_seven5'],
-		['Down', 'note_seven6'],
-		['Right 2', 'note_seven7'],
-		[''],
-		['8 KEYS'],
-		['Left 1', 'note_eight1'],
-		['Down 1', 'note_eight2'],
-		['Up 1', 'note_eight3'],
-		['Right 1', 'note_eight4'],
-		['Left 2', 'note_eight5'],
-		['Down 2', 'note_eight6'],
-		['Up 2', 'note_eight7'],
-		['Right 2', 'note_eight8'],
-		[''],
-		['9 KEYS'],
-		['Left 1', 'note_nine1'],
-		['Down 1', 'note_nine2'],
-		['Up 1', 'note_nine3'],
-		['Right 1', 'note_nine4'],
-		['Center', 'note_nine5'],
-		['Left 2', 'note_nine6'],
-		['Down 2', 'note_nine7'],
-		['Up 2', 'note_nine8'],
-		['Right 2', 'note_nine9'],
-		[''],
-		['10 KEYS'],
-		['Left 1', 'note_ten1'],
-		['Down 1', 'note_ten2'],
-		['Up 1', 'note_ten3'],
-		['Right 1', 'note_ten4'],
-		['Center 1', 'note_ten5'],
-		['Center 2', 'note_ten6'],
-		['Left 2', 'note_ten7'],
-		['Down 2', 'note_ten8'],
-		['Up 2', 'note_ten9'],
-		['Right 2', 'note_ten10'],
-		[''],
-		['UI'],
-		['Left', 'ui_left'],
-		['Down', 'ui_down'],
-		['Up', 'ui_up'],
-		['Right', 'ui_right'],
-		[''],
-		['Reset', 'reset'],
-		['Accept', 'accept'],
-		['Back', 'back'],
-		['Pause', 'pause'],
-		[''],
-		['VOLUME'],
-		['Mute', 'volume_mute'],
-		['Up', 'volume_up'],
-		['Down', 'volume_down'],
-		[''],
-		['DEBUG'],
-		['Key 1', 'debug_1'],
-		['Key 2', 'debug_2']
-	];
+	var optionShit:Array<Dynamic> = Keybinds.optionShit();
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private var grpInputs:Array<AttachedText> = [];
 	private var grpInputsAlt:Array<AttachedText> = [];
+
 	var rebindingKey:Bool = false;
 	var nextAccept:Int = 5;
+
+	var pages:Array<Dynamic> = [];
+	var curPage:Int = 0;
 
 	public function new() {
 		super();
@@ -139,8 +47,51 @@ class ControlsSubState extends MusicBeatSubstate {
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
-		optionShit.push(['']);
-		optionShit.push([defaultKey]);
+		var currentPage:String = "";
+		var generatedPage:Dynamic = [];
+		for (i in 0...optionShit.length) {
+			if (optionShit[i][0] != "" && optionShit[i].length < 2 && currentPage == "") { //It's the first page title
+				generatedPage.push(optionShit[i]);
+				currentPage = optionShit[i][0];
+			} else if (optionShit[i][0] != "" && optionShit[i].length < 2 && currentPage != "") { // It's a new page title.
+				generatedPage.push(['']);
+				generatedPage.push([defaultKey]);
+				pages.push(generatedPage);
+
+				generatedPage = [];
+				generatedPage.push(optionShit[i]);
+				currentPage = optionShit[i][0];
+			} else if (optionShit[i].length > 1) { // It's an input
+				generatedPage.push(optionShit[i]);
+			} else if (optionShit[i][0] != "" && optionShit[i].length < 2) { // It's blank!
+				generatedPage.push(optionShit[i]);
+			}
+		}
+
+		optionShit = pages[curPage];
+		reloadTexts();
+		changeSelection();
+	}
+
+	function reloadTexts() {
+		for (i in 0...grpOptions.members.length) {
+			var obj = grpOptions.members[0];
+			obj.kill();
+			grpOptions.remove(obj, true);
+			obj.destroy();
+		}
+
+		for (text in grpInputs) {
+			text.kill();
+			remove(text);
+		}
+		grpInputs = [];
+
+		for (text in grpInputsAlt) {
+			text.kill();
+			remove(text);
+		}
+		grpInputsAlt = [];
 
 		for (i in 0...optionShit.length) {
 			var isCentered:Bool = false;
@@ -149,7 +100,11 @@ class ControlsSubState extends MusicBeatSubstate {
 				isCentered = true;
 			}
 
-			var optionText:Alphabet = new Alphabet(200, 300, optionShit[i][0], (!isCentered || isDefaultKey));
+			var isFirst:Bool = i == 0;
+			var text:String = optionShit[i][0];
+			if (isFirst) text = '< ' + text + ' >';
+
+			var optionText:Alphabet = new Alphabet(200, 300, text, (!isCentered || isDefaultKey));
 			optionText.isMenuItem = true;
 			if(isCentered) {
 				optionText.screenCenter(X);
@@ -160,36 +115,23 @@ class ControlsSubState extends MusicBeatSubstate {
 			optionText.distancePerItem.y = 60;
 			optionText.targetY = i - curSelected;
 			optionText.snapToPosition();
+			optionText.ID = 0;
+			if (isFirst) optionText.ID = 1;
 			grpOptions.add(optionText);
 
 			if(!isCentered) {
 				addBindTexts(optionText, i);
+				bindLength++;
 				if(curSelected < 0) curSelected = i;
 			}
 		}
-
-		doMessage("Hold your UI UP key and UI DOWN key to scroll faster.\nHold your SHIFT key to skip 3.");
-		changeSelection();
 	}
 
 	var bindingTime:Float = 0;
+	var holdTime:Float = 0;
 	override function update(elapsed:Float) {
 		if(!rebindingKey) {
-
-			var shiftMult:Int = 1;
-			if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
-
-			if (controls.UI_UP_P) {
-				holdTime = 0;
-				changeSelection(-1);
-			}
-			if (controls.UI_DOWN_P) {
-				holdTime = 0;
-				changeSelection(1);
-			}
-			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
-				changeAlt();
-			}
+			var shiftMult:Int = FlxG.keys.pressed.SHIFT ? 3 : 1;
 
 			if(controls.UI_DOWN || controls.UI_UP)
 			{
@@ -197,10 +139,23 @@ class ControlsSubState extends MusicBeatSubstate {
 				holdTime += elapsed;
 				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-				{
+				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 				}
+			}
+
+			if (controls.UI_UP_P) {
+				changeSelection(-shiftMult);
+				holdTime = 0;
+			}
+			if (controls.UI_DOWN_P) {
+				changeSelection(shiftMult);
+				holdTime = 0;
+			}
+			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
+				if (grpOptions.members[curSelected].ID == 1) {
+					changePage(controls.UI_LEFT_P ? -1 : 1);
+				} else changeAlt();
 			}
 
 			if (controls.BACK) {
@@ -213,6 +168,7 @@ class ControlsSubState extends MusicBeatSubstate {
 				if(optionShit[curSelected][0] == defaultKey) {
 					ClientPrefs.keyBinds = ClientPrefs.defaultKeys.copy();
 					reloadKeys();
+					reloadTexts();
 					changeSelection();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 				} else if(!unselectableCheck(curSelected)) {
@@ -234,7 +190,6 @@ class ControlsSubState extends MusicBeatSubstate {
 
 				var opposite:Int = (curAlt ? 0 : 1);
 				if(keysArray[opposite] == keysArray[1 - opposite]) {
-					doMessage("You cannot repeat the same key.", 2);
 					keysArray[opposite] = NONE;
 				}
 				ClientPrefs.keyBinds.set(optionShit[curSelected][1], keysArray);
@@ -247,10 +202,13 @@ class ControlsSubState extends MusicBeatSubstate {
 			bindingTime += elapsed;
 			if(bindingTime > 5) {
 				if (curAlt) {
-					grpInputsAlt[curSelected].alpha = 1;
+					if (grpInputsAlt[curSelected] != null)
+						grpInputsAlt[curSelected].alpha = 1;
 				} else {
-					grpInputs[curSelected].alpha = 1;
+					if (grpInputsAlt[curSelected] != null)
+						grpInputs[curSelected].alpha = 1;
 				}
+				reloadTexts();
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				rebindingKey = false;
 				bindingTime = 0;
@@ -273,14 +231,32 @@ class ControlsSubState extends MusicBeatSubstate {
 		return num;
 	}
 	
+	function changePage(change:Int = 0) {
+		curPage += change;
+
+		if (curPage < 0)
+			curPage = pages.length - 1;
+		if (curPage >= pages.length)
+			curPage = 0;
+
+		optionShit = pages[curPage];
+
+		reloadTexts();
+		changeSelection();
+	}
+
 	function changeSelection(change:Int = 0) {
-		do {
-			curSelected += change;
-			if (curSelected < 0)
-				curSelected = optionShit.length - 1;
-			if (curSelected >= optionShit.length)
-				curSelected = 0;
-		} while(unselectableCheck(curSelected));
+		curSelected += change;
+
+		if (curSelected < 0)
+			curSelected = optionShit.length - 1;
+		if (curSelected >= optionShit.length)
+			curSelected = 0;
+
+		if ((unselectableCheck(curSelected) && grpOptions.members[curSelected].ID != 1) && change != 0) {
+			changeSelection(change);
+			return;
+		}
 
 		var bullShit:Int = 0;
 
@@ -295,22 +271,24 @@ class ControlsSubState extends MusicBeatSubstate {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			if(!unselectableCheck(bullShit - 1)) {
+			if(!unselectableCheck(bullShit - 1) || item.ID == 1) {
 				item.alpha = 0.6;
 				if (item.targetY == 0) {
 					item.alpha = 1;
-					if(curAlt) {
-						for (i in 0...grpInputsAlt.length) {
-							if(grpInputsAlt[i].sprTracker == item) {
-								grpInputsAlt[i].alpha = 1;
-								break;
+					if (item.ID != 1) {
+						if(curAlt) {
+							for (i in 0...grpInputsAlt.length) {
+								if(grpInputsAlt[i].sprTracker == item) {
+									grpInputsAlt[i].alpha = 1;
+									break;
+								}
 							}
-						}
-					} else {
-						for (i in 0...grpInputs.length) {
-							if(grpInputs[i].sprTracker == item) {
-								grpInputs[i].alpha = 1;
-								break;
+						} else {
+							for (i in 0...grpInputs.length) {
+								if(grpInputs[i].sprTracker == item) {
+									grpInputs[i].alpha = 1;
+									break;
+								}
 							}
 						}
 					}

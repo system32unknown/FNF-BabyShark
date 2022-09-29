@@ -12,6 +12,8 @@ import game.StrumNote;
 import game.Note;
 import data.StageData;
 import utils.CoolUtil;
+import utils.ClientPrefs;
+import shaders.ColorSwap;
 import states.MusicBeatState;
 import states.LoadingState;
 import states.PlayState;
@@ -23,6 +25,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.addons.display.FlxGridOverlay;
+import flixel.ui.FlxButton;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
@@ -36,17 +39,16 @@ import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
+import flixel.util.FlxSort;
+import openfl.utils.Assets as OpenFlAssets;
 import haxe.Json;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
-import openfl.utils.Assets as OpenFlAssets;
 import lime.media.AudioBuffer;
 import haxe.io.Bytes;
 import flash.geom.Rectangle;
-import flixel.util.FlxSort;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
@@ -93,8 +95,8 @@ class ChartingState extends MusicBeatState
 		['Screen Shake', "Value 1: Camera shake\nValue 2: HUD shake\n\nEvery value works as the following example: \"1, 0.05\".\nThe first number (1) is the duration.\nThe second number (0.05) is the intensity."],
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
-		['Change Mania', "Value 1: The new mania value (min: 0; max: 9)"],
-		['Set Property', "Value 1: Variable name\nValue 2: New value"]
+		['Set Property', "Value 1: Variable name\nValue 2: New value"],
+		['Change Mania', "Value 1: The new mania value (min: " + Note.minMania + "; max: " + Note.maxMania + ")\nValue 2: Skip old strum fade tween\nPut 'true' to skip it, anything else or blank to not."]
 	];
 
 	var _file:FileReference;
@@ -148,6 +150,7 @@ class ChartingState extends MusicBeatState
 	var value1InputText:FlxUIInputText;
 	var value2InputText:FlxUIInputText;
 	var currentSongName:String;
+	var currentDifficultyName:String;
 
 	var zoomTxt:FlxText;
 	var zoomList:Array<Float> = [0.25, 0.5, 1, 2, 3, 4, 6, 8, 12, 16, 24];
@@ -362,7 +365,7 @@ class ChartingState extends MusicBeatState
 		UI_songTitle.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		blockPressWhileTypingOn.push(UI_songTitle);
 
-		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
+		var check_voices = new FlxUICheckBox(10, 30, null, null, "Has voice track", 100);
 		check_voices.checked = _song.needsVoices;
 		check_voices.callback = function() {
 			_song.needsVoices = check_voices.checked;
@@ -530,6 +533,26 @@ class ChartingState extends MusicBeatState
 		stageDropDown.selectedLabel = _song.stage;
 		blockPressWhileScrolling.push(stageDropDown);
 
+		tempMap.clear();
+		var difficulties:Array<String> = CoolUtil.difficulties;
+		for (i in 0...difficulties.length) {
+			tempMap.set(difficulties[i], true);
+		}
+		currentDifficultyName = CoolUtil.difficulties[PlayState.storyDifficulty];
+
+		var difficultyDropDown = new FlxUIDropDownMenuCustom(stageDropDown.x, gfVersionDropDown.y, FlxUIDropDownMenuCustom.makeStrIdLabelArray(difficulties, true), function (difficulty:String) {
+			var newDiff = difficulties[Std.parseInt(difficulty)];
+			if (newDiff != currentDifficultyName) {
+				openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
+					currentDifficultyName = newDiff;
+					PlayState.storyDifficulty = Std.parseInt(difficulty);
+					loadJson(_song.song.toLowerCase());
+				}, null, ignoreWarnings));
+			}
+		});
+		difficultyDropDown.selectedLabel = currentDifficultyName;
+		blockPressWhileScrolling.push(difficultyDropDown);
+
 		var skin = PlayState.SONG.arrowSkin;
 		if (skin == null) skin = '';
 		noteSkinInputText = new FlxUIInputText(player2DropDown.x, player2DropDown.y + 50, 150, skin, 8);
@@ -570,18 +593,19 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(noteSkinInputText);
 		tab_group_song.add(noteSplashesInputText);
 		tab_group_song.add(new FlxText(stepperBPM.x, stepperBPM.y - 15, 0, 'Song BPM:'));
-		tab_group_song.add(new FlxText(stepperBPM.x + 100, stepperBPM.y - 15, 0, 'Song Offset:'));
 		tab_group_song.add(new FlxText(stepperSpeed.x, stepperSpeed.y - 15, 0, 'Song Speed:'));
 		tab_group_song.add(new FlxText(stepperMania.x, stepperMania.y - 15, 0, 'Mania:'));
 		tab_group_song.add(new FlxText(player2DropDown.x, player2DropDown.y - 15, 0, '(P2) Opponent:'));
 		tab_group_song.add(new FlxText(gfVersionDropDown.x, gfVersionDropDown.y - 15, 0, '(P3) GF:'));
 		tab_group_song.add(new FlxText(player1DropDown.x, player1DropDown.y - 15, 0, 'P1 (BF):'));
+		tab_group_song.add(new FlxText(difficultyDropDown.x, difficultyDropDown.y - 15, 0, 'Difficulty:'));
 		tab_group_song.add(new FlxText(stageDropDown.x, stageDropDown.y - 15, 0, 'Stage:'));
 		tab_group_song.add(new FlxText(noteSkinInputText.x, noteSkinInputText.y - 15, 0, 'Note Texture:'));
 		tab_group_song.add(new FlxText(noteSplashesInputText.x, noteSplashesInputText.y - 15, 0, 'Note Splashes Texture:'));
 		tab_group_song.add(player2DropDown);
 		tab_group_song.add(gfVersionDropDown);
 		tab_group_song.add(player1DropDown);
+		tab_group_song.add(difficultyDropDown);
 		tab_group_song.add(stageDropDown);
 
 		UI_box.addGroup(tab_group_song);
@@ -1110,7 +1134,7 @@ class ChartingState extends MusicBeatState
 
 			FlxG.sound.music.volume = vol;
 		};
-		mouseScrollingQuant = new FlxUICheckBox(10, 200, null, null, "Mouse Scrolling Quantization", 100);
+		mouseScrollingQuant = new FlxUICheckBox(10, 210, null, null, "Mouse Scrolling Quantization", 100);
 		if (FlxG.save.data.mouseScrollingQuant == null) FlxG.save.data.mouseScrollingQuant = false;
 		mouseScrollingQuant.checked = FlxG.save.data.mouseScrollingQuant;
 
@@ -1119,7 +1143,7 @@ class ChartingState extends MusicBeatState
 			mouseQuant = FlxG.save.data.mouseScrollingQuant;
 		};
 
-		check_vortex = new FlxUICheckBox(10, 160, null, null, "Vortex Editor (BETA)", 100);
+		check_vortex = new FlxUICheckBox(10, 170, null, null, "Vortex Editor (BETA)", 100);
 		if (FlxG.save.data.chart_vortex == null) FlxG.save.data.chart_vortex = false;
 		check_vortex.checked = FlxG.save.data.chart_vortex;
 
@@ -1129,7 +1153,7 @@ class ChartingState extends MusicBeatState
 			reloadGridLayer();
 		};
 
-		check_warnings = new FlxUICheckBox(10, 120, null, null, "Ignore Progress Warnings", 100);
+		check_warnings = new FlxUICheckBox(10, 130, null, null, "Ignore Progress Warnings", 100);
 		if (FlxG.save.data.ignoreWarnings == null) FlxG.save.data.ignoreWarnings = false;
 		check_warnings.checked = FlxG.save.data.ignoreWarnings;
 
@@ -1860,6 +1884,10 @@ class ChartingState extends MusicBeatState
 			updateWaveform();
 		}
 
+		var oneHalf:Float = GRID_SIZE * Note.ammo[_song.mania];
+		leftIcon.setPosition((oneHalf / 2) - (leftIcon.width / 2), -100);
+		rightIcon.setPosition(((oneHalf * 2) - (oneHalf / 2)) - (rightIcon.width / 2), -100);
+
 		var leHeight:Int = Std.int(gridBG.height);
 		var foundNextSec:Bool = false;
 		if(sectionStartTime(1) <= FlxG.sound.music.length) {
@@ -2445,10 +2473,27 @@ class ChartingState extends MusicBeatState
 		if(height < minHeight) height = minHeight;
 		if(height < 1) height = 1; //Prevents error of invalid height
 
+		var colorSwap = new ColorSwap();
+
 		var colorList:Array<String> = Note.keysShit.get(_song.mania).get('sustaincolor');
 		var susColor = Std.parseInt('0xff' + colorList[note.noteData]);
 
+		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
+		var hueColor:Float = arrowHSV[Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania])][0] / 360;
+		var saturationColor:Float = arrowHSV[Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania])][1] / 100;
+		var brightnessColor:Float = arrowHSV[Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania])][2] / 100;
+		switch (note.noteType) {
+			case 'Hurt Note' | 'Danger Note' | 'Kill Note':
+				susColor = CoolUtil.dominantColor(note);
+		}
+
 		var spr:FlxSprite = new FlxSprite(note.x + (GRID_SIZE * 0.5) - 4, note.y + GRID_SIZE / 2).makeGraphic(8, height, susColor);
+		if (note.noteType != "Hurt Note" || note.noteType != "Danger Note" || note.noteType != "Kill Note") {
+			spr.shader = colorSwap.shader;
+			colorSwap.hue = hueColor;
+			colorSwap.saturation = saturationColor;
+			colorSwap.brightness = brightnessColor;
+		}
 		return spr;
 	}
 
@@ -2706,7 +2751,6 @@ class ChartingState extends MusicBeatState
 		}
 
 		var data:String = Json.stringify(json, "\t");
-
 		if ((data != null) && (data.length > 0)) {
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);

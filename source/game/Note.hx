@@ -5,6 +5,7 @@ import editors.ChartingState;
 import shaders.ColorSwap;
 import utils.ClientPrefs;
 import states.PlayState;
+import data.EkData;
 
 using StringTools;
 
@@ -24,32 +25,21 @@ class Note extends FlxSprite
 	public static var xtra:Array<Int> = [150, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 	public static var posRest:Array<Int> = [0, 0, 0, 0, 25, 32, 46, 52, 60, 40, 30];
 	public static var gridSizes:Array<Int> = [40, 40, 40, 40, 40, 40, 40, 40, 40, 35, 30];
-	public static var offsets:Array<Dynamic> = [[20, 10], [10, 10], [10, 10], [10, 10], [10, 10], [10, 10], [10, 10], [10, 10], [10, 10], [10, 20], [10, 10], [10, 10]];
+
+	public static var offsets:Map<Int, Array<Int>> = [
+		0 => [20, 10],
+		9 => [10, 20]
+	];
 
 	public static var minMania:Int = 0;
 	public static var maxMania:Int = 9;
+	public static var xmlMax:Int = 17; // This specifies the max of the splashes can go
 
 	public static var maxManiaUI_integer:Int = maxMania + 1;
 	public static var defaultMania:Int = 3;
 
-	public static var keysShit:Map<Int, Map<String, Dynamic>> = [
-		0 => ["letters" => ["E"], "anims" => ["UP"], "strumAnims" => ["SPACE"], "pixelAnimIndex" => [4], "sustaincolor" => ['cccccc']],
-		1 => ["letters" => ["A", "D"], "anims" => ["LEFT", "RIGHT"], "strumAnims" => ["LEFT", "RIGHT"], "pixelAnimIndex" => [0, 3], "sustaincolor" => ['c24b99', 'f9393f']],
-		2 => ["letters" => ["A", "E", "D"], "anims" => ["LEFT", "UP", "RIGHT"], "strumAnims" => ["LEFT", "SPACE", "RIGHT"], "pixelAnimIndex" => [0, 4, 3], "sustaincolor" => ['c24b99', 'cccccc', 'f9393f']],
-		3 => ["letters" => ["A", "B", "C", "D"], "anims" => ["LEFT", "DOWN", "UP", "RIGHT"], "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT"], "pixelAnimIndex" => [0, 1, 2, 3], "sustaincolor" => ['c24b99', '00ffff', '12fa05', 'f9393f']],
-		4 => ["letters" => ["A", "B", "E", "C", "D"], "anims" => ["LEFT", "DOWN", "UP", "UP", "RIGHT"],
-			 "strumAnims" => ["LEFT", "DOWN", "SPACE", "UP", "RIGHT"], "pixelAnimIndex" => [0, 1, 4, 2, 3], "sustaincolor" => ['c24b99', '00ffff', 'cccccc' ,'12fa05', 'f9393f']],
-		5 => ["letters" => ["A", "C", "D", "F", "B", "I"], "anims" => ["LEFT", "UP", "RIGHT", "LEFT", "DOWN", "RIGHT"],
-			 "strumAnims" => ["LEFT", "UP", "RIGHT", "LEFT", "DOWN", "RIGHT"], "pixelAnimIndex" => [0, 2, 3, 5, 1, 8], "sustaincolor" => ['c24b99', '12fa05', 'f9393f', 'ffff00', '00ffff', '0033ff']],
-		6 => ["letters" => ["A", "C", "D", "E", "F", "B", "I"], "anims" => ["LEFT", "UP", "RIGHT", "UP", "LEFT", "DOWN", "RIGHT"],
-			 "strumAnims" => ["LEFT", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "RIGHT"], "pixelAnimIndex" => [0, 2, 3, 4, 5, 1, 8], "sustaincolor" => ['c24b99', '12fa05', 'f9393f', 'cccccc', 'ffff00', '00ffff', '0033ff']],
-		7 => ["letters" => ["A", "B", "C", "D", "F", "G", "H", "I"], "anims" => ["LEFT", "UP", "DOWN", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
-			 "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"], "pixelAnimIndex" => [0, 1, 2, 3, 5, 6, 7, 8], "sustaincolor" => ['c24b99', '00ffff', '12fa05', 'f9393f', 'ffff00', '8b4aff', 'ff0000', '0033ff']],
-		8 => ["letters" => ["A", "B", "C", "D", "E", "F", "G", "H", "I"], "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
-			 "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT"], "pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8], "sustaincolor" => ['c24b99', '00ffff', '12fa05', 'f9393f', 'cccccc', 'ffff00', '8b4aff', 'ff0000', '0033ff']],
-		9 => ["letters" => ["A", "B", "C", "D", "E", "J", "F", "G", "H", "I"], "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
-			 "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], "pixelAnimIndex" => [0, 1, 2, 3, 4, 9, 5, 6, 7, 8], "sustaincolor" => ['c24b99', '00ffff', '12fa05', 'f9393f', 'cccccc', 'cccccc', 'ffff00', '8b4aff', 'ff0000', '0033ff']]
-	];
+	public static var pixelNotesDivisionValue:Int = 18;
+	public static var keysShit:Map<Int, Map<String, Dynamic>> = EKData.keysShit;
 
 	public static var ammo:Array<Int> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 	public static var pixelScales:Array<Float> = [1.2, 1.15, 1.1, 1, 0.9, 0.83, 0.8, 0.74, 0.7, 0.6, 0.55];
@@ -124,6 +114,8 @@ class Note extends FlxSprite
 	public var distance:Float = 2000; //plan on doing scroll directions soon -bb
 
 	public var hitsoundDisabled:Bool = false;
+	public var changeAnim:Bool = true;
+	public var changeColSwap:Bool = true;
 	
 	var defaultWidth:Float = 0;
 	var defaultHeight:Float = 0;
@@ -323,13 +315,13 @@ class Note extends FlxSprite
 		if(PlayState.isPixelStage) {
 			if(isSustainNote) {
 				loadGraphic(Paths.image('pixelUI/' + blahblah + 'ENDS'));
-				width = width / 10;
+				width = width / pixelNotesDivisionValue;
 				height = height / 2;
 				originalHeightForCalcs = height;
 				loadGraphic(Paths.image('pixelUI/' + blahblah + 'ENDS'), true, Math.floor(width), Math.floor(height));
 			} else {
 				loadGraphic(Paths.image('pixelUI/' + blahblah));
-				width = width / 10;
+				width = width / pixelNotesDivisionValue;
 				height = height / 5;
 				loadGraphic(Paths.image('pixelUI/' + blahblah), true, Math.floor(width), Math.floor(height));
 			}
@@ -391,23 +383,6 @@ class Note extends FlxSprite
 				animation.add(gfxLetter[i], [i + 10]);
 			}
 		}
-	}
-
-	public function applyManiaChange() {
-		if (isSustainNote) 
-			scale.y = 1;
-
-		reloadNote(texture);
-		if (isSustainNote)
-			offsetX = width / 2;
-
-		if (!isSustainNote) {
-			var animToPlay:String = '';
-			animToPlay = Note.keysShit.get(mania).get('letters')[noteData % Note.ammo[mania]];
-			animation.play(animToPlay);
-		}
-
-		updateHitbox();
 	}
 
 	override function update(elapsed:Float)

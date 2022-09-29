@@ -39,10 +39,8 @@ class StrumNote extends FlxSprite
 		this.noteData = leData;
 		super(x, y);
 
-		var stat:String = Note.keysShit.get(PlayState.mania).get('strumAnims')[leData];
-		var pres:String = Note.keysShit.get(PlayState.mania).get('letters')[leData];
-		skinThing[0] = stat;
-		skinThing[1] = pres;
+		skinThing[0] = Note.keysShit.get(PlayState.mania).get('strumAnims')[leData];
+		skinThing[1] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
 
 		var skin:String = 'NOTE_assets';
 		if(PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
@@ -83,8 +81,7 @@ class StrumNote extends FlxSprite
 		}
 		updateHitbox();
 
-		if(lastAnim != null)
-		{
+		if(lastAnim != null) {
 			playAnim(lastAnim, true);
 		}
 	}
@@ -115,10 +112,8 @@ class StrumNote extends FlxSprite
 			}
 		}
 		
-		if(animation.curAnim != null) {
-			if(animation.curAnim.name == 'confirm' && !PlayState.isPixelStage) {
-				centerOrigin();
-			}
+		if((animation.curAnim != null && animation.curAnim.name == 'confirm') && !PlayState.isPixelStage) {
+			centerOrigin();
 		}
 
 		super.update(elapsed);

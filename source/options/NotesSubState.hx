@@ -75,12 +75,11 @@ class NotesSubState extends MusicBeatSubstate
 			shaderArray.push(newShader);
 		}
 
-		hsbText = new Alphabet(posX + 560, 0, "Hue    Saturation  Brightness", false);
+		hsbText = new Alphabet(posX + 720, 0, "Hue    Saturation  Brightness", false);
 		hsbText.scaleX = 0.6;
 		hsbText.scaleY = 0.6;
 		add(hsbText);
 
-		doMessage("Hold your UI UP key and UI DOWN key to scroll faster.\nHold your UI LEFT key and UI RIGHT key when changing a\nnote value to change it faster.\nHold your SHIFT key to skip 3.", 8);
 		changeSelection();
 	}
 

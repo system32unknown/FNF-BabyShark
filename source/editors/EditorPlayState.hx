@@ -8,7 +8,7 @@ import game.Conductor;
 import game.Note;
 import utils.CoolUtil;
 import utils.ClientPrefs;
-import utils.Keybinds;
+import data.EkData.Keybinds;
 import states.MusicBeatState;
 import states.PlayState;
 import states.LoadingState;

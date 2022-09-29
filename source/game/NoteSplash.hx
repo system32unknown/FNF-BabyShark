@@ -45,20 +45,27 @@ class NoteSplash extends FlxSprite
 		colorSwap.saturation = satColor;
 		colorSwap.brightness = brtColor;
 
-		var offsets:Array<Int> = [Note.offsets[PlayState.mania][0], Note.offsets[PlayState.mania][1]];
+		var offsets:Array<Int> = [10, 10];
+		var mania:Int = PlayState.mania;
+		if(Note.offsets.exists(mania)){
+			var oA = Note.offsets.get(mania);
+			offsets = [oA[0], oA[1]];
+		}
 		offset.set(offsets[0], offsets[1]);
 
 		var animNum:Int = FlxG.random.int(1, 2);
-		animation.play('note' + Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[note] + '-' + animNum, true);
+		var animIndex:Int = Math.floor(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[note] % (Note.xmlMax + 1));
+		var animToPlay:String = 'note' + animIndex + '-' + animNum;
+		animation.play(animToPlay, true);
 		if(animation.curAnim != null)animation.curAnim.frameRate = 24 + FlxG.random.int(-2, 2);
 	}
 
 	function loadAnims(skin:String) {
 		frames = Paths.getSparrowAtlas(skin);
 
-		for (gfx in 0...Note.gfxLetter.length) {
-			for (splash_frame in 1...3) {
-				animation.addByPrefix('note${gfx}-' + splash_frame, 'note splash ${Note.gfxLetter[gfx]} ' + splash_frame, 24, false);
+		for (splash_frame in 1...3) {
+			for (gfx in 0...Note.gfxLetter.length) {
+				animation.addByPrefix('note$gfx-' + splash_frame, 'note splash ${Note.gfxLetter[gfx]} ' + splash_frame, 24, false);
 			}
 		}
 	}

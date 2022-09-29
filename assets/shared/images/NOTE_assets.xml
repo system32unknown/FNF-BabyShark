@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TextureAtlas imagePath="NOTE_assets.png">
+	<!-- Created with Adobe Animate version 21.0.7.42652 -->
+	<!-- http://www.adobe.com/products/animate.html -->
 	<SubTexture name="A0000" x="1412" y="937" width="154" height="157"/>
 	<SubTexture name="A confirm0000" x="68" y="187" width="217" height="220"/>
 	<SubTexture name="A confirm0001" x="295" y="187" width="217" height="220"/>

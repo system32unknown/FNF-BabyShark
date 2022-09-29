@@ -59,10 +59,9 @@ class HealthIcon extends FlxSprite
 			}
 			
 			loadGraphic(file, true, Math.floor(width / iconnum), Math.floor(height)); //Then load it fr
-			iconOffsets[0] = (width - 150) / iconnum;
-			iconOffsets[1] = (width - 150) / iconnum;
-			
 			if (ClientPrefs.getPref('HealthTypes') != 'Vanilla' || ClientPrefs.getPref('HealthTypes') != "Exe") {
+				iconOffsets[0] = (width - 150) / iconnum;
+				iconOffsets[1] = (width - 150) / iconnum;
 				updateHitbox();
 			}
 

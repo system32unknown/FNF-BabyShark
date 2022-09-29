@@ -35,7 +35,8 @@ class ClientPrefs {
 		'IconBounceType' => 'Psych',
 		'RatingTypes' => 'Static',
 		'comboStacking' => true,
-		'convertEK'=> false,
+		'convertEK' => false,
+		'showKeybindsOnStart' => false,
 		'ShowLU' => false,
 		'HiddenOppLU' => false,
 		'LUAlpha' => 0,
@@ -202,7 +203,7 @@ class ClientPrefs {
 		'debug_1'		=> [SEVEN, NONE],
 		'debug_2'		=> [EIGHT, NONE]
 	];
-	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
+	public static var defaultKeys:Map<String, Array<FlxKey>> = keyBinds;
 
 	public static function loadDefaultKeys() {
 		defaultKeys = keyBinds.copy();
@@ -294,6 +295,7 @@ class ClientPrefs {
 				}
 			}
 		}
+		loadDefaultKeys();
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic):Dynamic {
@@ -311,6 +313,7 @@ class ClientPrefs {
 		TitleState.muteKeys = copyKey(keyBinds.get('volume_mute'));
 		TitleState.volumeDownKeys = copyKey(keyBinds.get('volume_down'));
 		TitleState.volumeUpKeys = copyKey(keyBinds.get('volume_up'));
+
 		FlxG.sound.muteKeys = TitleState.muteKeys;
 		FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 		FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;

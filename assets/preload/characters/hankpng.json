@@ -1,0 +1,78 @@
+{
+	"animations": [
+		{
+			"offsets": [
+				-106,
+				-305
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "idle",
+			"indices": [],
+			"name": "hankpng idle"
+		},
+		{
+			"offsets": [
+				-33,
+				-101
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singUP",
+			"indices": [],
+			"name": "hankpng up"
+		},
+		{
+			"offsets": [
+				-100,
+				-268
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singDOWN",
+			"indices": [],
+			"name": "hankpng down"
+		},
+		{
+			"offsets": [
+				37,
+				-160
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "hankpng left"
+		},
+		{
+			"offsets": [
+				-121,
+				-270
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singRIGHT",
+			"indices": [],
+			"name": "hankpng right"
+		}
+	],
+	"no_antialiasing": false,
+	"image": "characters/Hank_png",
+	"position": [
+		0,
+		0
+	],
+	"healthicon": "hankpng",
+	"flip_x": false,
+	"healthbar_colors": [
+		102,
+		187,
+		223
+	],
+	"camera_position": [
+		0,
+		300
+	],
+	"sing_duration": 4,
+	"scale": 1
+}
