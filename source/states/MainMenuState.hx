@@ -93,6 +93,17 @@ class MainMenuState extends MusicBeatState
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
 		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
 
+		if (FlxG.random.bool(20)) {
+			var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('3dMenu'));
+			bg.scrollFactor.set(0, yScroll);
+			bg.setGraphicSize(Std.int(bg.width * 1.175));
+			bg.updateHitbox();
+			bg.screenCenter();
+			if (ClientPrefs.getPref('shaders'))
+				bg.shader = WShader.shader;
+			bg.antialiasing = globalAntialiasing;
+			add(bg);
+		}
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('3dMenu'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));

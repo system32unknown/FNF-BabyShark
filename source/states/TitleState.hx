@@ -42,7 +42,7 @@ class TitleState extends MusicBeatState
 	var textGroup:FlxGroup;
 	
 	var titlebg:FlxBackdrop;
-	var titleLogos:Array<FlxSprite> = [new FlxSprite(100, 1500), new FlxSprite(600, 1500)];
+	var titleLogo:FlxSprite = new FlxSprite(0, 1500);
 	var titleText:FlxSprite;
 
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
@@ -139,18 +139,12 @@ class TitleState extends MusicBeatState
 		titlebg.screenCenter(X);
 		add(titlebg);
 
-		titleLogos[0].frames = Paths.getSparrowAtlas('logoBumpin');
-		titleLogos[0].animation.addByPrefix('bump', 'logo bumpin', 24, false);
-		titleLogos[0].animation.play('bump');
-
-		titleLogos[1].loadGraphic(Paths.image('BSF3D'));
-		
-		for (logo in titleLogos) {
-			logo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-			logo.setGraphicSize(Std.int(logo.width * .7));
-			logo.updateHitbox();
-			add(logo);
-		}
+		titleLogo.loadGraphic(Paths.image('FinalLogo'));
+		titleLogo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		titleLogo.setGraphicSize(Std.int(titleLogo.width * .7));
+		titleLogo.updateHitbox();
+		titleLogo.screenCenter(X);
+		add(titleLogo);
 
 		titleText = new FlxSprite(125, 576);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
@@ -194,8 +188,7 @@ class TitleState extends MusicBeatState
 			initialized = true;
 	}
 
-	function getIntroTextShit():Array<Array<String>>
-	{
+	function getIntroTextShit():Array<Array<String>> {
 		var fullText:String = Assets.getText(Paths.txt('introText'));
 
 		var firstArray:Array<String> = fullText.split('\n');
@@ -257,11 +250,6 @@ class TitleState extends MusicBeatState
 				MainMenuState.firstStart = true;
 				MainMenuState.finishedFunnyMove = false;
 
-				for (logo in titleLogos) {
-					logoInt++;
-					FlxTween.tween(logo, {x: ((logoInt % 2 == 0) ? 2000: -2000)}, 2.2, {ease: FlxEase.circInOut});
-				}
-
 				new FlxTimer().start(1, function(tmr:FlxTimer) {
 					MusicBeatState.switchState(new MainMenuState());
 					closedState = true;
@@ -314,9 +302,6 @@ class TitleState extends MusicBeatState
 		super.beatHit();
 		
 		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
-
-		if(titleLogos[0] != null)
-			titleLogos[0].animation.play('bump', true);
 
 		if(!closedState) {
 			sickBeats++;
@@ -389,19 +374,14 @@ class TitleState extends MusicBeatState
 
 			remove(credGroup);
 			FlxG.camera.flash(FlxColor.WHITE, 4);
-			var logoInt:Int = 0;
-			for (logo in titleLogos) {
-				logoInt++;
-				var islogoalt:Bool = (logoInt % 2 == 0);
-				FlxTween.tween(logo, {y: (islogoalt ? 100: 200)}, 1.4, {ease: FlxEase.expoInOut});
-				logo.angle = (islogoalt ? -4 : 4);
-				new FlxTimer().start(0.01, function(tmr:FlxTimer) {
-					if (logo.angle == (islogoalt ? -4 : 4))
-						FlxTween.angle(logo, logo.angle, (islogoalt ? 4 : -4), 4, {ease: FlxEase.quartInOut});
-					if (logo.angle == (islogoalt ? 4 : -4))
-						FlxTween.angle(logo, logo.angle, (islogoalt ? -4 : 4), 4, {ease: FlxEase.quartInOut});
-				}, 0);
-			}
+
+			FlxTween.tween(titleLogo, {y: 100}, 1.4, {ease: FlxEase.expoInOut});
+			new FlxTimer().start(0.01, function(tmr:FlxTimer) {
+				if (titleLogo.angle == -4)
+					FlxTween.angle(titleLogo, titleLogo.angle, 4, 4, {ease: FlxEase.quartInOut});
+				if (titleLogo.angle == 4)
+					FlxTween.angle(titleLogo, titleLogo.angle, -4, 4, {ease: FlxEase.quartInOut});
+			}, 0);
 			skippedIntro = true;
 		}
 	}

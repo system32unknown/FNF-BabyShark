@@ -23,11 +23,11 @@ import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
 import flixel.util.FlxSave;
+import openfl.utils.Assets;
 import flixel.math.FlxMath;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.display.FlxRuntimeShader;
 import openfl.display.BlendMode;
-import openfl.utils.Assets;
 import substates.MusicBeatSubstate;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
@@ -1567,8 +1567,7 @@ class FunkinLua {
 						var daOffset = luaObj.animOffsets.get(name);
 						if (luaObj.animOffsets.exists(name)) {
 							luaObj.offset.set(daOffset[0], daOffset[1]);
-						} else
-							luaObj.offset.set(0, 0);
+						}
 					}
 				}
 				return true;
@@ -2162,6 +2161,20 @@ class FunkinLua {
 			luaTrace('' + text1 + text2 + text3 + text4 + text5, true, false);
 		});
 		
+		addCallback("debugPrintArray", function(?text:Array<Dynamic>) {
+			var array_text = '';
+			if (text == null)
+				text = [];
+
+			for (_text in 0...text.length) {
+				if (text[_text] == null)
+					array_text += '';
+				else array_text += text[_text];
+			}
+
+			luaTrace('' + array_text, true, false);
+		});
+
 		addCallback("close", function() {
 			closed = true;
 			return closed;
@@ -2279,8 +2292,7 @@ class FunkinLua {
 
 		addCallback("getTextString", function(tag:String) {
 			var obj:FlxText = getTextObject(tag);
-			if(obj != null && obj.text != null)
-			{
+			if(obj != null && obj.text != null) {
 				return obj.text;
 			}
 			luaTrace("getTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
@@ -2416,8 +2428,7 @@ class FunkinLua {
 			}
 			return false;
 		});
-		addCallback("deleteFile", function(path:String, ?ignoreModFolders:Bool = false)
-		{
+		addCallback("deleteFile", function(path:String, ?ignoreModFolders:Bool = false) {
 			try {
 				#if MODS_ALLOWED
 				if(!ignoreModFolders)
