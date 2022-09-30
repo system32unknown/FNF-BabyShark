@@ -38,7 +38,7 @@ class Note extends FlxSprite
 	public static var maxManiaUI_integer:Int = maxMania + 1;
 	public static var defaultMania:Int = 3;
 
-	public static var pixelNotesDivisionValue:Int = 18;
+	public static var pixelNotesDivisionValue:Int = 10;
 	public static var keysShit:Map<Int, Map<String, Dynamic>> = EKData.keysShit;
 
 	public static var ammo:Array<Int> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -376,11 +376,11 @@ class Note extends FlxSprite
 		if(isSustainNote) {
 			for (i in 0...gfxLetter.length) {
 				animation.add(gfxLetter[i] + ' hold', [i]);
-				animation.add(gfxLetter[i] + ' tail', [i + 10]);
+				animation.add(gfxLetter[i] + ' tail', [i + pixelNotesDivisionValue]);
 			}
 		} else {
 			for (i in 0...gfxLetter.length) {
-				animation.add(gfxLetter[i], [i + 10]);
+				animation.add(gfxLetter[i], [i + pixelNotesDivisionValue]);
 			}
 		}
 	}

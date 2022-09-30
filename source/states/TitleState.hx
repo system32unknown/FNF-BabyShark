@@ -141,7 +141,7 @@ class TitleState extends MusicBeatState
 
 		titleLogo.loadGraphic(Paths.image('FinalLogo'));
 		titleLogo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		titleLogo.setGraphicSize(Std.int(titleLogo.width * .7));
+		titleLogo.setGraphicSize(Std.int(titleLogo.width * 1.5));
 		titleLogo.updateHitbox();
 		titleLogo.screenCenter(X);
 		add(titleLogo);

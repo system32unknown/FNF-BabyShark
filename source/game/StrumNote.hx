@@ -18,9 +18,46 @@ class StrumNote extends FlxSprite
 	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
 	public var sustainReduce:Bool = true;
 	
-	private var player:Int;
+	public var animationArray:Array<String> = ['static', 'pressed'];
+	public var static_anim(default, set):String = "static";
+	public var pressed_anim(default, set):String = "pressed"; // in case you would use this on lua
+	// though, you shouldn't change it
+	public var confirm_anim(default, set):String = "static";
 
-	private var skinThing:Array<String> = ['static', 'pressed'];
+	private function set_static_anim(value:String):String {
+		if (!PlayState.isPixelStage) {
+			animation.addByPrefix('static', value);
+			animationArray[0] = value;
+			if (animation.curAnim != null && animation.curAnim.name == 'static') {
+				playAnim('static');
+			}
+		}
+		return value;
+	}
+
+	private function set_pressed_anim(value:String):String {
+		if (!PlayState.isPixelStage) {
+			animation.addByPrefix('pressed', value);
+			animationArray[1] = value;
+			if (animation.curAnim != null && animation.curAnim.name == 'pressed') {
+				playAnim('pressed');
+			}
+		}
+		return value;
+	}
+
+	private function set_confirm_anim(value:String):String {
+		if (!PlayState.isPixelStage) {
+			animation.addByPrefix('confirm', value);
+			animationArray[2] = value;
+			if (animation.curAnim != null && animation.curAnim.name == 'confirm') {
+				playAnim('confirm');
+			}
+		}
+		return value;
+	}
+
+	private var player:Int;
 	
 	public var texture(default, set):String = null;
 	private function set_texture(value:String):String {
@@ -39,8 +76,8 @@ class StrumNote extends FlxSprite
 		this.noteData = leData;
 		super(x, y);
 
-		skinThing[0] = Note.keysShit.get(PlayState.mania).get('strumAnims')[leData];
-		skinThing[1] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
+		animationArray[0] = Note.keysShit.get(PlayState.mania).get('strumAnims')[leData];
+		animationArray[1] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
 
 		var skin:String = 'NOTE_assets';
 		if(PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
@@ -54,6 +91,8 @@ class StrumNote extends FlxSprite
 		var lastAnim:String = null;
 		if(animation.curAnim != null) lastAnim = animation.curAnim.name;
 
+		var pxDV:Int = Note.pixelNotesDivisionValue;
+
 		if(PlayState.isPixelStage) {
 			loadGraphic(Paths.image('pixelUI/' + texture));
 			width = width / 10;
@@ -66,8 +105,8 @@ class StrumNote extends FlxSprite
 			updateHitbox();
 			antialiasing = false;
 			animation.add('static', [daFrames[noteData]]);
-			animation.add('pressed', [daFrames[noteData] + 10, daFrames[noteData] + 20], 12, false);
-			animation.add('confirm', [daFrames[noteData] + 30, daFrames[noteData] + 40], 24, false);
+			animation.add('pressed', [daFrames[noteData] + pxDV, daFrames[noteData] + (pxDV * 2)], 12, false);
+			animation.add('confirm', [daFrames[noteData] + (pxDV * 3), daFrames[noteData] + (pxDV * 4)], 24, false);
 		} else {
 			frames = Paths.getSparrowAtlas(texture);
 
@@ -75,9 +114,9 @@ class StrumNote extends FlxSprite
 
 			setGraphicSize(Std.int(width * Note.scales[PlayState.mania]));
 	
-			animation.addByPrefix('static', 'arrow' + skinThing[0]);
-			animation.addByPrefix('pressed', skinThing[1] + ' press', 24, false);
-			animation.addByPrefix('confirm', skinThing[1] + ' confirm', 24, false);
+			animation.addByPrefix('static', 'arrow' + animationArray[0]);
+			animation.addByPrefix('pressed', animationArray[1] + ' press', 24, false);
+			animation.addByPrefix('confirm', animationArray[1] + ' confirm', 24, false);
 		}
 		updateHitbox();
 

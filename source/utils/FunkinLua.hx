@@ -2158,21 +2158,21 @@ class FunkinLua {
 			if (text3 == null) text3 = '';
 			if (text4 == null) text4 = '';
 			if (text5 == null) text5 = '';
-			luaTrace('' + text1 + text2 + text3 + text4 + text5, true, false);
+			luaTrace(text1 + text2 + text3 + text4 + text5, true, false);
 		});
 		
-		addCallback("debugPrintArray", function(?text:Array<Dynamic>) {
+		addCallback("debugPrintArray", function(?text:Array<Dynamic>, divider:Dynamic = ' ') {
 			var array_text = '';
 			if (text == null)
 				text = [];
 
 			for (_text in 0...text.length) {
 				if (text[_text] == null)
-					array_text += '';
-				else array_text += text[_text];
+					array_text += '' + divider;
+				else array_text += text[_text] + divider;
 			}
 
-			luaTrace('' + array_text, true, false);
+			luaTrace(array_text, true, false);
 		});
 
 		addCallback("close", function() {

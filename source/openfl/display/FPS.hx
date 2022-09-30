@@ -72,21 +72,21 @@ class FPS extends TextField
 			#if openfl
 			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 			if (memoryMegas > peakMegas) peakMegas = memoryMegas;
-			#end
 
 			if (ClientPrefs.getPref('showMEM')) {
 				text += "MEM: " + memoryMegas + " MB\n";
-				text += "MEM Peak: " + memoryMegas + " MB\n";
-			}
-
-			if (text != null || text != '') {
-				if (Main.fpsVar != null)
-					Main.fpsVar.visible = true;
+				text += "MEM Peak: " + peakMegas + " MB\n";
 			}
 
 			textColor = 0xFFFFFFFF;
 			if (memoryMegas > 3000 || currentFPS <= ClientPrefs.getPref('framerate') / 2) {
 				textColor = 0xFFFF0000;
+			}
+			#end
+
+			if (text != null || text != '') {
+				if (Main.fpsVar != null)
+					Main.fpsVar.visible = true;
 			}
 		}
 

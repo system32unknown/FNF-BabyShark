@@ -150,12 +150,11 @@ class PlayState extends MusicBeatState
 	private static var prevCamFollow:FlxPoint;
 	private static var prevCamFollowPos:FlxObject;
 
-	private var laneunderlay:FlxSprite;
-	private var laneunderlayOpponent:FlxSprite;
-
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
+	public var playerLU:FlxTypedGroup<FlxSprite>;
+	public var opponentLU:FlxTypedGroup<FlxSprite>;
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
 	public var camZooming:Bool = false;
@@ -187,6 +186,7 @@ class PlayState extends MusicBeatState
 	public var endingSong:Bool = false;
 	public var startingSong:Bool = false;
 	private var updateTime:Bool = true;
+	private var updateLU:Bool = false;
 	public static var changedDifficulty:Bool = false;
 	public static var chartingMode:Bool = false;
 
@@ -989,23 +989,19 @@ class PlayState extends MusicBeatState
 		if(downScroll) strumLine.y = FlxG.height - 150;
 		strumLine.scrollFactor.set();
 
-		laneunderlayOpponent = new FlxSprite().makeGraphic(490, FlxG.height * 2);
-		laneunderlayOpponent.alpha = ClientPrefs.getPref('LUAlpha');
-		laneunderlayOpponent.color = FlxColor.BLACK;
-		laneunderlayOpponent.scrollFactor.set();
-		laneunderlayOpponent.cameras = [camHUD];
+		playerLU = new FlxTypedGroup<FlxSprite>();
+		playerLU.cameras = [camHUD];
+		add(playerLU);
 
-		laneunderlay = new FlxSprite().makeGraphic(490, FlxG.height * 2);
-		laneunderlay.alpha = ClientPrefs.getPref('LUAlpha');
-		laneunderlay.color = FlxColor.BLACK;
-		laneunderlay.scrollFactor.set();
-		laneunderlay.cameras = [camHUD];
+		opponentLU = new FlxTypedGroup<FlxSprite>();
+		opponentLU.cameras = [camHUD];
+		add(opponentLU);
 
 		if (ClientPrefs.getPref('ShowLU')) {
 			if (!ClientPrefs.getPref('HiddenOppLU') && !ClientPrefs.getPref('middleScroll')) {
-				add(laneunderlayOpponent);
+				add(opponentLU);
 			}
-			add(laneunderlay);
+			add(playerLU);
 		}
 
 		var showTime:Bool = (ClientPrefs.getPref('timeBarType') != 'Disabled');
@@ -1988,6 +1984,31 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	public function addLUStrums():Void {
+		if (ClientPrefs.getPref('ShowLU')) {
+			for (i in 0...playerStrums.members.length) {
+				var playerLay = new FlxSprite(playerStrums.members[i].x, 0).makeGraphic(Std.int(playerStrums.members[i].width), FlxG.height);
+				playerLay.alpha = ClientPrefs.getPref('LUAlpha');
+				playerLay.color = FlxColor.BLACK;
+				playerLay.scrollFactor.set();
+				playerLay.cameras = [camHUD];
+				playerLay.screenCenter(Y);
+				playerLU.add(playerLay);
+			}
+			if (!ClientPrefs.getPref('HiddenOppLU') && !ClientPrefs.getPref('middleScroll')) {
+				for (i in 0...opponentStrums.members.length) {
+					var opponentLay = new FlxSprite(opponentStrums.members[i].x, 0).makeGraphic(Std.int(opponentStrums.members[i].width), FlxG.height);
+					opponentLay.alpha = ClientPrefs.getPref('LUAlpha');
+					opponentLay.color = FlxColor.BLACK;
+					opponentLay.scrollFactor.set();
+					opponentLay.cameras = [camHUD];
+					opponentLay.screenCenter(Y);
+					opponentLU.add(opponentLay);
+				}
+			}
+		}
+	}
+
 	public function startCountdown():Void
 	{
 		if (startedCountdown) {
@@ -2002,12 +2023,8 @@ class PlayState extends MusicBeatState
 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
-	
-			laneunderlay.x = playerStrums.members[0].x - 24;
-			laneunderlayOpponent.x = opponentStrums.members[0].x - 24;
-	
-			laneunderlay.screenCenter(Y);
-			laneunderlayOpponent.screenCenter(Y);
+
+			addLUStrums();
 
 			updateLuaDefaultPos();
 	
@@ -2583,7 +2600,7 @@ class PlayState extends MusicBeatState
 					daKeyTxt.borderSize = 1.25;
 					daKeyTxt.alpha = 0;
 					daKeyTxt.size = 32 - mania; //essentially if i ever add 0k!?!?
-					daKeyTxt.x = babyArrow.x+(babyArrow.width / 2);
+					daKeyTxt.x = babyArrow.x + (babyArrow.width / 2);
 					daKeyTxt.x -= daKeyTxt.width / 2;
 					add(daKeyTxt);
 					daKeyTxt.cameras = [camHUD];
@@ -2691,7 +2708,9 @@ class PlayState extends MusicBeatState
 		}
 
 		playerStrums.clear();
+		playerLU.clear();
 		opponentStrums.clear();
+		opponentLU.clear();
 		strumLineNotes.clear();
 		setOnLuas('mania', mania);
 
@@ -2707,6 +2726,7 @@ class PlayState extends MusicBeatState
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
+		addLUStrums();
 		updateLuaDefaultPos();
 	}
 
@@ -2846,6 +2866,19 @@ class PlayState extends MusicBeatState
 			if(camlock) {
 				camFollow.x = camlockx;
 				camFollow.y = camlocky;
+			}
+		}
+
+		if (updateLU && ClientPrefs.getPref('ShowLU')) {
+			for (i in 0...playerLU.members.length) {
+				if (playerLU.members[i] != null)
+					playerLU.members[i].x = playerStrums.members[i].x;
+			}
+			if (!ClientPrefs.getPref('HiddenOppLU') && !ClientPrefs.getPref('middleScroll')) {
+				for (i in 0...opponentLU.members.length) {
+					if (opponentLU.members[i] != null)
+						opponentLU.members[i].x = opponentStrums.members[i].x;
+				}
 			}
 		}
 
