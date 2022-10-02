@@ -8,6 +8,9 @@ import flixel.effects.FlxFlicker;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
+#if lime
+import lime.system.System;
+#end
 
 import utils.ClientPrefs;
 
@@ -16,6 +19,19 @@ class FlashingState extends MusicBeatState
 	public static var leftState:Bool = false;
 
 	var warnText:FlxText;
+	var saveDataPath:String = '';
+	var displaySaveDataPath:String = '';
+	
+	var bg:FlxSprite;
+	var warnTextY:Float = 0;
+	var manual:FlxSprite;
+	var textNoAdvanced:String = "Hey, watch out!\n
+								This Mod contains some flashing lights!\n
+								Press ENTER to disable them now or go to Options Menu.\n
+								Press ESCAPE to ignore this message.\n
+								You've been warned!";
+	var textAdvanced:String = "";
+
 	override function create()
 	{
 		super.create();
@@ -26,13 +42,33 @@ class FlashingState extends MusicBeatState
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
-		warnText = new FlxText(0, 0, FlxG.width,
-			"Hey, watch out!\n
-			This Mod contains some flashing lights!\n
-			Press ENTER to disable them now or go to Options Menu.\n
-			Press ESCAPE to ignore this message.\n
-			You've been warned!",
-			32);
+		FlxG.mouse.visible = true;
+
+		#if lime
+	 	saveDataPath = System.applicationStorageDirectory + 'altertoriel\\';
+		displaySaveDataPath = StringTools.replace(saveDataPath, "\\", "/");
+
+		textAdvanced = 	
+		"Before use:\n\nEK uses a different save data folder than normal\nPsych Engine, so you are going to have to set your\noptions to what you're using.\n" + 
+		#if lime
+		"Save data creation path:\n\n" + displaySaveDataPath + "\n" +
+		#if windows
+		"Press RESET to open this folder";
+		#end
+		#end
+		#end
+
+
+		manual = new FlxSprite(0, 0);
+		manual.frames = Paths.getSparrowAtlas('manual_book');
+		manual.animation.addByPrefix('normal', 'manual icon', 30, true);
+		manual.animation.addByPrefix('hover', 'manual icon hover', 30, true);
+		add(manual);
+		manual.x = FlxG.width - manual.width;
+		manual.y = FlxG.height - manual.height;
+		manual.animation.play('normal', true);
+
+		warnText = new FlxText(0, 0, FlxG.width, textNoAdvanced, 32);
 		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
 		add(warnText);
@@ -41,6 +77,19 @@ class FlashingState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		if(!leftState) {
+			if (FlxG.mouse.overlaps(manual)) {
+				if (manual.animation.curAnim.name != 'hover') {
+					manual.animation.play('hover', true);
+				}
+				warnText.text = textAdvanced + textNoAdvanced;
+			} else {
+				if (manual.animation.curAnim != null && manual.animation.curAnim.name != 'normal') {
+					manual.animation.play('normal', true);
+				}
+				warnText.text = textNoAdvanced;
+			}
+			warnText.screenCenter(Y);
+
 			var back:Bool = controls.BACK;
 			if (controls.ACCEPT || back) {
 				leftState = true;
@@ -64,6 +113,11 @@ class FlashingState extends MusicBeatState
 					});
 				}
 			}
+			#if (lime && windows)
+			if (controls.RESET) {
+				Sys.command("explorer " + saveDataPath.toLowerCase());
+			}
+			#end
 		}
 		super.update(elapsed);
 	}

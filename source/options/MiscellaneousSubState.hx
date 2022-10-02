@@ -1,7 +1,5 @@
 package options;
 
-import flixel.FlxG;
-
 using StringTools;
 
 class MiscellaneousSubState extends BaseOptionsMenu

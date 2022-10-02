@@ -80,7 +80,7 @@ class TileContainerMovieClip extends TileContainer {
 	}
 
 	public function get_animFrames():Int{
-	return symbol.get_numFrames();
+		return symbol.get_numFrames();
 	}
 	
 

@@ -43,6 +43,7 @@ class LoadingState extends MusicBeatState
 
 	var funkay:FlxSprite;
 	var loadBar:FlxSprite;
+	var loadBarBack:FlxSprite;
 	override function create()
 	{
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d);
@@ -59,6 +60,11 @@ class LoadingState extends MusicBeatState
 		loadBar.screenCenter(X);
 		loadBar.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(loadBar);
+
+		loadBarBack = loadBar.clone();
+		loadBarBack.color = 0x00000000;
+		loadBarBack.width = 13;
+		add(loadBarBack);
 		
 		initSongsManifest().onComplete(function(lib) {
 			callbacks = new MultiCallback(onLoad);

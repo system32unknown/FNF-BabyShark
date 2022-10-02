@@ -93,7 +93,7 @@ class MainMenuState extends MusicBeatState
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
 		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
 
-		if (FlxG.random.bool(20)) {
+		if (FlxG.random.bool(30)) {
 			var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('3dMenu'));
 			bg.scrollFactor.set(0, yScroll);
 			bg.setGraphicSize(Std.int(bg.width * 1.175));
@@ -175,8 +175,9 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(FlxG.width - 280, FlxG.height - 36, 0, 
-			'Psych Engine Extra Keys v$psychEngineVersion\n' +
+		var versionShit:FlxText = new FlxText(FlxG.width - 280, FlxG.height - 47, 0, 
+			'Psych Engine v$psychEngineVersion\n' +
+			'Psych Engine EK CUSTOM BUILD\n' +
 			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
 			12);
 		versionShit.scrollFactor.set();

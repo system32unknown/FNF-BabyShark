@@ -19,7 +19,6 @@ using StringTools;
 class AtlasFrameMaker extends FlxFramesCollection
 {
 	/**
-	
 	* Creates Frames from TextureAtlas(very early and broken ok) Originally made for FNF HD by Smokey and Rozebud
 	*
 	* @param   key                 The file path.

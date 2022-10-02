@@ -26,7 +26,6 @@ class CreditsState extends MusicBeatState
 	var curSelected:Int = -1;
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private var iconArray:Array<AttachedSprite> = [];
 	private var creditsStuff:Array<Array<String>> = [];
 
 	var bg:FlxSprite;
@@ -142,8 +141,6 @@ class CreditsState extends MusicBeatState
 				icon.xAdd = optionText.width + 10;
 				icon.sprTracker = optionText;
 	
-				// using a FlxGroup is too much fuss!
-				iconArray.push(icon);
 				add(icon);
 				Paths.currentModDirectory = '';
 
