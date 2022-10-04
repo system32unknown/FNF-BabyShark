@@ -7,12 +7,11 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 
 import utils.ClientPrefs;
-import utils.CoolUtil;
+import utils.MathUtil;
 
 using StringTools;
 
-enum Alignment
-{
+enum Alignment {
 	LEFT;
 	CENTERED;
 	RIGHT;
@@ -95,8 +94,7 @@ class Alphabet extends FlxSpriteGroup
 	public function clearLetters()
 	{
 		var i:Int = letters.length;
-		while (i > 0)
-		{
+		while (i > 0) {
 			--i;
 			var letter:AlphaCharacter = letters[i];
 			if(letter != null)
@@ -151,7 +149,7 @@ class Alphabet extends FlxSpriteGroup
 	override function update(elapsed:Float)
 	{
 		if (isMenuItem) {
-			var lerpVal:Float = CoolUtil.boundTo(elapsed * 9.6, 0, 1);
+			var lerpVal:Float = MathUtil.boundTo(elapsed * 9.6, 0, 1);
 			if(changeX)
 				x = FlxMath.lerp(x, (targetY * distancePerItem.x) + startPosition.x, lerpVal);
 			if(changeY)

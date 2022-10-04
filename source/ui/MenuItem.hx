@@ -6,7 +6,7 @@ import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 
 import utils.ClientPrefs;
-import utils.CoolUtil;
+import utils.MathUtil;
 
 class MenuItem extends FlxSprite
 {
@@ -36,7 +36,7 @@ class MenuItem extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		y = FlxMath.lerp(y, (targetY * 120) + 480, CoolUtil.boundTo(elapsed * 10.2, 0, 1));
+		y = FlxMath.lerp(y, (targetY * 120) + 480, MathUtil.boundTo(elapsed * 10.2, 0, 1));
 
 		if (isFlashing)
 			flashingInt += 1;

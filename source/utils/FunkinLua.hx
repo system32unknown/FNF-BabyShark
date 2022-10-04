@@ -3170,7 +3170,7 @@ class FunkinLua {
 	{
 		var coverMeInPiss:Dynamic = getObjectDirectly(killMe[0], checkForTextsToo);
 		var end = killMe.length;
-		if(getProperty)end=killMe.length-1;
+		if (getProperty) end = killMe.length - 1;
 
 		for (i in 1...end) {
 			coverMeInPiss = getVarInArray(coverMeInPiss, killMe[i]);
@@ -3181,9 +3181,8 @@ class FunkinLua {
 	public static function getObjectDirectly(objectName:String, ?checkForTextsToo:Bool = true):Dynamic
 	{
 		var coverMeInPiss:Dynamic = PlayState.instance.getLuaObject(objectName, checkForTextsToo);
-		if(coverMeInPiss==null)
+		if (coverMeInPiss == null)
 			coverMeInPiss = getVarInArray(getInstance(), objectName);
-
 		return coverMeInPiss;
 	}
 
@@ -3195,8 +3194,7 @@ class FunkinLua {
 
 	function isErrorAllowed(error:String) {
 		error = error.trim();
-		switch(error)
-		{
+		switch(error) {
 			case 'attempt to call a nil value' | 'C++ exception':
 				return false;
 		}

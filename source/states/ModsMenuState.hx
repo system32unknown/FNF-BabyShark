@@ -473,7 +473,7 @@ class ModsMenuState extends MusicBeatState
 			if(elapsed == -1) {
 				mod.alphabet.y = intendedPos;
 			} else {
-				mod.alphabet.y = FlxMath.lerp(mod.alphabet.y, intendedPos, CoolUtil.boundTo(elapsed * 12, 0, 1));
+				mod.alphabet.y = FlxMath.lerp(mod.alphabet.y, intendedPos, MathUtil.boundTo(elapsed * 12, 0, 1));
 			}
 
 			if(i == curSelected) {

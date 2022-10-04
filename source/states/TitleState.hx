@@ -23,6 +23,7 @@ import data.WeekData;
 import utils.PlayerSettings;
 import utils.ClientPrefs;
 import utils.CoolUtil;
+import utils.MathUtil;
 import game.Highscore;
 import game.Conductor;
 import states.MainMenuState;
@@ -219,7 +220,7 @@ class TitleState extends MusicBeatState
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER || controls.ACCEPT;
 		
 		if (newTitle) {
-			titleTimer += CoolUtil.boundTo(elapsed, 0, 1);
+			titleTimer += MathUtil.boundTo(elapsed, 0, 1);
 			if (titleTimer > 2) titleTimer -= 2;
 		}
 

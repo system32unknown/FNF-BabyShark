@@ -47,13 +47,8 @@ class CoolUtil
 		return Paths.formatToSongPath(fileSuffix);
 	}
 
-	public static function difficultyString():String
-	{
+	public static function difficultyString():String {
 		return difficulties[PlayState.storyDifficulty].toUpperCase();
-	}
-
-	inline public static function boundTo(value:Float, min:Float, max:Float):Float {
-		return Math.max(min, Math.min(max, value));
 	}
 
 	public static function coolTextFile(path:String):Array<String>
@@ -99,7 +94,7 @@ class CoolUtil
 		var maxCount = 0;
 		var maxKey:Int = 0;//after the loop this will store the max color
 		countByColor[flixel.util.FlxColor.BLACK] = 0;
-			for(key in countByColor.keys()) {
+		for(key in countByColor.keys()) {
 			if(countByColor[key] >= maxCount) {
 				maxCount = countByColor[key];
 				maxKey = key;
@@ -123,14 +118,6 @@ class CoolUtil
 
 	public static function precacheMusic(sound:String, ?library:String = null):Void {
 		Paths.music(sound, library);
-	}
-
-	public static function truncateFloat(number:Float, precision:Int):Float
-	{
-		var num = number;
-		num = num * Math.pow(10, precision);
-		num = Math.round(num) / Math.pow(10, precision);
-		return num;
 	}
 
 	public static function GenerateLetterRank(accuracy:Float) { // generate a letter rankings

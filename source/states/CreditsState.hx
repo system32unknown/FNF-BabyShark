@@ -18,6 +18,7 @@ import sys.io.File;
 import ui.Alphabet;
 import ui.AttachedSprite;
 import utils.CoolUtil;
+import utils.MathUtil;
 
 using StringTools;
 
@@ -225,7 +226,7 @@ class CreditsState extends MusicBeatState
 		
 		for (item in grpOptions.members) {
 			if(!item.bold) {
-				var lerpVal:Float = CoolUtil.boundTo(elapsed * 12, 0, 1);
+				var lerpVal:Float = MathUtil.boundTo(elapsed * 12, 0, 1);
 				if(item.targetY == 0) {
 					var lastX:Float = item.x;
 					item.screenCenter(X);

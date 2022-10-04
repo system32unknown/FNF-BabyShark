@@ -6,7 +6,9 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.util.FlxTimer;
+import flixel.util.FlxColor;
 import flixel.math.FlxMath;
+import flixel.text.FlxText;
 
 import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
@@ -44,6 +46,7 @@ class LoadingState extends MusicBeatState
 	var funkay:FlxSprite;
 	var loadBar:FlxSprite;
 	var loadBarBack:FlxSprite;
+	var loadText:FlxText;
 	override function create()
 	{
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d);
@@ -56,15 +59,19 @@ class LoadingState extends MusicBeatState
 		funkay.scrollFactor.set();
 		funkay.screenCenter(XY);
 
+		loadBarBack = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 20, FlxColor.BLACK);
+		loadBarBack.screenCenter(X);
+		loadBarBack.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		add(loadBarBack);
+
 		loadBar = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 10, 0xffff16d2);
 		loadBar.screenCenter(X);
 		loadBar.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(loadBar);
 
-		loadBarBack = loadBar.clone();
-		loadBarBack.color = 0x00000000;
-		loadBarBack.width = 13;
-		add(loadBarBack);
+		loadText = new FlxText(loadBar.x, loadBarBack.y - 24, 0, '0%');
+		loadText.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(loadText);
 		
 		initSongsManifest().onComplete(function(lib) {
 			callbacks = new MultiCallback(onLoad);
@@ -95,6 +102,7 @@ class LoadingState extends MusicBeatState
 
 		if(callbacks != null) {
 			targetShit = FlxMath.remapToRange(callbacks.numRemaining / callbacks.length, 1, 0, 0, 1);
+			loadText.text = 'Loading... (${callbacks.numRemaining} / ${callbacks.length})';
 			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
 		}
 	}

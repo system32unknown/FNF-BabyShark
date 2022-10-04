@@ -14,6 +14,7 @@ import flixel.util.FlxTimer;
 import flixel.graphics.FlxGraphic;
 import data.WeekData;
 import utils.CoolUtil;
+import utils.MathUtil;
 import utils.ClientPrefs;
 import game.Highscore;
 import game.Song;
@@ -185,7 +186,7 @@ class StoryMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 30, 0, 1)));
+		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, MathUtil.boundTo(elapsed * 30, 0, 1)));
 		if(Math.abs(intendedScore - lerpScore) < 10) lerpScore = intendedScore;
 
 		scoreText.text = "(" + ((curWeek + 1) + "/" + loadedWeeks.length) + ") | WEEK SCORE:" + lerpScore;
