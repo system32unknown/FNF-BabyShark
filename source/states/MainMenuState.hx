@@ -21,6 +21,7 @@ import game.Achievements;
 import editors.MasterEditorMenu;
 import utils.ClientPrefs;
 import utils.CoolUtil;
+import utils.MathUtil;
 import shaders.WiggleEffect.WiggleEffect;
 import shaders.WiggleEffect.WiggleEffectType;
 import data.WeekData;

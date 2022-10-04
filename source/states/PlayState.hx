@@ -4245,7 +4245,7 @@ class PlayState extends MusicBeatState
 		timing.y -= comboOffset[3][1];
 
 		if (ClientPrefs.getPref('ShowMsTiming') && timingTxtArrays[0] != null) {
-			var msTiming = MathUtil.truncateFloat(noteDiff / 1.0, 3);
+			var msTiming = MathUtil.truncateFloat(noteDiff / 1.0);
 			timingTxtArrays[0].text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
 			timingTxtArrays[0].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			timingTxtArrays[0].borderSize = 1;

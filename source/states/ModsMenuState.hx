@@ -22,6 +22,7 @@ import ui.AttachedSprite;
 import ui.Alphabet;
 import utils.ClientPrefs;
 import utils.CoolUtil;
+import utils.MathUtil;
 import states.TitleState;
 import states.FreeplayState;
 

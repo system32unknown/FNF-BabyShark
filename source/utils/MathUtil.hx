@@ -5,7 +5,7 @@ class MathUtil {
 		return Math.max(min, Math.min(max, value));
 	}
 
-	inline public static function truncateFloat(number:Float, precision:Int):Float {
+	inline public static function truncateFloat(number:Float, ?precision:Int = 3):Float {
         var num = number;
         num = num * Math.pow(10, precision);
         num = Math.round(num) / Math.pow(10, precision);

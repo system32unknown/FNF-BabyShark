@@ -765,7 +765,7 @@ class EditorPlayState extends MusicBeatState
 		timing.y -= comboOffset[3][1];
 
 		if (ClientPrefs.getPref('ShowMsTiming') && msTimingTxt != null) {
-			var msTiming = MathUtil.truncateFloat(noteDiff / 1.0, 3);
+			var msTiming = MathUtil.truncateFloat(noteDiff / 1.0);
 			msTimingTxt.text = msTiming + "ms";
 			msTimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			msTimingTxt.borderSize = 1;
