@@ -94,17 +94,18 @@ class MainMenuState extends MusicBeatState
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
 		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
 
-		if (FlxG.random.bool(30)) {
-			var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('3dMenu'));
-			bg.scrollFactor.set(0, yScroll);
-			bg.setGraphicSize(Std.int(bg.width * 1.175));
-			bg.updateHitbox();
-			bg.screenCenter();
-			if (ClientPrefs.getPref('shaders'))
-				bg.shader = WShader.shader;
-			bg.antialiasing = globalAntialiasing;
-			add(bg);
-		}
+		var randomizedShader:Bool = FlxG.random.bool(50);
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('3dMenu'));
+		bg.scrollFactor.set(0, yScroll);
+		bg.setGraphicSize(Std.int(bg.width * 1.175));
+		bg.updateHitbox();
+		bg.screenCenter();
+		bg.visible = randomizedShader;
+		if (ClientPrefs.getPref('shaders') && randomizedShader)
+			bg.shader = WShader.shader;
+		bg.antialiasing = globalAntialiasing;
+		add(bg);
+
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('3dMenu'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
@@ -130,13 +131,13 @@ class MainMenuState extends MusicBeatState
 		add(camFollow);
 		add(camFollowPos);
 
-		menuCover = new FlxSprite().makeGraphic(FlxG.width - 480, FlxG.height * 2);
+		menuCover = new FlxSprite().makeGraphic(FlxG.width - 480, FlxG.height);
 		menuCover.alpha = 0.5;
 		menuCover.color = FlxColor.WHITE;
 		menuCover.scrollFactor.set();
 		add(menuCover);
 
-		menuCoverAlt = new FlxSprite().makeGraphic(FlxG.width - 500, FlxG.height * 2);
+		menuCoverAlt = new FlxSprite().makeGraphic(FlxG.width - 500, FlxG.height);
 		menuCoverAlt.x = menuCover.x + 10;
 		menuCoverAlt.alpha = 0.7;
 		menuCoverAlt.color = FlxColor.BLACK;
@@ -176,9 +177,9 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(FlxG.width - 280, FlxG.height - 47, 0, 
-			'Psych Engine v$psychEngineVersion\n' +
-			'Psych Engine EK CUSTOM BUILD\n' +
+		var versionShit:FlxText = new FlxText(FlxG.width - 285, FlxG.height - 47, 0, 
+			'Psych Engine v$psychEngineVersion (EK Custom)\n' +
+			'Altertoriel Engine 1.0\n' +
 			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
 			12);
 		versionShit.scrollFactor.set();
@@ -215,8 +216,7 @@ class MainMenuState extends MusicBeatState
 	var selectedSomethin:Bool = false;
 
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music.volume < 0.8)
-		{
+		if (FlxG.sound.music.volume < 0.8) {
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += 0.5 * elapsed;
 		}

@@ -59,7 +59,8 @@ class LoadingState extends MusicBeatState
 		funkay.scrollFactor.set();
 		funkay.screenCenter(XY);
 
-		loadBarBack = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 20, FlxColor.BLACK);
+		loadBarBack = new FlxSprite(0, FlxG.height - 25).makeGraphic(FlxG.width, 20, FlxColor.BLACK);
+		loadBarBack.scale.x = .51;
 		loadBarBack.screenCenter(X);
 		loadBarBack.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(loadBarBack);
@@ -69,8 +70,8 @@ class LoadingState extends MusicBeatState
 		loadBar.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(loadBar);
 
-		loadText = new FlxText(loadBar.x, loadBarBack.y - 24, 0, '0%');
-		loadText.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		loadText = new FlxText(180, loadBarBack.y - 24, 0, '0%');
+		loadText.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(loadText);
 		
 		initSongsManifest().onComplete(function(lib) {

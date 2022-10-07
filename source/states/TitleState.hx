@@ -38,7 +38,6 @@ class TitleState extends MusicBeatState
 
 	public static var initialized:Bool = false;
 
-	var blackScreen:FlxSprite;
 	var credGroup:FlxGroup;
 	var textGroup:FlxGroup;
 	
@@ -180,13 +179,11 @@ class TitleState extends MusicBeatState
 		add(credGroup);
 		textGroup = new FlxGroup();
 
-		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		var blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		credGroup.add(blackScreen);
 
-		if (initialized)
-			skipIntro();
-		else
-			initialized = true;
+		if (initialized) skipIntro();
+		else initialized = true;
 	}
 
 	function getIntroTextShit():Array<Array<String>> {
@@ -377,6 +374,7 @@ class TitleState extends MusicBeatState
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 
 			FlxTween.tween(titleLogo, {y: 100}, 1.4, {ease: FlxEase.expoInOut});
+			titleLogo.angle = -4;
 			new FlxTimer().start(0.01, function(tmr:FlxTimer) {
 				if (titleLogo.angle == -4)
 					FlxTween.angle(titleLogo, titleLogo.angle, 4, 4, {ease: FlxEase.quartInOut});

@@ -55,7 +55,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'ScoreTextStyle',
 			'string',
 			'BabyShark',
-			['Kade', 'Psych', 'BabyShark', 'FPSPlus']);
+			['Kade', 'Psych', 'BabyShark']);
 		addOption(option);
 
 		var option:Option = new Option('Camera Zooms',

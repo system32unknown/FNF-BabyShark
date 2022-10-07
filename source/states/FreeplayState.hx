@@ -200,11 +200,11 @@ class FreeplayState extends MusicBeatState
 			lerpRating = intendedRating;
 
 		var ratingSplit:Array<String> = Std.string(Highscore.floorDecimal(lerpRating * 100, 2)).split('.');
-		if(ratingSplit.length < 2) { //No decimals, add an empty space
+		if (ratingSplit.length < 2) { //No decimals, add an empty space
 			ratingSplit.push('');
 		}
 		
-		while(ratingSplit[1].length < 2) { //Less than 2 decimals in it, add decimals then
+		while (ratingSplit[1].length < 2) { //Less than 2 decimals in it, add decimals then
 			ratingSplit[1] += '0';
 		}
 
@@ -220,8 +220,7 @@ class FreeplayState extends MusicBeatState
 		var shiftMult:Int = 1;
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
-		if(songs.length > 1)
-		{
+		if(songs.length > 1) {
 			if (upP) {
 				changeSelection(-shiftMult);
 				holdTime = 0;
@@ -231,21 +230,18 @@ class FreeplayState extends MusicBeatState
 				holdTime = 0;
 			}
 
-			if(controls.UI_DOWN || controls.UI_UP)
-			{
+			if(controls.UI_DOWN || controls.UI_UP) {
 				var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
 				holdTime += elapsed;
 				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-				{
+				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 					changeDiff();
 				}
 			}
 
-			if(FlxG.mouse.wheel != 0)
-			{
+			if(FlxG.mouse.wheel != 0) {
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
 				changeSelection(-shiftMult * FlxG.mouse.wheel, false);
 				changeDiff();
@@ -305,7 +301,6 @@ class FreeplayState extends MusicBeatState
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = curDifficulty;
 
-			//trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
 			if(colorTween != null) {
 				colorTween.cancel();
 			}
@@ -319,9 +314,7 @@ class FreeplayState extends MusicBeatState
 			FlxG.sound.music.volume = 0;
 					
 			destroyFreeplayVocals();
-		}
-		else if(controls.RESET)
-		{
+		} else if(controls.RESET) {
 			persistentUpdate = false;
 			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
 			FlxG.sound.play(Paths.sound('scrollMenu'));

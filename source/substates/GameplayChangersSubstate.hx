@@ -170,8 +170,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 								add = controls.UI_LEFT ? -curOption.changeValue : curOption.changeValue;
 							}
 
-							switch(curOption.type)
-							{
+							switch(curOption.type) {
 								case 'int' | 'float' | 'percent':
 									holdValue = curOption.getValue() + add;
 									if(holdValue < curOption.minValue) holdValue = curOption.minValue;
@@ -233,35 +232,29 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 						}
 					}
 
-					if(curOption.type != 'string') {
+					if (curOption.type != 'string') {
 						holdTime += elapsed;
 					}
-				} else if(controls.UI_LEFT_R || controls.UI_RIGHT_R) {
+				} else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) {
 					clearHold();
 				}
 			}
 
-			if(controls.RESET)
-			{
-				for (i in 0...optionsArray.length)
-				{
+			if(controls.RESET) {
+				for (i in 0...optionsArray.length) {
 					var leOption:GameplayOption = optionsArray[i];
 					leOption.setValue(leOption.defaultValue);
-					if(leOption.type != 'bool')
-					{
-						if(leOption.type == 'string')
-						{
+					if(leOption.type != 'bool') {
+						if(leOption.type == 'string') {
 							leOption.curOption = leOption.options.indexOf(leOption.getValue());
 						}
 						updateTextFrom(leOption);
 					}
 
-					if(leOption.name == 'Scroll Speed')
-					{
+					if(leOption.name == 'Scroll Speed') {
 						leOption.displayFormat = "%vX";
 						leOption.maxValue = 3;
-						if(leOption.getValue() > 3)
-						{
+						if(leOption.getValue() > 3) {
 							leOption.setValue(3);
 						}
 						updateTextFrom(leOption);
@@ -399,8 +392,7 @@ class GameplayOption
 		}
 	}
 
-	public function change()
-	{
+	public function change() {
 		//nothing lol
 		if(onChange != null) {
 			onChange();
