@@ -23,17 +23,6 @@ class HealthIcon extends FlxSprite
 		scrollFactor.set();
 	}
 
-	override function update(elapsed:Float)
-	{
-		super.update(elapsed);
-
-		if (ClientPrefs.getPref('IconBounceType') == "DaveAndBambi" || ClientPrefs.getPref('IconBounceType') == "Purgatory" || ClientPrefs.getPref('IconBounceType') == "GoldenApple")
-			offset.set(Std.int(FlxMath.bound(width - 150, 0)),Std.int(FlxMath.bound(height - 150, 0)));
-
-		if (sprTracker != null)
-			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
-	}
-
 	private var iconOffsets:Array<Float> = [0, 0];
 	public function changeIcon(char:String) {
 		if(this.char != char) {
@@ -84,5 +73,15 @@ class HealthIcon extends FlxSprite
 
 	public function getCharacter():String {
 		return char;
+	}
+
+	override function update(elapsed:Float) {
+		super.update(elapsed);
+
+		if (ClientPrefs.getPref('IconBounceType') == "DaveAndBambi" || ClientPrefs.getPref('IconBounceType') == "Purgatory" || ClientPrefs.getPref('IconBounceType') == "GoldenApple")
+			offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
+
+		if (sprTracker != null)
+			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 	}
 }

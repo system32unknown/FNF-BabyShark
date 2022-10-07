@@ -227,7 +227,7 @@ class MainMenuState extends MusicBeatState
 		if (ClientPrefs.getPref('shaders'))
 			WShader.update(elapsed * 2);
 
-		if (!selectedSomethin) {
+		if (!selectedSomethin && finishedFunnyMove) {
 			if (controls.UI_UP_P) {
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(-1);

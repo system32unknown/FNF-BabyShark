@@ -70,7 +70,7 @@ class LoadingState extends MusicBeatState
 		loadBar.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(loadBar);
 
-		loadText = new FlxText(180, loadBarBack.y - 24, 0, '0%');
+		loadText = new FlxText(loadBarBack.x + 320, loadBarBack.y - 24, 0, '0%');
 		loadText.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(loadText);
 		

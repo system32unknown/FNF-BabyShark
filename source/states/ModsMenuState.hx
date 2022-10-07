@@ -38,6 +38,7 @@ class ModsMenuState extends MusicBeatState
 	var noModsTxt:FlxText;
 	var selector:AttachedSprite;
 	var descriptionTxt:FlxText;
+	var folderTxt:FlxText;	
 	var needaReset = false;
 	private static var curSelected:Int = 0;
 	public static var defaultColor:FlxColor = 0xFF665AFF;
@@ -224,13 +225,17 @@ class ModsMenuState extends MusicBeatState
 		visibleWhenHasMods.push(buttonEnableAll);
 
 		// more buttons
-		var startX:Int = 1100;
-
 		descriptionTxt = new FlxText(148, 0, FlxG.width - 216, "", 32);
 		descriptionTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT);
 		descriptionTxt.scrollFactor.set();
 		add(descriptionTxt);
 		visibleWhenHasMods.push(descriptionTxt);
+
+		folderTxt = new FlxText(148, 0, 0, "", 32);
+		folderTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		folderTxt.scrollFactor.set();
+		add(folderTxt);
+		visibleWhenHasMods.push(folderTxt);
 
 		var i:Int = 0;
 		while (i < modsList.length) {
@@ -261,7 +266,7 @@ class ModsMenuState extends MusicBeatState
 			if(loadedIcon != null) {
 				newMod.icon.loadGraphic(loadedIcon, true, 150, 150);//animated icon support
 				var totalFrames = Math.floor(loadedIcon.width / 150) * Math.floor(loadedIcon.height / 150);
-				newMod.icon.animation.add("icon", [for (i in 0...totalFrames) i],10);
+				newMod.icon.animation.add("icon", [for (i in 0...totalFrames) i], 10);
 				newMod.icon.animation.play("icon");
 			} else {
 				newMod.icon.loadGraphic(Paths.image('unknownMod'));
@@ -275,10 +280,8 @@ class ModsMenuState extends MusicBeatState
 
 		if(curSelected >= mods.length) curSelected = 0;
 
-		if(mods.length < 1)
-			bg.color = defaultColor;
-		else
-			bg.color = mods[curSelected].color;
+		if(mods.length < 1) bg.color = defaultColor;
+		else bg.color = mods[curSelected].color;
 
 		intendedColor = bg.color;
 		changeSelection();
@@ -351,8 +354,7 @@ class ModsMenuState extends MusicBeatState
 	var noModsSine:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if(noModsTxt.visible)
-		{
+		if(noModsTxt.visible) {
 			noModsSine += 180 * elapsed;
 			noModsTxt.alpha = 1 - Math.sin((Math.PI * noModsSine) / 180);
 		}
@@ -364,8 +366,7 @@ class ModsMenuState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			FlxG.mouse.visible = false;
 			saveTxt();
-			if(needaReset)
-			{
+			if(needaReset) {
 				TitleState.initialized = false;
 				TitleState.closedState = false;
 				FlxG.sound.music.fadeOut(0.3);
@@ -375,9 +376,7 @@ class ModsMenuState extends MusicBeatState
 					FreeplayState.vocals = null;
 				}
 				FlxG.camera.fade(FlxColor.BLACK, 0.5, false, FlxG.resetGame, false);
-			}
-			else
-			{
+			} else {
 				MusicBeatState.switchState(new MainMenuState());
 			}
 		}
@@ -405,12 +404,10 @@ class ModsMenuState extends MusicBeatState
 	function changeSelection(change:Int = 0)
 	{
 		var noMods:Bool = (mods.length < 1);
-		for (obj in visibleWhenHasMods)
-		{
+		for (obj in visibleWhenHasMods) {
 			obj.visible = !noMods;
 		}
-		for (obj in visibleWhenNoMods)
-		{
+		for (obj in visibleWhenNoMods) {
 			obj.visible = noMods;
 		}
 		if(noMods) return;
@@ -435,27 +432,24 @@ class ModsMenuState extends MusicBeatState
 		}
 
 		var i:Int = 0;
-		for (mod in mods)
-		{
+		for (mod in mods) {
 			mod.alphabet.alpha = 0.6;
-			if(i == curSelected)
-			{
+			if(i == curSelected) {
 				mod.alphabet.alpha = 1;
 				selector.sprTracker = mod.alphabet;
 				descriptionTxt.text = mod.description;
-				if (mod.restart){//finna make it to where if nothing changed then it won't reset
+				folderTxt.text = "Folder: " + mod.folder;
+				if (mod.restart) {//finna make it to where if nothing changed then it won't reset
 					descriptionTxt.text += " (This Mod will restart the game!)";
 				}
 
 				// correct layering
-				var stuffArray:Array<FlxSprite> = [selector, descriptionTxt, mod.alphabet, mod.icon];
-				for (obj in stuffArray)
-				{
+				var stuffArray:Array<FlxSprite> = [selector, descriptionTxt, folderTxt, mod.alphabet, mod.icon];
+				for (obj in stuffArray) {
 					remove(obj);
 					insert(members.length, obj);
 				}
-				for (obj in buttonsArray)
-				{
+				for (obj in buttonsArray) {
 					remove(obj);
 					insert(members.length, obj);
 				}
@@ -470,15 +464,16 @@ class ModsMenuState extends MusicBeatState
 		var i:Int = 0;
 		for (mod in mods) {
 			var intendedPos:Float = (i - curSelected) * 225 + 200;
-			if(i > curSelected) intendedPos += 225;
-			if(elapsed == -1) {
+			if (i > curSelected) intendedPos += 225;
+			if (elapsed == -1) {
 				mod.alphabet.y = intendedPos;
 			} else {
 				mod.alphabet.y = FlxMath.lerp(mod.alphabet.y, intendedPos, MathUtil.boundTo(elapsed * 12, 0, 1));
 			}
 
-			if(i == curSelected) {
+			if (i == curSelected) {
 				descriptionTxt.y = mod.alphabet.y + 160;
+				folderTxt.y = buttonEnableAll.y;
 				for (button in buttonsArray) {
 					button.y = mod.alphabet.y + 320;
 				}
