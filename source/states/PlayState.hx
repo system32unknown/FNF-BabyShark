@@ -928,8 +928,7 @@ class PlayState extends MusicBeatState
 					firstTank.strumTime = 10;
 					tankmanRun.add(firstTank);
 
-					for (i in 0...TankmenBG.animationNotes.length)
-					{
+					for (i in 0...TankmenBG.animationNotes.length) {
 						if(FlxG.random.bool(16)) {
 							var tankBih = tankmanRun.recycle(TankmenBG);
 							tankBih.strumTime = TankmenBG.animationNotes[i][0];
@@ -956,8 +955,7 @@ class PlayState extends MusicBeatState
 			camPos.x += gf.getGraphicMidpoint().x + gf.cameraPosition[0];
 			camPos.y += gf.getGraphicMidpoint().y + gf.cameraPosition[1];
 		}
-
-		if(dad.curCharacter.startsWith(gf.curCharacter)) {
+		if(dad.curCharacter.startsWith(gf != null ? gf.curCharacter : "gf")) {
 			dad.setPosition(GF_X, GF_Y);
 			if(gf != null)
 				gf.visible = false;
@@ -4787,8 +4785,7 @@ class PlayState extends MusicBeatState
 
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
 
-		if (!note.isSustainNote)
-		{
+		if (!note.isSustainNote) {
 			note.kill();
 			notes.remove(note, true);
 			note.destroy();
@@ -5240,6 +5237,14 @@ class PlayState extends MusicBeatState
 	
 				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
+			case "StridentCrisis":
+				FlxTween.cancelTweensOf(iconP1);
+				iconP1.angle = -24;
+				FlxTween.tween(iconP1, {"angle": 0}, .3, {ease: FlxEase.quadOut});
+				
+				FlxTween.cancelTweensOf(iconP2);
+				iconP2.angle = 24;
+				FlxTween.tween(iconP2, {"angle": 0}, .3, {ease: FlxEase.quadOut});
 			case "Custom":
 				callOnLuas('onBounceBeat', []);
 		}

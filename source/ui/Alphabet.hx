@@ -308,10 +308,8 @@ class AlphaCharacter extends FlxSprite
 		if(!bold)
 		{
 			if(isTypeAlphabet(lowercase)) {
-				if(lowercase != character)
-					suffix = ' uppercase';
-				else
-					suffix = ' lowercase';
+				if(lowercase != character) suffix = ' uppercase';
+				else suffix = ' lowercase';
 			} else {
 				suffix = ' normal';
 				if(curLetter != null && curLetter.offsets != null) {

@@ -39,7 +39,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'IconBounceType',
 			'string',
 			'Psych',
-			['Vanilla', 'Psych', 'PsychOld', 'Andromeda', 'DaveAndBambi', 'Purgatory', 'GoldenApple', 'Micdup', 'RadicalOne', 'Custom']);
+			['Vanilla', 'Psych', 'PsychOld', 'Andromeda', 'DaveAndBambi', 'Purgatory', 'GoldenApple', 'StridentCrisis', 'Micdup', 'RadicalOne', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Health Types:',

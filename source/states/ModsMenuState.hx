@@ -225,8 +225,8 @@ class ModsMenuState extends MusicBeatState
 		visibleWhenHasMods.push(buttonEnableAll);
 
 		// more buttons
-		descriptionTxt = new FlxText(148, 0, FlxG.width - 216, "", 32);
-		descriptionTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT);
+		descriptionTxt = new FlxText(148, 0, FlxG.width - 216, "", 16);
+		descriptionTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
 		descriptionTxt.scrollFactor.set();
 		add(descriptionTxt);
 		visibleWhenHasMods.push(descriptionTxt);

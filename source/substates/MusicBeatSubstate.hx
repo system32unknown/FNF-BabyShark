@@ -14,13 +14,11 @@ class MusicBeatSubstate extends FlxSubState
 	inline function get_controls():Controls
 		return PlayerSettings.player.controls;
 
-	public function new()
-	{
+	public function new() {
 		super();
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		var oldStep:Int = curStep;
 
 		updateCurStep();
@@ -31,22 +29,17 @@ class MusicBeatSubstate extends FlxSubState
 		super.update(elapsed);
 	}
 
-	private function updateCurStep():Void
-	{
+	private function updateCurStep():Void {
 		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
 
 		var shit = ((Conductor.songPosition - ClientPrefs.getPref('noteOffset')) - lastChange.songTime) / lastChange.stepCrochet;
 		curStep = lastChange.stepTime + Math.floor(shit);
 	}
 
-	public function stepHit():Void
-	{
+	public function stepHit():Void {
 		if (curStep % 4 == 0)
 			beatHit();
 	}
 
-	public function beatHit():Void
-	{
-		//do literally nothing dumbass
-	}
+	public function beatHit():Void { } //do literally nothing dumbass
 }

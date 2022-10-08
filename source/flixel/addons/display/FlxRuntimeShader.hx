@@ -200,24 +200,18 @@ class FlxRuntimeShader extends FlxShader
 	{
 		_glslVersion = glslVersion;
 
-		if (fragmentSource == null)
-		{
+		if (fragmentSource == null) {
 			trace('Loading default fragment source...');
 			glFragmentSource = processFragmentSource(DEFAULT_FRAGMENT_SOURCE);
-		}
-		else
-		{
+		} else {
 			trace('Loading fragment source from argument...');
 			glFragmentSource = processFragmentSource(fragmentSource);
 		}
 
-		if (vertexSource == null)
-		{
+		if (vertexSource == null) {
 			var s = processVertexSource(DEFAULT_VERTEX_SOURCE);
 			glVertexSource = s;
-		}
-		else
-		{
+		} else {
 			var s = processVertexSource(vertexSource);
 			glVertexSource = s;
 		}
@@ -395,10 +389,8 @@ class FlxRuntimeShader extends FlxShader
 				__inputBitmapData.push(input);
 
 				switch (name) {
-					case "openfl_Texture":
-						__texture = input;
-					case "bitmap":
-						__bitmap = input;
+					case "openfl_Texture": __texture = input;
+					case "bitmap": __bitmap = input;
 					default:
 				}
 
