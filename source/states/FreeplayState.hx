@@ -293,10 +293,9 @@ class FreeplayState extends MusicBeatState
 		else if (accepted) {
 			persistentUpdate = false;
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
-			if (songLowercase == "") /*trace("Empty Song Found!");*/ return;
+			if (songLowercase == "") return;
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-			trace(poop);
-
+			
 			PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = curDifficulty;
@@ -305,7 +304,7 @@ class FreeplayState extends MusicBeatState
 				colorTween.cancel();
 			}
 			
-			if (FlxG.keys.pressed.SHIFT){
+			if (FlxG.keys.pressed.SHIFT) {
 				LoadingState.loadAndSwitchState(new ChartingState());
 			} else {
 				LoadingState.loadAndSwitchState(new PlayState());
@@ -385,17 +384,14 @@ class FreeplayState extends MusicBeatState
 
 		iconArray[curSelected].alpha = 1;
 
-		for (item in grpSongs.members)
-		{
+		for (item in grpSongs.members) {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0.6;
 
 			if (item.targetY == 0)
-			{
 				item.alpha = 1;
-			}
 		}
 		
 		Paths.currentModDirectory = songs[curSelected].folder;
@@ -432,8 +428,7 @@ class FreeplayState extends MusicBeatState
 		}
 
 		var newPos:Int = CoolUtil.difficulties.indexOf(lastDifficultyName);
-		if(newPos > -1)
-		{
+		if(newPos > -1) {
 			curDifficulty = newPos;
 		}
 	}

@@ -225,14 +225,14 @@ class ModsMenuState extends MusicBeatState
 		visibleWhenHasMods.push(buttonEnableAll);
 
 		// more buttons
-		descriptionTxt = new FlxText(148, 0, FlxG.width - 216, "", 16);
-		descriptionTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
+		descriptionTxt = new FlxText(148, 0, FlxG.width - 216, "", 32);
+		descriptionTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT);
 		descriptionTxt.scrollFactor.set();
 		add(descriptionTxt);
 		visibleWhenHasMods.push(descriptionTxt);
 
-		folderTxt = new FlxText(148, 0, 0, "", 32);
-		folderTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		folderTxt = new FlxText(148, 0, 0, "", 16);
+		folderTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		folderTxt.scrollFactor.set();
 		add(folderTxt);
 		visibleWhenHasMods.push(folderTxt);
