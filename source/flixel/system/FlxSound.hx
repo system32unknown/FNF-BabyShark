@@ -256,15 +256,13 @@ class FlxSound extends FlxBasic
 		name = null;
 		artist = null;
 
-		if (_channel != null)
-		{
+		if (_channel != null) {
 			_channel.removeEventListener(Event.SOUND_COMPLETE, stopped);
 			_channel.stop();
 			_channel = null;
 		}
 
-		if (_sound != null)
-		{
+		if (_sound != null) {
 			_sound.removeEventListener(Event.ID3, gotID3);
 			_sound = null;
 		}

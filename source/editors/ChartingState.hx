@@ -1121,6 +1121,18 @@ class ChartingState extends MusicBeatState
 	#end
 	var instVolume:FlxUINumericStepper;
 	var voicesVolume:FlxUINumericStepper;
+
+	var chartPlaybackRate(default, set):Float = 1;
+	var chartPlaybackRateStepper:FlxUINumericStepper;
+
+	function set_chartPlaybackRate(value:Float):Float {
+		chartPlaybackRate = value;
+		if(vocals != null) {
+			vocals.pitch = chartPlaybackRate;
+		}
+		FlxG.sound.music.pitch = chartPlaybackRate;
+		return value;
+	}
 	function addChartingUI() {
 		var tab_group_chart = new FlxUI(null, UI_box);
 		tab_group_chart.name = 'Charting';
@@ -1222,6 +1234,10 @@ class ChartingState extends MusicBeatState
 		blockPressWhileTypingOnStepper.push(metronomeStepper);
 		blockPressWhileTypingOnStepper.push(metronomeOffsetStepper);
 
+		chartPlaybackRateStepper = new FlxUINumericStepper(metronomeOffsetStepper.x + 100, 55, 0.25, 1, 0.5, 3, 2);
+		chartPlaybackRateStepper.name = 'playback_rate';
+		blockPressWhileTypingOnStepper.push(chartPlaybackRateStepper);
+
 		disableAutoScrolling = new FlxUICheckBox(metronome.x + 120, metronome.y, null, null, "Disable Autoscroll (Not Recommended)", 120, function() {
 			FlxG.save.data.chart_noAutoScroll = disableAutoScrolling.checked;
 		});
@@ -1242,6 +1258,7 @@ class ChartingState extends MusicBeatState
 		tab_group_chart.add(new FlxText(metronomeOffsetStepper.x, metronomeOffsetStepper.y - 15, 0, 'Offset (ms):'));
 		tab_group_chart.add(new FlxText(instVolume.x, instVolume.y - 15, 0, 'Inst Volume'));
 		tab_group_chart.add(new FlxText(voicesVolume.x, voicesVolume.y - 15, 0, 'Voices Volume'));
+		tab_group_chart.add(new FlxText(chartPlaybackRateStepper.x, chartPlaybackRateStepper.y - 15, 0, 'Playback Rate (in editor)'));
 		tab_group_chart.add(metronome);
 		tab_group_chart.add(disableAutoScrolling);
 		tab_group_chart.add(metronomeStepper);
@@ -1250,6 +1267,7 @@ class ChartingState extends MusicBeatState
 		tab_group_chart.add(waveformUseInstrumental);
 		tab_group_chart.add(waveformUseVoices);
 		#end
+		tab_group_chart.add(chartPlaybackRateStepper);
 		tab_group_chart.add(instVolume);
 		tab_group_chart.add(voicesVolume);
 		tab_group_chart.add(check_mute_inst);
@@ -1356,6 +1374,8 @@ class ChartingState extends MusicBeatState
 					FlxG.sound.music.volume = nums.value;
 				case 'voices_volume':
 					vocals.volume = nums.value;
+				case 'playback_rate':
+					chartPlaybackRate = nums.value;
 			}
 		}
 		else if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
@@ -1630,16 +1650,16 @@ class ChartingState extends MusicBeatState
 						vocals.pause();
 						vocals.time = FlxG.sound.music.time;
 						vocals.play();
+						vocals.pitch = chartPlaybackRate;
 					}
 					FlxG.sound.music.play();
+					vocals.pitch = chartPlaybackRate;
 				}
 			}
 
 			if (FlxG.keys.justPressed.R) {
-				if (FlxG.keys.pressed.SHIFT)
-					resetSection(true);
-				else
-					resetSection();
+				if (FlxG.keys.pressed.SHIFT) resetSection(true);
+				else resetSection();
 			}
 
 			if (FlxG.mouse.wheel != 0) {
@@ -1706,7 +1726,7 @@ class ChartingState extends MusicBeatState
 
 			var style = currentType;
 
-			if (FlxG.keys.pressed.SHIFT){
+			if (FlxG.keys.pressed.SHIFT) {
 				style = 3;
 			}
 

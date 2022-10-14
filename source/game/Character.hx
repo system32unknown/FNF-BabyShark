@@ -79,7 +79,7 @@ class Character extends FlxSprite
 	public var originalFlipX:Bool = false;
 	public var healthColorArray:Array<Int> = [255, 0, 0];
 
-	public static var DEFAULT_CHARACTER:String = 'bf'; //In case a character is missing, it will use BF on its place
+	public static final DEFAULT_CHARACTER:String = 'bf'; //In case a character is missing, it will use BF on its place
 	public function new(x:Float, y:Float, ?character:String = 'bf', ?isPlayer:Bool = false)
 	{
 		super(x, y);
@@ -149,12 +149,9 @@ class Character extends FlxSprite
 				}
 
 				switch (spriteType){
-					case "packer":
-						frames = Paths.getPackerAtlas(json.image);
-					case "sparrow":
-						frames = Paths.getSparrowAtlas(json.image);
-					case "texture":
-						frames = AtlasFrameMaker.construct(json.image);
+					case "packer": frames = Paths.getPackerAtlas(json.image);
+					case "sparrow": frames = Paths.getSparrowAtlas(json.image);
+					case "texture": frames = AtlasFrameMaker.construct(json.image);
 				}
 				imageFile = json.image;
 
@@ -189,7 +186,7 @@ class Character extends FlxSprite
 						var animFps:Int = anim.fps;
 						var animLoop:Bool = !!anim.loop; //Bruh
 						var animIndices:Array<Int> = anim.indices;
-						if(animIndices != null && animIndices.length > 0) {
+						if (animIndices != null && animIndices.length > 0) {
 							animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
 						} else {
 							animation.addByPrefix(animAnim, animName, animFps, animLoop);
@@ -353,10 +350,8 @@ class Character extends FlxSprite
 			danceEveryNumBeats = (danceIdle ? 1 : 2);
 		} else if(lastDanceIdle != danceIdle) {
 			var calc:Float = danceEveryNumBeats;
-			if(danceIdle)
-				calc /= 2;
-			else
-				calc *= 2;
+			if(danceIdle) calc /= 2;
+			else calc *= 2;
 
 			danceEveryNumBeats = Math.round(Math.max(calc, 1));
 		}
