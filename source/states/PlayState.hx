@@ -164,6 +164,7 @@ class PlayState extends MusicBeatState
 
 	public var gfSpeed:Int = 1;
 	public var health:Float = 1;
+	var healthMax:Float = 2;
 	public var combo:Int = 0;
 	public var MaxCombo:Int = 0;
 
@@ -317,6 +318,8 @@ class PlayState extends MusicBeatState
 	var keysPressed:Array<Bool> = [];
 	var boyfriendIdleTime:Float = 0.0;
 	var boyfriendIdled:Bool = false;
+
+	var gfChecknull:String = "";
 
 	// Lua shit
 	public static var instance:PlayState;
@@ -958,7 +961,8 @@ class PlayState extends MusicBeatState
 			camPos.x += gf.getGraphicMidpoint().x + gf.cameraPosition[0];
 			camPos.y += gf.getGraphicMidpoint().y + gf.cameraPosition[1];
 		}
-		if(dad.curCharacter.startsWith(gf != null ? gf.curCharacter : "gf")) {
+		gfChecknull = (gf != null ? gf.curCharacter : "gf");
+		if(dad.curCharacter == gfChecknull) {
 			dad.setPosition(GF_X, GF_Y);
 			if(gf != null)
 				gf.visible = false;
@@ -1088,7 +1092,7 @@ class PlayState extends MusicBeatState
 		if(downScroll) healthBarBG.y = 0.11 * FlxG.height;
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
-			'health', 0, 2);
+			'health', 0, healthMax);
 		healthBar.scrollFactor.set();
 		// healthBar
 		healthBar.visible = !hideHud;
@@ -3116,8 +3120,8 @@ class PlayState extends MusicBeatState
 				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
 		}
 
-		if (health > 2)
-			health = 2;
+		if (health > healthMax)
+			health = healthMax;
 
 		if (healthBar.percent < 20 && iconP1.icontype != "single")
 			iconP1.animation.curAnim.curFrame = 1;
@@ -3264,7 +3268,7 @@ class PlayState extends MusicBeatState
 					
 						//Jesus fuck this took me so much mother fucking time AAAAAAAAAA
 						if(strumScroll && daNote.isSustainNote) {
-							if (daNote.animation.curAnim.name.endsWith('end')) {
+							if (daNote.animation.curAnim != null && daNote.animation.curAnim.name.endsWith('tail')) {
 								daNote.y += 10.5 * (fakeCrochet / 400) * 1.5 * songSpeed + (46 * (songSpeed - 1));
 								daNote.y -= 46 * (1 - (fakeCrochet / 600)) * songSpeed;
 								if(PlayState.isPixelStage) {
@@ -3502,7 +3506,7 @@ class PlayState extends MusicBeatState
 				if(Math.isNaN(time) || time <= 0) time = 0.6;
 
 				if(value != 0) {
-					if(dad.curCharacter.startsWith(gf.curCharacter)) { //Tutorial GF is actually Dad! The GF is an imposter!! ding ding ding ding ding ding ding, dindinding, end my suffering
+					if(dad.curCharacter == gfChecknull) { //Tutorial GF is actually Dad! The GF is an imposter!! ding ding ding ding ding ding ding, dindinding, end my suffering
 						dad.playAnim('cheer', true);
 						dad.specialAnim = true;
 						dad.heyTimer = time;
@@ -3766,11 +3770,11 @@ class PlayState extends MusicBeatState
 								addCharacterToList(value2, charType);
 							}
 
-							var wasGf:Bool = dad.curCharacter.startsWith(gf.curCharacter);
+							var wasGf:Bool = dad.curCharacter == gfChecknull;
 							var lastAlpha:Float = dad.alpha;
 							dad.alpha = 0.00001;
 							dad = dadMap.get(value2);
-							if(!dad.curCharacter.startsWith(gf.curCharacter)) {
+							if(dad.curCharacter != gfChecknull) {
 								if(wasGf && gf != null) {
 									gf.visible = true;
 								}
@@ -4770,7 +4774,7 @@ class PlayState extends MusicBeatState
 			vocals.volume = 1;
 
 		var time:Float = 0.15;
-		if(note.isSustainNote && !note.animation.curAnim.name.endsWith('end')) {
+		if(note.isSustainNote && !note.animation.curAnim.name.endsWith('tail')) {
 			time += 0.15;
 		}
 		StrumPlayAnim(true, Std.int(Math.abs(note.noteData)) % Note.ammo[mania], time);
@@ -4928,7 +4932,7 @@ class PlayState extends MusicBeatState
 
 			if(cpuControlled) {
 				var time:Float = 0.15;
-				if(note.isSustainNote && !note.animation.curAnim.name.endsWith('end')) {
+				if(note.isSustainNote && !note.animation.curAnim.name.endsWith('tail')) {
 					time += 0.15;
 				}
 				StrumPlayAnim(false, Std.int(Math.abs(note.noteData)) % Note.ammo[mania], time);

@@ -123,7 +123,7 @@ class Note extends FlxSprite
 	var defaultHeight:Float = 0;
 
 	public function resizeByRatio(ratio:Float) { //haha funny twitter shit
-		if(isSustainNote && !animation.curAnim.name.endsWith('end')) {
+		if(isSustainNote && !animation.curAnim.name.endsWith('tail')) {
 			scale.y *= ratio;
 			updateHitbox();
 		}
@@ -190,7 +190,7 @@ class Note extends FlxSprite
 					colorSwap.hue = 0;
 					colorSwap.saturation = 0;
 					colorSwap.brightness = 0;
-					missHealth = 1;
+					missHealth = 2;
 					hitCausesMiss = true;
 				case 'Alt Animation':
 					animSuffix = '-alt';
@@ -365,10 +365,8 @@ class Note extends FlxSprite
 				animation.addByPrefix(gfxLetter[i] + ' tail', gfxLetter[i] + ' tail');
 			}
 
-			if (!isSustainNote)
-				setGraphicSize(Std.int(defaultWidth * scales[mania]));
-			else
-				setGraphicSize(Std.int(defaultWidth * scales[mania]), Std.int(defaultHeight * scales[0]));
+			if (!isSustainNote) setGraphicSize(Std.int(defaultWidth * scales[mania]));
+			else setGraphicSize(Std.int(defaultWidth * scales[mania]), Std.int(defaultHeight * scales[0]));
 
 			updateHitbox();
 		}

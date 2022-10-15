@@ -958,7 +958,7 @@ class FunkinLua {
 						PlayState.instance.modchartTweens.remove(tag);
 					}
 				}));
-			}else{
+			} else {
 				luaTrace('doTween: Couldnt find object: ' + variable, false, false, FlxColor.RED);
 			}
 		});

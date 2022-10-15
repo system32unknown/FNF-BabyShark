@@ -365,7 +365,7 @@ class EditorPlayState extends MusicBeatState
 						daNote.y = (strumY + 0.45 * (Conductor.songPosition - daNote.strumTime) * PlayState.SONG.speed);
 						if (daNote.isSustainNote) {
 							//Jesus fuck this took me so much mother fucking time AAAAAAAAAA
-							if (daNote.animation.curAnim.name.endsWith('end')) {
+							if (daNote.animation.curAnim.name.endsWith('tail')) {
 								daNote.y += 10.5 * (fakeCrochet / 400) * 1.5 * PlayState.SONG.speed + (46 * (PlayState.SONG.speed - 1));
 								daNote.y -= 46 * (1 - (fakeCrochet / 600)) * PlayState.SONG.speed;
 								if(PlayState.isPixelStage) {
@@ -414,7 +414,7 @@ class EditorPlayState extends MusicBeatState
 						vocals.volume = 1;
 
 					var time:Float = 0.15;
-					if(daNote.isSustainNote && !daNote.animation.curAnim.name.endsWith('end')) {
+					if(daNote.isSustainNote && !daNote.animation.curAnim.name.endsWith('tail')) {
 						time += 0.15;
 					}
 					StrumPlayAnim(true, Std.int(Math.abs(daNote.noteData)) % 4, time);

@@ -2,9 +2,6 @@ package substates;
 
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
@@ -20,9 +17,6 @@ import data.WeekData;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
-	var restartsprite:FlxSprite;
-	var restarttween:FlxTween = null;
-
 	public var boyfriend:Boyfriend;
 	var camFollow:FlxPoint;
 	var camFollowPos:FlxObject;
@@ -45,17 +39,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	override function create() {
 		instance = this;
-
-		restartsprite = new FlxSprite(500, 800).loadGraphic(Paths.image('restart'));
-		restartsprite.setGraphicSize(Std.int(restartsprite.width * 0.7));
-		restartsprite.updateHitbox();
-		restartsprite.antialiasing = true;
-		add(restartsprite);
-
 		PlayState.instance.callOnLuas('onGameOverStart', []);
-		if (restarttween == null)
-			restarttween = FlxTween.tween(restartsprite, {y: restartsprite.y - 70}, 3, {ease: FlxEase.quartInOut});
-
 		super.create();
 	}
 
@@ -70,8 +54,6 @@ class GameOverSubstate extends MusicBeatSubstate
 		boyfriend = new Boyfriend(x, y, characterName);
 		boyfriend.x += boyfriend.positionArray[0];
 		boyfriend.y += boyfriend.positionArray[1];
-		if (restartsprite != null)
-			restartsprite.x = boyfriend.x;
 		add(boyfriend);
 
 		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
@@ -162,14 +144,6 @@ class GameOverSubstate extends MusicBeatSubstate
 	function endBullshit():Void
 	{
 		if (!isEnding) {
-			if (restarttween != null)
-				restarttween = FlxTween.tween(restartsprite, {y: restartsprite.y - 80}, 4, {ease: FlxEase.backInOut,
-					onComplete: function(_) {
-						restarttween = null;
-						restartsprite.destroy();
-					}
-				});
-
 			isEnding = true;
 			boyfriend.playAnim('deathConfirm', true);
 			FlxG.sound.music.stop();
