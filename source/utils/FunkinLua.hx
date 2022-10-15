@@ -244,6 +244,24 @@ class FunkinLua {
 			return false;
 		});
 
+		Lua_helper.add_callback(lua, "giveAchievement", function(name:String){
+			var me = this;
+			if (Achievements.isAchievementUnlocked(name) || !PlayState.instance.achievementArray.contains(me)) {
+				if (!PlayState.instance.achievementArray.contains(me)) {
+					luaTrace("giveAchievement: This lua file is not a custom achievement lua.", false, false, FlxColor.RED);
+				}
+
+				return false;
+			}
+			@:privateAccess
+			if (PlayState.instance != null) {
+				Achievements.unlockAchievement(name);
+				PlayState.instance.startAchievement(name);
+				ClientPrefs.saveSettings();
+				return true;
+			} else return false;
+		});
+
 		// shader shit
 		addCallback("initLuaShader", function(name:String, glslVersion:Int = 120) {
 			if(!ClientPrefs.getPref('shaders')) return false;

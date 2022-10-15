@@ -324,6 +324,7 @@ class PlayState extends MusicBeatState
 	// Lua shit
 	public static var instance:PlayState;
 	public var luaArray:Array<FunkinLua> = [];
+	public var achievementArray:Array<FunkinLua> = [];
 	private var luaDebugGroup:FlxTypedGroup<FunkinLua.DebugLuaText>;
 	public var introSoundsSuffix:String = '';
 
@@ -884,7 +885,7 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		// STAGE SCRIPTS
+		// STAGE SCRIPTS, CUSTOM ACHIVEMENTS
 		#if (MODS_ALLOWED && LUA_ALLOWED)
 		var doPush:Bool = false;
 		var luaFile:String = 'stages/' + curStage + '.lua';
@@ -900,6 +901,16 @@ class PlayState extends MusicBeatState
 
 		if(doPush)
 			luaArray.push(new FunkinLua(luaFile));
+
+		var luaFiles:Array<String> = Achievements.getModAchievements().copy();
+		if(luaFiles.length > 0){
+			for(luaFile in luaFiles)
+			{
+				var lua = new FunkinLua(luaFile);
+				luaArray.push(lua);
+				achievementArray.push(lua);
+			}
+		}
 		#end
 
 		var gfVersion:String = SONG.gfVersion;
