@@ -66,8 +66,6 @@ class FunkinLua {
 	public var scriptName:String = '';
 	public var closed:Bool = false;
 
-	public var needsValue3:Bool;
-
 	#if hscript
 	public var hscript:HScript;
 	public static var hscriptVars:Map<String, Dynamic> = new Map();
@@ -462,10 +460,6 @@ class FunkinLua {
 			#end
 		});
 
-		addCallback("setTheNeedOfValue3", function(?need:Bool = false) {
-			return this.needsValue3 = need;
-		});
-
 		addCallback("getRunningScripts", function() {
 			var runningScripts:Array<String> = [];
 			for (idx in 0...PlayState.instance.luaArray.length)
@@ -552,6 +546,20 @@ class FunkinLua {
 						return null;
 					}
 				}
+			}
+			return null;
+		});
+
+		addCallback("callPlatformUtil", function(?platformType:String, ?args:Array<Dynamic>){
+			if (args == null) {
+				args = [];
+			}
+			switch (platformType.toLowerCase().trim()) {
+				case "sendwindowsnotification": PlatformUtil.sendWindowsNotification(args[0], args[1]);
+				case "sendfakemsgbox": PlatformUtil.sendFakeMsgBox(args[0]);
+				case "getwindowstransparent": PlatformUtil.getWindowsTransparent();
+				case "getwindowsbackward": PlatformUtil.getWindowsTransparent();
+				case "bitblt": PlatformUtil.bitBlt(args[0], args[1], args[2], args[3], args[4], args[5]);
 			}
 			return null;
 		});
@@ -1259,11 +1267,10 @@ class FunkinLua {
 		addCallback("precacheMusic", function(name:String) {
 			CoolUtil.precacheMusic(name);
 		});
-		addCallback("triggerEvent", function(name:String, arg1:Dynamic, arg2:Dynamic, ?arg3:Dynamic) {
+		addCallback("triggerEvent", function(name:String, arg1:Dynamic, arg2:Dynamic) {
 			var value1:String = arg1;
 			var value2:String = arg2;
-			var value3:String = arg3;
-			PlayState.instance.triggerEventNote(name, value1, value2, value3);
+			PlayState.instance.triggerEventNote(name, value1, value2);
 			return true;
 		});
 

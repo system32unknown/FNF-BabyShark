@@ -1371,13 +1371,13 @@ class PlayState extends MusicBeatState
 		CustomFadeTransition.nextCamera = camOther;
 	}
 
-	#if (!flash && sys)
+	#if (sys)
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
 	public function createRuntimeShader(name:String):FlxRuntimeShader
 	{
 		if(!ClientPrefs.getPref('shaders')) return new FlxRuntimeShader();
 
-		#if (!flash && MODS_ALLOWED && sys)
+		#if (MODS_ALLOWED && sys)
 		if(!runtimeShaders.exists(name) && !initLuaShader(name)) {
 			FlxG.log.warn('Shader $name is missing!');
 			return new FlxRuntimeShader();
@@ -3453,11 +3453,7 @@ class PlayState extends MusicBeatState
 			if(eventNotes[0].value2 != null)
 				value2 = eventNotes[0].value2;
 
-			var value3:String = '';
-			if (eventNotes[0].value3 != null)
-				value3 = eventNotes[0].value3;
-
-			triggerEventNote(eventNotes[0].event, value1, value2, value3);
+			triggerEventNote(eventNotes[0].event, value1, value2);
 			eventNotes.shift();
 		}
 	}
@@ -3467,15 +3463,14 @@ class PlayState extends MusicBeatState
 		return pressed;
 	}
 
-	public function triggerEventNote(eventName:String, value1:String, value2:String, ?value3:String) {
+	public function triggerEventNote(eventName:String, value1:String, value2:String) {
 		switch(eventName) {
 			case 'Dadbattle Spotlight':
 				if (WeekData.getWeekFileName() == 'week1' && curStage == 'stage') {
 					var val:Null<Int> = Std.parseInt(value1);
 					if(val == null) val = 0;
 
-					switch(Std.parseInt(value1))
-					{
+					switch(Std.parseInt(value1)) {
 						case 1, 2, 3: //enable and target dad
 							if(val == 1) //enable
 							{
@@ -3825,13 +3820,12 @@ class PlayState extends MusicBeatState
 				if(Math.isNaN(val1)) val1 = 1;
 				if(Math.isNaN(val2)) val2 = 0;
 
-				var ease:(t:Float) -> Float = FunkinLua.getFlxEaseByString(value3);
 				var newValue:Float = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1) * val1;
 
 				if(val2 <= 0) {
 					songSpeed = newValue;
 				} else {
-					songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, val2 * playbackRate, {ease: ease, 
+					songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, val2 * playbackRate, {ease: FlxEase.linear, 
 						onComplete: function (twn:FlxTween) {
 							songSpeedTween = null;
 						}

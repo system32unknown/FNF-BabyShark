@@ -276,8 +276,7 @@ class FreeplayState extends MusicBeatState
 				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 				if (PlayState.SONG.needsVoices)
 					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
-				else
-					vocals = new FlxSound();
+				else vocals = new FlxSound();
 
 				FlxG.sound.list.add(vocals);
 				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
@@ -288,9 +287,7 @@ class FreeplayState extends MusicBeatState
 				instPlaying = curSelected;
 				#end
 			}
-		}
-
-		else if (accepted) {
+		} else if (accepted) {
 			persistentUpdate = false;
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 			if (songLowercase == "") return;
