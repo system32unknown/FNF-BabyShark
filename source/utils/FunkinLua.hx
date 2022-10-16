@@ -558,7 +558,7 @@ class FunkinLua {
 				case "sendwindowsnotification": PlatformUtil.sendWindowsNotification(args[0], args[1]);
 				case "sendfakemsgbox": PlatformUtil.sendFakeMsgBox(args[0]);
 				case "getwindowstransparent": PlatformUtil.getWindowsTransparent();
-				case "getwindowsbackward": PlatformUtil.getWindowsTransparent();
+				case "getwindowsbackward": PlatformUtil.getWindowsbackward();
 				case "bitblt": PlatformUtil.bitBlt(args[0], args[1], args[2], args[3], args[4], args[5]);
 			}
 			return null;
