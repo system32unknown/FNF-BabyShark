@@ -103,15 +103,4 @@ class PlatformUtil
 	{
 		return res;
 	}
-
-    #if windows
-	@:functionCode('
-        HDC hWnd = GetActiveWindow();
-        res = BitBlt(hWnd, x, y, width, height, hWnd, xx, yy, SRCCOPY);
-    ')
-    #end
-	static public function bitBlt(x:Int = 0, y:Int = 0, width:Int = 0, xx:Int = 0, yy:Int = 0, height:Int = 0, res:Int = 0)  // Only works on windows, otherwise returns 0!
-	{
-		return res;
-	}
 }

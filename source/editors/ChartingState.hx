@@ -1023,6 +1023,8 @@ class ChartingState extends MusicBeatState
 
 		var addButton:FlxButton = new FlxButton(removeButton.x + removeButton.width + 10, removeButton.y, '+', function() {
 			if(curSelectedNote != null && curSelectedNote[2] == null) { //Is event note
+				curSelectedNote[1].push(['', '', '']);
+
 				changeEventSelected(1);
 				updateGrid();
 			}
