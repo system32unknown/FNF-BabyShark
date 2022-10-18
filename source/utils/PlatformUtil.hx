@@ -9,7 +9,6 @@ package utils;
 #include <dwmapi.h>
 #include <strsafe.h>
 #include <shellapi.h>
-#include <wingdi.h>
 #include <iostream>
 #include <string>
 
@@ -100,6 +99,16 @@ class PlatformUtil
     ')
     #end
 	static public function getWindowsbackward(res:Int = 0)  // Only works on windows, otherwise returns 0!
+	{
+		return res;
+	}
+
+    #if windows
+	@:functionCode('
+        res = SetCursorPos(x, y); 
+    ')
+    #end
+	static public function setCursorPos(x:Int = 0, y:Int = 0, res:Int = 0)  // Only works on windows, otherwise returns 0!
 	{
 		return res;
 	}

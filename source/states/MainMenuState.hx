@@ -31,7 +31,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	var BabySharkVersion:String = '0.1 BETA'; //This is also used for Discord RPC
-	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
+	public static var psychEngineVersion:String = '0.6.3'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
 	var menuCover:FlxSprite;

@@ -21,6 +21,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.tweens.misc.VarTween;
+import flixel.animation.FlxAnimationController;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
@@ -117,7 +118,7 @@ class PlayState extends MusicBeatState
 	public var songSpeed(default, set):Float = 1;
 	public var songSpeedType:String = "multiplicative";
 	public var noteKillOffset:Float = 350;
-	public var playbackRate(default, set):Float = ClientPrefs.getGameplaySetting('songspeed', 1);
+	public var playbackRate(default, set):Float = 1;
 
 	public var boyfriendGroup:FlxSpriteGroup;
 	public var dadGroup:FlxSpriteGroup;
@@ -364,6 +365,7 @@ class PlayState extends MusicBeatState
 		debugKeysChart = ClientPrefs.copyKey(ClientPrefs.keyBinds.get('debug_1'));
 		debugKeysCharacter = ClientPrefs.copyKey(ClientPrefs.keyBinds.get('debug_2'));
 		PauseSubState.songName = null; //Reset to default
+		playbackRate = ClientPrefs.getGameplaySetting('songspeed', 1);
 
 		keysArray = Keybinds.fill();
 
@@ -1449,6 +1451,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.pitch = value;
 		}
 		playbackRate = value;
+		FlxAnimationController.globalSpeed = value;
 		Conductor.safeZoneOffset = (ClientPrefs.getPref('safeFrames') / 60) * 1000 * value;
 		setOnLuas('playbackRate', playbackRate);
 		return value;
@@ -3085,9 +3088,9 @@ class PlayState extends MusicBeatState
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.85)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.85)));
 			case "Psych":
-				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, MathUtil.boundTo(1 - (elapsed * 9), 0, 1));
+				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP1.scale.set(mult, mult);
-				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, MathUtil.boundTo(1 - (elapsed * 9), 0, 1));
+				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP2.scale.set(mult, mult);
 			case "PsychOld":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, MathUtil.boundTo(1 - (elapsed * 30), 0, 1))));
@@ -3806,6 +3809,21 @@ class PlayState extends MusicBeatState
 							}
 							setOnLuas('gfName', gf.curCharacter);
 						}
+				}
+				reloadHealthBarColors();
+
+			case 'Change Character Icon':
+				var charType:Int = 0;
+				switch(value1.toLowerCase().trim()) {
+					case 'dad' | 'opponent': charType = 1;
+					default:
+						charType = Std.parseInt(value1);
+						if(Math.isNaN(charType)) charType = 0;
+				}
+
+				switch(charType) {
+					case 0: iconP1.changeIcon(value2);
+					case 1: iconP2.changeIcon(value2);
 				}
 				reloadHealthBarColors();
 
@@ -5171,7 +5189,8 @@ class PlayState extends MusicBeatState
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-
+		
+		FlxAnimationController.globalSpeed = 1;
 		FlxG.sound.music.pitch = 1;
 		super.destroy();
 	}

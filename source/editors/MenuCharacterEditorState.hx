@@ -35,14 +35,11 @@ class MenuCharacterEditorState extends MusicBeatState
 	var txtOffsets:FlxText;
 	var defaultCharacters:Array<String> = ['dad', 'bf', 'gf'];
 
-	var offsetType:Int = 1;
-
 	override function create() {
 		characterFile = {
 			image: 'Menu_Dad',
 			scale: 1,
 			position: [0, 0],
-			confirmPosition: [0, 0],
 			idle_anim: 'M Dad Idle',
 			confirm_anim: 'M Dad Idle',
 			flipX: false
@@ -53,8 +50,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		#end
 
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
-		for (char in 0...3)
-		{
+		for (char in 0...3) {
 			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, defaultCharacters[char]);
 			weekCharacterThing.y += 70;
 			weekCharacterThing.alpha = 0.2;
@@ -71,9 +67,7 @@ class MenuCharacterEditorState extends MusicBeatState
 
 		var tipText:FlxText = new FlxText(0, 540, FlxG.width,
 			"Arrow Keys - Change Current Offset (Hold shift for 10x speed)
-			\nSpace - Play \"Confirm\" animation
-			\nPress 2 to Adjust Confirm Animation Offset (If exists)
-			\nPress 1 to Adjust Character Offset", 16);
+			\nSpace - Play \"Confirm\" animation", 16);
 		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		tipText.scrollFactor.set();
 		add(tipText);
@@ -135,22 +129,19 @@ class MenuCharacterEditorState extends MusicBeatState
 		tab_group.name = "Character Type";
 
 		opponentCheckbox = new FlxUICheckBox(10, 20, null, null, "Opponent", 100);
-		opponentCheckbox.callback = function()
-		{
+		opponentCheckbox.callback = function() {
 			curTypeSelected = 0;
 			updateCharTypeBox();
 		};
 
 		boyfriendCheckbox = new FlxUICheckBox(opponentCheckbox.x, opponentCheckbox.y + 40, null, null, "Boyfriend", 100);
-		boyfriendCheckbox.callback = function()
-		{
+		boyfriendCheckbox.callback = function() {
 			curTypeSelected = 1;
 			updateCharTypeBox();
 		};
 
 		girlfriendCheckbox = new FlxUICheckBox(boyfriendCheckbox.x, boyfriendCheckbox.y + 40, null, null, "Girlfriend", 100);
-		girlfriendCheckbox.callback = function()
-		{
+		girlfriendCheckbox.callback = function() {
 			curTypeSelected = 2;
 			updateCharTypeBox();
 		};
@@ -164,7 +155,6 @@ class MenuCharacterEditorState extends MusicBeatState
 	var imageInputText:FlxUIInputText;
 	var idleInputText:FlxUIInputText;
 	var confirmInputText:FlxUIInputText;
-	var confirmDescText:FlxText;
 	var scaleStepper:FlxUINumericStepper;
 	var flipXCheckbox:FlxUICheckBox;
 	function addCharacterUI() {
@@ -179,8 +169,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		blockPressWhileTypingOn.push(confirmInputText);
 
 		flipXCheckbox = new FlxUICheckBox(10, confirmInputText.y + 30, null, null, "Flip X", 100);
-		flipXCheckbox.callback = function()
-		{
+		flipXCheckbox.callback = function() {
 			grpWeekCharacters.members[curTypeSelected].flipX = flipXCheckbox.checked;
 			characterFile.flipX = flipXCheckbox.checked;
 		};
@@ -191,7 +180,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		
 		scaleStepper = new FlxUINumericStepper(140, imageInputText.y, 0.05, 1, 0.1, 30, 2);
 
-		confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Confirm animation on the .XML:');
+		var confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Confirm animation on the .XML:');
 		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Image file name:'));
 		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Idle animation on the .XML:'));
 		tab_group.add(new FlxText(scaleStepper.x, scaleStepper.y - 18, 0, 'Scale:'));
@@ -211,12 +200,9 @@ class MenuCharacterEditorState extends MusicBeatState
 		girlfriendCheckbox.checked = false;
 
 		switch(curTypeSelected) {
-			case 0:
-				opponentCheckbox.checked = true;
-			case 1:
-				boyfriendCheckbox.checked = true;
-			case 2:
-				girlfriendCheckbox.checked = true;
+			case 0: opponentCheckbox.checked = true;
+			case 1: boyfriendCheckbox.checked = true;
+			case 2: girlfriendCheckbox.checked = true;
 		}
 
 		updateCharacters();
@@ -245,9 +231,6 @@ class MenuCharacterEditorState extends MusicBeatState
 		char.updateHitbox();
 		char.animation.play('idle');
 
-		confirmDescText.visible = true;
-		confirmInputText.visible = true;
-		offsetType = 1;
 		updateOffset();
 		
 		#if desktop
@@ -302,104 +285,40 @@ class MenuCharacterEditorState extends MusicBeatState
 
 			var shiftMult:Int = 1;
 			if(FlxG.keys.pressed.SHIFT) shiftMult = 10;
-
-			if(FlxG.keys.justPressed.LEFT) 
-			{
-				if (offsetType < 2)
-				{
-					characterFile.position[0] += shiftMult;
-					updateOffset();
-				}
-				else
-				{
-					characterFile.confirmPosition[0] += shiftMult;
-					updateConfirmOffset();
-				}
+			if(FlxG.keys.justPressed.LEFT) {
+				characterFile.position[0] += shiftMult;
+				updateOffset();
 			}
-			if(FlxG.keys.justPressed.RIGHT) 
-			{
-				if (offsetType < 2)
-				{
-					characterFile.position[0] -= shiftMult;
-					updateOffset();
-				}
-				else
-				{
-					characterFile.confirmPosition[0] -= shiftMult;
-					updateConfirmOffset();
-				}
+			if(FlxG.keys.justPressed.RIGHT) {
+				characterFile.position[0] -= shiftMult;
+				updateOffset();
 			}
-			if(FlxG.keys.justPressed.UP) 
-			{
-				if (offsetType < 2)
-				{
-					characterFile.position[1] += shiftMult;
-					updateOffset();
-				}
-				else
-				{
-					characterFile.confirmPosition[1] += shiftMult;
-					updateConfirmOffset();
-				}
+			if(FlxG.keys.justPressed.UP) {
+				characterFile.position[1] += shiftMult;
+				updateOffset();
 			}
-			if (FlxG.keys.justPressed.DOWN) 
-			{
-				if (offsetType < 2)
-				{
-					characterFile.position[1] -= shiftMult;
-					updateOffset();
-				}
-				else
-				{
-					characterFile.confirmPosition[1] -= shiftMult;
-					updateConfirmOffset();
-				}
+			if(FlxG.keys.justPressed.DOWN) {
+				characterFile.position[1] -= shiftMult;
+				updateOffset();
 			}
 
-			if(FlxG.keys.justPressed.SPACE && grpWeekCharacters.members[curTypeSelected].hasConfirmAnimation) {
-				updateConfirmOffset();
+			if(FlxG.keys.justPressed.SPACE && curTypeSelected == 1) {
+				grpWeekCharacters.members[curTypeSelected].animation.play('confirm', true);
 			}
 		}
 
-		updateText();
-
-		var char:MenuCharacter = grpWeekCharacters.members[curTypeSelected];
-
-		if (char.animation.curAnim != null && char.animation.curAnim.name == 'confirm' && char.animation.curAnim.finished) 
-		{
-			updateOffset();
+		var char:MenuCharacter = grpWeekCharacters.members[1];
+		if(char.animation.curAnim != null && char.animation.curAnim.name == 'confirm' && char.animation.curAnim.finished) {
 			char.animation.play('idle', true);
 		}
 
-		if (FlxG.keys.justPressed.TWO && char.hasConfirmAnimation)
-			offsetType = 2;
-		else if (FlxG.keys.justPressed.ONE)
-			offsetType = 1;
-
 		super.update(elapsed);
-	}
-
-	function updateConfirmOffset() 
-	{
-		updateOffset();
-		var char:MenuCharacter = grpWeekCharacters.members[curTypeSelected];
-		char.confirmPosition = characterFile.confirmPosition;
-		char.playAnim();
 	}
 
 	function updateOffset() {
 		var char:MenuCharacter = grpWeekCharacters.members[curTypeSelected];
 		char.offset.set(characterFile.position[0], characterFile.position[1]);
 		txtOffsets.text = '' + characterFile.position;
-	}
-
-	function updateText() {
-		var char:MenuCharacter = grpWeekCharacters.members[curTypeSelected];
-
-		if (offsetType < 2)
-			txtOffsets.text = 'Character Offsets: ' + beautifyOffset(characterFile.position);
-		else
-			txtOffsets.text = 'Confirm Animation Offsets: ${beautifyOffset(char.confirmPosition)}';
 	}
 
 	var _file:FileReference = null;
@@ -437,9 +356,7 @@ class MenuCharacterEditorState extends MusicBeatState
 					idleInputText.text = characterFile.idle_anim;
 					confirmInputText.text = characterFile.confirm_anim;
 					scaleStepper.value = characterFile.scale;
-					updateConfirmOffset();
 					updateOffset();
-					offsetType = 1;
 					_file = null;
 					return;
 				}
@@ -451,9 +368,9 @@ class MenuCharacterEditorState extends MusicBeatState
 		#end
 	}
 
-	/*
-		* Called when the save file dialog is cancelled.
-	*/
+	/**
+		Called when the save file dialog is cancelled.
+	**/
 	function onLoadCancel(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
@@ -463,9 +380,9 @@ class MenuCharacterEditorState extends MusicBeatState
 		trace("Cancelled file loading.");
 	}
 
-	/*
-		* Called if there is an error while saving the gameplay recording.
-	*/
+	/**
+		Called if there is an error while saving the gameplay recording.
+	**/
 	function onLoadError(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
@@ -499,9 +416,9 @@ class MenuCharacterEditorState extends MusicBeatState
 		FlxG.log.notice("Successfully saved file.");
 	}
 
-	/*
-		* Called when the save file dialog is cancelled.
-	*/
+	/**
+		Called when the save file dialog is cancelled.
+	**/
 	function onSaveCancel(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -510,9 +427,9 @@ class MenuCharacterEditorState extends MusicBeatState
 		_file = null;
 	}
 
-	/*
-		* Called if there is an error while saving the gameplay recording.
-	*/
+	/**
+		Called if there is an error while saving the gameplay recording.
+	**/
 	function onSaveError(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -521,11 +438,4 @@ class MenuCharacterEditorState extends MusicBeatState
 		_file = null;
 		FlxG.log.error("Problem saving file");
 	}
-
-	function beautifyOffset(offset:Array<OneOfTwo<Float, Int>>)
-	{
-		return Std.string(offset.copy()).split(',').join(', ');
-	}
 }
-	
-abstract OneOfTwo<K, V>(Dynamic) from K to K from V to V {}

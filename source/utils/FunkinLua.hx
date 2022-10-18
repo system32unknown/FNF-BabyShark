@@ -559,6 +559,7 @@ class FunkinLua {
 				case "sendfakemsgbox": PlatformUtil.sendFakeMsgBox(args[0], args[1]);
 				case "getwindowstransparent": PlatformUtil.getWindowsTransparent();
 				case "getwindowsbackward": PlatformUtil.getWindowsbackward();
+				case "setcursorpos": PlatformUtil.setCursorPos(args[0], args[1]);
 			}
 		});
 
@@ -1573,8 +1574,7 @@ class FunkinLua {
 			if(spr != null) {
 				if(spr.animation.getByName(name) != null)
 				{
-					if(Std.isOfType(spr, Character))
-					{
+					if(Std.isOfType(spr, Character)) {
 						//convert spr to Character
 						var obj:Dynamic = spr;
 						var spr:Character = obj;
@@ -1599,12 +1599,7 @@ class FunkinLua {
 						offsetY = spr.animOffsets.get(name)[1];
 					}
 
-					#if (flixel >= "4.11.0")
-					if (spr.animation.exists(name))
-					#else
-					if (spr.animation.getByName(name) != null)
-					#end
-					{
+					if (spr.animation.getByName(name) != null) {
 						spr.animation.play(name, forced, reverse, startFrame);
 						spr.offset.set(offsetX, offsetY);
 					}
@@ -3114,7 +3109,9 @@ class FunkinLua {
 			
 			for (arg in args) Convert.toLua(lua, arg);
 			var hscriptResult:Dynamic = hscript.call(func, args);
-			if (hscriptResult == null) trace(hscriptResult);
+			if (hscriptResult == null) {
+				luaTrace("ERROR: " + hscriptResult);
+			}
 
 			var status:Int = Lua.pcall(lua, args.length, 1, 0);
 			if (status != Lua.LUA_OK) {
