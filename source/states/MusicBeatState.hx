@@ -52,10 +52,8 @@ class MusicBeatState extends FlxUIState {
 
 			if(PlayState.SONG != null)
 			{
-				if (oldStep < curStep)
-					updateSection();
-				else
-					rollbackSection();
+				if (oldStep < curStep) updateSection();
+				else rollbackSection();
 			}
 		}
 
@@ -83,10 +81,8 @@ class MusicBeatState extends FlxUIState {
 		var lastSection:Int = curSection;
 		curSection = 0;
 		stepsToDo = 0;
-		for (i in 0...PlayState.SONG.notes.length)
-		{
-			if (PlayState.SONG.notes[i] != null)
-			{
+		for (i in 0...PlayState.SONG.notes.length) {
+			if (PlayState.SONG.notes[i] != null) {
 				stepsToDo += Math.round(getBeatsOnSection() * 4);
 				if(stepsToDo > curStep) break;
 				
@@ -97,16 +93,14 @@ class MusicBeatState extends FlxUIState {
 		if(curSection > lastSection) sectionHit();
 	}
 
-	private function updateBeat():Void
-	{
+	private function updateBeat():Void {
 		curBeat = Math.floor(curStep / 4);
-		curDecBeat = curDecStep/4;
+		curDecBeat = curDecStep / 4;
 	}
 
 	private function updateCurStep():Void
 	{
 		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
-
 		var shit = ((Conductor.songPosition - ClientPrefs.getPref('noteOffset')) - lastChange.songTime) / lastChange.stepCrochet;
 		curDecStep = lastChange.stepTime + shit;
 		curStep = lastChange.stepTime + Math.floor(shit);
@@ -137,19 +131,16 @@ class MusicBeatState extends FlxUIState {
 		MusicBeatState.switchState(FlxG.state);
 	}
 
-	public function stepHit():Void
-	{
+	public function stepHit():Void {
 		if (curStep % 4 == 0)
 			beatHit();
 	}
 
-	public function beatHit():Void
-	{
+	public function beatHit():Void {
 		//trace('Beat: ' + curBeat);
 	}
 
-	public function sectionHit():Void
-	{
+	public function sectionHit():Void {
 		//trace('Section: ' + curSection + ', Beat: ' + curBeat + ', Step: ' + curStep);
 	}
 

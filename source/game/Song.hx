@@ -67,8 +67,7 @@ class Song {
 						songJson.events.push([note[0], [[note[2], note[3], note[4]]]]);
 						notes.remove(note);
 						len = notes.length;
-					}
-					else i++;
+					} else i++;
 				}
 			}
 		}
@@ -102,7 +101,6 @@ class Song {
 
 		while (!rawJson.endsWith("}")) {
 			rawJson = rawJson.substr(0, rawJson.length - 1);
-			// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
 		}
 		
 		var songJson:Dynamic = parseJSONshit(rawJson);

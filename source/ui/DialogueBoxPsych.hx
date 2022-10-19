@@ -309,8 +309,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 
 					box.animation.curAnim.curFrame = box.animation.curAnim.frames.length - 1;
 					box.animation.curAnim.reverse();
-					if(daText != null)
-					{
+					if(daText != null) {
 						daText.kill();
 						remove(daText);
 						daText.destroy();
@@ -460,13 +459,13 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		}
 		var centerPrefix:String = '';
 		var lePosition:String = arrayCharacters[character].jsonFile.dialogue_pos;
-		if(lePosition == 'center') centerPrefix = 'center-';
+		if (lePosition == 'center') centerPrefix = 'center-';
 
-		if(character != lastCharacter) {
+		if (character != lastCharacter) {
 			box.animation.play(centerPrefix + boxType + 'Open', true);
 			updateBoxOffsets(box);
 			box.flipX = (lePosition == 'left');
-		} else if(boxType != lastBoxType) {
+		} else if (boxType != lastBoxType) {
 			box.animation.play(centerPrefix + boxType, true);
 			updateBoxOffsets(box);
 		}
@@ -475,15 +474,15 @@ class DialogueBoxPsych extends FlxSpriteGroup
 
 		daText.text = curDialogue.text;
 		daText.sound = curDialogue.sound;
-		if(daText.sound == null || daText.sound.trim() == '') daText.sound = 'dialogue';
+		if (daText.sound == null || daText.sound.trim() == '') daText.sound = 'dialogue';
 
 		daText.y = DEFAULT_TEXT_Y;
-		if(daText.rows > 2) daText.y -= LONG_TEXT_ADD;
+		if (daText.rows > 2) daText.y -= LONG_TEXT_ADD;
 
 		var char:DialogueCharacter = arrayCharacters[character];
-		if(char != null) {
+		if (char != null) {
 			char.playAnim(curDialogue.expression, daText.finishedText);
-			if(char.animation.curAnim != null) {
+			if (char.animation.curAnim != null) {
 				var rate:Float = 24 - (((curDialogue.speed - 0.05) / 5) * 480);
 				if(rate < 12) rate = 12;
 				else if(rate > 48) rate = 48;
@@ -510,9 +509,9 @@ class DialogueBoxPsych extends FlxSpriteGroup
 	public static function updateBoxOffsets(box:FlxSprite) { //Had to make it static because of the editors
 		box.centerOffsets();
 		box.updateHitbox();
-		if(box.animation.curAnim.name.startsWith('angry')) {
+		if (box.animation.curAnim.name.startsWith('angry')) {
 			box.offset.set(50, 65);
-		} else if(box.animation.curAnim.name.startsWith('center-angry')) {
+		} else if (box.animation.curAnim.name.startsWith('center-angry')) {
 			box.offset.set(50, 30);
 		} else {
 			box.offset.set(10, 0);

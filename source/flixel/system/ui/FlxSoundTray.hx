@@ -139,6 +139,7 @@ class FlxSoundTray extends Sprite
 
 		if (FlxG.sound.muted) {
 			globalVolume = 0;
+			'Volume: Muted';
 		}
 
 		for (i in 0..._bars.length) {

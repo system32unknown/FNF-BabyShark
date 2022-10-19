@@ -22,6 +22,8 @@ typedef AchievementMeta = {
 	public var desc:String;
 	public var save_tag:String;
 	public var hidden:Bool;
+	public var ?week_nomiss:String;
+	public var ?lua_code:String;
 	/**
 		If null or -1, gets pushed instead of getting inserting to specified index.
 	**/
@@ -76,9 +78,16 @@ class Achievements {
 		return false;
 	}
 
+	public static function exists(name:String) {
+		for (i in achievementsStuff) {
+			if (i[2] == name) return true;
+		}
+		return false;
+	}
+
 	public static function getAchievementIndex(name:String) {
 		for (i in 0...achievementsStuff.length) {
-			if(achievementsStuff[i][2] == name) {
+			if (achievementsStuff[i][2] == name) {
 				return i;
 			}
 		}
@@ -145,14 +154,35 @@ class Achievements {
 			if (FileSystem.exists(i)) {
 				for (l in FileSystem.readDirectory(i) ){
 					var pushedLuas = [];
-					if (l.endsWith('.lua')&&!pushedLuas.contains(l)) {
+					var file = l.substr(0, l.length - 4);
+					//ignore lua files that does not have a json file
+					if (l.endsWith('.lua') && FileSystem.exists(i + file+'.json') && !pushedLuas.contains(l)) {
 						luas.push(i + l);
-						pushedLuas.push(i + l);
+						pushedLuas.push(l);
 					}
 				}
 			}
 		}
 		return luas.copy();
+	}
+
+	public static function getModAchievementMetas():Array<AchievementMeta> {
+		var paths:Array<String>= [Paths.modFolders('achievements/'),Paths.getPreloadPath('achievements/'),];
+
+		var metas = [];
+		for (i in paths.copy())
+			if (FileSystem.exists(i))
+				for (l in FileSystem.readDirectory(i))
+					if (l.endsWith('.json')) {
+						try {
+							var meta:AchievementMeta = cast haxe.Json.parse(File.getContent(i + l));
+							metas.push(meta);
+						} catch(e) {
+							trace(e.stack);
+						}
+					}
+
+		return metas.copy();
 	}
 	#end
 }

@@ -22,8 +22,7 @@ class MenuItem extends FlxSprite
 
 	private var isFlashing:Bool = false;
 
-	public function startFlashing():Void
-	{
+	public function startFlashing():Void {
 		isFlashing = true;
 	}
 
@@ -38,12 +37,9 @@ class MenuItem extends FlxSprite
 		super.update(elapsed);
 		y = FlxMath.lerp(y, (targetY * 120) + 480, MathUtil.boundTo(elapsed * 10.2, 0, 1));
 
-		if (isFlashing)
-			flashingInt += 1;
+		if (isFlashing) flashingInt += 1;
 
-		if (flashingInt % fakeFramerate >= Math.floor(fakeFramerate / 2))
-			color = 0xFF33ffff;
-		else
-			color = FlxColor.WHITE;
+		if (flashingInt % fakeFramerate >= Math.floor(fakeFramerate / 2)) color = 0xFF33ffff;
+		else color = FlxColor.WHITE;
 	}
 }

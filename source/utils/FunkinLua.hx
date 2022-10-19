@@ -71,7 +71,7 @@ class FunkinLua {
 	public static var hscriptVars:Map<String, Dynamic> = new Map();
 	#end	
 	
-	public function new(script:String) {
+	public function new(script:String, ?scriptCode:String) {
 		#if LUA_ALLOWED
 		lua = LuaL.newstate();
 		LuaL.openlibs(lua);
@@ -81,7 +81,7 @@ class FunkinLua {
 		//trace("LuaJIT version: " + Lua.versionJIT());
 
 		try {
-			var result:Dynamic = LuaL.dofile(lua, script);
+			var result:Int = scriptCode != null ? LuaL.dostring(lua, scriptCode) : LuaL.dofile(lua, script);
 			var resultStr:String = Lua.tostring(lua, result);
 			if(resultStr != null && result != 0) {
 				trace('Error on lua script! ' + resultStr);

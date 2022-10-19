@@ -77,11 +77,10 @@ class TitleState extends MusicBeatState
 		super.create();
 
 		FlxG.save.bind('funkin', 'altertoriel');
-
 		ClientPrefs.loadPrefs();
 		Highscore.load();
 
-		if(!initialized) {
+		if (!initialized) {
 			if(FlxG.save.data != null && FlxG.save.data.fullscreen) {
 				FlxG.fullscreen = FlxG.save.data.fullscreen;
 			}
@@ -108,8 +107,7 @@ class TitleState extends MusicBeatState
 			}
 			#end
 
-			if (initialized)
-				startIntro();
+			if (initialized) startIntro();
 			else {
 				new FlxTimer().start(1, function(tmr:FlxTimer) {
 					startIntro();
@@ -120,7 +118,7 @@ class TitleState extends MusicBeatState
 
 	function startIntro() {
 		if (!initialized) {
-			if(FlxG.sound.music == null) {
+			if (FlxG.sound.music == null) {
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 			}
 		}
@@ -204,8 +202,7 @@ class TitleState extends MusicBeatState
 	var newTitle:Bool = false;
 	var titleTimer:Float = 0;
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 
@@ -233,8 +230,7 @@ class TitleState extends MusicBeatState
 				titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
 			}
 			
-			if(pressedEnter) {
-				var logoInt:Int = 0;
+			if (pressedEnter) {
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
 				
@@ -276,7 +272,7 @@ class TitleState extends MusicBeatState
 	}
 
 	function addMoreText(text:String, ?offset:Float = 0) {
-		if(textGroup != null && credGroup != null) {
+		if (textGroup != null && credGroup != null) {
 			var coolText:FlxText = new FlxText(0, 0, FlxG.width, text, 48);
 			coolText.setFormat(Paths.font('comic.ttf'), 48, FlxColor.WHITE, CENTER);
 			coolText.screenCenter(X);
@@ -339,30 +335,23 @@ class TitleState extends MusicBeatState
 					createCoolText(['A Biggest Collaboration']);
 				case 10:
 					addMoreText('Mod Ever');
+					addMoreText('And Ultimate Baby Shark Mod!');
 				case 11:
 					deleteCoolText();
 					createCoolText([curWacky[0]]);
-				case 12:
-					addMoreText(curWacky[1]);
-				case 13:
-					deleteCoolText();
-				case 14:
-					addMoreText('Baby');
-				case 15:
-					addMoreText('Shark\'s');
-				case 16:
-					addMoreText('Funkin');
-				case 17:
-					skipIntro();
+				case 12: addMoreText(curWacky[1]);
+				case 13: deleteCoolText();
+				case 14: addMoreText('Baby');
+				case 15: addMoreText('Shark\'s');
+				case 16: addMoreText('Funkin');
+				case 17: skipIntro();
 			}
 		}
 	}
 
 	var skippedIntro:Bool = false;
-	function skipIntro():Void
-	{
-		if (!skippedIntro)
-		{
+	function skipIntro():Void {
+		if (!skippedIntro) {
 			gradientBar = FlxGradient.createGradientFlxSprite(Math.round(FlxG.width), 512, [0x00, 0x553D0468, 0xC4FFE600], 1, 90, true);
 	    	gradientBar.y = FlxG.height - gradientBar.height;
 	     	gradientBar.scale.y = 0;

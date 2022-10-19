@@ -1344,7 +1344,7 @@ class ChartingState extends MusicBeatState
 					}
 				} else if (sender == value2InputText && checkEventSelected(2)) {
 					if(curSelectedNote[1][curEventSelected] != null) {
-						curSelectedNote[1][curEventSelected][2] = value1InputText.text;
+						curSelectedNote[1][curEventSelected][2] = value2InputText.text;
 						updateGrid();
 					}
 				} else if (sender == strumTimeInputText) {

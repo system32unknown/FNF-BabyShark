@@ -28,18 +28,18 @@ class TypedAlphabet extends Alphabet
 	private var _curLetter:Int = -1;
 	private var _timeToUpdate:Float = 0;
 	override function update(elapsed:Float) {
-		if(!finishedText) {
+		if (!finishedText) {
 			var playedSound:Bool = false;
 			_timeToUpdate += elapsed;
-			while(_timeToUpdate >= delay) {
+			while (_timeToUpdate >= delay) {
 				showCharacterUpTo(_curLetter + 1);
-				if(!playedSound && sound != '' && (delay > 0.025 || _curLetter % 2 == 0)) {
+				if (!playedSound && sound != '' && (delay > 0.025 || _curLetter % 2 == 0)) {
 					FlxG.sound.play(Paths.sound(sound), volume);
 				}
 				playedSound = true;
 
 				_curLetter++;
-				if(_curLetter >= letters.length - 1) {
+				if (_curLetter >= letters.length - 1) {
 					finishedText = true;
 					if(onFinish != null) onFinish();
 					_timeToUpdate = 0;

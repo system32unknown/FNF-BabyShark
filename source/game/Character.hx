@@ -218,17 +218,12 @@ class Character extends FlxSprite
 		}
 	}
 
-	override function update(elapsed:Float)
-	{
-		if(!debugMode && animation.curAnim != null)
-		{
-			if(heyTimer > 0)
-			{
+	override function update(elapsed:Float) {
+		if(!debugMode && animation.curAnim != null) {
+			if (heyTimer > 0) {
 				heyTimer -= elapsed * PlayState.instance.playbackRate;
-				if(heyTimer <= 0)
-				{
-					if(specialAnim && animation.curAnim.name == 'hey' || animation.curAnim.name == 'cheer')
-					{
+				if (heyTimer <= 0) {
+					if (specialAnim && animation.curAnim.name == 'hey' || animation.curAnim.name == 'cheer') {
 						specialAnim = false;
 						dance();
 					}
@@ -239,8 +234,7 @@ class Character extends FlxSprite
 				dance();
 			}
 			
-			switch(curCharacter)
-			{
+			switch(curCharacter) {
 				case 'pico-speaker':
 					if(animationNotes.length > 0 && Conductor.songPosition > animationNotes[0][0]) {
 						var noteData:Int = 1;
@@ -281,17 +275,13 @@ class Character extends FlxSprite
 	{
 		if (!debugMode && !skipDance && !specialAnim)
 		{
-			if(danceIdle)
-			{
+			if(danceIdle) {
 				danced = !danced;
 
-				if (danced)
-					playAnim('danceRight' + idleSuffix);
-				else
-					playAnim('danceLeft' + idleSuffix);
-			}
-			else if(animation.getByName('idle' + idleSuffix) != null) {
-					playAnim('idle' + idleSuffix);
+				if (danced) playAnim('danceRight' + idleSuffix);
+				else playAnim('danceLeft' + idleSuffix);
+			} else if(animation.getByName('idle' + idleSuffix) != null) {
+				playAnim('idle' + idleSuffix);
 			}
 		}
 	}
@@ -309,17 +299,13 @@ class Character extends FlxSprite
 
 		if (curCharacter.startsWith('gf'))
 		{
-			if (AnimName == 'singLEFT')
-			{
+			if (AnimName == 'singLEFT') {
 				danced = true;
-			}
-			else if (AnimName == 'singRIGHT')
-			{
+			} else if (AnimName == 'singRIGHT') {
 				danced = false;
 			}
 
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
-			{
+			if (AnimName == 'singUP' || AnimName == 'singDOWN') {
 				danced = !danced;
 			}
 		}

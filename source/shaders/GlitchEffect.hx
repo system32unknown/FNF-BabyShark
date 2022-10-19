@@ -42,10 +42,10 @@ class GlitchEffect extends Effect
         return v;
     }
 
-    function set_waveAmplitude(v:Bool):Bool
+    function set_isBG(v:Bool):Bool
     {
         isBG = v;
-        shader.isBG.value = [isBG];
+        shader.uDistortBG.value = [isBG];
         return v;
     }
 

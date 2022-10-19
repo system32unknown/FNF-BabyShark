@@ -326,6 +326,7 @@ class PlayState extends MusicBeatState
 	public static var instance:PlayState;
 	public var luaArray:Array<FunkinLua> = [];
 	public var achievementArray:Array<FunkinLua> = [];
+	public var achievementWeeks:Array<String> = [];
 	private var luaDebugGroup:FlxTypedGroup<FunkinLua.DebugLuaText>;
 	public var introSoundsSuffix:String = '';
 
@@ -833,8 +834,7 @@ class PlayState extends MusicBeatState
 		}
 
 		switch(Paths.formatToSongPath(SONG.song)) {
-			case 'stress':
-				GameOverSubstate.characterName = 'bf-holding-gf-dead';
+			case 'stress': GameOverSubstate.characterName = 'bf-holding-gf-dead';
 		}
 
 		if(isPixelStage) {
@@ -876,9 +876,9 @@ class PlayState extends MusicBeatState
 		#end
 
 		for (folder in foldersToCheck) {
-			if(FileSystem.exists(folder)) {
+			if (FileSystem.exists(folder)) {
 				for (file in FileSystem.readDirectory(folder)) {
-					if(file.endsWith('.lua') && !filesPushed.contains(file)) {
+					if (file.endsWith('.lua') && !filesPushed.contains(file)) {
 						luaArray.push(new FunkinLua(folder + file));
 						filesPushed.push(file);
 					}
@@ -888,7 +888,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		// STAGE SCRIPTS, CUSTOM ACHIVEMENTS
-		#if (MODS_ALLOWED && LUA_ALLOWED)
+		#if (MODS_ALLOWED && LUA_ALLOWED && ACHIEVEMENTS_ALLOWED)
 		var doPush:Bool = false;
 		var luaFile:String = 'stages/' + curStage + '.lua';
 		if(FileSystem.exists(Paths.modFolders(luaFile))) {
@@ -911,6 +911,19 @@ class PlayState extends MusicBeatState
 				var lua = new FunkinLua(luaFile);
 				luaArray.push(lua);
 				achievementArray.push(lua);
+			}
+		}
+
+
+		var achievementMetas = Achievements.getModAchievementMetas().copy();
+		for (i in achievementMetas) {
+			if(i.lua_code != null) {
+				var lua = new FunkinLua(null, i.lua_code);
+				luaArray.push(lua);
+				achievementArray.push(lua);
+			}
+			if(i.week_nomiss != null) {
+				achievementWeeks.push(i.week_nomiss);
 			}
 		}
 		#end
@@ -3822,8 +3835,8 @@ class PlayState extends MusicBeatState
 				}
 
 				switch(charType) {
-					case 0: iconP1.changeIcon(value2);
-					case 1: iconP2.changeIcon(value2);
+					case 0: iconP1.changeIcon("icon-" + value2);
+					case 1: iconP2.changeIcon("icon-" + value2);
 				}
 				reloadHealthBarColors();
 
@@ -3990,8 +4003,9 @@ class PlayState extends MusicBeatState
 			var achieve:String = checkForAchievement(['week1_nomiss', 'week2_nomiss', 'week3_nomiss', 'week4_nomiss',
 				'week5_nomiss', 'week6_nomiss', 'week7_nomiss', 'ur_bad',
 				'ur_good', 'hype', 'two_keys', 'toastie', 'debugger']);
+			var customAchieves:String = checkForAchievement(achievementWeeks);
 
-			if (achieve != null) {
+			if (achieve != null || customAchieves != null) {
 				startAchievement(achieve);
 				return;
 			}
@@ -4160,7 +4174,7 @@ class PlayState extends MusicBeatState
 	}
 
 	private function UpdateScoreText() {
-		var Accuracy:Float = Highscore.floorDecimal(ratingPercent * 100, 2);
+		var Accuracy:Float = MathUtil.floorDecimal(ratingPercent * 100, 2);
 		var Ranks:String = CoolUtil.GenerateLetterRank(Accuracy);
 		switch (ClientPrefs.getPref('ScoreTextStyle')) {
 			case 'Kade':
@@ -5513,7 +5527,7 @@ class PlayState extends MusicBeatState
 		var usedPractice:Bool = (ClientPrefs.getGameplaySetting('practice', false) || ClientPrefs.getGameplaySetting('botplay', false));
 		for (i in 0...achievesToCheck.length) {
 			var achievementName:String = achievesToCheck[i];
-			if(!Achievements.isAchievementUnlocked(achievementName) && !cpuControlled) {
+			if(!Achievements.isAchievementUnlocked(achievementName) && !cpuControlled && Achievements.exists(achievementName)) {
 				var unlock:Bool = false;
 				if (achievementName.contains(WeekData.getWeekFileName()) && achievementName.endsWith('nomiss')) { // any FC achievements, name should be "weekFileName_nomiss", e.g: "weekd_nomiss"
 					if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'HARD'
