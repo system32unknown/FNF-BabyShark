@@ -58,8 +58,10 @@ class ClientPrefs {
 		// Gameplay settings
 		'comboOffset' => [[0, 0], [0, 0], [0, 0], [0, 0]],
 		'ratingOffset' => 0,
+		'pefectWindow' => 15,
 		'sickWindow' => 45,
 		'goodWindow' => 90,
+		'okWindow' => 105,
 		'badWindow' => 135,
 		'safeFrames' => 10
 	];

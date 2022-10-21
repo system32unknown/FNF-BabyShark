@@ -25,9 +25,9 @@ class Conductor
 
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
 
-	public static function judgeNote(note:Note, diff:Float=0):Rating { // die
+	public static function judgeNote(note:Note, diff:Float = 0):Rating { // die
 		var data:Array<Rating> = PlayState.instance.ratingsData; //shortening cuz fuck u
-		for(i in 0...data.length-1)  { //skips last window (Shit)
+		for(i in 0...data.length-1) { //skips last window (Shit)
 			if (diff <= data[i].hitWindow) {
 				return data[i];
 			}
@@ -104,7 +104,7 @@ class Conductor
 		return val != null ? val : 4;
 	}
 
-	inline public static function calculateCrochet(bpm:Float){
+	inline public static function calculateCrochet(bpm:Float) {
 		return (60 / bpm) * 1000;
 	}
 
@@ -123,7 +123,7 @@ class Rating
 	public var counter:String = '';
 	public var hitWindow:Null<Int> = 0; //ms
 	public var ratingMod:Float = 1;
-	public var score:Int = 350;
+	public var score:Int = 500;
 	public var noteSplash:Bool = true;
 
 	public function new(name:String)
@@ -132,10 +132,11 @@ class Rating
 		this.image = name;
 		this.counter = name + 's';
 		this.hitWindow = ClientPrefs.getPref(name + 'Window', 0);
+		if(hitWindow == null)
+			hitWindow = 0;
 	}
 
-	public function increase(blah:Int = 1)
-	{
+	public function increase(blah:Int = 1) {
 		Reflect.setField(PlayState.instance, counter, Reflect.field(PlayState.instance, counter) + blah);
 	}
 }

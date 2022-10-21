@@ -103,7 +103,7 @@ class LoadingState extends MusicBeatState
 
 		if(callbacks != null) {
 			targetShit = FlxMath.remapToRange(callbacks.numRemaining / callbacks.length, 1, 0, 0, 1);
-			loadText.text = 'Loading... (${callbacks.numRemaining} / ${callbacks.length}) [${FlxG.state.toString()} -> ${target.toString()}]';
+			loadText.text = 'Loading... (${callbacks.numRemaining} / ${callbacks.length}) [${Type.getClass(FlxG.state)} -> ${Type.getClass(target)}]';
 			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
 		}
 	}
