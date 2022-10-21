@@ -2,6 +2,7 @@ package animateatlas.tilecontainer;
 
 import openfl.display.Tileset;
 import openfl.display.BitmapData;
+import openfl.errors.ArgumentError;
 import animateatlas.JSONData.AnimationData;
 import animateatlas.JSONData.ElementData;
 import animateatlas.JSONData.LayerFrameData;
@@ -13,7 +14,6 @@ import animateatlas.JSONData.SymbolData;
 import animateatlas.JSONData.SpriteData;
 import animateatlas.HelperEnums.LoopMode;
 import animateatlas.HelperEnums.SymbolType;
-import openfl.errors.ArgumentError;
 
 /**
  * Since we can extract symbols from the exported timeline and instance them separatedly, this keeps track of all symbols.
@@ -31,22 +31,10 @@ class TileAnimationLibrary {
 	public static inline var BITMAP_SYMBOL_NAME:String = "___atlas_sprite___";
 
 	private static var STD_MATRIX3D_DATA:Matrix3DData = {
-		m00: 1,
-		m01: 0,
-		m02: 0,
-		m03: 0,
-		m10: 0,
-		m11: 1,
-		m12: 0,
-		m13: 0,
-		m20: 0,
-		m21: 0,
-		m22: 1,
-		m23: 0,
-		m30: 0,
-		m31: 0,
-		m32: 0,
-		m33: 1
+		m00: 1, m01: 0, m02: 0, m03: 0,
+		m10: 0, m11: 1, m12: 0, m13: 0,
+		m20: 0, m21: 0, m22: 1, m23: 0,
+		m30: 0, m31: 0, m32: 0, m33: 1
 	};
 
 	public function new(data:AnimationData, atlas:AtlasData, texture:BitmapData) {
@@ -156,9 +144,7 @@ class TileAnimationLibrary {
 		// a purely internal symbol for bitmaps - simplifies their handling
 		_symbolData.set(BITMAP_SYMBOL_NAME, {
 			SYMBOL_name: BITMAP_SYMBOL_NAME,
-			TIMELINE: {
-				LAYERS: []
-			}
+			TIMELINE: {LAYERS: []}
 		});
 	}
 
@@ -193,10 +179,7 @@ class TileAnimationLibrary {
 								symbolType: SymbolType.GRAPHIC,
 								firstFrame: 0,
 								loop: LoopMode.LOOP,
-								transformationPoint: {
-									x: 0,
-									y: 0
-								},
+								transformationPoint: {x: 0, y: 0},
 								Matrix3D: STD_MATRIX3D_DATA
 							}
 						};

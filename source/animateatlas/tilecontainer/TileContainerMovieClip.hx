@@ -54,10 +54,8 @@ class TileContainerMovieClip extends TileContainer {
 		var uncalculatedFrames:Int = 0;
 		
 		for (i in 0...getFrameLabels().length){
-		uncalculatedArray.push(getFrame(getFrameLabels()[i]));
+			uncalculatedArray.push(getFrame(getFrameLabels()[i]));
 		}
-		
-	
 		uncalculatedFrames = uncalculatedArray[0]+uncalculatedArray.length;
 
 		return uncalculatedFrames;
@@ -130,6 +128,5 @@ class TileContainerMovieClip extends TileContainer {
 	private function get_framerate():Float {
 		return _framerate == null ? symbol._library.frameRate : _framerate;
 	}
-
 	// # end region
 }

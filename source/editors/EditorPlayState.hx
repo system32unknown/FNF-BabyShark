@@ -115,8 +115,7 @@ class EditorPlayState extends MusicBeatState
 		
 		if (PlayState.SONG.needsVoices)
 			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
-		else
-			vocals = new FlxSound();
+		else vocals = new FlxSound();
 
 		generateSong(PlayState.SONG.song);
 		#if (LUA_ALLOWED && MODS_ALLOWED)
@@ -172,6 +171,10 @@ class EditorPlayState extends MusicBeatState
 		super.create();
 	}
 
+	function sortByShit(Obj1:Note, Obj2:Note):Int {
+		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
+	}
+
 	var songHits:Int = 0;
 	var songMisses:Int = 0;
 	var startingSong:Bool = true;
@@ -212,8 +215,7 @@ class EditorPlayState extends MusicBeatState
 						var oldNote:Note;
 						if (unspawnNotes.length > 0)
 							oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-						else
-							oldNote = null;
+						else oldNote = null;
 
 						var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
 						swagNote.mustPress = gottaHitNote;
@@ -272,8 +274,7 @@ class EditorPlayState extends MusicBeatState
 		generatedMusic = true;
 	}
 
-	function startSong():Void
-	{
+	function startSong():Void {
 		startingSong = false;
 		FlxG.sound.music.time = startPos;
 		FlxG.sound.music.play();
@@ -283,11 +284,6 @@ class EditorPlayState extends MusicBeatState
 		vocals.play();
 	}
 
-	function sortByShit(Obj1:Note, Obj2:Note):Int
-	{
-		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
-	}
-
 	private function endSong() {
 		LoadingState.loadAndSwitchState(new editors.ChartingState());
 	}
@@ -295,8 +291,7 @@ class EditorPlayState extends MusicBeatState
 	public var noteKillOffset:Float = 350;
 	public var spawnTime:Float = 2000;
 	override function update(elapsed:Float) {
-		if (FlxG.keys.justPressed.ESCAPE)
-		{
+		if (FlxG.keys.justPressed.ESCAPE) {
 			FlxG.sound.music.pause();
 			vocals.pause();
 			LoadingState.loadAndSwitchState(new editors.ChartingState());
@@ -312,14 +307,12 @@ class EditorPlayState extends MusicBeatState
 			Conductor.songPosition += elapsed * 1000;
 		}
 
-		if (unspawnNotes[0] != null)
-		{
+		if (unspawnNotes[0] != null) {
 			var time:Float = spawnTime;
 			if(PlayState.SONG.speed < 1) time /= PlayState.SONG.speed;
 			if(unspawnNotes[0].multSpeed < 1) time /= unspawnNotes[0].multSpeed;
 
-			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
-			{
+			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time) {
 				var dunceNote:Note = unspawnNotes[0];
 				notes.insert(0, dunceNote);
 				dunceNote.spawned = true;
@@ -425,12 +418,9 @@ class EditorPlayState extends MusicBeatState
 					}
 				}
 
-				if (Conductor.songPosition > (noteKillOffset / PlayState.SONG.speed) + daNote.strumTime)
-				{
-					if (daNote.mustPress)
-					{
-						if (daNote.tooLate || !daNote.wasGoodHit)
-						{
+				if (Conductor.songPosition > (noteKillOffset / PlayState.SONG.speed) + daNote.strumTime) {
+					if (daNote.mustPress) {
+						if (daNote.tooLate || !daNote.wasGoodHit) {
 							//Dupe note remove
 							notes.forEachAlive(function(note:Note) {
 								if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 10) {
@@ -477,26 +467,21 @@ class EditorPlayState extends MusicBeatState
 		super.onFocusLost();
 	}
 
-	override function beatHit()
-	{
+	override function beatHit() {
 		super.beatHit();
-		if (generatedMusic)
-		{
+		if (generatedMusic) {
 			notes.sort(FlxSort.byY, ClientPrefs.getPref('downScroll') ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		}
 	}
 
-	override function stepHit()
-	{
+	override function stepHit() {
 		super.stepHit();
-		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
-		{
+		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20) {
 			resyncVocals();
 		}
 	}
 
-	function resyncVocals():Void
-	{
+	function resyncVocals():Void {
 		vocals.pause();
 
 		FlxG.sound.music.play();
@@ -568,8 +553,7 @@ class EditorPlayState extends MusicBeatState
 		}
 	}
 
-	function sortHitNotes(a:Note, b:Note):Int
-	{
+	function sortHitNotes(a:Note, b:Note):Int{
 		if (a.lowPriority && !b.lowPriority)
 			return 1;
 		else if (!a.lowPriority && b.lowPriority)
@@ -592,12 +576,10 @@ class EditorPlayState extends MusicBeatState
 	}
 
 	private function getKeyFromEvent(key:FlxKey):Int {
-		if(key != NONE) {
+		if (key != NONE) {
 			for (i in 0...keysArray[songMania].length) {
 				for (j in 0...keysArray[songMania][i].length) {
-					if(key == keysArray[songMania][i][j]) {
-						return i;
-					}
+					if (key == keysArray[songMania][i][j]) return i;
 				}
 			}
 		}
@@ -612,12 +594,10 @@ class EditorPlayState extends MusicBeatState
 		return false;
 	}
 
-	private function keyShit():Void {
+	private function keyShit():Void { // rewritten inputs???
 		if (generatedMusic) {
-			// rewritten inputs???
 			notes.forEachAlive(function(daNote:Note) {
-				// hold note functions
-				if (daNote.isSustainNote && dataKeyIsPressed(daNote.noteData) && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit)
+				if (daNote.isSustainNote && dataKeyIsPressed(daNote.noteData) && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit) // hold note functions
 				   goodNoteHit(daNote);
 			});
 		}
@@ -626,10 +606,8 @@ class EditorPlayState extends MusicBeatState
 	var combo:Int = 0;
 	function goodNoteHit(note:Note):Void
 	{
-		if (!note.wasGoodHit)
-		{
-			if (ClientPrefs.getPref('hitsoundVolume') > 0 && !note.hitsoundDisabled)
-			{
+		if (!note.wasGoodHit) {
+			if (ClientPrefs.getPref('hitsoundVolume') > 0 && !note.hitsoundDisabled) {
 				FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.getPref('hitsoundVolume') );
 			}
 
@@ -641,8 +619,7 @@ class EditorPlayState extends MusicBeatState
 				}
 				note.wasGoodHit = true;
 				vocals.volume = 0;
-				if (!note.isSustainNote)
-				{
+				if (!note.isSustainNote) {
 					note.kill();
 					notes.remove(note, true);
 					note.destroy();
@@ -667,8 +644,7 @@ class EditorPlayState extends MusicBeatState
 			note.wasGoodHit = true;
 			vocals.volume = 1;
 
-			if (!note.isSustainNote)
-			{
+			if (!note.isSustainNote) {
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();

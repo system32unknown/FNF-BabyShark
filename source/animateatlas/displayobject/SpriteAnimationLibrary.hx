@@ -1,6 +1,7 @@
 package animateatlas.displayobject;
 
 import openfl.display.BitmapData;
+import openfl.errors.ArgumentError;
 import animateatlas.JSONData.AnimationData;
 import animateatlas.JSONData.ElementData;
 import animateatlas.JSONData.LayerFrameData;
@@ -12,7 +13,6 @@ import animateatlas.JSONData.SymbolData;
 import animateatlas.JSONData.SpriteData;
 import animateatlas.HelperEnums.LoopMode;
 import animateatlas.HelperEnums.SymbolType;
-import openfl.errors.ArgumentError;
 
 /**
  * Performance will be REALLY BAD.
@@ -31,22 +31,10 @@ class SpriteAnimationLibrary {
 	public static inline var BITMAP_SYMBOL_NAME:String = "___atlas_sprite___";
 
 	private static var STD_MATRIX3D_DATA:Matrix3DData = {
-		m00: 1,
-		m01: 0,
-		m02: 0,
-		m03: 0,
-		m10: 0,
-		m11: 1,
-		m12: 0,
-		m13: 0,
-		m20: 0,
-		m21: 0,
-		m22: 1,
-		m23: 0,
-		m30: 0,
-		m31: 0,
-		m32: 0,
-		m33: 1
+		m00: 1, m01: 0, m02: 0, m03: 0,
+		m10: 0, m11: 1, m12: 0, m13: 0,
+		m20: 0, m21: 0, m22: 1, m23: 0,
+		m30: 0, m31: 0, m32: 0, m33: 1
 	};
 
 	public function new(data:AnimationData, atlas:AtlasData, texture:BitmapData) {

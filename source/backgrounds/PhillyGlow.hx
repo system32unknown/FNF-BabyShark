@@ -1,7 +1,7 @@
 package backgrounds;
 
-import flixel.FlxSprite;
 import flixel.util.FlxColor;
+import flixel.FlxSprite;
 import flixel.FlxG;
 
 import utils.ClientPrefs;
@@ -40,8 +40,7 @@ class PhillyGlowParticle extends FlxSprite
 		{
 			lifeTime = 0;
 			alpha -= decay * elapsed;
-			if(alpha > 0)
-			{
+			if(alpha > 0) {
 				scale.set(originalScale * alpha, originalScale * alpha);
 			}
 		}
@@ -69,15 +68,12 @@ class PhillyGlowGradient extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		var newHeight:Int = Math.round(height - 1000 * elapsed);
-		if(newHeight > 0)
-		{
+		if(newHeight > 0) {
 			alpha = intendedAlpha;
 			setGraphicSize(2000, newHeight);
 			updateHitbox();
 			y = originalY + (originalHeight - height);
-		}
-		else
-		{
+		} else {
 			alpha = 0;
 			y = -5000;
 		}

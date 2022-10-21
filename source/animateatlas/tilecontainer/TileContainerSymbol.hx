@@ -1,13 +1,16 @@
 package animateatlas.tilecontainer;
 
 import openfl.display.Tileset;
+import openfl.display.FrameLabel;
+import openfl.display.TileContainer;
+import openfl.display.Tile;
 import openfl.errors.ArgumentError;
-import openfl.geom.Rectangle;
 import openfl.errors.Error;
+import openfl.geom.Rectangle;
+import openfl.geom.ColorTransform;
 import animateatlas.JSONData.ElementData;
 import animateatlas.HelperEnums.LoopMode;
 import animateatlas.HelperEnums.SymbolType;
-import openfl.display.FrameLabel;
 import animateatlas.JSONData.SymbolData;
 import animateatlas.JSONData.SymbolInstanceData;
 import animateatlas.JSONData.LayerData;
@@ -15,9 +18,6 @@ import animateatlas.JSONData.BitmapPosData;
 import animateatlas.JSONData.Matrix3DData;
 import animateatlas.JSONData.LayerFrameData;
 import animateatlas.JSONData.ColorData;
-import openfl.geom.ColorTransform;
-import openfl.display.TileContainer;
-import openfl.display.Tile;
 
 class TileContainerSymbol extends TileContainer {
 	public var currentLabel(get, never):String;
@@ -39,7 +39,6 @@ class TileContainerSymbol extends TileContainer {
 	private var _numFrames:Int;
 	private var _numLayers:Int;
 	private var _frameLabels:Array<FrameLabel>;
-	private var _colorTransform:ColorTransform;
 	private var _layers:Array<TileContainer>;
 
 	private function new(data:SymbolData, library:TileAnimationLibrary, tileset:Tileset) {

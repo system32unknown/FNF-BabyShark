@@ -2101,9 +2101,7 @@ class PlayState extends MusicBeatState
 				clearNotesBefore(startOnTime);
 				setSongTime(startOnTime - 350);
 				return;
-			}
-			else if (skipCountdown)
-			{
+			} else if (skipCountdown) {
 				setSongTime(0);
 				return;
 			}
@@ -2190,7 +2188,6 @@ class PlayState extends MusicBeatState
 							countdownGo.setGraphicSize(Std.int(countdownGo.width * daPixelZoom));
 
 						countdownGo.updateHitbox();
-
 						countdownGo.screenCenter();
 						countdownGo.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownGo);
@@ -3164,14 +3161,14 @@ class PlayState extends MusicBeatState
 
 		if (healthBar.percent < 20 && iconP1.icontype != "single")
 			iconP1.animation.curAnim.curFrame = 1;
-		else if (healthBar.percent > 80 && (iconP1.icontype == "winning" && ClientPrefs.getPref('WinningIcon')))
+		else if (healthBar.percent > 80 && iconP1.icontype == "winning")
 			iconP1.animation.curAnim.curFrame = 2;
 		else
 			iconP1.animation.curAnim.curFrame = 0;
 
 		if (healthBar.percent > 80 && iconP2.icontype != "single")
 			iconP2.animation.curAnim.curFrame = 1;
-		else if (healthBar.percent < 20 && (iconP2.icontype == "winning" && ClientPrefs.getPref('WinningIcon')))
+		else if (healthBar.percent < 20 && iconP2.icontype == "winning")
 			iconP2.animation.curAnim.curFrame = 2;
 		else
 			iconP2.animation.curAnim.curFrame = 0;
@@ -5286,7 +5283,6 @@ class PlayState extends MusicBeatState
 				iconP2.scale.set(1.2, 1.2);
 			case "DaveAndBambi" | "Purgatory":
 				var funny:Float = (healthBar.percent * 0.01) + 0.01;
-
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
 
@@ -5333,9 +5329,13 @@ class PlayState extends MusicBeatState
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 
-				iconP1.scale.set(1.1, 1.3);
-				iconP2.scale.set(1.1, 1.3);
-
+				if (curBeat % 2 == 0) {
+					iconP1.scale.set(1.1, .8);
+					iconP2.scale.set(1.1, 1.3);
+				} else {
+					iconP1.scale.set(1.1, 1.3);
+					iconP2.scale.set(1.1, .8);
+				}
 				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 
@@ -5474,11 +5474,8 @@ class PlayState extends MusicBeatState
 
 	function StrumPlayAnim(isDad:Bool, id:Int, time:Float) {
 		var spr:StrumNote = null;
-		if(isDad) {
-			spr = strumLineNotes.members[id];
-		} else {
-			spr = playerStrums.members[id];
-		}
+		if (isDad) spr = strumLineNotes.members[id];
+		else spr = playerStrums.members[id];
 
 		if(spr != null) {
 			spr.playAnim('confirm', true);

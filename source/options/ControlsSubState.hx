@@ -21,7 +21,6 @@ class ControlsSubState extends MusicBeatSubstate {
 	private static var curAlt:Bool = false;
 
 	private static var defaultKey:String = 'Reset to Default Keys';
-	private var bindLength:Int = 0;
 
 	var optionShit:Array<Dynamic> = Keybinds.optionShit();
 
@@ -106,7 +105,7 @@ class ControlsSubState extends MusicBeatSubstate {
 
 			var optionText:Alphabet = new Alphabet(200, 300, text, (!isCentered || isDefaultKey));
 			optionText.isMenuItem = true;
-			if(isCentered) {
+			if (isCentered) {
 				optionText.screenCenter(X);
 				optionText.y -= 55;
 				optionText.startPosition.y -= 55;
@@ -119,9 +118,8 @@ class ControlsSubState extends MusicBeatSubstate {
 			if (isFirst) optionText.ID = 1;
 			grpOptions.add(optionText);
 
-			if(!isCentered) {
+			if (!isCentered) {
 				addBindTexts(optionText, i);
-				bindLength++;
 				if(curSelected < 0) curSelected = i;
 			}
 		}
@@ -130,11 +128,10 @@ class ControlsSubState extends MusicBeatSubstate {
 	var bindingTime:Float = 0;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float) {
-		if(!rebindingKey) {
+		if (!rebindingKey) {
 			var shiftMult:Int = FlxG.keys.pressed.SHIFT ? 3 : 1;
 
-			if(controls.UI_DOWN || controls.UI_UP)
-			{
+			if (controls.UI_DOWN || controls.UI_UP) {
 				var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
 				holdTime += elapsed;
 				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
@@ -142,7 +139,7 @@ class ControlsSubState extends MusicBeatSubstate {
 				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 				}
-			}
+			} 
 
 			if (controls.UI_UP_P) {
 				changeSelection(-shiftMult);
@@ -375,7 +372,7 @@ class ControlsSubState extends MusicBeatSubstate {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			if(!unselectableCheck(bullShit-1)) {
+			if(!unselectableCheck(bullShit - 1)) {
 				item.alpha = 0.6;
 				if (item.targetY == 0) {
 					item.alpha = 1;

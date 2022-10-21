@@ -54,13 +54,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Winning Icons',
-			"If checked, you'll get a winning icon when\nopponent losing.",
-			'WinningIcon',
-			'bool',
-			false);
-		addOption(option);
-
 		var option:Option = new Option('Hitsound Type',
 			"What should the hitsounds like?",
 			'hitsoundTypes',

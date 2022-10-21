@@ -1,15 +1,12 @@
 package flixel.custom.ui;
 
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.ui.FlxButton;
 import flash.geom.Rectangle;
 import flixel.addons.ui.interfaces.IFlxUIClickable;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.addons.ui.interfaces.IHasParams;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.ui.FlxButton;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxStringUtil;
 import flixel.addons.ui.FlxUIGroup;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.FlxUIButton;
@@ -18,6 +15,9 @@ import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.StrNameLabel;
 import flixel.addons.ui.FlxUI;
+import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxStringUtil;
 
 /*
 	THIS IS AN EDIT OF FlxUIDropDownMenu I'VE MADE BECAUSE I'M TIRED OF IT NOT SUPPORTING SCROLLING UP/DOWN
@@ -612,8 +612,7 @@ class FlxUIDropDownHeader extends FlxUIGroup
 	}
 }
 
-enum FlxUIDropDownMenuDropDirection
-{
+enum FlxUIDropDownMenuDropDirection {
 	Automatic;
 	Down;
 	Up;

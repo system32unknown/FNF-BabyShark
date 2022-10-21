@@ -519,8 +519,7 @@ class FlxRuntimeShader extends FlxShader
 	{
 		var prop:ShaderParameter<Float> = Reflect.field(this.data, name);
 		@:privateAccess
-		if (prop == null)
-		{
+		if (prop == null) {
 			trace('[WARN] Shader float property ${name} not found.');
 			return;
 		}

@@ -3,17 +3,19 @@ package animateatlas.displayobject;
 import openfl.filters.GlowFilter;
 import openfl.filters.BlurFilter;
 import openfl.display.PixelSnapping;
-import openfl.geom.Point;
+import openfl.display.FrameLabel;
 import openfl.display.BitmapData;
 import openfl.display.Bitmap;
 import openfl.display.Sprite;
 import openfl.errors.ArgumentError;
-import openfl.geom.Rectangle;
 import openfl.errors.Error;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+import openfl.geom.Matrix;
+import openfl.geom.ColorTransform;
 import animateatlas.JSONData.ElementData;
 import animateatlas.HelperEnums.LoopMode;
 import animateatlas.HelperEnums.SymbolType;
-import openfl.display.FrameLabel;
 import animateatlas.JSONData.SymbolData;
 import animateatlas.JSONData.SymbolInstanceData;
 import animateatlas.JSONData.LayerData;
@@ -21,8 +23,6 @@ import animateatlas.JSONData.BitmapPosData;
 import animateatlas.JSONData.Matrix3DData;
 import animateatlas.JSONData.LayerFrameData;
 import animateatlas.JSONData.ColorData;
-import openfl.geom.Matrix;
-import openfl.geom.ColorTransform;
 import animateatlas.JSONData.FilterData;
 
 class SpriteSymbol extends Sprite {
@@ -46,12 +46,10 @@ class SpriteSymbol extends Sprite {
 	private var _numFrames:Int;
 	private var _numLayers:Int;
 	private var _frameLabels:Array<FrameLabel>;
-	private var _colorTransform:ColorTransform;
 	private var _layers:Array<Sprite>;
 	private var _texture:BitmapData;
 	private var _tempRect = new Rectangle();
 	private var _zeroPoint = new Point(0, 0);
-	private var filterHelper:BitmapData;
 	public var smoothing:Bool = true;
 
 	private static var sMatrix:Matrix = new Matrix();
@@ -153,8 +151,7 @@ class SpriteSymbol extends Sprite {
 			// this is confusing but needed :(
 			var oldSymbol:SpriteSymbol = (layer.numChildren > i) ? try
 				cast(layer.getChildAt(i), SpriteSymbol)
-			catch (e:Dynamic)
-				null : null;
+			catch (e:Dynamic) null : null;
 
 			var newSymbol:SpriteSymbol = null;
 
@@ -277,29 +274,8 @@ class SpriteSymbol extends Sprite {
 				blur.blurX = data.BlurFilter.blurX;
 				blur.blurY = data.BlurFilter.blurY;
 				blur.quality = data.BlurFilter.quality;
-				//_bitmap.bitmapData.applyFilter(_bitmap.bitmapData,new Rectangle(0,0,_bitmap.bitmapData.width,_bitmap.bitmapData.height),new Point(0,0),blur);
-				//filters.push(blur);
 			}
-			if (data.GlowFilter != null){
-				//trace('GLOW' + data.GlowFilter);
-				//glow = new GlowFilter();
-				//glow.blurX = data.GlowFilter.blurX;
-				//glow.blurY = data.GlowFilter.blurY;
-				//glow.color = data.GlowFilter.color;
-				//glow.alpha = data.GlowFilter.alpha;
-				//glow.quality = data.GlowFilter.quality;
-				//glow.strength = data.GlowFilter.strength;
-				//glow.knockout = data.GlowFilter.knockout;
-				//glow.inner = data.GlowFilter.inner;
-				//filters.push(glow);
-
-
-
-
-			}
-
 		}
-		
 	}
 
 	private function setTransformationMatrix(data:Matrix3DData):Void {
@@ -323,7 +299,6 @@ class SpriteSymbol extends Sprite {
 			newTransform.alphaMultiplier = (data.alphaMultiplier == null ? 1 : data.alphaMultiplier);
 		}
 		transform.colorTransform = newTransform;
-		
 	}
 
 	private function setLoop(data:String):Void {
@@ -384,8 +359,6 @@ class SpriteSymbol extends Sprite {
 		return _frameLabels.map(f -> f.name); // Inlining. I feel a js
 	}
 
-
-
 	function sortLabels(i1:FrameLabel, i2:FrameLabel):Int {
 		var f1 = i1.frame;
 		var f2 = i2.frame;
@@ -402,9 +375,8 @@ class SpriteSymbol extends Sprite {
 		return _layers[layerIndex];
 	}
 
-	public function getTexture():BitmapData{
-	//THIS GETS THE ENTIRE THING I'M RETARDED LOL
-	return _texture;
+	public function getTexture():BitmapData{ //THIS GETS THE ENTIRE THING I'M RETARDED LOL
+		return _texture;
 	}
 
 	public function getNextLabel(afterLabel:String = null):String {

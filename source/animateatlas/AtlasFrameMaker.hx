@@ -1,18 +1,18 @@
 package animateatlas;
 
+import haxe.Json;
 import openfl.geom.Rectangle;
+import openfl.display.BitmapData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import haxe.Json;
-import openfl.display.BitmapData;
-import animateatlas.JSONData.AtlasData;
-import animateatlas.JSONData.AnimationData;
-import animateatlas.displayobject.SpriteAnimationLibrary;
-import animateatlas.displayobject.SpriteMovieClip;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxColor;
+import animateatlas.JSONData.AtlasData;
+import animateatlas.JSONData.AnimationData;
+import animateatlas.displayobject.SpriteAnimationLibrary;
+import animateatlas.displayobject.SpriteMovieClip;
 import states.PlayState;
 
 using StringTools;
@@ -54,8 +54,8 @@ class AtlasFrameMaker extends FlxFramesCollection
 			frameArray.push(getFramesArray(t, x));
 		}
 
-		for(x in frameArray) {
-			for(y in x) {
+		for (x in frameArray) {
+			for (y in x) {
 				frameCollection.pushFrame(y);
 			}
 		}
@@ -71,11 +71,9 @@ class AtlasFrameMaker extends FlxFramesCollection
 		var firstPass = true;
 		var frameSize:FlxPoint = new FlxPoint(0, 0);
 
-		for (i in t.getFrame(animation)...t.numFrames)
-		{
+		for (i in t.getFrame(animation)...t.numFrames) {
 			t.currentFrame = i;
-			if (t.currentLabel == animation)
-			{
+			if (t.currentLabel == animation) {
 				sizeInfo = t.getBounds(t);
 				var bitmapShit:BitmapData = new BitmapData(Std.int(sizeInfo.width + sizeInfo.x), Std.int(sizeInfo.height + sizeInfo.y), true, 0);
 				bitmapShit.draw(t, null, null, null, null, true);

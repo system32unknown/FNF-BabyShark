@@ -28,7 +28,6 @@ class ClientPrefs {
 		'ShowCombo' => true,
 		'ShowNPSCounter' => false,
 		'ShowLateEarly' => false,
-		'WinningIcon' => false,
 		'ShowMaxCombo' => false,
 		'MstimingTypes' => "Psych",
 		'ShowJudgementCount' => false,
