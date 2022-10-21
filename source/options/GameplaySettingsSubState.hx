@@ -143,17 +143,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 90;
 		addOption(option);
 
-		var option:Option = new Option('Ok Hit Window',
-			'Changes the amount of time you have\nfor hitting a "Ok" in milliseconds.',
-			'okWindow',
-			'int',
-			105);
-		option.displayFormat = '%vms';
-		option.scrollSpeed = 15;
-		option.minValue = 7;
-		option.maxValue = 105;
-		addOption(option);
-
 		var option:Option = new Option('Bad Hit Window',
 			'Changes the amount of time you have\nfor hitting a "Bad" in milliseconds.',
 			'badWindow',
