@@ -166,7 +166,7 @@ class PlayState extends MusicBeatState
 	public var health:Float = 1;
 	var healthMax:Float = 2;
 	public var combo:Int = 0;
-	public var MaxCombo:Int = 0;
+	public var maxCombo:Int = 0;
 
 	private var healthBarBG:AttachedSprite;
 	public var healthBar:FlxBar;
@@ -176,9 +176,11 @@ class PlayState extends MusicBeatState
 	public var timeBar:FlxBar;
 
 	public var ratingsData:Array<Rating> = [];
+	public var perfects:Int = 0;
 	public var sicks:Int = 0;
 	public var goods:Int = 0;
 	public var bads:Int = 0;
+	public var oks:Int = 0;
 	public var shits:Int = 0;
 
 	public static var mania:Int = 0;
@@ -370,7 +372,13 @@ class PlayState extends MusicBeatState
 		keysArray = Keybinds.fill();
 
 		//Ratings
-		ratingsData.push(new Rating('sick')); //default rating
+		ratingsData.push(new Rating('perfect')); //default rating
+
+		var rating:Rating = new Rating('sick');
+		rating.ratingMod = 1;
+		rating.score = 350;
+		rating.noteSplash = true;
+		ratingsData.push(rating);
 
 		var rating:Rating = new Rating('good');
 		rating.ratingMod = 0.7;
@@ -381,6 +389,12 @@ class PlayState extends MusicBeatState
 		var rating:Rating = new Rating('bad');
 		rating.ratingMod = 0.4;
 		rating.score = 100;
+		rating.noteSplash = false;
+		ratingsData.push(rating);
+
+		var rating:Rating = new Rating('ok');
+		rating.ratingMod = 0.2;
+		rating.score = 25;
 		rating.noteSplash = false;
 		ratingsData.push(rating);
 
@@ -1154,7 +1168,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.borderSize = 1;
 		judgementCounter.scrollFactor.set();
 		judgementCounter.screenCenter(Y);
-		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${MaxCombo}\n' : '') + 'Perfects: ${sicks}\nNices: ${goods}\nToo Bads: ${bads}\nBruhs: ${shits}\n';
+		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${maxCombo}\n' : '') + 'Perfects: ${perfects}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nOks: ${oks}\nShits: ${shits}\n';
 		if (ClientPrefs.getPref('ShowJudgementCount')) {
 			add(judgementCounter);
 		}
@@ -2251,7 +2265,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function updateScore(miss:Bool = false) {
-		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${MaxCombo}\n' : '') + 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		judgementCounter.text = (ClientPrefs.getPref('ShowmaxCombo') ? 'Max Combos: ${maxCombo}\n' : '') + 'Perfects: ${perfects}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nOks: ${oks}\nShits: ${shits}\n';
 		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
 		}
@@ -4155,9 +4169,11 @@ class PlayState extends MusicBeatState
 			pixelShitPart2 = '-pixel';
 		}
 
+		Paths.image(pixelShitPart1 + "perfect" + pixelShitPart2);
 		Paths.image(pixelShitPart1 + "sick" + pixelShitPart2);
 		Paths.image(pixelShitPart1 + "good" + pixelShitPart2);
 		Paths.image(pixelShitPart1 + "bad" + pixelShitPart2);
+		Paths.image(pixelShitPart1 + "ok" + pixelShitPart2);
 		Paths.image(pixelShitPart1 + "shit" + pixelShitPart2);
 		Paths.image(pixelShitPart1 + "combo" + pixelShitPart2);
 		Paths.image(pixelShitPart1 + "early" + pixelShitPart2);
@@ -4302,14 +4318,15 @@ class PlayState extends MusicBeatState
 			timingTxtArrays[0].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			timingTxtArrays[0].borderSize = 1;
 			timingTxtArrays[0].visible = (!hideHud);
-			if (RatingTypes == "Static"){
+			if (RatingTypes == "Static") {
 				timingTxtArrays[0].cameras = [camHUD];
 			}
 	
 			switch (daRating.name) {
-				case 'shit' | 'bad': timingTxtArrays[0].color = FlxColor.RED;
+				case 'shit' | 'bad' | 'ok': timingTxtArrays[0].color = FlxColor.RED;
 				case 'good': timingTxtArrays[0].color = FlxColor.GREEN;
 				case 'sick': timingTxtArrays[0].color = FlxColor.CYAN;
+				case 'perfect': timingTxtArrays[0].color = FlxColor.WHITE;
 			}
 	
 			add(timingTxtArrays[0]);
@@ -4715,8 +4732,8 @@ class PlayState extends MusicBeatState
 		if (combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
 			gf.playAnim('sad');
 		}
-		if (combo > MaxCombo)
-			MaxCombo = combo;
+		if (combo > maxCombo)
+			maxCombo = combo;
 		combo = 0;
 		health -= daNote.missHealth * healthLoss;
 		
@@ -4761,8 +4778,8 @@ class PlayState extends MusicBeatState
 			if (combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
 				gf.playAnim('sad');
 			}
-			if (combo > MaxCombo)
-				MaxCombo = combo;
+			if (combo > maxCombo)
+				maxCombo = combo;
 			combo = 0;
 
 			if(!practiceMode) songScore -= 10;
@@ -5502,9 +5519,10 @@ class PlayState extends MusicBeatState
 
 			// Rating FC
 			ratingFC = "";
+			if (perfects > 0) ratingFC = "PFC";
 			if (sicks > 0) ratingFC = "SFC";
 			if (goods > 0) ratingFC = "GFC";
-			if (bads > 0 || shits > 0) ratingFC = "FC";
+			if (bads > 0 || shits > 0 || oks > 0) ratingFC = "FC";
 			if (songMisses > 0 && songMisses < 10) ratingFC = "SDCB";
 			else if (songMisses >= 10) ratingFC = "Clear";
 		}
