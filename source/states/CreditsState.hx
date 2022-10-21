@@ -132,9 +132,8 @@ class CreditsState extends MusicBeatState
 			optionText.snapToPosition();
 			grpOptions.add(optionText);
 
-			if(isSelectable) {
-				if(creditsStuff[i][5] != null)
-				{
+			if (isSelectable) {
+				if (creditsStuff[i][5] != null) {
 					Paths.currentModDirectory = creditsStuff[i][5];
 				}
 

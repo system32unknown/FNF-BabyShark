@@ -41,7 +41,6 @@ import game.Achievements.AchievementObject;
 import game.Section.SwagSection;
 import game.*;
 import utils.*;
-import shaders.*;
 import backgrounds.*;
 import ui.*;
 import data.StageData.StageFile;
@@ -3864,11 +3863,18 @@ class PlayState extends MusicBeatState
 				}
 
 			case 'Set Property':
-				var killMe:Array<String> = value1.split('.');
-				if(killMe.length > 1) {
-					FunkinLua.setVarInArray(FunkinLua.getPropertyLoopThingWhatever(killMe, true, true), killMe[killMe.length-1], value2);
+				var trueVal:Dynamic = null;
+				var killMe:Array<String> = value1.split(',');
+				if (killMe.length > 1 && killMe[1].toLowerCase().replace(" ", "") == "bool") {
+					if (value2 == "true") trueVal = true;
+					else if (value2 == "false") trueVal = false;
+				}
+
+				killMe = killMe[0].split('.');
+				if (killMe.length > 1) {
+					FunkinLua.setVarInArray(FunkinLua.getPropertyLoopThingWhatever(killMe, true, true), killMe[killMe.length - 1], trueVal != null ? trueVal : value2);
 				} else {
-					FunkinLua.setVarInArray(this, value1, value2);
+					FunkinLua.setVarInArray(this, value1, trueVal != null ? trueVal : value2);
 				}
 		}
 		callOnLuas('onEvent', [eventName, value1, value2]);
@@ -5078,8 +5084,7 @@ class PlayState extends MusicBeatState
 		if (startedMoving) {
 			phillyTrain.x -= 400;
 
-			if (phillyTrain.x < -2000 && !trainFinishing)
-			{
+			if (phillyTrain.x < -2000 && !trainFinishing) {
 				phillyTrain.x = -1150;
 				trainCars -= 1;
 
@@ -5114,15 +5119,15 @@ class PlayState extends MusicBeatState
 		lightningStrikeBeat = curBeat;
 		lightningOffset = FlxG.random.int(8, 24);
 
-		if(boyfriend.animOffsets.exists('scared')) {
+		if (boyfriend.animOffsets.exists('scared')) {
 			boyfriend.playAnim('scared', true);
 		}
 
-		if(gf != null && gf.animOffsets.exists('scared')) {
+		if (gf != null && gf.animOffsets.exists('scared')) {
 			gf.playAnim('scared', true);
 		}
 
-		if(ClientPrefs.getPref('camZooms')) {
+		if (ClientPrefs.getPref('camZooms')) {
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;
 
@@ -5132,7 +5137,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if(ClientPrefs.getPref('flashing')) {
+		if (ClientPrefs.getPref('flashing')) {
 			halloweenWhite.alpha = 0.4;
 			FlxTween.tween(halloweenWhite, {alpha: 0.5}, 0.075 * playbackRate);
 			FlxTween.tween(halloweenWhite, {alpha: 0}, 0.25 * playbackRate, {startDelay: 0.15 * playbackRate});
@@ -5373,8 +5378,7 @@ class PlayState extends MusicBeatState
 				if (!trainMoving)
 					trainCooldown += 1;
 
-				if (curBeat % 4 == 0)
-				{
+				if (curBeat % 4 == 0) {
 					curLight = FlxG.random.int(0, phillyLightsColors.length - 1, [curLight]);
 					phillyWindow.color = phillyLightsColors[curLight];
 					phillyWindow.alpha = 1;
@@ -5386,8 +5390,7 @@ class PlayState extends MusicBeatState
 				}
 		}
 
-		if (curStage == 'spooky' && FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset)
-		{
+		if (curStage == 'spooky' && FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset) {
 			lightningStrikeShit();
 		}
 		lastBeatHit = curBeat;

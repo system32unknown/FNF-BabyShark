@@ -29,9 +29,7 @@ class PlatformUtil
     ')
     #end
 	static public function getWindowsTransparent(res:Int = 0) // Only works on windows, otherwise returns 0!
-	{
 		return res;
-	}
 
     #if windows
     @:functionCode('
@@ -66,9 +64,7 @@ class PlatformUtil
     ')
     #end
     static public function sendWindowsNotification(title:String = "", desc:String = "", res:Int = 0)
-    {
         return res;
-    }
 
     #if windows
     @:functionCode('
@@ -83,10 +79,8 @@ class PlatformUtil
         );
     ')
     #end
-    static public function sendFakeMsgBox(title:String = "", desc:String = "", res:Int = 0)    // TODO: Linux and macOS (will do soon)
-    {
+    static public function sendFakeMsgBox(title:String = "", desc:String = "", res:Int = 0) // TODO: Linux and macOS (will do soon)
         return res;
-    }
 
     #if windows
 	@:functionCode('
@@ -98,18 +92,14 @@ class PlatformUtil
         }
     ')
     #end
-	static public function getWindowsbackward(res:Int = 0)  // Only works on windows, otherwise returns 0!
-	{
+	static public function getWindowsbackward(res:Int = 0) // Only works on windows, otherwise returns 0!
 		return res;
-	}
 
     #if windows
 	@:functionCode('
         res = SetCursorPos(x, y); 
     ')
     #end
-	static public function setCursorPos(x:Int = 0, y:Int = 0, res:Int = 0)  // Only works on windows, otherwise returns 0!
-	{
+	static public function setCursorPos(x:Int = 0, y:Int = 0, res:Int = 0) // Only works on windows, otherwise returns 0!
 		return res;
-	}
 }

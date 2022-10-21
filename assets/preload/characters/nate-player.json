@@ -1,0 +1,122 @@
+{
+	"animations": [
+		{
+			"offsets": [
+				3,
+				0
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "idle",
+			"indices": [],
+			"name": "Nate Idle Dance"
+		},
+		{
+			"offsets": [
+				21,
+				27
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singUP",
+			"indices": [],
+			"name": "Nate Up note0"
+		},
+		{
+			"offsets": [
+				84,
+				-80
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singDOWN",
+			"indices": [],
+			"name": "Nate Down Note0"
+		},
+		{
+			"offsets": [
+				80,
+				-38
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singDOWNmiss",
+			"indices": [],
+			"name": "Nate Down Note MISS"
+		},
+		{
+			"offsets": [
+				28,
+				67
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singUPmiss",
+			"indices": [],
+			"name": "Nate Up note miss"
+		},
+		{
+			"loop": false,
+			"offsets": [
+				-48,
+				2
+			],
+			"anim": "singRIGHT",
+			"fps": 24,
+			"name": "Nate Note Right0",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				85,
+				-10
+			],
+			"anim": "singLEFT",
+			"fps": 24,
+			"name": "Nate NOTE LEFT0",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				-45,
+				50
+			],
+			"anim": "singRIGHTmiss",
+			"fps": 24,
+			"name": "Nate Note Right Miss",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				83,
+				28
+			],
+			"anim": "singLEFTmiss",
+			"fps": 24,
+			"name": "Nate NOTE LEFT miss",
+			"indices": []
+		}
+	],
+	"no_antialiasing": false,
+	"image": "characters/Nate_FNF_assets",
+	"position": [
+		0,
+		300
+	],
+	"healthicon": "nate",
+	"flip_x": true,
+	"healthbar_colors": [
+		108,
+		225,
+		181
+	],
+	"camera_position": [
+		220,
+		0
+	],
+	"sing_duration": 4,
+	"scale": 1
+}

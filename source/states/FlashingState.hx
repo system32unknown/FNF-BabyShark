@@ -58,7 +58,6 @@ class FlashingState extends MusicBeatState
 		#end
 		#end
 
-
 		manual = new FlxSprite(0, 0);
 		manual.frames = Paths.getSparrowAtlas('manual_book');
 		manual.animation.addByPrefix('normal', 'manual icon', 30, true);

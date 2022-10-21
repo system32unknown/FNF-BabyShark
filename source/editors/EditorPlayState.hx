@@ -1,12 +1,10 @@
 package editors;
 
-import game.Section;
 import game.Section.SwagSection;
 import game.StrumNote;
 import game.NoteSplash;
 import game.Conductor;
 import game.Note;
-import utils.CoolUtil;
 import utils.MathUtil;
 import utils.ClientPrefs;
 import data.EkData.Keybinds;
@@ -17,7 +15,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
@@ -531,7 +528,7 @@ class EditorPlayState extends MusicBeatState
 					if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.isSustainNote) {
 						if(daNote.noteData == key)
 							sortedNotesList.push(daNote);
-						canMiss = true;
+						canMiss = !ClientPrefs.getPref('AntiMash');
 					}
 				});
 				sortedNotesList.sort(sortHitNotes);
@@ -553,10 +550,8 @@ class EditorPlayState extends MusicBeatState
 							goodNoteHit(epicNote);
 							pressNotes.push(epicNote);
 						}
-
 					}
-				}
-				else if (canMiss && ClientPrefs.getPref('ghostTapping')) {
+				} else if (canMiss && ClientPrefs.getPref('ghostTapping')) {
 					noteMiss();
 				}
 

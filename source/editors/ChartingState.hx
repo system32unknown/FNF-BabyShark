@@ -309,8 +309,8 @@ class ChartingState extends MusicBeatState
 		\nA/D - Go to the previous/next section
 		\nLeft/Right - Change Snap
 		\nUp/Down - Change Conductor's Strum Time with Snapping
-		\nLeft Bracket / Right Bracket - Change Song Playback Rate (SHIFT to go Faster)
-		\nALT + Left Bracket / Right Bracket - Reset Song Playback Rate
+		\nLeft / Right Bracket - Change Song Playback Rate (SHIFT to go Faster)
+		\nALT + Left / Right Bracket - Reset Song Playback Rate
 		\nHold Shift to move 4x faster
 		\nHold Control and click on an arrow to select it
 		\nZ/X - Zoom in/out
@@ -2687,8 +2687,7 @@ class ChartingState extends MusicBeatState
 						var diff:String = songLower.substring(ind + 1);
 						var ind:Int = CoolUtil.lowerDifficulties.indexOf(diff);
 						if (ind != -1) PlayState.storyDifficulty = ind;
-					}
-					catch(e) {}
+					} catch(e) {}
 				}
 				if (!success) {
 					var diff:String = CoolUtil.difficulties[PlayState.storyDifficulty];
@@ -2710,8 +2709,7 @@ class ChartingState extends MusicBeatState
 						if (ind != -1) PlayState.storyDifficulty = ind;
 					}
 				}
-			}
-			catch(e) {
+			} catch(e) {
 				trace("Problem with Loading Song \"" + song.toLowerCase() + "\"");
 				return;
 			}

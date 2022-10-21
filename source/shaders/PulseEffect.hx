@@ -1,5 +1,7 @@
 package shaders;
 
+import flixel.system.FlxAssets.FlxShader;
+
 class PulseEffect extends Effect
 {
     public var shader(default,null):PulseShader = new PulseShader();
