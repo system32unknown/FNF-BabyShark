@@ -23,9 +23,7 @@ class CoolUtil
 	public static var difficulties:Array<String> = [];
 	public static var lowerDifficulties(get, null):Array<String>;
 	static function get_lowerDifficulties():Array<String> {
-		var copy:Array<String> = [];
-		for (v in difficulties) copy.push(v.toLowerCase());
-		return copy;
+		return [for (v in difficulties) v.toLowerCase()];
 	}
 
 	inline public static function quantize(f:Float, snap:Float){
@@ -60,22 +58,11 @@ class CoolUtil
 		if(Assets.exists(path)) daList = Assets.getText(path).trim().split('\n');
 		#end
 
-		for (i in 0...daList.length) {
-			daList[i] = daList[i].trim();
-		}
-
-		return daList;
+		return [for (i in 0...daList.length) daList[i].trim()];
 	}
-	public static function listFromString(string:String):Array<String>
-	{
-		var daList:Array<String> = [];
-		daList = string.trim().split('\n');
-
-		for (i in 0...daList.length) {
-			daList[i] = daList[i].trim();
-		}
-
-		return daList;
+	public static function listFromString(string:String):Array<String> {
+		final daList = string.trim().split('\n');
+		return [for(i in 0...daList.length) daList[i].trim()];
 	}
 	public static function dominantColor(sprite:flixel.FlxSprite):Int{
 		var countByColor:Map<Int, Int> = [];
@@ -104,11 +91,7 @@ class CoolUtil
 	}
 
 	public static function numberArray(max:Int, ?min = 0):Array<Int> {
-		var dumbArray:Array<Int> = [];
-		for (i in min...max) {
-			dumbArray.push(i);
-		}
-		return dumbArray;
+		return [for(i in min...max) i];
 	}
 
 	//uhhhh does this even work at all? i'm starting to doubt
@@ -173,9 +156,7 @@ class CoolUtil
 	}
 
 	public static function browserLoad(site:String) {
-		#if linux
-		Sys.command('/usr/bin/xdg-open', [site]);
-		#else
+		#if windows
 		FlxG.openURL(site);
 		#end
 	}

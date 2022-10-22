@@ -32,13 +32,11 @@ class DiscordClient
 		DiscordRpc.shutdown();
 	}
 	
-	public static function shutdown()
-	{
+	public static function shutdown() {
 		DiscordRpc.shutdown();
 	}
 	
-	static function onReady()
-	{
+	static function onReady() {
 		DiscordRpc.presence({
 			details: "In the Menus",
 			state: null,
@@ -47,18 +45,15 @@ class DiscordClient
 		});
 	}
 
-	static function onError(_code:Int, _message:String)
-	{
+	static function onError(_code:Int, _message:String) {
 		trace('Error! $_code : $_message');
 	}
 
-	static function onDisconnected(_code:Int, _message:String)
-	{
+	static function onDisconnected(_code:Int, _message:String) {
 		trace('Disconnected! $_code : $_message');
 	}
 
-	public static function initialize()
-	{
+	public static function initialize() {
 		sys.thread.Thread.create(() -> {
 			new DiscordClient();
 		});
@@ -71,9 +66,7 @@ class DiscordClient
 		var startTimestamp:Float = if(hasStartTimestamp) Date.now().getTime() else 0;
 
 		if (endTimestamp > 0)
-		{
 			endTimestamp = startTimestamp + endTimestamp;
-		}
 
 		DiscordRpc.presence({
 			details: details,

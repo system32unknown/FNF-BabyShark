@@ -142,7 +142,6 @@ class ChartingState extends MusicBeatState
 	var tempBpm:Float = 0;
 	var playbackSpeed:Float = 1;
 
-
 	var lastNoteData:Float;
 	var lastNoteStrum:Float;
 
@@ -1985,11 +1984,11 @@ class ChartingState extends MusicBeatState
 
 		if (FlxG.save.data.chart_waveformInst) {
 			var sound:FlxSound = FlxG.sound.music;
-			if (sound._sound != null && sound._sound.__buffer != null) {
-				var bytes:Bytes = sound._sound.__buffer.data.toBytes();
+			if (sound.buffer  != null) {
+				var bytes:Bytes = sound.buffer.data.toBytes();
 
 				wavData = waveformData(
-					sound._sound.__buffer,
+					sound.buffer,
 					bytes,
 					st,
 					et,
@@ -2002,11 +2001,11 @@ class ChartingState extends MusicBeatState
 
 		if (FlxG.save.data.chart_waveformVoices) {
 			var sound:FlxSound = vocals;
-			if (sound._sound != null && sound._sound.__buffer != null) {
-				var bytes:Bytes = sound._sound.__buffer.data.toBytes();
+			if (sound.buffer != null) {
+				var bytes:Bytes = sound.buffer.data.toBytes();
 
 				wavData = waveformData(
-					sound._sound.__buffer,
+					sound.buffer,
 					bytes,
 					st,
 					et,

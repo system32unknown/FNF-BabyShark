@@ -2261,7 +2261,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function updateScore(miss:Bool = false) {
-		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${maxCombo}\n' : '') + 'Perfects: ${perfects}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\n\nShits: ${shits}\n';
+		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${maxCombo}\n' : '') + 'Perfects: ${perfects}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
 		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
 		}
@@ -3370,8 +3370,7 @@ class PlayState extends MusicBeatState
 					}
 				});
 			} else {
-				notes.forEachAlive(function(daNote:Note)
-				{
+				notes.forEachAlive(function(daNote:Note) {
 					daNote.canBeHit = false;
 					daNote.wasGoodHit = false;
 				});
@@ -3483,9 +3482,8 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function getControl(key:String) {
-		var pressed:Bool = Reflect.getProperty(controls, key);
-		return pressed;
+	public function getControl(key:String):Bool {
+		return Reflect.getProperty(controls, key);
 	}
 
 	public function triggerEventNote(eventName:String, value1:String, value2:String) {
@@ -3497,8 +3495,7 @@ class PlayState extends MusicBeatState
 
 					switch(Std.parseInt(value1)) {
 						case 1, 2, 3: //enable and target dad
-							if(val == 1) //enable
-							{
+							if (val == 1) { //enable
 								dadbattleBlack.visible = true;
 								dadbattleLight.visible = true;
 								dadbattleSmokes.visible = true;
@@ -3527,10 +3524,8 @@ class PlayState extends MusicBeatState
 			case 'Hey!':
 				var value:Int = 2;
 				switch(value1.toLowerCase().trim()) {
-					case 'bf' | 'boyfriend' | '0':
-						value = 0;
-					case 'gf' | 'girlfriend' | '1':
-						value = 1;
+					case 'bf' | 'boyfriend' | '0': value = 0;
+					case 'gf' | 'girlfriend' | '1': value = 1;
 				}
 
 				var time:Float = Std.parseFloat(value2);
@@ -5442,12 +5437,11 @@ class PlayState extends MusicBeatState
 		callOnLuas('onSectionHit', []);
 	}
 
-	public function callOnLuas(event:String, args:Array<Dynamic>, ignoreStops = true, exclusions:Array<String> = null):Dynamic {
+	public function callOnLuas(event:String, args:Array<Dynamic>, ignoreStops = true, ?exclusions:Array<String>):Dynamic {
 		var returnVal:Dynamic = FunkinLua.Function_Continue;
 		#if LUA_ALLOWED
-		if(exclusions == null) exclusions = [];
 		for (script in luaArray) {
-			if(exclusions.contains(script.scriptName))
+			if(exclusions != null && exclusions.contains(script.scriptName))
 				continue;
 
 			var ret:Dynamic = script.call(event, args);

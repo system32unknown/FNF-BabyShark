@@ -265,7 +265,7 @@ class FunkinLua {
 			if(!ClientPrefs.getPref('shaders')) return false;
 
 			#if (!flash && MODS_ALLOWED && sys)
-			return initLuaShader(name, glslVersion);
+			return PlayState.instance.initLuaShader(name, glslVersion);
 			#else
 			luaTrace("initLuaShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
@@ -276,8 +276,7 @@ class FunkinLua {
 			if(!ClientPrefs.getPref('shaders')) return false;
 
 			#if (!flash && MODS_ALLOWED && sys)
-			if(!PlayState.instance.runtimeShaders.exists(shader) && !initLuaShader(shader))
-			{
+			if(!PlayState.instance.runtimeShaders.exists(shader) && !PlayState.instance.initLuaShader(shader)) {
 				luaTrace('setSpriteShader: Shader $shader is missing!', false, false, FlxColor.RED);
 				return false;
 			}
@@ -1579,8 +1578,7 @@ class FunkinLua {
 						var obj:Dynamic = spr;
 						var spr:Character = obj;
 						spr.playAnim(name, forced, reverse, startFrame);
-					}
-					else
+					} else
 						spr.animation.play(name, forced, reverse, startFrame);
 				}
 				return true;
@@ -2157,8 +2155,7 @@ class FunkinLua {
 				text = [];
 
 			for (_text in 0...text.length) {
-				if (text[_text] == null)
-					array_text += '' + divider;
+				if (text[_text] == null) array_text += '' + divider;
 				else array_text += text[_text] + divider;
 			}
 
@@ -2382,15 +2379,11 @@ class FunkinLua {
 		addCallback("checkFileExists", function(filename:String, ?absolute:Bool = false) {
 			#if MODS_ALLOWED
 			if(absolute)
-			{
 				return FileSystem.exists(filename);
-			}
 
 			var path:String = Paths.modFolders(filename);
 			if(FileSystem.exists(path))
-			{
 				return true;
-			}
 			return FileSystem.exists(Paths.getPath('assets/$filename', TEXT));
 			#else
 			if(absolute)
@@ -2836,52 +2829,6 @@ class FunkinLua {
 		}
 		return null;
 	}
-	
-	function initLuaShader(name:String, ?glslVersion:Int = 120)
-	{
-		if(!ClientPrefs.getPref('shaders')) return false;
-
-		if(PlayState.instance.runtimeShaders.exists(name))
-		{
-			luaTrace('Shader $name was already initialized!');
-			return true;
-		}
-
-		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
-		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
-			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
-
-		for(mod in Paths.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
-		
-		for (folder in foldersToCheck)
-		{
-			if(FileSystem.exists(folder))
-			{
-				var frag:String = folder + name + '.frag';
-				var vert:String = folder + name + '.vert';
-				var found:Bool = false;
-				if(FileSystem.exists(frag)) {
-					frag = File.getContent(frag);
-					found = true;
-				}
-				else frag = null;
-
-				if (FileSystem.exists(vert)) {
-					vert = File.getContent(vert);
-					found = true;
-				}
-				else vert = null;
-
-				if(found) {
-					PlayState.instance.runtimeShaders.set(name, [frag, vert]);
-					return true;
-				}
-			}
-		}
-		luaTrace('Missing shader $name .frag AND .vert files!', false, false, FlxColor.RED);
-		return false;
-	}
 
 	function getGroupStuff(leArray:Dynamic, variable:String) {
 		var killMe:Array<String> = variable.split('.');
@@ -3076,59 +3023,61 @@ class FunkinLua {
 
 		if (v != null) v = v.trim();
 		if (v == null || v == "") {
-			switch(status) {
+			return switch(status) {
 				case Lua.LUA_ERRRUN: return "Runtime Error";
 				case Lua.LUA_ERRMEM: return "Memory Allocation Error";
 				case Lua.LUA_ERRERR: return "Crtical Error";
+				default: "Unknown Error";
 			}
-			return "Unknown Error";
 		}
-		return v;
+		return null;
 		#end
 	}
 
 	var lastCalledFunction:String = '';
 	public function call(func:String, args:Array<Dynamic>): Dynamic {
 		#if LUA_ALLOWED
-		if(closed) return Function_Continue;
-
+		if (closed || lua == null || func == null || args == null) return Function_Continue;
 		lastCalledFunction = func;
-		try {
-			if(lua == null) return Function_Continue;
 
-			Lua.getglobal(lua, func);
-			var type:Int = Lua.type(lua, -1);
-			if (type != Lua.LUA_TFUNCTION) {
-				if (type != Lua.LUA_TNIL) {
-					luaTrace("ERROR (" + func + "): tried to be called as a function, but is not a function.");
-				}
-
-				Lua.pop(lua, 1);
-				return Function_Continue;
-			}
-			
-			for (arg in args) Convert.toLua(lua, arg);
-			var hscriptResult:Dynamic = hscript.call(func, args);
-			if (hscriptResult == null) {
-				luaTrace("ERROR: " + hscriptResult);
-			}
-
-			var status:Int = Lua.pcall(lua, args.length, 1, 0);
-			if (status != Lua.LUA_OK) {
-				var error:String = getErrorMessage(status);
-				luaTrace("ERROR (" + func + "): " + error, false, false, FlxColor.RED);
-				return Function_Continue;
-			}
-			// If successful, pass and then return the result.
-			var result:Dynamic = cast Convert.fromLua(lua, -1);
-			if (result == null) result = Function_Continue;
+		Lua.getglobal(lua, func);
+		var type:Int = Lua.type(lua, -1);
+		if (type != Lua.LUA_TFUNCTION) {
+			if (type != Lua.LUA_TNIL)
+				luaTrace("ERROR (" + func + "): tried to be called as a function, but is not a function.");
 			Lua.pop(lua, 1);
-			return result;
-		} catch (e:haxe.Exception) {
-			trace(e.stack);
+			return Function_Continue;
 		}
-		#end
+		
+		for (arg in args) Convert.toLua(lua, arg);
+		var hscriptResult:Dynamic = hscript.call(func, args);
+		if (hscriptResult == null) {
+			luaTrace("ERROR (" + func + "): " + hscriptResult, false, false, FlxColor.RED);
+		}
+
+		var status:Int = Lua.pcall(lua, args.length, 1, 0);
+		if (status != Lua.LUA_OK) {
+			var error:String = getErrorMessage(status);
+			luaTrace("ERROR (" + func + "): " + error, false, false, FlxColor.RED);
+			return Function_Continue;
+		}
+
+		var resultType:Int = Lua.type(lua, -1);
+		if (!resultIsAllowed(resultType)) {
+			luaTrace("WARNING (" + func + "): unsupported returned value type (\"" + Lua.typename(lua, resultType) + "\")", false, false, FlxColor.RED);
+			Lua.pop(lua, 1);
+			return Function_Continue;
+		}
+
+		// If successful, pass and then return the result.
+		var result:Dynamic = cast Convert.fromLua(lua, -1);
+		if (result == null) result = Function_Continue;
+
+		Lua.pop(lua, 1);
+		return result;
+		#else
 		return Function_Continue;
+		#end
 	}
 
 	static function addAnimByIndices(obj:String, name:String, prefix:String, indices:String, framerate:Int = 24, loop:Bool = false)
@@ -3179,19 +3128,11 @@ class FunkinLua {
 		return coverMeInPiss;
 	}
 
-	function typeToString(type:Int):String {
-		#if LUA_ALLOWED
-		switch(type) {
-			case Lua.LUA_TBOOLEAN: return "boolean";
-			case Lua.LUA_TNUMBER: return "number";
-			case Lua.LUA_TSTRING: return "string";
-			case Lua.LUA_TTABLE: return "table";
-			case Lua.LUA_TFUNCTION: return "function";
-		}
-		if (type <= Lua.LUA_TNIL) return "nil";
-		#end
-		return "unknown";
+	#if LUA_ALLOWED
+	inline function resultIsAllowed(type:Int):Bool {
+		return type >= Lua.LUA_TNIL && type < Lua.LUA_TTABLE && type != Lua.LUA_TLIGHTUSERDATA;
 	}
+	#end
 
 	public function set(variable:String, data:Dynamic) {
 		#if LUA_ALLOWED
