@@ -7,7 +7,9 @@ import flash.display.Sprite;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import flash.Lib;
+import flixel.system.FlxAssets;
 import flixel.system.FlxBasePreloader;
+import flixel.FlxG;
  
 @:bitmap("assets/preload/images/logo.png") 
 class LogoImage extends BitmapData {}
@@ -20,6 +22,8 @@ class FunkinPreloader extends FlxBasePreloader {
     var _logo = new Sprite();
 	var _logoGlow = new Sprite();
     var _text = new TextField();
+	var _flxtext = new TextField();
+	var _flxlogo = new Sprite(); 
     var _buffer = new Sprite();
     var _bmpBar:Bitmap;
 
@@ -51,16 +55,34 @@ class FunkinPreloader extends FlxBasePreloader {
 		_text.width = 200;
 		_buffer.addChild(_text);
 
+		_flxtext = new TextField();
+		_flxtext.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 14, 0xffffff);
+		_flxtext.text = Std.string(FlxG.VERSION);
+		_flxtext.embedFonts = true;
+		_flxtext.selectable = false;
+		_flxtext.multiline = false;
+		_flxtext.width = 200;
+		_flxtext.x = _text.x;
+		_flxtext.y = _text.y - 338;
+		_buffer.addChild(_flxtext);
+
+		FlxAssets.drawLogo(_flxlogo.graphics);
+		_flxlogo.scaleX = _flxlogo.scaleY = .2;
+		_flxlogo.x = _flxtext.x + 150;
+		_flxlogo.y = _flxtext.y;
+		_buffer.addChild(_flxlogo);
+
         _logo.addChild(new Bitmap(new LogoImage(0, 0))); //Sets the graphic of the sprite to a Bitmap object, which uses our embedded BitmapData class.
         _logo.scaleX = _logo.scaleY = ratio;
         _logo.x = (this._width / 2) - (_logo.width / 2);
         _logo.y = (this._height / 2) - (_logo.height / 2);
         _buffer.addChild(_logo);
 
+		_logoGlow.addChild(new Bitmap(new LogoImage(0, 0)));
 		_logoGlow.blendMode = BlendMode.SCREEN;
-		_logoGlow.scaleX = _logoGlow.scaleY = _height / 8 * 0.04;
-		_logoGlow.x = (_width - _logoGlow.width) / 2;
-		_logoGlow.y = (_height - _logoGlow.height) / 2;
+		_logoGlow.scaleX = ratio;
+		_logoGlow.x = (this._width / 2) - (_logo.width / 2);
+		_logoGlow.y = (this._height / 2) - (_logo.height / 2);
 		_buffer.addChild(_logoGlow);
 
 		var corners = createBitmap(GraphicLogoCorners, function(corners) {
@@ -71,9 +93,8 @@ class FunkinPreloader extends FlxBasePreloader {
 		_buffer.addChild(corners);
 
 		var bitmap = new Bitmap(new BitmapData(_width, _height, false, 0xffffff));
-		var i:Int = 0;
-		var j:Int = 0;
-		while (i < _height){
+		var i:Int = 0, j:Int = 0;
+		while (i < _height) {
 			j = 0;
 			while (j < _width)
 				bitmap.bitmapData.setPixel(j++, i, 0);
@@ -92,6 +113,8 @@ class FunkinPreloader extends FlxBasePreloader {
 		_buffer = null;
 		_bmpBar = null;
 		_text = null;
+		_flxtext = null;
+		_flxlogo = null;
 		_logo = null;
 		_logoGlow = null;
         super.destroy();
@@ -99,6 +122,6 @@ class FunkinPreloader extends FlxBasePreloader {
 
 	override public function update(Percent:Float):Void {
 		_bmpBar.scaleX = Percent * (_width - 8);
-		_text.text = "BSF 0.0.1 - " + Std.int(Percent * 100) + "%";
+		_text.text = "BSF 0.1 BETA - " + Std.int(Percent * 100) + "%";
     }
 }
