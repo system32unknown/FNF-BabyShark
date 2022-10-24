@@ -4599,8 +4599,7 @@ class PlayState extends MusicBeatState
 							pressNotes.push(epicNote);
 						}
 					}
-				}
-				else {
+				} else {
 					callOnLuas('onGhostTap', [key]);
 					if (canMiss) {
 						noteMissPress(key);
@@ -4640,11 +4639,9 @@ class PlayState extends MusicBeatState
 	{
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = getKeyFromEvent(eventKey);
-		if(!cpuControlled && startedCountdown && !paused && key > -1)
-		{
+		if(!cpuControlled && startedCountdown && !paused && key > -1) {
 			var spr:StrumNote = playerStrums.members[key];
-			if(spr != null)
-			{
+			if(spr != null) {
 				spr.playAnim('static');
 				spr.resetAnim = 0;
 			}
@@ -4653,7 +4650,7 @@ class PlayState extends MusicBeatState
 	}
 
 	private function getKeyFromEvent(key:FlxKey):Int {
-		if(key != NONE) {
+		if (key != NONE) {
 			for (i in 0...keysArray[mania].length) {
 				for (j in 0...keysArray[mania][i].length) {
 					if(key == keysArray[mania][i][j]) {
@@ -4740,11 +4737,9 @@ class PlayState extends MusicBeatState
 		RecalculateRating(true);
 
 		var char:Character = boyfriend;
-		if(daNote.gfNote) {
-			char = gf;
-		}
+		if (daNote.gfNote) char = gf;
 
-		if(char != null && !daNote.noMissAnimation && char.hasMissAnimations) {
+		if (char != null && !daNote.noMissAnimation && char.hasMissAnimations) {
 			var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[daNote.noteData] + 'miss' + daNote.animSuffix;
 			char.playAnim(animToPlay, true);
 		}
@@ -4752,8 +4747,7 @@ class PlayState extends MusicBeatState
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}
 
-	function noteMissPress(direction:Int = 1):Void //You pressed a key when there was no notes to press for this key
-	{
+	function noteMissPress(direction:Int = 1):Void { //You pressed a key when there was no notes to press for this key
 		if(ClientPrefs.getPref('ghostTapping')) return; //fuck it
 
 		if (!boyfriend.stunned)
@@ -4800,8 +4794,7 @@ class PlayState extends MusicBeatState
 		} else if (!note.noAnimation) {
 			var altAnim:String = note.animSuffix;
 
-			if (SONG.notes[curSection] != null)
-			{
+			if (SONG.notes[curSection] != null) {
 				if (SONG.notes[curSection].altAnim && !SONG.notes[curSection].gfSection) {
 					altAnim = '-alt';
 				}
@@ -4813,8 +4806,7 @@ class PlayState extends MusicBeatState
 				char = gf;
 			}
 
-			if(char != null)
-			{
+			if(char != null) {
 				char.playAnim(animToPlay, true);
 				char.holdTimer = 0;
 			}
@@ -4928,7 +4920,15 @@ class PlayState extends MusicBeatState
 
 				if(!note.noMissAnimation) {
 					switch(note.noteType) {
-						case 'Hurt Note': //Hurt note
+						case 'Hurt Note' | 'Kill Note': // Hurt note, Kill Note
+							if(boyfriend.animation.getByName('hurt') != null) {
+								boyfriend.playAnim('hurt', true);
+								boyfriend.specialAnim = true;
+							}
+					}
+				} else {
+					switch(note.noteType) {
+						case 'Danger Note': //Danger note
 							if(boyfriend.animation.getByName('hurt') != null) {
 								boyfriend.playAnim('hurt', true);
 								boyfriend.specialAnim = true;
@@ -5051,8 +5051,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var carTimer:FlxTimer;
-	function fastCarDrive()
-	{
+	function fastCarDrive() {
 		FlxG.sound.play(Paths.soundRandom('carPass', 0, 1), 0.7);
 
 		fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed) * 3;
@@ -5070,16 +5069,14 @@ class PlayState extends MusicBeatState
 	var trainFinishing:Bool = false;
 	var trainCooldown:Int = 0;
 
-	function trainStart():Void
-	{
+	function trainStart():Void {
 		trainMoving = true;
 		if (!trainSound.playing)
 			trainSound.play(true);
 	}
 
 	var startedMoving:Bool = false;
-	function updateTrainPos():Void
-	{
+	function updateTrainPos():Void {
 		if (trainSound.time >= 4700) {
 			startedMoving = true;
 			if (gf != null) {

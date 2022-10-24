@@ -435,11 +435,11 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		var curDialogue:DialogueLine = null;
 		do {
 			curDialogue = dialogueList.dialogue[currentText];
-		} while(curDialogue == null);
+		} while (curDialogue == null);
 
-		if(curDialogue.text == null || curDialogue.text.length < 1) curDialogue.text = ' ';
-		if(curDialogue.boxState == null) curDialogue.boxState = 'normal';
-		if(curDialogue.speed == null || Math.isNaN(curDialogue.speed)) curDialogue.speed = 0.05;
+		if (curDialogue.text == null || curDialogue.text.length < 1) curDialogue.text = ' ';
+		if (curDialogue.boxState == null) curDialogue.boxState = 'normal';
+		if (curDialogue.speed == null || Math.isNaN(curDialogue.speed)) curDialogue.speed = 0.05;
 
 		var animName:String = curDialogue.boxState;
 		var boxType:String = textBoxTypes[0];
@@ -499,9 +499,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 	public static function parseDialogue(path:String):DialogueFile {
 		#if MODS_ALLOWED
 		if(FileSystem.exists(path))
-		{
 			return cast Json.parse(File.getContent(path));
-		}
 		#end
 		return cast Json.parse(Assets.getText(path));
 	}

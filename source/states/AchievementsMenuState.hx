@@ -108,9 +108,8 @@ class AchievementsMenuState extends MusicBeatState
 
 		for (i in 0...achievementArray.length) {
 			achievementArray[i].alpha = 0.6;
-			if(i == curSelected) {
+			if (i == curSelected)
 				achievementArray[i].alpha = 1;
-			}
 		}
 		descText.text = Achievements.achievementsStuff[achievementIndex[curSelected]][1];
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);

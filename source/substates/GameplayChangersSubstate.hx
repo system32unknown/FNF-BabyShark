@@ -227,7 +227,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 							updateTextFrom(curOption);
 							curOption.change();
 							FlxG.sound.play(Paths.sound('scrollMenu'));
-						} else if(curOption.type != 'string') {
+						} else if (curOption.type != 'string') {
 							holdValue = Math.max(curOption.minValue, Math.min(curOption.maxValue, holdValue + curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1)));
 
 							switch(curOption.type) {
@@ -306,7 +306,6 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 			curSelected = 0;
 
 		var bullShit:Int = 0;
-
 		for (item in grpOptions.members) {
 			item.targetY = bullShit - curSelected;
 			bullShit++;

@@ -101,8 +101,7 @@ class Paths
 
 	static public var currentModDirectory:String = '';
 	static public var currentLevel:String;
-	static public function setCurrentLevel(name:String)
-	{
+	static public function setCurrentLevel(name:String) {
 		currentLevel = name.toLowerCase();
 	}
 
@@ -179,42 +178,29 @@ class Paths
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
 
-	static public function sound(key:String, ?library:String):Sound
-	{
-		var sound:Sound = returnSound('sounds', key, library);
-		return sound;
+	static public function sound(key:String, ?library:String):Sound {
+		return returnSound('sounds', key, library);
 	}
 
-	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
-	{
+	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String) {
 		return sound(key + FlxG.random.int(min, max), library);
 	}
 
-	inline static public function music(key:String, ?library:String):Sound
-	{
-		var file:Sound = returnSound('music', key, library);
-		return file;
+	inline static public function music(key:String, ?library:String):Sound {
+		return returnSound('music', key, library);
 	}
 
-	inline static public function voices(song:String):Any
-	{
-		var songKey:String = '${formatToSongPath(song)}/Voices';
-		var voices = returnSound('songs', songKey);
-		return voices;
+	inline static public function voices(song:String):Any {
+		return returnSound('songs', '${formatToSongPath(song)}/Voices');
 	}
 
-	inline static public function inst(song:String):Any
-	{
-		var songKey:String = '${formatToSongPath(song)}/Inst';
-		var inst = returnSound('songs', songKey);
-		return inst;
+	inline static public function inst(song:String):Any {
+		return returnSound('songs', '${formatToSongPath(song)}/Inst');
 	}
 
-	inline static public function image(key:String, ?library:String):FlxGraphic
-	{
+	inline static public function image(key:String, ?library:String):FlxGraphic {
 		// streamlined the assets process more
-		var returnAsset:FlxGraphic = returnGraphic(key, library);
-		return returnAsset;
+		return returnGraphic(key, library);
 	}
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String

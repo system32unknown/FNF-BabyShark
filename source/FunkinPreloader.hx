@@ -80,9 +80,9 @@ class FunkinPreloader extends FlxBasePreloader {
 
 		_logoGlow.addChild(new Bitmap(new LogoImage(0, 0)));
 		_logoGlow.blendMode = BlendMode.SCREEN;
-		_logoGlow.scaleX = ratio;
-		_logoGlow.x = (this._width / 2) - (_logo.width / 2);
-		_logoGlow.y = (this._height / 2) - (_logo.height / 2);
+		_logoGlow.scaleX = _logoGlow.scaleY = ratio;
+		_logoGlow.x = (this._width / 2) - (_logoGlow.width / 2);
+		_logoGlow.y = (this._height / 2) - (_logoGlow.height / 2);
 		_buffer.addChild(_logoGlow);
 
 		var corners = createBitmap(GraphicLogoCorners, function(corners) {

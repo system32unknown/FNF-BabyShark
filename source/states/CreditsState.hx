@@ -41,7 +41,7 @@ class CreditsState extends MusicBeatState
 	{
 		#if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
+		DiscordClient.changePresence("In the Credits", null);
 		#end
 
 		persistentUpdate = true;
@@ -54,19 +54,14 @@ class CreditsState extends MusicBeatState
 
 		#if MODS_ALLOWED
 		var path:String = 'modsList.txt';
-		if(FileSystem.exists(path))
-		{
+		if(FileSystem.exists(path)) {
 			var leMods:Array<String> = CoolUtil.coolTextFile(path);
-			for (i in 0...leMods.length)
-			{
+			for (i in 0...leMods.length) {
 				if (leMods.length > 1 && leMods[0].length > 0) {
 					var modSplit:Array<String> = leMods[i].split('|');
-					if (!Paths.ignoreModFolders.contains(modSplit[0].toLowerCase()) && !modsAdded.contains(modSplit[0]))
-					{
-						if (modSplit[1] == '1')
-							pushModCreditsToList(modSplit[0]);
-						else
-							modsAdded.push(modSplit[0]);
+					if (!Paths.ignoreModFolders.contains(modSplit[0].toLowerCase()) && !modsAdded.contains(modSplit[0])) {
+						if (modSplit[1] == '1') pushModCreditsToList(modSplit[0]);
+						else modsAdded.push(modSplit[0]);
 					}
 				}
 			}
@@ -82,13 +77,16 @@ class CreditsState extends MusicBeatState
 
 		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
 			['Vs Dave and Bambi Team'],
-			['MoldyGH',				'placeholdericon',	'Creator/Main Dev',				                        		'https://twitter.com/moldy_gh',		    'FF0000'],
-			['MTM101',				'placeholdericon',	'Secondary Dev',				                        		'https://twitter.com/OfficialMTM101',	'FF0000'],
-			['rapparep lol',      	'placeholdericon',	'Main Artist',				                            		'https://twitter.com/rappareplol',		'FF0000'],
-			['TheBuilderXD',      	'placeholdericon',	'Page Manager, Tristan Sprite Creator, and more',       		'https://twitter.com/TheBuilderXD',		'FF0000'],
-			['Erizur',            	'placeholdericon',	'Programmer, Week Icon Artist',                       			'https://twitter.com/am_erizur',		'FF0000'],
-			['T5mpler',           	'placeholdericon',	'Dev/Programmer & Supporter',                           		'https://twitter.com/RealT5mpler',		'FF0000'], 
-			['Stats45',           	'placeholdericon',	'Minor programming, Moral support',                     		'https://twitter.com/Stats451',			'FF0000'],
+			['MoldyGH',				'MoldyGH',			'Creator / Main Dev',				                        	'https://twitter.com/moldy_gh',		    'FF0000'],
+			['MTM101',				'MTM10',			'Secondary Dev',				                        		'https://twitter.com/OfficialMTM101',	'FF0000'],
+			['rapparep lol',      	'rapparep',			'Main Artist',				                            		'https://twitter.com/rappareplol',		'FF0000'],
+			['TheBuilderXD',      	'TheBuilderXD',		'Page Manager, Tristan Sprite Creator, and more',       		'https://twitter.com/TheBuilderXD',		'FF0000'],
+			['Erizur',            	'Erizur',			'Programmer, Week Icon Artist',                       			'https://twitter.com/am_erizur',		'FF0000'],
+			['T5mpler',           	'T5mpler',			'Dev / Programmer & Supporter',                           		'https://twitter.com/RealT5mpler',		'FF0000'], 
+			['Pointy',           	'pointy',			'Artist & Charter',                           					'https://twitter.com/PointyyESM',		'FF0000'], 
+			['Zmac',           		'Zmac',				'3D Backgrounds, Intro text help',                           	'',										'FF0000'], 
+			['Billy Bobbo',         'billy',			'Moral Support & Idea Suggesting',                     			'https://twitter.com/BillyBobboLOL',	'FF0000'],
+			['Steph45',           	'Stehp45',			'Minor programming, Moral support',                     		'https://twitter.com/Stats451',			'FF0000'],
 			[''],
 			['Psych Engine Extra Keys'],
 			['tposejank', 			'tposejank',		'Main Programmer of Psych Engine EK', 							'https://www.twitter.com/tpose_jank', 	'B9AF27'],
@@ -100,17 +98,21 @@ class CreditsState extends MusicBeatState
 			['shubs',				'shubs',			'Additional Programmer of Psych Engine',						'https://twitter.com/yoshubs',			'5E99DF'],
 			[''],
 			['Former Engine Members'],
-			['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbsub3',			'3E813A'],
+			['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbpnz213',			'3E813A'],
 			[''],
 			['Engine Contributors'],
 			['iFlicky',				'flicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',		'https://twitter.com/flicky_i',			'9E29CF'],
 			['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',	'https://twitter.com/gedehari',			'E1843A'],
 			['EliteMasterEric',		'mastereric',		'Runtime Shaders support',										'https://twitter.com/EliteMasterEric',	'FFBD40'],
+			['Gabriela',			'gabriela',			'Playback Rate Modifier\nand other PRs',						'https://twitter.com/BeastlyGabi',		'5E99DF'],
 			['PolybiusProxy',		'proxy',			'.MP4 Video Loader Library (hxCodec)',							'https://twitter.com/polybiusproxy',	'DCD294'],
 			['KadeDev',				'kade',				'Fixed some cool stuff on Chart Editor\nand other PRs',			'https://twitter.com/kade0912',			'64A250'],
 			['Keoiki',				'keoiki',			'Note Splash Animations',										'https://twitter.com/Keoiki_',			'D2D2D2'],
 			['Nebula the Zorua',	'nebula',			'LUA JIT Fork and some Lua reworks',							'https://twitter.com/Nebula_Zorua',		'7D40B2'],
 			['Smokey',				'smokey',			'Sprite Atlas Support',											'https://twitter.com/Smokey_5_',		'483D92'],
+			['Raltyro',				'raltyro',			'Bunch of lua fixes',											'https://twitter.com/raltyro',			'D2D2D2'],
+			['UncertainProd',		'unknown',			'Sampler2D in Runtime Shaders',									'https://github.com/UncertainProd',		'D2D2D2'],
+			['ACrazyTown',			'acrazytown',		'Optimized PNGs',												'',										'FFFFFF'],	
 			[''],
 			["Funkin' Crew"],
 			['ninjamuffin99',		'ninjamuffin99',	"Programmer of Friday Night Funkin'",							'https://twitter.com/ninja_muffin99',	'CF2D2D'],
@@ -119,9 +121,8 @@ class CreditsState extends MusicBeatState
 			['kawaisprite',			'kawaisprite',		"Composer of Friday Night Funkin'",								'https://twitter.com/kawaisprite',		'378FC7']
 		];
 		
-		for(i in pisspoop) {
+		for(i in pisspoop)
 			creditsStuff.push(i);
-		}
 	
 		for (i in 0...creditsStuff.length) {
 			var isSelectable:Bool = !unselectableCheck(i);
@@ -252,9 +253,8 @@ class CreditsState extends MusicBeatState
 
 		var newColor:Int =  getCurrentBGColor();
 		if(newColor != intendedColor) {
-			if(colorTween != null) {
+			if (colorTween != null)
 				colorTween.cancel();
-			}
 			intendedColor = newColor;
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
 				onComplete: function(twn:FlxTween) {
