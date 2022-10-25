@@ -9,6 +9,8 @@ import haxe.Json;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
+#else
+import lime.utils.Assets;
 #end
 
 using StringTools;
@@ -61,9 +63,9 @@ class Song {
 				var i:Int = 0;
 				var notes:Array<Dynamic> = sec.sectionNotes;
 				var len:Int = notes.length;
-				while(i < len) {
+				while (i < len) {
 					var note:Array<Dynamic> = notes[i];
-					if(note[1] < 0) {
+					if (note[1] < 0) {
 						songJson.events.push([note[0], [[note[2], note[3], note[4]]]]);
 						notes.remove(note);
 						len = notes.length;
@@ -72,8 +74,7 @@ class Song {
 			}
 		}
 
-		if (songJson.mania == null && !ClientPrefs.getPref('convertEK'))
-        {
+		if (songJson.mania == null && !ClientPrefs.getPref('convertEK')) {
             songJson.mania = Note.defaultMania;
         }
 	}
@@ -86,12 +87,12 @@ class Song {
 		var formattedSong:String = Paths.formatToSongPath(jsonInput);
 		#if MODS_ALLOWED
 		var moddyFile:String = Paths.modsJson(formattedFolder + '/' + formattedSong);
-		if(FileSystem.exists(moddyFile)) {
+		if (FileSystem.exists(moddyFile)) {
 			rawJson = File.getContent(moddyFile).trim();
 		}
 		#end
 
-		if(rawJson == null) {
+		if (rawJson == null) {
 			#if sys
 			rawJson = File.getContent(Paths.json(formattedFolder + '/' + formattedSong)).trim();
 			#else

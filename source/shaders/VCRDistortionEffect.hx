@@ -5,45 +5,65 @@ import openfl.Lib;
 
 class VCRDistortionEffect extends Effect
 {
-    public var shader:VCRDistortionShader = new VCRDistortionShader();
-    public function new(glitchFactor:Float,distortion:Bool=true,perspectiveOn:Bool=true,vignetteMoving:Bool=true){
-        shader.data.iTime.value = [0];
-        shader.data.vignetteOn.value = [true];
-        shader.data.perspectiveOn.value = [perspectiveOn];
-        shader.data.distortionOn.value = [distortion];
-        shader.data.scanlinesOn.value = [true];
-        shader.data.vignetteMoving.value = [vignetteMoving];
-        shader.data.glitchModifier.value = [glitchFactor];
-        shader.data.iResolution.value = [Lib.current.stage.stageWidth, Lib.current.stage.stageHeight];
+    public var shader(default, null):VCRDistortionShader = new VCRDistortionShader();
+
+    public var glitchModifier(default, set):Float = 0.5;
+    public var vignetteOn(default, set):Bool = true;
+    public var perspectiveOn(default, set):Bool = true;
+    public var distortionOn(default, set):Bool = false;
+    public var vignetteMoving(default, set):Bool = true;
+    public var scanlinesOn(default, set):Bool = true;
+    public var iResolution(default, set):Dynamic = [Lib.current.stage.stageWidth, Lib.current.stage.stageHeight];
+
+    public function new() {
+        shader.iTime.value = [0];
     }
 
-    public function update(elapsed:Float){
-        shader.data.iTime.value[0] += elapsed;
-        shader.data.iResolution.value = [Lib.current.stage.stageWidth, Lib.current.stage.stageHeight];
+    public function update(elapsed:Float):Void {
+        shader.iTime.value[0] += elapsed;
+        shader.iResolution.value = [iResolution];
     }
 
-    public function setVignette(state:Bool){
-        shader.data.vignetteOn.value[0] = state;
+    public function set_glitchModifier(modifier:Float):Float {
+        glitchModifier = modifier;
+        shader.glitchModifier.value = [glitchModifier];
+        return modifier;
     }
 
-    public function setPerspective(state:Bool){
-        shader.data.perspectiveOn.value[0] = state;
+    public function set_vignetteOn(state:Bool):Bool {
+        vignetteOn = state; 
+        shader.vignetteOn.value = [vignetteOn];
+        return state;
     }
 
-    public function setGlitchModifier(modifier:Float){
-        shader.data.glitchModifier.value[0] = modifier;
+    public function set_perspectiveOn(state:Bool):Bool {
+        perspectiveOn = state;
+        shader.perspectiveOn.value = [perspectiveOn];
+        return state;
     }
 
-    public function setDistortion(state:Bool){
-        shader.data.distortionOn.value[0] = state;
+    public function set_distortionOn(state:Bool):Bool {
+        distortionOn = state;
+        shader.distortionOn.value = [distortionOn];
+        return state;
     }
 
-    public function setScanlines(state:Bool){
-        shader.data.scanlinesOn.value[0] = state;
+    public function set_vignetteMoving(state:Bool):Bool {
+        vignetteMoving = state;
+        shader.vignetteMoving.value = [vignetteMoving];
+        return state;
     }
 
-    public function setVignetteMoving(state:Bool){
-        shader.data.vignetteMoving.value[0] = state;
+    public function set_scanlinesOn(state:Bool):Bool {
+        scanlinesOn = state;
+        shader.scanlinesOn.value = [scanlinesOn];
+        return state;
+    }
+
+    public function set_iResolution(state:Dynamic):Dynamic {
+        iResolution = state;
+        shader.iResolution.value = [iResolution];
+        return state;
     }
 }
 
@@ -159,6 +179,10 @@ class VCRDistortionShader extends FlxShader {
             }
         }
     ')
+
+    public function new() {
+       super();
+    }
 }
 
 class Effect {

@@ -3,7 +3,7 @@ package states;
 #if desktop
 import utils.Discord.DiscordClient;
 #end
-import utils.ClientPrefs;
+import shaders.VCRDistortionEffect.VCRDistortionEffect;
 
 import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
@@ -19,16 +19,18 @@ class TerminalState extends MusicBeatState
     //if you ingore this message and use it anyway, atleast give credit.
 
     public var curCommand:String = "";
-    public var previousText:String = "Vs Dave Developer Console[Version 1.0.00001.1234]\nAll Rights Reserved.\n[WARNING] \\bin\\Sys\\system.bin not found!\n";
+    public var previousText:String = "FNF Developer Console [Version 1.0.0]\nAll Rights Reserved.\n[WARNING] \\bin\\Sys\\system.bin not found!\n> ";
     public var displayText:FlxText;
     public var CommandList:Array<TerminalCommand> = new Array<TerminalCommand>();
     public var typeSound:FlxSound;
+
+    var shaderVCR:VCRDistortionEffect;
 
     // [BAD PERSON] was too lazy to finish this lol.
     var unformattedSymbols:Array<String> = [
         "period", "backslash",
         "one", "two", "three", "four", "five", 
-        "six", "seven", "eight", "nine","zero",
+        "six", "seven", "eight", "nine", "zero",
         "shift", "semicolon", "alt", "lbracket",
         "rbracket", "comma", "plus"
     ];
@@ -48,10 +50,12 @@ class TerminalState extends MusicBeatState
 		DiscordClient.changePresence("The Terminal", null);
 		#end
 
-        Main.fpsVar.visible = false;
-        PlayState.isStoryMode = false;
+        shaderVCR = new VCRDistortionEffect();
+        shaderVCR.distortionOn = true;
+        FlxG.camera.setFilters([new ShaderFilter(shaderVCR.shader)]);
+
         displayText = new FlxText(0, 0, FlxG.width, previousText, 32);
-		displayText.setFormat(Paths.font("vcr.ttf"), 16);
+		displayText.setFormat(Paths.font("vcr.ttf"), 14);
         displayText.size *= 2;
 		displayText.antialiasing = false;
         typeSound = FlxG.sound.load(Paths.sound('terminal_space'), 0.6);
@@ -69,7 +73,7 @@ class TerminalState extends MusicBeatState
         }));
 
         CommandList.push(new TerminalCommand("clear", "Clears the screen.", function(arguments:Array<String>) {
-            previousText = "> ";
+            previousText = "";
             UpdateText("");
         }));
 
@@ -86,8 +90,19 @@ class TerminalState extends MusicBeatState
             UpdateText("\n" + tx);
         }));
 
+        CommandList.push(new TerminalCommand("shit", "dont.", function(arguments:Array<String>) {
+            UpdateText(getRandomizedText(FlxG.random.int(1, 50)));
+        }));
+
         add(displayText);
         super.create();
+    }
+
+    function getRandomizedText(max:Int):String {
+        var temp_str:String = "";
+        for (i in 0...max)
+            temp_str += String.fromCharCode(FlxG.random.int(65, 122));
+        return temp_str;
     }
 
     public function UpdateText(val:String) {
@@ -122,6 +137,10 @@ class TerminalState extends MusicBeatState
     {
         super.update(elapsed);
 
+        if (shaderVCR != null) {
+            shaderVCR.update(elapsed);
+        }
+        
         var keyJustPressed:FlxKey = cast(FlxG.keys.firstJustPressed(), FlxKey);
         if (keyJustPressed == FlxKey.ENTER) {
             var calledFunc:Bool = false;
@@ -136,7 +155,7 @@ class TerminalState extends MusicBeatState
             }
             if (!calledFunc) {
                 UpdatePreviousText(false); //resets the text
-                UpdateText("Unknown command \"" + arguments[0] + "\"");
+                UpdateText("\nUnknown command \"" + arguments[0] + "\"");
             }
             UpdatePreviousText(true);
             return;
@@ -169,9 +188,13 @@ class TerminalState extends MusicBeatState
             curCommand = "";
         }
         if (FlxG.keys.justPressed.ESCAPE) {
-            Main.fpsVar.visible = ClientPrefs.getPref('showFPS');
-            FlxG.switchState(new MainMenuState());
+            MusicBeatState.switchState(new MainMenuState());
+            FlxG.sound.playMusic(Paths.music('freakyMenu'));
         }
+    }
+
+    override function destroy() {
+        super.destroy();
     }
 }
 

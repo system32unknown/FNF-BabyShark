@@ -6,7 +6,6 @@ import utils.Discord.DiscordClient;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import utils.Controls;
 import utils.ClientPrefs;
 import states.MusicBeatState;
 import states.MainMenuState;

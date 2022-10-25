@@ -4,11 +4,15 @@ import flixel.system.FlxAssets.FlxShader;
 
 class ScanlineEffect extends Effect
 {
-	public var shader:Scanline;
-	public function new (lockAlpha) {
-		shader = new Scanline();
-		shader.data.lockAlpha.value = [lockAlpha];
-	}
+	public var shader(default, null):Scanline = new Scanline();
+
+	public var lockAlpha(default, set):Bool = false;
+
+    public function set_lockAlpha(modifier:Bool):Bool {
+        lockAlpha = modifier;
+        shader.lockAlpha.value = [lockAlpha];
+        return modifier;
+    }
 }
 
 class Scanline extends FlxShader
