@@ -35,7 +35,7 @@ class Conductor
 		return data[data.length - 1];
 	}
 
-	public static function getBPMFromSeconds(time:Float){
+	public static function getBPMFromSeconds(time:Float) {
 		var lastChange:BPMChangeEvent = {
 			stepTime: 0,
 			songTime: 0,
@@ -50,7 +50,7 @@ class Conductor
 		return lastChange;
 	}
 
-	public static function getBPMFromStep(step:Float){
+	public static function getBPMFromStep(step:Float) {
 		var lastChange:BPMChangeEvent = {
 			stepTime: 0,
 			songTime: 0,

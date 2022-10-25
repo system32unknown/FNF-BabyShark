@@ -88,7 +88,7 @@ class StoryMenuState extends MusicBeatState
 
 		#if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
+		DiscordClient.changePresence("Story Menu", null);
 		#end
 
 		var num:Int = 0;
@@ -226,18 +226,13 @@ class StoryMenuState extends MusicBeatState
 			else if (upP || downP)
 				changeDifficulty();
 
-			if(FlxG.keys.justPressed.CONTROL)
-			{
+			if(FlxG.keys.justPressed.CONTROL) {
 				persistentUpdate = false;
 				openSubState(new GameplayChangersSubstate());
-			}
-			else if(controls.RESET)
-			{
+			} else if(controls.RESET) {
 				persistentUpdate = false;
 				openSubState(new ResetScoreSubState('', curDifficulty, '', curWeek));
-			}
-			else if (controls.ACCEPT)
-			{
+			} else if (controls.ACCEPT) {
 				selectWeek();
 			}
 		}
