@@ -168,6 +168,12 @@
 		255,
 		0
 	],
+	"gameover_properties": [
+		"bf-dead",
+		"fnf_loss_sfx",
+		"gameOver",
+		"gameOverEnd"
+	],
 	"camera_position": [
 		0,
 		0

@@ -192,10 +192,6 @@ class TerminalState extends MusicBeatState
             FlxG.sound.playMusic(Paths.music('freakyMenu'));
         }
     }
-
-    override function destroy() {
-        super.destroy();
-    }
 }
 
 class TerminalCommand

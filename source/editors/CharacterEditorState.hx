@@ -24,7 +24,6 @@ import flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-import lime.system.Clipboard;
 import haxe.Json;
 import utils.CoolUtil;
 import utils.ClientPrefs;
@@ -146,8 +145,7 @@ class CharacterEditorState extends MusicBeatState
 		\nT - Reset Current Offset
 		\nHold Shift to Move 10x faster\n".split('\n');
 
-		for (i in 0...tipTextArray.length-1)
-		{
+		for (i in 0...tipTextArray.length-1) {
 			var tipText:FlxText = new FlxText(FlxG.width - 320, FlxG.height - 15 - 16 * (tipTextArray.length - i), 300, tipTextArray[i], 12);
 			tipText.cameras = [camHUD];
 			tipText.setFormat(null, 12, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
@@ -172,6 +170,7 @@ class CharacterEditorState extends MusicBeatState
 
 		var tabs = [
 			{name: 'Character', label: 'Character'},
+			{name: 'Properties', label: 'Properties'},
 			{name: 'Animations', label: 'Animations'},
 		];
 		UI_characterbox = new FlxUITabMenu(null, tabs, true);
@@ -186,7 +185,7 @@ class CharacterEditorState extends MusicBeatState
 		add(changeBGbutton);
 
 		addSettingsUI();
-
+		addPropertiesUI();
 		addCharacterUI();
 		addAnimationsUI();
 		UI_characterbox.selected_tab_id = 'Character';
@@ -341,6 +340,12 @@ class CharacterEditorState extends MusicBeatState
 				0,
 				0
 			],
+			"gameover_properties": [
+				"bf-dead",
+				"fnf_loss_sfx",
+				"gameOver",
+				"gameOverEnd"
+			],
 			"sing_duration": 6.1,
 			"scale": 1
 		}';
@@ -381,8 +386,7 @@ class CharacterEditorState extends MusicBeatState
 			for (character in characters) {
 				character.animOffsets.clear();
 				character.animationsArray = parsedJson.animations;
-				for (anim in character.animationsArray)
-				{
+				for (anim in character.animationsArray) {
 					character.addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
 				}
 				if(character.animationsArray[0] != null) {
@@ -443,8 +447,7 @@ class CharacterEditorState extends MusicBeatState
 		tab_group.name = "Character";
 
 		imageInputText = new FlxUIInputText(15, 30, 200, 'characters/BOYFRIEND', 8);
-		var reloadImage:FlxButton = new FlxButton(imageInputText.x + 210, imageInputText.y - 3, "Reload Image", function()
-		{
+		var reloadImage:FlxButton = new FlxButton(imageInputText.x + 210, imageInputText.y - 3, "Reload Image", function() {
 			char.imageFile = imageInputText.text;
 			reloadCharacterImage();
 			if(char.animation.curAnim != null) {
@@ -452,8 +455,7 @@ class CharacterEditorState extends MusicBeatState
 			}
 		});
 
-		var decideIconColor:FlxButton = new FlxButton(reloadImage.x, reloadImage.y + 30, "Get Icon Color", function()
-		{
+		var decideIconColor:FlxButton = new FlxButton(reloadImage.x, reloadImage.y + 30, "Get Icon Color", function() {
 			var coolColor = FlxColor.fromInt(CoolUtil.dominantColor(leHealthIcon));
 			healthColorStepperR.value = coolColor.red;
 			healthColorStepperG.value = coolColor.green;
@@ -471,7 +473,7 @@ class CharacterEditorState extends MusicBeatState
 
 		flipXCheckBox = new FlxUICheckBox(singDurationStepper.x + 80, singDurationStepper.y, null, null, "Flip X", 50);
 		flipXCheckBox.checked = char.flipX;
-		if(char.isPlayer) flipXCheckBox.checked = !flipXCheckBox.checked;
+		if (char.isPlayer) flipXCheckBox.checked = !flipXCheckBox.checked;
 		flipXCheckBox.callback = function() {
 			char.originalFlipX = !char.originalFlipX;
 			char.flipX = char.originalFlipX;
@@ -528,6 +530,32 @@ class CharacterEditorState extends MusicBeatState
 		tab_group.add(healthColorStepperG);
 		tab_group.add(healthColorStepperB);
 		tab_group.add(saveCharacterButton);
+		UI_characterbox.addGroup(tab_group);
+	}
+
+	var characterDeathName:FlxUIInputText;
+	var characterDeathSound:FlxUIInputText;
+	var characterDeathConfirm:FlxUIInputText;
+	var characterDeathMusic:FlxUIInputText;
+	function addPropertiesUI() {
+		var tab_group = new FlxUI(null, UI_box);
+		tab_group.name = "Properties";
+
+		characterDeathName = new FlxUIInputText(15, 35, 150, char.deathChar, 8);
+		characterDeathSound = new FlxUIInputText(characterDeathName.x, characterDeathName.y + 45, 150, char.deathSound, 8);
+		characterDeathConfirm = new FlxUIInputText(characterDeathName.x, characterDeathName.y + 85, 150, char.deathConfirm, 8);
+		characterDeathMusic = new FlxUIInputText(characterDeathName.x, characterDeathName.y + 125, 150, char.deathMusic, 8);
+
+		tab_group.add(new FlxText(characterDeathName.x, characterDeathName.y - 18, 0, 'Game Over Character:'));
+		tab_group.add(new FlxText(characterDeathSound.x, characterDeathSound.y - 18, 0, 'Game Over Starting Sound:'));
+		tab_group.add(new FlxText(characterDeathConfirm.x, characterDeathConfirm.y - 18, 0, 'Game Over Confirm Sound:'));
+		tab_group.add(new FlxText(characterDeathMusic.x, characterDeathMusic.y - 18, 0, 'Game Over Music:'));
+
+		tab_group.add(characterDeathName);
+		tab_group.add(characterDeathSound);
+		tab_group.add(characterDeathConfirm);
+		tab_group.add(characterDeathMusic);
+
 		UI_characterbox.addGroup(tab_group);
 	}
 
@@ -607,26 +635,26 @@ class CharacterEditorState extends MusicBeatState
 				indices: indices,
 				offsets: lastOffsets
 			};
-			if(indices != null && indices.length > 0) {
+			if (indices != null && indices.length > 0) {
 				char.animation.addByIndices(newAnim.anim, newAnim.name, newAnim.indices, "", newAnim.fps, newAnim.loop);
 			} else {
 				char.animation.addByPrefix(newAnim.anim, newAnim.name, newAnim.fps, newAnim.loop);
 			}
 
-			if(!char.animOffsets.exists(newAnim.anim)) {
+			if (!char.animOffsets.exists(newAnim.anim)) {
 				char.addOffset(newAnim.anim, 0, 0);
 			}
 			char.animationsArray.push(newAnim);
 
-			if(lastAnim == animationInputText.text) {
+			if (lastAnim == animationInputText.text) {
 				var leAnim:FlxAnimation = char.animation.getByName(lastAnim);
-				if(leAnim != null && leAnim.frames.length > 0) {
+				if (leAnim != null && leAnim.frames.length > 0) {
 					char.playAnim(lastAnim, true);
 				} else {
 					for(i in 0...char.animationsArray.length) {
-						if(char.animationsArray[i] != null) {
+						if (char.animationsArray[i] != null) {
 							leAnim = char.animation.getByName(char.animationsArray[i].anim);
-							if(leAnim != null && leAnim.frames.length > 0) {
+							if (leAnim != null && leAnim.frames.length > 0) {
 								char.playAnim(char.animationsArray[i].anim, true);
 								curAnim = i;
 								break;
@@ -692,13 +720,19 @@ class CharacterEditorState extends MusicBeatState
 				leHealthIcon.changeIcon(healthIconInputText.text);
 				char.healthIcon = healthIconInputText.text;
 				updatePresence();
-			}
-			else if(sender == imageInputText) {
+			} else if(sender == imageInputText) {
 				char.imageFile = imageInputText.text;
+			} else if(sender == characterDeathName) {
+				char.deathChar = characterDeathName.text;
+			} else if(sender == characterDeathSound) {
+				char.deathSound = characterDeathSound.text;
+			} else if(sender == characterDeathConfirm) {
+				char.deathConfirm = characterDeathConfirm.text;
+			} else if(sender == characterDeathMusic) {
+				char.deathMusic = characterDeathMusic.text;
 			}
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
-			if (sender == scaleStepper)
-			{
+			if (sender == scaleStepper) {
 				reloadCharacterImage();
 				char.jsonScale = sender.value;
 				char.scale.set(char.jsonScale, char.jsonScale);
@@ -711,45 +745,29 @@ class CharacterEditorState extends MusicBeatState
 				if(char.animation.curAnim != null) {
 					char.playAnim(char.animation.curAnim.name, true);
 				}
-			}
-			else if(sender == positionXStepper)
-			{
+			} else if(sender == positionXStepper) {
 				char.positionArray[0] = positionXStepper.value;
 				char.x = char.positionArray[0] + OFFSET_X + 100;
 				updatePointerPos();
-			}
-			else if(sender == singDurationStepper)
-			{
-				char.singDuration = singDurationStepper.value;//ermm you forgot this??
-			}
-			else if(sender == positionYStepper)
-			{
+			} else if(sender == singDurationStepper) {
+				char.singDuration = singDurationStepper.value; //ermm you forgot this??
+			} else if(sender == positionYStepper) {
 				char.positionArray[1] = positionYStepper.value;
 				char.y = char.positionArray[1];
 				updatePointerPos();
-			}
-			else if(sender == positionCameraXStepper)
-			{
+			} else if(sender == positionCameraXStepper) {
 				char.cameraPosition[0] = positionCameraXStepper.value;
 				updatePointerPos();
-			}
-			else if(sender == positionCameraYStepper)
-			{
+			} else if(sender == positionCameraYStepper) {
 				char.cameraPosition[1] = positionCameraYStepper.value;
 				updatePointerPos();
-			}
-			else if(sender == healthColorStepperR)
-			{
+			} else if(sender == healthColorStepperR) {
 				char.healthColorArray[0] = Math.round(healthColorStepperR.value);
 				healthBarBG.color = FlxColor.fromRGB(char.healthColorArray[0], char.healthColorArray[1], char.healthColorArray[2]);
-			}
-			else if(sender == healthColorStepperG)
-			{
+			} else if(sender == healthColorStepperG) {
 				char.healthColorArray[1] = Math.round(healthColorStepperG.value);
 				healthBarBG.color = FlxColor.fromRGB(char.healthColorArray[0], char.healthColorArray[1], char.healthColorArray[2]);
-			}
-			else if(sender == healthColorStepperB)
-			{
+			} else if(sender == healthColorStepperB) {
 				char.healthColorArray[2] = Math.round(healthColorStepperB.value);
 				healthBarBG.color = FlxColor.fromRGB(char.healthColorArray[0], char.healthColorArray[1], char.healthColorArray[2]);
 			}
@@ -898,6 +916,10 @@ class CharacterEditorState extends MusicBeatState
 			positionYStepper.value = char.positionArray[1];
 			positionCameraXStepper.value = char.cameraPosition[0];
 			positionCameraYStepper.value = char.cameraPosition[1];
+			characterDeathName.text = char.deathChar;
+			characterDeathSound.text = char.deathSound;
+			characterDeathConfirm.text = char.deathConfirm;
+			characterDeathMusic.text = char.deathMusic;
 			reloadAnimationDropDown();
 			updatePresence();
 		}
@@ -1171,7 +1193,8 @@ class CharacterEditorState extends MusicBeatState
 
 			"flip_x": char.originalFlipX,
 			"no_antialiasing": char.noAntialiasing,
-			"healthbar_colors": char.healthColorArray
+			"healthbar_colors": char.healthColorArray,
+			"gameover_properties": [char.deathChar, char.deathSound, char.deathMusic, char.deathConfirm],
 		};
 
 		var data:String = Json.stringify(json, "\t");
