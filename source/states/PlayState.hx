@@ -4902,14 +4902,6 @@ class PlayState extends MusicBeatState
 								boyfriend.specialAnim = true;
 							}
 					}
-				} else {
-					switch(note.noteType) {
-						case 'Danger Note': //Danger note
-							if(boyfriend.animation.getByName('hurt') != null) {
-								boyfriend.playAnim('hurt', true);
-								boyfriend.specialAnim = true;
-							}
-					}
 				}
 
 				note.wasGoodHit = true;

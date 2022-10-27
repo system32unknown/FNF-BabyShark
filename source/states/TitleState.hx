@@ -201,6 +201,7 @@ class TitleState extends MusicBeatState
 	
 	var newTitle:Bool = false;
 	var titleTimer:Float = 0;
+	var pressedEnter:Bool = false;
 
 	override function update(elapsed:Float) {
 		if (FlxG.sound.music != null)
@@ -211,7 +212,7 @@ class TitleState extends MusicBeatState
 		gradientBar.updateHitbox();
 		gradientBar.y = FlxG.height - gradientBar.height;
 
-		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER || controls.ACCEPT;
+		pressedEnter = FlxG.keys.justPressed.ENTER || controls.ACCEPT;
 		
 		if (newTitle) {
 			titleTimer += MathUtil.boundTo(elapsed, 0, 1);
@@ -231,6 +232,7 @@ class TitleState extends MusicBeatState
 			}
 			
 			if (pressedEnter) {
+				FlxTween.tween(titleLogo, {y: -700}, 1, {ease: FlxEase.backIn});
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
 				
@@ -294,7 +296,6 @@ class TitleState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-		
 		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
 
 		if(!closedState) {
