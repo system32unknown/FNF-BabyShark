@@ -197,7 +197,8 @@ class ChartingState extends MusicBeatState
 				speed: 1,
 				stage: 'stage',
 				validScore: false,
-				mania: Note.defaultMania
+				mania: Note.defaultMania,
+				screwYou: null
 			};
 			addSection();
 			PlayState.SONG = _song;
@@ -365,6 +366,7 @@ class ChartingState extends MusicBeatState
 	var UI_songTitle:FlxUIInputText;
 	var noteSkinInputText:FlxUIInputText;
 	var noteSplashesInputText:FlxUIInputText;
+	var screwYouInputText:FlxUIInputText;
 	var stageDropDown:FlxUIDropDownMenuCustom;
 	var sliderRate:FlxUISlider;
 	function addSongUI():Void
@@ -548,7 +550,7 @@ class ChartingState extends MusicBeatState
 		}
 		currentDifficultyName = CoolUtil.difficulties[PlayState.storyDifficulty];
 
-		var difficultyDropDown = new FlxUIDropDownMenuCustom(stageDropDown.x, gfVersionDropDown.y, FlxUIDropDownMenuCustom.makeStrIdLabelArray(difficulties, true), function (difficulty:String) {
+		var difficultyDropDown = new FlxUIDropDownMenuCustom(stageDropDown.x, gfVersionDropDown.y, FlxUIDropDownMenuCustom.makeStrIdLabelArray(difficulties, true), function(difficulty:String) {
 			var newDiff = difficulties[Std.parseInt(difficulty)];
 			if (newDiff != currentDifficultyName) {
 				openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
@@ -560,6 +562,9 @@ class ChartingState extends MusicBeatState
 		});
 		difficultyDropDown.selectedLabel = currentDifficultyName;
 		blockPressWhileScrolling.push(difficultyDropDown);
+
+		screwYouInputText = new FlxUIInputText(difficultyDropDown.x, player2DropDown.y - 2, Math.floor(difficultyDropDown.width), _song.screwYou, 8);
+		blockPressWhileTypingOn.push(screwYouInputText);
 
 		var skin = PlayState.SONG.arrowSkin;
 		if (skin == null) skin = '';
@@ -600,6 +605,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(reloadNotesButton);
 		tab_group_song.add(noteSkinInputText);
 		tab_group_song.add(noteSplashesInputText);
+		tab_group_song.add(screwYouInputText);
 		tab_group_song.add(new FlxText(stepperBPM.x, stepperBPM.y - 15, 0, 'Song BPM:'));
 		tab_group_song.add(new FlxText(stepperSpeed.x, stepperSpeed.y - 15, 0, 'Song Speed:'));
 		tab_group_song.add(new FlxText(stepperMania.x, stepperMania.y - 15, 0, 'Mania:'));
@@ -608,6 +614,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(new FlxText(player1DropDown.x, player1DropDown.y - 15, 0, 'P1 (BF):'));
 		tab_group_song.add(new FlxText(difficultyDropDown.x, difficultyDropDown.y - 15, 0, 'Difficulty:'));
 		tab_group_song.add(new FlxText(stageDropDown.x, stageDropDown.y - 15, 0, 'Stage:'));
+		tab_group_song.add(new FlxText(screwYouInputText.x, screwYouInputText.y - 15, 0, 'Screw You Text:'));
 		tab_group_song.add(new FlxText(noteSkinInputText.x, noteSkinInputText.y - 15, 0, 'Note Texture:'));
 		tab_group_song.add(new FlxText(noteSplashesInputText.x, noteSplashesInputText.y - 15, 0, 'Note Splashes Texture:'));
 		tab_group_song.add(player2DropDown);
@@ -1391,6 +1398,10 @@ class ChartingState extends MusicBeatState
 		camPos.x = -80 + gWidth;
 		strumLine.width = gWidth;
 		rightIcon.x = gWidth / 2 + GRID_SIZE * 2;
+
+		if (screwYouInputText.text == null || screwYouInputText.text ==  '')
+			_song.screwYou = null;
+		else _song.screwYou = screwYouInputText.text;
 
 		if (FlxG.sound.music.time < 0) {
 			FlxG.sound.music.pause();

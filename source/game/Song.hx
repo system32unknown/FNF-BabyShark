@@ -29,6 +29,7 @@ typedef SwagSong = {
 	var stage:String;
 
 	var mania:Null<Int>;
+	var screwYou:String;
 
 	var arrowSkin:String;
 	var splashSkin:String;

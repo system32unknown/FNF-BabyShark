@@ -202,6 +202,8 @@ class PlayState extends MusicBeatState
 	public var botplaySine:Float = 0;
 	public var botplayTxt:FlxText;
 
+	var screwYouTxt:FlxText;
+
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
 
@@ -1187,6 +1189,17 @@ class PlayState extends MusicBeatState
 		songNameText.scrollFactor.set();
 		songNameText.borderSize = 1;
 		add(songNameText);
+
+		if(SONG.screwYou != null) {
+			screwYouTxt = new FlxText(2, textYPos, 0, SONG.screwYou, 16);
+			screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			screwYouTxt.scrollFactor.set();
+			screwYouTxt.borderSize = 1;
+			scoreTxt.visible = !hideHud;
+			screwYouTxt.cameras = [camHUD];
+			songNameText.y -= 20;
+			add(screwYouTxt);
+		}
 
 		var engineName:Array<String> = CoolUtil.getSpilttext(Paths.txt('EngineList'));
 		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (PE " + MainMenuState.psychEngineVersion +")", 16);
@@ -4150,6 +4163,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	// FOR LUA
 	public function ChangeAllFonts(font:String) {
 		scoreTxt.font = font;
 		botplayTxt.font = font;
@@ -4159,6 +4173,8 @@ class PlayState extends MusicBeatState
 		engineText.font = font;
 		for (dakey in daKeyText)
 			dakey.font = font;
+		if(SONG.screwYou != null)
+			screwYouTxt.font = font;
 	}
 
 	private function UpdateScoreText() {
@@ -4200,7 +4216,7 @@ class PlayState extends MusicBeatState
 
 		var rating:FlxSprite = new FlxSprite();
 		var timing:FlxSprite = new FlxSprite();
-		var score:Int = 350;
+		var score:Int = 500;
 
 		//tryna do MS based judgment due to popular demand
 		var daRating:Rating = Conductor.judgeNote(note, noteDiff / playbackRate);
@@ -4228,9 +4244,8 @@ class PlayState extends MusicBeatState
 				totalPlayed++;
 				RecalculateRating(false);
 			}
-		}
-		else if (cpuControlled) {
-			botScore += 350;
+		} else if (cpuControlled) {
+			botScore += score;
 			if(!note.ratingDisabled) {
 				songHits++;
 				totalPlayed++;
@@ -5222,7 +5237,7 @@ class PlayState extends MusicBeatState
 		super.beatHit();
 
 		if (curBeat % 4 == 0) {
-			timeTxt.scale.set(1.075, 1.075);
+			timeTxt.scale.set(1.1, 1.1);
 			FlxTween.tween(timeTxt.scale, {x: 1, y: 1}, 0.2 * playbackRate, {ease: FlxEase.linear});
 		}
 
