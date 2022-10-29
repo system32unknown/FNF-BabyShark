@@ -19,6 +19,7 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxGradient;
 import lime.app.Application;
 import openfl.Assets;
+import haxe.Json;
 import data.WeekData;
 import utils.PlayerSettings;
 import utils.ClientPrefs;
@@ -27,8 +28,18 @@ import utils.MathUtil;
 import game.Highscore;
 import game.Conductor;
 import states.MainMenuState;
+#if sys
+import sys.FileSystem;
+#end
 
 using StringTools;
+
+typedef TitleData = {
+	titlex:Float,
+	gfx:Float,
+	gfy:Float,
+	bpm:Int
+}
 
 class TitleState extends MusicBeatState
 {
@@ -49,9 +60,12 @@ class TitleState extends MusicBeatState
 	var titleTextAlphas:Array<Float> = [1, .64];
 
 	var curWacky:Array<String> = [];
+	var titleJSON:TitleData = null;
 
 	var gradientBar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 1, 0xFF0F5FFF);
 	var gradtimer:Float = 0;
+
+	var startingTween:FlxTween;
 
 	override public function create():Void
 	{
@@ -79,6 +93,8 @@ class TitleState extends MusicBeatState
 		FlxG.save.bind('funkin', 'altertoriel');
 		ClientPrefs.loadPrefs();
 		Highscore.load();
+
+		titleJSON = Json.parse(Paths.getTextFromFile('images/DaveDanceTitle.json'));
 
 		if (!initialized) {
 			if(FlxG.save.data != null && FlxG.save.data.fullscreen) {
@@ -116,6 +132,8 @@ class TitleState extends MusicBeatState
 		}
 	}
 
+	var daveDance:FlxSprite;
+	var danceLeft:Bool = false;
 	function startIntro() {
 		if (!initialized) {
 			if (FlxG.sound.music == null) {
@@ -123,7 +141,7 @@ class TitleState extends MusicBeatState
 			}
 		}
 
-		Conductor.changeBPM(150);
+		Conductor.changeBPM(titleJSON.bpm);
 		persistentUpdate = true;
 
 		var bg:FlxSprite = new FlxSprite();
@@ -137,11 +155,18 @@ class TitleState extends MusicBeatState
 		titlebg.screenCenter(X);
 		add(titlebg);
 
+		daveDance = new FlxSprite(100, 20);
+		daveDance.frames = Paths.getSparrowAtlas('DaveDanceTitle');
+		daveDance.animation.addByIndices('danceTitle', 'danceTitle', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "", 24, false);
+		daveDance.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		add(daveDance);
+
 		titleLogo.loadGraphic(Paths.image('FinalLogo'));
 		titleLogo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		titleLogo.setGraphicSize(Std.int(titleLogo.width * 1.5));
 		titleLogo.updateHitbox();
 		titleLogo.screenCenter(X);
+		trace(titleLogo.x);
 		add(titleLogo);
 
 		titleText = new FlxSprite(125, 576);
@@ -232,7 +257,11 @@ class TitleState extends MusicBeatState
 			}
 			
 			if (pressedEnter) {
-				FlxTween.tween(titleLogo, {y: -700}, 1, {ease: FlxEase.backIn});
+				if (startingTween.active) {
+					startingTween.cancel();
+					startingTween = null;
+					FlxTween.tween(titleLogo, {y: -700}, 1, {ease: FlxEase.backIn});
+				}
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
 				
@@ -298,6 +327,11 @@ class TitleState extends MusicBeatState
 		super.beatHit();
 		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
 
+		if(daveDance != null) {
+			danceLeft = !danceLeft;
+			daveDance.animation.play('danceTitle');
+		}
+
 		if(!closedState) {
 			sickBeats++;
 			switch (sickBeats)
@@ -358,7 +392,7 @@ class TitleState extends MusicBeatState
 	     	gradientBar.scale.y = 0;
 	    	gradientBar.updateHitbox();
 	    	add(gradientBar);
-	     	FlxTween.tween(gradientBar, {'scale.y': 1.3}, 4, {ease: FlxEase.quadInOut});
+			startingTween = FlxTween.tween(gradientBar, {'scale.y': 1.3}, 4, {ease: FlxEase.quadInOut});
 
 			remove(credGroup);
 			FlxG.camera.flash(FlxColor.WHITE, 4);

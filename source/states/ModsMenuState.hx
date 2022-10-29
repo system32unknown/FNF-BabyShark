@@ -161,7 +161,7 @@ class ModsMenuState extends MusicBeatState
 		startX -= 100;
 		buttonTop = new FlxButton(startX, 0, "TOP", function() {
 			var doRestart:Bool = (mods[0].restart || mods[curSelected].restart);
-			for (i in 0...curSelected)  { //so it shifts to the top instead of replacing the top one
+			for (i in 0...curSelected) { //so it shifts to the top instead of replacing the top one
 				moveMod(-1, true);
 			}
 

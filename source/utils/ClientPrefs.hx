@@ -46,7 +46,6 @@ class ClientPrefs {
 		'ghostTapping' => true,
 		'HealthTypes' => 'Psych',
 		'timeBarType' => 'Time Left',
-		'ScoreTextStyle' => 'BabyShark',
 		'scoreZoom' => true,
 		'noReset' => false,
 		'AltDiscordImg' => false,

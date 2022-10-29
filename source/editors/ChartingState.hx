@@ -99,7 +99,8 @@ class ChartingState extends MusicBeatState
 		['Change Character Icon', "Value 1: Icon to change (Dad, BF)\nValue 2: New character's icon name"],
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
 		['Set Property', "Value 1: Variable name\nValue 2: New value"],
-		['Change Mania', "Value 1: The new mania value (min: " + Note.minMania + "; max: " + Note.maxMania + ")\nValue 2: Skip old strum fade tween\nPut 'true' to skip it, anything else or blank to not."]
+		['Change Mania', "Value 1: The new mania value (min: " + Note.minMania + "; max: " + Note.maxMania + ")\nValue 2: Skip old strum fade tween\nPut 'true' to skip it, anything else or blank to not."],
+		['\"Screw you!\" Text Change', "Value 1: Text\n\nChanges the \"Screw you!\" text."]
 	];
 
 	var _file:FileReference;

@@ -272,8 +272,6 @@ class PlayState extends MusicBeatState
 
 	var allNotesMs:Float = 0;
 	var averageMs:Float = 0;
-
-	public var divider:String = "|";
 	
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
@@ -287,6 +285,8 @@ class PlayState extends MusicBeatState
 
 	var songNameText:FlxText;
 	var engineText:FlxText;
+
+	var textYPos:Float = FlxG.height * .9 + 52;
 
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
@@ -1152,9 +1152,6 @@ class PlayState extends MusicBeatState
 
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		switch (ClientPrefs.getPref('ScoreTextStyle')) {
-			case 'Psych': scoreTxt.size = 20;
-		}
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1;
 		scoreTxt.visible = !hideHud;
@@ -1181,8 +1178,6 @@ class PlayState extends MusicBeatState
 		if (downScroll) {
 			botplayTxt.y = timeBarBG.y - 78;
 		}
-
-		var textYPos:Float = FlxG.height * .9 + 52;
 
 		songNameText = new FlxText(2, textYPos, 0, SONG.song + " - " + storyDifficultyText + (playbackRate != 1 ? ' ($playbackRate' + 'x)' : ''), 16);
 		songNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -2237,8 +2232,7 @@ class PlayState extends MusicBeatState
 		insert(members.indexOf(dadGroup), obj);
 	}
 
-	public function clearNotesBefore(time:Float)
-	{
+	public function clearNotesBefore(time:Float) {
 		var i:Int = unspawnNotes.length - 1;
 		while (i >= 0) {
 			var daNote:Note = unspawnNotes[i];
@@ -3833,6 +3827,12 @@ class PlayState extends MusicBeatState
 				}
 				reloadHealthBarColors();
 
+			case '\"Screw you!\" Text Change':
+				if (screwYouTxt.text != null)
+					screwYouTxt.text = value1;
+				if(screwYouTxt.text == null || screwYouTxt.text == "")
+					songNameText.y = textYPos;
+				else songNameText.y = textYPos - 20;
 			case 'BG Freaks Expression':
 				if(bgGirls != null) bgGirls.swapDanceType();
 
@@ -4171,34 +4171,22 @@ class PlayState extends MusicBeatState
 		timeTxt.font = font;
 		songNameText.font = font;
 		engineText.font = font;
+		engineText.x = FlxG.width - engineText.width;
 		for (dakey in daKeyText)
 			dakey.font = font;
 		if(SONG.screwYou != null)
 			screwYouTxt.font = font;
 	}
 
+	var divider:String = "|";
 	private function UpdateScoreText() {
 		var Accuracy:Float = MathUtil.floorDecimal(ratingPercent * 100, 2);
 		var Ranks:String = CoolUtil.GenerateLetterRank(Accuracy);
-		switch (ClientPrefs.getPref('ScoreTextStyle')) {
-			case 'Kade':
-				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps(Max:$maxNPS) ' + divider : '')
-				+ ' Score:' + (!cpuControlled ? songScore : botScore) + ' '
-				+ divider + ' Combo Breaks:' + songMisses + ' '
-				+ divider + ' Accuracy:' + '$Accuracy%' + ' '
-				+ divider + ' ($ratingFC) $Ranks';
-			case 'Psych':
-				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS: $nps ($maxNPS) ' + divider : '')
-				+ ' Score: ' + (!cpuControlled ? songScore : botScore) + ' '
-				+ divider + ' Misses: ' + songMisses + ' '
-				+ divider + ' Rating: $ratingName ($Accuracy%) - $ratingFC';
-			case 'BabyShark':
-				scoreTxt.text = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) ' + divider : '')
-				+ (!cpuControlled ? ' Score:' + songScore : ' Bot Score:' + botScore)
-				+ (!cpuControlled ? ' ' + divider + ' Misses:' + songMisses + ' ' : ' ')
-				+ divider + ' Acc.:' + '$Accuracy%'
-				+ (ratingName != '?' ? ' [$ratingName, $Ranks] - $ratingFC' : ' [N/A, N/A] - ?');
-		}
+		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) ' : '');
+		tempText += divider + (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
+		tempText += (!cpuControlled ? '$divider Misses:$songMisses ' : '');
+		tempText += '$divider Acc.:$Accuracy%' + (ratingName != '?' ? ' [$ratingName, $Ranks] - $ratingFC' : ' [?, ?] - ?');
+		scoreTxt.text = tempText;
 	}
 
 	private function popUpScore(note:Note = null):Void {

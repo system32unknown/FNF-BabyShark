@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="DaveDanceTitle.png">
+	<SubTexture name="danceTitle0000" x="0" y="0" width="480" height="584" frameX="-2" frameY="-12" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0001" x="481" y="0" width="482" height="584" frameX="0" frameY="-12" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0002" x="964" y="0" width="482" height="585" frameX="0" frameY="-11" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0003" x="1447" y="0" width="482" height="585" frameX="0" frameY="-11" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0004" x="1447" y="0" width="482" height="585" frameX="0" frameY="-11" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0005" x="0" y="586" width="479" height="588" frameX="-2" frameY="-8" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0006" x="0" y="586" width="479" height="588" frameX="-2" frameY="-8" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0007" x="480" y="586" width="477" height="592" frameX="-4" frameY="-4" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0008" x="480" y="586" width="477" height="592" frameX="-4" frameY="-4" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0009" x="958" y="586" width="477" height="596" frameX="-3" frameY="0" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0010" x="958" y="586" width="477" height="596" frameX="-3" frameY="0" frameWidth="482" frameHeight="596"/>
+	<SubTexture name="danceTitle0011" x="1436" y="586" width="478" height="596" frameX="-2" frameY="0" frameWidth="482" frameHeight="596"/>
+</TextureAtlas>
