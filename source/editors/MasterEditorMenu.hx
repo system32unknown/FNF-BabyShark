@@ -73,10 +73,8 @@ class MasterEditorMenu extends MusicBeatState {
 		directoryTxt.scrollFactor.set();
 		add(directoryTxt);
 		
-		for (folder in Paths.getModDirectories()) {
-			directories.push(folder);
-		}
-
+		directories = [for (folder in Paths.getModDirectories()) folder];
+		
 		var found:Int = directories.indexOf(Paths.currentModDirectory);
 		if(found > -1) curDirectory = found;
 		changeDirectory();
@@ -89,19 +87,11 @@ class MasterEditorMenu extends MusicBeatState {
 
 	override function update(elapsed:Float)
 	{
-		if (controls.UI_UP_P) {
-			changeSelection(-1);
-		}
-		if (controls.UI_DOWN_P) {
-			changeSelection(1);
-		}
+		if (controls.UI_UP_P) changeSelection(-1);
+		if (controls.UI_DOWN_P) changeSelection(1);
 		#if MODS_ALLOWED
-		if(controls.UI_LEFT_P) {
-			changeDirectory(-1);
-		}
-		if(controls.UI_RIGHT_P) {
-			changeDirectory(1);
-		}
+		if(controls.UI_LEFT_P) changeDirectory(-1);
+		if(controls.UI_RIGHT_P) changeDirectory(1);
 		#end
 
 		if (controls.BACK) {
@@ -132,9 +122,7 @@ class MasterEditorMenu extends MusicBeatState {
 			item.alpha = 0.6;
 
 			if (item.targetY == 0)
-			{
 				item.alpha = 1;
-			}
 		}
 		super.update(elapsed);
 	}
@@ -166,8 +154,7 @@ class MasterEditorMenu extends MusicBeatState {
 		WeekData.setDirectoryFromWeek();
 		if(directories[curDirectory] == null || directories[curDirectory].length < 1)
 			directoryTxt.text = '< No Mod Directory Loaded >';
-		else
-		{
+		else {
 			Paths.currentModDirectory = directories[curDirectory];
 			directoryTxt.text = '< Loaded Mod Directory: ' + Paths.currentModDirectory + ' >';
 		}

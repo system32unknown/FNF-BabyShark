@@ -192,12 +192,7 @@ class EditorPlayState extends MusicBeatState
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
 		
-		var noteData:Array<SwagSection>;
-
-		// NEW SHIT
-		noteData = songData.notes;
-
-		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
+		var noteData:Array<SwagSection> = songData.notes;
 
 		for (section in noteData) {
 			for (songNotes in section.sectionNotes) {
@@ -267,7 +262,6 @@ class EditorPlayState extends MusicBeatState
 					}
 				}
 			}
-			daBeats += 1;
 		}
 
 		unspawnNotes.sort(sortByShit);

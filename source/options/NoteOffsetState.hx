@@ -139,10 +139,7 @@ class NoteOffsetState extends MusicBeatState
 		lateEarly.antialiasing = globalAntialiasing;
 		add(lateEarly);
 
-		var seperatedScore:Array<Int> = [];
-		for (i in 0...3) {
-			seperatedScore.push(FlxG.random.int(0, 9));
-		}
+		var seperatedScore:Array<Int> = [for (_ in 0...3) FlxG.random.int(0, 9)];
 
 		var daLoop:Int = 0;
 		for (i in seperatedScore) {

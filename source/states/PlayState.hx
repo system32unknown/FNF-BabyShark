@@ -2422,8 +2422,7 @@ class PlayState extends MusicBeatState
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-				else
-					oldNote = null;
+				else oldNote = null;
 
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
 				swagNote.mustPress = gottaHitNote;

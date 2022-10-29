@@ -305,8 +305,7 @@ class AlphaCharacter extends FlxSprite
 		if(allLetters.exists(lowercase)) curLetter = allLetters.get(lowercase);
 
 		var suffix:String = '';
-		if(!bold)
-		{
+		if(!bold) {
 			if(isTypeAlphabet(lowercase)) {
 				if(lowercase != character) suffix = ' uppercase';
 				else suffix = ' lowercase';
@@ -319,8 +318,7 @@ class AlphaCharacter extends FlxSprite
 			}
 		} else {
 			suffix = ' bold';
-			if(curLetter != null && curLetter.offsetsBold != null)
-			{
+			if(curLetter != null && curLetter.offsetsBold != null) {
 				letterOffset[0] = curLetter.offsetsBold[0];
 				letterOffset[1] = curLetter.offsetsBold[1];
 			}

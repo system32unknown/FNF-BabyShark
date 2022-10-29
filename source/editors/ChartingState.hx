@@ -778,7 +778,6 @@ class ChartingState extends MusicBeatState
 			for (note in _song.notes[daSec - value].sectionNotes) {
 				if(check_notesSec.checked) {
 					var strum = note[0] + Conductor.stepCrochet * (getSectionBeats(daSec) * 4 * value);
-
 					var copiedNote:Array<Dynamic> = [strum, note[1], note[2], note[3]];
 					_song.notes[daSec].sectionNotes.push(copiedNote);
 				}
@@ -1539,8 +1538,7 @@ class ChartingState extends MusicBeatState
 			}
 		}
 
-		if (!blockInput)
-		{
+		if (!blockInput) {
 			if (FlxG.keys.justPressed.ESCAPE) {
 				autosaveSong();
 				LoadingState.loadAndSwitchState(new editors.EditorPlayState(sectionStartTime(), _song.mania));
@@ -1594,8 +1592,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 
-			if (FlxG.keys.justPressed.SPACE)
-			{
+			if (FlxG.keys.justPressed.SPACE) {
 				if (FlxG.sound.music.playing) {
 					FlxG.sound.music.pause();
 					if(vocals != null) vocals.pause();
@@ -1648,9 +1645,9 @@ class ChartingState extends MusicBeatState
 
 				var daTime:Float = 700 * FlxG.elapsed * holdingShift;
 
-				if (FlxG.keys.pressed.W) {
+				if (FlxG.keys.pressed.W)
 					FlxG.sound.music.time -= daTime;
-				} else FlxG.sound.music.time += daTime;
+				else FlxG.sound.music.time += daTime;
 
 				if(vocals != null) {
 					vocals.pause();
@@ -1659,8 +1656,7 @@ class ChartingState extends MusicBeatState
 			}
 
 			if(!vortex) {
-				if (FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN  )
-				{
+				if (FlxG.keys.justPressed.UP || FlxG.keys.justPressed.DOWN) {
 					FlxG.sound.music.pause();
 					updateCurStep();
 					var beat:Float = curDecBeat;
@@ -2483,8 +2479,7 @@ class ChartingState extends MusicBeatState
 	function getEventName(names:Array<Dynamic>):String {
 		var retStr:String = '';
 		var addedOne:Bool = false;
-		for (i in 0...names.length)
-		{
+		for (i in 0...names.length) {
 			if(addedOne) retStr += ', ';
 			retStr += names[i][0];
 			addedOne = true;
@@ -2604,9 +2599,7 @@ class ChartingState extends MusicBeatState
 			});
 		}
 
-		if (!delnote) {
-			addNote(cs, d, style);
-		}
+		if (!delnote) addNote(cs, d, style);
 	}
 
 	private function addNote(strum:Null<Float> = null, data:Null<Int> = null, type:Null<Int> = null):Void
@@ -2661,20 +2654,17 @@ class ChartingState extends MusicBeatState
 		//updateGrid();
 	}
 
-	function getStrumTime(yPos:Float, doZoomCalc:Bool = true):Float
-	{
+	function getStrumTime(yPos:Float, doZoomCalc:Bool = true):Float {
 		var leZoom:Float = zoomList[curZoom];
 		if(!doZoomCalc) leZoom = 1;
 		return FlxMath.remapToRange(yPos, gridBG.y, gridBG.y + gridBG.height * leZoom, 0, 16 * Conductor.stepCrochet);
 	}
-	function getYfromStrum(strumTime:Float, doZoomCalc:Bool = true):Float
-	{
+	function getYfromStrum(strumTime:Float, doZoomCalc:Bool = true):Float {
 		var leZoom:Float = zoomList[curZoom];
 		if(!doZoomCalc) leZoom = 1;
 		return FlxMath.remapToRange(strumTime, 0, 16 * Conductor.stepCrochet, gridBG.y, gridBG.y + gridBG.height * leZoom);
 	}
-	function getYfromStrumNotes(strumTime:Float, beats:Float):Float
-	{
+	function getYfromStrumNotes(strumTime:Float, beats:Float):Float {
 		var value:Float = strumTime / (beats * 4 * Conductor.stepCrochet);
 		return GRID_SIZE * beats * 4 * zoomList[curZoom] * value + gridBG.y;
 	}
@@ -2710,8 +2700,7 @@ class ChartingState extends MusicBeatState
 						try {
 							PlayState.SONG = Song.loadFromJson(songLower + "-" + diff, songLower);
 							success = true;
-						}
-						catch(e) {}
+						} catch(e) {}
 					}
 					if (!success) {
 						PlayState.SONG = Song.loadFromJson(songLower, songLower);
@@ -2730,9 +2719,7 @@ class ChartingState extends MusicBeatState
 	}
 
 	function autosaveSong():Void {
-		FlxG.save.data.autosave = Json.stringify({
-			"song": _song
-		});
+		FlxG.save.data.autosave = Json.stringify({"song": _song});
 		FlxG.save.flush();
 	}
 
@@ -2743,14 +2730,10 @@ class ChartingState extends MusicBeatState
 
 	private function saveLevel() {
 		if(_song.events != null && _song.events.length > 1) _song.events.sort(sortByTime);
-		var json = {
-			"song": _song
-		};
-
+		var json = {"song": _song};
 		var data:String = Json.stringify(json, "\t");
 
-		if ((data != null) && (data.length > 0))
-		{
+		if (data != null && data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
@@ -2784,19 +2767,14 @@ class ChartingState extends MusicBeatState
 		return path;
 	}
 
-	function sortByTime(Obj1:Array<Dynamic>, Obj2:Array<Dynamic>):Int
-	{
+	function sortByTime(Obj1:Array<Dynamic>, Obj2:Array<Dynamic>):Int {
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1[0], Obj2[0]);
 	}
 
 	private function saveEvents() {
 		if(_song.events != null && _song.events.length > 1) _song.events.sort(sortByTime);
-		var eventsSong:Dynamic = {
-			events: _song.events
-		};
-		var json = {
-			"song": eventsSong
-		}
+		var eventsSong:Dynamic = {events: _song.events};
+		var json = {"song": eventsSong}
 
 		var data:String = Json.stringify(json, "\t");
 		if ((data != null) && (data.length > 0)) {

@@ -1943,7 +1943,7 @@ class FunkinLua {
 			var objectsArray:Array<FlxSprite> = [];
 			for (i in 0...namesArray.length) {
 				var real = PlayState.instance.getLuaObject(namesArray[i]);
-				if(real!=null) {
+				if(real != null) {
 					objectsArray.push(real);
 				} else {
 					objectsArray.push(Reflect.getProperty(getInstance(), namesArray[i]));

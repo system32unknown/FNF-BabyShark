@@ -81,8 +81,8 @@ class CoolUtil
 		var maxCount = 0;
 		var maxKey:Int = 0;//after the loop this will store the max color
 		countByColor[flixel.util.FlxColor.BLACK] = 0;
-		for(key in countByColor.keys()) {
-			if(countByColor[key] >= maxCount) {
+		for (key in countByColor.keys()) {
+			if (countByColor[key] >= maxCount) {
 				maxCount = countByColor[key];
 				maxKey = key;
 			}
@@ -91,7 +91,7 @@ class CoolUtil
 	}
 
 	public static function numberArray(max:Int, ?min = 0):Array<Int> {
-		return [for(i in min...max) i];
+		return [for (i in min...max) i];
 	}
 
 	//uhhhh does this even work at all? i'm starting to doubt

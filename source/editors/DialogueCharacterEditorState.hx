@@ -337,11 +337,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 	}
 
 	function reloadAnimationsDropDown() {
-		animationArray = [];
-		for (anim in character.jsonFile.animations) {
-			animationArray.push(anim.anim);
-		}
-
+		animationArray = [for (anim in character.jsonFile.animations) anim.anim];
 		if(animationArray.length < 1) animationArray = [''];
 		animationDropDown.setData(FlxUIDropDownMenuCustom.makeStrIdLabelArray(animationArray, true));
 	}

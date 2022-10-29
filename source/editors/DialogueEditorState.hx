@@ -207,7 +207,6 @@ class DialogueEditorState extends MusicBeatState
 
 		switch(character.jsonFile.dialogue_pos) {
 			case 'right': character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;
-			
 			case 'center':
 				character.x = FlxG.width / 2;
 				character.x -= character.width / 2;

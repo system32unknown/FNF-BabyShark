@@ -155,7 +155,7 @@ class TitleState extends MusicBeatState
 		titlebg.screenCenter(X);
 		add(titlebg);
 
-		daveDance = new FlxSprite(100, 20);
+		daveDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
 		daveDance.frames = Paths.getSparrowAtlas('DaveDanceTitle');
 		daveDance.animation.addByIndices('danceTitle', 'danceTitle', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "", 24, false);
 		daveDance.antialiasing = ClientPrefs.getPref('globalAntialiasing');
@@ -164,9 +164,8 @@ class TitleState extends MusicBeatState
 		titleLogo.loadGraphic(Paths.image('FinalLogo'));
 		titleLogo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		titleLogo.setGraphicSize(Std.int(titleLogo.width * 1.5));
+		titleLogo.x = titleJSON.titlex;
 		titleLogo.updateHitbox();
-		titleLogo.screenCenter(X);
-		trace(titleLogo.x);
 		add(titleLogo);
 
 		titleText = new FlxSprite(125, 576);
@@ -247,9 +246,7 @@ class TitleState extends MusicBeatState
 		if (initialized && !transitioning && skippedIntro) {
 			if (newTitle && !pressedEnter) {
 				var timer:Float = titleTimer;
-				if (timer >= 1)
-					timer = (-timer) + 2;
-				
+				if (timer >= 1) timer = -timer + 2;
 				timer = FlxEase.quadInOut(timer);
 				
 				titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], timer);
@@ -257,7 +254,7 @@ class TitleState extends MusicBeatState
 			}
 			
 			if (pressedEnter) {
-				if (startingTween.active) {
+				if (startingTween != null) {
 					startingTween.cancel();
 					startingTween = null;
 					FlxTween.tween(titleLogo, {y: -700}, 1, {ease: FlxEase.backIn});
@@ -325,6 +322,7 @@ class TitleState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
+		
 		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
 
 		if(daveDance != null) {
@@ -334,8 +332,7 @@ class TitleState extends MusicBeatState
 
 		if(!closedState) {
 			sickBeats++;
-			switch (sickBeats)
-			{
+			switch (sickBeats) {
 				case 1:
 					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
