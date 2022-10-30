@@ -73,8 +73,7 @@ class MasterEditorMenu extends MusicBeatState {
 		directoryTxt.scrollFactor.set();
 		add(directoryTxt);
 		
-		directories = [for (folder in Paths.getModDirectories()) folder];
-		
+		for (folder in Paths.getModDirectories()) directories.push(folder);
 		var found:Int = directories.indexOf(Paths.currentModDirectory);
 		if(found > -1) curDirectory = found;
 		changeDirectory();
