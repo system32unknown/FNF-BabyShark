@@ -25,6 +25,7 @@ import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import haxe.Json;
+
 import utils.CoolUtil;
 import utils.ClientPrefs;
 import backgrounds.BGSprite;
@@ -1148,8 +1149,7 @@ class CharacterEditorState extends MusicBeatState
 
 	var _file:FileReference;
 
-	function onSaveComplete(_):Void
-	{
+	function onSaveComplete(_):Void {
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -1160,8 +1160,7 @@ class CharacterEditorState extends MusicBeatState
 	/**
 		* Called when the save file dialog is cancelled.
 	**/
-	function onSaveCancel(_):Void
-	{
+	function onSaveCancel(_):Void {
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -1171,8 +1170,7 @@ class CharacterEditorState extends MusicBeatState
 	/**
 	Called if there is an error while saving the gameplay recording.
 	**/
-	function onSaveError(_):Void
-	{
+	function onSaveError(_):Void {
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -1199,8 +1197,7 @@ class CharacterEditorState extends MusicBeatState
 
 		var data:String = Json.stringify(json, "\t");
 
-		if (data.length > 0)
-		{
+		if (data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);

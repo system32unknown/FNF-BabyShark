@@ -19,18 +19,19 @@ typedef EventNote = {
 class Note extends FlxSprite
 {
 	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-	public static var scales:Array<Float> = [0.9, 0.85, 0.8, 0.7, 0.66, 0.6, 0.55, 0.50, 0.46, 0.39, 0.36];
-	public static var lessX:Array<Int> = [0, 0, 0, 0, 0, 8, 7, 8, 8, 7, 6];
-	public static var separator:Array<Int> = [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4];
-	public static var xtra:Array<Int> = [150, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-	public static var posRest:Array<Int> = [0, 0, 0, 0, 25, 32, 46, 52, 60, 40, 30];
-	public static var gridSizes:Array<Int> = [40, 40, 40, 40, 40, 40, 40, 40, 40, 35, 30];
-
-	public static var offsets:Map<Int, Array<Int>> = [
+	public static var scales:Array<Float> = EKData.scales;
+	public static var lessX:Array<Int> = EKData.lessX;
+	public static var separator:Array<Int> = EKData.noteSep;
+	public static var xtra:Array<Float> = EKData.offsetX;
+	public static var posRest:Array<Float> = EKData.restPosition;
+	public static var gridSizes:Array<Int> = EKData.gridSizes;
+	public static var noteSplashOffsets:Map<Int, Array<Int>> = [
 		0 => [20, 10],
 		9 => [10, 20]
 	];
+	public static var noteSplashScales:Array<Float> = EKData.splashScales;
 
+	public static var ammo:Array<Int> = EKData.gun;
 	public static var minMania:Int = 0;
 	public static var maxMania:Int = 9;
 	public static var xmlMax:Int = 17; // This specifies the max of the splashes can go
@@ -40,9 +41,7 @@ class Note extends FlxSprite
 
 	public static var pixelNotesDivisionValue:Int = 10;
 	public static var keysShit:Map<Int, Map<String, Dynamic>> = EKData.keysShit;
-
-	public static var ammo:Array<Int> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-	public static var pixelScales:Array<Float> = [1.2, 1.15, 1.1, 1, 0.9, 0.83, 0.8, 0.74, 0.7, 0.6, 0.55];
+	public static var pixelScales:Array<Float> = EKData.pixelScales;
 	public var mania:Int = 1;
 
 	public var strumTime:Float = 0;
@@ -134,9 +133,8 @@ class Note extends FlxSprite
 	}
 
 	private function set_texture(value:String):String {
-		if(texture != value) {
+		if(texture != value)
 			reloadNote('', value);
-		}
 		texture = value;
 		return value;
 	}
@@ -144,8 +142,7 @@ class Note extends FlxSprite
 	private function set_noteType(value:String):String {
 		noteSplashTexture = PlayState.SONG.splashSkin;
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-		if (noteData > -1 && noteData < arrowHSV.length)
-		{
+		if (noteData > -1 && noteData < arrowHSV.length) {
 			colorSwap.hue = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][0] / 360;
 			colorSwap.saturation = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][1] / 100;
 			colorSwap.brightness = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][2] / 100;
@@ -162,11 +159,9 @@ class Note extends FlxSprite
 					colorSwap.brightness = 0;
 					lowPriority = true;
 
-					if(isSustainNote) {
+					if(isSustainNote)
 						missHealth = 0.1;
-					} else {
-						missHealth = 0.3;
-					}
+					else missHealth = 0.3;
 					hitCausesMiss = true;
 				case 'Danger Note':
 					reloadNote('DANGER');
@@ -175,11 +170,9 @@ class Note extends FlxSprite
 					colorSwap.saturation = 0;
 					colorSwap.brightness = 0;
 					noMissAnimation = true;
-					if(isSustainNote) {
+					if (isSustainNote) 
 						missHealth = 0.3;
-					} else {
-						missHealth = 0.5;
-					}
+					else missHealth = 0.5;
 					hitCausesMiss = false;
 				case 'Kill Note':
 					ignoreNote = true;
@@ -287,12 +280,12 @@ class Note extends FlxSprite
 	var lastNoteOffsetXForPixelAutoAdjusting:Float = 0;
 	public var originalHeightForCalcs:Float = 6;
 	function reloadNote(?prefix:String = '', ?texture:String = '', ?suffix:String = '') {
-		if(prefix == null) prefix = '';
-		if(texture == null) texture = '';
-		if(suffix == null) suffix = '';
+		if (prefix == null) prefix = '';
+		if (texture == null) texture = '';
+		if (suffix == null) suffix = '';
 
 		var skin:String = texture;
-		if(texture.length < 1) {
+		if (texture.length < 1) {
 			skin = PlayState.SONG.arrowSkin;
 			if(skin == null || skin.length < 1) {
 				skin = 'NOTE_assets';
@@ -340,9 +333,8 @@ class Note extends FlxSprite
 			loadNoteAnims();
 			antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		}
-		if(isSustainNote) {
+		if(isSustainNote)
 			scale.y = lastScaleY;
-		}
 		updateHitbox();
 
 		if(animName != null)
@@ -408,8 +400,7 @@ class Note extends FlxSprite
 			}
 		}
 
-		if (tooLate && !inEditor)
-		{
+		if (tooLate && !inEditor) {
 			if (alpha > 0.3)
 				alpha = 0.3;
 		}

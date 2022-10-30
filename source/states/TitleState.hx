@@ -212,13 +212,7 @@ class TitleState extends MusicBeatState
 		var fullText:String = Assets.getText(Paths.txt('introText'));
 
 		var firstArray:Array<String> = fullText.split('\n');
-		var swagGoodArray:Array<Array<String>> = [];
-
-		for (i in firstArray) {
-			swagGoodArray.push(i.split('--'));
-		}
-
-		return swagGoodArray;
+		return [for (i in firstArray) i.split('--')];
 	}
 
 	var transitioning:Bool = false;

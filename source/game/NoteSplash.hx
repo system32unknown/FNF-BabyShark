@@ -11,7 +11,7 @@ class NoteSplash extends FlxSprite
 	public var colorSwap:ColorSwap = null;
 	private var textureLoaded:String = null;
 
-	var sc:Array<Float> = [1.3, 1.2, 1.1, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4];
+	var sc:Array<Float> = Note.noteSplashScales;
 
 	public function new(x:Float = 0, y:Float = 0, ?note:Int = 0) {
 		super(x, y);
@@ -47,8 +47,8 @@ class NoteSplash extends FlxSprite
 
 		var offsets:Array<Int> = [10, 10];
 		var mania:Int = PlayState.mania;
-		if(Note.offsets.exists(mania)){
-			var oA = Note.offsets.get(mania);
+		if(Note.noteSplashOffsets.exists(mania)){
+			var oA = Note.noteSplashOffsets.get(mania);
 			offsets = [oA[0], oA[1]];
 		}
 		offset.set(offsets[0], offsets[1]);

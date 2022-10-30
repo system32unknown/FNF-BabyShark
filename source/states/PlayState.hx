@@ -4731,8 +4731,7 @@ class PlayState extends MusicBeatState
 		if (!boyfriend.stunned)
 		{
 			health -= 0.05 * healthLoss;
-			if(instakillOnMiss)
-			{
+			if(instakillOnMiss) {
 				vocals.volume = 0;
 				doDeathCheck(true);
 			}

@@ -781,16 +781,8 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @return an array with all the animations.
 	 * @since 4.11.0
 	 */
-	public function getAnimationList():Array<FlxAnimation>
-	{
-		var animList:Array<FlxAnimation> = [];
-
-		for (anims in _animations)
-		{
-			animList.push(anims);
-		}
-
-		return animList;
+	public function getAnimationList():Array<FlxAnimation> {
+		return [for (anims in _animations) anims];
 	}
 
 	/**
@@ -801,13 +793,7 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	public function getNameList():Array<String>
 	{
-		var namesList:Array<String> = [];
-		for (names in _animations.keys())
-		{
-			namesList.push(names);
-		}
-
-		return namesList;
+		return [for (names in _animations.keys()) names];
 	}
 
 	/**

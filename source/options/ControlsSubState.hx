@@ -22,7 +22,7 @@ class ControlsSubState extends MusicBeatSubstate {
 
 	private static var defaultKey:String = 'Reset to Default Keys';
 
-	var optionShit:Array<Dynamic> = Keybinds.optionShit();
+	var optionShit:Array<Dynamic> = [];
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private var grpInputs:Array<AttachedText> = [];
@@ -45,6 +45,8 @@ class ControlsSubState extends MusicBeatSubstate {
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
+
+		optionShit = Keybinds.optionShit();
 
 		var currentPage:String = "";
 		var generatedPage:Dynamic = [];

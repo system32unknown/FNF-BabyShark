@@ -243,12 +243,9 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 		var vButtons = [];
 		for (i in 0...list.length)
 		{
-			if (list[i] != null)
-			{
+			if (list[i] != null) {
 				vButtons.push(list[i].visible);
-			}
-			else
-			{
+			} else {
 				vButtons.push(false);
 			}
 		}
@@ -304,9 +301,7 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 							recycled = true; // we successfully recycled it
 						}
 					}
-				}
-				else
-				{
+				} else {
 					list = [];
 				}
 				if (!recycled)
@@ -377,9 +372,6 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 		return t;
 	}
 
-	/*public function setUIControlCallback(UIControlCallback:Bool->FlxUIDropDownMenuCustom->Void):Void {
-		_ui_control_callback = UIControlCallback;
-	}*/
 	public function changeLabelByIndex(i:Int, NewLabel:String):Void
 	{
 		var btn:FlxUIButton = getBtnByIndex(i);
@@ -400,8 +392,7 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 
 	public function getBtnByIndex(i:Int):FlxUIButton
 	{
-		if (i >= 0 && i < list.length)
-		{
+		if (i >= 0 && i < list.length) {
 			return list[i];
 		}
 		return null;
@@ -409,12 +400,9 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 
 	public function getBtnById(name:String):FlxUIButton
 	{
-		for (btn in list)
-		{
+		for (btn in list) {
 			if (btn.name == name)
-			{
 				return btn;
-			}
 		}
 		return null;
 	}
@@ -432,8 +420,7 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 					--currentScroll;
 					if(currentScroll < 0) currentScroll = 0;
 					updateButtonPositions();
-				}
-				else if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN) {
+				} else if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN) {
 					// Go down
 					currentScroll++;
 					if(currentScroll >= list.length) currentScroll = list.length-1;
@@ -498,14 +485,10 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 		showList(false);
 
 		if (callback != null)
-		{
 			callback(item.name);
-		}
 
 		if (broadcastToFlxUI)
-		{
 			FlxUI.event(CLICK_EVENT, this, item.name, params);
-		}
 	}
 
 	/**
@@ -518,11 +501,9 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 	public static function makeStrIdLabelArray(StringArray:Array<String>, UseIndexID:Bool = false):Array<StrNameLabel>
 	{
 		var strIdArray:Array<StrNameLabel> = [];
-		for (i in 0...StringArray.length)
-		{
+		for (i in 0...StringArray.length) {
 			var ID:String = StringArray[i];
-			if (UseIndexID)
-			{
+			if (UseIndexID) {
 				ID = Std.string(i);
 			}
 			strIdArray[i] = new StrNameLabel(ID, StringArray[i]);
@@ -569,13 +550,10 @@ class FlxUIDropDownHeader extends FlxUIGroup
 
 		// Background
 		if (background == null)
-		{
 			background = new FlxUI9SliceSprite(0, 0, FlxUIAssets.IMG_BOX, new Rectangle(0, 0, Width, 20), [1, 1, 14, 14]);
-		}
 
 		// Button
-		if (button == null)
-		{
+		if (button == null) {
 			button = new FlxUISpriteButton(0, 0, new FlxSprite(0, 0, FlxUIAssets.IMG_DROPDOWN));
 			button.loadGraphicSlice9([FlxUIAssets.IMG_BUTTON_THIN], 80, 20, [FlxStringUtil.toIntArray(FlxUIAssets.SLICE9_BUTTON)],
 				FlxUI9SliceSprite.TILE_NONE, -1, false, FlxUIAssets.IMG_BUTTON_SIZE, FlxUIAssets.IMG_BUTTON_SIZE);
@@ -591,9 +569,7 @@ class FlxUIDropDownHeader extends FlxUIGroup
 
 		// Text
 		if (text == null)
-		{
 			text = new FlxUIText(0, 0, Std.int(background.width));
-		}
 		text.setPosition(2, 4);
 		text.color = FlxColor.BLACK;
 

@@ -302,14 +302,10 @@ class WeekEditorState extends MusicBeatState
 			grpWeekCharacters.members[i].changeCharacter(weekFile.weekCharacters[i]);
 		}
 
-		var stringThing:Array<String> = [];
-		for (i in 0...weekFile.songs.length) {
-			stringThing.push(weekFile.songs[i][0]);
-		}
+		var stringThing:Array<String> = [for (i in 0...weekFile.songs.length) weekFile.songs[i][0]];
 
 		txtTracklist.text = '';
-		for (i in 0...stringThing.length)
-		{
+		for (i in 0...stringThing.length) {
 			txtTracklist.text += stringThing[i] + '\n';
 		}
 

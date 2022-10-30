@@ -117,10 +117,7 @@ class DialogueCharacter extends FlxSprite
 	public function playAnim(animName:String = null, playIdle:Bool = false) {
 		var leAnim:String = animName;
 		if(animName == null || !dialogueAnimations.exists(animName)) { //Anim is null, get a random animation
-			var arrayAnims:Array<String> = [];
-			for (anim in dialogueAnimations) {
-				arrayAnims.push(anim.anim);
-			}
+			var arrayAnims:Array<String> = [for (anim in dialogueAnimations) anim.anim];
 			if(arrayAnims.length > 0) {
 				leAnim = arrayAnims[FlxG.random.int(0, arrayAnims.length-1)];
 			}

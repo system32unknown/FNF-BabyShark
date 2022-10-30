@@ -75,6 +75,17 @@ class EKData {
             "sustaincolor" => ['c24b99', '00ffff', '12fa05', 'f9393f', 'cccccc', 'cccccc', 'ffff00', '8b4aff', 'ff0000', '0033ff']
         ],
 	];
+
+    public static var scales:Array<Float> = [0.9, 0.85, 0.8, 0.7, 0.66, 0.6, 0.55, 0.50, 0.46, 0.39, 0.36];
+	public static var lessX:Array<Int> = [0, 0, 0, 0, 0, 8, 7, 8, 8, 7, 6];
+    public static var noteSep:Array<Int> = [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5];
+    public static var offsetX:Array<Float> = [150, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    public static var gun:Array<Int> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    public static var restPosition:Array<Float> = [0, 0, 0, 0, 25, 32, 46, 52, 60, 40, 30];
+    public static var gridSizes:Array<Int> = [40, 40, 40, 40, 40, 40, 40, 40, 40, 35, 30];
+
+    public static var splashScales:Array<Float> = [1.3, 1.2, 1.1, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4];
+    public static var pixelScales:Array<Float> = [1.2, 1.15, 1.1, 1, 0.9, 0.83, 0.8, 0.74, 0.7, 0.6, 0.55];
 }
 
 class Keybinds
@@ -178,8 +189,7 @@ class Keybinds
         ];
     }
 
-    public static function fill():Array<Array<Dynamic>>
-    {
+    public static function fill():Array<Array<Dynamic>> {
         return [
 			[
 				ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_one1'))
