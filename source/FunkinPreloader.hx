@@ -110,6 +110,7 @@ class FunkinPreloader extends FlxBasePreloader {
     override function destroy() {
 		if (_buffer != null)
             removeChild(_buffer);
+		
 		_buffer = null;
 		_bmpBar = null;
 		_text = null;

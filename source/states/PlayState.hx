@@ -1001,8 +1001,7 @@ class PlayState extends MusicBeatState
 		gfChecknull = (gf != null ? gf.curCharacter : "gf");
 		if(dad.curCharacter == gfChecknull) {
 			dad.setPosition(GF_X, GF_Y);
-			if(gf != null)
-				gf.visible = false;
+			if(gf != null) gf.visible = false;
 		}
 
 		switch(curStage) {
@@ -1128,10 +1127,10 @@ class PlayState extends MusicBeatState
 		add(healthBarBG);
 		if(downScroll) healthBarBG.y = 0.11 * FlxG.height;
 
+		// healthBar
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, healthMax);
 		healthBar.scrollFactor.set();
-		// healthBar
 		healthBar.visible = !hideHud;
 		healthBar.alpha = healthBarAlpha;
 		add(healthBar);
@@ -1623,10 +1622,8 @@ class PlayState extends MusicBeatState
 	}
 
 	function startAndEnd() {
-		if(endingSong)
-			endSong();
-		else
-			startCountdown();
+		if(endingSong) endSong();
+		else startCountdown();
 	}
 
 	var dialogueCount:Int = 0;
@@ -3054,8 +3051,7 @@ class PlayState extends MusicBeatState
 				var cock:Date = notesHitArray[balls];
 				if (cock != null && cock.getTime() + 1000 < Date.now().getTime())
 					notesHitArray.remove(cock);
-				else
-					balls = 0;
+				else balls = 0;
 				balls--;
 			}
 			nps = notesHitArray.length;
@@ -3088,35 +3084,26 @@ class PlayState extends MusicBeatState
 			case "Vanilla": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.5)));
-			case "NewGrounds":
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.85)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.85)));
 			case "Psych":
 				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP1.scale.set(mult, mult);
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP2.scale.set(mult, mult);
-			case "PsychOld":
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, MathUtil.boundTo(1 - (elapsed * 30), 0, 1))));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, MathUtil.boundTo(1 - (elapsed * 30), 0, 1))));
 			case "Andromeda": // Stolen from Andromeda Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(0.1))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(0.1))));
-			case "Micdup": // Stolen from FNF Mic'd Up
+			case "Micdup" | "BabyShark": // Stolen from FNF Mic'd Up
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
-			case "DaveAndBambi" | "Purgatory": // Stolen from Dave And Bambi
+			case "Purgatory": // Stolen from Dave And Bambi
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.8)), Std.int(FlxMath.lerp(150, iconP1.height, 0.8)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.8)), Std.int(FlxMath.lerp(150, iconP2.height, 0.8)));
-			case "DnB30":
+			case "DaveAndBambi":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
 			case "GoldenApple": // Stolen from Dave And Bambi
 				iconP1.centerOffsets();
 				iconP2.centerOffsets();
-			case "BabyShark":
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
 			case "Custom":
 				callOnLuas('onBounceUpdate', []);
 		}
@@ -3125,12 +3112,11 @@ class PlayState extends MusicBeatState
 		iconP2.updateHitbox();
 
 		var iconOffset:Int = 26;
-
 		switch(ClientPrefs.getPref('HealthTypes')) {
 			case "Vanilla": // Stolen from Vanilla Engine
 				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
-			case "Exe": // Stolen from Sonic Exe
+			case "Exe":
 				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset) - iconP1.offset.x;
 				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset) - iconP2.offset.x;
 			case "Psych":
@@ -4168,23 +4154,28 @@ class PlayState extends MusicBeatState
 		botplayTxt.font = font;
 		judgementCounter.font = font;
 		timeTxt.font = font;
+
 		songNameText.font = font;
+		songNameText.y = textYPos;
 		engineText.font = font;
 		engineText.x = FlxG.width - engineText.width;
+		engineText.y = textYPos;
+
 		for (dakey in daKeyText)
 			dakey.font = font;
 		if(SONG.screwYou != null)
 			screwYouTxt.font = font;
+			screwYouTxt.y = textYPos;
 	}
 
-	var divider:String = "|";
+	var scoreSeparator:String = "|";
 	private function UpdateScoreText() {
 		var Accuracy:Float = MathUtil.floorDecimal(ratingPercent * 100, 2);
 		var Ranks:String = CoolUtil.GenerateLetterRank(Accuracy);
 		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) ' : '');
-		tempText += divider + (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
-		tempText += (!cpuControlled ? '$divider Misses:$songMisses ' : '');
-		tempText += '$divider Acc.:$Accuracy%' + (ratingName != '?' ? ' [$ratingName, $Ranks] - $ratingFC' : ' [?, ?] - ?');
+		tempText += scoreSeparator + (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
+		tempText += (!cpuControlled ? '$scoreSeparator Misses:$songMisses ' : '');
+		tempText += '$scoreSeparator Acc.:$Accuracy%' + (ratingName != '?' ? ' [$ratingName, $Ranks] - $ratingFC' : ' [?, ?] - ?');
 		scoreTxt.text = tempText;
 	}
 
@@ -4639,7 +4630,6 @@ class PlayState extends MusicBeatState
 		}
 		return -1;
 	}
-
 
 	private function keysArePressed():Bool {
 		for (i in 0...keysArray[mania].length) {
@@ -5236,13 +5226,13 @@ class PlayState extends MusicBeatState
 		}
 		
 		switch (ClientPrefs.getPref('IconBounceType')) {
-			case 'Vanilla' | 'Andromeda' | 'Micdup' | 'PsychOld' | 'NewGrounds':
+			case 'Vanilla' | 'Andromeda' | 'Micdup':
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 			case "Psych":
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
-			case "DaveAndBambi" | "Purgatory":
+			case "Purgatory":
 				var funny:Float = (healthBar.percent * 0.01) + 0.01;
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
@@ -5251,20 +5241,18 @@ class PlayState extends MusicBeatState
 					advTweenAngleIcon(iconP1, -24, .3, FlxEase.quadOut);
 					advTweenAngleIcon(iconP2, 24, .3, FlxEase.quadOut);
 				}
-			case "DnB30":
-				var funny:Float = Math.max(Math.min(healthBar.value, 1.9),
-				0.1);
+			case "DaveAndBambi":
+				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), 0.1);
 	
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + 0.1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + 0.1))), Std.int(iconP2.height - (25 * ((2 - funny) + 0.1))));
 			case "RadicalOne":
-				FlxTween.cancelTweensOf(iconP1);
-				FlxTween.cancelTweensOf(iconP2);
-
-				iconP1.scale.set(1.3, 1.3);
-				iconP2.scale.set(1.3, 1.3);
-
 				FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
+				FlxTween.cancelTweensOf(iconP1);
+				iconP1.scale.set(1.3, 1.3);
+
+				FlxTween.cancelTweensOf(iconP2);
+				iconP2.scale.set(1.3, 1.3);
 				FlxTween.tween(iconP2, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
 			case "GoldenApple":
 				if (curBeat % 2 == 0) {
@@ -5460,9 +5448,9 @@ class PlayState extends MusicBeatState
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
 
 				// Rating Name
-				if(ratingPercent >= 1) {
-					ratingName = ratingStuff[ratingStuff.length-1][0]; //Uses last string
-				} else {
+				if (ratingPercent >= 1)
+					ratingName = ratingStuff[ratingStuff.length - 1][0]; //Uses last string
+				else {
 					for (i in 0...ratingStuff.length - 1) {
 						if(ratingPercent < ratingStuff[i][1]) {
 							ratingName = ratingStuff[i][0];

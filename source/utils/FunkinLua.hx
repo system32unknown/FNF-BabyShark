@@ -1,5 +1,6 @@
 package utils;
 
+import flixel.addons.effects.chainable.FlxShakeEffect;
 #if LUA_ALLOWED
 import llua.Lua;
 import llua.LuaL;
@@ -23,10 +24,11 @@ import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
 import flixel.util.FlxSave;
-import openfl.utils.Assets;
 import flixel.math.FlxMath;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.display.FlxRuntimeShader;
+import flixel.addons.effects.*; //Experimental Feature
+import openfl.utils.Assets;
 import openfl.display.BlendMode;
 import substates.MusicBeatSubstate;
 import substates.GameOverSubstate;
@@ -1315,42 +1317,30 @@ class FunkinLua {
 
 		addCallback("getCharacterX", function(type:String) {
 			switch(type.toLowerCase()) {
-				case 'dad' | 'opponent':
-					return PlayState.instance.dadGroup.x;
-				case 'gf' | 'girlfriend':
-					return PlayState.instance.gfGroup.x;
-				default:
-					return PlayState.instance.boyfriendGroup.x;
+				case 'dad' | 'opponent': return PlayState.instance.dadGroup.x;
+				case 'gf' | 'girlfriend': return PlayState.instance.gfGroup.x;
+				default: return PlayState.instance.boyfriendGroup.x;
 			}
 		});
 		addCallback("setCharacterX", function(type:String, value:Float) {
 			switch(type.toLowerCase()) {
-				case 'dad' | 'opponent':
-					PlayState.instance.dadGroup.x = value;
-				case 'gf' | 'girlfriend':
-					PlayState.instance.gfGroup.x = value;
-				default:
-					PlayState.instance.boyfriendGroup.x = value;
+				case 'dad' | 'opponent': PlayState.instance.dadGroup.x = value;
+				case 'gf' | 'girlfriend': PlayState.instance.gfGroup.x = value;
+				default: PlayState.instance.boyfriendGroup.x = value;
 			}
 		});
 		addCallback("getCharacterY", function(type:String) {
 			switch(type.toLowerCase()) {
-				case 'dad' | 'opponent':
-					return PlayState.instance.dadGroup.y;
-				case 'gf' | 'girlfriend':
-					return PlayState.instance.gfGroup.y;
-				default:
-					return PlayState.instance.boyfriendGroup.y;
+				case 'dad' | 'opponent': return PlayState.instance.dadGroup.y;
+				case 'gf' | 'girlfriend': return PlayState.instance.gfGroup.y;
+				default: return PlayState.instance.boyfriendGroup.y;
 			}
 		});
 		addCallback("setCharacterY", function(type:String, value:Float) {
 			switch(type.toLowerCase()) {
-				case 'dad' | 'opponent':
-					PlayState.instance.dadGroup.y = value;
-				case 'gf' | 'girlfriend':
-					PlayState.instance.gfGroup.y = value;
-				default:
-					PlayState.instance.boyfriendGroup.y = value;
+				case 'dad' | 'opponent': PlayState.instance.dadGroup.y = value;
+				case 'gf' | 'girlfriend': PlayState.instance.gfGroup.y = value;
+				default: PlayState.instance.boyfriendGroup.y = value;
 			}
 		});
 		addCallback("changeMania", function(newValue:Int, skipTwn:Bool = false) {
@@ -1578,8 +1568,7 @@ class FunkinLua {
 						var obj:Dynamic = spr;
 						var spr:Character = obj;
 						spr.playAnim(name, forced, reverse, startFrame);
-					} else
-						spr.animation.play(name, forced, reverse, startFrame);
+					} else spr.animation.play(name, forced, reverse, startFrame);
 				}
 				return true;
 			}
@@ -2034,11 +2023,13 @@ class FunkinLua {
 			return false;
 
 			#else
-			if(PlayState.instance.endingSong) {
-				PlayState.instance.endSong();
-			} else {
-				PlayState.instance.startCountdown();
-			}
+			new FlxTimer().start(0.05, function(tmr:FlxTimer) {
+				if(PlayState.instance.endingSong) {
+					PlayState.instance.endSong();
+				} else {
+					PlayState.instance.startCountdown();
+				}
+			});
 			return true;
 			#end
 		});
@@ -2387,9 +2378,7 @@ class FunkinLua {
 			return FileSystem.exists(Paths.getPath('assets/$filename', TEXT));
 			#else
 			if(absolute)
-			{
 				return Assets.exists(filename);
-			}
 			return Assets.exists(Paths.getPath('assets/$filename', TEXT));
 			#end
 		});
@@ -2412,11 +2401,9 @@ class FunkinLua {
 		addCallback("deleteFile", function(path:String, ?ignoreModFolders:Bool = false) {
 			try {
 				#if MODS_ALLOWED
-				if(!ignoreModFolders)
-				{
+				if(!ignoreModFolders) {
 					var lePath:String = Paths.modFolders(path);
-					if(FileSystem.exists(lePath))
-					{
+					if(FileSystem.exists(lePath)) {
 						FileSystem.deleteFile(lePath);
 						return true;
 					}
@@ -2424,8 +2411,7 @@ class FunkinLua {
 				#end
 
 				var lePath:String = Paths.getPath(path, TEXT);
-				if(Assets.exists(lePath))
-				{
+				if(Assets.exists(lePath)) {
 					FileSystem.deleteFile(lePath);
 					return true;
 				}
@@ -3136,9 +3122,7 @@ class FunkinLua {
 
 	public function set(variable:String, data:Dynamic) {
 		#if LUA_ALLOWED
-		if(lua == null) {
-			return;
-		}
+		if (lua == null) return;
 
 		Convert.toLua(lua, data);
 		Lua.setglobal(lua, variable);
@@ -3176,8 +3160,7 @@ class FunkinLua {
 		#end
 	}
 
-	public static inline function getInstance()
-	{
+	public static inline function getInstance() {
 		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
 	}
 }
@@ -3314,6 +3297,8 @@ class HScript
 		setVar('FlxTween', FlxTween);
 		setVar('FlxEase', FlxEase);
 		setVar('PlayState', PlayState);
+		setVar('FlxCloth', FlxClothSprite);
+		setVar('FlxShake', FlxShakeEffect);
 		setVar('game', PlayState.instance);
 		setVar('Paths', Paths);
 		setVar('Conductor', Conductor);

@@ -433,21 +433,16 @@ class Controls extends FlxActionSet
 				func(_note_down, PRESSED);
 				func(_note_downP, JUST_PRESSED);
 				func(_note_downR, JUST_RELEASED);
-			case ACCEPT:
-				func(_accept, JUST_PRESSED);
-			case BACK:
-				func(_back, JUST_PRESSED);
-			case PAUSE:
-				func(_pause, JUST_PRESSED);
-			case RESET:
-				func(_reset, JUST_PRESSED);
+			case ACCEPT: func(_accept, JUST_PRESSED);
+			case BACK: func(_back, JUST_PRESSED);
+			case PAUSE: func(_pause, JUST_PRESSED);
+			case RESET: func(_reset, JUST_PRESSED);
 		}
 	}
 
 	public function replaceBinding(control:Control, ?toAdd:Int, ?toRemove:Int)
 	{
-		if (toAdd == toRemove)
-			return;
+		if (toAdd == toRemove) return;
 
 		if (toRemove != null)
 			unbindKeys(control, [toRemove]);
@@ -501,8 +496,7 @@ class Controls extends FlxActionSet
 	static function removeKeys(action:FlxActionDigital, keys:Array<FlxKey>)
 	{
 		var i = action.inputs.length;
-		while (i-- > 0)
-		{
+		while (i-- > 0) {
 			var input = action.inputs[i];
 			if (input.device == KEYBOARD && keys.indexOf(cast input.inputID) != -1)
 				action.remove(input);
@@ -511,15 +505,13 @@ class Controls extends FlxActionSet
 
 	public function setKeyboardScheme(scheme:KeyboardScheme, reset = true)
 	{
-		if (reset)
-			removeKeyboard();
+		if (reset) removeKeyboard();
 
 		keyboardScheme = scheme;
 		var keysMap = ClientPrefs.keyBinds;
 		
 		#if (haxe >= "4.0.0")
-		switch (scheme)
-		{
+		switch (scheme) {
 			case Solo:
 				inline bindKeys(Control.UI_UP, keysMap.get('ui_up'));
 				inline bindKeys(Control.UI_DOWN, keysMap.get('ui_down'));
@@ -537,8 +529,7 @@ class Controls extends FlxActionSet
 			case None: // nothing
 		}
 		#else
-		switch (scheme)
-		{
+		switch (scheme) {
 			case Solo:
 				bindKeys(Control.UI_UP, [W, FlxKey.UP]);
 				bindKeys(Control.UI_DOWN, [S, FlxKey.DOWN]);

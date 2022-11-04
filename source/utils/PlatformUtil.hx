@@ -23,9 +23,7 @@ class PlatformUtil
         HWND hWnd = GetActiveWindow();
         res = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
         if (res)
-        {
             SetLayeredWindowAttributes(hWnd, RGB(1, 1, 1), 0, LWA_COLORKEY);
-        }
     ')
     #end
 	static public function getWindowsTransparent(res:Int = 0) // Only works on windows, otherwise returns 0!
@@ -87,9 +85,7 @@ class PlatformUtil
         HWND hWnd = GetActiveWindow();
         res = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
         if (res)
-        {
             SetLayeredWindowAttributes(hWnd, RGB(1, 1, 1), 1, LWA_COLORKEY);
-        }
     ')
     #end
 	static public function getWindowsbackward(res:Int = 0) // Only works on windows, otherwise returns 0!
