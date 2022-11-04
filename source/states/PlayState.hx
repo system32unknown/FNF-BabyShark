@@ -358,6 +358,8 @@ class PlayState extends MusicBeatState
 	private var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
 	private var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 
+
+	private var useLuaGameOver:Bool = false;
 	override public function create()
 	{
 		Paths.clearStoredMemory();
@@ -725,7 +727,7 @@ class PlayState extends MusicBeatState
 
 				var bgTrees:FlxSprite = new FlxSprite(repositionShit - 380, -800);
 				bgTrees.frames = Paths.getPackerAtlas('weeb/weebTrees');
-				bgTrees.animation.add('treeLoop', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 12);
+				bgTrees.animation.add('treeLoop', CoolUtil.numberArray(18), 12);
 				bgTrees.animation.play('treeLoop');
 				bgTrees.scrollFactor.set(0.85, 0.85);
 				add(bgTrees);
@@ -986,7 +988,7 @@ class PlayState extends MusicBeatState
 		boyfriendGroup.add(boyfriend);
 		startCharacterLua(boyfriend.curCharacter);
 
-		if (boyfriend != null) {
+		if (boyfriend != null && !useLuaGameOver) {
 			GameOverSubstate.characterName = boyfriend.deathChar;
 			GameOverSubstate.deathSoundName = boyfriend.deathSound;
 			GameOverSubstate.loopSoundName = boyfriend.deathMusic;

@@ -151,7 +151,8 @@ class TitleState extends MusicBeatState
 		titlebg = new FlxBackdrop(Paths.image('thechecker'), 0, 0.2, true, true);
 		titlebg.velocity.set(0, 110);
 		titlebg.updateHitbox();
-		titlebg.alpha = 0.5;
+		titlebg.alpha = .5;
+		titlebg.color = 0xFF5C00CD;
 		titlebg.screenCenter(X);
 		add(titlebg);
 
