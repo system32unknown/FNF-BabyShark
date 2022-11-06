@@ -358,7 +358,6 @@ class PlayState extends MusicBeatState
 	private var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
 	private var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 
-
 	private var useLuaGameOver:Bool = false;
 	override public function create()
 	{
@@ -4236,8 +4235,7 @@ class PlayState extends MusicBeatState
 		var pixelShitPart1:String = "";
 		var pixelShitPart2:String = '';
 
-		if (PlayState.isPixelStage)
-		{
+		if (PlayState.isPixelStage) {
 			pixelShitPart1 = 'pixelUI/';
 			pixelShitPart2 = '-pixel';
 		}
@@ -4284,7 +4282,7 @@ class PlayState extends MusicBeatState
 			}
 	
 			switch (daRating.name) {
-				case 'shit' | 'bad' | 'ok': timingTxtArrays[0].color = FlxColor.RED;
+				case 'shit' | 'bad': timingTxtArrays[0].color = FlxColor.RED;
 				case 'good': timingTxtArrays[0].color = FlxColor.GREEN;
 				case 'sick': timingTxtArrays[0].color = FlxColor.CYAN;
 				case 'perfect': timingTxtArrays[0].color = FlxColor.WHITE;
@@ -4341,21 +4339,18 @@ class PlayState extends MusicBeatState
 					timingTxtArrays[1].x = comboSpr.x + 100;
 					if (ClientPrefs.getPref('ShowMsTiming'))
 						timingTxtArrays[1].y = timingTxtArrays[0].y + 20;
-					else
-						timingTxtArrays[1].y = comboSpr.y + 100;
+					else timingTxtArrays[1].y = comboSpr.y + 100;
 				} else {
 					timingTxtArrays[1].x = rating.x + 100;
 					if (ClientPrefs.getPref('ShowMsTiming'))
 						timingTxtArrays[1].y = timingTxtArrays[0].y + 20;
-					else
-						timingTxtArrays[1].y = rating.y + 100;
+					else timingTxtArrays[1].y = rating.y + 100;
 				}
 			} else {
 				timingTxtArrays[1].x = rating.x + 100;
 				if (ClientPrefs.getPref('ShowMsTiming'))
 					timingTxtArrays[1].y = timingTxtArrays[0].y + 100;
-				else
-					timingTxtArrays[1].y = rating.y + 100;
+				else timingTxtArrays[1].y = rating.y + 100;
 			}
 			timingTxtArrays[1].updateHitbox();
 		}
@@ -4560,8 +4555,7 @@ class PlayState extends MusicBeatState
 								doubleNote.kill();
 								notes.remove(doubleNote, true);
 								doubleNote.destroy();
-							} else
-								notesStopped = true;
+							} else notesStopped = true;
 						}
 
 						// eee jack detection before was not super good

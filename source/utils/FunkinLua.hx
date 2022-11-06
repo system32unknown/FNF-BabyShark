@@ -486,15 +486,15 @@ class FunkinLua {
 		});
 
 		addCallback("callOnLuas", function(?funcName:String, ?args:Array<Dynamic>, ignoreStops=false, ignoreSelf=true, ?exclusions:Array<String>){
-			if(funcName==null) {
+			if(funcName == null) {
 				#if (linc_luajit >= "0.0.6")
 				LuaL.error(lua, "bad argument #1 to 'callOnLuas' (string expected, got nil)");
 				#end
 				return;
 			}
-			if(args==null)args = [];
+			if(args == null) args = [];
 
-			if(exclusions==null)exclusions=[];
+			if(exclusions == null) exclusions = [];
 
 			Lua.getglobal(lua, 'scriptName');
 			var daScriptName = Lua.tostring(lua, -1);
@@ -558,8 +558,7 @@ class FunkinLua {
 			switch (platformType.toLowerCase().trim()) {
 				case "sendwindowsnotification": PlatformUtil.sendWindowsNotification(args[0], args[1]);
 				case "sendfakemsgbox": PlatformUtil.sendFakeMsgBox(args[0], args[1]);
-				case "getwindowstransparent": PlatformUtil.getWindowsTransparent();
-				case "getwindowsbackward": PlatformUtil.getWindowsbackward();
+				case "getwindowstransparent": PlatformUtil.getWindowsTransparent(args[0], args[1], args[2], args[3]);
 				case "setcursorpos": PlatformUtil.setCursorPos(args[0], args[1]);
 			}
 		});
@@ -2746,20 +2745,16 @@ class FunkinLua {
 			var blah:Dynamic = null;
 			if(PlayState.instance.variables.exists(shit[0])) {
 				var retVal:Dynamic = PlayState.instance.variables.get(shit[0]);
-				if(retVal != null)
-					blah = retVal;
+				if(retVal != null) blah = retVal;
 			} else blah = Reflect.getProperty(instance, shit[0]);
 
 			for (i in 1...shit.length) {
 				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
-				if(i >= shit.length-1) //Last array
-					blah[leNum] = value;
-				else //Anything else
-					blah = blah[leNum];
+				if(i >= shit.length - 1) blah[leNum] = value; //Last array
+				else blah = blah[leNum]; //Anything else
 			}
 			return blah;
 		}
-
 
 		if(PlayState.instance.variables.exists(variable)) {
 			PlayState.instance.variables.set(variable, value);
@@ -2776,8 +2771,7 @@ class FunkinLua {
 			var blah:Dynamic = null;
 			if(PlayState.instance.variables.exists(shit[0])) {
 				var retVal:Dynamic = PlayState.instance.variables.get(shit[0]);
-				if(retVal != null)
-					blah = retVal;
+				if(retVal != null) blah = retVal;
 			} else blah = Reflect.getProperty(instance, shit[0]);
 			for (i in 1...shit.length) {
 				var leNum:Dynamic = shit[i].substr(0, shit[i].length - 1);
@@ -2788,15 +2782,13 @@ class FunkinLua {
 
 		if(PlayState.instance.variables.exists(variable)) {
 			var retVal:Dynamic = PlayState.instance.variables.get(variable);
-			if(retVal != null)
-				return retVal;
+			if(retVal != null) return retVal;
 		}
 
 		return Reflect.getProperty(instance, variable);
 	}
 
-	inline static function getTextObject(name:String):FlxText
-	{
+	inline static function getTextObject(name:String):FlxText {
 		return PlayState.instance.modchartTexts.exists(name) ? PlayState.instance.modchartTexts.get(name) : Reflect.getProperty(PlayState.instance, name);
 	}
 
@@ -2820,21 +2812,19 @@ class FunkinLua {
 		var killMe:Array<String> = variable.split('.');
 		if(killMe.length > 1) {
 			var coverMeInPiss:Dynamic = Reflect.getProperty(leArray, killMe[0]);
-			for (i in 1...killMe.length-1) {
+			for (i in 1...killMe.length - 1) {
 				coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
 			}
 			switch(Type.typeof(coverMeInPiss)){
 				case ValueType.TClass(haxe.ds.StringMap) | ValueType.TClass(haxe.ds.ObjectMap) | ValueType.TClass(haxe.ds.IntMap) | ValueType.TClass(haxe.ds.EnumValueMap):
 					return coverMeInPiss.get(killMe[killMe.length-1]);
-				default:
-					return Reflect.getProperty(coverMeInPiss, killMe[killMe.length-1]);
+				default: return Reflect.getProperty(coverMeInPiss, killMe[killMe.length-1]);
 			};
 		}
 		switch(Type.typeof(leArray)){
 			case ValueType.TClass(haxe.ds.StringMap) | ValueType.TClass(haxe.ds.ObjectMap) | ValueType.TClass(haxe.ds.IntMap) | ValueType.TClass(haxe.ds.EnumValueMap):
 				return leArray.get(variable);
-			default:
-				return Reflect.getProperty(leArray, variable);
+			default: return Reflect.getProperty(leArray, variable);
 		};
 	}
 
@@ -3181,7 +3171,7 @@ class ModchartText extends FlxText
 	public var wasAdded:Bool = false;
 	public function new(x:Float, y:Float, text:String, width:Float) {
 		super(x, y, width, text, 16);
-		setFormat("VCR OSD Mono", 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		cameras = [PlayState.instance.camHUD];
 		scrollFactor.set();
 		borderSize = 1;

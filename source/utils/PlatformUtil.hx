@@ -23,10 +23,10 @@ class PlatformUtil
         HWND hWnd = GetActiveWindow();
         res = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
         if (res)
-            SetLayeredWindowAttributes(hWnd, RGB(1, 1, 1), 0, LWA_COLORKEY);
+            SetLayeredWindowAttributes(hWnd, RGB(r, g, b), alpha, LWA_COLORKEY);
     ')
     #end
-	static public function getWindowsTransparent(res:Int = 0) // Only works on windows, otherwise returns 0!
+	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0, res:Int = 0) // Only works on windows, otherwise returns 0!
 		return res;
 
     #if windows
@@ -79,17 +79,6 @@ class PlatformUtil
     #end
     static public function sendFakeMsgBox(title:String = "", desc:String = "", res:Int = 0) // TODO: Linux and macOS (will do soon)
         return res;
-
-    #if windows
-	@:functionCode('
-        HWND hWnd = GetActiveWindow();
-        res = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
-        if (res)
-            SetLayeredWindowAttributes(hWnd, RGB(1, 1, 1), 1, LWA_COLORKEY);
-    ')
-    #end
-	static public function getWindowsbackward(res:Int = 0) // Only works on windows, otherwise returns 0!
-		return res;
 
     #if windows
 	@:functionCode('

@@ -22,8 +22,6 @@ import editors.MasterEditorMenu;
 import utils.ClientPrefs;
 import utils.CoolUtil;
 import utils.MathUtil;
-import shaders.WiggleEffect.WiggleEffect;
-import shaders.WiggleEffect.WiggleEffectType;
 import data.WeekData;
 
 using StringTools;
@@ -53,8 +51,6 @@ class MainMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
-
-	var WShader:WiggleEffect = new WiggleEffect();
 
 	//Stolen from Kade Engine
 	public static var firstStart:Bool = true;
@@ -86,41 +82,23 @@ class MainMenuState extends MusicBeatState
 
 		persistentUpdate = persistentDraw = true;
 
-		WShader.effectType = WiggleEffectType.HEAT_WAVE_HORIZONTAL;
-		WShader.waveAmplitude = 0.1;
-		WShader.waveFrequency = 4;
-		WShader.waveSpeed = 1;
-
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
 		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
 
-		var randomizedShader:Bool = FlxG.random.bool(50);
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('3dMenu'));
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.visible = randomizedShader;
-		if (ClientPrefs.getPref('shaders') && randomizedShader)
-			bg.shader = WShader.shader;
+		bg.flipX = true;
 		bg.antialiasing = globalAntialiasing;
 		add(bg);
 
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('3dMenu'));
-		bg.scrollFactor.set(0, yScroll);
-		bg.setGraphicSize(Std.int(bg.width * 1.175));
-		bg.updateHitbox();
-		bg.screenCenter();
-		if (ClientPrefs.getPref('shaders'))
-			bg.shader = WShader.shader;
-		bg.antialiasing = globalAntialiasing;
-		add(bg);
-
-		var bg:FlxBackdrop = new FlxBackdrop(Paths.image('thechecker'), 0.4, 0.3, true, true);
+		var bg:FlxBackdrop = new FlxBackdrop(Paths.image('thechecker'), 0, 0.2, true, true);
 		bg.scrollFactor.set(0, yScroll);
 		bg.velocity.set(30, 110);
-		bg.alpha = .5;
-		bg.color = 0xFFFF0000;
+		bg.alpha = .2;
+		bg.color = FlxColor.PURPLE;
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.antialiasing = globalAntialiasing;
@@ -223,9 +201,6 @@ class MainMenuState extends MusicBeatState
 
 		var lerpVal:Float = MathUtil.boundTo(elapsed * 7.5, 0, 1);
 		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
-
-		if (ClientPrefs.getPref('shaders'))
-			WShader.update(elapsed * 2);
 
 		if (!selectedSomethin && finishedFunnyMove) {
 			if (controls.UI_UP_P) {

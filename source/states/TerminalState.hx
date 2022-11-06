@@ -4,6 +4,7 @@ package states;
 import utils.Discord.DiscordClient;
 #end
 import shaders.VCRDistortionEffect.VCRDistortionEffect;
+import utils.ClientPrefs;
 
 import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
@@ -52,7 +53,8 @@ class TerminalState extends MusicBeatState
 
         shaderVCR = new VCRDistortionEffect();
         shaderVCR.distortionOn = true;
-        FlxG.camera.setFilters([new ShaderFilter(shaderVCR.shader)]);
+        if (ClientPrefs.getPref('shaders'))
+            FlxG.camera.setFilters([new ShaderFilter(shaderVCR.shader)]);
 
         displayText = new FlxText(0, 0, FlxG.width, previousText, 32);
 		displayText.setFormat(Paths.font("vcr.ttf"), 14);
