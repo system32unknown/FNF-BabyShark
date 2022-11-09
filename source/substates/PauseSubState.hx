@@ -131,6 +131,7 @@ class PauseSubState extends MusicBeatSubstate
 		levelDifficulty.alpha = 0;
 		levelInfo.alpha = 0;
 		timerTxt.alpha = 0;
+		practiceText.alpha = 0;
 
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
@@ -142,6 +143,7 @@ class PauseSubState extends MusicBeatSubstate
 		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
 		FlxTween.tween(blueballedTxt, {alpha: 1, y: blueballedTxt.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
 		FlxTween.tween(timerTxt, {alpha: 1, y: timerTxt.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
+		if (PlayState.instance.practiceMode) FlxTween.tween(practiceText, {alpha: 1, y: practiceText.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 1.1});
 
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
@@ -199,10 +201,8 @@ class PauseSubState extends MusicBeatSubstate
 				}
 		}
 
-		if (accepted && cantUnpause <= 0)
-		{
-			if (menuItems == difficultyChoices)
-			{
+		if (accepted && cantUnpause <= 0) {
+			if (menuItems == difficultyChoices) {
 				if(menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected)) {
 					var name:String = PlayState.SONG.song;
 					var poop = Highscore.formatSong(name, curSelected);
@@ -221,8 +221,7 @@ class PauseSubState extends MusicBeatSubstate
 
 			switch (daSelected)
 			{
-				case "Resume":
-					close();
+				case "Resume": close();
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
 					deleteSkipTimeText();

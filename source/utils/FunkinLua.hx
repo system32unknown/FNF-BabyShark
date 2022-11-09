@@ -1,6 +1,5 @@
 package utils;
 
-import flixel.addons.effects.chainable.FlxShakeEffect;
 #if LUA_ALLOWED
 import llua.Lua;
 import llua.LuaL;
@@ -28,6 +27,7 @@ import flixel.math.FlxMath;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.display.FlxRuntimeShader;
 import flixel.addons.effects.*; //Experimental Feature
+import flixel.addons.effects.chainable.*; //Experimental Feature
 import openfl.utils.Assets;
 import openfl.display.BlendMode;
 import substates.MusicBeatSubstate;
@@ -1517,7 +1517,7 @@ class FunkinLua {
 		});
 
 		addCallback("addAnimation", function(obj:String, name:String, frames:Array<Int>, framerate:Int = 24, loop:Bool = true) {
-			if(PlayState.instance.getLuaObject(obj,false)!=null) {
+			if(PlayState.instance.getLuaObject(obj, false) != null) {
 				var cock:FlxSprite = PlayState.instance.getLuaObject(obj,false);
 				cock.animation.add(name, frames, framerate, loop);
 				if(cock.animation.curAnim == null) {
@@ -3288,7 +3288,8 @@ class HScript
 		setVar('FlxEase', FlxEase);
 		setVar('PlayState', PlayState);
 		setVar('FlxCloth', FlxClothSprite);
-		setVar('FlxShake', FlxShakeEffect);
+		setVar('FlxSkewed', FlxSkewedSprite);
+		setVar('FlxRainbow', FlxRainbowEffect);
 		setVar('game', PlayState.instance);
 		setVar('Paths', Paths);
 		setVar('Conductor', Conductor);

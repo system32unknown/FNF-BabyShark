@@ -3,6 +3,7 @@ package ui;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import utils.ClientPrefs;
+import utils.CoolUtil;
 
 using StringTools;
 
@@ -32,19 +33,12 @@ class HealthIcon extends FlxSprite
 			var file:Dynamic = Paths.image(name);
 
 			loadGraphic(file);
-			switch (width) {
-				case 150: 
-					icontype = 'single';
-					iconnum = 1;
-					iconarray = [0];
-				case 300: 
-					icontype = 'classic';
-					iconnum = 2;
-					iconarray = [0, 1];
-				case 450: 
-					icontype = 'winning';
-					iconnum = 3;
-					iconarray = [0, 1, 2];
+			var iconTypes:Array<String> = ['single', 'classic', 'winning'];
+			var index:Int = Math.floor(width / 150);
+			if (index - 1 <= iconTypes.length) {
+				icontype = iconTypes[index - 1];
+				iconnum = index; // Thanks to EyeDaleHim#8508 for Improving code!
+				iconarray = CoolUtil.numberArray(index);
 			}
 			
 			loadGraphic(file, true, Math.floor(width / iconnum), Math.floor(height)); //Then load it fr

@@ -1197,7 +1197,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var engineName:Array<String> = CoolUtil.getSpilttext(Paths.txt('EngineList'));
-		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (PE " + MainMenuState.psychEngineVersion +")", 16);
+		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (PE " + MainMenuState.psychEngineVersion + ")", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		engineText.scrollFactor.set();
 		engineText.borderSize = 1;
@@ -2055,7 +2055,7 @@ class PlayState extends MusicBeatState
 				playerLay.screenCenter(Y);
 				playerLU.add(playerLay);
 			}
-			if (!ClientPrefs.getPref('HiddenOppLU') && !ClientPrefs.getPref('middleScroll')) {
+			if (!ClientPrefs.getPref('HiddenOppLU')) {
 				for (i in 0...opponentStrums.members.length) {
 					var opponentLay = new FlxSprite(opponentStrums.members[i].x, 0).makeGraphic(Std.int(opponentStrums.members[i].width), FlxG.height);
 					opponentLay.alpha = ClientPrefs.getPref('LUAlpha');
@@ -2155,7 +2155,7 @@ class PlayState extends MusicBeatState
 						countdownReady.screenCenter();
 						countdownReady.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownReady);
-						FlxTween.tween(countdownReady, {alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
+						FlxTween.tween(countdownReady, {y: countdownReady.y + 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween) {
 								remove(countdownReady);
@@ -2174,7 +2174,7 @@ class PlayState extends MusicBeatState
 						countdownSet.screenCenter();
 						countdownSet.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownSet);
-						FlxTween.tween(countdownSet, {alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
+						FlxTween.tween(countdownSet, {y: countdownSet.y + 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween) {
 								remove(countdownSet);
@@ -2194,7 +2194,7 @@ class PlayState extends MusicBeatState
 						countdownGo.screenCenter();
 						countdownGo.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownGo);
-						FlxTween.tween(countdownGo, {alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
+						FlxTween.tween(countdownGo, {y: countdownGo.y + 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween) {
 								remove(countdownGo);
@@ -2214,7 +2214,6 @@ class PlayState extends MusicBeatState
 					}
 				});
 				callOnLuas('onCountdownTick', [swagCounter]);
-
 				swagCounter += 1;
 			}, 5);
 		}
@@ -4176,7 +4175,7 @@ class PlayState extends MusicBeatState
 		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) ' : '');
 		tempText += scoreSeparator + (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
 		tempText += (!cpuControlled ? '$scoreSeparator Misses:$songMisses ' : '');
-		tempText += '$scoreSeparator Acc.:$Accuracy%' + (ratingName != '?' ? ' [$ratingName, $Ranks] - $ratingFC' : ' [?, ?] - ?');
+		tempText += '$scoreSeparator Acc:$Accuracy%' + (ratingName != '?' ? ' [$ratingName, $Ranks] - $ratingFC' : ' [?, ?] - ?');
 		scoreTxt.text = tempText;
 	}
 
@@ -4385,6 +4384,7 @@ class PlayState extends MusicBeatState
 
 		var seperatedScore:Array<Int> = [];
 
+		trace(Math.pow(10, Std.string(combo).length - 1));
 		if(combo >= 1000) {
 			seperatedScore.push(Math.floor(combo / 1000) % 10);
 		}
@@ -4683,8 +4683,7 @@ class PlayState extends MusicBeatState
 		if (combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
 			gf.playAnim('sad');
 		}
-		if (combo > maxCombo)
-			maxCombo = combo;
+		if (combo > maxCombo) maxCombo = combo;
 		combo = 0;
 		health -= daNote.missHealth * healthLoss;
 		
@@ -4730,9 +4729,7 @@ class PlayState extends MusicBeatState
 			combo = 0;
 
 			if(!practiceMode) songScore -= 10;
-			if(!endingSong) {
-				songMisses++;
-			}
+			if(!endingSong) songMisses++;
 			totalPlayed++;
 			RecalculateRating(true);
 

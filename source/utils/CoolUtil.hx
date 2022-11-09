@@ -148,11 +148,7 @@ class CoolUtil
 		if(Assets.exists(path)) firstArray = Assets.getText(path).trim().split('\n');
 		#end
 
-		for (i in 0...firstArray.length) {
-			firstArray[i] = firstArray[i].trim().replace("-", " ");
-		}
-
-		return firstArray;
+		return [for (i in 0...firstArray.length) firstArray[i].trim().replace("-", " ")];
 	}
 
 	public static function browserLoad(site:String) {
