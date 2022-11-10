@@ -170,12 +170,12 @@ class TitleState extends MusicBeatState
 		daveDance.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(daveDance);
 
-		logoBl = new FlxSprite(titleJSON.titlex, 1500);
+		logoBl = new FlxSprite(0, 1500);
+		logoBl.x = titleJSON.titlex;
 		logoBl.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		if (!FileSystem.exists(Paths.modsXml('FinalLogo'))) {
 			logoBl.loadGraphic(Paths.image('FinalLogo'));
 			logoBl.setGraphicSize(Std.int(logoBl.width * 1.5));
-			add(logoBl);
 		} else {
 			foundXml = true;
 			logoBl.frames = Paths.getSparrowAtlas('FinalLogo');
@@ -183,6 +183,7 @@ class TitleState extends MusicBeatState
 			logoBl.animation.play('bump');
 		}
 		logoBl.updateHitbox();
+		add(logoBl);
 
 		titleText = new FlxSprite(125, 576);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
