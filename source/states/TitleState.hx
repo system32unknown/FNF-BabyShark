@@ -38,6 +38,7 @@ typedef TitleData = {
 	titlex:Float,
 	gfx:Float,
 	gfy:Float,
+	useOldDance:Bool,
 	bpm:Int
 }
 
@@ -53,7 +54,7 @@ class TitleState extends MusicBeatState
 	var textGroup:FlxGroup;
 	
 	var titlebg:FlxBackdrop;
-	var titleLogo:FlxSprite = new FlxSprite(0, 1500);
+	var logoBl:FlxSprite;
 	var titleText:FlxSprite;
 
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
@@ -134,6 +135,7 @@ class TitleState extends MusicBeatState
 
 	var daveDance:FlxSprite;
 	var danceLeft:Bool = false;
+	var foundXml:Bool = false;
 	function startIntro() {
 		if (!initialized) {
 			if (FlxG.sound.music == null) {
@@ -158,16 +160,29 @@ class TitleState extends MusicBeatState
 
 		daveDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
 		daveDance.frames = Paths.getSparrowAtlas('DaveDanceTitle');
-		daveDance.animation.addByIndices('danceTitle', 'danceTitle', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "", 24, false);
+		if (titleJSON.useOldDance != null && titleJSON.useOldDance) {
+			daveDance.animation.addByIndices('danceTitle', 'danceTitle', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "", 24, false);
+		} else {
+			daveDance.animation.addByIndices('danceLeft', 'danceTitle', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+			daveDance.animation.addByIndices('danceRight', 'danceTitle', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+		}
+		
 		daveDance.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(daveDance);
 
-		titleLogo.loadGraphic(Paths.image('FinalLogo'));
-		titleLogo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		titleLogo.setGraphicSize(Std.int(titleLogo.width * 1.5));
-		titleLogo.x = titleJSON.titlex;
-		titleLogo.updateHitbox();
-		add(titleLogo);
+		logoBl = new FlxSprite(titleJSON.titlex, 1500);
+		logoBl.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		if (!FileSystem.exists(Paths.modsXml('logoBumpin'))) {
+			logoBl.loadGraphic(Paths.image('FinalLogo'));
+			logoBl.setGraphicSize(Std.int(logoBl.width * 1.5));
+			add(logoBl);
+		} else {
+			foundXml = true;
+			logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+			logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+			logoBl.animation.play('bump');
+		}
+		logoBl.updateHitbox();
 
 		titleText = new FlxSprite(125, 576);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
@@ -252,7 +267,7 @@ class TitleState extends MusicBeatState
 				if (startingTween != null) {
 					startingTween.cancel();
 					startingTween = null;
-					FlxTween.tween(titleLogo, {y: -700}, 1, {ease: FlxEase.backIn});
+					FlxTween.tween(logoBl, {y: -700}, 1, {ease: FlxEase.backIn});
 				}
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
@@ -318,11 +333,19 @@ class TitleState extends MusicBeatState
 	{
 		super.beatHit();
 		
+		if(logoBl != null && foundXml)
+			logoBl.animation.play('bump', true);
+
 		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
 
 		if(daveDance != null) {
-			danceLeft = !danceLeft;
-			daveDance.animation.play('danceTitle');
+			if (titleJSON.useOldDance != null && titleJSON.useOldDance) {
+				daveDance.animation.play('danceTitle');
+			} else {
+				danceLeft = !danceLeft;
+				if (danceLeft) daveDance.animation.play('danceRight');
+				else daveDance.animation.play('danceLeft');
+			}
 		}
 
 		if(!closedState) {
@@ -389,13 +412,13 @@ class TitleState extends MusicBeatState
 			remove(credGroup);
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 
-			FlxTween.tween(titleLogo, {y: 100}, 1.4, {ease: FlxEase.expoInOut});
-			titleLogo.angle = -4;
+			FlxTween.tween(logoBl, {y: 100}, 1.4, {ease: FlxEase.expoInOut});
+			logoBl.angle = -4;
 			new FlxTimer().start(0.01, function(tmr:FlxTimer) {
-				if (titleLogo.angle == -4)
-					FlxTween.angle(titleLogo, titleLogo.angle, 4, 4, {ease: FlxEase.quartInOut});
-				if (titleLogo.angle == 4)
-					FlxTween.angle(titleLogo, titleLogo.angle, -4, 4, {ease: FlxEase.quartInOut});
+				if (logoBl.angle == -4)
+					FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
+				if (logoBl.angle == 4)
+					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
 			}, 0);
 			skippedIntro = true;
 		}

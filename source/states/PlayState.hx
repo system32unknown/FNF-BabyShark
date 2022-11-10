@@ -4383,8 +4383,6 @@ class PlayState extends MusicBeatState
 		timing.updateHitbox();
 
 		var seperatedScore:Array<Int> = [];
-
-		trace(Math.pow(10, Std.string(combo).length - 1));
 		if(combo >= 1000) {
 			seperatedScore.push(Math.floor(combo / 1000) % 10);
 		}
@@ -4713,8 +4711,7 @@ class PlayState extends MusicBeatState
 	function noteMissPress(direction:Int = 1):Void { //You pressed a key when there was no notes to press for this key
 		if(ClientPrefs.getPref('ghostTapping')) return; //fuck it
 
-		if (!boyfriend.stunned)
-		{
+		if (!boyfriend.stunned) {
 			health -= 0.05 * healthLoss;
 			if(instakillOnMiss) {
 				vocals.volume = 0;
@@ -4724,8 +4721,7 @@ class PlayState extends MusicBeatState
 			if (combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
 				gf.playAnim('sad');
 			}
-			if (combo > maxCombo)
-				maxCombo = combo;
+			if (combo > maxCombo) maxCombo = combo;
 			combo = 0;
 
 			if(!practiceMode) songScore -= 10;
