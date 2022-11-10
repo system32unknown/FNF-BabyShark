@@ -166,12 +166,10 @@ class TitleState extends MusicBeatState
 			daveDance.animation.addByIndices('danceLeft', 'danceTitle', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 			daveDance.animation.addByIndices('danceRight', 'danceTitle', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 		}
-		
 		daveDance.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(daveDance);
 
 		logoBl = new FlxSprite(0, 1500);
-		logoBl.x = titleJSON.titlex;
 		logoBl.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		if (!FileSystem.exists(Paths.modsXml('FinalLogo'))) {
 			logoBl.loadGraphic(Paths.image('FinalLogo'));
@@ -182,6 +180,7 @@ class TitleState extends MusicBeatState
 			logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 			logoBl.animation.play('bump');
 		}
+		logoBl.x = titleJSON.titlex;
 		logoBl.updateHitbox();
 		add(logoBl);
 
