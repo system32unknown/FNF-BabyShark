@@ -36,6 +36,7 @@ using StringTools;
 
 typedef TitleData = {
 	titlex:Float,
+	starty:Float,
 	gfx:Float,
 	gfy:Float,
 	useOldDance:Bool,
@@ -412,7 +413,7 @@ class TitleState extends MusicBeatState
 			remove(credGroup);
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 
-			FlxTween.tween(logoBl, {y: 100}, 1.4, {ease: FlxEase.expoInOut});
+			FlxTween.tween(logoBl, {y: titleJSON.starty}, 1.4, {ease: FlxEase.expoInOut});
 			logoBl.angle = -4;
 			new FlxTimer().start(0.01, function(tmr:FlxTimer) {
 				if (logoBl.angle == -4)

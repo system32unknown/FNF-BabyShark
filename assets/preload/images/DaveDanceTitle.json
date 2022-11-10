@@ -1,7 +1,8 @@
 {	
 	"titlex":239.5,
+	"starty":100,
 	"gfx":100,
 	"gfy":20,
-	"useOldDance": false,
+	"useOldDance":true,
 	"bpm":150
 }

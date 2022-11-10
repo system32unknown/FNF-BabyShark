@@ -4383,11 +4383,9 @@ class PlayState extends MusicBeatState
 		timing.updateHitbox();
 
 		var seperatedScore:Array<Int> = [];
-		if(combo >= 1000) {
-			seperatedScore.push(Math.floor(combo / 1000) % 10);
-		}
-		seperatedScore.push(Math.floor(combo / 100) % 10);
-		seperatedScore.push(Math.floor(combo / 10) % 10);
+		if(combo >= 1000) seperatedScore.push(Math.floor(combo / 1000) % 10);
+		if(combo >= 100) seperatedScore.push(Math.floor(combo / 100) % 10);
+		if(combo >= 10) seperatedScore.push(Math.floor(combo / 10) % 10);
 		seperatedScore.push(combo % 10);
 
 		if (!ClientPrefs.getPref('comboStacking')) {
