@@ -2,6 +2,6 @@
 	"titlex":239.5,
 	"gfx":100,
 	"gfy":20,
-	"useOldDance", false,
+	"useOldDance": false,
 	"bpm":150
 }
