@@ -1196,7 +1196,7 @@ class PlayState extends MusicBeatState
 			add(screwYouTxt);
 		}
 
-		var engineName:Array<String> = CoolUtil.getSpilttext(Paths.txt('EngineList'));
+		var engineName:Array<String> = CoolUtil.coolTextFile(Paths.txt('EngineList'));
 		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (PE " + MainMenuState.psychEngineVersion + ")", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		engineText.scrollFactor.set();

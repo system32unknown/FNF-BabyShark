@@ -139,18 +139,6 @@ class CoolUtil
 		return FlxG.elapsed / (1 / 60) * num;
 	}
 
-	public static function getSpilttext(path:String):Array<String>
-	{
-		var firstArray:Array<String> = [];
-		#if sys
-		if(FileSystem.exists(path)) firstArray = File.getContent(path).trim().split('\n');
-		#else
-		if(Assets.exists(path)) firstArray = Assets.getText(path).trim().split('\n');
-		#end
-
-		return [for (i in 0...firstArray.length) firstArray[i].trim().replace("-", " ")];
-	}
-
 	public static function browserLoad(site:String) {
 		#if windows
 		FlxG.openURL(site);

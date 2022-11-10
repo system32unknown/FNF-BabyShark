@@ -160,7 +160,7 @@ class TitleState extends MusicBeatState
 
 		daveDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
 		daveDance.frames = Paths.getSparrowAtlas('DaveDanceTitle');
-		if (titleJSON.useOldDance != null && titleJSON.useOldDance) {
+		if (titleJSON.useOldDance) {
 			daveDance.animation.addByIndices('danceTitle', 'danceTitle', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "", 24, false);
 		} else {
 			daveDance.animation.addByIndices('danceLeft', 'danceTitle', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
@@ -339,7 +339,7 @@ class TitleState extends MusicBeatState
 		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
 
 		if(daveDance != null) {
-			if (titleJSON.useOldDance != null && titleJSON.useOldDance) {
+			if (titleJSON.useOldDance) {
 				daveDance.animation.play('danceTitle');
 			} else {
 				danceLeft = !danceLeft;
