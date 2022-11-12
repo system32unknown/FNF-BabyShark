@@ -3325,9 +3325,10 @@ class PlayState extends MusicBeatState
 				
 					// Kill extremely late notes and cause misses
 					if (Conductor.songPosition > noteKillOffset + daNote.strumTime) {
-						if (daNote.mustPress && !cpuControlled &&!daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) {
+						if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit))
 							noteMiss(daNote);
-						}
+						if (!daNote.mustPress && daNote.ignoreNote && !endingSong)
+							opponentnoteMiss(daNote);
 					
 						daNote.active = false;
 						daNote.visible = false;
@@ -4642,8 +4643,7 @@ class PlayState extends MusicBeatState
 	}
 
 	//Hold Notes
-	private function keyShit():Void
-	{
+	private function keyShit():Void {
 		if (startedCountdown && !boyfriend.stunned && generatedMusic){
 			// rewritten inputs???
 			notes.forEachAlive(function(daNote:Note) {
@@ -4664,6 +4664,19 @@ class PlayState extends MusicBeatState
 				boyfriend.dance();
 			}
 		}
+	}
+
+	function opponentnoteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
+		//Dupe note remove
+		notes.forEachAlive(function(note:Note) {
+			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) {
+				note.kill();
+				notes.remove(note, true);
+				note.destroy();
+			}
+		});
+
+		callOnLuas('opponentnoteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes

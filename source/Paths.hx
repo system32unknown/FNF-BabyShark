@@ -145,27 +145,20 @@ class Paths
 	}
 
 	inline static function getLibraryPathForce(file:String, library:String) {
-		var returnPath = '$library:assets/$library/$file';
-		return returnPath;
+		return '$library:assets/$library/$file';
 	}
 
-	inline public static function getPreloadPath(file:String = '') {
+	inline public static function getPreloadPath(file:String = '')
 		return 'assets/$file';
-	}
 
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)
-	{
 		return getPath(file, type, library);
-	}
 
 	inline static public function txt(key:String, ?library:String)
-	{
 		return getPath('data/$key.txt', TEXT, library);
-	}
+	
 	inline static public function json(key:String, ?library:String)
-	{
 		return getPath('data/$key.json', TEXT, library);
-	}
 
 	static public function video(key:String)
 	{

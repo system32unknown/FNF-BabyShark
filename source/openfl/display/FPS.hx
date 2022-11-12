@@ -23,12 +23,12 @@ class FPS extends TextField
 		The current frame rate, expressed using frames-per-second
 	**/
 	public var currentFPS(default, null):Int;
-	private var memoryMegas:Float = 0;
-	private var peakMegas:Float = 0;
+	private var memory:Float = 0;
+	private var peak:Float = 0;
 
-	@:noCompletion private var cacheCount:Int;
-	@:noCompletion private var currentTime:Float;
-	@:noCompletion private var times:Array<Float>;
+	@:noCompletion private var cacheCount:Int = 0;
+	@:noCompletion private var currentTime:Float = 0;
+	@:noCompletion private var times:Array<Float> = [];
 
 	public function new(x:Float = 10, y:Float = 10, color:Int = 0x000000)
 	{
@@ -44,10 +44,6 @@ class FPS extends TextField
 		defaultTextFormat = new TextFormat("VCR OSD Mono", 14, color);
 		autoSize = LEFT;
 		multiline = true;
-
-		cacheCount = 0;
-		currentTime = 0;
-		times = [];
 	}
 
 	// Event Handlers
@@ -70,24 +66,24 @@ class FPS extends TextField
 			text += (ClientPrefs.getPref('showFPS') ? "FPS: " + currentFPS + "\n" : "");
 
 			#if openfl
-			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
-			if (memoryMegas > peakMegas) peakMegas = memoryMegas;
+			memory = Math.abs(FlxMath.roundDecimal(System.totalMemory / Math.floor(Math.pow(10, 6)), 1));
+
+			if (memory > peak) peak = memory;
 
 			if (ClientPrefs.getPref('showMEM')) {
-				text += "MEM: " + memoryMegas + " MB\n";
-				text += "MEM Peak: " + peakMegas + " MB\n";
+				text += "MEM: " + memory + ' MB\n';
+				text += "MEM Peak: " + peak + ' MB\n';
 			}
 
 			textColor = 0xFFFFFFFF;
-			if (memoryMegas > 3000 || currentFPS <= ClientPrefs.getPref('framerate') / 2) {
+			if (memory > 3000 || currentFPS <= ClientPrefs.getPref('framerate') / 2) {
 				textColor = 0xFFFF0000;
 			}
 			#end
 
-			if (text != null || text != '') {
+			if (text != null || text != '')
 				if (Main.fpsVar != null)
 					Main.fpsVar.visible = true;
-			}
 		}
 
 		cacheCount = currentCount;

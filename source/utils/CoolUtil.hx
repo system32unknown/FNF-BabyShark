@@ -45,21 +45,19 @@ class CoolUtil
 		return Paths.formatToSongPath(fileSuffix);
 	}
 
-	public static function difficultyString():String {
+	inline public static function difficultyString():String {
 		return difficulties[PlayState.storyDifficulty].toUpperCase();
 	}
 
-	public static function coolTextFile(path:String):Array<String>
-	{
-		var daList:Array<String> = [];
+	public static function coolTextFile(path:String):Array<String> {
 		#if sys
-		if(FileSystem.exists(path)) daList = File.getContent(path).trim().split('\n');
+		if(FileSystem.exists(path)) return [for (i in File.getContent(path).trim().split('\n')) i.trim()];
 		#else
-		if(Assets.exists(path)) daList = Assets.getText(path).trim().split('\n');
+		if(Assets.exists(path)) return [for (i in Assets.getText(path).trim().split('\n')) i.trim()];
 		#end
-
-		return [for (i in 0...daList.length) daList[i].trim()];
+		return [];
 	}
+		
 	public static function listFromString(string:String):Array<String> {
 		final daList = string.trim().split('\n');
 		return [for(i in 0...daList.length) daList[i].trim()];
@@ -90,7 +88,7 @@ class CoolUtil
 		return maxKey;
 	}
 
-	public static function numberArray(max:Int, ?min = 0):Array<Int> {
+	inline public static function numberArray(max:Int, ?min = 0):Array<Int> {
 		return [for (i in min...max) i];
 	}
 
@@ -139,7 +137,7 @@ class CoolUtil
 		return FlxG.elapsed / (1 / 60) * num;
 	}
 
-	public static function browserLoad(site:String) {
+	inline public static function browserLoad(site:String) {
 		#if windows
 		FlxG.openURL(site);
 		#end
