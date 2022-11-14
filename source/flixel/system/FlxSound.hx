@@ -414,8 +414,7 @@ class FlxSound extends FlxBasic
 			_sound = EmbeddedSound;
 		} else if (EmbeddedSound is Class) {
 			_sound = Type.createInstance(EmbeddedSound, []);
-		}
-		else if (EmbeddedSound is String) {
+		} else if (EmbeddedSound is String) {
 			if (Assets.exists(EmbeddedSound, AssetType.SOUND) || Assets.exists(EmbeddedSound, AssetType.MUSIC))
 				_sound = Assets.getSound(EmbeddedSound);
 			else FlxG.log.error('Could not find a Sound asset with an ID of \'$EmbeddedSound\'.');
@@ -734,8 +733,7 @@ class FlxSound extends FlxBasic
 			_paused = false;
 		}
 		#if (cpp || sys || js)
-		else
-			_lastTimeUpdate = Timer.stamp();
+		else _lastTimeUpdate = Timer.stamp();
 		#end
 	}
 
@@ -784,13 +782,11 @@ class FlxSound extends FlxBasic
 		return group;
 	}
 
-	inline function get_playing():Bool
-	{
+	inline function get_playing():Bool {
 		return _channel != null;
 	}
 
-	inline function get_volume():Float
-	{
+	inline function get_volume():Float {
 		return _volume;
 	}
 
@@ -868,9 +864,7 @@ class FlxSound extends FlxBasic
 		if (_realPitch <= 0 && adjusted > 0) {
 			_realPitch = adjusted;
 			time = _time;
-		}
-		else
-			_realPitch = adjusted;
+		} else _realPitch = adjusted;
 
 		return _pitch = v;
 	}
@@ -910,8 +904,7 @@ class FlxSound extends FlxBasic
 				if (_channel == null || !_channel.__isValid) {
 					cleanup(false, true);
 					startSound(time);
-				}
-				else {
+				} else {
 					#if lime
 					_channel.__source.offset = Std.int(Math.max(0, Math.min(time, length - 1)));
 					_channel.__source.currentTime = 0;

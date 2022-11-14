@@ -2728,6 +2728,10 @@ class FunkinLua {
 			return list;
 		});
 
+		addCallback("getGameplayChangerValue", function(tag:String) {
+			return ClientPrefs.getGameplaySetting(tag, false);
+		});
+
 		call('onCreate', []);
 		#end
 	}

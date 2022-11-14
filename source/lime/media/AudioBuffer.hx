@@ -67,23 +67,15 @@ class AudioBuffer
 		__format = 0;
 		if (channels == 1)
 		{
-			if (bitsPerSample == 8)
-			{
+			if (bitsPerSample == 8) {
 				__format = AL.FORMAT_MONO8;
-			}
-			else if (bitsPerSample == 16)
-			{
+			} else if (bitsPerSample == 16) {
 				__format = AL.FORMAT_MONO16;
 			}
-		}
-		else if (channels == 2)
-		{
-			if (bitsPerSample == 8)
-			{
+		} else if (channels == 2) {
+			if (bitsPerSample == 8) {
 				__format = AL.FORMAT_STEREO8;
-			}
-			else if (bitsPerSample == 16)
-			{
+			} else if (bitsPerSample == 16) {
 				__format = AL.FORMAT_STEREO16;
 			}
 		}
@@ -313,13 +305,11 @@ class AudioBuffer
 		if (audioBuffer != null)
 		{
 			#if flash
-			audioBuffer.__srcSound.addEventListener(flash.events.Event.COMPLETE, function(event)
-			{
+			audioBuffer.__srcSound.addEventListener(flash.events.Event.COMPLETE, function(event) {
 				promise.complete(audioBuffer);
 			});
 
-			audioBuffer.__srcSound.addEventListener(flash.events.ProgressEvent.PROGRESS, function(event)
-			{
+			audioBuffer.__srcSound.addEventListener(flash.events.ProgressEvent.PROGRESS, function(event) {
 				promise.progress(Std.int(event.bytesLoaded), Std.int(event.bytesTotal));
 			});
 
@@ -327,13 +317,11 @@ class AudioBuffer
 			#elseif (js && html5 && lime_howlerjs)
 			if (audioBuffer != null)
 			{
-				audioBuffer.__srcHowl.on("load", function()
-				{
+				audioBuffer.__srcHowl.on("load", function() {
 					promise.complete(audioBuffer);
 				});
 
-				audioBuffer.__srcHowl.on("loaderror", function(id, msg)
-				{
+				audioBuffer.__srcHowl.on("loaderror", function(id, msg) {
 					promise.error(msg);
 				});
 
@@ -342,28 +330,18 @@ class AudioBuffer
 			#else
 			promise.complete(audioBuffer);
 			#end
-		}
-		else
-		{
-			promise.error(null);
-		}
+		} else promise.error(null);
 
 		return promise.future;
 		#else
 		// TODO: Streaming
 
 		var request = new HTTPRequest<AudioBuffer>();
-		return request.load(path).then(function(buffer)
-		{
-			if (buffer != null)
-			{
+		return request.load(path).then(function(buffer) {
+			if (buffer != null){
 				buffer.initBuffer();
 				return Future.withValue(buffer);
-			}
-			else
-			{
-				return cast Future.withError("");
-			}
+			} else return cast Future.withError("");
 		});
 		#end
 	}
@@ -375,22 +353,17 @@ class AudioBuffer
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = AudioBuffer.fromFiles(paths);
 
-		if (audioBuffer != null)
-		{
-			audioBuffer.__srcHowl.on("load", function()
-			{
+		if (audioBuffer != null) {
+			audioBuffer.__srcHowl.on("load", function() {
 				promise.complete(audioBuffer);
 			});
 
-			audioBuffer.__srcHowl.on("loaderror", function()
-			{
+			audioBuffer.__srcHowl.on("loaderror", function() {
 				promise.error(null);
 			});
 
 			audioBuffer.__srcHowl.load();
-		}
-		else
-		{
+		} else {
 			promise.error(null);
 		}
 		#else
@@ -404,17 +377,12 @@ class AudioBuffer
 	{
 		var signature = bytes.getString(0, 4);
 
-		switch (signature)
-		{
-			case "OggS":
-				return "audio/ogg";
-			case "fLaC":
-				return "audio/flac";
-			case "RIFF" if (bytes.getString(8, 4) == "WAVE"):
-				return "audio/wav";
+		switch (signature) {
+			case "OggS": return "audio/ogg";
+			case "fLaC": return "audio/flac";
+			case "RIFF" if (bytes.getString(8, 4) == "WAVE"): return "audio/wav";
 			default:
-				switch ([bytes.get(0), bytes.get(1), bytes.get(2)])
-				{
+				switch ([bytes.get(0), bytes.get(1), bytes.get(2)]) {
 					case [73, 68, 51] | [255, 251, _] | [255, 250, _] | [255, 243, _]: return "audio/mp3";
 					default:
 				}

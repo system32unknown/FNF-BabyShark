@@ -151,8 +151,7 @@ class WeekData {
 				for (daWeek in listOfWeeks)
 				{
 					var path:String = directory + daWeek + '.json';
-					if(sys.FileSystem.exists(path))
-					{
+					if(sys.FileSystem.exists(path)) {
 						addWeek(daWeek, path, directories[i], i, originalLength);
 					}
 				}
@@ -160,8 +159,7 @@ class WeekData {
 				for (file in FileSystem.readDirectory(directory))
 				{
 					var path = haxe.io.Path.join([directory, file]);
-					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json'))
-					{
+					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json')) {
 						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
 					}
 				}
