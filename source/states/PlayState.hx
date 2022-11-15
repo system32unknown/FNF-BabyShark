@@ -2704,7 +2704,6 @@ class PlayState extends MusicBeatState
 	}
 
 	public function changeMania(newValue:Int, skipStrumFadeOut:Bool = false) {
-		
 		var daOldMania = mania;
 		mania = newValue;
 
@@ -3082,8 +3081,8 @@ class PlayState extends MusicBeatState
 
 		switch(ClientPrefs.getPref('IconBounceType')) {
 			case "Vanilla": // Stolen from Vanilla Engine
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.5)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.5)));
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .5)));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .5)));
 			case "Psych":
 				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP1.scale.set(mult, mult);
@@ -3093,11 +3092,11 @@ class PlayState extends MusicBeatState
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(0.1))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(0.1))));
 			case "Micdup" | "BabyShark": // Stolen from FNF Mic'd Up
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, 0.09 / (Main.fpsVar.currentFPS / 60))));
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, .09 / (Main.fpsVar.currentFPS / 60))));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, .09 / (Main.fpsVar.currentFPS / 60))));
 			case "Purgatory": // Stolen from Dave And Bambi
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.8)), Std.int(FlxMath.lerp(150, iconP1.height, 0.8)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.8)), Std.int(FlxMath.lerp(150, iconP2.height, 0.8)));
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .8)), Std.int(FlxMath.lerp(150, iconP1.height, .8)));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .8)), Std.int(FlxMath.lerp(150, iconP2.height, .8)));
 			case "DaveAndBambi":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
@@ -3814,11 +3813,13 @@ class PlayState extends MusicBeatState
 				reloadHealthBarColors();
 
 			case '\"Screw you!\" Text Change':
-				if (screwYouTxt.text != null)
-					screwYouTxt.text = value1;
-				if(screwYouTxt.text == null || screwYouTxt.text == "")
-					songNameText.y = textYPos;
-				else songNameText.y = textYPos - 20;
+				if(SONG.screwYou != null) {
+					if (screwYouTxt.text != null)
+						screwYouTxt.text = value1;
+					if(screwYouTxt.text == null || screwYouTxt.text == "")
+						songNameText.y = textYPos;
+					else songNameText.y = textYPos - 20;
+				}
 			case 'BG Freaks Expression':
 				if(bgGirls != null) bgGirls.swapDanceType();
 
@@ -4164,17 +4165,18 @@ class PlayState extends MusicBeatState
 
 		for (dakey in daKeyText)
 			dakey.font = font;
-		if(SONG.screwYou != null)
+		if (SONG.screwYou != null) {
 			screwYouTxt.font = font;
 			screwYouTxt.y = textYPos;
+		}
 	}
 
 	var scoreSeparator:String = "|";
 	private function UpdateScoreText() {
 		var Accuracy:Float = MathUtil.floorDecimal(ratingPercent * 100, 2);
 		var Ranks:String = CoolUtil.GenerateLetterRank(Accuracy);
-		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) ' : '');
-		tempText += scoreSeparator + (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
+		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) $scoreSeparator' : '');
+		tempText += (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
 		tempText += (!cpuControlled ? '$scoreSeparator Misses:$songMisses ' : '');
 		tempText += '$scoreSeparator Acc:$Accuracy%' + (ratingName != '?' ? ' [$ratingName, $Ranks] - $ratingFC' : ' [?, ?] - ?');
 		scoreTxt.text = tempText;
@@ -5233,19 +5235,19 @@ class PlayState extends MusicBeatState
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
 			case "Purgatory":
-				var funny:Float = (healthBar.percent * 0.01) + 0.01;
+				var funny:Float = (healthBar.percent * .01) + .01;
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
 
-				if (curBeat % 4 == 0 && (ClientPrefs.getPref('IconBounceType') == "Purgatory")) {
+				if (curBeat % 4 == 0) {
 					advTweenAngleIcon(iconP1, -24, .3, FlxEase.quadOut);
 					advTweenAngleIcon(iconP2, 24, .3, FlxEase.quadOut);
 				}
 			case "DaveAndBambi":
 				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), 0.1);
 	
-				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + 0.1))), Std.int(iconP1.height - (25 * funny)));
-				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + 0.1))), Std.int(iconP2.height - (25 * ((2 - funny) + 0.1))));
+				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
+				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
 			case "RadicalOne":
 				FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
 				FlxTween.cancelTweensOf(iconP1);
@@ -5256,14 +5258,14 @@ class PlayState extends MusicBeatState
 				FlxTween.tween(iconP2, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
 			case "GoldenApple":
 				if (curBeat % 2 == 0) {
-					iconP1.scale.set(1.1, 0.8);
+					iconP1.scale.set(1.1, .8);
 					iconP2.scale.set(1.1, 1.3);
 	
 					FlxTween.angle(iconP1, -15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 					FlxTween.angle(iconP2, 15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 				} else {
 					iconP1.scale.set(1.1, 1.3);
-					iconP2.scale.set(1.1, 0.8);
+					iconP2.scale.set(1.1, .8);
 	
 					FlxTween.angle(iconP2, -15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 					FlxTween.angle(iconP1, 15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});

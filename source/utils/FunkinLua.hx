@@ -780,19 +780,11 @@ class FunkinLua {
 			#end
 		});
 
-		addCallback("loadSong", function(?name:String = null, ?difficultyNum:Int = -1, ?weekJson:String = null) {
+		addCallback("loadSong", function(?name:String = null, ?difficultyNum:Int = -1) {
 			if(name == null || name.length < 1)
 				name = PlayState.SONG.song;
-			if (difficultyNum <= -1)
+			if (difficultyNum == -1)
 				difficultyNum = PlayState.storyDifficulty;
-
-			var identifier:Dynamic;
-			if (weekJson == null || weekJson.length < 1) 
-				identifier = WeekData.weeksList[PlayState.storyWeek];
-			else identifier = weekJson;
-			
-			if (identifier != null) 
-				CoolUtil.difficulties = [WeekData.weeksLoaded.get(identifier).difficulties];
 
 			var poop = Highscore.formatSong(name, difficultyNum);
 			PlayState.SONG = Song.loadFromJson(poop, name);

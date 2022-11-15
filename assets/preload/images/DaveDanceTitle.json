@@ -1,8 +1,9 @@
 {	
-	"titlex":239.5,
+	"titlex":405,
 	"starty":100,
-	"gfx":100,
+	"gfx":30,
 	"gfy":20,
 	"useOldDance":true,
+	"bgColor":"5C00CD",
 	"bpm":150
 }

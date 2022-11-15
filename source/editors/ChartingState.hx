@@ -1345,12 +1345,12 @@ class ChartingState extends MusicBeatState
 			if (sender == noteSplashesInputText) {
 				_song.splashSkin = noteSplashesInputText.text;
 			} else if (curSelectedNote != null) {
-				if (sender == value1InputText && checkEventSelected(1)) {
+				if (sender == value1InputText) {
 					if(curSelectedNote[1][curEventSelected] != null) {
 						curSelectedNote[1][curEventSelected][1] = value1InputText.text;
 						updateGrid();
 					}
-				} else if (sender == value2InputText && checkEventSelected(2)) {
+				} else if (sender == value2InputText) {
 					if(curSelectedNote[1][curEventSelected] != null) {
 						curSelectedNote[1][curEventSelected][2] = value2InputText.text;
 						updateGrid();
@@ -1367,10 +1367,6 @@ class ChartingState extends MusicBeatState
 				case 'playbackSpeed': playbackSpeed = Std.int(sliderRate.value);
 			}
 		}
-	}
-
-	function checkEventSelected(index:Int = 0):Bool {
-		return curSelectedNote[1] != null && curSelectedNote[1][curEventSelected][index] != null;
 	}
 
 	function sectionStartTime(add:Int = 0):Float {

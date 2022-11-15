@@ -39,6 +39,7 @@ typedef TitleData = {
 	starty:Float,
 	gfx:Float,
 	gfy:Float,
+	bgColor:String,
 	useOldDance:Bool,
 	bpm:Int
 }
@@ -91,7 +92,6 @@ class TitleState extends MusicBeatState
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
 		super.create();
-
 		FlxG.save.bind('funkin', 'altertoriel');
 		ClientPrefs.loadPrefs();
 		Highscore.load();
@@ -155,7 +155,7 @@ class TitleState extends MusicBeatState
 		titlebg.velocity.set(0, 110);
 		titlebg.updateHitbox();
 		titlebg.alpha = .5;
-		titlebg.color = 0xFF5C00CD;
+		titlebg.color = FlxColor.fromString('#${titleJSON.bgColor}');
 		titlebg.screenCenter(X);
 		add(titlebg);
 
@@ -322,8 +322,8 @@ class TitleState extends MusicBeatState
 
 	function deleteCoolText() {
 		while (textGroup.members.length > 0) {
-			credGroup.remove(textGroup.members[0], true);
-			textGroup.remove(textGroup.members[0], true);
+			if (credGroup != null) credGroup.remove(textGroup.members[0], true);
+			if (textGroup != null) textGroup.remove(textGroup.members[0], true);
 		}
 	}
 
