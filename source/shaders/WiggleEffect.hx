@@ -19,7 +19,7 @@ class WiggleEffect
 	public var waveFrequency(default, set):Float = 0;
 	public var waveAmplitude(default, set):Float = 0;
 
-	public function new():Void{
+	public function new():Void {
 		shader.uTime.value = [0];
 	}
 

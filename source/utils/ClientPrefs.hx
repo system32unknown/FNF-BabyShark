@@ -33,6 +33,7 @@ class ClientPrefs {
 		'MstimingTypes' => "Psych",
 		'ShowJudgementCount' => false,
 		'IconBounceType' => 'Psych',
+		'updateIconBox' => true,
 		'RatingTypes' => 'Static',
 		'comboStacking' => true,
 		'convertEK' => false,

@@ -50,6 +50,13 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Vanilla', 'Psych', 'Exe']);
 		addOption(option);
 
+		var option:Option = new Option('Enable Health Bar Bopping',
+			'If checked, Enables Psych Icon Style.',
+			'updateIconBox',
+			'bool',
+			false);
+		addOption(option);
+
 		var option:Option = new Option('Camera Zooms',
 			"If unchecked, the camera won't zoom in on a beat hit.",
 			'camZooms',

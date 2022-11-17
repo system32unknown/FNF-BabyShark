@@ -2,7 +2,7 @@ package shaders;
 
 import flixel.system.FlxAssets.FlxShader;
 
-class GlitchEffect extends Effect 
+class GlitchEffect 
 {
     public var shader(default,null):GlitchShader = new GlitchShader();
 
@@ -11,7 +11,7 @@ class GlitchEffect extends Effect
 	public var waveAmplitude(default, set):Float = 0;
     public var isBG(default, set):Bool = false;
 
-	public function new():Void
+	public function new()
 	{
 		shader.uTime.value = [0];
 	}
@@ -100,10 +100,4 @@ class GlitchShader extends FlxShader
     {
        super();
     }
-} 
-
-class Effect {
-	public function setValue(shader:FlxShader, variable:String, value:Float) {
-		Reflect.setProperty(Reflect.getProperty(shader, 'variable'), 'value', [value]);
-	}
 }

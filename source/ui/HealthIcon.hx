@@ -12,6 +12,7 @@ class HealthIcon extends FlxSprite
 	public var sprTracker:FlxSprite;
 	private var isPlayer:Bool = false;
 	private var char:String = '';
+	
 	public var icontype:String = 'classic';
 	private var iconnum:Int = 0;
 	private var iconarray:Array<Int>;
@@ -44,7 +45,7 @@ class HealthIcon extends FlxSprite
 			loadGraphic(file, true, Math.floor(width / iconnum), Math.floor(height)); //Then load it fr
 			iconOffsets[0] = (width - 150) / iconnum;
 			iconOffsets[1] = (width - 150) / iconnum;
-			updateHitbox();
+			if (ClientPrefs.getPref('updateIconBox')) updateHitbox();
 
 			animation.add(char, iconarray, 0, false, isPlayer);
 			animation.play(char);
@@ -58,9 +59,11 @@ class HealthIcon extends FlxSprite
 	}
 
 	override function updateHitbox() {
-		super.updateHitbox();
-		offset.x = iconOffsets[0];
-		offset.y = iconOffsets[1];
+		if (ClientPrefs.getPref('updateIconBox')) {
+			super.updateHitbox();
+			offset.x = iconOffsets[0];
+			offset.y = iconOffsets[1];
+		}
 	}
 
 	public function getCharacter():String {

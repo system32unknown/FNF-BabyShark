@@ -3,7 +3,7 @@ package shaders;
 import flixel.system.FlxAssets.FlxShader;
 import openfl.Lib;
 
-class VCRDistortionEffect extends Effect
+class VCRDistortionEffect
 {
     public var shader(default, null):VCRDistortionShader = new VCRDistortionShader();
 
@@ -184,10 +184,4 @@ class VCRDistortionShader extends FlxShader {
     public function new() {
        super();
     }
-}
-
-class Effect {
-	public function setValue(shader:FlxShader, variable:String, value:Float) {
-		Reflect.setProperty(Reflect.getProperty(shader, 'variable'), 'value', [value]);
-	}
 }
