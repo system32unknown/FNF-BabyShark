@@ -82,7 +82,7 @@ class PlatformUtil
 
     #if windows
 	@:functionCode('
-        res = SetCursorPos(x, y); 
+        return SetCursorPos(x, y); 
     ')
     #end
 	static public function setCursorPos(x:Int = 0, y:Int = 0):Int
