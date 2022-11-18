@@ -47,14 +47,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'HealthTypes',
 			'string',
 			'Psych',
-			['Vanilla', 'Psych', 'Exe']);
-		addOption(option);
-
-		var option:Option = new Option('Enable Health Bar Bopping',
-			'If checked, Enables Psych Icon Style.',
-			'updateIconBox',
-			'bool',
-			false);
+			['Vanilla', 'Psych']);
 		addOption(option);
 
 		var option:Option = new Option('Camera Zooms',

@@ -15,7 +15,6 @@ class PlayerSettings
 	}
 
 	static public function init():Void {
-		if (player == null)
-			player = new PlayerSettings(Solo);
+		if (player == null) player = new PlayerSettings(Solo);
 	}
 }

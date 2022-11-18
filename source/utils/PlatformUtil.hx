@@ -61,15 +61,15 @@ class PlatformUtil
         return Shell_NotifyIcon(NIM_MODIFY, &m_NID);
     ')
     #end
-    static public function sendWindowsNotification(title:String = "", desc:String = "", res:Int = 0)
-        return res;
+    static public function sendWindowsNotification(title:String = "", desc:String = ""):Int
+        return 0;
 
     #if windows
     @:functionCode('
         LPCSTR lwtitle = title.c_str();
         LPCSTR lwDesc = desc.c_str();
 
-        res = MessageBox(
+        return MessageBox(
             NULL,
             lwDesc,
             lwtitle,
@@ -77,14 +77,14 @@ class PlatformUtil
         );
     ')
     #end
-    static public function sendFakeMsgBox(title:String = "", desc:String = "", res:Int = 0) // TODO: Linux and macOS (will do soon)
-        return res;
+    static public function sendFakeMsgBox(title:String = "", desc:String = ""):Int
+        return 0;
 
     #if windows
 	@:functionCode('
         res = SetCursorPos(x, y); 
     ')
     #end
-	static public function setCursorPos(x:Int = 0, y:Int = 0, res:Int = 0) // Only works on windows, otherwise returns 0!
-		return res;
+	static public function setCursorPos(x:Int = 0, y:Int = 0):Int
+		return 0;
 }

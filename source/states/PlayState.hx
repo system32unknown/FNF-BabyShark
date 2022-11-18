@@ -2896,9 +2896,9 @@ class PlayState extends MusicBeatState
 		if(disableTheTripperAt == curStep || isDead)
 			disableTheTripper = true;
 
+		screenshader.update(elapsed);
 		if(disableTheTripper) {
-			screenshader.update(elapsed);
-			screenshader.shader.uampmul.value[0] -= (elapsed / 2);
+			screenshader.ampmul -= (elapsed / 2);
 		}
 
 		if(ClientPrefs.getPref('camMovement')) {
@@ -3136,30 +3136,24 @@ class PlayState extends MusicBeatState
 			case "Vanilla": // Stolen from Vanilla Engine
 				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
-			case "Exe":
-				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset) - iconP1.offset.x;
-				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset) - iconP2.offset.x;
 			case "Psych":
 				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
 				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
 		}
-
 		if (health > healthMax)
 			health = healthMax;
 
 		if (healthBar.percent < 20 && iconP1.icontype != "single")
 			iconP1.animation.curAnim.curFrame = 1;
-		else if (healthBar.percent > 80 && (iconP1.icontype == "winning" && ClientPrefs.getPref('WinningIcon')))
+		else if (healthBar.percent > 80 && iconP1.icontype == "winning")
 			iconP1.animation.curAnim.curFrame = 2;
-		else
-			iconP1.animation.curAnim.curFrame = 0;
+		else iconP1.animation.curAnim.curFrame = 0;
 
 		if (healthBar.percent > 80 && iconP2.icontype != "single")
 			iconP2.animation.curAnim.curFrame = 1;
-		else if (healthBar.percent < 20 && (iconP2.icontype == "winning" && ClientPrefs.getPref('WinningIcon')))
+		else if (healthBar.percent < 20 && iconP2.icontype == "winning")
 			iconP2.animation.curAnim.curFrame = 2;
-		else
-			iconP2.animation.curAnim.curFrame = 0;
+		else iconP2.animation.curAnim.curFrame = 0;
 
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {
 			persistentUpdate = false;
@@ -3750,7 +3744,7 @@ class PlayState extends MusicBeatState
 				var skipTween:Bool = value2 == "true" ? true : false;
 
 				newMania = Std.parseInt(value1);
-				if(Math.isNaN(newMania) && newMania < 0 && newMania > 9)
+				if(Math.isNaN(newMania) && newMania < Note.minMania && newMania > Note.maxMania)
 					newMania = 0;
 				changeMania(newMania, skipTween);
 
@@ -3849,15 +3843,13 @@ class PlayState extends MusicBeatState
 					disableTheTripper = false;
 					disableTheTripperAt = Std.parseInt(value1);
 
-					FlxG.camera.setFilters([new ShaderFilter(screenshader.shader)]);
 					screenshader.waveSpeed = Std.parseFloat(value2);
 					screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
-					screenshader.shader.uampmul.value[0] = 1;
+					screenshader.ampmul = 1;
 				}
 
 			case 'Change Scroll Speed':
-				if (songSpeedType == "constant")
-					return;
+				if (songSpeedType == "constant") return;
 				var val1:Float = Std.parseFloat(value1);
 				var val2:Float = Std.parseFloat(value2);
 				if(Math.isNaN(val1)) val1 = 1;
@@ -3929,8 +3921,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var cameraTwn:FlxTween;
-	public function moveCamera(isDad:Bool)
-	{
+	public function moveCamera(isDad:Bool) {
 		if(isDad) {
 			camFollow.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
 			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
@@ -3998,9 +3989,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			if(doDeathCheck()) {
-				return;
-			}
+			if(doDeathCheck()) return;
 		}
 
 		timeBarBG.visible = false;
@@ -4703,7 +4692,7 @@ class PlayState extends MusicBeatState
 	function opponentnoteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		//Dupe note remove
 		notes.forEachAlive(function(note:Note) {
-			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) {
+			if (daNote != note && !daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) {
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
@@ -5281,9 +5270,9 @@ class PlayState extends MusicBeatState
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
 			case "RadicalOne":
-				FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
 				FlxTween.cancelTweensOf(iconP1);
 				iconP1.scale.set(1.3, 1.3);
+				FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
 
 				FlxTween.cancelTweensOf(iconP2);
 				iconP2.scale.set(1.3, 1.3);
@@ -5311,17 +5300,7 @@ class PlayState extends MusicBeatState
 			case "BabyShark":
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
-
-				if (curBeat % 2 == 0) {
-					iconP1.scale.set(1.1, .8);
-					iconP2.scale.set(1.1, 1.3);
-				} else {
-					iconP1.scale.set(1.1, 1.3);
-					iconP2.scale.set(1.1, .8);
-				}
-				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
-				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
-
+				
 				advTweenAngleIcon(iconP1, (curBeat % 2 == 0 ? -16 : 16), .3, FlxEase.quadOut);
 				advTweenAngleIcon(iconP2, (curBeat % 2 == 0 ? 16 : -16), .3, FlxEase.quadOut);
 			case "Custom":

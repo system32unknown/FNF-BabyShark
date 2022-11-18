@@ -45,7 +45,6 @@ class HealthIcon extends FlxSprite
 			loadGraphic(file, true, Math.floor(width / iconnum), Math.floor(height)); //Then load it fr
 			iconOffsets[0] = (width - 150) / iconnum;
 			iconOffsets[1] = (width - 150) / iconnum;
-			if (ClientPrefs.getPref('updateIconBox')) updateHitbox();
 
 			animation.add(char, iconarray, 0, false, isPlayer);
 			animation.play(char);
@@ -55,14 +54,6 @@ class HealthIcon extends FlxSprite
 			if(char.endsWith('-pixel')) {
 				antialiasing = false;
 			}
-		}
-	}
-
-	override function updateHitbox() {
-		if (ClientPrefs.getPref('updateIconBox')) {
-			super.updateHitbox();
-			offset.x = iconOffsets[0];
-			offset.y = iconOffsets[1];
 		}
 	}
 

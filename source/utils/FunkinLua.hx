@@ -552,9 +552,8 @@ class FunkinLua {
 		});
 
 		addCallback("callPlatformUtil", function(?platformType:String, ?args:Array<Dynamic>){
-			if (args == null) {
-				args = [];
-			}
+			if (args == null) args = [];
+
 			switch (platformType.toLowerCase().trim()) {
 				case "sendwindowsnotification": PlatformUtil.sendWindowsNotification(args[0], args[1]);
 				case "sendfakemsgbox": PlatformUtil.sendFakeMsgBox(args[0], args[1]);
@@ -563,7 +562,7 @@ class FunkinLua {
 			}
 		});
 
-		addCallback("getGlobalFromScript", function(?luaFile:String, ?global:String){ // returns the global from a script
+		addCallback("getGlobalFromScript", function(?luaFile:String, ?global:String) { // returns the global from a script
 			if(luaFile == null) {
 				#if (linc_luajit >= "0.0.6")
 				LuaL.error(lua, "bad argument #1 to 'getGlobalFromScript' (string expected, got nil)");
@@ -1958,20 +1957,12 @@ class FunkinLua {
 		});
 		addCallback("getRandomInt", function(min:Int, max:Int = FlxMath.MAX_VALUE_INT, exclude:String = '') {
 			var excludeArray:Array<String> = exclude.split(',');
-			var toExclude:Array<Int> = [];
-			for (i in 0...excludeArray.length)
-			{
-				toExclude.push(Std.parseInt(excludeArray[i].trim()));
-			}
+			var toExclude:Array<Int> = [for (i in 0...excludeArray.length) Std.parseInt(excludeArray[i].trim())];
 			return FlxG.random.int(min, max, toExclude);
 		});
 		addCallback("getRandomFloat", function(min:Float, max:Float = 1, exclude:String = '') {
 			var excludeArray:Array<String> = exclude.split(',');
-			var toExclude:Array<Float> = [];
-			for (i in 0...excludeArray.length)
-			{
-				toExclude.push(Std.parseFloat(excludeArray[i].trim()));
-			}
+			var toExclude:Array<Float> = [for (i in 0...excludeArray.length) Std.parseFloat(excludeArray[i].trim())];
 			return FlxG.random.float(min, max, toExclude);
 		});
 		addCallback("getRandomBool", function(chance:Float = 50) {
@@ -1983,10 +1974,8 @@ class FunkinLua {
 			path = Paths.modsJson(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
 			if(!FileSystem.exists(path))
 			#end
-				path = Paths.json(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
-
-				luaTrace('startDialogue: Trying to load dialogue: ' + path);
-
+			path = Paths.json(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
+			luaTrace('startDialogue: Trying to load dialogue: ' + path);
 			#if MODS_ALLOWED
 			if(FileSystem.exists(path))
 			#else
@@ -2731,15 +2720,13 @@ class FunkinLua {
 	#if hscript
 	public static function isOfTypes(value:Any, types:Array<Dynamic>) {
 		for (type in types) {
-			if(Std.isOfType(value, type)) return true;
+			if (Std.isOfType(value, type)) return true;
 		}
 		return false;
 	}
 
 	public function initHaxeModule() {
-		if(hscript == null) {
-			hscript = new HScript();
-		}
+		if(hscript == null) hscript = new HScript();
 	}
 	#end
 
@@ -2859,9 +2846,7 @@ class FunkinLua {
 	}
 
 	function resetTextTag(tag:String) {
-		if(!PlayState.instance.modchartTexts.exists(tag)) {
-			return;
-		}
+		if(!PlayState.instance.modchartTexts.exists(tag)) return;
 
 		var pee:ModchartText = PlayState.instance.modchartTexts.get(tag);
 		pee.kill();
@@ -3131,10 +3116,8 @@ class FunkinLua {
 		result = Convert.fromLua(lua, -1);
 		Lua.pop(lua, 1);
 
-		if(result == null) {
-			return false;
-		}
-		return (result == 'true');
+		if(result == null) return false;
+		return result == 'true';
 	}
 	#end
 
@@ -3265,8 +3248,7 @@ class HScript
 	}
 
 	public function call(key:String, args:Array<Dynamic>):Dynamic {
-		if (!interp.variables.exists(key))
-			return -1;
+		if (!interp.variables.exists(key)) return -1;
 
 		var functionField:Function = interp.variables.get(key);
 		return Reflect.callMethod(this, functionField, args);
