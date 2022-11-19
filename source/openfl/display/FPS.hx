@@ -22,7 +22,7 @@ class FPS extends TextField
 	/**
 		The current frame rate, expressed using frames-per-second
 	**/
-	public var currentFPS(default, null):Int;
+	public var currentFPS(default, null):Int = 0;
 	private var memory:Float = 0;
 	private var peak:Float = 0;
 
@@ -37,15 +37,14 @@ class FPS extends TextField
 		this.x = x;
 		this.y = y;
 
-		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
 		
-		defaultTextFormat = new TextFormat("VCR OSD Mono", 14, color);
+		defaultTextFormat = new TextFormat(openfl.utils.Assets.getFont("assets/fonts/vcr.ttf").fontName, 14, color);
 		autoSize = LEFT;
 		multiline = true;
 	}
-
+	
 	// Event Handlers
 	@:noCompletion
 	private override function __enterFrame(deltaTime:Float):Void

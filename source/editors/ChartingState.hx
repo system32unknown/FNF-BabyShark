@@ -2504,7 +2504,7 @@ class ChartingState extends MusicBeatState
 				susColor = CoolUtil.dominantColor(note);
 		}
 
-		var spr:FlxSprite = new FlxSprite(note.x + (GRID_SIZE * 0.5) - 4, note.y + GRID_SIZE / 2).makeGraphic(8, height, susColor);
+		var spr:FlxSprite = new FlxSprite(note.x + (GRID_SIZE * 0.5) - 4, note.y + GRID_SIZE / 2).makeGraphic(8, height, (ClientPrefs.getPref('EditorSusColor') ? susColor : FlxColor.WHITE));
 		if (note.noteType != "Hurt Note" || note.noteType != "Danger Note" || note.noteType != "Kill Note") {
 			spr.shader = colorSwap.shader;
 			colorSwap.hue = hueColor;

@@ -263,7 +263,11 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if (curSelected >= optionsArray.length)
 			curSelected = 0;
 
-		descText.text = optionsArray[curSelected].description;
+		var descString:String = "";
+		var checkIfEmpty:Bool = optionsArray[curSelected].description != "";
+		if (checkIfEmpty) descString = optionsArray[curSelected].description;
+		descBox.visible = checkIfEmpty;
+		descText.text = descString;
 		descText.screenCenter(Y);
 		descText.y += 270;
 

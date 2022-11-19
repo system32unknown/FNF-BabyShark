@@ -44,6 +44,7 @@ class ClientPrefs {
 		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
 		'ghostTapping' => true,
 		'HealthTypes' => 'Psych',
+		'EditorSusColor' => false,
 		'timeBarType' => 'Time Left',
 		'scoreZoom' => true,
 		'noReset' => false,

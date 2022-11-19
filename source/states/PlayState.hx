@@ -2768,29 +2768,6 @@ class PlayState extends MusicBeatState
 				FlxG.sound.music.pause();
 				vocals.pause();
 			}
-
-			if (startTimer != null && !startTimer.finished)
-				startTimer.active = false;
-			if (finishTimer != null && !finishTimer.finished)
-				finishTimer.active = false;
-			if (songSpeedTween != null)
-				songSpeedTween.active = false;
-
-			if(carTimer != null) carTimer.active = false;
-
-			var chars:Array<Character> = [boyfriend, gf, dad];
-			for (char in chars) {
-				if(char != null && char.colorTween != null) {
-					char.colorTween.active = false;
-				}
-			}
-
-			for (tween in modchartTweens) {
-				tween.active = false;
-			}
-			for (timer in modchartTimers) {
-				timer.active = false;
-			}
 		}
 
 		super.openSubState(SubState);
@@ -2800,33 +2777,17 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			if (FlxG.sound.music != null && !startingSong)
-			{
+			if (FlxG.sound.music != null && !startingSong) {
 				resyncVocals();
 			}
 
-			if (startTimer != null && !startTimer.finished)
-				startTimer.active = true;
-			if (finishTimer != null && !finishTimer.finished)
-				finishTimer.active = true;
-			if (songSpeedTween != null)
-				songSpeedTween.active = true;
+			FlxTimer.globalManager.forEach(function(tmr:FlxTimer) {
+				if (!tmr.finished) tmr.active = true;
+			});
 
-			if(carTimer != null) carTimer.active = true;
-
-			var chars:Array<Character> = [boyfriend, gf, dad];
-			for (char in chars) {
-				if(char != null && char.colorTween != null) {
-					char.colorTween.active = true;
-				}
-			}
-
-			for (tween in modchartTweens) {
-				tween.active = true;
-			}
-			for (timer in modchartTimers) {
-				timer.active = true;
-			}
+			FlxTween.globalManager.forEach(function(twn:FlxTween) {
+				if (!twn.finished) twn.active = true;
+			});
 			paused = false;
 			callOnLuas('onResume', []);
 
@@ -2898,6 +2859,8 @@ class PlayState extends MusicBeatState
 
 		screenshader.update(elapsed);
 		if(disableTheTripper) {
+			FlxG.camera.setFilters([new ShaderFilter(screenshader.shader)]);
+			screenshader.update(elapsed);
 			screenshader.ampmul -= (elapsed / 2);
 		}
 
@@ -3124,8 +3087,6 @@ class PlayState extends MusicBeatState
 			case "GoldenApple": // Stolen from Dave And Bambi
 				iconP1.centerOffsets();
 				iconP2.centerOffsets();
-			case "Custom":
-				callOnLuas('onBounceUpdate', []);
 		}
 
 		iconP1.updateHitbox();
@@ -3382,6 +3343,14 @@ class PlayState extends MusicBeatState
 
 	function openPauseMenu()
 	{
+		FlxTimer.globalManager.forEach(function(tmr:FlxTimer) {
+			if (!tmr.finished) tmr.active = false;
+		});
+
+		FlxTween.globalManager.forEach(function(twn:FlxTween) {
+			if (!twn.finished) twn.active = false;
+		});
+
 		persistentUpdate = false;
 		persistentDraw = true;
 		paused = true;
@@ -3426,12 +3395,6 @@ class PlayState extends MusicBeatState
 
 				persistentUpdate = false;
 				persistentDraw = false;
-				for (tween in modchartTweens) {
-					tween.active = true;
-				}
-				for (timer in modchartTimers) {
-					timer.active = true;
-				}
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
 
 				#if desktop
@@ -3843,6 +3806,8 @@ class PlayState extends MusicBeatState
 					disableTheTripper = false;
 					disableTheTripperAt = Std.parseInt(value1);
 
+					screenshader.waveAmplitude = 1;
+					screenshader.waveFrequency = 2;
 					screenshader.waveSpeed = Std.parseFloat(value2);
 					screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
 					screenshader.ampmul = 1;
@@ -5303,8 +5268,6 @@ class PlayState extends MusicBeatState
 				
 				advTweenAngleIcon(iconP1, (curBeat % 2 == 0 ? -16 : 16), .3, FlxEase.quadOut);
 				advTweenAngleIcon(iconP2, (curBeat % 2 == 0 ? 16 : -16), .3, FlxEase.quadOut);
-			case "Custom":
-				callOnLuas('onBounceBeat', []);
 		}
 
 		iconP1.updateHitbox();

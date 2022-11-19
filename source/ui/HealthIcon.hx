@@ -14,6 +14,7 @@ class HealthIcon extends FlxSprite
 	private var char:String = '';
 	
 	public var icontype:String = 'classic';
+	public var isPsych:Bool = false;
 	private var iconnum:Int = 0;
 	private var iconarray:Array<Int>;
 
@@ -55,6 +56,19 @@ class HealthIcon extends FlxSprite
 				antialiasing = false;
 			}
 		}
+	}
+
+	override function updateHitbox() {
+		if (!isPsych) {
+			width = Math.abs(scale.x) * frameWidth;
+			height = Math.abs(scale.y) * frameHeight;
+			offset.set(-0.5 * (width - frameWidth), -0.5 * (height - frameHeight));
+			centerOrigin();
+			return;
+		} 
+		super.updateHitbox();
+		offset.x = iconOffsets[0];
+		offset.y = iconOffsets[1];
 	}
 
 	public function getCharacter():String {

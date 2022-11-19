@@ -52,8 +52,14 @@ class MiscellaneousSubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Alternate Discord Large Image',
-			'lol',
+			'',
 			'AltDiscordImg',
+			'bool',
+			true);
+		addOption(option);
+		var option:Option = new Option('Sustain Color In Editor',
+			'',
+			'EditorSusColor',
 			'bool',
 			true);
 		addOption(option);
