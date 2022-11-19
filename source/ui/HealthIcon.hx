@@ -35,7 +35,7 @@ class HealthIcon extends FlxSprite
 			var file:Dynamic = Paths.image(name);
 
 			loadGraphic(file);
-			var iconTypes:Array<String> = ['single', 'classic', 'winning'];
+			final iconTypes:Array<String> = ['single', 'classic', 'winning'];
 			var index:Int = Math.floor(width / 150);
 			if (index - 1 <= iconTypes.length) {
 				icontype = iconTypes[index - 1];

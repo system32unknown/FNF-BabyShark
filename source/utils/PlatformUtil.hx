@@ -87,4 +87,15 @@ class PlatformUtil
     #end
 	static public function setCursorPos(x:Int = 0, y:Int = 0):Int
 		return 0;
+
+    #if windows
+    @:functionCode('
+        HWND window = GetActiveWindow();
+        HICON smallIcon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
+        HICON icon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+        SendMessage(window, WM_SETICON, ICON_SMALL, (LPARAM)smallIcon);
+        SendMessage(window, WM_SETICON, ICON_BIG, (LPARAM)icon);
+    ')
+    #end
+    static public function setWindowIcon(path:String) {}
 }
