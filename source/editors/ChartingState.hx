@@ -97,7 +97,7 @@ class ChartingState extends MusicBeatState
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
 		['Change Character Icon', "Value 1: Icon to change (Dad, BF)\nValue 2: New character's icon name"],
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
-		['Set Property', "Value 1: Variable name\nValue 2: New value"],
+		['Set Property', "Value 1: Variable name\nValue 2: New value\n\nIf the Value is boolean add ', bool' in Value 1\nExample: boyfriend.visible, bool"],
 		['Change Mania', "Value 1: The new mania value (min: " + Note.minMania + "; max: " + Note.maxMania + ")\nValue 2: Skip old strum fade tween\nPut 'true' to skip it, anything else or blank to not."],
 		['\"Screw you!\" Text Change', "Value 1: Text\n\nChanges the \"Screw you!\" text."],
 		['Rainbow Eyesore', "Value 1: Step to end at\nValue 2: Speed"]
@@ -120,7 +120,7 @@ class ChartingState extends MusicBeatState
 	var strumLineNotes:FlxTypedGroup<StrumNote>;
 
 	public static var GRID_SIZE:Int = 40;
-	var CAM_OFFSET:Int = 360;
+	final CAM_OFFSET:Int = 360;
 
 	var dummyArrow:FlxSprite;
 
@@ -159,7 +159,7 @@ class ChartingState extends MusicBeatState
 	var currentDifficultyName:String;
 
 	var zoomTxt:FlxText;
-	var zoomList:Array<Float> = [0.25, 0.5, 1, 2, 3, 4, 6, 8, 12, 16, 24];
+	final zoomList:Array<Float> = [0.25, 0.5, 1, 2, 3, 4, 6, 8, 12, 16, 24];
 	var curZoom:Int = 2;
 
 	private var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
@@ -2501,10 +2501,10 @@ class ChartingState extends MusicBeatState
 		var brightnessColor:Float = arrowHSV[Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania])][2] / 100;
 		switch (note.noteType) {
 			case 'Hurt Note' | 'Danger Note' | 'Kill Note':
-				susColor = CoolUtil.dominantColor(note);
+				susColor = (ClientPrefs.getPref('EditorSusColor') ? CoolUtil.dominantColor(note) : FlxColor.WHITE);
 		}
 
-		var spr:FlxSprite = new FlxSprite(note.x + (GRID_SIZE * 0.5) - 4, note.y + GRID_SIZE / 2).makeGraphic(8, height, (ClientPrefs.getPref('EditorSusColor') ? susColor : FlxColor.WHITE));
+		var spr:FlxSprite = new FlxSprite(note.x + (GRID_SIZE * 0.5) - 4, note.y + GRID_SIZE / 2).makeGraphic(8, height, susColor);
 		if (note.noteType != "Hurt Note" || note.noteType != "Danger Note" || note.noteType != "Kill Note") {
 			spr.shader = colorSwap.shader;
 			colorSwap.hue = hueColor;
@@ -2775,7 +2775,7 @@ class ChartingState extends MusicBeatState
 		var json = {"song": eventsSong}
 
 		var data:String = Json.stringify(json, "\t");
-		if ((data != null) && (data.length > 0)) {
+		if (data != null && data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);

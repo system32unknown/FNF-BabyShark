@@ -520,8 +520,7 @@ class EditorPlayState extends MusicBeatState
 								doubleNote.kill();
 								notes.remove(doubleNote, true);
 								doubleNote.destroy();
-							} else
-								notesStopped = true;
+							} else notesStopped = true;
 						}
 
 						// eee jack detection before was not super good

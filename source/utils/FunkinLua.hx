@@ -551,7 +551,7 @@ class FunkinLua {
 			return null;
 		});
 
-		addCallback("callPlatformUtil", function(?platformType:String, ?args:Array<Dynamic>){
+		addCallback("callCppUtil", function(?platformType:String, ?args:Array<Dynamic>){
 			if (args == null) args = [];
 
 			switch (platformType.toLowerCase().trim()) {

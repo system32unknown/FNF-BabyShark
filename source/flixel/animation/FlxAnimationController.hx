@@ -246,10 +246,8 @@ class FlxAnimationController implements IFlxDestroyable
 		// Check _animations frames
 		var numFrames:Int = Frames.length - 1;
 		var i:Int = numFrames;
-		while (i >= 0)
-		{
-			if (Frames[numFrames - i] < frames)
-			{
+		while (i >= 0) {
+			if (Frames[numFrames - i] < frames) {
 				// add to existing animation, forward to backward
 				anim.frames.push(Frames[numFrames - i]);
 			}

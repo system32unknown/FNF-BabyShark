@@ -174,15 +174,11 @@ class EditorLua {
 	
 	public function call(event:String, args:Array<Dynamic>):Dynamic {
 		#if LUA_ALLOWED
-		if(lua == null) {
-			return Function_Continue;
-		}
+		if(lua == null) return Function_Continue;
 
 		Lua.getglobal(lua, event);
 
-		for (arg in args) {
-			Convert.toLua(lua, arg);
-		}
+		for (arg in args) Convert.toLua(lua, arg);
 
 		var result:Null<Int> = Lua.pcall(lua, args.length, 1, 0);
 		if(result != null && resultIsAllowed(lua, result)) {
@@ -213,9 +209,7 @@ class EditorLua {
 
 	public function set(variable:String, data:Dynamic) {
 		#if LUA_ALLOWED
-		if(lua == null) {
-			return;
-		}
+		if(lua == null) return;
 
 		Convert.toLua(lua, data);
 		Lua.setglobal(lua, variable);
@@ -224,9 +218,7 @@ class EditorLua {
 
 	public function stop() {
 		#if LUA_ALLOWED
-		if(lua == null) {
-			return;
-		}
+		if(lua == null) return;
 
 		Lua.close(lua);
 		lua = null;
