@@ -31,7 +31,6 @@ import states.MainMenuState;
 #if sys
 import sys.FileSystem;
 #end
-
 using StringTools;
 
 typedef TitleData = {
