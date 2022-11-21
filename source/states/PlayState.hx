@@ -480,8 +480,7 @@ class PlayState extends MusicBeatState
 
 		curStage = SONG.stage;
 		if(SONG.stage == null || SONG.stage.length < 1) {
-			switch (songName)
-			{
+			switch (songName) {
 				case 'spookeez' | 'south' | 'monster': curStage = 'spooky';
 				case 'pico' | 'blammed' | 'philly' | 'philly-nice': curStage = 'philly';
 				case 'milf' | 'satin-panties' | 'high': curStage = 'limo';
@@ -3704,7 +3703,7 @@ class PlayState extends MusicBeatState
 
 			case 'Change Mania':
 				var newMania:Int = 0;
-				var skipTween:Bool = value2 == "true" ? true : false;
+				var skipTween:Bool = (value2 == "true");
 
 				newMania = Std.parseInt(value1);
 				if(Math.isNaN(newMania) && newMania < Note.minMania && newMania > Note.maxMania)
@@ -3836,8 +3835,7 @@ class PlayState extends MusicBeatState
 				var trueVal:Dynamic = null;
 				var killMe:Array<String> = value1.split(',');
 				if (killMe.length > 1 && killMe[1].toLowerCase().replace(" ", "") == "bool") {
-					if (value2 == "true") trueVal = true;
-					else if (value2 == "false") trueVal = false;
+					trueVal = (value2 == "true");
 				}
 
 				killMe = killMe[0].split('.');

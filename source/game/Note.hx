@@ -31,6 +31,8 @@ class Note extends FlxSprite
 	];
 	public static var noteSplashScales:Array<Float> = EKData.splashScales;
 
+	public var extraData:Map<String, Dynamic> = [];
+
 	public static var ammo:Array<Int> = EKData.gun;
 	public static var minMania:Int = 0;
 	public static var maxMania:Int = 9;

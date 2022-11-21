@@ -2501,8 +2501,10 @@ class ChartingState extends MusicBeatState
 		var brightnessColor:Float = arrowHSV[Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania])][2] / 100;
 		switch (note.noteType) {
 			case 'Hurt Note' | 'Danger Note' | 'Kill Note':
-				susColor = (ClientPrefs.getPref('EditorSusColor') ? CoolUtil.dominantColor(note) : FlxColor.WHITE);
+				susColor = CoolUtil.dominantColor(note);
 		}
+
+		if (!ClientPrefs.getPref('EditorSusColor')) susColor = FlxColor.WHITE;
 
 		var spr:FlxSprite = new FlxSprite(note.x + (GRID_SIZE * 0.5) - 4, note.y + GRID_SIZE / 2).makeGraphic(8, height, susColor);
 		if (note.noteType != "Hurt Note" || note.noteType != "Danger Note" || note.noteType != "Kill Note") {
