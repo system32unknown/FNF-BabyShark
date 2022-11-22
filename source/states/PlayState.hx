@@ -178,7 +178,7 @@ class PlayState extends MusicBeatState
 	public var timeBar:FlxBar;
 
 	public var ratingsData:Array<Rating> = [];
-	public var perfects:Int = 0;
+	public var epics:Int = 0;
 	public var sicks:Int = 0;
 	public var goods:Int = 0;
 	public var bads:Int = 0;
@@ -1175,7 +1175,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.borderSize = 1;
 		judgementCounter.scrollFactor.set();
 		judgementCounter.screenCenter(Y);
-		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${maxCombo}\n' : '') + 'Perfects: ${perfects}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${maxCombo}\n' : '') + 'Epics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
 		if (ClientPrefs.getPref('ShowJudgementCount')) {
 			add(judgementCounter);
 		}
@@ -2274,7 +2274,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function updateScore(miss:Bool = false) {
-		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${maxCombo}\n' : '') + 'Perfects: ${perfects}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${maxCombo}\n' : '') + 'Epics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
 		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
 		}
@@ -2282,8 +2282,8 @@ class PlayState extends MusicBeatState
 			if (scoreTxtTween != null) {
 				scoreTxtTween.cancel();
 			}
-			scoreTxt.scale.x = 1.075;
-			scoreTxt.scale.y = 1.075;
+			scoreTxt.scale.x = 1.1;
+			scoreTxt.scale.y = 1.1;
 			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2 * playbackRate, {
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
@@ -4120,7 +4120,7 @@ class PlayState extends MusicBeatState
 			pixelShitPart2 = '-pixel';
 		}
 
-		Paths.image(pixelShitPart1 + "perfect" + pixelShitPart2);
+		Paths.image(pixelShitPart1 + "epic" + pixelShitPart2);
 		Paths.image(pixelShitPart1 + "sick" + pixelShitPart2);
 		Paths.image(pixelShitPart1 + "good" + pixelShitPart2);
 		Paths.image(pixelShitPart1 + "bad" + pixelShitPart2);
@@ -4157,12 +4157,12 @@ class PlayState extends MusicBeatState
 
 	var scoreSeparator:String = "|";
 	private function UpdateScoreText() {
-		var Accuracy:Float = MathUtil.floorDecimal(ratingPercent * 100, 2);
-		var Ranks:String = CoolUtil.GenerateLetterRank(Accuracy);
+		var accuracy:Float = MathUtil.floorDecimal(ratingPercent * 100, 2);
+		var ranks:String = CoolUtil.GenerateLetterRank(accuracy);
 		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) $scoreSeparator' : '');
 		tempText += (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
 		tempText += (!cpuControlled ? '$scoreSeparator Misses:$songMisses ' : '');
-		tempText += '$scoreSeparator Acc:$Accuracy%' + (ratingName != '?' ? ' [$ratingName, $Ranks] - $ratingFC' : ' [?, ?] - ?');
+		tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ranks] - $ratingFC' : ' [?, ?] - ?');
 		scoreTxt.text = tempText;
 	}
 
@@ -5436,7 +5436,7 @@ class PlayState extends MusicBeatState
 
 			// Rating FC
 			ratingFC = "";
-			if (perfects > 0) ratingFC = "PFC";
+			if (epics > 0) ratingFC = "MFC";
 			if (sicks > 0) ratingFC = "SFC";
 			if (goods > 0) ratingFC = "GFC";
 			if (bads > 0 || shits > 0) ratingFC = "FC";
