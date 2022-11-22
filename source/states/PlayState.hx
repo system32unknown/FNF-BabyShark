@@ -380,7 +380,7 @@ class PlayState extends MusicBeatState
 		keysArray = Keybinds.fill();
 
 		//Ratings
-		ratingsData.push(new Rating('perfect')); //default rating
+		ratingsData.push(new Rating('epic')); //default rating
 
 		var rating:Rating = new Rating('sick');
 		rating.ratingMod = 1;
@@ -4271,7 +4271,7 @@ class PlayState extends MusicBeatState
 				case 'shit' | 'bad': timingTxtArrays[0].color = FlxColor.RED;
 				case 'good': timingTxtArrays[0].color = FlxColor.GREEN;
 				case 'sick': timingTxtArrays[0].color = FlxColor.CYAN;
-				case 'perfect': timingTxtArrays[0].color = FlxColor.WHITE;
+				case 'epic': timingTxtArrays[0].color = FlxColor.WHITE;
 			}
 	
 			add(timingTxtArrays[0]);

@@ -103,9 +103,9 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 30;
 		addOption(option);
 
-		var option:Option = new Option('Perfect! Hit Window',
-			'Changes the amount of time you have\nfor hitting a "Perfect!" in milliseconds.',
-			'perfectWindow',
+		var option:Option = new Option('Epic! Hit Window',
+			'Changes the amount of time you have\nfor hitting a "Epic!" in milliseconds.',
+			'epicWindow',
 			'int',
 			10);
 		option.displayFormat = '%vms';
