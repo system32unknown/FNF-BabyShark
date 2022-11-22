@@ -4238,7 +4238,7 @@ class PlayState extends MusicBeatState
 		rating.acceleration.y = 550 * playbackRate * playbackRate;
 		rating.velocity.x -= FlxG.random.int(0, 10) * playbackRate;
 		rating.velocity.y -= FlxG.random.int(140, 175) * playbackRate;
-		rating.visible = (!hideHud && showRating);
+		rating.visible = !hideHud && showRating;
 		rating.x += comboOffset[0][0];
 		rating.y -= comboOffset[0][1];
 
@@ -4253,7 +4253,7 @@ class PlayState extends MusicBeatState
 		timing.acceleration.y = 550 * playbackRate * playbackRate;
 		timing.velocity.x -= FlxG.random.int(0, 10) * playbackRate;
 		timing.velocity.y -= FlxG.random.int(140, 175) * playbackRate;
-		timing.visible = (!hideHud && ClientPrefs.getPref('ShowLateEarly'));
+		timing.visible = !hideHud && ClientPrefs.getPref('ShowLateEarly');
 		timing.x += comboOffset[3][0];
 		timing.y -= comboOffset[3][1];
 
@@ -4262,7 +4262,7 @@ class PlayState extends MusicBeatState
 			timingTxtArrays[0].text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
 			timingTxtArrays[0].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			timingTxtArrays[0].borderSize = 1;
-			timingTxtArrays[0].visible = (!hideHud);
+			timingTxtArrays[0].visible = !hideHud;
 			if (RatingTypes == "Static") {
 				timingTxtArrays[0].cameras = [camHUD];
 			}
@@ -4271,7 +4271,7 @@ class PlayState extends MusicBeatState
 				case 'shit' | 'bad': timingTxtArrays[0].color = FlxColor.RED;
 				case 'good': timingTxtArrays[0].color = FlxColor.GREEN;
 				case 'sick': timingTxtArrays[0].color = FlxColor.CYAN;
-				case 'epic': timingTxtArrays[0].color = FlxColor.WHITE;
+				case 'epic': timingTxtArrays[0].color = FlxColor.fromString('#784FFF');
 			}
 	
 			add(timingTxtArrays[0]);
@@ -4281,8 +4281,8 @@ class PlayState extends MusicBeatState
 			timingTxtArrays[1].text = "Average: " + Math.round(averageMs) + "ms";
 			timingTxtArrays[1].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			timingTxtArrays[1].borderSize = 1;
-			timingTxtArrays[1].visible = (!hideHud);
-			if (RatingTypes == "Static"){
+			timingTxtArrays[1].visible = !hideHud;
+			if (RatingTypes == "Static") {
 				timingTxtArrays[1].cameras = [camHUD];
 			}
 			add(timingTxtArrays[1]);
@@ -4297,7 +4297,7 @@ class PlayState extends MusicBeatState
 		comboSpr.acceleration.y = FlxG.random.int(200, 300) * playbackRate * playbackRate;
 		comboSpr.velocity.y -= FlxG.random.int(140, 160) * playbackRate;
 		comboSpr.velocity.x += FlxG.random.int(1, 10) * playbackRate;
-		comboSpr.visible = (!hideHud && showCombo);
+		comboSpr.visible = !hideHud && showCombo;
 		comboSpr.x += comboOffset[2][0];
 		comboSpr.y -= comboOffset[2][1];
 
