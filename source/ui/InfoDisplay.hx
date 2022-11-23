@@ -77,13 +77,8 @@ class InfoDisplay extends TextField
 				text += "MEM Peak: " + getInterval(peak);
 			}
 
-			textColor = 0xFFFFFFFF;
-			if (peak > 3000 || currentFPS <= ClientPrefs.getPref('framerate') / 2)
-				textColor = 0xFFFF0000;
-
-			if (text != null || text != '')
-				if (Main.infoVar != null)
-					Main.infoVar.visible = fullVisible;
+			if ((text != null || text != '') && Main.infoVar != null)
+				Main.infoVar.visible = fullVisible;
 		}
 
 		cacheCount = currentCount;

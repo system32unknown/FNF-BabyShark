@@ -46,6 +46,7 @@ class TerminalState extends MusicBeatState
 
     override public function create():Void
     {
+        Main.infoVar.fullVisible = false;
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("The Terminal", null);
@@ -165,7 +166,7 @@ class TerminalState extends MusicBeatState
 
         if (keyJustPressed != FlxKey.NONE) {
             if (keyJustPressed == FlxKey.BACKSPACE) {
-                curCommand = curCommand.substr(0,curCommand.length - 1);
+                curCommand = curCommand.substr(0, curCommand.length - 1);
                 typeSound.play();
             } else if (keyJustPressed == FlxKey.SPACE) {
                 curCommand += " ";
@@ -190,6 +191,7 @@ class TerminalState extends MusicBeatState
             curCommand = "";
         }
         if (FlxG.keys.justPressed.ESCAPE) {
+            Main.infoVar.fullVisible = true;
             MusicBeatState.switchState(new MainMenuState());
             FlxG.sound.playMusic(Paths.music('freakyMenu'));
         }
