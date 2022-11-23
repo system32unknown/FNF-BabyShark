@@ -362,8 +362,7 @@ class FreeplayState extends MusicBeatState
 
 		var bullShit:Int = 0;
 
-		for (i in 0...iconArray.length)
-		{
+		for (i in 0...iconArray.length) {
 			iconArray[i].alpha = 0.6;
 		}
 
@@ -386,22 +385,18 @@ class FreeplayState extends MusicBeatState
 		var diffStr:String = WeekData.getCurrentWeek().difficulties;
 		if(diffStr != null) diffStr = diffStr.trim(); //Fuck you HTML5
 
-		if(diffStr != null && diffStr.length > 0)
-		{
+		if(diffStr != null && diffStr.length > 0) {
 			var diffs:Array<String> = diffStr.split(',');
 			var i:Int = diffs.length - 1;
-			while (i > 0)
-			{
-				if(diffs[i] != null)
-				{
+			while (i > 0) {
+				if(diffs[i] != null) {
 					diffs[i] = diffs[i].trim();
 					if(diffs[i].length < 1) diffs.remove(diffs[i]);
 				}
 				--i;
 			}
 
-			if(diffs.length > 0 && diffs[0].length > 0)
-			{
+			if(diffs.length > 0 && diffs[0].length > 0) {
 				CoolUtil.difficulties = diffs;
 			}
 		}

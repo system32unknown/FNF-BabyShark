@@ -238,7 +238,7 @@ class MultiCallback
 		id = '$length:$id';
 		length++;
 		numRemaining++;
-		var func:Void->Void = null;
+		var func:Void -> Void = null;
 		func = function() {
 			if (unfired.exists(id)) {
 				unfired.remove(id);
@@ -263,7 +263,4 @@ class MultiCallback
 		if (logId != null)
 			trace('$logId: $msg');
 	}
-	
-	public function getFired() return fired.copy();
-	public function getUnfired() return [for (id in unfired.keys()) id];
 }
