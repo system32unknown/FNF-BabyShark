@@ -8,6 +8,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.math.FlxMath;
 import game.Achievements;
 import utils.ClientPrefs;
 import ui.Alphabet;

@@ -113,12 +113,9 @@ class Alphabet extends FlxSpriteGroup
 		if (value == scaleX) return value;
 
 		scale.x = value;
-		for (letter in letters)
-		{
-			if(letter != null)
-			{
+		for (letter in letters) {
+			if(letter != null) {
 				letter.updateHitbox();
-				//letter.updateLetterOffset();
 				var ratio:Float = (value / letter.spawnScale.x);
 				letter.x = letter.spawnPos.x * ratio;
 			}
@@ -150,20 +147,16 @@ class Alphabet extends FlxSpriteGroup
 	{
 		if (isMenuItem) {
 			var lerpVal:Float = MathUtil.boundTo(elapsed * 9.6, 0, 1);
-			if(changeX)
-				x = FlxMath.lerp(x, (targetY * distancePerItem.x) + startPosition.x, lerpVal);
-			if(changeY)
-				y = FlxMath.lerp(y, (targetY * 1.3 * distancePerItem.y) + startPosition.y, lerpVal);
+			if(changeX) x = FlxMath.lerp(x, (targetY * distancePerItem.x) + startPosition.x, lerpVal);
+			if(changeY) y = FlxMath.lerp(y, (targetY * 1.3 * distancePerItem.y) + startPosition.y, lerpVal);
 		}
 		super.update(elapsed);
 	}
 
 	public function snapToPosition() {
 		if (isMenuItem) {
-			if(changeX)
-				x = (targetY * distancePerItem.x) + startPosition.x;
-			if(changeY)
-				y = (targetY * 1.3 * distancePerItem.y) + startPosition.y;
+			if(changeX) x = (targetY * distancePerItem.x) + startPosition.x;
+			if(changeY) y = (targetY * 1.3 * distancePerItem.y) + startPosition.y;
 		}
 	}
 
