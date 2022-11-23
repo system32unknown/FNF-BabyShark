@@ -8,7 +8,7 @@ import openfl.system.System;
 import utils.ClientPrefs;
 
 /**
-	The FPS class provides an easy-to-use monitor to display
+	The Advanced FPS class provides an easy-to-use monitor to display
 	the current frame rate of an OpenFL project
 **/
 class InfoDisplay extends TextField
@@ -16,6 +16,7 @@ class InfoDisplay extends TextField
 	/**
 		The current frame rate, expressed using frames-per-second
 	**/
+	public var fullVisible:Bool = true;
 	public var currentFPS(default, null):Int = 0;
 	var peak:UInt = 0;
 
@@ -51,10 +52,7 @@ class InfoDisplay extends TextField
 		size = Math.round(size * 100) / 100;
 		return size + " " + intervalArray[data] + " \n";
 	}
-	
-	
-	// Event Handlers
-	@:noCompletion
+
 	function update(_:Event):Void {
 		var now:Float = Timer.stamp();
 		times.push(now);
@@ -79,9 +77,13 @@ class InfoDisplay extends TextField
 				text += "MEM Peak: " + getInterval(peak);
 			}
 
+			textColor = 0xFFFFFFFF;
+			if (peak > 3000 || currentFPS <= ClientPrefs.getPref('framerate') / 2)
+				textColor = 0xFFFF0000;
+
 			if (text != null || text != '')
 				if (Main.infoVar != null)
-					Main.infoVar.visible = true;
+					Main.infoVar.visible = fullVisible;
 		}
 
 		cacheCount = currentCount;

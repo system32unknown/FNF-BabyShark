@@ -179,6 +179,7 @@ class ChartingState extends MusicBeatState
 	public var mouseQuant:Bool = false;
 	override function create()
 	{
+		Main.infoVar.fullVisible = false;
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
 		else {
@@ -1540,6 +1541,7 @@ class ChartingState extends MusicBeatState
 				autosaveSong();
 				LoadingState.loadAndSwitchState(new editors.EditorPlayState(sectionStartTime(), _song.mania));
 			} if (FlxG.keys.justPressed.ENTER) {
+				Main.infoVar.fullVisible = true;
 				autosaveSong();
 				FlxG.mouse.visible = false;
 				PlayState.SONG = _song;
@@ -1561,6 +1563,7 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.BACKSPACE) {
 				PlayState.chartingMode = false;
+				Main.infoVar.fullVisible = true;
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				FlxG.mouse.visible = false;
