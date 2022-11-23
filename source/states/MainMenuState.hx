@@ -273,15 +273,9 @@ class MainMenuState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	function changeItem(huh:Int = 0)
-	{
+	function changeItem(huh:Int = 0) {
 		if (finishedFunnyMove) {
-			curSelected += huh;
-
-			if (curSelected >= menuItems.length)
-				curSelected = 0;
-			if (curSelected < 0)
-				curSelected = menuItems.length - 1;
+			curSelected = FlxMath.wrap(curSelected + huh, 0, menuItems.length - 1);
 		}
 		menuItems.forEach(function(spr:FlxSprite) {
 			spr.animation.play('idle');
