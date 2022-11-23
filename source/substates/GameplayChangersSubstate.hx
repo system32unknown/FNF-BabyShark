@@ -363,11 +363,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	
 	function changeSelection(change:Int = 0)
 	{
-		curSelected += change;
-		if (curSelected < 0)
-			curSelected = optionsArray.length - 1;
-		if (curSelected >= optionsArray.length)
-			curSelected = 0;
+		curSelected = FlxMath.wrap(curSelected + change, 0, optionsArray.length - 1);
 
 		var bullShit:Int = 0;
 		for (item in grpOptions.members) {

@@ -257,11 +257,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	}
 	
 	function changeSelection(change:Int = 0) {
-		curSelected += change;
-		if (curSelected < 0)
-			curSelected = optionsArray.length - 1;
-		if (curSelected >= optionsArray.length)
-			curSelected = 0;
+		curSelected = FlxMath.wrap(curSelected + change, 0, optionsArray.length - 1);
 
 		var descString:String = "";
 		var checkIfEmpty:Bool = optionsArray[curSelected].description != "";

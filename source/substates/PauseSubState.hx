@@ -10,6 +10,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
+import flixel.math.FlxMath;
 
 import ui.Alphabet;
 import utils.ClientPrefs;
@@ -304,14 +305,8 @@ class PauseSubState extends MusicBeatSubstate
 	}
 
 	function changeSelection(change:Int = 0):Void {
-		curSelected += change;
-
+		curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-
-		if (curSelected < 0)
-			curSelected = menuItems.length - 1;
-		if (curSelected >= menuItems.length)
-			curSelected = 0;
 
 		var bullShit:Int = 0;
 		for (item in grpMenuShit.members) {

@@ -15,6 +15,7 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.ui.FlxButton;
+import flixel.math.FlxMath;
 import openfl.utils.Assets;
 import openfl.net.FileReference;
 import openfl.events.Event;
@@ -743,12 +744,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 	function changeSelection(change:Int = 0) {
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = weekFile.songs.length - 1;
-		if (curSelected >= weekFile.songs.length)
-			curSelected = 0;
+		curSelected = FlxMath.wrap(curSelected + change, 0, weekFile.songs.length - 1);
 
 		var bullShit:Int = 0;
 		for (i in 0...iconArray.length) {

@@ -217,12 +217,7 @@ class NotesSubState extends MusicBeatSubstate
 	}
 
 	function changeSelection(change:Int = 0) {
-		curSelected += change;
-		if (curSelected < 0)
-			curSelected = arrowHSV.length - 1;
-		if (curSelected >= arrowHSV.length)
-			curSelected = 0;
-
+		curSelected = FlxMath.wrap(curSelected + change, 0, arrowHSV.length - 1);
 		curValue = arrowHSV[curSelected][typeSelected];
 		updateValue();
 
@@ -259,12 +254,7 @@ class NotesSubState extends MusicBeatSubstate
 	}
 
 	function changeType(change:Int = 0) {
-		typeSelected += change;
-		if (typeSelected < 0)
-			typeSelected = 2;
-		if (typeSelected > 2)
-			typeSelected = 0;
-
+		typeSelected = FlxMath.wrap(typeSelected + change, 0, 2);
 		curValue = arrowHSV[curSelected][typeSelected];
 		updateValue();
 

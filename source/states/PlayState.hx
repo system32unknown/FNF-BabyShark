@@ -2282,8 +2282,7 @@ class PlayState extends MusicBeatState
 			if (scoreTxtTween != null) {
 				scoreTxtTween.cancel();
 			}
-			scoreTxt.scale.x = 1.1;
-			scoreTxt.scale.y = 1.1;
+			scoreTxt.scale.set(1.075, 1.075);
 			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2 * playbackRate, {
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
@@ -5203,9 +5202,7 @@ class PlayState extends MusicBeatState
 			FlxTween.tween(timeTxt.scale, {x: 1, y: 1}, 0.2 * playbackRate, {ease: FlxEase.linear});
 		}
 
-		if(lastBeatHit >= curBeat) {
-			return;
-		}
+		if(lastBeatHit >= curBeat) return;
 
 		if (generatedMusic) {
 			notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);

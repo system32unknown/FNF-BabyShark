@@ -231,13 +231,7 @@ class ControlsSubState extends MusicBeatSubstate {
 	}
 	
 	function changePage(change:Int = 0) {
-		curPage += change;
-
-		if (curPage < 0)
-			curPage = pages.length - 1;
-		if (curPage >= pages.length)
-			curPage = 0;
-
+		curPage = FlxMath.wrap(curPage + change, 0, pages.length - 1);
 		optionShit = pages[curPage];
 
 		reloadTexts();
@@ -245,13 +239,7 @@ class ControlsSubState extends MusicBeatSubstate {
 	}
 
 	function changeSelection(change:Int = 0) {
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = optionShit.length - 1;
-		if (curSelected >= optionShit.length)
-			curSelected = 0;
-
+		curSelected = FlxMath.wrap(curSelected + change, 0, optionShit.length - 1);
 		if ((unselectableCheck(curSelected) && grpOptions.members[curSelected].ID != 1) && change != 0) {
 			changeSelection(change);
 			return;
