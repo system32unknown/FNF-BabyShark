@@ -163,15 +163,16 @@ class StrumNote extends FlxSprite
 		centerOffsets();
 		centerOrigin();
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
+		var arrowIndex:Int = Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania]);
 		if(animation.curAnim == null || animation.curAnim.name == 'static') {
 			colorSwap.hue = 0;
 			colorSwap.saturation = 0;
 			colorSwap.brightness = 0;
 		} else {
 			if (noteData > -1 && noteData < arrowHSV.length) {
-				colorSwap.hue = arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][0] / 360;
-				colorSwap.saturation = arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][1] / 100;
-				colorSwap.brightness = arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][2] / 100;
+				colorSwap.hue = arrowHSV[arrowIndex][0] / 360;
+				colorSwap.saturation = arrowHSV[arrowIndex][1] / 100;
+				colorSwap.brightness = arrowHSV[arrowIndex][2] / 100;
 			}
 
 			if(animation.curAnim.name == 'confirm' && !PlayState.isPixelStage) {

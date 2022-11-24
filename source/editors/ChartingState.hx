@@ -179,7 +179,7 @@ class ChartingState extends MusicBeatState
 	public var mouseQuant:Bool = false;
 	override function create()
 	{
-		Main.infoVar.fullVisible = false;
+		Main.infoVar.alpha = .5;
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
 		else {
@@ -1541,7 +1541,7 @@ class ChartingState extends MusicBeatState
 				autosaveSong();
 				LoadingState.loadAndSwitchState(new editors.EditorPlayState(sectionStartTime(), _song.mania));
 			} if (FlxG.keys.justPressed.ENTER) {
-				Main.infoVar.fullVisible = true;
+				Main.infoVar.alpha = 1;
 				autosaveSong();
 				FlxG.mouse.visible = false;
 				PlayState.SONG = _song;
@@ -1563,7 +1563,7 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.BACKSPACE) {
 				PlayState.chartingMode = false;
-				Main.infoVar.fullVisible = true;
+				Main.infoVar.alpha = 1;
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				FlxG.mouse.visible = false;
@@ -2499,9 +2499,10 @@ class ChartingState extends MusicBeatState
 		var susColor = Std.parseInt('0xff' + colorList[note.noteData]);
 
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-		var hueColor:Float = arrowHSV[Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania])][0] / 360;
-		var saturationColor:Float = arrowHSV[Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania])][1] / 100;
-		var brightnessColor:Float = arrowHSV[Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania])][2] / 100;
+		var arrowIndex:Int = Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania]);
+		var hueColor:Float = arrowHSV[arrowIndex][0] / 360;
+		var saturationColor:Float = arrowHSV[arrowIndex][1] / 100;
+		var brightnessColor:Float = arrowHSV[arrowIndex][2] / 100;
 		switch (note.noteType) {
 			case 'Hurt Note' | 'Danger Note' | 'Kill Note':
 				susColor = CoolUtil.dominantColor(note);
@@ -2519,7 +2520,7 @@ class ChartingState extends MusicBeatState
 		return spr;
 	}
 
-	private function addSection(sectionBeats:Float = 4, lengthInSteps:Int = 16):Void {
+	function addSection(sectionBeats:Float = 4, lengthInSteps:Int = 16):Void {
 		var sec:SwagSection = {
 			sectionBeats: sectionBeats,
 			lengthInSteps: lengthInSteps,
@@ -2605,8 +2606,7 @@ class ChartingState extends MusicBeatState
 		if (!delnote) addNote(cs, d, style);
 	}
 
-	private function addNote(strum:Null<Float> = null, data:Null<Int> = null, type:Null<Int> = null):Void
-	{
+	function addNote(strum:Null<Float> = null, data:Null<Int> = null, type:Null<Int> = null):Void {
 		var noteStrum = getStrumTime(dummyArrow.y * (getSectionBeats() / 4), false) + sectionStartTime();
 		var noteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
 		var noteSus = 0;
@@ -2643,19 +2643,9 @@ class ChartingState extends MusicBeatState
 	}
 
 	// will figure this out l8r
-	function redo()
-	{
-		//_song = redos[curRedoIndex];
-	}
+	function redo() {}
 
-	function undo()
-	{
-		//redos.push(_song);
-		//undos.pop();
-		//_song.notes = undos[undos.length - 1];
-		///trace(_song.notes);
-		//updateGrid();
-	}
+	function undo() {}
 
 	function getStrumTime(yPos:Float, doZoomCalc:Bool = true):Float {
 		var leZoom:Float = zoomList[curZoom];
@@ -2673,8 +2663,7 @@ class ChartingState extends MusicBeatState
 	}
 
 	function loadJson(song:String):Void {
-		if (Paths.checkReservedFile(song)) {
-			return;
+		if (Paths.checkReservedFile(song)) { return;
 		} else {
 			//shitty null fix, i fucking hate it when this happens
 			//make it look sexier if possible

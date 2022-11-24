@@ -73,7 +73,7 @@ class Main extends Sprite
 		ClientPrefs.loadDefaultKeys();
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, #if (flixel < "5.0.0") zoom,#end framerate, framerate, skipSplash, startFullscreen));
 
-		infoVar = new InfoDisplay(10, 3);
+		infoVar = new InfoDisplay(8, 3);
 		addChild(infoVar);
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;

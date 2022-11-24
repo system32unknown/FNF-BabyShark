@@ -106,10 +106,10 @@ class MainMenuState extends MusicBeatState
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 		
-		var bg:FlxBackdrop = new FlxBackdrop(Paths.image('thechecker'), 0, 0.2, true, true);
+		var bg:FlxBackdrop = new FlxBackdrop(Paths.image('thechecker'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.velocity.set(30, 110);
-		bg.alpha = .2;
+		bg.alpha = .3;
 		bg.color = FlxColor.PURPLE;
 		bg.updateHitbox();
 		bg.screenCenter();

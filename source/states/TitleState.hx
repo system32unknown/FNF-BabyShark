@@ -150,7 +150,7 @@ class TitleState extends MusicBeatState
 		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
-		titlebg = new FlxBackdrop(Paths.image('thechecker'), 0, 0.2, true, true);
+		titlebg = new FlxBackdrop(Paths.image('thechecker'));
 		titlebg.velocity.set(0, 110);
 		titlebg.updateHitbox();
 		titlebg.alpha = .5;

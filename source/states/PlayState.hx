@@ -4965,14 +4965,15 @@ class PlayState extends MusicBeatState
 		var skin:String = 'noteSplashes';
 		if((PlayState.SONG.splashSkin != null || PlayState.SONG.splashSkin != '') && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
+		var arrowIndex:Int = Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[data] % Note.ammo[mania]);
 
 		var hue:Float = 0;
 		var sat:Float = 0;
 		var brt:Float = 0;
 		if (data > -1 && data < arrowHSV.length) {
-			var hue:Float = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[data] % Note.ammo[mania])][0] / 360;
-			var sat:Float = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[data] % Note.ammo[mania])][1] / 100;
-			var brt:Float = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[data] % Note.ammo[mania])][2] / 100;
+			var hue:Float = arrowHSV[arrowIndex][0] / 360;
+			var sat:Float = arrowHSV[arrowIndex][1] / 100;
+			var brt:Float = arrowHSV[arrowIndex][2] / 100;
 			if(note != null) {
 				skin = note.noteSplashTexture;
 				hue = note.noteSplashHue;

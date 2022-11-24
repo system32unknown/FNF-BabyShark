@@ -144,10 +144,11 @@ class Note extends FlxSprite
 	private function set_noteType(value:String):String {
 		noteSplashTexture = PlayState.SONG.splashSkin;
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
+		var arrowIndex:Int = Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania]);
 		if (noteData > -1 && noteData < arrowHSV.length) {
-			colorSwap.hue = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][0] / 360;
-			colorSwap.saturation = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][1] / 100;
-			colorSwap.brightness = arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][2] / 100;
+			colorSwap.hue = arrowHSV[arrowIndex][0] / 360;
+			colorSwap.saturation = arrowHSV[arrowIndex][1] / 100;
+			colorSwap.brightness = arrowHSV[arrowIndex][2] / 100;
 		}
 
 		if(noteData > -1 && noteType != value) {

@@ -34,7 +34,6 @@ class ClientPrefs {
 		'IconBounceType' => 'Psych',
 		'RatingTypes' => 'Static',
 		'comboStacking' => true,
-		'convertEK' => false,
 		'showKeybindsOnStart' => false,
 		'ShowLU' => false,
 		'HiddenOppLU' => false,
