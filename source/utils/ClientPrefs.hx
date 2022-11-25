@@ -28,7 +28,6 @@ class ClientPrefs {
 		'ShowCombo' => true,
 		'ShowNPSCounter' => false,
 		'ShowLateEarly' => false,
-		'ShowMaxCombo' => false,
 		'MstimingTypes' => "Psych",
 		'ShowJudgementCount' => false,
 		'IconBounceType' => 'Psych',
@@ -64,7 +63,7 @@ class ClientPrefs {
 	];
 
 	// For custom functions after the save data is loaded
-	public static var loadFunctions:Map<String, (Dynamic) -> Void> = [
+	public static var loadFunctions:Map<String, Dynamic -> Void> = [
 		'framerate' => function(framerate:Int) {
 			if (framerate > FlxG.drawFramerate) {
 				FlxG.updateFramerate = framerate;
@@ -94,7 +93,7 @@ class ClientPrefs {
 		'henchmenDeath' => [Achievements, 'henchmenDeath']
 	];
 
-	// For stuff that needs to be in the controls_v2 save
+	// For stuff that needs to be in the controls save
 	public static var separateSaves:Array<String> = [
 		'customControls'
 	];
@@ -223,7 +222,7 @@ class ClientPrefs {
 		FlxG.save.flush();
 
 		var save:FlxSave = new FlxSave();
-		save.bind('controls_v2', 'altertoriel'); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
+		save.bind('controls', 'altertoriel'); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
 
 		for (name in separateSaves) {
 			if (prefs.exists(name)) {
@@ -271,7 +270,7 @@ class ClientPrefs {
 		}
 
 		var save:FlxSave = new FlxSave();
-		save.bind('controls_v2', 'altertoriel');
+		save.bind('controls', 'altertoriel');
 		if (save != null) {
 			for (name in separateSaves) {
 				var data:Dynamic = Reflect.field(save.data, name);
@@ -285,8 +284,7 @@ class ClientPrefs {
 						var loadTo:Dynamic = Reflect.field(map[0], map[1]);
 
 						for (name => value in cast(data, Map<Dynamic, Dynamic>)) {
-							if (loadTo.exists(name))
-								loadTo.set(name, value);
+							if (loadTo.exists(name)) loadTo.set(name, value);
 						}
 						if (loadFunctions.exists(name)) loadFunctions.get(name)(loadTo); // Call the load function
 						continue;

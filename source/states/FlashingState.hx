@@ -36,7 +36,6 @@ class FlashingState extends MusicBeatState
 	{
 		super.create();
 
-		FlxG.save.data.firstTime = true;
 		FlxG.save.flush();
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);

@@ -1175,7 +1175,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.borderSize = 1;
 		judgementCounter.scrollFactor.set();
 		judgementCounter.screenCenter(Y);
-		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${maxCombo}\n' : '') + 'Epics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
 		if (ClientPrefs.getPref('ShowJudgementCount')) {
 			add(judgementCounter);
 		}
@@ -2274,7 +2274,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function updateScore(miss:Bool = false) {
-		judgementCounter.text = (ClientPrefs.getPref('ShowMaxCombo') ? 'Max Combos: ${maxCombo}\n' : '') + 'Epics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
 		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
 		}

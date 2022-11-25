@@ -343,8 +343,7 @@ class AlphaCharacter extends FlxSprite
 	private function set_image(name:String)
 	{
 		var lastAnim:String = null;
-		if (animation != null)
-		{
+		if (animation != null) {
 			lastAnim = animation.name;
 		}
 		image = name;

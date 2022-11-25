@@ -1099,6 +1099,16 @@ class FunkinLua {
 			return PlayState.instance.songHits;
 		});
 
+		addCallback("getHighscore", function(song:String, diff:Int) {
+			return Highscore.getScore(song, diff);
+		});
+		addCallback("getSavedRating", function(song:String, diff:Int) {
+			return Highscore.getRating(song, diff);
+		});
+		addCallback("getWeekScore", function(week:String, diff:Int) {
+			return Highscore.getWeekScore(week, diff);
+		});
+
 		addCallback("setHealth", function(value:Float = 0) {
 			PlayState.instance.health = value;
 		});
@@ -2274,8 +2284,7 @@ class FunkinLua {
 		});
 
 		addCallback("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
-			if(!PlayState.instance.modchartSaves.exists(name))
-			{
+			if(!PlayState.instance.modchartSaves.exists(name)) {
 				var save:FlxSave = new FlxSave();
 				save.bind(name, folder);
 				PlayState.instance.modchartSaves.set(name, save);
@@ -2292,21 +2301,25 @@ class FunkinLua {
 			luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 		});
 		addCallback("getDataFromSave", function(name:String, field:String, ?defaultValue:Dynamic = null) {
-			if(PlayState.instance.modchartSaves.exists(name))
-			{
-				var retVal:Dynamic = Reflect.field(PlayState.instance.modchartSaves.get(name).data, field);
-				return retVal;
+			if(PlayState.instance.modchartSaves.exists(name)) {
+				return Reflect.field(PlayState.instance.modchartSaves.get(name).data, field);
 			}
 			luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 			return defaultValue;
 		});
 		addCallback("setDataFromSave", function(name:String, field:String, value:Dynamic) {
-			if(PlayState.instance.modchartSaves.exists(name))
-			{
+			if(PlayState.instance.modchartSaves.exists(name)) {
 				Reflect.setField(PlayState.instance.modchartSaves.get(name).data, field, value);
 				return;
 			}
 			luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
+		});
+		addCallback("deleteDataFromSave", function(name:String) {
+			if(PlayState.instance.modchartSaves.exists(name)) {
+				PlayState.instance.modchartSaves.get(name).erase();
+				return;
+			}
+			luaTrace('deleteDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 		});
 
 		addCallback("checkFileExists", function(filename:String, ?absolute:Bool = false) {

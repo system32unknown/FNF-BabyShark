@@ -11,8 +11,10 @@ import sys.io.File;
 #end
 import openfl.utils.Assets;
 
+import states.PlayState;
 import utils.ClientPrefs;
 import utils.PlayerSettings;
+import utils.FunkinLua;
 
 using StringTools;
 
@@ -312,7 +314,10 @@ class DialogueBoxPsych extends FlxSpriteGroup
 						daText.destroy();
 					}
 					updateBoxOffsets(box);
-					FlxG.sound.music.fadeOut(1, 0);
+					var ret:Dynamic = PlayState.instance.callOnLuas('onEndDialogue', []);
+					if(ret != FunkinLua.Function_Stop) {
+						FlxG.sound.music.fadeOut(1, 0);
+					}
 				} else {
 					startNextDialog();
 				}

@@ -106,13 +106,6 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Show Max Combo',
-			'If checked, the Max Combo will be shown.',
-			'ShowMaxCombo',
-			'bool',
-			true);
-		addOption(option);
-
 		var option:Option = new Option('Show Lane Underlay',
 			'If checked, the Lane underlay will be shown.',
 			'ShowLU',
