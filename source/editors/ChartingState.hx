@@ -71,6 +71,7 @@ class ChartingState extends MusicBeatState
 		'Hurt Note',
 		'Danger Note',
 		'Kill Note',
+		'Randomized Note',
 		'GF Sing',
 		'No Animation'
 	];

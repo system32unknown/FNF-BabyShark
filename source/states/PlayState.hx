@@ -356,15 +356,15 @@ class PlayState extends MusicBeatState
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
 
-	private var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
-	private var downScroll:Bool = ClientPrefs.getPref('downScroll');
-	private var hideHud:Bool = ClientPrefs.getPref('hideHud');
-	private var healthBarAlpha:Float = ClientPrefs.getPref('healthBarAlpha');
-	private var RatingTypes:String = ClientPrefs.getPref('RatingTypes');
-	private var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
-	private var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
+	var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
+	var downScroll:Bool = ClientPrefs.getPref('downScroll');
+	var hideHud:Bool = ClientPrefs.getPref('hideHud');
+	var healthBarAlpha:Float = ClientPrefs.getPref('healthBarAlpha');
+	var RatingTypes:String = ClientPrefs.getPref('RatingTypes');
+	var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
+	var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 
-	private var useLuaGameOver:Bool = false;
+	var useLuaGameOver:Bool = false;
 	override public function create()
 	{
 		Paths.clearStoredMemory();
@@ -3224,10 +3224,18 @@ class PlayState extends MusicBeatState
 					strumAngle += daNote.offsetAngle;
 					strumAlpha *= daNote.multAlpha;
 				
-					if (strumScroll) { //Downscroll
-						daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
-					} else { //Upscroll
-						daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+					if (daNote.noteType == "Randomized Note") {
+						if (strumScroll) { //Downscroll
+							daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed * daNote.localScrollSpeed);
+						} else { //Upscroll
+							daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed * daNote.localScrollSpeed);
+						}
+					} else {
+						if (strumScroll) { //Downscroll
+							daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+						} else { //Upscroll
+							daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+						}
 					}
 				
 					var angleDir = strumDirection * Math.PI / 180;
@@ -3834,7 +3842,8 @@ class PlayState extends MusicBeatState
 				var trueVal:Dynamic = null;
 				var killMe:Array<String> = value1.split(',');
 				if (killMe.length > 1 && killMe[1].toLowerCase().replace(" ", "") == "bool") {
-					trueVal = (value2 == "true");
+					if (value2 == "true") trueVal = true;
+					else if (value2 == "false") trueVal = false;
 				}
 
 				killMe = killMe[0].split('.');

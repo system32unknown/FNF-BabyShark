@@ -1,6 +1,7 @@
 package game;
 
 import flixel.FlxSprite;
+import flixel.math.FlxRandom;
 import editors.ChartingState;
 import shaders.ColorSwap;
 import utils.ClientPrefs;
@@ -56,6 +57,10 @@ class Note extends FlxSprite
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;
 	public var prevNote:Note;
+
+	public var localScrollSpeed:Float = 1;
+	public var maxRNGNote:Int = 120;
+	public var maxRNGFloatArray:Array<Float> = [1, 3];
 
 	public var spawned:Bool = false;
 
@@ -193,6 +198,13 @@ class Note extends FlxSprite
 					noMissAnimation = true;
 				case 'GF Sing':
 					gfNote = true;
+				case 'Randomized Note':
+					var rng:FlxRandom = new FlxRandom();
+					if (rng.int(0, maxRNGNote) == 1) {
+						localScrollSpeed = 0.1;
+					} else {
+						localScrollSpeed = rng.float(maxRNGFloatArray[0], maxRNGFloatArray[1]);
+					}
 			}
 			noteType = value;
 		}
