@@ -3224,7 +3224,7 @@ class PlayState extends MusicBeatState
 					strumAngle += daNote.offsetAngle;
 					strumAlpha *= daNote.multAlpha;
 				
-					if (daNote.noteType == "Randomized Note") {
+					if (daNote.randomized) {
 						if (strumScroll) { //Downscroll
 							daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed * daNote.localScrollSpeed);
 						} else { //Upscroll

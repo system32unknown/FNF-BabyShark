@@ -37,6 +37,7 @@ class ClientPrefs {
 		'ShowLU' => false,
 		'HiddenOppLU' => false,
 		'LUAlpha' => 0,
+		'BeatIconFreeplay' => false,
 		'AntiMash' => false,
 		'noteOffset' => 0,
 		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],

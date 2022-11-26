@@ -50,6 +50,14 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			'bool',
 			true);
 		addOption(option);
+
+		var option:Option = new Option('Beat Icon In Freeplay',
+			'',
+			'BeatIconFreeplay',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Sustain Color In Editor',
 			'',
 			'EditorSusColor',

@@ -62,7 +62,7 @@ class TitleState extends MusicBeatState
 	var titleTextAlphas:Array<Float> = [1, .64];
 
 	var curWacky:Array<String> = [];
-	var titleJSON:TitleData = null;
+	public static var titleJSON:TitleData = null;
 
 	var gradientBar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 1, 0xFF0F5FFF);
 	var gradtimer:Float = 0;
@@ -320,9 +320,11 @@ class TitleState extends MusicBeatState
 	}
 
 	function deleteCoolText() {
-		while (textGroup.members.length > 0) {
-			if (credGroup != null) credGroup.remove(textGroup.members[0], true);
-			if (textGroup != null) textGroup.remove(textGroup.members[0], true);
+		if (textGroup != null) {
+			while (textGroup.members.length > 0) {
+				if (credGroup != null) credGroup.remove(textGroup.members[0], true);
+				textGroup.remove(textGroup.members[0], true);
+			}
 		}
 	}
 
@@ -393,7 +395,9 @@ class TitleState extends MusicBeatState
 				case 14: addMoreText('Baby');
 				case 15: addMoreText('Shark\'s');
 				case 16: addMoreText('Funkin');
-				case 17: skipIntro();
+				case 17: 
+					deleteCoolText();
+					skipIntro();
 			}
 		}
 	}
