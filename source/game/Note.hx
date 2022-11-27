@@ -1,7 +1,6 @@
 package game;
 
 import flixel.FlxSprite;
-import flixel.math.FlxRandom;
 import editors.ChartingState;
 import shaders.ColorSwap;
 import utils.ClientPrefs;

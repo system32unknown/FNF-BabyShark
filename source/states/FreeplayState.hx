@@ -231,7 +231,7 @@ class FreeplayState extends MusicBeatState
 		var shiftMult:Int = 1;
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
-		if(songs.length > 1 && (upP || downP)) {
+		if(songs.length > 1) {
 			if (upP) {
 				changeSelection(-shiftMult);
 				holdTime = 0;
@@ -241,13 +241,15 @@ class FreeplayState extends MusicBeatState
 				holdTime = 0;
 			}
 
-			var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
-			holdTime += elapsed;
-			var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
-
-			if(holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
-				changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
-				changeDiff();
+			if (controls.UI_DOWN || controls.UI_UP) {
+				var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
+				holdTime += elapsed;
+				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+				
+				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
+					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
+					changeDiff();
+				}
 			}
 
 			if(FlxG.mouse.wheel != 0) {

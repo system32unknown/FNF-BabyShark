@@ -854,12 +854,11 @@ class FunkinLua {
 		addCallback("getPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic) {
 			var shitMyPants:Array<String> = obj.split('.');
 			var realObject:Dynamic = Reflect.getProperty(getInstance(), obj);
-			if(shitMyPants.length>1)
+			if(shitMyPants.length > 1)
 				realObject = getPropertyLoopThingWhatever(shitMyPants, true, false);
 
 			if (Std.isOfType(realObject, FlxTypedGroup)) {
-				var result:Dynamic = getGroupStuff(realObject.members[index], variable);
-				return result;
+				return getGroupStuff(realObject.members[index], variable);
 			}
 
 			var leArray:Dynamic = realObject[index];
@@ -867,8 +866,7 @@ class FunkinLua {
 				var result:Dynamic = null;
 				if(Type.typeof(variable) == ValueType.TInt)
 					result = leArray[variable];
-				else
-					result = getGroupStuff(leArray, variable);
+				else result = getGroupStuff(leArray, variable);
 				return result;
 			}
 			luaTrace("Object #" + index + " from group: " + obj + " doesn't exist!", false, false, FlxColor.RED);
@@ -877,7 +875,7 @@ class FunkinLua {
 		addCallback("setPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic, value:Dynamic) {
 			var shitMyPants:Array<String> = obj.split('.');
 			var realObject:Dynamic = Reflect.getProperty(getInstance(), obj);
-			if (shitMyPants.length>1)
+			if (shitMyPants.length > 1)
 				realObject = getPropertyLoopThingWhatever(shitMyPants, true, false);
 
 			if (Std.isOfType(realObject, FlxTypedGroup)) {
@@ -897,11 +895,9 @@ class FunkinLua {
 		addCallback("removeFromGroup", function(obj:String, index:Int, dontDestroy:Bool = false) {
 			if(Std.isOfType(Reflect.getProperty(getInstance(), obj), FlxTypedGroup)) {
 				var sex = Reflect.getProperty(getInstance(), obj).members[index];
-				if(!dontDestroy)
-					sex.kill();
+				if(!dontDestroy) sex.kill();
 				Reflect.getProperty(getInstance(), obj).remove(sex, true);
-				if(!dontDestroy)
-					sex.destroy();
+				if(!dontDestroy) sex.destroy();
 				return;
 			}
 			Reflect.getProperty(getInstance(), obj).remove(Reflect.getProperty(getInstance(), obj)[index]);
@@ -955,7 +951,6 @@ class FunkinLua {
 		});
 		addCallback("callFromClass", function(classVar:String, variable:String, ?arguments:Array<Dynamic>) {
 			if (arguments != null) arguments = [];
-			@:privateAccess
 			var killMe:Array<String> = variable.split('.');
 			if(killMe.length > 1) {
 				var coverMeInPiss:Dynamic = getVarInArray(Type.resolveClass(classVar), killMe[0]);
@@ -2838,7 +2833,7 @@ class FunkinLua {
 		}
 	}
 
-	function addCallback(name:String, func:Function) {
+	inline function addCallback(name:String, func:Function) {
 		return Lua_helper.add_callback(lua, name, func);
 	}
 
