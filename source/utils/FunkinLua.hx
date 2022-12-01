@@ -150,10 +150,12 @@ class FunkinLua {
 
 		set('score', 0);
 		set('misses', 0);
+		set('accuracy', 0);
 		set('hits', 0);
 
 		set('rating', 0);
 		set('ratingName', '');
+		set('ratingRank', '');
 		set('ratingFC', '');
 		set('version', MainMenuState.psychEngineVersion.trim());
 
@@ -240,8 +242,7 @@ class FunkinLua {
 				PlayState.instance.closeSubState();
 				CustomSubstate.instance = null;
 				return true;
-			}
-			return false;
+			} return false;
 		});
 
 		Lua_helper.add_callback(lua, "giveAchievement", function(name:String){
@@ -1284,8 +1285,7 @@ class FunkinLua {
 
 			if(PlayState.isStoryMode)
 				MusicBeatState.switchState(new StoryMenuState());
-			else
-				MusicBeatState.switchState(new FreeplayState());
+			else MusicBeatState.switchState(new FreeplayState());
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			PlayState.changedDifficulty = false;
@@ -1326,9 +1326,11 @@ class FunkinLua {
 				default: PlayState.instance.boyfriendGroup.y = value;
 			}
 		});
+
 		addCallback("changeMania", function(newValue:Int, skipTwn:Bool = false) {
 			PlayState.instance.changeMania(newValue, skipTwn);
 		});
+
 		addCallback("cameraSetTarget", function(target:String) {
 			var isDad:Bool = false;
 			if(target == 'dad') {
@@ -1542,8 +1544,7 @@ class FunkinLua {
 
 			var spr:FlxSprite = Reflect.getProperty(getInstance(), obj);
 			if(spr != null) {
-				if(spr.animation.getByName(name) != null)
-				{
+				if(spr.animation.getByName(name) != null) {
 					if(Std.isOfType(spr, Character)) {
 						//convert spr to Character
 						var obj:Dynamic = spr;
@@ -1718,8 +1719,7 @@ class FunkinLua {
 			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
 			if (leGroup != null) {
 				leGroup.scale.set(x, y);
-				if (updateHitbox)
-					leGroup.updateHitbox();
+				if (updateHitbox) leGroup.updateHitbox();
 			}
 		});
 		addCallback("updateGroupHitbox", function(tag:String) {
@@ -1757,8 +1757,7 @@ class FunkinLua {
 				if (leSprite != null && leGroup.members.contains(leSprite)) {
 					leGroup.remove(leSprite);
 
-					if (destroy)
-						leGroup.destroy();
+					if (destroy) leGroup.destroy();
 				}
 			}
 		});

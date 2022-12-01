@@ -16,12 +16,13 @@ class InfoDisplay extends TextField
 	/**
 		The current frame rate, expressed using frames-per-second
 	**/
-	public var fullVisible:Bool = true;
 	public var currentFPS(default, null):Int = 0;
+
+	public var fullVisible:Bool = true;
 	var peak:UInt = 0;
 
-	var cacheCount:Int = 0;
-	var times:Array<Float> = [];
+	@:noCompletion var cacheCount:Int = 0;
+	@:noCompletion var times:Array<Float> = [];
 
 	static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
 
@@ -57,9 +58,8 @@ class InfoDisplay extends TextField
 		var now:Float = Timer.stamp();
 		times.push(now);
 
-		while (times[0] < now - 1) {
+		while (times[0] < now - 1)
 			times.shift();
-		}
 
 		var currentCount = times.length;
 		currentFPS = Math.round((currentCount + cacheCount) / 2);

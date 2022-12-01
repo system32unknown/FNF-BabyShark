@@ -265,6 +265,9 @@ class PlayState extends MusicBeatState
 	public var songScore:Int = 0;
 	public var botScore:Int = 0;
 
+	var accuracy:Float = 0;
+	var ranks:String = "";
+
 	var notesHitArray:Array<Date> = [];
 	var nps:Int = 0;
 	var maxNPS:Int = 0;
@@ -3074,7 +3077,7 @@ class PlayState extends MusicBeatState
 			case "Andromeda": // Stolen from Andromeda Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(0.1))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(0.1))));
-			case "Micdup" | "BabyShark": // Stolen from FNF Mic'd Up
+			case "Micdup": // Stolen from FNF Mic'd Up
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, .09 / (Main.infoVar.currentFPS / 60))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, .09 / (Main.infoVar.currentFPS / 60))));
 			case "Purgatory": // Stolen from Dave And Bambi
@@ -3083,6 +3086,12 @@ class PlayState extends MusicBeatState
 			case "DaveAndBambi":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
+			case "BabyShark":
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, .09 / (Main.infoVar.currentFPS / 60))));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, .09 / (Main.infoVar.currentFPS / 60))));
+
+				iconP1.centerOffsets();
+				iconP2.centerOffsets();
 			case "GoldenApple": // Stolen from Dave And Bambi
 				iconP1.centerOffsets();
 				iconP2.centerOffsets();
@@ -4166,8 +4175,6 @@ class PlayState extends MusicBeatState
 
 	var scoreSeparator:String = "|";
 	private function UpdateScoreText() {
-		var accuracy:Float = MathUtil.floorDecimal(ratingPercent * 100, 2);
-		var ranks:String = CoolUtil.GenerateLetterRank(accuracy);
 		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) $scoreSeparator' : '');
 		tempText += (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
 		tempText += (!cpuControlled ? '$scoreSeparator Misses:$songMisses ' : '');
@@ -5436,6 +5443,9 @@ class PlayState extends MusicBeatState
 				// Rating Percent
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
 
+				accuracy = MathUtil.floorDecimal(ratingPercent * 100, 2);
+				ranks = CoolUtil.GenerateLetterRank(accuracy);
+
 				// Rating Name
 				if (ratingPercent >= 1)
 					ratingName = ratingStuff[ratingStuff.length - 1][0]; //Uses last string
@@ -5459,8 +5469,11 @@ class PlayState extends MusicBeatState
 			else if (songMisses >= 10) ratingFC = "Clear";
 		}
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
+		setOnLuas('accuracy', accuracy);
+
 		setOnLuas('rating', ratingPercent);
 		setOnLuas('ratingName', ratingName);
+		setOnLuas('ratingRank', ranks);
 		setOnLuas('ratingFC', ratingFC);
 	}
 
