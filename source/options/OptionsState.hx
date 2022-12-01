@@ -69,11 +69,15 @@ class OptionsState extends MusicBeatState
 		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
-		pageText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
-		pageText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
+		pageText = new FlxText(FlxG.width * .82, 5, 0, "", 32);
+		pageText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		
-		pageBG = new FlxSprite(pageText.x - 6, 0).makeGraphic(1, 66, 0xFF000000);
+		pageBG = new FlxSprite(pageText.x - 6, FlxG.height - 40).makeGraphic(260, 40, FlxColor.BLACK);
 		pageBG.alpha = 0.6;
+
+		pageText.y = pageBG.y;
+		pageBG.updateHitbox();
+
 		add(pageBG);
 		add(pageText);
 
@@ -101,10 +105,6 @@ class OptionsState extends MusicBeatState
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		pageText.text = '<PAGE: $curPage / ${Lambda.count(options) - 1}>';
-		pageBG.scale.x = FlxG.width - pageText.x + 6;
-		pageBG.x = FlxG.width - (pageBG.scale.x / 2);
-
 		if (controls.UI_UP_P) {
 			changeSelection(-1);
 		}
@@ -114,6 +114,8 @@ class OptionsState extends MusicBeatState
 
 		if(controls.UI_LEFT_P) changePage(-1);
 		if(controls.UI_RIGHT_P) changePage(1);
+
+		pageText.text = '<PAGE: $curPage / ${Lambda.count(options) - 1}>';
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));

@@ -426,9 +426,7 @@ class FreeplayState extends MusicBeatState
 		
 		if(CoolUtil.difficulties.contains(CoolUtil.defaultDifficulty)) {
 			curDifficulty = Math.round(Math.max(0, CoolUtil.defaultDifficulties.indexOf(CoolUtil.defaultDifficulty)));
-		} else {
-			curDifficulty = 0;
-		}
+		} else curDifficulty = 0;
 
 		var newPos:Int = CoolUtil.difficulties.indexOf(lastDifficultyName);
 		if(newPos > -1) {

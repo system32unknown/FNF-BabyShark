@@ -62,8 +62,7 @@ class FlashingState extends MusicBeatState
 		manual.animation.addByPrefix('normal', 'manual icon', 30, true);
 		manual.animation.addByPrefix('hover', 'manual icon hover', 30, true);
 		add(manual);
-		manual.x = FlxG.width - manual.width;
-		manual.y = FlxG.height - manual.height;
+		manual.setPosition(FlxG.width - manual.width, FlxG.height - manual.height);
 		manual.animation.play('normal', true);
 
 		warnText = new FlxText(0, 0, FlxG.width, textNoAdvanced, 32);
