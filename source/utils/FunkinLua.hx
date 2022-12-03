@@ -477,12 +477,6 @@ class FunkinLua {
 				#end
 				return;
 			}
-			if (scriptVar == null) {
-				#if (linc_luajit >= "0.0.6")
-				LuaL.error(lua, "bad argument #2 to 'setOnLuas' (string expected, got nil)");
-				#end
-				return;
-			}
 			PlayState.instance.setOnLuas(varName, scriptVar);
 		});
 
@@ -1006,6 +1000,19 @@ class FunkinLua {
 				luaTrace('doTween: Couldnt find object: ' + variable, false, false, FlxColor.RED);
 			}
 		});
+		addCallback("doTweenAdvAngle", function(tag:String, vars:String, value:Array<Float>, duration:Float, ease:String) {
+			var penisExam:Dynamic = tweenShit(tag, vars);
+			if(penisExam != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.angle(penisExam, value[0], value[1], duration * PlayState.instance.playbackRate, {ease: getFlxEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			} else {
+				luaTrace('doTweenAdvAngle: Couldnt find object: ' + vars, false, false, FlxColor.RED);
+			}
+		});
 		addCallback("doTweenColor", function(tag:String, vars:String, targetColor:String, duration:Float, ease:String) {
 			var penisExam:Dynamic = tweenShit(tag, vars);
 			if(penisExam != null) {
@@ -1471,7 +1478,7 @@ class FunkinLua {
 			if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
 
 			var spr:FlxSprite = PlayState.instance.getLuaObject(obj,false);
-			if(spr!=null) {
+			if(spr != null) {
 				PlayState.instance.getLuaObject(obj,false).makeGraphic(width, height, colorNum);
 				return;
 			}
@@ -1482,7 +1489,7 @@ class FunkinLua {
 			}
 		});
 		addCallback("addAnimationByPrefix", function(obj:String, name:String, prefix:String, framerate:Int = 24, loop:Bool = true) {
-			if(PlayState.instance.getLuaObject(obj,false)!=null) {
+			if(PlayState.instance.getLuaObject(obj,false) != null) {
 				var cock:FlxSprite = PlayState.instance.getLuaObject(obj,false);
 				cock.animation.addByPrefix(name, prefix, framerate, loop);
 				if(cock.animation.curAnim == null) {
@@ -1592,7 +1599,7 @@ class FunkinLua {
 		});
 
 		addCallback("setScrollFactor", function(obj:String, scrollX:Float, scrollY:Float) {
-			if(PlayState.instance.getLuaObject(obj,false)!=null) {
+			if(PlayState.instance.getLuaObject(obj,false) != null) {
 				PlayState.instance.getLuaObject(obj,false).scrollFactor.set(scrollX, scrollY);
 				return;
 			}
@@ -1666,7 +1673,7 @@ class FunkinLua {
 			}
 		});
 		addCallback("setGraphicSize", function(obj:String, x:Int, y:Int = 0, updateHitbox:Bool = true) {
-			if(PlayState.instance.getLuaObject(obj)!=null) {
+			if(PlayState.instance.getLuaObject(obj) != null) {
 				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
 				shit.setGraphicSize(x, y);
 				if(updateHitbox) shit.updateHitbox();
@@ -1695,7 +1702,7 @@ class FunkinLua {
 			}
 		});
 		addCallback("scaleObject", function(obj:String, x:Float, y:Float, updateHitbox:Bool = true) {
-			if(PlayState.instance.getLuaObject(obj)!=null) {
+			if(PlayState.instance.getLuaObject(obj) != null) {
 				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
 				shit.scale.set(x, y);
 				if(updateHitbox) shit.updateHitbox();
@@ -1729,7 +1736,7 @@ class FunkinLua {
 			}
 		});
 		addCallback("updateHitbox", function(obj:String) {
-			if(PlayState.instance.getLuaObject(obj)!=null) {
+			if(PlayState.instance.getLuaObject(obj) != null) {
 				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
 				shit.updateHitbox();
 				return;
@@ -1748,6 +1755,28 @@ class FunkinLua {
 				return;
 			}
 			Reflect.getProperty(getInstance(), group)[index].updateHitbox();
+		});
+
+		addCallback("centerOffsets", function(obj:String) {
+			if(PlayState.instance.getLuaObject(obj) != null) {
+				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
+				shit.centerOffsets();
+				return;
+			}
+
+			var poop:FlxSprite = Reflect.getProperty(getInstance(), obj);
+			if(poop != null) {
+				poop.centerOffsets();
+				return;
+			}
+			luaTrace('centerOffsets: Couldnt find object: ' + obj, false, false, FlxColor.RED);
+		});
+		addCallback("centerOffsetsFromGroup", function(group:String, index:Int) {
+			if(Std.isOfType(Reflect.getProperty(getInstance(), group), FlxTypedGroup)) {
+				Reflect.getProperty(getInstance(), group).members[index].centerOffsets();
+				return;
+			}
+			Reflect.getProperty(getInstance(), group)[index].centerOffsets();
 		});
 
 		addCallback("removeSpriteFromGroup", function(tag:String, spr:String, destroy:Bool = true) {
@@ -1865,7 +1894,7 @@ class FunkinLua {
 		});
 		addCallback("setBlendMode", function(obj:String, blend:String = '') {
 			var real = PlayState.instance.getLuaObject(obj);
-			if(real!=null) {
+			if(real != null) {
 				real.blend = blendModeFromString(blend);
 				return true;
 			}
@@ -3054,7 +3083,7 @@ class FunkinLua {
 		var strIndices:Array<String> = indices.trim().split(',');
 		var die:Array<Int> = [for (i in 0...strIndices.length) Std.parseInt(strIndices[i])];
 
-		if(PlayState.instance.getLuaObject(obj, false)!=null) {
+		if(PlayState.instance.getLuaObject(obj, false) != null) {
 			var pussy:FlxSprite = PlayState.instance.getLuaObject(obj, false);
 			pussy.animation.addByIndices(name, prefix, die, '', framerate, loop);
 			if(pussy.animation.curAnim == null) {

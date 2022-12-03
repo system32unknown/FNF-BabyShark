@@ -3066,7 +3066,7 @@ class PlayState extends MusicBeatState
 		}
 
 		switch(ClientPrefs.getPref('IconBounceType')) {
-			case "Vanilla": // Stolen from Vanilla Engine
+			case "Vanilla" | "StridentCrisis": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .5)));
 			case "Psych":
@@ -3074,7 +3074,7 @@ class PlayState extends MusicBeatState
 				iconP1.scale.set(mult, mult);
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP2.scale.set(mult, mult);
-			case "Andromeda": // Stolen from Andromeda Engine
+			case "Andromeda" | "BabyShark": // Stolen from Andromeda Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(0.1))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(0.1))));
 			case "Micdup": // Stolen from FNF Mic'd Up
@@ -3086,21 +3086,12 @@ class PlayState extends MusicBeatState
 			case "DaveAndBambi":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
-			case "BabyShark":
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, .09 / (Main.infoVar.currentFPS / 60))));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, .09 / (Main.infoVar.currentFPS / 60))));
-
-				iconP1.centerOffsets();
-				iconP2.centerOffsets();
-			case "GoldenApple": // Stolen from Dave And Bambi
-				iconP1.centerOffsets();
-				iconP2.centerOffsets();
 		}
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		var iconOffset:Int = 26;
+		final iconOffset:Int = 26;
 		switch(ClientPrefs.getPref('HealthTypes')) {
 			case "Vanilla": // Stolen from Vanilla Engine
 				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
@@ -3157,7 +3148,7 @@ class PlayState extends MusicBeatState
 					songPercent = (curTime / songLength);
 
 					var songCalc:Float = (songLength - curTime);
-					if(timebarType == 'Time Elapsed' || ClientPrefs.getPref('timeBarType') == 'ElapsedPosition') songCalc = curTime;
+					if(timebarType == 'Time Elapsed' || ClientPrefs.getPref('timeBarType') == 'ElapsedPosition' || ClientPrefs.getPref('timeBarType') == 'NameElapsedPosition') songCalc = curTime;
 
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
 					if (secondsTotal < 0) secondsTotal = 0;
@@ -3168,6 +3159,7 @@ class PlayState extends MusicBeatState
 							case 'Time Left' | 'Time Elapsed': timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
 							case 'ElapsedPosition' | 'LeftPosition': timeTxt.text = pauseTimeTxt;
 							case 'NameLeft' | 'NameElapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal, false) + ")";
+							case 'NameElapsedPosition' | 'NameLeftPosition': timeTxt.text = SONG.song + " (" + pauseTimeTxt + ")";
 						}
 				}
 			}
@@ -5273,8 +5265,19 @@ class PlayState extends MusicBeatState
 				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 			case "StridentCrisis":
-				advTweenAngleIcon(iconP1, -24, .3, FlxEase.quadOut);
-				advTweenAngleIcon(iconP2, 24, .3, FlxEase.quadOut);
+				var funny:Float = (healthBar.percent * 0.01) + 0.01;
+				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (2 + funny))),Std.int(iconP2.height - (25 * (2 + funny))));
+				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))),Std.int(iconP2.height - (25 * (2 - funny))));
+		
+				iconP1.scale.set(1.1, 0.8);
+				iconP2.scale.set(1.1, 0.8);
+		
+				FlxTween.angle(iconP1, -15, 0, Conductor.crochet / 1300 * gfSpeed, {ease: FlxEase.quadOut});
+				FlxTween.angle(iconP2, 15, 0, Conductor.crochet / 1300 * gfSpeed, {ease: FlxEase.quadOut}); 
+		
+				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
+				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
+		
 			case "BabyShark":
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));

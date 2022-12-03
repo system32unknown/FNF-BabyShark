@@ -34,7 +34,7 @@ class OptionsState extends MusicBeatState
 			case 'Visuals and UI': openSubState(new options.VisualsUISubState());
 			case 'Gameplay': openSubState(new options.GameplaySettingsSubState());
 			case 'Miscellaneous': openSubState(new options.MiscellaneousSubState());
-			case 'Saves': openSubState(new options.MiscellaneousSubState());
+			case 'Saves': openSubState(new options.SaveSubState());
 			case 'Adjust Delay and Combo': LoadingState.loadAndSwitchState(new options.NoteOffsetState());
 		}
 	}
@@ -69,7 +69,7 @@ class OptionsState extends MusicBeatState
 		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
-		pageText = new FlxText(FlxG.width * .82, 5, 0, "", 32);
+		pageText = new FlxText(FlxG.width * .802, 5, 0, "", 32);
 		pageText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		
 		pageBG = new FlxSprite(pageText.x - 6, FlxG.height - 40).makeGraphic(260, 40, FlxColor.BLACK);
