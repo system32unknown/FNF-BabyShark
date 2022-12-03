@@ -139,7 +139,6 @@ class FlxSoundTray extends Sprite
 
 		if (FlxG.sound.muted) {
 			globalVolume = 0;
-			text.text = 'Volume: Muted';
 		}
 
 		for (i in 0..._bars.length) {
@@ -150,7 +149,7 @@ class FlxSoundTray extends Sprite
 			}
 		}
 
-		text.text = 'Volume: ${globalVolume * 10}%';
+		text.text = 'Volume: ' + (FlxG.sound.muted ? 'Muted' : globalVolume * 10 + '%');
 	}
 
 	public function screenCenter():Void {

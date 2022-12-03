@@ -132,17 +132,12 @@ class MusicBeatState extends FlxUIState {
 	}
 
 	public function stepHit():Void {
-		if (curStep % 4 == 0)
-			beatHit();
+		if (curStep % 4 == 0) beatHit();
 	}
 
-	public function beatHit():Void {
-		//trace('Beat: ' + curBeat);
-	}
+	public function beatHit():Void {}
 
-	public function sectionHit():Void {
-		//trace('Section: ' + curSection + ', Beat: ' + curBeat + ', Step: ' + curStep);
-	}
+	public function sectionHit():Void {}
 
 	function getBeatsOnSection() {
 		var val:Null<Float> = 4;

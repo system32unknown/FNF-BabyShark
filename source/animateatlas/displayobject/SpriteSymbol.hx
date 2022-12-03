@@ -49,7 +49,7 @@ class SpriteSymbol extends Sprite {
 	private var _layers:Array<Sprite>;
 	private var _texture:BitmapData;
 	private var _tempRect = new Rectangle();
-	private var _zeroPoint = new Point(0, 0);
+	private var _zeroPoint = new Point();
 	public var smoothing:Bool = true;
 
 	private static var sMatrix:Matrix = new Matrix();

@@ -64,12 +64,12 @@ class AtlasFrameMaker extends FlxFramesCollection
 
 	@:noCompletion static function getFramesArray(t:SpriteMovieClip,animation:String):Array<FlxFrame>
 	{
-		var sizeInfo:Rectangle = new Rectangle(0, 0);
+		var sizeInfo:Rectangle = new Rectangle();
 		t.currentLabel = animation;
 		var bitMapArray:Array<BitmapData> = [];
 		var daFramez:Array<FlxFrame> = [];
 		var firstPass = true;
-		var frameSize:FlxPoint = new FlxPoint(0, 0);
+		var frameSize:FlxPoint = new FlxPoint();
 
 		for (i in t.getFrame(animation)...t.numFrames) {
 			t.currentFrame = i;

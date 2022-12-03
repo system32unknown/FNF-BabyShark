@@ -209,7 +209,7 @@ class FunkinLua {
 		set('healthBarAlpha', ClientPrefs.getPref('healthBarAlpha'));
 		set('noResetButton', ClientPrefs.getPref('noReset'));
 		set('lowQuality', ClientPrefs.getPref('lowQuality'));
-		set('shadersEnabled', ClientPrefs.getPref('shadersEnabled'));
+		set('shaders', ClientPrefs.getPref('shaders'));
 		set('scriptName', scriptName);
 		set('isPixelStage', PlayState.isPixelStage);
 		set('curStage', PlayState.curStage);

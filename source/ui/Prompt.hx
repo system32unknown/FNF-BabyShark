@@ -35,7 +35,7 @@ class Prompt extends MusicBeatSubstate
 			if(okc != null) okc();
 			close();
 		});
-		buttonNo = new FlxButton(633.3,450, op2, function() {
+		buttonNo = new FlxButton(633.3, 450, op2, function() {
 			if(cancelc != null) cancelc();
 			close();
 		});
@@ -49,8 +49,8 @@ class Prompt extends MusicBeatSubstate
 			if (okc != null) okc();
 			close();
 		} else {
-			panel = new FlxSprite(0, 0);
-			panelbg = new FlxSprite(0, 0);
+			panel = new FlxSprite();
+			panelbg = new FlxSprite();
 			makeSelectorGraphic(panel, 300, 150, 0xff999999);
 			makeSelectorGraphic(panelbg, 304, 154, 0xff000000);
 			panel.scrollFactor.set();

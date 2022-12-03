@@ -46,16 +46,10 @@ class StageData {
 				case 'ugh' | 'guns' | 'stress': stage = 'tank';
 				default: stage = 'stage';
 			}
-		} else {
-			stage = 'stage';
-		}
+		} else stage = 'stage';
 
 		var stageFile:StageFile = getStageFile(stage);
-		if(stageFile == null) { //preventing crashes
-			forceNextDirectory = '';
-		} else {
-			forceNextDirectory = stageFile.directory;
-		}
+		forceNextDirectory = (stageFile == null ? '' : stageFile.directory); // preventing crashes
 	}
 
 	public static function getStageFile(stage:String):StageFile {
@@ -74,9 +68,7 @@ class StageData {
 			rawJson = Assets.getText(path);
 		}
 		#end
-		else {
-			return null;
-		}
+		else return null;
 		return cast Json.parse(rawJson);
 	}
 }

@@ -1313,7 +1313,7 @@ class PlayState extends MusicBeatState
 		if (isStoryMode && !seenCutscene) {
 			switch (daSong) {
 				case "monster":
-					var whiteScreen:FlxSprite = new FlxSprite(0, 0).makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.WHITE);
+					var whiteScreen:FlxSprite = new FlxSprite().makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.WHITE);
 					add(whiteScreen);
 					whiteScreen.scrollFactor.set();
 					whiteScreen.blend = ADD;

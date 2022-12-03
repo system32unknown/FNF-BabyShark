@@ -594,7 +594,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 			}
 			if(FlxG.keys.justPressed.R) {
 				camGame.zoom = 1;
-				mainGroup.setPosition(0, 0);
+				mainGroup.setPosition();
 				hudGroup.visible = true;
 			}
 

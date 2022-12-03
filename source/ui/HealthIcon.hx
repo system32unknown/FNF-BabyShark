@@ -67,8 +67,7 @@ class HealthIcon extends FlxSprite
 			return;
 		} 
 		super.updateHitbox();
-		offset.x = iconOffsets[0];
-		offset.y = iconOffsets[1];
+		offset.set(iconOffsets[0], iconOffsets[1]);
 	}
 
 	public function getCharacter():String {

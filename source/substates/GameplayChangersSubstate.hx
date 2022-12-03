@@ -468,11 +468,8 @@ class GameplayOption
 	}
 
 	public function getValue():Dynamic
-	{
 		return ClientPrefs.gameplaySettings.get(variable);
-	}
-	public function setValue(value:Dynamic)
-	{
+	public function setValue(value:Dynamic){
 		ClientPrefs.gameplaySettings.set(variable, value);
 	}
 

@@ -141,7 +141,7 @@ class DialogueCharacter extends FlxSprite
 				offset.set(anim.loop_offsets[0], anim.loop_offsets[1]);
 			}
 		} else {
-			offset.set(0, 0);
+			offset.set();
 			trace('Offsets not found! Dialogue character is badly formatted, anim: ' + leAnim + ', ' + (playIdle ? 'idle anim' : 'loop anim'));
 		}
 	}
@@ -514,7 +514,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 		} else if (box.animation.curAnim.name.startsWith('center-angry')) {
 			box.offset.set(50, 30);
 		} else {
-			box.offset.set(10, 0);
+			box.offset.set(10);
 		}
 		
 		if(!box.flipX) box.offset.y += 10;

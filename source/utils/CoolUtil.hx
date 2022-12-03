@@ -93,11 +93,11 @@ class CoolUtil
 	}
 
 	//uhhhh does this even work at all? i'm starting to doubt
-	public static function precacheSound(sound:String, ?library:String = null):Void {
+	inline public static function precacheSound(sound:String, ?library:String = null):Void {
 		Paths.sound(sound, library);
 	}
 
-	public static function precacheMusic(sound:String, ?library:String = null):Void {
+	inline public static function precacheMusic(sound:String, ?library:String = null):Void {
 		Paths.music(sound, library);
 	}
 
@@ -133,7 +133,7 @@ class CoolUtil
 		return ranking;
 	}
 
-	public static function adjustFPS(num:Float):Float {
+	inline public static function adjustFPS(num:Float):Float {
 		return FlxG.elapsed / (1 / 60) * num;
 	}
 
