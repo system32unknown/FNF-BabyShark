@@ -84,14 +84,22 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			['Static', 'Global']);
 		addOption(option);
 
+		var option:Option = new Option('Note Diff Type:',
+			'Choose the type of Note Diffs.',
+			'NoteDiffTypes',
+			'string',
+			'Andromeda',
+			['Psych', 'Kade', 'Andromeda']);
+		addOption(option);
+
 		var option:Option = new Option('Ms Timing Type:',
 			'Choose the type of Ms timing.',
 			'MstimingTypes',
 			'string',
-			'Psych',
-			['Psych', 'Kade', 'Andromeda']);
+			'Simple',
+			['Kade', 'KadeFixed', 'Simple', 'OS']);
 		addOption(option);
-
+		
 		var option:Option = new Option('Rating Offset',
 			'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.',
 			'ratingOffset',

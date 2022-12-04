@@ -3033,7 +3033,7 @@ class FunkinLua {
 	}
 
 	var lastCalledFunction:String = '';
-	public function call(func:String, args:Array<Dynamic>): Dynamic {
+	public function call(func:String, args:Array<Dynamic>):Dynamic {
 		#if LUA_ALLOWED
 		if (closed || lua == null || func == null || args == null) return Function_Continue;
 		lastCalledFunction = func;

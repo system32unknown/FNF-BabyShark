@@ -656,7 +656,7 @@ class EditorPlayState extends MusicBeatState
 	var COMBO_Y:Float = 340;
 	private function popUpScore(note:Note):Void
 	{
-		var noteDiff:Float = PlayState.getMsTiming(note);
+		var noteDiff:Float = PlayState.getNoteDiff(note);
 		var placement:String = Std.string(combo);
 
 		var daTiming:String = "";
@@ -664,6 +664,7 @@ class EditorPlayState extends MusicBeatState
 			daTiming = "early";
 		else if (noteDiff < Conductor.safeZoneOffset * -0.1)
 			daTiming = "late";
+		var msTiming:Float = 0;
 
 		var coolText:FlxText = new FlxText(0, 0, 0, placement, 32);
 		coolText.x = COMBO_X;
@@ -729,6 +730,11 @@ class EditorPlayState extends MusicBeatState
 		timing.y -= comboOffset[3][1];
 
 		if (ClientPrefs.getPref('ShowMsTiming') && msTimingTxt != null) {
+			switch (ClientPrefs.getPref('MstimingTypes')) {
+				case "Kade": msTiming = MathUtil.truncateFloat(noteDiff / 1);
+				case "KadeFixed": msTiming = MathUtil.truncateFloat(noteDiff);
+				case "Simple": msTiming = MathUtil.truncateFloat(noteDiff / 10);
+			}
 			var msTiming = MathUtil.truncateFloat(noteDiff / 1.0);
 			msTimingTxt.text = msTiming + "ms";
 			msTimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);

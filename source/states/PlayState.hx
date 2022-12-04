@@ -4175,7 +4175,7 @@ class PlayState extends MusicBeatState
 	}
 
 	private function popUpScore(note:Note = null):Void {
-		var noteDiff = getMsTiming(note);
+		var noteDiff = getNoteDiff(note);
 		allNotesMs += noteDiff;
 		averageMs = allNotesMs / songHits;
 
@@ -4194,6 +4194,7 @@ class PlayState extends MusicBeatState
 		//tryna do MS based judgment due to popular demand
 		var daRating:Rating = Conductor.judgeNote(note, noteDiff / playbackRate);
 		var daTiming:String = "";
+		var msTiming:Float = 0;
 
 		totalNotesHit += daRating.ratingMod;
 		note.ratingMod = daRating.ratingMod;
@@ -4266,7 +4267,13 @@ class PlayState extends MusicBeatState
 		timing.y -= comboOffset[3][1];
 
 		if (ClientPrefs.getPref('ShowMsTiming') && timingTxtArrays[0] != null) {
-			var msTiming = MathUtil.truncateFloat(noteDiff / 1.0);
+			switch (ClientPrefs.getPref('MstimingTypes')) {
+				case "Kade": msTiming = MathUtil.truncateFloat(noteDiff / playbackRate);
+				case "KadeFixed": msTiming = MathUtil.truncateFloat(noteDiff);
+				case "Simple": msTiming = MathUtil.truncateFloat(noteDiff / 1.);
+				case "OS": msTiming = Math.round(noteDiff);
+			}
+			
 			timingTxtArrays[0].text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
 			timingTxtArrays[0].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			timingTxtArrays[0].borderSize = 1;
@@ -4494,9 +4501,9 @@ class PlayState extends MusicBeatState
 		});
 	}
 
-	public static function getMsTiming(note:Note = null):Float {
+	public static function getNoteDiff(note:Note = null):Float {
 		var notediff:Float = 0;
-		switch(ClientPrefs.getPref('MstimingTypes')) {
+		switch(ClientPrefs.getPref('NoteDiffTypes')) {
 			case 'Psych':
 				notediff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
 			case 'Kade':
