@@ -65,9 +65,9 @@ class CharacterEditorState extends MusicBeatState
 	var UI_box:FlxUITabMenu;
 	var UI_characterbox:FlxUITabMenu;
 
-	private var camEditor:FlxCamera;
-	private var camHUD:FlxCamera;
-	private var camMenu:FlxCamera;
+	var camEditor:FlxCamera;
+	var camHUD:FlxCamera;
+	var camMenu:FlxCamera;
 
 	var changeBGbutton:FlxButton;
 	var leHealthIcon:HealthIcon;
@@ -238,9 +238,9 @@ class CharacterEditorState extends MusicBeatState
 			var widShit = Std.int(bgSky.width * 6);
 			var bgTrees:FlxSprite = new FlxSprite(repositionShit - 380, -800 - playerYDifference);
 			bgTrees.frames = Paths.getPackerAtlas('weeb/weebTrees');
-			bgTrees.animation.add('treeLoop', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 12);
+			bgTrees.animation.add('treeLoop', CoolUtil.numberArray(18), 12);
 			bgTrees.animation.play('treeLoop');
-			bgTrees.scrollFactor.set(0.85, 0.85);
+			bgTrees.scrollFactor.set(.85, .85);
 			bgLayer.add(bgTrees);
 			bgTrees.antialiasing = false;
 
@@ -596,7 +596,7 @@ class CharacterEditorState extends MusicBeatState
 			if(selectedAnimation > 0) {
 				ghostChar.visible = true;
 				ghostChar.playAnim(ghostChar.animationsArray[selectedAnimation-1].anim, true);
-				char.alpha = 0.85;
+				char.alpha = .85;
 			}
 		});
 
@@ -780,7 +780,6 @@ class CharacterEditorState extends MusicBeatState
 		if(char.animation.curAnim != null) {
 			lastAnim = char.animation.curAnim.name;
 		}
-		var anims:Array<AnimArray> = char.animationsArray.copy();
 		if(Paths.fileExists('images/' + char.imageFile + '/Animation.json', TEXT)) {
 			char.frames = AtlasFrameMaker.construct(char.imageFile);
 		} else if(Paths.fileExists('images/' + char.imageFile + '.txt', TEXT)) {
@@ -831,8 +830,7 @@ class CharacterEditorState extends MusicBeatState
 		}
 		dumbTexts.clear();
 
-		for (anim => offsets in char.animOffsets)
-		{
+		for (anim => offsets in char.animOffsets) {
 			var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
 			text.setFormat(null, 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			text.scrollFactor.set();
@@ -959,7 +957,7 @@ class CharacterEditorState extends MusicBeatState
 			}
 		}
 
-		char.alpha = 0.85;
+		char.alpha = .85;
 		ghostChar.visible = true;
 		if(ghostDropDown.selectedLabel == '') {
 			ghostChar.visible = false;
@@ -1085,15 +1083,8 @@ class CharacterEditorState extends MusicBeatState
 			}
 
 			if(char.animationsArray.length > 0) {
-				if (FlxG.keys.justPressed.W)
-				{
-					curAnim -= 1;
-				}
-
-				if (FlxG.keys.justPressed.S)
-				{
-					curAnim += 1;
-				}
+				if (FlxG.keys.justPressed.W) curAnim -= 1;
+				if (FlxG.keys.justPressed.S) curAnim += 1;
 
 				if (curAnim < 0)
 					curAnim = char.animationsArray.length - 1;
@@ -1116,7 +1107,6 @@ class CharacterEditorState extends MusicBeatState
 				}
 
 				var controlArray:Array<Bool> = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.DOWN];
-
 				for (i in 0...controlArray.length) {
 					if(controlArray[i]) {
 						var holdShift = FlxG.keys.pressed.SHIFT;
@@ -1158,7 +1148,7 @@ class CharacterEditorState extends MusicBeatState
 	}
 
 	/**
-		* Called when the save file dialog is cancelled.
+		Called when the save file dialog is cancelled.
 	**/
 	function onSaveCancel(_):Void {
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -1168,7 +1158,7 @@ class CharacterEditorState extends MusicBeatState
 	}
 
 	/**
-	Called if there is an error while saving the gameplay recording.
+		Called if there is an error while saving the gameplay recording.
 	**/
 	function onSaveError(_):Void {
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);

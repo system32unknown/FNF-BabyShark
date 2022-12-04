@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<!-- _________________________Application Settings _________________________ -->
+	<!-- _________________________Application Settings_________________________ -->
 	<app title="Baby Shark's Funkin: The Full Ass Game" file="Baby Shark's Funkin" packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark" main="Main" version="0.2.8" company="Altertoriel" />
 
 	<!-- NOTE TO SELF: DISABLE THIS IF ISSUES ARE FOUND -->
@@ -13,14 +13,14 @@
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8"/>
 
-	<!-- ____________________________Window Settings ___________________________ -->
+	<!-- ____________________________Window Settings___________________________ -->
 
 	<!--These window settings apply to all targets-->
 	<window width="1280" height="720" fps="" background="#000000" hardware="true" vsync="false"/>
 
 	<!--Desktop-specific-->
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
-	<!-- _____________________________Path Settings ____________________________ -->
+	<!-- _____________________________Path Settings____________________________ -->
 
 	<set name="BUILD_DIR" value="export/debug" if="debug"/>
 	<set name="BUILD_DIR" value="export/release" unless="debug"/>
@@ -80,7 +80,7 @@
 	</section>
 	
 	<assets path="assets/fonts"/>
-	<!-- _______________________________Libraries ______________________________ -->
+	<!-- _______________________________Libraries______________________________ -->
 
 	<haxelib name="flixel"/>
 
@@ -95,7 +95,10 @@
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
 	<haxelib name="discord_rpc" if="desktop"/>
 
-	<!-- ______________________________Haxedefines _____________________________ -->
+	<!-- Enables a terminal log prompt on debug builds -->
+	<haxelib name="hxcpp-debug-server" if="debug"/>
+
+	<!-- ______________________________Haxedefines_____________________________ -->
 
 	<!--Disable the Flixel core focus lost screen-->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
@@ -123,7 +126,7 @@
 	<error value="Seems like you're not using NebulaZoruas github fork of luajit, please use it instead." if="${linc_luajit == 0.0.4}" />
 	<error value="Seems like you're using Haxe ${haxe}, please update!" if="${haxe == 4.1.5}" unless="linux"/>
 
-	<!-- _________________________________Custom _______________________________ -->
+	<!-- _________________________________Custom_______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<icon path="art/icon16.png" size='16'/>
