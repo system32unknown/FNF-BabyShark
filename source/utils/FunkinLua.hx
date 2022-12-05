@@ -2415,8 +2415,7 @@ class FunkinLua {
 				return true;
 			return FileSystem.exists(Paths.getPath('assets/$filename', TEXT));
 			#else
-			if(absolute)
-				return Assets.exists(filename);
+			if(absolute) return Assets.exists(filename);
 			return Assets.exists(Paths.getPath('assets/$filename', TEXT));
 			#end
 		});

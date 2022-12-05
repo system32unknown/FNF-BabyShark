@@ -2104,7 +2104,7 @@ class PlayState extends MusicBeatState
 			addLUStrums();
 			updateLuaDefaultPos();
 	
-			setOnLuas('defaultMania', SONG.mania);
+			setOnLuas('defaultMania', Note.ammo[SONG.mania]);
 
 			startedCountdown = true;
 			Conductor.songPosition = 0;
