@@ -265,8 +265,8 @@ class PlayState extends MusicBeatState
 	public var songScore:Int = 0;
 	public var botScore:Int = 0;
 
-	var accuracy:Float = 0;
-	var ranks:String = "";
+	public var accuracy:Float = 0;
+	public var ranks:String = "";
 
 	var notesHitArray:Array<Date> = [];
 	var nps:Int = 0;
@@ -4023,7 +4023,7 @@ class PlayState extends MusicBeatState
 					}
 					MusicBeatState.switchState(new StoryMenuState());
 
-					if(!ClientPrefs.getGameplaySetting('practice', false) && !ClientPrefs.getGameplaySetting('botplay', false)) {
+					if(!practiceMode && !cpuControlled) {
 						StoryMenuState.weekCompleted.set(WeekData.weeksList[storyWeek], true);
 
 						if (SONG.validScore) {
@@ -4320,15 +4320,12 @@ class PlayState extends MusicBeatState
 			timingTxtArrays[0].screenCenter();
 			if (showCombo) {
 				if (combo >= 10) {
-					timingTxtArrays[0].x = comboSpr.x + 100;
-					timingTxtArrays[0].y = comboSpr.y + 80;
+					timingTxtArrays[0].setPosition(comboSpr.x + 100, comboSpr.y + 80);
 				} else {
-					timingTxtArrays[0].x = rating.x + 100;
-					timingTxtArrays[0].y = rating.y + 100;
+					timingTxtArrays[0].setPosition(rating.x + 100, rating.y + 100);
 				}
 			} else {
-				timingTxtArrays[0].x = rating.x + 100;
-				timingTxtArrays[0].y = rating.y + 100;
+				timingTxtArrays[0].setPosition(rating.x + 100, rating.y + 100);
 			}
 			timingTxtArrays[0].updateHitbox();
 		}
@@ -4368,11 +4365,11 @@ class PlayState extends MusicBeatState
 		}
 
 		if (!PlayState.isPixelStage) {
-			rating.setGraphicSize(Std.int(rating.width * 0.7));
+			rating.setGraphicSize(Std.int(rating.width * .7));
 			rating.antialiasing = globalAntialiasing;
-			comboSpr.setGraphicSize(Std.int(comboSpr.width * 0.7));
+			comboSpr.setGraphicSize(Std.int(comboSpr.width * .7));
 			comboSpr.antialiasing = globalAntialiasing;
-			timing.setGraphicSize(Std.int(timing.width * 0.7));
+			timing.setGraphicSize(Std.int(timing.width * .7));
 			timing.antialiasing = globalAntialiasing;
 		} else {
 			rating.setGraphicSize(Std.int(rating.width * daPixelZoom * 0.85));
@@ -5216,7 +5213,7 @@ class PlayState extends MusicBeatState
 
 		if (curBeat % 4 == 0) {
 			timeTxt.scale.set(1.1, 1.1);
-			FlxTween.tween(timeTxt.scale, {x: 1, y: 1}, 0.2 * playbackRate, {ease: FlxEase.linear});
+			FlxTween.tween(timeTxt.scale, {x: 1, y: 1}, .2 * playbackRate, {ease: FlxEase.linear});
 		}
 
 		if(lastBeatHit >= curBeat) return;
@@ -5238,22 +5235,14 @@ class PlayState extends MusicBeatState
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
 
 				if (curBeat % 4 == 0) {
-					advTweenAngleIcon(iconP1, -24, .3, FlxEase.quadOut);
-					advTweenAngleIcon(iconP2, 24, .3, FlxEase.quadOut);
+					FlxTween.angle(iconP1, -30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+					FlxTween.angle(iconP2, 30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 				}
 			case "DaveAndBambi":
-				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), 0.1);
+				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), .1);
 	
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
-			case "RadicalOne":
-				FlxTween.cancelTweensOf(iconP1);
-				iconP1.scale.set(1.3, 1.3);
-				FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
-
-				FlxTween.cancelTweensOf(iconP2);
-				iconP2.scale.set(1.3, 1.3);
-				FlxTween.tween(iconP2, {"scale.x": 1, "scale.y": 1}, Conductor.stepCrochet / 500, {ease: FlxEase.cubeOut});
 			case "GoldenApple":
 				if (curBeat % 2 == 0) {
 					iconP1.scale.set(1.1, .8);
@@ -5272,12 +5261,12 @@ class PlayState extends MusicBeatState
 				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 			case "StridentCrisis":
-				var funny:Float = (healthBar.percent * 0.01) + 0.01;
-				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (2 + funny))),Std.int(iconP2.height - (25 * (2 + funny))));
-				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))),Std.int(iconP2.height - (25 * (2 - funny))));
+				var funny:Float = (healthBar.percent * .01) + .01;
+				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (2 + funny))), Std.int(iconP2.height - (25 * (2 + funny))));
+				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
 		
-				iconP1.scale.set(1.1, 0.8);
-				iconP2.scale.set(1.1, 0.8);
+				iconP1.scale.set(1.1, .8);
+				iconP2.scale.set(1.1, .8);
 		
 				FlxTween.angle(iconP1, -15, 0, Conductor.crochet / 1300 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.angle(iconP2, 15, 0, Conductor.crochet / 1300 * gfSpeed, {ease: FlxEase.quadOut}); 
@@ -5378,8 +5367,8 @@ class PlayState extends MusicBeatState
 			}
 
 			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.getPref('camZooms')) {
-				FlxG.camera.zoom += 0.015 * camZoomingMult;
-				camHUD.zoom += 0.03 * camZoomingMult;
+				FlxG.camera.zoom += .015 * camZoomingMult;
+				camHUD.zoom += .03 * camZoomingMult;
 			}
 
 			if (SONG.notes[curSection].changeBPM) {
@@ -5471,7 +5460,7 @@ class PlayState extends MusicBeatState
 
 			// Rating FC
 			ratingFC = "";
-			if (epics > 0) ratingFC = "MFC";
+			if (epics > 0) ratingFC = "PFC";
 			if (sicks > 0) ratingFC = "SFC";
 			if (goods > 0) ratingFC = "GFC";
 			if (bads > 0 || shits > 0) ratingFC = "FC";
@@ -5487,20 +5476,12 @@ class PlayState extends MusicBeatState
 		setOnLuas('ratingFC', ratingFC);
 	}
 
-	function advTweenAngleIcon(sprite:Dynamic, angle:Float, duration:Float, ease:Dynamic) {
-		if (Std.isOfType(sprite, FlxSprite)) {
-			FlxTween.cancelTweensOf(sprite);
-			sprite.angle = angle;
-			FlxTween.tween(sprite, {"angle": 0}, duration, {ease: ease});
-		}
-	}
-
 	#if ACHIEVEMENTS_ALLOWED
 	private function checkForAchievement(achievesToCheck:Array<String> = null):String
 	{
 		if(chartingMode) return null;
 
-		var usedPractice:Bool = (ClientPrefs.getGameplaySetting('practice', false) || ClientPrefs.getGameplaySetting('botplay', false));
+		var usedPractice:Bool = (practiceMode || cpuControlled);
 		for (i in 0...achievesToCheck.length) {
 			var achievementName:String = achievesToCheck[i];
 			if(!Achievements.isAchievementUnlocked(achievementName) && !cpuControlled && Achievements.exists(achievementName)) {
@@ -5512,7 +5493,7 @@ class PlayState extends MusicBeatState
 				}
 				switch(achievementName) {
 					case 'ur_bad':
-						if(ratingPercent < 0.2 && !practiceMode) {
+						if(ratingPercent < .2 && !practiceMode) {
 							unlock = true;
 						}
 					case 'ur_good':

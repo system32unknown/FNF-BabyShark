@@ -7,6 +7,7 @@ import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
+import lime.app.Application;
 
 import states.TitleState;
 import utils.ClientPrefs;
@@ -15,7 +16,6 @@ import ui.InfoDisplay;
 
 //crash handler stuff
 #if CRASH_HANDLER
-import lime.app.Application;
 import openfl.events.UncaughtErrorEvent;
 import haxe.CallStack;
 import haxe.io.Path;
@@ -89,9 +89,12 @@ class Main extends Sprite
 		#end
 
 		#if desktop
-		FlxG.stage.application.window.onClose.add(function() {
-			DiscordClient.shutdown();
-		});
+		if (!DiscordClient.isInitialized) {
+			DiscordClient.initialize();
+			Application.current.window.onClose.add(function() {
+				DiscordClient.shutdown();
+			});
+		}
 		#end
 	}
 
