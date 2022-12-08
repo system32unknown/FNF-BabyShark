@@ -51,7 +51,7 @@ class InfoDisplay extends TextField
 			size = size / 1024;
 		}
 
-		size = MathUtil.truncateFloat(size, 10);
+		size = MathUtil.truncateFloat(size, 2);
 		return size + " " + intervalArray[data] + " \n";
 	}
 
