@@ -28,12 +28,9 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	var BabySharkVersion:String = '0.1 BETA'; //This is also used for Discord RPC
+	var BabySharkVersion:String ='0.1 BETA'; //This is also used for Discord RPC
 	public static var psychEngineVersion:String = '0.6.3'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
-
-	var menuCover:FlxSprite;
-	var menuCoverAlt:FlxSprite;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	var camGame:FlxCamera;
@@ -121,17 +118,21 @@ class MainMenuState extends MusicBeatState
 		add(camFollow);
 		add(camFollowPos);
 
-		menuCover = new FlxSprite().makeGraphic(FlxG.width - 480, FlxG.height);
+		var menuCover:FlxSprite = new FlxSprite().makeGraphic(FlxG.width - 680, Std.int(FlxG.height * 1.5));
+		menuCover.x = 30;
+		menuCover.screenCenter(Y);
 		menuCover.alpha = 0.5;
 		menuCover.color = FlxColor.WHITE;
-		menuCover.scrollFactor.set();
+		menuCover.angle = -15;
+		menuCover.scrollFactor.set(0, yScroll);
 		add(menuCover);
 
-		menuCoverAlt = new FlxSprite().makeGraphic(FlxG.width - 500, FlxG.height);
-		menuCoverAlt.x = menuCover.x + 10;
+		var menuCoverAlt:FlxSprite = new FlxSprite().makeGraphic(Std.int(menuCover.width - 20), Std.int(menuCover.height));
+		menuCoverAlt.setPosition(menuCover.x + 10, menuCover.y);
+		menuCoverAlt.angle = menuCover.angle;
 		menuCoverAlt.alpha = 0.7;
 		menuCoverAlt.color = FlxColor.BLACK;
-		menuCoverAlt.scrollFactor.set();
+		menuCoverAlt.scrollFactor.set(0, yScroll);
 		add(menuCoverAlt);
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
@@ -152,15 +153,17 @@ class MainMenuState extends MusicBeatState
 			menuItem.scrollFactor.set(0, scr);
 			menuItem.antialiasing = globalAntialiasing;
 			menuItem.updateHitbox();
+			menuItem.scale.set(.7, .7);
+			var offsetMenuItem:Float = (i * 80) - offset;
 			if (firstStart)
-				FlxTween.tween(menuItem, {y: (i * 140) + offset}, 1 + (i * 0.25), {
+				FlxTween.tween(menuItem, {x: offsetMenuItem, y: (i * 140) + offset}, 1 + (i * 0.25), {
 					ease: FlxEase.expoInOut,
 					onComplete: function(flxTween:FlxTween) {
 						finishedFunnyMove = true;
 						changeItem();
 					}
 				});
-			else menuItem.y = (i * 140) + offset;
+			else menuItem.setPosition(offsetMenuItem, (i * 140) + offset);
 		}
 
 		firstStart = false;
@@ -169,7 +172,7 @@ class MainMenuState extends MusicBeatState
 
 		var versionShit:FlxText = new FlxText(FlxG.width - 285, FlxG.height - 47, 0, 
 			'Psych Engine v$psychEngineVersion (EK Custom)\n' +
-			'Altertoriel Engine 1.0\n' +
+			'Alter Engine 1.0\n' +
 			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
 			12);
 		versionShit.scrollFactor.set();
@@ -248,8 +251,8 @@ class MainMenuState extends MusicBeatState
 							}
 						});
 					} else {
-						FlxTween.tween(spr, {"scale.x": 1.2, "scale.y": 1.2}, .4, {ease: FlxEase.sineInOut});
-						FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker) {
+						FlxTween.tween(spr, {"scale.x": .9, "scale.y": .9}, .4, {ease: FlxEase.sineInOut});
+						FlxFlicker.flicker(spr, 1, .06, false, false, function(flick:FlxFlicker) {
 							var daChoice:String = optionShit[curSelected];
 							switch (daChoice) {
 								case 'story_mode': MusicBeatState.switchState(new StoryMenuState());

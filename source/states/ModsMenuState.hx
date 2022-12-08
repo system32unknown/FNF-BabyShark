@@ -108,7 +108,7 @@ class ModsMenuState extends MusicBeatState
 		selector.xAdd = -205;
 		selector.yAdd = -68;
 		selector.alphaMult = 0.5;
-		makeSelectorGraphic();
+		CoolUtil.makeSelectorGraphic(selector, 1100, 450, FlxColor.BLACK, 11);
 		add(selector);
 		visibleWhenHasMods.push(selector);
 
@@ -476,40 +476,6 @@ class ModsMenuState extends MusicBeatState
 			}
 			i++;
 		}
-	}
-
-	var cornerSize:Int = 11;
-	function makeSelectorGraphic()
-	{
-		selector.makeGraphic(1100, 450, FlxColor.BLACK);
-		selector.pixels.fillRect(new Rectangle(0, 190, selector.width, 5), 0x0);
-
-		// Why did i do this? Because i'm a lmao stupid, of course
-		// also i wanted to understand better how fillRect works so i did this shit lol???
-		selector.pixels.fillRect(new Rectangle(0, 0, cornerSize, cornerSize), 0x0);														 //top left
-		drawCircleCornerOnSelector(false, false);
-		selector.pixels.fillRect(new Rectangle(selector.width - cornerSize, 0, cornerSize, cornerSize), 0x0);							 //top right
-		drawCircleCornerOnSelector(true, false);
-		selector.pixels.fillRect(new Rectangle(0, selector.height - cornerSize, cornerSize, cornerSize), 0x0);							 //bottom left
-		drawCircleCornerOnSelector(false, true);
-		selector.pixels.fillRect(new Rectangle(selector.width - cornerSize, selector.height - cornerSize, cornerSize, cornerSize), 0x0); //bottom right
-		drawCircleCornerOnSelector(true, true);
-	}
-
-	function drawCircleCornerOnSelector(flipX:Bool, flipY:Bool)
-	{
-		var antiX:Float = (selector.width - cornerSize);
-		var antiY:Float = flipY ? (selector.height - 1) : 0;
-		if(flipY) antiY -= 2;
-		selector.pixels.fillRect(new Rectangle((flipX ? antiX : 1), Std.int(Math.abs(antiY - 8)), 10, 3), FlxColor.BLACK);
-		if(flipY) antiY += 1;
-		selector.pixels.fillRect(new Rectangle((flipX ? antiX : 2), Std.int(Math.abs(antiY - 6)),  9, 2), FlxColor.BLACK);
-		if(flipY) antiY += 1;
-		selector.pixels.fillRect(new Rectangle((flipX ? antiX : 3), Std.int(Math.abs(antiY - 5)),  8, 1), FlxColor.BLACK);
-		selector.pixels.fillRect(new Rectangle((flipX ? antiX : 4), Std.int(Math.abs(antiY - 4)),  7, 1), FlxColor.BLACK);
-		selector.pixels.fillRect(new Rectangle((flipX ? antiX : 5), Std.int(Math.abs(antiY - 3)),  6, 1), FlxColor.BLACK);
-		selector.pixels.fillRect(new Rectangle((flipX ? antiX : 6), Std.int(Math.abs(antiY - 2)),  5, 1), FlxColor.BLACK);
-		selector.pixels.fillRect(new Rectangle((flipX ? antiX : 8), Std.int(Math.abs(antiY - 1)),  3, 1), FlxColor.BLACK);
 	}
 }
 

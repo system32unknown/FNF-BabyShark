@@ -337,8 +337,6 @@ class TitleState extends MusicBeatState
 		if(logoBl != null && foundXml)
 			logoBl.animation.play('bump', true);
 
-		FlxTween.tween(FlxG.camera, {zoom: 1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
-
 		if(daveDance != null) {
 			if (titleJSON.useOldDance) {
 				daveDance.animation.play('danceTitle');
