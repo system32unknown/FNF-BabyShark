@@ -62,7 +62,7 @@ class HealthIcon extends FlxSprite
 		if (!isPsych) {
 			width = Math.abs(scale.x) * frameWidth;
 			height = Math.abs(scale.y) * frameHeight;
-			offset.set(-0.5 * (width - frameWidth), -0.5 * (height - frameHeight));
+			offset.set(-.5 * (width - frameWidth), -.5 * (height - frameHeight));
 			centerOrigin();
 			return;
 		} 

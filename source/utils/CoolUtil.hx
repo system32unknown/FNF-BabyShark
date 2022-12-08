@@ -123,8 +123,8 @@ class CoolUtil
 			[accuracy >= 70, "B"],
 			[accuracy >= 60, "C"],
 			[accuracy >= 50, "D"],
-			[accuracy >= 10, "E"],
-			[accuracy > 5, "F"],
+			[accuracy >= 20, "E"],
+			[accuracy > 10, "F"],
 		];
 
 		for (i in 0...wifeConditions.length) {

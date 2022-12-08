@@ -1,7 +1,6 @@
 package lime.media;
 
 import haxe.io.Bytes;
-import haxe.io.Path;
 import lime._internal.backend.native.NativeCFFI;
 import lime._internal.format.Base64;
 import lime.app.Future;
@@ -52,10 +51,9 @@ class AudioBuffer
 	private static function __init__()
 	{
 		var p = untyped AudioBuffer.prototype;
-		untyped Object.defineProperties(p,
-			{
-				"src": {get: p.get_src, set: p.set_src}
-			});
+		untyped Object.defineProperties(p, {
+			"src": {get: p.get_src, set: p.set_src}
+		});
 	}
 	#end
 

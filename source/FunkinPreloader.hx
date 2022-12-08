@@ -27,8 +27,8 @@ class FunkinPreloader extends FlxBasePreloader {
     var _buffer = new Sprite();
     var _bmpBar:Bitmap;
 
-    public function new(MinDisplayTime:Float = 3, ?AllowedURLs:Array<String>) {
-        super(MinDisplayTime, AllowedURLs);
+    public function new(MinDisplayTime:Float = 3) {
+        super(MinDisplayTime);
     }
      
     override function create():Void {
@@ -121,8 +121,8 @@ class FunkinPreloader extends FlxBasePreloader {
         super.destroy();
     }
 
-	override public function update(Percent:Float):Void {
-		_bmpBar.scaleX = Percent * (_width - 8);
-		_text.text = "BSF 0.1 BETA - " + Std.int(Percent * 100) + "%";
+	override public function update(percent:Float):Void {
+		_bmpBar.scaleX = percent * (_width - 8);
+		_text.text = "BSF 0.1 BETA - " + Std.int(percent * 100) + "%";
     }
 }

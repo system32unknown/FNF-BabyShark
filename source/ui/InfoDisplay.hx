@@ -6,6 +6,7 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.system.System;
 import utils.ClientPrefs;
+import utils.MathUtil;
 
 /**
 	The Advanced FPS class provides an easy-to-use monitor to display
@@ -26,7 +27,7 @@ class InfoDisplay extends TextField
 
 	static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-	public function new(x:Float = 10, y:Float = 10)
+	public function new(x:Float = 4, y:Float = 2)
 	{
 		super();
 
@@ -50,7 +51,7 @@ class InfoDisplay extends TextField
 			size = size / 1024;
 		}
 
-		size = Math.round(size * 100) / 100;
+		size = MathUtil.truncateFloat(size, 10);
 		return size + " " + intervalArray[data] + " \n";
 	}
 
