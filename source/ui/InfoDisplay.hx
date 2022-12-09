@@ -5,8 +5,8 @@ import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.system.System;
+import flixel.util.FlxColor;
 import utils.ClientPrefs;
-import utils.MathUtil;
 
 /**
 	The Advanced FPS class provides an easy-to-use monitor to display
@@ -51,11 +51,13 @@ class InfoDisplay extends TextField
 			size = size / 1024;
 		}
 
-		size = MathUtil.truncateFloat(size, 2);
+		size = Math.round(size * 100) / 100;
 		return size + " " + intervalArray[data] + " \n";
 	}
 
+	var colorCycle:Int = 0;
 	function update(_:Event):Void {
+		colorCycle++;
 		var now:Float = Timer.stamp();
 		times.push(now);
 
@@ -65,6 +67,10 @@ class InfoDisplay extends TextField
 		var currentCount = times.length;
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
 		if (currentFPS > ClientPrefs.getPref('framerate')) currentFPS = ClientPrefs.getPref('framerate');
+
+		if (ClientPrefs.getPref('RainbowFPS')) {
+			textColor = FlxColor.fromHSB(colorCycle % 360, colorCycle * .1 % 1, colorCycle * .1 % 1);
+		}
 
 		if (currentCount != cacheCount) {
 			text = '';

@@ -45,6 +45,7 @@ import sys.io.File;
 
 import Type.ValueType;
 import ui.DialogueBoxPsych;
+import ui.CustomFadeTransition;
 
 #if hscript
 import hscript.Parser;

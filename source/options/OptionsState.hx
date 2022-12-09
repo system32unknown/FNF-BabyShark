@@ -19,9 +19,9 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Map<Int, Array<Dynamic>> = [
-		0 => ['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'],
-		1 => ['Saves', 'Miscellaneous']
+	var options:Array<Array<Dynamic>> = [
+		['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'],
+		['Saves', 'Miscellaneous']
 	];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;

@@ -1,4 +1,4 @@
-package utils;
+package ui;
 
 import flixel.FlxG;
 import flixel.tweens.FlxEase;
@@ -7,6 +7,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
+import utils.MathUtil;
 import substates.MusicBeatSubstate;
 
 class CustomFadeTransition extends MusicBeatSubstate {

@@ -53,6 +53,7 @@ class ClientPrefs {
 		'hitsoundVolume' => 0,
 		'hitsoundTypes' => 'Tick',
 		'ShowWatermark' => true,
+		'RainbowFPS' => false,
 		'pauseMusic' => 'Tea Time',
 		// Gameplay settings
 		'comboOffset' => [[0, 0], [0, 0], [0, 0], [0, 0]],

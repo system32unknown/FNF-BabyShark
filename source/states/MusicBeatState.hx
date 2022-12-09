@@ -7,7 +7,7 @@ import flixel.FlxState;
 import flixel.FlxCamera;
 import utils.Controls;
 import utils.PlayerSettings;
-import utils.CustomFadeTransition;
+import ui.CustomFadeTransition;
 import utils.ClientPrefs;
 import game.Conductor;
 
