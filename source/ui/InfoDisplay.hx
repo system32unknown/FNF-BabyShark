@@ -55,9 +55,7 @@ class InfoDisplay extends TextField
 		return size + " " + intervalArray[data] + " \n";
 	}
 
-	var colorCycle:Int = 0;
 	function update(_:Event):Void {
-		colorCycle++;
 		var now:Float = Timer.stamp();
 		times.push(now);
 
@@ -67,10 +65,6 @@ class InfoDisplay extends TextField
 		var currentCount = times.length;
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
 		if (currentFPS > ClientPrefs.getPref('framerate')) currentFPS = ClientPrefs.getPref('framerate');
-
-		if (ClientPrefs.getPref('RainbowFPS')) {
-			textColor = FlxColor.fromHSB(colorCycle % 360, colorCycle * .1 % 1, colorCycle * .1 % 1);
-		}
 
 		if (currentCount != cacheCount) {
 			text = '';

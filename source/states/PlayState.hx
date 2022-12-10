@@ -1083,14 +1083,13 @@ class PlayState extends MusicBeatState
 		timeBarBG.alpha = 0;
 		timeBarBG.visible = showTime;
 		timeBarBG.color = FlxColor.BLACK;
-		timeBarBG.xAdd = -4;
-		timeBarBG.yAdd = -4;
+		timeBarBG.setAdd(-4, -4);
 		add(timeBarBG);
 		
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
 			'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
-		timeBar.createGradientBar([0xFF000000], [dad.getColor(), boyfriend.getColor()], 1, 90);
+		timeBar.createGradientBar([FlxColor.BLACK], [dad.getColor(), boyfriend.getColor()], 1, 90);
 		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
@@ -1139,8 +1138,7 @@ class PlayState extends MusicBeatState
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		healthBarBG.visible = !hideHud;
-		healthBarBG.xAdd = -4;
-		healthBarBG.yAdd = -4;
+		healthBarBG.setAdd(-4, -4);
 		add(healthBarBG);
 		if(downScroll) healthBarBG.y = 0.11 * FlxG.height;
 
@@ -2104,7 +2102,7 @@ class PlayState extends MusicBeatState
 			addLUStrums();
 			updateLuaDefaultPos();
 	
-			setOnLuas('defaultMania', Note.ammo[SONG.mania]);
+			setOnLuas('defaultMania', SONG.mania);
 
 			startedCountdown = true;
 			Conductor.songPosition = 0;
@@ -2745,7 +2743,7 @@ class PlayState extends MusicBeatState
 		opponentStrums.clear();
 		opponentLU.clear();
 		strumLineNotes.clear();
-		setOnLuas('mania', mania);
+		setOnLuas('defaultMania', mania);
 
 		notes.forEachAlive(function(note:Note) {
 			updateNote(note);
@@ -3241,6 +3239,10 @@ class PlayState extends MusicBeatState
 					}
 				
 					var angleDir = strumDirection * Math.PI / 180;
+
+					if(daNote.isSustainNote)
+						daNote.angle = strumDirection - 90;
+
 					if (daNote.copyAngle)
 						daNote.angle = strumDirection - 90 + strumAngle;
 				
@@ -4987,6 +4989,7 @@ class PlayState extends MusicBeatState
 			var hue:Float = arrowHSV[arrowIndex][0] / 360;
 			var sat:Float = arrowHSV[arrowIndex][1] / 100;
 			var brt:Float = arrowHSV[arrowIndex][2] / 100;
+			
 			if(note != null) {
 				skin = note.noteSplashTexture;
 				hue = note.noteSplashHue;

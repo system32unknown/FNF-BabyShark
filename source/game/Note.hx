@@ -36,7 +36,7 @@ class Note extends FlxSprite
 	public static var ammo:Array<Int> = EKData.gun;
 	public static var minMania:Int = 0;
 	public static var maxMania:Int = 9;
-	public static var xmlMax:Int = 17; // This specifies the max of the splashes can go
+	public static var xmlMax:Int = 10; // This specifies the max of the splashes can go
 
 	public static var maxManiaUI_integer:Int = maxMania + 1;
 	public static var defaultMania:Int = 3;

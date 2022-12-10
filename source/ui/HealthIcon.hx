@@ -44,8 +44,7 @@ class HealthIcon extends FlxSprite
 			}
 			
 			loadGraphic(file, true, Math.floor(width / iconnum), Math.floor(height)); //Then load it fr
-			iconOffsets[0] = (width - 150) / iconnum;
-			iconOffsets[1] = (width - 150) / iconnum;
+			iconOffsets[0] = iconOffsets[1] = (width - 150) / iconnum;
 			
 			animation.add(char, iconarray, 0, false, isPlayer);
 			animation.play(char);

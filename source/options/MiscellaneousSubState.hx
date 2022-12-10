@@ -65,13 +65,6 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Rainbow FPS',
-			'',
-			'RainbowFPS',
-			'bool',
-			true);
-		addOption(option);
-
 		super();
 	}
 }
