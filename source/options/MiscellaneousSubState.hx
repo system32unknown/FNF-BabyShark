@@ -65,6 +65,13 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Rainbow Fps',
+			'',
+			'RainbowFps',
+			'bool',
+			true);
+		addOption(option);
+
 		super();
 	}
 }

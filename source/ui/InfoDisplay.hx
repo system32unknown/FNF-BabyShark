@@ -27,6 +27,8 @@ class InfoDisplay extends TextField
 
 	static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
 
+ 	@:noCompletion @:noPrivateAccess var timeColor = 0;
+
 	public function new(x:Float = 4, y:Float = 2)
 	{
 		super();
@@ -56,6 +58,11 @@ class InfoDisplay extends TextField
 	}
 
 	function update(_:Event):Void {
+		if (ClientPrefs.getPref('RainbowFps')) {
+			timeColor = (timeColor % 360) + 1;
+			textColor = FlxColor.fromHSB(timeColor, 1, 1);
+		}
+
 		var now:Float = Timer.stamp();
 		times.push(now);
 

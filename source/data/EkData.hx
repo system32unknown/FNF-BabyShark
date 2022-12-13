@@ -1,9 +1,10 @@
 package data;
 
 import utils.ClientPrefs;
+import utils.CoolUtil;
 
 class EKData {
-    public static var keysShit:Map<Int, Map<String, Dynamic>> = [ // Ammount of keys = num + 1
+    public static var keysShit:Map<Int, Map<String, Dynamic>> = [ // Amount of keys = num + 1
 		0 => [
             "letters" => ["E"], 
             "anims" => ["UP"], 
@@ -29,7 +30,7 @@ class EKData {
             "letters" => ["A", "B", "C", "D"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT"], 
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT"], 
-            "pixelAnimIndex" => [0, 1, 2, 3], 
+            "pixelAnimIndex" => CoolUtil.numberArray(5), 
             "sustaincolor" => ['c24b99', '00ffff', '12fa05', 'f9393f']
         ],
 		4 => [
@@ -64,28 +65,78 @@ class EKData {
             "letters" => ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
 			"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT"], 
-            "pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8],
+            "pixelAnimIndex" => CoolUtil.numberArray(9),
             "sustaincolor" => ['c24b99', '00ffff', '12fa05', 'f9393f', 'cccccc', 'ffff00', '8b4aff', 'ff0000', '0033ff']
         ],
 		9 => [
             "letters" => ["A", "B", "C", "D", "E", "J", "F", "G", "H", "I"],
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
-			"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"],
+			"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "PLUS", "LEFT", "DOWN", "UP", "RIGHT"],
             "pixelAnimIndex" => [0, 1, 2, 3, 4, 9, 5, 6, 7, 8],
             "sustaincolor" => ['c24b99', '00ffff', '12fa05', 'f9393f', 'cccccc', 'cccccc', 'ffff00', '8b4aff', 'ff0000', '0033ff']
         ],
+        10 => [
+            "letters" => ["A", "B", "C", "D", "J", "E", "M", "F", "G", "H", "I"], 
+            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "PLUS", "SPACE", "PLUS", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "pixelAnimIndex" => [0, 1, 2, 3, 9, 4, 12, 5, 6, 7, 8]
+        ],
+        11 => [
+            "letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "F", "G", "H", "I"], 
+            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 5, 6, 7, 8]
+        ],
+        12 => [
+            "letters" => ["A", "B", "C", "D", "J", "K", "N", "L", "M", "F", "G", "H", "I"], 
+            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 13, 11, 12, 5, 6, 7, 8]
+        ],
+        13 => [
+            "letters" => ["A", "B", "C", "D", "J", "K", "E", "N", "L", "M", "F", "G", "H", "I"], 
+            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "SPACE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 4, 13, 11, 12, 5, 6, 7, 8]
+        ],
+        14 => [
+            "letters" => ["A", "B", "C", "D", "J", "K", "E", "N", "E", "L", "M", "F", "G", "H", "I"], 
+            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "SPACE", "CIRCLE", "SPACE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 4, 13, 4, 11, 12, 5, 6, 7, 8]
+        ],
+        15 => [
+            "letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "O", "P", "Q", "R", "F", "G", "H", "I"], 
+            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 14, 15, 16, 17, 5, 6, 7, 8]
+        ],
+        16 => [
+            "letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "F", "G", "H", "I"], 
+            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 13, 14, 15, 16, 17, 5, 6, 7, 8]
+        ],
+        17 => [
+            "letters" => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 
+            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT",
+            "LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT", 
+            "LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "pixelAnimIndex" => CoolUtil.numberArray(18)
+        ],
 	];
 
-    public static var scales:Array<Float> = [0.9, 0.85, 0.8, 0.7, 0.66, 0.6, 0.55, 0.50, 0.46, 0.39, 0.36];
-	public static var lessX:Array<Int> = [0, 0, 0, 0, 0, 8, 7, 8, 8, 7, 6];
-    public static var noteSep:Array<Int> = [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5];
+    public static var scales:Array<Float> = [.9, .85, .8, .7, .66, .6, .55, .50, .46, .39, .36, .32, .31, .31, .3, .26, .26, .22];
+	public static var lessX:Array<Int> = [0, 0, 0, 0, 0, 8, 7, 8, 8, 7, 6, 6, 8, 7, 6, 6, 7, 6, 6];
+    public static var noteSep:Array<Int> = [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 6, 5];
     public static var offsetX:Array<Float> = [150, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     public static var gun:Array<Int> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     public static var restPosition:Array<Float> = [0, 0, 0, 0, 25, 32, 46, 52, 60, 40, 30];
     public static var gridSizes:Array<Int> = [40, 40, 40, 40, 40, 40, 40, 40, 40, 35, 30];
 
-    public static var splashScales:Array<Float> = [1.3, 1.2, 1.1, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4];
-    public static var pixelScales:Array<Float> = [1.2, 1.15, 1.1, 1, 0.9, 0.83, 0.8, 0.74, 0.7, 0.6, 0.55];
+    public static var splashScales:Array<Float> = [1.3, 1.2, 1.1, 1, 1, .9, .8, .7, .6, .5, .4];
+    public static var pixelScales:Array<Float> = [1.2, 1.15, 1.1, 1, .9, .83, .8, .74, .7, .6, .55];
 }
 
 class Keybinds

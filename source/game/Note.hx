@@ -35,8 +35,8 @@ class Note extends FlxSprite
 
 	public static var ammo:Array<Int> = EKData.gun;
 	public static var minMania:Int = 0;
-	public static var maxMania:Int = 9;
-	public static var xmlMax:Int = 10; // This specifies the max of the splashes can go
+	public static var maxMania:Int = 17;
+	public static var xmlMax:Int = 17; // This specifies the max of the splashes can go
 
 	public static var maxManiaUI_integer:Int = maxMania + 1;
 	public static var defaultMania:Int = 3;
@@ -233,9 +233,7 @@ class Note extends FlxSprite
 
 			x += swagWidth * (noteData % Note.ammo[mania]);
 			if(!isSustainNote && noteData > -1 && noteData < Note.maxManiaUI_integer) { //Doing this 'if' check to fix the warnings on Senpai songs
-				var animToPlay:String = '';
-				animToPlay = Note.keysShit.get(mania).get('letters')[noteData];
-				animation.play(animToPlay);
+				animation.play(Note.keysShit.get(mania).get('letters')[noteData]);
 			}
 		}
 
@@ -283,7 +281,7 @@ class Note extends FlxSprite
 		x += offsetX;
 	}
 
-	var lastNoteOffsetXForPixelAutoAdjusting:Float = 0;
+	var lastNoteOffsetX_Pixel:Float = 0;
 	public var originalHeightForCalcs:Float = 6;
 	function reloadNote(?prefix:String = '', ?texture:String = '', ?suffix:String = '') {
 		if (prefix == null) prefix = '';
@@ -330,9 +328,9 @@ class Note extends FlxSprite
 			antialiasing = false;
 
 			if(isSustainNote) {
-				offsetX += lastNoteOffsetXForPixelAutoAdjusting;
-				lastNoteOffsetXForPixelAutoAdjusting = (width - 7) * (PlayState.daPixelZoom / 2);
-				offsetX -= lastNoteOffsetXForPixelAutoAdjusting;
+				offsetX += lastNoteOffsetX_Pixel;
+				lastNoteOffsetX_Pixel = (width - 7) * (PlayState.daPixelZoom / 2);
+				offsetX -= lastNoteOffsetX_Pixel;
 			}
 		} else {
 			frames = Paths.getSparrowAtlas(blahblah);
@@ -406,8 +404,7 @@ class Note extends FlxSprite
 		}
 
 		if (tooLate && !inEditor) {
-			if (alpha > 0.3)
-				alpha = 0.3;
+			if (alpha > .3) alpha = .3;
 		}
 	}
 }

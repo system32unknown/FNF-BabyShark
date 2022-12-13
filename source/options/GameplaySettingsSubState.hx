@@ -76,12 +76,12 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
-		var option:Option = new Option('Rating Type:',
+		var option:Option = new Option('Rating Display:',
 			'Choose the type of rating you want to see.',
-			'RatingTypes',
+			'RatingDisplay',
 			'string',
 			'Static',
-			['Static', 'Global']);
+			['Hud', 'World']);
 		addOption(option);
 
 		var option:Option = new Option('Note Diff Type:',

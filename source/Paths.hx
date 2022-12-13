@@ -238,7 +238,7 @@ class Paths
 	inline static public function fileExists(key:String, type:AssetType)
 	{
 		#if MODS_ALLOWED
-		if(FileSystem.exists(mods(currentModDirectory + '/' + key)) || FileSystem.exists(mods(key))) {
+		if(FileSystem.exists(mods('$currentModDirectory/$key')) || FileSystem.exists(mods(key))) {
 			return true;
 		}
 		#end
@@ -335,7 +335,7 @@ class Paths
 		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
 		if(!currentTrackedSounds.exists(gottenPath))
 		#if MODS_ALLOWED
-			currentTrackedSounds.set(gottenPath, Sound.fromFile('./' + gottenPath));
+			currentTrackedSounds.set(gottenPath, Sound.fromFile('./$gottenPath'));
 		#else
 		{
 			var folder:String = '';
@@ -350,19 +350,19 @@ class Paths
 
 	#if MODS_ALLOWED
 	inline static public function mods(key:String = '') {
-		return 'mods/' + key;
+		return return 'mods/$key';
 	}
 
 	inline static public function modsFont(key:String) {
-		return modFolders('fonts/' + key);
+		return modFolders('fonts/$key');
 	}
 
 	inline static public function modsJson(key:String) {
-		return modFolders('data/' + key + '.json');
+		return modFolders('data/$key.json');
 	}
 
 	inline static public function modsVideo(key:String) {
-		return modFolders('videos/' + key + '.' + VIDEO_EXT);
+		return modFolders('videos/$key.$VIDEO_EXT');
 	}
 
 	inline static public function modsSounds(path:String, key:String) {
@@ -370,30 +370,29 @@ class Paths
 	}
 
 	inline static public function modsImages(key:String) {
-		return modFolders('images/' + key + '.png');
+		return modFolders('images/$key.png');
 	}
 
 	inline static public function modsXml(key:String) {
-		return modFolders('images/' + key + '.xml');
+		return modFolders('images/$key.xml');
 	}
 
 	inline static public function modsTxt(key:String) {
-		return modFolders('images/' + key + '.txt');
+		return modFolders('images/$key.txt');
 	}
 
 	static public function modFolders(key:String) {
 		if(currentModDirectory != null && currentModDirectory.length > 0) {
-			var fileToCheck:String = mods(currentModDirectory + '/' + key);
+			var fileToCheck:String = mods('$currentModDirectory/$key');
 			if(FileSystem.exists(fileToCheck)) {
 				return fileToCheck;
 			}
 		}
 
 		for(mod in getGlobalMods()) {
-			var fileToCheck:String = mods(mod + '/' + key);
+			var fileToCheck:String = mods('$mod/$key');
 			if(FileSystem.exists(fileToCheck))
 				return fileToCheck;
-
 		}
 		return 'mods/' + key;
 	}
@@ -413,7 +412,7 @@ class Paths
 				var dat = i.split("|");
 				if (dat[1] == "1") {
 					var folder = dat[0];
-					var path = Paths.mods(folder + '/pack.json');
+					var path = Paths.mods('$folder/pack.json');
 					if(FileSystem.exists(path)) {
 						try {
 							var rawJson:String = File.getContent(path);
@@ -422,9 +421,7 @@ class Paths
 								var global:Bool = Reflect.getProperty(stuff, "runsGlobally");
 								if(global)globalMods.push(dat[0]);
 							}
-						} catch(e:Dynamic) {
-							trace(e);
-						}
+						} catch(e:Dynamic) trace(e);
 					}
 				}
 			}

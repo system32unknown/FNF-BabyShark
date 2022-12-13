@@ -363,7 +363,7 @@ class PlayState extends MusicBeatState
 	var downScroll:Bool = ClientPrefs.getPref('downScroll');
 	var hideHud:Bool = ClientPrefs.getPref('hideHud');
 	var healthBarAlpha:Float = ClientPrefs.getPref('healthBarAlpha');
-	var RatingTypes:String = ClientPrefs.getPref('RatingTypes');
+	var ratingDisplay:String = ClientPrefs.getPref('ratingDisplay');
 	var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
 	var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 
@@ -4240,7 +4240,7 @@ class PlayState extends MusicBeatState
 		var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 
 		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2));
-		if (RatingTypes == "Static") {
+		if (ratingDisplay == "Hud") {
 			rating.cameras = [camHUD];
 		}
 		rating.screenCenter();
@@ -4256,7 +4256,7 @@ class PlayState extends MusicBeatState
 		if (daTiming != "") {
 			timing.loadGraphic(Paths.image(pixelShitPart1 + daTiming.toLowerCase() + pixelShitPart2));
 		}
-		if (RatingTypes == "Static") {
+		if (ratingDisplay == "Hud") {
 			timing.cameras = [camHUD];
 		}
 		timing.screenCenter();
@@ -4280,7 +4280,7 @@ class PlayState extends MusicBeatState
 			timingTxtArrays[0].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			timingTxtArrays[0].borderSize = 1;
 			timingTxtArrays[0].visible = !hideHud;
-			if (RatingTypes == "Static") {
+			if (ratingDisplay == "Hud") {
 				timingTxtArrays[0].cameras = [camHUD];
 			}
 	
@@ -4299,14 +4299,14 @@ class PlayState extends MusicBeatState
 			timingTxtArrays[1].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			timingTxtArrays[1].borderSize = 1;
 			timingTxtArrays[1].visible = !hideHud;
-			if (RatingTypes == "Static") {
+			if (ratingDisplay == "Hud") {
 				timingTxtArrays[1].cameras = [camHUD];
 			}
 			add(timingTxtArrays[1]);
 		}
 
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
-		if (RatingTypes == "Static") {
+		if (ratingDisplay == "Hud") {
 			comboSpr.cameras = [camHUD];
 		}
 		comboSpr.screenCenter();
@@ -4404,7 +4404,7 @@ class PlayState extends MusicBeatState
 		for (i in seperatedScore)
 		{
 			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
-			if (RatingTypes == "Static") {
+			if (ratingDisplay == "Hud") {
 				numScore.cameras = [camHUD];
 			}
 			numScore.screenCenter();
