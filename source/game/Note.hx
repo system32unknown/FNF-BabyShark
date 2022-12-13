@@ -18,7 +18,7 @@ typedef EventNote = {
 
 class Note extends FlxSprite
 {
-	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
 	public static var scales:Array<Float> = EKData.scales;
 	public static var lessX:Array<Int> = EKData.lessX;
 	public static var separator:Array<Int> = EKData.noteSep;

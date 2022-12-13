@@ -2496,7 +2496,9 @@ class ChartingState extends MusicBeatState
 		var colorSwap = new ColorSwap();
 
 		var colorList:Array<String> = Note.keysShit.get(_song.mania).get('sustaincolor');
-		var susColor = Std.parseInt('0xff' + colorList[note.noteData]);
+		var susColor = FlxColor.WHITE;
+		if (colorList.contains(Std.string(note.noteData)))
+			Std.parseInt('0xff' + colorList[note.noteData]); //Prevents error of checking colors.
 
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 		var arrowIndex:Int = Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania]);
