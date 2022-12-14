@@ -2697,7 +2697,7 @@ class PlayState extends MusicBeatState
 			}
 
 			if (isPixelStage) {
-				prevNote.scale.y *= daPixelZoom * (Note.pixelScales[mania]); //Fuck urself
+				prevNote.scale.y *= daPixelZoom * Note.pixelScales[mania]; //Fuck urself
 				prevNote.updateHitbox();
 			}
 		} else if (!note.isSustainNote && noteData > - 1 && noteData < tMania) {

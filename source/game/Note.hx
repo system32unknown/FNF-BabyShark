@@ -41,9 +41,10 @@ class Note extends FlxSprite
 	public static var maxManiaUI_integer:Int = maxMania + 1;
 	public static var defaultMania:Int = 3;
 
-	public static var pixelNotesDivisionValue:Int = 10;
-	public static var keysShit:Map<Int, Map<String, Dynamic>> = EKData.keysShit;
+	public static var pixelNotesDivisionValue:Int = 18;
 	public static var pixelScales:Array<Float> = EKData.pixelScales;
+
+	public static var keysShit:Map<Int, Map<String, Dynamic>> = EKData.keysShit;
 	public var mania:Int = 1;
 
 	public var strumTime:Float = 0;
@@ -337,8 +338,7 @@ class Note extends FlxSprite
 			loadNoteAnims();
 			antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		}
-		if(isSustainNote)
-			scale.y = lastScaleY;
+		if(isSustainNote) scale.y = lastScaleY;
 		updateHitbox();
 
 		if(animName != null)

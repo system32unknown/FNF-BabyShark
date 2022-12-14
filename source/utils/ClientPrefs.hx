@@ -42,7 +42,7 @@ class ClientPrefs {
 		'BeatIconFreeplay' => false,
 		'AntiMash' => false,
 		'noteOffset' => 0,
-		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
+		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
 		'ghostTapping' => true,
 		'HealthTypes' => 'Psych',
 		'EditorSusColor' => false,
@@ -331,10 +331,6 @@ class ClientPrefs {
 	];
 	public static var defaultKeys:Map<String, Array<FlxKey>> = keyBinds;
 
-	public static function loadDefaultKeys() {
-		defaultKeys = keyBinds.copy();
-	}
-
 	public static function saveSettings() {
 		var save:Dynamic = FlxG.save.data;
 
@@ -420,7 +416,6 @@ class ClientPrefs {
 				}
 			}
 		}
-		loadDefaultKeys();
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic):Dynamic {

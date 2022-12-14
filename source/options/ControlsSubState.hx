@@ -64,7 +64,7 @@ class ControlsSubState extends MusicBeatSubstate {
 				currentPage = optionShit[i][0];
 			} else if (optionShit[i].length > 1) { // It's an input
 				generatedPage.push(optionShit[i]);
-			} else if (optionShit[i][0] != "" && optionShit[i].length < 2) { // It's blank!
+			} else if (optionShit[i][0] == "" && optionShit[i].length < 2) { // It's blank!
 				generatedPage.push(optionShit[i]);
 			}
 		}

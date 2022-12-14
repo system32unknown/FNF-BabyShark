@@ -304,8 +304,7 @@ class ChartingState extends MusicBeatState
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.resize(300, 400);
-		UI_box.x = 640 + GRID_SIZE / 2 + 120;
-		UI_box.y = 25;
+		UI_box.setPosition(640 + GRID_SIZE / 2 + 120, 25);
 		UI_box.scrollFactor.set();
 
 		text = "W/S or Mouse Wheel - Change Conductor's strum time
@@ -666,11 +665,7 @@ class ChartingState extends MusicBeatState
 		check_changeBPM.name = 'check_changeBPM';
 
 		stepperSectionBPM = new FlxUINumericStepper(10, check_changeBPM.y + 20, 1, Conductor.bpm, 0, 999, 1);
-		if (check_changeBPM.checked) {
-			stepperSectionBPM.value = _song.notes[curSec].bpm;
-		} else {
-			stepperSectionBPM.value = Conductor.bpm;
-		}
+		stepperSectionBPM.value = check_changeBPM.checked ? _song.notes[curSec].bpm : Conductor.bpm;
 		stepperSectionBPM.name = 'section_bpm';
 		blockPressWhileTypingOnStepper.push(stepperSectionBPM);
 
@@ -2497,8 +2492,8 @@ class ChartingState extends MusicBeatState
 
 		var colorList:Array<String> = Note.keysShit.get(_song.mania).get('sustaincolor');
 		var susColor = FlxColor.WHITE;
-		if (colorList.contains(Std.string(note.noteData)))
-			Std.parseInt('0xff' + colorList[note.noteData]); //Prevents error of checking colors.
+		if (Note.keysShit.get(_song.mania).exists('sustaincolor'))
+			Std.parseInt('0xff' + colorList[note.noteData]); //Prevents error for checking colors.
 
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 		var arrowIndex:Int = Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania]);

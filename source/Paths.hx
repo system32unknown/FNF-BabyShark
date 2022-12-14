@@ -8,15 +8,15 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
 import lime.utils.Assets;
+import flash.media.Sound;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
 #end
 import haxe.Json;
+import haxe.io.Path;
 
 import utils.CoolUtil;
-
-import flash.media.Sound;
 
 using StringTools;
 
@@ -434,13 +434,36 @@ class Paths
 		var modsFolder:String = mods();
 		if(FileSystem.exists(modsFolder)) {
 			for (folder in FileSystem.readDirectory(modsFolder)) {
-				var path = haxe.io.Path.join([modsFolder, folder]);
+				var path = Path.join([modsFolder, folder]);
 				if (sys.FileSystem.isDirectory(path) && !ignoreModFolders.contains(folder) && !list.contains(folder)) {
 					list.push(folder);
 				}
 			}
 		}
 		return list;
+	}
+	#end
+
+
+	#if LUA_ALLOWED
+	static public function getLuaPackagePath():String {
+		var toAdd:Array<String> = ['.'];
+		#if MODS_ALLOWED
+		toAdd.push('./mods');
+		if (currentModDirectory != null && currentModDirectory.length > 0)
+			toAdd.push('./mods/$currentModDirectory');
+		for (mod in getGlobalMods()) toAdd.push('./mods/$mod');
+		#end
+		toAdd.push('./assets');
+		var paths:Array<String> = [];
+		for (path in toAdd) {
+			#if sys
+			path = FileSystem.absolutePath(path);
+			#end
+			paths.push(Path.join([path, '?.lua']));
+			paths.push(Path.join([path, '?', 'init.lua']));
+		}
+		return paths.join(';');
 	}
 	#end
 }

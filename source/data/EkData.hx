@@ -65,7 +65,7 @@ class EKData {
             "letters" => ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
 			"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT"], 
-            "pixelAnimIndex" => CoolUtil.numberArray(9),
+            "pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8],
             "sustaincolor" => ['c24b99', '00ffff', '12fa05', 'f9393f', 'cccccc', 'ffff00', '8b4aff', 'ff0000', '0033ff']
         ],
 		9 => [
@@ -119,11 +119,9 @@ class EKData {
         ],
         17 => [
             "letters" => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 
-            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT",
-            "LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
-            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT", 
-            "LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
-            "pixelAnimIndex" => CoolUtil.numberArray(18)
+            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "PLUS", "RLEFT", "RDOWN", "RUP", "RRIGHT"], 
+            "pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
         ],
 	];
 
