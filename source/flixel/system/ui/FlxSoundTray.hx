@@ -66,7 +66,6 @@ class FlxSoundTray extends Sprite
 
 		text.width = tmp.width;
 		text.height = tmp.height;
-		text.multiline = true;
 		text.wordWrap = true;
 		text.selectable = false;
 
@@ -156,7 +155,7 @@ class FlxSoundTray extends Sprite
 		scaleX = _defaultScale;
 		scaleY = _defaultScale;
 
-		x = (0.5 * (Lib.current.stage.stageWidth - _width * _defaultScale) - FlxG.game.x);
+		x = 0.5 * (Lib.current.stage.stageWidth - _width * _defaultScale) - FlxG.game.x;
 	}
 }
 #end

@@ -933,13 +933,7 @@ class EditorPlayState extends MusicBeatState
 
 	// For Opponent's notes glow
 	function StrumPlayAnim(isDad:Bool, id:Int, time:Float) {
-		var spr:StrumNote = null;
-		if(isDad) {
-			spr = strumLineNotes.members[id];
-		} else {
-			spr = playerStrums.members[id];
-		}
-
+		var spr:StrumNote = isDad ? strumLineNotes.members[id] : playerStrums.members[id];
 		if(spr != null) {
 			spr.playAnim('confirm', true);
 			spr.resetAnim = time;

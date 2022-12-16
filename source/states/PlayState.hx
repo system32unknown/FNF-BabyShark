@@ -1209,7 +1209,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var engineName:Array<String> = CoolUtil.coolTextFile(Paths.txt('EngineList'));
-		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (AE " + MainMenuState.alterEngineVersion + ")", 16);
+		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (AE v" + MainMenuState.alterEngineVersion + ")", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		engineText.scrollFactor.set();
 		engineText.borderSize = 1;

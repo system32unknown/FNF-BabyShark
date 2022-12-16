@@ -79,7 +79,7 @@ class Paths
 	public static var keyExclusions:Array<String> = [
 		'music/freakyMenu.$SOUND_EXT',
 		'music/breakfast.$SOUND_EXT',
-		'amusic/tea-time.$SOUND_EXT',
+		'music/tea-time.$SOUND_EXT',
 	];
 
 	public static function decacheGraphic(key:String) {
@@ -126,11 +126,8 @@ class Paths
 
 	/// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
-		// clear non local assets in the tracked assets list
 		for (key in currentTrackedAssets.keys()) {
-			// if it is not currently contained within the used local assets
 			if (!localTrackedAssets.contains(key) && !assetExcluded(key)) {
-				// get rid of it
 				decacheGraphic(key);
 			}
 		}
@@ -140,7 +137,7 @@ class Paths
 
 	// define the locally tracked assets
 	public static var localTrackedAssets:Array<String> = [];
-	public static function clearStoredMemory(cleanUnused:Bool = false) {
+	public static function clearStoredMemory() {
 		// clear anything not in the tracked assets list
 		@:privateAccess
 		for (key in FlxG.bitmap._cache.keys()) {
@@ -204,9 +201,8 @@ class Paths
 		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
 	}
 
-	inline static function getLibraryPathForce(file:String, library:String) {
+	inline static function getLibraryPathForce(file:String, library:String)
 		return '$library:assets/$library/$file';
-	}
 
 	inline public static function getPreloadPath(file:String = '')
 		return 'assets/$file';
@@ -220,8 +216,7 @@ class Paths
 	inline static public function json(key:String, ?library:String)
 		return getPath('data/$key.json', TEXT, library);
 
-	static public function video(key:String)
-	{
+	static public function video(key:String) {
 		#if MODS_ALLOWED
 		var file:String = modsVideo(key);
 		if (FileSystem.exists(file)) return file;
@@ -237,21 +232,17 @@ class Paths
 		return sound(key + FlxG.random.int(min, max), library);
 	}
 
-	inline static public function music(key:String, ?library:String):Sound {
+	inline static public function music(key:String, ?library:String):Sound
 		return returnSound('music', key, library);
-	}
 
-	inline static public function voices(song:String):Any {
+	inline static public function voices(song:String):Any
 		return returnSound('songs', '${formatToSongPath(song)}/Voices');
-	}
 
-	inline static public function inst(song:String):Any {
+	inline static public function inst(song:String):Any
 		return returnSound('songs', '${formatToSongPath(song)}/Inst');
-	}
 	// streamlined the assets process more
-	inline static public function image(key:String, ?library:String):FlxGraphic {
+	inline static public function image(key:String, ?library:String):FlxGraphic
 		return returnGraphic(key, library);
-	}
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
 	{
@@ -395,37 +386,29 @@ class Paths
 	}
 
 	#if MODS_ALLOWED
-	inline static public function mods(key:String = '') {
-		return return 'mods/$key';
-	}
+	inline static public function mods(key:String = '')
+		return 'mods/$key';
 
-	inline static public function modsFont(key:String) {
+	inline static public function modsFont(key:String)
 		return modFolders('fonts/$key');
-	}
 
-	inline static public function modsJson(key:String) {
+	inline static public function modsJson(key:String)
 		return modFolders('data/$key.json');
-	}
 
-	inline static public function modsVideo(key:String) {
+	inline static public function modsVideo(key:String)
 		return modFolders('videos/$key.$VIDEO_EXT');
-	}
 
-	inline static public function modsSounds(path:String, key:String) {
+	inline static public function modsSounds(path:String, key:String)
 		return modFolders(path + '/' + key + '.' + SOUND_EXT);
-	}
 
-	inline static public function modsImages(key:String) {
+	inline static public function modsImages(key:String)
 		return modFolders('images/$key.png');
-	}
 
-	inline static public function modsXml(key:String) {
+	inline static public function modsXml(key:String)
 		return modFolders('images/$key.xml');
-	}
 
-	inline static public function modsTxt(key:String) {
+	inline static public function modsTxt(key:String)
 		return modFolders('images/$key.txt');
-	}
 
 	static public function modFolders(key:String) {
 		if(currentModDirectory != null && currentModDirectory.length > 0) {
