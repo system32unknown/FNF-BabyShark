@@ -20,7 +20,6 @@ import flixel.util.FlxColor;
 import game.Achievements;
 import editors.MasterEditorMenu;
 import utils.ClientPrefs;
-import utils.CoolUtil;
 import utils.MathUtil;
 import data.WeekData;
 
@@ -170,7 +169,7 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(FlxG.width - 285, FlxG.height - 47, 0, 
+		var versionShit:FlxText = new FlxText(FlxG.width - 280, FlxG.height - 74, 0, 
 			'Psych Engine v$psychEngineVersion\n' +
 			'Extra Keys Custom Build\n' +
 			'Alter Engine 1.0\n' +

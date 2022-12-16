@@ -1083,7 +1083,7 @@ class PlayState extends MusicBeatState
 		timeBarBG.alpha = 0;
 		timeBarBG.visible = showTime;
 		timeBarBG.color = FlxColor.BLACK;
-		timeBarBG.setAdd(-4, -4);
+		timeBarBG.setAdd(-4, -2);
 		add(timeBarBG);
 		
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
@@ -1093,9 +1093,9 @@ class PlayState extends MusicBeatState
 		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
-		add(timeBar);
 		add(timeTxt);
 		timeBarBG.sprTracker = timeBar;
+		insert(members.indexOf(timeBarBG), timeBar);
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		add(strumLineNotes);
@@ -1139,8 +1139,8 @@ class PlayState extends MusicBeatState
 		healthBarBG.scrollFactor.set();
 		healthBarBG.visible = !hideHud;
 		healthBarBG.setAdd(-4, -4);
-		add(healthBarBG);
 		if(downScroll) healthBarBG.y = 0.11 * FlxG.height;
+		add(healthBarBG);
 
 		// healthBar
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
@@ -1148,7 +1148,7 @@ class PlayState extends MusicBeatState
 		healthBar.scrollFactor.set();
 		healthBar.visible = !hideHud;
 		healthBar.alpha = healthBarAlpha;
-		add(healthBar);
+		insert(members.indexOf(healthBarBG), healthBar);
 		healthBarBG.sprTracker = healthBar;
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);

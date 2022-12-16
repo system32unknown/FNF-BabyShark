@@ -961,10 +961,11 @@ class EditorPlayState extends MusicBeatState
 		if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
 		
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
+		var arrowIndex:Int = Std.int(Note.keysShit.get(songMania).get('pixelAnimIndex')[data] % Note.ammo[songMania]);
 
-		var hue:Float = arrowHSV[Std.int(Note.keysShit.get(songMania).get('pixelAnimIndex')[data] % Note.ammo[songMania])][0] / 360;
-		var sat:Float = arrowHSV[Std.int(Note.keysShit.get(songMania).get('pixelAnimIndex')[data] % Note.ammo[songMania])][1] / 100;
-		var brt:Float = arrowHSV[Std.int(Note.keysShit.get(songMania).get('pixelAnimIndex')[data] % Note.ammo[songMania])][2] / 100;
+		var hue:Float = arrowHSV[arrowIndex][0] / 360;
+		var sat:Float = arrowHSV[arrowIndex][1] / 100;
+		var brt:Float = arrowHSV[arrowIndex][2] / 100;
 		if(note != null) {
 			skin = note.noteSplashTexture;
 			hue = note.noteSplashHue;

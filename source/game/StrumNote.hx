@@ -18,7 +18,7 @@ class StrumNote extends FlxSprite
 	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
 	public var sustainReduce:Bool = true;
 	
-	public var animationArray:Array<String> = ['static', 'pressed'];
+	public var animationArray:Array<String> = ['static', 'pressed', 'confirm'];
 	public var static_anim(default, set):String = "static";
 	public var pressed_anim(default, set):String = "pressed"; // in case you would use this on lua
 	// though, you shouldn't change it
@@ -77,7 +77,7 @@ class StrumNote extends FlxSprite
 		super(x, y);
 
 		animationArray[0] = Note.keysShit.get(PlayState.mania).get('strumAnims')[leData];
-		animationArray[1] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
+		animationArray[1] = animationArray[2] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
 
 		var skin:String = 'NOTE_assets';
 		if(PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
@@ -95,8 +95,8 @@ class StrumNote extends FlxSprite
 
 		if(PlayState.isPixelStage) {
 			loadGraphic(Paths.image('pixelUI/' + texture));
-			width = width / 10;
-			height = height / 5;
+			width /= pxDV;
+			height /= 5;
 			antialiasing = false;
 			loadGraphic(Paths.image('pixelUI/' + texture), true, Math.floor(width), Math.floor(height));
 			var daFrames:Array<Int> = Note.keysShit.get(PlayState.mania).get('pixelAnimIndex');
@@ -116,7 +116,7 @@ class StrumNote extends FlxSprite
 	
 			animation.addByPrefix('static', 'arrow' + animationArray[0]);
 			animation.addByPrefix('pressed', animationArray[1] + ' press', 24, false);
-			animation.addByPrefix('confirm', animationArray[1] + ' confirm', 24, false);
+			animation.addByPrefix('confirm', animationArray[2] + ' confirm', 24, false);
 		}
 		updateHitbox();
 
@@ -135,10 +135,10 @@ class StrumNote extends FlxSprite
 		}
 
 		x += Note.xtra[PlayState.mania];
+
 		x += 50;
 		x += ((FlxG.width / 2) * player);
 		ID = noteData;
-		
 		x -= Note.posRest[PlayState.mania];
 	}
 
