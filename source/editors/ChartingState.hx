@@ -273,8 +273,7 @@ class ChartingState extends MusicBeatState
 		quant.animation.addByPrefix('q','chart_quant',0,false);
 		quant.animation.play('q', true, false, 0);
 		quant.sprTracker = strumLine;
-		quant.xAdd = -32;
-		quant.yAdd = 8;
+		quant.setAdd(-32, 8);
 		add(quant);
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
@@ -2370,8 +2369,7 @@ class ChartingState extends MusicBeatState
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 100, theType, 24);
 				daText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-				daText.xAdd = -32;
-				daText.yAdd = 6;
+				daText.setAdd(-32, 6);
 				daText.borderSize = 1;
 				curRenderedNoteType.add(daText);
 				daText.sprTracker = note;
@@ -2829,6 +2827,11 @@ class AttachedFlxText extends FlxText
 
 	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true) {
 		super(X, Y, FieldWidth, Text, Size, EmbeddedFont);
+	}
+
+	public function setAdd(?x:Float = 0, ?y:Float = 0) {
+		xAdd = x;
+		yAdd = y;
 	}
 
 	override function update(elapsed:Float) {

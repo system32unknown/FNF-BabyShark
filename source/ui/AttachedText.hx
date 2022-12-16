@@ -20,6 +20,11 @@ class AttachedText extends Alphabet
 		this.offsetY = offsetY;
 	}
 
+	public function setOffset(?x:Float = 0, ?y:Float = 0) {
+		offsetX = x;
+		offsetY = y;
+	}
+
 	override function update(elapsed:Float) {
 		if (sprTracker != null) {
 			setPosition(sprTracker.x + offsetX, sprTracker.y + offsetY);

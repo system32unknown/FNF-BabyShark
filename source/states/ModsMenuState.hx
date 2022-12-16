@@ -105,8 +105,7 @@ class ModsMenuState extends MusicBeatState
 		saveTxt();
 
 		selector = new AttachedSprite();
-		selector.xAdd = -205;
-		selector.yAdd = -68;
+		selector.setAdd(-205, -68);
 		selector.alphaMult = 0.5;
 		CoolUtil.makeSelectorGraphic(selector, 1100, 450, FlxColor.BLACK, 11);
 		add(selector);
@@ -272,8 +271,7 @@ class ModsMenuState extends MusicBeatState
 				newMod.icon.loadGraphic(Paths.image('unknownMod'));
 			}
 			newMod.icon.sprTracker = newMod.alphabet;
-			newMod.icon.xAdd = -newMod.icon.width - 30;
-			newMod.icon.yAdd = -45;
+			newMod.icon.setAdd(-newMod.icon.width - 30, -45);
 			add(newMod.icon);
 			i++;
 		}

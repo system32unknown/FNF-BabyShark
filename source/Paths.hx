@@ -229,7 +229,7 @@ class Paths
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
 
-	inline static public function sound(key:String, ?library:String):Sound {
+	static public function sound(key:String, ?library:String):Sound {
 		return returnSound('sounds', key, library);
 	}
 
