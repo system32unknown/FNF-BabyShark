@@ -16,7 +16,7 @@ class ClientPrefs {
 		'showMEM' => true,
 		'flashing' => true,
 		'globalAntialiasing' => true,
-		'noteSplashes' => true,
+		'splashOpacity' => .6,
 		'lowQuality' => false,
 		'shaders' => true,
 		'framerate' => 60,

@@ -1077,13 +1077,11 @@ class PlayState extends MusicBeatState
 		updateTime = showTime;
 
 		timeBarBG = new AttachedSprite('timeBar');
-		timeBarBG.x = timeTxt.x;
-		timeBarBG.y = timeTxt.y + (timeTxt.height / 4) - 2;
+		timeBarBG.setPosition(timeTxt.x, timeTxt.y + (timeTxt.height / 4) - 2);
 		timeBarBG.scrollFactor.set();
 		timeBarBG.alpha = 0;
 		timeBarBG.visible = showTime;
-		timeBarBG.color = FlxColor.BLACK;
-		timeBarBG.setAdd(-4, -2);
+		timeBarBG.setAdd(-4, -4);
 		add(timeBarBG);
 		
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
@@ -1211,7 +1209,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var engineName:Array<String> = CoolUtil.coolTextFile(Paths.txt('EngineList'));
-		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (PE " + MainMenuState.psychEngineVersion + ")", 16);
+		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (AE " + MainMenuState.alterEngineVersion + ")", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		engineText.scrollFactor.set();
 		engineText.borderSize = 1;
@@ -2626,6 +2624,7 @@ class PlayState extends MusicBeatState
 
 			strumLineNotes.add(babyArrow);
 			babyArrow.postAddedToGroup();
+			callOnLuas('onSpawnStrum', [strumLineNotes.members.indexOf(babyArrow), babyArrow.player, babyArrow.ID]);
 
 			if (ClientPrefs.getPref('showKeybindsOnStart') && player == 1) {
 				for (j in 0...keysArray[mania][i].length) {
@@ -2723,8 +2722,7 @@ class PlayState extends MusicBeatState
 		if (!skipStrumFadeOut) {
 			for (i in 0...strumLineNotes.members.length) {
 				var oldStrum:FlxSprite = strumLineNotes.members[i].clone();
-				oldStrum.x = strumLineNotes.members[i].x;
-				oldStrum.y = strumLineNotes.members[i].y;
+				oldStrum.setPosition(strumLineNotes.members[i].x, strumLineNotes.members[i].y);
 				oldStrum.alpha = strumLineNotes.members[i].alpha;
 				oldStrum.scrollFactor.set();
 				oldStrum.cameras = [camHUD];
@@ -2865,10 +2863,7 @@ class PlayState extends MusicBeatState
 		}
 
 		if(ClientPrefs.getPref('camMovement')) {
-			if(camlock) {
-				camFollow.x = camlockx;
-				camFollow.y = camlocky;
-			}
+			if(camlock) camFollow.set(camlockx, camlocky);
 		}
 
 		if (updateLU && ClientPrefs.getPref('ShowLU')) {
@@ -3101,17 +3096,16 @@ class PlayState extends MusicBeatState
 		if (health > healthMax)
 			health = healthMax;
 
-		if (healthBar.percent < 20 && iconP1.icontype != "single")
-			iconP1.animation.curAnim.curFrame = 1;
-		else if (healthBar.percent > 80 && iconP1.icontype == "winning")
-			iconP1.animation.curAnim.curFrame = 2;
-		else iconP1.animation.curAnim.curFrame = 0;
-
-		if (healthBar.percent > 80 && iconP2.icontype != "single")
-			iconP2.animation.curAnim.curFrame = 1;
-		else if (healthBar.percent < 20 && iconP2.icontype == "winning")
-			iconP2.animation.curAnim.curFrame = 2;
-		else iconP2.animation.curAnim.curFrame = 0;
+		if (healthBar.percent < 20) {
+			iconP1.setState(1);
+			iconP2.setState(2);
+		} else if (healthBar.percent > 80) {
+			iconP1.setState(2);
+			iconP2.setState(1);
+		} else {
+			iconP1.setState(0);
+			iconP2.setState(0);
+		}
 
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {
 			persistentUpdate = false;
@@ -3669,8 +3663,7 @@ class PlayState extends MusicBeatState
 
 					isCameraOnForcedPos = false;
 					if(!Math.isNaN(Std.parseFloat(value1)) || !Math.isNaN(Std.parseFloat(value2))) {
-						camFollow.x = val1;
-						camFollow.y = val2;
+						camFollow.set(val1, val2);
 						isCameraOnForcedPos = true;
 					}
 				}
@@ -4156,8 +4149,7 @@ class PlayState extends MusicBeatState
 		songNameText.font = font;
 		songNameText.y = textYPos;
 		engineText.font = font;
-		engineText.x = FlxG.width - engineText.width;
-		engineText.y = textYPos;
+		engineText.setPosition(FlxG.width - engineText.width, textYPos);
 
 		for (dakey in daKeyText)
 			dakey.font = font;
@@ -4814,8 +4806,7 @@ class PlayState extends MusicBeatState
 				if(camTimer.finished) {
 					camlock = false;
 					cameraSpeed = 1;
-					camFollow.x = campointx;
-					camFollow.y = campointy;
+					camFollow.set(campointx, campointy);
 					camTimer = null;
 				} 
 			}
@@ -4872,8 +4863,7 @@ class PlayState extends MusicBeatState
 					if(camTimer.finished) {
 						camlock = false;
 						cameraSpeed = 1;
-						camFollow.x = campointx;
-						camFollow.y = campointy;
+						camFollow.set(campointx, campointy);
 						camTimer = null;
 					} 
 				}
@@ -4968,7 +4958,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function spawnNoteSplashOnNote(note:Note) {
-		if(ClientPrefs.getPref('noteSplashes') && note != null) {
+		if(ClientPrefs.getPref('splashOpacity') > 0 && note != null) {
 			var strum:StrumNote = playerStrums.members[note.noteData];
 			if(strum != null) {
 				spawnNoteSplash(strum.x, strum.y, note.noteData, note);
@@ -5005,8 +4995,7 @@ class PlayState extends MusicBeatState
 
 	var fastCarCanDrive:Bool = true;
 	function resetFastCar():Void {
-		fastCar.x = -12600;
-		fastCar.y = FlxG.random.int(140, 250);
+		fastCar.setPosition(-12600, FlxG.random.int(140, 250));
 		fastCar.velocity.x = 0;
 		fastCarCanDrive = true;
 	}

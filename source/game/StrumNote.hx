@@ -57,7 +57,7 @@ class StrumNote extends FlxSprite
 		return value;
 	}
 
-	private var player:Int;
+	public var player:Int;
 	
 	public var texture(default, set):String = null;
 	private function set_texture(value:String):String {

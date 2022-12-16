@@ -32,7 +32,7 @@ class NoteSplash extends FlxSprite
 	public function setupNoteSplash(x:Float, y:Float, note:Int = 0, texture:String = null, hueColor:Float = 0, satColor:Float = 0, brtColor:Float = 0) {
 		setPosition(x - Note.swagWidth * .95, y - Note.swagWidth);
 		setGraphicSize(Std.int(width * sc[PlayState.mania]));
-		alpha = 0.6;
+		alpha = ClientPrefs.getPref('splashOpacity');
 
 		if(texture == null || texture == '') {
 			texture = 'noteSplashes';
@@ -46,7 +46,7 @@ class NoteSplash extends FlxSprite
 		colorSwap.saturation = satColor;
 		colorSwap.brightness = brtColor;
 
-		var offsets:Array<Int> = [10, 10];
+		var offsets:Array<Int> = [-10, 0];
 		var mania:Int = PlayState.mania;
 		if(Note.noteSplashOffsets.exists(mania)){
 			var oA = Note.noteSplashOffsets.get(mania);

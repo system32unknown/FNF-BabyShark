@@ -27,8 +27,8 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	var BabySharkVersion:String ='0.1 BETA'; //This is also used for Discord RPC
-	public static var psychEngineVersion:String = '0.6.3'; //This is also used for Discord RPC
+	var BabySharkVersion:String ='1.0 BETA'; //This is also used for Discord RPC
+	public static var alterEngineVersion:String = '1.0'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -169,10 +169,8 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(FlxG.width - 280, FlxG.height - 74, 0, 
-			'Psych Engine v$psychEngineVersion\n' +
-			'Extra Keys Custom Build\n' +
-			'Alter Engine 1.0\n' +
+		var versionShit:FlxText = new FlxText(FlxG.width - 280, FlxG.height - 80, 0, 
+			'Alter Engine v$alterEngineVersion\n' +
 			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
 			12);
 		versionShit.scrollFactor.set();

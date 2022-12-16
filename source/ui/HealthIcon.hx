@@ -1,6 +1,7 @@
 package ui;
 
 import flixel.FlxSprite;
+import flixel.graphics.FlxGraphic;
 import flixel.math.FlxMath;
 import utils.ClientPrefs;
 import utils.CoolUtil;
@@ -9,52 +10,90 @@ using StringTools;
 
 class HealthIcon extends FlxSprite
 {
+	static final prefix:String = 'icons/';
+	static final credits:String = 'credits/';
+	static final defaultIcon:String = 'icon-unknown';
+
+	public var iconOffsets:Array<Float> = [0, 0];
 	public var sprTracker:FlxSprite;
-	private var isPlayer:Bool = false;
+	public var isPlayer:Bool = false;
+	public var isCredit:Bool;
+
 	private var char:String = '';
 	
-	public var icontype:String = 'classic';
 	public var isPsych:Bool = false;
-	private var iconnum:Int = 0;
-	private var iconarray:Array<Int>;
+	private var availableStates:Int = 1;
+	private var state:Int = 0;
+	
+	public static function returnGraphic(char:String, ?folder:String, defaultIfMissing:Bool = false, creditIcon:Bool = false):FlxGraphic {
+		var path:String;
+		if (creditIcon) {
+			path = credits + ((folder != null || folder == '') ? '$folder/' : '') + char;
+			if ((folder != null || folder == '') && !Paths.fileExists('images/$path.png', IMAGE)) path = credits + char;
+			if (Paths.fileExists('images/$path.png', IMAGE)) return Paths.image(path);
+			if (defaultIfMissing) return Paths.image(prefix + defaultIcon);
+			return null;
+		}
+		path = prefix + char;
+		if (!Paths.fileExists('images/$path.png', IMAGE)) path = '${prefix}icon-$char'; //Older versions of psych engine's support
+		if (!Paths.fileExists('images/$path.png', IMAGE)) { //Prevents crash from missing icon
+			if (!defaultIfMissing) return null;
+			path = prefix + defaultIcon;
+		}
+		return Paths.image(path);
+	}
 
-	public function new(char:String = 'bf', isPlayer:Bool = false)
+	public function new(?char:String, ?folder:String, isPlayer:Bool = false, isCredit:Bool = false)
 	{
-		super();
 		this.isPlayer = isPlayer;
+		this.isCredit = isCredit;
+
+		super();
 		changeIcon(char);
 		scrollFactor.set();
 	}
 
-	private var iconOffsets:Array<Float> = [0, 0];
-	public function changeIcon(char:String) {
-		if(this.char != char) {
-			var name:String = 'icons/' + char;
-			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-' + char; //Older versions of psych engine's support
-			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
-			var file:Dynamic = Paths.image(name);
+	public function changeIcon(char:String, ?folder:String, defaultIfMissing:Bool = true):Bool {
+		if (this.char == char) return false;
+		var graph:FlxGraphic = null;
 
-			loadGraphic(file);
-			final iconTypes:Array<String> = ['single', 'classic', 'winning'];
-			var index:Int = Math.floor(width / 150);
-			if (index - 1 <= iconTypes.length) {
-				icontype = iconTypes[index - 1];
-				iconnum = index; // Thanks to EyeDaleHim#8508 for Improving code!
-				iconarray = CoolUtil.numberArray(index);
-			}
-			
-			loadGraphic(file, true, Math.floor(width / iconnum), Math.floor(height)); //Then load it fr
-			iconOffsets[0] = iconOffsets[1] = (width - 150) / iconnum;
-			
-			animation.add(char, iconarray, 0, false, isPlayer);
-			animation.play(char);
+		if (isCredit) graph = returnGraphic(char, folder, false, true);
+		if (graph == null) graph = returnGraphic(char, defaultIfMissing);
+		else {
 			this.char = char;
 
+			iconOffsets[1] = iconOffsets[0] = 0;
+			loadGraphic(graph);
+			updateHitbox();
+			state = 0;
+
 			antialiasing = ClientPrefs.getPref('globalAntialiasing');
-			if(char.endsWith('-pixel')) {
-				antialiasing = false;
-			}
+			if (char.endsWith('-pixel')) antialiasing = false;
+			return true;
 		}
+
+		if (graph == null) return false;
+		var ratio:Float = graph.width / graph.height;
+		availableStates = Math.round(ratio);
+		this.char = char;
+
+		iconOffsets[1] = iconOffsets[0] = 0;
+		if (availableStates <= 1) {
+			loadGraphic(graph);
+			updateHitbox();
+			state = 0;
+			return true;
+		}
+		loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
+		updateHitbox();
+
+		animation.add(char, [for (i in 0...availableStates) i], 0, false, isPlayer);
+		animation.play(char);
+
+		antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		if (char.endsWith('-pixel')) antialiasing = false;
+
+		return true;
 	}
 
 	override function updateHitbox() {
@@ -69,8 +108,13 @@ class HealthIcon extends FlxSprite
 		offset.set(iconOffsets[0], iconOffsets[1]);
 	}
 
-	public function getCharacter():String {
+	public function getCharacter():String
 		return char;
+
+	public function setState(state:Int) {
+		if (state >= availableStates) state = 0;
+		if (this.state == state || animation.curAnim == null) return;
+		animation.curAnim.curFrame = this.state = state;
 	}
 
 	override function update(elapsed:Float) {
@@ -81,7 +125,6 @@ class HealthIcon extends FlxSprite
 				offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
 		}
 
-		if (sprTracker != null)
-			setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
+		if (sprTracker != null) setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 	}
 }
