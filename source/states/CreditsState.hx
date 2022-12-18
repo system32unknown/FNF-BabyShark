@@ -372,7 +372,8 @@ class CreditSectionState extends MusicBeatState {
 				if(creditsStuff[i][5] != null)
 					Paths.currentModDirectory = creditsStuff[i][5];
 
-				var icon:HealthIcon = new HealthIcon(false, true);
+				var icon:HealthIcon = new HealthIcon(null, false);
+				icon.isCredit = true;
 				if (!icon.changeIcon(creditsStuff[i][1], curCSection, false))
 					icon.changeIcon(creditsStuff[i][1], getSimilarIcon(creditsStuff[i][1]));
 

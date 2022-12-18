@@ -1,8 +1,5 @@
 package states;
 
-#if desktop
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -21,13 +18,16 @@ import game.Achievements;
 import editors.MasterEditorMenu;
 import utils.ClientPrefs;
 import utils.MathUtil;
+#if desktop
+import utils.Discord.DiscordClient;
+#end
 import data.WeekData;
 
 using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	var BabySharkVersion:String ='1.0 BETA'; //This is also used for Discord RPC
+	var BabySharkVersion:String = '1.0 BETA'; //This is also used for Discord RPC
 	public static var alterEngineVersion:String = '1.0'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
@@ -169,11 +169,12 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(FlxG.width - 280, FlxG.height - 80, 0, 
+		var versionShit:FlxText = new FlxText(FlxG.width - 280, 0, 0, 
 			'Alter Engine v$alterEngineVersion\n' +
 			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
 			12);
 		versionShit.scrollFactor.set();
+		versionShit.y = FlxG.height - versionShit.height;
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
 

@@ -109,12 +109,12 @@ class CharacterEditorState extends MusicBeatState
 
 		loadChar(!daAnim.startsWith('bf'), false);
 
-		healthBarBG = new FlxSprite(30, FlxG.height - 75).loadGraphic(Paths.image('healthBar'));
+		healthBarBG = new FlxSprite(30, FlxG.height - 75).loadGraphic(Paths.image('old/healthBar'));
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
 		healthBarBG.cameras = [camHUD];
 
-		leHealthIcon = new HealthIcon(char.healthIcon, false);
+		leHealthIcon = new HealthIcon(char.healthIcon);
 		leHealthIcon.y = FlxG.height - 150;
 		add(leHealthIcon);
 		leHealthIcon.cameras = [camHUD];
@@ -146,7 +146,7 @@ class CharacterEditorState extends MusicBeatState
 		\nT - Reset Current Offset
 		\nHold Shift to Move 10x faster\n".split('\n');
 
-		for (i in 0...tipTextArray.length-1) {
+		for (i in 0...tipTextArray.length - 1) {
 			var tipText:FlxText = new FlxText(FlxG.width - 320, FlxG.height - 15 - 16 * (tipTextArray.length - i), 300, tipTextArray[i], 12);
 			tipText.cameras = [camHUD];
 			tipText.setFormat(null, 12, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
@@ -157,9 +157,7 @@ class CharacterEditorState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow);
 
-		var tabs = [
-			{name: 'Settings', label: 'Settings'},
-		];
+		var tabs = [{name: 'Settings', label: 'Settings'},];
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.cameras = [camMenu];

@@ -17,7 +17,7 @@ class HealthIcon extends FlxSprite
 	public var iconOffsets:Array<Float> = [0, 0];
 	public var sprTracker:FlxSprite;
 	public var isPlayer:Bool = false;
-	public var isCredit:Bool;
+	public var isCredit:Bool = false;
 
 	private var char:String = '';
 	
@@ -43,11 +43,9 @@ class HealthIcon extends FlxSprite
 		return Paths.image(path);
 	}
 
-	public function new(?char:String, ?folder:String, isPlayer:Bool = false, isCredit:Bool = false)
+	public function new(?char:String, isPlayer:Bool = false)
 	{
 		this.isPlayer = isPlayer;
-		this.isCredit = isCredit;
-
 		super();
 		changeIcon(char);
 		scrollFactor.set();
@@ -62,7 +60,7 @@ class HealthIcon extends FlxSprite
 		else {
 			this.char = char;
 
-			iconOffsets[1] = iconOffsets[0] = 0;
+			iconOffsets[1] = iconOffsets[0] = (width - 150) / 2;
 			loadGraphic(graph);
 			updateHitbox();
 			state = 0;
@@ -73,21 +71,15 @@ class HealthIcon extends FlxSprite
 		}
 
 		if (graph == null) return false;
-		var ratio:Float = graph.width / graph.height;
-		availableStates = Math.round(ratio);
+		availableStates = Math.round(graph.width / graph.height);
 		this.char = char;
 
-		iconOffsets[1] = iconOffsets[0] = 0;
-		if (availableStates <= 1) {
-			loadGraphic(graph);
-			updateHitbox();
-			state = 0;
-			return true;
-		}
+		iconOffsets[1] = iconOffsets[0] = (width - 150) / 2;
+		
 		loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
 		updateHitbox();
 
-		animation.add(char, [for (i in 0...availableStates) i], 0, false, isPlayer);
+		animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
 		animation.play(char);
 
 		antialiasing = ClientPrefs.getPref('globalAntialiasing');

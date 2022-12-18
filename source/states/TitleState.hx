@@ -1,8 +1,5 @@
 package states;
 
-#if desktop
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxBackdrop;
@@ -18,13 +15,15 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.util.FlxGradient;
 import lime.app.Application;
-import openfl.Assets;
 import haxe.Json;
 import data.WeekData;
 import utils.PlayerSettings;
 import utils.ClientPrefs;
 import utils.CoolUtil;
 import utils.MathUtil;
+#if desktop
+import utils.Discord.DiscordClient;
+#end
 import game.Highscore;
 import game.Conductor;
 import states.MainMenuState;
@@ -225,7 +224,7 @@ class TitleState extends MusicBeatState
 	}
 
 	function getIntroTextShit():Array<Array<String>> {
-		var fullText:String = Assets.getText(Paths.txt('introText'));
+		var fullText:String = Paths.getTextFromFile('data/introText.txt');
 		var firstArray:Array<String> = fullText.split('\n');
 		return [for (i in firstArray) i.split('--')];
 	}
@@ -268,10 +267,12 @@ class TitleState extends MusicBeatState
 					startingTween = null;
 					FlxTween.tween(logoBl, {y: -700}, 1, {ease: FlxEase.backIn});
 				}
-				titleText.color = FlxColor.WHITE;
-				titleText.alpha = 1;
-				
-				if(titleText != null) titleText.animation.play('press');
+
+				if(titleText != null) {
+					titleText.color = FlxColor.WHITE;
+					titleText.alpha = 1;
+					titleText.animation.play('press');
+				}
 
 				FlxG.camera.flash(ClientPrefs.getPref('flashing') ? FlxColor.WHITE : 0x4CFFFFFF, 1);
 				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
