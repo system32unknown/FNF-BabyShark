@@ -84,15 +84,12 @@ class FlxAnimationController implements IFlxDestroyable
 	public var followGlobalSpeed:Bool = true;
 	public function update(elapsed:Float):Void
 	{
-		if (_curAnim != null)
-		{
+		if (_curAnim != null) {
 			var e:Float = elapsed;
 			if(followGlobalSpeed) e *= globalSpeed;
 
 			_curAnim.update(e);
-		}
-		else if (_prerotated != null)
-		{
+		} else if (_prerotated != null) {
 			_prerotated.angle = _sprite.angle;
 		}
 	}
@@ -859,14 +856,8 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_curAnim != null)
 		{
-			if (Value)
-			{
-				_curAnim.pause();
-			}
-			else
-			{
-				_curAnim.resume();
-			}
+			if (Value) _curAnim.pause();
+			else _curAnim.resume();
 		}
 		return Value;
 	}

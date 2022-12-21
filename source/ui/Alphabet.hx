@@ -129,10 +129,8 @@ class Alphabet extends FlxSpriteGroup
 		if (value == scaleY) return value;
 
 		scale.y = value;
-		for (letter in letters)
-		{
-			if(letter != null)
-			{
+		for (letter in letters) {
+			if(letter != null) {
 				letter.updateHitbox();
 				letter.updateLetterOffset();
 				var ratio:Float = (value / letter.spawnScale.y);
@@ -223,12 +221,7 @@ typedef Letter = {
 	?offsetsBold:Array<Float>
 }
 
-class AlphaCharacter extends FlxSprite
-{
-	//public static var alphabet:String = "abcdefghijklmnopqrstuvwxyz";
-	//public static var numbers:String = "1234567890";
-	//public static var symbols:String = "|~#$%()*+-:;<=>@[]^_.,'!?";
-
+class AlphaCharacter extends FlxSprite {
 	public var image(default, set):String;
 
 	public static var allLetters:Map<String, Null<Letter>> = [

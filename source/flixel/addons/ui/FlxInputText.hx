@@ -231,10 +231,7 @@ class FlxInputText extends FlxText
 		lines = 1;
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 
-		if (Text == null)
-		{
-			Text = "";
-		}
+		if (Text == null) Text = "";
 
 		text = Text; // ensure set_text is called to avoid bugs (like not preparing _charBoundaries on sys target, making it impossible to click)
 

@@ -14,15 +14,15 @@ import game.Conductor;
 import game.Song;
 
 class MusicBeatState extends FlxUIState {
-	private var curSection:Int = 0;
-	private var stepsToDo:Int = 0;
+	var curSection:Int = 0;
+	var stepsToDo:Int = 0;
 
-	private var curStep:Int = 0;
-	private var curBeat:Int = 0;
+	var curStep:Int = 0;
+	var curBeat:Int = 0;
 
-	private var curDecStep:Float = 0;
-	private var curDecBeat:Float = 0;
-	private var controls(get, never):Controls;
+	var curDecStep:Float = 0;
+	var curDecBeat:Float = 0;
+	var controls(get, never):Controls;
 
 	var errorDisplay:ErrorDisplay;
 	final missChart:String = 'Error! Chart not found;';

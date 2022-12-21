@@ -403,8 +403,7 @@ class FlxSound extends FlxBasic
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
 	public function loadEmbedded(EmbeddedSound:FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void, Pitch:Float = 1):FlxSound {
-		if (EmbeddedSound == null)
-			return this;
+		if (EmbeddedSound == null) return this;
 
 		cleanup(true);
 
@@ -444,8 +443,7 @@ class FlxSound extends FlxBasic
 			// Check if the sound was destroyed before calling. Weak ref doesn't guarantee GC.
 			if (_sound == e.target) {
 				_length = _sound.length;
-				if (OnLoad != null)
-					OnLoad();
+				if (OnLoad != null) OnLoad();
 			}
 		}
 		// Use a weak reference so this can be garbage collected if destroyed before loading.
@@ -503,7 +501,7 @@ class FlxSound extends FlxBasic
 	{
 		if (!exists) return this;
 
-		if (ForceRestart) cleanup(false, true);
+		if (ForceRestart) cleanup(false);
 		else if (playing)  return this; // Already playing sound
 
 		endTime = EndTime;
@@ -544,7 +542,7 @@ class FlxSound extends FlxBasic
 	 */
 	public inline function stop():FlxSound
 	{
-		cleanup(autoDestroy, true);
+		cleanup(autoDestroy);
 		return this;
 	}
 
@@ -676,8 +674,7 @@ class FlxSound extends FlxBasic
 		if (looped) {
 			cleanup(false);
 			play(false, loopTime, endTime);
-		} else
-			cleanup(autoDestroy);
+		} else cleanup(autoDestroy);
 	}
 
 	/**
@@ -878,7 +875,7 @@ class FlxSound extends FlxBasic
 			#if openfl
 			@:privateAccess{
 				if (_channel == null || !_channel.__isValid) {
-					cleanup(false, true);
+					cleanup(false);
 					startSound(time);
 				} else {
 					#if lime
@@ -892,7 +889,7 @@ class FlxSound extends FlxBasic
 			}
 			#else
 			if (time < 0 || time > length) {
-				cleanup(false, true);
+				cleanup(false);
 				startSound(time);
 			}
 			#end

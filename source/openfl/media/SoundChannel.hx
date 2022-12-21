@@ -99,8 +99,7 @@ import lime.media.AudioSource;
 		}
 
 		#if lime
-		if (source != null)
-		{
+		if (source != null) {
 			__source = source;
 			__source.onComplete.add(source_onComplete);
 			__isValid = true;

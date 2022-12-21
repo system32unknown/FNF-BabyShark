@@ -2,7 +2,6 @@ package lime._internal.backend.native;
 
 import haxe.Int64;
 import haxe.Timer;
-import haxe.io.Bytes;
 import lime.math.Vector4;
 import lime.media.openal.AL;
 import lime.media.openal.ALBuffer;
@@ -42,10 +41,8 @@ class NativeAudioSource
 	private var streamTimer:Timer;
 	private var timer:Timer;
 
-	public function new(parent:AudioSource)
-	{
+	public function new(parent:AudioSource) {
 		this.parent = parent;
-
 		position = new Vector4();
 	}
 
@@ -102,10 +99,7 @@ class NativeAudioSource
 
 	public function play():Void
 	{
-		if (playing || handle == null)
-		{
-			return;
-		}
+		if (playing || handle == null) return;
 
 		playing = true;
 
@@ -141,20 +135,12 @@ class NativeAudioSource
 			readMax = 4096;
 
 			if (readMax > length - total)
-			{
 				readMax = length - total;
-			}
 
 			read = vorbisFile.read(buffer.buffer, total, readMax);
 
-			if (read > 0)
-			{
-				total += read;
-			}
-			else
-			{
-				break;
-			}
+			if (read > 0) total += read;
+			else break;
 		}
 
 		return buffer;
@@ -307,20 +293,13 @@ class NativeAudioSource
 	// Get & Set Methods
 	public function getCurrentTime():Int
 	{
-		if (completed)
-		{
-			return getLength();
-		}
-		else if (handle != null)
-		{
-			if (stream)
-			{
+		if (completed) return getLength();
+		else if (handle != null) {
+			if (stream) {
 				var time = (Std.int(bufferTimeBlocks[0] * 1000) + Std.int(AL.getSourcef(handle, AL.SEC_OFFSET) * 1000)) - parent.offset;
 				if (time < 0) return 0;
 				return time;
-			}
-			else
-			{
+			} else {
 				var offset = AL.getSourcei(handle, AL.BYTE_OFFSET);
 				var ratio = (offset / dataLength);
 				var totalSeconds = samples / parent.buffer.sampleRate;
