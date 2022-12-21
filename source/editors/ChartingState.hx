@@ -1561,7 +1561,7 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.BACKSPACE) {
 				PlayState.chartingMode = false;
-				Main.infoVar.alpha = 1;
+				Main.overlayVar.alpha = 1;
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				FlxG.mouse.visible = false;
@@ -1690,7 +1690,7 @@ class ChartingState extends MusicBeatState
 
 				if(FlxG.keys.justPressed.LEFT) {
 					curQuant--;
-					if(curQuant<0)
+					if(curQuant < 0)
 						curQuant = quantizations.length-1;
 
 					quantization = quantizations[curQuant];
@@ -1760,11 +1760,10 @@ class ChartingState extends MusicBeatState
 			if (FlxG.keys.justPressed.D)
 				changeSection(curSec + shiftThing);
 			if (FlxG.keys.justPressed.A) {
-				if(curSec <= 0) {
+				if(curSec <= 0)
 					changeSection(_song.notes.length-1);
-				} else {
-					changeSection(curSec - shiftThing);
-				}
+				else changeSection(curSec - shiftThing);
+
 			}
 		} else if (FlxG.keys.justPressed.ENTER) {
 			for (i in 0...blockPressWhileTypingOn.length) {
@@ -1945,7 +1944,7 @@ class ChartingState extends MusicBeatState
 
 		if (strumLineNotes != null)	{
 			strumLineNotes.clear();
-			for (i in 0...(Note.ammo[_song.mania] * 2)){
+			for (i in 0...Note.ammo[_song.mania] * 2){
 				var note:StrumNote = new StrumNote(GRID_SIZE * (i + 1), strumLine.y, i % Note.ammo[_song.mania], 0);
 				note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 				note.updateHitbox();
@@ -2156,11 +2155,8 @@ class ChartingState extends MusicBeatState
 						else array[1][1][gotIndex - 1] = array[1][1][gotIndex - 1] + lRMax;
 				}
 
-				lmin = 0;
-				lmax = 0;
-
-				rmin = 0;
-				rmax = 0;
+				lmin = lmax = 0;
+				rmin = rmax = 0;
 			}
 
 			index++;
@@ -2246,15 +2242,11 @@ class ChartingState extends MusicBeatState
 			var blah2:Float = getSectionBeats(curSec + 1);
 			if(sectionStartTime(1) > FlxG.sound.music.length) blah2 = 0;
 	
-			if(blah1 != lastSecBeats || blah2 != lastSecBeatsNext) {
+			if(blah1 != lastSecBeats || blah2 != lastSecBeatsNext)
 				reloadGridLayer();
-			} else {
-				updateGrid();
-			}
+			else updateGrid();
 			updateSectionUI();
-		} else {
-			changeSection();
-		}
+		} else changeSection();
 		Conductor.songPosition = FlxG.sound.music.time;
 		updateWaveform();
 	}
@@ -2275,15 +2267,16 @@ class ChartingState extends MusicBeatState
 	function updateHeads():Void {
 		var healthIconP1:String = loadHealthIconFromCharacter(_song.player1);
 		var healthIconP2:String = loadHealthIconFromCharacter(_song.player2);
+		var gfIcon:String = loadHealthIconFromCharacter(_song.gfVersion);
 
 		if (_song.notes[curSec].mustHitSection) {
 			leftIcon.changeIcon(healthIconP1);
 			rightIcon.changeIcon(healthIconP2);
-			if (_song.notes[curSec].gfSection) leftIcon.changeIcon('gf');
+			if (_song.notes[curSec].gfSection) leftIcon.changeIcon(gfIcon);
 		} else {
 			leftIcon.changeIcon(healthIconP2);
 			rightIcon.changeIcon(healthIconP1);
-			if (_song.notes[curSec].gfSection) leftIcon.changeIcon('gf');
+			if (_song.notes[curSec].gfSection) leftIcon.changeIcon(gfIcon);
 		}
 	}
 
@@ -2346,9 +2339,9 @@ class ChartingState extends MusicBeatState
 		nextRenderedNotes.clear();
 		nextRenderedSustains.clear();
 
-		if (_song.notes[curSec].changeBPM && _song.notes[curSec].bpm > 0) {
+		if (_song.notes[curSec].changeBPM && _song.notes[curSec].bpm > 0)
 			Conductor.changeBPM(_song.notes[curSec].bpm);
-		} else {
+		else {
 			// get last bpm
 			var daBPM:Float = _song.bpm;
 			for (i in 0...curSec)
