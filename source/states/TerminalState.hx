@@ -46,7 +46,7 @@ class TerminalState extends MusicBeatState
 
     override public function create():Void
     {
-        Main.infoVar.alpha = .5;
+        Main.overlayVar.alpha = .5;
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("The Terminal", null);
@@ -191,7 +191,7 @@ class TerminalState extends MusicBeatState
             curCommand = "";
         }
         if (FlxG.keys.justPressed.ESCAPE) {
-            Main.infoVar.alpha = 1;
+            Main.overlayVar.alpha = 1;
             MusicBeatState.switchState(new MainMenuState());
             FlxG.sound.playMusic(Paths.music('freakyMenu'));
         }

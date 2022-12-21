@@ -295,8 +295,6 @@ class PlayState extends MusicBeatState
 	var songNameText:FlxText;
 	var engineText:FlxText;
 
-	var textYPos:Float = FlxG.height * .9 + 52;
-
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
 	public static var seenCutscene:Bool = false;
@@ -1191,30 +1189,33 @@ class PlayState extends MusicBeatState
 			botplayTxt.y = timeBarBG.y - 78;
 		}
 
-		songNameText = new FlxText(2, textYPos, 0, SONG.song + " - " + storyDifficultyText + (playbackRate != 1 ? ' ($playbackRate' + 'x)' : ''), 16);
+		songNameText = new FlxText(2, 0, 0, SONG.song + " - " + storyDifficultyText + (playbackRate != 1 ? ' ($playbackRate' + 'x)' : ''), 16);
 		songNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		songNameText.scrollFactor.set();
 		songNameText.borderSize = 1;
+		songNameText.y = FlxG.height - songNameText.height;
+		songNameText.visible = !hideHud && ClientPrefs.getPref('ShowWatermark');
 		add(songNameText);
 
 		if(SONG.screwYou != null) {
-			screwYouTxt = new FlxText(2, textYPos, 0, SONG.screwYou, 16);
+			screwYouTxt = new FlxText(2, 0, 0, SONG.screwYou, 16);
 			screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			screwYouTxt.scrollFactor.set();
 			screwYouTxt.borderSize = 1;
-			scoreTxt.visible = !hideHud;
+			screwYouTxt.y = songNameText.y - 20;
+			screwYouTxt.visible = !hideHud;
 			screwYouTxt.cameras = [camHUD];
 			songNameText.y -= 20;
 			add(screwYouTxt);
 		}
 
-		var engineName:Array<String> = CoolUtil.coolTextFile(Paths.txt('EngineList'));
-		engineText = new FlxText(0, textYPos, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (AE v" + MainMenuState.alterEngineVersion + ")", 16);
+		var engineName:Array<String> = [for (i in Paths.getTextFromFile('data/EngineList.txt').split('\n')) i.trim()];
+		engineText = new FlxText(0, 0, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (AE v" + MainMenuState.alterEngineVersion + ")", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		engineText.scrollFactor.set();
 		engineText.borderSize = 1;
-		engineText.x = FlxG.width - engineText.width;
-		engineText.visible = ClientPrefs.getPref('ShowWatermark');
+		engineText.setPosition(FlxG.width - engineText.width, FlxG.height - engineText.height);
+		engineText.visible = !hideHud && ClientPrefs.getPref('ShowWatermark');
 		add(engineText);
 
 		strumLineNotes.cameras = [camHUD];
@@ -3071,8 +3072,8 @@ class PlayState extends MusicBeatState
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(0.1))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(0.1))));
 			case "Micdup": // Stolen from FNF Mic'd Up
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, .09 / (Main.infoVar.currentFPS / 60))));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, .09 / (Main.infoVar.currentFPS / 60))));
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, .09 / (Main.overlayVar.currentFPS / 60))));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, .09 / (Main.overlayVar.currentFPS / 60))));
 			case "Purgatory": // Stolen from Dave And Bambi
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .8)), Std.int(FlxMath.lerp(150, iconP1.height, .8)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .8)), Std.int(FlxMath.lerp(150, iconP2.height, .8)));
@@ -3798,8 +3799,8 @@ class PlayState extends MusicBeatState
 					if (screwYouTxt.text != null)
 						screwYouTxt.text = value1;
 					if(screwYouTxt.text == null || screwYouTxt.text == "")
-						songNameText.y = textYPos;
-					else songNameText.y = textYPos - 20;
+						songNameText.y = FlxG.height - songNameText.height;
+					else songNameText.y = (FlxG.height - songNameText.height) - 20;
 				}
 			case 'BG Freaks Expression':
 				if(bgGirls != null) bgGirls.swapDanceType();
@@ -4147,15 +4148,15 @@ class PlayState extends MusicBeatState
 		timeTxt.font = font;
 
 		songNameText.font = font;
-		songNameText.y = textYPos;
+		songNameText.y = FlxG.height - songNameText.height;
 		engineText.font = font;
-		engineText.setPosition(FlxG.width - engineText.width, textYPos);
+		engineText.setPosition(FlxG.width - engineText.width, FlxG.height - engineText.height);
 
 		for (dakey in daKeyText)
 			dakey.font = font;
 		if (SONG.screwYou != null) {
 			screwYouTxt.font = font;
-			screwYouTxt.y = textYPos;
+			screwYouTxt.y = songNameText.y - 20;
 		}
 	}
 

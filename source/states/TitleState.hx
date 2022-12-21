@@ -225,8 +225,7 @@ class TitleState extends MusicBeatState
 
 	function getIntroTextShit():Array<Array<String>> {
 		var fullText:String = Paths.getTextFromFile('data/introText.txt');
-		var firstArray:Array<String> = fullText.split('\n');
-		return [for (i in firstArray) i.split('--')];
+		return [for (i in fullText.split('\n')) i.split('--')];
 	}
 
 	var transitioning:Bool = false;

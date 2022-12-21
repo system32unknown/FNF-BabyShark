@@ -22,6 +22,7 @@ import game.Song;
 import substates.ResetScoreSubState;
 import substates.GameplayChangersSubstate;
 import ui.HealthIcon;
+import ui.ErrorDisplay;
 import ui.Alphabet;
 
 using StringTools;
@@ -169,6 +170,10 @@ class FreeplayState extends MusicBeatState
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
+
+		errorDisplay = new ErrorDisplay();
+		errorDisplay.addDisplay(this);
+
 		super.create();
 	}
 
@@ -282,47 +287,60 @@ class FreeplayState extends MusicBeatState
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
 				Paths.currentModDirectory = songs[curSelected].folder;
-				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
-				if (PlayState.SONG.needsVoices)
-					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
-				else vocals = new FlxSound();
 
-				FlxG.sound.list.add(vocals);
-				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
-				vocals.play();
-				vocals.persist = true;
-				vocals.looped = true;
-				vocals.volume = 0.7;
-				instPlaying = curSelected;
-				Conductor.changeBPM(PlayState.SONG.bpm);
-				curPlaying = ClientPrefs.getPref('BeatIconFreeplay');
+				var songFolder:String = songs[curSelected].songName.toLowerCase();
+				var songLowercase:String = Highscore.formatSong(songFolder, curDifficulty);
+				PlayState.SONG = Song.loadFromJson(songLowercase, songFolder);
+
+				if (PlayState.SONG != null) {
+					if (PlayState.SONG.needsVoices)
+						vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+					else vocals = new FlxSound();
+
+					FlxG.sound.list.add(vocals);
+					FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
+					vocals.play();
+					vocals.persist = true;
+					vocals.looped = true;
+					vocals.volume = 0.7;
+					instPlaying = curSelected;
+					Conductor.changeBPM(PlayState.SONG.bpm);
+					curPlaying = ClientPrefs.getPref('BeatIconFreeplay');
+				} else {
+					errorDisplay.text = getErrorMessage(missChart, 'chart required to play audio, $missFile', songFolder, songLowercase);
+					errorDisplay.displayError();
+				}
 				#end
 			}
 		} else if (accepted) {
-			persistentUpdate = false;
-			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
+			var songFolder:String = Paths.formatToSongPath(songs[curSelected].songName);
+			var songLowercase:String = Highscore.formatSong(songFolder, curDifficulty);
+			
 			if (songLowercase == "") return;
-			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-			
-			PlayState.SONG = Song.loadFromJson(poop, songLowercase);
-			PlayState.isStoryMode = false;
-			PlayState.storyDifficulty = curDifficulty;
-			curPlaying = false;
 
-			if(colorTween != null) {
-				colorTween.cancel();
-			}
-			
-			if (FlxG.keys.pressed.SHIFT) {
-				LoadingState.loadAndSwitchState(new ChartingState());
+			PlayState.SONG = Song.loadFromJson(songLowercase, songFolder);
+
+			if (PlayState.SONG != null) {
+				persistentUpdate = false;
+				PlayState.isStoryMode = false;
+				PlayState.storyDifficulty = curDifficulty;
+
+				if(colorTween != null) {
+					colorTween.cancel();
+				}
+
+				if (FlxG.keys.pressed.SHIFT) {
+					LoadingState.loadAndSwitchState(new ChartingState());
+				} else {
+					LoadingState.loadAndSwitchState(new PlayState());
+				}
+
+				FlxG.sound.music.volume = 0;
+				destroyFreeplayVocals();
 			} else {
-				LoadingState.loadAndSwitchState(new PlayState());
+				errorDisplay.text = getErrorMessage(missChart, 'cannot play song, $missFile', songFolder, songLowercase);
+				errorDisplay.displayError();
 			}
-
-			FlxG.sound.music.volume = 0;
-					
-			destroyFreeplayVocals();
 		} else if(controls.RESET) {
 			persistentUpdate = false;
 			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));

@@ -10,7 +10,7 @@ import lime.app.Application;
 import states.TitleState;
 import utils.ClientPrefs;
 import utils.Discord.DiscordClient;
-import ui.InfoDisplay;
+import ui.Overlay;
 
 //crash handler stuff
 #if CRASH_HANDLER
@@ -34,7 +34,7 @@ class Main extends Sprite
 		skipSplash: true, // if the default flixel splash screen should be skipped
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
-	public static var infoVar:InfoDisplay;
+	public static var overlayVar:Overlay;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 	public static function main():Void {
@@ -73,12 +73,12 @@ class Main extends Sprite
 
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 
-		infoVar = new InfoDisplay(4, 2);
-		addChild(infoVar);
+		overlayVar = new Overlay(4, 2);
+		addChild(overlayVar);
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-		if(infoVar != null) {
-			infoVar.visible = ClientPrefs.getPref('showFPS');
+		if(overlayVar != null) {
+			overlayVar.visible = ClientPrefs.getPref('showFPS');
 		}
 		
 		#if CRASH_HANDLER

@@ -21,6 +21,7 @@ import states.TitleState;
 import ui.HealthIcon;
 import ui.Prompt;
 import ui.AttachedSprite;
+import ui.ErrorDisplay;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxObject;
@@ -179,7 +180,7 @@ class ChartingState extends MusicBeatState
 	public var mouseQuant:Bool = false;
 	override function create()
 	{
-		Main.infoVar.alpha = .5;
+		Main.overlayVar.alpha = .5;
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
 		else {
@@ -353,6 +354,9 @@ class ChartingState extends MusicBeatState
 		zoomTxt = new FlxText(10, 10, 0, "Zoom: 1 / 1", 16);
 		zoomTxt.scrollFactor.set();
 		add(zoomTxt);
+
+		errorDisplay = new ErrorDisplay();
+		errorDisplay.addDisplay(this);
 
 		updateGrid();
 		super.create();
@@ -1535,7 +1539,7 @@ class ChartingState extends MusicBeatState
 				autosaveSong();
 				LoadingState.loadAndSwitchState(new editors.EditorPlayState(sectionStartTime(), _song.mania));
 			} if (FlxG.keys.justPressed.ENTER) {
-				Main.infoVar.alpha = 1;
+				Main.overlayVar.alpha = 1;
 				autosaveSong();
 				FlxG.mouse.visible = false;
 				PlayState.SONG = _song;
@@ -2658,22 +2662,24 @@ class ChartingState extends MusicBeatState
 	}
 
 	function loadJson(song:String):Void {
-		if (Paths.checkReservedFile(song)) { return;
-		} else {
+		if (Paths.checkReservedFile(song)) return;
+		else {
 			//shitty null fix, i fucking hate it when this happens
 			//make it look sexier if possible
+			var loadedSong:SwagSong = null;
+			var songFolder:String = song.toLowerCase();
 			try {
 				var defaultDiff:String = CoolUtil.defaultDifficulty.toLowerCase();
-				var songLower:String = song.toLowerCase();
 
 				var ind:Int = song.lastIndexOf("-");
 				var success:Bool = false;
+				
 				if (ind != -1) {
 					try {
-						PlayState.SONG = Song.loadFromJson(songLower, songLower.substring(0, ind));
+						loadedSong = Song.loadFromJson(songFolder, songFolder.substring(0, ind));
 						success = true;
 
-						var diff:String = songLower.substring(ind + 1);
+						var diff:String = songFolder.substring(ind + 1);
 						var ind:Int = CoolUtil.lowerDifficulties.indexOf(diff);
 						if (ind != -1) PlayState.storyDifficulty = ind;
 					} catch(e) {}
@@ -2685,23 +2691,30 @@ class ChartingState extends MusicBeatState
 					var success:Bool = false;
 					if (diff != null && diff != defaultDiff) {
 						try {
-							PlayState.SONG = Song.loadFromJson(songLower + "-" + diff, songLower);
+							loadedSong = Song.loadFromJson(songFolder + "-" + diff, songFolder);
 							success = true;
 						} catch(e) {}
 					}
 					if (!success) {
-						PlayState.SONG = Song.loadFromJson(songLower, songLower);
+						loadedSong = Song.loadFromJson(songFolder, songFolder);
 	
-						// after loaded
 						var ind:Int = CoolUtil.lowerDifficulties.indexOf(defaultDiff);
 						if (ind != -1) PlayState.storyDifficulty = ind;
 					}
 				}
 			} catch(e) {
-				trace("Problem with Loading Song \"" + song.toLowerCase() + "\"");
+				errorDisplay.text = getErrorMessage(missChart, 'cannot load JSON, $missFile', songFolder, songFolder);
+				errorDisplay.displayError();
 				return;
 			}
-			MusicBeatState.resetState();
+
+			if (loadedSong != null) {
+				PlayState.SONG = loadedSong;
+				MusicBeatState.resetState();
+			} else {
+				errorDisplay.text = getErrorMessage(missChart, 'cannot load JSON, $missFile', songFolder, songFolder);
+				errorDisplay.displayError();
+			}
 		}
 	}
 

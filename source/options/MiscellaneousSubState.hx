@@ -23,6 +23,20 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Rainbow Fps',
+			'',
+			'RainbowFps',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option('MS on FPS Counter',
+			'',
+			'MSFPSCounter',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Flashing Lights',
 			"Uncheck this if you're sensitive to flashing lights!",
 			'flashing',
@@ -61,13 +75,6 @@ class MiscellaneousSubState extends BaseOptionsMenu
 		var option:Option = new Option('Sustain Color In Editor',
 			'',
 			'EditorSusColor',
-			'bool',
-			true);
-		addOption(option);
-
-		var option:Option = new Option('Rainbow Fps',
-			'',
-			'RainbowFps',
 			'bool',
 			true);
 		addOption(option);

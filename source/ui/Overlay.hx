@@ -1,10 +1,12 @@
 package ui;
 
+import cpp.NativeGc;
 import haxe.Timer;
-import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+#if !cpp
 import openfl.system.System;
+#end
 import flixel.util.FlxColor;
 import utils.ClientPrefs;
 
@@ -12,7 +14,7 @@ import utils.ClientPrefs;
 	The Advanced FPS class provides an easy-to-use monitor to display
 	the current frame rate of an OpenFL project
 **/
-class InfoDisplay extends TextField
+class Overlay extends TextField
 {
 	/**
 		The current frame rate, expressed using frames-per-second
@@ -41,8 +43,6 @@ class InfoDisplay extends TextField
 		
 		defaultTextFormat = new TextFormat(openfl.utils.Assets.getFont("assets/fonts/vcr.ttf").fontName, 14, 0xFFFFFF);
 		text = "";
-
-		addEventListener(Event.ENTER_FRAME, update);
 	}
 
 	public static function getInterval(num:UInt):String {
@@ -57,7 +57,7 @@ class InfoDisplay extends TextField
 		return size + " " + intervalArray[data] + " \n";
 	}
 
-	function update(_:Event):Void {
+	override function __enterFrame(dt:Float):Void {
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + 1;
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
@@ -75,9 +75,9 @@ class InfoDisplay extends TextField
 
 		if (currentCount != cacheCount) {
 			text = '';
-			text += (ClientPrefs.getPref('showFPS') ? "FPS: " + currentFPS + "\n" : "");
+			text += (ClientPrefs.getPref('showFPS') ? 'FPS: $currentFPS${ClientPrefs.getPref('MSFPSCounter') ? ' [MS: $dt]' : ''}\n' : "");
 
-			var memory:Int = System.totalMemory;
+			var memory:Int = #if cpp Std.int(NativeGc.memInfo(0)) #else System.totalMemory #end;
 			if (memory > peak) peak = memory;
 
 			if (ClientPrefs.getPref('showMEM')) {
@@ -85,8 +85,8 @@ class InfoDisplay extends TextField
 				text += "MEM Peak: " + getInterval(peak);
 			}
 
-			if ((text != null || text != '') && Main.infoVar != null)
-				Main.infoVar.visible = fullVisible;
+			if ((text != null || text != '') && Main.overlayVar != null)
+				Main.overlayVar.visible = fullVisible;
 		}
 
 		cacheCount = currentCount;

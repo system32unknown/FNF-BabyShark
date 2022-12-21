@@ -8,8 +8,10 @@ import flixel.FlxCamera;
 import utils.Controls;
 import utils.PlayerSettings;
 import ui.CustomFadeTransition;
+import ui.ErrorDisplay;
 import utils.ClientPrefs;
 import game.Conductor;
+import game.Song;
 
 class MusicBeatState extends FlxUIState {
 	private var curSection:Int = 0;
@@ -22,10 +24,32 @@ class MusicBeatState extends FlxUIState {
 	private var curDecBeat:Float = 0;
 	private var controls(get, never):Controls;
 
+	var errorDisplay:ErrorDisplay;
+	final missChart:String = 'Error! Chart not found;';
+	final missFile:String = 'MISSING FILE AT:';
+
 	public static var camBeat:FlxCamera;
 
 	inline function get_controls():Controls
 		return PlayerSettings.player.controls;
+
+	private static function getPathWithDir(songFolder:String, songLowercase:String):String {
+		return 'mods/${Paths.currentModDirectory}/data/$songFolder/$songLowercase.json';
+	}
+
+	public function getErrorMessage(error:String, reason:String, songFolder:String, songLowercase:String):String {
+		var formattedSong:String = Song.getSongPath(songFolder, songLowercase);
+		var songString:String = Paths.json(formattedSong);
+		var modsSongString:String = Paths.modsJson(formattedSong);
+		var modDirString:String = '';
+
+		if (Paths.currentModDirectory.length < 1) {
+			return error + '\n$reason\n\'$songString\' or\n\'$modsSongString\'';
+		} else {
+			modDirString = getPathWithDir(songFolder, songLowercase);
+			return error + '\n$reason\n\'$songString\',\n\'$modsSongString\' or\n\'$modDirString\'';
+		}
+	}
 
 	override function create() {
 		camBeat = FlxG.camera;
