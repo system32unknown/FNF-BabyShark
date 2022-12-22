@@ -171,23 +171,19 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 		if (header == null)
 			header = new FlxUIDropDownHeader();
 
-		if (dropPanel == null)
-		{
+		if (dropPanel == null) {
 			var rect = new Rectangle(0, 0, header.background.width, header.background.height);
 			dropPanel = new FlxUI9SliceSprite(0, 0, FlxUIAssets.IMG_BOX, rect, [1, 1, 14, 14]);
 		}
 
-		if (DataList != null)
-		{
+		if (DataList != null) {
 			for (i in 0...DataList.length)
 			{
 				var data = DataList[i];
 				list.push(makeListButton(i, data.label, data.name));
 			}
 			selectSomething(DataList[0].name, DataList[0].label);
-		}
-		else if (ButtonList != null)
-		{
+		} else if (ButtonList != null) {
 			for (btn in ButtonList)
 			{
 				list.push(btn);
@@ -217,8 +213,7 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 		dropPanel.y = header.background.y;
 		if (dropsUp())
 			dropPanel.y -= getPanelHeight();
-		else
-			dropPanel.y += buttonHeight;
+		else dropPanel.y += buttonHeight;
 
 		var offset = dropPanel.y;
 		for (i in 0...currentScroll) { //Hides buttons that goes before the current scroll

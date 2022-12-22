@@ -35,9 +35,9 @@ class FlxSoundTray extends Sprite
 	/**
 	 * How wide the sound tray background is.
 	 */
-	var _width:Int = 80;
+	var _width:Int = 90;
 
-	var _defaultScale:Float = 2.0;
+	var _defaultScale:Float = 2;
 	var text:TextField = new TextField();
 
 	/**The sound used when increasing the volume.**/
@@ -144,7 +144,7 @@ class FlxSoundTray extends Sprite
 			if (i < globalVolume) {
 				_bars[i].alpha = 1;
 			} else {
-				_bars[i].alpha = 0.5;
+				_bars[i].alpha = .5;
 			}
 		}
 
@@ -155,7 +155,7 @@ class FlxSoundTray extends Sprite
 		scaleX = _defaultScale;
 		scaleY = _defaultScale;
 
-		x = 0.5 * (Lib.current.stage.stageWidth - _width * _defaultScale) - FlxG.game.x;
+		x = .5 * (Lib.current.stage.stageWidth - _width * _defaultScale) - FlxG.game.x;
 	}
 }
 #end

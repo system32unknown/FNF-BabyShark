@@ -526,8 +526,7 @@ class FlxSound extends FlxBasic
 	 */
 	public function pause():FlxSound
 	{
-		if (!playing)
-			return this;
+		if (!playing) return this;
 
 		if (!_focusPreventation) _alreadyPaused = true;
 
@@ -554,8 +553,7 @@ class FlxSound extends FlxBasic
 	 */
 	public inline function fadeOut(Duration:Float = 1, ?To:Float = 0, ?onComplete:FlxTween->Void):FlxSound
 	{
-		if (fadeTween != null)
-			fadeTween.cancel();
+		if (fadeTween != null) fadeTween.cancel();
 		fadeTween = FlxTween.num(volume, To, Duration, {onComplete: onComplete}, volumeTween);
 
 		return this;
@@ -570,11 +568,9 @@ class FlxSound extends FlxBasic
 	 */
 	public inline function fadeIn(Duration:Float = 1, From:Float = 0, To:Float = 1, ?onComplete:FlxTween->Void):FlxSound
 	{
-		if (!playing)
-			play();
+		if (!playing) play();
 
-		if (fadeTween != null)
-			fadeTween.cancel();
+		if (fadeTween != null) fadeTween.cancel();
 
 		fadeTween = FlxTween.num(From, To, Duration, {onComplete: onComplete}, volumeTween);
 		return this;
@@ -601,7 +597,7 @@ class FlxSound extends FlxBasic
 	 */
 	public inline function getActualPitch():Float
 	{
-		return _realPitch;//Math.max(0, _pitch * _timeScaleAdjust);
+		return _realPitch; //Math.max(0, _pitch * _timeScaleAdjust);
 	}
 
 	/**

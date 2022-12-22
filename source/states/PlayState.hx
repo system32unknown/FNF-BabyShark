@@ -4377,10 +4377,10 @@ class PlayState extends MusicBeatState
 		timing.updateHitbox();
 
 		var seperatedScore:Array<Int> = [];
-		if(combo >= 1000) seperatedScore.push(Math.floor(combo / 1000) % 10);
-		if(combo >= 100) seperatedScore.push(Math.floor(combo / 100) % 10);
-		if(combo >= 10) seperatedScore.push(Math.floor(combo / 10) % 10);
-		seperatedScore.push(combo % 10);
+		var comboSplit:Array<String> = (combo + "").split('');
+
+		for (i in 0...combpSplit.length)
+			seperatedScore.push(Std.parseInt(comboSplit[i]));
 
 		if (!ClientPrefs.getPref('comboStacking')) {
 			if (lastCombo != null) lastCombo.kill();
@@ -4394,6 +4394,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var daLoop:Int = 0;
+		var comboSize = 1.2 - (seperatedScore.length * .1);
 		for (i in seperatedScore)
 		{
 			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
@@ -4401,7 +4402,7 @@ class PlayState extends MusicBeatState
 				numScore.cameras = [camHUD];
 			}
 			numScore.screenCenter();
-			numScore.x = coolText.x + (43 * daLoop) - 90;
+			numScore.x = coolText.x + (43 * comboSize) * daLoop;
 			numScore.y += 80;
 
 			numScore.x += comboOffset[1][0];
