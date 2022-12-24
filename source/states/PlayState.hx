@@ -2285,6 +2285,7 @@ class PlayState extends MusicBeatState
 			}
 			scoreTxt.scale.set(1.075, 1.075);
 			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2 * playbackRate, {
+				ease: FlxEase.backOut,
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
 				}
@@ -4384,7 +4385,6 @@ class PlayState extends MusicBeatState
 			}
 		
 			var daLoop:Int = 0;
-			var comboSize = 1.2 - seperatedScore.length;
 			for (i in seperatedScore)
 			{
 				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
@@ -4392,7 +4392,7 @@ class PlayState extends MusicBeatState
 					numScore.cameras = [camHUD];
 				}
 				numScore.screenCenter();
-				numScore.x = (coolText.x + ((43 * comboSize) * daLoop) - 90) + comboOffset[1][0];
+				numScore.x = (coolText.x + (43 * daLoop) - 90) + comboOffset[1][0];
 				numScore.y += 80 - comboOffset[1][1];
 			
 				if (!ClientPrefs.getPref('comboStacking'))
@@ -5264,10 +5264,16 @@ class PlayState extends MusicBeatState
 					iconP2.scale.set(1.1, 1.3);
 				}
 
+				if (curBeat % 4 == 0) {
+					FlxTween.angle(iconP1, -360, 0, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
+					FlxTween.angle(iconP2, 360, 0, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
+				} else {
+					FlxTween.angle(iconP1, (curBeat % 2 == 0 ? -15 : 15), 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+					FlxTween.angle(iconP2, (curBeat % 2 == 0 ? 15 : -15), 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+				}
+
 				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
-				FlxTween.angle(iconP1, (curBeat % 2 == 0 ? -15 : 15), 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-				FlxTween.angle(iconP2, (curBeat % 2 == 0 ? 15 : -15), 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 		}
 
 		iconP1.updateHitbox();
