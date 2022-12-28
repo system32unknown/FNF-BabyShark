@@ -561,6 +561,7 @@ class FunkinLua {
 				case "getwindowstransparent": PlatformUtil.getWindowsTransparent(args[0], args[1], args[2], args[3]);
 				case "setcursorpos": PlatformUtil.setCursorPos(args[0], args[1]);
 				case "setwindowicon": PlatformUtil.setWindowIcon(args[0]);
+				case "getmousepos": PlatformUtil.getMousePos(args[0]);
 			}
 		});
 
@@ -1346,12 +1347,7 @@ class FunkinLua {
 		});
 
 		addCallback("cameraSetTarget", function(target:String) {
-			var isDad:Bool = false;
-			if(target == 'dad') {
-				isDad = true;
-			}
-			PlayState.instance.moveCamera(isDad);
-			return isDad;
+			PlayState.instance.moveCamera(target);
 		});
 		addCallback("cameraShake", function(camera:String, intensity:Float, duration:Float) {
 			cameraFromString(camera).shake(intensity, duration * PlayState.instance.playbackRate);
@@ -1846,7 +1842,7 @@ class FunkinLua {
 		addCallback("stampSprite", function(sprite:String, brush:String, x:Int, y:Int) {
 			if(!PlayState.instance.modChartSprites.exists(sprite) || !PlayState.instance.modChartSprites.exists(brush)) return false;
 
-			PlayState.instance.modChartSprites.get(sprite).stamp(PlayState.instance.modChartSprites.get(sprite), x, y);
+			PlayState.instance.modChartSprites.get(sprite).stamp(PlayState.instance.modChartSprites.get(brush), x, y);
 			return true;
 		});
 

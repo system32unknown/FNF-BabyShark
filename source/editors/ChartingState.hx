@@ -1847,10 +1847,10 @@ class ChartingState extends MusicBeatState
 						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)){
 							var soundToPlay = 'hitsound';
 							if(_song.player1 == 'gf') { //Easter egg
-								soundToPlay = 'GF_' + Std.string(data + 1);
+								soundToPlay = 'gfnoise/GF_${Std.string(data + 1)}';
 							}
 
-							FlxG.sound.play(Paths.sound("gfnoise/" + soundToPlay)).pan = note.noteData < 4 ? -0.3 : 0.3; //would be coolio
+							FlxG.sound.play(Paths.sound(soundToPlay)).pan = note.noteData < 4 ? -0.3 : 0.3; //would be coolio
 							playedSound[data] = true;
 						}
 

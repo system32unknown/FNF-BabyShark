@@ -98,4 +98,25 @@ class PlatformUtil
     ')
     #end
     static public function setWindowIcon(path:String) {}
+
+    #if windows
+    @:functionCode('
+        POINT mousePos;
+
+        int mousePosArray[2] = {0, 0};
+        if (GetCursorPos(&mousePos)) { // retrieve the mouse position
+            mousePosArray[0] = mousePos.x;
+            mousePosArray[1] = mousePos.y;
+        }
+
+        if (pos == 0) {
+            return mousePosArray[0];
+        } else if (pos == 1) {
+            return mousePosArray[1];
+        } else {
+            return 0;
+        }
+    ')
+    #end
+    static public function getMousePos(pos:Int):Int {return 0;}
 }

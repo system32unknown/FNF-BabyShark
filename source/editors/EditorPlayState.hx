@@ -623,7 +623,6 @@ class EditorPlayState extends MusicBeatState
 			if (!note.isSustainNote)
 			{
 				combo += 1;
-				if(combo > 9999) combo = 9999;
 				popUpScore(note);
 				songHits++;
 			}
@@ -712,7 +711,7 @@ class EditorPlayState extends MusicBeatState
 		comboSpr.acceleration.y = FlxG.random.int(200, 300);
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
 		comboSpr.velocity.y -= FlxG.random.int(140, 160);
-		comboSpr.visible = !ClientPrefs.getPref('hideHud') && ClientPrefs.getPref('ShowCombo');
+		comboSpr.visible = !ClientPrefs.getPref('hideHud');
 		comboSpr.x += comboOffset[2][0];
 		comboSpr.y -= comboOffset[2][1];
 
@@ -798,12 +797,10 @@ class EditorPlayState extends MusicBeatState
 
 		var seperatedScore:Array<Int> = [];
 
-		if(combo >= 1000) {
-			seperatedScore.push(Math.floor(combo / 1000) % 10);
-		}
-		seperatedScore.push(Math.floor(combo / 100) % 10);
-		seperatedScore.push(Math.floor(combo / 10) % 10);
-		seperatedScore.push(combo % 10);
+		var comboSplit:Array<String> = (combo + "").split('');
+		
+		for (i in 0...comboSplit.length)
+			seperatedScore.push(Std.parseInt(comboSplit[i]));
 
 		if (!ClientPrefs.getPref('comboStacking')) {
 			if (lastCombo != null) lastCombo.kill();
