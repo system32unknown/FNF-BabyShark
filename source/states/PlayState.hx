@@ -1202,7 +1202,8 @@ class PlayState extends MusicBeatState
 			screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			screwYouTxt.scrollFactor.set();
 			screwYouTxt.borderSize = 1;
-			screwYouTxt.y = songNameText.y - 20;
+			screwYouTxt.y = songNameText.y;
+			songNameText.y -= 20;
 			screwYouTxt.visible = !hideHud;
 			screwYouTxt.cameras = [camHUD];
 			add(screwYouTxt);
