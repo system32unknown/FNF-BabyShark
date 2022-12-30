@@ -131,8 +131,7 @@ class Rating
 		this.image = name;
 		this.counter = name + 's';
 		this.hitWindow = ClientPrefs.getPref(name + 'Window', 0);
-		if(hitWindow == null)
-			hitWindow = 0;
+		if(hitWindow == null) hitWindow = 0;
 	}
 
 	public function increase(blah:Int = 1) {

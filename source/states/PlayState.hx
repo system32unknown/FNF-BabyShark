@@ -3151,9 +3151,9 @@ class PlayState extends MusicBeatState
 					if (timebarType != 'Song Name')
 						switch (timebarType) {
 							case 'Time Left' | 'Time Elapsed': timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
-							case 'ElapsedPosition' | 'LeftPosition': timeTxt.text = pauseTimeTxt;
-							case 'NameLeft' | 'NameElapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal, false) + ")";
-							case 'NameElapsedPosition' | 'NameLeftPosition': timeTxt.text = SONG.song + " (" + pauseTimeTxt + ")";
+							case 'Time Position': timeTxt.text = pauseTimeTxt;
+							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal, false) + ")";
+							case 'Name Elapsed Position': timeTxt.text = SONG.song + " (" + pauseTimeTxt + ")";
 						}
 				}
 			}

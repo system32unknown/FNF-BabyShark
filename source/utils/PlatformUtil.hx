@@ -119,4 +119,12 @@ class PlatformUtil
     ')
     #end
     static public function getMousePos(pos:Int):Int {return 0;}
+
+    #if windows
+    @:functionCode('
+        system("CLS");
+        std::cout<< "" <<std::flush;
+    ')
+    #end
+    static public function clearScreen() {}
 }

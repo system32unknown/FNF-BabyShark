@@ -224,13 +224,11 @@ class Paths
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
 
-	inline static public function sound(key:String, ?library:String):Sound {
+	inline static public function sound(key:String, ?library:String):Sound
 		return returnSound('sounds', key, library);
-	}
 
-	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String) {
+	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
 		return sound(key + FlxG.random.int(min, max), library);
-	}
 
 	inline static public function music(key:String, ?library:String):Sound
 		return returnSound('music', key, library);

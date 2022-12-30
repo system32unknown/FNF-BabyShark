@@ -21,8 +21,7 @@ class StrumNote extends FlxSprite
 	public var animationArray:Array<String> = ['static', 'pressed', 'confirm'];
 	public var static_anim(default, set):String = "static";
 	public var pressed_anim(default, set):String = "pressed"; // in case you would use this on lua
-	// though, you shouldn't change it
-	public var confirm_anim(default, set):String = "static";
+	public var confirm_anim(default, set):String = "confirm";
 
 	private function set_static_anim(value:String):String {
 		if (!PlayState.isPixelStage) {
