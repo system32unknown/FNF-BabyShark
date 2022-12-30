@@ -142,12 +142,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 				usesCheckbox = false;
 			}
 
-			if(curOption.type == 'func') {
-				if(controls.ACCEPT) {
-					FlxG.sound.play(Paths.sound('scrollMenu'));
-				}
-			}
-
 			if(usesCheckbox) {
 				if(controls.ACCEPT) {
 					FlxG.sound.play(Paths.sound('scrollMenu'));
