@@ -33,7 +33,7 @@ class MenuCharacterEditorState extends MusicBeatState
 	var grpWeekCharacters:FlxTypedGroup<MenuCharacter>;
 	var characterFile:MenuCharacterFile = null;
 	var txtOffsets:FlxText;
-	var defaultCharacters:Array<String> = ['dad', 'bf', 'gf'];
+	final defaultCharacters:Array<String> = ['dad', 'bf', 'gf'];
 
 	override function create() {
 		characterFile = {

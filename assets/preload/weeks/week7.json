@@ -37,11 +37,6 @@
 	],
 	"storyName": "Tankman",
 	"weekName": "Week 7",
-	"freeplayColor": [
-		146,
-		113,
-		253
-	],
 	"hideStoryMode": false,
 	"weekBefore": "week6",
 	"startUnlocked": true

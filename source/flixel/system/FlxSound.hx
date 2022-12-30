@@ -839,14 +839,10 @@ class FlxSound extends FlxBasic
 	}
 
 	inline function get_pan():Float
-	{
 		return _transform.pan;
-	}
 
 	inline function set_pan(pan:Float):Float
-	{
 		return _transform.pan = pan;
-	}
 
 	function update_time(time:Float = null):Float {
 		_time = (time == null && _channel != null) ? _channel.position : time;
@@ -869,7 +865,7 @@ class FlxSound extends FlxBasic
 		if (playing && _realPitch > 0)
 		{
 			#if openfl
-			@:privateAccess{
+			@:privateAccess {
 				if (_channel == null || !_channel.__isValid) {
 					cleanup(false);
 					startSound(time);

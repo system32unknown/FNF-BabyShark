@@ -69,13 +69,9 @@ class TileAnimationLibrary {
 		out.sort(function(a1, a2):Int {
 			a1 = a1.toLowerCase();
 			a2 = a2.toLowerCase();
-			if (a1 < a2) {
-				return -1;
-			} else if (a1 > a2) {
-				return 1;
-			} else {
-				return 0;
-			}
+			if (a1 < a2) return -1;
+			else if (a1 > a2) return 1;
+			else return 0;
 		});
 		return out;
 	}
@@ -96,9 +92,7 @@ class TileAnimationLibrary {
 		var pool:Array<TileContainerSymbol> = getSymbolPool(name);
 		if (pool.length == 0) {
 			return new TileContainerSymbol(getSymbolData(name), this, _texture);
-		} else {
-			return pool.pop();
-		}
+		} else return pool.pop();
 	}
 
 	private function putSymbol(symbol:TileContainerSymbol):Void {

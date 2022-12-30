@@ -264,7 +264,7 @@ class CharacterEditorState extends MusicBeatState
 		}
 	}
 
-	var TemplateCharacter:String = '{
+	final TemplateCharacter:String = '{
 			"animations": [
 				{
 					"loop": false,

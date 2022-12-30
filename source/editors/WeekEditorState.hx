@@ -474,7 +474,6 @@ class WeekEditorState extends MusicBeatState
 	}
 	
 	public static var loadedWeek:WeekFile = null;
-	public static var loadError:Bool = false;
 	private static function onLoadComplete(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
@@ -494,7 +493,6 @@ class WeekEditorState extends MusicBeatState
 				{
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
 					trace("Successfully loaded file: " + cutName);
-					loadError = false;
 
 					weekFileName = cutName;
 					_file = null;
@@ -502,7 +500,6 @@ class WeekEditorState extends MusicBeatState
 				}
 			}
 		}
-		loadError = true;
 		loadedWeek = null;
 		_file = null;
 		#else
@@ -626,7 +623,6 @@ class WeekEditorFreeplayState extends MusicBeatState
 	}
 	
 	var UI_box:FlxUITabMenu;
-	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 	function addEditorBox() {
 		var tabs = [
 			{name: 'Freeplay', label: 'Freeplay'},

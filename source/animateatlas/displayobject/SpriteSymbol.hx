@@ -1,6 +1,5 @@
 package animateatlas.displayobject;
 
-import openfl.filters.GlowFilter;
 import openfl.filters.BlurFilter;
 import openfl.display.PixelSnapping;
 import openfl.display.FrameLabel;
@@ -180,8 +179,6 @@ class SpriteSymbol extends Sprite {
 			newSymbol.setColor(elementData.color);
 			newSymbol.setLoop(elementData.loop);
 			newSymbol.setType(elementData.symbolType);
-			
-		
 
 			if (newSymbol.type == SymbolType.GRAPHIC) {
 				var firstFrame:Int = elementData.firstFrame;
@@ -267,7 +264,6 @@ class SpriteSymbol extends Sprite {
 	@:access(animateatlas)
 	private function setFilterData(data:FilterData):Void{
 		var blur:BlurFilter;
-		var glow:GlowFilter;
 		if (data != null){
 			if (data.BlurFilter != null){
 				blur = new BlurFilter();
@@ -362,13 +358,9 @@ class SpriteSymbol extends Sprite {
 	function sortLabels(i1:FrameLabel, i2:FrameLabel):Int {
 		var f1 = i1.frame;
 		var f2 = i2.frame;
-		if (f1 < f2) {
-			return -1;
-		} else if (f1 > f2) {
-			return 1;
-		} else {
-			return 0;
-		}
+		if (f1 < f2) return -1;
+		else if (f1 > f2) return 1;
+		else return 0;
 	}
 
 	private function getLayer(layerIndex:Int):Sprite {

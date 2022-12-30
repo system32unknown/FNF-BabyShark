@@ -3145,6 +3145,7 @@ class PlayState extends MusicBeatState
 					switch (timebarType) {
 						case 'Time Elapsed' | 'Time Position' | 'Name Elapsed' | 'Name Time Position':
 							songCalc = curTime;
+					}
 
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
 					if (secondsTotal < 0) secondsTotal = 0;

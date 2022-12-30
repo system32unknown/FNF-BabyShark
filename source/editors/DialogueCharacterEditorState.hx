@@ -602,8 +602,8 @@ class DialogueCharacterEditorState extends MusicBeatState
 				if(UI_mainbox.selected_tab_id == 'Animations') {
 					hudGroup.alpha = 0;
 					mainGroup.alpha = 0;
-					ghostLoop.alpha = 0.6;
-					ghostIdle.alpha = 0.6;
+					ghostLoop.alpha = .6;
+					ghostIdle.alpha = .6;
 					tipText.text = TIP_TEXT_OFFSET;
 					offsetLoopText.visible = true;
 					offsetIdleText.visible = true;
@@ -662,8 +662,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 			ghostLoop.setPosition(character.x, character.y);
 			ghostIdle.setPosition(character.x, character.y);
-			hudGroup.x = mainGroup.x;
-			hudGroup.y = mainGroup.y;
+			hudGroup.setPosition(mainGroup.x, mainGroup.y);
 		}
 		super.update(elapsed);
 	}
@@ -744,8 +743,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 	function saveCharacter() {
 		var data:String = Json.stringify(character.jsonFile, "\t");
-		if (data.length > 0)
-		{
+		if (data.length > 0) {
 			var splittedImage:Array<String> = imageInputText.text.trim().split('_');
 			var characterName:String = splittedImage[0].toLowerCase().replace(' ', '');
 

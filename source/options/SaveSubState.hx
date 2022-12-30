@@ -2,18 +2,16 @@ package options;
 
 using StringTools;
 
-class SaveSubState extends BaseOptionsMenu
+class SaveSubState extends FuncOptionsMenu
 {
 	public function new()
 	{
 		title = 'Save';
 		rpcTitle = 'Save Menu'; //for Discord Rich Presence
 
-		var option:Option = new Option('FPS Counter',
-			'If unchecked, hides the FPS Counter.',
-			'showFPS',
-			'bool',
-			true);
+		var option:OptionFunc = new OptionFunc('Delete Saves', "test", function() {
+			trace("hi");
+		});
 		addOption(option);
 
 		super();

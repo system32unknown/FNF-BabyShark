@@ -170,7 +170,6 @@ class DialogueBoxPsych extends FlxSpriteGroup
 
 	var textBoxTypes:Array<String> = ['normal', 'angry'];
 	
-
 	public function new(dialogueList:DialogueFile, ?song:String = null)
 	{
 		super();

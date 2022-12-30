@@ -8,7 +8,6 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
-import ui.Alphabet;
 import utils.PlayerSettings;
 import states.PlayState;
 

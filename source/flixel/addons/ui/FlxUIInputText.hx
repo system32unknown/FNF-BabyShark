@@ -10,8 +10,6 @@ import flixel.addons.ui.interfaces.IResizable;
  */
 class FlxUIInputText extends FlxInputText implements IResizable implements IFlxUIWidget implements IHasParams
 {
-	public var name:String;
-
 	public var broadcastToFlxUI:Bool = true;
 
 	public static inline var CHANGE_EVENT:String = "change_input_text"; // change in any way
@@ -22,15 +20,13 @@ class FlxUIInputText extends FlxInputText implements IResizable implements IFlxU
 	public static inline var PASTE_EVENT:String = "paste_input_text"; // paste text in this text field
 	public static inline var CUT_EVENT:String = "cut_input_text"; // cut text in this text field
 
-	public function resize(w:Float, h:Float):Void
-	{
+	public function resize(w:Float, h:Float):Void {
 		width = w;
 		height = h;
 		calcFrame();
 	}
 
-	private override function onChange(action:String):Void
-	{
+	private override function onChange(action:String):Void {
 		super.onChange(action);
 		if (broadcastToFlxUI)
 		{

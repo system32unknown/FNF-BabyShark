@@ -18,7 +18,6 @@ typedef WeekFile = {
 	var weekBefore:String;
 	var storyName:String;
 	var weekName:String;
-	var freeplayColor:Array<Int>;
 	var startUnlocked:Bool;
 	var hiddenUntilUnlocked:Bool;
 	var hideStoryMode:Bool;
@@ -38,7 +37,6 @@ class WeekData {
 	public var weekBefore:String;
 	public var storyName:String;
 	public var weekName:String;
-	public var freeplayColor:Array<Int>;
 	public var startUnlocked:Bool;
 	public var hiddenUntilUnlocked:Bool;
 	public var hideStoryMode:Bool;
@@ -55,7 +53,6 @@ class WeekData {
 			weekBefore: 'tutorial',
 			storyName: 'Your New Week',
 			weekName: 'Custom Week',
-			freeplayColor: [146, 113, 253],
 			startUnlocked: true,
 			hiddenUntilUnlocked: false,
 			hideStoryMode: false,
@@ -73,7 +70,6 @@ class WeekData {
 		weekBefore = weekFile.weekBefore;
 		storyName = weekFile.storyName;
 		weekName = weekFile.weekName;
-		freeplayColor = weekFile.freeplayColor;
 		startUnlocked = weekFile.startUnlocked;
 		hiddenUntilUnlocked = weekFile.hiddenUntilUnlocked;
 		hideStoryMode = weekFile.hideStoryMode;
@@ -148,16 +144,14 @@ class WeekData {
 			var directory:String = directories[i] + 'weeks/';
 			if(FileSystem.exists(directory)) {
 				var listOfWeeks:Array<String> = CoolUtil.coolTextFile(directory + 'weekList.txt');
-				for (daWeek in listOfWeeks)
-				{
+				for (daWeek in listOfWeeks) {
 					var path:String = directory + daWeek + '.json';
 					if(sys.FileSystem.exists(path)) {
 						addWeek(daWeek, path, directories[i], i, originalLength);
 					}
 				}
 
-				for (file in FileSystem.readDirectory(directory))
-				{
+				for (file in FileSystem.readDirectory(directory)) {
 					var path = haxe.io.Path.join([directory, file]);
 					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json')) {
 						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
@@ -168,22 +162,17 @@ class WeekData {
 		#end
 	}
 
-	private static function addWeek(weekToCheck:String, path:String, directory:String, i:Int, originalLength:Int)
-	{
-		if(!weeksLoaded.exists(weekToCheck))
-		{
+	private static function addWeek(weekToCheck:String, path:String, directory:String, i:Int, originalLength:Int) {
+		if(!weeksLoaded.exists(weekToCheck)) {
 			var week:WeekFile = getWeekFile(path);
-			if(week != null)
-			{
+			if(week != null) {
 				var weekFile:WeekData = new WeekData(week, weekToCheck);
-				if (i >= originalLength)
-				{
+				if (i >= originalLength) {
 					#if MODS_ALLOWED
 					weekFile.folder = directory.substring(Paths.mods().length, directory.length-1);
 					#end
 				}
-				if ((PlayState.isStoryMode && !weekFile.hideStoryMode) || (!PlayState.isStoryMode && !weekFile.hideFreeplay))
-				{
+				if ((PlayState.isStoryMode && !weekFile.hideStoryMode) || (!PlayState.isStoryMode && !weekFile.hideFreeplay)) {
 					weeksLoaded.set(weekToCheck, weekFile);
 					weeksList.push(weekToCheck);
 				}

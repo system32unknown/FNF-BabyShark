@@ -13,13 +13,11 @@ import utils.Controls;
 import utils.ClientPrefs;
 import substates.MusicBeatSubstate;
 import ui.AttachedText;
-import ui.CheckboxThingie;
 import ui.Alphabet;
-import game.Character;
 
 using StringTools;
 
-class BaseOptionsMenu extends MusicBeatSubstate
+class FuncOptionsMenu extends MusicBeatSubstate
 {
 	private var curOption:Option = null;
 	private var curSelected:Int = 0;

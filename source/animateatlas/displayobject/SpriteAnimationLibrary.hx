@@ -70,13 +70,9 @@ class SpriteAnimationLibrary {
 		out.sort(function(a1, a2):Int {
 			a1 = a1.toLowerCase();
 			a2 = a2.toLowerCase();
-			if (a1 < a2) {
-				return -1;
-			} else if (a1 > a2) {
-				return 1;
-			} else {
-				return 0;
-			}
+			if (a1 < a2) return -1;
+			else if (a1 > a2) return 1;
+			else return 0;
 		});
 		return out;
 	}

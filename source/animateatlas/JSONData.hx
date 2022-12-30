@@ -120,17 +120,6 @@ typedef FilterData = {
 		blurX:Float,
 		blurY:Float,
 		quality:Int
-		},
-	
-	?GlowFilter: {
-		blurX: Float,
-		blurY: Float,
-		color: Int,
-		alpha: Int,
-		quality: Int,
-		strength: Int,
-		knockout: Bool,
-		inner: Bool
 	}
 }
 
