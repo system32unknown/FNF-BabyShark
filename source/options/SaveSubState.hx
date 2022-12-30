@@ -12,7 +12,7 @@ class SaveSubState extends FuncOptionsMenu
 		var option:OptionFunc = new OptionFunc('Delete Saves', "test", function() {
 			trace("hi");
 		});
-		addOption(option);
+		addOptionFunc(option);
 
 		super();
 	}
