@@ -3139,10 +3139,12 @@ class PlayState extends MusicBeatState
 					var timebarType:String = ClientPrefs.getPref('timeBarType');
 					var curTime:Float = Conductor.songPosition - ClientPrefs.getPref('noteOffset');
 					if(curTime < 0) curTime = 0;
-					songPercent = (curTime / songLength);
+					songPercent = curTime / songLength;
 
-					var songCalc:Float = (songLength - curTime);
-					if(timebarType == 'Time Elapsed' || ClientPrefs.getPref('timeBarType') == 'ElapsedPosition' || ClientPrefs.getPref('timeBarType') == 'NameElapsedPosition') songCalc = curTime;
+					var songCalc:Float = songLength - curTime;
+					switch (timebarType) {
+						case 'Time Elapsed' | 'Time Position' | 'Name Elapsed' | 'Name Time Position':
+							songCalc = curTime;
 
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
 					if (secondsTotal < 0) secondsTotal = 0;
@@ -3153,7 +3155,7 @@ class PlayState extends MusicBeatState
 							case 'Time Left' | 'Time Elapsed': timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
 							case 'Time Position': timeTxt.text = pauseTimeTxt;
 							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal, false) + ")";
-							case 'Name Elapsed Position': timeTxt.text = SONG.song + " (" + pauseTimeTxt + ")";
+							case 'Name Time Position': timeTxt.text = SONG.song + " (" + pauseTimeTxt + ")";
 						}
 				}
 			}
