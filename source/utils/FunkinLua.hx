@@ -562,6 +562,7 @@ class FunkinLua {
 				case "setcursorpos": PlatformUtil.setCursorPos(args[0], args[1]);
 				case "setwindowicon": PlatformUtil.setWindowIcon(args[0]);
 				case "getmousepos": PlatformUtil.getMousePos(args[0]);
+				case "clearscreen": PlatformUtil.clearScreen();
 			}
 		});
 

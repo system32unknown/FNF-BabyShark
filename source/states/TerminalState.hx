@@ -1,10 +1,11 @@
 package states;
 
+import shaders.VCRDistortionEffect.VCRDistortionEffect;
+import utils.ClientPrefs;
 #if desktop
 import utils.Discord.DiscordClient;
 #end
-import shaders.VCRDistortionEffect.VCRDistortionEffect;
-import utils.ClientPrefs;
+import utils.CoolUtil;
 
 import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
@@ -28,7 +29,7 @@ class TerminalState extends MusicBeatState
     var shaderVCR:VCRDistortionEffect;
 
     // [BAD PERSON] was too lazy to finish this lol.
-    var unformattedSymbols:Array<String> = [
+    final unformattedSymbols:Array<String> = [
         "period", "backslash",
         "one", "two", "three", "four", "five", 
         "six", "seven", "eight", "nine", "zero",
@@ -36,7 +37,7 @@ class TerminalState extends MusicBeatState
         "rbracket", "comma", "plus"
     ];
 
-    var formattedSymbols:Array<String> = [
+    final formattedSymbols:Array<String> = [
         ".", "/",
         "1", "2", "3", "4", "5",
         "6", "7", "8", "9", "0",
@@ -65,7 +66,7 @@ class TerminalState extends MusicBeatState
         FlxG.sound.playMusic(Paths.music('TheAmbience', 'shared'), 0.7);
 
         CommandList.push(new TerminalCommand("help", "Displays this menu.", function(arguments:Array<String>) {
-            UpdatePreviousText(false); //resets the text
+            UpdatePreviousText(); //resets the text
             var helpText:String = "";
             for (v in CommandList) {
                 if (v.showInHelp) {
@@ -81,7 +82,7 @@ class TerminalState extends MusicBeatState
         }));
 
         CommandList.push(new TerminalCommand("open", "Searches for a text file with the specified ID, and if it exists, display it.", function(arguments:Array<String>) {
-            UpdatePreviousText(false); //resets the text
+            UpdatePreviousText(); //resets the text
             var tx = "";
             switch (arguments[0].toLowerCase()) {
                 default: tx = "File not found.";
@@ -94,18 +95,11 @@ class TerminalState extends MusicBeatState
         }));
 
         CommandList.push(new TerminalCommand("shit", "dont.", function(arguments:Array<String>) {
-            UpdateText(getRandomizedText(FlxG.random.int(1, 50)));
+            UpdateText(CoolUtil.getRandomizedText(FlxG.random.int(1, 50)));
         }));
 
         add(displayText);
         super.create();
-    }
-
-    function getRandomizedText(max:Int):String {
-        var temp_str:String = "";
-        for (i in 0...max)
-            temp_str += String.fromCharCode(FlxG.random.int(65, 122));
-        return temp_str;
     }
 
     public function UpdateText(val:String) {
@@ -113,7 +107,7 @@ class TerminalState extends MusicBeatState
     }
 
     //after all of my work this STILL DOESNT COMPLETELY STOP THE TEXT SHIT FROM GOING OFF THE SCREEN IM GONNA DIE
-    public function UpdatePreviousText(reset:Bool)
+    public function UpdatePreviousText(reset:Bool = false)
     {
         previousText = displayText.text + (reset ? "\n> " : "");
         displayText.text = previousText;
@@ -157,7 +151,7 @@ class TerminalState extends MusicBeatState
                 }
             }
             if (!calledFunc) {
-                UpdatePreviousText(false); //resets the text
+                UpdatePreviousText(); //resets the text
                 UpdateText("\nUnknown command \"" + arguments[0] + "\"");
             }
             UpdatePreviousText(true);

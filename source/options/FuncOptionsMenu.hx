@@ -101,10 +101,9 @@ class FuncOptionsMenu extends MusicBeatSubstate
 		}
 
 		if(nextAccept <= 0) {
-			if(curOption.type == 'func') {
-				if(controls.ACCEPT) {
-					FlxG.sound.play(Paths.sound('scrollMenu'));
-				}
+			if(controls.ACCEPT) {
+				FlxG.sound.play(Paths.sound('scrollMenu'));
+				if (curOption.funcs != null) curOption.funcs();
 			}
 		}
 

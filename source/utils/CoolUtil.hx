@@ -197,4 +197,11 @@ class CoolUtil
 		panel.pixels.fillRect(new Rectangle((flipX ? antiX : 6), Std.int(Math.abs(antiY - 2)),  5, 1), color);
 		panel.pixels.fillRect(new Rectangle((flipX ? antiX : 8), Std.int(Math.abs(antiY - 1)),  3, 1), color);
 	}
+
+	public static function getRandomizedText(max:Int):String {
+        var temp_str:String = "";
+        for (i in 0...max)
+            temp_str += String.fromCharCode(FlxG.random.int(65, 122));
+        return temp_str;
+    }
 }

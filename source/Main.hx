@@ -68,7 +68,7 @@ class Main extends Sprite
 
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 
-		overlayVar = new Overlay(4, 2);
+		overlayVar = new Overlay();
 		addChild(overlayVar);
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;

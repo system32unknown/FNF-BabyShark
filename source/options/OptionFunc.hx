@@ -9,8 +9,6 @@ class OptionFunc
 	private var child:Alphabet;
 	public var text(get, set):String;
 
-	public final type:String = "func";
-
 	public var funcs:Void->Void = null;
 
 	public var description:String = '';
