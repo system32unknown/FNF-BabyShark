@@ -3,7 +3,6 @@ package options;
 import flixel.FlxG;
 import ui.Prompt;
 import game.Highscore;
-import utils.CoolUtil;
 
 using StringTools;
 
@@ -41,14 +40,6 @@ class SaveSubState extends FuncOptionsMenu
 			}, cancelcallback));
 		});
 		addOptionFunc(option);
-
-		for (i in 0...10) {
-			var option:OptionFunc = new OptionFunc('Secret Page ' + i, CoolUtil.getRandomizedText(20), function() {
-				trace("Well you're tried.");
-				Sys.exit(0);
-			});
-			addOptionFunc(option);
-		}
 
 		super();
 	}

@@ -72,13 +72,6 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Sustain Color In Editor',
-			'',
-			'EditorSusColor',
-			'bool',
-			true);
-		addOption(option);
-
 		super();
 	}
 }

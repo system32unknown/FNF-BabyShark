@@ -2482,32 +2482,7 @@ class ChartingState extends MusicBeatState
 		if(height < minHeight) height = minHeight;
 		if(height < 1) height = 1; //Prevents error of invalid height
 
-		var colorSwap = new ColorSwap();
-
-		var colorList:Array<String> = Note.keysShit.get(_song.mania).get('sustaincolor');
-		var susColor = FlxColor.WHITE;
-		if (Note.keysShit.get(_song.mania).exists('sustaincolor'))
-			Std.parseInt('0xff' + colorList[note.noteData]); //Prevents error for checking colors.
-
-		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-		var arrowIndex:Int = Std.int(Note.keysShit.get(_song.mania).get('pixelAnimIndex')[note.noteData] % Note.ammo[_song.mania]);
-		var hueColor:Float = arrowHSV[arrowIndex][0] / 360;
-		var saturationColor:Float = arrowHSV[arrowIndex][1] / 100;
-		var brightnessColor:Float = arrowHSV[arrowIndex][2] / 100;
-		switch (note.noteType) {
-			case 'Hurt Note' | 'Danger Note' | 'Kill Note':
-				susColor = CoolUtil.dominantColor(note);
-		}
-
-		if (!ClientPrefs.getPref('EditorSusColor')) susColor = FlxColor.WHITE;
-
-		var spr:FlxSprite = new FlxSprite(note.x + (GRID_SIZE * 0.5) - 4, note.y + GRID_SIZE / 2).makeGraphic(8, height, susColor);
-		if (note.noteType != "Hurt Note" || note.noteType != "Danger Note" || note.noteType != "Kill Note") {
-			spr.shader = colorSwap.shader;
-			colorSwap.hue = hueColor;
-			colorSwap.saturation = saturationColor;
-			colorSwap.brightness = brightnessColor;
-		}
+		var spr:FlxSprite = new FlxSprite(note.x + (GRID_SIZE * 0.5) - 4, note.y + GRID_SIZE / 2).makeGraphic(8, height);
 		return spr;
 	}
 
