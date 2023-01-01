@@ -57,6 +57,9 @@ import utils.Discord;
 #end
 
 using StringTools;
+#if LUA_ALLOWED
+using llua.Lua.Lua_helper;
+#end
 
 class FunkinLua {
 	public static var Function_Stop:Dynamic = 1;
@@ -251,7 +254,7 @@ class FunkinLua {
 			} return false;
 		});
 
-		Lua_helper.add_callback(lua, "giveAchievement", function(name:String) {
+		addCallback("giveAchievement", function(name:String) {
 			var me = this;
 			if (Achievements.isAchievementUnlocked(name) || !PlayState.instance.achievementArray.contains(me)) {
 				if (!PlayState.instance.achievementArray.contains(me)) {
@@ -2893,7 +2896,7 @@ class FunkinLua {
 	}
 
 	inline function addCallback(name:String, func:Function) {
-		return Lua_helper.add_callback(lua, name, func);
+		return lua.add_callback(name, func);
 	}
 
 	function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic) {
@@ -3191,8 +3194,6 @@ class FunkinLua {
 		#if hscript
 		if(hscript != null) hscript = null;
 		#end
-
-		hscript = null;
 		Lua.close(lua);
 		lua = null;
 		#end

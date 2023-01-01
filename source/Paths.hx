@@ -152,7 +152,7 @@ class Paths
 		}
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
-		openfl.Assets.cache.clear("songs");
+		#if !html5 openfl.Assets.cache.clear("songs"); #end
 		System.gc();
 	}
 
@@ -233,11 +233,22 @@ class Paths
 	inline static public function music(key:String, ?library:String):Sound
 		return returnSound('music', key, library);
 
-	inline static public function voices(song:String):Any
+	inline static public function voices(song:String):Any {
+		#if html5
+		return 'songs:assets/songs/${formatToSongPath(song)}/Voices.$SOUND_EXT';
+		#else
 		return returnSound('songs', '${formatToSongPath(song)}/Voices');
+		#end
+	}
 
-	inline static public function inst(song:String):Any
+	inline static public function inst(song:String):Any {
+		#if html5
+		return 'songs:assets/songs/${formatToSongPath(song)}/Inst.$SOUND_EXT';
+		#else
 		return returnSound('songs', '${formatToSongPath(song)}/Inst');
+		#end
+	}
+		
 	// streamlined the assets process more
 	inline static public function image(key:String, ?library:String):FlxGraphic
 		return returnGraphic(key, library);
