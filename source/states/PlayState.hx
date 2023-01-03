@@ -1160,8 +1160,9 @@ class PlayState extends MusicBeatState
 		add(iconP2);
 		reloadHealthBarColors();
 
-		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt = new FlxText(0, Math.floor(healthBarBG.y + 40), FlxG.width, "", 16);
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
+		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1;
 		scoreTxt.visible = !hideHud;
@@ -2283,8 +2284,8 @@ class PlayState extends MusicBeatState
 			if (scoreTxtTween != null) {
 				scoreTxtTween.cancel();
 			}
-			scoreTxt.scale.set(1.075, 1.075);
-			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2 * playbackRate, {
+			scoreTxt.scale.set(1.1, 1.1);
+			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, .2 * playbackRate, {
 				ease: FlxEase.backOut,
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
