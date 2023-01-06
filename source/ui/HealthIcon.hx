@@ -12,12 +12,12 @@ class HealthIcon extends FlxSprite
 {
 	static final prefix:String = 'icons/';
 	static final credits:String = 'credits/';
-	static final defaultIcon:String = 'icon-unknown';
+	static final defaultIcon:String = 'unknown';
 
 	public var iconOffsets:Array<Float> = [0, 0];
 	public var sprTracker:FlxSprite;
-	public var isPlayer:Bool = false;
-	public var isCredit:Bool = false;
+	var isPlayer:Bool = false;
+	var isCredit:Bool;
 
 	private var char:String = '';
 	
@@ -43,12 +43,13 @@ class HealthIcon extends FlxSprite
 		return Paths.image(path);
 	}
 
-	public function new(?char:String, isPlayer:Bool = false)
+	public function new(?char:String, ?folder:String, isPlayer:Bool = false, isCredit = false)
 	{
 		this.isPlayer = isPlayer;
+		this.isCredit = isCredit;
 		super();
-		changeIcon(char);
 		scrollFactor.set();
+		changeIcon(char == null ? (isCredit ? defaultIcon : 'bf') : char, folder);
 	}
 
 	public function changeIcon(char:String, ?folder:String, defaultIfMissing:Bool = true):Bool {
@@ -74,7 +75,8 @@ class HealthIcon extends FlxSprite
 		availableStates = Math.round(graph.width / graph.height);
 		this.char = char;
 		
-		iconOffsets[1] = iconOffsets[0] = (width - 150) / availableStates;
+		iconOffsets[0] = (width - 150) / availableStates;
+		iconOffsets[1] = (height - 150) / availableStates;
 		
 		loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
 		updateHitbox();

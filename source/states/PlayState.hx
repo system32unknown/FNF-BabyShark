@@ -28,6 +28,7 @@ import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import flixel.util.FlxSave;
+import haxe.Json;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.KeyboardEvent;
 import openfl.filters.ShaderFilter;
@@ -60,6 +61,10 @@ import sys.io.File;
 
 #if VIDEOS_ALLOWED
 import VideoHandler;
+#end
+
+#if LUA_ALLOWED
+using llua.Lua.Lua_helper;
 #end
 
 using StringTools;
@@ -334,10 +339,11 @@ class PlayState extends MusicBeatState
 	// Lua shit
 	public static var instance:PlayState;
 	public var luaArray:Array<FunkinLua> = [];
-	public var achievementArray:Array<FunkinLua> = [];
-	public var achievementWeeks:Array<String> = [];
 	private var luaDebugGroup:FlxTypedGroup<FunkinLua.DebugLuaText>;
 	public var introSoundsSuffix:String = '';
+
+	var achievementsArray:Array<FunkinLua> = [];
+	var achievementWeeks:Array<String> = [];
 
 	// Debug buttons
 	private var debugKeysChart:Array<FlxKey>;
@@ -880,6 +886,61 @@ class PlayState extends MusicBeatState
 		add(luaDebugGroup);
 		#end
 
+		function addAbilityToUnlockAchievements(funkinLua:FunkinLua) {
+			var lua = funkinLua.lua;
+			if (lua != null){
+				lua.add_callback("giveAchievement", function(name:String){
+					if (luaArray.contains(funkinLua))
+						throw 'Illegal attempt to unlock ' + name;
+					@:privateAccess
+					if (Achievements.isAchievementUnlocked(name))
+						return "Achievement " + name + " is already unlocked!";
+					if (!Achievements.exists(name))
+						return "Achievement " + name + " does not exist."; 
+					if(instance != null) { 
+						Achievements.unlockAchievement(name);
+						instance.startAchievement(name);
+						ClientPrefs.saveSettings();
+						return "Unlocked achievement " + name + "!";
+					} else return "Instance is null.";
+				});
+			}
+		}
+
+		//CUSTOM ACHIVEMENTS
+		#if (MODS_ALLOWED && LUA_ALLOWED && ACHIEVEMENTS_ALLOWED)
+		var luaFiles:Array<String> = Achievements.getModAchievements().copy();
+		if(luaFiles.length > 0) {
+			for(luaFile in luaFiles) {
+				var meta:Achievements.AchievementMeta = try Json.parse(File.getContent(luaFile.substring(0, luaFile.length - 4) + '.json')) catch(e) throw e;
+				if (meta != null) {
+					if (meta.song != null && meta.song.length > 0 && SONG.song.toLowerCase().replace(' ', '-') != meta.song.toLowerCase().replace(' ', '-'))
+						continue;
+
+					var lua = new FunkinLua(luaFile);
+					addAbilityToUnlockAchievements(lua);
+					achievementsArray.push(lua);
+				}
+			}
+		}
+
+		var achievementMetas = Achievements.getModAchievementMetas().copy();
+		for (i in achievementMetas) {
+			if(i.song != null) {
+				if(i.song.length > 0 && SONG.song.toLowerCase().replace(' ', '-') != i.song.toLowerCase().replace(' ', '-'))
+					continue;
+			}
+			if(i.lua_code != null) {
+				var lua = new FunkinLua(null, i.lua_code);
+				addAbilityToUnlockAchievements(lua);
+				achievementsArray.push(lua);
+			}
+			if(i.week_nomiss != null) {
+				achievementWeeks.push(i.week_nomiss + '_nomiss');
+			}
+		}
+		#end
+
 		// "GLOBAL" SCRIPTS
 		#if LUA_ALLOWED
 		var filesPushed:Array<String> = [];
@@ -929,7 +990,7 @@ class PlayState extends MusicBeatState
 			{
 				var lua = new FunkinLua(luaFile);
 				luaArray.push(lua);
-				achievementArray.push(lua);
+				achievementsArray.push(lua);
 			}
 		}
 
@@ -939,7 +1000,7 @@ class PlayState extends MusicBeatState
 			if(i.lua_code != null) {
 				var lua = new FunkinLua(null, i.lua_code);
 				luaArray.push(lua);
-				achievementArray.push(lua);
+				achievementsArray.push(lua);
 			}
 			if(i.week_nomiss != null) {
 				achievementWeeks.push(i.week_nomiss);
@@ -1160,18 +1221,17 @@ class PlayState extends MusicBeatState
 		add(iconP2);
 		reloadHealthBarColors();
 
-		scoreTxt = new FlxText(0, Math.floor(healthBarBG.y + 40), FlxG.width, "", 16);
+		scoreTxt = new FlxText(0, Math.floor(healthBarBG.y + 40), FlxG.width, "");
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-		scoreTxt.scrollFactor.set();
-		scoreTxt.borderSize = 1;
 		scoreTxt.visible = !hideHud;
+		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
 		add(scoreTxt);
 
-		judgementCounter = new FlxText(10, 0, 0, "", 16);
-		judgementCounter.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		judgementCounter.borderSize = 1;
+		judgementCounter = new FlxText(2, 0, 0, "", 16);
+		judgementCounter.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
+		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		judgementCounter.scrollFactor.set();
 		judgementCounter.screenCenter(Y);
 		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
@@ -1199,11 +1259,10 @@ class PlayState extends MusicBeatState
 		add(songNameText);
 
 		if(SONG.screwYou != null) {
-			screwYouTxt = new FlxText(2, 0, 0, SONG.screwYou, 16);
+			screwYouTxt = new FlxText(2, songNameText.y, 0, SONG.screwYou, 16);
 			screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			screwYouTxt.scrollFactor.set();
 			screwYouTxt.borderSize = 1;
-			screwYouTxt.y = songNameText.y;
 			songNameText.y -= 20;
 			screwYouTxt.visible = !hideHud;
 			screwYouTxt.cameras = [camHUD];
@@ -2286,7 +2345,7 @@ class PlayState extends MusicBeatState
 			}
 			scoreTxt.scale.set(1.1, 1.1);
 			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, .2 * playbackRate, {
-				ease: FlxEase.backOut,
+				ease: FlxEase.expoOut,
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
 				}
@@ -3071,8 +3130,8 @@ class PlayState extends MusicBeatState
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP2.scale.set(mult, mult);
 			case "Andromeda" | "BabyShark": // Stolen from Andromeda Engine
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(0.1))));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(0.1))));
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(.1))));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(.1))));
 			case "Micdup": // Stolen from FNF Mic'd Up
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, .09 / (Main.overlayVar.currentFPS / 60))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, .09 / (Main.overlayVar.currentFPS / 60))));
@@ -3986,10 +4045,10 @@ class PlayState extends MusicBeatState
 			var achieve:String = checkForAchievement(['week1_nomiss', 'week2_nomiss', 'week3_nomiss', 'week4_nomiss',
 				'week5_nomiss', 'week6_nomiss', 'week7_nomiss', 'ur_bad',
 				'ur_good', 'hype', 'two_keys', 'toastie', 'debugger']);
-			var customAchieves:String = checkForAchievement(achievementWeeks);
+			var customAchieve:String = checkForAchievement(achievementWeeks);
 
-			if (achieve != null || customAchieves != null) {
-				startAchievement(achieve);
+			if (achieve != null || customAchieve != null) {
+				startAchievement(customAchieve != null ? customAchieve : achieve);
 				return;
 			}
 		}
@@ -5395,6 +5454,7 @@ class PlayState extends MusicBeatState
 				returnVal = cast ret;
 			}
 		}
+		for (i in achievementsArray) i.call(event, args);
 		#end
 		return returnVal;
 	}
@@ -5404,6 +5464,7 @@ class PlayState extends MusicBeatState
 		for (i in 0...luaArray.length) {
 			luaArray[i].set(variable, arg);
 		}
+		for(i in achievementsArray) i.set(variable, arg);
 		#end
 	}
 

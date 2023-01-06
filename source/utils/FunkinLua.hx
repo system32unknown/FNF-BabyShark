@@ -75,7 +75,9 @@ class FunkinLua {
 	#if hscript
 	public var hscript:HScript;
 	public static var hscriptVars:Map<String, Dynamic> = new Map();
-	#end	
+	#end
+
+	public var scriptCode:String;
 	
 	public function new(script:String, ?scriptCode:String) {
 		#if LUA_ALLOWED
@@ -108,6 +110,8 @@ class FunkinLua {
 			trace(e);
 			return;
 		}
+		if (scriptCode != null) 
+			this.scriptCode = scriptCode;
 		scriptName = script;
 		initHaxeModule();
 
@@ -252,24 +256,6 @@ class FunkinLua {
 				CustomSubstate.instance = null;
 				return true;
 			} return false;
-		});
-
-		addCallback("giveAchievement", function(name:String) {
-			var me = this;
-			if (Achievements.isAchievementUnlocked(name) || !PlayState.instance.achievementArray.contains(me)) {
-				if (!PlayState.instance.achievementArray.contains(me)) {
-					luaTrace("giveAchievement: This lua file is not a custom achievement lua.", false, false, FlxColor.RED);
-				}
-
-				return false;
-			}
-			@:privateAccess
-			if (PlayState.instance != null) {
-				Achievements.unlockAchievement(name);
-				PlayState.instance.startAchievement(name);
-				ClientPrefs.saveSettings();
-				return true;
-			} else return false;
 		});
 
 		// shader shit

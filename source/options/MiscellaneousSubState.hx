@@ -72,6 +72,13 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Show Haxeflixel Splash',
+			'Not implemented. I\'ll figure it later.',
+			'showSplash',
+			'bool',
+			true);
+		addOption(option);
+
 		super();
 	}
 }

@@ -278,10 +278,10 @@ class CreditsState extends MusicBeatState
 		}
 
 		descText.text = sections[curSelected][2];
-		descText.y = FlxG.height - descText.height + offsetThing - 60;
+		descText.y = FlxG.height - descText.height + offsetThing - 30;
 
 		if(moveTween != null) moveTween.cancel();
-		moveTween = FlxTween.tween(descText, {y : descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
+		moveTween = FlxTween.tween(descText, {y : descText.y + 45}, 0.25, {ease: FlxEase.sineOut});
 
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
@@ -372,8 +372,7 @@ class CreditSectionState extends MusicBeatState {
 				if(creditsStuff[i][5] != null)
 					Paths.currentModDirectory = creditsStuff[i][5];
 
-				var icon:HealthIcon = new HealthIcon(null, false);
-				icon.isCredit = true;
+				var icon:HealthIcon = new HealthIcon(false, true);
 				if (!icon.changeIcon(creditsStuff[i][1], curCSection, false))
 					icon.changeIcon(creditsStuff[i][1], getSimilarIcon(creditsStuff[i][1]));
 
