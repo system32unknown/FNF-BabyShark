@@ -31,6 +31,7 @@ class ClientPrefs {
 		'ShowLateEarly' => false,
 		'NoteDiffTypes' => "Andromeda",
 		'MstimingTypes' => "Simple",
+		'ScoreType' => 'Alter',
 		'ShowJudgementCount' => false,
 		'IconBounceType' => 'Psych',
 		'RatingDisplay' => 'World',

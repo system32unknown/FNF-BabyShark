@@ -31,8 +31,7 @@ class Overlay extends TextField
 
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
-	public function new(x:Float = 4, y:Float = 2)
-	{
+	public function new(x:Float = 4, y:Float = 2) {
 		super();
 
 		this.x = x;
@@ -43,6 +42,10 @@ class Overlay extends TextField
 		
 		defaultTextFormat = new TextFormat(openfl.utils.Assets.getFont("assets/fonts/vcr.ttf").fontName, 14, 0xFFFFFF);
 		text = "";
+	}
+
+	public function changeFont(font:Dynamic) {
+		defaultTextFormat = font;
 	}
 
 	public static function getInterval(num:UInt):String {

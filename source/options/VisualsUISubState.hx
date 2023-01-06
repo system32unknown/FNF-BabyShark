@@ -55,6 +55,14 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Vanilla', 'Psych']);
 		addOption(option);
 
+		var option:Option = new Option('Score Types:',
+			"",
+			'ScoreType',
+			'string',
+			'Psych',
+			['Alter', 'Kade', 'Style1']);
+		addOption(option);
+
 		var option:Option = new Option('Camera Zooms',
 			"If unchecked, the camera won't zoom in on a beat hit.",
 			'camZooms',

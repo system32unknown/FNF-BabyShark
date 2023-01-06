@@ -101,7 +101,6 @@ class ChartingState extends MusicBeatState
 		['Set Property', "Value 1: Variable name\nValue 2: New value\n\nIf the Value is boolean add ', bool' in Value 1\nExample: boyfriend.visible, bool"],
 		['Change Mania', "Value 1: The new mania value (min: " + Note.minMania + "; max: " + Note.maxMania + ")\nValue 2: Skip old strum fade tween\nPut 'true' to skip it, anything else or blank to not."],
 		['\"Screw you!\" Text Change', "Value 1: Text\n\nChanges the \"Screw you!\" text."],
-		['Rainbow Eyesore', "Value 1: Step to end at\nValue 2: Speed"]
 	];
 
 	var _file:FileReference;

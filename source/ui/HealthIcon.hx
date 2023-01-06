@@ -107,7 +107,7 @@ class HealthIcon extends FlxSprite
 
 	public function setState(state:Int) {
 		if (state >= availableStates) state = 0;
-		if (this.state == state || animation.curAnim == null) return;
+		if (animation.curAnim == null) return;
 		animation.curAnim.curFrame = this.state = state;
 	}
 

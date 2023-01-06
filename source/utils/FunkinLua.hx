@@ -46,6 +46,7 @@ import sys.io.File;
 import Type.ValueType;
 import ui.DialogueBoxPsych;
 import ui.CustomFadeTransition;
+import ui.Overlay;
 
 #if hscript
 import hscript.Parser;
@@ -2305,6 +2306,15 @@ class FunkinLua {
 				return true;
 			}
 			luaTrace("setTextAlignment: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+
+		addCallback("setFPSTextFont", function(font:String) {
+			var fps:Overlay = Main.overlayVar;
+			if (fps != null) {
+				fps.changeFont(Paths.font(font));
+				return true;
+			}
 			return false;
 		});
 
