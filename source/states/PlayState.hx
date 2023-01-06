@@ -28,7 +28,6 @@ import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import flixel.util.FlxSave;
-import haxe.Json;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.KeyboardEvent;
 import openfl.filters.ShaderFilter;
@@ -61,10 +60,6 @@ import sys.io.File;
 
 #if VIDEOS_ALLOWED
 import VideoHandler;
-#end
-
-#if LUA_ALLOWED
-using llua.Lua.Lua_helper;
 #end
 
 using StringTools;
@@ -889,57 +884,9 @@ class PlayState extends MusicBeatState
 		function addAbilityToUnlockAchievements(funkinLua:FunkinLua) {
 			var lua = funkinLua.lua;
 			if (lua != null){
-				lua.add_callback("giveAchievement", function(name:String){
-					if (luaArray.contains(funkinLua))
-						throw 'Illegal attempt to unlock ' + name;
-					@:privateAccess
-					if (Achievements.isAchievementUnlocked(name))
-						return "Achievement " + name + " is already unlocked!";
-					if (!Achievements.exists(name))
-						return "Achievement " + name + " does not exist."; 
-					if(instance != null) { 
-						Achievements.unlockAchievement(name);
-						instance.startAchievement(name);
-						ClientPrefs.saveSettings();
-						return "Unlocked achievement " + name + "!";
-					} else return "Instance is null.";
-				});
+
 			}
 		}
-
-		//CUSTOM ACHIVEMENTS
-		#if (MODS_ALLOWED && LUA_ALLOWED && ACHIEVEMENTS_ALLOWED)
-		var luaFiles:Array<String> = Achievements.getModAchievements().copy();
-		if(luaFiles.length > 0) {
-			for(luaFile in luaFiles) {
-				var meta:Achievements.AchievementMeta = try Json.parse(File.getContent(luaFile.substring(0, luaFile.length - 4) + '.json')) catch(e) throw e;
-				if (meta != null) {
-					if (meta.song != null && meta.song.length > 0 && SONG.song.toLowerCase().replace(' ', '-') != meta.song.toLowerCase().replace(' ', '-'))
-						continue;
-
-					var lua = new FunkinLua(luaFile);
-					addAbilityToUnlockAchievements(lua);
-					achievementsArray.push(lua);
-				}
-			}
-		}
-
-		var achievementMetas = Achievements.getModAchievementMetas().copy();
-		for (i in achievementMetas) {
-			if(i.song != null) {
-				if(i.song.length > 0 && SONG.song.toLowerCase().replace(' ', '-') != i.song.toLowerCase().replace(' ', '-'))
-					continue;
-			}
-			if(i.lua_code != null) {
-				var lua = new FunkinLua(null, i.lua_code);
-				addAbilityToUnlockAchievements(lua);
-				achievementsArray.push(lua);
-			}
-			if(i.week_nomiss != null) {
-				achievementWeeks.push(i.week_nomiss + '_nomiss');
-			}
-		}
-		#end
 
 		// "GLOBAL" SCRIPTS
 		#if LUA_ALLOWED
@@ -2345,7 +2292,7 @@ class PlayState extends MusicBeatState
 			}
 			scoreTxt.scale.set(1.1, 1.1);
 			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, .2 * playbackRate, {
-				ease: FlxEase.expoOut,
+				ease: FlxEase.backOut,
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
 				}
