@@ -44,6 +44,7 @@ import game.*;
 import utils.*;
 import backgrounds.*;
 import ui.*;
+import shaders.PulseEffect;
 import data.StageData.StageFile;
 import data.EkData.Keybinds;
 import data.*;
@@ -249,6 +250,10 @@ class PlayState extends MusicBeatState
 	var santa:BGSprite;
 	var heyTimer:Float;
 
+	var disableTheTripper:Bool = false;
+	var disableTheTripperAt:Int;
+	var screenshader:PulseEffect = new PulseEffect();
+
 	var bgGirls:BackgroundGirls;
 	var bgGhouls:BGSprite;
 
@@ -423,6 +428,11 @@ class PlayState extends MusicBeatState
 		instakillOnMiss = ClientPrefs.getGameplaySetting('instakill', false);
 		practiceMode = ClientPrefs.getGameplaySetting('practice', false);
 		cpuControlled = ClientPrefs.getGameplaySetting('botplay', false);
+
+		screenshader.waveAmplitude = 1;
+		screenshader.waveFrequency = 2;
+		screenshader.waveSpeed = 1;
+		screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
 
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
@@ -2849,6 +2859,14 @@ class PlayState extends MusicBeatState
 	override public function update(elapsed:Float) {
 		callOnLuas('onUpdate', [elapsed]);
 
+		if(disableTheTripperAt == curStep || isDead)
+			disableTheTripper = true;
+
+		screenshader.update(elapsed);
+		if(disableTheTripper && screenshader.ampmul >= 0) {
+			screenshader.ampmul -= (elapsed / 2);
+		}
+
 		if(ClientPrefs.getPref('camMovement')) {
 			if(camlock) camFollow.set(camlockx, camlocky);
 		}
@@ -3793,6 +3811,26 @@ class PlayState extends MusicBeatState
 				}
 			case 'BG Freaks Expression':
 				if(bgGirls != null) bgGirls.swapDanceType();
+
+			case 'Rainbow Eyesore':
+				if(ClientPrefs.getPref('shaders')) {
+					var splitedVal:Array<String> = value1.trim().split(',');
+					disableTheTripper = false;
+					disableTheTripperAt = Std.parseInt(splitedVal[0]);
+
+					screenshader.waveSpeed = Std.parseFloat(splitedVal[1]);
+					screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
+					screenshader.ampmul = 1;
+
+					switch(value2.trim().toLowerCase()) {
+						case 'camhud' | 'hud':
+							camHUD.setFilters([new ShaderFilter(screenshader.shader)]);
+						case 'camother' | 'other':
+							camOther.setFilters([new ShaderFilter(screenshader.shader)]);
+						default:
+							camGame.setFilters([new ShaderFilter(screenshader.shader)]);
+					}
+				}
 
 			case 'Change Scroll Speed':
 				if (songSpeedType == "constant") return;
