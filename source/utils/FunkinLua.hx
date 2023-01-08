@@ -256,20 +256,23 @@ class FunkinLua {
 		});
 
 		addCallback("giveAchievement", function(name:String) {
-			if (PlayState.instance.luaArray.contains(this))
-				throw 'Illegal attempt to unlock ' + name;
-			if (Achievements.isAchievementUnlocked(name))
-				return "Achievement " + name + " is already unlocked!";
-			if (!Achievements.exists(name))
-				return "Achievement " + name + " does not exist.";
-			@:privateAccess {
-				if(PlayState.instance != null) { 
-					Achievements.unlockAchievement(name);
-					PlayState.instance.startAchievement(name);
-					ClientPrefs.saveSettings();
-					return "Unlocked achievement " + name + "!";
-				} else return "Instance is null.";
+			var me = this;
+			if (!PlayState.instance.achievementsArray.contains(me)) {
+				luaTrace("giveAchievement: This lua file is not a custom achievement lua.", false, false, FlxColor.RED);
+				return false;
 			}
+			if (Achievements.isAchievementUnlocked(name)) {
+				luaTrace('giveAchievement: Achievement $name is already unlocked.', false, false, FlxColor.YELLOW);
+				return false;
+			}
+
+			@:privateAccess
+			if (PlayState.instance != null) {
+				Achievements.unlockAchievement(name);
+				PlayState.instance.startAchievement(name);
+				ClientPrefs.saveSettings();
+				return true;
+			} else return false;
 		});
 
 		// shader shit

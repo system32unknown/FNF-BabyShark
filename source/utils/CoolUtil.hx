@@ -3,6 +3,7 @@ package utils;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
+import flixel.util.FlxSave;
 import openfl.geom.Rectangle;
 #if sys
 import sys.io.File;

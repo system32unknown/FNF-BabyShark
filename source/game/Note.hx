@@ -359,7 +359,8 @@ class Note extends FlxSprite
 				animation.addByPrefix(gfxLetter[i] + ' tail', gfxLetter[i] + ' tail');
 			}
 
-			if (!isSustainNote) setGraphicSize(Std.int(defaultWidth * scales[mania]));
+			if (!isSustainNote)
+				setGraphicSize(Std.int(defaultWidth * scales[mania]));
 			else setGraphicSize(Std.int(defaultWidth * scales[mania]), Std.int(defaultHeight * scales[0]));
 
 			updateHitbox();

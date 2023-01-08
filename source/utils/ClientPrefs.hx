@@ -396,7 +396,7 @@ class ClientPrefs {
 		}
 
 		var save:FlxSave = new FlxSave();
-		save.bind('controls' CoolUtil.getSavePath());
+		save.bind('controls', CoolUtil.getSavePath());
 		if (save != null) {
 			for (name in separateSaves) {
 				var data:Dynamic = Reflect.field(save.data, name);
