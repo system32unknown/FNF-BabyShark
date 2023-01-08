@@ -348,7 +348,7 @@ class ClientPrefs {
 		FlxG.save.flush();
 
 		var save:FlxSave = new FlxSave();
-		save.bind('controls' #if (flixel < "5.0.0"), 'altertoriel' #end); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
+		save.bind('controls', CoolUtil.getSavePath()); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
 
 		for (name in separateSaves) {
 			if (prefs.exists(name)) {
@@ -396,7 +396,7 @@ class ClientPrefs {
 		}
 
 		var save:FlxSave = new FlxSave();
-		save.bind('controls' #if (flixel < "5.0.0"), 'altertoriel' #end);
+		save.bind('controls' CoolUtil.getSavePath());
 		if (save != null) {
 			for (name in separateSaves) {
 				var data:Dynamic = Reflect.field(save.data, name);

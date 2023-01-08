@@ -90,7 +90,7 @@ class TitleState extends MusicBeatState
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
 		super.create();
-		FlxG.save.bind('funkin' #if (flixel < "5.0.0"), 'altertoriel' #end);
+		FlxG.save.bind('funkin', CoolUtil.getSavePath());
 		ClientPrefs.loadPrefs();
 		Highscore.load();
 

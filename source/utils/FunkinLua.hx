@@ -2384,7 +2384,7 @@ class FunkinLua {
 		addCallback("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
 				var save:FlxSave = new FlxSave();
-				save.bind(name #if (flixel < "5.0.0"), folder #end);
+				save.bind(name, CoolUtil.getSavePath(folder));
 				PlayState.instance.modchartSaves.set(name, save);
 				return;
 			}
