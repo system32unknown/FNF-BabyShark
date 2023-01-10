@@ -87,16 +87,16 @@ class VCRDistortionShader extends FlxShader {
 
         float ramp(float y, float start, float end)
         {
-        	float inside = step(start,y) - step(end,y);
-        	float fact = (y-start)/(end-start)*inside;
-        	return (1.-fact) * inside;
+        	float inside = step(start, y) - step(end, y);
+        	float fact = (y - start) / (end - start) * inside;
+        	return (1. - fact) * inside;
         }
 
         vec4 getVideo(vec2 uv) {
           	vec2 look = uv;
             if(distortionOn){
-            	float window = 1./(1.+20.*(look.y-mod(iTime/4.,1.))*(look.y-mod(iTime/4.,1.)));
-            	look.x = look.x + (sin(look.y*10. + iTime)/50.*onOff(4.,4.,.3)*(1.+cos(iTime*80.))*window)*(glitchModifier*2);
+            	float window = 1. / (1. + 20. * (look.y - mod(iTime / 4., 1.)) * (look.y - mod(iTime / 4., 1.)));
+            	look.x = look.x + (sin(look.y * 10. + iTime) / 50. * onOff(4., 4., .3) * (1. + cos(iTime*80.))*window)*(glitchModifier*2);
             	float vShift = 0.4*onOff(2.,3.,.9)*(sin(iTime)*sin(iTime*20.) +
             										 (0.5 + 0.1*sin(iTime*200.)*cos(iTime)));
             	look.y = mod(look.y + vShift*glitchModifier, 1.);

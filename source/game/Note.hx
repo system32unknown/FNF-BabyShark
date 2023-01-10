@@ -122,8 +122,8 @@ class Note extends FlxSprite
 	public var changeAnim:Bool = true;
 	public var changeColSwap:Bool = true;
 	
-	var defaultWidth:Float = 0;
-	var defaultHeight:Float = 0;
+	var defaultWidth:Float = 157;
+	var defaultHeight:Float = 154;
 
 	public function resizeByRatio(ratio:Float) { //haha funny twitter shit
 		if(isSustainNote && !animation.curAnim.name.endsWith('tail')) {
@@ -308,8 +308,6 @@ class Note extends FlxSprite
 		var lastScaleY:Float = scale.y;
 		var blahblah:String = arraySkin.join('/');
 
-		defaultWidth = 157;
-		defaultHeight = 154;
 		if(PlayState.isPixelStage) {
 			if(isSustainNote) {
 				loadGraphic(Paths.image('pixelUI/' + blahblah + 'ENDS'));
@@ -361,7 +359,7 @@ class Note extends FlxSprite
 
 			if (!isSustainNote)
 				setGraphicSize(Std.int(defaultWidth * scales[mania]));
-			else setGraphicSize(Std.int(defaultWidth * scales[mania]), Std.int(defaultHeight * scales[0]));
+			else setGraphicSize(Std.int(defaultWidth * scales[mania]));
 
 			updateHitbox();
 		}

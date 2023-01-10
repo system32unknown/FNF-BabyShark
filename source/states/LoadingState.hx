@@ -2,6 +2,10 @@ package states;
 
 import lime.app.Promise;
 import lime.app.Future;
+import lime.utils.Assets as LimeAssets;
+import lime.utils.AssetLibrary;
+import lime.utils.AssetManifest;
+
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
@@ -11,9 +15,6 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 
 import openfl.utils.Assets;
-import lime.utils.Assets as LimeAssets;
-import lime.utils.AssetLibrary;
-import lime.utils.AssetManifest;
 
 import haxe.io.Path;
 
@@ -115,13 +116,11 @@ class LoadingState extends MusicBeatState
 		MusicBeatState.switchState(target);
 	}
 	
-	static function getSongPath() {
+	static function getSongPath()
 		return Paths.inst(PlayState.SONG.song);
-	}
 	
-	static function getVocalPath() {
+	static function getVocalPath()
 		return Paths.voices(PlayState.SONG.song);
-	}
 	
 	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false) {
 		MusicBeatState.switchState(getNextState(target, stopMusic));

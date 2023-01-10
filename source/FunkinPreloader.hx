@@ -10,17 +10,34 @@ import flash.Lib;
 import flixel.system.FlxAssets;
 import flixel.system.FlxBasePreloader;
 import flixel.FlxG;
- 
-@:bitmap("assets/preload/images/logo.png") 
-class LogoImage extends BitmapData {}
+
+@:bitmap("assets/preload/images/logo.png") // easter egg >:)
+class OldFunkinLogoImage extends BitmapData {}
+
+@:bitmap("assets/preload/images/logos/funkinlogo.png") 
+class FunkinLogoImage extends BitmapData {}
+@:bitmap("assets/preload/images/logos/bslogo.png") 
+class BsLogoImage extends BitmapData {}
+@:bitmap("assets/preload/images/logos/vdnblogo.png") 
+class DaveLogoImage extends BitmapData {}
+
 @:bitmap("assets/preload/images/flixel/light.png")
 class GraphicLogoLight extends BitmapData {} 
 @:bitmap("assets/preload/images/flixel/corners.png")
 class GraphicLogoCorners extends BitmapData {}
 
 class FunkinPreloader extends FlxBasePreloader {
-    var _logo = new Sprite();
-	var _logoGlow = new Sprite();
+    var _logo:Array<Sprite> = [
+		new Sprite(),
+		new Sprite(),
+		new Sprite()
+	];
+	var _logoGlow:Array<Sprite> = [
+		new Sprite(),
+		new Sprite(),
+		new Sprite()
+	];
+
     var _text = new TextField();
 	var _flxtext = new TextField();
 	var _flxlogo = new Sprite(); 
@@ -32,6 +49,8 @@ class FunkinPreloader extends FlxBasePreloader {
     }
      
     override function create():Void {
+		final logoList:Array<BitmapData> = [(FlxG.random.int(0, 999) == 1 ? new OldFunkinLogoImage(0, 0) : new FunkinLogoImage(0, 0)), new BsLogoImage(0, 0), new DaveLogoImage(0, 0)];
+
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
 		this._width = Std.int(Lib.current.stage.stageWidth / _buffer.scaleX);
@@ -45,7 +64,6 @@ class FunkinPreloader extends FlxBasePreloader {
 		_bmpBar.y = _height - 11;
 		_buffer.addChild(_bmpBar);
 
-		_text = new TextField();
 		_text.defaultTextFormat = new TextFormat("VCR OSD Mono", 12, 0xffffff);
 		_text.embedFonts = true;
 		_text.selectable = false;
@@ -55,7 +73,6 @@ class FunkinPreloader extends FlxBasePreloader {
 		_text.width = 200;
 		_buffer.addChild(_text);
 
-		_flxtext = new TextField();
 		_flxtext.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 14, 0xffffff);
 		_flxtext.text = Std.string(FlxG.VERSION);
 		_flxtext.embedFonts = true;
@@ -72,18 +89,17 @@ class FunkinPreloader extends FlxBasePreloader {
 		_flxlogo.y = _flxtext.y;
 		_buffer.addChild(_flxlogo);
 
-        _logo.addChild(new Bitmap(new LogoImage(0, 0))); //Sets the graphic of the sprite to a Bitmap object, which uses our embedded BitmapData class.
-        _logo.scaleX = _logo.scaleY = ratio;
-        _logo.x = (this._width / 2) - (_logo.width / 2);
-        _logo.y = (this._height / 2) - (_logo.height / 2);
-        _buffer.addChild(_logo);
+		for (_index => _bitmaps in logoList) {
+			_logo[_index] = makeSpriteBitmap(_bitmaps, ratio * .65, 180);
+			var logox:Float = _logo[_index].x + (_index * 190);
+			_logo[_index].x = logox;
+			_buffer.addChild(_logo[_index]);
 
-		_logoGlow.addChild(new Bitmap(new LogoImage(0, 0)));
-		_logoGlow.blendMode = BlendMode.SCREEN;
-		_logoGlow.scaleX = _logoGlow.scaleY = ratio;
-		_logoGlow.x = (this._width / 2) - (_logoGlow.width / 2);
-		_logoGlow.y = (this._height / 2) - (_logoGlow.height / 2);
-		_buffer.addChild(_logoGlow);
+			_logoGlow[_index] = makeSpriteBitmap(_bitmaps, ratio * .65, 180);
+			_logoGlow[_index].x = logox;
+			_logoGlow[_index].blendMode = BlendMode.SCREEN;
+			_buffer.addChild(_logoGlow[_index]);
+		}
 
 		var corners = createBitmap(GraphicLogoCorners, function(corners) {
 			corners.width = _width;
@@ -101,11 +117,20 @@ class FunkinPreloader extends FlxBasePreloader {
 			i += 2;
 		}
 		bitmap.blendMode = BlendMode.OVERLAY;
-		bitmap.alpha = 0.25;
+		bitmap.alpha = .25;
 		_buffer.addChild(bitmap);
 
         super.create();
     }
+
+	function makeSpriteBitmap(bitmap:BitmapData, scale:Float, x:Float = 0, y:Float = 0) {
+		var _sprite = new Sprite();
+        _sprite.addChild(new Bitmap(bitmap));
+        _sprite.scaleX = _sprite.scaleY = scale;
+        _sprite.x = ((this._width / 2) - (_sprite.width / 2)) - x;
+        _sprite.y = ((this._height / 2) - (_sprite.height / 2)) - y;
+        return _sprite;
+	}
 
     override function destroy() {
 		if (_buffer != null)
@@ -116,8 +141,10 @@ class FunkinPreloader extends FlxBasePreloader {
 		_text = null;
 		_flxtext = null;
 		_flxlogo = null;
-		_logo = null;
-		_logoGlow = null;
+		for (i in 0...3) {
+			_logo[i] = null;
+			_logoGlow[i] = null;
+		}
         super.destroy();
     }
 

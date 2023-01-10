@@ -55,12 +55,20 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Vanilla', 'Psych']);
 		addOption(option);
 
-		var option:Option = new Option('Score Types:',
+		var option:Option = new Option('Score Styles:',
 			"",
 			'ScoreType',
 			'string',
 			'Psych',
 			['Alter', 'Kade', 'Style1']);
+		addOption(option);
+
+		var option:Option = new Option('Rating Display:',
+			'Choose the type of rating you want to see.',
+			'RatingDisplay',
+			'string',
+			'World',
+			['Hud', 'World']);
 		addOption(option);
 
 		var option:Option = new Option('Camera Zooms',

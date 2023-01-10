@@ -22,8 +22,6 @@ class FlashingState extends MusicBeatState
 	var saveDataPath:String = '';
 	var displaySaveDataPath:String = '';
 	
-	var bg:FlxSprite;
-	var warnTextY:Float = 0;
 	var manual:FlxSprite;
 	var textNoAdvanced:String = "Hey, watch out!\n
 								This Mod contains some flashing lights!\n
@@ -38,8 +36,7 @@ class FlashingState extends MusicBeatState
 
 		FlxG.save.flush();
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		add(bg);
+		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK));
 
 		FlxG.mouse.visible = true;
 

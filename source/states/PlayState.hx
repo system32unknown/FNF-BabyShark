@@ -362,7 +362,7 @@ class PlayState extends MusicBeatState
 	var downScroll:Bool = ClientPrefs.getPref('downScroll');
 	var hideHud:Bool = ClientPrefs.getPref('hideHud');
 	var healthBarAlpha:Float = ClientPrefs.getPref('healthBarAlpha');
-	var ratingDisplay:String = ClientPrefs.getPref('ratingDisplay');
+	var ratingDisplay:String = ClientPrefs.getPref('RatingDisplay');
 	var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
 	var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 
@@ -4178,7 +4178,7 @@ class PlayState extends MusicBeatState
 
 	var scoreSeparator:String = "|";
 	private function UpdateScoreText() {
-		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? 'NPS:$nps ($maxNPS) $scoreSeparator' : '');
+		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? (ClientPrefs.getPref('ScoreType') == 'Kade' ? 'NPS:$nps (Max:$maxNPS) $scoreSeparator' : 'NPS:$nps ($maxNPS) $scoreSeparator') : '');
 		switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter':
 				tempText += (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');

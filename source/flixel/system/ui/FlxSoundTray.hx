@@ -41,10 +41,10 @@ class FlxSoundTray extends Sprite
 	var text:TextField = new TextField();
 
 	/**The sound used when increasing the volume.**/
-	public var volumeUpSound:String = "flixel/sounds/beep";
+	final volumeUpSound:String = "flixel/sounds/beep";
 
 	/**The sound used when decreasing the volume.**/
-	public var volumeDownSound:String = 'flixel/sounds/beep';
+	final volumeDownSound:String = 'flixel/sounds/beep';
 
 	/**Whether or not changing the volume should make noise.**/
 	public var silent:Bool = false;
@@ -58,8 +58,8 @@ class FlxSoundTray extends Sprite
 		super();
 
 		visible = false;
-		scaleX = _defaultScale;
-		scaleY = _defaultScale;
+		scaleX = scaleY = _defaultScale;
+		
 		var tmp:Bitmap = new Bitmap(new BitmapData(_width, 30, true, 0x7F000000));
 		screenCenter();
 		addChild(tmp);
@@ -152,9 +152,7 @@ class FlxSoundTray extends Sprite
 	}
 
 	public function screenCenter():Void {
-		scaleX = _defaultScale;
-		scaleY = _defaultScale;
-
+		scaleX = scaleY = _defaultScale;
 		x = .5 * (Lib.current.stage.stageWidth - _width * _defaultScale) - FlxG.game.x;
 	}
 }

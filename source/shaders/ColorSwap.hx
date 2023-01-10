@@ -86,8 +86,7 @@ class ColorSwapShader extends FlxShader {
 		uniform bool awesomeOutline;
 
 		const float offset = 1.0 / 128.0;
-		vec3 normalizeColor(vec3 color)
-		{
+		vec3 normalizeColor(vec3 color) {
 			return vec3(
 				color[0] / 255.0,
 				color[1] / 255.0,
@@ -95,8 +94,7 @@ class ColorSwapShader extends FlxShader {
 			);
 		}
 
-		vec3 rgb2hsv(vec3 c)
-		{
+		vec3 rgb2hsv(vec3 c) {
 			vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
 			vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
 			vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
@@ -137,7 +135,7 @@ class ColorSwapShader extends FlxShader {
 
 			if (awesomeOutline)
 			{
-				 // Outline bullshit?
+				// Outline bullshit?
 				vec2 size = vec2(3, 3);
 
 				if (color.a <= 0.5) {

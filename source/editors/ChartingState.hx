@@ -2651,7 +2651,7 @@ class ChartingState extends MusicBeatState
 						var diff:String = songFolder.substring(ind + 1);
 						var ind:Int = CoolUtil.lowerDifficulties.indexOf(diff);
 						if (ind != -1) PlayState.storyDifficulty = ind;
-					} catch(e) {}
+					} catch(e) {trace(e);}
 				}
 				if (!success) {
 					var diff:String = CoolUtil.difficulties[PlayState.storyDifficulty];
@@ -2659,8 +2659,10 @@ class ChartingState extends MusicBeatState
 	
 					var success:Bool = false;
 					if (diff != null && diff != defaultDiff) {
-						loadedSong = Song.loadFromJson(songFolder + "-" + diff, songFolder);
-						success = true;
+						try {
+							loadedSong = Song.loadFromJson(songFolder + "-" + diff, songFolder);
+							success = true;
+						} catch(e) {trace(e);}
 					}
 					if (!success) {
 						loadedSong = Song.loadFromJson(songFolder, songFolder);
@@ -2670,6 +2672,7 @@ class ChartingState extends MusicBeatState
 					}
 				}
 			} catch(e) {
+				trace(e);
 				errorDisplay.text = getErrorMessage(missChart, 'cannot load JSON, $missFile', songFolder, songFolder);
 				errorDisplay.displayError();
 				return;
