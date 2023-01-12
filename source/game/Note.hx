@@ -359,7 +359,7 @@ class Note extends FlxSprite
 
 			if (!isSustainNote)
 				setGraphicSize(Std.int(defaultWidth * scales[mania]));
-			else setGraphicSize(Std.int(defaultWidth * scales[mania]));
+			else setGraphicSize(Std.int(defaultWidth * scales[mania]), Std.int(defaultHeight * scales[0]));
 
 			updateHitbox();
 		}

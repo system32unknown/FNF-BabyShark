@@ -4,9 +4,7 @@ import cpp.NativeGc;
 import haxe.Timer;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-#if !cpp
 import openfl.system.System;
-#end
 import flixel.util.FlxColor;
 import utils.ClientPrefs;
 
@@ -80,7 +78,7 @@ class Overlay extends TextField
 			text = '';
 			text += (ClientPrefs.getPref('showFPS') ? 'FPS: $currentFPS${ClientPrefs.getPref('MSFPSCounter') ? ' [MS: $dt]' : ''}\n' : "");
 
-			var memory:Int = #if cpp Std.int(NativeGc.memInfo(0)) #else System.totalMemory #end;
+			var memory:Int = #if cpp ClientPrefs.getPref('MEMType') == 'cpp' ? Std.int(NativeGc.memInfo(0)) : System.totalMemory #else System.totalMemory #end;
 			if (memory > peak) peak = memory;
 
 			if (ClientPrefs.getPref('showMEM')) {

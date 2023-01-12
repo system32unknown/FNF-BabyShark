@@ -15,6 +15,7 @@ class ClientPrefs {
 		'MSFPSCounter' => false,
 		'showFPS' => true,
 		'showMEM' => true,
+		#if cpp 'MEMType' => 'cpp', #end
 		'flashing' => true,
 		'globalAntialiasing' => true,
 		'splashOpacity' => .6,

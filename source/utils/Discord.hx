@@ -4,8 +4,8 @@ import Sys.sleep;
 import discord_rpc.DiscordRpc;
 
 #if LUA_ALLOWED
-import llua.Lua;
 import llua.State;
+using llua.Lua.Lua_helper;
 #end
 
 using StringTools;
@@ -82,7 +82,7 @@ class DiscordClient
 
 	#if LUA_ALLOWED
 	public static function addLuaCallbacks(lua:State) {
-		Lua_helper.add_callback(lua, "changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
+		lua.add_callback("changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
 			changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
 		});
 	}

@@ -18,6 +18,7 @@ import game.Achievements;
 import editors.MasterEditorMenu;
 import utils.ClientPrefs;
 import utils.MathUtil;
+import utils.Version;
 #if desktop
 import utils.Discord.DiscordClient;
 #end
@@ -29,6 +30,7 @@ class MainMenuState extends MusicBeatState
 {
 	final BabySharkVersion:String = '1.0 BETA'; //This is also used for Discord RPC
 	public static var alterEngineVersion:String = '1.0'; //This is also used for Discord RPC
+	
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -170,7 +172,7 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollowPos, null, 1);
 
 		var versionShit:FlxText = new FlxText(FlxG.width - 280, 0, 0, 
-			'Alter Engine v$alterEngineVersion\n' +
+			'Alter Engine v$alterEngineVersion\n (${Version.getGitCommitHash()})' +
 			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
 			12);
 		versionShit.scrollFactor.set();

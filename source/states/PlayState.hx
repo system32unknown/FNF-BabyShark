@@ -31,6 +31,7 @@ import flixel.util.FlxSave;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.KeyboardEvent;
 import openfl.filters.ShaderFilter;
+import openfl.filters.BitmapFilter;
 import editors.ChartingState;
 import editors.CharacterEditorState;
 import animateatlas.AtlasFrameMaker;
@@ -213,6 +214,8 @@ class PlayState extends MusicBeatState
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
+
+	public var shaderFilters:Array<BitmapFilter> = [];
 
 	var dialogue:Array<String> = null;
 
@@ -879,13 +882,6 @@ class PlayState extends MusicBeatState
 		add(luaDebugGroup);
 		#end
 
-		function addAbilityToUnlockAchievements(funkinLua:FunkinLua) {
-			var lua = funkinLua.lua;
-			if (lua != null){
-
-			}
-		}
-
 		// "GLOBAL" SCRIPTS
 		#if LUA_ALLOWED
 		var filesPushed:Array<String> = [];
@@ -1166,7 +1162,7 @@ class PlayState extends MusicBeatState
 		add(iconP2);
 		reloadHealthBarColors();
 
-		scoreTxt = new FlxText(0, Math.floor(healthBarBG.y + 40), FlxG.width, "");
+		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0, "");
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		scoreTxt.visible = !hideHud;
@@ -2681,6 +2677,7 @@ class PlayState extends MusicBeatState
 		}
 
 		note.updateHitbox();
+
 		var prevNote:Note = note.prevNote;
 		if (note.isSustainNote && prevNote != null) {
 			note.offsetX += note.width / 2;
@@ -2711,6 +2708,7 @@ class PlayState extends MusicBeatState
 				note.animation.play(Note.keysShit.get(mania).get('letters')[noteData % tMania]);
 			}
 		}
+		
 		if (note.changeColSwap) {
 			var hsvNumThing = Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData % tMania]);
 			var colSwap = note.colorSwap;
@@ -2720,6 +2718,10 @@ class PlayState extends MusicBeatState
 			colSwap.saturation = arrowHSV[hsvNumThing][1] / 100;
 			colSwap.brightness = arrowHSV[hsvNumThing][2] / 100;
 		}
+	}
+
+	public function addCamFilter(shader:BitmapFilter) {
+		shaderFilters.insert(1, shader);
 	}
 
 	public function changeMania(newValue:Int, skipStrumFadeOut:Bool = false) {
@@ -3028,6 +3030,7 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
+		scoreTxt.x = Math.floor((FlxG.width / 2) - (scoreTxt.width / 2));
 		if (ClientPrefs.getPref('ShowNPSCounter')) {
 			var balls = notesHitArray.length - 1;
 			while (balls >= 0) {
@@ -3064,7 +3067,10 @@ class PlayState extends MusicBeatState
 		}
 
 		switch(ClientPrefs.getPref('IconBounceType')) {
-			case "Vanilla" | "StridentCrisis": // Stolen from Vanilla Engine
+			case "Vanilla":
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.85)));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.85)));
+			case "Kade" | "StridentCrisis": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .5)));
 			case "Psych":
@@ -3822,13 +3828,16 @@ class PlayState extends MusicBeatState
 					screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
 					screenshader.ampmul = 1;
 
+					if (shaderFilters[0] == null)
+						shaderFilters[0] = new ShaderFilter(screenshader.shader);
+
 					switch(value2.trim().toLowerCase()) {
 						case 'camhud' | 'hud':
-							camHUD.setFilters([new ShaderFilter(screenshader.shader)]);
+							camHUD.setFilters(shaderFilters);
 						case 'camother' | 'other':
-							camOther.setFilters([new ShaderFilter(screenshader.shader)]);
+							camOther.setFilters(shaderFilters);
 						default:
-							camGame.setFilters([new ShaderFilter(screenshader.shader)]);
+							camGame.setFilters(shaderFilters);
 					}
 				}
 
@@ -5231,7 +5240,7 @@ class PlayState extends MusicBeatState
 		}
 		
 		switch (ClientPrefs.getPref('IconBounceType')) {
-			case 'Vanilla' | 'Andromeda' | 'Micdup':
+			case 'Vanilla' | 'Andromeda' | 'Micdup' | 'Kade':
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 			case "Psych":
