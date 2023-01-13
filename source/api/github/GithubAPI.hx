@@ -6,10 +6,9 @@ import haxe.Http;
 using StringTools;
 
 class GithubAPI {
-
     public static function getLatestCommits():String {
-        var sha_id:Array<GithubCommits> = getCommits("system32unknown", "FNF-BabyShark");
-        return sha_id[0].sha;
+        var sha_id:GithubCommits = getCommits("system32unknown", "FNF-BabyShark")[0];
+        return sha_id.sha;
     }
 
 	static function getCommits(user:String, commits:String) {
