@@ -97,7 +97,6 @@ class HealthIcon extends FlxSprite
 			centerOrigin();
 			return;
 		} 
-		super.updateHitbox();
 		offset.set(iconOffsets[0], iconOffsets[1]);
 	}
 
