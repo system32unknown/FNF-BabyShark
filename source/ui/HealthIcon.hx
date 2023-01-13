@@ -75,8 +75,7 @@ class HealthIcon extends FlxSprite
 		availableStates = Math.round(graph.width / graph.height);
 		this.char = char;
 		
-		iconOffsets[0] = (width - 150) / availableStates;
-		iconOffsets[1] = (height - 150) / availableStates;
+		iconOffsets[1] = iconOffsets[0] = (width - 150) / 2;
 		
 		loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
 		updateHitbox();

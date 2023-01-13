@@ -12,6 +12,8 @@ import utils.ClientPrefs;
 import utils.Discord.DiscordClient;
 import ui.Overlay;
 
+import api.github.GithubAPI;
+
 //crash handler stuff
 #if CRASH_HANDLER
 import openfl.events.UncaughtErrorEvent;
@@ -25,6 +27,7 @@ using StringTools;
 
 class Main extends Sprite
 {
+	public static var COMMIT_HASH(default, never):String = GithubAPI.getLatestCommits();
 	var game = {
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height
