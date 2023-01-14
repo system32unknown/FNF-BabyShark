@@ -5,6 +5,7 @@ import llua.Lua;
 import llua.LuaL;
 import llua.State;
 import llua.Convert;
+using llua.Lua.Lua_helper;
 #end
 
 import haxe.Constraints.Function;
@@ -57,9 +58,6 @@ import hscript.Interp;
 import utils.Discord;
 #end
 
-#if LUA_ALLOWED
-using llua.Lua.Lua_helper;
-#end
 using StringTools;
 
 class FunkinLua {
