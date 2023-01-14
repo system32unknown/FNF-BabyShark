@@ -17,9 +17,8 @@ class GithubAPI {
 			var url:String = 'https://api.github.com/repos/${user}/${commits}/commits';
 			var data = getGitToJSON(url);
 	
-			if (!(data is Array)) {
+			if (!(data is Array))
 				getGitException(data);
-			}
 
 			return data;
 		} catch(exception) {
