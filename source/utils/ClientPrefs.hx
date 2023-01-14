@@ -5,7 +5,6 @@ import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 import states.TitleState;
 import game.Achievements;
-import utils.Controls.KeyboardScheme;
 
 class ClientPrefs {
 	public static var prefs:Map<String, Dynamic> = [
@@ -431,29 +430,12 @@ class ClientPrefs {
 	}
 
 	public static function reloadControls() {
-		PlayerSettings.player.controls.setKeyboardScheme(KeyboardScheme.Solo);
-
-		TitleState.muteKeys = copyKey(keyBinds.get('volume_mute'));
-		TitleState.volumeDownKeys = copyKey(keyBinds.get('volume_down'));
-		TitleState.volumeUpKeys = copyKey(keyBinds.get('volume_up'));
+		TitleState.muteKeys = keyBinds.get('volume_mute').copy();
+		TitleState.volumeDownKeys = keyBinds.get('volume_down').copy();
+		TitleState.volumeUpKeys = keyBinds.get('volume_up').copy();
 
 		FlxG.sound.muteKeys = TitleState.muteKeys;
 		FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
 		FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
-	}
-	public static function copyKey(arrayToCopy:Array<FlxKey>):Array<FlxKey> {
-		var copiedArray:Array<FlxKey> = arrayToCopy.copy();
-		var len:Int = copiedArray.length;
-		var i:Int = 0;
-
-		while (i < len) {
-			if (copiedArray[i] == NONE) {
-				copiedArray.remove(NONE);
-				i--;
-			}
-			i++;
-			len = copiedArray.length;
-		}
-		return copiedArray;
 	}
 }

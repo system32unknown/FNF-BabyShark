@@ -1,7 +1,6 @@
 package substates;
 
 import utils.Controls;
-import utils.PlayerSettings;
 import flixel.FlxSubState;
 
 class MusicBeatSubstate extends FlxSubState
@@ -9,7 +8,7 @@ class MusicBeatSubstate extends FlxSubState
 	private var controls(get, never):Controls;
 
 	inline function get_controls():Controls
-		return PlayerSettings.player.controls;
+		return Controls.instance;
 
 	public function new() {
 		super();

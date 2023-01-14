@@ -8,7 +8,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
-import utils.PlayerSettings;
+import utils.Controls;
 import states.PlayState;
 
 using StringTools;
@@ -167,7 +167,7 @@ class DialogueBox extends FlxSpriteGroup
 			dialogueStarted = true;
 		}
 
-		if(PlayerSettings.player.controls.ACCEPT) {
+		if(Controls.instance.ACCEPT) {
 			if (dialogueEnded) {
 				if (dialogueList[1] == null && dialogueList[0] != null) {
 					if (!isEnding) {

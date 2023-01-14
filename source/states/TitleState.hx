@@ -17,7 +17,6 @@ import flixel.util.FlxGradient;
 import lime.app.Application;
 import haxe.Json;
 import data.WeekData;
-import utils.PlayerSettings;
 import utils.ClientPrefs;
 import utils.CoolUtil;
 import utils.MathUtil;
@@ -84,9 +83,7 @@ class TitleState extends MusicBeatState
 		FlxG.sound.volumeDownKeys = volumeDownKeys;
 		FlxG.sound.volumeUpKeys = volumeUpKeys;
 		FlxG.keys.preventDefaultKeys = [TAB];
-
-		PlayerSettings.init();
-
+		
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
 		super.create();

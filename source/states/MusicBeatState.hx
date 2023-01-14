@@ -6,7 +6,6 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
 import flixel.FlxCamera;
 import utils.Controls;
-import utils.PlayerSettings;
 import ui.CustomFadeTransition;
 import ui.ErrorDisplay;
 import utils.ClientPrefs;
@@ -31,7 +30,7 @@ class MusicBeatState extends FlxUIState {
 	public static var camBeat:FlxCamera;
 
 	inline function get_controls():Controls
-		return PlayerSettings.player.controls;
+		return Controls.instance;
 
 	private static function getPathWithDir(songFolder:String, songLowercase:String):String {
 		return 'mods/${Paths.currentModDirectory}/data/$songFolder/$songLowercase.json';
