@@ -57,15 +57,15 @@ import hscript.Interp;
 import utils.Discord;
 #end
 
-using StringTools;
 #if LUA_ALLOWED
 using llua.Lua.Lua_helper;
 #end
+using StringTools;
 
 class FunkinLua {
-	public static var Function_Stop:Dynamic = 1;
-	public static var Function_Continue:Dynamic = 0;
-	public static var Function_StopLua:Dynamic = 2;
+	public static var Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
+	public static var Function_Continue:Dynamic = "##PSYCHLUA_FUNCTIONCONTINUE";
+	public static var Function_StopLua:Dynamic = "##PSYCHLUA_FUNCTIONSTOPLUA";
 
 	#if LUA_ALLOWED
 	public var lua:State = null;
@@ -78,6 +78,8 @@ class FunkinLua {
 	public static var hscriptVars:Map<String, Dynamic> = new Map();
 	#end
 	
+	public var scriptCode:String;
+
 	public function new(script:String, ?scriptCode:String) {
 		#if LUA_ALLOWED
 		lua = LuaL.newstate();
@@ -93,7 +95,11 @@ class FunkinLua {
 			Lua.setfield(lua, -2, "path");
 			Lua.pop(lua, 1);
 
-			var result:Int = scriptCode != null ? LuaL.dostring(lua, scriptCode) : LuaL.dofile(lua, script);
+			var result;
+			if(scriptCode != null) 
+				result = LuaL.dostring(lua, scriptCode);
+			else result = LuaL.dofile(lua, script);
+
 			var resultStr:String = Lua.tostring(lua, result);
 			if(resultStr != null && result != 0) {
 				trace('Error on lua script! ' + resultStr);
@@ -109,6 +115,8 @@ class FunkinLua {
 			trace(e);
 			return;
 		}
+		if (scriptCode != null) 
+			this.scriptCode = scriptCode;
 		scriptName = script;
 		initHaxeModule();
 
@@ -246,33 +254,12 @@ class FunkinLua {
 			}
 			PlayState.instance.openSubState(new CustomSubstate(name));
 		});
-
 		addCallback("closeCustomSubstate", function() {
 			if(CustomSubstate.instance != null) {
 				PlayState.instance.closeSubState();
 				CustomSubstate.instance = null;
 				return true;
 			} return false;
-		});
-
-		addCallback("giveAchievement", function(name:String) {
-			var me = this;
-			if (!PlayState.instance.achievementsArray.contains(me)) {
-				luaTrace("giveAchievement: This lua file is not a custom achievement lua.", false, false, FlxColor.RED);
-				return false;
-			}
-			if (Achievements.isAchievementUnlocked(name)) {
-				luaTrace('giveAchievement: Achievement $name is already unlocked.', false, false, FlxColor.YELLOW);
-				return false;
-			}
-
-			@:privateAccess
-			if (PlayState.instance != null) {
-				Achievements.unlockAchievement(name);
-				PlayState.instance.startAchievement(name);
-				ClientPrefs.saveSettings();
-				return true;
-			} else return false;
 		});
 
 		// shader shit
@@ -1169,7 +1156,7 @@ class FunkinLua {
 			return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]);
 		});
 		addCallback("getDominantColor", function(tag:String) {
-			if (tag == null) Lua.pushnil(lua);
+			if (tag == null) return 0;
 			return CoolUtil.dominantColor(getObjectDirectly(tag));
 		});
 
@@ -2387,7 +2374,7 @@ class FunkinLua {
 		addCallback("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
 				var save:FlxSave = new FlxSave();
-				save.bind(name, CoolUtil.getSavePath(folder));
+				save.bind(name, CoolUtil.getSavePath() + '/' + folder);
 				PlayState.instance.modchartSaves.set(name, save);
 				return;
 			}
