@@ -322,14 +322,14 @@ class ClientPrefs {
 		'accept'		=> [SPACE, ENTER],
 		'back'			=> [BACKSPACE, ESCAPE],
 		'pause'			=> [ENTER, ESCAPE],
-		'reset'			=> [R, NONE],
+		'reset'			=> [R],
 		
-		'volume_mute'	=> [ZERO, NONE],
+		'volume_mute'	=> [ZERO],
 		'volume_up'		=> [NUMPADPLUS, PLUS],
 		'volume_down'	=> [NUMPADMINUS, MINUS],
 		
-		'debug_1'		=> [SEVEN, NONE],
-		'debug_2'		=> [EIGHT, NONE]
+		'debug_1'		=> [SEVEN],
+		'debug_2'		=> [EIGHT]
 	];
 	public static var defaultKeys:Map<String, Array<FlxKey>> = keyBinds;
 
