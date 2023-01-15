@@ -1256,7 +1256,6 @@ class PlayState extends MusicBeatState
 		screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		screwYouTxt.scrollFactor.set();
 		screwYouTxt.borderSize = 1;
-		songNameText.y -= 20;
 		screwYouTxt.visible = !hideHud;
 		screwYouTxt.cameras = [camHUD];
 		add(screwYouTxt);
@@ -2303,7 +2302,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function updateScore(miss:Bool = false) {
-		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + (ClientPrefs.getPref('movemissjudge') ? 'Misses: ${songMisses}\n' : '');
+		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + (ClientPrefs.getPref('movemissjudge') ? (ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks: ${songMisses}\n' : 'Misses: ${songMisses}\n') : '');
 		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
 		}
@@ -3826,6 +3825,7 @@ class PlayState extends MusicBeatState
 
 			case '\"Screw you!\" Text Change':
 				if (screwYouTxt.text != null)
+					songNameText.y -= 20;
 					screwYouTxt.text = value1;
 				if(screwYouTxt.text == null || screwYouTxt.text == "")
 					songNameText.y = FlxG.height - songNameText.height;
@@ -4204,15 +4204,15 @@ class PlayState extends MusicBeatState
 		switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter':
 				tempText += (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
-				tempText += (!cpuControlled || ClientPrefs.getPref('movemissjudge') ? '$scoreSeparator Misses:$songMisses ' : '');
+				tempText += (!cpuControlled && !ClientPrefs.getPref('movemissjudge') ? '$scoreSeparator Misses:$songMisses ' : '');
 				tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ranks] - $ratingFC' : ' [?, ?] - ?');
 			case 'Kade':
 				tempText += ' Score:${(!cpuControlled ? songScore : botScore)} ';
-				tempText += (!cpuControlled || ClientPrefs.getPref('movemissjudge') ? '$scoreSeparator Combo Breaks:$songMisses ' : '');
+				tempText += (!cpuControlled && !ClientPrefs.getPref('movemissjudge') ? '$scoreSeparator Combo Breaks:$songMisses ' : '');
 				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 			case 'Style1':
 				tempText += ' Score:${(!cpuControlled ? songScore : botScore)} ';
-				tempText += (!cpuControlled || ClientPrefs.getPref('movemissjudge') ? '$scoreSeparator Misses:$songMisses ' : '');
+				tempText += (!cpuControlled && !ClientPrefs.getPref('movemissjudge') ? '$scoreSeparator Misses:$songMisses ' : '');
 				tempText += '$scoreSeparator Accuracy:$accuracy% ';
 				tempText += '$scoreSeparator Rank: ' + (ratingName != '?' ? '$ranks' : 'N/A');		
 		} 
