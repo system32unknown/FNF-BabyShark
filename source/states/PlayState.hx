@@ -1228,7 +1228,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		judgementCounter.scrollFactor.set();
 		judgementCounter.screenCenter(Y);
-		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + (ClientPrefs.getPref('movemissjudge') ? (ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks: ${songMisses}\n' : 'Misses: ${songMisses}\n') : '');
 		if (ClientPrefs.getPref('ShowJudgementCount')) {
 			add(judgementCounter);
 		}
@@ -1252,16 +1252,14 @@ class PlayState extends MusicBeatState
 		songNameText.visible = !hideHud && ClientPrefs.getPref('ShowWatermark');
 		add(songNameText);
 
-		if(SONG.screwYou != null) {
-			screwYouTxt = new FlxText(2, songNameText.y, 0, SONG.screwYou, 16);
-			screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			screwYouTxt.scrollFactor.set();
-			screwYouTxt.borderSize = 1;
-			songNameText.y -= 20;
-			screwYouTxt.visible = !hideHud;
-			screwYouTxt.cameras = [camHUD];
-			add(screwYouTxt);
-		}
+		screwYouTxt = new FlxText(2, songNameText.y, 0, SONG.screwYou, 16);
+		screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		screwYouTxt.scrollFactor.set();
+		screwYouTxt.borderSize = 1;
+		songNameText.y -= 20;
+		screwYouTxt.visible = !hideHud;
+		screwYouTxt.cameras = [camHUD];
+		add(screwYouTxt);
 
 		var engineName:Array<String> = [for (i in Paths.getTextFromFile('data/EngineList.txt').split('\n')) i.trim()];
 		engineText = new FlxText(0, 0, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (AE " + MainMenuState.alterEngineVersion + ")", 16);
@@ -2305,7 +2303,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function updateScore(miss:Bool = false) {
-		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n';
+		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + (ClientPrefs.getPref('movemissjudge') ? 'Misses: ${songMisses}\n' : '');
 		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
 		}
@@ -3827,13 +3825,11 @@ class PlayState extends MusicBeatState
 				reloadHealthBarColors();
 
 			case '\"Screw you!\" Text Change':
-				if(SONG.screwYou != null) {
-					if (screwYouTxt.text != null)
-						screwYouTxt.text = value1;
-					if(screwYouTxt.text == null || screwYouTxt.text == "")
-						songNameText.y = FlxG.height - songNameText.height;
-					else songNameText.y = (FlxG.height - songNameText.height) - 20;
-				}
+				if (screwYouTxt.text != null)
+					screwYouTxt.text = value1;
+				if(screwYouTxt.text == null || screwYouTxt.text == "")
+					songNameText.y = FlxG.height - songNameText.height;
+				else songNameText.y = (FlxG.height - songNameText.height) - 20;
 			case 'BG Freaks Expression':
 				if(bgGirls != null) bgGirls.swapDanceType();
 
@@ -4198,10 +4194,8 @@ class PlayState extends MusicBeatState
 
 		for (dakey in daKeyText)
 			dakey.font = font;
-		if (SONG.screwYou != null) {
-			screwYouTxt.font = font;
-			screwYouTxt.y = songNameText.y - 20;
-		}
+		screwYouTxt.font = font;
+		screwYouTxt.y = songNameText.y - 20;
 	}
 
 	var scoreSeparator:String = "|";
@@ -4210,15 +4204,15 @@ class PlayState extends MusicBeatState
 		switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter':
 				tempText += (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
-				tempText += (!cpuControlled ? '$scoreSeparator Misses:$songMisses ' : '');
+				tempText += (!cpuControlled || ClientPrefs.getPref('movemissjudge') ? '$scoreSeparator Misses:$songMisses ' : '');
 				tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ranks] - $ratingFC' : ' [?, ?] - ?');
 			case 'Kade':
 				tempText += ' Score:${(!cpuControlled ? songScore : botScore)} ';
-				tempText += (!cpuControlled ? '$scoreSeparator Combo Breaks:$songMisses ' : '');
+				tempText += (!cpuControlled || ClientPrefs.getPref('movemissjudge') ? '$scoreSeparator Combo Breaks:$songMisses ' : '');
 				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 			case 'Style1':
 				tempText += ' Score:${(!cpuControlled ? songScore : botScore)} ';
-				tempText += (!cpuControlled ? '$scoreSeparator Misses:$songMisses ' : '');
+				tempText += (!cpuControlled || ClientPrefs.getPref('movemissjudge') ? '$scoreSeparator Misses:$songMisses ' : '');
 				tempText += '$scoreSeparator Accuracy:$accuracy% ';
 				tempText += '$scoreSeparator Rank: ' + (ratingName != '?' ? '$ranks' : 'N/A');		
 		} 

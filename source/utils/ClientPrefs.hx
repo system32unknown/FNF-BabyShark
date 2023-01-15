@@ -50,6 +50,7 @@ class ClientPrefs {
 		'timeBarType' => 'Time Left',
 		'scoreZoom' => true,
 		'noReset' => false,
+		'movemissjudge' => false,
 		'AltDiscordImg' => false,
 		'healthBarAlpha' => 1,
 		'hitsoundVolume' => 0,
