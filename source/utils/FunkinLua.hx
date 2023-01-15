@@ -174,6 +174,7 @@ class FunkinLua {
 		set('ratingRank', '');
 		set('ratingFC', '');
 		set('version', MainMenuState.alterEngineVersion.trim());
+		set('commit_hash', Main.COMMIT_HASH.trim());
 
 		set('inGameOver', false);
 		set('mustHitSection', PlayState.SONG.notes[0].mustHitSection);

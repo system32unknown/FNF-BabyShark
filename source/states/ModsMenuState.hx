@@ -115,9 +115,7 @@ class ModsMenuState extends MusicBeatState
 		var startX:Int = 1120;
 
 		buttonToggle = new FlxButton(startX, 0, "ON", function() {
-			if(mods[curSelected].restart) {
-				needaReset = true;
-			}
+			if(mods[curSelected].restart) needaReset = true;
 			modsList[curSelected][1] = !modsList[curSelected][1];
 			updateButtonToggle();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);

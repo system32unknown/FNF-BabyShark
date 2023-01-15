@@ -66,9 +66,6 @@ import VideoHandler;
 
 #if LUA_ALLOWED
 using llua.Lua.Lua_helper;
-import llua.LuaL;
-import llua.State;
-import llua.Convert;
 #end
 
 using StringTools;

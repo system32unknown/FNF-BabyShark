@@ -1,6 +1,9 @@
 package ui;
 
+#if cpp
+import cpp.vm.Gc;
 import cpp.NativeGc;
+#end
 import haxe.Timer;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
@@ -9,7 +12,7 @@ import flixel.util.FlxColor;
 import utils.ClientPrefs;
 
 /**
-	The Advanced FPS class provides an easy-to-use monitor to display
+	The Overlay class provides an easy-to-use monitor to display
 	the current frame rate of an OpenFL project
 **/
 class Overlay extends TextField
@@ -58,6 +61,16 @@ class Overlay extends TextField
 		return size + " " + intervalArray[data] + " \n";
 	}
 
+	function getMemoryUsage(type:String):Int {
+		var mem = 0;
+		switch (type) {
+			case "cpp": mem = Std.int(NativeGc.memInfo(0));
+			case "system": mem = System.totalMemory;
+			case "gc": mem = Std.int(Gc.memInfo64(Gc.MEM_INFO_USAGE));
+		}
+		return mem;
+	}
+
 	override function __enterFrame(dt:Float):Void {
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + 1;
@@ -78,7 +91,7 @@ class Overlay extends TextField
 			text = '';
 			text += (ClientPrefs.getPref('showFPS') ? 'FPS: $currentFPS${ClientPrefs.getPref('MSFPSCounter') ? ' [MS: $dt]' : ''}\n' : "");
 
-			var memory:Int = #if cpp ClientPrefs.getPref('MEMType') == 'cpp' ? Std.int(NativeGc.memInfo(0)) : System.totalMemory #else System.totalMemory #end;
+			var memory:Int = getMemoryUsage(ClientPrefs.getPref('MEMType'));
 			if (memory > peak) peak = memory;
 
 			if (ClientPrefs.getPref('showMEM')) {

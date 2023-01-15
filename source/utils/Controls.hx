@@ -48,7 +48,6 @@ class Controls {
 	public var NOTE_DOWN_R(get, never):Bool;
 	public var NOTE_LEFT_R(get, never):Bool;
 	public var NOTE_RIGHT_R(get, never):Bool;
-
 	function get_UI_UP_R() return justReleased('ui_up');
 	function get_UI_DOWN_R() return justReleased('ui_down');
 	function get_UI_LEFT_R() return justReleased('ui_left');
@@ -62,7 +61,6 @@ class Controls {
 	public var BACK(get, never):Bool;
 	public var PAUSE(get, never):Bool;
 	public var RESET(get, never):Bool;
-
 	function get_ACCEPT() return justPressed('accept');
 	function get_BACK() return justPressed('back');
 	function get_PAUSE() return justPressed('pause');

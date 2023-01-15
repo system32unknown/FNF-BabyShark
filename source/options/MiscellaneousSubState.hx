@@ -42,8 +42,8 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			'',
 			'MEMType',
 			'string',
-			'Time Left',
-			['cpp', 'system']);
+			'system',
+			['cpp', 'system', 'gc']);
 		addOption(option);
 		#end
 
