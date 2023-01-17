@@ -51,7 +51,7 @@ import data.StageData.StageFile;
 import data.EkData.Keybinds;
 import data.*;
 
-#if !flash 
+#if !flash
 import flixel.addons.display.FlxRuntimeShader;
 #end
 
@@ -60,9 +60,8 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
-#if VIDEOS_ALLOWED
-import VideoHandler;
-#end
+import handlers.PsychVideo;
+import handlers.CutsceneHandler;
 
 #if LUA_ALLOWED
 using llua.Lua.Lua_helper;
@@ -1632,29 +1631,11 @@ class PlayState extends MusicBeatState
 		char.y += char.positionArray[1];
 	}
 
-	public function startVideo(name:String)
-	{
+	public function loadVideo(name:String) {
 		#if VIDEOS_ALLOWED
-		inCutscene = true;
-
-		var filepath:String = Paths.video(name);
-		#if sys
-		if(!FileSystem.exists(filepath))
-		#else
-		if(!OpenFlAssets.exists(filepath))
-		#end
-		{
-			FlxG.log.warn('Couldnt find video file: ' + name);
-			startAndEnd();
-			return;
-		}
-
-		var video:VideoHandler = new VideoHandler();
-		video.playVideo(filepath);
-		video.finishCallback = function() {
-			startAndEnd();
-			return;
-		}
+		var videoHandler:PsychVideo = new PsychVideo();
+		videoHandler.loadCutscene(name);
+		return;
 		#else
 		FlxG.log.warn('Platform not supported!');
 		startAndEnd();
@@ -1662,7 +1643,65 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	function startAndEnd() {
+	public function startVideo(name:String) {
+		#if VIDEOS_ALLOWED
+		inCutscene = true;
+
+		var videoHandler:PsychVideo = new PsychVideo(function() {
+			FlxG.log.warn('Couldnt find video file: ' + name);
+			startAndEnd();
+			return;
+		});
+		videoHandler.startVideo(name);
+		return;
+		#else
+		FlxG.log.warn('Platform not supported!');
+		startAndEnd();
+		return;
+		#end
+	}
+
+	/**
+		Renders a Video Sprite on Screen
+		@param name [the Video Name in the "assets/videos" folder]
+		@param x [the Horizontal Position of the Rendered Video]
+		@param y [the Vertical Position of the Rendered Video]
+		@param op [the Opacity of the Rendered Video]
+		@param strCamera [the camera that should be used for rendering the video (e.g: hud)]
+		@param loop [if the Video should play from the start once it's done]
+		@param pauseMusic [if the Current Song should be paused while playing the video]
+	**/
+	public function startVideoSprite(name:String, x:Float = 0, y:Float = 0, op:Float = 1, strCamera:String = 'world',
+		?loop:Bool = false, ?pauseMusic:Bool = false)
+	{
+		#if VIDEOS_ALLOWED
+		var myCamera:FlxCamera = camGame;
+		// stinks but whatever
+		switch (strCamera) {
+			case 'alt' | 'other' | 'above': myCamera = camOther;
+			case 'hud' | 'ui' | 'interface': myCamera = camHUD;
+			default: myCamera = camGame;
+		}
+
+		var videoHandler:PsychVideo = new PsychVideo(function() {
+			startAndEnd();
+			return;
+		});
+		var video:FlxSprite = null;
+
+		video = videoHandler.startVideoSprite(x, y, op, name, myCamera, loop, pauseMusic);
+		if (video == null) return;
+		add(video);
+
+		return;
+		#else
+		FlxG.log.warn('Platform not supported!');
+		startAndEnd();
+		return;
+		#end
+	}
+
+	public function startAndEnd() {
 		if(endingSong) endSong();
 		else startCountdown();
 	}
@@ -1774,8 +1813,7 @@ class PlayState extends MusicBeatState
 		});
 	}
 
-	function tankIntro()
-	{
+	function tankIntro() {
 		var cutsceneHandler:CutsceneHandler = new CutsceneHandler();
 
 		var songName:String = Paths.formatToSongPath(SONG.song);
@@ -2583,6 +2621,9 @@ class PlayState extends MusicBeatState
 					phillyGlowParticles.visible = false;
 					insert(members.indexOf(phillyGlowGradient) + 1, phillyGlowParticles);
 				}
+
+			case 'Play Video Sprite':
+				loadVideo(Std.string(event.value1));
 		}
 
 		if(!eventPushedMap.exists(event.event)) {
@@ -2811,6 +2852,9 @@ class PlayState extends MusicBeatState
 			FlxTween.globalManager.forEach(function(twn:FlxTween) {
 				if (!twn.finished) twn.active = true;
 			});
+
+			PsychVideo.isActive(true);
+
 			paused = false;
 			callOnLuas('onResume', []);
 
@@ -2838,6 +2882,7 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
+		PsychVideo.isActive(true);
 		super.onFocus();
 	}
 
@@ -2849,6 +2894,7 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
+		PsychVideo.isActive(false);
 		super.onFocusLost();
 	}
 
@@ -3385,6 +3431,8 @@ class PlayState extends MusicBeatState
 			if (!twn.finished) twn.active = false;
 		});
 
+		PsychVideo.isActive(false);
+
 		persistentUpdate = false;
 		persistentDraw = true;
 		paused = true;
@@ -3874,6 +3922,19 @@ class PlayState extends MusicBeatState
 						}
 					});
 				}
+
+			case 'Play Video Sprite':
+				var contents:Array<Dynamic> = [0, 0, 1, 'world'];
+				if (Std.string(value2) != null && Std.string(value2).length > 1) {
+					contents = Std.string(value2).split(',');
+				}
+
+				var x:Float = Std.parseFloat(contents[0]);
+				var y:Float = Std.parseFloat(contents[1]);
+				var op:Float = Std.parseFloat(contents[2]);
+				var cam:String = Std.string(contents[3]);
+
+				startVideoSprite(Std.string(value1), x, y, op, cam);
 
 			case 'Set Property':
 				var trueVal:Dynamic = null;
@@ -5216,6 +5277,7 @@ class PlayState extends MusicBeatState
 		
 		FlxAnimationController.globalSpeed = 1;
 		FlxG.sound.music.pitch = 1;
+		PsychVideo.clearAll();
 		super.destroy();
 	}
 

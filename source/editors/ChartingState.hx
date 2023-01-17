@@ -102,6 +102,7 @@ class ChartingState extends MusicBeatState
 		['Change Mania', "Value 1: The new mania value (min: " + Note.minMania + "; max: " + Note.maxMania + ")\nValue 2: Skip old strum fade tween\nPut 'true' to skip it, anything else or blank to not."],
 		['\"Screw you!\" Text Change', "Value 1: Text\n\nChanges the \"Screw you!\" text."],
 		['Rainbow Eyesore', "Value 1: Step to end, Speed\nValue 2: Camera Type"],
+		['Play Video Sprite', "Value 1: Video Name (must be on the \"Videos\" Folder\nValue 2: X Position, Y Position, Opacity, Camera\nX and Y and Opacity are Float Values (e.g 1.5)\nCamera is a String (e.g: 'world')\n\nvalues are separated by commas."],
 	];
 
 	var _file:FileReference;

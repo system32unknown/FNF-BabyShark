@@ -2053,13 +2053,21 @@ class FunkinLua {
 			return false;
 
 			#else
-			new FlxTimer().start(0.05, function(tmr:FlxTimer) {
-				if(PlayState.instance.endingSong) {
-					PlayState.instance.endSong();
-				} else {
-					PlayState.instance.startCountdown();
-				}
-			});
+			PlayState.instance.startAndEnd();
+			return true;
+			#end
+		});
+		addCallback("startVideoSprite", function(videoFile:String, x:Float = 0, y:Float = 0, op:Float = 1, cam:String = 'world', ?loop:Bool = false, ?pauseMusic:Bool = false) {
+			#if VIDEOS_ALLOWED
+			if(FileSystem.exists(Paths.video(videoFile))) {
+				PlayState.instance.startVideoSprite(videoFile, x, y, op, cam, loop, pauseMusic);
+				return true;
+			} else {
+				luaTrace('startVideoSprite: Video file not found: ' + videoFile, false, false, FlxColor.RED);
+			}
+			return false;
+			#else
+			PlayState.instance.startAndEnd();
 			return true;
 			#end
 		});
