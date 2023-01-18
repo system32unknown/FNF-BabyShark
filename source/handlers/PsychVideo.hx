@@ -91,8 +91,7 @@ class PsychVideo {
 				if (resume) {
 					videos[v].resume();
 					sprites[s].bitmap.resume();
-				}
-				else {
+				} else {
 					videos[v].pause();
 					sprites[s].bitmap.pause();
 				}
@@ -106,7 +105,7 @@ class PsychVideo {
 				videos[v].dispose();
 				sprites[s].bitmap.dispose();
 				sprites[s].kill();
-				//
+
 				videos = [];
 				sprites = [];
 			}

@@ -803,7 +803,6 @@
 		"player3": "gf",
 		"song": "Bopeebo",
 		"needsVoices": true,
-		"validScore": true,
 		"bpm": 100,
 		"speed": 1
 	}

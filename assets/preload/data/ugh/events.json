@@ -119,11 +119,9 @@
 		],
 		"notes": [],
 		"splashSkin": null,
-		"validScore": false,
 		"gfVersion": "gf-tankmen",
 		"bpm": 160,
 		"arrowSkin": null,
-		"needsVoices": true,
-		"song": "Ugh"
+		"needsVoices": true,"song": "Ugh"
 	}
 }

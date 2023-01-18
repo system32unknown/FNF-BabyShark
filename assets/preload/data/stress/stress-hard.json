@@ -5075,7 +5075,6 @@
 		"song": "Stress",
 		"stage": "tank",
 		"needsVoices": true,
-		"validScore": true,
 		"bpm": 178,
 		"speed": 2.6
 	}
