@@ -1216,15 +1216,14 @@ class PlayState extends MusicBeatState
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		
+		if (ClientPrefs.getPref('HealthTypes') == 'Psych') {
+			iconP1.isPsych = true;
+			iconP2.isPsych = true;
+		}
 		if (ClientPrefs.getPref('ScoreType') == 'Psych') {
 			scoreTxt.y = healthBarBG.y + 36;
 			scoreTxt.borderSize = 1.25;
 			scoreTxt.size = 20;
-
-			if (ClientPrefs.getPref('HealthTypes') == 'Psych') {
-				iconP1.isPsych = true;
-				iconP2.isPsych = true;
-			}
 		}
 
 		scoreTxt.visible = !hideHud;
