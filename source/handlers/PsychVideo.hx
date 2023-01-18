@@ -9,8 +9,8 @@ import sys.FileSystem;
 import openfl.Assets as OpenFlAssets;
 #end
 #if VIDEOS_ALLOWED
-import VideoHandler;
-import VideoSprite;
+import hxcodec.VideoHandler;
+import hxcodec.VideoSprite;
 
 /**
 	Handles the execution of Video Cutscenes and Video Sprites with hxCodec
@@ -30,8 +30,7 @@ class PsychVideo {
 		var filepath:String = Paths.video(name);
 		if (#if sys !FileSystem.exists(filepath) #else !OpenFlAssets.exists(filepath) #end) {
 			FlxG.log.warn('Couldnt find video file: ' + name);
-			if (endFunc != null)
-				endFunc();
+			if (endFunc != null) endFunc();
 			return false;
 		}
 		return true;
@@ -42,7 +41,7 @@ class PsychVideo {
 		if (!exists(name))
 			return;
 
-		var loader:VideoSprite = new VideoSprite(0, 0);
+		var loader:VideoSprite = new VideoSprite();
 		loader.playVideo(path);
 
 		// stop it immediately
@@ -69,8 +68,7 @@ class PsychVideo {
 		?pauseMusic:Bool = false):FlxSprite {
 		//
 		var path:String = Paths.video(name);
-		if (!exists(name))
-			return null;
+		if (!exists(name)) return null;
 
 		var newSprite:VideoSprite = new VideoSprite(x, y);
 		newSprite.bitmap.canSkip = false;

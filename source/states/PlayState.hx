@@ -1553,6 +1553,7 @@ class PlayState extends MusicBeatState
 
 	public function reloadHealthBarColors() {
 		healthBar.createFilledBar(dad.getColor(), boyfriend.getColor());
+		healthBar.createImageFilledBar(Paths.image("healthBarOverlay"), boyfriend.getColor());
 		timeBar.createGradientBar([FlxColor.BLACK], [dad.getColor(), boyfriend.getColor()], 1, 90);
 
 		healthBar.updateBar();
@@ -3238,7 +3239,7 @@ class PlayState extends MusicBeatState
 							case 'Time Position': timeTxt.text = timePos;
 							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal) + ")";
 							case 'Name Time Position': timeTxt.text = SONG.song + " (" + timePos + ")";
-							case 'Name Percent': timeTxt.text = ' ${SONG.song} ($songPercent%)';
+							case 'Name Percent': timeTxt.text = '${SONG.song} (${Math.fround(songPercent) * 100}%)';
 						}
 				}
 			}
