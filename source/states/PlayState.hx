@@ -1271,7 +1271,7 @@ class PlayState extends MusicBeatState
 		var engineName:Array<String> = [for (i in Paths.getTextFromFile('data/EngineList.txt').split('\n')) i.trim()];
 		engineText = new FlxText(0, 0, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (AE " + MainMenuState.alterEngineVersion + ")", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
-		screwYouTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		engineText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		engineText.scrollFactor.set();
 		engineText.setPosition(FlxG.width - engineText.width, FlxG.height - engineText.height);
 		engineText.visible = !hideHud && ClientPrefs.getPref('ShowWatermark');
