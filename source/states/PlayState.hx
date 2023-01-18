@@ -1221,7 +1221,7 @@ class PlayState extends MusicBeatState
 			scoreTxt.borderSize = 1.25;
 			scoreTxt.size = 20;
 
-			if (ClientPrefs.getPref('ScoreType') == 'Psych') {
+			if (ClientPrefs.getPref('HealthTypes') == 'Psych') {
 				iconP1.isPsych = true;
 				iconP2.isPsych = true;
 			}
@@ -1553,7 +1553,6 @@ class PlayState extends MusicBeatState
 
 	public function reloadHealthBarColors() {
 		healthBar.createFilledBar(dad.getColor(), boyfriend.getColor());
-		healthBar.createImageFilledBar(Paths.image("healthBarOverlay"), boyfriend.getColor());
 		timeBar.createGradientBar([FlxColor.BLACK], [dad.getColor(), boyfriend.getColor()], 1, 90);
 
 		healthBar.updateBar();
@@ -1625,7 +1624,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	public function getLuaObject(tag:String, text:Bool=true):FlxSprite {
+	public function getLuaObject(tag:String, text:Bool = true):FlxSprite {
 		if(modChartSprites.exists(tag)) return modChartSprites.get(tag);
 		if(text && modchartTexts.exists(tag)) return modchartTexts.get(tag);
 		if(variables.exists(tag)) return variables.get(tag);
@@ -3239,7 +3238,7 @@ class PlayState extends MusicBeatState
 							case 'Time Position': timeTxt.text = timePos;
 							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal) + ")";
 							case 'Name Time Position': timeTxt.text = SONG.song + " (" + timePos + ")";
-							case 'Name Percent': timeTxt.text = '${SONG.song} (${timeBar.percent}}%)';
+							case 'Name Percent': timeTxt.text = '${SONG.song} (${timeBar.percent}%)';
 						}
 				}
 			}
