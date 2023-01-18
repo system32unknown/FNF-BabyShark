@@ -307,8 +307,6 @@ class PlayState extends MusicBeatState
 	public static var seenCutscene:Bool = false;
 	public static var deathCounter:Int = 0;
 
-	public static var pauseTimeTxt:String = "00:00 / 00:00";
-
 	public var defaultCamZoom:Float = 1.05;
 	public var defaultHudCamZoom:Float = 1.0;
 
@@ -3142,8 +3140,8 @@ class PlayState extends MusicBeatState
 
 		switch(ClientPrefs.getPref('IconBounceType')) {
 			case "Vanilla":
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.85)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.85)));
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .85)));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .85)));
 			case "Kade" | "StridentCrisis": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .5)));
@@ -3161,7 +3159,7 @@ class PlayState extends MusicBeatState
 			case "Purgatory": // Stolen from Dave And Bambi
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .8)), Std.int(FlxMath.lerp(150, iconP1.height, .8)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .8)), Std.int(FlxMath.lerp(150, iconP2.height, .8)));
-			case "DaveAndBambi":
+			case "Dave":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
 		}
@@ -3233,13 +3231,14 @@ class PlayState extends MusicBeatState
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
 					if (secondsTotal < 0) secondsTotal = 0;
 
-					pauseTimeTxt = FlxStringUtil.formatTime(secondsTotal, false) + " / " + FlxStringUtil.formatTime(Math.floor(songLength / 1000), false);
+					var timePos:String = FlxStringUtil.formatTime(secondsTotal) + " / " + FlxStringUtil.formatTime(Math.floor(songLength / 1000));
 					if (timebarType != 'Song Name')
 						switch (timebarType) {
-							case 'Time Left' | 'Time Elapsed': timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
-							case 'Time Position': timeTxt.text = pauseTimeTxt;
-							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal, false) + ")";
-							case 'Name Time Position': timeTxt.text = SONG.song + " (" + pauseTimeTxt + ")";
+							case 'Time Left' | 'Time Elapsed': timeTxt.text = FlxStringUtil.formatTime(secondsTotal);
+							case 'Time Position': timeTxt.text = timePos;
+							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal) + ")";
+							case 'Name Time Position': timeTxt.text = SONG.song + " (" + timePos + ")";
+							case 'Name Percent': timeTxt.text = ' ${SONG.song} ($songPercent%)';
 						}
 				}
 			}
@@ -5359,7 +5358,7 @@ class PlayState extends MusicBeatState
 					FlxTween.angle(iconP1, -30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 					FlxTween.angle(iconP2, 30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 				}
-			case "DaveAndBambi":
+			case "Dave":
 				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), .1);
 	
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));

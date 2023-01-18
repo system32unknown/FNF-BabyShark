@@ -3,9 +3,10 @@ package handlers;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import openfl.Assets as OpenFlAssets;
 #if sys
 import sys.FileSystem;
+#else
+import openfl.Assets as OpenFlAssets;
 #end
 #if VIDEOS_ALLOWED
 import VideoHandler;

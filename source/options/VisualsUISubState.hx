@@ -36,7 +36,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'timeBarType',
 			'string',
 			'Time Left',
-			['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Disabled']);
+			['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Name Percent', 'Disabled']);
 		addOption(option);
 
 		var option:Option = new Option('Icon Bounce:',
@@ -44,7 +44,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'IconBounceType',
 			'string',
 			'Psych',
-			['Vanilla', 'Kade', 'Psych', 'Andromeda', 'DaveAndBambi', 'Purgatory', 'GoldenApple', 'StridentCrisis', 'Micdup', 'BabyShark', 'Custom']);
+			['Vanilla', 'Kade', 'Psych', 'Andromeda', 'Dave', 'Purgatory', 'GoldenApple', 'StridentCrisis', 'Micdup', 'BabyShark', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Health Bar Types:',
