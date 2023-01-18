@@ -60,7 +60,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'ScoreType',
 			'string',
 			'Psych',
-			['Alter', 'Kade', 'Style1']);
+			['Alter', 'Kade', 'Style1', 'Psych']);
 		addOption(option);
 
 		var option:Option = new Option('Rating Display:',

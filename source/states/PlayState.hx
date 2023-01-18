@@ -1217,6 +1217,18 @@ class PlayState extends MusicBeatState
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0, "");
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		
+		if (ClientPrefs.getPref('ScoreType') == 'Psych') {
+			scoreTxt.y = healthBarBG.y + 36;
+			scoreTxt.borderSize = 1.25;
+			scoreTxt.size = 20;
+
+			if (ClientPrefs.getPref('ScoreType') == 'Psych') {
+				iconP1.isPsych = true;
+				iconP2.isPsych = true;
+			}
+		}
+
 		scoreTxt.visible = !hideHud;
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
@@ -4263,9 +4275,12 @@ class PlayState extends MusicBeatState
 
 		switch (ClientPrefs.getPref('ScoreType')) {
 			case 'Alter' | 'Style1':
-				missText = (sepa == '\n' ? 'Misses: $songMisses' : '$scoreSeparator Misses:$songMisses') + sepa;
+				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses:$songMisses' + sepa;
 			case 'Kade':
-				missText = (sepa == '\n' ? 'Combo Breaks: $songMisses' : '$scoreSeparator Combo Breaks:$songMisses') + sepa;
+				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:$songMisses' : 'Combo Breaks: $songMisses'}' + sepa;
+			case 'Psych':
+				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses: $songMisses' + sepa;
+
 		} return missText;
 	}
 
@@ -4277,6 +4292,10 @@ class PlayState extends MusicBeatState
 				tempText += (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
 				tempText += tempMiss;
 				tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ranks] - $ratingFC' : ' [?, ?] - ?');
+			case 'Psych':
+				tempText += ' Score: ${!cpuControlled ? songScore : botScore} ';
+				tempText += tempMiss;
+				tempText += '$scoreSeparator Rating: ' + (ratingName != '?' ? '$ratingName ($accuracy%) - $ratingFC' : '?');
 			case 'Kade':
 				tempText += ' Score:${(!cpuControlled ? songScore : botScore)} ';
 				tempText += tempMiss;
