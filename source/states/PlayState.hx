@@ -3239,7 +3239,7 @@ class PlayState extends MusicBeatState
 							case 'Time Position': timeTxt.text = timePos;
 							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal) + ")";
 							case 'Name Time Position': timeTxt.text = SONG.song + " (" + timePos + ")";
-							case 'Name Percent': timeTxt.text = '${SONG.song} (${Math.fround(songPercent) * 100}%)';
+							case 'Name Percent': timeTxt.text = '${SONG.song} (${timeBar.percent}}%)';
 						}
 				}
 			}
