@@ -615,7 +615,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(new FlxText(stepperMania.x, stepperMania.y - 15, 0, 'Mania:'));
 		tab_group_song.add(new FlxText(player2DropDown.x, player2DropDown.y - 15, 0, '(P2) Opponent:'));
 		tab_group_song.add(new FlxText(gfVersionDropDown.x, gfVersionDropDown.y - 15, 0, '(P3) GF:'));
-		tab_group_song.add(new FlxText(player1DropDown.x, player1DropDown.y - 15, 0, 'P1 (BF):'));
+		tab_group_song.add(new FlxText(player1DropDown.x, player1DropDown.y - 15, 0, '(P1) BF:'));
 		tab_group_song.add(new FlxText(difficultyDropDown.x, difficultyDropDown.y - 15, 0, 'Difficulty:'));
 		tab_group_song.add(new FlxText(stageDropDown.x, stageDropDown.y - 15, 0, 'Stage:'));
 		tab_group_song.add(new FlxText(screwYouInputText.x, screwYouInputText.y - 15, 0, 'Screw You Text:'));

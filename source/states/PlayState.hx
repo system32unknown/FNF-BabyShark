@@ -1242,9 +1242,9 @@ class PlayState extends MusicBeatState
 		}
 
 		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
-		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		botplayTxt.scrollFactor.set();
-		botplayTxt.borderSize = 1;
 		botplayTxt.visible = cpuControlled;
 		botplayTxt.screenCenter(X);
 		add(botplayTxt);
@@ -1253,26 +1253,26 @@ class PlayState extends MusicBeatState
 		}
 
 		songNameText = new FlxText(2, 0, 0, SONG.song + " - " + storyDifficultyText + (playbackRate != 1 ? ' ($playbackRate' + 'x)' : ''), 16);
-		songNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		songNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
+		songNameText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		songNameText.scrollFactor.set();
-		songNameText.borderSize = 1;
 		songNameText.y = FlxG.height - songNameText.height;
 		songNameText.visible = !hideHud && ClientPrefs.getPref('ShowWatermark');
 		add(songNameText);
 
-		screwYouTxt = new FlxText(2, songNameText.y, 0, SONG.screwYou, 16);
-		screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		screwYouTxt = new FlxText(2, songNameText.y, 0, SONG.screwYou.trim(), 16);
+		screwYouTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
+		screwYouTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		screwYouTxt.scrollFactor.set();
-		screwYouTxt.borderSize = 1;
 		screwYouTxt.visible = !hideHud;
 		screwYouTxt.cameras = [camHUD];
 		add(screwYouTxt);
 
 		var engineName:Array<String> = [for (i in Paths.getTextFromFile('data/EngineList.txt').split('\n')) i.trim()];
 		engineText = new FlxText(0, 0, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (AE " + MainMenuState.alterEngineVersion + ")", 16);
-		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
+		screwYouTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		engineText.scrollFactor.set();
-		engineText.borderSize = 1;
 		engineText.setPosition(FlxG.width - engineText.width, FlxG.height - engineText.height);
 		engineText.visible = !hideHud && ClientPrefs.getPref('ShowWatermark');
 		add(engineText);
