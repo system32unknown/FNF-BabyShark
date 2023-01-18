@@ -1114,10 +1114,10 @@ class PlayState extends MusicBeatState
 
 		var showTime:Bool = (ClientPrefs.getPref('timeBarType') != 'Disabled');
 		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 20, 400, "", 32);
-		timeTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		timeTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
+		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
-		timeTxt.borderSize = 1;
 		timeTxt.visible = showTime;
 		if(downScroll) timeTxt.y = FlxG.height - 35;
 
