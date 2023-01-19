@@ -1270,6 +1270,9 @@ class PlayState extends MusicBeatState
 		screwYouTxt.cameras = [camHUD];
 		add(screwYouTxt);
 
+		if (screwYouTxt.text == null || screwYouTxt.text != "")
+			songNameText.y -= 20;
+
 		var engineName:Array<String> = [for (i in Paths.getTextFromFile('data/EngineList.txt').split('\n')) i.trim()];
 		engineText = new FlxText(0, 0, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (AE " + MainMenuState.alterEngineVersion + ")", 16);
 		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
@@ -3888,7 +3891,8 @@ class PlayState extends MusicBeatState
 
 			case '\"Screw you!\" Text Change':
 				if (screwYouTxt.text != null)
-					songNameText.y -= 20;
+					if (songNameText.y != songNameText.y - 20)
+						songNameText.y -= 20;
 					screwYouTxt.text = value1;
 				if(screwYouTxt.text == null || screwYouTxt.text == "")
 					songNameText.y = FlxG.height - songNameText.height;
