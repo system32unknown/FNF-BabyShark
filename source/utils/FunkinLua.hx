@@ -75,8 +75,6 @@ class FunkinLua {
 	public var hscript:HScript;
 	public static var hscriptVars:Map<String, Dynamic> = new Map();
 	#end
-	
-	public var scriptCode:String;
 
 	public function new(script:String, ?scriptCode:String) {
 		#if LUA_ALLOWED
@@ -113,8 +111,6 @@ class FunkinLua {
 			trace(e);
 			return;
 		}
-		if (scriptCode != null) 
-			this.scriptCode = scriptCode;
 		scriptName = script;
 		initHaxeModule();
 
