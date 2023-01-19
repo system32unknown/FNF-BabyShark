@@ -1238,10 +1238,9 @@ class PlayState extends MusicBeatState
 		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		judgementCounter.scrollFactor.set();
 		judgementCounter.screenCenter(Y);
+		judgementCounter.visible = ClientPrefs.getPref('ShowJudgementCount') && !hideHud;
 		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + getMissText(cpuControlled, !ClientPrefs.getPref('movemissjudge'), '\n');
-		if (ClientPrefs.getPref('ShowJudgementCount')) {
-			add(judgementCounter);
-		}
+		add(judgementCounter);
 
 		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
@@ -2353,6 +2352,7 @@ class PlayState extends MusicBeatState
 
 	public function updateScore(miss:Bool = false) {
 		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + getMissText(cpuControlled, !ClientPrefs.getPref('movemissjudge'), '\n');
+		judgementCounter.screenCenter(Y);
 		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
 		}
@@ -4262,6 +4262,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.font = font;
 		botplayTxt.font = font;
 		judgementCounter.font = font;
+		judgementCounter.screenCenter(Y);
 		timeTxt.font = font;
 
 		songNameText.font = font;
