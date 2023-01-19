@@ -284,7 +284,6 @@ class PlayState extends MusicBeatState
 	public var scoreTxt:FlxText;
 
 	var scoreTxtTween:FlxTween;
-	var judgementTween:FlxTween;
 
 	var daKeyText:Array<FlxText> = [];
 
@@ -2340,15 +2339,6 @@ class PlayState extends MusicBeatState
 				ease: FlxEase.backOut,
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
-				}
-			});
-
-			if (judgementTween != null) judgementTween.cancel();
-			
-			judgementCounter.scale.set(1.1, 1.1);
-			judgementTween = FlxTween.tween(judgementCounter.scale, {x: 1, y: 1}, .2 * playbackRate, {
-				onComplete: function(twn:FlxTween) {
-					judgementTween = null;
 				}
 			});
 		}
