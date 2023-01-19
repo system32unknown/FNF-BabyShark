@@ -282,7 +282,9 @@ class PlayState extends MusicBeatState
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
+
 	var scoreTxtTween:FlxTween;
+	var judgementTween:FlxTween;
 
 	var daKeyText:Array<FlxText> = [];
 
@@ -1354,7 +1356,6 @@ class PlayState extends MusicBeatState
 
 					FlxTween.tween(whiteScreen, {alpha: 0}, 1 * playbackRate, {
 						startDelay: 0.1,
-						ease: FlxEase.linear,
 						onComplete: function(twn:FlxTween) {
 							camHUD.visible = true;
 							remove(whiteScreen);
@@ -1373,7 +1374,6 @@ class PlayState extends MusicBeatState
 					inCutscene = true;
 
 					FlxTween.tween(blackScreen, {alpha: 0}, 0.7 * playbackRate, {
-						ease: FlxEase.linear,
 						onComplete: function(twn:FlxTween) {
 							remove(blackScreen);
 						}
@@ -2354,14 +2354,22 @@ class PlayState extends MusicBeatState
 			UpdateScoreText();
 		}
 		if(ClientPrefs.getPref('scoreZoom') && !miss) {
-			if (scoreTxtTween != null) {
-				scoreTxtTween.cancel();
-			}
+			if (scoreTxtTween != null) scoreTxtTween.cancel();
+
 			scoreTxt.scale.set(1.1, 1.1);
 			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, .2 * playbackRate, {
 				ease: FlxEase.backOut,
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
+				}
+			});
+
+			if (judgementTween != null) judgementTween.cancel();
+			
+			judgementCounter.scale.set(1.1, 1.1);
+			judgementTween = FlxTween.tween(judgementCounter.scale, {x: 1, y: 1}, .2 * playbackRate, {
+				onComplete: function(twn:FlxTween) {
+					judgementTween = null;
 				}
 			});
 		}
@@ -3144,7 +3152,7 @@ class PlayState extends MusicBeatState
 			case "Kade" | "StridentCrisis": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .5)));
-			case "Psych" | "OS":
+			case "Psych":
 				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP1.scale.set(mult, mult);
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
@@ -3923,7 +3931,7 @@ class PlayState extends MusicBeatState
 				if(val2 <= 0) {
 					songSpeed = newValue;
 				} else {
-					songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, val2 * playbackRate, {ease: FlxEase.linear, 
+					songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, val2 * playbackRate, {
 						onComplete: function (twn:FlxTween) {
 							songSpeedTween = null;
 						}
@@ -4340,14 +4348,14 @@ class PlayState extends MusicBeatState
 			if(!note.ratingDisabled) {
 				songHits++;
 				totalPlayed++;
-				RecalculateRating(false);
+				RecalculateRating();
 			}
 		} else if (cpuControlled) {
 			botScore += score;
 			if(!note.ratingDisabled) {
 				songHits++;
 				totalPlayed++;
-				RecalculateRating(false);
+				RecalculateRating();
 			}
 		}
 		if (showCombo) {
@@ -5329,7 +5337,7 @@ class PlayState extends MusicBeatState
 
 		if (curBeat % 4 == 0) {
 			timeTxt.scale.set(1.1, 1.1);
-			FlxTween.tween(timeTxt.scale, {x: 1, y: 1}, .2 * playbackRate, {ease: FlxEase.linear});
+			FlxTween.tween(timeTxt.scale, {x: 1, y: 1}, .2 * playbackRate);
 		}
 
 		if(lastBeatHit >= curBeat) return;
@@ -5345,31 +5353,19 @@ class PlayState extends MusicBeatState
 			case "Psych":
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
-			case "OS":
-				iconP1.scale.set(1.2, 1.2);
-				iconP2.scale.set(1.2, 1.2);
 
-				if (curBeat % 2 == 0) {
-					iconP1.angle = 8;
-					iconP2.angle = -8;
-				} else {
-					iconP1.angle = -8;
-					iconP2.angle = 8;
-				}
-			case "Purgatory":
-				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), .1);
-				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
-				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
-
-				if (curBeat % 4 == 0) {
-					FlxTween.angle(iconP1, -30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-					FlxTween.angle(iconP2, 30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-				}
-			case "Dave":
+			case "Dave" | "Purgatory":
 				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), .1);
 	
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
+
+				if (ClientPrefs.getPref('IconBounceType') == "Purgatory") {
+					if (curBeat % 4 == 0) {
+						FlxTween.angle(iconP1, -30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+						FlxTween.angle(iconP2, 30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+					}
+				}
 			case "GoldenApple":
 				if (curBeat % 2 == 0) {
 					iconP1.scale.set(1.1, .8);
