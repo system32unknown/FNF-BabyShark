@@ -3144,7 +3144,7 @@ class PlayState extends MusicBeatState
 			case "Kade" | "StridentCrisis": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .5)));
-			case "Psych":
+			case "Psych" | "OS":
 				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP1.scale.set(mult, mult);
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
@@ -3155,10 +3155,7 @@ class PlayState extends MusicBeatState
 			case "Micdup": // Stolen from FNF Mic'd Up
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, .09 / (Main.overlayVar.currentFPS / 60))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, .09 / (Main.overlayVar.currentFPS / 60))));
-			case "Purgatory": // Stolen from Dave And Bambi
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .8)), Std.int(FlxMath.lerp(150, iconP1.height, .8)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .8)), Std.int(FlxMath.lerp(150, iconP2.height, .8)));
-			case "Dave":
+			case "Dave" | "Purgatory":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
 		}
@@ -5348,10 +5345,21 @@ class PlayState extends MusicBeatState
 			case "Psych":
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
+			case "OS":
+				iconP1.scale.set(1.2, 1.2);
+				iconP2.scale.set(1.2, 1.2);
+
+				if (curBeat % 2 == 0) {
+					iconP1.angle = 8;
+					iconP2.angle = -8;
+				} else {
+					iconP1.angle = -8;
+					iconP2.angle = 8;
+				}
 			case "Purgatory":
-				var funny:Float = (healthBar.percent * .01) + .01;
-				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
-				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
+				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), .1);
+				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
+				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
 
 				if (curBeat % 4 == 0) {
 					FlxTween.angle(iconP1, -30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
