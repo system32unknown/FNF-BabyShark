@@ -4556,6 +4556,7 @@ class PlayState extends MusicBeatState
 				FlxTween.tween(timing, {alpha: 0}, 0.2 / playbackRate, {
 					startDelay: Conductor.crochet * 0.001 / playbackRate,
 					onComplete: function(tween:FlxTween) {
+						remove(timing, true);
 						timing.destroy();
 					}
 				});
