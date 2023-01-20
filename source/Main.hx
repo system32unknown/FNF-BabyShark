@@ -45,8 +45,7 @@ class Main extends Sprite
 		Lib.current.addChild(new Main());
 	}
 
-	public function new()
-	{
+	public function new() {
 		super();
 		stage != null ? init() : addEventListener(Event.ADDED_TO_STAGE, init);
 	}

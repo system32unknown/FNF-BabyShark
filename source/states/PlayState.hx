@@ -4275,7 +4275,7 @@ class PlayState extends MusicBeatState
 			case 'Psych':
 				tempText += ' Score: ${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
-				tempText += '$scoreSeparator Rating: ' + (ratingName != '?' ? '$ratingName ($accuracy%) - $ratingFC' : '?');
+				tempText += '$scoreSeparator Rating: ' + (ratingName != '?' ? '$ratingName ($ratingPercent%) - $ratingFC' : '?');
 			case 'Kade':
 				tempText += ' Score:${(!cpuControlled ? songScore : botScore)} ';
 				tempText += tempMiss;
@@ -5412,8 +5412,7 @@ class PlayState extends MusicBeatState
 			dad.dance();
 		}
 
-		switch (curStage)
-		{
+		switch (curStage) {
 			case 'tank':
 				if(!lowQuality) tankWatchtower.dance();
 				foregroundSprites.forEach(function(spr:BGSprite) {
