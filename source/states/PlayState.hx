@@ -1335,7 +1335,7 @@ class PlayState extends MusicBeatState
 						startDelay: 0.1,
 						onComplete: function(twn:FlxTween) {
 							camHUD.visible = true;
-							remove(whiteScreen);
+							remove(whiteScreen, true);
 							startCountdown();
 						}
 					});
@@ -1352,7 +1352,7 @@ class PlayState extends MusicBeatState
 
 					FlxTween.tween(blackScreen, {alpha: 0}, 0.7 * playbackRate, {
 						onComplete: function(twn:FlxTween) {
-							remove(blackScreen);
+							remove(blackScreen, true);
 						}
 					});
 					FlxG.sound.play(Paths.sound('Lights_Turn_On'));
@@ -1362,7 +1362,7 @@ class PlayState extends MusicBeatState
 
 					new FlxTimer().start(0.8, function(tmr:FlxTimer) {
 						camHUD.visible = true;
-						remove(blackScreen);
+						remove(blackScreen, true);
 						FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 2.5, {
 							ease: FlxEase.quadInOut,
 							onComplete: function(twn:FlxTween) {
@@ -1521,7 +1521,7 @@ class PlayState extends MusicBeatState
 		if(luaDebugGroup.members.length > 34) {
 			var blah = luaDebugGroup.members[34];
 			blah.destroy();
-			luaDebugGroup.remove(blah);
+			luaDebugGroup.remove(blah, true);
 		}
 		luaDebugGroup.insert(0, new FunkinLua.DebugLuaText(text, luaDebugGroup, color));
 		#end
@@ -1751,7 +1751,7 @@ class PlayState extends MusicBeatState
 
 		var songName:String = Paths.formatToSongPath(SONG.song);
 		if (songName == 'roses' || songName == 'thorns') {
-			remove(black);
+			remove(black, true);
 
 			if (songName == 'thorns') {
 				add(red);
@@ -1776,8 +1776,8 @@ class PlayState extends MusicBeatState
 							} else {
 								senpaiEvil.animation.play('idle');
 								FlxG.sound.play(Paths.sound('Senpai_Dies'), 1, false, null, true, function() {
-									remove(senpaiEvil);
-									remove(red);
+									remove(senpaiEvil, true);
+									remove(red, true);
 									FlxG.camera.fade(FlxColor.WHITE, 0.01, true, function() {
 										add(dialogueBox);
 										camHUD.visible = true;
@@ -1791,10 +1791,9 @@ class PlayState extends MusicBeatState
 					} else {
 						add(dialogueBox);
 					}
-				} else
-					startCountdown();
+				} else startCountdown();
 
-				remove(black);
+				remove(black, true);
 			}
 		});
 	}
@@ -2222,7 +2221,7 @@ class PlayState extends MusicBeatState
 						FlxTween.tween(countdownReady, {y: countdownReady.y + 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween) {
-								remove(countdownReady);
+								remove(countdownReady, true);
 								countdownReady.destroy();
 							}
 						});
@@ -2241,7 +2240,7 @@ class PlayState extends MusicBeatState
 						FlxTween.tween(countdownSet, {y: countdownSet.y + 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween) {
-								remove(countdownSet);
+								remove(countdownSet, true);
 								countdownSet.destroy();
 							}
 						});
@@ -2261,7 +2260,7 @@ class PlayState extends MusicBeatState
 						FlxTween.tween(countdownGo, {y: countdownGo.y + 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween) {
-								remove(countdownGo);
+								remove(countdownGo, true);
 								countdownGo.destroy();
 							}
 						});
@@ -2908,6 +2907,13 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float) {
 		callOnLuas('onUpdate', [elapsed]);
+
+		grpNoteSplashes.forEachDead(function(splash:NoteSplash) {
+			if (grpNoteSplashes.length > 1) {
+				grpNoteSplashes.remove(splash, true);
+				splash.destroy();
+			}
+		});
 
 		if(disableTheTripperAt == curStep || isDead)
 			disableTheTripper = true;
@@ -4532,6 +4538,7 @@ class PlayState extends MusicBeatState
 			
 				FlxTween.tween(numScore, {alpha: 0}, 0.2 / playbackRate, {
 					onComplete: function(tween:FlxTween) {
+						remove(numScore, true);
 						numScore.destroy();
 					},
 					startDelay: Conductor.crochet * 0.002 / playbackRate
@@ -4587,7 +4594,9 @@ class PlayState extends MusicBeatState
 			FlxTween.tween(comboSpr, {alpha: 0}, 0.2 / playbackRate, {
 				onComplete: function(tween:FlxTween) {
 					coolText.destroy();
+					remove(comboSpr, true);
 					comboSpr.destroy();
+					remove(rating, true);
 					rating.destroy();
 				},
 				startDelay: Conductor.crochet * 0.002 / playbackRate
@@ -4881,7 +4890,7 @@ class PlayState extends MusicBeatState
 		if(note.isSustainNote && !note.animation.curAnim.name.endsWith('tail')) {
 			time += 0.15;
 		}
-		StrumPlayAnim(true, Std.int(Math.abs(note.noteData)) % Note.ammo[mania], time / playbackRate);
+		StrumPlayAnim(true, Std.int(Math.abs(note.noteData)) % Note.ammo[mania], time);
 		note.hitByOpponent = true;
 
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
@@ -5036,7 +5045,7 @@ class PlayState extends MusicBeatState
 				if(note.isSustainNote && !note.animation.curAnim.name.endsWith('tail')) {
 					time += 0.15;
 				}
-				StrumPlayAnim(false, Std.int(Math.abs(note.noteData)) % Note.ammo[mania], time / playbackRate);
+				StrumPlayAnim(false, Std.int(Math.abs(note.noteData)) % Note.ammo[mania], time);
 			} else {
 				var spr = playerStrums.members[note.noteData];
 				if(spr != null)
@@ -5555,7 +5564,7 @@ class PlayState extends MusicBeatState
 
 		if(spr != null) {
 			spr.playAnim('confirm', true);
-			spr.resetAnim = time;
+			spr.resetAnim = time / playbackRate;
 		}
 	}
 
