@@ -165,6 +165,8 @@ class FunkinLua {
 		set('accuracy', 0);
 		set('hits', 0);
 
+		set('defaultMania', 0);
+
 		set('rating', 0);
 		set('ratingName', '');
 		set('ratingRank', '');

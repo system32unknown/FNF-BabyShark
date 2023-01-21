@@ -33,14 +33,13 @@ class MiscellaneousSubState extends BaseOptionsMenu
 		var option:Option = new Option('Rainbow Fps Speed',
 			'',
 			'RainbowSpeed',
-			'percent',
-			0);
+			'int',
+			1);
 		addOption(option);
-		option.scrollSpeed = 1.6;
-		option.minValue = .0;
-		option.maxValue = 1;
-		option.changeValue = .1;
-		option.decimals = 1;
+		option.displayFormat = '%v%';
+		option.scrollSpeed = 15;
+		option.minValue = 1;
+		option.maxValue = 20;
 
 		var option:Option = new Option('MS on FPS Counter',
 			'',
