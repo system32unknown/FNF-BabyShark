@@ -1212,10 +1212,10 @@ class PlayState extends MusicBeatState
 		judgementCounter.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
 		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		judgementCounter.scrollFactor.set();
-		judgementCounter.screenCenter(Y);
 		judgementCounter.visible = ClientPrefs.getPref('ShowJudgementCount') && !hideHud;
 		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + getMissText(cpuControlled, !ClientPrefs.getPref('movemissjudge'), '\n');
 		add(judgementCounter);
+		judgementCounter.screenCenter(Y);
 
 		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
@@ -2335,7 +2335,7 @@ class PlayState extends MusicBeatState
 
 			scoreTxt.scale.set(1.1, 1.1);
 			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, .2 * playbackRate, {
-				ease: FlxEase.backOut,
+				ease: (ClientPrefs.getPref('ScoreType') == "Psych" ? FlxEase.linear : FlxEase.backOut),
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
 				}
@@ -4274,7 +4274,7 @@ class PlayState extends MusicBeatState
 			case 'Psych':
 				tempText += ' Score: ${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
-				tempText += '$scoreSeparator Rating: ' + (ratingName != '?' ? '$ratingName ($ratingPercent%) - $ratingFC' : '?');
+				tempText += '$scoreSeparator Rating: ' + (ratingName != '?' ? '$ratingName ($accuracy%) - $ratingFC' : '?');
 			case 'Kade':
 				tempText += ' Score:${(!cpuControlled ? songScore : botScore)} ';
 				tempText += tempMiss;
@@ -5609,9 +5609,8 @@ class PlayState extends MusicBeatState
 			else if (songMisses >= 10) ratingFC = "Clear";
 		}
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
-		setOnLuas('accuracy', accuracy);
 
-		setOnLuas('rating', ratingPercent);
+		setOnLuas('rating', accuracy);
 		setOnLuas('ratingName', ratingName);
 		setOnLuas('ratingRank', ranks);
 		setOnLuas('ratingFC', ratingFC);
