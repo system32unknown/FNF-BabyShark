@@ -165,7 +165,7 @@ class FunkinLua {
 		set('accuracy', 0);
 		set('hits', 0);
 
-		set('defaultMania', 0);
+		set('defaultMania', PlayState.SONG.mania);
 
 		set('rating', 0);
 		set('ratingName', '');
