@@ -14,7 +14,7 @@ class ClientPrefs {
 		'MSFPSCounter' => false,
 		'showFPS' => true,
 		'showMEM' => true,
-		#if cpp 'MEMType' => 'cpp', #end
+		'MEMType' => 'cpp',
 		'flashing' => true,
 		'globalAntialiasing' => true,
 		'splashOpacity' => .6,
@@ -36,6 +36,7 @@ class ClientPrefs {
 		'IconBounceType' => 'Psych',
 		'RatingDisplay' => 'World',
 		'RainbowFps' => false,
+		'RainbowSpeed' => 1,
 		'comboStacking' => true,
 		'showKeybindsOnStart' => false,
 		'ShowLU' => false,
