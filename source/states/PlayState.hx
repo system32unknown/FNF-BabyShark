@@ -63,6 +63,12 @@ import sys.io.File;
 import handlers.PsychVideo;
 import handlers.CutsceneHandler;
 
+#if hscript
+import hscript.Interp;
+import hscript.Parser;
+import utils.HscriptHandler;
+#end
+
 #if LUA_ALLOWED
 using llua.Lua.Lua_helper;
 #end
@@ -340,6 +346,7 @@ class PlayState extends MusicBeatState
 	// Lua shit
 	public static var instance:PlayState;
 	public var luaArray:Array<FunkinLua> = [];
+	public var hscriptArray:Map<String, Interp> = [];
 	private var luaDebugGroup:FlxTypedGroup<FunkinLua.DebugLuaText>;
 	public var introSoundsSuffix:String = '';
 
@@ -1313,7 +1320,18 @@ class PlayState extends MusicBeatState
 					if(file.endsWith('.lua') && !filesPushed.contains(file)) {
 						luaArray.push(new FunkinLua(folder + file));
 						filesPushed.push(file);
-					}
+					} #if hscript else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
+						var exparser = new Parser();
+						exparser.allowMetadata = true;
+						exparser.allowTypes = true;
+						var parsedstring = exparser.parseString(File.getContent(folder + file));
+						var interp = new Interp();
+						interp = HscriptHandler.setVars(interp);
+
+						interp.execute(parsedstring);
+						hscriptArray.set(folder + file,interp);
+						filesPushed.push(file);
+					} #end
 				}
 			}
 		}
@@ -1410,6 +1428,7 @@ class PlayState extends MusicBeatState
 
 		Conductor.safeZoneOffset = (ClientPrefs.getPref('safeFrames') / 60) * 1000;
 		callOnLuas('onCreatePost', []);
+		callOnHScripts('create', []);
 
 		super.create();
 
@@ -2907,6 +2926,7 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float) {
 		callOnLuas('onUpdate', [elapsed]);
+		callOnHScripts('update', [elapsed]);
 
 		grpNoteSplashes.forEachDead(function(splash:NoteSplash) {
 			if (grpNoteSplashes.length > 1) {
@@ -4669,6 +4689,7 @@ class PlayState extends MusicBeatState
 					callOnLuas('onGhostTap', [key]);
 					if (canMiss) {
 						noteMissPress(key);
+						callOnHScripts('noteMissPress', [key]);
 					}
 				}
 
@@ -4689,6 +4710,7 @@ class PlayState extends MusicBeatState
 				spr.resetAnim = 0;
 			}
 			callOnLuas('onKeyPress', [key]);
+			callOnHScripts('onKeyPress', [key]);
 		}
 	}
 
@@ -4781,9 +4803,11 @@ class PlayState extends MusicBeatState
 		});
 
 		callOnLuas('opponentnoteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
+		callOnHScripts('opponentnoteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
+		callOnHScripts('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 		//Dupe note remove
 		notes.forEachAlive(function(note:Note) {
 			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) {
@@ -4925,6 +4949,7 @@ class PlayState extends MusicBeatState
 		}
 
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
+		callOnHScripts('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
 
 		if (!note.isSustainNote) {
 			note.kill();
@@ -5059,6 +5084,7 @@ class PlayState extends MusicBeatState
 			var leData:Int = Math.round(Math.abs(note.noteData));
 			var leType:String = note.noteType;
 			callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
+			callOnHScripts('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 
 			if (!note.isSustainNote) {
 				note.kill();
@@ -5464,6 +5490,7 @@ class PlayState extends MusicBeatState
 
 		setOnLuas('curBeat', curBeat); //DAWGG?????
 		callOnLuas('onBeatHit', []);
+		callOnHScripts('beatHit', [curBeat]);
 	}
 
 	override function sectionHit() {
@@ -5492,6 +5519,7 @@ class PlayState extends MusicBeatState
 		
 		setOnLuas('curSection', curSection);
 		callOnLuas('onSectionHit', []);
+		callOnHScripts('sectionHit', [curSection]);
 	}
 
 	#if LUA_ALLOWED
@@ -5545,6 +5573,28 @@ class PlayState extends MusicBeatState
 		for (i in achievementsArray) i.call(event, args);
 		#end
 		return returnVal;
+	}
+
+	function callSingleHScript(func:String, args:Array<Dynamic>, filename:String) {
+		if (!hscriptArray.get(filename).variables.exists(func)) {
+			return;
+		}
+		var method = hscriptArray.get(filename).variables.get(func);
+
+		switch (args.length) {
+			case 0: method();
+			case 1: method(args[0]);
+			case 2: method(args[0], args[1]);
+			case 3: method(args[0], args[1], args[2]);
+			case 4: method(args[0], args[1], args[2], args[3]);
+			case 5: method(args[0], args[1], args[2], args[3], args[4]);
+		}
+	}
+
+	function callOnHScripts(func:String, args:Array<Dynamic>) {
+		for (i in hscriptArray.keys()) {
+			callSingleHScript(func, args, i);	// it could be easier ig
+		}
 	}
 
 	public function setOnLuas(variable:String, arg:Dynamic) {
