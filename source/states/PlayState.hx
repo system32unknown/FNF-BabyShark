@@ -2335,7 +2335,7 @@ class PlayState extends MusicBeatState
 
 			scoreTxt.scale.set(1.1, 1.1);
 			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, .2 * playbackRate, {
-				ease: (ClientPrefs.getPref('ScoreType') == "Psych" ? FlxEase.linear : FlxEase.backOut),
+				ease: FlxEase.backOut,
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
 				}
