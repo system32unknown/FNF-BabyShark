@@ -1,6 +1,12 @@
+#PSYCH FOLDERS
+export/
+.haxelib/
+dump/
+
+hmm.json
+
 ### VS Code
-export/*
-.vscode/*
+.vscode/
 *.code-workspace
 # Local history which shouldn't be shared.
 .history

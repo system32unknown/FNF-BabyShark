@@ -14,6 +14,7 @@ import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.ui.FlxBar;
+import flixel.text.FlxText;
 import flixel.util.FlxTimer;
 import flixel.addons.display.FlxBackdrop;
 import flixel.tweens.FlxEase;
@@ -47,6 +48,7 @@ class HscriptHandler {
         interp.variables.set('FlxCamera', FlxCamera);
         interp.variables.set('FlxTimer', FlxTimer);
         interp.variables.set('FlxEase', FlxEase);
+        interp.variables.set('FlxText', FlxText);
         interp.variables.set('FlxTween', FlxTween);
         interp.variables.set('FlxSprite', FlxSprite);
         interp.variables.set('FlxBasic', FlxBasic);
