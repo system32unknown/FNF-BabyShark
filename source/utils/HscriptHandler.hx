@@ -8,10 +8,8 @@ import game.*;
 import ui.*;
 
 import flixel.FlxBasic;
-import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxGame;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.ui.FlxBar;
