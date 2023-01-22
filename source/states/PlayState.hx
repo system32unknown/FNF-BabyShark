@@ -976,12 +976,11 @@ class PlayState extends MusicBeatState
 						var exparser = new Parser();
 						exparser.allowMetadata = true;
 						exparser.allowTypes = true;
-						var parsedstring = exparser.parseString(File.getContent(folder + file));
 						var interp = new Interp();
 						interp = HscriptHandler.setVars(interp);
 
-						interp.execute(parsedstring);
-						hscriptArray.set(folder + file,interp);
+						interp.execute(exparser.parseString(File.getContent(folder + file)));
+						hscriptArray.set(folder + file, interp);
 						filesPushed.push(file);
 					} #end
 				}
@@ -1326,7 +1325,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		for (folder in foldersToCheck) {
-			if(FileSystem.exists(folder)) {
+			if( FileSystem.exists(folder)) {
 				for (file in FileSystem.readDirectory(folder)) {
 					if (file.endsWith('.lua') && !filesPushed.contains(file)) {
 						luaArray.push(new FunkinLua(folder + file));
@@ -1335,12 +1334,11 @@ class PlayState extends MusicBeatState
 						var exparser = new Parser();
 						exparser.allowMetadata = true;
 						exparser.allowTypes = true;
-						var parsedstring = exparser.parseString(File.getContent(folder + file));
 						var interp = new Interp();
 						interp = HscriptHandler.setVars(interp);
 
-						interp.execute(parsedstring);
-						hscriptArray.set(folder + file,interp);
+						interp.execute(exparser.parseString(File.getContent(folder + file)));
+						hscriptArray.set(folder + file, interp);
 						filesPushed.push(file);
 					} #end
 				}

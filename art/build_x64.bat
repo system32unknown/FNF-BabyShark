@@ -1,9 +1,15 @@
 @echo off
 color 0a
 cd ..
-echo BUILDING GAME
+title BUILDING GAME
 lime build windows -release
-echo.
-echo done.
-pause
-explorer.exe export\release\windows\bin
+
+setlocal
+:PROMPT
+SET /P AYS = Do you want run game? (Y/N)?
+IF /I "%AYS%" NEQ "Y" GOTO END
+
+cd export/release/windows/bin
+"Baby Shark's Funkin"
+:END
+endlocal
