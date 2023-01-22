@@ -972,7 +972,18 @@ class PlayState extends MusicBeatState
 					if (file.endsWith('.lua') && !filesPushed.contains(file)) {
 						luaArray.push(new FunkinLua(folder + file));
 						filesPushed.push(file);
-					}
+					} #if hscript else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
+						var exparser = new Parser();
+						exparser.allowMetadata = true;
+						exparser.allowTypes = true;
+						var parsedstring = exparser.parseString(File.getContent(folder + file));
+						var interp = new Interp();
+						interp = HscriptHandler.setVars(interp);
+
+						interp.execute(parsedstring);
+						hscriptArray.set(folder + file,interp);
+						filesPushed.push(file);
+					} #end
 				}
 			}
 		}
@@ -1317,7 +1328,7 @@ class PlayState extends MusicBeatState
 		for (folder in foldersToCheck) {
 			if(FileSystem.exists(folder)) {
 				for (file in FileSystem.readDirectory(folder)) {
-					if(file.endsWith('.lua') && !filesPushed.contains(file)) {
+					if (file.endsWith('.lua') && !filesPushed.contains(file)) {
 						luaArray.push(new FunkinLua(folder + file));
 						filesPushed.push(file);
 					} #if hscript else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
@@ -2689,6 +2700,7 @@ class PlayState extends MusicBeatState
 			strumLineNotes.add(babyArrow);
 			babyArrow.postAddedToGroup();
 			callOnLuas('onSpawnStrum', [strumLineNotes.members.indexOf(babyArrow), babyArrow.player, babyArrow.ID]);
+			callOnHScripts('onSpawnStrum', [strumLineNotes.members.indexOf(babyArrow), babyArrow.player, babyArrow.ID]);
 
 			if (ClientPrefs.getPref('showKeybindsOnStart') && player == 1) {
 				for (j in 0...keysArray[mania][i].length) {
@@ -2822,6 +2834,7 @@ class PlayState extends MusicBeatState
 		}
 
 		callOnLuas('onChangeMania', [mania, daOldMania]);
+		callOnHScripts('onChangeMania', [mania, daOldMania]);
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
@@ -4807,7 +4820,6 @@ class PlayState extends MusicBeatState
 	}
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
-		callOnHScripts('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 		//Dupe note remove
 		notes.forEachAlive(function(note:Note) {
 			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) {
@@ -4845,6 +4857,7 @@ class PlayState extends MusicBeatState
 		}
 
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
+		callOnHScripts('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}
 
 	function noteMissPress(direction:Int = 1):Void { //You pressed a key when there was no notes to press for this key
@@ -5323,13 +5336,12 @@ class PlayState extends MusicBeatState
 			resyncVocals();
 		}
 
-		if(curStep == lastStepHit) {
-			return;
-		}
+		if(curStep == lastStepHit) return;
 
 		lastStepHit = curStep;
 		setOnLuas('curStep', curStep);
 		callOnLuas('onStepHit', []);
+		callOnHScripts('onStepHit', [curStep]);
 	}
 
 	var lightningStrikeBeat:Int = 0;

@@ -43,6 +43,9 @@ class HscriptHandler {
         interp.variables.set('NoteSplash', NoteSplash);
         interp.variables.set('FlxSprite', FlxSprite);
         interp.variables.set('FlxBasic', FlxBasic);
+
+        interp.variables.set('StringTools', StringTools);
+        interp.variables.set('Math', Math);
         return interp;
     }
 }
