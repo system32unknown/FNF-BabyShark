@@ -321,7 +321,6 @@ class PlayState extends MusicBeatState
 	public static var daPixelZoom:Float = 6;
 
 	public var inCutscene:Bool = false;
-	public var inGameCutscene:Bool = false;
 	public var skipCountdown:Bool = false;
 	var songLength:Float = 0;
 
@@ -1871,7 +1870,6 @@ class PlayState extends MusicBeatState
 		};
 
 		camFollow.set(dad.x + 280, dad.y + 170);
-		inGameCutscene = true;
 		switch(songName) {
 			case 'ugh':
 				cutsceneHandler.endTime = 12;
@@ -2169,7 +2167,6 @@ class PlayState extends MusicBeatState
 		}
 
 		inCutscene = false;
-		inGameCutscene = false;
 		var ret:Dynamic = callOnLuas('onStartCountdown', [], false);
 		if (ret != FunkinLua.Function_Stop) {
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
@@ -3292,7 +3289,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (generatedMusic && !inGameCutscene) {
+		if (generatedMusic) {
 			if (!inCutscene) {
 				if(!cpuControlled) {
 					keyShit();
@@ -4805,7 +4802,7 @@ class PlayState extends MusicBeatState
 				   startAchievement(achieve);
 				}
 				#end
-			} else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * 0.001 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss')) {
+			} else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 / FlxG.sound.music.pitch) * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss')) {
 				boyfriend.dance();
 			}
 		}
