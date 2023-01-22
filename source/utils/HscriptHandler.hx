@@ -15,7 +15,6 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.ui.FlxBar;
 import flixel.util.FlxTimer;
-import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -38,6 +37,7 @@ class HscriptHandler {
         interp.variables.set('Note', Note);
         interp.variables.set('NoteSplash', NoteSplash);
         interp.variables.set('Paths', Paths);
+        interp.variables.set('Alphabet', Alphabet);
 
         interp.variables.set('FlxG', FlxG);
         interp.variables.set('FlxGame', FlxGame);
@@ -46,7 +46,6 @@ class HscriptHandler {
         interp.variables.set('FlxState', FlxState);
         interp.variables.set('FlxCamera', FlxCamera);
         interp.variables.set('FlxTimer', FlxTimer);
-        interp.variables.set('FlxColor', FlxColor);
         interp.variables.set('FlxEase', FlxEase);
         interp.variables.set('FlxTween', FlxTween);
         interp.variables.set('FlxSprite', FlxSprite);
@@ -54,6 +53,8 @@ class HscriptHandler {
 
         interp.variables.set('StringTools', StringTools);
         interp.variables.set('Math', Math);
+        interp.variables.set('Type', Type);
+
         return interp;
     }
 }

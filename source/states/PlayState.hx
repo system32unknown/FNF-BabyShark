@@ -2164,6 +2164,7 @@ class PlayState extends MusicBeatState
 	{
 		if (startedCountdown) {
 			callOnLuas('onStartCountdown', []);
+			callOnHScripts('onStartCountdown', []);
 			return;
 		}
 
@@ -2186,6 +2187,7 @@ class PlayState extends MusicBeatState
 			Conductor.songPosition -= Conductor.crochet * 5;
 			setOnLuas('startedCountdown', true);
 			callOnLuas('onCountdownStarted', []);
+			callOnHScripts('onCountdownStarted', []);
 
 			var swagCounter:Int = 0;
 
@@ -2305,6 +2307,7 @@ class PlayState extends MusicBeatState
 					}
 				});
 				callOnLuas('onCountdownTick', [swagCounter]);
+				callOnHScripts('onCountdownTick', [swagCounter]);
 				swagCounter += 1;
 			}, 5);
 		}
@@ -2370,6 +2373,7 @@ class PlayState extends MusicBeatState
 			});
 		}
 		callOnLuas('onUpdateScore', [miss]);
+		callOnHScripts('onUpdateScore', [miss]);
 	}
 
 	public function setSongTime(time:Float) {
@@ -2441,6 +2445,7 @@ class PlayState extends MusicBeatState
 		#end
 		setOnLuas('songLength', songLength);
 		callOnLuas('onSongStart', []);
+		callOnHScripts('onSongStart', []);
 	}
 
 	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
@@ -3280,6 +3285,7 @@ class PlayState extends MusicBeatState
 				notes.insert(0, dunceNote);
 				dunceNote.spawned=true;
 				callOnLuas('onSpawnNote', [notes.members.indexOf(dunceNote), dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote]);
+				callOnHScripts('onSpawnNote', [notes.members.indexOf(dunceNote), dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote]);
 
 				var index:Int = unspawnNotes.indexOf(dunceNote);
 				unspawnNotes.splice(index, 1);
@@ -3439,6 +3445,7 @@ class PlayState extends MusicBeatState
 		setOnLuas('cameraY', camFollowPos.y);
 		setOnLuas('botPlay', cpuControlled);
 		callOnLuas('onUpdatePost', [elapsed]);
+		callOnHScripts('onUpdatePost', [elapsed]);
 	}
 
 	function openPauseMenu()
@@ -4698,9 +4705,9 @@ class PlayState extends MusicBeatState
 					}
 				} else {
 					callOnLuas('onGhostTap', [key]);
+					callOnHScripts('onGhostTap', [key]);
 					if (canMiss) {
 						noteMissPress(key);
-						callOnHScripts('noteMissPress', [key]);
 					}
 				}
 
@@ -4745,6 +4752,7 @@ class PlayState extends MusicBeatState
 				spr.resetAnim = 0;
 			}
 			callOnLuas('onKeyRelease', [key]);
+			callOnHScripts('onKeyRelease', [key]);
 		}
 	}
 
@@ -4887,6 +4895,7 @@ class PlayState extends MusicBeatState
 			vocals.volume = 0;
 		}
 		callOnLuas('noteMissPress', [direction]);
+		callOnHScripts('noteMissPress', [direction]);
 	}
 
 	function opponentNoteHit(note:Note):Void {
