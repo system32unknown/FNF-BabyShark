@@ -1,19 +1,28 @@
 # Baby Shark's Funkin
 Heavily Modded Psych Engine. combined with Kade, Mic'd up, Andromeda, Forever, Dave, Vanilla.
 
-## Credits (WIP):
+# Credits (WIP):
 
-## Psych Engine:
+### Psych Engine:
 * Shadow Mario - Programmer
 * RiverOaken - Artist
 * Yoshubs - Assistant Programmer
 
-## Kade Engine:
+### Kade Engine:
 * KadeDev - Programmer of Kade Engine
 
-### Special Thanks
+### Forever Engine:
+* Yoshubs - Programmer of Forever Engine
+
+### Dave Engine:
+* Vs. Dave and bambi Teams
+
+### Base Engine:
+* Funkin' Crew
+
+### Special Thanks /
 * bbpanzu - Ex-Programmer
-* shubs - New Input System
+* Yoshubs - New Input System
 * SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
 * KadeDev - Fixed some cool stuff on Chart Editor and other PRs
 * iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds
