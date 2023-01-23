@@ -1,6 +1,13 @@
 package utils;
 
 #if windows
+
+@:buildXml('
+<target id="haxe">
+    <lib name="dwmapi.lib" if="windows"/>
+    <lib name="shell32.lib" if="windows"/>
+</target>
+')
 @:cppFileCode('
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,8 +19,9 @@ package utils;
 #include <iostream>
 #include <string>
 
-#pragma comment(lib, "Dwmapi")
-#pragma comment(lib, "Shell32.lib")
+// Test
+// #pragma comment(lib, "Dwmapi")
+// #pragma comment(lib, "Shell32.lib")
 ')
 #end
 class PlatformUtil
@@ -127,4 +135,14 @@ class PlatformUtil
     ')
     #end
     static public function clearScreen() {}
+
+    #if windows
+    @:functionCode('
+        // https://stackoverflow.com/questions/9965710/how-to-change-text-and-background-color
+
+        HANDLE conso = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(conso, color);
+    ')
+    #end
+    static public function setConsoleTextColor(color:Int) {}
 }
