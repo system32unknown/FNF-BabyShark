@@ -9,7 +9,9 @@ setlocal
 SET /P AYS = Do you want run game? (Y/N)?
 IF /I "%AYS%" NEQ "Y" GOTO END
 
+cd ..
 cd export/release/windows/bin
 "Baby Shark's Funkin"
 :END
 endlocal
+exit

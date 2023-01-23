@@ -553,6 +553,7 @@ class FunkinLua {
 				case "setwindowicon": PlatformUtil.setWindowIcon(args[0]);
 				case "getmousepos": PlatformUtil.getMousePos(args[0]);
 				case "clearscreen": PlatformUtil.clearScreen();
+				case "setconsoletextcolor": PlatformUtil.setConsoleTextColor(args[0]);
 			}
 		});
 

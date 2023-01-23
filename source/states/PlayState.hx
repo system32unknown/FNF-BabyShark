@@ -444,7 +444,7 @@ class PlayState extends MusicBeatState
 		screenshader.waveAmplitude = 1;
 		screenshader.waveFrequency = 2;
 		screenshader.waveSpeed = 1;
-		screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
+		screenshader.shader.uTime.value[0] = FlxG.random.float(-100000, 100000);
 
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
@@ -3899,10 +3899,13 @@ class PlayState extends MusicBeatState
 				if (screwYouTxt.text != null)
 					if (songNameText.y != songNameText.y - 20)
 						songNameText.y -= 20;
-					screwYouTxt.text = value1;
+
+				screwYouTxt.text = value1;
+
 				if(screwYouTxt.text == null || screwYouTxt.text == "")
 					songNameText.y = FlxG.height - songNameText.height;
 				else songNameText.y = (FlxG.height - songNameText.height) - 20;
+
 			case 'BG Freaks Expression':
 				if(bgGirls != null) bgGirls.swapDanceType();
 
@@ -3913,7 +3916,7 @@ class PlayState extends MusicBeatState
 					disableTheTripperAt = Std.parseInt(splitedVal[0]);
 
 					screenshader.waveSpeed = Std.parseFloat(splitedVal[1]);
-					screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
+					screenshader.shader.uTime.value[0] = FlxG.random.float(-100000, 100000);
 					screenshader.ampmul = 1;
 
 					if (shaderFilters[0] == null)
@@ -4272,14 +4275,12 @@ class PlayState extends MusicBeatState
 		timeTxt.font = font;
 
 		songNameText.font = font;
-		songNameText.y = FlxG.height - songNameText.height;
 		engineText.font = font;
 		engineText.setPosition(FlxG.width - engineText.width, FlxG.height - engineText.height);
 
 		for (dakey in daKeyText)
 			dakey.font = font;
 		screwYouTxt.font = font;
-		screwYouTxt.y = songNameText.y - 20;
 	}
 
 	var scoreSeparator:String = "|";
