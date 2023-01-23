@@ -96,9 +96,6 @@
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
 	<haxelib name="discord_rpc" if="desktop"/>
 
-	<!-- Enables a terminal log prompt on debug builds -->
-	<haxelib name="hxcpp-debug-server" if="debug"/>
-
 	<!-- ______________________________Haxedefines_____________________________ -->
 
 	<!--Disable the Flixel core focus lost screen-->

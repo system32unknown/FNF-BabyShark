@@ -1260,7 +1260,7 @@ class PlayState extends MusicBeatState
 		screwYouTxt.cameras = [camHUD];
 		add(screwYouTxt);
 
-		if (screwYouTxt.text == null || screwYouTxt.text != "")
+		if (screwYouTxt.text != null || screwYouTxt.text != "")
 			songNameText.y -= 20;
 
 		var engineName:Array<String> = [for (i in Paths.getTextFromFile('data/EngineList.txt').split('\n')) i.trim()];
