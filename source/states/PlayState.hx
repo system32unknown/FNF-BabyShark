@@ -3280,7 +3280,7 @@ class PlayState extends MusicBeatState
 			{
 				var dunceNote:Note = unspawnNotes[0];
 				notes.insert(0, dunceNote);
-				dunceNote.spawned=true;
+				dunceNote.spawned = true;
 				callOnLuas('onSpawnNote', [notes.members.indexOf(dunceNote), dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote]);
 				callOnHScripts('onSpawnNote', [notes.members.indexOf(dunceNote), dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote]);
 
@@ -5592,24 +5592,17 @@ class PlayState extends MusicBeatState
 	}
 
 	function callSingleHScript(func:String, args:Array<Dynamic>, filename:String) {
-		if (!hscriptArray.get(filename).variables.exists(func)) {
+		var hvaribles:Map<String, Dynamic> = hscriptArray.get(filename).variables;
+		if (!hvaribles.exists(func))
 			return;
-		}
-		var method = hscriptArray.get(filename).variables.get(func);
-
-		switch (args.length) {
-			case 0: method();
-			case 1: method(args[0]);
-			case 2: method(args[0], args[1]);
-			case 3: method(args[0], args[1], args[2]);
-			case 4: method(args[0], args[1], args[2], args[3]);
-			case 5: method(args[0], args[1], args[2], args[3], args[4]);
-		}
+		
+		var method = hvaribles.get(func);
+		Reflect.callMethod(null, method, args);
 	}
 
 	function callOnHScripts(func:String, args:Array<Dynamic>) {
 		for (i in hscriptArray.keys()) {
-			callSingleHScript(func, args, i);	// it could be easier ig
+			callSingleHScript(func, args, i); // it could be easier ig
 		}
 	}
 
