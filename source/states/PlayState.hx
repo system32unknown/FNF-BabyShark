@@ -66,7 +66,7 @@ import handlers.CutsceneHandler;
 #if hscript
 import hscript.Interp;
 import hscript.Parser;
-import utils.HscriptHandler;
+import handlers.HscriptHandler;
 #end
 
 #if LUA_ALLOWED
@@ -4275,7 +4275,7 @@ class PlayState extends MusicBeatState
 		timeTxt.font = font;
 
 		songNameText.font = font;
-		songNameText.y = FlxG.height - songNameText.height;
+		songNameText.y = FlxG.height - songNameText.height; //Fixes Height Issues
 		screwYouTxt.y = songNameText.y;
 		if (screwYouTxt.text != null || screwYouTxt.text != "")
 			songNameText.y -= 20;

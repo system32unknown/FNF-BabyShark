@@ -18,10 +18,6 @@ package utils;
 #include <shellapi.h>
 #include <iostream>
 #include <string>
-
-// Test
-// #pragma comment(lib, "Dwmapi")
-// #pragma comment(lib, "Shell32.lib")
 ')
 #end
 class PlatformUtil
@@ -34,7 +30,7 @@ class PlatformUtil
             SetLayeredWindowAttributes(hWnd, RGB(r, g, b), alpha, LWA_COLORKEY);
     ')
     #end
-	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0, res:Int = 0) // Only works on windows, otherwise returns 0!
+	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0, res:Int = 0)
 		return res;
 
     #if windows

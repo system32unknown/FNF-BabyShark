@@ -49,7 +49,6 @@ class TerminalState extends MusicBeatState
     {
         Main.overlayVar.alpha = .5;
 		#if desktop
-		// Updating Discord Rich Presence
 		DiscordClient.changePresence("The Terminal", null);
 		#end
 
@@ -92,10 +91,6 @@ class TerminalState extends MusicBeatState
                 case "expunged": tx = "[FILE DELETED]\n[FUCK YOU!]";
             }
             UpdateText("\n" + tx);
-        }));
-
-        CommandList.push(new TerminalCommand("shit", "dont.", function(arguments:Array<String>) {
-            UpdateText(CoolUtil.getRandomizedText(FlxG.random.int(1, 50)));
         }));
 
         add(displayText);

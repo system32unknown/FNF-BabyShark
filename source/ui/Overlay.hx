@@ -72,6 +72,8 @@ class Overlay extends TextField
 	}
 
 	override function __enterFrame(dt:Float):Void {
+		super.__enterFrame(Math.floor(dt));
+
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + ClientPrefs.getPref('RainbowSpeed');
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);

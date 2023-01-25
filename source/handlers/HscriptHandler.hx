@@ -1,4 +1,4 @@
-package utils;
+package handlers;
 
 import hscript.Interp;
 
@@ -6,6 +6,7 @@ import states.*;
 import substates.*;
 import game.*;
 import ui.*;
+import utils.*;
 
 import flixel.FlxBasic;
 import flixel.FlxG;
