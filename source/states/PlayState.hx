@@ -4275,6 +4275,11 @@ class PlayState extends MusicBeatState
 		timeTxt.font = font;
 
 		songNameText.font = font;
+		songNameText.y = FlxG.height - songNameText.height;
+		screwYouTxt.y = songNameText.y;
+		if (screwYouTxt.text != null || screwYouTxt.text != "")
+			songNameText.y -= 20;
+
 		engineText.font = font;
 		engineText.setPosition(FlxG.width - engineText.width, FlxG.height - engineText.height);
 
