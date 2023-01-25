@@ -4277,7 +4277,7 @@ class PlayState extends MusicBeatState
 		songNameText.font = font;
 		songNameText.y = FlxG.height - songNameText.height; //Fixes Height Issues
 		screwYouTxt.y = songNameText.y;
-		if (screwYouTxt.text != null || screwYouTxt.text != "")
+		if (screwYouTxt.text != null && screwYouTxt.text != "")
 			songNameText.y -= 20;
 
 		engineText.font = font;
