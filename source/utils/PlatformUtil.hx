@@ -131,14 +131,4 @@ class PlatformUtil
     ')
     #end
     static public function clearScreen() {}
-
-    #if windows
-    @:functionCode('
-        // https://stackoverflow.com/questions/9965710/how-to-change-text-and-background-color
-
-        HANDLE conso = GetStdHandle(STD_OUTPUT_HANDLE);
-        SetConsoleTextAttribute(conso, color);
-    ')
-    #end
-    static public function setConsoleTextColor(color:Int) {}
 }

@@ -44,8 +44,6 @@ class FreeplayState extends MusicBeatState
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
 
-	var curPlaying:Bool = false;
-
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 
 	private var iconArray:Array<HealthIcon> = [];
@@ -90,7 +88,7 @@ class FreeplayState extends MusicBeatState
 		WeekData.loadTheFirstEnabledMod();
 
 		#if PRELOAD_ALL
-		if (!curPlaying) Conductor.changeBPM(TitleState.titleJSON.bpm);
+		Conductor.changeBPM(TitleState.titleJSON.bpm);
 		#end
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -135,8 +133,9 @@ class FreeplayState extends MusicBeatState
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
 
-		countText = new FlxText(scoreText.x, scoreBG.width - scoreBG.y, 0, "", 28);
-		countText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		countText = new FlxText(0, 0, 0, "", 28);
+		countText.setPosition(FlxG.width * .7, scoreBG.height - countText.y);
+		countText.setFormat(Paths.font("vcr.ttf"), 28, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		countText.borderSize = 1.25;
 
 		add(countText);
@@ -202,11 +201,6 @@ class FreeplayState extends MusicBeatState
 
 		if (FlxG.sound.music.volume < 0.7)
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-
-		if (curPlaying) {
-			iconArray[instPlaying].setGraphicSize(Std.int(FlxMath.lerp(150, iconArray[instPlaying].width, 0.85)));
-			iconArray[instPlaying].updateHitbox();
-		}
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, MathUtil.boundTo(elapsed * 24, 0, 1)));
 		lerpRating = FlxMath.lerp(lerpRating, intendedRating, MathUtil.boundTo(elapsed * 12, 0, 1));
@@ -305,7 +299,6 @@ class FreeplayState extends MusicBeatState
 					vocals.volume = 0.7;
 					instPlaying = curSelected;
 					Conductor.changeBPM(PlayState.SONG.bpm);
-					curPlaying = ClientPrefs.getPref('BeatIconFreeplay');
 				} else {
 					errorDisplay.text = getErrorMessage(missChart, 'chart required to play audio, $missFile', songFolder, songLowercase);
 					errorDisplay.displayError();
@@ -347,15 +340,6 @@ class FreeplayState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
 		super.update(elapsed);
-	}
-
-	override function beatHit() {
-		super.beatHit();
-
-		if(curPlaying) {
-			iconArray[instPlaying].setGraphicSize(Std.int(iconArray[instPlaying].width + 30));
-			iconArray[instPlaying].updateHitbox();
-		}
 	}
 
 	public static function destroyFreeplayVocals() {
@@ -460,11 +444,9 @@ class FreeplayState extends MusicBeatState
 
 		scoreBG.scale.x = FlxG.width - scoreText.x + 6;
 		scoreBG.x = FlxG.width - (scoreBG.scale.x / 2);
+		
 		diffText.x = Std.int(scoreBG.x + (scoreBG.width / 2));
 		diffText.x -= diffText.width / 2;
-
-		countText.x = Std.int(scoreBG.x - (scoreBG.scale.x / 2));
-		countText.x -= countText.width;
 	}
 }
 
