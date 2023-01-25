@@ -42,7 +42,6 @@ class ClientPrefs {
 		'ShowLU' => false,
 		'HiddenOppLU' => false,
 		'LUAlpha' => 0,
-		'BeatIconFreeplay' => false,
 		'AntiMash' => false,
 		'noteOffset' => 0,
 		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
@@ -58,7 +57,6 @@ class ClientPrefs {
 		'hitsoundTypes' => 'Tick',
 		'ShowWatermark' => true,
 		'pauseMusic' => 'Tea Time',
-		'showSplash' => false,
 		// Gameplay settings
 		'comboOffset' => [[0, 0], [0, 0], [0, 0], [0, 0]],
 		'ratingOffset' => 0,
@@ -305,7 +303,6 @@ class ClientPrefs {
 		'note_187'	=> [J, NONE],
 		'note_188'	=> [K, NONE],
 		'note_189'  => [L, NONE],
-
 		'note_1810' => [Q, NONE],
 		'note_1811'	=> [W, NONE],
 		'note_1812'	=> [E, NONE],
