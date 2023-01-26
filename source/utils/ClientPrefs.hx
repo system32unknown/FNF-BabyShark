@@ -29,7 +29,7 @@ class ClientPrefs {
 		'ShowCombo' => true,
 		'ShowNPSCounter' => false,
 		'ShowLateEarly' => false,
-		'NoteDiffTypes' => "Andromeda",
+		'NoteDiffTypes' => "Simple",
 		'MstimingTypes' => "Simple",
 		'ScoreType' => 'Alter',
 		'ShowJudgementCount' => false,

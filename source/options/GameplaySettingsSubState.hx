@@ -80,8 +80,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			'Choose the type of Note Diffs.',
 			'NoteDiffTypes',
 			'string',
-			'Andromeda',
-			['Psych', 'Kade', 'Andromeda']);
+			'Simple',
+			['Psych', 'Kade', 'Simple']);
 		addOption(option);
 
 		var option:Option = new Option('Ms Timing Type:',
@@ -89,7 +89,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			'MstimingTypes',
 			'string',
 			'Simple',
-			['Kade', 'KadeFixed', 'Simple', 'OS']);
+			['Kade', 'Simple']);
 		addOption(option);
 		
 		var option:Option = new Option('Rating Offset',

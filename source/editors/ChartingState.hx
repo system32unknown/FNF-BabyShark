@@ -181,7 +181,7 @@ class ChartingState extends MusicBeatState
 	public var mouseQuant:Bool = false;
 	override function create()
 	{
-		Main.overlayVar.alpha = .5;
+		Main.overlayVar.textAlpha = .5;
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
 		else {
@@ -360,6 +360,11 @@ class ChartingState extends MusicBeatState
 
 		updateGrid();
 		super.create();
+	}
+
+	override function destroy() {
+		super.destroy();
+		Main.overlayVar.textAlpha = 1;
 	}
 
 	var check_mute_inst:FlxUICheckBox = null;
@@ -1539,7 +1544,7 @@ class ChartingState extends MusicBeatState
 				autosaveSong();
 				LoadingState.loadAndSwitchState(new editors.EditorPlayState(sectionStartTime(), _song.mania));
 			} if (FlxG.keys.justPressed.ENTER) {
-				Main.overlayVar.alpha = 1;
+				
 				autosaveSong();
 				FlxG.mouse.visible = false;
 				PlayState.SONG = _song;
@@ -1561,7 +1566,6 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.BACKSPACE) {
 				PlayState.chartingMode = false;
-				Main.overlayVar.alpha = 1;
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				FlxG.mouse.visible = false;

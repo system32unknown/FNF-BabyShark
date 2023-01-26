@@ -1,110 +1,69 @@
 package ui;
 
-#if cpp
-import cpp.vm.Gc;
-import cpp.NativeGc;
-#end
-import haxe.Timer;
-import openfl.text.TextField;
-import openfl.text.TextFormat;
-import openfl.system.System;
+import openfl.display.Sprite;
+import openfl.display.DisplayObject;
+import openfl.utils.Assets;
+
+import ui.framerate.*;
 import flixel.util.FlxColor;
 import utils.ClientPrefs;
 
-/**
-	The Overlay class provides an easy-to-use monitor to display
-	the current frame rate of an OpenFL project
-**/
-class Overlay extends TextField
-{
-	/**
-		The current frame rate, expressed using frames-per-second
-	**/
-	public var currentFPS(default, null):Int = 0;
+class Overlay extends Sprite {
+	public static var instance:Overlay;
 
-	public var fullVisible:Bool = true;
-	var peak:UInt = 0;
-
-	@:noCompletion var cacheCount:Int = 0;
-	@:noCompletion var times:Array<Float> = [];
-
-	static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
-
+    public var fpsCounter:FPSCounter;
+    public var memoryCounter:MEMCounter;
+	public var fontName:String = Assets.getFont("assets/fonts/vcr.ttf").fontName;
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
+
+	public var color(default, set):FlxColor;
+	public var textAlpha(default, set):Float = 0;
 
 	public function new(x:Float = 4, y:Float = 2) {
 		super();
+		if (instance == null) instance = this;
+		else throw "Cannot create another instance.";
 
 		this.x = x;
 		this.y = y;
 
-		autoSize = LEFT;
-		selectable = false;
-		
-		defaultTextFormat = new TextFormat(openfl.utils.Assets.getFont("assets/fonts/vcr.ttf").fontName, 14, 0xFFFFFF);
-		text = "";
+        __addToList(fpsCounter = new FPSCounter());
+        __addToList(memoryCounter = new MEMCounter());
 	}
 
-	public function changeFont(font:Dynamic) {
-		defaultTextFormat = font;
-	}
+    var __lastAddedSprite:DisplayObject = null;
+    function __addToList(spr:DisplayObject) {
+        spr.x = 0;
+        spr.y = __lastAddedSprite != null ? (__lastAddedSprite.y + __lastAddedSprite.height) : 4;
+        __lastAddedSprite = spr;
+        addChild(spr);
+    }
 
-	public static function getInterval(num:UInt):String {
-		var size:Float = num;
-		var data = 0;
-		while (size > 1024 && data < intervalArray.length - 1) {
-			data++;
-			size = size / 1024;
-		}
-
-		size = Math.round(size * 100) / 100;
-		return size + " " + intervalArray[data] + " \n";
-	}
-
-	function getMemoryUsage(type:String):Int {
-		var mem = 0;
-		switch (type) {
-			case "cpp": mem = Std.int(NativeGc.memInfo(0));
-			case "system": mem = System.totalMemory;
-			case "gc": mem = Std.int(Gc.memInfo64(Gc.MEM_INFO_USAGE));
-		}
-		return mem;
-	}
-
-	override function __enterFrame(dt:Float):Void {
-		super.__enterFrame(Math.floor(dt));
+	override function __enterFrame(dt:Int):Void {
+		super.__enterFrame(dt);
 
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + ClientPrefs.getPref('RainbowSpeed');
-			textColor = FlxColor.fromHSB(timeColor, 1, 1);
-		}
+			color = FlxColor.fromHSB(timeColor, 1, 1);
+		} else color = FlxColor.WHITE;
+	}
 
-		var now:Float = Timer.stamp();
-		times.push(now);
+	function set_color(value) {
+		fpsCounter.fpsText.textColor = value;
+		fpsCounter.fpsNum.textColor = value;
+		memoryCounter.memPeaktxt.textColor = value;
+		memoryCounter.memtxt.textColor = value;
 
-		while (times[0] < now - 1)
-			times.shift();
+		return color = value;
+	}
 
-		var currentCount = times.length;
-		currentFPS = Math.round((currentCount + cacheCount) / 2);
-		if (currentFPS > ClientPrefs.getPref('framerate')) currentFPS = ClientPrefs.getPref('framerate');
+	function set_textAlpha(value) {
+		fpsCounter.fpsText.alpha = textAlpha;
+		fpsCounter.fpsNum.alpha = textAlpha;
+		memoryCounter.memPeaktxt.alpha = textAlpha;
+		memoryCounter.memtxt.alpha = textAlpha;
+		alpha = textAlpha;
 
-		if (currentCount != cacheCount) {
-			text = '';
-			text += (ClientPrefs.getPref('showFPS') ? 'FPS: $currentFPS${ClientPrefs.getPref('MSFPSCounter') ? ' [MS: $dt]' : ''}\n' : "");
-
-			var memory:Int = getMemoryUsage(ClientPrefs.getPref('MEMType'));
-			if (memory > peak) peak = memory;
-
-			if (ClientPrefs.getPref('showMEM')) {
-				text += "MEM: " + getInterval(memory);
-				text += "MEM Peak: " + getInterval(peak);
-			}
-
-			if ((text != null || text != '') && Main.overlayVar != null)
-				Main.overlayVar.visible = fullVisible;
-		}
-
-		cacheCount = currentCount;
+		return textAlpha = value;
 	}
 }

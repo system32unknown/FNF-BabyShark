@@ -2304,15 +2304,6 @@ class FunkinLua {
 			return false;
 		});
 
-		addCallback("setFPSTextFont", function(font:String) {
-			var fps:Overlay = Main.overlayVar;
-			if (fps != null) {
-				fps.changeFont(Paths.font(font));
-				return true;
-			}
-			return false;
-		});
-
 		addCallback("getTextString", function(tag:String) {
 			var obj:FlxText = getTextObject(tag);
 			if(obj != null && obj.text != null) {

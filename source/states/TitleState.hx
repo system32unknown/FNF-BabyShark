@@ -325,7 +325,7 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	private var sickBeats:Int = 0; //Basically curBeat but won't be skipped if you hold the tab or resize the screen
+	var sickBeats:Int = 0; //Basically curBeat but won't be skipped if you hold the tab or resize the screen
 	public static var closedState:Bool = false;
 	override function beatHit()
 	{
@@ -355,7 +355,6 @@ class TitleState extends MusicBeatState
 					addMoreText('MoldyGH, MTM101, Stats45');
 					addMoreText('Rapparep lol, TheBuilderXD, Edival');
 					addMoreText('T5mpler, Erizur, Billy Bobbo');
-					addMoreText('Marcello_TIMEnice30');
 				case 3:
 					deleteCoolText();
 					createCoolText(['Baby Shark\'s Big Show Created by:']);
@@ -365,9 +364,11 @@ class TitleState extends MusicBeatState
 					addMoreText('SmartStudy');
 				case 5:
 					deleteCoolText();
-					createCoolText(['Psych Engine EK Created by:']);
+					createCoolText(['Extra Keys Created by:']);
 				case 6:
 					addMoreText('tposejank');
+					addMoreText('srPerez');
+					addMoreText('Leather128');
 				case 7:
 					deleteCoolText();
 					createCoolText(['Psych Engine Created by:']);
@@ -378,10 +379,9 @@ class TitleState extends MusicBeatState
 					addMoreText('And Psych Engine Contributors!');
 				case 9:
 					deleteCoolText();
-					createCoolText(['A Biggest Collaboration']);
+					createCoolText(['Bambisona and Babysharksona by']);
 				case 10:
-					addMoreText('Mod Ever');
-					addMoreText('And Ultimate Baby Shark Mod!');
+					addMoreText('Everyone');
 				case 11:
 					deleteCoolText();
 					createCoolText([curWacky[0]]);
@@ -389,7 +389,9 @@ class TitleState extends MusicBeatState
 				case 13: deleteCoolText();
 				case 14: addMoreText('Baby');
 				case 15: addMoreText('Shark\'s');
-				case 16: addMoreText('Funkin');
+				case 16:
+					addMoreText('Funkin');
+					addMoreText('The Full Ass Mod');
 				case 17: 
 					deleteCoolText();
 					skipIntro();

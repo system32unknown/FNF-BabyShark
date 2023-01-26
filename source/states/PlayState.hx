@@ -353,11 +353,11 @@ class PlayState extends MusicBeatState
 	public var achievementWeeks:Array<String> = [];
 
 	// Debug buttons
-	private var debugKeysChart:Array<FlxKey>;
-	private var debugKeysCharacter:Array<FlxKey>;
+	var debugKeysChart:Array<FlxKey>;
+	var debugKeysCharacter:Array<FlxKey>;
 
 	// Less laggy controls
-	private var keysArray:Array<Dynamic>;
+	var keysArray:Array<Dynamic>;
 
 	var precacheList:Map<String, String> = new Map<String, String>();
 
@@ -893,8 +893,8 @@ class PlayState extends MusicBeatState
 
 		function addAbilityToUnlockAchievements(funkinLua:FunkinLua) {
 			var lua = funkinLua.lua;
-			if (lua != null){
-				lua.add_callback("giveAchievement", function(name:String){
+			if (lua != null) {
+				lua.add_callback("giveAchievement", function(name:String) {
 					if (luaArray.contains(funkinLua))
 						throw 'Illegal attempt to unlock ' + name;
 					@:privateAccess
@@ -907,10 +907,8 @@ class PlayState extends MusicBeatState
 						instance.startAchievement(name);
 						ClientPrefs.saveSettings();
 						return "Unlocked achievement " + name + "!";
-					}
-					else return "Instance is null.";
+					} else return "Instance is null.";
 				});
-
 			}
 		}
 
@@ -1414,9 +1412,7 @@ class PlayState extends MusicBeatState
 
 		//PRECACHING MISS SOUNDS BECAUSE I THINK THEY CAN LAG PEOPLE AND FUCK THEM UP IDK HOW HAXE WORKS
 		if(ClientPrefs.getPref('hitsoundVolume') > 0) precacheList.set('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}', 'sound');
-		precacheList.set('missnote1', 'sound');
-		precacheList.set('missnote2', 'sound');
-		precacheList.set('missnote3', 'sound');
+		for (i in 1...4) precacheList.set('missnote$i', 'sound');
 
 		if (PauseSubState.songName != null) {
 			precacheList.set(PauseSubState.songName, 'music');
@@ -3168,8 +3164,9 @@ class PlayState extends MusicBeatState
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, CoolUtil.adjustFPS(.1))));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, CoolUtil.adjustFPS(.1))));
 			case "Micdup": // Stolen from FNF Mic'd Up
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, .09 / (Main.overlayVar.currentFPS / 60))));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, .09 / (Main.overlayVar.currentFPS / 60))));
+				var curFPS:Float = Main.overlayVar.fpsCounter.currentFPS;
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.width, 150, .09 / (curFPS / 60))));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.width, 150, .09 / (curFPS / 60))));
 			case "Dave" | "Purgatory":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
@@ -4425,9 +4422,7 @@ class PlayState extends MusicBeatState
 			if (ClientPrefs.getPref('ShowMsTiming') && timingTxtArrays[0] != null) {
 				switch (ClientPrefs.getPref('MstimingTypes')) {
 					case "Kade": msTiming = MathUtil.truncateFloat(noteDiff / playbackRate);
-					case "KadeFixed": msTiming = MathUtil.truncateFloat(noteDiff);
 					case "Simple": msTiming = MathUtil.truncateFloat(noteDiff / 1.);
-					case "OS": msTiming = Math.round(noteDiff);
 				}
 				
 				timingTxtArrays[0].text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
@@ -4653,7 +4648,7 @@ class PlayState extends MusicBeatState
 			case 'Kade':
 				if (note != null) notediff = -(note.strumTime - Conductor.songPosition);
 				else notediff = Conductor.safeZoneOffset;
-			case 'Andromeda':
+			case 'Simple':
 				notediff = note.strumTime - Conductor.songPosition;
 		}
 

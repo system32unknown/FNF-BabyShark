@@ -97,6 +97,11 @@ class TerminalState extends MusicBeatState
         super.create();
     }
 
+	override function destroy() {
+		super.destroy();
+		Main.overlayVar.textAlpha = 1;
+	}
+
     public function UpdateText(val:String) {
         displayText.text = previousText + val;
     }
@@ -180,7 +185,7 @@ class TerminalState extends MusicBeatState
             curCommand = "";
         }
         if (FlxG.keys.justPressed.ESCAPE) {
-            Main.overlayVar.alpha = 1;
+            
             MusicBeatState.switchState(new MainMenuState());
             FlxG.sound.playMusic(Paths.music('freakyMenu'));
         }

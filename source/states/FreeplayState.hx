@@ -133,10 +133,10 @@ class FreeplayState extends MusicBeatState
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		diffText.font = scoreText.font;
 
-		countText = new FlxText(0, 0, 0, "", 28);
-		countText.setPosition(FlxG.width * .7, scoreBG.height - countText.y);
+		countText = new FlxText(scoreBG.x, 0, 0, "", 28);
 		countText.setFormat(Paths.font("vcr.ttf"), 28, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		countText.borderSize = 1.25;
+		countText.y = scoreBG.height - countText.y;
 
 		add(countText);
 		add(diffText);
@@ -252,7 +252,7 @@ class FreeplayState extends MusicBeatState
 				}
 			}
 
-			if(FlxG.mouse.wheel != 0) {
+			if (FlxG.mouse.wheel != 0) {
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
 				changeSelection(-shiftMult * FlxG.mouse.wheel, false);
 				changeDiff();
