@@ -970,13 +970,13 @@ class PlayState extends MusicBeatState
 						luaArray.push(new FunkinLua(folder + file));
 						filesPushed.push(file);
 					} #if hscript else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
-						var exparser = new Parser();
-						exparser.allowMetadata = true;
-						exparser.allowTypes = true;
+						var parser = new Parser();
+						parser.allowMetadata = parser.allowJSON = parser.allowTypes = true;
 						var interp = new Interp();
+						interp.allowStaticVariables = interp.allowPublicVariables = true;
 						interp = HscriptHandler.setVars(interp);
 
-						interp.execute(exparser.parseString(File.getContent(folder + file)));
+						interp.execute(parser.parseString(File.getContent(folder + file)));
 						hscriptArray.set(folder + file, interp);
 						filesPushed.push(file);
 					} #end

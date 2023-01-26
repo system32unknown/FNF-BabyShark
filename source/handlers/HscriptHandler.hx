@@ -8,13 +8,7 @@ import game.*;
 import ui.*;
 import utils.*;
 
-import flixel.FlxBasic;
-import flixel.FlxG;
-import flixel.FlxGame;
-import flixel.FlxCamera;
-import flixel.FlxSprite;
-import flixel.FlxState;
-import flixel.ui.FlxBar;
+import flixel.*;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
 import flixel.addons.display.FlxBackdrop;
@@ -22,41 +16,63 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
 class HscriptHandler {
+    public static function getDefaultVariables():Map<String, Dynamic> {
+        return [
+            // Haxe related stuff
+            "Std"               => Std,
+            "Math"              => Math,
+            "StringTools"       => StringTools,
+            "Json"              => haxe.Json,
+
+            // OpenFL & Lime related stuff
+            "Assets"            => openfl.utils.Assets,
+            "Application"       => lime.app.Application,
+            "window"            => lime.app.Application.current.window,
+
+            // Flixel related stuff
+            "FlxG"              => FlxG,
+            "FlxSprite"         => FlxSprite,
+            "FlxBasic"          => FlxBasic,
+            "FlxCamera"         => FlxCamera,
+            "state"             => FlxG.state,
+            "FlxEase"           => flixel.tweens.FlxEase,
+            "FlxTween"          => flixel.tweens.FlxTween,
+            "FlxSound"          => flixel.system.FlxSound,
+            "FlxAssets"         => flixel.system.FlxAssets,
+            "FlxMath"           => flixel.math.FlxMath,
+            "FlxGroup"          => flixel.group.FlxGroup,
+            "FlxTypedGroup"     => flixel.group.FlxGroup.FlxTypedGroup,
+            "FlxSpriteGroup"    => flixel.group.FlxSpriteGroup,
+            "FlxTypeText"       => flixel.addons.text.FlxTypeText,
+            "FlxBackdrop"       => flixel.addons.display.FlxBackdrop,
+            "FlxText"           => FlxText,
+            "FlxTimer"          => FlxTimer,
+            "FlxPoint"          => CoolUtil.getMacroAbstractClass("flixel.math.FlxPoint"),
+            "FlxAxes"           => CoolUtil.getMacroAbstractClass("flixel.util.FlxAxes"),
+            "FlxColor"          => CoolUtil.getMacroAbstractClass("flixel.util.FlxColor"),
+
+            // Engine related stuff
+            "PlayState"          => PlayState,
+            "game"              => PlayState.instance,
+            "Note"              => Note,
+            "NoteSplash"        => NoteSplash,
+            "HealthIcon"        => HealthIcon,
+            "StrumLine"         => StrumNote,
+            "Character"         => Character,
+            "Boyfriend"         => Boyfriend,
+            "Paths"             => Paths,
+            "Conductor"         => Conductor,
+            "Alphabet"          => Alphabet,
+
+            "CoolUtil"          => CoolUtil,
+            "ClientPrefs"       => ClientPrefs,
+        ];
+    }
 
     public static function setVars(interp:Interp) {
-        interp.variables.set('PlayState', PlayState);
-        interp.variables.set('game', PlayState.instance);
-        interp.variables.set('MainMenuState', MainMenuState);
-        interp.variables.set('GameOverSubstate', GameOverSubstate);
-
-        interp.variables.set('Character', Character);
-        interp.variables.set('Boyfriend', Boyfriend);
-        interp.variables.set('Song', Song);
-        interp.variables.set('HealthIcon', HealthIcon);
-        interp.variables.set('StrumNote', StrumNote);
-        interp.variables.set('Conductor', Conductor);
-        interp.variables.set('ClientPrefs', ClientPrefs);
-        interp.variables.set('Note', Note);
-        interp.variables.set('NoteSplash', NoteSplash);
-        interp.variables.set('Paths', Paths);
-        interp.variables.set('Alphabet', Alphabet);
-
-        interp.variables.set('FlxG', FlxG);
-        interp.variables.set('FlxGame', FlxGame);
-        interp.variables.set('FlxBackdrop', FlxBackdrop);
-        interp.variables.set('FlxBar', FlxBar);
-        interp.variables.set('FlxState', FlxState);
-        interp.variables.set('FlxCamera', FlxCamera);
-        interp.variables.set('FlxTimer', FlxTimer);
-        interp.variables.set('FlxEase', FlxEase);
-        interp.variables.set('FlxText', FlxText);
-        interp.variables.set('FlxTween', FlxTween);
-        interp.variables.set('FlxSprite', FlxSprite);
-        interp.variables.set('FlxBasic', FlxBasic);
-
-        interp.variables.set('StringTools', StringTools);
-        interp.variables.set('Math', Math);
-        interp.variables.set('Type', Type);
+        for (key => type in getDefaultVariables()) {
+            interp.variables.set(key, type);
+        }
 
         return interp;
     }

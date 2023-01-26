@@ -212,4 +212,8 @@ class CoolUtil
 			+ '/'
 			+ FlxSave.validate(FlxG.stage.application.meta.get('file')) #end;
 	}
+
+	public static function getMacroAbstractClass(className:String) {
+		return Type.resolveClass('${className}_HSC');
+	}
 }
