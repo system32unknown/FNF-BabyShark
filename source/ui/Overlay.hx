@@ -11,7 +11,6 @@ import utils.ClientPrefs;
 
 class Overlay extends Sprite {
 	public static var instance:Overlay;
-	public static var textFormat:TextFormat;
 
     public var fpsCounter:FPSCounter;
     public var memoryCounter:MEMCounter;
@@ -24,8 +23,6 @@ class Overlay extends Sprite {
 		super();
 		if (instance == null) instance = this;
 		else throw "Cannot create another instance.";
-
-		textFormat = new TextFormat(fontName, 12, -1);
 
 		this.x = x;
 		this.y = y;
@@ -49,6 +46,8 @@ class Overlay extends Sprite {
 			timeColor = (timeColor % 360) + ClientPrefs.getPref('RainbowSpeed');
 			color = FlxColor.fromHSB(timeColor, 1, 1);
 		} else color = FlxColor.WHITE;
+
+		visible = ClientPrefs.getPref('showMEM') || ClientPrefs.getPref('showFPS');
 	}
 
 	function set_color(value) {

@@ -76,9 +76,6 @@ class Main extends Sprite
 		addChild(overlayVar);
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-		if(overlayVar != null) {
-			overlayVar.visible = ClientPrefs.getPref('showFPS');
-		}
 		
 		#if CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
