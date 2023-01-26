@@ -30,8 +30,7 @@ class PlatformUtil
             SetLayeredWindowAttributes(hWnd, RGB(r, g, b), alpha, LWA_COLORKEY);
     ')
     #end
-	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0, res:Int = 0)
-		return res;
+	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0, res:Int = 0) return res;
 
     #if windows
     @:functionCode('
@@ -65,8 +64,7 @@ class PlatformUtil
         return Shell_NotifyIcon(NIM_MODIFY, &m_NID);
     ')
     #end
-    static public function sendWindowsNotification(title:String = "", desc:String = ""):Int
-        return 0;
+    static public function sendWindowsNotification(title:String = "", desc:String = ""):Int return 0;
 
     #if windows
     @:functionCode('
@@ -81,16 +79,14 @@ class PlatformUtil
         );
     ')
     #end
-    static public function sendFakeMsgBox(title:String = "", desc:String = ""):Int
-        return 0;
+    static public function sendFakeMsgBox(title:String = "", desc:String = ""):Int return 0;
 
     #if windows
 	@:functionCode('
         return SetCursorPos(x, y); 
     ')
     #end
-	static public function setCursorPos(x:Int = 0, y:Int = 0):Int
-		return 0;
+	static public function setCursorPos(x:Int = 0, y:Int = 0):Int return 0;
 
     #if windows
     @:functionCode('
@@ -124,11 +120,10 @@ class PlatformUtil
     #end
     static public function getMousePos(pos:Int):Int {return 0;}
 
-    #if windows
     @:functionCode('
-        system("CLS");
-        std::cout<< "" <<std::flush;
+        int darkMode = enable ? 1 : 0;
+        HWND window = GetActiveWindow();
+        DwmSetWindowAttribute(window, type, &darkMode, sizeof(darkMode));
     ')
-    #end
-    static public function clearScreen() {}
+    public static function setWindowAtt(type:Int, enable:Bool) {}
 }

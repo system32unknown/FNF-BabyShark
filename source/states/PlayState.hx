@@ -5594,8 +5594,7 @@ class PlayState extends MusicBeatState
 
 	function callSingleHScript(func:String, args:Array<Dynamic>, filename:String) {
 		var hvaribles:Map<String, Dynamic> = hscriptArray.get(filename).variables;
-		if (!hvaribles.exists(func))
-			return;
+		if (!hvaribles.exists(func)) return;
 		
 		var method = hvaribles.get(func);
 		Reflect.callMethod(null, method, args);
@@ -5637,10 +5636,8 @@ class PlayState extends MusicBeatState
 
 		var ret:Dynamic = callOnLuas('onRecalculateRating', [], false);
 		if(ret != FunkinLua.Function_Stop) {
-			if(totalPlayed < 1) //Prevent divide by 0
-				ratingName = '?';
-			else {
-				// Rating Percent
+			if(totalPlayed < 1)  ratingName = '?'; //Prevent divide by 0
+			else { // Rating Percent
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
 
 				accuracy = MathUtil.floorDecimal(ratingPercent * 100, 2);

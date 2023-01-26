@@ -19,9 +19,8 @@ class Overlay extends Sprite {
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
 	public var color(default, set):FlxColor;
-	public var textAlpha(default, set):Float = 0;
 
-	public function new(x:Float = 4, y:Float = 2) {
+	public function new(x:Float = 0, y:Float = 0) {
 		super();
 		if (instance == null) instance = this;
 		else throw "Cannot create another instance.";
@@ -37,8 +36,8 @@ class Overlay extends Sprite {
 
     var __lastAddedSprite:DisplayObject = null;
     function __addToList(spr:DisplayObject) {
-        spr.x = 0;
-        spr.y = __lastAddedSprite != null ? (__lastAddedSprite.y + __lastAddedSprite.height) : 4;
+        spr.x = x;
+        spr.y = __lastAddedSprite != null ? (__lastAddedSprite.y + __lastAddedSprite.height) : y;
         __lastAddedSprite = spr;
         addChild(spr);
     }
@@ -58,14 +57,5 @@ class Overlay extends Sprite {
 		memoryCounter.memtxt.textColor = value;
 
 		return color = value;
-	}
-
-	function set_textAlpha(value) {
-		fpsCounter.fpsText.alpha = textAlpha;
-		fpsCounter.fpsNum.alpha = textAlpha;
-		memoryCounter.memtxt.alpha = textAlpha;
-		alpha = textAlpha;
-
-		return textAlpha = value;
 	}
 }

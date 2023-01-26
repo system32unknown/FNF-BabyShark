@@ -99,7 +99,7 @@ class TerminalState extends MusicBeatState
 
 	override function destroy() {
 		super.destroy();
-		Main.overlayVar.textAlpha = 1;
+		Main.overlayVar.alpha = 1;
 	}
 
     public function UpdateText(val:String) {

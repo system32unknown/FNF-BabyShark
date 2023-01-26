@@ -181,7 +181,7 @@ class ChartingState extends MusicBeatState
 	public var mouseQuant:Bool = false;
 	override function create()
 	{
-		Main.overlayVar.textAlpha = .5;
+		Main.overlayVar.alpha = .5;
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
 		else {
@@ -364,7 +364,7 @@ class ChartingState extends MusicBeatState
 
 	override function destroy() {
 		super.destroy();
-		Main.overlayVar.textAlpha = 1;
+		Main.overlayVar.alpha = 1;
 	}
 
 	var check_mute_inst:FlxUICheckBox = null;

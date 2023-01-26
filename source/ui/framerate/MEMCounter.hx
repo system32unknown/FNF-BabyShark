@@ -27,7 +27,7 @@ class MEMCounter extends Sprite {
     }
 
     public override function __enterFrame(dt:Int) {
-        if (alpha <= 0.05) return;
+        if (alpha <= 0.05 || !visible) return;
         super.__enterFrame(dt);
 
         memory = MiscUtil.getMemoryUsage(ClientPrefs.getPref('MEMType'));

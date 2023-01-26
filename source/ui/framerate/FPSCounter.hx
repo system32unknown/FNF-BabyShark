@@ -33,7 +33,7 @@ class FPSCounter extends Sprite {
     }
 
     public override function __enterFrame(dt:Int) {
-        if (alpha <= 0.05) return;
+        if (alpha <= 0.05 || !visible) return;
         super.__enterFrame(dt);
 
 		var now:Float = Timer.stamp();
@@ -48,7 +48,7 @@ class FPSCounter extends Sprite {
 
 		if (currentCount != cacheCount) {
 			fpsNum.text = Std.string(Math.floor(currentFPS));
-            fpsText.text = 'FPS [MS: $dt]';
+            fpsText.text = 'FPS [$dt MS]';
 
             fpsText.x = fpsNum.x + fpsNum.width;
             fpsText.y = (fpsNum.y + fpsNum.height) - fpsText.height;
