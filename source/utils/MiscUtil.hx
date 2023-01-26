@@ -18,7 +18,7 @@ class MiscUtil {
 		}
 
 		size = Math.round(size * 100) / 100;
-		return size + " " + intervalArray[data] + " \n";
+		return '$size ${intervalArray[data]}';
 	}
 
 	public static function getMemoryUsage(type:String):Int {

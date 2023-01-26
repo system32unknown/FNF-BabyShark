@@ -9,7 +9,6 @@ import utils.MiscUtil;
 
 class MEMCounter extends Sprite {
     public var memtxt:TextField;
-    public var memPeaktxt:TextField;
 
     var memory:UInt = 0;
     var mempeak:UInt = 0;
@@ -18,16 +17,13 @@ class MEMCounter extends Sprite {
         super();
 
         memtxt = new TextField();
-        memPeaktxt = new TextField();
-
-        for (text in [memtxt, memPeaktxt]) {
-            text.autoSize = LEFT;
-            text.x = text.y = 0;
-            text.text = "";
-            text.multiline = text.wordWrap = false;
-            text.defaultTextFormat = new TextFormat(Overlay.instance.fontName, 12, -1);
-            addChild(text);
-        }
+        
+        memtxt.autoSize = LEFT;
+        memtxt.x = memtxt.y = 0;
+        memtxt.text = "";
+        memtxt.multiline = memtxt.wordWrap = false;
+        memtxt.defaultTextFormat = new TextFormat(Overlay.instance.fontName, 12, -1);
+        addChild(memtxt);
     }
 
     public override function __enterFrame(dt:Int) {
@@ -36,10 +32,7 @@ class MEMCounter extends Sprite {
 
         memory = MiscUtil.getMemoryUsage(ClientPrefs.getPref('MEMType'));
         if (memory > mempeak) mempeak = memory;
-        memtxt.text = "MEM: " + MiscUtil.getInterval(memory);
-        memPeaktxt.text = " / " + MiscUtil.getInterval(mempeak);
-
-        memPeaktxt.x = memtxt.x + memtxt.width;
+        memtxt.text = "MEM: " + MiscUtil.getInterval(memory) + " / " + MiscUtil.getInterval(mempeak);
         visible = ClientPrefs.getPref('showMEM');
     }
 }

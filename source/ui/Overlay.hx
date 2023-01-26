@@ -2,6 +2,7 @@ package ui;
 
 import openfl.display.Sprite;
 import openfl.display.DisplayObject;
+import openfl.text.TextFormat;
 import openfl.utils.Assets;
 
 import ui.framerate.*;
@@ -10,6 +11,7 @@ import utils.ClientPrefs;
 
 class Overlay extends Sprite {
 	public static var instance:Overlay;
+	public static var textFormat:TextFormat;
 
     public var fpsCounter:FPSCounter;
     public var memoryCounter:MEMCounter;
@@ -23,6 +25,8 @@ class Overlay extends Sprite {
 		super();
 		if (instance == null) instance = this;
 		else throw "Cannot create another instance.";
+
+		textFormat = new TextFormat(fontName, 12, -1);
 
 		this.x = x;
 		this.y = y;
@@ -51,7 +55,6 @@ class Overlay extends Sprite {
 	function set_color(value) {
 		fpsCounter.fpsText.textColor = value;
 		fpsCounter.fpsNum.textColor = value;
-		memoryCounter.memPeaktxt.textColor = value;
 		memoryCounter.memtxt.textColor = value;
 
 		return color = value;
@@ -60,7 +63,6 @@ class Overlay extends Sprite {
 	function set_textAlpha(value) {
 		fpsCounter.fpsText.alpha = textAlpha;
 		fpsCounter.fpsNum.alpha = textAlpha;
-		memoryCounter.memPeaktxt.alpha = textAlpha;
 		memoryCounter.memtxt.alpha = textAlpha;
 		alpha = textAlpha;
 
