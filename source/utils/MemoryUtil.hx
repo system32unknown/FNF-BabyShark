@@ -7,28 +7,10 @@ import cpp.NativeGc;
 import openfl.system.System;
 
 class MemoryUtil {
-    public static function clearMinor() {
-        #if cpp
-        Gc.run(false);
-        #end
-    }
-
 	public static function clearMajor() {
 		#if cpp
 		Gc.run(true);
 		Gc.compact();
-		#end
-	}
-
-	public static function enable() {
-		#if (cpp)
-		Gc.enable(true);
-		#end
-	}
-
-	public static function disable() {
-		#if (cpp)
-		Gc.enable(false);
 		#end
 	}
 
