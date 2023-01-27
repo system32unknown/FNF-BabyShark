@@ -1,4 +1,4 @@
-package utils;
+package scripting;
 
 #if LUA_ALLOWED
 import llua.Lua;
@@ -27,8 +27,6 @@ import flixel.util.FlxSave;
 import flixel.math.FlxMath;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.display.FlxRuntimeShader;
-import flixel.addons.effects.*; //Experimental Feature
-import flixel.addons.effects.chainable.*; //Experimental Feature
 import openfl.utils.Assets;
 import openfl.display.BlendMode;
 import substates.MusicBeatSubstate;
@@ -36,6 +34,7 @@ import substates.GameOverSubstate;
 import substates.PauseSubState;
 import states.*;
 import game.*;
+import utils.*;
 import shaders.ColorSwap;
 import data.WeekData;
 
@@ -47,7 +46,6 @@ import sys.io.File;
 import Type.ValueType;
 import ui.DialogueBoxPsych;
 import ui.CustomFadeTransition;
-import ui.Overlay;
 
 #if hscript
 import hscript.Parser;
@@ -3298,8 +3296,7 @@ class HScript
 		FunkinLua.hscriptVars.set(key, data);
 		
 		for (i in FunkinLua.hscriptVars.keys())
-			if (!exists(i))
-				interp.variables.set(i, FunkinLua.hscriptVars.get(i));
+			if (!exists(i)) interp.variables.set(i, FunkinLua.hscriptVars.get(i));
 
 		return interp.variables;
 	}
@@ -3330,9 +3327,6 @@ class HScript
 		setVar('FlxTween', FlxTween);
 		setVar('FlxEase', FlxEase);
 		setVar('PlayState', PlayState);
-		setVar('FlxCloth', FlxClothSprite);
-		setVar('FlxSkewed', FlxSkewedSprite);
-		setVar('FlxRainbow', FlxRainbowEffect);
 		setVar('game', PlayState.instance);
 		setVar('Paths', Paths);
 		setVar('Conductor', Conductor);

@@ -50,6 +50,7 @@ import shaders.PulseEffect;
 import data.StageData.StageFile;
 import data.EkData.Keybinds;
 import data.*;
+import scripting.*;
 
 #if !flash
 import flixel.addons.display.FlxRuntimeShader;
@@ -65,7 +66,6 @@ import handlers.CutsceneHandler;
 
 #if hscript
 import hscript.Interp;
-import handlers.HscriptHandler;
 #end
 
 #if LUA_ALLOWED
@@ -968,9 +968,8 @@ class PlayState extends MusicBeatState
 						filesPushed.push(file);
 					} #if hscript else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
 						var hscriptHand:HscriptHandler = new HscriptHandler(folder + file);
-						var run_Interp:Interp = hscriptHand.execute();
 
-						hscriptArray.set(folder + file, run_Interp);
+						hscriptArray.set(folder + file, hscriptHand.execute());
 						filesPushed.push(file);
 					} #end
 				}
@@ -1321,9 +1320,8 @@ class PlayState extends MusicBeatState
 						filesPushed.push(file);
 					} #if hscript else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
 						var hscriptHand:HscriptHandler = new HscriptHandler(folder + file);
-						var run_Interp:Interp = hscriptHand.execute();
-
-						hscriptArray.set(folder + file, run_Interp);
+						
+						hscriptArray.set(folder + file, hscriptHand.execute());
 						filesPushed.push(file);
 					} #end
 				}

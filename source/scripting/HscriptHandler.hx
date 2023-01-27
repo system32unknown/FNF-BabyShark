@@ -1,4 +1,4 @@
-package handlers;
+package scripting;
 
 import hscript.Interp;
 import hscript.Parser;
@@ -14,7 +14,6 @@ import ui.*;
 import utils.*;
 
 import flixel.*;
-import flixel.custom.system.ColoredLog;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
