@@ -1096,8 +1096,8 @@ class PlayState extends MusicBeatState
 		}
 
 		var showTime:Bool = (ClientPrefs.getPref('timeBarType') != 'Disabled');
-		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 20, 400, "", 20);
-		timeTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
+		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 20, 400, "", 16);
+		timeTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
@@ -1110,11 +1110,11 @@ class PlayState extends MusicBeatState
 		updateTime = showTime;
 
 		timeBarBG = new AttachedSprite('timeBar');
-		timeBarBG.setPosition(timeTxt.x, timeTxt.y + (timeTxt.height / 4) - 2);
+		timeBarBG.setPosition(0, timeTxt.y + (timeTxt.height / 4) - 2);
+		timeBarBG.screenCenter(X);
 		timeBarBG.scrollFactor.set();
 		timeBarBG.alpha = 0;
 		timeBarBG.visible = showTime;
-		timeBarBG.setAdd(-4, -4);
 		add(timeBarBG);
 		
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
@@ -1165,12 +1165,12 @@ class PlayState extends MusicBeatState
 		moveCameraSection();
 
 		healthBarBG = new AttachedSprite('healthBar');
-		healthBarBG.y = FlxG.height * 0.89;
+		healthBarBG.y = FlxG.height * 0.9;
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		healthBarBG.visible = !hideHud;
 		healthBarBG.setAdd(-4, -4);
-		if(downScroll) healthBarBG.y = 0.11 * FlxG.height;
+		if(downScroll) healthBarBG.y = .11 * FlxG.height;
 		add(healthBarBG);
 
 		// healthBar
@@ -2869,11 +2869,10 @@ class PlayState extends MusicBeatState
 		super.closeSubState();
 	}
 
-	override public function onFocus():Void
-	{
+	override public function onFocus():Void {
 		#if desktop
 		if (health > 0 && !paused) {
-			if (Conductor.songPosition > 0.0) {
+			if (Conductor.songPosition > .0) {
 				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset'));
 			} else {
 				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
@@ -2882,11 +2881,12 @@ class PlayState extends MusicBeatState
 		#end
 
 		PsychVideo.isActive(true);
+		callOnLuas('onFocus', []);
+		callOnHScripts('onFocus', []);
 		super.onFocus();
 	}
 
-	override public function onFocusLost():Void
-	{
+	override public function onFocusLost():Void {
 		#if desktop
 		if (health > 0 && !paused) {
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
@@ -2894,11 +2894,18 @@ class PlayState extends MusicBeatState
 		#end
 
 		PsychVideo.isActive(false);
+		callOnLuas('onFocusLost', []);
+		callOnHScripts('onFocusLost', []);
 		super.onFocusLost();
 	}
 
-	function resyncVocals():Void
-	{
+	override public function onResize(Width:Int, Height:Int):Void {
+		callOnLuas('onResize', [Width, Height]);
+		callOnHScripts('onResize', [Width, Height]);
+		super.onResize();
+	}
+
+	function resyncVocals():Void {
 		if(finishTimer != null) return;
 
 		vocals.pause();
