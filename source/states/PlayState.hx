@@ -3148,12 +3148,12 @@ class PlayState extends MusicBeatState
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP2.scale.set(mult, mult);
 			case "Andromeda" | "BabyShark": // Stolen from Andromeda Engine
-				iconP1.setGraphicSize(Std.int(CoolUtil.adjustFPS(iconP1.width, 150, .1)));
-				iconP2.setGraphicSize(Std.int(CoolUtil.adjustFPS(iconP2.width, 150, .1)));
+				iconP1.setGraphicSize(Std.int(MathUtil.adjustFPS(iconP1.width, 150, .1)));
+				iconP2.setGraphicSize(Std.int(MathUtil.adjustFPS(iconP2.width, 150, .1)));
 			case "Micdup": // Stolen from FNF Mic'd Up
 				var curFPS:Float = Main.overlayVar.fpsCounter.currentFPS;
-				iconP1.setGraphicSize(Std.int(CoolUtil.adjustFPS(iconP1.width, 150, .09 / (curFPS / 60))));
-				iconP2.setGraphicSize(Std.int(CoolUtil.adjustFPS(iconP2.width, 150, .09 / (curFPS / 60))));
+				iconP1.setGraphicSize(Std.int(MathUtil.adjustFPS(iconP1.width, 150, .09 / (curFPS / 60))));
+				iconP2.setGraphicSize(Std.int(MathUtil.adjustFPS(iconP2.width, 150, .09 / (curFPS / 60))));
 			case "Dave" | "Purgatory":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
