@@ -1121,10 +1121,10 @@ class PlayState extends MusicBeatState
 			'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
 		timeBar.createGradientBar([FlxColor.BLACK], [dad.getColor(), boyfriend.getColor()], 1, 90);
-		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
 		add(timeTxt);
+		
 		timeBarBG.sprTracker = timeBar;
 		insert(members.indexOf(timeBarBG), timeBar);
 
