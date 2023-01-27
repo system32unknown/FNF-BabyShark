@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.util.FlxSave;
+import flixel.math.FlxMath;
 import openfl.geom.Rectangle;
 #if sys
 import sys.io.File;
@@ -156,9 +157,12 @@ class CoolUtil
 		return ranking;
 	}
 
-	inline public static function adjustFPS(num:Float):Float {
-		return FlxG.elapsed / (1 / 60) * num;
+	inline public static function adjustFPS(from:Float, to:Float, ratio:Float):Float {
+		return FlxMath.lerp(from, to, ratioFPS(ratio));
 	}
+
+	inline public static function ratioFPS(ratio:Float):Float
+		return MathUtil.boundTo(ratio * 60 * FlxG.elapsed, 0, 1);
 
 	inline public static function browserLoad(site:String) {
 		#if windows
