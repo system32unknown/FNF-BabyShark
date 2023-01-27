@@ -14,7 +14,7 @@ import openfl.utils.Assets;
 import states.PlayState;
 import utils.ClientPrefs;
 import utils.Controls;
-import utils.FunkinLua;
+import scripting.FunkinLua;
 
 using StringTools;
 
