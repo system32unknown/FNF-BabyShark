@@ -65,7 +65,6 @@ import handlers.CutsceneHandler;
 
 #if hscript
 import hscript.Interp;
-import hscript.Parser;
 import handlers.HscriptHandler;
 #end
 
@@ -970,14 +969,10 @@ class PlayState extends MusicBeatState
 						luaArray.push(new FunkinLua(folder + file));
 						filesPushed.push(file);
 					} #if hscript else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
-						var parser = new Parser();
-						parser.allowMetadata = parser.allowJSON = parser.allowTypes = true;
-						var interp = new Interp();
-						interp.allowStaticVariables = interp.allowPublicVariables = true;
-						interp = HscriptHandler.setVars(interp);
+						var hscriptHand:HscriptHandler = new HscriptHandler(folder + file);
+						var run_Interp:Interp = hscriptHand.execute();
 
-						interp.execute(parser.parseString(File.getContent(folder + file)));
-						hscriptArray.set(folder + file, interp);
+						hscriptArray.set(folder + file, run_Interp);
 						filesPushed.push(file);
 					} #end
 				}
@@ -1328,14 +1323,10 @@ class PlayState extends MusicBeatState
 						luaArray.push(new FunkinLua(folder + file));
 						filesPushed.push(file);
 					} #if hscript else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
-						var exparser = new Parser();
-						exparser.allowMetadata = true;
-						exparser.allowTypes = true;
-						var interp = new Interp();
-						interp = HscriptHandler.setVars(interp);
+						var hscriptHand:HscriptHandler = new HscriptHandler(folder + file);
+						var run_Interp:Interp = hscriptHand.execute();
 
-						interp.execute(exparser.parseString(File.getContent(folder + file)));
-						hscriptArray.set(folder + file, interp);
+						hscriptArray.set(folder + file, run_Interp);
 						filesPushed.push(file);
 					} #end
 				}
@@ -2995,7 +2986,7 @@ class PlayState extends MusicBeatState
 					while (i > 0)
 					{
 						var particle = phillyGlowParticles.members[i];
-						if(particle.alpha == 0) {
+						if(particle.alpha <= 0) {
 							particle.kill();
 							phillyGlowParticles.remove(particle, true);
 							particle.destroy();
