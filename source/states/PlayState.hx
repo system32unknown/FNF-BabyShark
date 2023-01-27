@@ -2902,7 +2902,7 @@ class PlayState extends MusicBeatState
 	override public function onResize(Width:Int, Height:Int):Void {
 		callOnLuas('onResize', [Width, Height]);
 		callOnHScripts('onResize', [Width, Height]);
-		super.onResize();
+		super.onResize(Width, Height);
 	}
 
 	function resyncVocals():Void {
