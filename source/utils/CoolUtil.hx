@@ -157,9 +157,8 @@ class CoolUtil
 		return ranking;
 	}
 
-	inline public static function adjustFPS(from:Float, to:Float, ratio:Float):Float {
+	inline public static function adjustFPS(from:Float, to:Float, ratio:Float):Float
 		return FlxMath.lerp(from, to, ratioFPS(ratio));
-	}
 
 	inline public static function ratioFPS(ratio:Float):Float
 		return MathUtil.boundTo(ratio * 60 * FlxG.elapsed, 0, 1);
@@ -210,8 +209,8 @@ class CoolUtil
         return temp_str;
     }
 
+	@:access(flixel.util.FlxSave.validate)
 	public static function getSavePath(folder:String = 'altertoriel'):String {
-		@:privateAccess
 		return #if (flixel < "5.0.0") folder #else FlxG.stage.application.meta.get('company')
 			+ '/'
 			+ FlxSave.validate(FlxG.stage.application.meta.get('file')) #end;
@@ -219,5 +218,19 @@ class CoolUtil
 
 	public static function getMacroAbstractClass(className:String) {
 		return Type.resolveClass('${className}_HSC');
+	}
+
+    static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+	public static function getInterval(num:UInt):String {
+		var size:Float = num;
+		var data = 0;
+		while (size > 1024 && data < intervalArray.length - 1) {
+			data++;
+			size = size / 1024;
+		}
+
+		size = Math.round(size * 100) / 100;
+		return '$size ${intervalArray[data]}';
 	}
 }

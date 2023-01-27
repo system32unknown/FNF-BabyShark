@@ -1,6 +1,9 @@
 package;
 
 import flixel.FlxGame;
+import flixel.FlxG;
+import flixel.FlxState;
+
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -8,8 +11,8 @@ import openfl.display.StageScaleMode;
 import lime.app.Application;
 
 import states.TitleState;
-import utils.ClientPrefs;
 import utils.Controls;
+import utils.MemoryUtil;
 import utils.Discord.DiscordClient;
 import ui.Overlay;
 
@@ -89,6 +92,16 @@ class Main extends Sprite
 			});
 		}
 		#end
+
+		FlxG.fixedTimestep = false;
+		FlxG.signals.preStateCreate.add(onStateSwitch);
+	}
+
+	static function onStateSwitch(newState:FlxState) {
+		Paths.clearUnusedMemory();
+		Paths.clearStoredMemory();
+
+		MemoryUtil.clearMajor();
 	}
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!

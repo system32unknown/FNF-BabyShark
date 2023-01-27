@@ -4,8 +4,10 @@ import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
 import openfl.system.System;
+import openfl.utils.AssetCache;
 import openfl.utils.AssetType;
-import openfl.utils.Assets as OpenFlAssets;
+import openfl.utils.Assets as OpenFlAssetsUtil;
+import openfl.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
 import lime.utils.Assets;
 import flash.media.Sound;
@@ -84,12 +86,12 @@ class Paths
 
 	public static function decacheGraphic(key:String) {
 		var obj = currentTrackedAssets.get(key);
-		@:privateAccess{
+		@:privateAccess {
 			if (obj == null) obj = FlxG.bitmap._cache.get(key);
 			if (obj != null) {
 				if (assetExcluded(obj)) return;
 
-				OpenFlAssets.cache.removeBitmapData(key);
+				OpenFlAssetsUtil.cache.removeBitmapData(key);
 				FlxG.bitmap._cache.remove(key);
 
 				if (obj.bitmap != null) {
@@ -104,23 +106,22 @@ class Paths
 		}
 	}
 
+	@:access(openfl.media.Sound.__buffer)
 	public static function decacheSound(key:String) {
 		var obj = currentTrackedSounds.get(key);
-		if (obj == null && OpenFlAssets.cache.hasSound(key)) obj = OpenFlAssets.cache.getSound(key);
+		if (obj == null && OpenFlAssetsUtil.cache.hasSound(key)) obj = OpenFlAssets.cache.getSound(key);
 		if (assetExcluded(obj)) return;
 
-		OpenFlAssets.cache.removeSound(key);
+		OpenFlAssetsUtil.cache.removeSound(key);
 		Assets.cache.clear(key);
 		currentTrackedSounds.remove(key);
 
 		if (obj != null) {
-			@:privateAccess{
-				if (obj.__buffer != null) {
-					obj.__buffer.dispose();
-					obj.__buffer = null;
-				}
-				obj = null;
+			if (obj.__buffer != null) {
+				obj.__buffer.dispose();
+				obj.__buffer = null;
 			}
+			obj = null;
 		}
 	}
 
@@ -150,6 +151,11 @@ class Paths
 			if (key != null && !localTrackedAssets.contains(key) && !assetExcluded(key))
 				decacheSound(key);
 		}
+		
+		var cache = cast(OpenFlAssets.cache, AssetCache);
+		for (key => font in cache.font)
+			cache.removeFont(key);
+
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
 		#if !html5 openfl.Assets.cache.clear("songs"); #end
@@ -185,12 +191,12 @@ class Paths
 			var levelPath:String = '';
 			if(currentLevel != 'shared') {
 				levelPath = getLibraryPathForce(file, currentLevel);
-				if (OpenFlAssets.exists(levelPath, type))
+				if (OpenFlAssetsUtil.exists(levelPath, type))
 					return levelPath;
 			}
 
 			levelPath = getLibraryPathForce(file, "shared");
-			if (OpenFlAssets.exists(levelPath, type))
+			if (OpenFlAssetsUtil.exists(levelPath, type))
 				return levelPath;
 		}
 
@@ -297,7 +303,7 @@ class Paths
 		}
 		#end
 
-		return OpenFlAssets.exists((isPath ? key : getPath(key, type)));
+		return OpenFlAssetsUtil.exists((isPath ? key : getPath(key, type)));
 	}
 
 	inline static public function getSparrowAtlas(key:String, ?library:String):FlxAtlasFrames
@@ -351,7 +357,7 @@ class Paths
 		#end
 
 		var path = getPath('images/$key.png', IMAGE, library);
-		if (OpenFlAssets.exists(path, IMAGE)) {
+		if (OpenFlAssetsUtil.exists(path, IMAGE)) {
 			if(!currentTrackedAssets.exists(path)) {
 				var newGraphic:FlxGraphic = FlxG.bitmap.add(path, false, path);
 				newGraphic.persist = true;
@@ -387,7 +393,7 @@ class Paths
 			var folder:String = '';
 			if(path == 'songs') folder = 'songs:';
 
-			currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(folder + getPath('$path/$key.$SOUND_EXT', SOUND, library)));
+			currentTrackedSounds.set(gottenPath, OpenFlAssetsUtil.getSound(folder + getPath('$path/$key.$SOUND_EXT', SOUND, library)));
 		}
 		#end
 		localTrackedAssets.push(gottenPath);

@@ -380,8 +380,6 @@ class PlayState extends MusicBeatState
 	var useLuaGameOver:Bool = false;
 	override public function create()
 	{
-		Paths.clearStoredMemory();
-
 		// for lua
 		instance = this;
 
@@ -1163,8 +1161,7 @@ class PlayState extends MusicBeatState
 		FlxG.camera.focusOn(camFollow);
 
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
-
-		FlxG.fixedTimestep = false;
+		
 		moveCameraSection();
 
 		healthBarBG = new AttachedSprite('healthBar');
@@ -1436,7 +1433,6 @@ class PlayState extends MusicBeatState
 				case 'music': Paths.music(key);
 			}
 		}
-		Paths.clearUnusedMemory();
 		
 		CustomFadeTransition.nextCamera = camOther;
 		if(eventNotes.length < 1) checkEventNote();

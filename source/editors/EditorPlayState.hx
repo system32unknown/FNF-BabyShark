@@ -731,7 +731,6 @@ class EditorPlayState extends MusicBeatState
 		if (ClientPrefs.getPref('ShowMsTiming') && msTimingTxt != null) {
 			switch (ClientPrefs.getPref('MstimingTypes')) {
 				case "Kade": msTiming = MathUtil.truncateFloat(noteDiff / 1);
-				case "KadeFixed": msTiming = MathUtil.truncateFloat(noteDiff);
 				case "Simple": msTiming = MathUtil.truncateFloat(noteDiff / 10);
 			}
 			var msTiming = MathUtil.truncateFloat(noteDiff / 1.0);

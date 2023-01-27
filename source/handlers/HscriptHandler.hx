@@ -35,7 +35,6 @@ class HscriptHandler {
 
         var parser = new Parser();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
-        interp.errorHandler = __errorHandler;
         interp.staticVariables = staticVariables;
         interp.allowStaticVariables = interp.allowPublicVariables = true;
         setVars();
@@ -43,9 +42,7 @@ class HscriptHandler {
         try {
             expr = parser.parseString(File.getContent(path));
         } catch(e:Error) {
-            __errorHandler(e);
-        } catch(e) {
-            __errorHandler(new Error(ECustom(e.toString()), 0, 0, fileName, 0));
+            trace(e);
         }
     }
 
@@ -55,14 +52,6 @@ class HscriptHandler {
             return interp;
         }
         return null;
-    }
-
-    function __errorHandler(error:Error) {
-        var fn = '$fileName:${error.line}: ';
-        var err = error.toString();
-        if (err.startsWith(fn)) err = err.substr(fn.length);
-
-        ColoredLog.error(fn + err);
     }
 
     function getDefaultVariables():Map<String, Dynamic> {

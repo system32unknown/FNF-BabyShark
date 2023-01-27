@@ -5,7 +5,8 @@ import openfl.display.Sprite;
 import openfl.text.TextField;
 
 import utils.ClientPrefs;
-import utils.MiscUtil;
+import utils.MemoryUtil;
+import utils.CoolUtil;
 
 class MEMCounter extends Sprite {
     public var memtxt:TextField;
@@ -30,9 +31,9 @@ class MEMCounter extends Sprite {
         if (alpha <= 0.05) return;
         super.__enterFrame(dt);
 
-        memory = MiscUtil.getMemoryUsage(ClientPrefs.getPref('MEMType'));
+        memory = MemoryUtil.getMemUsage(ClientPrefs.getPref('MEMType'));
         if (memory > mempeak) mempeak = memory;
-        memtxt.text = "MEM: " + MiscUtil.getInterval(memory) + " / " + MiscUtil.getInterval(mempeak);
+        memtxt.text = "MEM: " + CoolUtil.getInterval(memory) + " / " + CoolUtil.getInterval(mempeak);
         visible = ClientPrefs.getPref('showMEM');
     }
 }

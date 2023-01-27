@@ -67,11 +67,7 @@ class TitleState extends MusicBeatState
 
 	var startingTween:FlxTween;
 
-	override public function create():Void
-	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
-
+	override public function create():Void {
 		#if LUA_ALLOWED
 		Paths.pushGlobalMods();
 		#end
