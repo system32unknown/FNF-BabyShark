@@ -132,9 +132,9 @@ class FreeplayState extends MusicBeatState
 		diffText.font = scoreText.font;
 
 		countText = new FlxText(0, 0, 0, "", 20);
-		countText.setPosition(FlxG.width - countText.width, scoreBG.height - countText.y);
 		countText.setFormat(Paths.font("vcr.ttf"), countText.size, FlxColor.WHITE, RIGHT);
 		countText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.25);
+		countText.setPosition(FlxG.width - countText.width, scoreBG.height - countText.y);
 
 		add(countText);
 		add(diffText);
