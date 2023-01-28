@@ -1046,6 +1046,7 @@ class PlayState extends MusicBeatState
 			camPos.x += gf.getGraphicMidpoint().x + gf.cameraPosition[0];
 			camPos.y += gf.getGraphicMidpoint().y + gf.cameraPosition[1];
 		}
+		
 		gfChecknull = (gf != null ? gf.curCharacter : "gf");
 		if(dad.curCharacter == gfChecknull) {
 			dad.setPosition(GF_X, GF_Y);

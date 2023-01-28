@@ -50,6 +50,7 @@ class HealthIcon extends FlxSprite
 		changeIcon(char == null ? (isCredit ? defaultIcon : 'bf') : char, folder);
 	}
 
+	var iconSize:Float = 0;
 	public function changeIcon(char:String, ?folder:String, defaultIfMissing:Bool = true):Bool {
 		if (this.char == char) return false;
 		var graph:FlxGraphic = null;
@@ -59,7 +60,8 @@ class HealthIcon extends FlxSprite
 		else {
 			this.char = char;
 
-			iconOffsets[1] = iconOffsets[0] = 0;
+			iconSize = (width - 150) / availableStates;
+			iconOffsets[1] = iconOffsets[0] = iconSize;
 			loadGraphic(graph);
 			updateHitbox();
 			state = 0;
@@ -73,7 +75,8 @@ class HealthIcon extends FlxSprite
 		availableStates = Math.round(graph.width / graph.height);
 		this.char = char;
 		
-		iconOffsets[1] = iconOffsets[0] = 0;
+		iconSize = (width - 150) / availableStates;
+		iconOffsets[1] = iconOffsets[0] = iconSize;
 		
 		loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
 		updateHitbox();

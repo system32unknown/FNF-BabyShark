@@ -287,7 +287,9 @@ class MainMenuState extends MusicBeatState
 				if(menuItems.length > 4) {
 					add = menuItems.length * 8;
 				}
-				camFollow.setPosition(spr.getGraphicMidpoint().x, spr.getGraphicMidpoint().y - add);
+				var mid = spr.getGraphicMidpoint();
+				camFollow.setPosition(mid.x, mid.y - add);
+				mid.put();
 				spr.centerOffsets();
 			}
 		});
