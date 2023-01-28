@@ -13,7 +13,6 @@ class Overlay extends Sprite {
 
     public var fpsCounter:FPSCounter;
     public var memoryCounter:MEMCounter;
-	var infoCounter:InfoCounter;
 
 	public var fontName:String = Assets.getFont("assets/fonts/vcr.ttf").fontName;
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
@@ -30,7 +29,6 @@ class Overlay extends Sprite {
 
         __addToList(fpsCounter = new FPSCounter());
         __addToList(memoryCounter = new MEMCounter());
-		__addToList(infoCounter = new InfoCounter());
 	}
 
     var __lastAddedSprite:DisplayObject = null;
@@ -49,14 +47,13 @@ class Overlay extends Sprite {
 			color = FlxColor.fromHSB(timeColor, 1, 1);
 		} else color = FlxColor.WHITE;
 
-		visible = ClientPrefs.getPref('showMEM') || ClientPrefs.getPref('showFPS') || ClientPrefs.getPref('ShowWatermark');
+		visible = ClientPrefs.getPref('showMEM') || ClientPrefs.getPref('showFPS');
 	}
 
 	function set_color(value) {
 		fpsCounter.fpsText.textColor = value;
 		fpsCounter.fpsNum.textColor = value;
 		memoryCounter.memtxt.textColor = value;
-		infoCounter.infotxt.textColor = value;
 
 		return color = value;
 	}
