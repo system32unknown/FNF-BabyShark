@@ -66,8 +66,7 @@ class FunkinPreloader extends FlxBasePreloader {
 
 		_text.defaultTextFormat = new TextFormat("VCR OSD Mono", 12, 0xffffff);
 		_text.embedFonts = true;
-		_text.selectable = false;
-		_text.multiline = false;
+		_text.selectable = _text.multiline = false;
 		_text.x = 2;
 		_text.y = _bmpBar.y - 14;
 		_text.width = 200;
@@ -76,8 +75,7 @@ class FunkinPreloader extends FlxBasePreloader {
 		_flxtext.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 14, 0xffffff);
 		_flxtext.text = Std.string(FlxG.VERSION);
 		_flxtext.embedFonts = true;
-		_flxtext.selectable = false;
-		_flxtext.multiline = false;
+		_flxtext.selectable = _flxtext.multiline = false;
 		_flxtext.width = 200;
 		_flxtext.x = _text.x;
 		_flxtext.y = _text.y - 338;
