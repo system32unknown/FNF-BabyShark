@@ -60,8 +60,12 @@ class HealthIcon extends FlxSprite
 		else {
 			this.char = char;
 
-			iconSize = (width - 150) / availableStates;
-			iconOffsets[1] = iconOffsets[0] = iconSize;
+			iconOffsets[1] = iconOffsets[0] = 0;
+			if (isPsych) {
+				iconSize = (width - 150) / 2;
+				iconOffsets[1] = iconOffsets[0] = iconSize;
+			}
+
 			loadGraphic(graph);
 			updateHitbox();
 			state = 0;
@@ -75,8 +79,11 @@ class HealthIcon extends FlxSprite
 		availableStates = Math.round(graph.width / graph.height);
 		this.char = char;
 		
-		iconSize = (width - 150) / availableStates;
-		iconOffsets[1] = iconOffsets[0] = iconSize;
+		iconOffsets[1] = iconOffsets[0] = 0;
+		if (isPsych) {
+			iconSize = (width - 150) / 2;
+			iconOffsets[1] = iconOffsets[0] = iconSize;
+		}
 		
 		loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
 		updateHitbox();
