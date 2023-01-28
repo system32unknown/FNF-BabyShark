@@ -26,8 +26,6 @@ import utils.MathUtil;
 import states.TitleState;
 import states.FreeplayState;
 
-using StringTools;
-
 class ModsMenuState extends MusicBeatState
 {
 	var mods:Array<ModMetadata> = [];

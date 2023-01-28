@@ -9,8 +9,6 @@ import data.WeekData;
 import game.Highscore;
 import utils.CoolUtil;
 
-using StringTools;
-
 class ResetScoreSubState extends MusicBeatSubstate
 {
 	var bg:FlxSprite;

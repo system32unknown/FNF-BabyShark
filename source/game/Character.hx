@@ -19,8 +19,6 @@ import states.PlayState;
 import game.Section.SwagSection;
 import game.Song;
 
-using StringTools;
-
 typedef CharacterFile = {
 	var animations:Array<AnimArray>;
 	var image:String;

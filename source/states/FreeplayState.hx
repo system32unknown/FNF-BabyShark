@@ -25,8 +25,6 @@ import ui.HealthIcon;
 import ui.ErrorDisplay;
 import ui.Alphabet;
 
-using StringTools;
-
 class FreeplayState extends MusicBeatState
 {
 	var songs:Array<SongMetadata> = [];

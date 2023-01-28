@@ -1,7 +1,5 @@
 package game;
 
-using StringTools;
-
 class Boyfriend extends Character
 {
 	public var startedDeath:Bool = false;

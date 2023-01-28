@@ -23,8 +23,6 @@ import utils.Discord.DiscordClient;
 #end
 import data.WeekData;
 
-using StringTools;
-
 class MainMenuState extends MusicBeatState
 {
 	final BabySharkVersion:String = '1.0'; //This is also used for Discord RPC

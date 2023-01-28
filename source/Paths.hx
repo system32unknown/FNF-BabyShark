@@ -20,8 +20,6 @@ import haxe.io.Path;
 
 import utils.CoolUtil;
 
-using StringTools;
-
 @:access(openfl.display.BitmapData.__texture)
 class Paths
 {

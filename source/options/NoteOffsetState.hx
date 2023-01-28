@@ -20,8 +20,6 @@ import backgrounds.BGSprite;
 import ui.CustomFadeTransition;
 import ui.Alphabet;
 
-using StringTools;
-
 class NoteOffsetState extends MusicBeatState
 {
 	var boyfriend:Character;

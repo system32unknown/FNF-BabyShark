@@ -13,8 +13,6 @@ import flixel.text.FlxText;
 import flixel.system.FlxSound;
 import flixel.FlxG;
 
-using StringTools;
-
 class TerminalState extends MusicBeatState
 {
     //dont just yoink this code and use it in your own mod. this includes you, psych engine porters.

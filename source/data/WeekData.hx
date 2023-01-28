@@ -8,8 +8,6 @@ import haxe.Json;
 import utils.CoolUtil;
 import states.PlayState;
 
-using StringTools;
-
 typedef WeekFile = {
 	// JSON variables
 	var songs:Array<Dynamic>;

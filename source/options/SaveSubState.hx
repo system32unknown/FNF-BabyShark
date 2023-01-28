@@ -4,8 +4,6 @@ import flixel.FlxG;
 import ui.Prompt;
 import game.Highscore;
 
-using StringTools;
-
 class SaveSubState extends FuncOptionsMenu
 {
 	public function new()

@@ -72,8 +72,6 @@ import hscript.Interp;
 using llua.Lua.Lua_helper;
 #end
 
-using StringTools;
-
 class PlayState extends MusicBeatState
 {
 	public static var STRUM_X = 42;

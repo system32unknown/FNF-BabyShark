@@ -14,8 +14,6 @@ import utils.Discord.DiscordClient;
 import substates.MusicBeatSubstate;
 import ui.Alphabet;
 
-using StringTools;
-
 class FuncOptionsMenu extends MusicBeatSubstate
 {
 	private var curOption:OptionFunc = null;

@@ -7,8 +7,6 @@ import utils.ClientPrefs;
 import states.PlayState;
 import data.EkData;
 
-using StringTools;
-
 typedef EventNote = {
 	strumTime:Float,
 	event:String,

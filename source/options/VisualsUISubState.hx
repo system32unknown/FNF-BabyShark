@@ -3,8 +3,6 @@ package options;
 import flixel.FlxG;
 import utils.ClientPrefs;
 
-using StringTools;
-
 class VisualsUISubState extends BaseOptionsMenu
 {
 	public function new()

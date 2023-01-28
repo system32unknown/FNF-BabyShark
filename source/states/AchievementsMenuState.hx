@@ -13,8 +13,6 @@ import game.Achievements;
 import utils.ClientPrefs;
 import ui.Alphabet;
 
-using StringTools;
-
 class AchievementsMenuState extends MusicBeatState
 {
 	#if ACHIEVEMENTS_ALLOWED

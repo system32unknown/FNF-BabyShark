@@ -3,8 +3,6 @@ package game;
 import flixel.FlxG;
 import utils.CoolUtil;
 
-using StringTools;
-
 class Highscore {
 	#if (haxe >= "4.0.0")
 	public static var weekScores:Map<String, Int> = new Map();

@@ -15,8 +15,6 @@ import states.MainMenuState;
 import states.LoadingState;
 import ui.Alphabet;
 
-using StringTools;
-
 class OptionsState extends MusicBeatState
 {
 	var options:Array<Array<Dynamic>> = [

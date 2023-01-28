@@ -9,8 +9,6 @@ import flixel.math.FlxPoint;
 import utils.ClientPrefs;
 import utils.MathUtil;
 
-using StringTools;
-
 enum Alignment {
 	LEFT;
 	CENTERED;

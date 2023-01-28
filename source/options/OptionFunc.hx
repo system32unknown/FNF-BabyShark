@@ -2,8 +2,6 @@ package options;
 
 import ui.Alphabet;
 
-using StringTools;
-
 class OptionFunc
 {
 	private var child:Alphabet;

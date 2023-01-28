@@ -16,8 +16,6 @@ import utils.ClientPrefs;
 import utils.Controls;
 import scripting.FunkinLua;
 
-using StringTools;
-
 typedef DialogueCharacterFile = {
 	var image:String;
 	var dialogue_pos:String;

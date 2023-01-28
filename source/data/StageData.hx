@@ -9,8 +9,6 @@ import openfl.utils.Assets;
 import haxe.Json;
 import game.Song;
 
-using StringTools;
-
 typedef StageFile = {
 	var directory:String;
 	var defaultZoom:Float;

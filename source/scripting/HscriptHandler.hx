@@ -18,8 +18,6 @@ import flixel.text.FlxText;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 
-using StringTools;
-
 class HscriptHandler {
     public var staticVariables:Map<String, Dynamic> = [];
 

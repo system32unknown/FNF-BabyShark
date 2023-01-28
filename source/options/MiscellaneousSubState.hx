@@ -1,7 +1,5 @@
 package options;
 
-using StringTools;
-
 class MiscellaneousSubState extends BaseOptionsMenu
 {
 	public function new()

@@ -20,8 +20,6 @@ import game.Conductor;
 import game.Note;
 import states.PlayState;
 
-using StringTools;
-
 class EditorLua {
 	public static var Function_Stop = 1;
 	public static var Function_Continue = 0;

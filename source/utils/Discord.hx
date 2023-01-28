@@ -8,8 +8,6 @@ import llua.State;
 using llua.Lua.Lua_helper;
 #end
 
-using StringTools;
-
 class DiscordClient
 {
 	public static var isInitialized:Bool = false;

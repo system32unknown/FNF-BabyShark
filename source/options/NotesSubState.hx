@@ -13,8 +13,6 @@ import utils.ClientPrefs;
 import shaders.ColorSwap;
 import ui.Alphabet;
 
-using StringTools;
-
 class NotesSubState extends MusicBeatSubstate
 {
 	private static var curSelected:Int = 0;

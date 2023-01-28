@@ -15,8 +15,6 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 
-using StringTools;
-
 class GameplayChangersSubstate extends MusicBeatSubstate
 {
 	private var curOption:GameplayOption = null;

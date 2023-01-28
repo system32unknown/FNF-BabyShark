@@ -24,8 +24,6 @@ import ui.MenuItem;
 import ui.MenuCharacter;
 import ui.ErrorDisplay;
 
-using StringTools;
-
 class StoryMenuState extends MusicBeatState
 {
 	public static var weekCompleted:Map<String, Bool> = new Map<String, Bool>();

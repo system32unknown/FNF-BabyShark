@@ -6,8 +6,6 @@ import flixel.math.FlxMath;
 import utils.ClientPrefs;
 import utils.CoolUtil;
 
-using StringTools;
-
 class HealthIcon extends FlxSprite
 {
 	static final prefix:String = 'icons/';

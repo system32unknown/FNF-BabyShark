@@ -31,8 +31,6 @@ import states.TitleState;
 import sys.io.File;
 #end
 
-using StringTools;
-
 class DialogueCharacterEditorState extends MusicBeatState
 {
 	var box:FlxSprite;

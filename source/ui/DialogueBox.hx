@@ -11,8 +11,6 @@ import flixel.util.FlxTimer;
 import utils.Controls;
 import states.PlayState;
 
-using StringTools;
-
 class DialogueBox extends FlxSpriteGroup
 {
 	var box:FlxSprite;

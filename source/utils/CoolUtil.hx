@@ -13,8 +13,6 @@ import openfl.utils.Assets;
 #end
 import states.PlayState;
 
-using StringTools;
-
 class CoolUtil
 {
 	public static final defaultDifficulties:Array<String> = ['Easy', 'Normal', 'Hard'];

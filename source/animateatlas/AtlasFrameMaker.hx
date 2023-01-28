@@ -15,7 +15,6 @@ import animateatlas.displayobject.SpriteAnimationLibrary;
 import animateatlas.displayobject.SpriteMovieClip;
 import states.PlayState;
 
-using StringTools;
 class AtlasFrameMaker extends FlxFramesCollection
 {
 	/**

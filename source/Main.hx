@@ -27,8 +27,6 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
-using StringTools;
-
 class Main extends Sprite
 {
 	public static var COMMIT_HASH(default, never):String = GithubAPI.getLatestCommits();

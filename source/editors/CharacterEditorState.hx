@@ -38,8 +38,6 @@ import ui.HealthIcon;
 import sys.FileSystem;
 #end
 
-using StringTools;
-
 /**
 	*DEBUG MODE
 **/

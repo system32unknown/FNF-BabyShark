@@ -13,8 +13,6 @@ import sys.FileSystem;
 import lime.utils.Assets;
 #end
 
-using StringTools;
-
 typedef SwagSong = {
 	var song:String;
 	var notes:Array<SwagSection>;

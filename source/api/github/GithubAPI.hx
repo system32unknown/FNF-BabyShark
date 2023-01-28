@@ -4,8 +4,6 @@ import haxe.Json;
 import haxe.Http;
 import haxe.Exception;
 
-using StringTools;
-
 class GithubAPI {
     public static function getLatestCommits():String {
         var sha_id:GithubCommits = getCommits("system32unknown", "FNF-BabyShark")[0];

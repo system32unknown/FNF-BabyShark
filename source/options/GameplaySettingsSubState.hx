@@ -3,8 +3,6 @@ package options;
 import flixel.FlxG;
 import utils.ClientPrefs;
 
-using StringTools;
-
 class GameplaySettingsSubState extends BaseOptionsMenu
 {
 	public function new()

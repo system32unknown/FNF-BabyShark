@@ -14,8 +14,6 @@ import ui.InputFormatter;
 import ui.AttachedText;
 import ui.Alphabet;
 
-using StringTools;
-
 class ControlsSubState extends MusicBeatSubstate {
 	private static var curSelected:Int = 1;
 	private static var curAlt:Bool = false;

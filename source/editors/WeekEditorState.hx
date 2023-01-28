@@ -36,8 +36,6 @@ import ui.HealthIcon;
 import ui.MenuCharacter;
 import ui.MenuItem;
 
-using StringTools;
-
 class WeekEditorState extends MusicBeatState
 {
 	var txtWeekTitle:FlxText;

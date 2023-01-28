@@ -15,8 +15,6 @@ import sys.FileSystem;
 
 import utils.ClientPrefs;
 
-using StringTools;
-
 typedef AchievementMeta = {
 	public var name:String;
 	public var desc:String;

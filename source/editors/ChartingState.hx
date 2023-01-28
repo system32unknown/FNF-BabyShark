@@ -58,8 +58,6 @@ import sys.FileSystem;
 import flash.media.Sound;
 #end
 
-using StringTools;
-
 @:access(flixel.system.FlxSound._sound)
 @:access(openfl.media.Sound.__buffer)
 

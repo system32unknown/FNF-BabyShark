@@ -5,8 +5,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import utils.ClientPrefs;
 
-using StringTools;
-
 class GraphicsSettingsSubState extends BaseOptionsMenu
 {
 	public function new()

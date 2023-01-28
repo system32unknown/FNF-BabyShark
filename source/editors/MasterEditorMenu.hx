@@ -21,8 +21,6 @@ import data.WeekData;
 import game.Character;
 import ui.Alphabet;
 
-using StringTools;
-
 class MasterEditorMenu extends MusicBeatState {
 	var options:Array<String> = [
 		'Week Editor',

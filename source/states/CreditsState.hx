@@ -21,8 +21,6 @@ import utils.MathUtil;
 import utils.Discord.DiscordClient;
 #end
 
-using StringTools;
-
 class CreditsState extends MusicBeatState
 {
 	// Title, Variable, Description, Color

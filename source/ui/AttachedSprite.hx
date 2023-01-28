@@ -3,8 +3,6 @@ package ui;
 import flixel.FlxSprite;
 import utils.ClientPrefs;
 
-using StringTools;
-
 class AttachedSprite extends FlxSprite
 {
 	public var sprTracker:FlxSprite;
