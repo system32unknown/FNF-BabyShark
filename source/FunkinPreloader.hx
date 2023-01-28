@@ -85,7 +85,7 @@ class FunkinPreloader extends FlxBasePreloader {
 
 		FlxAssets.drawLogo(_flxlogo.graphics);
 		_flxlogo.scaleX = _flxlogo.scaleY = .2;
-		_flxlogo.x = _flxtext.width + 30;
+		_flxlogo.x = _flxtext.width + 10;
 		_flxlogo.y = _flxtext.y;
 		_buffer.addChild(_flxlogo);
 
