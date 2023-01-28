@@ -150,6 +150,6 @@ class FunkinPreloader extends FlxBasePreloader {
 
 	override public function update(percent:Float):Void {
 		_bmpBar.scaleX = percent * (_width - 8);
-		_text.text = "BSF 0.1 BETA - " + Std.int(percent * 100) + "%";
+		_text.text = "BSF 0.1 - " + Std.int(percent * 100) + "%";
     }
 }
