@@ -85,12 +85,12 @@ class Paths
 	public static function decacheGraphic(key:String) {
 		var obj = currentTrackedAssets.get(key);
 		@:privateAccess {
-			if (obj == null) obj = FlxG.bitmap._cache.get(key);
+			if (obj == null)
+				obj = FlxG.bitmap._cache.get(key);
 			if (obj != null) {
 				if (assetExcluded(obj)) return;
 
 				OpenFlAssetsUtil.cache.removeBitmapData(key);
-				Assets.cache.clear(key);
 				FlxG.bitmap._cache.remove(key);
 
 				if (obj.bitmap != null) {
@@ -113,7 +113,6 @@ class Paths
 		if (assetExcluded(obj)) return;
 
 		OpenFlAssetsUtil.cache.removeSound(key);
-		Assets.cache.clear(key);
 		currentTrackedSounds.remove(key);
 
 		if (obj != null) {
@@ -155,8 +154,6 @@ class Paths
 		var cache = cast(OpenFlAssets.cache, AssetCache);
 		for (key => font in cache.font)
 			cache.removeFont(key);
-		for (key => sound in cache.sound)
-			cache.removeSound(key);
 
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];

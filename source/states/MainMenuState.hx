@@ -67,6 +67,7 @@ class MainMenuState extends MusicBeatState
 		debugKeys = ClientPrefs.keyBinds.get('debug_1').copy();
 
 		camGame = new FlxCamera();
+
 		camAchievement = new FlxCamera();
 		camAchievement.bgColor.alpha = 0;
 
@@ -239,8 +240,6 @@ class MainMenuState extends MusicBeatState
 				if(ClientPrefs.getPref('flashing')) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
 				menuItems.forEach(function(spr:FlxSprite) {
-					FlxTween.tween(FlxG.camera, {zoom: 5}, 0.8, {ease: FlxEase.expoIn});
-					FlxTween.tween(FlxG.camera, {angle: 45}, 0.8, {ease: FlxEase.expoIn});
 					if (curSelected != spr.ID) {
 						numMenu++;
 						FlxTween.tween(spr, {alpha: 0, x: -100 + spr.x}, .1 * numMenu, {

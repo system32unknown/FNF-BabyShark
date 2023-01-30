@@ -5540,8 +5540,7 @@ class PlayState extends MusicBeatState
 
 		#if MODS_ALLOWED
 		var luaToLoad:String = Paths.modFolders(luaFile);
-		if(FileSystem.exists(luaToLoad))
-		{
+		if(FileSystem.exists(luaToLoad)) {
 			luaArray.push(new FunkinLua(luaToLoad));
 			return true;
 		} else {

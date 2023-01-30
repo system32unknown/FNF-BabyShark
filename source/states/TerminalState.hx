@@ -5,7 +5,6 @@ import utils.ClientPrefs;
 #if desktop
 import utils.Discord.DiscordClient;
 #end
-import utils.CoolUtil;
 
 import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
@@ -144,7 +143,7 @@ class TerminalState extends MusicBeatState
                 if (v.commandName == arguments[0] || (v.commandName == curCommand && v.oneCommand)) { //argument 0 should be the actual command at the moment
                     arguments.shift();
                     calledFunc = true;
-                    v.FuncToCall(arguments);
+                    v.funcToCall(arguments);
                     break;
                 }
             }
@@ -183,7 +182,6 @@ class TerminalState extends MusicBeatState
             curCommand = "";
         }
         if (FlxG.keys.justPressed.ESCAPE) {
-            
             MusicBeatState.switchState(new MainMenuState());
             FlxG.sound.playMusic(Paths.music('freakyMenu'));
         }
@@ -194,7 +192,7 @@ class TerminalCommand
 {
     public var commandName:String = "undefined";
     public var commandHelp:String = "if you see this you are very homosexual and dumb."; //hey im not homosexual. kinda mean ngl
-    public var FuncToCall:Dynamic;
+    public var funcToCall:Dynamic;
     public var showInHelp:Bool;
     public var oneCommand:Bool;
 
@@ -202,7 +200,7 @@ class TerminalCommand
     {
         commandName = name;
         commandHelp = help;
-        FuncToCall = func;
+        funcToCall = func;
         this.showInHelp = showInHelp;
         this.oneCommand = oneCommand;
     }
