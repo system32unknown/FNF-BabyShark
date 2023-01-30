@@ -1095,10 +1095,9 @@ class PlayState extends MusicBeatState
 		}
 
 		var showTime:Bool = (ClientPrefs.getPref('timeBarType') != 'Disabled');
-		timeTxt = new FlxText(0, 20, 400, "", 16);
-		timeTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
+		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 20, 400, "", 20);
+		timeTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
 		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-		timeTxt.screenCenter(X);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
 		timeTxt.visible = showTime;
@@ -1121,7 +1120,6 @@ class PlayState extends MusicBeatState
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
 			'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
-		timeBar.screenCenter(X);
 		timeBar.createGradientBar([FlxColor.GRAY], [dad.getColor(), boyfriend.getColor()], 1, 90);
 		timeBar.numDivisions = 800; // How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;

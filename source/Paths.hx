@@ -368,7 +368,7 @@ class Paths
 			localTrackedAssets.push(path);
 			return currentTrackedAssets.get(path);
 		}
-		trace('oh no $key and $library is returning null NOOOO $path');
+		trace('oh no $key and $library, $path is returning null NOOOO');
 		return null;
 	}
 
