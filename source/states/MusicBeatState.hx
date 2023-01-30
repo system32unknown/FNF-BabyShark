@@ -68,13 +68,11 @@ class MusicBeatState extends FlxUIState {
 		updateCurStep();
 		updateBeat();
 
-		if (oldStep != curStep)
-		{
+		if (oldStep != curStep) {
 			if(curStep > 0)
 				stepHit();
 
-			if(PlayState.SONG != null)
-			{
+			if(PlayState.SONG != null) {
 				if (oldStep < curStep) updateSection();
 				else rollbackSection();
 			}
@@ -85,11 +83,9 @@ class MusicBeatState extends FlxUIState {
 		super.update(elapsed);
 	}
 
-	private function updateSection():Void
-	{
+	private function updateSection():Void {
 		if(stepsToDo < 1) stepsToDo = Math.round(getBeatsOnSection() * 4);
-		while(curStep >= stepsToDo)
-		{
+		while (curStep >= stepsToDo) {
 			curSection++;
 			var beats:Float = getBeatsOnSection();
 			stepsToDo += Math.round(beats * 4);
