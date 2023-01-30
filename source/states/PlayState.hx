@@ -41,7 +41,6 @@ import game.Achievements.AchievementObject;
 import game.Section.SwagSection;
 import game.*;
 import utils.*;
-import scripting.FunkinLua;
 #if desktop
 import utils.Discord.DiscordClient;
 #end
@@ -50,6 +49,7 @@ import ui.*;
 import shaders.PulseEffect;
 import data.StageData.StageFile;
 import data.EkData.Keybinds;
+import scripting.*;
 import data.*;
 
 #if !flash
@@ -66,7 +66,6 @@ import handlers.CutsceneHandler;
 
 #if hscript
 import hscript.Interp;
-import scripting.HscriptHandler;
 #end
 
 #if LUA_ALLOWED

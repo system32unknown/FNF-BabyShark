@@ -92,6 +92,7 @@ class Paths
 				if (assetExcluded(obj)) return;
 
 				OpenFlAssetsUtil.cache.removeBitmapData(key);
+				Assets.cache.clear(key);
 				FlxG.bitmap._cache.remove(key);
 
 				if (obj.bitmap != null) {
@@ -113,6 +114,7 @@ class Paths
 		if (assetExcluded(obj)) return;
 
 		OpenFlAssetsUtil.cache.removeSound(key);
+		Assets.cache.clear(key);
 		currentTrackedSounds.remove(key);
 
 		if (obj != null) {
