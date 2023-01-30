@@ -157,7 +157,7 @@ class Note extends FlxSprite
 			switch(value) {
 				case 'Hurt Note':
 					ignoreNote = true;
-					reloadNote('HURT');
+					reloadNote('HURT', 'NOTE_assets');
 					noteSplashTexture = 'HURTnoteSplashes';
 					colorSwap.hue = 0;
 					colorSwap.saturation = 0;
@@ -169,7 +169,7 @@ class Note extends FlxSprite
 					else missHealth = 0.3;
 					hitCausesMiss = true;
 				case 'Danger Note':
-					reloadNote('DANGER');
+					reloadNote('DANGER', 'NOTE_assets');
 					noteSplashTexture = 'DANGERnoteSplashes';
 					colorSwap.hue = 0;
 					colorSwap.saturation = 0;
@@ -181,7 +181,7 @@ class Note extends FlxSprite
 					hitCausesMiss = false;
 				case 'Kill Note':
 					ignoreNote = true;
-					reloadNote('KILL');
+					reloadNote('KILL', 'NOTE_assets');
 					noteSplashTexture = 'HURTnoteSplashes';
 					colorSwap.hue = 0;
 					colorSwap.saturation = 0;

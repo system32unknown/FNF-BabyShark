@@ -90,11 +90,13 @@ class Paths
 				if (assetExcluded(obj)) return;
 
 				OpenFlAssetsUtil.cache.removeBitmapData(key);
+				Assets.cache.clear(key);
 				FlxG.bitmap._cache.remove(key);
 
 				if (obj.bitmap != null) {
 					obj.bitmap.lock();
-					if (obj.bitmap.__texture != null) obj.bitmap.__texture.dispose();
+					if (obj.bitmap.__texture != null)
+						obj.bitmap.__texture.dispose();
 					obj.bitmap.disposeImage();
 				}
 
@@ -123,7 +125,7 @@ class Paths
 		}
 	}
 
-	/// haya I love you for the base cache dump I took to the max
+	// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
 		for (key in currentTrackedAssets.keys()) {
 			if (!localTrackedAssets.contains(key) && !assetExcluded(key)) {

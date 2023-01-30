@@ -134,7 +134,7 @@ class FreeplayState extends MusicBeatState
 		countText = new FlxText(0, 0, 0, "", 20);
 		countText.setFormat(Paths.font("vcr.ttf"), countText.size, FlxColor.WHITE, RIGHT);
 		countText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.25);
-		countText.setPosition(FlxG.width - countText.width, scoreBG.height - countText.y);
+		countText.y = scoreBG.height - countText.y;
 
 		add(countText);
 		add(diffText);
@@ -437,6 +437,7 @@ class FreeplayState extends MusicBeatState
 
 	private function positionHighscore() {
 		countText.text = "PAGES (" + ((curSelected + 1) + "/" + songs.length) + ")";
+		countText.x = FlxG.width - countText.width;
 
 		scoreText.x = FlxG.width - scoreText.width - 6;
 
