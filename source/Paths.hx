@@ -21,6 +21,7 @@ import haxe.io.Path;
 import utils.CoolUtil;
 
 @:access(openfl.display.BitmapData.__texture)
+@:access(openfl.media.Sound.__buffer)
 class Paths
 {
 	inline public static var SOUND_EXT = "ogg";
@@ -106,7 +107,6 @@ class Paths
 		}
 	}
 
-	@:access(openfl.media.Sound.__buffer)
 	public static function decacheSound(key:String) {
 		var obj = currentTrackedSounds.get(key);
 		if (obj == null && OpenFlAssetsUtil.cache.hasSound(key)) obj = OpenFlAssets.cache.getSound(key);
