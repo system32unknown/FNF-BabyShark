@@ -385,7 +385,7 @@ class TitleState extends MusicBeatState
 				case 15: addMoreText('Shark\'s');
 				case 16:
 					addMoreText('Funkin');
-					addMoreText('The Full Ass Mod');
+					addMoreText('The Full Game');
 				case 17: 
 					deleteCoolText();
 					skipIntro();
