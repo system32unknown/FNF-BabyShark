@@ -62,19 +62,14 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 			return str;
 
 		var i:Int = 0;
-		for (btn in list)
-		{
-			if (btn != null && btn.name == str)
-			{
+		for (btn in list) {
+			if (btn != null && btn.name == str) {
 				var item:FlxUIButton = list[i];
 				_selectedId = str;
-				if (item.label != null)
-				{
+				if (item.label != null) {
 					_selectedLabel = item.label.text;
 					header.text.text = item.label.text;
-				}
-				else
-				{
+				} else {
 					_selectedLabel = "";
 					header.text.text = "";
 				}
@@ -296,9 +291,7 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 							recycled = true; // we successfully recycled it
 						}
 					}
-				} else {
-					list = [];
-				}
+				} else list = [];
 				if (!recycled)
 				{ // If we couldn't recycle a button, make a fresh one
 					var t:FlxUIButton = makeListButton(i, data.label, data.name);
@@ -387,18 +380,15 @@ class FlxUIDropDownMenuCustom extends FlxUIGroup implements IFlxUIWidget impleme
 
 	public function getBtnByIndex(i:Int):FlxUIButton
 	{
-		if (i >= 0 && i < list.length) {
+		if (i >= 0 && i < list.length)
 			return list[i];
-		}
 		return null;
 	}
 
 	public function getBtnById(name:String):FlxUIButton
 	{
-		for (btn in list) {
-			if (btn.name == name)
-				return btn;
-		}
+		for (btn in list)
+			if (btn.name == name) return btn;
 		return null;
 	}
 

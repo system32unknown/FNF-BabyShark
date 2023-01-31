@@ -358,8 +358,7 @@ class FlxSound extends FlxBasic
 			if (playing) pitch = _pitch;
 		}
 		
-		if (!playing)
-			return;
+		if (!playing) return;
 		
 		_amplitudeUpdate = true;
 
@@ -632,8 +631,7 @@ class FlxSound extends FlxBasic
 	 */
 	function startSound(StartTime:Float):Void
 	{
-		if (_sound == null)
-			return;
+		if (_sound == null) return;
 
 		update_time(StartTime);
 		_paused = false;
@@ -740,11 +738,8 @@ class FlxSound extends FlxBasic
 			// New group must be set before removing sound to prevent infinite recursion
 			this.group = group;
 
-			if (oldGroup != null)
-				oldGroup.remove(this);
-
-			if (group != null)
-				group.add(this);
+			if (oldGroup != null) oldGroup.remove(this);
+			if (group != null) group.add(this);
 
 			updateTransform();
 		}

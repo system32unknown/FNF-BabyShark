@@ -3142,7 +3142,7 @@ class PlayState extends MusicBeatState
 		}
 
 		switch(ClientPrefs.getPref('IconBounceType')) {
-			case "Vanilla":
+			case "Vanilla" | "FixedPurgatory":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .85)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .85)));
 			case "Kade" | "StridentCrisis": // Stolen from Vanilla Engine
@@ -5369,7 +5369,6 @@ class PlayState extends MusicBeatState
 			case "Psych":
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
-
 			case "Dave" | "Purgatory":
 				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), .1);
 	
@@ -5381,6 +5380,17 @@ class PlayState extends MusicBeatState
 						FlxTween.angle(iconP1, -30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 						FlxTween.angle(iconP2, 30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 					}
+				}
+			case "FixedPurgatory":
+				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
+				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+
+				if (curBeat % 2 == 0) {
+					FlxTween.angle(iconP1, -15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+					FlxTween.angle(iconP2, 15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+				} else {
+					FlxTween.angle(iconP1, 15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+					FlxTween.angle(iconP2, -15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 				}
 			case "GoldenApple":
 				if (curBeat % 2 == 0) {

@@ -63,8 +63,7 @@ class AudioBuffer
 	{
 		#if lime_cffi
 		__format = 0;
-		if (channels == 1)
-		{
+		if (channels == 1) {
 			if (bitsPerSample == 8) {
 				__format = AL.FORMAT_MONO8;
 			} else if (bitsPerSample == 16) {
@@ -82,8 +81,7 @@ class AudioBuffer
 		{
 			__srcBuffer = AL.createBuffer();
 
-			if (__srcBuffer != null)
-			{
+			if (__srcBuffer != null) {
 				AL.bufferData(__srcBuffer, __format, data, data.length, sampleRate);
 			}
 		}
@@ -113,8 +111,7 @@ class AudioBuffer
 
 		#if (js && html5 && lime_howlerjs)
 		// if base64String doesn't contain codec data, add it.
-		if (base64String.indexOf(",") == -1)
-		{
+		if (base64String.indexOf(",") == -1) {
 			base64String = "data:" + __getCodec(Base64.decode(base64String)) + ";base64," + base64String;
 		}
 
@@ -207,8 +204,7 @@ class AudioBuffer
 
 		return audioBuffer;
 		#elseif flash
-		switch (Path.extension(path))
-		{
+		switch (Path.extension(path)) {
 			case "ogg", "wav":
 				return null;
 			default:

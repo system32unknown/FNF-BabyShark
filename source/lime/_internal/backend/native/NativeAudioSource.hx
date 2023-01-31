@@ -185,17 +185,13 @@ class NativeAudioSource
 			var numBuffers = 0;
 			var data;
 
-			for (buffer in buffers)
-			{
-				if (dataLength - position >= STREAM_BUFFER_SIZE)
-				{
+			for (buffer in buffers) {
+				if (dataLength - position >= STREAM_BUFFER_SIZE) {
 					data = readVorbisFileBuffer(vorbisFile, STREAM_BUFFER_SIZE);
 					AL.bufferData(buffer, format, data, data.length, parent.buffer.sampleRate);
 					position += STREAM_BUFFER_SIZE;
 					numBuffers++;
-				}
-				else if (position < dataLength)
-				{
+				} else if (position < dataLength) {
 					data = readVorbisFileBuffer(vorbisFile, dataLength - position);
 					AL.bufferData(buffer, format, data, data.length, parent.buffer.sampleRate);
 					numBuffers++;

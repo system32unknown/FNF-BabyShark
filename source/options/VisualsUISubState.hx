@@ -42,7 +42,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'IconBounceType',
 			'string',
 			'Psych',
-			['Vanilla', 'Kade', 'Psych', 'Andromeda', 'Dave', 'Purgatory', 'GoldenApple', 'StridentCrisis', 'Micdup', 'BabyShark', 'Custom']);
+			['Vanilla', 'Kade', 'Psych', 'Andromeda', 'Dave', 'Purgatory', 'FixedPurgatory', 'GoldenApple', 'StridentCrisis', 'Micdup', 'BabyShark', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Health Bar Types:',

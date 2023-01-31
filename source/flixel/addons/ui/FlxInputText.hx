@@ -250,10 +250,8 @@ class FlxInputText extends FlxText
 		callback = null;
 
 		#if sys
-		if (_charBoundaries != null)
-		{
-			while (_charBoundaries.length > 0)
-			{
+		if (_charBoundaries != null) {
+			while (_charBoundaries.length > 0) {
 				_charBoundaries.pop();
 			}
 			_charBoundaries = null;
@@ -266,8 +264,7 @@ class FlxInputText extends FlxText
 	/**
 	 * Draw the caret in addition to the text.
 	 */
-	override public function draw():Void
-	{
+	override public function draw():Void {
 		drawSprite(fieldBorderSprite);
 		drawSprite(backgroundSprite);
 
@@ -275,9 +272,7 @@ class FlxInputText extends FlxText
 
 		// In case caretColor was changed
 		if (caretColor != caret.color || caret.height != size + 2)
-		{
 			caret.color = caretColor;
-		}
 
 		drawSprite(caret);
 	}
@@ -350,7 +345,6 @@ class FlxInputText extends FlxText
 			  if (key == 67 && e.ctrlKey) {
 		 	  #end
 				Clipboard.text = text;
-
 				onChange(COPY_ACTION);
 
 				// Stops the function to go further, because it whoud type in a c to the input
@@ -802,15 +796,13 @@ class FlxInputText extends FlxText
 		switch (alignStr) {
 			case RIGHT:
 				offx = textField.width - 2 - textField.textWidth - 2;
-				if (offx < 0)
-					offx = 0; // hack, fix negative offset.
+				if (offx < 0) offx = 0; // hack, fix negative offset.
 
 			case CENTER:
 				#if !js
 				offx = (textField.width - 2 - textField.textWidth) / 2 + textField.scrollH / 2;
 				#end
-				if (offx <= 1)
-					offx = 0; // hack, fix ofset rounding alignment.
+				if (offx <= 1) offx = 0; // hack, fix ofset rounding alignment.
 
 			default: offx = 0;
 		}
@@ -835,12 +827,10 @@ class FlxInputText extends FlxText
 			} else { // Caret is to the right of text
 				boundaries = getCharBoundaries(caretIndex - 1);
 				if (boundaries != null) {
-					caret.x = offx + boundaries.right + x;
-					caret.y = boundaries.top + y;
+					caret.setPosition(offx + boundaries.right + x, boundaries.top + y);
 				} else if (text.length == 0) { // Text box is empty
 					// 2 px gutters
-					caret.x = x + offx + 2;
-					caret.y = y + 2;
+					caret.setPosition(x + offx + 2, y + 2);
 				}
 			}
 		}
@@ -877,15 +867,12 @@ class FlxInputText extends FlxText
 	}
 
 	private function set_lines(Value:Int):Int {
-		if (Value == 0)
-			return 0;
+		if (Value == 0) return 0;
 
 		if (Value > 1) {
-			textField.wordWrap = true;
-			textField.multiline = true;
+			textField.wordWrap = textField.multiline = true;
 		} else {
-			textField.wordWrap = false;
-			textField.multiline = false;
+			textField.wordWrap = textField.multiline = false;
 		}
 
 		lines = Value;

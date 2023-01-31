@@ -39,12 +39,8 @@ class FlxSoundTray extends Sprite
 
 	var _defaultScale:Float = 2;
 	var text:TextField = new TextField();
-
-	/**The sound used when increasing the volume.**/
-	final volumeUpSound:String = "flixel/sounds/beep";
-
 	/**The sound used when decreasing the volume.**/
-	final volumeDownSound:String = 'flixel/sounds/beep';
+	final volumeSound:String = 'flixel/sounds/beep';
 
 	/**Whether or not changing the volume should make noise.**/
 	public var silent:Bool = false;
@@ -125,9 +121,8 @@ class FlxSoundTray extends Sprite
 	public function show(slient:Bool = false):Void
 	{
 		if (!silent) {
-			var sound = FlxAssets.getSound(slient ? volumeUpSound : volumeDownSound);
-			if (sound != null)
-				FlxG.sound.load(sound).play();
+			var sound = FlxAssets.getSound(volumeSound);
+			if (sound != null) FlxG.sound.load(sound).play();
 		}
 
 		_timer = 1;
@@ -141,11 +136,7 @@ class FlxSoundTray extends Sprite
 		}
 
 		for (i in 0..._bars.length) {
-			if (i < globalVolume) {
-				_bars[i].alpha = 1;
-			} else {
-				_bars[i].alpha = .5;
-			}
+			_bars[i].alpha = i < globalVolume ? 1 : .5;
 		}
 
 		text.text = 'Volume: ' + (FlxG.sound.muted ? 'Muted' : globalVolume * 10 + '%');
