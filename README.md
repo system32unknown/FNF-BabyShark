@@ -1,6 +1,8 @@
 # Baby Shark's Funkin
 Heavily Modded Psych Engine. combined with Kade, Mic'd up, Andromeda, Forever, Dave, Vanilla.
 
+![Repo size](https://img.shields.io/github/repo-size/system32unknown/FNF-BabyShark)
+
 # Credits (WIP):
 
 ### Psych Engine:
