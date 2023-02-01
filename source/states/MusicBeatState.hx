@@ -125,7 +125,10 @@ class MusicBeatState extends FlxUIState {
 		curStep = lastChange.stepTime + Math.floor(shit);
 	}
 
-	public static function switchState(nextState:FlxState) {
+	public static function switchState(nextState:FlxState, stopMusic:Bool = false) {
+		if (stopMusic && FlxG.sound.music != null)
+			FlxG.sound.music.stop();
+
 		// Custom made Trans in
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;
@@ -147,7 +150,7 @@ class MusicBeatState extends FlxUIState {
 	}
 
 	public static function resetState() {
-		MusicBeatState.switchState(FlxG.state);
+		MusicBeatState.switchState(FlxG.state, true);
 	}
 
 	public function stepHit():Void {

@@ -4080,6 +4080,12 @@ class PlayState extends MusicBeatState
 			if(doDeathCheck()) return;
 		}
 
+		for (listnote in notes) {
+			listnote.kill();
+			listnote.destroy();
+			notes.remove(listnote, true);
+		}
+
 		timeBarBG.visible = false;
 		timeBar.visible = false;
 		timeTxt.visible = false;

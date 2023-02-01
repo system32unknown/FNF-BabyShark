@@ -1319,7 +1319,6 @@ class ChartingState extends MusicBeatState
 			switch (wname) {
 				case 'section_beats':
 					_song.notes[curSec].sectionBeats = nums.value;
-					_song.notes[curSec].lengthInSteps = Std.int(nums.value);
 					reloadGridLayer();
 				case 'song_speed':
 					_song.speed = nums.value;
@@ -1540,7 +1539,7 @@ class ChartingState extends MusicBeatState
 		if (!blockInput) {
 			if (FlxG.keys.justPressed.ESCAPE) {
 				autosaveSong();
-				LoadingState.loadAndSwitchState(new editors.EditorPlayState(sectionStartTime(), _song.mania));
+				LoadingState.loadAndSwitchState(new EditorPlayState(sectionStartTime(), _song.mania), true);
 			} if (FlxG.keys.justPressed.ENTER) {
 				
 				autosaveSong();
@@ -1550,7 +1549,7 @@ class ChartingState extends MusicBeatState
 				if(vocals != null) vocals.stop();
 
 				StageData.loadDirectory(_song);
-				LoadingState.loadAndSwitchState(new PlayState());
+				LoadingState.loadAndSwitchState(new PlayState(), true);
 			}
 
 			if(curSelectedNote != null && curSelectedNote[1] > -1) {
@@ -1564,7 +1563,7 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.BACKSPACE) {
 				PlayState.chartingMode = false;
-				MusicBeatState.switchState(new editors.MasterEditorMenu());
+				MusicBeatState.switchState(new MasterEditorMenu(), true);
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				FlxG.mouse.visible = false;
 				return;
@@ -1615,7 +1614,7 @@ class ChartingState extends MusicBeatState
 			if (FlxG.mouse.wheel != 0) {
 				FlxG.sound.music.pause();
 				if (!mouseQuant)
-					FlxG.sound.music.time -= (FlxG.mouse.wheel * Conductor.stepCrochet*0.8);
+					FlxG.sound.music.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * .8);
 				else {
 						var beat:Float = curDecBeat;
 						var snap:Float = quantization / 4;
@@ -2490,10 +2489,9 @@ class ChartingState extends MusicBeatState
 		return spr;
 	}
 
-	function addSection(sectionBeats:Float = 4, lengthInSteps:Int = 16):Void {
+	function addSection(sectionBeats:Float = 4):Void {
 		var sec:SwagSection = {
 			sectionBeats: sectionBeats,
-			lengthInSteps: lengthInSteps,
 			bpm: _song.bpm,
 			changeBPM: false,
 			mustHitSection: true,
