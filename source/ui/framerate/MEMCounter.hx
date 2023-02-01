@@ -10,6 +10,7 @@ import utils.CoolUtil;
 
 class MEMCounter extends Sprite {
     public var memtxt:TextField;
+    public var __init_y:Float = 0;
 
     var memory:UInt = 0;
     var mempeak:UInt = 0;
@@ -20,10 +21,12 @@ class MEMCounter extends Sprite {
         memtxt = new TextField();
         
         memtxt.autoSize = LEFT;
-        memtxt.x = memtxt.y = 0;
+        memtxt.x = 0;
+        memtxt.y = 0;
         memtxt.text = "";
         memtxt.multiline = memtxt.wordWrap = false;
         memtxt.defaultTextFormat = new TextFormat(Overlay.instance.fontName, 12, -1);
+        __init_y = memtxt.y;
         addChild(memtxt);
     }
 

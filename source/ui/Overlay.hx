@@ -47,6 +47,12 @@ class Overlay extends Sprite {
 			color = FlxColor.fromHSB(timeColor, 1, 1);
 		} else color = FlxColor.WHITE;
 
+		if (!ClientPrefs.getPref('showFPS')) {
+            memoryCounter.memtxt.y = memoryCounter.__init_y + y;
+        } else {
+			memoryCounter.memtxt.y = memoryCounter.__init_y;
+		}
+
 		visible = ClientPrefs.getPref('showMEM') || ClientPrefs.getPref('showFPS');
 	}
 
