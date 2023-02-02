@@ -50,7 +50,7 @@ class Overlay extends Sprite {
 		if (!ClientPrefs.getPref('showFPS')) {
             memoryCounter.memtxt.y = memoryCounter.__init_y + memoryCounter.height;
         } else {
-			memoryCounter.memtxt.y = memoryCounter.__init_y;
+			memoryCounter.memtxt.y = 0;
 		}
 
 		visible = ClientPrefs.getPref('showMEM') || ClientPrefs.getPref('showFPS');

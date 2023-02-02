@@ -2,6 +2,7 @@ package substates;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
@@ -83,6 +84,14 @@ class PauseSubState extends MusicBeatSubstate
 		bg.scrollFactor.set();
 		add(bg);
 
+		var pausebg = new FlxBackdrop(Paths.image('thechecker'));
+		pausebg.velocity.set(0, 50);
+		pausebg.updateHitbox();
+		pausebg.alpha = .5;
+		pausebg.scrollFactor.set();
+		pausebg.screenCenter(X);
+		add(pausebg);
+
 		var levelInfo:FlxText = new FlxText(20, 15, 0, "", 32);
 		levelInfo.text += PlayState.SONG.song;
 		levelInfo.scrollFactor.set();
@@ -107,8 +116,7 @@ class PauseSubState extends MusicBeatSubstate
 		var chartingText:FlxText = new FlxText(20, 15 + 101, 0, "CHARTING MODE", 32);
 		chartingText.scrollFactor.set();
 		chartingText.setFormat(Paths.font('vcr.ttf'), 32);
-		chartingText.x = FlxG.width - (chartingText.width + 20);
-		chartingText.y = FlxG.height - (chartingText.height + 20);
+		chartingText.setPosition(FlxG.width - (chartingText.width + 20), FlxG.height - (chartingText.height + 20));
 		chartingText.updateHitbox();
 		chartingText.visible = PlayState.chartingMode;
 		add(chartingText);
@@ -158,12 +166,8 @@ class PauseSubState extends MusicBeatSubstate
 		var downP = controls.UI_DOWN_P;
 		var accepted = controls.ACCEPT;
 
-		if (upP) {
-			changeSelection(-1);
-		}
-		if (downP) {
-			changeSelection(1);
-		}
+		if (upP) changeSelection(-1);
+		if (downP) changeSelection(1);
 
 		var daSelected:String = menuItems[curSelected];
 		switch (daSelected)
@@ -251,11 +255,7 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.seenCutscene = false;
 
 					WeekData.loadTheFirstEnabledMod();
-					if(PlayState.isStoryMode) {
-						MusicBeatState.switchState(new StoryMenuState());
-					} else {
-						MusicBeatState.switchState(new FreeplayState());
-					}
+					MusicBeatState.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 					PlayState.cancelMusicFadeTween();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					PlayState.changedDifficulty = false;

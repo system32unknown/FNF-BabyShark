@@ -2823,8 +2823,7 @@ class PlayState extends MusicBeatState
 		updateLuaDefaultPos();
 	}
 
-	override function openSubState(SubState:FlxSubState)
-	{
+	override function openSubState(SubState:FlxSubState) {
 		if (paused) {
 			if (FlxG.sound.music != null) {
 				FlxG.sound.music.pause();
@@ -2835,10 +2834,8 @@ class PlayState extends MusicBeatState
 		super.openSubState(SubState);
 	}
 
-	override function closeSubState()
-	{
-		if (paused)
-		{
+	override function closeSubState() {
+		if (paused) {
 			if (FlxG.sound.music != null && !startingSong) {
 				resyncVocals();
 			}
@@ -2846,7 +2843,6 @@ class PlayState extends MusicBeatState
 			FlxTimer.globalManager.forEach(function(tmr:FlxTimer) {
 				if (!tmr.finished) tmr.active = true;
 			});
-
 			FlxTween.globalManager.forEach(function(twn:FlxTween) {
 				if (!twn.finished) twn.active = true;
 			});
