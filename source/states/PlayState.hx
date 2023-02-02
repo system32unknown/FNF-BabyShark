@@ -2775,7 +2775,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function addCamFilter(shader:BitmapFilter) {
-		if (shaderFilters.length > 0)
+		if (shaderFilters.length >= 0)
 			shaderFilters.insert(shaderFilters.length, shader);
 	}
 
@@ -3898,6 +3898,8 @@ class PlayState extends MusicBeatState
 			case 'Rainbow Eyesore':
 				if(ClientPrefs.getPref('shaders')) {
 					var splitedVal:Array<String> = value1.trim().split(',');
+					var shadeLen:Int = (splitedVal[2] != null ? Std.parseInt(splitedVal[2]) : 0);
+
 					disableTheTripper = false;
 					disableTheTripperAt = Std.parseInt(splitedVal[0]);
 
@@ -3905,8 +3907,8 @@ class PlayState extends MusicBeatState
 					screenshader.shader.uTime.value[0] = FlxG.random.float(-100000, 100000);
 					screenshader.ampmul = 1;
 
-					if (shaderFilters[0] == null)
-						shaderFilters[0] = new ShaderFilter(screenshader.shader);
+					if (shaderFilters[shadeLen] == null)
+						shaderFilters[shadeLen] = new ShaderFilter(screenshader.shader);
 
 					switch(value2.trim().toLowerCase()) {
 						case 'camhud' | 'hud':
