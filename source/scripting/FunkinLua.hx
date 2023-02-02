@@ -2174,12 +2174,11 @@ class FunkinLua {
 		
 		addCallback("debugPrintArray", function(?text:Array<Dynamic>, divider:Dynamic = ' ') {
 			var array_text = '';
-			if (text == null)
-				text = [];
+			if (text == null) text = [];
 
-			for (_text in 0...text.length) {
-				if (text[_text] == null) array_text += '' + divider;
-				else array_text += text[_text] + divider;
+			for (_text in text) {
+				if (_text == null) array_text += '' + divider;
+				else array_text += _text + divider;
 			}
 
 			luaTrace(array_text, true, false);

@@ -222,8 +222,6 @@ class PlayState extends MusicBeatState
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
-	public var shaderFilters:Array<BitmapFilter> = [];
-
 	var dialogue:Array<String> = null;
 
 	var dadbattleBlack:BGSprite;
@@ -263,6 +261,7 @@ class PlayState extends MusicBeatState
 	var disableTheTripper:Bool = false;
 	var disableTheTripperAt:Int;
 	var screenshader:PulseEffect = new PulseEffect();
+	public var shaderFilters:Array<BitmapFilter> = [null];
 
 	var bgGirls:BackgroundGirls;
 	var bgGhouls:BGSprite;
