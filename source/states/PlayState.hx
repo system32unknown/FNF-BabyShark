@@ -4076,11 +4076,11 @@ class PlayState extends MusicBeatState
 			if(doDeathCheck()) return;
 		}
 
-		for (listnote in notes) {
-			listnote.kill();
-			listnote.destroy();
-			notes.remove(listnote, true);
-		}
+		notes.forEachAlive(function(note:Note) {
+			note.kill();
+			notes.remove(note, true);
+			note.destroy();
+		});
 
 		timeBarBG.visible = false;
 		timeBar.visible = false;
@@ -4244,17 +4244,12 @@ class PlayState extends MusicBeatState
 			pixelShitPart2 = '-pixel';
 		}
 
-		Paths.image(pixelShitPart1 + "epic" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "sick" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "good" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "bad" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "shit" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "combo" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "early" + pixelShitPart2);
-		Paths.image(pixelShitPart1 + "late" + pixelShitPart2);
+		for (cacheRating in ["epic", "sick", "good", "bad", "shit", "combo", "early", "late"]) {
+			Paths.image(pixelShitPart1 + cacheRating + pixelShitPart2);
+		}
 		
 		for (i in 0...10) {
-			Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2);
+			Paths.image(pixelShitPart1 + 'num$i' + pixelShitPart2);
 		}
 	}
 
@@ -4641,7 +4636,7 @@ class PlayState extends MusicBeatState
 			case 'Psych':
 				notediff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
 			case 'Kade':
-				if (note != null) notediff = -(note.strumTime - Conductor.songPosition);
+				if (note != null) notediff = note.strumTime - Conductor.songPosition;
 				else notediff = Conductor.safeZoneOffset;
 			case 'Simple':
 				notediff = note.strumTime - Conductor.songPosition;

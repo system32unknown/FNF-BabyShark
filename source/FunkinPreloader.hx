@@ -11,15 +11,8 @@ import flixel.system.FlxAssets;
 import flixel.system.FlxBasePreloader;
 import flixel.FlxG;
 
-@:bitmap("assets/preload/images/logo.png") // easter egg >:)
-class OldFunkinLogoImage extends BitmapData {}
-
-@:bitmap("assets/preload/images/logos/funkinlogo.png") 
+@:bitmap("assets/preload/images/FinalLogo.png")
 class FunkinLogoImage extends BitmapData {}
-@:bitmap("assets/preload/images/logos/bslogo.png") 
-class BsLogoImage extends BitmapData {}
-@:bitmap("assets/preload/images/logos/vdnblogo.png") 
-class DaveLogoImage extends BitmapData {}
 
 @:bitmap("assets/preload/images/flixel/light.png")
 class GraphicLogoLight extends BitmapData {} 
@@ -27,16 +20,8 @@ class GraphicLogoLight extends BitmapData {}
 class GraphicLogoCorners extends BitmapData {}
 
 class FunkinPreloader extends FlxBasePreloader {
-    var _logo:Array<Sprite> = [
-		new Sprite(),
-		new Sprite(),
-		new Sprite()
-	];
-	var _logoGlow:Array<Sprite> = [
-		new Sprite(),
-		new Sprite(),
-		new Sprite()
-	];
+    var _logo:Sprite = new Sprite();
+	var _logoGlow:Sprite = new Sprite();
 
     var _text = new TextField();
 	var _flxtext = new TextField();
@@ -49,8 +34,6 @@ class FunkinPreloader extends FlxBasePreloader {
     }
      
     override function create():Void {
-		final logoList:Array<BitmapData> = [(FlxG.random.int(0, 999) == 1 ? new OldFunkinLogoImage(0, 0) : new FunkinLogoImage(0, 0)), new BsLogoImage(0, 0), new DaveLogoImage(0, 0)];
-
 		_buffer.scaleX = _buffer.scaleY = 2;
 		addChild(_buffer);
 		this._width = Std.int(Lib.current.stage.stageWidth / _buffer.scaleX);
@@ -87,17 +70,10 @@ class FunkinPreloader extends FlxBasePreloader {
 		_flxlogo.y = _flxtext.y;
 		_buffer.addChild(_flxlogo);
 
-		for (_index => _bitmaps in logoList) {
-			_logo[_index] = makeSpriteBitmap(_bitmaps, ratio * .65, 180);
-			var logox:Float = _logo[_index].x + (_index * 190);
-			_logo[_index].x = logox;
-			_buffer.addChild(_logo[_index]);
-
-			_logoGlow[_index] = makeSpriteBitmap(_bitmaps, ratio * .65, 180);
-			_logoGlow[_index].x = logox;
-			_logoGlow[_index].blendMode = BlendMode.SCREEN;
-			_buffer.addChild(_logoGlow[_index]);
-		}
+		_logo = makeSpriteBitmap(new FunkinLogoImage(0, 0), ratio * .65, 180);
+		_buffer.addChild(_logo);
+		_logoGlow = makeSpriteBitmap(new FunkinLogoImage(0, 0), ratio * .65, 180);
+		_buffer.addChild(_logoGlow);
 
 		var corners = createBitmap(GraphicLogoCorners, function(corners) {
 			corners.width = _width;
@@ -139,10 +115,8 @@ class FunkinPreloader extends FlxBasePreloader {
 		_text = null;
 		_flxtext = null;
 		_flxlogo = null;
-		for (i in 0...3) {
-			_logo[i] = null;
-			_logoGlow[i] = null;
-		}
+		_logo = null;
+		_logoGlow = null;
         super.destroy();
     }
 
