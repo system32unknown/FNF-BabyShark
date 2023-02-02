@@ -60,7 +60,6 @@ import flash.media.Sound;
 
 @:access(flixel.system.FlxSound._sound)
 @:access(openfl.media.Sound.__buffer)
-
 class ChartingState extends MusicBeatState
 {
 	public static var noteTypeList:Array<String> = [ //Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
@@ -228,6 +227,9 @@ class ChartingState extends MusicBeatState
 		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90).loadGraphic(Paths.image('eventArrow'));
 		leftIcon = new HealthIcon('bf');
 		rightIcon = new HealthIcon('dad');
+		leftIcon.isPsych = true;
+		rightIcon.isPsych = true;
+
 		eventIcon.scrollFactor.set(1, 1);
 		leftIcon.scrollFactor.set(1, 1);
 		rightIcon.scrollFactor.set(1, 1);
@@ -1699,8 +1701,7 @@ class ChartingState extends MusicBeatState
 				quant.animation.play('q', true, false, curQuant);
 			}
 			if(vortex && !blockInput) {
-				var controlArray:Array<Bool> = [FlxG.keys.justPressed.ONE, FlxG.keys.justPressed.TWO, FlxG.keys.justPressed.THREE, FlxG.keys.justPressed.FOUR,
-											   FlxG.keys.justPressed.FIVE, FlxG.keys.justPressed.SIX, FlxG.keys.justPressed.SEVEN, FlxG.keys.justPressed.EIGHT];
+				var controlArray:Array<Bool> = [false];
 
 				if(controlArray.contains(true)) {
 					for (i in 0...controlArray.length) {
@@ -1732,7 +1733,6 @@ class ChartingState extends MusicBeatState
 					}
 
 					var dastrum = 0;
-
 					if (curSelectedNote != null) {
 						dastrum = curSelectedNote[0];
 					}
@@ -1740,8 +1740,7 @@ class ChartingState extends MusicBeatState
 					var secStart:Float = sectionStartTime();
 					var datime = (feces - secStart) - (dastrum - secStart); //idk math find out why it doesn't work on any other section other than 0
 					if (curSelectedNote != null) {
-						var controlArray:Array<Bool> = [FlxG.keys.pressed.ONE, FlxG.keys.pressed.TWO, FlxG.keys.pressed.THREE, FlxG.keys.pressed.FOUR,
-													   FlxG.keys.pressed.FIVE, FlxG.keys.pressed.SIX, FlxG.keys.pressed.SEVEN, FlxG.keys.pressed.EIGHT];
+						var controlArray:Array<Bool> = [false];
 
 						if(controlArray.contains(true)) {
 							for (i in 0...controlArray.length) {
@@ -2139,20 +2138,17 @@ class ChartingState extends MusicBeatState
 
 				if (gotIndex > array[0][0].length) array[0][0].push(lRMin);
 					else array[0][0][gotIndex - 1] = array[0][0][gotIndex - 1] + lRMin;
-
 				if (gotIndex > array[0][1].length) array[0][1].push(lRMax);
 					else array[0][1][gotIndex - 1] = array[0][1][gotIndex - 1] + lRMax;
 
 				if (channels >= 2) {
 					if (gotIndex > array[1][0].length) array[1][0].push(rRMin);
 						else array[1][0][gotIndex - 1] = array[1][0][gotIndex - 1] + rRMin;
-
 					if (gotIndex > array[1][1].length) array[1][1].push(rRMax);
 						else array[1][1][gotIndex - 1] = array[1][1][gotIndex - 1] + rRMax;
 				} else {
 					if (gotIndex > array[1][0].length) array[1][0].push(lRMin);
 						else array[1][0][gotIndex - 1] = array[1][0][gotIndex - 1] + lRMin;
-
 					if (gotIndex > array[1][1].length) array[1][1].push(lRMax);
 						else array[1][1][gotIndex - 1] = array[1][1][gotIndex - 1] + lRMax;
 				}
@@ -2454,7 +2450,7 @@ class ChartingState extends MusicBeatState
 		note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 		note.updateHitbox();
 		note.x = Math.floor(daNoteInfo * GRID_SIZE) + GRID_SIZE;
-		if(isNextSection && _song.notes[curSec].mustHitSection != _song.notes[curSec+1].mustHitSection) {
+		if(isNextSection && _song.notes[curSec].mustHitSection != _song.notes[curSec + 1].mustHitSection) {
 			if(daNoteInfo > Note.ammo[_song.mania] - 1) {
 				note.x -= GRID_SIZE * Note.ammo[_song.mania];
 			} else if(daSus != null) {

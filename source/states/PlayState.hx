@@ -261,7 +261,7 @@ class PlayState extends MusicBeatState
 	var disableTheTripper:Bool = false;
 	var disableTheTripperAt:Int;
 	var screenshader:PulseEffect = new PulseEffect();
-	public var shaderFilters:Array<BitmapFilter> = [null];
+	public var shaderFilters:Array<BitmapFilter> = [];
 
 	var bgGirls:BackgroundGirls;
 	var bgGhouls:BGSprite;
@@ -2775,7 +2775,8 @@ class PlayState extends MusicBeatState
 	}
 
 	public function addCamFilter(shader:BitmapFilter) {
-		shaderFilters.insert(1, shader);
+		if (shaderFilters.length > 0)
+			shaderFilters.insert(shaderFilters.length, shader);
 	}
 
 	public function changeMania(newValue:Int, skipStrumFadeOut:Bool = false) {

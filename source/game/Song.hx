@@ -55,11 +55,9 @@ class Song {
 			songJson.player3 = null;
 		}
 
-		if(songJson.events == null)
-		{
+		if(songJson.events == null) {
 			songJson.events = [];
-			for (secNum in 0...songJson.notes.length)
-			{
+			for (secNum in 0...songJson.notes.length) {
 				var sec:SwagSection = songJson.notes[secNum];
 
 				var i:Int = 0;
