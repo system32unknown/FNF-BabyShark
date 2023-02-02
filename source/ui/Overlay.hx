@@ -48,7 +48,7 @@ class Overlay extends Sprite {
 		} else color = FlxColor.WHITE;
 
 		if (!ClientPrefs.getPref('showFPS')) {
-            memoryCounter.memtxt.y = memoryCounter.__init_y + memoryCounter.height;
+            memoryCounter.memtxt.y = memoryCounter.__init_y - memoryCounter.height;
         } else {
 			memoryCounter.memtxt.y = 0;
 		}
