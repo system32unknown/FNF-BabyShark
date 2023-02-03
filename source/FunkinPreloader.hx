@@ -70,9 +70,9 @@ class FunkinPreloader extends FlxBasePreloader {
 		_flxlogo.y = _flxtext.y;
 		_buffer.addChild(_flxlogo);
 
-		_logo = makeSpriteBitmap(new FunkinLogoImage(0, 0), ratio * .65, 180);
+		_logo = makeSpriteBitmap(new FunkinLogoImage(0, 0), ratio * 2, 180);
 		_buffer.addChild(_logo);
-		_logoGlow = makeSpriteBitmap(new FunkinLogoImage(0, 0), ratio * .65, 180);
+		_logoGlow = makeSpriteBitmap(new FunkinLogoImage(0, 0), ratio * 2, 180);
 		_buffer.addChild(_logoGlow);
 
 		var corners = createBitmap(GraphicLogoCorners, function(corners) {
