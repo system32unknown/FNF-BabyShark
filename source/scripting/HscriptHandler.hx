@@ -57,6 +57,7 @@ class HscriptHandler {
             "Std"               => Std,
             "Math"              => Math,
             "StringTools"       => StringTools,
+            "Reflect"       => Reflect,
             "Json"              => haxe.Json,
 
             // OpenFL & Lime related stuff

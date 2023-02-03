@@ -179,6 +179,9 @@ class ChartingState extends MusicBeatState
 	override function create()
 	{
 		Main.overlayVar.alpha = .5;
+
+		FlxG.stage.window.onDropFile.add(onDropFile);
+
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
 		else {
@@ -227,8 +230,6 @@ class ChartingState extends MusicBeatState
 		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90).loadGraphic(Paths.image('eventArrow'));
 		leftIcon = new HealthIcon('bf');
 		rightIcon = new HealthIcon('dad');
-		leftIcon.isPsych = true;
-		rightIcon.isPsych = true;
 
 		eventIcon.scrollFactor.set(1, 1);
 		leftIcon.scrollFactor.set(1, 1);
@@ -364,6 +365,7 @@ class ChartingState extends MusicBeatState
 
 	override function destroy() {
 		super.destroy();
+		FlxG.stage.window.onDropFile.remove(onDropFile);
 		Main.overlayVar.alpha = 1;
 	}
 
@@ -2778,6 +2780,10 @@ class ChartingState extends MusicBeatState
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		FlxG.log.error("Problem saving Level data");
+	}
+	
+	function onDropFile(path:String):Void {
+		trace("user dropped file with path: " + path);
 	}
 
 	function getSectionBeats(?section:Null<Int> = null) {
