@@ -6,7 +6,7 @@ import flixel.FlxG;
 #if sys
 import sys.FileSystem;
 #else
-import openfl.Assets as OpenFlAssets;
+import openfl.util.Assets;
 #end
 #if VIDEOS_ALLOWED
 import hxcodec.VideoHandler;
@@ -28,7 +28,7 @@ class PsychVideo {
 
 	public function exists(name:String):Bool {
 		var filepath:String = Paths.video(name);
-		if (#if sys !FileSystem.exists(filepath) #else !OpenFlAssets.exists(filepath) #end) {
+		if (#if sys !FileSystem.exists(filepath) #else !Assets.exists(filepath) #end) {
 			FlxG.log.warn('Couldnt find video file: ' + name);
 			if (endFunc != null) endFunc();
 			return false;
@@ -38,8 +38,7 @@ class PsychVideo {
 
 	public function loadCutscene(name:String):Void {
 		var path:String = Paths.video(name);
-		if (!exists(name))
-			return;
+		if (!exists(name)) return;
 
 		var loader:VideoSprite = new VideoSprite();
 		loader.playVideo(path);
@@ -66,7 +65,6 @@ class PsychVideo {
 
 	public function startVideoSprite(x:Float = 0, y:Float = 0, op:Float = 1, name:String, ?cam:FlxCamera, ?loop:Bool = false,
 		?pauseMusic:Bool = false):FlxSprite {
-		//
 		var path:String = Paths.video(name);
 		if (!exists(name)) return null;
 
@@ -77,7 +75,6 @@ class PsychVideo {
 			newSprite.cameras = [cam];
 		newSprite.alpha = op;
 		newSprite.playVideo(path, loop, pauseMusic);
-		//
 		sprites.push(newSprite);
 		return newSprite;
 	}

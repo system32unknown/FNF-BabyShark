@@ -17,8 +17,7 @@ class CutsceneHandler extends FlxBasic
 	public var objects:Array<FlxSprite> = [];
 	public var music:String = null;
 	
-	public function new()
-	{
+	public function new() {
 		super();
 
 		timer(0, function() {

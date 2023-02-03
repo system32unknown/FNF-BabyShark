@@ -13,7 +13,7 @@ import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
-import openfl.Assets;
+import openfl.utils.Assets;
 
 #if (openfl >= "8.0.0")
 import openfl.utils.AssetType;

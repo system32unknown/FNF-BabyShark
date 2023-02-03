@@ -6,8 +6,7 @@ import flixel.graphics.FlxGraphic;
 import openfl.system.System;
 import openfl.utils.AssetCache;
 import openfl.utils.AssetType;
-import openfl.utils.Assets as OpenFlAssetsUtil;
-import openfl.Assets as OpenFlAssets;
+import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
 import lime.utils.Assets;
 import flash.media.Sound;
@@ -91,7 +90,7 @@ class Paths
 			if (obj != null) {
 				if (assetExcluded(obj)) return;
 
-				OpenFlAssetsUtil.cache.removeBitmapData(key);
+				OpenFlAssets.cache.removeBitmapData(key);
 				Assets.cache.clear(key);
 				FlxG.bitmap._cache.remove(key);
 
@@ -110,10 +109,10 @@ class Paths
 
 	public static function decacheSound(key:String) {
 		var obj = currentTrackedSounds.get(key);
-		if (obj == null && OpenFlAssetsUtil.cache.hasSound(key)) obj = OpenFlAssets.cache.getSound(key);
+		if (obj == null && OpenFlAssets.cache.hasSound(key)) obj = OpenFlAssets.cache.getSound(key);
 		if (assetExcluded(obj)) return;
 
-		OpenFlAssetsUtil.cache.removeSound(key);
+		OpenFlAssets.cache.removeSound(key);
 		Assets.cache.clear(key);
 		currentTrackedSounds.remove(key);
 
@@ -192,12 +191,12 @@ class Paths
 			var levelPath:String = '';
 			if(currentLevel != 'shared') {
 				levelPath = getLibraryPathForce(file, currentLevel);
-				if (OpenFlAssetsUtil.exists(levelPath, type))
+				if (OpenFlAssets.exists(levelPath, type))
 					return levelPath;
 			}
 
 			levelPath = getLibraryPathForce(file, "shared");
-			if (OpenFlAssetsUtil.exists(levelPath, type))
+			if (OpenFlAssets.exists(levelPath, type))
 				return levelPath;
 		}
 
@@ -296,15 +295,14 @@ class Paths
 		return 'assets/fonts/$key';
 	}
 
-	inline static public function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?isPath:Bool = false, ?library:String):Bool
-	{
+	inline static public function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?isPath:Bool = false, ?library:String):Bool {
 		#if MODS_ALLOWED
 		if(!ignoreMods && (FileSystem.exists(mods('$currentModDirectory/$key')) || FileSystem.exists(mods(key)))) {
 			return true;
 		}
 		#end
 
-		return OpenFlAssetsUtil.exists((isPath ? key : getPath(key, type)));
+		return OpenFlAssets.exists((isPath ? key : getPath(key, type)));
 	}
 
 	inline static public function getSparrowAtlas(key:String, ?library:String):FlxAtlasFrames
@@ -358,7 +356,7 @@ class Paths
 		#end
 
 		var path = getPath('images/$key.png', IMAGE, library);
-		if (OpenFlAssetsUtil.exists(path, IMAGE)) {
+		if (OpenFlAssets.exists(path, IMAGE)) {
 			if(!currentTrackedAssets.exists(path)) {
 				var newGraphic:FlxGraphic = FlxG.bitmap.add(path, false, path);
 				newGraphic.persist = true;
