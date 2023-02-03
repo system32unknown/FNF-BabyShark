@@ -56,6 +56,7 @@ class ClientPrefs {
 		'hitsoundVolume' => 0,
 		'hitsoundTypes' => 'Tick',
 		'ShowWatermark' => true,
+		'week7CutScene' => true,
 		'pauseMusic' => 'Tea Time',
 		// Gameplay settings
 		'comboOffset' => [[0, 0], [0, 0], [0, 0], [0, 0]],

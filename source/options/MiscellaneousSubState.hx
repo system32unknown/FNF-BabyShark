@@ -46,6 +46,11 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Enable Week 7 Cutscene', '',
+			'week7CutScene',
+		'bool', true);
+		addOption(option);
+
 		#if cpp
 		var option:Option = new Option('MEM Type',
 			'',

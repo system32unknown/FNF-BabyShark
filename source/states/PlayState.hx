@@ -1385,10 +1385,10 @@ class PlayState extends MusicBeatState
 					schoolIntro(doof);
 
 				case 'ugh' | 'guns' | 'stress':
-					tankIntro();
+					if (ClientPrefs.getPref('week7CutScene'))
+						tankIntro();
 
-				default:
-					startCountdown();
+				default: startCountdown();
 			}
 			seenCutscene = true;
 		} else {
