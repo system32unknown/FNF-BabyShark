@@ -201,11 +201,11 @@
 	<SubTexture name="arrowDOWN0000" x="881" y="2365" width="158" height="154"/>
 	<SubTexture name="arrowLEFT0000" x="1040" y="2365" width="154" height="158"/>
 	<SubTexture name="arrowPLUS0000" x="1195" y="2365" width="144" height="144"/>
+	<SubTexture name="arrowUP0000" x="332" y="2525" width="158" height="154"/>
 	<SubTexture name="arrowRIGHT0000" x="1340" y="2365" width="154" height="158"/>
 	<SubTexture name="arrowRLEFT0000" x="1495" y="2365" width="152" height="159"/>
-	<SubTexture name="arrowRRDOWN0000" x="1648" y="2365" width="160" height="152"/>
+	<SubTexture name="arrowRDOWN0000" x="1648" y="2365" width="160" height="152"/>
 	<SubTexture name="arrowRRIGHT0000" x="1809" y="2365" width="152" height="159"/>
 	<SubTexture name="arrowRUP0000" x="0" y="2525" width="160" height="154"/>
 	<SubTexture name="arrowSPACE0000" x="161" y="2525" width="170" height="170"/>
-	<SubTexture name="arrowUP0000" x="332" y="2525" width="158" height="154"/>
 </TextureAtlas>

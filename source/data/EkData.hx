@@ -57,7 +57,7 @@ class EKData {
             "letters" => ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
 			"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT"], 
-            "pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8],
+            "pixelAnimIndex" => CoolUtil.numberArray(9),
         ],
 		9 => [
             "letters" => ["A", "B", "C", "D", "E", "J", "F", "G", "H", "I"],
@@ -86,32 +86,32 @@ class EKData {
         13 => [
             "letters" => ["A", "B", "C", "D", "J", "K", "E", "N", "L", "M", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
-            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "SPACE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "SPACE", "PLUS", "RUP", "RRIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 4, 13, 11, 12, 5, 6, 7, 8]
         ],
         14 => [
             "letters" => ["A", "B", "C", "D", "J", "K", "E", "N", "E", "L", "M", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
-            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "SPACE", "CIRCLE", "SPACE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "SPACE", "PLUS", "SPACE", "RUP", "RRIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 4, 13, 4, 11, 12, 5, 6, 7, 8]
         ],
         15 => [
             "letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "O", "P", "Q", "R", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
-            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 14, 15, 16, 17, 5, 6, 7, 8]
         ],
         16 => [
             "letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "F", "G", "H", "I"], 
-            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
-            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
+            "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
+            "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "SPACE", "RLEFT", "RDOWN", "RUP", "RRIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 13, 14, 15, 16, 17, 5, 6, 7, 8]
         ],
         17 => [
             "letters" => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "PLUS", "RLEFT", "RDOWN", "RUP", "RRIGHT"], 
-            "pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+            "pixelAnimIndex" => CoolUtil.numberArray(18)
         ],
 	];
 
