@@ -32,8 +32,8 @@ class MusicBeatState extends FlxUIState {
 	inline function get_controls():Controls
 		return Controls.instance;
 
-	private static function getPathWithDir(songFolder:String, songLowercase:String):String {
-		return 'mods/${Paths.currentModDirectory}/data/$songFolder/$songLowercase.json';
+	static function getPathWithDir(songFolder:String, songLowercase:String):String {
+		return 'mods/${Paths.currentModDirectory}/data/charting/$songFolder/$songLowercase.json';
 	}
 
 	public function getErrorMessage(error:String, reason:String, songFolder:String, songLowercase:String):String {

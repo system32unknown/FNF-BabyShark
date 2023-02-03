@@ -199,7 +199,6 @@ class LoadingState extends MusicBeatState
 			}
 
 			var library = AssetLibrary.fromManifest(manifest);
-
 			if (library == null) {
 				promise.error("Cannot open library \"" + id + "\"");
 			} else {

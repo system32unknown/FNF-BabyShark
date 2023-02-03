@@ -153,7 +153,7 @@ class Paths
 		}
 		
 		var cache = cast(OpenFlAssets.cache, AssetCache);
-		for (key => font in cache.font)
+		for (key in cache.font.keys())
 			cache.removeFont(key);
 
 		// flags everything to be cleared out next unused memory clear
