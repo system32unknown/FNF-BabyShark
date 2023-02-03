@@ -1387,6 +1387,7 @@ class PlayState extends MusicBeatState
 				case 'ugh' | 'guns' | 'stress':
 					if (ClientPrefs.getPref('week7CutScene'))
 						tankIntro();
+					else startCountdown();
 
 				default: startCountdown();
 			}
