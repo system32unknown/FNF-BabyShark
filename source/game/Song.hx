@@ -83,7 +83,8 @@ class Song {
 	{
 		var rawJson = null;
 		
-		var formattedPath:String = getSongPath((folder == null ? jsonInput : folder), jsonInput);
+		var formattedPath:String = "/charts/" + getSongPath((folder == null ? jsonInput : folder), jsonInput);
+		trace(formattedPath);
 		#if MODS_ALLOWED
 		var moddyFile:String = Paths.modsJson(formattedPath);
 		if (FileSystem.exists(moddyFile)) {
