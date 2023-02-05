@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<!-- _________________________Application Settings_________________________ -->
-	<app title="Baby Shark's Funkin: The Full Game" file="Baby Shark's Funkin" packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark" main="Main" version="0.2.8" company="altertoriel" />
+	<app title="Baby Shark's Funkin: The Full Game" file="Baby Shark's Funkin" packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark" main="Main" version="0.1" company="altertoriel" />
 
 	<!-- NOTE TO SELF: DISABLE THIS IF ISSUES ARE FOUND -->
 	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB"/> <!-- stable luas PUT AFTER FIRST LINE WITH APP NAME AND ETC -->

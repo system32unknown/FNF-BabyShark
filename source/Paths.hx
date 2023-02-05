@@ -220,7 +220,7 @@ class Paths
 		return getPath('data/$key.txt', TEXT, library);
 	
 	inline static public function json(key:String, ?library:String)
-		return getPath('data/$key.json', TEXT, library);
+		return getPath('data/charts/$key.json', TEXT, library);
 
 	static public function video(key:String) {
 		#if MODS_ALLOWED
@@ -407,7 +407,7 @@ class Paths
 		return modFolders('fonts/$key');
 
 	inline static public function modsJson(key:String)
-		return modFolders('data/$key.json');
+		return modFolders('data/charts/$key.json');
 
 	inline static public function modsVideo(key:String)
 		return modFolders('videos/$key.$VIDEO_EXT');
