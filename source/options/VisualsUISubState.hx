@@ -42,7 +42,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'IconBounceType',
 			'string',
 			'Psych',
-			['Vanilla', 'Kade', 'Psych', 'Andromeda', 'Dave', 'Purgatory', 'FixedPurgatory', 'GoldenApple', 'StridentCrisis', 'Micdup', 'BabyShark', 'Custom']);
+			['Vanilla', 'Kade', 'Psych', 'Dave', 'BP', 'SC', 'GoldenApple', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Health Bar Types:',
@@ -58,7 +58,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'ScoreType',
 			'string',
 			'Psych',
-			['Alter', 'Kade', 'Style1', 'Psych']);
+			['Alter', 'Kade', 'Psych']);
 		addOption(option);
 
 		var option:Option = new Option('Rating Display:',
@@ -126,7 +126,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Show Judgements Counter',
-			'If checked, the Judgements counter will be shown.\nLike Andromeda Engine.',
+			'If checked, the Judgements counter will be shown.',
 			'ShowJudgementCount',
 			'bool',
 			true);
@@ -204,8 +204,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		changedMusic = true;
 	}
 
-	override function destroy()
-	{
+	override function destroy() {
 		if(changedMusic) FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		super.destroy();
 	}

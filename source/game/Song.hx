@@ -85,13 +85,13 @@ class Song {
 		
 		var formattedPath:String = getSongPath((folder == null ? jsonInput : folder), jsonInput);
 		#if MODS_ALLOWED
-		var moddyFile:String = Paths.modsChart(Paths.CHART_PATH + formattedPath);
+		var moddyFile:String = Paths.modsChart(formattedPath);
 		if (FileSystem.exists(moddyFile)) {
 			rawJson = File.getContent(moddyFile).trim();
 		}
 		#end
 
-		var jsonPath = Paths.chart(Paths.CHART_PATH + formattedPath);
+		var jsonPath = Paths.chart(formattedPath);
 		if (rawJson == null && Paths.fileExists(jsonPath, TEXT, true, true)) {
 			#if sys
 			rawJson = File.getContent(jsonPath).trim();

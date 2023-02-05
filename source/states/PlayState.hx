@@ -1309,7 +1309,7 @@ class PlayState extends MusicBeatState
 			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + Paths.formatToSongPath(SONG.song) + '/'));
 
 		for(mod in Paths.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + '/${Paths.CHART_PATH}' + Paths.formatToSongPath(SONG.song) + '/'));// using push instead of insert because these should run after everything else
+			foldersToCheck.insert(0, Paths.mods(mod + '/${Paths.CHART_PATH}' + Paths.formatToSongPath(SONG.song) + '/')); // using push instead of insert because these should run after everything else
 		#end
 
 		for (folder in foldersToCheck) {
@@ -3139,10 +3139,10 @@ class PlayState extends MusicBeatState
 		}
 
 		switch(ClientPrefs.getPref('IconBounceType')) {
-			case "Vanilla" | "FixedPurgatory":
+			case "Vanilla":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .85)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .85)));
-			case "Kade" | "StridentCrisis": // Stolen from Vanilla Engine
+			case "Kade" | "SC": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .5)));
 			case "Psych":
@@ -3150,14 +3150,7 @@ class PlayState extends MusicBeatState
 				iconP1.scale.set(mult, mult);
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP2.scale.set(mult, mult);
-			case "Andromeda" | "BabyShark": // Stolen from Andromeda Engine
-				iconP1.setGraphicSize(Std.int(MathUtil.adjustFPS(iconP1.width, 150, .1)));
-				iconP2.setGraphicSize(Std.int(MathUtil.adjustFPS(iconP2.width, 150, .1)));
-			case "Micdup": // Stolen from FNF Mic'd Up
-				var curFPS:Float = Main.overlayVar.fpsCounter.currentFPS;
-				iconP1.setGraphicSize(Std.int(MathUtil.adjustFPS(iconP1.width, 150, .09 / (curFPS / 60))));
-				iconP2.setGraphicSize(Std.int(MathUtil.adjustFPS(iconP2.width, 150, .09 / (curFPS / 60))));
-			case "Dave" | "Purgatory":
+			case "Dave" | "BP":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
 		}
@@ -4284,7 +4277,7 @@ class PlayState extends MusicBeatState
 		if (bot || hidden) return missText;
 
 		switch (ClientPrefs.getPref('ScoreType')) {
-			case 'Alter' | 'Style1':
+			case 'Alter':
 				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses:$songMisses' + sepa;
 			case 'Kade':
 				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:$songMisses' : 'Combo Breaks: $songMisses'}' + sepa;
@@ -4309,12 +4302,7 @@ class PlayState extends MusicBeatState
 			case 'Kade':
 				tempText += ' Score:${(!cpuControlled ? songScore : botScore)} ';
 				tempText += tempMiss;
-				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
-			case 'Style1':
-				tempText += ' Score:${(!cpuControlled ? songScore : botScore)} ';
-				tempText += tempMiss;
-				tempText += '$scoreSeparator Accuracy:$accuracy% ';
-				tempText += '$scoreSeparator Rank: ' + (ratingName != '?' ? '$ranks' : 'N/A');		
+				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');	
 		}
 		scoreTxt.text = tempText;
 	}
@@ -5363,13 +5351,13 @@ class PlayState extends MusicBeatState
 		}
 		
 		switch (ClientPrefs.getPref('IconBounceType')) {
-			case 'Vanilla' | 'Andromeda' | 'Micdup' | 'Kade':
+			case 'Vanilla' | 'Kade':
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 			case "Psych":
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
-			case "Dave" | "Purgatory":
+			case "Dave" | "BP":
 				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), .1);
 	
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
@@ -5380,17 +5368,6 @@ class PlayState extends MusicBeatState
 						FlxTween.angle(iconP1, -30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 						FlxTween.angle(iconP2, 30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 					}
-				}
-			case "FixedPurgatory":
-				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
-
-				if (curBeat % 2 == 0) {
-					FlxTween.angle(iconP1, -15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-					FlxTween.angle(iconP2, 15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-				} else {
-					FlxTween.angle(iconP1, 15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-					FlxTween.angle(iconP2, -15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 				}
 			case "GoldenApple":
 				if (curBeat % 2 == 0) {
@@ -5409,7 +5386,7 @@ class PlayState extends MusicBeatState
 	
 				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
-			case "StridentCrisis":
+			case "SC":
 				var funny:Float = (healthBar.percent * .01) + .01;
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (2 + funny))), Std.int(iconP2.height - (25 * (2 + funny))));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))), Std.int(iconP2.height - (25 * (2 - funny))));
@@ -5420,26 +5397,6 @@ class PlayState extends MusicBeatState
 				FlxTween.angle(iconP1, -15, 0, Conductor.crochet / 1300 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.angle(iconP2, 15, 0, Conductor.crochet / 1300 * gfSpeed, {ease: FlxEase.quadOut}); 
 		
-				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
-				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
-		
-			case "BabyShark":
-				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
-				
-				if (curBeat % 2 == 0) {
-					iconP1.scale.set(1.1, 1.3);
-					iconP2.scale.set(1.1, 1.3);
-				}
-
-				if (curBeat % 4 == 0) {
-					FlxTween.angle(iconP1, -360, 0, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
-					FlxTween.angle(iconP2, 360, 0, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
-				} else {
-					FlxTween.angle(iconP1, (curBeat % 2 == 0 ? -15 : 15), 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-					FlxTween.angle(iconP2, (curBeat % 2 == 0 ? 15 : -15), 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-				}
-
 				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 		}
