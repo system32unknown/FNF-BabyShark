@@ -1299,7 +1299,7 @@ class PlayState extends MusicBeatState
 		}
 
 		// SONG SPECIFIC SCRIPTS
-		final songpath:String = 'data/charting/'; 
+		final songpath:String = 'data/charts/'; 
 		#if LUA_ALLOWED
 		var filesPushed:Array<String> = [];
 		var foldersToCheck:Array<String> = [Paths.getPreloadPath(songpath + Paths.formatToSongPath(SONG.song) + '/')];
