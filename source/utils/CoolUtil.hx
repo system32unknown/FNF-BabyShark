@@ -76,7 +76,7 @@ class CoolUtil
 		}
 		var maxCount = 0;
 		var maxKey:Int = 0;//after the loop this will store the max color
-		countByColor[flixel.util.FlxColor.BLACK] = 0;
+		countByColor[FlxColor.BLACK] = 0;
 		for (key in countByColor.keys()) {
 			if (countByColor[key] >= maxCount) {
 				maxCount = countByColor[key];
@@ -94,7 +94,6 @@ class CoolUtil
 	inline public static function precacheSound(sound:String, ?library:String = null):Void {
 		Paths.sound(sound, library);
 	}
-
 	inline public static function precacheMusic(sound:String, ?library:String = null):Void {
 		Paths.music(sound, library);
 	}
