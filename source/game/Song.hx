@@ -81,18 +81,17 @@ class Song {
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
 	{
-		final chartpath:String = "charts/";
 		var rawJson = null;
 		
 		var formattedPath:String = getSongPath((folder == null ? jsonInput : folder), jsonInput);
 		#if MODS_ALLOWED
-		var moddyFile:String = Paths.modsJson(chartpath + formattedPath);
+		var moddyFile:String = Paths.modsChart(Paths.CHART_PATH + formattedPath);
 		if (FileSystem.exists(moddyFile)) {
 			rawJson = File.getContent(moddyFile).trim();
 		}
 		#end
 
-		var jsonPath = Paths.json(chartpath + formattedPath);
+		var jsonPath = Paths.chart(Paths.CHART_PATH + formattedPath);
 		if (rawJson == null && Paths.fileExists(jsonPath, TEXT, true, true)) {
 			#if sys
 			rawJson = File.getContent(jsonPath).trim();

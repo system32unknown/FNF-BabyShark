@@ -47,27 +47,6 @@ class CoolUtil
 		return difficulties[PlayState.storyDifficulty].toUpperCase();
 	}
 
-	public static function checkJsonFilePath(song:String, diff:String, diffNum:Int) {
-		var realJson:Bool = false;
-		var jsonPath:String = song + '/' + song + diff;
-		var newDiff:String = null;
-
-		#if sys
-		#if MODS_ALLOWED
-		realJson = FileSystem.exists(Paths.modsJson(jsonPath)) || FileSystem.exists(Paths.json(jsonPath));
-		#else
-		realJson = FileSystem.exists(Paths.json(jsonPath));
-		#end
-		#else
-		realJson = Assets.exists(Paths.json(jsonPath));
-		#end
-
-		if (!realJson) {
-			if (diff.length > 0) newDiff = '' else newDiff = '-' + CoolUtil.difficulties[diffNum];
-		}
-		return newDiff;
-	}
-
 	public static function coolTextFile(path:String):Array<String> {
 		#if sys
 		if(FileSystem.exists(path)) return [for (i in File.getContent(path).trim().split('\n')) i.trim()];

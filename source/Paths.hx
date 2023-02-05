@@ -23,6 +23,7 @@ import utils.CoolUtil;
 @:access(openfl.media.Sound.__buffer)
 class Paths
 {
+	inline public static final CHART_PATH = "charts";
 	inline public static var SOUND_EXT = "ogg";
 	inline public static var VIDEO_EXT = "mp4";
 
@@ -220,7 +221,10 @@ class Paths
 		return getPath('data/$key.txt', TEXT, library);
 	
 	inline static public function json(key:String, ?library:String)
-		return getPath('data/charts/$key.json', TEXT, library);
+		return getPath('data/$key.json', TEXT, library);
+
+	inline static public function chart(key:String, ?library:String)
+		return json('data/$CHART_PATH/$key.json', library);
 
 	static public function video(key:String) {
 		#if MODS_ALLOWED
@@ -407,7 +411,10 @@ class Paths
 		return modFolders('fonts/$key');
 
 	inline static public function modsJson(key:String)
-		return modFolders('data/charts/$key.json');
+		return modFolders('data/$key.json');
+
+	inline static public function modsChart(key:String)
+		return modsJson('$CHART_PATH/$key');
 
 	inline static public function modsVideo(key:String)
 		return modFolders('videos/$key.$VIDEO_EXT');

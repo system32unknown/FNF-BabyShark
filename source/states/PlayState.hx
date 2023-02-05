@@ -1301,15 +1301,15 @@ class PlayState extends MusicBeatState
 		// SONG SPECIFIC SCRIPTS
 		#if LUA_ALLOWED
 		var filesPushed:Array<String> = [];
-		var foldersToCheck:Array<String> = [Paths.getPreloadPath(Paths.formatToSongPath(SONG.song) + '/')];
+		var foldersToCheck:Array<String> = [Paths.getPreloadPath(Paths.CHART_PATH + Paths.formatToSongPath(SONG.song) + '/')];
 
 		#if MODS_ALLOWED
-		foldersToCheck.insert(0, Paths.mods(Paths.formatToSongPath(SONG.song) + '/'));
+		foldersToCheck.insert(0, Paths.mods(Paths.CHART_PATH + Paths.formatToSongPath(SONG.song) + '/'));
 		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
 			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + Paths.formatToSongPath(SONG.song) + '/'));
 
 		for(mod in Paths.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + Paths.formatToSongPath(SONG.song) + '/'));// using push instead of insert because these should run after everything else
+			foldersToCheck.insert(0, Paths.mods(mod + '/${Paths.CHART_PATH}' + Paths.formatToSongPath(SONG.song) + '/'));// using push instead of insert because these should run after everything else
 		#end
 
 		for (folder in foldersToCheck) {
@@ -2458,9 +2458,9 @@ class PlayState extends MusicBeatState
 		noteData = songData.notes;
 
 		var songName:String = Paths.formatToSongPath(SONG.song);
-		var file:String = Paths.json(songName + '/events');
+		var file:String = Paths.chart(songName + '/events');
 		#if MODS_ALLOWED
-		if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file)) {
+		if (FileSystem.exists(Paths.modsChart(songName + '/events')) || FileSystem.exists(file)) {
 		#else
 		if (OpenFlAssets.exists(file)) {
 		#end

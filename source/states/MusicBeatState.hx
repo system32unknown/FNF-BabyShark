@@ -38,8 +38,8 @@ class MusicBeatState extends FlxUIState {
 
 	public function getErrorMessage(error:String, reason:String, songFolder:String, songLowercase:String):String {
 		var formattedSong:String = Song.getSongPath(songFolder, songLowercase);
-		var songString:String = Paths.json(formattedSong);
-		var modsSongString:String = Paths.modsJson(formattedSong);
+		var songString:String = Paths.chart(formattedSong);
+		var modsSongString:String = Paths.modsChart(formattedSong);
 		var modDirString:String = '';
 
 		if (Paths.currentModDirectory.length < 1) {
