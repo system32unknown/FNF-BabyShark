@@ -1316,6 +1316,7 @@ class PlayState extends MusicBeatState
 			if( FileSystem.exists(folder)) {
 				for (file in FileSystem.readDirectory(folder)) {
 					if (file.endsWith('.lua') && !filesPushed.contains(file)) {
+						trace(folder + file);
 						luaArray.push(new FunkinLua(folder + file));
 						filesPushed.push(file);
 					} #if hscript else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
