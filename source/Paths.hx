@@ -224,7 +224,7 @@ class Paths
 		return getPath('data/$key.json', TEXT, library);
 
 	inline static public function chart(key:String, ?library:String)
-		return json('data/$CHART_PATH/$key.json', library);
+		return json('$CHART_PATH/$key', library);
 
 	static public function video(key:String) {
 		#if MODS_ALLOWED
