@@ -2013,7 +2013,6 @@ class FunkinLua {
 			path = Paths.chart(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
 			luaTrace('startDialogue: Trying to load dialogue: ' + path);
 			#if MODS_ALLOWED
-			trace(path);
 			if(FileSystem.exists(path))
 			#else
 			if(Assets.exists(path))
