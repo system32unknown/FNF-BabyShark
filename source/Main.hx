@@ -92,15 +92,16 @@ class Main extends Sprite
 		#end
 
 		FlxG.fixedTimestep = false;
-		FlxG.signals.postStateSwitch.add(postStateSwitch);
+		FlxG.signals.preStateSwitch.add(onStateSwitch);
 	}
 
-	static function postStateSwitch() {
+	static function onStateSwitch() {
 		Paths.clearUnusedMemory();
 		Paths.clearStoredMemory();
 
 		MemoryUtil.clearMajor();
 		FlxG.bitmap.dumpCache();
+		FlxG.bitmap.clearUnused();
 	}
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
