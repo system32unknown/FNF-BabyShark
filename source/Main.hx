@@ -51,8 +51,7 @@ class Main extends Sprite
 		stage != null ? init() : addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 
-	private function init(?E:Event):Void
-	{
+	private function init(?E:Event):Void {
 		if (hasEventListener(Event.ADDED_TO_STAGE)) {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
@@ -100,6 +99,7 @@ class Main extends Sprite
 		Paths.clearStoredMemory();
 
 		MemoryUtil.clearMajor();
+
 		FlxG.bitmap.dumpCache();
 		FlxG.bitmap.clearUnused();
 	}

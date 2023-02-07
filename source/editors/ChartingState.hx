@@ -2783,7 +2783,7 @@ class ChartingState extends MusicBeatState
 	}
 	
 	function onDropFile(path:String):Void {
-		trace("user dropped file with path: " + path);
+		trace("user dropped file with path: " + Path.normalize(path));
 	}
 
 	function getSectionBeats(?section:Null<Int> = null) {
