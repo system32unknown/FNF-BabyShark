@@ -2212,69 +2212,14 @@ class PlayState extends MusicBeatState
 					santa.dance(true);
 				}
 
-				switch (swagCounter) {
-					case 0:
-						FlxG.sound.play(Paths.sound('intro3' + introSoundsSuffix), 0.6);
-					case 1:
-						countdownReady = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
-						countdownReady.cameras = [camHUD];
-						countdownReady.scrollFactor.set();
-						countdownReady.updateHitbox();
+				var introSndPaths:Array<String> = [
+					"intro3" + introSoundsSuffix, "intro2" + introSoundsSuffix,
+					"intro1" + introSoundsSuffix, "introGo" + introSoundsSuffix
+				];
 
-						if (PlayState.isPixelStage)
-							countdownReady.setGraphicSize(Std.int(countdownReady.width * daPixelZoom));
-
-						countdownReady.screenCenter();
-						countdownReady.antialiasing = antialias;
-						insert(members.indexOf(notes), countdownReady);
-						FlxTween.tween(countdownReady, {y: countdownReady.y + 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
-							ease: FlxEase.cubeInOut,
-							onComplete: function(twn:FlxTween) {
-								remove(countdownReady, true);
-								countdownReady.destroy();
-							}
-						});
-						FlxG.sound.play(Paths.sound('intro2' + introSoundsSuffix), 0.6);
-					case 2:
-						countdownSet = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
-						countdownSet.cameras = [camHUD];
-						countdownSet.scrollFactor.set();
-
-						if (PlayState.isPixelStage)
-							countdownSet.setGraphicSize(Std.int(countdownSet.width * daPixelZoom));
-
-						countdownSet.screenCenter();
-						countdownSet.antialiasing = antialias;
-						insert(members.indexOf(notes), countdownSet);
-						FlxTween.tween(countdownSet, {y: countdownSet.y + 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
-							ease: FlxEase.cubeInOut,
-							onComplete: function(twn:FlxTween) {
-								remove(countdownSet, true);
-								countdownSet.destroy();
-							}
-						});
-						FlxG.sound.play(Paths.sound('intro1' + introSoundsSuffix), 0.6);
-					case 3:
-						countdownGo = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
-						countdownGo.cameras = [camHUD];
-						countdownGo.scrollFactor.set();
-
-						if (PlayState.isPixelStage)
-							countdownGo.setGraphicSize(Std.int(countdownGo.width * daPixelZoom));
-
-						countdownGo.updateHitbox();
-						countdownGo.screenCenter();
-						countdownGo.antialiasing = antialias;
-						insert(members.indexOf(notes), countdownGo);
-						FlxTween.tween(countdownGo, {y: countdownGo.y + 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
-							ease: FlxEase.cubeInOut,
-							onComplete: function(twn:FlxTween) {
-								remove(countdownGo, true);
-								countdownGo.destroy();
-							}
-						});
-						FlxG.sound.play(Paths.sound('introGo' + introSoundsSuffix), 0.6);
-				}
+				if (swagCounter > 0)
+					readySetGo(introAlts[swagCounter - 1], antialias);
+				FlxG.sound.play(Paths.sound(introSndPaths[swagCounter]), 0.6);
 
 				notes.forEachAlive(function(note:Note) {
 					if(ClientPrefs.getPref('opponentStrums') || note.mustPress) {
@@ -2288,8 +2233,32 @@ class PlayState extends MusicBeatState
 				callOnLuas('onCountdownTick', [swagCounter]);
 				callOnHScripts('onCountdownTick', [swagCounter]);
 				swagCounter += 1;
-			}, 5);
+			}, 4);
 		}
+	}
+
+	function readySetGo(path:String, alias:Bool):Void {
+		var antialias:Bool = alias;
+
+		var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(path));
+		spr.cameras = [camHUD];
+		spr.scrollFactor.set();
+
+		if (PlayState.isPixelStage)
+			spr.setGraphicSize(Std.int(spr.width * daPixelZoom));
+
+		spr.updateHitbox();
+		spr.screenCenter();
+		spr.antialiasing = antialias;
+		insert(members.indexOf(notes), spr);
+
+		FlxTween.tween(spr, {y: spr.y += 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
+			ease: FlxEase.cubeInOut,
+			onComplete: function(twn:FlxTween) {
+				remove(spr, true);
+				spr.destroy();
+			}
+		});
 	}
 
 	public function addBehindGF(obj:FlxObject) {
