@@ -2217,9 +2217,10 @@ class PlayState extends MusicBeatState
 					"intro1" + introSoundsSuffix, "introGo" + introSoundsSuffix
 				];
 
-				if (swagCounter > 0)
+				if (swagCounter > 0) {
 					readySetGo(introAlts[swagCounter - 1], antialias);
-				FlxG.sound.play(Paths.sound(introSndPaths[swagCounter]), 0.6);
+					FlxG.sound.play(Paths.sound(introSndPaths[swagCounter - 1]), 0.6);
+				}
 
 				notes.forEachAlive(function(note:Note) {
 					if(ClientPrefs.getPref('opponentStrums') || note.mustPress) {
@@ -2233,7 +2234,7 @@ class PlayState extends MusicBeatState
 				callOnLuas('onCountdownTick', [swagCounter]);
 				callOnHScripts('onCountdownTick', [swagCounter]);
 				swagCounter += 1;
-			}, 4);
+			}, 5);
 		}
 	}
 
@@ -2246,13 +2247,13 @@ class PlayState extends MusicBeatState
 
 		if (PlayState.isPixelStage)
 			spr.setGraphicSize(Std.int(spr.width * daPixelZoom));
-
 		spr.updateHitbox();
+
 		spr.screenCenter();
 		spr.antialiasing = antialias;
 		insert(members.indexOf(notes), spr);
 
-		FlxTween.tween(spr, {y: spr.y += 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
+		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, (Conductor.crochet / 1000) * playbackRate, {
 			ease: FlxEase.cubeInOut,
 			onComplete: function(twn:FlxTween) {
 				remove(spr, true);
