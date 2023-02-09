@@ -35,7 +35,7 @@ class NoteSplash extends FlxSprite
 		setGraphicSize(Std.int(width * sc[PlayState.mania]));
 		alpha = ClientPrefs.getPref('splashOpacity');
 
-		if(texture == null || texture == '') {
+		if(texture == null || texture.length < 1) {
 			texture = 'noteSplashes';
 			if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) texture = PlayState.SONG.splashSkin;
 		}

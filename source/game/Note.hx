@@ -144,6 +144,7 @@ class Note extends FlxSprite
 	}
 
 	private function set_noteType(value:String):String {
+		var luaPrefix:String = '';
 		noteSplashTexture = PlayState.SONG.splashSkin;
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 		var arrowIndex:Int = Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania]);
@@ -195,6 +196,13 @@ class Note extends FlxSprite
 					noMissAnimation = true;
 				case 'GF Sing':
 					gfNote = true;
+				case '' | 'Hey!':
+				default:
+					#if MODS_ALLOWED
+					if (Paths.image(luaPrefix + 'NOTE_assets') != null)
+						reloadNote(luaPrefix, 'NOTE_assets');
+					else trace('Suggestion: rename $value texture to ${luaPrefix}NOTE_assets');
+					#end
 			}
 			noteType = value;
 		}

@@ -2216,11 +2216,10 @@ class PlayState extends MusicBeatState
 					"intro3" + introSoundsSuffix, "intro2" + introSoundsSuffix,
 					"intro1" + introSoundsSuffix, "introGo" + introSoundsSuffix
 				];
-
-				if (swagCounter > 0) {
-					readySetGo(introAlts[swagCounter - 1], antialias);
-					FlxG.sound.play(Paths.sound(introSndPaths[swagCounter - 1]), 0.6);
-				}
+					
+				if (swagCounter > 0 && swagCounter <= 3)
+					readySetGo(introAlts[swagCounter - 1], antialias, swagCounter - 1);
+				FlxG.sound.play(Paths.sound(introSndPaths[swagCounter]), 0.6);
 
 				notes.forEachAlive(function(note:Note) {
 					if(ClientPrefs.getPref('opponentStrums') || note.mustPress) {
@@ -2234,14 +2233,16 @@ class PlayState extends MusicBeatState
 				callOnLuas('onCountdownTick', [swagCounter]);
 				callOnHScripts('onCountdownTick', [swagCounter]);
 				swagCounter += 1;
-			}, 5);
+			}, 4);
 		}
 	}
 
-	function readySetGo(path:String, alias:Bool):Void {
+	function readySetGo(path:String, alias:Bool, ind:Int = 0):Void {
 		var antialias:Bool = alias;
+		var sprArray:Array<FlxSprite> = [countdownReady, countdownSet, countdownGo];
 
-		var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(path));
+		var spr:FlxSprite = sprArray[ind];
+		spr = new FlxSprite().loadGraphic(Paths.image(path));
 		spr.cameras = [camHUD];
 		spr.scrollFactor.set();
 
@@ -3893,11 +3894,10 @@ class PlayState extends MusicBeatState
 
 				var newValue:Float = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1) * val1;
 
-				if(val2 <= 0) {
-					songSpeed = newValue;
-				} else {
+				if(val2 <= 0) songSpeed = newValue;
+				else {
 					songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, val2 * playbackRate, {
-						onComplete: function (twn:FlxTween) {
+						onComplete: function(twn:FlxTween) {
 							songSpeedTween = null;
 						}
 					});
@@ -4251,28 +4251,33 @@ class PlayState extends MusicBeatState
 				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses:$songMisses' + sepa;
 			case 'Kade':
 				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:$songMisses' : 'Combo Breaks: $songMisses'}' + sepa;
-			case 'Psych':
+			case 'Psych' | 'Dnb':
 				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses: $songMisses' + sepa;
 
 		} return missText;
 	}
 
 	function UpdateScoreText() {
-		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? (ClientPrefs.getPref('ScoreType') == 'Kade' ? 'NPS:$nps (Max:$maxNPS) $scoreSeparator' : 'NPS:$nps ($maxNPS) $scoreSeparator') : '');
+		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? (ClientPrefs.getPref('ScoreType') == 'Kade' ? 'NPS:$nps (Max:$maxNPS) $scoreSeparator ' : 'NPS:$nps ($maxNPS) $scoreSeparator ') : '');
 		var tempMiss:String = getMissText(cpuControlled, ClientPrefs.getPref('movemissjudge'));
+		
 		switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter':
-				tempText += (!cpuControlled ? ' Score:$songScore ' : ' Bot Score:$botScore ');
+				tempText += (!cpuControlled ? 'Score:$songScore ' : 'Bot Score:$botScore ');
 				tempText += tempMiss;
 				tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ranks] - $ratingFC' : ' [?, ?] - ?');
 			case 'Psych':
-				tempText += ' Score: ${!cpuControlled ? songScore : botScore} ';
+				tempText += 'Score: ${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
 				tempText += '$scoreSeparator Rating: ' + (ratingName != '?' ? '$ratingName [$accuracy% | $ratingFC]' : '? [0% | ?]');
 			case 'Kade':
-				tempText += ' Score:${(!cpuControlled ? songScore : botScore)} ';
+				tempText += 'Score:${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
-				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');	
+				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
+			case 'Dnb':
+				tempText += 'Score:${!cpuControlled ? songScore : botScore} ';
+				tempText += tempMiss;
+				tempText += '$scoreSeparator Accuracy:$accuracy%';
 		}
 		scoreTxt.text = tempText;
 	}
@@ -4377,8 +4382,8 @@ class PlayState extends MusicBeatState
 				}
 				
 				timingTxtArrays[0].text = msTiming + "ms" + (cpuControlled ? " <Bot>" : "");
-				timingTxtArrays[0].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-				timingTxtArrays[0].borderSize = 1;
+				timingTxtArrays[0].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER);
+				timingTxtArrays[0].setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 				timingTxtArrays[0].visible = !hideHud;
 				if (ratingDisplay == "Hud") {
 					timingTxtArrays[0].cameras = [camHUD];
@@ -4396,8 +4401,8 @@ class PlayState extends MusicBeatState
 		
 			if (ClientPrefs.getPref('ShowAverage') && timingTxtArrays[0] != null) {
 				timingTxtArrays[1].text = "Average: " + Math.round(averageMs) + "ms";
-				timingTxtArrays[1].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-				timingTxtArrays[1].borderSize = 1;
+				timingTxtArrays[1].setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER);
+				timingTxtArrays[1].setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 				timingTxtArrays[1].visible = !hideHud;
 				if (ratingDisplay == "Hud") {
 					timingTxtArrays[1].cameras = [camHUD];
@@ -4506,9 +4511,7 @@ class PlayState extends MusicBeatState
 				if (!PlayState.isPixelStage) {
 					numScore.antialiasing = globalAntialiasing;
 					numScore.setGraphicSize(Std.int(numScore.width * 0.5));
-				} else {
-					numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
-				}
+				} else numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
 				numScore.updateHitbox();
 			
 				numScore.acceleration.y = FlxG.random.int(200, 300) * playbackRate * playbackRate;
@@ -4660,10 +4663,7 @@ class PlayState extends MusicBeatState
 					}
 				}
 
-				// I dunno what you need this for but here you go
-				//									- Shubs
-
-				// Shubs, this is for the "Just the Two of Us" achievement lol
+				// this is for the "Just the Two of Us" achievement lol
 				//									- Shadow Mario
 				keysPressed[key] = true;
 
@@ -5042,8 +5042,7 @@ class PlayState extends MusicBeatState
 				StrumPlayAnim(false, Std.int(Math.abs(note.noteData)) % Note.ammo[mania], time);
 			} else {
 				var spr = playerStrums.members[note.noteData];
-				if(spr != null)
-					spr.playAnim('confirm', true);
+				if(spr != null) spr.playAnim('confirm', true);
 
 			}
 			note.wasGoodHit = true;
