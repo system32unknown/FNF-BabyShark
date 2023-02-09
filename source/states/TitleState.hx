@@ -23,7 +23,6 @@ import utils.CoolUtil;
 import utils.MathUtil;
 #if desktop
 import utils.Discord.DiscordClient;
-import api.windows.Program;
 #end
 import game.Highscore;
 import game.Conductor;
@@ -73,11 +72,6 @@ class TitleState extends MusicBeatState
 		#end
 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
 		WeekData.loadTheFirstEnabledMod();
-
-		if (Program.checkIfRunning("FNFBot20.exe")) {
-			PlatformUtil.showMessageBox("Cheating Detected", "No cheating with FNFBot.\nTerminating Game.", MSG_ERROR);
-			#if sys Sys.exit(0); #end
-		}
 
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.sound.muteKeys = muteKeys;

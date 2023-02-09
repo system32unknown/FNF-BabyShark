@@ -1202,16 +1202,10 @@ class PlayState extends MusicBeatState
 			iconP1.isPsych = true;
 			iconP2.isPsych = true;
 		}
-		switch (ClientPrefs.getPref('ScoreType')) {
-			case 'Psych':
-				scoreTxt.y = healthBarBG.y + 36;
-				scoreTxt.borderSize = 1.25;
-				scoreTxt.size = 20;
-			case 'Dnb':
-				scoreTxt.font = Paths.font("comic.ttf");
-				scoreTxt.y = healthBarBG.y + 40;
-				scoreTxt.borderSize = 1.5;
-				scoreTxt.size = 20;
+		if (ClientPrefs.getPref('ScoreType') == 'Psych') {
+			scoreTxt.y = healthBarBG.y + 36;
+			scoreTxt.borderSize = 1.25;
+			scoreTxt.size = 20;
 		}
 
 		scoreTxt.visible = !hideHud;
@@ -4253,7 +4247,7 @@ class PlayState extends MusicBeatState
 		if (bot || hidden) return missText;
 
 		switch (ClientPrefs.getPref('ScoreType')) {
-			case 'Alter' | 'Dnb':
+			case 'Alter':
 				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses:$songMisses' + sepa;
 			case 'Kade':
 				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:$songMisses' : 'Combo Breaks: $songMisses'}' + sepa;
@@ -4280,10 +4274,6 @@ class PlayState extends MusicBeatState
 				tempText += 'Score:${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
 				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
-			case 'Dnb':
-				tempText += 'Score:${!cpuControlled ? songScore : botScore} ';
-				tempText += tempMiss;
-				tempText += '$scoreSeparator Accuracy:$accuracy%';
 		}
 		scoreTxt.text = tempText;
 	}
