@@ -4253,11 +4253,11 @@ class PlayState extends MusicBeatState
 		if (bot || hidden) return missText;
 
 		switch (ClientPrefs.getPref('ScoreType')) {
-			case 'Alter':
+			case 'Alter' | 'Dnb':
 				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses:$songMisses' + sepa;
 			case 'Kade':
 				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:$songMisses' : 'Combo Breaks: $songMisses'}' + sepa;
-			case 'Psych' | 'Dnb':
+			case 'Psych':
 				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses: $songMisses' + sepa;
 
 		} return missText;

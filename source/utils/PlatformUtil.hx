@@ -125,5 +125,19 @@ class PlatformUtil
         HWND window = GetActiveWindow();
         DwmSetWindowAttribute(window, type, &darkMode, sizeof(darkMode));
     ')
-    public static function setWindowAtt(type:Int, enable:Bool) {}
+    static public function setWindowAtt(type:Int, enable:Bool) {}
+
+    #if windows
+    @:functionCode('
+        MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);
+    ')
+    #end
+    static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
+}
+
+@:enum abstract MessageBoxIcon(Int) {
+    var MSG_ERROR:MessageBoxIcon = 0x00000010;
+    var MSG_QUESTION:MessageBoxIcon = 0x00000020;
+    var MSG_WARNING:MessageBoxIcon = 0x00000030;
+    var MSG_INFORMATION:MessageBoxIcon = 0x00000040;
 }
