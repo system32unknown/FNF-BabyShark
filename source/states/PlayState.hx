@@ -1194,7 +1194,7 @@ class PlayState extends MusicBeatState
 		add(iconP2);
 		reloadHealthBarColors();
 
-		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0, "");
+		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		
@@ -1202,10 +1202,16 @@ class PlayState extends MusicBeatState
 			iconP1.isPsych = true;
 			iconP2.isPsych = true;
 		}
-		if (ClientPrefs.getPref('ScoreType') == 'Psych') {
-			scoreTxt.y = healthBarBG.y + 36;
-			scoreTxt.borderSize = 1.25;
-			scoreTxt.size = 20;
+		switch (ClientPrefs.getPref('ScoreType')) {
+			case 'Psych':
+				scoreTxt.y = healthBarBG.y + 36;
+				scoreTxt.borderSize = 1.25;
+				scoreTxt.size = 20;
+			case 'Dnb':
+				scoreTxt.font = Paths.font("comic.ttf");
+				scoreTxt.y = healthBarBG.y + 40;
+				scoreTxt.borderSize = 1.5;
+				scoreTxt.size = 20;
 		}
 
 		scoreTxt.visible = !hideHud;
