@@ -2246,7 +2246,7 @@ class PlayState extends MusicBeatState
 		spr.cameras = [camHUD];
 		spr.scrollFactor.set();
 
-		if (PlayState.isPixelStage)
+		if (isPixelStage)
 			spr.setGraphicSize(Std.int(spr.width * daPixelZoom));
 		spr.updateHitbox();
 
@@ -2362,7 +2362,7 @@ class PlayState extends MusicBeatState
 
 		previousFrameTime = FlxG.game.ticks;
 
-		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
+		FlxG.sound.playMusic(Paths.inst(SONG.song), 1, false);
 		FlxG.sound.music.onComplete = finishSong.bind();
 		vocals.play();
 
@@ -2413,12 +2413,12 @@ class PlayState extends MusicBeatState
 
 		curSong = songData.song;
 
-		if (SONG.needsVoices) vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+		if (SONG.needsVoices) vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.song));
 		else vocals = new FlxSound();
 
 		vocals.pitch = playbackRate;
 		FlxG.sound.list.add(vocals);
-		FlxG.sound.list.add(new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.song)));
+		FlxG.sound.list.add(new FlxSound().loadEmbedded(Paths.inst(SONG.song)));
 
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
@@ -3303,8 +3303,8 @@ class PlayState extends MusicBeatState
 								if (daNote.animation.curAnim != null && daNote.animation.curAnim.name.endsWith('tail')) {
 									daNote.y += 10.5 * (fakeCrochet / 400) * 1.5 * songSpeed + (46 * (songSpeed - 1));
 									daNote.y -= 46 * (1 - (fakeCrochet / 600)) * songSpeed;
-									if(PlayState.isPixelStage) {
-										daNote.y += 8 + (6 - daNote.originalHeightForCalcs) * PlayState.daPixelZoom;
+									if(isPixelStage) {
+										daNote.y += 8 + (6 - daNote.originalHeightForCalcs) * daPixelZoom;
 									} else {
 										daNote.y -= 19;
 									}
@@ -4118,7 +4118,7 @@ class PlayState extends MusicBeatState
 					var difficulty:String = CoolUtil.getDifficultyFilePath();
 
 					trace('LOADING NEXT SONG');
-					trace(Paths.formatToSongPath(PlayState.storyPlaylist[0]) + difficulty);
+					trace(Paths.formatToSongPath(storyPlaylist[0]) + difficulty);
 
 					var winterHorrorlandNext = (Paths.formatToSongPath(SONG.song) == "eggnog");
 					if (winterHorrorlandNext)
@@ -4138,7 +4138,7 @@ class PlayState extends MusicBeatState
 					prevCamFollow = camFollow;
 					prevCamFollowPos = camFollowPos;
 
-					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0] + difficulty, PlayState.storyPlaylist[0]);
+					SONG = Song.loadFromJson(storyPlaylist[0] + difficulty, storyPlaylist[0]);
 					FlxG.sound.music.stop();
 
 					if(winterHorrorlandNext) {
@@ -4335,7 +4335,7 @@ class PlayState extends MusicBeatState
 			var pixelShitPart1:String = "";
 			var pixelShitPart2:String = '';
 			
-			if (PlayState.isPixelStage) {
+			if (isPixelStage) {
 				pixelShitPart1 = 'pixelUI/';
 				pixelShitPart2 = '-pixel';
 			}
@@ -4456,7 +4456,7 @@ class PlayState extends MusicBeatState
 				lastLateEarly = timing;
 			}
 		
-			if (!PlayState.isPixelStage) {
+			if (!isPixelStage) {
 				rating.setGraphicSize(Std.int(rating.width * .7));
 				rating.antialiasing = globalAntialiasing;
 				comboSpr.setGraphicSize(Std.int(comboSpr.width * .7));
@@ -4504,7 +4504,7 @@ class PlayState extends MusicBeatState
 				if (!ClientPrefs.getPref('comboStacking'))
 					lastScore.push(numScore);
 			
-				if (!PlayState.isPixelStage) {
+				if (!isPixelStage) {
 					numScore.antialiasing = globalAntialiasing;
 					numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 				} else numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
@@ -4885,7 +4885,7 @@ class PlayState extends MusicBeatState
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
 		var camTimer:FlxTimer;
 
-		if (ClientPrefs.getPref('camMovement') && !PlayState.isPixelStage) {
+		if (ClientPrefs.getPref('camMovement') && !isPixelStage) {
 			if(!bfturn) {
 				switch (animToPlay) {
 					case "singLEFT":
@@ -5069,7 +5069,7 @@ class PlayState extends MusicBeatState
 
 	public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
 		var skin:String = 'noteSplashes';
-		if((PlayState.SONG.splashSkin != null || PlayState.SONG.splashSkin != '') && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
+		if((SONG.splashSkin != null || SONG.splashSkin != '') && SONG.splashSkin.length > 0) skin = SONG.splashSkin;
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 		var arrowIndex:Int = Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[data] % Note.ammo[mania]);
 

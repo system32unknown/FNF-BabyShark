@@ -150,7 +150,7 @@ class MusicBeatState extends FlxUIState {
 	}
 
 	public static function resetState() {
-		MusicBeatState.switchState(FlxG.state, true);
+		switchState(FlxG.state, true);
 	}
 
 	public function stepHit():Void {
