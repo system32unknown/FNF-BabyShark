@@ -528,7 +528,7 @@ class CreditsEditor extends MusicBeatState
 	{
 		if(change != 0) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		do {
-			FlxMath.wrap(curSelected + change, 0, creditsStuff.length - 1);
+			curSelected = FlxMath.wrap(curSelected + change, 0, creditsStuff.length - 1);
 		} while(nullCheck(curSelected));
 
 		if(unselectableCheck(curSelected)) curSelIsTitle = true;
