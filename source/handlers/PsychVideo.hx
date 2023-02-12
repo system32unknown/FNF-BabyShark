@@ -9,7 +9,9 @@ import sys.FileSystem;
 import openfl.util.Assets;
 #end
 #if VIDEOS_ALLOWED
-import hxcodec.VideoHandler;
+#if (hxCodec >= "2.6.1") import hxcodec.VideoHandler as MP4Handler;
+#elseif (hxCodec == "2.6.0") import VideoHandler as MP4Handler;
+#else import vlc.MP4Handler; #end
 import hxcodec.VideoSprite;
 
 /**
@@ -19,7 +21,7 @@ import hxcodec.VideoSprite;
 class PsychVideo {
 	public var endFunc:Void->Void;
 
-	public static var videos:Array<VideoHandler> = [];
+	public static var videos:Array<MP4Handler> = [];
 	public static var sprites:Array<VideoSprite> = [];
 
 	public function new(?endFunc:Void->Void):Void {
@@ -48,12 +50,12 @@ class PsychVideo {
 		loader.destroy();
 	}
 
-	public function startVideo(name:String):VideoHandler {
+	public function startVideo(name:String):MP4Handler {
 		var path:String = Paths.video(name);
 		if (!exists(name))
 			return null;
 
-		var video:VideoHandler = new VideoHandler();
+		var video:MP4Handler = new MP4Handler();
 		if (endFunc != null)
 			video.finishCallback = endFunc;
 		video.canSkip = true;
@@ -126,7 +128,7 @@ class PsychVideo {
 	public function loadCutscene(name:String):Void
 		return;
 
-	public function startVideo(name:String):VideoHandler
+	public function startVideo(name:String):MP4Handler
 		return null;
 
 	public function startVideoSprite(x:Float = 0, y:Float = 0, op:Float = 1, name:String, ?cam:FlxCamera, ?loop:Bool = false,

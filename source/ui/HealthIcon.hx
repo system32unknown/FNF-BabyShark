@@ -17,11 +17,11 @@ class HealthIcon extends FlxSprite
 	var isPlayer:Bool = false;
 	var isCredit:Bool;
 
-	private var char:String = '';
+	var char:String = '';
 	
 	public var isPsych:Bool = false;
-	private var availableStates:Int = 1;
-	private var state:Int = 0;
+	var availableStates:Int = 1;
+	var state:Int = 0;
 	
 	public static function returnGraphic(char:String, ?folder:String, defaultIfMissing:Bool = false, creditIcon:Bool = false):FlxGraphic {
 		var path:String;

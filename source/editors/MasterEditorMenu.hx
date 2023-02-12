@@ -29,6 +29,7 @@ class MasterEditorMenu extends MusicBeatState {
 		'Dialogue Portrait Editor',
 		'Character Editor',
 		'Chart Editor',
+		'Credit Editor',
 		'Enter Terminal'
 	];
 	private var grpTexts:FlxTypedGroup<Alphabet>;
@@ -104,7 +105,8 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), false);
 				case 'Dialogue Editor' :LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
 				case 'Chart Editor': LoadingState.loadAndSwitchState(new ChartingState(), false); //felt it would be cool maybe
-				case 'Enter Terminal': LoadingState.loadAndSwitchState(new TerminalState(), false);
+				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditor());
+				case 'Enter Terminal': MusicBeatState.loadAndSwitchState(new TerminalState(), false);
 			}
 			FlxG.sound.music.volume = 0;
 			#if PRELOAD_ALL
