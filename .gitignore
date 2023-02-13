@@ -2,7 +2,6 @@
 export/
 .haxelib/
 dump/
-hmm.json
 
 ### VS Code
 .vscode/
