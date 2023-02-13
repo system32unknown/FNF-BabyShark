@@ -25,7 +25,7 @@ Heavily Modded Psych Engine. combined with Kade, Dave, Base Engines.
 ### Base Engine:
 * Funkin' Crew
 
-### Special Thanks /
+### Special Thanks:
 * bbpanzu - Ex-Programmer
 * Yoshubs - New Input System
 * SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
