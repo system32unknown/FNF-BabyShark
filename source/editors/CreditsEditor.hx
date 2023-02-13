@@ -294,10 +294,11 @@ class CreditsEditor extends MusicBeatState
 				}
 
 				var icon:AttachedSprite;
-				if(Paths.fileExists('images/credits/' + creditsStuff[i][1] + '.png', IMAGE)) icon = new AttachedSprite('credits/' + creditsStuff[i][1]);
+				if(Paths.fileExists('images/credits/' + creditsStuff[i][1] + '.png', IMAGE))
+					icon = new AttachedSprite('credits/' + creditsStuff[i][1]);
 				else {
-					icon = new AttachedSprite('credits/unknown'); // If icon didnt load it will load the unknow icon.
-					if(creditsStuff[i][1] == null || creditsStuff[i][1] == '') icon = new AttachedSprite('credits/none');
+					icon = new AttachedSprite('credits/unknown'); // If icon didnt load it will load the unknown icon.
+					if(creditsStuff[i][1] == null || creditsStuff[i][1] == '') icon = new AttachedSprite('credits/unknown');
 				}
 
 				icon.xAdd = optionText.width + 10;
