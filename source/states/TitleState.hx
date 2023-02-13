@@ -102,7 +102,7 @@ class TitleState extends MusicBeatState
 		}
 
 		#if FLX_NO_DEBUG
-		if (ClientPrefs.getPref('FlxStartup') && !doneFlixelSplash) {
+		if (!initialized && ClientPrefs.getPref('FlxStartup') && !doneFlixelSplash) {
 			doneFlixelSplash = true;
 			FlxSplash.nextState = TitleState;
 			FlxG.switchState(new FlxSplash());

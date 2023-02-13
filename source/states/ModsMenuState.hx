@@ -15,7 +15,6 @@ import sys.FileSystem;
 import sys.io.File;
 import haxe.Json;
 import openfl.display.BitmapData;
-import flash.geom.Rectangle;
 
 import data.WeekData;
 import ui.AttachedSprite;

@@ -1,8 +1,13 @@
 # Baby Shark's Funkin
-Heavily Modded Psych Engine. combined with Kade, Forever, Dave, Vanilla.
+![Baby Shark's Funkin Logo](assets/preload/images/FinalLogo.png)
+
+Heavily Modded Psych Engine. combined with Kade, Dave, Base Engines.
 
 ![Repo size](https://img.shields.io/github/repo-size/system32unknown/FNF-BabyShark)
 ![File Count](https://img.shields.io/github/directory-file-count/system32unknown/FNF-BabyShark)
+![Last commit](https://img.shields.io/github/last-commit/system32unknown/FNF-BabyShark)
+![Windows Build](https://img.shields.io/github/actions/workflow/status/system32unknown/FNF-BabyShark/main.yml)
+![License](https://img.shields.io/github/license/system32unknown/FNF-BabyShark)
 
 # Credits (WIP):
 
@@ -14,11 +19,8 @@ Heavily Modded Psych Engine. combined with Kade, Forever, Dave, Vanilla.
 ### Kade Engine:
 * KadeDev - Programmer of Kade Engine
 
-### Forever Engine:
-* Yoshubs - Programmer of Forever Engine
-
 ### Dave Engine:
-* Vs. Dave and bambi Teams
+* Vs. Dave and Bambi Teams
 
 ### Base Engine:
 * Funkin' Crew
