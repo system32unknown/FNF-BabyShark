@@ -14,11 +14,11 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.util.FlxGradient;
+import flixel.system.FlxSplash;
 import lime.app.Application;
 import haxe.Json;
 import data.WeekData;
 import utils.ClientPrefs;
-import utils.PlatformUtil;
 import utils.CoolUtil;
 import utils.MathUtil;
 #if desktop
@@ -47,6 +47,7 @@ class TitleState extends MusicBeatState
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
 	public static var initialized:Bool = false;
+	static var doneFlixelSplash:Bool = false;
 
 	var credGroup:FlxGroup;
 	var textGroup:FlxGroup;
@@ -99,6 +100,15 @@ class TitleState extends MusicBeatState
 		if (FlxG.save.data.weekCompleted != null) {
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
+
+		#if FLX_NO_DEBUG
+		if (ClientPrefs.getPref('FlxStartup') && !doneFlixelSplash) {
+			doneFlixelSplash = true;
+			FlxSplash.nextState = TitleState;
+			FlxG.switchState(new FlxSplash());
+			return;
+		}
+		#end
 
 		FlxG.mouse.visible = false;
 		if (ClientPrefs.getPref('flashing') == null && !FlashingState.leftState) {

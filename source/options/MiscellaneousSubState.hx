@@ -89,6 +89,13 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('HaxeFlixel Start up',
+			'',
+			'FlxStartup',
+			'bool',
+			true);
+		addOption(option);
+
 		super();
 	}
 }

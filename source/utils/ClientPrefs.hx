@@ -43,6 +43,7 @@ class ClientPrefs {
 		'HiddenOppLU' => false,
 		'LUAlpha' => 0,
 		'AntiMash' => false,
+		'FlxStartup' => false,
 		'noteOffset' => 0,
 		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
 		'ghostTapping' => true,

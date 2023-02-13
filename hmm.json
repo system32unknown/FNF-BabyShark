@@ -13,21 +13,21 @@
       {
         "name": "flixel",
         "type": "git",
-        "dir": null,
+        "dir": "flixel",
         "ref": "master",
         "url": "https://github.com/HaxeFlixel/flixel"
       },
       {
         "name": "flixel-addons",
         "type": "git",
-        "dir": null,
+        "dir": "flixel-addons",
         "ref": "master",
         "url": "https://github.com/HaxeFlixel/flixel-addons"
       },
       {
         "name": "flixel-ui",
         "type": "git",
-        "dir": null,
+        "dir": "flixel-ui",
         "ref": "master",
         "url": "https://github.com/HaxeFlixel/flixel-ui"
       },
@@ -39,7 +39,7 @@
       {
         "name": "hxCodec",
         "type": "git",
-        "dir": null,
+        "dir": "hxCodec",
         "ref": "main",
         "url": "https://github.com/polybiusproxy/hxCodec"
       },
@@ -53,14 +53,14 @@
       {
         "name": "discord_rpc",
         "type": "git",
-        "dir": null,
+        "dir": "discord_rpc",
         "ref": "master",
         "url": "https://github.com/Aidan63/linc_discord-rpc"
       },
       {
         "name": "linc_luajit",
         "type": "git",
-        "dir": null,
+        "dir": "linc_luajit",
         "ref": "master",
         "url": "https://github.com/system32unknown/linc_luajit"
       }
