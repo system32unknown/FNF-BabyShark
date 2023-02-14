@@ -132,18 +132,9 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Show Lane Underlay',
-			'If checked, the Lane underlay will be shown.',
-			'ShowLU',
-			'bool',
-			true);
-		addOption(option);
-
-		var option:Option = new Option('Hide Opponent LU',
-			'If checked, the Opponent LU will be hidden.',
-			'HiddenOppLU',
-			'bool',
-			true);
+		var option:Option = new Option('Lane Underlay Type',
+			'', 'LUType', 'string', 'Never',
+			['Only P1', 'Both', 'Never']);
 		addOption(option);
 
 		var option:Option = new Option('Lane Underlay Transparency',

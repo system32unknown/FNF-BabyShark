@@ -188,17 +188,18 @@ class CoolUtil
 	public static function getMacroAbstractClass(className:String)
 		return Type.resolveClass('${className}_HSC');
 
-    static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
-
-	public static function getInterval(num:UInt):String {
-		var size:Float = num;
-		var data = 0;
-		while (size > 1024 && data < intervalArray.length - 1) {
-			data++;
-			size = size / 1024;
+	public static function removeDuplicates(string:Array<String>):Array<String> {
+		var tempArray:Array<String> = new Array<String>();
+		var lastSeen:String = null;
+		string.sort(function(str1:String, str2:String) {
+		  return (str1 == str2) ? 0 : (str1 > str2) ? 1 : -1; 
+		});
+		for (str in string) {
+		  if (str != lastSeen) {
+			tempArray.push(str);
+		  }
+		  lastSeen = str;
 		}
-
-		size = Math.round(size * 100) / 100;
-		return '$size${intervalArray[data]}';
+		return tempArray;
 	}
 }

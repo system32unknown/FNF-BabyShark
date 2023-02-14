@@ -254,7 +254,7 @@ class MainMenuState extends MusicBeatState
 							var daChoice:String = optionShit[curSelected];
 							switch (daChoice) {
 								case 'story_mode': MusicBeatState.switchState(new StoryMenuState());
-								case 'freeplay': MusicBeatState.switchState(new FreeplayState());
+								case 'freeplay': MusicBeatState.switchState(new FreeplaySectionState());
 								#if MODS_ALLOWED
 								case 'mods': MusicBeatState.switchState(new ModsMenuState());
 								#end

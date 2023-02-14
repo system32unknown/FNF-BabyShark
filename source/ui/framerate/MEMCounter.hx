@@ -36,7 +36,7 @@ class MEMCounter extends Sprite {
 
         memory = MemoryUtil.getMemUsage(ClientPrefs.getPref('MEMType'));
         if (memory > mempeak) mempeak = memory;
-        memtxt.text = "MEM: " + CoolUtil.getInterval(memory) + " / " + CoolUtil.getInterval(mempeak);
+        memtxt.text = "MEM: " + MemoryUtil.getInterval(memory) + " / " + MemoryUtil.getInterval(mempeak);
         visible = ClientPrefs.getPref('showMEM');
     }
 }

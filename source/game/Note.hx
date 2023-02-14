@@ -196,7 +196,6 @@ class Note extends FlxSprite
 					noMissAnimation = true;
 				case 'GF Sing':
 					gfNote = true;
-				case '' | 'Hey!':
 				default:
 					#if MODS_ALLOWED
 					if (Paths.image(luaPrefix + 'NOTE_assets') != null)

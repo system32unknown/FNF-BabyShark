@@ -1080,17 +1080,17 @@ class PlayState extends MusicBeatState
 
 		playerLU = new FlxTypedGroup<FlxSprite>();
 		playerLU.cameras = [camHUD];
-		add(playerLU);
 
 		opponentLU = new FlxTypedGroup<FlxSprite>();
 		opponentLU.cameras = [camHUD];
-		add(opponentLU);
 
-		if (ClientPrefs.getPref('ShowLU')) {
-			if (!ClientPrefs.getPref('HiddenOppLU') && !ClientPrefs.getPref('middleScroll')) {
-				add(opponentLU);
-			}
-			add(playerLU);
+		switch(ClientPrefs.getPref('LUType').toLowerCase()) {
+			case 'only p1': add(playerLU);
+			case 'both': 
+				if (!ClientPrefs.getPref('middleScroll')) {
+					add(playerLU);
+					add(opponentLU);
+				}
 		}
 
 		var showTime:Bool = (ClientPrefs.getPref('timeBarType') != 'Disabled');
@@ -2116,26 +2116,16 @@ class PlayState extends MusicBeatState
 	}
 
 	public function addLUStrums():Void {
-		if (ClientPrefs.getPref('ShowLU')) {
-			for (i in 0...playerStrums.members.length) {
-				var playerLay = new FlxSprite(playerStrums.members[i].x, 0).makeGraphic(Std.int(playerStrums.members[i].width), FlxG.height);
-				playerLay.alpha = ClientPrefs.getPref('LUAlpha');
-				playerLay.color = FlxColor.BLACK;
-				playerLay.scrollFactor.set();
-				playerLay.cameras = [camHUD];
-				playerLay.screenCenter(Y);
-				playerLU.add(playerLay);
-			}
-			if (!ClientPrefs.getPref('HiddenOppLU')) {
-				for (i in 0...opponentStrums.members.length) {
-					var opponentLay = new FlxSprite(opponentStrums.members[i].x, 0).makeGraphic(Std.int(opponentStrums.members[i].width), FlxG.height);
-					opponentLay.alpha = ClientPrefs.getPref('LUAlpha');
-					opponentLay.color = FlxColor.BLACK;
-					opponentLay.scrollFactor.set();
-					opponentLay.cameras = [camHUD];
-					opponentLay.screenCenter(Y);
-					opponentLU.add(opponentLay);
-				}
+		var strums:Array<Array<Dynamic>> = [[playerStrums, playerLU], [opponentStrums, opponentLU]];
+		for (istrums in strums) {
+			for (i in 0...istrums[0].members.length) {
+				var strumLay:FlxSprite = new FlxSprite(istrums[0].members[i].x, 0).makeGraphic(Std.int(istrums[0].members[i].width), FlxG.height);
+				strumLay.alpha = ClientPrefs.getPref('LUAlpha');
+				strumLay.color = FlxColor.BLACK;
+				strumLay.scrollFactor.set();
+				strumLay.cameras = [camHUD];
+				strumLay.screenCenter(Y);
+				istrums[1].add(strumLay);
 			}
 		}
 	}
@@ -2917,16 +2907,21 @@ class PlayState extends MusicBeatState
 			if(camlock) camFollow.set(camlockx, camlocky);
 		}
 
-		if (updateLU && ClientPrefs.getPref('ShowLU')) {
-			for (i in 0...playerLU.members.length) {
-				if (playerLU.members[i] != null)
-					playerLU.members[i].x = playerStrums.members[i].x;
-			}
-			if (!ClientPrefs.getPref('HiddenOppLU') && !ClientPrefs.getPref('middleScroll')) {
-				for (i in 0...opponentLU.members.length) {
-					if (opponentLU.members[i] != null)
-						opponentLU.members[i].x = opponentStrums.members[i].x;
-				}
+		if (updateLU) {
+			switch(ClientPrefs.getPref('LUType').toLowerCase()) {
+				case 'only p1':
+					for (i in 0...playerLU.members.length) {
+						if (playerLU.members[i] != null)
+							playerLU.members[i].x = playerStrums.members[i].x;
+					}
+				case 'both':
+					var strums:Array<Array<Dynamic>> = [[playerStrums, playerLU], [opponentStrums, opponentLU]];
+					if (!ClientPrefs.getPref('middleScroll')) {
+						for (strumLU in strums)
+							for (i in 0...strumLU[1].members.length)
+								if (strumLU[1].members[i] != null)
+									strumLU[1].members[i].x = strumLU[0].members[i].x;
+					}
 			}
 		}
 

@@ -65,6 +65,11 @@
 		<library name="week6"         preload="false"/>
 		<library name="week7"         preload="false"/>
 	</section>
+
+	<section if="VIDEOS_ALLOWED">
+		<assets path="plugins/" embed='true' rename='' if="windows"/>
+		<assets path="dlls/" rename='' if="windows"/>
+	</section>
 	
 	<assets path="assets/videos"        library="videos"        if="VIDEOS_ALLOWED"/>
 	<assets path="assets/songs"         library="songs"         exclude="*.mp3"/>
@@ -83,6 +88,10 @@
 	
 	<assets path="assets/fonts"/>
 	
+	<!-- _______________________________Flags______________________________ -->
+	<haxeflag name="-dce no"  if="debug" />
+	<haxeflag name="-dce std" unless="debug" />
+
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>
 
@@ -120,7 +129,7 @@
 
 	<!-- I was trying to make it so it'd give you an error if your not using NebulaZoruas fork of linc_luajit but I couldn't figure it out. -->
 	<error value="Seems like you're not using NebulaZoruas github fork of luajit, please use it instead." if="${linc_luajit == 0.0.4}" />
-	<error value="Seems like you're using Haxe ${haxe}, please update!" if="${haxe == 4.1.5}" unless="linux"/>
+	<error value="Seems like you're using Haxe ${haxe}, please update to latest version!" if="${haxe == 4.1.5}" unless="linux"/>
 
 	<define name="hscriptPos"/>
 
