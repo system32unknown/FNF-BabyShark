@@ -71,9 +71,7 @@ class Main extends Sprite
 		}
 
 		Controls.init();
-		var tempFlxGame = new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen);
-		@:privateAccess tempFlxGame._skipSplash = ClientPrefs.getPref('FlxStartup');
-		addChild(tempFlxGame);
+		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 
 		overlayVar = new Overlay();
 		addChild(overlayVar);

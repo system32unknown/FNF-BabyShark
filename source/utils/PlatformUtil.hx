@@ -1,7 +1,6 @@
 package utils;
 
 #if windows
-
 @:buildXml('
 <target id="haxe">
     <lib name="dwmapi.lib" if="windows"/>

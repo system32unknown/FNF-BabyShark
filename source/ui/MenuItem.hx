@@ -13,8 +13,7 @@ class MenuItem extends FlxSprite
 	public var targetY:Float = 0;
 	public var flashingInt:Int = 0;
 
-	public function new(x:Float, y:Float, weekName:String = '')
-	{
+	public function new(x:Float, y:Float, weekName:String = '') {
 		super(x, y);
 		loadGraphic(Paths.image('storymenu/' + weekName));
 		antialiasing = ClientPrefs.getPref('globalAntialiasing');

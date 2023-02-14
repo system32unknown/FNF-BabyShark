@@ -8,7 +8,6 @@ import haxe.Timer;
 import utils.ClientPrefs;
 
 class FPSCounter extends Sprite {
-    public var fpsNum:TextField;
     public var fpsText:TextField;
 
     public var currentFPS(default, null):Int = 0;
@@ -19,21 +18,16 @@ class FPSCounter extends Sprite {
     public function new() {
         super();
 
-        fpsNum = new TextField();
         fpsText = new TextField();
-
-        for (text in [fpsNum, fpsText]) {
-            text.autoSize = LEFT;
-            text.x = text.y = 0;
-            text.text = "FPS";
-            text.multiline = text.wordWrap = false;
-            text.defaultTextFormat = new TextFormat(Overlay.instance.fontName, text == fpsNum ? 18 : 14, -1);
-            addChild(text);
-        }
+        fpsText.autoSize = LEFT;
+        fpsText.x = fpsText.y = 0;
+        fpsText.text = "FPS";
+        fpsText.defaultTextFormat = new TextFormat(Overlay.instance.fontName, 12, -1);
+        addChild(fpsText);
     }
 
     public override function __enterFrame(dt:Int) {
-        if (alpha <= 0.05) return;
+        if (alpha <= .05) return;
         super.__enterFrame(dt);
 
 		var now:Float = Timer.stamp();
@@ -47,11 +41,7 @@ class FPSCounter extends Sprite {
 		if (currentFPS > ClientPrefs.getPref('framerate')) currentFPS = ClientPrefs.getPref('framerate');
 
 		if (currentCount != cacheCount) {
-			fpsNum.text = Std.string(Math.floor(currentFPS));
-            fpsText.text = 'FPS [$dt MS]';
-
-            fpsText.x = fpsNum.x + fpsNum.width;
-            fpsText.y = (fpsNum.y + fpsNum.height) - fpsText.height;
+            fpsText.text = Math.floor(currentFPS) + 'FPS [$dt MS]';
 		}
 
         visible = ClientPrefs.getPref('showFPS');

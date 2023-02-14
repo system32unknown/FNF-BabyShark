@@ -139,6 +139,11 @@ class Alphabet extends FlxSpriteGroup
 		return value;
 	}
 
+	public function setScale(?value1:Float, ?value2:Float) {
+		scaleX = value1;
+		scaleY = value2;
+	}
+
 	override function update(elapsed:Float)
 	{
 		if (isMenuItem) {
@@ -314,8 +319,7 @@ class AlphaCharacter extends FlxSprite {
 		var anim:String = alphaAnim + suffix;
 		animation.addByPrefix(anim, anim, 24);
 		animation.play(anim, true);
-		if(animation.curAnim == null)
-		{
+		if(animation.curAnim == null) {
 			if(suffix != ' bold') suffix = ' normal';
 			anim = 'question' + suffix;
 			animation.addByPrefix(anim, anim, 24);
@@ -331,8 +335,7 @@ class AlphaCharacter extends FlxSprite {
 		return (ascii >= 65 && ascii <= 90) || (ascii >= 97 && ascii <= 122);
 	}
 
-	private function set_image(name:String)
-	{
+	function set_image(name:String) {
 		var lastAnim:String = null;
 		if (animation != null) {
 			lastAnim = animation.name;
@@ -343,8 +346,7 @@ class AlphaCharacter extends FlxSprite {
 		this.scale.y = parent.scaleY;
 		alignOffset = 0;
 		
-		if (lastAnim != null)
-		{
+		if (lastAnim != null) {
 			animation.addByPrefix(lastAnim, lastAnim, 24);
 			animation.play(lastAnim, true);
 			

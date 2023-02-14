@@ -185,9 +185,8 @@ class CoolUtil
 			+ FlxSave.validate(FlxG.stage.application.meta.get('file')) #end;
 	}
 
-	public static function getMacroAbstractClass(className:String) {
+	public static function getMacroAbstractClass(className:String)
 		return Type.resolveClass('${className}_HSC');
-	}
 
     static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
 
@@ -200,6 +199,6 @@ class CoolUtil
 		}
 
 		size = Math.round(size * 100) / 100;
-		return '$size ${intervalArray[data]}';
+		return '$size${intervalArray[data]}';
 	}
 }

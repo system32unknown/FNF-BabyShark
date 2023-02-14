@@ -43,22 +43,19 @@ class Overlay extends Sprite {
 		super.__enterFrame(dt);
 
 		if (ClientPrefs.getPref('RainbowFps')) {
-			timeColor = (timeColor % 360) + ClientPrefs.getPref('RainbowSpeed');
+			timeColor = (timeColor % 360) + 1;
 			color = FlxColor.fromHSB(timeColor, 1, 1);
 		} else color = FlxColor.WHITE;
 
-		if (!ClientPrefs.getPref('showFPS')) {
+		if (!ClientPrefs.getPref('showFPS'))
             memoryCounter.memtxt.y = memoryCounter.__init_y - memoryCounter.height;
-        } else {
-			memoryCounter.memtxt.y = 0;
-		}
+        else memoryCounter.memtxt.y = 0;
 
 		visible = ClientPrefs.getPref('showMEM') || ClientPrefs.getPref('showFPS');
 	}
 
 	function set_color(value) {
 		fpsCounter.fpsText.textColor = value;
-		fpsCounter.fpsNum.textColor = value;
 		memoryCounter.memtxt.textColor = value;
 
 		return color = value;

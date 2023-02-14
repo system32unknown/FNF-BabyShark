@@ -2171,7 +2171,6 @@ class FunkinLua {
 			if (text5 == null) text5 = '';
 			luaTrace(text1 + text2 + text3 + text4 + text5, true, false);
 		});
-		
 		addCallback("debugPrintArray", function(?text:Array<Dynamic>, divider:Dynamic = ' ') {
 			var array_text = '';
 			if (text == null) text = [];
@@ -2185,8 +2184,7 @@ class FunkinLua {
 		});
 
 		addCallback("close", function() {
-			closed = true;
-			return closed;
+			return closed = true;
 		});
 
 		addCallback("changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {

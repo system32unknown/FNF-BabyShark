@@ -126,8 +126,6 @@ class ErrorDisplay
         if (destroy) {
             this.errorBG.kill();
             this.errorText.kill();
-        } else {
-            this.destroy();
-        }
+        } else this.destroy();
     }
 }

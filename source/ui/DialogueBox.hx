@@ -203,7 +203,6 @@ class DialogueBox extends FlxSpriteGroup
 	}
 
 	var isEnding:Bool = false;
-
 	function startDialogue():Void
 	{
 		cleanDialog();

@@ -12,11 +12,7 @@ import states.*;
 import game.*;
 import ui.*;
 import utils.*;
-
 import flixel.*;
-import flixel.text.FlxText;
-import flixel.util.FlxTimer;
-import flixel.tweens.FlxTween;
 
 class HscriptHandler {
     public var staticVariables:Map<String, Dynamic> = [];
@@ -32,15 +28,13 @@ class HscriptHandler {
 
         var parser = new Parser();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
-        interp.staticVariables = staticVariables;
         interp.allowStaticVariables = interp.allowPublicVariables = true;
+        interp.staticVariables = staticVariables;
+
         setVars();
 
-        try {
-            expr = parser.parseString(File.getContent(path));
-        } catch(e:Error) {
-            trace(e);
-        }
+        try {expr = parser.parseString(File.getContent(path));
+        } catch(e:Error) {trace(e);}
     }
 
     public function execute():Interp {
@@ -72,7 +66,7 @@ class HscriptHandler {
             "FlxCamera"         => FlxCamera,
             "state"             => FlxG.state,
             "FlxEase"           => flixel.tweens.FlxEase,
-            "FlxTween"          => FlxTween,
+            "FlxTween"          => flixel.tweens.FlxTween,
             "FlxSound"          => flixel.system.FlxSound,
             "FlxAssets"         => flixel.system.FlxAssets,
             "FlxMath"           => flixel.math.FlxMath,
@@ -81,8 +75,8 @@ class HscriptHandler {
             "FlxSpriteGroup"    => flixel.group.FlxSpriteGroup,
             "FlxTypeText"       => flixel.addons.text.FlxTypeText,
             "FlxBackdrop"       => flixel.addons.display.FlxBackdrop,
-            "FlxText"           => FlxText,
-            "FlxTimer"          => FlxTimer,
+            "FlxText"           => flixel.text.FlxText,
+            "FlxTimer"          => flixel.util.FlxTimer,
             "FlxPoint"          => CoolUtil.getMacroAbstractClass("flixel.math.FlxPoint"),
             "FlxAxes"           => CoolUtil.getMacroAbstractClass("flixel.util.FlxAxes"),
             "FlxColor"          => CoolUtil.getMacroAbstractClass("flixel.util.FlxColor"),
@@ -109,5 +103,10 @@ class HscriptHandler {
         for (key => type in getDefaultVariables()) {
             interp.variables.set(key, type);
         }
+        interp.variables.set("trace", Reflect.makeVarArgs((args) -> {
+            var v:String = Std.string(args.shift());
+            for (a in args) v += ", " + Std.string(a);
+            trace(v);
+        }));
     }
 }
