@@ -101,15 +101,6 @@ class TitleState extends MusicBeatState
 			StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
 
-		#if FLX_NO_DEBUG
-		if (!initialized && ClientPrefs.getPref('FlxStartup') && !doneFlixelSplash) {
-			doneFlixelSplash = true;
-			FlxSplash.nextState = TitleState;
-			FlxG.switchState(new FlxSplash());
-			return;
-		}
-		#end
-
 		FlxG.mouse.visible = false;
 		if (ClientPrefs.getPref('flashing') == null && !FlashingState.leftState) {
 			FlxTransitionableState.skipNextTransIn = true;

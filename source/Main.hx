@@ -12,6 +12,7 @@ import lime.app.Application;
 
 import states.TitleState;
 import utils.Controls;
+import utils.ClientPrefs;
 import utils.MemoryUtil;
 import utils.Discord.DiscordClient;
 import ui.Overlay;
@@ -70,7 +71,9 @@ class Main extends Sprite
 		}
 
 		Controls.init();
-		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
+		var tempFlxGame = new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen);
+		@:privateAccess tempFlxGame._skipSplash = ClientPrefs.getPref('FlxStartup');
+		addChild(tempFlxGame);
 
 		overlayVar = new Overlay();
 		addChild(overlayVar);
