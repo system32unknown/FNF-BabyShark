@@ -1844,11 +1844,10 @@ class ChartingState extends MusicBeatState
 				if(note.strumTime > lastConductorPos && FlxG.sound.music.playing && note.noteData > -1) {
 					var data:Int = note.noteData % Note.ammo[_song.mania];
 					var noteDataToCheck:Int = note.noteData;
-					if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection) {
+					if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection)
 						noteDataToCheck += Note.ammo[_song.mania];
-						strumLineNotes.members[noteDataToCheck].playAnim('confirm', true);
-						strumLineNotes.members[noteDataToCheck].resetAnim = ((note.sustainLength / 1000) + 0.15) / playbackSpeed;
-					}
+					strumLineNotes.members[noteDataToCheck].playAnim('confirm', true);
+					strumLineNotes.members[noteDataToCheck].resetAnim = ((note.sustainLength / 1000) + 0.15) / playbackSpeed;
 					if(!playedSound[data]) {
 						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)){
 							var soundToPlay = 'hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}';
