@@ -65,11 +65,6 @@
 		<library name="week6"         preload="false"/>
 		<library name="week7"         preload="false"/>
 	</section>
-
-	<section if="VIDEOS_ALLOWED">
-		<assets path="plugins/" embed='true' rename='' if="windows"/>
-		<assets path="dlls/" rename='' if="windows"/>
-	</section>
 	
 	<assets path="assets/videos"        library="videos"        if="VIDEOS_ALLOWED"/>
 	<assets path="assets/songs"         library="songs"         exclude="*.mp3"/>
@@ -89,8 +84,8 @@
 	<assets path="assets/fonts"/>
 	
 	<!-- _______________________________Flags______________________________ -->
-	<haxeflag name="-dce no"  if="debug" />
-	<haxeflag name="-dce std" unless="debug" />
+	<haxeflag name="-dce no" if="debug"/>
+	<haxeflag name="-dce std" unless="debug"/>
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>
