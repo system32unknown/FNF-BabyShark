@@ -58,7 +58,7 @@ class WeekData {
 			hideStoryMode: false,
 			hideFreeplay: false,
 			difficulties: '',
-			sections: "Base"
+			sections: "Vanilla"
 		};
 		return weekFile;
 	}

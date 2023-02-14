@@ -125,15 +125,6 @@ class FreeplaySectionState extends MusicBeatState
 
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
-	
-		if (!transitioning) {
-			var mult:Float = FlxMath.lerp(1, bg.scale.x, MathUtil.boundTo(1 - (elapsed * 9), 0, 1));
-			bg.scale.set(mult, mult);
-			bg.updateHitbox();
-			var mult:Float = FlxMath.lerp(1, sectionSpr.scale.x, MathUtil.boundTo(1 - (elapsed * 9), 0, 1));
-			sectionSpr.scale.set(mult, mult);
-			sectionSpr.updateHitbox();
-		}
 
 		if (controls.UI_LEFT_P && !transitioning)
 		{
@@ -160,18 +151,15 @@ class FreeplaySectionState extends MusicBeatState
             sectionSpr.updateHitbox();
 		}
 		
-		if ((controls.BACK || FlxG.mouse.justPressedRight) && !transitioning) {
+		if (controls.BACK && !transitioning) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
-		if ((controls.ACCEPT || FlxG.mouse.justPressed) && !transitioning) {
+		if (controls.ACCEPT && !transitioning) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
 			sectionTxt.visible = false;
-			FlxTween.tween(sectionSpr, {'scale.x': 11, 'scale.y': 11, y: sectionSpr.y + 3000, alpha: 0}, 0.9, {
-				ease: FlxEase.expoIn
-			});
 			FlxTween.tween(bg, {'scale.x': .003, 'scale.y': .003, alpha: 0}, 1.1, {
 				ease: FlxEase.expoIn,
 				onComplete: function(twn:FlxTween) {
