@@ -348,8 +348,7 @@ class FreeplayState extends MusicBeatState
 		vocals = null;
 	}
 
-	function changeDiff(change:Int = 0)
-	{
+	function changeDiff(change:Int = 0) {
 		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, CoolUtil.difficulties.length - 1);
 
 		lastDifficultyName = CoolUtil.difficulties[curDifficulty];

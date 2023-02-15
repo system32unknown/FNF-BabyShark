@@ -21,8 +21,7 @@ import game.Conductor;
 /**
 * State used to decide which selection of songs should be loaded in `FreeplayState`.
 */
-class FreeplaySectionState extends MusicBeatState
-{
+class FreeplaySectionState extends MusicBeatState {
 	public static var daSection:String = '';
 	var counter:Int = 0;
 	var sectionArray:Array<String> = [];
@@ -40,10 +39,7 @@ class FreeplaySectionState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
 		#if desktop
-		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Selecting a Freeplay Section", null);
 		#end
 
@@ -99,11 +95,11 @@ class FreeplaySectionState extends MusicBeatState
 		sectionSpr.screenCenter(XY);
 		add(sectionSpr);
 
-		sectionTxt = new FlxText(0, 0, 0, "");
+		sectionTxt = new FlxText(0, 620, 0, "");
 		sectionTxt.scrollFactor.set();
-		sectionTxt.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.SHADOW, FlxColor.BLACK);
+		sectionTxt.setFormat("Comic Sans MS Bold", 32, FlxColor.WHITE, CENTER);
+		sectionTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
 		sectionTxt.screenCenter(X);
-		sectionTxt.y += 620;
 		add(sectionTxt);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
@@ -125,31 +121,8 @@ class FreeplaySectionState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 
-		if (controls.UI_LEFT_P && !transitioning)
-		{
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-			if (counter > 0)
-				counter -= 1;
-			else counter = sectionArray.length - 1;
-
-            daSection = sectionArray[counter];
-            sectionSpr.loadGraphic(Paths.image('freeplaysections/' + daSection.toLowerCase()));
-            sectionSpr.scale.set(1.1, 1.1);
-            sectionSpr.updateHitbox();
-		}
-
-		if (controls.UI_RIGHT_P && !transitioning) {
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-			if (counter < sectionArray.length - 1)
-				counter += 1;
-			else counter = 0;
-            
-            daSection = sectionArray[counter];
-			trace(daSection);
-            sectionSpr.loadGraphic(Paths.image('freeplaysections/' + daSection.toLowerCase()));
-            sectionSpr.scale.set(1.1, 1.1);
-            sectionSpr.updateHitbox();
-		}
+		if (controls.UI_LEFT_P && !transitioning) changeSection(-1);
+		if (controls.UI_RIGHT_P && !transitioning) changeSection(1);
 		
 		if (controls.BACK && !transitioning) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -169,14 +142,20 @@ class FreeplaySectionState extends MusicBeatState
 		sectionTxt.text = daSection.toUpperCase();
 		sectionTxt.screenCenter(X);
 		
-		if(transitioning) {
-			bg.screenCenter(XY);
-		} 
-		
 		var lerpVal:Float = MathUtil.boundTo(elapsed * 7.5, 0, 1);
 		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 
 		super.update(elapsed);
+	}
+
+	function changeSection(change:Int = 0) {
+		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		counter = FlxMath.wrap(counter + change, 0, sectionArray.length - 1);
+
+		daSection = sectionArray[counter];
+		sectionSpr.loadGraphic(Paths.image('freeplaysections/' + daSection.toLowerCase()));
+		sectionSpr.scale.set(1.1, 1.1);
+		sectionSpr.updateHitbox();
 	}
 
 	function weekIsLocked(name:String):Bool {
