@@ -1,7 +1,5 @@
 package states;
 
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 #if desktop
 import utils.Discord.DiscordClient;
 #end
@@ -10,6 +8,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.effects.FlxFlicker;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
@@ -161,12 +160,9 @@ class FreeplaySectionState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
 			sectionTxt.visible = false;
-			FlxTween.tween(bg, {'scale.x': .003, 'scale.y': .003, alpha: 0}, 1.1, {
-				ease: FlxEase.expoIn,
-				onComplete: function(twn:FlxTween) {
-					FlxTransitionableState.skipNextTransIn = true;
-					MusicBeatState.switchState(new FreeplayState());
-				}
+			FlxFlicker.flicker(sectionSpr, 1, 0.06, true, false, function(_) {
+				FlxTransitionableState.skipNextTransIn = true;
+				MusicBeatState.switchState(new FreeplayState());
 			});
 		}
 
