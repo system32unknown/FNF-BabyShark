@@ -146,6 +146,7 @@ class FreeplaySectionState extends MusicBeatState
 			else counter = 0;
             
             daSection = sectionArray[counter];
+			trace(daSection);
             sectionSpr.loadGraphic(Paths.image('freeplaysections/' + daSection.toLowerCase()));
             sectionSpr.scale.set(1.1, 1.1);
             sectionSpr.updateHitbox();
