@@ -16,5 +16,5 @@
 	"hideStoryMode": false,
 	"weekBefore": "week6",
 	"startUnlocked": true,
-	"sections": "Vanilla"
+	"sections": ["Vanilla"]
 }

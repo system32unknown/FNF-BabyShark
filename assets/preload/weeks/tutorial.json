@@ -17,5 +17,5 @@
 
 	"hideStoryMode": false,
 	"hideFreeplay": false,
-	"sections": "Vanilla"
+	"sections": ["Vanilla"]
 }
