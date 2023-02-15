@@ -49,7 +49,7 @@ class FreeplayState extends MusicBeatState
 	var intendedColor:Int;
 	var colorTween:FlxTween;
 
-	var section:String = '';
+	var section:String = 'Vanilla';
 
 	override function create()
 	{		
@@ -62,6 +62,7 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		section = FreeplaySectionState.daSection;
+		if (section == null || section == '') section = 'Vanilla';
 
 		var doFunnyContinue = false;
 		for (i in 0...WeekData.weeksList.length) {
