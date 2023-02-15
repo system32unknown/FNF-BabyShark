@@ -55,10 +55,11 @@ class FreeplaySectionState extends MusicBeatState {
 			if(leWeek.hideFreeplay) continue;
 			if (leWeek.sections != null) {
 				var fuck:Int = 0;
-				if (leWeek.sections.toLowerCase() != sectionArray[fuck].toLowerCase()) {
-					sectionArray.push(leWeek.sections);
+				for (section in leWeek.sections) {
+					if (section.toLowerCase() != sectionArray[fuck].toLowerCase())
+						sectionArray.push(section);
+					fuck++;
 				}
-				fuck++;
 			} else doFunnyContinue = true;
 			if (doFunnyContinue) {
 				doFunnyContinue = false;

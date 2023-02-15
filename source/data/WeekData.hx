@@ -21,7 +21,7 @@ typedef WeekFile = {
 	var hideStoryMode:Bool;
 	var hideFreeplay:Bool;
 	var difficulties:String;
-	var sections:String;
+	var sections:Array<String>;
 }
 
 class WeekData {
@@ -41,7 +41,7 @@ class WeekData {
 	public var hideStoryMode:Bool;
 	public var hideFreeplay:Bool;
 	public var difficulties:String;
-	public var sections:String;
+	public var sections:Array<String>;
 
 	public var fileName:String;
 
@@ -58,7 +58,7 @@ class WeekData {
 			hideStoryMode: false,
 			hideFreeplay: false,
 			difficulties: '',
-			sections: "Mods"
+			sections: ["Mods"]
 		};
 		return weekFile;
 	}

@@ -49,7 +49,7 @@ class FreeplayState extends MusicBeatState
 	var intendedColor:Int;
 	var colorTween:FlxTween;
 
-	var section:String = 'Vanilla';
+	var section:String = '';
 
 	override function create()
 	{		
@@ -70,12 +70,14 @@ class FreeplayState extends MusicBeatState
 
 			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
 			if (leWeek.sections != null) {
-				if (leWeek.sections != section) {
-					doFunnyContinue = true;
-				} else {
-					doFunnyContinue = false;
-					break;
-				}	
+				for (sex in leWeek.sections) {
+					if (sex != section) {
+						doFunnyContinue = true;
+					} else {
+						doFunnyContinue = false;
+						break;
+					}	
+				}
 			} else doFunnyContinue = true;
 
 			if (doFunnyContinue) {
