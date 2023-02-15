@@ -83,19 +83,19 @@ class FreeplaySectionState extends MusicBeatState {
 		persistentUpdate = persistentDraw = true;
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.scrollFactor.set(0, 0);
+		bg.scrollFactor.set();
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(bg);
 
-		sectionSpr = new FlxSprite(0,0).loadGraphic(Paths.image('freeplaysections/' + daSection.toLowerCase()));
+		sectionSpr = new FlxSprite().loadGraphic(Paths.image('freeplaysections/' + daSection.toLowerCase()));
 		sectionSpr.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		sectionSpr.scrollFactor.set();
 		sectionSpr.screenCenter(XY);
 		add(sectionSpr);
 
-		sectionTxt = new FlxText(0, 620, 0, "");
+		sectionTxt = new FlxText(0, 620, 0, "", 32);
 		sectionTxt.scrollFactor.set();
 		sectionTxt.setFormat("Comic Sans MS Bold", 32, FlxColor.WHITE, CENTER);
 		sectionTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
@@ -134,7 +134,6 @@ class FreeplaySectionState extends MusicBeatState {
 			transitioning = true;
 			sectionTxt.visible = false;
 			FlxFlicker.flicker(sectionSpr, 1, 0.06, true, false, function(_) {
-				FlxTransitionableState.skipNextTransIn = true;
 				MusicBeatState.switchState(new FreeplayState());
 			});
 		}

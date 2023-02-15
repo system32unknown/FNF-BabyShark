@@ -42,13 +42,14 @@ class FreeplayState extends MusicBeatState
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
 
-	private var grpSongs:FlxTypedGroup<Alphabet>;
-
-	private var iconArray:Array<HealthIcon> = [];
+	var grpSongs:FlxTypedGroup<Alphabet>;
+	var iconArray:Array<HealthIcon> = [];
 
 	var bg:FlxSprite;
 	var intendedColor:Int;
 	var colorTween:FlxTween;
+
+	var section:String = '';
 
 	override function create()
 	{		
@@ -57,14 +58,25 @@ class FreeplayState extends MusicBeatState
 		WeekData.reloadWeekFiles(false);
 
 		#if desktop
-		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Freeplay Menu", null);
 		#end
 
+		section = FreeplaySectionState.daSection;
+
+		var doFunnyContinue = false;
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 
 			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
+			if (leWeek.sections != null) {
+				doFunnyContinue = true;
+			} else doFunnyContinue = true;
+
+			if (doFunnyContinue) {
+				doFunnyContinue = false;
+				continue;
+			}
+
 			var leSongs:Array<String> = [];
 			var leChars:Array<String> = [];
 
@@ -267,7 +279,7 @@ class FreeplayState extends MusicBeatState
 				colorTween.cancel();
 			}
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			MusicBeatState.switchState(new MainMenuState());
+			MusicBeatState.switchState(new FreeplaySectionState());
 		}
 
 		if(ctrl) {
