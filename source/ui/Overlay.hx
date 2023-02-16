@@ -48,15 +48,15 @@ class Overlay extends Sprite {
 		} else color = FlxColor.WHITE;
 
 		if (!ClientPrefs.getPref('showFPS'))
-            memoryCounter.memtxt.y = memoryCounter.__init_y - memoryCounter.height;
-        else memoryCounter.memtxt.y = 0;
+            memoryCounter.y = memoryCounter.__init_y - memoryCounter.height;
+        else memoryCounter.y = 0;
 
 		visible = ClientPrefs.getPref('showFPS');
 	}
 
 	function set_color(value) {
-		fpsCounter.fpsText.textColor = value;
-		memoryCounter.memtxt.textColor = value;
+		fpsCounter.textColor = value;
+		memoryCounter.textColor = value;
 
 		return color = value;
 	}
