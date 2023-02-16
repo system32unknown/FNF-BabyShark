@@ -53,8 +53,6 @@ class FPSCounter extends Sprite {
             fpsText.x = fpsNum.x + fpsNum.width;
             fpsText.y = (fpsNum.y + fpsNum.height) - fpsText.height;
 		}
-
-        visible = ClientPrefs.getPref('showFPS');
 		cacheCount = currentCount;
     }
 }

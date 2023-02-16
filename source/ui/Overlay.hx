@@ -14,7 +14,7 @@ class Overlay extends Sprite {
     public var fpsCounter:FPSCounter;
     public var memoryCounter:MEMCounter;
 
-	public var fontName:String = #if windows '${Sys.getEnv("windir")}\\Fonts\\calibri.ttf' #else Assets.getFont("assets/fonts/vcr.ttf").fontName #end;
+	public var fontName:String = #if windows '${Sys.getEnv("windir")}\\Fonts\\tahoma.ttf' #else Assets.getFont("assets/fonts/vcr.ttf").fontName #end;
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
 	public var color(default, set):FlxColor;
@@ -51,7 +51,7 @@ class Overlay extends Sprite {
             memoryCounter.memtxt.y = memoryCounter.__init_y - memoryCounter.height;
         else memoryCounter.memtxt.y = 0;
 
-		visible = ClientPrefs.getPref('showMEM') || ClientPrefs.getPref('showFPS');
+		visible = ClientPrefs.getPref('showFPS');
 	}
 
 	function set_color(value) {
