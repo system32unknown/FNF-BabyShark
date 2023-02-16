@@ -43,7 +43,7 @@ class FPSCounter extends Sprite {
 		if (currentFPS > ClientPrefs.getPref('framerate')) currentFPS = ClientPrefs.getPref('framerate');
 
 		if (currentCount != cacheCount) {
-            fpsText.text = '${Math.floor(currentFPS)}FPS [$dt MS]';
+            fpsText.text = 'FPS:${Math.floor(currentFPS)} [$dt MS]';
 		}
 		cacheCount = currentCount;
     }
