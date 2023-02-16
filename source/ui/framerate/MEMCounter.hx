@@ -25,7 +25,7 @@ class MEMCounter extends Sprite {
         memtxt.y = 0;
         memtxt.text = "";
         memtxt.multiline = memtxt.wordWrap = false;
-        memtxt.defaultTextFormat = new TextFormat(Overlay.instance.fontName, 12, -1);
+        memtxt.defaultTextFormat = new TextFormat(Overlay.instance.fontName, 14, -1);
         __init_y = memtxt.y;
         addChild(memtxt);
     }

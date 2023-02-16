@@ -1,6 +1,7 @@
 package ui.framerate;
 
 import openfl.text.TextFormat;
+import openfl.display.Sprite;
 import openfl.text.TextField;
 
 import haxe.Timer;
@@ -21,7 +22,7 @@ class FPSCounter extends Sprite {
 
         fpsText.autoSize = LEFT;
         fpsText.x = fpsText.y = 0;
-        fpsText.text = "FPS";
+        fpsText.text = "FPS: 0";
         fpsText.multiline = fpsText.wordWrap = false;
         fpsText.defaultTextFormat = new TextFormat(Overlay.instance.fontName, 14, -1);
         addChild(fpsText);
@@ -42,7 +43,7 @@ class FPSCounter extends Sprite {
 		if (currentFPS > ClientPrefs.getPref('framerate')) currentFPS = ClientPrefs.getPref('framerate');
 
 		if (currentCount != cacheCount) {
-            fpsText.text = 'FPS:${Math.floor(currentFPS)} [$dt MS]';
+            fpsText.text = 'FPS: ${Math.floor(currentFPS)} [$dt MS]';
 		}
 		cacheCount = currentCount;
     }
