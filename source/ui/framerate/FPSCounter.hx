@@ -1,7 +1,6 @@
 package ui.framerate;
 
 import openfl.text.TextFormat;
-import openfl.display.Sprite;
 import openfl.text.TextField;
 
 import haxe.Timer;
