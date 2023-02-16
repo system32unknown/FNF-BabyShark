@@ -168,9 +168,8 @@ class LoadingState extends MusicBeatState
 
 		var library = LimeAssets.getLibrary(id);
 
-		if (library != null) {
+		if (library != null)
 			return Future.withValue(library);
-		}
 
 		var path = id;
 		var rootPath = null;
@@ -184,9 +183,7 @@ class LoadingState extends MusicBeatState
 			if (StringTools.endsWith(path, ".bundle")) {
 				rootPath = path;
 				path += "/library.json";
-			} else {
-				rootPath = Path.directory(path);
-			}
+			} else rootPath = Path.directory(path);
 			@:privateAccess
 			path = LimeAssets.__cacheBreak(path);
 		}

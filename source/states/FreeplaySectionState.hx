@@ -9,6 +9,7 @@ import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
+import flixel.tweens.FlxTween;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
@@ -134,7 +135,8 @@ class FreeplaySectionState extends MusicBeatState {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
 			sectionTxt.visible = false;
-			FlxFlicker.flicker(sectionSpr, 1, 0.06, true, false, function(_) {
+			FlxTween.tween(sectionSpr, {'scale.x': 2, 'scale.y': 2}, 1);
+			FlxFlicker.flicker(sectionSpr, 1, .06, true, false, function(_) {
 				MusicBeatState.switchState(new FreeplayState());
 			});
 		}

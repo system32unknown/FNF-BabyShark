@@ -14,7 +14,7 @@ class Overlay extends Sprite {
     public var fpsCounter:FPSCounter;
     public var memoryCounter:MEMCounter;
 
-	public var fontName:String = Assets.getFont("assets/fonts/vcr.ttf").fontName;
+	public var fontName:String = #if windows '${Sys.getEnv("windir")}\\Fonts\\calibri.ttf' #else Assets.getFont("assets/fonts/vcr.ttf").fontName #end;
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
 	public var color(default, set):FlxColor;
