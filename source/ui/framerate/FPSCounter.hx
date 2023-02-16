@@ -21,9 +21,9 @@ class FPSCounter extends Sprite {
         fpsText = new TextField();
 
         fpsText.autoSize = LEFT;
-        fpsText.x = text.y = 0;
+        fpsText.x = fpsText.y = 0;
         fpsText.text = "FPS";
-        fpsText.multiline = text.wordWrap = false;
+        fpsText.multiline = fpsText.wordWrap = false;
         fpsText.defaultTextFormat = new TextFormat(Overlay.instance.fontName, 14, -1);
         addChild(fpsText);
     }

@@ -14,7 +14,7 @@ class Overlay extends Sprite {
     public var fpsCounter:FPSCounter;
     public var memoryCounter:MEMCounter;
 
-	public var fontName:String = #if windows '${Sys.getEnv("windir")}\\Fonts\\tahoma.ttf' #else Assets.getFont("assets/fonts/vcr.ttf").fontName #end;
+	public var fontName:String = Assets.getFont("assets/fonts/vcr.ttf").fontName;
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
 	public var color(default, set):FlxColor;
@@ -56,7 +56,6 @@ class Overlay extends Sprite {
 
 	function set_color(value) {
 		fpsCounter.fpsText.textColor = value;
-		fpsCounter.fpsNum.textColor = value;
 		memoryCounter.memtxt.textColor = value;
 
 		return color = value;
