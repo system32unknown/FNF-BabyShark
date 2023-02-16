@@ -6,7 +6,9 @@ import openfl.text.TextField;
 import haxe.Timer;
 import utils.ClientPrefs;
 
-class FPSCounter extends TextField {
+class FPSCounter extends Sprite {
+    public var fpsText:TextField;
+
     public var currentFPS(default, null):Int = 0;
 
 	@:noCompletion var cacheCount:Int = 0;
@@ -15,11 +17,14 @@ class FPSCounter extends TextField {
     public function new() {
         super();
 
-        autoSize = LEFT;
-        x = y = 0;
-        text = "FPS: 0";
-        multiline = wordWrap = false;
-        defaultTextFormat = new TextFormat(Overlay.instance.fontName, 14, -1);
+        fpsText = new TextField();
+
+        fpsText.autoSize = LEFT;
+        fpsText.x = fpsText.y = 0;
+        fpsText.text = "FPS";
+        fpsText.multiline = fpsText.wordWrap = false;
+        fpsText.defaultTextFormat = new TextFormat(Overlay.instance.fontName, 14, -1);
+        addChild(fpsText);
     }
 
     public override function __enterFrame(dt:Int) {
@@ -37,7 +42,7 @@ class FPSCounter extends TextField {
 		if (currentFPS > ClientPrefs.getPref('framerate')) currentFPS = ClientPrefs.getPref('framerate');
 
 		if (currentCount != cacheCount) {
-            text = 'FPS: ${Math.floor(currentFPS)} [$dt MS]';
+            fpsText.text = 'FPS:${Math.floor(currentFPS)} [$dt MS]';
 		}
 		cacheCount = currentCount;
     }
