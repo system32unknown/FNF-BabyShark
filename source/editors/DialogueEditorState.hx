@@ -254,8 +254,8 @@ class DialogueEditorState extends MusicBeatState
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
+			if(Paths.checkReservedFile(sender.text)) return;
 			if (sender == characterInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				character.reloadCharacterJson(characterInputText.text);
 				reloadCharacter();
 
@@ -264,22 +264,18 @@ class DialogueEditorState extends MusicBeatState
 					if(character.jsonFile.animations.length > curAnim && character.jsonFile.animations[curAnim] != null) {
 						character.playAnim(character.jsonFile.animations[curAnim].anim, daText.finishedText);
 						animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
-					} else {
-						animText.text = 'ERROR! NO ANIMATIONS FOUND';
-					}
+					} else animText.text = 'ERROR! NO ANIMATIONS FOUND';
 					characterAnimSpeed();
 				}
 				dialogueFile.dialogue[curSelected].portrait = characterInputText.text;
 				reloadText(false);
 				updateTextBox();
 			} else if(sender == lineInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				dialogueFile.dialogue[curSelected].text = lineInputText.text;
 				daText.text = lineInputText.text;
 				if(daText.text == null) daText.text = '';
 				reloadText(true);
 			} else if(sender == soundInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				daText.finishText();
 				dialogueFile.dialogue[curSelected].sound = soundInputText.text;
 				daText.sound = soundInputText.text;

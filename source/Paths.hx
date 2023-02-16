@@ -170,7 +170,7 @@ class Paths
 	}
 
 	public static function checkReservedFile(text:String):Bool {
-		var forbidden:Array<String> = ['AUX', 'CON', 'PRN', 'NUL']; // thanks kingyomoma
+		final forbidden:Array<String> = ['AUX', 'CON', 'PRN', 'NUL']; // thanks kingyomoma
 		for (i in 1...9) {
 			forbidden.push('COM$i');
 			forbidden.push('LPT$i');

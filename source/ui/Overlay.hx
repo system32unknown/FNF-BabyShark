@@ -55,7 +55,9 @@ class Overlay extends Sprite {
 	}
 
 	function set_color(value) {
+		for (text in [fpsCounter])
 		fpsCounter.fpsText.textColor = value;
+		fpsCounter.fpsNum.textColor = value;
 		memoryCounter.memtxt.textColor = value;
 
 		return color = value;

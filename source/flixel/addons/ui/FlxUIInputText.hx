@@ -28,12 +28,10 @@ class FlxUIInputText extends FlxInputText implements IResizable implements IFlxU
 		calcFrame();
 	}
 
-	private override function onChange(action:String):Void {
+	override function onChange(action:String):Void {
 		super.onChange(action);
-		if (broadcastToFlxUI)
-		{
-			switch (action)
-			{
+		if (broadcastToFlxUI) {
+			switch (action) {
 				case FlxInputText.ENTER_ACTION: // press enter
 					FlxUI.event(ENTER_EVENT, this, text, params);
 				case FlxInputText.DELETE_ACTION, FlxInputText.BACKSPACE_ACTION: // deleted some text

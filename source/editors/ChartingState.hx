@@ -1305,13 +1305,10 @@ class ChartingState extends MusicBeatState
 
 					updateGrid();
 					updateHeads();
-
 				case 'GF section':
 					_song.notes[curSec].gfSection = check.checked;
-
 					updateGrid();
 					updateHeads();
-
 				case 'Change BPM':
 					_song.notes[curSec].changeBPM = check.checked;
 					FlxG.log.add('changed bpm shit');
@@ -1906,10 +1903,6 @@ class ChartingState extends MusicBeatState
 		if(FlxG.save.data.chart_waveformInst || FlxG.save.data.chart_waveformVoices) {
 			updateWaveform();
 		}
-
-		var oneHalf:Float = GRID_SIZE * Note.ammo[_song.mania];
-		leftIcon.setPosition((oneHalf / 2) - (leftIcon.width / 2), -100);
-		rightIcon.setPosition(((oneHalf * 2) - (oneHalf / 2)) - (rightIcon.width / 2), -100);
 
 		var leHeight:Int = Std.int(gridBG.height);
 		var foundNextSec:Bool = false;

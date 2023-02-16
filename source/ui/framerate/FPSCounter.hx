@@ -8,6 +8,7 @@ import haxe.Timer;
 import utils.ClientPrefs;
 
 class FPSCounter extends Sprite {
+    public var fpsNum:TextField;
     public var fpsText:TextField;
 
     public var currentFPS(default, null):Int = 0;
@@ -17,15 +18,17 @@ class FPSCounter extends Sprite {
 
     public function new() {
         super();
-
+        fpsNum = new TextField();
         fpsText = new TextField();
 
-        fpsText.autoSize = LEFT;
-        fpsText.x = fpsText.y = 0;
-        fpsText.text = "FPS: 0";
-        fpsText.multiline = fpsText.wordWrap = false;
-        fpsText.defaultTextFormat = new TextFormat(Overlay.instance.fontName, 14, -1);
-        addChild(fpsText);
+        for (text in [fpsNum, fpsText]) {
+            text.autoSize = LEFT;
+            text.x = text.y = 0;
+            text.text = "FPS";
+            text.multiline = text.wordWrap = false;
+            text.defaultTextFormat = new TextFormat(Overlay.instance.fontName, text == fpsNum ? 18 : 14, -1);
+            addChild(text);
+        }
     }
 
     public override function __enterFrame(dt:Int) {
@@ -43,7 +46,11 @@ class FPSCounter extends Sprite {
 		if (currentFPS > ClientPrefs.getPref('framerate')) currentFPS = ClientPrefs.getPref('framerate');
 
 		if (currentCount != cacheCount) {
-            fpsText.text = 'FPS: ${Math.floor(currentFPS)} [$dt MS]';
+			fpsNum.text = Std.string(Math.floor(currentFPS));
+            fpsText.text = 'FPS [$dt MS]';
+
+            fpsText.x = fpsNum.x + fpsNum.width;
+            fpsText.y = (fpsNum.y + fpsNum.height) - fpsText.height;
 		}
 		cacheCount = currentCount;
     }

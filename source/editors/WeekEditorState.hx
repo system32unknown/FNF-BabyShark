@@ -9,6 +9,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUICheckBox;
@@ -227,7 +228,7 @@ class WeekEditorState extends MusicBeatState
 	var difficultiesInputText:FlxUIInputText;
 	var lockedCheckbox:FlxUICheckBox;
 	var hiddenUntilUnlockCheckbox:FlxUICheckBox;
-
+	var sectionInputText:FlxUIInputText;
 	function addOtherUI() {
 		var tab_group = new FlxUI(null, UI_box);
 		tab_group.name = "Other";
@@ -251,11 +252,16 @@ class WeekEditorState extends MusicBeatState
 		difficultiesInputText = new FlxUIInputText(10, weekBeforeInputText.y + 60, 200, '', 8);
 		blockPressWhileTypingOn.push(difficultiesInputText);
 		
+		sectionInputText = new FlxUIInputText(10, difficultiesInputText.y + 75, 200, 'Vanilla', 8);
+		blockPressWhileTypingOn.push(sectionInputText);
+
 		tab_group.add(new FlxText(weekBeforeInputText.x, weekBeforeInputText.y - 28, 0, 'Week File name of the Week you have\nto finish for Unlocking:'));
 		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y - 20, 0, 'Difficulties:'));
 		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y + 20, 0, 'Default difficulties are "Easy, Normal, Hard"\nwithout quotes.'));
+		tab_group.add(new FlxText(sectionInputText.x, sectionInputText.y - 20, 0, 'Sections:'));
 		tab_group.add(weekBeforeInputText);
 		tab_group.add(difficultiesInputText);
+		tab_group.add(sectionInputText);
 		tab_group.add(hiddenUntilUnlockCheckbox);
 		tab_group.add(lockedCheckbox);
 		UI_box.addGroup(tab_group);
@@ -284,11 +290,13 @@ class WeekEditorState extends MusicBeatState
 		difficultiesInputText.text = '';
 		if(weekFile.difficulties != null) difficultiesInputText.text = weekFile.difficulties;
 
+		sectionInputText.text = FlxStringUtil.formatArray(weekFile.sections);
+
 		lockedCheckbox.checked = !weekFile.startUnlocked;
 		lock.visible = lockedCheckbox.checked;
 		
 		hiddenUntilUnlockCheckbox.checked = weekFile.hiddenUntilUnlocked;
-		hiddenUntilUnlockCheckbox.alpha = 0.4 + 0.6 * (lockedCheckbox.checked ? 1 : 0);
+		hiddenUntilUnlockCheckbox.alpha = .4 + .6 * (lockedCheckbox.checked ? 1 : 0);
 
 		reloadBG();
 		reloadWeekThing();
@@ -363,30 +371,25 @@ class WeekEditorState extends MusicBeatState
 	}
 	
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
+		if(Paths.checkReservedFile(sender.text)) return;
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
 			if(sender == weekFileInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				weekFileName = weekFileInputText.text.trim();
 				reloadWeekThing();
 			} else if(sender == opponentInputText || sender == boyfriendInputText || sender == girlfriendInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				weekFile.weekCharacters[0] = opponentInputText.text.trim();
 				weekFile.weekCharacters[1] = boyfriendInputText.text.trim();
 				weekFile.weekCharacters[2] = girlfriendInputText.text.trim();
 				updateText();
 			} else if(sender == backgroundInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				weekFile.weekBackground = backgroundInputText.text.trim();
 				reloadBG();
 			} else if(sender == displayNameInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				weekFile.storyName = displayNameInputText.text.trim();
 				updateText();
 			} else if(sender == weekNameInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				weekFile.weekName = weekNameInputText.text.trim();
 			} else if(sender == songsInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				var splittedText:Array<String> = songsInputText.text.trim().split(',');
 				for (i in 0...splittedText.length) {
 					splittedText[i] = splittedText[i].trim();
@@ -409,11 +412,11 @@ class WeekEditorState extends MusicBeatState
 				}
 				updateText();
 			} else if(sender == weekBeforeInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				weekFile.weekBefore = weekBeforeInputText.text.trim();
 			} else if(sender == difficultiesInputText) {
-				if(Paths.checkReservedFile(sender.text)) return;
 				weekFile.difficulties = difficultiesInputText.text.trim();
+			}  else if(sender == sectionInputText) {
+				weekFile.sections = sectionInputText.text.trim().split(',');
 			}
 		}
 	}
