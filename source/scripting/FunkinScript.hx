@@ -1,57 +1,32 @@
 package scripting;
 
-import hscript.Interp;
-import hscript.Parser;
-import hscript.Expr;
-
-#if sys
-import sys.io.File;
-#end
-
 import states.*;
 import game.*;
 import ui.*;
 import utils.*;
 import flixel.*;
 
-class HscriptHandler {
-    public var staticVariables:Map<String, Dynamic> = [];
+final class FunkinScript extends SScript {
+	override public function new(?scriptFile:String = "", ?preset:Bool = true, ?startExecute:Bool = true) {
+        super(scriptFile, preset, false);
 
-    public var interp:Interp;
-    public var expr:Expr;
-    public var fileName:String = '';
-
-    public function new(path:String) {
-        fileName = path;
-
-        interp = new Interp();
-
-        var parser = new Parser();
-        parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
-        interp.allowStaticVariables = interp.allowPublicVariables = true;
-        interp.staticVariables = staticVariables;
-
-        setVars();
-
-        try {expr = parser.parseString(File.getContent(path));
-        } catch(e:Error) {trace(e);}
+        traces = false;
+        privateAccess = true;
+        
+        execute();
     }
 
-    public function execute():Interp {
-        if (expr != null) {
-            interp.execute(expr);
-            return interp;
+    override function preset():Void {
+        super.preset();
+        for (key => type in getDefaultVariables()) {
+            set(key, type);
         }
-        return null;
     }
 
     function getDefaultVariables():Map<String, Dynamic> {
         return [
             // Haxe related stuff
-            "Std"               => Std,
-            "Math"              => Math,
-            "StringTools"       => StringTools,
-            "Reflect"       => Reflect,
+            "Reflect"           => Reflect,
             "Json"              => haxe.Json,
 
             // OpenFL & Lime related stuff
@@ -97,16 +72,5 @@ class HscriptHandler {
             "CoolUtil"          => CoolUtil,
             "ClientPrefs"       => ClientPrefs,
         ];
-    }
-
-    function setVars() {
-        for (key => type in getDefaultVariables()) {
-            interp.variables.set(key, type);
-        }
-        interp.variables.set("trace", Reflect.makeVarArgs((args) -> {
-            var v:String = Std.string(args.shift());
-            for (a in args) v += ", " + Std.string(a);
-            trace(v);
-        }));
     }
 }

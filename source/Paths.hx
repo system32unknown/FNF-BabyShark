@@ -110,7 +110,8 @@ class Paths
 
 	public static function decacheSound(key:String) {
 		var obj = currentTrackedSounds.get(key);
-		if (obj == null && OpenFlAssets.cache.hasSound(key)) obj = OpenFlAssets.cache.getSound(key);
+		if (obj == null && OpenFlAssets.cache.hasSound(key))
+			obj = OpenFlAssets.cache.getSound(key);
 		if (assetExcluded(obj)) return;
 
 		OpenFlAssets.cache.removeSound(key);

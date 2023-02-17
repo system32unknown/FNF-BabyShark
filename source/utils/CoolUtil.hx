@@ -8,9 +8,9 @@ import openfl.geom.Rectangle;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
-#else
-import openfl.utils.Assets;
 #end
+import openfl.utils.Assets;
+
 import states.PlayState;
 
 class CoolUtil

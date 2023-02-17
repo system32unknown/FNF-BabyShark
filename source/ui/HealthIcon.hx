@@ -12,6 +12,7 @@ class HealthIcon extends FlxSprite
 	static final credits:String = 'credits/';
 	static final defaultIcon:String = 'unknown';
 
+	public var animated:Bool;
 	public var iconOffsets:Array<Float> = [0, 0];
 	public var sprTracker:FlxSprite;
 	var isPlayer:Bool = false;
@@ -76,14 +77,28 @@ class HealthIcon extends FlxSprite
 		availableStates = Math.round(graph.width / graph.height);
 		this.char = char;
 		
+		var animd:Bool = Paths.exists('images/icons/$char.xml');
+		var jsonAtlas:Bool = false;
+		if (!animd) {
+			animd = Paths.exists('images/icons/$char.json');
+			jsonAtlas = animd;
+		}
+		animated = animd;
+
 		iconSize = (isPsych ? (width - 150) / 2 : 0);
 		iconOffsets[1] = iconOffsets[0] = iconSize;
-		
-		loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
-		updateHitbox();
+		if (!animd) {
+			loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
+			updateHitbox();
 
-		animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
-		animation.play(char);
+			animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
+			animation.play(char);
+		} else {
+			frames = jsonAtlas ? Paths.getJsonAtlas(name) : Paths.getSparrowAtlas(name);
+			animation.addByPrefix('idle', 'idle');
+			animation.addByPrefix('dead', 'dead');
+			animation.play('idle');
+		}
 
 		antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		if (char.endsWith('-pixel')) antialiasing = false;
