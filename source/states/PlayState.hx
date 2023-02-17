@@ -5578,11 +5578,10 @@ class PlayState extends MusicBeatState
 		return for (i in scriptArray) i.set(key, value);
 	}
 
-	public function setOnLuas(variable:String, arg:Dynamic, ?callOnScript:Bool = true) {
+	public function setOnLuas(variable:String, arg:Dynamic) {
+		setOnScripts(variable, arg);
 		#if LUA_ALLOWED
-		for (i in 0...luaArray.length) {
-			luaArray[i].set(variable, arg);
-		}
+		for (i in 0...luaArray.length) luaArray[i].set(variable, arg);
 		for(i in achievementsArray) i.set(variable, arg);
 		#end
 	}
