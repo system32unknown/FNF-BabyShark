@@ -291,6 +291,10 @@ class Paths
 		return Assets.getText(getPath(key, TEXT));
 	}
 
+	inline static public function exists(key:String) {
+		return FileSystem.exists(mods(key)) || FileSystem.exists(getPreloadPath(key));
+	}
+
 	inline static public function font(key:String):String
 	{
 		#if MODS_ALLOWED
@@ -319,6 +323,17 @@ class Paths
 		return FlxAtlasFrames.fromSparrow((imageLoaded != null ? imageLoaded : image(key, library)), (xmlExists ? File.getContent(modsXml(key)) : file('images/$key.xml', library)));
 		#else
 		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
+		#end
+	}
+
+	inline static public function getJsonAtlas(key:String, ?library:String):FlxAtlasFrames {
+		#if MODS_ALLOWED
+		var imageLoaded:FlxGraphic = returnGraphic(key);
+		var xmlExists:Bool = FileSystem.exists(modsPacker(key));
+
+		return FlxAtlasFrames.fromTexturePackerJson((imageLoaded != null ? imageLoaded : image(key, library)), (xmlExists ? File.getContent(modsPacker(key)) : file('images/$key.json', library)));
+		#else
+		return FlxAtlasFrames.fromTexturePackerJson(image(key, library), file('images/$key.json', library));
 		#end
 	}
 
@@ -428,6 +443,9 @@ class Paths
 
 	inline static public function modsXml(key:String)
 		return modFolders('images/$key.xml');
+
+	inline static public function modsPacker(key:String)
+		return modFolders('images/$key.json');
 
 	inline static public function modsTxt(key:String)
 		return modFolders('images/$key.txt');

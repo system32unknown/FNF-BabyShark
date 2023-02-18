@@ -3159,14 +3159,29 @@ class PlayState extends MusicBeatState
 			health = healthMax;
 
 		if (healthBar.percent < 20) {
-			iconP1.setState(1);
-			iconP2.setState(2);
+			if (playerIcon.animated) {
+				iconP1.animation.play('dead');
+				iconP2.animation.play('win');
+			} else {
+				iconP1.setState(1);
+				iconP2.setState(2);			
+			}
 		} else if (healthBar.percent > 80) {
-			iconP1.setState(2);
-			iconP2.setState(1);
+			if (playerIcon.animated) {
+				iconP1.animation.play('win');
+				iconP2.animation.play('dead');
+			} else {
+				iconP1.setState(2);
+				iconP2.setState(1);
+			}
 		} else {
-			iconP1.setState(0);
-			iconP2.setState(0);
+			if (playerIcon.animated) {
+				iconP1.animation.play('idle');
+				iconP2.animation.play('idle');
+			} else {
+				iconP1.setState(0);
+				iconP2.setState(0);
+			}
 		}
 
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {

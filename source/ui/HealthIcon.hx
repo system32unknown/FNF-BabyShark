@@ -61,8 +61,8 @@ class HealthIcon extends FlxSprite
 		else {
 			this.char = char;
 
-			iconSize = (isPsych ? (width - 150) / 2 : 0);
-			iconOffsets[1] = iconOffsets[0] = iconSize;
+			iconSize =  (width - 150) / 2;
+			iconOffsets[1] = iconOffsets[0] = (isPsych ? iconSize : 0);
 
 			loadGraphic(graph);
 			updateHitbox();
@@ -85,8 +85,8 @@ class HealthIcon extends FlxSprite
 		}
 		animated = animd;
 
-		iconSize = (isPsych ? (width - 150) / 2 : 0);
-		iconOffsets[1] = iconOffsets[0] = iconSize;
+		iconSize = (width - 150) / 2;
+		iconOffsets[1] = iconOffsets[0] = (isPsych ? iconSize : 0);
 		if (!animd) {
 			loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
 			updateHitbox();
@@ -94,9 +94,11 @@ class HealthIcon extends FlxSprite
 			animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
 			animation.play(char);
 		} else {
-			frames = jsonAtlas ? Paths.getJsonAtlas(name) : Paths.getSparrowAtlas(name);
+			frames = jsonAtlas ? Paths.getJsonAtlas(char) : Paths.getSparrowAtlas(char);
 			animation.addByPrefix('idle', 'idle');
 			animation.addByPrefix('dead', 'dead');
+			animation.addByPrefix('win', 'win');
+
 			animation.play('idle');
 		}
 
