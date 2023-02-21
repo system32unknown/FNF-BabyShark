@@ -1,23 +1,28 @@
 package ui;
 
-import openfl.display.Sprite;
-import openfl.display.DisplayObject;
+import haxe.Timer;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 import openfl.utils.Assets;
 
-import ui.framerate.*;
 import flixel.util.FlxColor;
 import utils.ClientPrefs;
+import utils.MemoryUtil;
 
-class Overlay extends Sprite {
+class Overlay extends TextField {
 	public static var instance:Overlay;
+	public var fontName:String = Assets.getFont("assets/fonts/Proggy.ttf").fontName;
 
-    public var fpsCounter:FPSCounter;
-    public var memoryCounter:MEMCounter;
-
-	public var fontName:String = Assets.getFont("assets/fonts/vcr.ttf").fontName;
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
-	public var color(default, set):FlxColor;
+	//FPS
+    public var currentFPS(default, null):Int = 0;
+	@:noCompletion var cacheCount:Int = 0;
+	@:noCompletion var times:Array<Float> = [];
+
+	//Memory
+    var memory:UInt = 0;
+    var mempeak:UInt = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
 		super();
@@ -27,39 +32,43 @@ class Overlay extends Sprite {
 		this.x = x;
 		this.y = y;
 
-        __addToList(fpsCounter = new FPSCounter());
-        __addToList(memoryCounter = new MEMCounter());
+		autoSize = LEFT;
+		multiline = wordWrap = false;
+		text = "";
+		defaultTextFormat = new TextFormat(fontName, 16, -1);
 	}
-
-    var __lastAddedSprite:DisplayObject = null;
-    function __addToList(spr:DisplayObject) {
-        spr.x = x;
-        spr.y = __lastAddedSprite != null ? (__lastAddedSprite.y + __lastAddedSprite.height) : y;
-        __lastAddedSprite = spr;
-        addChild(spr);
-    }
 
 	override function __enterFrame(dt:Int):Void {
 		super.__enterFrame(dt);
+		if (alpha <= .05) return;
 
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + 1;
-			color = FlxColor.fromHSB(timeColor, 1, 1);
-		} else color = FlxColor.WHITE;
+			textColor = FlxColor.fromHSB(timeColor, 1, 1);
+		} else textColor = FlxColor.WHITE;
 
-		if (!ClientPrefs.getPref('showFPS'))
-            memoryCounter.memtxt.y = memoryCounter.__init_y - memoryCounter.height;
-        else memoryCounter.memtxt.y = 0;
+		var now:Float = Timer.stamp();
+		times.push(now);
 
+		while (times[0] < now - 1)
+			times.shift();
+
+		var currentCount = times.length;
+		currentFPS = Math.round((currentCount + cacheCount) / 2);
+		if (currentFPS > ClientPrefs.getPref('framerate'))
+			currentFPS = ClientPrefs.getPref('framerate');
+
+		memory = MemoryUtil.getMemUsage(ClientPrefs.getPref('MEMType'));
+		if (memory > mempeak)mempeak = memory;
+
+		if (currentCount != cacheCount) {
+			text = '';
+			text += 'FPS: $currentFPS ${ClientPrefs.getPref('MSFPSCounter') ? '[MS: $dt]' : ''}\n';
+			if (ClientPrefs.getPref('showMEM'))
+				text += 'MEM: ${MemoryUtil.getInterval(memory)}/${MemoryUtil.getInterval(mempeak)}\n';
+		}
+
+		cacheCount = currentCount;
 		visible = ClientPrefs.getPref('showFPS');
-	}
-
-	function set_color(value) {
-		for (text in [fpsCounter])
-		fpsCounter.fpsText.textColor = value;
-		fpsCounter.fpsNum.textColor = value;
-		memoryCounter.memtxt.textColor = value;
-
-		return color = value;
 	}
 }

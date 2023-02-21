@@ -8,6 +8,8 @@ import utils.CoolUtil;
 
 class HealthIcon extends FlxSprite
 {
+	final animatediconstates:Array<String> = ['normal', 'lose', 'win'];
+
 	static final prefix:String = 'icons/';
 	static final credits:String = 'credits/';
 	static final defaultIcon:String = 'unknown';
@@ -20,7 +22,7 @@ class HealthIcon extends FlxSprite
 
 	var char:String = '';
 	
-	public var isPsych:Bool = false;
+	public var isCenter:Bool = false;
 	var availableStates:Int = 1;
 	var state:Int = 0;
 	
@@ -42,8 +44,7 @@ class HealthIcon extends FlxSprite
 		return Paths.image(path);
 	}
 
-	public function new(?char:String, ?folder:String, isPlayer:Bool = false, isCredit = false)
-	{
+	public function new(?char:String, ?folder:String, isPlayer:Bool = false, isCredit = false) {
 		this.isPlayer = isPlayer;
 		this.isCredit = isCredit;
 		super();
@@ -51,7 +52,6 @@ class HealthIcon extends FlxSprite
 		changeIcon(char == null ? (isCredit ? defaultIcon : 'bf') : char, folder);
 	}
 
-	var iconSize:Float = 0;
 	public function changeIcon(char:String, ?folder:String, defaultIfMissing:Bool = true):Bool {
 		if (this.char == char) return false;
 		var graph:FlxGraphic = null;
@@ -60,9 +60,6 @@ class HealthIcon extends FlxSprite
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing);
 		else {
 			this.char = char;
-
-			iconSize =  (width - 150) / 2;
-			iconOffsets[1] = iconOffsets[0] = (isPsych ? iconSize : 0);
 
 			loadGraphic(graph);
 			updateHitbox();
@@ -85,8 +82,6 @@ class HealthIcon extends FlxSprite
 		}
 		animated = animd;
 
-		iconSize = (width - 150) / 2;
-		iconOffsets[1] = iconOffsets[0] = (isPsych ? iconSize : 0);
 		if (!animd) {
 			loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
 			updateHitbox();
@@ -94,12 +89,11 @@ class HealthIcon extends FlxSprite
 			animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
 			animation.play(char);
 		} else {
-			frames = jsonAtlas ? Paths.getJsonAtlas(char) : Paths.getSparrowAtlas(char);
-			animation.addByPrefix('idle', 'idle');
-			animation.addByPrefix('dead', 'dead');
-			animation.addByPrefix('win', 'win');
+			frames = jsonAtlas ? Paths.getJsonAtlas('icons/$char') : Paths.getSparrowAtlas('icons/$char');
+			for (state in animatediconstates) 
+				animation.addByPrefix(state, state, 24, false, isPlayer, false);
 
-			animation.play('idle');
+			animation.play(animatediconstates[0]);
 		}
 
 		antialiasing = ClientPrefs.getPref('globalAntialiasing');
@@ -109,24 +103,23 @@ class HealthIcon extends FlxSprite
 	}
 
 	override function updateHitbox() {
-		if (!isPsych) {
+		if (!isCenter) {
 			width = Math.abs(scale.x) * frameWidth;
 			height = Math.abs(scale.y) * frameHeight;
 			offset.set(-.5 * (width - frameWidth), -.5 * (height - frameHeight));
-			centerOrigin();
-			return;
-		} 
-		super.updateHitbox();
-		offset.set(iconOffsets[0], iconOffsets[1]);
+		} else centerOrigin();
 	}
 
 	public function getCharacter():String
 		return char;
 
 	public function setState(state:Int) {
-		if (state >= availableStates) state = 0;
 		if (animation.curAnim == null) return;
-		animation.curAnim.curFrame = this.state = state;
+		if (state >= availableStates) state = 0;
+		this.state = state;
+		if (!animated) {
+			animation.curAnim.curFrame = this.state;
+		} else animation.play(animatediconstates[this.state]);
 	}
 
 	override function update(elapsed:Float) {

@@ -374,7 +374,6 @@ class CreditSectionState extends MusicBeatState {
 				if (!icon.changeIcon(creditsStuff[i][1], curCSection, false))
 					icon.changeIcon(creditsStuff[i][1], getSimilarIcon(creditsStuff[i][1]));
 
-				icon.iconOffsets[1] = -30;
 				icon.updateHitbox();
 				icon.sprTracker = optionText;
 				icon.ID = i;

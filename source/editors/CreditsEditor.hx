@@ -365,6 +365,7 @@ class CreditsEditor extends MusicBeatState
 		linkInput.text = '';
 		colorInput.text = '';
 		showIconExist(iconInput.text);
+		iconColorShow();
 	}
 
 	function setItemData() {
@@ -417,7 +418,7 @@ class CreditsEditor extends MusicBeatState
 		} while(nullCheck(curSelected));
 
 		updateCreditObjects();
-		changeSelection();
+		changeSelection(-1);
 	}
 
 	function templateArray() {
@@ -469,6 +470,10 @@ class CreditsEditor extends MusicBeatState
 					changeSelection(shiftMult);
 					holdTime = 0;
 				}
+				if(FlxG.mouse.wheel != 0) {
+					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+					changeSelection(-shiftMult * FlxG.mouse.wheel, false);
+				}
 
 				if((FlxG.keys.justPressed.S || FlxG.keys.justPressed.DOWN) || (FlxG.keys.justPressed.W || FlxG.keys.justPressed.UP)) {
 					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
@@ -506,7 +511,7 @@ class CreditsEditor extends MusicBeatState
 				addCredit();
 			}
 
-			if (FlxG.keys.justPressed.BACKSPACE) {
+			if (FlxG.keys.justPressed.BACKSPACE || FlxG.keys.justPressed.ESCAPE) {
 				if(colorTween != null) {
 					colorTween.cancel();
 				}
@@ -514,6 +519,16 @@ class CreditsEditor extends MusicBeatState
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
 				quitting = true;
+			}
+
+			if(blockInput) {
+				if (FlxG.keys.justPressed.ENTER) {
+					for (i in 0...blockPressWhileTypingOn.length) {
+						if(blockPressWhileTypingOn[i].hasFocus) {
+							blockPressWhileTypingOn[i].hasFocus = false;
+						}
+					}
+				}
 			}
 		}
 
@@ -525,9 +540,9 @@ class CreditsEditor extends MusicBeatState
 
 	var moveTween:FlxTween = null;
 	var curSelIsTitle:Bool = false;
-	function changeSelection(change:Int = 0)
+	function changeSelection(change:Int = 0, playSound:Bool = true)
 	{
-		if(change != 0) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		if(change != 0 && playSound) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		do {
 			curSelected = FlxMath.wrap(curSelected + change, 0, creditsStuff.length - 1);
 		} while(nullCheck(curSelected));
@@ -716,6 +731,7 @@ class CreditsEditor extends MusicBeatState
 					creditsStuff.push(arr);
 				}
 				updateCreditObjects();
+				changeSelection();
 				return;
 			}
 		}

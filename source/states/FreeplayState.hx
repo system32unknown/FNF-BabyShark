@@ -94,8 +94,7 @@ class FreeplayState extends MusicBeatState
 			}
 
 			WeekData.setDirectoryFromWeek(leWeek);
-			for (song in leWeek.songs)
-			{
+			for (song in leWeek.songs) {
 				var colors:Array<Int> = song[2];
 				if(colors == null || colors.length < 3) {
 					colors = [146, 113, 253];
@@ -132,7 +131,6 @@ class FreeplayState extends MusicBeatState
 			songText.snapToPosition();
 
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.isPsych = true;
 			icon.sprTracker = songText;
 
 			// using a FlxGroup is too much fuss!

@@ -337,7 +337,7 @@ class PlayState extends MusicBeatState
 	// Lua shit
 	public static var instance:PlayState;
 	public var luaArray:Array<FunkinLua> = [];
-	public var scriptArray:Array<FunkinScript> = [];
+	public var scriptArray:Array<AlterScript> = [];
 	var luaDebugGroup:FlxTypedGroup<FunkinLua.DebugLuaText>;
 	public var introSoundsSuffix:String = '';
 
@@ -960,7 +960,7 @@ class PlayState extends MusicBeatState
 						luaArray.push(new FunkinLua(folder + file));
 						filesPushed.push(file);
 					} else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
-						scriptArray.push(new FunkinScript(folder + file));
+						scriptArray.push(new AlterScript(folder + file));
 						filesPushed.push(file);
 					}
 				}
@@ -970,7 +970,7 @@ class PlayState extends MusicBeatState
 
 		// STAGE SCRIPTS
 		#if (MODS_ALLOWED && LUA_ALLOWED)
-		startLuasOnFolder('stages/' + curStage + '.lua');
+			startLuasOnFolder('stages/' + curStage + '.lua');
 		#end
 
 		var gfVersion:String = SONG.gfVersion;
@@ -1193,8 +1193,8 @@ class PlayState extends MusicBeatState
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		
 		if (ClientPrefs.getPref('HealthTypes') == 'Psych') {
-			iconP1.isPsych = true;
-			iconP2.isPsych = true;
+			iconP1.isCenter = true;
+			iconP2.isCenter = true;
 		}
 		if (ClientPrefs.getPref('ScoreType') == 'Psych') {
 			scoreTxt.y = healthBarBG.y + 36;
@@ -1313,7 +1313,7 @@ class PlayState extends MusicBeatState
 						luaArray.push(new FunkinLua(folder + file));
 						filesPushed.push(file);
 					} else if (file.endsWith('.hx') && !filesPushed.contains(file)) {
-						scriptArray.push(new FunkinScript(folder + file));
+						scriptArray.push(new AlterScript(folder + file));
 						filesPushed.push(file);
 					}
 				}
@@ -1572,7 +1572,6 @@ class PlayState extends MusicBeatState
 	}
 
 	function startCharacterLua(name:String) {
-		#if SCRIPT_ALLOWED startCharacterHaxe(name); #end
 		#if LUA_ALLOWED
 		var doPush:Bool = false;
 		var luaFile:String = 'characters/' + name + '.lua';
@@ -1598,35 +1597,6 @@ class PlayState extends MusicBeatState
 				if(script.scriptName == luaFile) return;
 			}
 			luaArray.push(new FunkinLua(luaFile));
-		}
-		#end
-	}
-	function startCharacterHaxe(name:String) {
-		#if SCRIPT_ALLOWED
-		var doPush:Bool = false;
-		var hxFile:String = 'characters/' + name + '.hx';
-		#if MODS_ALLOWED
-		if(FileSystem.exists(Paths.modFolders(hxFile))) {
-			hxFile = Paths.modFolders(hxFile);
-			doPush = true;
-		} else {
-			hxFile = Paths.getPreloadPath(hxFile);
-			if(FileSystem.exists(hxFile)) {
-				doPush = true;
-			}
-		}
-		#else
-		luaFile = Paths.getPreloadPath(hxFile);
-		if(Assets.exists(hxFile)) {
-			doPush = true;
-		}
-		#end
-
-		if(doPush) {
-			for (script in scriptArray) {
-				if(script.scriptFile == hxFile) return;
-			}
-			scriptArray.push(new FunkinScript(hxFile));
 		}
 		#end
 	}
@@ -3147,38 +3117,20 @@ class PlayState extends MusicBeatState
 		iconP2.updateHitbox();
 
 		final iconOffset:Int = 26;
-		switch(ClientPrefs.getPref('HealthTypes')) {
-			case "Vanilla": // Stolen from Vanilla Engine
-				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
-			case "Psych":
-				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
-		}
+		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
+		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
 		if (health > healthMax)
 			health = healthMax;
 
 		if (healthBar.percent < 20) {
-			if (iconP1.animated) {
-				iconP1.animation.play('dead');
-			} else iconP1.setState(1);
-			if (iconP2.animated) {
-				iconP2.animation.play('win');
-			} else iconP2.setState(2);
+			iconP1.setState(1);
+			iconP2.setState(2);
 		} else if (healthBar.percent > 80) {
-			if (iconP1.animated) {
-				iconP1.animation.play('win');
-			} else iconP1.setState(2);
-			if (iconP2.animated) {
-				iconP2.animation.play('dead');
-			} else iconP2.setState(1);
+			iconP1.setState(2);
+			iconP2.setState(1);
 		} else {
-			if (iconP1.animated) {
-				iconP1.animation.play('idle');
-			} else iconP1.setState(0);
-			if (iconP2.animated) {
-				iconP2.animation.play('idle');
-			} else iconP2.setState(0);
+			iconP1.setState(0);
+			iconP2.setState(0);
 		}
 
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {
@@ -5357,7 +5309,7 @@ class PlayState extends MusicBeatState
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
 
-				if (ClientPrefs.getPref('IconBounceType') == "Purgatory") {
+				if (ClientPrefs.getPref('IconBounceType') == "BP") {
 					if (curBeat % 4 == 0) {
 						FlxTween.angle(iconP1, -30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 						FlxTween.angle(iconP2, 30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
@@ -5495,7 +5447,6 @@ class PlayState extends MusicBeatState
 
 	#if LUA_ALLOWED
 	public function startLuasOnFolder(luaFile:String) {
-		#if SCRIPT_ALLOWED startHxOnFolder(luaFile); #end
 		for (script in luaArray) {
 			if(script.scriptName == luaFile) return false;
 		}
@@ -5522,40 +5473,8 @@ class PlayState extends MusicBeatState
 		return false;
 	}
 	#end
-	#if SCRIPT_ALLOWED
-	public function startHxOnFolder(luaFile:String) {
-		for (script in scriptArray) {
-			if(script.scriptFile == luaFile) return false;
-		}
-
-		#if MODS_ALLOWED
-		var luaToLoad:String = Paths.modFolders(luaFile);
-		if(FileSystem.exists(luaToLoad)) {
-			scriptArray.push(new FunkinScript(luaToLoad));
-			return true;
-		} else {
-			luaToLoad = Paths.getPreloadPath(luaFile);
-			if(FileSystem.exists(luaToLoad)) {
-				scriptArray.push(new FunkinScript(luaToLoad));
-				return true;
-			}
-		}
-		#elseif sys
-		var luaToLoad:String = Paths.getPreloadPath(luaFile);
-		if(OpenFlAssets.exists(luaToLoad)) {
-			scriptArray.push(new FunkinScript(luaToLoad));
-			return true;
-		}
-		#end
-		return false;
-	}
-	#end
 
 	public function callOnScripts(event:String, args:Array<Dynamic>):Void {
-		#if !SCRIPT_ALLOWED
-		return;
-		#end
-
 		return for (i in scriptArray) i.call(event, args);
 	}
 
@@ -5582,18 +5501,10 @@ class PlayState extends MusicBeatState
 		return returnVal;
 	}
 
-	public function setOnScripts(key:String, value:Dynamic):Void {
-		#if !SCRIPT_ALLOWED
-		return;
-		#end
-		
-		return for (i in scriptArray) i.set(key, value);
-	}
-
 	public function setOnLuas(variable:String, arg:Dynamic) {
-		setOnScripts(variable, arg);
 		#if LUA_ALLOWED
-		for (i in 0...luaArray.length) luaArray[i].set(variable, arg);
+		for (i in 0...luaArray.length)
+			luaArray[i].set(variable, arg);
 		for(i in achievementsArray) i.set(variable, arg);
 		#end
 	}
@@ -5619,7 +5530,7 @@ class PlayState extends MusicBeatState
 
 		var ret:Dynamic = callOnLuas('onRecalculateRating', [], false);
 		if(ret != FunkinLua.Function_Stop) {
-			if(totalPlayed < 1)  ratingName = '?'; //Prevent divide by 0
+			if(totalPlayed < 1) ratingName = '?'; //Prevent divide by 0
 			else { // Rating Percent
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
 

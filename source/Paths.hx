@@ -292,7 +292,7 @@ class Paths
 	}
 
 	inline static public function exists(key:String) {
-		return FileSystem.exists(mods(key)) || FileSystem.exists(getPreloadPath(key));
+		return FileSystem.exists(modFolders(key)) || FileSystem.exists(getPreloadPath(key));
 	}
 
 	inline static public function font(key:String):String
