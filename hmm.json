@@ -44,11 +44,11 @@
         "url": "https://github.com/polybiusproxy/hxCodec"
       },
       {
-        "name": "SScript",
+        "name": "hscript",
         "type": "git",
         "dir": null,
-        "ref": "testing",
-        "url": "https://github.com/TheWorldMachinima/SScript"
+        "ref": "master",
+        "url": "https://www.github.com/YoshiCrafter29/hscript-improved"
       },
       {
         "name": "discord_rpc",

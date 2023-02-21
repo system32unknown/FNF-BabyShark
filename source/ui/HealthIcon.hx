@@ -113,13 +113,16 @@ class HealthIcon extends FlxSprite
 	public function getCharacter():String
 		return char;
 
-	public function setState(state:Int) {
-		if (animation.curAnim == null) return;
+	function setStateIndex(state:Int) {
 		if (state >= availableStates) state = 0;
-		this.state = state;
+		if (animation.curAnim == null) return;
+		animation.curAnim.curFrame = this.state = state;
+	}
+
+	public function setState(state:Int) {
 		if (!animated) {
-			animation.curAnim.curFrame = this.state;
-		} else animation.play(animatediconstates[this.state]);
+			setStateIndex(state);
+		} else animation.play(animatediconstates[state]);
 	}
 
 	override function update(elapsed:Float) {

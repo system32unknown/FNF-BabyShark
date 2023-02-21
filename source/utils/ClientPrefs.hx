@@ -53,7 +53,6 @@ class ClientPrefs {
 		'healthBarAlpha' => 1,
 		'hitsoundVolume' => 0,
 		'hitsoundTypes' => 'Tick',
-		'ShowWatermark' => true,
 		'week7CutScene' => true,
 		'pauseMusic' => 'Tea Time',
 		// Gameplay settings

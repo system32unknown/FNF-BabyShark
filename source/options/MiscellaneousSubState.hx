@@ -68,13 +68,6 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Watermarks',
-			"If checked, enables all watermarks from the engine.",
-			'ShowWatermark',
-			'bool',
-			true);
-		addOption(option);
-
 		var option:Option = new Option('Dynamic Camera Movement',
 			"If unchecked, \nthe camera won't move in the direction in which the characters sing.",
 			'camMovement', 
@@ -85,13 +78,6 @@ class MiscellaneousSubState extends BaseOptionsMenu
 		var option:Option = new Option('Alternate Discord Large Image',
 			'',
 			'AltDiscordImg',
-			'bool',
-			true);
-		addOption(option);
-
-		var option:Option = new Option('HaxeFlixel Start up',
-			'',
-			'FlxStartup',
 			'bool',
 			true);
 		addOption(option);

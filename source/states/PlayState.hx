@@ -299,7 +299,6 @@ class PlayState extends MusicBeatState
 	var msAverageTween:VarTween;
 
 	var songNameText:FlxText;
-	var engineText:FlxText;
 
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
@@ -1232,7 +1231,7 @@ class PlayState extends MusicBeatState
 		songNameText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		songNameText.scrollFactor.set();
 		songNameText.y = FlxG.height - songNameText.height;
-		songNameText.visible = !hideHud && ClientPrefs.getPref('ShowWatermark');
+		songNameText.visible = !hideHud;
 		add(songNameText);
 
 		screwYouTxt = new FlxText(2, songNameText.y, 0, SONG.screwYou.trim(), 16);
@@ -1245,15 +1244,6 @@ class PlayState extends MusicBeatState
 
 		if (screwYouTxt.text != null && screwYouTxt.text != "")
 			songNameText.y -= 20;
-
-		var engineName:Array<String> = [for (i in Paths.getTextFromFile('data/EngineList.txt').split('\n')) i.trim()];
-		engineText = new FlxText(0, 0, 0, engineName[FlxG.random.int(0, engineName.length - 1)] + " Engine (AE " + MainMenuState.alterEngineVersion + ")", 16);
-		engineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
-		engineText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-		engineText.scrollFactor.set();
-		engineText.setPosition(FlxG.width - engineText.width, FlxG.height - engineText.height);
-		engineText.visible = !hideHud && ClientPrefs.getPref('ShowWatermark');
-		add(engineText);
 
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
@@ -1268,7 +1258,6 @@ class PlayState extends MusicBeatState
 		timeBarBG.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
 		songNameText.cameras = [camHUD];
-		engineText.cameras = [camHUD];
 		judgementCounter.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
@@ -1611,7 +1600,7 @@ class PlayState extends MusicBeatState
 	function startCharacterPos(char:Character, ?gfCheck:Bool = false) {
 		if(gfCheck && char.curCharacter.startsWith('gf')) { //IF DAD IS GIRLFRIEND, HE GOES TO HER POSITION
 			char.setPosition(GF_X, GF_Y);
-			char.scrollFactor.set(0.95, 0.95);
+			char.scrollFactor.set(.95, .95);
 			char.danceEveryNumBeats = 2;
 		}
 		char.x += char.positionArray[0];
@@ -4213,9 +4202,6 @@ class PlayState extends MusicBeatState
 		screwYouTxt.y = songNameText.y;
 		if (screwYouTxt.text != null && screwYouTxt.text != "")
 			songNameText.y -= 20;
-
-		engineText.font = font;
-		engineText.setPosition(FlxG.width - engineText.width, FlxG.height - engineText.height);
 
 		for (dakey in daKeyText)
 			dakey.font = font;
