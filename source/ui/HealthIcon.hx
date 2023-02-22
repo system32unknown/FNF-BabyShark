@@ -72,12 +72,13 @@ class HealthIcon extends FlxSprite
 
 		if (graph == null) return false;
 		availableStates = Math.round(graph.width / graph.height);
+		var pathType:String = (isCredit ? 'credits' : 'icons');
 		this.char = char;
 		
-		var animd:Bool = Paths.exists('images/icons/$char.xml');
+		var animd:Bool = Paths.exists('images/$pathType/$char.xml');
 		var jsonAtlas:Bool = false;
 		if (!animd) {
-			animd = Paths.exists('images/icons/$char.json');
+			animd = Paths.exists('images/$pathType/$char.json');
 			jsonAtlas = animd;
 		}
 		animated = animd;
@@ -89,13 +90,10 @@ class HealthIcon extends FlxSprite
 			animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
 			animation.play(char);
 		} else {
-			frames = jsonAtlas ? Paths.getJsonAtlas('icons/$char') : Paths.getSparrowAtlas('icons/$char');
+			frames = jsonAtlas ? Paths.getJsonAtlas('$pathType/$char') : Paths.getSparrowAtlas('$pathType/$char');
 			for (state in animatediconstates) {
-				if (animation.exists(state)) {
-					animation.addByPrefix(state, state, 24, false, isPlayer, false);
-				}
+				animation.addByPrefix(state, state, 24, false, isPlayer, false);
 			}
-
 			animation.play(animatediconstates[0]);
 		}
 
@@ -125,7 +123,6 @@ class HealthIcon extends FlxSprite
 	public function setState(state:Int) {
 		if (!animated) {
 			setStateIndex(state);
-			
 		} else if (animation.exists(animatediconstates[state])) animation.play(animatediconstates[state]);
 	}
 
