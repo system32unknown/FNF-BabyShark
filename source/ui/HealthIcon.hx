@@ -122,14 +122,15 @@ class HealthIcon extends FlxSprite
 	public function setState(state:Int) {
 		if (!animated) {
 			setStateIndex(state);
-		} else animation.play(animatediconstates[state]);
+			
+		} else if (animation.exists(animatediconstates[state])) animation.play(animatediconstates[state]);
 	}
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
 		switch (ClientPrefs.getPref('IconBounceType')) {
-			case "DaveAndBambi" | "Purgatory" | "GoldenApple" | "StridentCrisis":
+			case "DaveAndBambi" | "BP" | "GoldenApple" | "SC":
 				offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
 		}
 
