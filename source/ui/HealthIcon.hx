@@ -90,8 +90,11 @@ class HealthIcon extends FlxSprite
 			animation.play(char);
 		} else {
 			frames = jsonAtlas ? Paths.getJsonAtlas('icons/$char') : Paths.getSparrowAtlas('icons/$char');
-			for (state in animatediconstates) 
-				animation.addByPrefix(state, state, 24, false, isPlayer, false);
+			for (state in animatediconstates) {
+				if (animation.exists(state)) {
+					animation.addByPrefix(state, state, 24, false, isPlayer, false);
+				}
+			}
 
 			animation.play(animatediconstates[0]);
 		}
