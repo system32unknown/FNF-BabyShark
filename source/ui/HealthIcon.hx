@@ -56,14 +56,29 @@ class HealthIcon extends FlxSprite
 		if (this.char == char) return false;
 		var graph:FlxGraphic = null;
 
+		var pathType:String = (isCredit ? 'credits' : 'icons');
+		var animd:Bool = Paths.exists('images/$pathType/$char.xml');
+		var jsonAtlas:Bool = false;
+		if (!animd) {
+			animd = Paths.exists('images/$pathType/$char.json');
+			jsonAtlas = animd;
+		}
+		animated = animd;
+
 		if (isCredit) graph = returnGraphic(char, folder, false, true);
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing);
 		else {
 			this.char = char;
 
-			loadGraphic(graph);
-			updateHitbox();
-			state = 0;
+			if (!animd) {
+				loadGraphic(graph);
+				updateHitbox();
+				state = 0;
+			} else {
+				frames = jsonAtlas ? Paths.getJsonAtlas('$pathType/$char') : Paths.getSparrowAtlas('$pathType/$char');
+				animation.addByPrefix('normal', 'normal', 24, true, isPlayer, false);
+				animation.play('normal');
+			}
 
 			antialiasing = ClientPrefs.getPref('globalAntialiasing');
 			if (char.endsWith('-pixel')) antialiasing = false;
@@ -72,16 +87,7 @@ class HealthIcon extends FlxSprite
 
 		if (graph == null) return false;
 		availableStates = Math.round(graph.width / graph.height);
-		var pathType:String = (isCredit ? 'credits' : 'icons');
 		this.char = char;
-		
-		var animd:Bool = Paths.exists('images/$pathType/$char.xml');
-		var jsonAtlas:Bool = false;
-		if (!animd) {
-			animd = Paths.exists('images/$pathType/$char.json');
-			jsonAtlas = animd;
-		}
-		animated = animd;
 
 		if (!animd) {
 			loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
@@ -91,8 +97,8 @@ class HealthIcon extends FlxSprite
 			animation.play(char);
 		} else {
 			frames = jsonAtlas ? Paths.getJsonAtlas('$pathType/$char') : Paths.getSparrowAtlas('$pathType/$char');
-			for (state in animatediconstates) {
-				animation.addByPrefix(state, state, 24, false, isPlayer, false);
+			for (animstate in animatediconstates) {
+				animation.addByPrefix(animstate, animstate, 24, false, isPlayer, false);
 			}
 			animation.play(animatediconstates[0]);
 		}
