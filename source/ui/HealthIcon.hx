@@ -70,15 +70,9 @@ class HealthIcon extends FlxSprite
 		else {
 			this.char = char;
 
-			if (!animd) {
-				loadGraphic(graph);
-				updateHitbox();
-				state = 0;
-			} else {
-				frames = jsonAtlas ? Paths.getJsonAtlas('$pathType/$char') : Paths.getSparrowAtlas('$pathType/$char');
-				animation.addByPrefix('normal', 'normal', 24, true, isPlayer, false);
-				animation.play('normal');
-			}
+			loadGraphic(graph);
+			updateHitbox();
+			state = 0;
 
 			antialiasing = ClientPrefs.getPref('globalAntialiasing');
 			if (char.endsWith('-pixel')) antialiasing = false;
