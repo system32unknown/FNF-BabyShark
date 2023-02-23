@@ -13,6 +13,9 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
+import flixel.addons.display.FlxBackdrop;
+
+import shaders.GlitchEffect;
 
 import openfl.utils.Assets;
 
@@ -44,21 +47,32 @@ class LoadingState extends MusicBeatState
 		this.directory = directory;
 	}
 
-	var funkay:FlxSprite;
 	var loadBar:FlxSprite;
 	var loadBarBack:FlxSprite;
 	var loadText:FlxText;
 	override function create()
 	{
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d);
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.getPath('images/backgrounds/scarybg.png', IMAGE));
+		bg.y = 200;
+		bg.setGraphicSize(Std.int(bg.width * 3));
+		if(ClientPrefs.getPref('shaders')) {
+			var expungedshader:GlitchEffect = new GlitchEffect();
+			expungedshader.waveAmplitude = .1;
+			expungedshader.waveFrequency = 5;
+			expungedshader.waveSpeed = 2;
+			bg.shader = expungedshader.shader;
+		}
 		add(bg);
-		funkay = new FlxSprite().loadGraphic(Paths.getPath('images/funkay.png', IMAGE));
-		funkay.setGraphicSize(0, FlxG.height);
+
+		var funkay:FlxBackdrop = new FlxBackdrop(Paths.getPath('images/thechecker.png', IMAGE));
+		funkay.velocity.set(0, 110);
+		funkay.alpha = .5;
 		funkay.updateHitbox();
 		funkay.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		funkay.color = FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255));
 		add(funkay);
 		funkay.scrollFactor.set();
-		funkay.screenCenter(XY);
+		funkay.screenCenter(X);
 
 		loadBarBack = new FlxSprite(0, FlxG.height - 25).makeGraphic(FlxG.width, 20, FlxColor.BLACK);
 		loadBarBack.scale.x = .51;
@@ -71,8 +85,10 @@ class LoadingState extends MusicBeatState
 		loadBar.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(loadBar);
 
-		loadText = new FlxText(loadBarBack.x + 320, loadBarBack.y - 24, 0, '0%');
-		loadText.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		loadText = new FlxText(0, loadBarBack.y - 24, 0, '0%', 16);
+		loadText.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, FlxTextAlign.CENTER);
+		loadText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1);
+		loadText.screenCenter(X);
 		add(loadText);
 		
 		initSongsManifest().onComplete(function(lib) {
@@ -104,7 +120,8 @@ class LoadingState extends MusicBeatState
 
 		if(callbacks != null) {
 			targetShit = FlxMath.remapToRange(callbacks.numRemaining / callbacks.length, 1, 0, 0, 1);
-			loadText.text = 'Loading... (${callbacks.numRemaining} / ${callbacks.length}) [${Type.getClass(FlxG.state)} -> ${Type.getClass(target)}]';
+			loadText.text = 'Loading... (${callbacks.numRemaining} / ${callbacks.length}) [Next State: ${Type.getClass(target)}]';
+			loadText.screenCenter(X);
 			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
 		}
 	}
