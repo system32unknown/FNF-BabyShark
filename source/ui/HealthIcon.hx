@@ -8,8 +8,6 @@ import utils.CoolUtil;
 
 class HealthIcon extends FlxSprite
 {
-	final animatediconstates:Array<String> = ['normal', 'lose', 'win'];
-
 	static final prefix:String = 'icons/';
 	static final credits:String = 'credits/';
 	static final defaultIcon:String = 'unknown';

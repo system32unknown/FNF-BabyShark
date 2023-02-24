@@ -186,12 +186,17 @@ class Paths
 	}
 
 	public static function getPath(file:String, type:AssetType, ?library:Null<String> = null) {
-		if (library != null)
-			return getLibraryPath(file, library);
+		if (library != null) return getLibraryPath(file, library);
 
 		if (currentLevel != null) {
 			var levelPath:String = '';
-			levelPath = getLibraryPathForce(file, (currentLevel != 'shared' ? currentLevel : "shared"));
+			if(currentLevel != 'shared') {
+				levelPath = getLibraryPathForce(file, currentLevel);
+				if (OpenFlAssets.exists(levelPath, type))
+					return levelPath;
+			}
+
+			levelPath = getLibraryPathForce(file, "shared");
 			if (OpenFlAssets.exists(levelPath, type))
 				return levelPath;
 		}
