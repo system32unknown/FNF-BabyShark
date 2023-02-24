@@ -47,16 +47,17 @@ class LoadingState extends MusicBeatState
 		this.directory = directory;
 	}
 
+	var expungedshader:GlitchEffect;
 	var loadBar:FlxSprite;
 	var loadBarBack:FlxSprite;
 	var loadText:FlxText;
 	override function create()
 	{
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.getPath('images/backgrounds/scarybg.png', IMAGE));
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.getPath('images/backgrounds/void/scarybg.png', IMAGE));
 		bg.y = 200;
 		bg.setGraphicSize(Std.int(bg.width * 3));
 		if(ClientPrefs.getPref('shaders')) {
-			var expungedshader:GlitchEffect = new GlitchEffect();
+			expungedshader = new GlitchEffect();
 			expungedshader.waveAmplitude = .1;
 			expungedshader.waveFrequency = 5;
 			expungedshader.waveSpeed = 2;
@@ -123,6 +124,10 @@ class LoadingState extends MusicBeatState
 			loadText.text = 'Loading... (${callbacks.numRemaining} / ${callbacks.length}) [Next State: ${Type.getClass(target)}]';
 			loadText.screenCenter(X);
 			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
+		}
+
+		if (expungedshader != null) {
+			expungedshader.update(elapsed);
 		}
 	}
 	
