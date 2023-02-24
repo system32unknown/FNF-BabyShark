@@ -100,6 +100,9 @@ class Main extends Sprite
 		Paths.clearStoredMemory();
 
 		MemoryUtil.clearMajor();
+
+		FlxG.bitmap.dumpCache();
+		FlxG.bitmap.clearUnused();
 	}
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!

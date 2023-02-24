@@ -5270,11 +5270,6 @@ class PlayState extends MusicBeatState
 	{
 		super.beatHit();
 
-		if (curBeat % 4 == 0) {
-			timeTxt.scale.set(1.1, 1.1);
-			FlxTween.tween(timeTxt.scale, {x: 1, y: 1}, .2 * playbackRate);
-		}
-
 		if(lastBeatHit >= curBeat) return;
 
 		if (generatedMusic) {
