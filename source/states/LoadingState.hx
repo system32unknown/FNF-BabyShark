@@ -13,9 +13,6 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
-import flixel.addons.display.FlxBackdrop;
-
-import shaders.GlitchEffect;
 
 import openfl.utils.Assets;
 
@@ -47,42 +44,20 @@ class LoadingState extends MusicBeatState
 		this.directory = directory;
 	}
 
-	var expungedshader:GlitchEffect;
 	var loadBar:FlxSprite;
 	var loadBarBack:FlxSprite;
 	var loadText:FlxText;
-
-	var logo:FlxSprite;
 	override function create()
 	{
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.getPath('images/backgrounds/void/scarybg.png', IMAGE));
-		bg.y = 200;
-		bg.setGraphicSize(Std.int(bg.width * 3));
-		bg.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		if(ClientPrefs.getPref('shaders')) {
-			expungedshader = new GlitchEffect();
-			expungedshader.waveAmplitude = .1;
-			expungedshader.waveFrequency = 5;
-			expungedshader.waveSpeed = 2;
-			bg.shader = expungedshader.shader;
-		}
+		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d);
 		add(bg);
-
-		var funkay:FlxBackdrop = new FlxBackdrop(Paths.getPath('images/thechecker.png', IMAGE));
-		funkay.velocity.set(0, 110);
-		funkay.alpha = .5;
+		var funkay:FlxSprite = new FlxSprite().loadGraphic(Paths.getPath('images/funkay.png', IMAGE));
+		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		funkay.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		funkay.color = FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255));
 		add(funkay);
 		funkay.scrollFactor.set();
-		funkay.screenCenter(X);
-
-		logo = new FlxSprite().loadGraphic(Paths.getPath('images/FinalLogo.png', IMAGE));
-		logo.screenCenter();
-		logo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		add(logo);
-		logo.scale.set(1.4, 1.4);
+		funkay.screenCenter();
 
 		loadBarBack = new FlxSprite(0, FlxG.height - 25).makeGraphic(FlxG.width, 20, FlxColor.BLACK);
 		loadBarBack.scale.x = .51;
@@ -108,7 +83,7 @@ class LoadingState extends MusicBeatState
 			if(directory != null && directory.length > 0 && directory != 'shared') {
 				checkLibrary(directory);
 			}
-			var fadeTime = 0.5;
+			var fadeTime = .5;
 			FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
 			new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
 		});
@@ -133,10 +108,6 @@ class LoadingState extends MusicBeatState
 			loadText.text = 'Loading... (${callbacks.numRemaining} / ${callbacks.length}) [Next State: ${Type.getClass(target)}]';
 			loadText.screenCenter(X);
 			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
-		}
-
-		if (expungedshader != null) {
-			expungedshader.update(elapsed);
 		}
 	}
 	
