@@ -55,6 +55,7 @@ class LoadingState extends MusicBeatState
 	var loadText:FlxText;
 
 	var logo:FlxSprite;
+	var logoTween:FlxTween;
 	var loadLogoText:FlxText;
 	override function create()
 	{
@@ -81,16 +82,17 @@ class LoadingState extends MusicBeatState
 		funkay.scrollFactor.set();
 		funkay.screenCenter(X);
 
-		logo = new FlxSprite().loadGraphic(Paths.getPath('FinalLogo.png', IMAGE));
+		logo = new FlxSprite().loadGraphic(Paths.getPath('images/FinalLogo.png', IMAGE));
 		logo.screenCenter();
 		logo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(logo);
-		FlxTween.tween(logo, {y: logo.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
+		logoTween = FlxTween.tween(logo, {y: logo.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
 
 		loadLogoText = new FlxText(0, logo.y - logo.height, 0, 'LOADING', 30);
 		loadLogoText.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 30, FlxColor.WHITE, FlxTextAlign.CENTER);
 		loadLogoText.setBorderStyle(FlxTextBorderStyle.SHADOW, FlxColor.GRAY, 2);
 		loadLogoText.screenCenter(X);
+		add(loadLogoText);
 
 		loadBarBack = new FlxSprite(0, FlxG.height - 25).makeGraphic(FlxG.width, 20, FlxColor.BLACK);
 		loadBarBack.scale.x = .51;
@@ -200,6 +202,9 @@ class LoadingState extends MusicBeatState
 	
 	override function destroy() {
 		super.destroy();
+		logoTween.cancel();
+		logoTween.destroy();
+		logoTween = null;
 		callbacks = null;
 	}
 	
