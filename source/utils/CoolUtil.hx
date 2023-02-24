@@ -192,13 +192,13 @@ class CoolUtil
 		var tempArray:Array<String> = new Array<String>();
 		var lastSeen:String = null;
 		string.sort(function(str1:String, str2:String) {
-		  return (str1 == str2) ? 0 : (str1 > str2) ? 1 : -1; 
+		  	return (str1 == str2) ? 0 : (str1 > str2) ? 1 : -1; 
 		});
 		for (str in string) {
-		  if (str != lastSeen) {
-			tempArray.push(str);
-		  }
-		  lastSeen = str;
+		  	if (str != lastSeen) {
+				tempArray.push(str);
+		  	}
+		  	lastSeen = str;
 		}
 		return tempArray;
 	}

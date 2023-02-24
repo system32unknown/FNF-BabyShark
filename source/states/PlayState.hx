@@ -1984,7 +1984,7 @@ class PlayState extends MusicBeatState
 					gfCutscene.alpha = 1;
 					gfCutscene.animation.play('dieBitch', true);
 					gfCutscene.animation.finishCallback = function(name:String) {
-						if(name == 'dieBitch')  { //Next part
+						if(name == 'dieBitch') { //Next part
 							gfCutscene.animation.play('getRektLmao', true);
 							gfCutscene.offset.set(224, 445);
 						} else {
