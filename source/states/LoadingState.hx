@@ -13,6 +13,8 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.addons.display.FlxBackdrop;
 
 import shaders.GlitchEffect;
@@ -51,11 +53,15 @@ class LoadingState extends MusicBeatState
 	var loadBar:FlxSprite;
 	var loadBarBack:FlxSprite;
 	var loadText:FlxText;
+
+	var logo:FlxSprite;
+	var loadLogoText:FlxText;
 	override function create()
 	{
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.getPath('images/backgrounds/void/scarybg.png', IMAGE));
 		bg.y = 200;
 		bg.setGraphicSize(Std.int(bg.width * 3));
+		bg.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		if(ClientPrefs.getPref('shaders')) {
 			expungedshader = new GlitchEffect();
 			expungedshader.waveAmplitude = .1;
@@ -74,6 +80,17 @@ class LoadingState extends MusicBeatState
 		add(funkay);
 		funkay.scrollFactor.set();
 		funkay.screenCenter(X);
+
+		logo = new FlxSprite().loadGraphic(Paths.getPath('FinalLogo.png', IMAGE));
+		logo.screenCenter();
+		logo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		add(logo);
+		FlxTween.tween(logo, {y: logo.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
+
+		loadLogoText = new FlxText(0, logo.y - logo.height, 0, 'LOADING', 30);
+		loadLogoText.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 30, FlxColor.WHITE, FlxTextAlign.CENTER);
+		loadLogoText.setBorderStyle(FlxTextBorderStyle.SHADOW, FlxColor.GRAY, 2);
+		loadLogoText.screenCenter(X);
 
 		loadBarBack = new FlxSprite(0, FlxG.height - 25).makeGraphic(FlxG.width, 20, FlxColor.BLACK);
 		loadBarBack.scale.x = .51;
@@ -125,6 +142,8 @@ class LoadingState extends MusicBeatState
 			loadText.screenCenter(X);
 			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
 		}
+
+		loadLogoText.y = logo.y - logo.height;
 
 		if (expungedshader != null) {
 			expungedshader.update(elapsed);
