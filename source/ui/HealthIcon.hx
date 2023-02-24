@@ -56,15 +56,6 @@ class HealthIcon extends FlxSprite
 		if (this.char == char) return false;
 		var graph:FlxGraphic = null;
 
-		var pathType:String = (isCredit ? 'credits' : 'icons');
-		var animd:Bool = Paths.exists('images/$pathType/$char.xml');
-		var jsonAtlas:Bool = false;
-		if (!animd) {
-			animd = Paths.exists('images/$pathType/$char.json');
-			jsonAtlas = animd;
-		}
-		animated = animd;
-
 		if (isCredit) graph = returnGraphic(char, folder, false, true);
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing);
 		else {
@@ -83,19 +74,11 @@ class HealthIcon extends FlxSprite
 		availableStates = Math.round(graph.width / graph.height);
 		this.char = char;
 
-		if (!animd) {
-			loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
-			updateHitbox();
+		loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
+		updateHitbox();
 
-			animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
-			animation.play(char);
-		} else {
-			frames = jsonAtlas ? Paths.getJsonAtlas('$pathType/$char') : Paths.getSparrowAtlas('$pathType/$char');
-			for (animstate in animatediconstates) {
-				animation.addByPrefix(animstate, animstate, 24, false, isPlayer, false);
-			}
-			animation.play(animatediconstates[0]);
-		}
+		animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
+		animation.play(char);
 
 		antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		if (char.endsWith('-pixel')) antialiasing = false;
@@ -114,19 +97,10 @@ class HealthIcon extends FlxSprite
 	public function getCharacter():String
 		return char;
 
-	function setStateIndex(state:Int) {
+	public function setState(state:Int) {
 		if (state >= availableStates) state = 0;
 		if (animation.curAnim == null) return;
 		animation.curAnim.curFrame = this.state = state;
-	}
-
-	public function setState(state:Int) {
-		if (!animated) {
-			setStateIndex(state);
-		} else if (animation.exists(animatediconstates[state])) {
-			animation.finish();
-			animation.play(animatediconstates[state]);
-		}
 	}
 
 	override function update(elapsed:Float) {
