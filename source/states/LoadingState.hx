@@ -13,8 +13,6 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.addons.display.FlxBackdrop;
 
 import shaders.GlitchEffect;
@@ -54,7 +52,6 @@ class LoadingState extends MusicBeatState
 	var loadText:FlxText;
 
 	var logo:FlxSprite;
-	var logoTween:FlxTween;
 	var loadLogoText:FlxText;
 	var expungedshader:GlitchEffect;
 	override function create()
@@ -86,7 +83,6 @@ class LoadingState extends MusicBeatState
 		logo.screenCenter();
 		logo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(logo);
-		logoTween = FlxTween.tween(logo, {y: logo.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
 
 		loadLogoText = new FlxText(0, logo.y - logo.height, 0, 'LOADING', 30);
 		loadLogoText.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 30, FlxColor.WHITE, FlxTextAlign.CENTER);

@@ -3741,7 +3741,7 @@ class PlayState extends MusicBeatState
 				var charType:Int = 0;
 				switch(value1.toLowerCase().trim()) {
 					case 'gf' | 'girlfriend': charType = 2;
-					case 'dad' | 'opponent': charType = 1;
+					case 'dad' | 'opponent' | 'cpu': charType = 1;
 					default:
 						charType = Std.parseInt(value1);
 						if(Math.isNaN(charType)) charType = 0;
@@ -3754,10 +3754,10 @@ class PlayState extends MusicBeatState
 								addCharacterToList(value2, charType);
 							}
 
-							var lastAlpha:Float = boyfriend.alpha;
-							boyfriend.alpha = 0.00001;
+							var lastVisible:Bool = boyfriend.visible;
+							boyfriend.visible = false;
 							boyfriend = boyfriendMap.get(value2);
-							boyfriend.alpha = lastAlpha;
+							boyfriend.visible = lastVisible;
 							iconP1.changeIcon(boyfriend.healthIcon);
 						}
 						setOnLuas('boyfriendName', boyfriend.curCharacter);
@@ -3769,8 +3769,8 @@ class PlayState extends MusicBeatState
 							}
 
 							var wasGf:Bool = dad.curCharacter == gfChecknull;
-							var lastAlpha:Float = dad.alpha;
-							dad.alpha = 0.00001;
+							var lastVisible:Bool = dad.visible;
+							dad.visible = false;
 							dad = dadMap.get(value2);
 							if(dad.curCharacter != gfChecknull) {
 								if(wasGf && gf != null) {
@@ -3779,7 +3779,7 @@ class PlayState extends MusicBeatState
 							} else if(gf != null) {
 								gf.visible = false;
 							}
-							dad.alpha = lastAlpha;
+							dad.visible = lastVisible;
 							iconP2.changeIcon(dad.healthIcon);
 						}
 						setOnLuas('dadName', dad.curCharacter);
@@ -3791,10 +3791,10 @@ class PlayState extends MusicBeatState
 									addCharacterToList(value2, charType);
 								}
 
-								var lastAlpha:Float = gf.alpha;
-								gf.alpha = 0.00001;
+								var lastVisible:Bool = gf.visible;
+								gf.visible = false;
 								gf = gfMap.get(value2);
-								gf.alpha = lastAlpha;
+								gf.visible = lastVisible;
 							}
 							setOnLuas('gfName', gf.curCharacter);
 						}
@@ -3850,8 +3850,7 @@ class PlayState extends MusicBeatState
 							camHUD.setFilters(shaderFilters);
 						case 'camother' | 'other':
 							camOther.setFilters(shaderFilters);
-						default:
-							camGame.setFilters(shaderFilters);
+						default: camGame.setFilters(shaderFilters);
 					}
 				}
 
