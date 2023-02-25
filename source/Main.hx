@@ -100,6 +100,7 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 		FlxG.signals.preStateSwitch.add(onStateSwitch);
+		FlxG.signals.postStateSwitch.add(onStateSwitchPost);
 	}
 
 	static function onStateSwitch() {
@@ -107,7 +108,9 @@ class Main extends Sprite
 		Paths.clearStoredMemory();
 
 		MemoryUtil.clearMajor();
+	}
 
+	static function onStateSwitchPost() {
 		FlxG.bitmap.dumpCache();
 		FlxG.bitmap.clearUnused();
 	}

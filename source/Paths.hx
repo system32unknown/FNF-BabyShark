@@ -157,6 +157,9 @@ class Paths
 		var cache = cast(OpenFlAssets.cache, AssetCache);
 		for (key in cache.font.keys())
 			cache.removeFont(key);
+		for (key in cache.sound.keys())
+			if (cache.hasSound(key))
+				cache.removeFont(key);
 
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
