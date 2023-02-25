@@ -1,6 +1,6 @@
 package options;
 
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
@@ -45,7 +45,7 @@ class OptionsState extends MusicBeatState
 	var pageText:FlxText;
 
 	override function create() {
-		#if desktop
+		#if discord_rpc
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 

@@ -1,6 +1,6 @@
 package options;
 
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
@@ -41,7 +41,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if(title == null) title = 'Options';
 		if(rpcTitle == null) rpcTitle = 'Options Menu';
 		
-		#if desktop
+		#if discord_rpc
 		DiscordClient.changePresence(rpcTitle, null);
 		#end
 		

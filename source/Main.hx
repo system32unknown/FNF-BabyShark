@@ -2,7 +2,9 @@ package;
 
 import flixel.FlxGame;
 import flixel.FlxG;
-import flixel.FlxState;
+
+import haxe.EnumFlags;
+import haxe.Exception;
 
 import openfl.Lib;
 import openfl.display.Sprite;
@@ -12,10 +14,12 @@ import lime.app.Application;
 
 import states.TitleState;
 import utils.Controls;
-import utils.ClientPrefs;
 import utils.MemoryUtil;
-import utils.Discord.DiscordClient;
 import ui.Overlay;
+
+#if discord_rpc
+import utils.Discord.DiscordClient;
+#end
 
 import api.github.GithubAPI;
 
@@ -78,11 +82,14 @@ class Main extends Sprite
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		
-		#if CRASH_HANDLER
+		#if (CRASH_HANDLER && !hl)
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
+		#if (CRASH_HANDLER && hl)
+		hl.Api.setErrorHandler(onCrash);
+		#end
 
-		#if desktop
+		#if discord_rpc
 		if (!DiscordClient.isInitialized) {
 			DiscordClient.initialize();
 			Application.current.window.onClose.add(function() {
@@ -108,8 +115,13 @@ class Main extends Sprite
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
 	// very cool person for real they don't get enough credit for their work
 	#if CRASH_HANDLER
-	function onCrash(e:UncaughtErrorEvent):Void
+	function onCrash(e:Dynamic):Void
 	{
+		var message:String = "";
+		if ((e is UncaughtErrorEvent))
+			message = e.error;
+		else message = try Std.string(e) catch(_:Exception) "Unknown";
+
 		var errMsg:String = "";
 		var path:String;
 		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
@@ -127,7 +139,7 @@ class Main extends Sprite
 			}
 		}
 
-		errMsg += "\nUncaught Error: " + e.error + "\nPlease report this error to the GitHub page: https://github.com/ShadowMario/FNF-PsychEngine\n\n> Crash Handler written by: sqirra-rng";
+		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/ShadowMario/FNF-PsychEngine\n\n> Crash Handler written by: sqirra-rng';
 
 		if (!FileSystem.exists("./crash/"))
 			FileSystem.createDirectory("./crash/");
@@ -137,8 +149,18 @@ class Main extends Sprite
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
+
+		#if hl
+		var flags:EnumFlags<hl.UI.DialogFlags> = new EnumFlags<hl.UI.DialogFlags>();
+		flags.set(IsError);
+		hl.UI.dialog("Alter Engine: Error!", errMsg, flags);
+		#else
 		Application.current.window.alert(errMsg, "Alter Engine: Error!");
+		#end
+		
+		#if discord_rpc
 		DiscordClient.shutdown();
+		#end
 		Sys.exit(1);
 	}
 	#end

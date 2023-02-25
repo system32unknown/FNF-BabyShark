@@ -52,7 +52,7 @@ import hscript.Parser;
 import hscript.Interp;
 #end
 
-#if desktop
+#if discord_rpc
 import utils.Discord;
 #end
 
@@ -2188,7 +2188,7 @@ class FunkinLua {
 		});
 
 		addCallback("changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
-			#if desktop
+			#if discord_rpc
 			DiscordClient.changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
 			#end
 		});

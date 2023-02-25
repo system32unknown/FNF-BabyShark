@@ -1,6 +1,6 @@
 package states;
 
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 import editors.ChartingState;
@@ -57,7 +57,7 @@ class FreeplayState extends MusicBeatState
 		PlayState.isStoryMode = false;
 		WeekData.reloadWeekFiles(false);
 
-		#if desktop
+		#if discord_rpc
 		DiscordClient.changePresence("Freeplay Menu", null);
 		#end
 

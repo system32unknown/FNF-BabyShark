@@ -21,7 +21,7 @@ import data.WeekData;
 import utils.ClientPrefs;
 import utils.CoolUtil;
 import utils.MathUtil;
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 import game.Highscore;
@@ -107,7 +107,7 @@ class TitleState extends MusicBeatState
 			FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
 		} else {
-			#if desktop
+			#if discord_rpc
 			if (!DiscordClient.isInitialized) {
 				DiscordClient.initialize();
 				Application.current.onExit.add(function(exitCode) {

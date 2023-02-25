@@ -17,7 +17,7 @@ import ui.HealthIcon;
 import ui.AttachedSprite;
 import utils.CoolUtil;
 import utils.MathUtil;
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 
@@ -102,7 +102,7 @@ class CreditsState extends MusicBeatState
 	var offsetThing:Float = -75;
 
 	override function create() {
-		#if desktop
+		#if discord_rpc
 		DiscordClient.changePresence("In the Credits", null);
 		#end
 
@@ -339,7 +339,7 @@ class CreditSectionState extends MusicBeatState {
 
 	override function create()
 	{
-		#if desktop
+		#if discord_rpc
 		DiscordClient.changePresence("In the Menus", null);
 		#end
 		prevModDir = Paths.currentModDirectory;

@@ -8,7 +8,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import utils.Controls;
 import utils.ClientPrefs;
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 import substates.MusicBeatSubstate;
@@ -35,7 +35,7 @@ class FuncOptionsMenu extends MusicBeatSubstate
 		if(title == null) title = 'Options';
 		if(rpcTitle == null) rpcTitle = 'Options Menu';
 		
-		#if desktop
+		#if discord_rpc
 		DiscordClient.changePresence(rpcTitle, null);
 		#end
 		

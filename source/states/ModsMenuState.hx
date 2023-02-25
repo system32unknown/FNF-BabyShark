@@ -1,6 +1,6 @@
 package states;
 
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
@@ -57,7 +57,7 @@ class ModsMenuState extends MusicBeatState
 	{
 		WeekData.setDirectoryFromWeek();
 
-		#if desktop
+		#if discord_rpc
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Mod Menus", null);
 		#end

@@ -29,7 +29,7 @@ import ui.AttachedSprite;
 import ui.CustomFadeTransition;
 import ui.Prompt;
 import utils.CoolUtil;
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 
@@ -62,7 +62,7 @@ class CreditsEditor extends MusicBeatState
 
 	override function create()
 	{
-		#if desktop
+		#if discord_rpc
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Credits Editor", null);
 		#end

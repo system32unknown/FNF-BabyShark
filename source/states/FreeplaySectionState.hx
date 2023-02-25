@@ -1,6 +1,6 @@
 package states;
 
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 import flixel.FlxG;
@@ -41,7 +41,7 @@ class FreeplaySectionState extends MusicBeatState {
 
 	override function create()
 	{
-		#if desktop
+		#if discord_rpc
 		DiscordClient.changePresence("Selecting a Freeplay Section", null);
 		#end
 

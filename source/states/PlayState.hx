@@ -41,7 +41,7 @@ import game.Achievements.AchievementObject;
 import game.Section.SwagSection;
 import game.*;
 import utils.*;
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 import backgrounds.*;
@@ -320,7 +320,7 @@ class PlayState extends MusicBeatState
 	public var girlfriendCameraOffset:Array<Float> = null;
 
 	var storyDifficultyText:String = "";
-	#if desktop
+	#if discord_rpc
 	// Discord RPC variables
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
@@ -463,15 +463,13 @@ class PlayState extends MusicBeatState
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
-		#if desktop
+		#if discord_rpc
 		storyDifficultyText = CoolUtil.difficulties[storyDifficulty];
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
 		if (isStoryMode) {
 			detailsText = "Story Mode: " + WeekData.getCurrentWeek().weekName;
-		} else {
-			detailsText = "Freeplay";
-		}
+		} else detailsText = "Freeplay";
 
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
@@ -1390,7 +1388,7 @@ class PlayState extends MusicBeatState
 
 		precacheList.set('alphabet', 'image');
 	
-		#if desktop
+		#if discord_rpc
 		// Updating Discord Rich Presence.
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
 		#end
@@ -2360,7 +2358,7 @@ class PlayState extends MusicBeatState
 				});
 		}
 
-		#if desktop
+		#if discord_rpc
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength);
 		#end
@@ -2796,12 +2794,10 @@ class PlayState extends MusicBeatState
 			paused = false;
 			callOnLuas('onResume', []);
 
-			#if desktop
+			#if discord_rpc
 			if (startTimer != null && startTimer.finished) {
 				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset'));
-			} else {
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-			}
+			} else DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
 			#end
 		}
 
@@ -2809,13 +2805,11 @@ class PlayState extends MusicBeatState
 	}
 
 	override public function onFocus():Void {
-		#if desktop
+		#if discord_rpc
 		if (health > 0 && !paused) {
 			if (Conductor.songPosition > .0) {
 				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset'));
-			} else {
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-			}
+			} else DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
 		}
 		#end
 
@@ -2826,10 +2820,9 @@ class PlayState extends MusicBeatState
 	}
 
 	override public function onFocusLost():Void {
-		#if desktop
-		if (health > 0 && !paused) {
+		#if discord_rpc
+		if (health > 0 && !paused)
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-		}
 		#end
 
 		PsychVideo.isActive(false);
@@ -3388,7 +3381,7 @@ class PlayState extends MusicBeatState
 		}
 		openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
-		#if desktop
+		#if discord_rpc
 		DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
 		#end
 	}
@@ -3401,7 +3394,7 @@ class PlayState extends MusicBeatState
 		MusicBeatState.switchState(new ChartingState());
 		chartingMode = true;
 
-		#if desktop
+		#if discord_rpc
 		DiscordClient.changePresence("Chart Editor", null, null, true);
 		#end
 	}
@@ -3424,7 +3417,7 @@ class PlayState extends MusicBeatState
 				persistentDraw = false;
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
 
-				#if desktop
+				#if discord_rpc
 				// Game Over doesn't get his own variable because it's only used here
 				DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
 				#end

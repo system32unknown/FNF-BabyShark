@@ -18,7 +18,7 @@ import game.Achievements;
 import editors.MasterEditorMenu;
 import utils.ClientPrefs;
 import utils.MathUtil;
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 import data.WeekData;
@@ -60,7 +60,7 @@ class MainMenuState extends MusicBeatState
 		#end
 		WeekData.loadTheFirstEnabledMod();
 
-		#if desktop
+		#if discord_rpc
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end

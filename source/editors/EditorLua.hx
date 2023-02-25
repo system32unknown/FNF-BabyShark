@@ -12,7 +12,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxSprite;
 import Type.ValueType;
 
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 import utils.ClientPrefs;

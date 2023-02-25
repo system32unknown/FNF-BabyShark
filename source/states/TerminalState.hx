@@ -2,7 +2,7 @@ package states;
 
 import shaders.VCRDistortionEffect.VCRDistortionEffect;
 import utils.ClientPrefs;
-#if desktop
+#if discord_rpc
 import utils.Discord.DiscordClient;
 #end
 
@@ -45,7 +45,7 @@ class TerminalState extends MusicBeatState
     override public function create():Void
     {
         Main.overlayVar.alpha = .5;
-		#if desktop
+		#if discord_rpc
 		DiscordClient.changePresence("The Terminal", null);
 		#end
 
