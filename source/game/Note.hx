@@ -198,6 +198,7 @@ class Note extends FlxSprite
 					gfNote = true;
 				default:
 					#if MODS_ALLOWED
+					luaPrefix = value.split(" ")[0].toUpperCase();
 					if (Paths.image(luaPrefix + 'NOTE_assets') != null)
 						reloadNote(luaPrefix, 'NOTE_assets');
 					else trace('Suggestion: rename $value texture to ${luaPrefix}NOTE_assets');
