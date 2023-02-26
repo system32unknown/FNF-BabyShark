@@ -1902,9 +1902,11 @@ class ChartingState extends MusicBeatState
 		gridLayer.clear();
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE + GRID_SIZE * Note.ammo[_song.mania] * 2, Std.int(GRID_SIZE * getSectionBeats() * 4 * zoomList[curZoom]));
 
+		#if desktop
 		if(FlxG.save.data.chart_waveformInst || FlxG.save.data.chart_waveformVoices) {
 			updateWaveform();
 		}
+		#end
 
 		var leHeight:Int = Std.int(gridBG.height);
 		var foundNextSec:Bool = false;
@@ -2789,6 +2791,7 @@ class ChartingState extends MusicBeatState
 		if(_song.notes[section] == null || _song.notes[section].sectionBeats == 0)
 			val = 4;
 		else val = _song.notes[section].sectionBeats;
+
 		return val;
 	}
 
