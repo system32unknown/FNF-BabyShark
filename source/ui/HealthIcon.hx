@@ -12,8 +12,6 @@ class HealthIcon extends FlxSprite
 	static final credits:String = 'credits/';
 	static final defaultIcon:String = 'unknown';
 
-	public var animated:Bool;
-	public var iconOffsets:Array<Float> = [0, 0];
 	public var sprTracker:FlxSprite;
 	var isPlayer:Bool = false;
 	var isCredit:Bool;

@@ -1,11 +1,12 @@
 package ui;
 
-import haxe.Timer;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.utils.Assets;
 
 import flixel.util.FlxColor;
+import flixel.FlxG;
+import utils.MathUtil;
 import utils.ClientPrefs;
 import utils.MemoryUtil;
 
@@ -17,12 +18,10 @@ class Overlay extends TextField {
 
 	//FPS
     public var currentFPS(default, null):Int = 0;
-	@:noCompletion var cacheCount:Int = 0;
-	@:noCompletion var times:Array<Float> = [];
 
 	//Memory
-    var memory:UInt = 0;
-    var mempeak:UInt = 0;
+    var memory:Int = 0;
+    var mempeak:Int = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
 		super();
@@ -38,37 +37,25 @@ class Overlay extends TextField {
 		defaultTextFormat = new TextFormat(fontName, 16, -1);
 	}
 
+	//Yoinked from codename engine
 	override function __enterFrame(dt:Int):Void {
-		super.__enterFrame(dt);
 		if (alpha <= .05) return;
+		super.__enterFrame(dt);
 
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + 1;
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		var now:Float = Timer.stamp();
-		times.push(now);
-
-		while (times[0] < now - 1)
-			times.shift();
-
-		var currentCount = times.length;
-		currentFPS = Math.round((currentCount + cacheCount) / 2);
-		if (currentFPS > ClientPrefs.getPref('framerate'))
-			currentFPS = ClientPrefs.getPref('framerate');
+		currentFPS = Math.floor(MathUtil.fpsLerp(currentFPS, FlxG.elapsed == 0 ? 0 : (1 / FlxG.elapsed), .25));
 
 		memory = MemoryUtil.getMemUsage(ClientPrefs.getPref('MEMType'));
-		if (memory > mempeak)mempeak = memory;
+		if (memory > mempeak) mempeak = memory;
 
-		if (currentCount != cacheCount) {
-			text = '';
-			text += 'FPS: $currentFPS ${ClientPrefs.getPref('MSFPSCounter') ? '[MS: $dt]' : ''}\n';
-			if (ClientPrefs.getPref('showMEM'))
-				text += 'MEM: ${MemoryUtil.getInterval(memory)}/${MemoryUtil.getInterval(mempeak)}\n';
-		}
+		text = '$currentFPS FPS ${ClientPrefs.getPref('MSFPSCounter') ? '[MS: $dt]' : ''}\n';
+		if (ClientPrefs.getPref('showMEM'))
+			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
 
-		cacheCount = currentCount;
 		visible = ClientPrefs.getPref('showFPS');
 	}
 }

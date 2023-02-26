@@ -7,8 +7,6 @@ import cpp.NativeGc;
 import openfl.system.System;
 
 class MemoryUtil {
-	static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
-
 	public static function clearMajor() {
 		#if cpp
 		Gc.run(true);
@@ -26,7 +24,9 @@ class MemoryUtil {
 		return mem;
 	}
 
-	public static function getInterval(num:UInt):String {
+	public static function getInterval(num:Float):String {
+		final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
+		
 		var size:Float = num;
 		var data = 0;
 		while (size > 1024 && data < intervalArray.length - 1) {

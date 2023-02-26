@@ -13,6 +13,7 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import flixel.math.FlxMath;
 import data.WeekData;
 import utils.CoolUtil;
@@ -135,9 +136,12 @@ class FreeplaySectionState extends MusicBeatState {
 		if (controls.ACCEPT && !transitioning) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
-			sectionTxt.visible = false;
 			FlxTween.tween(sectionSpr, {'scale.x': 1.5, 'scale.y': 1.5}, .7, {ease: FlxEase.circOut});
-			FlxFlicker.flicker(sectionSpr, 1, .06, true, false, function(_) {
+			if(ClientPrefs.getPref('flashing')) {
+				FlxFlicker.flicker(sectionSpr, 1, .06, true, false, function(_) {
+					MusicBeatState.switchState(new FreeplayState());
+				});
+			} else new FlxTimer().start(1, function(mr:FlxTimer) {
 				MusicBeatState.switchState(new FreeplayState());
 			});
 		}

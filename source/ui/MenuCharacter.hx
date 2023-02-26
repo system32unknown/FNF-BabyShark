@@ -21,7 +21,7 @@ class MenuCharacter extends FlxSprite
 {
 	public var character:String;
 	public var hasConfirmAnimation:Bool = false;
-	private static var DEFAULT_CHARACTER:String = 'bf';
+	static var DEFAULT_CHARACTER:String = 'bf';
 
 	public function new(x:Float, character:String = 'bf') {
 		super(x);
