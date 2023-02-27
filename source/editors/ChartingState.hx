@@ -3,6 +3,7 @@ package editors;
 #if discord_rpc
 import utils.Discord.DiscordClient;
 #end
+import game.HealthIcon;
 import game.Character;
 import game.Section.SwagSection;
 import game.Song;
@@ -18,7 +19,6 @@ import states.MusicBeatState;
 import states.LoadingState;
 import states.PlayState;
 import states.TitleState;
-import ui.HealthIcon;
 import ui.Prompt;
 import ui.AttachedSprite;
 import ui.ErrorDisplay;
@@ -1820,8 +1820,8 @@ class ChartingState extends MusicBeatState
 		bpmTxt.text =
 		Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2)) + " / " + Std.string(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2)) +
 		"\nSection: " + curSec +
-		"\n\nBeat: " + Std.string(curDecBeat).substring(0, 4) +
-		"\n\nStep: " + curStep +
+		"\nBeat: " + Std.string(curDecBeat).substring(0, 4) +
+		"\nStep: " + curStep +
 		"\n\nBeat Snap: " + quantization + "th";
 
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
@@ -1846,7 +1846,7 @@ class ChartingState extends MusicBeatState
 					if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection)
 						noteDataToCheck += Note.ammo[_song.mania];
 					strumLineNotes.members[noteDataToCheck].playAnim('confirm', true);
-					strumLineNotes.members[noteDataToCheck].resetAnim = ((note.sustainLength / 1000) + 0.15) / playbackSpeed;
+					strumLineNotes.members[noteDataToCheck].resetAnim = ((note.sustainLength / 1000) + .15) / playbackSpeed;
 					if(!playedSound[data]) {
 						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)){
 							var soundToPlay = 'hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}';

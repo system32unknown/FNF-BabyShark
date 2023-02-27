@@ -1,4 +1,4 @@
-package ui;
+package game;
 
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;

@@ -21,7 +21,7 @@ import game.Highscore;
 import game.Song;
 import substates.ResetScoreSubState;
 import substates.GameplayChangersSubstate;
-import ui.HealthIcon;
+import game.HealthIcon;
 import ui.ErrorDisplay;
 import ui.Alphabet;
 

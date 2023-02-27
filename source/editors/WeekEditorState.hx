@@ -32,8 +32,8 @@ import data.WeekData;
 import states.TitleState;
 import states.MusicBeatState;
 import utils.ClientPrefs;
+import game.HealthIcon;
 import ui.Alphabet;
-import ui.HealthIcon;
 import ui.MenuCharacter;
 import ui.MenuItem;
 

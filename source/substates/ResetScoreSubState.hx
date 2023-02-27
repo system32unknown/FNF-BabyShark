@@ -4,8 +4,8 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import ui.Alphabet;
-import ui.HealthIcon;
 import data.WeekData;
+import game.HealthIcon;
 import game.Highscore;
 import utils.CoolUtil;
 

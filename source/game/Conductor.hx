@@ -4,8 +4,7 @@ import game.Song.SwagSong;
 import utils.ClientPrefs;
 import states.PlayState;
 
-typedef BPMChangeEvent =
-{
+typedef BPMChangeEvent = {
 	var stepTime:Int;
 	var songTime:Float;
 	var bpm:Float;

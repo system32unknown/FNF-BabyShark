@@ -30,9 +30,9 @@ import utils.CoolUtil;
 import utils.ClientPrefs;
 import backgrounds.BGSprite;
 import game.Character;
+import game.HealthIcon;
 import states.MusicBeatState;
 import states.TitleState;
-import ui.HealthIcon;
 
 #if MODS_ALLOWED
 import sys.FileSystem;

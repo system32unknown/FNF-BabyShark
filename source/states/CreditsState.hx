@@ -13,8 +13,8 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 import ui.Alphabet;
-import ui.HealthIcon;
 import ui.AttachedSprite;
+import game.HealthIcon;
 import utils.CoolUtil;
 import utils.MathUtil;
 #if discord_rpc
@@ -24,7 +24,7 @@ import utils.Discord.DiscordClient;
 class CreditsState extends MusicBeatState
 {
 	// Title, Variable, Description, Color
-	private static var titles(default, never):Array<Array<String>> = [
+	static var titles(default, never):Array<Array<String>> = [
 		['Credits Sections'],
 		['Psych Engine Team',		'psych',			'Developers of Psych Engine',						'D662EB'],
 		["Funkin' Crew",			'funkin',			'The only cool kickers of Friday Night Funkin\'',	'FD40AB'],
@@ -34,7 +34,7 @@ class CreditsState extends MusicBeatState
 	];
 
 	// Name - Icon name - Description - Link - BG Color
-	private static var psych(default, never):Array<Array<String>> = [
+	static var psych(default, never):Array<Array<String>> = [
 		['Psych Engine Team'],
 		['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',		'444444'],
 		['RiverOaken',			'river',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/RiverOaken',			'B42F71'],
@@ -58,7 +58,7 @@ class CreditsState extends MusicBeatState
 		['ACrazyTown',			'acrazytown',		'Optimized PNGs',												'https://twitter.com/acrazytown',			'A03E3D'],
 	];
 
-	private static var funkin(default, never):Array<Array<String>> = [
+	static var funkin(default, never):Array<Array<String>> = [
 		["Funkin' Crew"],
 		['ninjamuffin99',		'ninjamuffin99',	"Programmer of Friday Night Funkin'",							'https://twitter.com/ninja_muffin99',		'F73838'],
 		['PhantomArcade',		'phantomarcade',	"Animator of Friday Night Funkin'",								'https://twitter.com/PhantomArcade3K',		'FFBB1B'],
@@ -66,7 +66,7 @@ class CreditsState extends MusicBeatState
 		['kawaisprite',			'kawaisprite',		"Composer of Friday Night Funkin'",								'https://twitter.com/kawaisprite',			'6475F3']
 	];
 
-	private static var daveandbambi(default, never):Array<Array<String>> = [
+	static var daveandbambi(default, never):Array<Array<String>> = [
 		['Vs Dave and Bambi Team'],
 		['MoldyGH',				'MoldyGH',			'Creator / Main Dev',				                        	'https://twitter.com/moldy_gh',		    	'FF0000'],
 		['MTM101',				'MTM10',			'Secondary Dev',				                        		'https://twitter.com/OfficialMTM101',		'FF0000'],
@@ -80,7 +80,7 @@ class CreditsState extends MusicBeatState
 		['Steph45',           	'Steph45',			'Minor programming, Moral support',                     		'https://twitter.com/Stats451',				'FF0000']
 	];
 
-	private static var psychek(default, never):Array<Array<String>> = [
+	static var psychek(default, never):Array<Array<String>> = [
 		['Psych Engine Extra Keys'],
 		['tposejank', 			'tposejank',		'Main Programmer of Psych Engine EK', 							'https://twitter.com/tpose_jank', 			'B9AF27'],
 		['srPerez', 			'perez', 			'1-9 keys art', 												'https://twitter.com/newsrperez',			'FF9E00'],
@@ -90,8 +90,8 @@ class CreditsState extends MusicBeatState
 	public static var prevSelected:Int = 0;
 	public var curSelected:Int = -1;
 
-	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private var sections:Array<Array<String>> = [];
+	var grpOptions:FlxTypedGroup<Alphabet>;
+	var sections:Array<Array<String>> = [];
 
 	var bg:FlxSprite;
 	var descText:FlxText;
