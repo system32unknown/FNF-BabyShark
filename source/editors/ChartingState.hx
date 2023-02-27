@@ -2785,14 +2785,11 @@ class ChartingState extends MusicBeatState
 	}
 
 	function getSectionBeats(?section:Null<Int> = null) {
-		var val:Null<Float> = null;
 		if (section == null) section = curSec;
-
-		if(_song.notes[section] == null || _song.notes[section].sectionBeats == 0)
-			val = 4;
-		else val = _song.notes[section].sectionBeats;
-
-		return val;
+		var val:Null<Float> = null;
+		
+		if(_song.notes[section] != null) val = _song.notes[section].sectionBeats;
+		return val != null ? val : 4;
 	}
 
 	override function updateCurStep():Void  {
