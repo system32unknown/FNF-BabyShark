@@ -3,7 +3,6 @@ package game;
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxSort;
 import flixel.util.FlxColor;
 #if MODS_ALLOWED
@@ -53,7 +52,6 @@ class Character extends FlxSprite
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = DEFAULT_CHARACTER;
 
-	public var colorTween:FlxTween;
 	public var holdTimer:Float = 0;
 	public var heyTimer:Float = 0;
 	public var specialAnim:Bool = false;

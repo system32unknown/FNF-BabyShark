@@ -37,6 +37,7 @@ class ClientPrefs {
 		'RatingDisplay' => 'World',
 		'RainbowFps' => false,
 		'comboStacking' => true,
+		'coloredHealthBar' => true,
 		'showKeybindsOnStart' => false,
 		'LUType' => 'never',
 		'LUAlpha' => 0,

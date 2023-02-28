@@ -6,8 +6,8 @@ lime build windows -release
 
 setlocal
 :PROMPT
-SET /P AYS = Do you want run game? (Y/N)?
-IF /I "%AYS%" NEQ "Y" GOTO END
+set /P AYS = Do you want run game? (y/n):
+if /I "%AYS%" neq "y" goto END else exit
 
 cd ..
 cd export/release/windows/bin
