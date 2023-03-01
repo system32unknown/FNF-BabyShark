@@ -1209,7 +1209,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		judgementCounter.scrollFactor.set();
 		judgementCounter.visible = ClientPrefs.getPref('ShowJudgementCount') && !hideHud;
-		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + getMissText(cpuControlled, !ClientPrefs.getPref('movemissjudge'), '\n');
+		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + getMissText(!ClientPrefs.getPref('movemissjudge'), '\n');
 		add(judgementCounter);
 		judgementCounter.screenCenter(Y);
 
@@ -2279,7 +2279,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function updateScore(miss:Bool = false) {
-		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + getMissText(cpuControlled, !ClientPrefs.getPref('movemissjudge'), '\n');
+		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + getMissText(!ClientPrefs.getPref('movemissjudge'), '\n');
 		judgementCounter.screenCenter(Y);
 		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
@@ -4205,9 +4205,10 @@ class PlayState extends MusicBeatState
 	}
 
 	var scoreSeparator:String = "|";
-	function getMissText(bot:Bool = false, hidden:Bool = false, sepa:String = ' '):String {
+	var customMiss:String = 'Misses';
+	function getMissText(hidden:Bool = false, sepa:String = ' '):String {
 		var missText = "";
-		if (bot || hidden) return missText;
+		if (cpuControlled || hidden) return missText;
 
 		switch (ClientPrefs.getPref('ScoreType')) {
 			case 'Alter':
@@ -4216,13 +4217,13 @@ class PlayState extends MusicBeatState
 				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:$songMisses' : 'Combo Breaks: $songMisses'}' + sepa;
 			case 'Psych':
 				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses: $songMisses' + sepa;
-
+			default: '${sepa != '\n' ? scoreSeparator + ' ' : ''}$customMiss: $songMisses' + sepa;
 		} return missText;
 	}
 
 	function UpdateScoreText() {
 		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? (ClientPrefs.getPref('ScoreType') == 'Kade' ? 'NPS:$nps (Max:$maxNPS) $scoreSeparator ' : 'NPS:$nps ($maxNPS) $scoreSeparator ') : '');
-		var tempMiss:String = getMissText(cpuControlled, ClientPrefs.getPref('movemissjudge'));
+		var tempMiss:String = getMissText(ClientPrefs.getPref('movemissjudge'));
 		
 		switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter':
