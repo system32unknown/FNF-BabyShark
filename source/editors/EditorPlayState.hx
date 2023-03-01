@@ -73,10 +73,10 @@ class EditorPlayState extends MusicBeatState
 	var lastScore:Array<FlxSprite> = [];
 	
 	var timerToStart:Float = 0;
-	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
+	var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
 	
 	// Less laggy controls
-	private var keysArray:Array<Dynamic>;
+	var keysArray:Array<Dynamic>;
 
 	public static var instance:EditorPlayState;
 
