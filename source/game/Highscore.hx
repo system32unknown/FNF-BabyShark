@@ -106,11 +106,12 @@ class Highscore {
 	}
 
 	public static function load():Void {
-		if (FlxG.save.data.weekScores != null) {
-			weekScores = FlxG.save.data.weekScores;
-		}
-		if (FlxG.save.data.songScores != null) {
-			songScores = FlxG.save.data.songScores;
+		var save:Dynamic = FlxG.save.data;
+		for (highScores in [weekScores, songScores]) {
+			for (setting in highScores.keys()) {
+				var value:Dynamic = Reflect.getProperty(save, setting);
+				if (value != null) highScores.set(setting, value);
+			}
 		}
 		if (FlxG.save.data.songRating != null) {
 			songRating = FlxG.save.data.songRating;
