@@ -102,7 +102,7 @@ class Main extends Sprite
 		FlxG.signals.preStateSwitch.add(onStateSwitch);
 	}
 
-	static function onStateSwitch() {
+	function onStateSwitch() {
 		Paths.clearUnusedMemory();
 		Paths.clearStoredMemory();
 

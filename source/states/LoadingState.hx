@@ -56,21 +56,13 @@ class LoadingState extends MusicBeatState
 	var expungedshader:GlitchEffect;
 	override function create()
 	{
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.getPath('images/backgrounds/void/scarybg.png', IMAGE));
-		bg.y = 200;
-		bg.setGraphicSize(Std.int(bg.width * 3));
-		bg.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		if(ClientPrefs.getPref('shaders')) {
-			expungedshader = new GlitchEffect();
-			expungedshader.waveAmplitude = .1;
-			expungedshader.waveFrequency = 5;
-			expungedshader.waveSpeed = 2;
-			bg.shader = expungedshader.shader;
-		}
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg.scrollFactor.set();
+		bg.color = FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255));
 		add(bg);
 
 		var funkay:FlxBackdrop = new FlxBackdrop(Paths.getPath('images/thechecker.png', IMAGE));
-		funkay.velocity.set(0, 110);
+		funkay.velocity.set(100, 110);
 		funkay.alpha = .5;
 		funkay.updateHitbox();
 		funkay.antialiasing = ClientPrefs.getPref('globalAntialiasing');
@@ -142,10 +134,6 @@ class LoadingState extends MusicBeatState
 		}
 
 		loadLogoText.y = logo.y - logo.height;
-
-		if (expungedshader != null) {
-			expungedshader.update(elapsed);
-		}
 	}
 	
 	function onLoad() {
