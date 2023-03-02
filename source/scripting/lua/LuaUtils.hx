@@ -133,7 +133,7 @@ class LuaUtils
 	public static function getPropertyLoop(killMe:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool=true):Dynamic {
 		var obj:Dynamic = getObjectDirectly(killMe[0], checkForTextsToo);
 		var end = killMe.length;
-		if(getProperty) end = killMe.length-1;
+		if(getProperty) end = killMe.length - 1;
 
 		for (i in 1...end) {
 			obj = getVarInArray(obj, killMe[i]);
@@ -168,10 +168,8 @@ class LuaUtils
 		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
 	}
 	
-	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String)
-	{
-		switch(spriteType.toLowerCase().trim())
-		{
+	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
+		switch(spriteType.toLowerCase().trim()) {
 			case "texture" | "textureatlas" | "tex":
 				spr.frames = AtlasFrameMaker.construct(image);
 

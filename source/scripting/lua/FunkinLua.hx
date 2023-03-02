@@ -806,7 +806,7 @@ class FunkinLua {
 			}
 
 			if(spr != null && image != null && image.length > 0) {
-				loadFrames(spr, image, spriteType);
+				LuaUtils.loadFrames(spr, image, spriteType);
 			}
 		});
 
@@ -842,7 +842,7 @@ class FunkinLua {
 				realObject = LuaUtils.getPropertyLoop(shitMyPants, true, false);
 
 			if (Std.isOfType(realObject, FlxTypedGroup)) {
-				return getGroupStuff(realObject.members[index], variable);
+				return LuaUtils.getGroupStuff(realObject.members[index], variable);
 			}
 
 			var leArray:Dynamic = realObject[index];
@@ -850,7 +850,7 @@ class FunkinLua {
 				var result:Dynamic = null;
 				if(Type.typeof(variable) == ValueType.TInt)
 					result = leArray[variable];
-				else result = getGroupStuff(leArray, variable);
+				else result = LuaUtils.getGroupStuff(leArray, variable);
 				return result;
 			}
 			luaTrace("Object #" + index + " from group: " + obj + " doesn't exist!", false, false, FlxColor.RED);
@@ -863,7 +863,7 @@ class FunkinLua {
 				realObject = LuaUtils.getPropertyLoop(shitMyPants, true, false);
 
 			if (Std.isOfType(realObject, FlxTypedGroup)) {
-				setGroupStuff(realObject.members[index], variable, value);
+				LuaUtils.setGroupStuff(realObject.members[index], variable, value);
 				return;
 			}
 
@@ -873,7 +873,7 @@ class FunkinLua {
 					leArray[variable] = value;
 					return;
 				}
-				setGroupStuff(leArray, variable, value);
+				LuaUtils.setGroupStuff(leArray, variable, value);
 			}
 		});
 		addCallback("removeFromGroup", function(obj:String, index:Int, dontDestroy:Bool = false) {
@@ -1456,7 +1456,7 @@ class FunkinLua {
 
 		addCallback("makeLuaSprite", function(tag:String, image:String, x:Float, y:Float) {
 			tag = tag.replace('.', '');
-			resetSpriteTag(tag);
+			LuaUtils.resetSpriteTag(tag);
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
 			if(image != null && image.length > 0)
 			{
@@ -1468,16 +1468,16 @@ class FunkinLua {
 		});
 		addCallback("makeAnimatedLuaSprite", function(tag:String, image:String, x:Float, y:Float, ?spriteType:String = "sparrow") {
 			tag = tag.replace('.', '');
-			resetSpriteTag(tag);
+			LuaUtils.resetSpriteTag(tag);
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
 
-			loadFrames(leSprite, image, spriteType);
+			LuaUtils.loadFrames(leSprite, image, spriteType);
 			leSprite.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 			PlayState.instance.modChartSprites.set(tag, leSprite);
 		});
 		addCallback("makeLuaSpriteGroup", function(tag:String, ?x:Float = 0, ?y:Float = 0, ?maxSize:Int = 0) {
 			tag = tag.replace('.', '');
-			resetSpriteTag(tag);
+			LuaUtils.resetSpriteTag(tag);
 
 			var leGroup:ModchartGroup = new ModchartGroup(x, y, maxSize);
 			PlayState.instance.modchartGroups.set(tag, leGroup);
@@ -2216,13 +2216,13 @@ class FunkinLua {
 		// LUA TEXTS
 		addCallback("makeLuaText", function(tag:String, text:String, width:Int, x:Float, y:Float) {
 			tag = tag.replace('.', '');
-			resetTextTag(tag);
+			LuaUtils.resetTextTag(tag);
 			var leText:ModchartText = new ModchartText(x, y, text, width);
 			PlayState.instance.modchartTexts.set(tag, leText);
 		});
 
 		addCallback("setTextString", function(tag:String, text:String) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				obj.text = text;
 				return true;
@@ -2231,7 +2231,7 @@ class FunkinLua {
 			return false;
 		});
 		addCallback("setTextSize", function(tag:String, size:Int) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				obj.size = size;
 				return true;
@@ -2240,7 +2240,7 @@ class FunkinLua {
 			return false;
 		});
 		addCallback("setTextWidth", function(tag:String, width:Float) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				obj.fieldWidth = width;
 				return true;
@@ -2249,7 +2249,7 @@ class FunkinLua {
 			return false;
 		});
 		addCallback("setTextBorder", function(tag:String, size:Int, color:String) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				var colorNum:Int = Std.parseInt(color);
 				if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
@@ -2262,7 +2262,7 @@ class FunkinLua {
 			return false;
 		});
 		addCallback("setTextBorderStyle", function(tag:String, borderStyle:String = 'NONE') {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				obj.borderStyle = NONE;
 				switch(borderStyle.trim().toLowerCase()) {
@@ -2274,7 +2274,7 @@ class FunkinLua {
 			}
 		});
 		addCallback("setTextColor", function(tag:String, color:String) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				var colorNum:Int = Std.parseInt(color);
 				if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
@@ -2286,7 +2286,7 @@ class FunkinLua {
 			return false;
 		});
 		addCallback("setTextFont", function(tag:String, newFont:String) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				obj.font = Paths.font(newFont);
 				return true;
@@ -2295,7 +2295,7 @@ class FunkinLua {
 			return false;
 		});
 		addCallback("setTextItalic", function(tag:String, italic:Bool) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				obj.italic = italic;
 				return true;
@@ -2304,7 +2304,7 @@ class FunkinLua {
 			return false;
 		});
 		addCallback("setTextAlignment", function(tag:String, alignment:String = 'left') {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				obj.alignment = LEFT;
 				switch(alignment.trim().toLowerCase()) {
@@ -2318,7 +2318,7 @@ class FunkinLua {
 		});
 
 		addCallback("getTextString", function(tag:String) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null && obj.text != null) {
 				return obj.text;
 			}
@@ -2326,7 +2326,7 @@ class FunkinLua {
 			return null;
 		});
 		addCallback("getTextSize", function(tag:String) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				return obj.size;
 			}
@@ -2334,7 +2334,7 @@ class FunkinLua {
 			return -1;
 		});
 		addCallback("getTextFont", function(tag:String) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				return obj.font;
 			}
@@ -2342,7 +2342,7 @@ class FunkinLua {
 			return null;
 		});
 		addCallback("getTextWidth", function(tag:String) {
-			var obj:FlxText = getTextObject(tag);
+			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				return obj.fieldWidth;
 			}
@@ -2817,10 +2817,6 @@ class FunkinLua {
 		return true;
 	}
 
-	inline static function getTextObject(name:String):FlxText {
-		return PlayState.instance.modchartTexts.exists(name) ? PlayState.instance.modchartTexts.get(name) : Reflect.getProperty(PlayState.instance, name);
-	}
-
 	public function getShader(obj:String):FlxRuntimeShader {
 		var killMe:Array<String> = obj.split('.');
 		var leObj:FlxSprite = LuaUtils.getObjectDirectly(killMe[0]);
@@ -2836,76 +2832,8 @@ class FunkinLua {
 		return null;
 	}
 
-	function getGroupStuff(leArray:Dynamic, variable:String) {
-		var killMe:Array<String> = variable.split('.');
-		if(killMe.length > 1) {
-			var coverMeInPiss:Dynamic = Reflect.getProperty(leArray, killMe[0]);
-			for (i in 1...killMe.length - 1) {
-				coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
-			}
-			switch(Type.typeof(coverMeInPiss)) {
-				case ValueType.TClass(haxe.ds.StringMap) | ValueType.TClass(haxe.ds.ObjectMap) | ValueType.TClass(haxe.ds.IntMap) | ValueType.TClass(haxe.ds.EnumValueMap):
-					return coverMeInPiss.get(killMe[killMe.length - 1]);
-				default: return Reflect.getProperty(coverMeInPiss, killMe[killMe.length - 1]);
-			};
-		}
-		switch(Type.typeof(leArray)) {
-			case ValueType.TClass(haxe.ds.StringMap) | ValueType.TClass(haxe.ds.ObjectMap) | ValueType.TClass(haxe.ds.IntMap) | ValueType.TClass(haxe.ds.EnumValueMap):
-				return leArray.get(variable);
-			default: return Reflect.getProperty(leArray, variable);
-		};
-	}
-
-	function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
-		switch(spriteType.toLowerCase().trim()) {
-			case "texture" | "textureatlas" | "tex": spr.frames = AtlasFrameMaker.construct(image);
-			case "texture_noaa" | "textureatlas_noaa" | "tex_noaa": spr.frames = AtlasFrameMaker.construct(image, null, true);
-			case "packer" | "packeratlas" | "pac": spr.frames = Paths.getPackerAtlas(image);
-			default: spr.frames = Paths.getSparrowAtlas(image);
-		}
-	}
-
 	inline function addCallback(name:String, func:Function) {
 		return lua.add_callback(name, func);
-	}
-
-	function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic) {
-		var killMe:Array<String> = variable.split('.');
-		if(killMe.length > 1) {
-			var coverMeInPiss:Dynamic = Reflect.getProperty(leArray, killMe[0]);
-			for (i in 1...killMe.length - 1) {
-				coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
-			}
-			Reflect.setProperty(coverMeInPiss, killMe[killMe.length - 1], value);
-			return;
-		}
-		Reflect.setProperty(leArray, variable, value);
-	}
-
-	function resetTextTag(tag:String) {
-		if(!PlayState.instance.modchartTexts.exists(tag)) return;
-
-		var pee:ModchartText = PlayState.instance.modchartTexts.get(tag);
-		pee.kill();
-		if(pee.wasAdded) {
-			PlayState.instance.remove(pee, true);
-		}
-		pee.destroy();
-		PlayState.instance.modchartTexts.remove(tag);
-	}
-
-	function resetSpriteTag(tag:String) {
-		if(!PlayState.instance.modChartSprites.exists(tag)) {
-			return;
-		}
-
-		var pee:ModchartSprite = PlayState.instance.modChartSprites.get(tag);
-		pee.kill();
-		if(pee.wasAdded) {
-			PlayState.instance.remove(pee, true);
-		}
-		pee.destroy();
-		PlayState.instance.modChartSprites.remove(tag);
 	}
 
 	public function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
