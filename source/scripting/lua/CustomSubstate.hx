@@ -2,6 +2,7 @@ package scripting.lua;
 
 import flixel.FlxG;
 import substates.MusicBeatSubstate;
+import states.PlayState;
 
 class CustomSubstate extends MusicBeatSubstate {
 	public static var name:String = 'unnamed';

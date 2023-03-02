@@ -1,4 +1,4 @@
-package scripting.hxae;
+package scripting.haxe;
 
 import hscript.*;
 import hscript.Expr.Error;

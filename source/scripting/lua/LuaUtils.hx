@@ -1,10 +1,8 @@
 package scripting.lua;
 
-import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
-import flixel.util.FlxColor;
 import openfl.display.BlendMode;
 import animateatlas.AtlasFrameMaker;
 import Type.ValueType;
@@ -13,11 +11,11 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 
+import states.PlayState;
+import substates.GameOverSubstate;
+
 #if LUA_ALLOWED
 import llua.Lua;
-import llua.LuaL;
-import llua.State;
-import llua.Convert;
 #end
 
 typedef LuaTweenOptions = {
@@ -198,17 +196,17 @@ class LuaUtils
 	}
 
 	public static function resetSpriteTag(tag:String) {
-		if(!PlayState.instance.modchartSprites.exists(tag)) {
+		if(!PlayState.instance.modChartSprites.exists(tag)) {
 			return;
 		}
 
-		var target:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+		var target:ModchartSprite = PlayState.instance.modChartSprites.get(tag);
 		target.kill();
 		if(target.wasAdded) {
 			PlayState.instance.remove(target, true);
 		}
 		target.destroy();
-		PlayState.instance.modchartSprites.remove(tag);
+		PlayState.instance.modChartSprites.remove(tag);
 	}
 
 	public static function cancelTween(tag:String) {

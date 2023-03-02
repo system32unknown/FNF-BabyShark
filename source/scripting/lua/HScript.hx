@@ -13,10 +13,12 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 
+import states.PlayState;
+
 class HScript
 {
 	#if hscript
-	public static var parser:Parser = new Parser();
+	public static var parser:Parser;
 	public var interp:Interp;
 
 	public var variables(get, never):Map<String, Dynamic>;
@@ -35,13 +37,18 @@ class HScript
 		FunkinLua.hscriptVars.set(key, data);
 		
 		for (i in FunkinLua.hscriptVars.keys())
-			if (!exists(i)) interp.variables.set(i, FunkinLua.hscriptVars.get(i));
+			if (!interp.variables.exists(i)) interp.variables.set(i, FunkinLua.hscriptVars.get(i));
 
 		return interp.variables;
 	}
 
 	public function new() {
 		interp = new Interp();
+		parser = new Parser();
+		setVars();
+	}
+
+	function setVars():Void {
 		setVar('FlxG', FlxG);
 		setVar('FlxSprite', FlxSprite);
 		setVar('FlxCamera', FlxCamera);
@@ -51,8 +58,6 @@ class HScript
 		setVar('PlayState', states.PlayState);
 		setVar('game', states.PlayState.instance);
 		setVar('Paths', Paths);
-		setVar('Conductor', game.Conductor);
-		setVar('ClientPrefs', utils.ClientPrefs);
 		setVar('Character', game.Character);
 		setVar('Alphabet', ui.Alphabet);
 		setVar('CustomSubstate', CustomSubstate);
@@ -82,7 +87,7 @@ class HScript
 	public function execute(codeToRun:String):Dynamic {
 		@:privateAccess
 		parser.line = 1;
-		parser.allowTypes  = parser.allowMetadata = parser.allowJSON = true;
+		parser.allowTypes = parser.allowMetadata = parser.allowJSON = true;
 		return interp.execute(parser.parseString(codeToRun));
 	}
 	#end

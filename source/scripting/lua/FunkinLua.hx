@@ -9,14 +9,11 @@ using llua.Lua.Lua_helper;
 #end
 
 import haxe.Constraints.Function;
-import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxCamera;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
@@ -27,8 +24,6 @@ import flixel.math.FlxMath;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.display.FlxRuntimeShader;
 import openfl.utils.Assets;
-import openfl.display.BlendMode;
-import substates.MusicBeatSubstate;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
 import states.*;
@@ -62,7 +57,7 @@ class FunkinLua {
 	public var closed:Bool = false;
 
 	#if hscript
-	public var hscript:HScript;
+	public static var hscript:HScript;
 	public static var hscriptVars:Map<String, Dynamic> = new Map();
 	#end
 
@@ -99,7 +94,7 @@ class FunkinLua {
 			return;
 		}
 		scriptName = script;
-		Hscript.initHaxeModule();
+		HScript.initHaxeModule();
 
 		trace('lua file loaded succesfully:' + script);
 
@@ -829,10 +824,10 @@ class FunkinLua {
 		addCallback("setProperty", function(variable:String, value:Dynamic) {
 			var killMe:Array<String> = variable.split('.');
 			if (killMe.length > 1) {
-				setVarInArray(LuaUtils.getPropertyLoop(killMe), killMe[killMe.length - 1], value);
+				LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe), killMe[killMe.length - 1], value);
 				return true;
 			}
-			setVarInArray(LuaUtils.getTargetInstance(), variable, value);
+			LuaUtils.setVarInArray(LuaUtils.getTargetInstance(), variable, value);
 			return true;
 		});
 		addCallback("getPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic) {
@@ -980,7 +975,7 @@ class FunkinLua {
 			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if(penisExam != null) {
 				if(values != null) {
-					var myOptions:LuaTweenOptions = LuaUtils.getLuaTween(options);
+					var myOptions:LuaUtils.LuaTweenOptions = LuaUtils.getLuaTween(options);
 					PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, values, duration, {
 						type: myOptions.type,
 						ease: myOptions.ease,
@@ -1038,7 +1033,7 @@ class FunkinLua {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.color(penisExam, duration * PlayState.instance.playbackRate, curColor, color, {ease: LuaUtils.getTweenEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
 						PlayState.instance.modchartTweens.remove(tag);
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag, vars]);
 					}
 				}));
 			} else {
@@ -2612,73 +2607,23 @@ class FunkinLua {
 		});
 		addCallback("doTweenX", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
 			luaTrace("doTweenX is deprecated! Use doTween instead", false, true);
-			var penisExam:Dynamic = tweenShit(tag, vars);
-			if(penisExam != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, {x: value}, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			} else {
-				luaTrace('doTweenX: Couldnt find object: ' + vars, false, false, FlxColor.RED);
-			}
+			oldTweenFunction(tag, vars, {x: value}, duration, ease, 'doTweenX');
 		});
 		addCallback("doTweenY", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
 			luaTrace("doTweenY is deprecated! Use doTween instead", false, true);
-			var penisExam:Dynamic = tweenShit(tag, vars);
-			if(penisExam != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, {y: value}, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			} else {
-				luaTrace('doTweenY: Couldnt find object: ' + vars, false, false, FlxColor.RED);
-			}
+			oldTweenFunction(tag, vars, {y: value}, duration, ease, 'doTweenY');
 		});
 		addCallback("doTweenAngle", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
 			luaTrace("doTweenAngle is deprecated! Use doTween instead", false, true);
-			var penisExam:Dynamic = tweenShit(tag, vars);
-			if(penisExam != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, {angle: value}, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			} else {
-				luaTrace('doTweenAngle: Couldnt find object: ' + vars, false, false, FlxColor.RED);
-			}
+			oldTweenFunction(tag, vars, {angle: value}, duration, ease, 'doTweenAngle');
 		});
 		addCallback("doTweenAlpha", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
 			luaTrace("doTweenAlpha is deprecated! Use doTween instead", false, true);
-			var penisExam:Dynamic = tweenShit(tag, vars);
-			if(penisExam != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, {alpha: value}, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			} else {
-				luaTrace('doTweenAlpha: Couldnt find object: ' + vars, false, false, FlxColor.RED);
-			}
+			oldTweenFunction(tag, vars, {alpha: value}, duration, ease, 'doTweenAlpha');
 		});
 		addCallback("doTweenZoom", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
 			luaTrace("doTweenZoom is deprecated! Use doTween instead", false, true);
-			var penisExam:Dynamic = tweenShit(tag, vars);
-			if(penisExam != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, {zoom: value}, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			} else {
-				luaTrace('doTweenColor: Couldnt find object: ' + vars, false, false, FlxColor.RED);
-			}
+			oldTweenFunction(tag, vars, {zoom: value}, duration, ease, 'doTweenZoom');
 		});
 		addCallback("noteTweenX", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
 			luaTrace("noteTweenX is deprecated! Use noteTween instead", false, true);
@@ -2882,10 +2827,6 @@ class FunkinLua {
 		}
 		
 		for (arg in args) Convert.toLua(lua, arg);
-		var hscriptResult:Dynamic = hscript.call(func, args);
-		if (hscriptResult == null) {
-			luaTrace("ERROR (" + func + "): " + hscriptResult, false, false, FlxColor.RED);
-		}
 
 		var status:Int = Lua.pcall(lua, args.length, 1, 0);
 		if (status != Lua.LUA_OK) {
@@ -2989,8 +2930,6 @@ class FunkinLua {
 					PlayState.instance.modchartTweens.remove(tag);
 				}
 			}));
-		} else {
-			luaTrace('$funcName: Couldnt find object: $vars', false, false, FlxColor.RED);
-		}
+		} else luaTrace('$funcName: Couldnt find object: $vars', false, false, FlxColor.RED);
 	}
 }

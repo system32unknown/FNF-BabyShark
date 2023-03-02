@@ -49,8 +49,9 @@ import ui.*;
 import shaders.PulseEffect;
 import data.StageData.StageFile;
 import data.EkData.Keybinds;
-import scripting.*;
 import data.*;
+import scripting.haxe.AlterScript;
+import scripting.lua.*;
 
 #if !flash
 import flixel.addons.display.FlxRuntimeShader;
@@ -92,24 +93,24 @@ class PlayState extends MusicBeatState
 	public var gfMap:Map<String, Character> = new Map();
 	public var variables:Map<String, Dynamic> = new Map();
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
-	public var modChartSprites:Map<String, FunkinLua.ModchartSprite> = new Map<String, FunkinLua.ModchartSprite>();
+	public var modChartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
 	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
-	public var modchartTexts:Map<String, FunkinLua.ModchartText> = new Map<String, FunkinLua.ModchartText>();
+	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
-	public var modchartGroups:Map<String, FunkinLua.ModchartGroup> = new Map<String, FunkinLua.ModchartGroup>();
+	public var modchartGroups:Map<String, ModchartGroup> = new Map<String, ModchartGroup>();
 	#else
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
 	public var gfMap:Map<String, Character> = new Map<String, Character>();
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public var modchartTweens:Map<String, FlxTween> = new Map();
-	public var modChartSprites:Map<String, FunkinLua.ModchartSprite> = new Map();
+	public var modChartSprites:Map<String, ModchartSprite> = new Map();
 	public var modchartTimers:Map<String, FlxTimer> = new Map();
 	public var modchartSounds:Map<String, FlxSound> = new Map();
-	public var modchartTexts:Map<String, FunkinLua.ModchartText> = new Map();
+	public var modchartTexts:Map<String, ModchartText> = new Map();
 	public var modchartSaves:Map<String, FlxSave> = new Map();
-	public var modchartGroups:Map<String, FunkinLua.ModchartGroup> = new Map();
+	public var modchartGroups:Map<String, ModchartGroup> = new Map();
 	#end
 
 	public var BF_X:Float = 770;
@@ -332,7 +333,7 @@ class PlayState extends MusicBeatState
 	public static var instance:PlayState;
 	public var luaArray:Array<FunkinLua> = [];
 	public var scriptArray:Array<AlterScript> = [];
-	var luaDebugGroup:FlxTypedGroup<FunkinLua.DebugLuaText>;
+	var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
 	public var introSoundsSuffix:String = '';
 
 	public var achievementsArray:Array<FunkinLua> = [];
@@ -868,7 +869,7 @@ class PlayState extends MusicBeatState
 		}
 
 		#if LUA_ALLOWED
-		luaDebugGroup = new FlxTypedGroup<FunkinLua.DebugLuaText>();
+		luaDebugGroup = new FlxTypedGroup<DebugLuaText>();
 		luaDebugGroup.cameras = [camOther];
 		add(luaDebugGroup);
 		#end
@@ -1497,7 +1498,7 @@ class PlayState extends MusicBeatState
 
 	public function addTextToDebug(text:String, color:FlxColor) {
 		#if LUA_ALLOWED
-		luaDebugGroup.forEachAlive(function(spr:FunkinLua.DebugLuaText) {
+		luaDebugGroup.forEachAlive(function(spr:DebugLuaText) {
 			spr.y += 20;
 		});
 
@@ -1506,7 +1507,7 @@ class PlayState extends MusicBeatState
 			blah.destroy();
 			luaDebugGroup.remove(blah, true);
 		}
-		luaDebugGroup.insert(0, new FunkinLua.DebugLuaText(text, luaDebugGroup, color));
+		luaDebugGroup.insert(0, new DebugLuaText(text, luaDebugGroup, color));
 		#end
 	}
 
@@ -3881,9 +3882,9 @@ class PlayState extends MusicBeatState
 
 				killMe = killMe[0].split('.');
 				if (killMe.length > 1) {
-					FunkinLua.setVarInArray(FunkinLua.getPropertyLoopThingWhatever(killMe, true, true), killMe[killMe.length - 1], trueVal != null ? trueVal : value2);
+					LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe, true, true), killMe[killMe.length - 1], trueVal != null ? trueVal : value2);
 				} else {
-					FunkinLua.setVarInArray(this, value1, trueVal != null ? trueVal : value2);
+					LuaUtils.setVarInArray(this, value1, trueVal != null ? trueVal : value2);
 				}
 		}
 		callOnLuas('onEvent', [eventName, value1, value2]);

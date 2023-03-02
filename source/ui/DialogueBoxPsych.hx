@@ -14,7 +14,7 @@ import openfl.utils.Assets;
 import states.PlayState;
 import utils.ClientPrefs;
 import utils.Controls;
-import scripting.FunkinLua;
+import scripting.lua.FunkinLua;
 
 typedef DialogueCharacterFile = {
 	var image:String;
