@@ -526,7 +526,6 @@ class FunkinLua {
 
 			switch (platformType.toLowerCase().trim()) {
 				case "sendwindowsnotification": PlatformUtil.sendWindowsNotification(args[0], args[1]);
-				case "sendfakemsgbox": PlatformUtil.sendFakeMsgBox(args[0], args[1]);
 				case "getwindowstransparent": PlatformUtil.getWindowsTransparent(args[0], args[1], args[2], args[3]);
 				case "setcursorpos": PlatformUtil.setCursorPos(args[0], args[1]);
 				case "setwindowicon": PlatformUtil.setWindowIcon(args[0]);

@@ -75,7 +75,7 @@ class ClientPrefs {
 				FlxG.updateFramerate = framerate;
 			}
 		},
-		'customControls' => function(controls:Map<String, Array<FlxKey>>) {
+		'keyboard' => function(controls:Map<String, Array<FlxKey>>) {
 			reloadControls();
 		}
 	];
@@ -89,7 +89,7 @@ class ClientPrefs {
 	// Maps like gameplaySettings
 	public static var mapData:Map<String, Array<Dynamic>> = [
 		'gameplaySettings' => [ClientPrefs, 'gameplaySettings'],
-		'customControls' => [ClientPrefs, 'keyBinds'],
+		'keyboard' => [ClientPrefs, 'keyBinds'],
 
 		'achievementsMap' => [Achievements, 'achievementsMap'],
 		'henchmenDeath' => [Achievements, 'henchmenDeath']
@@ -97,7 +97,7 @@ class ClientPrefs {
 
 	// For stuff that needs to be in the controls save
 	public static var separateSaves:Array<String> = [
-		'customControls'
+		'keyboard'
 	];
 
 	public static var gameplaySettings:Map<String, Dynamic> = [

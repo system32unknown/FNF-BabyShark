@@ -64,22 +64,7 @@ class PlatformUtil
     ')
     #end
     static public function sendWindowsNotification(title:String = "", desc:String = ""):Int return 0;
-
-    #if windows
-    @:functionCode('
-        LPCSTR lwtitle = title.c_str();
-        LPCSTR lwDesc = desc.c_str();
-
-        return MessageBox(
-            NULL,
-            lwDesc,
-            lwtitle,
-            MB_OK
-        );
-    ')
-    #end
-    static public function sendFakeMsgBox(title:String = "", desc:String = ""):Int return 0;
-
+    
     #if windows
 	@:functionCode('
         return SetCursorPos(x, y); 
