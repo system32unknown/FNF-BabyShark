@@ -4249,7 +4249,7 @@ class PlayState extends MusicBeatState
 			if (ClientPrefs.getPref('ShowMsTiming')) {
 				mstimingTxt.screenCenter();
 				var comboShowSpr:FlxSprite = (combo >= 10 ? comboSpr : rating);
-				mstimingTxt.setPosition(comboShowSpr.x + 100, comboShowSpr.y + comboShowSpr.height);
+				mstimingTxt.setPosition(comboShowSpr.x + 100, comboShowSpr.y + (combo >= 10 ? 80 : 100));
 				mstimingTxt.updateHitbox();
 			}
 		
