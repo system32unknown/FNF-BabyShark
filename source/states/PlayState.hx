@@ -53,10 +53,6 @@ import data.*;
 import scripting.haxe.AlterScript;
 import scripting.lua.*;
 
-#if !flash
-import flixel.addons.display.FlxRuntimeShader;
-#end
-
 #if sys
 import sys.FileSystem;
 import sys.io.File;
@@ -93,7 +89,7 @@ class PlayState extends MusicBeatState
 	public var gfMap:Map<String, Character> = new Map();
 	public var variables:Map<String, Dynamic> = new Map();
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
-	public var modChartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
+	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
 	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
@@ -105,7 +101,7 @@ class PlayState extends MusicBeatState
 	public var gfMap:Map<String, Character> = new Map<String, Character>();
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public var modchartTweens:Map<String, FlxTween> = new Map();
-	public var modChartSprites:Map<String, ModchartSprite> = new Map();
+	public var modchartSprites:Map<String, ModchartSprite> = new Map();
 	public var modchartTimers:Map<String, FlxTimer> = new Map();
 	public var modchartSounds:Map<String, FlxSound> = new Map();
 	public var modchartTexts:Map<String, ModchartText> = new Map();
@@ -182,7 +178,7 @@ class PlayState extends MusicBeatState
 	private var timeBarBG:AttachedSprite;
 	public var timeBar:FlxBar;
 
-	public var ratingsData:Array<Rating> = [];
+	public var ratingsData:Array<Rating> = Rating.loadDefault();
 	public var epics:Int = 0;
 	public var sicks:Int = 0;
 	public var goods:Int = 0;
@@ -356,6 +352,7 @@ class PlayState extends MusicBeatState
 	public static var lastLateEarly:FlxSprite;
 	// stores the last combo score objects in an array
 	public static var lastScore:Array<FlxSprite> = [];
+	public var songName:String;
 
 	var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
 	var downScroll:Bool = ClientPrefs.getPref('downScroll');
@@ -377,39 +374,6 @@ class PlayState extends MusicBeatState
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed', 1);
 
 		keysArray = Keybinds.fill();
-
-		//Ratings
-		ratingsData.push(new Rating('epic')); //default rating
-
-		var rating:Rating = new Rating('sick');
-		rating.ratingMod = 1;
-		rating.score = 350;
-		rating.noteSplash = true;
-		ratingsData.push(rating);
-
-		var rating:Rating = new Rating('good');
-		rating.ratingMod = 0.7;
-		rating.score = 200;
-		rating.noteSplash = false;
-		ratingsData.push(rating);
-
-		var rating:Rating = new Rating('bad');
-		rating.ratingMod = 0.4;
-		rating.score = 100;
-		rating.noteSplash = false;
-		ratingsData.push(rating);
-
-		var rating:Rating = new Rating('ok');
-		rating.ratingMod = 0.2;
-		rating.score = 25;
-		rating.noteSplash = false;
-		ratingsData.push(rating);
-
-		var rating:Rating = new Rating('shit');
-		rating.ratingMod = 0;
-		rating.score = 50;
-		rating.noteSplash = false;
-		ratingsData.push(rating);
 
 		// For the "Just the Two of Us" achievement
 		for (i in 0...keysArray[mania].length) {
@@ -472,23 +436,12 @@ class PlayState extends MusicBeatState
 		#end
 
 		GameOverSubstate.resetVariables();
-		var songName:String = Paths.formatToSongPath(SONG.song);
+		songName = Paths.formatToSongPath(SONG.song);
 
-		curStage = SONG.stage;
 		if(SONG.stage == null || SONG.stage.length < 1) {
-			switch (songName) {
-				case 'spookeez' | 'south' | 'monster': curStage = 'spooky';
-				case 'pico' | 'blammed' | 'philly' | 'philly-nice': curStage = 'philly';
-				case 'milf' | 'satin-panties' | 'high': curStage = 'limo';
-				case 'cocoa' | 'eggnog': curStage = 'mall';
-				case 'winter-horrorland': curStage = 'mallEvil';
-				case 'senpai' | 'roses': curStage = 'school';
-				case 'thorns': curStage = 'schoolEvil';
-				case 'ugh' | 'guns' | 'stress': curStage = 'tank';
-				default: curStage = 'stage';
-			}
+			SONG.stage = StageData.vanillaSongStage(songName);
 		}
-		SONG.stage = curStage;
+		curStage = SONG.stage;
 
 		var stageData:StageFile = StageData.getStageFile(curStage);
 		if(stageData == null) { //Stage couldn't be found, create a dummy stage for preventing a crash
@@ -846,7 +799,7 @@ class PlayState extends MusicBeatState
 				if(!lowQuality) foregroundSprites.add(new BGSprite('tank3', 1300, 1200, 3.5, 2.5, ['fg']));
 		}
 
-		switch(Paths.formatToSongPath(SONG.song)) {
+		switch(songName) {
 			case 'stress': GameOverSubstate.characterName = 'bf-holding-gf-dead';
 		}
 
@@ -978,7 +931,7 @@ class PlayState extends MusicBeatState
 				default: gfVersion = 'gf';
 			}
 
-			switch(Paths.formatToSongPath(SONG.song)) {
+			switch(songName) {
 				case 'stress': gfVersion = 'pico-speaker';
 			}
 			SONG.gfVersion = gfVersion; //Fix for the Chart Editor
@@ -1278,15 +1231,15 @@ class PlayState extends MusicBeatState
 		// SONG SPECIFIC SCRIPTS
 		#if LUA_ALLOWED
 		var filesPushed:Array<String> = [];
-		var foldersToCheck:Array<String> = [Paths.getPreloadPath('data/${Paths.CHART_PATH}/' + Paths.formatToSongPath(SONG.song) + '/')];
+		var foldersToCheck:Array<String> = [Paths.getPreloadPath('data/${Paths.CHART_PATH}/' + songName + '/')];
 
 		#if MODS_ALLOWED
-		foldersToCheck.insert(0, Paths.mods('data/${Paths.CHART_PATH}/' + Paths.formatToSongPath(SONG.song) + '/'));
+		foldersToCheck.insert(0, Paths.mods('data/${Paths.CHART_PATH}/' + songName + '/'));
 		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
-			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/data/${Paths.CHART_PATH}/' + Paths.formatToSongPath(SONG.song) + '/'));
+			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/data/${Paths.CHART_PATH}/' + songName + '/'));
 
 		for(mod in Paths.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + 'data/${Paths.CHART_PATH}/' + Paths.formatToSongPath(SONG.song) + '/')); // using push instead of insert because these should run after everything else
+			foldersToCheck.insert(0, Paths.mods(mod + 'data/${Paths.CHART_PATH}/' + songName + '/')); // using push instead of insert because these should run after everything else
 		#end
 
 		for (folder in foldersToCheck) {
@@ -1412,67 +1365,6 @@ class PlayState extends MusicBeatState
 		if(eventNotes.length < 1) checkEventNote();
 	}
 
-	#if (sys)
-	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
-	public function createRuntimeShader(name:String):FlxRuntimeShader
-	{
-		if(!ClientPrefs.getPref('shaders')) return new FlxRuntimeShader();
-
-		#if (MODS_ALLOWED && sys)
-		if(!runtimeShaders.exists(name) && !initLuaShader(name)) {
-			FlxG.log.warn('Shader $name is missing!');
-			return new FlxRuntimeShader();
-		}
-
-		var arr:Array<String> = runtimeShaders.get(name);
-		return new FlxRuntimeShader(arr[0], arr[1]);
-		#else
-		FlxG.log.warn("Platform unsupported for Runtime Shaders!");
-		return null;
-		#end
-	}
-
-	public function initLuaShader(name:String, ?glslVersion:Int = 120) {
-		if(!ClientPrefs.getPref('shaders')) return false;
-
-		if(runtimeShaders.exists(name)) {
-			FlxG.log.warn('Shader $name was already initialized!');
-			return true;
-		}
-
-		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
-		if (Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
-			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
-
-		for (mod in Paths.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
-		
-		for (folder in foldersToCheck) {
-			if (FileSystem.exists(folder)) {
-				var frag:String = folder + name + '.frag';
-				var vert:String = folder + name + '.vert';
-				var found:Bool = false;
-				if (FileSystem.exists(frag)) {
-					frag = File.getContent(frag);
-					found = true;
-				} else frag = null;
-
-				if (FileSystem.exists(vert)) {
-					vert = File.getContent(vert);
-					found = true;
-				} else vert = null;
-
-				if (found) {
-					runtimeShaders.set(name, [frag, vert]);
-					return true;
-				}
-			}
-		}
-		FlxG.log.warn('Missing shader $name .frag AND .vert files!');
-		return false;
-	}
-	#end
-
 	function set_songSpeed(value:Float):Float {
 		if (generatedMusic) {
 			var ratio:Float = value / songSpeed; //funny word huh
@@ -1585,7 +1477,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function getLuaObject(tag:String, text:Bool = true):FlxSprite {
-		if(modChartSprites.exists(tag)) return modChartSprites.get(tag);
+		if(modchartSprites.exists(tag)) return modchartSprites.get(tag);
 		if(text && modchartTexts.exists(tag)) return modchartTexts.get(tag);
 		if(variables.exists(tag)) return variables.get(tag);
 		return null;
@@ -1733,7 +1625,6 @@ class PlayState extends MusicBeatState
 		senpaiEvil.screenCenter();
 		senpaiEvil.x += 300;
 
-		var songName:String = Paths.formatToSongPath(SONG.song);
 		if (songName == 'roses' || songName == 'thorns') {
 			remove(black, true);
 
@@ -1750,7 +1641,7 @@ class PlayState extends MusicBeatState
 				tmr.reset(0.3);
 			} else {
 				if (dialogueBox != null) {
-					if (Paths.formatToSongPath(SONG.song) == 'thorns') {
+					if (songName == 'thorns') {
 						add(senpaiEvil);
 						senpaiEvil.alpha = 0;
 						new FlxTimer().start(0.3, function(swagTimer:FlxTimer) {
@@ -1785,7 +1676,6 @@ class PlayState extends MusicBeatState
 	function tankIntro() {
 		var cutsceneHandler:CutsceneHandler = new CutsceneHandler();
 
-		var songName:String = Paths.formatToSongPath(SONG.song);
 		dadGroup.alpha = 0.00001;
 		camHUD.visible = false;
 
@@ -2135,8 +2025,6 @@ class PlayState extends MusicBeatState
 
 			var swagCounter:Int = 0;
 
-			if(startOnTime < 0) startOnTime = 0;
-
 			if (startOnTime > 0) {
 				clearNotesBefore(startOnTime);
 				setSongTime(startOnTime - 350);
@@ -2393,7 +2281,6 @@ class PlayState extends MusicBeatState
 		// NEW SHIT
 		noteData = songData.notes;
 
-		var songName:String = Paths.formatToSongPath(SONG.song);
 		var file:String = Paths.chart(songName + '/events');
 		#if MODS_ALLOWED
 		if (FileSystem.exists(Paths.modsChart(songName + '/events')) || FileSystem.exists(file)) {
@@ -3933,7 +3820,7 @@ class PlayState extends MusicBeatState
 			camFollow.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
 			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
-			if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1) {
+			if (songName == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1) {
 				cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut, onComplete:
 					function (twn:FlxTween) {
 						cameraTwn = null;
@@ -3949,7 +3836,7 @@ class PlayState extends MusicBeatState
 	}
 
 	function tweenCamIn() {
-		if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1.3) {
+		if (songName == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1.3) {
 			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000) * playbackRate, {ease: FlxEase.elasticInOut, 
 				onComplete: function (twn:FlxTween) {
 					cameraTwn = null;
@@ -4076,7 +3963,7 @@ class PlayState extends MusicBeatState
 					trace('LOADING NEXT SONG');
 					trace(Paths.formatToSongPath(storyPlaylist[0]) + difficulty);
 
-					var winterHorrorlandNext = (Paths.formatToSongPath(SONG.song) == "eggnog");
+					var winterHorrorlandNext = (songName == "eggnog");
 					if (winterHorrorlandNext)
 					{
 						var blackShit:FlxSprite = new FlxSprite(-FlxG.width * FlxG.camera.zoom,
@@ -4750,7 +4637,7 @@ class PlayState extends MusicBeatState
 	}
 
 	function opponentNoteHit(note:Note):Void {
-		if (Paths.formatToSongPath(SONG.song) != 'tutorial')
+		if (songName != 'tutorial')
 			camZooming = true;
 
 		if(note.noteType == 'Hey!' && dad.animOffsets.exists('hey')) {
@@ -5539,7 +5426,7 @@ class PlayState extends MusicBeatState
 							unlock = true;
 						}
 					case 'debugger':
-						if(Paths.formatToSongPath(SONG.song) == 'test' && !usedPractice) {
+						if(songName == 'test' && !usedPractice) {
 							unlock = true;
 						}
 				}
