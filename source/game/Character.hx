@@ -12,7 +12,7 @@ import sys.FileSystem;
 import openfl.utils.Assets;
 import haxe.Json;
 
-import backgrounds.TankmenBG;
+import stages.objects.TankmenBG;
 import utils.ClientPrefs;
 import states.PlayState;
 import game.Section.SwagSection;

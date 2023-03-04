@@ -20,6 +20,7 @@ import flash.net.FileFilter;
 import haxe.Json;
 import utils.ClientPrefs;
 import ui.DialogueBoxPsych;
+import ui.DialogueCharacter;
 import ui.TypedAlphabet;
 import states.MusicBeatState;
 import states.TitleState;

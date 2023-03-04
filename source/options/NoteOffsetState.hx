@@ -15,8 +15,8 @@ import flixel.math.FlxPoint;
 import states.MusicBeatState;
 import game.Character;
 import game.Conductor;
+import game.BGSprite;
 import utils.ClientPrefs;
-import backgrounds.BGSprite;
 import ui.CustomFadeTransition;
 import ui.Alphabet;
 

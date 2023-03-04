@@ -71,14 +71,14 @@ class PlayState extends MusicBeatState
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
 	public static var ratingStuff:Array<Dynamic> = [
-		['You Suck!', 0.2], //From 0% to 19%
-		['Shit', 0.4], //From 20% to 39%
-		['Bad', 0.5], //From 40% to 49%
-		['Bruh', 0.6], //From 50% to 59%
-		['Meh', 0.69], //From 60% to 68%
-		['Nice', 0.7], //69%
-		['Good', 0.8], //From 70% to 79%
-		['Great', 0.9], //From 80% to 89%
+		['You Suck!', .2], //From 0% to 19%
+		['Shit', .4], //From 20% to 39%
+		['Bad', .5], //From 40% to 49%
+		['Bruh', .6], //From 50% to 59%
+		['Meh', .69], //From 60% to 68%
+		['Nice', .7], //69%
+		['Good', .8], //From 70% to 79%
+		['Great', .9], //From 80% to 89%
 		['Sick!', 1] //From 90% to 99%
 	];
 	//event variables
@@ -455,21 +455,7 @@ class PlayState extends MusicBeatState
 
 		var stageData:StageFile = StageData.getStageFile(curStage);
 		if(stageData == null) { //Stage couldn't be found, create a dummy stage for preventing a crash
-			stageData = {
-				directory: "",
-				defaultZoom: 0.9,
-				isPixelStage: false,
-
-				boyfriend: [770, 100],
-				girlfriend: [400, 130],
-				opponent: [100, 100],
-				hide_girlfriend: false,
-
-				camera_boyfriend: [0, 0],
-				camera_opponent: [0, 0],
-				camera_girlfriend: [0, 0],
-				camera_speed: 1
-			};
+			stageData = StageData.dummy();
 		}
 
 		defaultCamZoom = stageData.defaultZoom;
@@ -2167,10 +2153,11 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	var scoreTweenSetting:Array<Dynamic> = [1.1, .2, 'backOut'];
 	public function updateScore(miss:Bool = false) {
 		judgementCounter.text = 'Max Combos: ${maxCombo}';
 		for (rating in ratingsData) {
-			judgementCounter.text += '\n${rating.name.substr(0).toUpperCase()}s: ${rating.hits}';
+			judgementCounter.text += '\n${flixel.addons.ui.U.FU(rating.name)}s: ${rating.hits}';
 		}
 		judgementCounter.text += getMissText(!ClientPrefs.getPref('movemissjudge'), '\n');
 		judgementCounter.screenCenter(Y);
@@ -2180,9 +2167,9 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.getPref('scoreZoom') && !miss) {
 			if (scoreTxtTween != null) scoreTxtTween.cancel();
 
-			scoreTxt.scale.set(1.1, 1.1);
-			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, .2 * playbackRate, {
-				ease: FlxEase.backOut,
+			scoreTxt.scale.set(scoreTweenSetting[1], scoreTweenSetting[1]);
+			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, scoreTweenSetting[2] * playbackRate, {
+				ease: LuaUtils.getTweenEaseByString(scoreTweenSetting[3]),
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
 				}

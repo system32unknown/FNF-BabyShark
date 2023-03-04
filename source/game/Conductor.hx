@@ -153,13 +153,7 @@ class Rating
 		rating.score = 100;
 		rating.noteSplash = false;
 		ratingsData.push(rating);
-
-		var rating:Rating = new Rating('ok');
-		rating.ratingMod = .2;
-		rating.score = 25;
-		rating.noteSplash = false;
-		ratingsData.push(rating);
-
+		
 		var rating:Rating = new Rating('shit');
 		rating.ratingMod = 0;
 		rating.score = 50;
