@@ -81,10 +81,7 @@ class Controls {
 
 	public static var instance:Controls;
 
-	public function new() {}
-
-	public static function init() {
-		instance = new Controls();
-		instance.keyboardBinds = ClientPrefs.keyBinds;
+	public function new() {
+		keyboardBinds = ClientPrefs.keyBinds;
 	}
 }

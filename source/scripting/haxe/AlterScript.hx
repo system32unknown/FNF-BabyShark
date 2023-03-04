@@ -47,7 +47,14 @@ class AlterScript {
     public function execute() {
         try {
             interp.execute(parser.parseString(script, scriptFile));
-        } catch(e:Error) trace(e);
+        } catch(e:Error) {
+            #if windows
+            lime.app.Application.current.window.alert(e.toString(), "Error on AlterScript");
+            #else
+            trace("Error: " + e);
+            #end
+            return;
+        };
     }
 
     function get(key:String):Dynamic {

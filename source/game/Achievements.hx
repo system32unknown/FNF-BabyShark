@@ -54,7 +54,7 @@ class Achievements {
 		["God Effing Damn It!",			"Beat Week 7 on Hard with no Misses.",				'week7_nomiss',			false],
 		["What a Funkin' Disaster!",	"Complete a Song with a rating lower than 20%.",	'ur_bad',				false],
 		["Perfectionist",				"Complete a Song with a rating of 100%.",			'ur_good',				false],
-		["Roadkill Enthusiast",			"Watch the Henchmen die over 100 times.",			'roadkill_enthusiast',	false],
+		["Roadkill Enthusiast",			"Watch the Henchmen die over 50 times.",			'roadkill_enthusiast',	false],
 		["Oversinging Much...?",		"Hold down a note for 10 seconds.",					'oversinging',			false],
 		["Hyperactive",					"Finish a Song without going Idle.",				'hype',					false],
 		["Just the Two of Us",			"Finish a Song pressing only two keys.",			'two_keys',				false],
@@ -124,7 +124,7 @@ class Achievements {
 						var meta:AchievementMeta = cast haxe.Json.parse(File.getContent(i + l));
 						if (meta != null) {
 							if (meta.global != null && meta.global.length > 0 && !FileSystem.exists(i + l.substring(0, l.length - 4) + 'lua'))
-								throw "(" + l + ") global needs a lua file to work.\nCreate a lua file named \"" + l.substring(0, l.length - 5) + "\" in \"" + i + "\".";
+								throw '($l) global needs a lua file to work.\nCreate a lua file named \"' + l.substring(0, l.length - 5) + "\" in \"" + i + "\".";
 
 							if (meta.global == null || meta.global.length < 1) {
 								if (meta.clearAchievements)
@@ -139,12 +139,10 @@ class Achievements {
 									if (index == null || index < 0) {
 										achievementsStuff.push(achievement.copy());
 									} else {
-										achievementsStuff.insert(index,achievement);
+										achievementsStuff.insert(index, achievement);
 									}
 								}
-							} else {
-								achievementsStuff = meta.global.copy();
-							}
+							} else achievementsStuff = meta.global.copy();
 						}
 					}
 				}
@@ -187,9 +185,7 @@ class Achievements {
 						try {
 							var meta:AchievementMeta = haxe.Json.parse(File.getContent(i + l));
 							metas.push(meta);
-						} catch(e) {
-							trace(e.stack);
-						}
+						} catch(e) trace(e.stack);
 					}
 		return metas;
 	}
@@ -217,7 +213,7 @@ class AttachedAchievement extends FlxSprite {
 		} else {
 			loadGraphic(Paths.image('achievements/lockedachievement'));
 		}
-		scale.set(0.7, 0.7);
+		scale.set(.7, .7);
 		updateHitbox();
 	}
 

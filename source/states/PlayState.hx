@@ -44,7 +44,7 @@ import utils.*;
 #if discord_rpc
 import utils.Discord.DiscordClient;
 #end
-import backgrounds.*;
+import stages.objects.*;
 import ui.*;
 import shaders.PulseEffect;
 import data.StageData.StageFile;
@@ -179,11 +179,7 @@ class PlayState extends MusicBeatState
 	public var timeBar:FlxBar;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
-	public var epics:Int = 0;
-	public var sicks:Int = 0;
-	public var goods:Int = 0;
-	public var bads:Int = 0;
-	public var shits:Int = 0;
+	public var fullComboFunction:Void->Void = null;
 
 	public static var mania:Int = 0;
 
@@ -219,7 +215,7 @@ class PlayState extends MusicBeatState
 
 	var dadbattleBlack:BGSprite;
 	var dadbattleLight:BGSprite;
-	var dadbattleSmokes:FlxSpriteGroup;
+	var dadbattleFog:DadBattleFog;
 
 	var halloweenBG:BGSprite;
 	var halloweenWhite:BGSprite;
@@ -227,10 +223,9 @@ class PlayState extends MusicBeatState
 	var phillyLightsColors:Array<FlxColor>;
 	var phillyWindow:BGSprite;
 	var phillyStreet:BGSprite;
-	var phillyTrain:BGSprite;
+	var phillyTrain:PhillyTrain;
 	var blammedLightsBlack:FlxSprite;
 	var phillyWindowEvent:BGSprite;
-	var trainSound:FlxSound;
 
 	var phillyGlowGradient:PhillyGlow.PhillyGlowGradient;
 	var phillyGlowParticles:FlxTypedGroup<PhillyGlow.PhillyGlowParticle>;
@@ -260,7 +255,7 @@ class PlayState extends MusicBeatState
 	var bgGhouls:BGSprite;
 
 	var tankWatchtower:BGSprite;
-	var tankGround:BGSprite;
+	var tankGround:BackgroundTank;
 	var tankmanRun:FlxTypedGroup<TankmenBG>;
 	var foregroundSprites:FlxTypedGroup<BGSprite>;
 
@@ -281,8 +276,6 @@ class PlayState extends MusicBeatState
 	var scoreTxtTween:FlxTween;
 
 	var daKeyText:Array<FlxText> = [];
-
-	var allNotesMs:Float = 0;
 	
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
@@ -372,6 +365,23 @@ class PlayState extends MusicBeatState
 		debugKeysCharacter = ClientPrefs.keyBinds.get('debug_2').copy();
 		PauseSubState.songName = null; //Reset to default
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed', 1);
+		fullComboFunction = function() {
+			var epics = ratingsData[0].hits;
+			var sicks = ratingsData[1].hits;
+			var goods = ratingsData[2].hits;
+			var bads = ratingsData[3].hits;
+			var shits = ratingsData[4].hits;
+
+			ratingFC = 'Clear';
+			if(songMisses < 1) {
+				if (bads > 0 || shits > 0) ratingFC = 'FC';
+				else if (goods > 0) ratingFC = 'GFC';
+				else if (sicks > 0) ratingFC = 'SFC';
+				else if (epics > 0) ratingFC = "PFC";
+			} else if (songMisses < 10) {
+				ratingFC = 'SDCB';
+			}
+		};
 
 		keysArray = Keybinds.fill();
 
@@ -515,7 +525,6 @@ class PlayState extends MusicBeatState
 					stageCurtains.updateHitbox();
 					add(stageCurtains);
 				}
-				dadbattleSmokes = new FlxSpriteGroup(); //troll'd
 
 			case 'spooky': //Week 2
 				if(!lowQuality) {
@@ -557,11 +566,8 @@ class PlayState extends MusicBeatState
 					add(streetBehind);
 				}
 
-				phillyTrain = new BGSprite('philly/train', 2000, 360);
+				phillyTrain = new PhillyTrain(2000, 360);
 				add(phillyTrain);
-
-				trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes'));
-				FlxG.sound.list.add(trainSound);
 
 				phillyStreet = new BGSprite('philly/street', -40, 50);
 				add(phillyStreet);
@@ -734,6 +740,10 @@ class PlayState extends MusicBeatState
 					bgGhouls.updateHitbox();
 					bgGhouls.visible = false;
 					bgGhouls.antialiasing = false;
+					bgGhouls.animation.finishCallback = function(name:String) {
+						if(name == 'BG freaks glitch instance')
+							bgGhouls.visible = false;
+					}
 					add(bgGhouls);
 				} else {
 					var bg:BGSprite = new BGSprite('weeb/animatedEvilSchool_low', posX, posY, 0.8, 0.9);
@@ -778,7 +788,7 @@ class PlayState extends MusicBeatState
 					add(tankWatchtower);
 				}
 
-				tankGround = new BGSprite('tankRolling', 300, 300, 0.5, 0.5,['BG tank w lighting'], true);
+				tankGround = new BackgroundTank();
 				add(tankGround);
 
 				tankmanRun = new FlxTypedGroup<TankmenBG>();
@@ -788,7 +798,6 @@ class PlayState extends MusicBeatState
 				ground.setGraphicSize(Std.int(1.15 * ground.width));
 				ground.updateHitbox();
 				add(ground);
-				moveTank();
 
 				foregroundSprites = new FlxTypedGroup<BGSprite>();
 				foregroundSprites.add(new BGSprite('tank0', -500, 650, 1.7, 1.5, ['fg']));
@@ -1158,7 +1167,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		judgementCounter.scrollFactor.set();
 		judgementCounter.visible = ClientPrefs.getPref('ShowJudgementCount') && !hideHud;
-		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + getMissText(!ClientPrefs.getPref('movemissjudge'), '\n');
+		judgementCounter.text = 'Max Combos: 0\nEpics: 0\nSicks: 0\nGoods: 0\nBads: 0\nShits: 0\n' + getMissText(!ClientPrefs.getPref('movemissjudge'), '\n');
 		add(judgementCounter);
 		judgementCounter.screenCenter(Y);
 
@@ -2159,7 +2168,11 @@ class PlayState extends MusicBeatState
 	}
 
 	public function updateScore(miss:Bool = false) {
-		judgementCounter.text = 'Max Combos: ${maxCombo}\nEpics: ${epics}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\n' + getMissText(!ClientPrefs.getPref('movemissjudge'), '\n');
+		judgementCounter.text = 'Max Combos: ${maxCombo}';
+		for (rating in ratingsData) {
+			judgementCounter.text += '\n${rating.name.substr(0).toUpperCase()}s: ${rating.hits}';
+		}
+		judgementCounter.text += getMissText(!ClientPrefs.getPref('movemissjudge'), '\n');
 		judgementCounter.screenCenter(Y);
 		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
@@ -2396,27 +2409,10 @@ class PlayState extends MusicBeatState
 					dadbattleLight.alpha = 0.375;
 					dadbattleLight.blend = ADD;
 					dadbattleLight.visible = false;
-
-					dadbattleSmokes.alpha = 0.7;
-					dadbattleSmokes.blend = ADD;
-					dadbattleSmokes.visible = false;
 					add(dadbattleLight);
-					add(dadbattleSmokes);
 
-					var offsetX = 200;
-					var smoke:BGSprite = new BGSprite('smoke', -1550 + offsetX, 660 + FlxG.random.float(-20, 20), 1.2, 1.05);
-					smoke.setGraphicSize(Std.int(smoke.width * FlxG.random.float(1.1, 1.22)));
-					smoke.updateHitbox();
-					smoke.velocity.x = FlxG.random.float(15, 22);
-					smoke.active = true;
-					dadbattleSmokes.add(smoke);
-					var smoke:BGSprite = new BGSprite('smoke', 1550 + offsetX, 660 + FlxG.random.float(-20, 20), 1.2, 1.05);
-					smoke.setGraphicSize(Std.int(smoke.width * FlxG.random.float(1.1, 1.22)));
-					smoke.updateHitbox();
-					smoke.velocity.x = FlxG.random.float(-15, -22);
-					smoke.active = true;
-					smoke.flipX = true;
-					dadbattleSmokes.add(smoke);
+					dadbattleFog = new DadBattleFog();
+					add(dadbattleFog);
 				}
 
 			case 'Philly Glow':
@@ -2783,23 +2779,7 @@ class PlayState extends MusicBeatState
 		}
 
 		switch (curStage) {
-			case 'tank':
-				moveTank(elapsed);
-			case 'schoolEvil':
-				if(!lowQuality && bgGhouls.animation.curAnim.finished) {
-					bgGhouls.visible = false;
-				}
 			case 'philly':
-				if (trainMoving)
-				{
-					trainFrameTiming += elapsed;
-
-					if (trainFrameTiming >= 1 / 24)
-					{
-						updateTrainPos();
-						trainFrameTiming = 0;
-					}
-				}
 				phillyWindow.alpha -= (Conductor.crochet / 1000) * FlxG.elapsed * 1.5;
 
 				if(phillyGlowParticles != null)
@@ -3345,7 +3325,7 @@ class PlayState extends MusicBeatState
 							if (val == 1) { //enable
 								dadbattleBlack.visible = true;
 								dadbattleLight.visible = true;
-								dadbattleSmokes.visible = true;
+								dadbattleFog.visible = true;
 								defaultCamZoom += 0.12;
 							}
 
@@ -3362,8 +3342,8 @@ class PlayState extends MusicBeatState
 							dadbattleBlack.visible = false;
 							dadbattleLight.visible = false;
 							defaultCamZoom -= 0.12;
-							FlxTween.tween(dadbattleSmokes, {alpha: 0}, 1 * playbackRate, {onComplete: function(twn:FlxTween) {
-								dadbattleSmokes.visible = false;
+							FlxTween.tween(dadbattleFog, {alpha: 0}, 1 * playbackRate, {onComplete: function(twn:FlxTween) {
+								dadbattleFog.visible = false;
 							}});
 					}
 				}
@@ -4120,7 +4100,6 @@ class PlayState extends MusicBeatState
 
 	private function popUpScore(note:Note = null):Void {
 		var noteDiff = getNoteDiff(note);
-		allNotesMs += noteDiff;
 
 		vocals.volume = 1;
 
@@ -4135,7 +4114,7 @@ class PlayState extends MusicBeatState
 
 		totalNotesHit += daRating.ratingMod;
 		note.ratingMod = daRating.ratingMod;
-		if(!note.ratingDisabled) daRating.increase();
+		if(!note.ratingDisabled) daRating.hits++;
 		note.rating = daRating.name;
 		score = daRating.score;
 
@@ -4216,10 +4195,10 @@ class PlayState extends MusicBeatState
 					case "Simple": msTiming = MathUtil.truncateFloat(noteDiff / 1.);
 				}
 				
-				mstimingTxt.text = msTiming + "ms";
-				mstimingTxt.setFormat(Paths.font("vcr.ttf"), 22, FlxColor.WHITE, CENTER);
+				mstimingTxt.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 20, FlxColor.WHITE, CENTER);
 				mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 				mstimingTxt.visible = !hideHud;
+				mstimingTxt.text = msTiming + "ms";
 				if (ratingDisplay == "Hud") {
 					mstimingTxt.cameras = [camHUD];
 				}
@@ -4906,59 +4885,6 @@ class PlayState extends MusicBeatState
 		});
 	}
 
-	var trainMoving:Bool = false;
-	var trainFrameTiming:Float = 0;
-
-	var trainCars:Int = 8;
-	var trainFinishing:Bool = false;
-	var trainCooldown:Int = 0;
-
-	function trainStart():Void {
-		trainMoving = true;
-		if (!trainSound.playing)
-			trainSound.play(true);
-	}
-
-	var startedMoving:Bool = false;
-	function updateTrainPos():Void {
-		if (trainSound.time >= 4700) {
-			startedMoving = true;
-			if (gf != null) {
-				gf.playAnim('hairBlow');
-				gf.specialAnim = true;
-			}
-		}
-
-		if (startedMoving) {
-			phillyTrain.x -= 400;
-
-			if (phillyTrain.x < -2000 && !trainFinishing) {
-				phillyTrain.x = -1150;
-				trainCars -= 1;
-
-				if (trainCars <= 0)
-					trainFinishing = true;
-			}
-
-			if (phillyTrain.x < -4000 && trainFinishing)
-				trainReset();
-		}
-	}
-
-	function trainReset():Void
-	{
-		if(gf != null) {
-			gf.danced = false; //Sets head to the correct position once the animation ends
-			gf.playAnim('hairFall');
-			gf.specialAnim = true;
-		}
-		phillyTrain.x = FlxG.width + 200;
-		trainMoving = false;
-		trainCars = 8;
-		trainFinishing = false;
-		startedMoving = false;
-	}
-
 	function lightningStrikeShit():Void
 	{
 		FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2));
@@ -5029,21 +4955,6 @@ class PlayState extends MusicBeatState
 			limoCorpse.visible = false;
 			limoCorpseTwo.x = -500;
 			limoCorpseTwo.visible = false;
-		}
-	}
-
-	var tankX:Float = 400;
-	var tankSpeed:Float = FlxG.random.float(5, 7);
-	var tankAngle:Float = FlxG.random.int(-90, 45);
-
-	function moveTank(?elapsed:Float = 0):Void
-	{
-		if(!inCutscene)
-		{
-			tankAngle += elapsed * tankSpeed;
-			tankGround.angle = tankAngle - 90 + 15;
-			tankGround.x = tankX + 1500 * Math.cos(Math.PI / 180 * (1 * tankAngle + 180));
-			tankGround.y = 1300 + 1100 * Math.sin(Math.PI / 180 * (1 * tankAngle + 180));
 		}
 	}
 
@@ -5198,18 +5109,12 @@ class PlayState extends MusicBeatState
 					fastCarDrive();
 
 			case "philly":
-				if (!trainMoving)
-					trainCooldown += 1;
+				phillyTrain.beatHit(curBeat);
 
 				if (curBeat % 4 == 0) {
 					curLight = FlxG.random.int(0, phillyLightsColors.length - 1, [curLight]);
 					phillyWindow.color = phillyLightsColors[curLight];
 					phillyWindow.alpha = 1;
-				}
-
-				if (curBeat % 8 == 4 && FlxG.random.bool(30) && !trainMoving && trainCooldown > 8) {
-					trainCooldown = FlxG.random.int(-4, 0);
-					trainStart();
 				}
 		}
 
@@ -5218,7 +5123,7 @@ class PlayState extends MusicBeatState
 		}
 		lastBeatHit = curBeat;
 
-		setOnLuas('curBeat', curBeat); //DAWGG?????
+		setOnLuas('curBeat', curBeat);
 		callOnLuas('onBeatHit', []);
 		callOnScripts('beatHit', [curBeat]);
 	}
@@ -5357,14 +5262,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			// Rating FC
-			ratingFC = "";
-			if (epics > 0) ratingFC = "PFC";
-			if (sicks > 0) ratingFC = "SFC";
-			if (goods > 0) ratingFC = "GFC";
-			if (bads > 0 || shits > 0) ratingFC = "FC";
-			if (songMisses > 0 && songMisses < 10) ratingFC = "SDCB";
-			else if (songMisses >= 10) ratingFC = "Clear";
+			fullComboFunction();
 		}
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
 
@@ -5384,51 +5282,52 @@ class PlayState extends MusicBeatState
 			var achievementName:String = achievesToCheck[i];
 			if(!Achievements.isAchievementUnlocked(achievementName) && !cpuControlled && Achievements.exists(achievementName)) {
 				var unlock:Bool = false;
-				if (achievementName.contains(WeekData.getWeekFileName()) && achievementName.endsWith('nomiss')) { // any FC achievements, name should be "weekFileName_nomiss", e.g: "weekd_nomiss"
+				if (achievementName.contains(WeekData.getWeekFileName()) && achievementName.endsWith('_nomiss')) { // any FC achievements, name should be "weekFileName_nomiss", e.g: "weekd_nomiss"
 					if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'HARD'
 						&& storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice)
 						unlock = true;
-				}
-				switch(achievementName) {
-					case 'ur_bad':
-						if(ratingPercent < .2 && !practiceMode) {
-							unlock = true;
-						}
-					case 'ur_good':
-						if(ratingPercent >= 1 && !usedPractice) {
-							unlock = true;
-						}
-					case 'roadkill_enthusiast':
-						if(Achievements.henchmenDeath >= 100) {
-							unlock = true;
-						}
-					case 'oversinging':
-						if(boyfriend.holdTimer >= 10 && !usedPractice) {
-							unlock = true;
-						}
-					case 'hype':
-						if(!boyfriendIdled && !usedPractice) {
-							unlock = true;
-						}
-					case 'two_keys':
-						if(!usedPractice) {
-							var howManyPresses:Int = 0;
-							for (j in 0...keysPressed.length) {
-								if(keysPressed[j]) howManyPresses++;
-							}
-
-							if(howManyPresses <= 2) {
+				} else {
+					switch(achievementName) {
+						case 'ur_bad':
+							if(ratingPercent < .2 && !practiceMode) {
 								unlock = true;
 							}
-						}
-					case 'toastie':
-						if(lowQuality && !globalAntialiasing && !ClientPrefs.getPref('shaders')) {
-							unlock = true;
-						}
-					case 'debugger':
-						if(songName == 'test' && !usedPractice) {
-							unlock = true;
-						}
+						case 'ur_good':
+							if(ratingPercent >= 1 && !usedPractice) {
+								unlock = true;
+							}
+						case 'roadkill_enthusiast':
+							if(Achievements.henchmenDeath >= 100) {
+								unlock = true;
+							}
+						case 'oversinging':
+							if(boyfriend.holdTimer >= 10 && !usedPractice) {
+								unlock = true;
+							}
+						case 'hype':
+							if(!boyfriendIdled && !usedPractice) {
+								unlock = true;
+							}
+						case 'two_keys':
+							if(!usedPractice) {
+								var howManyPresses:Int = 0;
+								for (j in 0...keysPressed.length) {
+									if(keysPressed[j]) howManyPresses++;
+								}
+	
+								if(howManyPresses <= 2) {
+									unlock = true;
+								}
+							}
+						case 'toastie':
+							if(lowQuality && !globalAntialiasing && !ClientPrefs.getPref('shaders')) {
+								unlock = true;
+							}
+						case 'debugger':
+							if(Paths.formatToSongPath(SONG.song) == 'test' && !usedPractice) {
+								unlock = true;
+							}
+					}
 				}
 
 				if(unlock) {

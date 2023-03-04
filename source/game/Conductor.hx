@@ -118,23 +118,21 @@ class Rating
 {
 	public var name:String = '';
 	public var image:String = '';
-	public var counter:String = '';
 	public var hitWindow:Null<Int> = 0; //ms
 	public var ratingMod:Float = 1;
 	public var score:Int = 500;
 	public var noteSplash:Bool = true;
+	public var hits:Int = 0;
 
 	public function new(name:String)
 	{
 		this.name = name;
 		this.image = name;
-		this.counter = name + 's';
 		this.hitWindow = ClientPrefs.getPref(name + 'Window', 0);
 		if(hitWindow == null) hitWindow = 0;
 	}
 
-	public static function loadDefault():Array<Rating>
-	{
+	public static function loadDefault():Array<Rating> {
 		//Ratings
 		var ratingsData:Array<Rating> = [new Rating('epic')];
 
@@ -169,9 +167,5 @@ class Rating
 		ratingsData.push(rating);
 
 		return ratingsData;
-	}
-
-	public function increase(blah:Int = 1) {
-		Reflect.setField(PlayState.instance, counter, Reflect.field(PlayState.instance, counter) + blah);
 	}
 }

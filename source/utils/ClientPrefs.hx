@@ -344,7 +344,7 @@ class ClientPrefs {
 		FlxG.save.flush();
 
 		var save:FlxSave = new FlxSave();
-		save.bind('controls', CoolUtil.getSavePath()); //Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
+		save.bind('controls', CoolUtil.getSavePath());
 
 		for (name in separateSaves) {
 			if (prefs.exists(name)) {
