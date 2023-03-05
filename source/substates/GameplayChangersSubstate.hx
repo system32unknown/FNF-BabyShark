@@ -8,7 +8,6 @@ import flixel.FlxSprite;
 import ui.Alphabet;
 import ui.CheckboxThingie;
 import ui.AttachedText;
-import utils.ClientPrefs;
 
 #if sys
 import sys.io.File;

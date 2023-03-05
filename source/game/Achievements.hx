@@ -13,8 +13,6 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 
-import utils.ClientPrefs;
-
 typedef AchievementMeta = {
 	public var name:String;
 	public var desc:String;

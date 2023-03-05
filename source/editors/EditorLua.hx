@@ -11,11 +11,6 @@ import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxSprite;
 import Type.ValueType;
-
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
-import utils.ClientPrefs;
 import game.Conductor;
 import game.Note;
 import states.PlayState;

@@ -5,9 +5,6 @@ import openfl.text.TextFormat;
 import openfl.utils.Assets;
 
 import flixel.util.FlxColor;
-import flixel.FlxG;
-import utils.MathUtil;
-import utils.ClientPrefs;
 import utils.system.MemoryUtil;
 import utils.system.FPSUtil;
 import openfl.system.System;
@@ -44,7 +41,7 @@ class Overlay extends TextField {
 	override function __enterFrame(dt:Int):Void {
 		if (alpha <= .05) return;
 		super.__enterFrame(dt);
-		FPS.update(dt);
+		FPS.update();
 
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + 1;

@@ -7,11 +7,6 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import utils.Controls;
-import utils.ClientPrefs;
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
-import substates.MusicBeatSubstate;
 import ui.Alphabet;
 
 class FuncOptionsMenu extends MusicBeatSubstate

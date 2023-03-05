@@ -1,6 +1,5 @@
 package data;
 
-import utils.ClientPrefs;
 import utils.CoolUtil;
 
 class EKData {

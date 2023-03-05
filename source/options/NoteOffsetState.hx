@@ -12,11 +12,10 @@ import flixel.FlxG;
 import flixel.ui.FlxBar;
 import flixel.math.FlxPoint;
 
-import states.MusicBeatState;
+
 import game.Character;
 import game.Conductor;
 import game.BGSprite;
-import utils.ClientPrefs;
 import ui.CustomFadeTransition;
 import ui.Alphabet;
 

@@ -1,6 +1,5 @@
 package options;
 
-import utils.ClientPrefs;
 import ui.Alphabet;
 
 class Option

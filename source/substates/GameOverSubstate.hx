@@ -9,7 +9,6 @@ import flixel.util.FlxTimer;
 import game.Boyfriend;
 import game.Conductor;
 import states.PlayState;
-import states.MusicBeatState;
 import states.StoryMenuState;
 import states.FreeplayState;
 import utils.MathUtil;

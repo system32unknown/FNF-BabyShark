@@ -14,13 +14,11 @@ import flixel.util.FlxStringUtil;
 import flixel.math.FlxMath;
 
 import ui.Alphabet;
-import utils.ClientPrefs;
 import utils.CoolUtil;
 import game.Conductor;
 import game.Highscore;
 import game.Song;
 import states.PlayState;
-import states.MusicBeatState;
 import states.StoryMenuState;
 import states.FreeplayState;
 import data.WeekData;

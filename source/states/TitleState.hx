@@ -18,12 +18,8 @@ import flixel.system.FlxSplash;
 import lime.app.Application;
 import haxe.Json;
 import data.WeekData;
-import utils.ClientPrefs;
 import utils.CoolUtil;
 import utils.MathUtil;
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import game.Highscore;
 import game.Conductor;
 import states.MainMenuState;

@@ -1,8 +1,5 @@
 package editors;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -22,11 +19,9 @@ import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
 import haxe.Json;
 import lime.system.Clipboard;
-import utils.ClientPrefs;
 import ui.DialogueBoxPsych;
 import ui.DialogueCharacter;
 import ui.TypedAlphabet;
-import states.MusicBeatState;
 import states.TitleState;
 #if sys
 import sys.io.File;

@@ -12,7 +12,6 @@ import sys.io.File;
 import openfl.utils.Assets;
 
 import states.PlayState;
-import utils.ClientPrefs;
 import utils.Controls;
 import scripting.lua.FunkinLua;
 

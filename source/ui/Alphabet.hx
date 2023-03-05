@@ -6,7 +6,6 @@ import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 
-import utils.ClientPrefs;
 import utils.MathUtil;
 
 enum Alignment {

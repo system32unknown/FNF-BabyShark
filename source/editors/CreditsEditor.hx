@@ -23,15 +23,11 @@ import openfl.events.IOErrorEvent;
 import sys.io.File;
 #end
 
-import states.MusicBeatState;
 import ui.Alphabet;
 import ui.AttachedSprite;
 import ui.CustomFadeTransition;
 import ui.Prompt;
 import utils.CoolUtil;
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 
 using StringTools;
 

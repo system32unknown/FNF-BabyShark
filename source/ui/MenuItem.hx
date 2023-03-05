@@ -5,7 +5,6 @@ import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 
-import utils.ClientPrefs;
 import utils.MathUtil;
 
 class MenuItem extends FlxSprite

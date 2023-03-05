@@ -1,16 +1,12 @@
 package options;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import utils.ClientPrefs;
-import states.MusicBeatState;
+
 import states.MainMenuState;
 import states.LoadingState;
 import ui.Alphabet;

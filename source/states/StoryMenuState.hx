@@ -1,8 +1,5 @@
 package states;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
@@ -15,7 +12,6 @@ import flixel.graphics.FlxGraphic;
 import data.WeekData;
 import utils.CoolUtil;
 import utils.MathUtil;
-import utils.ClientPrefs;
 import game.Highscore;
 import game.Song;
 import substates.ResetScoreSubState;

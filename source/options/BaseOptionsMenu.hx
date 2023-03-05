@@ -1,8 +1,5 @@
 package options;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -10,8 +7,6 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import utils.Controls;
-import utils.ClientPrefs;
-import substates.MusicBeatSubstate;
 import ui.AttachedText;
 import ui.CheckboxThingie;
 import ui.Alphabet;

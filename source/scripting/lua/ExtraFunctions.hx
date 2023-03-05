@@ -13,7 +13,6 @@ import openfl.utils.Assets;
 
 import states.PlayState;
 import utils.CoolUtil;
-import utils.ClientPrefs;
 
 //
 // Things to trivialize some dumb stuff like splitting strings on older Lua

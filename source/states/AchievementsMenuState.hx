@@ -1,8 +1,5 @@
 package states;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -10,7 +7,6 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import game.Achievements;
-import utils.ClientPrefs;
 import ui.Alphabet;
 
 class AchievementsMenuState extends MusicBeatState

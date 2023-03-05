@@ -1,7 +1,6 @@
 package scripting.lua;
 
 import flixel.FlxSprite;
-import utils.ClientPrefs;
 
 class ModchartSprite extends FlxSprite
 {

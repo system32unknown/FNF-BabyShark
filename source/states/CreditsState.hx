@@ -17,9 +17,6 @@ import ui.AttachedSprite;
 import game.HealthIcon;
 import utils.CoolUtil;
 import utils.MathUtil;
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 
 class CreditsState extends MusicBeatState
 {

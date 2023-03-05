@@ -1,7 +1,6 @@
 package ui;
 
 import flixel.FlxSprite;
-import utils.ClientPrefs;
 
 class CheckboxThingie extends FlxSprite
 {

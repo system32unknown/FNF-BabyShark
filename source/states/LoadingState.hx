@@ -15,13 +15,8 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.addons.display.FlxBackdrop;
 
-import shaders.GlitchEffect;
-
 import openfl.utils.Assets;
-
 import haxe.io.Path;
-
-import utils.ClientPrefs;
 import data.StageData;
 
 class LoadingState extends MusicBeatState
@@ -53,7 +48,6 @@ class LoadingState extends MusicBeatState
 
 	var logo:FlxSprite;
 	var loadLogoText:FlxText;
-	var expungedshader:GlitchEffect;
 	override function create()
 	{
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));

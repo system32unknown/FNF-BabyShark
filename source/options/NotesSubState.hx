@@ -5,11 +5,9 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
-import substates.MusicBeatSubstate;
 import game.Note;
 import utils.Controls;
 import utils.MathUtil;
-import utils.ClientPrefs;
 import shaders.ColorSwap;
 import ui.Alphabet;
 

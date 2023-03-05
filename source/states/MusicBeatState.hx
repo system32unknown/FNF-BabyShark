@@ -8,7 +8,6 @@ import flixel.FlxCamera;
 import utils.Controls;
 import ui.CustomFadeTransition;
 import ui.ErrorDisplay;
-import utils.ClientPrefs;
 import game.Conductor;
 import game.Song;
 

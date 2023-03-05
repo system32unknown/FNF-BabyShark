@@ -1,11 +1,6 @@
 package states;
 
 import shaders.VCRDistortionEffect.VCRDistortionEffect;
-import utils.ClientPrefs;
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
-
 import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
 import flixel.text.FlxText;

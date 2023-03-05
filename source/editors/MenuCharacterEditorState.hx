@@ -1,8 +1,5 @@
 package editors;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -24,7 +21,6 @@ import sys.io.File;
 #end
 import ui.MenuCharacter;
 import states.TitleState;
-import states.MusicBeatState;
 
 class MenuCharacterEditorState extends MusicBeatState
 {

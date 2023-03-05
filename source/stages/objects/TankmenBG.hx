@@ -3,7 +3,6 @@ package stages.objects;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
-import utils.ClientPrefs;
 import game.Conductor;
 
 class TankmenBG extends FlxSprite

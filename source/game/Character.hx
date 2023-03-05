@@ -13,7 +13,6 @@ import openfl.utils.Assets;
 import haxe.Json;
 
 import stages.objects.TankmenBG;
-import utils.ClientPrefs;
 import states.PlayState;
 import game.Section.SwagSection;
 import game.Song;

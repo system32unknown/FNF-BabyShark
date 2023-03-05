@@ -1,8 +1,5 @@
 package editors;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import game.HealthIcon;
 import game.Character;
 import game.Section.SwagSection;
@@ -13,9 +10,7 @@ import game.StrumNote;
 import game.Note;
 import data.StageData;
 import utils.CoolUtil;
-import utils.ClientPrefs;
 import shaders.ColorSwap;
-import states.MusicBeatState;
 import states.LoadingState;
 import states.PlayState;
 import states.TitleState;

@@ -1,8 +1,5 @@
 package editors;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
@@ -30,8 +27,6 @@ import sys.FileSystem;
 #end
 import data.WeekData;
 import states.TitleState;
-import states.MusicBeatState;
-import utils.ClientPrefs;
 import game.HealthIcon;
 import ui.Alphabet;
 import ui.MenuCharacter;

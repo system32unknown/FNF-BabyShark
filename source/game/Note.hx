@@ -3,7 +3,6 @@ package game;
 import flixel.FlxSprite;
 import editors.ChartingState;
 import shaders.ColorSwap;
-import utils.ClientPrefs;
 import states.PlayState;
 import data.EkData;
 
@@ -143,11 +142,11 @@ class Note extends FlxSprite
 		return value;
 	}
 
-	private function set_noteType(value:String):String {
+	function set_noteType(value:String):String {
 		var luaPrefix:String = '';
 		noteSplashTexture = PlayState.SONG.splashSkin;
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-		var arrowIndex:Int = Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania]);
+		var arrowIndex:Int = Std.int(keysShit.get(mania).get('pixelAnimIndex')[noteData] % ammo[mania]);
 		if (noteData > -1 && noteData < arrowHSV.length) {
 			colorSwap.hue = arrowHSV[arrowIndex][0] / 360;
 			colorSwap.saturation = arrowHSV[arrowIndex][1] / 100;
@@ -239,14 +238,13 @@ class Note extends FlxSprite
 			colorSwap = new ColorSwap();
 			shader = colorSwap.shader;
 
-			x += swagWidth * (noteData % Note.ammo[mania]);
-			if(!isSustainNote && noteData > -1 && noteData < Note.maxManiaUI_integer) { //Doing this 'if' check to fix the warnings on Senpai songs
-				animation.play(Note.keysShit.get(mania).get('letters')[noteData]);
+			x += swagWidth * (noteData % ammo[mania]);
+			if(!isSustainNote && noteData > -1 && noteData < maxManiaUI_integer) { //Doing this 'if' check to fix the warnings on Senpai songs
+				animation.play(keysShit.get(mania).get('letters')[noteData]);
 			}
 		}
 
-		if (isSustainNote && prevNote != null)
-		{
+		if (isSustainNote && prevNote != null) {
 			alpha = 0.6;
 			multAlpha = 0.6;
 			hitsoundDisabled = true;
@@ -255,17 +253,17 @@ class Note extends FlxSprite
 			offsetX += width / 2;
 			copyAngle = false;
 
-			animation.play(Note.keysShit.get(mania).get('letters')[noteData] + ' tail');
+			animation.play(keysShit.get(mania).get('letters')[noteData] + ' tail');
 
 			updateHitbox();
 
 			offsetX -= width / 2;
 
 			if (PlayState.isPixelStage)
-				offsetX += 30 * Note.pixelScales[mania];
+				offsetX += 30 * pixelScales[mania];
 
 			if (prevNote.isSustainNote) {
-				prevNote.animation.play(Note.keysShit.get(mania).get('letters')[prevNote.noteData] + ' hold');
+				prevNote.animation.play(keysShit.get(mania).get('letters')[prevNote.noteData] + ' hold');
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
 				if(PlayState.instance != null) {
@@ -329,7 +327,7 @@ class Note extends FlxSprite
 				loadGraphic(Paths.image('pixelUI/' + blahblah), true, Math.floor(width), Math.floor(height));
 			}
 			defaultWidth = width;
-			setGraphicSize(Std.int(width * PlayState.daPixelZoom * Note.pixelScales[mania]));
+			setGraphicSize(Std.int(width * PlayState.daPixelZoom * pixelScales[mania]));
 			loadPixelNoteAnims();
 			antialiasing = false;
 

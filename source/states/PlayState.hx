@@ -41,9 +41,6 @@ import game.Achievements.AchievementObject;
 import game.Section.SwagSection;
 import game.*;
 import utils.*;
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import stages.objects.*;
 import ui.*;
 import shaders.PulseEffect;

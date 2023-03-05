@@ -17,10 +17,6 @@ import utils.Controls;
 import utils.system.MemoryUtil;
 import ui.Overlay;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
-
 import api.github.GithubAPI;
 
 //crash handler stuff

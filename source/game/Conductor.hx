@@ -1,7 +1,6 @@
 package game;
 
 import game.Song.SwagSong;
-import utils.ClientPrefs;
 import states.PlayState;
 
 typedef BPMChangeEvent = {

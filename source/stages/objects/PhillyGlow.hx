@@ -4,8 +4,6 @@ import flixel.util.FlxColor;
 import flixel.FlxSprite;
 import flixel.FlxG;
 
-import utils.ClientPrefs;
-
 class PhillyGlowParticle extends FlxSprite
 {
 	var lifeTime:Float = 0;

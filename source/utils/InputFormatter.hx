@@ -1,4 +1,4 @@
-package ui;
+package utils;
 import flixel.input.keyboard.FlxKey;
 
 class InputFormatter {

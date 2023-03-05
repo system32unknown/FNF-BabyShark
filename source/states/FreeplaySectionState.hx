@@ -1,8 +1,5 @@
 package states;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -18,7 +15,6 @@ import flixel.math.FlxMath;
 import data.WeekData;
 import utils.CoolUtil;
 import utils.MathUtil;
-import utils.ClientPrefs;
 import game.Conductor;
 
 /**

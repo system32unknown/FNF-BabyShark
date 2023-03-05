@@ -1,8 +1,5 @@
 package editors;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -27,11 +24,10 @@ import openfl.events.IOErrorEvent;
 import haxe.Json;
 
 import utils.CoolUtil;
-import utils.ClientPrefs;
 import game.BGSprite;
 import game.Character;
 import game.HealthIcon;
-import states.MusicBeatState;
+
 import states.TitleState;
 
 #if MODS_ALLOWED

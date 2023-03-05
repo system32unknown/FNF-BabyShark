@@ -6,7 +6,6 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import openfl.geom.Rectangle;
 import utils.CoolUtil;
-import substates.MusicBeatSubstate;
 
 class Prompt extends MusicBeatSubstate
 {

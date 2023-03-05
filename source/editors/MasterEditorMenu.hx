@@ -1,8 +1,5 @@
 package editors;
 
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -12,7 +9,6 @@ import flixel.math.FlxMath;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
-import states.MusicBeatState;
 import states.LoadingState;
 import states.MainMenuState;
 import states.FreeplayState;

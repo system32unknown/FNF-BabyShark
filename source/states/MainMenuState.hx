@@ -16,11 +16,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import game.Achievements;
 import editors.MasterEditorMenu;
-import utils.ClientPrefs;
 import utils.MathUtil;
-#if discord_rpc
-import utils.Discord.DiscordClient;
-#end
 import data.WeekData;
 
 class MainMenuState extends MusicBeatState

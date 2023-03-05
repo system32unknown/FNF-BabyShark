@@ -6,9 +6,7 @@ import game.NoteSplash;
 import game.Conductor;
 import game.Note;
 import utils.MathUtil;
-import utils.ClientPrefs;
 import data.EkData.Keybinds;
-import states.MusicBeatState;
 import states.PlayState;
 import states.LoadingState;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -109,7 +107,7 @@ class EditorPlayState extends MusicBeatState
 
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
 		grpNoteSplashes.add(splash);
-		splash.alpha = 0.0;
+		splash.alpha = 0.;
 		
 		if (PlayState.SONG.needsVoices)
 			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
