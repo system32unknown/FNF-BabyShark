@@ -8,7 +8,7 @@ import flixel.math.FlxMath;
 import data.EkData.Keybinds;
 import utils.CoolUtil;
 import utils.Controls;
-import ui.InputFormatter;
+import utils.InputFormatter;
 import ui.AttachedText;
 import ui.Alphabet;
 
