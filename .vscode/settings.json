@@ -1,0 +1,18 @@
+{
+    "lime.targetConfigurations": [
+      {
+        "label": "Build Windows (Debug)",
+        "target": "windows",
+        "args": [
+          "-debug"
+        ]
+      },
+      {
+        "label": "Build Windows (Release)",
+        "target": "windows",
+        "args": [
+          "-release"
+        ]
+      }
+    ]
+  }

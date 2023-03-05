@@ -3,7 +3,6 @@ package;
 import flixel.FlxGame;
 import flixel.FlxG;
 
-import haxe.EnumFlags;
 import haxe.Exception;
 
 import openfl.Lib;
