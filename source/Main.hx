@@ -14,7 +14,7 @@ import lime.app.Application;
 
 import states.TitleState;
 import utils.Controls;
-import utils.MemoryUtil;
+import utils.system.MemoryUtil;
 import ui.Overlay;
 
 #if discord_rpc

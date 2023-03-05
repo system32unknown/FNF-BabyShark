@@ -8,7 +8,9 @@ import flixel.util.FlxColor;
 import flixel.FlxG;
 import utils.MathUtil;
 import utils.ClientPrefs;
-import utils.MemoryUtil;
+import utils.system.MemoryUtil;
+import utils.system.FPSUtil;
+import openfl.system.System;
 
 class Overlay extends TextField {
 	public static var instance:Overlay;
@@ -17,7 +19,7 @@ class Overlay extends TextField {
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
 	//FPS
-    public var currentFPS(default, null):Int = 0;
+    public var FPS:FPSUtil;
 
 	//Memory
     var memory:Int = 0;
@@ -35,24 +37,24 @@ class Overlay extends TextField {
 		multiline = wordWrap = false;
 		text = "";
 		defaultTextFormat = new TextFormat(fontName, 16, -1);
+		FPS = new FPSUtil();
 	}
 
 	//Yoinked from codename engine
 	override function __enterFrame(dt:Int):Void {
 		if (alpha <= .05) return;
 		super.__enterFrame(dt);
+		FPS.update(dt);
 
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + 1;
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		currentFPS = Math.floor(MathUtil.fpsLerp(currentFPS, FlxG.elapsed == 0 ? 0 : (1 / FlxG.elapsed), .25));
-
-		memory = MemoryUtil.getMemUsage(ClientPrefs.getPref('MEMType'));
+		memory = cast(System.totalMemory, UInt);
 		if (memory > mempeak) mempeak = memory;
 
-		text = '$currentFPS FPS ${ClientPrefs.getPref('MSFPSCounter') ? '[MS: $dt]' : ''}\n';
+		text = '${FPS.currentFPS} FPS ${ClientPrefs.getPref('MSFPSCounter') ? '[MS: $dt]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
 			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
 

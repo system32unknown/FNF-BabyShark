@@ -4177,10 +4177,7 @@ class PlayState extends MusicBeatState
 			timing.y -= comboOffset[3][1];
 		
 			if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
-				switch (ClientPrefs.getPref('MstimingTypes')) {
-					case "Kade": msTiming = MathUtil.truncateFloat(noteDiff / playbackRate);
-					case "Simple": msTiming = MathUtil.truncateFloat(noteDiff / 1.);
-				}
+				msTiming = MathUtil.truncateFloat(noteDiff / playbackRate);
 				
 				mstimingTxt.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 20, FlxColor.WHITE, CENTER);
 				mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);

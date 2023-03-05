@@ -5,8 +5,7 @@ import haxe.PosInfos;
 
 // https://gist.github.com/martinwells/5980517
 class ColoredLog {
-	static var ansiColors:Map<String,String> = new Map();
-
+	static var ansiColors:Map<String, String> = new Map();
 	static var origTrace:Function;
 
 	public static function init() {

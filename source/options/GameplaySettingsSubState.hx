@@ -81,14 +81,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			'Simple',
 			['Psych', 'Kade', 'Simple']);
 		addOption(option);
-
-		var option:Option = new Option('Ms Timing Type:',
-			'Choose the type of Ms timing.',
-			'MstimingTypes',
-			'string',
-			'Simple',
-			['Kade', 'Simple']);
-		addOption(option);
 		
 		var option:Option = new Option('Rating Offset',
 			'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.',

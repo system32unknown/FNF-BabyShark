@@ -45,15 +45,13 @@ class MiscellaneousSubState extends BaseOptionsMenu
 		'bool', true);
 		addOption(option);
 
-		#if cpp
-		var option:Option = new Option('MEM Type',
+		var option:Option = new Option('FPS Type',
 			'',
-			'MEMType',
+			'FPSType',
 			'string',
-			'system',
-			['cpp', 'system', 'gc']);
+			'times',
+			['times', 'elapsed']);
 		addOption(option);
-		#end
 
 		var option:Option = new Option('Flashing Lights',
 			"Uncheck this if you're sensitive to flashing lights!",

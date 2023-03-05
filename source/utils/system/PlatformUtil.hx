@@ -1,4 +1,4 @@
-package utils;
+package utils.system;
 
 #if windows
 @:buildXml('
