@@ -342,32 +342,31 @@ class TitleState extends MusicBeatState
 				case 1:
 					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
-					createCoolText(['Vs Dave and Bambi Created by:']);
+					createCoolText(['Vs Dave and Bambi by:']);
 				case 2:
 					addMoreText('MoldyGH, MTM101, Stats45');
 					addMoreText('Rapparep lol, TheBuilderXD, Edival');
 					addMoreText('T5mpler, Erizur, Billy Bobbo');
 				case 3:
 					deleteCoolText();
-					createCoolText(['Baby Shark\'s Big Show Created by:']);
+					createCoolText(['Baby Shark\'s Big Show by:']);
 				case 4:
 					addMoreText('Pinkfong');
 					addMoreText('Nickelodeon');
 					addMoreText('SmartStudy');
 				case 5:
 					deleteCoolText();
-					createCoolText(['Extra Keys Created by:']);
+					createCoolText(['Extra Keys by:']);
 				case 6:
 					addMoreText('tposejank');
 					addMoreText('srPerez');
 					addMoreText('Leather128');
 				case 7:
 					deleteCoolText();
-					createCoolText(['Psych Engine Created by:']);
+					createCoolText(['Psych Engine by:']);
 				case 8:
 					addMoreText('Shadow Mario');
 					addMoreText('RiverOaken');
-					addMoreText('YoShubs');
 					addMoreText('And Psych Engine Contributors!');
 				case 9:
 					deleteCoolText();

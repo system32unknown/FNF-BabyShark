@@ -7,6 +7,7 @@ Heavily Modded Psych Engine. combined with Kade, Dave, Base Engines.
 ![File Count](https://img.shields.io/github/directory-file-count/system32unknown/FNF-BabyShark)
 ![Last commit](https://img.shields.io/github/last-commit/system32unknown/FNF-BabyShark)
 ![Windows Build](https://img.shields.io/github/actions/workflow/status/system32unknown/FNF-BabyShark/main.yml)
+![Appveyor Build](https://img.shields.io/appveyor/build/system32unknown/FNF-BabyShark)
 ![License](https://img.shields.io/github/license/system32unknown/FNF-BabyShark)
 
 # Credits (WIP):
@@ -14,7 +15,6 @@ Heavily Modded Psych Engine. combined with Kade, Dave, Base Engines.
 ### Psych Engine:
 * Shadow Mario - Programmer
 * RiverOaken - Artist
-* Yoshubs - Assistant Programmer
 
 ### Kade Engine:
 * KadeDev - Programmer of Kade Engine
@@ -27,6 +27,7 @@ Heavily Modded Psych Engine. combined with Kade, Dave, Base Engines.
 
 ### Special Thanks:
 * bbpanzu - Ex-Programmer
+* Yoshubs - Ex-Assistant Programmer
 * Yoshubs - New Input System
 * SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
 * KadeDev - Fixed some cool stuff on Chart Editor and other PRs
