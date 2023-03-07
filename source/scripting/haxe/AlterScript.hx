@@ -37,6 +37,7 @@ class AlterScript {
         interp.staticVariables = staticVariables;
 
         parser = new Parser();
+        parser.line = 1;
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
 
         setVars();
@@ -63,7 +64,6 @@ class AlterScript {
 
     public function call(func:String, args:Array<Dynamic>):Dynamic {
         if (func == null || args == null || !exists(func)) return null;
-
         return Reflect.callMethod(this, get(func), args);
     }
 

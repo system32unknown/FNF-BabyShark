@@ -231,8 +231,8 @@ class FlxRuntimeShader extends FlxShader
 	 */
 	function processFragmentSource(input:String):String
 	{
-		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_FRAGMENT_HEADER);
-		result = StringTools.replace(result, PRAGMA_BODY, BASE_FRAGMENT_BODY);
+		var result = input.replace(PRAGMA_HEADER, BASE_FRAGMENT_HEADER);
+		result = result.replace(PRAGMA_BODY, BASE_FRAGMENT_BODY);
 		return result;
 	}
 
@@ -241,8 +241,8 @@ class FlxRuntimeShader extends FlxShader
 	 */
 	function processVertexSource(input:String):String
 	{
-		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_VERTEX_HEADER);
-		result = StringTools.replace(result, PRAGMA_BODY, BASE_VERTEX_BODY);
+		var result = input.replace(PRAGMA_HEADER, BASE_VERTEX_HEADER);
+		result = result.replace(PRAGMA_BODY, BASE_VERTEX_BODY);
 		return result;
 	}
 
@@ -287,10 +287,10 @@ class FlxRuntimeShader extends FlxShader
 			var precisionHeaders = buildPrecisionHeaders();
 			var versionHeader = '#version ${_glslVersion}\n';
 
-			var vertex = StringTools.replace(glVertexSource, PRAGMA_PRECISION, precisionHeaders);
-			vertex = StringTools.replace(vertex, PRAGMA_VERSION, versionHeader);
-			var fragment = StringTools.replace(glFragmentSource, PRAGMA_PRECISION, precisionHeaders);
-			fragment = StringTools.replace(fragment, PRAGMA_VERSION, versionHeader);
+			var vertex = glVertexSource.replace(PRAGMA_PRECISION, precisionHeaders);
+			vertex = vertex.replace(PRAGMA_VERSION, versionHeader);
+			var fragment = glFragmentSource.replace(PRAGMA_PRECISION, precisionHeaders);
+			fragment = fragment.replace(PRAGMA_VERSION, versionHeader);
 			
 			var id = vertex + fragment;
 
@@ -376,13 +376,13 @@ class FlxRuntimeShader extends FlxShader
 			type = regex.matched(1);
 			name = regex.matched(2);
 
-			if (StringTools.startsWith(name, "gl_")) {
+			if (name.startsWith("gl_")) {
 				continue;
 			}
 
 			var isUniform = (storageType == "uniform");
 
-			if (StringTools.startsWith(type, "sampler")) {
+			if (type.startsWith("sampler")) {
 				var input = new ShaderInput<BitmapData>();
 				input.name = name;
 				input.__isUniform = isUniform;
@@ -486,10 +486,8 @@ class FlxRuntimeShader extends FlxShader
 						parameter.__length = length;
 						__paramFloat.push(parameter);
 
-						if (StringTools.startsWith(name, "openfl_"))
-						{
-							switch (name)
-							{
+						if (name.startsWith("openfl_")) {
+							switch (name) {
 								case "openfl_Alpha": __alpha = parameter;
 								case "openfl_ColorMultiplier": __colorMultiplier = parameter;
 								case "openfl_ColorOffset": __colorOffset = parameter;

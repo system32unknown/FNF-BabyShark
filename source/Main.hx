@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxGame;
+import flixel.custom.system.ColoredLog;
 import flixel.FlxG;
 
 import haxe.Exception;
@@ -55,6 +56,7 @@ class Main extends Sprite
 		if (hasEventListener(Event.ADDED_TO_STAGE)) {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
+		ColoredLog.init();
 
 		setupGame();
 	}
@@ -144,9 +146,8 @@ class Main extends Sprite
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
-
 		#if hl
-		var flags:EnumFlags<hl.UI.DialogFlags> = new EnumFlags<hl.UI.DialogFlags>();
+		var flags:EnumFlags<hl.UI.DialogFlags> = new haxe.EnumFlags<hl.UI.DialogFlags>();
 		flags.set(IsError);
 		hl.UI.dialog("Alter Engine: Error!", errMsg, flags);
 		#else

@@ -56,7 +56,6 @@ class FunkinLua {
 
 	#if hscript
 	public static var hscript:HScript;
-	public static var hscriptVars:Map<String, Dynamic> = new Map();
 	#end
 
 	public function new(script:String, ?scriptCode:String) {
@@ -155,9 +154,16 @@ class FunkinLua {
 		set('commit_hash', Main.COMMIT_HASH.trim());
 
 		set('inGameOver', false);
-		set('mustHitSection', PlayState.SONG.notes[0].mustHitSection);
-		set('altAnim', PlayState.SONG.notes[0].altAnim);
-		set('gfSection', PlayState.SONG.notes[0].gfSection);
+		
+		if (PlayState.SONG.notes[0] != null) {
+			set('mustHitSection', PlayState.SONG.notes[0].mustHitSection);
+			set('altAnim', PlayState.SONG.notes[0].altAnim);
+			set('gfSection', PlayState.SONG.notes[0].gfSection);
+		} else {
+			set('mustHitSection', false);
+			set('altAnim', false);
+			set('gfSection', false);
+		}
 
 		// Gameplay settings
 		set('healthGainMult', PlayState.instance.healthGain);
@@ -728,7 +734,7 @@ class FunkinLua {
 			try {
 				if(varsToBring != null) {
 					for (key in Reflect.fields(varsToBring)) {
-						hscript.interp.variables.set(key, Reflect.field(varsToBring, key));
+						hscript.variables.set(key, Reflect.field(varsToBring, key));
 					}
 				}
 				retVal = hscript.execute(codeToRun);

@@ -28,8 +28,7 @@ class FlashingState extends MusicBeatState
 								You've been warned!";
 	var textAdvanced:String = "";
 
-	override function create()
-	{
+	override function create() {
 		super.create();
 
 		FlxG.save.flush();
@@ -40,7 +39,7 @@ class FlashingState extends MusicBeatState
 
 		#if lime
 	 	saveDataPath = System.applicationStorageDirectory + 'altertoriel\\';
-		displaySaveDataPath = StringTools.replace(saveDataPath, "\\", "/");
+		displaySaveDataPath = saveDataPath.replace("\\", "/");
 
 		textAdvanced = 	
 		"Before use:\n\nEK uses a different save data folder than normal\nPsych Engine, so you are going to have to set your\noptions to what you're using.\n" + 

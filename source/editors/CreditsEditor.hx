@@ -29,8 +29,6 @@ import ui.CustomFadeTransition;
 import ui.Prompt;
 import utils.CoolUtil;
 
-using StringTools;
-
 class CreditsEditor extends MusicBeatState
 {
 	var curSelected:Int = -1;
@@ -183,21 +181,21 @@ class CreditsEditor extends MusicBeatState
 		colorInput = new FlxUIInputText(60, linkInput.y + yDist, 70, '', 8);
 		colorSquare = new FlxSprite(colorInput.x + 80, colorInput.y).makeGraphic(15, 15, 0xFFFFFFFF);
 		var getIconColor:FlxButton = new FlxButton(colorSquare.x + 23, colorSquare.y - 2, "Get Icon Color", function() {
-				var icon:String;
-				if(iconInput.text != null && iconInput.text.length > 0) icon = iconInput.text;
-				else icon = creditsStuff[curSelected][1];
+			var icon:String;
+			if(iconInput.text != null && iconInput.text.length > 0) icon = iconInput.text;
+			else icon = creditsStuff[curSelected][1];
 
-				var pathIcon:String;
-				if(Paths.fileExists('images/credits/' + icon + '.png', IMAGE)) pathIcon = 'credits/' + icon;
-				else pathIcon = 'credits/none';
+			var pathIcon:String;
+			if(Paths.fileExists('images/credits/' + icon + '.png', IMAGE)) pathIcon = 'credits/' + icon;
+			else pathIcon = 'credits/none';
 
-				var iconSprite:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image(pathIcon));				
-				var daColor:String = StringTools.hex(CoolUtil.dominantColor(iconSprite)).substring(2, this.length);
-				colorInput.text = daColor;
+			var iconSprite:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image(pathIcon));
+			var daColor:String = CoolUtil.dominantColor(iconSprite).hex().substring(2, this.length);
+			colorInput.text = daColor;
 
-				iconSprite.kill();
-				iconSprite = null;
-				iconColorShow();
+			iconSprite.kill();
+			iconSprite = null;
+			iconColorShow();
 		});
 
 		var creditAdd:FlxButton = new FlxButton(20, colorInput.y + yDist + 10, "Add credit", function() {
@@ -381,7 +379,7 @@ class CreditsEditor extends MusicBeatState
 
 			if(colorInput.text != null && colorInput.text.length > 0) {
 				creditsStuff[curSelected][4] = colorInput.text;
-			} else { creditsStuff[curSelected][4] = 'e1e1e1'; }
+			} else creditsStuff[curSelected][4] = 'e1e1e1';
 		}
 	}
 
@@ -440,8 +438,8 @@ class CreditsEditor extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if (FlxG.sound.music.volume < 0.7) {
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
+		if (FlxG.sound.music.volume < .7) {
+			FlxG.sound.music.volume += .5 * FlxG.elapsed;
 		}
 
 		var blockInput:Bool = false;
@@ -589,10 +587,10 @@ class CreditsEditor extends MusicBeatState
 		descBox.updateHitbox();
 	}
 
-	private function unselectableCheck(num:Int):Bool {
+	function unselectableCheck(num:Int):Bool {
 		return creditsStuff[num].length <= 1;
 	}
-	private function nullCheck(num:Int):Bool {
+	function nullCheck(num:Int):Bool {
 		if(creditsStuff[num].length <= 1 && creditsStuff[num][0].length <= 0) return true;
 		return false;
 	}
@@ -684,9 +682,7 @@ class CreditsEditor extends MusicBeatState
 		}
 
 		var data:String = daStuff.join('\n');
-
-		if (data.length > 0)
-		{
+		if (data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);

@@ -3,7 +3,6 @@ package scripting.lua;
 #if hscript
 import hscript.Parser;
 import hscript.Interp;
-import hscript.Expr;
 #end
 
 import flixel.FlxG;
@@ -34,17 +33,20 @@ class HScript
 	}
 
 	public function setVar(key:String, data:Dynamic):Map<String, Dynamic> {
-		FunkinLua.hscriptVars.set(key, data);
+		variables.set(key, data);
 		
-		for (i in FunkinLua.hscriptVars.keys())
-			if (!interp.variables.exists(i)) interp.variables.set(i, FunkinLua.hscriptVars.get(i));
+		for (i in variables.keys())
+			if (!variables.exists(i)) variables.set(i, variables.get(i));
 
-		return interp.variables;
+		return variables;
 	}
 
 	public function new() {
 		interp = new Interp();
 		parser = new Parser();
+
+		parser.allowTypes = parser.allowMetadata = parser.allowJSON = true;
+		parser.line = 1;
 		setVars();
 	}
 
@@ -85,9 +87,6 @@ class HScript
 	}
 
 	public function execute(codeToRun:String):Dynamic {
-		@:privateAccess
-		parser.line = 1;
-		parser.allowTypes = parser.allowMetadata = parser.allowJSON = true;
 		return interp.execute(parser.parseString(codeToRun));
 	}
 	#end

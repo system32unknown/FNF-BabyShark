@@ -427,11 +427,9 @@ class FlxAnimationController implements IFlxDestroyable
 		for (i in 0...numFrames)
 		{
 			var name:String = flxFrames[i].name;
-			if (StringTools.startsWith(name, Prefix) && StringTools.endsWith(name, Postfix))
-			{
+			if (name.startsWith(Prefix) && name.endsWith(Postfix)) {
 				var index:Null<Int> = Std.parseInt(name.substring(Prefix.length, name.length - Postfix.length));
-				if (index != null && index == Index)
-				{
+				if (index != null && index == Index) {
 					return i;
 				}
 			}
@@ -707,10 +705,8 @@ class FlxAnimationController implements IFlxDestroyable
 
 	function findByPrefix(AnimFrames:Array<FlxFrame>, Prefix:String):Void
 	{
-		for (frame in _sprite.frames.frames)
-		{
-			if (frame.name != null && StringTools.startsWith(frame.name, Prefix))
-			{
+		for (frame in _sprite.frames.frames) {
+			if (frame.name != null && frame.name.startsWith(Prefix)) {
 				AnimFrames.push(frame);
 			}
 		}

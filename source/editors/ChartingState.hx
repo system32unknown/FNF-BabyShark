@@ -206,7 +206,7 @@ class ChartingState extends MusicBeatState
 
 		#if discord_rpc
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Chart Editor", StringTools.replace(_song.song, '-', ' '));
+		DiscordClient.changePresence("Chart Editor", _song.song.replace('-', ' '));
 		#end
 
 		vortex = FlxG.save.data.chart_vortex;

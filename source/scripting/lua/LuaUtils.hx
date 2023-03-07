@@ -220,8 +220,8 @@ class LuaUtils
 	public static function tweenPrepare(tag:String, vars:String) {
 		cancelTween(tag);
 		var variables:Array<String> = vars.split('.');
-		var sexyProp:Dynamic = LuaUtils.getObjectDirectly(variables[0]);
-		if(variables.length > 1) sexyProp = LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(variables), variables[variables.length - 1]);
+		var sexyProp:Dynamic = getObjectDirectly(variables[0]);
+		if(variables.length > 1) sexyProp = getVarInArray(getPropertyLoop(variables), variables[variables.length - 1]);
 		return sexyProp;
 	}
 
