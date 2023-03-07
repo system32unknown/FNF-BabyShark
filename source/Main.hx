@@ -1,7 +1,7 @@
 package;
 
 import flixel.FlxGame;
-import flixel.custom.system.ColoredLog;
+import flixel.custom.system.CustomLog;
 import flixel.FlxG;
 
 import haxe.Exception;
@@ -56,7 +56,7 @@ class Main extends Sprite
 		if (hasEventListener(Event.ADDED_TO_STAGE)) {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
-		ColoredLog.init();
+		CustomLog.init();
 
 		setupGame();
 	}
