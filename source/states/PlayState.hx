@@ -62,8 +62,7 @@ import handlers.CutsceneHandler;
 using llua.Lua.Lua_helper;
 #end
 
-class PlayState extends MusicBeatState
-{
+class PlayState extends MusicBeatState {
 	public static var STRUM_X = 42;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
@@ -2250,8 +2249,8 @@ class PlayState extends MusicBeatState
 
 	private var noteTypeMap:Map<String, Bool> = new Map<String, Bool>();
 	private var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
-	private function generateSong(dataPath:String):Void {
-		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype','multiplicative');
+	function generateSong(dataPath:String):Void {
+		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype', 'multiplicative');
 
 		switch(songSpeedType) {
 			case "multiplicative": songSpeed = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1);

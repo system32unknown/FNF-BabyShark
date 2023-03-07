@@ -734,7 +734,7 @@ class FunkinLua {
 			try {
 				if(varsToBring != null) {
 					for (key in Reflect.fields(varsToBring)) {
-						hscript.variables.set(key, Reflect.field(varsToBring, key));
+						hscript.interp.variables.set(key, Reflect.field(varsToBring, key));
 					}
 				}
 				retVal = hscript.execute(codeToRun);
@@ -756,7 +756,7 @@ class FunkinLua {
 				if(libPackage.length > 0)
 					str = libPackage + '.';
 
-				hscript.setVar(libName, Type.resolveClass(str + libName));
+				hscript.variables.set(libName, Type.resolveClass(str + libName));
 			} catch (e:Dynamic) {
 				luaTrace(scriptName + ":" + lastCalledFunction + " - " + e, false, false, FlxColor.RED);
 			}
