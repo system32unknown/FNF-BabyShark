@@ -1562,6 +1562,7 @@ class ChartingState extends MusicBeatState
 			}
 
 			if (FlxG.keys.justPressed.BACKSPACE) {
+				autosaveSong();
 				PlayState.chartingMode = false;
 				MusicBeatState.switchState(new MasterEditorMenu(), true);
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));

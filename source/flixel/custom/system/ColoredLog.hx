@@ -5,20 +5,20 @@ import haxe.PosInfos;
 
 // https://gist.github.com/martinwells/5980517
 class ColoredLog {
-	static var ansiColors:Map<String, String> = new Map();
+	static var ansiColors:Map<String, String> = [
+		'black' => '\033[0;30m',
+		'red' => '\033[31m',
+		'green' => '\033[32m',
+		'yellow' => '\033[33m',
+		'blue' => '\033[1;34m',
+		'magenta' => '\033[1;35m',
+		'cyan' => '\033[0;36m',
+		'grey' => '\033[0;37m',
+		'white' => '\033[1;37m'
+	];
 	static var origTrace:Function;
 
 	public static function init() {
-		ansiColors['black'] = '\033[0;30m';
-		ansiColors['red'] = '\033[31m';
-		ansiColors['green'] = '\033[32m';
-		ansiColors['yellow'] = '\033[33m';
-		ansiColors['blue'] = '\033[1;34m';
-		ansiColors['magenta'] = '\033[1;35m';
-		ansiColors['cyan'] = '\033[0;36m';
-		ansiColors['grey'] = '\033[0;37m';
-		ansiColors['white'] = '\033[1;37m';
-
 		// reuse it for quick lookups of colors to log levels
 		ansiColors['debug'] = ansiColors['cyan'];
 		ansiColors['info'] = ansiColors['white'];

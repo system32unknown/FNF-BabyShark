@@ -108,7 +108,6 @@ class AlterScript {
             "FlxTypedGroup"     => flixel.group.FlxGroup.FlxTypedGroup,
             "FlxSpriteGroup"    => flixel.group.FlxSpriteGroup,
             "FlxTypeText"       => flixel.addons.text.FlxTypeText,
-            "FlxBackdrop"       => flixel.addons.display.FlxBackdrop,
             "FlxText"           => flixel.text.FlxText,
             "FlxTimer"          => flixel.util.FlxTimer,
             "FlxPoint"          => CoolUtil.getMacroAbstractClass("flixel.math.FlxPoint"),

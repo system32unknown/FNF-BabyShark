@@ -26,6 +26,7 @@ class FreeplayState extends MusicBeatState
 	var songs:Array<SongMetadata> = [];
 
 	static var curSelected:Int = 0;
+	var lerpSelected:Float = 0;
 	var curDifficulty:Int = -1;
 	static var lastDifficultyName:String = '';
 
@@ -116,8 +117,7 @@ class FreeplayState extends MusicBeatState
 		{
 			Paths.currentModDirectory = songs[i].folder;
 			var songText:Alphabet = new Alphabet(90, 320, songs[i].songName, true);
-			songText.isMenuItem = true;
-			songText.targetY = i - curSelected;
+			songText.targetY = i;
 			grpSongs.add(songText);
 
 			var maxWidth = 980;
@@ -128,6 +128,10 @@ class FreeplayState extends MusicBeatState
 
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.sprTracker = songText;
+
+			// too laggy with a lot of songs, so i had to recode the logic for it
+			songText.visible = songText.active = songText.isMenuItem = false;
+			icon.visible = icon.active = false;
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
@@ -157,6 +161,7 @@ class FreeplayState extends MusicBeatState
 		if(curSelected >= songs.length) curSelected = 0;
 		bg.color = songs[curSelected].color;
 		intendedColor = bg.color;
+		lerpSelected = curSelected;
 
 		if(lastDifficultyName == '') {
 			lastDifficultyName = CoolUtil.defaultDifficulty;
@@ -185,6 +190,7 @@ class FreeplayState extends MusicBeatState
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
+		updateTexts();
 		super.create();
 	}
 
@@ -351,6 +357,8 @@ class FreeplayState extends MusicBeatState
 			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
+
+		updateTexts(elapsed);
 		super.update(elapsed);
 	}
 
@@ -406,12 +414,11 @@ class FreeplayState extends MusicBeatState
 		iconArray[curSelected].alpha = 1;
 
 		for (item in grpSongs.members) {
-			item.targetY = bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0.6;
 
-			if (item.targetY == 0)
+			if (item.targetY == curSelected)
 				item.alpha = 1;
 		}
 		
@@ -438,9 +445,9 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		
-		if(CoolUtil.difficulties.contains(CoolUtil.defaultDifficulty)) {
+		if(CoolUtil.difficulties.contains(CoolUtil.defaultDifficulty))
 			curDifficulty = Math.round(Math.max(0, CoolUtil.defaultDifficulties.indexOf(CoolUtil.defaultDifficulty)));
-		} else curDifficulty = 0;
+		else curDifficulty = 0;
 
 		var newPos:Int = CoolUtil.difficulties.indexOf(lastDifficultyName);
 		if(newPos > -1) {
@@ -448,7 +455,7 @@ class FreeplayState extends MusicBeatState
 		}
 	}
 
-	private function positionHighscore() {
+	function positionHighscore() {
 		countText.text = "PAGES (" + ((curSelected + 1) + "/" + songs.length) + ")";
 		countText.x = FlxG.width - countText.width;
 
@@ -459,6 +466,31 @@ class FreeplayState extends MusicBeatState
 		
 		diffText.x = Std.int(scoreBG.x + (scoreBG.width / 2));
 		diffText.x -= diffText.width / 2;
+	}
+
+	var _drawDistance:Int = 4;
+	var _lastVisibles:Array<Int> = [];
+	public function updateTexts(elapsed:Float = 0.0)
+	{
+		lerpSelected = FlxMath.lerp(lerpSelected, curSelected, MathUtil.boundTo(elapsed * 9.6, 0, 1));
+		for (i in _lastVisibles) {
+			grpSongs.members[i].visible = grpSongs.members[i].active = false;
+			iconArray[i].visible = iconArray[i].active = false;
+		}
+		_lastVisibles = [];
+
+		var min:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected - _drawDistance)));
+		var max:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected + _drawDistance)));
+		for (i in min...max) {
+			var item:Alphabet = grpSongs.members[i];
+			item.visible = item.active = true;
+			item.x = ((item.targetY - lerpSelected) * item.distancePerItem.x) + item.startPosition.x;
+			item.y = ((item.targetY - lerpSelected) * 1.3 * item.distancePerItem.y) + item.startPosition.y;
+
+			var icon:HealthIcon = iconArray[i];
+			icon.visible = icon.active = true;
+			_lastVisibles.push(i);
+		}
 	}
 }
 
