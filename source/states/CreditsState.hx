@@ -37,7 +37,7 @@ class CreditsState extends MusicBeatState
 		['RiverOaken',			'river',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/RiverOaken',			'B42F71'],
 		[''],
 		['Former Engine Members'],
-		['shubs',				'shubs',			'Additional Programmer of Psych Engine',						'https://twitter.com/yoshubs',				'5E99DF'],
+		['shubs',				'shubs',			'Ex-Programmer of Psych Engine',						'https://twitter.com/yoshubs',				'5E99DF'],
 		['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbsub3',				'3E813A'],
 		[''],
 		['Engine Contributors'],

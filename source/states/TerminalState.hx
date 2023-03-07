@@ -49,7 +49,7 @@ class TerminalState extends MusicBeatState
         if (ClientPrefs.getPref('shaders'))
             FlxG.camera.setFilters([new ShaderFilter(shaderVCR.shader)]);
 
-        displayText = new FlxText(0, 0, FlxG.width, previousText, 32);
+        displayText = new FlxText(0, 0, FlxG.width, previousText, 14);
 		displayText.setFormat(Paths.font("vcr.ttf"), 14);
         displayText.size *= 2;
 		displayText.antialiasing = false;

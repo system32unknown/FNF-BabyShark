@@ -174,7 +174,6 @@ class ChartingState extends MusicBeatState
 	override function create()
 	{
 		Main.overlayVar.alpha = .5;
-
 		FlxG.stage.window.onDropFile.add(onDropFile);
 
 		if (PlayState.SONG != null)

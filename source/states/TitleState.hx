@@ -134,9 +134,7 @@ class TitleState extends MusicBeatState
 		Conductor.changeBPM(titleJSON.bpm);
 		persistentUpdate = true;
 
-		var bg:FlxSprite = new FlxSprite();
-		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		add(bg);
+		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK));
 
 		titlebg = new FlxBackdrop(Paths.image('thechecker'));
 		titlebg.velocity.set(0, 110);
