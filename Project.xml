@@ -84,8 +84,8 @@
 	<assets path="assets/fonts"/>
 	
 	<!-- _______________________________Flags______________________________ -->
-	<haxeflag name="-dce no" if="debug"/>
-	<haxeflag name="-dce std" unless="debug"/>
+	<!-- <haxeflag name="-dce no" if="debug"/> -->
+	<!-- <haxeflag name="-dce std" unless="debug"/> -->
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>
