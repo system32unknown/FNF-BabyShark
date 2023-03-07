@@ -4,6 +4,10 @@ import flash.utils.Function;
 import haxe.PosInfos;
 
 // https://gist.github.com/martinwells/5980517
+#if !lime_debug
+@:fileXml('tags="haxe,release"')
+@:noDebug
+#end
 class ColoredLog {
 	static var ansiColors:Map<String, String> = [
 		'black' => '\033[0;30m',
