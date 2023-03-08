@@ -2155,7 +2155,7 @@ class PlayState extends MusicBeatState {
 		for (rating in ratingsData) {
 			judgementCounter.text += '\n${flixel.addons.ui.U.FU(rating.name)}s: ${rating.hits}';
 		}
-		judgementCounter.text += getMissText(!ClientPrefs.getPref('movemissjudge'), '\n');
+		judgementCounter.text += '\n${getMissText(!ClientPrefs.getPref('movemissjudge'), '\n')}';
 		judgementCounter.screenCenter(Y);
 		if (!ClientPrefs.getPref('ShowNPSCounter')) {
 			UpdateScoreText();
@@ -3292,10 +3292,6 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	public function getControl(key:String):Bool {
-		return Reflect.getProperty(controls, key);
-	}
-
 	public function triggerEventNote(eventName:String, value1:String, value2:String) {
 		switch(eventName) {
 			case 'Dadbattle Spotlight':
@@ -4047,17 +4043,18 @@ class PlayState extends MusicBeatState {
 	var scoreSeparator:String = "|";
 	function getMissText(hidden:Bool = false, sepa:String = ' '):String {
 		var missText = "";
+		var sepaSpace:String = (sepa != '\n' ? scoreSeparator + ' ' : '');
 		if (cpuControlled || hidden) return missText;
 
 		switch (ClientPrefs.getPref('ScoreType')) {
 			case 'Alter':
-				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses:$songMisses' + sepa;
+				missText = sepaSpace + 'Misses:$songMisses';
 			case 'Kade':
-				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:' : 'Combo Breaks: '}$songMisses' + sepa;
+				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:' : 'Combo Breaks: '}$songMisses';
 			case 'Psych':
-				missText = '${sepa != '\n' ? scoreSeparator + ' ' : ''}Misses: $songMisses' + sepa;
+				missText = sepaSpace + 'Misses: $songMisses';
 
-		} return missText;
+		} return missText + sepa;
 	}
 
 	function UpdateScoreText() {
@@ -4068,7 +4065,7 @@ class PlayState extends MusicBeatState {
 			case 'Alter':
 				tempText += 'Score:${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
-				tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ranks] - $ratingFC' : ' [?, ?] - ?');
+				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ranks] - $ratingFC' : ' [?, ?] - ?');
 			case 'Psych':
 				tempText += 'Score: ${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
