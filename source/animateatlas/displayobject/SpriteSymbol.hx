@@ -264,8 +264,8 @@ class SpriteSymbol extends Sprite {
 	@:access(animateatlas)
 	private function setFilterData(data:FilterData):Void{
 		var blur:BlurFilter;
-		if (data != null){
-			if (data.BlurFilter != null){
+		if (data != null) {
+			if (data.BlurFilter != null) {
 				blur = new BlurFilter();
 				blur.blurX = data.BlurFilter.blurX;
 				blur.blurY = data.BlurFilter.blurY;

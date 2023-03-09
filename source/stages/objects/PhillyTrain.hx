@@ -24,13 +24,10 @@ class PhillyTrain extends BGSprite
 	public var cars:Int = 8;
 	public var cooldown:Int = 0;
 
-	override function update(elapsed:Float)
-	{
-		if (moving)
-		{
+	override function update(elapsed:Float) {
+		if (moving) {
 			frameTiming += elapsed;
-			if (frameTiming >= 1 / 24)
-			{
+			if (frameTiming >= 1 / 24) {
 				if (sound.time >= 4700) {
 					startedMoving = true;
 					if (PlayState.instance.gf != null) {
@@ -58,8 +55,7 @@ class PhillyTrain extends BGSprite
 	}
 
 	public function beatHit(curBeat:Int):Void {
-		if (!moving)
-			cooldown += 1;
+		if (!moving) cooldown += 1;
 
 		if (curBeat % 8 == 4 && FlxG.random.bool(30) && !moving && cooldown > 8) {
 			cooldown = FlxG.random.int(-4, 0);

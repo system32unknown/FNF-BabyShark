@@ -8,43 +8,16 @@ import openfl.geom.Rectangle;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
-#end
+#else
 import openfl.utils.Assets;
-
-import states.PlayState;
+#end
 
 class CoolUtil
 {
-	public static final defaultDifficulties:Array<String> = ['Easy', 'Normal', 'Hard'];
-	public static var defaultDifficulty:String = 'Normal'; //The chart that has no suffix and starting difficulty on Freeplay/Story Mode
-
-	public static var difficulties:Array<String> = [];
-	public static var lowerDifficulties(get, null):Array<String>;
-	static function get_lowerDifficulties():Array<String> {
-		return [for (v in difficulties) v.toLowerCase()];
-	}
-
-	inline public static function quantize(f:Float, snap:Float){
+	inline public static function quantize(f:Float, snap:Float) {
 		// changed so this actually works lol
 		var m:Float = Math.fround(f * snap);
 		return (m / snap);
-	}
-	
-	public static function getDifficultyFilePath(num:Null<Int> = null)
-	{
-		if(num == null) num = PlayState.storyDifficulty;
-
-		var fileSuffix:String = difficulties[num];
-		if(fileSuffix != defaultDifficulty  && fileSuffix != null) {
-			fileSuffix = '-' + fileSuffix;
-		} else {
-			fileSuffix = '';
-		}
-		return Paths.formatToSongPath(fileSuffix);
-	}
-
-	inline public static function difficultyString():String {
-		return difficulties[PlayState.storyDifficulty].toUpperCase();
 	}
 
 	public static function coolTextFile(path:String):Array<String> {
@@ -55,17 +28,17 @@ class CoolUtil
 		#end
 		return [];
 	}
-		
 	public static function listFromString(string:String):Array<String> {
 		final daList = string.trim().split('\n');
 		return [for(i in 0...daList.length) daList[i].trim()];
 	}
+
 	public static function dominantColor(sprite:flixel.FlxSprite):Int{
 		var countByColor:Map<Int, Int> = [];
 		for(col in 0...sprite.frameWidth) {
 			for(row in 0...sprite.frameHeight) {
 			  	var colorOfThisPixel:Int = sprite.pixels.getPixel32(col, row);
-			  	if(colorOfThisPixel != 0){
+			  	if(colorOfThisPixel != 0) {
 					if(countByColor.exists(colorOfThisPixel)) {
 					    countByColor[colorOfThisPixel] =  countByColor[colorOfThisPixel] + 1;
 					} else if(countByColor[colorOfThisPixel] != 13520687 - (2 * 13520687)) {

@@ -7,7 +7,7 @@ import ui.Alphabet;
 import data.WeekData;
 import game.HealthIcon;
 import game.Highscore;
-import utils.CoolUtil;
+import game.Difficulty;
 
 class ResetScoreSubState extends MusicBeatSubstate
 {
@@ -35,7 +35,7 @@ class ResetScoreSubState extends MusicBeatSubstate
 		if(week > -1) {
 			name = WeekData.weeksLoaded.get(WeekData.weeksList[week]).weekName;
 		}
-		name += ' (' + CoolUtil.difficulties[difficulty] + ')?';
+		name += ' (' + Difficulty.getString(difficulty) + ')?';
 
 		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;

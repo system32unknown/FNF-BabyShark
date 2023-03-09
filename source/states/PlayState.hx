@@ -430,7 +430,7 @@ class PlayState extends MusicBeatState {
 		Conductor.changeBPM(SONG.bpm);
 
 		#if discord_rpc
-		storyDifficultyText = CoolUtil.difficulties[storyDifficulty];
+		storyDifficultyText = Difficulty.getString();
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
 		if (isStoryMode) {
@@ -3917,14 +3917,13 @@ class PlayState extends MusicBeatState {
 					}
 					changedDifficulty = false;
 				} else {
-					var difficulty:String = CoolUtil.getDifficultyFilePath();
+					var difficulty:String = Difficulty.getFilePath();
 
 					trace('LOADING NEXT SONG');
 					trace(Paths.formatToSongPath(storyPlaylist[0]) + difficulty);
 
 					var winterHorrorlandNext = (songName == "eggnog");
-					if (winterHorrorlandNext)
-					{
+					if (winterHorrorlandNext) {
 						var blackShit:FlxSprite = new FlxSprite(-FlxG.width * FlxG.camera.zoom,
 							-FlxG.height * FlxG.camera.zoom).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
 						blackShit.scrollFactor.set();
@@ -4483,7 +4482,7 @@ class PlayState extends MusicBeatState {
 
 	//Hold Notes
 	private function keyShit():Void {
-		if (startedCountdown && !boyfriend.stunned && generatedMusic){
+		if (startedCountdown && !boyfriend.stunned && generatedMusic) {
 			// rewritten inputs???
 			notes.forEachAlive(function(daNote:Note) {
 				// hold note functions
@@ -5260,7 +5259,7 @@ class PlayState extends MusicBeatState {
 			if(!Achievements.isAchievementUnlocked(achievementName) && !cpuControlled && Achievements.exists(achievementName)) {
 				var unlock:Bool = false;
 				if (achievementName.contains(WeekData.getWeekFileName()) && achievementName.endsWith('_nomiss')) { // any FC achievements, name should be "weekFileName_nomiss", e.g: "weekd_nomiss"
-					if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'HARD'
+					if(isStoryMode && campaignMisses + songMisses < 1 && Difficulty.getString().toUpperCase() == 'HARD'
 						&& storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice)
 						unlock = true;
 				} else {

@@ -10,8 +10,8 @@ import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
 import data.WeekData;
-import utils.CoolUtil;
 import utils.MathUtil;
+import game.Difficulty;
 import game.Conductor;
 import game.Highscore;
 import game.Song;
@@ -28,7 +28,7 @@ class FreeplayState extends MusicBeatState
 	static var curSelected:Int = 0;
 	var lerpSelected:Float = 0;
 	var curDifficulty:Int = -1;
-	static var lastDifficultyName:String = '';
+	static var lastDifficultyName:String = Difficulty.getDefault();
 
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
@@ -163,11 +163,8 @@ class FreeplayState extends MusicBeatState
 		intendedColor = bg.color;
 		lerpSelected = curSelected;
 
-		if(lastDifficultyName == '') {
-			lastDifficultyName = CoolUtil.defaultDifficulty;
-		}
-		curDifficulty = Math.round(Math.max(0, CoolUtil.defaultDifficulties.indexOf(lastDifficultyName)));
-		
+		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
+
 		changeSelection();
 		changeDiff();
 
@@ -371,15 +368,15 @@ class FreeplayState extends MusicBeatState
 	}
 
 	function changeDiff(change:Int = 0) {
-		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, CoolUtil.difficulties.length - 1);
+		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, Difficulty.list.length - 1);
 
-		lastDifficultyName = CoolUtil.difficulties[curDifficulty];
+		lastDifficultyName = Difficulty.getString(curDifficulty);
+		_updateSongLastDifficulty();
 
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
 
-		PlayState.storyDifficulty = curDifficulty;
-		diffText.text = '< ' + CoolUtil.difficultyString() + ' >';
+		diffText.text = '< ' + Difficulty.getString(curDifficulty).toUpperCase() + ' >';
 		positionHighscore();
 	}
 
@@ -402,9 +399,6 @@ class FreeplayState extends MusicBeatState
 			});
 		}
 
-		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
-
 		var bullShit:Int = 0;
 
 		for (i in 0...iconArray.length) {
@@ -425,7 +419,7 @@ class FreeplayState extends MusicBeatState
 		Paths.currentModDirectory = songs[curSelected].folder;
 		PlayState.storyWeek = songs[curSelected].week;
 
-		CoolUtil.difficulties = CoolUtil.defaultDifficulties.copy();
+		Difficulty.resetList();
 		var diffStr:String = WeekData.getCurrentWeek().difficulties;
 		if(diffStr != null) diffStr = diffStr.trim(); //Fuck you HTML5
 
@@ -440,19 +434,30 @@ class FreeplayState extends MusicBeatState
 				--i;
 			}
 
-			if(diffs.length > 0 && diffs[0].length > 0) {
-				CoolUtil.difficulties = diffs;
-			}
+			if(diffs.length > 0 && diffs[0].length > 0)
+				Difficulty.list = diffs;
 		}
 		
-		if(CoolUtil.difficulties.contains(CoolUtil.defaultDifficulty))
-			curDifficulty = Math.round(Math.max(0, CoolUtil.defaultDifficulties.indexOf(CoolUtil.defaultDifficulty)));
+		if(songs[curSelected].lastDifficulty != null && Difficulty.list.contains(songs[curSelected].lastDifficulty))
+			curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(songs[curSelected].lastDifficulty)));
+		else if(Difficulty.list.contains(Difficulty.getDefault()))
+			curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(Difficulty.getDefault())));
 		else curDifficulty = 0;
 
-		var newPos:Int = CoolUtil.difficulties.indexOf(lastDifficultyName);
+		var newPos:Int = Difficulty.list.indexOf(lastDifficultyName);
 		if(newPos > -1) {
 			curDifficulty = newPos;
 		}
+
+		_updateSongLastDifficulty();
+
+		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
+		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
+	}
+
+
+	inline function _updateSongLastDifficulty() {
+		songs[curSelected].lastDifficulty = Difficulty.getString(curDifficulty);
 	}
 
 	function positionHighscore() {
@@ -501,6 +506,7 @@ class SongMetadata
 	public var songCharacter:String = "";
 	public var color:Int = -7179779;
 	public var folder:String = "";
+	public var lastDifficulty:String = null;
 
 	public function new(song:String, week:Int, songCharacter:String, color:Int)
 	{

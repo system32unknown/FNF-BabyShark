@@ -113,14 +113,14 @@ class LuaUtils
 			for (i in 1...killMe.length-1) {
 				coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
 			}
-			switch(Type.typeof(coverMeInPiss)){
+			switch(Type.typeof(coverMeInPiss)) {
 				case ValueType.TClass(haxe.ds.StringMap) | ValueType.TClass(haxe.ds.ObjectMap) | ValueType.TClass(haxe.ds.IntMap) | ValueType.TClass(haxe.ds.EnumValueMap):
 					return coverMeInPiss.get(killMe[killMe.length-1]);
 				default:
 					return Reflect.getProperty(coverMeInPiss, killMe[killMe.length-1]);
 			};
 		}
-		switch(Type.typeof(leArray)){
+		switch(Type.typeof(leArray)) {
 			case ValueType.TClass(haxe.ds.StringMap) | ValueType.TClass(haxe.ds.ObjectMap) | ValueType.TClass(haxe.ds.IntMap) | ValueType.TClass(haxe.ds.EnumValueMap):
 				return leArray.get(variable);
 			default:

@@ -53,7 +53,7 @@ class TileContainerMovieClip extends TileContainer {
 		var uncalculatedArray:Array<Int> = [];
 		var uncalculatedFrames:Int = 0;
 		
-		for (i in 0...getFrameLabels().length){
+		for (i in 0...getFrameLabels().length) {
 			uncalculatedArray.push(getFrame(getFrameLabels()[i]));
 		}
 		uncalculatedFrames = uncalculatedArray[0]+uncalculatedArray.length;

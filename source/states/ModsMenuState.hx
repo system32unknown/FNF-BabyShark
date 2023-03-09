@@ -86,7 +86,7 @@ class ModsMenuState extends MusicBeatState
 		}
 
 		// FIND MOD FOLDERS
-		if (FileSystem.exists("modsList.txt")){
+		if (FileSystem.exists("modsList.txt")) {
 			for (folder in Paths.getModDirectories()) {
 				if(!Paths.ignoreModFolders.contains(folder)) {
 					addToModsList([folder, true]); //i like it false by default. -bb //Well, i like it True! -Shadow

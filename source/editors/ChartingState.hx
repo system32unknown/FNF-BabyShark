@@ -7,10 +7,10 @@ import game.Song;
 import game.Song.SwagSong;
 import game.Conductor;
 import game.StrumNote;
+import game.Difficulty;
 import game.Note;
 import data.StageData;
 import utils.CoolUtil;
-import shaders.ColorSwap;
 import states.LoadingState;
 import states.PlayState;
 import states.TitleState;
@@ -179,7 +179,7 @@ class ChartingState extends MusicBeatState
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
 		else {
-			CoolUtil.difficulties = CoolUtil.defaultDifficulties.copy();
+			Difficulty.resetList();
 
 			_song = {
 				song: 'Test',
@@ -549,11 +549,11 @@ class ChartingState extends MusicBeatState
 		blockPressWhileScrolling.push(stageDropDown);
 
 		tempMap.clear();
-		var difficulties:Array<String> = CoolUtil.difficulties;
+		var difficulties:Array<String> = Difficulty.list;
 		for (i in 0...difficulties.length) {
 			tempMap.set(difficulties[i], true);
 		}
-		currentDifficultyName = CoolUtil.difficulties[PlayState.storyDifficulty];
+		currentDifficultyName = Difficulty.getString();
 
 		var difficultyDropDown = new FlxUIDropDownMenu(stageDropDown.x, gfVersionDropDown.y, FlxUIDropDownMenu.makeStrIdLabelArray(difficulties, true), function(difficulty:String) {
 			var newDiff = difficulties[Std.parseInt(difficulty)];
@@ -988,9 +988,8 @@ class ChartingState extends MusicBeatState
 			var selectedEvent:Int = Std.parseInt(pressed);
 			descText.text = eventStuff[selectedEvent][1];
 				if (curSelectedNote != null &&  eventStuff != null) {
-				if (curSelectedNote != null && curSelectedNote[2] == null){
-				curSelectedNote[1][curEventSelected][0] = eventStuff[selectedEvent][0];
-
+				if (curSelectedNote != null && curSelectedNote[2] == null) {
+					curSelectedNote[1][curEventSelected][0] = eventStuff[selectedEvent][0];
 				}
 				updateGrid();
 			}
@@ -1843,7 +1842,7 @@ class ChartingState extends MusicBeatState
 					strumLineNotes.members[noteDataToCheck].playAnim('confirm', true);
 					strumLineNotes.members[noteDataToCheck].resetAnim = ((note.sustainLength / 1000) + .15) / playbackSpeed;
 					if(!playedSound[data]) {
-						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)){
+						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)) {
 							var soundToPlay = 'hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}';
 							if(_song.player1 == 'gf') { //Easter egg
 								soundToPlay = 'gfnoise/GF_${Std.string(data + 1)}';
@@ -1889,7 +1888,7 @@ class ChartingState extends MusicBeatState
 
 		PlayState.mania = _song.mania;
 
-		if (dummyArrow != null){
+		if (dummyArrow != null) {
 			dummyArrow.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			dummyArrow.updateHitbox();	
 		}
@@ -1940,7 +1939,7 @@ class ChartingState extends MusicBeatState
 
 		if (strumLineNotes != null)	{
 			strumLineNotes.clear();
-			for (i in 0...Note.ammo[_song.mania] * 2){
+			for (i in 0...Note.ammo[_song.mania] * 2) {
 				var note:StrumNote = new StrumNote(GRID_SIZE * (i + 1), strumLine.y, i % Note.ammo[_song.mania], 0);
 				note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 				note.updateHitbox();
@@ -2550,7 +2549,7 @@ class ChartingState extends MusicBeatState
 		updateGrid();
 	}
 
-	public function doANoteThing(cs, d, style){
+	public function doANoteThing(cs, d, style) {
 		var delnote = false;
 		if(strumLineNotes.members[d].overlaps(curRenderedNotes)) {
 			curRenderedNotes.forEachAlive(function(note:Note) {
@@ -2628,7 +2627,7 @@ class ChartingState extends MusicBeatState
 			var loadedSong:SwagSong = null;
 			var songFolder:String = song.toLowerCase();
 			try {
-				var defaultDiff:String = CoolUtil.defaultDifficulty.toLowerCase();
+				var defaultDiff:String = Difficulty.getDefault().toLowerCase();
 
 				var ind:Int = song.lastIndexOf("-");
 				var success:Bool = false;
@@ -2639,12 +2638,12 @@ class ChartingState extends MusicBeatState
 						success = true;
 
 						var diff:String = songFolder.substring(ind + 1);
-						var ind:Int = CoolUtil.lowerDifficulties.indexOf(diff);
+						var ind:Int = Difficulty.lowerlists.indexOf(diff);
 						if (ind != -1) PlayState.storyDifficulty = ind;
 					} catch(e) {trace(e);}
 				}
 				if (!success) {
-					var diff:String = CoolUtil.difficulties[PlayState.storyDifficulty];
+					var diff:String = Difficulty.getString();
 					if (diff != null) diff = diff.toLowerCase();
 	
 					var success:Bool = false;
@@ -2657,7 +2656,7 @@ class ChartingState extends MusicBeatState
 					if (!success) {
 						loadedSong = Song.loadFromJson(songFolder, songFolder);
 	
-						var ind:Int = CoolUtil.lowerDifficulties.indexOf(defaultDiff);
+						var ind:Int = Difficulty.lowerlists.indexOf(defaultDiff);
 						if (ind != -1) PlayState.storyDifficulty = ind;
 					}
 				}
@@ -2703,11 +2702,7 @@ class ChartingState extends MusicBeatState
 	}
 
 	function getCurrrentDataPath():String {
-		var diffSuffix:String = 
-			CoolUtil.difficulties[PlayState.storyDifficulty] != null && 
-			CoolUtil.difficulties[PlayState.storyDifficulty] != CoolUtil.defaultDifficulty
-			? "-" + CoolUtil.difficulties[PlayState.storyDifficulty].toLowerCase() 
-			: "";
+		var diffSuffix:String = Difficulty.getString() != null && Difficulty.getString() != Difficulty.getDefault() ? "-" + Difficulty.getString().toLowerCase() : "";
 
 		var path:String;
 		#if MODS_ALLOWED

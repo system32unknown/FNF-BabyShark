@@ -48,7 +48,7 @@ class NoteSplash extends FlxSprite
 
 		var offsets:Array<Int> = [-10, 0];
 		var mania:Int = PlayState.mania;
-		if(Note.noteSplashOffsets.exists(mania)){
+		if(Note.noteSplashOffsets.exists(mania)) {
 			var oA = Note.noteSplashOffsets.get(mania);
 			offsets = [oA[0], oA[1]];
 		}

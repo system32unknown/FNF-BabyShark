@@ -1,28 +1,21 @@
 # Taken from https://github.com/andyli/HaxeCI/blob/master/appveyor.yml
 version: "{build}"
 
-environment:
-  global:
-    HAXELIB_ROOT: C:\projects\haxelib
-
 install:
     # http://help.appveyor.com/discussions/problems/5616-not-able-to-build-due-to-problem-in-chocolateyinstallps1
     - ps: Set-Service wuauserv -StartupType Manual
-    - cinst neko --version 2.3.0 -y
-    - cinst haxe --version 4.1.5 -y
-    - RefreshEnv
+    - cinst haxe --version 4.2.5 -y
     # Setup haxelib
-    - mkdir "%HAXELIB_ROOT%"
-    - haxelib setup "%HAXELIB_ROOT%"
+    - haxelib setup C:/haxelib
     # Install project dependencies
-    haxelib install hxcpp > /dev/null --quiet
-    haxelib install hmm --quiet
-    haxelib run hmm install
+    - haxelib install hxcpp > /dev/null --quiet
+    - haxelib install hmm --quiet
+    - haxelib run hmm install
 
 build_script:
     - haxelib run lime build windows
 
 artifacts:
     - path: export/release/windows/bin
-    name: AlterEngine-Windows
+    name: windowsBuild
     type: zip

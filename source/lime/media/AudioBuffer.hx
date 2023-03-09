@@ -332,7 +332,7 @@ class AudioBuffer
 
 		var request = new HTTPRequest<AudioBuffer>();
 		return request.load(path).then(function(buffer) {
-			if (buffer != null){
+			if (buffer != null) {
 				buffer.initBuffer();
 				return Future.withValue(buffer);
 			} else return cast Future.withError("");

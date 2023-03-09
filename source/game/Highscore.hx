@@ -1,7 +1,7 @@
 package game;
 
 import flixel.FlxG;
-import utils.CoolUtil;
+import game.Difficulty;
 
 class Highscore {
 	#if (haxe >= "4.0.0")
@@ -14,17 +14,14 @@ class Highscore {
 	public static var songRating:Map<String, Float> = new Map<String, Float>();
 	#end
 
-	public static function resetSong(song:String, diff:Int = 0):Void
-	{
+	public static function resetSong(song:String, diff:Int = 0):Void {
 		var daSong:String = formatSong(song, diff);
 		setScore(daSong, 0);
 		setRating(daSong, 0);
 	}
 
-	public static function resetWeek(week:String, diff:Int = 0):Void
-	{
-		var daWeek:String = formatSong(week, diff);
-		setWeekScore(daWeek, 0);
+	public static function resetWeek(week:String, diff:Int = 0):Void {
+		setWeekScore(formatSong(week, diff), 0);
 	}
 
 	public static function saveScore(song:String, score:Int = 0, ?diff:Int = 0, ?rating:Float = -1):Void
@@ -78,7 +75,7 @@ class Highscore {
 	}
 
 	public static function formatSong(song:String, diff:Int):String {
-		return Paths.formatToSongPath(song) + CoolUtil.getDifficultyFilePath(diff);
+		return Paths.formatToSongPath(song) + Difficulty.getFilePath(diff);
 	}
 
 	public static function getScore(song:String, diff:Int):Int {
