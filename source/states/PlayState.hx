@@ -4052,7 +4052,6 @@ class PlayState extends MusicBeatState {
 				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:' : 'Combo Breaks: '}$songMisses';
 			case 'Psych':
 				missText = sepaSpace + 'Misses: $songMisses';
-
 		} return missText + sepa;
 	}
 
@@ -4083,7 +4082,6 @@ class PlayState extends MusicBeatState {
 		vocals.volume = 1;
 
 		var placement:String = Std.string(combo);
-
 		var score:Int = 500;
 
 		//tryna do MS based judgment due to popular demand
@@ -4124,7 +4122,7 @@ class PlayState extends MusicBeatState {
 		if (showCombo) {
 			var coolText:FlxText = new FlxText(0, 0, 0, placement, 32);
 			coolText.screenCenter();
-			coolText.x = FlxG.width * 0.35;
+			coolText.x = FlxG.width * .35;
 			
 			var rating:FlxSprite = new FlxSprite();
 			var timing:FlxSprite = new FlxSprite();
