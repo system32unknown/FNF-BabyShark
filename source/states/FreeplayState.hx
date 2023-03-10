@@ -166,7 +166,6 @@ class FreeplayState extends MusicBeatState
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
 
 		changeSelection();
-		changeDiff();
 
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = 0.6;
@@ -237,21 +236,15 @@ class FreeplayState extends MusicBeatState
 		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%)';
 		positionHighscore();
 
-		var upP = controls.UI_UP_P;
-		var downP = controls.UI_DOWN_P;
-		var accepted = controls.ACCEPT;
-		var space = FlxG.keys.justPressed.SPACE;
-		var ctrl = FlxG.keys.justPressed.CONTROL;
-
 		var shiftMult:Int = 1;
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 		if(songs.length > 1) {
-			if (upP) {
+			if (controls.UI_UP_P) {
 				changeSelection(-shiftMult);
 				holdTime = 0;
 			}
-			if (downP) {
+			if (controls.UI_DOWN_P) {
 				changeSelection(shiftMult);
 				holdTime = 0;
 			}
@@ -261,10 +254,8 @@ class FreeplayState extends MusicBeatState
 				holdTime += elapsed;
 				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 				
-				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
+				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
-					changeDiff();
-				}
 			}
 
 			if (FlxG.mouse.wheel != 0) {
@@ -274,9 +265,13 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if (controls.UI_LEFT_P) changeDiff(-1);
-		else if (controls.UI_RIGHT_P) changeDiff(1);
-		else if (upP || downP) changeDiff();
+		if (controls.UI_LEFT_P) {
+			changeDiff(-1);
+			_updateSongLastDifficulty();
+		} else if (controls.UI_RIGHT_P) {
+			changeDiff(1);
+			_updateSongLastDifficulty();
+		}
 
 		if (controls.BACK) {
 			persistentUpdate = false;
@@ -287,10 +282,10 @@ class FreeplayState extends MusicBeatState
 			MusicBeatState.switchState(new FreeplaySectionState());
 		}
 
-		if(ctrl) {
+		if(FlxG.keys.justPressed.CONTROL) {
 			persistentUpdate = false;
 			openSubState(new GameplayChangersSubstate());
-		} else if(space) {
+		} else if(FlxG.keys.justPressed.SPACE) {
 			if(instPlaying != curSelected) {
 				#if PRELOAD_ALL
 				destroyFreeplayVocals();
@@ -320,7 +315,7 @@ class FreeplayState extends MusicBeatState
 				}
 				#end
 			}
-		} else if (accepted) {
+		} else if (controls.ACCEPT) {
 			var songFolder:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var songLowercase:String = Highscore.formatSong(songFolder, curDifficulty);
 			
@@ -370,20 +365,23 @@ class FreeplayState extends MusicBeatState
 	function changeDiff(change:Int = 0) {
 		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, Difficulty.list.length - 1);
 
-		lastDifficultyName = Difficulty.getString(curDifficulty);
-		_updateSongLastDifficulty();
-
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
 
-		diffText.text = '< ' + Difficulty.getString(curDifficulty).toUpperCase() + ' >';
+		lastDifficultyName = Difficulty.getString(curDifficulty);
+		if (Difficulty.list.length > 1)
+			diffText.text = '< ' + lastDifficultyName.toUpperCase() + ' >';
+		else diffText.text = lastDifficultyName.toUpperCase();
+
 		positionHighscore();
 	}
 
 	function changeSelection(change:Int = 0, playSound:Bool = true)
 	{
+		_updateSongLastDifficulty();
 		if(playSound) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
+		var lastList:Array<String> = Difficulty.list;
 		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length - 1);
 			
 		var newColor:Int = songs[curSelected].color;
@@ -419,35 +417,18 @@ class FreeplayState extends MusicBeatState
 		Paths.currentModDirectory = songs[curSelected].folder;
 		PlayState.storyWeek = songs[curSelected].week;
 
-		Difficulty.resetList();
-		var diffStr:String = WeekData.getCurrentWeek().difficulties;
-		if(diffStr != null) diffStr = diffStr.trim(); //Fuck you HTML5
-
-		if(diffStr != null && diffStr.length > 0) {
-			var diffs:Array<String> = diffStr.split(',');
-			var i:Int = diffs.length - 1;
-			while (i > 0) {
-				if(diffs[i] != null) {
-					diffs[i] = diffs[i].trim();
-					if(diffs[i].length < 1) diffs.remove(diffs[i]);
-				}
-				--i;
-			}
-
-			if(diffs.length > 0 && diffs[0].length > 0)
-				Difficulty.list = diffs;
-		}
+		Difficulty.loadFromWeek();
 		
-		if(songs[curSelected].lastDifficulty != null && Difficulty.list.contains(songs[curSelected].lastDifficulty))
-			curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(songs[curSelected].lastDifficulty)));
+		var savedDiff:String = songs[curSelected].lastDifficulty;
+		var lastDiff:Int = Difficulty.list.indexOf(lastDifficultyName);
+		if(savedDiff != null && !lastList.contains(savedDiff) && Difficulty.list.contains(savedDiff))
+			curDifficulty = Math.round(Math.max(0, Difficulty.list.indexOf(savedDiff)));
+		else if(lastDiff > -1) curDifficulty = lastDiff;
 		else if(Difficulty.list.contains(Difficulty.getDefault()))
 			curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(Difficulty.getDefault())));
 		else curDifficulty = 0;
 
-		var newPos:Int = Difficulty.list.indexOf(lastDifficultyName);
-		if(newPos > -1) {
-			curDifficulty = newPos;
-		}
+		changeDiff();
 
 		_updateSongLastDifficulty();
 

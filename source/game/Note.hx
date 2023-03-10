@@ -90,6 +90,7 @@ class Note extends FlxSprite
 	public var noteSplashHue:Float = 0;
 	public var noteSplashSat:Float = 0;
 	public var noteSplashBrt:Float = 0;
+	public var enableReloadNote:Bool = false;
 
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
@@ -197,10 +198,12 @@ class Note extends FlxSprite
 					gfNote = true;
 				default:
 					#if MODS_ALLOWED
-					luaPrefix = value.split(" ")[0].toUpperCase();
-					if (Paths.image(luaPrefix + 'NOTE_assets') != null)
-						reloadNote(luaPrefix, 'NOTE_assets');
-					else trace('Suggestion: rename $value texture to ${luaPrefix}NOTE_assets');
+					if (enableReloadNote) {
+						luaPrefix = value.split(" ")[0].toUpperCase();
+						if (Paths.image(luaPrefix + 'NOTE_assets') != null)
+							reloadNote(luaPrefix, 'NOTE_assets');
+						else trace('Suggestion: rename $value texture to ${luaPrefix}NOTE_assets');
+					}
 					#end
 			}
 			noteType = value;

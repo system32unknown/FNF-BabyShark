@@ -4012,11 +4012,11 @@ class PlayState extends MusicBeatState {
 		}
 
 		for (cacheRating in ["epic", "sick", "good", "bad", "shit", "combo", "early", "late"]) {
-			Paths.image(pixelShitPart1 + cacheRating + pixelShitPart2);
+			Paths.image(pixelShitPart1 + 'ratings/' + cacheRating + pixelShitPart2);
 		}
 		
 		for (i in 0...10) {
-			Paths.image(pixelShitPart1 + 'num$i' + pixelShitPart2);
+			Paths.image(pixelShitPart1 + 'number/num$i' + pixelShitPart2);
 		}
 	}
 
@@ -4139,7 +4139,7 @@ class PlayState extends MusicBeatState {
 		
 			var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 		
-			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.image + pixelShitPart2));
+			rating.loadGraphic(Paths.image(pixelShitPart1 + 'ratings/' + daRating.image + pixelShitPart2));
 			if (ratingDisplay == "Hud") {
 				rating.cameras = [camHUD];
 			}
@@ -4154,7 +4154,7 @@ class PlayState extends MusicBeatState {
 			rating.y -= comboOffset[0][1];
 		
 			if (daTiming != "") {
-				timing.loadGraphic(Paths.image(pixelShitPart1 + daTiming.toLowerCase() + pixelShitPart2));
+				timing.loadGraphic(Paths.image(pixelShitPart1 + 'ratings/' + daTiming.toLowerCase() + pixelShitPart2));
 			}
 			if (ratingDisplay == "Hud") {
 				timing.cameras = [camHUD];
@@ -4188,7 +4188,7 @@ class PlayState extends MusicBeatState {
 				add(mstimingTxt);
 			}
 		
-			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
+			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'ratings/combo' + pixelShitPart2));
 			if (ratingDisplay == "Hud") {
 				comboSpr.cameras = [camHUD];
 			}
@@ -4254,9 +4254,8 @@ class PlayState extends MusicBeatState {
 			}
 		
 			var daLoop:Int = 0;
-			for (i in seperatedScore)
-			{
-				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
+			for (i in seperatedScore) {
+				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'number/num$i' + pixelShitPart2));
 				if (ratingDisplay == "Hud") {
 					numScore.cameras = [camHUD];
 				}

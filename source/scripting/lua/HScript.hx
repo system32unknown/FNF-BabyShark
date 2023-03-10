@@ -45,7 +45,7 @@ class HScript
 		interp = new Interp();
 		parser = new Parser();
 
-		parser.allowTypes = parser.allowMetadata = parser.allowJSON = true;
+		parser.allowTypes = parser.allowJSON = true;
 		parser.line = 1;
 		setVars();
 	}
