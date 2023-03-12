@@ -123,8 +123,7 @@ class WeekEditorState extends MusicBeatState
 		];
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.resize(250, 375);
-		UI_box.x = FlxG.width - UI_box.width;
-		UI_box.y = FlxG.height - UI_box.height;
+		UI_box.setPosition(FlxG.width - UI_box.width, FlxG.height - UI_box.height);
 		UI_box.scrollFactor.set();
 		addWeekUI();
 		addOtherUI();
@@ -625,8 +624,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		];
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.resize(250, 200);
-		UI_box.x = FlxG.width - UI_box.width - 100;
-		UI_box.y = FlxG.height - UI_box.height - 60;
+		UI_box.setPosition(FlxG.width - UI_box.width - 100, FlxG.height - UI_box.height - 60);
 		UI_box.scrollFactor.set();
 		
 		UI_box.selected_tab_id = 'Week';

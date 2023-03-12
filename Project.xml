@@ -28,16 +28,19 @@
 	<classpath name="source"/>
 	
 	<!-- PSYCH ENGINE CUSTOMIZATION -->
-	<define name="MODS_ALLOWED" if="desktop"/>
-	<define name="LUA_ALLOWED" if="cpp"/>
+	<section if="desktop">
+		<define name="MODS_ALLOWED"/>
+		<define name="LUA_ALLOWED" if="cpp"/>
+		<define name="HSCRIPT_ALLOWED"/>
+		<define name="CRASH_HANDLER"/>
+	</section>
+
 	<define name="ACHIEVEMENTS_ALLOWED"/>
 	<define name="VIDEOS_ALLOWED" if="web || windows cpp" unless="32bits"/>
-	<define name="CRASH_HANDLER" if="desktop"/>
 
 	<assets path="assets/preload" rename="assets" exclude="*.mp3"/>
 
-	<!-- <define name="PRELOAD_ALL" /> -->
-	<define name="PRELOAD_ALL" unless="web"/>
+	<!-- <define name="PRELOAD_ALL" unless="web"/> -->
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
 	
 	<library name="videos"        preload="true"/>
@@ -84,15 +87,15 @@
 	<assets path="assets/fonts"/>
 	
 	<!-- _______________________________Flags______________________________ -->
-	<!-- <haxeflag name="-dce no" if="debug"/> -->
-	<!-- <haxeflag name="-dce std" unless="debug"/> -->
+	<haxeflag name="-dce no" if="hscript"/>
+	<haxeflag name="-dce full" unless="hscript"/>
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>
 
 	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons"/>
-	<haxelib name="hscript" if="LUA_ALLOWED"/>
+	<haxelib name="hscript" if="HSCRIPT_ALLOWED"/>
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui"/>
@@ -109,24 +112,21 @@
 	<!--Allow working memory greater than 1 Gig-->
 	<!--haxedef name="HXCPP_GC_BIG_BLOCKS"-->
 
-	<!-- No deprecation warnings. -->
-	<haxedef name="no-deprecation-warnings"/>
-	
-	<!-- Show debug traces for hxCodec -->
-	<haxedef name="HXC_DEBUG_TRACE" if="debug"/>
-	
-	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
-	<haxedef name="FLX_NO_DEBUG" unless="debug"/>
+	<section unless="debug">
+		<!-- No deprecation warnings. -->
+		<haxedef name="no-deprecation-warnings"/>
+		<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
+		<haxedef name="FLX_NO_DEBUG"/>
+	</section>
 	
 	<!--Used for Izzy Engine's crash handler-->
 	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER"/>
 	<haxedef name="HXCPP_STACK_LINE" if="CRASH_HANDLER"/>
 
-	<!-- I was trying to make it so it'd give you an error if your not using NebulaZoruas fork of linc_luajit but I couldn't figure it out. -->
 	<error value="Seems like you're not using NebulaZoruas github fork of luajit, please use it instead." if="${linc_luajit == 0.0.4}" />
 	<error value="Seems like you're using Haxe ${haxe}, please update to latest version!" if="${haxe == 4.1.5}" unless="linux"/>
 
-	<define name="hscriptPos"/>
+	<define name="hscriptPos" if="HSCRIPT_ALLOWED"/>
 
 	<!-- _________________________________Custom_______________________________ -->
 

@@ -104,8 +104,7 @@ class DialogueEditorState extends MusicBeatState
 		];
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.resize(250, 210);
-		UI_box.x = FlxG.width - UI_box.width - 10;
-		UI_box.y = 10;
+		UI_box.setPosition(FlxG.width - UI_box.width - 10, 10);
 		UI_box.scrollFactor.set();
 		UI_box.alpha = 0.8;
 		addDialogueLineUI();

@@ -164,8 +164,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 		];
 		UI_typebox = new FlxUITabMenu(null, tabs, true);
 		UI_typebox.resize(120, 180);
-		UI_typebox.x = 900;
-		UI_typebox.y = FlxG.height - UI_typebox.height - 50;
+		UI_typebox.setPosition(900, FlxG.height - UI_typebox.height - 50);
 		UI_typebox.scrollFactor.set();
 		UI_typebox.camera = camHUD;
 		addTypeUI();
@@ -177,8 +176,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 		];
 		UI_mainbox = new FlxUITabMenu(null, tabs, true);
 		UI_mainbox.resize(200, 250);
-		UI_mainbox.x = UI_typebox.x + UI_typebox.width;
-		UI_mainbox.y = FlxG.height - UI_mainbox.height - 50;
+		UI_mainbox.setPosition(UI_typebox.x + UI_typebox.width, FlxG.height - UI_mainbox.height - 50);
 		UI_mainbox.scrollFactor.set();
 		UI_mainbox.camera = camHUD;
 		addAnimationsUI();

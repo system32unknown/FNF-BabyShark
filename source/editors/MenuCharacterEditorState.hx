@@ -82,8 +82,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		}];
 		UI_typebox = new FlxUITabMenu(null, tabs, true);
 		UI_typebox.resize(120, 180);
-		UI_typebox.x = 100;
-		UI_typebox.y = FlxG.height - UI_typebox.height - 50;
+		UI_typebox.setPosition(100, FlxG.height - UI_typebox.height - 50);
 		UI_typebox.scrollFactor.set();
 		addTypeUI();
 		add(UI_typebox);
@@ -93,8 +92,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		}];
 		UI_mainbox = new FlxUITabMenu(null, tabs, true);
 		UI_mainbox.resize(240, 180);
-		UI_mainbox.x = FlxG.width - UI_mainbox.width - 100;
-		UI_mainbox.y = FlxG.height - UI_mainbox.height - 50;
+		UI_mainbox.setPosition(FlxG.width - UI_mainbox.width - 100, FlxG.height - UI_mainbox.height - 50);
 		UI_mainbox.scrollFactor.set();
 		addCharacterUI();
 		add(UI_mainbox);

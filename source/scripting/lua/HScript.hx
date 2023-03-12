@@ -1,6 +1,6 @@
 package scripting.lua;
 
-#if hscript
+#if (hscript && HSCRIPT_ALLOWED)
 import hscript.Parser;
 import hscript.Interp;
 #end
@@ -16,7 +16,7 @@ import states.PlayState;
 
 class HScript
 {
-	#if hscript
+	#if (hscript && HSCRIPT_ALLOWED)
 	public static var parser:Parser;
 	public var interp:Interp;
 
@@ -26,7 +26,7 @@ class HScript
 		return interp.variables;
 	
 	public static function initHaxeModule() {
-		#if hscript
+		#if (hscript && HSCRIPT_ALLOWED)
 		if(FunkinLua.hscript == null)
 			FunkinLua.hscript = new HScript(); //TO DO: Fix issue with 2 scripts not being able to use the same variable names
 		#end

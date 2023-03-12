@@ -54,7 +54,7 @@ class FunkinLua {
 	public var scriptName:String = '';
 	public var closed:Bool = false;
 
-	#if hscript
+	#if (hscript && HSCRIPT_ALLOWED)
 	public static var hscript:HScript;
 	#end
 
@@ -727,7 +727,7 @@ class FunkinLua {
 		addCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null) {
 			var retVal:Dynamic = null;
 
-			#if hscript
+			#if (hscript && HSCRIPT_ALLOWED)
 			HScript.initHaxeModule();
 
 			try {
@@ -748,7 +748,7 @@ class FunkinLua {
 			return retVal;
 		});
 		addCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
-			#if hscript
+			#if (hscript && HSCRIPT_ALLOWED)
 			HScript.initHaxeModule();
 			try {
 				var str:String = '';
@@ -2466,7 +2466,7 @@ class FunkinLua {
 			return;
 		}
 
-		#if hscript
+		#if (hscript && HSCRIPT_ALLOWED)
 		if(hscript != null) hscript = null;
 		#end
 		Lua.close(lua);

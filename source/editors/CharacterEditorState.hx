@@ -157,8 +157,7 @@ class CharacterEditorState extends MusicBeatState
 		UI_box.cameras = [camMenu];
 
 		UI_box.resize(250, 120);
-		UI_box.x = FlxG.width - 275;
-		UI_box.y = 25;
+		UI_box.setPosition(FlxG.width - 275, 25);
 		UI_box.scrollFactor.set();
 
 		var tabs = [
@@ -170,8 +169,7 @@ class CharacterEditorState extends MusicBeatState
 		UI_characterbox.cameras = [camMenu];
 
 		UI_characterbox.resize(350, 250);
-		UI_characterbox.x = UI_box.x - 100;
-		UI_characterbox.y = UI_box.y + UI_box.height;
+		UI_characterbox.setPosition(UI_box.x - 100, UI_box.y + UI_box.height);
 		UI_characterbox.scrollFactor.set();
 		add(UI_characterbox);
 		add(UI_box);

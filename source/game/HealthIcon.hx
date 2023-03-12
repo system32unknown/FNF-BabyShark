@@ -82,11 +82,7 @@ class HealthIcon extends FlxSprite
 	}
 
 	override function updateHitbox() {
-		if (!isCenter) {
-			width = Math.abs(scale.x) * frameWidth;
-			height = Math.abs(scale.y) * frameHeight;
-			offset.set(-.5 * (width - frameWidth), -.5 * (height - frameHeight));
-		} else centerOrigin();
+		if (isCenter) centerOrigin();
 	}
 
 	public function getCharacter():String

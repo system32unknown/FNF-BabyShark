@@ -34,8 +34,6 @@ class Note extends FlxSprite
 	public static var minMania:Int = 0;
 	public static var maxMania:Int = 17;
 	public static var xmlMax:Int = 17; // This specifies the max of the splashes can go
-
-	public static var maxManiaUI_integer:Int = maxMania + 1;
 	public static var defaultMania:Int = 3;
 
 	public static var pixelNotesDivisionValue:Int = 18;
@@ -58,8 +56,6 @@ class Note extends FlxSprite
 	public var randomized:Bool = false;
 	public var localScrollSpeed:Float = 1;
 
-	public var spawned:Bool = false;
-
 	public var tail:Array<Note> = []; // for sustains
 	public var parent:Note;
 	public var blockHit:Bool = false; // only works for player
@@ -79,10 +75,8 @@ class Note extends FlxSprite
 	public var animSuffix:String = '';
 	public var gfNote:Bool = false;
 	public var earlyHitMult:Float = 0.5;
-	public var lateHitMult:Float = 1;
-	public var lowPriority:Bool = false;
 
-	public static var swagWidth:Float = 160 * 0.7;
+	public static var swagWidth:Float = 160 * .7;
 
 	// Lua shit
 	public var noteSplashDisabled:Bool = false;
@@ -90,7 +84,6 @@ class Note extends FlxSprite
 	public var noteSplashHue:Float = 0;
 	public var noteSplashSat:Float = 0;
 	public var noteSplashBrt:Float = 0;
-	public var enableReloadNote:Bool = false;
 
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
@@ -137,14 +130,12 @@ class Note extends FlxSprite
 	}
 
 	private function set_texture(value:String):String {
-		if(texture != value)
-			reloadNote('', value);
+		if(texture != value) reloadNote('', value);
 		texture = value;
 		return value;
 	}
 
 	function set_noteType(value:String):String {
-		var luaPrefix:String = '';
 		noteSplashTexture = PlayState.SONG.splashSkin;
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 		var arrowIndex:Int = Std.int(keysShit.get(mania).get('pixelAnimIndex')[noteData] % ammo[mania]);
@@ -160,33 +151,21 @@ class Note extends FlxSprite
 					ignoreNote = true;
 					reloadNote('HURT', 'NOTE_assets');
 					noteSplashTexture = 'HURTnoteSplashes';
-					colorSwap.hue = 0;
-					colorSwap.saturation = 0;
-					colorSwap.brightness = 0;
-					lowPriority = true;
-
-					if(isSustainNote)
-						missHealth = 0.1;
-					else missHealth = 0.3;
+					colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
+					missHealth = (isSustainNote ? .1 : .3);
 					hitCausesMiss = true;
 				case 'Danger Note':
 					reloadNote('DANGER', 'NOTE_assets');
 					noteSplashTexture = 'DANGERnoteSplashes';
-					colorSwap.hue = 0;
-					colorSwap.saturation = 0;
-					colorSwap.brightness = 0;
+					colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
 					noMissAnimation = true;
-					if (isSustainNote) 
-						missHealth = 0.3;
-					else missHealth = 0.5;
+					missHealth = (isSustainNote ? .3 : .5);
 					hitCausesMiss = false;
 				case 'Kill Note':
 					ignoreNote = true;
 					reloadNote('KILL', 'NOTE_assets');
 					noteSplashTexture = 'HURTnoteSplashes';
-					colorSwap.hue = 0;
-					colorSwap.saturation = 0;
-					colorSwap.brightness = 0;
+					colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
 					missHealth = 2;
 					hitCausesMiss = true;
 				case 'Alt Animation':
@@ -196,15 +175,15 @@ class Note extends FlxSprite
 					noMissAnimation = true;
 				case 'GF Sing':
 					gfNote = true;
+				#if MODS_ALLOWED
+				case '' | 'Hey!':
 				default:
-					#if MODS_ALLOWED
-					if (enableReloadNote) {
-						luaPrefix = value.split(" ")[0].toUpperCase();
-						if (Paths.image(luaPrefix + 'NOTE_assets') != null)
-							reloadNote(luaPrefix, 'NOTE_assets');
-						else trace('Suggestion: rename $value texture to ${luaPrefix}NOTE_assets');
-					}
-					#end
+					final luaPrefix = value.split(" ")[0].toUpperCase();
+					if (Paths.fileExists('images/${value.toUpperCase()}_assets.png', IMAGE)) {
+						reloadNote(luaPrefix, '_assets');
+						colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
+					} else trace('Suggestion: rename $value texture to ${luaPrefix}_assets');
+				#end
 			}
 			noteType = value;
 		}
@@ -220,8 +199,7 @@ class Note extends FlxSprite
 
 		mania = PlayState.mania;
 
-		if (prevNote == null)
-			prevNote = this;
+		if (prevNote == null) prevNote = this;
 
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
@@ -229,7 +207,6 @@ class Note extends FlxSprite
 		this.moves = false;
 
 		x += (ClientPrefs.getPref('middleScroll') ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50;
-		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
 		this.strumTime = strumTime;
 		if(!inEditor) this.strumTime += ClientPrefs.getPref('noteOffset');
@@ -242,14 +219,14 @@ class Note extends FlxSprite
 			shader = colorSwap.shader;
 
 			x += swagWidth * (noteData % ammo[mania]);
-			if(!isSustainNote && noteData > -1 && noteData < maxManiaUI_integer) { //Doing this 'if' check to fix the warnings on Senpai songs
-				animation.play(keysShit.get(mania).get('letters')[noteData]);
+			if(!isSustainNote && noteData > -1) { //Doing this 'if' check to fix the warnings on Senpai songs
+				animation.play(keysShit.get(mania).get('letters')[noteData % ammo[mania]]);
 			}
 		}
 
 		if (isSustainNote && prevNote != null) {
-			alpha = 0.6;
-			multAlpha = 0.6;
+			alpha = .6;
+			multAlpha = .6;
 			hitsoundDisabled = true;
 			if(ClientPrefs.getPref('downScroll')) flipY = true;
 
@@ -257,7 +234,6 @@ class Note extends FlxSprite
 			copyAngle = false;
 
 			animation.play(keysShit.get(mania).get('letters')[noteData] + ' tail');
-
 			updateHitbox();
 
 			offsetX -= width / 2;
@@ -284,9 +260,7 @@ class Note extends FlxSprite
 				scale.y *= PlayState.daPixelZoom;
 				updateHitbox();
 			}
-		} else if(!isSustainNote) {
-			earlyHitMult = 1;
-		}
+		} else if(!isSustainNote) earlyHitMult = 1;
 		x += offsetX;
 	}
 
@@ -300,15 +274,12 @@ class Note extends FlxSprite
 		var skin:String = texture;
 		if (texture.length < 1) {
 			skin = PlayState.SONG.arrowSkin;
-			if(skin == null || skin.length < 1) {
-				skin = 'NOTE_assets';
-			}
+			if(skin == null || skin.length < 1) skin = 'NOTE_assets';
 		}
 
 		var animName:String = null;
-		if(animation.curAnim != null) {
+		if(animation.curAnim != null)
 			animName = animation.curAnim.name;
-		}
 
 		var arraySkin:Array<String> = skin.split('/');
 		arraySkin[arraySkin.length - 1] = prefix + arraySkin[arraySkin.length - 1] + suffix;
@@ -357,61 +328,53 @@ class Note extends FlxSprite
 	}
 
 	function loadNoteAnims() {
-		for (i in 0...gfxLetter.length) {
-			animation.addByPrefix(gfxLetter[i], gfxLetter[i] + '0');
-
+		for (letter in gfxLetter) {
 			if (isSustainNote) {
-				animation.addByPrefix(gfxLetter[i] + ' hold', gfxLetter[i] + ' hold');
-				animation.addByPrefix(gfxLetter[i] + ' tail', gfxLetter[i] + ' tail');
-			}
-
-			if (!isSustainNote)
-				setGraphicSize(Std.int(defaultWidth * scales[mania]));
-			else setGraphicSize(Std.int(defaultWidth * scales[mania]), Std.int(defaultHeight * scales[0]));
-
-			updateHitbox();
+				animation.addByPrefix('$letter hold', '$letter hold');
+				animation.addByPrefix('$letter tail', '$letter tail');
+			} else animation.addByPrefix(letter, letter + '0');
 		}
+
+		setGraphicSize(Std.int(defaultWidth * scales[mania]), (isSustainNote ? Std.int(defaultHeight * scales[0]) : 0));
+		updateHitbox();
 	}
 
 	function loadPixelNoteAnims() {
 		if(isSustainNote) {
-			for (i in 0...gfxLetter.length) {
-				animation.add(gfxLetter[i] + ' hold', [i]);
-				animation.add(gfxLetter[i] + ' tail', [i + pixelNotesDivisionValue]);
+			for (i => letter in gfxLetter) {
+				animation.add('$letter hold', [i]);
+				animation.add('$letter tail', [i + pixelNotesDivisionValue]);
 			}
 		} else {
-			for (i in 0...gfxLetter.length) {
-				animation.add(gfxLetter[i], [i + pixelNotesDivisionValue]);
+			for (i => letter in gfxLetter) {
+				animation.add(letter, [i + pixelNotesDivisionValue]);
 			}
 		}
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 
 		mania = PlayState.mania;
 
 		if (mustPress) {
-			// ok river
-			if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult)
-				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))
-				canBeHit = true;
-			else canBeHit = false;
-
-			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
-				tooLate = true;
+			canBeHit = (strumTime > Conductor.songPosition - Conductor.safeZoneOffset && strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult));
+			tooLate = (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit);
 		} else {
 			canBeHit = false;
 
-			if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult)) {
-				if ((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition)
-					wasGoodHit = true;
-			}
+			if (!(strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))) return;
+			wasGoodHit = ((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition);
 		}
 
 		if (tooLate && !inEditor) {
 			if (alpha > .3) alpha = .3;
 		}
+	}
+
+	override function destroy() {
+		shader = null;
+		colorSwap = null;
+		super.destroy();
 	}
 }

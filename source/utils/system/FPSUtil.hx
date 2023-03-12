@@ -5,8 +5,7 @@ import haxe.Timer;
 import flixel.FlxG;
 
 class FPSUtil {
-    var times:Array<Float> = [];
-    var curTime:Float = 0;
+    @:noCompletion var times:Array<Float> = [];
     public var currentFPS(default, null):Int;
     public function new() {}
 

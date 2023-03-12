@@ -5,10 +5,10 @@ import cpp.vm.Gc;
 #end
 
 class MemoryUtil {
-	public static function clearMajor() {
+	public static function clearMajor(?minor:Bool = false) {
 		#if cpp
-		Gc.run(true);
-		Gc.compact();
+		Gc.run(!minor);
+		if (!minor) Gc.compact();
 		#end
 	}
 
