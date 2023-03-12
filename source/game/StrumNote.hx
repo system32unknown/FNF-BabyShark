@@ -177,4 +177,10 @@ class StrumNote extends FlxSprite
 			}
 		}
 	}
+
+	override function destroy() {
+		shader = null;
+		colorSwap = null;
+		super.destroy();
+	}
 }

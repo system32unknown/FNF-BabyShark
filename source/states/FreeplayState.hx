@@ -14,10 +14,10 @@ import utils.MathUtil;
 import game.Difficulty;
 import game.Conductor;
 import game.Highscore;
+import game.HealthIcon;
 import game.Song;
 import substates.ResetScoreSubState;
 import substates.GameplayChangersSubstate;
-import game.HealthIcon;
 import ui.ErrorDisplay;
 import ui.Alphabet;
 
@@ -100,10 +100,6 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		WeekData.loadTheFirstEnabledMod();
-
-		#if PRELOAD_ALL
-		Conductor.changeBPM(TitleState.titleJSON.bpm);
-		#end
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.getPref('globalAntialiasing');
@@ -308,7 +304,6 @@ class FreeplayState extends MusicBeatState
 					vocals.looped = true;
 					vocals.volume = 0.7;
 					instPlaying = curSelected;
-					Conductor.changeBPM(PlayState.SONG.bpm);
 				} else {
 					errorDisplay.text = getErrorMessage(missChart, 'chart required to play audio, $missFile', songFolder, songLowercase);
 					errorDisplay.displayError();

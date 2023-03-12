@@ -89,7 +89,6 @@ class Note extends FlxSprite
 	public var offsetY:Float = 0;
 	public var offsetAngle:Float = 0;
 	public var multAlpha:Float = 1;
-	public var multSpeed(default, set):Float = 1;
 
 	public var copyX:Bool = true;
 	public var copyY:Bool = true;
@@ -121,12 +120,6 @@ class Note extends FlxSprite
 			scale.y *= ratio;
 			updateHitbox();
 		}
-	}
-
-	private function set_multSpeed(value:Float):Float {
-		resizeByRatio(value / multSpeed);
-		multSpeed = value;
-		return value;
 	}
 
 	private function set_texture(value:String):String {
@@ -340,15 +333,11 @@ class Note extends FlxSprite
 	}
 
 	function loadPixelNoteAnims() {
-		if(isSustainNote) {
-			for (i => letter in gfxLetter) {
-				animation.add('$letter hold', [i]);
-				animation.add('$letter tail', [i + pixelNotesDivisionValue]);
-			}
-		} else {
-			for (i => letter in gfxLetter) {
+		for (i => letter in gfxLetter) {
+			animation.add('$letter hold', [i]);
+			animation.add('$letter tail', [i + pixelNotesDivisionValue]);
+			if(isSustainNote)
 				animation.add(letter, [i + pixelNotesDivisionValue]);
-			}
 		}
 	}
 

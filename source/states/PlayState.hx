@@ -2724,13 +2724,6 @@ class PlayState extends MusicBeatState {
 		callOnLuas('onUpdate', [elapsed]);
 		callOnScripts('update', [elapsed]);
 
-		grpNoteSplashes.forEachDead(function(splash:NoteSplash) {
-			if (grpNoteSplashes.length > 1) {
-				grpNoteSplashes.remove(splash, true);
-				splash.destroy();
-			}
-		});
-
 		if(disableTheTripperAt == curStep || isDead)
 			disableTheTripper = true;
 
@@ -3018,9 +3011,11 @@ class PlayState extends MusicBeatState {
 			camHUD.zoom = FlxMath.lerp(defaultHudCamZoom, camHUD.zoom, MathUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay * playbackRate), 0, 1));
 		}
 
-		FlxG.watch.addQuick("secShit", curSection);
+		#if debug
+		FlxG.watch.addQuick("sectionShit", curSection);
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
+		#end
 
 		// RESET = Quick Game Over Screen
 		if (!ClientPrefs.getPref('noReset') && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong) {
@@ -3029,12 +3024,9 @@ class PlayState extends MusicBeatState {
 		doDeathCheck();
 
 		if (unspawnNotes[0] != null) {
-			var time:Float = spawnTime;
-			if(songSpeed < 1) time /= songSpeed;
-			if(unspawnNotes[0].multSpeed < 1) time /= unspawnNotes[0].multSpeed;
+			final spawnTime:Float = (1750 / songSpeed) / (FlxMath.bound(camHUD.zoom, null, 1));
 
-			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
-			{
+			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < spawnTime) {
 				var dunceNote:Note = unspawnNotes[0];
 				notes.insert(0, dunceNote);
 				callOnLuas('onSpawnNote', [notes.members.indexOf(dunceNote), dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote]);
@@ -3074,25 +3066,24 @@ class PlayState extends MusicBeatState {
 					
 						if (daNote.randomized) {
 							if (strumScroll) { //Downscroll
-								daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed * daNote.localScrollSpeed);
+								daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.localScrollSpeed);
 							} else { //Upscroll
-								daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed * daNote.localScrollSpeed);
+								daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.localScrollSpeed);
 							}
 						} else {
 							if (strumScroll) { //Downscroll
-								daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+								daNote.distance = (0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed);
 							} else { //Upscroll
-								daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed * daNote.multSpeed);
+								daNote.distance = (-0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed);
 							}
 						}
 					
 						var angleDir = strumDirection * Math.PI / 180;
-						if(daNote.isSustainNote)
-							daNote.angle = strumDirection - 90;
-	
-						if (daNote.copyAngle)
-							daNote.angle = strumDirection - 90 + strumAngle;
-					
+						if(!daNote.isSustainNote) {
+							if (daNote.copyAngle)
+								daNote.angle = strumDirection - 90 + strumAngle;
+						} else daNote.angle = strumDirection - 90 + (daNote.copyAngle ? strumAngle : 0);
+
 						if(daNote.copyAlpha)
 							daNote.alpha = strumAlpha;
 					
@@ -3109,18 +3100,15 @@ class PlayState extends MusicBeatState {
 									daNote.y -= 46 * (1 - (fakeCrochet / 600)) * songSpeed;
 									if(isPixelStage) {
 										daNote.y += 8 + (6 - daNote.originalHeightForCalcs) * daPixelZoom;
-									} else {
-										daNote.y -= 19;
-									}
+									} else daNote.y -= 19;
 								}
 								daNote.y += (Note.swagWidth / 2) - (60.5 * (songSpeed - 1));
 								daNote.y += 27.5 * ((SONG.bpm / 100) - 1) * (songSpeed - 1) * Note.scales[mania];
 							}
 						}
 					
-						if (!daNote.mustPress && daNote.wasGoodHit && !daNote.hitByOpponent && !daNote.ignoreNote) {
+						if (!daNote.mustPress && daNote.wasGoodHit && !daNote.hitByOpponent && !daNote.ignoreNote)
 							opponentNoteHit(daNote);
-						}
 					
 						if(!daNote.blockHit && daNote.mustPress && cpuControlled && daNote.canBeHit) {
 							if(daNote.isSustainNote) {

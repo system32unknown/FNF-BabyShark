@@ -274,6 +274,14 @@ class Character extends FlxSprite
 		super.update(elapsed);
 	}
 
+	override function destroy() {
+		animationsArray = null;
+		animOffsets = null;
+		shader = null;
+		animationNotes = null;
+		super.destroy();
+	}
+
 	public var danced:Bool = false;
 
 	/**

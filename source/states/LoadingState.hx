@@ -21,7 +21,7 @@ import data.StageData;
 
 class LoadingState extends MusicBeatState
 {
-	inline static var MIN_TIME = 1.0;
+	inline static final MIN_TIME = 1.0;
 
 	// Browsers will load create(), you can make your song load a custom directory there
 	// If you're compiling to desktop (or something that doesn't use NO_PRELOAD_ALL), search for getNextState instead
@@ -77,7 +77,7 @@ class LoadingState extends MusicBeatState
 		add(loadLogoText);
 
 		loadBarBack = new FlxSprite(0, FlxG.height - 25).makeGraphic(FlxG.width, 20, FlxColor.BLACK);
-		loadBarBack.scale.x = .51;
+		loadBarBack.scale.x = .50;
 		loadBarBack.screenCenter(X);
 		loadBarBack.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(loadBarBack);
@@ -163,7 +163,6 @@ class LoadingState extends MusicBeatState
 		}
 		
 		if (!loaded) return new LoadingState(target, stopMusic, directory);
-
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		

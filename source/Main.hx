@@ -28,6 +28,10 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
+#if cpp
+import cpp.vm.Gc;
+#end
+
 class Main extends Sprite
 {
 	public static var COMMIT_HASH(default, never):String = GithubAPI.getLatestCommits();
@@ -56,13 +60,13 @@ class Main extends Sprite
 		if (hasEventListener(Event.ADDED_TO_STAGE)) {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
-		CustomLog.init();
-
 		setupGame();
 	}
 
 	private function setupGame():Void
 	{
+		#if cpp Gc.enable(true); #end
+
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 		if (game.zoom == -1.) {
@@ -71,6 +75,7 @@ class Main extends Sprite
 			game.height = Math.ceil(stageHeight / game.zoom);
 		}
 
+		CustomLog.init();
 		Controls.instance = new Controls();
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 
@@ -121,14 +126,12 @@ class Main extends Sprite
 		else message = try Std.string(e) catch(_:Exception) "Unknown";
 
 		var errMsg:String = "";
-		var path:String;
-		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
+		final callStack:Array<StackItem> = CallStack.exceptionStack(true);
 		var dateNow:String = Date.now().toString();
 
-		dateNow = dateNow.replace(" ", "_");
-		dateNow = dateNow.replace(":", "'");
+		dateNow = dateNow.replace(" ", "_").replace(":", "'");
 
-		path = "./crash/" + "PsychEngine_" + dateNow + ".txt";
+		final path = "./crash/" + "PsychEngine_" + dateNow + ".txt";
 
 		for (stackItem in callStack) {
 			switch (stackItem) {

@@ -25,7 +25,7 @@ class Conductor
 
 	public static function judgeNote(note:Note, diff:Float = 0):Rating { // die
 		var data:Array<Rating> = PlayState.instance.ratingsData; //shortening cuz fuck u
-		for(i in 0...data.length-1) { //skips last window (Shit)
+		for(i in 0...data.length - 1) { //skips last window (Shit)
 			if (diff <= data[i].hitWindow) {
 				return data[i];
 			}
@@ -123,8 +123,7 @@ class Rating
 	public var noteSplash:Bool = true;
 	public var hits:Int = 0;
 
-	public function new(name:String)
-	{
+	public function new(name:String) {
 		this.name = name;
 		this.image = name;
 		this.hitWindow = ClientPrefs.getPref(name + 'Window', 0);
