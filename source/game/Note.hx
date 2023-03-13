@@ -49,7 +49,6 @@ class Note extends FlxSprite
 	public var hitByOpponent:Bool = false;
 	public var prevNote:Note;
 
-	public var randomized:Bool = false;
 	public var localScrollSpeed:Float = 1;
 
 	public var tail:Array<Note> = []; // for sustains
@@ -108,8 +107,8 @@ class Note extends FlxSprite
 	public var changeAnim:Bool = true;
 	public var changeColSwap:Bool = true;
 	
-	var defaultWidth:Float = 157;
-	var defaultHeight:Float = 154;
+	var defaultWidth:Float = 0;
+	var defaultHeight:Float = 0;
 
 	public function resizeByRatio(ratio:Float) { //haha funny twitter shit
 		if(isSustainNote && !animation.curAnim.name.endsWith('tail')) {
@@ -171,7 +170,7 @@ class Note extends FlxSprite
 					if (Paths.fileExists('images/${value.toUpperCase()}_assets.png', IMAGE)) {
 						reloadNote(luaPrefix, '_assets');
 						colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
-					} else trace('Suggestion: rename $value texture to ${luaPrefix}_assets');
+					}
 				#end
 			}
 			noteType = value;
@@ -276,17 +275,21 @@ class Note extends FlxSprite
 		var lastScaleY:Float = scale.y;
 		var blahblah:String = arraySkin.join('/');
 
+		defaultWidth = 157;
+		defaultHeight = 154;
 		if(PlayState.isPixelStage) {
 			if(isSustainNote) {
 				loadGraphic(Paths.image('pixelUI/' + blahblah + 'ENDS'));
 				width /= pixelNotesDivisionValue;
 				height /= 2;
 				originalHeightForCalcs = height;
+				trace(width, height);
 				loadGraphic(Paths.image('pixelUI/' + blahblah + 'ENDS'), true, Math.floor(width), Math.floor(height));
 			} else {
 				loadGraphic(Paths.image('pixelUI/' + blahblah));
 				width /= pixelNotesDivisionValue;
 				height /= 5;
+				trace(width, height);
 				loadGraphic(Paths.image('pixelUI/' + blahblah), true, Math.floor(width), Math.floor(height));
 			}
 			defaultWidth = width;
@@ -339,8 +342,6 @@ class Note extends FlxSprite
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-
-		mania = PlayState.mania;
 
 		if (mustPress) {
 			canBeHit = (strumTime > Conductor.songPosition - Conductor.safeZoneOffset && strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult));
