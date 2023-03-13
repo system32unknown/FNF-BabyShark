@@ -219,6 +219,34 @@ class ExtraFunctions
 			return list;
 		});
 
+		funk.addCallback("parseJson", function(jsonStr:String, varName:String) {
+			var json = Paths.modFolders('data/' + jsonStr + '.json');
+			var foundJson:Bool;
+
+			#if sys
+				if (FileSystem.exists(json)) {
+					foundJson = true;
+				} else {
+					funk.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
+					foundJson = false;
+					return;	
+				}
+			#else
+				if (Assets.exists(json)) {
+					foundJson = true;
+				} else {
+					funk.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
+					foundJson = false;
+					return;	
+				}
+			#end
+
+			if (foundJson) {
+				var parsedJson = haxe.Json.parse(File.getContent(json));				
+				PlayState.instance.variables.set(varName, parsedJson);
+			}
+		});
+
 		// String tools
 		funk.addCallback("stringStartsWith", function(str:String, start:String) {
 			return str.startsWith(start);

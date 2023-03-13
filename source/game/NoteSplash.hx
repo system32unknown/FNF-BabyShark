@@ -42,18 +42,15 @@ class NoteSplash extends FlxSprite
 		colorSwap.saturation = satColor;
 		colorSwap.brightness = brtColor;
 
-		var offsets:Array<Int> = [-10, 0];
 		var mania:Int = PlayState.mania;
-		if(Note.noteSplashOffsets.exists(mania)) {
-			var oA = Note.noteSplashOffsets.get(mania);
-			offsets = [oA[0], oA[1]];
-		}
-		offset.set(offsets[0], offsets[1]);
+		if (PlayState.isPixelStage || texture != 'noteSplashes')
+			offset.set(14 / Note.scales[mania], 14 / Note.scales[mania]);
 
 		var animNum:Int = FlxG.random.int(1, 2);
-		var animIndex:Int = Math.floor(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[note] % (Note.xmlMax + 1));
-		animation.play('note' + animIndex + '-' + animNum, true);
-		if(animation.curAnim != null) animation.curAnim.frameRate = 24 + FlxG.random.int(-2, 2);
+		var animIndex:Int = Math.floor(Note.keysShit.get(mania).get('pixelAnimIndex')[note] % (Note.xmlMax + 1));
+		animation.play('note$animIndex-$animNum', true);
+		if(animation.curAnim != null)
+			animation.curAnim.frameRate = 24 + FlxG.random.int(-2, 2);
 		animation.finishCallback = name -> {
 			kill();
 			if (PlayState.instance != null)

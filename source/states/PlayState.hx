@@ -906,8 +906,9 @@ class PlayState extends MusicBeatState {
 		#end
 
 		// STAGE SCRIPTS
-		#if (MODS_ALLOWED && LUA_ALLOWED)
+		#if (MODS_ALLOWED && LUA_ALLOWED && HSCRIPT_ALLOWED)
 			startLuasOnFolder('stages/' + curStage + '.lua');
+			addAlterScript('stages/' + curStage + '.hx');
 		#end
 
 		var gfVersion:String = SONG.gfVersion;
@@ -1204,9 +1205,11 @@ class PlayState extends MusicBeatState {
 		#if LUA_ALLOWED
 		for (notetype in noteTypeMap.keys()) {
 			startLuasOnFolder('custom_notetypes/' + notetype + '.lua');
+			addAlterScript('custom_notetypes/' + notetype + '.hx');
 		}
 		for (event in eventPushedMap.keys()) {
 			startLuasOnFolder('custom_events/' + event + '.lua');
+			addAlterScript('custom_events/' + event + '.hx');
 		}
 		#end
 		noteTypeMap.clear();
@@ -4032,7 +4035,7 @@ class PlayState extends MusicBeatState {
 
 		switch (ClientPrefs.getPref('ScoreType')) {
 			case 'Alter':
-				missText = sepaSpace + 'Misses:$songMisses';
+				missText = sepaSpace + 'Breaks:$songMisses';
 			case 'Kade':
 				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:' : 'Combo Breaks: '}$songMisses';
 			case 'Psych':
@@ -5091,6 +5094,35 @@ class PlayState extends MusicBeatState {
 		callOnLuas('onSectionHit', []);
 		callOnScripts('sectionHit', [curSection]);
 	}
+
+	#if HSCRIPT_ALLOWED
+	public function addAlterScript(hxFile:String) {
+		for (script in scriptArray) {
+			if(script.scriptFile == hxFile) return false;
+		}
+
+		#if MODS_ALLOWED
+		var hxToLoad:String = Paths.modFolders(hxFile);
+		if(FileSystem.exists(hxToLoad)) {
+			scriptArray.push(new AlterScript(hxToLoad));
+			return true;
+		} else {
+			hxToLoad = Paths.getPreloadPath(hxFile);
+			if(FileSystem.exists(hxToLoad)) {
+				scriptArray.push(new AlterScript(hxToLoad));
+				return true;
+			}
+		}
+		#elseif sys
+		var hxToLoad:String = Paths.getPreloadPath(hxFile);
+		if(OpenFlAssets.exists(hxToLoad)) {
+			scriptArray.push(new AlterScript(hxToLoad));
+			return true;
+		}
+		#end
+		return false;
+	}
+	#end
 
 	#if LUA_ALLOWED
 	public function startLuasOnFolder(luaFile:String) {

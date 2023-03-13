@@ -28,10 +28,6 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
-#if cpp
-import cpp.vm.Gc;
-#end
-
 class Main extends Sprite
 {
 	public static var COMMIT_HASH(default, never):String = GithubAPI.getLatestCommits();
@@ -65,8 +61,6 @@ class Main extends Sprite
 
 	private function setupGame():Void
 	{
-		#if cpp Gc.enable(true); #end
-
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 		if (game.zoom == -1.) {
@@ -103,15 +97,12 @@ class Main extends Sprite
 		FlxG.fixedTimestep = false;
 		FlxG.signals.preStateSwitch.add(() -> {
 			Paths.clearStoredMemory();
+			Paths.clearUnusedMemory();
 
 			MemoryUtil.clearMajor();
 	
 			FlxG.bitmap.dumpCache();
 			FlxG.bitmap.clearUnused();
-		});
-		FlxG.signals.postStateSwitch.add(() -> {
-			Paths.clearUnusedMemory();
-			MemoryUtil.clearMajor(true);
 		});
 	}
 

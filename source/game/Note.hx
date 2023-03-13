@@ -22,10 +22,6 @@ class Note extends FlxSprite
 	public static var xtra:Array<Float> = EKData.offsetX;
 	public static var posRest:Array<Float> = EKData.restPosition;
 	public static var gridSizes:Array<Int> = EKData.gridSizes;
-	public static var noteSplashOffsets:Map<Int, Array<Int>> = [
-		0 => [20, 10],
-		9 => [10, 20]
-	];
 	public static var noteSplashScales:Array<Float> = EKData.splashScales;
 
 	public var extraData:Map<String, Dynamic> = [];
