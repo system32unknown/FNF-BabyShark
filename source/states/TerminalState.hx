@@ -4,7 +4,7 @@ import shaders.VCRDistortionEffect.VCRDistortionEffect;
 import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
 import flixel.text.FlxText;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.FlxG;
 
 class TerminalState extends MusicBeatState

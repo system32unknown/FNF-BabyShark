@@ -2,13 +2,10 @@
 <project>
 	<!-- _________________________Application Settings_________________________ -->
 	<app title="Baby Shark's Funkin: The Full Game" file="Baby Shark's Funkin" packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark" main="Main" version="0.1" company="altertoriel" />
+	<app preloader="flixel.system.FlxPreloader"/>
 
 	<!-- NOTE TO SELF: DISABLE THIS IF ISSUES ARE FOUND -->
 	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB"/> <!-- stable luas PUT AFTER FIRST LINE WITH APP NAME AND ETC -->
-
-	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
-		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
-	<app preloader="flixel.system.FlxPreloader" />
 
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8"/>
@@ -38,8 +35,6 @@
 	<define name="ACHIEVEMENTS_ALLOWED"/>
 	<define name="VIDEOS_ALLOWED" if="web || windows cpp" unless="32bits"/>
 
-	<assets path="assets/preload" rename="assets" exclude="*.mp3"/>
-
 	<define name="PRELOAD_ALL" unless="web"/>
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
 	
@@ -48,41 +43,19 @@
 	<section if="PRELOAD_ALL">
 		<library name="songs"         preload="true"/>
 		<library name="shared"        preload="true"/>
-		<library name="week1"         preload="true"/>
-		<library name="week2"         preload="true"/>
-		<library name="week3"         preload="true"/>
-		<library name="week4"         preload="true"/>
-		<library name="week5"         preload="true"/>
-		<library name="week6"         preload="true"/>
-		<library name="week7"         preload="true"/>
 	</section>
 	
 	<section if="NO_PRELOAD_ALL">
 		<library name="songs"         preload="false"/>
 		<library name="shared"        preload="false"/>
-		<library name="week1"         preload="false"/>
-		<library name="week2"         preload="false"/>
-		<library name="week3"         preload="false"/>
-		<library name="week4"         preload="false"/>
-		<library name="week5"         preload="false"/>
-		<library name="week6"         preload="false"/>
-		<library name="week7"         preload="false"/>
 	</section>
 	
-	<assets path="assets/videos"        library="videos"        if="VIDEOS_ALLOWED"/>
-	<assets path="assets/songs"         library="songs"         exclude="*.mp3"/>
-	<assets path="assets/shared"        library="shared"        exclude="*.mp3"/>
-	<assets path="assets/week1"         library="week1"         exclude="*.mp3"/>
-	<assets path="assets/week2"         library="week2"         exclude="*.mp3"/>
-	<assets path="assets/week3"         library="week3"         exclude="*.mp3"/>
-	<assets path="assets/week4"         library="week4"         exclude="*.mp3"/>
-	<assets path="assets/week5"         library="week5"         exclude="*.mp3"/>
-	<assets path="assets/week6"         library="week6"         exclude="*.mp3"/>
-	<assets path="assets/week7"         library="week7"         exclude="*.mp3"/>
+	<assets path="assets/videos" library="videos" if="VIDEOS_ALLOWED"/>
+	<assets path="assets/preload" rename="assets"/>
+	<assets path="assets/songs"  library="songs"/>
+	<assets path="assets/shared" library="shared"/>
 	
-	<section if="MODS_ALLOWED">
-		<assets path='example_mods' rename='mods' embed='false'/>
-	</section>
+	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED"/>
 	
 	<assets path="assets/fonts"/>
 	

@@ -16,7 +16,7 @@ import flixel.FlxObject;
 import flixel.tweens.FlxTween;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
 import flixel.addons.transition.FlxTransitionableState;

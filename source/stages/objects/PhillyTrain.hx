@@ -3,7 +3,7 @@ package stages.objects;
 import game.BGSprite;
 import states.PlayState;
 import flixel.FlxG;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 
 class PhillyTrain extends BGSprite
 {
