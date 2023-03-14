@@ -54,14 +54,6 @@
 	<assets path="assets/preload" rename="assets"/>
 	<assets path="assets/songs"  library="songs"/>
 	<assets path="assets/shared" library="shared"/>
-
-	<assets path="assets/week1" library="week1"/>
-	<assets path="assets/week2" library="week2"/>
-	<assets path="assets/week3" library="week3"/>
-	<assets path="assets/week4" library="week4"/>
-	<assets path="assets/week5" library="week5"/>
-	<assets path="assets/week6" library="week6"/>
-	<assets path="assets/week7" library="week7"/>
 	
 	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED"/>
 	
