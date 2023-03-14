@@ -7,9 +7,11 @@ import flixel.FlxG;
 import haxe.Exception;
 
 import openfl.Lib;
+import openfl.Assets;
 import openfl.display.Sprite;
-import openfl.events.Event;
 import openfl.display.StageScaleMode;
+import openfl.events.Event;
+import openfl.utils.AssetCache;
 import lime.app.Application;
 
 import states.TitleState;
@@ -96,13 +98,21 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 		FlxG.signals.preStateSwitch.add(() -> {
-			Paths.clearStoredMemory();
-			Paths.clearUnusedMemory();
-
-			MemoryUtil.clearMajor();
-	
+			Paths.clearStoredCache();
 			FlxG.bitmap.dumpCache();
-			FlxG.bitmap.clearUnused();
+			FlxG.sound.destroy();
+
+			var cache = cast(Assets.cache, AssetCache);
+			for (key in cache.font.keys())
+				cache.removeFont(key);
+			for (key in cache.sound.keys())
+				cache.removeSound(key);
+			cache = null;
+			MemoryUtil.clearMajor();
+		});
+		FlxG.signals.postStateSwitch.add(() -> {
+			Paths.clearUnusedCache();
+			MemoryUtil.clearMajor(true);
 		});
 	}
 

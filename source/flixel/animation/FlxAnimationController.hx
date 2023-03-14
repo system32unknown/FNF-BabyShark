@@ -97,13 +97,11 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		destroyAnimations();
 
-		for (anim in controller._animations)
-		{
+		for (anim in controller._animations) {
 			add(anim.name, anim.frames, anim.frameRate, anim.looped, anim.flipX, anim.flipY);
 		}
 
-		if (controller._prerotated != null)
-		{
+		if (controller._prerotated != null) {
 			createPrerotated();
 		}
 
@@ -125,14 +123,12 @@ class FlxAnimationController implements IFlxDestroyable
 		_prerotated.angle = _sprite.angle;
 	}
 
-	public function destroyAnimations():Void
-	{
+	public function destroyAnimations():Void {
 		clearAnimations();
 		clearPrerotated();
 	}
 
-	public function destroy():Void
-	{
+	public function destroy():Void {
 		destroyAnimations();
 		_animations = null;
 		callback = null;
@@ -144,25 +140,19 @@ class FlxAnimationController implements IFlxDestroyable
 		return _sprite.frames.frames[index].duration;
 	}
 
-	function clearPrerotated():Void
-	{
-		if (_prerotated != null)
-		{
+	function clearPrerotated():Void {
+		if (_prerotated != null) {
 			_prerotated.destroy();
 		}
 		_prerotated = null;
 	}
 
-	function clearAnimations():Void
-	{
-		if (_animations != null)
-		{
+	function clearAnimations():Void {
+		if (_animations != null) {
 			var anim:FlxAnimation;
-			for (key in _animations.keys())
-			{
+			for (key in _animations.keys()) {
 				anim = _animations.get(key);
-				if (anim != null)
-				{
+				if (anim != null) {
 					anim.destroy();
 				}
 			}
@@ -188,14 +178,11 @@ class FlxAnimationController implements IFlxDestroyable
 		var framesToAdd:Array<Int> = Frames;
 		var numFrames:Int = framesToAdd.length - 1;
 		var i:Int = numFrames;
-		while (i >= 0)
-		{
-			if (framesToAdd[i] >= frames)
-			{
+		while (i >= 0) {
+			if (framesToAdd[i] >= frames) {
 				// Splicing original Frames array could lead to unexpected results
 				// So we are cloning it (only once) and will use its copy
-				if (framesToAdd == Frames)
-				{
+				if (framesToAdd == Frames) {
 					framesToAdd = Frames.copy();
 				}
 
@@ -216,11 +203,9 @@ class FlxAnimationController implements IFlxDestroyable
 	 *
 	 * @param   Name   The name of animation to remove.
 	 */
-	public function remove(Name:String):Void
-	{
+	public function remove(Name:String):Void {
 		var anim:FlxAnimation = _animations.get(Name);
-		if (anim != null)
-		{
+		if (anim != null) {
 			_animations.remove(Name);
 			anim.destroy();
 		}
@@ -234,11 +219,9 @@ class FlxAnimationController implements IFlxDestroyable
 	 * @param   Name     What the existing animation is called (e.g. `"run"`).
 	 * @param   Frames   An array of indices indicating what frames to append (e.g. `[0, 1, 2]`).
 	 */
-	public function append(Name:String, Frames:Array<Int>):Void
-	{
+	public function append(Name:String, Frames:Array<Int>):Void {
 		var anim:FlxAnimation = _animations.get(Name);
-		if (anim == null)
-		{
+		if (anim == null) {
 			// anim must already exist
 			FlxG.log.warn("No animation called \"" + Name + "\"");
 			return;

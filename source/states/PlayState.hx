@@ -129,8 +129,6 @@ class PlayState extends MusicBeatState {
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 
-	public var spawnTime:Float = 2000;
-
 	public var vocals:FlxSound;
 
 	public var dad:Character = null;
@@ -574,8 +572,7 @@ class PlayState extends MusicBeatState {
 					grpLimoDancers = new FlxTypedGroup<BackgroundDancer>();
 					add(grpLimoDancers);
 
-					for (i in 0...5)
-					{
+					for (i in 0...5) {
 						var dancer:BackgroundDancer = new BackgroundDancer((370 * i) + 170, bgLimo.y - 400);
 						dancer.scrollFactor.set(0.4, 0.4);
 						grpLimoDancers.add(dancer);
