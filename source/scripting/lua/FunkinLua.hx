@@ -1779,19 +1779,15 @@ class FunkinLua {
 		});
 
 		addCallback("setHealthBarColors", function(leftHex:String, rightHex:String) {
-			var left:FlxColor = Std.parseInt(leftHex);
-			var right:FlxColor = Std.parseInt(rightHex);
+			var left = Std.parseInt('0xFF' + leftHex);
+			var right = Std.parseInt('0xFF' + rightHex);
 
-			if (leftHex != null && leftHex != '') {				
-				if (!leftHex.startsWith('0x')) {
-					left = Std.parseInt('0xff' + leftHex);
-				}
-			} else left = PlayState.instance.dad.getColor();
-			if (rightHex != null && rightHex != '') {
-				if (!rightHex.startsWith('0x')) {
-					right = Std.parseInt('0xff' + rightHex);
-				}
-			} else right = PlayState.instance.boyfriend.getColor();
+			if (leftHex == null || leftHex == '') {
+				left = PlayState.instance.dad.getColor();
+			}		
+			if (rightHex == null || rightHex == '') {
+				right = PlayState.instance.boyfriend.getColor();
+			}
 
 			PlayState.instance.healthBar.createFilledBar(left, right);
 			PlayState.instance.healthBar.updateBar();
@@ -1800,13 +1796,13 @@ class FunkinLua {
 			var left:Array<FlxColor> = [Std.parseInt(leftHex[0]), Std.parseInt(leftHex[1])];
 			for (index_ => left_ in leftHex) {
 				if(!left_.startsWith('0x'))
-					left[index_] = Std.parseInt('0xff' + left_);
+					left[index_] = Std.parseInt('0xFF' + left_);
 			}
 
 			var right:Array<FlxColor> = [Std.parseInt(rightHex[0]), Std.parseInt(rightHex[1])];
 			for (index_ => right_ in rightHex) {
 				if(!right_.startsWith('0x'))
-					right[index_] = Std.parseInt('0xff' + right_);
+					right[index_] = Std.parseInt('0xFF' + right_);
 			}
 			PlayState.instance.healthBar.createGradientBar(left, right, 1, 90);
 			PlayState.instance.healthBar.updateBar();

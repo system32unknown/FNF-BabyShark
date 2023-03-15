@@ -17,6 +17,7 @@ import lime.app.Application;
 import states.TitleState;
 import utils.Controls;
 import utils.system.MemoryUtil;
+import game.CustomGame;
 import ui.Overlay;
 
 import api.github.GithubAPI;
@@ -54,15 +55,14 @@ class Main extends Sprite
 		stage != null ? init() : addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 
-	private function init(?E:Event):Void {
+	function init(?E:Event):Void {
 		if (hasEventListener(Event.ADDED_TO_STAGE)) {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		setupGame();
 	}
 
-	private function setupGame():Void
-	{
+	function setupGame():Void {
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 		if (game.zoom == -1.) {
@@ -73,7 +73,7 @@ class Main extends Sprite
 
 		CustomLog.init();
 		Controls.instance = new Controls();
-		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
+		addChild(new CustomGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 
 		overlayVar = new Overlay();
 		addChild(overlayVar);
@@ -109,6 +109,9 @@ class Main extends Sprite
 				cache.removeSound(key);
 			cache = null;
 			MemoryUtil.clearMajor();
+
+			FlxG.bitmap.dumpCache();
+			FlxG.bitmap.clearUnused();
 		});
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();

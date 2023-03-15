@@ -2,15 +2,38 @@ package utils.system;
 
 #if cpp
 import cpp.vm.Gc;
+#elseif hl
+import hl.Gc;
+#elseif java
+import java.vm.Gc;
+#elseif neko
+import neko.vm.Gc;
 #end
 
 class MemoryUtil {
+	public static var disableCount:Int = 0;
+
+	public static function askDisable() {
+		disableCount++;
+		if (disableCount > 0)
+			Gcenable(false);
+		else Gcenable();
+	}
+	public static function askEnable() {
+		disableCount--;
+		if (disableCount > 0)
+			Gcenable(false);
+		else Gcenable();
+	}
+
 	public static function clearMajor(?minor:Bool = false) {
 		#if cpp
 		Gc.run(!minor);
 		if (!minor) Gc.compact();
-		#else
-		openfl.system.System.gc();
+		#elseif hl
+		Gc.major();
+		#elseif (java || neko)
+		Gc.run(true);
 		#end
 	}
 
@@ -26,5 +49,11 @@ class MemoryUtil {
 
 		size = Math.round(size * 100) / 100;
 		return '$size ${intervalArray[data]}';
+	}
+
+	public static function Gcenable(?enabled:Bool = true) {
+		#if (cpp || hl)
+		Gc.enable(enabled);
+		#end
 	}
 }
