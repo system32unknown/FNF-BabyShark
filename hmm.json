@@ -14,21 +14,21 @@
         "name": "flixel",
         "type": "git",
         "dir": null,
-        "ref": "master",
+        "ref": "dev",
         "url": "https://github.com/HaxeFlixel/flixel"
       },
       {
         "name": "flixel-addons",
         "type": "git",
         "dir": null,
-        "ref": "master",
+        "ref": "dev",
         "url": "https://github.com/HaxeFlixel/flixel-addons"
       },
       {
         "name": "flixel-ui",
         "type": "git",
         "dir": null,
-        "ref": "master",
+        "ref": "dev",
         "url": "https://github.com/HaxeFlixel/flixel-ui"
       },
       {

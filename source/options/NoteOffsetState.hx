@@ -6,12 +6,12 @@ import flixel.text.FlxText;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
+import flixel.util.FlxSpriteUtil;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.ui.FlxBar;
 import flixel.math.FlxPoint;
-
 
 import game.Character;
 import game.Conductor;
@@ -111,7 +111,7 @@ class NoteOffsetState extends MusicBeatState
 		coolText.screenCenter();
 		coolText.x = FlxG.width * 0.35;
 
-		rating = new FlxSprite().loadGraphic(Paths.image('sick'));
+		rating = new FlxSprite().loadGraphic(Paths.image('ratings/sick'));
 		rating.cameras = [camHUD];
 		rating.setGraphicSize(Std.int(rating.width * 0.7));
 		rating.updateHitbox();
@@ -122,14 +122,14 @@ class NoteOffsetState extends MusicBeatState
 		comboNums.cameras = [camHUD];
 		add(comboNums);
 
-		combo = new FlxSprite().loadGraphic(Paths.image('combo'));
+		combo = new FlxSprite().loadGraphic(Paths.image('ratings/combo'));
 		combo.cameras = [camHUD];
 		combo.setGraphicSize(Std.int(combo.width * 0.7));
 		combo.updateHitbox();
 		combo.antialiasing = globalAntialiasing;
 		add(combo);
 
-		lateEarly = new FlxSprite().loadGraphic(Paths.image('early'));
+		lateEarly = new FlxSprite().loadGraphic(Paths.image('ratings/early'));
 		lateEarly.cameras = [camHUD];
 		lateEarly.setGraphicSize(Std.int(combo.width * 0.7));
 		lateEarly.updateHitbox();
@@ -140,7 +140,7 @@ class NoteOffsetState extends MusicBeatState
 
 		var daLoop:Int = 0;
 		for (i in seperatedScore) {
-			var numScore:FlxSprite = new FlxSprite(43 * daLoop).loadGraphic(Paths.image('num' + i));
+			var numScore:FlxSprite = new FlxSprite(43 * daLoop).loadGraphic(Paths.image('number/num$i'));
 			numScore.cameras = [camHUD];
 			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 			numScore.updateHitbox();
@@ -157,10 +157,8 @@ class NoteOffsetState extends MusicBeatState
 		repositionCombo();
 
 		// Note delay stuff
-		
 		beatText = new Alphabet(0, 0, 'Beat Hit!', true);
-		beatText.scaleX = 0.6;
-		beatText.scaleY = 0.6;
+		beatText.setScale(.6, .6);
 		beatText.x += 260;
 		beatText.alpha = 0;
 		beatText.acceleration.y = 250;
@@ -191,6 +189,10 @@ class NoteOffsetState extends MusicBeatState
 		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.visible = false;
 		timeBar.cameras = [camHUD];
+
+		var bar = new FlxSprite(timeBar.x, timeBar.y).makeGraphic(Math.floor(timeBar.width), Math.floor(timeBar.height), FlxColor.TRANSPARENT);
+		add(bar);
+		FlxSpriteUtil.drawRect(bar, 0, 0, timeBar.width, timeBar.height, FlxColor.TRANSPARENT, {thickness: 4, color: FlxColor.BLACK});
 
 		add(timeBarBG);
 		add(timeBar);
