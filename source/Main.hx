@@ -100,6 +100,7 @@ class Main extends Sprite
 		FlxG.signals.preStateSwitch.add(() -> {
 			Paths.clearStoredCache();
 			FlxG.bitmap.dumpCache();
+			FlxG.bitmap.clearUnused();
 			FlxG.sound.destroy();
 
 			var cache = cast(Assets.cache, AssetCache);
@@ -110,8 +111,7 @@ class Main extends Sprite
 			cache = null;
 			MemoryUtil.clearMajor();
 
-			FlxG.bitmap.dumpCache();
-			FlxG.bitmap.clearUnused();
+			
 		});
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();
