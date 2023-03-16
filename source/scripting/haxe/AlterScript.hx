@@ -141,5 +141,6 @@ class AlterScript {
             for (a in args) v += ", " + Std.string(a);
             trace(v);
         }));
+        call("create", []);
     }
 }

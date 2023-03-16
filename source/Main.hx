@@ -110,8 +110,6 @@ class Main extends Sprite
 				cache.removeSound(key);
 			cache = null;
 			MemoryUtil.clearMajor();
-
-			
 		});
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();
