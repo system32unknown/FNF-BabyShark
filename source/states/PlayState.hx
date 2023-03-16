@@ -1923,14 +1923,7 @@ class PlayState extends MusicBeatState {
 	public var countdownGo:FlxSprite;
 	public static var startOnTime:Float = 0;
 
-	var camMovement:Float = 40;
-	var velocity:Float = 1;
-	var campointx:Float = 0;
-	var campointy:Float = 0;
-	var camlockx:Float = 0;
-	var camlocky:Float = 0;
-	var camlock:Bool = false;
-	var bfturn:Bool = false;
+	var camMovement:Float = 20;
 
 	function cacheCountdown() {
 		var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
@@ -2722,10 +2715,6 @@ class PlayState extends MusicBeatState {
 		screenshader.update(elapsed);
 		if(disableTheTripper && screenshader.ampmul >= 0) {
 			screenshader.ampmul -= (elapsed / 2);
-		}
-
-		if(ClientPrefs.getPref('camMovement')) {
-			if(camlock) camFollow.set(camlockx, camlocky);
 		}
 
 		if (updateLU) {
@@ -3720,24 +3709,10 @@ class PlayState extends MusicBeatState {
 
 		if (!SONG.notes[curSection].mustHitSection) {
 			moveCamera('dad');
-			if(ClientPrefs.getPref('camMovement')) {
-				campointx = camFollow.x;
-				campointy = camFollow.y;
-				bfturn = false;
-				camlock = false;
-				cameraSpeed = 1;
-			}
 			callOnLuas('onMoveCamera', ['dad']);
 			callOnScripts('onMoveCamera', ['dad']);
 		} else {
 			moveCamera('boyfriend');
-			if(ClientPrefs.getPref('camMovement')) {
-				campointx = camFollow.x;
-				campointy = camFollow.y;	
-				bfturn = true;
-				camlock = false;
-				cameraSpeed = 1;
-			}
 			callOnLuas('onMoveCamera', ['boyfriend']);
 			callOnScripts('onMoveCamera', ['boyfriend']);
 		}
@@ -4594,33 +4569,25 @@ class PlayState extends MusicBeatState {
 		note.hitByOpponent = true;
 
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
-		var camTimer:FlxTimer;
-
-		if (ClientPrefs.getPref('camMovement') && !isPixelStage) {
-			if(!bfturn) {
-				switch (animToPlay) {
-					case "singLEFT":
-						camlockx = campointx - camMovement;
-						camlocky = campointy;
-					case "singDOWN":
-						camlocky = campointy + camMovement;
-						camlockx = campointx;
-					case "singUP":
-						camlocky = campointy - camMovement;
-						camlockx = campointx;
-					case "singRIGHT":
-						camlockx = campointx + camMovement;
-						camlocky = campointy;
+		if (ClientPrefs.getPref('camMovement')) {
+			if(!SONG.notes[Math.floor(curStep / 16)].mustHitSection && !note.isSustainNote) {
+				if (!dad.stunned) {
+					camFollow.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
+					switch (animToPlay) {
+						case "singLEFT":
+							camFollow.x += dad.cameraPosition[0] - camMovement;
+							camFollow.y += dad.cameraPosition[1];
+						case "singDOWN":
+							camFollow.x += dad.cameraPosition[0];
+							camFollow.y += dad.cameraPosition[1] + camMovement;
+						case "singUP":
+							camFollow.x += dad.cameraPosition[0];
+							camFollow.y += dad.cameraPosition[1] - camMovement;
+						case "singRIGHT":
+							camFollow.x += dad.cameraPosition[0] + camMovement;
+							camFollow.y += dad.cameraPosition[1];
+					}
 				}
-				camTimer = new FlxTimer().start(1);
-				cameraSpeed = velocity;
-				camlock = true;
-				if(camTimer.finished) {
-					camlock = false;
-					cameraSpeed = 1;
-					camFollow.set(campointx, campointy);
-					camTimer = null;
-				} 
 			}
 		}
 
@@ -4651,34 +4618,25 @@ class PlayState extends MusicBeatState {
 				notesHitArray.unshift(Date.now());
 
 			var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
-			var camTimer:FlxTimer;
-
 			if (ClientPrefs.getPref('camMovement')) {
-				if(bfturn) {
-					switch (animToPlay) {
-						case "singLEFT":
-							camlockx = campointx - camMovement;
-							camlocky = campointy;
-						case "singDOWN":
-							camlocky = campointy + camMovement;
-							camlockx = campointx;
-						case "singUP":
-							camlocky = campointy - camMovement;
-							camlockx = campointx;
-						case "singRIGHT":
-							camlockx = campointx + camMovement;
-							camlocky = campointy;
+				if(SONG.notes[Math.floor(curStep / 16)].mustHitSection && !note.isSustainNote) {
+					if (!boyfriend.stunned) {
+						camFollow.set(boyfriend.getMidpoint().x - 150, boyfriend.getMidpoint().y - 100);
+						switch (animToPlay) {
+							case "singLEFT":
+								camFollow.x += boyfriend.cameraPosition[0] - camMovement;
+								camFollow.y += boyfriend.cameraPosition[1];
+							case "singDOWN":
+								camFollow.x += boyfriend.cameraPosition[0];
+								camFollow.y += boyfriend.cameraPosition[1] + camMovement;	
+							case "singUP":
+								camFollow.x += boyfriend.cameraPosition[0];
+								camFollow.y += boyfriend.cameraPosition[1] - camMovement;
+							case "singRIGHT":
+								camFollow.x += boyfriend.cameraPosition[0] + camMovement;
+								camFollow.y += boyfriend.cameraPosition[1];
+						}
 					}
-					
-					camTimer = new FlxTimer().start(1);
-					cameraSpeed = velocity;
-					camlock = true;
-					if(camTimer.finished) {
-						camlock = false;
-						cameraSpeed = 1;
-						camFollow.set(campointx, campointy);
-						camTimer = null;
-					} 
 				}
 			}
 
@@ -4714,8 +4672,6 @@ class PlayState extends MusicBeatState {
 			health += note.hitHealth * healthGain;
 
 			if(!note.noAnimation) {
-				var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
-
 				if(note.gfNote) {
 					if(gf != null) {
 						gf.playAnim(animToPlay + note.animSuffix, true);
