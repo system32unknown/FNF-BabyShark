@@ -130,6 +130,7 @@ class PlayState extends MusicBeatState {
 	public static var storyDifficulty:Int = 1;
 
 	public var vocals:FlxSound;
+	public var inst:FlxSound;
 
 	public var dad:Character = null;
 	public var gf:Character = null;
@@ -2197,7 +2198,9 @@ class PlayState extends MusicBeatState {
 
 		previousFrameTime = FlxG.game.ticks;
 
-		FlxG.sound.playMusic(Paths.inst(SONG.song), 1, false);
+		@:privateAccess
+		FlxG.sound.playMusic(inst._sound, 1, false);
+		FlxG.sound.music.pitch = playbackRate;
 		FlxG.sound.music.onComplete = finishSong.bind();
 		vocals.play();
 
@@ -2253,7 +2256,8 @@ class PlayState extends MusicBeatState {
 
 		vocals.pitch = playbackRate;
 		FlxG.sound.list.add(vocals);
-		FlxG.sound.list.add(new FlxSound().loadEmbedded(Paths.inst(SONG.song)));
+		inst = new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.song));
+		FlxG.sound.list.add(inst);
 
 		notes = new FlxTypedGroup<Note>();
 		add(notes);

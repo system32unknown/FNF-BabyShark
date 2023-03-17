@@ -96,9 +96,14 @@ class LoadingState extends MusicBeatState
 		initSongsManifest().onComplete(function(lib) {
 			callbacks = new MultiCallback(onLoad);
 			var introComplete = callbacks.add("introComplete");
+			if (PlayState.SONG != null) {
+				checkLoadSong(getSongPath());
+				if (PlayState.SONG.needsVoices)
+					checkLoadSong(getVocalPath());
+			}
 			checkLibrary("shared");
 			if(directory != null && directory.length > 0 && directory != 'shared') {
-				checkLibrary(directory);
+				checkLibrary('week_assets');
 			}
 			var fadeTime = .5;
 			FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
@@ -106,6 +111,13 @@ class LoadingState extends MusicBeatState
 		});
 	}
 	
+	function checkLoadSong(path:String) {
+		if (!Assets.cache.hasSound(path)){
+			var callback = callbacks.add("song:" + path);
+			Assets.loadSound(path).onComplete(function(_) {callback();});
+		}
+	}
+
 	function checkLibrary(library:String) {
 		if (Assets.getLibrary(library) == null) {
 			@:privateAccess
@@ -159,7 +171,7 @@ class LoadingState extends MusicBeatState
 		#if NO_PRELOAD_ALL
 		var loaded:Bool = false;
 		if (PlayState.SONG != null) {
-			loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && isLibraryLoaded(directory);
+			loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && checkLibrary('week_assets');
 		}
 		
 		if (!loaded) return new LoadingState(target, stopMusic, directory);
