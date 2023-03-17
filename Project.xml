@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<!-- _________________________Application Settings_________________________ -->
-	<app title="Baby Shark's Funkin: The Full Game" file="Baby Shark's Funkin" packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark" main="Main" version="0.1" company="altertoriel" />
+	<app title="Baby Shark's Funkin: The Full Game" file="Baby Shark's Funkin" packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark" main="Main" version="0.1" company="altertoriel"/>
 	<app preloader="flixel.system.FlxPreloader"/>
 
 	<!-- NOTE TO SELF: DISABLE THIS IF ISSUES ARE FOUND -->
@@ -24,22 +24,24 @@
 
 	<classpath name="source"/>
 	
-	<!-- PSYCH ENGINE CUSTOMIZATION -->
+	<!-- ______________________PSYCH ENGINE CUSTOMIZATION______________________ -->
 	<section if="desktop">
 		<define name="MODS_ALLOWED"/>
 		<define name="LUA_ALLOWED" if="cpp"/>
 		<define name="HSCRIPT_ALLOWED"/>
-		<define name="CRASH_HANDLER"/>
+		<define name="CRASH_HANDLER" if="release"/>
+		<define name="VIDEOS_ALLOWED" unless="32bits"/>
 	</section>
 
 	<define name="ACHIEVEMENTS_ALLOWED"/>
-	<define name="VIDEOS_ALLOWED" if="desktop" unless="32bits"/>
 
 	<define name="PRELOAD_ALL" unless="web"/>
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
 	
-	<library name="videos"        preload="true"/>
-	
+	<assets path="assets/fonts"/>
+	<assets path="assets/preload" rename="assets"/>
+
+	<library name="videos" preload="true"/>
 	<section if="PRELOAD_ALL">
 		<library name="songs" preload="true"/>
 		<library name="shared" preload="true"/>
@@ -53,14 +55,11 @@
 	</section>
 	
 	<assets path="assets/videos" library="videos" if="VIDEOS_ALLOWED"/>
-	<assets path="assets/preload" rename="assets"/>
 	<assets path="assets/songs"  library="songs"/>
 	<assets path="assets/shared" library="shared"/>
 	<assets path="assets/week_assets" library="week_assets" rename="assets"/>
 	
 	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED"/>
-	
-	<assets path="assets/fonts"/>
 	
 	<!-- _______________________________Flags______________________________ -->
 	<haxeflag name="-dce no" if="HSCRIPT_ALLOWED"/>
@@ -83,9 +82,6 @@
 	<!--Disable the Flixel core focus lost screen-->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
 
-	<!--Allow working memory greater than 1 Gig-->
-	<!--haxedef name="HXCPP_GC_BIG_BLOCKS"-->
-
 	<section unless="debug">
 		<!-- No deprecation warnings. -->
 		<haxedef name="no-deprecation-warnings"/>
@@ -94,9 +90,11 @@
 	</section>
 	
 	<!--Used for Izzy Engine's crash handler-->
-	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER"/>
-	<haxedef name="HXCPP_STACK_LINE" if="CRASH_HANDLER"/>
-	<haxedef name="HXCPP_STACK_TRACE" if="CRASH_HANDLER"/>
+	<section if="CRASH_HANDLER">
+		<haxedef name="HXCPP_CHECK_POINTER"/>
+		<haxedef name="HXCPP_STACK_LINE"/>
+		<haxedef name="HXCPP_STACK_TRACE"/>
+	</section>
 
 	<error value="Seems like you're not using NebulaZoruas github fork of luajit, please use it instead." if="${linc_luajit == 0.0.4}" />
 	<error value="Seems like you're using Haxe ${haxe}, please update to latest version!" if="${haxe == 4.1.5}" unless="linux"/>

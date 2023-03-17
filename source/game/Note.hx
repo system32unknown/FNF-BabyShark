@@ -332,11 +332,15 @@ class Note extends FlxSprite
 	}
 
 	function loadPixelNoteAnims() {
-		for (i => letter in gfxLetter) {
-			animation.add('$letter hold', [i]);
-			animation.add('$letter tail', [i + pixelNotesDivisionValue]);
-			if(isSustainNote)
+		if(isSustainNote) {
+			for (i => letter in gfxLetter) {
+				animation.add('$letter hold', [i]);
+				animation.add('$letter tail', [i + pixelNotesDivisionValue]);
+			}
+		} else {
+			for (i => letter in gfxLetter) {
 				animation.add(letter, [i + pixelNotesDivisionValue]);
+			}
 		}
 	}
 
