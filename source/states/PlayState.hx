@@ -904,16 +904,14 @@ class PlayState extends MusicBeatState {
 		#end
 
 		// STAGE SCRIPTS
-		#if (MODS_ALLOWED && LUA_ALLOWED && HSCRIPT_ALLOWED)
-			startLuasOnFolder('stages/' + curStage + '.lua');
-			addAlterScript('stages/' + curStage + '.hx');
+		#if MODS_ALLOWED
+			#if LUA_ALLOWED startLuasOnFolder('stages/' + curStage + '.lua'); #end
+			#if HSCRIPT_ALLOWED addAlterScript('stages/' + curStage + '.hx'); #end
 		#end
 
 		var gfVersion:String = SONG.gfVersion;
-		if(gfVersion == null || gfVersion.length < 1)
-		{
-			switch (curStage)
-			{
+		if(gfVersion == null || gfVersion.length < 1) {
+			switch (curStage) {
 				case 'limo': gfVersion = 'gf-car';
 				case 'mall' | 'mallEvil': gfVersion = 'gf-christmas';
 				case 'school' | 'schoolEvil': gfVersion = 'gf-pixel';
@@ -3570,12 +3568,9 @@ class PlayState extends MusicBeatState {
 							dad.visible = false;
 							dad = dadMap.get(value2);
 							if(dad.curCharacter != gfChecknull) {
-								if(wasGf && gf != null) {
+								if(wasGf && gf != null)
 									gf.visible = true;
-								}
-							} else if(gf != null) {
-								gf.visible = false;
-							}
+							} else if(gf != null) gf.visible = false;
 							dad.visible = lastVisible;
 							iconP2.changeIcon(dad.healthIcon);
 						}

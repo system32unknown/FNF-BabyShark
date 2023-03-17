@@ -312,8 +312,7 @@ class Character extends FlxSprite
 			offset.set(daOffset[0], daOffset[1]);
 		} else offset.set();
 
-		if (curCharacter.startsWith('gf'))
-		{
+		if (curCharacter.startsWith('gf')) {
 			if (AnimName == 'singLEFT') {
 				danced = true;
 			} else if (AnimName == 'singRIGHT') {
