@@ -34,7 +34,6 @@ import editors.CharacterEditorState;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
 import game.Note.EventNote;
-import game.Conductor.Rating;
 import game.Achievements.AchievementObject;
 import game.Section.SwagSection;
 import game.*;
