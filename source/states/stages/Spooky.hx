@@ -1,16 +1,14 @@
 package states.stages;
 
-import states.stages.BaseStage;
-
 class Spooky extends BaseStage
 {
 	var halloweenBG:BGSprite;
 	var halloweenWhite:BGSprite;
 	override function create()
 	{
-		if(!ClientPrefs.data.lowQuality)
+		if(!lowQuality)
 			halloweenBG = new BGSprite('halloween_bg', -200, -100, ['halloweem bg0', 'halloweem bg lightning strike']);
-		else  halloweenBG = new BGSprite('halloween_bg_low', -200, -100);
+		else halloweenBG = new BGSprite('halloween_bg_low', -200, -100);
 		add(halloweenBG);
 
 		//PRECACHE SOUNDS
@@ -43,7 +41,7 @@ class Spooky extends BaseStage
 
 	function lightningStrikeShit():Void {
 		FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2));
-		if(!ClientPrefs.data.lowQuality) halloweenBG.animation.play('halloweem bg lightning strike');
+		if(!lowQuality) halloweenBG.animation.play('halloweem bg lightning strike');
 
 		lightningStrikeBeat = curBeat;
 		lightningOffset = FlxG.random.int(8, 24);
@@ -60,7 +58,7 @@ class Spooky extends BaseStage
 			gf.playAnim('scared', true);
 		}
 
-		if(ClientPrefs.data.camZooms) {
+		if(ClientPrefs.getPref('camZooms')) {
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;
 
@@ -70,7 +68,7 @@ class Spooky extends BaseStage
 			}
 		}
 
-		if(ClientPrefs.data.flashing) {
+		if(ClientPrefs.getPref('flashing')) {
 			halloweenWhite.alpha = 0.4;
 			FlxTween.tween(halloweenWhite, {alpha: 0.5}, 0.075);
 			FlxTween.tween(halloweenWhite, {alpha: 0}, 0.25, {startDelay: 0.15});
