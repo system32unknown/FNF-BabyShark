@@ -1,18 +1,15 @@
 package states.stages;
 
-import flixel.FlxG;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.FlxSubState;
 import flixel.math.FlxPoint;
 import flixel.group.FlxSpriteGroup;
-import states.MusicBeatState;
 
 import game.Note.EventNote;
 import game.Character;
 import game.Boyfriend;
-import utils.ClientPrefs;
 
 enum Countdown {
 	THREE;

@@ -6,7 +6,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
-import flixel.addons.effects.FlxTrail;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
@@ -26,14 +25,12 @@ import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import flixel.util.FlxSave;
-import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.KeyboardEvent;
 import openfl.filters.ShaderFilter;
 import openfl.filters.BitmapFilter;
 import haxe.Json;
 import editors.ChartingState;
 import editors.CharacterEditorState;
-import animateatlas.AtlasFrameMaker;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
 import game.Note.EventNote;
@@ -43,7 +40,6 @@ import game.Section.SwagSection;
 import game.*;
 import utils.*;
 import states.stages.*;
-import stages.objects.*;
 import ui.*;
 import shaders.PulseEffect;
 import data.StageData.StageFile;
@@ -58,7 +54,6 @@ import sys.io.File;
 #end
 
 import handlers.PsychVideo;
-import handlers.CutsceneHandler;
 
 class PlayState extends MusicBeatState {
 	public static var STRUM_X = 42;
@@ -300,8 +295,6 @@ class PlayState extends MusicBeatState {
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
 	override public function create() {
-		Paths.clearStoredCache();
-
 		startCallback = startCountdown;
 		endCallback = endSong;
 
@@ -542,8 +535,6 @@ class PlayState extends MusicBeatState {
 			}
 		}
 		#end
-
-		startCallback();
 
 		// STAGE SCRIPTS
 		#if MODS_ALLOWED
@@ -832,6 +823,7 @@ class PlayState extends MusicBeatState {
 		}
 		#end
 
+		startCallback();
 		RecalculateRating();
 
 		//PRECACHING MISS SOUNDS BECAUSE I THINK THEY CAN LAG PEOPLE AND FUCK THEM UP IDK HOW HAXE WORKS
@@ -2272,9 +2264,8 @@ class PlayState extends MusicBeatState {
 	public function checkEventNote() {
 		while(eventNotes.length > 0) {
 			var leStrumTime:Float = eventNotes[0].strumTime;
-			if(Conductor.songPosition < leStrumTime) {
+			if(Conductor.songPosition < leStrumTime)
 				return;
-			}
 
 			var value1:String = '';
 			if(eventNotes[0].value1 != null)
@@ -2285,6 +2276,7 @@ class PlayState extends MusicBeatState {
 				value2 = eventNotes[0].value2;
 
 			triggerEventNote(eventNotes[0].event, value1, value2, leStrumTime);
+			eventNotes.shift();
 		}
 	}
 

@@ -32,10 +32,8 @@ class StageWeek1 extends BaseStage {
 			add(stageCurtains);
 		}
 	}
-	override function eventPushed(event:game.Note.EventNote)
-	{
-		switch(event.event)
-		{
+	override function eventPushed(event:game.Note.EventNote) {
+		switch(event.event) {
 			case "Dadbattle Spotlight":
 				dadbattleBlack = new BGSprite(null, -800, -400, 0, 0);
 				dadbattleBlack.makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
@@ -86,8 +84,7 @@ class StageWeek1 extends BaseStage {
 						dadbattleBlack.visible = false;
 						dadbattleLight.visible = false;
 						defaultCamZoom -= 0.12;
-						FlxTween.tween(dadbattleFog, {alpha: 0}, 1, {onComplete: function(twn:FlxTween)
-						{
+						FlxTween.tween(dadbattleFog, {alpha: 0}, 1, {onComplete: function(twn:FlxTween) {
 							dadbattleFog.visible = false;
 						}});
 				}
