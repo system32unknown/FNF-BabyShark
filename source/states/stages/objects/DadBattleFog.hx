@@ -1,13 +1,11 @@
-package stages.objects;
+package states.stages.objects;
 
 import game.BGSprite;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
 
-class DadBattleFog extends FlxSpriteGroup
-{
-	public function new()
-	{
+class DadBattleFog extends FlxSpriteGroup {
+	public function new() {
 		super();
 		
 		alpha = 0.7;

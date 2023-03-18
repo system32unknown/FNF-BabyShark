@@ -2,7 +2,6 @@ package scripting.lua;
 
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import states.PlayState;
 
 class ModchartText extends FlxText {
 	public var wasAdded:Bool = false;

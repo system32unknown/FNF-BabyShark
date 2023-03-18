@@ -1,6 +1,5 @@
-package stages.objects;
+package states.stages.objects;
 
-import flixel.FlxSprite;
 import utils.CoolUtil;
 
 class BackgroundDancer extends FlxSprite

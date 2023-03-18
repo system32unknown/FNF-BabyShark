@@ -1,4 +1,4 @@
-package stages.objects;
+package states.stages.objects;
 
 import game.BGSprite;
 import flixel.FlxG;

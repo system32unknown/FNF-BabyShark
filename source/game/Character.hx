@@ -12,8 +12,7 @@ import sys.FileSystem;
 import openfl.utils.Assets;
 import haxe.Json;
 
-import stages.objects.TankmenBG;
-import states.PlayState;
+import states.stages.objects.TankmenBG;
 import game.Section.SwagSection;
 import game.Song;
 
@@ -87,11 +86,7 @@ class Character extends FlxSprite
 	{
 		super(x, y);
 
-		#if (haxe >= "4.0.0")
-		animOffsets = new Map();
-		#else
 		animOffsets = new Map<String, Array<Dynamic>>();
-		#end
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 		antialiasing = ClientPrefs.getPref('globalAntialiasing');
@@ -123,19 +118,7 @@ class Character extends FlxSprite
 				#end
 
 				var json:CharacterFile = cast Json.parse(rawJson);
-				var spriteType = "sparrow";
-				//sparrow, packer, texture
-				#if MODS_ALLOWED
-				var modTxtToFind:String = Paths.modsTxt(json.image);
-				var txtToFind:String = Paths.getPath('images/' + json.image + '.txt', TEXT, library);
-				
-				if (FileSystem.exists(modTxtToFind) || FileSystem.exists(txtToFind) || Assets.exists(txtToFind))
-				#else
-				if (Assets.exists(Paths.getPath('images/' + json.image + '.txt', TEXT, library)))
-				#end
-				{
-					spriteType = "packer";
-				}
+				var useAtlas:Bool = false;
 				
 				#if MODS_ALLOWED
 				var modAnimToFind:String = Paths.modFolders('images/' + json.image + '/Animation.json');
@@ -145,15 +128,10 @@ class Character extends FlxSprite
 				#else
 				if (Assets.exists(Paths.getPath('images/' + json.image + '/Animation.json', TEXT, library)))
 				#end
-				{
-					spriteType = "texture";
-				}
-
-				switch (spriteType) {
-					case "packer": frames = Paths.getPackerAtlas(json.image, library);
-					case "sparrow": frames = Paths.getSparrowAtlas(json.image, library);
-					case "texture": frames = AtlasFrameMaker.construct(json.image);
-				}
+				useAtlas = true;
+				if(!useAtlas)
+					frames = Paths.getAtlas(json.image);
+				else frames = AtlasFrameMaker.construct(json.image);
 				imageFile = json.image;
 
 				if (json.scale != 1) {

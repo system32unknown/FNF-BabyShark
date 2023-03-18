@@ -2,6 +2,7 @@ package scripting.haxe;
 
 import hscript.*;
 import hscript.Expr.Error;
+import haxe.CallStack;
 
 #if sys
 import sys.io.File;
@@ -15,6 +16,7 @@ import utils.*;
 import flixel.*;
 
 class AlterScript {
+    public static var activeScripts:Array<AlterScript> = [];
     public var staticVariables:Map<String, Dynamic> = [];
 
     var interp:Interp;
@@ -22,6 +24,8 @@ class AlterScript {
 
     public var scriptFile(default, null):String = "";
     public var script(default, null):String = "";
+
+    static var hadError:Bool = false;
 
     public function new(path:String, ?autoRun:Bool = true) {
         if (path != ""  && path != null) {
@@ -32,16 +36,24 @@ class AlterScript {
             scriptFile = path;
         }
 
+        if (hadError) {
+            script = 'trace("Replaced script to continue gameplay");';
+            hadError = false;
+        }
+
         interp = new Interp();
         interp.allowStaticVariables = interp.allowPublicVariables = true;
         interp.staticVariables = staticVariables;
 
         parser = new Parser();
         parser.line = 1;
+        parser.preprocesorValues = getDefaultPreprocessors();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
 
         setVars();
 
+        activeScripts.push(this);
+        FlxG.signals.preStateSwitch.add(() -> {activeScripts.remove(this);});
         if (autoRun) execute();
     }
 
@@ -49,12 +61,19 @@ class AlterScript {
         try {
             interp.execute(parser.parseString(script, scriptFile));
         } catch(e:Error) {
-            #if windows
-            lime.app.Application.current.window.alert(e.toString(), "Error on AlterScript");
-            #else
-            trace("Error: " + e);
-            #end
-            return;
+            if (e.toString() == "Null Object Reference") {
+                var errMsg = "";
+                final callItems:Array<StackItem> = CallStack.callStack();
+                for (callStacks in callItems) {
+                    switch (callStacks) {
+                        case FilePos(_, file, line):
+                            errMsg += '$file (line $line)\n';
+                        default: Sys.println(callStacks);
+                    }
+                }
+                lime.app.Application.current.window.alert('$e \nUncaught Error: $errMsg', "Error on AlterScript");
+            }
+            hadError = true;
         };
     }
 
@@ -67,9 +86,34 @@ class AlterScript {
         return Reflect.callMethod(this, get(func), args);
     }
 
+    public function stop() {
+        interp = null;
+        parser = null;
+        activeScripts.remove(this);
+    }
+
     function exists(key:String):Bool {
         if (interp == null) return false;
         return interp.variables.exists(key);
+    }
+
+    function getDefaultPreprocessors():Map<String, Bool> {
+        return [
+            "sys" => #if sys true #else false #end,
+            "cpp" => #if cpp true #else false #end,
+            "desktop" => #if desktop true #else false #end,
+            "windows" => #if windows true #else false #end,
+            "hl" => #if hl true #else false #end,
+            "neko" => #if neko true #else false #end,
+            "web" => #if web true #else false #end,
+            "debug" => #if debug true #else false #end,
+            "release" => #if release true #else false #end,
+            "final" => #if final true #else false #end,
+            "MODS_ALLOWED" => #if MODS_ALLOWED true #else false #end,
+            "LUA_ALLOWED" => #if LUA_ALLOWED true #else false #end,
+            "VIDEOS_ALLOWED" => #if VIDEOS_ALLOWED true #else false #end,
+            "CRASH_HANDLER" => #if CRASH_HANDLER true #else false #end
+        ];
     }
 
     function getDefaultVariables():Map<String, Dynamic> {

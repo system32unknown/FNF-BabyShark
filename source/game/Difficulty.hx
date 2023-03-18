@@ -1,6 +1,5 @@
 package game;
 
-import states.PlayState;
 import data.WeekData;
 
 class Difficulty {

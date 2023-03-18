@@ -6,6 +6,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
 import flixel.FlxCamera;
 import utils.Controls;
+import states.stages.BaseStage;
 import ui.CustomFadeTransition;
 import ui.ErrorDisplay;
 import game.Conductor;
@@ -78,6 +79,10 @@ class MusicBeatState extends FlxUIState {
 		}
 
 		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
+
+		stagesFunc(function(stage:BaseStage) {
+			stage.update(elapsed);
+		});
 
 		super.update(elapsed);
 	}
@@ -153,12 +158,36 @@ class MusicBeatState extends FlxUIState {
 	}
 
 	public function stepHit():Void {
+		stagesFunc(function(stage:BaseStage) {
+			stage.curStep = curStep;
+			stage.curDecStep = curDecStep;
+			stage.stepHit();
+		});
+
 		if (curStep % 4 == 0) beatHit();
 	}
 
-	public function beatHit():Void {}
+	public var stages:Array<BaseStage> = [];
+	public function beatHit():Void {
+		stagesFunc(function(stage:BaseStage) {
+			stage.curBeat = curBeat;
+			stage.curDecBeat = curDecBeat;
+			stage.beatHit();
+		});
+	}
 
-	public function sectionHit():Void {}
+	public function sectionHit():Void {
+		stagesFunc(function(stage:BaseStage) {
+			stage.curSection = curSection;
+			stage.sectionHit();
+		});
+	}
+
+	function stagesFunc(func:BaseStage -> Void) {
+		for (stage in stages)
+			if(stage != null && stage.exists && stage.active)
+				func(stage);
+	}
 
 	function getBeatsOnSection() {
 		var val:Null<Float> = 4;

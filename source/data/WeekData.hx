@@ -6,7 +6,6 @@ import sys.FileSystem;
 #end
 import haxe.Json;
 import utils.CoolUtil;
-import states.PlayState;
 
 typedef WeekFile = {
 	// JSON variables

@@ -3,7 +3,6 @@ package game;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import shaders.ColorSwap;
-import states.PlayState;
 
 class StrumNote extends FlxSprite
 {

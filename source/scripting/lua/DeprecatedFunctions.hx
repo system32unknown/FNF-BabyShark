@@ -3,7 +3,6 @@ package scripting.lua;
 import flixel.FlxSprite;
 import flixel.FlxG;
 
-import states.PlayState;
 import game.StrumNote;
 import flixel.tweens.FlxTween;
 

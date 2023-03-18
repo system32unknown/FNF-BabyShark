@@ -1,4 +1,4 @@
-package stages.objects;
+package states.stages.objects;
 
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
@@ -15,7 +15,7 @@ class PhillyGlowParticle extends FlxSprite
 		this.color = color;
 
 		loadGraphic(Paths.image('philly/particle'));
-		antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		antialiasing = antialiasing;
 		lifeTime = FlxG.random.float(0.6, 0.9);
 		decay = FlxG.random.float(0.8, 1);
 		if(!ClientPrefs.getPref('flashing')) {
@@ -43,47 +43,5 @@ class PhillyGlowParticle extends FlxSprite
 			}
 		}
 		super.update(elapsed);
-	}
-}
-
-class PhillyGlowGradient extends FlxSprite
-{
-	public var originalY:Float;
-	public var originalHeight:Int = 400;
-	public var intendedAlpha:Float = 1;
-	public function new(x:Float, y:Float)
-	{
-		super(x, y);
-		originalY = y;
-
-		loadGraphic(Paths.image('philly/gradient'));
-		antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		scrollFactor.set(0, 0.75);
-		setGraphicSize(2000, originalHeight);
-		updateHitbox();
-	}
-
-	override function update(elapsed:Float)
-	{
-		var newHeight:Int = Math.round(height - 1000 * elapsed);
-		if(newHeight > 0) {
-			alpha = intendedAlpha;
-			setGraphicSize(2000, newHeight);
-			updateHitbox();
-			y = originalY + (originalHeight - height);
-		} else {
-			alpha = 0;
-			y = -5000;
-		}
-
-		super.update(elapsed);
-	}
-
-	public function bop()
-	{
-		setGraphicSize(2000, originalHeight);
-		updateHitbox();
-		y = originalY;
-		alpha = intendedAlpha;
 	}
 }

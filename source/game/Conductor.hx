@@ -1,7 +1,6 @@
 package game;
 
 import game.Song.SwagSong;
-import states.PlayState;
 
 typedef BPMChangeEvent = {
 	var stepTime:Int;

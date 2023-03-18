@@ -11,7 +11,6 @@ import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import openfl.utils.Assets;
 
-import states.PlayState;
 import utils.CoolUtil;
 
 //

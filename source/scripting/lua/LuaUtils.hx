@@ -11,7 +11,6 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 
-import states.PlayState;
 import substates.GameOverSubstate;
 
 #if LUA_ALLOWED

@@ -12,8 +12,6 @@ import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 
-import states.PlayState;
-
 class HScript
 {
 	#if (hscript && HSCRIPT_ALLOWED)

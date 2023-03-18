@@ -3,7 +3,6 @@ package game;
 import flixel.FlxSprite;
 import editors.ChartingState;
 import shaders.ColorSwap;
-import states.PlayState;
 import data.EkData;
 
 typedef EventNote = {
@@ -181,8 +180,7 @@ class Note extends FlxSprite
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false)
-	{
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false) {
 		super();
 
 		mania = PlayState.mania;

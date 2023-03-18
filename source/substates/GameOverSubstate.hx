@@ -8,7 +8,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import game.Boyfriend;
 import game.Conductor;
-import states.PlayState;
 import states.StoryMenuState;
 import states.FreeplayState;
 import utils.MathUtil;

@@ -1,7 +1,6 @@
-package stages.objects;
+package states.stages.objects;
 
 import game.BGSprite;
-import states.PlayState;
 import flixel.FlxG;
 import flixel.sound.FlxSound;
 

@@ -12,7 +12,6 @@ import game.Note;
 import data.StageData;
 import utils.CoolUtil;
 import states.LoadingState;
-import states.PlayState;
 import states.TitleState;
 import ui.Prompt;
 import ui.AttachedSprite;

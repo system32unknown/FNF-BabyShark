@@ -5,8 +5,6 @@ import flixel.FlxBasic;
 import flixel.FlxSprite;
 import flixel.util.FlxSort;
 
-import states.PlayState;
-
 class CutsceneHandler extends FlxBasic
 {
 	public var timedEvents:Array<Dynamic> = [];

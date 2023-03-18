@@ -13,7 +13,6 @@ import animateatlas.JSONData.AtlasData;
 import animateatlas.JSONData.AnimationData;
 import animateatlas.displayobject.SpriteAnimationLibrary;
 import animateatlas.displayobject.SpriteMovieClip;
-import states.PlayState;
 
 class AtlasFrameMaker extends FlxFramesCollection
 {

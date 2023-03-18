@@ -12,7 +12,6 @@ import sys.FileSystem;
 import states.LoadingState;
 import states.MainMenuState;
 import states.FreeplayState;
-import states.TerminalState;
 import data.WeekData;
 import game.Character;
 import ui.Alphabet;
@@ -25,8 +24,7 @@ class MasterEditorMenu extends MusicBeatState {
 		'Dialogue Portrait Editor',
 		'Character Editor',
 		'Chart Editor',
-		'Credit Editor',
-		'Enter Terminal'
+		'Credit Editor'
 	];
 	private var grpTexts:FlxTypedGroup<Alphabet>;
 	private var directories:Array<String> = [null];
@@ -102,7 +100,6 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Dialogue Editor' :LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
 				case 'Chart Editor': LoadingState.loadAndSwitchState(new ChartingState(), false); //felt it would be cool maybe
 				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditor());
-				case 'Enter Terminal': LoadingState.loadAndSwitchState(new TerminalState(), false);
 			}
 			FlxG.sound.music.volume = 0;
 			#if PRELOAD_ALL
