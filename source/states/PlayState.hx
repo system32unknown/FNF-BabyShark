@@ -139,7 +139,6 @@ class PlayState extends MusicBeatState {
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
 	public var camZoomingDecay:Float = 1;
-	private var curSong:String = "";
 
 	public var gfSpeed:Int = 1;
 	public var health:Float = 1;
@@ -287,7 +286,6 @@ class PlayState extends MusicBeatState {
 	var healthBarAlpha:Float = ClientPrefs.getPref('healthBarAlpha');
 	var ratingDisplay:String = ClientPrefs.getPref('RatingDisplay');
 	var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
-	var lowQuality:Bool = ClientPrefs.getPref('lowQuality');
 
 	var useLuaGameOver:Bool = false;
 
@@ -295,6 +293,8 @@ class PlayState extends MusicBeatState {
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
 	override public function create() {
+		Paths.clearUnusedCache();
+
 		startCallback = startCountdown;
 		endCallback = endSong;
 
@@ -580,6 +580,7 @@ class PlayState extends MusicBeatState {
 			dad.setPosition(GF_X, GF_Y);
 			if(gf != null) gf.visible = false;
 		}
+		stagesFunc(function(stage:BaseStage) stage.createPost());
 
 		Conductor.songPosition = -5000 / Conductor.songPosition;
 
@@ -1422,8 +1423,6 @@ class PlayState extends MusicBeatState {
 
 		var songData = SONG;
 		Conductor.changeBPM(songData.bpm);
-
-		curSong = songData.song;
 
 		if (SONG.needsVoices) vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.song));
 		else vocals = new FlxSound();
@@ -3603,7 +3602,7 @@ class PlayState extends MusicBeatState {
 		var hue:Float = 0;
 		var sat:Float = 0;
 		var brt:Float = 0;
-		if (data > -1 && data <= arrowHSV.length) {
+		if (data > -1 && data < arrowHSV.length) {
 			var hue:Float = arrowHSV[arrowIndex][0] / 360;
 			var sat:Float = arrowHSV[arrowIndex][1] / 100;
 			var brt:Float = arrowHSV[arrowIndex][2] / 100;
@@ -3651,12 +3650,12 @@ class PlayState extends MusicBeatState {
 	var lastStepHit:Int = -1;
 	override function stepHit()
 	{
-		super.stepHit();
 		if (Math.abs(FlxG.sound.music.time - (Conductor.songPosition - Conductor.offset)) > (20 * playbackRate)
 			|| (SONG.needsVoices && Math.abs(vocals.time - (Conductor.songPosition - Conductor.offset)) > (20 * playbackRate)))
 		{
 			resyncVocals();
 		}
+		super.stepHit();
 
 		if(curStep == lastStepHit) return;
 
@@ -3954,7 +3953,7 @@ class PlayState extends MusicBeatState {
 								}
 							}
 						case 'toastie':
-							if(lowQuality && !globalAntialiasing && !ClientPrefs.getPref('shaders')) {
+							if(ClientPrefs.getPref('lowQuality') && !globalAntialiasing && !ClientPrefs.getPref('shaders')) {
 								unlock = true;
 							}
 						case 'debugger':

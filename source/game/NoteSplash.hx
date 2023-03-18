@@ -42,6 +42,7 @@ class NoteSplash extends FlxSprite
 		colorSwap.brightness = brtColor;
 
 		var mania:Int = PlayState.mania;
+		offset.set(-34 * Note.scales[PlayState.mania], -23 * Note.scales[PlayState.mania]);
 		if (PlayState.isPixelStage || texture != 'noteSplashes')
 			offset.set(14 / Note.scales[mania], 14 / Note.scales[mania]);
 
