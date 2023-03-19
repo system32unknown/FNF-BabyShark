@@ -129,8 +129,7 @@ class Tank extends BaseStage
 	var gfCutscene:FlxSprite;
 	var picoCutscene:FlxSprite;
 	var boyfriendCutscene:FlxSprite;
-	function prepareCutscene()
-	{
+	function prepareCutscene() {
 		cutsceneHandler = new CutsceneHandler();
 
 		dadGroup.visible = false;
@@ -357,8 +356,7 @@ class Tank extends BaseStage
 			camFollow.set(dad.x + 500, dad.y + 170);
 		});
 
-		cutsceneHandler.timer(31.2, function()
-		{
+		cutsceneHandler.timer(31.2, function() {
 			boyfriend.playAnim('singUPmiss', true);
 			boyfriend.animation.finishCallback = function(name:String) {
 				if (name == 'singUPmiss') {

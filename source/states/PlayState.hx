@@ -28,6 +28,7 @@ import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
 import openfl.filters.ShaderFilter;
 import openfl.filters.BitmapFilter;
+import openfl.utils.Assets as OpenFlAssets;
 import haxe.Json;
 import editors.ChartingState;
 import editors.CharacterEditorState;
@@ -38,7 +39,7 @@ import game.Achievements.AchievementObject;
 import game.Section.SwagSection;
 import game.*;
 import utils.*;
-import states.stages.*;
+import states.stages.BaseStage;
 import ui.*;
 import shaders.PulseEffect;
 import data.StageData.StageFile;
@@ -55,7 +56,7 @@ import sys.io.File;
 import handlers.PsychVideo;
 
 class PlayState extends MusicBeatState {
-	public static var STRUM_X = 42;
+	public static var STRUM_X = 48.5;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
 	public static var ratingStuff:Array<Dynamic> = [
@@ -125,8 +126,8 @@ class PlayState extends MusicBeatState {
 	//Handles the new epic mega sexy cam code that i've done
 	public var camFollow:FlxPoint;
 	public var camFollowPos:FlxObject;
-	private static var prevCamFollow:FlxPoint;
-	private static var prevCamFollowPos:FlxObject;
+	static var prevCamFollow:FlxPoint;
+	static var prevCamFollowPos:FlxObject;
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
@@ -184,6 +185,8 @@ class PlayState extends MusicBeatState {
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
+
+	var dialogueJson:DialogueBoxPsych.DialogueFile = null;
 
 	var disableTheTripper:Bool = false;
 	var disableTheTripperAt:Int;
@@ -436,9 +439,8 @@ class PlayState extends MusicBeatState {
 			case 'tank': new states.stages.Tank(); //Week 7 - Ugh, Guns, Stress
 		}
 
-		if(isPixelStage) {
+		if(isPixelStage)
 			introSoundsSuffix = '-pixel';
-		}
 
 		add(gfGroup);
 		add(dadGroup);
@@ -1067,7 +1069,6 @@ class PlayState extends MusicBeatState {
 
 	var dialogueCount:Int = 0;
 	public var psychDialogue:DialogueBoxPsych;
-	//You don't have to add a song, just saying. You can just do "startDialogue(dialogueJson);" and it should work
 	public function startDialogue(dialogueFile:DialogueBoxPsych.DialogueFile, ?song:String = null):Void
 	{
 		// TO DO: Make this more flexible, maybe?
@@ -1273,16 +1274,6 @@ class PlayState extends MusicBeatState {
 		return spr;
 	}
 
-	public function addBehindGF(obj:FlxBasic) {
-		insert(members.indexOf(gfGroup), obj);
-	}
-	public function addBehindBF(obj:FlxBasic) {
-		insert(members.indexOf(boyfriendGroup), obj);
-	}
-	public function addBehindDad(obj:FlxBasic) {
-		insert(members.indexOf(dadGroup), obj);
-	}
-
 	public function clearNotesBefore(time:Float) {
 		var i:Int = unspawnNotes.length - 1;
 		while (i >= 0) {
@@ -1385,9 +1376,8 @@ class PlayState extends MusicBeatState {
 		FlxG.sound.music.onComplete = finishSong.bind();
 		vocals.play();
 
-		if(startOnTime > 0) {
+		if(startOnTime > 0)
 			setSongTime(startOnTime - 500);
-		}
 		startOnTime = 0;
 
 		if(paused) {
@@ -1794,7 +1784,7 @@ class PlayState extends MusicBeatState {
 
 	override public function onFocusLost():Void {
 		#if discord_rpc
-		if (health > 0 && !paused) DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
+		if (health > 0 && !paused) resetRPC();
 		#end
 
 		PsychVideo.isActive(false);
@@ -2188,8 +2178,7 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onUpdatePost', [elapsed]);
 	}
 
-	function openPauseMenu()
-	{
+	function openPauseMenu() {
 		FlxTimer.globalManager.forEach(function(tmr:FlxTimer) {
 			if (!tmr.finished) tmr.active = false;
 		});
@@ -2324,12 +2313,10 @@ class PlayState extends MusicBeatState {
 				}
 
 			case 'Set Camera Zoom':
-				var defCamZoom:Float = Std.parseFloat(value1);
-				var defHudZoom:Float = Std.parseFloat(value2);
-				if(Math.isNaN(defCamZoom)) defCamZoom = defaultCamZoom;
-				if(Math.isNaN(defHudZoom)) defHudZoom = 1;
-				defaultCamZoom = defCamZoom;
-				defaultHudCamZoom = defHudZoom;
+				if(flValue1 == null) flValue1 = defaultCamZoom;
+				if(flValue2 == null) flValue2 = 1;
+				defaultCamZoom = flValue1;
+				defaultHudCamZoom = flValue2;
 
 			case 'Play Animation':
 				var char:Character = dad;
@@ -2355,7 +2342,7 @@ class PlayState extends MusicBeatState {
 					if(flValue1 != null || flValue2 != null) {
 						if(flValue1 == null) flValue1 = 0;
 						if(flValue2 == null) flValue2 = 0;
-						camFollow.set(flValue1, flValue1);
+						camFollow.set(flValue1, flValue2);
 						isCameraOnForcedPos = true;
 					}
 				}
@@ -3563,7 +3550,6 @@ class PlayState extends MusicBeatState {
 			} else {
 				var spr = playerStrums.members[note.noteData];
 				if(spr != null) spr.playAnim('confirm', true);
-
 			}
 			note.wasGoodHit = true;
 			vocals.volume = 1;
@@ -3664,7 +3650,6 @@ class PlayState extends MusicBeatState {
 	}
 
 	var lastBeatHit:Int = -1;
-
 	override function beatHit()
 	{
 		if(lastBeatHit >= curBeat) return;

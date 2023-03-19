@@ -51,8 +51,7 @@ class BaseStage extends FlxBasic
 	public var camFollow(get, never):FlxPoint;
 	public var camFollowPos(get, never):FlxObject;
 
-	public function new(?game:MusicBeatState)
-	{
+	public function new(?game:MusicBeatState) {
 		if (game == null) game = PlayState.instance;
 		this.game = game;
 
@@ -69,7 +68,6 @@ class BaseStage extends FlxBasic
 	//main callbacks
 	public function create() {}
 	public function createPost() {}
-	//public function update(elapsed:Float) {}
 	public function countdownTick(count:Countdown, num:Int) {}
 
 	// FNF steps, beats and sections
@@ -173,8 +171,7 @@ class BaseStage extends FlxBasic
 	inline function get_camOther():FlxCamera return game.camOther;
 
 	inline function get_defaultCamZoom():Float return game.defaultCamZoom;
-	inline function set_defaultCamZoom(value:Float):Float
-	{
+	inline function set_defaultCamZoom(value:Float):Float {
 		game.defaultCamZoom = value;
 		return game.defaultCamZoom;
 	}

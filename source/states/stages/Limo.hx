@@ -87,7 +87,7 @@ class Limo extends BaseStage
 	{
 		if(!lowQuality) {
 			grpLimoParticles.forEach(function(spr:BGSprite) {
-				if(spr.animation.curAnim.finished) {
+				spr.animation.finishCallback = name -> {
 					spr.kill();
 					grpLimoParticles.remove(spr, true);
 					spr.destroy();
@@ -170,8 +170,7 @@ class Limo extends BaseStage
 	override function beatHit()
 	{
 		if(!lowQuality) {
-			grpLimoDancers.forEach(function(dancer:BackgroundDancer)
-			{
+			grpLimoDancers.forEach(function(dancer:BackgroundDancer) {
 				dancer.dance();
 			});
 		}
