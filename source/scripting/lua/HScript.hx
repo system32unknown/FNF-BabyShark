@@ -34,7 +34,8 @@ class HScript
 		variables.set(key, data);
 		
 		for (i in variables.keys())
-			if (!variables.exists(i)) variables.set(i, variables.get(i));
+			if (!variables.exists(i))
+				variables.set(i, variables.get(i));
 
 		return variables;
 	}

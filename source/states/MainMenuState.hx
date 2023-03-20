@@ -5,7 +5,6 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.display.FlxBackdrop;
 import flixel.effects.FlxFlicker;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
@@ -96,16 +95,6 @@ class MainMenuState extends MusicBeatState
 		magenta.antialiasing = globalAntialiasing;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
-		
-		var bg:FlxBackdrop = new FlxBackdrop(Paths.image('thechecker'));
-		bg.scrollFactor.set(0, yScroll);
-		bg.velocity.set(30, 110);
-		bg.alpha = .3;
-		bg.color = FlxColor.PURPLE;
-		bg.updateHitbox();
-		bg.screenCenter();
-		bg.antialiasing = globalAntialiasing;
-		add(bg);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollowPos = new FlxObject(0, 0, 1, 1);
@@ -167,8 +156,9 @@ class MainMenuState extends MusicBeatState
 		var versionShit:FlxText = new FlxText(0, 0, 0, 
 			'Alter Engine v$alterEngineVersion (${Main.COMMIT_HASH.trim().substring(0, 7)})\n' +
 			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
-			12);
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			16);
+		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT);
+		versionShit.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		versionShit.scrollFactor.set();
 		versionShit.setPosition(FlxG.width - versionShit.width, FlxG.height - versionShit.height);
 		add(versionShit);

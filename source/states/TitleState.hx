@@ -43,7 +43,6 @@ class TitleState extends MusicBeatState
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
 	public static var initialized:Bool = false;
-	static var doneFlixelSplash:Bool = false;
 
 	var credGroup:FlxGroup;
 	var textGroup:FlxGroup;

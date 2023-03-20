@@ -186,8 +186,6 @@ class PlayState extends MusicBeatState {
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
-	var dialogueJson:DialogueBoxPsych.DialogueFile = null;
-
 	var disableTheTripper:Bool = false;
 	var disableTheTripperAt:Int;
 	var screenshader:PulseEffect = new PulseEffect();
@@ -2904,15 +2902,8 @@ class PlayState extends MusicBeatState {
 		else if (noteDiff < Conductor.safeZoneOffset * -0.1)
 			daTiming = "late";
 
-		if (!practiceMode && !cpuControlled) {
-			songScore += score;
-			if(!note.ratingDisabled) {
-				songHits++;
-				totalPlayed++;
-				RecalculateRating();
-			}
-		} else if (cpuControlled) {
-			botScore += score;
+		if ((!practiceMode && !cpuControlled) || cpuControlled) {
+			(cpuControlled ? botScore : songScore) += score;
 			if(!note.ratingDisabled) {
 				songHits++;
 				totalPlayed++;
