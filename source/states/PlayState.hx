@@ -376,9 +376,9 @@ class PlayState extends MusicBeatState {
 		storyDifficultyText = Difficulty.getString();
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
-		if (isStoryMode) {
+		if (isStoryMode)
 			detailsText = "Story Mode: " + WeekData.getCurrentWeek().weekName;
-		} else detailsText = "Freeplay";
+		else detailsText = "Freeplay";
 
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
@@ -1390,7 +1390,7 @@ class PlayState extends MusicBeatState {
 
 		#if discord_rpc
 		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength);
+		DiscordClient.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter(), true, songLength);
 		#end
 		setOnLuas('songLength', songLength);
 		callOnLuas('onSongStart', []);
@@ -1761,8 +1761,8 @@ class PlayState extends MusicBeatState {
 
 			#if discord_rpc
 			if (startTimer != null && startTimer.finished) {
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset'));
-			} else DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
+				DiscordClient.changePresence(detailsText, SONG.song + ' ($storyDifficultyText)', iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset'));
+			} else DiscordClient.changePresence(detailsText, SONG.song + ' ($storyDifficultyText)', iconP2.getCharacter());
 			#end
 		}
 
@@ -1798,12 +1798,11 @@ class PlayState extends MusicBeatState {
 	}
 
 	// Updating Discord Rich Presence.
-	function resetRPC(?cond:Bool = false)
-	{
+	function resetRPC(?cond:Bool = false) {
 		#if desktop
 		if (cond)
-			DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset'));
-		else DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
+			DiscordClient.changePresence(detailsText, SONG.song + ' ($storyDifficultyText)', iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset'));
+		else DiscordClient.changePresence(detailsText, SONG.song + ' ($storyDifficultyText)', iconP2.getCharacter());
 		#end
 	}
 
@@ -2902,8 +2901,15 @@ class PlayState extends MusicBeatState {
 		else if (noteDiff < Conductor.safeZoneOffset * -0.1)
 			daTiming = "late";
 
-		if ((!practiceMode && !cpuControlled) || cpuControlled) {
-			(cpuControlled ? botScore : songScore) += score;
+		if (!practiceMode && !cpuControlled) {
+			songScore += score;
+			if(!note.ratingDisabled) {
+				songHits++;
+				totalPlayed++;
+				RecalculateRating();
+			}
+		} else if (cpuControlled) {
+			botScore += score;
 			if(!note.ratingDisabled) {
 				songHits++;
 				totalPlayed++;
