@@ -3430,7 +3430,6 @@ class PlayState extends MusicBeatState {
 	}
 
 	function moveCamOnNote(singArrows:String) {
-		var camTimer:FlxTimer;
 		switch (singArrows) {
 			case "singLEFT":
 				camlockpoint.x = campoint.x - camMovement;
@@ -3446,7 +3445,7 @@ class PlayState extends MusicBeatState {
 				camlockpoint.y = campoint.y;
 		}
 
-		camTimer = new FlxTimer().start(1);
+		var camTimer:FlxTimer = new FlxTimer().start(1);
 		camlock = true;
 		if(camTimer.finished) {
 			camlock = false;
