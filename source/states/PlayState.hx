@@ -2566,7 +2566,6 @@ class PlayState extends MusicBeatState {
 				campoint.copyFrom(camFollow);
 				bfturn = false;
 				camlock = false;
-				cameraSpeed = 1;
 			}
 			callOnLuas('onMoveCamera', ['dad']);
 			callOnScripts('onMoveCamera', ['dad']);
@@ -2576,7 +2575,6 @@ class PlayState extends MusicBeatState {
 				campoint.copyFrom(camFollow);
 				bfturn = true;
 				camlock = false;
-				cameraSpeed = 1;
 			}
 			callOnLuas('onMoveCamera', ['boyfriend']);
 			callOnScripts('onMoveCamera', ['boyfriend']);
@@ -3449,11 +3447,9 @@ class PlayState extends MusicBeatState {
 		}
 
 		camTimer = new FlxTimer().start(1);
-		cameraSpeed = velocity;
 		camlock = true;
 		if(camTimer.finished) {
 			camlock = false;
-			cameraSpeed = 1;
 			camFollow.copyFrom(campoint);
 			camTimer = null;
 		} 
