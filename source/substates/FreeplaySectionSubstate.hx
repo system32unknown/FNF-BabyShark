@@ -1,123 +1,95 @@
-package states;
+package substates;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.FlxCamera;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.effects.FlxFlicker;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
 import flixel.math.FlxMath;
 import data.WeekData;
 import utils.CoolUtil;
-import utils.MathUtil;
+import states.MainMenuState;
+import states.StoryMenuState;
 import game.Conductor;
 
 /**
 * State used to decide which selection of songs should be loaded in `FreeplayState`.
 */
-class FreeplaySectionState extends MusicBeatState {
-	public static var daSection:String = '';
+class FreeplaySectionSubstate extends MusicBeatSubstate {
+	public static var daSection:String = 'Vanilla';
 	var counter:Int = 0;
 	var sectionArray:Array<String> = [];
 
 	var sectionSpr:FlxSprite;
 	var sectionTxt:FlxText;
 
-    var camGame:FlxCamera;
-
-	var camFollow:FlxObject;
-	var camFollowPos:FlxObject;
-
 	var bg:FlxSprite;
 	var transitioning:Bool = false;
 
-	override function create()
-	{
-		#if discord_rpc
-		DiscordClient.changePresence("Selecting a Freeplay Section", null);
-		#end
-
-		persistentUpdate = true;
+	override public function new() {
+		super();
 		WeekData.reloadWeekFiles(false);
-
-		var doFunnyContinue = false;
 
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 
 			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
-			if(leWeek.hideFreeplay) continue;
+			if(leWeek.hideFreeplay || leWeek.sections == null) continue;
+			WeekData.setDirectoryFromWeek(leWeek);
 			if (leWeek.sections != null) {
-				var fuck:Int = 0;
-				for (section in leWeek.sections) {
+				for (fuck => section in leWeek.sections) {
 					if (section.toLowerCase() != sectionArray[fuck].toLowerCase())
 						sectionArray.push(section);
-					fuck++;
 				}
-			} else doFunnyContinue = true;
-			if (doFunnyContinue) {
-				doFunnyContinue = false;
-				continue;
 			}
-
-			WeekData.setDirectoryFromWeek(leWeek);
 		}
 		sectionArray = CoolUtil.removeDuplicates(sectionArray);
 		WeekData.loadTheFirstEnabledMod();
 
-		daSection = sectionArray[0];
+        for (i in 0...sectionArray.length) {
+            if (sectionArray[i] == daSection) {
+                counter = i;
+                break;
+            }
+        }
 
-		camGame = new FlxCamera();
-
-		FlxG.cameras.reset(camGame);
-		FlxG.cameras.setDefaultDrawTarget(camGame, true); //new EPIC code
-
-		transIn = FlxTransitionableState.defaultTransIn;
-		transOut = FlxTransitionableState.defaultTransOut;
-
-		persistentUpdate = persistentDraw = true;
+		daSection = sectionArray[counter];
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		bg.alpha = 0;
 		add(bg);
 
 		sectionSpr = new FlxSprite().loadGraphic(Paths.image('freeplaysections/' + daSection.toLowerCase()));
 		sectionSpr.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		sectionSpr.scrollFactor.set();
 		sectionSpr.screenCenter(XY);
+		sectionSpr.alpha = 0;
 		add(sectionSpr);
 
 		sectionTxt = new FlxText(0, 620, 0, "", 32);
-		sectionTxt.scrollFactor.set();
 		sectionTxt.setFormat("Comic Sans MS Bold", 32, FlxColor.WHITE, CENTER);
 		sectionTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
+		sectionTxt.scrollFactor.set();
 		sectionTxt.screenCenter(X);
+		sectionTxt.alpha = 0;
 		add(sectionTxt);
 
-		camFollow = new FlxObject(0, 0, 1, 1);
-		camFollowPos = new FlxObject(0, 0, 1, 1);
-		add(camFollow);
-		add(camFollowPos);
+		#if discord_rpc
+		DiscordClient.changePresence("Selecting a Freeplay Section", null);
+		#end
 
-		FlxG.camera.follow(camFollowPos, null, 1);
-
-		super.create();
+		FlxTween.tween(bg, {alpha: 1}, 1, {ease: FlxEase.expoOut});
+		FlxTween.tween(sectionSpr, {alpha: 1}, 1, {ease: FlxEase.expoOut});
+		FlxTween.tween(sectionTxt, {alpha: 1}, 1, {ease: FlxEase.expoOut});
 	}
 
-	override function update(elapsed:Float)
-	{
-		if (FlxG.sound.music.volume < 0.8) {
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-		}
-
+	override function update(elapsed:Float) {
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 
@@ -132,22 +104,20 @@ class FreeplaySectionState extends MusicBeatState {
 		if (controls.ACCEPT && !transitioning) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
-			FlxTween.tween(sectionSpr, {'scale.x': 1.5, 'scale.y': 1.5}, .7, {ease: FlxEase.circOut});
-			if(ClientPrefs.getPref('flashing')) {
-				FlxFlicker.flicker(sectionSpr, 1, .06, true, false, function(_) {
-					MusicBeatState.switchState(new FreeplayState());
-				});
-			} else new FlxTimer().start(1, function(mr:FlxTimer) {
-				MusicBeatState.switchState(new FreeplayState());
+			FlxTween.tween(bg, {alpha: 0}, 0, {ease: FlxEase.expoInOut});
+			FlxTween.tween(sectionTxt, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
+			FlxTween.tween(sectionSpr, {alpha: 0}, .5, {ease: FlxEase.expoInOut,
+				onComplete: function(tween:FlxTween) {
+					FlxTransitionableState.skipNextTransIn = true;
+					MusicBeatState.resetState();
+					close();
+				}
 			});
 		}
 
 		sectionTxt.text = daSection.toUpperCase();
 		sectionTxt.screenCenter(X);
 		
-		var lerpVal:Float = MathUtil.boundTo(elapsed * 7.5, 0, 1);
-		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
-
 		super.update(elapsed);
 	}
 

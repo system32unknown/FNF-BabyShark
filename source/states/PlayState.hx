@@ -2132,7 +2132,7 @@ class PlayState extends MusicBeatState {
 					
 						// Kill extremely late notes and cause misses
 						if (Conductor.songPosition > noteKillOffset + daNote.strumTime) {
-							if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit))
+							if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit) && Conductor.songPosition - elapsed > daNote.strumTime)
 								noteMiss(daNote);
 							if (!daNote.mustPress && daNote.ignoreNote && !endingSong)
 								opponentnoteMiss(daNote);
@@ -2915,6 +2915,8 @@ class PlayState extends MusicBeatState {
 			}
 		}
 		if (showCombo) {
+			var ratingCams = (ratingDisplay == "Hud" ? camHUD : camGame);
+
 			var coolText:FlxText = new FlxText(0, 0, 0, placement, 32);
 			coolText.screenCenter();
 			coolText.x = FlxG.width * .35;
@@ -2933,9 +2935,7 @@ class PlayState extends MusicBeatState {
 			var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 		
 			rating.loadGraphic(Paths.image(pixelShitPart1 + 'ratings/' + daRating.image + pixelShitPart2));
-			if (ratingDisplay == "Hud") {
-				rating.cameras = [camHUD];
-			}
+			rating.cameras = [ratingCams];
 			rating.screenCenter();
 			rating.x = coolText.x - 40;
 			rating.y -= 60;
@@ -2949,9 +2949,7 @@ class PlayState extends MusicBeatState {
 			if (daTiming != "") {
 				timing.loadGraphic(Paths.image(pixelShitPart1 + 'ratings/' + daTiming.toLowerCase() + pixelShitPart2));
 			}
-			if (ratingDisplay == "Hud") {
-				timing.cameras = [camHUD];
-			}
+			timing.cameras = [ratingCams];
 			timing.screenCenter();
 			timing.x = coolText.x - 130;
 			timing.acceleration.y = 550 * playbackRate * playbackRate;
@@ -2968,9 +2966,7 @@ class PlayState extends MusicBeatState {
 				mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 				mstimingTxt.visible = !hideHud;
 				mstimingTxt.text = msTiming + "ms";
-				if (ratingDisplay == "Hud") {
-					mstimingTxt.cameras = [camHUD];
-				}
+				mstimingTxt.cameras = [ratingCams];
 			
 				switch (daRating.name) {
 					case 'shit' | 'bad': mstimingTxt.color = FlxColor.RED;
@@ -2982,9 +2978,7 @@ class PlayState extends MusicBeatState {
 			}
 		
 			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'ratings/combo' + pixelShitPart2));
-			if (ratingDisplay == "Hud") {
-				comboSpr.cameras = [camHUD];
-			}
+			comboSpr.cameras = [ratingCams];
 			comboSpr.screenCenter();
 			comboSpr.x = coolText.x;
 			comboSpr.acceleration.y = FlxG.random.int(200, 300) * playbackRate * playbackRate;
@@ -3049,9 +3043,7 @@ class PlayState extends MusicBeatState {
 			var daLoop:Int = 0;
 			for (i in seperatedScore) {
 				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'number/num$i' + pixelShitPart2));
-				if (ratingDisplay == "Hud") {
-					numScore.cameras = [camHUD];
-				}
+				numScore.cameras = [ratingCams];
 				numScore.screenCenter();
 				numScore.x = coolText.x + (43 * daLoop) - 90 + comboOffset[1][0];
 				numScore.y += 80 - comboOffset[1][1];

@@ -18,6 +18,7 @@ import game.HealthIcon;
 import game.Song;
 import substates.ResetScoreSubState;
 import substates.GameplayChangersSubstate;
+import substates.FreeplaySectionSubstate;
 import ui.ErrorDisplay;
 import ui.Alphabet;
 
@@ -58,7 +59,7 @@ class FreeplayState extends MusicBeatState
 		DiscordClient.changePresence("Freeplay Menu", null);
 		#end
 
-		section = FreeplaySectionState.daSection;
+		section = FreeplaySectionSubstate.daSection;
 		if (section == null || section == '') section = 'Vanilla';
 
 		var doFunnyContinue = false;
@@ -68,9 +69,8 @@ class FreeplayState extends MusicBeatState
 			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
 			if (leWeek.sections != null) {
 				for (sex in leWeek.sections) {
-					if (sex != section) {
-						doFunnyContinue = true;
-					} else {
+					if (sex != section) doFunnyContinue = true;
+					else {
 						doFunnyContinue = false;
 						break;
 					}	
@@ -168,15 +168,20 @@ class FreeplayState extends MusicBeatState
 		add(textBG);
 
 		#if PRELOAD_ALL
-		var leText:String = "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
+		final leTextSplit:Array<String> = [
+			"Press SPACE to listen to the Song. / Press CTRL to open the Gameplay Changers Menu.",
+			"Press COMMA to change the Section. / Press RESET to Reset your Score and Accuracy."
+		];
+		var leText:String = '${leTextSplit[0]}\n${leTextSplit[1]}';
 		var size:Int = 16;
 		#else
-		var leText:String = "Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
+		var leText:String = "Press COMMA to change the Section. / Press CTRL to open the Gameplay Changers Menu. / Press RESET to Reset your Score and Accuracy.";
 		var size:Int = 18;
 		#end
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
+		text.y = FlxG.height - text.height;
 		add(text);
 
 		errorDisplay = new ErrorDisplay();
@@ -275,7 +280,7 @@ class FreeplayState extends MusicBeatState
 				colorTween.cancel();
 			}
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			MusicBeatState.switchState(new FreeplaySectionState());
+			MusicBeatState.switchState(new MainMenuState());
 		}
 
 		if(FlxG.keys.justPressed.CONTROL) {
@@ -329,9 +334,7 @@ class FreeplayState extends MusicBeatState
 
 				if (FlxG.keys.pressed.SHIFT) {
 					LoadingState.loadAndSwitchState(new ChartingState());
-				} else {
-					LoadingState.loadAndSwitchState(new PlayState());
-				}
+				} else LoadingState.loadAndSwitchState(new PlayState());
 
 				FlxG.sound.music.volume = 0;
 				destroyFreeplayVocals();
@@ -339,6 +342,10 @@ class FreeplayState extends MusicBeatState
 				errorDisplay.text = getErrorMessage(missChart, 'cannot play song, $missFile', songFolder, songLowercase);
 				errorDisplay.displayError();
 			}
+		} else if (FlxG.keys.justPressed.COMMA) {
+			persistentUpdate = false;
+			openSubState(new FreeplaySectionSubstate());
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 		} else if(controls.RESET) {
 			persistentUpdate = false;
 			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
