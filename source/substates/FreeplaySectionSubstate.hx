@@ -3,6 +3,7 @@ package substates;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.graphics.FlxGraphic;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.text.FlxText;
@@ -20,7 +21,9 @@ import game.Conductor;
 class FreeplaySectionSubstate extends MusicBeatSubstate {
 	public static var daSection:String = 'Vanilla';
 	var counter:Int = 0;
+
 	var sectionArray:Array<String> = [];
+	var sectionImageMap:Map<String, FlxGraphic> = new Map<String, FlxGraphic>();
 
 	var sectionSpr:FlxSprite;
 	var sectionTxt:FlxText;
@@ -40,8 +43,10 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			WeekData.setDirectoryFromWeek(leWeek);
 			if (leWeek.sections != null) {
 				for (fuck => section in leWeek.sections) {
-					if (section.toLowerCase() != sectionArray[fuck].toLowerCase())
+					if (section.toLowerCase() != sectionArray[fuck].toLowerCase()) {
 						sectionArray.push(section);
+						sectionImageMap.set(section.toLowerCase(), Paths.image('freeplaysections/${section.toLowerCase()}'));
+					}
 				}
 			}
 		}
@@ -54,7 +59,6 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
                 break;
             }
         }
-
 		daSection = sectionArray[counter];
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -65,7 +69,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		bg.alpha = 0;
 		add(bg);
 
-		sectionSpr = new FlxSprite().loadGraphic(Paths.image('freeplaysections/' + daSection.toLowerCase()));
+		sectionSpr = new FlxSprite().loadGraphic(sectionImageMap.get(daSection.toLowerCase()));
 		sectionSpr.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		sectionSpr.scrollFactor.set();
 		sectionSpr.screenCenter(XY);
@@ -84,9 +88,9 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		DiscordClient.changePresence("Selecting a Freeplay Section", null);
 		#end
 
-		FlxTween.tween(bg, {alpha: 1}, 1, {ease: FlxEase.expoOut});
 		FlxTween.tween(sectionSpr, {alpha: 1}, 1, {ease: FlxEase.expoOut});
 		FlxTween.tween(sectionTxt, {alpha: 1}, 1, {ease: FlxEase.expoOut});
+		FlxTween.tween(bg, {alpha: 1}, 1, {ease: FlxEase.expoOut});
 	}
 
 	override function update(elapsed:Float) {
@@ -104,12 +108,10 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		if (controls.ACCEPT && !transitioning) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
-			FlxTween.tween(bg, {alpha: 0}, 0, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionTxt, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionSpr, {alpha: 0}, .5, {ease: FlxEase.expoInOut,
 				onComplete: function(tween:FlxTween) {
-					FlxTransitionableState.skipNextTransIn = true;
-					MusicBeatState.resetState();
+					FlxG.resetState();
 					close();
 				}
 			});
@@ -126,7 +128,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		counter = FlxMath.wrap(counter + change, 0, sectionArray.length - 1);
 
 		daSection = sectionArray[counter];
-		sectionSpr.loadGraphic(Paths.image('freeplaysections/' + daSection.toLowerCase()));
+		sectionSpr.loadGraphic(sectionImageMap.get(daSection.toLowerCase()));
 		sectionSpr.scale.set(1.1, 1.1);
 		sectionSpr.updateHitbox();
 	}

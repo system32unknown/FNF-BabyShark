@@ -69,7 +69,8 @@ class FreeplayState extends MusicBeatState
 			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
 			if (leWeek.sections != null) {
 				for (sex in leWeek.sections) {
-					if (sex != section) doFunnyContinue = true;
+					if (sex != section)
+						doFunnyContinue = true;
 					else {
 						doFunnyContinue = false;
 						break;

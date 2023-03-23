@@ -2616,57 +2616,19 @@ class ChartingState extends MusicBeatState
 	function loadJson(song:String):Void {
 		if (Paths.checkReservedFile(song)) return;
 		else {
-			//shitty null fix, i fucking hate it when this happens
-			//make it look sexier if possible
-			var loadedSong:SwagSong = null;
-			var songFolder:String = song.toLowerCase();
 			try {
-				var defaultDiff:String = Difficulty.getDefault().toLowerCase();
-
-				var ind:Int = song.lastIndexOf("-");
-				var success:Bool = false;
-				
-				if (ind != -1) {
-					try {
-						loadedSong = Song.loadFromJson(songFolder, songFolder.substring(0, ind));
-						success = true;
-
-						var diff:String = songFolder.substring(ind + 1);
-						var ind:Int = Difficulty.lowerlists.indexOf(diff);
-						if (ind != -1) PlayState.storyDifficulty = ind;
-					} catch(e) {trace(e);}
-				}
-				if (!success) {
-					var diff:String = Difficulty.getString();
-					if (diff != null) diff = diff.toLowerCase();
-	
-					var success:Bool = false;
-					if (diff != null && diff != defaultDiff) {
-						try {
-							loadedSong = Song.loadFromJson(songFolder + "-" + diff, songFolder);
-							success = true;
-						} catch(e) {trace(e);}
-					}
-					if (!success) {
-						loadedSong = Song.loadFromJson(songFolder, songFolder);
-	
-						var ind:Int = Difficulty.lowerlists.indexOf(defaultDiff);
-						if (ind != -1) PlayState.storyDifficulty = ind;
-					}
-				}
+				if (Difficulty.getString() != Difficulty.getDefault()) {
+					if(Difficulty.getString() == null) {
+						PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
+					} else PlayState.SONG = Song.loadFromJson(song.toLowerCase() + "-" + Difficulty.getString(), song.toLowerCase());
+				} else PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
+				Paths.clearUnusedCache();
+				MusicBeatState.resetState();
 			} catch(e) {
-				trace(e);
-				errorDisplay.text = getErrorMessage(missChart, 'cannot load JSON, $missFile', songFolder, songFolder);
+				trace(e.message);
+				errorDisplay.text = getErrorMessage('Error:', e.message, song.toLowerCase(), song.toLowerCase());
 				errorDisplay.displayError();
 				return;
-			}
-
-			if (loadedSong != null) {
-				PlayState.SONG = loadedSong;
-				MusicBeatState.resetState();
-			} else {
-				errorDisplay.text = getErrorMessage(missChart, 'cannot load JSON, $missFile', songFolder, songFolder);
-				errorDisplay.displayError();
 			}
 		}
 	}
@@ -2765,7 +2727,7 @@ class ChartingState extends MusicBeatState
 	}
 	
 	function onDropFile(path:String):Void {
-		trace("user dropped file with path: " + Path.normalize(path));
+		trace("user dropped file with path: " + Path.normalize(path) + ", " + Path.directory(path));
 	}
 
 	function getSectionBeats(?section:Null<Int> = null) {
