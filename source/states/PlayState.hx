@@ -1304,7 +1304,7 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	var scoreTweenSetting:Array<Dynamic> = [1.1, .2, 'backOut'];
+	var scoreTweenSetting:Array<Dynamic> = [1.075, .2, 'backOut'];
 	public function updateScore(miss:Bool = false) {
 		judgementCounter.text = 'Max Combos: ${maxCombo}';
 		for (rating in ratingsData) {
@@ -1318,9 +1318,9 @@ class PlayState extends MusicBeatState {
 		if(ClientPrefs.getPref('scoreZoom') && !miss) {
 			if (scoreTxtTween != null) scoreTxtTween.cancel();
 
-			scoreTxt.scale.set(scoreTweenSetting[1], scoreTweenSetting[1]);
-			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, scoreTweenSetting[2] * playbackRate, {
-				ease: LuaUtils.getTweenEaseByString(scoreTweenSetting[3]),
+			scoreTxt.scale.set(scoreTweenSetting[0], scoreTweenSetting[0]);
+			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, scoreTweenSetting[1] * playbackRate, {
+				ease: LuaUtils.getTweenEaseByString(scoreTweenSetting[2]),
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
 				}
