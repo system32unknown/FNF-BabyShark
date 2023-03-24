@@ -2841,10 +2841,9 @@ class PlayState extends MusicBeatState {
 		if (cpuControlled || hidden) return missText;
 
 		switch (ClientPrefs.getPref('ScoreType')) {
-			case 'Alter':
-				missText = sepaSpace + 'Breaks:$songMisses';
-			case 'Kade':
-				missText = '${sepa != '\n' ? scoreSeparator + ' Combo Breaks:' : 'Combo Breaks: '}$songMisses';
+			case 'Alter' | 'Kade':
+				var breakText = (ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks');
+				missText = '${sepa != '\n' ? '$scoreSeparator $breakText:' : '$breakText: '}$songMisses';
 			case 'Psych':
 				missText = sepaSpace + 'Misses: $songMisses';
 		} return missText + sepa;
