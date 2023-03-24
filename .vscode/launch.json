@@ -1,19 +1,19 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-        {
-            "name": "Windows (Debug)",
-            "type": "lime",
-            "preLaunchTask": "Build Windows (Debug)",
-            "request": "launch",
-            "program": "${workspaceFolder}/export/debug/windows/bin/Baby Shark's Funkin.exe"
-        },
-        {
-            "name": "Windows (Release)",
-            "type": "lime",
-            "preLaunchTask": "Build Windows (Release)",
-            "request": "launch",
-            "program": "${workspaceFolder}/export/debug/windows/bin/Kade Engine.exe"
-        }
-	]
-}
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Windows (Debug)",
+        "type": "lime",
+        "preLaunchTask": "Build Windows (Debug)",
+        "request": "launch",
+        "program": "${workspaceFolder}/export/debug/windows/bin/Baby Shark's Funkin.exe"
+      },
+      {
+        "name": "Windows (Release)",
+        "type": "lime",
+        "preLaunchTask": "Build Windows (Release)",
+        "request": "launch",
+        "program": "${workspaceFolder}/export/debug/windows/bin/Baby Shark's Funkin.exe"
+      },
+    ],
+  }
