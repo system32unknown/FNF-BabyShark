@@ -69,8 +69,6 @@ class ChartingState extends MusicBeatState
 	var noteTypeIntMap:Map<Int, String> = new Map<Int, String>();
 	var noteTypeMap:Map<String, Null<Int>> = new Map<String, Null<Int>>();
 	public var ignoreWarnings = false;
-	//var undos = [];
-	//var redos = [];
 	var eventStuff:Array<Dynamic> = [
 		['', "Nothing. Yep, that's right."],
 		['Dadbattle Spotlight', "Used in Dad Battle,\nValue 1: 0/1 = ON/OFF,\n2 = Target Dad\n3 = Target BF\n\nDoes not work outside of Week 1 Stage."],
@@ -372,8 +370,7 @@ class ChartingState extends MusicBeatState
 	var screwYouInputText:FlxUIInputText;
 	var stageDropDown:FlxUIDropDownMenu;
 	var sliderRate:FlxUISlider;
-	function addSongUI():Void
-	{
+	function addSongUI():Void {
 		UI_songTitle = new FlxUIInputText(10, 10, 70, _song.song, 8);
 		UI_songTitle.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		blockPressWhileTypingOn.push(UI_songTitle);
@@ -2727,7 +2724,10 @@ class ChartingState extends MusicBeatState
 	}
 	
 	function onDropFile(path:String):Void {
-		trace("user dropped file with path: " + Path.normalize(path) + ", " + Path.directory(path));
+		trace("user dropped file with path: " + Path.normalize(path));
+		openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
+			loadJson(path.toLowerCase());
+		}, null, ignoreWarnings));
 	}
 
 	function getSectionBeats(?section:Null<Int> = null) {
