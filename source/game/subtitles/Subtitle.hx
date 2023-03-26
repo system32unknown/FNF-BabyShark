@@ -40,10 +40,10 @@ class Subtitle extends FlxTypeText {
 			screenCenter(properties.screenCenter);
 		}
 
-		start(properties.typeSpeed, false, false, [], _ -> {
-			new FlxTimer().start(showTime, _ -> {
+		start(properties.typeSpeed, false, false, [], function() {
+			new FlxTimer().start(showTime, function(timer:FlxTimer) {
 				FlxTween.tween(this, {alpha: 0}, 0.5, {
-					onComplete: _ -> {
+					onComplete: function(tween:FlxTween) {
 						finish();
 					}
 				});
