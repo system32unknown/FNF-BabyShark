@@ -175,28 +175,4 @@ class CoolUtil
 		}
 		return tempArray;
 	}
-
-	public static function formatTime(seconds:Float):String {
-		var hours:Int = Std.int(seconds / 3600);
-		var minutes:Int = Std.int(seconds / 60) % 60;
-		var secondsLeft:Int = Std.int(seconds) % 60;
-		
-		var timeString:String = "";
-		if (hours > 0) {
-			if (hours < 10)
-				timeString += "0";
-			timeString += hours + ":";
-		}
-		
-		if (minutes < 10)
-			timeString += "0";
-		timeString += minutes + ":";
-		
-		if (secondsLeft < 10)
-			timeString += "0";
-		timeString += secondsLeft;
-		
-		return timeString;
-	}
-	
 }
