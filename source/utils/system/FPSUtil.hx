@@ -1,8 +1,6 @@
 package utils.system;
 
-import utils.MathUtil;
 import haxe.Timer;
-import flixel.FlxG;
 
 class FPSUtil {
     @:noCompletion var times:Array<Float> = [];
@@ -15,9 +13,6 @@ class FPSUtil {
 		while (times[0] < now - 1)
 			times.shift();
 
-        switch (ClientPrefs.getPref("FPSType")) {
-            case "elapsed": currentFPS = Math.floor(MathUtil.fpsLerp(currentFPS, FlxG.elapsed == 0 ? 0 : (1 / FlxG.elapsed), .25));
-            case "times": currentFPS = times.length;
-        }
+        currentFPS = times.length;
     }
 }

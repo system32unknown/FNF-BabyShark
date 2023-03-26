@@ -117,13 +117,6 @@ class PlatformUtil
     ')
     #end
     static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
-
-    #if windows
-    @:functionCode('
-        SetProcessDPIAware();
-    ')
-    #end
-    static public function callDPIAware() {}
 }
 
 @:enum abstract MessageBoxIcon(Int) {

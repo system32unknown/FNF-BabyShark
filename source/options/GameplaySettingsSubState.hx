@@ -73,6 +73,11 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
+		var option:Option = new Option('Enable Cutscenes', '',
+			'EnableCutScene',
+		'bool', true);
+		addOption(option);
+
 		var option:Option = new Option('Note Diff Type:',
 			'Choose the type of Note Diffs.',
 			'NoteDiffTypes',

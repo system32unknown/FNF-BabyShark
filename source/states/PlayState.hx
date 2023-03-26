@@ -299,6 +299,7 @@ class PlayState extends MusicBeatState {
 	public var endCallback:Void->Void = null;
 	override public function create() {
 		Paths.clearUnusedCache();
+		utils.system.MemoryUtil.Gcenable(false);
 
 		startCallback = startCountdown;
 		endCallback = endSong;

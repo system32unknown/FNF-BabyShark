@@ -51,7 +51,6 @@ class Main extends Sprite
 
 	public function new() {
 		super();
-		utils.system.PlatformUtil.callDPIAware();
 		stage != null ? init() : addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 

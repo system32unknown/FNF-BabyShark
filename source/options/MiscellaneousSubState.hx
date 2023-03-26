@@ -40,19 +40,6 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Enable Week 7 Cutscene', '',
-			'week7CutScene',
-		'bool', true);
-		addOption(option);
-
-		var option:Option = new Option('FPS Type',
-			'',
-			'FPSType',
-			'string',
-			'times',
-			['times', 'elapsed']);
-		addOption(option);
-
 		var option:Option = new Option('Flashing Lights',
 			"Uncheck this if you're sensitive to flashing lights!",
 			'flashing',
