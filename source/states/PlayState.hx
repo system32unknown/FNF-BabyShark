@@ -22,7 +22,6 @@ import flixel.animation.FlxAnimationController;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
-import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
@@ -38,6 +37,7 @@ import game.Note.EventNote;
 import game.Achievements.AchievementObject;
 import game.Section.SwagSection;
 import game.*;
+import game.subtitles.*;
 import utils.*;
 import states.stages.BaseStage;
 import ui.*;
@@ -291,6 +291,7 @@ class PlayState extends MusicBeatState {
 	var showCombo:Bool = ClientPrefs.getPref('ShowCombo');
 
 	var useLuaGameOver:Bool = false;
+	public var subtitleManager:SubtitleManager;
 
 	// Callbacks for stages
 	public var startCallback:Void->Void = null;
@@ -846,6 +847,10 @@ class PlayState extends MusicBeatState {
 		Conductor.safeZoneOffset = (ClientPrefs.getPref('safeFrames') / 60) * 1000;
 		callOnLuas('onCreatePost', []);
 		callOnScripts('onCreatePost', []);
+
+		subtitleManager = new SubtitleManager();
+		subtitleManager.cameras = [camHUD];
+		add(subtitleManager);
 
 		super.create();
 
