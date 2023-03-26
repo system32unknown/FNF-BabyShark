@@ -1720,19 +1720,19 @@ class FunkinLua {
 				return;
 			}
 
-			var pee:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+			var sprite:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
 			if(destroy) {
-				pee.kill();
+				sprite.kill();
 			}
 
-			if(pee.wasAdded) {
-				LuaUtils.getTargetInstance().remove(pee, true);
-				pee.wasAdded = false;
+			if(sprite.wasAdded) {
+				LuaUtils.getTargetInstance().remove(sprite, true);
+				sprite.wasAdded = false;
 			}
 
 			if(destroy) {
-				pee.destroy();
 				PlayState.instance.modchartSprites.remove(tag);
+				sprite.destroy();
 			}
 		});
 
@@ -2272,19 +2272,19 @@ class FunkinLua {
 				return;
 			}
 
-			var pee:ModchartText = PlayState.instance.modchartTexts.get(tag);
+			var text:ModchartText = PlayState.instance.modchartTexts.get(tag);
 			if(destroy) {
-				pee.kill();
+				text.kill();
 			}
 
-			if(pee.wasAdded) {
-				LuaUtils.getTargetInstance().remove(pee, true);
-				pee.wasAdded = false;
+			if(text.wasAdded) {
+				LuaUtils.getTargetInstance().remove(text, true);
+				text.wasAdded = false;
 			}
 
 			if(destroy) {
-				pee.destroy();
 				PlayState.instance.modchartTexts.remove(tag);
+				text.destroy();
 			}
 		});
 

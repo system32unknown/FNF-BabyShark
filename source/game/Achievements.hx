@@ -56,8 +56,7 @@ class Achievements {
 		["Oversinging Much...?",		"Hold down a note for 10 seconds.",					'oversinging',			false],
 		["Hyperactive",					"Finish a Song without going Idle.",				'hype',					false],
 		["Just the Two of Us",			"Finish a Song pressing only two keys.",			'two_keys',				false],
-		["Toaster Gamer",				"Have you tried to run the game on a toaster?",		'toastie',				false],
-		["Debugger",					"Beat the \"Test\" Stage from the Chart Editor.",	'debugger',				 true]
+		["Toaster Gamer",				"Have you tried to run the game on a toaster?",		'toastie',				false]
 	];
 	public static var copyAchievements = achievementsStuff.copy();
 	public static var achievementsMap:Map<String, Bool> = new Map<String, Bool>();
@@ -208,9 +207,7 @@ class AttachedAchievement extends FlxSprite {
 	public function reloadAchievementImage() {
 		if(Achievements.isAchievementUnlocked(tag)) {
 			loadGraphic(Paths.image('achievements/' + tag));
-		} else {
-			loadGraphic(Paths.image('achievements/lockedachievement'));
-		}
+		} else loadGraphic(Paths.image('achievements/lockedachievement'));
 		scale.set(.7, .7);
 		updateHitbox();
 	}

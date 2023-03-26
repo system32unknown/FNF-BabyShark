@@ -26,7 +26,7 @@ class MemoryUtil {
 		else Gcenable();
 	}
 
-	public static function clearMajor(?minor:Bool = false) {
+	inline public static function clearMajor(?minor:Bool = false) {
 		#if cpp
 		Gc.run(!minor);
 		if (!minor) Gc.compact();
@@ -51,7 +51,7 @@ class MemoryUtil {
 		return '$size ${intervalArray[data]}';
 	}
 
-	public static function Gcenable(?enabled:Bool = true) {
+	inline public static function Gcenable(?enabled:Bool = true) {
 		#if (cpp || hl)
 		Gc.enable(enabled);
 		#end

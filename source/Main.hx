@@ -1,6 +1,5 @@
 package;
 
-import flixel.FlxGame;
 import flixel.custom.system.CustomLog;
 import flixel.FlxG;
 
@@ -52,6 +51,7 @@ class Main extends Sprite
 
 	public function new() {
 		super();
+		utils.system.PlatformUtil.callDPIAware();
 		stage != null ? init() : addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 
@@ -99,7 +99,6 @@ class Main extends Sprite
 		FlxG.fixedTimestep = false;
 		FlxG.signals.preStateSwitch.add(() -> {
 			Paths.clearStoredCache();
-			FlxG.bitmap.dumpCache();
 			FlxG.bitmap.clearUnused();
 			FlxG.sound.destroy();
 
@@ -109,11 +108,11 @@ class Main extends Sprite
 			for (key in cache.sound.keys())
 				cache.removeSound(key);
 			cache = null;
-			MemoryUtil.clearMajor();
+			MemoryUtil.clearMajor(true);
 		});
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();
-			MemoryUtil.clearMajor(true);
+			MemoryUtil.clearMajor();
 		});
 	}
 

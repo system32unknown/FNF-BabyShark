@@ -41,7 +41,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'IconBounceType',
 			'string',
 			'Psych',
-			['Vanilla', 'Kade', 'Psych', 'Dave', 'BP', 'GoldenApple', 'Custom']);
+			['Vanilla', 'Kade', 'Psych', 'Dave', 'GoldenApple', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Health Bar Types:',

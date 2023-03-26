@@ -28,7 +28,7 @@ import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
 import openfl.filters.ShaderFilter;
 import openfl.filters.BitmapFilter;
-import openfl.utils.Assets as OpenFlAssets;
+#if !MODS_ALLOWED import openfl.utils.Assets as OpenFlAssets; #end
 import haxe.Json;
 import editors.ChartingState;
 import editors.CharacterEditorState;
@@ -47,6 +47,9 @@ import data.EkData.Keybinds;
 import data.*;
 import scripting.haxe.AlterScript;
 import scripting.lua.*;
+#if LUA_ALLOWED
+import llua.Lua;
+#end
 
 #if sys
 import sys.FileSystem;
@@ -298,7 +301,7 @@ class PlayState extends MusicBeatState {
 		startCallback = startCountdown;
 		endCallback = endSong;
 
-		// for lua
+		FreeplayState.destroyFreeplayVocals();
 		instance = this;
 
 		debugKeysChart = ClientPrefs.keyBinds.get('debug_1').copy();
@@ -588,7 +591,6 @@ class PlayState extends MusicBeatState {
 
 		playerLU = new FlxTypedGroup<FlxSprite>();
 		playerLU.cameras = [camHUD];
-
 		opponentLU = new FlxTypedGroup<FlxSprite>();
 		opponentLU.cameras = [camHUD];
 
@@ -715,7 +717,6 @@ class PlayState extends MusicBeatState {
 			scoreTxt.borderSize = 1.25;
 			scoreTxt.size = 20;
 		}
-
 		scoreTxt.visible = !hideHud;
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
@@ -1921,19 +1922,17 @@ class PlayState extends MusicBeatState {
 				iconP1.scale.set(mult, mult);
 				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, MathUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 				iconP2.scale.set(mult, mult);
-			case "Dave" | "BP":
+			case "Dave":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
 		}
-
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
 		final iconOffset:Int = 26;
-		if (health > healthMax)
-			health = healthMax;
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+		if (health > healthMax) health = healthMax;
+		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01) - iconOffset);
+		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01)) - (iconP2.width - iconOffset);
 
 		if (healthBar.percent < 20) {
 			iconP1.setState(1);
@@ -3126,9 +3125,6 @@ class PlayState extends MusicBeatState {
 		switch(ClientPrefs.getPref('NoteDiffTypes')) {
 			case 'Psych':
 				notediff = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.getPref('ratingOffset'));
-			case 'Kade':
-				if (note != null) notediff = note.strumTime - Conductor.songPosition;
-				else notediff = Conductor.safeZoneOffset;
 			case 'Simple':
 				notediff = note.strumTime - Conductor.songPosition;
 		}
@@ -3593,6 +3589,9 @@ class PlayState extends MusicBeatState {
 			lua.stop();
 		}
 		luaArray = [];
+		#if LUA_ALLOWED
+		Lua_helper.callbacks.clear();
+		#end
 		for (hx in scriptArray) {
 			hx.call('onDestroy', []);
 			hx.stop();
@@ -3648,18 +3647,10 @@ class PlayState extends MusicBeatState {
 			case "Psych":
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
-			case "Dave" | "BP":
+			case "Dave":
 				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), .1);
-	
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
-
-				if (ClientPrefs.getPref('IconBounceType') == "BP") {
-					if (curBeat % 4 == 0) {
-						FlxTween.angle(iconP1, -30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-						FlxTween.angle(iconP2, 30, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-					}
-				}
 			case "GoldenApple":
 				if (curBeat % 2 == 0) {
 					iconP1.scale.set(1.1, .8);
@@ -3920,10 +3911,6 @@ class PlayState extends MusicBeatState {
 							}
 						case 'toastie':
 							if(ClientPrefs.getPref('lowQuality') && !globalAntialiasing && !ClientPrefs.getPref('shaders')) {
-								unlock = true;
-							}
-						case 'debugger':
-							if(Paths.formatToSongPath(SONG.song) == 'test' && !usedPractice) {
 								unlock = true;
 							}
 					}

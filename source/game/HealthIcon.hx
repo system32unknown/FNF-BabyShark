@@ -104,7 +104,7 @@ class HealthIcon extends FlxSprite
 		super.update(elapsed);
 
 		switch (ClientPrefs.getPref('IconBounceType')) {
-			case "Dave" | "BP" | "GoldenApple":
+			case "Dave" | "GoldenApple":
 				offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
 		}
 
