@@ -78,7 +78,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			'NoteDiffTypes',
 			'string',
 			'Simple',
-			['Psych', 'Kade', 'Simple']);
+			['Psych', 'Simple']);
 		addOption(option);
 		
 		var option:Option = new Option('Rating Offset',
