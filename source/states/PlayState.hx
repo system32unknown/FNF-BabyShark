@@ -3607,6 +3607,8 @@ class PlayState extends MusicBeatState {
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 
+		subtitleManager.destroy();
+		subtitleManager = null;
 		FlxAnimationController.globalSpeed = 1;
 		FlxG.sound.music.pitch = 1;
 		PsychVideo.clearAll();

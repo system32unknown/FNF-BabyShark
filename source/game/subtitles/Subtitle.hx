@@ -54,9 +54,8 @@ class Subtitle extends FlxTypeText {
 	public function finish() {
 		if (onSubComplete != null) {
 			onSubComplete();
-		}
-
-        manager.onSubtitleComplete(this);
+			manager.onSubtitleComplete(this);
+		} else manager.onSubtitleComplete(this);
 	}
 
 	function init(properties:SubtitleProperties):SubtitleProperties {
@@ -77,6 +76,8 @@ class Subtitle extends FlxTypeText {
 			properties.screenCenter = FlxAxes.XY;
 		if (properties.sounds == null)
 			properties.sounds = null;
+		if (properties.fonts == null)
+			properties.fonts = Paths.font("comic.ttf");
 		return properties;
 	}
 }
