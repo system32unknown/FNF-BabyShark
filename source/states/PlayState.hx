@@ -1986,12 +1986,12 @@ class PlayState extends MusicBeatState {
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
 					if (secondsTotal < 0) secondsTotal = 0;
 
-					var timePos:String = FlxStringUtil.formatTime(secondsTotal) + " / " + FlxStringUtil.formatTime(Math.floor(songLength / 1000));
+					var timePos:String = CoolUtil.formatTime(secondsTotal) + " / " + CoolUtil.formatTime(Math.floor(songLength / 1000));
 					if (timebarType != 'Song Name')
 						switch (timebarType) {
-							case 'Time Left' | 'Time Elapsed': timeTxt.text = FlxStringUtil.formatTime(secondsTotal);
+							case 'Time Left' | 'Time Elapsed': timeTxt.text = CoolUtil.formatTime(secondsTotal);
 							case 'Time Position': timeTxt.text = timePos;
-							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal) + ")";
+							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + " (" + CoolUtil.formatTime(secondsTotal) + ")";
 							case 'Name Time Position': timeTxt.text = SONG.song + " (" + timePos + ")";
 							case 'Name Percent': timeTxt.text = '${SONG.song} (${timeBar.percent}%)';
 						}

@@ -11,6 +11,5 @@ class ModchartText extends FlxText {
 		setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		cameras = [PlayState.instance.camHUD];
 		scrollFactor.set();
-		borderSize = 1;
 	}
 }
