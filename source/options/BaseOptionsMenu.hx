@@ -74,7 +74,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		for (i in 0...optionsArray.length)
 		{
-			var optionText:Alphabet = new Alphabet(290, 260, optionsArray[i].name, false);
+			var optionText:Alphabet = new Alphabet(290, 260, optionsArray[i].name, optionsArray[i].type == 'func');
 			optionText.isMenuItem = true;
 			optionText.x += 300;
 			optionText.targetY = i;
@@ -85,7 +85,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 				checkbox.sprTracker = optionText;
 				checkbox.ID = i;
 				checkboxGroup.add(checkbox);
-			} else {
+			} else if (optionsArray[i].type != 'func') {
 				optionText.x -= 80;
 				optionText.startPosition.x -= 80;
 				var valueText:AttachedText = new AttachedText('' + optionsArray[i].getValue(), optionText.width + 80);
@@ -128,17 +128,16 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
-		if(nextAccept <= 0)
-		{
+		if(nextAccept <= 0) {
 			var usesCheckbox = true;
-			if(curOption.type != 'bool') {
+			if(curOption.type != 'bool' && curOption.type != 'func') {
 				usesCheckbox = false;
 			}
 
 			if(usesCheckbox) {
 				if(controls.ACCEPT) {
-					FlxG.sound.play(Paths.sound('scrollMenu'));
-					curOption.setValue((curOption.getValue() == true) ? false : true);
+					FlxG.sound.play(Paths.sound((curOption.type == 'func' ? 'confirmMenu' : 'scrollMenu')));
+					if (curOption.type == 'bool') curOption.setValue((curOption.getValue() == true) ? false : true);
 					curOption.change();
 					reloadCheckboxes();
 				}

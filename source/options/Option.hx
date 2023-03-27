@@ -50,6 +50,7 @@ class Option
 					if(options.length > 0) {
 						defaultValue = options[0];
 					}
+				case 'func': defaultValue = '';
 			}
 		}
 
@@ -57,8 +58,7 @@ class Option
 			setValue(defaultValue);
 		}
 
-		switch(type)
-		{
+		switch(type) {
 			case 'string':
 				var num:Int = options.indexOf(getValue());
 				if(num > -1) {
@@ -75,8 +75,7 @@ class Option
 		}
 	}
 
-	public function change()
-	{
+	public function change() {
 		//nothing lol
 		if(onChange != null) {
 			onChange();
@@ -112,12 +111,11 @@ class Option
 		return null;
 	}
 
-	private function get_type()
-	{
+	function get_type() {
 		var newValue:String = 'bool';
 		switch(type.toLowerCase().trim())
 		{
-			case 'int' | 'float' | 'percent' | 'string': newValue = type;
+			case 'int' | 'float' | 'percent' | 'string' | 'func': newValue = type;
 			case 'integer': newValue = 'int';
 			case 'str': newValue = 'string';
 			case 'fl': newValue = 'float';

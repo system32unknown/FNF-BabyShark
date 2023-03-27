@@ -120,6 +120,7 @@ class NoteOffsetState extends MusicBeatState
 
 		comboNums = new FlxSpriteGroup();
 		comboNums.cameras = [camHUD];
+		comboNums.antialiasing = globalAntialiasing;
 		add(comboNums);
 
 		combo = new FlxSprite().loadGraphic(Paths.image('ratings/combo'));
@@ -296,26 +297,22 @@ class NoteOffsetState extends MusicBeatState
 					startMousePos.y - rating.y >= 0 && startMousePos.y - rating.y <= rating.height)
 				{
 					holdingObjectType = 'rating';
-					startComboOffset.x = comboOffset[0][0];
-					startComboOffset.y = comboOffset[0][1];
+					startComboOffset.set(comboOffset[0][0], comboOffset[0][1]);
 				} else if (startMousePos.x - comboNums.x >= 0 && startMousePos.x - comboNums.x <= comboNums.width &&
 						 startMousePos.y - comboNums.y >= 0 && startMousePos.y - comboNums.y <= comboNums.height)
 				{
 					holdingObjectType = 'numscore';
-					startComboOffset.x = comboOffset[1][0];
-					startComboOffset.y = comboOffset[1][1];
+					startComboOffset.set(comboOffset[1][0], comboOffset[1][1]);
 				} else if (startMousePos.x - combo.x >= 0 && startMousePos.x - combo.x <= combo.width &&
 						 startMousePos.y - combo.y >= 0 && startMousePos.y - combo.y <= combo.height)
 				{
 					holdingObjectType = 'combo';
-					startComboOffset.x = comboOffset[2][0];
-					startComboOffset.y = comboOffset[2][1];
+					startComboOffset.set(comboOffset[2][0], comboOffset[2][1]);
 				} else if (startMousePos.x - lateEarly.x >= 0 && startMousePos.x - lateEarly.x <= lateEarly.width &&
 						 startMousePos.y - lateEarly.y >= 0 && startMousePos.y - lateEarly.y <= lateEarly.height)
 		   		{
 					holdingObjectType = 'lateearly';
-					startComboOffset.x = comboOffset[3][0];
-					startComboOffset.y = comboOffset[3][1];
+					startComboOffset.set(comboOffset[3][0], comboOffset[3][1]);
 		   		}
 			}
 			if(FlxG.mouse.justReleased) {
@@ -452,8 +449,7 @@ class NoteOffsetState extends MusicBeatState
 		combo.y -= comboOffset[2][1];
 
 		lateEarly.screenCenter();
-		lateEarly.x = coolText.x - 130 + comboOffset[3][0];
-		lateEarly.y = coolText.y - comboOffset[3][1];
+		lateEarly.setPosition(coolText.x - 130 + comboOffset[3][0], coolText.y - comboOffset[3][1]);
 
 		reloadTexts();
 	}
