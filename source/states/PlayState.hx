@@ -982,9 +982,11 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function getLuaObject(tag:String, text:Bool = true):FlxSprite {
+		#if LUA_ALLOWED
 		if(modchartSprites.exists(tag)) return modchartSprites.get(tag);
 		if(text && modchartTexts.exists(tag)) return modchartTexts.get(tag);
 		if(variables.exists(tag)) return variables.get(tag);
+		#end
 		return null;
 	}
 
@@ -2860,7 +2862,7 @@ class PlayState extends MusicBeatState {
 			case 'Alter':
 				tempText += 'Score:${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
-				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ranks] - $ratingFC' : ' [?, ?] - ?');
+				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ranks] • $ratingFC' : ' [?, ?] • ?');
 			case 'Psych':
 				tempText += 'Score: ${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;

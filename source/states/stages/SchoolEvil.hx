@@ -1,6 +1,6 @@
 package states.stages;
 
-import flixel.addons.effects.FlxTrail;
+import game.DeltaTrail;
 import ui.DialogueBox;
 import utils.CoolUtil;
 
@@ -36,7 +36,7 @@ class SchoolEvil extends BaseStage
 		}
 	}
 	override function createPost() {
-		var trail:FlxTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069);
+		var trail:DeltaTrail = new DeltaTrail(dad, null, 4, 24 / 60, 0.3, 0.069);
 		addBehindDad(trail);
 	}
 

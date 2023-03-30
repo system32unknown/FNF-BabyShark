@@ -30,7 +30,7 @@
 		<define name="LUA_ALLOWED" if="cpp"/>
 		<define name="HSCRIPT_ALLOWED"/>
 		<define name="CRASH_HANDLER" if="release"/>
-		<define name="VIDEOS_ALLOWED" unless="32bits"/>
+		<define name="VIDEOS_ALLOWED" if="cpp" unless="32bits"/>
 	</section>
 
 	<define name="ACHIEVEMENTS_ALLOWED"/>

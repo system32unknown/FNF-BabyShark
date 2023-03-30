@@ -2730,7 +2730,8 @@ class ChartingState extends MusicBeatState
 		}, null, ignoreWarnings));
 	}
 
-	function getSectionBeats(?section:Null<Int> = null) {
+	function getSectionBeats(?section:Null<Int> = null)
+	{
 		if (section == null) section = curSec;
 		var val:Null<Float> = null;
 		
