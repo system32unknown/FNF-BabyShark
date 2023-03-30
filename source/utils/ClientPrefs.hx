@@ -14,7 +14,6 @@ class ClientPrefs {
 		'MSFPSCounter' => false,
 		'showFPS' => true,
 		'showMEM' => true,
-		'FPSType' => 'elapsed',
 		'flashing' => true,
 		'globalAntialiasing' => true,
 		'splashOpacity' => .6,
