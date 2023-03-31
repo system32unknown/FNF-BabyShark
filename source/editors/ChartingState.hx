@@ -2659,10 +2659,10 @@ class ChartingState extends MusicBeatState
 
 		var path:String;
 		#if MODS_ALLOWED
-		path = Paths.modsJson(Paths.CHART_PATH + currentSongName + "/" + currentSongName + diffSuffix);
+		path = Paths.modsJson(Paths.CHART_PATH + "/" + currentSongName + "/" + currentSongName + diffSuffix);
 		if (!FileSystem.exists(path))
 		#end
-			path = Paths.json(Paths.CHART_PATH + currentSongName + "/" + currentSongName + diffSuffix);
+			path = Paths.json(Paths.CHART_PATH + "/" + currentSongName + "/" + currentSongName + diffSuffix);
 
 		return path;
 	}

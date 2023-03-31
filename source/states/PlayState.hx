@@ -1433,9 +1433,9 @@ class PlayState extends MusicBeatState {
 		// NEW SHIT
 		noteData = songData.notes;
 
-		var file:String = Paths.json(Paths.CHART_PATH + songName + '/events');
+		var file:String = Paths.json(Paths.CHART_PATH + "/" + songName + '/events');
 		#if MODS_ALLOWED
-		if (FileSystem.exists(Paths.modsJson(Paths.CHART_PATH + songName + '/events')) || FileSystem.exists(file)) {
+		if (FileSystem.exists(Paths.modsJson(Paths.CHART_PATH + "/" + songName + '/events')) || FileSystem.exists(file)) {
 		#else
 		if (OpenFlAssets.exists(file)) {
 		#end
