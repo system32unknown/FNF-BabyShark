@@ -1,6 +1,5 @@
 package states;
 
-import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -552,7 +551,7 @@ class PlayState extends MusicBeatState {
 
 			gf = new Character(0, 0, SONG.gfVersion);
 			startCharacterPos(gf);
-			gf.scrollFactor.set(0.95, 0.95);
+			gf.scrollFactor.set(.95, .95);
 			gfGroup.add(gf);
 			startCharacterLua(gf.curCharacter);
 		}
@@ -1113,7 +1112,6 @@ class PlayState extends MusicBeatState {
 	public static var startOnTime:Float = 0;
 
 	public var camMovement:Float = 40;
-	public var velocity:Float = 1;
 	public var campoint:FlxPoint = new FlxPoint();
 	public var camlockpoint:FlxPoint = new FlxPoint();
 	public var camlock:Bool = false;
@@ -1186,14 +1184,12 @@ class PlayState extends MusicBeatState {
 			setOnLuas('defaultMania', SONG.mania);
 
 			startedCountdown = true;
-			Conductor.songPosition = 0;
 			Conductor.songPosition -= Conductor.crochet * 5;
 			setOnLuas('startedCountdown', true);
 			callOnLuas('onCountdownStarted', []);
 			callOnScripts('onCountdownStarted', []);
 
 			var swagCounter:Int = 0;
-
 			if (startOnTime > 0) {
 				clearNotesBefore(startOnTime);
 				setSongTime(startOnTime - 350);
@@ -1275,7 +1271,7 @@ class PlayState extends MusicBeatState {
 		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, Conductor.crochet / 1000, {
 			ease: FlxEase.cubeInOut,
 			onComplete: function(twn:FlxTween) {
-				remove(spr);
+				remove(spr, true);
 				spr.destroy();
 			}
 		});
