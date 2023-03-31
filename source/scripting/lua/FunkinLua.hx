@@ -1928,10 +1928,10 @@ class FunkinLua {
 		addCallback("startDialogue", function(dialogueFile:String, music:String = null) {
 			var path:String;
 			#if MODS_ALLOWED
-			path = Paths.modsChart(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
+			path = Paths.modsJson("charts/" + Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
 			if(!FileSystem.exists(path))
 			#end
-			path = Paths.chart(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
+			path = Paths.json("charts/" + Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
 			luaTrace('startDialogue: Trying to load dialogue: ' + path);
 			#if MODS_ALLOWED
 			if(FileSystem.exists(path))

@@ -402,9 +402,9 @@ class ChartingState extends MusicBeatState
 
 		var loadEventJson:FlxButton = new FlxButton(loadAutosaveBtn.x, loadAutosaveBtn.y + 30, 'Load Events', function() {
 			var songName:String = Paths.formatToSongPath(_song.song);
-			var file:String = Paths.chart(songName + '/events');
+			var file:String = Paths.json(Paths.CHART_PATH + '/$songName/events');
 			#if sys
-			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsChart(songName + '/events')) || #end FileSystem.exists(file))
+			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson(Paths.CHART_PATH + "/" + songName + '/events')) || #end FileSystem.exists(file))
 			#else
 			if (OpenFlAssets.exists(file))
 			#end
@@ -2659,10 +2659,10 @@ class ChartingState extends MusicBeatState
 
 		var path:String;
 		#if MODS_ALLOWED
-		path = Paths.modsChart(currentSongName + "/" + currentSongName + diffSuffix);
+		path = Paths.modsJson(Paths.CHART_PATH + currentSongName + "/" + currentSongName + diffSuffix);
 		if (!FileSystem.exists(path))
 		#end
-			path = Paths.chart(currentSongName + "/" + currentSongName + diffSuffix);
+			path = Paths.json(Paths.CHART_PATH + currentSongName + "/" + currentSongName + diffSuffix);
 
 		return path;
 	}

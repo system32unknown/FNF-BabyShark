@@ -3,7 +3,6 @@ package;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
-import openfl.system.System;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
@@ -194,9 +193,6 @@ class Paths
 	
 	inline static public function json(key:String, ?library:String)
 		return getPath('data/$key.json', TEXT, library);
-
-	inline static public function chart(key:String, ?library:String)
-		return json('$CHART_PATH/$key', library);
 
 	static public function video(key:String) {
 		#if MODS_ALLOWED
@@ -399,9 +395,6 @@ class Paths
 	inline static public function modsJson(key:String)
 		return modFolders('data/$key.json');
 
-	inline static public function modsChart(key:String)
-		return modsJson('$CHART_PATH/$key');
-
 	inline static public function modsVideo(key:String)
 		return modFolders('videos/$key.$VIDEO_EXT');
 
@@ -413,9 +406,6 @@ class Paths
 
 	inline static public function modsXml(key:String)
 		return modFolders('images/$key.xml');
-
-	inline static public function modsPacker(key:String)
-		return modFolders('images/$key.json');
 
 	inline static public function modsTxt(key:String)
 		return modFolders('images/$key.txt');
