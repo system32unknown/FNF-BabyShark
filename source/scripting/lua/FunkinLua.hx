@@ -527,17 +527,10 @@ class FunkinLua {
 			return null;
 		});
 
-		addCallback("callCppUtil", function(?platformType:String, ?args:Array<Dynamic>) {
+		addCallback("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
+			var platFunc:Dynamic = Reflect.getProperty(PlatformUtil, platformType.toLowerCase().trim());
 			if (args == null) args = [];
-
-			switch (platformType.toLowerCase().trim()) {
-				case "sendwindowsnotification": PlatformUtil.sendWindowsNotification(args[0], args[1]);
-				case "getwindowstransparent": PlatformUtil.getWindowsTransparent(args[0], args[1], args[2], args[3]);
-				case "setcursorpos": PlatformUtil.setCursorPos(args[0], args[1]);
-				case "setwindowicon": PlatformUtil.setWindowIcon(args[0]);
-				case "getmousepos": PlatformUtil.getMousePos(args[0]);
-				case "setwindowatt": PlatformUtil.setWindowAtt(args[0], args[1]);
-			}
+			Reflect.callMethod(null, platFunc, args);
 		});
 
 		addCallback("getGlobalFromScript", function(?luaFile:String, ?global:String) { // returns the global from a script

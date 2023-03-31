@@ -1184,6 +1184,7 @@ class PlayState extends MusicBeatState {
 			setOnLuas('defaultMania', SONG.mania);
 
 			startedCountdown = true;
+			Conductor.songPosition = 0;
 			Conductor.songPosition -= Conductor.crochet * 5;
 			setOnLuas('startedCountdown', true);
 			callOnLuas('onCountdownStarted', []);
@@ -1831,7 +1832,7 @@ class PlayState extends MusicBeatState {
 	public var canReset:Bool = true;
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
-
+	var moveHealthIcons:Bool = true;
 	override public function update(elapsed:Float) {
 		callOnLuas('onUpdate', [elapsed]);
 		callOnScripts('onUpdate', [elapsed]);
@@ -1936,8 +1937,8 @@ class PlayState extends MusicBeatState {
 
 		final iconOffset:Int = 26;
 		if (health > healthMax) health = healthMax;
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01)) - (iconP2.width - iconOffset);
+		if (moveHealthIcons) iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01) - iconOffset);
+		if (moveHealthIcons) iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01)) - (iconP2.width - iconOffset);
 
 		if (healthBar.percent < 20) {
 			iconP1.setState(1);
