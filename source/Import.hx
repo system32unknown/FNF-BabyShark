@@ -1,6 +1,6 @@
 // DO NOT REMOVE THIS
 #if discord_rpc
-import utils.Discord.DiscordClient;
+import utils.DiscordClient;
 #end
 import utils.ClientPrefs;
 import states.MusicBeatState;

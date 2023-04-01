@@ -61,6 +61,23 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		#if DISCORD_ALLOWED
+		var option:Option = new Option('Discord RPC:',
+			'Change Discord Rich Presence',
+			'discordRPC',
+			'string',
+			'Normal',
+			['Deactivated', 'Normal', 'Hide Infos']);
+		addOption(option);
+		option.onChange = onChangeDiscord;
+		#end
+
 		super();
 	}
+
+	#if DISCORD_ALLOWED
+	function onChangeDiscord() {
+		DiscordClient.changePresence(rpcTitle, null);
+	}
+	#end
 }

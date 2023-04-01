@@ -39,10 +39,6 @@ import Type.ValueType;
 import ui.DialogueBoxPsych;
 import ui.CustomFadeTransition;
 
-#if discord_rpc
-import utils.Discord;
-#end
-
 class FunkinLua {
 	public static var Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
 	public static var Function_Continue:Dynamic = "##PSYCHLUA_FUNCTIONCONTINUE";
@@ -528,8 +524,8 @@ class FunkinLua {
 		});
 
 		addCallback("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
-			var platFunc:Dynamic = Reflect.getProperty(PlatformUtil, platformType.toLowerCase().trim());
 			if (args == null) args = [];
+			var platFunc = Reflect.field(PlatformUtil, platformType.toLowerCase().trim());
 			Reflect.callMethod(null, platFunc, args);
 		});
 

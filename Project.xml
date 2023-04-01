@@ -31,6 +31,7 @@
 		<define name="HSCRIPT_ALLOWED"/>
 		<define name="CRASH_HANDLER" if="release"/>
 		<define name="VIDEOS_ALLOWED" if="cpp" unless="32bits"/>
+		<define name="DISCORD_ALLOWED" if="cpp"/>
 	</section>
 
 	<define name="ACHIEVEMENTS_ALLOWED"/>
@@ -72,7 +73,7 @@
 
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
-	<haxelib name="discord_rpc" if="cpp"/>
+	<haxelib name="discord_rpc" if="DISCORD_ALLOWED"/>
 
 	<haxelib name="hscript" if="HSCRIPT_ALLOWED"/>
 	<define name="hscriptPos" if="HSCRIPT_ALLOWED"/>

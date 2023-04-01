@@ -2,6 +2,7 @@ package game;
 
 import flixel.FlxSprite;
 import editors.ChartingState;
+import flixel.math.FlxRect;
 import shaders.ColorSwap;
 import data.EkData;
 
@@ -364,5 +365,15 @@ class Note extends FlxSprite
 		shader = null;
 		colorSwap = null;
 		super.destroy();
+	}
+
+	@:noCompletion
+	override function set_clipRect(rect:FlxRect):FlxRect {
+		clipRect = rect;
+
+		if (frames != null)
+			frame = frames.frames[animation.frameIndex];
+
+		return rect;
 	}
 }

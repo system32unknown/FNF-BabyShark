@@ -91,13 +91,11 @@ class Paths
 		currentTrackedSounds.remove(key);
 
 		if (obj != null) {
-			@:privateAccess{
-				if (obj.__buffer != null) {
-					obj.__buffer.dispose();
-					obj.__buffer = null;
-				}
-				obj = null;
+			if (obj.__buffer != null) {
+				obj.__buffer.dispose();
+				obj.__buffer = null;
 			}
+			obj = null;
 		}
 	}
 

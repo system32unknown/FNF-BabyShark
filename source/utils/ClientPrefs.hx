@@ -47,6 +47,7 @@ class ClientPrefs {
 		'noReset' => false,
 		'movemissjudge' => false,
 		'AltDiscordImg' => false,
+		'discordRPC' => 'Normal',
 		'healthBarAlpha' => 1,
 		'hitsoundVolume' => 0,
 		'hitsoundTypes' => 'Tick',
@@ -75,7 +76,15 @@ class ClientPrefs {
 		},
 		'keyboard' => function(controls:Map<String, Array<FlxKey>>) {
 			reloadControls();
+		},
+		#if desktop
+		'discordRPC' => function(status:String) {
+			if (status == 'Deactivated' && DiscordClient.isInitialized)
+				DiscordClient.shutdown();
+			else if (status != 'Deactivated' && !DiscordClient.isInitialized)
+				DiscordClient.initialize();
 		}
+		#end
 	];
 
 	// Flixel data to load, i.e 'mute' or 'volume'
