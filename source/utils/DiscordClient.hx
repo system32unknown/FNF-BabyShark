@@ -63,13 +63,11 @@ class DiscordClient
 
 	public static function initialize() {
 		#if DISCORD_ALLOWED
-		if (ClientPrefs.getPref('discordRPC') != 'Deactivated') {
-			sys.thread.Thread.create(() -> {
-				new DiscordClient();
-			});
-			trace("Discord Client initialized");
-			isInitialized = true;
-		}
+		sys.thread.Thread.create(() -> {
+			new DiscordClient();
+		});
+		trace("Discord Client initialized");
+		isInitialized = true;
 		#end
 	}
 
@@ -92,20 +90,7 @@ class DiscordClient
             endTimestamp : Std.int(endTimestamp / 1000)
 		};
 
-		if (ClientPrefs.getPref('discordRPC') == 'Deactivated' || !isInitialized) {
-			presence.startTimestamp = if (hasStartTimestamp) 1 else 0;
-			presence.endTimestamp = Std.int(endTimestamp);
-			queue = presence;
-		} else {
-			if (ClientPrefs.getPref('discordRPC') == 'Hide Infos') {
-				presence.details = null;
-				presence.state = null;
-				presence.smallImageKey = null;
-				presence.startTimestamp = 0;
-				presence.endTimestamp = 0;
-			}
-			DiscordRpc.presence(presence);
-		}
+		DiscordRpc.presence(presence);
 		#end
 	}
 }

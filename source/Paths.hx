@@ -99,27 +99,36 @@ class Paths
 		}
 	}
 
+	public static function decacheGraphic(key:String) {
+		var obj = currentTrackedAssets.get(key);
+		@:privateAccess{
+			if (obj == null)
+				obj = FlxG.bitmap._cache.get(key);
+			if (obj != null) {
+				if (assetExcluded(obj)) return;
+
+				OpenFlAssets.cache.removeBitmapData(key);
+				FlxG.bitmap._cache.remove(key);
+
+				if (obj.bitmap != null) {
+					obj.bitmap.lock();
+					if (obj.bitmap.__texture != null)
+						obj.bitmap.__texture.dispose();
+					obj.bitmap.disposeImage();
+				}
+
+				obj.dump();
+				obj.destroy();
+				currentTrackedAssets.remove(key);
+			}
+		}
+	}
+
 	// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedCache() {
-		for (key in currentTrackedAssets) {
+		for (key in currentTrackedAssets.keys()) {
 			if ((!localTrackedAssets.contains(key) || freeableAssets.contains(key)) && !keyExclusions.contains(key)) {
-				var obj = FlxG.bitmap.get(key);
-				@:privateAccess
-				if (obj != null) {
-					openfl.Assets.cache.removeBitmapData(key);
-					FlxG.bitmap._cache.remove(key);
-
-					if (obj.bitmap != null) {
-						obj.bitmap.lock();
-						if (obj.bitmap.__texture != null)
-							obj.bitmap.__texture.dispose();
-						obj.bitmap.disposeImage();
-					}
-
-					obj.dump();
-					obj.destroy();
-				}
-				currentTrackedAssets.remove(key);
+				decacheGraphic(key);
 			}
 		}
 		freeableAssets = [];
@@ -136,21 +145,8 @@ class Paths
 	public static function clearStoredCache(?cleanUnused:Bool = false) {
 		@:privateAccess
 		for (key in FlxG.bitmap._cache.keys()) {
-			var obj = FlxG.bitmap.get(key);
-			if (obj != null && !currentTrackedAssets.contains(key)) {
-				openfl.Assets.cache.removeBitmapData(key);
-				FlxG.bitmap._cache.remove(key);
-
-				if (obj.bitmap != null) {
-					obj.bitmap.lock();
-					if (obj.bitmap.__texture != null)
-						obj.bitmap.__texture.dispose();
-					obj.bitmap.disposeImage();
-				}
-
-				obj.dump();
-				obj.destroy();
-			}
+			if (key != null && !currentTrackedAssets.exists(key) && !assetExcluded(key))
+				decacheGraphic(key);
 		}
 
 		for (key in currentTrackedSounds.keys()) {
@@ -356,17 +352,17 @@ class Paths
 	}
 
 	// completely rewritten asset loading? fuck!
-	public static var currentTrackedAssets:Array<String> = [];
+	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	public static function returnGraphic(key:String, ?library:String, ?noPersist:Bool = false):FlxGraphic {
 		#if MODS_ALLOWED
 		var path:String = modsImages(key);
 		if(FileSystem.exists(path)) {
-			if(!currentTrackedAssets.contains(path) && !FlxG.bitmap.checkCache(path)) {
+			if(!currentTrackedAssets.exists(path) && !FlxG.bitmap.checkCache(path)) {
 				var graphic:FlxGraphic;
 				var bitmap:BitmapData = BitmapData.fromFile(path);
 				graphic = FlxGraphic.fromBitmapData(bitmap, false, path);
 				graphic.persist = !noPersist;
-				currentTrackedAssets.push(path);
+				currentTrackedAssets.set(path, graphic);
 			}
 			localTrackedAssets.push(path);
 			return FlxG.bitmap.get(path);
@@ -375,10 +371,10 @@ class Paths
 
 		path = getPath('images/$key.png', IMAGE, library);
 		if (OpenFlAssets.exists(path, IMAGE)) {
-			if(!currentTrackedAssets.contains(path) && !FlxG.bitmap.checkCache(path)) {
+			if(!currentTrackedAssets.exists(path) && !FlxG.bitmap.checkCache(path)) {
 				var newGraphic:FlxGraphic = FlxG.bitmap.add(path, false, path);
 				newGraphic.persist = !noPersist;
-				currentTrackedAssets.push(path);
+				currentTrackedAssets.set(path, newGraphic);
 			}
 			localTrackedAssets.push(path);
 			return FlxG.bitmap.get(path);
