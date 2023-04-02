@@ -150,9 +150,8 @@ class Paths
 		}
 
 		for (key in currentTrackedSounds.keys()) {
-			if (!localTrackedAssets.contains(key) && !keyExclusions.contains(key) && key != null) {
+			if (!localTrackedAssets.contains(key) && !keyExclusions.contains(key) && key != null)
 				decacheSound(key);
-			}
 		}
 
 		// flags everything to be cleared out next unused memory clear

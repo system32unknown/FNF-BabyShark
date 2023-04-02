@@ -1,4 +1,3 @@
-// DO NOT REMOVE THIS
 #if discord_rpc
 import utils.DiscordClient;
 #end

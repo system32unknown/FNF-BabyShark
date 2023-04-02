@@ -65,8 +65,6 @@
 	<!-- _______________________________Flags______________________________ -->
 	<haxeflag name="-dce no" if="HSCRIPT_ALLOWED"/>
 	<haxeflag name="-dce full" unless="HSCRIPT_ALLOWED"/>
-	<haxeflag name="--macro" value="utils.macros.ScriptsMacro.addAdditionalClasses()" if="HSCRIPT_ALLOWED"/>
-	<haxeflag name="--macro" value="utils.macros.StdDeprecationsRemover.init()" />
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>

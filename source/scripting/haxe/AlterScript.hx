@@ -61,18 +61,17 @@ class AlterScript {
         try {
             interp.execute(parser.parseString(script, scriptFile));
         } catch(e:Error) {
-            if (e.toString() == "Null Object Reference") {
-                var errMsg = "";
-                final callItems:Array<StackItem> = CallStack.callStack();
-                for (callStacks in callItems) {
-                    switch (callStacks) {
-                        case FilePos(_, file, line):
-                            errMsg += '$file (line $line)\n';
-                        default: Sys.println(callStacks);
-                    }
+            var errMsg = "";
+            final callItems:Array<StackItem> = CallStack.callStack();
+            for (callStacks in callItems) {
+                switch (callStacks) {
+                    case FilePos(_, file, line):
+                        errMsg += '$file (line $line)\n';
+                    default: Sys.println(callStacks);
                 }
-                lime.app.Application.current.window.alert('$e \nUncaught Error: $errMsg', "Error on AlterScript");
             }
+            lime.app.Application.current.window.alert('$e \nUncaught Error: $errMsg', "Error on AlterScript");
+            
             hadError = true;
         };
     }
