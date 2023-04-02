@@ -364,9 +364,6 @@ class PlayState extends MusicBeatState {
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
 
-		persistentUpdate = true;
-		persistentDraw = true;
-
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
 
@@ -855,6 +852,7 @@ class PlayState extends MusicBeatState {
 
 		super.create();
 
+		cacheDeath();
 		cacheCountdown();
 		cachePopUpScore();
 		for (key => type in precacheList) {
@@ -864,9 +862,11 @@ class PlayState extends MusicBeatState {
 				case 'music': Paths.music(key);
 			}
 		}
+		Paths.clearUnusedCache();
 		
 		CustomFadeTransition.nextCamera = camOther;
 		if(eventNotes.length < 1) checkEventNote();
+		persistentUpdate = persistentDraw = true;
 	}
 
 	function set_songSpeed(value:Float):Float {
@@ -2230,8 +2230,7 @@ class PlayState extends MusicBeatState {
 				vocals.stop();
 				FlxG.sound.music.stop();
 
-				persistentUpdate = false;
-				persistentDraw = false;
+				persistentUpdate = persistentDraw = false;
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
 
 				#if discord_rpc
@@ -2814,6 +2813,43 @@ class PlayState extends MusicBeatState {
 		for (i in 0...10) {
 			Paths.image(pixelShitPart1 + 'number/num$i' + pixelShitPart2);
 		}
+	}
+
+	public function cacheDeath()
+	{
+		var characterPath:String = 'data/characters/' + GameOverSubstate.characterName + '.json';
+		#if MODS_ALLOWED
+		var path:String = Paths.modFolders(characterPath);
+		if (!FileSystem.exists(path)) {
+			path = Paths.getPreloadPath(characterPath);
+		}
+
+		if (!FileSystem.exists(path))
+		#else
+		var path:String = Paths.getPreloadPath(characterPath);
+		if (!Assets.exists(path))
+		#end
+		{
+			path = Paths.getPreloadPath('characters/bf-dead.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+		}
+
+		#if MODS_ALLOWED
+		var rawJson = sys.io.File.getContent(path);
+		#else
+		var rawJson = Assets.getText(path);
+		#end
+
+		var json:Character.CharacterFile = cast Json.parse(rawJson);
+		Paths.image(json.image);
+
+		json = null;
+		rawJson = null;
+		path = null;
+		characterPath = null;
+
+		Paths.sound(GameOverSubstate.deathSoundName);
+		Paths.music(GameOverSubstate.loopSoundName);
+		Paths.sound(GameOverSubstate.endSoundName);
 	}
 
 	// FOR LUA

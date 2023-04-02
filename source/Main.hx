@@ -16,7 +16,7 @@ import lime.app.Application;
 import states.TitleState;
 import utils.Controls;
 import utils.system.MemoryUtil;
-import game.CustomGame;
+import game.FunkinGame;
 import ui.Overlay;
 
 import api.github.GithubAPI;
@@ -33,6 +33,7 @@ import sys.io.File;
 class Main extends Sprite
 {
 	public static var COMMIT_HASH(default, never):String = GithubAPI.getLatestCommits();
+	
 	var game = {
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height
@@ -72,10 +73,9 @@ class Main extends Sprite
 
 		CustomLog.init();
 		Controls.instance = new Controls();
-		addChild(new CustomGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
+		addChild(new FunkinGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 
-		overlayVar = new Overlay();
-		addChild(overlayVar);
+		addChild(overlayVar = new Overlay());
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		

@@ -3,7 +3,7 @@ package game;
 import flixel.FlxGame;
 import utils.system.MemoryUtil;
 
-class CustomGame extends FlxGame {
+class FunkinGame extends FlxGame {
     var skipNextTickUpdate:Bool = false;
     public override function switchState() {
         super.switchState();
