@@ -2,14 +2,12 @@ package scripting.haxe;
 
 import hscript.*;
 import hscript.Expr.Error;
-import haxe.CallStack;
 
 #if sys
 import sys.io.File;
 import sys.FileSystem;
 #end
 
-import states.*;
 import game.*;
 import ui.*;
 import utils.*;
@@ -168,6 +166,9 @@ class AlterScript {
 
             "CoolUtil"          => CoolUtil,
             "ClientPrefs"       => ClientPrefs,
+
+            "FlxTrail" => flixel.addons.effects.FlxTrail,
+            "FlxBackdrop" => flixel.addons.display.FlxBackdrop,
         ];
     }
 

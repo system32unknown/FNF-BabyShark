@@ -56,7 +56,7 @@
 	</section>
 	
 	<assets path="assets/videos" library="videos" if="VIDEOS_ALLOWED"/>
-	<assets path="assets/songs"  library="songs"/>
+	<assets path="assets/songs" library="songs"/>
 	<assets path="assets/shared" library="shared"/>
 	<assets path="assets/week_assets" library="week_assets" rename="assets"/>
 	
