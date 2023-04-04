@@ -182,6 +182,7 @@ class FreeplayState extends MusicBeatState
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
+		textBG.height = text.height;
 		text.y = FlxG.height - text.height;
 		add(text);
 
@@ -343,6 +344,8 @@ class FreeplayState extends MusicBeatState
 				errorDisplay.text = getErrorMessage(missChart, 'cannot play song, $missFile', songFolder, songLowercase);
 				errorDisplay.displayError();
 			}
+		} else if (FlxG.keys.pressed.P) {
+			LoadingState.loadAndSwitchState(new CharacterInSelectState.CharacterSelectState());
 		} else if (FlxG.keys.justPressed.COMMA) {
 			persistentUpdate = false;
 			openSubState(new FreeplaySectionSubstate());

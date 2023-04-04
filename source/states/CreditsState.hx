@@ -37,7 +37,7 @@ class CreditsState extends MusicBeatState
 		['RiverOaken',			'river',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/RiverOaken',			'B42F71'],
 		[''],
 		['Former Engine Members'],
-		['shubs',				'shubs',			'Ex-Programmer of Psych Engine',						'https://twitter.com/yoshubs',				'5E99DF'],
+		['shubs',				'shubs',			'Ex-Programmer of Psych Engine',								'https://twitter.com/yoshubs',				'5E99DF'],
 		['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbsub3',				'3E813A'],
 		[''],
 		['Engine Contributors'],
@@ -283,10 +283,10 @@ class CreditsState extends MusicBeatState
 	}
 
 	#if MODS_ALLOWED
-	private static var modDescription = 'Credits Section for the mod "%s"';
-	private var modSectionsBound:Int = -1;
+	static var modDescription = 'Credits Section for the mod "%s"';
+	var modSectionsBound:Int = -1;
 
-	private var modCredits:Array<Array<String>> = [];
+	var modCredits:Array<Array<String>> = [];
 	function pushModCredits(?folder:String = null):Void {
 		var creditsFile:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits.txt');
 		if (!FileSystem.exists(creditsFile)) return;
@@ -608,7 +608,7 @@ class CreditSectionState extends MusicBeatState {
 		return Std.parseInt(bgColor);
 	}
 
-	private function unselectableCheck(num:Int):Bool {
+	function unselectableCheck(num:Int):Bool {
 		return creditsStuff[num].length <= 1;
 	}
 }

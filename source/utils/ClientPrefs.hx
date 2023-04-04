@@ -52,6 +52,7 @@ class ClientPrefs {
 		'hitsoundTypes' => 'Tick',
 		'week7CutScene' => true,
 		'pauseMusic' => 'Tea Time',
+		'unlockedcharacters' => [true, false, false, false, true],
 		// Gameplay settings
 		'comboOffset' => [[0, 0], [0, 0], [0, 0], [0, 0]],
 		'ratingOffset' => 0,

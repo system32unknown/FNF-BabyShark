@@ -44,7 +44,7 @@ class AlterScript {
         interp.allowStaticVariables = interp.allowPublicVariables = true;
         interp.staticVariables = staticVariables;
         interp.errorHandler = function(e:Error) {
-            trace(e.toString());
+            lime.app.Application.current.window.alert('Uncaught Error: ${e.toString()}', "Error on AlterScript");
         };
 
         parser = new Parser();
