@@ -2817,7 +2817,7 @@ class PlayState extends MusicBeatState {
 
 	public function cacheDeath()
 	{
-		var characterPath:String = 'data/characters/' + GameOverSubstate.characterName + '.json';
+		var characterPath:String = 'characters/' + GameOverSubstate.characterName + '.json';
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);
 		if (!FileSystem.exists(path)) {
@@ -2885,16 +2885,25 @@ class PlayState extends MusicBeatState {
 				missText = sepaSpace + 'Misses: $songMisses';
 		} return missText + sepa;
 	}
+	function getNPSText() {
+		if (!ClientPrefs.getPref('ShowNPSCounter')) return '';
+
+		switch (ClientPrefs.getPref('ScoreType')) {
+			case 'Alter' | 'Kade':
+				return 'NPS:$nps (Max:$maxNPS) $scoreSeparator ';
+			default: return 'NPS:$nps ($maxNPS) $scoreSeparator ';
+		}
+	}
 
 	function UpdateScoreText() {
-		var tempText:String = (ClientPrefs.getPref('ShowNPSCounter') ? (ClientPrefs.getPref('ScoreType') == 'Kade' ? 'NPS:$nps (Max:$maxNPS) $scoreSeparator ' : 'NPS:$nps ($maxNPS) $scoreSeparator ') : '');
+		var tempText:String = getNPSText();
 		var tempMiss:String = getMissText(ClientPrefs.getPref('movemissjudge'));
 		
 		switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter':
 				tempText += 'Score:${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
-				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ranks] • $ratingFC' : ' [?, ?] • ?');
+				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' • [$ratingName, $ranks] • $ratingFC' : ' • [?, ?] • ?');
 			case 'Psych':
 				tempText += 'Score: ${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;

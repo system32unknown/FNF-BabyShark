@@ -46,7 +46,6 @@ class AlterScript {
         interp.staticVariables = staticVariables;
 
         parser = new Parser();
-        parser.line = 1;
         parser.preprocesorValues = getDefaultPreprocessors();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
 
@@ -59,19 +58,10 @@ class AlterScript {
 
     public function execute() {
         try {
+            parser.line = 1;
             interp.execute(parser.parseString(script, scriptFile));
         } catch(e:Error) {
-            var errMsg = "";
-            final callItems:Array<StackItem> = CallStack.callStack();
-            for (callStacks in callItems) {
-                switch (callStacks) {
-                    case FilePos(_, file, line):
-                        errMsg += '$file (line $line)\n';
-                    default: Sys.println(callStacks);
-                }
-            }
-            lime.app.Application.current.window.alert('$e \nUncaught Error: $errMsg', "Error on AlterScript");
-            
+            lime.app.Application.current.window.alert('\nUncaught Error: ${e.toString()}', "Error on AlterScript");
             hadError = true;
         };
     }

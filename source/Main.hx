@@ -99,14 +99,38 @@ class Main extends Sprite
 		FlxG.signals.preStateSwitch.add(() -> {
 			Paths.clearStoredCache();
 			FlxG.bitmap.clearUnused();
+			FlxG.bitmap.clearCache();
+			
+			FlxG.sound.list.forEachAlive(function(sound:flixel.system.FlxSound):Void {
+				FlxG.sound.list.remove(sound, true);
+				@:privateAccess
+				FlxG.sound.destroySound(sound);
+				sound.stop();
+				sound.destroy();
+			});
+			FlxG.sound.list.clear();
 			FlxG.sound.destroy();
 
 			var cache = cast(Assets.cache, AssetCache);
+			var lime_cache:lime.utils.AssetCache = cast lime.utils.Assets.cache;
+			
 			for (key in cache.font.keys())
-				cache.removeFont(key);
-			for (key in cache.sound.keys())
-				cache.removeSound(key);
-			cache = null;
+				cache.font.remove(key);
+			@:privateAccess
+			for (key in cache.sound.keys()) {
+				cache.sound.get(key).close();
+				cache.sound.remove(key);
+			}
+
+			for (key in lime_cache.image.keys())
+				lime_cache.image.remove(key);
+			for (key in lime_cache.font.keys())
+				lime_cache.font.remove(key);
+			for (key in lime_cache.audio.keys()) {
+				lime_cache.audio.get(key).dispose();
+				lime_cache.audio.remove(key);
+			};
+
 			MemoryUtil.clearMajor(true);
 		});
 		FlxG.signals.postStateSwitch.add(() -> {
