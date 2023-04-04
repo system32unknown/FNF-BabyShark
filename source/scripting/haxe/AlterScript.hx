@@ -24,6 +24,7 @@ class AlterScript {
 
     public var scriptFile(default, null):String = "";
     public var script(default, null):String = "";
+    public var expr:Expr;
 
     static var hadError:Bool = false;
 
@@ -44,6 +45,9 @@ class AlterScript {
         interp = new Interp();
         interp.allowStaticVariables = interp.allowPublicVariables = true;
         interp.staticVariables = staticVariables;
+        interp.errorHandler = function(e:Error) {
+            trace(e.toString());
+        };
 
         parser = new Parser();
         parser.preprocesorValues = getDefaultPreprocessors();
@@ -59,11 +63,13 @@ class AlterScript {
     public function execute() {
         try {
             parser.line = 1;
-            interp.execute(parser.parseString(script, scriptFile));
+            expr = parser.parseString(script, scriptFile);
         } catch(e:Error) {
             lime.app.Application.current.window.alert('\nUncaught Error: ${e.toString()}', "Error on AlterScript");
             hadError = true;
-        };
+        }
+
+        if (!hadError) interp.execute(expr);
     }
 
     function get(key:String):Dynamic {
