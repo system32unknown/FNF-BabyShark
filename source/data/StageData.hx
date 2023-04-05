@@ -87,14 +87,6 @@ class StageData {
 				return 'limo';
 			case 'cocoa' | 'eggnog':
 				return 'mall';
-			case 'winter-horrorland':
-				return 'mallEvil';
-			case 'senpai' | 'roses':
-				return 'school';
-			case 'thorns':
-				return 'schoolEvil';
-			case 'ugh' | 'guns' | 'stress':
-				return 'tank';
 		}
 		return 'stage';
 	}

@@ -159,7 +159,6 @@ class CharacterSelectState extends MusicBeatState
 			current--;
 			if (current < 0) 
 				current = characters.length - 1;
-			if(current == 1) current = 0;
             currentReal = current;
 			UpdateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
@@ -170,7 +169,6 @@ class CharacterSelectState extends MusicBeatState
 			current++;
 			if (current > characters.length - 1)
 				current = 0;
-			if(current == 1) current = 2;
 
 			currentReal = current;
 			UpdateBF();
@@ -205,17 +203,8 @@ class CharacterSelectState extends MusicBeatState
 		char.screenCenter();
 		char.y = 450;
 
-		switch (char.curCharacter) {
-			case "tristan" | 'tristan-golden':
-				char.y = 100 + 325;
-			case 'dave' | 'dave-future':
-				char.y = 100 + 160;
-			case 'bambi', 'bambi-angry':
-				char.y = 100 + 400;
-				char.y -= 75;
-		}
 		add(char);
-		funnyIconMan.animation.play(char.curCharacter);
+		funnyIconMan.changeIcon(char.curCharacter);
 		characterText.screenCenter(X);
 	}
 
