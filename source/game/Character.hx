@@ -3,7 +3,6 @@ package game;
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxSort;
 import flixel.util.FlxColor;
 #if MODS_ALLOWED
 import sys.io.File;
@@ -11,10 +10,6 @@ import sys.FileSystem;
 #end
 import openfl.utils.Assets;
 import haxe.Json;
-
-import states.stages.objects.TankmenBG;
-import game.Section.SwagSection;
-import game.Song;
 
 typedef CharacterFile = {
 	var animations:Array<AnimArray>;
@@ -195,13 +190,6 @@ class Character extends FlxSprite
 		if (isPlayer) {
 			flipX = !flipX;
 		}
-
-		switch(curCharacter) {
-			case 'pico-speaker':
-				skipDance = true;
-				loadMappedAnims();
-				playAnim("shoot1");
-		}
 	}
 
 	override function update(elapsed:Float) {
@@ -218,19 +206,6 @@ class Character extends FlxSprite
 			} else if(specialAnim && animation.curAnim.finished) {
 				specialAnim = false;
 				dance();
-			}
-			
-			switch(curCharacter) {
-				case 'pico-speaker':
-					if(animationNotes.length > 0 && Conductor.songPosition > animationNotes[0][0]) {
-						var noteData:Int = 1;
-						if(animationNotes[0][1] > 2) noteData = 3;
-
-						noteData += FlxG.random.int(0, 1);
-						playAnim('shoot' + noteData, true);
-						animationNotes.shift();
-					}
-					if(animation.curAnim.finished) playAnim(animation.curAnim.name, false, false, animation.curAnim.frames.length - 3);
 			}
 
 			if (!isPlayer) {
@@ -267,8 +242,7 @@ class Character extends FlxSprite
 	**/
 	public function dance()
 	{
-		if (!debugMode && !skipDance && !specialAnim)
-		{
+		if (!debugMode && !skipDance && !specialAnim) {
 			if(danceIdle) {
 				danced = !danced;
 
@@ -300,21 +274,6 @@ class Character extends FlxSprite
 			if (AnimName == 'singUP' || AnimName == 'singDOWN') {
 				danced = !danced;
 			}
-		}
-	}
-	
-	function loadMappedAnims():Void {
-		var noteData:Array<SwagSection> = Song.loadFromJson('picospeaker', Paths.formatToSongPath(PlayState.SONG.song)).notes;
-		if (noteData != null) {
-			for (section in noteData) {
-				for (songNotes in section.sectionNotes) {
-					animationNotes.push(songNotes);
-				}
-			}
-			TankmenBG.animationNotes = animationNotes;
-			animationNotes.sort(function(Obj1:Array<Dynamic>, Obj2:Array<Dynamic>):Int {
-				return FlxSort.byValues(FlxSort.ASCENDING, Obj1[0], Obj2[0]);
-			});
 		}
 	}
 

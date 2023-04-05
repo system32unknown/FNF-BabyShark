@@ -44,11 +44,10 @@ class CharacterSelectState extends MusicBeatState
 	var currentSelectedCharacter:CharacterInSelect;
 
 	public var characters:Array<CharacterInSelect> = [
-		new CharacterInSelect(['bf', 'bf-pixel', 'bf-christmas'], ["Boyfriend", "Pixel Boyfriend", "Christmas Boyfriend"]),
-		new CharacterInSelect(['tristan, tristan-golden'], ["Tristan", "Golden Tristan"]),
-		new CharacterInSelect(['dave', 'dave-future'], ["Dave Algebra Class", 'Dave (Robot Suit)']),
-		new CharacterInSelect(['bambi', 'bambi-angry'], ['Bambi Bambi Bambi', 'Ripple Bambi']),
+		new CharacterInSelect(['bf', 'bf-pixel', 'bf-christmas', 'bf-holding-gf'], ["Boyfriend", "Pixel Boyfriend", "Christmas Boyfriend", 'BF and GF']),
 		new CharacterInSelect(['bs', 'bs-true', 'bs-at'], ["Baby Shark", 'Baby Shark True form', 'Baby Shark And Altertoriel']),
+		new CharacterInSelect(['pico-player'], ["Pico"]),
+		new CharacterInSelect(['nate-player'], ["Nate the Hunter Baby Shark"]),
 	];
 	
 	override public function create():Void 
@@ -66,7 +65,7 @@ class CharacterSelectState extends MusicBeatState
 
 		currentSelectedCharacter = characters[currentReal];
 
-		FlxG.sound.playMusic(Paths.music("gameOver"), 1, true);
+		FlxG.sound.playMusic(Paths.music("good-ending"), 1, true);
 
 		var bg:BGSprite = new BGSprite('stageback', -600, -200, 0.9, 0.9);
 		add(bg);
@@ -111,7 +110,6 @@ class CharacterSelectState extends MusicBeatState
 		funnyIconMan = new HealthIcon('bf', true);
 		funnyIconMan.sprTracker = characterText;
 		funnyIconMan.cameras = [camHUD];
-		funnyIconMan.visible = false;
 		add(funnyIconMan);
 
 		var tutorialThing:FlxSprite = new FlxSprite(-130, -90).loadGraphic(Paths.image('charSelectGuide'));
@@ -162,13 +160,7 @@ class CharacterSelectState extends MusicBeatState
 			if (current < 0) 
 				current = characters.length - 1;
 			if(current == 1) current = 0;
-            switch(current) {
-				case 2: currentReal = 2;
-				case 3: currentReal = 2;
-				case 4: currentReal = 2;
-				case 5: currentReal = 3;
-				default: currentReal = current;
-			}
+            currentReal = current;
 			UpdateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
@@ -180,13 +172,7 @@ class CharacterSelectState extends MusicBeatState
 				current = 0;
 			if(current == 1) current = 2;
 
-			switch(current) {
-				case 2: currentReal = 2;
-				case 3: currentReal = 2;
-				case 4: currentReal = 2;
-				case 5: currentReal = 3;
-				default: currentReal = current;
-			}
+			currentReal = current;
 			UpdateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
