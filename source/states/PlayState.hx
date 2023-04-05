@@ -1119,8 +1119,8 @@ class PlayState extends MusicBeatState {
 
 	function cacheCountdown() {
 		var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
-		introAssets.set('default', ['ready', 'set', 'go']);
-		introAssets.set('pixel', ['pixelUI/ready-pixel', 'pixelUI/set-pixel', 'pixelUI/date-pixel']);
+		introAssets.set('default', ['countdown/ready', 'countdown/set', 'countdown/go']);
+		introAssets.set('pixel', ['pixelUI/countdown/ready-pixel', 'pixelUI/countdown/set-pixel', 'pixelUI/date-pixel']);
 
 		var introAlts:Array<String> = introAssets.get('default');
 		if (isPixelStage) introAlts = introAssets.get('pixel');
@@ -1128,20 +1128,16 @@ class PlayState extends MusicBeatState {
 		for (asset in introAlts)
 			Paths.image(asset);
 		
-		Paths.sound('intro3' + introSoundsSuffix);
-		Paths.sound('intro2' + introSoundsSuffix);
-		Paths.sound('intro1' + introSoundsSuffix);
-		Paths.sound('introGo' + introSoundsSuffix);
+		for (count in ['3', '2', '1', 'Go'])
+			Paths.sound('countdown/intro$count' + introSoundsSuffix);
 	}
 
 	public function updateLuaDefaultPos() {
 		for (i in 0...playerStrums.length) {
-			setOnLuas('defaultPlayerStrumPOS' + i, [playerStrums.members[i].x, playerStrums.members[i].y]);
 			setOnLuas('defaultPlayerStrumX' + i, playerStrums.members[i].x);
 			setOnLuas('defaultPlayerStrumY' + i, playerStrums.members[i].y);
 		}
 		for (i in 0...opponentStrums.length) {
-			setOnLuas('defaultOpponentStrumPOS' + i, [opponentStrums.members[i].x, opponentStrums.members[i].y]);
 			setOnLuas('defaultOpponentStrumX' + i, opponentStrums.members[i].x);
 			setOnLuas('defaultOpponentStrumY' + i, opponentStrums.members[i].y);
 		}
@@ -3900,7 +3896,6 @@ class PlayState extends MusicBeatState {
 					}
 				}
 			}
-
 			fullComboFunction();
 		}
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
@@ -3935,10 +3930,6 @@ class PlayState extends MusicBeatState {
 							if(ratingPercent >= 1 && !usedPractice) {
 								unlock = true;
 							}
-						case 'roadkill_enthusiast':
-							if(Achievements.henchmenDeath >= 100) {
-								unlock = true;
-							}
 						case 'oversinging':
 							if(boyfriend.holdTimer >= 10 && !usedPractice) {
 								unlock = true;
@@ -3957,10 +3948,6 @@ class PlayState extends MusicBeatState {
 								if(howManyPresses <= 2) {
 									unlock = true;
 								}
-							}
-						case 'toastie':
-							if(ClientPrefs.getPref('lowQuality') && !globalAntialiasing && !ClientPrefs.getPref('shaders')) {
-								unlock = true;
 							}
 					}
 				}

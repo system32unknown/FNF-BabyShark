@@ -90,8 +90,7 @@ class ClientPrefs {
 		'gameplaySettings' => [ClientPrefs, 'gameplaySettings'],
 		'keyboard' => [ClientPrefs, 'keyBinds'],
 
-		'achievementsMap' => [Achievements, 'achievementsMap'],
-		'henchmenDeath' => [Achievements, 'henchmenDeath']
+		'achievementsMap' => [Achievements, 'achievementsMap']
 	];
 
 	// For stuff that needs to be in the controls save

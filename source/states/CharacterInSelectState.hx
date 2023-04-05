@@ -66,10 +66,6 @@ class CharacterSelectState extends MusicBeatState
 
 		currentSelectedCharacter = characters[currentReal];
 
-		if (ClientPrefs.getPref('unlockedcharacters') == null) {
-            ClientPrefs.prefs.set('unlockedcharacters', [true,true,true,true,true]);
-		}
-
 		FlxG.sound.playMusic(Paths.music("gameOver"), 1, true);
 
 		var bg:BGSprite = new BGSprite('stageback', -600, -200, 0.9, 0.9);
@@ -148,15 +144,10 @@ class CharacterSelectState extends MusicBeatState
 		}
 		if (controls.ACCEPT)
 		{
-			if (!ClientPrefs.getPref('unlockedcharacters')[currentReal]) {
-				FlxG.camera.shake(0.05, 0.1);
-				FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), .9);
-				return;
-			}
-            
 			if (pressedTheFunny)
 				return;
 			else pressedTheFunny = true;
+
 			selectedCharacter = true;
 			var heyAnimation:Bool = char.animation.getByName("hey") != null; 
 			char.playAnim(heyAnimation ? 'hey' : 'singUP', true);
@@ -239,12 +230,6 @@ class CharacterSelectState extends MusicBeatState
 		}
 		add(char);
 		funnyIconMan.animation.play(char.curCharacter);
-		if (!ClientPrefs.getPref('unlockedcharacters')[currentReal]) {
-			char.color = FlxColor.BLACK;
-			funnyIconMan.color = FlxColor.BLACK;
-			funnyIconMan.animation.curAnim.curFrame = 1;
-			characterText.text = '[LOCKED]';
-		}
 		characterText.screenCenter(X);
 	}
 

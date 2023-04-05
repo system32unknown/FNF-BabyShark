@@ -1885,7 +1885,7 @@ class FunkinLua {
 				switch(pos.trim().toLowerCase()) {
 					case 'x': spr.screenCenter(X); return;
 					case 'y': spr.screenCenter(Y); return;
-					default: spr.screenCenter(XY); return;
+					default: spr.screenCenter(); return;
 				}
 			}
 			luaTrace("screenCenter: Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
@@ -1895,11 +1895,9 @@ class FunkinLua {
 			var objectsArray:Array<FlxSprite> = [];
 			for (i in 0...namesArray.length) {
 				var real = PlayState.instance.getLuaObject(namesArray[i]);
-				if(real != null) {
+				if(real != null)
 					objectsArray.push(real);
-				} else {
-					objectsArray.push(Reflect.getProperty(LuaUtils.getTargetInstance(), namesArray[i]));
-				}
+				else objectsArray.push(Reflect.getProperty(LuaUtils.getTargetInstance(), namesArray[i]));
 			}
 
 			if(!objectsArray.contains(null) && FlxG.overlap(objectsArray[0], objectsArray[1])) {

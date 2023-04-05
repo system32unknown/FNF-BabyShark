@@ -64,10 +64,8 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 
 	function onChangeFramerate()
 	{
-		if (ClientPrefs.getPref('framerate') > FlxG.drawFramerate) {
+		if (ClientPrefs.getPref('framerate') > FlxG.drawFramerate)
 			FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.getPref('framerate');
-		} else {
-			FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.getPref('framerate');
-		}
+		else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.getPref('framerate');
 	}
 }
