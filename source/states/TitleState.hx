@@ -367,9 +367,9 @@ class TitleState extends MusicBeatState
 					addMoreText('And Psych Engine Contributors!');
 				case 9:
 					deleteCoolText();
-					createCoolText(['Bambisona and Babyshark OCs']);
+					createCoolText(['Doo Doo Doo,']);
 				case 10:
-					addMoreText('is Everything!');
+					addMoreText('Almost there!');
 				case 11:
 					deleteCoolText();
 					createCoolText([curWacky[0]]);
