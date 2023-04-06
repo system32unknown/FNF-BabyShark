@@ -21,7 +21,6 @@ import data.WeekData;
 class MainMenuState extends MusicBeatState
 {
 	final BabySharkVersion:String = '1.0'; //This is also used for Discord RPC
-	public static var alterEngineVersion:String = '1.0'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -154,7 +153,7 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollowPos, null, 1);
 
 		var versionShit:FlxText = new FlxText(0, 0, 0, 
-			'Alter Engine v$alterEngineVersion (${Main.COMMIT_HASH.trim().substring(0, 7)})\n' +
+			'Alter Engine v${Main.engineVersion.version} (${Main.COMMIT_HASH.trim().substring(0, 7)})\n' +
 			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
 			16);
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT);

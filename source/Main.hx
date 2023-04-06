@@ -16,6 +16,7 @@ import lime.app.Application;
 import states.TitleState;
 import utils.Controls;
 import utils.system.MemoryUtil;
+import utils.GameVersion;
 import game.FunkinGame;
 import ui.Overlay;
 
@@ -33,7 +34,8 @@ import sys.io.File;
 class Main extends Sprite
 {
 	public static var COMMIT_HASH(default, never):String = GithubAPI.getLatestCommits();
-	
+	public static var engineVersion:GameVersion = new GameVersion(0, 1, 0);
+
 	var game = {
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height

@@ -184,7 +184,7 @@ class ChartingState extends MusicBeatState
 				arrowSkin: 'NOTE_assets',
 				splashSkin: 'noteSplashes',
 				player1: 'bf',
-				player2: 'dad',
+				player2: 'daddyshark',
 				gfVersion: 'gf',
 				speed: 1,
 				stage: 'stage',
@@ -216,8 +216,8 @@ class ChartingState extends MusicBeatState
 		add(waveformSprite);
 
 		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90).loadGraphic(Paths.image('eventArrow'));
-		leftIcon = new HealthIcon('bf');
-		rightIcon = new HealthIcon('dad');
+		leftIcon = new HealthIcon('bs');
+		rightIcon = new HealthIcon('daddyshark');
 
 		eventIcon.scrollFactor.set(1, 1);
 		leftIcon.scrollFactor.set(1, 1);

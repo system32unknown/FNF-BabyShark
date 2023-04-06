@@ -5,14 +5,10 @@
 		["Milf", "mommyshark", [252, 150, 215]]
 	],
 	
-	"weekCharacters": [
-		"mom",
-		"bf",
-		"gf"
-	],
+	"weekCharacters": ["", "bf", "gf"],
 	"weekBackground": "limo",
 
-	"storyName": "MOMMY MUST MURDER",
+	"storyName": "BEAUTY MOMMY SHARK",
 	"weekBefore": "week3",
 	"weekName": "Week 4",
 	"startUnlocked": true,

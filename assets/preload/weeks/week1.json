@@ -5,10 +5,10 @@
 		["Dad Battle", "daddyshark", [146, 113, 253]]
 	],
 
-	"weekCharacters": ["dad", "bf", "gf"],
+	"weekCharacters": ["", "bf", "gf"],
 	"weekBackground": "stage",
 
-	"storyName": "Daddy Dearest",
+	"storyName": "Dentist Daddy Shark",
 	"weekBefore": "tutorial",
 	"weekName": "Week 1",
 	"startUnlocked": true,

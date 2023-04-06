@@ -5,14 +5,10 @@
 		["Blammed", "nate", [148, 22, 83]]
 	],
 
-	"weekCharacters": [
-		"pico",
-		"bf",
-		"gf"
-	],
+	"weekCharacters": ["", "bf", "gf"],
 	"weekBackground": "philly",
 
-	"storyName": "PICO",
+	"storyName": "Nate.",
 	"weekBefore": "week2",
 	"weekName": "Week 3",
 	"startUnlocked": true,

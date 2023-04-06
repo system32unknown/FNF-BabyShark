@@ -2895,7 +2895,7 @@ class PlayState extends MusicBeatState {
 			case 'Alter':
 				tempText += 'Score:${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
-				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' • [$ratingName, $ranks] • $ratingFC' : ' • [?, ?] • ?');
+				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' | [$ratingName, $ratingFC] • $ranks' : ' | [?, ?] • F');
 			case 'Psych':
 				tempText += 'Score: ${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
