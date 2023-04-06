@@ -1,6 +1,6 @@
 {
 	"song": {
-		"player1": "bf",
+		"player1": "bs",
 		"notes": [
 			{
 				"sectionNotes": [
@@ -799,7 +799,7 @@
 				"mustHitSection": true
 			}
 		],
-		"player2": "dad",
+		"player2": "daddyshark",
 		"player3": "gf",
 		"song": "Bopeebo",
 		"needsVoices": true,

@@ -166,6 +166,7 @@ class FreeplayState extends MusicBeatState
 
 		var textBG:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = .5;
+		textBG.scrollFactor.set();
 		add(textBG);
 
 		#if PRELOAD_ALL

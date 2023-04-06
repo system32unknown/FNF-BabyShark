@@ -63,8 +63,8 @@ class PlayState extends MusicBeatState {
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
 	public static var ratingStuff:Array<Dynamic> = [
-		['You Suck!', .2], //From 0% to 19%
-		['Shit', .4], //From 20% to 39%
+		['Try again!', .2], //From 0% to 19%
+		['Ok', .4], //From 20% to 39%
 		['Bad', .5], //From 40% to 49%
 		['Bruh', .6], //From 50% to 59%
 		['Meh', .69], //From 60% to 68%
@@ -2577,8 +2577,7 @@ class PlayState extends MusicBeatState {
 	public function moveCamera(moveCameraTo:Dynamic) {
 		if(moveCameraTo == 'dad' || moveCameraTo) {
 			camFollow.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
-			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
-			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
+			camFollow.add(dad.cameraPosition[0] + opponentCameraOffset[0], dad.cameraPosition[1] + opponentCameraOffset[1]);
 			tweenCamIn();
 		} else if(moveCameraTo == 'boyfriend' || !moveCameraTo) {
 			camFollow.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
@@ -2593,8 +2592,7 @@ class PlayState extends MusicBeatState {
 			}
 		} else {
 			camFollow.set(gf.getMidpoint().x, gf.getMidpoint().y);
-			camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
-			camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
+			camFollow.add(gf.cameraPosition[0] + girlfriendCameraOffset[0], gf.cameraPosition[1] + girlfriendCameraOffset[1]);
 			tweenCamIn();
 		}
 	}
@@ -2974,27 +2972,22 @@ class PlayState extends MusicBeatState {
 			rating.loadGraphic(Paths.image(pixelShitPart1 + 'ratings/' + daRating.image + pixelShitPart2));
 			rating.cameras = [ratingCams];
 			rating.screenCenter();
-			rating.x = coolText.x - 40;
-			rating.y -= 60;
+			rating.x = coolText.x - 40 +comboOffset[0][0];
+			rating.y -= 60 - comboOffset[0][1];
 			rating.acceleration.y = 550 * playbackRate * playbackRate;
-			rating.velocity.x -= FlxG.random.int(0, 10) * playbackRate;
-			rating.velocity.y -= FlxG.random.int(140, 175) * playbackRate;
+			rating.velocity.subtract(FlxG.random.int(0, 10) * playbackRate, FlxG.random.int(140, 175) * playbackRate);
 			rating.visible = !hideHud && showRating;
-			rating.x += comboOffset[0][0];
-			rating.y -= comboOffset[0][1];
 		
 			if (daTiming != "") {
 				timing.loadGraphic(Paths.image(pixelShitPart1 + 'ratings/' + daTiming.toLowerCase() + pixelShitPart2));
 			}
 			timing.cameras = [ratingCams];
 			timing.screenCenter();
-			timing.x = coolText.x - 130;
-			timing.acceleration.y = 550 * playbackRate * playbackRate;
-			timing.velocity.x -= FlxG.random.int(0, 10) * playbackRate;
-			timing.velocity.y -= FlxG.random.int(140, 175) * playbackRate;
-			timing.visible = !hideHud && ClientPrefs.getPref('ShowLateEarly');
-			timing.x += comboOffset[3][0];
+			timing.x = coolText.x - 130 + comboOffset[3][0];
 			timing.y -= comboOffset[3][1];
+			timing.acceleration.y = 550 * playbackRate * playbackRate;
+			timing.velocity.subtract(FlxG.random.int(0, 10) * playbackRate, FlxG.random.int(140, 175) * playbackRate);
+			timing.visible = !hideHud && ClientPrefs.getPref('ShowLateEarly');
 		
 			if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
 				msTiming = MathUtil.truncateFloat(noteDiff / playbackRate);
@@ -3017,13 +3010,12 @@ class PlayState extends MusicBeatState {
 			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'ratings/combo' + pixelShitPart2));
 			comboSpr.cameras = [ratingCams];
 			comboSpr.screenCenter();
-			comboSpr.x = coolText.x;
+			comboSpr.x = coolText.x + comboOffset[2][0];
+			comboSpr.y -= comboOffset[2][1];
 			comboSpr.acceleration.y = FlxG.random.int(200, 300) * playbackRate * playbackRate;
 			comboSpr.velocity.y -= FlxG.random.int(140, 160) * playbackRate;
 			comboSpr.velocity.x += FlxG.random.int(1, 10) * playbackRate;
 			comboSpr.visible = !hideHud;
-			comboSpr.x += comboOffset[2][0];
-			comboSpr.y -= comboOffset[2][1];
 		
 			if (ClientPrefs.getPref('ShowMsTiming')) {
 				mstimingTxt.screenCenter();
@@ -3172,13 +3164,11 @@ class PlayState extends MusicBeatState {
 	}
 
 	public var strumsBlocked:Array<Bool> = [];
-	private function onKeyPress(event:KeyboardEvent):Void
-	{
+	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = getKeyFromEvent(eventKey);
 
-		if (!cpuControlled && startedCountdown && !paused && key > -1 && FlxG.keys.checkStatus(eventKey, JUST_PRESSED))
-		{
+		if (!cpuControlled && startedCountdown && !paused && key > -1 && FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) {
 			if(!boyfriend.stunned && generatedMusic && !endingSong) {
 				//more accurate hit time for the ratings?
 				var lastTime:Float = Conductor.songPosition;
@@ -3289,7 +3279,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	//Hold Notes
-	private function keyShit():Void {
+	function keyShit():Void {
 		if (startedCountdown && !boyfriend.stunned && generatedMusic) {
 			// rewritten inputs???
 			notes.forEachAlive(function(daNote:Note) {
@@ -3302,9 +3292,8 @@ class PlayState extends MusicBeatState {
 			if (keysArePressed() && !endingSong) {
 				#if ACHIEVEMENTS_ALLOWED
 				var achieve:String = checkForAchievement(['oversinging']);
-				if (achieve != null) {
+				if (achieve != null)
 				   startAchievement(achieve);
-				}
 				#end
 			} else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 / FlxG.sound.music.pitch) * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss')) {
 				boyfriend.dance();
@@ -3440,9 +3429,7 @@ class PlayState extends MusicBeatState {
 
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[note.noteData];
 		if (ClientPrefs.getPref('camMovement')) {
-			if(!bfturn) {
-				moveCamOnNote(animToPlay);
-			}
+			if(!bfturn) moveCamOnNote(animToPlay);
 		}
 
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
@@ -3458,17 +3445,13 @@ class PlayState extends MusicBeatState {
 	function moveCamOnNote(singArrows:String) {
 		switch (singArrows) {
 			case "singLEFT":
-				camlockpoint.x = campoint.x - camMovement;
-				camlockpoint.y = campoint.y;
+				camlockpoint.set(campoint.x - camMovement, campoint.y);
 			case "singDOWN":
-				camlockpoint.x = campoint.x;
-				camlockpoint.y = campoint.y + camMovement;
+				camlockpoint.set(campoint.x, campoint.y + camMovement);
 			case "singUP":
-				camlockpoint.x = campoint.x;
-				camlockpoint.y = campoint.y - camMovement;
+				camlockpoint.set(campoint.x, campoint.y - camMovement);
 			case "singRIGHT":
-				camlockpoint.x = campoint.x + camMovement;
-				camlockpoint.y = campoint.y;
+				camlockpoint.set(campoint.x + camMovement, campoint.y);
 		}
 
 		var camTimer:FlxTimer = new FlxTimer().start(1);
@@ -3755,7 +3738,7 @@ class PlayState extends MusicBeatState {
 		
 		setOnLuas('curSection', curSection);
 		callOnLuas('onSectionHit', []);
-		callOnScripts('sectionHit', [curSection]);
+		callOnScripts('onSectionHit', [curSection]);
 	}
 
 	#if HSCRIPT_ALLOWED
