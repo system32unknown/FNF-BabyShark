@@ -137,7 +137,7 @@ class TitleState extends MusicBeatState
 		titlebg.screenCenter(X);
 		add(titlebg);
 
-		logoBl = new FlxSprite(0, 1500);
+		logoBl = new FlxSprite(FlxG.width / 2, 1500);
 		logoBl.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		if (!FileSystem.exists(Paths.modsXml('FinalLogo'))) {
 			logoBl.loadGraphic(Paths.image('FinalLogo'));
@@ -148,9 +148,9 @@ class TitleState extends MusicBeatState
 			logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 			logoBl.animation.play('bump');
 		}
-		logoBl.screenCenter(X);
 		logoBl.updateHitbox();
 		add(logoBl);
+		logoBl.screenCenter(X);
 
 		titleText = new FlxSprite(125, 576);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
@@ -176,10 +176,6 @@ class TitleState extends MusicBeatState
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
 		add(titleText);
-
-		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('logo'));
-		logo.screenCenter();
-		logo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 
 		credGroup = new FlxGroup();
 		add(credGroup);
