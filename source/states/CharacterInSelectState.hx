@@ -108,17 +108,10 @@ class CharacterSelectState extends MusicBeatState
 		add(characterText);
 
 		funnyIconMan = new HealthIcon('bf', true);
-		funnyIconMan.screenCenter(X);
-		funnyIconMan.y = characterText.y + characterText.height;
-		funnyIconMan.sprTracker = characterText;
+		funnyIconMan.setPosition(FlxG.width / 2, characterText.y + characterText.height);
 		funnyIconMan.cameras = [camHUD];
 		add(funnyIconMan);
-
-		var tutorialThing:FlxSprite = new FlxSprite(-130, -90).loadGraphic(Paths.image('charSelectGuide'));
-		tutorialThing.setGraphicSize(Std.int(tutorialThing.width * 1.5));
-		tutorialThing.antialiasing = true;
-		tutorialThing.cameras = [camHUD];
-		add(tutorialThing);
+		funnyIconMan.screenCenter(X);
 	}
 
 	override public function update(elapsed:Float):Void 

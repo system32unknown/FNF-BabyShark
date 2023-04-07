@@ -71,7 +71,8 @@ class PlayState extends MusicBeatState {
 		['Nice', .7], //69%
 		['Good', .8], //From 70% to 79%
 		['Great', .9], //From 80% to 89%
-		['Sick!', 1] //From 90% to 99%
+		['Sick!', 1], //From 90% to 99%
+		['Amazing!!', 1]
 	];
 	//event variables
 	var isCameraOnForcedPos:Bool = false;
@@ -800,7 +801,7 @@ class PlayState extends MusicBeatState {
 			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/data/${Paths.CHART_PATH}/' + songName + '/'));
 
 		for(mod in Paths.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + 'data/${Paths.CHART_PATH}/' + songName + '/')); // using push instead of insert because these should run after everything else
+			foldersToCheck.insert(0, Paths.mods(mod + '/data/${Paths.CHART_PATH}/' + songName + '/')); // using push instead of insert because these should run after everything else
 		#end
 
 		for (folder in foldersToCheck) {

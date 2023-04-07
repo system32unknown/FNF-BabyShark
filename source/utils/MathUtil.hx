@@ -1,8 +1,5 @@
 package utils;
 
-import flixel.FlxG;
-import flixel.math.FlxMath;
-
 class MathUtil {
 	inline public static function boundTo(value:Float, min:Float, max:Float):Float {
 		return Math.max(min, Math.min(max, value));
@@ -22,17 +19,5 @@ class MathUtil {
 		for (i in 0...decimals) tempMult *= 10;
 		var newValue:Float = Math.floor(value * tempMult);
 		return newValue / tempMult;
-	}
-
-	inline public static function adjustFPS(adjust:Float):Float {
-		return FlxG.elapsed / (1 / 60) * adjust;
-	}
-
-	inline public static function ratioFPS(ratio:Float):Float {
-		return boundTo(ratio * 60 * FlxG.elapsed, 0, 1);
-	}
-
-	inline public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
-		return FlxMath.lerp(v1, v2, ratioFPS(ratio));
 	}
 }

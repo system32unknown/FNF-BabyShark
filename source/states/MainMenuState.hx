@@ -234,7 +234,6 @@ class MainMenuState extends MusicBeatState
 							}
 						});
 					} else {
-						FlxTween.tween(spr, {"scale.x": .9, "scale.y": .9}, .4, {ease: FlxEase.sineInOut});
 						FlxFlicker.flicker(spr, 1, .06, false, false, function(flick:FlxFlicker) {
 							var daChoice:String = optionShit[curSelected];
 							switch (daChoice) {

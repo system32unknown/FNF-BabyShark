@@ -52,10 +52,9 @@ class Subtitle extends FlxTypeText {
 	}
 
 	public function finish() {
-		if (onSubComplete != null) {
+		if (onSubComplete != null)
 			onSubComplete();
-			manager.onSubtitleComplete(this);
-		} else manager.onSubtitleComplete(this);
+		manager.onSubtitleComplete(this);
 	}
 
 	function init(properties:SubtitleProperties):SubtitleProperties {

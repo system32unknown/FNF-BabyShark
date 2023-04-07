@@ -37,6 +37,12 @@ class Overlay extends TextField {
 		FPS = new FPSUtil();
 	}
 
+	public function checkFPSLag(maxMB:Int = 3000) {
+		if (memory > maxMB || FPS.currentFPS <= ClientPrefs.getPref('framerate') / 2)
+			return true;
+		return false;
+	}
+
 	//Yoinked from codename engine
 	override function __enterFrame(dt:Int):Void {
 		if (alpha <= .05) return;

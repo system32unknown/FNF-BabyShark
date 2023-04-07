@@ -29,10 +29,7 @@ import sys.FileSystem;
 typedef TitleData = {
 	titlex:Float,
 	starty:Float,
-	gfx:Float,
-	gfy:Float,
 	bgColor:String,
-	useOldDance:Bool,
 	bpm:Int
 }
 
@@ -82,7 +79,7 @@ class TitleState extends MusicBeatState
 		ClientPrefs.loadPrefs();
 		Highscore.load();
 
-		titleJSON = Json.parse(Paths.getTextFromFile('images/DaveDanceTitle.json'));
+		titleJSON = Json.parse(Paths.getTextFromFile('data/titleData.json'));
 
 		if (!initialized) {
 			if(FlxG.save.data != null && FlxG.save.data.fullscreen) {
@@ -120,8 +117,6 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	var daveDance:FlxSprite;
-	var danceLeft:Bool = false;
 	var foundXml:Bool = false;
 	function startIntro() {
 		if (!initialized) {
@@ -142,17 +137,6 @@ class TitleState extends MusicBeatState
 		titlebg.color = FlxColor.fromString('#${titleJSON.bgColor}');
 		titlebg.screenCenter(X);
 		add(titlebg);
-
-		daveDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
-		daveDance.frames = Paths.getSparrowAtlas('DaveDanceTitle');
-		if (titleJSON.useOldDance) {
-			daveDance.animation.addByIndices('danceTitle', 'danceTitle', CoolUtil.numberArray(12), "", 24, false);
-		} else {
-			daveDance.animation.addByIndices('danceLeft', 'danceTitle', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-			daveDance.animation.addByIndices('danceRight', 'danceTitle', CoolUtil.numberArray(30, 15), "", 24, false);
-		}
-		daveDance.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		add(daveDance);
 
 		logoBl = new FlxSprite(0, 1500);
 		logoBl.antialiasing = ClientPrefs.getPref('globalAntialiasing');
@@ -322,16 +306,6 @@ class TitleState extends MusicBeatState
 		
 		if(logoBl != null && foundXml)
 			logoBl.animation.play('bump', true);
-
-		if(daveDance != null) {
-			if (titleJSON.useOldDance) {
-				daveDance.animation.play('danceTitle');
-			} else {
-				danceLeft = !danceLeft;
-				if (danceLeft) daveDance.animation.play('danceRight');
-				else daveDance.animation.play('danceLeft');
-			}
-		}
 
 		if(!closedState) {
 			sickBeats++;
