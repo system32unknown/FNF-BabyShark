@@ -108,6 +108,7 @@ class CharacterSelectState extends MusicBeatState
 		add(characterText);
 
 		funnyIconMan = new HealthIcon('bf', true);
+		funnyIconMan.screenCenter(X);
 		funnyIconMan.y = characterText.y + characterText.height;
 		funnyIconMan.sprTracker = characterText;
 		funnyIconMan.cameras = [camHUD];
@@ -126,7 +127,7 @@ class CharacterSelectState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
-			LoadingState.loadAndSwitchState(new FreeplayState());
+			MusicBeatState.switchState(new FreeplayState());
 		}
 
 		if(controls.UI_LEFT_P && !pressedTheFunny) {
@@ -170,7 +171,6 @@ class CharacterSelectState extends MusicBeatState
 			current++;
 			if (current > characters.length - 1)
 				current = 0;
-
 			currentReal = current;
 			UpdateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
