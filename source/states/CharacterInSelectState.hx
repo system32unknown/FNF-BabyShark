@@ -4,6 +4,7 @@ import flixel.*;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.math.FlxMath;
 import game.Boyfriend;
 import game.Conductor;
 import game.HealthIcon;
@@ -148,43 +149,35 @@ class CharacterSelectState extends MusicBeatState
 			FlxG.sound.play(Paths.music('gameOverEnd'));
 			new FlxTimer().start(1.9, endIt);
 		}
-		if (FlxG.keys.justPressed.LEFT && !selectedCharacter)
-		{
-			curForm = 0;
-			current--;
-			if (current < 0) 
-				current = characters.length - 1;
-            currentReal = current;
-			UpdateBF();
+		if (FlxG.keys.justPressed.LEFT && !selectedCharacter){
+			changeChr(-1);
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
-
 		if (FlxG.keys.justPressed.RIGHT && !selectedCharacter) {
-			curForm = 0;
-			current++;
-			if (current > characters.length - 1)
-				current = 0;
-			currentReal = current;
-			UpdateBF();
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-		}
-		if (FlxG.keys.justPressed.DOWN && !selectedCharacter)
-		{
-			curForm--;
-			if (curForm < 0)
-				curForm = characters[currentReal].names.length - 1;
-			UpdateBF();
+			changeChr(1);
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
 
-		if (FlxG.keys.justPressed.UP && !selectedCharacter)
-		{
-			curForm++;
-			if (curForm > characters[currentReal].names.length - 1)
-				curForm = 0;
-			UpdateBF();
+		if (FlxG.keys.justPressed.DOWN && !selectedCharacter) {
+			changeForm(-1);
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
+		if (FlxG.keys.justPressed.UP && !selectedCharacter) {
+			changeForm(1);
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		}
+	}
+
+	function changeChr(chr:Int = 0) {
+		curForm = 0;
+		current = FlxMath.wrap(current + chr, 0, characters.length - 1);
+		currentReal = current;
+		UpdateBF();
+	}
+	function changeForm(form:Int = 0) {
+		curForm = 0;
+		curForm = FlxMath.wrap(curForm + form, 0, characters[currentReal].names.length - 1);
+		UpdateBF();
 	}
 
 	public function UpdateBF()
@@ -199,6 +192,7 @@ class CharacterSelectState extends MusicBeatState
 
 		add(char);
 		funnyIconMan.changeIcon(char.healthIcon);
+		funnyIconMan.y = characterText.y + characterText.height;
 		characterText.screenCenter(X);
 	}
 

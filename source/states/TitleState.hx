@@ -27,7 +27,6 @@ import states.MainMenuState;
 import sys.FileSystem;
 #end
 typedef TitleData = {
-	titlex:Float,
 	starty:Float,
 	bgColor:String,
 	bpm:Int
@@ -149,7 +148,7 @@ class TitleState extends MusicBeatState
 			logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 			logoBl.animation.play('bump');
 		}
-		logoBl.x = titleJSON.titlex;
+		logoBl.screenCenter(X);
 		logoBl.updateHitbox();
 		add(logoBl);
 
