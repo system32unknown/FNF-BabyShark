@@ -108,6 +108,7 @@ class CharacterSelectState extends MusicBeatState
 		add(characterText);
 
 		funnyIconMan = new HealthIcon('bf', true);
+		funnyIconMan.y = characterText.y + characterText.height;
 		funnyIconMan.sprTracker = characterText;
 		funnyIconMan.cameras = [camHUD];
 		add(funnyIconMan);
@@ -204,7 +205,7 @@ class CharacterSelectState extends MusicBeatState
 		char.y = 450;
 
 		add(char);
-		funnyIconMan.changeIcon(char.curCharacter);
+		funnyIconMan.changeIcon(char.healthIcon);
 		characterText.screenCenter(X);
 	}
 
