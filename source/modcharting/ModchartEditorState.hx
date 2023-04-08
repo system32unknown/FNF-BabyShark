@@ -33,7 +33,10 @@ import flixel.addons.ui.Anchor;
 import flixel.addons.display.FlxBackdrop;
 
 import game.Section.SwagSection;
-import game.Song.SwagSong;
+import game.StrumNote;
+import game.Song;
+import game.Note;
+import game.Conductor;
 import substates.MusicBeatSubstate;
 import data.StageData;
 import states.*;
@@ -441,7 +444,6 @@ class ModchartEditorState extends MusicBeatState
             {
                 var dunceNote:Note = unspawnNotes[0];
                 notes.insert(0, dunceNote);
-                dunceNote.spawned = true;
                 var index:Int = unspawnNotes.indexOf(dunceNote);
                 unspawnNotes.splice(index, 1);
             }
@@ -543,8 +545,7 @@ class ModchartEditorState extends MusicBeatState
         }
 
 
-        if (FlxG.keys.justPressed.ESCAPE)
-        {
+        if (FlxG.keys.justPressed.ESCAPE) {
             var exitFunc = function() {
                 FlxG.mouse.visible = false;
                 FlxG.sound.music.stop();
@@ -690,7 +691,7 @@ class ModchartEditorState extends MusicBeatState
         } else vocals = new FlxSound();
 
         FlxG.sound.list.add(vocals);
-        inst = new FlxSound().loadEmbedded(Paths.inst(SONG.song));
+        inst = new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.song));
         FlxG.sound.list.add(inst);
 
         FlxG.sound.music.onComplete = function() {
@@ -731,7 +732,7 @@ class ModchartEditorState extends MusicBeatState
                 swagNote.mustPress = gottaHitNote;
                 swagNote.gfNote = (section.gfSection && (songNotes[1]<4));
                 swagNote.noteType = songNotes[3];
-                if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = editors.ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
+                if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = states.editors.ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
 
                 swagNote.scrollFactor.set();
 
@@ -774,12 +775,12 @@ class ModchartEditorState extends MusicBeatState
             // FlxG.log.add(i);
             var targetAlpha:Float = 1;
             if (player < 1) {
-                if(!ClientPrefs.opponentStrums) targetAlpha = 0;
+                if(!ClientPrefs.getPref('opponentStrums')) targetAlpha = 0;
                 else if(ClientPrefs.getPref('middleScroll')) targetAlpha = 0.35;
             }
 
             var babyArrow:StrumNote = new StrumNote(ClientPrefs.getPref('middleScroll') ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, strumLine.y, i, player);
-            babyArrow.downScroll = ClientPrefs.downScroll;
+            babyArrow.downScroll = ClientPrefs.getPref('downScroll');
             babyArrow.alpha = targetAlpha;
 
             if (player == 1) {

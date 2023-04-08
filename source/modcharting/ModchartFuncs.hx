@@ -13,13 +13,13 @@ class ModchartFuncs
 {
     public static function loadLuaFunctions()
     {
+        #if hscript
+        scripting.lua.HScript.initHaxeModule();
+        #end
+
         #if LUA_ALLOWED
         for (funkin in PlayState.instance.luaArray)
         {
-            #if hscript
-            funkin.initHaxeModule();
-            #end
-            
             funkin.addCallback('startMod', function(name:String, modClass:String, type:String = '', pf:Int = -1) {
                 startMod(name,modClass,type,pf);
             });

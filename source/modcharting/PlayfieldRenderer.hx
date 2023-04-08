@@ -78,7 +78,7 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
     public var modchart:ModchartFile;
     public var inEditor:Bool = false;
     public var editorPaused:Bool = false;
-    public function new(strumGroup:FlxTypedGroup<StrumNoteType>, notes:FlxTypedGroup<Note>,instance:ModchartMusicBeatState) 
+    public function new(strumGroup:FlxTypedGroup<StrumNoteType>, notes:FlxTypedGroup<Note>, instance:ModchartMusicBeatState) 
     {
         super(0,0);
         this.strumGroup = strumGroup;

@@ -635,10 +635,6 @@ class PlayState extends MusicBeatState {
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		add(strumLineNotes);
-		playfieldRenderer = new PlayfieldRenderer(strumLineNotes, notes, this);
-		playfieldRenderer.cameras = [camHUD];
-		add(playfieldRenderer);
-		add(grpNoteSplashes);
 
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
 		grpNoteSplashes.add(splash);
@@ -648,6 +644,10 @@ class PlayState extends MusicBeatState {
 		playerStrums = new FlxTypedGroup<StrumNote>();
 
 		generateSong(SONG.song);
+		playfieldRenderer = new PlayfieldRenderer(strumLineNotes, notes, this);
+		playfieldRenderer.cameras = [camHUD];
+		add(playfieldRenderer);
+		add(grpNoteSplashes);
 
 		camFollow = new FlxPoint();
 		camFollowPos = new FlxObject(0, 0, 1, 1);
@@ -1173,8 +1173,6 @@ class PlayState extends MusicBeatState {
 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
-
-			NoteMovement.getDefaultStrumPos(this);
 
 			addLUStrums();
 			updateLuaDefaultPos();
