@@ -524,8 +524,12 @@ class FunkinLua {
 		});
 
 		addCallback("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
+			final trimmedpft = platformType.toLowerCase().trim();
 			if (args == null) args = [];
-			var platFunc = Reflect.field(PlatformUtil, platformType.toLowerCase().trim());
+			final blackListcpp = ["getRAM"];
+			if (blackListcpp.contains(trimmedpft)) return;
+
+			var platFunc = Reflect.field(PlatformUtil, trimmedpft);
 			Reflect.callMethod(null, platFunc, args);
 		});
 

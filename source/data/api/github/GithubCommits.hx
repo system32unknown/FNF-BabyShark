@@ -1,4 +1,4 @@
-package api.github;
+package data.api.github;
 
 typedef GithubCommits = {
     var sha:String;

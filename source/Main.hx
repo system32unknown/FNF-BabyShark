@@ -20,7 +20,7 @@ import utils.GameVersion;
 import game.FunkinGame;
 import ui.Overlay;
 
-import api.github.GithubAPI;
+import data.api.github.GithubAPI;
 
 //crash handler stuff
 #if CRASH_HANDLER

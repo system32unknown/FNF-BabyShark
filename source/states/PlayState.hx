@@ -29,8 +29,7 @@ import openfl.filters.ShaderFilter;
 import openfl.filters.BitmapFilter;
 #if !MODS_ALLOWED import openfl.utils.Assets as OpenFlAssets; #end
 import haxe.Json;
-import editors.ChartingState;
-import editors.CharacterEditorState;
+import states.editors.*;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
 import game.Note.EventNote;
@@ -47,6 +46,7 @@ import data.EkData.Keybinds;
 import data.*;
 import scripting.haxe.AlterScript;
 import scripting.lua.*;
+import modcharting.*;
 #if LUA_ALLOWED
 import llua.Lua;
 #end
@@ -635,6 +635,9 @@ class PlayState extends MusicBeatState {
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		add(strumLineNotes);
+		playfieldRenderer = new PlayfieldRenderer(strumLineNotes, notes, this);
+		playfieldRenderer.cameras = [camHUD];
+		add(playfieldRenderer);
 		add(grpNoteSplashes);
 
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
@@ -839,6 +842,7 @@ class PlayState extends MusicBeatState {
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 
 		Conductor.safeZoneOffset = (ClientPrefs.getPref('safeFrames') / 60) * 1000;
+		ModchartFuncs.loadLuaFunctions();
 		callOnLuas('onCreatePost', []);
 		callOnScripts('onCreatePost', []);
 
@@ -1170,6 +1174,8 @@ class PlayState extends MusicBeatState {
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 
+			NoteMovement.getDefaultStrumPos(this);
+
 			addLUStrums();
 			updateLuaDefaultPos();
 	
@@ -1458,7 +1464,7 @@ class PlayState extends MusicBeatState {
 				swagNote.gfNote = (section.gfSection && (songNotes[1] < Note.ammo[mania]));
 				swagNote.noteType = songNotes[3];
 
-				if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = editors.ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
+				if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
 
 				swagNote.scrollFactor.set();
 				unspawnNotes.push(swagNote);

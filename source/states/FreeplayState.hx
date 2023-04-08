@@ -1,6 +1,5 @@
 package states;
 
-import editors.ChartingState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -16,6 +15,7 @@ import game.Conductor;
 import game.Highscore;
 import game.HealthIcon;
 import game.Song;
+import states.editors.ChartingState;
 import substates.ResetScoreSubState;
 import substates.GameplayChangersSubstate;
 import substates.FreeplaySectionSubstate;

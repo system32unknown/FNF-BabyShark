@@ -9,6 +9,8 @@ import java.vm.Gc;
 #elseif neko
 import neko.vm.Gc;
 #end
+import openfl.system.System;
+import flixel.math.FlxMath;
 
 class MemoryUtil {
 	public static var disableCount:Int = 0;
@@ -55,5 +57,13 @@ class MemoryUtil {
 		#if (cpp || hl)
 		Gc.enable(enabled);
 		#end
+	}
+
+	public static function getMEMtype():Dynamic {
+		switch (ClientPrefs.getPref('MEMType')) {
+			case 'Cast': return cast(System.totalMemory, UInt);
+			case 'Cpp': return PlatformUtil.getRAM();
+		}
+		return 0;
 	}
 }

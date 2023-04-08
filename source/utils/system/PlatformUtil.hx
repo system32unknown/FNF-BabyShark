@@ -17,6 +17,7 @@ package utils.system;
 #include <shellapi.h>
 #include <iostream>
 #include <string>
+#include <psapi.h>
 ')
 #end
 class PlatformUtil
@@ -30,6 +31,16 @@ class PlatformUtil
     ')
     #end
 	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0, res:Int = 0) return res;
+
+    #if windows
+	@:functionCode('
+        HWND hWnd = GetActiveWindow();
+        res = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
+        if (res)
+            SetLayeredWindowAttributes(hWnd, RGB(r, g, b), alpha, LWA_COLORKEY);
+    ')
+    #end
+	static public function getWindowsBackward(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 1, res:Int = 0) return res;
 
     #if windows
     @:functionCode('
@@ -117,6 +128,13 @@ class PlatformUtil
     ')
     #end
     static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
+
+    @:functionCode('
+        PROCESS_MEMORY_COUNTERS info;
+        GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info));
+        return (size_t)info.WorkingSetSize;
+    ')
+    public static function getRAM():Float return 0;
 }
 
 @:enum abstract MessageBoxIcon(Int) {

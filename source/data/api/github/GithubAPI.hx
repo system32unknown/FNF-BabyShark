@@ -1,4 +1,4 @@
-package api.github;
+package data.api.github;
 
 import haxe.Json;
 import haxe.Http;

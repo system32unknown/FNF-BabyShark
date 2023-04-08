@@ -1,7 +1,6 @@
 package states;
 
 import flixel.FlxG;
-import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
 import flixel.FlxCamera;
@@ -12,7 +11,7 @@ import ui.ErrorDisplay;
 import game.Conductor;
 import game.Song;
 
-class MusicBeatState extends FlxUIState {
+class MusicBeatState extends modcharting.ModchartMusicBeatState {
 	var curSection:Int = 0;
 	var stepsToDo:Int = 0;
 

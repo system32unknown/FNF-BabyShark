@@ -7,7 +7,6 @@ import openfl.utils.Assets;
 import flixel.util.FlxColor;
 import utils.system.MemoryUtil;
 import utils.system.FPSUtil;
-import openfl.system.System;
 
 class Overlay extends TextField {
 	public static var instance:Overlay;
@@ -19,8 +18,8 @@ class Overlay extends TextField {
     public var FPS:FPSUtil;
 
 	//Memory
-    var memory:Int = 0;
-    var mempeak:Int = 0;
+    var memory:Dynamic = 0;
+    var mempeak:Dynamic = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
 		super();
@@ -54,7 +53,7 @@ class Overlay extends TextField {
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		memory = cast(System.totalMemory, UInt);
+		memory = MemoryUtil.getMEMtype();
 		if (memory > mempeak) mempeak = memory;
 
 		text = '${FPS.currentFPS} FPS ${ClientPrefs.getPref('MSFPSCounter') ? '[MS: $dt]' : ''}\n';

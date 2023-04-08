@@ -13,8 +13,8 @@ import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import states.editors.MasterEditorMenu;
 import game.Achievements;
-import editors.MasterEditorMenu;
 import utils.MathUtil;
 import data.WeekData;
 

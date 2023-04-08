@@ -1,7 +1,7 @@
 package game;
 
 import flixel.FlxSprite;
-import editors.ChartingState;
+import states.editors.ChartingState;
 import flixel.math.FlxRect;
 import shaders.ColorSwap;
 import data.EkData;
@@ -37,6 +37,9 @@ class Note extends FlxSprite
 
 	public static var keysShit:Map<Int, Map<String, Dynamic>> = EKData.keysShit;
 	public var mania:Int = 1;
+
+	public var mesh:flixel.FlxStrip = null; 
+	public var z:Float = 0;
 
 	public var strumTime:Float = 0;
 

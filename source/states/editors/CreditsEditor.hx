@@ -1,4 +1,4 @@
-package editors;
+package states.editors;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -511,7 +511,7 @@ class CreditsEditor extends MusicBeatState
 				}
 				FlxG.mouse.visible = false;
 				FlxG.sound.play(Paths.sound('cancelMenu'));
-				MusicBeatState.switchState(new editors.MasterEditorMenu());
+				MusicBeatState.switchState(new MasterEditorMenu());
 				quitting = true;
 			}
 

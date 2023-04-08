@@ -61,6 +61,13 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Memory Type', "",
+			'MEMType',
+			'string',
+			'Psych',
+			['Cast', 'Cpp']);
+		addOption(option);
+
 		super();
 	}
 }

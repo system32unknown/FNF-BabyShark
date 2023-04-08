@@ -1,4 +1,4 @@
-package editors;
+package states.editors;
 
 import game.HealthIcon;
 import game.Character;
