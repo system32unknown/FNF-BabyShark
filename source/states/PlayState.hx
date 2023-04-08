@@ -46,7 +46,6 @@ import data.EkData.Keybinds;
 import data.*;
 import scripting.haxe.AlterScript;
 import scripting.lua.*;
-import modcharting.*;
 #if LUA_ALLOWED
 import llua.Lua;
 #end
@@ -644,9 +643,6 @@ class PlayState extends MusicBeatState {
 		playerStrums = new FlxTypedGroup<StrumNote>();
 
 		generateSong(SONG.song);
-		playfieldRenderer = new PlayfieldRenderer(strumLineNotes, notes, this);
-		playfieldRenderer.cameras = [camHUD];
-		add(playfieldRenderer);
 		add(grpNoteSplashes);
 
 		camFollow = new FlxPoint();
@@ -842,7 +838,6 @@ class PlayState extends MusicBeatState {
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 
 		Conductor.safeZoneOffset = (ClientPrefs.getPref('safeFrames') / 60) * 1000;
-		ModchartFuncs.loadLuaFunctions();
 		callOnLuas('onCreatePost', []);
 		callOnScripts('onCreatePost', []);
 
