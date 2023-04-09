@@ -64,6 +64,7 @@
 	
 	<!-- _______________________________Flags______________________________ -->
 	<section if="HSCRIPT_ALLOWED">
+		<!-- <haxeflag name="\-\-macro" value="utils.ScriptsMacro.addAdditionalClasses()" />-->
 		<haxeflag name="-dce" value="no"/>
 	</section>
 
