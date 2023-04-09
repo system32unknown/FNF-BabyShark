@@ -14,7 +14,6 @@ import utils.*;
 import flixel.*;
 
 class AlterScript {
-    public static var activeScripts:Array<AlterScript> = [];
     public var staticVariables:Map<String, Dynamic> = [];
 
     var interp:Interp;
@@ -43,9 +42,7 @@ class AlterScript {
         interp = new Interp();
         interp.allowStaticVariables = interp.allowPublicVariables = true;
         interp.staticVariables = staticVariables;
-        interp.errorHandler = function(e:Error) {
-            lime.app.Application.current.window.alert('Uncaught Error: ${e.toString()}', "Error on AlterScript");
-        };
+        interp.errorHandler = errorHanding;
 
         parser = new Parser();
         parser.preprocesorValues = getDefaultPreprocessors();
@@ -53,8 +50,6 @@ class AlterScript {
 
         setVars();
 
-        activeScripts.push(this);
-        FlxG.signals.preStateSwitch.add(() -> {activeScripts.remove(this);});
         if (autoRun) execute();
     }
 
@@ -63,7 +58,7 @@ class AlterScript {
             parser.line = 1;
             expr = parser.parseString(script, scriptFile);
         } catch(e:Error) {
-            lime.app.Application.current.window.alert('\nUncaught Error: ${e.toString()}', "Error on AlterScript");
+            errorHanding(e);
             hadError = true;
         }
 
@@ -82,7 +77,6 @@ class AlterScript {
     public function stop() {
         interp = null;
         parser = null;
-        activeScripts.remove(this);
     }
 
     function exists(key:String):Bool {
@@ -182,5 +176,23 @@ class AlterScript {
             trace(v);
         }));
         call("create", []);
+    }
+
+    function callErrBox(title:String, context:String) {
+        #if hl
+		var flags:haxe.EnumFlags<hl.UI.DialogFlags> = new haxe.EnumFlags<hl.UI.DialogFlags>();
+		flags.set(IsError);
+		hl.UI.dialog(title, context, flags);
+		#else
+		lime.app.Application.current.window.alert(context, title);
+		#end
+    }
+
+    function errorHanding(e:Error) {
+        var fn = '$scriptFile:${e.line}: ';
+        var err = e.toString();
+        if (err.startsWith(fn)) err = err.substr(fn.length);
+
+        callErrBox("Error on AlterScript", "Uncaught Error: " + fn + '\n$err');
     }
 }

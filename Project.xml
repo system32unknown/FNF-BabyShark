@@ -63,8 +63,9 @@
 	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED"/>
 	
 	<!-- _______________________________Flags______________________________ -->
-	<haxeflag name="-dce no" if="HSCRIPT_ALLOWED"/>
-	<haxeflag name="-dce full" unless="HSCRIPT_ALLOWED"/>
+	<section if="HSCRIPT_ALLOWED">
+		<haxeflag name="-dce" value="no"/>
+	</section>
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>
@@ -75,7 +76,7 @@
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
 	<haxelib name="discord_rpc" if="DISCORD_ALLOWED"/>
 
-	<haxelib name="hscript" if="HSCRIPT_ALLOWED"/>
+	<haxelib name="hscript-improved" rename="hscript" if="HSCRIPT_ALLOWED"/>
 	<define name="hscriptPos" if="HSCRIPT_ALLOWED"/>
 
 	<!-- ______________________________Haxedefines_____________________________ -->

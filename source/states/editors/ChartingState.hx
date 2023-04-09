@@ -713,11 +713,9 @@ class ChartingState extends MusicBeatState
 					}
 				} else {
 					if(check_notesSec.checked) {
-						if(note[4] != null) {
+						if(note[4] != null)
 							copiedNote = [newStrumTime, note[1], note[2], note[3], note[4]];
-						} else {
-							copiedNote = [newStrumTime, note[1], note[2], note[3]];
-						}
+						else copiedNote = [newStrumTime, note[1], note[2], note[3]];
 						_song.notes[curSec].sectionNotes.push(copiedNote);
 					}
 				}
@@ -803,11 +801,9 @@ class ChartingState extends MusicBeatState
 			var duetNotes:Array<Array<Dynamic>> = [];
 			for (note in _song.notes[curSec].sectionNotes) {
 				var boob = note[1];
-				if (boob > (Note.ammo[_song.mania] - 1)) {
+				if (boob > (Note.ammo[_song.mania] - 1))
 					boob -= Note.ammo[_song.mania];
-				} else {
-					boob += Note.ammo[_song.mania];
-				}
+				else boob += Note.ammo[_song.mania];
 
 				var copiedNote:Array<Dynamic> = [note[0], boob, note[2], note[3]];
 				duetNotes.push(copiedNote);
@@ -1198,6 +1194,15 @@ class ChartingState extends MusicBeatState
 		blockPressWhileTypingOnStepper.push(metronomeStepper);
 		blockPressWhileTypingOnStepper.push(metronomeOffsetStepper);
 
+		var randomizeNotes:FlxButton = new FlxButton(metronomeOffsetStepper.x + 100, metronomeOffsetStepper.y, "Randomize Notes", function() {
+			for (note in _song.notes[curSec].sectionNotes) {
+				var boob = note[1] % Note.ammo[_song.mania];
+				boob = FlxG.random.int(0, (Note.ammo[_song.mania] * 2) - 1);
+				note[1] = boob;
+			}
+			updateGrid();
+		});
+
 		disableAutoScrolling = new FlxUICheckBox(metronome.x + 120, metronome.y, null, null, "Disable Autoscroll (Not Recommended)", 120, function() {
 			FlxG.save.data.chart_noAutoScroll = disableAutoScrolling.checked;
 		});
@@ -1223,6 +1228,7 @@ class ChartingState extends MusicBeatState
 		tab_group_chart.add(new FlxText(instVolume.x, instVolume.y - 15, 0, 'Inst Volume'));
 		tab_group_chart.add(new FlxText(voicesVolume.x, voicesVolume.y - 15, 0, 'Voices Volume'));
 		tab_group_chart.add(metronome);
+		tab_group_chart.add(randomizeNotes);
 		tab_group_chart.add(disableAutoScrolling);
 		tab_group_chart.add(metronomeStepper);
 		tab_group_chart.add(metronomeOffsetStepper);
@@ -1289,7 +1295,6 @@ class ChartingState extends MusicBeatState
 			switch (label) {
 				case 'Must hit section':
 					_song.notes[curSec].mustHitSection = check.checked;
-
 					updateGrid();
 					updateHeads();
 				case 'GF section':

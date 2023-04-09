@@ -189,9 +189,7 @@ class DialogueBoxPsych extends FlxSpriteGroup
 					if(ret != FunkinLua.Function_Stop) {
 						FlxG.sound.music.fadeOut(1, 0);
 					}
-				} else {
-					startNextDialog();
-				}
+				} else startNextDialog();
 				FlxG.sound.play(Paths.sound(closeSound), closeVolume);
 			} else if (daText.finishedText) {
 				var char:DialogueCharacter = arrayCharacters[lastCharacter];

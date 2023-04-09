@@ -175,4 +175,8 @@ class CoolUtil
 		}
 		return tempArray;
 	}
+
+	public static function dynamicArray<T>(v:T, len:Int):Array<T> {
+		return [for (_ in 0...len) v];
+	}
 }

@@ -329,9 +329,7 @@ class PlayState extends MusicBeatState {
 		keysArray = Keybinds.fill();
 
 		// For the "Just the Two of Us" achievement
-		for (i in 0...keysArray[mania].length) {
-			keysPressed.push(false);
-		}
+		keysPressed = CoolUtil.dynamicArray(false, keysArray[mania].length);
 
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();

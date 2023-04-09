@@ -11,7 +11,6 @@ import openfl.display.Sprite;
 import openfl.display.StageScaleMode;
 import openfl.events.Event;
 import openfl.utils.AssetCache;
-import lime.app.Application;
 
 import states.TitleState;
 import utils.Controls;
@@ -54,6 +53,12 @@ class Main extends Sprite
 
 	public function new() {
 		super();
+		#if windows
+		@:functionCode('
+			#include <Windows.h>
+			SetProcessDPIAware()
+		')
+		#end
 		stage != null ? init() : addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 
@@ -91,7 +96,7 @@ class Main extends Sprite
 		#if discord_rpc
 		if (!DiscordClient.isInitialized) {
 			DiscordClient.initialize();
-			Application.current.window.onClose.add(function() {
+			lime.app.Application.current.window.onClose.add(function() {
 				DiscordClient.shutdown();
 			});
 		}
@@ -177,11 +182,11 @@ class Main extends Sprite
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
 		#if hl
-		var flags:EnumFlags<hl.UI.DialogFlags> = new haxe.EnumFlags<hl.UI.DialogFlags>();
+		var flags:haxe.EnumFlags<hl.UI.DialogFlags> = new haxe.EnumFlags<hl.UI.DialogFlags>();
 		flags.set(IsError);
 		hl.UI.dialog("Alter Engine: Error!", errMsg, flags);
 		#else
-		Application.current.window.alert(errMsg, "Alter Engine: Error!");
+		lime.app.Application.current.window.alert(errMsg, "Alter Engine: Error!");
 		#end
 		
 		#if discord_rpc
