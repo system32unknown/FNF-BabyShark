@@ -1,5 +1,6 @@
 package data.api.github;
 
+#if GITHUB_ALLOWED
 import haxe.Json;
 import haxe.Http;
 import haxe.Exception;
@@ -44,3 +45,22 @@ class GithubAPI {
 		return Json.parse(r);
 	}
 }
+#else
+class GithubAPI {
+    public static function getLatestCommits():String {
+        return '';
+    }
+
+	static function getCommits(user:String, commits:String, ?onError:Exception->Void) {
+		return [];
+	}
+
+	static function getGitException(object:Dynamic):GitException {
+		return new GitException("Github is Off.");
+	}
+
+	static function getGitToJSON(url:String) {
+		return null;
+	}
+}
+#end

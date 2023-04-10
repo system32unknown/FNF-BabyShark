@@ -27,8 +27,9 @@
 	<!-- ______________________PSYCH ENGINE CUSTOMIZATION______________________ -->
 	<section if="desktop">
 		<define name="MODS_ALLOWED"/>
-		<define name="LUA_ALLOWED" if="cpp"/>
 		<define name="HSCRIPT_ALLOWED"/>
+		<define name="GITHUB_ALLOWED"/>
+		<define name="LUA_ALLOWED" if="cpp"/>
 		<define name="CRASH_HANDLER" if="release"/>
 		<define name="VIDEOS_ALLOWED" if="cpp" unless="32bits"/>
 		<define name="DISCORD_ALLOWED" if="cpp"/>
@@ -64,7 +65,7 @@
 	
 	<!-- _______________________________Flags______________________________ -->
 	<section if="HSCRIPT_ALLOWED">
-		<!-- <haxeflag name="\-\-macro" value="utils.ScriptsMacro.addAdditionalClasses()" />-->
+		<!--<haxeflag name="\-\-macro" value="funkin.macros.ScriptsMacro.addAdditionalClasses()" />-->
 		<haxeflag name="-dce" value="no"/>
 	</section>
 

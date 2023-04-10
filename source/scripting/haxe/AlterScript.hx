@@ -42,11 +42,12 @@ class AlterScript {
         interp = new Interp();
         interp.allowStaticVariables = interp.allowPublicVariables = true;
         interp.staticVariables = staticVariables;
-        interp.errorHandler = errorHanding;
+        interp.errorHandler = _errorHanding;
 
         parser = new Parser();
         parser.preprocesorValues = getDefaultPreprocessors();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
+        parser.line = 1;
 
         setVars();
 
@@ -55,12 +56,10 @@ class AlterScript {
 
     public function execute() {
         try {
-            parser.line = 1;
             expr = parser.parseString(script, scriptFile);
         } catch(e:Error) {
-            errorHanding(e);
-            hadError = true;
-        }
+            _errorHanding(e);
+        } catch(e) {_errorHanding(new Error(ECustom(e.toString()), 0, 0, scriptFile, 0));}
 
         if (!hadError) interp.execute(expr);
     }
@@ -188,11 +187,13 @@ class AlterScript {
 		#end
     }
 
-    function errorHanding(e:Error) {
+    function _errorHanding(e:Error) {
         var fn = '$scriptFile:${e.line}: ';
         var err = e.toString();
         if (err.startsWith(fn)) err = err.substr(fn.length);
 
         callErrBox("Error on AlterScript", "Uncaught Error: " + fn + '\n$err');
+
+        hadError = true;
     }
 }

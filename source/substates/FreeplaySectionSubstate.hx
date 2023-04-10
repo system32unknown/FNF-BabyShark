@@ -2,7 +2,6 @@ package substates;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.FlxGraphic;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
@@ -11,7 +10,7 @@ import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import data.WeekData;
 import utils.CoolUtil;
-import states.MainMenuState;
+import states.FreeplayState;
 import states.StoryMenuState;
 import game.Conductor;
 
@@ -102,10 +101,11 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		
 		if (controls.BACK && !transitioning) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			MusicBeatState.switchState(new MainMenuState());
+			close();
 		}
 
 		if (controls.ACCEPT && !transitioning) {
+			if (daSection == FreeplayState.section) return;
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
 			FlxTween.tween(sectionTxt, {alpha: 0}, .5, {ease: FlxEase.expoInOut});

@@ -1,4 +1,4 @@
-#if !macro
+//#if !macro
 #if discord_rpc
 import utils.DiscordClient;
 #end
@@ -8,4 +8,4 @@ import states.PlayState;
 import substates.MusicBeatSubstate;
 
 using StringTools;
-#end
+//#end

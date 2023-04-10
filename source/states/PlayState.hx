@@ -604,9 +604,8 @@ class PlayState extends MusicBeatState {
 		timeTxt.visible = showTime;
 		if(downScroll) timeTxt.y = FlxG.height - 35;
 
-		if(ClientPrefs.getPref('timeBarType') == 'Song Name') {
+		if(ClientPrefs.getPref('timeBarType') == 'Song Name')
 			timeTxt.text = SONG.song;
-		}
 		updateTime = showTime;
 
 		timeBarBG = new AttachedSprite('timeBar');
@@ -621,7 +620,7 @@ class PlayState extends MusicBeatState {
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
 			'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
-		timeBar.createGradientBar([FlxColor.GRAY], [dad.getColor(), boyfriend.getColor()], 1, 90);
+		timeBar.createGradientBar([FlxColor.GRAY, FlxColor.fromRGB(0, 255, 128)], [boyfriend.getColor(), dad.getColor()], 1);
 		timeBar.numDivisions = 800; // How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
@@ -902,7 +901,7 @@ class PlayState extends MusicBeatState {
 
 	public function reloadHealthBarColors() {
 		healthBar.createFilledBar(dad.getColor(), boyfriend.getColor());
-		timeBar.createGradientBar([FlxColor.GRAY], [dad.getColor(), boyfriend.getColor()], 1, 90);
+		timeBar.createGradientBar([FlxColor.GRAY, FlxColor.fromRGB(0, 255, 128)], [boyfriend.getColor(), dad.getColor()], 1);
 
 		healthBar.updateBar();
 		timeBar.updateBar();
