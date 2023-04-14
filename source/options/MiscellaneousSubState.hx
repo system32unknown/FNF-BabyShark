@@ -64,7 +64,7 @@ class MiscellaneousSubState extends BaseOptionsMenu
 		var option:Option = new Option('Memory Type', "",
 			'MEMType',
 			'string',
-			'Psych',
+			'Cast',
 			['Cast', 'Cpp']);
 		addOption(option);
 

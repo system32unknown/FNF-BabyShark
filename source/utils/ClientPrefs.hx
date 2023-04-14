@@ -14,7 +14,7 @@ class ClientPrefs {
 		'MSFPSCounter' => false,
 		'showFPS' => true,
 		'showMEM' => true,
-		'MEMType' => 'Psych',
+		'MEMType' => 'Cast',
 		'flashing' => true,
 		'globalAntialiasing' => true,
 		'splashOpacity' => .6,

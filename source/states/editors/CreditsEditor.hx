@@ -15,7 +15,6 @@ import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flash.net.FileFilter;
-import flash.text.TextField;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
@@ -33,10 +32,10 @@ class CreditsEditor extends MusicBeatState
 {
 	var curSelected:Int = -1;
 
-	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private var iconArray:Array<AttachedSprite> = [];
-	private var creditsStuff:Array<Array<String>> = [];
-	private var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
+	var grpOptions:FlxTypedGroup<Alphabet>;
+	var iconArray:Array<AttachedSprite> = [];
+	var creditsStuff:Array<Array<String>> = [];
+	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 	public var ignoreWarnings = false;
 
 	public var camGame:FlxCamera;
@@ -122,8 +121,8 @@ class CreditsEditor extends MusicBeatState
 		descBox = new AttachedSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
 		descBox.setAdd(-10, -10);
-		descBox.alphaMult = 0.6;
-		descBox.alpha = 0.6;
+		descBox.alphaMult = .6;
+		descBox.alpha = .6;
 		add(descBox);
 
 		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
@@ -189,7 +188,7 @@ class CreditsEditor extends MusicBeatState
 			if(Paths.fileExists('images/credits/' + icon + '.png', IMAGE)) pathIcon = 'credits/' + icon;
 			else pathIcon = 'credits/none';
 
-			var iconSprite:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image(pathIcon));
+			var iconSprite:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pathIcon));
 			var daColor:String = CoolUtil.dominantColor(iconSprite).hex().substring(2, this.length);
 			colorInput.text = daColor;
 
@@ -627,23 +626,19 @@ class CreditsEditor extends MusicBeatState
 		if(colorInput.text.length > 10) return;
 		var daColor:Int;
 		if(colorInput.text != null && colorInput.text.length > 0) {
-
-			if(!colorInput.text.startsWith('0xFF')) {
+			if(!colorInput.text.startsWith('0xFF'))
 				daColor = Std.parseInt('0xFF' + colorInput.text);
-			} else { daColor = Std.parseInt(colorInput.text); }
-
-		} else { daColor = Std.parseInt('0xFFe1e1e1'); }
+			else daColor = Std.parseInt(colorInput.text);
+		} else daColor = Std.parseInt('0xFFe1e1e1');
 		colorSquare.color = daColor;
 	}
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
-			if(sender == iconInput) {
+			if(sender == iconInput)
 				showIconExist(iconInput.text);
-			}
-			if(sender == colorInput) {
+			if(sender == colorInput)
 				iconColorShow();
-			}
 		}
 	}
 
@@ -716,12 +711,8 @@ class CreditsEditor extends MusicBeatState
 			var rawTxt:String = File.getContent(fullPath);
 			if(rawTxt != null) {
 				creditsStuff = [];
-				var firstarray:Array<String> = rawTxt.split('\n');
-				for(i in firstarray)
-				{
-					var arr:Array<String> = i.replace('\\n', '\n').split("::");
-					creditsStuff.push(arr);
-				}
+				for(i in rawTxt.split('\n'))
+					creditsStuff.push(i.replace('\\n', '\n').split("::"));
 				updateCreditObjects();
 				changeSelection();
 				return;

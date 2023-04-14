@@ -64,10 +64,8 @@
 	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED"/>
 	
 	<!-- _______________________________Flags______________________________ -->
-	<section if="HSCRIPT_ALLOWED">
-		<!--<haxeflag name="\-\-macro" value="funkin.macros.ScriptsMacro.addAdditionalClasses()" />-->
-		<haxeflag name="-dce" value="no"/>
-	</section>
+	<haxeflag name="-dce no" if="HSCRIPT_ALLOWED"/>
+	<haxeflag name="-dce full" unless="HSCRIPT_ALLOWED"/>
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>

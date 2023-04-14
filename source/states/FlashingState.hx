@@ -18,7 +18,6 @@ class FlashingState extends MusicBeatState
 
 	var warnText:FlxText;
 	var saveDataPath:String = '';
-	var displaySaveDataPath:String = '';
 	
 	var manual:FlxSprite;
 	var textNoAdvanced:String = "Hey, watch out!\n
@@ -39,7 +38,7 @@ class FlashingState extends MusicBeatState
 
 		#if lime
 	 	saveDataPath = System.applicationStorageDirectory + 'altertoriel\\';
-		displaySaveDataPath = saveDataPath.replace("\\", "/");
+		var displaySaveDataPath = saveDataPath.replace("\\", "/");
 
 		textAdvanced = 	
 		"Before use:\n\nEK uses a different save data folder than normal\nPsych Engine, so you are going to have to set your\noptions to what you're using.\n" + 
@@ -59,9 +58,9 @@ class FlashingState extends MusicBeatState
 		manual.setPosition(FlxG.width - manual.width, FlxG.height - manual.height);
 		manual.animation.play('normal', true);
 
-		warnText = new FlxText(0, 0, FlxG.width, textNoAdvanced, 32);
+		warnText = new FlxText(0, 0, 0, textNoAdvanced, 32);
 		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
-		warnText.screenCenter(Y);
+		warnText.screenCenter();
 		add(warnText);
 	}
 
@@ -72,7 +71,7 @@ class FlashingState extends MusicBeatState
 				if (manual.animation.curAnim.name != 'hover') {
 					manual.animation.play('hover', true);
 				}
-				warnText.text = textAdvanced + textNoAdvanced;
+				warnText.text = textAdvanced;
 			} else {
 				if (manual.animation.curAnim != null && manual.animation.curAnim.name != 'normal') {
 					manual.animation.play('normal', true);

@@ -184,9 +184,9 @@ class FreeplayState extends MusicBeatState
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		text.y = FlxG.height - text.height;
+		add(text);
 		textBG.height = text.height;
 		textBG.y = FlxG.height - textBG.height;
-		add(text);
 
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);

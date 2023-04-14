@@ -824,6 +824,14 @@ class ChartingState extends MusicBeatState
 			}
 			updateGrid();
 		});
+		var randomizeNotes:FlxButton = new FlxButton(duetButton.x + 100, duetButton.y, "Randomize Notes", function() {
+			for (note in _song.notes[curSec].sectionNotes) {
+				var boob = note[1] % Note.ammo[_song.mania];
+				boob = FlxG.random.int(0, (Note.ammo[_song.mania] * 2) - 1);
+				note[1] = boob;
+			}
+			updateGrid();
+		});
 
 		tab_group_section.add(new FlxText(stepperBeats.x, stepperBeats.y - 15, 0, 'Beats per Section:'));
 		tab_group_section.add(stepperBeats);
@@ -842,6 +850,7 @@ class ChartingState extends MusicBeatState
 		tab_group_section.add(copyLastButton);
 		tab_group_section.add(duetButton);
 		tab_group_section.add(mirrorButton);
+		tab_group_section.add(randomizeNotes);
 		UI_box.addGroup(tab_group_section);
 	}
 
@@ -1194,15 +1203,6 @@ class ChartingState extends MusicBeatState
 		blockPressWhileTypingOnStepper.push(metronomeStepper);
 		blockPressWhileTypingOnStepper.push(metronomeOffsetStepper);
 
-		var randomizeNotes:FlxButton = new FlxButton(metronomeOffsetStepper.x + 100, metronomeOffsetStepper.y, "Randomize Notes", function() {
-			for (note in _song.notes[curSec].sectionNotes) {
-				var boob = note[1] % Note.ammo[_song.mania];
-				boob = FlxG.random.int(0, (Note.ammo[_song.mania] * 2) - 1);
-				note[1] = boob;
-			}
-			updateGrid();
-		});
-
 		disableAutoScrolling = new FlxUICheckBox(metronome.x + 120, metronome.y, null, null, "Disable Autoscroll (Not Recommended)", 120, function() {
 			FlxG.save.data.chart_noAutoScroll = disableAutoScrolling.checked;
 		});
@@ -1228,7 +1228,6 @@ class ChartingState extends MusicBeatState
 		tab_group_chart.add(new FlxText(instVolume.x, instVolume.y - 15, 0, 'Inst Volume'));
 		tab_group_chart.add(new FlxText(voicesVolume.x, voicesVolume.y - 15, 0, 'Voices Volume'));
 		tab_group_chart.add(metronome);
-		tab_group_chart.add(randomizeNotes);
 		tab_group_chart.add(disableAutoScrolling);
 		tab_group_chart.add(metronomeStepper);
 		tab_group_chart.add(metronomeOffsetStepper);
@@ -1751,9 +1750,8 @@ class ChartingState extends MusicBeatState
 				changeSection(curSec + shiftThing);
 			if (FlxG.keys.justPressed.A) {
 				if(curSec <= 0)
-					changeSection(_song.notes.length-1);
+					changeSection(_song.notes.length - 1);
 				else changeSection(curSec - shiftThing);
-
 			}
 		} else if (FlxG.keys.justPressed.ENTER) {
 			for (i in 0...blockPressWhileTypingOn.length) {
@@ -1918,9 +1916,7 @@ class ChartingState extends MusicBeatState
 
 		for (i in 1...4) {
 			var beatsep:FlxSprite = new FlxSprite(gridBG.x, (GRID_SIZE * (4 * curZoom)) * i).makeGraphic(Std.int(gridBG.width), 1, 0x44FF0000);
-			if(vortex) {
-				gridLayer.add(beatsep);
-			}
+			if(vortex) gridLayer.add(beatsep);
 		}
 
 		var gridBlackLine:FlxSprite = new FlxSprite(gridBG.x + GRID_SIZE).makeGraphic(2, leHeight, FlxColor.BLACK);
@@ -1984,9 +1980,7 @@ class ChartingState extends MusicBeatState
 				wavData = waveformData(
 					sound.buffer,
 					bytes,
-					st,
-					et,
-					1,
+					st, et, 1,
 					wavData,
 					Std.int(gridBG.height)
 				);
@@ -2001,9 +1995,7 @@ class ChartingState extends MusicBeatState
 				wavData = waveformData(
 					sound.buffer,
 					bytes,
-					st,
-					et,
-					1,
+					st, et, 1,
 					wavData,
 					Std.int(gridBG.height)
 				);
@@ -2089,11 +2081,10 @@ class ChartingState extends MusicBeatState
 
 				var sample:Float = (byte / 65535);
 
-				if (sample > 0) {
+				if (sample > 0)
 					if (sample > lmax) lmax = sample;
-				} else if (sample < 0) {
+				else if (sample < 0)
 					if (sample < lmin) lmin = sample;
-				}
 
 				if (channels >= 2) {
 					byte = bytes.getUInt16((index * channels * 2) + 2);
@@ -2102,11 +2093,10 @@ class ChartingState extends MusicBeatState
 
 					sample = (byte / 65535);
 
-					if (sample > 0) {
+					if (sample > 0)
 						if (sample > rmax) rmax = sample;
-					} else if (sample < 0) {
+					else if (sample < 0)
 						if (sample < rmin) rmin = sample;
-					}
 				}
 			}
 
@@ -2298,11 +2288,9 @@ class ChartingState extends MusicBeatState
 				stepperSusLength.value = curSelectedNote[2];
 				if(curSelectedNote[3] != null) {
 					currentType = noteTypeMap.get(curSelectedNote[3]);
-					if(currentType <= 0) {
+					if(currentType <= 0)
 						noteTypeDropDown.selectedLabel = '';
-					} else {
-						noteTypeDropDown.selectedLabel = currentType + '. ' + curSelectedNote[3];
-					}
+					else noteTypeDropDown.selectedLabel = currentType + '. ' + curSelectedNote[3];
 				}
 			} else {
 				eventDropDown.selectedLabel = curSelectedNote[1][curEventSelected][0];
@@ -2591,11 +2579,6 @@ class ChartingState extends MusicBeatState
 		updateGrid();
 		updateNoteUI();
 	}
-
-	// will figure this out l8r
-	function redo() {}
-
-	function undo() {}
 
 	function getStrumTime(yPos:Float, doZoomCalc:Bool = true):Float {
 		var leZoom:Float = zoomList[curZoom];

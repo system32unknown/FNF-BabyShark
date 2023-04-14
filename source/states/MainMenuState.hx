@@ -153,9 +153,9 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollowPos, null, 1);
 
 		var versionShit:FlxText = new FlxText(0, 0, 0, 
+			'PSYCH v0.6.3 - CUSTOM BUILD\n' +
 			'Alter Engine v${Main.engineVersion.version} (${Main.COMMIT_HASH.trim().substring(0, 7)})\n' +
-			'Baby Shark\'s Funkin\' v$BabySharkVersion\n',
-			16);
+			'Baby Shark\'s Funkin\' v$BabySharkVersion\n', 16);
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT);
 		versionShit.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		versionShit.scrollFactor.set();

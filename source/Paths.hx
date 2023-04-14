@@ -118,6 +118,7 @@ class Paths
 					if (obj.bitmap.__texture != null)
 						obj.bitmap.__texture.dispose();
 					obj.bitmap.disposeImage();
+					flixel.util.FlxDestroyUtil.dispose(obj.bitmap);
 				}
 
 				obj.dump();
