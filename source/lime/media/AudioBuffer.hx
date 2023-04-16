@@ -357,9 +357,7 @@ class AudioBuffer
 			});
 
 			audioBuffer.__srcHowl.load();
-		} else {
-			promise.error(null);
-		}
+		} else promise.error(null);
 		#else
 		promise.completeWith(new Future<AudioBuffer>(function() return fromFiles(paths), true));
 		#end

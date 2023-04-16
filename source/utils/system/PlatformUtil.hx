@@ -129,12 +129,13 @@ class PlatformUtil
     #end
     static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
 
+    #if windows
     @:functionCode('
-        PROCESS_MEMORY_COUNTERS info;
-        GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info));
-        return (size_t)info.WorkingSetSize;
+        #include <Windows.h>
+        SetProcessDPIAware()
     ')
-    public static function getRAM():Float return 0;
+    #end
+    static public function setDPIAware() {}
 }
 
 @:enum abstract MessageBoxIcon(Int) {

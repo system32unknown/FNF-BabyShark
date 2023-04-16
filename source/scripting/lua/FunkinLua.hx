@@ -526,7 +526,7 @@ class FunkinLua {
 		addCallback("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
 			final trimmedpft = platformType.toLowerCase().trim();
 			if (args == null) args = [];
-			final blackListcpp = ["getRAM"];
+			final blackListcpp = ["setDPIAware"];
 			if (blackListcpp.contains(trimmedpft)) return;
 
 			var platFunc = Reflect.field(PlatformUtil, trimmedpft);
@@ -1551,9 +1551,9 @@ class FunkinLua {
 					if (front)
 						LuaUtils.getTargetInstance().add(leGroup);
 					else {
-						if(PlayState.instance.isDead) {
+						if(PlayState.instance.isDead)
 							GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), leGroup);
-						} else {
+						else {
 							var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gfGroup);
 							if(PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup) < position) {
 								position = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
@@ -1975,9 +1975,7 @@ class FunkinLua {
 			if(FileSystem.exists(Paths.video(videoFile))) {
 				PlayState.instance.startVideoSprite(videoFile, x, y, op, cam, loop, pauseMusic);
 				return true;
-			} else {
-				luaTrace('startVideoSprite: Video file not found: ' + videoFile, false, false, FlxColor.RED);
-			}
+			} else luaTrace('startVideoSprite: Video file not found: ' + videoFile, false, false, FlxColor.RED);
 			return false;
 			#else
 			PlayState.instance.startAndEnd();

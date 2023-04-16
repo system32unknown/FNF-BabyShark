@@ -109,8 +109,8 @@ class Paths
 				if (assetExcluded(obj)) return;
 
 				OpenFlAssets.cache.removeBitmapData(key);
-				OpenFlAssets.cache.clearBitmapData(key);
-				OpenFlAssets.cache.clear(key);
+				//OpenFlAssets.cache.clearBitmapData(key);
+				//OpenFlAssets.cache.clear(key);
 				FlxG.bitmap._cache.remove(key);
 
 				if (obj.bitmap != null) {

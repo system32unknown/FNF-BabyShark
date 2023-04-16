@@ -223,17 +223,17 @@ class ExtraFunctions
 			var foundJson:Bool;
 
 			#if sys
-				if (FileSystem.exists(json)) {
+				if (FileSystem.exists(json))
 					foundJson = true;
-				} else {
+				else {
 					funk.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
 					foundJson = false;
 					return;	
 				}
 			#else
-				if (Assets.exists(json)) {
+				if (Assets.exists(json))
 					foundJson = true;
-				} else {
+				else {
 					funk.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
 					foundJson = false;
 					return;	

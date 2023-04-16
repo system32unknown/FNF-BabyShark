@@ -23,6 +23,7 @@ import lime.media.AudioSource;
 	 -  the SoundChannel or Microphone object for the sound  -  and through the
 	properties in the SoundTransform class that control the output of the sound
 	to the computer's speakers.
+
 	In Flash Player 10 and later and AIR 1.5 and later, you can also use
 	this class to work with sound that is generated dynamically. In this case,
 	the Sound object uses the function you assign to a `sampleData`
@@ -31,12 +32,17 @@ import lime.media.AudioSource;
 	can use `Sound.extract()` to extract sound data from a Sound
 	object, after which you can manipulate it before writing it back to the
 	stream for playback.
+
 	To control sounds that are embedded in a SWF file, use the properties in
 	the SoundMixer class.
+
 	**Note**: The ActionScript 3.0 Sound API differs from ActionScript
 	2.0. In ActionScript 3.0, you cannot take sound objects and arrange them in
 	a hierarchy to control their properties.
+
 	When you use this class, consider the following security model:
+
+
 	* Loading and playing a sound is not allowed if the calling file is in
 	a network sandbox and the sound file to be loaded is local.
 	* By default, loading and playing a sound is not allowed if the calling
@@ -49,17 +55,21 @@ import lime.media.AudioSource;
 	`SoundMixer.computeSpectrum()`,
 	`SoundMixer.bufferTime`, and the `SoundTransform`
 	class.
+
+
 	However, in Adobe AIR, content in the `application` security
 	sandbox(content installed with the AIR application) are not restricted by
 	these security limitations.
+
 	For more information related to security, see the Flash Player Developer
 	Center Topic: [Security](http://www.adobe.com/go/devnet_security_en).
+
 	@event complete   Dispatched when data has loaded successfully.
-	@event id3        Dispatched by a Sound object when ID3 data is available
+	@event id3		Dispatched by a Sound object when ID3 data is available
 					  for an MP3 sound.
-	@event ioError    Dispatched when an input/output error occurs that causes
+	@event ioError	Dispatched when an input/output error occurs that causes
 					  a load operation to fail.
-	@event open       Dispatched when a load operation starts.
+	@event open	   Dispatched when a load operation starts.
 	@event progress   Dispatched when data is received as a load operation
 					  progresses.
 	@event sampleData Dispatched when the runtime requests new audio data.
@@ -92,6 +102,7 @@ class Sound extends EventDispatcher
 		file. If an MP3 sound that you load using the `Sound.load()` method
 		contains ID3 tags, you can query these properties. Only ID3 tags that
 		use the UTF-8 character set are supported.
+
 		Flash Player 9 and later and AIR support ID3 2.0 tags, specifically
 		2.3 and 2.4. The following tables list the standard ID3 2.0 tags and
 		the type of content the tags represent. The `Sound.id3` property
@@ -100,6 +111,7 @@ class Sound extends EventDispatcher
 		can be accessed either through the ID3 2.0 property name or the
 		ActionScript property name. The second table describes ID3 tags that
 		are supported but do not have predefined properties in ActionScript.
+
 		| ID3 2.0 tag | Corresponding Sound class property |
 		| --- | --- |
 		| COMM | Sound.id3.comment |
@@ -109,10 +121,12 @@ class Sound extends EventDispatcher
 		| TPE1 | Sound.id3.artist |
 		| TRCK | Sound.id3.track |
 		| TYER | Sound.id3.year |
+
 		The following table describes ID3 tags that are supported but do not
 		have predefined properties in the Sound class. You access them by
 		calling `mySound.id3.TFLT`, `mySound.id3.TIME`, and so on. **NOTE:**
 		None of these tags are supported in Flash Lite 4.
+
 		| Property | Description |
 		| --- | --- |
 		| TFLT | File type |
@@ -145,7 +159,9 @@ class Sound extends EventDispatcher
 		| TSSE | Software/hardware and settings used for encoding |
 		| TYER | Year |
 		| WXXX | URL link frame |
+
 		When using this property, consider the Flash Player security model:
+
 		* The `id3` property of a Sound object is always permitted for SWF
 		files that are in the same security sandbox as the sound file. For
 		files in other sandboxes, there are security checks.
@@ -157,9 +173,11 @@ class Sound extends EventDispatcher
 		policy file exists and permits access from the domain of the loading
 		SWF file, then the file is allowed to access the `id3` property of the
 		Sound object; otherwise it is not.
+
 		However, in Adobe AIR, content in the `application` security sandbox
 		(content installed with the AIR application) are not restricted by
 		these security limitations.
+
 		For more information related to security, see the Flash Player
 		Developer Center Topic: <a
 		href="http://www.adobe.com/go/devnet_security_en"
@@ -187,11 +205,13 @@ class Sound extends EventDispatcher
 		method. For Sound objects that are associated with a sound asset from a
 		SWF file's library, the value of the `url` property is
 		`null`.
+
 		When you first call `Sound.load()`, the `url`
 		property initially has a value of `null`, because the final URL
 		is not yet known. The `url` property will have a non-null value
 		as soon as an `open` event is dispatched from the Sound
 		object.
+
 		The `url` property contains the final, absolute URL from
 		which a sound was loaded. The value of `url` is usually the
 		same as the value passed to the `stream` parameter of
@@ -202,6 +222,7 @@ class Sound extends EventDispatcher
 		reflects the final URL from which the sound file was actually downloaded.
 		This reporting of an absolute, final URL is equivalent to the behavior of
 		`LoaderInfo.url`.
+
 		In some cases, the value of the `url` property is truncated;
 		see the `isURLInaccessible` property for details.
 	**/
@@ -228,12 +249,14 @@ class Sound extends EventDispatcher
 		valid URLRequest object to the Sound constructor, you must call the
 		`load()` function for the Sound object yourself, or the stream
 		will not load.
+
 		Once `load()` is called on a Sound object, you can't later
 		load a different sound file into that Sound object. To load a different
 		sound file, create a new Sound object.
 		In Flash Player 10 and later and AIR 1.5 and later, instead of using
 		`load()`, you can use the `sampleData` event handler
 		to load sound dynamically into the Sound object.
+
 		@param stream  The URL that points to an external MP3 file.
 		@param context An optional SoundLoader context object, which can define
 					   the buffer time(the minimum number of milliseconds of MP3
@@ -259,6 +282,7 @@ class Sound extends EventDispatcher
 	/**
 		Closes the stream, causing any download of data to cease. No data may
 		be read from the stream after the `close()` method is called.
+
 		@throws IOError The stream could not be closed, or the stream was not
 						open.
 	**/
@@ -282,10 +306,12 @@ class Sound extends EventDispatcher
 		this method to extract sound data from a Sound object. Then you can
 		write the data to the byte array that another Sound object is using to
 		stream dynamic audio.
+
 		The audio data is placed in the target byte array starting from the
 		current position of the byte array. The audio data is always exposed
 		as 44100 Hz Stereo. The sample type is a 32-bit floating-point value,
 		which can be converted to a Number using `ByteArray.readFloat()`.
+
 		@param target A ByteArray object in which the extracted sound samples
 					  are placed.
 		@param length The number of sound samples to extract. A sample
@@ -300,6 +326,7 @@ class Sound extends EventDispatcher
 	#if lime
 	/**
 		Creates a new Sound from an AudioBuffer immediately.
+
 		@param	buffer	An AudioBuffer instance
 		@returns	A new Sound
 	**/
@@ -314,10 +341,13 @@ class Sound extends EventDispatcher
 	/**
 		Creates a new Sound from a file path synchronously. This means that the
 		Sound will be returned immediately (if supported).
+
 		HTML5 and Flash do not support creating Sound synchronously, so these targets
 		always return `null`.
+
 		In order to load files from a remote web address, use the `loadFromFile` method,
 		which supports asynchronous loading.
+
 		@param	path	A local file path containing a sound
 		@returns	A new Sound if successful, or `null` if unsuccessful
 	**/
@@ -336,10 +366,13 @@ class Sound extends EventDispatcher
 		constructor calls `Sound.load()` for you. You only need to call
 		`Sound.load()` yourself if you don't pass a valid URLRequest
 		object to the Sound constructor or you pass a `null` value.
+
 		Once `load()` is called on a Sound object, you can't later
 		load a different sound file into that Sound object. To load a different
 		sound file, create a new Sound object.
+
 		When using this method, consider the following security model:
+
 		* Calling `Sound.load()` is not allowed if the calling file
 		is in the local-with-file-system sandbox and the sound is in a network
 		sandbox.
@@ -352,34 +385,41 @@ class Sound extends EventDispatcher
 		`allowNetworking` parameter of the `object` and
 		`embed` tags in the HTML page that contains the SWF
 		content.
+
 		 In Flash Player 10 and later, if you use a multipart Content-Type(for
 		example "multipart/form-data") that contains an upload(indicated by a
 		"filename" parameter in a "content-disposition" header within the POST
 		body), the POST operation is subject to the security rules applied to
 		uploads:
+
 		* The POST operation must be performed in response to a user-initiated
 		action, such as a mouse click or key press.
 		* If the POST operation is cross-domain(the POST target is not on the
 		same server as the SWF file that is sending the POST request), the target
 		server must provide a URL policy file that permits cross-domain
 		access.
+
+
 		Also, for any multipart Content-Type, the syntax must be valid
 		(according to the RFC2046 standards). If the syntax appears to be invalid,
 		the POST operation is subject to the security rules applied to
 		uploads.
+
 		In Adobe AIR, content in the `application` security sandbox
 		(content installed with the AIR application) are not restricted by these
 		security limitations.
+
 		For more information related to security, see the Flash Player
 		Developer Center Topic: [Security](http://www.adobe.com/go/devnet_security_en).
+
 		@param stream  A URL that points to an external MP3 file.
 		@param context An optional SoundLoader context object, which can define
 					   the buffer time(the minimum number of milliseconds of MP3
 					   data to hold in the Sound object's buffer) and can specify
 					   whether the application should check for a cross-domain
 					   policy file prior to loading the sound.
-		@throws IOError       A network error caused the load to fail.
-		@throws IOError       The `digest` property of the
+		@throws IOError	   A network error caused the load to fail.
+		@throws IOError	   The `digest` property of the
 							  `stream` object is not `null`.
 							  You should only set the `digest` property
 							  of a URLRequest object when calling the
@@ -398,22 +438,9 @@ class Sound extends EventDispatcher
 		url = stream.url;
 
 		#if lime
-		#if (js && html5)
-		var defaultLibrary = lime.utils.Assets.getLibrary("default"); // TODO: Improve this
-
-		if (defaultLibrary != null && defaultLibrary.cachedAudioBuffers.exists(url)) {
-			AudioBuffer_onURLLoad(defaultLibrary.cachedAudioBuffers.get(url));
-		} else {
-			AudioBuffer.loadFromFile(url).onComplete(AudioBuffer_onURLLoad).onError(function(_)
-			{
-				AudioBuffer_onURLLoad(null);
-			});
-		}
-		#else
 		AudioBuffer.loadFromFile(url).onComplete(AudioBuffer_onURLLoad).onError(function(_) {
 			AudioBuffer_onURLLoad(null);
 		});
-		#end
 		#end
 	}
 
@@ -422,6 +449,7 @@ class Sound extends EventDispatcher
 		ByteArray position and will leave the ByteArray position at the end of the specified bytes length once
 		finished. If the MP3 sound data contains ID3 data ID3 events will be dispatched during this function call.
 		This function will throw an exception if the ByteArray object does not contain enough data.
+
 		@param	bytes
 		@param	bytesLength
 	**/
@@ -443,11 +471,9 @@ class Sound extends EventDispatcher
 		#if lime
 		__buffer = AudioBuffer.fromBytes(bytes);
 
-		if (__buffer == null) {
+		if (__buffer == null)
 			dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-		} else {
-			dispatchEvent(new Event(Event.COMPLETE));
-		}
+		else dispatchEvent(new Event(Event.COMPLETE));
 		#else
 		dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 		#end
@@ -456,8 +482,10 @@ class Sound extends EventDispatcher
 	/**
 		Creates a new Sound from a file path or web address asynchronously. The file
 		load will occur in the background.
+
 		Progress, completion and error callbacks will be dispatched in the current
 		thread using callbacks attached to a returned Future object.
+
 		@param	path	A local file path or web address containing a sound
 		@returns	A Future Sound
 	**/
@@ -476,8 +504,10 @@ class Sound extends EventDispatcher
 		Creates a new Sound from a set of file paths or web addresses asynchronously.
 		The audio backend will choose the first compatible file format, and will load the file
 		it selects in the background.
+
 		Progress, completion and error callbacks will be dispatched in the current
 		thread using callbacks attached to a returned Future object.
+
 		@param	paths	A set of local file paths or web addresses containing sound
 		@returns	A Future Sound
 	**/
@@ -496,12 +526,15 @@ class Sound extends EventDispatcher
 		Load PCM 32-bit floating point sound data from a ByteArray object into a Sound object. The data will be read
 		from the current ByteArray position and will leave the ByteArray position at the end of the specified sample
 		length multiplied by either 1 channel or 2 channels if the stereo flag is set once finished.
+
 		Starting with Flash Player 11.8, the amount of audio data that can be passed to this function is limited. For
 		SWF versions >= 21, this function throws an exception if the amount of audio data passed into this function is
 		more than 1800 seconds. That is, samples / sampleRate should be less than or equal to 1800. For swf versions <
 		21, the runtime fails silently if the amount of audio data passed in is more than 12000 seconds. This is
 		provided only for backward compatibility.
+
 		This function throws an exception if the ByteArray object does not contain enough data.
+
 		@param	bytes
 		@param	samples
 		@param	format
@@ -547,9 +580,10 @@ class Sound extends EventDispatcher
 		returns a SoundChannel object, which you access to stop the sound and to
 		monitor volume.(To control the volume, panning, and balance, access the
 		SoundTransform object assigned to the sound channel.)
-		@param startTime    The initial position in milliseconds at which playback
+
+		@param startTime	The initial position in milliseconds at which playback
 							should start.
-		@param loops        Defines the number of times a sound loops back to the
+		@param loops		Defines the number of times a sound loops back to the
 							`startTime` value before the sound channel
 							stops playback.
 		@param sndTransform The initial SoundTransform object assigned to the
@@ -565,16 +599,14 @@ class Sound extends EventDispatcher
 		if (__buffer == null || SoundMixer.__soundChannels.length >= SoundMixer.MAX_ACTIVE_CHANNELS)
 			return null;
 
-		if (sndTransform == null) {
+		if (sndTransform == null)
 			sndTransform = new SoundTransform();
-		} else {
-			sndTransform = sndTransform.clone();
-		}
+		else sndTransform = sndTransform.clone();
 
 		var pan = SoundMixer.__soundTransform.pan + sndTransform.pan;
 
 		if (pan > 1) pan = 1;
-		if (pan < -1) pan = -1;
+		else if (pan < -1) pan = -1;
 
 		var volume = SoundMixer.__soundTransform.volume * sndTransform.volume;
 
@@ -596,26 +628,27 @@ class Sound extends EventDispatcher
 	}
 
 	// Get & Set Methods
-	@:noCompletion private function get_id3():ID3Info {
+	@:noCompletion private function get_id3():ID3Info
+	{
 		return new ID3Info();
 	}
 
-	@:noCompletion private function get_length():Int
+	@:noCompletion private function get_length():Float
 	{
 		#if lime
 		if (__buffer != null)
 		{
 			#if (js && html5 && howlerjs)
-			return Std.int(__buffer.src.duration() * 1000);
+			return __buffer.src.duration() * 1000;
 			#else
 			if (__buffer.data != null) {
-				var samples = (__buffer.data.length) / ((__buffer.channels * __buffer.bitsPerSample) / 8);
-				var thelength = Std.int(samples / __buffer.sampleRate * 1000);
-				if (thelength < 0) thelength = 12173936;
-				return thelength;
+				var samples = (Int64.make(0, __buffer.data.length) * Int64.ofInt(8)) / Int64.ofInt(__buffer.channels * __buffer.bitsPerSample);
+				var value = samples / Int64.ofInt(__buffer.sampleRate) * Int64.ofInt(1000);
+				return Int64.toInt(value);
 			} else if (__buffer.__srcVorbisFile != null) {
-				var samples = Int64.toInt(__buffer.__srcVorbisFile.pcmTotal());
-				return Std.int(samples / __buffer.sampleRate * 1000);
+				var samples = __buffer.__srcVorbisFile.pcmTotal();
+				var value = Int64.fromFloat(__buffer.__srcVorbisFile.timeTotal()) * 1000;
+				return Int64.toInt(value);
 			} else return 0;
 			#end
 		}
@@ -628,9 +661,9 @@ class Sound extends EventDispatcher
 	#if lime
 	@:noCompletion private function AudioBuffer_onURLLoad(buffer:AudioBuffer):Void
 	{
-		if (buffer == null) {
+		if (buffer == null)
 			dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-		} else {
+		else {
 			__buffer = buffer;
 			dispatchEvent(new Event(Event.COMPLETE));
 		}

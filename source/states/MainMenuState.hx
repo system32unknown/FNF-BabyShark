@@ -20,7 +20,6 @@ import data.WeekData;
 
 class MainMenuState extends MusicBeatState
 {
-	final BabySharkVersion:String = '1.0'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -155,7 +154,7 @@ class MainMenuState extends MusicBeatState
 		var versionShit:FlxText = new FlxText(0, 0, 0, 
 			'PSYCH v0.6.3 - CUSTOM BUILD\n' +
 			'Alter Engine v${Main.engineVersion.version} (${Main.COMMIT_HASH.trim().substring(0, 7)})\n' +
-			'Baby Shark\'s Funkin\' v$BabySharkVersion\n', 16);
+			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n', 16);
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT);
 		versionShit.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		versionShit.scrollFactor.set();

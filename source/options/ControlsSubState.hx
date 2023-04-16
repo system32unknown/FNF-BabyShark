@@ -169,11 +169,9 @@ class ControlsSubState extends MusicBeatSubstate {
 				} else if(!unselectableCheck(curSelected)) {
 					bindingTime = 0;
 					rebindingKey = true;
-					if (curAlt) {
+					if (curAlt)
 						grpInputsAlt[getInputTextNum()].alpha = 0;
-					} else {
-						grpInputs[getInputTextNum()].alpha = 0;
-					}
+					else grpInputs[getInputTextNum()].alpha = 0;
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 				}
 			}

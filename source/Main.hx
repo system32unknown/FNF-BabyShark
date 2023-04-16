@@ -53,12 +53,7 @@ class Main extends Sprite
 
 	public function new() {
 		super();
-		#if windows
-		@:functionCode('
-			#include <Windows.h>
-			SetProcessDPIAware()
-		')
-		#end
+		utils.system.PlatformUtil.setDPIAware();
 		stage != null ? init() : addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 
@@ -108,13 +103,6 @@ class Main extends Sprite
 			FlxG.bitmap.clearUnused();
 			FlxG.bitmap.clearCache();
 			
-			FlxG.sound.list.forEachAlive(function(sound:flixel.system.FlxSound):Void {
-				FlxG.sound.list.remove(sound, true);
-				@:privateAccess
-				FlxG.sound.destroySound(sound);
-				sound.stop();
-				sound.destroy();
-			});
 			FlxG.sound.list.clear();
 			FlxG.sound.destroy();
 

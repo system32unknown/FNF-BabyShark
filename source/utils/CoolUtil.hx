@@ -153,9 +153,7 @@ class CoolUtil
 
 	@:access(flixel.util.FlxSave.validate)
 	public static function getSavePath(folder:String = 'altertoriel'):String {
-		return #if (flixel < "5.0.0") folder #else FlxG.stage.application.meta.get('company')
-			+ '/'
-			+ FlxSave.validate(FlxG.stage.application.meta.get('file')) #end;
+		return FlxG.stage.application.meta.get('company') + '/' + FlxSave.validate(FlxG.stage.application.meta.get('file'));
 	}
 
 	public static function getMacroAbstractClass(className:String)
@@ -168,9 +166,7 @@ class CoolUtil
 		  	return (str1 == str2) ? 0 : (str1 > str2) ? 1 : -1; 
 		});
 		for (str in string) {
-		  	if (str != lastSeen) {
-				tempArray.push(str);
-		  	}
+		  	if (str != lastSeen) tempArray.push(str);
 		  	lastSeen = str;
 		}
 		return tempArray;

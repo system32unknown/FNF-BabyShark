@@ -95,11 +95,9 @@ class ResetScoreSubState extends MusicBeatSubstate
 			close();
 		} else if(controls.ACCEPT) {
 			if(onYes) {
-				if(week == -1) {
+				if(week == -1)
 					Highscore.resetSong(song, difficulty);
-				} else {
-					Highscore.resetWeek(WeekData.weeksList[week], difficulty);
-				}
+				else Highscore.resetWeek(WeekData.weeksList[week], difficulty);
 			}
 			FlxG.sound.play(Paths.sound('cancelMenu'), 1);
 			close();

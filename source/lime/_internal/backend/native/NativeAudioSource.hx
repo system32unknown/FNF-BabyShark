@@ -401,11 +401,9 @@ class NativeAudioSource
 
 	public function getPitch():Float
 	{
-		if (handle != null) {
+		if (handle != null)
 			return AL.getSourcef(handle, AL.PITCH);
-		} else {
-			return 1;
-		}
+		else return 1;
 	}
 
 	public function setPitch(value:Float):Float

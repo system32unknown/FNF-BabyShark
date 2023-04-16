@@ -3610,11 +3610,14 @@ class PlayState extends MusicBeatState {
 		#if LUA_ALLOWED
 		Lua_helper.callbacks.clear();
 		#end
-		for (hx in scriptArray) {
+		for (hx in scriptArray)
 			hx.call('onDestroy', []);
-			hx.stop();
-		}
 		scriptArray = [];
+
+		@:privateAccess {
+			FlxG.sound.destroySound(inst);
+			FlxG.sound.destroySound(vocals);
+		}
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);

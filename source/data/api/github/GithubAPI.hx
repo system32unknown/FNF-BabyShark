@@ -48,7 +48,7 @@ class GithubAPI {
 #else
 class GithubAPI {
     public static function getLatestCommits():String {
-        return '';
+        return 'Github is Off.';
     }
 
 	static function getCommits(user:String, commits:String, ?onError:Exception->Void) {

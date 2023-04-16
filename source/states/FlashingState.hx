@@ -78,7 +78,7 @@ class FlashingState extends MusicBeatState
 				}
 				warnText.text = textNoAdvanced;
 			}
-			warnText.screenCenter(Y);
+			warnText.screenCenter();
 
 			var back:Bool = controls.BACK;
 			if (controls.ACCEPT || back) {

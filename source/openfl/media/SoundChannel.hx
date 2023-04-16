@@ -88,15 +88,13 @@ import lime.media.AudioSource;
 	}
 	#end
 
-	@:noCompletion private function new(source:#if lime AudioSource #else Dynamic #end = null, soundTransform:SoundTransform = null):Void
+	@:noCompletion function new(source:#if lime AudioSource #else Dynamic #end = null, soundTransform:SoundTransform = null):Void
 	{
 		super(this);
 
-		if (soundTransform != null) {
+		if (soundTransform != null)
 			__soundTransform = soundTransform;
-		} else {
-			__soundTransform = new SoundTransform();
-		}
+		else __soundTransform = new SoundTransform();
 
 		#if lime
 		if (source != null) {
