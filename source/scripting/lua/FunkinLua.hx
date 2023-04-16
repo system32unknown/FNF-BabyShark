@@ -1020,9 +1020,7 @@ class FunkinLua {
 		addCallback("doTweenColor", function(tag:String, vars:String, targetColor:String, duration:Float, ease:String) {
 			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if(penisExam != null) {
-				var color:Int = Std.parseInt(targetColor);
-				if(!targetColor.startsWith('0x')) color = Std.parseInt('0xff' + targetColor);
-
+				var color:Int = FlxColor.fromString(targetColor);
 				var curColor:FlxColor = penisExam.color;
 				curColor.alphaFloat = penisExam.alpha;
 				PlayState.instance.modchartTweens.set(tag, FlxTween.color(penisExam, duration * PlayState.instance.playbackRate, curColor, color, {ease: LuaUtils.getTweenEaseByString(ease),
@@ -1151,9 +1149,11 @@ class FunkinLua {
 			return PlayState.instance.health;
 		});
 
+		addCallback("FlxColor", function(?color:String = '') { return LuaUtils.getColorByString(color); });
+		addCallback("getColorFromName", function(?color:String = '') { return LuaUtils.getColorByString(color); });
+
 		addCallback("getColorFromHex", function(color:String) {
-			if(!color.startsWith('0x')) color = '0xff' + color;
-			return Std.parseInt(color);
+			return FlxColor.fromString(color);
 		});
 		addCallback("getColorFromRgb", function(rgb:Array<Int>) {
 			return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]);
@@ -1269,14 +1269,10 @@ class FunkinLua {
 		});
 
 		addCallback("cameraFlash", function(camera:String, color:String, duration:Float, forced:Bool) {
-			var colorNum:Int = Std.parseInt(color);
-			if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
-			LuaUtils.cameraFromString(camera).flash(colorNum, duration * PlayState.instance.playbackRate, null, forced);
+			LuaUtils.cameraFromString(camera).flash(FlxColor.fromString(color), duration * PlayState.instance.playbackRate, null, forced);
 		});
 		addCallback("cameraFade", function(camera:String, color:String, duration:Float, forced:Bool) {
-			var colorNum:Int = Std.parseInt(color);
-			if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
-			LuaUtils.cameraFromString(camera).fade(colorNum, duration * PlayState.instance.playbackRate, false, null, forced);
+			LuaUtils.cameraFromString(camera).fade(FlxColor.fromString(color), duration * PlayState.instance.playbackRate, false, null, forced);
 		});
 		addCallback("setRatingPercent", function(value:Float) {
 			PlayState.instance.ratingPercent = value;
@@ -1392,8 +1388,7 @@ class FunkinLua {
 		});
 
 		addCallback("makeGraphic", function(obj:String, width:Int, height:Int, color:String) {
-			var colorNum:Int = Std.parseInt(color);
-			if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
+			var colorNum:Int = FlxColor.fromString(color);
 
 			var spr:FlxSprite = PlayState.instance.getLuaObject(obj,false);
 			if(spr != null) {
@@ -1772,53 +1767,35 @@ class FunkinLua {
 		});
 
 		addCallback("setHealthBarColors", function(leftHex:String, rightHex:String) {
-			var left = Std.parseInt('0xFF' + leftHex);
-			var right = Std.parseInt('0xFF' + rightHex);
+			var left = FlxColor.fromString(leftHex);
+			var right = FlxColor.fromString(rightHex);
 
-			if (leftHex == null || leftHex == '') {
+			if (leftHex == null || leftHex == '')
 				left = PlayState.instance.dad.getColor();
-			}		
-			if (rightHex == null || rightHex == '') {
+			if (rightHex == null || rightHex == '')
 				right = PlayState.instance.boyfriend.getColor();
-			}
 
 			PlayState.instance.healthBar.createFilledBar(left, right);
 			PlayState.instance.healthBar.updateBar();
 		});
 		addCallback("setHealthBarColorsWithGradient", function(leftHex:Array<String>, rightHex:Array<String>) {
-			var left:Array<FlxColor> = [Std.parseInt(leftHex[0]), Std.parseInt(leftHex[1])];
-			for (index_ => left_ in leftHex) {
-				if(!left_.startsWith('0x'))
-					left[index_] = Std.parseInt('0xFF' + left_);
-			}
+			var left:Array<FlxColor> = [FlxColor.fromString(leftHex[0]), FlxColor.fromString(leftHex[1])];
+			var right:Array<FlxColor> = [FlxColor.fromString(rightHex[0]), FlxColor.fromString(rightHex[1])];
 
-			var right:Array<FlxColor> = [Std.parseInt(rightHex[0]), Std.parseInt(rightHex[1])];
-			for (index_ => right_ in rightHex) {
-				if(!right_.startsWith('0x'))
-					right[index_] = Std.parseInt('0xFF' + right_);
-			}
 			PlayState.instance.healthBar.createGradientBar(left, right, 1, 90);
 			PlayState.instance.healthBar.updateBar();
 		});
 		addCallback("setTimeBarColors", function(leftHex:String, rightHex:String) {
-			var left:FlxColor = Std.parseInt(leftHex);
-			if(!leftHex.startsWith('0x')) left = Std.parseInt('0xff' + leftHex);
-			var right:FlxColor = Std.parseInt(rightHex);
-			if(!rightHex.startsWith('0x')) right = Std.parseInt('0xff' + rightHex);
+			var left:FlxColor = FlxColor.fromString(leftHex);
+			var right:FlxColor = FlxColor.fromString(rightHex);
 
 			PlayState.instance.timeBar.createFilledBar(right, left);
 			PlayState.instance.timeBar.updateBar();
 		});
 		addCallback("setTimeBarColorsWithGradient", function(leftHex:Array<String>, rightHex:Array<String>) {
-			var left:Array<FlxColor> = [Std.parseInt(leftHex[0]), Std.parseInt(leftHex[1])];
-			for (index_ => left_ in leftHex) {
-				if(!left_.startsWith('0x')) left[index_] = Std.parseInt('0xff' + left_);
-			}
+			var left:Array<FlxColor> = [FlxColor.fromString(leftHex[0]), FlxColor.fromString(leftHex[1])];
+			var right:Array<FlxColor> = [FlxColor.fromString(rightHex[0]), FlxColor.fromString(rightHex[1])];
 			
-			var right:Array<FlxColor> = [Std.parseInt(rightHex[0]), Std.parseInt(rightHex[1])];
-			for (index_ => right_ in rightHex) {
-				if(!right_.startsWith('0x')) right[index_] = Std.parseInt('0xff' + right_);
-			}
 			PlayState.instance.timeBar.createGradientBar(left, right, 1, 90);
 			PlayState.instance.timeBar.updateBar();
 		});
@@ -2148,11 +2125,8 @@ class FunkinLua {
 		addCallback("setTextBorder", function(tag:String, size:Int, color:String) {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
-				var colorNum:Int = Std.parseInt(color);
-				if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
-
 				obj.borderSize = size;
-				obj.borderColor = colorNum;
+				obj.borderColor = FlxColor.fromString(color);
 				return true;
 			}
 			luaTrace("setTextBorder: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
@@ -2173,10 +2147,7 @@ class FunkinLua {
 		addCallback("setTextColor", function(tag:String, color:String) {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
-				var colorNum:Int = Std.parseInt(color);
-				if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
-
-				obj.color = colorNum;
+				obj.color = FlxColor.fromString(color);
 				return true;
 			}
 			luaTrace("setTextColor: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
