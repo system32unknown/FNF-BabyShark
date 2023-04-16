@@ -54,6 +54,7 @@ class Main extends Sprite
 	public function new() {
 		super();
 		utils.system.PlatformUtil.setDPIAware();
+
 		stage != null ? init() : addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 
@@ -74,6 +75,8 @@ class Main extends Sprite
 		}
 
 		CustomLog.init();
+		utils.FunkinCache.init();
+
 		Controls.instance = new Controls();
 		addChild(new FunkinGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 
@@ -100,36 +103,12 @@ class Main extends Sprite
 		FlxG.fixedTimestep = false;
 		FlxG.signals.preStateSwitch.add(() -> {
 			Paths.clearStoredCache();
-			FlxG.bitmap.clearUnused();
-			FlxG.bitmap.clearCache();
-			
-			FlxG.sound.list.clear();
-			FlxG.sound.destroy();
-
-			var cache = cast(Assets.cache, AssetCache);
-			var lime_cache:lime.utils.AssetCache = cast lime.utils.Assets.cache;
-			
-			for (key in cache.font.keys())
-				cache.font.remove(key);
-			@:privateAccess
-			for (key in cache.sound.keys()) {
-				cache.sound.get(key).close();
-				cache.sound.remove(key);
-			}
-
-			for (key in lime_cache.image.keys())
-				lime_cache.image.remove(key);
-			for (key in lime_cache.font.keys())
-				lime_cache.font.remove(key);
-			for (key in lime_cache.audio.keys()) {
-				lime_cache.audio.get(key).dispose();
-				lime_cache.audio.remove(key);
-			};
-
-			MemoryUtil.clearMajor(true);
 		});
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();
+			
+			MemoryUtil.clearMajor();
+			MemoryUtil.clearMajor(true);
 			MemoryUtil.clearMajor();
 		});
 	}

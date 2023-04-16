@@ -1,19 +1,17 @@
 name: Build
 
 # Controls when the action will run.
+name: Windows Build
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   buildWindows:
+    name: Windows Build
+    permissions: write-all
     runs-on: windows-latest
 
     steps:
@@ -50,11 +48,17 @@ jobs:
       - name: Compile
         run: haxelib run lime build windows --app-version="4.0.0-${{github.run_id}}"
 
-      - name: Publish Artifact
+      - name: Publish Artifact (building)
         uses: actions/upload-artifact@main
         with:
           name: windowsBuild
           path: export/release/windows/bin
+
+      - name: Publish artifact (executable)
+        uses: actions/upload-artifact@main
+        with:
+          name: Update-Windows
+          path: export/release/windows/bin/Baby Shark's Funkin.exe
 
       - name: Clear current Action Cache
         uses: actions/github-script@main

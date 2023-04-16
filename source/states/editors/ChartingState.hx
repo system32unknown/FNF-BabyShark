@@ -101,6 +101,8 @@ class ChartingState extends MusicBeatState
 	public static var curSec:Int = 0;
 	static var lastSong:String = '';
 
+	public var zoomFactorTxt:String = "1 / 1";
+
 	var bpmTxt:FlxText;
 	var camPos:FlxObject;
 	var strumLine:FlxSprite;
@@ -146,7 +148,6 @@ class ChartingState extends MusicBeatState
 	var currentSongName:String;
 	var currentDifficultyName:String;
 
-	var zoomTxt:FlxText;
 	final zoomList:Array<Float> = [.25, .5, 1, 2, 3, 4, 6, 8, 12, 16, 24];
 	var curZoom:Int = 2;
 
@@ -167,7 +168,6 @@ class ChartingState extends MusicBeatState
 	public var mouseQuant:Bool = false;
 	override function create()
 	{
-		Main.overlayVar.alpha = .5;
 		FlxG.stage.window.onDropFile.add(onDropFile);
 
 		if (PlayState.SONG != null)
@@ -338,10 +338,6 @@ class ChartingState extends MusicBeatState
 			changeSection();
 		}
 		lastSong = currentSongName;
-
-		zoomTxt = new FlxText(10, 10, 0, "Zoom: 1 / 1", 16);
-		zoomTxt.scrollFactor.set();
-		add(zoomTxt);
 
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
@@ -1807,6 +1803,7 @@ class ChartingState extends MusicBeatState
 		"\nSection: " + curSec +
 		"\nBeat: " + Std.string(curDecBeat).substring(0, 4) +
 		"\nStep: " + curStep +
+		'\nZoom: $zoomFactorTxt' +
 		"\n\nBeat Snap: " + quantization + "th";
 
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
@@ -1866,9 +1863,8 @@ class ChartingState extends MusicBeatState
 
 	function updateZoom() {
 		var daZoom:Float = zoomList[curZoom];
-		var zoomThing:String = '1 / ' + daZoom;
-		if(daZoom < 1) zoomThing = Math.round(1 / daZoom) + ' / 1';
-		zoomTxt.text = 'Zoom: ' + zoomThing;
+		zoomFactorTxt = '1 / ' + daZoom;
+		if(daZoom < 1) zoomFactorTxt = Math.round(1 / daZoom) + ' / 1';
 		reloadGridLayer();
 	}
 

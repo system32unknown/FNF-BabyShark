@@ -4,9 +4,7 @@
 Heavily Modded Psych Engine. combined with Kade, Dave, Base Engines.
 
 ![Repo size](https://img.shields.io/github/repo-size/system32unknown/FNF-BabyShark)
-![File Count](https://img.shields.io/github/directory-file-count/system32unknown/FNF-BabyShark)
 ![Last commit](https://img.shields.io/github/last-commit/system32unknown/FNF-BabyShark)
-![Windows Build](https://img.shields.io/appveyor/build/system32unknown/FNF-BabyShark?label=Windows%20Build)
 ![License](https://img.shields.io/github/license/system32unknown/FNF-BabyShark)
 
 # Credits (WIP):

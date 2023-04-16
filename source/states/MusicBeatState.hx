@@ -55,9 +55,8 @@ class MusicBeatState extends FlxUIState {
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		super.create();
 
-		if(!skip) {
-			openSubState(new CustomFadeTransition(0.7, true));
-		}
+		if(!skip)
+			openSubState(new CustomFadeTransition(.7, true));
 		FlxTransitionableState.skipNextTransOut = false;
 	}
 
@@ -97,8 +96,7 @@ class MusicBeatState extends FlxUIState {
 		}
 	}
 
-	private function rollbackSection():Void
-	{
+	function rollbackSection():Void {
 		if(curStep < 0) return;
 
 		var lastSection:Int = curSection;
@@ -116,13 +114,12 @@ class MusicBeatState extends FlxUIState {
 		if(curSection > lastSection) sectionHit();
 	}
 
-	private function updateBeat():Void {
+	function updateBeat():Void {
 		curBeat = Math.floor(curStep / 4);
 		curDecBeat = curDecStep / 4;
 	}
 
-	private function updateCurStep():Void
-	{
+	function updateCurStep():Void {
 		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
 		var shit = ((Conductor.songPosition - ClientPrefs.getPref('noteOffset')) - lastChange.songTime) / lastChange.stepCrochet;
 		curDecStep = lastChange.stepTime + shit;

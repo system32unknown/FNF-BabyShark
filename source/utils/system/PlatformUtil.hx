@@ -131,8 +131,7 @@ class PlatformUtil
 
     #if windows
     @:functionCode('
-        #include <Windows.h>
-        SetProcessDPIAware()
+        SetProcessDPIAware();
     ')
     #end
     static public function setDPIAware() {}
