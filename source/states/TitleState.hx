@@ -23,6 +23,7 @@ import utils.MathUtil;
 import game.Highscore;
 import game.Conductor;
 import states.MainMenuState;
+import states.OutdatedState;
 #if sys
 import sys.FileSystem;
 #end
@@ -62,6 +63,9 @@ class TitleState extends MusicBeatState
 		#if LUA_ALLOWED
 		Paths.pushGlobalMods();
 		#end
+
+		getBuildVer("https://github.com/system32unknown/FNF-BabyShark/blob/main/version.txt");
+
 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
 		WeekData.loadTheFirstEnabledMod();
 
@@ -247,7 +251,9 @@ class TitleState extends MusicBeatState
 				MainMenuState.finishedFunnyMove = false;
 
 				new FlxTimer().start(1, function(tmr:FlxTimer) {
-					MusicBeatState.switchState(new MainMenuState());
+					if (MainMenuState.updateShit)
+						MusicBeatState.switchState(new OutdatedState());
+					else MusicBeatState.switchState(new MainMenuState());
 					closedState = true;
 				});
 			}
@@ -379,5 +385,23 @@ class TitleState extends MusicBeatState
 			}, 0);
 			skippedIntro = true;
 		}
+	}
+
+	function getBuildVer(verhttp:String) {
+		if (!Main.funkinNet.isOnline) return;
+		
+		var http = new haxe.Http(verhttp);
+		var returnedData:Array<String> = [];
+
+		http.onData = function(data:String) {
+			returnedData[0] = data.substring(0, data.indexOf(';'));
+			returnedData[1] = data.substring(data.indexOf('-'), data.length);
+			if (!Main.engineVersion.version.contains(returnedData[0].trim()) && !OutdatedState.leftState) {
+				MainMenuState.updateShit = true;
+				OutdatedState.needVer = returnedData[0];
+				OutdatedState.currChanges = returnedData[1];
+			}
+		}
+		http.request();
 	}
 }

@@ -106,7 +106,9 @@ class CoolUtil
 	}
 
 	inline public static function browserLoad(site:String) {
-		#if windows
+		#if linux
+		Sys.command('/usr/bin/xdg-open', [site, "&"]);
+		#else
 		FlxG.openURL(site);
 		#end
 	}

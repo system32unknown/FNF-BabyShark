@@ -21,6 +21,7 @@ import data.WeekData;
 class MainMenuState extends MusicBeatState
 {
 	public static var curSelected:Int = 0;
+	public static var updateShit:Bool = false;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	var camGame:FlxCamera;
@@ -152,7 +153,6 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollowPos, null, 1);
 
 		var versionShit:FlxText = new FlxText(0, 0, 0, 
-			'PSYCH v0.6.3 - CUSTOM BUILD\n' +
 			'Alter Engine v${Main.engineVersion.version} (${Main.COMMIT_HASH.trim().substring(0, 7)})\n' +
 			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n', 16);
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT);

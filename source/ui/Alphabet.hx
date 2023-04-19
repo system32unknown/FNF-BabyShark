@@ -38,8 +38,7 @@ class Alphabet extends FlxSpriteGroup
 	{
 		super(x, y);
 
-		this.startPosition.x = x;
-		this.startPosition.y = y;
+		this.startPosition.set(x, y);
 		this.bold = bold;
 		this.text = text;
 	}
@@ -341,8 +340,7 @@ class AlphaCharacter extends FlxSprite {
 		}
 		image = name;
 		frames = Paths.getSparrowAtlas(name);
-		this.scale.x = parent.scaleX;
-		this.scale.y = parent.scaleY;
+		this.scale.set(parent.scaleX, parent.scaleY);
 		alignOffset = 0;
 		
 		if (lastAnim != null) {

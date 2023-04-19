@@ -2,7 +2,6 @@ package flixel.system.ui;
 
 #if FLX_SOUND_SYSTEM
 import flixel.FlxG;
-import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import openfl.Lib;
 import openfl.display.Bitmap;
@@ -62,7 +61,7 @@ class FlxSoundTray extends Sprite
 
 		text.width = tmp.width;
 		text.height = tmp.height;
-		text.wordWrap = true;
+		text.wordWrap = text.multiline = true;
 		text.selectable = false;
 
 		var dtf:TextFormat = new TextFormat("VCR OSD Mono", 10, FlxColor.WHITE);
@@ -118,11 +117,10 @@ class FlxSoundTray extends Sprite
 	 *
 	 * @param slient Whether the volume is increasing.
 	 */
-	public function show(slient:Bool = false):Void
+	public function show(Silent:Bool = false):Void
 	{
-		if (!silent) {
-			var sound = FlxAssets.getSound(volumeSound);
-			if (sound != null) FlxG.sound.load(sound).play();
+		if (!Silent) {
+			FlxG.sound.load(volumeSound).play();
 		}
 
 		_timer = 1;
