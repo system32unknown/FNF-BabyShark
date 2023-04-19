@@ -7,8 +7,6 @@ import haxe.Exception;
 
 class GithubAPI {
     public static function getLatestCommits():String {
-		if (!Main.funkinNet.isOnline) return "NULL";
-
         var sha_id:GithubCommits = getCommits("system32unknown", "FNF-BabyShark")[0];
         return sha_id.sha;
     }

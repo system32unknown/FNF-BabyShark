@@ -19,7 +19,6 @@ import game.FunkinGame;
 import ui.Overlay;
 
 import data.api.github.GithubAPI;
-import data.api.FunkinInternet;
 
 //crash handler stuff
 #if CRASH_HANDLER
@@ -34,7 +33,6 @@ class Main extends Sprite
 {
 	public static var COMMIT_HASH(default, never):String = GithubAPI.getLatestCommits();
 	public static var engineVersion:GameVersion = new GameVersion(0, 1, 0);
-	public static var funkinNet:FunkinInternet = new FunkinInternet();
 
 	var game = {
 		width: 1280, // WINDOW width
@@ -76,6 +74,7 @@ class Main extends Sprite
 		}
 
 		CustomLog.init();
+		FunkinInternet.init();
 		utils.FunkinCache.init();
 
 		Controls.instance = new Controls();

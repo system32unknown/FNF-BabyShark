@@ -388,7 +388,7 @@ class TitleState extends MusicBeatState
 	}
 
 	function getBuildVer(verhttp:String) {
-		if (!Main.funkinNet.isOnline) return;
+		if (!FunkinInternet.isOnline) return;
 		
 		var http = new haxe.Http(verhttp);
 		var returnedData:Array<String> = [];

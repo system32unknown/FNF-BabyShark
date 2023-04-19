@@ -5,5 +5,6 @@ import utils.ClientPrefs;
 import states.MusicBeatState;
 import states.PlayState;
 import substates.MusicBeatSubstate;
+import data.api.FunkinInternet;
 
 using StringTools;
