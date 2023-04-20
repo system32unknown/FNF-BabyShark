@@ -743,6 +743,7 @@ class FunkinLua {
 		addCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
 			#if (hscript && HSCRIPT_ALLOWED)
 			HScript.initHaxeModule();
+			if (hscript.variables.exists(libName)) return;
 			try {
 				var str:String = '';
 				if(libPackage.length > 0)

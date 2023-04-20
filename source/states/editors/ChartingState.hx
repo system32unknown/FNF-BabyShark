@@ -2707,7 +2707,7 @@ class ChartingState extends MusicBeatState
 	function onDropFile(path:String):Void {
 		trace("user dropped file with path: " + Path.normalize(path));
 		openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
-			loadJson(path.toLowerCase());
+			loadJson(path.substring(path.lastIndexOf("/") + 1).toLowerCase());
 		}, null, ignoreWarnings));
 	}
 

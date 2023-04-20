@@ -3812,13 +3812,9 @@ class PlayState extends MusicBeatState {
 			if(exclusions != null && exclusions.contains(script.scriptName))
 				continue;
 
-			var myValue = script.call(event, args);
-			if(myValue == FunkinLua.Function_StopLua && !ignoreStops)
-				break;
-
-			// had to do this because there is a bug in haxe where Stop != Continue doesnt work
-			if(myValue != null && myValue != FunkinLua.Function_Continue)
-				returnVal = myValue;
+			var ret = script.call(event, args);
+			if (ret == FunkinLua.Function_StopLua && !ignoreStops) break;
+			if (ret != null && ret != FunkinLua.Function_Continue) returnVal = ret;
 		}
 		for (i in achievementsArray) i.call(event, args);
 		#end

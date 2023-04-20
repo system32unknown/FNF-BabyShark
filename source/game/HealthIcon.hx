@@ -10,6 +10,7 @@ class HealthIcon extends FlxSprite
 	static final prefix:String = 'icons/';
 	static final credits:String = 'credits/';
 	static final defaultIcon:String = 'unknown';
+	static final altDefaultIcon:String = 'icon-face';
 
 	public var sprTracker:FlxSprite;
 	var isPlayer:Bool = false;
@@ -34,7 +35,8 @@ class HealthIcon extends FlxSprite
 		if (!Paths.fileExists('images/$path.png', IMAGE)) path = '${prefix}icon-$char'; //Older versions of psych engine's support
 		if (!Paths.fileExists('images/$path.png', IMAGE)) { //Prevents crash from missing icon
 			if (!defaultIfMissing) return null;
-			path = prefix + defaultIcon;
+			path = prefix + altDefaultIcon;
+			if (!Paths.fileExists('images/' + path + '.png', IMAGE, false, true)) path = prefix + defaultIcon;
 		}
 		return Paths.image(path);
 	}
