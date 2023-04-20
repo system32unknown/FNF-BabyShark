@@ -53,6 +53,7 @@ class TitleState extends MusicBeatState
 
 	var curWacky:Array<String> = [];
 	public static var titleJSON:TitleData = null;
+	var mustUpdate:Bool = false;
 
 	var gradientBar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 1, 0xFF0F5FFF);
 	var gradtimer:Float = 0;
@@ -64,7 +65,8 @@ class TitleState extends MusicBeatState
 		Paths.pushGlobalMods();
 		#end
 
-		getBuildVer("https://github.com/system32unknown/FNF-BabyShark/blob/main/version.txt");
+		if (!closedState)
+			getBuildVer("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/blob/main/version.txt");
 
 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
 		WeekData.loadTheFirstEnabledMod();
@@ -251,7 +253,7 @@ class TitleState extends MusicBeatState
 				MainMenuState.finishedFunnyMove = false;
 
 				new FlxTimer().start(1, function(tmr:FlxTimer) {
-					if (MainMenuState.updateShit)
+					if (mustUpdate)
 						MusicBeatState.switchState(new OutdatedState());
 					else MusicBeatState.switchState(new MainMenuState());
 					closedState = true;
@@ -396,12 +398,18 @@ class TitleState extends MusicBeatState
 		http.onData = function(data:String) {
 			returnedData[0] = data.substring(0, data.indexOf(';'));
 			returnedData[1] = data.substring(data.indexOf('-'), data.length);
-			if (!Main.engineVersion.version.contains(returnedData[0].trim()) && !OutdatedState.leftState) {
-				MainMenuState.updateShit = true;
+
+			if (Main.engineVersion.version != returnedData[0].trim()) {
+				mustUpdate = true;
 				OutdatedState.needVer = returnedData[0];
 				OutdatedState.currChanges = returnedData[1];
 			}
 		}
+
+		http.onError = function(error) {
+			trace('error: $error');
+		}
+
 		http.request();
 	}
 }

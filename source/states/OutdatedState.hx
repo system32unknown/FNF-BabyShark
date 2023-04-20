@@ -3,10 +3,8 @@ package states;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
+import flixel.tweens.FlxTween;
 import utils.CoolUtil;
 
 class OutdatedState extends MusicBeatState
@@ -16,39 +14,48 @@ class OutdatedState extends MusicBeatState
 	public static var needVer:String = "IDFK LOL";
 	public static var currChanges:String = "dk";
 
+	var txt:FlxText;
+
 	override function create()
 	{
 		super.create();
 
-		var txt:FlxText = new FlxText(0, 0, FlxG.width,
-			"Your Version is outdated!\nYou are on "
-			+ Main.engineVersion.version
+		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK));
+
+		txt = new FlxText(0, 0, FlxG.width,
+			"Your Custom Build is outdated!\n
+			You are on " + Main.engineVersion.version
 			+ "\nwhile the most recent version is "
-			+ needVer
-			+ "."
+			+ '$needVer.'
 			+ "\n\nWhat's new:\n\n"
 			+ currChanges
-			+ "\n& more changes and bugfixes in the full changelog"
-			+ "\n\nPress Space to view the full changelog and update\nor ESCAPE to ignore this",
+			+ "\n& more changes and bugfixes in the full changelog
+			\n\nPress Space to view the full changelog and update\nor ESCAPE to ignore this",
 		32);
-		txt.setFormat("Comic Sans MS Bold", 32, FlxColor.fromRGB(200, 200, 200), CENTER);
-        txt.setBorderStyle(OUTLINE, FlxColor.BLUE, 3);
+		txt.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		txt.screenCenter();
 		add(txt);
 	}
 
 	override function update(elapsed:Float)
 	{
-		if (controls.ACCEPT) {
-			CoolUtil.browserLoad("https://github.com/system32unknown/FNF-BabyShark/release/latest");
-		} else if (controls.ACCEPT) {
-			leftState = true;
-			MusicBeatState.switchState(new MainMenuState());
-		}
+		if(!leftState) {
+			if (controls.ACCEPT) {
+				leftState = true;
+				CoolUtil.browserLoad("https://github.com/system32unknown/FNF-BabyShark/releases/");
+			} else if(controls.BACK) {
+				leftState = true;
+			}
 
-		if (controls.BACK) {
-			leftState = true;
-			MusicBeatState.switchState(new MainMenuState());
+			if(leftState)
+			{
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				FlxTween.tween(txt, {alpha: 0}, 1, {
+					onComplete: function (twn:FlxTween) {
+						MusicBeatState.switchState(new MainMenuState());
+					}
+				});
+			}
 		}
 		super.update(elapsed);
 	}

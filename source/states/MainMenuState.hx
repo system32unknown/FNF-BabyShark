@@ -21,7 +21,6 @@ import data.WeekData;
 class MainMenuState extends MusicBeatState
 {
 	public static var curSelected:Int = 0;
-	public static var updateShit:Bool = false;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	var camGame:FlxCamera;
