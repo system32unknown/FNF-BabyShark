@@ -79,8 +79,8 @@ class Main extends Sprite
 
 		Controls.instance = new Controls();
 		addChild(new FunkinGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
-
 		addChild(overlayVar = new Overlay());
+		
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		
