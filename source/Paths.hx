@@ -83,48 +83,41 @@ class Paths
 
 	public static function decacheSound(key:String) {
 		var obj = currentTrackedSounds.get(key);
+		currentTrackedSounds.remove(key);
+
 		if (obj == null && OpenFlAssets.cache.hasSound(key)) obj = OpenFlAssets.cache.getSound(key);
-		if (assetExcluded(obj)) return;
+		if (obj == null || assetExcluded(obj)) return;
 
 		OpenFlAssets.cache.removeSound(key);
 		Assets.cache.clear(key);
-		currentTrackedSounds.remove(key);
-
-		if (obj != null) {
-			if (obj.__buffer != null) {
-				obj.__buffer.dispose();
-				obj.__buffer = null;
-			}
-			obj = null;
+		
+		if (obj.__buffer != null) {
+			obj.__buffer.dispose();
+			obj.__buffer = null;
 		}
+		obj = null;
 	}
 
-	public static function decacheGraphic(key:String) {
+	public static function decacheGraphic(key:String) @:privateAccess {
 		var obj = currentTrackedAssets.get(key);
-		@:privateAccess{
-			if (obj == null)
-				obj = FlxG.bitmap._cache.get(key);
-			if (obj != null) {
-				if (assetExcluded(obj)) return;
+		currentTrackedAssets.remove(key);
+		if (obj == null)
+			obj = FlxG.bitmap._cache.get(key);
+		if ((obj == null && (obj = FlxG.bitmap._cache.get(key)) == null) || assetExcluded(obj)) return;
 
-				OpenFlAssets.cache.removeBitmapData(key);
-				OpenFlAssets.cache.clearBitmapData(key);
-				OpenFlAssets.cache.clear(key);
-				FlxG.bitmap._cache.remove(key);
-
-				if (obj.bitmap != null) {
-					obj.bitmap.lock();
-					if (obj.bitmap.__texture != null)
-						obj.bitmap.__texture.dispose();
-					obj.bitmap.disposeImage();
-					flixel.util.FlxDestroyUtil.dispose(obj.bitmap);
-				}
-
-				obj.dump();
-				obj.destroy();
-				currentTrackedAssets.remove(key);
-			}
+		OpenFlAssets.cache.removeBitmapData(key);
+		OpenFlAssets.cache.clear(key);
+		FlxG.bitmap._cache.remove(key);
+		if (obj.bitmap != null) {
+			obj.bitmap.lock();
+			if (obj.bitmap.__texture != null) obj.bitmap.__texture.dispose();
+			if (obj.bitmap.image != null) obj.bitmap.image.data = null;
+			obj.bitmap.disposeImage();
+			flixel.util.FlxDestroyUtil.dispose(obj.bitmap);
 		}
+		obj.dump();
+		obj.destroy();
+		obj = null;
 	}
 
 	// haya I love you for the base cache dump I took to the max
@@ -136,7 +129,7 @@ class Paths
 		}
 		freeableAssets = [];
 		#if cpp
-		cpp.vm.Gc.run(false);
+		utils.system.MemoryUtil.clearMajor();
 		#else
 		openfl.system.System.gc();
 		#end
@@ -146,14 +139,13 @@ class Paths
 	public static var localTrackedAssets:Array<String> = [];
 	public static var freeableAssets:Array<String> = [];
 	public static function clearStoredCache(?cleanUnused:Bool = false) {
-		@:privateAccess
-		for (key in FlxG.bitmap._cache.keys()) {
+		for (key in @:privateAccess FlxG.bitmap._cache.keys()) {
 			if (key != null && !currentTrackedAssets.exists(key) && !assetExcluded(key))
 				decacheGraphic(key);
 		}
 
 		for (key in currentTrackedSounds.keys()) {
-			if (!localTrackedAssets.contains(key) && !keyExclusions.contains(key) && key != null)
+			if (key != null && !localTrackedAssets.contains(key) && !assetExcluded(key))
 				decacheSound(key);
 		}
 
@@ -259,8 +251,8 @@ class Paths
 	}
 		
 	// streamlined the assets process more
-	inline static public function image(key:String, ?library:String, ?persist:Bool = true):FlxGraphic
-		return returnGraphic(key, library, !persist);
+	inline static public function image(key:String, ?library:String):FlxGraphic
+		return returnGraphic(key, library);
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
 	{
@@ -353,68 +345,126 @@ class Paths
 		return hideChars.split(path).join("").toLowerCase();
 	}
 
-	// completely rewritten asset loading? fuck!
-	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
-	public static function returnGraphic(key:String, ?library:String, ?noPersist:Bool = false):FlxGraphic {
-		#if MODS_ALLOWED
-		var path:String = modsImages(key);
-		if(FileSystem.exists(path)) {
-			if(!currentTrackedAssets.exists(path) && !FlxG.bitmap.checkCache(path)) {
-				var graphic:FlxGraphic;
-				var bitmap:BitmapData = BitmapData.fromFile(path);
-				graphic = FlxGraphic.fromBitmapData(bitmap, false, path);
-				graphic.persist = !noPersist;
-				currentTrackedAssets.set(path, graphic);
-			}
-			localTrackedAssets.push(path);
-			return FlxG.bitmap.get(path);
+	static var assetCompressTrack:Int = 0;
+	@:noCompletion static function stepAssetCompress():Void {
+		assetCompressTrack++;
+		if (assetCompressTrack > 6) {
+			assetCompressTrack = 0;
+			utils.system.MemoryUtil.clearMajor();
 		}
+	}
+
+	public static var hardwareCache:Bool = false;
+	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
+	public static function returnGraphic(key:String, ?library:String):FlxGraphic {
+		var modExists:Bool = false, graph:FlxGraphic = null;
+
+		#if MODS_ALLOWED
+		var modKey:String = modsImages(key);
+		if ((graph = currentTrackedAssets.get(modKey)) != null) {
+			localTrackedAssets.push(modKey);
+			return graph;
+		}
+
+		var srcKey:String = getPath('images/$key.png', IMAGE, library);
+		if ((graph = currentTrackedAssets.get(srcKey)) != null) {
+			localTrackedAssets.push(srcKey);
+			return graph;
+		}
+		else modExists = FileSystem.exists(modKey);
+
+		var path:String = if (modExists) modKey; else srcKey;
+		#else
+		var path:String = getPath('images/$key.png', IMAGE, library);
+		if ((graph = currentTrackedAssets.get(path)) != null) return graph;
 		#end
 
-		path = getPath('images/$key.png', IMAGE, library);
-		if (OpenFlAssets.exists(path, IMAGE)) {
-			if(!currentTrackedAssets.exists(path) && !FlxG.bitmap.checkCache(path)) {
-				var newGraphic:FlxGraphic = FlxG.bitmap.add(path, false, path);
-				newGraphic.persist = !noPersist;
-				currentTrackedAssets.set(path, newGraphic);
-			}
+		if (modExists || OpenFlAssets.exists(path, IMAGE)) {
 			localTrackedAssets.push(path);
-			return FlxG.bitmap.get(path);
+
+			var bitmap:BitmapData = _regBitmap(path, hardwareCache, modExists);
+			if (bitmap != null) graph = FlxGraphic.fromBitmapData(bitmap, false, path);
+
+			if (graph != null) {
+				graph.persist = true;
+				currentTrackedAssets.set(path, graph);
+				return graph;
+			}
 		}
-		trace('oh no $key and $library, $path is returning null NOOOO');
+
+		trace('oh no $key is returning null NOOOO: $path' #if MODS_ALLOWED + ' | Mods: $modKey' #end);
 		return null;
 	}
 
-	public static var currentTrackedSounds:Map<String, Sound> = [];
-	public static function returnSound(path:String, key:String, ?library:String) {
-		#if MODS_ALLOWED
-		var file:String = modsSounds(path, key);
-		if(FileSystem.exists(file)) {
-			if(!currentTrackedSounds.exists(file)) {
-				currentTrackedSounds.set(file, Sound.fromFile(file));
-			}
-			localTrackedAssets.push(key);
-			return currentTrackedSounds.get(file);
-		}
+	static function _regBitmap(key:String, hardware:Bool, file:Bool):BitmapData {
+		stepAssetCompress();
+		if (!file) return OpenFlAssets.getBitmapData(key, false, hardware);
+		#if sys
+		var newBitmap:BitmapData = BitmapData.fromFile(key);
+		if (newBitmap != null) return OpenFlAssets.registerBitmapData(newBitmap, key, false, hardware);
 		#end
-		// I hate this so god damn much
-		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
-		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
-		if(!currentTrackedSounds.exists(gottenPath))
-		#if MODS_ALLOWED
-			currentTrackedSounds.set(gottenPath, Sound.fromFile('./$gottenPath'));
-		#else
-		{
-			var folder:String = '';
-			#if html5
-			if(path == 'songs') folder = 'songs:';
-			#end
-			currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(folder + getPath('$path/$key.$SOUND_EXT', SOUND, library)));
-		}
-		#end
-		localTrackedAssets.push(gottenPath);
-		return currentTrackedSounds.get(gottenPath);
+		return null;
 	}
+
+	public static function regBitmap(key:String, ?hardware:Bool):BitmapData {
+		if (hardware == null) hardware = hardwareCache;
+		#if MODS_ALLOWED
+		if (FileSystem.exists(key)) return _regBitmap(key, hardware, true);
+		#end
+		if (OpenFlAssets.exists(key, IMAGE)) return _regBitmap(key, hardware, false);
+		return null;
+	}
+
+	public static var streamSounds:Bool = false;
+	public static var currentTrackedSounds:Map<String, Sound> = [];
+	public static function returnSound(path:String, key:String, ?library:String, ?stream:Bool):Sound {
+		#if MODS_ALLOWED
+		var modKey:String = modsSounds(path, key), modExists:Bool = FileSystem.exists(modKey);
+		var path:String = if (modExists) modKey; else getPath('$path/$key.$SOUND_EXT', SOUND, library);
+		var track:String = path.substr(path.indexOf(':') + 1);
+		var folder:String = './';
+		#else
+		var path:String = getPath('$path/$key.$SOUND_EXT', IMAGE, library), modExists:Bool = false;
+		var track:String = path.substr(path.indexOf(':') + 1);
+		var folder:String = '';
+		if (path == 'songs') folder = 'songs:';
+		#end
+		var uwu:String = folder + (modExists ? path : track);
+
+		#if (!MODS_ALLOWED)
+		if (OpenFlAssets.exists(uwu, SOUND)) {
+		#end
+			localTrackedAssets.push(track);
+			var sound:Sound = currentTrackedSounds.get(track);
+
+			// if no stream and sound is stream, fuck it, load one that arent stream
+			@:privateAccess if (!stream && sound != null && sound.__buffer != null && sound.__buffer.__srcVorbisFile != null) {
+				decacheSound(track);
+				sound = null;
+			}
+			if (sound == null) currentTrackedSounds.set(track, sound = _regSound(uwu, stream, #if MODS_ALLOWED true #else modExists #end));
+			if (sound != null) return sound;
+		#if (!MODS_ALLOWED) } #end
+
+		trace('oh no $key its returning null NOOOO: $path' #if MODS_ALLOWED + ' | $modKey' #end);
+		return null;
+	}
+
+	private static function _regSound(key:String, stream:Bool, file:Bool):Sound {
+		var snd:Sound = OpenFlAssets.getRawSound(key, stream, file);
+		if (snd != null) stepAssetCompress();
+		return snd;
+	}
+
+	public static function regSound(key:String, ?stream:Bool):Sound {
+		if (stream == null) stream = streamSounds;
+		#if MODS_ALLOWED
+		if (FileSystem.exists(key)) return _regSound(key, stream, true);
+		#end
+		if (OpenFlAssets.exists(key, SOUND)) return _regSound(key, stream, false);
+		return null;
+	}
+
 
 	#if MODS_ALLOWED
 	inline static public function mods(key:String = '')

@@ -48,8 +48,7 @@ class AudioBuffer
 	@:noCompletion private var __format:Int;
 
 	#if commonjs
-	private static function __init__()
-	{
+	private static function __init__() {
 		var p = untyped AudioBuffer.prototype;
 		untyped Object.defineProperties(p, {
 			"src": {get: p.get_src, set: p.set_src}
@@ -297,34 +296,8 @@ class AudioBuffer
 		var audioBuffer = AudioBuffer.fromFile(path);
 
 		if (audioBuffer != null)
-		{
-			#if flash
-			audioBuffer.__srcSound.addEventListener(flash.events.Event.COMPLETE, function(event) {
-				promise.complete(audioBuffer);
-			});
-
-			audioBuffer.__srcSound.addEventListener(flash.events.ProgressEvent.PROGRESS, function(event) {
-				promise.progress(Std.int(event.bytesLoaded), Std.int(event.bytesTotal));
-			});
-
-			audioBuffer.__srcSound.addEventListener(flash.events.IOErrorEvent.IO_ERROR, promise.error);
-			#elseif (js && html5 && lime_howlerjs)
-			if (audioBuffer != null)
-			{
-				audioBuffer.__srcHowl.on("load", function() {
-					promise.complete(audioBuffer);
-				});
-
-				audioBuffer.__srcHowl.on("loaderror", function(id, msg) {
-					promise.error(msg);
-				});
-
-				audioBuffer.__srcHowl.load();
-			}
-			#else
 			promise.complete(audioBuffer);
-			#end
-		} else promise.error(null);
+		else promise.error(null);
 
 		return promise.future;
 		#else

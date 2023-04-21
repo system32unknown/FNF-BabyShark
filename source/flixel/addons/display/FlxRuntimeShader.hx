@@ -344,16 +344,6 @@ class FlxRuntimeShader extends FlxShader
 		}
 	}
 
-	private var __fieldList:Array<String> = null;
-	private function thisHasField(name:String) {
-		// Reflect.hasField(this, name) is REALLY expensive so we use a cache.
-		if (__fieldList == null) {
-			__fieldList = Reflect.fields(this)
-				.concat(Type.getInstanceFields(Type.getClass(this)));
-		}
-		return __fieldList.indexOf(name) != -1;
-	}
-
 	/**
 	 * The parent function that initializes the shader.
 	 * This is done because some shader fields (such as `bitmap`) have to automatically propagate from the shader,

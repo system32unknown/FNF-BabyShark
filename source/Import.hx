@@ -1,3 +1,4 @@
+#if !macro
 #if discord_rpc
 import utils.DiscordClient;
 #end
@@ -8,3 +9,4 @@ import substates.MusicBeatSubstate;
 import data.api.FunkinInternet;
 
 using StringTools;
+#end
