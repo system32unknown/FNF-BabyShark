@@ -63,14 +63,6 @@ class CoolUtil
 		return [for (i in min...max) i];
 	}
 
-	//uhhhh does this even work at all? i'm starting to doubt
-	inline public static function precacheSound(sound:String, ?library:String = null):Void {
-		Paths.sound(sound, library);
-	}
-	inline public static function precacheMusic(sound:String, ?library:String = null):Void {
-		Paths.music(sound, library);
-	}
-
 	public static function GenerateLetterRank(accuracy:Float) { // generate a letter rankings
 		var ranking:String = "N/A";
 		var wifeConditions:Array<Dynamic> = [

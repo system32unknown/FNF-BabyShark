@@ -96,11 +96,6 @@ class LoadingState extends MusicBeatState
 		initSongsManifest().onComplete(function(lib) {
 			callbacks = new MultiCallback(onLoad);
 			var introComplete = callbacks.add("introComplete");
-			if (PlayState.SONG != null) {
-				checkLoadSong(getSongPath());
-				if (PlayState.SONG.needsVoices)
-					checkLoadSong(getVocalPath());
-			}
 			checkLibrary("shared");
 			if(directory != null && directory.length > 0 && directory != 'shared') {
 				checkLibrary('week_assets');

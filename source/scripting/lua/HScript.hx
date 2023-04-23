@@ -2,6 +2,7 @@ package scripting.lua;
 
 #if (hscript && HSCRIPT_ALLOWED)
 import hscript.Parser;
+import hscript.Expr;
 import hscript.Interp;
 #end
 
@@ -15,11 +16,21 @@ import flixel.tweens.FlxEase;
 class HScript
 {
 	#if (hscript && HSCRIPT_ALLOWED)
-	public static var parser:Parser;
+	static var MAX_POOL(default, null):Int = 255;
+
+	public static var parser:Parser = new Parser();
+
+	public var idEnumerator:Int = 0;
+
+	public var exprs:Map<Int, Expr> = new Map(); // safe cache
+	var pool:Map<Int, Expr> = new Map(); // unsafe immediate cache
+	var keys:Map<String, Int> = new Map(); // indices
+	var syek:Map<Int, String> = new Map(); // secidni (for pool)
+	var poolarr:Array<Int> = [];
+
 	public var interp:Interp;
 
 	public var variables(get, never):Map<String, Dynamic>;
-
 	public function get_variables()
 		return interp.variables;
 	
@@ -42,10 +53,6 @@ class HScript
 
 	public function new() {
 		interp = new Interp();
-		parser = new Parser();
-
-		parser.allowTypes = parser.allowJSON = true;
-		parser.line = 1;
 		setVars();
 	}
 
@@ -85,8 +92,50 @@ class HScript
 		});
 	}
 
-	public function execute(codeToRun:String):Dynamic {
-		return interp.execute(parser.parseString(codeToRun));
+	public function parse(code:String):Int {
+		if (keys.exists(code)) return keys.get(code);
+		var expr:Expr = parser.parseString(code);
+		exprs.set(idEnumerator, expr);
+		keys.set(code, idEnumerator);
+		return idEnumerator++;
+	}
+
+	inline public function getExpr(id:Int):Expr
+		return exprs.get(id);
+
+	public function execute(expr:Expr):Dynamic {
+		parser.allowTypes = parser.allowJSON = parser.allowMetadata = true;
+		parser.line = 1;
+		return interp.execute(expr);
+	}
+
+	public function immediateExecute(code:String):Dynamic {
+		var expr:Expr;
+		if (keys.exists(code)) expr = pool.get(keys.get(code));
+		else {
+			expr = parser.parseString(code);
+			pool.set(idEnumerator, expr);
+			keys.set(code, idEnumerator);
+			syek.set(idEnumerator, code);
+			poolarr.push(idEnumerator);
+			idEnumerator++;
+			while (poolarr.length > MAX_POOL) {
+				var id:Int = poolarr.shift();
+				var code:String = syek.get(id);
+				syek.remove(id);
+				keys.remove(code);
+				pool.remove(id);
+			}
+		}
+		return inline execute(expr);
+	}
+
+	public function destroy() {
+		exprs.clear();
+		pool.clear();
+		keys.clear();
+		syek.clear();
+		poolarr.resize(0);
 	}
 	#end
 }

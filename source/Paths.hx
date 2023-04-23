@@ -217,42 +217,35 @@ class Paths
 	inline static public function json(key:String, ?library:String)
 		return getPath('data/$key.json', TEXT, library);
 
-	static public function video(key:String) {
+	#if (!MODS_ALLOWED) inline #end static public function video(key:String) {
 		#if MODS_ALLOWED
 		var file:String = modsVideo(key);
 		if (FileSystem.exists(file)) return file;
 		#end
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
-
-	inline static public function sound(key:String, ?library:String):Sound
+	#if (!MODS_ALLOWED) inline #end static public function sound(key:String, ?library:String):Sound
 		return returnSound('sounds', key, library);
 
-	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
+	#if (!MODS_ALLOWED) inline #end static public function soundRandom(key:String, min:Int, max:Int, ?library:String):Sound
 		return sound(key + FlxG.random.int(min, max), library);
 
-	inline static public function music(key:String, ?library:String):Sound
-		return returnSound('music', key, library);
-
-	inline static public function voices(song:String):Any {
-		#if html5
-		return 'songs:assets/songs/${formatToSongPath(song)}/Voices.$SOUND_EXT';
-		#else
-		return returnSound('songs', '${formatToSongPath(song)}/Voices');
-		#end
+	public static var streamMusic:Bool = false;
+	#if (!MODS_ALLOWED) inline #end static public function music(key:String, ?library:String, ?stream:Bool):Sound {
+		return returnSound('music', key, library,
+			stream || streamMusic//stream != null ? stream : (!MusicBeatState.inState(PlayState) || streamMusic)
+		);
 	}
 
-	inline static public function inst(song:String):Any {
-		#if html5
-		return 'songs:assets/songs/${formatToSongPath(song)}/Inst.$SOUND_EXT';
-		#else
-		return returnSound('songs', '${formatToSongPath(song)}/Inst');
-		#end
-	}
-		
 	// streamlined the assets process more
-	inline static public function image(key:String, ?library:String):FlxGraphic
+	#if (!MODS_ALLOWED) inline #end static public function image(key:String, ?library:String):FlxGraphic
 		return returnGraphic(key, library);
+
+	#if (!MODS_ALLOWED) inline #end static public function inst(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
+		return returnSound('songs', '${formatToSongPath(song)}/Inst', !forceNoStream && (stream || streamMusic));
+
+	#if (!MODS_ALLOWED) inline #end static public function voices(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
+		return returnSound('songs', '${formatToSongPath(song)}/Voices', !forceNoStream && (stream || streamMusic));
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
 	{
@@ -538,6 +531,9 @@ class Paths
 		}
 		return globalMods;
 	}
+
+	static public function isValidModDir(dir:String):Bool
+		return FileSystem.isDirectory(haxe.io.Path.join([mods(), dir])) && !ignoreModFolders.contains(dir.toLowerCase());
 
 	static public function getModDirectories(lowercase:Bool = false):Array<String> {
 		var list:Array<String> = [];

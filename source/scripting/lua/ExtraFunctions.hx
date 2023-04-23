@@ -115,45 +115,40 @@ class ExtraFunctions
 		// Save data management
 		funk.addCallback("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
-				var save:FlxSave = new FlxSave();
-				// folder goes unused for flixel 5 users. @BeastlyGhost
-				save.bind(name, CoolUtil.getSavePath() + '/' + folder);
-				PlayState.instance.modchartSaves.set(name, save);
+				funk.luaTrace('initSaveData: Save file already initialized: ' + name);
 				return;
 			}
-			funk.luaTrace('initSaveData: Save file already initialized: ' + name);
+			var save:FlxSave = new FlxSave();
+			save.bind(name, CoolUtil.getSavePath() + '/' + folder);
+			PlayState.instance.modchartSaves.set(name, save);
 		});
 		funk.addCallback("flushSaveData", function(name:String) {
-			if(PlayState.instance.modchartSaves.exists(name))
-			{
+			if(PlayState.instance.modchartSaves.exists(name)) {
 				PlayState.instance.modchartSaves.get(name).flush();
 				return;
 			}
 			funk.luaTrace('flushSaveData: Save file not initialized: ' + name, false, false, FlxColor.RED);
 		});
 		funk.addCallback("getDataFromSave", function(name:String, field:String, ?defaultValue:Dynamic = null) {
-			if(PlayState.instance.modchartSaves.exists(name))
-			{
-				var retVal:Dynamic = Reflect.field(PlayState.instance.modchartSaves.get(name).data, field);
-				return retVal;
+			if(!PlayState.instance.modchartSaves.exists(name)) {
+				funk.luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
+				return defaultValue;
 			}
-			funk.luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
-			return defaultValue;
+			return Reflect.field(PlayState.instance.modchartSaves.get(name).data, field);
 		});
 		funk.addCallback("setDataFromSave", function(name:String, field:String, value:Dynamic) {
-			if(PlayState.instance.modchartSaves.exists(name))
-			{
-				Reflect.setField(PlayState.instance.modchartSaves.get(name).data, field, value);
+			if(!PlayState.instance.modchartSaves.exists(name)) {
+				funk.luaTrace('setDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 				return;
 			}
-			funk.luaTrace('setDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
+			Reflect.setField(PlayState.instance.modchartSaves.get(name).data, field, value);
+			
 		});
 
 		// File management
 		funk.addCallback("checkFileExists", function(filename:String, ?absolute:Bool = false) {
 			#if MODS_ALLOWED
-			if(absolute)
-				return FileSystem.exists(filename);
+			if(absolute) return FileSystem.exists(filename);
 
 			var path:String = Paths.modFolders(filename);
 			if(FileSystem.exists(path)) {

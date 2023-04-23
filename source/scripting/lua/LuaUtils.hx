@@ -16,6 +16,8 @@ import substates.GameOverSubstate;
 
 #if LUA_ALLOWED
 import llua.Lua;
+import llua.Convert;
+import llua.State;
 #end
 
 typedef LuaTweenOptions = {
@@ -30,6 +32,21 @@ typedef LuaTweenOptions = {
 
 class LuaUtils
 {
+	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
+		var ind = variable.indexOf('.');
+		if (ind == -1) {
+			if (PlayState.instance.variables.exists(variable)) return PlayState.instance.variables.get(variable);
+			return checkLuaFirst ? getObjectDirectly(variable, checkForTextsToo) : getVarInArray(getTargetInstance(), variable);
+		}
+
+		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo);
+		while (ind != -1) {
+			obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
+		}
+
+		return obj;
+	}
+
 	public static function getLuaTween(options:Dynamic) {
 		return {
 			type: getTweenTypeByString(options.type),
@@ -156,9 +173,7 @@ class LuaUtils
 	}
 	
 	public static function isOfTypes(value:Any, types:Array<Dynamic>) {
-		for (type in types) {
-			if(Std.isOfType(value, type)) return true;
-		}
+		for (type in types) if(Std.isOfType(value, type)) return true;
 		return false;
 	}
 	
@@ -182,9 +197,7 @@ class LuaUtils
 	}
 
 	public static function resetTextTag(tag:String) {
-		if(!PlayState.instance.modchartTexts.exists(tag)) {
-			return;
-		}
+		if(!PlayState.instance.modchartTexts.exists(tag)) return;
 
 		var target:ModchartText = PlayState.instance.modchartTexts.get(tag);
 		target.kill();
@@ -196,9 +209,7 @@ class LuaUtils
 	}
 
 	public static function resetSpriteTag(tag:String) {
-		if(!PlayState.instance.modchartSprites.exists(tag)) {
-			return;
-		}
+		if(!PlayState.instance.modchartSprites.exists(tag)) return;
 
 		var target:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
 		target.kill();
@@ -347,4 +358,35 @@ class LuaUtils
 		}
 		return PlayState.instance.camGame;
 	}
+
+	public static function isLuaRunning(luaFile:String) {
+		#if LUA_ALLOWED
+		luaFile = FunkinLua.format(luaFile);
+
+		for (luaInstance in PlayState.instance.luaArray) {
+			if (luaInstance.globalScriptName == luaFile && !luaInstance.closed)
+				return true;
+		}
+		#end
+		return false;
+	}
+
+	//Copied from Raltyro's getarguments
+	inline static function _getarguments(l:State, args:Dynamic, nparams:Int, offset:Int):Void {
+		var i:Int = 0, _temp:Int;
+		while(i < nparams) {
+			_temp = i + offset;
+			args[_temp] = Convert.fromLua(l, ++i);
+		}
+	}
+
+	public static function getarguments(l:State, ?args:Dynamic, ?nparams:Int, ?offset:Int = 0):Array<Any> {
+		if (args == null) args = [];
+		if (nparams == null) nparams = Lua.gettop(l);
+		if (nparams == 0) return args;
+
+		_getarguments(l, args, nparams, offset);
+		return args;
+	}
+
 }
