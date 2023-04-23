@@ -66,7 +66,7 @@ class TitleState extends MusicBeatState
 		#end
 
 		if (!closedState)
-			getBuildVer("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/blob/main/version.txt");
+			getBuildVer("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/version.txt");
 
 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
 		WeekData.loadTheFirstEnabledMod();
@@ -114,16 +114,12 @@ class TitleState extends MusicBeatState
 			#end
 
 			if (initialized) startIntro();
-			else {
-				new FlxTimer().start(1, function(tmr:FlxTimer) {
-					startIntro();
-				});
-			}
+			else new FlxTimer().start(1, startIntro);
 		}
 	}
 
 	var foundXml:Bool = false;
-	function startIntro() {
+	function startIntro(?_) {
 		if (!initialized) {
 			if (FlxG.sound.music == null) {
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);

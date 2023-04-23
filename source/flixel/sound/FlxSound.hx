@@ -15,9 +15,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flash.media.SoundMixer;
 import openfl.Assets;
-#if flash11
-import flash.utils.ByteArray;
-#end
 #if (openfl >= "8.0.0")
 import openfl.utils.AssetType;
 #end
@@ -92,17 +89,17 @@ class FlxSound extends FlxBasic
 	/**
 	 * Stores the average wave amplitude of both stereo channels.
 	 */
-	public var amplitude(#if flash default #elseif lime get #end, null):Float;
+	public var amplitude(get, null):Float;
 
 	/**
 	 * Just the amplitude of the left stereo channel.
 	 */
-	public var amplitudeLeft(#if flash default #elseif lime get #end, null):Float;
+	public var amplitudeLeft(get, null):Float;
 
 	/**
 	 * Just the amplitude of the left stereo channel.
 	 */
-	public var amplitudeRight(#if flash default #elseif lime get #end, null):Float;
+	public var amplitudeRight(get, null):Float;
 
 	/**
 	 * Whether to call `destroy()` when the sound has finished playing.
@@ -393,23 +390,6 @@ class FlxSound extends FlxBasic
 
 		_volumeAdjust = radialMultiplier;
 		updateTransform();
-
-		#if flash
-		if (_transform.volume > 0) {
-			amplitudeLeft = _channel.leftPeak / _transform.volume;
-			amplitudeRight = _channel.rightPeak / _transform.volume;
-			amplitude = (amplitudeLeft + amplitudeRight) * 0.5;
-		} else {
-			amplitudeLeft = 0;
-			amplitudeRight = 0;
-			amplitude = 0;
-		}
-		#end
-
-		#if flash
-		if (endTime != null && _time >= endTime)
-			stopped();
-		#end
 	}
 
 	override public function kill():Void {
@@ -489,11 +469,7 @@ class FlxSound extends FlxBasic
 		pitch = 1;
 		#end
 		if (_sound != null) {
-			#if flash
-			_length = _sound.length;
-			#else
 			makeChannel();
-			#end
 		} else _length = 0;
 
 		endTime = _length;
@@ -685,11 +661,7 @@ class FlxSound extends FlxBasic
 
 		_paused = false;
 		_time = StartTime;
-		#if flash
-		_channel = _sound.play(_time, 0, _transform);
-		#else
 		@:privateAccess if (_channel == null || !_channel.__isValid || _channel.__source.__backend == null) makeChannel();
-		#end
 
 		if (_channel != null) {
 			#if FLX_PITCH
@@ -768,10 +740,6 @@ class FlxSound extends FlxBasic
 		if (_channel != null)
 		{
 			_channel.removeEventListener(Event.SOUND_COMPLETE, stopped);
-			#if flash
-			_channel.stop();
-			_channel = null;
-			#else
 			_channel.removeEventListener(Event.SOUND_LOOP, ev_looped);
 			@:privateAccess{
 				if (_channel.__isValid) {
@@ -779,7 +747,6 @@ class FlxSound extends FlxBasic
 					else _channel.__source.pause();
 				}
 			}
-			#end
 		}
 
 		active = false;
@@ -949,10 +916,6 @@ class FlxSound extends FlxBasic
 	function set_time(time:Float):Float @:privateAccess {
 		time = FlxMath.bound(time, 0, length - 1);
 		if (_channel != null && _realPitch > 0) {
-			#if flash
-			cleanup(false, true);
-			startSound(time);
-			#else
 			if (!_channel.__isValid) {
 				cleanup(false, true);
 				startSound(time);
@@ -960,7 +923,6 @@ class FlxSound extends FlxBasic
 				_channel.__source.offset = 0;
 				_channel.__source.currentTime = Std.int(time);
 			}
-			#end
 		}
 		return _time = time;
 	}

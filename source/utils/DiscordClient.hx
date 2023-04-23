@@ -75,9 +75,7 @@ class DiscordClient
 	{
 		#if DISCORD_ALLOWED
 		var startTimestamp:Float = if(hasStartTimestamp) Date.now().getTime() else 0;
-
-		if (endTimestamp > 0)
-			endTimestamp = startTimestamp + endTimestamp;
+		if (endTimestamp > 0) endTimestamp = startTimestamp + endTimestamp;
 
 		var presence:DiscordPresenceOptions = {
 			details: details,

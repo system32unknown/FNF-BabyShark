@@ -19,30 +19,24 @@ package utils.system;
 #include <string>
 #include <psapi.h>
 ')
-#end
 class PlatformUtil
 {
-    #if windows
 	@:functionCode('
         HWND hWnd = GetActiveWindow();
         res = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
         if (res)
             SetLayeredWindowAttributes(hWnd, RGB(r, g, b), alpha, LWA_COLORKEY);
     ')
-    #end
 	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0, res:Int = 0) return res;
 
-    #if windows
 	@:functionCode('
         HWND hWnd = GetActiveWindow();
         res = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
         if (res)
             SetLayeredWindowAttributes(hWnd, RGB(r, g, b), alpha, LWA_COLORKEY);
     ')
-    #end
 	static public function getWindowsBackward(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 1, res:Int = 0) return res;
 
-    #if windows
     @:functionCode('
         NOTIFYICONDATA m_NID;
 
@@ -73,17 +67,11 @@ class PlatformUtil
 
         return Shell_NotifyIcon(NIM_MODIFY, &m_NID);
     ')
-    #end
     static public function sendWindowsNotification(title:String = "", desc:String = ""):Int return 0;
     
-    #if windows
-	@:functionCode('
-        return SetCursorPos(x, y); 
-    ')
-    #end
+	@:functionCode('return SetCursorPos(x, y);')
 	static public function setCursorPos(x:Int = 0, y:Int = 0):Int return 0;
 
-    #if windows
     @:functionCode('
         HWND window = GetActiveWindow();
         HICON smallIcon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
@@ -91,10 +79,8 @@ class PlatformUtil
         SendMessage(window, WM_SETICON, ICON_SMALL, (LPARAM)smallIcon);
         SendMessage(window, WM_SETICON, ICON_BIG, (LPARAM)icon);
     ')
-    #end
     static public function setWindowIcon(path:String) {}
 
-    #if windows
     @:functionCode('
         POINT mousePos;
 
@@ -112,7 +98,6 @@ class PlatformUtil
             return 0;
         }
     ')
-    #end
     static public function getMousePos(pos:Int):Int {return 0;}
 
     @:functionCode('
@@ -122,20 +107,33 @@ class PlatformUtil
     ')
     static public function setWindowAtt(type:Int, enable:Bool) {}
 
-    #if windows
-    @:functionCode('
-        MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);
-    ')
-    #end
+    @:functionCode('MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND); ')
     static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
 
-    #if windows
-    @:functionCode('
-        SetProcessDPIAware();
-    ')
-    #end
+    @:functionCode('SetProcessDPIAware();')
     static public function setDPIAware() {}
 }
+#else
+class PlatformUtil {
+	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0, res:Int = 0) return 0;
+
+	static public function getWindowsBackward(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 1, res:Int = 0) return 0;
+
+    static public function sendWindowsNotification(title:String = "", desc:String = ""):Int return 0;
+
+	static public function setCursorPos(x:Int = 0, y:Int = 0):Int return 0;
+
+    static public function setWindowIcon(path:String) {}
+
+    static public function getMousePos(pos:Int):Int {return 0;}
+
+    static public function setWindowAtt(type:Int, enable:Bool) {}
+
+    static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
+
+    static public function setDPIAware() {}
+}
+#end
 
 @:enum abstract MessageBoxIcon(Int) {
     var MSG_ERROR:MessageBoxIcon = 0x00000010;

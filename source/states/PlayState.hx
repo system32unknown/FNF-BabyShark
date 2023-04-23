@@ -305,9 +305,21 @@ class PlayState extends MusicBeatState {
 		FreeplayState.destroyFreeplayVocals();
 		instance = this;
 
+		FlxG.fixedTimestep = false;
+		persistentUpdate = persistentDraw = true;
+
+		if (FlxG.sound.music != null) FlxG.sound.music.destroy();
+		var music:FlxSound = FlxG.sound.music = new FlxSound();
+		music.group = FlxG.sound.defaultMusicGroup;
+		music.persist = true;
+		music.volume = 1;
+
+		GameOverSubstate.resetVariables();
+		PauseSubState.songName = null; //Reset to default
+
 		debugKeysChart = ClientPrefs.keyBinds.get('debug_1').copy();
 		debugKeysCharacter = ClientPrefs.keyBinds.get('debug_2').copy();
-		PauseSubState.songName = null; //Reset to default
+		
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed', 1);
 		fullComboFunction = function() {
 			var epics = ratingsData[0].hits;
@@ -383,7 +395,6 @@ class PlayState extends MusicBeatState {
 		detailsPausedText = "Paused - " + detailsText;
 		#end
 
-		GameOverSubstate.resetVariables();
 		songName = Paths.formatToSongPath(SONG.song);
 
 		if(SONG.stage == null || SONG.stage.length < 1) {
@@ -858,7 +869,6 @@ class PlayState extends MusicBeatState {
 		
 		CustomFadeTransition.nextCamera = camOther;
 		if(eventNotes.length < 1) checkEventNote();
-		persistentUpdate = persistentDraw = true;
 	}
 
 	function set_songSpeed(value:Float):Float {
@@ -2835,7 +2845,7 @@ class PlayState extends MusicBeatState {
 
 		Paths.sound(GameOverSubstate.deathSoundName);
 		Paths.music(GameOverSubstate.loopSoundName);
-		Paths.sound(GameOverSubstate.endSoundName);
+		Paths.music(GameOverSubstate.endSoundName);
 	}
 
 	// FOR LUA
@@ -3607,16 +3617,21 @@ class PlayState extends MusicBeatState {
 			lua.stop();
 		}
 		luaArray = [];
-		#if LUA_ALLOWED
-		Lua_helper.callbacks.clear();
-		#end
 		for (hx in scriptArray)
 			hx.call('onDestroy', []);
 		scriptArray = [];
 
-		@:privateAccess {
-			FlxG.sound.destroySound(inst);
-			FlxG.sound.destroySound(vocals);
+		for (name => save in modchartSaves) save.close();
+
+		@:privateAccess
+		if (Std.isOfType(FlxG.game._requestedState, PlayState)) {
+			if (FlxG.sound.music != null) FlxG.sound.music.destroy();
+		} else {
+			Paths.clearStoredCache();
+			if (FlxG.sound.music != null) {
+				FlxG.sound.music.onComplete = null;
+				FlxG.sound.music.pitch = 1;
+			}
 		}
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
@@ -3625,7 +3640,6 @@ class PlayState extends MusicBeatState {
 		subtitleManager.destroy();
 		subtitleManager = null;
 		FlxAnimationController.globalSpeed = 1;
-		FlxG.sound.music.pitch = 1;
 		PsychVideo.clearAll();
 		super.destroy();
 	}

@@ -166,13 +166,11 @@ class ShaderMacro
 				switch (field.name)
 				{
 					case "new":
-						var block = switch (field.kind)
-						{
+						var block = switch (field.kind) {
 							case FFun(f):
 								if (f.expr == null) null;
 
-								switch (f.expr.expr)
-								{
+								switch (f.expr.expr) {
 									case EBlock(e): e;
 									default: null;
 								}
@@ -182,74 +180,56 @@ class ShaderMacro
 
 						block.unshift(Context.parse("__isGenerated = true", pos));
 
-						if (glVertexSource != null)
-						{
-							block.unshift(macro if (__glVertexSource == null)
-							{
+						if (glVertexSource != null) {
+							block.unshift(macro if (__glVertexSource == null) {
 								__glVertexSource = $v{glVertexSource};
 							});
 						}
 
-						if (glFragmentSource != null)
-						{
-							block.unshift(macro if (__glFragmentSource == null)
-							{
+						if (glFragmentSource != null) {
+							block.unshift(macro if (__glFragmentSource == null) {
 								__glFragmentSource = $v{glFragmentSource};
 							});
 						}
 
-						if (glVertexSourceRaw != null)
-						{
-							block.unshift(macro if (__glVertexSourceRaw == null)
-							{
+						if (glVertexSourceRaw != null) {
+							block.unshift(macro if (__glVertexSourceRaw == null) {
 								__glVertexSourceRaw = $v{glVertexSourceRaw};
 							});
 						}
 
-						if (glFragmentSourceRaw != null)
-						{
-							block.unshift(macro if (__glFragmentSourceRaw == null)
-							{
+						if (glFragmentSourceRaw != null) {
+							block.unshift(macro if (__glFragmentSourceRaw == null) {
 								__glFragmentSourceRaw = $v{glFragmentSourceRaw};
 							});
 						}
 
-						if (glVertexBody != null)
-						{
-							block.unshift(macro if (__glVertexBodyRaw == null)
-							{
+						if (glVertexBody != null) {
+							block.unshift(macro if (__glVertexBodyRaw == null) {
 								__glVertexBodyRaw = $v{glVertexBody};
 							});
 						}
 
-						if (glFragmentBody != null)
-						{
-							block.unshift(macro if (__glFragmentBodyRaw == null)
-							{
+						if (glFragmentBody != null) {
+							block.unshift(macro if (__glFragmentBodyRaw == null) {
 								__glFragmentBodyRaw = $v{glFragmentBody};
 							});
 						}
 
-						if (glVertexHeader != null)
-						{
-							block.unshift(macro if (__glVertexHeaderRaw == null)
-							{
+						if (glVertexHeader != null) {
+							block.unshift(macro if (__glVertexHeaderRaw == null) {
 								__glVertexHeaderRaw = $v{glVertexHeader};
 							});
 						}
 
-						if (glFragmentHeader != null)
-						{
-							block.unshift(macro if (__glFragmentHeaderRaw == null)
-							{
+						if (glFragmentHeader != null) {
+							block.unshift(macro if (__glFragmentHeaderRaw == null) {
 								__glFragmentHeaderRaw = $v{glFragmentHeader};
 							});
 						}
 
-						if (glVersion != null)
-						{
-							block.unshift(macro if (__glVersion == 0)
-							{
+						if (glVersion != null) {
+							block.unshift(macro if (__glVersion == 0) {
 								__glVersion = $v{glVersion};
 							});
 						}
@@ -274,13 +254,8 @@ class ShaderMacro
 		var lastMatch = 0, position, regex, field:Field, name, type;
 
 		if (storageType == "uniform")
-		{
 			regex = ~/uniform ([A-Za-z0-9]+) ([A-Za-z0-9_]+)/;
-		}
-		else
-		{
-			regex = ~/attribute ([A-Za-z0-9]+) ([A-Za-z0-9_]+)/;
-		}
+		else regex = ~/attribute ([A-Za-z0-9]+) ([A-Za-z0-9_]+)/;
 
 		var fieldAccess;
 
@@ -289,22 +264,14 @@ class ShaderMacro
 			type = regex.matched(1);
 			name = regex.matched(2);
 
-			if (StringTools.startsWith(name, "gl_"))
-			{
+			if (name.startsWith("gl_"))
 				continue;
-			}
 
-			if (StringTools.startsWith(name, "openfl_"))
-			{
+			if (name.startsWith("openfl_"))
 				fieldAccess = APrivate;
-			}
-			else
-			{
-				fieldAccess = APublic;
-			}
+			else fieldAccess = APublic;
 
-			if (StringTools.startsWith(type, "sampler"))
-			{
+			if (type.startsWith("sampler")) {
 				field = {
 					name: name,
 					meta: [],
@@ -312,11 +279,8 @@ class ShaderMacro
 					kind: FVar(macro:openfl.display.ShaderInput<openfl.display.BitmapData>),
 					pos: pos
 				};
-			}
-			else
-			{
-				var parameterType:openfl.display.ShaderParameterType = switch (type)
-				{
+			} else {
+				var parameterType:openfl.display.ShaderParameterType = switch (type) {
 					case "bool": BOOL;
 					case "double", "float": FLOAT;
 					case "int", "uint": INT;
@@ -341,8 +305,7 @@ class ShaderMacro
 					default: null;
 				}
 
-				switch (parameterType)
-				{
+				switch (parameterType) {
 					case BOOL, BOOL2, BOOL3, BOOL4:
 						field = {
 							name: name,
@@ -372,7 +335,7 @@ class ShaderMacro
 				}
 			}
 
-			if (StringTools.startsWith(name, "openfl_"))
+			if (name.startsWith("openfl_"))
 			{
 				field.meta = [
 					{name: ":keep", pos: pos},
@@ -380,11 +343,7 @@ class ShaderMacro
 					{name: ":noCompletion", pos: pos},
 					{name: ":allow", params: [macro openfl.display._internal], pos: pos}
 				];
-			}
-			else
-			{
-				field.meta = [{name: ":keep", pos: pos}];
-			}
+			} else field.meta = [{name: ":keep", pos: pos}];
 
 			fields.push(field);
 

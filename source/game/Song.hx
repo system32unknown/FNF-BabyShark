@@ -73,9 +73,8 @@ class Song {
 			}
 		}
 
-		if (songJson.mania == null) {
+		if (songJson.mania == null)
             songJson.mania = Note.defaultMania;
-        }
 	}
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong

@@ -46,10 +46,10 @@ import haxe.io.Bytes;
 import haxe.io.Path;
 import haxe.Json;
 import flash.geom.Rectangle;
+import flash.media.Sound;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
-import flash.media.Sound;
 #end
 
 @:access(flixel.system.FlxSound._sound)
@@ -168,7 +168,6 @@ class ChartingState extends MusicBeatState
 	public var mouseQuant:Bool = false;
 	override function create()
 	{
-		FlxG.stage.window.onDropFile.add(onDropFile);
 
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
@@ -176,7 +175,7 @@ class ChartingState extends MusicBeatState
 			Difficulty.resetList();
 
 			_song = {
-				song: 'Test',
+				song: 'Tutorial',
 				notes: [],
 				events: [],
 				bpm: 150.,
@@ -184,7 +183,7 @@ class ChartingState extends MusicBeatState
 				arrowSkin: 'NOTE_assets',
 				splashSkin: 'noteSplashes',
 				player1: 'bf',
-				player2: 'daddyshark',
+				player2: 'gf',
 				gfVersion: 'gf',
 				speed: 1,
 				stage: 'stage',
@@ -344,12 +343,6 @@ class ChartingState extends MusicBeatState
 
 		updateGrid();
 		super.create();
-	}
-
-	override function destroy() {
-		super.destroy();
-		FlxG.stage.window.onDropFile.remove(onDropFile);
-		Main.overlayVar.alpha = 1;
 	}
 
 	var check_mute_inst:FlxUICheckBox = null;
@@ -2702,14 +2695,6 @@ class ChartingState extends MusicBeatState
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		FlxG.log.error("Problem saving Level data");
-	}
-	
-	function onDropFile(path:String):Void {
-		var droppedfile:String = path.substring(path.lastIndexOf("/") + 1).toLowerCase();
-		trace("user dropped file with path: " + path);
-		openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
-			loadJson(path);
-		}, null, ignoreWarnings));
 	}
 
 	function getSectionBeats(?section:Null<Int> = null)

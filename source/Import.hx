@@ -7,6 +7,6 @@ import states.MusicBeatState;
 import states.PlayState;
 import substates.MusicBeatSubstate;
 import data.api.FunkinInternet;
+#end
 
 using StringTools;
-#end

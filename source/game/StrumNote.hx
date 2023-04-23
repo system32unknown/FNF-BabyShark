@@ -19,7 +19,7 @@ class StrumNote extends FlxSprite
 	public var pressed_anim(default, set):String = "pressed"; // in case you would use this on lua
 	public var confirm_anim(default, set):String = "confirm";
 
-	private function set_static_anim(value:String):String {
+	function set_static_anim(value:String):String {
 		if (!PlayState.isPixelStage) {
 			animation.addByPrefix('static', value);
 			animationArray[0] = value;
@@ -30,7 +30,7 @@ class StrumNote extends FlxSprite
 		return value;
 	}
 
-	private function set_pressed_anim(value:String):String {
+	function set_pressed_anim(value:String):String {
 		if (!PlayState.isPixelStage) {
 			animation.addByPrefix('pressed', value);
 			animationArray[1] = value;
@@ -41,7 +41,7 @@ class StrumNote extends FlxSprite
 		return value;
 	}
 
-	private function set_confirm_anim(value:String):String {
+	function set_confirm_anim(value:String):String {
 		if (!PlayState.isPixelStage) {
 			animation.addByPrefix('confirm', value);
 			animationArray[2] = value;
@@ -146,7 +146,7 @@ class StrumNote extends FlxSprite
 			}
 		}
 		
-		if((animation.curAnim != null && animation.curAnim.name == 'confirm') && !PlayState.isPixelStage) {
+		if(animation.curAnim.name == 'confirm' && !PlayState.isPixelStage) {
 			centerOrigin();
 		}
 
