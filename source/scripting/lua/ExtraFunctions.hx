@@ -144,6 +144,38 @@ class ExtraFunctions
 			Reflect.setField(PlayState.instance.modchartSaves.get(name).data, field, value);
 			
 		});
+		funk.addCallback("getOptionSave", function(variable:String, isJson:Bool = false, ?modName:String = null) {
+			if (!isJson)
+				return ClientPrefs.getPref(variable);
+			else if (isJson) {
+				#if MODS_ALLOWED
+				if (modName == null) modName = Paths.currentModDirectory;
+				if (ClientPrefs.modsOptsSaves.exists(modName) && ClientPrefs.modsOptsSaves[modName].exists(variable)) {
+					return ClientPrefs.modsOptsSaves[modName][variable];
+				}
+				#else
+				funk.luaTrace('getOptionSave: Platform unsupported for Json Options!', false, false, FlxColor.RED);
+				#end
+			}
+			return null;
+		});
+		funk.addCallback("setOptionSave", function(variable:String, value:Dynamic, isJson:Bool = false, ?modName:String = null) {
+			if (!isJson) {
+				ClientPrefs.prefs.set(variable, value);
+				return ClientPrefs.getPref(variable) != null ? true : false;
+			} else if (isJson) {
+				#if MODS_ALLOWED
+				if (modName == null) modName = Paths.currentModDirectory;
+				if (ClientPrefs.modsOptsSaves.exists(modName) && ClientPrefs.modsOptsSaves[modName].exists(variable)) {
+					ClientPrefs.modsOptsSaves[modName][variable] = value;
+					return true;
+				}
+				#else
+				funk.luaTrace('setOptionSave: Platform unsupported for Json Options!', false, false, FlxColor.RED);
+				#end
+			}
+			return false;
+		});
 
 		// File management
 		funk.addCallback("checkFileExists", function(filename:String, ?absolute:Bool = false) {

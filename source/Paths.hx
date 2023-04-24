@@ -42,7 +42,8 @@ class Paths
 		'weeks',
 		'fonts',
 		'scripts',
-		'achievements'
+		'achievements',
+		'options'
 	];
 	#end
 
@@ -508,25 +509,17 @@ class Paths
 	static public function pushGlobalMods() // prob a better way to do this but idc
 	{
 		globalMods = [];
-		var path:String = 'modsList.txt';
-		if(FileSystem.exists(path)) {
-			var list:Array<String> = CoolUtil.coolTextFile(path);
-			for (i in list) {
-				var dat = i.split("|");
-				if (dat[1] == "1") {
-					var folder = dat[0];
-					var path = Paths.mods('$folder/pack.json');
-					if(FileSystem.exists(path)) {
-						try {
-							var rawJson:String = File.getContent(path);
-							if(rawJson != null && rawJson.length > 0) {
-								var stuff:Dynamic = Json.parse(rawJson);
-								var global:Bool = Reflect.getProperty(stuff, "runsGlobally");
-								if(global)globalMods.push(dat[0]);
-							}
-						} catch(e:Dynamic) trace(e);
+		for (folder in getActiveModsDir()) {
+			var path = Paths.mods(folder + '/pack.json');
+			if(FileSystem.exists(path)) {
+				try {
+					var rawJson:String = File.getContent(path);
+					if(rawJson != null && rawJson.length > 0) {
+						var stuff:Dynamic = Json.parse(rawJson);
+						var global:Bool = Reflect.getProperty(stuff, "runsGlobally");
+						if(global) globalMods.push(folder);
 					}
-				}
+				} catch(e:Dynamic) {trace(e);}
 			}
 		}
 		return globalMods;
@@ -552,6 +545,20 @@ class Paths
 		return list;
 	}
 
+	static public function getActiveModsDir():Array<String> {
+		var finalList:Array<String> = [];
+		var path:String = 'modsList.txt';
+		if(FileSystem.exists(path)) {
+			var genList:Array<String> = getModDirectories();
+			var list:Array<String> = CoolUtil.coolTextFile(path);
+			for (i in list) {
+				var dat = i.split("|");
+				if (dat[1] == "1" && genList.contains(dat[0])) finalList.push(dat[0]);
+			}
+		}
+		return finalList;
+	}
+	
 	static public function getActiveModDirectories(lowercase:Bool = false):Array<String> {
 		var list:Array<String> = [];
 		final path:String = 'modsList.txt';

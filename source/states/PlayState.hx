@@ -887,11 +887,11 @@ class PlayState extends MusicBeatState {
 			if(vocals != null) vocals.pitch = value;
 			FlxG.sound.music.pitch = value;
 		}
-		playbackRate = value;
+		
 		FlxAnimationController.globalSpeed = value;
 		Conductor.safeZoneOffset = (ClientPrefs.getPref('safeFrames') / 60) * 1000 * value;
 		setOnLuas('playbackRate', playbackRate);
-		return value;
+		return playbackRate = value;
 	}
 
 	public function addTextToDebug(text:String, color:FlxColor) {
@@ -1554,16 +1554,16 @@ class PlayState extends MusicBeatState {
 	}
 
 	public var skipArrowStartTween:Bool = false; //for lua
-	function generateStaticArrows(player:Int):Void {
+	public function generateStaticArrows(player:Int):Void {
+		var targetAlpha:Float = 1;
+		if (player < 1) {
+			if (!ClientPrefs.getPref('opponentStrums')) targetAlpha = 0;
+			else if (ClientPrefs.getPref('middleScroll')) targetAlpha = 0.35;
+		}
+		
 		for (i in 0...Note.ammo[mania]) {
 			var twnDuration:Float = (4 / mania) * playbackRate;
 			var twnStart:Float = 0.5 + ((0.8 / mania) * i) * playbackRate;
-
-			var targetAlpha:Float = 1;
-			if (player < 1) {
-				if (!ClientPrefs.getPref('opponentStrums')) targetAlpha = 0;
-				else if (ClientPrefs.getPref('middleScroll')) targetAlpha = 0.35;
-			}
 
 			var babyArrow:StrumNote = new StrumNote(ClientPrefs.getPref('middleScroll') ? STRUM_X_MIDDLESCROLL : STRUM_X, strumLine.y, i, player);
 			babyArrow.downScroll = downScroll;
@@ -1573,9 +1573,9 @@ class PlayState extends MusicBeatState {
 				FlxTween.tween(babyArrow, {alpha: targetAlpha}, twnDuration, {ease: FlxEase.circOut, startDelay: twnStart});
 			} else babyArrow.alpha = targetAlpha;
 
-			if (player == 1) {
+			if (player == 1)
 				playerStrums.add(babyArrow);
-			} else {
+			else {
 				if (ClientPrefs.getPref('middleScroll')) {
 					var separator:Int = Note.separator[mania];
 					babyArrow.x += 310;
@@ -1593,26 +1593,23 @@ class PlayState extends MusicBeatState {
 
 			if (ClientPrefs.getPref('showKeybindsOnStart') && player == 1) {
 				for (j in 0...keysArray[mania][i].length) {
-					var daKeyTxt:FlxText = new FlxText(babyArrow.x, babyArrow.y - 10, 0, InputFormatter.getKeyName(keysArray[mania][i][j]), 32);
-					daKeyTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-					daKeyTxt.borderSize = 1.25;
+					var daKeyTxt:FlxText = new FlxText(babyArrow.x, babyArrow.y - 10, 0, InputFormatter.getKeyName(keysArray[mania][i][j]), 32 - mania);
+					daKeyTxt.setFormat(Paths.font("vcr.ttf"), 32 - mania, FlxColor.WHITE, CENTER);
+					daKeyTxt.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1.25);
 					daKeyTxt.alpha = 0;
-					daKeyTxt.size = 32 - mania; //essentially if i ever add 0k!?!?
-					daKeyTxt.x = babyArrow.x + (babyArrow.width / 2);
-					daKeyTxt.x -= daKeyTxt.width / 2;
+					var textY:Float = (j == 0 ? babyArrow.y - 32 : ((babyArrow.y - 32) + babyArrow.height) - daKeyTxt.height);
+					daKeyTxt.setPosition(babyArrow.x + (babyArrow.width / 2) - daKeyTxt.width / 2, textY);
 					add(daKeyTxt);
 					daKeyTxt.cameras = [camHUD];
 					daKeyText.push(daKeyTxt);
-					var textY:Float = (j == 0 ? babyArrow.y - 32 : ((babyArrow.y - 32) + babyArrow.height) - daKeyTxt.height);
-					daKeyTxt.y = textY;
 
-					if (mania > 1 && !skipArrowStartTween) {
+					if (mania > 1 && !skipArrowStartTween)
 						FlxTween.tween(daKeyTxt, {y: textY + 32, alpha: 1}, twnDuration, {ease: FlxEase.circOut, startDelay: twnStart});
-					} else {
+					else {
 						daKeyTxt.y += 16;
 						daKeyTxt.alpha = 1;
 					}
-					new FlxTimer().start(Conductor.crochet * 0.001 * 12, function(_) {
+					new FlxTimer().start(Conductor.crochet * .001 * 12, function(_) {
 						FlxTween.tween(daKeyTxt, {y: daKeyTxt.y + 32, alpha: 0}, twnDuration, {ease: FlxEase.circIn, startDelay: twnStart, 
 						onComplete: function(t) {
 							remove(daKeyTxt);
@@ -1666,9 +1663,7 @@ class PlayState extends MusicBeatState {
 				prevNote.updateHitbox();
 			}
 		} else if (!note.isSustainNote && noteData > - 1 && noteData < tMania) {
-			if (note.changeAnim) {
-				note.animation.play(Note.keysShit.get(mania).get('letters')[noteData % tMania]);
-			}
+			if (note.changeAnim) note.animation.play(Note.keysShit.get(mania).get('letters')[noteData % tMania]);
 		}
 		
 		if (note.changeColSwap) {

@@ -105,14 +105,6 @@ class LoadingState extends MusicBeatState
 			new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
 		});
 	}
-	
-	function checkLoadSong(path:String) {
-		if (!Assets.cache.hasSound(path)){
-			var callback = callbacks.add("song:" + path);
-			Assets.loadSound(path).onComplete(function(_) {callback();});
-		}
-	}
-
 	function checkLibrary(library:String) {
 		if (Assets.getLibrary(library) == null) {
 			@:privateAccess

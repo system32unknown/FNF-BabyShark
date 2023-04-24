@@ -9,10 +9,12 @@ class HealthIcon extends FlxSprite
 {
 	static final prefix:String = 'icons/';
 	static final credits:String = 'credits/';
-	static final defaultIcon:String = 'unknown';
+	static final defaultIcon:String = 'icon-unknown';
 	static final altDefaultIcon:String = 'icon-face';
 
+	public var iconZoom:Float = 1;
 	public var sprTracker:FlxSprite;
+	public var isPixelIcon(get, null):Bool;
 	var isPlayer:Bool = false;
 	var isCredit:Bool;
 
@@ -56,30 +58,31 @@ class HealthIcon extends FlxSprite
 		if (isCredit) graph = returnGraphic(char, folder, false, true);
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing);
 		else {
+			availableStates = 1;
 			this.char = char;
-
-			loadGraphic(graph);
-			updateHitbox();
 			state = 0;
 
-			antialiasing = ClientPrefs.getPref('globalAntialiasing');
-			if (char.endsWith('-pixel')) antialiasing = false;
+			loadGraphic(graph, true, graph.width, graph.height);
+			iconZoom = isPixelIcon ? 150 / graph.height : 1;
+
+			updateHitbox();
+			antialiasing = iconZoom < 2.5 && ClientPrefs.getPref('globalAntialiasing');
 			return true;
 		}
 
 		if (graph == null) return false;
 		availableStates = Math.round(graph.width / graph.height);
 		this.char = char;
+		state = 0;
 
 		loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
-		updateHitbox();
+		iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
 		animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
 		animation.play(char);
 
-		antialiasing = ClientPrefs.getPref('globalAntialiasing');
-		if (char.endsWith('-pixel')) antialiasing = false;
-
+		updateHitbox();
+		antialiasing = iconZoom < 2.5 && ClientPrefs.getPref('globalAntialiasing');
 		return true;
 	}
 
@@ -94,6 +97,10 @@ class HealthIcon extends FlxSprite
 
 	public function getCharacter():String
 		return char;
+
+	@:noCompletion
+	inline function get_isPixelIcon():Bool
+		return char.substr(-6, 6) == '-pixel';
 
 	public function setState(state:Int) {
 		if (state >= availableStates) state = 0;

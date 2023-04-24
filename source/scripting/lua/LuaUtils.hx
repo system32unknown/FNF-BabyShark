@@ -14,12 +14,6 @@ import flixel.tweens.FlxEase;
 
 import substates.GameOverSubstate;
 
-#if LUA_ALLOWED
-import llua.Lua;
-import llua.Convert;
-import llua.State;
-#end
-
 typedef LuaTweenOptions = {
 	type:FlxTweenType,
 	startDelay:Float,
@@ -185,10 +179,8 @@ class LuaUtils
 		switch(spriteType.toLowerCase().trim()) {
 			case "texture" | "textureatlas" | "tex":
 				spr.frames = AtlasFrameMaker.construct(image);
-
 			case "texture_noaa" | "textureatlas_noaa" | "tex_noaa":
 				spr.frames = AtlasFrameMaker.construct(image, null, true);
-
 			case "packer" | "packeratlas" | "pac":
 				spr.frames = Paths.getPackerAtlas(image);
 
@@ -246,8 +238,7 @@ class LuaUtils
 	}
 
 	public static function getColorByString(?color:String = '') {
-		switch(color.toLowerCase().trim())
-		{
+		switch(color.toLowerCase().trim()) {
 			case 'blue': return FlxColor.BLUE;
 			case 'brown': return FlxColor.BROWN;
 			case 'cyan': return FlxColor.CYAN;
@@ -336,20 +327,6 @@ class LuaUtils
 			case 'subtract': return SUBTRACT;
 		} return NORMAL;
 	}
-	
-	public static function typeToString(type:Int):String {
-		#if LUA_ALLOWED
-		switch(type) {
-			case Lua.LUA_TBOOLEAN: return "boolean";
-			case Lua.LUA_TNUMBER: return "number";
-			case Lua.LUA_TSTRING: return "string";
-			case Lua.LUA_TTABLE: return "table";
-			case Lua.LUA_TFUNCTION: return "function";
-		}
-		if (type <= Lua.LUA_TNIL) return "nil";
-		#end
-		return "unknown";
-	}
 
 	public static function cameraFromString(cam:String):FlxCamera {
 		switch(cam.toLowerCase()) {
@@ -370,23 +347,4 @@ class LuaUtils
 		#end
 		return false;
 	}
-
-	//Copied from Raltyro's getarguments
-	inline static function _getarguments(l:State, args:Dynamic, nparams:Int, offset:Int):Void {
-		var i:Int = 0, _temp:Int;
-		while(i < nparams) {
-			_temp = i + offset;
-			args[_temp] = Convert.fromLua(l, ++i);
-		}
-	}
-
-	public static function getarguments(l:State, ?args:Dynamic, ?nparams:Int, ?offset:Int = 0):Array<Any> {
-		if (args == null) args = [];
-		if (nparams == null) nparams = Lua.gettop(l);
-		if (nparams == 0) return args;
-
-		_getarguments(l, args, nparams, offset);
-		return args;
-	}
-
 }
