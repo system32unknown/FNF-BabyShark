@@ -43,38 +43,27 @@ class ExtraFunctions
 
 		funk.addCallback("gamepadAnalogX", function(id:Int, ?leftStick:Bool = true) {
 			var controller = FlxG.gamepads.getByID(id);
-			if (controller == null)
-			{
-				return 0.0;
-			}
+			if (controller == null) return 0.;
 			return controller.getXAxis(leftStick ? LEFT_ANALOG_STICK : RIGHT_ANALOG_STICK);
 		});
 		funk.addCallback("gamepadAnalogY", function(id:Int, ?leftStick:Bool = true) {
 			var controller = FlxG.gamepads.getByID(id);
-			if (controller == null) {
-				return 0.;
-			}
+			if (controller == null) return 0.;
 			return controller.getYAxis(leftStick ? LEFT_ANALOG_STICK : RIGHT_ANALOG_STICK);
 		});
 		funk.addCallback("gamepadJustPressed", function(id:Int, name:String) {
 			var controller = FlxG.gamepads.getByID(id);
-			if (controller == null) {
-				return false;
-			}
+			if (controller == null) return false;
 			return Reflect.getProperty(controller.justPressed, name) == true;
 		});
 		funk.addCallback("gamepadPressed", function(id:Int, name:String) {
 			var controller = FlxG.gamepads.getByID(id);
-			if (controller == null) {
-				return false;
-			}
+			if (controller == null) return false;
 			return Reflect.getProperty(controller.pressed, name) == true;
 		});
 		funk.addCallback("gamepadReleased", function(id:Int, name:String) {
 			var controller = FlxG.gamepads.getByID(id);
-			if (controller == null) {
-				return false;
-			}
+			if (controller == null) return false;
 			return Reflect.getProperty(controller.justReleased, name) == true;
 		});
 
@@ -188,9 +177,7 @@ class ExtraFunctions
 			}
 			return FileSystem.exists(Paths.getPath('assets/$filename', TEXT));
 			#else
-			if(absolute) {
-				return Assets.exists(filename);
-			}
+			if(absolute) return Assets.exists(filename);
 			return Assets.exists(Paths.getPath('assets/$filename', TEXT));
 			#end
 		});
@@ -250,16 +237,14 @@ class ExtraFunctions
 			var foundJson:Bool;
 
 			#if sys
-				if (FileSystem.exists(json))
-					foundJson = true;
+				if (FileSystem.exists(json)) foundJson = true;
 				else {
 					funk.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
 					foundJson = false;
 					return;	
 				}
 			#else
-				if (Assets.exists(json))
-					foundJson = true;
+				if (Assets.exists(json)) foundJson = true;
 				else {
 					funk.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
 					foundJson = false;
@@ -327,18 +312,14 @@ class ExtraFunctions
 			var excludeArray:Array<String> = exclude.split(',');
 			var toExclude:Array<Int> = [];
 			for (i in 0...excludeArray.length)
-			{
 				toExclude.push(Std.parseInt(excludeArray[i].trim()));
-			}
 			return FlxG.random.int(min, max, toExclude);
 		});
 		funk.addCallback("getRandomFloat", function(min:Float, max:Float = 1, exclude:String = '') {
 			var excludeArray:Array<String> = exclude.split(',');
 			var toExclude:Array<Float> = [];
 			for (i in 0...excludeArray.length)
-			{
 				toExclude.push(Std.parseFloat(excludeArray[i].trim()));
-			}
 			return FlxG.random.float(min, max, toExclude);
 		});
 		funk.addCallback("getRandomBool", function(chance:Float = 50) {

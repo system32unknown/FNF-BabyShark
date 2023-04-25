@@ -53,7 +53,7 @@ class Overlay extends TextField {
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		memory = MemoryUtil.getMEMtype();
+		memory = MemoryUtil.getMEM();
 		if (memory > mempeak) mempeak = memory;
 
 		text = '${FPS.currentFPS} FPS ${ClientPrefs.getPref('MSFPSCounter') ? '[MS: $dt]' : ''}\n';

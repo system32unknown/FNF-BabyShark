@@ -210,8 +210,6 @@ class FunkinLua {
 
 		#if windows
 		var os = 'windows';
-		#elseif html5
-		var os = 'browser';
 		#else
 		var os = Sys.systemName().toLowerCase();
 		#end
@@ -1484,18 +1482,13 @@ class FunkinLua {
 				return true;
 			}
 
-			var killMe:Array<String> = obj.split('.');
-			var object:FlxSprite = LuaUtils.getObjectDirectly(killMe[0]);
-			if(killMe.length > 1) {
-				object = LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(killMe), killMe[killMe.length - 1]);
-			}
-
-			if(object != null) {
-				object.shader = color.shader;
-				return true;
-			}
-			luaTrace("setColorSwap: Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
+			var object:FlxSprite = LuaUtils.getVarInstance(obj);
+			if(object == null) {
+				luaTrace("setColorSwap: Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
+				return false;
+			} 
+			object.shader = color.shader;
+			return true;
 		});
 
 		addCallback("stampSprite", function(sprite:String, brush:String, x:Int, y:Int) {
@@ -1519,10 +1512,8 @@ class FunkinLua {
 			var left = leftHex;
 			var right = rightHex;
 
-			if (leftHex == null || leftHex == '')
-				left = PlayState.instance.dad.getColor();
-			if (rightHex == null || rightHex == '')
-				right = PlayState.instance.boyfriend.getColor();
+			if (leftHex == null) left = PlayState.instance.dad.getColor();
+			if (rightHex == null) right = PlayState.instance.boyfriend.getColor();
 
 			PlayState.instance.healthBar.createFilledBar(left, right);
 			PlayState.instance.healthBar.updateBar();

@@ -9,49 +9,22 @@ class MiscellaneousSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('FPS Counter',
 			'If unchecked, hides the FPS Counter.',
-			'showFPS',
-			'bool',
-			true);
+			'showFPS', 'bool', true);
 		addOption(option);
 
 		var option:Option = new Option('Memory Counter',
 			'If unchecked, hides the Memory Counter.',
-			'showMEM',
-			'bool',
-			true);
+			'showMEM', 'bool', true);
 		addOption(option);
 
 		var option:Option = new Option('Rainbow FPS',
-			'',
-			'RainbowFps',
-			'bool',
-			true);
+			'', 'RainbowFps',
+			'bool', true);
 		addOption(option);
-
-		option.displayFormat = '%v%';
-		option.scrollSpeed = 15;
-		option.minValue = 1;
-		option.maxValue = 20;
 
 		var option:Option = new Option('MS on FPS Counter',
-			'',
-			'MSFPSCounter',
-			'bool',
-			true);
-		addOption(option);
-
-		var option:Option = new Option('Flashing Lights',
-			"Uncheck this if you're sensitive to flashing lights!",
-			'flashing',
-			'bool',
-			true);
-		addOption(option);
-
-		var option:Option = new Option('Dynamic Camera Movement',
-			"If unchecked, \nthe camera won't move in the direction in which the characters sing.",
-			'camMovement', 
-			'bool',
-			true);
+			'', 'MSFPSCounter',
+			'bool', true);
 		addOption(option);
 
 		var option:Option = new Option('Alternate Discord Large Image',
@@ -61,12 +34,25 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Memory Type', "",
-			'MEMType',
-			'string',
-			'Cast',
-			['Cast', 'Cpp']);
+		#if desktop
+		var option:Option = new Option('Hardware Caching',
+			'If checked, the game will use GPU to store images for to maintain MEM usage. ' +
+			'Restart the game for to apply changes.' +
+			'\n[UNCHECK THIS IF IMAGES ARE NOT SHOWING]',
+			'hardwareCache',
+			'bool',
+			false);
 		addOption(option);
+		
+		var option:Option = new Option('Streaming Music',
+			'If checked, the game will simultaneously load music data while its playing, this also make looped musics seamlessly loop. ' +
+			'Restart the game for to apply changes.' +
+			'\n[UNCHECK THIS IF GAME IS CRASHING]',
+			'streamMusic',
+			'bool',
+			false);
+		addOption(option);
+		#end
 
 		super();
 	}

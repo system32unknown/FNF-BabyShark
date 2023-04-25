@@ -169,4 +169,19 @@ class CoolUtil
 	public static function dynamicArray<T>(v:T, len:Int):Array<T> {
 		return [for (_ in 0...len) v];
 	}
+
+
+	public static function getOptionDefVal(type:String, ?options:Array<String> = null):Dynamic {
+		return switch(type) {
+			case 'bool': false;
+			case 'int' | 'float': 0;
+			case 'percent': 1;
+			case 'string':
+				if(options.length > 0)
+					options[0];
+				else '';
+			case 'func': '';
+			default: null;
+		}
+	}
 }

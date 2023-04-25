@@ -32,23 +32,22 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Ghost Tapping',
 			"If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.",
-			'ghostTapping',
-			'bool',
-			true);
+			'ghostTapping', 'bool', true);
 		addOption(option);
 
 		var option:Option = new Option('Disable Reset Button',
 			"If checked, pressing Reset won't do anything.",
-			'noReset',
-			'bool',
-			false);
+			'noReset', 'bool', false);
 		addOption(option);
 
 		var option:Option = new Option('Antimash',
 			"If unchecked, antimash will not do anything.",
-			'AntiMash',
-			'bool',
-			true);
+			'AntiMash', 'bool', true);
+		addOption(option);
+
+		var option:Option = new Option('Dynamic Camera Movement',
+			"If unchecked, \nthe camera won't move in the direction in which the characters sing.",
+			'camMovement', 'bool', true);
 		addOption(option);
 
 		var option:Option = new Option('Hitsound Type',

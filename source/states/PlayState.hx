@@ -149,11 +149,11 @@ class PlayState extends MusicBeatState {
 	public var combo:Int = 0;
 	public var maxCombo:Int = 0;
 
-	private var healthBarBG:AttachedSprite;
+	var healthBarBG:AttachedSprite;
 	public var healthBar:FlxBar;
 	var songPercent:Float = 0;
 
-	private var timeBarBG:AttachedSprite;
+	var timeBarBG:AttachedSprite;
 	public var timeBar:FlxBar;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();

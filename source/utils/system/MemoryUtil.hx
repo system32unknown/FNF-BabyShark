@@ -58,11 +58,7 @@ class MemoryUtil {
 		#end
 	}
 
-	public static function getMEMtype():Dynamic {
-		switch (ClientPrefs.getPref('MEMType')) {
-			case 'Cast': return cast(cast(System.totalMemory, UInt), Float);
-			case 'Cpp': return Gc.memInfo64(Gc.MEM_INFO_USAGE);
-		}
-		return 0;
+	inline public static function getMEM():Float {
+		return cast(cast(System.totalMemory, UInt), Float);
 	}
 }

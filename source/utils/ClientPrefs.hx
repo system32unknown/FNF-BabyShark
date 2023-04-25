@@ -7,6 +7,9 @@ import states.TitleState;
 import game.Achievements;
 
 class ClientPrefs {
+	public static var isHardCInited:Bool = false;
+	public static var isStreMInited:Bool = false;
+
 	public static var prefs:Map<String, Dynamic> = [
 		'downScroll' => false,
 		'middleScroll' => false,
@@ -14,7 +17,6 @@ class ClientPrefs {
 		'MSFPSCounter' => false,
 		'showFPS' => true,
 		'showMEM' => true,
-		'MEMType' => 'Cast',
 		'flashing' => true,
 		'globalAntialiasing' => true,
 		'splashOpacity' => .6,
@@ -75,6 +77,16 @@ class ClientPrefs {
 		},
 		'keyboard' => function(controls:Map<String, Array<FlxKey>>) {
 			reloadControls();
+		}, 'hardwareCache' => function(bool:Bool) {
+			if (!isHardCInited) {
+				Paths.hardwareCache = bool;
+				isHardCInited = true;
+			}
+		}, 'streamMusic' => function(bool:Bool) {
+			if (!isStreMInited) {
+				Paths.streamMusic = bool;
+				isStreMInited = true;
+			}
 		}
 	];
 

@@ -238,102 +238,104 @@ class LuaUtils
 	}
 
 	public static function getColorByString(?color:String = '') {
-		switch(color.toLowerCase().trim()) {
-			case 'blue': return FlxColor.BLUE;
-			case 'brown': return FlxColor.BROWN;
-			case 'cyan': return FlxColor.CYAN;
-			case 'gray' | 'grey': return FlxColor.GRAY;
-			case 'green': return FlxColor.GREEN;
-			case 'lime': return FlxColor.LIME;
-			case 'magenta': return FlxColor.MAGENTA;
-			case 'orange': return FlxColor.ORANGE;
-			case 'pink': return FlxColor.PINK;
-			case 'purple': return FlxColor.PURPLE;
-			case 'red': return FlxColor.RED;
-			case 'transparent': return FlxColor.TRANSPARENT;
-			case 'white': return FlxColor.WHITE;
-			case 'yellow': return FlxColor.YELLOW;
+		return switch(color.toLowerCase().trim()) {
+			case 'blue': FlxColor.BLUE;
+			case 'brown': FlxColor.BROWN;
+			case 'cyan': FlxColor.CYAN;
+			case 'gray' | 'grey': FlxColor.GRAY;
+			case 'green': FlxColor.GREEN;
+			case 'lime': FlxColor.LIME;
+			case 'magenta': FlxColor.MAGENTA;
+			case 'orange': FlxColor.ORANGE;
+			case 'pink': FlxColor.PINK;
+			case 'purple': FlxColor.PURPLE;
+			case 'red': FlxColor.RED;
+			case 'transparent': FlxColor.TRANSPARENT;
+			case 'white': FlxColor.WHITE;
+			case 'yellow': FlxColor.YELLOW;
+			default: FlxColor.BLACK;
 		}
-		return FlxColor.BLACK;
 	}
 
 	//buncho string stuffs
 	public static function getTweenTypeByString(?type:String = '') {
-		switch(type.toLowerCase().trim()) {
-			case 'backward': return FlxTweenType.BACKWARD;
-			case 'looping': return FlxTweenType.LOOPING;
-			case 'persist': return FlxTweenType.PERSIST;
-			case 'pingpong': return FlxTweenType.PINGPONG;
+		return switch(type.toLowerCase().trim()) {
+			case 'backward': FlxTweenType.BACKWARD;
+			case 'looping': FlxTweenType.LOOPING;
+			case 'persist': FlxTweenType.PERSIST;
+			case 'pingpong': FlxTweenType.PINGPONG;
+			default: FlxTweenType.ONESHOT;
 		}
-		return FlxTweenType.ONESHOT;
 	}
 
 	public static function getTweenEaseByString(?ease:String = '') {
-		switch(ease.toLowerCase().trim()) {
-			case 'backin': return FlxEase.backIn;
-			case 'backinout': return FlxEase.backInOut;
-			case 'backout': return FlxEase.backOut;
-			case 'bouncein': return FlxEase.bounceIn;
-			case 'bounceinout': return FlxEase.bounceInOut;
-			case 'bounceout': return FlxEase.bounceOut;
-			case 'circin': return FlxEase.circIn;
-			case 'circinout': return FlxEase.circInOut;
-			case 'circout': return FlxEase.circOut;
-			case 'cubein': return FlxEase.cubeIn;
-			case 'cubeinout': return FlxEase.cubeInOut;
-			case 'cubeout': return FlxEase.cubeOut;
-			case 'elasticin': return FlxEase.elasticIn;
-			case 'elasticinout': return FlxEase.elasticInOut;
-			case 'elasticout': return FlxEase.elasticOut;
-			case 'expoin': return FlxEase.expoIn;
-			case 'expoinout': return FlxEase.expoInOut;
-			case 'expoout': return FlxEase.expoOut;
-			case 'quadin': return FlxEase.quadIn;
-			case 'quadinout': return FlxEase.quadInOut;
-			case 'quadout': return FlxEase.quadOut;
-			case 'quartin': return FlxEase.quartIn;
-			case 'quartinout': return FlxEase.quartInOut;
-			case 'quartout': return FlxEase.quartOut;
-			case 'quintin': return FlxEase.quintIn;
-			case 'quintinout': return FlxEase.quintInOut;
-			case 'quintout': return FlxEase.quintOut;
-			case 'sinein': return FlxEase.sineIn;
-			case 'sineinout': return FlxEase.sineInOut;
-			case 'sineout': return FlxEase.sineOut;
-			case 'smoothstepin': return FlxEase.smoothStepIn;
-			case 'smoothstepinout': return FlxEase.smoothStepInOut;
-			case 'smoothstepout': return FlxEase.smoothStepInOut;
-			case 'smootherstepin': return FlxEase.smootherStepIn;
-			case 'smootherstepinout': return FlxEase.smootherStepInOut;
-			case 'smootherstepout': return FlxEase.smootherStepOut;
-		} return FlxEase.linear;
+		return switch(ease.toLowerCase().trim()) {
+			case 'backin': FlxEase.backIn;
+			case 'backinout': FlxEase.backInOut;
+			case 'backout': FlxEase.backOut;
+			case 'bouncein': FlxEase.bounceIn;
+			case 'bounceinout': FlxEase.bounceInOut;
+			case 'bounceout': FlxEase.bounceOut;
+			case 'circin': FlxEase.circIn;
+			case 'circinout': FlxEase.circInOut;
+			case 'circout': FlxEase.circOut;
+			case 'cubein': FlxEase.cubeIn;
+			case 'cubeinout': FlxEase.cubeInOut;
+			case 'cubeout': FlxEase.cubeOut;
+			case 'elasticin': FlxEase.elasticIn;
+			case 'elasticinout': FlxEase.elasticInOut;
+			case 'elasticout': FlxEase.elasticOut;
+			case 'expoin': FlxEase.expoIn;
+			case 'expoinout': FlxEase.expoInOut;
+			case 'expoout': FlxEase.expoOut;
+			case 'quadin': FlxEase.quadIn;
+			case 'quadinout': FlxEase.quadInOut;
+			case 'quadout': FlxEase.quadOut;
+			case 'quartin': FlxEase.quartIn;
+			case 'quartinout': FlxEase.quartInOut;
+			case 'quartout': FlxEase.quartOut;
+			case 'quintin': FlxEase.quintIn;
+			case 'quintinout': FlxEase.quintInOut;
+			case 'quintout': FlxEase.quintOut;
+			case 'sinein': FlxEase.sineIn;
+			case 'sineinout': FlxEase.sineInOut;
+			case 'sineout': FlxEase.sineOut;
+			case 'smoothstepin': FlxEase.smoothStepIn;
+			case 'smoothstepinout': FlxEase.smoothStepInOut;
+			case 'smoothstepout': FlxEase.smoothStepInOut;
+			case 'smootherstepin': FlxEase.smootherStepIn;
+			case 'smootherstepinout': FlxEase.smootherStepInOut;
+			case 'smootherstepout': FlxEase.smootherStepOut;
+			default: FlxEase.linear;
+		}
 	}
 
 	public static function blendModeFromString(blend:String):BlendMode {
-		switch(blend.toLowerCase().trim()) {
-			case 'add': return ADD;
-			case 'alpha': return ALPHA;
-			case 'darken': return DARKEN;
-			case 'difference': return DIFFERENCE;
-			case 'erase': return ERASE;
-			case 'hardlight': return HARDLIGHT;
-			case 'invert': return INVERT;
-			case 'layer': return LAYER;
-			case 'lighten': return LIGHTEN;
-			case 'multiply': return MULTIPLY;
-			case 'overlay': return OVERLAY;
-			case 'screen': return SCREEN;
-			case 'shader': return SHADER;
-			case 'subtract': return SUBTRACT;
-		} return NORMAL;
+		return switch(blend.toLowerCase().trim()) {
+			case 'add': ADD;
+			case 'alpha': ALPHA;
+			case 'darken': DARKEN;
+			case 'difference': DIFFERENCE;
+			case 'erase': ERASE;
+			case 'hardlight': HARDLIGHT;
+			case 'invert': INVERT;
+			case 'layer': LAYER;
+			case 'lighten': LIGHTEN;
+			case 'multiply': MULTIPLY;
+			case 'overlay': OVERLAY;
+			case 'screen': SCREEN;
+			case 'shader': SHADER;
+			case 'subtract': SUBTRACT;
+			default: NORMAL; 
+		}
 	}
 
 	public static function cameraFromString(cam:String):FlxCamera {
-		switch(cam.toLowerCase()) {
-			case 'camhud' | 'hud': return PlayState.instance.camHUD;
-			case 'camother' | 'other': return PlayState.instance.camOther;
+		return switch(cam.toLowerCase()) {
+			case 'camhud' | 'hud': PlayState.instance.camHUD;
+			case 'camother' | 'other': PlayState.instance.camOther;
+			default: PlayState.instance.camGame;
 		}
-		return PlayState.instance.camGame;
 	}
 
 	public static function isLuaRunning(luaFile:String) {

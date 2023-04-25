@@ -528,8 +528,9 @@ class Paths
 	static public function isValidModDir(dir:String):Bool
 		return FileSystem.isDirectory(haxe.io.Path.join([mods(), dir])) && !ignoreModFolders.contains(dir.toLowerCase());
 
-	static public function getModDirectories(lowercase:Bool = false):Array<String> {
+	static public function getModDirectories(lowercase:Bool = false, inclMainFol:Bool = false):Array<String> {
 		var list:Array<String> = [];
+		if (inclMainFol) list.push('');
 		var modsFolder:String = mods();
 
 		if (!FileSystem.exists(modsFolder)) return list;
@@ -545,8 +546,9 @@ class Paths
 		return list;
 	}
 
-	static public function getActiveModsDir():Array<String> {
+	static public function getActiveModsDir(inclMainFol:Bool = false):Array<String> {
 		var finalList:Array<String> = [];
+		if (inclMainFol) finalList.push('');
 		var path:String = 'modsList.txt';
 		if(FileSystem.exists(path)) {
 			var genList:Array<String> = getModDirectories();
