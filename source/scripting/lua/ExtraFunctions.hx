@@ -5,10 +5,7 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
-import flixel.FlxG;
 import flixel.util.FlxSave;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
 import openfl.utils.Assets;
 
 import utils.CoolUtil;

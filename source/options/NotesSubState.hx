@@ -1,10 +1,6 @@
 package options;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
 import game.Note;
 import utils.Controls;
 import utils.MathUtil;

@@ -1,25 +1,17 @@
 package states;
 
-import flixel.FlxCamera;
-import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.keyboard.FlxKey;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.sound.FlxSound;
-import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.tweens.misc.VarTween;
 import flixel.animation.FlxAnimationController;
 import flixel.ui.FlxBar;
-import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
@@ -1555,6 +1547,8 @@ class PlayState extends MusicBeatState {
 
 	public var skipArrowStartTween:Bool = false; //for lua
 	public function generateStaticArrows(player:Int):Void {
+		var strumLineX:Float = ClientPrefs.getPref('middleScroll') ? STRUM_X_MIDDLESCROLL : STRUM_X;
+		var strumLineY:Float = downScroll ? (FlxG.height - 150) : 50;
 		var targetAlpha:Float = 1;
 		if (player < 1) {
 			if (!ClientPrefs.getPref('opponentStrums')) targetAlpha = 0;
@@ -1565,7 +1559,7 @@ class PlayState extends MusicBeatState {
 			var twnDuration:Float = (4 / mania) * playbackRate;
 			var twnStart:Float = 0.5 + ((0.8 / mania) * i) * playbackRate;
 
-			var babyArrow:StrumNote = new StrumNote(ClientPrefs.getPref('middleScroll') ? STRUM_X_MIDDLESCROLL : STRUM_X, strumLine.y, i, player);
+			var babyArrow:StrumNote = new StrumNote(strumLineX, strumLineY, i, player);
 			babyArrow.downScroll = downScroll;
 			babyArrow.scrollFactor.set();
 			if (!isStoryMode && !skipArrowStartTween && mania > 1) {

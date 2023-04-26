@@ -1,11 +1,5 @@
 package states;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.math.FlxMath;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
-import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
 import flixel.FlxBasic;
 import sys.FileSystem;

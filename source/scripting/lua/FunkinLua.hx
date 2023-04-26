@@ -9,16 +9,10 @@ using llua.Lua.Lua_helper;
 #end
 
 import haxe.Constraints.Function;
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.tweens.FlxTween;
-import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.sound.FlxSound;
-import flixel.util.FlxTimer;
-import flixel.util.FlxColor;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.display.FlxRuntimeShader;
 import substates.GameOverSubstate;

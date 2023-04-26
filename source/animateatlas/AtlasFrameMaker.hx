@@ -8,7 +8,6 @@ import flixel.math.FlxRect;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.frames.FlxFrame;
-import flixel.util.FlxColor;
 import animateatlas.JSONData.AtlasData;
 import animateatlas.JSONData.AnimationData;
 import animateatlas.displayobject.SpriteAnimationLibrary;

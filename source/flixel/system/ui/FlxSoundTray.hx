@@ -1,8 +1,6 @@
 package flixel.system.ui;
 
 #if FLX_SOUND_SYSTEM
-import flixel.FlxG;
-import flixel.util.FlxColor;
 import openfl.Lib;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;

@@ -1,5 +1,6 @@
 package states.stages;
 
+import flixel.group.FlxGroup.FlxTypedGroup;
 import utils.MathUtil;
 
 enum HenchmenKillState {

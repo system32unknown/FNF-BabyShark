@@ -1,7 +1,5 @@
 package scripting.lua;
 
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 class DebugLuaText extends FlxText {

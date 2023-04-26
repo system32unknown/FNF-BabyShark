@@ -1,11 +1,6 @@
 package states.editors;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end

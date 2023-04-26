@@ -1,10 +1,5 @@
 package ui;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.math.FlxMath;
-import flixel.util.FlxColor;
-
 import utils.MathUtil;
 
 class MenuItem extends FlxSprite

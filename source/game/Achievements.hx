@@ -1,13 +1,5 @@
 package game;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxCamera;
-import flixel.tweens.FlxTween;
-import flixel.group.FlxSpriteGroup;
-import flixel.util.FlxColor;
-import flixel.text.FlxText;
-
 #if MODS_ALLOWED
 import sys.io.File;
 import sys.FileSystem;

@@ -1,10 +1,7 @@
 package options;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
-import flixel.math.FlxMath;
 import data.EkData.Keybinds;
 import utils.CoolUtil;
 import utils.Controls;

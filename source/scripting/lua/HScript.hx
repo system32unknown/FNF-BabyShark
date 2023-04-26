@@ -6,13 +6,6 @@ import hscript.Expr;
 import hscript.Interp;
 #end
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxCamera;
-import flixel.util.FlxTimer;
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
-
 class HScript
 {
 	#if (hscript && HSCRIPT_ALLOWED)

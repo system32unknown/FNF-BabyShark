@@ -1,13 +1,7 @@
 package states;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
 import flixel.effects.FlxFlicker;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxTimer;
 #if lime
 import lime.system.System;
 #end

@@ -1,10 +1,5 @@
 package states;
 
-import flixel.*;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
-import flixel.math.FlxMath;
 import game.Boyfriend;
 import game.Conductor;
 import game.HealthIcon;

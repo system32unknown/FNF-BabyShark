@@ -1,7 +1,5 @@
 package flixel.addons.ui;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.ui.FlxButton;
 import flash.geom.Rectangle;
 import flixel.addons.ui.interfaces.IFlxUIClickable;
@@ -15,7 +13,6 @@ import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.StrNameLabel;
 import flixel.addons.ui.FlxUI;
-import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 

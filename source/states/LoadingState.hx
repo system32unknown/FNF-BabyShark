@@ -6,13 +6,7 @@ import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 
-import flixel.FlxG;
 import flixel.FlxState;
-import flixel.FlxSprite;
-import flixel.util.FlxTimer;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
-import flixel.text.FlxText;
 import flixel.addons.display.FlxBackdrop;
 
 import openfl.utils.Assets;

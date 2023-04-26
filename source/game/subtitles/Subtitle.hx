@@ -1,12 +1,7 @@
 package game.subtitles;
 
-import flixel.FlxG;
-import flixel.text.FlxText;
 import flixel.util.FlxAxes;
-import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
 import flixel.sound.FlxSound;
-import flixel.tweens.FlxTween;
 import flixel.addons.text.FlxTypeText;
 
 typedef SubtitleProperties = {

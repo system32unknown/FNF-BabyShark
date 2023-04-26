@@ -4,7 +4,6 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.utils.Assets;
 
-import flixel.util.FlxColor;
 import utils.system.MemoryUtil;
 import utils.system.FPSUtil;
 

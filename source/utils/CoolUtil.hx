@@ -1,8 +1,5 @@
 package utils;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.util.FlxColor;
 import flixel.util.FlxSave;
 import openfl.geom.Rectangle;
 #if sys
@@ -169,7 +166,6 @@ class CoolUtil
 	public static function dynamicArray<T>(v:T, len:Int):Array<T> {
 		return [for (_ in 0...len) v];
 	}
-
 
 	public static function getOptionDefVal(type:String, ?options:Array<String> = null):Dynamic {
 		return switch(type) {

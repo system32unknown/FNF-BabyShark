@@ -1,8 +1,5 @@
 package substates;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.util.FlxColor;
 import ui.Alphabet;
 import data.WeekData;
 import game.HealthIcon;

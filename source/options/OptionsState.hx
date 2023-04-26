@@ -1,12 +1,6 @@
 package options;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxMath;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
-
 import states.MainMenuState;
 import states.LoadingState;
 import ui.Alphabet;

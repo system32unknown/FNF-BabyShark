@@ -1,14 +1,6 @@
 package states.editors;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxCamera;
 import flixel.ui.FlxButton;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;

@@ -1,9 +1,6 @@
 package game;
 
 import animateatlas.AtlasFrameMaker;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.util.FlxColor;
 #if MODS_ALLOWED
 import sys.io.File;
 import sys.FileSystem;

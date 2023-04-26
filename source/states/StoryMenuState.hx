@@ -1,13 +1,6 @@
 package states;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup;
-import flixel.math.FlxMath;
-import flixel.text.FlxText;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
 import flixel.graphics.FlxGraphic;
 import data.WeekData;
 import utils.MathUtil;

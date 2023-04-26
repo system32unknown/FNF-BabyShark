@@ -1,10 +1,5 @@
 package states;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
-import flixel.tweens.FlxTween;
 import utils.CoolUtil;
 
 class OutdatedState extends MusicBeatState

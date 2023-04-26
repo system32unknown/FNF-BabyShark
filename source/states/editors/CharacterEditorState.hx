@@ -1,14 +1,9 @@
 package states.editors;
 
 import animateatlas.AtlasFrameMaker;
-import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.FlxCamera;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.graphics.FlxGraphic;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
@@ -190,17 +185,9 @@ class CharacterEditorState extends MusicBeatState
 	var onPixelBG:Bool = false;
 	var OFFSET_X:Float = 300;
 	function reloadBGs() {
-		var i:Int = bgLayer.members.length-1;
-		while(i >= 0) {
-			var memb:FlxSprite = bgLayer.members[i];
-			if(memb != null) {
-				memb.kill();
-				bgLayer.remove(memb);
-				memb.destroy();
-			}
-			--i;
-		}
+		bgLayer.forEachAlive(function(spr:FlxSprite) spr.destroy());
 		bgLayer.clear();
+
 		var playerXDifference = 0;
 		if(char.isPlayer) playerXDifference = 670;
 
@@ -210,6 +197,7 @@ class CharacterEditorState extends MusicBeatState
 				playerXDifference += 200;
 				playerYDifference = 220;
 			}
+			Paths.setCurrentLevel('week6');
 
 			var bgSky:BGSprite = new BGSprite('weeb/weebSky', OFFSET_X - (playerXDifference / 2) - 300, 0 - playerYDifference, 0.1, 0.1);
 			bgLayer.add(bgSky);
@@ -245,6 +233,7 @@ class CharacterEditorState extends MusicBeatState
 			bgTrees.updateHitbox();
 			changeBGbutton.text = "Regular BG";
 		} else {
+			Paths.setCurrentLevel('week1');
 			var bg:BGSprite = new BGSprite('stageback', -600 + OFFSET_X - playerXDifference, -300, 0.9, 0.9);
 			bgLayer.add(bg);
 

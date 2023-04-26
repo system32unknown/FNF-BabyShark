@@ -4,8 +4,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
 import game.Boyfriend;
 import game.Conductor;
 import states.StoryMenuState;

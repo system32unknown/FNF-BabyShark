@@ -1,13 +1,6 @@
 package substates;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
-import flixel.math.FlxMath;
 import data.WeekData;
 import utils.CoolUtil;
 import states.FreeplayState;
