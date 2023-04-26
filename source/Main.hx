@@ -100,7 +100,6 @@ class Main extends Sprite
 		}
 		#end
 
-		FlxG.fixedTimestep = false;
 		FlxG.signals.preStateSwitch.add(() -> {
 			Paths.clearStoredCache();
 		});

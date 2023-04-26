@@ -74,9 +74,8 @@ class ClientPrefs {
 				FlxG.drawFramerate = framerate;
 				FlxG.updateFramerate = framerate;
 			}
-		},
-		'keyboard' => function(controls:Map<String, Array<FlxKey>>) {
-			reloadControls();
+		}, 'keyboard' => function(controls:Map<String, Array<FlxKey>>) {
+			reloadVolumeKeys();
 		}, 'hardwareCache' => function(bool:Bool) {
 			if (!isHardCInited) {
 				Paths.hardwareCache = bool;
@@ -341,7 +340,6 @@ class ClientPrefs {
 		'debug_2'		=> [EIGHT]
 	];
 	public static var defaultKeys:Map<String, Array<FlxKey>> = keyBinds;
-
 	public static function saveSettings() {
 		var save:Dynamic = FlxG.save.data;
 
@@ -433,18 +431,26 @@ class ClientPrefs {
 		return (gameplaySettings.exists(name) ? gameplaySettings.get(name) : defaultValue);
 	}
 
-	inline public static function getPref(name:String, ?defaultValue:Dynamic):Dynamic {
-		if (prefs.exists(name)) return prefs.get(name);
-		return defaultValue;
-	}
-
-	public static function reloadControls() {
+	public static function reloadVolumeKeys() {
 		TitleState.muteKeys = keyBinds.get('volume_mute').copy();
 		TitleState.volumeDownKeys = keyBinds.get('volume_down').copy();
 		TitleState.volumeUpKeys = keyBinds.get('volume_up').copy();
+		toggleVolumeKeys(true);
+	}
+	public static function toggleVolumeKeys(turnOn:Bool) {
+		if(turnOn) {
+			FlxG.sound.muteKeys = TitleState.muteKeys;
+			FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
+			FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
+		} else {
+			FlxG.sound.muteKeys = [];
+			FlxG.sound.volumeDownKeys = [];
+			FlxG.sound.volumeUpKeys = [];
+		}
+	}
 
-		FlxG.sound.muteKeys = TitleState.muteKeys;
-		FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
-		FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
+	inline public static function getPref(name:String, ?defaultValue:Dynamic):Dynamic {
+		if (prefs.exists(name)) return prefs.get(name);
+		return defaultValue;
 	}
 }

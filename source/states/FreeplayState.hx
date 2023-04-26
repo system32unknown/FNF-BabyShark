@@ -111,10 +111,7 @@ class FreeplayState extends MusicBeatState
 			songText.targetY = i;
 			grpSongs.add(songText);
 
-			var maxWidth = 980;
-			if (songText.width > maxWidth) {
-				songText.scaleX = maxWidth / songText.width;
-			}
+			songText.scaleX = Math.min(1, 980 / songText.width);
 			songText.snapToPosition();
 
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
@@ -239,6 +236,15 @@ class FreeplayState extends MusicBeatState
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 		if(songs.length > 1) {
+			if(FlxG.keys.justPressed.HOME) {
+				curSelected = 0;
+				changeSelection();
+				holdTime = 0;	
+			} else if(FlxG.keys.justPressed.END) {
+				curSelected = songs.length - 1;
+				changeSelection();
+				holdTime = 0;	
+			}
 			if (controls.UI_UP_P) {
 				changeSelection(-shiftMult);
 				holdTime = 0;

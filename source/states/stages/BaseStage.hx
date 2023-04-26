@@ -4,7 +4,6 @@ import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.FlxSubState;
-import flixel.math.FlxPoint;
 import flixel.group.FlxSpriteGroup;
 
 import game.Note.EventNote;
@@ -48,12 +47,10 @@ class BaseStage extends FlxBasic
 	public var camOther(get, never):FlxCamera;
 
 	public var defaultCamZoom(get, set):Float;
-	public var camFollow(get, never):FlxPoint;
-	public var camFollowPos(get, never):FlxObject;
+	public var camFollow(get, never):FlxObject;
 
-	public function new(?game:MusicBeatState) {
-		if (game == null) game = PlayState.instance;
-		this.game = game;
+	public function new() {
+		this.game = cast FlxG.state;
 
 		if(this.game == null) {
 			FlxG.log.warn('Invalid state for the stage added!');
@@ -134,7 +131,6 @@ class BaseStage extends FlxBasic
 	// overrides
 	function startCountdown() if(onPlayState) return PlayState.instance.startCountdown(); else return false;
 	function endSong() if(onPlayState)return PlayState.instance.endSong(); else return false;
-	function snapCamFollowToPos(x:Float, y:Float) if(onPlayState) PlayState.instance.snapCamFollowToPos(x, y);
 	function moveCameraSection() if(onPlayState) moveCameraSection();
 	function moveCamera(isDad:Bool) if(onPlayState) moveCamera(isDad);
 	inline function get_paused() return game.paused;
@@ -175,6 +171,5 @@ class BaseStage extends FlxBasic
 		game.defaultCamZoom = value;
 		return game.defaultCamZoom;
 	}
-	inline function get_camFollow():FlxPoint return game.camFollow;
-	inline function get_camFollowPos():FlxObject return game.camFollowPos;
+	inline function get_camFollow():FlxObject return game.camFollow;
 }

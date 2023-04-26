@@ -17,7 +17,12 @@ class CoolUtil
 		return (m / snap);
 	}
 
-	public static function coolTextFile(path:String):Array<String> {
+
+	inline public static function capitalize(text:String) {
+		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
+	}
+
+	inline public static function coolTextFile(path:String):Array<String> {
 		#if sys
 		if(FileSystem.exists(path)) return [for (i in File.getContent(path).trim().split('\n')) i.trim()];
 		#else
@@ -25,22 +30,21 @@ class CoolUtil
 		#end
 		return [];
 	}
-	public static function listFromString(string:String):Array<String> {
+	inline public static function listFromString(string:String):Array<String> {
 		final daList = string.trim().split('\n');
 		return [for(i in 0...daList.length) daList[i].trim()];
 	}
 
-	public static function dominantColor(sprite:flixel.FlxSprite):Int{
+	inline public static function dominantColor(sprite:FlxSprite):Int{
 		var countByColor:Map<Int, Int> = [];
 		for(col in 0...sprite.frameWidth) {
 			for(row in 0...sprite.frameHeight) {
 			  	var colorOfThisPixel:Int = sprite.pixels.getPixel32(col, row);
 			  	if(colorOfThisPixel != 0) {
-					if(countByColor.exists(colorOfThisPixel)) {
-					    countByColor[colorOfThisPixel] =  countByColor[colorOfThisPixel] + 1;
-					} else if(countByColor[colorOfThisPixel] != 13520687 - (2 * 13520687)) {
+					if(countByColor.exists(colorOfThisPixel))
+					    countByColor[colorOfThisPixel]++;
+					else if(countByColor[colorOfThisPixel] != 13520687 - (2 * 13520687))
 						countByColor[colorOfThisPixel] = 1;
-					}
 			  	}
 			}
 		}

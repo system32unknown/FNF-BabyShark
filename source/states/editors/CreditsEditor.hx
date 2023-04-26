@@ -436,15 +436,14 @@ class CreditsEditor extends MusicBeatState
 		var blockInput:Bool = false;
 		for (inputText in blockPressWhileTypingOn) {
 			if(inputText.hasFocus) {
-				FlxG.sound.muteKeys = [];
-				FlxG.sound.volumeDownKeys = [];
-				FlxG.sound.volumeUpKeys = [];
+				ClientPrefs.toggleVolumeKeys(false);
 				blockInput = true;
 				break;
 			}
 		}		
 
 		if(!quitting && !blockInput) {
+			ClientPrefs.toggleVolumeKeys(true);
 			if(creditsStuff.length > 1) {
 				var shiftMult:Int = 1;
 				if (FlxG.keys.justPressed.W || FlxG.keys.justPressed.UP) {

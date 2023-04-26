@@ -116,13 +116,9 @@ class PlayState extends MusicBeatState {
 	public var unspawnNotes:Array<Note> = [];
 	public var eventNotes:Array<EventNote> = [];
 
-	private var strumLine:FlxSprite;
-
 	//Handles the new epic mega sexy cam code that i've done
-	public var camFollow:FlxPoint;
-	public var camFollowPos:FlxObject;
-	static var prevCamFollow:FlxPoint;
-	static var prevCamFollowPos:FlxObject;
+	public var camFollow:FlxObject;
+	static var prevCamFollow:FlxObject;
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
@@ -255,10 +251,6 @@ class PlayState extends MusicBeatState {
 	public var achievementsArray:Array<FunkinLua> = [];
 	public var achievementWeeks:Array<String> = [];
 
-	// Debug buttons
-	var debugKeysChart:Array<FlxKey>;
-	var debugKeysCharacter:Array<FlxKey>;
-
 	// Less laggy controls
 	var keysArray:Array<Dynamic>;
 
@@ -309,9 +301,6 @@ class PlayState extends MusicBeatState {
 		GameOverSubstate.resetVariables();
 		PauseSubState.songName = null; //Reset to default
 
-		debugKeysChart = ClientPrefs.keyBinds.get('debug_1').copy();
-		debugKeysCharacter = ClientPrefs.keyBinds.get('debug_2').copy();
-		
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed', 1);
 		fullComboFunction = function() {
 			var epics = ratingsData[0].hits;
@@ -580,10 +569,6 @@ class PlayState extends MusicBeatState {
 
 		Conductor.songPosition = -5000 / Conductor.songPosition;
 
-		strumLine = new FlxSprite(ClientPrefs.getPref('middleScroll') ? STRUM_X_MIDDLESCROLL : STRUM_X, 50).makeGraphic(FlxG.width, 10);
-		if(downScroll) strumLine.y = FlxG.height - 150;
-		strumLine.scrollFactor.set();
-
 		playerLU = new FlxTypedGroup<FlxSprite>();
 		playerLU.cameras = [camHUD];
 		opponentLU = new FlxTypedGroup<FlxSprite>();
@@ -645,23 +630,17 @@ class PlayState extends MusicBeatState {
 		generateSong(SONG.song);
 		add(grpNoteSplashes);
 
-		camFollow = new FlxPoint();
-		camFollowPos = new FlxObject(0, 0, 1, 1);
-
-		snapCamFollowToPos(camPos.x, camPos.y);
+		camFollow = new FlxObject(0, 0, 1, 1);
+		camFollow.setPosition(camPos.x, camPos.y);
 		if (prevCamFollow != null) {
 			camFollow = prevCamFollow;
 			prevCamFollow = null;
 		}
-		if (prevCamFollowPos != null) {
-			camFollowPos = prevCamFollowPos;
-			prevCamFollowPos = null;
-		}
-		add(camFollowPos);
+		add(camFollow);
 
-		FlxG.camera.follow(camFollowPos, LOCKON, 1);
+		FlxG.camera.follow(camFollow, LOCKON, 1);
 		FlxG.camera.zoom = defaultCamZoom;
-		FlxG.camera.focusOn(camFollow);
+		FlxG.camera.snapToTarget();
 
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 		
@@ -1825,7 +1804,7 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onUpdate', [elapsed]);
 
 		if(ClientPrefs.getPref('camMovement') && !isPixelStage) {
-			if(camlock) camFollow.copyFrom(camlockpoint);
+			if(camlock) camFollow.setPosition(camlockpoint.x, camlockpoint.y);
 		}
 
 		if(disableTheTripperAt == curStep || isDead)
@@ -1854,9 +1833,9 @@ class PlayState extends MusicBeatState {
 			}
 		}
 		
+		FlxG.camera.followLerp = 0;
 		if(!inCutscene) {
-			var lerpVal:Float = MathUtil.boundTo(elapsed * 2.4 * cameraSpeed * playbackRate, 0, 1);
-			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
+			FlxG.camera.followLerp = FlxMath.bound(elapsed * 2.4 * cameraSpeed * playbackRate, 0, 1);
 			if(!startingSong && !endingSong && boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name.startsWith('idle')) {
 				boyfriendIdleTime += elapsed;
 				if(boyfriendIdleTime >= 0.15) { // Kind of a mercy thing for making the achievement easier to get as it's apparently frustrating to some playerss
@@ -1900,7 +1879,7 @@ class PlayState extends MusicBeatState {
 			}
 		}
 
-		if (FlxG.keys.anyJustPressed(debugKeysChart) && !endingSong && !inCutscene)
+		if (controls.justPressed('debug_1') && !endingSong && !inCutscene)
 			openChartEditor();
 
 		switch(ClientPrefs.getPref('IconBounceType')) {
@@ -1938,7 +1917,7 @@ class PlayState extends MusicBeatState {
 			iconP2.setState(0);
 		}
 
-		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {
+		if (controls.justPressed('debug_2') && !endingSong && !inCutscene) {
 			persistentUpdate = false;
 			paused = true;
 			cancelMusicFadeTween();
@@ -2025,7 +2004,7 @@ class PlayState extends MusicBeatState {
 		if (generatedMusic) {
 			if (!inCutscene) {
 				if(!cpuControlled) {
-					keyShit();
+					keysCheck();
 				} else if(boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 / FlxG.sound.music.pitch) * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss')) {
 					boyfriend.dance();
 				}
@@ -2156,14 +2135,15 @@ class PlayState extends MusicBeatState {
 		}
 		#end
 
-		setOnLuas('cameraX', camFollowPos.x);
-		setOnLuas('cameraY', camFollowPos.y);
+		setOnLuas('cameraX', camFollow.x);
+		setOnLuas('cameraY', camFollow.y);
 		setOnLuas('botPlay', cpuControlled);
 		callOnLuas('onUpdatePost', [elapsed]);
 		callOnScripts('onUpdatePost', [elapsed]);
 	}
 
 	function openPauseMenu() {
+		FlxG.camera.followLerp = 0;
 		FlxTimer.globalManager.forEach(function(tmr:FlxTimer) {
 			if (!tmr.finished) tmr.active = false;
 		});
@@ -2218,7 +2198,7 @@ class PlayState extends MusicBeatState {
 				FlxG.sound.music.stop();
 
 				persistentUpdate = persistentDraw = false;
-				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
+				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollow.x, camFollow.y));
 
 				#if discord_rpc
 				// Game Over doesn't get his own variable because it's only used here
@@ -2326,7 +2306,7 @@ class PlayState extends MusicBeatState {
 					if(flValue1 != null || flValue2 != null) {
 						if(flValue1 == null) flValue1 = 0;
 						if(flValue2 == null) flValue2 = 0;
-						camFollow.set(flValue1, flValue2);
+						camFollow.setPosition(flValue1, flValue2);
 						isCameraOnForcedPos = true;
 					}
 				}
@@ -2550,7 +2530,7 @@ class PlayState extends MusicBeatState {
 		if (!SONG.notes[sec].mustHitSection) {
 			moveCamera('dad');
 			if(ClientPrefs.getPref('camMovement') && !isPixelStage) {
-				campoint.copyFrom(camFollow);
+				campoint.set(camFollow.x, camFollow.y);
 				bfturn = false;
 				camlock = false;
 			}
@@ -2559,7 +2539,7 @@ class PlayState extends MusicBeatState {
 		} else {
 			moveCamera('boyfriend');
 			if(ClientPrefs.getPref('camMovement') && !isPixelStage){
-				campoint.copyFrom(camFollow);
+				campoint.set(camFollow.x, camFollow.y);
 				bfturn = true;
 				camlock = false;
 			}
@@ -2571,11 +2551,12 @@ class PlayState extends MusicBeatState {
 	var cameraTwn:FlxTween;
 	public function moveCamera(moveCameraTo:Dynamic) {
 		if(moveCameraTo == 'dad' || moveCameraTo) {
-			camFollow.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
-			camFollow.add(dad.cameraPosition[0] + opponentCameraOffset[0], dad.cameraPosition[1] + opponentCameraOffset[1]);
+			camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
+			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
+			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
 			tweenCamIn();
 		} else if(moveCameraTo == 'boyfriend' || !moveCameraTo) {
-			camFollow.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
+			camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
 			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
 			if (songName == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1) {
@@ -2586,8 +2567,9 @@ class PlayState extends MusicBeatState {
 				});
 			}
 		} else {
-			camFollow.set(gf.getMidpoint().x, gf.getMidpoint().y);
-			camFollow.add(gf.cameraPosition[0] + girlfriendCameraOffset[0], gf.cameraPosition[1] + girlfriendCameraOffset[1]);
+			camFollow.setPosition(gf.getMidpoint().x, gf.getMidpoint().y);
+			camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
+			camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
 			tweenCamIn();
 		}
 	}
@@ -2600,11 +2582,6 @@ class PlayState extends MusicBeatState {
 				}
 			});
 		}
-	}
-
-	public function snapCamFollowToPos(x:Float, y:Float) {
-		camFollow.set(x, y);
-		camFollowPos.setPosition(x, y);
 	}
 
 	public function finishSong(?ignoreNoteOffset:Bool = false):Void
@@ -2723,7 +2700,6 @@ class PlayState extends MusicBeatState {
 					FlxTransitionableState.skipNextTransOut = true;
 
 					prevCamFollow = camFollow;
-					prevCamFollowPos = camFollowPos;
 
 					SONG = Song.loadFromJson(storyPlaylist[0] + difficulty, storyPlaylist[0]);
 					FlxG.sound.music.stop();
@@ -3162,8 +3138,11 @@ class PlayState extends MusicBeatState {
 	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = getKeyFromEvent(eventKey);
+		if (FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(key);
+	}
 
-		if (!cpuControlled && startedCountdown && !paused && key > -1 && FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) {
+	function keyPressed(key:Int) {
+		if (!cpuControlled && startedCountdown && !paused && key > -1) {
 			if(!boyfriend.stunned && generatedMusic && !endingSong) {
 				//more accurate hit time for the ratings?
 				var lastTime:Float = Conductor.songPosition;
@@ -3205,9 +3184,7 @@ class PlayState extends MusicBeatState {
 				} else {
 					callOnLuas('onGhostTap', [key]);
 					callOnScripts('onGhostTap', [key]);
-					if (canMiss) {
-						noteMissPress(key);
-					}
+					if (canMiss) noteMissPress(key);
 				}
 
 				// this is for the "Just the Two of Us" achievement lol
@@ -3228,10 +3205,12 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	private function onKeyRelease(event:KeyboardEvent):Void {
+	function onKeyRelease(event:KeyboardEvent):Void {
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = getKeyFromEvent(eventKey);
-		if(!cpuControlled && startedCountdown && !paused && key > -1) {
+	}
+	function keyReleased(key:Int) {
+		if(!cpuControlled && startedCountdown && !paused) {
 			var spr:StrumNote = playerStrums.members[key];
 			if(spr != null) {
 				spr.playAnim('static');
@@ -3242,26 +3221,24 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	private function getKeyFromEvent(key:FlxKey):Int {
+	function getKeyFromEvent(key:FlxKey):Int {
 		if (key != NONE) {
 			for (i in 0...keysArray[mania].length) {
-				for (j in 0...keysArray[mania][i].length) {
-					if(key == keysArray[mania][i][j]) {
-						return i;
-					}
+				var note:Array<Dynamic> = controls.keyboardBinds[keysArray[mania][i]];
+				for (noteKey in note) {
+					if(key == noteKey) return i;
 				}
 			}
-		}
+		} 
 		return -1;
 	}
 
-	private function keysArePressed():Bool {
+	function keysArePressed():Bool {
 		for (i in 0...keysArray[mania].length) {
 			for (j in 0...keysArray[mania][i].length) {
 				if (FlxG.keys.checkStatus(keysArray[mania][i][j], PRESSED)) return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -3274,7 +3251,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	//Hold Notes
-	function keyShit():Void {
+	function keysCheck():Void {		
 		if (startedCountdown && !boyfriend.stunned && generatedMusic) {
 			// rewritten inputs???
 			notes.forEachAlive(function(daNote:Note) {
@@ -3453,7 +3430,7 @@ class PlayState extends MusicBeatState {
 		camlock = true;
 		if(camTimer.finished) {
 			camlock = false;
-			camFollow.copyFrom(campoint);
+			camFollow.setPosition(campoint.x, campoint.y);
 			camTimer = null;
 		} 
 	}

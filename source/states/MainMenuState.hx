@@ -31,7 +31,6 @@ class MainMenuState extends MusicBeatState
 	var magenta:FlxSprite;
 
 	var camFollow:FlxObject;
-	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
 
 	//Stolen from Kade Engine
@@ -49,7 +48,6 @@ class MainMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-		debugKeys = ClientPrefs.keyBinds.get('debug_1').copy();
 
 		camGame = new FlxCamera();
 
@@ -87,9 +85,7 @@ class MainMenuState extends MusicBeatState
 		add(magenta);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
-		camFollowPos = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
-		add(camFollowPos);
 
 		var menuCover:FlxSprite = new FlxSprite().makeGraphic(FlxG.width - 680, Std.int(FlxG.height * 1.5));
 		menuCover.x = 30;
@@ -141,7 +137,7 @@ class MainMenuState extends MusicBeatState
 
 		firstStart = false;
 
-		FlxG.camera.follow(camFollowPos, null, 1);
+		FlxG.camera.follow(camFollow, null, 0);
 
 		var versionShit:FlxText = new FlxText(0, 0, 0, 
 			'Alter Engine v${Main.engineVersion.version} (${Main.COMMIT_HASH.trim().substring(0, 7)})\n' +
@@ -187,9 +183,8 @@ class MainMenuState extends MusicBeatState
 			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += 0.5 * elapsed;
 		}
 
-		var lerpVal:Float = MathUtil.boundTo(elapsed * 7.5, 0, 1);
-		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
-
+		FlxG.camera.followLerp = FlxMath.bound(elapsed * 7.5, 0, 1);
+		
 		if (!selectedSomethin && finishedFunnyMove) {
 			if (controls.UI_UP_P) {
 				FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -239,7 +234,7 @@ class MainMenuState extends MusicBeatState
 						});
 					}
 				});
-			} else if (FlxG.keys.anyJustPressed(debugKeys)) {
+			} else if (controls.justPressed('debug_1')) {
 				selectedSomethin = true;
 				MusicBeatState.switchState(new MasterEditorMenu());
 			}

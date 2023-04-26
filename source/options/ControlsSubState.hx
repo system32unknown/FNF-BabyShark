@@ -1,5 +1,7 @@
 package options;
 
+import flixel.addons.display.FlxBackdrop;
+import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
 import data.EkData.Keybinds;
@@ -10,16 +12,16 @@ import ui.AttachedText;
 import ui.Alphabet;
 
 class ControlsSubState extends MusicBeatSubstate {
-	private static var curSelected:Int = 1;
-	private static var curAlt:Bool = false;
+	static var curSelected:Int = 1;
+	static var curAlt:Bool = false;
 
-	private static var defaultKey:String = 'Reset to Default Keys';
+	static var defaultKey:String = 'Reset to Default Keys';
 
 	var optionShit:Array<Dynamic> = [];
 
-	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private var grpInputs:Array<AttachedText> = [];
-	private var grpInputsAlt:Array<AttachedText> = [];
+	var grpOptions:FlxTypedGroup<Alphabet>;
+	var grpInputs:Array<AttachedText> = [];
+	var grpInputsAlt:Array<AttachedText> = [];
 
 	var rebindingKey:Bool = false;
 	var nextAccept:Int = 5;
@@ -27,14 +29,22 @@ class ControlsSubState extends MusicBeatSubstate {
 	var pages:Array<Dynamic> = [];
 	var curPage:Int = 0;
 
+	var bg:FlxSprite;
+
 	public function new() {
 		super();
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
+		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg.color = 0xff7192fd;
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.getPref('globalAntialiasing');
 		add(bg);
+
+		var grid:FlxBackdrop = new FlxBackdrop(FlxGridOverlay.createGrid(80, 80, 160, 160, true, 0x33FFFFFF, 0x0));
+		grid.velocity.set(40, 40);
+		grid.alpha = 0;
+		FlxTween.tween(grid, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
+		add(grid);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
@@ -151,7 +161,7 @@ class ControlsSubState extends MusicBeatSubstate {
 			}
 
 			if (controls.BACK) {
-				ClientPrefs.reloadControls();
+				ClientPrefs.reloadVolumeKeys();
 				close();
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 			}

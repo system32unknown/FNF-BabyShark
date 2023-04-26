@@ -573,12 +573,16 @@ class FunkinLua {
 			#end
 			return -1;
 		});
-		addCallback("runHaxeCode", function(codeToRun:Dynamic) {
+		addCallback("runHaxeCode", function(codeToRun:Dynamic, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null) {
 			#if (hscript && HSCRIPT_ALLOWED)
 			try {
+				if(varsToBring != null)
+					for (key in Reflect.fields(varsToBring))
+						hscript.interp.variables.set(key, Reflect.field(varsToBring, key));
+
 				var retVal:Dynamic;
 				if (Std.isOfType(codeToRun, Int))
-					retVal = hscript.execute(hscript.getExpr(codeToRun));
+					retVal = hscript.execute(hscript.getExpr(codeToRun), funcToRun, funcArgs);
 				else retVal = hscript.immediateExecute(codeToRun);
 				if (retVal != null && LuaUtils.isOfTypes(retVal, allowedHaxeTypes)) return retVal;
 			} catch (e:Dynamic) {

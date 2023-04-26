@@ -1,8 +1,6 @@
 package substates;
 
-import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import game.Boyfriend;
 import game.Conductor;
@@ -14,8 +12,7 @@ import data.WeekData;
 class GameOverSubstate extends MusicBeatSubstate
 {
 	public var boyfriend:Boyfriend;
-	var camFollow:FlxPoint;
-	var camFollowPos:FlxObject;
+	var camFollow:FlxObject;
 	var updateCamera:Bool = false;
 	var playingDeathSound:Bool = false;
 
@@ -52,17 +49,16 @@ class GameOverSubstate extends MusicBeatSubstate
 		boyfriend.y += boyfriend.positionArray[1];
 		add(boyfriend);
 
-		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
-
 		FlxG.sound.play(Paths.sound(deathSoundName));
 		FlxG.camera.scroll.set();
 		FlxG.camera.target = null;
 
 		boyfriend.playAnim('firstDeath');
 
-		camFollowPos = new FlxObject(0, 0, 1, 1);
-		camFollowPos.setPosition(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2));
-		add(camFollowPos);
+		camFollow = new FlxObject(0, 0, 1, 1);
+		camFollow.setPosition(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
+		FlxG.camera.focusOn(new FlxPoint(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2)));
+		add(camFollow);
 	}
 
 	var isFollowingAlready:Bool = false;
@@ -71,10 +67,6 @@ class GameOverSubstate extends MusicBeatSubstate
 		super.update(elapsed);
 
 		PlayState.instance.callOnLuas('onUpdate', [elapsed]);
-		if(updateCamera) {
-			var lerpVal:Float = MathUtil.boundTo(elapsed * 0.6, 0, 1);
-			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
-		}
 
 		if (controls.ACCEPT) {
 			endBullshit();
@@ -97,11 +89,14 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name == 'firstDeath') {
 			if(boyfriend.animation.curAnim.curFrame >= 12 && !isFollowingAlready) {
-				FlxG.camera.follow(camFollowPos, LOCKON, 1);
+				FlxG.camera.follow(camFollow, LOCKON, 0);
 				updateCamera = true;
 				isFollowingAlready = true;
 			}
 		}
+
+		if(updateCamera) FlxG.camera.followLerp = FlxMath.bound(elapsed * 0.6, 0, 1);
+		else FlxG.camera.followLerp = 0;
 
 		if (FlxG.sound.music.playing) {
 			Conductor.songPosition = FlxG.sound.music.time;

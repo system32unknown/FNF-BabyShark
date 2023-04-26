@@ -96,10 +96,23 @@ class HScript
 	inline public function getExpr(id:Int):Expr
 		return exprs.get(id);
 
-	public function execute(expr:Expr):Dynamic {
+	public function execute(expr:Expr, ?funcToRun:String = null, ?funcArgs:Array<Dynamic>):Dynamic {
 		parser.allowTypes = parser.allowJSON = parser.allowMetadata = true;
 		parser.line = 1;
-		return interp.execute(expr);
+
+		try {
+			var value:Dynamic = interp.execute(expr);
+			if(funcToRun != null) {
+				if(interp.variables.exists(funcToRun)) {
+					if(funcArgs == null) funcArgs = [];
+					value = Reflect.callMethod(null, interp.variables.get(funcToRun), funcArgs);
+				}
+			}
+			return value;
+		} catch(e:haxe.Exception) {
+			trace(e);
+			return null;
+		}
 	}
 
 	public function immediateExecute(code:String):Dynamic {
