@@ -1,7 +1,6 @@
 package ui;
 
 import flixel.ui.FlxButton;
-import openfl.geom.Rectangle;
 import utils.CoolUtil;
 
 class Prompt extends MusicBeatSubstate
