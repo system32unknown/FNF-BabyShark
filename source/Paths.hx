@@ -1,6 +1,5 @@
 package;
 
-import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
 import openfl.utils.AssetType;
@@ -510,7 +509,7 @@ class Paths
 	{
 		globalMods = [];
 		for (folder in getActiveModsDir()) {
-			var path = Paths.mods(folder + '/pack.json');
+			var path = mods(folder + '/pack.json');
 			if(FileSystem.exists(path)) {
 				try {
 					var rawJson:String = File.getContent(path);

@@ -1,9 +1,5 @@
 package states.stages.objects;
 
-import flixel.util.FlxColor;
-import flixel.FlxSprite;
-import flixel.FlxG;
-
 class PhillyGlowParticle extends FlxSprite
 {
 	var lifeTime:Float = 0;

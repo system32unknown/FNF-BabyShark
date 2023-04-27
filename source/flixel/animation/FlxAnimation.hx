@@ -1,7 +1,5 @@
 package flixel.animation;
 
-import flixel.FlxG;
-
 /**
  * Just a helper structure for the `FlxSprite` animation system.
  */

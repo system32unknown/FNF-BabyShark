@@ -1,6 +1,5 @@
 package ui;
 
-import flixel.FlxSprite;
 import ui.Alphabet;
 
 class AttachedText extends Alphabet

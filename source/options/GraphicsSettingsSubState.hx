@@ -1,9 +1,5 @@
 package options;
 
-import flixel.text.FlxText;
-import flixel.FlxG;
-import flixel.FlxSprite;
-
 class GraphicsSettingsSubState extends BaseOptionsMenu
 {
 	public function new()

@@ -1,7 +1,6 @@
 package;
 
 import flixel.custom.system.CustomLog;
-import flixel.FlxG;
 
 import haxe.Exception;
 

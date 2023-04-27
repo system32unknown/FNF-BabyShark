@@ -1,7 +1,5 @@
 package options;
 
-import flixel.FlxG;
-
 class GameplaySettingsSubState extends BaseOptionsMenu
 {
 	public function new()

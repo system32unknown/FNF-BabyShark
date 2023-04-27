@@ -1,8 +1,5 @@
 package handlers;
 
-import flixel.FlxSprite;
-import flixel.FlxCamera;
-import flixel.FlxG;
 #if sys
 import sys.FileSystem;
 #else

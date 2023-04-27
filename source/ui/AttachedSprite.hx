@@ -1,7 +1,5 @@
 package ui;
 
-import flixel.FlxSprite;
-
 class AttachedSprite extends FlxSprite
 {
 	public var sprTracker:FlxSprite;

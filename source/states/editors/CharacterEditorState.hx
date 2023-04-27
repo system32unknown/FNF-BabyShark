@@ -2,7 +2,6 @@ package states.editors;
 
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxObject;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.graphics.FlxGraphic;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUICheckBox;

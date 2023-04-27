@@ -2,9 +2,7 @@ package states.stages;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.FlxCamera;
 import flixel.FlxSubState;
-import flixel.group.FlxSpriteGroup;
 
 import game.Note.EventNote;
 import game.Character;

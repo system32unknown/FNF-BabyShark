@@ -1,7 +1,5 @@
 package options;
 
-import flixel.FlxG;
-
 class VisualsUISubState extends BaseOptionsMenu
 {
 	public function new()

@@ -1,6 +1,5 @@
 package options;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
 import game.Note;
 import utils.Controls;
 import utils.MathUtil;

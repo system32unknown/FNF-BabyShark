@@ -1,6 +1,5 @@
 package game;
 
-import flixel.FlxSprite;
 import states.editors.ChartingState;
 import flixel.math.FlxRect;
 import shaders.ColorSwap;

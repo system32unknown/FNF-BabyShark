@@ -1,6 +1,5 @@
 package states.editors;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end

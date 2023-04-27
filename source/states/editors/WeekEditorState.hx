@@ -1,7 +1,6 @@
 package states.editors;
 
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxStringUtil;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIInputText;
@@ -9,7 +8,6 @@ import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.ui.FlxButton;
-import flixel.math.FlxMath;
 import openfl.utils.Assets;
 import openfl.net.FileReference;
 import openfl.events.Event;

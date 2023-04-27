@@ -1,8 +1,6 @@
 package utils.system;
 
 import haxe.Timer;
-import flixel.FlxG;
-import flixel.math.FlxMath;
 
 class FPSUtil {
     @:noCompletion var times:Array<Float> = [];

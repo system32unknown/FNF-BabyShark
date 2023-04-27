@@ -1,8 +1,6 @@
 package game;
 
-import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
-import flixel.math.FlxMath;
 import utils.CoolUtil;
 
 class HealthIcon extends FlxSprite

@@ -1,8 +1,6 @@
 package handlers;
 
-import flixel.FlxG;
 import flixel.FlxBasic;
-import flixel.FlxSprite;
 import flixel.util.FlxSort;
 
 class CutsceneHandler extends FlxBasic

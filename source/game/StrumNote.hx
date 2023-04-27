@@ -1,7 +1,5 @@
 package game;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import shaders.ColorSwap;
 
 class StrumNote extends FlxSprite

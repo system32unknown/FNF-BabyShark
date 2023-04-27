@@ -1,7 +1,5 @@
 package ui;
 
-import flixel.FlxSprite;
-
 class CheckboxThingie extends FlxSprite
 {
 	public var sprTracker:FlxSprite;

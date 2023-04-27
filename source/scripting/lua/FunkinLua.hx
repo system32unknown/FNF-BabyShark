@@ -11,7 +11,6 @@ using llua.Lua.Lua_helper;
 import haxe.Constraints.Function;
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.sound.FlxSound;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.display.FlxRuntimeShader;
@@ -48,7 +47,6 @@ class FunkinLua {
 	public var closed:Bool = false;
 
 	#if (hscript && HSCRIPT_ALLOWED)
-	public static var allowedHaxeTypes(default, null):Array<Dynamic> = [Bool, Int, Float, String, Array];
 	public static var hscript:HScript;
 	#end
 
@@ -61,7 +59,6 @@ class FunkinLua {
 					break;
 				}
 			}
-
 			if (modDir != '' || index != -1)
 				globalScriptName = Path.join([for (i in (index + (modDir != '' ? 1 : 0))...dirs.length) dirs[i]]);
 		} else globalScriptName = scriptName;
@@ -86,11 +83,10 @@ class FunkinLua {
 			#if windows
 			lime.app.Application.current.window.alert(error, 'Error on lua script! "$script"');
 			#else
-			luaTrace('Error loading lua script: "$script"\n' + error, true, false, FlxColor.RED);
+			luaTrace('$script\n$error', true, false, FlxColor.RED);
 			#end
 		}
-
-		HScript.initHaxeModule();
+		#if hscript HScript.initHaxeModule(); #end
 
 		// Lua shit
 		set('Function_StopLua', Function_StopLua);
@@ -458,7 +454,7 @@ class FunkinLua {
 		});
 
 		addCallback("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
-			final trimmedpft = platformType.toLowerCase().trim();
+			final trimmedpft = platformType.trim();
 			if (args == null) args = [];
 			final blackListcpp = ["setDPIAware"];
 			if (blackListcpp.contains(trimmedpft)) return;
@@ -559,56 +555,6 @@ class FunkinLua {
 				return false;
 			}
 			return true;
-		});
-
-		addCallback("runHaxeCode", function(code:String):Int {
-			#if (hscript && HSCRIPT_ALLOWED)
-			try {
-				return hscript.parse(code);
-			} catch(e) {
-				luaTrace(scriptName + ":" + lastCalledFunction + " - " + e, false, false, FlxColor.RED);
-			}
-			#else
-			luaTrace("parseHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
-			#end
-			return -1;
-		});
-		addCallback("runHaxeCode", function(codeToRun:Dynamic, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null) {
-			#if (hscript && HSCRIPT_ALLOWED)
-			try {
-				if(varsToBring != null)
-					for (key in Reflect.fields(varsToBring))
-						hscript.interp.variables.set(key, Reflect.field(varsToBring, key));
-
-				var retVal:Dynamic;
-				if (Std.isOfType(codeToRun, Int))
-					retVal = hscript.execute(hscript.getExpr(codeToRun), funcToRun, funcArgs);
-				else retVal = hscript.immediateExecute(codeToRun);
-				if (retVal != null && LuaUtils.isOfTypes(retVal, allowedHaxeTypes)) return retVal;
-			} catch (e:Dynamic) {
-				luaTrace(scriptName + ":" + lastCalledFunction + " - " + e, false, false, FlxColor.RED);
-			}
-			#else
-			luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
-			#end
-
-			return null;
-		});
-		addCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
-			#if (hscript && HSCRIPT_ALLOWED)
-			if (hscript.variables.exists(libName)) return;
-			try {
-				var str:String = '';
-				if(libPackage != null && libPackage.length > 0)
-					str = libPackage + '.';
-
-				hscript.variables.set(libName, Type.resolveClass(str + libName));
-			} catch (e:Dynamic) {
-				luaTrace(scriptName + ":" + lastCalledFunction + " - " + e, false, false, FlxColor.RED);
-			}
-			#else
-			luaTrace("addHaxeLibrary: HScript isn't supported on this platform!", false, false, FlxColor.RED);
-			#end
 		});
 
 		addCallback("loadSong", function(?name:String = null, ?difficultyNum:Int = -1) {
@@ -1934,6 +1880,7 @@ class FunkinLua {
 
 		DeprecatedFunctions.implement(this);
 		ExtraFunctions.implement(this);
+		#if (hscript && HSCRIPT_ALLOWED) HScript.implement(this); #end
 
 		call('onCreate', []);
 		if (closed) return stop();
@@ -1983,7 +1930,7 @@ class FunkinLua {
 		#end
 	}
 
-	var lastCalledFunction:String = '';
+	public var lastCalledFunction:String = '';
 	public function call(func:String, args:Array<Dynamic>):Dynamic {
 		#if LUA_ALLOWED
 		if (closed) return Function_Continue;

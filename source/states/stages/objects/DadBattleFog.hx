@@ -1,14 +1,12 @@
 package states.stages.objects;
 
 import game.BGSprite;
-import flixel.FlxG;
-import flixel.group.FlxSpriteGroup;
 
 class DadBattleFog extends FlxSpriteGroup {
 	public function new() {
 		super();
 		
-		alpha = 0.7;
+		alpha = .7;
 		blend = ADD;
 
 		var offsetX = 200;

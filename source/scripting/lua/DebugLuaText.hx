@@ -1,7 +1,5 @@
 package scripting.lua;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
-
 class DebugLuaText extends FlxText {
 	var disableTime:Float = 6;
 	public var parentGroup:FlxTypedGroup<DebugLuaText>;

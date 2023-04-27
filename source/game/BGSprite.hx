@@ -1,7 +1,5 @@
 package game;
 
-import flixel.FlxSprite;
-
 class BGSprite extends FlxSprite
 {
 	private var idleAnim:String;

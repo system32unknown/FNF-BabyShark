@@ -1,6 +1,5 @@
 package states;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.sound.FlxSound;
 import data.WeekData;
 import utils.MathUtil;

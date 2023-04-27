@@ -5,6 +5,8 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
+#if MODS_ALLOWED import haxe.Json; #end
+
 import flixel.util.FlxSave;
 import openfl.utils.Assets;
 
@@ -130,6 +132,36 @@ class ExtraFunctions
 			Reflect.setField(PlayState.instance.modchartSaves.get(name).data, field, value);
 			
 		});
+		funk.addCallback("loadJsonOptions", function(inclMainFol:Bool = true, ?modNames:Array<String> = null) {
+			#if MODS_ALLOWED
+			if (modNames == null) modNames = [];
+			if (modNames.length < 1) modNames.push(Paths.currentModDirectory);
+			for(mod in Paths.getModDirectories(inclMainFol)) if(modNames.contains(mod) || (inclMainFol && mod == '')) {
+				var path:String = haxe.io.Path.join([Paths.mods(), mod, 'options']);
+				if(FileSystem.exists(path)) for(file in FileSystem.readDirectory(path)) {
+					var folder:String = path + '/' + file;
+					if(FileSystem.isDirectory(folder)) for(rawFile in FileSystem.readDirectory(folder)) if(rawFile.endsWith('.json')) {
+						var rawJson = File.getContent(folder + '/' + rawFile);
+						if (rawJson != null && rawJson.length > 0) {
+							var json = Json.parse(rawJson);
+							if (!ClientPrefs.modsOptsSaves.exists(mod)) ClientPrefs.modsOptsSaves.set(mod, []);
+							if (!ClientPrefs.modsOptsSaves[mod].exists(json.variable)) {
+								if (!Reflect.hasField(json, 'defaultValue')) {
+									var type:String = 'bool';
+									if (Reflect.hasField(json, 'type')) type = json.type;
+									ClientPrefs.modsOptsSaves[mod][json.variable] = CoolUtil.getOptionDefVal(type, Reflect.field(json, 'options'));
+								} else ClientPrefs.modsOptsSaves[mod][json.variable] = json.defaultValue;
+							}
+						}
+					}
+				}
+			}
+			return ClientPrefs.modsOptsSaves.toString();
+			#else
+			funk.luaTrace('loadJsonOptions: Platform unsupported for Json Options!', false, false, FlxColor.RED);
+			return false;
+			#end
+		});
 		funk.addCallback("getOptionSave", function(variable:String, isJson:Bool = false, ?modName:String = null) {
 			if (!isJson)
 				return ClientPrefs.getPref(variable);
@@ -161,6 +193,10 @@ class ExtraFunctions
 				#end
 			}
 			return false;
+		});
+		funk.addCallback("saveSettings", function() {
+			ClientPrefs.saveSettings();
+			return true;
 		});
 
 		// File management

@@ -1,6 +1,5 @@
 package utils;
 
-import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 
 //Keeping same use cases on stuff for it to be easier to understand/use

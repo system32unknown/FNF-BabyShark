@@ -3,7 +3,6 @@ package states;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
 import states.editors.MasterEditorMenu;
 import game.Achievements;

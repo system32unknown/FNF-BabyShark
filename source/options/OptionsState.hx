@@ -1,6 +1,5 @@
 package options;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
 import states.MainMenuState;
 import states.LoadingState;
 import ui.Alphabet;
@@ -57,6 +56,17 @@ class OptionsState extends MusicBeatState
 		selectorRight = new Alphabet(0, 0, '<', true);
 		add(selectorRight);
 
+		#if MODS_ALLOWED
+		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
+		textBG.alpha = 0.6;
+		add(textBG);
+
+		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "Press RESET to access the Modpacks Options saves Reset menu.", 18);
+		text.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
+		text.scrollFactor.set();
+		add(text);
+		#end
+
 		pageText = new FlxText(FlxG.width * .802, 5, 0, "", 32);
 		pageText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		
@@ -88,6 +98,9 @@ class OptionsState extends MusicBeatState
 	override function closeSubState() {
 		super.closeSubState();
 		ClientPrefs.saveSettings();
+		#if desktop
+		DiscordClient.changePresence("Options Menu", null);
+		#end
 	}
 
 	override function update(elapsed:Float) {
@@ -113,6 +126,12 @@ class OptionsState extends MusicBeatState
 		if (controls.ACCEPT) {
 			openSelectedSubstate(options[curPage][curSelected]);
 		}
+
+		#if MODS_ALLOWED
+		if (controls.RESET) {
+			openSubState(new options.DeleteSavesSubState());
+		}
+		#end
 	}
 	
 	function changeSelection(change:Int = 0) {

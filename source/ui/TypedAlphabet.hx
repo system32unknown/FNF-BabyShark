@@ -1,7 +1,5 @@
 package ui;
 
-import flixel.FlxG;
-
 class TypedAlphabet extends Alphabet
 {
 	public var onFinish:Void->Void = null;

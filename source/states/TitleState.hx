@@ -1,14 +1,11 @@
 package states;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxGradient;
-import flixel.system.FlxSplash;
 import lime.app.Application;
 import haxe.Json;
 import data.WeekData;

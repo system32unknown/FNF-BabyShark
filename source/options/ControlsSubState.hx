@@ -2,7 +2,6 @@ package options;
 
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
 import data.EkData.Keybinds;
 import utils.CoolUtil;

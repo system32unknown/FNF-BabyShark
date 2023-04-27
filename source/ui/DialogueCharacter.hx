@@ -1,7 +1,5 @@
 package ui;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import haxe.Json;
 #if sys
 import sys.FileSystem;

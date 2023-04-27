@@ -26,7 +26,6 @@ import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUISlider;
 import flixel.addons.ui.FlxUIDropDownMenu;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.sound.FlxSound;
 import flixel.util.FlxSort;

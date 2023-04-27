@@ -1,10 +1,8 @@
 package states;
 
-import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
-import flixel.FlxCamera;
 import utils.Controls;
 import states.stages.BaseStage;
 import ui.CustomFadeTransition;

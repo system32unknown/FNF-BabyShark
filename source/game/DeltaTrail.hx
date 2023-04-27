@@ -1,14 +1,13 @@
 package game;
 
 import flixel.addons.effects.FlxTrail;
-import flixel.FlxSprite;
 import flixel.system.FlxAssets;
 import flixel.math.FlxPoint;
 
 /**
  * FlxTrail but it uses delta time.
  * @author Rozebud :]
- */
+*/
 class DeltaTrail extends FlxTrail
 {
 	var _timer:Float = 0;

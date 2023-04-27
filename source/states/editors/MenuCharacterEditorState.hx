@@ -1,6 +1,5 @@
 package states.editors;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;

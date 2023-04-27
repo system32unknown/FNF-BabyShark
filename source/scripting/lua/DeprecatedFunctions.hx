@@ -1,10 +1,6 @@
 package scripting.lua;
 
-import flixel.FlxSprite;
-import flixel.FlxG;
-
 import game.StrumNote;
-import flixel.tweens.FlxTween;
 
 //
 // This is simply where i store deprecated functions for it to be more organized.

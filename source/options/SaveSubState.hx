@@ -1,6 +1,5 @@
 package options;
 
-import flixel.FlxG;
 import ui.Prompt;
 import game.Highscore;
 

@@ -1,6 +1,5 @@
 package game.subtitles;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
 import game.subtitles.Subtitle.SubtitleProperties;
 
 class SubtitleManager extends FlxTypedGroup<Subtitle> {

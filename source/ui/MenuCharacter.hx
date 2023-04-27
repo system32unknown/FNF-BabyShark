@@ -1,6 +1,5 @@
 package ui;
 
-import flixel.FlxSprite;
 #if MODS_ALLOWED
 import sys.io.File;
 import sys.FileSystem;

@@ -6,20 +6,13 @@ import hscript.Expr;
 import hscript.Interp;
 #end
 
+import haxe.Exception;
+
 class HScript
 {
 	#if (hscript && HSCRIPT_ALLOWED)
-	static var MAX_POOL(default, null):Int = 255;
 
 	public static var parser:Parser = new Parser();
-
-	public var idEnumerator:Int = 0;
-
-	public var exprs:Map<Int, Expr> = new Map(); // safe cache
-	var pool:Map<Int, Expr> = new Map(); // unsafe immediate cache
-	var keys:Map<String, Int> = new Map(); // indices
-	var syek:Map<Int, String> = new Map(); // secidni (for pool)
-	var poolarr:Array<Int> = [];
 
 	public var interp:Interp;
 
@@ -85,63 +78,74 @@ class HScript
 		});
 	}
 
-	public function parse(code:String):Int {
-		if (keys.exists(code)) return keys.get(code);
-		var expr:Expr = parser.parseString(code);
-		exprs.set(idEnumerator, expr);
-		keys.set(code, idEnumerator);
-		return idEnumerator++;
-	}
-
-	inline public function getExpr(id:Int):Expr
-		return exprs.get(id);
-
-	public function execute(expr:Expr, ?funcToRun:String = null, ?funcArgs:Array<Dynamic>):Dynamic {
+	public function execute(codeToRun:String, ?funcToRun:String = null, ?funcArgs:Array<Dynamic>):Dynamic {
 		parser.allowTypes = parser.allowJSON = parser.allowMetadata = true;
 		parser.line = 1;
-
+		var expr:Expr = parser.parseString(codeToRun);
 		try {
 			var value:Dynamic = interp.execute(expr);
-			if(funcToRun != null) {
-				if(interp.variables.exists(funcToRun)) {
-					if(funcArgs == null) funcArgs = [];
-					value = Reflect.callMethod(null, interp.variables.get(funcToRun), funcArgs);
-				}
-			}
-			return value;
-		} catch(e:haxe.Exception) {
+			return (funcToRun != null) ? executeFunction(funcToRun, funcArgs) : value;
+		} catch(e:Exception) {
 			trace(e);
 			return null;
 		}
 	}
 
-	public function immediateExecute(code:String):Dynamic {
-		var expr:Expr;
-		if (keys.exists(code)) expr = pool.get(keys.get(code));
-		else {
-			expr = parser.parseString(code);
-			pool.set(idEnumerator, expr);
-			keys.set(code, idEnumerator);
-			syek.set(idEnumerator, code);
-			poolarr.push(idEnumerator);
-			idEnumerator++;
-			while (poolarr.length > MAX_POOL) {
-				var id:Int = poolarr.shift();
-				var code:String = syek.get(id);
-				syek.remove(id);
-				keys.remove(code);
-				pool.remove(id);
+	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic>) {
+		if(funcToRun != null) {
+			if(interp.variables.exists(funcToRun)) {
+				if(funcArgs == null) funcArgs = [];
+				return Reflect.callMethod(null, interp.variables.get(funcToRun), funcArgs);
 			}
 		}
-		return inline execute(expr);
+		return null;
 	}
 
-	public function destroy() {
-		exprs.clear();
-		pool.clear();
-		keys.clear();
-		syek.clear();
-		poolarr.resize(0);
+	#if LUA_ALLOWED
+	public static function implement(funk:FunkinLua)
+	{
+		funk.addCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null) {
+			var retVal:Dynamic = null;
+
+			#if hscript
+			try {
+				if(varsToBring != null)
+					for (key in Reflect.fields(varsToBring))
+						FunkinLua.hscript.interp.variables.set(key, Reflect.field(varsToBring, key));
+				retVal = FunkinLua.hscript.execute(codeToRun, funcToRun, funcArgs);
+			} catch (e:Dynamic) {
+				funk.luaTrace(funk.scriptName + ":" + funk.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
+			}
+			#else
+			funk.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
+			#end
+
+			if(retVal != null && !LuaUtils.isOfTypes(retVal, [Bool, Int, Float, String, Array])) retVal = null;
+			return retVal;
+		});
+
+		funk.addCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
+			try {
+				return FunkinLua.hscript.executeFunction(funcToRun, funcArgs);
+			} catch(e:Exception) {
+				funk.luaTrace(Std.string(e));
+				return null;
+			}
+		});
+
+		funk.addCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
+			#if hscript
+			try {
+				var str:String = '';
+				if(libPackage.length > 0)
+					str = libPackage + '.';
+				FunkinLua.hscript.variables.set(libName, Type.resolveClass(str + libName));
+			} catch (e:Dynamic) {
+				funk.luaTrace(funk.scriptName + ":" + funk.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
+			}
+			#end
+		});
+		#end
 	}
 	#end
 }

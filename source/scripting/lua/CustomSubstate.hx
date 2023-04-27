@@ -1,7 +1,5 @@
 package scripting.lua;
 
-import flixel.FlxG;
-
 class CustomSubstate extends MusicBeatSubstate {
 	public static var name:String = 'unnamed';
 	public static var instance:CustomSubstate;

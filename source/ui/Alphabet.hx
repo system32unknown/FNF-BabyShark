@@ -1,11 +1,6 @@
 package ui;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.group.FlxSpriteGroup;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-
 import utils.MathUtil;
 
 enum Alignment {

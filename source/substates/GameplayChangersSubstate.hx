@@ -1,6 +1,5 @@
 package substates;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
 import ui.Alphabet;
 import ui.CheckboxThingie;
 import ui.AttachedText;

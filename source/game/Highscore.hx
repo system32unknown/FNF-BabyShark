@@ -1,6 +1,5 @@
 package game;
 
-import flixel.FlxG;
 import game.Difficulty;
 
 class Highscore {

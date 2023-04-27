@@ -3,8 +3,6 @@ package states;
 import flixel.FlxObject;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.group.FlxSpriteGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -14,7 +12,6 @@ import flixel.animation.FlxAnimationController;
 import flixel.ui.FlxBar;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
-import flixel.util.FlxTimer;
 import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
 import openfl.filters.ShaderFilter;
@@ -3224,12 +3221,13 @@ class PlayState extends MusicBeatState {
 	function getKeyFromEvent(key:FlxKey):Int {
 		if (key != NONE) {
 			for (i in 0...keysArray[mania].length) {
-				var note:Array<Dynamic> = controls.keyboardBinds[keysArray[mania][i]];
-				for (noteKey in note) {
-					if(key == noteKey) return i;
+				for (j in 0...keysArray[mania][i].length) {
+					if(key == keysArray[mania][i][j]) {
+						return i;
+					}
 				}
 			}
-		} 
+		}
 		return -1;
 	}
 

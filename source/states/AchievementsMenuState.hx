@@ -1,6 +1,5 @@
 package states;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
 import game.Achievements;
 import ui.Alphabet;
 
