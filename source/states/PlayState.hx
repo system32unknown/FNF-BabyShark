@@ -146,7 +146,7 @@ class PlayState extends MusicBeatState {
 
 	public static var mania:Int = 0;
 
-	private var generatedMusic:Bool = false;
+	var generatedMusic:Bool = false;
 	public var endingSong:Bool = false;
 	public var startingSong:Bool = false;
 	var updateTime:Bool = true;
@@ -614,8 +614,7 @@ class PlayState extends MusicBeatState {
 		timeBarBG.sprTracker = timeBar;
 		insert(members.indexOf(timeBarBG), timeBar);
 
-		strumLineNotes = new FlxTypedGroup<StrumNote>();
-		add(strumLineNotes);
+		add(strumLineNotes = new FlxTypedGroup<StrumNote>());
 
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
 		grpNoteSplashes.add(splash);
@@ -649,7 +648,7 @@ class PlayState extends MusicBeatState {
 		healthBarBG.scrollFactor.set();
 		healthBarBG.visible = !hideHud;
 		healthBarBG.setAdd(-4, -4);
-		if(downScroll) healthBarBG.y = .11 * FlxG.height;
+		if(downScroll) healthBarBG.y = 50;
 		add(healthBarBG);
 
 		// healthBar
@@ -2654,6 +2653,7 @@ class PlayState extends MusicBeatState {
 			var percent:Float = ratingPercent;
 			if(Math.isNaN(percent)) percent = 0;
 			Highscore.saveScore(SONG.song, songScore, storyDifficulty, percent);
+			Highscore.saveCombo(SONG.song, ratingFC, storyDifficulty);
 
 			playbackRate = 1;
 
@@ -2690,7 +2690,6 @@ class PlayState extends MusicBeatState {
 				} else {
 					var difficulty:String = Difficulty.getFilePath();
 
-					trace('LOADING NEXT SONG');
 					trace(Paths.formatToSongPath(storyPlaylist[0]) + difficulty);
 
 					FlxTransitionableState.skipNextTransIn = true;
@@ -2705,7 +2704,6 @@ class PlayState extends MusicBeatState {
 					LoadingState.loadAndSwitchState(new PlayState());
 				}
 			} else {
-				trace('WENT BACK TO FREEPLAY??');
 				WeekData.loadTheFirstEnabledMod();
 				cancelMusicFadeTween();
 				if(FlxTransitionableState.skipNextTransIn) {
@@ -2756,7 +2754,7 @@ class PlayState extends MusicBeatState {
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
 
-	private function cachePopUpScore() {
+	function cachePopUpScore() {
 		var pixelShitPart1:String = '';
 		var pixelShitPart2:String = '';
 		if (isPixelStage) {
@@ -2874,7 +2872,7 @@ class PlayState extends MusicBeatState {
 		scoreTxt.text = tempText;
 	}
 
-	private function popUpScore(note:Note = null):Void {
+	function popUpScore(note:Note = null):Void {
 		var noteDiff = getNoteDiff(note);
 
 		vocals.volume = 1;
@@ -3205,6 +3203,7 @@ class PlayState extends MusicBeatState {
 	function onKeyRelease(event:KeyboardEvent):Void {
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = getKeyFromEvent(eventKey);
+		if(key > -1) keyReleased(key);
 	}
 	function keyReleased(key:Int) {
 		if(!cpuControlled && startedCountdown && !paused) {
@@ -3240,7 +3239,7 @@ class PlayState extends MusicBeatState {
 		return false;
 	}
 
-	private function dataKeyIsPressed(data:Int):Bool {
+	function dataKeyIsPressed(data:Int):Bool {
 		for (i in 0...keysArray[mania][data].length) {
 			if (FlxG.keys.checkStatus(keysArray[mania][data][i], PRESSED)) return true;
 		}
@@ -3249,7 +3248,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	//Hold Notes
-	function keysCheck():Void {		
+	function keysCheck():Void {	
 		if (startedCountdown && !boyfriend.stunned && generatedMusic) {
 			// rewritten inputs???
 			notes.forEachAlive(function(daNote:Note) {
@@ -3365,7 +3364,7 @@ class PlayState extends MusicBeatState {
 		if(note.noteType == 'Hey!' && dad.animOffsets.exists('hey')) {
 			dad.playAnim('hey', true);
 			dad.specialAnim = true;
-			dad.heyTimer = 0.6;
+			dad.heyTimer = .6;
 		} else if (!note.noAnimation) {
 			var altAnim:String = note.animSuffix;
 
@@ -3390,9 +3389,9 @@ class PlayState extends MusicBeatState {
 		if (SONG.needsVoices)
 			vocals.volume = 1;
 
-		var time:Float = 0.15;
+		var time:Float = .15;
 		if(note.isSustainNote && !note.animation.curAnim.name.endsWith('tail')) {
-			time += 0.15;
+			time += .15;
 		}
 		StrumPlayAnim(true, Std.int(Math.abs(note.noteData)) % Note.ammo[mania], time);
 		note.hitByOpponent = true;
@@ -3558,9 +3557,9 @@ class PlayState extends MusicBeatState {
 		var sat:Float = 0;
 		var brt:Float = 0;
 		if (data > -1 && data < arrowHSV.length) {
-			var hue:Float = arrowHSV[arrowIndex][0] / 360;
-			var sat:Float = arrowHSV[arrowIndex][1] / 100;
-			var brt:Float = arrowHSV[arrowIndex][2] / 100;
+			hue = arrowHSV[arrowIndex][0] / 360;
+			sat = arrowHSV[arrowIndex][1] / 100;
+			brt = arrowHSV[arrowIndex][2] / 100;
 			
 			if(note != null) {
 				skin = note.noteSplashTexture;
@@ -3859,7 +3858,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	#if ACHIEVEMENTS_ALLOWED
-	private function checkForAchievement(achievesToCheck:Array<String> = null):String
+	function checkForAchievement(achievesToCheck:Array<String> = null):String
 	{
 		if(chartingMode) return null;
 

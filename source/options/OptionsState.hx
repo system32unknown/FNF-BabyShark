@@ -10,8 +10,8 @@ class OptionsState extends MusicBeatState
 		['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'],
 		['Saves', 'Miscellaneous']
 	];
-	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private static var curSelected:Int = 0;
+	var grpOptions:FlxTypedGroup<Alphabet>;
+	static var curSelected:Int = 0;
 
 	function openSelectedSubstate(label:String) {
 		switch(label) {
@@ -30,8 +30,7 @@ class OptionsState extends MusicBeatState
 	var selectorRight:Alphabet;
 
 	var curPage:Int = 0;
-	var pageBG:FlxSprite;
-	var pageText:FlxText;
+	var descTxt:FlxText;
 
 	override function create() {
 		#if discord_rpc
@@ -61,23 +60,11 @@ class OptionsState extends MusicBeatState
 		textBG.alpha = 0.6;
 		add(textBG);
 
-		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "Press RESET to access the Modpacks Options saves Reset menu.", 18);
-		text.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
-		text.scrollFactor.set();
-		add(text);
+		descTxt = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "Press RESET to access the Modpacks Options saves Reset menu.", 18);
+		descTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
+		descTxt.scrollFactor.set();
+		add(descTxt);
 		#end
-
-		pageText = new FlxText(FlxG.width * .802, 5, 0, "", 32);
-		pageText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
-		
-		pageBG = new FlxSprite(pageText.x - 6, FlxG.height - 40).makeGraphic(260, 40, FlxColor.BLACK);
-		pageBG.alpha = 0.6;
-
-		pageText.y = pageBG.y;
-		pageBG.updateHitbox();
-
-		add(pageBG);
-		add(pageText);
 
 		changeSelection();
 		ClientPrefs.saveSettings();
@@ -116,7 +103,7 @@ class OptionsState extends MusicBeatState
 		if(controls.UI_LEFT_P) changePage(-1);
 		if(controls.UI_RIGHT_P) changePage(1);
 
-		pageText.text = '<PAGE: $curPage / ${Lambda.count(options) - 1}>';
+		descTxt.text = '($curPage / ${Lambda.count(options) - 1}) Press RESET to access the Modpacks Options saves Reset menu.';
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -145,10 +132,8 @@ class OptionsState extends MusicBeatState
 			item.alpha = 0.6;
 			if (item.targetY == 0) {
 				item.alpha = 1;
-				selectorLeft.x = item.x - 63;
-				selectorLeft.y = item.y;
-				selectorRight.x = item.x + item.width + 15;
-				selectorRight.y = item.y;
+				selectorLeft.setPosition(item.x - 63, item.y);
+				selectorRight.setPosition(item.x + item.width + 15, item.y);
 			}
 		}
 		FlxG.sound.play(Paths.sound('scrollMenu'));

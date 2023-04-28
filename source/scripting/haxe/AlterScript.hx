@@ -73,11 +73,6 @@ class AlterScript {
         return Reflect.callMethod(this, get(func), args);
     }
 
-    public function stop() {
-        interp = null;
-        parser = null;
-    }
-
     function exists(key:String):Bool {
         if (interp == null) return false;
         return interp.variables.exists(key);

@@ -65,12 +65,13 @@ class MainMenuState extends MusicBeatState
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
 		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
 
-		bg = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		bg = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.antialiasing = globalAntialiasing;
+		bg.color = 0xFFFDE871;
 		add(bg);
 
 		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
@@ -83,22 +84,19 @@ class MainMenuState extends MusicBeatState
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 
-		camFollow = new FlxObject(0, 0, 1, 1);
-		add(camFollow);
+		add(camFollow = new FlxObject(0, 0, 1, 1));
 
 		var menuCover:FlxSprite = new FlxSprite().makeGraphic(FlxG.width - 680, Std.int(FlxG.height * 1.5));
 		menuCover.x = 30;
 		menuCover.screenCenter(Y);
-		menuCover.alpha = 0.5;
+		menuCover.alpha = .5;
 		menuCover.color = FlxColor.WHITE;
-		menuCover.angle = -15;
 		menuCover.scrollFactor.set(0, yScroll);
 		add(menuCover);
 
 		var menuCoverAlt:FlxSprite = new FlxSprite().makeGraphic(Std.int(menuCover.width - 20), Std.int(menuCover.height));
 		menuCoverAlt.setPosition(menuCover.x + 10, menuCover.y);
-		menuCoverAlt.angle = menuCover.angle;
-		menuCoverAlt.alpha = 0.7;
+		menuCoverAlt.alpha = .7;
 		menuCoverAlt.color = FlxColor.BLACK;
 		menuCoverAlt.scrollFactor.set(0, yScroll);
 		add(menuCoverAlt);
@@ -122,16 +120,15 @@ class MainMenuState extends MusicBeatState
 			menuItem.antialiasing = globalAntialiasing;
 			menuItem.updateHitbox();
 			menuItem.scale.set(.7, .7);
-			var offsetMenuItem:Float = (20 + (i * 80)) - offset;
 			if (firstStart)
-				FlxTween.tween(menuItem, {x: offsetMenuItem, y: (i * 140) + offset}, 1 + (i * 0.25), {
+				FlxTween.tween(menuItem, {y: (i * 140) + offset}, 1 + (i * 0.25), {
 					ease: FlxEase.expoInOut,
 					onComplete: function(flxTween:FlxTween) {
 						finishedFunnyMove = true;
 						changeItem();
 					}
 				});
-			else menuItem.setPosition(offsetMenuItem, (i * 140) + offset);
+			else menuItem.setPosition(100, (i * 140) + offset);
 		}
 
 		firstStart = false;
@@ -211,7 +208,7 @@ class MainMenuState extends MusicBeatState
 				menuItems.forEach(function(spr:FlxSprite) {
 					if (curSelected != spr.ID) {
 						numMenu++;
-						FlxTween.tween(spr, {alpha: 0, x: -100 + spr.x}, .1 * numMenu, {
+						FlxTween.tween(spr, {alpha: 0, y: spr.y + 40}, .1 * numMenu, {
 							ease: FlxEase.quadOut,
 							onComplete: function(twn:FlxTween) {
 								spr.kill();

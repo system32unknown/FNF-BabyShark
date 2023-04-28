@@ -26,12 +26,14 @@ class FreeplayState extends MusicBeatState
 
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
+	var comboText:FlxText;
 	var diffText:FlxText;
 	var countText:FlxText;
 	var lerpScore:Int = 0;
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
+	var intendedcombo:String = '';
 
 	var grpSongs:FlxTypedGroup<Alphabet>;
 	var iconArray:Array<HealthIcon> = [];
@@ -129,21 +131,27 @@ class FreeplayState extends MusicBeatState
 		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 
-		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(1, 66, 0xFF000000);
+		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(1, 90, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		add(scoreBG);
 
-		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
+		diffText = new FlxText(scoreText.x, 0, 0, "", 24);
+		diffText.y = scoreBG.height - diffText.height + 10;
 		diffText.font = scoreText.font;
 
+		comboText = new FlxText(scoreText.x, 0, 0, "", 24);
+		comboText.y = scoreBG.height / 2 - 3;
+		comboText.font = diffText.font;
+
 		countText = new FlxText(0, 0, 0, "", 20);
-		countText.setFormat(Paths.font("vcr.ttf"), countText.size, FlxColor.WHITE, RIGHT);
+		countText.setFormat(scoreText.font, countText.size, FlxColor.WHITE, RIGHT);
 		countText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.25);
 		countText.y = scoreBG.height - countText.y;
 
 		add(countText);
 		add(diffText);
 		add(scoreText);
+		add(comboText);
 
 		if(curSelected >= songs.length) curSelected = 0;
 		bg.color = songs[curSelected].color;
@@ -228,6 +236,7 @@ class FreeplayState extends MusicBeatState
 			ratingSplit[1] += '0';
 		}
 
+		comboText.text = 'Rating: ' + intendedcombo;
 		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%)';
 		positionHighscore();
 
@@ -279,9 +288,8 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK) {
 			persistentUpdate = false;
-			if(colorTween != null) {
+			if(colorTween != null)
 				colorTween.cancel();
-			}
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			MusicBeatState.switchState(new MainMenuState());
 		}
@@ -310,7 +318,7 @@ class FreeplayState extends MusicBeatState
 					vocals.play();
 					vocals.persist = true;
 					vocals.looped = true;
-					vocals.volume = 0.7;
+					vocals.volume = .7;
 					instPlaying = curSelected;
 				} else {
 					errorDisplay.text = getErrorMessage(missChart, 'chart required to play audio, $missFile', songFolder, songLowercase);
@@ -345,8 +353,6 @@ class FreeplayState extends MusicBeatState
 				errorDisplay.text = getErrorMessage(missChart, 'cannot play song, $missFile', songFolder, songLowercase);
 				errorDisplay.displayError();
 			}
-		} else if (FlxG.keys.pressed.P) {
-			LoadingState.loadAndSwitchState(new CharacterInSelectState.CharacterSelectState());
 		} else if (FlxG.keys.justPressed.COMMA) {
 			persistentUpdate = false;
 			openSubState(new FreeplaySectionSubstate());
@@ -374,6 +380,7 @@ class FreeplayState extends MusicBeatState
 
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
+		intendedcombo = Highscore.getCombo(songs[curSelected].songName, curDifficulty);
 
 		lastDifficultyName = Difficulty.getString(curDifficulty);
 		if (Difficulty.list.length > 1)
@@ -407,7 +414,7 @@ class FreeplayState extends MusicBeatState
 		var bullShit:Int = 0;
 
 		for (i in 0...iconArray.length) {
-			iconArray[i].alpha = 0.6;
+			iconArray[i].alpha = .6;
 		}
 
 		iconArray[curSelected].alpha = 1;
@@ -415,7 +422,7 @@ class FreeplayState extends MusicBeatState
 		for (item in grpSongs.members) {
 			bullShit++;
 
-			item.alpha = 0.6;
+			item.alpha = .6;
 
 			if (item.targetY == curSelected)
 				item.alpha = 1;
@@ -441,6 +448,7 @@ class FreeplayState extends MusicBeatState
 
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
+		intendedcombo = Highscore.getCombo(songs[curSelected].songName, curDifficulty);
 	}
 
 
@@ -459,6 +467,9 @@ class FreeplayState extends MusicBeatState
 		
 		diffText.x = Std.int(scoreBG.x + (scoreBG.width / 2));
 		diffText.x -= diffText.width / 2;
+
+		comboText.x = Std.int(scoreBG.x + (scoreBG.width / 2));
+		comboText.x -= comboText.width / 2;
 	}
 
 	var _drawDistance:Int = 4;

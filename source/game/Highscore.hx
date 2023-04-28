@@ -6,11 +6,13 @@ class Highscore {
 	public static var weekScores:Map<String, Int> = new Map();
 	public static var songScores:Map<String, Int> = new Map<String, Int>();
 	public static var songRating:Map<String, Float> = new Map<String, Float>();
+	public static var songCombos:Map<String, String> = new Map<String, String>();
 
 	public static function resetSong(song:String, diff:Int = 0):Void {
 		var daSong:String = formatSong(song, diff);
 		setScore(daSong, 0);
 		setRating(daSong, 0);
+		setCombo(daSong, '');
 	}
 
 	public static function resetWeek(week:String, diff:Int = 0):Void {
@@ -42,18 +44,32 @@ class Highscore {
 		} else setWeekScore(daWeek, score);
 	}
 
+	public static function saveCombo(song:String, combo:String, ?diff:Int = 0):Void {
+		var daSong:String = formatSong(song, diff);
+		var finalCombo:String = combo.split(')')[0].replace('(', '');
+
+		if (songCombos.exists(daSong)) {
+			if (getComboInt(songCombos.get(daSong)) < getComboInt(finalCombo))
+				setCombo(daSong, finalCombo);
+		} else setCombo(daSong, finalCombo);
+	}
+
 	/**
 	 * YOU SHOULD FORMAT SONG WITH formatSong() BEFORE TOSSING IN SONG VARIABLE
 	 */
-	static function setScore(song:String, score:Int):Void
-	{
+	static function setScore(song:String, score:Int):Void {
 		// Reminder that I don't need to format this song, it should come formatted!
 		songScores.set(song, score);
 		FlxG.save.data.songScores = songScores;
 		FlxG.save.flush();
 	}
-	static function setWeekScore(week:String, score:Int):Void
-	{
+	static function setCombo(song:String, combo:String):Void {
+		// Reminder that I don't need to format this song, it should come formatted!
+		songCombos.set(song, checkIfEmpty(combo) ? "Unclear" : combo);
+		FlxG.save.data.songCombos = songCombos;
+		FlxG.save.flush();
+	}
+	static function setWeekScore(week:String, score:Int):Void {
 		// Reminder that I don't need to format this song, it should come formatted!
 		weekScores.set(week, score);
 		FlxG.save.data.weekScores = weekScores;
@@ -71,6 +87,14 @@ class Highscore {
 		return Paths.formatToSongPath(song) + Difficulty.getFilePath(diff);
 	}
 
+	static function getComboInt(combo:String):Int {
+		final ratings:Array<String> = ['SDCB', 'FC', 'GFC', 'SFC', 'PFC'];
+		for (i => item in ratings) {
+			if (item == combo) return i;
+		}
+		return 0;
+	}
+
 	public static function getScore(song:String, diff:Int):Int {
 		var daSong:String = formatSong(song, diff);
 		if (!songScores.exists(daSong))
@@ -78,7 +102,13 @@ class Highscore {
 
 		return songScores.get(daSong);
 	}
+	public static function getCombo(song:String, diff:Int):String {
+		var daSong:String = formatSong(song, diff);
+		if (!songCombos.exists(daSong))
+			setCombo(daSong, '');
 
+		return songCombos.get(daSong);
+	}
 	public static function getRating(song:String, diff:Int):Float {
 		var daSong:String = formatSong(song, diff);
 		if (!songRating.exists(daSong))
@@ -102,5 +132,11 @@ class Highscore {
 			songScores = FlxG.save.data.songScores;
 		if (FlxG.save.data.songRating != null)
 			songRating = FlxG.save.data.songRating;
+		if (FlxG.save.data.songCombos != null)
+			songCombos = FlxG.save.data.songCombos;
+	}
+
+	static function checkIfEmpty(s:String):Bool {
+		return s == null || s.length == 0 || s == '';
 	}
 }
