@@ -46,7 +46,7 @@ class Highscore {
 
 	public static function saveCombo(song:String, combo:String, ?diff:Int = 0):Void {
 		var daSong:String = formatSong(song, diff);
-		var finalCombo:String = combo.split(')')[0].replace('(', '');
+		var finalCombo:String = combo;
 
 		if (songCombos.exists(daSong)) {
 			if (getComboInt(songCombos.get(daSong)) < getComboInt(finalCombo))
@@ -88,9 +88,9 @@ class Highscore {
 	}
 
 	static function getComboInt(combo:String):Int {
-		final ratings:Array<String> = ['SDCB', 'FC', 'GFC', 'SFC', 'PFC'];
+		final ratings:Array<String> = ['Clear', 'SDCB', 'FC', 'GFC', 'SFC', 'PFC'];
 		for (i => item in ratings) {
-			if (item == combo) return i;
+			if (item == combo) return i + 1;
 		}
 		return 0;
 	}

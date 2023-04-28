@@ -140,7 +140,7 @@ class FreeplayState extends MusicBeatState
 		diffText.font = scoreText.font;
 
 		comboText = new FlxText(scoreText.x, 0, 0, "", 24);
-		comboText.y = scoreBG.height / 2 - 3;
+		comboText.y = scoreBG.height / 2 - 6;
 		comboText.font = diffText.font;
 
 		countText = new FlxText(0, 0, 0, "", 20);
