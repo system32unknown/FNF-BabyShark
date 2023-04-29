@@ -16,23 +16,7 @@ typedef LuaTweenOptions = {
 	ease:EaseFunction
 }
 
-class LuaUtils
-{
-	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
-		var ind = variable.indexOf('.');
-		if (ind == -1) {
-			if (PlayState.instance.variables.exists(variable)) return PlayState.instance.variables.get(variable);
-			return checkLuaFirst ? getObjectDirectly(variable, checkForTextsToo) : getVarInArray(getTargetInstance(), variable);
-		}
-
-		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo);
-		while (ind != -1) {
-			obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
-		}
-
-		return obj;
-	}
-
+class LuaUtils {
 	public static function getLuaTween(options:Dynamic) {
 		return {
 			type: getTweenTypeByString(options.type),
@@ -51,14 +35,12 @@ class LuaUtils
 			var target:Dynamic = null;
 			if(PlayState.instance.variables.exists(splitProps[0])) {
 				var retVal:Dynamic = PlayState.instance.variables.get(splitProps[0]);
-				if(retVal != null)
-					target = retVal;
-			}
-			else target = Reflect.getProperty(instance, splitProps[0]);
+				if(retVal != null) target = retVal;
+			} else target = Reflect.getProperty(instance, splitProps[0]);
 
 			for (i in 1...splitProps.length) {
 				var j:Dynamic = splitProps[i].substr(0, splitProps[i].length - 1);
-				if(i >= splitProps.length-1) //Last array
+				if(i >= splitProps.length - 1) //Last array
 					target[j] = value;
 				else target = target[j]; //Anything else
 			}
@@ -96,15 +78,29 @@ class LuaUtils
 
 		return Reflect.getProperty(instance, variable);
 	}
+	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
+		var ind = variable.indexOf('.');
+		if (ind == -1) {
+			if (PlayState.instance.variables.exists(variable)) return PlayState.instance.variables.get(variable);
+			return checkLuaFirst ? getObjectDirectly(variable, checkForTextsToo) : getVarInArray(getTargetInstance(), variable);
+		}
+
+		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo);
+		while (ind != -1) {
+			obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
+		}
+
+		return obj;
+	}
 
 	public static function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic) {
 		var killMe:Array<String> = variable.split('.');
 		if(killMe.length > 1) {
 			var coverMeInPiss:Dynamic = Reflect.getProperty(leArray, killMe[0]);
-			for (i in 1...killMe.length-1) {
+			for (i in 1...killMe.length - 1) {
 				coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
 			}
-			Reflect.setProperty(coverMeInPiss, killMe[killMe.length-1], value);
+			Reflect.setProperty(coverMeInPiss, killMe[killMe.length - 1], value);
 			return;
 		}
 		Reflect.setProperty(leArray, variable, value);
@@ -113,14 +109,14 @@ class LuaUtils
 		var killMe:Array<String> = variable.split('.');
 		if(killMe.length > 1) {
 			var coverMeInPiss:Dynamic = Reflect.getProperty(leArray, killMe[0]);
-			for (i in 1...killMe.length-1) {
+			for (i in 1...killMe.length - 1) {
 				coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
 			}
 			switch(Type.typeof(coverMeInPiss)) {
 				case ValueType.TClass(haxe.ds.StringMap) | ValueType.TClass(haxe.ds.ObjectMap) | ValueType.TClass(haxe.ds.IntMap) | ValueType.TClass(haxe.ds.EnumValueMap):
-					return coverMeInPiss.get(killMe[killMe.length-1]);
+					return coverMeInPiss.get(killMe[killMe.length - 1]);
 				default:
-					return Reflect.getProperty(coverMeInPiss, killMe[killMe.length-1]);
+					return Reflect.getProperty(coverMeInPiss, killMe[killMe.length - 1]);
 			};
 		}
 		switch(Type.typeof(leArray)) {
@@ -155,7 +151,8 @@ class LuaUtils
 	}
 
 	inline public static function getTextObject(name:String):FlxText {
-		return PlayState.instance.modchartTexts.exists(name) ? PlayState.instance.modchartTexts.get(name) : Reflect.getProperty(PlayState.instance, name);
+		return #if LUA_ALLOWED PlayState.instance.modchartTexts.exists(name) ? PlayState.instance.modchartTexts.get(name) : #end
+		Reflect.getProperty(PlayState.instance, name);
 	}
 	
 	public static function isOfTypes(value:Any, types:Array<Dynamic>) {

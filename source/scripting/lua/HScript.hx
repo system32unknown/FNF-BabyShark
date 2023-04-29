@@ -108,6 +108,8 @@ class HScript
 	}
 
 	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic>) {
+		for (i in 0...funcArgs.length)
+		    funcArgs[i] = LuaUtils.fromLua(funcArgs[i]);
 		if(funcToRun != null) {
 			if(interp.variables.exists(funcToRun)) {
 				if(funcArgs == null) funcArgs = [];

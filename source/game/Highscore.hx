@@ -64,8 +64,9 @@ class Highscore {
 		FlxG.save.flush();
 	}
 	static function setCombo(song:String, combo:String):Void {
+		
 		// Reminder that I don't need to format this song, it should come formatted!
-		songCombos.set(song, checkIfEmpty(combo) ? "Unclear" : combo);
+		songCombos.set(song, checkIfEmpty(combo) ? "Unclear, N/A" : combo);
 		FlxG.save.data.songCombos = songCombos;
 		FlxG.save.flush();
 	}
@@ -88,6 +89,7 @@ class Highscore {
 	}
 
 	static function getComboInt(combo:String):Int {
+		combo = combo.split(',')[0];
 		final ratings:Array<String> = ['Clear', 'SDCB', 'FC', 'GFC', 'SFC', 'PFC'];
 		for (i => item in ratings) {
 			if (item == combo) return i + 1;

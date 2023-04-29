@@ -378,7 +378,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		if (data.length > 0)
 		{
 			var splittedImage:Array<String> = imageInputText.text.trim().split('_');
-			var characterName:String = splittedImage[splittedImage.length-1].toLowerCase().replace(' ', '');
+			var characterName:String = splittedImage[splittedImage.length - 1].toLowerCase().replace(' ', '');
 
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);

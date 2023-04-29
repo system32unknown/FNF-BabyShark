@@ -1649,7 +1649,7 @@ class ChartingState extends MusicBeatState
 			if(!blockInput) {
 				if(FlxG.keys.justPressed.RIGHT) {
 					curQuant++;
-					if(curQuant>quantizations.length-1)
+					if(curQuant>quantizations.length - 1)
 						curQuant = 0;
 
 					quantization = quantizations[curQuant];
@@ -1658,7 +1658,7 @@ class ChartingState extends MusicBeatState
 				if(FlxG.keys.justPressed.LEFT) {
 					curQuant--;
 					if(curQuant < 0)
-						curQuant = quantizations.length-1;
+						curQuant = quantizations.length - 1;
 
 					quantization = quantizations[curQuant];
 				}

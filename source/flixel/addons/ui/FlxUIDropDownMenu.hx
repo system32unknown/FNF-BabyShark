@@ -405,7 +405,7 @@ class FlxUIDropDownMenu extends FlxUIGroup implements IFlxUIWidget implements IF
 				} else if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN) {
 					// Go down
 					currentScroll++;
-					if(currentScroll >= list.length) currentScroll = list.length-1;
+					if(currentScroll >= list.length) currentScroll = list.length - 1;
 					updateButtonPositions();
 				}
 			}

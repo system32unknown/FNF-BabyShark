@@ -127,7 +127,7 @@ class WeekData {
 
 						#if MODS_ALLOWED
 						if(j >= originalLength) {
-							weekFile.folder = directories[j].substring(Paths.mods().length, directories[j].length-1);
+							weekFile.folder = directories[j].substring(Paths.mods().length, directories[j].length - 1);
 						}
 						#end
 
@@ -170,7 +170,7 @@ class WeekData {
 				var weekFile:WeekData = new WeekData(week, weekToCheck);
 				if (i >= originalLength) {
 					#if MODS_ALLOWED
-					weekFile.folder = directory.substring(Paths.mods().length, directory.length-1);
+					weekFile.folder = directory.substring(Paths.mods().length, directory.length - 1);
 					#end
 				}
 				if ((PlayState.isStoryMode && !weekFile.hideStoryMode) || (!PlayState.isStoryMode && !weekFile.hideFreeplay)) {

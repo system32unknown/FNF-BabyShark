@@ -79,7 +79,7 @@ class Philly extends BaseStage
 		phillyWindow.alpha -= (Conductor.crochet / 1000) * FlxG.elapsed * 1.5;
 		if(phillyGlowParticles != null)
 		{
-			var i:Int = phillyGlowParticles.members.length-1;
+			var i:Int = phillyGlowParticles.members.length - 1;
 			while (i > 0)
 			{
 				var particle = phillyGlowParticles.members[i];
@@ -140,7 +140,7 @@ class Philly extends BaseStage
 						}
 
 					case 1: //turn on
-						curLightEvent = FlxG.random.int(0, phillyLightsColors.length-1, [curLightEvent]);
+						curLightEvent = FlxG.random.int(0, phillyLightsColors.length - 1, [curLightEvent]);
 						var color:FlxColor = phillyLightsColors[curLightEvent];
 
 						if(!phillyGlowGradient.visible) {

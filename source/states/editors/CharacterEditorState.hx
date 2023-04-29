@@ -796,7 +796,7 @@ class CharacterEditorState extends MusicBeatState
 	{
 		var daLoop:Int = 0;
 
-		var i:Int = dumbTexts.members.length-1;
+		var i:Int = dumbTexts.members.length - 1;
 		while(i >= 0) {
 			var memb:FlxText = dumbTexts.members[i];
 			if(memb != null) {
@@ -830,7 +830,7 @@ class CharacterEditorState extends MusicBeatState
 	}
 
 	function loadChar(isDad:Bool, blahBlahBlah:Bool = true) {
-		var i:Int = charLayer.members.length-1;
+		var i:Int = charLayer.members.length - 1;
 		while(i >= 0) {
 			var memb:Character = charLayer.members[i];
 			if(memb != null) {

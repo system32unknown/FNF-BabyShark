@@ -140,6 +140,7 @@ class FlxAnimationController implements IFlxDestroyable
 		_sprite = null;
 	}
 
+	@:allow(flixel.animation.FlxAnimation)
 	function getFrameDuration(index:Int) {
 		return _sprite.frames.frames[index].duration;
 	}
@@ -202,8 +203,7 @@ class FlxAnimationController implements IFlxDestroyable
 			}
 		}
 		
-		if (framesToAdd.length > 0)
-		{
+		if (framesToAdd.length > 0) {
 			var anim = new FlxAnimation(this, name, framesToAdd, frameRate, looped, flipX, flipY);
 			_animations.set(name, anim);
 			
@@ -707,8 +707,10 @@ class FlxAnimationController implements IFlxDestroyable
 
 	function findByPrefix(AnimFrames:Array<FlxFrame>, Prefix:String):Void
 	{
-		for (frame in _sprite.frames.frames) {
-			if (frame.name != null && frame.name.startsWith(Prefix)) {
+		for (frame in _sprite.frames.frames)
+		{
+			if (frame.name != null && StringTools.startsWith(frame.name, Prefix))
+			{
 				AnimFrames.push(frame);
 			}
 		}
@@ -762,10 +764,10 @@ class FlxAnimationController implements IFlxDestroyable
 		return animName;
 	}
 
-	function set_name(animName:String):String
+	function set_name(AnimName:String):String
 	{
-		play(animName);
-		return animName;
+		play(AnimName);
+		return AnimName;
 	}
 
 	/**
@@ -828,14 +830,10 @@ class FlxAnimationController implements IFlxDestroyable
 		if (anim != _curAnim)
 		{
 			if (_curAnim != null)
-			{
 				_curAnim.stop();
-			}
 
 			if (anim != null)
-			{
 				anim.play();
-			}
 		}
 		return _curAnim = anim;
 	}

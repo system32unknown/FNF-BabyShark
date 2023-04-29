@@ -2653,7 +2653,7 @@ class PlayState extends MusicBeatState {
 			var percent:Float = ratingPercent;
 			if(Math.isNaN(percent)) percent = 0;
 			Highscore.saveScore(SONG.song, songScore, storyDifficulty, percent);
-			Highscore.saveCombo(SONG.song, ratingFC, storyDifficulty);
+			Highscore.saveCombo(SONG.song, '$ratingFC, $ratingName', storyDifficulty);
 
 			playbackRate = 1;
 

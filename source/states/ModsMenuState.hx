@@ -12,6 +12,7 @@ import ui.AttachedSprite;
 import ui.Alphabet;
 import utils.CoolUtil;
 import utils.MathUtil;
+import utils.InputFormatter;
 import states.TitleState;
 import states.FreeplayState;
 
@@ -57,7 +58,9 @@ class ModsMenuState extends MusicBeatState
 		add(bg);
 		bg.screenCenter();
 
-		noModsTxt = new FlxText(0, 0, FlxG.width, "NO MODS INSTALLED\nPRESS BACK TO EXIT AND INSTALL A MOD", 48);
+		final backKey = ClientPrefs.keyBinds.get('back').copy();
+		for (key in backKey)
+			noModsTxt = new FlxText(0, 0, FlxG.width, 'NO MODS HAVE BEEN INSTALLED\nPRESS ${InputFormatter.getKeyName(key).toUpperCase()} TO EXIT', 48);
 		if(FlxG.random.bool(0.1)) noModsTxt.text += '\nBITCH.'; //meanie
 		noModsTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		noModsTxt.scrollFactor.set();
