@@ -108,8 +108,6 @@ class HScript
 	}
 
 	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic>) {
-		for (i in 0...funcArgs.length)
-		    funcArgs[i] = LuaUtils.fromLua(funcArgs[i]);
 		if(funcToRun != null) {
 			if(interp.variables.exists(funcToRun)) {
 				if(funcArgs == null) funcArgs = [];
@@ -120,8 +118,7 @@ class HScript
 	}
 
 	#if LUA_ALLOWED
-	public static function implement(funk:FunkinLua)
-	{
+	public static function implement(funk:FunkinLua) {
 		funk.addCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null) {
 			var retVal:Dynamic = null;
 
