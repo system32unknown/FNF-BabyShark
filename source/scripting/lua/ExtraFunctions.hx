@@ -264,6 +264,13 @@ class ExtraFunctions
 			#end
 			return list;
 		});
+		funk.addCallback("promptSaveFile", function(fileName:String, content:String, extension:String) {
+			CoolUtil.saveFile({
+				fileDefaultName: fileName,
+				format: extension,
+				content: content
+			});
+		});
 
 		funk.addCallback("parseJson", function(jsonStr:String, varName:String) {
 			var json = Paths.modFolders('data/' + jsonStr + '.json');

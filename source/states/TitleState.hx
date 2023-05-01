@@ -129,7 +129,7 @@ class TitleState extends MusicBeatState
 		add(titlebg);
 
 		logoBl = new FlxSprite(FlxG.width / 2, 1500);
-		logoBl.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		logoBl.antialiasing = ClientPrefs.getPref('Antialiasing');
 		if (!FileSystem.exists(Paths.modsXml('FinalLogo'))) {
 			logoBl.loadGraphic(Paths.image('FinalLogo'));
 			logoBl.setGraphicSize(Std.int(logoBl.width * 1.5));
@@ -163,7 +163,7 @@ class TitleState extends MusicBeatState
 			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
 		}
 		
-		titleText.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		titleText.antialiasing = ClientPrefs.getPref('Antialiasing');
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
 		add(titleText);

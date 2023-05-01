@@ -36,7 +36,7 @@ class NoteOffsetState extends MusicBeatState
 
 	var changeModeText:FlxText;
 
-	var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
+	var antialiasing:Bool = ClientPrefs.getPref('Antialiasing');
 	var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 
 	override public function create()
@@ -82,26 +82,26 @@ class NoteOffsetState extends MusicBeatState
 		rating.cameras = [camHUD];
 		rating.setGraphicSize(Std.int(rating.width * 0.7));
 		rating.updateHitbox();
-		rating.antialiasing = globalAntialiasing;
+		rating.antialiasing = antialiasing;
 		add(rating);
 
 		comboNums = new FlxSpriteGroup();
 		comboNums.cameras = [camHUD];
-		comboNums.antialiasing = globalAntialiasing;
+		comboNums.antialiasing = antialiasing;
 		add(comboNums);
 
 		combo = new FlxSprite().loadGraphic(Paths.image('ratings/combo'));
 		combo.cameras = [camHUD];
 		combo.setGraphicSize(Std.int(combo.width * 0.7));
 		combo.updateHitbox();
-		combo.antialiasing = globalAntialiasing;
+		combo.antialiasing = antialiasing;
 		add(combo);
 
 		lateEarly = new FlxSprite().loadGraphic(Paths.image('ratings/early'));
 		lateEarly.cameras = [camHUD];
 		lateEarly.setGraphicSize(Std.int(combo.width * 0.7));
 		lateEarly.updateHitbox();
-		lateEarly.antialiasing = globalAntialiasing;
+		lateEarly.antialiasing = antialiasing;
 		add(lateEarly);
 
 		var seperatedScore:Array<Int> = [for (_ in 0...3) FlxG.random.int(0, 9)];
@@ -112,7 +112,7 @@ class NoteOffsetState extends MusicBeatState
 			numScore.cameras = [camHUD];
 			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 			numScore.updateHitbox();
-			numScore.antialiasing = globalAntialiasing;
+			numScore.antialiasing = antialiasing;
 			comboNums.add(numScore);
 			daLoop++;
 		}

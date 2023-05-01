@@ -98,7 +98,7 @@ class FreeplayState extends MusicBeatState
 		WeekData.loadTheFirstEnabledMod();
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(bg);
 		bg.screenCenter();
 

@@ -17,7 +17,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Anti-Aliasing',
 			'If unchecked, disables anti-aliasing, increases performance\nat the cost of sharper visuals.',
-			'globalAntialiasing',
+			'Antialiasing',
 			'bool',
 			true);
 		option.showBoyfriend = true;
@@ -53,7 +53,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 			var sprite:Dynamic = sprite; //Make it check for FlxSprite instead of FlxBasic
 			var sprite:FlxSprite = sprite; //Don't judge me ok
 			if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText)) {
-				sprite.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+				sprite.antialiasing = ClientPrefs.getPref('Antialiasing');
 			}
 		}
 	}

@@ -61,7 +61,8 @@ class AlterScript {
             _errorHanding(e);
         } catch(e) {_errorHanding(new Error(ECustom(e.toString()), 0, 0, scriptFile, 0));}
 
-        if (!hadError) interp.execute(expr);
+        if (!hadError && interp != null) interp.execute(expr);
+        else stop();
     }
 
     function get(key:String):Dynamic {
@@ -76,6 +77,14 @@ class AlterScript {
     function exists(key:String):Bool {
         if (interp == null) return false;
         return interp.variables.exists(key);
+    }
+
+    public function stop()
+    {
+        #if HSCRIPT_ALLOWED
+        interp = null;
+        parser = null;
+        #end
     }
 
     function getDefaultPreprocessors():Map<String, Bool> {
@@ -188,7 +197,6 @@ class AlterScript {
         if (err.startsWith(fn)) err = err.substr(fn.length);
 
         callErrBox("Error on AlterScript", "Uncaught Error: " + fn + '\n$err');
-
         hadError = true;
     }
 }

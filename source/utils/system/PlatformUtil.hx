@@ -90,13 +90,9 @@ class PlatformUtil
             mousePosArray[1] = mousePos.y;
         }
 
-        if (pos == 0) {
+        if (pos == 0)
             return mousePosArray[0];
-        } else if (pos == 1) {
-            return mousePosArray[1];
-        } else {
-            return 0;
-        }
+        else return mousePosArray[1];
     ')
     static public function getMousePos(pos:Int):Int {return 0;}
 

@@ -81,7 +81,7 @@ class Character extends FlxSprite
 		animOffsets = new Map<String, Array<Dynamic>>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
-		antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		antialiasing = ClientPrefs.getPref('Antialiasing');
 		switch (curCharacter)
 		{
 			//case 'your character name in case you want to hardcode them instead':
@@ -154,7 +154,7 @@ class Character extends FlxSprite
 					healthColorArray = json.healthbar_colors;
 
 				antialiasing = !noAntialiasing;
-				if (!ClientPrefs.getPref('globalAntialiasing')) antialiasing = false;
+				if (!ClientPrefs.getPref('Antialiasing')) antialiasing = false;
 
 				animationsArray = json.animations;
 				if (animationsArray != null && animationsArray.length > 0) {

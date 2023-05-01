@@ -64,7 +64,7 @@ class HealthIcon extends FlxSprite
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
 			updateHitbox();
-			antialiasing = iconZoom < 2.5 && ClientPrefs.getPref('globalAntialiasing');
+			antialiasing = iconZoom < 2.5 && ClientPrefs.getPref('Antialiasing');
 			return true;
 		}
 
@@ -80,7 +80,7 @@ class HealthIcon extends FlxSprite
 		animation.play(char);
 
 		updateHitbox();
-		antialiasing = iconZoom < 2.5 && ClientPrefs.getPref('globalAntialiasing');
+		antialiasing = iconZoom < 2.5 && ClientPrefs.getPref('Antialiasing');
 		return true;
 	}
 

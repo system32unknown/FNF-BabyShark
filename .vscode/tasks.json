@@ -2,20 +2,32 @@
 	"version": "2.0.0",
 	"tasks": [
         {
-          "label": "Build Windows (Debug)",
           "type": "lime",
-          "targetConfiguration": "Build Windows (Debug)",
           "command": "build",
+          "targetConfiguration": "Build Windows (Debug)",
+          "problemMatcher": [
+            "$haxe-absolute",
+            "$haxe",
+            "$haxe-error",
+            "$haxe-trace"
+          ],
+          "label": "Build Windows (Debug)",
           "group": {
             "kind": "build",
             "isDefault": true
           }
         },
         {
-          "label": "Build Windows (Release)",
           "type": "lime",
-          "targetConfiguration": "Build Windows (Release)",
           "command": "build",
+          "targetConfiguration": "Build Windows (Release)",
+          "problemMatcher": [
+            "$haxe-absolute",
+            "$haxe",
+            "$haxe-error",
+            "$haxe-trace"
+          ],
+          "label": "Build Windows (Release)",
           "group": {
             "kind": "build",
             "isDefault": true

@@ -2,6 +2,7 @@ package utils;
 
 import flixel.util.FlxSave;
 import openfl.geom.Rectangle;
+import openfl.net.FileReference;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
@@ -9,14 +10,22 @@ import sys.FileSystem;
 import openfl.utils.Assets;
 #end
 
-class CoolUtil
-{
+typedef FileSaveContext = {
+	var content:String;
+	var format:String;
+	var fileDefaultName:String;
+}
+
+class CoolUtil {
+	public static function saveFile(settings:FileSaveContext) {
+		new FileReference().save(settings.content, settings.fileDefaultName + '.' + settings.format);
+	}
+
 	inline public static function quantize(f:Float, snap:Float) {
 		// changed so this actually works lol
 		var m:Float = Math.fround(f * snap);
 		return (m / snap);
 	}
-
 
 	inline public static function capitalize(text:String) {
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();

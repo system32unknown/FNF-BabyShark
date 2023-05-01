@@ -12,7 +12,7 @@ class BackgroundDancer extends FlxSprite
 		animation.addByIndices('danceLeft', 'bg dancer sketch PINK', CoolUtil.numberArray(14), "", 24, false);
 		animation.addByIndices('danceRight', 'bg dancer sketch PINK', CoolUtil.numberArray(30, 15), "", 24, false);
 		animation.play('danceLeft');
-		antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		antialiasing = ClientPrefs.getPref('Antialiasing');
 	}
 
 	var danceDir:Bool = false;

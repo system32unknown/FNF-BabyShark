@@ -33,8 +33,8 @@ class FlxSoundTray extends Sprite
 	 * How wide the sound tray background is.
 	 */
 	var _width:Int = 90;
+	var _defaultScale:Float = 2.0;
 
-	var _defaultScale:Float = 2;
 	var text:TextField = new TextField();
 	/**The sound used when decreasing the volume.**/
 	final volumeSound:String = 'flixel/sounds/beep';
@@ -118,7 +118,8 @@ class FlxSoundTray extends Sprite
 	public function show(Silent:Bool = false):Void
 	{
 		if (!Silent) {
-			FlxG.sound.load(volumeSound).play();
+			var sound = FlxAssets.getSound(volumeSound);
+			if (sound != null) FlxG.sound.load(volumeSound).play();
 		}
 
 		_timer = 1;

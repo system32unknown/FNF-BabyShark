@@ -18,7 +18,8 @@ class MasterEditorMenu extends MusicBeatState {
 		'Dialogue Portrait Editor',
 		'Character Editor',
 		'Chart Editor',
-		'Credit Editor'
+		'Credit Editor',
+		'Stage Editor'
 	];
 	private var grpTexts:FlxTypedGroup<Alphabet>;
 	private var directories:Array<String> = [null];
@@ -93,6 +94,7 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), false);
 				case 'Dialogue Editor' :LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
 				case 'Chart Editor': LoadingState.loadAndSwitchState(new ChartingState(), false); //felt it would be cool maybe
+				case 'Stage Editor': LoadingState.loadAndSwitchState(new StageEditorState(), false);
 				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditor());
 			}
 			FlxG.sound.music.volume = 0;

@@ -63,14 +63,14 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
+		var antialiasing:Bool = ClientPrefs.getPref('Antialiasing');
 
 		bg = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.antialiasing = globalAntialiasing;
+		bg.antialiasing = antialiasing;
 		bg.color = 0xFFFDE871;
 		add(bg);
 
@@ -80,7 +80,7 @@ class MainMenuState extends MusicBeatState
 		magenta.updateHitbox();
 		magenta.screenCenter();
 		magenta.visible = false;
-		magenta.antialiasing = globalAntialiasing;
+		magenta.antialiasing = antialiasing;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 
@@ -117,7 +117,7 @@ class MainMenuState extends MusicBeatState
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
 			menuItem.scrollFactor.set(0, scr);
-			menuItem.antialiasing = globalAntialiasing;
+			menuItem.antialiasing = antialiasing;
 			menuItem.updateHitbox();
 			menuItem.scale.set(.7, .7);
 			if (firstStart)

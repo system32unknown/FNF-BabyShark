@@ -181,7 +181,7 @@ class AttachedAchievement extends FlxSprite {
 		super(x, y);
 
 		changeAchievement(name);
-		antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		antialiasing = ClientPrefs.getPref('Antialiasing');
 	}
 
 	public function changeAchievement(tag:String) {
@@ -221,7 +221,7 @@ class AchievementObject extends FlxSpriteGroup {
 		achievementIcon.scrollFactor.set();
 		achievementIcon.setGraphicSize(Std.int(achievementIcon.width * (2 / 3)));
 		achievementIcon.updateHitbox();
-		achievementIcon.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		achievementIcon.antialiasing = ClientPrefs.getPref('Antialiasing');
 
 		var achievementName:FlxText = new FlxText(achievementIcon.x + achievementIcon.width + 20, achievementIcon.y + 16, 280, Achievements.achievementsStuff[id][0], 16);
 		achievementName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);

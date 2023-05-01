@@ -55,10 +55,10 @@ class StoryMenuState extends MusicBeatState
 		txtWeekTitle.alpha = 0.7;
 
 		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
-		var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
+		var antialiasing:Bool = ClientPrefs.getPref('Antialiasing');
 		var bgYellow:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 386, 0xFFF9CF51);
 		bgSprite = new FlxSprite(0, 56);
-		bgSprite.antialiasing = globalAntialiasing;
+		bgSprite.antialiasing = antialiasing;
 
 		grpWeekText = new FlxTypedGroup<MenuItem>();
 		add(grpWeekText);
@@ -89,7 +89,7 @@ class StoryMenuState extends MusicBeatState
 				grpWeekText.add(weekThing);
 
 				weekThing.screenCenter(X);
-				weekThing.antialiasing = globalAntialiasing;
+				weekThing.antialiasing = antialiasing;
 
 				// Needs an offset thingie
 				if (isLocked) {
@@ -98,7 +98,7 @@ class StoryMenuState extends MusicBeatState
 					lock.animation.addByPrefix('lock', 'lock');
 					lock.animation.play('lock');
 					lock.ID = i;
-					lock.antialiasing = globalAntialiasing;
+					lock.antialiasing = antialiasing;
 					grpLocks.add(lock);
 				}
 				num++;
@@ -121,7 +121,7 @@ class StoryMenuState extends MusicBeatState
 		leftArrow.animation.addByPrefix('idle', "arrow left");
 		leftArrow.animation.addByPrefix('press', "arrow push left");
 		leftArrow.animation.play('idle');
-		leftArrow.antialiasing = globalAntialiasing;
+		leftArrow.antialiasing = antialiasing;
 		difficultySelectors.add(leftArrow);
 
 		Difficulty.resetList();
@@ -130,7 +130,7 @@ class StoryMenuState extends MusicBeatState
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
 		
 		sprDifficulty = new FlxSprite(0, leftArrow.y);
-		sprDifficulty.antialiasing = globalAntialiasing;
+		sprDifficulty.antialiasing = antialiasing;
 		difficultySelectors.add(sprDifficulty);
 
 		rightArrow = new FlxSprite(leftArrow.x + 376, leftArrow.y);
@@ -138,7 +138,7 @@ class StoryMenuState extends MusicBeatState
 		rightArrow.animation.addByPrefix('idle', 'arrow right');
 		rightArrow.animation.addByPrefix('press', "arrow push right", 24, false);
 		rightArrow.animation.play('idle');
-		rightArrow.antialiasing = globalAntialiasing;
+		rightArrow.antialiasing = antialiasing;
 		difficultySelectors.add(rightArrow);
 
 		add(bgYellow);
@@ -146,7 +146,7 @@ class StoryMenuState extends MusicBeatState
 		add(grpWeekCharacters);
 
 		var tracksSprite:FlxSprite = new FlxSprite(FlxG.width * 0.07, bgSprite.y + 425).loadGraphic(Paths.image('Menu_Tracks'));
-		tracksSprite.antialiasing = globalAntialiasing;
+		tracksSprite.antialiasing = antialiasing;
 		add(tracksSprite);
 
 		txtTracklist = new FlxText(FlxG.width * 0.05, tracksSprite.y + 60, 0, "", 32);

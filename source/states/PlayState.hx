@@ -48,7 +48,7 @@ import handlers.PsychVideo;
 
 class PlayState extends MusicBeatState {
 	public static var STRUM_X = 48.5;
-	public static var STRUM_X_MIDDLESCROLL = -278;
+	public static var STRUM_X_MIDDLESCROLL = -271.5;
 
 	public static var ratingStuff:Array<Dynamic> = [
 		['Try again!', .2], //From 0% to 19%
@@ -264,7 +264,7 @@ class PlayState extends MusicBeatState {
 
 	public var songName:String;
 
-	var globalAntialiasing:Bool = ClientPrefs.getPref('globalAntialiasing');
+	var antialiasing:Bool = ClientPrefs.getPref('Antialiasing');
 	var downScroll:Bool = ClientPrefs.getPref('downScroll');
 	var hideHud:Bool = ClientPrefs.getPref('hideHud');
 	var healthBarAlpha:Float = ClientPrefs.getPref('healthBarAlpha');
@@ -581,7 +581,8 @@ class PlayState extends MusicBeatState {
 		}
 
 		var showTime:Bool = (ClientPrefs.getPref('timeBarType') != 'Disabled');
-		timeTxt = new FlxText(STRUM_X + (FlxG.width / 2) - 248, 20, 400, "", 20);
+		timeTxt = new FlxText(0, 19, 400, "", 20);
+		timeTxt.screenCenter(X);
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
 		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		timeTxt.scrollFactor.set();
@@ -594,7 +595,7 @@ class PlayState extends MusicBeatState {
 		updateTime = showTime;
 
 		timeBarBG = new AttachedSprite('timeBar');
-		timeBarBG.setPosition(0, timeTxt.y + (timeTxt.height / 4) - 2);
+		timeBarBG.y = timeTxt.y + (timeTxt.height / 4) - 2;
 		timeBarBG.screenCenter(X);
 		timeBarBG.scrollFactor.set();
 		timeBarBG.alpha = 0;
@@ -1178,7 +1179,7 @@ class PlayState extends MusicBeatState {
 				introAssets.set('pixel', ['pixelUI/countdown/ready-pixel', 'pixelUI/countdown/set-pixel', 'pixelUI/date-pixel']);
 
 				var introAlts:Array<String> = introAssets.get('default');
-				var antialias:Bool = globalAntialiasing;
+				var antialias:Bool = antialiasing;
 				if (isPixelStage) {
 					introAlts = introAssets.get('pixel');
 					antialias = false;
@@ -2188,6 +2189,8 @@ class PlayState extends MusicBeatState {
 				boyfriend.stunned = true;
 				deathCounter++;
 
+				playbackRate = 1;
+
 				paused = true;
 
 				vocals.stop();
@@ -2653,7 +2656,8 @@ class PlayState extends MusicBeatState {
 			var percent:Float = ratingPercent;
 			if(Math.isNaN(percent)) percent = 0;
 			Highscore.saveScore(SONG.song, songScore, storyDifficulty, percent);
-			Highscore.saveCombo(SONG.song, '$ratingFC, $ratingName', storyDifficulty);
+			if(!practiceMode && !cpuControlled)
+				Highscore.saveCombo(SONG.song, '$ratingFC, $ratingName', storyDifficulty);
 
 			playbackRate = 1;
 
@@ -2689,8 +2693,6 @@ class PlayState extends MusicBeatState {
 					changedDifficulty = false;
 				} else {
 					var difficulty:String = Difficulty.getFilePath();
-
-					trace(Paths.formatToSongPath(storyPlaylist[0]) + difficulty);
 
 					FlxTransitionableState.skipNextTransIn = true;
 					FlxTransitionableState.skipNextTransOut = true;
@@ -2847,7 +2849,7 @@ class PlayState extends MusicBeatState {
 		switch (ClientPrefs.getPref('ScoreType')) {
 			case 'Alter' | 'Kade':
 				return 'NPS:$nps (Max:$maxNPS) $scoreSeparator ';
-			default: return 'NPS:$nps ($maxNPS) $scoreSeparator ';
+			default: return 'NPS: $nps $scoreSeparator ';
 		}
 	}
 
@@ -3003,11 +3005,11 @@ class PlayState extends MusicBeatState {
 		
 			if (!isPixelStage) {
 				rating.setGraphicSize(Std.int(rating.width * .7));
-				rating.antialiasing = globalAntialiasing;
+				rating.antialiasing = antialiasing;
 				comboSpr.setGraphicSize(Std.int(comboSpr.width * .7));
-				comboSpr.antialiasing = globalAntialiasing;
+				comboSpr.antialiasing = antialiasing;
 				timing.setGraphicSize(Std.int(timing.width * .7));
-				timing.antialiasing = globalAntialiasing;
+				timing.antialiasing = antialiasing;
 			} else {
 				rating.setGraphicSize(Std.int(rating.width * daPixelZoom * .85));
 				comboSpr.setGraphicSize(Std.int(comboSpr.width * daPixelZoom * .85));
@@ -3047,7 +3049,7 @@ class PlayState extends MusicBeatState {
 					lastScore.push(numScore);
 			
 				if (!isPixelStage) {
-					numScore.antialiasing = globalAntialiasing;
+					numScore.antialiasing = antialiasing;
 					numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 				} else numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
 				numScore.updateHitbox();

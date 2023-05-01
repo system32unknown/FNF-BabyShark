@@ -53,7 +53,7 @@ class LoadingState extends MusicBeatState
 		funkay.velocity.set(100, 110);
 		funkay.alpha = .5;
 		funkay.updateHitbox();
-		funkay.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		funkay.antialiasing = ClientPrefs.getPref('Antialiasing');
 		funkay.color = FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255));
 		add(funkay);
 		funkay.scrollFactor.set();
@@ -61,7 +61,7 @@ class LoadingState extends MusicBeatState
 
 		logo = new FlxSprite().loadGraphic(Paths.getPath('images/FinalLogo.png', IMAGE));
 		logo.screenCenter();
-		logo.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		logo.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(logo);
 
 		loadLogoText = new FlxText(0, logo.y - logo.height, 0, 'LOADING', 30);
@@ -73,12 +73,12 @@ class LoadingState extends MusicBeatState
 		loadBarBack = new FlxSprite(0, FlxG.height - 25).makeGraphic(FlxG.width, 20, FlxColor.BLACK);
 		loadBarBack.scale.x = .50;
 		loadBarBack.screenCenter(X);
-		loadBarBack.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		loadBarBack.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(loadBarBack);
 
 		loadBar = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 10, 0xffff16d2);
 		loadBar.screenCenter(X);
-		loadBar.antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		loadBar.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(loadBar);
 
 		loadText = new FlxText(0, loadBarBack.y - 24, 0, '0%', 16);

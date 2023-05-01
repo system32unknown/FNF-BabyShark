@@ -457,10 +457,10 @@ class FunkinLua {
 			final trimmedpft = platformType.trim();
 			if (args == null) args = [];
 			final blackListcpp = ["setDPIAware"];
-			if (blackListcpp.contains(trimmedpft)) return;
+			if (blackListcpp.contains(trimmedpft)) return null;
 
 			var platFunc = Reflect.field(PlatformUtil, trimmedpft);
-			Reflect.callMethod(null, platFunc, args);
+			return Reflect.callMethod(null, platFunc, args);
 		});
 
 		addCallback("getGlobalFromScript", function(?luaFile:String, ?global:String) { // returns the global from a script

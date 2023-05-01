@@ -103,7 +103,7 @@ class StrumNote extends FlxSprite
 		} else {
 			frames = Paths.getSparrowAtlas(texture);
 
-			antialiasing = ClientPrefs.getPref('globalAntialiasing');
+			antialiasing = ClientPrefs.getPref('Antialiasing');
 
 			setGraphicSize(Std.int(width * Note.scales[PlayState.mania]));
 	

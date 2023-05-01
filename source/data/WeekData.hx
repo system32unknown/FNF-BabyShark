@@ -6,6 +6,7 @@ import sys.FileSystem;
 #end
 import haxe.Json;
 import utils.CoolUtil;
+import openfl.utils.Assets as OpenFlAssets;
 
 typedef WeekFile = {
 	// JSON variables
@@ -116,24 +117,27 @@ class WeekData {
 		var originalLength:Int = directories.length;
 		#end
 
-		var sexList:Array<String> = CoolUtil.coolTextFile(Paths.getPreloadPath('weeks/weekList.txt'));
-		for (i in 0...sexList.length) {
+		var library = OpenFlAssets.getLibrary("weeks");
+		for (asset in library.list(null)) {
 			for (j in 0...directories.length) {
-				var fileToCheck:String = directories[j] + 'weeks/' + sexList[i] + '.json';
-				if(!weeksLoaded.exists(sexList[i])) {
-					var week:WeekFile = getWeekFile(fileToCheck);
-					if(week != null) {
-						var weekFile:WeekData = new WeekData(week, sexList[i]);
+				if (asset.endsWith(".json")) {
+					var weekName = asset.replace('${directories[j]}weeks/', "").replace(".json", "");
+					var fileToCheck:String = (directories[j].contains("assets") ? Paths.getLibraryPath('$weekName.json', 'weeks') : '${directories[j]}weeks/$weekName.json');
+					if (!weeksLoaded.exists(weekName)) {
+						var week:WeekFile = getWeekFile(fileToCheck);
+						if (week != null) {
+							var weekFile:WeekData = new WeekData(week, weekName);
 
-						#if MODS_ALLOWED
-						if(j >= originalLength) {
-							weekFile.folder = directories[j].substring(Paths.mods().length, directories[j].length - 1);
-						}
-						#end
+							#if MODS_ALLOWED
+							if(j >= originalLength) {
+								weekFile.folder = directories[j].substring(Paths.mods().length, directories[j].length-1);
+							}
+							#end
 
-						if(weekFile != null && (isStoryMode == null || (isStoryMode && !weekFile.hideStoryMode) || (!isStoryMode && !weekFile.hideFreeplay))) {
-							weeksLoaded.set(sexList[i], weekFile);
-							weeksList.push(sexList[i]);
+							if (weekFile != null && (isStoryMode == null || (isStoryMode && !weekFile.hideStoryMode) || (!isStoryMode && !weekFile.hideFreeplay))) {
+								weeksLoaded.set(weekName, weekFile);
+								weeksList.push(weekName);
+							}
 						}
 					}
 				}

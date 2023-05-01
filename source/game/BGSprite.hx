@@ -21,7 +21,7 @@ class BGSprite extends FlxSprite
 			active = false;
 		}
 		scrollFactor.set(scrollX, scrollY);
-		antialiasing = ClientPrefs.getPref('globalAntialiasing');
+		antialiasing = ClientPrefs.getPref('Antialiasing');
 	}
 
 	public function dance(?forceplay:Bool = false) {
