@@ -5,7 +5,6 @@ import llua.Lua;
 import llua.LuaL;
 import llua.State;
 import llua.Convert;
-using llua.Lua.Lua_helper;
 #end
 
 import haxe.Constraints.Function;
@@ -29,7 +28,6 @@ import sys.io.File;
 import haxe.io.Path;
 #end
 
-import Type.ValueType;
 import ui.DialogueBoxPsych;
 import ui.CustomFadeTransition;
 
@@ -70,7 +68,9 @@ class FunkinLua {
 		var result:Int = LuaL.loadfile(lua, script);
 		if (result == Lua.LUA_OK) {
 			LuaL.openlibs(lua);
-			Lua.init_callbacks(lua);
+			Lua_helper.init_callbacks(lua);
+			Lua_helper.link_extra_arguments(lua, [this]);
+			Lua_helper.link_static_callbacks(lua);
 
 			Lua.getglobal(lua, "package");
 			Lua.pushstring(lua, Paths.getLuaPackagePath());
@@ -88,12 +88,1652 @@ class FunkinLua {
 		}
 		#if hscript HScript.initHaxeModule(); #end
 
+		initGlobals();
+
+		addCallback("openCustomSubstate", function(_, name:String, pauseGame:Bool = false) {
+			if(pauseGame) {
+				PlayState.instance.persistentUpdate = false;
+				PlayState.instance.persistentDraw = true;
+				PlayState.instance.paused = true;
+				if(FlxG.sound.music != null) {
+					FlxG.sound.music.pause();
+					PlayState.instance.vocals.pause();
+				}
+			}
+			PlayState.instance.openSubState(new CustomSubstate(name));
+		});
+		addCallback("closeCustomSubstate", function(_) {
+			if(CustomSubstate.instance == null) return false;
+			PlayState.instance.closeSubState();
+			CustomSubstate.instance = null;
+			return true;
+		});
+
+		// shader shit
+		addCallback("initLuaShader", function(l:FunkinLua, name:String, glslVersion:Int = 120) {
+			if(!ClientPrefs.getPref('shaders')) return false;
+
+			#if (!flash && MODS_ALLOWED && sys)
+			return initLuaShader(name, glslVersion);
+			#else
+			l.luaTrace("initLuaShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+			return false;
+		});
+		
+		addCallback("setSpriteShader", function(l:FunkinLua, obj:String, shader:String) {
+			if(!ClientPrefs.getPref('shaders')) return false;
+
+			#if (!flash && MODS_ALLOWED && sys)
+			if(!runtimeShaders.exists(shader) && !initLuaShader(shader)) {
+				l.luaTrace('setSpriteShader: Shader $shader is missing!', false, false, FlxColor.RED);
+				return false;
+			}
+
+			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
+			if(leObj != null) {
+				var arr:Array<String> = runtimeShaders.get(shader);
+				leObj.shader = new FlxRuntimeShader(arr[0], arr[1]);
+				return true;
+			}
+			#else
+			l.luaTrace("setSpriteShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+			return false;
+		});
+		addCallback("removeSpriteShader", function(_, obj:String) {
+			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
+			if (leObj != null) {
+				leObj.shader = null;
+				return true;
+			}
+			return false;
+		});
+
+		addCallback("getShaderBool", function(l:FunkinLua, obj:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			return shader != null ? shader.getBool(prop) : null;
+			#else
+			l.luaTrace("getShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			return null;
+			#end
+		});
+		addCallback("getShaderBoolArray", function(l:FunkinLua, obj:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			return shader != null ? shader.getBoolArray(prop) : null;
+			#else
+			l.luaTrace("getShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			return null;
+			#end
+		});
+		addCallback("getShaderInt", function(l:FunkinLua, obj:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			return shader != null ? shader.getInt(prop) : null;
+			#else
+			l.luaTrace("Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			return null;
+			#end
+		});
+		addCallback("getShaderIntArray", function(l:FunkinLua, obj:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			return shader != null ? shader.getIntArray(prop) : null;
+			#else
+			l.luaTrace("getShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			return null;
+			#end
+		});
+		addCallback("getShaderFloat", function(l:FunkinLua, obj:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			return shader != null ? shader.getFloat(prop) : null;
+			#else
+			l.luaTrace("getShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			return null;
+			#end
+		});
+		addCallback("getShaderFloatArray", function(l:FunkinLua, obj:String, prop:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			return shader != null ? shader.getFloatArray(prop) : null;
+			#else
+			l.luaTrace("getShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			return null;
+			#end
+		});
+
+		addCallback("setShaderBool", function(l:FunkinLua, obj:String, prop:String, value:Bool) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			if (shader != null) {
+				shader.setBool(prop, value);
+				return true;
+			}
+			#else
+			l.luaTrace("setShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+
+			return false;
+		});
+		addCallback("setShaderBoolArray", function(l:FunkinLua, obj:String, prop:String, values:Dynamic) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			if (shader != null) {
+				shader.setBoolArray(prop, values);
+				return true;
+			}
+			#else
+			l.luaTrace("setShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+
+			return false;
+		});
+		addCallback("setShaderInt", function(l:FunkinLua, obj:String, prop:String, value:Int) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			if (shader != null) {
+				shader.setInt(prop, value);
+				return true;
+			}
+			#else
+			l.luaTrace("setShaderInt: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+
+			return false;
+		});
+		addCallback("setShaderIntArray", function(l:FunkinLua, obj:String, prop:String, values:Dynamic) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			if (shader != null) {
+				shader.setIntArray(prop, values);
+				return true;
+			}
+			#else
+			l.luaTrace("setShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+
+			return false;
+		});
+		addCallback("setShaderFloat", function(l:FunkinLua, obj:String, prop:String, value:Float) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			if (shader != null) {
+				shader.setFloat(prop, value);
+				return true;
+			}
+			#else
+			l.luaTrace("setShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+
+			return false;
+		});
+		addCallback("setShaderFloatArray", function(l:FunkinLua, obj:String, prop:String, values:Dynamic) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			if (shader != null) {
+				shader.setFloatArray(prop, values);
+				return true;
+			}
+			#else
+			l.luaTrace("setShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+
+			return false;
+		});
+
+		addCallback("setShaderSampler2D", function(l:FunkinLua, obj:String, prop:String, bitmapdataPath:String) {
+			#if (!flash && MODS_ALLOWED && sys)
+			var shader:FlxRuntimeShader = getShader(obj);
+			if (shader != null) {
+				var value = Paths.image(bitmapdataPath);
+				if (value == null || value.bitmap == null) return false;
+
+				shader.setSampler2D(prop, value.bitmap);
+				return true;
+			}
+			#else
+			l.luaTrace("setShaderSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+
+			return false;
+		});
+
+		addCallback("getRunningScripts", function(_) {
+			var runningScripts:Array<String> = [];
+			for (idx in 0...PlayState.instance.luaArray.length)
+				runningScripts.push(PlayState.instance.luaArray[idx].scriptName);
+
+			return runningScripts;
+		});
+
+		addCallback("setOnLuas", function(_, varName:String, scriptVar:Dynamic) {
+			if (varName == null) return;
+			PlayState.instance.setOnLuas(varName, scriptVar);
+		});
+
+		addCallback("callOnLuas", function(l:FunkinLua, funcName:String, args:Array<Any>, ignoreStops:Bool = false, ignoreSelf:Bool = true, ?exclusions:Array<String>):Void {
+			var scriptName:String = l.globalScriptName;
+			if (ignoreSelf && !exclusions.contains(scriptName)) exclusions.push(scriptName);
+			PlayState.instance.callOnLuas(funcName, args, ignoreStops, exclusions);
+		});
+
+		addCallback("callScript", function(l:FunkinLua, luaFile:String, funcName:String, args:Array<Dynamic>):Dynamic {
+			luaFile = format(luaFile);
+
+			for (luaInstance in PlayState.instance.luaArray) {
+				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed)
+					return luaInstance.call(funcName, args);
+			}
+
+			l.luaTrace('callScript: The script "${luaFile}" doesn\'t exists nor is active!');
+			return null;
+		});
+
+		addCallback("callCppUtil", function(_, platformType:String, ?args:Array<Dynamic>) {
+			final trimmedpft = platformType.trim();
+			if (args == null) args = [];
+			final blackListcpp = ["setDPIAware"];
+			if (blackListcpp.contains(trimmedpft)) return null;
+
+			var platFunc = Reflect.field(PlatformUtil, trimmedpft);
+			return Reflect.callMethod(null, platFunc, args);
+		});
+
+		addCallback("setGlobalFromScript", function(l:FunkinLua, luaFile:String, global:String, val:Dynamic):Bool {
+			luaFile = format(luaFile);
+
+			var got:Bool = false;
+			for (luaInstance in PlayState.instance.luaArray) {
+				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed) {
+					luaInstance.set(global, val);
+					got = true;
+				}
+			}
+
+			if (!got) {
+				l.luaTrace('setGlobalFromScript: The script "${luaFile}" doesn\'t exists nor is active!');
+				return false;
+			}
+			return true;
+		});
+		addCallback("getGlobalFromScript", function(_, luaFile:String, global:String):Dynamic {
+			luaFile = format(luaFile);
+
+			for (luaInstance in PlayState.instance.luaArray) {
+				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed) {
+					var lua:State = luaInstance.lua;
+					Lua.getglobal(lua, global);
+
+					var result:Dynamic = Convert.fromLua(lua, -1);
+					Lua.pop(lua, 1);
+
+					return result;
+				}
+			}
+			return null;
+		});
+
+		addCallback("isRunning", function(_, luaFile:String) {
+			return LuaUtils.isLuaRunning(luaFile);
+		});
+
+		addCallback("addLuaScript", function(l:FunkinLua, luaFile:String, ?ignoreAlreadyRunning:Bool = false):Bool { //would be dope asf.
+			luaFile = format(luaFile);
+
+			if (!ignoreAlreadyRunning && LuaUtils.isLuaRunning(luaFile)) {
+				l.luaTrace('addLuaScript: The script "${luaFile}" is already running!');
+				return false;
+			}
+
+			var res:FunkinLua = PlayState.instance.executeLua(luaFile);
+			if (res == null) {
+				l.luaTrace('addLuaScript: The script "${luaFile}" doesn\'t exist!', false, false, FlxColor.RED);
+				return false;
+			}
+			return true;
+		});
+		addCallback("removeLuaScript", function(l:FunkinLua, luaFile:String):Bool {
+			luaFile = format(luaFile);
+
+			var got:Bool = false;
+			for (luaInstance in PlayState.instance.luaArray) {
+				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed) {
+					luaInstance.closed = true;
+					got = true;
+				}
+			}
+
+			if (!got) {
+				l.luaTrace('removeLuaScript: The script "${luaFile}" doesn\'t exists nor is active!');
+				return false;
+			}
+			return true;
+		});
+
+		addCallback("loadSong", function(_,  ?name:String = null, ?difficultyNum:Int = -1) {
+			if(name == null || name.length <= 0) name = PlayState.SONG.song;
+			if (difficultyNum == -1) difficultyNum = PlayState.storyDifficulty;
+
+			var poop = Highscore.formatSong(name, difficultyNum);
+			PlayState.SONG = Song.loadFromJson(poop, name);
+			PlayState.storyDifficulty = difficultyNum;
+			PlayState.instance.persistentUpdate = false;
+			LoadingState.loadAndSwitchState(new PlayState());
+
+			FlxG.sound.music.pause();
+			FlxG.sound.music.volume = 0;
+			if(PlayState.instance.vocals != null) {
+				PlayState.instance.vocals.pause();
+				PlayState.instance.vocals.volume = 0;
+			}
+		});
+
+		addCallback("loadGraphic", function(_,  variable:String, image:String, ?gridX:Int = 0, ?gridY:Int = 0) {
+			var spr:FlxSprite = LuaUtils.getVarInstance(variable);
+
+			if (spr == null || image == null || image.length <= 0) return false;
+			var animated = gridX != 0 || gridY != 0;
+
+			spr.loadGraphic(Paths.image(image), animated, gridX, gridY);
+			return true;
+		});
+		addCallback("loadFrames", function(_,  variable:String, image:String, spriteType:String = "sparrow") {
+			var spr:FlxSprite = LuaUtils.getVarInstance(variable);
+			if (spr == null || image == null || image.length <= 0) return false;
+
+			LuaUtils.loadFrames(spr, image, spriteType);
+			return true;
+		});
+
+		addCallback("getPref", function(_, pref:String, ?defaultValue:Dynamic) {
+			return ClientPrefs.getPref(pref, defaultValue);
+		});
+		addCallback("setPref", function(_, pref:String, ?value:Dynamic = null) {
+			ClientPrefs.prefs.set(pref, value);
+		});
+
+		addCallback("getProperty", true, function(state:State, lua:FunkinLua):Int {
+			if (!LuaUtils.hasValidArgs(state, 1)) return 1;
+			var variable:String = Convert.fromLua(state, 1);
+
+			if ((variable is String)) {
+				if (!Convert.toLua(state, LuaUtils.getVarInstance(variable, false))) Lua.pushnil(state);
+			} else {
+				if (lua.getBool('luaBackwardCompatibility')) return Lua.gettop(state);
+				Lua.pushnil(state);
+			}
+
+			return 1;
+		});
+		addCallback("setProperty", true, function(state:State, lua:FunkinLua):Int {
+			if (!LuaUtils.hasValidArgs(state, 1)) return 1;
+			var args = Lua.gettop(state), variable:String = Convert.fromLua(state, 1);
+
+			if ((variable is String)) Lua.pushboolean(state, LuaUtils.setVarInstance(variable, args > 1 ? Convert.fromLua(state, 2) : null));
+			else Lua.pushboolean(state, false);
+
+			return 1;
+		});
+		addCallback("getPropertyFromGroup", true, function(state:State, lua:FunkinLua):Int {
+			if (!LuaUtils.hasValidArgs(state, 3)) return 1;
+			var obj:String = Convert.fromLua(state, 1), index:Int = Convert.fromLua(state, 2), variable:Dynamic = Convert.fromLua(state, 3);
+			var realObject:Dynamic = LuaUtils.getVarInstance(obj, false), isNull = false;
+
+			if (Std.isOfType(realObject, FlxTypedGroup)) {
+				if (!Convert.toLua(state, LuaUtils.getGroupStuff(realObject.members[index], variable))) isNull = true;
+			} else {
+				var leArray:Dynamic = realObject[index];
+				if (leArray != null) {
+					var result:Dynamic = null;
+					if ((variable is Int)) result = leArray[variable];
+					else result = LuaUtils.getGroupStuff(leArray, variable);
+
+					if (!Convert.toLua(state, result)) isNull = true;
+				} else Lua.pushnil(state);
+			}
+
+			if (isNull) {
+				if (lua.getBool('luaBackwardCompatibility')) return Lua.gettop(state);
+				else Lua.pushnil(state);
+			}
+			return 1;
+		});
+		addCallback("setPropertyFromGroup", true, function(state:State, lua:FunkinLua):Int {
+			if (!LuaUtils.hasValidArgs(state, 3)) return 1;
+			var args = Lua.gettop(state);
+			var obj:String = Convert.fromLua(state, 1), index:Int = Convert.fromLua(state, 2), variable:Dynamic = Convert.fromLua(state, 3);
+			var value:Dynamic = args > 3 ? Convert.fromLua(state, 4) : null, realObject:Dynamic = LuaUtils.getVarInstance(obj, false), isNull = false;
+
+			if (Std.isOfType(realObject, FlxTypedGroup)) {
+				LuaUtils.setGroupStuff(realObject.members[index], variable, value);
+				Lua.pushboolean(state, true);
+			} else {
+				var leArray:Dynamic = realObject[index];
+				if (leArray != null) {
+					if ((variable is Int)) leArray[variable] = value;
+					else LuaUtils.setGroupStuff(leArray, variable, value);
+					Lua.pushboolean(state, true);
+				} else Lua.pushboolean(state, false);
+			}
+
+			return 1;
+		});
+		addCallback("removeFromGroup", true, function(state:State, lua:FunkinLua):Int {
+			if (!LuaUtils.hasValidArgs(state, 2)) return 1;
+			var args = Lua.gettop(state);
+			var obj:String = Convert.fromLua(state, 1), index:Int = Convert.fromLua(state, 2), dontDestroy:Bool = args > 2 ? Convert.fromLua(state, 3) : false;
+			var grp:Dynamic = LuaUtils.getVarInstance(obj, false);
+
+			if (Std.isOfType(grp, FlxTypedGroup)) {
+				var sex = grp.members[index];
+				if (sex != null) {
+					grp.remove(sex, true);
+					if (!dontDestroy) {
+						sex.kill();
+						sex.destroy();
+					}
+				}
+			} else grp.splice(index, 1);
+
+			Lua.pushnil(state);
+			return 1;
+		});
+
+		addCallback("getPropertyFromClass", true, function(state:State, lua:FunkinLua):Int {
+			if (!LuaUtils.hasValidArgs(state, 2)) return 1;
+			if (!Convert.toLua(state, LuaUtils.getVarInObject(Type.resolveClass(Convert.fromLua(state, 1)), Convert.fromLua(state, 2))))
+				Lua.pushnil(state);
+
+			return 1;
+		});
+		addCallback("setPropertyFromClass", true, function(state:State, lua:FunkinLua):Int {
+			if (!LuaUtils.hasValidArgs(state, 2)) return 1;
+			var args:Int = Lua.gettop(state);
+			Lua.pushboolean(state, LuaUtils.setVarInObject(Type.resolveClass(Convert.fromLua(state, 1)), Convert.fromLua(state, 2), args > 2 ? Convert.fromLua(state, 3) : null));
+			return 1;
+		});
+
+		addCallback("callFromObject", function(_, variable:String, ?arguments:Array<Dynamic>) {
+			if (arguments != null) arguments = [];
+			var result:Dynamic = null;
+			var killMe:Array<String> = variable.split('.');
+			if(killMe.length > 1)
+				result = LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(killMe), killMe[killMe.length - 1]);
+			else result = LuaUtils.getVarInArray(LuaUtils.getInstance(), variable);
+			return Reflect.callMethod(null, result, arguments);
+		});
+		addCallback("callFromClass", function(_,  classVar:String, variable:String, ?arguments:Array<Dynamic>) {
+			if (arguments != null) arguments = [];
+			var killMe:Array<String> = variable.split('.');
+			if(killMe.length > 1) {
+				var coverMeInPiss:Dynamic = LuaUtils.getVarInArray(Type.resolveClass(classVar), killMe[0]);
+				for (i in 1...killMe.length - 1) {
+					coverMeInPiss = LuaUtils.getVarInArray(coverMeInPiss, killMe[i]);
+				}
+				return Reflect.callMethod(null, LuaUtils.getVarInArray(coverMeInPiss, killMe[killMe.length - 1]), arguments);
+			}
+			return Reflect.callMethod(null, LuaUtils.getVarInArray(Type.resolveClass(classVar), variable), arguments);
+		});
+
+		//shitass stuff for epic coders like me B)  *image of obama giving himself a medal*
+		addCallback("getObjectOrder", function(_, obj:String) {
+			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
+			if (poop != null) return LuaUtils.getInstance().members.indexOf(poop);
+			return -1;
+		});
+		addCallback("setObjectOrder", function(_, obj:String, position:Int) {
+			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
+			if (poop == null) return false;
+
+			LuaUtils.getInstance().remove(poop, true);
+			LuaUtils.getInstance().insert(position, poop);
+			return true;
+		});
+
+		// gay ass tweens
+		addCallback("startTween", function(l:FunkinLua, tag:String, vars:String, values:Any = null, duration:Float, options:Any = null) {
+			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
+			if(penisExam != null) {
+				if(values != null) {
+					var myOptions:LuaUtils.LuaTweenOptions = LuaUtils.getLuaTween(options);
+					PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, values, duration, {
+						type: myOptions.type,
+						ease: myOptions.ease,
+						startDelay: myOptions.startDelay,
+						loopDelay: myOptions.loopDelay,
+
+						onUpdate: function(twn:FlxTween) {
+							if(myOptions.onUpdate != null) PlayState.instance.callOnLuas(myOptions.onUpdate, [tag, vars]);
+						}, onStart: function(twn:FlxTween) {
+							if(myOptions.onStart != null) PlayState.instance.callOnLuas(myOptions.onStart, [tag, vars]);
+						}, onComplete: function(twn:FlxTween) {
+							if(myOptions.onComplete != null) PlayState.instance.callOnLuas(myOptions.onComplete, [tag, vars]);
+							if(twn.type == FlxTweenType.ONESHOT || twn.type == FlxTweenType.BACKWARD) PlayState.instance.modchartTweens.remove(tag);
+						}
+					}));
+				} else l.luaTrace('startTween: No values on 2nd argument!', false, false, FlxColor.RED);
+			} else l.luaTrace('startTween: Couldnt find object: ' + vars, false, false, FlxColor.RED);
+		});
+		addCallback("doTween", function(l:FunkinLua, tag:String, variable:String, fieldsNValues:Dynamic, duration:Float, ease:String) {
+			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, variable);
+			if(penisExam != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, fieldsNValues, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			} else l.luaTrace('doTween: Couldnt find object: ' + variable, false, false, FlxColor.RED);
+		});
+		addCallback("doTweenAdvAngle", function(l:FunkinLua, tag:String, vars:String, value:Array<Float>, duration:Float, ease:String) {
+			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
+			if(penisExam != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.angle(penisExam, value[0], value[1], duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			} else l.luaTrace('doTweenAdvAngle: Couldnt find object: ' + vars, false, false, FlxColor.RED);
+		});
+		addCallback("doTweenColor", function(l:FunkinLua, tag:String, vars:String, targetColor:Dynamic, duration:Float, ease:String) {
+			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
+			if(penisExam != null) {
+				var curColor:FlxColor = penisExam.color;
+				curColor.alphaFloat = penisExam.alpha;
+				PlayState.instance.modchartTweens.set(tag, FlxTween.color(penisExam, duration * PlayState.instance.playbackRate, curColor, targetColor, {ease: LuaUtils.getTweenEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag, vars]);
+					}
+				}));
+			} else l.luaTrace('doTweenColor: Couldnt find object: ' + vars, false, false, FlxColor.RED);
+		});
+
+		// bisexual note tween
+		addCallback("noteTween", function(_, tag:String, note:Int, fieldsNValues:Dynamic, duration:Float, ease:String) {
+			LuaUtils.cancelTween(tag);
+			if(note < 0) note = 0;
+			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
+
+			if(testicle != null) {
+				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, fieldsNValues, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
+					onComplete: function(twn:FlxTween) {
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+						PlayState.instance.modchartTweens.remove(tag);
+					}
+				}));
+			}
+		});
+		addCallback("mouseClicked", function(_, button:String) {
+			return switch(button.trim().toLowerCase()) {
+				case 'middle': FlxG.mouse.justPressedMiddle;
+				case 'right': FlxG.mouse.justPressedRight;
+				default: FlxG.mouse.justPressed;
+			}
+		});
+		addCallback("mousePressed", function(_, button:String) {
+			return switch(button.trim().toLowerCase()) {
+				case 'middle': FlxG.mouse.pressedMiddle;
+				case 'right': FlxG.mouse.pressedRight;
+				default: FlxG.mouse.pressed;
+			}
+		});
+		addCallback("mouseReleased", function(_, button:String) {
+			return switch(button.trim().toLowerCase()) {
+				case 'middle': FlxG.mouse.justReleasedMiddle;
+				case 'right': FlxG.mouse.justReleased;
+				default: FlxG.mouse.justReleased;
+			}
+		});
+
+		addCallback("cancelTween", function(_, tag:String) {
+			LuaUtils.cancelTween(tag);
+		});
+
+		addCallback("runTimer", function(_, tag:String, time:Float = 1, loops:Int = 1) {
+			LuaUtils.cancelTimer(tag);
+			PlayState.instance.modchartTimers.set(tag, new FlxTimer().start(time, function(tmr:FlxTimer) {
+				if(tmr.finished) {
+					PlayState.instance.modchartTimers.remove(tag);
+				}
+				PlayState.instance.callOnLuas('onTimerCompleted', [tag, tmr.loops, tmr.loopsLeft]);
+			}, loops));
+		});
+		addCallback("cancelTimer", function(_, tag:String) {
+			LuaUtils.cancelTimer(tag);
+		});
+
+		//stupid bietch ass functions
+		addCallback("addScore", function(_, value:Int = 0) {
+			PlayState.instance.songScore += value;
+			PlayState.instance.RecalculateRating();
+		});
+		addCallback("addMisses", function(_, value:Int = 0) {
+			PlayState.instance.songMisses += value;
+			PlayState.instance.RecalculateRating();
+		});
+		addCallback("addHits", function(_, value:Int = 0) {
+			PlayState.instance.songHits += value;
+			PlayState.instance.RecalculateRating();
+		});
+		addCallback("setScore", function(_, value:Int = 0) {
+			PlayState.instance.songScore = value;
+			PlayState.instance.RecalculateRating();
+		});
+		addCallback("setMisses", function(_, value:Int = 0) {
+			PlayState.instance.songMisses = value;
+			PlayState.instance.RecalculateRating();
+		});
+		addCallback("setHits", function(_, value:Int = 0) {
+			PlayState.instance.songHits = value;
+			PlayState.instance.RecalculateRating();
+		});
+		addCallback("getScore", function() {
+			return PlayState.instance.songScore;
+		});
+		addCallback("getMisses", function() {
+			return PlayState.instance.songMisses;
+		});
+		addCallback("getAccuracy", function() {
+			return PlayState.instance.accuracy;
+		});
+		addCallback("getHits", function() {
+			return PlayState.instance.songHits;
+		});
+
+		addCallback("getHighscore", function(_, song:String, diff:Int) {
+			return Highscore.getScore(song, diff);
+		});
+		addCallback("getSavedRating", function(_, song:String, diff:Int) {
+			return Highscore.getRating(song, diff);
+		});
+		addCallback("getSavedCombo", function(_, song:String, diff:Int) {
+			return Highscore.getCombo(song, diff);
+		});
+		addCallback("getWeekScore", function(_, week:String, diff:Int) {
+			return Highscore.getWeekScore(week, diff);
+		});
+
+		addCallback("setHealth", function(_, value:Float = 0) {
+			PlayState.instance.health = value;
+		});
+		addCallback("addHealth", function(_, value:Float = 0) {
+			PlayState.instance.health += value;
+		});
+		addCallback("getHealth", function() {
+			return PlayState.instance.health;
+		});
+
+		addCallback("FlxColor", function(_, color:String = '') { return LuaUtils.getColorByString(color); });
+		addCallback("getColorFromName", function(_, color:String = '') { return LuaUtils.getColorByString(color); });
+
+		addCallback("getColorFromHex", function(_, color:String) {
+			return FlxColor.fromString(color);
+		});
+		addCallback("getColorFromRgb", function(_, rgb:Array<Int>) {
+			return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]);
+		});
+		addCallback("getDominantColor", function(_, tag:String) {
+			if (tag == null) return 0;
+			return CoolUtil.dominantColor(LuaUtils.getObjectDirectly(tag));
+		});
+
+		addCallback("addCharacterToList", function(_, name:String, type:String) {
+			var charType:Int = 0;
+			switch(type.toLowerCase()) {
+				case 'dad': charType = 1;
+				case 'gf' | 'girlfriend': charType = 2;
+			}
+			PlayState.instance.addCharacterToList(name, charType);
+		});
+		addCallback("precacheImage", function(_, name:String) {
+			Paths.returnGraphic(name);
+		});
+		addCallback("precacheSound", function(_, name:String) {
+			Paths.sound(name);
+		});
+		addCallback("precacheMusic", function(_, name:String) {
+			Paths.music(name);
+		});
+
+		addCallback("triggerEvent", function(_, name:String, arg1:Dynamic, arg2:Dynamic) {
+			var value1:String = arg1;
+			var value2:String = arg2;
+			PlayState.instance.triggerEventNote(name, value1, value2, Conductor.songPosition);
+			return true;
+		});
+
+		addCallback("startCountdown", function() {
+			PlayState.instance.startCountdown();
+			return true;
+		});
+		addCallback("endSong", function() {
+			PlayState.instance.KillNotes();
+			PlayState.instance.endSong();
+			return true;
+		});
+		addCallback("restartSong", function(_, ?skipTransition:Bool = false) {
+			PlayState.instance.persistentUpdate = false;
+			PauseSubState.restartSong(skipTransition);
+			return true;
+		});
+		addCallback("exitSong", function(_, ?skipTransition:Bool = false) {
+			if(skipTransition) {
+				FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransOut = true;
+			}
+
+			PlayState.cancelMusicFadeTween();
+			CustomFadeTransition.nextCamera = PlayState.instance.camOther;
+			if(FlxTransitionableState.skipNextTransIn)
+				CustomFadeTransition.nextCamera = null;
+
+			if(PlayState.isStoryMode)
+				MusicBeatState.switchState(new StoryMenuState());
+			else MusicBeatState.switchState(new FreeplayState());
+
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			PlayState.changedDifficulty = false;
+			PlayState.chartingMode = false;
+			PlayState.instance.transitioning = true;
+			WeekData.loadTheFirstEnabledMod();
+			return true;
+		});
+		addCallback("getSongPosition", function() {
+			return Conductor.songPosition;
+		});
+
+		addCallback("getCharacterX", function(_, type:String) {
+			switch(type.toLowerCase()) {
+				case 'dad' | 'opponent': return PlayState.instance.dadGroup.x;
+				case 'gf' | 'girlfriend': return PlayState.instance.gfGroup.x;
+				default: return PlayState.instance.boyfriendGroup.x;
+			}
+		});
+		addCallback("setCharacterX", function(_, type:String, value:Float) {
+			switch(type.toLowerCase()) {
+				case 'dad' | 'opponent': PlayState.instance.dadGroup.x = value;
+				case 'gf' | 'girlfriend': PlayState.instance.gfGroup.x = value;
+				default: PlayState.instance.boyfriendGroup.x = value;
+			}
+		});
+		addCallback("getCharacterY", function(_, type:String) {
+			switch(type.toLowerCase()) {
+				case 'dad' | 'opponent': return PlayState.instance.dadGroup.y;
+				case 'gf' | 'girlfriend': return PlayState.instance.gfGroup.y;
+				default: return PlayState.instance.boyfriendGroup.y;
+			}
+		});
+		addCallback("setCharacterY", function(_, type:String, value:Float) {
+			switch(type.toLowerCase()) {
+				case 'dad' | 'opponent': PlayState.instance.dadGroup.y = value;
+				case 'gf' | 'girlfriend': PlayState.instance.gfGroup.y = value;
+				default: PlayState.instance.boyfriendGroup.y = value;
+			}
+		});
+
+		addCallback("changeMania", function(_, newValue:Int, skipTwn:Bool = false) {
+			PlayState.instance.changeMania(newValue, skipTwn);
+		});
+		addCallback("generateStaticArrows", function(_, player:Int) {
+			PlayState.instance.generateStaticArrows(player);
+		});
+
+		addCallback("cameraSetTarget", function(_, target:String) {
+			PlayState.instance.moveCamera(target);
+		});
+		addCallback("cameraShake", function(_, camera:String, intensity:Float, duration:Float) {
+			LuaUtils.cameraFromString(camera).shake(intensity, duration * PlayState.instance.playbackRate);
+		});
+
+		addCallback("cameraFlash", function(_, camera:String, color:Dynamic, duration:Float, forced:Bool) {
+			LuaUtils.cameraFromString(camera).flash(color, duration * PlayState.instance.playbackRate, null, forced);
+		});
+		addCallback("cameraFade", function(_, camera:String, color:Dynamic, duration:Float, forced:Bool) {
+			LuaUtils.cameraFromString(camera).fade(color, duration * PlayState.instance.playbackRate, false, null, forced);
+		});
+		addCallback("setRatingPercent", function(_, value:Float) {
+			PlayState.instance.ratingPercent = value;
+		});
+		addCallback("setRatingName", function(_, value:String) {
+			PlayState.instance.ratingName = value;
+		});
+		addCallback("setRatingFC", function(_, value:String) {
+			PlayState.instance.ratingFC = value;
+		});
+		addCallback("getMouseX", function(_, camera:String) {
+			return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).x;
+		});
+		addCallback("getMouseY", function(_, camera:String) {
+			return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).y;
+		});
+
+		addCallback("getMidpointX", function(_, obj:String) {
+			var obj:FlxObject = LuaUtils.getVarInstance(obj);
+			if (obj != null) return obj.getMidpoint().x;
+			return 0;
+		});
+		addCallback("getMidpointY", function(_, obj:String) {
+			var obj:FlxObject = LuaUtils.getVarInstance(obj);
+			if (obj != null) return obj.getMidpoint().y;
+			return 0;
+		});
+		addCallback("getGraphicMidpointX", function(_, obj:String) {
+			var spr:FlxSprite  = LuaUtils.getVarInstance(obj);
+			if (spr != null) return spr.getGraphicMidpoint().x;
+			return 0;
+		});
+		addCallback("getGraphicMidpointY", function(_, obj:String) {
+			var spr:FlxSprite  = LuaUtils.getVarInstance(obj);
+			if (spr != null) return spr.getGraphicMidpoint().y;
+			return 0;
+		});
+		addCallback("getScreenPositionX", function(_, obj:String) {
+			var poop:FlxObject = LuaUtils.getVarInstance(obj);
+			if (poop != null) return poop.getScreenPosition().x;
+			return 0;
+		});
+		addCallback("getScreenPositionY", function(_, obj:String) {
+			var poop:FlxObject = LuaUtils.getVarInstance(obj);
+			if (poop != null) return poop.getScreenPosition().y;
+			return 0;
+		});
+		addCallback("characterDance", function(_, character:String) {
+			switch(character.toLowerCase()) {
+				case 'dad': PlayState.instance.dad.dance();
+				case 'gf' | 'girlfriend': if(PlayState.instance.gf != null) PlayState.instance.gf.dance();
+				default: PlayState.instance.boyfriend.dance();
+			}
+		});
+
+		addCallback("makeLuaSprite", function(_, tag:String, image:String, x:Float, y:Float) {
+			tag = tag.replace('.', '');
+			LuaUtils.resetSpriteTag(tag);
+
+			var leSprite:ModchartSprite = new ModchartSprite(x, y);
+			if(image != null && image.length > 0) leSprite.loadGraphic(Paths.image(image));
+			leSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
+
+			PlayState.instance.modchartSprites.set(tag, leSprite);
+		});
+		addCallback("makeAnimatedLuaSprite", function(_, tag:String, image:String, x:Float, y:Float, ?spriteType:String = "sparrow") {
+			tag = tag.replace('.', '');
+			LuaUtils.resetSpriteTag(tag);
+
+			var leSprite:ModchartSprite = new ModchartSprite(x, y);
+			leSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
+			LuaUtils.loadFrames(leSprite, image, spriteType);
+			
+			PlayState.instance.modchartSprites.set(tag, leSprite);
+		});
+		addCallback("makeLuaSpriteGroup", function(_, tag:String, ?x:Float = 0, ?y:Float = 0, ?maxSize:Int = 0) {
+			tag = tag.replace('.', '');
+			LuaUtils.resetSpriteTag(tag);
+
+			var leGroup:ModchartGroup = new ModchartGroup(x, y, maxSize);
+			PlayState.instance.modchartGroups.set(tag, leGroup);
+		});
+
+		addCallback("makeGraphic", function(_, obj:String, width:Int, height:Int, color:Dynamic) {
+			var spr:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
+
+			if (spr == null) return false;
+			spr.makeGraphic(width, height, color);
+			return true;
+		});
+		addCallback("addAnimationByPrefix", function(_, obj:String, name:String, prefix:String, framerate:Int = 24, loop:Bool = true) {
+			if(PlayState.instance.getLuaObject(obj, false) != null) {
+				var cock:FlxSprite = PlayState.instance.getLuaObject(obj,false);
+				cock.animation.addByPrefix(name, prefix, framerate, loop);
+				if(cock.animation.curAnim == null) {
+					cock.animation.play(name, true);
+				}
+				return;
+			}
+
+			var cock:FlxSprite = Reflect.getProperty(LuaUtils.getInstance(), obj);
+			if(cock != null) {
+				cock.animation.addByPrefix(name, prefix, framerate, loop);
+				if(cock.animation.curAnim == null) {
+					cock.animation.play(name, true);
+				}
+			}
+		});
+
+		addCallback("addAnimation", function(_, obj:String, name:String, frames:Array<Int>, framerate:Int = 24, loop:Bool = true) {
+			if(PlayState.instance.getLuaObject(obj, false) != null) {
+				var cock:FlxSprite = PlayState.instance.getLuaObject(obj,false);
+				cock.animation.add(name, frames, framerate, loop);
+				if(cock.animation.curAnim == null) {
+					cock.animation.play(name, true);
+				}
+				return;
+			}
+
+			var cock:FlxSprite = Reflect.getProperty(LuaUtils.getInstance(), obj);
+			if(cock != null) {
+				cock.animation.add(name, frames, framerate, loop);
+				if(cock.animation.curAnim == null) {
+					cock.animation.play(name, true);
+				}
+			}
+		});
+
+		addCallback("addAnimationByIndices", function(_, obj:String, name:String, prefix:String, indices:String, framerate:Int = 24, loop:Bool = false) {
+			return addAnimByIndices(obj, name, prefix, indices, framerate, loop);
+		});
+
+		addCallback("playAnim", function(_, obj:String, name:String, forced:Bool = false, ?reverse:Bool = false, ?startFrame:Int = 0) {
+			if(PlayState.instance.getLuaObject(obj, false) != null) {
+				var luaObj:FlxSprite = PlayState.instance.getLuaObject(obj,false);
+				if(luaObj.animation.getByName(name) != null) {
+					luaObj.animation.play(name, forced, reverse, startFrame);
+					if(Std.isOfType(luaObj, ModchartSprite)) {
+						//convert luaObj to ModchartSprite
+						var obj:Dynamic = luaObj;
+						var luaObj:ModchartSprite = obj;
+
+						var daOffset = luaObj.animOffsets.get(name);
+						if (luaObj.animOffsets.exists(name)) {
+							luaObj.offset.set(daOffset[0], daOffset[1]);
+						}
+					}
+				}
+				return true;
+			}
+
+			var spr:FlxSprite = Reflect.getProperty(LuaUtils.getInstance(), obj);
+			if(spr != null) {
+				if(spr.animation.getByName(name) != null) {
+					if(Std.isOfType(spr, Character)) {
+						//convert spr to Character
+						var obj:Dynamic = spr;
+						var spr:Character = obj;
+						spr.playAnim(name, forced, reverse, startFrame);
+					} else spr.animation.play(name, forced, reverse, startFrame);
+				}
+				return true;
+			}
+			return false;
+		});
+		addCallback("playAnimGroup", function(_, obj:String, name:String, forced:Bool = false, ?reverse:Bool = false, ?startFrame:Int = 0) {
+			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(obj);
+			if (leGroup != null) {
+				leGroup.forEach(function(spr:ModchartSprite) {
+					var offsetX:Float = 0;
+					var offsetY:Float = 0;
+
+					if (spr.animOffsets.exists(name)) {
+						offsetX = spr.animOffsets.get(name)[0];
+						offsetY = spr.animOffsets.get(name)[1];
+					}
+
+					if (spr.animation.getByName(name) != null) {
+						spr.animation.play(name, forced, reverse, startFrame);
+						spr.offset.set(offsetX, offsetY);
+					}
+				});
+				return true;	
+			}
+			return false;
+		});
+		addCallback("addOffset", function(_, obj:String, anim:String, x:Float, y:Float) {
+			if(PlayState.instance.modchartSprites.exists(obj)) {
+				PlayState.instance.modchartSprites.get(obj).animOffsets.set(anim, [x, y]);
+				return true;
+			}
+
+			var char:Character = Reflect.getProperty(LuaUtils.getInstance(), obj);
+			if(char != null) {
+				char.addOffset(anim, x, y);
+				return true;
+			}
+			return false;
+		});
+
+		addCallback("setScrollFactor", function(_, obj:String, scrollX:Float, scrollY:Float) {
+			var obj:FlxObject = LuaUtils.getVarInstance(obj);
+			if (obj == null) return false;
+
+			obj.scrollFactor.set(scrollX, scrollY);
+			return true;
+		});
+		addCallback("setGroupScrollFactor", function(_, obj:String, ?scrollX:Float = 0, ?scrollY:Float = 0) {
+			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(obj);
+			if (leGroup != null) {	
+				leGroup.scrollFactor.set(scrollX, scrollY);
+			}
+		});
+
+		addCallback("addSpriteToGroup", function(_, tag:String, spr:String) {
+			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
+			if (leGroup != null) {
+				var leSprite:ModchartSprite = PlayState.instance.modchartSprites.get(spr);
+				if (leSprite != null) {
+					leGroup.add(leSprite);
+				}
+			}
+		});
+
+		addCallback("addLuaSpriteGroup", function(_, tag:String, front:Bool = false) {
+			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
+			if (leGroup != null) {
+				if (!leGroup.wasAdded) {
+					if (front)
+						LuaUtils.getInstance().add(leGroup);
+					else {
+						if(PlayState.instance.isDead)
+							GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), leGroup);
+						else {
+							var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gfGroup);
+							if(PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup) < position)
+								position = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
+							else if(PlayState.instance.members.indexOf(PlayState.instance.dadGroup) < position)
+								position = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
+							PlayState.instance.insert(position, leGroup);
+						}
+					}
+					leGroup.wasAdded = true;
+				}
+			}
+		});
+		addCallback("addLuaSprite", function(_, tag:String, front:Bool = false) {
+			var shit:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+			if (shit == null || shit.wasAdded) return false;
+
+			if(front) LuaUtils.getInstance().add(shit);
+			else {
+				if(PlayState.instance.isDead)
+					GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), shit);
+				else {
+					var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gfGroup);
+					if(PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup) < position)
+						position = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
+					else if(PlayState.instance.members.indexOf(PlayState.instance.dadGroup) < position)
+						position = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
+					PlayState.instance.insert(position, shit);
+				}
+			}
+
+			return shit.wasAdded = true;
+		});
+		addCallback("setGraphicSize", function(_, obj:String, x:Int, y:Int = 0, updateHitbox:Bool = true) {
+			var poop:FlxSprite = LuaUtils.getVarInstance(obj);
+			if (poop == null) return false;
+
+			poop.setGraphicSize(x, y);
+			if (updateHitbox) poop.updateHitbox();
+			return true;
+		});
+		addCallback("setGroupGraphicSize", function(_, tag:String, x:Int, y:Int = 0, updateHitbox:Bool = true) {
+			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
+			if (leGroup != null) {
+				leGroup.setGraphicSize(x, y);
+				if (updateHitbox)
+					leGroup.updateHitbox();
+			}
+		});
+		addCallback("scaleObject", function(_, obj:String, x:Float, y:Float, updateHitbox:Bool = true) {
+			var poop:FlxSprite = LuaUtils.getVarInstance(obj);
+			if (poop == null) return false;
+
+			poop.scale.set(x, y);
+			if (updateHitbox) poop.updateHitbox();
+			return true;
+		});
+		addCallback("scaleGroup", function(_, tag:String, x:Float, y:Float, updateHitbox:Bool = true) {
+			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
+			if (leGroup != null) {
+				leGroup.scale.set(x, y);
+				if (updateHitbox) leGroup.updateHitbox();
+			}
+		});
+		addCallback("updateGroupHitbox", function(_, tag:String) {
+			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
+			if (leGroup != null) {
+				leGroup.updateHitbox();	
+			}
+		});
+		addCallback("updateHitbox", function(_, obj:String) {
+			if(PlayState.instance.getLuaObject(obj) != null) {
+				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
+				shit.updateHitbox();
+				return;
+			}
+
+			var poop:FlxSprite = Reflect.getProperty(LuaUtils.getInstance(), obj);
+			if(poop != null) {
+				poop.updateHitbox();
+				return;
+			}
+			luaTrace('updateHitbox: Couldnt find object: ' + obj, false, false, FlxColor.RED);
+		});
+		addCallback("updateHitboxFromGroup", function(_, group:String, index:Int) {
+			if(Std.isOfType(Reflect.getProperty(LuaUtils.getInstance(), group), FlxTypedGroup)) {
+				Reflect.getProperty(LuaUtils.getInstance(), group).members[index].updateHitbox();
+				return;
+			}
+			Reflect.getProperty(LuaUtils.getInstance(), group)[index].updateHitbox();
+		});
+
+		addCallback("centerOffsets", function(_, obj:String) {
+			if(PlayState.instance.getLuaObject(obj) != null) {
+				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
+				shit.centerOffsets();
+				return;
+			}
+
+			var poop:FlxSprite = Reflect.getProperty(LuaUtils.getInstance(), obj);
+			if(poop != null) {
+				poop.centerOffsets();
+				return;
+			}
+			luaTrace('centerOffsets: Couldnt find object: ' + obj, false, false, FlxColor.RED);
+		});
+		addCallback("centerOffsetsFromGroup", function(_, group:String, index:Int) {
+			if(Std.isOfType(Reflect.getProperty(LuaUtils.getInstance(), group), FlxTypedGroup)) {
+				Reflect.getProperty(LuaUtils.getInstance(), group).members[index].centerOffsets();
+				return;
+			}
+			Reflect.getProperty(LuaUtils.getInstance(), group)[index].centerOffsets();
+		});
+
+		addCallback("removeSpriteFromGroup", function(_, tag:String, spr:String, destroy:Bool = true) {
+			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
+			if (leGroup != null) {
+				var leSprite:ModchartSprite = PlayState.instance.modchartSprites.get(spr);
+				if (leSprite != null && leGroup.members.contains(leSprite)) {
+					leGroup.remove(leSprite);
+					if (destroy) leGroup.destroy();
+				}
+			}
+		});
+		addCallback("removeLuaSprite", function(_, tag:String, destroy:Bool = true) {
+			var pee:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+			if (pee == null) return false;
+
+			if (destroy) pee.kill();
+			if (pee.wasAdded) {
+				LuaUtils.getInstance().remove(pee, true);
+				pee.wasAdded = false;
+			}
+			if (destroy) {
+				pee.destroy();
+				PlayState.instance.modchartSprites.remove(tag);
+			}
+			return true;
+		});
+
+		addCallback("setColorSwap", function(_, obj:String, hue:Float = 0, saturation:Float = 0, brightness:Float = 0) {
+			var real = PlayState.instance.getLuaObject(obj);
+			var color:ColorSwap = new ColorSwap();
+			color.hue = hue;
+			color.saturation = saturation;
+			color.brightness = brightness;
+			if(real != null) {
+				real.shader = color.shader;
+				return true;
+			}
+
+			var object:FlxSprite = LuaUtils.getVarInstance(obj);
+			if(object == null) {
+				luaTrace("setColorSwap: Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
+				return false;
+			} 
+			object.shader = color.shader;
+			return true;
+		});
+
+		addCallback("stampSprite", function(_, sprite:String, brush:String, x:Int, y:Int) {
+			if(!PlayState.instance.modchartSprites.exists(sprite) || !PlayState.instance.modchartSprites.exists(brush)) return false;
+
+			PlayState.instance.modchartSprites.get(sprite).stamp(PlayState.instance.modchartSprites.get(brush), x, y);
+			return true;
+		});
+
+		addCallback("luaSpriteExists", function(_, tag:String) {
+			return PlayState.instance.modchartSprites.exists(tag);
+		});
+		addCallback("luaTextExists", function(_, tag:String) {
+			return PlayState.instance.modchartTexts.exists(tag);
+		});
+		addCallback("luaSoundExists", function(_, tag:String) {
+			return PlayState.instance.modchartSounds.exists(tag);
+		});
+
+		addCallback("setHealthBarColors", function(_, leftHex:Dynamic, rightHex:Dynamic) {
+			var left = leftHex;
+			var right = rightHex;
+
+			if (leftHex == null) left = PlayState.instance.dad.getColor();
+			if (rightHex == null) right = PlayState.instance.boyfriend.getColor();
+
+			PlayState.instance.healthBar.createFilledBar(left, right);
+			PlayState.instance.healthBar.updateBar();
+		});
+		addCallback("setHealthBarColorsWithGradient", function(_, leftHex:Array<Dynamic>, rightHex:Array<Dynamic>) {
+			var left:Array<FlxColor> = [leftHex[0], leftHex[1]];
+			var right:Array<FlxColor> = [rightHex[0], rightHex[1]];
+
+			PlayState.instance.healthBar.createGradientBar(left, right, 1, 90);
+			PlayState.instance.healthBar.updateBar();
+		});
+		addCallback("setTimeBarColors", function(_, leftHex:Dynamic, rightHex:Dynamic) {
+			PlayState.instance.timeBar.createFilledBar(leftHex, rightHex);
+			PlayState.instance.timeBar.updateBar();
+		});
+		addCallback("setTimeBarColorsWithGradient", function(_, leftHex:Array<Dynamic>, rightHex:Array<Dynamic>) {
+			var left:Array<FlxColor> = [leftHex[0], leftHex[1]];
+			var right:Array<FlxColor> = [rightHex[0], rightHex[1]];
+			
+			PlayState.instance.timeBar.createGradientBar(left, right, 1, 90);
+			PlayState.instance.timeBar.updateBar();
+		});
+
+		addCallback("setObjectCamera", function(_, obj:String, camera:String = '') {
+			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
+			if (poop == null) return false;
+
+			poop.camera = LuaUtils.cameraFromString(camera);
+			return true;
+		});
+		addCallback("setBlendMode", function(_, obj:String, blend:String = '') {
+			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
+			if (spr == null) return false;
+
+			spr.blend = LuaUtils.blendModeFromString(blend);
+			return true;
+		});
+		addCallback("screenCenterGroup", function(_, tag:String, pos:String = 'xy') {
+			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
+			if (leGroup != null) {
+				switch (pos.toLowerCase().trim()) {
+					case 'x': leGroup.screenCenter(X);
+					case 'y': leGroup.screenCenter(Y);
+					case 'xy': leGroup.screenCenter();
+					default: return;
+				}
+			}
+		});
+		addCallback("screenCenter", function(_, obj:String, pos:String = 'xy') {
+			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
+			if (spr == null) return false;
+
+			switch(pos.trim().toLowerCase()) {
+				case 'x': spr.screenCenter(X);
+				case 'y': spr.screenCenter(Y);
+				default: spr.screenCenter(XY);
+			}
+			return true;
+		});
+		addCallback("objectsOverlap", function(_, obj1:String, obj2:String) {
+			var guh1:FlxBasic = LuaUtils.getVarInstance(obj1), guh2:FlxBasic = LuaUtils.getVarInstance(obj2);
+			if (guh1 == null || guh2 == null) return false;
+			return FlxG.overlap(guh1, guh2);
+		});
+		addCallback("getPixelColor", function(_, obj:String, x:Int, y:Int) {
+			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
+			if(spr == null) return 0;
+
+			if(spr.framePixels != null) spr.framePixels.getPixel32(x, y);
+			return spr.pixels.getPixel32(x, y);
+		});
+
+		addCallback("startDialogue", function(l:FunkinLua, dialogueFile:String, music:String = null) {
+			var path:String;
+			#if MODS_ALLOWED
+			path = Paths.modsJson("charts/" + Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
+			if(!FileSystem.exists(path))
+			#end
+				path = Paths.json("charts/" + Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
+			l.luaTrace('startDialogue: Trying to load dialogue: ' + path);
+			#if MODS_ALLOWED
+			if(FileSystem.exists(path))
+			#else
+			if(Assets.exists(path))
+			#end {
+				var shit:DialogueFile = DialogueBoxPsych.parseDialogue(path);
+				if(shit.dialogue.length > 0) {
+					PlayState.instance.startDialogue(shit, music);
+					l.luaTrace('Successfully loaded dialogue', false, false, FlxColor.GREEN);
+					return true;
+				} else l.luaTrace('Your dialogue file is badly formatted!', false, false, FlxColor.RED);
+			} else {
+				l.luaTrace('startDialogue: Dialogue file not found', false, false, FlxColor.RED);
+				if(PlayState.instance.endingSong)
+					PlayState.instance.endSong();
+				else PlayState.instance.startCountdown();
+			}
+			return false;
+		});
+		addCallback("startVideo", function(l:FunkinLua, videoFile:String) {
+			#if VIDEOS_ALLOWED
+			if(FileSystem.exists(Paths.video(videoFile))) {
+				PlayState.instance.startVideo(videoFile);
+				return true;
+			}
+			
+			l.luaTrace('startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
+			return false;
+
+			#else
+			PlayState.instance.startAndEnd();
+			return true;
+			#end
+		});
+		addCallback("startVideoSprite", function(l:FunkinLua, videoFile:String, x:Float = 0, y:Float = 0, op:Float = 1, cam:String = 'world', ?loop:Bool = false, ?pauseMusic:Bool = false) {
+			#if VIDEOS_ALLOWED
+			if(FileSystem.exists(Paths.video(videoFile))) {
+				PlayState.instance.startVideoSprite(videoFile, x, y, op, cam, loop, pauseMusic);
+				return true;
+			} else l.luaTrace('startVideoSprite: Video file not found: ' + videoFile, false, false, FlxColor.RED);
+			return false;
+			#else
+			PlayState.instance.startAndEnd();
+			return true;
+			#end
+		});
+
+		addCallback("playMusic", function(_, sound:String, volume:Float = 1, loop:Bool = false) {
+			FlxG.sound.playMusic(Paths.music(sound), volume, loop);
+		});
+		addCallback("playSound", function(_, sound:String, volume:Float = 1, ?tag:String = null) {
+			if(tag != null && tag.length > 0) {
+				tag = tag.replace('.', '');
+				if(PlayState.instance.modchartSounds.exists(tag)) {
+					PlayState.instance.modchartSounds.get(tag).stop();
+				}
+				PlayState.instance.modchartSounds.set(tag, FlxG.sound.play(Paths.sound(sound), volume, false, function() {
+					PlayState.instance.modchartSounds.remove(tag);
+					PlayState.instance.callOnLuas('onSoundFinished', [tag]);
+				}));
+				return;
+			}
+			FlxG.sound.play(Paths.sound(sound), volume);
+		});
+		addCallback("stopSound", function(_, tag:String) {
+			if(tag != null && tag.length > 1 && PlayState.instance.modchartSounds.exists(tag)) {
+				PlayState.instance.modchartSounds.get(tag).stop();
+				PlayState.instance.modchartSounds.remove(tag);
+			}
+		});
+		addCallback("pauseSound", function(_, tag:String) {
+			if(tag != null && tag.length > 1 && PlayState.instance.modchartSounds.exists(tag)) {
+				PlayState.instance.modchartSounds.get(tag).pause();
+			}
+		});
+		addCallback("resumeSound", function(_, tag:String) {
+			if(tag != null && tag.length > 1 && PlayState.instance.modchartSounds.exists(tag)) {
+				PlayState.instance.modchartSounds.get(tag).play();
+			}
+		});
+		addCallback("soundFadeIn", function(_, tag:String, duration:Float, fromValue:Float = 0, toValue:Float = 1) {
+			if(tag == null || tag.length < 1) {
+				FlxG.sound.music.fadeIn(duration, fromValue, toValue);
+			} else if(PlayState.instance.modchartSounds.exists(tag)) {
+				PlayState.instance.modchartSounds.get(tag).fadeIn(duration * PlayState.instance.playbackRate, fromValue, toValue);
+			}
+		});
+		addCallback("soundFadeOut", function(_, tag:String, duration:Float, toValue:Float = 0) {
+			if(tag == null || tag.length < 1) {
+				FlxG.sound.music.fadeOut(duration, toValue);
+			} else if(PlayState.instance.modchartSounds.exists(tag)) {
+				PlayState.instance.modchartSounds.get(tag).fadeOut(duration * PlayState.instance.playbackRate, toValue);
+			}
+		});
+		addCallback("soundFadeCancel", function(_, tag:String) {
+			if(tag == null || tag.length < 1) {
+				if(FlxG.sound.music.fadeTween != null) {
+					FlxG.sound.music.fadeTween.cancel();
+				}
+			} else if(PlayState.instance.modchartSounds.exists(tag)) {
+				var theSound:FlxSound = PlayState.instance.modchartSounds.get(tag);
+				if(theSound.fadeTween != null) {
+					theSound.fadeTween.cancel();
+					PlayState.instance.modchartSounds.remove(tag);
+				}
+			}
+		});
+		addCallback("getSoundVolume", function(_, tag:String) {
+			if(tag == null || tag.length < 1) {
+				if(FlxG.sound.music != null)
+					return FlxG.sound.music.volume;
+			} else if(PlayState.instance.modchartSounds.exists(tag))
+				return PlayState.instance.modchartSounds.get(tag).volume;
+			return 0;
+		});
+		addCallback("setSoundVolume", function(_, tag:String, value:Float) {
+			if(tag == null || tag.length < 1) {
+				if(FlxG.sound.music != null)
+					FlxG.sound.music.volume = value;
+			} else if(PlayState.instance.modchartSounds.exists(tag)) {
+				PlayState.instance.modchartSounds.get(tag).volume = value;
+			}
+		});
+		addCallback("getSoundTime", function(_, tag:String) {
+			if(tag != null && tag.length > 0 && PlayState.instance.modchartSounds.exists(tag))
+				return PlayState.instance.modchartSounds.get(tag).time;
+			return 0;
+		});
+		addCallback("setSoundTime", function(_, tag:String, value:Float) {
+			if(tag != null && tag.length > 0 && PlayState.instance.modchartSounds.exists(tag)) {
+				var theSound:FlxSound = PlayState.instance.modchartSounds.get(tag);
+				if(theSound != null) theSound.time = value;
+			}
+		});
+		addCallback("getSoundPitch", function(_, tag:String) {
+			if(tag == null || tag.length < 1) {
+				if(FlxG.sound.music != null)
+					return FlxG.sound.music.pitch;
+			} else if (PlayState.instance.modchartSounds.exists(tag))
+				return PlayState.instance.modchartSounds.get(tag).pitch;
+			
+			return 1;
+		});
+		addCallback("setSoundPitch", function(_, tag:String, value:Float = 1) {
+			if(tag == null || tag.length < 1) {
+				if(FlxG.sound.music != null)
+					FlxG.sound.music.pitch = value;
+			} else if (PlayState.instance.modchartSounds.exists(tag)) {
+				var theSound:FlxSound = PlayState.instance.modchartSounds.get(tag);
+				if(theSound != null) theSound.pitch = value;
+			}
+		});
+
+		addCallback("debugPrint", true, function(lua:State, fl:FunkinLua) {
+			var texts:Array<Dynamic> = Lua_helper.getarguments(lua);
+			if (texts.length <= 0) return 0;
+			var text:String = Std.isOfType(texts[0], String) ? texts[0] : '';
+			for (i in 1...texts.length) {
+				var s:String = texts[i];
+				if (Std.isOfType(s, String)) text += ", " + s;
+			}
+			fl.luaTrace(text, true, false);
+			return 0;
+		});
+
+		addCallback("close", function(l:FunkinLua):Bool {
+			return l.closed = true;
+		});
+
+		addCallback("changePresence", function(_, details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
+			#if discord_rpc
+			DiscordClient.changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
+			#end
+		});
+
+		// LUA TEXTS
+		addCallback("makeLuaText", function(_, tag:String, text:String, width:Int, x:Float, y:Float) {
+			tag = tag.replace('.', '');
+			LuaUtils.resetTextTag(tag);
+			PlayState.instance.modchartTexts.set(tag, new ModchartText(x, y, text, width));
+		});
+
+		addCallback("setTextString", function(l:FunkinLua, tag:String, text:String) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.text = text;
+				return true;
+			}
+			l.luaTrace("setTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+		addCallback("setTextSize", function(l:FunkinLua, tag:String, size:Int) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.size = size;
+				return true;
+			}
+			l.luaTrace("setTextSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+		addCallback("setTextWidth", function(l:FunkinLua, tag:String, width:Float) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.fieldWidth = width;
+				return true;
+			}
+			l.luaTrace("setTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+		addCallback("setTextBorder", function(l:FunkinLua, tag:String, size:Int, color:Dynamic) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.borderSize = size;
+				obj.borderColor = color;
+				return true;
+			}
+			l.luaTrace("setTextBorder: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+		addCallback("setTextBorderStyle", function(_, tag:String, borderStyle:String = 'NONE') {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.borderStyle = NONE;
+				switch(borderStyle.trim().toLowerCase()) {
+					case 'none': obj.borderStyle = NONE;
+					case 'shadow': obj.borderStyle = SHADOW;
+					case 'outline': obj.borderStyle = OUTLINE;
+					case 'outline_fast': obj.borderStyle = OUTLINE_FAST;
+				}
+			}
+		});
+		addCallback("setTextColor", function(l:FunkinLua, tag:String, color:Dynamic) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.color = color;
+				return true;
+			}
+			l.luaTrace("setTextColor: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+		addCallback("setTextFont", function(l:FunkinLua, tag:String, newFont:String) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.font = Paths.font(newFont);
+				return true;
+			}
+			l.luaTrace("setTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+		addCallback("setTextItalic", function(l:FunkinLua, tag:String, italic:Bool) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.italic = italic;
+				return true;
+			}
+			l.luaTrace("setTextItalic: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+		addCallback("setTextAlignment", function(l:FunkinLua, tag:String, alignment:String = 'left') {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.alignment = LEFT;
+				switch(alignment.trim().toLowerCase()) {
+					case 'right': obj.alignment = RIGHT;
+					case 'center': obj.alignment = CENTER;
+				}
+				return true;
+			}
+			l.luaTrace("setTextAlignment: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+
+		addCallback("getTextString", function(l:FunkinLua, tag:String) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null && obj.text != null)
+				return obj.text;
+			l.luaTrace("getTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return null;
+		});
+		addCallback("getTextSize", function(l:FunkinLua, tag:String) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) return obj.size;
+			l.luaTrace("getTextSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return -1;
+		});
+		addCallback("getTextFont", function(l:FunkinLua, tag:String) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) return obj.font;
+			l.luaTrace("getTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return null;
+		});
+		addCallback("getTextWidth", function(l:FunkinLua, tag:String) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) return obj.fieldWidth;
+			l.luaTrace("getTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return 0;
+		});
+
+		addCallback("addLuaText", function(_, tag:String) {
+			if(PlayState.instance.modchartTexts.exists(tag)) {
+				var shit:ModchartText = PlayState.instance.modchartTexts.get(tag);
+				if(!shit.wasAdded) {
+					LuaUtils.getInstance().add(shit);
+					shit.wasAdded = true;
+				}
+			}
+		});
+		addCallback("removeLuaText", function(_, tag:String, destroy:Bool = true) {
+			if(!PlayState.instance.modchartTexts.exists(tag)) return;
+
+			var text:ModchartText = PlayState.instance.modchartTexts.get(tag);
+			if(destroy) text.kill();
+
+			if(text.wasAdded) {
+				LuaUtils.getInstance().remove(text, true);
+				text.wasAdded = false;
+			}
+
+			if(destroy) {
+				text.destroy();
+				PlayState.instance.modchartTexts.remove(tag);
+			}
+		});
+
+		DeprecatedFunctions.implement(this);
+		ExtraFunctions.implement(this);
+		#if (hscript && HSCRIPT_ALLOWED) HScript.implement(this); #end
+
+		call('onCreate');
+		if (closed) return stop();
+		#end
+	}
+
+	#if LUA_ALLOWED
+	public function initGlobals() {
 		// Lua shit
 		set('Function_StopLua', Function_StopLua);
 		set('Function_Stop', Function_Stop);
 		set('Function_Continue', Function_Continue);
+
 		set('luaDebugMode', false);
 		set('luaDeprecatedWarnings', true);
+		set('luaBackwardCompatibility', true);
 		set('inChartEditor', false);
 		
 		// Song/Week shit
@@ -204,1688 +1844,8 @@ class FunkinLua {
 		var os = Sys.systemName().toLowerCase();
 		#end
 		set('buildTarget', os);
-
-		// custom substate
-		addCallback("openCustomSubstate", function(name:String, pauseGame:Bool = false) {
-			if(pauseGame) {
-				PlayState.instance.persistentUpdate = false;
-				PlayState.instance.persistentDraw = true;
-				PlayState.instance.paused = true;
-				if(FlxG.sound.music != null) {
-					FlxG.sound.music.pause();
-					PlayState.instance.vocals.pause();
-				}
-			}
-			PlayState.instance.openSubState(new CustomSubstate(name));
-		});
-		addCallback("closeCustomSubstate", function() {
-			if(CustomSubstate.instance == null) return false;
-			PlayState.instance.closeSubState();
-			CustomSubstate.instance = null;
-			return true;
-		});
-
-		// shader shit
-		addCallback("initLuaShader", function(name:String, glslVersion:Int = 120) {
-			if(!ClientPrefs.getPref('shaders')) return false;
-
-			#if (!flash && MODS_ALLOWED && sys)
-			return initLuaShader(name, glslVersion);
-			#else
-			luaTrace("initLuaShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-			return false;
-		});
-		
-		addCallback("setSpriteShader", function(obj:String, shader:String) {
-			if(!ClientPrefs.getPref('shaders')) return false;
-
-			#if (!flash && MODS_ALLOWED && sys)
-			if(!runtimeShaders.exists(shader) && !initLuaShader(shader)) {
-				luaTrace('setSpriteShader: Shader $shader is missing!', false, false, FlxColor.RED);
-				return false;
-			}
-
-			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
-			if(leObj != null) {
-				var arr:Array<String> = runtimeShaders.get(shader);
-				leObj.shader = new FlxRuntimeShader(arr[0], arr[1]);
-				return true;
-			}
-			#else
-			luaTrace("setSpriteShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-			return false;
-		});
-		addCallback("removeSpriteShader", function(obj:String) {
-			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
-			if (leObj != null) {
-				leObj.shader = null;
-				return true;
-			}
-			return false;
-		});
-
-		addCallback("getShaderBool", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getBool(prop) : null;
-			#else
-			luaTrace("getShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-		addCallback("getShaderBoolArray", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getBoolArray(prop) : null;
-			#else
-			luaTrace("getShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-		addCallback("getShaderInt", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getInt(prop) : null;
-			#else
-			luaTrace("Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-		addCallback("getShaderIntArray", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getIntArray(prop) : null;
-			#else
-			luaTrace("getShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-		addCallback("getShaderFloat", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getFloat(prop) : null;
-			#else
-			luaTrace("getShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-		addCallback("getShaderFloatArray", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getFloatArray(prop) : null;
-			#else
-			luaTrace("getShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-
-		addCallback("setShaderBool", function(obj:String, prop:String, value:Bool) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setBool(prop, value);
-				return true;
-			}
-			#else
-			luaTrace("setShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-		addCallback("setShaderBoolArray", function(obj:String, prop:String, values:Dynamic) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setBoolArray(prop, values);
-				return true;
-			}
-			#else
-			luaTrace("setShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-		addCallback("setShaderInt", function(obj:String, prop:String, value:Int) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setInt(prop, value);
-				return true;
-			}
-			#else
-			luaTrace("setShaderInt: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-		addCallback("setShaderIntArray", function(obj:String, prop:String, values:Dynamic) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setIntArray(prop, values);
-				return true;
-			}
-			#else
-			luaTrace("setShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-		addCallback("setShaderFloat", function(obj:String, prop:String, value:Float) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setFloat(prop, value);
-				return true;
-			}
-			#else
-			luaTrace("setShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-		addCallback("setShaderFloatArray", function(obj:String, prop:String, values:Dynamic) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setFloatArray(prop, values);
-				return true;
-			}
-			#else
-			luaTrace("setShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-
-		addCallback("setShaderSampler2D", function(obj:String, prop:String, bitmapdataPath:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				var value = Paths.image(bitmapdataPath);
-				if (value == null || value.bitmap == null) return false;
-
-				shader.setSampler2D(prop, value.bitmap);
-				return true;
-			}
-			#else
-			luaTrace("setShaderSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-
-		addCallback("getRunningScripts", function() {
-			var runningScripts:Array<String> = [];
-			for (idx in 0...PlayState.instance.luaArray.length)
-				runningScripts.push(PlayState.instance.luaArray[idx].scriptName);
-
-			return runningScripts;
-		});
-
-		addCallback("setOnLuas", function(?varName:String, ?scriptVar:Dynamic) {
-			if (varName == null) {
-				#if (linc_luajit >= "0.0.6")
-				LuaL.error(lua, "bad argument #1 to 'setOnLuas' (string expected, got nil)");
-				#end
-				return;
-			}
-			PlayState.instance.setOnLuas(varName, scriptVar);
-		});
-
-		addCallback("callOnLuas", function(?funcName:String, ?args:Array<Dynamic>, ignoreStops = false, ignoreSelf = true, ?exclusions:Array<String>) {
-			var scriptName:String = globalScriptName;
-			if (ignoreSelf && !exclusions.contains(scriptName)) exclusions.push(scriptName);
-			PlayState.instance.callOnLuas(funcName, args, ignoreStops, exclusions);
-		});
-
-		addCallback("callScript", function(?luaFile:String, ?funcName:String, ?args:Array<Dynamic>) {
-			luaFile = format(luaFile);
-
-			for (luaInstance in PlayState.instance.luaArray) {
-				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed)
-					return luaInstance.call(funcName, args);
-			}
-
-			luaTrace('callScript: The script "${luaFile}" doesn\'t exists nor is active!');
-			return null;
-		});
-
-		addCallback("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
-			final trimmedpft = platformType.trim();
-			if (args == null) args = [];
-			final blackListcpp = ["setDPIAware"];
-			if (blackListcpp.contains(trimmedpft)) return null;
-
-			var platFunc = Reflect.field(PlatformUtil, trimmedpft);
-			return Reflect.callMethod(null, platFunc, args);
-		});
-
-		addCallback("getGlobalFromScript", function(?luaFile:String, ?global:String) { // returns the global from a script
-			luaFile = format(luaFile);
-
-			for (luaInstance in PlayState.instance.luaArray) {
-				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed) {
-					var lua:State = luaInstance.lua;
-					Lua.getglobal(lua, global);
-
-					var result:Dynamic = Convert.fromLua(lua, -1);
-					Lua.pop(lua, 1);
-
-					return result;
-				}
-			}
-			return null;
-		});
-		addCallback("setGlobalFromScript", function(luaFile:String, global:String, val:Dynamic) { // returns the global from a script
-			luaFile = format(luaFile);
-
-			var got:Bool = false;
-			for (luaInstance in PlayState.instance.luaArray) {
-				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed) {
-					luaInstance.set(global, val);
-					got = true;
-				}
-			}
-
-			if (!got) {
-				luaTrace('setGlobalFromScript: The script "${luaFile}" doesn\'t exists nor is active!');
-				return false;
-			}
-			return true;
-		});
-
-		addCallback("isRunning", function(luaFile:String) {
-			return LuaUtils.isLuaRunning(luaFile);
-		});
-
-		addCallback("addLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false) { //would be dope asf.
-			var cervix = luaFile + ".lua";
-			if(luaFile.endsWith(".lua"))cervix=luaFile;
-			var doPush = false;
-			#if MODS_ALLOWED
-			if(FileSystem.exists(Paths.modFolders(cervix))) {
-				cervix = Paths.modFolders(cervix);
-				doPush = true;
-			} else if(FileSystem.exists(cervix)) {
-				doPush = true;
-			} else {
-				cervix = Paths.getPreloadPath(cervix);
-				if(FileSystem.exists(cervix)) {
-					doPush = true;
-				}
-			}
-			#else
-			cervix = Paths.getPreloadPath(cervix);
-			if(Assets.exists(cervix)) {
-				doPush = true;
-			}
-			#end
-
-			if(doPush) {
-				if(!ignoreAlreadyRunning) {
-					for (luaInstance in PlayState.instance.luaArray) {
-						if(luaInstance.scriptName == cervix) {
-							luaTrace('addLuaScript: The script "' + cervix + '" is already running!');
-							return false;
-						}
-					}
-				}
-				PlayState.instance.luaArray.push(new FunkinLua(cervix));
-				return true;
-			}
-			luaTrace("addLuaScript: Script doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("removeLuaScript", function(luaFile:String) {
-			luaFile = format(luaFile);
-
-			var got:Bool = false;
-			for (luaInstance in PlayState.instance.luaArray) {
-				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed) {
-					luaInstance.closed = true;
-					got = true;
-				}
-			}
-
-			if (!got) {
-				luaTrace('removeLuaScript: The script "${luaFile}" doesn\'t exists nor is active!');
-				return false;
-			}
-			return true;
-		});
-
-		addCallback("loadSong", function(?name:String = null, ?difficultyNum:Int = -1) {
-			if(name == null || name.length <= 0) name = PlayState.SONG.song;
-			if (difficultyNum == -1) difficultyNum = PlayState.storyDifficulty;
-
-			var poop = Highscore.formatSong(name, difficultyNum);
-			PlayState.SONG = Song.loadFromJson(poop, name);
-			PlayState.storyDifficulty = difficultyNum;
-			PlayState.instance.persistentUpdate = false;
-			LoadingState.loadAndSwitchState(new PlayState());
-
-			FlxG.sound.music.pause();
-			FlxG.sound.music.volume = 0;
-			if(PlayState.instance.vocals != null) {
-				PlayState.instance.vocals.pause();
-				PlayState.instance.vocals.volume = 0;
-			}
-		});
-
-		addCallback("loadGraphic", function(variable:String, image:String, ?gridX:Int = 0, ?gridY:Int = 0) {
-			var spr:FlxSprite = LuaUtils.getVarInstance(variable);
-
-			if (spr == null || image == null || image.length <= 0) return false;
-			var animated = gridX != 0 || gridY != 0;
-
-			spr.loadGraphic(Paths.image(image), animated, gridX, gridY);
-			return true;
-		});
-		addCallback("loadFrames", function(variable:String, image:String, spriteType:String = "sparrow") {
-			var spr:FlxSprite = LuaUtils.getVarInstance(variable);
-			if (spr == null || image == null || image.length <= 0) return false;
-
-			LuaUtils.loadFrames(spr, image, spriteType);
-			return true;
-		});
-
-		addCallback("getPref", function(pref:String, ?defaultValue:Dynamic) {
-			return ClientPrefs.getPref(pref, defaultValue);
-		});
-		addCallback("setPref", function(pref:String, ?value:Dynamic = null) {
-			ClientPrefs.prefs.set(pref, value);
-		});
-
-		addCallback("getProperty", function(variable:String) {
-			var result:Dynamic = null;
-			var killMe:Array<String> = variable.split('.');
-			if (killMe.length > 1)
-				result = LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(killMe), killMe[killMe.length - 1]);
-			else result = LuaUtils.getVarInArray(LuaUtils.getTargetInstance(), variable);
-
-			return result;
-		});
-		addCallback("setProperty", function(variable:String, value:Dynamic) {
-			var killMe:Array<String> = variable.split('.');
-			if (killMe.length > 1) {
-				LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe), killMe[killMe.length - 1], value);
-				return true;
-			}
-			LuaUtils.setVarInArray(LuaUtils.getTargetInstance(), variable, value);
-			return true;
-		});
-		addCallback("getPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic) {
-			var shitMyPants:Array<String> = obj.split('.');
-			var realObject:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
-			if(shitMyPants.length > 1)
-				realObject = LuaUtils.getPropertyLoop(shitMyPants, true, false);
-
-			if (Std.isOfType(realObject, FlxTypedGroup)) {
-				return LuaUtils.getGroupStuff(realObject.members[index], variable);
-			}
-
-			var leArray:Dynamic = realObject[index];
-			if (leArray != null) {
-				var result:Dynamic = null;
-				if(Type.typeof(variable) == ValueType.TInt)
-					result = leArray[variable];
-				else result = LuaUtils.getGroupStuff(leArray, variable);
-				return result;
-			}
-			luaTrace("Object #" + index + " from group: " + obj + " doesn't exist!", false, false, FlxColor.RED);
-			return null;
-		});
-		addCallback("setPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic, value:Dynamic) {
-			var shitMyPants:Array<String> = obj.split('.');
-			var realObject:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
-			if (shitMyPants.length > 1)
-				realObject = LuaUtils.getPropertyLoop(shitMyPants, true, false);
-
-			if (Std.isOfType(realObject, FlxTypedGroup)) {
-				LuaUtils.setGroupStuff(realObject.members[index], variable, value);
-				return;
-			}
-
-			var leArray:Dynamic = realObject[index];
-			if(leArray != null) {
-				if(Type.typeof(variable) == ValueType.TInt) {
-					leArray[variable] = value;
-					return;
-				}
-				LuaUtils.setGroupStuff(leArray, variable, value);
-			}
-		});
-		addCallback("removeFromGroup", function(obj:String, index:Int, dontDestroy:Bool = false) {
-			if(Std.isOfType(Reflect.getProperty(LuaUtils.getTargetInstance(), obj), FlxTypedGroup)) {
-				var sex = Reflect.getProperty(LuaUtils.getTargetInstance(), obj).members[index];
-				if(!dontDestroy) sex.kill();
-				Reflect.getProperty(LuaUtils.getTargetInstance(), obj).remove(sex, true);
-				if(!dontDestroy) sex.destroy();
-				return;
-			}
-			Reflect.getProperty(LuaUtils.getTargetInstance(), obj).remove(Reflect.getProperty(LuaUtils.getTargetInstance(), obj)[index]);
-		});
-
-		addCallback("getPropertyFromClass", function(classVar:String, variable:String) {
-			@:privateAccess
-			var killMe:Array<String> = variable.split('.');
-			if(killMe.length > 1) {
-				var coverMeInPiss:Dynamic = LuaUtils.getVarInArray(Type.resolveClass(classVar), killMe[0]);
-				for (i in 1...killMe.length - 1) {
-					coverMeInPiss = LuaUtils.getVarInArray(coverMeInPiss, killMe[i]);
-				}
-				return LuaUtils.getVarInArray(coverMeInPiss, killMe[killMe.length - 1]);
-			}
-			if (classVar == 'ClientPrefs') {
-				var pref:Dynamic = ClientPrefs.getPref(variable);
-				if (pref != null) return pref;
-			}
-			return LuaUtils.getVarInArray(Type.resolveClass(classVar), variable);
-		});
-		addCallback("setPropertyFromClass", function(classVar:String, variable:String, value:Dynamic) {
-			@:privateAccess
-			var killMe:Array<String> = variable.split('.');
-			if(killMe.length > 1) {
-				var coverMeInPiss:Dynamic = LuaUtils.getVarInArray(Type.resolveClass(classVar), killMe[0]);
-				for (i in 1...killMe.length - 1) {
-					coverMeInPiss = LuaUtils.getVarInArray(coverMeInPiss, killMe[i]);
-				}
-				LuaUtils.setVarInArray(coverMeInPiss, killMe[killMe.length - 1], value);
-				return true;
-			}
-			if (classVar == 'ClientPrefs') {
-				if (ClientPrefs.prefs.exists(variable)) {
-					ClientPrefs.prefs.set(variable, value);
-					return true;
-				}
-			}
-			LuaUtils.setVarInArray(Type.resolveClass(classVar), variable, value);
-			return true;
-		});
-
-		addCallback("callFromObject", function(variable:String, ?arguments:Array<Dynamic>) {
-			if (arguments != null) arguments = [];
-			var result:Dynamic = null;
-			var killMe:Array<String> = variable.split('.');
-			if(killMe.length > 1)
-				result = LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(killMe), killMe[killMe.length - 1]);
-			else result = LuaUtils.getVarInArray(LuaUtils.getTargetInstance(), variable);
-			return Reflect.callMethod(null, result, arguments);
-		});
-		addCallback("callFromClass", function(classVar:String, variable:String, ?arguments:Array<Dynamic>) {
-			if (arguments != null) arguments = [];
-			var killMe:Array<String> = variable.split('.');
-			if(killMe.length > 1) {
-				var coverMeInPiss:Dynamic = LuaUtils.getVarInArray(Type.resolveClass(classVar), killMe[0]);
-				for (i in 1...killMe.length - 1) {
-					coverMeInPiss = LuaUtils.getVarInArray(coverMeInPiss, killMe[i]);
-				}
-				return Reflect.callMethod(null, LuaUtils.getVarInArray(coverMeInPiss, killMe[killMe.length - 1]), arguments);
-			}
-			return Reflect.callMethod(null, LuaUtils.getVarInArray(Type.resolveClass(classVar), variable), arguments);
-		});
-
-		//shitass stuff for epic coders like me B)  *image of obama giving himself a medal*
-		addCallback("getObjectOrder", function(obj:String) {
-			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
-			if (poop != null) return LuaUtils.getTargetInstance().members.indexOf(poop);
-			return -1;
-		});
-		addCallback("setObjectOrder", function(obj:String, position:Int) {
-			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
-			if (poop == null) return false;
-
-			LuaUtils.getTargetInstance().remove(poop, true);
-			LuaUtils.getTargetInstance().insert(position, poop);
-			return true;
-		});
-
-		// gay ass tweens
-		addCallback("startTween", function(tag:String, vars:String, values:Any = null, duration:Float, options:Any = null) {
-			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
-			if(penisExam != null) {
-				if(values != null) {
-					var myOptions:LuaUtils.LuaTweenOptions = LuaUtils.getLuaTween(options);
-					PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, values, duration, {
-						type: myOptions.type,
-						ease: myOptions.ease,
-						startDelay: myOptions.startDelay,
-						loopDelay: myOptions.loopDelay,
-
-						onUpdate: function(twn:FlxTween) {
-							if(myOptions.onUpdate != null) PlayState.instance.callOnLuas(myOptions.onUpdate, [tag, vars]);
-						}, onStart: function(twn:FlxTween) {
-							if(myOptions.onStart != null) PlayState.instance.callOnLuas(myOptions.onStart, [tag, vars]);
-						}, onComplete: function(twn:FlxTween) {
-							if(myOptions.onComplete != null) PlayState.instance.callOnLuas(myOptions.onComplete, [tag, vars]);
-							if(twn.type == FlxTweenType.ONESHOT || twn.type == FlxTweenType.BACKWARD) PlayState.instance.modchartTweens.remove(tag);
-						}
-					}));
-				} else luaTrace('startTween: No values on 2nd argument!', false, false, FlxColor.RED);
-			} else luaTrace('startTween: Couldnt find object: ' + vars, false, false, FlxColor.RED);
-		});
-		addCallback("doTween", function(tag:String, variable:String, fieldsNValues:Dynamic, duration:Float, ease:String) {
-			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, variable);
-			if(penisExam != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, fieldsNValues, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			} else luaTrace('doTween: Couldnt find object: ' + variable, false, false, FlxColor.RED);
-		});
-		addCallback("doTweenAdvAngle", function(tag:String, vars:String, value:Array<Float>, duration:Float, ease:String) {
-			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
-			if(penisExam != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.angle(penisExam, value[0], value[1], duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			} else luaTrace('doTweenAdvAngle: Couldnt find object: ' + vars, false, false, FlxColor.RED);
-		});
-		addCallback("doTweenColor", function(tag:String, vars:String, targetColor:Dynamic, duration:Float, ease:String) {
-			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
-			if(penisExam != null) {
-				var curColor:FlxColor = penisExam.color;
-				curColor.alphaFloat = penisExam.alpha;
-				PlayState.instance.modchartTweens.set(tag, FlxTween.color(penisExam, duration * PlayState.instance.playbackRate, curColor, targetColor, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
-						PlayState.instance.modchartTweens.remove(tag);
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag, vars]);
-					}
-				}));
-			} else luaTrace('doTweenColor: Couldnt find object: ' + vars, false, false, FlxColor.RED);
-		});
-
-		// bisexual note tween
-		addCallback("noteTween", function(tag:String, note:Int, fieldsNValues:Dynamic, duration:Float, ease:String) {
-			LuaUtils.cancelTween(tag);
-			if(note < 0) note = 0;
-			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
-
-			if(testicle != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, fieldsNValues, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			}
-		});
-		addCallback("mouseClicked", function(button:String) {
-			return switch(button.trim().toLowerCase()) {
-				case 'middle': FlxG.mouse.justPressedMiddle;
-				case 'right': FlxG.mouse.justPressedRight;
-				default: FlxG.mouse.justPressed;
-			}
-		});
-		addCallback("mousePressed", function(button:String) {
-			return switch(button.trim().toLowerCase()) {
-				case 'middle': FlxG.mouse.pressedMiddle;
-				case 'right': FlxG.mouse.pressedRight;
-				default: FlxG.mouse.pressed;
-			}
-		});
-		addCallback("mouseReleased", function(button:String) {
-			return switch(button.trim().toLowerCase()) {
-				case 'middle': FlxG.mouse.justReleasedMiddle;
-				case 'right': FlxG.mouse.justReleased;
-				default: FlxG.mouse.justReleased;
-			}
-		});
-
-		addCallback("cancelTween", function(tag:String) {
-			LuaUtils.cancelTween(tag);
-		});
-
-		addCallback("runTimer", function(tag:String, time:Float = 1, loops:Int = 1) {
-			LuaUtils.cancelTimer(tag);
-			PlayState.instance.modchartTimers.set(tag, new FlxTimer().start(time, function(tmr:FlxTimer) {
-				if(tmr.finished) {
-					PlayState.instance.modchartTimers.remove(tag);
-				}
-				PlayState.instance.callOnLuas('onTimerCompleted', [tag, tmr.loops, tmr.loopsLeft]);
-			}, loops));
-		});
-		addCallback("cancelTimer", function(tag:String) {
-			LuaUtils.cancelTimer(tag);
-		});
-
-		//stupid bietch ass functions
-		addCallback("addScore", function(value:Int = 0) {
-			PlayState.instance.songScore += value;
-			PlayState.instance.RecalculateRating();
-		});
-		addCallback("addMisses", function(value:Int = 0) {
-			PlayState.instance.songMisses += value;
-			PlayState.instance.RecalculateRating();
-		});
-		addCallback("addHits", function(value:Int = 0) {
-			PlayState.instance.songHits += value;
-			PlayState.instance.RecalculateRating();
-		});
-		addCallback("setScore", function(value:Int = 0) {
-			PlayState.instance.songScore = value;
-			PlayState.instance.RecalculateRating();
-		});
-		addCallback("setMisses", function(value:Int = 0) {
-			PlayState.instance.songMisses = value;
-			PlayState.instance.RecalculateRating();
-		});
-		addCallback("setHits", function(value:Int = 0) {
-			PlayState.instance.songHits = value;
-			PlayState.instance.RecalculateRating();
-		});
-		addCallback("getScore", function() {
-			return PlayState.instance.songScore;
-		});
-		addCallback("getMisses", function() {
-			return PlayState.instance.songMisses;
-		});
-		addCallback("getAccuracy", function() {
-			return PlayState.instance.accuracy;
-		});
-		addCallback("getHits", function() {
-			return PlayState.instance.songHits;
-		});
-
-		addCallback("getHighscore", function(song:String, diff:Int) {
-			return Highscore.getScore(song, diff);
-		});
-		addCallback("getSavedRating", function(song:String, diff:Int) {
-			return Highscore.getRating(song, diff);
-		});
-		addCallback("getWeekScore", function(week:String, diff:Int) {
-			return Highscore.getWeekScore(week, diff);
-		});
-
-		addCallback("setHealth", function(value:Float = 0) {
-			PlayState.instance.health = value;
-		});
-		addCallback("addHealth", function(value:Float = 0) {
-			PlayState.instance.health += value;
-		});
-		addCallback("getHealth", function() {
-			return PlayState.instance.health;
-		});
-
-		addCallback("FlxColor", function(?color:String = '') { return LuaUtils.getColorByString(color); });
-		addCallback("getColorFromName", function(?color:String = '') { return LuaUtils.getColorByString(color); });
-
-		addCallback("getColorFromHex", function(color:String) {
-			return FlxColor.fromString(color);
-		});
-		addCallback("getColorFromRgb", function(rgb:Array<Int>) {
-			return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]);
-		});
-		addCallback("getDominantColor", function(tag:String) {
-			if (tag == null) return 0;
-			return CoolUtil.dominantColor(LuaUtils.getObjectDirectly(tag));
-		});
-
-		addCallback("addCharacterToList", function(name:String, type:String) {
-			var charType:Int = 0;
-			switch(type.toLowerCase()) {
-				case 'dad': charType = 1;
-				case 'gf' | 'girlfriend': charType = 2;
-			}
-			PlayState.instance.addCharacterToList(name, charType);
-		});
-		addCallback("precacheImage", function(name:String) {
-			Paths.returnGraphic(name);
-		});
-		addCallback("precacheSound", function(name:String) {
-			Paths.sound(name);
-		});
-		addCallback("precacheMusic", function(name:String) {
-			Paths.music(name);
-		});
-
-		addCallback("triggerEvent", function(name:String, arg1:Dynamic, arg2:Dynamic) {
-			var value1:String = arg1;
-			var value2:String = arg2;
-			PlayState.instance.triggerEventNote(name, value1, value2, Conductor.songPosition);
-			return true;
-		});
-
-		addCallback("startCountdown", function() {
-			PlayState.instance.startCountdown();
-			return true;
-		});
-		addCallback("endSong", function() {
-			PlayState.instance.KillNotes();
-			PlayState.instance.endSong();
-			return true;
-		});
-		addCallback("restartSong", function(?skipTransition:Bool = false) {
-			PlayState.instance.persistentUpdate = false;
-			PauseSubState.restartSong(skipTransition);
-			return true;
-		});
-		addCallback("exitSong", function(?skipTransition:Bool = false) {
-			if(skipTransition) {
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
-			}
-
-			PlayState.cancelMusicFadeTween();
-			CustomFadeTransition.nextCamera = PlayState.instance.camOther;
-			if(FlxTransitionableState.skipNextTransIn)
-				CustomFadeTransition.nextCamera = null;
-
-			if(PlayState.isStoryMode)
-				MusicBeatState.switchState(new StoryMenuState());
-			else MusicBeatState.switchState(new FreeplayState());
-
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
-			PlayState.changedDifficulty = false;
-			PlayState.chartingMode = false;
-			PlayState.instance.transitioning = true;
-			WeekData.loadTheFirstEnabledMod();
-			return true;
-		});
-		addCallback("getSongPosition", function() {
-			return Conductor.songPosition;
-		});
-
-		addCallback("getCharacterX", function(type:String) {
-			switch(type.toLowerCase()) {
-				case 'dad' | 'opponent': return PlayState.instance.dadGroup.x;
-				case 'gf' | 'girlfriend': return PlayState.instance.gfGroup.x;
-				default: return PlayState.instance.boyfriendGroup.x;
-			}
-		});
-		addCallback("setCharacterX", function(type:String, value:Float) {
-			switch(type.toLowerCase()) {
-				case 'dad' | 'opponent': PlayState.instance.dadGroup.x = value;
-				case 'gf' | 'girlfriend': PlayState.instance.gfGroup.x = value;
-				default: PlayState.instance.boyfriendGroup.x = value;
-			}
-		});
-		addCallback("getCharacterY", function(type:String) {
-			switch(type.toLowerCase()) {
-				case 'dad' | 'opponent': return PlayState.instance.dadGroup.y;
-				case 'gf' | 'girlfriend': return PlayState.instance.gfGroup.y;
-				default: return PlayState.instance.boyfriendGroup.y;
-			}
-		});
-		addCallback("setCharacterY", function(type:String, value:Float) {
-			switch(type.toLowerCase()) {
-				case 'dad' | 'opponent': PlayState.instance.dadGroup.y = value;
-				case 'gf' | 'girlfriend': PlayState.instance.gfGroup.y = value;
-				default: PlayState.instance.boyfriendGroup.y = value;
-			}
-		});
-
-		addCallback("changeMania", function(newValue:Int, skipTwn:Bool = false) {
-			PlayState.instance.changeMania(newValue, skipTwn);
-		});
-		addCallback("generateStaticArrows", function(player:Int) {
-			PlayState.instance.generateStaticArrows(player);
-		});
-
-		addCallback("cameraSetTarget", function(target:String) {
-			PlayState.instance.moveCamera(target);
-		});
-		addCallback("cameraShake", function(camera:String, intensity:Float, duration:Float) {
-			LuaUtils.cameraFromString(camera).shake(intensity, duration * PlayState.instance.playbackRate);
-		});
-
-		addCallback("cameraFlash", function(camera:String, color:Dynamic, duration:Float, forced:Bool) {
-			LuaUtils.cameraFromString(camera).flash(color, duration * PlayState.instance.playbackRate, null, forced);
-		});
-		addCallback("cameraFade", function(camera:String, color:Dynamic, duration:Float, forced:Bool) {
-			LuaUtils.cameraFromString(camera).fade(color, duration * PlayState.instance.playbackRate, false, null, forced);
-		});
-		addCallback("setRatingPercent", function(value:Float) {
-			PlayState.instance.ratingPercent = value;
-		});
-		addCallback("setRatingName", function(value:String) {
-			PlayState.instance.ratingName = value;
-		});
-		addCallback("setRatingFC", function(value:String) {
-			PlayState.instance.ratingFC = value;
-		});
-		addCallback("getMouseX", function(camera:String) {
-			return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).x;
-		});
-		addCallback("getMouseY", function(camera:String) {
-			return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).y;
-		});
-
-		addCallback("getMidpointX", function(obj:String) {
-			var obj:FlxObject = LuaUtils.getVarInstance(obj);
-			if (obj != null) return obj.getMidpoint().x;
-			return 0;
-		});
-		addCallback("getMidpointY", function(obj:String) {
-			var obj:FlxObject = LuaUtils.getVarInstance(obj);
-			if (obj != null) return obj.getMidpoint().y;
-			return 0;
-		});
-		addCallback("getGraphicMidpointX", function(obj:String) {
-			var spr:FlxSprite  = LuaUtils.getVarInstance(obj);
-			if (spr != null) return spr.getGraphicMidpoint().x;
-			return 0;
-		});
-		addCallback("getGraphicMidpointY", function(obj:String) {
-			var spr:FlxSprite  = LuaUtils.getVarInstance(obj);
-			if (spr != null) return spr.getGraphicMidpoint().y;
-			return 0;
-		});
-		addCallback("getScreenPositionX", function(obj:String) {
-			var poop:FlxObject = LuaUtils.getVarInstance(obj);
-			if (poop != null) return poop.getScreenPosition().x;
-			return 0;
-		});
-		addCallback("getScreenPositionY", function(obj:String) {
-			var poop:FlxObject = LuaUtils.getVarInstance(obj);
-			if (poop != null) return poop.getScreenPosition().y;
-			return 0;
-		});
-		addCallback("characterDance", function(character:String) {
-			switch(character.toLowerCase()) {
-				case 'dad': PlayState.instance.dad.dance();
-				case 'gf' | 'girlfriend': if(PlayState.instance.gf != null) PlayState.instance.gf.dance();
-				default: PlayState.instance.boyfriend.dance();
-			}
-		});
-
-		addCallback("makeLuaSprite", function(tag:String, image:String, x:Float, y:Float) {
-			tag = tag.replace('.', '');
-			LuaUtils.resetSpriteTag(tag);
-
-			var leSprite:ModchartSprite = new ModchartSprite(x, y);
-			if(image != null && image.length > 0) leSprite.loadGraphic(Paths.image(image));
-			leSprite.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-
-			PlayState.instance.modchartSprites.set(tag, leSprite);
-		});
-		addCallback("makeAnimatedLuaSprite", function(tag:String, image:String, x:Float, y:Float, ?spriteType:String = "sparrow") {
-			tag = tag.replace('.', '');
-			LuaUtils.resetSpriteTag(tag);
-
-			var leSprite:ModchartSprite = new ModchartSprite(x, y);
-			leSprite.antialiasing = ClientPrefs.getPref('globalAntialiasing');
-			LuaUtils.loadFrames(leSprite, image, spriteType);
-			
-			PlayState.instance.modchartSprites.set(tag, leSprite);
-		});
-		addCallback("makeLuaSpriteGroup", function(tag:String, ?x:Float = 0, ?y:Float = 0, ?maxSize:Int = 0) {
-			tag = tag.replace('.', '');
-			LuaUtils.resetSpriteTag(tag);
-
-			var leGroup:ModchartGroup = new ModchartGroup(x, y, maxSize);
-			PlayState.instance.modchartGroups.set(tag, leGroup);
-		});
-
-		addCallback("makeGraphic", function(obj:String, width:Int, height:Int, color:Dynamic) {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
-
-			if (spr == null) return false;
-			spr.makeGraphic(width, height, color);
-			return true;
-		});
-		addCallback("addAnimationByPrefix", function(obj:String, name:String, prefix:String, framerate:Int = 24, loop:Bool = true) {
-			if(PlayState.instance.getLuaObject(obj, false) != null) {
-				var cock:FlxSprite = PlayState.instance.getLuaObject(obj,false);
-				cock.animation.addByPrefix(name, prefix, framerate, loop);
-				if(cock.animation.curAnim == null) {
-					cock.animation.play(name, true);
-				}
-				return;
-			}
-
-			var cock:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
-			if(cock != null) {
-				cock.animation.addByPrefix(name, prefix, framerate, loop);
-				if(cock.animation.curAnim == null) {
-					cock.animation.play(name, true);
-				}
-			}
-		});
-
-		addCallback("addAnimation", function(obj:String, name:String, frames:Array<Int>, framerate:Int = 24, loop:Bool = true) {
-			if(PlayState.instance.getLuaObject(obj, false) != null) {
-				var cock:FlxSprite = PlayState.instance.getLuaObject(obj,false);
-				cock.animation.add(name, frames, framerate, loop);
-				if(cock.animation.curAnim == null) {
-					cock.animation.play(name, true);
-				}
-				return;
-			}
-
-			var cock:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
-			if(cock != null) {
-				cock.animation.add(name, frames, framerate, loop);
-				if(cock.animation.curAnim == null) {
-					cock.animation.play(name, true);
-				}
-			}
-		});
-
-		addCallback("addAnimationByIndices", function(obj:String, name:String, prefix:String, indices:String, framerate:Int = 24, loop:Bool = false) {
-			return addAnimByIndices(obj, name, prefix, indices, framerate, loop);
-		});
-
-		addCallback("playAnim", function(obj:String, name:String, forced:Bool = false, ?reverse:Bool = false, ?startFrame:Int = 0) {
-			if(PlayState.instance.getLuaObject(obj, false) != null) {
-				var luaObj:FlxSprite = PlayState.instance.getLuaObject(obj,false);
-				if(luaObj.animation.getByName(name) != null) {
-					luaObj.animation.play(name, forced, reverse, startFrame);
-					if(Std.isOfType(luaObj, ModchartSprite)) {
-						//convert luaObj to ModchartSprite
-						var obj:Dynamic = luaObj;
-						var luaObj:ModchartSprite = obj;
-
-						var daOffset = luaObj.animOffsets.get(name);
-						if (luaObj.animOffsets.exists(name)) {
-							luaObj.offset.set(daOffset[0], daOffset[1]);
-						}
-					}
-				}
-				return true;
-			}
-
-			var spr:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
-			if(spr != null) {
-				if(spr.animation.getByName(name) != null) {
-					if(Std.isOfType(spr, Character)) {
-						//convert spr to Character
-						var obj:Dynamic = spr;
-						var spr:Character = obj;
-						spr.playAnim(name, forced, reverse, startFrame);
-					} else spr.animation.play(name, forced, reverse, startFrame);
-				}
-				return true;
-			}
-			return false;
-		});
-		addCallback("playAnimGroup", function(obj:String, name:String, forced:Bool = false, ?reverse:Bool = false, ?startFrame:Int = 0) {
-			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(obj);
-			if (leGroup != null) {
-				leGroup.forEach(function(spr:ModchartSprite) {
-					var offsetX:Float = 0;
-					var offsetY:Float = 0;
-
-					if (spr.animOffsets.exists(name)) {
-						offsetX = spr.animOffsets.get(name)[0];
-						offsetY = spr.animOffsets.get(name)[1];
-					}
-
-					if (spr.animation.getByName(name) != null) {
-						spr.animation.play(name, forced, reverse, startFrame);
-						spr.offset.set(offsetX, offsetY);
-					}
-				});
-				return true;	
-			}
-			return false;
-		});
-		addCallback("addOffset", function(obj:String, anim:String, x:Float, y:Float) {
-			if(PlayState.instance.modchartSprites.exists(obj)) {
-				PlayState.instance.modchartSprites.get(obj).animOffsets.set(anim, [x, y]);
-				return true;
-			}
-
-			var char:Character = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
-			if(char != null) {
-				char.addOffset(anim, x, y);
-				return true;
-			}
-			return false;
-		});
-
-		addCallback("setScrollFactor", function(obj:String, scrollX:Float, scrollY:Float) {
-			var obj:FlxObject = LuaUtils.getVarInstance(obj);
-			if (obj == null) return false;
-
-			obj.scrollFactor.set(scrollX, scrollY);
-			return true;
-		});
-		addCallback("setGroupScrollFactor", function(obj:String, ?scrollX:Float = 0, ?scrollY:Float = 0) {
-			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(obj);
-			if (leGroup != null) {	
-				leGroup.scrollFactor.set(scrollX, scrollY);
-			}
-		});
-
-		addCallback("addSpriteToGroup", function(tag:String, spr:String) {
-			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
-			if (leGroup != null) {
-				var leSprite:ModchartSprite = PlayState.instance.modchartSprites.get(spr);
-				if (leSprite != null) {
-					leGroup.add(leSprite);
-				}
-			}
-		});
-
-		addCallback("addLuaSpriteGroup", function(tag:String, front:Bool = false) {
-			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
-			if (leGroup != null) {
-				if (!leGroup.wasAdded) {
-					if (front)
-						LuaUtils.getTargetInstance().add(leGroup);
-					else {
-						if(PlayState.instance.isDead)
-							GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), leGroup);
-						else {
-							var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gfGroup);
-							if(PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup) < position)
-								position = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
-							else if(PlayState.instance.members.indexOf(PlayState.instance.dadGroup) < position)
-								position = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
-							PlayState.instance.insert(position, leGroup);
-						}
-					}
-					leGroup.wasAdded = true;
-				}
-			}
-		});
-		addCallback("addLuaSprite", function(tag:String, front:Bool = false) {
-			var shit:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
-			if (shit == null || shit.wasAdded) return false;
-
-			if(front) LuaUtils.getTargetInstance().add(shit);
-			else {
-				if(PlayState.instance.isDead)
-					GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), shit);
-				else {
-					var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gfGroup);
-					if(PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup) < position)
-						position = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
-					else if(PlayState.instance.members.indexOf(PlayState.instance.dadGroup) < position)
-						position = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
-					PlayState.instance.insert(position, shit);
-				}
-			}
-
-			return shit.wasAdded = true;
-		});
-		addCallback("setGraphicSize", function(obj:String, x:Int, y:Int = 0, updateHitbox:Bool = true) {
-			var poop:FlxSprite = LuaUtils.getVarInstance(obj);
-			if (poop == null) return false;
-
-			poop.setGraphicSize(x, y);
-			if (updateHitbox) poop.updateHitbox();
-			return true;
-		});
-		addCallback("setGroupGraphicSize", function(tag:String, x:Int, y:Int = 0, updateHitbox:Bool = true) {
-			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
-			if (leGroup != null) {
-				leGroup.setGraphicSize(x, y);
-				if (updateHitbox)
-					leGroup.updateHitbox();
-			}
-		});
-		addCallback("scaleObject", function(obj:String, x:Float, y:Float, updateHitbox:Bool = true) {
-			var poop:FlxSprite = LuaUtils.getVarInstance(obj);
-			if (poop == null) return false;
-
-			poop.scale.set(x, y);
-			if (updateHitbox) poop.updateHitbox();
-			return true;
-		});
-		addCallback("scaleGroup", function(tag:String, x:Float, y:Float, updateHitbox:Bool = true) {
-			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
-			if (leGroup != null) {
-				leGroup.scale.set(x, y);
-				if (updateHitbox) leGroup.updateHitbox();
-			}
-		});
-		addCallback("updateGroupHitbox", function(tag:String) {
-			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
-			if (leGroup != null) {
-				leGroup.updateHitbox();	
-			}
-		});
-		addCallback("updateHitbox", function(obj:String) {
-			if(PlayState.instance.getLuaObject(obj) != null) {
-				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
-				shit.updateHitbox();
-				return;
-			}
-
-			var poop:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
-			if(poop != null) {
-				poop.updateHitbox();
-				return;
-			}
-			luaTrace('updateHitbox: Couldnt find object: ' + obj, false, false, FlxColor.RED);
-		});
-		addCallback("updateHitboxFromGroup", function(group:String, index:Int) {
-			if(Std.isOfType(Reflect.getProperty(LuaUtils.getTargetInstance(), group), FlxTypedGroup)) {
-				Reflect.getProperty(LuaUtils.getTargetInstance(), group).members[index].updateHitbox();
-				return;
-			}
-			Reflect.getProperty(LuaUtils.getTargetInstance(), group)[index].updateHitbox();
-		});
-
-		addCallback("centerOffsets", function(obj:String) {
-			if(PlayState.instance.getLuaObject(obj) != null) {
-				var shit:FlxSprite = PlayState.instance.getLuaObject(obj);
-				shit.centerOffsets();
-				return;
-			}
-
-			var poop:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
-			if(poop != null) {
-				poop.centerOffsets();
-				return;
-			}
-			luaTrace('centerOffsets: Couldnt find object: ' + obj, false, false, FlxColor.RED);
-		});
-		addCallback("centerOffsetsFromGroup", function(group:String, index:Int) {
-			if(Std.isOfType(Reflect.getProperty(LuaUtils.getTargetInstance(), group), FlxTypedGroup)) {
-				Reflect.getProperty(LuaUtils.getTargetInstance(), group).members[index].centerOffsets();
-				return;
-			}
-			Reflect.getProperty(LuaUtils.getTargetInstance(), group)[index].centerOffsets();
-		});
-
-		addCallback("removeSpriteFromGroup", function(tag:String, spr:String, destroy:Bool = true) {
-			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
-			if (leGroup != null) {
-				var leSprite:ModchartSprite = PlayState.instance.modchartSprites.get(spr);
-				if (leSprite != null && leGroup.members.contains(leSprite)) {
-					leGroup.remove(leSprite);
-					if (destroy) leGroup.destroy();
-				}
-			}
-		});
-		addCallback("removeLuaSprite", function(tag:String, destroy:Bool = true) {
-			var pee:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
-			if (pee == null) return false;
-
-			if (destroy) pee.kill();
-			if (pee.wasAdded) {
-				LuaUtils.getTargetInstance().remove(pee, true);
-				pee.wasAdded = false;
-			}
-			if (destroy) {
-				pee.destroy();
-				PlayState.instance.modchartSprites.remove(tag);
-			}
-			return true;
-		});
-
-		addCallback("setColorSwap", function(obj:String, hue:Float = 0, saturation:Float = 0, brightness:Float = 0) {
-			var real = PlayState.instance.getLuaObject(obj);
-			var color:ColorSwap = new ColorSwap();
-			color.hue = hue;
-			color.saturation = saturation;
-			color.brightness = brightness;
-			if(real != null) {
-				real.shader = color.shader;
-				return true;
-			}
-
-			var object:FlxSprite = LuaUtils.getVarInstance(obj);
-			if(object == null) {
-				luaTrace("setColorSwap: Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
-				return false;
-			} 
-			object.shader = color.shader;
-			return true;
-		});
-
-		addCallback("stampSprite", function(sprite:String, brush:String, x:Int, y:Int) {
-			if(!PlayState.instance.modchartSprites.exists(sprite) || !PlayState.instance.modchartSprites.exists(brush)) return false;
-
-			PlayState.instance.modchartSprites.get(sprite).stamp(PlayState.instance.modchartSprites.get(brush), x, y);
-			return true;
-		});
-
-		addCallback("luaSpriteExists", function(tag:String) {
-			return PlayState.instance.modchartSprites.exists(tag);
-		});
-		addCallback("luaTextExists", function(tag:String) {
-			return PlayState.instance.modchartTexts.exists(tag);
-		});
-		addCallback("luaSoundExists", function(tag:String) {
-			return PlayState.instance.modchartSounds.exists(tag);
-		});
-
-		addCallback("setHealthBarColors", function(leftHex:Dynamic, rightHex:Dynamic) {
-			var left = leftHex;
-			var right = rightHex;
-
-			if (leftHex == null) left = PlayState.instance.dad.getColor();
-			if (rightHex == null) right = PlayState.instance.boyfriend.getColor();
-
-			PlayState.instance.healthBar.createFilledBar(left, right);
-			PlayState.instance.healthBar.updateBar();
-		});
-		addCallback("setHealthBarColorsWithGradient", function(leftHex:Array<Dynamic>, rightHex:Array<Dynamic>) {
-			var left:Array<FlxColor> = [leftHex[0], leftHex[1]];
-			var right:Array<FlxColor> = [rightHex[0], rightHex[1]];
-
-			PlayState.instance.healthBar.createGradientBar(left, right, 1, 90);
-			PlayState.instance.healthBar.updateBar();
-		});
-		addCallback("setTimeBarColors", function(leftHex:Dynamic, rightHex:Dynamic) {
-			PlayState.instance.timeBar.createFilledBar(leftHex, rightHex);
-			PlayState.instance.timeBar.updateBar();
-		});
-		addCallback("setTimeBarColorsWithGradient", function(leftHex:Array<Dynamic>, rightHex:Array<Dynamic>) {
-			var left:Array<FlxColor> = [leftHex[0], leftHex[1]];
-			var right:Array<FlxColor> = [rightHex[0], rightHex[1]];
-			
-			PlayState.instance.timeBar.createGradientBar(left, right, 1, 90);
-			PlayState.instance.timeBar.updateBar();
-		});
-
-		addCallback("setObjectCamera", function(obj:String, camera:String = '') {
-			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
-			if (poop == null) return false;
-
-			poop.cameras = [LuaUtils.cameraFromString(camera)];
-			return true;
-		});
-		addCallback("setBlendMode", function(obj:String, blend:String = '') {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
-			if (spr == null) return false;
-
-			spr.blend = LuaUtils.blendModeFromString(blend);
-			return true;
-		});
-		addCallback("screenCenterGroup", function(tag:String, pos:String = 'xy') {
-			var leGroup:ModchartGroup = PlayState.instance.modchartGroups.get(tag);
-			if (leGroup != null) {
-				switch (pos.toLowerCase().trim()) {
-					case 'x': leGroup.screenCenter(X);
-					case 'y': leGroup.screenCenter(Y);
-					case 'xy': leGroup.screenCenter();
-					default: return;
-				}
-			}
-		});
-		addCallback("screenCenter", function(obj:String, pos:String = 'xy') {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
-			if (spr == null) return false;
-
-			switch(pos.trim().toLowerCase()) {
-				case 'x': spr.screenCenter(X);
-				case 'y': spr.screenCenter(Y);
-				default: spr.screenCenter(XY);
-			}
-			return true;
-		});
-		addCallback("objectsOverlap", function(obj1:String, obj2:String) {
-			var guh1:FlxBasic = LuaUtils.getVarInstance(obj1), guh2:FlxBasic = LuaUtils.getVarInstance(obj2);
-			if (guh1 == null || guh2 == null) return false;
-			return FlxG.overlap(guh1, guh2);
-		});
-		addCallback("getPixelColor", function(obj:String, x:Int, y:Int) {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
-			if(spr == null) return 0;
-
-			if(spr.framePixels != null) spr.framePixels.getPixel32(x, y);
-			return spr.pixels.getPixel32(x, y);
-		});
-
-		addCallback("startDialogue", function(dialogueFile:String, music:String = null) {
-			var path:String;
-			#if MODS_ALLOWED
-			path = Paths.modsJson("charts/" + Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
-			if(!FileSystem.exists(path))
-			#end
-				path = Paths.json("charts/" + Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
-			luaTrace('startDialogue: Trying to load dialogue: ' + path);
-			#if MODS_ALLOWED
-			if(FileSystem.exists(path))
-			#else
-			if(Assets.exists(path))
-			#end {
-				var shit:DialogueFile = DialogueBoxPsych.parseDialogue(path);
-				if(shit.dialogue.length > 0) {
-					PlayState.instance.startDialogue(shit, music);
-					luaTrace('Successfully loaded dialogue', false, false, FlxColor.GREEN);
-					return true;
-				} else luaTrace('Your dialogue file is badly formatted!', false, false, FlxColor.RED);
-			} else {
-				luaTrace('startDialogue: Dialogue file not found', false, false, FlxColor.RED);
-				if(PlayState.instance.endingSong)
-					PlayState.instance.endSong();
-				else PlayState.instance.startCountdown();
-			}
-			return false;
-		});
-		addCallback("startVideo", function(videoFile:String) {
-			#if VIDEOS_ALLOWED
-			if(FileSystem.exists(Paths.video(videoFile))) {
-				PlayState.instance.startVideo(videoFile);
-				return true;
-			}
-			
-			luaTrace('startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
-			return false;
-
-			#else
-			PlayState.instance.startAndEnd();
-			return true;
-			#end
-		});
-		addCallback("startVideoSprite", function(videoFile:String, x:Float = 0, y:Float = 0, op:Float = 1, cam:String = 'world', ?loop:Bool = false, ?pauseMusic:Bool = false) {
-			#if VIDEOS_ALLOWED
-			if(FileSystem.exists(Paths.video(videoFile))) {
-				PlayState.instance.startVideoSprite(videoFile, x, y, op, cam, loop, pauseMusic);
-				return true;
-			} else luaTrace('startVideoSprite: Video file not found: ' + videoFile, false, false, FlxColor.RED);
-			return false;
-			#else
-			PlayState.instance.startAndEnd();
-			return true;
-			#end
-		});
-
-		addCallback("playMusic", function(sound:String, volume:Float = 1, loop:Bool = false) {
-			FlxG.sound.playMusic(Paths.music(sound), volume, loop);
-		});
-		addCallback("playSound", function(sound:String, volume:Float = 1, ?tag:String = null) {
-			if(tag != null && tag.length > 0) {
-				tag = tag.replace('.', '');
-				if(PlayState.instance.modchartSounds.exists(tag)) {
-					PlayState.instance.modchartSounds.get(tag).stop();
-				}
-				PlayState.instance.modchartSounds.set(tag, FlxG.sound.play(Paths.sound(sound), volume, false, function() {
-					PlayState.instance.modchartSounds.remove(tag);
-					PlayState.instance.callOnLuas('onSoundFinished', [tag]);
-				}));
-				return;
-			}
-			FlxG.sound.play(Paths.sound(sound), volume);
-		});
-		addCallback("stopSound", function(tag:String) {
-			if(tag != null && tag.length > 1 && PlayState.instance.modchartSounds.exists(tag)) {
-				PlayState.instance.modchartSounds.get(tag).stop();
-				PlayState.instance.modchartSounds.remove(tag);
-			}
-		});
-		addCallback("pauseSound", function(tag:String) {
-			if(tag != null && tag.length > 1 && PlayState.instance.modchartSounds.exists(tag)) {
-				PlayState.instance.modchartSounds.get(tag).pause();
-			}
-		});
-		addCallback("resumeSound", function(tag:String) {
-			if(tag != null && tag.length > 1 && PlayState.instance.modchartSounds.exists(tag)) {
-				PlayState.instance.modchartSounds.get(tag).play();
-			}
-		});
-		addCallback("soundFadeIn", function(tag:String, duration:Float, fromValue:Float = 0, toValue:Float = 1) {
-			if(tag == null || tag.length < 1) {
-				FlxG.sound.music.fadeIn(duration, fromValue, toValue);
-			} else if(PlayState.instance.modchartSounds.exists(tag)) {
-				PlayState.instance.modchartSounds.get(tag).fadeIn(duration * PlayState.instance.playbackRate, fromValue, toValue);
-			}
-		});
-		addCallback("soundFadeOut", function(tag:String, duration:Float, toValue:Float = 0) {
-			if(tag == null || tag.length < 1) {
-				FlxG.sound.music.fadeOut(duration, toValue);
-			} else if(PlayState.instance.modchartSounds.exists(tag)) {
-				PlayState.instance.modchartSounds.get(tag).fadeOut(duration * PlayState.instance.playbackRate, toValue);
-			}
-		});
-		addCallback("soundFadeCancel", function(tag:String) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music.fadeTween != null) {
-					FlxG.sound.music.fadeTween.cancel();
-				}
-			} else if(PlayState.instance.modchartSounds.exists(tag)) {
-				var theSound:FlxSound = PlayState.instance.modchartSounds.get(tag);
-				if(theSound.fadeTween != null) {
-					theSound.fadeTween.cancel();
-					PlayState.instance.modchartSounds.remove(tag);
-				}
-			}
-		});
-		addCallback("getSoundVolume", function(tag:String) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music != null)
-					return FlxG.sound.music.volume;
-			} else if(PlayState.instance.modchartSounds.exists(tag)) {
-				return PlayState.instance.modchartSounds.get(tag).volume;
-			}
-			return 0;
-		});
-		addCallback("setSoundVolume", function(tag:String, value:Float) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music != null)
-					FlxG.sound.music.volume = value;
-			} else if(PlayState.instance.modchartSounds.exists(tag)) {
-				PlayState.instance.modchartSounds.get(tag).volume = value;
-			}
-		});
-		addCallback("getSoundTime", function(tag:String) {
-			if(tag != null && tag.length > 0 && PlayState.instance.modchartSounds.exists(tag))
-				return PlayState.instance.modchartSounds.get(tag).time;
-			return 0;
-		});
-		addCallback("setSoundTime", function(tag:String, value:Float) {
-			if(tag != null && tag.length > 0 && PlayState.instance.modchartSounds.exists(tag)) {
-				var theSound:FlxSound = PlayState.instance.modchartSounds.get(tag);
-				if(theSound != null) theSound.time = value;
-			}
-		});
-		addCallback("getSoundPitch", function(tag:String) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music != null)
-					return FlxG.sound.music.pitch;
-			} else if (PlayState.instance.modchartSounds.exists(tag))
-				return PlayState.instance.modchartSounds.get(tag).pitch;
-			
-			return 1;
-		});
-		addCallback("setSoundPitch", function(tag:String, value:Float = 1) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music != null)
-					FlxG.sound.music.pitch = value;
-			} else if (PlayState.instance.modchartSounds.exists(tag)) {
-				var theSound:FlxSound = PlayState.instance.modchartSounds.get(tag);
-				if(theSound != null) theSound.pitch = value;
-			}
-		});
-
-		addCallback("debugPrint", function(text1:Dynamic = '', text2:Dynamic = '', text3:Dynamic = '', text4:Dynamic = '', text5:Dynamic = '') {
-			if (text1 == null) text1 = '';
-			if (text2 == null) text2 = '';
-			if (text3 == null) text3 = '';
-			if (text4 == null) text4 = '';
-			if (text5 == null) text5 = '';
-			luaTrace(text1 + text2 + text3 + text4 + text5, true, false);
-		});
-		addCallback("debugPrintArray", function(text:Array<Dynamic>, divider:Dynamic = ' ') {
-			var array_text = '';
-			if (text == null) text = [];
-
-			for (_text in text) {
-				if (_text == null) array_text += '' + divider;
-				else array_text += _text + divider;
-			}
-
-			luaTrace(array_text, true, false);
-		});
-
-		addCallback("close", function() {
-			return closed = true;
-		});
-
-		addCallback("changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
-			#if discord_rpc
-			DiscordClient.changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
-			#end
-		});
-
-		// LUA TEXTS
-		addCallback("makeLuaText", function(tag:String, text:String, width:Int, x:Float, y:Float) {
-			tag = tag.replace('.', '');
-			LuaUtils.resetTextTag(tag);
-			PlayState.instance.modchartTexts.set(tag, new ModchartText(x, y, text, width));
-		});
-
-		addCallback("setTextString", function(tag:String, text:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.text = text;
-				return true;
-			}
-			luaTrace("setTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextSize", function(tag:String, size:Int) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.size = size;
-				return true;
-			}
-			luaTrace("setTextSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextWidth", function(tag:String, width:Float) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.fieldWidth = width;
-				return true;
-			}
-			luaTrace("setTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextBorder", function(tag:String, size:Int, color:Dynamic) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.borderSize = size;
-				obj.borderColor = color;
-				return true;
-			}
-			luaTrace("setTextBorder: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextBorderStyle", function(tag:String, borderStyle:String = 'NONE') {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.borderStyle = NONE;
-				switch(borderStyle.trim().toLowerCase()) {
-					case 'none': obj.borderStyle = NONE;
-					case 'shadow': obj.borderStyle = SHADOW;
-					case 'outline': obj.borderStyle = OUTLINE;
-					case 'outline_fast': obj.borderStyle = OUTLINE_FAST;
-				}
-			}
-		});
-		addCallback("setTextColor", function(tag:String, color:Dynamic) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.color = color;
-				return true;
-			}
-			luaTrace("setTextColor: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextFont", function(tag:String, newFont:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.font = Paths.font(newFont);
-				return true;
-			}
-			luaTrace("setTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextItalic", function(tag:String, italic:Bool) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.italic = italic;
-				return true;
-			}
-			luaTrace("setTextItalic: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextAlignment", function(tag:String, alignment:String = 'left') {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.alignment = LEFT;
-				switch(alignment.trim().toLowerCase()) {
-					case 'right': obj.alignment = RIGHT;
-					case 'center': obj.alignment = CENTER;
-				}
-				return true;
-			}
-			luaTrace("setTextAlignment: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-
-		addCallback("getTextString", function(tag:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null && obj.text != null) {
-				return obj.text;
-			}
-			luaTrace("getTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return null;
-		});
-		addCallback("getTextSize", function(tag:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				return obj.size;
-			}
-			luaTrace("getTextSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return -1;
-		});
-		addCallback("getTextFont", function(tag:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				return obj.font;
-			}
-			luaTrace("getTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return null;
-		});
-		addCallback("getTextWidth", function(tag:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				return obj.fieldWidth;
-			}
-			luaTrace("getTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return 0;
-		});
-
-		addCallback("addLuaText", function(tag:String) {
-			if(PlayState.instance.modchartTexts.exists(tag)) {
-				var shit:ModchartText = PlayState.instance.modchartTexts.get(tag);
-				if(!shit.wasAdded) {
-					LuaUtils.getTargetInstance().add(shit);
-					shit.wasAdded = true;
-				}
-			}
-		});
-		addCallback("removeLuaText", function(tag:String, destroy:Bool = true) {
-			if(!PlayState.instance.modchartTexts.exists(tag)) return;
-
-			var text:ModchartText = PlayState.instance.modchartTexts.get(tag);
-			if(destroy) text.kill();
-
-			if(text.wasAdded) {
-				LuaUtils.getTargetInstance().remove(text, true);
-				text.wasAdded = false;
-			}
-
-			if(destroy) {
-				text.destroy();
-				PlayState.instance.modchartTexts.remove(tag);
-			}
-		});
-
-		DeprecatedFunctions.implement(this);
-		ExtraFunctions.implement(this);
-		#if (hscript && HSCRIPT_ALLOWED) HScript.implement(this); #end
-
-		call('onCreate', []);
-		if (closed) return stop();
-		#end
 	}
+	#end
 
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
 	public function getShader(obj:String):FlxRuntimeShader {
@@ -1894,8 +1854,8 @@ class FunkinLua {
 		return null;
 	}
 
-	inline public function addCallback(name:String, func:Function) {
-		return lua.add_callback(name, func);
+	inline public function addCallback(name:String, ?adv:Bool = false, func:Function) {
+		Lua_helper.set_static_callback(name, adv, func);
 	}
 
 	public function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
@@ -1931,7 +1891,7 @@ class FunkinLua {
 	}
 
 	public var lastCalledFunction:String = '';
-	public function call(func:String, args:Array<Dynamic>):Dynamic {
+	public function call(func:String, ?args:Array<Any>):Dynamic {
 		#if LUA_ALLOWED
 		if (closed) return Function_Continue;
 		lastCalledFunction = func;
@@ -1987,7 +1947,7 @@ class FunkinLua {
 			return true;
 		}
 
-		var pussy:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
+		var pussy:FlxSprite = Reflect.getProperty(LuaUtils.getInstance(), obj);
 		if(pussy != null) {
 			pussy.animation.addByIndices(name, prefix, die, '', framerate, loop);
 			if(pussy.animation.curAnim == null) pussy.animation.play(name, true);
@@ -2002,10 +1962,9 @@ class FunkinLua {
 	}
 	#end
 
-	public function set(variable:String, data:Dynamic) {
+	public function set(variable:String, data:Any) {
 		#if LUA_ALLOWED
 		if (lua == null) return;
-
 		Convert.toLua(lua, data);
 		Lua.setglobal(lua, variable);
 		#end
@@ -2033,7 +1992,8 @@ class FunkinLua {
 		PlayState.instance.luaArray.remove(this);
 		closed = true;
 		#if LUA_ALLOWED
-		if(lua == null) return;
+		if (lua == null) return;
+		Lua_helper.terminate_callbacks(lua);
 		Lua.close(lua);
 		lua = null;
 		#end
@@ -2041,6 +2001,13 @@ class FunkinLua {
 
 	public static function format(luaFile:String):String {
 		return Path.normalize((luaFile = luaFile.toLowerCase()).endsWith('.lua') ? luaFile : '${luaFile}.lua');
+	}
+
+	public static function execute(script:String):FunkinLua {
+		var lua:FunkinLua = new FunkinLua(script);
+		if (PlayState.instance == null || FlxG.state != PlayState.instance) return lua;
+		if (!lua.closed) PlayState.instance.luaArray.push(lua);
+		return lua;
 	}
 
 	//clone functions

@@ -1,5 +1,10 @@
 package scripting.lua;
 
+#if LUA_ALLOWED
+import llua.Lua;
+import llua.State;
+#end
+
 import openfl.display.BlendMode;
 import animateatlas.AtlasFrameMaker;
 import Type.ValueType;
@@ -78,15 +83,62 @@ class LuaUtils {
 
 		return Reflect.getProperty(instance, variable);
 	}
+
+	public static function setVarInstance(variable:String, value:Dynamic, checkForTextsToo:Bool = true):Bool {
+		var ind = variable.indexOf('.');
+		if (ind == -1) {
+			if (PlayState.instance.variables.exists(variable)) {
+				if (value == null) PlayState.instance.variables.remove(variable);
+				else PlayState.instance.variables.set(variable, value);
+				return true;
+			}
+			return setVarInArray(getInstance(), variable, value);
+		}
+
+		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo), pind;
+		while((pind = ind) != -1) {
+			if ((ind = variable.indexOf('.', ind + 1)) == -1)
+				return setVarInArray(obj, variable.substr(pind + 1), value);
+			obj = getVarInArray(obj, variable.substring(pind + 1, ind));
+		}
+
+		return true;
+	}
 	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
 		var ind = variable.indexOf('.');
 		if (ind == -1) {
 			if (PlayState.instance.variables.exists(variable)) return PlayState.instance.variables.get(variable);
-			return checkLuaFirst ? getObjectDirectly(variable, checkForTextsToo) : getVarInArray(getTargetInstance(), variable);
+			return checkLuaFirst ? getObjectDirectly(variable, checkForTextsToo) : getVarInArray(getInstance(), variable);
 		}
 
 		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo);
 		while (ind != -1) {
+			obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
+		}
+
+		return obj;
+	}
+
+	public static function setVarInObject(obj:Dynamic, variable:String, value:Dynamic):Bool {
+		var ind = variable.indexOf('.');
+		if (ind == -1) return setVarInArray(obj, variable, value);
+
+		var obj:Dynamic = getVarInArray(obj, variable.substr(0, ind)), pind;
+		while((pind = ind) != -1) {
+			if ((ind = variable.indexOf('.', ind + 1)) == -1)
+				return setVarInArray(obj, variable.substr(pind + 1), value);
+
+			obj = getVarInArray(obj, variable.substring(pind + 1, ind));
+		}
+
+		return true;
+	}
+	public static function getVarInObject(obj:Dynamic, variable:String):Dynamic {
+		var ind = variable.indexOf('.');
+		if (ind == -1) return getVarInArray(obj, variable);
+
+		var obj:Dynamic = getVarInArray(obj, variable.substr(0, ind));
+		while(ind != -1) {
 			obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
 		}
 
@@ -145,7 +197,7 @@ class LuaUtils {
 			
 			default:
 				var obj:Dynamic = PlayState.instance.getLuaObject(objectName, checkForTextsToo);
-				if(obj == null) obj = getVarInArray(getTargetInstance(), objectName);
+				if(obj == null) obj = getVarInArray(getInstance(), objectName);
 				return obj;
 		}
 	}
@@ -160,7 +212,7 @@ class LuaUtils {
 		return false;
 	}
 	
-	public static inline function getTargetInstance() {
+	public static inline function getInstance() {
 		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
 	}
 	
@@ -337,5 +389,11 @@ class LuaUtils {
 		}
 		#end
 		return false;
+	}
+
+	public static function hasValidArgs(state:State, neededArgs:Int):Bool {
+		var uwu:Bool = Lua.gettop(state) >= neededArgs;
+		if (!uwu) Lua.pushnil(state);
+		return uwu;
 	}
 }

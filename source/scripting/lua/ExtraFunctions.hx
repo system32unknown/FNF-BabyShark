@@ -4,69 +4,67 @@ package scripting.lua;
 import sys.FileSystem;
 import sys.io.File;
 #end
-
 #if MODS_ALLOWED import haxe.Json; #end
-
 import flixel.util.FlxSave;
 import openfl.utils.Assets;
 
+import data.api.FunkinInternet;
 import utils.CoolUtil;
 
 //
 // Things to trivialize some dumb stuff like splitting strings on older Lua
 //
-class ExtraFunctions
-{
+class ExtraFunctions {
 	public static function implement(funk:FunkinLua)
 	{
 		// Keyboard & Gamepads
-		funk.addCallback("keyboardJustPressed", function(name:String) {
+		funk.addCallback("keyboardJustPressed", function(_, name:String) {
 			return Reflect.getProperty(FlxG.keys.justPressed, name);
 		});
-		funk.addCallback("keyboardPressed", function(name:String) {
+		funk.addCallback("keyboardPressed", function(_, name:String) {
 			return Reflect.getProperty(FlxG.keys.pressed, name);
 		});
-		funk.addCallback("keyboardReleased", function(name:String) {
+		funk.addCallback("keyboardReleased", function(_, name:String) {
 			return Reflect.getProperty(FlxG.keys.justReleased, name);
 		});
 
-		funk.addCallback("anyGamepadJustPressed", function(name:String) {
+		funk.addCallback("anyGamepadJustPressed", function(_, name:String) {
 			return FlxG.gamepads.anyJustPressed(name);
 		});
-		funk.addCallback("anyGamepadPressed", function(name:String) {
+		funk.addCallback("anyGamepadPressed", function(_, name:String) {
 			return FlxG.gamepads.anyPressed(name);
 		});
-		funk.addCallback("anyGamepadReleased", function(name:String) {
+		funk.addCallback("anyGamepadReleased", function(_, name:String) {
 			return FlxG.gamepads.anyJustReleased(name);
 		});
 
-		funk.addCallback("gamepadAnalogX", function(id:Int, ?leftStick:Bool = true) {
+		funk.addCallback("gamepadAnalogX", function(_, id:Int, ?leftStick:Bool = true) {
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null) return 0.;
 			return controller.getXAxis(leftStick ? LEFT_ANALOG_STICK : RIGHT_ANALOG_STICK);
 		});
-		funk.addCallback("gamepadAnalogY", function(id:Int, ?leftStick:Bool = true) {
+		funk.addCallback("gamepadAnalogY", function(_, id:Int, ?leftStick:Bool = true) {
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null) return 0.;
 			return controller.getYAxis(leftStick ? LEFT_ANALOG_STICK : RIGHT_ANALOG_STICK);
 		});
-		funk.addCallback("gamepadJustPressed", function(id:Int, name:String) {
+		funk.addCallback("gamepadJustPressed", function(_, id:Int, name:String) {
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null) return false;
 			return Reflect.getProperty(controller.justPressed, name) == true;
 		});
-		funk.addCallback("gamepadPressed", function(id:Int, name:String) {
+		funk.addCallback("gamepadPressed", function(_, id:Int, name:String) {
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null) return false;
 			return Reflect.getProperty(controller.pressed, name) == true;
 		});
-		funk.addCallback("gamepadReleased", function(id:Int, name:String) {
+		funk.addCallback("gamepadReleased", function(_, id:Int, name:String) {
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null) return false;
 			return Reflect.getProperty(controller.justReleased, name) == true;
 		});
 
-		funk.addCallback("keyJustPressed", function(name:String = '') {
+		funk.addCallback("keyJustPressed", function(_, name:String = '') {
 			name = name.toLowerCase();
 			switch(name) {
 				case 'left': return PlayState.instance.controls.NOTE_LEFT_P;
@@ -77,7 +75,7 @@ class ExtraFunctions
 			}
 			return false;
 		});
-		funk.addCallback("keyPressed", function(name:String = '') {
+		funk.addCallback("keyPressed", function(_, name:String = '') {
 			name = name.toLowerCase();
 			switch(name) {
 				case 'left': return PlayState.instance.controls.NOTE_LEFT;
@@ -88,7 +86,7 @@ class ExtraFunctions
 			}
 			return false;
 		});
-		funk.addCallback("keyReleased", function(name:String = '') {
+		funk.addCallback("keyReleased", function(_, name:String = '') {
 			name = name.toLowerCase();
 			switch(name) {
 				case 'left': return PlayState.instance.controls.NOTE_LEFT_R;
@@ -101,38 +99,37 @@ class ExtraFunctions
 		});
 
 		// Save data management
-		funk.addCallback("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
+		funk.addCallback("initSaveData", function(l:FunkinLua, name:String, ?folder:String = 'psychenginemods') {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
-				funk.luaTrace('initSaveData: Save file already initialized: ' + name);
+				l.luaTrace('initSaveData: Save file already initialized: ' + name);
 				return;
 			}
 			var save:FlxSave = new FlxSave();
 			save.bind(name, CoolUtil.getSavePath() + '/' + folder);
 			PlayState.instance.modchartSaves.set(name, save);
 		});
-		funk.addCallback("flushSaveData", function(name:String) {
+		funk.addCallback("flushSaveData", function(l:FunkinLua, name:String) {
 			if(PlayState.instance.modchartSaves.exists(name)) {
 				PlayState.instance.modchartSaves.get(name).flush();
 				return;
 			}
-			funk.luaTrace('flushSaveData: Save file not initialized: ' + name, false, false, FlxColor.RED);
+			l.luaTrace('flushSaveData: Save file not initialized: ' + name, false, false, FlxColor.RED);
 		});
-		funk.addCallback("getDataFromSave", function(name:String, field:String, ?defaultValue:Dynamic = null) {
+		funk.addCallback("getDataFromSave", function(l:FunkinLua, name:String, field:String, ?defaultValue:Dynamic = null) {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
-				funk.luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
+				l.luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 				return defaultValue;
 			}
 			return Reflect.field(PlayState.instance.modchartSaves.get(name).data, field);
 		});
-		funk.addCallback("setDataFromSave", function(name:String, field:String, value:Dynamic) {
+		funk.addCallback("setDataFromSave", function(l:FunkinLua, name:String, field:String, value:Dynamic) {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
-				funk.luaTrace('setDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
+				l.luaTrace('setDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 				return;
 			}
 			Reflect.setField(PlayState.instance.modchartSaves.get(name).data, field, value);
-			
 		});
-		funk.addCallback("loadJsonOptions", function(inclMainFol:Bool = true, ?modNames:Array<String> = null) {
+		funk.addCallback("loadJsonOptions", function(l:FunkinLua, inclMainFol:Bool = true, ?modNames:Array<String> = null) {
 			#if MODS_ALLOWED
 			if (modNames == null) modNames = [];
 			if (modNames.length < 1) modNames.push(Paths.currentModDirectory);
@@ -158,13 +155,12 @@ class ExtraFunctions
 			}
 			return ClientPrefs.modsOptsSaves.toString();
 			#else
-			funk.luaTrace('loadJsonOptions: Platform unsupported for Json Options!', false, false, FlxColor.RED);
+			l.luaTrace('loadJsonOptions: Platform unsupported for Json Options!', false, false, FlxColor.RED);
 			return false;
 			#end
 		});
-		funk.addCallback("getOptionSave", function(variable:String, isJson:Bool = false, ?modName:String = null) {
-			if (!isJson)
-				return ClientPrefs.getPref(variable);
+		funk.addCallback("getOptionSave", function(l:FunkinLua, variable:String, isJson:Bool = false, ?modName:String = null) {
+			if (!isJson) return ClientPrefs.getPref(variable);
 			else if (isJson) {
 				#if MODS_ALLOWED
 				if (modName == null) modName = Paths.currentModDirectory;
@@ -172,12 +168,12 @@ class ExtraFunctions
 					return ClientPrefs.modsOptsSaves[modName][variable];
 				}
 				#else
-				funk.luaTrace('getOptionSave: Platform unsupported for Json Options!', false, false, FlxColor.RED);
+				l.luaTrace('getOptionSave: Platform unsupported for Json Options!', false, false, FlxColor.RED);
 				#end
 			}
 			return null;
 		});
-		funk.addCallback("setOptionSave", function(variable:String, value:Dynamic, isJson:Bool = false, ?modName:String = null) {
+		funk.addCallback("setOptionSave", function(l:FunkinLua, variable:String, value:Dynamic, isJson:Bool = false, ?modName:String = null) {
 			if (!isJson) {
 				ClientPrefs.prefs.set(variable, value);
 				return ClientPrefs.getPref(variable) != null ? true : false;
@@ -189,7 +185,7 @@ class ExtraFunctions
 					return true;
 				}
 				#else
-				funk.luaTrace('setOptionSave: Platform unsupported for Json Options!', false, false, FlxColor.RED);
+				l.luaTrace('setOptionSave: Platform unsupported for Json Options!', false, false, FlxColor.RED);
 				#end
 			}
 			return false;
@@ -200,7 +196,7 @@ class ExtraFunctions
 		});
 
 		// File management
-		funk.addCallback("checkFileExists", function(filename:String, ?absolute:Bool = false) {
+		funk.addCallback("checkFileExists", function(_, filename:String, ?absolute:Bool = false) {
 			#if MODS_ALLOWED
 			if(absolute) return FileSystem.exists(filename);
 
@@ -214,7 +210,7 @@ class ExtraFunctions
 			return Assets.exists(Paths.getPath('assets/$filename', TEXT));
 			#end
 		});
-		funk.addCallback("saveFile", function(path:String, content:String, ?absolute:Bool = false) {
+		funk.addCallback("saveFile", function(l:FunkinLua, path:String, content:String, ?absolute:Bool = false) {
 			try {
 				if(!absolute)
 					File.saveContent(Paths.mods(path), content);
@@ -222,11 +218,11 @@ class ExtraFunctions
 
 				return true;
 			} catch (e:Dynamic) {
-				funk.luaTrace("saveFile: Error trying to save " + path + ": " + e, false, false, FlxColor.RED);
+				l.luaTrace("saveFile: Error trying to save " + path + ": " + e, false, false, FlxColor.RED);
 			}
 			return false;
 		});
-		funk.addCallback("deleteFile", function(path:String, ?ignoreModFolders:Bool = false) {
+		funk.addCallback("deleteFile", function(l:FunkinLua, path:String, ?ignoreModFolders:Bool = false) {
 			try {
 				#if MODS_ALLOWED
 				if(!ignoreModFolders) {
@@ -244,14 +240,14 @@ class ExtraFunctions
 					return true;
 				}
 			} catch (e:Dynamic) {
-				funk.luaTrace("deleteFile: Error trying to delete " + path + ": " + e, false, false, FlxColor.RED);
+				l.luaTrace("deleteFile: Error trying to delete " + path + ": " + e, false, false, FlxColor.RED);
 			}
 			return false;
 		});
-		funk.addCallback("getTextFromFile", function(path:String, ?ignoreModFolders:Bool = false) {
+		funk.addCallback("getTextFromFile", function(_, path:String, ?ignoreModFolders:Bool = false) {
 			return Paths.getTextFromFile(path, ignoreModFolders);
 		});
-		funk.addCallback("directoryFileList", function(folder:String) {
+		funk.addCallback("directoryFileList", function(_, folder:String) {
 			var list:Array<String> = [];
 			#if sys
 			if(FileSystem.exists(folder)) {
@@ -264,7 +260,7 @@ class ExtraFunctions
 			#end
 			return list;
 		});
-		funk.addCallback("promptSaveFile", function(fileName:String, content:String, extension:String) {
+		funk.addCallback("promptSaveFile", function(_, fileName:String, content:String, extension:String) {
 			CoolUtil.saveFile({
 				fileDefaultName: fileName,
 				format: extension,
@@ -272,25 +268,16 @@ class ExtraFunctions
 			});
 		});
 
-		funk.addCallback("parseJson", function(jsonStr:String, varName:String) {
+		funk.addCallback("parseJson", function(l:FunkinLua, jsonStr:String, varName:String) {
 			var json = Paths.modFolders('data/' + jsonStr + '.json');
 			var foundJson:Bool;
 
-			#if sys
-				if (FileSystem.exists(json)) foundJson = true;
-				else {
-					funk.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
-					foundJson = false;
-					return;	
-				}
-			#else
-				if (Assets.exists(json)) foundJson = true;
-				else {
-					funk.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
-					foundJson = false;
-					return;	
-				}
-			#end
+			if #if sys (FileSystem.exists(json)) #else (Assets.exists(json)) #end foundJson = true;
+			else {
+				l.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
+				foundJson = false;
+				return;	
+			}
 
 			if (foundJson) {
 				var parsedJson = haxe.Json.parse(File.getContent(json));				
@@ -299,75 +286,81 @@ class ExtraFunctions
 		});
 
 		// String tools
-		funk.addCallback("stringStartsWith", function(str:String, start:String) {
+		funk.addCallback("stringStartsWith", function(_, str:String, start:String) {
 			return str.startsWith(start);
 		});
-		funk.addCallback("stringEndsWith", function(str:String, end:String) {
+		funk.addCallback("stringEndsWith", function(_, str:String, end:String) {
 			return str.endsWith(end);
 		});
-		funk.addCallback("stringSplit", function(str:String, split:String) {
+		funk.addCallback("stringSplit", function(_, str:String, split:String) {
 			return str.split(split);
 		});
-		funk.addCallback("stringTrim", function(str:String) {
+		funk.addCallback("stringTrim", function(_, str:String) {
 			return str.trim();
 		});
 
 		// Regex
-		funk.addCallback("regexMatch", function(str:String, toMatch:String, flag:String = "i") {
+		funk.addCallback("regexMatch", function(_, str:String, toMatch:String, flag:String = "i") {
 			return new EReg(str, flag).match(toMatch);
 		});
-		funk.addCallback("regexSubMatch", function(str:String, toMatch:String, pos:Int, len:Int = -1, flag:String = "i") {
+		funk.addCallback("regexSubMatch", function(_, str:String, toMatch:String, pos:Int, len:Int = -1, flag:String = "i") {
 			return new EReg(str, flag).matchSub(toMatch, pos, len);
 		});
-		funk.addCallback("regexFindMatchAt", function(str:String, toMatch:String, n:Int, flag:String = "i") {
+		funk.addCallback("regexFindMatchAt", function(_, str:String, toMatch:String, n:Int, flag:String = "i") {
 			var theData = new EReg(str, flag);
 			theData.match(toMatch);
 			return theData.matched(n);
 		});
-		funk.addCallback("regexFindFirstMatch", function(str:String, toMatch:String, flag:String = "i") {
+		funk.addCallback("regexFindFirstMatch", function(_, str:String, toMatch:String, flag:String = "i") {
 			var theData = new EReg(str, flag);
 			theData.match(toMatch);
 			return theData.matchedLeft();
 		});
-		funk.addCallback("regexFindLastMatch", function(str:String, toMatch:String, flag:String = "i") {
+		funk.addCallback("regexFindLastMatch", function(_, str:String, toMatch:String, flag:String = "i") {
 			var theData = new EReg(str, flag);
 			theData.match(toMatch);
 			return theData.matchedRight();
 		});
-		funk.addCallback("regexMatchPosition", function(str:String, toMatch:String, flag:String = "i") {
+		funk.addCallback("regexMatchPosition", function(_, str:String, toMatch:String, flag:String = "i") {
 			var data = new EReg(str, flag);
 			data.match(toMatch);
 			var theData = data.matchedPos();
 			return [theData.pos, theData.len];
 		});
-		funk.addCallback("regexReplace", function(str:String, toReplace:String, replacement:String, flag:String = "i") {
+		funk.addCallback("regexReplace", function(_, str:String, toReplace:String, replacement:String, flag:String = "i") {
 			return new EReg(str, flag).replace(toReplace, replacement);
 		});
-		funk.addCallback("regexSplit", function(str:String, toSplit:String, flag:String = "i") {
+		funk.addCallback("regexSplit", function(_, str:String, toSplit:String, flag:String = "i") {
 			return new EReg(str, flag).split(toSplit);
 		});
 
 		// Randomization
-		funk.addCallback("getRandomInt", function(min:Int, max:Int = FlxMath.MAX_VALUE_INT, exclude:String = '') {
+		funk.addCallback("getRandomInt", function(_, min:Int, max:Int = FlxMath.MAX_VALUE_INT, exclude:String = '') {
 			var excludeArray:Array<String> = exclude.split(',');
 			var toExclude:Array<Int> = [];
 			for (i in 0...excludeArray.length)
 				toExclude.push(Std.parseInt(excludeArray[i].trim()));
 			return FlxG.random.int(min, max, toExclude);
 		});
-		funk.addCallback("getRandomFloat", function(min:Float, max:Float = 1, exclude:String = '') {
+		funk.addCallback("getRandomFloat", function(_, min:Float, max:Float = 1, exclude:String = '') {
 			var excludeArray:Array<String> = exclude.split(',');
 			var toExclude:Array<Float> = [];
 			for (i in 0...excludeArray.length)
 				toExclude.push(Std.parseFloat(excludeArray[i].trim()));
 			return FlxG.random.float(min, max, toExclude);
 		});
-		funk.addCallback("getRandomBool", function(chance:Float = 50) {
+		funk.addCallback("getRandomBool", function(_, chance:Float = 50) {
 			return FlxG.random.bool(chance);
 		});
 
-		funk.addCallback("getGameplayChangerValue", function(tag:String) {
+		funk.addCallback("getGameplayChangerValue", function(_, tag:String) {
 			return ClientPrefs.getGameplaySetting(tag, false);
+		});
+		funk.addCallback("request", function(_, web:String, post:Bool, callback:Dynamic, errorback:Dynamic) {
+			FunkinInternet.request(web, post, callback, errorback);
+		});
+		funk.addCallback("returnDynamic", function(_, anyvar:Any):Dynamic {
+			return Type.typeof(anyvar);
 		});
 	}
 }

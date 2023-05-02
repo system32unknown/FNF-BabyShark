@@ -17,7 +17,7 @@ class ClientPrefs {
 		'showFPS' => true,
 		'showMEM' => true,
 		'flashing' => true,
-		'globalAntialiasing' => true,
+		'Antialiasing' => true,
 		'splashOpacity' => .6,
 		'lowQuality' => false,
 		'shaders' => true,

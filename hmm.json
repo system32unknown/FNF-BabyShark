@@ -27,7 +27,7 @@
         },
         {"name": "linc_luajit", "type": "git", "dir": null,
             "ref": "master",
-            "url": "https://github.com/system32unknown/linc_luajit"
+            "url": "https://github.com/Raltyro/linc_luajit"
         }
     ]
   }

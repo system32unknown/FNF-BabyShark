@@ -69,8 +69,9 @@ class AlterScript {
         return if (exists(key)) interp.variables.get(key) else null;
     }
 
-    public function call(func:String, args:Array<Dynamic>):Dynamic {
-        if (func == null || args == null || !exists(func)) return null;
+    public function call(func:String, ?args:Array<Any>):Dynamic {
+        if (func == null || !exists(func)) return null;
+        if (args == null) args = [];
         return Reflect.callMethod(this, get(func), args);
     }
 
@@ -133,17 +134,17 @@ class AlterScript {
             "FlxBasic"          => FlxBasic,
             "FlxCamera"         => FlxCamera,
             "state"             => FlxG.state,
-            "FlxEase"           => flixel.tweens.FlxEase,
-            "FlxTween"          => flixel.tweens.FlxTween,
+            "FlxEase"           => FlxEase,
+            "FlxTween"          => FlxTween,
             "FlxSound"          => flixel.system.FlxSound,
             "FlxAssets"         => flixel.system.FlxAssets,
-            "FlxMath"           => flixel.math.FlxMath,
+            "FlxMath"           => FlxMath,
             "FlxGroup"          => flixel.group.FlxGroup,
-            "FlxTypedGroup"     => flixel.group.FlxGroup.FlxTypedGroup,
-            "FlxSpriteGroup"    => flixel.group.FlxSpriteGroup,
+            "FlxTypedGroup"     => FlxTypedGroup,
+            "FlxSpriteGroup"    => FlxSpriteGroup,
             "FlxTypeText"       => flixel.addons.text.FlxTypeText,
-            "FlxText"           => flixel.text.FlxText,
-            "FlxTimer"          => flixel.util.FlxTimer,
+            "FlxText"           => FlxText,
+            "FlxTimer"          => FlxTimer,
             "FlxPoint"          => CoolUtil.getMacroAbstractClass("flixel.math.FlxPoint"),
             "FlxAxes"           => CoolUtil.getMacroAbstractClass("flixel.util.FlxAxes"),
             "FlxColor"          => CoolUtil.getMacroAbstractClass("flixel.util.FlxColor"),
@@ -178,7 +179,7 @@ class AlterScript {
             for (a in args) v += ", " + Std.string(a);
             trace(v);
         }));
-        call("create", []);
+        call("create");
     }
 
     function callErrBox(title:String, context:String) {

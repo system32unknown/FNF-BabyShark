@@ -5,12 +5,6 @@
           "type": "lime",
           "command": "build",
           "targetConfiguration": "Build Windows (Debug)",
-          "problemMatcher": [
-            "$haxe-absolute",
-            "$haxe",
-            "$haxe-error",
-            "$haxe-trace"
-          ],
           "label": "Build Windows (Debug)",
           "group": {
             "kind": "build",
@@ -21,12 +15,6 @@
           "type": "lime",
           "command": "build",
           "targetConfiguration": "Build Windows (Release)",
-          "problemMatcher": [
-            "$haxe-absolute",
-            "$haxe",
-            "$haxe-error",
-            "$haxe-trace"
-          ],
           "label": "Build Windows (Release)",
           "group": {
             "kind": "build",

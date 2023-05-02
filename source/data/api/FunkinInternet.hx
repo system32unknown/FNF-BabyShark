@@ -11,10 +11,10 @@ class FunkinInternet {
         http.onStatus = function(status:Int) {
             switch status {
                 case 200:
-                    trace("\033[1;37m[FUNKIN] FunkinWeb is Online.\033[32m");
+                    trace("\n\033[1;37m[FUNKIN] FunkinWeb is Online.\033[32m");
                     done = true;
                 default:
-                    trace("\033[1;37m[FUNKIN] FunkinWeb is Online.\033[31m");
+                    trace("\n\033[1;37m[FUNKIN] FunkinWeb is Online.\033[31m");
                     done = false;
             }
         };
@@ -26,5 +26,20 @@ class FunkinInternet {
         http.request(false);
 
         return done;
+    }
+
+    static public function request(web:String, post:Bool = false, func:Void->Void, errorfunc:Void->Void) {
+        var http = new haxe.Http(web);
+        http.onStatus = function(status:Int) {
+            switch status {
+                case 200: if(func != null) func();
+            }
+        };
+
+        http.onError = function(e) {
+            if(errorfunc != null) errorfunc();
+        }
+
+        http.request(post);
     }
 }
