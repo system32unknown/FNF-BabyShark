@@ -4,6 +4,7 @@ import flixel.graphics.FlxGraphic;
 import data.WeekData;
 import utils.CoolUtil;
 import states.StoryMenuState;
+import states.FreeplayState;
 import game.Conductor;
 
 /**
@@ -92,7 +93,10 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		if (controls.UI_RIGHT_P && !transitioning) changeSection(1);
 		
 		if (controls.BACK && !transitioning) {
+			daSection = FreeplayState.section;
+
 			FlxG.sound.play(Paths.sound('cancelMenu'));
+			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionTxt, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionSpr, {alpha: 0}, .5, {ease: FlxEase.expoInOut,
 				onComplete: function(tween:FlxTween) {
