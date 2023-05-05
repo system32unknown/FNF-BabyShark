@@ -21,7 +21,7 @@ class FPSUtil {
 	}
 
 	inline public static function ratioFPS(ratio:Float):Float {
-		return MathUtil.boundTo(ratio * 60 * FlxG.elapsed, 0, 1);
+		return FlxMath.bound(ratio * 60 * FlxG.elapsed, 0, 1);
 	}
 
 	inline public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {

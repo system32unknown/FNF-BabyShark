@@ -49,7 +49,6 @@ class MainMenuState extends MusicBeatState
 		#end
 
 		camGame = new FlxCamera();
-
 		camAchievement = new FlxCamera();
 		camAchievement.bgColor.alpha = 0;
 
@@ -137,7 +136,8 @@ class MainMenuState extends MusicBeatState
 
 		var versionShit:FlxText = new FlxText(0, 0, 0, 
 			'Alter Engine v${Main.engineVersion.version} (${Main.COMMIT_HASH.trim().substring(0, 7)})\n' +
-			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n', 16);
+			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n' +
+			'${FlxG.VERSION.toString()}\n', 16);
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT);
 		versionShit.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		versionShit.scrollFactor.set();
@@ -166,16 +166,15 @@ class MainMenuState extends MusicBeatState
 	// Unlocks "Freaky on a Friday Night" achievement
 	function giveAchievement() {
 		add(new AchievementObject('friday_night_play', camAchievement));
-		FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
-		trace('Giving achievement "friday_night_play"');
+		FlxG.sound.play(Paths.sound('confirmMenu'), .7);
 	}
 	#end
 
 	var selectedSomethin:Bool = false;
 
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music.volume < 0.8) {
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
+		if (FlxG.sound.music.volume < .8) {
+			FlxG.sound.music.volume += .5 * FlxG.elapsed;
 			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += 0.5 * elapsed;
 		}
 
@@ -183,25 +182,25 @@ class MainMenuState extends MusicBeatState
 		
 		if (!selectedSomethin && finishedFunnyMove) {
 			if (controls.UI_UP_P) {
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 				changeItem(-1);
 			}
 
 			if (controls.UI_DOWN_P) {
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 				changeItem(1);
 			}
 
 			if (controls.BACK) {
 				selectedSomethin = true;
-				FlxG.sound.play(Paths.sound('cancelMenu'));
+				FlxG.sound.play(Paths.sound('cancelMenu'), .7);
 				MusicBeatState.switchState(new TitleState());
 			}
 
 			var numMenu = 0;
 			if (controls.ACCEPT) {
 				selectedSomethin = true;
-				FlxG.sound.play(Paths.sound('confirmMenu'));
+				FlxG.sound.play(Paths.sound('confirmMenu'), .7);
 
 				if(ClientPrefs.getPref('flashing')) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 

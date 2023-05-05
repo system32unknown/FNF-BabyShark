@@ -116,19 +116,14 @@ class NativeApplication
 		#if (nodejs && lime_cffi)
 		NativeCFFI.lime_application_init(handle);
 
-		var eventLoop = function()
-		{
+		var eventLoop = function() {
 			var active = NativeCFFI.lime_application_update(handle);
 
 			if (!active)
 			{
 				untyped process.exitCode = NativeCFFI.lime_application_quit(handle);
 				parent.onExit.dispatch(untyped process.exitCode);
-			}
-			else
-			{
-				untyped setImmediate(eventLoop);
-			}
+			} else untyped setImmediate(eventLoop);
 		}
 
 		untyped setImmediate(eventLoop);
@@ -554,7 +549,7 @@ class NativeApplication
 	}
 }
 
-@:keep /*private*/ class ApplicationEventInfo
+@:keep class ApplicationEventInfo
 {
 	public var deltaTime:Int;
 	public var type:ApplicationEventType;
@@ -577,7 +572,7 @@ class NativeApplication
 	var EXIT = 1;
 }
 
-@:keep /*private*/ class ClipboardEventInfo
+@:keep class ClipboardEventInfo
 {
 	public var type:ClipboardEventType;
 
@@ -597,7 +592,7 @@ class NativeApplication
 	var UPDATE = 0;
 }
 
-@:keep /*private*/ class DropEventInfo
+@:keep class DropEventInfo
 {
 	public var file:#if hl hl.Bytes #else String #end;
 	public var type:DropEventType;
@@ -619,7 +614,7 @@ class NativeApplication
 	var DROP_FILE = 0;
 }
 
-@:keep /*private*/ class GamepadEventInfo
+@:keep class GamepadEventInfo
 {
 	public var axis:Int;
 	public var button:Int;
@@ -651,7 +646,7 @@ class NativeApplication
 	var DISCONNECT = 4;
 }
 
-@:keep /*private*/ class JoystickEventInfo
+@:keep class JoystickEventInfo
 {
 	public var id:Int;
 	public var index:Int;
@@ -687,7 +682,7 @@ class NativeApplication
 	var DISCONNECT = 6;
 }
 
-@:keep /*private*/ class KeyEventInfo
+@:keep class KeyEventInfo
 {
 	public var keyCode:Int;
 	public var modifier:Int;
@@ -714,7 +709,7 @@ class NativeApplication
 	var KEY_UP = 1;
 }
 
-@:keep /*private*/ class MouseEventInfo
+@:keep class MouseEventInfo
 {
 	public var button:Int;
 	public var movementX:Float;
@@ -749,7 +744,7 @@ class NativeApplication
 	var MOUSE_WHEEL = 3;
 }
 
-@:keep /*private*/ class RenderEventInfo
+@:keep class RenderEventInfo
 {
 	public var type:RenderEventType;
 
@@ -771,7 +766,7 @@ class NativeApplication
 	var RENDER_CONTEXT_RESTORED = 2;
 }
 
-@:keep /*private*/ class SensorEventInfo
+@:keep class SensorEventInfo
 {
 	public var id:Int;
 	public var x:Float;
@@ -799,7 +794,7 @@ class NativeApplication
 	var ACCELEROMETER = 0;
 }
 
-@:keep /*private*/ class TextEventInfo
+@:keep class TextEventInfo
 {
 	public var id:Int;
 	public var length:Int;
@@ -829,7 +824,7 @@ class NativeApplication
 	var TEXT_EDIT = 1;
 }
 
-@:keep /*private*/ class TouchEventInfo
+@:keep class TouchEventInfo
 {
 	public var device:Int;
 	public var dx:Float;
@@ -865,7 +860,7 @@ class NativeApplication
 	var TOUCH_MOVE = 2;
 }
 
-@:keep /*private*/ class WindowEventInfo
+@:keep class WindowEventInfo
 {
 	public var height:Int;
 	public var type:WindowEventType;

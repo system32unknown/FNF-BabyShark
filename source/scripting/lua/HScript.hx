@@ -119,7 +119,7 @@ class HScript
 
 	#if LUA_ALLOWED
 	public static function implement(funk:FunkinLua) {
-		funk.addCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null) {
+		funk.addCallback("runHaxeCode", function(l:FunkinLua, codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null) {
 			var retVal:Dynamic = null;
 
 			#if hscript
@@ -129,26 +129,30 @@ class HScript
 						FunkinLua.hscript.interp.variables.set(key, Reflect.field(varsToBring, key));
 				retVal = FunkinLua.hscript.execute(codeToRun, funcToRun, funcArgs);
 			} catch (e:Dynamic) {
-				funk.luaTrace(funk.scriptName + ":" + funk.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
+				l.luaTrace(funk.scriptName + ":" + funk.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
 			}
 			#else
-			funk.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
+			l.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
 			#end
 
 			if(retVal != null && !LuaUtils.isOfTypes(retVal, [Bool, Int, Float, String, Array])) retVal = null;
 			return retVal;
 		});
 
-		funk.addCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
+		funk.addCallback("runHaxeFunction", function(l:FunkinLua, funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
+			#if hscript
 			try {
 				return FunkinLua.hscript.executeFunction(funcToRun, funcArgs);
 			} catch(e:Exception) {
 				funk.luaTrace(Std.string(e));
 				return null;
 			}
+			#else
+			l.luaTrace("runHaxeFunction: HScript isn't supported on this platform!", false, false, FlxColor.RED);
+			#end
 		});
 
-		funk.addCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
+		funk.addCallback("addHaxeLibrary", function(l:FunkinLua, libName:String, ?libPackage:String = '') {
 			#if hscript
 			try {
 				var str:String = '';
@@ -156,8 +160,10 @@ class HScript
 					str = libPackage + '.';
 				FunkinLua.hscript.variables.set(libName, Type.resolveClass(str + libName));
 			} catch (e:Dynamic) {
-				funk.luaTrace(funk.scriptName + ":" + funk.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
+				l.luaTrace(funk.scriptName + ":" + l.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
 			}
+			#else
+			l.luaTrace("addHaxeLibrary: HScript isn't supported on this platform!", false, false, FlxColor.RED);
 			#end
 		});
 		#end

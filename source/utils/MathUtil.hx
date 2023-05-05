@@ -1,10 +1,6 @@
 package utils;
 
 class MathUtil {
-	inline public static function boundTo(value:Float, min:Float, max:Float):Float {
-		return Math.max(min, Math.min(max, value));
-	}
-
 	public static function truncateFloat(number:Float, ?precision:Int = 3):Float {
         var num = number;
         num = num * Math.pow(10, precision);

@@ -106,7 +106,7 @@ class ModsMenuState extends MusicBeatState
 			if(mods[curSelected].restart) needaReset = true;
 			modsList[curSelected][1] = !modsList[curSelected][1];
 			updateButtonToggle();
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.7);
 		});
 		buttonToggle.setGraphicSize(50, 50);
 		buttonToggle.updateHitbox();
@@ -120,7 +120,7 @@ class ModsMenuState extends MusicBeatState
 
 		buttonUp = new FlxButton(startX, 0, "/\\", function() {
 			moveMod(-1);
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.7);
 		});
 		buttonUp.setGraphicSize(50, 50);
 		buttonUp.updateHitbox();
@@ -133,7 +133,7 @@ class ModsMenuState extends MusicBeatState
 
 		buttonDown = new FlxButton(startX, 0, "\\/", function() {
 			moveMod(1);
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.7);
 		});
 		buttonDown.setGraphicSize(50, 50);
 		buttonDown.updateHitbox();
@@ -153,7 +153,7 @@ class ModsMenuState extends MusicBeatState
 			if(doRestart) {
 				needaReset = true;
 			}
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.7);
 		});
 		buttonTop.setGraphicSize(80, 50);
 		buttonTop.updateHitbox();
@@ -175,7 +175,7 @@ class ModsMenuState extends MusicBeatState
 				}
 			}
 			updateButtonToggle();
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.7);
 		});
 		buttonDisableAll.setGraphicSize(170, 50);
 		buttonDisableAll.updateHitbox();
@@ -198,7 +198,7 @@ class ModsMenuState extends MusicBeatState
 				}
 			}
 			updateButtonToggle();
-			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.7);
 		});
 		buttonEnableAll.setGraphicSize(170, 50);
 		buttonEnableAll.updateHitbox();
@@ -445,11 +445,8 @@ class ModsMenuState extends MusicBeatState
 		for (mod in mods) {
 			var intendedPos:Float = (i - curSelected) * 225 + 200;
 			if (i > curSelected) intendedPos += 225;
-			if (elapsed == -1) {
-				mod.alphabet.y = intendedPos;
-			} else {
-				mod.alphabet.y = FlxMath.lerp(mod.alphabet.y, intendedPos, MathUtil.boundTo(elapsed * 12, 0, 1));
-			}
+			if (elapsed == -1) mod.alphabet.y = intendedPos;
+			else mod.alphabet.y = FlxMath.lerp(mod.alphabet.y, intendedPos, FlxMath.bound(elapsed * 12, 0, 1));
 
 			if (i == curSelected) {
 				descriptionTxt.y = mod.alphabet.y + 160;
@@ -481,7 +478,7 @@ class ModMetadata
 		this.restart = false;
 
 		//Try loading json
-		var path = Paths.mods(folder + '/pack.json');
+		var path = Paths.mods((folder != null ? '$folder/' : '') + 'pack.json');
 		if(FileSystem.exists(path)) {
 			var rawJson:String = File.getContent(path);
 			if(rawJson != null && rawJson.length > 0) {
@@ -493,25 +490,15 @@ class ModMetadata
 					var restart:Bool = Reflect.getProperty(stuff, "restart");
 
 				if(name != null && name.length > 0)
-				{
 					this.name = name;
-				}
 				if(description != null && description.length > 0)
-				{
 					this.description = description;
-				}
 				if(name == 'Name')
-				{
 					this.name = folder;
-				}
 				if(description == 'Description')
-				{
 					this.description = "No description provided.";
-				}
 				if(colors != null && colors.length > 2)
-				{
 					this.color = FlxColor.fromRGB(colors[0], colors[1], colors[2]);
-				}
 
 				this.restart = restart;
 			}

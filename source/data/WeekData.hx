@@ -94,11 +94,11 @@ class WeekData {
 			var stuff:Array<String> = CoolUtil.coolTextFile(modsListPath);
 			for (i in 0...stuff.length) {
 				var splitName:Array<String> = stuff[i].trim().split('|');
-				if(splitName[1] == '0') { // Disable mod
+				if(splitName[1] == '0') // Disable mod
 					disabledMods.push(splitName[0]);
-				} else { // Sort mod loading order based on modsList.txt file
+				else { // Sort mod loading order based on modsList.txt file
 					var path = haxe.io.Path.join([Paths.mods(), splitName[0]]);
-					if (sys.FileSystem.isDirectory(path) && !Paths.ignoreModFolders.contains(splitName[0]) && !disabledMods.contains(splitName[0]) && !directories.contains(path + '/')) {
+					if (FileSystem.isDirectory(path) && !Paths.ignoreModFolders.contains(splitName[0]) && !disabledMods.contains(splitName[0]) && !directories.contains(path + '/')) {
 						directories.push(path + '/');
 					}
 				}
@@ -151,14 +151,14 @@ class WeekData {
 				var listOfWeeks:Array<String> = CoolUtil.coolTextFile(directory + 'weekList.txt');
 				for (daWeek in listOfWeeks) {
 					var path:String = directory + daWeek + '.json';
-					if(sys.FileSystem.exists(path)) {
+					if(FileSystem.exists(path)) {
 						addWeek(daWeek, path, directories[i], i, originalLength);
 					}
 				}
 
 				for (file in FileSystem.readDirectory(directory)) {
 					var path = haxe.io.Path.join([directory, file]);
-					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json')) {
+					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
 						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
 					}
 				}
@@ -228,12 +228,11 @@ class WeekData {
 		#if MODS_ALLOWED
 		if (FileSystem.exists("modsList.txt")) {
 			var list:Array<String> = CoolUtil.listFromString(File.getContent("modsList.txt"));
-			var foundTheTop = false;
 			for (i in list) {
 				var dat = i.split("|");
-				if (dat[1] == "1" && !foundTheTop) {
-					foundTheTop = true;
+				if (dat[1] == "1") {
 					Paths.currentModDirectory = dat[0];
+					break;
 				}
 			}
 		}

@@ -30,11 +30,14 @@ class PauseSubState extends MusicBeatSubstate
 	var curTime:Float = Math.max(0, Conductor.songPosition);
 
 	public static var songName:String = '';
+	public static var toOptions:Bool = false;
 
 	public function new(x:Float, y:Float)
 	{
 		super();
 		if(Difficulty.list.length < 2) menuItemsOG.remove('Change Difficulty'); //No need to change difficulty if there is only one!
+
+		toOptions = false;
 
 		if(PlayState.chartingMode)
 		{
@@ -64,7 +67,6 @@ class PauseSubState extends MusicBeatSubstate
 			pauseMusic.loadEmbedded(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), true, true);
 		}
 		pauseMusic.volume = 0;
-		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 
 		FlxG.sound.list.add(pauseMusic);
 
@@ -125,11 +127,20 @@ class PauseSubState extends MusicBeatSubstate
 		FlxTween.tween(blueballedTxt, {alpha: 1, y: blueballedTxt.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
 		if (PlayState.instance.practiceMode) FlxTween.tween(practiceText, {alpha: 1, y: practiceText.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 1.1});
 
-		grpMenuShit = new FlxTypedGroup<Alphabet>();
-		add(grpMenuShit);
+		add(grpMenuShit = new FlxTypedGroup<Alphabet>());
 
 		regenMenu();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+	}
+
+	override function create() {
+		super.create();
+		
+		if(FlxG.sound.music != null) {
+			FlxG.sound.music.pause();
+			PlayState.instance.vocals.pause();
+		}
+		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 	}
 
 	var holdTime:Float = 0;
@@ -257,16 +268,16 @@ class PauseSubState extends MusicBeatSubstate
 
 	public static function restartSong(noTrans:Bool = false)
 	{
+		PlayState.restarted = true;
 		PlayState.instance.paused = true; // For lua
 		FlxG.sound.music.volume = 0;
 		PlayState.instance.vocals.volume = 0;
 
 		if(noTrans) {
 			FlxTransitionableState.skipNextTransOut = true;
-			FlxG.resetState();
-		} else {
-			MusicBeatState.resetState();
+			FlxTransitionableState.skipNextTransIn = true;
 		}
+		MusicBeatState.resetState();
 	}
 
 	override function destroy()
@@ -313,9 +324,9 @@ class PauseSubState extends MusicBeatSubstate
 
 			if(menuItems[i] == 'Skip Time') {
 				skipTimeText = new FlxText(0, 0, 0, '', 64);
-				skipTimeText.setFormat(Paths.font("vcr.ttf"), 64, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+				skipTimeText.setFormat(Paths.font("vcr.ttf"), 64, FlxColor.WHITE, CENTER);
+				skipTimeText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
 				skipTimeText.scrollFactor.set();
-				skipTimeText.borderSize = 2;
 				skipTimeTracker = item;
 				add(skipTimeText);
 

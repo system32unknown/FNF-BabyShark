@@ -112,15 +112,15 @@ class ShaderMacro
 			if (glFragmentSource != null && glFragmentHeader != null && glFragmentBody != null)
 			{
 				glFragmentSourceRaw = glFragmentSource;
-				glFragmentSource = StringTools.replace(glFragmentSource, "#pragma header", glFragmentHeader);
-				glFragmentSource = StringTools.replace(glFragmentSource, "#pragma body", glFragmentBody);
+				glFragmentSource = glFragmentSource.replace("#pragma header", glFragmentHeader);
+				glFragmentSource = glFragmentSource.replace("#pragma body", glFragmentBody);
 			}
 
 			if (glVertexSource != null && glVertexHeader != null && glVertexBody != null)
 			{
 				glVertexSourceRaw = glVertexSource;
-				glVertexSource = StringTools.replace(glVertexSource, "#pragma header", glVertexHeader);
-				glVertexSource = StringTools.replace(glVertexSource, "#pragma body", glVertexBody);
+				glVertexSource = glVertexSource.replace("#pragma header", glVertexHeader);
+				glVertexSource = glVertexSource.replace("#pragma body", glVertexBody);
 			}
 
 			var shaderDataFields = new Array<Field>();

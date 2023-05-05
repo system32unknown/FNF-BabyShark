@@ -16,9 +16,6 @@ import lime.media.howlerjs.Howl;
 #end
 #if (js && html5)
 import js.html.Audio;
-#elseif flash
-import flash.media.Sound;
-import flash.net.URLRequest;
 #end
 
 @:access(lime._internal.backend.native.NativeCFFI)
@@ -42,7 +39,7 @@ class AudioBuffer
 	@:noCompletion private var __srcBuffer:#if lime_cffi ALBuffer #else Dynamic #end;
 	@:noCompletion private var __srcCustom:Dynamic;
 	@:noCompletion private var __srcHowl:#if lime_howlerjs Howl #else Dynamic #end;
-	@:noCompletion private var __srcSound:#if flash Sound #else Dynamic #end;
+	@:noCompletion private var __srcSound:Dynamic;
 	@:noCompletion private var __srcVorbisFile:#if lime_vorbis VorbisFile #else Dynamic #end;
 	
 	@:noCompletion private var __format:Int;
@@ -202,16 +199,6 @@ class AudioBuffer
 		#end
 
 		return audioBuffer;
-		#elseif flash
-		switch (Path.extension(path)) {
-			case "ogg", "wav":
-				return null;
-			default:
-		}
-
-		var audioBuffer = new AudioBuffer();
-		audioBuffer.__srcSound = new Sound(new URLRequest(path));
-		return audioBuffer;
 		#elseif (lime_cffi && !macro)
 		#if !cs
 		var audioBuffer = new AudioBuffer();
@@ -290,19 +277,6 @@ class AudioBuffer
 
 	public static function loadFromFile(path:String):Future<AudioBuffer>
 	{
-		#if (flash || (js && html5))
-		var promise = new Promise<AudioBuffer>();
-
-		var audioBuffer = AudioBuffer.fromFile(path);
-
-		if (audioBuffer != null)
-			promise.complete(audioBuffer);
-		else promise.error(null);
-
-		return promise.future;
-		#else
-		// TODO: Streaming
-
 		var request = new HTTPRequest<AudioBuffer>();
 		return request.load(path).then(function(buffer) {
 			if (buffer != null) {
@@ -310,7 +284,6 @@ class AudioBuffer
 				return Future.withValue(buffer);
 			} else return cast Future.withError("");
 		});
-		#end
 	}
 
 	public static function loadFromFiles(paths:Array<String>):Future<AudioBuffer>
@@ -366,9 +339,6 @@ class AudioBuffer
 		#else
 		return __srcAudio;
 		#end
-		#elseif flash
-		return __srcSound;
-		#elseif lime_vorbis
 		return __srcVorbisFile;
 		#else
 		return __srcCustom;
@@ -383,8 +353,6 @@ class AudioBuffer
 		#else
 		return __srcAudio = value;
 		#end
-		#elseif flash
-		return __srcSound = value;
 		#elseif lime_vorbis
 		return __srcVorbisFile = value;
 		#else

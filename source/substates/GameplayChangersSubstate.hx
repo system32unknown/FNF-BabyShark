@@ -162,8 +162,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		for (i in 0...optionsArray.length) {
 			var optionText:Alphabet = new Alphabet(200, 360, optionsArray[i].name, true);
 			optionText.isMenuItem = true;
-			optionText.scaleX = 0.8;
-			optionText.scaleY = 0.8;
+			optionText.setScale(.8, .8);
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
@@ -198,12 +197,10 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	var holdValue:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if (controls.UI_UP_P) {
+		if (controls.UI_UP_P)
 			changeSelection(-1);
-		}
-		if (controls.UI_DOWN_P) {
+		if (controls.UI_DOWN_P)
 			changeSelection(1);
-		}
 
 		if (controls.BACK) {
 			close();
@@ -453,10 +450,8 @@ class GameplayOption
 	}
 
 	public function change() {
-		//nothing lol
-		if(onChange != null) {
+		if(onChange != null)
 			onChange();
-		}
 	}
 
 	public function getValue():Dynamic
@@ -465,31 +460,26 @@ class GameplayOption
 		ClientPrefs.gameplaySettings.set(variable, value);
 	}
 
-	public function setChild(child:Alphabet)
-	{
+	public function setChild(child:Alphabet) {
 		this.child = child;
 	}
 
-	private function get_text()
-	{
+	function get_text() {
 		if(child != null) {
 			return child.text;
 		}
 		return null;
 	}
-	private function set_text(newValue:String = '')
-	{
+	function set_text(newValue:String = '') {
 		if(child != null) {
 			child.text = newValue;
 		}
 		return null;
 	}
 
-	private function get_type()
-	{
+	function get_type() {
 		var newValue:String = 'bool';
-		switch(type.toLowerCase().trim())
-		{
+		switch(type.toLowerCase().trim()) {
 			case 'int' | 'float' | 'percent' | 'string': newValue = type;
 			case 'integer': newValue = 'int';
 			case 'str': newValue = 'string';

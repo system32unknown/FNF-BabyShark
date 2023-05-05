@@ -709,7 +709,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		for (frame in _sprite.frames.frames)
 		{
-			if (frame.name != null && StringTools.startsWith(frame.name, Prefix))
+			if (frame.name != null && frame.name.startsWith(Prefix))
 			{
 				AnimFrames.push(frame);
 			}
@@ -720,7 +720,7 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (_sprite.frames != null && numFrames > 0)
 		{
-			Frame = Frame % numFrames;
+			Frame %= numFrames;
 			_sprite.frame = _sprite.frames.frames[Frame];
 			frameIndex = Frame;
 			fireCallback();
@@ -829,11 +829,8 @@ class FlxAnimationController implements IFlxDestroyable
 	{
 		if (anim != _curAnim)
 		{
-			if (_curAnim != null)
-				_curAnim.stop();
-
-			if (anim != null)
-				anim.play();
+			if (_curAnim != null) _curAnim.stop();
+			if (anim != null) anim.play();
 		}
 		return _curAnim = anim;
 	}

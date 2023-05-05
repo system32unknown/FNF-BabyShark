@@ -27,19 +27,15 @@ class GraphicsShader extends Shader
 		openfl_TextureCoordv = openfl_TextureCoord;
 
 		if (openfl_HasColorTransform) {
-
 			openfl_ColorMultiplierv = openfl_ColorMultiplier;
 			openfl_ColorOffsetv = openfl_ColorOffset / 255.0;
-
 		}
 
 		gl_Position = openfl_Matrix * openfl_Position;")
 	@:glVertexSource("#pragma header
 
 		void main(void) {
-
 			#pragma body
-
 		}")
 	@:glFragmentHeader("varying float openfl_Alphav;
 		varying vec4 openfl_ColorMultiplierv;
@@ -68,37 +64,25 @@ class GraphicsShader extends Shader
 			color = clamp (openfl_ColorOffsetv + (color * colorMultiplier), 0.0, 1.0);
 
 			if (color.a > 0.0) {
-
 				gl_FragColor = vec4 (color.rgb * color.a * openfl_Alphav, color.a * openfl_Alphav);
-
 			} else {
-
 				gl_FragColor = vec4 (0.0, 0.0, 0.0, 0.0);
-
 			}
 
 		} else {
-
 			gl_FragColor = color * openfl_Alphav;
-
 		}")
 	#if emscripten
 	@:glFragmentSource("#pragma header
-
 		void main(void) {
-
 			#pragma body
 
 			gl_FragColor = gl_FragColor.bgra;
-
 		}")
 	#else
 	@:glFragmentSource("#pragma header
-
 		void main(void) {
-
 			#pragma body
-
 		}")
 	#end
 	public function new(code:ByteArray = null)

@@ -57,7 +57,7 @@ class FreeplayState extends MusicBeatState
 		section = FreeplaySectionSubstate.daSection;
 		if (section == null || section == '') section = 'Vanilla';
 
-		var doFunnyContinue = false;
+		var foundSection = false;
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 
@@ -65,16 +65,16 @@ class FreeplayState extends MusicBeatState
 			if (leWeek.sections != null) {
 				for (sex in leWeek.sections) {
 					if (sex != section)
-						doFunnyContinue = true;
+						foundSection = true;
 					else {
-						doFunnyContinue = false;
+						foundSection = false;
 						break;
 					}	
 				}
-			} else doFunnyContinue = true;
+			} else foundSection = true;
 
-			if (doFunnyContinue) {
-				doFunnyContinue = false;
+			if (foundSection) {
+				foundSection = false;
 				continue;
 			}
 
@@ -219,8 +219,8 @@ class FreeplayState extends MusicBeatState
 		if (FlxG.sound.music.volume < 0.7)
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 
-		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, MathUtil.boundTo(elapsed * 24, 0, 1)));
-		lerpRating = FlxMath.lerp(lerpRating, intendedRating, MathUtil.boundTo(elapsed * 12, 0, 1));
+		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, FlxMath.bound(elapsed * 24, 0, 1)));
+		lerpRating = FlxMath.lerp(lerpRating, intendedRating, FlxMath.bound(elapsed * 12, 0, 1));
 
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
@@ -304,24 +304,41 @@ class FreeplayState extends MusicBeatState
 				FlxG.sound.music.volume = 0;
 				Paths.currentModDirectory = songs[curSelected].folder;
 
-				var songFolder:String = songs[curSelected].songName.toLowerCase();
-				var songLowercase:String = Highscore.formatSong(songFolder, curDifficulty);
-				PlayState.SONG = Song.loadFromJson(songLowercase, songFolder);
+				var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
+				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
+				Conductor.usePlayState = true;
+				Conductor.mapBPMChanges(PlayState.SONG, true);
+				Conductor.changeBPM(PlayState.SONG.bpm);
 
 				if (PlayState.SONG != null) {
-					if (PlayState.SONG.needsVoices)
-						vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+					if (PlayState.SONG.needsVoices) vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song, true));
 					else vocals = new FlxSound();
-
 					FlxG.sound.list.add(vocals);
-					FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
-					vocals.play();
+	
+					FlxG.sound.music.loadEmbedded(Paths.inst(PlayState.SONG.song, true), false);
+					FlxG.sound.music.onComplete = function() {
+						if (vocals == null) {
+							FlxG.sound.music.onComplete = null;
+							return;
+						}
+						FlxG.sound.music.pause();
+						vocals.stop();
+	
+						vocals.time = FlxG.sound.music.time = FlxG.sound.music.time - 1;
+						FlxG.sound.music.resume();
+						vocals.play();
+					}
+					vocals.looped = !(FlxG.sound.music.looped = true);
+					vocals.volume = FlxG.sound.music.volume = 0.7;
 					vocals.persist = true;
-					vocals.looped = true;
-					vocals.volume = .7;
+					vocals.autoDestroy = false;
+	
+					FlxG.sound.music.play();
+					vocals.play();
 					instPlaying = curSelected;
 				} else {
-					errorDisplay.text = getErrorMessage(missChart, 'chart required to play audio, $missFile', songFolder, songLowercase);
+					errorDisplay.text = getErrorMessage(missChart, 'chart required to play audio, $missFile', songLowercase, poop);
 					errorDisplay.displayError();
 				}
 				#end
@@ -356,11 +373,11 @@ class FreeplayState extends MusicBeatState
 		} else if (FlxG.keys.justPressed.COMMA) {
 			persistentUpdate = false;
 			openSubState(new FreeplaySectionSubstate());
-			FlxG.sound.play(Paths.sound('scrollMenu'));
+			FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 		} else if(controls.RESET) {
 			persistentUpdate = false;
 			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
-			FlxG.sound.play(Paths.sound('scrollMenu'));
+			FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 		}
 
 		updateTexts(elapsed);
@@ -476,7 +493,7 @@ class FreeplayState extends MusicBeatState
 	var _lastVisibles:Array<Int> = [];
 	public function updateTexts(elapsed:Float = 0.0)
 	{
-		lerpSelected = FlxMath.lerp(lerpSelected, curSelected, MathUtil.boundTo(elapsed * 9.6, 0, 1));
+		lerpSelected = FlxMath.lerp(lerpSelected, curSelected, FlxMath.bound(elapsed * 9.6, 0, 1));
 		for (i in _lastVisibles) {
 			grpSongs.members[i].visible = grpSongs.members[i].active = false;
 			iconArray[i].visible = iconArray[i].active = false;

@@ -117,6 +117,8 @@ class AlterScript {
             "StringTools"       => StringTools,
             "DateTools"         => DateTools,
             "Reflect"           => Reflect,
+            "EReg"              => EReg,
+            "Xml"               => Xml,
             "AlterScript"       => this,
 
             "Json"              => haxe.Json,
@@ -166,7 +168,10 @@ class AlterScript {
             "ClientPrefs"       => ClientPrefs,
 
             "FlxTrail" => flixel.addons.effects.FlxTrail,
+            "DeltaTrail" => DeltaTrail,
             "FlxBackdrop" => flixel.addons.display.FlxBackdrop,
+            "FlxClothSprite" => flixel.addons.effects.FlxClothSprite,
+            "FlxSkewedSprite" => flixel.addons.effects.FlxSkewedSprite,
         ];
     }
 

@@ -5,7 +5,6 @@ import flixel.custom.system.CustomLog;
 import haxe.Exception;
 
 import openfl.Lib;
-import openfl.Assets;
 import openfl.display.Sprite;
 import openfl.display.StageScaleMode;
 import openfl.events.Event;
@@ -83,6 +82,18 @@ class Main extends Sprite
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		
+		FlxG.signals.preStateSwitch.add(() -> {
+			Paths.clearStoredCache();
+		});
+		FlxG.signals.postStateSwitch.add(() -> {
+			Paths.clearUnusedCache();
+			
+			MemoryUtil.clearMajor();
+			MemoryUtil.clearMajor(true);
+			MemoryUtil.clearMajor();
+		});
+		FlxG.signals.postGameReset.add(onGameReset);
+
 		#if (CRASH_HANDLER && !hl)
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
@@ -98,17 +109,17 @@ class Main extends Sprite
 			});
 		}
 		#end
+	}
 
-		FlxG.signals.preStateSwitch.add(() -> {
-			Paths.clearStoredCache();
-		});
-		FlxG.signals.postStateSwitch.add(() -> {
-			Paths.clearUnusedCache();
-			
-			MemoryUtil.clearMajor();
-			MemoryUtil.clearMajor(true);
-			MemoryUtil.clearMajor();
-		});
+	function onGameReset() {
+		#if LUA_ALLOWED
+		Paths.pushGlobalMods();
+		#end
+
+		FlxG.fixedTimestep = false;
+		FlxG.mouse.visible = false;
+		ClientPrefs.toggleVolumeKeys(true);
+		FlxG.keys.preventDefaultKeys = [TAB];
 	}
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
@@ -127,7 +138,7 @@ class Main extends Sprite
 
 		dateNow = dateNow.replace(" ", "_").replace(":", "'");
 
-		final path = "./crash/" + "PsychEngine_" + dateNow + ".txt";
+		final path = "./crash/PsychEngine_" + dateNow + ".txt";
 
 		for (stackItem in callStack) {
 			switch (stackItem) {

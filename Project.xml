@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<!-- _________________________Application Settings_________________________ -->
-	<app title="Baby Shark's Funkin: The Full Game" file="AlterEngine" packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark" main="Main" version="1.0" company="Altertoriel"/>
-	<app preloader="flixel.system.FlxPreloader"/>
+	<app title="Baby Shark's Funkin: The Full Game" file="AlterEngine" version="1.0" company="Altertoriel"/>
+	<app packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark"/>
+	<app main="Main" preloader="flixel.system.FlxPreloader"/>
 
 	<!-- NOTE TO SELF: DISABLE THIS IF ISSUES ARE FOUND -->
 	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB"/> <!-- stable luas PUT AFTER FIRST LINE WITH APP NAME AND ETC -->
@@ -13,10 +14,11 @@
 	<!-- ____________________________Window Settings___________________________ -->
 
 	<!--These window settings apply to all targets-->
-	<window width="1280" height="720" fps="" background="#000000" hardware="true" vsync="false"/>
+	<window hardware="true" fps="" background=""/>
+	<window orientation="landscape"/>
 
 	<!--Desktop-specific-->
-	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
+	<window if="desktop" width="1280" height="720" fullscreen="false" resizable="true" vsync="false" allowHighDPI="true"/>
 	<!-- _____________________________Path Settings____________________________ -->
 
 	<set name="BUILD_DIR" value="export/debug" if="debug"/>
@@ -85,7 +87,7 @@
 
 	<!--Disable the Flixel core focus lost screen-->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
-	<haxedef name="REGION"/>
+	<haxedef name="queue_experimental_optimization"/>
 
 	<section unless="debug">
 		<!-- No deprecation warnings. -->

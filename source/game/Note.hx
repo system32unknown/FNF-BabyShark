@@ -43,6 +43,7 @@ class Note extends FlxSprite
 	public var noteData:Int = 0;
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
+	public var hasMissed:Bool = false;
 	public var wasGoodHit:Bool = false;
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;
@@ -68,6 +69,7 @@ class Note extends FlxSprite
 
 	public var animSuffix:String = '';
 	public var gfNote:Bool = false;
+	public var lateHitMult:Float = 1;
 	public var earlyHitMult:Float = 0.5;
 
 	public static var swagWidth:Float = 160 * .7;
@@ -342,22 +344,25 @@ class Note extends FlxSprite
 		}
 	}
 
+	inline public function checkDiff(songPos:Float):Bool {
+		return (strumTime > songPos - (Conductor.safeZoneOffset * lateHitMult)
+				&& strumTime < songPos + (Conductor.safeZoneOffset * earlyHitMult));
+	}
+
+	inline public function checkHit(songPos:Float):Bool {
+		return strumTime <= songPos + (Conductor.safeZoneOffset * earlyHitMult)
+				&& ((isSustainNote && prevNote.wasGoodHit) || strumTime <= songPos);
+	}
+
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
 		if (mustPress) {
-			canBeHit = (strumTime > Conductor.songPosition - Conductor.safeZoneOffset && strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult));
-			tooLate = (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit);
-		} else {
-			canBeHit = false;
+			canBeHit = checkDiff(Conductor.songPosition);
 
-			if (!(strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))) return;
-			wasGoodHit = ((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition);
-		}
-
-		if (tooLate && !inEditor) {
-			if (alpha > .3) alpha = .3;
-		}
+			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
+				tooLate = true;
+		} else canBeHit = false;
 	}
 
 	override function destroy() {

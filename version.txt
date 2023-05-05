@@ -1,2 +1,5 @@
 0.1.0;
-- Net Handler and Outdated State
+- Net Handler
+- Kade's Outdated State
+- New Input and Scroll
+- Improved FunkinLua (Thanks raltyro)

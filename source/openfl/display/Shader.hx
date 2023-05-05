@@ -1,6 +1,5 @@
 package openfl.display;
 
-#if !flash
 import openfl.display._internal.ShaderBuffer;
 import openfl.display3D.Context3D;
 import openfl.display3D.Program3D;
@@ -247,34 +246,34 @@ class Shader
 	**/
 	public var program:Program3D;
 
-	@:noCompletion private var __alpha:ShaderParameter<Float>;
-	@:noCompletion private var __bitmap:ShaderInput<BitmapData>;
-	@:noCompletion private var __colorMultiplier:ShaderParameter<Float>;
-	@:noCompletion private var __colorOffset:ShaderParameter<Float>;
-	@:noCompletion private var __context:Context3D;
-	@:noCompletion private var __data:ShaderData;
-	@:noCompletion private var __glVersion:Int;
-	@:noCompletion private var __glFragmentHeaderRaw:String;
-	@:noCompletion private var __glFragmentBodyRaw:String;
-	@:noCompletion private var __glFragmentSourceRaw:String;
-	@:noCompletion private var __glFragmentSource:String;
-	@:noCompletion private var __glSourceDirty:Bool;
-	@:noCompletion private var __glVertexHeaderRaw:String;
-	@:noCompletion private var __glVertexBodyRaw:String;
-	@:noCompletion private var __glVertexSourceRaw:String;
-	@:noCompletion private var __glVertexSource:String;
-	@:noCompletion private var __hasColorTransform:ShaderParameter<Bool>;
-	@:noCompletion private var __inputBitmapData:Array<ShaderInput<BitmapData>>;
-	@:noCompletion private var __isGenerated:Bool;
-	@:noCompletion private var __matrix:ShaderParameter<Float>;
-	@:noCompletion private var __numPasses:Int;
-	@:noCompletion private var __paramBool:Array<ShaderParameter<Bool>>;
-	@:noCompletion private var __paramFloat:Array<ShaderParameter<Float>>;
-	@:noCompletion private var __paramInt:Array<ShaderParameter<Int>>;
-	@:noCompletion private var __position:ShaderParameter<Float>;
-	@:noCompletion private var __textureCoord:ShaderParameter<Float>;
-	@:noCompletion private var __texture:ShaderInput<BitmapData>;
-	@:noCompletion private var __textureSize:ShaderParameter<Float>;
+	@:noCompletion var __alpha:ShaderParameter<Float>;
+	@:noCompletion var __bitmap:ShaderInput<BitmapData>;
+	@:noCompletion var __colorMultiplier:ShaderParameter<Float>;
+	@:noCompletion var __colorOffset:ShaderParameter<Float>;
+	@:noCompletion var __context:Context3D;
+	@:noCompletion var __data:ShaderData;
+	@:noCompletion var __glVersion:Int;
+	@:noCompletion var __glFragmentHeaderRaw:String;
+	@:noCompletion var __glFragmentBodyRaw:String;
+	@:noCompletion var __glFragmentSourceRaw:String;
+	@:noCompletion var __glFragmentSource:String;
+	@:noCompletion var __glSourceDirty:Bool;
+	@:noCompletion var __glVertexHeaderRaw:String;
+	@:noCompletion var __glVertexBodyRaw:String;
+	@:noCompletion var __glVertexSourceRaw:String;
+	@:noCompletion var __glVertexSource:String;
+	@:noCompletion var __hasColorTransform:ShaderParameter<Bool>;
+	@:noCompletion var __inputBitmapData:Array<ShaderInput<BitmapData>>;
+	@:noCompletion var __isGenerated:Bool;
+	@:noCompletion var __matrix:ShaderParameter<Float>;
+	@:noCompletion var __numPasses:Int;
+	@:noCompletion var __paramBool:Array<ShaderParameter<Bool>>;
+	@:noCompletion var __paramFloat:Array<ShaderParameter<Float>>;
+	@:noCompletion var __paramInt:Array<ShaderParameter<Int>>;
+	@:noCompletion var __position:ShaderParameter<Float>;
+	@:noCompletion var __textureCoord:ShaderParameter<Float>;
+	@:noCompletion var __texture:ShaderInput<BitmapData>;
+	@:noCompletion var __textureSize:ShaderParameter<Float>;
 
 	#if openfljs
 	@:noCompletion private static function __init__()
@@ -351,36 +350,6 @@ class Shader
 		}
 	}
 
-	// private function __clone ():Shader {
-	// var classType = Type.getClass (this);
-	// var shader = Type.createInstance (classType, []);
-	// for (input in __inputBitmapData) {
-	// 	if (input.input != null) {
-	// 		var field = Reflect.field (shader.data, input.name);
-	// 		field.channels = input.channels;
-	// 		field.height = input.height;
-	// 		field.input = input.input;
-	// 		field.smoothing = input.smoothing;
-	// 		field.width = input.width;
-	// 	}
-	// }
-	// for (param in __paramBool) {
-	// 	if (param.value != null) {
-	// 		Reflect.field (shader.data, param.name).value = param.value.copy ();
-	// 	}
-	// }
-	// for (param in __paramFloat) {
-	// 	if (param.value != null) {
-	// 		Reflect.field (shader.data, param.name).value = param.value.copy ();
-	// 	}
-	// }
-	// for (param in __paramInt) {
-	// 	if (param.value != null) {
-	// 		Reflect.field (shader.data, param.name).value = param.value.copy ();
-	// 	}
-	// }
-	// return shader;
-	// }
 	@:noCompletion private function __createGLShader(source:String, type:Int):GLShader
 	{
 		var gl = __context.gl;
@@ -389,7 +358,7 @@ class Shader
 		gl.shaderSource(shader, source);
 		gl.compileShader(shader);
 		var shaderInfoLog = gl.getShaderInfoLog(shader);
-		var hasInfoLog = shaderInfoLog != null && StringTools.trim(shaderInfoLog) != "";
+		var hasInfoLog = shaderInfoLog != null && shaderInfoLog.trim() != "";
 		var compileStatus = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
 
 		if (hasInfoLog || compileStatus == 0)
@@ -417,7 +386,7 @@ class Shader
 		// Fix support for drivers that don't draw if attribute 0 is disabled
 		for (param in __paramFloat)
 		{
-			if (param.name.indexOf("Position") > -1 && StringTools.startsWith(param.name, "openfl_"))
+			if (param.name.indexOf("Position") > -1 && param.name.startsWith("openfl_"))
 			{
 				gl.bindAttribLocation(program, 0, param.name);
 				break;
@@ -583,15 +552,9 @@ class Shader
 			var id = vertex + fragment;
 
 			if (__context.__programs.exists(id))
-			{
 				program = __context.__programs.get(id);
-			}
-			else
-			{
+			else {
 				program = __context.createProgram(GLSL);
-
-				// TODO
-				// program.uploadSources (vertex, fragment);
 				program.__glProgram = __createGLProgram(vertex, fragment);
 
 				__context.__programs.set(id, program);
@@ -604,49 +567,29 @@ class Shader
 				for (input in __inputBitmapData)
 				{
 					if (input.__isUniform)
-					{
 						input.index = gl.getUniformLocation(glProgram, input.name);
-					}
-					else
-					{
-						input.index = gl.getAttribLocation(glProgram, input.name);
-					}
+					else input.index = gl.getAttribLocation(glProgram, input.name);
 				}
 
 				for (parameter in __paramBool)
 				{
 					if (parameter.__isUniform)
-					{
 						parameter.index = gl.getUniformLocation(glProgram, parameter.name);
-					}
-					else
-					{
-						parameter.index = gl.getAttribLocation(glProgram, parameter.name);
-					}
+					else parameter.index = gl.getAttribLocation(glProgram, parameter.name);
 				}
 
 				for (parameter in __paramFloat)
 				{
 					if (parameter.__isUniform)
-					{
 						parameter.index = gl.getUniformLocation(glProgram, parameter.name);
-					}
-					else
-					{
-						parameter.index = gl.getAttribLocation(glProgram, parameter.name);
-					}
+					else parameter.index = gl.getAttribLocation(glProgram, parameter.name);
 				}
 
 				for (parameter in __paramInt)
 				{
 					if (parameter.__isUniform)
-					{
 						parameter.index = gl.getUniformLocation(glProgram, parameter.name);
-					}
-					else
-					{
-						parameter.index = gl.getAttribLocation(glProgram, parameter.name);
-					}
+					else parameter.index = gl.getAttribLocation(glProgram, parameter.name);
 				}
 			}
 		}
@@ -665,14 +608,14 @@ class Shader
 			type = regex.matched(1);
 			name = regex.matched(2);
 
-			if (StringTools.startsWith(name, "gl_"))
+			if (name.startsWith("gl_"))
 			{
 				continue;
 			}
 
 			var isUniform = (storageType == "uniform");
 
-			if (StringTools.startsWith(type, "sampler"))
+			if (type.startsWith("sampler"))
 			{
 				var input = new ShaderInput<BitmapData>();
 				input.name = name;
@@ -782,7 +725,7 @@ class Shader
 						parameter.__length = length;
 						__paramFloat.push(parameter);
 
-						if (StringTools.startsWith(name, "openfl_"))
+						if (name.startsWith("openfl_"))
 						{
 							switch (name)
 							{
@@ -870,25 +813,15 @@ class Shader
 		}
 
 		var gl = __context.gl;
-
-		if (shaderBuffer.paramDataLength > 0)
-		{
+		if (shaderBuffer.paramDataLength > 0){
 			if (shaderBuffer.paramDataBuffer == null)
 			{
 				shaderBuffer.paramDataBuffer = gl.createBuffer();
 			}
 
-			// Log.verbose ("bind param data buffer (length: " + shaderBuffer.paramData.length + ") (" + shaderBuffer.paramCount + ")");
-
 			__context.__bindGLArrayBuffer(shaderBuffer.paramDataBuffer);
 			gl.bufferData(gl.ARRAY_BUFFER, shaderBuffer.paramData, gl.DYNAMIC_DRAW);
-		}
-		else
-		{
-			// Log.verbose ("bind buffer null");
-
-			__context.__bindGLArrayBuffer(null);
-		}
+		} else __context.__bindGLArrayBuffer(null);
 
 		var boolIndex = 0;
 		var floatIndex = 0;
@@ -922,18 +855,11 @@ class Shader
 				}
 
 				if (hasOverride)
-				{
 					boolRef.__updateGL(__context, overrideBoolValue);
-				}
-				else
-				{
-					boolRef.__updateGLFromBuffer(__context, paramData, shaderBuffer.paramPositions[i], shaderBuffer.paramLengths[i], bufferOffset);
-				}
+				else boolRef.__updateGLFromBuffer(__context, paramData, shaderBuffer.paramPositions[i], shaderBuffer.paramLengths[i], bufferOffset);
 
 				boolIndex++;
-			}
-			else if (i < boolCount + floatCount)
-			{
+			} else if (i < boolCount + floatCount) {
 				floatRef = shaderBuffer.paramRefs_Float[floatIndex];
 
 				for (j in 0...shaderBuffer.overrideFloatCount)
@@ -947,18 +873,11 @@ class Shader
 				}
 
 				if (hasOverride)
-				{
 					floatRef.__updateGL(__context, overrideFloatValue);
-				}
-				else
-				{
-					floatRef.__updateGLFromBuffer(__context, paramData, shaderBuffer.paramPositions[i], shaderBuffer.paramLengths[i], bufferOffset);
-				}
+				else floatRef.__updateGLFromBuffer(__context, paramData, shaderBuffer.paramPositions[i], shaderBuffer.paramLengths[i], bufferOffset);
 
 				floatIndex++;
-			}
-			else
-			{
+			} else {
 				intRef = shaderBuffer.paramRefs_Int[intIndex];
 
 				for (j in 0...shaderBuffer.overrideIntCount)
@@ -972,13 +891,8 @@ class Shader
 				}
 
 				if (hasOverride)
-				{
 					intRef.__updateGL(__context, overrideIntValue);
-				}
-				else
-				{
-					intRef.__updateGLFromBuffer(__context, paramData, shaderBuffer.paramPositions[i], shaderBuffer.paramLengths[i], bufferOffset);
-				}
+				else intRef.__updateGLFromBuffer(__context, paramData, shaderBuffer.paramPositions[i], shaderBuffer.paramLengths[i], bufferOffset);
 
 				intIndex++;
 			}
@@ -1080,7 +994,6 @@ class Shader
 
 	private function thisHasField(name:String)
 	{
-		// Reflect.hasField(this, name) is REALLY expensive so we cache the result.
 		if (__fieldList == null)
 		{
 			__fieldList = Reflect.fields(this).concat(Type.getInstanceFields(Type.getClass(this)));
@@ -1088,6 +1001,3 @@ class Shader
 		return __fieldList.indexOf(name) != -1;
 	}
 }
-#else
-typedef Shader = flash.display.Shader;
-#end

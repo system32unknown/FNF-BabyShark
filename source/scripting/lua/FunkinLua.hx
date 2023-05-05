@@ -72,6 +72,8 @@ class FunkinLua {
 			Lua_helper.link_extra_arguments(lua, [this]);
 			Lua_helper.link_static_callbacks(lua);
 
+			initGlobals();
+
 			Lua.getglobal(lua, "package");
 			Lua.pushstring(lua, Paths.getLuaPackagePath());
 			Lua.setfield(lua, -2, "path");
@@ -87,8 +89,6 @@ class FunkinLua {
 			#end
 		}
 		#if hscript HScript.initHaxeModule(); #end
-
-		initGlobals();
 
 		addCallback("openCustomSubstate", function(_, name:String, pauseGame:Bool = false) {
 			if(pauseGame) {

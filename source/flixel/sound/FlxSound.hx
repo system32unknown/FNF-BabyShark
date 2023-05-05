@@ -332,9 +332,7 @@ class FlxSound extends FlxBasic
 
 		if (_channel != null) {
 			_channel.removeEventListener(Event.SOUND_COMPLETE, stopped);
-			#if !flash
 			_channel.removeEventListener(Event.SOUND_LOOP, ev_looped);
-			#end
 			_channel.stop();
 			_channel = null;
 		}
@@ -473,9 +471,7 @@ class FlxSound extends FlxBasic
 		return this;
 	}
 
-	#if !flash
-	function makeChannel()
-	@:privateAccess {
+	function makeChannel() @:privateAccess {
 		var source = new lime.media.AudioSource(_sound.__buffer);
 		source.gain = 0;
 
@@ -488,7 +484,6 @@ class FlxSound extends FlxBasic
 
 		SoundMixer.__registerSoundChannel(_channel);
 	}
-	#end
 
 	/**
 	 * Call this function if you want this sound's volume to change
@@ -667,7 +662,6 @@ class FlxSound extends FlxBasic
 			pitch = _pitch;
 			#end
 
-			#if !flash
 			@:privateAccess{
 				_channel.soundTransform = _transform;
 				_channel.__source.__backend.playing = true;
@@ -680,7 +674,6 @@ class FlxSound extends FlxBasic
 			looped = looped;
 			_amplitudeTime = -1;
 			_channel.addEventListener(Event.SOUND_LOOP, ev_looped);
-			#end
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
 
 			active = true;
@@ -705,17 +698,13 @@ class FlxSound extends FlxBasic
 		} else cleanup(autoDestroy);
 	}
 
-	#if !flash
-	function ev_looped(?_):Void
-	{
-		if (onComplete != null)
-			onComplete();
+	function ev_looped(?_):Void {
+		if (onComplete != null) onComplete();
 
-		if (!looped) {
+		if (!looped)
 			cleanup(autoDestroy);
-		} else _channel.loops = 999;
+		else _channel.loops = 999;
 	}
-	#end
 
 	/**
 	 * An internal helper function used to help Flash clean up (and potentially re-use) finished sounds.
@@ -801,7 +790,7 @@ class FlxSound extends FlxBasic
 	}
 
 	inline function get_playing():Bool
-		@:privateAccess return _channel != null #if !flash && _channel.__isValid && _channel.__source.playing #end;
+		@:privateAccess return _channel != null && _channel.__isValid && _channel.__source.playing;
 
 	inline function get_volume():Float
 		return _volume;
@@ -824,7 +813,6 @@ class FlxSound extends FlxBasic
 		@:privateAccess return (buffer != null) ? buffer.__srcVorbisFile : null;
 	#end
 
-	#if !flash
 	function update_amplitude():Void @:privateAccess {
 		if (_channel == null || _time == _amplitudeTime || !_amplitudeUpdate) return;
 		_channel.__updatePeaks();
@@ -849,7 +837,6 @@ class FlxSound extends FlxBasic
 		update_amplitude();
 		return if (stereo) (_amplitudeLeft + _amplitudeRight) * 0.5; else _amplitudeLeft;
 	}
-	#end
 
 	inline function get_channels():Int
 		@:privateAccess return (buffer != null) ? buffer.channels : 0;
@@ -875,29 +862,23 @@ class FlxSound extends FlxBasic
 	#end
 
 	inline function set_looped(v:Bool):Bool {
-		#if !flash
 		if (playing) {
 			if (v) _channel.loops = 999;
 			else _channel.loops = 0;
 		}
-		#end
 		return looped = v;
 	}
 
 	inline function set_loopTime(v:Float):Float {
-		#if !flash
 		if (playing) _channel.loopTime = v;
-		#end
 		return loopTime = v;
 	}
 
 	inline function set_endTime(v:Null<Float>):Null<Float> {
-		#if !flash
 		if (playing) {
 			if (v != null && v > 0) _channel.endTime = v;
 			else _channel.endTime = null;
 		}
-		#end
 		return endTime = v;
 	}
 

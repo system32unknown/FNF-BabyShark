@@ -40,9 +40,9 @@ class CreditsState extends MusicBeatState
 		['PolybiusProxy',		'proxy',			'MP4 Video Loader Library (hxCodec)',							'https://twitter.com/polybiusproxy',		'DCD294'],
 		['KadeDev',				'kade',				'Fixed some cool stuff on Chart Editor\nand other PRs',			'https://twitter.com/kade0912',				'64A250'],
 		['Keoiki',				'keoiki',			'Note Splash Animations',										'https://twitter.com/Keoiki_',				'D2D2D2'],
-		['superpowers04', 		'superpowers04', 	'linc_luaJIT Fork\n and some small lua stuff', 					'https://github.com/superpowers04',			'B957ED'],
+		['superpowers04', 		'superpowers04', 	'linc_luaJIT Fork\n and lua reworks', 							'https://github.com/superpowers04',			'B957ED'],
 		['Smokey',				'smokey',			'Sprite Atlas Support',											'https://twitter.com/Smokey_5_',			'483D92'],
-		['Raltyro',				'raltyro',			'Bunch of lua fixes',											'https://twitter.com/raltyro',				'F3F3F3'],
+		['Raltyro',				'raltyro',			'Bunch of lua fixes, Owner of Psike Engine',											'https://twitter.com/raltyro',				'F3F3F3'],
 		['UncertainProd',		'prod',				'Sampler2D in Runtime Shaders',									'https://github.com/UncertainProd',			'D2D2D2'],
 		['ACrazyTown',			'acrazytown',		'Optimized PNGs',												'https://twitter.com/acrazytown',			'A03E3D'],
 	];
@@ -112,7 +112,7 @@ class CreditsState extends MusicBeatState
 			pushModCredits(mod);
 
 		if (modCredits.length > 0) {
-			sections.push(['Mod Credits Sections']);
+			sections.push(['Modpack Credits Sections']);
 			modSectionsBound = sections.length;
 		}
 		for (mod in modCredits)
@@ -151,7 +151,7 @@ class CreditsState extends MusicBeatState
 		add(descBox);
 
 		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
-		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
+		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		descText.scrollFactor.set();
 		descBox.sprTracker = descText;
 		add(descText);
@@ -167,7 +167,7 @@ class CreditsState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music.volume < 0.7)
-			FlxG.sound.music.volume = MathUtil.boundTo(FlxG.sound.music.volume + (.5 * elapsed), 0, .7);
+			FlxG.sound.music.volume = FlxMath.bound(FlxG.sound.music.volume + (.5 * elapsed), 0, .7);
 
 		if(!quitting)
 		{
@@ -194,13 +194,12 @@ class CreditsState extends MusicBeatState
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
+					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
-					}
 				}
 			}
 
-			if(controls.ACCEPT && (sections[curSelected][1] != null)) {
+			if(controls.ACCEPT && sections[curSelected][1] != null) {
 				if(colorTween != null)
 					colorTween.cancel();
 
@@ -222,7 +221,7 @@ class CreditsState extends MusicBeatState
 				if(colorTween != null) {
 					colorTween.cancel();
 				}
-				FlxG.sound.play(Paths.sound('cancelMenu'));
+				FlxG.sound.play(Paths.sound('cancelMenu'), .7);
 				MusicBeatState.switchState(new MainMenuState());
 				quitting = true;
 			}
@@ -303,7 +302,7 @@ class CreditsState extends MusicBeatState
 		return Std.parseInt(bgColor);
 	}
 
-	private function unselectableCheck(num:Int):Bool {
+	function unselectableCheck(num:Int):Bool {
 		return sections[num].length <= 1;
 	}
 }
@@ -315,8 +314,8 @@ class CreditSectionState extends MusicBeatState {
 	var curSelected:Int = -1;
 	var prevModDir:String;
 
-	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private var creditsStuff:Array<Array<String>> = [];
+	var grpOptions:FlxTypedGroup<Alphabet>;
+	var creditsStuff:Array<Array<String>> = [];
 
 	var bg:FlxSprite;
 	var descText:FlxText;
@@ -405,7 +404,7 @@ class CreditSectionState extends MusicBeatState {
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music.volume < 0.7)
-			FlxG.sound.music.volume = MathUtil.boundTo(FlxG.sound.music.volume + (.5 * elapsed), 0, .7);
+			FlxG.sound.music.volume = FlxMath.bound(FlxG.sound.music.volume + (.5 * elapsed), 0, .7);
 
 		if(!quitting)
 		{
@@ -457,7 +456,7 @@ class CreditSectionState extends MusicBeatState {
 
 		for (item in grpOptions.members) {
 			if(!item.bold) {
-				var lerpVal:Float = MathUtil.boundTo(elapsed * 12, 0, 1);
+				var lerpVal:Float = FlxMath.bound(elapsed * 12, 0, 1);
 				if(item.targetY == 0) {
 					var lastX:Float = item.x;
 					item.screenCenter(X);

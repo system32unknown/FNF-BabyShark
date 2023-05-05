@@ -1,8 +1,6 @@
 package openfl.events;
 
-#if !flash
 import openfl.utils.Object;
-
 #if openfl_pool_events
 import openfl.utils.ObjectPool;
 #end
@@ -639,22 +637,6 @@ class Event
 	**/
 	public static inline var TEXTURE_READY:EventType<Event> = "textureReady";
 
-	#if false
-	/**
-		The `Event.TEXT_INTERACTION_MODE_CHANGE` constant defines the value of
-		the `type` property of a `interaction mode` event object.
-		This event has the following properties:
-
-		| Property | Value |
-		| --- | --- |
-		| `bubbles` | `false` |
-		| `cancelable` | `false`; there is no default behavior to cancel. |
-		| `currentTarget` | The object that is actively processing the Event object with an event listener. |
-		| `target` | The TextField object whose interaction mode property is changed. For example on Android, one can change the interaction mode to SELECTION via context menu. The `target` property is not always the object in the display list that registered the event listener. Use the `currentTarget` property to access the object in the display list that is currently processing the event. |
-	**/
-	// @:noCompletion @:dox(hide) @:require(flash11) public static var TEXT_INTERACTION_MODE_CHANGE:String;
-	#end
-
 	/**
 		The `Event.UNLOAD` constant defines the value of the `type` property
 		of an `unload` event object.
@@ -668,9 +650,6 @@ class Event
 		| `target` | The LoaderInfo object associated with the SWF file being unloaded or replaced. |
 	**/
 	public static inline var UNLOAD:EventType<Event> = "unload";
-
-	// @:noCompletion @:dox(hide) public static var VIDEO_FRAME:String;
-	// @:noCompletion @:dox(hide) public static var WORKER_STATE:String;
 
 	/**
 		Indicates whether an event is a bubbling event. If the event can bubble,
@@ -727,12 +706,12 @@ class Event
 	public var type(default, null):String;
 
 	#if openfl_pool_events
-	@:noCompletion private static var __pool:ObjectPool<Event> = new ObjectPool<Event>(function() return new Event(null), function(event) event.__init());
+	@:noCompletion static var __pool:ObjectPool<Event> = new ObjectPool<Event>(function() return new Event(null), function(event) event.__init());
 	#end
 
-	@:noCompletion private var __isCanceled:Bool;
-	@:noCompletion private var __isCanceledNow:Bool;
-	@:noCompletion private var __preventDefault:Bool;
+	@:noCompletion var __isCanceled:Bool;
+	@:noCompletion var __isCanceledNow:Bool;
+	@:noCompletion var __preventDefault:Bool;
 
 	/**
 		Creates an Event object to pass as a parameter to event listeners.
@@ -897,7 +876,7 @@ class Event
 		return __formatToString("Event", ["type", "bubbles", "cancelable"]);
 	}
 
-	@:noCompletion private function __formatToString(className:String, parameters:Array<String>):String
+	@:noCompletion function __formatToString(className:String, parameters:Array<String>):String
 	{
 		// TODO: Make this a macro function, and handle at compile-time, with rest parameters?
 
@@ -917,9 +896,7 @@ class Event
 		return output;
 	}
 
-	@:noCompletion private function __init():Void
-	{
-		// type = null;
+	@:noCompletion function __init():Void {
 		target = null;
 		currentTarget = null;
 		bubbles = false;
@@ -930,6 +907,3 @@ class Event
 		__preventDefault = false;
 	}
 }
-#else
-typedef Event = flash.events.Event;
-#end

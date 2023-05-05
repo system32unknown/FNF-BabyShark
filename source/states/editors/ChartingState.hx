@@ -243,6 +243,7 @@ class ChartingState extends MusicBeatState
 		currentSongName = Paths.formatToSongPath(_song.song);
 		loadSong();
 		reloadGridLayer();
+		Conductor.usePlayState = true;
 		Conductor.changeBPM(_song.bpm);
 		Conductor.mapBPMChanges(_song);
 
@@ -1235,7 +1236,7 @@ class ChartingState extends MusicBeatState
 
 		vocals = new FlxSound();
 		if  (_song.needsVoices) {
-			var file:Dynamic = Paths.voices(currentSongName);
+			var file:Dynamic = Paths.voices(currentSongName, false, true);
 			if (Std.isOfType(file, Sound) || OpenFlAssets.exists(file)) {
 				vocals.loadEmbedded(file);
 			}
@@ -1248,7 +1249,7 @@ class ChartingState extends MusicBeatState
 	}
 
 	function generateSong() {
-		FlxG.sound.playMusic(Paths.inst(currentSongName), 0.6);
+		FlxG.sound.playMusic(Paths.inst(currentSongName, false, true), 0.6);
 		if (instVolume != null) FlxG.sound.music.volume = instVolume.value;
 		if (check_mute_inst != null && check_mute_inst.checked) FlxG.sound.music.volume = 0;
 
@@ -2133,17 +2134,7 @@ class ChartingState extends MusicBeatState
 	}
 
 	function recalculateSteps(add:Float = 0):Int {
-		var lastChange:BPMChangeEvent = {
-			stepTime: 0,
-			songTime: 0,
-			bpm: 0
-		}
-		for (i in 0...Conductor.bpmChangeMap.length) {
-			if (FlxG.sound.music.time > Conductor.bpmChangeMap[i].songTime)
-				lastChange = Conductor.bpmChangeMap[i];
-		}
-
-		curStep = lastChange.stepTime + Math.floor((FlxG.sound.music.time - lastChange.songTime + add) / Conductor.stepCrochet);
+		curStep = Conductor.getStepRounded(FlxG.sound.music.time, -add);
 		updateBeat();
 
 		return curStep;
@@ -2175,8 +2166,6 @@ class ChartingState extends MusicBeatState
 	function changeSection(sec:Int = 0, ?updateMusic:Bool = true):Void {
 		if (_song.notes[sec] != null) {
 			curSec = sec;
-			updateGrid();
-
 			if (updateMusic) {
 				FlxG.sound.music.pause();
 

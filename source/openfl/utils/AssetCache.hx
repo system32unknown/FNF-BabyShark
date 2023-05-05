@@ -93,15 +93,10 @@ class AssetCache implements IAssetCache
 	public function clearBitmapData(prefix:String = null):Void
 	{
 		if (prefix == null)
-		{
 			bitmapData = new Map<String, BitmapData>();
-		}
-		else
-		{
+		else {
 			for (key in getBitmapKeys(prefix))
-			{
 				removeBitmapData(key);
-			}
 		}
 	}
 
@@ -114,15 +109,10 @@ class AssetCache implements IAssetCache
 	public function clearFonts(prefix:String = null):Void
 	{
 		if (prefix == null)
-		{
 			font = new Map<String, Font>();
-		}
-		else
-		{
+		else {
 			for (key in getFontKeys(prefix))
-			{
 				removeFont(key);
-			}
 		}
 	}
 
@@ -135,15 +125,10 @@ class AssetCache implements IAssetCache
 	public function clearSounds(prefix:String = null):Void
 	{
 		if (prefix == null)
-		{
 			sound = new Map<String, Sound>();
-		}
-		else
-		{
+		else {
 			for (key in getSoundKeys(prefix))
-			{
 				removeSound(key);
-			}
 		}
 	}
 
@@ -183,21 +168,13 @@ class AssetCache implements IAssetCache
 	public function getBitmapKeys(prefix:String = null):Array<String>
 	{
 		var result:Array<String> = [];
-		if (prefix == null)
-		{
+		if (prefix == null) {
 			for (key in bitmapData.keys())
-			{
 				result.push(key);
-			}
-		}
-		else
-		{
-			for (key in bitmapData.keys())
-			{
-				if (StringTools.startsWith(key, prefix))
-				{
+		} else {
+			for (key in bitmapData.keys()) {
+				if (key.startsWith(prefix))
 					result.push(key);
-				}
 			}
 		}
 		return result;
@@ -212,21 +189,13 @@ class AssetCache implements IAssetCache
 	public function getFontKeys(prefix:String = null):Array<String>
 	{
 		var result:Array<String> = [];
-		if (prefix == null)
-		{
+		if (prefix == null) {
 			for (key in font.keys())
-			{
 				result.push(key);
-			}
-		}
-		else
-		{
-			for (key in font.keys())
-			{
-				if (StringTools.startsWith(key, prefix))
-				{
+		} else {
+			for (key in font.keys()) {
+				if (key.startsWith(prefix))
 					result.push(key);
-				}
 			}
 		}
 		return result;
@@ -241,21 +210,13 @@ class AssetCache implements IAssetCache
 	public function getSoundKeys(prefix:String = null):Array<String>
 	{
 		var result:Array<String> = [];
-		if (prefix == null)
-		{
+		if (prefix == null) {
 			for (key in sound.keys())
-			{
 				result.push(key);
-			}
-		}
-		else
-		{
-			for (key in sound.keys())
-			{
-				if (StringTools.startsWith(key, prefix))
-				{
+		} else {
+			for (key in sound.keys()) {
+				if (key.startsWith(prefix))
 					result.push(key);
-				}
 			}
 		}
 		return result;
