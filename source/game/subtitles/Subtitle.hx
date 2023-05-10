@@ -74,4 +74,17 @@ class Subtitle extends FlxTypeText {
 			properties.fonts = Paths.font("comic.ttf");
 		return properties;
 	}
+
+	public static function getLuaSubtitle(options:Dynamic) {
+		return {
+			x: options.x,
+			y: options.y,
+			subtitleSize: options.subtitleSize,
+			typeSpeed: options.typeSpeed,
+			centerScreen: options.centerScreen,
+			screenCenter: options.screenCenter,
+			sounds: options.sounds,
+			fonts: options.fonts,
+		};
+	}
 }

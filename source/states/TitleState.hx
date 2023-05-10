@@ -194,7 +194,10 @@ class TitleState extends MusicBeatState
 		if (!initialized) return super.update(elapsed);
 
 		if (!transitioning) {
-			if (FlxG.sound.music == null) FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
+			if (FlxG.sound.music == null) {
+				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
+				FlxG.sound.music.fadeIn(4, 0, 0.7);
+			} 
 			Conductor.songPosition = FlxG.sound.music.time;
 		} else if (skippedIntro) Conductor.songPosition += elapsed * 1000;
 

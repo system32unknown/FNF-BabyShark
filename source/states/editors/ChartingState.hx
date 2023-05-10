@@ -200,8 +200,7 @@ class ChartingState extends MusicBeatState
 		bg.color = 0xFF222222;
 		add(bg);
 
-		gridLayer = new FlxTypedGroup<FlxSprite>();
-		add(gridLayer);
+		add(gridLayer = new FlxTypedGroup<FlxSprite>());
 
 		waveformSprite = new FlxSprite(GRID_SIZE).makeGraphic(FlxG.width, FlxG.height, 0x00FFFFFF);
 		add(waveformSprite);
@@ -251,8 +250,8 @@ class ChartingState extends MusicBeatState
 		bpmTxt.scrollFactor.set();
 		add(bpmTxt);
 
-		quant = new AttachedSprite('chart_quant','chart_quant');
-		quant.animation.addByPrefix('q','chart_quant',0,false);
+		quant = new AttachedSprite('chart_quant', 'chart_quant');
+		quant.animation.addByPrefix('q', 'chart_quant', 0, false);
 		quant.animation.play('q', true, false, 0);
 		quant.sprTracker = strumLine;
 		quant.setAdd(-32, 8);
@@ -331,10 +330,11 @@ class ChartingState extends MusicBeatState
 		}
 		lastSong = currentSongName;
 
+		updateGrid();
+
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
-		updateGrid();
 		super.create();
 	}
 
@@ -444,7 +444,7 @@ class ChartingState extends MusicBeatState
 			var directory:String = directories[i];
 			if(FileSystem.exists(directory)) {
 				for (file in FileSystem.readDirectory(directory)) {
-					var path = haxe.io.Path.join([directory, file]);
+					var path = Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
 						var charToCheck:String = file.substr(0, file.length - 5);
 						if(!charToCheck.endsWith('-dead') && !tempMap.exists(charToCheck)) {
@@ -501,7 +501,7 @@ class ChartingState extends MusicBeatState
 			var directory:String = directories[i];
 			if(FileSystem.exists(directory)) {
 				for (file in FileSystem.readDirectory(directory)) {
-					var path = haxe.io.Path.join([directory, file]);
+					var path = Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
 						var stageToCheck:String = file.substr(0, file.length - 5);
 						if(!tempMap.exists(stageToCheck)) {
@@ -522,7 +522,6 @@ class ChartingState extends MusicBeatState
 		stageDropDown.selectedLabel = _song.stage;
 		blockPressWhileScrolling.push(stageDropDown);
 
-		tempMap.clear();
 		var difficulties:Array<String> = Difficulty.list;
 		for (i in 0...difficulties.length) {
 			tempMap.set(difficulties[i], true);
@@ -676,9 +675,7 @@ class ChartingState extends MusicBeatState
 		});
 
 		var pasteButton:FlxButton = new FlxButton(copyButton.x + 100, copyButton.y, "Paste Section", function() {
-			if(notesCopied == null || notesCopied.length < 1) {
-				return;
-			}
+			if(notesCopied == null || notesCopied.length < 1) return;
 
 			var addToTime:Float = Conductor.stepCrochet * (getSectionBeats() * 4 * (curSec - sectionToCopy));
 			for (note in notesCopied) {
@@ -878,7 +875,7 @@ class ChartingState extends MusicBeatState
 			var directory:String =  directories[i];
 			if(FileSystem.exists(directory)) {
 				for (file in FileSystem.readDirectory(directory)) {
-					var path = haxe.io.Path.join([directory, file]);
+					var path = Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.lua')) {
 						var fileToCheck:String = file.substr(0, file.length - 4);
 						if(!noteTypeMap.exists(fileToCheck)) {
@@ -939,7 +936,7 @@ class ChartingState extends MusicBeatState
 			var directory:String =  directories[i];
 			if(FileSystem.exists(directory)) {
 				for (file in FileSystem.readDirectory(directory)) {
-					var path = haxe.io.Path.join([directory, file]);
+					var path = Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file != 'readme.txt' && file.endsWith('.txt')) {
 						var fileToCheck:String = file.substr(0, file.length - 4);
 						if(!eventPushedMap.exists(fileToCheck)) {
@@ -2571,7 +2568,6 @@ class ChartingState extends MusicBeatState
 				Paths.clearUnusedCache();
 				MusicBeatState.resetState();
 			} catch(e) {
-				trace(e.message);
 				errorDisplay.text = getErrorMessage('Error:', e.message, song.toLowerCase(), song.toLowerCase());
 				errorDisplay.displayError();
 				return;

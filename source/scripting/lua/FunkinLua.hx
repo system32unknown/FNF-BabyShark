@@ -1562,8 +1562,13 @@ class FunkinLua {
 
 		addCallback("changePresence", function(_, details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
 			#if discord_rpc
+			PlayState.instance.presenceChangedByLua = true;
 			DiscordClient.changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
 			#end
+		});
+		addCallback("addSubtitle", function(_, text:String, typespe:Float, showTime:Float, options:Dynamic) {
+			var suboptions:game.subtitles.Subtitle.SubtitleProperties = game.subtitles.Subtitle.getLuaSubtitle(options);
+			PlayState.instance.subtitleManager.addSubtitle(text, typespe, showTime, suboptions);
 		});
 
 		// LUA TEXTS

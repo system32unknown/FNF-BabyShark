@@ -1,21 +1,34 @@
 package options;
 
+import flixel.FlxObject;
 import flixel.ui.FlxBar;
 import flixel.math.FlxPoint;
 import game.Character;
 import game.Conductor;
 import states.stages.StageWeek1 as BackgroundStage;
 import ui.CustomFadeTransition;
-import ui.Alphabet;
 
-class NoteOffsetState extends MusicBeatState
-{
-	var boyfriend:Character;
-	var gf:Character;
+class NoteOffsetState extends MusicBeatState {
+	public static var daPixelZoom:Float = PlayState.daPixelZoom;
+	var delayMin:Int = -500;
+	var delayMax:Int = 500;
 
+	var BF_X:Float = 770;
+	var BF_Y:Float = 100;
+	var GF_X:Float = 400;
+	var GF_Y:Float = 130;
+	
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
+	public var cameraSpeed:Float = 1;
+	public var defaultCamZoom:Float = 1;
+
+	var boyfriendGroup:FlxSpriteGroup;
+	var gfGroup:FlxSpriteGroup;
+
+	var boyfriend:Character;
+	var gf:Character;
 
 	var coolText:FlxText;
 	var combo:FlxSprite;
@@ -26,27 +39,32 @@ class NoteOffsetState extends MusicBeatState
 	var dumbTexts:FlxTypedGroup<FlxText>;
 
 	var barPercent:Float = 0;
-	var delayMin:Int = -500;
-	var delayMax:Int = 500;
 	var timeBarBG:FlxSprite;
 	var timeBar:FlxBar;
 	var timeTxt:FlxText;
-	var beatText:Alphabet;
-	var beatTween:FlxTween;
 
 	var changeModeText:FlxText;
 
 	var antialiasing:Bool = ClientPrefs.getPref('Antialiasing');
 	var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 
-	override public function create()
-	{
+	override public function create() {
+		#if discord_rpc
+		DiscordClient.changePresence('Adjusting Offsets and Combos', null);
+		#end
+
+		FlxG.fixedTimestep = false;
+		persistentUpdate = true;
+
+		FlxG.sound.destroy(true);
+		Paths.clearUnusedCache();
 		// Cameras
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
-		camHUD.bgColor.alpha = 0;
-		camOther.bgColor.alpha = 0;
+		camGame.bgColor = 0xFF000000;
+		camHUD.bgColor = 0x00000000;
+		camOther.bgColor = 0x00000000;
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
@@ -54,24 +72,25 @@ class NoteOffsetState extends MusicBeatState
 
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
-		FlxG.camera.scroll.set(120, 130);
+		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
-		persistentUpdate = true;
-		FlxG.sound.pause();
 		// Stage
 		Paths.setCurrentLevel('week1');
 		new BackgroundStage();
+		camGame.scroll.set(120, 130);
+		defaultCamZoom = 0.7;
+
+		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
+		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
 
 		// Characters
-		gf = new Character(400, 130, 'gf');
-		gf.x += gf.positionArray[0];
-		gf.y += gf.positionArray[1];
+		gf = new Character(gf.positionArray[0], gf.positionArray[1], 'gf');
 		gf.scrollFactor.set(0.95, 0.95);
-		boyfriend = new Character(770, 100, 'bf', true);
-		boyfriend.x += boyfriend.positionArray[0];
-		boyfriend.y += boyfriend.positionArray[1];
-		add(gf);
-		add(boyfriend);
+		gf.danceEveryNumBeats = 2;
+		gfGroup.add(gf);
+		
+		boyfriend = new Character(boyfriend.positionArray[0], boyfriend.positionArray[1], 'bf', true);
+		boyfriendGroup.add(boyfriend);
 
 		// Combo stuff
 		coolText = new FlxText(0, 0, 0, '', 32);
@@ -79,26 +98,26 @@ class NoteOffsetState extends MusicBeatState
 		coolText.x = FlxG.width * 0.35;
 
 		rating = new FlxSprite().loadGraphic(Paths.image('ratings/sick'));
-		rating.cameras = [camHUD];
+		rating.camera = camHUD;
 		rating.setGraphicSize(Std.int(rating.width * 0.7));
 		rating.updateHitbox();
 		rating.antialiasing = antialiasing;
 		add(rating);
 
 		comboNums = new FlxSpriteGroup();
-		comboNums.cameras = [camHUD];
+		comboNums.camera = camHUD;
 		comboNums.antialiasing = antialiasing;
 		add(comboNums);
 
 		combo = new FlxSprite().loadGraphic(Paths.image('ratings/combo'));
-		combo.cameras = [camHUD];
+		combo.camera = camHUD;
 		combo.setGraphicSize(Std.int(combo.width * 0.7));
 		combo.updateHitbox();
 		combo.antialiasing = antialiasing;
 		add(combo);
 
 		lateEarly = new FlxSprite().loadGraphic(Paths.image('ratings/early'));
-		lateEarly.cameras = [camHUD];
+		lateEarly.camera = camHUD;
 		lateEarly.setGraphicSize(Std.int(combo.width * 0.7));
 		lateEarly.updateHitbox();
 		lateEarly.antialiasing = antialiasing;
@@ -109,7 +128,7 @@ class NoteOffsetState extends MusicBeatState
 		var daLoop:Int = 0;
 		for (i in seperatedScore) {
 			var numScore:FlxSprite = new FlxSprite(43 * daLoop).loadGraphic(Paths.image('number/num$i'));
-			numScore.cameras = [camHUD];
+			numScore.camera = camHUD;
 			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 			numScore.updateHitbox();
 			numScore.antialiasing = antialiasing;
@@ -117,72 +136,56 @@ class NoteOffsetState extends MusicBeatState
 			daLoop++;
 		}
 
-		dumbTexts = new FlxTypedGroup<FlxText>();
-		dumbTexts.cameras = [camHUD];
-		add(dumbTexts);
-		createTexts();
-
-		repositionCombo();
-
-		// Note delay stuff
-		beatText = new Alphabet(0, 0, 'Beat Hit!', true);
-		beatText.setScale(.6, .6);
-		beatText.x += 260;
-		beatText.alpha = 0;
-		beatText.acceleration.y = 250;
-		beatText.visible = false;
-		add(beatText);
-		
 		timeTxt = new FlxText(0, 600, FlxG.width, "", 32);
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.borderSize = 2;
-		timeTxt.visible = false;
-		timeTxt.cameras = [camHUD];
-
-		barPercent = ClientPrefs.getPref('noteOffset');
-		updateNoteDelay();
+		timeTxt.antialiasing = antialiasing;
 		
 		timeBarBG = new FlxSprite(0, timeTxt.y + 8).loadGraphic(Paths.image('old/healthBar'));
 		timeBarBG.setGraphicSize(Std.int(timeBarBG.width * 1.2));
+		timeBarBG.scrollFactor.set();
 		timeBarBG.updateHitbox();
-		timeBarBG.cameras = [camHUD];
 		timeBarBG.screenCenter(X);
-		timeBarBG.visible = false;
+		timeBarBG.antialiasing = antialiasing;
 
 		timeBar = new FlxBar(0, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this, 'barPercent', delayMin, delayMax);
 		timeBar.scrollFactor.set();
 		timeBar.screenCenter(X);
 		timeBar.createFilledBar(FlxColor.BLACK, FlxColor.fromRGB(0, 255, 128));
 		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
-		timeBar.visible = false;
-		timeBar.cameras = [camHUD];
+		timeBar.antialiasing = antialiasing;
 
-		var bar = new FlxSprite(timeBar.x, timeBar.y).makeGraphic(Math.floor(timeBar.width), Math.floor(timeBar.height), FlxColor.TRANSPARENT);
-		bar.cameras = [camHUD];
+		barPercent = ClientPrefs.getPref('noteOffset');
+		updateNoteDelay();
+
+		dumbTexts = new FlxTypedGroup<FlxText>();
+		dumbTexts.camera = camHUD;
+		add(dumbTexts);
+		for (i in 0...8) createTexts(i);
+
+		repositionCombo();
+
+		timeBarBG.camera = camHUD; add(timeBarBG);
+		timeBar.camera = camHUD; add(timeBar);
+		timeTxt.camera = camHUD; add(timeTxt);
+
+		var bar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 40, FlxColor.BLACK);
 		bar.scrollFactor.set();
-		bar.screenCenter(X);
-
-		add(timeBarBG);
+		bar.alpha = 0.6;
+		bar.camera = camHUD;
 		add(bar);
-		add(timeBar);
-		add(timeTxt);
 
-		///////////////////////
-
-		var blackBox:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 40, FlxColor.BLACK);
-		blackBox.scrollFactor.set();
-		blackBox.alpha = 0.6;
-		blackBox.cameras = [camHUD];
-		add(blackBox);
-
-		changeModeText = new FlxText(0, 4, FlxG.width, "", 32);
-		changeModeText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		changeModeText = new FlxText(0, 4, FlxG.width, "", 32).setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		changeModeText.antialiasing = antialiasing;
 		changeModeText.scrollFactor.set();
-		changeModeText.cameras = [camHUD];
+		changeModeText.camera = camHUD;
 		add(changeModeText);
+
 		updateMode();
 
+		Conductor.usePlayState = false;
+		Conductor.mapBPMChanges(true);
 		Conductor.changeBPM(128);
 		FlxG.sound.playMusic(Paths.music('offsetSong'));
 
@@ -196,8 +199,12 @@ class NoteOffsetState extends MusicBeatState
 	var startMousePos:FlxPoint = new FlxPoint();
 	var startComboOffset:FlxPoint = new FlxPoint();
 
-	override public function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
+		Conductor.songPosition = FlxG.sound.music.time;
+		super.update(elapsed);
+
+		camGame.zoom = FlxMath.lerp(camGame.zoom, defaultCamZoom, FlxMath.bound(elapsed * 3.125, 0, 1));
+
 		var addNum:Int = 1;
 		if(FlxG.keys.pressed.SHIFT) addNum = 10;
 
@@ -259,24 +266,16 @@ class NoteOffsetState extends MusicBeatState
 			{
 				holdingObjectType = null;
 				FlxG.mouse.getScreenPosition(camHUD, startMousePos);
-				if (startMousePos.x - rating.x >= 0 && startMousePos.x - rating.x <= rating.width &&
-					startMousePos.y - rating.y >= 0 && startMousePos.y - rating.y <= rating.height)
-				{
+				if (selectObj(startMousePos, rating)) {
 					holdingObjectType = 'rating';
 					startComboOffset.set(comboOffset[0][0], comboOffset[0][1]);
-				} else if (startMousePos.x - comboNums.x >= 0 && startMousePos.x - comboNums.x <= comboNums.width &&
-						 startMousePos.y - comboNums.y >= 0 && startMousePos.y - comboNums.y <= comboNums.height)
-				{
+				} else if (selectObj(startMousePos, comboNums)) {
 					holdingObjectType = 'numscore';
 					startComboOffset.set(comboOffset[1][0], comboOffset[1][1]);
-				} else if (startMousePos.x - combo.x >= 0 && startMousePos.x - combo.x <= combo.width &&
-						 startMousePos.y - combo.y >= 0 && startMousePos.y - combo.y <= combo.height)
-				{
+				} else if (selectObj(startMousePos, combo)) {
 					holdingObjectType = 'combo';
 					startComboOffset.set(comboOffset[2][0], comboOffset[2][1]);
-				} else if (startMousePos.x - lateEarly.x >= 0 && startMousePos.x - lateEarly.x <= lateEarly.width &&
-						 startMousePos.y - lateEarly.y >= 0 && startMousePos.y - lateEarly.y <= lateEarly.height)
-		   		{
+				} else if (selectObj(startMousePos, lateEarly)) {
 					holdingObjectType = 'lateearly';
 					startComboOffset.set(comboOffset[3][0], comboOffset[3][1]);
 		   		}
@@ -350,55 +349,33 @@ class NoteOffsetState extends MusicBeatState
 		}
 
 		if(controls.BACK) {
-			if(zoomTween != null) zoomTween.cancel();
-			if(beatTween != null) beatTween.cancel();
-
 			persistentUpdate = false;
 			CustomFadeTransition.nextCamera = camOther;
 			MusicBeatState.switchState(new options.OptionsState());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'), 1, true);
 			FlxG.mouse.visible = false;
 		}
-
-		Conductor.songPosition = FlxG.sound.music.time;
-		super.update(elapsed);
 	}
 
-	var zoomTween:FlxTween;
-	var lastBeatHit:Int = -1;
+	inline function selectObj(obj1:FlxPoint, obj2:FlxObject):Bool {
+		return obj1.x - obj2.x >= 0 && obj1.x - obj2.x <= obj2.width && obj1.y - obj2.y >= 0 && obj1.y - obj2.y <= obj2.height;
+	}
+
 	override public function beatHit()
 	{
 		super.beatHit();
 
-		if(lastBeatHit == curBeat)
-			return;
-
-		if(curBeat % 2 == 0) {
-			boyfriend.dance();
-			gf.dance();
-		}
+		if(curBeat % 2 == 0) boyfriend.dance();
+		gf.dance();
 		
-		if(curBeat % 4 == 2) {
-			FlxG.camera.zoom = 1.15;
+		if (!onComboMenu && camGame.zoom < 1.35)
+			camGame.zoom += 0.0075;
+	}
 
-			if(zoomTween != null) zoomTween.cancel();
-			zoomTween = FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.circOut, onComplete: function(twn:FlxTween) {
-					zoomTween = null;
-				}
-			});
+	override function sectionHit() {
+		super.sectionHit();
 
-			beatText.alpha = 1;
-			beatText.y = 320;
-			beatText.velocity.y = -150;
-			if(beatTween != null) beatTween.cancel();
-			beatTween = FlxTween.tween(beatText, {alpha: 0}, 1, {ease: FlxEase.sineIn,
-				onComplete: function(twn:FlxTween) {
-					beatTween = null;
-				}
-			});
-		}
-
-		lastBeatHit = curBeat;
+		if (camGame.zoom < 1.35) camGame.zoom += 0.015;
 	}
 
 	function repositionCombo() {
@@ -420,21 +397,16 @@ class NoteOffsetState extends MusicBeatState
 		reloadTexts();
 	}
 
-	function createTexts() {
-		for (i in 0...8) {
-			var text:FlxText = new FlxText(10, 48 + (i * 30), 0, '', 24);
-			text.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			text.scrollFactor.set();
-			text.borderSize = 2;
-			dumbTexts.add(text);
-			text.cameras = [camHUD];
+	function createTexts(i:Int) {
+		var text:FlxText = new FlxText(10, 48 + (i * 30), 0, '', 24);
+		text.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		text.antialiasing = antialiasing;
+		text.scrollFactor.set();
+		text.borderSize = 2;
+		text.camera = camHUD;
 
-			switch(i) {
-				case 2 | 3: text.y += 24;
-				case 4 | 5: text.y += 48;
-				case 6 | 7: text.y += 72;
-			}
-		}
+		dumbTexts.add(text);
+		text.y += Math.floor(i / 2) * 24;
 	}
 
 	function reloadTexts()
@@ -465,10 +437,7 @@ class NoteOffsetState extends MusicBeatState
 		lateEarly.visible = onComboMenu;
 		dumbTexts.visible = onComboMenu;
 		
-		timeBarBG.visible = !onComboMenu;
-		timeBar.visible = !onComboMenu;
-		timeTxt.visible = !onComboMenu;
-		beatText.visible = !onComboMenu;
+		timeBarBG.visible = timeBar.visible = timeTxt.visible = !onComboMenu;
 
 		if(onComboMenu)
 			changeModeText.text = '< Combo Offset (Press Accept to Switch) >';
@@ -476,5 +445,12 @@ class NoteOffsetState extends MusicBeatState
 
 		changeModeText.text = changeModeText.text.toUpperCase();
 		FlxG.mouse.visible = onComboMenu;
+	}
+
+	override function destroy() {
+		super.destroy();
+
+		startMousePos.put();
+		startComboOffset.put();
 	}
 }

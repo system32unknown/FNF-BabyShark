@@ -19,7 +19,7 @@ class DeleteSavesSubState extends MusicBeatSubstate {
     {
         super();
 
-        #if desktop
+        #if discord_rpc
 		DiscordClient.changePresence("Modpacks Options Saves Menu", null);
 		#end
 
