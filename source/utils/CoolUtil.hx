@@ -33,9 +33,9 @@ class CoolUtil {
 
 	inline public static function coolTextFile(path:String):Array<String> {
 		#if sys
-		if(FileSystem.exists(path)) return [for (i in File.getContent(path).trim().split('\n')) i.trim()];
+		if (FileSystem.exists(path)) return listFromString(File.getContent(path));
 		#else
-		if(Assets.exists(path)) return [for (i in Assets.getText(path).trim().split('\n')) i.trim()];
+		if (Assets.exists(path)) return listFromString(Assets.getText(path));
 		#end
 		return [];
 	}

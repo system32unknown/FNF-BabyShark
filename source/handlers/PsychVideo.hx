@@ -50,8 +50,7 @@ class PsychVideo {
 
 	public function startVideo(name:String):MP4Handler {
 		var path:String = Paths.video(name);
-		if (!exists(name))
-			return null;
+		if (!exists(name)) return null;
 
 		var video:MP4Handler = new MP4Handler();
 		if (endFunc != null)
@@ -72,7 +71,7 @@ class PsychVideo {
 		newSprite.bitmap.canSkip = false;
 
 		if (cam != null)
-			newSprite.cameras = [cam];
+			newSprite.camera = cam;
 		newSprite.alpha = op;
 		newSprite.playVideo(path, loop, pauseMusic);
 		sprites.push(newSprite);
@@ -102,8 +101,8 @@ class PsychVideo {
 				sprites[s].bitmap.dispose();
 				sprites[s].kill();
 
-				videos = [];
-				sprites = [];
+				videos.resize(0);
+				sprites.resize(0);
 			}
 		}
 	}

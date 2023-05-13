@@ -8,6 +8,7 @@ import states.MainMenuState;
 import states.FreeplayState;
 import data.WeekData;
 import game.Character;
+import game.Conductor;
 import ui.Alphabet;
 
 class MasterEditorMenu extends MusicBeatState {
@@ -99,6 +100,8 @@ class MasterEditorMenu extends MusicBeatState {
 			}
 			FlxG.sound.music.volume = 0;
 			#if PRELOAD_ALL
+			Conductor.usePlayState = false;
+			Conductor.mapBPMChanges(true);
 			FreeplayState.destroyFreeplayVocals();
 			#end
 		}

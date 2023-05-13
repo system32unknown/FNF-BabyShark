@@ -84,13 +84,20 @@ class NoteOffsetState extends MusicBeatState {
 		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
 
 		// Characters
-		gf = new Character(gf.positionArray[0], gf.positionArray[1], 'gf');
+		gf = new Character(0, 0, 'gf');
+		gf.x += gf.positionArray[0];
+		gf.y += gf.positionArray[1];
 		gf.scrollFactor.set(0.95, 0.95);
 		gf.danceEveryNumBeats = 2;
 		gfGroup.add(gf);
 		
-		boyfriend = new Character(boyfriend.positionArray[0], boyfriend.positionArray[1], 'bf', true);
+		boyfriend = new Character(0, 0, 'bf', true);
+		boyfriend.x += boyfriend.positionArray[0];
+		boyfriend.y += boyfriend.positionArray[1];
 		boyfriendGroup.add(boyfriend);
+
+		add(gfGroup);
+		add(boyfriendGroup);
 
 		// Combo stuff
 		coolText = new FlxText(0, 0, 0, '', 32);
