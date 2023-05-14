@@ -2,4 +2,5 @@
 - Net Handler
 - Kade's Outdated State
 - New Input and Scroll
-- Improved FunkinLua (Thanks raltyro)
+- Improved FunkinLua
+-
