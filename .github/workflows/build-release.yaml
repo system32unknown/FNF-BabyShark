@@ -55,7 +55,7 @@ jobs:
           if-no-files-found: error
 
       - name: Uploading artifact (executable windows)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@main
         with:
           name: executableOnly-${{ matrix.compile }}-${{ matrix.build }}
           path: export/${{ matrix.build }}/${{ matrix.folder }}/bin/AlterEngine.exe
