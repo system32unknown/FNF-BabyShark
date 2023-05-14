@@ -26,7 +26,7 @@
             "url": "https://github.com/Aidan63/linc_discord-rpc"
         },
 		{"name": "linc_luajit-ralt", "type": "git", "dir": "linc_luajit-ralt",
-			"ref": "ralf",
+			"ref": "ralt",
 			"url": "https://github.com/Raltyro/linc_luajit"
 		}
     ]
