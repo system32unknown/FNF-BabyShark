@@ -6,7 +6,7 @@
             "ref": "dev",
             "url": "https://github.com/HaxeFlixel/flixel"
         },
-        {"name": "flixel-addons", "type": "git", "dir":"flixel-ui",
+        {"name": "flixel-addons", "type": "git", "dir":"flixel-addons",
             "ref": "dev",
             "url": "https://github.com/HaxeFlixel/flixel-addons"
         },
