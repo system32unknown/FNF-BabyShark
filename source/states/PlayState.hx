@@ -607,9 +607,9 @@ class PlayState extends MusicBeatState {
 		}
 		add(camFollow);
 
-		camGame.follow(camFollow, LOCKON, 1);
-		camGame.zoom = defaultCamZoom;
-		camGame.snapToTarget();
+		FlxG.camera.follow(camFollow, LOCKON, 1);
+		FlxG.camera.zoom = defaultCamZoom;
+		FlxG.camera.snapToTarget();
 
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 		
