@@ -76,7 +76,7 @@
 	<haxelib name="flixel-ui"/>
 	<haxelib name="flixel-addons"/>
 
-	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
+	<haxelib name="linc_luajit-ralt" rename="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
 	<haxelib name="discord_rpc" if="DISCORD_ALLOWED"/>
 
@@ -95,7 +95,7 @@
 		<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 		<haxedef name="FLX_NO_DEBUG"/>
 	</section>
-	
+	linc_luajit-ralt
 	<!--Used for Izzy Engine's crash handler-->
 	<section if="CRASH_HANDLER">
 		<haxedef name="HXCPP_CHECK_POINTER"/>
