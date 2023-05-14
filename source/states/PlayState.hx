@@ -572,7 +572,7 @@ class PlayState extends MusicBeatState {
 		timeBarBG.scrollFactor.set();
 		timeBarBG.alpha = 0;
 		timeBarBG.visible = showTime;
-		timeBarBG.setAdd(-4, -4);
+		timeBarBG.addPoint.set(-4, -4);
 		add(timeBarBG);
 		
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
@@ -607,9 +607,9 @@ class PlayState extends MusicBeatState {
 		}
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, LOCKON, 1);
-		FlxG.camera.zoom = defaultCamZoom;
-		FlxG.camera.snapToTarget();
+		camGame.follow(camFollow, LOCKON, 1);
+		camGame.zoom = defaultCamZoom;
+		camGame.snapToTarget();
 
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 		
@@ -620,7 +620,7 @@ class PlayState extends MusicBeatState {
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		healthBarBG.visible = !hideHud;
-		healthBarBG.setAdd(-4, -4);
+		healthBarBG.addPoint.set(-4, -4);
 		if(downScroll) healthBarBG.y = 50;
 		add(healthBarBG);
 
@@ -651,8 +651,8 @@ class PlayState extends MusicBeatState {
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		
 		if (ClientPrefs.getPref('HealthTypes') == 'Psych') {
-			iconP1.isCenter = true;
-			iconP2.isCenter = true;
+			iconP1.iconType = 'psych';
+			iconP2.iconType = 'psych';
 		}
 		if (ClientPrefs.getPref('ScoreType') == 'Psych') {
 			scoreTxt.y = healthBarBG.y + 36;
@@ -680,9 +680,7 @@ class PlayState extends MusicBeatState {
 		botplayTxt.visible = cpuControlled;
 		botplayTxt.screenCenter(X);
 		add(botplayTxt);
-		if (downScroll) {
-			botplayTxt.y = timeBarBG.y - 78;
-		}
+		if (downScroll) botplayTxt.y = timeBarBG.y - 78;
 
 		songNameText = new FlxText(2, 0, 0, SONG.song + " - " + storyDifficultyText + (playbackRate != 1 ? ' ($playbackRate' + 'x)' : ''), 16);
 		songNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
@@ -1509,7 +1507,7 @@ class PlayState extends MusicBeatState {
 					daKeyTxt.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1.25);
 					daKeyTxt.alpha = 0;
 					var textY:Float = (j == 0 ? babyArrow.y - 32 : ((babyArrow.y - 32) + babyArrow.height) - daKeyTxt.height);
-					daKeyTxt.setPosition(babyArrow.x + (babyArrow.width / 2) - daKeyTxt.width / 2, textY);
+					daKeyTxt.setPosition(babyArrow.x + ((babyArrow.width - daKeyTxt.width) / 2), textY);
 					add(daKeyTxt);
 					daKeyTxt.camera = camHUD;
 					daKeyText.push(daKeyTxt);
@@ -1859,8 +1857,16 @@ class PlayState extends MusicBeatState {
 
 		final iconOffset:Int = 26;
 		if (health > healthMax) health = healthMax;
-		if (moveHealthIcons) iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01) - iconOffset);
-		if (moveHealthIcons) iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01)) - (iconP2.width - iconOffset);
+
+		if (moveHealthIcons) {
+			if (ClientPrefs.getPref('HealthTypes') == 'Psych') {	
+				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
+				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
+			} else {
+				iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01) - iconOffset);
+				iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01)) - (iconP2.width - iconOffset);
+			}
+		}
 
 		if (healthBar.percent < 20) {
 			iconP1.setState(1);
@@ -3549,7 +3555,7 @@ class PlayState extends MusicBeatState {
 			if (generatedMusic && !endingSong && !isCameraOnForcedPos)
 				moveCameraSection();
 
-			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.getPref('camZooms')) {
+			if (ClientPrefs.getPref('camZooms') && camZooming && FlxG.camera.zoom < 1.35) {
 				FlxG.camera.zoom += .015 * camZoomingMult;
 				camHUD.zoom += .03 * camZoomingMult;
 			}

@@ -1,5 +1,6 @@
 package utils;
 
+import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
 import openfl.geom.Rectangle;
 import openfl.net.FileReference;
@@ -193,4 +194,7 @@ class CoolUtil {
 			default: null;
 		}
 	}
+
+	inline public static function flKeyToFlx(keyCode:Int):FlxKey
+		@:privateAccess return FlxKey.toStringMap.get(keyCode);
 }

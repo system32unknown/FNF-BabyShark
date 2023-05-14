@@ -14,6 +14,7 @@ import utils.CoolUtil;
 import states.LoadingState;
 import ui.Prompt;
 import ui.AttachedSprite;
+import ui.AttachedFlxText;
 import ui.ErrorDisplay;
 import flixel.FlxObject;
 import flixel.addons.display.FlxGridOverlay;
@@ -250,7 +251,7 @@ class ChartingState extends MusicBeatState
 		quant.animation.addByPrefix('q', 'chart_quant', 0, false);
 		quant.animation.play('q', true, false, 0);
 		quant.sprTracker = strumLine;
-		quant.setAdd(-32, 8);
+		quant.addPoint.set(-32, 8);
 		add(quant);
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
@@ -2274,7 +2275,7 @@ class ChartingState extends MusicBeatState
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 100, theType, 24);
 				daText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER);
 				daText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1);
-				daText.setAdd(-32, 6);
+				daText.textoffset.set(-32, 6);
 				curRenderedNoteType.add(daText);
 				daText.sprTracker = note;
 			}
@@ -2296,8 +2297,8 @@ class ChartingState extends MusicBeatState
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 400, text, 12);
 				daText.setFormat(Paths.font("vcr.ttf"), 12, FlxColor.WHITE, RIGHT);
 				daText.setBorderStyle(FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK, 1);
-				daText.xAdd = -410;
-				if(note.eventLength > 1) daText.yAdd += 8;
+				daText.textoffset.x = -410;
+				if(note.eventLength > 1) daText.textoffset.y += 8;
 				curRenderedNoteType.add(daText);
 				daText.sprTracker = note;
 			}
@@ -2652,30 +2653,5 @@ class ChartingState extends MusicBeatState
 		var shit = (Conductor.songPosition - lastChange.songTime) / lastChange.stepCrochet;
 		curDecStep = lastChange.stepTime + shit;
 		curStep = lastChange.stepTime + Math.floor(shit);
-	}
-}
-
-class AttachedFlxText extends FlxText {
-	public var sprTracker:FlxSprite;
-	public var xAdd:Float = 0;
-	public var yAdd:Float = 0;
-
-	public function new(X:Float = 0, Y:Float = 0, FieldWidth:Float = 0, ?Text:String, Size:Int = 8, EmbeddedFont:Bool = true) {
-		super(X, Y, FieldWidth, Text, Size, EmbeddedFont);
-	}
-
-	public function setAdd(?x:Float = 0, ?y:Float = 0) {
-		xAdd = x;
-		yAdd = y;
-	}
-
-	override function update(elapsed:Float) {
-		super.update(elapsed);
-
-		if (sprTracker != null) {
-			setPosition(sprTracker.x + xAdd, sprTracker.y + yAdd);
-			angle = sprTracker.angle;
-			alpha = sprTracker.alpha;
-		}
 	}
 }

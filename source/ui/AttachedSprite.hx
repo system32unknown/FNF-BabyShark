@@ -1,10 +1,11 @@
 package ui;
 
+import flixel.math.FlxPoint;
+
 class AttachedSprite extends FlxSprite
 {
 	public var sprTracker:FlxSprite;
-	public var xAdd:Float = 0;
-	public var yAdd:Float = 0;
+	public var addPoint:FlxPoint = new FlxPoint();
 	public var angleAdd:Float = 0;
 	public var alphaMult:Float = 1;
 
@@ -19,16 +20,9 @@ class AttachedSprite extends FlxSprite
 			frames = Paths.getSparrowAtlas(file, library);
 			animation.addByPrefix('idle', anim, 24, loop);
 			animation.play('idle');
-		} else if (file != null) {
-			loadGraphic(Paths.image(file));
-		}
+		} else if (file != null) loadGraphic(Paths.image(file));
 		antialiasing = ClientPrefs.getPref('Antialiasing');
 		scrollFactor.set();
-	}
-
-	public function setAdd(?x:Float = 0, ?y:Float = 0) {
-		xAdd = x;
-		yAdd = y;
 	}
 
 	override function update(elapsed:Float)
@@ -36,17 +30,12 @@ class AttachedSprite extends FlxSprite
 		super.update(elapsed);
 
 		if (sprTracker != null) {
-			setPosition(sprTracker.x + xAdd, sprTracker.y + yAdd);
+			setPosition(sprTracker.x + addPoint.x, sprTracker.y + addPoint.y);
 			scrollFactor.set(sprTracker.scrollFactor.x, sprTracker.scrollFactor.y);
 
-			if(copyAngle)
-				angle = sprTracker.angle + angleAdd;
-
-			if(copyAlpha)
-				alpha = sprTracker.alpha * alphaMult;
-
-			if(copyVisible) 
-				visible = sprTracker.visible;
+			if(copyAngle) angle = sprTracker.angle + angleAdd;
+			if(copyAlpha) alpha = sprTracker.alpha * alphaMult;
+			if(copyVisible) visible = sprTracker.visible;
 		}
 	}
 }

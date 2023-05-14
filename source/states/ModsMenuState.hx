@@ -25,8 +25,7 @@ class ModsMenuState extends MusicBeatState
 
 	var noModsTxt:FlxText;
 	var selector:AttachedSprite;
-	var descriptionTxt:FlxText;
-	var folderTxt:FlxText;	
+	var descriptionTxt:FlxText;	
 	var needaReset = false;
 	private static var curSelected:Int = 0;
 	public static var defaultColor:FlxColor = 0xFF665AFF;
@@ -93,7 +92,7 @@ class ModsMenuState extends MusicBeatState
 		saveTxt();
 
 		selector = new AttachedSprite();
-		selector.setAdd(-205, -68);
+		selector.addPoint.set(-205, -68);
 		selector.alphaMult = 0.5;
 		CoolUtil.makeSelectorGraphic(selector, 1100, 450, FlxColor.BLACK, 11);
 		add(selector);
@@ -216,12 +215,6 @@ class ModsMenuState extends MusicBeatState
 		add(descriptionTxt);
 		visibleWhenHasMods.push(descriptionTxt);
 
-		folderTxt = new FlxText(148, 0, 0, "", 16);
-		folderTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		folderTxt.scrollFactor.set();
-		add(folderTxt);
-		visibleWhenHasMods.push(folderTxt);
-
 		var i:Int = 0;
 		while (i < modsList.length) {
 			var values:Array<Dynamic> = modsList[i];
@@ -257,7 +250,7 @@ class ModsMenuState extends MusicBeatState
 				newMod.icon.loadGraphic(Paths.image('unknownMod'));
 			}
 			newMod.icon.sprTracker = newMod.alphabet;
-			newMod.icon.setAdd(-newMod.icon.width - 30, -45);
+			newMod.icon.addPoint.set(-newMod.icon.width - 30, -45);
 			add(newMod.icon);
 			i++;
 		}
@@ -418,13 +411,10 @@ class ModsMenuState extends MusicBeatState
 				mod.alphabet.alpha = 1;
 				selector.sprTracker = mod.alphabet;
 				descriptionTxt.text = mod.description;
-				folderTxt.text = "Folder: " + mod.folder;
-				if (mod.restart) { // finna make it to where if nothing changed then it won't reset
-					descriptionTxt.text += " (This Mod will restart the game!)";
-				}
+				if (mod.restart) descriptionTxt.text += " (This Mod will restart the game!)";
 
 				// correct layering
-				var stuffArray:Array<FlxSprite> = [selector, descriptionTxt, folderTxt, mod.alphabet, mod.icon];
+				var stuffArray:Array<FlxSprite> = [selector, descriptionTxt, mod.alphabet, mod.icon];
 				for (obj in stuffArray) {
 					remove(obj);
 					insert(members.length, obj);
@@ -450,7 +440,6 @@ class ModsMenuState extends MusicBeatState
 
 			if (i == curSelected) {
 				descriptionTxt.y = mod.alphabet.y + 160;
-				folderTxt.y = buttonEnableAll.y;
 				for (button in buttonsArray) {
 					button.y = mod.alphabet.y + 320;
 				}
@@ -460,9 +449,7 @@ class ModsMenuState extends MusicBeatState
 	}
 }
 
-class ModMetadata
-{
-	public var folder:String;
+class ModMetadata {
 	public var name:String;
 	public var description:String;
 	public var color:FlxColor;
@@ -471,7 +458,6 @@ class ModMetadata
 	public var icon:AttachedSprite;
 
 	public function new(folder:String) {
-		this.folder = folder;
 		this.name = folder;
 		this.description = "No description provided.";
 		this.color = ModsMenuState.defaultColor;

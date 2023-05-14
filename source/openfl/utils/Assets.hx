@@ -103,8 +103,7 @@ class Assets
 		@param	hardware		Hardware Caching (Default: false)
 		@return		A new BitmapData object
 	**/
-	public static function getBitmapData(id:String, useCache:Bool = true, ?key:String, hardware:Bool = false):BitmapData
-	{
+	public static function getBitmapData(id:String, useCache:Bool = true, ?key:String, hardware:Bool = false):BitmapData {
 		#if (lime && tools && !display)
 		key = key != null ? key : id;
 		
@@ -116,7 +115,6 @@ class Assets
 		}
 
 		var image = LimeAssets.getImage(id, false);
-
 		if (image != null)
 		{
 			var bitmapData:BitmapData = BitmapData.fromImage(image);

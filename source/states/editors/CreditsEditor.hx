@@ -111,7 +111,7 @@ class CreditsEditor extends MusicBeatState
 
 		descBox = new AttachedSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
-		descBox.setAdd(-10, -10);
+		descBox.addPoint.set(-10, -10);
 		descBox.alphaMult = .6;
 		descBox.alpha = .6;
 		add(descBox);
@@ -285,7 +285,7 @@ class CreditsEditor extends MusicBeatState
 					if(creditsStuff[i][1] == null || creditsStuff[i][1] == '') icon = new AttachedSprite('credits/unknown');
 				}
 
-				icon.xAdd = optionText.width + 10;
+				icon.addPoint.x = optionText.width + 10;
 				icon.sprTracker = optionText;
 
 				// using a FlxGroup is too much fuss!

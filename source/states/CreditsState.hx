@@ -145,7 +145,7 @@ class CreditsState extends MusicBeatState
 
 		descBox = new AttachedSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
-		descBox.setAdd(-10, -10);
+		descBox.addPoint.set(-10, -10);
 		descBox.alphaMult = 0.6;
 		descBox.alpha = 0.6;
 		add(descBox);
@@ -362,7 +362,7 @@ class CreditSectionState extends MusicBeatState {
 				if (!icon.changeIcon(creditsStuff[i][1], curCSection, false))
 					icon.changeIcon(creditsStuff[i][1], getSimilarIcon(creditsStuff[i][1]));
 
-				icon.isCenter = true;
+				icon.iconType = 'center';
 				icon.offset.y = -30;
 				icon.updateHitbox();
 				icon.sprTracker = optionText;
@@ -382,7 +382,7 @@ class CreditSectionState extends MusicBeatState {
 
 		descBox = new AttachedSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
-		descBox.setAdd(-10, -10);
+		descBox.addPoint.set(-10, -10);
 		descBox.alphaMult = 0.6;
 		descBox.alpha = 0.6;
 		add(descBox);

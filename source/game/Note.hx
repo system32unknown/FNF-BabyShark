@@ -108,8 +108,8 @@ class Note extends FlxSprite
 	public var changeAnim:Bool = true;
 	public var changeColSwap:Bool = true;
 	
-	var defaultWidth:Float = 0;
-	var defaultHeight:Float = 0;
+	var defaultWidth:Float = 157;
+	var defaultHeight:Float = 154;
 
 	public function resizeByRatio(ratio:Float) { //haha funny twitter shit
 		if(isSustainNote && !animation.curAnim.name.endsWith('tail')) {
@@ -118,10 +118,9 @@ class Note extends FlxSprite
 		}
 	}
 
-	private function set_texture(value:String):String {
+	function set_texture(value:String):String {
 		if(texture != value) reloadNote('', value);
-		texture = value;
-		return value;
+		return texture = value;
 	}
 
 	function set_noteType(value:String):String {
@@ -283,13 +282,11 @@ class Note extends FlxSprite
 				width /= pixelNotesDivisionValue;
 				height /= 2;
 				originalHeightForCalcs = height;
-				trace(width, height);
 				loadGraphic(Paths.image('pixelUI/' + blahblah + 'ENDS'), true, Math.floor(width), Math.floor(height));
 			} else {
 				loadGraphic(Paths.image('pixelUI/' + blahblah));
 				width /= pixelNotesDivisionValue;
 				height /= 5;
-				trace(width, height);
 				loadGraphic(Paths.image('pixelUI/' + blahblah), true, Math.floor(width), Math.floor(height));
 			}
 			defaultWidth = width;

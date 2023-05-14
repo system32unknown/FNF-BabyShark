@@ -112,6 +112,9 @@ class Main extends Sprite
 	}
 
 	function onGameReset() {
+		Paths.clearStoredCache();
+		Paths.clearUnusedCache();
+
 		#if LUA_ALLOWED
 		Paths.pushGlobalMods();
 		#end

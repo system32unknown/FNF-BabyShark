@@ -1,11 +1,10 @@
 package ui;
 
 import ui.Alphabet;
+import flixel.math.FlxPoint;
 
-class AttachedText extends Alphabet
-{
-	public var offsetX:Float = 0;
-	public var offsetY:Float = 0;
+class AttachedText extends Alphabet {
+	public var textoffset:FlxPoint = new FlxPoint();
 	public var sprTracker:FlxSprite;
 	public var copyVisible:Bool = true;
 	public var copyAlpha:Bool = false;
@@ -15,24 +14,14 @@ class AttachedText extends Alphabet
 		this.scaleX = scale;
 		this.scaleY = scale;
 		this.isMenuItem = false;
-		this.offsetX = offsetX;
-		this.offsetY = offsetY;
-	}
-
-	public function setOffset(?x:Float = 0, ?y:Float = 0) {
-		offsetX = x;
-		offsetY = y;
+		this.textoffset.set(offsetX, offsetY);
 	}
 
 	override function update(elapsed:Float) {
 		if (sprTracker != null) {
-			setPosition(sprTracker.x + offsetX, sprTracker.y + offsetY);
-			if (copyVisible) {
-				visible = sprTracker.visible;
-			}
-			if (copyAlpha) {
-				alpha = sprTracker.alpha;
-			}
+			setPosition(sprTracker.x + textoffset.x, sprTracker.y + textoffset.y);
+			if (copyVisible) visible = sprTracker.visible;
+			if (copyAlpha) alpha = sprTracker.alpha;
 		}
 
 		super.update(elapsed);
