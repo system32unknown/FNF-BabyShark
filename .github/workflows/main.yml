@@ -1,6 +1,5 @@
 name: Build Release
 
-# Controls when the action will run.
 on:
   workflow_dispatch:
 
