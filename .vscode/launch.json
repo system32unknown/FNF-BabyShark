@@ -6,14 +6,14 @@
         "type": "lime",
         "preLaunchTask": "Build Windows (Debug)",
         "request": "launch",
-        "program": "${workspaceFolder}/export/debug/windows/bin/Baby Shark's Funkin.exe"
+        "program": "${workspaceFolder}/export/debug/windows/bin/AlterEngine.exe"
       },
       {
         "name": "Windows (Release)",
         "type": "lime",
         "preLaunchTask": "Build Windows (Release)",
         "request": "launch",
-        "program": "${workspaceFolder}/export/debug/windows/bin/Baby Shark's Funkin.exe"
+        "program": "${workspaceFolder}/export/debug/windows/bin/AlterEngine.exe"
       },
     ],
   }

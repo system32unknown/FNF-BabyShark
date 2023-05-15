@@ -11,7 +11,7 @@ if /I "%AYS%" neq "y" goto END else exit
 
 cd ..
 cd export/release/windows/bin
-"Baby Shark's Funkin"
+"AlterEngine"
 :END
 endlocal
 exit

@@ -90,7 +90,7 @@ class AtlasFrameMaker extends FlxFramesCollection
 			var theFrame = new FlxFrame(b);
 			theFrame.parent = b;
 			theFrame.name = animation + i;
-			theFrame.sourceSize.set(frameSize.x,frameSize.y);
+			theFrame.sourceSize.set(frameSize.x, frameSize.y);
 			theFrame.frame = new FlxRect(0, 0, bitMapArray[i].width, bitMapArray[i].height);
 			daFramez.push(theFrame);
 		}

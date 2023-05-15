@@ -1,1 +1,0 @@
-Put your custom achievements here! Custom achievements should have a .json and a .lua file and they must have the same name.

@@ -208,9 +208,8 @@ class SpriteSymbol extends Sprite {
 
 	private function createLayers():Void {
 		// todo safety check for not initialiing twice
-		if (_layers != null) {
+		if (_layers != null)
 			throw new Error("You must not call this twice");
-		}
 		_layers = new Array<Sprite>();
 
 		if (_numLayers <= 1) {
@@ -245,13 +244,12 @@ class SpriteSymbol extends Sprite {
 	
 			}
 			// aditional checks for rotation
+			_bitmap.x = data.Position.x;
 			if (spriteData.rotated) {
 				_bitmap.rotation = -90;
-				_bitmap.x = data.Position.x;
 				_bitmap.y = data.Position.y + spriteData.w;
 			} else {
 				_bitmap.rotation = 0;
-				_bitmap.x = data.Position.x;
 				_bitmap.y = data.Position.y;
 			}
 
@@ -297,15 +295,11 @@ class SpriteSymbol extends Sprite {
 		transform.colorTransform = newTransform;
 	}
 
-	private function setLoop(data:String):Void {
-		if (data != null) {
-			_loopMode = data;
-		} else {
-			_loopMode = LoopMode.LOOP;
-		}
+	function setLoop(data:String):Void {
+		_loopMode = (data != null) ? data : LoopMode.LOOP;
 	}
 
-	private function setType(data:String):Void {
+	function setType(data:String):Void {
 		if (data != null) {
 			_type = data;
 		}
@@ -363,7 +357,7 @@ class SpriteSymbol extends Sprite {
 		else return 0;
 	}
 
-	private function getLayer(layerIndex:Int):Sprite {
+	function getLayer(layerIndex:Int):Sprite {
 		return _layers[layerIndex];
 	}
 
@@ -392,11 +386,9 @@ class SpriteSymbol extends Sprite {
 		for (i in 1...numLabels) {
 			var label:FrameLabel = _frameLabels[i];
 
-			if (label.frame <= _currentFrame) {
+			if (label.frame <= _currentFrame)
 				highestLabel = label;
-			} else {
-				break;
-			}
+			else break;
 		}
 
 		return (highestLabel != null) ? highestLabel.name : null;
@@ -413,20 +405,18 @@ class SpriteSymbol extends Sprite {
 		return -1;
 	}
 
-	private function get_currentFrame():Int {
+	function get_currentFrame():Int {
 		return _currentFrame;
 	}
 
-	private function set_currentFrame(value:Int):Int {
+	function set_currentFrame(value:Int):Int {
 		while (value < 0) {
 			value += _numFrames;
 		}
 
-		if (_loopMode == LoopMode.PLAY_ONCE) {
+		if (_loopMode == LoopMode.PLAY_ONCE)
 			_currentFrame = Std.int(Math.min(Math.max(value, 0), _numFrames - 1));
-		} else {
-			_currentFrame = Std.int(Math.abs(value % _numFrames));
-		}
+		else _currentFrame = Std.int(Math.abs(value % _numFrames));
 
 		if (_composedFrame != _currentFrame) {
 			update();
@@ -434,56 +424,48 @@ class SpriteSymbol extends Sprite {
 		return value;
 	}
 
-	private function get_type():String {
+	function get_type():String {
 		return _type;
 	}
 
 	private function set_type(value:String):String {
-		if (SymbolType.isValid(value)) {
+		if (SymbolType.isValid(value))
 			_type = value;
-		} else {
-			throw new ArgumentError("Invalid symbol type: " + value);
-		}
+		else throw new ArgumentError("Invalid symbol type: " + value);
 		return value;
 	}
 
-	private function get_loopMode():String {
+	function get_loopMode():String {
 		return _loopMode;
 	}
 
-	private function set_loopMode(value:String):String {
-		if (LoopMode.isValid(value)) {
+	function set_loopMode(value:String):String {
+		if (LoopMode.isValid(value))
 			_loopMode = value;
-		} else {
-			throw new ArgumentError("Invalid loop mode: " + value);
-		}
+		else throw new ArgumentError("Invalid loop mode: " + value);
 		return value;
 	}
 
-	private function get_symbolName():String {
+	function get_symbolName():String {
 		return _symbolName;
 	}
 
-	private function get_numLayers():Int {
+	function get_numLayers():Int {
 		return _numLayers;
 	}
 
-	private function get_numFrames():Int {
+	function get_numFrames():Int {
 		return _numFrames;
 	}
 
-	// data access
-
-	private function getLayerData(layerIndex:Int):LayerData {
+	function getLayerData(layerIndex:Int):LayerData {
 		return _data.TIMELINE.LAYERS[layerIndex];
 	}
 
-	private function getFrameData(layerIndex:Int, frameIndex:Int):LayerFrameData {
+	function getFrameData(layerIndex:Int, frameIndex:Int):LayerFrameData {
 		var layer = getLayerData(layerIndex);
-		if (layer == null)
-			return null;
+		if (layer == null) return null;
 
 		return layer.FrameMap.get(frameIndex);
 	}
-
 }

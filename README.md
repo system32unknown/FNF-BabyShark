@@ -32,6 +32,7 @@ Heavily Modded Psych Engine. combined with Kade, Dave, Base Engines.
 * Keoiki - Note Splash Animations
 * Smokey - Sprite Atlas Support
 * superpowers04 - LUA JIT Fork and some Lua reworks
+* Raltyro - Maintainer of Psike Engine
 _____________________________________
 
 ## Mod Support
