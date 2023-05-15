@@ -10,11 +10,12 @@
             "ref": "dev",
             "url": "https://github.com/HaxeFlixel/flixel-addons"
         },
-        {"name": "flixel-ui", "type": "git", "ref": "dev", "dir":"flixel-ui",
+        {"name": "flixel-ui", "type": "git", "dir":"flixel-ui",
+            "ref": "dev",
             "url": "https://github.com/HaxeFlixel/flixel-ui"
         },
         {"name": "hxcpp", "type": "haxelib"},
-        {"name": "hxCodec", "type": "git", "dir": "hxCodes",
+        {"name": "hxCodec", "type": "git", "dir": "hxCodec",
             "ref": "main",
             "url": "https://github.com/polybiusproxy/hxCodec"
         },

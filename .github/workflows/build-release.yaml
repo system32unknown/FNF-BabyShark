@@ -42,8 +42,6 @@ jobs:
         run: |
           haxelib setup .haxelib/
           haxelib install hxcpp --quiet
-          haxelib install format --quiet
-          haxelib install hxp --quiet
 
       - name: Install haxelibs
         run: haxe -cp update -D analyzer-optimize -main Update --interp
