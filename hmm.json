@@ -6,10 +6,11 @@
             "ref": "dev",
             "url": "https://github.com/HaxeFlixel/flixel"
         },
-        {"name": "flixel-addons", "type": "git", "ref": "dev",
+        {"name": "flixel-addons", "type": "git", "dir":"flixel-addons",
+            "ref": "dev",
             "url": "https://github.com/HaxeFlixel/flixel-addons"
         },
-        {"name": "flixel-ui", "type": "git", "ref": "dev",
+        {"name": "flixel-ui", "type": "git", "ref": "dev", "dir":"flixel-ui",
             "url": "https://github.com/HaxeFlixel/flixel-ui"
         },
         {"name": "hxcpp", "type": "haxelib"},
