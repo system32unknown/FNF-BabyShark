@@ -1,7 +1,6 @@
 package game;
 
 import flixel.FlxGame;
-import utils.system.MemoryUtil;
 
 class FunkinGame extends FlxGame {
     var skipNextTickUpdate:Bool = false;
@@ -17,17 +16,5 @@ class FunkinGame extends FlxGame {
         if (skipNextTickUpdate != (skipNextTickUpdate = false))
             _total = ticks = getTicks();
         super.onEnterFrame(t);
-    }
-
-    public override function draw() {
-        MemoryUtil.askDisable();
-        super.draw();
-        MemoryUtil.askEnable();
-    }
-
-    public override function update() {
-        MemoryUtil.askDisable();
-        super.update();
-        MemoryUtil.askEnable();
     }
 }

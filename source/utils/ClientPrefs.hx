@@ -37,6 +37,8 @@ class ClientPrefs {
 		'RainbowFps' => false,
 		'comboStacking' => false,
 		'showKeybindsOnStart' => false,
+		'hardwareCache' => false,
+		'streamMusic' => false,
 		'LUType' => 'Never',
 		'LUAlpha' => 0,
 		'AntiMash' => false,

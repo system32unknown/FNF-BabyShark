@@ -12,21 +12,6 @@ import neko.vm.Gc;
 import openfl.system.System;
 
 class MemoryUtil {
-	public static var disableCount:Int = 0;
-
-	public static function askDisable() {
-		disableCount++;
-		if (disableCount > 0)
-			Gcenable(false);
-		else Gcenable();
-	}
-	public static function askEnable() {
-		disableCount--;
-		if (disableCount > 0)
-			Gcenable(false);
-		else Gcenable();
-	}
-
 	inline public static function clearMajor(?minor:Bool = false) {
 		#if cpp
 		Gc.run(!minor);
@@ -59,6 +44,12 @@ class MemoryUtil {
 	}
 
 	inline public static function getMEM():Float {
+		#if cpp
+		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
+		#elseif sys
 		return cast(cast(System.totalMemory, UInt), Float);
+		#else
+		return 0;
+		#end
 	}
 }

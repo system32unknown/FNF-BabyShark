@@ -195,6 +195,9 @@ class CoolUtil {
 		}
 	}
 
-	inline public static function flKeyToFlx(keyCode:Int):FlxKey
-		@:privateAccess return FlxKey.toStringMap.get(keyCode);
+	inline public static function parseHex(hex:String) {
+		var parsedhex:FlxColor = Std.parseInt(hex);
+		if(!hex.startsWith('0x')) parsedhex = Std.parseInt('0xff' + hex);
+		return;
+	}
 }

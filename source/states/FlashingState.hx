@@ -11,8 +11,7 @@ class FlashingState extends MusicBeatState
 	override function create() {
 		super.create();
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		add(bg);
+		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK));
 
 		warnText = new FlxText(0, 0, FlxG.width,
 			"Hey, Welcome to Alter Engine!\n
@@ -23,7 +22,7 @@ class FlashingState extends MusicBeatState
 			You've been warned!",
 			32);
 		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
-		warnText.screenCenter(Y);
+		warnText.screenCenter();
 		add(warnText);
 	}
 

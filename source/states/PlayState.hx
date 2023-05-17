@@ -2189,7 +2189,7 @@ class PlayState extends MusicBeatState {
 					case 'gf' | 'girlfriend' | '1': value = 1;
 				}
 
-				if(Math.isNaN(flValue2) || flValue2 <= 0) flValue2 = .6;
+				if(flValue2 == null || flValue2 <= 0) flValue2 = .6;
 
 				if(value != 0) {
 					if(dad.curCharacter == gfChecknull) { //Tutorial GF is actually Dad! The GF is an imposter!! ding ding ding ding ding ding ding, dindinding, end my suffering
@@ -2209,21 +2209,21 @@ class PlayState extends MusicBeatState {
 				}
 
 			case 'Set GF Speed':
-				if(Math.isNaN(flValue1) || flValue1 < 1) flValue1 = 1;
+				if(flValue1 == null || flValue1 < 1) flValue1 = 1;
 				gfSpeed = Math.round(flValue1);
 
 			case 'Add Camera Zoom':
 				if(ClientPrefs.getPref('camZooms') && FlxG.camera.zoom < 1.35) {
-					if(Math.isNaN(flValue1)) flValue1 = 0.015;
-					if(Math.isNaN(flValue2)) flValue2 = 0.03;
+					if(flValue1 == null) flValue1 = 0.015;
+					if(flValue2 == null) flValue2 = 0.03;
 
 					FlxG.camera.zoom += flValue1;
 					camHUD.zoom += flValue2;
 				}
 
 			case 'Set Camera Zoom':
-				if(Math.isNaN(flValue1)) flValue1 = defaultCamZoom;
-				if(Math.isNaN(flValue2)) flValue2 = 1;
+				if(flValue1 == null) flValue1 = defaultCamZoom;
+				if(flValue2 == null) flValue2 = 1;
 				defaultCamZoom = flValue1;
 				defaultHudCamZoom = flValue2;
 
@@ -2248,9 +2248,9 @@ class PlayState extends MusicBeatState {
 			case 'Camera Follow Pos':
 				if(camFollow != null) {
 					isCameraOnForcedPos = false;
-					if(!Math.isNaN(flValue1) || !Math.isNaN(flValue2)) {
-						if(Math.isNaN(flValue1)) flValue1 = 0;
-						if(Math.isNaN(flValue2)) flValue2 = 0;
+					if(flValue1 != null || flValue2 != null) {
+						if(flValue1 == null) flValue1 = 0;
+						if(flValue2 == null) flValue2 = 0;
 						camFollow.setPosition(flValue1, flValue2);
 						isCameraOnForcedPos = true;
 					}
@@ -2391,8 +2391,8 @@ class PlayState extends MusicBeatState {
 
 			case 'Change Scroll Speed':
 				if (songSpeedType != "constant") {
-					if(Math.isNaN(flValue1)) flValue1 = 1;
-					if(Math.isNaN(flValue2)) flValue2 = 0;
+					if(flValue1 == null) flValue1 = 1;
+					if(flValue2 == null) flValue2 = 0;
 
 					var newValue:Float = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1) * flValue1;
 					if(flValue2 <= 0) songSpeed = newValue;

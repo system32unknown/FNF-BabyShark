@@ -158,6 +158,8 @@ class ChartingState extends MusicBeatState
 	public static var vortex:Bool = false;
 	public var mouseQuant:Bool = false;
 	override function create() {
+		Paths.clearUnusedCache();
+
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
 		else {
@@ -364,23 +366,27 @@ class ChartingState extends MusicBeatState
 		var reloadSong:FlxButton = new FlxButton(saveButton.x + 90, saveButton.y, "Reload Audio", function() {
 			currentSongName = Paths.formatToSongPath(UI_songTitle.text);
 			loadSong();
-			updateWaveform();
+			#if desktop updateWaveform(); #end
 		});
 
 		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function() {
 			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {loadJson(_song.song.toLowerCase());}, null,ignoreWarnings));
 		});
+		reloadSongJson.color = 0xffff7e00;
+		reloadSongJson.label.color = FlxColor.WHITE;
 
 		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, 'Load Autosave', function() {
 			PlayState.SONG = Song.parseJSONshit(FlxG.save.data.autosave);
 			MusicBeatState.resetState();
 		});
+		loadAutosaveBtn.color = FlxColor.GREEN;
+		loadAutosaveBtn.label.color = FlxColor.WHITE;
 
 		var loadEventJson:FlxButton = new FlxButton(loadAutosaveBtn.x, loadAutosaveBtn.y + 30, 'Load Events', function() {
 			var songName:String = Paths.formatToSongPath(_song.song);
 			var file:String = Paths.json(Paths.CHART_PATH + '/$songName/events');
 			#if sys
-			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson(Paths.CHART_PATH + "/" + songName + '/events')) || #end FileSystem.exists(file))
+			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson(Paths.CHART_PATH + '/$songName/events')) || #end FileSystem.exists(file))
 			#else
 			if (OpenFlAssets.exists(file))
 			#end
@@ -391,6 +397,8 @@ class ChartingState extends MusicBeatState
 				changeSection(curSec);
 			}
 		});
+		loadEventJson.color = FlxColor.GREEN;
+		loadEventJson.label.color = FlxColor.WHITE;
 
 		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, 'Save Events', function () {
 			saveEvents();
@@ -833,7 +841,10 @@ class ChartingState extends MusicBeatState
 	var stepperSusLength:FlxUINumericStepper;
 	var strumTimeInputText:FlxUIInputText; //I wanted to use a stepper but we can't scale these as far as i know :(
 	var noteTypeDropDown:FlxUIDropDownMenu;
-	var currentType:Int = 0;
+	var currentType:Int = 0;	var stepperSpamCloseness:FlxUINumericStepper;
+	var stepperSpamLength:FlxUINumericStepper;
+	var spamLength:Float = 5;
+	var spamCloseness:Float = 2;
 
 	function addNoteUI():Void
 	{
@@ -900,9 +911,46 @@ class ChartingState extends MusicBeatState
 		});
 		blockPressWhileScrolling.push(noteTypeDropDown);
 
+		var spamButton:FlxButton = new FlxButton(noteTypeDropDown.x, noteTypeDropDown.y + 40, "Add Notes", function() {
+			if (curSelectedNote != null) {
+				for(i in 0...Std.int(spamLength)) {
+					addNote(curSelectedNote[0] + (15000 / _song.bpm) / spamCloseness, curSelectedNote[1], curSelectedNote[2], false);
+				}
+				updateGrid();
+				updateNoteUI();
+			}
+		});
+		var spamButtontwo:FlxButton = new FlxButton(spamButton.x, spamButton.y + 40, "Add Notes 2", function() {
+			if (curSelectedNote != null) {
+				for(j in 0...Std.int(spamCloseness)) {
+					for(i in 0...Std.int(spamLength)) {
+						addNote(curSelectedNote[0] + (15000 / _song.bpm) / j, curSelectedNote[1], curSelectedNote[2], false);
+					}
+				}
+				updateGrid();
+				updateNoteUI();
+			}
+		});
+		
+		stepperSpamCloseness = new FlxUINumericStepper(spamButton.x + 90, spamButton.y + 5, 2, 2, 2, 64);
+		stepperSpamCloseness.value = spamCloseness;
+		stepperSpamCloseness.name = 'note_spamthing';
+		blockPressWhileTypingOnStepper.push(stepperSpamCloseness);
+
+		stepperSpamLength = new FlxUINumericStepper(stepperSpamCloseness.x + 90, stepperSpamCloseness.y, 5, 5, 1, 8192);
+		stepperSpamLength.value = spamLength;
+		stepperSpamLength.name = 'note_spamamount';
+		blockPressWhileTypingOnStepper.push(stepperSpamLength);
+
 		tab_group_note.add(new FlxText(10, 10, 0, 'Sustain length:'));
+		tab_group_note.add(new FlxText(stepperSpamCloseness.x, stepperSpamCloseness.y - 15, 0, 'Note Density:'));
+		tab_group_note.add(new FlxText(stepperSpamLength.x, stepperSpamLength.y - 15, 0, 'Note Amount:'));
 		tab_group_note.add(new FlxText(10, 50, 0, 'Strum time (in miliseconds):'));
 		tab_group_note.add(new FlxText(10, 90, 0, 'Note type:'));
+		tab_group_note.add(spamButton);
+		tab_group_note.add(spamButtontwo);
+		tab_group_note.add(stepperSpamCloseness);
+		tab_group_note.add(stepperSpamLength);
 		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(strumTimeInputText);
 		tab_group_note.add(noteTypeDropDown);
@@ -1299,6 +1347,8 @@ class ChartingState extends MusicBeatState
 						curSelectedNote[2] = nums.value;
 						updateGrid();
 					}
+				case 'note_spamthing': spamCloseness = nums.value;
+				case 'note_spamamount': spamLength = nums.value;
 				case 'section_bpm':
 					_song.notes[curSec].bpm = nums.value;
 					updateGrid();
@@ -2241,10 +2291,30 @@ class ChartingState extends MusicBeatState
 	}
 
 	function updateGrid():Void {
+		curRenderedNotes.forEach(note -> {
+			curRenderedNotes.remove(note, true);
+			note.destroy();
+		});
 		curRenderedNotes.clear();
+		curRenderedSustains.forEach(sus -> {
+			curRenderedSustains.remove(sus, true);
+			sus.destroy();
+		});
 		curRenderedSustains.clear();
+		curRenderedNoteType.forEach(txt -> {
+			curRenderedNoteType.remove(txt, true);
+			txt.destroy();
+		});
 		curRenderedNoteType.clear();
+		nextRenderedNotes.forEach(note -> {
+			nextRenderedNotes.remove(note, true);
+			note.destroy();
+		});
 		nextRenderedNotes.clear();
+		nextRenderedSustains.forEach(sus -> {
+			nextRenderedSustains.remove(sus, true);
+			sus.destroy();
+		});
 		nextRenderedSustains.clear();
 
 		if (_song.notes[curSec].changeBPM && _song.notes[curSec].bpm > 0)
@@ -2476,7 +2546,7 @@ class ChartingState extends MusicBeatState
 		if (!delnote) addNote(cs, d, style);
 	}
 
-	function addNote(strum:Null<Float> = null, data:Null<Int> = null, type:Null<Int> = null):Void {
+	function addNote(strum:Null<Float> = null, data:Null<Int> = null, type:Null<Int> = null, ?gridUpdate:Bool = true):Void {
 		var noteStrum = getStrumTime(dummyArrow.y * (getSectionBeats() / 4), false) + sectionStartTime();
 		var noteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
 		var noteSus = 0;
@@ -2508,8 +2578,10 @@ class ChartingState extends MusicBeatState
 		lastNoteData = noteData;
 		lastNoteStrum = noteStrum;
 
-		updateGrid();
-		updateNoteUI();
+		if (gridUpdate) {
+			updateGrid();
+			updateNoteUI();
+		}
 	}
 
 	function getStrumTime(yPos:Float, doZoomCalc:Bool = true):Float {
