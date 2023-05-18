@@ -49,7 +49,7 @@ class Note extends FlxSprite
 	public var hitByOpponent:Bool = false;
 	public var prevNote:Note;
 
-	public var localScrollSpeed:Float = 1;
+	public var multSpeed(default, set):Float = 1;
 
 	public var tail:Array<Note> = []; // for sustains
 	public var parent:Note;
@@ -110,6 +110,12 @@ class Note extends FlxSprite
 	
 	var defaultWidth:Float = 157;
 	var defaultHeight:Float = 154;
+
+	function set_multSpeed(value:Float):Float {
+		resizeByRatio(value / multSpeed);
+		multSpeed = value;
+		return value;
+	}
 
 	public function resizeByRatio(ratio:Float) { //haha funny twitter shit
 		if(isSustainNote && !animation.curAnim.name.endsWith('tail')) {

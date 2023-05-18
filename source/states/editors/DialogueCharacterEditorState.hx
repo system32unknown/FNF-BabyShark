@@ -72,9 +72,9 @@ class DialogueCharacterEditorState extends MusicBeatState
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		
 		mainGroup = new FlxSpriteGroup();
-		mainGroup.cameras = [camGame];
+		mainGroup.camera = camGame;
 		hudGroup = new FlxSpriteGroup();
-		hudGroup.cameras = [camGame];
+		hudGroup.camera = camGame;
 		add(mainGroup);
 		add(hudGroup);
 
@@ -87,7 +87,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 		ghostLoop.color = FlxColor.RED;
 		ghostLoop.isGhost = true;
 		ghostLoop.jsonFile = character.jsonFile;
-		ghostLoop.cameras = [camGame];
+		ghostLoop.camera = camGame;
 		add(ghostLoop);
 		
 		ghostIdle = new DialogueCharacter();
@@ -95,7 +95,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 		ghostIdle.color = FlxColor.BLUE;
 		ghostIdle.isGhost = true;
 		ghostIdle.jsonFile = character.jsonFile;
-		ghostIdle.cameras = [camGame];
+		ghostIdle.camera = camGame;
 		add(ghostIdle);
 
 		box = new FlxSprite(70, 370);
@@ -111,20 +111,20 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 		tipText = new FlxText(10, 10, FlxG.width - 20, TIP_TEXT_MAIN, 8);
 		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		tipText.cameras = [camHUD];
+		tipText.camera = camHUD;
 		tipText.scrollFactor.set();
 		add(tipText);
 
 		offsetLoopText = new FlxText(10, 10, 0, '', 32);
 		offsetLoopText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		offsetLoopText.cameras = [camHUD];
+		offsetLoopText.camera = camHUD;
 		offsetLoopText.scrollFactor.set();
 		add(offsetLoopText);
 		offsetLoopText.visible = false;
 
 		offsetIdleText = new FlxText(10, 46, 0, '', 32);
 		offsetIdleText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		offsetIdleText.cameras = [camHUD];
+		offsetIdleText.camera = camHUD;
 		offsetIdleText.scrollFactor.set();
 		add(offsetIdleText);
 		offsetIdleText.visible = false;
@@ -132,14 +132,13 @@ class DialogueCharacterEditorState extends MusicBeatState
 		animText = new FlxText(10, 22, FlxG.width - 20, '', 8);
 		animText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		animText.scrollFactor.set();
-		animText.cameras = [camHUD];
+		animText.camera = camHUD;
 		add(animText);
 
 		reloadCharacter();
 		updateTextBox();
 		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, '', 0.05, false);
-		daText.scaleX = 0.7;
-		daText.scaleY = 0.7;
+		daText.setScale(.7, .7);
 		daText.text = DEFAULT_TEXT;
 		hudGroup.add(daText);
 
