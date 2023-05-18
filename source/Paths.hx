@@ -377,7 +377,6 @@ class Paths
 		return null;
 	}
 
-	public static var streamSounds:Bool = false;
 	public static var currentTrackedSounds:Map<String, Sound> = [];
 	public static function returnSound(path:String, key:String, ?library:String, ?stream:Bool):Sound {
 		#if MODS_ALLOWED

@@ -177,7 +177,7 @@ class CoolUtil {
 		return tempArray;
 	}
 
-	public static function dynamicArray<T>(v:T, len:Int):Array<T> {
+	inline public static function dynamicArray<T>(v:T, len:Int):Array<T> {
 		return [for (_ in 0...len) v];
 	}
 
@@ -187,8 +187,7 @@ class CoolUtil {
 			case 'int' | 'float': 0;
 			case 'percent': 1;
 			case 'string':
-				if(options.length > 0)
-					options[0];
+				if(options.length > 0) options[0];
 				else '';
 			case 'func': '';
 			default: null;
@@ -198,6 +197,6 @@ class CoolUtil {
 	inline public static function parseHex(hex:String) {
 		var parsedhex:FlxColor = Std.parseInt(hex);
 		if(!hex.startsWith('0x')) parsedhex = Std.parseInt('0xff' + hex);
-		return;
+		return parsedhex;
 	}
 }
