@@ -16,15 +16,17 @@ class FPSUtil {
         currentFPS = times.length;
     }
 
-	inline public static function adjustFPS(adjust:Float):Float {
-		return FlxG.elapsed / (1 / 60) * adjust;
-	}
-
-	inline public static function ratioFPS(ratio:Float):Float {
-		return FlxMath.bound(ratio * 60 * FlxG.elapsed, 0, 1);
+	public static function getFPSAdjust(type:String = 'PSYCH', fps:Float) {
+		return switch (type.toLowerCase()) {
+			case 'andromeda': FlxG.elapsed / (1 / 60) * fps;
+			case 'psychold': FlxMath.bound(1 - (fps * 30), 0, 1);
+			case 'codename': FlxMath.bound(fps * 60 * FlxG.elapsed, 0, 1);
+			case 'forever': fps * (60 / FlxG.drawFramerate);
+			default: 0;
+		};
 	}
 
 	inline public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
-		return FlxMath.lerp(v1, v2, ratioFPS(ratio));
+		return FlxMath.lerp(v1, v2, getFPSAdjust('codename', ratio));
 	}
 }

@@ -637,13 +637,13 @@ class PlayState extends MusicBeatState {
 		healthBarBG.sprTracker = healthBar;
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
-		iconP1.y = healthBar.y - 75;
+		iconP1.y = healthBar.y - (iconP1.height / 2);
 		iconP1.visible = !hideHud;
 		iconP1.alpha = healthBarAlpha;
 		add(iconP1);
 
 		iconP2 = new HealthIcon(dad.healthIcon, false);
-		iconP2.y = healthBar.y - 75;
+		iconP2.y = healthBar.y - (iconP2.height / 2);
 		iconP2.visible = !hideHud;
 		iconP2.alpha = healthBarAlpha;
 		add(iconP2);

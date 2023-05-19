@@ -362,5 +362,8 @@ class ExtraFunctions {
 		funk.addCallback("returnDynamic", function(_, anyvar:Any):Dynamic {
 			return Type.typeof(anyvar);
 		});
+		funk.addCallback("getFPS", function(_, type:String, num:Float) {
+			return utils.system.FPSUtil.getFPSAdjust(type, num);
+		});
 	}
 }
