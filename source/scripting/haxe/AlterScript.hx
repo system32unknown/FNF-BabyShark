@@ -80,11 +80,11 @@ class AlterScript {
         return interp.variables.exists(key);
     }
 
-    public function stop()
-    {
+    public function stop() {
         #if HSCRIPT_ALLOWED
         interp = null;
         parser = null;
+        PlayState.instance.scriptArray.remove(this);
         #end
     }
 
