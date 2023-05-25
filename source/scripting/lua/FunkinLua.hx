@@ -886,7 +886,12 @@ class FunkinLua {
 		});
 
 		addCallback("cameraSetTarget", function(_, target:String) {
-			PlayState.instance.moveCamera(target);
+			switch(target.toLowerCase()) { //we do some copy and pasteing.
+				case 'dad' | 'opponent': PlayState.instance.moveCamera('dad');
+				case 'gf' | 'girlfriend': PlayState.instance.moveCamera('gf');
+				default: PlayState.instance.moveCamera('bf');
+			}
+			return target;
 		});
 		addCallback("cameraShake", function(_, camera:String, intensity:Float, duration:Float) {
 			LuaUtils.cameraFromString(camera).shake(intensity, duration * PlayState.instance.playbackRate);

@@ -12,7 +12,7 @@ class SaveSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Reset Score',
 			"Reset your score on all songs and weeks. This is irreversible!",
-			'resetWeekLink',
+			'resetScore',
 			'func',
 			false);
 		addOption(option);
@@ -43,6 +43,9 @@ class SaveSubState extends BaseOptionsMenu
 			FlxG.save.data.songRating = null;
 			for (key in Highscore.songRating.keys()) {
 				Highscore.songRating[key] = 0;
+			}
+			for (key in Highscore.songCombos.keys()) {
+				Highscore.songCombos[key] = '';
 			}
 			FlxG.mouse.visible = false;
 		}, cancelcallback));

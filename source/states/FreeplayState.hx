@@ -162,29 +162,27 @@ class FreeplayState extends MusicBeatState
 
 		changeSelection();
 
-		var textBG:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 26, 0xFF000000);
-		textBG.alpha = .5;
-		textBG.scrollFactor.set();
+		var textBG:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 30, 0x7F000000);
 		add(textBG);
+		textBG.scrollFactor.set();
+		textBG.y = FlxG.height - textBG.height;
 
 		#if PRELOAD_ALL
 		final leTextSplit:Array<String> = [
-			"Press SPACE to listen to the Song. / Press CTRL to open the Gameplay Changers Menu.",
-			"Press COMMA to change the Section. / Press RESET to Reset your Score and Accuracy."
+			"[SPACE] - Listen to the Song / [CTRL] - Gameplay Changers Menu",
+			"[COMMA] - Change Sections / [RESET] - Reset Score and Accuracy"
 		];
 		var leText:String = '${leTextSplit[0]}\n${leTextSplit[1]}';
 		var size:Int = 16;
 		#else
-		var leText:String = "Press COMMA to change the Section. / Press CTRL to open the Gameplay Changers Menu. / Press RESET to Reset your Score and Accuracy.";
+		var leText:String = "[COMMA] - Change Sections / [CTRL] - Gameplay Changers Menu / RESET - Reset Score and Accuracy";
 		var size:Int = 18;
 		#end
-		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
-		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
+		var text:FlxText = new FlxText(textBG.x, textBG.y / 2, FlxG.width, leText, size);
+		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, CENTER);
 		text.scrollFactor.set();
 		text.y = FlxG.height - text.height;
 		add(text);
-		textBG.height = text.height;
-		textBG.y = FlxG.height - textBG.height;
 
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);

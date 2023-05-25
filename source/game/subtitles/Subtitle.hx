@@ -56,22 +56,14 @@ class Subtitle extends FlxTypeText {
 		if (properties == null)
 			properties = {};
 
-		if (properties.x == null)
-			properties.x = FlxG.width / 2;
-		if (properties.y == null)
-			properties.y = (FlxG.height / 2) - 200;
-		if (properties.subtitleSize == null)
-			properties.subtitleSize = 36;
-		if (properties.typeSpeed == null)
-			properties.typeSpeed = 0.02;
-		if (properties.centerScreen == null)
-			properties.centerScreen = true;
-		if (properties.screenCenter == null)
-			properties.screenCenter = FlxAxes.XY;
-		if (properties.sounds == null)
-			properties.sounds = null;
-		if (properties.fonts == null)
-			properties.fonts = Paths.font("comic.ttf");
+		if (properties.x == null) properties.x = FlxG.width / 2;
+		if (properties.y == null) properties.y = (FlxG.height / 2) - 200;
+		if (properties.subtitleSize == null) properties.subtitleSize = 36;
+		if (properties.typeSpeed == null) properties.typeSpeed = 0.02;
+		if (properties.centerScreen == null) properties.centerScreen = true;
+		if (properties.screenCenter == null) properties.screenCenter = FlxAxes.XY;
+		if (properties.sounds == null) properties.sounds = null;
+		if (properties.fonts == null) properties.fonts = Paths.font("comic.ttf");
 		return properties;
 	}
 

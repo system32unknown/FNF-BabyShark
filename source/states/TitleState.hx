@@ -99,8 +99,7 @@ class TitleState extends MusicBeatState
 		titlebg = new FlxBackdrop(Paths.image('thechecker'));
 		titlebg.velocity.set(0, 110);
 		titlebg.updateHitbox();
-		titlebg.alpha = .5;
-		titlebg.color = FlxColor.fromString('#${titleJSON.bgColor}');
+		titlebg.color = FlxColor.fromString('0x7F${titleJSON.bgColor}');
 		titlebg.screenCenter(X);
 
 		logoBl = new FlxSprite(FlxG.width / 2, 1500);

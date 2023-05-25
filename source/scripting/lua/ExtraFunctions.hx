@@ -15,8 +15,7 @@ import utils.CoolUtil;
 // Things to trivialize some dumb stuff like splitting strings on older Lua
 //
 class ExtraFunctions {
-	public static function implement(funk:FunkinLua)
-	{
+	public static function implement(funk:FunkinLua) {
 		// Keyboard & Gamepads
 		funk.addCallback("keyboardJustPressed", function(_, name:String) {
 			return Reflect.getProperty(FlxG.keys.justPressed, name);
@@ -102,18 +101,20 @@ class ExtraFunctions {
 		funk.addCallback("initSaveData", function(l:FunkinLua, name:String, ?folder:String = 'psychenginemods') {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
 				l.luaTrace('initSaveData: Save file already initialized: ' + name);
-				return;
+				return false;
 			}
 			var save:FlxSave = new FlxSave();
-			save.bind(name, CoolUtil.getSavePath() + '/' + folder);
+			save.bind(name, '${CoolUtil.getSavePath()}/$folder');
 			PlayState.instance.modchartSaves.set(name, save);
+			return true;
 		});
 		funk.addCallback("flushSaveData", function(l:FunkinLua, name:String) {
 			if(PlayState.instance.modchartSaves.exists(name)) {
 				PlayState.instance.modchartSaves.get(name).flush();
-				return;
+				return true;
 			}
 			l.luaTrace('flushSaveData: Save file not initialized: ' + name, false, false, FlxColor.RED);
+			return false;
 		});
 		funk.addCallback("getDataFromSave", function(l:FunkinLua, name:String, field:String, ?defaultValue:Dynamic = null) {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
@@ -125,9 +126,10 @@ class ExtraFunctions {
 		funk.addCallback("setDataFromSave", function(l:FunkinLua, name:String, field:String, value:Dynamic) {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
 				l.luaTrace('setDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
-				return;
+				return false;
 			}
 			Reflect.setField(PlayState.instance.modchartSaves.get(name).data, field, value);
+			return true;
 		});
 		funk.addCallback("loadJsonOptions", function(l:FunkinLua, inclMainFol:Bool = true, ?modNames:Array<String> = null) {
 			#if MODS_ALLOWED
@@ -215,7 +217,6 @@ class ExtraFunctions {
 				if(!absolute)
 					File.saveContent(Paths.mods(path), content);
 				else File.saveContent(path, content);
-
 				return true;
 			} catch (e:Dynamic) {
 				l.luaTrace("saveFile: Error trying to save " + path + ": " + e, false, false, FlxColor.RED);
@@ -276,13 +277,14 @@ class ExtraFunctions {
 			else {
 				l.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
 				foundJson = false;
-				return;	
 			}
 
 			if (foundJson) {
 				var parsedJson = haxe.Json.parse(File.getContent(json));				
 				PlayState.instance.variables.set(varName, parsedJson);
+				return true;
 			}
+			return false;
 		});
 
 		// String tools
@@ -355,12 +357,6 @@ class ExtraFunctions {
 
 		funk.addCallback("getGameplayChangerValue", function(_, tag:String) {
 			return ClientPrefs.getGameplaySetting(tag, false);
-		});
-		funk.addCallback("request", function(_, web:String, post:Bool, callback:Dynamic, errorback:Dynamic) {
-			FunkinInternet.request(web, post, callback, errorback);
-		});
-		funk.addCallback("returnDynamic", function(_, anyvar:Any):Dynamic {
-			return Type.typeof(anyvar);
 		});
 		funk.addCallback("getFPS", function(_, type:String, num:Float) {
 			return utils.system.FPSUtil.getFPSAdjust(type, num);

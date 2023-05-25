@@ -233,12 +233,9 @@ class StoryMenuState extends MusicBeatState
 	var movedBack:Bool = false;
 	var selectedWeek:Bool = false;
 	var stopspamming:Bool = false;
-
 	function selectWeek()
 	{
-		if (!weekIsLocked(loadedWeeks[curWeek].fileName))
-		{
-			// We can't use Dynamic Array .copy() because that crashes HTML5, here's a workaround.
+		if (!weekIsLocked(loadedWeeks[curWeek].fileName)) {
 			var songArray:Array<String> = [];
 			var leWeek:Array<Dynamic> = loadedWeeks[curWeek].songs;
 			for (i in 0...leWeek.length) {

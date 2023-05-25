@@ -110,8 +110,8 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			FlxTween.tween(sectionTxt, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionSpr, {alpha: 0}, .5, {ease: FlxEase.expoInOut,
 				onComplete: function(tween:FlxTween) {
-					FlxG.resetState();
 					close();
+					FlxG.resetState();
 				}
 			});
 		}

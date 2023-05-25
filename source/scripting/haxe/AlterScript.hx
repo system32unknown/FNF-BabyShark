@@ -204,5 +204,6 @@ class AlterScript {
 
         callErrBox("Error on AlterScript", "Uncaught Error: " + fn + '\n$err');
         hadError = true;
+        stop();
     }
 }

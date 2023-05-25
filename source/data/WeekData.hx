@@ -3,6 +3,7 @@ package data;
 #if MODS_ALLOWED
 import sys.io.File;
 import sys.FileSystem;
+import haxe.io.Path;
 #end
 import haxe.Json;
 import utils.CoolUtil;
@@ -97,7 +98,7 @@ class WeekData {
 				if(splitName[1] == '0') // Disable mod
 					disabledMods.push(splitName[0]);
 				else { // Sort mod loading order based on modsList.txt file
-					var path = haxe.io.Path.join([Paths.mods(), splitName[0]]);
+					var path = Path.join([Paths.mods(), splitName[0]]);
 					if (FileSystem.isDirectory(path) && !Paths.ignoreModFolders.contains(splitName[0]) && !disabledMods.contains(splitName[0]) && !directories.contains(path + '/')) {
 						directories.push(path + '/');
 					}
@@ -107,7 +108,7 @@ class WeekData {
 
 		var modsDirectories:Array<String> = Paths.getModDirectories();
 		for (folder in modsDirectories) {
-			var pathThing:String = haxe.io.Path.join([Paths.mods(), folder]) + '/';
+			var pathThing:String = Path.join([Paths.mods(), folder]) + '/';
 			if (!disabledMods.contains(folder) && !directories.contains(pathThing)) {
 				directories.push(pathThing);
 			}
@@ -157,7 +158,7 @@ class WeekData {
 				}
 
 				for (file in FileSystem.readDirectory(directory)) {
-					var path = haxe.io.Path.join([directory, file]);
+					var path = Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
 						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
 					}
@@ -167,7 +168,7 @@ class WeekData {
 		#end
 	}
 
-	private static function addWeek(weekToCheck:String, path:String, directory:String, i:Int, originalLength:Int) {
+	static function addWeek(weekToCheck:String, path:String, directory:String, i:Int, originalLength:Int) {
 		if(!weeksLoaded.exists(weekToCheck)) {
 			var week:WeekFile = getWeekFile(path);
 			if(week != null) {
@@ -185,7 +186,7 @@ class WeekData {
 		}
 	}
 
-	private static function getWeekFile(path:String):WeekFile {
+	static function getWeekFile(path:String):WeekFile {
 		var rawJson:String = null;
 		#if MODS_ALLOWED
 		if(FileSystem.exists(path)) {

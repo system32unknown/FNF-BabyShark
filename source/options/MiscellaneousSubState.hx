@@ -40,8 +40,7 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			'Restart the game for to apply changes.' +
 			'\n[UNCHECK THIS IF IMAGES ARE NOT SHOWING]',
 			'hardwareCache',
-			'bool',
-			false);
+			'bool', false);
 		addOption(option);
 		
 		var option:Option = new Option('Streaming Music',
@@ -49,8 +48,7 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			'Restart the game for to apply changes.' +
 			'\n[UNCHECK THIS IF GAME IS CRASHING]',
 			'streamMusic',
-			'bool',
-			false);
+			'bool', false);
 		addOption(option);
 		#end
 
