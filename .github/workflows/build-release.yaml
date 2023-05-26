@@ -89,8 +89,8 @@ jobs:
             export/${{ matrix.build }}/${{ matrix.folder }}/obj/
             .haxelib/
     
-    - name: Discord Webhook Action
-      uses: tsickert/discord-webhook@master
-      with:
-        webhook-url: ${{ secrets.WEBHOOK_URL }}
-        content: "Build Action Completed"
+      - name: Discord Webhook Action
+        uses: tsickert/discord-webhook@master
+        with:
+          webhook-url: ${{ secrets.WEBHOOK_URL }}
+          content: "Build Action Completed"
