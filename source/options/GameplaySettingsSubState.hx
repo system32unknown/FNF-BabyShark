@@ -60,8 +60,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		var option:Option = new Option('Hitsound Volume',
 			'Funny notes does \"Tick!\" when you hit them.',
 			'hitsoundVolume',
-			'percent',
-			0);
+			'percent', 0);
 		addOption(option);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
@@ -75,12 +74,13 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		'bool', true);
 		addOption(option);
 
-		var option:Option = new Option('Note Diff Type:',
-			'Choose the type of Note Diffs.',
-			'NoteDiffTypes',
-			'string',
-			'Simple',
-			['Psych', 'Simple']);
+		var option:Option = new Option('Update Cam Section',
+		'If checked, camera will always update,\nwhich makes the camera more precise',
+		'UpdateCamSection', 'bool', true);
+		addOption(option);
+
+		var option:Option = new Option('Note Diff Type:', 'Choose the type of Note Diffs.',
+			'NoteDiffTypes', 'string', 'Simple', ['Psych', 'Simple']);
 		addOption(option);
 		
 		var option:Option = new Option('Rating Offset',
@@ -94,7 +94,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 30;
 		addOption(option);
 
-		var option:Option = new Option('Epic! Hit Window',
+		var option:Option = new Option('Epic Hit Window',
 			'Changes the amount of time you have\nfor hitting a "Epic!" in milliseconds.',
 			'epicWindow',
 			'int',
@@ -105,7 +105,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 10;
 		addOption(option);
 		
-		var option:Option = new Option('Sick! Hit Window',
+		var option:Option = new Option('Sick Hit Window',
 			'Changes the amount of time you have\nfor hitting a "Sick!" in milliseconds.',
 			'sickWindow',
 			'int',

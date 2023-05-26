@@ -4,7 +4,6 @@ import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
 import utils.Controls;
-import utils.GraphicCacheSprite;
 import states.stages.BaseStage;
 import ui.CustomFadeTransition;
 import ui.ErrorDisplay;
@@ -13,7 +12,6 @@ import game.Conductor.BPMChangeEvent;
 import game.Song;
 
 class MusicBeatState extends FlxUIState {
-	public var graphicCache:GraphicCacheSprite = new GraphicCacheSprite();
 	public var curBPMChange:BPMChangeEvent;
 
 	var passedSections:Array<Float> = [];
@@ -102,14 +100,7 @@ class MusicBeatState extends FlxUIState {
 		persistentUpdate = false;
 		passedSections = null;
 		utils.system.MemoryUtil.clearMajor();
-		graphicCache.destroy();
-
 		super.destroy();
-	}
-
-	public override function draw() {
-		graphicCache.draw();
-		super.draw();
 	}
 
 	override function update(elapsed:Float) {

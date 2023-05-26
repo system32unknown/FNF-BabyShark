@@ -1,20 +1,17 @@
 # Baby Shark's Funkin
 ![Baby Shark's Funkin Logo](assets/preload/images/FinalLogo.png)
 
-Heavily Modded Psych Engine. combined with Kade, Dave, Base Engines.
+Heavily Modded of Psych Engine. combined with Kade, Dave, Base Engines.
 
 ![Repo size](https://img.shields.io/github/repo-size/system32unknown/FNF-BabyShark)
 ![Last commit](https://img.shields.io/github/last-commit/system32unknown/FNF-BabyShark)
 ![License](https://img.shields.io/github/license/system32unknown/FNF-BabyShark)
 
-# Credits (WIP):
+# Credits:
 
 ### Psych Engine:
 * Shadow Mario - Programmer
 * RiverOaken - Artist
-
-### Kade Engine:
-* KadeDev - Programmer of Kade Engine
 
 ### Dave Engine:
 * Vs. Dave and Bambi Teams
@@ -26,7 +23,7 @@ Heavily Modded Psych Engine. combined with Kade, Dave, Base Engines.
 * bbpanzu - Ex-Programmer
 * Yoshubs - Ex-Programmer, New Input System
 * SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
-* KadeDev - Fixed some cool stuff on Chart Editor and other PRs
+* KadeDev - Fixed some cool stuff on Chart Editor and other PRs, Programmer of Kade Engine
 * iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds
 * PolybiusProxy - .MP4 Video Loader Library (hxCodec)
 * Keoiki - Note Splash Animations

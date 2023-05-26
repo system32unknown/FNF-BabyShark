@@ -13,7 +13,7 @@
         "type": "lime",
         "preLaunchTask": "Build Windows (Release)",
         "request": "launch",
-        "program": "${workspaceFolder}/export/debug/windows/bin/AlterEngine.exe"
+        "program": "${workspaceFolder}/export/release/windows/bin/AlterEngine.exe"
       },
     ],
   }

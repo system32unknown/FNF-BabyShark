@@ -38,12 +38,9 @@ class OutdatedState extends MusicBeatState
 			if (controls.ACCEPT) {
 				leftState = true;
 				CoolUtil.browserLoad("https://github.com/system32unknown/FNF-BabyShark/releases/");
-			} else if(controls.BACK) {
-				leftState = true;
-			}
+			} else if(controls.BACK) leftState = true;
 
-			if(leftState)
-			{
+			if(leftState) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				FlxTween.tween(txt, {alpha: 0}, 1, {
 					onComplete: function (twn:FlxTween) {

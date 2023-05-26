@@ -51,6 +51,7 @@ class ClientPrefs {
 		'noReset' => false,
 		'movemissjudge' => false,
 		'AltDiscordImg' => false,
+		'UpdateCamSection' => false,
 		'healthBarAlpha' => 1,
 		'hitsoundVolume' => 0,
 		'hitsoundTypes' => 'Tick',

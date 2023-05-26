@@ -67,8 +67,7 @@ class FunkinCache extends AssetCache {
 	public override function getBitmapData(id:String):BitmapData
 	{
 		var s = bitmapData.get(id);
-		if (s != null)
-			return s;
+		if (s != null) return s;
 		var s2 = bitmapData2.get(id);
 		if (s2 != null) {
 			bitmapData2.remove(id);
@@ -86,8 +85,7 @@ class FunkinCache extends AssetCache {
 	public override function getFont(id:String):Font
 	{
 		var s = font.get(id);
-		if (s != null)
-			return s;
+		if (s != null) return s;
 		var s2 = font2.get(id);
 		if (s2 != null) {
 			font2.remove(id);
@@ -105,8 +103,7 @@ class FunkinCache extends AssetCache {
 	public override function getSound(id:String):Sound
 	{
 		var s = sound.get(id);
-		if (s != null)
-			return s;
+		if (s != null) return s;
 		var s2 = sound2.get(id);
 		if (s2 != null) {
 			sound2.remove(id);

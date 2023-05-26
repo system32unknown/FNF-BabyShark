@@ -225,9 +225,7 @@ class Paths
 
 	public static var streamMusic:Bool = false;
 	#if (!MODS_ALLOWED) inline #end static public function music(key:String, ?library:String, ?stream:Bool):Sound {
-		return returnSound('music', key, library,
-			stream || streamMusic//stream != null ? stream : (!MusicBeatState.inState(PlayState) || streamMusic)
-		);
+		return returnSound('music', key, library, stream || streamMusic);
 	}
 
 	// streamlined the assets process more
@@ -267,8 +265,7 @@ class Paths
 		return Assets.getText(getPath(key, TEXT));
 	}
 
-	inline static public function font(key:String):String
-	{
+	inline static public function font(key:String):String {
 		#if MODS_ALLOWED
 		var file:String = modsFont(key);
 		if(FileSystem.exists(file)) return file;
@@ -479,11 +476,10 @@ class Paths
 	}
 
 	static public function isValidModDir(dir:String):Bool
-		return FileSystem.isDirectory(haxe.io.Path.join([mods(), dir])) && !ignoreModFolders.contains(dir.toLowerCase());
+		return FileSystem.isDirectory(Path.join([mods(), dir])) && !ignoreModFolders.contains(dir.toLowerCase());
 
-	static public function getModDirectories(lowercase:Bool = false, inclMainFol:Bool = false):Array<String> {
+	static public function getModDirectories(lowercase:Bool = false):Array<String> {
 		var list:Array<String> = [];
-		if (inclMainFol) list.push('');
 		var modsFolder:String = mods();
 
 		if (!FileSystem.exists(modsFolder)) return list;
