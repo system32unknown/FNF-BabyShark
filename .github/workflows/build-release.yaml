@@ -48,10 +48,7 @@ jobs:
           haxelib dev hxcpp hxcpp
           cd hxcpp/tools/hxcpp
           haxe compile.hxml
-          cd ../build
-          haxe compile.hxml
-          cd ../../project
-          neko build.n
+          cd ../../../
 
       - name: Install haxelibs
         run: haxe -cp update -D analyzer-optimize -main Update --interp
