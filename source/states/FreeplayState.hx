@@ -162,7 +162,7 @@ class FreeplayState extends MusicBeatState
 
 		changeSelection();
 
-		var textBG:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 30, 0x7F000000);
+		var textBG:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 32, 0x7F000000);
 		add(textBG);
 		textBG.scrollFactor.set();
 		textBG.y = FlxG.height - textBG.height;
@@ -184,7 +184,6 @@ class FreeplayState extends MusicBeatState
 		text.y = FlxG.height - text.height;
 		add(text);
 
-		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
 		updateTexts();

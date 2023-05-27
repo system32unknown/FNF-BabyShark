@@ -10,7 +10,6 @@ import lime.app.Application;
 import haxe.Json;
 import data.WeekData;
 import utils.CoolUtil;
-import utils.MathUtil;
 import game.Highscore;
 import game.Conductor;
 import states.MainMenuState;

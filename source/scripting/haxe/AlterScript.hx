@@ -82,8 +82,7 @@ class AlterScript {
 
     public function stop() {
         #if HSCRIPT_ALLOWED
-        interp = null;
-        parser = null;
+        interp = parser = null;
         PlayState.instance.scriptArray.remove(this);
         #end
     }
@@ -96,14 +95,12 @@ class AlterScript {
             "windows" => #if windows true #else false #end,
             "hl" => #if hl true #else false #end,
             "neko" => #if neko true #else false #end,
-            "web" => #if web true #else false #end,
             "debug" => #if debug true #else false #end,
             "release" => #if release true #else false #end,
             "final" => #if final true #else false #end,
             "MODS_ALLOWED" => #if MODS_ALLOWED true #else false #end,
             "LUA_ALLOWED" => #if LUA_ALLOWED true #else false #end,
-            "VIDEOS_ALLOWED" => #if VIDEOS_ALLOWED true #else false #end,
-            "CRASH_HANDLER" => #if CRASH_HANDLER true #else false #end
+            "VIDEOS_ALLOWED" => #if VIDEOS_ALLOWED true #else false #end
         ];
     }
 

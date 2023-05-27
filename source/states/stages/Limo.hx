@@ -1,7 +1,5 @@
 package states.stages;
 
-import utils.MathUtil;
-
 enum HenchmenKillState {
 	WAIT;
 	KILLING;

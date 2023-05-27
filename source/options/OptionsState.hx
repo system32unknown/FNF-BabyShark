@@ -40,13 +40,11 @@ class OptionsState extends MusicBeatState
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.updateHitbox();
-
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(bg);
 
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
+		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
 		reload();
 
@@ -152,10 +150,8 @@ class OptionsState extends MusicBeatState
 			item.alpha = 0.6;
 			if (item.targetY == 0) {
 				item.alpha = 1;
-				selectorLeft.x = item.x - 63;
-				selectorLeft.y = item.y;
-				selectorRight.x = item.x + item.width + 15;
-				selectorRight.y = item.y;
+				selectorLeft.setPosition(item.x - 63, item.y;);
+				selectorRight.setPosition(item.x + item.width + 15, item.y);
 			}
 		}
 

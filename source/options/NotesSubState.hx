@@ -2,7 +2,6 @@ package options;
 
 import game.Note;
 import utils.Controls;
-import utils.MathUtil;
 import shaders.ColorSwap;
 import ui.Alphabet;
 

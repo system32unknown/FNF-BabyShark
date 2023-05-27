@@ -15,7 +15,6 @@ class Overlay extends TextField {
 
 	//FPS
     public var FPS:FPSUtil;
-	public var advMode:Bool = false;
 
 	//Memory
     var memory:Dynamic = 0;

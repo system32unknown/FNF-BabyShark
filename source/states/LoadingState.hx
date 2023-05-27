@@ -209,9 +209,9 @@ class LoadingState extends MusicBeatState
 			}
 
 			var library = AssetLibrary.fromManifest(manifest);
-			if (library == null) {
+			if (library == null)
 				promise.error("Cannot open library \"" + id + "\"");
-			} else {
+			else {
 				@:privateAccess
 				LimeAssets.libraries.set(id, library);
 				library.onChange.add(LimeAssets.onChange.dispatch);

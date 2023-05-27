@@ -324,14 +324,12 @@ class ChartingState extends MusicBeatState
 		add(nextRenderedSustains);
 		add(nextRenderedNotes);
 
-		if(lastSong != currentSongName) {
+		if(lastSong != currentSongName)
 			changeSection();
-		}
 		lastSong = currentSongName;
 
 		updateGrid();
 
-		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
 		super.create();

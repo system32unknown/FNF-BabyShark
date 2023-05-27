@@ -6,7 +6,6 @@ import flixel.effects.FlxFlicker;
 import flixel.input.keyboard.FlxKey;
 import states.editors.MasterEditorMenu;
 import game.Achievements;
-import utils.MathUtil;
 import data.WeekData;
 
 class MainMenuState extends MusicBeatState

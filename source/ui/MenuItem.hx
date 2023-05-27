@@ -1,7 +1,5 @@
 package ui;
 
-import utils.MathUtil;
-
 class MenuItem extends FlxSprite
 {
 	public var targetY:Float = 0;

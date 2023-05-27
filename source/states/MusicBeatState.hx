@@ -55,9 +55,9 @@ class MusicBeatState extends FlxUIState {
 		var modsSongString:String = Paths.modsJson(Paths.CHART_PATH + "/" + formattedSong);
 		var modDirString:String = '';
 
-		if (Paths.currentModDirectory.length < 1) {
+		if (Paths.currentModDirectory.length < 1)
 			return error + '\n$reason\n\'$songString\' or\n\'$modsSongString\'';
-		} else {
+		else {
 			modDirString = getPathWithDir(songFolder, songLowercase);
 			return error + '\n$reason\n\'$songString\',\n\'$modsSongString\' or\n\'$modDirString\'';
 		}
@@ -90,6 +90,7 @@ class MusicBeatState extends FlxUIState {
 		camBeat = FlxG.camera;
 
 		super.create();
+		errorDisplay = new ErrorDisplay();
 
 		if (!skip) openSubState(new CustomFadeTransition(.7, true));
 		FlxTransitionableState.skipNextTransOut = false;

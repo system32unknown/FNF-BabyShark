@@ -194,8 +194,6 @@ class PlayState extends MusicBeatState {
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
 	var scoreTxtTween:FlxTween;
-
-	var daKeyText:Array<FlxText> = [];
 	
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
@@ -1510,7 +1508,6 @@ class PlayState extends MusicBeatState {
 					daKeyTxt.setPosition(babyArrow.x + ((babyArrow.width - daKeyTxt.width) / 2), textY);
 					add(daKeyTxt);
 					daKeyTxt.camera = camHUD;
-					daKeyText.push(daKeyTxt);
 
 					if (mania > 1 && !skipArrowStartTween)
 						FlxTween.tween(daKeyTxt, {y: textY + 32, alpha: 1}, twnDuration, {ease: FlxEase.circOut, startDelay: twnStart});

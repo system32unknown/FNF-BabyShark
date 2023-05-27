@@ -11,7 +11,6 @@ import data.WeekData;
 import ui.AttachedSprite;
 import ui.Alphabet;
 import utils.CoolUtil;
-import utils.MathUtil;
 import utils.InputFormatter;
 import states.TitleState;
 import states.FreeplayState;

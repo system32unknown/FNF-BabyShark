@@ -7,11 +7,11 @@ class AchievementsMenuState extends MusicBeatState
 {
 	#if ACHIEVEMENTS_ALLOWED
 	var options:Array<String> = [];
-	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private static var curSelected:Int = 0;
-	private var achievementArray:Array<AttachedAchievement> = [];
-	private var achievementIndex:Array<Int> = [];
-	private var descText:FlxText;
+	var grpOptions:FlxTypedGroup<Alphabet>;
+	static var curSelected:Int = 0;
+	var achievementArray:Array<AttachedAchievement> = [];
+	var achievementIndex:Array<Int> = [];
+	var descText:FlxText;
 
 	override function create() {
 		#if discord_rpc

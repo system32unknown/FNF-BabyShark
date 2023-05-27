@@ -374,13 +374,11 @@ class DialogueBoxPsych extends FlxSpriteGroup
 	public static function updateBoxOffsets(box:FlxSprite) { //Had to make it static because of the editors
 		box.centerOffsets();
 		box.updateHitbox();
-		if (box.animation.curAnim.name.startsWith('angry')) {
+		if (box.animation.curAnim.name.startsWith('angry'))
 			box.offset.set(50, 65);
-		} else if (box.animation.curAnim.name.startsWith('center-angry')) {
+		else if (box.animation.curAnim.name.startsWith('center-angry'))
 			box.offset.set(50, 30);
-		} else {
-			box.offset.set(10);
-		}
+		else box.offset.set(10);
 		
 		if(!box.flipX) box.offset.y += 10;
 	}

@@ -8,7 +8,6 @@ import ui.Alphabet;
 import ui.AttachedSprite;
 import game.HealthIcon;
 import utils.CoolUtil;
-import utils.MathUtil;
 
 class CreditsState extends MusicBeatState
 {

@@ -115,8 +115,7 @@ class ErrorDisplay
      * Removes the display by `.kill()`ing the text and BG
      * @param destroy [Optional] destroy the sprites (just do `myDisplay.destroy();` instead)
      */
-    public function remove(?destroy:Bool = false)
-    {
+    public function remove(?destroy:Bool = false) {
         if (destroy) {
             this.errorBG.kill();
             this.errorText.kill();

@@ -3,7 +3,6 @@ package states;
 import flixel.group.FlxGroup;
 import flixel.graphics.FlxGraphic;
 import data.WeekData;
-import utils.MathUtil;
 import game.Highscore;
 import game.Difficulty;
 import game.Song;
@@ -151,7 +150,6 @@ class StoryMenuState extends MusicBeatState
 		add(scoreText);
 		add(txtWeekTitle);
 
-		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
 		changeWeek();
