@@ -840,7 +840,8 @@ class ChartingState extends MusicBeatState
 	var stepperSusLength:FlxUINumericStepper;
 	var strumTimeInputText:FlxUIInputText; //I wanted to use a stepper but we can't scale these as far as i know :(
 	var noteTypeDropDown:FlxUIDropDownMenu;
-	var currentType:Int = 0;	var stepperSpamCloseness:FlxUINumericStepper;
+	var currentType:Int = 0;
+	var stepperSpamCloseness:FlxUINumericStepper;
 	var stepperSpamLength:FlxUINumericStepper;
 	var spamLength:Float = 5;
 	var spamCloseness:Float = 2;
@@ -898,7 +899,7 @@ class ChartingState extends MusicBeatState
 		#end
 
 		for (i in 1...displayNameList.length) {
-			displayNameList[i] = i + '. ' + displayNameList[i];
+			displayNameList[i] = '$i. ' + displayNameList[i];
 		}
 
 		noteTypeDropDown = new FlxUIDropDownMenu(10, 105, FlxUIDropDownMenu.makeStrIdLabelArray(displayNameList, true), function(character:String) {

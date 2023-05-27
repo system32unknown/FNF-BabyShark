@@ -2952,14 +2952,6 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	function onKeyPress(event:KeyboardEvent):Void {
-		if (cpuControlled || !startedCountdown || paused) return;
-
-		var eventKey:FlxKey = event.keyCode;
-		var key:Int = getKeyFromEvent(eventKey);
-		if (key >= 0 && FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) inputPress(key);
-	}
-
 	function inputPress(key:Int) {
 		fillKeysPressed();
 
@@ -2995,8 +2987,11 @@ class PlayState extends MusicBeatState {
 			if (sortedNotesList.length > 0) {
 				for (epicNote in sortedNotesList) {
 					for (doubleNote in pressNotes) {
-						if (Math.abs(doubleNote.strumTime - epicNote.strumTime) < 3)
-							notesStopped = true;
+						if (Math.abs(doubleNote.strumTime - epicNote.strumTime) < 1) {
+							doubleNote.kill();
+							notes.remove(doubleNote, true);
+							doubleNote.destroy();
+						} else notesStopped = true;
 					}
 
 					// eee jack detection before was not super good
@@ -3029,13 +3024,7 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onKeyPress', [key]);
 	}
 
-	function onKeyRelease(event:KeyboardEvent):Void {
-		if (cpuControlled || !startedCountdown || paused) return;
 
-		var eventKey:FlxKey = event.keyCode;
-		var key:Int = getKeyFromEvent(eventKey);
-		if(key > -1) inputRelease(key);
-	}
 	function inputRelease(key:Int) {
 		if (!keysPressed[key]) return;
 		fillKeysPressed();
@@ -3049,6 +3038,22 @@ class PlayState extends MusicBeatState {
 		}
 		callOnLuas('onKeyRelease', [key]);
 		callOnScripts('onKeyRelease', [key]);
+	}
+
+	function onKeyPress(event:KeyboardEvent):Void {
+		if (cpuControlled || !startedCountdown || paused) return;
+
+		var eventKey:FlxKey = event.keyCode;
+		var key:Int = getKeyFromEvent(eventKey);
+		if (key >= 0 && FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) inputPress(key);
+	}
+
+	function onKeyRelease(event:KeyboardEvent):Void {
+		if (cpuControlled || !startedCountdown || paused) return;
+
+		var eventKey:FlxKey = event.keyCode;
+		var key:Int = getKeyFromEvent(eventKey);
+		if(key > -1) inputRelease(key);
 	}
 
 	function fillKeysPressed() {
