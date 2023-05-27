@@ -41,7 +41,18 @@ jobs:
       - name: Setup Haxelib
         run: |
           haxelib setup .haxelib/
+        
+      - name: Install Hxcpp
+        run: |
           haxelib install hxcpp --quiet
+          git clone https://github.com/HaxeFoundation/hxcpp.git --depth=1;
+          haxelib dev hxcpp hxcpp
+          cd hxcpp/tools/hxcpp
+          haxe compile.hxml
+          cd ../build
+          haxe compile.hxml
+          cd ../../project
+          neko build.n
 
       - name: Install haxelibs
         run: haxe -cp update -D analyzer-optimize -main Update --interp

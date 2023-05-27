@@ -14,10 +14,6 @@
             "ref": "dev",
             "url": "https://github.com/HaxeFlixel/flixel-ui"
         },
-        {"name": "hxcpp", "type": "git", "dir": "hxcpp",
-            "ref": "main",
-            "url": "https://github.com/HaxeFoundation/hxcpp"
-        },
         {"name": "hxCodec", "type": "git", "dir": "hxCodec",
             "ref": "main",
             "url": "https://github.com/polybiusproxy/hxCodec"

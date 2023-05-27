@@ -3458,19 +3458,12 @@ class PlayState extends MusicBeatState {
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
 			case "GoldenApple":
-				if (curBeat % 2 == 0) {
-					iconP1.scale.set(1.1, .8);
-					iconP2.scale.set(1.1, 1.3);
-	
-					FlxTween.angle(iconP1, -15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-					FlxTween.angle(iconP2, 15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-				} else {
-					iconP1.scale.set(1.1, 1.3);
-					iconP2.scale.set(1.1, .8);
-	
-					FlxTween.angle(iconP1, 15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-					FlxTween.angle(iconP2, -15, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
-				}
+				var iconAngle:Float = (curBeat % 2 == 0 ? -15 : 15);
+				iconP1.scale.set(1.1, (curBeat % 2 == 0 ? .8 : 1.3));
+				iconP2.scale.set(1.1, (curBeat % 2 == 0 ? 1.3 : .8));
+
+				FlxTween.angle(iconP1, iconAngle, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
+				FlxTween.angle(iconP2, -iconAngle, 0, Conductor.crochet / 1300, {ease: FlxEase.quadOut});
 	
 				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
