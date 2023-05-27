@@ -44,7 +44,6 @@ jobs:
         
       - name: Install Hxcpp
         run: |
-          haxelib install hxcpp --quiet
           git clone https://github.com/HaxeFoundation/hxcpp.git --depth=1;
           haxelib dev hxcpp hxcpp
           cd hxcpp/tools/hxcpp
