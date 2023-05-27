@@ -1577,9 +1577,11 @@ class FunkinLua {
 		addCallback("debugPrint", true, function(lua:State, fl:FunkinLua) {
 			var texts:Array<Dynamic> = Lua_helper.getarguments(lua);
 			if (texts.length <= 0) return 0;
-			var text:String = Std.isOfType(texts[0], String) ? texts[0] : '';
-			for (i in 1...texts.length) {
-				var s:String = texts[i];
+			var convtxt:Array<String> = [for (i in texts) Std.isOfType(i[0], String) ? i : Std.string(i)];
+
+			var text:String = convtxt[0];
+			for (i in 1...convtxt.length) {
+				var s:String = convtxt[i];
 				if (Std.isOfType(s, String)) text += ', $s';
 			}
 			fl.luaTrace(text, true, false);
