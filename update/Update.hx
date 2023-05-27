@@ -55,6 +55,7 @@ class Update {
 					default: Sys.println('Cannot resolve library of type "${lib.type}"');
 				}
 			}
+			Sys.println("Install Hxcpp with git manually and compile it.");
 		}
 		catch(e) {trace(e);}
 

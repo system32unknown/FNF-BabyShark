@@ -26,7 +26,7 @@ class AlterScript {
     static var hadError:Bool = false;
 
     public function new(path:String, ?autoRun:Bool = true) {
-        if (path != ""  && path != null) {
+        if (path != "" && path != null) {
             if (FileSystem.exists(path))
                 script = File.getContent(path);
             else script = path;
@@ -82,7 +82,8 @@ class AlterScript {
 
     public function stop() {
         #if HSCRIPT_ALLOWED
-        interp = parser = null;
+        interp = null;
+        parser = null;
         PlayState.instance.scriptArray.remove(this);
         #end
     }

@@ -150,7 +150,7 @@ class OptionsState extends MusicBeatState
 			item.alpha = 0.6;
 			if (item.targetY == 0) {
 				item.alpha = 1;
-				selectorLeft.setPosition(item.x - 63, item.y;);
+				selectorLeft.setPosition(item.x - 63, item.y);
 				selectorRight.setPosition(item.x + item.width + 15, item.y);
 			}
 		}
