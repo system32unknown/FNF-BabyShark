@@ -827,7 +827,7 @@ class PlayState extends MusicBeatState {
 		if(luaDebugGroup.members.length > 34) {
 			var blah = luaDebugGroup.members[34];
 			blah.destroy();
-			luaDebugGroup.remove(blah, true);
+			luaDebugGroup.remove(blah);
 		}
 		luaDebugGroup.insert(0, new DebugLuaText(text, luaDebugGroup, color));
 		#end
@@ -3576,12 +3576,14 @@ class PlayState extends MusicBeatState {
 			foldersToCheck.insert(0, Paths.mods('${mod}/$folder'));
 		#end
 
-		var scriptArrays:Array<Dynamic> = (type == 'lua' ? luaArray : scriptArray);
 		for (folder in foldersToCheck) {
 			if (FileSystem.exists(folder)) {
 				for (file in FileSystem.readDirectory(folder)) {
 					if (!file.endsWith('.$type') || filesPushed.contains(file)) continue;
-					scriptArrays.push((type == 'lua' ? FunkinLua.execute(folder + file) : new AlterScript(folder + file)));
+					
+					if(type == 'lua') {FunkinLua.execute(folder + file);}
+					else {scriptArray.push(new AlterScript(folder + file));}
+
 					filesPushed.push(file);
 				}
 			}

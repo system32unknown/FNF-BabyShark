@@ -69,10 +69,12 @@ class FunkinLua {
 		if (result == Lua.LUA_OK) {
 			LuaL.openlibs(lua);
 			Lua_helper.init_callbacks(lua);
+			
+			initGlobals();
+
 			Lua_helper.link_extra_arguments(lua, [this]);
 			Lua_helper.link_static_callbacks(lua);
 
-			initGlobals();
 
 			Lua.getglobal(lua, "package");
 			Lua.pushstring(lua, Paths.getLuaPackagePath());
@@ -1578,7 +1580,7 @@ class FunkinLua {
 			var text:String = Std.isOfType(texts[0], String) ? texts[0] : '';
 			for (i in 1...texts.length) {
 				var s:String = texts[i];
-				if (Std.isOfType(s, String)) text += ", " + s;
+				if (Std.isOfType(s, String)) text += ', $s';
 			}
 			fl.luaTrace(text, true, false);
 			return 0;
