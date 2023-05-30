@@ -56,6 +56,7 @@ class ClientPrefs {
 		'hitsoundVolume' => 0,
 		'hitsoundTypes' => 'Tick',
 		'pauseMusic' => 'Tea Time',
+		'discordRPC' => true,
 		// Gameplay settings
 		'comboOffset' => [[0, 0], [0, 0], [0, 0], [0, 0]],
 		'ratingOffset' => 0,
@@ -427,6 +428,8 @@ class ClientPrefs {
 				}
 			}
 		}
+
+		#if desktop DiscordClient.check(); #end
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic):Dynamic {

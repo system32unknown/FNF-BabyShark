@@ -1,7 +1,6 @@
 package game.subtitles;
 
 import flixel.util.FlxAxes;
-import flixel.sound.FlxSound;
 import flixel.addons.text.FlxTypeText;
 
 typedef SubtitleProperties = {

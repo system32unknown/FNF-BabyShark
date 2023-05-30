@@ -10,7 +10,6 @@ import llua.Convert;
 import haxe.Constraints.Function;
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.sound.FlxSound;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.display.FlxRuntimeShader;
 import substates.GameOverSubstate;
@@ -624,8 +623,8 @@ class FunkinLua {
 			if(penisExam != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(penisExam, fieldsNValues, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			} else l.luaTrace('doTween: Couldnt find object: ' + variable, false, false, FlxColor.RED);

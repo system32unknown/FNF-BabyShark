@@ -1,6 +1,5 @@
 package states;
 
-import flixel.sound.FlxSound;
 import data.WeekData;
 import utils.MathUtil;
 import game.Difficulty;
@@ -183,7 +182,8 @@ class FreeplayState extends MusicBeatState
 		text.scrollFactor.set();
 		text.y = FlxG.height - text.height;
 		add(text);
-
+		
+		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
 		updateTexts();

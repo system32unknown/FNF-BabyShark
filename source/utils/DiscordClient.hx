@@ -2,10 +2,14 @@ package utils;
 
 import Sys.sleep;
 import discord_rpc.DiscordRpc;
+import lime.app.Application;
 
 class DiscordClient
 {
 	public static var isInitialized:Bool = false;
+
+	static var _defaultID:String = "1013313492889108510";
+	public static var clientID(default, set):String = _defaultID;
 	#if DISCORD_ALLOWED
 	public static var queue:DiscordPresenceOptions = {
 		details: "In the Menus",
@@ -20,7 +24,7 @@ class DiscordClient
 		#if DISCORD_ALLOWED
 		trace("Discord Client starting...");
 		DiscordRpc.start({
-			clientID: "1013313492889108510",
+			clientID: clientID,
 			onReady: onReady,
 			onError: onError,
 			onDisconnected: onDisconnected
@@ -36,10 +40,29 @@ class DiscordClient
 		#end
 	}
 	
+	public static function check() {
+		if(!ClientPrefs.getPref('discordRPC')) {
+			if(DiscordClient.isInitialized) DiscordClient.shutdown();
+			DiscordClient.isInitialized = false;
+		} else DiscordClient.start();
+	}
+
+	public static function start() {
+		if (!DiscordClient.isInitialized && ClientPrefs.getPref('discordRPC')) {
+			DiscordClient.initialize();
+			Application.current.window.onClose.add(function() {
+				DiscordClient.shutdown();
+			});
+		}
+	}
+
+	public static function resetID() {
+		if(clientID != _defaultID) clientID = _defaultID;
+	}
+
 	public static function shutdown() {
 		#if DISCORD_ALLOWED
 		DiscordRpc.shutdown();
-		isInitialized = false;
 		#end
 	}
 	
@@ -51,6 +74,16 @@ class DiscordClient
 			queue.endTimestamp
 		);
 		#end
+	}
+
+	static function set_clientID(newID:String) {
+		clientID = newID;
+		if(isInitialized) {
+			DiscordClient.shutdown();
+			isInitialized = false;
+			start();
+		}
+		return newID;
 	}
 
 	static function onError(_code:Int, _message:String) {

@@ -90,7 +90,6 @@ class MusicBeatState extends FlxUIState {
 		camBeat = FlxG.camera;
 
 		super.create();
-		errorDisplay = new ErrorDisplay();
 
 		if (!skip) openSubState(new CustomFadeTransition(.7, true));
 		FlxTransitionableState.skipNextTransOut = false;

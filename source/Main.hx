@@ -102,12 +102,7 @@ class Main extends Sprite
 		#end
 
 		#if discord_rpc
-		if (!DiscordClient.isInitialized) {
-			DiscordClient.initialize();
-			lime.app.Application.current.window.onClose.add(function() {
-				DiscordClient.shutdown();
-			});
-		}
+		DiscordClient.start();
 		#end
 	}
 

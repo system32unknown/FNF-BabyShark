@@ -1,7 +1,5 @@
 package states.stages.objects;
 
-import flixel.sound.FlxSound;
-
 class PhillyTrain extends BGSprite
 {
 	public var sound:FlxSound;

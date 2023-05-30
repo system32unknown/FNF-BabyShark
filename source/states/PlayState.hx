@@ -6,7 +6,6 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.sound.FlxSound;
 import flixel.tweens.misc.VarTween;
 import flixel.animation.FlxAnimationController;
 import flixel.ui.FlxBar;
@@ -3420,6 +3419,7 @@ class PlayState extends MusicBeatState {
 		subtitleManager = null;
 		FlxAnimationController.globalSpeed = 1;
 		PsychVideo.clearAll();
+		#if desktop DiscordClient.resetID(); #end
 		super.destroy();
 	}
 

@@ -2,7 +2,6 @@ package substates;
 
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.sound.FlxSound;
 import flixel.util.FlxStringUtil;
 
 import ui.Alphabet;

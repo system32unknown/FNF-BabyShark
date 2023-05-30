@@ -27,7 +27,6 @@ import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUISlider;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.math.FlxPoint;
-import flixel.sound.FlxSound;
 import flixel.util.FlxSort;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.Event;
@@ -329,7 +328,7 @@ class ChartingState extends MusicBeatState
 		lastSong = currentSongName;
 
 		updateGrid();
-
+		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
 		super.create();

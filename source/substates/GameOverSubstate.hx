@@ -2,7 +2,6 @@ package substates;
 
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
-import flixel.sound.FlxSound;
 import flixel.addons.transition.FlxTransitionableState;
 import game.Boyfriend;
 import game.Conductor;
