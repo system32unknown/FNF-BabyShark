@@ -8,6 +8,7 @@ import utils.CoolUtil;
 import utils.Controls;
 import utils.InputFormatter;
 import ui.AttachedText;
+import ui.AttachedSprite;
 import ui.Alphabet;
 
 class ControlsSubState extends MusicBeatSubstate {
@@ -29,6 +30,8 @@ class ControlsSubState extends MusicBeatSubstate {
 	var curPage:Int = 0;
 
 	var bg:FlxSprite;
+	var grpBlacks:FlxTypedGroup<AttachedSprite>;
+	var selectSpr:AttachedSprite;
 
 	public function new() {
 		super();
@@ -47,6 +50,11 @@ class ControlsSubState extends MusicBeatSubstate {
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
+		selectSpr = new AttachedSprite();
+		selectSpr.makeGraphic(250, 78, FlxColor.WHITE);
+		selectSpr.copyAlpha = false;
+		selectSpr.alpha = .75;
+		add(selectSpr);
 
 		optionShit = Keybinds.optionShit();
 

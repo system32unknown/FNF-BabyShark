@@ -37,7 +37,7 @@ class Alphabet extends FlxSpriteGroup
 		this.text = text;
 	}
 
-	public function setAlignmentFromString(align:String)
+	function setAlignmentFromString(align:String)
 	{
 		switch(align.toLowerCase().trim())
 		{
@@ -47,14 +47,14 @@ class Alphabet extends FlxSpriteGroup
 		}
 	}
 
-	private function set_alignment(align:Alignment)
+	function set_alignment(align:Alignment)
 	{
 		alignment = align;
 		updateAlignment();
 		return align;
 	}
 
-	private function updateAlignment()
+	function updateAlignment()
 	{
 		for (letter in letters)
 		{
@@ -136,8 +136,7 @@ class Alphabet extends FlxSpriteGroup
 		scaleY = value2;
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		if (isMenuItem) {
 			var lerpVal:Float = FlxMath.bound(elapsed * 9.6, 0, 1);
 			if(changeX) x = FlxMath.lerp(x, (targetY * distancePerItem.x) + startPosition.x, lerpVal);
@@ -153,9 +152,8 @@ class Alphabet extends FlxSpriteGroup
 		}
 	}
 
-	private static var Y_PER_ROW:Float = 85;
-	private function createLetters(newText:String)
-	{
+	static var Y_PER_ROW:Float = 85;
+	function createLetters(newText:String) {
 		var consecutiveSpaces:Int = 0;
 
 		var xPos:Float = 0;
@@ -221,49 +219,49 @@ class AlphaCharacter extends FlxSprite {
 
 	public static var allLetters:Map<String, Null<Letter>> = [
 		//alphabet
-		'a'  => null, 'b'  => null, 'c'  => null, 'd'  => null, 'e'  => null, 'f'  => null,
-		'g'  => null, 'h'  => null, 'i'  => null, 'j'  => null, 'k'  => null, 'l'  => null,
-		'm'  => null, 'n'  => null, 'o'  => null, 'p'  => null, 'q'  => null, 'r'  => null,
-		's'  => null, 't'  => null, 'u'  => null, 'v'  => null, 'w'  => null, 'x'  => null,
-		'y'  => null, 'z'  => null,
+		'a' => null, 'b' => null, 'c' => null, 'd' => null, 'e' => null, 'f' => null,
+		'g' => null, 'h' => null, 'i' => null, 'j' => null, 'k' => null, 'l' => null,
+		'm' => null, 'n' => null, 'o' => null, 'p' => null, 'q' => null, 'r' => null,
+		's' => null, 't' => null, 'u' => null, 'v' => null, 'w' => null, 'x' => null,
+		'y' => null, 'z' => null,
 		
 		//numbers
-		'0'  => null, '1'  => null, '2'  => null, '3'  => null, '4'  => null,
-		'5'  => null, '6'  => null, '7'  => null, '8'  => null, '9'  => null,
+		'0' => null, '1' => null, '2' => null, '3' => null, '4' => null,
+		'5' => null, '6' => null, '7' => null, '8' => null, '9' => null,
 
 		//symbols
-		'&'  => {offsetsBold: [0, 2]},
-		'('  => {offsetsBold: [0, 5]},
-		')'  => {offsetsBold: [0, 5]},
-		'*'  => {offsets: [0, 28]},
-		'+'  => {offsets: [0, 7], offsetsBold: [0, -12]},
-		'-'  => {offsets: [0, 16], offsetsBold: [0, -30]},
-		'<'  => {offsetsBold: [0, 4]},
-		'>'  => {offsetsBold: [0, 4]},
+		'&' => {offsetsBold: [0, 2]},
+		'(' => {offsetsBold: [0, 5]},
+		')' => {offsetsBold: [0, 5]},
+		'*' => {offsets: [0, 28]},
+		'+' => {offsets: [0, 7], offsetsBold: [0, -12]},
+		'-' => {offsets: [0, 16], offsetsBold: [0, -30]},
+		'<' => {offsetsBold: [0, 4]},
+		'>' => {offsetsBold: [0, 4]},
 		'\'' => {anim: 'apostrophe', offsets: [0, 32]},
-		'"'  => {anim: 'quote', offsets: [0, 32], offsetsBold: [0, 0]},
-		'!'  => {anim: 'exclamation', offsetsBold: [0, 10]},
-		'?'  => {anim: 'question', offsetsBold: [0, 4]},			//also used for "unknown"
-		'.'  => {anim: 'period', offsetsBold: [0, -44]},
-		'❝'  => {anim: 'start quote', offsets: [0, 24], offsetsBold: [0, -5]},
-		'❞'  => {anim: 'end quote', offsets: [0, 24], offsetsBold: [0, -5]},
+		'"' => {anim: 'quote', offsets: [0, 32], offsetsBold: [0, 0]},
+		'!' => {anim: 'exclamation', offsetsBold: [0, 10]},
+		'?' => {anim: 'question', offsetsBold: [0, 4]},			//also used for "unknown"
+		'.' => {anim: 'period', offsetsBold: [0, -44]},
+		'❝' => {anim: 'start quote', offsets: [0, 24], offsetsBold: [0, -5]},
+		'❞' => {anim: 'end quote', offsets: [0, 24], offsetsBold: [0, -5]},
 
 		//symbols with no bold
-		'_'  => null,
-		'#'  => null,
-		'$'  => null,
-		'%'  => null,
-		':'  => {offsets: [0, 2]},
-		';'  => {offsets: [0, -2]},
-		'@'  => null,
-		'['  => null,
-		']'  => {offsets: [0, -1]},
-		'^'  => {offsets: [0, 28]},
-		','  => {anim: 'comma', offsets: [0, -6]},
+		'_' => null,
+		'#' => null,
+		'$' => null,
+		'%' => null,
+		':' => {offsets: [0, 2]},
+		';' => {offsets: [0, -2]},
+		'@' => null,
+		'[' => null,
+		']' => {offsets: [0, -1]},
+		'^' => {offsets: [0, 28]},
+		',' => {anim: 'comma', offsets: [0, -6]},
 		'\\' => {anim: 'back slash', offsets: [0, 0]},
-		'/'  => {anim: 'forward slash', offsets: [0, 0]},
-		'|'  => null,
-		'~'  => {offsets: [0, 16]}
+		'/' => {anim: 'forward slash', offsets: [0, 0]},
+		'|' => null,
+		'~' => {offsets: [0, 16]}
 	];
 
 	var parent:Alphabet;

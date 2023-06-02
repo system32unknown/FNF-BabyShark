@@ -174,8 +174,7 @@ class LuaUtils {
 		switch(Type.typeof(leArray)) {
 			case ValueType.TClass(haxe.ds.StringMap) | ValueType.TClass(haxe.ds.ObjectMap) | ValueType.TClass(haxe.ds.IntMap) | ValueType.TClass(haxe.ds.EnumValueMap):
 				return leArray.get(variable);
-			default:
-				return Reflect.getProperty(leArray, variable);
+			default: return Reflect.getProperty(leArray, variable);
 		};
 	}
 
@@ -184,9 +183,7 @@ class LuaUtils {
 		var end = killMe.length;
 		if(getProperty) end = killMe.length - 1;
 
-		for (i in 1...end) {
-			obj = getVarInArray(obj, killMe[i]);
-		}
+		for (i in 1...end) obj = getVarInArray(obj, killMe[i]);
 		return obj;
 	}
 
@@ -234,9 +231,8 @@ class LuaUtils {
 
 		var target:ModchartText = PlayState.instance.modchartTexts.get(tag);
 		target.kill();
-		if(target.wasAdded) {
+		if(target.wasAdded)
 			PlayState.instance.remove(target, true);
-		}
 		target.destroy();
 		PlayState.instance.modchartTexts.remove(tag);
 	}
@@ -246,9 +242,8 @@ class LuaUtils {
 
 		var target:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
 		target.kill();
-		if(target.wasAdded) {
+		if(target.wasAdded)
 			PlayState.instance.remove(target, true);
-		}
 		target.destroy();
 		PlayState.instance.modchartSprites.remove(tag);
 	}

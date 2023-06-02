@@ -8,7 +8,6 @@ import sys.io.File;
 import flixel.util.FlxSave;
 import openfl.utils.Assets;
 
-import data.api.FunkinInternet;
 import utils.CoolUtil;
 
 //
@@ -203,9 +202,7 @@ class ExtraFunctions {
 			if(absolute) return FileSystem.exists(filename);
 
 			var path:String = Paths.modFolders(filename);
-			if(FileSystem.exists(path)) {
-				return true;
-			}
+			if(FileSystem.exists(path)) return true;
 			return FileSystem.exists(Paths.getPath('assets/$filename', TEXT));
 			#else
 			if(absolute) return Assets.exists(filename);

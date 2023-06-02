@@ -185,7 +185,7 @@ class PlayState extends MusicBeatState {
 	public var accuracy:Float = 0;
 	public var ranks:String = "";
 
-	var notesHitArray:Array<Date> = [];
+	var notesHitArray:Array<Float> = [];
 	var nps:Int = 0;
 	var maxNPS:Int = 0;
 
@@ -1802,17 +1802,19 @@ class PlayState extends MusicBeatState {
 
 		scoreTxt.x = Math.floor((FlxG.width - scoreTxt.width) / 2);
 		if (ClientPrefs.getPref('ShowNPSCounter')) {
-			var balls = notesHitArray.length - 1;
-			while (balls >= 0) {
-				var cock:Date = notesHitArray[balls];
-				if (cock != null && cock.getTime() + 1000 < Date.now().getTime())
-					notesHitArray.remove(cock);
-				else balls = 0;
-				balls--;
+			if (notesHitArray.length > 0) {
+				var balls = notesHitArray.length - 1;
+				while (balls >= 0) {
+					var cock:Float = notesHitArray[balls];
+					if (cock + 1000 < Date.now().getTime())
+						notesHitArray.remove(cock);
+					else break;
+					balls--;
+				}
+				nps = notesHitArray.length;
+				if (nps > maxNPS) maxNPS = nps;
 			}
-			nps = notesHitArray.length;
-			if (nps > maxNPS) maxNPS = nps;
-			
+
 			UpdateScoreText();
 		}
 
@@ -1908,13 +1910,14 @@ class PlayState extends MusicBeatState {
 					}
 
 					var secondsTotal:Int = Math.floor(Math.max(0, songCalc / 1000));
-					var timePos:String = FlxStringUtil.formatTime(secondsTotal) + " / " + FlxStringUtil.formatTime(Math.floor(songLength / 1000));
+					var formattedsec:String = CoolUtil.formatTime(secondsTotal);
+					var timePos:String = '$formattedsec / ' + CoolUtil.formatTime(Math.floor(songLength / 1000));
 					if (timeType != 'Song Name')
 						switch (timeType) {
-							case 'Time Left' | 'Time Elapsed': timeTxt.text = FlxStringUtil.formatTime(secondsTotal);
+							case 'Time Left' | 'Time Elapsed': timeTxt.text = formattedsec;
 							case 'Time Position': timeTxt.text = timePos;
-							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + " (" + FlxStringUtil.formatTime(secondsTotal) + ")";
-							case 'Name Time Position': timeTxt.text = SONG.song + " (" + timePos + ")";
+							case 'Name Left' | 'Name Elapsed': timeTxt.text = SONG.song + ' ($formattedsec)';
+							case 'Name Time Position': timeTxt.text = SONG.song + ' ($timePos)';
 							case 'Name Percent': timeTxt.text = '${SONG.song} (${timeBar.percent}%)';
 						}
 				}
@@ -2009,8 +2012,7 @@ class PlayState extends MusicBeatState {
 				if (daNote.copyAngle) daNote.angle = strumDirection - 90 + strumAngle;
 			else daNote.angle = strumDirection - 90 + (daNote.copyAngle ? strumAngle : 0);
 
-			if(daNote.copyAlpha)
-				daNote.alpha = strumAlpha;
+			if(daNote.copyAlpha) daNote.alpha = strumAlpha;
 		
 			if(daNote.copyX)
 				daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
@@ -3254,7 +3256,7 @@ class PlayState extends MusicBeatState {
 		var leData:Int = Math.floor(Math.abs(note.noteData));
 		var leType:String = note.noteType;
 
-		if (!isSus) notesHitArray.unshift(Date.now());
+		if (!isSus) notesHitArray.unshift(Date.now().getTime());
 
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
 		if (ClientPrefs.getPref('camMovement')) {
@@ -3517,8 +3519,7 @@ class PlayState extends MusicBeatState {
 		DiscordClient.changePresence(
 			(extraDetails != null ? '${extraDetails} - ' : '') + (paused ? detailsPausedText : detailsText),
 			'${SONG.song} (${storyDifficultyText})' + ((!startingSong && totalPlayed > 0) ? ' $scoreDetail' : ''),
-			iconP2 != null ? iconP2.getCharacter() : '',
-			showTime,
+			iconP2 != null ? iconP2.getCharacter() : '', showTime,
 			!showTime ? 0 : Math.max(songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset'), 0)
 		);
 		#end

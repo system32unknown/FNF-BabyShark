@@ -6,7 +6,7 @@ class ModchartText extends FlxText {
 		super(x, y, width, text, 16);
 		setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-		cameras = [PlayState.instance.camHUD];
+		camera = PlayState.instance.camHUD;
 		scrollFactor.set();
 	}
 }

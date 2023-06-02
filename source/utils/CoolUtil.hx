@@ -199,4 +199,28 @@ class CoolUtil {
 		if(!hex.startsWith('0x')) parsedhex = Std.parseInt('0xff' + hex);
 		return parsedhex;
 	}
+
+	public static function formatTime(sec:Float):String {
+		var hours:Int = Std.int(sec / 3600);
+		var minutes:Int = Std.int((sec % 3600) / 60);
+		var seconds:Int = Std.int(sec % 60);
+
+		var timeString:String = "";
+
+		// Add hour digits
+		if (hours >= 1) {
+			if (hours < 10) timeString += "0";
+			timeString += hours + ":";
+		}
+
+		// Add minute digits
+		if (minutes < 10) timeString += "0";
+		timeString += minutes + ":";
+
+		// Add second digits
+		if (seconds < 10) timeString += "0";
+		timeString += seconds;
+
+		return timeString;
+	}
 }

@@ -15,13 +15,13 @@ class OptionsState extends MusicBeatState
 
 	function openSelectedSubstate(label:String) {
 		switch(label) {
-			case 'Note Colors': openSubState(new options.NotesSubState());
-			case 'Controls': openSubState(new options.ControlsSubState());
-			case 'Graphics': openSubState(new options.GraphicsSettingsSubState());
-			case 'Visuals and UI': openSubState(new options.VisualsUISubState());
-			case 'Gameplay': openSubState(new options.GameplaySettingsSubState());
-			case 'Miscellaneous': openSubState(new options.MiscellaneousSubState());
-			case 'Saves': openSubState(new options.SaveSubState());
+			case 'Note Colors': openSubState(new NotesSubState());
+			case 'Controls': openSubState(new ControlsSubState());
+			case 'Graphics': openSubState(new GraphicsSettingsSubState());
+			case 'Visuals and UI': openSubState(new VisualsUISubState());
+			case 'Gameplay': openSubState(new GameplaySettingsSubState());
+			case 'Miscellaneous': openSubState(new MiscellaneousSubState());
+			case 'Saves': openSubState(new SaveSubState());
 			case 'Adjust Delay and Combo': LoadingState.loadAndSwitchState(new options.NoteOffsetState());
 		}
 	}
@@ -48,10 +48,8 @@ class OptionsState extends MusicBeatState
 
 		reload();
 
-		selectorLeft = new Alphabet(0, 0, '>', true);
-		add(selectorLeft);
-		selectorRight = new Alphabet(0, 0, '<', true);
-		add(selectorRight);
+		add(selectorLeft = new Alphabet(0, 0, '>', true));
+		add(selectorRight = new Alphabet(0, 0, '<', true));
 
 		#if MODS_ALLOWED
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
@@ -91,12 +89,8 @@ class OptionsState extends MusicBeatState
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (controls.UI_UP_P) {
-			changeSelection(-1);
-		}
-		if (controls.UI_DOWN_P) {
-			changeSelection(1);
-		}
+		if (controls.UI_UP_P) changeSelection(-1);
+		if (controls.UI_DOWN_P) changeSelection(1);
 
 		if(controls.UI_LEFT_P) changePage(-1);
 		if(controls.UI_RIGHT_P) changePage(1);
@@ -114,7 +108,7 @@ class OptionsState extends MusicBeatState
 
 		#if MODS_ALLOWED
 		if (controls.RESET) {
-			openSubState(new options.DeleteSavesSubState());
+			openSubState(new DeleteSavesSubState());
 		}
 		#end
 	}
