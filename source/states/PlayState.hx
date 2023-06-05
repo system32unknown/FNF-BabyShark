@@ -10,10 +10,8 @@ import flixel.tweens.misc.VarTween;
 import flixel.animation.FlxAnimationController;
 import flixel.ui.FlxBar;
 import flixel.util.FlxSort;
-import flixel.util.FlxStringUtil;
 import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
-import openfl.filters.ShaderFilter;
 import openfl.filters.BitmapFilter;
 #if !MODS_ALLOWED import openfl.utils.Assets as OpenFlAssets; #end
 import haxe.Json;
@@ -29,7 +27,6 @@ import utils.*;
 import ui.*;
 import data.*;
 import states.stages.BaseStage;
-import shaders.PulseEffect;
 import data.StageData.StageFile;
 import data.EkData.Keybinds;
 import scripting.haxe.AlterScript;
@@ -1857,13 +1854,15 @@ class PlayState extends MusicBeatState {
 		final iconOffset:Int = 26;
 		if (health > healthMax) health = healthMax;
 
-		if (ClientPrefs.getPref('HealthTypes') == 'Psych') {	
-			if (iconP1.moves) iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-			if (iconP2.moves) iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
-		} else {
-			if (iconP1.moves) iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01) - iconOffset);
-			if (iconP2.moves) iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01)) - (iconP2.width - iconOffset);
-		}
+		var healthPer:Float = FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01;
+		if (iconP1.moves) {
+			if (iconP1.iconType == 'psych') iconP1.x = healthBar.x + (healthBar.width * healthPer) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
+			else iconP1.x = healthBar.x + (healthBar.width * healthPer - iconOffset);
+		} 
+		if (iconP2.moves) {
+			if (iconP2.iconType == 'psych') iconP2.x = healthBar.x + (healthBar.width * healthPer) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
+			else iconP2.x = healthBar.x + (healthBar.width * healthPer) - (iconP2.width - iconOffset);
+		} 
 
 		if (healthBar.percent < 20) {
 			iconP1.setState(1);

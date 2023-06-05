@@ -12,7 +12,7 @@ using haxe.macro.TypeTools;
 class ShaderMacro
 {
 	#if 0
-	private static var __suppressWarning:Array<Class<Dynamic>> = [Expr];
+	static var __suppressWarning:Array<Class<Dynamic>> = [Expr];
 	#end
 
 	public static function build():Array<Field>

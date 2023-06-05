@@ -13,6 +13,7 @@ import states.TitleState;
 import utils.Controls;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
+import utils.CoolUtil;
 import game.FunkinGame;
 import ui.Overlay;
 
@@ -94,11 +95,9 @@ class Main extends Sprite
 		});
 		FlxG.signals.postGameReset.add(onGameReset);
 
-		#if (CRASH_HANDLER && !hl)
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
-		#end
-		#if (CRASH_HANDLER && hl)
-		hl.Api.setErrorHandler(onCrash);
+		#if CRASH_HANDLER
+		#if !hl Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash); #end
+		#if hl hl.Api.setErrorHandler(onCrash); #end
 		#end
 
 		#if discord_rpc
@@ -136,7 +135,7 @@ class Main extends Sprite
 
 		dateNow = dateNow.replace(" ", "_").replace(":", "'");
 
-		final path = "./crash/PsychEngine_" + dateNow + ".txt";
+		final path = './crash/PsychEngine_$dateNow.txt';
 
 		for (stackItem in callStack) {
 			switch (stackItem) {
@@ -145,7 +144,7 @@ class Main extends Sprite
 			}
 		}
 
-		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/ShadowMario/FNF-PsychEngine\n\n> Crash Handler written by: sqirra-rng';
+		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/ShadowMario/FNF-PsychEngine\n\n Crash Handler written by: sqirra-rng';
 
 		if (!FileSystem.exists("./crash/"))
 			FileSystem.createDirectory("./crash/");
@@ -155,13 +154,7 @@ class Main extends Sprite
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
-		#if hl
-		var flags:haxe.EnumFlags<hl.UI.DialogFlags> = new haxe.EnumFlags<hl.UI.DialogFlags>();
-		flags.set(IsError);
-		hl.UI.dialog("Alter Engine: Error!", errMsg, flags);
-		#else
-		lime.app.Application.current.window.alert(errMsg, "Alter Engine: Error!");
-		#end
+		CoolUtil.callErrBox("Alter Engine: Error!", errMsg);
 		
 		#if discord_rpc
 		DiscordClient.shutdown();

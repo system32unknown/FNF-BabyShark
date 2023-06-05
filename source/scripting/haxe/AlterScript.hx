@@ -185,22 +185,12 @@ class AlterScript {
         call("create");
     }
 
-    function callErrBox(title:String, context:String) {
-        #if hl
-		var flags:haxe.EnumFlags<hl.UI.DialogFlags> = new haxe.EnumFlags<hl.UI.DialogFlags>();
-		flags.set(IsError);
-		hl.UI.dialog(title, context, flags);
-		#else
-		lime.app.Application.current.window.alert(context, title);
-		#end
-    }
-
     function _errorHanding(e:Error) {
         var fn = '$scriptFile:${e.line}: ';
         var err = e.toString();
         if (err.startsWith(fn)) err = err.substr(fn.length);
 
-        callErrBox("Error on AlterScript", "Uncaught Error: " + fn + '\n$err');
+        CoolUtil.callErrBox("Error on AlterScript", "Uncaught Error: " + fn + '\n$err');
         hadError = true;
         stop();
     }

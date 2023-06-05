@@ -29,7 +29,6 @@ class MainMenuState extends MusicBeatState
 	var magenta:FlxSprite;
 
 	var camFollow:FlxObject;
-	var debugKeys:Array<FlxKey>;
 
 	//Stolen from Kade Engine
 	public static var firstStart:Bool = true;
@@ -60,7 +59,7 @@ class MainMenuState extends MusicBeatState
 
 		persistentUpdate = persistentDraw = true;
 
-		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
+		var yScroll:Float = Math.max(.25 - (.05 * (optionShit.length - 4)), .1);
 		var antialiasing:Bool = ClientPrefs.getPref('Antialiasing');
 
 		bg = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
@@ -128,7 +127,6 @@ class MainMenuState extends MusicBeatState
 				});
 			else menuItem.setPosition(100, (i * 140) + offset);
 		}
-
 		firstStart = false;
 
 		FlxG.camera.follow(camFollow, null, 0);
@@ -248,9 +246,8 @@ class MainMenuState extends MusicBeatState
 			if (spr.ID == curSelected && finishedFunnyMove) {
 				spr.animation.play('selected');
 				var add:Float = 0;
-				if(menuItems.length > 4) {
+				if(menuItems.length > 4)
 					add = menuItems.length * 8;
-				}
 				var mid = spr.getGraphicMidpoint();
 				camFollow.setPosition(mid.x, mid.y - add);
 				mid.put();

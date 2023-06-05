@@ -223,4 +223,14 @@ class CoolUtil {
 
 		return timeString;
 	}
+
+	public static function callErrBox(title:String, context:String) {
+        #if hl
+		var flags:haxe.EnumFlags<hl.UI.DialogFlags> = new haxe.EnumFlags<hl.UI.DialogFlags>();
+		flags.set(IsError);
+		hl.UI.dialog(title, context, flags);
+		#else
+		lime.app.Application.current.window.alert(context, title);
+		#end
+    }
 }
