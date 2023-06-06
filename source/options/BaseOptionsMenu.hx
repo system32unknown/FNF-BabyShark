@@ -41,7 +41,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if(rpcTitle == null) rpcTitle = 'Options Menu';
 		
 		#if discord_rpc
-		DiscordClient.changePresence(rpcTitle, null);
+		Discord.changePresence(rpcTitle, null);
 		#end
 		
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -83,7 +83,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		modDisp.scrollFactor.set();
 		add(modDisp);
 
-		for (folder in Paths.getActiveModsDir(true)) {
+		for (folder in Mods.getActiveModsDir(true)) {
 			var path:String = haxe.io.Path.join([Paths.mods(), folder, 'options', FlxStringUtil.getClassName(this, true)]);
 			if(FileSystem.exists(path)) for(file in FileSystem.readDirectory(path)) if(file.endsWith('.json')) {
 				var rawJson = File.getContent(path + '/' + file);
@@ -362,10 +362,5 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		for (checkbox in checkboxGroup) {
 			checkbox.daValue = (optionsArray[checkbox.ID].getValue() == true);
 		}
-	}
-
-	override function destroy() {
-		ClientPrefs.loadPrefs();
-		super.destroy();
 	}
 }

@@ -48,7 +48,7 @@ class ModsMenuState extends MusicBeatState
 
 		#if discord_rpc
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Mod Menus", null);
+		Discord.changePresence("Mod Menus", null);
 		#end
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -67,28 +67,8 @@ class ModsMenuState extends MusicBeatState
 		noModsTxt.screenCenter();
 		visibleWhenNoMods.push(noModsTxt);
 
-		var path:String = 'modsList.txt';
-		if(FileSystem.exists(path)) {
-			var leMods:Array<String> = CoolUtil.coolTextFile(path);
-			for (i in 0...leMods.length) {
-				if(leMods.length > 1 && leMods[0].length > 0) {
-					var modSplit:Array<String> = leMods[i].split('|');
-					if(!Paths.ignoreModFolders.contains(modSplit[0].toLowerCase())) {
-						addToModsList([modSplit[0], (modSplit[1] == '1')]);
-					}
-				}
-			}
-		}
-
-		// FIND MOD FOLDERS
-		if (FileSystem.exists("modsList.txt")) {
-			for (folder in Paths.getModDirectories()) {
-				if(!Paths.ignoreModFolders.contains(folder)) {
-					addToModsList([folder, true]); //i like it false by default. -bb //Well, i like it True! -Shadow
-				}
-			}
-		}
-		saveTxt();
+		var list:ModsList = Mods.parseList();
+		for (mod in list.all) modsList.push([mod, list.enabled.contains(mod)]);
 
 		selector = new AttachedSprite();
 		selector.addPoint.set(-205, -68);
@@ -269,15 +249,6 @@ class ModsMenuState extends MusicBeatState
 		super.create();
 	}
 
-	function addToModsList(values:Array<Dynamic>) {
-		for (i in 0...modsList.length) {
-			if(modsList[i][0] == values[0]) {
-				return;
-			}
-		}
-		modsList.push(values);
-	}
-
 	function updateButtonToggle() {
 		if (modsList[curSelected][1]) {
 			buttonToggle.label.text = 'ON';
@@ -322,14 +293,12 @@ class ModsMenuState extends MusicBeatState
 			fileStr += values[0] + '|' + (values[1] ? '1' : '0');
 		}
 
-		var path:String = 'modsList.txt';
-		File.saveContent(path, fileStr);
-		Paths.pushGlobalMods();
+		File.saveContent('modsList.txt', fileStr);
+		Mods.pushGlobalMods();
 	}
 
 	var noModsSine:Float = 0;
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		if(noModsTxt.visible) {
 			noModsSine += 180 * elapsed;
 			noModsTxt.alpha = 1 - Math.sin((Math.PI * noModsSine) / 180);
@@ -463,30 +432,25 @@ class ModMetadata {
 		this.restart = false;
 
 		//Try loading json
-		var path = Paths.mods((folder != null ? '$folder/' : '') + 'pack.json');
-		if(FileSystem.exists(path)) {
-			var rawJson:String = File.getContent(path);
-			if(rawJson != null && rawJson.length > 0) {
-				var stuff:Dynamic = Json.parse(rawJson);
-					//using reflects cuz for some odd reason my haxe hates the stuff.var shit
-					var colors:Array<Int> = Reflect.getProperty(stuff, "color");
-					var description:String = Reflect.getProperty(stuff, "description");
-					var name:String = Reflect.getProperty(stuff, "name");
-					var restart:Bool = Reflect.getProperty(stuff, "restart");
-
-				if(name != null && name.length > 0)
-					this.name = name;
-				if(description != null && description.length > 0)
-					this.description = description;
-				if(name == 'Name')
-					this.name = folder;
-				if(description == 'Description')
-					this.description = "No description provided.";
-				if(colors != null && colors.length > 2)
-					this.color = FlxColor.fromRGB(colors[0], colors[1], colors[2]);
-
-				this.restart = restart;
+		var pack:Dynamic = Mods.getPack(folder);
+		if(pack != null) {
+			//using reflects cuz for some odd reason my haxe hates the stuff.var shit
+			if(pack.name != null && pack.name.length > 0) {
+				if(pack.name != 'Name')
+					this.name = pack.name;
+				else this.name = pack.folder;
 			}
+
+			if(pack.description != null && pack.description.length > 0) {
+				if(pack.description != 'Description')
+					this.description = pack.description;
+				else this.description = "No description provided.";
+			}
+
+			if(pack.colors != null && pack.colors.length > 2)
+				this.color = FlxColor.fromRGB(pack.colors[0], pack.colors[1], pack.colors[2]);
+
+			this.restart = pack.restart;
 		}
 	}
 }

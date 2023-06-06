@@ -43,7 +43,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			}
 		}
 		sectionArray = CoolUtil.removeDuplicates(sectionArray);
-		WeekData.loadTheFirstEnabledMod();
+		Mods.loadTheFirstEnabledMod();
 
         for (i in 0...sectionArray.length) {
             if (sectionArray[i] == daSection) {
@@ -77,7 +77,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		add(sectionTxt);
 
 		#if discord_rpc
-		DiscordClient.changePresence("Selecting a Freeplay Section", null);
+		Discord.changePresence("Selecting a Freeplay Section", null);
 		#end
 
 		FlxTween.tween(sectionSpr, {alpha: 1}, 1, {ease: FlxEase.expoOut});

@@ -50,7 +50,7 @@ class FreeplayState extends MusicBeatState
 		WeekData.reloadWeekFiles(false);
 
 		#if discord_rpc
-		DiscordClient.changePresence("Freeplay Menu", null);
+		Discord.changePresence("Freeplay Menu", null);
 		#end
 
 		section = FreeplaySectionSubstate.daSection;
@@ -94,7 +94,7 @@ class FreeplayState extends MusicBeatState
 				addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
 			}
 		}
-		WeekData.loadTheFirstEnabledMod();
+		Mods.loadTheFirstEnabledMod();
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
@@ -106,7 +106,7 @@ class FreeplayState extends MusicBeatState
 
 		for (i in 0...songs.length)
 		{
-			Paths.currentModDirectory = songs[i].folder;
+			Mods.currentModDirectory = songs[i].folder;
 			var songText:Alphabet = new Alphabet(90, 320, songs[i].songName, true);
 			songText.targetY = i;
 			grpSongs.add(songText);
@@ -299,7 +299,7 @@ class FreeplayState extends MusicBeatState
 				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
-				Paths.currentModDirectory = songs[curSelected].folder;
+				Mods.currentModDirectory = songs[curSelected].folder;
 
 				var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
@@ -344,7 +344,7 @@ class FreeplayState extends MusicBeatState
 			var songFolder:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var songLowercase:String = Highscore.formatSong(songFolder, curDifficulty);
 			
-			if (songLowercase == "") return;
+			if (songLowercase == "" || songLowercase.length > 0) return;
 
 			PlayState.SONG = Song.loadFromJson(songLowercase, songFolder);
 
@@ -357,12 +357,13 @@ class FreeplayState extends MusicBeatState
 					colorTween.cancel();
 				}
 
-				if (FlxG.keys.pressed.SHIFT) {
+				if (FlxG.keys.pressed.SHIFT)
 					LoadingState.loadAndSwitchState(new ChartingState());
-				} else LoadingState.loadAndSwitchState(new PlayState());
+				else LoadingState.loadAndSwitchState(new PlayState());
 
 				FlxG.sound.music.volume = 0;
 				destroyFreeplayVocals();
+				#if MODS_ALLOWED Discord.loadModRPC(); #end
 			} else {
 				errorDisplay.text = getErrorMessage(missChart, 'cannot play song, $missFile', songFolder, songLowercase);
 				errorDisplay.displayError();
@@ -442,7 +443,7 @@ class FreeplayState extends MusicBeatState
 				item.alpha = 1;
 		}
 		
-		Paths.currentModDirectory = songs[curSelected].folder;
+		Mods.currentModDirectory = songs[curSelected].folder;
 		PlayState.storyWeek = songs[curSelected].week;
 
 		Difficulty.loadFromWeek();
@@ -527,7 +528,7 @@ class SongMetadata
 		this.week = week;
 		this.songCharacter = songCharacter;
 		this.color = color;
-		this.folder = Paths.currentModDirectory;
+		this.folder = Mods.currentModDirectory;
 		if (this.folder == null) this.folder = '';
 	}
 }

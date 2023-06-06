@@ -33,7 +33,7 @@ class MasterEditorMenu extends MusicBeatState {
 		FlxG.camera.bgColor = FlxColor.BLACK;
 		#if discord_rpc
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Editors Main Menu", null);
+		Discord.changePresence("Editors Main Menu", null);
 		#end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -62,8 +62,8 @@ class MasterEditorMenu extends MusicBeatState {
 		directoryTxt.scrollFactor.set();
 		add(directoryTxt);
 		
-		for (folder in Paths.getModDirectories()) directories.push(folder);
-		var found:Int = directories.indexOf(Paths.currentModDirectory);
+		for (folder in Mods.getModDirectories()) directories.push(folder);
+		var found:Int = directories.indexOf(Mods.currentModDirectory);
 		if(found > -1) curDirectory = found;
 		changeDirectory();
 		#end
@@ -134,8 +134,8 @@ class MasterEditorMenu extends MusicBeatState {
 		if(directories[curDirectory] == null || directories[curDirectory].length < 1)
 			directoryTxt.text = '< No Mod Directory Loaded >';
 		else {
-			Paths.currentModDirectory = directories[curDirectory];
-			directoryTxt.text = '< Loaded Mod Directory: ' + Paths.currentModDirectory + ' >';
+			Mods.currentModDirectory = directories[curDirectory];
+			directoryTxt.text = '< Loaded Mod Directory: ' + Mods.currentModDirectory + ' >';
 		}
 		directoryTxt.text = directoryTxt.text.toUpperCase();
 	}

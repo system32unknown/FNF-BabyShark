@@ -24,28 +24,6 @@ class Paths
 	inline public static var SOUND_EXT = "ogg";
 	inline public static var VIDEO_EXT = "mp4";
 
-	#if MODS_ALLOWED
-	public static var ignoreModFolders:Array<String> = [
-		'characters',
-		'custom_events',
-		'custom_notetypes',
-		'custom_gamechangers',
-		'data',
-		'songs',
-		'music',
-		'sounds',
-		'shaders',
-		'videos',
-		'images',
-		'stages',
-		'weeks',
-		'fonts',
-		'scripts',
-		'achievements',
-		'options'
-	];
-	#end
-
 	public static function excludeAsset(asset:Dynamic) {
 		if ((asset is String)) {
 			var key:String = asset;
@@ -152,7 +130,6 @@ class Paths
 		clearUnusedCache();
 	}
 
-	static public var currentModDirectory:String = '';
 	static public var currentLevel:String;
 	static public function setCurrentLevel(name:String)
 		currentLevel = name.toLowerCase();
@@ -275,7 +252,7 @@ class Paths
 
 	inline static public function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?isPath:Bool = false, ?library:String):Bool {
 		#if MODS_ALLOWED
-		if(!ignoreMods && (FileSystem.exists(mods('$currentModDirectory/$key')) || FileSystem.exists(mods(key))))
+		if(!ignoreMods && (FileSystem.exists(mods('${Mods.currentModDirectory}/$key')) || FileSystem.exists(mods(key))))
 			return true;
 		#end
 
@@ -440,113 +417,27 @@ class Paths
 		return modFolders('images/$key.txt');
 
 	static public function modFolders(key:String) {
-		if(currentModDirectory != null && currentModDirectory.length > 0) {
-			var file:String = mods('$currentModDirectory/$key');
+		if(Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0) {
+			var file:String = mods('${Mods.currentModDirectory}/$key');
 			if(FileSystem.exists(file)) return file;
 		}
 
-		for(mod in getGlobalMods()) {
+		for(mod in Mods.getGlobalMods()) {
 			var file:String = mods('$mod/$key');
 			if(FileSystem.exists(file)) return file;
 		}
 		return mods(key);
 	}
-
-	public static var globalMods:Array<String> = [];
-
-	static public function getGlobalMods()
-		return globalMods;
-
-	static public function pushGlobalMods() { // prob a better way to do this but idc
-		globalMods = [];
-		for (folder in getActiveModsDir()) {
-			var path = mods(folder + '/pack.json');
-			if(FileSystem.exists(path)) {
-				try {
-					var rawJson:String = File.getContent(path);
-					if(rawJson != null && rawJson.length > 0) {
-						var stuff:Dynamic = Json.parse(rawJson);
-						var global:Bool = Reflect.getProperty(stuff, "runsGlobally");
-						if(global) globalMods.push(folder);
-					}
-				} catch(e:Dynamic) {trace(e);}
-			}
-		}
-		return globalMods;
-	}
-
-	static public function isValidModDir(dir:String):Bool
-		return FileSystem.isDirectory(Path.join([mods(), dir])) && !ignoreModFolders.contains(dir.toLowerCase());
-
-	static public function getModDirectories(lowercase:Bool = false):Array<String> {
-		var list:Array<String> = [];
-		var modsFolder:String = mods();
-
-		if (!FileSystem.exists(modsFolder)) return list;
-
-		for (folder in FileSystem.readDirectory(modsFolder)) {
-			var path:String = Path.join([modsFolder, folder]);
-			var lower:String = folder.toLowerCase();
-
-			if (FileSystem.isDirectory(path) && !ignoreModFolders.contains(lower) && !list.contains(lower))
-				list.push(lowercase ? lower : folder);
-		}
-
-		return list;
-	}
-
-	static public function getActiveModsDir(inclMainFol:Bool = false):Array<String> {
-		var finalList:Array<String> = [];
-		if (inclMainFol) finalList.push('');
-		
-		var path:String = 'modsList.txt';
-		if(FileSystem.exists(path)) {
-			var genList:Array<String> = getModDirectories();
-			var list:Array<String> = CoolUtil.coolTextFile(path);
-			for (i in list) {
-				var dat = i.split("|");
-				if (dat[1] == "1" && genList.contains(dat[0])) finalList.push(dat[0]);
-			}
-		}
-		return finalList;
-	}
-	
-	static public function getActiveModDirectories(lowercase:Bool = false):Array<String> {
-		var list:Array<String> = [];
-		final path:String = 'modsList.txt';
-
-		var remains:Array<String> = getModDirectories(true);
-
-		if (remains.length <= 0 || !FileSystem.exists(path)) return list;
-		var leMods:Array<String> = CoolUtil.coolTextFile(path);
-
-		for (i in 0...leMods.length) {
-			if (remains.length <= 0) break;
-			if (leMods.length > 1 && leMods[0].length > 0) {
-				var modSplit:Array<String> = leMods[i].split('|');
-				var modLower:String = modSplit[0].toLowerCase();
-
-				if (remains.contains(modLower) && modSplit[1] == '1') {
-					remains.remove(modLower);
-					list.push(lowercase ? modLower : modSplit[0]);
-				}
-			}
-		}
-
-		remains = null;
-		return list;
-	}
 	#end
-
 
 	#if LUA_ALLOWED
 	static public function getLuaPackagePath():String {
 		var toAdd:Array<String> = ['.'];
 		#if MODS_ALLOWED
 		toAdd.push('./mods');
-		if (currentModDirectory != null && currentModDirectory.length > 0)
-			toAdd.push('./mods/$currentModDirectory');
-		for (mod in getGlobalMods()) toAdd.push('./mods/$mod');
+		if (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)
+			toAdd.push('./mods/${Mods.currentModDirectory}');
+		for (mod in Mods.getGlobalMods()) toAdd.push('./mods/$mod');
 		#end
 		toAdd.push('./assets');
 		var paths:Array<String> = [];

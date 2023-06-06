@@ -59,7 +59,7 @@ class AlterScript {
             expr = parser.parseString(script, scriptFile);
         } catch(e:Error) {
             _errorHanding(e);
-        } catch(e) {_errorHanding(new Error(ECustom(e.toString()), 0, 0, scriptFile, 0));}
+        } catch(e) _errorHanding(new Error(ECustom(e.toString()), 0, 0, scriptFile, 0));
 
         if (!hadError && interp != null) interp.execute(expr);
         else stop();
@@ -157,7 +157,6 @@ class AlterScript {
             "HealthIcon"        => HealthIcon,
             "StrumLine"         => StrumNote,
             "Character"         => Character,
-            "Boyfriend"         => Boyfriend,
             "Paths"             => Paths,
             "Conductor"         => Conductor,
             "Alphabet"          => Alphabet,

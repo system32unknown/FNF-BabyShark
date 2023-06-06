@@ -50,7 +50,7 @@ class NoteOffsetState extends MusicBeatState {
 
 	override public function create() {
 		#if discord_rpc
-		DiscordClient.changePresence('Adjusting Offsets and Combos', null);
+		Discord.changePresence('Adjusting Offsets and Combos', null);
 		#end
 
 		FlxG.fixedTimestep = false;

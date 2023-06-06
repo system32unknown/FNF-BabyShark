@@ -47,24 +47,24 @@ class FunkinLua {
 	public static var hscript:HScript;
 	#end
 
-	public function new(script:String, ?scriptCode:String) {
+	public function new(script:String) {
 		if (!Path.isAbsolute(script)) { // any absoluted paths, fuck it.
 			var dirs = (script = format(script)).split('/'), mod = Paths.mods(), index = -1;
 			for (i in 0...dirs.length) {
 				if (mod.startsWith(dirs[i])) {
-					modDir = ((index = i + 1) < dirs.length && Paths.isValidModDir(dirs[index])) ? dirs[index] : '';
+					modDir = ((index = i + 1) < dirs.length && Mods.isValidModDir(dirs[index])) ? dirs[index] : '';
 					break;
 				}
 			}
 			if (modDir != '' || index != -1)
 				globalScriptName = Path.join([for (i in (index + (modDir != '' ? 1 : 0))...dirs.length) dirs[i]]);
 		} else globalScriptName = scriptName;
-		scriptName = script;
+		this.scriptName = script;
 
 		#if LUA_ALLOWED
 		lua = LuaL.newstate();
 
-		var result:Int = LuaL.loadfile(lua, script);
+		var result:Int = LuaL.loadfile(lua, scriptName);
 		if (result == Lua.LUA_OK) {
 			LuaL.openlibs(lua);
 			Lua_helper.init_callbacks(lua);
@@ -73,7 +73,6 @@ class FunkinLua {
 
 			Lua_helper.link_extra_arguments(lua, [this]);
 			Lua_helper.link_static_callbacks(lua);
-
 
 			Lua.getglobal(lua, "package");
 			Lua.pushstring(lua, Paths.getLuaPackagePath());
@@ -303,11 +302,7 @@ class FunkinLua {
 		});
 
 		addCallback("getRunningScripts", function(_) {
-			var runningScripts:Array<String> = [];
-			for (idx in 0...PlayState.instance.luaArray.length)
-				runningScripts.push(PlayState.instance.luaArray[idx].scriptName);
-
-			return runningScripts;
+			return [for (script in PlayState.instance.luaArray) script];
 		});
 
 		addCallback("setOnLuas", function(_, varName:String, scriptVar:Dynamic) {
@@ -315,10 +310,19 @@ class FunkinLua {
 			PlayState.instance.setOnLuas(varName, scriptVar);
 		});
 
-		addCallback("callOnLuas", function(l:FunkinLua, funcName:String, args:Array<Any>, ignoreStops:Bool = false, ignoreSelf:Bool = true, ?exclusions:Array<String>):Void {
-			var scriptName:String = l.globalScriptName;
-			if (ignoreSelf && !exclusions.contains(scriptName)) exclusions.push(scriptName);
+		addCallback("callOnLuas", function(l:FunkinLua, funcName:String, args:Array<Dynamic> = null, ignoreStops = false, exclusions:Array<String> = null) {
+			if(funcName == null){
+				#if (linc_luajit >= "0.0.6")
+				LuaL.error(lua, "bad argument #1 to 'callOnLuas' (string expected, got nil)");
+				#end
+				return false;
+			}
+
+			if(args == null) args = [];
+			if(exclusions == null) exclusions = [];
+
 			PlayState.instance.callOnLuas(funcName, args, ignoreStops, exclusions);
+			return true;
 		});
 
 		addCallback("callScript", function(l:FunkinLua, luaFile:String, funcName:String, args:Array<Dynamic>):Dynamic {
@@ -771,11 +775,13 @@ class FunkinLua {
 			return PlayState.instance.health;
 		});
 
-		addCallback("FlxColor", function(_, color:String = '') { return LuaUtils.getColorByString(color); });
-		addCallback("getColorFromName", function(_, color:String = '') { return LuaUtils.getColorByString(color); });
+		Lua_helper.add_callback(lua, "FlxColor", function(?color:String = '') return FlxColor.fromString(color));
+		Lua_helper.add_callback(lua, "getColorFromName", function(?color:String = '') return FlxColor.fromString(color));
+		Lua_helper.add_callback(lua, "getColorFromString", function(?color:String = '') return FlxColor.fromString(color));
 
-		addCallback("getColorFromHex", function(_, color:String) {
-			return CoolUtil.parseHex(color);
+		addCallback("getColorFromHex", function(_, myColor:String) {
+			myColor = myColor.trim();
+			return Std.parseInt(myColor.startsWith('0x') ? myColor : '0xFF$myColor');
 		});
 		addCallback("getColorFromRgb", function(_, rgb:Array<Int>) {
 			return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]);
@@ -821,6 +827,7 @@ class FunkinLua {
 		});
 		addCallback("restartSong", function(_, ?skipTransition:Bool = false) {
 			PlayState.instance.persistentUpdate = false;
+			FlxG.camera.followLerp = 0;
 			PauseSubState.restartSong(skipTransition);
 			return true;
 		});
@@ -838,12 +845,14 @@ class FunkinLua {
 			if(PlayState.isStoryMode)
 				MusicBeatState.switchState(new StoryMenuState());
 			else MusicBeatState.switchState(new FreeplayState());
+			#if desktop Discord.resetClientID(); #end
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			PlayState.changedDifficulty = false;
 			PlayState.chartingMode = false;
 			PlayState.instance.transitioning = true;
-			WeekData.loadTheFirstEnabledMod();
+			FlxG.camera.followLerp = 0;
+			Mods.loadTheFirstEnabledMod();
 			return true;
 		});
 		addCallback("getSongPosition", function() {
@@ -1594,12 +1603,8 @@ class FunkinLua {
 		addCallback("changePresence", function(_, details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
 			#if discord_rpc
 			PlayState.instance.presenceChangedByLua = true;
-			DiscordClient.changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
+			Discord.changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
 			#end
-		});
-		addCallback("addSubtitle", function(_, text:String, typespe:Float, showTime:Float, options:Dynamic) {
-			var suboptions:game.subtitles.Subtitle.SubtitleProperties = game.subtitles.Subtitle.getLuaSubtitle(options);
-			PlayState.instance.subtitleManager.addSubtitle(text, typespe, showTime, suboptions);
 		});
 
 		// LUA TEXTS
@@ -1792,6 +1797,7 @@ class FunkinLua {
 		set('weekRaw', PlayState.storyWeek);
 		set('week', WeekData.weeksList[PlayState.storyWeek]);
 		set('seenCutscene', PlayState.seenCutscene);
+		set('hasVocals', PlayState.SONG.needsVoices);
 
 		// Camera poo
 		set('cameraX', 0);
@@ -1872,7 +1878,7 @@ class FunkinLua {
 		set('scriptName', scriptName);
 		set('isPixelStage', PlayState.isPixelStage);
 		set('curStage', PlayState.curStage);
-		set('currentModDirectory', Paths.currentModDirectory);
+		set('currentModDirectory', Mods.currentModDirectory);
 
 		#if windows
 		var os = 'windows';
@@ -2069,10 +2075,10 @@ class FunkinLua {
 		}
 
 		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
-		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
-			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
+		if(Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)
+			foldersToCheck.insert(0, Paths.mods(Mods.currentModDirectory + '/shaders/'));
 
-		for(mod in Paths.getGlobalMods())
+		for(mod in Mods.getGlobalMods())
 			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
 		
 		for (folder in foldersToCheck) {

@@ -87,36 +87,13 @@ class WeekData {
 		weeksList = [];
 		weeksLoaded.clear();
 		#if MODS_ALLOWED
-		var disabledMods:Array<String> = [];
-		var modsListPath:String = 'modsList.txt';
 		var directories:Array<String> = [Paths.mods(), Paths.getPreloadPath()];
-		var originalLength:Int = directories.length;
-		if(FileSystem.exists(modsListPath)) {
-			var stuff:Array<String> = CoolUtil.coolTextFile(modsListPath);
-			for (i in 0...stuff.length) {
-				var splitName:Array<String> = stuff[i].trim().split('|');
-				if(splitName[1] == '0') // Disable mod
-					disabledMods.push(splitName[0]);
-				else { // Sort mod loading order based on modsList.txt file
-					var path = Path.join([Paths.mods(), splitName[0]]);
-					if (FileSystem.isDirectory(path) && !Paths.ignoreModFolders.contains(splitName[0]) && !disabledMods.contains(splitName[0]) && !directories.contains(path + '/')) {
-						directories.push(path + '/');
-					}
-				}
-			}
-		}
-
-		var modsDirectories:Array<String> = Paths.getModDirectories();
-		for (folder in modsDirectories) {
-			var pathThing:String = Path.join([Paths.mods(), folder]) + '/';
-			if (!disabledMods.contains(folder) && !directories.contains(pathThing)) {
-				directories.push(pathThing);
-			}
-		}
+		for (mod in Mods.parseList().enabled)
+			directories.push(Paths.mods(mod + '/'));
 		#else
 		var directories:Array<String> = [Paths.getPreloadPath()];
-		var originalLength:Int = directories.length;
 		#end
+		var originalLength:Int = directories.length;
 
 		var library = OpenFlAssets.getLibrary("weeks");
 		for (asset in library.list(null)) {
@@ -189,22 +166,15 @@ class WeekData {
 	static function getWeekFile(path:String):WeekFile {
 		var rawJson:String = null;
 		#if MODS_ALLOWED
-		if(FileSystem.exists(path)) {
-			rawJson = File.getContent(path);
-		}
+		if(FileSystem.exists(path)) rawJson = File.getContent(path);
 		#else
-		if(OpenFlAssets.exists(path)) {
-			rawJson = Assets.getText(path);
-		}
+		if(OpenFlAssets.exists(path)) rawJson = Assets.getText(path);
 		#end
 
-		if(rawJson != null && rawJson.length > 0) {
+		if(rawJson != null && rawJson.length > 0)
 			return cast Json.parse(rawJson);
-		}
 		return null;
 	}
-
-	//FUNCTIONS YOU WILL PROBABLY NEVER NEED TO USE
 
 	//To use on PlayState.hx or Highscore stuff
 	public static function getWeekFileName():String {
@@ -217,26 +187,9 @@ class WeekData {
 	}
 
 	public static function setDirectoryFromWeek(?data:WeekData = null) {
-		Paths.currentModDirectory = '';
+		Mods.currentModDirectory = '';
 		if(data != null && data.folder != null && data.folder.length > 0) {
-			Paths.currentModDirectory = data.folder;
+			Mods.currentModDirectory = data.folder;
 		}
-	}
-
-	public static function loadTheFirstEnabledMod() {
-		Paths.currentModDirectory = '';
-		
-		#if MODS_ALLOWED
-		if (FileSystem.exists("modsList.txt")) {
-			var list:Array<String> = CoolUtil.listFromString(File.getContent("modsList.txt"));
-			for (i in list) {
-				var dat = i.split("|");
-				if (dat[1] == "1") {
-					Paths.currentModDirectory = dat[0];
-					break;
-				}
-			}
-		}
-		#end
 	}
 }

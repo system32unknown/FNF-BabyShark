@@ -1,6 +1,6 @@
 #if !macro
 #if discord_rpc
-import utils.DiscordClient;
+import utils.Discord;
 #end
 import utils.ClientPrefs;
 import states.MusicBeatState;
@@ -8,6 +8,7 @@ import states.PlayState;
 import substates.MusicBeatSubstate;
 import data.api.FunkinInternet;
 import Paths;
+#if MODS_ALLOWED import utils.Mods; #end
 
 import flixel.FlxG;
 import flixel.FlxSprite;

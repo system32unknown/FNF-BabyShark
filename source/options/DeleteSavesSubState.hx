@@ -20,7 +20,7 @@ class DeleteSavesSubState extends MusicBeatSubstate {
         super();
 
         #if discord_rpc
-		DiscordClient.changePresence("Modpacks Options Saves Menu", null);
+		Discord.changePresence("Modpacks Options Saves Menu", null);
 		#end
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -70,7 +70,7 @@ class DeleteSavesSubState extends MusicBeatSubstate {
 		text.scrollFactor.set();
 		add(text);
 
-        var active:Array<String> = Paths.getActiveModsDir();
+        var active:Array<String> = Mods.getActiveModsDir();
         for (save in ClientPrefs.modsOptsSaves.keys()) {
             var toCheck:Array<Dynamic> = [save, null, false];
             if (save != '') {

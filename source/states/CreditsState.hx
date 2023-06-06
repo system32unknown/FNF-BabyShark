@@ -25,7 +25,7 @@ class CreditsState extends MusicBeatState
 	static var psych(default, never):Array<Array<String>> = [
 		['Psych Engine Team'],
 		['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',		'444444'],
-		['RiverOaken',			'river',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/RiverOaken',			'B42F71'],
+		['Riveren',				'riveren',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/riverennn',			'B42F71'],
 		[''],
 		['Former Engine Members'],
 		['shubs',				'shubs',			'Ex-Programmer of Psych Engine',								'https://twitter.com/yoshubs',				'5E99DF'],
@@ -91,7 +91,7 @@ class CreditsState extends MusicBeatState
 
 	override function create() {
 		#if discord_rpc
-		DiscordClient.changePresence("In the Credits", null);
+		Discord.changePresence("In the Credits", null);
 		#end
 
 		sections = [for (title in titles) title];
@@ -101,11 +101,10 @@ class CreditsState extends MusicBeatState
 		add(bg);
 		bg.screenCenter();
 		
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
+		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
 		#if MODS_ALLOWED
-		var activeMods = Paths.getActiveModDirectories(true);
+		var activeMods = Mods.getActiveModDirectories(true);
 		pushModCredits();
 		for (mod in activeMods)
 			pushModCredits(mod);
@@ -327,20 +326,19 @@ class CreditSectionState extends MusicBeatState {
 	override function create()
 	{
 		#if discord_rpc
-		DiscordClient.changePresence("In the Menus", null);
+		Discord.changePresence("In the Menus", null);
 		#end
-		prevModDir = Paths.currentModDirectory;
+		prevModDir = Mods.currentModDirectory;
 		persistentUpdate = true;
 
 		initializeList();
-		if (CSectionisMod) Paths.currentModDirectory = curCSection;
+		if (CSectionisMod) Mods.currentModDirectory = curCSection;
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.screenCenter();
 		add(bg);
 
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
+		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
 		var prefix:String = CSectionisMod ? '' : curCSection + '/';
 		for (i in 0...creditsStuff.length)
@@ -355,7 +353,7 @@ class CreditSectionState extends MusicBeatState {
 
 			if(isSelectable) {
 				if(creditsStuff[i][5] != null)
-					Paths.currentModDirectory = creditsStuff[i][5];
+					Mods.currentModDirectory = creditsStuff[i][5];
 
 				var icon:HealthIcon = new HealthIcon(false, true);
 				if (!icon.changeIcon(creditsStuff[i][1], curCSection, false))
@@ -369,7 +367,7 @@ class CreditSectionState extends MusicBeatState {
 
 				// using a FlxGroup is too much fuss!
 				add(icon);
-				Paths.currentModDirectory = CSectionisMod ? curCSection : '';
+				Mods.currentModDirectory = CSectionisMod ? curCSection : '';
 
 				if(curSelected == -1) curSelected = i;
 			} else {
@@ -467,7 +465,7 @@ class CreditSectionState extends MusicBeatState {
 	}
 
 	override function destroy() {
-		Paths.currentModDirectory = prevModDir;
+		Mods.currentModDirectory = prevModDir;
 		super.destroy();
 	}
 

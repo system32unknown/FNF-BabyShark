@@ -3,7 +3,7 @@ package substates;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.addons.transition.FlxTransitionableState;
-import game.Boyfriend;
+import game.Character;
 import game.Conductor;
 import states.StoryMenuState;
 import states.FreeplayState;
@@ -11,7 +11,7 @@ import data.WeekData;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
-	public var boyfriend:Boyfriend;
+	public var boyfriend:Character;
 
 	public var camOther:FlxCamera;
 	public var camHUD:FlxCamera;
@@ -41,7 +41,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		Paths.sound(endSoundName);
 
 		if (PlayState.instance != null)
-			PlayState.instance.gameOverChar = new Boyfriend(0, 0, characterName);
+			PlayState.instance.gameOverChar = new Character(0, 0, characterName, true);
 	}
 
 	override function create() {
@@ -88,6 +88,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		add(camFollow);
 	}
 
+	public var startedDeath:Bool = false;
 	var isFollowingAlready:Bool = false;
 	override function update(elapsed:Float) {
 		PlayState.instance.cleanupLuas();
@@ -103,7 +104,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			PlayState.seenCutscene = false;
 			PlayState.chartingMode = false;
 
-			WeekData.loadTheFirstEnabledMod();
+			Mods.loadTheFirstEnabledMod();
 			if (PlayState.isStoryMode) MusicBeatState.switchState(new StoryMenuState());
 			else MusicBeatState.switchState(new FreeplayState());
 
@@ -111,15 +112,28 @@ class GameOverSubstate extends MusicBeatSubstate
 			PlayState.instance.callOnLuas('onGameOverConfirm', [false]);
 		}
 
-		if (boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name == 'firstDeath') {
-			if(boyfriend.animation.curAnim.curFrame >= 12 && !isFollowingAlready) {
-				FlxG.camera.follow(camFollow, LOCKON, 0);
-				updateCamera = true;
-				isFollowingAlready = true;
+		if (boyfriend.animation.curAnim != null) {
+			if (boyfriend.animation.curAnim.name.endsWith('miss') && boyfriend.animation.curAnim.finished)
+				boyfriend.playAnim('idle', true, false, 10);
+
+			if (boyfriend.animation.curAnim.name == 'firstDeath' && boyfriend.animation.curAnim.finished && startedDeath)
+				boyfriend.playAnim('deathLoop');
+
+			if(boyfriend.animation.curAnim.name == 'firstDeath') {
+				if(boyfriend.animation.curAnim.curFrame >= 12 && !isFollowingAlready) {
+					FlxG.camera.follow(camFollow, LOCKON, 0);
+					updateCamera = true;
+					isFollowingAlready = true;
+				}
+
+				if (boyfriend.animation.curAnim.finished && !playingDeathSound) {
+					startedDeath = true;
+					coolStartDeath();
+				}
 			}
 		}
 
-		if(updateCamera) FlxG.camera.followLerp = FlxMath.bound(elapsed * 0.6, 0, 1);
+		if(updateCamera) FlxG.camera.followLerp = FlxMath.bound(elapsed * 0.6 / (FlxG.updateFramerate / 60), 0, 1);
 		else FlxG.camera.followLerp = 0;
 
 		if (FlxG.sound.music.playing) {
@@ -183,7 +197,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		PlayState.instance.callOnLuas('onGameOverConfirm', [true]);
 	}
 
-	function getBoyfriend(x:Float, y:Float):Boyfriend {
+	function getBoyfriend(x:Float, y:Float):Character {
 		var ins:PlayState = PlayState.instance;
 		if (ins != null) {
 			var bf = ins.gameOverChar;
@@ -200,6 +214,6 @@ class GameOverSubstate extends MusicBeatSubstate
 			return bf;
 		}
 
-		return new Boyfriend(x, y, characterName);
+		return new Character(x, y, characterName, true);
 	}
 }

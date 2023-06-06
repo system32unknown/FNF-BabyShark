@@ -101,7 +101,7 @@ class Main extends Sprite
 		#end
 
 		#if discord_rpc
-		DiscordClient.start();
+		Discord.start();
 		#end
 	}
 
@@ -110,7 +110,7 @@ class Main extends Sprite
 		Paths.clearUnusedCache();
 
 		#if LUA_ALLOWED
-		Paths.pushGlobalMods();
+		Mods.pushGlobalMods();
 		#end
 
 		FlxG.fixedTimestep = false;
@@ -157,7 +157,7 @@ class Main extends Sprite
 		CoolUtil.callErrBox("Alter Engine: Error!", errMsg);
 		
 		#if discord_rpc
-		DiscordClient.shutdown();
+		Discord.shutdown();
 		#end
 		Sys.exit(1);
 	}

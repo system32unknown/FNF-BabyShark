@@ -222,14 +222,14 @@ class Character extends FlxSprite
 				dance();
 			}
 
-			if (!isPlayer) {
-				if (animation.curAnim.name.startsWith('sing')) holdTimer += elapsed;
+			if (animation.curAnim.name.startsWith('sing'))
+				holdTimer += elapsed;
+			else if(isPlayer) holdTimer = 0;
 
-				var pitch = PlayState.instance != null ? PlayState.instance.playbackRate : FlxG.sound.music != null ? FlxG.sound.music.pitch : 1;
-				if (holdTimer >= Conductor.stepCrochet * (.0011 / pitch) * singDuration) {
-					dance();
-					holdTimer = 0;
-				}
+			var pitch = PlayState.instance != null ? PlayState.instance.playbackRate : FlxG.sound.music != null ? FlxG.sound.music.pitch : 1;
+			if (!isPlayer && holdTimer >= Conductor.stepCrochet * (.0011 / pitch) * singDuration) {
+				dance();
+				holdTimer = 0;
 			}
 
 			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)

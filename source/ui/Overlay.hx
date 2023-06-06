@@ -17,7 +17,7 @@ class Overlay extends TextField {
     public var FPS:FPSUtil;
 
 	//Memory
-    var memory:Dynamic = 0;
+    @:allow(utils.system.FPSUtil) var memory:Dynamic = 0;
     var mempeak:Dynamic = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
@@ -33,12 +33,6 @@ class Overlay extends TextField {
 		text = "";
 		defaultTextFormat = new TextFormat(fontName, 16, -1);
 		FPS = new FPSUtil();
-	}
-
-	public function checkFPSLag(maxMB:Int = 3000) {
-		if (memory > maxMB || FPS.currentFPS <= ClientPrefs.getPref('framerate') / 2)
-			return true;
-		return false;
 	}
 
 	//Yoinked from codename engine

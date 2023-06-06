@@ -46,7 +46,7 @@ class MusicBeatState extends FlxUIState {
 		return Controls.instance;
 
 	static function getPathWithDir(songFolder:String, songLowercase:String):String {
-		return 'mods/${Paths.currentModDirectory}/data/' + Paths.CHART_PATH + '/$songFolder/$songLowercase.json';
+		return 'mods/${Mods.currentModDirectory}/data/' + Paths.CHART_PATH + '/$songFolder/$songLowercase.json';
 	}
 
 	public function getErrorMessage(error:String, reason:String, songFolder:String, songLowercase:String):String {
@@ -55,7 +55,7 @@ class MusicBeatState extends FlxUIState {
 		var modsSongString:String = Paths.modsJson(Paths.CHART_PATH + "/" + formattedSong);
 		var modDirString:String = '';
 
-		if (Paths.currentModDirectory.length < 1)
+		if (Mods.currentModDirectory.length < 1)
 			return error + '\n$reason\n\'$songString\' or\n\'$modsSongString\'';
 		else {
 			modDirString = getPathWithDir(songFolder, songLowercase);
@@ -88,6 +88,7 @@ class MusicBeatState extends FlxUIState {
 		if (curBPMChange != null && curBPMChange.bpm != Conductor.bpm) curBPMChange = Conductor.getDummyBPMChange();
 		var skip = FlxTransitionableState.skipNextTransOut;
 		camBeat = FlxG.camera;
+		#if MODS_ALLOWED Mods.updatedOnState = false; #end
 
 		super.create();
 

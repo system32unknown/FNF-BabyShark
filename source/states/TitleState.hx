@@ -54,14 +54,14 @@ class TitleState extends MusicBeatState
 	override function create():Void {
 		Paths.clearUnusedCache();
 		#if LUA_ALLOWED
-		Paths.pushGlobalMods();
+		Mods.pushGlobalMods();
 		#end
 
 		if (!closedState)
 			getBuildVer("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/version.txt");
 
 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
-		WeekData.loadTheFirstEnabledMod();
+		Mods.loadTheFirstEnabledMod();
 
 		FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 60;
@@ -305,7 +305,7 @@ class TitleState extends MusicBeatState
 					createCoolText(['Psych Engine by:']);
 				case 7:
 					addMoreText('Shadow Mario');
-					addMoreText('RiverOaken');
+					addMoreText('Riveren');
 					addMoreText('And Psych Engine Contributors!');
 				case 8:
 					deleteCoolText();

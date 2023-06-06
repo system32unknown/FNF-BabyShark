@@ -273,26 +273,6 @@ class LuaUtils {
 		}
 	}
 
-	public static function getColorByString(?color:String = '') {
-		return switch(color.toLowerCase().trim()) {
-			case 'blue': FlxColor.BLUE;
-			case 'brown': FlxColor.BROWN;
-			case 'cyan': FlxColor.CYAN;
-			case 'gray' | 'grey': FlxColor.GRAY;
-			case 'green': FlxColor.GREEN;
-			case 'lime': FlxColor.LIME;
-			case 'magenta': FlxColor.MAGENTA;
-			case 'orange': FlxColor.ORANGE;
-			case 'pink': FlxColor.PINK;
-			case 'purple': FlxColor.PURPLE;
-			case 'red': FlxColor.RED;
-			case 'transparent': FlxColor.TRANSPARENT;
-			case 'white': FlxColor.WHITE;
-			case 'yellow': FlxColor.YELLOW;
-			default: FlxColor.BLACK;
-		}
-	}
-
 	//buncho string stuffs
 	public static function getTweenTypeByString(?type:String = '') {
 		return switch(type.toLowerCase().trim()) {

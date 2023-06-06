@@ -34,7 +34,7 @@ class OptionsState extends MusicBeatState
 
 	override function create() {
 		#if discord_rpc
-		DiscordClient.changePresence("Options Menu", null);
+		Discord.changePresence("Options Menu", null);
 		#end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -82,7 +82,7 @@ class OptionsState extends MusicBeatState
 		super.closeSubState();
 		ClientPrefs.saveSettings();
 		#if desktop
-		DiscordClient.changePresence("Options Menu", null);
+		Discord.changePresence("Options Menu", null);
 		#end
 	}
 
@@ -150,5 +150,10 @@ class OptionsState extends MusicBeatState
 		}
 
 		FlxG.sound.play(Paths.sound('scrollMenu'));
+	}
+
+	override function destroy() {
+		ClientPrefs.loadPrefs();
+		super.destroy();
 	}
 }

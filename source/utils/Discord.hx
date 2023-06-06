@@ -4,8 +4,7 @@ import Sys.sleep;
 import discord_rpc.DiscordRpc;
 import lime.app.Application;
 
-class DiscordClient
-{
+class Discord {
 	public static var isInitialized:Bool = false;
 
 	static var _defaultID:String = "1013313492889108510";
@@ -19,8 +18,7 @@ class DiscordClient
 	}
 	#end
 
-	public function new()
-	{
+	public function new() {
 		#if DISCORD_ALLOWED
 		trace("Discord Client starting...");
 		DiscordRpc.start({
@@ -31,33 +29,28 @@ class DiscordClient
 		});
 		trace("Discord Client started.");
 
-		while (true) {
+		var localID:String = clientID;
+		while (localID == clientID) {
 			DiscordRpc.process();
 			sleep(2);
 		}
-
-		DiscordRpc.shutdown();
 		#end
 	}
 	
 	public static function check() {
 		if(!ClientPrefs.getPref('discordRPC')) {
-			if(DiscordClient.isInitialized) DiscordClient.shutdown();
-			DiscordClient.isInitialized = false;
-		} else DiscordClient.start();
+			if(isInitialized) shutdown();
+				isInitialized = false;
+		} else start();
 	}
 
 	public static function start() {
-		if (!DiscordClient.isInitialized && ClientPrefs.getPref('discordRPC')) {
-			DiscordClient.initialize();
+		if (!isInitialized && ClientPrefs.getPref('discordRPC')) {
+			initialize();
 			Application.current.window.onClose.add(function() {
-				DiscordClient.shutdown();
+				shutdown();
 			});
 		}
-	}
-
-	public static function resetID() {
-		if(clientID != _defaultID) clientID = _defaultID;
 	}
 
 	public static function shutdown() {
@@ -77,11 +70,12 @@ class DiscordClient
 	}
 
 	static function set_clientID(newID:String) {
+		var change:Bool = (clientID != newID);
 		clientID = newID;
-		if(isInitialized) {
-			DiscordClient.shutdown();
+		if(change && isInitialized) {
 			isInitialized = false;
 			start();
+			DiscordRpc.process();
 		}
 		return newID;
 	}
@@ -97,12 +91,24 @@ class DiscordClient
 	public static function initialize() {
 		#if DISCORD_ALLOWED
 		sys.thread.Thread.create(() -> {
-			new DiscordClient();
+			new Discord();
 		});
 		trace("Discord Client initialized");
 		isInitialized = true;
 		#end
 	}
+
+	public static function resetClientID()
+		clientID = _defaultID;
+
+	#if MODS_ALLOWED
+	public static function loadModRPC() {
+		var pack:Dynamic = Mods.getPack();
+		if(pack != null && pack.discordRPC != null && pack.discordRPC != clientID) {
+			clientID = pack.discordRPC;
+		}
+	}
+	#end
 
 	public static function changePresence(details:String, state:Null<String>, ?smallImageKey : String, ?hasStartTimestamp : Bool, ?endTimestamp: Float)
 	{
