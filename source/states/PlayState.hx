@@ -2184,7 +2184,7 @@ class PlayState extends MusicBeatState {
 				if(flValue2 == null || flValue2 <= 0) flValue2 = .6;
 
 				if(value != 0) {
-					if(dad.curCharacter == gfChecknull) { //Tutorial GF is actually Dad! The GF is an imposter!! ding ding ding ding ding ding ding, dindinding, end my suffering
+					if(dad.curCharacter == gfChecknull) {
 						dad.playAnim('cheer', true);
 						dad.specialAnim = true;
 						dad.heyTimer = flValue2;
@@ -2329,10 +2329,9 @@ class PlayState extends MusicBeatState {
 							var lastVisible:Bool = dad.visible;
 							dad.visible = false;
 							dad = dadMap.get(value2);
-							if(dad.curCharacter != gfChecknull) {
-								if(wasGf && gf != null)
-									gf.visible = true;
-							} else if(gf != null) gf.visible = false;
+							if(dad.curCharacter != gfChecknull)
+								if(wasGf && gf != null) gf.visible = true;
+							else if(gf != null) gf.visible = false;
 							dad.visible = lastVisible;
 							iconP2.changeIcon(dad.healthIcon);
 						}
@@ -3140,10 +3139,9 @@ class PlayState extends MusicBeatState {
 		if(char != null && char.hasMissAnimations) {
 			var suffix:String = '';
 			if(note != null) suffix = note.animSuffix;
-			char.playAnim(Note.keysShit.get(mania).get('anims')[direction] + 'miss' + suffix, true);
-			
+			char.playAnim('sing' + Note.keysShit.get(mania).get('anims')[direction] + 'miss' + suffix, true);
 			if(char != gf && combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
-				gf.playAnim('sad');
+				gf.playAnim('sad', true);
 				gf.specialAnim = true;
 			}
 		}

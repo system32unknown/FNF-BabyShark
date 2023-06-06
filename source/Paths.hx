@@ -11,10 +11,8 @@ import flash.media.Sound;
 import sys.io.File;
 import sys.FileSystem;
 #end
-import haxe.Json;
 import haxe.io.Path;
-
-import utils.CoolUtil;
+#if MODS_ALLOWED import utils.Mods; #end
 
 @:access(openfl.display.BitmapData.__texture)
 @:access(openfl.media.Sound.__buffer)

@@ -35,13 +35,12 @@ class Mods
 		'options'
 	];
 
-	public static var globalMods:Array<String> = [];
+	static var globalMods:Array<String> = [];
 
 	public static function getGlobalMods()
 		return globalMods;
 
-	public static function pushGlobalMods() // prob a better way to do this but idc
-	{
+	public static function pushGlobalMods() { // prob a better way to do this but idc
 		globalMods = [];
 		for(mod in parseList().enabled) {
 			var pack:Dynamic = getPack(mod);
@@ -105,7 +104,7 @@ class Mods
 			var path:String = Path.join([modsFolder, folder]);
 			var lower:String = folder.toLowerCase();
 
-			if (FileSystem.isDirectory(path) && !ignoreModFolders.contains(lower) && !list.contains(lower))
+			if (FileSystem.isDirectory(path) && !ignoreModFolders.contains(lower) && !list.contains(folder))
 				list.push(lowercase ? lower : folder);
 		}
 
@@ -119,7 +118,7 @@ class Mods
 			try {
 				var rawJson:String = File.getContent(path);
 				if(rawJson != null && rawJson.length > 0) return Json.parse(rawJson);
-			} catch(e:Dynamic) {trace(e);}
+			} catch(e:Dynamic) trace(e);
 		}
 		return null;
 	}
@@ -157,8 +156,7 @@ class Mods
 		} catch(e) trace(e);
 
 		// Scan for folders that aren't on modsList.txt yet
-		for (folder in getModDirectories())
-		{
+		for (folder in getModDirectories()) {
 			if(FileSystem.exists(Paths.mods(folder)) && FileSystem.isDirectory(Paths.mods(folder)) &&
 			!ignoreModFolders.contains(folder.toLowerCase()) && !added.contains(folder)) {
 				added.push(folder);

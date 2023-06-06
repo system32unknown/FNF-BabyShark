@@ -344,7 +344,7 @@ class FreeplayState extends MusicBeatState
 			var songFolder:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var songLowercase:String = Highscore.formatSong(songFolder, curDifficulty);
 			
-			if (songLowercase == "" || songLowercase.length > 0) return;
+			if (songLowercase == "" || songLowercase.length < 1) return;
 
 			PlayState.SONG = Song.loadFromJson(songLowercase, songFolder);
 

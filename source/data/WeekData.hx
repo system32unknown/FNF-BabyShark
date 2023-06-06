@@ -88,12 +88,13 @@ class WeekData {
 		weeksLoaded.clear();
 		#if MODS_ALLOWED
 		var directories:Array<String> = [Paths.mods(), Paths.getPreloadPath()];
+		var originalLength:Int = directories.length;
 		for (mod in Mods.parseList().enabled)
 			directories.push(Paths.mods(mod + '/'));
 		#else
 		var directories:Array<String> = [Paths.getPreloadPath()];
-		#end
 		var originalLength:Int = directories.length;
+		#end
 
 		var library = OpenFlAssets.getLibrary("weeks");
 		for (asset in library.list(null)) {

@@ -201,27 +201,19 @@ class CoolUtil {
 	}
 
 	public static function formatTime(sec:Float):String {
-		var hours:Int = Std.int(sec / 3600);
-		var minutes:Int = Std.int((sec % 3600) / 60);
-		var seconds:Int = Std.int(sec % 60);
+		var hoursRemaining:Int = Math.floor(sec / 3600);
+		var minutesRemaining:Int = Math.floor(sec / 60) % 60;
+		var minutesRemainingShit:String = Std.string(minutesRemaining);
+		var secondsRemaining:String = Std.string(sec % 60);
 
-		var timeString:String = "";
+		if (secondsRemaining.length < 2) secondsRemaining = '0' + secondsRemaining;
+		if (minutesRemainingShit.length < 2) minutesRemainingShit = '0' + minutesRemaining; 
 
-		// Add hour digits
-		if (hours >= 1) {
-			if (hours < 10) timeString += "0";
-			timeString += hours + ":";
-		}
-
-		// Add minute digits
-		if (minutes < 10) timeString += "0";
-		timeString += minutes + ":";
-
-		// Add second digits
-		if (seconds < 10) timeString += "0";
-		timeString += seconds;
-
-		return timeString;
+		if(sec <= 3600000)
+			return flixel.util.FlxStringUtil.formatTime(sec, false);
+		else if(sec >= 3600000)
+			return '$hoursRemaining:$minutesRemainingShit:$secondsRemaining';
+		return '';
 	}
 
 	public static function callErrBox(title:String, context:String) {
