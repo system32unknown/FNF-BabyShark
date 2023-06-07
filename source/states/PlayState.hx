@@ -3126,7 +3126,6 @@ class PlayState extends MusicBeatState {
 
 		if(instakillOnMiss) doDeathCheck(true);
 		if (combo > maxCombo) maxCombo = combo;
-		combo = 0;
 
 		if(!practiceMode) songScore -= 10;
 		if(!endingSong) songMisses++;
@@ -3140,9 +3139,12 @@ class PlayState extends MusicBeatState {
 			var suffix:String = '';
 			if(note != null) suffix = note.animSuffix;
 			char.playAnim('sing' + Note.keysShit.get(mania).get('anims')[direction] + 'miss' + suffix, true);
+			if(char != gf && combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
+				gf.playAnim('sad');
+				gf.specialAnim = true;
+			}
 		}
-		if(combo > 5 && gf != null && gf.animOffsets.exists('sad'))
-			gf.playAnim('sad');
+		combo = 0;
 		vocals.volume = 0;
 	}
 
