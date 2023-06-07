@@ -204,9 +204,8 @@ class Character extends FlxSprite
 
 	override function update(elapsed:Float) {
 		if(!debugMode && animation.curAnim != null) {
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished) {
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished)
 				dance(true, false, 10);
-			}
 
 			if (heyTimer > 0) {
 				heyTimer -= elapsed * PlayState.instance.playbackRate;

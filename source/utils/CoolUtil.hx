@@ -1,6 +1,5 @@
 package utils;
 
-import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
 import openfl.geom.Rectangle;
 import openfl.net.FileReference;

@@ -88,7 +88,7 @@ class FunkinLua {
 			luaTrace('$script\n$error', true, false, FlxColor.RED);
 			#end
 		}
-		#if hscript HScript.initHaxeModule(); #end
+		#if hscript HScript.initHaxeModule(this); #end
 
 		addCallback("openCustomSubstate", function(_, name:String, pauseGame:Bool = false) {
 			if(pauseGame) {
@@ -1006,8 +1006,8 @@ class FunkinLua {
 			return true;
 		});
 		addCallback("addAnimationByPrefix", function(_, obj:String, name:String, prefix:String, framerate:Int = 24, loop:Bool = true) {
-			if(PlayState.instance.getLuaObject(obj, false) != null) {
-				var cock:FlxSprite = PlayState.instance.getLuaObject(obj,false);
+			var cock:FlxSprite = PlayState.instance.getLuaObject(obj,false);
+			if(cock != null) {
 				cock.animation.addByPrefix(name, prefix, framerate, loop);
 				if(cock.animation.curAnim == null) {
 					cock.animation.play(name, true);
@@ -1062,8 +1062,9 @@ class FunkinLua {
 							luaObj.offset.set(daOffset[0], daOffset[1]);
 						}
 					}
+					return true;
 				}
-				return true;
+				return false;
 			}
 
 			var spr:FlxSprite = Reflect.getProperty(LuaUtils.getInstance(), obj);
@@ -1075,8 +1076,8 @@ class FunkinLua {
 						var spr:Character = obj;
 						spr.playAnim(name, forced, reverse, startFrame);
 					} else spr.animation.play(name, forced, reverse, startFrame);
+					return true;
 				}
-				return true;
 			}
 			return false;
 		});
@@ -1759,6 +1760,7 @@ class FunkinLua {
 		DeprecatedFunctions.implement(this);
 		ExtraFunctions.implement(this);
 		#if (hscript && HSCRIPT_ALLOWED) HScript.implement(this); #end
+		trace('lua file loaded succesfully:' + scriptName);
 
 		call('onCreate');
 		if (closed) return stop();

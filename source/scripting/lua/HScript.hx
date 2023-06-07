@@ -11,19 +11,19 @@ import haxe.Exception;
 class HScript
 {
 	#if (hscript && HSCRIPT_ALLOWED)
-
 	public static var parser:Parser = new Parser();
-
 	public var interp:Interp;
+
+	public var parentLua:FunkinLua;
 
 	public var variables(get, never):Map<String, Dynamic>;
 	public function get_variables()
 		return interp.variables;
 	
-	public static function initHaxeModule() {
+	public static function initHaxeModule(parent:FunkinLua) {
 		#if (hscript && HSCRIPT_ALLOWED)
 		if(FunkinLua.hscript == null)
-			FunkinLua.hscript = new HScript(); //TO DO: Fix issue with 2 scripts not being able to use the same variable names
+			FunkinLua.hscript = new HScript(parent); //TO DO: Fix issue with 2 scripts not being able to use the same variable names
 		#end
 	}
 
@@ -37,8 +37,9 @@ class HScript
 		return variables;
 	}
 
-	public function new() {
+	public function new(parent:FunkinLua) {
 		interp = new Interp();
+		parentLua = parent;
 		setVars();
 	}
 
@@ -76,6 +77,26 @@ class HScript
 			}
 			return false;
 		});
+		interp.variables.set('debugPrint', function(text:String, ?color:FlxColor = null) {
+			if(color == null) color = FlxColor.WHITE;
+			parentLua.luaTrace(text, true, false, color);
+		});
+		interp.variables.set('createCallback', function(name:String, adv:Bool, func:Dynamic, ?funk:FunkinLua = null) {
+			if(funk == null) funk = parentLua;
+			funk.addCallback(name, adv, func);
+		});
+		interp.variables.set('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
+			try {
+				var str:String = '';
+				if(libPackage.length > 0)
+					str = libPackage + '.';
+
+				interp.variables.set(libName, Type.resolveClass(str + libName));
+			} catch (e:Dynamic) {
+				parentLua.luaTrace(parentLua.scriptName + ":" + parentLua.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
+			}
+		});
+		interp.variables.set('parentLua', parentLua);
 	}
 
 	public static function getImports(code:String):Array<String> {

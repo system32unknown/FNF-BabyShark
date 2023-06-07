@@ -22,8 +22,6 @@ import game.BGSprite;
 import game.Character;
 import game.HealthIcon;
 
-import states.TitleState;
-
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
