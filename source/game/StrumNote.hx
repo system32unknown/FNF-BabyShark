@@ -102,9 +102,6 @@ class StrumNote extends FlxSprite
 			animation.add('confirm', [daFrames[noteData] + (pxDV * 3), daFrames[noteData] + (pxDV * 4)], 24, false);
 		} else {
 			frames = Paths.getSparrowAtlas(texture);
-
-			antialiasing = ClientPrefs.getPref('Antialiasing');
-
 			setGraphicSize(Std.int(width * Note.scales[PlayState.mania]));
 	
 			animation.addByPrefix('static', 'arrow' + animationArray[0]);

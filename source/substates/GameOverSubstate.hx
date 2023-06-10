@@ -177,7 +177,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		boyfriend.playAnim('deathConfirm', true);
 		FlxG.sound.music.stop();
 
-		var snd:FlxSound = FlxG.sound.play(Paths.music(endSoundName));
+		var snd:FlxSound = FlxG.sound.play(Paths.sound(endSoundName));
 		snd.onComplete = endSoundComplete;
 
 		new FlxTimer().start(0.7, function(tmr:FlxTimer) {

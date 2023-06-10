@@ -40,7 +40,7 @@ class Discord {
 	public static function check() {
 		if(!ClientPrefs.getPref('discordRPC')) {
 			if(isInitialized) shutdown();
-				isInitialized = false;
+			isInitialized = false;
 		} else start();
 	}
 

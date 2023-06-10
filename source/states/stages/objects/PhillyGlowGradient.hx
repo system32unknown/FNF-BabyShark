@@ -11,7 +11,6 @@ class PhillyGlowGradient extends FlxSprite
 		originalY = y;
 
 		loadGraphic(Paths.image('philly/gradient'));
-		antialiasing = ClientPrefs.getPref('Antialiasing');
 		scrollFactor.set(0, 0.75);
 		setGraphicSize(2000, originalHeight);
 		updateHitbox();

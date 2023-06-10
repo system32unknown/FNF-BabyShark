@@ -57,12 +57,10 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		bg.scrollFactor.set();
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
 		bg.alpha = 0;
 		add(bg);
 
 		sectionSpr = new FlxSprite().loadGraphic(sectionImageMap.get(daSection.toLowerCase()));
-		sectionSpr.antialiasing = ClientPrefs.getPref('Antialiasing');
 		sectionSpr.scrollFactor.set();
 		sectionSpr.screenCenter();
 		sectionSpr.alpha = 0;

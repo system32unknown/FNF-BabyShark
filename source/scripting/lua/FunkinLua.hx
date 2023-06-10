@@ -778,11 +778,8 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "FlxColor", function(?color:String = '') return FlxColor.fromString(color));
 		Lua_helper.add_callback(lua, "getColorFromName", function(?color:String = '') return FlxColor.fromString(color));
 		Lua_helper.add_callback(lua, "getColorFromString", function(?color:String = '') return FlxColor.fromString(color));
-
-		addCallback("getColorFromHex", function(_, myColor:String) {
-			myColor = myColor.trim();
-			return Std.parseInt(myColor.startsWith('0x') ? myColor : '0xFF$myColor');
-		});
+		Lua_helper.add_callback(lua, "getColorFromHex", function(color:String) return FlxColor.fromString('#$color'));
+		
 		addCallback("getColorFromRgb", function(_, rgb:Array<Int>) {
 			return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]);
 		});
@@ -975,7 +972,6 @@ class FunkinLua {
 
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
 			if(image != null && image.length > 0) leSprite.loadGraphic(Paths.image(image));
-			leSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
 
 			PlayState.instance.modchartSprites.set(tag, leSprite);
 		});
@@ -984,7 +980,6 @@ class FunkinLua {
 			LuaUtils.resetSpriteTag(tag);
 
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
-			leSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
 			LuaUtils.loadFrames(leSprite, image, spriteType);
 			
 			PlayState.instance.modchartSprites.set(tag, leSprite);
@@ -1333,24 +1328,7 @@ class FunkinLua {
 			if (leftHex == null) left = PlayState.instance.dad.getColor();
 			if (rightHex == null) right = PlayState.instance.boyfriend.getColor();
 
-			PlayState.instance.healthBar.createFilledBar(left, right);
-			PlayState.instance.healthBar.updateBar();
-		});
-		addCallback("setHealthBarColorsWithGradient", function(_, leftHex:Array<String>, rightHex:Array<String>) {
-			var left:Array<FlxColor> = [Std.parseInt(leftHex[0]), Std.parseInt(leftHex[1])];
-			for (index_ => left_ in leftHex) {
-				if(!left_.startsWith('0x'))
-					left[index_] = Std.parseInt('0xff' + left_);
-			}
-
-			var right:Array<FlxColor> = [Std.parseInt(rightHex[0]), Std.parseInt(rightHex[1])];
-			for (index_ => right_ in rightHex) {
-				if(!right_.startsWith('0x'))
-					right[index_] = Std.parseInt('0xff' + right_);
-			}
-
-			PlayState.instance.healthBar.createGradientBar(left, right, 1, 90);
-			PlayState.instance.healthBar.updateBar();
+			PlayState.instance.healthBar.setColors(left, right);
 		});
 		addCallback("setTimeBarColors", function(_, leftHex:String, rightHex:String) {
 			var leftHex = CoolUtil.parseHex(leftHex);

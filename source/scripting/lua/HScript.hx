@@ -77,15 +77,15 @@ class HScript
 			}
 			return false;
 		});
-		interp.variables.set('debugPrint', function(text:String, ?color:FlxColor = null) {
+		setVar('debugPrint', function(text:String, ?color:FlxColor = null) {
 			if(color == null) color = FlxColor.WHITE;
 			parentLua.luaTrace(text, true, false, color);
 		});
-		interp.variables.set('createCallback', function(name:String, adv:Bool, func:Dynamic, ?funk:FunkinLua = null) {
+		setVar('createCallback', function(name:String, adv:Bool, func:Dynamic, ?funk:FunkinLua = null) {
 			if(funk == null) funk = parentLua;
 			funk.addCallback(name, adv, func);
 		});
-		interp.variables.set('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
+		setVar('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
 			try {
 				var str:String = '';
 				if(libPackage.length > 0)
@@ -96,7 +96,7 @@ class HScript
 				parentLua.luaTrace(parentLua.scriptName + ":" + parentLua.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
 			}
 		});
-		interp.variables.set('parentLua', parentLua);
+		setVar('parentLua', parentLua);
 	}
 
 	public static function getImports(code:String):Array<String> {

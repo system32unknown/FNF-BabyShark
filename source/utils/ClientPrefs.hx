@@ -429,6 +429,7 @@ class ClientPrefs {
 			}
 		}
 
+		FlxSprite.defaultAntialiasing = getPref('Antialiasing');
 		#if desktop Discord.check(); #end
 	}
 

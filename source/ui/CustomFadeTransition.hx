@@ -90,8 +90,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 	}
 
 	static var cachedGradient:FlxGraphic;
-	static function getGradient():FlxGraphic {
-		@:privateAccess
+	static function getGradient():FlxGraphic @:privateAccess {
 		if (cachedGradient != null && cachedGradient.frameCollections != null) return cachedGradient;
 
 		var bitmap:BitmapData = FlxGradient.createGradientBitmapData(FlxG.width, 1, [FlxColor.BLACK, 0x0], 1, 0);

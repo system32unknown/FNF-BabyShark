@@ -137,8 +137,7 @@ class PlayState extends MusicBeatState {
 	public var combo:Int = 0;
 	public var maxCombo:Int = 0;
 
-	var healthBarBG:AttachedSprite;
-	public var healthBar:FlxBar;
+	public var healthBar:HealthBar;
 	var songPercent:Float = 0;
 
 	var timeBarBG:AttachedSprite;
@@ -266,7 +265,6 @@ class PlayState extends MusicBeatState {
 
 	public var songName:String;
 
-	var antialiasing:Bool = ClientPrefs.getPref('Antialiasing');
 	var downScroll:Bool = ClientPrefs.getPref('downScroll');
 	var middleScroll:Bool = ClientPrefs.getPref('middleScroll');
 	var hideHud:Bool = ClientPrefs.getPref('hideHud');
@@ -553,8 +551,7 @@ class PlayState extends MusicBeatState {
 		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
-		timeTxt.visible = showTime;
-		timeTxt.antialiasing = antialiasing;
+		timeTxt.visible = updateTime = showTime;
 		if(downScroll) timeTxt.y = FlxG.height - 35;
 
 		if(timeType == 'Song Name') timeTxt.text = SONG.song;
@@ -609,23 +606,15 @@ class PlayState extends MusicBeatState {
 		
 		moveCameraSection();
 
-		healthBarBG = new AttachedSprite('healthBar');
-		healthBarBG.y = FlxG.height * 0.9;
-		healthBarBG.screenCenter(X);
-		healthBarBG.scrollFactor.set();
-		healthBarBG.visible = !hideHud;
-		healthBarBG.addPoint.set(-4, -4);
-		if(downScroll) healthBarBG.y = 50;
-		add(healthBarBG);
-
-		// healthBar
-		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
-			'health', 0, healthMax);
+		healthBar = new HealthBar(0, 0, 'healthBar', function() return health, 0, healthMax);
+		healthBar.y = (downScroll ? 50 : FlxG.height * .9);
+		healthBar.screenCenter(X);
+		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
 		healthBar.visible = !hideHud;
 		healthBar.alpha = healthBarAlpha;
-		insert(members.indexOf(healthBarBG), healthBar);
-		healthBarBG.sprTracker = healthBar;
+		reloadHealthBarColors();
+		add(healthBar);
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
@@ -640,7 +629,7 @@ class PlayState extends MusicBeatState {
 		add(iconP2);
 		reloadHealthBarColors();
 
-		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0);
+		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 40), 0);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		
@@ -649,7 +638,7 @@ class PlayState extends MusicBeatState {
 			iconP2.iconType = 'psych';
 		}
 		if (ClientPrefs.getPref('ScoreType') == 'Psych') {
-			scoreTxt.y = healthBarBG.y + 36;
+			scoreTxt.y = healthBar.y + 40;
 			scoreTxt.borderSize = 1.25;
 			scoreTxt.size = 20;
 		}
@@ -699,7 +688,6 @@ class PlayState extends MusicBeatState {
 		grpNoteSplashes.camera = camHUD;
 		notes.camera = camHUD;
 		healthBar.camera = camHUD;
-		healthBarBG.camera = camHUD;
 		iconP1.camera = camHUD;
 		iconP2.camera = camHUD;
 		scoreTxt.camera = camHUD;
@@ -822,10 +810,8 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function reloadHealthBarColors() {
-		healthBar.createFilledBar(dad.getColor(), boyfriend.getColor());
+		healthBar.setColors(dad.getColor(), boyfriend.getColor());
 		timeBar.createGradientBar([FlxColor.GRAY], [dad.getColor(), boyfriend.getColor()], 1, 90);
-
-		healthBar.updateBar();
 		timeBar.updateBar();
 	}
 
@@ -1095,11 +1081,7 @@ class PlayState extends MusicBeatState {
 				introAssets.set('pixel', ['pixelUI/countdown/ready-pixel', 'pixelUI/countdown/set-pixel', 'pixelUI/date-pixel']);
 
 				var introAlts:Array<String> = introAssets.get('default');
-				var antialias:Bool = antialiasing;
-				if (isPixelStage) {
-					introAlts = introAssets.get('pixel');
-					antialias = false;
-				}
+				if (isPixelStage) introAlts = introAssets.get('pixel');
 					
 				var tick:states.stages.BaseStage.Countdown = THREE;
 				switch(swagCounter) {
@@ -1107,15 +1089,15 @@ class PlayState extends MusicBeatState {
 						FlxG.sound.play(Paths.sound('countdown/intro3' + introSoundsSuffix), 0.6);
 						tick = THREE;
 					case 1:
-						countdownReady = createCountdownSprite(introAlts[0], antialias);
+						countdownReady = createCountdownSprite(introAlts[0]);
 						FlxG.sound.play(Paths.sound('countdown/intro2' + introSoundsSuffix), 0.6);
 						tick = TWO;
 					case 2:
-						countdownSet = createCountdownSprite(introAlts[1], antialias);
+						countdownSet = createCountdownSprite(introAlts[1]);
 						FlxG.sound.play(Paths.sound('countdown/intro1' + introSoundsSuffix), 0.6);
 						tick = ONE;
 					case 3:
-						countdownGo = createCountdownSprite(introAlts[2], antialias);
+						countdownGo = createCountdownSprite(introAlts[2]);
 						FlxG.sound.play(Paths.sound('countdown/introGo' + introSoundsSuffix), 0.6);
 						tick = GO;
 					case 4: tick = START;
@@ -1139,7 +1121,7 @@ class PlayState extends MusicBeatState {
 		return true;
 	}
 
-	inline function createCountdownSprite(image:String, antialias:Bool):FlxSprite {
+	inline function createCountdownSprite(image:String):FlxSprite {
 		var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(image));
 		spr.camera = camHUD;
 		spr.scrollFactor.set();
@@ -1149,7 +1131,6 @@ class PlayState extends MusicBeatState {
 			spr.setGraphicSize(Std.int(spr.width * daPixelZoom));
 
 		spr.screenCenter();
-		spr.antialiasing = antialias;
 		insert(members.indexOf(notes), spr);
 		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, Conductor.crochet / 1000, {
 			ease: FlxEase.cubeInOut,
@@ -1848,14 +1829,13 @@ class PlayState extends MusicBeatState {
 		final iconOffset:Int = 26;
 		if (health > healthMax) health = healthMax;
 
-		var healthPer:Float = FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * .01;
 		if (iconP1.moves) {
-			if (iconP1.iconType == 'psych') iconP1.x = healthBar.x + (healthBar.width * healthPer) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-			else iconP1.x = healthBar.x + (healthBar.width * healthPer - iconOffset);
+			if (iconP1.iconType == 'psych') iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
+			else iconP1.x = healthBar.barCenter - iconOffset;
 		} 
 		if (iconP2.moves) {
-			if (iconP2.iconType == 'psych') iconP2.x = healthBar.x + (healthBar.width * healthPer) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
-			else iconP2.x = healthBar.x + (healthBar.width * healthPer) - (iconP2.width - iconOffset);
+			if (iconP2.iconType == 'psych') iconP2.x = healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
+			else iconP2.x = healthBar.barCenter - (iconP2.width - iconOffset);
 		} 
 
 		if (healthBar.percent < 20) {
@@ -2821,7 +2801,6 @@ class PlayState extends MusicBeatState {
 			}
 		
 			if (!isPixelStage) {
-				rating.antialiasing = comboSpr.antialiasing = timing.antialiasing = antialiasing;
 				rating.setGraphicSize(Std.int(rating.width * .7));
 				comboSpr.setGraphicSize(Std.int(comboSpr.width * .7));
 				timing.setGraphicSize(Std.int(timing.width * .7));
@@ -2864,7 +2843,6 @@ class PlayState extends MusicBeatState {
 					lastScore.push(numScore);
 			
 				if (!isPixelStage) {
-					numScore.antialiasing = antialiasing;
 					numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 				} else numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
 				numScore.updateHitbox();
@@ -3429,7 +3407,7 @@ class PlayState extends MusicBeatState {
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
 			case "Dave":
-				var funny:Float = Math.max(Math.min(healthBar.value, 1.9), .1);
+				var funny:Float = Math.max(Math.min(healthBar.percent, 1.9), .1);
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
 			case "GoldenApple":
