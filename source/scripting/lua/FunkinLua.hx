@@ -1338,15 +1338,9 @@ class FunkinLua {
 			PlayState.instance.timeBar.updateBar();
 		});
 		addCallback("setTimeBarColorsWithGradient", function(_, leftHex:Array<String>, rightHex:Array<String>) {
-			var left:Array<FlxColor> = [Std.parseInt(leftHex[0]), Std.parseInt(leftHex[1])];
-			for (index_ => left_ in leftHex) {
-				if(!left_.startsWith('0x')) left[index_] = Std.parseInt('0xff' + left_);
-			}
+			var left:Array<FlxColor> = [Std.parseInt(leftHex[0]), CoolUtil.parseHex(leftHex[1])];
+			var right:Array<FlxColor> = [CoolUtil.parseHex(rightHex[0]), CoolUtil.parseHex(rightHex[1])];
 
-			var right:Array<FlxColor> = [Std.parseInt(rightHex[0]), Std.parseInt(rightHex[1])];
-			for (index_ => right_ in rightHex) {
-				if(!right_.startsWith('0x')) right[index_] = Std.parseInt('0xff' + right_);
-			}
 			PlayState.instance.timeBar.createGradientBar(left, right, 1, 90);
 			PlayState.instance.timeBar.updateBar();
 		});

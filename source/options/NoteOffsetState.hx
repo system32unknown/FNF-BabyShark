@@ -1,17 +1,17 @@
 package options;
 
 import flixel.FlxObject;
-import flixel.ui.FlxBar;
 import flixel.math.FlxPoint;
+import game.HealthBar;
 import game.Character;
 import game.Conductor;
 import states.stages.StageWeek1 as BackgroundStage;
 import ui.CustomFadeTransition;
 
 class NoteOffsetState extends MusicBeatState {
-	public static var daPixelZoom:Float = PlayState.daPixelZoom;
 	var delayMin:Int = -500;
 	var delayMax:Int = 500;
+	var timeBar:HealthBar;
 
 	var BF_X:Float = 770;
 	var BF_Y:Float = 100;
@@ -39,8 +39,6 @@ class NoteOffsetState extends MusicBeatState {
 	var dumbTexts:FlxTypedGroup<FlxText>;
 
 	var barPercent:Float = 0;
-	var timeBarBG:FlxSprite;
-	var timeBar:FlxBar;
 	var timeTxt:FlxText;
 
 	var changeModeText:FlxText;
@@ -108,26 +106,22 @@ class NoteOffsetState extends MusicBeatState {
 		rating.camera = camHUD;
 		rating.setGraphicSize(Std.int(rating.width * 0.7));
 		rating.updateHitbox();
-		rating.antialiasing = antialiasing;
 		add(rating);
 
 		comboNums = new FlxSpriteGroup();
 		comboNums.camera = camHUD;
-		comboNums.antialiasing = antialiasing;
 		add(comboNums);
 
 		combo = new FlxSprite().loadGraphic(Paths.image('ratings/combo'));
 		combo.camera = camHUD;
 		combo.setGraphicSize(Std.int(combo.width * 0.7));
 		combo.updateHitbox();
-		combo.antialiasing = antialiasing;
 		add(combo);
 
 		lateEarly = new FlxSprite().loadGraphic(Paths.image('ratings/early'));
 		lateEarly.camera = camHUD;
 		lateEarly.setGraphicSize(Std.int(combo.width * 0.7));
 		lateEarly.updateHitbox();
-		lateEarly.antialiasing = antialiasing;
 		add(lateEarly);
 
 		var seperatedScore:Array<Int> = [for (_ in 0...3) FlxG.random.int(0, 9)];
@@ -138,7 +132,6 @@ class NoteOffsetState extends MusicBeatState {
 			numScore.camera = camHUD;
 			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 			numScore.updateHitbox();
-			numScore.antialiasing = antialiasing;
 			comboNums.add(numScore);
 			daLoop++;
 		}
@@ -147,21 +140,11 @@ class NoteOffsetState extends MusicBeatState {
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.borderSize = 2;
-		timeTxt.antialiasing = antialiasing;
-		
-		timeBarBG = new FlxSprite(0, timeTxt.y + 8).loadGraphic(Paths.image('old/healthBar'));
-		timeBarBG.setGraphicSize(Std.int(timeBarBG.width * 1.2));
-		timeBarBG.scrollFactor.set();
-		timeBarBG.updateHitbox();
-		timeBarBG.screenCenter(X);
-		timeBarBG.antialiasing = antialiasing;
 
-		timeBar = new FlxBar(0, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this, 'barPercent', delayMin, delayMax);
+		timeBar = new HealthBar(0, timeTxt.y + (timeTxt.height / 3), 'healthBar', function() return barPercent, delayMin, delayMax);
 		timeBar.scrollFactor.set();
 		timeBar.screenCenter(X);
-		timeBar.createFilledBar(FlxColor.BLACK, FlxColor.fromRGB(0, 255, 128));
-		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
-		timeBar.antialiasing = antialiasing;
+		timeBar.leftBar.color = FlxColor.LIME;
 
 		barPercent = ClientPrefs.getPref('noteOffset');
 		updateNoteDelay();
@@ -173,7 +156,6 @@ class NoteOffsetState extends MusicBeatState {
 
 		repositionCombo();
 
-		timeBarBG.camera = camHUD; add(timeBarBG);
 		timeBar.camera = camHUD; add(timeBar);
 		timeTxt.camera = camHUD; add(timeTxt);
 
@@ -184,7 +166,6 @@ class NoteOffsetState extends MusicBeatState {
 		add(bar);
 
 		changeModeText = new FlxText(0, 4, FlxG.width, "", 32).setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
-		changeModeText.antialiasing = antialiasing;
 		changeModeText.scrollFactor.set();
 		changeModeText.camera = camHUD;
 		add(changeModeText);
@@ -407,7 +388,6 @@ class NoteOffsetState extends MusicBeatState {
 	function createTexts(i:Int) {
 		var text:FlxText = new FlxText(10, 48 + (i * 30), 0, '', 24);
 		text.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		text.antialiasing = antialiasing;
 		text.scrollFactor.set();
 		text.borderSize = 2;
 		text.camera = camHUD;
@@ -444,10 +424,9 @@ class NoteOffsetState extends MusicBeatState {
 		lateEarly.visible = onComboMenu;
 		dumbTexts.visible = onComboMenu;
 		
-		timeBarBG.visible = timeBar.visible = timeTxt.visible = !onComboMenu;
+		timeBar.visible = timeTxt.visible = !onComboMenu;
 
-		if(onComboMenu)
-			changeModeText.text = '< Combo Offset (Press Accept to Switch) >';
+		if(onComboMenu) changeModeText.text = '< Combo Offset (Press Accept to Switch) >';
 		else changeModeText.text = '< Note/Beat Delay (Press Accept to Switch) >';
 
 		changeModeText.text = changeModeText.text.toUpperCase();

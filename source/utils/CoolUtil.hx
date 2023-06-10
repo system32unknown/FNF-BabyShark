@@ -194,8 +194,9 @@ class CoolUtil {
 	}
 
 	inline public static function parseHex(hex:String) {
-		var parsedhex:FlxColor = Std.parseInt(hex);
-		if(!hex.startsWith('0x')) parsedhex = Std.parseInt('0xff' + hex);
+		var parsedhex:Null<FlxColor> = FlxColor.fromString(hex);
+		if(parsedhex == null) parsedhex = FlxColor.fromString('0x' + hex);
+		if(parsedhex == null) parsedhex = FlxColor.WHITE; //fail safe
 		return parsedhex;
 	}
 
