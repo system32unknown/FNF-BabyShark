@@ -97,7 +97,6 @@ class PlayState extends MusicBeatState {
 	public static var storyDifficulty:Int = 1;
 
 	public var vocals:FlxSound;
-	public var inst:FlxSound;
 
 	public var dad:Character = null;
 	public var gf:Character = null;
@@ -3407,7 +3406,7 @@ class PlayState extends MusicBeatState {
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
 			case "Dave":
-				var funny:Float = Math.max(Math.min(healthBar.percent, 1.9), .1);
+				var funny:Float = Math.max(Math.min(healthBar.bounded, 1.9), .1);
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
 			case "GoldenApple":
@@ -3421,7 +3420,6 @@ class PlayState extends MusicBeatState {
 				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 * gfSpeed, {ease: FlxEase.quadOut});
 		}
-
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 

@@ -10,6 +10,7 @@ class HealthBar extends FlxSpriteGroup
 	public var bg:FlxSprite;
 	public var valueFunction:Void->Float = function() return 0;
 	public var percent(default, set):Float = 0;
+	public var bounded(default, null):Float = 0;
 	public var bounds:Dynamic = {min: 0, max: 1};
 	public var leftToRight(default, set):Bool = true;
 	public var barCenter(default, null):Float = 0;
@@ -40,7 +41,8 @@ class HealthBar extends FlxSpriteGroup
 	}
 
 	override function update(elapsed:Float) {
-		var value:Null<Float> = FlxMath.remapToRange(FlxMath.bound(valueFunction(), bounds.min, bounds.max), bounds.min, bounds.max, 0, 100);
+		bounded = FlxMath.bound(valueFunction(), bounds.min, bounds.max);
+		var value:Null<Float> = FlxMath.remapToRange(bounded, bounds.min, bounds.max, 0, 100);
 		percent = (value != null ? value : 0);
 		super.update(elapsed);
 	}
