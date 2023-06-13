@@ -7,7 +7,6 @@ import game.Character;
 import game.Conductor;
 import states.StoryMenuState;
 import states.FreeplayState;
-import data.WeekData;
 
 class GameOverSubstate extends MusicBeatSubstate
 {

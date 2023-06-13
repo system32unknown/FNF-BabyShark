@@ -105,6 +105,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		if (controls.ACCEPT && !transitioning) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
+			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionTxt, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionSpr, {alpha: 0}, .5, {ease: FlxEase.expoInOut,
 				onComplete: function(tween:FlxTween) {

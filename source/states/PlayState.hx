@@ -1398,6 +1398,10 @@ class PlayState extends MusicBeatState {
 				addCharacterToList(newCharacter, charType);
 
 			case 'Play Video Sprite': loadVideo(Std.string(event.value1));
+
+			case 'Play Sound':
+				precacheList.set(event.value1, 'sound');
+				Paths.sound(event.value1);
 		}
 
 		stagesFunc(function(stage:BaseStage) stage.eventPushed(event));
@@ -1421,7 +1425,6 @@ class PlayState extends MusicBeatState {
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 
 	function makeEvent(event:Array<Dynamic>, i:Int) {
-		var newEventNote:Array<Dynamic> = [event[0], event[1][i][0], event[1][i][1], event[1][i][2]];
 		var subEvent:EventNote = {
 			strumTime: event[0] + ClientPrefs.getPref('noteOffset'),
 			event: event[1][i][0],
@@ -2398,6 +2401,10 @@ class PlayState extends MusicBeatState {
 				if (killMe.length > 1)
 					LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe, true, true), killMe[killMe.length - 1], trueVal != null ? trueVal : value2);
 				else LuaUtils.setVarInArray(this, value1, trueVal != null ? trueVal : value2);
+
+				case 'Play Sound':
+					if(flValue2 == null) flValue2 = 1;
+					FlxG.sound.play(Paths.sound(value1), flValue2);
 		}
 		stagesFunc(function(stage:BaseStage) stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
 		callOnLuas('onEvent', [eventName, value1, value2, strumTime]);
@@ -3495,8 +3502,7 @@ class PlayState extends MusicBeatState {
 
 		#if MODS_ALLOWED
 		var mod = restrict ? Paths.mods(luaFile) : Paths.modFolders(luaFile);
-		if (FileSystem.exists(mod))
-			return FunkinLua.execute(mod);
+		if (FileSystem.exists(mod)) return FunkinLua.execute(mod);
 		else
 		#end if (#if sys FileSystem.exists #else OpenFlAssets.exists #end(Paths.getPreloadPath(luaFile)))
 			return FunkinLua.execute(Paths.getPreloadPath(luaFile));
@@ -3565,13 +3571,11 @@ class PlayState extends MusicBeatState {
 		if(exclusions == null) exclusions = [];
 
 		for (lua in luaArray) {
-			if(exclusions.contains(lua.scriptName))
-				continue;
+			if(exclusions.contains(lua.scriptName)) continue;
 			lua.set(variable, arg);
 		}
 		for(i in achievementsArray) {
-			if(exclusions.contains(i.scriptName))
-				continue;
+			if(exclusions.contains(i.scriptName)) continue;
 			i.set(variable, arg);
 		}
 		#end

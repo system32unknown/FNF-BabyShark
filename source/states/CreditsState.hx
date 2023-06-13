@@ -154,7 +154,7 @@ class CreditsState extends MusicBeatState
 		descBox.sprTracker = descText;
 		add(descText);
 
-		bg.color = getCurrentBGColor();
+		bg.color = CoolUtil.colorFromString(sections[curSelected][4]);
 		intendedColor = bg.color;
 		changeSelection();
 		super.create();
@@ -198,8 +198,7 @@ class CreditsState extends MusicBeatState
 			}
 
 			if(controls.ACCEPT && sections[curSelected][1] != null) {
-				if(colorTween != null)
-					colorTween.cancel();
+				if(colorTween != null) colorTween.cancel();
 
 				CreditSectionState.curCSection = sections[curSelected][1];
 
@@ -216,9 +215,7 @@ class CreditsState extends MusicBeatState
 
 			if (controls.BACK)
 			{
-				if(colorTween != null) {
-					colorTween.cancel();
-				}
+				if(colorTween != null) colorTween.cancel();
 				FlxG.sound.play(Paths.sound('cancelMenu'), .7);
 				MusicBeatState.switchState(new MainMenuState());
 				quitting = true;
@@ -236,10 +233,9 @@ class CreditsState extends MusicBeatState
 			curSelected = FlxMath.wrap(curSelected + change, 0, sections.length - 1);
 		} while(unselectableCheck(curSelected));
 
-		var newColor:Int =  getCurrentBGColor();
+		var newColor:Int = CoolUtil.colorFromString(sections[curSelected][4]);
 		if(newColor != intendedColor) {
-			if (colorTween != null)
-				colorTween.cancel();
+			if (colorTween != null) colorTween.cancel();
 			intendedColor = newColor;
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
 				onComplete: function(twn:FlxTween) {
@@ -290,15 +286,6 @@ class CreditsState extends MusicBeatState
 		}
 	}
 	#end
-
-	function getCurrentBGColor() {
-		if (sections.length <= 0 || sections[curSelected] == null || sections[curSelected][3] == null) return 0x0;
-		var bgColor:String = sections[curSelected][3];
-		if(!bgColor.startsWith('0x')) {
-			bgColor = '0xFF' + bgColor;
-		}
-		return Std.parseInt(bgColor);
-	}
 
 	function unselectableCheck(num:Int):Bool {
 		return sections[num].length <= 1;
@@ -390,7 +377,7 @@ class CreditSectionState extends MusicBeatState {
 		descBox.sprTracker = descText;
 		add(descText);
 
-		bg.color = getCurrentBGColor();
+		bg.color = CoolUtil.colorFromString(creditsStuff[curSelected][4]);
 		intendedColor = bg.color;
 		changeSelection();
 		super.create();
@@ -439,9 +426,7 @@ class CreditSectionState extends MusicBeatState {
 			}
 
 			if(controls.BACK) {
-				if(colorTween != null) {
-					colorTween.cancel();
-				}
+				if(colorTween != null) colorTween.cancel();
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				
 				var state:CreditsState = new CreditsState();
@@ -477,11 +462,9 @@ class CreditSectionState extends MusicBeatState {
 			curSelected = FlxMath.wrap(curSelected + change, 0, creditsStuff.length - 1);
 		} while(unselectableCheck(curSelected));
 
-		var newColor:Int = getCurrentBGColor();
+		var newColor:Int = CoolUtil.colorFromString(creditsStuff[curSelected][4]);
 		if(newColor != intendedColor) {
-			if(colorTween != null) {
-				colorTween.cancel();
-			}
+			if(colorTween != null) colorTween.cancel();
 			intendedColor = newColor;
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
 				onComplete: function(twn:FlxTween) {
@@ -583,15 +566,6 @@ class CreditSectionState extends MusicBeatState {
 		}
 
 		return null;
-	}
-
-	function getCurrentBGColor() {
-		if (creditsStuff.length <= 0 || creditsStuff[curSelected] == null || creditsStuff[curSelected][4] == null) return 0x0;
-		var bgColor:String = creditsStuff[curSelected][4];
-		if(!bgColor.startsWith('0x')) {
-			bgColor = '0xFF' + bgColor;
-		}
-		return Std.parseInt(bgColor);
 	}
 
 	function unselectableCheck(num:Int):Bool {

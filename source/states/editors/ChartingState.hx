@@ -79,6 +79,7 @@ class ChartingState extends MusicBeatState
 		['Change Mania', "Value 1: The new mania value (min: " + Note.minMania + "; max: " + Note.maxMania + ")\nValue 2: Skip old strum fade tween\nPut 'true' to skip it, anything else or blank to not."],
 		['Extra Text Change', "Value 1: Text\n\nChanges the Extra text."],
 		['Play Video Sprite', "Value 1: Video Name (must be on the \"Videos\" Folder\nValue 2: X Position, Y Position, Opacity, Camera\nX and Y and Opacity are Float Values (e.g 1.5)\nCamera is a String (e.g: 'world')\n\nvalues are separated by commas."],
+		['Play Sound', "Value 1: Sound file name\nValue 2: Volume (Default: 1), ranges from 0 to 1"],
 	];
 
 	var _file:FileReference;
@@ -1956,13 +1957,12 @@ class ChartingState extends MusicBeatState
 
 		if (FlxG.save.data.chart_waveformInst) {
 			var sound:FlxSound = FlxG.sound.music;
-			if (sound.buffer  != null) {
+			if (sound.buffer != null) {
 				var bytes:Bytes = sound.buffer.data.toBytes();
 
 				wavData = waveformData(
 					sound.buffer, bytes,
-					st, et, 1,
-					wavData,
+					st, et, 1, wavData,
 					Std.int(gridBG.height)
 				);
 			}
@@ -1975,8 +1975,7 @@ class ChartingState extends MusicBeatState
 
 				wavData = waveformData(
 					sound.buffer, bytes,
-					st, et, 1,
-					wavData,
+					st, et, 1, wavData,
 					Std.int(gridBG.height)
 				);
 			}
@@ -2258,9 +2257,8 @@ class ChartingState extends MusicBeatState
 				stepperSusLength.value = curSelectedNote[2];
 				if(curSelectedNote[3] != null) {
 					currentType = noteTypeMap.get(curSelectedNote[3]);
-					if(currentType <= 0)
-						noteTypeDropDown.selectedLabel = '';
-					else noteTypeDropDown.selectedLabel = currentType + '. ' + curSelectedNote[3];
+					if(currentType <= 0) noteTypeDropDown.selectedLabel = '';
+					else noteTypeDropDown.selectedLabel = '$currentType. ${curSelectedNote[3]}';
 				}
 			} else {
 				eventDropDown.selectedLabel = curSelectedNote[1][curEventSelected][0];

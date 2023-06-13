@@ -1,6 +1,7 @@
 package scripting.lua;
 
 import game.StrumNote;
+import utils.CoolUtil;
 
 //
 // This is simply where i store deprecated functions for it to be more organized.
@@ -41,12 +42,8 @@ class DeprecatedFunctions
 		});
 		funk.addCallback("luaSpriteMakeGraphic", function(l:FunkinLua, tag:String, width:Int, height:Int, color:String) {
 			l.luaTrace("luaSpriteMakeGraphic is deprecated! Use makeGraphic instead", false, true);
-			if(PlayState.instance.modchartSprites.exists(tag)) {
-				var colorNum:Null<FlxColor> = FlxColor.fromString(color);
-				if(colorNum == null) colorNum = FlxColor.fromString('0x' + color);
-				if(colorNum == null) colorNum = FlxColor.WHITE; //fail safe
-				PlayState.instance.modchartSprites.get(tag).makeGraphic(width, height, colorNum);
-			}
+			if(PlayState.instance.modchartSprites.exists(tag))
+				PlayState.instance.modchartSprites.get(tag).makeGraphic(width, height, CoolUtil.colorFromString(color));
 		});
 		funk.addCallback("luaSpriteAddAnimationByPrefix", function(l:FunkinLua, tag:String, name:String, prefix:String, framerate:Int = 24, loop:Bool = true) {
 			l.luaTrace("luaSpriteAddAnimationByPrefix is deprecated! Use addAnimationByPrefix instead", false, true);

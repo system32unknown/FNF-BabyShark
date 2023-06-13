@@ -6,9 +6,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxGradient;
-import lime.app.Application;
 import haxe.Json;
-import data.WeekData;
 import utils.CoolUtil;
 import game.Highscore;
 import game.Conductor;
@@ -98,7 +96,7 @@ class TitleState extends MusicBeatState
 		titlebg = new FlxBackdrop(Paths.image('thechecker'));
 		titlebg.velocity.set(0, 110);
 		titlebg.updateHitbox();
-		titlebg.color = FlxColor.fromString('0x7F${titleJSON.bgColor}');
+		titlebg.color = CoolUtil.colorFromString(titleJSON.bgColor);
 		titlebg.screenCenter(X);
 
 		logoBl = new FlxSprite(FlxG.width / 2, 1500);
@@ -271,6 +269,8 @@ class TitleState extends MusicBeatState
 	public static var closedState:Bool = false;
 	override function beatHit() {
 		super.beatHit();
+
+		FlxTween.tween(FlxG.camera, {zoom: 1.05}, .3, {ease: FlxEase.quadOut, type: BACKWARD});
 		
 		if(logoBl != null && foundXml)
 			logoBl.animation.play('bump', true);

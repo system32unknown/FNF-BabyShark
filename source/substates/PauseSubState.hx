@@ -177,9 +177,12 @@ class PauseSubState extends MusicBeatSubstate
 
 				if(controls.UI_LEFT || controls.UI_RIGHT) {
 					holdTime += elapsed;
-					if(holdTime > 0.5) {
+					if(holdTime > 0.5)
 						curTime += 45000 * elapsed * (controls.UI_LEFT ? -1 : 1);
-					}
+					if(holdTime > 0.5 && FlxG.sound.music.length >= 600000)
+						curTime += 150000 * elapsed * (controls.UI_LEFT ? -1 : 1);
+					if(holdTime > 0.5 && FlxG.sound.music.length >= 3600000)
+						curTime += 450000 * elapsed * (controls.UI_LEFT ? -1 : 1);
 
 					if(curTime >= FlxG.sound.music.length) curTime -= FlxG.sound.music.length;
 					else if(curTime < 0) curTime += FlxG.sound.music.length;
@@ -205,8 +208,7 @@ class PauseSubState extends MusicBeatSubstate
 				regenMenu();
 			}
 
-			switch (daSelected)
-			{
+			switch (daSelected) {
 				case "Resume": close();
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
@@ -310,7 +312,7 @@ class PauseSubState extends MusicBeatSubstate
 	}
 
 	function regenMenu():Void {
-		for (i in 0...grpMenuShit.members.length) {
+		for (_ in 0...grpMenuShit.members.length) {
 			var obj = grpMenuShit.members[0];
 			obj.kill();
 			grpMenuShit.remove(obj, true);
@@ -349,6 +351,6 @@ class PauseSubState extends MusicBeatSubstate
 	}
 
 	function updateSkipTimeText() {
-		skipTimeText.text = FlxStringUtil.formatTime(Math.max(0, Math.floor(curTime / 1000)), false) + ' / ' + FlxStringUtil.formatTime(Math.max(0, Math.floor(FlxG.sound.music.length / 1000)), false);
+		skipTimeText.text = FlxStringUtil.formatTime(Math.max(0, Math.floor(curTime / 1000))) + ' / ' + FlxStringUtil.formatTime(Math.max(0, Math.floor(FlxG.sound.music.length / 1000)));
 	}
 }

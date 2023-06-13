@@ -446,8 +446,7 @@ class ModMetadata {
 				else this.description = "No description provided.";
 			}
 
-			if(pack.colors != null && pack.colors.length > 2)
-				this.color = FlxColor.fromRGB(pack.colors[0], pack.colors[1], pack.colors[2]);
+			if(pack.color != null) this.color = FlxColor.fromRGB(pack.color[0] != null ? pack.color[0] : 170, pack.color[1] != null ? pack.color[1] : 0, pack.color[2] != null ? pack.color[2] : 255);
 
 			this.restart = pack.restart;
 		}
