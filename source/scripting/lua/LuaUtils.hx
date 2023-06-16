@@ -212,7 +212,30 @@ class LuaUtils {
 	public static inline function getInstance() {
 		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
 	}
+	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false)
+		{
+			var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
+			if(obj != null && obj.animation != null)
+			{
+				if(indices == null) indices = [];
+				if(Std.isOfType(indices, String))
+				{
+					var strIndices:Array<String> = cast (indices, String).trim().split(',');
+					var myIndices:Array<Int> = [];
+					for (i in 0...strIndices.length) {
+						myIndices.push(Std.parseInt(strIndices[i]));
+					}
+					indices = myIndices;
+				}
 	
+				obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
+				if(obj.animation.curAnim == null) {
+					obj.animation.play(name, true);
+				}
+				return true;
+			}
+			return false;
+		}
 	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
 		switch(spriteType.toLowerCase().trim()) {
 			case "texture" | "textureatlas" | "tex":
@@ -229,10 +252,9 @@ class LuaUtils {
 	public static function resetTextTag(tag:String) {
 		if(!PlayState.instance.modchartTexts.exists(tag)) return;
 
-		var target:ModchartText = PlayState.instance.modchartTexts.get(tag);
+		var target:FlxText = PlayState.instance.modchartTexts.get(tag);
 		target.kill();
-		if(target.wasAdded)
-			PlayState.instance.remove(target, true);
+		PlayState.instance.remove(target, true);
 		target.destroy();
 		PlayState.instance.modchartTexts.remove(tag);
 	}
@@ -242,8 +264,7 @@ class LuaUtils {
 
 		var target:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
 		target.kill();
-		if(target.wasAdded)
-			PlayState.instance.remove(target, true);
+		PlayState.instance.remove(target, true);
 		target.destroy();
 		PlayState.instance.modchartSprites.remove(tag);
 	}

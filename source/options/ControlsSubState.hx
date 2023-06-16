@@ -29,14 +29,10 @@ class ControlsSubState extends MusicBeatSubstate {
 	var pages:Array<Dynamic> = [];
 	var curPage:Int = 0;
 
-	var bg:FlxSprite;
-	var grpBlacks:FlxTypedGroup<AttachedSprite>;
-	var selectSpr:AttachedSprite;
-
 	public function new() {
 		super();
 
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.color = 0xff7192fd;
 		bg.screenCenter();
 		add(bg);
@@ -47,13 +43,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		FlxTween.tween(grid, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
 		add(grid);
 
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
-		selectSpr = new AttachedSprite();
-		selectSpr.makeGraphic(250, 78, FlxColor.WHITE);
-		selectSpr.copyAlpha = false;
-		selectSpr.alpha = .75;
-		add(selectSpr);
+		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
 		optionShit = Keybinds.optionShit();
 
@@ -91,17 +81,13 @@ class ControlsSubState extends MusicBeatSubstate {
 			obj.destroy();
 		}
 
-		for (text in grpInputs) {
-			text.kill();
-			remove(text);
+		for (grp in [grpInputs, grpInputsAlt]) {
+			for (text in grp) {
+				text.kill();
+				remove(text);
+			}
+			grp = [];
 		}
-		grpInputs = [];
-
-		for (text in grpInputsAlt) {
-			text.kill();
-			remove(text);
-		}
-		grpInputsAlt = [];
 
 		for (i in 0...optionShit.length) {
 			var isCentered:Bool = false;
@@ -182,8 +168,7 @@ class ControlsSubState extends MusicBeatSubstate {
 				} else if(!unselectableCheck(curSelected)) {
 					bindingTime = 0;
 					rebindingKey = true;
-					if (curAlt)
-						grpInputsAlt[getInputTextNum()].alpha = 0;
+					if (curAlt) grpInputsAlt[getInputTextNum()].alpha = 0;
 					else grpInputs[getInputTextNum()].alpha = 0;
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 				}
@@ -292,6 +277,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 
+	var curAltText:Array<AttachedText> = [];
 	function changeAlt() {
 		curAlt = !curAlt;
 		for (i in 0...grpInputs.length) {

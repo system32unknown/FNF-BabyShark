@@ -18,7 +18,7 @@ class OutdatedState extends MusicBeatState
 		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK));
 
 		txt = new FlxText(0, 0, FlxG.width,
-			"Your Custom Build is outdated!\n
+			"Alter Engine is outdated!\n
 			You are on " + Main.engineVersion.version
 			+ "\nwhile the most recent version is "
 			+ '$needVer.'

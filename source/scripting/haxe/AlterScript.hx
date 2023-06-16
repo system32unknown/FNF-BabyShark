@@ -12,6 +12,7 @@ import game.*;
 import ui.*;
 import utils.*;
 import flixel.*;
+import states.PlayState; // fucking flixel
 
 class AlterScript {
     public var staticVariables:Map<String, Dynamic> = [];

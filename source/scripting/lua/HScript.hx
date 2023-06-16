@@ -50,8 +50,8 @@ class HScript
 		setVar('FlxTimer', FlxTimer);
 		setVar('FlxTween', FlxTween);
 		setVar('FlxEase', FlxEase);
-		setVar('PlayState', states.PlayState);
-		setVar('game', states.PlayState.instance);
+		setVar('PlayState', PlayState);
+		setVar('game', PlayState.instance);
 		setVar('Paths', Paths);
 		setVar('Character', game.Character);
 		setVar('Alphabet', ui.Alphabet);

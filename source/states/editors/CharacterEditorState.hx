@@ -334,7 +334,7 @@ class CharacterEditorState extends MusicBeatState
 		tab_group.name = "Settings";
 
 		var check_player = new FlxUICheckBox(10, 60, null, null, "Playable Character", 100);
-		check_player.checked = daAnim.startsWith('bf');
+		check_player.checked = daAnim.startsWith('bf') || daAnim.endsWith('-player');
 		check_player.callback = function() {
 			char.isPlayer = !char.isPlayer;
 			char.flipX = !char.flipX;
@@ -345,7 +345,7 @@ class CharacterEditorState extends MusicBeatState
 
 		charDropDown = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray([''], true), function(character:String) {
 			daAnim = characterList[Std.parseInt(character)];
-			check_player.checked = daAnim.startsWith('bf');
+			check_player.checked = daAnim.startsWith('bf') || daAnim.endsWith('-player');
 			loadChar(!check_player.checked);
 			updatePresence();
 			reloadCharacterDropDown();
@@ -1016,7 +1016,7 @@ class CharacterEditorState extends MusicBeatState
 		if(!charDropDown.dropPanel.visible) {
 			if (FlxG.keys.justPressed.ESCAPE) {
 				if(goToPlayState) {
-					MusicBeatState.switchState(new states.PlayState());
+					MusicBeatState.switchState(new PlayState());
 				} else {
 					MusicBeatState.switchState(new MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));

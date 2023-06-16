@@ -24,8 +24,7 @@ class AchievementsMenuState extends MusicBeatState
 		menuBG.screenCenter();
 		add(menuBG);
 
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
+		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
 		Achievements.loadAchievements();
 		for (i in 0...Achievements.achievementsStuff.length) {
@@ -50,9 +49,9 @@ class AchievementsMenuState extends MusicBeatState
 		}
 
 		descText = new FlxText(150, 600, 980, "", 32);
-		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		descText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2.4);
 		descText.scrollFactor.set();
-		descText.borderSize = 2.4;
 		add(descText);
 		changeSelection();
 
@@ -62,10 +61,8 @@ class AchievementsMenuState extends MusicBeatState
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (controls.UI_UP_P)
-			changeSelection(-1);
-		if (controls.UI_DOWN_P)
-			changeSelection(1);
+		if (controls.UI_UP_P) changeSelection(-1);
+		if (controls.UI_DOWN_P) changeSelection(1);
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'), 0.7);
@@ -81,16 +78,11 @@ class AchievementsMenuState extends MusicBeatState
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = 0.6;
-			if (item.targetY == 0) {
-				item.alpha = 1;
-			}
+			item.alpha = (item.targetY == 0) ? 1 : .6;
 		}
 
 		for (i in 0...achievementArray.length) {
-			achievementArray[i].alpha = 0.6;
-			if (i == curSelected)
-				achievementArray[i].alpha = 1;
+			achievementArray[i].alpha = (i == curSelected) ? 1 : .6;
 		}
 		descText.text = Achievements.achievementsStuff[achievementIndex[curSelected]][1];
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.7);

@@ -11,6 +11,11 @@ class DeprecatedFunctions
 {
 	public static function implement(funk:FunkinLua)
 	{
+		funk.addCallback("addAnimationByIndicesLoop", function(l:FunkinLua, obj:String, name:String, prefix:String, indices:String, framerate:Int = 24) {
+			l.luaTrace("addAnimationByIndicesLoop is deprecated! Use addAnimationByIndices instead", false, true);
+			return LuaUtils.addAnimByIndices(obj, name, prefix, indices, framerate, true);
+		});
+
 		// DEPRECATED, DONT MESS WITH THESE SHITS, ITS JUST THERE FOR BACKWARD COMPATIBILITY
 		funk.addCallback("objectPlayAnimation", function(l:FunkinLua, obj:String, name:String, forced:Bool = false, ?startFrame:Int = 0) {
 			l.luaTrace("objectPlayAnimation is deprecated! Use playAnim instead", false, true);

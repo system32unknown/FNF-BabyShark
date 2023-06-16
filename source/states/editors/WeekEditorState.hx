@@ -384,9 +384,9 @@ class WeekEditorState extends MusicBeatState
 				}
 
 				for (i in 0...splittedText.length) {
-					if(i >= weekFile.songs.length) { //Add new song
+					if(i >= weekFile.songs.length) //Add new song
 						weekFile.songs.push([splittedText[i], 'face', [146, 113, 253]]);
-					} else { //Edit song
+					else { //Edit song
 						weekFile.songs[i][0] = splittedText[i];
 						if(weekFile.songs[i][1] == null || weekFile.songs[i][1]) {
 							weekFile.songs[i][1] = 'face';
@@ -399,7 +399,7 @@ class WeekEditorState extends MusicBeatState
 				weekFile.weekBefore = weekBeforeInputText.text.trim();
 			} else if(sender == difficultiesInputText) {
 				weekFile.difficulties = difficultiesInputText.text.trim();
-			}  else if(sender == sectionInputText) {
+			} else if(sender == sectionInputText) {
 				weekFile.sections = sectionInputText.text.trim().split(',');
 			}
 		}
@@ -444,7 +444,7 @@ class WeekEditorState extends MusicBeatState
 		lock.x = weekThing.width + 10 + weekThing.x;
 	}
 
-	private static var _file:FileReference;
+	static var _file:FileReference;
 	public static function loadWeek() {
 		var jsonFilter:FileFilter = new FileFilter('JSON', 'json');
 		_file = new FileReference();
@@ -455,7 +455,7 @@ class WeekEditorState extends MusicBeatState
 	}
 	
 	public static var loadedWeek:WeekFile = null;
-	private static function onLoadComplete(_):Void
+	static function onLoadComplete(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
@@ -645,9 +645,8 @@ class WeekEditorFreeplayState extends MusicBeatState
 			weekFile.songs[curSelected][1] = iconInputText.text;
 			iconArray[curSelected].changeIcon(iconInputText.text);
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
-			if(sender == bgColorStepperR || sender == bgColorStepperG || sender == bgColorStepperB) {
+			if(sender == bgColorStepperR || sender == bgColorStepperG || sender == bgColorStepperB)
 				updateBG();
-			}
 		}
 	}
 

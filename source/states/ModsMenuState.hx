@@ -435,8 +435,7 @@ class ModMetadata {
 		if(pack != null) {
 			//using reflects cuz for some odd reason my haxe hates the stuff.var shit
 			if(pack.name != null && pack.name.length > 0) {
-				if(pack.name != 'Name')
-					this.name = pack.name;
+				if(pack.name != 'Name') this.name = pack.name;
 				else this.name = pack.folder;
 			}
 

@@ -209,8 +209,8 @@ class CoolUtil {
 		var minutesRemainingShit:String = Std.string(minutesRemaining);
 		var secondsRemaining:String = Std.string(sec % 60);
 
-		if (secondsRemaining.length < 2) secondsRemaining = '0' + secondsRemaining;
-		if (minutesRemainingShit.length < 2) minutesRemainingShit = '0' + minutesRemaining; 
+		if (secondsRemaining.length < 2) secondsRemaining = '0${secondsRemaining}';
+		if (minutesRemainingShit.length < 2) minutesRemainingShit = '0${minutesRemaining}'; 
 
 		if(sec <= 3600000)
 			return flixel.util.FlxStringUtil.formatTime(sec, false);

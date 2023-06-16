@@ -3,10 +3,8 @@ package states;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
-import flixel.input.keyboard.FlxKey;
 import states.editors.MasterEditorMenu;
 import game.Achievements;
-import data.WeekData;
 
 class MainMenuState extends MusicBeatState
 {
@@ -95,8 +93,7 @@ class MainMenuState extends MusicBeatState
 		menuCoverAlt.scrollFactor.set(0, yScroll);
 		add(menuCoverAlt);
 
-		menuItems = new FlxTypedGroup<FlxSprite>();
-		add(menuItems);
+		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
 		for (i in 0...optionShit.length) {
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
