@@ -61,18 +61,19 @@ class CreditsState extends MusicBeatState
 		['rapparep lol',      	'rapparep',			'Main Artist',				                            		'https://twitter.com/rappareplol',			'FF0000'],
 		['TheBuilderXD',      	'TheBuilderXD',		'Page Manager, Tristan Sprite Creator, and more',       		'https://twitter.com/TheBuilderXD',			'FF0000'],
 		['Erizur',            	'Erizur',			'Programmer, Week Icon Artist',                       			'https://twitter.com/am_erizur',			'FF0000'],
-		['T5mpler',           	'T5mpler',			'Dev / Programmer & Supporter',                           		'https://twitter.com/RealT5mpler',			'FF0000'], 
 		['Pointy',           	'pointy',			'Artist & Charter',                           					'https://twitter.com/PointyyESM',			'FF0000'], 
 		['Zmac',           		'Zmac',				'3D Backgrounds, Intro text help',                           	'',											'FF0000'], 
 		['Billy Bobbo',         'billy',			'Moral Support & Idea Suggesting',                     			'https://twitter.com/BillyBobboLOL',		'FF0000'],
-		['Steph45',           	'Steph45',			'Minor programming, Moral support',                     		'https://twitter.com/Stats451',				'FF0000']
+		['Steph45',           	'Steph45',			'Minor programming, Moral support',                     		'https://twitter.com/Stats451',				'FF0000'],
+		['Former Team Members'],
+		['T5mpler',           	'T5mpler',			'Former Programmer & Supporter',                           		'https://twitter.com/RealT5mpler',			'FF0000']
 	];
 
 	static var psychek(default, never):Array<Array<String>> = [
 		['Psych Engine Extra Keys'],
 		['tposejank', 			'tposejank',		'Main Programmer of Psych Engine EK', 							'https://twitter.com/tpose_jank', 			'B9AF27'],
 		['srPerez', 			'perez', 			'1-9 keys art', 												'https://twitter.com/newsrperez',			'FF9E00'],
-		['Leather128', 			'leather', 			'12 - 16 keys art + coder', 												'https://twitter.com/newsrperez',			'FF9E00'],
+		['Leather128', 			'leather', 			'12 - 16 keys art + coder', 									'https://twitter.com/newsrperez',			'FF9E00'],
 	];
 
 	public static var prevSelected:Int = 0;

@@ -74,7 +74,7 @@ class ControlsSubState extends MusicBeatSubstate {
 	}
 
 	function reloadTexts() {
-		for (i in 0...grpOptions.members.length) {
+		for (_ in 0...grpOptions.members.length) {
 			var obj = grpOptions.members[0];
 			obj.kill();
 			grpOptions.remove(obj, true);
@@ -147,9 +147,9 @@ class ControlsSubState extends MusicBeatSubstate {
 				holdTime = 0;
 			}
 			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
-				if (grpOptions.members[curSelected].ID == 1) {
+				if (grpOptions.members[curSelected].ID == 1)
 					changePage(controls.UI_LEFT_P ? -1 : 1);
-				} else changeAlt();
+				else changeAlt();
 			}
 
 			if (controls.BACK) {
@@ -192,13 +192,8 @@ class ControlsSubState extends MusicBeatSubstate {
 
 			bindingTime += elapsed;
 			if(bindingTime > 5) {
-				if (curAlt) {
-					if (grpInputsAlt[curSelected] != null)
-						grpInputsAlt[curSelected].alpha = 1;
-				} else {
-					if (grpInputsAlt[curSelected] != null)
-						grpInputs[curSelected].alpha = 1;
-				}
+				if (curAltText[curSelected] != null)
+					curAltText[curSelected].alpha = 1;
 				reloadTexts();
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				rebindingKey = false;
@@ -215,9 +210,7 @@ class ControlsSubState extends MusicBeatSubstate {
 	function getInputTextNum() {
 		var num:Int = 0;
 		for (i in 0...curSelected) {
-			if(optionShit[i].length > 1) {
-				num++;
-			}
+			if(optionShit[i].length > 1) num++;
 		}
 		return num;
 	}
@@ -238,12 +231,8 @@ class ControlsSubState extends MusicBeatSubstate {
 		}
 
 		var bullShit:Int = 0;
-
-		for (i in 0...grpInputs.length) {
-			grpInputs[i].alpha = 0.6;
-		}
-		for (i in 0...grpInputsAlt.length) {
-			grpInputsAlt[i].alpha = 0.6;
+		for (grp in [grpInputs, grpInputsAlt]) {
+			for (grps in grp) grps.alpha = 0.6;
 		}
 
 		for (item in grpOptions.members) {
@@ -255,19 +244,10 @@ class ControlsSubState extends MusicBeatSubstate {
 				if (item.targetY == 0) {
 					item.alpha = 1;
 					if (item.ID != 1) {
-						if(curAlt) {
-							for (i in 0...grpInputsAlt.length) {
-								if(grpInputsAlt[i].sprTracker == item) {
-									grpInputsAlt[i].alpha = 1;
-									break;
-								}
-							}
-						} else {
-							for (i in 0...grpInputs.length) {
-								if(grpInputs[i].sprTracker == item) {
-									grpInputs[i].alpha = 1;
-									break;
-								}
+						for (grptxt in curAltText) {
+							if(grptxt.sprTracker == item) {
+								grptxt.alpha = 1;
+								break;
 							}
 						}
 					}
@@ -280,31 +260,21 @@ class ControlsSubState extends MusicBeatSubstate {
 	var curAltText:Array<AttachedText> = [];
 	function changeAlt() {
 		curAlt = !curAlt;
-		for (i in 0...grpInputs.length) {
-			if(grpInputs[i].sprTracker == grpOptions.members[curSelected]) {
-				grpInputs[i].alpha = 0.6;
-				if(!curAlt) {
-					grpInputs[i].alpha = 1;
+		curAltText = curAlt ? grpInputsAlt : grpInputs;
+		for (grp in [grpInputs, grpInputsAlt]) {
+			for (grps in grp) {
+				if(grps.sprTracker == grpOptions.members[curSelected]) {
+					grps.alpha = 0.6;
+					if(!curAlt) grps.alpha = 1;
+					break;
 				}
-				break;
-			}
-		}
-		for (i in 0...grpInputsAlt.length) {
-			if(grpInputsAlt[i].sprTracker == grpOptions.members[curSelected]) {
-				grpInputsAlt[i].alpha = 0.6;
-				if(curAlt) {
-					grpInputsAlt[i].alpha = 1;
-				}
-				break;
 			}
 		}
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 
-	private function unselectableCheck(num:Int, ?checkDefaultKey:Bool = false):Bool {
-		if(optionShit[num][0] == defaultKey) {
-			return checkDefaultKey;
-		}
+	function unselectableCheck(num:Int, ?checkDefaultKey:Bool = false):Bool {
+		if(optionShit[num][0] == defaultKey) return checkDefaultKey;
 		return optionShit[num].length < 2 && optionShit[num][0] != defaultKey;
 	}
 
@@ -324,17 +294,13 @@ class ControlsSubState extends MusicBeatSubstate {
 	}
 
 	function reloadKeys() {
-		while(grpInputs.length > 0) {
-			var item:AttachedText = grpInputs[0];
-			item.kill();
-			grpInputs.remove(item);
-			item.destroy();
-		}
-		while(grpInputsAlt.length > 0) {
-			var item:AttachedText = grpInputsAlt[0];
-			item.kill();
-			grpInputsAlt.remove(item);
-			item.destroy();
+		for (grp in [grpInputs, grpInputsAlt]) {
+			while(grp.length > 0) {
+				var item:AttachedText = grp[0];
+				item.kill();
+				grp.remove(item);
+				item.destroy();
+			}
 		}
 
 		for (i in 0...grpOptions.length) {
@@ -344,11 +310,8 @@ class ControlsSubState extends MusicBeatSubstate {
 		}
 
 		var bullShit:Int = 0;
-		for (i in 0...grpInputs.length) {
-			grpInputs[i].alpha = 0.6;
-		}
-		for (i in 0...grpInputsAlt.length) {
-			grpInputsAlt[i].alpha = 0.6;
+		for (grp in [grpInputs, grpInputsAlt]) {
+			for (grps in grp) grps.alpha = 0.6;
 		}
 
 		for (item in grpOptions.members) {
@@ -359,18 +322,8 @@ class ControlsSubState extends MusicBeatSubstate {
 				item.alpha = 0.6;
 				if (item.targetY == 0) {
 					item.alpha = 1;
-					if(curAlt) {
-						for (i in 0...grpInputsAlt.length) {
-							if(grpInputsAlt[i].sprTracker == item) {
-								grpInputsAlt[i].alpha = 1;
-							}
-						}
-					} else {
-						for (i in 0...grpInputs.length) {
-							if(grpInputs[i].sprTracker == item) {
-								grpInputs[i].alpha = 1;
-							}
-						}
+					for (grptxt in curAltText) {
+						if(grptxt.sprTracker == item) grptxt.alpha = 1;
 					}
 				}
 			}
