@@ -463,9 +463,9 @@ class FlxSound extends FlxBasic
 		#if FLX_PITCH
 		pitch = 1;
 		#end
-		if (_sound != null) {
+		if (_sound != null)
 			makeChannel();
-		} else _length = 0;
+		else _length = 0;
 
 		endTime = _length;
 		return this;

@@ -63,8 +63,7 @@ class FreeplayState extends MusicBeatState
 			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
 			if (leWeek.sections != null) {
 				for (sex in leWeek.sections) {
-					if (sex != section)
-						foundSection = true;
+					if (sex != section) foundSection = true;
 					else {
 						foundSection = false;
 						break;
@@ -213,7 +212,7 @@ class FreeplayState extends MusicBeatState
 			Conductor.songPosition = FlxG.sound.music.time;
 
 		if (FlxG.sound.music.volume < 0.7)
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
+			FlxG.sound.music.volume += 0.5 * elapsed;
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, FlxMath.bound(elapsed * 24, 0, 1)));
 		lerpRating = FlxMath.lerp(lerpRating, intendedRating, FlxMath.bound(elapsed * 12, 0, 1));

@@ -63,8 +63,7 @@ class NotesSubState extends MusicBeatSubstate
 		}
 
 		hsbText = new Alphabet(posX + 720, 0, "Hue    Saturation  Brightness", false);
-		hsbText.scaleX = 0.6;
-		hsbText.scaleY = 0.6;
+		hsbText.setScale(.6, .6);
 		add(hsbText);
 
 		changeSelection();
@@ -89,8 +88,7 @@ class NotesSubState extends MusicBeatSubstate
 			item.x = FlxMath.lerp(item.x, (item.ID * 20) + 90, lerpVal);
 			if (i == curSelected) {
 				hsbText.y = item.y - 70;
-				blackBG.y = item.y - 20;
-				blackBG.x = item.x - 20;
+				blackBG.setPosition(item.x - 20, item.y - 20);
 			}
 		}
 

@@ -8,8 +8,7 @@ typedef AnimationData = {
 	?ANIMATION:SymbolData,
 	?SYMBOL_DICTIONARY:{
 		Symbols:Array<SymbolData>
-	},
-	?metadata:{
+	}, ?metadata:{
 		?framerate:Null<Int>
 	}
 }
@@ -17,8 +16,7 @@ typedef AnimationData = {
 typedef AtlasData = {
 	?ATLAS:{
 		SPRITES:Array<SpriteDummy>
-	},
-	?meta:{
+	}, ?meta:{
 		app:String,
 		version:String,
 		image:String,

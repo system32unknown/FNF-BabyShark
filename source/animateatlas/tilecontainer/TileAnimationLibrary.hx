@@ -116,11 +116,9 @@ class TileAnimationLibrary {
 	private function parseAnimationData(data:AnimationData):Void {
 		var metaData = data.metadata;
 
-		if (metaData != null && metaData.framerate != null && metaData.framerate > 0) {
+		if (metaData != null && metaData.framerate != null && metaData.framerate > 0)
 			frameRate = (metaData.framerate);
-		} else {
-			frameRate = 24;
-		}
+		else frameRate = 24;
 
 		_symbolData = new Map();
 

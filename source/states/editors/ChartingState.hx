@@ -43,8 +43,6 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 
-@:access(flixel.system.FlxSound._sound)
-@:access(openfl.media.Sound.__buffer)
 class ChartingState extends MusicBeatState
 {
 	public static var noteTypeList:Array<String> = [ //Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
@@ -202,6 +200,8 @@ class ChartingState extends MusicBeatState
 		add(gridLayer = new FlxTypedGroup<FlxSprite>());
 
 		waveformSprite = new FlxSprite(GRID_SIZE).makeGraphic(FlxG.width, FlxG.height, 0x00FFFFFF);
+		waveformSprite.antialiasing = false;
+		waveformSprite.active = false;
 		add(waveformSprite);
 
 		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90).loadGraphic(Paths.image('eventArrow'));
@@ -1253,12 +1253,11 @@ class ChartingState extends MusicBeatState
 	}
 
 	function loadSong():Void {
-		if (FlxG.sound.music != null) {
+		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
-		}
 
 		vocals = new FlxSound();
-		if  (_song.needsVoices) {
+		if (_song.needsVoices) {
 			var file:Dynamic = Paths.voices(currentSongName, false, true);
 			if (Std.isOfType(file, Sound) || OpenFlAssets.exists(file)) {
 				vocals.loadEmbedded(file);
@@ -1318,6 +1317,7 @@ class ChartingState extends MusicBeatState
 			switch (wname) {
 				case 'section_beats':
 					_song.notes[curSec].sectionBeats = nums.value;
+					reloadGridLayer();
 					updateGrid(false);
 				case 'song_speed':
 					_song.speed = nums.value;
@@ -1376,9 +1376,8 @@ class ChartingState extends MusicBeatState
 		var daPos:Float = 0;
 		for (i in 0...curSec + add) {
 			if(_song.notes[i] != null) {
-				if (_song.notes[i].changeBPM) {
+				if (_song.notes[i].changeBPM)
 					daBPM = _song.notes[i].bpm;
-				}
 				daPos += getSectionBeats(i) * (1000 * 60 / daBPM);
 			}
 		}
@@ -1624,7 +1623,7 @@ class ChartingState extends MusicBeatState
 				if (FlxG.keys.pressed.CONTROL) holdingShift = 0.25;
 				else if (FlxG.keys.pressed.SHIFT) holdingShift = 4;
 
-				var daTime:Float = 700 * FlxG.elapsed * holdingShift;
+				var daTime:Float = 700 * elapsed * holdingShift;
 
 				if (FlxG.keys.pressed.W)
 					FlxG.sound.music.time -= daTime;
@@ -1787,11 +1786,11 @@ class ChartingState extends MusicBeatState
 
 		bpmTxt.text =
 		Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2)) + " / " + Std.string(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2)) +
-		"\nSection: " + curSec +
+		'\nSection: $curSec' +
 		"\nBeat: " + Std.string(curDecBeat).substring(0, 4) +
-		"\nStep: " + curStep +
+		'\nStep: $curStep' +
 		'\nZoom: $zoomFactorTxt' +
-		"\n\nBeat Snap: " + quantization + "th";
+		'\n\nBeat Snap: ${quantization}th';
 
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
 		curRenderedNotes.forEachAlive(function(note:Note) {
@@ -1859,7 +1858,6 @@ class ChartingState extends MusicBeatState
 	var lastSecBeatsNext:Float = 0;
 	function reloadGridLayer() {
 		GRID_SIZE = Note.gridSizes[_song.mania];
-
 		PlayState.mania = _song.mania;
 
 		if (dummyArrow != null) {
@@ -1867,6 +1865,10 @@ class ChartingState extends MusicBeatState
 			dummyArrow.updateHitbox();	
 		}
 
+		gridLayer.forEach(obj -> {
+			gridLayer.remove(obj);
+			obj.destroy();
+		});
 		gridLayer.clear();
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE + GRID_SIZE * Note.ammo[_song.mania] * 2, Std.int(GRID_SIZE * getSectionBeats() * 4 * zoomList[curZoom]));
 
@@ -1942,9 +1944,7 @@ class ChartingState extends MusicBeatState
 		}
 		waveformPrinted = false;
 
-		if(!FlxG.save.data.chart_waveformInst && !FlxG.save.data.chart_waveformVoices) {
-			return;
-		}
+		if(!FlxG.save.data.chart_waveformInst && !FlxG.save.data.chart_waveformVoices) return;
 
 		wavData[0][0] = [];
 		wavData[0][1] = [];
@@ -2028,7 +2028,6 @@ class ChartingState extends MusicBeatState
 		var channels:Int = buffer.channels;
 
 		var index:Int = Std.int(time * khz);
-
 		var samples:Float = ((endTime - time) * khz);
 
 		if (steps == null) steps = 1280;
@@ -2046,7 +2045,7 @@ class ChartingState extends MusicBeatState
 
 		var rows:Float = 0;
 
-		var simpleSample:Bool = true; //samples > 17200;
+		var simpleSample:Bool = true;
 		var v1:Bool = false;
 
 		if (array == null) array = [[[0], [0]], [[0], [0]]];
@@ -2092,20 +2091,20 @@ class ChartingState extends MusicBeatState
 				var rRMax:Float = rmax * multiply;
 
 				if (gotIndex > array[0][0].length) array[0][0].push(lRMin);
-					else array[0][0][gotIndex - 1] = array[0][0][gotIndex - 1] + lRMin;
+				else array[0][0][gotIndex - 1] += lRMin;
 				if (gotIndex > array[0][1].length) array[0][1].push(lRMax);
-					else array[0][1][gotIndex - 1] = array[0][1][gotIndex - 1] + lRMax;
+				else array[0][1][gotIndex - 1] += lRMax;
 
 				if (channels >= 2) {
 					if (gotIndex > array[1][0].length) array[1][0].push(rRMin);
-						else array[1][0][gotIndex - 1] = array[1][0][gotIndex - 1] + rRMin;
+					else array[1][0][gotIndex - 1] += rRMin;
 					if (gotIndex > array[1][1].length) array[1][1].push(rRMax);
-						else array[1][1][gotIndex - 1] = array[1][1][gotIndex - 1] + rRMax;
+					else array[1][1][gotIndex - 1] += rRMax;
 				} else {
 					if (gotIndex > array[1][0].length) array[1][0].push(lRMin);
-						else array[1][0][gotIndex - 1] = array[1][0][gotIndex - 1] + lRMin;
+					else array[1][0][gotIndex - 1] += lRMin;
 					if (gotIndex > array[1][1].length) array[1][1].push(lRMax);
-						else array[1][1][gotIndex - 1] = array[1][1][gotIndex - 1] + lRMax;
+					else array[1][1][gotIndex - 1] += lRMax;
 				}
 
 				lmin = 0;
@@ -2391,7 +2390,7 @@ class ChartingState extends MusicBeatState
 
 		var note:Note = new Note(daStrumTime, daNoteInfo % Note.ammo[_song.mania], null, null, true);
 		if(daSus != null) { //Common note
-			if(!Std.isOfType(i[3], String))  { //Convert old note type to new note type format
+			if(!Std.isOfType(i[3], String)) { //Convert old note type to new note type format
 				i[3] = noteTypeIntMap.get(i[3]);
 			}
 			if(i.length > 3 && (i[3] == null || i[3].length < 1)) {

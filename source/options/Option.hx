@@ -52,9 +52,7 @@ class Option
 		switch(type) {
 			case 'string':
 				var num:Int = options.indexOf(getValue());
-				if(num > -1) {
-					curOption = num;
-				}
+				if(num > -1) curOption = num;
 	
 			case 'percent':
 				displayFormat = '%v%';
@@ -67,19 +65,16 @@ class Option
 	}
 
 	public function change() {
-		//nothing lol
-		if(onChange != null) {
-			onChange();
-		}
+		if(onChange != null) onChange();
 	}
 
 	public function getValue():Dynamic
 	{
 		#if MODS_ALLOWED
 		if (fromJson != null) {
-			if (ClientPrefs.modsOptsSaves.exists(fromJson[0]) && ClientPrefs.modsOptsSaves[fromJson[0]].exists(variable)) {
+			if (ClientPrefs.modsOptsSaves.exists(fromJson[0]) && ClientPrefs.modsOptsSaves[fromJson[0]].exists(variable))
 				return ClientPrefs.modsOptsSaves[fromJson[0]][variable];
-			} else return null;
+			else return null;
 		}
 		#end
 		return ClientPrefs.getPref(variable);
@@ -98,25 +93,18 @@ class Option
 		this.child = child;
 	}
 
-	private function get_text()
-	{
-		if(child != null) {
-			return child.text;
-		}
+	function get_text() {
+		if(child != null) return child.text;
 		return null;
 	}
-	private function set_text(newValue:String = '')
-	{
-		if(child != null) {
-			child.text = newValue;
-		}
+	function set_text(newValue:String = '') {
+		if(child != null) child.text = newValue;
 		return null;
 	}
 
 	function get_type() {
 		var newValue:String = 'bool';
-		switch(type.toLowerCase().trim())
-		{
+		switch(type.toLowerCase().trim()) {
 			case 'int' | 'float' | 'percent' | 'string' | 'func': newValue = type;
 			case 'integer': newValue = 'int';
 			case 'str': newValue = 'string';

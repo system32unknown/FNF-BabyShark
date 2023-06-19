@@ -76,7 +76,7 @@ class Philly extends BaseStage
 
 	override function update(elapsed:Float)
 	{
-		phillyWindow.alpha -= (Conductor.crochet / 1000) * FlxG.elapsed * 1.5;
+		phillyWindow.alpha -= (Conductor.crochet / 1000) * elapsed * 1.5;
 		if(phillyGlowParticles != null)
 		{
 			var i:Int = phillyGlowParticles.members.length - 1;

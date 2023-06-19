@@ -1238,7 +1238,7 @@ class PlayState extends MusicBeatState {
 		previousFrameTime = FlxG.game.ticks;
 
 		var music:FlxSound = FlxG.sound.music;
-		music.loadEmbedded(Paths.inst(PlayState.SONG.song), false);
+		music.loadEmbedded(Paths.inst(SONG.song), false);
 		music.onComplete = finishSong.bind();
 		music.pitch = playbackRate;
 		music.volume = 1;
@@ -1279,7 +1279,7 @@ class PlayState extends MusicBeatState {
 		var songData = SONG;
 		Conductor.changeBPM(songData.bpm);
 
-		var inst = Paths.inst(PlayState.SONG.song);
+		var inst = Paths.inst(songData.song);
 		songLength = inst != null ? inst.length : 0;
 
 		if (SONG.needsVoices) vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.song));
@@ -2739,10 +2739,12 @@ class PlayState extends MusicBeatState {
 			
 			var p1:String = '';
 			var p2:String = '';
+			var antialias:Bool = ClientPrefs.getPref('Antialiasing');
 			
 			if (isPixelStage) {
 				p1 = 'pixelUI/';
 				p2 = '-pixel';
+				antialias = false;
 			}
 		
 			var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
@@ -2755,6 +2757,7 @@ class PlayState extends MusicBeatState {
 			rating.acceleration.y = 550 * playbackRate * playbackRate;
 			rating.velocity.subtract(FlxG.random.int(0, 10) * playbackRate, FlxG.random.int(140, 175) * playbackRate);
 			rating.visible = !hideHud && showRating;
+			rating.antialiasing = antialias;
 		
 			var timing:FlxSprite = new FlxSprite();
 			if (daTiming != "") timing.loadGraphic(Paths.image(p1 + 'ratings/$daTiming' + p2));
@@ -2765,6 +2768,7 @@ class PlayState extends MusicBeatState {
 			timing.acceleration.y = 550 * playbackRate * playbackRate;
 			timing.velocity.subtract(FlxG.random.int(0, 10) * playbackRate, FlxG.random.int(140, 175) * playbackRate);
 			timing.visible = !hideHud && ClientPrefs.getPref('ShowLateEarly');
+			timing.antialiasing = antialias;
 		
 			if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
 				msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
@@ -2774,7 +2778,7 @@ class PlayState extends MusicBeatState {
 				mstimingTxt.visible = !hideHud;
 				mstimingTxt.text = msTiming + "ms";
 				mstimingTxt.camera = ratingCams;
-			
+				mstimingTxt.antialiasing = antialias;
 				mstimingTxt.color = CoolUtil.dominantColor(rating);
 				add(mstimingTxt);
 			}
@@ -2788,6 +2792,7 @@ class PlayState extends MusicBeatState {
 			comboSpr.velocity.y -= FlxG.random.int(140, 160) * playbackRate;
 			comboSpr.velocity.x += FlxG.random.int(1, 10) * playbackRate;
 			comboSpr.visible = showCombo && !hideHud;
+			comboSpr.antialiasing = antialias;
 		
 			if (ClientPrefs.getPref('ShowMsTiming')) {
 				mstimingTxt.screenCenter();
@@ -2857,6 +2862,7 @@ class PlayState extends MusicBeatState {
 				numScore.velocity.y -= FlxG.random.int(140, 160) * playbackRate;
 				numScore.velocity.x = FlxG.random.float(-5, 5) * playbackRate;
 				numScore.visible = !hideHud && showComboNum;
+				numScore.antialiasing = antialias;
 			
 				if(combo >= 10) insert(members.indexOf(strumLineNotes), comboSpr);
 				insert(members.indexOf(strumLineNotes), rating);

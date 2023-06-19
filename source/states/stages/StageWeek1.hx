@@ -48,23 +48,20 @@ class StageWeek1 extends BaseStage {
 				add(dadbattleLight);
 
 				dadbattleFog = new DadBattleFog();
+				dadbattleFog.visible = false;
 				add(dadbattleFog);
 		}
 	}
 
-	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float)
-	{
-		switch(eventName)
-		{
+	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {
+		switch(eventName) {
 			case "Dadbattle Spotlight":
 				if(flValue1 == null) flValue1 = 0;
 				var val:Int = Math.round(flValue1);
 
-				switch(val)
-				{
+				switch(val) {
 					case 1, 2, 3: //enable and target dad
-						if(val == 1) //enable
-						{
+						if(val == 1) { //enable
 							dadbattleBlack.visible = true;
 							dadbattleLight.visible = true;
 							dadbattleFog.visible = true;
@@ -79,14 +76,13 @@ class StageWeek1 extends BaseStage {
 							dadbattleLight.alpha = 0.375;
 						});
 						dadbattleLight.setPosition(who.getGraphicMidpoint().x - dadbattleLight.width / 2, who.y + who.height - dadbattleLight.height + 50);
+						FlxTween.tween(dadbattleFog, {alpha: 0.7}, 1.5, {ease: FlxEase.quadInOut});
 
 					default:
 						dadbattleBlack.visible = false;
 						dadbattleLight.visible = false;
 						defaultCamZoom -= 0.12;
-						FlxTween.tween(dadbattleFog, {alpha: 0}, 1, {onComplete: function(twn:FlxTween) {
-							dadbattleFog.visible = false;
-						}});
+						FlxTween.tween(dadbattleFog, {alpha: 0}, .7, {onComplete: function(twn:FlxTween) dadbattleFog.visible = false});
 				}
 		}
 	}

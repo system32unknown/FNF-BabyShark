@@ -212,9 +212,8 @@ class Note extends FlxSprite
 			shader = colorSwap.shader;
 
 			x += swagWidth * (noteData % ammo[mania]);
-			if(!isSustainNote && noteData > -1) { //Doing this 'if' check to fix the warnings on Senpai songs
+			if(!isSustainNote && noteData > -1)
 				animation.play(keysShit.get(mania).get('letters')[noteData % ammo[mania]]);
-			}
 		}
 
 		if (isSustainNote && prevNote != null) {
@@ -324,9 +323,9 @@ class Note extends FlxSprite
 	function loadNoteAnims() {
 		for (letter in gfxLetter) {
 			if (isSustainNote) {
-				animation.addByPrefix('$letter hold', '$letter hold');
-				animation.addByPrefix('$letter tail', '$letter tail');
-			} else animation.addByPrefix(letter, letter + '0');
+				animation.addByPrefix('$letter hold', '$letter hold', 24);
+				animation.addByPrefix('$letter tail', '$letter tail', 24);
+			} else animation.addByPrefix(letter, '${letter}0', 24);
 		}
 
 		setGraphicSize(Std.int(defaultWidth * scales[mania]), (isSustainNote ? Std.int(defaultHeight * scales[0]) : 0));
@@ -336,12 +335,12 @@ class Note extends FlxSprite
 	function loadPixelNoteAnims() {
 		if(isSustainNote) {
 			for (i => letter in gfxLetter) {
-				animation.add('$letter hold', [i]);
-				animation.add('$letter tail', [i + pixelNotesDivisionValue]);
+				animation.add('$letter hold', [i], 24);
+				animation.add('$letter tail', [i + pixelNotesDivisionValue], 24);
 			}
 		} else {
 			for (i => letter in gfxLetter) {
-				animation.add(letter, [i + pixelNotesDivisionValue]);
+				animation.add(letter, [i + pixelNotesDivisionValue], 24);
 			}
 		}
 	}

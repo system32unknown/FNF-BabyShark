@@ -106,9 +106,7 @@ class OptionsState extends MusicBeatState
 		}
 
 		#if MODS_ALLOWED
-		if (controls.RESET) {
-			openSubState(new DeleteSavesSubState());
-		}
+		if (controls.RESET) openSubState(new DeleteSavesSubState());
 		#end
 	}
 	

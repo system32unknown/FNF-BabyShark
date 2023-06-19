@@ -329,8 +329,7 @@ class FlxInputText extends FlxText
 	{
 		var key:Int = e.keyCode;
 
-		if (hasFocus)
-		{
+		if (hasFocus) {
 			  //// Crtl/Cmd + C to copy text to the clipboard
 			  // This copies the entire input, because i'm too lazy to do caret selection, and if i did it i whoud probabbly make it a pr in flixel-ui.
 
@@ -451,11 +450,9 @@ class FlxInputText extends FlxText
 	 */
 	private function insertSubstring(Original:String, Insert:String, Index:Int):String
 	{
-		if (Index != Original.length) {
+		if (Index != Original.length)
 			Original = Original.substring(0, Index) + (Insert) + (Original.substring(Index));
-		} else {
-			Original = Original + (Insert);
-		}
+		else Original += Insert;
 		return Original;
 	}
 
@@ -477,11 +474,9 @@ class FlxInputText extends FlxText
 	private function getCharBoundaries(charIndex:Int):Rectangle {
 		if (_charBoundaries != null && charIndex >= 0 && _charBoundaries.length > 0) {
 			var r:Rectangle = new Rectangle();
-			if (charIndex >= _charBoundaries.length) {
+			if (charIndex >= _charBoundaries.length)
 				_charBoundaries[_charBoundaries.length - 1].copyToFlash(r);
-			} else {
-				_charBoundaries[charIndex].copyToFlash(r);
-			}
+			else _charBoundaries[charIndex].copyToFlash(r);
 			return r;
 		}
 		return null;
@@ -594,11 +589,9 @@ class FlxInputText extends FlxText
 	{
 		#if !js
 		var boundary:Rectangle = null;
-		if (caretIndex == -1) {
+		if (caretIndex == -1)
 			boundary = getCharBoundaries(text.length - 1);
-		} else {
-			boundary = getCharBoundaries(caretIndex);
-		}
+		else boundary = getCharBoundaries(caretIndex);
 
 		if (boundary != null)
 		{
@@ -710,11 +703,10 @@ class FlxInputText extends FlxText
 	 */
 	private function filter(text:String):String
 	{
-		if (forceCase == UPPER_CASE) {
+		if (forceCase == UPPER_CASE)
 			text = text.toUpperCase();
-		} else if (forceCase == LOWER_CASE) {
+		else if (forceCase == LOWER_CASE)
 			text = text.toLowerCase();
-		}
 
 		if (filterMode != NO_FILTER) {
 			var pattern:EReg;
@@ -732,25 +724,24 @@ class FlxInputText extends FlxText
 
 	private function set_params(p:Array<Dynamic>):Array<Dynamic> {
 		params = p;
-		if (params == null)
-			params = [];
+		if (params == null) params = [];
 		var namedValue:NamedString = {name: "value", value: text};
 		params.push(namedValue);
 		return p;
 	}
 
 	private override function set_x(X:Float):Float {
-		if ((fieldBorderSprite != null) && fieldBorderThickness > 0)
+		if (fieldBorderSprite != null && fieldBorderThickness > 0)
 			fieldBorderSprite.x = X - fieldBorderThickness;
-		if ((backgroundSprite != null) && background)
+		if (backgroundSprite != null && background)
 			backgroundSprite.x = X;
 		return super.set_x(X);
 	}
 
 	private override function set_y(Y:Float):Float {
-		if ((fieldBorderSprite != null) && fieldBorderThickness > 0)
+		if (fieldBorderSprite != null && fieldBorderThickness > 0)
 			fieldBorderSprite.y = Y - fieldBorderThickness;
-		if ((backgroundSprite != null) && background)
+		if (backgroundSprite != null && background)
 			backgroundSprite.y = Y;
 		return super.set_y(Y);
 	}
@@ -864,11 +855,9 @@ class FlxInputText extends FlxText
 	private function set_lines(Value:Int):Int {
 		if (Value == 0) return 0;
 
-		if (Value > 1) {
+		if (Value > 1)
 			textField.wordWrap = textField.multiline = true;
-		} else {
-			textField.wordWrap = textField.multiline = false;
-		}
+		else textField.wordWrap = textField.multiline = false;
 
 		lines = Value;
 		calcFrame();
