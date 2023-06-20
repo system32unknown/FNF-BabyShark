@@ -6,6 +6,7 @@ import openfl.utils.Assets;
 
 import utils.system.MemoryUtil;
 import utils.system.FPSUtil;
+import utils.MathUtil;
 
 class Overlay extends TextField {
 	public static var instance:Overlay;
@@ -36,9 +37,8 @@ class Overlay extends TextField {
 	}
 
 	//Yoinked from codename engine
-	override function __enterFrame(dt:Int):Void {
+	override function __enterFrame(dt:Float):Void {
 		if (alpha <= .05) return;
-		super.__enterFrame(dt);
 		FPS.update();
 
 		if (ClientPrefs.getPref('RainbowFps')) {
@@ -49,7 +49,7 @@ class Overlay extends TextField {
 		memory = MemoryUtil.getMEM();
 		if (memory > mempeak) mempeak = memory;
 
-		text = '${FPS.currentFPS} FPS ${ClientPrefs.getPref('MSFPSCounter') ? '[MS: $dt]' : ''}\n';
+		text = '${FPS.currentFPS} FPS ${ClientPrefs.getPref('FPSStats') ? '| ${Math.round(1000 / dt)} [${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
 			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
 

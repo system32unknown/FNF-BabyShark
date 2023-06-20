@@ -22,8 +22,8 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			'bool', true);
 		addOption(option);
 
-		var option:Option = new Option('MS on FPS Counter',
-			'', 'MSFPSCounter',
+		var option:Option = new Option('More Stats FPS',
+			'', 'FPSStats',
 			'bool', true);
 		addOption(option);
 

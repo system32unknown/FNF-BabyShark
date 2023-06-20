@@ -20,7 +20,6 @@ import lime.utils.UInt8Array;
 class NativeAudioSource {
 	static var STREAM_BUFFER_SIZE:Int = 16000;
 	static var STREAM_NUM_BUFFERS:Int = 16;
-	
 	static var STREAM_TIMER_FREQUENCY:Int = 100;
 
 	var buffers:Array<ALBuffer>;

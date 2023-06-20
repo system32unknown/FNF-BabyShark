@@ -85,14 +85,12 @@ import lime.media.AudioSource;
 	@:noCompletion private var __rightPeak:Float;
 
 	#if openfljs
-	@:noCompletion private static function __init__()
-	{
+	@:noCompletion private static function __init__() {
 		untyped Object.defineProperties(SoundChannel.prototype, {
 			"position": {
 				get: untyped #if haxe4 js.Syntax.code #else __js__ #end ("function () { return this.get_position (); }"),
 				set: untyped #if haxe4 js.Syntax.code #else __js__ #end ("function (v) { return this.set_position (v); }")
-			},
-			"soundTransform": {
+			}, "soundTransform": {
 				get: untyped #if haxe4 js.Syntax.code #else __js__ #end ("function () { return this.get_soundTransform (); }"),
 				set: untyped #if haxe4 js.Syntax.code #else __js__ #end ("function (v) { return this.set_soundTransform (v); }")
 			},

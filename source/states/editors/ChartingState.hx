@@ -199,7 +199,7 @@ class ChartingState extends MusicBeatState
 
 		add(gridLayer = new FlxTypedGroup<FlxSprite>());
 
-		waveformSprite = new FlxSprite(GRID_SIZE).makeGraphic(FlxG.width, FlxG.height, 0x00FFFFFF);
+		waveformSprite = new FlxSprite(GRID_SIZE, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		waveformSprite.antialiasing = false;
 		waveformSprite.active = false;
 		add(waveformSprite);
@@ -912,7 +912,7 @@ class ChartingState extends MusicBeatState
 		var spamButton:FlxButton = new FlxButton(noteTypeDropDown.x, noteTypeDropDown.y + 40, "Add Notes", function() {
 			if (curSelectedNote != null) {
 				for(i in 0...Std.int(spamLength)) {
-					addNote(curSelectedNote[0] + (15000 / _song.notes[curSec].bpm) / spamCloseness, curSelectedNote[1], curSelectedNote[2], false);
+					addNote(curSelectedNote[0] + (15000 / (_song.notes[curSec].bpm > 0 ? _song.notes[curSec].bpm : _song.bpm)) / spamCloseness, curSelectedNote[1], curSelectedNote[2], false);
 				}
 				updateGrid(false);
 				updateNoteUI();
@@ -1865,10 +1865,6 @@ class ChartingState extends MusicBeatState
 			dummyArrow.updateHitbox();	
 		}
 
-		gridLayer.forEach(obj -> {
-			gridLayer.remove(obj);
-			obj.destroy();
-		});
 		gridLayer.clear();
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE + GRID_SIZE * Note.ammo[_song.mania] * 2, Std.int(GRID_SIZE * getSectionBeats() * 4 * zoomList[curZoom]));
 
@@ -1939,7 +1935,7 @@ class ChartingState extends MusicBeatState
 	function updateWaveform() {
 		#if desktop
 		if(waveformPrinted) {
-			waveformSprite.makeGraphic(Std.int(GRID_SIZE * (Note.ammo[_song.mania] * 2)), Std.int(gridBG.height), 0x00FFFFFF);
+			waveformSprite.makeGraphic(Std.int(GRID_SIZE * (Note.ammo[_song.mania] * 2)), Std.int(gridBG.height), FlxColor.BLACK);
 			waveformSprite.pixels.fillRect(new Rectangle(0, 0, gridBG.width, gridBG.height), 0x00FFFFFF);
 		}
 		waveformPrinted = false;
@@ -2058,10 +2054,11 @@ class ChartingState extends MusicBeatState
 
 				var sample:Float = (byte / 65535);
 
-				if (sample > 0)
+				if (sample > 0) {
 					if (sample > lmax) lmax = sample;
-				else if (sample < 0)
+				} else if (sample < 0) {
 					if (sample < lmin) lmin = sample;
+				}
 
 				if (channels >= 2) {
 					byte = bytes.getUInt16((index * channels * 2) + 2);
@@ -2070,10 +2067,11 @@ class ChartingState extends MusicBeatState
 
 					sample = (byte / 65535);
 
-					if (sample > 0)
+					if (sample > 0) {
 						if (sample > rmax) rmax = sample;
-					else if (sample < 0)
+					} else if (sample < 0) {
 						if (sample < rmin) rmin = sample;
+					}
 				}
 			}
 
@@ -2091,20 +2089,24 @@ class ChartingState extends MusicBeatState
 				var rRMax:Float = rmax * multiply;
 
 				if (gotIndex > array[0][0].length) array[0][0].push(lRMin);
-				else array[0][0][gotIndex - 1] += lRMin;
+					else array[0][0][gotIndex - 1] += lRMin;
+
 				if (gotIndex > array[0][1].length) array[0][1].push(lRMax);
-				else array[0][1][gotIndex - 1] += lRMax;
+					else array[0][1][gotIndex - 1] += lRMax;
 
 				if (channels >= 2) {
 					if (gotIndex > array[1][0].length) array[1][0].push(rRMin);
-					else array[1][0][gotIndex - 1] += rRMin;
+						else array[1][0][gotIndex - 1] += rRMin;
+
 					if (gotIndex > array[1][1].length) array[1][1].push(rRMax);
-					else array[1][1][gotIndex - 1] += rRMax;
-				} else {
+						else array[1][1][gotIndex - 1] += rRMax;
+				}
+				else {
 					if (gotIndex > array[1][0].length) array[1][0].push(lRMin);
-					else array[1][0][gotIndex - 1] += lRMin;
+						else array[1][0][gotIndex - 1] += lRMin;
+
 					if (gotIndex > array[1][1].length) array[1][1].push(lRMax);
-					else array[1][1][gotIndex - 1] += lRMax;
+						else array[1][1][gotIndex - 1] += lRMax;
 				}
 
 				lmin = 0;

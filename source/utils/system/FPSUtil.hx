@@ -4,16 +4,25 @@ import haxe.Timer;
 
 class FPSUtil {
     @:noCompletion var times:Array<Float> = [];
+	@:noCompletion var curTime:Float;
+	@:noCompletion var cacheCount:Int;
     public var currentFPS(default, null):Int;
+	public var currentCount(default, null):Int;
     public function new() {}
 
     public function update() {
-		var now:Float = Timer.stamp();
-		times.push(now);
-		while (times[0] < now - 1)
+		curTime = Timer.stamp();
+		times.push(curTime);
+		while (times[0] < curTime - 1)
 			times.shift();
 
-        currentFPS = times.length;
+		currentCount = times.length;
+        currentFPS = Math.round(currentCount);
+
+		if (currentCount == cacheCount) {
+			cacheCount = currentCount;
+			return;
+		}
     }
 
 	public static function getFPSAdjust(type:String = 'PSYCH', fps:Float) {

@@ -12,6 +12,9 @@ import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.util.FlxStringUtil;
 import flash.media.SoundMixer;
 import openfl.Assets;
+#if flash11
+import flash.utils.ByteArray;
+#end
 #if (openfl >= "8.0.0")
 import openfl.utils.AssetType;
 #end
@@ -86,17 +89,17 @@ class FlxSound extends FlxBasic
 	/**
 	 * Stores the average wave amplitude of both stereo channels.
 	 */
-	public var amplitude(get, null):Float;
+	public var amplitude(#if flash default #elseif lime get #end, null):Float;
 
 	/**
 	 * Just the amplitude of the left stereo channel.
 	 */
-	public var amplitudeLeft(get, null):Float;
+	public var amplitudeLeft(#if flash default #elseif lime get #end, null):Float;
 
 	/**
 	 * Just the amplitude of the left stereo channel.
 	 */
-	public var amplitudeRight(get, null):Float;
+	public var amplitudeRight(#if flash default #elseif lime get #end, null):Float;
 
 	/**
 	 * Whether to call `destroy()` when the sound has finished playing.
@@ -332,7 +335,9 @@ class FlxSound extends FlxBasic
 
 		if (_channel != null) {
 			_channel.removeEventListener(Event.SOUND_COMPLETE, stopped);
+			#if !flash
 			_channel.removeEventListener(Event.SOUND_LOOP, ev_looped);
+			#end
 			_channel.stop();
 			_channel = null;
 		}
@@ -385,6 +390,23 @@ class FlxSound extends FlxBasic
 
 		_volumeAdjust = radialMultiplier;
 		updateTransform();
+
+		#if flash
+		if (_transform.volume > 0) {
+			amplitudeLeft = _channel.leftPeak / _transform.volume;
+			amplitudeRight = _channel.rightPeak / _transform.volume;
+			amplitude = (amplitudeLeft + amplitudeRight) * 0.5;
+		} else {
+			amplitudeLeft = 0;
+			amplitudeRight = 0;
+			amplitude = 0;
+		}
+		#end
+
+		#if flash
+		if (endTime != null && _time >= endTime)
+			stopped();
+		#end
 	}
 
 	override public function kill():Void {
@@ -453,8 +475,28 @@ class FlxSound extends FlxBasic
 		return init(Looped, AutoDestroy, OnComplete);
 	}
 
-	function init(Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound
-	{
+	#if flash11
+	/**
+	 * One of the main setup functions for sounds, this function loads a sound from a ByteArray.
+	 *
+	 * @param	Bytes 			A ByteArray object.
+	 * @param	Looped			Whether or not this sound should loop endlessly.
+	 * @param	AutoDestroy		Whether or not this FlxSound instance should be destroyed when the sound finishes playing.
+	 * 							Default value is false, but `FlxG.sound.play()` and `FlxG.sound.stream()` will set it to true by default.
+	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
+	 */
+	public function loadByteArray(Bytes:ByteArray, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound {
+		cleanup(true);
+
+		_sound = new Sound();
+		_sound.addEventListener(Event.ID3, gotID3);
+		_sound.loadCompressedDataFromByteArray(Bytes, Bytes.length);
+
+		return init(Looped, AutoDestroy, OnComplete);
+	}
+	#end
+
+	function init(Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound {
 		looped = Looped;
 		autoDestroy = AutoDestroy;
 		updateTransform();
@@ -463,15 +505,21 @@ class FlxSound extends FlxBasic
 		#if FLX_PITCH
 		pitch = 1;
 		#end
-		if (_sound != null)
+		if (_sound != null) {
+			#if flash
+			_length = _sound.length;
+			#else
 			makeChannel();
-		else _length = 0;
+			#end
+		} else _length = 0;
 
 		endTime = _length;
 		return this;
 	}
 
-	function makeChannel() @:privateAccess {
+	#if !flash
+	function makeChannel()
+	@:privateAccess {
 		var source = new lime.media.AudioSource(_sound.__buffer);
 		source.gain = 0;
 
@@ -484,6 +532,7 @@ class FlxSound extends FlxBasic
 
 		SoundMixer.__registerSoundChannel(_channel);
 	}
+	#end
 
 	/**
 	 * Call this function if you want this sound's volume to change
@@ -556,8 +605,7 @@ class FlxSound extends FlxBasic
 	/**
 	 * Call this function to stop this sound.
 	 */
-	public inline function stop():FlxSound
-	{
+	public inline function stop():FlxSound {
 		cleanup(autoDestroy);
 		return this;
 	}
@@ -653,15 +701,21 @@ class FlxSound extends FlxBasic
 
 		_paused = false;
 		_time = StartTime;
+		#if flash
+		_channel = _sound.play(_time, 0, _transform);
+		#else
 		@:privateAccess if (_channel == null || !_channel.__isValid || _channel.__source.__backend == null) makeChannel();
+		#end
 
 		if (_channel != null) {
+
 			#if FLX_PITCH
 			_timeScaleAdjust = timeScaleBased ? FlxG.timeScale : 1.0;
 			_realPitch = -1.0;
 			pitch = _pitch;
 			#end
 
+			#if !flash
 			@:privateAccess{
 				_channel.soundTransform = _transform;
 				_channel.__source.__backend.playing = true;
@@ -674,6 +728,7 @@ class FlxSound extends FlxBasic
 			looped = looped;
 			_amplitudeTime = -1;
 			_channel.addEventListener(Event.SOUND_LOOP, ev_looped);
+			#end
 			_channel.addEventListener(Event.SOUND_COMPLETE, stopped);
 
 			active = true;
@@ -698,13 +753,17 @@ class FlxSound extends FlxBasic
 		} else cleanup(autoDestroy);
 	}
 
-	function ev_looped(?_):Void {
-		if (onComplete != null) onComplete();
+	#if !flash
+	function ev_looped(?_):Void
+	{
+		if (onComplete != null)
+			onComplete();
 
 		if (!looped)
 			cleanup(autoDestroy);
 		else _channel.loops = 999;
 	}
+	#end
 
 	/**
 	 * An internal helper function used to help Flash clean up (and potentially re-use) finished sounds.
@@ -717,28 +776,30 @@ class FlxSound extends FlxBasic
 	 */
 	function cleanup(destroySound:Bool, resetPosition:Bool = true):Void
 	{
-		if (destroySound)
-		{
+		if (destroySound) {
 			reset();
 			return;
 		}
 
-		if (_channel != null)
-		{
+		if (_channel != null) {
 			_channel.removeEventListener(Event.SOUND_COMPLETE, stopped);
+			#if flash
+			_channel.stop();
+			_channel = null;
+			#else
 			_channel.removeEventListener(Event.SOUND_LOOP, ev_looped);
-			@:privateAccess{
+			@:privateAccess {
 				if (_channel.__isValid) {
 					if (resetPosition) _channel.__source.stop();
 					else _channel.__source.pause();
 				}
 			}
+			#end
 		}
 
 		active = false;
 
-		if (resetPosition)
-		{
+		if (resetPosition) {
 			_time = 0;
 			_paused = false;
 		}
@@ -779,10 +840,8 @@ class FlxSound extends FlxBasic
 			// New group must be set before removing sound to prevent infinite recursion
 			this.group = group;
 
-			if (oldGroup != null)
-				oldGroup.remove(this);
-			if (group != null)
-				group.add(this);
+			if (oldGroup != null) oldGroup.remove(this);
+			if (group != null) group.add(this);
 
 			updateTransform();
 		}
@@ -790,7 +849,7 @@ class FlxSound extends FlxBasic
 	}
 
 	inline function get_playing():Bool
-		@:privateAccess return _channel != null && _channel.__isValid && _channel.__source.playing;
+		@:privateAccess return _channel != null #if !flash && _channel.__isValid && _channel.__source.playing #end;
 
 	inline function get_volume():Float
 		return _volume;
@@ -813,6 +872,7 @@ class FlxSound extends FlxBasic
 		@:privateAccess return (buffer != null) ? buffer.__srcVorbisFile : null;
 	#end
 
+	#if !flash
 	function update_amplitude():Void @:privateAccess {
 		if (_channel == null || _time == _amplitudeTime || !_amplitudeUpdate) return;
 		_channel.__updatePeaks();
@@ -837,6 +897,7 @@ class FlxSound extends FlxBasic
 		update_amplitude();
 		return if (stereo) (_amplitudeLeft + _amplitudeRight) * 0.5; else _amplitudeLeft;
 	}
+	#end
 
 	inline function get_channels():Int
 		@:privateAccess return (buffer != null) ? buffer.channels : 0;
@@ -862,23 +923,29 @@ class FlxSound extends FlxBasic
 	#end
 
 	inline function set_looped(v:Bool):Bool {
+		#if !flash
 		if (playing) {
 			if (v) _channel.loops = 999;
 			else _channel.loops = 0;
 		}
+		#end
 		return looped = v;
 	}
 
 	inline function set_loopTime(v:Float):Float {
+		#if !flash
 		if (playing) _channel.loopTime = v;
+		#end
 		return loopTime = v;
 	}
 
 	inline function set_endTime(v:Null<Float>):Null<Float> {
+		#if !flash
 		if (playing) {
 			if (v != null && v > 0) _channel.endTime = v;
 			else _channel.endTime = null;
 		}
+		#end
 		return endTime = v;
 	}
 
@@ -894,6 +961,10 @@ class FlxSound extends FlxBasic
 	function set_time(time:Float):Float @:privateAccess {
 		time = FlxMath.bound(time, 0, length - 1);
 		if (_channel != null && _realPitch > 0) {
+			#if flash
+			cleanup(false, true);
+			startSound(time);
+			#else
 			if (!_channel.__isValid) {
 				cleanup(false, true);
 				startSound(time);
@@ -901,6 +972,7 @@ class FlxSound extends FlxBasic
 				_channel.__source.offset = 0;
 				_channel.__source.currentTime = Std.int(time);
 			}
+			#end
 		}
 		return _time = time;
 	}

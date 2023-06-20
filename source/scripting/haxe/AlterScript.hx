@@ -137,7 +137,7 @@ class AlterScript {
             "state"             => FlxG.state,
             "FlxEase"           => FlxEase,
             "FlxTween"          => FlxTween,
-            "FlxSound"          => flixel.system.FlxSound,
+            "FlxSound"          => flixel.sound.FlxSound,
             "FlxAssets"         => flixel.system.FlxAssets,
             "FlxMath"           => FlxMath,
             "FlxGroup"          => flixel.group.FlxGroup,
