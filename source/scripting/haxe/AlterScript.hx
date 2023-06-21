@@ -165,11 +165,7 @@ class AlterScript {
             "CoolUtil"          => CoolUtil,
             "ClientPrefs"       => ClientPrefs,
 
-            "FlxTrail" => flixel.addons.effects.FlxTrail,
             "DeltaTrail" => DeltaTrail,
-            "FlxBackdrop" => flixel.addons.display.FlxBackdrop,
-            "FlxClothSprite" => flixel.addons.effects.FlxClothSprite,
-            "FlxSkewedSprite" => flixel.addons.effects.FlxSkewedSprite,
         ];
     }
 
@@ -189,7 +185,7 @@ class AlterScript {
         var fn = '$scriptFile:${e.line}: ';
         var err = e.toString();
         if (err.startsWith(fn)) err = err.substr(fn.length);
-
+        trace(err);
         CoolUtil.callErrBox("Error on AlterScript", "Uncaught Error: " + fn + '\n$err');
         hadError = true;
         stop();

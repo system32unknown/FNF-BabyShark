@@ -80,8 +80,11 @@
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
 	<haxelib name="discord_rpc" if="DISCORD_ALLOWED"/>
 
-	<haxelib name="hscript-improved" rename="hscript" if="HSCRIPT_ALLOWED"/>
-	<define name="hscriptPos" if="HSCRIPT_ALLOWED"/>
+	<section if="HSCRIPT_ALLOWED">
+		<haxelib name="hscript-improved" rename="hscript"/>
+		<define name="hscriptPos"/>
+		<haxeflag name="--macro" value="macro.ScriptsMacro.addAdditionalClasses()" />
+	</section>
 
 	<!-- ______________________________Haxedefines_____________________________ -->
 

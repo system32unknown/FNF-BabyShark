@@ -199,7 +199,7 @@ class ChartingState extends MusicBeatState
 
 		add(gridLayer = new FlxTypedGroup<FlxSprite>());
 
-		waveformSprite = new FlxSprite(GRID_SIZE, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		waveformSprite = new FlxSprite(GRID_SIZE).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		waveformSprite.antialiasing = false;
 		waveformSprite.active = false;
 		add(waveformSprite);

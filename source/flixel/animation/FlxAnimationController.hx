@@ -879,7 +879,7 @@ class FlxAnimationController implements IFlxDestroyable
 
 	inline function get_frames():Int
 	{
-		return _sprite.numFrames;
+		return numFrames;
 	}
 
 	inline function get_numFrames():Int

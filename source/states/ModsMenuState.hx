@@ -4,7 +4,6 @@ import flixel.ui.FlxButton;
 import flixel.FlxBasic;
 import sys.FileSystem;
 import sys.io.File;
-import haxe.Json;
 import openfl.display.BitmapData;
 
 import data.WeekData;

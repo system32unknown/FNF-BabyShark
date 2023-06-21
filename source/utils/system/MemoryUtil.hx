@@ -11,6 +11,12 @@ import neko.vm.Gc;
 #end
 import openfl.system.System;
 
+#if windows
+@:cppFileCode("
+#include <windows.h>
+#include <psapi.h>
+")
+#end
 class MemoryUtil {
 	inline public static function clearMajor(?minor:Bool = false) {
 		#if cpp
@@ -52,4 +58,34 @@ class MemoryUtil {
 		return 0;
 		#end
 	}
+
+	public static function get_gcMemory():Int {
+		#if cpp
+		return untyped __global__.__hxcpp_gc_used_bytes();
+		#elseif hl
+		return Gc.stats().totalAllocated;
+		#elseif (java || neko)
+		return Gc.stats().heap;
+		#elseif (js && html5)
+		return untyped #if haxe4 js.Syntax.code #else __js__ #end ("(window.performance && window.performance.memory) ? window.performance.memory.usedJSHeapSize : 0");
+		#else
+		return 0;
+		#end
+	}
+
+	#if windows
+	@:functionCode("
+		PROCESS_MEMORY_COUNTERS info;
+		if (GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info)))
+			return (size_t)info.WorkingSetSize;
+	")
+	public static function get_totalMemory():Int return 0;
+	
+	@:functionCode("
+		PROCESS_MEMORY_COUNTERS info;
+		if (GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info)))
+			return (size_t)info.PeakWorkingSetSize;
+	")
+	public static function get_memPeak():Int return 0;
+	#end
 }
