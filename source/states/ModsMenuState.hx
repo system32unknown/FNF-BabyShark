@@ -126,9 +126,7 @@ class ModsMenuState extends MusicBeatState
 				moveMod(-1, true);
 			}
 
-			if(doRestart) {
-				needaReset = true;
-			}
+			if(doRestart) needaReset = true;
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.7);
 		});
 		buttonTop.setGraphicSize(80, 50);
@@ -313,15 +311,12 @@ class ModsMenuState extends MusicBeatState
 				TitleState.initialized = false;
 				TitleState.closedState = false;
 				FlxG.sound.music.fadeOut(0.3);
-				if(FreeplayState.vocals != null)
-				{
+				if(FreeplayState.vocals != null) {
 					FreeplayState.vocals.fadeOut(0.3);
 					FreeplayState.vocals = null;
 				}
 				FlxG.camera.fade(FlxColor.BLACK, 0.5, false, FlxG.resetGame, false);
-			} else {
-				MusicBeatState.switchState(new MainMenuState());
-			}
+			} else MusicBeatState.switchState(new MainMenuState());
 		}
 
 		if(controls.UI_UP_P && !noModsTxt.visible)

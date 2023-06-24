@@ -180,6 +180,9 @@ class FreeplayState extends MusicBeatState
 		text.scrollFactor.set();
 		text.y = FlxG.height - text.height;
 		add(text);
+
+		textBG.height = text.height;
+		textBG.y = FlxG.height - textBG.height;
 		
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);

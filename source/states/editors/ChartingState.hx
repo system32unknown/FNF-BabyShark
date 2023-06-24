@@ -805,7 +805,7 @@ class ChartingState extends MusicBeatState
 			}
 			updateGrid(false);
 		});
-		var randomizeNotes:FlxButton = new FlxButton(duetButton.x + 100, duetButton.y, "Randomize Notes", function() {
+		var randomizeNotes:FlxButton = new FlxButton(mirrorButton.x + 100, duetButton.y, "Randomize Notes", function() {
 			for (note in _song.notes[curSec].sectionNotes) {
 				var boob = note[1] % Note.ammo[_song.mania];
 				boob = FlxG.random.int(0, (Note.ammo[_song.mania] * 2) - 1);
@@ -843,6 +843,9 @@ class ChartingState extends MusicBeatState
 	var stepperSpamLength:FlxUINumericStepper;
 	var spamLength:Float = 5;
 	var spamCloseness:Float = 2;
+	var check_stackActive:FlxUICheckBox;
+	var stepperStackNum:FlxUINumericStepper;
+	var stepperStackOffset:FlxUINumericStepper;
 
 	function addNoteUI():Void
 	{
@@ -912,29 +915,66 @@ class ChartingState extends MusicBeatState
 		var spamButton:FlxButton = new FlxButton(noteTypeDropDown.x, noteTypeDropDown.y + 40, "Add Notes", function() {
 			if (curSelectedNote != null) {
 				for(i in 0...Std.int(spamLength)) {
-					addNote(curSelectedNote[0] + (15000 / (_song.notes[curSec].bpm > 0 ? _song.notes[curSec].bpm : _song.bpm)) / spamCloseness, curSelectedNote[1], curSelectedNote[2], false);
+					addNote(curSelectedNote[0] + (15000 / (_song.notes[curSec].changeBPM ? _song.notes[curSec].bpm : _song.bpm)) / spamCloseness, curSelectedNote[1], curSelectedNote[2], false);
 				}
 				updateGrid(false);
 				updateNoteUI();
 			}
 		});
 		
-		stepperSpamCloseness = new FlxUINumericStepper(spamButton.x + 90, spamButton.y + 5, 2, 2, 2, 64);
+		stepperSpamCloseness = new FlxUINumericStepper(spamButton.x + 90, spamButton.y + 5, 2, 2, 2, 1024);
 		stepperSpamCloseness.value = spamCloseness;
 		stepperSpamCloseness.name = 'note_spamthing';
 		blockPressWhileTypingOnStepper.push(stepperSpamCloseness);
 
-		stepperSpamLength = new FlxUINumericStepper(stepperSpamCloseness.x + 90, stepperSpamCloseness.y, 5, 5, 1, 8192);
+		stepperSpamLength = new FlxUINumericStepper(stepperSpamCloseness.x + 90, stepperSpamCloseness.y, 5, 5, 1, 16384);
 		stepperSpamLength.value = spamLength;
 		stepperSpamLength.name = 'note_spamamount';
 		blockPressWhileTypingOnStepper.push(stepperSpamLength);
 
+		var leftSectionNotetype:FlxButton = new FlxButton(spamButton.x, spamButton.y + 40, "Left Section to Notetype", function() {
+			for (sNotes in _song.notes[curSec].sectionNotes) {
+				var note:Array<Dynamic> = sNotes;
+				if (note[1] < Note.ammo[_song.mania])
+					note[3] = noteTypeIntMap.get(currentType);
+				sNotes = note;
+			}
+			updateGrid();
+		});
+		leftSectionNotetype.setGraphicSize(80, 30);
+		leftSectionNotetype.updateHitbox();
+		var rightSectionNotetype:FlxButton = new FlxButton(spamButton.x + 90, spamButton.y + 40, "Right Section to Notetype", function() {
+			for (sNotes in _song.notes[curSec].sectionNotes) {
+				var note:Array<Dynamic> = sNotes;
+				if (note[1] > (Note.ammo[_song.mania] - 1))
+					note[3] = noteTypeIntMap.get(currentType);
+				sNotes = note;
+			}
+			updateGrid();
+		});
+		rightSectionNotetype.setGraphicSize(80, 30);
+		rightSectionNotetype.updateHitbox();
+
+		check_stackActive = new FlxUICheckBox(spamButton.x, leftSectionNotetype.y + 60, null, null, "Spam Mode", 100);
+		check_stackActive.name = 'check_stackActive';
+		stepperStackNum = new FlxUINumericStepper(stepperSpamCloseness.x, leftSectionNotetype.y + 60, 1, 4, 0, 999999);
+		stepperStackNum.name = 'stack_count';
+		stepperStackOffset = new FlxUINumericStepper(stepperSpamLength.x, leftSectionNotetype.y + 60, 1, 1, 0, 8192);
+		stepperStackOffset.name = 'stack_offset';
+
+		tab_group_note.add(check_stackActive);
+		tab_group_note.add(stepperStackNum);
+		tab_group_note.add(stepperStackOffset);
+		tab_group_note.add(new FlxText(stepperStackNum.x, stepperStackNum.y - 15, 0, "Spam Count"));
+		tab_group_note.add(new FlxText(stepperStackOffset.x, stepperStackOffset.y - 15, 0, "Spam Multiplier"));
 		tab_group_note.add(new FlxText(10, 10, 0, 'Sustain length:'));
 		tab_group_note.add(new FlxText(stepperSpamCloseness.x, stepperSpamCloseness.y - 15, 0, 'Note Density:'));
 		tab_group_note.add(new FlxText(stepperSpamLength.x, stepperSpamLength.y - 15, 0, 'Note Amount:'));
 		tab_group_note.add(new FlxText(10, 50, 0, 'Strum time (in miliseconds):'));
 		tab_group_note.add(new FlxText(10, 90, 0, 'Note type:'));
 		tab_group_note.add(spamButton);
+		tab_group_note.add(leftSectionNotetype);
+		tab_group_note.add(rightSectionNotetype);
 		tab_group_note.add(stepperSpamCloseness);
 		tab_group_note.add(stepperSpamLength);
 		tab_group_note.add(stepperSusLength);
@@ -1486,6 +1526,12 @@ class ChartingState extends MusicBeatState
 					&& FlxG.mouse.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom]) {
 					FlxG.log.add('added note');
 					addNote();
+					if (check_stackActive.checked) {
+						var addCount = Math.floor(stepperStackNum.value) * Math.floor(stepperStackOffset.value);
+						for(i in 0...Std.int(addCount)) {
+							addNote(curSelectedNote[0] + 15000 / (_song.notes[curSec].changeBPM ? _song.notes[curSec].bpm : _song.bpm) / stepperStackOffset.value, curSelectedNote[1], curSelectedNote[2]);
+						}
+					}
 				}
 			}
 		}

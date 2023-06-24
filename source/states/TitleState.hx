@@ -50,20 +50,13 @@ class TitleState extends MusicBeatState
 	var startingTween:FlxTween;
 
 	override function create():Void {
-		Paths.clearUnusedCache();
-		#if LUA_ALLOWED
-		Mods.pushGlobalMods();
-		#end
+		onInit();
 
 		if (!closedState)
 			getBuildVer("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/version.txt");
 
 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
 		Mods.loadTheFirstEnabledMod();
-
-		FlxG.fixedTimestep = false;
-		FlxG.game.focusLostFramerate = 60;
-		FlxG.keys.preventDefaultKeys = [TAB];
 
 		super.create();
 		FlxG.save.bind('funkin', CoolUtil.getSavePath());
@@ -370,5 +363,19 @@ class TitleState extends MusicBeatState
 		}
 
 		http.request();
+	}
+
+	public static function onInit() {
+		Paths.clearStoredCache();
+		Paths.clearUnusedCache();
+
+		#if LUA_ALLOWED
+		Mods.pushGlobalMods();
+		#end
+
+		FlxG.fixedTimestep = false;
+		FlxG.mouse.visible = false;
+		ClientPrefs.toggleVolumeKeys(true);
+		FlxG.keys.preventDefaultKeys = [TAB];
 	}
 }

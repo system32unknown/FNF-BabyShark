@@ -515,7 +515,7 @@ class PlayState extends MusicBeatState {
 			GameOverSubstate.endSoundName = boyfriend.deathConfirm;
 		}
 	
-		var camPos:FlxPoint = new FlxPoint(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
+		var camPos:FlxPoint = FlxPoint.get(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
 		if(gf != null) {
 			camPos.add(gf.getGraphicMidpoint().x + gf.cameraPosition[0], gf.getGraphicMidpoint().y + gf.cameraPosition[1]);
 		}
@@ -591,6 +591,7 @@ class PlayState extends MusicBeatState {
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollow.setPosition(camPos.x, camPos.y);
+		camPos.put();
 		if (prevCamFollow != null) {
 			camFollow = prevCamFollow;
 			prevCamFollow = null;
@@ -996,7 +997,7 @@ class PlayState extends MusicBeatState {
 	function cacheCountdown() {
 		var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 		introAssets.set('default', ['countdown/ready', 'countdown/set', 'countdown/go']);
-		introAssets.set('pixel', ['pixelUI/countdown/ready-pixel', 'pixelUI/countdown/set-pixel', 'pixelUI/date-pixel']);
+		introAssets.set('pixel', ['pixelUI/countdown/ready-pixel', 'pixelUI/countdown/set-pixel', 'pixelUI/countdown/date-pixel']);
 
 		var introAlts:Array<String> = introAssets.get('default');
 		if (isPixelStage) introAlts = introAssets.get('pixel');
@@ -2187,11 +2188,11 @@ class PlayState extends MusicBeatState {
 				gfSpeed = Math.round(flValue1);
 
 			case 'Add Camera Zoom':
-				if(ClientPrefs.getPref('camZooms') && FlxG.camera.zoom < 1.35) {
+				if(ClientPrefs.getPref('camZooms') && camGame.zoom < 1.35) {
 					if(flValue1 == null) flValue1 = 0.015;
 					if(flValue2 == null) flValue2 = 0.03;
 
-					FlxG.camera.zoom += flValue1;
+					camGame.zoom += flValue1;
 					camHUD.zoom += flValue2;
 				}
 
@@ -3448,8 +3449,8 @@ class PlayState extends MusicBeatState {
 			if (generatedMusic && !endingSong && !isCameraOnForcedPos && !ClientPrefs.getPref('UpdateCamSection'))
 				moveCameraSection();
 
-			if (ClientPrefs.getPref('camZooms') && camZooming && FlxG.camera.zoom < 1.35) {
-				FlxG.camera.zoom += .015 * camZoomingMult;
+			if (ClientPrefs.getPref('camZooms') && camZooming && camGame.zoom < 1.35) {
+				camGame.zoom += .015 * camZoomingMult;
 				camHUD.zoom += .03 * camZoomingMult;
 			}
 

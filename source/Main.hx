@@ -93,30 +93,14 @@ class Main extends Sprite
 			MemoryUtil.clearMajor(true);
 			MemoryUtil.clearMajor();
 		});
-		FlxG.signals.postGameReset.add(onGameReset);
+		FlxG.signals.postGameReset.add(states.TitleState.onInit);
 
 		#if CRASH_HANDLER
 		#if !hl Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash); #end
 		#if hl hl.Api.setErrorHandler(onCrash); #end
 		#end
 
-		#if discord_rpc
-		Discord.start();
-		#end
-	}
-
-	function onGameReset() {
-		Paths.clearStoredCache();
-		Paths.clearUnusedCache();
-
-		#if LUA_ALLOWED
-		Mods.pushGlobalMods();
-		#end
-
-		FlxG.fixedTimestep = false;
-		FlxG.mouse.visible = false;
-		ClientPrefs.toggleVolumeKeys(true);
-		FlxG.keys.preventDefaultKeys = [TAB];
+		#if discord_rpc Discord.start(); #end
 	}
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!

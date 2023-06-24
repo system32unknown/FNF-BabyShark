@@ -26,7 +26,7 @@ class AlterScript {
 
     static var hadError:Bool = false;
 
-    public function new(path:String, ?autoRun:Bool = true) {
+    public function new(path:String) {
         if (path != "" && path != null) {
             if (FileSystem.exists(path))
                 script = File.getContent(path);
@@ -46,18 +46,17 @@ class AlterScript {
         interp.errorHandler = _errorHanding;
 
         parser = new Parser();
-        parser.preprocesorValues = getDefaultPreprocessors();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
-        parser.line = 1;
+        parser.preprocesorValues = getDefaultPreprocessors();
 
         setVars();
-
-        if (autoRun) execute();
+        execute();
     }
 
     public function execute() {
         try {
-            expr = parser.parseString(script, scriptFile);
+            if (script != null && script.trim() != "")
+                expr = parser.parseString(script, scriptFile);
         } catch(e:Error) {
             _errorHanding(e);
         } catch(e) _errorHanding(new Error(ECustom(e.toString()), 0, 0, scriptFile, 0));
@@ -89,21 +88,22 @@ class AlterScript {
         #end
     }
 
-    function getDefaultPreprocessors():Map<String, Bool> {
-        return [
-            "sys" => #if sys true #else false #end,
-            "cpp" => #if cpp true #else false #end,
-            "desktop" => #if desktop true #else false #end,
-            "windows" => #if windows true #else false #end,
-            "hl" => #if hl true #else false #end,
-            "neko" => #if neko true #else false #end,
-            "debug" => #if debug true #else false #end,
-            "release" => #if release true #else false #end,
-            "final" => #if final true #else false #end,
-            "MODS_ALLOWED" => #if MODS_ALLOWED true #else false #end,
-            "LUA_ALLOWED" => #if LUA_ALLOWED true #else false #end,
-            "VIDEOS_ALLOWED" => #if VIDEOS_ALLOWED true #else false #end
-        ];
+    function getDefaultPreprocessors():Map<String, Dynamic> {
+        var defines = macro.DefinesMacro.defines;
+        defines.set("version", lime.app.Application.current.meta.get('version'));
+        defines.set("sys", #if sys true #else false #end);
+        defines.set("cpp", #if cpp true #else false #end);
+        defines.set("desktop", #if desktop true #else false #end);
+        defines.set("windows", #if windows true #else false #end);
+        defines.set("hl", #if hl true #else false #end);
+        defines.set("neko", #if neko true #else false #end);
+        defines.set("debug", #if debug true #else false #end);
+        defines.set("release", #if release true #else false #end);
+        defines.set("final", #if final true #else false #end);
+        defines.set("MODS_ALLOWED", #if MODS_ALLOWED true #else false #end);
+        defines.set("LUA_ALLOWED", #if LUA_ALLOWED true #else false #end);
+        defines.set("VIDEOS_ALLOWED", #if VIDEOS_ALLOWED true #else false #end);
+        return defines;
     }
 
     function getDefaultVariables():Map<String, Dynamic> {
@@ -114,11 +114,8 @@ class AlterScript {
             "Math"              => Math,
             "Date"              => Date,
             "StringTools"       => StringTools,
-            "DateTools"         => DateTools,
             "Reflect"           => Reflect,
-            "EReg"              => EReg,
             "Xml"               => Xml,
-            "AlterScript"       => this,
 
             "Json"              => haxe.Json,
             "File"              => File,
@@ -185,7 +182,7 @@ class AlterScript {
         var fn = '$scriptFile:${e.line}: ';
         var err = e.toString();
         if (err.startsWith(fn)) err = err.substr(fn.length);
-        trace(err);
+        trace('Error on AlterScript: $err');
         CoolUtil.callErrBox("Error on AlterScript", "Uncaught Error: " + fn + '\n$err');
         hadError = true;
         stop();

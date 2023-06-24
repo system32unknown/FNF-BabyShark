@@ -213,7 +213,7 @@ class CoolUtil {
 		if (minutesRemainingShit.length < 2) minutesRemainingShit = '0${minutesRemaining}'; 
 
 		if(sec <= 3600000)
-			return flixel.util.FlxStringUtil.formatTime(sec, false);
+			return flixel.util.FlxStringUtil.formatTime(sec);
 		else if(sec >= 3600000)
 			return '$hoursRemaining:$minutesRemainingShit:$secondsRemaining';
 		return '';

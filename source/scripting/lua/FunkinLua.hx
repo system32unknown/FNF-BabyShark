@@ -769,14 +769,14 @@ class FunkinLua {
 		addCallback("addHealth", function(_, value:Float = 0) {
 			PlayState.instance.health += value;
 		});
-		addCallback("getHealth", function() {
+		addCallback("getHealth", function(_) {
 			return PlayState.instance.health;
 		});
 
-		Lua_helper.add_callback(lua, "FlxColor", function(?color:String = '') return FlxColor.fromString(color));
-		Lua_helper.add_callback(lua, "getColorFromName", function(?color:String = '') return FlxColor.fromString(color));
-		Lua_helper.add_callback(lua, "getColorFromString", function(?color:String = '') return FlxColor.fromString(color));
-		Lua_helper.add_callback(lua, "getColorFromHex", function(color:String) return FlxColor.fromString('#$color'));
+		addCallback("FlxColor", function(_, ?color:String = '') return FlxColor.fromString(color));
+		addCallback("getColorFromName", function(_, ?color:String = '') return FlxColor.fromString(color));
+		addCallback("getColorFromString", function(_, ?color:String = '') return FlxColor.fromString(color));
+		addCallback("getColorFromHex", function(_, color:String) return FlxColor.fromString('#$color'));
 		
 		addCallback("getColorFromRgb", function(_, rgb:Array<Int>) {
 			return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]);

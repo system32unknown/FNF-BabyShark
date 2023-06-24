@@ -15,7 +15,6 @@ import haxe.Json;
 import sys.io.File;
 #end
 import ui.MenuCharacter;
-import states.TitleState;
 
 class MenuCharacterEditorState extends MusicBeatState
 {

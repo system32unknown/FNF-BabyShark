@@ -21,7 +21,6 @@ class NoteOffsetState extends MusicBeatState {
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
-	public var cameraSpeed:Float = 1;
 	public var defaultCamZoom:Float = 1;
 
 	var boyfriendGroup:FlxSpriteGroup;
@@ -42,8 +41,6 @@ class NoteOffsetState extends MusicBeatState {
 	var timeTxt:FlxText;
 
 	var changeModeText:FlxText;
-
-	var antialiasing:Bool = ClientPrefs.getPref('Antialiasing');
 	var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 
 	override public function create() {

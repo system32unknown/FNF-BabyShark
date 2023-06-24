@@ -1084,8 +1084,7 @@ class CharacterEditorState extends MusicBeatState
 					if(controlArray[i]) {
 						var holdShift = FlxG.keys.pressed.SHIFT;
 						var multiplier = 1;
-						if (holdShift)
-							multiplier = 10;
+						if (holdShift) multiplier = 10;
 
 						var arrayVal = 0;
 						if(i > 1) arrayVal = 1;
