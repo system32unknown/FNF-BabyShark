@@ -6,15 +6,16 @@ import hscript.Expr.Error;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
-#end
+#else import lime.utils.Assets; #end
 
 import game.*;
 import ui.*;
 import utils.*;
 import flixel.*;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import states.PlayState; // fucking flixel
 
-class AlterScript {
+class AlterScript implements IFlxDestroyable {
     public var staticVariables:Map<String, Dynamic> = [];
 
     var interp:Interp;
@@ -22,22 +23,18 @@ class AlterScript {
 
     public var scriptFile(default, null):String = "";
     public var script(default, null):String = "";
-    public var expr:Expr;
 
-    static var hadError:Bool = false;
+    public var loaded:Bool = false;
 
     public function new(path:String) {
         if (path != "" && path != null) {
+            #if sys
             if (FileSystem.exists(path))
                 script = File.getContent(path);
             else script = path;
+            #else script = Assets.getText(path); #end
 
             scriptFile = path;
-        }
-
-        if (hadError) {
-            script = 'trace("Replaced script to continue gameplay");';
-            hadError = false;
         }
 
         interp = new Interp();
@@ -50,21 +47,27 @@ class AlterScript {
         parser.preprocesorValues = getDefaultPreprocessors();
 
         setVars();
-        execute();
+
+        if (path != null) try {
+            interp.execute(getExprFromStr(script));
+            trace("haxe file loaded successfully: " + path);
+            loaded = true;
+        } catch (e:Dynamic) trace('$e');
     }
 
-    public function execute() {
+    public function getExprFromStr(code:String) {
+        var expr:Expr = null;
         try {
-            if (script != null && script.trim() != "")
-                expr = parser.parseString(script, scriptFile);
+            expr = parser.parseString(code, scriptFile);
         } catch(e:Error) {
             _errorHanding(e);
-        } catch(e) _errorHanding(new Error(ECustom(e.toString()), 0, 0, scriptFile, 0));
-
-        if (!hadError && interp != null) interp.execute(expr);
-        else stop();
+        } catch(e) _errorHanding(new Error(ECustom(e.toString()), 0, 0, scriptFile, parser.line));
+        return expr;
     }
 
+    public function set(k:String, v:Dynamic):Void {
+        if (interp != null) interp.variables.set(k, v);
+    }
     function get(key:String):Dynamic {
         return if (exists(key)) interp.variables.get(key) else null;
     }
@@ -72,7 +75,7 @@ class AlterScript {
     public function call(func:String, ?args:Array<Any>):Dynamic {
         if (func == null || !exists(func)) return null;
         if (args == null) args = [];
-        return Reflect.callMethod(this, get(func), args);
+        return Reflect.callMethod(null, get(func), args);
     }
 
     function exists(key:String):Bool {
@@ -80,11 +83,11 @@ class AlterScript {
         return interp.variables.exists(key);
     }
 
-    public function stop() {
+    public function destroy() {
         #if HSCRIPT_ALLOWED
         interp = null;
         parser = null;
-        PlayState.instance.scriptArray.remove(this);
+        loaded = false;
         #end
     }
 
@@ -146,6 +149,7 @@ class AlterScript {
             "FlxPoint"          => CoolUtil.getMacroAbstractClass("flixel.math.FlxPoint"),
             "FlxAxes"           => CoolUtil.getMacroAbstractClass("flixel.util.FlxAxes"),
             "FlxColor"          => CoolUtil.getMacroAbstractClass("flixel.util.FlxColor"),
+            "FlxKey"            => CoolUtil.getMacroAbstractClass("flixel.input.keyboard.FlxKey"),
 
             // Engine related stuff
             "PlayState"         => PlayState,
@@ -170,11 +174,26 @@ class AlterScript {
         for (key => type in getDefaultVariables()) {
             interp.variables.set(key, type);
         }
-        interp.variables.set("trace", Reflect.makeVarArgs((args) -> {
+        set("trace", Reflect.makeVarArgs((args) -> {
             var v:String = Std.string(args.shift());
             for (a in args) v += ", " + Std.string(a);
             trace(v);
         }));
+		set('setVar', function(name:String, value:Dynamic) {
+			PlayState.instance.variables.set(name, value);
+		});
+		set('getVar', function(name:String) {
+			var result:Dynamic = null;
+			if(PlayState.instance.variables.exists(name)) result = PlayState.instance.variables.get(name);
+			return result;
+		});
+		set('removeVar', function(name:String) {
+			if(PlayState.instance.variables.exists(name)) {
+				PlayState.instance.variables.remove(name);
+				return true;
+			}
+			return false;
+		});
         call("create");
     }
 
@@ -184,7 +203,5 @@ class AlterScript {
         if (err.startsWith(fn)) err = err.substr(fn.length);
         trace('Error on AlterScript: $err');
         CoolUtil.callErrBox("Error on AlterScript", "Uncaught Error: " + fn + '\n$err');
-        hadError = true;
-        stop();
     }
 }

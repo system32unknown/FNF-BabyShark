@@ -6,12 +6,12 @@ lime build windows -release
 
 setlocal
 :PROMPT
-set /P AYS = Do you want run game? (y/n):
-if /I "%AYS%" neq "y" goto END else exit
+SET /P AYS = Do you want run game? (y/n):
+IF /I "%AYS%" NEQ "Y" GOTO END
 
-cd ..
 cd export/release/windows/bin
 "AlterEngine"
 :END
 endlocal
+pause
 exit

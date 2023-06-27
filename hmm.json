@@ -14,10 +14,7 @@
             "ref": "dev",
             "url": "https://github.com/HaxeFlixel/flixel-ui"
         },
-        {"name": "hxCodec", "type": "git", "dir": "hxCodec",
-            "ref": "main",
-            "url": "https://github.com/polybiusproxy/hxCodec"
-        },
+        {"name": "hxCodec", "type":"haxelib", "dir":"hxCodec", "version":"2.6.1"},
         {"name": "hscript-improved", "type": "git", "dir": "hscript-improved",
             "ref": "master",
             "url": "https://github.com/FNF-CNE-Devs/hscript-improved"

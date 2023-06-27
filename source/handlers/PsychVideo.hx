@@ -53,8 +53,7 @@ class PsychVideo {
 		if (!exists(name)) return null;
 
 		var video:MP4Handler = new MP4Handler();
-		if (endFunc != null)
-			video.finishCallback = endFunc;
+		if (endFunc != null) video.finishCallback = endFunc;
 		video.canSkip = true;
 
 		video.playVideo(path);

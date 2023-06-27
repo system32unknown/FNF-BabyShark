@@ -1524,7 +1524,7 @@ class PlayState extends MusicBeatState {
 			note.updateHitbox();
 			note.offsetX -= note.width / 2;
 
-			if (note != null && prevNote != null && prevNote.isSustainNote && prevNote.animation != null) { // haxe flixel
+			if (note != null && prevNote != null && prevNote.isSustainNote && prevNote.animation != null) {
 				prevNote.animation.play(Note.keysShit.get(mania).get('letters')[noteData % tMania] + ' hold');
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
@@ -3360,8 +3360,10 @@ class PlayState extends MusicBeatState {
 
 	override function destroy() {
 		cleanupLuas(true);
-		for (hx in scriptArray)
+		for (hx in scriptArray) {
 			hx.call('onDestroy');
+			hx.destroy();
+		}
 		scriptArray.resize(0);
 
 		for (name => save in modchartSaves) save.close();

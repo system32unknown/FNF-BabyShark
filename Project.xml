@@ -33,7 +33,7 @@
 		<define name="GITHUB_ALLOWED"/>
 		<define name="LUA_ALLOWED" if="cpp"/>
 		<define name="CRASH_HANDLER" if="release"/>
-		<define name="VIDEOS_ALLOWED" if="cpp" unless="32bits"/>
+		<define name="VIDEOS_ALLOWED" if="windows"/>
 		<define name="DISCORD_ALLOWED" if="cpp"/>
 	</section>
 
