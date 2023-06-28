@@ -36,7 +36,7 @@ class MemoryUtil {
 		var data = 0;
 		while (size > 1024 && data < intervalArray.length - 1) {
 			data++;
-			size = size / 1024;
+			size /= 1024;
 		}
 
 		size = Math.round(size * 100) / 100;

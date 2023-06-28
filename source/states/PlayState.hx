@@ -1002,8 +1002,7 @@ class PlayState extends MusicBeatState {
 		var introAlts:Array<String> = introAssets.get('default');
 		if (isPixelStage) introAlts = introAssets.get('pixel');
 		
-		for (asset in introAlts)
-			Paths.image(asset);
+		for (asset in introAlts) Paths.image(asset);
 		
 		for (count in ['3', '2', '1', 'Go'])
 			Paths.sound('countdown/intro$count' + introSoundsSuffix);
@@ -1024,9 +1023,8 @@ class PlayState extends MusicBeatState {
 		var strums:Array<Array<Dynamic>> = [[playerStrums, playerLU], [opponentStrums, opponentLU]];
 		for (istrums in strums) {
 			for (i in 0...istrums[0].members.length) {
-				var strumLay:FlxSprite = new FlxSprite(istrums[0].members[i].x, 0).makeGraphic(Std.int(istrums[0].members[i].width), FlxG.height);
+				var strumLay:FlxSprite = new FlxSprite(istrums[0].members[i].x, 0).makeGraphic(Std.int(istrums[0].members[i].width), FlxG.height, FlxColor.BLACK);
 				strumLay.alpha = ClientPrefs.getPref('LUAlpha');
-				strumLay.color = FlxColor.BLACK;
 				strumLay.scrollFactor.set();
 				strumLay.camera = camHUD;
 				strumLay.screenCenter(Y);
@@ -1035,8 +1033,7 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	public function startCountdown()
-	{
+	public function startCountdown() {
 		if (startedCountdown) {
 			callOnLuas('onStartCountdown');
 			callOnScripts('onStartCountdown');
@@ -1127,8 +1124,7 @@ class PlayState extends MusicBeatState {
 		spr.scrollFactor.set();
 		spr.updateHitbox();
 
-		if (isPixelStage)
-			spr.setGraphicSize(Std.int(spr.width * daPixelZoom));
+		if (isPixelStage) spr.setGraphicSize(Std.int(spr.width * daPixelZoom));
 
 		spr.screenCenter();
 		insert(members.indexOf(notes), spr);

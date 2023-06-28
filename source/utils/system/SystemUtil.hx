@@ -44,7 +44,7 @@ class CoolSystemStuff
 	}
 	public static function generateTextFile(fileContent:String, fileName:String) {
 		#if desktop
-		var path = CoolSystemStuff.getTempPath() + "/" + fileName + ".txt";
+		var path = CoolSystemStuff.getTempPath() + '/$fileName.txt';
 
 		File.saveContent(path, fileContent);
 		#if windows

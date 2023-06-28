@@ -10,45 +10,45 @@ class GlitchEffect
 	public var waveFrequency(default, set):Float = 0;
 	public var waveAmplitude(default, set):Float = 0;
     public var isBG(default, set):Bool = false;
+    public var enabled(default, set):Bool = true;
 
-	public function new()
-	{
+	public function new() {
 		shader.uTime.value = [0];
 	}
 
-    public function update(elapsed:Float):Void
-    {
+    public function update(elapsed:Float):Void {
         shader.uTime.value[0] += elapsed;
     }
 
-    function set_waveSpeed(v:Float):Float
-    {
+    function set_waveSpeed(v:Float):Float {
         waveSpeed = v;
         shader.uSpeed.value = [waveSpeed];
         return v;
     }
     
-    function set_waveFrequency(v:Float):Float
-    {
+    function set_waveFrequency(v:Float):Float {
         waveFrequency = v;
         shader.uFrequency.value = [waveFrequency];
         return v;
     }
     
-    function set_waveAmplitude(v:Float):Float
-    {
+    function set_waveAmplitude(v:Float):Float {
         waveAmplitude = v;
         shader.uWaveAmplitude.value = [waveAmplitude];
         return v;
     }
 
-    function set_isBG(v:Bool):Bool
-    {
+    function set_isBG(v:Bool):Bool {
         isBG = v;
         shader.uDistortBG.value = [isBG];
         return v;
     }
 
+    function set_enabled(v:Bool):Bool {
+        enabled = v;
+        shader.uEnabled.value = [enabled];
+        return v;
+    }
 }
  
 class GlitchShader extends FlxShader
@@ -77,9 +77,15 @@ class GlitchShader extends FlxShader
      * Distort BG?
     */
     uniform bool uDistortBG;
+
+    /*
+     * Enabled?
+    */
+    uniform bool uEnabled;
     
-    vec2 sineWave(vec2 pt)
-    {
+    vec2 sineWave(vec2 pt) {
+        if (!uEnabled) return vec2(pt.x, pt.y);
+
         float x = 0.0;
         float y = 0.0;
         
@@ -90,14 +96,10 @@ class GlitchShader extends FlxShader
         return vec2(pt.x + x, pt.y + y);
     }
     
-    void main()
-    {
+    void main() {
         vec2 uv = sineWave(openfl_TextureCoordv);
         gl_FragColor = texture2D(bitmap, uv);
     }')
 
-    public function new()
-    {
-       super();
-    }
+    public function new() {super();}
 }

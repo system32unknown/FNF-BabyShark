@@ -23,19 +23,10 @@ class PlatformUtil
 {
 	@:functionCode('
         HWND hWnd = GetActiveWindow();
-        res = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
-        if (res)
-            SetLayeredWindowAttributes(hWnd, RGB(r, g, b), alpha, LWA_COLORKEY);
+        alpha = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
+        SetLayeredWindowAttributes(hWnd, RGB(r, g, b), 0, LWA_COLORKEY);
     ')
-	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0, res:Int = 0) return res;
-
-	@:functionCode('
-        HWND hWnd = GetActiveWindow();
-        res = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
-        if (res)
-            SetLayeredWindowAttributes(hWnd, RGB(r, g, b), alpha, LWA_COLORKEY);
-    ')
-	static public function getWindowsBackward(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 1, res:Int = 0) return res;
+	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0) return alpha;
 
     @:functionCode('
         NOTIFYICONDATA m_NID;
@@ -108,6 +99,13 @@ class PlatformUtil
 
     @:functionCode('SetProcessDPIAware();')
     static public function setDPIAware() {}
+
+    @:functionCode('
+        HMENU hmenu = GetSystemMenu(GetActiveWindow(), FALSE);
+        EnableMenuItem(hmenu, SC_CLOSE, MF_BYCOMMAND | (enable ? MF_ENABLED : MF_GRAYED));
+    ')
+    static public function setCloseButtonEnabled(enable:Bool)
+        return enable;
 }
 #else
 class PlatformUtil {
@@ -128,6 +126,8 @@ class PlatformUtil {
     static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
 
     static public function setDPIAware() {}
+
+    static public function setCloseButtonEnabled() {return false;}
 }
 #end
 

@@ -49,7 +49,7 @@ class Overlay extends TextField {
 		memory = MemoryUtil.getMEM();
 		if (memory > mempeak) mempeak = memory;
 
-		text = '${FPS.currentFPS} FPS ${ClientPrefs.getPref('FPSStats') ? '| ${Math.round(1000 / dt)} [${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
+		text = '${FPS.currentFPS} FPS ${ClientPrefs.getPref('FPSStats') ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
 			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
 

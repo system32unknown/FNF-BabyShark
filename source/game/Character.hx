@@ -80,8 +80,7 @@ class Character extends FlxSprite
 		animOffsets = new Map<String, Array<Dynamic>>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
-		switch (curCharacter)
-		{
+		switch (curCharacter) {
 			//case 'your character name in case you want to hardcode them instead':
 			default:
 				var json:CharacterFile = getCharacterFile(character);
@@ -230,7 +229,7 @@ class Character extends FlxSprite
 			}
 
 			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
-				playAnim(animation.curAnim.name + '-loop');
+				playAnim('${animation.curAnim.name}-loop');
 		}
 		super.update(elapsed);
 	}
@@ -257,20 +256,20 @@ class Character extends FlxSprite
 		}
 	}
 
-	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void {
-		animation.play(AnimName, Force, Reversed, Frame);
+	public function playAnim(animName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void {
+		animation.play(animName, Force, Reversed, Frame);
 		specialAnim = false;
 
-		var daOffset = animOffsets.get(AnimName);
-		if (animOffsets.exists(AnimName))
+		var daOffset = animOffsets.get(animName);
+		if (animOffsets.exists(animName))
 			offset.set(daOffset[0], daOffset[1]);
 		else offset.set();
 
 		if (danceIdle) {
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
+			if (animName == 'singUP' || animName == 'singDOWN')
 				danced = !danced;
 			else if (AnimName.startsWith('sing'))
-				danced = AnimName == 'singLEFT';
+				danced = animName == 'singLEFT';
 		}		
 	}
 

@@ -38,8 +38,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		toOptions = false;
 
-		if(PlayState.chartingMode)
-		{
+		if(PlayState.chartingMode) {
 			menuItemsOG.insert(2, 'Leave Charting Mode');
 			
 			var num:Int = 0;
@@ -341,12 +340,10 @@ class PauseSubState extends MusicBeatSubstate
 		changeSelection();
 	}
 	
-	function updateSkipTextStuff()
-	{
+	function updateSkipTextStuff() {
 		if(skipTimeText == null || skipTimeTracker == null) return;
 
-		skipTimeText.x = skipTimeTracker.x + skipTimeTracker.width + 60;
-		skipTimeText.y = skipTimeTracker.y;
+		skipTimeText.setPosition(skipTimeTracker.x + skipTimeTracker.width + 60, skipTimeTracker.y);
 		skipTimeText.visible = (skipTimeTracker.alpha >= 1);
 	}
 

@@ -7,11 +7,11 @@ import ui.Alphabet;
 
 class NotesSubState extends MusicBeatSubstate
 {
-	private static var curSelected:Int = 0;
-	private static var typeSelected:Int = 0;
-	private var grpNumbers:FlxTypedGroup<Alphabet>;
-	private var grpNotes:FlxTypedGroup<FlxSprite>;
-	private var shaderArray:Array<ColorSwap> = [];
+	static var curSelected:Int = 0;
+	static var typeSelected:Int = 0;
+	var grpNumbers:FlxTypedGroup<Alphabet>;
+	var grpNotes:FlxTypedGroup<FlxSprite>;
+	var shaderArray:Array<ColorSwap> = [];
 	var curValue:Float = 0;
 	var holdTime:Float = 0;
 	var scrollHoldTime:Float = 0;
@@ -186,8 +186,7 @@ class NotesSubState extends MusicBeatSubstate
 		}
 
 		if (controls.BACK || (changingNote && controls.ACCEPT)) {
-			if(!changingNote)
-				close();
+			if(!changingNote) close();
 			else changeSelection();
 			changingNote = false;
 			FlxG.sound.play(Paths.sound('cancelMenu'));

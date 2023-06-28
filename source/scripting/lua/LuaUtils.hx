@@ -69,8 +69,8 @@ class LuaUtils {
 				if(retVal != null) target = retVal;
 			} else target = Reflect.getProperty(instance, splitProps[0]);
 
-			for (i in 1...splitProps.length) {
-				var j:Dynamic = splitProps[i].substr(0, splitProps[i].length - 1);
+			for (prop in splitProps) {
+				var j:Dynamic = prop.substr(0, prop.length - 1);
 				target = target[j];
 			}
 			return target;
