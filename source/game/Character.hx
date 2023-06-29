@@ -268,7 +268,7 @@ class Character extends FlxSprite
 		if (danceIdle) {
 			if (animName == 'singUP' || animName == 'singDOWN')
 				danced = !danced;
-			else if (AnimName.startsWith('sing'))
+			else if (animName.startsWith('sing'))
 				danced = animName == 'singLEFT';
 		}		
 	}

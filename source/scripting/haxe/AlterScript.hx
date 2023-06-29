@@ -33,9 +33,16 @@ class AlterScript implements IFlxDestroyable {
                 script = File.getContent(path);
             else script = path;
             #else script = Assets.getText(path); #end
-
             scriptFile = path;
         }
+
+        var strBuf = new StringBuf();
+        var temparr = scriptFile.split("\n");
+        for(i in temparr) {
+            if (i.startsWith("package;")) i = "";
+            strBuf.add(i + "\n");
+        }
+        script = strBuf.toString();
 
         interp = new Interp();
         interp.allowStaticVariables = interp.allowPublicVariables = true;
@@ -172,7 +179,7 @@ class AlterScript implements IFlxDestroyable {
 
     function setVars() {
         for (key => type in getDefaultVariables()) {
-            interp.variables.set(key, type);
+            set(key, type);
         }
         set("trace", Reflect.makeVarArgs((args) -> {
             var v:String = Std.string(args.shift());

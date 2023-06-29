@@ -51,7 +51,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		{
 			var sprite:FlxSprite = cast sprite;
 			if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText)) {
-				sprite.antialiasing = ClientPrefs.data.antialiasing;
+				sprite.antialiasing = ClientPrefs.getPref('Antialiasing');
 			}
 		}
 	}
