@@ -2711,8 +2711,15 @@ class PlayState extends MusicBeatState {
 		else if (noteDiff < Conductor.safeZoneOffset * -.1)
 			daTiming = "late";
 
-		if (!practiceMode) {
-			(cpuControlled ? songScore : botScore) += score;
+		if (!practiceMode && !cpuControlled) {
+			songScore += score;
+			if(!note.ratingDisabled) {
+				songHits++;
+				totalPlayed++;
+				RecalculateRating();
+			}
+		} else if (cpuControlled) {
+			botScore += score;
 			if(!note.ratingDisabled) {
 				songHits++;
 				totalPlayed++;
