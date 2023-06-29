@@ -8,6 +8,7 @@ package utils.system;
 </target>
 ')
 @:cppFileCode('
+#include <direct.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <windows.h>
