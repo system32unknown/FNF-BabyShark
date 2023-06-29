@@ -37,7 +37,7 @@ class AlterScript implements IFlxDestroyable {
         }
 
         var strBuf = new StringBuf();
-        var temparr = scriptFile.split("\n");
+        var temparr = script.split("\n");
         for(i in temparr) {
             if (i.startsWith("package;")) i = "";
             strBuf.add(i + "\n");
@@ -153,10 +153,10 @@ class AlterScript implements IFlxDestroyable {
             "FlxTypeText"       => flixel.addons.text.FlxTypeText,
             "FlxText"           => FlxText,
             "FlxTimer"          => FlxTimer,
-            "FlxPoint"          => CoolUtil.getMacroAbstractClass("flixel.math.FlxPoint"),
-            "FlxAxes"           => CoolUtil.getMacroAbstractClass("flixel.util.FlxAxes"),
-            "FlxColor"          => CoolUtil.getMacroAbstractClass("flixel.util.FlxColor"),
-            "FlxKey"            => CoolUtil.getMacroAbstractClass("flixel.input.keyboard.FlxKey"),
+            "FlxPoint"          => getMacroAbstractClass("flixel.math.FlxPoint"),
+            "FlxAxes"           => getMacroAbstractClass("flixel.util.FlxAxes"),
+            "FlxColor"          => getMacroAbstractClass("flixel.util.FlxColor"),
+            "FlxKey"            => getMacroAbstractClass("flixel.input.keyboard.FlxKey"),
 
             // Engine related stuff
             "PlayState"         => PlayState,
@@ -211,4 +211,7 @@ class AlterScript implements IFlxDestroyable {
         trace('Error on AlterScript: $err');
         CoolUtil.callErrBox("Error on AlterScript", "Uncaught Error: " + fn + '\n$err');
     }
+
+    function getMacroAbstractClass(className:String)
+		return Type.resolveClass('${className}_HSC');
 }

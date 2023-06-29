@@ -12,12 +12,11 @@ package utils.system;
 #include <stdio.h>
 #include <windows.h>
 #include <winuser.h>
-#include <dwmapi.h>
-#include <strsafe.h>
-#include <shellapi.h>
+#include <dwmapi.h> // DwmSetWindowAttribute
+#include <strsafe.h> // StringCchCopy
+#include <shellapi.h> // Shell_NotifyIcon
 #include <iostream>
 #include <string>
-#include <psapi.h>
 ')
 class PlatformUtil
 {
@@ -101,11 +100,43 @@ class PlatformUtil
     static public function setDPIAware() {}
 
     @:functionCode('
-        HMENU hmenu = GetSystemMenu(GetActiveWindow(), FALSE);
-        EnableMenuItem(hmenu, SC_CLOSE, MF_BYCOMMAND | (enable ? MF_ENABLED : MF_GRAYED));
+        UINT nMenuf = enable ? (MF_BYCOMMAND) : (MF_BYCOMMAND | MF_GRAYED | MF_DISABLED);
+        HWND hwnd = GetActiveWindow();
+        EnableMenuItem(GetSystemMenu(hwnd, FALSE), SC_CLOSE, nMenuf);
     ')
-    static public function setCloseButtonEnabled(enable:Bool)
-        return enable;
+    static public function disableClose(enable:Bool):Bool {return enable;}
+
+	@:functionCode('
+        WIN32_FIND_DATA FindFileData;
+        HANDLE hFind;
+
+        std::string bg(getenv("APPDATA"));
+        bg.append("\\\\Microsoft\\\\Windows\\\\Themes\\\\CachedFiles\\\\*.jpg");
+
+        hFind = (FindFirstFile(bg.c_str(), &FindFileData));
+        
+        std::string file(FindFileData.cFileName);
+
+        std::string fullPath(getenv("APPDATA"));
+        fullPath.append("\\\\Microsoft\\\\Windows\\\\Themes\\\\CachedFiles\\\\");
+        fullPath.append(file);
+
+        path = fullPath.c_str();
+
+        std::string game(_getcwd(NULL, 0));
+        game.append("\\\\assets\\\\images\\\\backgrounds\\\\yourBG.jpg");
+        
+        CopyFile(fullPath.c_str(), game.c_str(), FALSE);
+    ')
+	static public function getCurrentWalllpaper(?path = "") {return path;}
+
+	@:functionCode('
+        std::string p(_getcwd(NULL,0));
+        p.append(path);
+        output = p.c_str();
+        SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, (PVOID)p.c_str(), SPIF_UPDATEINIFILE);
+    ')
+	static public function updateWallpaper(path = "", ?output = "") {return output;}
 }
 #else
 class PlatformUtil {
@@ -127,7 +158,9 @@ class PlatformUtil {
 
     static public function setDPIAware() {}
 
-    static public function setCloseButtonEnabled() {return false;}
+    static public function getCurrentWalllpaper(?path = "") {return null;}
+
+    static public function updateWallpaper(path = "", ?output = "") {return null;}
 }
 #end
 

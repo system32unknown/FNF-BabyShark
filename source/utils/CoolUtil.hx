@@ -160,9 +160,6 @@ class CoolUtil {
 		return FlxG.stage.application.meta.get('company') + '/' + FlxSave.validate(FlxG.stage.application.meta.get('file'));
 	}
 
-	public static function getMacroAbstractClass(className:String)
-		return Type.resolveClass('${className}_HSC');
-
 	public static function removeDuplicates(string:Array<String>):Array<String> {
 		var tempArray:Array<String> = new Array<String>();
 		var lastSeen:String = null;

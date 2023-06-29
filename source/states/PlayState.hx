@@ -208,7 +208,7 @@ class PlayState extends MusicBeatState {
 	public static var restarted:Bool = false;
 
 	public var defaultCamZoom:Float = 1.05;
-	public var defaultHudCamZoom:Float = 1.0;
+	public var defaultHudCamZoom:Float = 1.;
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
@@ -641,6 +641,8 @@ class PlayState extends MusicBeatState {
 			scoreTxt.y = healthBar.y + 40;
 			scoreTxt.borderSize = 1.25;
 			scoreTxt.size = 20;
+		} else if(ClientPrefs.getPref('ScoreType') == 'Kade') {
+			scoreTxt.y = (downScroll ? healthBar.y + 50 : FlxG.height - scoreTxt.height);
 		}
 		scoreTxt.visible = !hideHud;
 		scoreTxt.scrollFactor.set();
@@ -1178,9 +1180,8 @@ class PlayState extends MusicBeatState {
 		}
 		judgementCounter.text += '\n${getMissText(!ClientPrefs.getPref('movemissjudge'), '\n')}';
 		judgementCounter.screenCenter(Y);
-		if (!ClientPrefs.getPref('ShowNPSCounter')) {
+		if (!ClientPrefs.getPref('ShowNPSCounter'))
 			UpdateScoreText();
-		}
 		if(ClientPrefs.getPref('scoreZoom') && !miss) {
 			if (scoreTxtTween != null) scoreTxtTween.cancel();
 
@@ -1445,7 +1446,7 @@ class PlayState extends MusicBeatState {
 		
 		for (i in 0...Note.ammo[mania]) {
 			var twnDuration:Float = (4 / mania) * playbackRate;
-			var twnStart:Float = 0.5 + ((0.8 / mania) * i) * playbackRate;
+			var twnStart:Float = .5 + ((.8 / mania) * i) * playbackRate;
 
 			var babyArrow:StrumNote = new StrumNote(strumLineX, strumLineY, i, player);
 			babyArrow.downScroll = downScroll;
@@ -1688,7 +1689,7 @@ class PlayState extends MusicBeatState {
 					vocals.pause();
 				}
 				Conductor.songPosition = (vocals.time = FlxG.sound.music.time) + Conductor.offset;
-			}else Conductor.songPosition = lastSongTime + Conductor.offset;
+			} else Conductor.songPosition = lastSongTime + Conductor.offset;
 
 			vocals.play();
 		} else Conductor.songPosition = lastSongTime + Conductor.offset;
@@ -2705,20 +2706,13 @@ class PlayState extends MusicBeatState {
 		if(daRating.noteSplash && !note.noteSplashDisabled)
 			spawnNoteSplashOnNote(note);
 
-		if (noteDiff > Conductor.safeZoneOffset * 0.1)
+		if (noteDiff > Conductor.safeZoneOffset * .1)
 			daTiming = "early";
-		else if (noteDiff < Conductor.safeZoneOffset * -0.1)
+		else if (noteDiff < Conductor.safeZoneOffset * -.1)
 			daTiming = "late";
 
-		if (!practiceMode && !cpuControlled) {
-			songScore += score;
-			if(!note.ratingDisabled) {
-				songHits++;
-				totalPlayed++;
-				RecalculateRating();
-			}
-		} else if (cpuControlled) {
-			botScore += score;
+		if (!practiceMode) {
+			(cpuControlled ? songScore : botScore) += score;
 			if(!note.ratingDisabled) {
 				songHits++;
 				totalPlayed++;
@@ -3105,7 +3099,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function noteMissCommon(direction:Int, note:Note = null) {
-		var subtract:Float = 0.05;
+		var subtract:Float = .05;
 		if(note != null) subtract = note.missHealth;
 		health -= subtract * healthLoss;
 
@@ -3271,7 +3265,7 @@ class PlayState extends MusicBeatState {
 			if(char != null) {
 				char.playAnim(animToPlay + note.animSuffix, true);
 				char.holdTimer = 0;
-				if(note.noteType == 'Hey!') {
+				if(leType == 'Hey!') {
 					if(char.animOffsets.exists(animCheck)) {
 						char.playAnim(animCheck, true);
 						char.specialAnim = true;
@@ -3284,16 +3278,15 @@ class PlayState extends MusicBeatState {
 		var time:Float = 0;
 		if(cpuControlled) {
 			time = 0.15;
-			if(isSus && !note.animation.curAnim.name.endsWith('tail')) {
+			if(isSus && !note.animation.curAnim.name.endsWith('tail'))
 				time += 0.15;
-			}
 		}
 		strumPlayAnim(false, leData % Note.ammo[mania], time);
 
 		callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		callOnScripts('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 
-		if (!note.isSustainNote) {
+		if (!isSus) {
 			note.kill();
 			notes.remove(note, true);
 			note.destroy();
@@ -3303,9 +3296,7 @@ class PlayState extends MusicBeatState {
 	public function spawnNoteSplashOnNote(note:Note) {
 		if(ClientPrefs.getPref('splashOpacity') > 0 && note != null) {
 			var strum:StrumNote = playerStrums.members[note.noteData];
-			if(strum != null) {
-				spawnNoteSplash(strum.x, strum.y, note.noteData, note);
-			}
+			if(strum != null) spawnNoteSplash(strum.x, strum.y, note.noteData, note);
 		}
 	}
 
@@ -3535,8 +3526,8 @@ class PlayState extends MusicBeatState {
 				for (file in FileSystem.readDirectory(folder)) {
 					if (!file.endsWith('.$type') || filesPushed.contains(file)) continue;
 					
-					if(type == 'lua') {FunkinLua.execute(folder + file);}
-					else {scriptArray.push(new AlterScript(folder + file));}
+					if(type == 'lua') FunkinLua.execute(folder + file);
+					else scriptArray.push(new AlterScript(folder + file));
 
 					filesPushed.push(file);
 				}
