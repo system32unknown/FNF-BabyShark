@@ -18,6 +18,8 @@ class ClientPrefs {
 		'showMEM' => true,
 		'flashing' => true,
 		'Antialiasing' => true,
+		'noteSkin' => 'Default',
+		'splashSkin' => 'Psych',
 		'splashOpacity' => .6,
 		'lowQuality' => false,
 		'shaders' => true,

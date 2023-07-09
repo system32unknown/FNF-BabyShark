@@ -35,7 +35,7 @@ import openfl.net.FileReference;
 import lime.media.AudioBuffer;
 import haxe.io.Bytes;
 import haxe.io.Path;
-import haxe.Json;
+import tjson.TJSON as Json;
 import flash.geom.Rectangle;
 import flash.media.Sound;
 #if sys
@@ -839,16 +839,11 @@ class ChartingState extends MusicBeatState
 	var strumTimeInputText:FlxUIInputText; //I wanted to use a stepper but we can't scale these as far as i know :(
 	var noteTypeDropDown:FlxUIDropDownMenu;
 	var currentType:Int = 0;
-	var stepperSpamCloseness:FlxUINumericStepper;
-	var stepperSpamLength:FlxUINumericStepper;
-	var spamLength:Float = 5;
-	var spamCloseness:Float = 2;
 	var check_stackActive:FlxUICheckBox;
 	var stepperStackNum:FlxUINumericStepper;
 	var stepperStackOffset:FlxUINumericStepper;
 
-	function addNoteUI():Void
-	{
+	function addNoteUI():Void {
 		var tab_group_note = new FlxUI(null, UI_box);
 		tab_group_note.name = 'Note';
 
@@ -912,27 +907,7 @@ class ChartingState extends MusicBeatState
 		});
 		blockPressWhileScrolling.push(noteTypeDropDown);
 
-		var spamButton:FlxButton = new FlxButton(noteTypeDropDown.x, noteTypeDropDown.y + 40, "Add Notes", function() {
-			if (curSelectedNote != null) {
-				for(i in 0...Std.int(spamLength)) {
-					addNote(curSelectedNote[0] + (15000 / (_song.notes[curSec].changeBPM ? _song.notes[curSec].bpm : _song.bpm)) / spamCloseness, curSelectedNote[1], curSelectedNote[2], false);
-				}
-				updateGrid(false);
-				updateNoteUI();
-			}
-		});
-		
-		stepperSpamCloseness = new FlxUINumericStepper(spamButton.x + 90, spamButton.y + 5, 2, 2, 2, 1024);
-		stepperSpamCloseness.value = spamCloseness;
-		stepperSpamCloseness.name = 'note_spamthing';
-		blockPressWhileTypingOnStepper.push(stepperSpamCloseness);
-
-		stepperSpamLength = new FlxUINumericStepper(stepperSpamCloseness.x + 90, stepperSpamCloseness.y, 5, 5, 1, 16384);
-		stepperSpamLength.value = spamLength;
-		stepperSpamLength.name = 'note_spamamount';
-		blockPressWhileTypingOnStepper.push(stepperSpamLength);
-
-		var leftSectionNotetype:FlxButton = new FlxButton(spamButton.x, spamButton.y + 40, "Left Section to Notetype", function() {
+		var leftSectionNotetype:FlxButton = new FlxButton(noteTypeDropDown.x, noteTypeDropDown.y + 40, "Left Section to Notetype", function() {
 			for (sNotes in _song.notes[curSec].sectionNotes) {
 				var note:Array<Dynamic> = sNotes;
 				if (note[1] < Note.ammo[_song.mania])
@@ -943,7 +918,7 @@ class ChartingState extends MusicBeatState
 		});
 		leftSectionNotetype.setGraphicSize(80, 30);
 		leftSectionNotetype.updateHitbox();
-		var rightSectionNotetype:FlxButton = new FlxButton(spamButton.x + 90, spamButton.y + 40, "Right Section to Notetype", function() {
+		var rightSectionNotetype:FlxButton = new FlxButton(leftSectionNotetype.x + 90, leftSectionNotetype.y, "Right Section to Notetype", function() {
 			for (sNotes in _song.notes[curSec].sectionNotes) {
 				var note:Array<Dynamic> = sNotes;
 				if (note[1] > (Note.ammo[_song.mania] - 1))
@@ -955,11 +930,11 @@ class ChartingState extends MusicBeatState
 		rightSectionNotetype.setGraphicSize(80, 30);
 		rightSectionNotetype.updateHitbox();
 
-		check_stackActive = new FlxUICheckBox(spamButton.x, leftSectionNotetype.y + 60, null, null, "Spam Mode", 100);
+		check_stackActive = new FlxUICheckBox(leftSectionNotetype.x, leftSectionNotetype.y + 60, null, null, "Spam Mode", 100);
 		check_stackActive.name = 'check_stackActive';
-		stepperStackNum = new FlxUINumericStepper(stepperSpamCloseness.x, leftSectionNotetype.y + 60, 1, 4, 0, 999999);
+		stepperStackNum = new FlxUINumericStepper(check_stackActive.x + 40, check_stackActive.y, 1, 4, 0, 999999);
 		stepperStackNum.name = 'stack_count';
-		stepperStackOffset = new FlxUINumericStepper(stepperSpamLength.x, leftSectionNotetype.y + 60, 1, 1, 0, 8192);
+		stepperStackOffset = new FlxUINumericStepper(stepperStackNum.x  + 40, stepperStackNum.y, 1, 1, 0, 8192);
 		stepperStackOffset.name = 'stack_offset';
 
 		tab_group_note.add(check_stackActive);
@@ -968,15 +943,10 @@ class ChartingState extends MusicBeatState
 		tab_group_note.add(new FlxText(stepperStackNum.x, stepperStackNum.y - 15, 0, "Spam Count"));
 		tab_group_note.add(new FlxText(stepperStackOffset.x, stepperStackOffset.y - 15, 0, "Spam Multiplier"));
 		tab_group_note.add(new FlxText(10, 10, 0, 'Sustain length:'));
-		tab_group_note.add(new FlxText(stepperSpamCloseness.x, stepperSpamCloseness.y - 15, 0, 'Note Density:'));
-		tab_group_note.add(new FlxText(stepperSpamLength.x, stepperSpamLength.y - 15, 0, 'Note Amount:'));
 		tab_group_note.add(new FlxText(10, 50, 0, 'Strum time (in miliseconds):'));
 		tab_group_note.add(new FlxText(10, 90, 0, 'Note type:'));
-		tab_group_note.add(spamButton);
 		tab_group_note.add(leftSectionNotetype);
 		tab_group_note.add(rightSectionNotetype);
-		tab_group_note.add(stepperSpamCloseness);
-		tab_group_note.add(stepperSpamLength);
 		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(strumTimeInputText);
 		tab_group_note.add(noteTypeDropDown);
@@ -1373,8 +1343,6 @@ class ChartingState extends MusicBeatState
 						curSelectedNote[2] = nums.value;
 						updateGrid(false);
 					}
-				case 'note_spamthing': spamCloseness = nums.value;
-				case 'note_spamamount': spamLength = nums.value;
 				case 'section_bpm':
 					_song.notes[curSec].bpm = nums.value;
 					updateGrid();
@@ -2651,7 +2619,7 @@ class ChartingState extends MusicBeatState
 	}
 
 	function autosaveSong():Void {
-		FlxG.save.data.autosave = Json.stringify({"song": _song});
+		FlxG.save.data.autosave = haxe.Json.stringify({"song": _song});
 		FlxG.save.flush();
 	}
 
@@ -2663,7 +2631,7 @@ class ChartingState extends MusicBeatState
 	function saveLevel() {
 		if(_song.events != null && _song.events.length > 1) _song.events.sort(sortByTime);
 		var json = {"song": _song};
-		var data:String = Json.stringify(json, "\t");
+		var data:String = haxe.Json.stringify(json, "\t");
 
 		if (data != null && data.length > 0) {
 			_file = new FileReference();
@@ -2704,7 +2672,7 @@ class ChartingState extends MusicBeatState
 		var eventsSong:Dynamic = {events: _song.events};
 		var json = {"song": eventsSong}
 
-		var data:String = Json.stringify(json, "\t");
+		var data:String = haxe.Json.stringify(json, "\t");
 		if (data != null && data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);

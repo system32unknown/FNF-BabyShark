@@ -6,12 +6,11 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxGradient;
-import haxe.Json;
+import tjson.TJSON as Json;
 import utils.CoolUtil;
 import game.Highscore;
 import game.Conductor;
 import states.MainMenuState;
-import states.OutdatedState;
 #if sys
 import sys.FileSystem;
 #end
@@ -39,7 +38,6 @@ class TitleState extends MusicBeatState
 
 	var curWacky:Array<String> = [];
 	public static var titleJSON:TitleData = null;
-	var mustUpdate:Bool = false;
 
 	var gradientBar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 1, 0xFF0F5FFF);
 	var gradtimer:Float = 0;
@@ -52,11 +50,8 @@ class TitleState extends MusicBeatState
 	override function create():Void {
 		onInit();
 
-		if (!closedState)
-			getBuildVer("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/version.txt");
-
 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
-		Mods.loadTheFirstEnabledMod();
+		Mods.loadTopMod();
 
 		super.create();
 		FlxG.save.bind('funkin', CoolUtil.getSavePath());
@@ -227,8 +222,7 @@ class TitleState extends MusicBeatState
 				MainMenuState.finishedFunnyMove = false;
 
 				new FlxTimer().start(1, function(tmr:FlxTimer) {
-					if (mustUpdate) MusicBeatState.switchState(new OutdatedState());
-					else MusicBeatState.switchState(new MainMenuState());
+					MusicBeatState.switchState(new MainMenuState());
 					closedState = true;
 				});
 			}
@@ -240,8 +234,13 @@ class TitleState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	function createCoolText(textArray:Array<String>, offset:Float = 0) {
-		for (i in 0...textArray.length) addMoreText(textArray[i], offset, i);
+	function createCoolText(textArray:Dynamic, offset:Float = 0) {
+		if (Std.isOfType(textArray, String))
+			addMoreText(textArray, offset, 1);
+		else {
+			for (i in 0...textArray.length)
+				addMoreText(textArray[i], offset, i);
+		}
 	}
 
 	function addMoreText(text:String, offset:Float = 0, i:Int = -1) {
@@ -262,49 +261,46 @@ class TitleState extends MusicBeatState
 	public static var closedState:Bool = false;
 	override function beatHit() {
 		super.beatHit();
-
-		FlxTween.tween(FlxG.camera, {zoom: 1.05}, .3, {ease: FlxEase.quadOut, type: BACKWARD});
 		
 		if(logoBl != null && foundXml)
 			logoBl.animation.play('bump', true);
 
 		if(!closedState) {
 			switch (sickBeats++) {
-				case 0:
-					createCoolText(['Vs Dave and Bambi by:']);
+				case 0: createCoolText('Vs Dave and Bambi by:');
 				case 1:
 					addMoreText('MoldyGH, MTM101, Stats45');
 					addMoreText('Rapparep lol, TheBuilderXD, Edival');
 					addMoreText('T5mpler, Erizur, Billy Bobbo');
 				case 2:
 					deleteCoolText();
-					createCoolText(['Baby Shark\'s Big Show by:']);
+					createCoolText('Baby Shark\'s Big Show by:');
 				case 3:
 					addMoreText('Pinkfong');
 					addMoreText('Nickelodeon');
 					addMoreText('SmartStudy');
 				case 4:
 					deleteCoolText();
-					createCoolText(['Extra Keys by:']);
+					createCoolText('Extra Keys by:');
 				case 5:
 					addMoreText('tposejank');
 					addMoreText('srPerez');
 					addMoreText('Leather128');
 				case 6:
 					deleteCoolText();
-					createCoolText(['Psych Engine by:']);
+					createCoolText('Psych Engine by:');
 				case 7:
 					addMoreText('Shadow Mario');
 					addMoreText('Riveren');
 					addMoreText('And Psych Engine Contributors!');
 				case 8:
 					deleteCoolText();
-					createCoolText(['Doo Doo Doo,']);
+					createCoolText('Doo Doo Doo,');
 				case 9:
 					addMoreText('Almost there!');
 				case 10:
 					deleteCoolText();
-					createCoolText([curWacky[0]]);
+					createCoolText(curWacky[0]);
 				case 11: addMoreText(curWacky[1]);
 				case 12: deleteCoolText();
 				case 13: addMoreText('Baby');
@@ -339,30 +335,6 @@ class TitleState extends MusicBeatState
 			}, 0);
 			skippedIntro = true;
 		}
-	}
-
-	function getBuildVer(verhttp:String) {
-		if (!FunkinInternet.isOnline) return;
-		
-		var http = new haxe.Http(verhttp);
-		var returnedData:Array<String> = [];
-
-		http.onData = function(data:String) {
-			returnedData[0] = data.substring(0, data.indexOf(';'));
-			returnedData[1] = data.substring(data.indexOf('-'), data.length);
-
-			if (Main.engineVersion.version != returnedData[0].trim()) {
-				mustUpdate = true;
-				OutdatedState.needVer = returnedData[0];
-				OutdatedState.currChanges = returnedData[1];
-			}
-		}
-
-		http.onError = function(error) {
-			trace('error: $error');
-		}
-
-		http.request();
 	}
 
 	public static function onInit() {

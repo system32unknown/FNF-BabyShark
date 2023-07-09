@@ -4,28 +4,25 @@
         {"name": "openfl", "type": "haxelib", "dir": "openfl"},
         {"name": "flixel","type": "git", "dir": "flixel",
             "ref": "dev",
-            "url": "https://github.com/HaxeFlixel/flixel"
-        },
+        "url": "https://github.com/HaxeFlixel/flixel"},
         {"name": "flixel-addons", "type": "git", "dir":"flixel-addons",
             "ref": "dev",
-            "url": "https://github.com/HaxeFlixel/flixel-addons"
-        },
+        "url": "https://github.com/HaxeFlixel/flixel-addons"},
         {"name": "flixel-ui", "type": "git", "dir":"flixel-ui",
             "ref": "dev",
-            "url": "https://github.com/HaxeFlixel/flixel-ui"
-        },
+        "url": "https://github.com/HaxeFlixel/flixel-ui"},
+        {"name": "tjson",
+          "type": "haxelib",
+        "version": null},
         {"name": "hxCodec", "type":"haxelib", "dir":"hxCodec", "version":"2.6.1"},
         {"name": "hscript-improved", "type": "git", "dir": "hscript-improved",
             "ref": "master",
-            "url": "https://github.com/FNF-CNE-Devs/hscript-improved"
-        },
+        "url": "https://github.com/FNF-CNE-Devs/hscript-improved"},
         {"name": "discord_rpc", "type": "git", "dir": "discord_rpc",
             "ref": "master",
-            "url": "https://github.com/Aidan63/linc_discord-rpc"
-        },
-		{"name": "linc_luajit-ralt", "type": "git", "dir": "linc_luajit-ralt",
-			"ref": "ralt",
-			"url": "https://github.com/Raltyro/linc_luajit"
-		}
+        "url": "https://github.com/Aidan63/linc_discord-rpc"},
+		{"name": "linc_luajit", "type": "git", "dir": "linc_luajit",
+            "ref": "master",
+        "url": "https://github.com/superpowers04/linc_luajit"}
     ]
   }

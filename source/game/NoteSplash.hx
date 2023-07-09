@@ -22,7 +22,7 @@ class NoteSplash extends FlxSprite
 		this.moves = false;
 	}
 
-	public function setupNoteSplash(x:Float, y:Float, note:Int = 0, texture:String = null, hueColor:Float = 0, satColor:Float = 0, brtColor:Float = 0) {
+	public function setupNoteSplash(x:Float, y:Float, note:Int = 0, texture:String = null, hsb:Array<Float> = null) {
 		setPosition(x - Note.swagWidth * .95, y - Note.swagWidth);
 		setGraphicSize(Std.int(width * sc[PlayState.mania]));
 		alpha = ClientPrefs.getPref('splashOpacity');
@@ -32,10 +32,12 @@ class NoteSplash extends FlxSprite
 			if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) texture = PlayState.SONG.splashSkin;
 		}
 
+		if(hsb == null) hsb = [0, 0, 0];
+
 		if(texture != null) loadAnims(texture);
-		colorSwap.hue = hueColor;
-		colorSwap.saturation = satColor;
-		colorSwap.brightness = brtColor;
+		colorSwap.hue = hsb[0];
+		colorSwap.saturation = hsb[1];
+		colorSwap.brightness = hsb[2];
 
 		var mania:Int = PlayState.mania;
 		offset.set(-34 * Note.scales[PlayState.mania], -23 * Note.scales[PlayState.mania]);

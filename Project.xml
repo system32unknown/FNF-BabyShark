@@ -41,6 +41,7 @@
 
 	<define name="PRELOAD_ALL" unless="web"/>
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
+	<define name="hscriptPos"/>
 	
 	<assets path="assets/fonts"/>
 	<assets path="assets/preload" rename="assets"/>
@@ -68,21 +69,21 @@
 	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED"/>
 	
 	<!-- _______________________________Flags______________________________ -->
-	<haxeflag name="-dce no" if="HSCRIPT_ALLOWED"/>
 	<haxeflag name="-dce full" unless="HSCRIPT_ALLOWED"/>
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-ui"/>
 	<haxelib name="flixel-addons"/>
+	<haxelib name="tjson"/>
 
-	<haxelib name="linc_luajit-ralt" rename="linc_luajit" if="LUA_ALLOWED"/>
+	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
 	<haxelib name="discord_rpc" if="DISCORD_ALLOWED"/>
 
 	<section if="HSCRIPT_ALLOWED">
+		<haxeflag name="-dce no"/>
 		<haxelib name="hscript-improved" rename="hscript"/>
-		<define name="hscriptPos"/>
 		<haxeflag name="--macro" value="macro.ScriptsMacro.addAdditionalClasses()" />
 	</section>
 

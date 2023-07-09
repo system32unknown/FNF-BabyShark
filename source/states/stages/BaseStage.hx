@@ -114,14 +114,11 @@ class BaseStage extends FlxBasic
 	public function precacheMusic(key:String) precache(key, 'music');
 
 	public function precache(key:String, type:String) {
-		if(onPlayState)
-			PlayState.instance.precacheList.set(key, type);
-		else {
-			switch(type) {
-				case 'image': Paths.image(key);
-				case 'sound': Paths.sound(key);
-				case 'music': Paths.music(key);
-			}
+		if(onPlayState) PlayState.instance.precacheList.set(key, type);
+		switch(type) {
+			case 'image': Paths.image(key);
+			case 'sound': Paths.sound(key);
+			case 'music': Paths.music(key);
 		}
 	}
 

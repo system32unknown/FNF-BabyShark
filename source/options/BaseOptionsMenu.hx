@@ -10,7 +10,7 @@ import game.Character;
 import flixel.util.FlxStringUtil;
 import sys.FileSystem;
 import sys.io.File;
-import haxe.Json;
+import tjson.TJSON as Json;
 #end
 
 class BaseOptionsMenu extends MusicBeatSubstate

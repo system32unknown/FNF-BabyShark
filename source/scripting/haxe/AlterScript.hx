@@ -100,7 +100,6 @@ class AlterScript implements IFlxDestroyable {
 
     function getDefaultPreprocessors():Map<String, Dynamic> {
         var defines = macro.DefinesMacro.defines;
-        defines.set("version", lime.app.Application.current.meta.get('version'));
         defines.set("sys", #if sys true #else false #end);
         defines.set("cpp", #if cpp true #else false #end);
         defines.set("desktop", #if desktop true #else false #end);
@@ -174,6 +173,12 @@ class AlterScript implements IFlxDestroyable {
             "ClientPrefs"       => ClientPrefs,
 
             "DeltaTrail" => DeltaTrail,
+            "engine" => {
+                version: lime.app.Application.current.meta.get('version'),
+                commit: macro.GitCommitMacro.commitNumber,
+                hash: macro.GitCommitMacro.commitHash,
+                name: "Alter Engine"
+            }
         ];
     }
 

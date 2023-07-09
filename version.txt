@@ -1,6 +1,0 @@
-0.1.0;
-- Net Handler
-- Kade's Outdated State
-- New Input and Scroll, Syncs (Subject to Change)
-- Improved FunkinLua
-- New Github Actions

@@ -1,6 +1,6 @@
 package ui;
 
-import haxe.Json;
+import tjson.TJSON as Json;
 #if sys
 import sys.FileSystem;
 import sys.io.File;

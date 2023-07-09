@@ -2,7 +2,7 @@ package utils;
 
 import sys.FileSystem;
 import sys.io.File;
-import haxe.Json;
+import tjson.TJSON as Json;
 import haxe.io.Path;
 
 typedef ModsList = {
@@ -176,7 +176,7 @@ class Mods
 		updatedOnState = true;
 	}
 
-	public static function loadTheFirstEnabledMod() {
+	public static function loadTopMod() {
 		currentModDirectory = '';
 
 		#if MODS_ALLOWED

@@ -18,7 +18,7 @@ class ScriptsMacro {
 			"flixel.addons.plugin", "flixel.addons.text", "flixel.addons.tile", "flixel.addons.transition",
 			"flixel.addons.util",
 			// OTHER LIBRARIES & STUFF
-			#if sys "sys", #end "openfl.net",
+			#if sys "sys", #end "openfl.net", "shaders",
 			// BASE HAXE
 			"DateTools", "EReg", "Lambda", "StringBuf", "haxe.crypto", "haxe.display", "haxe.exceptions", "haxe.extern"
 		])

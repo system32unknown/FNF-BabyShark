@@ -5,7 +5,7 @@ import sys.io.File;
 import sys.FileSystem;
 import haxe.io.Path;
 #end
-import haxe.Json;
+import tjson.TJSON as Json;
 import utils.CoolUtil;
 import openfl.utils.Assets as OpenFlAssets;
 

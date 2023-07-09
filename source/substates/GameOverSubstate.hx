@@ -103,7 +103,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			PlayState.seenCutscene = false;
 			PlayState.chartingMode = false;
 
-			Mods.loadTheFirstEnabledMod();
+			Mods.loadTopMod();
 			if (PlayState.isStoryMode) MusicBeatState.switchState(new StoryMenuState());
 			else MusicBeatState.switchState(new FreeplayState());
 
@@ -112,9 +112,6 @@ class GameOverSubstate extends MusicBeatSubstate
 		}
 
 		if (boyfriend.animation.curAnim != null) {
-			if (boyfriend.animation.curAnim.name.endsWith('miss') && boyfriend.animation.curAnim.finished)
-				boyfriend.playAnim('idle', true, false, 10);
-
 			if (boyfriend.animation.curAnim.name == 'firstDeath' && boyfriend.animation.curAnim.finished && startedDeath)
 				boyfriend.playAnim('deathLoop');
 

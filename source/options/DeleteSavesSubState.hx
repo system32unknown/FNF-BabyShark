@@ -3,7 +3,7 @@ package options;
 import ui.Alphabet;
 import sys.FileSystem;
 import sys.io.File;
-import haxe.Json;
+import tjson.TJSON as Json;
 
 class DeleteSavesSubState extends MusicBeatSubstate {
     var curSelected:Int = 0;

@@ -4,7 +4,7 @@ package ui;
 import sys.io.File;
 import sys.FileSystem;
 #end
-import haxe.Json;
+import tjson.TJSON as Json;
 
 typedef MenuCharacterFile = {
 	var image:String;

@@ -43,7 +43,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			}
 		}
 		sectionArray = CoolUtil.removeDuplicates(sectionArray);
-		Mods.loadTheFirstEnabledMod();
+		Mods.loadTopMod();
 
         for (i in 0...sectionArray.length) {
             if (sectionArray[i] == daSection) {

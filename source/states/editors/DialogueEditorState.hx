@@ -10,7 +10,7 @@ import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
-import haxe.Json;
+import tjson.TJSON as Json;
 import ui.DialogueBoxPsych;
 import ui.DialogueCharacter;
 import ui.TypedAlphabet;
@@ -487,7 +487,7 @@ class DialogueEditorState extends MusicBeatState
 	}
 
 	function saveDialogue() {
-		var data:String = Json.stringify(dialogueFile, "\t");
+		var data:String = haxe.Json.stringify(dialogueFile, "\t");
 		if (data.length > 0)
 		{
 			_file = new FileReference();

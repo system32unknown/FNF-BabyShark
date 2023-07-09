@@ -15,7 +15,7 @@ import flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-import haxe.Json;
+import tjson.TJSON as Json;
 
 import utils.CoolUtil;
 import game.BGSprite;
@@ -1157,7 +1157,7 @@ class CharacterEditorState extends MusicBeatState
 			"gameover_properties": [char.deathChar, char.deathSound, char.deathMusic, char.deathConfirm],
 		};
 
-		var data:String = Json.stringify(json, "\t");
+		var data:String = haxe.Json.stringify(json, "\t");
 
 		if (data.length > 0) {
 			_file = new FileReference();

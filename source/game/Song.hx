@@ -3,7 +3,7 @@ package game;
 import game.Section.SwagSection;
 import data.StageData;
 import game.Note;
-import haxe.Json;
+import tjson.TJSON as Json;
 
 #if sys
 import sys.io.File;

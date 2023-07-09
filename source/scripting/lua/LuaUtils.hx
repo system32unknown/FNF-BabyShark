@@ -1,10 +1,5 @@
 package scripting.lua;
 
-#if LUA_ALLOWED
-import llua.Lua;
-import llua.State;
-#end
-
 import openfl.display.BlendMode;
 import animateatlas.AtlasFrameMaker;
 import Type.ValueType;
@@ -178,7 +173,7 @@ class LuaUtils {
 		};
 	}
 
-	public static function getPropertyLoop(killMe:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool=true):Dynamic {
+	public static function getPropertyLoop(killMe:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic {
 		var obj:Dynamic = getObjectDirectly(killMe[0], checkForTextsToo);
 		var end = killMe.length;
 		if(getProperty) end = killMe.length - 1;

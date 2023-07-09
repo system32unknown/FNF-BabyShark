@@ -6,7 +6,7 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 import openfl.utils.Assets;
-import haxe.Json;
+import tjson.TJSON as Json;
 
 typedef CharacterFile = {
 	var animations:Array<AnimArray>;
@@ -216,6 +216,9 @@ class Character extends FlxSprite
 			} else if(specialAnim && animation.curAnim.finished) {
 				specialAnim = false;
 				dance();
+			} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished) {
+				dance();
+				animation.finish();
 			}
 
 			if (animation.curAnim.name.startsWith('sing'))

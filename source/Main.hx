@@ -17,8 +17,6 @@ import utils.CoolUtil;
 import game.FunkinGame;
 import ui.Overlay;
 
-import data.api.github.GithubAPI;
-
 //crash handler stuff
 #if CRASH_HANDLER
 import openfl.events.UncaughtErrorEvent;
@@ -30,8 +28,11 @@ import sys.io.File;
 
 class Main extends Sprite
 {
-	public static var COMMIT_HASH(default, never):String = GithubAPI.getLatestCommits();
-	public static var engineVersion:GameVersion = new GameVersion(0, 1, 0);
+	public static var COMMIT_HASH(get, never):String;
+	public static function get_COMMIT_HASH():String {
+		return macro.GitCommitMacro.commitHash;
+	}
+	public static var engineVersion:GameVersion = new GameVersion(0, 1, 1);
 
 	var game = {
 		width: 1280, // WINDOW width
@@ -73,9 +74,9 @@ class Main extends Sprite
 		}
 
 		CustomLog.init();
-		FunkinInternet.init();
 		utils.FunkinCache.init();
 
+		#if LUA_ALLOWED Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(scripting.lua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
 		addChild(new FunkinGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(overlayVar = new Overlay());
@@ -83,9 +84,7 @@ class Main extends Sprite
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		
-		FlxG.signals.preStateSwitch.add(() -> {
-			Paths.clearStoredCache();
-		});
+		FlxG.signals.preStateSwitch.add(() -> {Paths.clearStoredCache();});
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();
 			

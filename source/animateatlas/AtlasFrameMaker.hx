@@ -1,6 +1,6 @@
 package animateatlas;
 
-import haxe.Json;
+import tjson.TJSON as Json;
 import openfl.geom.Rectangle;
 import openfl.display.BitmapData;
 import flixel.math.FlxPoint;

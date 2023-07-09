@@ -101,7 +101,7 @@ class PlatformUtil
     static public function setDPIAware() {}
 
     @:functionCode('
-        UINT nMenuf = enable ? (MF_BYCOMMAND) : (MF_BYCOMMAND | MF_GRAYED | MF_DISABLED);
+        UINT nMenuf = enable ? (MF_BYCOMMAND | MF_GRAYED | MF_DISABLED) : (MF_BYCOMMAND);
         HWND hwnd = GetActiveWindow();
         EnableMenuItem(GetSystemMenu(hwnd, FALSE), SC_CLOSE, nMenuf);
     ')
