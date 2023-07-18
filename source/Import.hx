@@ -8,11 +8,11 @@ import llua.Lua;
 #if discord_rpc
 import utils.Discord;
 #end
+import utils.Paths;
 import utils.ClientPrefs;
 import states.MusicBeatState;
 import states.PlayState;
 import substates.MusicBeatSubstate;
-import Paths;
 #if MODS_ALLOWED import utils.Mods; #end
 
 import flixel.FlxG;

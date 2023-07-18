@@ -2,7 +2,6 @@ package scripting.lua;
 
 import openfl.display.BlendMode;
 import animateatlas.AtlasFrameMaker;
-import Type.ValueType;
 
 import substates.GameOverSubstate;
 
@@ -29,7 +28,7 @@ class LuaUtils {
 		};
 	}
 
-	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic):Any {
+	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic, allowMaps:Bool = false):Any {
 		var splitProps:Array<String> = variable.split('[');
 		if(splitProps.length > 1) {
 			var target:Dynamic = null;
@@ -46,16 +45,21 @@ class LuaUtils {
 			}
 			return target;
 		}
-			
-		if(PlayState.instance.variables.exists(variable)) {
-			PlayState.instance.variables.set(variable, value);
-			return true;
+
+		if(allowMaps && isMap(instance)) {
+			instance.set(variable, value);
+			return value;
 		}
 
+		if(PlayState.instance.variables.exists(variable)) {
+			PlayState.instance.variables.set(variable, value);
+			return value;
+		}
 		Reflect.setProperty(instance, variable, value);
-		return true;
+		return value;
 	}
-	public static function getVarInArray(instance:Dynamic, variable:String):Any {
+
+	public static function getVarInArray(instance:Dynamic, variable:String, allowMaps:Bool = false):Any {
 		var splitProps:Array<String> = variable.split('[');
 		if(splitProps.length > 1) {
 			var target:Dynamic = null;
@@ -70,35 +74,23 @@ class LuaUtils {
 			}
 			return target;
 		}
+		
+		if(allowMaps && isMap(instance))
+			return instance.get(variable);
 
 		if(PlayState.instance.variables.exists(variable)) {
 			var retVal:Dynamic = PlayState.instance.variables.get(variable);
 			if(retVal != null) return retVal;
 		}
-
 		return Reflect.getProperty(instance, variable);
 	}
 
-	public static function setVarInstance(variable:String, value:Dynamic, checkForTextsToo:Bool = true):Bool {
-		var ind = variable.indexOf('.');
-		if (ind == -1) {
-			if (PlayState.instance.variables.exists(variable)) {
-				if (value == null) PlayState.instance.variables.remove(variable);
-				else PlayState.instance.variables.set(variable, value);
-				return true;
-			}
-			return setVarInArray(getInstance(), variable, value);
-		}
-
-		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo), pind;
-		while((pind = ind) != -1) {
-			if ((ind = variable.indexOf('.', ind + 1)) == -1)
-				return setVarInArray(obj, variable.substr(pind + 1), value);
-			obj = getVarInArray(obj, variable.substring(pind + 1, ind));
-		}
-
-		return true;
+	public static function isMap(variable:Dynamic)
+	{
+		if(variable.exists != null && variable.keyValueIterator != null) return true;
+		return false;
 	}
+
 	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
 		var ind = variable.indexOf('.');
 		if (ind == -1) {
@@ -108,32 +100,6 @@ class LuaUtils {
 
 		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo);
 		while (ind != -1) {
-			obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
-		}
-
-		return obj;
-	}
-
-	public static function setVarInObject(obj:Dynamic, variable:String, value:Dynamic):Bool {
-		var ind = variable.indexOf('.');
-		if (ind == -1) return setVarInArray(obj, variable, value);
-
-		var obj:Dynamic = getVarInArray(obj, variable.substr(0, ind)), pind;
-		while((pind = ind) != -1) {
-			if ((ind = variable.indexOf('.', ind + 1)) == -1)
-				return setVarInArray(obj, variable.substr(pind + 1), value);
-
-			obj = getVarInArray(obj, variable.substring(pind + 1, ind));
-		}
-
-		return true;
-	}
-	public static function getVarInObject(obj:Dynamic, variable:String):Dynamic {
-		var ind = variable.indexOf('.');
-		if (ind == -1) return getVarInArray(obj, variable);
-
-		var obj:Dynamic = getVarInArray(obj, variable.substr(0, ind));
-		while(ind != -1) {
 			obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
 		}
 
@@ -152,25 +118,19 @@ class LuaUtils {
 		}
 		Reflect.setProperty(leArray, variable, value);
 	}
-	public static function getGroupStuff(leArray:Dynamic, variable:String) {
-		var killMe:Array<String> = variable.split('.');
-		if(killMe.length > 1) {
-			var coverMeInPiss:Dynamic = Reflect.getProperty(leArray, killMe[0]);
-			for (i in 1...killMe.length - 1) {
-				coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
-			}
-			switch(Type.typeof(coverMeInPiss)) {
-				case ValueType.TClass(haxe.ds.StringMap) | ValueType.TClass(haxe.ds.ObjectMap) | ValueType.TClass(haxe.ds.IntMap) | ValueType.TClass(haxe.ds.EnumValueMap):
-					return coverMeInPiss.get(killMe[killMe.length - 1]);
-				default:
-					return Reflect.getProperty(coverMeInPiss, killMe[killMe.length - 1]);
-			};
+	public static function getGroupStuff(leArray:Dynamic, variable:String, ?allowMaps:Bool = false) {
+		var split:Array<String> = variable.split('.');
+		if(split.length > 1) {
+			var obj:Dynamic = Reflect.getProperty(leArray, split[0]);
+			for (i in 1...split.length - 1)
+				obj = Reflect.getProperty(obj, split[i]);
+
+			leArray = obj;
+			variable = split[split.length - 1];
 		}
-		switch(Type.typeof(leArray)) {
-			case ValueType.TClass(haxe.ds.StringMap) | ValueType.TClass(haxe.ds.ObjectMap) | ValueType.TClass(haxe.ds.IntMap) | ValueType.TClass(haxe.ds.EnumValueMap):
-				return leArray.get(variable);
-			default: return Reflect.getProperty(leArray, variable);
-		};
+
+		if(allowMaps && isMap(leArray)) return leArray.get(variable);
+		return Reflect.getProperty(leArray, variable);
 	}
 
 	public static function getPropertyLoop(killMe:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic {
@@ -207,6 +167,26 @@ class LuaUtils {
 	public static inline function getInstance() {
 		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
 	}
+
+	public static inline function getLowestCharacterGroup():FlxSpriteGroup
+	{
+		var group:FlxSpriteGroup = PlayState.instance.gfGroup;
+		var pos:Int = PlayState.instance.members.indexOf(group);
+
+		var newPos:Int = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
+		if(newPos < pos) {
+			group = PlayState.instance.boyfriendGroup;
+			pos = newPos;
+		}
+		
+		newPos = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
+		if(newPos < pos) {
+			group = PlayState.instance.dadGroup;
+			pos = newPos;
+		}
+		return group;
+	}
+
 	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false)
 		{
 			var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
@@ -380,11 +360,5 @@ class LuaUtils {
 		}
 		#end
 		return false;
-	}
-
-	public static function hasValidArgs(state:State, neededArgs:Int):Bool {
-		var uwu:Bool = Lua.gettop(state) >= neededArgs;
-		if (!uwu) Lua.pushnil(state);
-		return uwu;
 	}
 }

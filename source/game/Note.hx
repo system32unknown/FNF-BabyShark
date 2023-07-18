@@ -11,6 +11,15 @@ typedef EventNote = {
 	value2:String
 }
 
+typedef NoteSplashData = {
+	disabled:Bool,
+	texture:String,
+	h:FlxColor,
+	s:FlxColor,
+	v:FlxColor,
+	a:Float
+}
+
 class Note extends FlxSprite
 {
 	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
@@ -22,7 +31,7 @@ class Note extends FlxSprite
 	public static var gridSizes:Array<Int> = EKData.gridSizes;
 	public static var noteSplashScales:Array<Float> = EKData.splashScales;
 
-	public var extraData:Map<String, Dynamic> = [];
+	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	public static var ammo:Array<Int> = EKData.gun;
 	public static var minMania:Int = 0;
@@ -48,8 +57,6 @@ class Note extends FlxSprite
 	public var hitByOpponent:Bool = false;
 	public var prevNote:Note;
 
-	public var multSpeed(default, set):Float = 1;
-
 	public var tail:Array<Note> = []; // for sustains
 	public var parent:Note;
 	public var blockHit:Bool = false; // only works for player
@@ -69,7 +76,7 @@ class Note extends FlxSprite
 	public var animSuffix:String = '';
 	public var gfNote:Bool = false;
 	public var lateHitMult:Float = 1;
-	public var earlyHitMult:Float = 0.5;
+	public var earlyHitMult:Float = 1;
 
 	public static var SUSTAIN_SIZE:Int = 44;
 	public static var swagWidth:Float = 160 * .7;
@@ -84,6 +91,7 @@ class Note extends FlxSprite
 	public var offsetY:Float = 0;
 	public var offsetAngle:Float = 0;
 	public var multAlpha:Float = 1;
+	public var multSpeed(default, set):Float = 1;
 
 	public var copyX:Bool = true;
 	public var copyY:Bool = true;
@@ -104,6 +112,8 @@ class Note extends FlxSprite
 	public var distance:Float = 2000; //plan on doing scroll directions soon -bb
 
 	public var hitsoundDisabled:Bool = false;
+	public var hitsoundChartEditor:Bool = true;
+	public var hitsound:String = 'hitsound';
 	public var changeAnim:Bool = true;
 	public var changeColSwap:Bool = true;
 	
@@ -129,7 +139,7 @@ class Note extends FlxSprite
 	}
 
 	function set_noteType(value:String):String {
-		noteSplashTexture = PlayState.SONG.splashSkin;
+		noteSplashTexture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 		var arrowIndex:Int = Std.int(keysShit.get(mania).get('pixelAnimIndex')[noteData] % ammo[mania]);
 		if (noteData > -1 && noteData < arrowHSV.length) {
@@ -147,6 +157,8 @@ class Note extends FlxSprite
 					colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
 					missHealth = (isSustainNote ? .1 : .25);
 					hitCausesMiss = true;
+					hitsound = 'cancelMenu';
+					hitsoundChartEditor = false;
 				case 'Danger Note':
 					reloadNote('DANGER', 'NOTE_assets');
 					noteSplashTexture = 'DANGERnoteSplashes';
@@ -159,8 +171,10 @@ class Note extends FlxSprite
 					reloadNote('KILL', 'NOTE_assets');
 					noteSplashTexture = 'HURTnoteSplashes';
 					colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
-					missHealth = 2;
+					missHealth = PlayState.instance.healthMax;
 					hitCausesMiss = true;
+					hitsound = 'cancelMenu';
+					hitsoundChartEditor = false;
 				case 'Alt Animation':
 					animSuffix = '-alt';
 				case 'No Animation':
@@ -249,8 +263,8 @@ class Note extends FlxSprite
 				scale.y *= PlayState.daPixelZoom;
 				updateHitbox();
 			}
+			earlyHitMult = 0;
 		} else if(!isSustainNote) {
-			earlyHitMult = 1;
 			centerOffsets();
 			centerOrigin();
 		}
@@ -260,6 +274,7 @@ class Note extends FlxSprite
 	var _lastNoteOffX:Float = 0;
 	static var _lastValidChecked:String; //optimization
 	public var originalHeight:Float = 6;
+	public var correctionOffset:Float = 0;
 	function reloadNote(texture:String = '', postfix:String = '') {
 		if (texture == null) texture = '';
 		if(postfix == null) postfix = '';
@@ -290,16 +305,12 @@ class Note extends FlxSprite
 		defaultHeight = 154;
 		if(PlayState.isPixelStage) {
 			if(isSustainNote) {
-				loadGraphic(Paths.image('pixelUI/' + skinPixel + 'ENDS' + skinPostfix));
-				width /= pixelNotesDivisionValue;
-				height /= 2;
-				originalHeight = height;
-				loadGraphic(Paths.image('pixelUI/' + skinPixel + 'ENDS' + skinPostfix), true, Math.floor(width), Math.floor(height));
+				var graphic = Paths.image('pixelUI/' + skinPixel + 'ENDS' + skinPostfix);
+				loadGraphic(graphic, true, Math.floor(graphic.width / pixelNotesDivisionValue), Math.floor(graphic.height / 2));
+				originalHeight = graphic.height / 2;
 			} else {
-				loadGraphic(Paths.image('pixelUI/'+ skinPixel + skinPostfix));
-				width /= pixelNotesDivisionValue;
-				height /= 5;
-				loadGraphic(Paths.image('pixelUI/'+ skinPixel + skinPostfix), true, Math.floor(width), Math.floor(height));
+				var graphic = Paths.image('pixelUI/' + skinPixel + skinPostfix);
+				loadGraphic(graphic, true, Math.floor(graphic.width / pixelNotesDivisionValue), Math.floor(graphic.height / 5));
 			}
 			defaultWidth = width;
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom * pixelScales[mania]));
@@ -359,13 +370,11 @@ class Note extends FlxSprite
 	}
 
 	inline public function checkDiff(songPos:Float):Bool {
-		return (strumTime > songPos - (Conductor.safeZoneOffset * lateHitMult)
-				&& strumTime < songPos + (Conductor.safeZoneOffset * earlyHitMult));
+		return (strumTime > songPos - (Conductor.safeZoneOffset * lateHitMult) && strumTime < songPos + (Conductor.safeZoneOffset * earlyHitMult));
 	}
 
 	inline public function checkHit(songPos:Float):Bool {
-		return strumTime <= songPos + (Conductor.safeZoneOffset * earlyHitMult)
-				&& ((isSustainNote && prevNote.wasGoodHit) || strumTime <= songPos);
+		return strumTime <= songPos + (Conductor.safeZoneOffset * earlyHitMult) && ((isSustainNote && prevNote.wasGoodHit) || strumTime <= songPos);
 	}
 
 	override function update(elapsed:Float) {
@@ -373,7 +382,6 @@ class Note extends FlxSprite
 
 		if (mustPress) {
 			canBeHit = checkDiff(Conductor.songPosition);
-
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 				tooLate = true;
 		} else canBeHit = false;

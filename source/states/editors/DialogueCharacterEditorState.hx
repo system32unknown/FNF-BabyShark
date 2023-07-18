@@ -137,7 +137,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 		reloadCharacter();
 		updateTextBox();
 		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, '', 0.05, false);
-		daText.setScale(.7, .7);
+		daText.setScale(.7);
 		daText.text = DEFAULT_TEXT;
 		hudGroup.add(daText);
 

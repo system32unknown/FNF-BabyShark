@@ -12,6 +12,7 @@ class OptionsState extends MusicBeatState
 	];
 	var grpOptions:FlxTypedGroup<Alphabet>;
 	static var curSelected:Int = 0;
+	public static var onPlayState:Bool = false;
 
 	function openSelectedSubstate(label:String) {
 		switch(label) {
@@ -22,7 +23,7 @@ class OptionsState extends MusicBeatState
 			case 'Gameplay': openSubState(new GameplaySettingsSubState());
 			case 'Miscellaneous': openSubState(new MiscellaneousSubState());
 			case 'Saves': openSubState(new SaveSubState());
-			case 'Adjust Delay and Combo': LoadingState.loadAndSwitchState(new options.NoteOffsetState());
+			case 'Adjust Delay and Combo': MusicBeatState.switchState(new options.NoteOffsetState());
 		}
 	}
 
@@ -98,7 +99,11 @@ class OptionsState extends MusicBeatState
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			MusicBeatState.switchState(new MainMenuState());
+			if(onPlayState) {
+				StageData.loadDirectory(PlayState.SONG);
+				LoadingState.loadAndSwitchState(new PlayState());
+				FlxG.sound.music.volume = 0;
+			} else MusicBeatState.switchState(new MainMenuState());
 		}
 
 		if (controls.ACCEPT) {

@@ -230,13 +230,9 @@ class ChartingState extends MusicBeatState
 		nextRenderedSustains = new FlxTypedGroup<FlxSprite>();
 		nextRenderedNotes = new FlxTypedGroup<Note>();
 
-		if(curSec >= _song.notes.length) curSec = _song.notes.length - 1;
-
 		FlxG.mouse.visible = true;
 
 		tempBpm = _song.bpm;
-
-		addSection();
 
 		currentSongName = Paths.formatToSongPath(_song.song);
 		loadSong();
@@ -244,6 +240,8 @@ class ChartingState extends MusicBeatState
 		Conductor.usePlayState = true;
 		Conductor.changeBPM(_song.bpm);
 		Conductor.mapBPMChanges(_song);
+
+		if(curSec >= _song.notes.length) curSec = _song.notes.length - 1;
 
 		bpmTxt = new FlxText(1100, 50, 0, "", 16);
 		bpmTxt.scrollFactor.set();
@@ -1278,6 +1276,15 @@ class ChartingState extends MusicBeatState
 		FlxG.sound.music.pause();
 		Conductor.songPosition = sectionStartTime();
 		FlxG.sound.music.time = Conductor.songPosition;
+
+		var curTime:Float = 0;
+		if(_song.notes.length <= 1) { //First load ever
+			trace('first load ever!!');
+			while(curTime < FlxG.sound.music.length) {
+				addSection();
+				curTime += (60 / _song.bpm) * 4000;
+			}
+		}
 	}
 
 	function generateSong() {

@@ -40,7 +40,7 @@ class DeleteSavesSubState extends MusicBeatSubstate {
 		add(grpName);
 
         var titleText:Alphabet = new Alphabet(75, 40, 'Modpacks Options Saves Menu', true);
-		titleText.setScale(.6, .6);
+		titleText.setScale(.6);
 		titleText.alpha = 0.4;
 		add(titleText);
 

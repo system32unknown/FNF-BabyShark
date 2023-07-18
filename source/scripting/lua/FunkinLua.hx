@@ -84,216 +84,6 @@ class FunkinLua {
 
 		initGlobals(game);
 
-		addCallback("openCustomSubstate", function(name:String, pauseGame:Bool = false) {
-			if(pauseGame) {
-				game.persistentUpdate = false;
-				game.persistentDraw = true;
-				game.paused = true;
-				if(FlxG.sound.music != null) {
-					FlxG.sound.music.pause();
-					game.vocals.pause();
-				}
-			}
-			game.openSubState(new CustomSubstate(name));
-		});
-		addCallback("closeCustomSubstate", function(_) {
-			if(CustomSubstate.instance == null) return false;
-			game.closeSubState();
-			CustomSubstate.instance = null;
-			return true;
-		});
-
-		// shader shit
-		addCallback("initLuaShader", function(name:String, glslVersion:Int = 120) {
-			if(!ClientPrefs.getPref('shaders')) return false;
-
-			#if (!flash && MODS_ALLOWED && sys)
-			return initLuaShader(name, glslVersion);
-			#else
-			luaTrace("initLuaShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-			return false;
-		});
-		
-		addCallback("setSpriteShader", function(obj:String, shader:String) {
-			if(!ClientPrefs.getPref('shaders')) return false;
-
-			#if (!flash && MODS_ALLOWED && sys)
-			if(!runtimeShaders.exists(shader) && !initLuaShader(shader)) {
-				luaTrace('setSpriteShader: Shader $shader is missing!', false, false, FlxColor.RED);
-				return false;
-			}
-
-			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
-			if(leObj != null) {
-				var arr:Array<String> = runtimeShaders.get(shader);
-				leObj.shader = new FlxRuntimeShader(arr[0], arr[1]);
-				return true;
-			}
-			#else
-			luaTrace("setSpriteShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-			return false;
-		});
-		addCallback("removeSpriteShader", function(obj:String) {
-			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
-			if (leObj != null) {
-				leObj.shader = null;
-				return true;
-			}
-			return false;
-		});
-
-		addCallback("getShaderBool", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getBool(prop) : null;
-			#else
-			luaTrace("getShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-		addCallback("getShaderBoolArray", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getBoolArray(prop) : null;
-			#else
-			luaTrace("getShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-		addCallback("getShaderInt", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getInt(prop) : null;
-			#else
-			luaTrace("Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-		addCallback("getShaderIntArray", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getIntArray(prop) : null;
-			#else
-			luaTrace("getShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-		addCallback("getShaderFloat", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getFloat(prop) : null;
-			#else
-			luaTrace("getShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-		addCallback("getShaderFloatArray", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getFloatArray(prop) : null;
-			#else
-			luaTrace("getShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return null;
-			#end
-		});
-
-		addCallback("setShaderBool", function(obj:String, prop:String, value:Bool) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setBool(prop, value);
-				return true;
-			}
-			#else
-			luaTrace("setShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-		addCallback("setShaderBoolArray", function(obj:String, prop:String, values:Dynamic) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setBoolArray(prop, values);
-				return true;
-			}
-			#else
-			luaTrace("setShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-		addCallback("setShaderInt", function(obj:String, prop:String, value:Int) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setInt(prop, value);
-				return true;
-			}
-			#else
-			luaTrace("setShaderInt: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-		addCallback("setShaderIntArray", function(obj:String, prop:String, values:Dynamic) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setIntArray(prop, values);
-				return true;
-			}
-			#else
-			luaTrace("setShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-		addCallback("setShaderFloat", function(obj:String, prop:String, value:Float) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setFloat(prop, value);
-				return true;
-			}
-			#else
-			luaTrace("setShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-		addCallback("setShaderFloatArray", function(obj:String, prop:String, values:Dynamic) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				shader.setFloatArray(prop, values);
-				return true;
-			}
-			#else
-			luaTrace("setShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
-
-		addCallback("setShaderSampler2D", function(obj:String, prop:String, bitmapdataPath:String) {
-			#if (!flash && MODS_ALLOWED && sys)
-			var shader:FlxRuntimeShader = getShader(obj);
-			if (shader != null) {
-				var value = Paths.image(bitmapdataPath);
-				if (value == null || value.bitmap == null) return false;
-
-				shader.setSampler2D(prop, value.bitmap);
-				return true;
-			}
-			#else
-			luaTrace("setShaderSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			#end
-
-			return false;
-		});
 
 		addCallback("getRunningScripts", function(_) {
 			return [for (script in game.luaArray) script];
@@ -1087,7 +877,6 @@ class FunkinLua {
 
 		addCallback("stampSprite", function(sprite:String, brush:String, x:Int, y:Int) {
 			if(!game.modchartSprites.exists(sprite) || !game.modchartSprites.exists(brush)) return false;
-
 			game.modchartSprites.get(sprite).stamp(game.modchartSprites.get(brush), x, y);
 			return true;
 		});
@@ -1336,10 +1125,10 @@ class FunkinLua {
 			luaTrace(toPrint.join(", "), true, false);
 		}));
 
-		addLocalCallback("close", function(l:FunkinLua):Bool {
+		addLocalCallback("close", function():Bool {
 			PlayState.instance.luaArray.remove(this);
-			trace('Closing script $scriptName');
-			return l.closed = true;
+			trace('Closing script: $scriptName');
+			return closed = true;
 		});
 
 		addCallback("changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
@@ -1349,160 +1138,15 @@ class FunkinLua {
 			#end
 		});
 
-		// LUA TEXTS
-		addCallback("makeLuaText", function(tag:String, text:String, width:Int, x:Float, y:Float) {
-			tag = tag.replace('.', '');
-			LuaUtils.resetTextTag(tag);
-			var leText:FlxText = new FlxText(x, y, width, text, 16);
-			leText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
-			leText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
-			leText.cameras = [game.camHUD];
-			leText.scrollFactor.set();
-			game.modchartTexts.set(tag, leText);
-		});
-
-		addCallback("setTextString", function(tag:String, text:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.text = text;
-				return true;
-			}
-			luaTrace("setTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextSize", function(tag:String, size:Int) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.size = size;
-				return true;
-			}
-			luaTrace("setTextSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextWidth", function(tag:String, width:Float) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.fieldWidth = width;
-				return true;
-			}
-			luaTrace("setTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextBorder", function(tag:String, size:Int, color:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.borderSize = size;
-				obj.borderColor = CoolUtil.colorFromString(color);
-				return true;
-			}
-			luaTrace("setTextBorder: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextBorderStyle", function(tag:String, borderStyle:String = 'NONE') {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.borderStyle = NONE;
-				switch(borderStyle.trim().toLowerCase()) {
-					case 'none': obj.borderStyle = NONE;
-					case 'shadow': obj.borderStyle = SHADOW;
-					case 'outline': obj.borderStyle = OUTLINE;
-					case 'outline_fast': obj.borderStyle = OUTLINE_FAST;
-				}
-			}
-		});
-		addCallback("setTextColor", function(tag:String, color:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.color = CoolUtil.colorFromString(color);
-				return true;
-			}
-			luaTrace("setTextColor: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextFont", function(tag:String, newFont:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.font = Paths.font(newFont);
-				return true;
-			}
-			luaTrace("setTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextItalic", function(tag:String, italic:Bool) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.italic = italic;
-				return true;
-			}
-			luaTrace("setTextItalic: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-		addCallback("setTextAlignment", function(tag:String, alignment:String = 'left') {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.alignment = LEFT;
-				switch(alignment.trim().toLowerCase()) {
-					case 'right': obj.alignment = RIGHT;
-					case 'center': obj.alignment = CENTER;
-				}
-				return true;
-			}
-			luaTrace("setTextAlignment: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return false;
-		});
-
-		addCallback("getTextString", function(tag:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null && obj.text != null)
-				return obj.text;
-			luaTrace("getTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return null;
-		});
-		addCallback("getTextSize", function(tag:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) return obj.size;
-			luaTrace("getTextSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return -1;
-		});
-		addCallback("getTextFont", function(tag:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) return obj.font;
-			luaTrace("getTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return null;
-		});
-		addCallback("getTextWidth", function(tag:String) {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) return obj.fieldWidth;
-			luaTrace("getTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			return 0;
-		});
-
-		addCallback("addLuaText", function(tag:String) {
-			if(game.modchartTexts.exists(tag)) {
-				LuaUtils.getInstance().add(game.modchartTexts.get(tag));
-			}
-		});
-		addCallback("removeLuaText", function(tag:String, destroy:Bool = true) {
-			if(!game.modchartTexts.exists(tag)) return;
-
-			var text:FlxText = game.modchartTexts.get(tag);
-			if(destroy) text.kill();
-
-			LuaUtils.getInstance().remove(text, true);
-
-			if(destroy) {
-				text.destroy();
-				game.modchartTexts.remove(tag);
-			}
-		});
-
-		DeprecatedFunctions.implement(this);
+		#if HSCRIPT_ALLOWED HScript.implement(this); #end
+		TextFunctions.implement(this);
+		ReflectionFunctions.implement(this);
 		ExtraFunctions.implement(this);
-		#if (hscript && HSCRIPT_ALLOWED) HScript.implement(this); #end
-		trace('lua file loaded succesfully:' + scriptName);
+		CustomSubstate.implement(this);
+		ShaderFunctions.implement(this);
+		DeprecatedFunctions.implement(this);
 
 		call('onCreate');
-		if (closed) return stop();
 		#end
 	}
 
@@ -1631,11 +1275,6 @@ class FunkinLua {
 	#end
 
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
-	public function getShader(obj:String):FlxRuntimeShader {
-		var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
-		if (leObj != null) return cast leObj.shader;
-		return null;
-	}
 
 	public function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
 		#if LUA_ALLOWED

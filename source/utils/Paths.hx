@@ -1,4 +1,4 @@
-package;
+package utils;
 
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
@@ -258,7 +258,7 @@ class Paths
 			return true;
 		#end
 
-		return OpenFlAssets.exists((isPath ? key : getPath(key, type)));
+		return OpenFlAssets.exists((isPath ? key : getPath(key, type, library, false)));
 	}
 
 	inline static public function getSparrowAtlas(key:String, ?library:String):FlxAtlasFrames {
@@ -334,12 +334,13 @@ class Paths
 
 			if (graph != null) {
 				graph.persist = true;
+				graph.destroyOnNoUse = false;
 				currentTrackedAssets.set(path, graph);
 				return graph;
 			}
 		}
 
-		trace('oh no its returning null NOOOO: $path' #if MODS_ALLOWED + ' | Mods: $modKey' #end);
+		trace('returnGraphic returning null: $path' #if MODS_ALLOWED + ' | Mods: $modKey' #end);
 		return null;
 	}
 
@@ -383,7 +384,7 @@ class Paths
 			if (sound != null) return sound;
 		#if (!MODS_ALLOWED) } #end
 
-		trace('oh no its returning null NOOOO: $path' #if MODS_ALLOWED + ' | $modKey' #end);
+		trace('returnSound returning null: $path' #if MODS_ALLOWED + ' | $modKey' #end);
 		return null;
 	}
 

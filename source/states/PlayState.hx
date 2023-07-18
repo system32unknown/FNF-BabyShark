@@ -132,7 +132,7 @@ class PlayState extends MusicBeatState {
 
 	public var gfSpeed:Int = 1;
 	public var health:Float = 1;
-	var healthMax:Float = 2;
+	public var healthMax:Float = 2;
 	public var combo:Int = 0;
 	public var maxCombo:Int = 0;
 
@@ -776,7 +776,7 @@ class PlayState extends MusicBeatState {
 			for (note in unspawnNotes) note.resizeByRatio(ratio);
 		}
 		
-		noteKillOffset = 350 / songSpeed;
+		noteKillOffset = Math.max(Conductor.stepCrochet, 350 / songSpeed);
 		return songSpeed = value;
 	}
 
@@ -1263,6 +1263,7 @@ class PlayState extends MusicBeatState {
 	var noteTypes:Array<String> = [];
 	var eventsPushed:Array<String> = [];
 	function generateSong(dataPath:String):Void {
+		songSpeed = PlayState.SONG.speed;
 		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype', 'multiplicative');
 
 		switch(songSpeedType) {
@@ -1757,7 +1758,7 @@ class PlayState extends MusicBeatState {
 		}
 		
 		FlxG.camera.followLerp = 0;
-		if(!inCutscene) {
+		if(!inCutscene && !paused) {
 			FlxG.camera.followLerp = FlxMath.bound(elapsed * 2.4 * cameraSpeed * playbackRate / (FlxG.updateFramerate / 60), 0, 1);
 			if(!startingSong && !endingSong && boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name.startsWith('idle')) {
 				boyfriendIdleTime += elapsed;
@@ -2029,7 +2030,7 @@ class PlayState extends MusicBeatState {
 			}
 		
 			// Kill extremely late notes and cause misses
-			if (Conductor.songPosition > noteKillOffset + daNote.strumTime) {
+			if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
 				if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit))
 					noteMiss(daNote);
 				if (!daNote.mustPress && daNote.ignoreNote && !endingSong)

@@ -190,8 +190,7 @@ class DialogueEditorState extends MusicBeatState
 		character.reloadAnimations();
 		character.setGraphicSize(Std.int(character.width * DialogueCharacter.DEFAULT_SCALE * character.jsonFile.scale));
 		character.updateHitbox();
-		character.x = DialogueBoxPsych.LEFT_CHAR_X;
-		character.y = DialogueBoxPsych.DEFAULT_CHAR_Y;
+		character.setPosition(DialogueBoxPsych.LEFT_CHAR_X, DialogueBoxPsych.DEFAULT_CHAR_Y);
 
 		switch(character.jsonFile.dialogue_pos) {
 			case 'right': character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;
@@ -204,11 +203,9 @@ class DialogueEditorState extends MusicBeatState
 		character.playAnim(); //Plays random animation
 		characterAnimSpeed();
 
-		if(character.animation.curAnim != null && character.jsonFile.animations != null) {
+		if(character.animation.curAnim != null && character.jsonFile.animations != null)
 			animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
-		} else {
-			animText.text = 'ERROR! NO ANIMATIONS FOUND';
-		}
+		else animText.text = 'ERROR! NO ANIMATIONS FOUND';
 	}
 
 	private static var DEFAULT_TEXT:String = "coolswag";
@@ -219,10 +216,8 @@ class DialogueEditorState extends MusicBeatState
 		if(textToType == null || textToType.length < 1) textToType = ' ';
 		
 		daText.text = textToType;
-		daText.resetDialogue();
 
-		if(skipDialogue) 
-			daText.finishText();
+		if(skipDialogue) daText.finishText();
 		else if(daText.delay > 0) {
 			if(character.jsonFile.animations.length > curAnim && character.jsonFile.animations[curAnim] != null) {
 				character.playAnim(character.jsonFile.animations[curAnim].anim);
@@ -311,9 +306,7 @@ class DialogueEditorState extends MusicBeatState
 					if(inputText == lineInputText) {
 						inputText.text += '\\n';
 						inputText.caretIndex += 2;
-					} else {
-						inputText.hasFocus = false;
-					}
+					} else inputText.hasFocus = false;
 				}
 				break;
 			}
@@ -354,9 +347,7 @@ class DialogueEditorState extends MusicBeatState
 				dialogueFile.dialogue.remove(dialogueFile.dialogue[curSelected]);
 				if(dialogueFile.dialogue.length < 1) //You deleted everything, dumbo!
 				{
-					dialogueFile.dialogue = [
-						copyDefaultLine()
-					];
+					dialogueFile.dialogue = [copyDefaultLine()];
 				}
 				changeText();
 			} else if(FlxG.keys.justPressed.P) {
@@ -402,9 +393,7 @@ class DialogueEditorState extends MusicBeatState
 			}
 			character.playAnim(character.jsonFile.animations[curAnim].anim, daText.finishedText);
 			animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + leLength + ') - Press W or S to scroll';
-		} else {
-			animText.text = 'ERROR! NO ANIMATIONS FOUND';
-		}
+		} else animText.text = 'ERROR! NO ANIMATIONS FOUND';
 		characterAnimSpeed();
 
 		selectedText.text = 'Line: (' + (curSelected + 1) + ' / ' + dialogueFile.dialogue.length + ') - Press A or D to scroll';

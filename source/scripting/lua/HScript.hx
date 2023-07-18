@@ -83,7 +83,7 @@ class HScript
 		});
 		setVar('createCallback', function(name:String, adv:Bool, func:Dynamic, ?funk:FunkinLua = null) {
 			if(funk == null) funk = parentLua;
-			funk.addCallback(name, adv, func);
+			funk.addLocalCallback(name, func);
 		});
 		setVar('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
 			try {
@@ -140,7 +140,7 @@ class HScript
 
 	#if LUA_ALLOWED
 	public static function implement(funk:FunkinLua) {
-		funk.addCallback("runHaxeCode", function(l:FunkinLua, codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null) {
+		funk.addLocalCallback("runHaxeCode", function(l:FunkinLua, codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null) {
 			var retVal:Dynamic = null;
 
 			#if hscript
@@ -160,7 +160,7 @@ class HScript
 			return retVal;
 		});
 
-		funk.addCallback("runHaxeFunction", function(l:FunkinLua, funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
+		funk.addLocalCallback("runHaxeFunction", function(l:FunkinLua, funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
 			#if hscript
 			try {
 				return FunkinLua.hscript.executeFunction(funcToRun, funcArgs);
@@ -173,7 +173,7 @@ class HScript
 			#end
 		});
 
-		funk.addCallback("addHaxeLibrary", function(l:FunkinLua, libName:String, ?libPackage:String = '') {
+		funk.addLocalCallback("addHaxeLibrary", function(l:FunkinLua, libName:String, ?libPackage:String = '') {
 			#if hscript
 			try {
 				var str:String = '';

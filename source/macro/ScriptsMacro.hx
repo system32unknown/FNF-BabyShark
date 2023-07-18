@@ -8,7 +8,7 @@ import haxe.macro.Compiler;
  */
 class ScriptsMacro {
 	public static function addAdditionalClasses() {
-		for(inc in [
+		var include:Array<String> = [
 			// FLIXEL
 			"flixel.util", "flixel.ui", "flixel.tweens", "flixel.tile", "flixel.text",
 			"flixel.system", "flixel.sound", "flixel.path", "flixel.math", "flixel.input",
@@ -21,8 +21,22 @@ class ScriptsMacro {
 			#if sys "sys", #end "openfl.net", "shaders",
 			// BASE HAXE
 			"DateTools", "EReg", "Lambda", "StringBuf", "haxe.crypto", "haxe.display", "haxe.exceptions", "haxe.extern"
-		])
-			Compiler.include(inc);
+		];
+		var exc:Array<String> = [
+			"flixel.addons.editors.spine",
+			"flixel.addons.nape",
+			"flixel.system.macros",
+
+			"haxe.macro",
+
+			"lime._internal.backend.air",
+			"lime._internal.backend.html5",
+			"lime._internal.backend.kha",
+			"lime.tools",
+		];
+
+		for (inc in include)
+			Compiler.include(inc, true, exc);
 
 		// FOR ABSTRACTS
 		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');

@@ -4,6 +4,7 @@ import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import states.editors.MasterEditorMenu;
+import options.OptionsState;
 import game.Achievements;
 
 class MainMenuState extends MusicBeatState
@@ -213,7 +214,13 @@ class MainMenuState extends MusicBeatState
 								#end
 								case 'awards': MusicBeatState.switchState(new AchievementsMenuState());
 								case 'credits': MusicBeatState.switchState(new CreditsState());
-								case 'options': LoadingState.loadAndSwitchState(new options.OptionsState());
+								case 'options':
+									LoadingState.loadAndSwitchState(new OptionsState());
+									OptionsState.onPlayState = false;
+									if (PlayState.SONG != null) {
+										PlayState.SONG.arrowSkin = null;
+										PlayState.SONG.splashSkin = null;
+									}
 							}
 						});
 					}
