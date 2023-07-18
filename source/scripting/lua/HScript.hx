@@ -123,7 +123,7 @@ class HScript
 			var value:Dynamic = interp.execute(expr);
 			return (funcToRun != null) ? executeFunction(funcToRun, funcArgs) : value;
 		} catch(e:Exception) {
-			trace(e);
+			parentLua.luaTrace(parentLua.scriptName + ":" + parentLua.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
 			return null;
 		}
 	}
@@ -132,7 +132,9 @@ class HScript
 		if(funcToRun != null) {
 			if(interp.variables.exists(funcToRun)) {
 				if(funcArgs == null) funcArgs = [];
-				return Reflect.callMethod(null, interp.variables.get(funcToRun), funcArgs);
+				try {
+					return Reflect.callMethod(null, interp.variables.get(funcToRun), funcArgs);
+				} catch(e) parentLua.luaTrace(parentLua.scriptName + ":" + parentLua.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
 			}
 		}
 		return null;

@@ -11,15 +11,6 @@ typedef EventNote = {
 	value2:String
 }
 
-typedef NoteSplashData = {
-	disabled:Bool,
-	texture:String,
-	h:FlxColor,
-	s:FlxColor,
-	v:FlxColor,
-	a:Float
-}
-
 class Note extends FlxSprite
 {
 	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];

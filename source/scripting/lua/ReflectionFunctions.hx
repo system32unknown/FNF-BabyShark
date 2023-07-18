@@ -29,8 +29,7 @@ class ReflectionFunctions {
 		});
 		funk.addCallback("getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false) {
 			var myClass:Dynamic = Type.resolveClass(classVar);
-			if(myClass == null)
-			{
+			if(myClass == null) {
 				funk.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
 				return null;
 			}
