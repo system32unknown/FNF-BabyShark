@@ -31,6 +31,24 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 		
+		#if desktop
+		var option:Option = new Option('Hardware Caching',
+			'If checked, the game will use GPU to store images for to maintain MEM usage. ' +
+			'Restart the game for to apply changes.' +
+			'\n[UNCHECK THIS IF IMAGES ARE NOT SHOWING]',
+			'hardwareCache',
+			'bool', false);
+		addOption(option);
+		
+		var option:Option = new Option('Streaming Music',
+			'If checked, the game will simultaneously load music data while its playing, this also make looped musics seamlessly loop. ' +
+			'Restart the game for to apply changes.' +
+			'\n[UNCHECK THIS IF GAME IS CRASHING]',
+			'streamMusic',
+			'bool', false);
+		addOption(option);
+		#end
+
 		var option:Option = new Option('Framerate',
 			"Pretty self explanatory, isn't it?",
 			'framerate',
@@ -45,19 +63,15 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		super();
 	}
 
-	function onChangeAntiAliasing()
-	{
-		for (sprite in members)
-		{
+	function onChangeAntiAliasing() {
+		for (sprite in members) {
 			var sprite:FlxSprite = cast sprite;
-			if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText)) {
+			if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText))
 				sprite.antialiasing = ClientPrefs.getPref('Antialiasing');
-			}
 		}
 	}
 
-	function onChangeFramerate()
-	{
+	function onChangeFramerate() {
 		if (ClientPrefs.getPref('framerate') > FlxG.drawFramerate)
 			FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.getPref('framerate');
 		else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.getPref('framerate');

@@ -34,24 +34,6 @@ class MiscellaneousSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		#if desktop
-		var option:Option = new Option('Hardware Caching',
-			'If checked, the game will use GPU to store images for to maintain MEM usage. ' +
-			'Restart the game for to apply changes.' +
-			'\n[UNCHECK THIS IF IMAGES ARE NOT SHOWING]',
-			'hardwareCache',
-			'bool', false);
-		addOption(option);
-		
-		var option:Option = new Option('Streaming Music',
-			'If checked, the game will simultaneously load music data while its playing, this also make looped musics seamlessly loop. ' +
-			'Restart the game for to apply changes.' +
-			'\n[UNCHECK THIS IF GAME IS CRASHING]',
-			'streamMusic',
-			'bool', false);
-		addOption(option);
-		#end
-
 		super();
 	}
 }

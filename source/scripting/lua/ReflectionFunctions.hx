@@ -15,13 +15,13 @@ class ReflectionFunctions {
 		funk.addCallback("getProperty", function(variable:String, ?allowMaps:Bool = false) {
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1)
-				return LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split, true, true, allowMaps), split[split.length-1], allowMaps);
+				return LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split, true, true, allowMaps), split[split.length - 1], allowMaps);
 			return LuaUtils.getVarInArray(LuaUtils.getInstance(), variable, allowMaps);
 		});
 		funk.addCallback("setProperty", function(variable:String, value:Dynamic, allowMaps:Bool = false) {
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1) {
-				LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split, true, true, allowMaps), split[split.length-1], value, allowMaps);
+				LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split, true, true, allowMaps), split[split.length - 1], value, allowMaps);
 				return true;
 			}
 			LuaUtils.setVarInArray(LuaUtils.getInstance(), variable, value, allowMaps);

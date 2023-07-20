@@ -33,8 +33,7 @@ class Difficulty {
 				--i;
 			}
 
-			if(diffs.length > 0 && diffs[0].length > 0)
-				list = diffs;
+			if(diffs.length > 0 && diffs[0].length > 0) list = diffs;
 		} else resetList();
 	}
 	inline public static function resetList() {

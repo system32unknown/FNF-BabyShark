@@ -162,6 +162,14 @@ class FunkinLua {
 			return LuaUtils.isLuaRunning(luaFile);
 		});
 
+		addCallback("setVar", function(varName:String, value:Dynamic) {
+			PlayState.instance.variables.set(varName, value);
+			return value;
+		});
+		addCallback("getVar", function(varName:String) {
+			return PlayState.instance.variables.get(varName);
+		});
+
 		addCallback("addLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false):Bool { //would be dope asf.
 			luaFile = format(luaFile);
 
@@ -234,7 +242,8 @@ class FunkinLua {
 			return ClientPrefs.getPref(pref, defaultValue);
 		});
 		addCallback("setPref", function(pref:String, ?value:Dynamic = null) {
-			ClientPrefs.prefs.set(pref, value);
+			if (Reflect.hasField(ClientPrefs.data, pref))
+				Reflect.setProperty(ClientPrefs.data, pref, value);
 		});
 
 		//shitass stuff for epic coders like me B)  *image of obama giving himself a medal*

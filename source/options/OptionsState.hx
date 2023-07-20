@@ -2,6 +2,7 @@ package options;
 
 import states.MainMenuState;
 import states.LoadingState;
+import data.StageData;
 import ui.Alphabet;
 
 class OptionsState extends MusicBeatState

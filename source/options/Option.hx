@@ -85,7 +85,7 @@ class Option
 			if (!ClientPrefs.modsOptsSaves.exists(fromJson[0])) ClientPrefs.modsOptsSaves.set(fromJson[0], []);
 			ClientPrefs.modsOptsSaves[fromJson[0]][variable] = value;
 		} else #end
-		ClientPrefs.prefs.set(variable, value);
+		Reflect.setProperty(ClientPrefs.data, variable, value);
 	}
 
 	public function setChild(child:Alphabet)

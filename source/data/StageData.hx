@@ -13,6 +13,7 @@ typedef StageFile = {
 	var directory:String;
 	var defaultZoom:Float;
 	var isPixelStage:Bool;
+	var stageUI:String;
 
 	var boyfriend:Array<Dynamic>;
 	var girlfriend:Array<Dynamic>;
@@ -31,6 +32,7 @@ class StageData {
 			directory: "",
 			defaultZoom: .9,
 			isPixelStage: false,
+			stageUI: "normal",
 
 			boyfriend: [770, 100],
 			girlfriend: [400, 130],
