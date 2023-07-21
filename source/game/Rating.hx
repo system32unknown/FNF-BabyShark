@@ -12,8 +12,12 @@ class Rating {
 	public function new(name:String) {
 		this.name = name;
 		this.image = name;
-		this.hitWindow = ClientPrefs.getPref(name + 'Window', 0);
-		if(hitWindow == null) hitWindow = 0;
+		this.hitWindow = 0;
+
+		var window:String = name + 'Window';
+		try {
+			this.hitWindow = ClientPrefs.getPref(window);
+		} catch(e) FlxG.log.error(e);
 	}
 
 	public static function loadDefault():Array<Rating> {

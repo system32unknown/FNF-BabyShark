@@ -470,7 +470,7 @@ class FunkinLua {
 		addCallback("triggerEvent", function(name:String, arg1:Dynamic, arg2:Dynamic) {
 			var value1:String = arg1;
 			var value2:String = arg2;
-			game.triggerEventNote(name, value1, value2, Conductor.songPosition);
+			game.triggerEvent(name, value1, value2, Conductor.songPosition);
 			return true;
 		});
 
@@ -1285,15 +1285,31 @@ class FunkinLua {
 
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
 
-	public function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
+	public static function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
 		#if LUA_ALLOWED
 		if(ignoreCheck || getBool('luaDebugMode')) {
 			if(deprecated && !getBool('luaDeprecatedWarnings')) return;
 			PlayState.instance.addTextToDebug(text, color);
-			haxe.Log.trace(text, cast {fileName: scriptName, lineNumber: 0});
 		}
 		#end
 	}
+
+	#if LUA_ALLOWED
+	public static function getBool(variable:String) {
+		if(lastCalledScript == null) return false;
+
+		var lua:State = lastCalledScript.lua;
+		if(lua == null) return false;
+
+		var result:String = null;
+		Lua.getglobal(lua, variable);
+		result = Convert.fromLua(lua, -1);
+		Lua.pop(lua, 1);
+
+		if(result == null) return false;
+		return (result == 'true');
+	}
+	#end
 
 	function getErrorMessage(status:Int = 0):String {
 		#if LUA_ALLOWED
@@ -1318,10 +1334,12 @@ class FunkinLua {
 	}
 
 	public var lastCalledFunction:String = '';
+	public static var lastCalledScript:FunkinLua = null;
 	public function call(func:String, ?args:Array<Any>):Dynamic {
 		#if LUA_ALLOWED
 		if (closed) return Function_Continue;
 		lastCalledFunction = func;
+		lastCalledScript = this;
 
 		Lua.getglobal(lua, func);
 		var type:Int = Lua.type(lua, -1);
@@ -1376,21 +1394,6 @@ class FunkinLua {
 		Lua.setglobal(lua, variable);
 		#end
 	}
-
-	#if LUA_ALLOWED
-	public function getBool(variable:String) {
-		#if LUA_ALLOWED
-		if (lua == null) return false;
-		Lua.getglobal(lua, variable);
-
-		var result:Bool = Lua.toboolean(lua, -1);
-		Lua.pop(lua, 1);
-
-		return result;
-		#end
-		return false;
-	}
-	#end
 
 	public function stop() {
 		#if LUA_ALLOWED

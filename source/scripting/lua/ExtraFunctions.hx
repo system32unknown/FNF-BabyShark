@@ -97,9 +97,9 @@ class ExtraFunctions {
 		});
 
 		// Save data management
-		funk.addCallback("initSaveData", function(l:FunkinLua, name:String, ?folder:String = 'psychenginemods') {
+		funk.addCallback("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
-				l.luaTrace('initSaveData: Save file already initialized: ' + name);
+				FunkinLua.luaTrace('initSaveData: Save file already initialized: ' + name);
 				return false;
 			}
 			var save:FlxSave = new FlxSave();
@@ -107,33 +107,33 @@ class ExtraFunctions {
 			PlayState.instance.modchartSaves.set(name, save);
 			return true;
 		});
-		funk.addCallback("flushSaveData", function(l:FunkinLua, name:String) {
+		funk.addCallback("flushSaveData", function(name:String) {
 			if(PlayState.instance.modchartSaves.exists(name)) {
 				PlayState.instance.modchartSaves.get(name).flush();
 				return true;
 			}
-			l.luaTrace('flushSaveData: Save file not initialized: ' + name, false, false, FlxColor.RED);
+			FunkinLua.luaTrace('flushSaveData: Save file not initialized: ' + name, false, false, FlxColor.RED);
 			return false;
 		});
-		funk.addCallback("getDataFromSave", function(l:FunkinLua, name:String, field:String, ?defaultValue:Dynamic = null) {
+		funk.addCallback("getDataFromSave", function(name:String, field:String, ?defaultValue:Dynamic = null) {
 			if(PlayState.instance.modchartSaves.exists(name)) {
 				var saveData = PlayState.instance.modchartSaves.get(name).data;
 				if(Reflect.hasField(saveData, field))
 					return Reflect.field(saveData, field);
 				else return defaultValue;
 			}
-			l.luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
+			FunkinLua.luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 			return defaultValue;
 		});
-		funk.addCallback("setDataFromSave", function(l:FunkinLua, name:String, field:String, value:Dynamic) {
+		funk.addCallback("setDataFromSave", function(name:String, field:String, value:Dynamic) {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
-				l.luaTrace('setDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
+				FunkinLua.luaTrace('setDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 				return false;
 			}
 			Reflect.setField(PlayState.instance.modchartSaves.get(name).data, field, value);
 			return true;
 		});
-		funk.addCallback("loadJsonOptions", function(l:FunkinLua, inclMainFol:Bool = true, ?modNames:Array<String> = null) {
+		funk.addCallback("loadJsonOptions", function(inclMainFol:Bool = true, ?modNames:Array<String> = null) {
 			#if MODS_ALLOWED
 			if (modNames == null) modNames = [];
 			if (modNames.length < 1) modNames.push(Mods.currentModDirectory);
@@ -159,11 +159,11 @@ class ExtraFunctions {
 			}
 			return ClientPrefs.modsOptsSaves.toString();
 			#else
-			l.luaTrace('loadJsonOptions: Platform unsupported for Json Options!', false, false, FlxColor.RED);
+			FunkinLua.luaTrace('loadJsonOptions: Platform unsupported for Json Options!', false, false, FlxColor.RED);
 			return false;
 			#end
 		});
-		funk.addCallback("getOptionSave", function(l:FunkinLua, variable:String, isJson:Bool = false, ?modName:String = null) {
+		funk.addCallback("getOptionSave", function(variable:String, isJson:Bool = false, ?modName:String = null) {
 			if (!isJson) return ClientPrefs.getPref(variable);
 			else if (isJson) {
 				#if MODS_ALLOWED
@@ -172,12 +172,12 @@ class ExtraFunctions {
 					return ClientPrefs.modsOptsSaves[modName][variable];
 				}
 				#else
-				l.luaTrace('getOptionSave: Platform unsupported for Json Options!', false, false, FlxColor.RED);
+				FunkinLua.luaTrace('getOptionSave: Platform unsupported for Json Options!', false, false, FlxColor.RED);
 				#end
 			}
 			return null;
 		});
-		funk.addCallback("setOptionSave", function(l:FunkinLua, variable:String, value:Dynamic, isJson:Bool = false, ?modName:String = null) {
+		funk.addCallback("setOptionSave", function(variable:String, value:Dynamic, isJson:Bool = false, ?modName:String = null) {
 			if (!isJson) {
 				Reflect.setProperty(ClientPrefs.data, variable, value);
 				return ClientPrefs.getPref(variable) != null ? true : false;
@@ -189,7 +189,7 @@ class ExtraFunctions {
 					return true;
 				}
 				#else
-				l.luaTrace('setOptionSave: Platform unsupported for Json Options!', false, false, FlxColor.RED);
+				FunkinLua.luaTrace('setOptionSave: Platform unsupported for Json Options!', false, false, FlxColor.RED);
 				#end
 			}
 			return false;
@@ -212,18 +212,18 @@ class ExtraFunctions {
 			return Assets.exists(Paths.getPath('assets/$filename', TEXT));
 			#end
 		});
-		funk.addCallback("saveFile", function(l:FunkinLua, path:String, content:String, ?absolute:Bool = false) {
+		funk.addCallback("saveFile", function(path:String, content:String, ?absolute:Bool = false) {
 			try {
 				if(!absolute)
 					File.saveContent(Paths.mods(path), content);
 				else File.saveContent(path, content);
 				return true;
 			} catch (e:Dynamic) {
-				l.luaTrace("saveFile: Error trying to save " + path + ": " + e, false, false, FlxColor.RED);
+				FunkinLua.luaTrace("saveFile: Error trying to save " + path + ": " + e, false, false, FlxColor.RED);
 			}
 			return false;
 		});
-		funk.addCallback("deleteFile", function(l:FunkinLua, path:String, ?ignoreModFolders:Bool = false) {
+		funk.addCallback("deleteFile", function(path:String, ?ignoreModFolders:Bool = false) {
 			try {
 				#if MODS_ALLOWED
 				if(!ignoreModFolders) {
@@ -241,7 +241,7 @@ class ExtraFunctions {
 					return true;
 				}
 			} catch (e:Dynamic) {
-				l.luaTrace("deleteFile: Error trying to delete " + path + ": " + e, false, false, FlxColor.RED);
+				FunkinLua.luaTrace("deleteFile: Error trying to delete " + path + ": " + e, false, false, FlxColor.RED);
 			}
 			return false;
 		});
@@ -269,13 +269,13 @@ class ExtraFunctions {
 			});
 		});
 
-		funk.addCallback("parseJson", function(l:FunkinLua, jsonStr:String, varName:String) {
+		funk.addCallback("parseJson", function(jsonStr:String, varName:String) {
 			var json = Paths.modFolders('data/' + jsonStr + '.json');
 			var foundJson:Bool;
 
 			if #if sys (FileSystem.exists(json)) #else (Assets.exists(json)) #end foundJson = true;
 			else {
-				l.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
+				FunkinLua.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
 				foundJson = false;
 			}
 

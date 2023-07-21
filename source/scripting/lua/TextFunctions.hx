@@ -23,7 +23,7 @@ class TextFunctions {
 				obj.text = text;
 				return true;
 			}
-			funk.luaTrace("setTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("setTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
 		funk.addCallback("setTextSize", function(tag:String, size:Int) {
@@ -32,7 +32,7 @@ class TextFunctions {
 				obj.size = size;
 				return true;
 			}
-			funk.luaTrace("setTextSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("setTextSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
 		funk.addCallback("setTextWidth", function(tag:String, width:Float) {
@@ -41,7 +41,7 @@ class TextFunctions {
 				obj.fieldWidth = width;
 				return true;
 			}
-			funk.luaTrace("setTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("setTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
 		funk.addCallback("setTextBorder", function(tag:String, size:Int, color:String) {
@@ -51,7 +51,7 @@ class TextFunctions {
 				obj.borderColor = CoolUtil.colorFromString(color);
 				return true;
 			}
-			funk.luaTrace("setTextBorder: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("setTextBorder: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
 		funk.addCallback("setTextBorderStyle", function(tag:String, borderStyle:String = 'NONE') {
@@ -72,7 +72,7 @@ class TextFunctions {
 				obj.color = CoolUtil.colorFromString(color);
 				return true;
 			}
-			funk.luaTrace("setTextColor: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("setTextColor: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
 		funk.addCallback("setTextFont", function(tag:String, newFont:String) {
@@ -81,7 +81,7 @@ class TextFunctions {
 				obj.font = Paths.font(newFont);
 				return true;
 			}
-			funk.luaTrace("setTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("setTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
 		funk.addCallback("setTextItalic", function(tag:String, italic:Bool) {
@@ -90,7 +90,7 @@ class TextFunctions {
 				obj.italic = italic;
 				return true;
 			}
-			funk.luaTrace("setTextItalic: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("setTextItalic: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
 		funk.addCallback("setTextAlignment", function(tag:String, alignment:String = 'left') {
@@ -103,32 +103,32 @@ class TextFunctions {
 				}
 				return true;
 			}
-			funk.luaTrace("setTextAlignment: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("setTextAlignment: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
 
 		funk.addCallback("getTextString", function(tag:String) {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null && obj.text != null) return obj.text;
-			funk.luaTrace("getTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("getTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return null;
 		});
 		funk.addCallback("getTextSize", function(tag:String) {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) return obj.size;
-			funk.luaTrace("getTextSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("getTextSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return -1;
 		});
 		funk.addCallback("getTextFont", function(tag:String) {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) return obj.font;
-			funk.luaTrace("getTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("getTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return null;
 		});
 		funk.addCallback("getTextWidth", function(tag:String) {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) return obj.fieldWidth;
-			funk.luaTrace("getTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("getTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return 0;
 		});
 

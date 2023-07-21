@@ -89,6 +89,10 @@ class Paths
 			if (obj.bitmap.image != null) obj.bitmap.image.data = null;
 			obj.bitmap.disposeImage();
 		}
+
+		obj.persist = false;
+		obj.destroyOnNoUse = true;
+
 		obj.dump();
 		obj.destroy();
 		obj = null;

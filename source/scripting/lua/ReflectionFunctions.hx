@@ -30,7 +30,7 @@ class ReflectionFunctions {
 		funk.addCallback("getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false) {
 			var myClass:Dynamic = Type.resolveClass(classVar);
 			if(myClass == null) {
-				funk.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
+				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
 				return null;
 			}
 
@@ -47,7 +47,7 @@ class ReflectionFunctions {
 		funk.addCallback("setPropertyFromClass", function(classVar:String, variable:String, value:Dynamic, ?allowMaps:Bool = false) {
 			var myClass:Dynamic = Type.resolveClass(classVar);
 			if(myClass == null) {
-				funk.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
+				FunkinLua.luaTrace('getPropertyFromClass: Class $classVar not found', false, false, FlxColor.RED);
 				return null;
 			}
 
@@ -84,7 +84,7 @@ class ReflectionFunctions {
 				else result = LuaUtils.getGroupStuff(leArray, variable, allowMaps);
 				return result;
 			}
-			funk.luaTrace("getPropertyFromGroup: Object #" + index + " from group: " + obj + " doesn't exist!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("getPropertyFromGroup: Object #" + index + " from group: " + obj + " doesn't exist!", false, false, FlxColor.RED);
 			return null;
 		});
 		funk.addCallback("setPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic, value:Dynamic) {
@@ -135,18 +135,18 @@ class ReflectionFunctions {
 				var myType:Dynamic = Type.resolveClass(className);
 		
 				if(myType == null) {
-					funk.luaTrace('createInstance: Variable $variableToSave is already being used and cannot be replaced!', false, false, FlxColor.RED);
+					FunkinLua.luaTrace('createInstance: Variable $variableToSave is already being used and cannot be replaced!', false, false, FlxColor.RED);
 					return false;
 				}
 
 				var obj:Dynamic = Type.createInstance(myType, args);
 				if(obj != null)
 					PlayState.instance.variables.set(variableToSave, obj);
-				else funk.luaTrace('createInstance: Failed to create $variableToSave, arguments are possibly wrong.', false, false, FlxColor.RED);
+				else FunkinLua.luaTrace('createInstance: Failed to create $variableToSave, arguments are possibly wrong.', false, false, FlxColor.RED);
 
 				return (obj != null);
 			}
-			else funk.luaTrace('createInstance: Variable $variableToSave is already being used and cannot be replaced!', false, false, FlxColor.RED);
+			else FunkinLua.luaTrace('createInstance: Variable $variableToSave is already being used and cannot be replaced!', false, false, FlxColor.RED);
 			return false;
 		});
 		funk.addCallback("addInstance", function(objectName:String, ?inFront:Bool = false) {
@@ -159,7 +159,7 @@ class ReflectionFunctions {
 					else GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), obj);
 				}
 			}
-			else funk.luaTrace('addInstance: Can\'t add what doesn\'t exist~ ($objectName)', false, false, FlxColor.RED);
+			else FunkinLua.luaTrace('addInstance: Can\'t add what doesn\'t exist~ ($objectName)', false, false, FlxColor.RED);
 		});
 	}
 

@@ -29,13 +29,10 @@ class Conductor
 	inline public static function calculateCrochet(bpm:Float):Float
 		return (60 / bpm) * 1000;
 
-	public static function judgeNote(note:Note, diff:Float = 0):Rating { // die
-		var data:Array<Rating> = PlayState.instance.ratingsData; //shortening cuz fuck u
-		for(i in 0...data.length - 1) { //skips last window (Shit)
-			if (diff <= data[i].hitWindow) {
-				return data[i];
-			}
-		}
+	public static function judgeNote(arr:Array<Rating>, diff:Float = 0):Rating { // die
+		var data:Array<Rating> = arr;
+		for(i in 0...data.length - 1) //skips last window (Shit)
+			if (diff <= data[i].hitWindow) return data[i];
 		return data[data.length - 1];
 	}
 
