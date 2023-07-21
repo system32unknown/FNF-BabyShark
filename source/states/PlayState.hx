@@ -524,7 +524,7 @@ class PlayState extends MusicBeatState {
 		opponentLU = new FlxTypedGroup<FlxSprite>();
 		opponentLU.camera = camHUD;
 
-		switch(ClientPrefs.getPref('LUType').toLowerCase()) {
+		switch(ClientPrefs.getPref('luType').toLowerCase()) {
 			case 'only p1': add(playerLU);
 			case 'both': 
 				if (!middleScroll) {
@@ -1019,7 +1019,7 @@ class PlayState extends MusicBeatState {
 		for (istrums in strums) {
 			for (i in 0...istrums[0].members.length) {
 				var strumLay:FlxSprite = new FlxSprite(istrums[0].members[i].x, 0).makeGraphic(Std.int(istrums[0].members[i].width), FlxG.height, FlxColor.BLACK);
-				strumLay.alpha = ClientPrefs.getPref('LUAlpha');
+				strumLay.alpha = ClientPrefs.getPref('luAlpha');
 				strumLay.scrollFactor.set();
 				strumLay.camera = camHUD;
 				strumLay.screenCenter(Y);
@@ -1808,7 +1808,7 @@ class PlayState extends MusicBeatState {
 		if (controls.justPressed('debug_1') && !endingSong && !inCutscene)
 			openChartEditor();
 
-		switch(ClientPrefs.getPref('IconBounceType')) {
+		switch(ClientPrefs.getPref('iconBounceType')) {
 			case "Vanilla":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .85)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .85)));

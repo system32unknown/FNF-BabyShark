@@ -69,11 +69,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
-		var option:Option = new Option('Enable Cutscenes', '',
-			'EnableCutScene',
-		'bool', true);
-		addOption(option);
-
 		var option:Option = new Option('Update Cam Section',
 		'If checked, camera will always update,\nwhich makes the camera more precise',
 		'UpdateCamSection', 'bool', true);

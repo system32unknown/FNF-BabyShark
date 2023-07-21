@@ -179,7 +179,7 @@ class ExtraFunctions {
 		});
 		funk.addCallback("setOptionSave", function(variable:String, value:Dynamic, isJson:Bool = false, ?modName:String = null) {
 			if (!isJson) {
-				Reflect.setProperty(ClientPrefs.data, variable, value);
+				ClientPrefs.data.prefs.set(variable, value);
 				return ClientPrefs.getPref(variable) != null ? true : false;
 			} else if (isJson) {
 				#if MODS_ALLOWED

@@ -307,7 +307,7 @@ class CharacterEditorState extends MusicBeatState
 				0,
 				0
 			],
-			"healthicon": "face",
+			"healthicon": "dad",
 			"flip_x": false,
 			"healthbar_colors": [
 				161,

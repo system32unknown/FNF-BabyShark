@@ -205,7 +205,7 @@ class ChartingState extends MusicBeatState {
 
 		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90).loadGraphic(Paths.image('eventArrow'));
 		leftIcon = new HealthIcon('bs');
-		rightIcon = new HealthIcon('daddyshark');
+		rightIcon = new HealthIcon('dad');
 
 		eventIcon.scrollFactor.set(1, 1);
 		leftIcon.scrollFactor.set(1, 1);

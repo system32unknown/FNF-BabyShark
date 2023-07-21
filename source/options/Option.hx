@@ -45,9 +45,7 @@ class Option
 
 		if(defaultValue == 'null variable value')
 			defaultValue = CoolUtil.getOptionDefVal(type, options);
-		if(getValue() == null) {
-			setValue(defaultValue);
-		}
+		if(getValue() == null) setValue(defaultValue);
 
 		switch(type) {
 			case 'string':
@@ -68,8 +66,7 @@ class Option
 		if(onChange != null) onChange();
 	}
 
-	public function getValue():Dynamic
-	{
+	public function getValue():Dynamic {
 		#if MODS_ALLOWED
 		if (fromJson != null) {
 			if (ClientPrefs.modsOptsSaves.exists(fromJson[0]) && ClientPrefs.modsOptsSaves[fromJson[0]].exists(variable))
@@ -85,11 +82,10 @@ class Option
 			if (!ClientPrefs.modsOptsSaves.exists(fromJson[0])) ClientPrefs.modsOptsSaves.set(fromJson[0], []);
 			ClientPrefs.modsOptsSaves[fromJson[0]][variable] = value;
 		} else #end
-		Reflect.setProperty(ClientPrefs.data, variable, value);
+		ClientPrefs.data.prefs.set(variable, value);
 	}
 
-	public function setChild(child:Alphabet)
-	{
+	public function setChild(child:Alphabet) {
 		this.child = child;
 	}
 

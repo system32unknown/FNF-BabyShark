@@ -238,12 +238,11 @@ class FunkinLua {
 			return true;
 		});
 
-		addCallback("getPref", function(pref:String, ?defaultValue:Dynamic) {
-			return ClientPrefs.getPref(pref, defaultValue);
+		addCallback("getPref", function(pref:String) {
+			return ClientPrefs.getPref(pref);
 		});
 		addCallback("setPref", function(pref:String, ?value:Dynamic = null) {
-			if (Reflect.hasField(ClientPrefs.data, pref))
-				Reflect.setProperty(ClientPrefs.data, pref, value);
+			ClientPrefs.data.prefs.set(pref, value);
 		});
 
 		//shitass stuff for epic coders like me B)  *image of obama giving himself a medal*
