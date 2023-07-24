@@ -890,6 +890,7 @@ class ChartingState extends MusicBeatState {
 	var strumTimeInputText:FlxUIInputText; //I wanted to use a stepper but we can't scale these as far as i know :(
 	var noteTypeDropDown:FlxUIDropDownMenu;
 	var currentType:Int = 0;
+	var noteStuffCopied:Array<Dynamic>;
 	var check_stackActive:FlxUICheckBox;
 	var stepperStackNum:FlxUINumericStepper;
 	var stepperStackOffset:FlxUINumericStepper;
