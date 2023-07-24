@@ -5,8 +5,11 @@ import flixel.input.keyboard.FlxKey;
 import states.TitleState;
 import game.Achievements;
 
-class SaveVariables {
-	public var prefs:Map<String, Dynamic> = [
+class ClientPrefs {
+	public static var isHardCInited:Bool = false;
+	public static var isStreMInited:Bool = false;
+
+	public static var prefs:Map<String, Dynamic> = [
 		'downScroll' => false,
 		'middleScroll' => false,
 		'opponentStrums' => true,
@@ -53,6 +56,7 @@ class SaveVariables {
 		'UpdateCamSection' => false,
 		'healthBarAlpha' => 1,
 		'hitsoundVolume' => 0,
+		'autoPause' => true,
 		'hitsoundTypes' => 'Tick',
 		'pauseMusic' => 'Tea Time',
 		'discordRPC' => true,
@@ -65,27 +69,6 @@ class SaveVariables {
 		'badWindow' => 135,
 		'safeFrames' => 10
 	];
-
-	public var gameplaySettings:Map<String, Dynamic> = [
-		'scrollspeed' => 1.,
-		'scrolltype' => 'multiplicative',
-		
-		'songspeed' => 1.,
-		'healthgain' => 1.,
-		'healthloss' => 1.,
-		'instakill' => false,
-		'practice' => false,
-		'botplay' => false
-	];
-
-	public function new() {}
-}
-class ClientPrefs {
-	public static var data:SaveVariables = null;
-	public static var defaultData:SaveVariables = null;
-	
-	public static var isHardCInited:Bool = false;
-	public static var isStreMInited:Bool = false;
 
 	// For custom functions after the save data is loaded
 	public static var loadFunctions:Map<String, Dynamic -> Void> = [
@@ -115,12 +98,13 @@ class ClientPrefs {
 	// Flixel data to load, i.e 'mute' or 'volume'
 	public static var flixelData:Map<String, String> = [
 		'volume' => 'volume',
-		'mute' => 'muted'
+		'mute' => 'muted',
+		'autoPause' => 'autoPause',
 	];
 
 	// Maps like gameplaySettings
 	public static var mapData:Map<String, Array<Dynamic>> = [
-		'gameplaySettings' => [ClientPrefs.data, 'gameplaySettings'],
+		'gameplaySettings' => [ClientPrefs, 'gameplaySettings'],
 		'keyboard' => [ClientPrefs, 'keyBinds'],
 
 		'achievementsMap' => [Achievements, 'achievementsMap']
@@ -130,6 +114,21 @@ class ClientPrefs {
 	public static var separateSaves:Array<String> = [
 		'keyboard'
 	];
+
+	public static var gameplaySettings:Map<String, Dynamic> = [
+		'scrollspeed' => 1.,
+		'scrolltype' => 'multiplicative',
+		
+		'songspeed' => 1.,
+		'healthgain' => 1.,
+		'healthloss' => 1.,
+		'instakill' => false,
+		'practice' => false,
+		'botplay' => false
+	];
+
+	public static var defaultgameplaySettings:Map<String, Dynamic> = gameplaySettings.copy();
+	public static var defaultprefs:Map<String, Dynamic> = prefs.copy();
 
 	#if MODS_ALLOWED
 	public static var modsOptsSaves:Map<String, Map<String, Dynamic>> = [];
@@ -348,7 +347,7 @@ class ClientPrefs {
 	public static function saveSettings() {
 		var save:Dynamic = FlxG.save.data;
 
-		for (setting => value in data.prefs) {
+		for (setting => value in prefs) {
 			if (!separateSaves.contains(setting))
 				Reflect.setField(save, setting, value);
 		}
@@ -358,12 +357,13 @@ class ClientPrefs {
 		}
 	
 		FlxG.save.flush();
+
 		var save:FlxSave = new FlxSave();
 		save.bind('controls', CoolUtil.getSavePath());
 
 		for (name in separateSaves) {
-			if (data.prefs.exists(name)) {
-				Reflect.setField(save.data, name, data.prefs.get(name));
+			if (prefs.exists(name)) {
+				Reflect.setField(save.data, name, prefs.get(name));
 				continue;
 			}
 			if (mapData.exists(name)) {
@@ -378,21 +378,23 @@ class ClientPrefs {
 	}
 
 	public static function loadPrefs() {
-		if(data == null) data = new SaveVariables();
-		if(defaultData == null) defaultData = new SaveVariables();
-
 		var save:Dynamic = FlxG.save.data;
-		for (setting in data.prefs.keys()) {
+		for (setting in prefs.keys()) {
 			var value:Dynamic = Reflect.getProperty(save, setting);
 			if (value != null && !separateSaves.contains(setting)) {
-				data.prefs.set(setting, value);
+				prefs.set(setting, value);
 				if (loadFunctions.exists(setting)) loadFunctions.get(setting)(value); // Call the load function
 			}
 		}
 		
 		for (setting => name in flixelData) {
 			var value:Dynamic = Reflect.field(save, setting);
-			if (value != null) Reflect.setField(FlxG.sound, name, value);
+			if (value != null) {
+				if (setting == 'volume' || setting == 'muted')
+					Reflect.setField(FlxG.sound, name, value);
+				else if (setting == 'autoPause')
+					Reflect.setField(FlxG, name, value);
+			}
 		}
 
 		for (savedAs => map in mapData) {
@@ -401,7 +403,8 @@ class ClientPrefs {
 				if (data != null) {
 					var loadTo:Dynamic = Reflect.field(map[0], map[1]);
 					for (name => value in data) {
-						if (loadTo.exists(name)) loadTo.set(name, value);
+						if (loadTo.exists(name))
+							loadTo.set(name, value);
 					}
 					if (loadFunctions.exists(savedAs)) loadFunctions.get(savedAs)(loadTo); // Call the load function
 				}
@@ -414,8 +417,8 @@ class ClientPrefs {
 			for (name in separateSaves) {
 				var data:Dynamic = Reflect.field(save.data, name);
 				if (data != null) {
-					if (data.prefs.exists(name)) {
-						data.prefs.set(name, data);
+					if (prefs.exists(name)) {
+						prefs.set(name, data);
 						continue;
 					}
 					if (mapData.exists(name)) {
@@ -437,8 +440,8 @@ class ClientPrefs {
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
-		if(!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
-		return (data.gameplaySettings.exists(name) ? data.gameplaySettings.get(name) : defaultValue);
+		if(!customDefaultValue) defaultValue = defaultgameplaySettings.get(name);
+		return (gameplaySettings.exists(name) ? gameplaySettings.get(name) : defaultValue);
 	}
 
 	public static function reloadVolumeKeys() {
@@ -460,7 +463,7 @@ class ClientPrefs {
 	}
 
 	inline public static function getPref(name:String, ?defaultValue:Dynamic):Dynamic {
-		if (data.prefs.exists(name)) return data.prefs.get(name);
+		if (prefs.exists(name)) return prefs.get(name);
 		return defaultValue;
 	}
 }

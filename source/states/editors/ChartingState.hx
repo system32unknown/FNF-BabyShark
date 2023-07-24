@@ -958,6 +958,20 @@ class ChartingState extends MusicBeatState {
 		});
 		blockPressWhileScrolling.push(noteTypeDropDown);
 
+		var copyButton:FlxButton = new FlxButton(10, noteTypeDropDown.y + 30, "Copy Note", function() {
+			if(curSelectedNote != null && curSelectedNote.length > 2)
+				noteStuffCopied = curSelectedNote;
+		});
+
+		var pasteButton:FlxButton = new FlxButton(copyButton.x + 100, copyButton.y, "Paste Note", function() {
+			if(noteStuffCopied != null) {
+				curSelectedNote[2] = noteStuffCopied[2];
+				curSelectedNote[3] = noteStuffCopied[3];
+				curSelectedNote[4] = noteStuffCopied[4];
+				updateGrid();
+			}
+		});
+
 		var leftSectionNotetype:FlxButton = new FlxButton(noteTypeDropDown.x, noteTypeDropDown.y + 40, "Left Section to Notetype", function() {
 			for (sNotes in _song.notes[curSec].sectionNotes) {
 				var note:Array<Dynamic> = sNotes;
@@ -985,7 +999,7 @@ class ChartingState extends MusicBeatState {
 		check_stackActive.name = 'check_stackActive';
 		stepperStackNum = new FlxUINumericStepper(check_stackActive.x + 40, check_stackActive.y, 1, 4, 0, 999999);
 		stepperStackNum.name = 'stack_count';
-		stepperStackOffset = new FlxUINumericStepper(stepperStackNum.x  + 40, stepperStackNum.y, 1, 1, 0, 8192);
+		stepperStackOffset = new FlxUINumericStepper(stepperStackNum.x + 60, stepperStackNum.y, 1, 1, 0, 8192);
 		stepperStackOffset.name = 'stack_offset';
 
 		tab_group_note.add(check_stackActive);
@@ -1001,6 +1015,8 @@ class ChartingState extends MusicBeatState {
 		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(strumTimeInputText);
 		tab_group_note.add(noteTypeDropDown);
+		tab_group_note.add(copyButton);
+		tab_group_note.add(pasteButton);
 
 		UI_box.addGroup(tab_group_note);
 	}
@@ -1949,7 +1965,7 @@ class ChartingState extends MusicBeatState {
 	function reloadGridLayer() {
 		GRID_SIZE = Note.gridSizes[_song.mania];
 		PlayState.mania = _song.mania;
-		columns = GRID_SIZE + GRID_SIZE * Note.ammo[_song.mania] * 2;
+		columns = (Note.ammo[_song.mania] * 2) + 1;
 
 		if (dummyArrow != null) {
 			dummyArrow.setGraphicSize(GRID_SIZE, GRID_SIZE);
@@ -2246,7 +2262,7 @@ class ChartingState extends MusicBeatState {
 	function changeNoteSustain(value:Float):Void {
 		if (curSelectedNote != null) {
 			if (curSelectedNote[2] != null) {
-				curSelectedNote[2] += value;
+				curSelectedNote[2] += Math.ceil(value);
 				curSelectedNote[2] = Math.max(curSelectedNote[2], 0);
 			}
 		}

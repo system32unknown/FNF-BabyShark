@@ -10,8 +10,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		var option:Option = new Option('Note Splashes',
 			"Set the alpha for the Note Splashes, usually shown when hitting \"Sick!\" notes.",
 			'splashOpacity',
-			'percent',
-			1);
+			'percent', 1);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
 		option.maxValue = 1;
@@ -134,7 +133,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Only P1', 'Both', 'Never']);
 		addOption(option);
 
-		var option:Option = new Option('Lane Underlay Transparency',
+		var option:Option = new Option('Lane Underlay Opacity',
 			'How transparent your lane is, higher = more visible.',
 			'LUAlpha',
 			'percent',
@@ -169,8 +168,8 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Health Bar Visibility',
-			'How much visible should the health bar and icons be.',
+		var option:Option = new Option('Health Bar Opacity',
+			'How much opacity should the health bar and icons be.',
 			'healthBarAlpha',
 			'percent',
 			1);

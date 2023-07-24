@@ -256,10 +256,16 @@ class Paths
 		return 'assets/fonts/$key';
 	}
 
-	inline static public function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?isPath:Bool = false, ?library:String):Bool {
+	static public function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?isPath:Bool = false, ?library:String):Bool {
 		#if MODS_ALLOWED
-		if(!ignoreMods && (FileSystem.exists(mods('${Mods.currentModDirectory}/$key')) || FileSystem.exists(mods(key))))
-			return true;
+		if(!ignoreMods) {
+			for(mod in Mods.getGlobalMods())
+				if (FileSystem.exists(mods('$mod/$key')))
+					return true;
+
+			if (FileSystem.exists(mods('${Mods.currentModDirectory}/$key')) || FileSystem.exists(mods(key)))
+				return true;
+		}
 		#end
 
 		return OpenFlAssets.exists((isPath ? key : getPath(key, type, library, false)));

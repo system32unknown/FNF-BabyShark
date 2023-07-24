@@ -330,7 +330,7 @@ class Note extends FlxSprite
 
 	public static function getNoteSkinPostfix() {
 		var skin:String = '';
-		if(ClientPrefs.getPref('noteSkin') != ClientPrefs.defaultData.prefs.get('noteSkin'))
+		if(ClientPrefs.getPref('noteSkin') != ClientPrefs.defaultprefs.get('noteSkin'))
 			skin = '-' + ClientPrefs.getPref('noteSkin').trim().toLowerCase().replace(' ', '_');
 		return skin;
 	}
@@ -376,6 +376,66 @@ class Note extends FlxSprite
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 				tooLate = true;
 		} else canBeHit = false;
+
+		if (tooLate && !inEditor)
+			if (alpha > .3) alpha = .3;
+	}
+
+	public function followStrumNote(myStrum:StrumNote, fakeCrochet:Float, songSpeed:Float = 1) {
+		var strumX:Float = myStrum.x;
+		var strumY:Float = myStrum.y;
+		var strumAngle:Float = myStrum.angle;
+		var strumAlpha:Float = myStrum.alpha;
+		var strumDirection:Float = myStrum.direction;
+
+		distance = (0.45 * (Conductor.songPosition - strumTime) * songSpeed * multSpeed);
+		if (!myStrum.downScroll) distance *= -1;
+
+		var angleDir = strumDirection * Math.PI / 180;
+		if(!isSustainNote)
+			if (copyAngle) angle = strumDirection - 90 + strumAngle + offsetAngle;
+		else angle = strumDirection - 90 + (copyAngle ? strumAngle + offsetAngle : 0);
+
+		if(copyAlpha) alpha = strumAlpha * multAlpha;
+		if(copyX) x = strumX + offsetX + Math.cos(angleDir) * distance;
+		if(copyY) {
+			y = strumY + offsetY + Math.sin(angleDir) * distance;
+
+			if(myStrum.downScroll && isSustainNote) {
+				if (animation.curAnim != null && animation.curAnim.name.endsWith('tail')) {
+					y += 10.5 * (fakeCrochet / 400) * 1.5 * songSpeed + (46 * (songSpeed - 1));
+					y -= 46 * (1 - (fakeCrochet / 600)) * songSpeed;
+					if(PlayState.isPixelStage)
+						y += 8 + (6 - originalHeight) * PlayState.daPixelZoom;
+					else y -= 19;
+				}
+				y += (swagWidth / 2) - (60.5 * (songSpeed - 1));
+				y += 27.5 * ((PlayState.SONG.bpm / 100) - 1) * (songSpeed - 1) * scales[mania];
+			}
+		}
+	}
+
+	public function clipToStrumNote(myStrum:StrumNote) {
+		var missed = tooLate || hasMissed || (isSustainNote && (parent == null || parent.hasMissed));
+
+		var center:Float = myStrum.y + offsetY + swagWidth / 2;
+		if(myStrum.sustainReduce && isSustainNote && (mustPress || !ignoreNote) && (!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !missed && !canBeHit)))) {
+			if (myStrum.downScroll ? (y - offset.y * scale.y + height >= center) : (y + offset.y * scale.y <= center)) {
+				var swagRect = clipRect;
+				if (swagRect == null) swagRect = FlxRect.get(0, 0, frameWidth, frameHeight);
+				else swagRect.set(0, 0, frameWidth, frameHeight);
+				
+				if (myStrum.downScroll) {
+					swagRect.height = (center - y) / scale.y;
+					swagRect.y = frameHeight - swagRect.height;
+				} else {
+					swagRect.y = (center - y) / scale.y;
+					swagRect.height -= swagRect.y;
+				}
+
+				clipRect = swagRect;
+			}
+		}
 	}
 
 	override function destroy() {

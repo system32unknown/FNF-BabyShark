@@ -13,7 +13,7 @@ typedef ModsList = {
 
 class Mods
 {
-	static public var currentModDirectory:String = '';
+	public static var currentModDirectory:String = '';
 
 	public static var ignoreModFolders:Array<String> = [
 		'characters',
@@ -37,10 +37,10 @@ class Mods
 
 	static var globalMods:Array<String> = [];
 
-	public static function getGlobalMods()
+	inline public static function getGlobalMods()
 		return globalMods;
 
-	public static function pushGlobalMods() { // prob a better way to do this but idc
+	inline public static function pushGlobalMods() { // prob a better way to do this but idc
 		globalMods = [];
 		for(mod in parseList().enabled) {
 			var pack:Dynamic = getPack(mod);
@@ -49,10 +49,10 @@ class Mods
 		return globalMods;
 	}
 
-	static public function isValidModDir(dir:String):Bool
+	inline public static function isValidModDir(dir:String):Bool
 		return FileSystem.isDirectory(Path.join([Paths.mods(), dir])) && !ignoreModFolders.contains(dir.toLowerCase());
 
-	static public function getActiveModsDir(inclMainFol:Bool = false):Array<String> {
+	inline public static function getActiveModsDir(inclMainFol:Bool = false):Array<String> {
 		var finalList:Array<String> = [];
 		if (inclMainFol) finalList.push('');
 		
@@ -68,7 +68,7 @@ class Mods
 		return finalList;
 	}
 	
-	static public function getActiveModDirectories(lowercase:Bool = false):Array<String> {
+	inline public static function getActiveModDirectories(lowercase:Bool = false):Array<String> {
 		var list:Array<String> = [];
 		final path:String = 'modsList.txt';
 
@@ -94,7 +94,7 @@ class Mods
 		return list;
 	}
 
-	static public function getModDirectories(lowercase:Bool = false):Array<String> {
+	inline public static function getModDirectories(lowercase:Bool = false):Array<String> {
 		var list:Array<String> = [];
 		var modsFolder:String = Paths.mods();
 
@@ -124,7 +124,7 @@ class Mods
 	}
 
 	public static var updatedOnState:Bool = false;
-	public static function parseList():ModsList {
+	inline public static function parseList():ModsList {
 		if(!updatedOnState) updateModList();
 		var list:ModsList = {enabled: [], disabled: [], all: []};
 

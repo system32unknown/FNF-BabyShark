@@ -72,10 +72,14 @@ class StrumNote extends FlxSprite
 		animationArray[0] = Note.keysShit.get(PlayState.mania).get('strumAnims')[leData];
 		animationArray[1] = animationArray[2] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
 
-		var skin:String = 'NOTE_assets';
-		if(PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
-		texture = skin; //Load texture and anims
+		var skin:String = null;
+		if(PlayState.SONG != null && PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
+		else skin = Note.defaultNoteSkin;
 
+		var customSkin:String = skin + Note.getNoteSkinPostfix();
+		if(Paths.fileExists('images/$customSkin.png', IMAGE)) skin = customSkin;
+
+		texture = skin; //Load texture and anims
 		scrollFactor.set();
 	}
 
@@ -90,8 +94,8 @@ class StrumNote extends FlxSprite
 			loadGraphic(Paths.image('pixelUI/' + texture));
 			width /= pxDV;
 			height /= 5;
-			antialiasing = false;
 			loadGraphic(Paths.image('pixelUI/' + texture), true, Math.floor(width), Math.floor(height));
+			antialiasing = false;
 			var daFrames:Array<Int> = Note.keysShit.get(PlayState.mania).get('pixelAnimIndex');
 
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom * Note.pixelScales[PlayState.mania]));
@@ -139,10 +143,6 @@ class StrumNote extends FlxSprite
 				playAnim('static');
 				resetAnim = 0;
 			}
-		}
-		
-		if(animation.curAnim.name == 'confirm' && !PlayState.isPixelStage) {
-			centerOrigin();
 		}
 
 		super.update(elapsed);

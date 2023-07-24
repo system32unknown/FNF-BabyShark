@@ -41,6 +41,7 @@ class FunkinLua {
 
 	public var callbacks:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public final addCallback:(String, Dynamic)->Bool;
+	public static var customFunctions:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public function new(script:String) {
 		if (!Path.isAbsolute(script)) { // any absoluted paths, fuck it.
 			var dirs = (script = format(script)).split('/'), mod = Paths.mods(), index = -1;
@@ -84,6 +85,8 @@ class FunkinLua {
 
 		initGlobals(game);
 
+		for (name => func in customFunctions)
+			if(func != null) addCallback(name, func);
 
 		addCallback("getRunningScripts", function(_) {
 			return [for (script in game.luaArray) script];
@@ -242,7 +245,7 @@ class FunkinLua {
 			return ClientPrefs.getPref(pref);
 		});
 		addCallback("setPref", function(pref:String, ?value:Dynamic = null) {
-			ClientPrefs.data.prefs.set(pref, value);
+			ClientPrefs.prefs.set(pref, value);
 		});
 
 		//shitass stuff for epic coders like me B)  *image of obama giving himself a medal*
@@ -962,10 +965,8 @@ class FunkinLua {
 		});
 		addCallback("getPixelColor", function(obj:String, x:Int, y:Int) {
 			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
-			if(spr == null) return 0;
-
-			if(spr.framePixels != null) spr.framePixels.getPixel32(x, y);
-			return spr.pixels.getPixel32(x, y);
+			if(spr != null) return spr.pixels.getPixel32(x, y);
+			return FlxColor.BLACK;
 		});
 
 		addCallback("startDialogue", function(dialogueFile:String, music:String = null) {
@@ -989,8 +990,7 @@ class FunkinLua {
 				} else luaTrace('Your dialogue file is badly formatted!', false, false, FlxColor.RED);
 			} else {
 				luaTrace('startDialogue: Dialogue file not found', false, false, FlxColor.RED);
-				if(game.endingSong)
-					game.endSong();
+				if(game.endingSong) game.endSong();
 				else game.startCountdown();
 			}
 			return false;
@@ -1201,6 +1201,7 @@ class FunkinLua {
 		set('screenHeight', FlxG.height);
 
 		// PlayState cringe ass nae nae bullcrap
+		set('curSection', 0);
 		set('curBeat', 0);
 		set('curStep', 0);
 		set('curDecBeat', 0);

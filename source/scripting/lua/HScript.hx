@@ -87,12 +87,17 @@ class HScript
 			if(funk == null) funk = parentLua;
 			funk.addLocalCallback(name, func);
 		});
+		setVar('createGlobalCallback', function(name:String, func:Dynamic) {
+			for (script in PlayState.instance.luaArray)
+				if(script != null && script.lua != null && !script.closed)
+					Lua_helper.add_callback(script.lua, name, func);
+
+			FunkinLua.customFunctions.set(name, func);
+		});
 		setVar('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
 			try {
 				var str:String = '';
-				if(libPackage.length > 0)
-					str = libPackage + '.';
-
+				if(libPackage.length > 0) str = libPackage + '.';
 				interp.variables.set(libName, Type.resolveClass(str + libName));
 			} catch (e:Dynamic) {
 				FunkinLua.lastCalledScript = parentLua;
@@ -117,7 +122,7 @@ class HScript
 			var splitted:Array<String> = imports.split('.');
 			interp.variables.set(splitted[splitted.length - 1], Type.resolveClass(imports));
 		}
-        	codeToRun = ~/^(?:(?!"|')(?:[^"']|\.(?!"|'))*?)import\s+([\w.]+);$/mg.replace(codeToRun, "");
+        codeToRun = ~/^(?:(?!"|')(?:[^"']|\.(?!"|'))*?)import\s+([\w.]+);$/mg.replace(codeToRun, "");
 
 		parser.allowTypes = parser.allowJSON = parser.allowMetadata = true;
 		parser.line = 1;
@@ -182,8 +187,7 @@ class HScript
 			#if hscript
 			try {
 				var str:String = '';
-				if(libPackage.length > 0)
-					str = libPackage + '.';
+				if(libPackage.length > 0) str = libPackage + '.';
 				FunkinLua.hscript.variables.set(libName, Type.resolveClass(str + libName));
 			} catch (e:Dynamic) {
 				FunkinLua.luaTrace(funk.scriptName + ":" + funk.lastCalledFunction + " - " + e, false, false, FlxColor.RED);

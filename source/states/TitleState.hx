@@ -267,40 +267,40 @@ class TitleState extends MusicBeatState
 
 		if(!closedState) {
 			switch (sickBeats++) {
-				case 0: createCoolText('Vs Dave and Bambi by:');
+				case 0: createCoolText(['Vs Dave and Bambi by:']);
 				case 1:
 					addMoreText('MoldyGH, MTM101, Stats45');
 					addMoreText('Rapparep lol, TheBuilderXD, Edival');
 					addMoreText('T5mpler, Erizur, Billy Bobbo');
 				case 2:
 					deleteCoolText();
-					createCoolText('Baby Shark\'s Big Show by:');
+					createCoolText(['Baby Shark\'s Big Show by:']);
 				case 3:
 					addMoreText('Pinkfong');
 					addMoreText('Nickelodeon');
 					addMoreText('SmartStudy');
 				case 4:
 					deleteCoolText();
-					createCoolText('Extra Keys by:');
+					createCoolText(['Extra Keys by:']);
 				case 5:
 					addMoreText('tposejank');
 					addMoreText('srPerez');
 					addMoreText('Leather128');
 				case 6:
 					deleteCoolText();
-					createCoolText('Psych Engine by:');
+					createCoolText(['Psych Engine by:']);
 				case 7:
 					addMoreText('Shadow Mario');
 					addMoreText('Riveren');
 					addMoreText('And Psych Engine Contributors!');
 				case 8:
 					deleteCoolText();
-					createCoolText('Doo Doo Doo,');
+					createCoolText(['Doo Doo Doo,']);
 				case 9:
 					addMoreText('Almost there!');
 				case 10:
 					deleteCoolText();
-					createCoolText(curWacky[0]);
+					createCoolText([curWacky[0]]);
 				case 11: addMoreText(curWacky[1]);
 				case 12: deleteCoolText();
 				case 13: addMoreText('Baby');

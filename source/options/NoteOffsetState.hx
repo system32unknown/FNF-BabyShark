@@ -191,7 +191,8 @@ class NoteOffsetState extends MusicBeatState {
 		camGame.zoom = FlxMath.lerp(camGame.zoom, defaultCamZoom, FlxMath.bound(elapsed * 3.125, 0, 1));
 
 		var addNum:Int = 1;
-		if(FlxG.keys.pressed.SHIFT) addNum = 10;
+		if(FlxG.keys.pressed.SHIFT)
+			addNum = onComboMenu ? 10 : 3;
 
 		if(onComboMenu)
 		{
@@ -316,7 +317,7 @@ class NoteOffsetState extends MusicBeatState {
 			if(controls.UI_LEFT_R || controls.UI_RIGHT_R) holdTime = 0;
 
 			if(holdTime > 0.5) {
-				barPercent += 100 * elapsed * mult;
+				barPercent += 100 * addNum * elapsed * mult;
 				barPercent = Math.max(delayMin, Math.min(barPercent, delayMax));
 				updateNoteDelay();
 			}
@@ -415,7 +416,7 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	function updateNoteDelay() {
-		ClientPrefs.data.prefs.set('noteOffset', Math.round(barPercent));
+		ClientPrefs.prefs.set('noteOffset', Math.round(barPercent));
 		timeTxt.text = 'Current offset: ' + Math.floor(barPercent) + ' ms';
 	}
 
@@ -428,8 +429,11 @@ class NoteOffsetState extends MusicBeatState {
 		
 		timeBar.visible = timeTxt.visible = !onComboMenu;
 
-		if(onComboMenu) changeModeText.text = '< Combo Offset (Press Accept to Switch) >';
-		else changeModeText.text = '< Note/Beat Delay (Press Accept to Switch) >';
+		var str:String;
+		var str2:String = '(Press Accept to Switch)';
+		str = onComboMenu ? 'Combo Offset' : 'Note/Beat Delay';
+
+		changeModeText.text = '< ${str.toUpperCase()} ${str2.toUpperCase()} >';
 
 		changeModeText.text = changeModeText.text.toUpperCase();
 		FlxG.mouse.visible = onComboMenu;
