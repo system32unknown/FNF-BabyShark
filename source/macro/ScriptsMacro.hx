@@ -5,18 +5,12 @@ import haxe.macro.Compiler;
 
 /**
  * Macros containing additional help functions to expand HScript capabilities.
- */
+*/
 class ScriptsMacro {
 	public static function addAdditionalClasses() {
 		var include:Array<String> = [
 			// FLIXEL
-			"flixel.util", "flixel.ui", "flixel.tweens", "flixel.tile", "flixel.text",
-			"flixel.system", "flixel.sound", "flixel.path", "flixel.math", "flixel.input",
-			"flixel.group", "flixel.graphics", "flixel.effects", "flixel.animation",
-			// FLIXEL ADDONS
-			"flixel.addons.api", "flixel.addons.display", "flixel.addons.effects", "flixel.addons.ui",
-			"flixel.addons.plugin", "flixel.addons.text", "flixel.addons.tile", "flixel.addons.transition",
-			"flixel.addons.util",
+			"flixel", "lime", "haxe",
 			// OTHER LIBRARIES & STUFF
 			#if flash "flash", #end
 			#if cpp "cpp", #end
@@ -24,7 +18,7 @@ class ScriptsMacro {
 			#if neko "neko", #end
 			#if sys "sys", #end "openfl.net", "shaders",
 			// BASE HAXE
-			"DateTools", "EReg", "Lambda", "StringBuf", "haxe.crypto", "haxe.display", "haxe.exceptions", "haxe.extern"
+			"DateTools", "EReg", "Lambda", "StringBuf", "haxe"
 		];
 		var exc:Array<String> = [
 			"flixel.addons.editors.spine",
@@ -32,6 +26,7 @@ class ScriptsMacro {
 			"flixel.system.macros",
 
 			"haxe.macro",
+			#if (js || hxcpp) "haxe.atomic.AtomicObject", #end
 
 			"lime._internal.backend.air",
 			"lime._internal.backend.html5",
@@ -39,12 +34,7 @@ class ScriptsMacro {
 			"lime.tools",
 		];
 
-		for (inc in include)
-			Compiler.include(inc, true, exc);
-
-		// FOR ABSTRACTS
-		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');
-		Compiler.addGlobalMetadata('haxe.CallStack', '@:build(hscript.UsingHandler.build())');
+		for (inc in include) Compiler.include(inc, true, exc);
 	}
 }
 #end

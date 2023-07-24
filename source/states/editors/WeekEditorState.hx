@@ -56,6 +56,7 @@ class WeekEditorState extends MusicBeatState
 
 		weekThing = new MenuItem(0, bgSprite.y + 396, weekFileName);
 		weekThing.y += weekThing.height + 20;
+		weekThing.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(weekThing);
 
 		var blackBarThingie:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 56, FlxColor.BLACK);
@@ -67,6 +68,7 @@ class WeekEditorState extends MusicBeatState
 		lock.frames = ui_tex;
 		lock.animation.addByPrefix('lock', 'lock');
 		lock.animation.play('lock');
+		lock.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(lock);
 		
 		missingFileText = new FlxText(0, 0, FlxG.width, "");
@@ -87,6 +89,7 @@ class WeekEditorState extends MusicBeatState
 		add(grpWeekCharacters);
 
 		var tracksSprite:FlxSprite = new FlxSprite(FlxG.width * 0.07, bgSprite.y + 435).loadGraphic(Paths.image('Menu_Tracks'));
+		tracksSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(tracksSprite);
 
 		txtTracklist = new FlxText(FlxG.width * 0.05, tracksSprite.y + 60, 0, "", 32);
@@ -568,13 +571,14 @@ class WeekEditorFreeplayState extends MusicBeatState
 	}
 
 	var bg:FlxSprite;
-	private var grpSongs:FlxTypedGroup<Alphabet>;
-	private var iconArray:Array<HealthIcon> = [];
+	var grpSongs:FlxTypedGroup<Alphabet>;
+	var iconArray:Array<HealthIcon> = [];
 
 	var curSelected = 0;
 
 	override function create() {
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
 		bg.color = FlxColor.WHITE;
 		add(bg);
 

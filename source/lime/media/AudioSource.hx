@@ -78,17 +78,17 @@ class AudioSource {
 	@:noCompletion inline function set_loops(value:Int):Int
 		return __backend.setLoops(value);
 
-	@:noCompletion inline function get_loopTime():Float
-		return __backend.getLoopTime();
+	@:noCompletion inline private function get_loopTime():Float
+		return #if flash 0 #else __backend.getLoopTime() #end;
 
-	@:noCompletion inline function set_loopTime(value:Float):Float
-		return __backend.setLoopTime(value);
+	@:noCompletion inline private function set_loopTime(value:Float):Float
+		return #if flash 0 #else __backend.setLoopTime(value) #end;
 
-	@:noCompletion inline function get_pitch():Float
-		return __backend.getPitch();
+	@:noCompletion inline private function get_pitch():Float
+		return #if flash 1 #else __backend.getPitch() #end;
 
-	@:noCompletion inline function set_pitch(value:Float):Float
-		return __backend.setPitch(Math.max(0, value));
+	@:noCompletion inline private function set_pitch(value:Float):Float
+		return #if flash value #else __backend.setPitch(Math.max(0, value)) #end;
 
 	@:noCompletion inline function get_position():Vector4
 		return __backend.getPosition();
@@ -97,4 +97,10 @@ class AudioSource {
 		return __backend.setPosition(value);
 }
 
-@:noCompletion typedef AudioSourceBackend = lime._internal.backend.native.NativeAudioSource;
+#if flash
+@:noCompletion private typedef AudioSourceBackend = lime._internal.backend.flash.FlashAudioSource;
+#elseif (js && html5)
+@:noCompletion private typedef AudioSourceBackend = lime._internal.backend.html5.HTML5AudioSource;
+#else
+@:noCompletion private typedef AudioSourceBackend = lime._internal.backend.native.NativeAudioSource;
+#end

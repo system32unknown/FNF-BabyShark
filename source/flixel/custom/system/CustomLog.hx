@@ -9,7 +9,7 @@ class CustomLog {
 		};
 	}
 
-	static function formatOutput(v:Dynamic, infos:haxe.PosInfos):String {
+	static function formatOutput(v:Dynamic, infos:PosInfos):String {
 		var fileName = infos.fileName.replace('source/', '');
 		var str = Std.string(v);
 		if (infos == null)

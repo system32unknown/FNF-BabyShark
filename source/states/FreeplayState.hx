@@ -96,6 +96,7 @@ class FreeplayState extends MusicBeatState
 		Mods.loadTopMod();
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = ClientPrefs.getPref('Antialiasing');
 		add(bg);
 		bg.screenCenter();
 
@@ -308,7 +309,7 @@ class FreeplayState extends MusicBeatState
 				if (PlayState.SONG != null) {
 					Conductor.usePlayState = true;
 					Conductor.mapBPMChanges(PlayState.SONG, true);
-					Conductor.changeBPM(PlayState.SONG.bpm);
+					Conductor.bpm = PlayState.SONG.bpm;
 
 					if (PlayState.SONG.needsVoices) vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song, true));
 					else vocals = new FlxSound();
@@ -439,9 +440,7 @@ class FreeplayState extends MusicBeatState
 			bullShit++;
 
 			item.alpha = .6;
-
-			if (item.targetY == curSelected)
-				item.alpha = 1;
+			if (item.targetY == curSelected) item.alpha = 1;
 		}
 		
 		Mods.currentModDirectory = songs[curSelected].folder;

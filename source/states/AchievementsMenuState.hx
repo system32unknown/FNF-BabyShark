@@ -1,6 +1,5 @@
 package states;
 
-import game.Achievements;
 import ui.Alphabet;
 
 class AchievementsMenuState extends MusicBeatState
@@ -18,17 +17,18 @@ class AchievementsMenuState extends MusicBeatState
 		Discord.changePresence("Achievements Menu", null);
 		#end
 
-		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
+		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
+		menuBG.color = 0xFF7196FD;
+		menuBG = ClientPrefs.getPref('Antialiasing');
 		add(menuBG);
 
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
-		Achievements.loadAchievements();
 		for (i in 0...Achievements.achievementsStuff.length) {
-			if(!Achievements.achievementsStuff[i][3] || Achievements.achievementsMap.exists(Achievements.achievementsStuff[i][2])) {
+			if(!Achievements.achievementsStuff[i][3] || Achievements.isAchievementUnlocked(Achievements.achievementsStuff[i][2])) {
 				options.push(Achievements.achievementsStuff[i]);
 				achievementIndex.push(i);
 			}
@@ -63,6 +63,11 @@ class AchievementsMenuState extends MusicBeatState
 
 		if (controls.UI_UP_P) changeSelection(-1);
 		if (controls.UI_DOWN_P) changeSelection(1);
+
+		if(FlxG.mouse.wheel != 0) {
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+			changeSelection(-FlxG.mouse.wheel);
+		}
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'), 0.7);

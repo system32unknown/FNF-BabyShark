@@ -26,6 +26,7 @@ class DeleteSavesSubState extends MusicBeatSubstate {
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.screenCenter();
+        bg.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(bg);
 
         noModsTxt = new FlxText(0, 0, FlxG.width, "NO MODPACK OPTIONS SAVES FOUND\nPRESS BACK TO EXIT", 48);

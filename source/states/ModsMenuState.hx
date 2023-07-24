@@ -51,6 +51,7 @@ class ModsMenuState extends MusicBeatState
 		#end
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(bg);
 		bg.screenCenter();
 
@@ -220,9 +221,7 @@ class ModsMenuState extends MusicBeatState
 				var totalFrames = Math.floor(loadedIcon.width / 150) * Math.floor(loadedIcon.height / 150);
 				newMod.icon.animation.add("icon", [for (i in 0...totalFrames) i], 10);
 				newMod.icon.animation.play("icon");
-			} else {
-				newMod.icon.loadGraphic(Paths.image('unknownMod'));
-			}
+			} else newMod.icon.loadGraphic(Paths.image('unknownMod'));
 			newMod.icon.sprTracker = newMod.alphabet;
 			newMod.icon.addPoint.set(-newMod.icon.width - 30, -45);
 			add(newMod.icon);
@@ -318,16 +317,19 @@ class ModsMenuState extends MusicBeatState
 			} else MusicBeatState.switchState(new MainMenuState());
 		}
 
-		if(controls.UI_UP_P && !noModsTxt.visible)
-		{
+		if(controls.UI_UP_P && !noModsTxt.visible) {
 			changeSelection(-1);
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
-		if(controls.UI_DOWN_P && !noModsTxt.visible)
-		{
+		if(controls.UI_DOWN_P && !noModsTxt.visible) {
 			changeSelection(1);
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
+		if(FlxG.mouse.wheel != 0) {
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+			changeSelection(-FlxG.mouse.wheel);
+		}
+
 		updatePosition(elapsed);
 		super.update(elapsed);
 	}

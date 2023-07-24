@@ -13,14 +13,12 @@
         "url": "https://github.com/HaxeFlixel/flixel-ui"},
         {"name": "tjson", "type": "haxelib", "dir":"tjson"},
         {"name": "hxCodec", "type":"haxelib", "dir":"hxCodec", "version":"2.6.1"},
-        {"name": "hscript-improved", "type": "git", "dir": "hscript-improved",
-            "ref": "master",
-        "url": "https://github.com/FNF-CNE-Devs/hscript-improved"},
+        {"name": "SScript", "type": "haxelib", "version": "sscript"},
         {"name": "discord_rpc", "type": "git", "dir": "discord_rpc",
             "ref": "master",
         "url": "https://github.com/Aidan63/linc_discord-rpc"},
-		{"name": "linc_luajit", "type": "git", "dir": "linc_luajit",
-            "ref": "master",
-        "url": "https://github.com/superpowers04/linc_luajit"}
+		{"name": "linc_luajit-ralt", "type": "git", "dir": "linc_luajit-ralt",
+			"ref": "ralt",
+		"url": "https://github.com/Raltyro/linc_luajit"}
     ]
   }

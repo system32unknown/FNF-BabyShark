@@ -5,15 +5,12 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import states.editors.MasterEditorMenu;
 import options.OptionsState;
-import game.Achievements;
 
 class MainMenuState extends MusicBeatState
 {
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
-	var camGame:FlxCamera;
-	var camAchievement:FlxCamera;
 	
 	var optionShit:Array<String> = [
 		'story_mode',
@@ -33,8 +30,7 @@ class MainMenuState extends MusicBeatState
 	public static var firstStart:Bool = true;
 	public static var finishedFunnyMove:Bool = false;
 
-	override function create()
-	{
+	override function create() {
 		#if MODS_ALLOWED
 		Mods.pushGlobalMods();
 		#end
@@ -44,14 +40,6 @@ class MainMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		Discord.changePresence("In the Menus", null);
 		#end
-
-		camGame = new FlxCamera();
-		camAchievement = new FlxCamera();
-		camAchievement.bgColor.alpha = 0;
-
-		FlxG.cameras.reset(camGame);
-		FlxG.cameras.add(camAchievement, false);
-		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
@@ -126,6 +114,7 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollow, null, 0);
 
 		var versionShit:FlxText = new FlxText(0, 0, 0, 
+			'Psych Engine 0.6.3 + 0.7.1h Addon\n' +
 			'Alter Engine v${Main.engineVersion.version} (${Main.COMMIT_HASH.trim().substring(0, 7)})\n' +
 			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n' +
 			'${FlxG.VERSION.toString()}\n', 16);
@@ -138,31 +127,15 @@ class MainMenuState extends MusicBeatState
 		changeItem();
 
 		#if ACHIEVEMENTS_ALLOWED
-		Achievements.loadAchievements();
 		var leDate = Date.now();
-		if (leDate.getDay() == 5 && leDate.getHours() >= 18) {
-			var achieveID:Int = Achievements.getAchievementIndex('friday_night_play');
-			if(!Achievements.isAchievementUnlocked(Achievements.achievementsStuff[achieveID][2])) { //It's a friday night. WEEEEEEEEEEEEEEEEEE
-				Achievements.achievementsMap.set(Achievements.achievementsStuff[achieveID][2], true);
-				giveAchievement();
-				ClientPrefs.saveSettings();
-			}
-		}
+		if (leDate.getDay() == 5 && leDate.getHours() >= 18)
+			Achievements.unlockAchievement('friday_night_play');
 		#end
 
 		super.create();
 	}
 
-	#if ACHIEVEMENTS_ALLOWED
-	// Unlocks "Freaky on a Friday Night" achievement
-	function giveAchievement() {
-		add(new AchievementObject('friday_night_play', camAchievement));
-		FlxG.sound.play(Paths.sound('confirmMenu'), .7);
-	}
-	#end
-
 	var selectedSomethin:Bool = false;
-
 	override function update(elapsed:Float) {
 		if (FlxG.sound.music.volume < .8) {
 			FlxG.sound.music.volume += .5 * elapsed;
@@ -175,10 +148,14 @@ class MainMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 				changeItem(-1);
 			}
-
 			if (controls.UI_DOWN_P) {
 				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 				changeItem(1);
+			}
+
+			if(FlxG.mouse.wheel != 0) {
+				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+				changeItem(-FlxG.mouse.wheel);
 			}
 
 			if (controls.BACK) {

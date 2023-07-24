@@ -21,7 +21,7 @@ import utils.CoolUtil;
 import game.BGSprite;
 import game.Character;
 import game.HealthIcon;
-import game.HealthBar;
+import game.Bar;
 
 #if MODS_ALLOWED
 import sys.FileSystem;
@@ -61,7 +61,7 @@ class CharacterEditorState extends MusicBeatState
 	var characterList:Array<String> = [];
 
 	var cameraFollowPointer:FlxSprite;
-	var healthBar:HealthBar;
+	var healthBar:Bar;
 
 	override function create()
 	{
@@ -96,7 +96,7 @@ class CharacterEditorState extends MusicBeatState
 
 		loadChar(!daAnim.startsWith('bf'), false);
 
-		healthBar = new HealthBar(30, FlxG.height - 75);
+		healthBar = new Bar(30, FlxG.height - 75);
 		healthBar.scrollFactor.set();
 		add(healthBar);
 		healthBar.cameras = [camHUD];
@@ -169,7 +169,6 @@ class CharacterEditorState extends MusicBeatState
 		add(changeBGbutton);
 
 		addSettingsUI();
-		addPropertiesUI();
 		addCharacterUI();
 		addAnimationsUI();
 		UI_characterbox.selected_tab_id = 'Character';
@@ -511,32 +510,6 @@ class CharacterEditorState extends MusicBeatState
 		UI_characterbox.addGroup(tab_group);
 	}
 
-	var characterDeathName:FlxUIInputText;
-	var characterDeathSound:FlxUIInputText;
-	var characterDeathConfirm:FlxUIInputText;
-	var characterDeathMusic:FlxUIInputText;
-	function addPropertiesUI() {
-		var tab_group = new FlxUI(null, UI_box);
-		tab_group.name = "Properties";
-
-		characterDeathName = new FlxUIInputText(15, 35, 150, char.deathChar, 8);
-		characterDeathSound = new FlxUIInputText(characterDeathName.x, characterDeathName.y + 45, 150, char.deathSound, 8);
-		characterDeathConfirm = new FlxUIInputText(characterDeathName.x, characterDeathName.y + 85, 150, char.deathConfirm, 8);
-		characterDeathMusic = new FlxUIInputText(characterDeathName.x, characterDeathName.y + 125, 150, char.deathMusic, 8);
-
-		tab_group.add(new FlxText(characterDeathName.x, characterDeathName.y - 18, 0, 'Game Over Character:'));
-		tab_group.add(new FlxText(characterDeathSound.x, characterDeathSound.y - 18, 0, 'Game Over Starting Sound:'));
-		tab_group.add(new FlxText(characterDeathConfirm.x, characterDeathConfirm.y - 18, 0, 'Game Over Confirm Sound:'));
-		tab_group.add(new FlxText(characterDeathMusic.x, characterDeathMusic.y - 18, 0, 'Game Over Music:'));
-
-		tab_group.add(characterDeathName);
-		tab_group.add(characterDeathSound);
-		tab_group.add(characterDeathConfirm);
-		tab_group.add(characterDeathMusic);
-
-		UI_characterbox.addGroup(tab_group);
-	}
-
 	var ghostDropDown:FlxUIDropDownMenu;
 	var animationDropDown:FlxUIDropDownMenu;
 	var animationInputText:FlxUIInputText;
@@ -700,14 +673,6 @@ class CharacterEditorState extends MusicBeatState
 				updatePresence();
 			} else if(sender == imageInputText) {
 				char.imageFile = imageInputText.text;
-			} else if(sender == characterDeathName) {
-				char.deathChar = characterDeathName.text;
-			} else if(sender == characterDeathSound) {
-				char.deathSound = characterDeathSound.text;
-			} else if(sender == characterDeathConfirm) {
-				char.deathConfirm = characterDeathConfirm.text;
-			} else if(sender == characterDeathMusic) {
-				char.deathMusic = characterDeathMusic.text;
 			}
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
 			if (sender == scaleStepper) {
@@ -892,10 +857,6 @@ class CharacterEditorState extends MusicBeatState
 			positionYStepper.value = char.positionArray[1];
 			positionCameraXStepper.value = char.cameraPosition[0];
 			positionCameraYStepper.value = char.cameraPosition[1];
-			characterDeathName.text = char.deathChar;
-			characterDeathSound.text = char.deathSound;
-			characterDeathConfirm.text = char.deathConfirm;
-			characterDeathMusic.text = char.deathMusic;
 			reloadAnimationDropDown();
 			updatePresence();
 		}
@@ -1154,7 +1115,6 @@ class CharacterEditorState extends MusicBeatState
 			"flip_x": char.originalFlipX,
 			"no_antialiasing": char.noAntialiasing,
 			"healthbar_colors": char.healthColorArray,
-			"gameover_properties": [char.deathChar, char.deathSound, char.deathMusic, char.deathConfirm],
 		};
 
 		var data:String = haxe.Json.stringify(json, "\t");

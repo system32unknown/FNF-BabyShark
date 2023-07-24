@@ -69,7 +69,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		camGame = PlayState.instance.camGame;
 
 		Conductor.songPosition = 0;
-		Conductor.changeBPM(100);
+		Conductor.bpm = 100;
 
 		boyfriend = getBoyfriend(x, y);
 		boyfriend.x += boyfriend.positionArray[0];

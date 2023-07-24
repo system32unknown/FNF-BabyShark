@@ -2,7 +2,7 @@ package options;
 
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
-import game.HealthBar;
+import game.Bar;
 import game.Character;
 import game.Conductor;
 import states.stages.StageWeek1 as BackgroundStage;
@@ -11,7 +11,7 @@ import ui.CustomFadeTransition;
 class NoteOffsetState extends MusicBeatState {
 	var delayMin:Int = -500;
 	var delayMax:Int = 500;
-	var timeBar:HealthBar;
+	var timeBar:Bar;
 
 	var BF_X:Float = 770;
 	var BF_Y:Float = 100;
@@ -138,7 +138,7 @@ class NoteOffsetState extends MusicBeatState {
 		timeTxt.scrollFactor.set();
 		timeTxt.borderSize = 2;
 
-		timeBar = new HealthBar(0, timeTxt.y + (timeTxt.height / 3), 'healthBar', function() return barPercent, delayMin, delayMax);
+		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 3), 'healthBar', function() return barPercent, delayMin, delayMax);
 		timeBar.scrollFactor.set();
 		timeBar.screenCenter(X);
 		timeBar.leftBar.color = FlxColor.LIME;
@@ -171,7 +171,7 @@ class NoteOffsetState extends MusicBeatState {
 
 		Conductor.usePlayState = false;
 		Conductor.mapBPMChanges(true);
-		Conductor.changeBPM(128);
+		Conductor.bpm = 128;
 		FlxG.sound.playMusic(Paths.music('offsetSong'));
 
 		super.create();

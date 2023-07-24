@@ -88,6 +88,7 @@ class TitleState extends MusicBeatState
 		titlebg.screenCenter(X);
 
 		logoBl = new FlxSprite(FlxG.width / 2, 1500);
+		logoBl.antialiasing = ClientPrefs.getPref('Antialiasing');
 		if (!FileSystem.exists(Paths.modsXml('FinalLogo'))) {
 			logoBl.loadGraphic(Paths.image('FinalLogo'));
 			logoBl.setGraphicSize(Std.int(logoBl.width * 1.5));
@@ -119,6 +120,7 @@ class TitleState extends MusicBeatState
 			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
 			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
 		}
+		titleText.antialiasing = ClientPrefs.getPref('Antialiasing');
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
 
@@ -139,7 +141,7 @@ class TitleState extends MusicBeatState
 		if (FreeplayState.vocals == null) {
 			Conductor.usePlayState = false;
 			Conductor.mapBPMChanges(true);
-			Conductor.changeBPM(titleJSON.bpm);
+			Conductor.bpm = titleJSON.bpm;
 		}
 
 		add(bg);
@@ -161,8 +163,13 @@ class TitleState extends MusicBeatState
 	}
 
 	function getIntroTextShit():Array<Array<String>> {
-		var fullText:String = Paths.getTextFromFile('data/introText.txt');
-		return [for (i in fullText.split('\n')) i.split('--')];
+		#if MODS_ALLOWED
+		var firstArray:Array<String> = Mods.mergeAllTextsNamed('data/introText.txt', Paths.getPreloadPath());
+		#else
+		var fullText:String = Assets.getText(Paths.txt('introText'));
+		var firstArray:Array<String> = fullText.split('\n');
+		#end
+		return [for (i in firstArray) i.split('--')];
 	}
 
 	var transitioning:Bool = false;

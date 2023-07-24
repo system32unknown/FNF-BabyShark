@@ -1,5 +1,6 @@
 package openfl.media;
 
+#if !flash
 import haxe.Int64;
 
 import openfl.events.Event;
@@ -401,3 +402,6 @@ import lime.media.AudioSource;
 		dispatchEvent(new Event(Event.SOUND_LOOP));
 	}
 }
+#else
+typedef SoundChannel = flash.media.SoundChannel;
+#end

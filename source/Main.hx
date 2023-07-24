@@ -75,9 +75,9 @@ class Main extends Sprite
 
 		CustomLog.init();
 		utils.FunkinCache.init();
-
-		#if LUA_ALLOWED Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(scripting.lua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
+		ClientPrefs.loadDefaultKeys();
+		Achievements.load();
 		addChild(new FunkinGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(overlayVar = new Overlay());
 		
@@ -93,6 +93,14 @@ class Main extends Sprite
 			MemoryUtil.clearMajor();
 		});
 		FlxG.signals.postGameReset.add(states.TitleState.onInit);
+		FlxG.signals.gameResized.add(function(w, h) {
+			if (FlxG.cameras != null) for (cam in FlxG.cameras.list) {
+				@:privateAccess
+				if (cam != null && cam._filters != null)
+				   	resetSpriteCache(cam.flashSprite);
+			}
+			if (FlxG.game != null) resetSpriteCache(FlxG.game);
+	   	});
 
 		#if CRASH_HANDLER
 		#if !hl Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash); #end
@@ -100,6 +108,13 @@ class Main extends Sprite
 		#end
 
 		#if discord_rpc Discord.start(); #end
+	}
+
+	static function resetSpriteCache(sprite:Sprite):Void {
+		@:privateAccess {
+		    sprite.__cacheBitmap = null;
+			sprite.__cacheBitmapData = null;
+		}
 	}
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!

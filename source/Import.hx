@@ -1,5 +1,4 @@
 #if !macro
-
 #if LUA_ALLOWED
 import llua.*;
 import llua.Lua;
@@ -14,6 +13,7 @@ import states.MusicBeatState;
 import states.PlayState;
 import substates.MusicBeatSubstate;
 #if MODS_ALLOWED import utils.Mods; #end
+#if ACHIEVEMENTS_ALLOWED import game.Achievements; #end
 
 import flixel.FlxG;
 import flixel.FlxSprite;
