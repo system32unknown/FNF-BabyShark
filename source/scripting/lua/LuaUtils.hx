@@ -106,17 +106,19 @@ class LuaUtils {
 		return obj;
 	}
 
-	public static function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic) {
-		var killMe:Array<String> = variable.split('.');
-		if(killMe.length > 1) {
-			var coverMeInPiss:Dynamic = Reflect.getProperty(leArray, killMe[0]);
-			for (i in 1...killMe.length - 1) {
-				coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
-			}
-			Reflect.setProperty(coverMeInPiss, killMe[killMe.length - 1], value);
-			return;
+	public static function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic, ?allowMaps:Bool = false) {
+		var split:Array<String> = variable.split('.');
+		if(split.length > 1) {
+			var obj:Dynamic = Reflect.getProperty(leArray, split[0]);
+			for (i in 1...split.length - 1)
+				obj = Reflect.getProperty(obj, split[i]);
+
+			leArray = obj;
+			variable = split[split.length - 1];
 		}
-		Reflect.setProperty(leArray, variable, value);
+		if(allowMaps && isMap(leArray)) leArray.set(variable, value);
+		else Reflect.setProperty(leArray, variable, value);
+		return value;
 	}
 	public static function getGroupStuff(leArray:Dynamic, variable:String, ?allowMaps:Bool = false) {
 		var split:Array<String> = variable.split('.');

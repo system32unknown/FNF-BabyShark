@@ -1950,6 +1950,8 @@ class PlayState extends MusicBeatState {
 			var strum:StrumNote = strumGroup.members[daNote.noteData];
 			daNote.followStrumNote(strum, fakeCrochet, songSpeed / playbackRate);
 
+			if(daNote.isSustainNote && strum.sustainReduce) daNote.clipToStrumNote(strum);
+
 			// Kill extremely late notes and cause misses
 			if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
 				if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit))
@@ -2984,9 +2986,8 @@ class PlayState extends MusicBeatState {
 
 				if (cpuControlled || boyfriend.stunned) return;
 
-				if (daNote.isSustainNote && strumsBlocked[daNote.noteData] != true && keysPressed[daNote.noteData % Note.ammo[mania]] && (daNote.parent == null || daNote.parent.wasGoodHit) && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit) {
+				if (daNote.isSustainNote && strumsBlocked[daNote.noteData] != true && keysPressed[daNote.noteData % Note.ammo[mania]] && (daNote.parent == null || daNote.parent.wasGoodHit) && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit)
 					goodNoteHit(daNote);
-				}
 			});
 		}
 
@@ -3534,6 +3535,7 @@ class PlayState extends MusicBeatState {
 		setOnLuas('score', songScore);
 		setOnLuas('misses', songMisses);
 		setOnLuas('hits', songHits);
+		setOnLuas('combo', combo);
 
 		callOnScripts('onRecalculateRating');
 		var ret:Dynamic = callOnLuas('onRecalculateRating', null, true);
@@ -3547,7 +3549,7 @@ class PlayState extends MusicBeatState {
 
 				// Rating Name
 				ratingName = ratingStuff[ratingStuff.length - 1][0]; //Uses last string
-				if (ratingPercent >= 1) {
+				if (ratingPercent < 1) {
 					for (i in 0...ratingStuff.length - 1) {
 						if(ratingPercent < ratingStuff[i][1]) {
 							ratingName = ratingStuff[i][0];
