@@ -13,7 +13,7 @@
         "url": "https://github.com/HaxeFlixel/flixel-ui"},
         {"name": "tjson", "type": "haxelib", "dir":"tjson"},
         {"name": "hxCodec", "type":"haxelib", "dir":"hxCodec", "version":"2.6.1"},
-        {"name": "SScript", "type": "haxelib", "version": "sscript"},
+        {"name": "SScript", "type": "haxelib", "version": "SScript"},
         {"name": "discord_rpc", "type": "git", "dir": "discord_rpc",
             "ref": "master",
         "url": "https://github.com/Aidan63/linc_discord-rpc"},
