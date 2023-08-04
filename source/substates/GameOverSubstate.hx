@@ -3,8 +3,8 @@ package substates;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.addons.transition.FlxTransitionableState;
-import game.Character;
-import game.Conductor;
+import objects.Character;
+
 import states.StoryMenuState;
 import states.FreeplayState;
 

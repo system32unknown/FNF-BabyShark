@@ -1,4 +1,4 @@
-package ui;
+package substates;
 
 import flixel.ui.FlxButton;
 import utils.CoolUtil;

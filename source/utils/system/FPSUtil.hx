@@ -29,8 +29,11 @@ class FPSUtil {
 		return switch (type.toLowerCase()) {
 			case 'andromeda': FlxG.elapsed / (1 / 60) * fps;
 			case 'psychold': FlxMath.bound(1 - (fps * 30), 0, 1);
+			case 'kade': FlxMath.bound(1 - (fps * 70), 0, 1);
 			case 'codename': FlxMath.bound(fps * 60 * FlxG.elapsed, 0, 1);
 			case 'forever': fps * (60 / FlxG.drawFramerate);
+			case 'yoshi': FlxMath.lerp(1.15, 1, FlxEase.cubeOut(fps % 1));
+			case 'micdup': .09 / (fps / 60);
 			default: 0;
 		};
 	}
@@ -40,6 +43,6 @@ class FPSUtil {
 	}
 
 	public function checkFPSLag(maxMB:Int = 3000) {
-		return ui.Overlay.instance.memory > maxMB || currentFPS <= ClientPrefs.getPref('framerate') / 2;
+		return objects.Overlay.instance.memory > maxMB || currentFPS <= ClientPrefs.getPref('framerate') / 2;
 	}
 }

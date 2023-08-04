@@ -7,7 +7,7 @@ import sys.FileSystem;
 import openfl.utils.Assets;
 #end
 import tjson.TJSON as Json;
-import game.Song;
+import backend.Song;
 
 typedef StageFile = {
 	var directory:String;

@@ -1,21 +1,19 @@
 package states.editors;
 
-import game.HealthIcon;
-import game.Character;
-import game.Section.SwagSection;
-import game.Song;
-import game.Song.SwagSong;
-import game.Conductor;
-import game.StrumNote;
-import game.Difficulty;
-import game.Note;
+import objects.HealthIcon;
+import objects.StrumNote;
+import objects.Note;
+import objects.Character;
+import objects.AttachedSprite;
+import objects.AttachedFlxText;
+import objects.ErrorDisplay;
+import backend.Section.SwagSection;
+import backend.Song;
+import backend.Song.SwagSong;
 import data.StageData;
 import utils.CoolUtil;
-import states.LoadingState;
-import ui.Prompt;
-import ui.AttachedSprite;
-import ui.AttachedFlxText;
-import ui.ErrorDisplay;
+import substates.Prompt;
+
 import flixel.FlxObject;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.ui.FlxButton;

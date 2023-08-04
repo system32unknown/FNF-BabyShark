@@ -1,6 +1,6 @@
-package utils;
-import flixel.input.keyboard.FlxKey;
+package backend;
 
+import flixel.input.keyboard.FlxKey;
 class InputFormatter {
 	public static function getKeyName(key:FlxKey):String {
 		switch (key) {

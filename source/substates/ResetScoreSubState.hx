@@ -1,10 +1,8 @@
 package substates;
 
-import ui.Alphabet;
 import data.WeekData;
-import game.HealthIcon;
-import game.Highscore;
-import game.Difficulty;
+import objects.HealthIcon;
+import backend.Highscore;
 
 class ResetScoreSubState extends MusicBeatSubstate
 {

@@ -3,13 +3,10 @@ package states.editors;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
-import states.LoadingState;
 import states.MainMenuState;
 import states.FreeplayState;
 import data.WeekData;
-import game.Character;
-import game.Conductor;
-import ui.Alphabet;
+import objects.Character;
 
 class MasterEditorMenu extends MusicBeatState {
 	var options:Array<String> = [

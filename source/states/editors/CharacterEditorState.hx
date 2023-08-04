@@ -18,10 +18,9 @@ import openfl.events.IOErrorEvent;
 import tjson.TJSON as Json;
 
 import utils.CoolUtil;
-import game.BGSprite;
-import game.Character;
-import game.HealthIcon;
-import game.Bar;
+import objects.Character;
+import objects.HealthIcon;
+import objects.Bar;
 
 #if MODS_ALLOWED
 import sys.FileSystem;

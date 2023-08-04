@@ -15,27 +15,30 @@ import openfl.events.KeyboardEvent;
 import openfl.filters.BitmapFilter;
 #if !MODS_ALLOWED import openfl.utils.Assets as OpenFlAssets; #end
 import tjson.TJSON as Json;
+import backend.Highscore;
+import backend.Song;
+import backend.Song.SwagSong;
+import backend.Section;
+import backend.Rating;
 import states.editors.*;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
-import game.Note.EventNote;
-import game.Section.SwagSection;
-import game.*;
+import objects.Note.EventNote;
+import objects.*;
+import backend.Section.SwagSection;
+import backend.PsychVideo;
 import utils.*;
-import ui.*;
 import data.*;
-import states.stages.BaseStage;
 import data.StageData.StageFile;
 import data.EkData.Keybinds;
-import scripting.lua.*;
+import psychlua.*;
+import cutscenes.DialogueBoxPsych;
 #if (SScript >= "3.0.0") import tea.SScript; #end
 
 #if sys
 import sys.FileSystem;
 import sys.io.File;
 #end
-
-import handlers.PsychVideo;
 
 class PlayState extends MusicBeatState {
 	public static var STRUM_X = 48.5;
@@ -94,7 +97,7 @@ class PlayState extends MusicBeatState {
 	@:noCompletion
 	static function get_isPixelStage():Bool
 		return stageUI == "pixel";
-	public static var SONG:Song.SwagSong = null;
+	public static var SONG:SwagSong = null;
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
@@ -933,8 +936,7 @@ class PlayState extends MusicBeatState {
 
 	var dialogueCount:Int = 0;
 	public var psychDialogue:DialogueBoxPsych;
-	public function startDialogue(dialogueFile:DialogueBoxPsych.DialogueFile, ?song:String = null):Void
-	{
+	public function startDialogue(dialogueFile:DialogueFile, ?song:String = null):Void {
 		// TO DO: Make this more flexible, maybe?
 		if(psychDialogue != null) return;
 
@@ -1116,6 +1118,10 @@ class PlayState extends MusicBeatState {
 		});
 		return spr;
 	}
+
+	public function addBehindGF(obj:flixel.FlxBasic) insert(members.indexOf(gfGroup), obj);
+	public function addBehindBF(obj:flixel.FlxBasic) insert(members.indexOf(boyfriendGroup), obj);
+	public function addBehindDad(obj:flixel.FlxBasic) insert(members.indexOf(dadGroup), obj);
 
 	public function clearNotesBefore(time:Float) {
 		var i:Int = unspawnNotes.length - 1;
@@ -1449,7 +1455,7 @@ class PlayState extends MusicBeatState {
 
 			if (ClientPrefs.getPref('showKeybindsOnStart') && player == 1) {
 				for (j in 0...keysArray[mania][i].length) {
-					var daKeyTxt:FlxText = new FlxText(babyArrow.x, babyArrow.y - 10, 0, InputFormatter.getKeyName(keysArray[mania][i][j]), 32 - mania);
+					var daKeyTxt:FlxText = new FlxText(babyArrow.x, babyArrow.y - 10, 0, backend.InputFormatter.getKeyName(keysArray[mania][i][j]), 32 - mania);
 					daKeyTxt.setFormat(Paths.font("vcr.ttf"), 32 - mania, FlxColor.WHITE, CENTER);
 					daKeyTxt.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1.25);
 					daKeyTxt.alpha = 0;

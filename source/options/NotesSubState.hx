@@ -1,9 +1,7 @@
 package options;
 
-import game.Note;
-import utils.Controls;
+import objects.Note;
 import shaders.ColorSwap;
-import ui.Alphabet;
 
 class NotesSubState extends MusicBeatSubstate
 {

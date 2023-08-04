@@ -1,6 +1,6 @@
 package states;
 
-import ui.Alphabet;
+import objects.AttachedAchievement;
 
 class AchievementsMenuState extends MusicBeatState
 {

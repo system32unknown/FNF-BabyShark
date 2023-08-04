@@ -2,17 +2,14 @@ package states;
 
 import data.WeekData;
 import utils.MathUtil;
-import game.Difficulty;
-import game.Conductor;
-import game.Highscore;
-import game.HealthIcon;
-import game.Song;
+import backend.Highscore;
+import backend.Song;
+import objects.HealthIcon;
+import objects.ErrorDisplay;
 import states.editors.ChartingState;
 import substates.ResetScoreSubState;
 import substates.GameplayChangersSubstate;
 import substates.FreeplaySectionSubstate;
-import ui.ErrorDisplay;
-import ui.Alphabet;
 
 class FreeplayState extends MusicBeatState
 {

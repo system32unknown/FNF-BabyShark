@@ -1,7 +1,7 @@
 package options;
 
-import ui.Prompt;
-import game.Highscore;
+import substates.Prompt;
+import backend.Highscore;
 
 class SaveSubState extends BaseOptionsMenu
 {

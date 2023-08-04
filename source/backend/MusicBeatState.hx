@@ -1,15 +1,9 @@
-package states;
+package backend;
 
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
-import utils.Controls;
-import states.stages.BaseStage;
-import ui.CustomFadeTransition;
-import ui.ErrorDisplay;
-import game.Conductor;
-import game.Conductor.BPMChangeEvent;
-import game.Song;
+import objects.ErrorDisplay;
 
 class MusicBeatState extends FlxUIState {
 	public var curBPMChange:BPMChangeEvent;

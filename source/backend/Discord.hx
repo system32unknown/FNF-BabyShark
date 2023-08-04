@@ -1,10 +1,10 @@
-package utils;
+package backend;
 
 import Sys.sleep;
 import discord_rpc.DiscordRpc;
 import lime.app.Application;
 import states.PlayState;
-import scripting.lua.FunkinLua;
+import psychlua.FunkinLua;
 
 class Discord {
 	public static var isInitialized:Bool = false;

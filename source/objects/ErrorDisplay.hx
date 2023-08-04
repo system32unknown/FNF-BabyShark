@@ -1,4 +1,4 @@
-package ui;
+package objects;
 
 import flixel.FlxState;
 

@@ -14,7 +14,7 @@ import tjson.TJSON as Json;
 #if sys
 import sys.io.File;
 #end
-import ui.MenuCharacter;
+import objects.MenuCharacter;
 
 class MenuCharacterEditorState extends MusicBeatState
 {

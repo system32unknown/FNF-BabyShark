@@ -5,12 +5,9 @@ import flixel.addons.display.FlxGridOverlay;
 import flixel.input.keyboard.FlxKey;
 import data.EkData.Keybinds;
 import utils.CoolUtil;
-import utils.Controls;
-import utils.InputFormatter;
-import ui.AttachedText;
-import ui.AttachedSprite;
-import ui.Alphabet;
-
+import backend.InputFormatter;
+import objects.AttachedText;
+import objects.AttachedSprite;
 class ControlsSubState extends MusicBeatSubstate {
 	static var curSelected:Int = 1;
 	static var curAlt:Bool = false;

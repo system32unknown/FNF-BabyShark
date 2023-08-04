@@ -1,8 +1,8 @@
-package game;
+package backend;
 
-import game.Section.SwagSection;
+import backend.Section.SwagSection;
 import data.StageData;
-import game.Note;
+import objects.Note;
 import tjson.TJSON as Json;
 
 #if sys

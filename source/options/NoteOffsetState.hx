@@ -2,11 +2,11 @@ package options;
 
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
-import game.Bar;
-import game.Character;
-import game.Conductor;
+import objects.Bar;
+import objects.Character;
+
 import states.stages.StageWeek1 as BackgroundStage;
-import ui.CustomFadeTransition;
+
 
 class NoteOffsetState extends MusicBeatState {
 	var delayMin:Int = -500;

@@ -12,11 +12,8 @@ import openfl.events.IOErrorEvent;
 #if MODS_ALLOWED
 import sys.io.File;
 #end
-
-import ui.Alphabet;
-import ui.AttachedSprite;
-import ui.CustomFadeTransition;
-import ui.Prompt;
+import objects.AttachedSprite;
+import substates.Prompt;
 import utils.CoolUtil;
 
 class CreditsEditor extends MusicBeatState

@@ -1,8 +1,7 @@
 package substates;
 
-import ui.Alphabet;
-import ui.CheckboxThingie;
-import ui.AttachedText;
+import objects.CheckboxThingie;
+import objects.AttachedText;
 
 #if sys
 import sys.io.File;
@@ -11,13 +10,13 @@ import sys.FileSystem;
 
 class GameplayChangersSubstate extends MusicBeatSubstate
 {
-	private var curOption:GameplayOption = null;
-	private var curSelected:Int = 0;
-	private var optionsArray:Array<Dynamic> = [];
+	var curOption:GameplayOption = null;
+	var curSelected:Int = 0;
+	var optionsArray:Array<Dynamic> = [];
 
-	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private var checkboxGroup:FlxTypedGroup<CheckboxThingie>;
-	private var grpTexts:FlxTypedGroup<AttachedText>;
+	var grpOptions:FlxTypedGroup<Alphabet>;
+	var checkboxGroup:FlxTypedGroup<CheckboxThingie>;
+	var grpTexts:FlxTypedGroup<AttachedText>;
 
 	function getOptions() {
 		var goption:GameplayOption = new GameplayOption('Scroll Type', 'scrolltype', 'string', 'multiplicative', ["multiplicative", "constant"]);

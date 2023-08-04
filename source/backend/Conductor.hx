@@ -1,6 +1,6 @@
-package game;
+package backend;
 
-import game.Song.SwagSong;
+import backend.Song.SwagSong;
 
 typedef BPMChangeEvent = {
 	var stepTime:Int;

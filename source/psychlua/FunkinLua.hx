@@ -4,12 +4,13 @@ import haxe.Constraints.Function;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.display.FlxRuntimeShader;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
 import states.*;
-import game.*;
-import utils.*;
+import backend.Highscore;
+import backend.Song;
+import objects.StrumNote;
+import objects.Note;
 import utils.system.PlatformUtil;
 import data.WeekData;
 
@@ -19,8 +20,7 @@ import sys.io.File;
 import haxe.io.Path;
 #end
 
-import ui.DialogueBoxPsych;
-import ui.CustomFadeTransition;
+import cutscenes.DialogueBoxPsych;
 
 class FunkinLua {
 	public static final Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
@@ -83,16 +83,16 @@ class FunkinLua {
 			return true;
 		});
 
-		addCallback("callScript", function(luaFile:String, funcName:String, args:Array<Dynamic>):Dynamic {
-			luaFile = format(luaFile);
+		addCallback("callScript", function(luaFile:String, funcName:String, args:Array<Dynamic>) {
+			if(args == null) args = [];
 
-			for (luaInstance in game.luaArray) {
-				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed)
-					return luaInstance.call(funcName, args);
-			}
-
-			luaTrace('callScript: The script "${luaFile}" doesn\'t exists nor is active!');
-			return null;
+			var foundScript:String = findScript(luaFile);
+			if(foundScript != null)
+				for (luaInstance in game.luaArray)
+					if(luaInstance.scriptName == foundScript) {
+						luaInstance.call(funcName, args);
+						return;
+					}
 		});
 
 		addCallback("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
@@ -105,38 +105,31 @@ class FunkinLua {
 			return Reflect.callMethod(null, platFunc, args);
 		});
 
-		addCallback("setGlobalFromScript", function(luaFile:String, global:String, val:Dynamic):Bool {
-			luaFile = format(luaFile);
-
-			var got:Bool = false;
-			for (luaInstance in game.luaArray) {
-				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed) {
-					luaInstance.set(global, val);
-					got = true;
-				}
-			}
-
-			if (!got) {
-				luaTrace('setGlobalFromScript: The script "${luaFile}" doesn\'t exists nor is active!');
-				return false;
-			}
-			return true;
+		addCallback("setGlobalFromScript", function(luaFile:String, global:String, val:Dynamic) { // returns the global from a script
+			var foundScript:String = findScript(luaFile);
+			if(foundScript != null)
+				for (luaInstance in game.luaArray)
+					if(luaInstance.scriptName == foundScript)
+						luaInstance.set(global, val);
 		});
-		addCallback("getGlobalFromScript", function(luaFile:String, global:String):Dynamic {
-			luaFile = format(luaFile);
 
-			for (luaInstance in game.luaArray) {
-				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed) {
-					var lua:State = luaInstance.lua;
-					Lua.getglobal(lua, global);
+		addCallback("getGlobalFromScript", function(luaFile:String, global:String) { // returns the global from a script
+			var foundScript:String = findScript(luaFile);
+			if(foundScript != null)
+				for (luaInstance in game.luaArray)
+					if(luaInstance.scriptName == foundScript) {
+						Lua.getglobal(luaInstance.lua, global);
+						if(Lua.isnumber(luaInstance.lua, -1))
+							Lua.pushnumber(lua, Lua.tonumber(luaInstance.lua, -1));
+						else if(Lua.isstring(luaInstance.lua, -1))
+							Lua.pushstring(lua, Lua.tostring(luaInstance.lua, -1));
+						else if(Lua.isboolean(luaInstance.lua, -1))
+							Lua.pushboolean(lua, Lua.toboolean(luaInstance.lua, -1));
+						else Lua.pushnil(lua);
 
-					var result:Dynamic = Convert.fromLua(lua, -1);
-					Lua.pop(lua, 1);
-
-					return result;
-				}
-			}
-			return null;
+						Lua.pop(luaInstance.lua, 1); // remove the global
+						return;
+					}
 		});
 
 		addCallback("isRunning", function(luaFile:String) {
@@ -151,37 +144,52 @@ class FunkinLua {
 			return PlayState.instance.variables.get(varName);
 		});
 
-		addCallback("addLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false):Bool { //would be dope asf.
-			luaFile = format(luaFile);
+		addCallback("addLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false) { //would be dope asf.
+			var foundScript:String = findScript(luaFile);
+			if(foundScript != null) {
+				if(!ignoreAlreadyRunning)
+					for (luaInstance in game.luaArray)
+						if(luaInstance.scriptName == foundScript) {
+							luaTrace('addLuaScript: The script "' + foundScript + '" is already running!');
+							return;
+						}
 
-			if (!ignoreAlreadyRunning && LuaUtils.isLuaRunning(luaFile)) {
-				luaTrace('addLuaScript: The script "${luaFile}" is already running!');
-				return false;
+				new FunkinLua(foundScript);
+				return;
 			}
-
-			var res:FunkinLua = game.executeLua(luaFile);
-			if (res == null) {
-				luaTrace('addLuaScript: The script "${luaFile}" doesn\'t exist!', false, false, FlxColor.RED);
-				return false;
-			}
-			return true;
+			luaTrace("addLuaScript: Script doesn't exist!", false, false, FlxColor.RED);
 		});
-		addCallback("removeLuaScript", function(luaFile:String):Bool {
-			luaFile = format(luaFile);
-
-			var got:Bool = false;
-			for (luaInstance in game.luaArray) {
-				if (luaInstance.globalScriptName == luaFile && !luaInstance.closed) {
-					luaInstance.closed = true;
-					got = true;
-				}
+		addCallback("addHScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false) {
+			#if HSCRIPT_ALLOWED
+			var foundScript:String = findScript(luaFile, '.hx');
+			if(foundScript != null) {
+				if(!ignoreAlreadyRunning)
+					for (script in game.hscriptArray)
+						if(script.origin == foundScript) {
+							luaTrace('addHScript: The script "' + foundScript + '" is already running!');
+							return;
+						}
+				PlayState.instance.initHScript(foundScript);
+				return;
 			}
-
-			if (!got) {
-				luaTrace('removeLuaScript: The script "${luaFile}" doesn\'t exists nor is active!');
-				return false;
+			luaTrace("addHScript: Script doesn't exist!", false, false, FlxColor.RED);
+			#else
+			luaTrace("addHScript: HScript is not supported on this platform!", false, false, FlxColor.RED);
+			#end
+		});
+		addCallback("removeLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false):Bool {
+			var foundScript:String = findScript(luaFile);
+			if(foundScript != null) {
+				if(!ignoreAlreadyRunning)
+					for (luaInstance in game.luaArray)
+						if(luaInstance.scriptName == foundScript) {
+							luaInstance.stop();
+							trace('Closing script ' + luaInstance.scriptName);
+							return true;
+						}
 			}
-			return true;
+			luaTrace('removeLuaScript: Script $luaFile isn\'t running!', false, false, FlxColor.RED);
+			return false;
 		});
 
 		addCallback("loadSong", function(?name:String = null, ?difficultyNum:Int = -1) {
@@ -200,6 +208,7 @@ class FunkinLua {
 				game.vocals.pause();
 				game.vocals.volume = 0;
 			}
+			FlxG.camera.followLerp = 0;
 		});
 
 		addCallback("loadGraphic", function( variable:String, image:String, ?gridX:Int = 0, ?gridY:Int = 0) {
@@ -528,9 +537,6 @@ class FunkinLua {
 
 		addCallback("changeMania", function(newValue:Int, skipTwn:Bool = false) {
 			game.changeMania(newValue, skipTwn);
-		});
-		addCallback("generateStaticArrows", function(player:Int) {
-			game.generateStaticArrows(player);
 		});
 
 		addCallback("cameraSetTarget", function(target:String) {

@@ -1,10 +1,10 @@
 package options;
 
-import utils.Controls;
-import ui.AttachedText;
-import ui.CheckboxThingie;
-import ui.Alphabet;
-import game.Character;
+
+import objects.AttachedText;
+import objects.CheckboxThingie;
+
+import objects.Character;
 
 #if MODS_ALLOWED
 import flixel.util.FlxStringUtil;

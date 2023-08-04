@@ -1,4 +1,4 @@
-package game;
+package backend;
 
 import objects.AchievementPopup;
 import haxe.Exception;
@@ -110,7 +110,7 @@ class Achievements {
 	}
 
 	#if ACHIEVEMENTS_ALLOWED
-	@:allow(ui.AchievementPopup)
+	@:allow(objects.AchievementPopup)
 	static var _popups:Array<AchievementPopup> = [];
 
 	public static var showingPopups(get, never):Bool;

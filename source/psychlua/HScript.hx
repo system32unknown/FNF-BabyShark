@@ -1,7 +1,7 @@
 package psychlua;
 
 import flixel.FlxBasic;
-import game.Character;
+import objects.Character;
 
 #if (HSCRIPT_ALLOWED && SScript >= "3.0.0")
 import tea.SScript;
@@ -59,9 +59,10 @@ class HScript extends SScript {
             "Xml"               => Xml,
 
             "Json"              => haxe.Json,
-            "File"              => File,
-            "FileSystem"        => FileSystem,
-
+			#if sys
+            "File"              => sys.io.File,
+            "FileSystem"        => sys.FileSystem,
+			#end
             // OpenFL & Lime related stuff
             "Assets"            => openfl.utils.Assets,
             "Application"       => lime.app.Application,
@@ -92,10 +93,10 @@ class HScript extends SScript {
             // Engine related stuff
             "PlayState"         => PlayState,
             "game"              => PlayState.instance,
-            "Note"              => Note,
-            "NoteSplash"        => NoteSplash,
-            "HealthIcon"        => HealthIcon,
-            "StrumLine"         => StrumNote,
+            "Note"              => objects.Note,
+            "NoteSplash"        => objects.NoteSplash,
+            "HealthIcon"        => objects.HealthIcon,
+            "StrumLine"         => objects.StrumNote,
             "Character"         => Character,
             "Paths"             => Paths,
             "Conductor"         => Conductor,
@@ -109,7 +110,7 @@ class HScript extends SScript {
 			#end
 			'ShaderFilter'		=> openfl.filters.ShaderFilter,
 
-            "DeltaTrail" => DeltaTrail,
+            "DeltaTrail" => objects.DeltaTrail,
             "engine" => {
                 version: lime.app.Application.current.meta.get('version'),
                 commit: macro.GitCommitMacro.commitNumber,
@@ -154,11 +155,11 @@ class HScript extends SScript {
 		// For adding your own callbacks
 
 		// not very tested but should work
-		set('createGlobalCallback', function(name:String, func:Dynamic) {
+		set('createGlobalCallback', function(name:String, func:haxe.Constraints.Function) {
 			#if LUA_ALLOWED
 			for (script in PlayState.instance.luaArray)
 				if(script != null && script.lua != null && !script.closed)
-					script.addCallback(script.lua, name, func);
+					script.addCallback(name, func);
 			#end
 			FunkinLua.customFunctions.set(name, func);
 		});

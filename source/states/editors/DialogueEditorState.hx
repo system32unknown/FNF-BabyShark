@@ -11,9 +11,9 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
 import tjson.TJSON as Json;
-import ui.DialogueBoxPsych;
-import ui.DialogueCharacter;
-import ui.TypedAlphabet;
+import cutscenes.DialogueBoxPsych;
+import cutscenes.DialogueCharacter;
+import objects.TypedAlphabet;
 import states.TitleState;
 #if sys
 import sys.io.File;
@@ -44,11 +44,7 @@ class DialogueEditorState extends MusicBeatState
 			sound: ''
 		};
 
-		dialogueFile = {
-			dialogue: [
-				copyDefaultLine()
-			]
-		};
+		dialogueFile = {dialogue: [ copyDefaultLine() ]};
 		
 		character = new DialogueCharacter();
 		character.scrollFactor.set();

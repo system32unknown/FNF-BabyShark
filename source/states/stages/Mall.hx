@@ -1,5 +1,7 @@
 package states.stages;
 
+import states.stages.objects.*;
+
 class Mall extends BaseStage
 {
 	var upperBoppers:BGSprite;
@@ -41,7 +43,7 @@ class Mall extends BaseStage
 		}
 	}
 
-	override function countdownTick(count:BaseStage.Countdown, num:Int) everyoneDance();
+	override function countdownTick(count:Countdown, num:Int) everyoneDance();
 	override function beatHit() everyoneDance();
 
 	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {

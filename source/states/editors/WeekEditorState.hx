@@ -21,10 +21,9 @@ import sys.FileSystem;
 #end
 import data.WeekData;
 import states.TitleState;
-import game.HealthIcon;
-import ui.Alphabet;
-import ui.MenuCharacter;
-import ui.MenuItem;
+import objects.HealthIcon;
+import objects.MenuCharacter;
+import objects.MenuItem;
 
 class WeekEditorState extends MusicBeatState
 {

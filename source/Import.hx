@@ -4,16 +4,28 @@ import llua.*;
 import llua.Lua;
 #end
 
-#if discord_rpc
-import utils.Discord;
-#end
-import utils.Paths;
-import utils.ClientPrefs;
-import states.MusicBeatState;
+#if discord_rpc import backend.Discord; #end
+
+#if ACHIEVEMENTS_ALLOWED import backend.Achievements; #end
+
+import backend.Paths;
+import backend.Controls;
+import backend.MusicBeatState;
+import backend.MusicBeatSubstate;
+import backend.CustomFadeTransition;
+import backend.ClientPrefs;
+import backend.Conductor;
+import backend.BaseStage;
+import backend.Difficulty;
+#if MODS_ALLOWED import backend.Mods; #end
+
+import utils.CoolUtil;
+
+import objects.Alphabet;
+import objects.BGSprite;
+
 import states.PlayState;
-import substates.MusicBeatSubstate;
-#if MODS_ALLOWED import utils.Mods; #end
-#if ACHIEVEMENTS_ALLOWED import game.Achievements; #end
+import states.LoadingState;
 
 import flixel.FlxG;
 import flixel.FlxSprite;

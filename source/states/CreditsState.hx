@@ -4,9 +4,8 @@ package states;
 import sys.FileSystem;
 import sys.io.File;
 #end
-import ui.Alphabet;
-import ui.AttachedSprite;
-import game.HealthIcon;
+import objects.AttachedSprite;
+import objects.HealthIcon;
 import utils.CoolUtil;
 
 class CreditsState extends MusicBeatState

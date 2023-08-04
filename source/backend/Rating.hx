@@ -1,4 +1,4 @@
-package game;
+package backend;
 
 class Rating {
 	public var name:String = '';

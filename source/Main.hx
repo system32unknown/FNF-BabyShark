@@ -1,7 +1,6 @@
 package;
 
 import flixel.custom.system.CustomLog;
-
 import haxe.Exception;
 
 import openfl.Lib;
@@ -10,12 +9,10 @@ import openfl.display.StageScaleMode;
 import openfl.events.Event;
 
 import states.TitleState;
-import utils.Controls;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
-import utils.CoolUtil;
-import game.FunkinGame;
-import ui.Overlay;
+import utils.FunkinGame;
+import objects.Overlay;
 
 //crash handler stuff
 #if CRASH_HANDLER

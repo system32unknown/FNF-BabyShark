@@ -1,4 +1,4 @@
-package ui;
+package cutscenes;
 
 import tjson.TJSON as Json;
 #if sys

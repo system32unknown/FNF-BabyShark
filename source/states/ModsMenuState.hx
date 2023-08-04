@@ -7,12 +7,9 @@ import sys.io.File;
 import openfl.display.BitmapData;
 
 import data.WeekData;
-import ui.AttachedSprite;
-import ui.Alphabet;
+import objects.AttachedSprite;
+import backend.InputFormatter;
 import utils.CoolUtil;
-import utils.InputFormatter;
-import states.TitleState;
-import states.FreeplayState;
 
 class ModsMenuState extends MusicBeatState
 {
@@ -25,7 +22,7 @@ class ModsMenuState extends MusicBeatState
 	var selector:AttachedSprite;
 	var descriptionTxt:FlxText;	
 	var needaReset = false;
-	private static var curSelected:Int = 0;
+	static var curSelected:Int = 0;
 	public static var defaultColor:FlxColor = 0xFF665AFF;
 
 	var buttonDown:FlxButton;

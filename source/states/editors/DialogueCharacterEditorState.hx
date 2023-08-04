@@ -13,9 +13,9 @@ import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
 import tjson.TJSON as Json;
 import lime.system.Clipboard;
-import ui.DialogueBoxPsych;
-import ui.DialogueCharacter;
-import ui.TypedAlphabet;
+import cutscenes.DialogueBoxPsych;
+import cutscenes.DialogueCharacter;
+import objects.TypedAlphabet;
 import states.TitleState;
 #if sys
 import sys.io.File;

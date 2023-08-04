@@ -1,4 +1,4 @@
-package ui;
+package objects;
 
 import openfl.text.TextField;
 import openfl.text.TextFormat;

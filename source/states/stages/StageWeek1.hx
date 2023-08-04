@@ -1,6 +1,7 @@
 package states.stages;
 
-import game.Character;
+import states.stages.objects.*;
+import objects.Character;
 
 class StageWeek1 extends BaseStage {
 	var dadbattleBlack:BGSprite;
@@ -32,7 +33,7 @@ class StageWeek1 extends BaseStage {
 			add(stageCurtains);
 		}
 	}
-	override function eventPushed(event:game.Note.EventNote) {
+	override function eventPushed(event:objects.Note.EventNote) {
 		switch(event.event) {
 			case "Dadbattle Spotlight":
 				dadbattleBlack = new BGSprite(null, -800, -400, 0, 0);

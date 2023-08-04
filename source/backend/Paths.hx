@@ -1,4 +1,4 @@
-package utils;
+package backend;
 
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
@@ -12,7 +12,6 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 import haxe.io.Path;
-#if MODS_ALLOWED import utils.Mods; #end
 
 @:access(openfl.display.BitmapData.__texture)
 @:access(openfl.media.Sound.__buffer)

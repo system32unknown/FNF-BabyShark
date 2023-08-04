@@ -1,4 +1,4 @@
-package ui;
+package cutscenes;
 
 import tjson.TJSON as Json;
 #if sys
@@ -7,8 +7,9 @@ import sys.io.File;
 #end
 import openfl.utils.Assets;
 
-import utils.Controls;
-import scripting.lua.FunkinLua;
+import objects.TypedAlphabet;
+import backend.Controls;
+import psychlua.FunkinLua;
 
 // Gonna try to kind of make it compatible to Forever Engine,
 // love u Shubs no homo :flushedh4:

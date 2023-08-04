@@ -4,11 +4,8 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.FlxStringUtil;
 
-import ui.Alphabet;
-import game.Difficulty;
-import game.Conductor;
-import game.Highscore;
-import game.Song;
+import backend.Highscore;
+import backend.Song;
 import states.StoryMenuState;
 import states.FreeplayState;
 import options.OptionsState;

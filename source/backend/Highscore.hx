@@ -1,6 +1,4 @@
-package game;
-
-import game.Difficulty;
+package backend;
 
 class Highscore {
 	public static var weekScores:Map<String, Int> = new Map();

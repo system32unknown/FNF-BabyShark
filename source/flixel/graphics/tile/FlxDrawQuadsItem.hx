@@ -6,7 +6,7 @@ package flixel.graphics.tile;
 	But yea, this is copy pasted to ensure ClientPrefs.antialiasing is APPLIED TO EVERYTHING.
  */
 #if FLX_DRAW_QUADS
-import utils.ClientPrefs;
+import backend.ClientPrefs;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.system.FlxAssets.FlxShader;

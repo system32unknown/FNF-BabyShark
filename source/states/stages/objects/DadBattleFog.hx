@@ -1,6 +1,6 @@
 package states.stages.objects;
 
-import game.BGSprite;
+import objects.BGSprite;
 
 class DadBattleFog extends FlxSpriteGroup {
 	public function new() {

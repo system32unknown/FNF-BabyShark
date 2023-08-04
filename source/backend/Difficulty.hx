@@ -1,4 +1,4 @@
-package game;
+package backend;
 
 import data.WeekData;
 

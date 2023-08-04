@@ -1,4 +1,4 @@
-package states.stages;
+package backend;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;

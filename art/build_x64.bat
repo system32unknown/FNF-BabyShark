@@ -4,14 +4,17 @@ cd ..
 title BUILDING GAME
 lime build windows -release
 
-setlocal
-:PROMPT
-SET /P AYS = Do you want run game? (y/n):
-IF /I "%AYS%" NEQ "Y" GOTO END
+if not "%ERRORLEVEL%" == "0" goto ERROR
+else goto OK
 
-cd export/release/windows/bin
-"AlterEngine"
-:END
-endlocal
+:ERROR
+echo Failed Compiling Game.
+goto QUIT
+
+:OK
+echo Done Compiling Game.
+goto QUIT
+
+:QUIT
 pause
 exit
