@@ -93,7 +93,7 @@ class FreeplayState extends MusicBeatState
 		Mods.loadTopMod();
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg = ClientPrefs.getPref('Antialiasing');
+		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(bg);
 		bg.screenCenter();
 
