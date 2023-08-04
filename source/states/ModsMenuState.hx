@@ -38,13 +38,12 @@ class ModsMenuState extends MusicBeatState
 	var visibleWhenNoMods:Array<FlxBasic> = [];
 	var visibleWhenHasMods:Array<FlxBasic> = [];
 
-	override function create()
-	{
+	override function create() {
 		WeekData.setDirectoryFromWeek();
 
 		#if discord_rpc
 		// Updating Discord Rich Presence
-		Discord.changePresence("Mod Menus", null);
+		Discord.changePresence("In the Mod Menus", null);
 		#end
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));

@@ -23,39 +23,25 @@ import haxe.io.Path;
 import cutscenes.DialogueBoxPsych;
 
 class FunkinLua {
-	public static final Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
-	public static final Function_Continue:Dynamic = "##PSYCHLUA_FUNCTIONCONTINUE";
-	public static final Function_StopLua:Dynamic = "##PSYCHLUA_FUNCTIONSTOPLUA";
-	public static final Function_StopHScript:Dynamic = "##PSYCHLUA_FUNCTIONSTOPHSCRIPT";
-	public static final Function_StopAll:Dynamic = "##PSYCHLUA_FUNCTIONSTOPALL";
+	public static var Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
+	public static var Function_Continue:Dynamic = "##PSYCHLUA_FUNCTIONCONTINUE";
+	public static var Function_StopLua:Dynamic = "##PSYCHLUA_FUNCTIONSTOPLUA";
+	public static var Function_StopHScript:Dynamic = "##PSYCHLUA_FUNCTIONSTOPHSCRIPT";
+	public static var Function_StopAll:Dynamic = "##PSYCHLUA_FUNCTIONSTOPALL";
 	
 	#if LUA_ALLOWED
 	public var lua:State = null;
 	#end
-	public var globalScriptName:String = '';
-	public var modDir:String = '';
 	public var scriptName:String = '';
 	public var closed:Bool = false;
 
-	#if (HSCRIPT_ALLOWED)
-	public var hscript:HScript;
+	#if (SScript >= "3.0.0")
+	public var hscript:HScript = null;
 	#end
 
 	public var callbacks:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public static var customFunctions:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public function new(script:String) {
-		if (!Path.isAbsolute(script)) { // any absoluted paths, fuck it.
-			var dirs = (script = format(script)).split('/'), mod = Paths.mods(), index = -1;
-			for (i in 0...dirs.length) {
-				if (mod.startsWith(dirs[i])) {
-					modDir = ((index = i + 1) < dirs.length && Mods.isValidModDir(dirs[index])) ? dirs[index] : '';
-					break;
-				}
-			}
-			if (modDir != '' || index != -1)
-				globalScriptName = Path.join([for (i in (index + (modDir != '' ? 1 : 0))...dirs.length) dirs[i]]);
-		} else globalScriptName = scriptName;
-
 		#if LUA_ALLOWED
 		lua = LuaL.newstate();
 		LuaL.openlibs(lua);
@@ -63,23 +49,46 @@ class FunkinLua {
 		this.scriptName = script;
 		var game:PlayState = PlayState.instance;
 		game.luaArray.push(this);
+		trace('loading lua file: $scriptName');
 
 		initGlobals(game);
 
 		addCallback("getRunningScripts", function(_) {
-			return [for (script in game.luaArray) script];
+			return [for (script in game.luaArray) script.scriptName];
 		});
 
+		addLocalCallback("setOnScripts", function(varName:String, arg:Dynamic, ?ignoreSelf:Bool = false, ?exclusions:Array<String> = null) {
+			if(exclusions == null) exclusions = [];
+			if(ignoreSelf && !exclusions.contains(scriptName)) exclusions.push(scriptName);
+			game.setOnScripts(varName, arg, exclusions);
+		});
+		addLocalCallback("setOnHScript", function(varName:String, arg:Dynamic, ?ignoreSelf:Bool = false, ?exclusions:Array<String> = null) {
+			if(exclusions == null) exclusions = [];
+			if(ignoreSelf && !exclusions.contains(scriptName)) exclusions.push(scriptName);
+			game.setOnHScript(varName, arg, exclusions);
+		});
 		addLocalCallback("setOnLuas", function(varName:String, arg:Dynamic, ?ignoreSelf:Bool = false, ?exclusions:Array<String> = null) {
 			if(exclusions == null) exclusions = [];
 			if(ignoreSelf && !exclusions.contains(scriptName)) exclusions.push(scriptName);
 			game.setOnLuas(varName, arg, exclusions);
 		});
 
+		addLocalCallback("callOnScripts", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
+			if(excludeScripts == null) excludeScripts = [];
+			if(ignoreSelf && !excludeScripts.contains(scriptName)) excludeScripts.push(scriptName);
+			game.callOnScripts(funcName, args, ignoreStops, excludeScripts, excludeValues);
+			return true;
+		});
 		addLocalCallback("callOnLuas", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
 			if(excludeScripts == null) excludeScripts = [];
 			if(ignoreSelf && !excludeScripts.contains(scriptName)) excludeScripts.push(scriptName);
 			game.callOnLuas(funcName, args, ignoreStops, excludeScripts, excludeValues);
+			return true;
+		});
+		addLocalCallback("callOnHScript", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
+			if(excludeScripts == null) excludeScripts = [];
+			if(ignoreSelf && !excludeScripts.contains(scriptName)) excludeScripts.push(scriptName);
+			game.callOnHScript(funcName, args, ignoreStops, excludeScripts, excludeValues);
 			return true;
 		});
 
@@ -133,7 +142,12 @@ class FunkinLua {
 		});
 
 		addCallback("isRunning", function(luaFile:String) {
-			return LuaUtils.isLuaRunning(luaFile);
+			var foundScript:String = findScript(luaFile);
+			if(foundScript != null)
+				for (luaInstance in game.luaArray)
+					if(luaInstance.scriptName == foundScript)
+						return true;
+			return false;
 		});
 
 		addCallback("setVar", function(varName:String, value:Dynamic) {
@@ -1150,6 +1164,7 @@ class FunkinLua {
 			#else
 			luaTrace('$scriptName\n$error', true, false, FlxColor.RED);
 			#end
+			trace(error);
 		}
 		trace('lua file loaded succesfully: $scriptName');
 

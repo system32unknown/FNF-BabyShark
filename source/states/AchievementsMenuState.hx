@@ -22,7 +22,7 @@ class AchievementsMenuState extends MusicBeatState
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
 		menuBG.color = 0xFF7196FD;
-		menuBG = ClientPrefs.getPref('Antialiasing');
+		menuBG.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(menuBG);
 
 		add(grpOptions = new FlxTypedGroup<Alphabet>());

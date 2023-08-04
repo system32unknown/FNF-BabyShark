@@ -253,9 +253,6 @@ class PlayState extends MusicBeatState {
 	var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
 	public var introSoundsSuffix:String = '';
 
-	public var achievementsArray:Array<FunkinLua> = [];
-	public var achievementWeeks:Array<String> = [];
-
 	// Less laggy controls
 	var keysArray:Array<Dynamic>;
 
@@ -508,8 +505,8 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(timeTxt);
 		
 		timeBarBG.sprTracker = timeBar;
-		uiGroup.insert(members.indexOf(timeBarBG), timeBar);
-		strumLineNotes = new FlxTypedGroup<StrumNote>();
+		uiGroup.insert(uiGroup.members.indexOf(timeBarBG), timeBar);
+		add(strumLineNotes = new FlxTypedGroup<StrumNote>());
 
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
 		grpNoteSplashes.add(splash);
@@ -577,7 +574,6 @@ class PlayState extends MusicBeatState {
 		scoreTxt.visible = !hideHud;
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
-		updateScore(false);
 		uiGroup.add(scoreTxt);
 
 		judgementCounter = new FlxText(2, 0, 0, "", 16);
@@ -2787,13 +2783,12 @@ class PlayState extends MusicBeatState {
 
 			var sortedNotesList:Array<Note> = [];				
 			var canMiss:Bool = !ClientPrefs.getPref('ghostTapping');
-			var notesStopped:Bool = false;
 
 			notes.forEachAlive(function(daNote:Note) {
 				if (!strumsBlocked[daNote.noteData] && daNote.mustPress && !daNote.blockHit && !daNote.tooLate) {
 					if (!daNote.isSustainNote && !daNote.wasGoodHit) {
 						if (!daNote.canBeHit && daNote.checkDiff(Conductor.songPosition)) daNote.update(0);
-						if (daNote.canBeHit) {
+						if (daNote.canBeHit && daNote.canBeHit) {
 							if (daNote.noteData == key) sortedNotesList.push(daNote);
 							canMiss = !ClientPrefs.getPref('AntiMash');
 						} else if (daNote.isSustainNote && daNote.noteData == key && ((daNote.wasGoodHit || daNote.prevNote.wasGoodHit) &&
@@ -2806,24 +2801,28 @@ class PlayState extends MusicBeatState {
 			var pressNotes:Array<Note> = [];
 
 			if (sortedNotesList.length > 0) {
-				for (epicNote in sortedNotesList) {
-					for (doubleNote in pressNotes) {
+				var epicNote:Note = sortedNotesList[0];
+				if (sortedNotesList.length > 1) {
+					for (bad in 1...sortedNotesList.length) {
+						var doubleNote:Note = sortedNotesList[bad];
+						// no point in jack derection if it isn't a jack
+						if (doubleNote.noteData != epicNote.noteData) break;
+
 						if (Math.abs(doubleNote.strumTime - epicNote.strumTime) < 1) {
 							doubleNote.kill();
 							notes.remove(doubleNote, true);
 							doubleNote.destroy();
-						} else notesStopped = true;
+							break;
+						} else if (doubleNote.strumTime < epicNote.strumTime) {
+							epicNote = doubleNote;
+							break;
+						}
 					}
 
-					// eee jack detection before was not super good
-					if (!notesStopped) {
-						if (epicNote.isSustainNote) {
-							strumPlayAnim(false, key);
-							continue;
-						}
-						pressNotes.push(epicNote);
-						goodNoteHit(epicNote);
-					}
+					if (epicNote.isSustainNote)
+						strumPlayAnim(false, key);
+					pressNotes.push(epicNote);
+					goodNoteHit(epicNote);
 				}
 			} else {
 				callOnScripts('onGhostTap', [key]);
@@ -3452,7 +3451,7 @@ class PlayState extends MusicBeatState {
 
 	public function setOnScripts(variable:String, arg:Dynamic, exclusions:Array<String> = null) {
 		if(exclusions == null) exclusions = [];
-		setOnScripts(variable, arg, exclusions);
+		setOnLuas(variable, arg, exclusions);
 		setOnHScript(variable, arg, exclusions);
 	}
 

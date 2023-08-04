@@ -5,7 +5,7 @@ title BUILDING GAME
 lime build windows -release
 
 if not "%ERRORLEVEL%" == "0" goto ERROR
-else goto OK
+goto OK
 
 :ERROR
 echo Failed Compiling Game.

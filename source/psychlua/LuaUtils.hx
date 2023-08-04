@@ -192,11 +192,9 @@ class LuaUtils {
 	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false)
 		{
 			var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
-			if(obj != null && obj.animation != null)
-			{
+			if(obj != null && obj.animation != null) {
 				if(indices == null) indices = [];
-				if(Std.isOfType(indices, String))
-				{
+				if(Std.isOfType(indices, String)) {
 					var strIndices:Array<String> = cast (indices, String).trim().split(',');
 					var myIndices:Array<Int> = [];
 					for (i in 0...strIndices.length) {
@@ -206,23 +204,18 @@ class LuaUtils {
 				}
 	
 				obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
-				if(obj.animation.curAnim == null) {
+				if(obj.animation.curAnim == null)
 					obj.animation.play(name, true);
-				}
 				return true;
 			}
 			return false;
 		}
 	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
-		switch(spriteType.toLowerCase().trim()) {
-			case "texture" | "textureatlas" | "tex":
-				spr.frames = AtlasFrameMaker.construct(image);
-			case "texture_noaa" | "textureatlas_noaa" | "tex_noaa":
-				spr.frames = AtlasFrameMaker.construct(image, null, true);
-			case "packer" | "packeratlas" | "pac":
-				spr.frames = Paths.getPackerAtlas(image);
-
-			default: spr.frames = Paths.getSparrowAtlas(image);
+		spr.frames = switch(spriteType.toLowerCase().trim()) {
+			case "texture" | "textureatlas" | "tex": AtlasFrameMaker.construct(image);
+			case "texture_noaa" | "textureatlas_noaa" | "tex_noaa": AtlasFrameMaker.construct(image, null, true);
+			case "packer" | "packeratlas" | "pac": Paths.getPackerAtlas(image);
+			default: Paths.getSparrowAtlas(image);
 		}
 	}
 
@@ -364,17 +357,5 @@ class LuaUtils {
 			case 'camother' | 'other': PlayState.instance.camOther;
 			default: PlayState.instance.camGame;
 		}
-	}
-
-	public static function isLuaRunning(luaFile:String) {
-		#if LUA_ALLOWED
-		luaFile = FunkinLua.format(luaFile);
-
-		for (luaInstance in PlayState.instance.luaArray) {
-			if (luaInstance.globalScriptName == luaFile && !luaInstance.closed)
-				return true;
-		}
-		#end
-		return false;
 	}
 }
