@@ -374,7 +374,14 @@ class Note extends FlxSprite
 			canBeHit = checkDiff(Conductor.songPosition);
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 				tooLate = true;
-		} else canBeHit = false;
+		} else {
+			canBeHit = false;
+
+			if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult)) {
+				if((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition)
+					wasGoodHit = true;
+			}
+		}
 
 		if (tooLate && !inEditor)
 			if (alpha > .3) alpha = .3;
