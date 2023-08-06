@@ -1,10 +1,15 @@
 package psychlua;
 
 #if (!flash && sys)
+import openfl.filters.ShaderFilter;
 import flixel.addons.display.FlxRuntimeShader;
 #end
 
 class ShaderFunctions {
+	#if (!flash && MODS_ALLOWED && sys)
+	static var storedFilters:Map<String, ShaderFilter> = [];
+	#end
+
 	public static function implement(funk:FunkinLua) {
 		funk.addLocalCallback("initLuaShader", function(name:String, glslVersion:Int = 120) {
 			if(!ClientPrefs.getPref('shaders')) return false;
@@ -46,6 +51,61 @@ class ShaderFunctions {
 			}
 			return false;
 		});
+
+		funk.addLocalCallback("addShaderToCam", function(cam:String, shader:String, ?index:String) {
+			if (!ClientPrefs.getPref('shaders')) return false;
+
+			if (index == null || index.length < 1)
+			    index = shader;
+
+			#if (!flash && MODS_ALLOWED && sys)
+			if (!funk.runtimeShaders.exists(shader) && !funk.initLuaShader(shader)) {
+			    FunkinLua.luaTrace('addShaderToCam: Shader $shader is missing!', false, false, FlxColor.RED);
+			    return false;
+			}
+
+            var arr:Array<String> = funk.runtimeShaders.get(shader);
+            var camera = getCam(cam);
+            @:privateAccess {
+                    if (camera._filters == null)
+                        camera._filters = [];
+
+                    var filter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
+                    storedFilters.set(index, filter);
+                    camera._filters.push(filter);
+            }
+            return true;
+			#else
+                FunkinLua.luaTrace("addShaderToCam: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			#end
+			return false;
+		});
+
+        funk.addLocalCallback("removeCamShader", function(cam:String, shader:String) {
+            #if (!flash && MODS_ALLOWED && sys)
+            var camera = getCam(cam);
+            @:privateAccess {
+                if (!storedFilters.exists(shader)) {
+                    FunkinLua.luaTrace('removeCamShader: $shader does not exist!', false, false, FlxColor.YELLOW);
+                    return false;
+                }
+
+                if (camera._filters == null) {
+                    FunkinLua.luaTrace('removeCamShader: camera $cam does not have any shaders!', false, false, FlxColor.YELLOW);
+                    return false;
+                }
+
+                camera._filters.remove(storedFilters.get(shader));
+                storedFilters.remove(shader);
+                return true;
+            }
+            #else
+            FunkinLua.luaTrace('removeCamShader: Platform unsupported for Runtime Shaders!', false, false, FlxColor.RED);
+            #end
+            return false;
+        });
+
+        funk.addLocalCallback("clearCamShaders", function(cam:String) getCam(cam).setFilters([]));
 
 		funk.addCallback("getShaderBool", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
@@ -200,8 +260,17 @@ class ShaderFunctions {
     }
 
 	public static function getShader(obj:String):FlxRuntimeShader {
+		if (storedFilters.exists(obj))
+		    return cast(storedFilters[obj].shader, FlxRuntimeShader);
+
 		var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
 		if (leObj != null) return cast leObj.shader;
 		return null;
+	}
+
+	public static function getCam(obj:String):Dynamic {
+		if (obj.toLowerCase().trim() == "global")
+ 			return FlxG.game;
+ 		return LuaUtils.cameraFromString(obj);
 	}
 }

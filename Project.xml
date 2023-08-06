@@ -79,7 +79,7 @@
 	<haxedef name="openflPos" />
 	<haxedef name="hscriptPos" />
 
-	<haxelib name="linc_luajit-ralt" rename="linc_luajit" if="LUA_ALLOWED"/>
+	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
 	<haxelib name="discord_rpc" if="DISCORD_ALLOWED"/>
 

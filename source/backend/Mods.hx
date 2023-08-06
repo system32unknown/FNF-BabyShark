@@ -1,7 +1,11 @@
 package backend;
 
+#if sys
 import sys.FileSystem;
 import sys.io.File;
+#else
+import lime.utils.Assets;
+#end
 import tjson.TJSON as Json;
 import haxe.io.Path;
 
@@ -11,15 +15,12 @@ typedef ModsList = {
 	all:Array<String>
 };
 
-class Mods
-{
+class Mods {
 	public static var currentModDirectory:String = '';
-
 	public static var ignoreModFolders:Array<String> = [
 		'characters',
 		'custom_events',
 		'custom_notetypes',
-		'custom_gamechangers',
 		'data',
 		'songs',
 		'music',
@@ -31,8 +32,6 @@ class Mods
 		'weeks',
 		'fonts',
 		'scripts',
-		'achievements',
-		'options'
 	];
 
 	static var globalMods:Array<String> = [];
@@ -47,25 +46,6 @@ class Mods
 			if(pack != null && pack.runsGlobally) globalMods.push(mod);
 		}
 		return globalMods;
-	}
-
-	inline public static function isValidModDir(dir:String):Bool
-		return FileSystem.isDirectory(Path.join([Paths.mods(), dir])) && !ignoreModFolders.contains(dir.toLowerCase());
-
-	inline public static function getActiveModsDir(inclMainFol:Bool = false):Array<String> {
-		var finalList:Array<String> = [];
-		if (inclMainFol) finalList.push('');
-		
-		var path:String = 'modsList.txt';
-		if(FileSystem.exists(path)) {
-			var genList:Array<String> = getModDirectories();
-			var list:Array<String> = CoolUtil.coolTextFile(path);
-			for (i in list) {
-				var dat = i.split("|");
-				if (dat[1] == "1" && genList.contains(dat[0])) finalList.push(dat[0]);
-			}
-		}
-		return finalList;
 	}
 	
 	inline public static function getActiveModDirectories(lowercase:Bool = false):Array<String> {
@@ -146,7 +126,7 @@ class Mods
 		if(mods) {
 			// Global mods first
 			for(mod in getGlobalMods()) {
-				var folder:String = Paths.mods(mod + '/' + fileToFind);
+				var folder:String = Paths.mods('$mod/$fileToFind');
 				if(FileSystem.exists(folder)) foldersToCheck.push(folder);
 			}
 
@@ -165,15 +145,17 @@ class Mods
 	}
 
 	public static function getPack(?folder:String = null):Dynamic {
-		if(folder == null) folder = currentModDirectory;
+		#if MODS_ALLOWED
+		if(folder == null) folder = Mods.currentModDirectory;
 
-		var path = Paths.mods(folder + '/pack.json');
+		var path = Paths.mods('$folder/pack.json');
 		if(FileSystem.exists(path)) {
 			try {
-				var rawJson:String = File.getContent(path);
+				var rawJson:String = #if sys File.getContent(path) #else Assets.getText(path) #end;
 				if(rawJson != null && rawJson.length > 0) return Json.parse(rawJson);
 			} catch(e:Dynamic) trace(e);
 		}
+		#end
 		return null;
 	}
 
@@ -184,6 +166,8 @@ class Mods
 
 		try {
 			for (mod in CoolUtil.coolTextFile('modsList.txt')) {
+				if(mod.trim().length < 1) continue;
+
 				var dat = mod.split("|");
 				list.all.push(dat[0]);
 				if (dat[1] == "1")
@@ -195,6 +179,7 @@ class Mods
 	}
 
 	static function updateModList() {
+		#if MODS_ALLOWED
 		// Find all that are already ordered
 		var list:Array<Array<Dynamic>> = [];
 		var added:Array<String> = [];
@@ -214,8 +199,7 @@ class Mods
 			if(FileSystem.exists(Paths.mods(folder)) && FileSystem.isDirectory(Paths.mods(folder)) &&
 			!ignoreModFolders.contains(folder.toLowerCase()) && !added.contains(folder)) {
 				added.push(folder);
-				list.push([folder, true]); //i like it false by default. -bb //Well, i like it True! -Shadow Mario (2022)
-				//Shadow Mario (2023): What the fuck was bb thinking
+				list.push([folder, true]);
 			}
 		}
 
@@ -228,6 +212,7 @@ class Mods
 
 		File.saveContent('modsList.txt', fileStr);
 		updatedOnState = true;
+		#end
 	}
 
 	public static function loadTopMod() {

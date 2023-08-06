@@ -56,8 +56,8 @@ class OptionsState extends MusicBeatState
 		textBG.alpha = 0.6;
 		add(textBG);
 
-		descTxt = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "Press RESET to access the Modpacks Options saves Reset menu.", 18);
-		descTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
+		descTxt = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "PAGES (0 / 0)", 18);
+		descTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER);
 		descTxt.scrollFactor.set();
 		add(descTxt);
 		#end
@@ -81,9 +81,6 @@ class OptionsState extends MusicBeatState
 	override function closeSubState() {
 		super.closeSubState();
 		ClientPrefs.saveSettings();
-		#if desktop
-		Discord.changePresence("Options Menu", null);
-		#end
 	}
 
 	override function update(elapsed:Float) {
@@ -95,7 +92,7 @@ class OptionsState extends MusicBeatState
 		if(controls.UI_LEFT_P) changePage(-1);
 		if(controls.UI_RIGHT_P) changePage(1);
 
-		descTxt.text = '($curPage / ${Lambda.count(options) - 1}) Press RESET to access the Modpacks Options saves Reset menu.';
+		descTxt.text = 'PAGES ($curPage / ${Lambda.count(options) - 1})';
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -109,10 +106,6 @@ class OptionsState extends MusicBeatState
 		if (controls.ACCEPT) {
 			openSelectedSubstate(options[curPage][curSelected]);
 		}
-
-		#if MODS_ALLOWED
-		if (controls.RESET) openSubState(new DeleteSavesSubState());
-		#end
 	}
 	
 	function changeSelection(change:Int = 0) {

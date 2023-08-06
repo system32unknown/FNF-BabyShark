@@ -9,28 +9,22 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Downscroll',
 			'If checked, notes go Down instead of Up, simple enough.',
-			'downScroll',
-			'bool',
-			false);
+			'downScroll', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Middlescroll',
 			'If checked, your notes get centered.',
-			'middleScroll',
-			'bool',
-			false);
+			'middleScroll', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Opponent Notes',
 			'If unchecked, opponent notes get hidden.',
-			'opponentStrums',
-			'bool',
-			true);
+			'opponentStrums', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Ghost Tapping',
 			"If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.",
-			'ghostTapping', 'bool', true);
+			'ghostTapping', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Auto Pause',
@@ -41,32 +35,29 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Disable Reset Button',
 			"If checked, pressing Reset won't do anything.",
-			'noReset', 'bool', false);
+			'noReset', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Antimash',
 			"If unchecked, antimash will not do anything.",
-			'AntiMash', 'bool', true);
+			'AntiMash', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Dynamic Camera Movement',
 			"If unchecked, \nthe camera won't move in the direction in which the characters sing.",
-			'camMovement', 'bool', true);
+			'camMovement', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Hitsound Type',
 			"What should the hitsounds like?",
 			'hitsoundTypes',
-			'string',
-			'Psych',
-			['Tick', 'Snap', 'DaveAndBambi']);
+			'string', ['Tick', 'Snap', 'DaveAndBambi']);
 		addOption(option);
 		option.onChange = onChangeHitsoundVolume;
 
 		var option:Option = new Option('Hitsound Volume',
 			'Funny notes does \"Tick!\" when you hit them.',
-			'hitsoundVolume',
-			'percent', 0);
+			'hitsoundVolume', 'percent');
 		addOption(option);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
@@ -77,18 +68,16 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Update Cam Section',
 		'If checked, camera will always update,\nwhich makes the camera more precise',
-		'UpdateCamSection', 'bool', true);
+		'UpdateCamSection', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Note Diff Type:', 'Choose the type of Note Diffs.',
-			'NoteDiffTypes', 'string', 'Simple', ['Psych', 'Simple']);
+			'NoteDiffTypes', 'string', ['Psych', 'Simple']);
 		addOption(option);
 		
 		var option:Option = new Option('Rating Offset',
 			'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.',
-			'ratingOffset',
-			'int',
-			0);
+			'ratingOffset', 'int');
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 20;
 		option.minValue = -30;
@@ -97,20 +86,16 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Epic Hit Window',
 			'Changes the amount of time you have\nfor hitting a "Epic!" in milliseconds.',
-			'epicWindow',
-			'int',
-			10);
+			'epicWindow', 'int');
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 15;
 		option.minValue = 1;
-		option.maxValue = 10;
+		option.maxValue = 15;
 		addOption(option);
 		
 		var option:Option = new Option('Sick Hit Window',
 			'Changes the amount of time you have\nfor hitting a "Sick!" in milliseconds.',
-			'sickWindow',
-			'int',
-			45);
+			'sickWindow', 'int');
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 15;
 		option.minValue = 15;
@@ -119,9 +104,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Good Hit Window',
 			'Changes the amount of time you have\nfor hitting a "Good" in milliseconds.',
-			'goodWindow',
-			'int',
-			90);
+			'goodWindow', 'int');
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 30;
 		option.minValue = 15;
@@ -130,9 +113,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Bad Hit Window',
 			'Changes the amount of time you have\nfor hitting a "Bad" in milliseconds.',
-			'badWindow',
-			'int',
-			135);
+			'badWindow', 'int');
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 60;
 		option.minValue = 15;
@@ -141,9 +122,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Safe Frames',
 			'Changes how many frames you have for\nhitting a note earlier or late.',
-			'safeFrames',
-			'float',
-			10);
+			'safeFrames', 'float');
 		option.scrollSpeed = 5;
 		option.minValue = 2;
 		option.maxValue = 10;

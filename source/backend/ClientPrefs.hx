@@ -127,10 +127,6 @@ class ClientPrefs {
 	public static var defaultgameplaySettings:Map<String, Dynamic> = gameplaySettings.copy();
 	public static var defaultprefs:Map<String, Dynamic> = prefs.copy();
 
-	#if MODS_ALLOWED
-	public static var modsOptsSaves:Map<String, Map<String, Dynamic>> = [];
-	#end
-
 	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
 		//Key Bind, Name for ControlsSubState

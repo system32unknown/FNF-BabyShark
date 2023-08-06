@@ -1941,7 +1941,8 @@ class ChartingState extends MusicBeatState {
 		"\nBeat: " + Std.string(curDecBeat).substring(0, 4) +
 		'\nStep: $curStep' +
 		'\nZoom: $zoomFactorTxt' +
-		'\n\nBeat Snap: ${quantization}th';
+		if ((quantization - 2) % 10 == 0 && quantization != 12) '\n\nBeat Snap ${quantization}nd';
+		else '\n\nBeat Snap: ${quantization}th';
 
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
 		curRenderedNotes.forEachAlive(function(note:Note) {
@@ -2085,7 +2086,7 @@ class ChartingState extends MusicBeatState {
 		gridLayer.add(gridBlackLine);
 
 		remove(strumLine);
-		strumLine = new FlxSprite(0, 50).makeGraphic(Std.int(GRID_SIZE + columns), 4);
+		strumLine = new FlxSprite(0, 50).makeGraphic(Std.int(GRID_SIZE + GRID_SIZE * Note.ammo[_song.mania] * 2), 4);
 		add(strumLine);
 
 		if (strumLineNotes != null)	{

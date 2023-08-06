@@ -5,19 +5,13 @@ import utils.CoolUtil;
 
 class Option
 {
-	var child:Alphabet;
+	public var child:Alphabet;
 	public var text(get, set):String;
 	public var onChange:Void->Void = null; //Pressed enter (on Bool type options) or pressed/held left/right (on other types)
-
-	#if MODS_ALLOWED
-	public var fromJson:Array<String> = null;
-	#end
 
 	public var type(get, default):String = 'bool'; //bool, int (or integer), float (or fl), percent, string (or str)
 	// Bool will use checkboxes
 	// Everything else will use a text
-
-	public var showBoyfriend:Bool = false;
 	public var scrollSpeed:Float = 50; //Only works on int/float, defines how fast it scrolls per second while holding left/right
 
 	var variable:String = null; //Variable from ClientPrefs.hx
@@ -34,14 +28,13 @@ class Option
 	public var description:String = '';
 	public var name:String = 'Unknown';
 
-	public function new(name:String, description:String = '', variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String> = null #if MODS_ALLOWED, ?fromJson:Array<String> = null #end) {
+	public function new(name:String, description:String = '', variable:String, type:String = 'bool', ?options:Array<String> = null) {
 		this.name = name;
 		this.description = description;
 		this.variable = variable;
 		this.type = type;
-		this.defaultValue = defaultValue;
+		this.defaultValue = ClientPrefs.defaultprefs.get(variable);
 		this.options = options;
-		#if MODS_ALLOWED this.fromJson = fromJson; #end
 
 		if(defaultValue == 'null variable value')
 			defaultValue = CoolUtil.getOptionDefVal(type, options);
@@ -67,26 +60,10 @@ class Option
 	}
 
 	public function getValue():Dynamic {
-		#if MODS_ALLOWED
-		if (fromJson != null) {
-			if (ClientPrefs.modsOptsSaves.exists(fromJson[0]) && ClientPrefs.modsOptsSaves[fromJson[0]].exists(variable))
-				return ClientPrefs.modsOptsSaves[fromJson[0]][variable];
-			else return null;
-		}
-		#end
 		return ClientPrefs.getPref(variable);
 	}
 	public function setValue(value:Dynamic) {
-		#if MODS_ALLOWED
-		if (fromJson != null) {
-			if (!ClientPrefs.modsOptsSaves.exists(fromJson[0])) ClientPrefs.modsOptsSaves.set(fromJson[0], []);
-			ClientPrefs.modsOptsSaves[fromJson[0]][variable] = value;
-		} else #end
 		ClientPrefs.prefs.set(variable, value);
-	}
-
-	public function setChild(child:Alphabet) {
-		this.child = child;
 	}
 
 	function get_text() {

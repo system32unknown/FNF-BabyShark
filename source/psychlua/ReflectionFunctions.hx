@@ -70,8 +70,7 @@ class ReflectionFunctions {
 				realObject = LuaUtils.getPropertyLoop(split, true, false, allowMaps);
 			else realObject = Reflect.getProperty(LuaUtils.getInstance(), obj);
 
-			if(Std.isOfType(realObject, FlxTypedGroup))
-			{
+			if(Std.isOfType(realObject, FlxTypedGroup)) {
 				var result:Dynamic = LuaUtils.getGroupStuff(realObject.members[index], variable, allowMaps);
 				return result;
 			}

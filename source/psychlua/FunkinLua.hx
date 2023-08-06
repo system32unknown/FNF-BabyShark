@@ -7,6 +7,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
 import states.*;
+import cutscenes.DialogueBoxPsych;
 import backend.Highscore;
 import backend.Song;
 import objects.StrumNote;
@@ -17,10 +18,7 @@ import data.WeekData;
 #if sys
 import sys.FileSystem;
 import sys.io.File;
-import haxe.io.Path;
 #end
-
-import cutscenes.DialogueBoxPsych;
 
 class FunkinLua {
 	public static var Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
@@ -57,35 +55,35 @@ class FunkinLua {
 			return [for (script in game.luaArray) script.scriptName];
 		});
 
-		addLocalCallback("setOnScripts", function(varName:String, arg:Dynamic, ?ignoreSelf:Bool = false, ?exclusions:Array<String> = null) {
+		addCallback("setOnScripts", function(varName:String, arg:Dynamic, ?ignoreSelf:Bool = false, ?exclusions:Array<String> = null) {
 			if(exclusions == null) exclusions = [];
 			if(ignoreSelf && !exclusions.contains(scriptName)) exclusions.push(scriptName);
 			game.setOnScripts(varName, arg, exclusions);
 		});
-		addLocalCallback("setOnHScript", function(varName:String, arg:Dynamic, ?ignoreSelf:Bool = false, ?exclusions:Array<String> = null) {
+		addCallback("setOnHScript", function(varName:String, arg:Dynamic, ?ignoreSelf:Bool = false, ?exclusions:Array<String> = null) {
 			if(exclusions == null) exclusions = [];
 			if(ignoreSelf && !exclusions.contains(scriptName)) exclusions.push(scriptName);
 			game.setOnHScript(varName, arg, exclusions);
 		});
-		addLocalCallback("setOnLuas", function(varName:String, arg:Dynamic, ?ignoreSelf:Bool = false, ?exclusions:Array<String> = null) {
+		addCallback("setOnLuas", function(varName:String, arg:Dynamic, ?ignoreSelf:Bool = false, ?exclusions:Array<String> = null) {
 			if(exclusions == null) exclusions = [];
 			if(ignoreSelf && !exclusions.contains(scriptName)) exclusions.push(scriptName);
 			game.setOnLuas(varName, arg, exclusions);
 		});
 
-		addLocalCallback("callOnScripts", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
+		addCallback("callOnScripts", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
 			if(excludeScripts == null) excludeScripts = [];
 			if(ignoreSelf && !excludeScripts.contains(scriptName)) excludeScripts.push(scriptName);
 			game.callOnScripts(funcName, args, ignoreStops, excludeScripts, excludeValues);
 			return true;
 		});
-		addLocalCallback("callOnLuas", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
+		addCallback("callOnLuas", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
 			if(excludeScripts == null) excludeScripts = [];
 			if(ignoreSelf && !excludeScripts.contains(scriptName)) excludeScripts.push(scriptName);
 			game.callOnLuas(funcName, args, ignoreStops, excludeScripts, excludeValues);
 			return true;
 		});
-		addLocalCallback("callOnHScript", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
+		addCallback("callOnHScript", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
 			if(excludeScripts == null) excludeScripts = [];
 			if(ignoreSelf && !excludeScripts.contains(scriptName)) excludeScripts.push(scriptName);
 			game.callOnHScript(funcName, args, ignoreStops, excludeScripts, excludeValues);
@@ -206,12 +204,13 @@ class FunkinLua {
 			return false;
 		});
 
-		addCallback("loadSong", function(?name:String = null, ?difficultyNum:Int = -1) {
+		addCallback("loadSong", function(?name:String = null, ?difficultyNum:Int = -1, ?difficultyArray:Array<String> = null) {
+			if (difficultyArray != null) Difficulty.list = difficultyArray;
 			if(name == null || name.length <= 0) name = PlayState.SONG.song;
 			if (difficultyNum == -1) difficultyNum = PlayState.storyDifficulty;
 
-			var poop = Highscore.formatSong(name, difficultyNum);
-			PlayState.SONG = Song.loadFromJson(poop, name);
+			var formattedsong = Highscore.formatSong(name, difficultyNum);
+			PlayState.SONG = Song.loadFromJson(formattedsong, name);
 			PlayState.storyDifficulty = difficultyNum;
 			game.persistentUpdate = false;
 			LoadingState.loadAndSwitchState(new PlayState());
@@ -1131,7 +1130,7 @@ class FunkinLua {
 
 		addCallback("debugPrint", function(text:Dynamic = '', color:String = 'WHITE') PlayState.instance.addTextToDebug(text, CoolUtil.colorFromString(color)));
 
-		addLocalCallback("close", function():Bool {
+		addCallback("close", function(_):Bool {
 			trace('Closing script: $scriptName');
 			return closed = true;
 		});
@@ -1145,26 +1144,22 @@ class FunkinLua {
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
 
-		var result:Int = LuaL.loadfile(lua, scriptName);
-		if (result == Lua.LUA_OK) {
-			Lua_helper.init_callbacks(lua);
-			Lua_helper.link_extra_arguments(lua, [this]);
-			Lua_helper.link_static_callbacks(lua);
-
-			Lua.getglobal(lua, "package");
-			Lua.pushstring(lua, Paths.getLuaPackagePath());
-			Lua.setfield(lua, -2, "path");
-			Lua.pop(lua, 1);
-
-			result = Lua.pcall(lua, 0, 0, 0);
-		} else {
-			var error:String = getErrorMessage();
-			#if windows
-			lime.app.Application.current.window.alert(error, 'Error on lua script! "$scriptName"');
-			#else
-			luaTrace('$scriptName\n$error', true, false, FlxColor.RED);
-			#end
-			trace(error);
+		try{
+			var result:Dynamic = LuaL.dofile(lua, scriptName);
+			var resultStr:String = Lua.tostring(lua, result);
+			if(resultStr != null && result != 0) {
+				trace(resultStr);
+				#if windows
+				lime.app.Application.current.window.alert(resultStr, 'Error on lua script!');
+				#else
+				luaTrace('$scriptName\n$resultStr', true, false, FlxColor.RED);
+				#end
+				lua = null;
+				return;
+			}
+		} catch(e:Dynamic) {
+			trace(e);
+			return;
 		}
 		trace('lua file loaded succesfully: $scriptName');
 
@@ -1290,12 +1285,18 @@ class FunkinLua {
 		set('buildTarget', getBuildTarget());
 
 		for (name => func in customFunctions)
-			if(func != null) addCallback(name, false, func);
+			if(func != null) addCallback(name, func);
 	}
 	#end
 
-	inline public function addCallback(name:String, ?adv:Bool = false, func:Function) {
-		Lua_helper.set_static_callback(name, adv, func);
+	inline public function addCallback(name:String, func:Function) {
+		Lua_helper.add_callback(lua, name, func);
+	}
+	public function addLocalCallback(name:String, myFunction:Dynamic) {
+		#if LUA_ALLOWED
+		callbacks.set(name, myFunction);
+		Lua_helper.add_callback(lua, name, null); //just so that it gets called
+		#end
 	}
 
 	public static function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
@@ -1303,8 +1304,8 @@ class FunkinLua {
 		if(ignoreCheck || getBool('luaDebugMode')) {
 			if(deprecated && !getBool('luaDeprecatedWarnings')) return;
 			PlayState.instance.addTextToDebug(text, color);
-			trace(text);
 		}
+		trace(text);
 		#end
 	}
 
@@ -1441,18 +1442,9 @@ class FunkinLua {
 		#end
 	}
 
-	public static function format(luaFile:String):String {
-		return Path.normalize((luaFile = luaFile.toLowerCase()).endsWith('.lua') ? luaFile : '${luaFile}.lua');
-	}
-
 	//clone functions
 	public static function getBuildTarget():String {
-		#if windows
-		var os = 'windows';
-		#else
-		var os = Sys.systemName().toLowerCase();
-		#end
-		return os;
+		return Sys.systemName().toLowerCase();
 	}
 
 	public function oldTweenFunction(tag:String, vars:String, tweenValue:Any, duration:Float, ease:String, funcName:String) {
@@ -1465,13 +1457,6 @@ class FunkinLua {
 				}
 			}));
 		} else luaTrace('$funcName: Couldnt find object: $vars', false, false, FlxColor.RED);
-	}
-	
-	public function addLocalCallback(name:String, myFunction:Dynamic) {
-		#if LUA_ALLOWED
-		callbacks.set(name, myFunction);
-		addCallback(name, false, null); //just so that it gets called
-		#end
 	}
 
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();

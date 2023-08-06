@@ -3,11 +3,6 @@ package substates;
 import objects.CheckboxThingie;
 import objects.AttachedText;
 
-#if sys
-import sys.io.File;
-import sys.FileSystem;
-#end
-
 class GameplayChangersSubstate extends MusicBeatSubstate
 {
 	var curOption:GameplayOption = null;
@@ -68,72 +63,12 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 		var option:GameplayOption = new GameplayOption('Botplay', 'botplay', 'bool', false);
 		optionsArray.push(option);
-
-		#if LUA_ALLOWED
-		var customGameplayChangers:Map<String, Bool> = new Map<String, Bool>();
-		var directories:Array<String> = [];
-
-		#if MODS_ALLOWED
-		directories.push(Paths.mods('custom_gamechangers/'));
-		directories.push(Paths.mods(Mods.currentModDirectory + '/custom_gamechangers/'));
-		for(mod in Mods.getGlobalMods())
-			directories.push(Paths.mods(mod + '/custom_gamechangers/'));
-		#end
-
-		for (i in 0...directories.length) {
-			var directory:String = directories[i];
-			if(FileSystem.exists(directory)) {
-				for (file in FileSystem.readDirectory(directory)) {
-					var path = haxe.io.Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file != 'readme.txt' && file.endsWith('.txt')) {
-						var fileToCheck:String = file.substr(0, file.length - 4);
-						var contentArray:Array<String> = File.getContent(path).split(",");
-						for(i in 0...contentArray.length)
-							if(contentArray[i].isSpace(0))
-								contentArray[i] = contentArray[i].trim(); // Remove space
-
-						var type:String = contentArray[0];
-						var tag:String = contentArray[1];
-
-						if(!customGameplayChangers.exists(tag)) {
-							customGameplayChangers.set(tag, false);
-							contentArray.remove(type);
-							contentArray.remove(tag);
-							switch(type) {
-								case 'int' | 'float' | 'percent':
-									var option:GameplayOption = new GameplayOption(fileToCheck, tag, type, contentArray[0]);
-									option.scrollSpeed = Std.parseFloat(contentArray[1]);
-									option.minValue = Std.parseFloat(contentArray[2]);
-									option.maxValue = Std.parseFloat(contentArray[3]);
-									option.changeValue = Std.parseFloat(contentArray[4]);
-									option.displayFormat = contentArray[5];
-									option.decimals = Std.parseInt(contentArray[6]);
-									optionsArray.push(option);
-
-								case 'string':
-									var option:GameplayOption = new GameplayOption(fileToCheck, tag, type, contentArray[0], contentArray);
-									optionsArray.push(option);
-
-								case 'bool':
-									var option:GameplayOption = new GameplayOption(fileToCheck, tag, type, contentArray[0]);
-									optionsArray.push(option);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		customGameplayChangers.clear();
-		customGameplayChangers = null;
-		#end
 	}
 
 	public function getOptionByName(name:String) {
 		for(i in optionsArray) {
 			var opt:GameplayOption = i;
-			if (opt.name == name)
-				return opt;
+			if (opt.name == name) return opt;
 		}
 		return null;
 	}
@@ -382,7 +317,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 class GameplayOption
 {
-	private var child:Alphabet;
+	var child:Alphabet;
 	public var text(get, set):String;
 	public var onChange:Void->Void = null; //Pressed enter (on Bool type options) or pressed/held left/right (on other types)
 
@@ -392,7 +327,7 @@ class GameplayOption
 
 	public var scrollSpeed:Float = 50; //Only works on int/float, defines how fast it scrolls per second while holding left/right
 
-	private var variable:String = null; //Variable from ClientPrefs.hx's gameplaySettings
+	var variable:String = null; //Variable from ClientPrefs.hx's gameplaySettings
 	public var defaultValue:Dynamic = null;
 
 	public var curOption:Int = 0; //Don't change this
@@ -434,9 +369,7 @@ class GameplayOption
 		{
 			case 'string':
 				var num:Int = options.indexOf(getValue());
-				if(num > -1) {
-					curOption = num;
-				}
+				if(num > -1) curOption = num;
 	
 			case 'percent':
 				displayFormat = '%v%';
@@ -449,8 +382,7 @@ class GameplayOption
 	}
 
 	public function change() {
-		if(onChange != null)
-			onChange();
+		if(onChange != null) onChange();
 	}
 
 	public function getValue():Dynamic
