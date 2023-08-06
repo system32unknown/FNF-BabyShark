@@ -37,8 +37,6 @@
 		<define name="DISCORD_ALLOWED" if="cpp"/>
 	</section>
 
-	<define name="ACHIEVEMENTS_ALLOWED"/>
-
 	<define name="PRELOAD_ALL" unless="web"/>
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
 	

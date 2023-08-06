@@ -353,7 +353,6 @@ class ClientPrefs {
 			if (!separateSaves.contains(savedAs))
 				Reflect.setField(save, savedAs, Reflect.field(map[0], map[1]));
 		}
-		#if ACHIEVEMENTS_ALLOWED Achievements.save(); #end
 		FlxG.save.flush();
 
 		var save:FlxSave = new FlxSave();
@@ -432,8 +431,6 @@ class ClientPrefs {
 				}
 			}
 		}
-
-		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
 		#if desktop Discord.check(); #end
 	}
 

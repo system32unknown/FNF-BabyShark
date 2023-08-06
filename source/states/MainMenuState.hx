@@ -16,7 +16,6 @@ class MainMenuState extends MusicBeatState
 		'story_mode',
 		'freeplay',
 		#if MODS_ALLOWED 'mods', #end
-		#if ACHIEVEMENTS_ALLOWED 'awards', #end
 		'credits',
 		'options'
 	];
@@ -126,12 +125,6 @@ class MainMenuState extends MusicBeatState
 
 		changeItem();
 
-		#if ACHIEVEMENTS_ALLOWED
-		var leDate = Date.now();
-		if (leDate.getDay() == 5 && leDate.getHours() >= 18)
-			Achievements.unlockAchievement('friday_night_play');
-		#end
-
 		super.create();
 	}
 
@@ -189,7 +182,6 @@ class MainMenuState extends MusicBeatState
 								#if MODS_ALLOWED
 								case 'mods': MusicBeatState.switchState(new ModsMenuState());
 								#end
-								case 'awards': MusicBeatState.switchState(new AchievementsMenuState());
 								case 'credits': MusicBeatState.switchState(new CreditsState());
 								case 'options':
 									LoadingState.loadAndSwitchState(new OptionsState());

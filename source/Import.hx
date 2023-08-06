@@ -6,8 +6,6 @@ import llua.Lua;
 
 #if discord_rpc import backend.Discord; #end
 
-#if ACHIEVEMENTS_ALLOWED import backend.Achievements; #end
-
 import backend.Paths;
 import backend.Controls;
 import backend.MusicBeatState;

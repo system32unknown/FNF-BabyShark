@@ -231,12 +231,6 @@ class PlayState extends MusicBeatState {
 	#end
 
 	var strumsBlocked:Array<Bool> = [];
-	
-	//Achievement shit
-	var keysPressed:Array<Int> = [];
-	var boyfriendIdleTime:Float = 0.0;
-	var boyfriendIdled:Bool = false;
-
 	var gfChecknull:String = "";
 
 	// Lua shit
@@ -1719,11 +1713,6 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.followLerp = 0;
 		if(!inCutscene && !paused) {
 			FlxG.camera.followLerp = FlxMath.bound(elapsed * 2.4 * cameraSpeed * playbackRate / (FlxG.updateFramerate / 60), 0, 1);
-			if(!startingSong && !endingSong && boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name.startsWith('idle')) {
-				boyfriendIdleTime += elapsed;
-				if(boyfriendIdleTime >= 0.15) // Kind of a mercy thing for making the achievement easier to get as it's apparently frustrating to some playerss
-					boyfriendIdled = true;
-			} else boyfriendIdleTime = 0;
 		}
 
 		checkEventNote();
@@ -2389,10 +2378,6 @@ class PlayState extends MusicBeatState {
 		seenCutscene = false;
 		restarted = false;
 
-		#if ACHIEVEMENTS_ALLOWED
-		checkForAchievement(['${WeekData.getWeekFileName()}_nomiss', 'ur_bad', 'ur_good', 'hype', 'two_keys', 'toastie', 'debugger']);
-		#end
-
 		var ret:Dynamic = callOnScripts('onEndSong', null, true);
 		if(ret != FunkinLua.Function_Stop && !transitioning) {
 			var percent:Float = ratingPercent;
@@ -2793,9 +2778,6 @@ class PlayState extends MusicBeatState {
 				callOnScripts('onGhostTap', [key]);
 				if (canMiss && !boyfriend.stunned) noteMissPress(key);
 			}
-
-			if(!keysPressed.contains(key)) keysPressed.push(key);
-
 			Conductor.songPosition = lastTime;
 		}
 
@@ -2862,18 +2844,14 @@ class PlayState extends MusicBeatState {
 		if (startedCountdown && !boyfriend.stunned && generatedMusic) {
 			if(notes.length > 0) {
 				notes.forEachAlive(function(daNote:Note) {
-					if (strumsBlocked[daNote.noteData] != true && daNote.isSustainNote && holdArray[daNote.noteData] && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit) {
+					if (strumsBlocked[daNote.noteData] != true && daNote.isSustainNote && holdArray[daNote.noteData] && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit)
 						goodNoteHit(daNote);
-					}
 				});
 			}
 
 			if (!holdArray.contains(true) || endingSong)
 				if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 / FlxG.sound.music.pitch) * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 					boyfriend.dance();
-			#if ACHIEVEMENTS_ALLOWED
-			else checkForAchievement(['oversinging']);
-			#end
 		}
 
 		if(strumsBlocked.contains(true) && releaseArray.contains(true))
@@ -3008,87 +2986,89 @@ class PlayState extends MusicBeatState {
 	}
 
 	function goodNoteHit(note:Note):Void {
-		if (note.wasGoodHit || (cpuControlled && (note.ignoreNote || note.hitCausesMiss))) return;
+		if (!note.wasGoodHit) {
+			if (cpuControlled && (note.ignoreNote || note.hitCausesMiss)) return;
 
-		note.wasGoodHit = true;
-		if (ClientPrefs.getPref('hitsoundVolume') > 0 && !note.hitsoundDisabled) 
-			FlxG.sound.play(Paths.sound('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}'), ClientPrefs.getPref('hitsoundVolume'));
-
-		var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
-		var leData:Int = Math.round(Math.abs(note.noteData));
-		var leType:String = note.noteType;
-
-		if (!isSus) notesHitArray.unshift(Date.now().getTime());
-
-		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
-		if (ClientPrefs.getPref('camMovement'))
-			if(bfturn) moveCamOnNote(animToPlay);
-
-		if(note.hitCausesMiss) {
-			noteMiss(note);
-			if(!note.noteSplashDisabled && !isSus)
-				spawnNoteSplashOnNote(note);
-
-			if(!note.noMissAnimation) {
-				switch(leType) {
-					case 'Hurt Note' | 'Kill Note': // Hurt note, Kill Note
-						if(boyfriend.animation.getByName('hurt') != null) {
-							boyfriend.playAnim('hurt', true);
-							boyfriend.specialAnim = true;
+			note.wasGoodHit = true;
+			if (ClientPrefs.getPref('hitsoundVolume') > 0 && !note.hitsoundDisabled) 
+				FlxG.sound.play(Paths.sound('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}'), ClientPrefs.getPref('hitsoundVolume'));
+	
+			var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
+			var leData:Int = Math.round(Math.abs(note.noteData));
+			var leType:String = note.noteType;
+	
+			if (!isSus) notesHitArray.unshift(Date.now().getTime());
+	
+			var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
+			if (ClientPrefs.getPref('camMovement'))
+				if(bfturn) moveCamOnNote(animToPlay);
+	
+			if(note.hitCausesMiss) {
+				noteMiss(note);
+				if(!note.noteSplashDisabled && !isSus)
+					spawnNoteSplashOnNote(note);
+	
+				if(!note.noMissAnimation) {
+					switch(leType) {
+						case 'Hurt Note' | 'Kill Note': // Hurt note, Kill Note
+							if(boyfriend.animation.getByName('hurt') != null) {
+								boyfriend.playAnim('hurt', true);
+								boyfriend.specialAnim = true;
+							}
+					}
+				}
+	
+				if (!isSus) {
+					note.kill();
+					notes.remove(note, true);
+					note.destroy();
+				}
+				return;
+			}
+	
+			if (!dontZoomCam) camZooming = true;
+			if (!isSus) {
+				combo++;
+				popUpScore(note);
+			}
+			health += note.hitHealth * healthGain;
+	
+			if(!note.noAnimation) {
+				var char:Character = boyfriend;
+				var animCheck:String = 'hey';
+	
+				if(note.gfNote) {
+					char = gf;
+					animCheck = 'cheer';
+				}
+	
+				if(char != null) {
+					char.playAnim(animToPlay + note.animSuffix, true);
+					char.holdTimer = 0;
+					if(leType == 'Hey!') {
+						if(char.animOffsets.exists(animCheck)) {
+							char.playAnim(animCheck, true);
+							char.specialAnim = true;
+							char.heyTimer = 0.6;
 						}
+					}
 				}
 			}
-
+	
+			if(!cpuControlled) {
+				var spr = playerStrums.members[note.noteData];
+				if(spr != null) spr.playAnim('confirm', true);
+			} else strumPlayAnim(false, leData % Note.ammo[mania], Conductor.stepCrochet * 1.25 / 1000 / playbackRate);
+			if (SONG.needsVoices) vocals.volume = 1;
+	
+			var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
+			if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('goodNoteHit', [note]);
+	
 			if (!isSus) {
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
 			}
-			return;
-		}
-
-		if (!dontZoomCam) camZooming = true;
-		if (!isSus) {
-			combo++;
-			popUpScore(note);
-		}
-		health += note.hitHealth * healthGain;
-
-		if(!note.noAnimation) {
-			var char:Character = boyfriend;
-			var animCheck:String = 'hey';
-
-			if(note.gfNote) {
-				char = gf;
-				animCheck = 'cheer';
-			}
-
-			if(char != null) {
-				char.playAnim(animToPlay + note.animSuffix, true);
-				char.holdTimer = 0;
-				if(leType == 'Hey!') {
-					if(char.animOffsets.exists(animCheck)) {
-						char.playAnim(animCheck, true);
-						char.specialAnim = true;
-						char.heyTimer = 0.6;
-					}
-				}
-			}
-		}
-
-		if(!cpuControlled) {
-			var spr = playerStrums.members[note.noteData];
-			if(spr != null) spr.playAnim('confirm', true);
-		} else strumPlayAnim(false, leData % Note.ammo[mania], Conductor.stepCrochet * 1.25 / 1000 / playbackRate);
-		if (SONG.needsVoices) vocals.volume = 1;
-
-		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
-		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('goodNoteHit', [note]);
-
-		if (!isSus) {
-			note.kill();
-			notes.remove(note, true);
-			note.destroy();
 		}
 	}
 
@@ -3511,28 +3491,5 @@ class PlayState extends MusicBeatState {
 			else if (sicks > 0) ratingFC = 'SFC';
 			else if (epics > 0) ratingFC = "PFC";
 		} else if (songMisses < 10) ratingFC = 'SDCB';
-	};
-
-	#if ACHIEVEMENTS_ALLOWED
-	function checkForAchievement(achievesToCheck:Array<String> = null) {
-		if(chartingMode) return;
-		var usedPractice:Bool = (practiceMode || cpuControlled);
-		if(cpuControlled) return;
-		for (name in achievesToCheck) {
-			var unlock:Bool = false;
-			if (name != WeekData.getWeekFileName() + '_nomiss') {
-				switch(name) {
-					case 'ur_bad':      unlock = (ratingPercent < 0.2 && !practiceMode);
-					case 'ur_good':     unlock = (ratingPercent >= 1 && !usedPractice);
-					case 'oversinging': unlock = (boyfriend.holdTimer >= 10 && !usedPractice);
-					case 'hype': 	    unlock = (!boyfriendIdled && !usedPractice);
-					case 'two_keys':    unlock = (!usedPractice && keysPressed.length <= 2);
-				}
-			} else
-				if(isStoryMode && campaignMisses + songMisses < 1 && Difficulty.getString().toUpperCase() == 'HARD' && storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice) unlock = true;
-
-			if(unlock) Achievements.unlockAchievement(name);
-		}
 	}
-	#end
 }
