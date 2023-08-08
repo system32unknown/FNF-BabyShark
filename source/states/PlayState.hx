@@ -2003,8 +2003,7 @@ class PlayState extends MusicBeatState {
 				#if discord_rpc
 				changeDiscordPresence("Game Over", false, true);
 				#end
-				isDead = true;
-				return true;
+				return isDead = true;
 			}
 		}
 		return false;
@@ -2753,7 +2752,7 @@ class PlayState extends MusicBeatState {
 				if (!strumsBlocked[daNote.noteData] && daNote.mustPress && !daNote.blockHit && !daNote.tooLate) {
 					if (!daNote.isSustainNote && !daNote.wasGoodHit) {
 						if (!daNote.canBeHit && daNote.checkDiff(Conductor.songPosition)) daNote.update(0);
-						if (daNote.canBeHit && daNote.canBeHit) {
+						if (daNote.canBeHit) {
 							if (daNote.noteData == key) sortedNotesList.push(daNote);
 							canMiss = !ClientPrefs.getPref('AntiMash');
 						} else if (daNote.isSustainNote && daNote.noteData == key && ((daNote.wasGoodHit || daNote.prevNote.wasGoodHit) && (daNote.parent != null && !daNote.parent.hasMissed && daNote.parent.wasGoodHit)))
@@ -2762,7 +2761,6 @@ class PlayState extends MusicBeatState {
 				}
 			});
 			sortedNotesList.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
-			var pressNotes:Array<Note> = [];
 			var notesStopped:Bool = false;
 
 			if (sortedNotesList.length > 0) {
@@ -2943,8 +2941,10 @@ class PlayState extends MusicBeatState {
 		if (SONG.needsVoices) vocals.volume = 1;
 
 		var isSus:Bool = note.isSustainNote;
-		var leData:Int = Std.int(Math.abs(note.noteData));
+		var leData:Int = Math.floor(Math.abs(note.noteData));
 		var leType:String = note.noteType;
+
+		note.hitByOpponent = true;
 
 		if(leType == 'Hey!' && dad.animOffsets.exists('hey')) {
 			dad.playAnim('hey', true);
@@ -2965,7 +2965,6 @@ class PlayState extends MusicBeatState {
 
 		if (SONG.needsVoices) vocals.volume = 1;
 		strumPlayAnim(true, leData % Note.ammo[mania], Conductor.stepCrochet * 1.25 / 1000 / playbackRate);
-		note.hitByOpponent = true;
 
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
 		if (ClientPrefs.getPref('camMovement'))
@@ -3006,7 +3005,7 @@ class PlayState extends MusicBeatState {
 			FlxG.sound.play(Paths.sound('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}'), ClientPrefs.getPref('hitsoundVolume'));
 
 		var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
-		var leData:Int = Math.round(Math.abs(note.noteData));
+		var leData:Int = Math.floor(Math.abs(note.noteData));
 		var leType:String = note.noteType;
 
 		if (!isSus) notesHitArray.unshift(Date.now().getTime());
@@ -3039,11 +3038,12 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (!dontZoomCam) camZooming = true;
+		if (SONG.needsVoices) vocals.volume = 1;
+		health += note.hitHealth * healthGain;
 		if (!isSus) {
 			combo++;
 			popUpScore(note);
 		}
-		health += note.hitHealth * healthGain;
 
 		if(!note.noAnimation) {
 			var char:Character = boyfriend;
@@ -3071,7 +3071,6 @@ class PlayState extends MusicBeatState {
 			var spr = playerStrums.members[note.noteData];
 			if(spr != null) spr.playAnim('confirm', true);
 		} else strumPlayAnim(false, leData % Note.ammo[mania], Conductor.stepCrochet * 1.25 / 1000 / playbackRate);
-		if (SONG.needsVoices) vocals.volume = 1;
 
 		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('goodNoteHit', [note]);
@@ -3305,7 +3304,7 @@ class PlayState extends MusicBeatState {
 				for (e in newScript.parsingExceptions)
 					if(e != null) addTextToDebug('ERROR ON LOADING ($file): ${e.message.substr(0, e.message.indexOf('\n'))}', FlxColor.RED);
 				newScript.destroy();
-				return; 
+				return;
 			}
 
 			hscriptArray.push(newScript);
