@@ -126,8 +126,7 @@ class EKData {
     public static var pixelScales:Array<Float> = [1.2, 1.15, 1.1, 1, .9, .83, .8, .74, .7, .6, .55, .5, .48, .48, .42, .38, .38, .32];
 }
 
-class Keybinds
-{
+class Keybinds {
     public static function optionShit():Array<Dynamic> {
         return [
             ['1 KEY'],

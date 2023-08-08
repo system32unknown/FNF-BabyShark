@@ -6,17 +6,22 @@ import haxe.macro.Compiler;
 /**
  * Macros containing additional help functions to expand HScript capabilities.
 */
-class ScriptsMacro {
-	public static function addAdditionalClasses() {
+class AdditionalClasses {
+	public static function add() {
 		var include:Array<String> = [
 			// FLIXEL
-			"flixel", "lime", "haxe",
+			"flixel", "lime", "haxe", "openfl",
+			#if VIDEOS_ALLOWED "hxcodec", #end
+			#if LUA_ALLOWED "llua", #end
+			#if desktop "discord_rpc", #end
+			#if SScript "tea", #end
+			#if SScript "ex", #end
 			// OTHER LIBRARIES & STUFF
 			#if flash "flash", #end
 			#if cpp "cpp", #end
 			#if hl "hl", #end
 			#if neko "neko", #end
-			#if sys "sys", #end "openfl.net", "shaders",
+			#if sys "sys", #end
 			// BASE HAXE
 			"DateTools", "EReg", "Lambda", "StringBuf", "haxe"
 		];

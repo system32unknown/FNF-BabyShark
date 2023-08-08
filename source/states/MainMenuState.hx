@@ -94,7 +94,7 @@ class MainMenuState extends MusicBeatState
 			menuItems.add(menuItem);
 
 			var scr:Float = (optionShit.length - 4) * 0.135;
-			if(optionShit.length < 6) scr = 0;
+			if(optionShit.length < 5) scr = 0;
 			menuItem.scrollFactor.set(0, scr);
 			menuItem.updateHitbox();
 			menuItem.scale.set(.7, .7);
@@ -113,10 +113,8 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollow, null, 0);
 
 		var versionShit:FlxText = new FlxText(0, 0, 0, 
-			'Psych Engine 0.6.3 + 0.7.1h Addon\n' +
 			'Alter Engine v${Main.engineVersion.version} (${Main.COMMIT_HASH.trim().substring(0, 7)})\n' +
-			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n' +
-			'${FlxG.VERSION.toString()}\n', 16);
+			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n', 16);
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT);
 		versionShit.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		versionShit.scrollFactor.set();

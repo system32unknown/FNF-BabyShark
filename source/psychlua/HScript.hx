@@ -3,6 +3,11 @@ package psychlua;
 import flixel.FlxBasic;
 import objects.Character;
 
+#if sys
+import sys.FileSystem;
+import sys.io.File;
+#end
+
 #if (HSCRIPT_ALLOWED && SScript >= "3.0.0")
 import tea.SScript;
 class HScript extends SScript {
@@ -37,9 +42,19 @@ class HScript extends SScript {
 
 	public var origin:String;
 	override public function new(?parent:FunkinLua, ?file:String) {
+		var usesClasses = false;
 		if (file == null) file = '';
-	
-		super(file, false, false);
+		#if sys
+		else if (FileSystem.exists(file)) {
+			var fileWithoutComments = ~/(\/[*](?:[^*]|[\r\n]|([*]+([^*\/]|[\r\n])))*[*]+\/|\/\/.*)/gm.replace(File.getContent(file), '');
+			usesClasses = ~/class\s.*\s*{/.match(fileWithoutComments);
+		}
+		#end
+
+		super(null, false, false);
+		classSupport = usesClasses;
+		doFile(file);
+		
 		parentLua = parent;
 		if (parent != null) origin = parent.scriptName;
 		if (scriptFile != null && scriptFile.length > 0) origin = scriptFile;
@@ -177,7 +192,9 @@ class HScript extends SScript {
 				if(libPackage.length > 0)
 					str = libPackage + '.';
 
-				set(libName, Type.resolveClass(str + libName));
+				var c:Dynamic = Type.resolveClass(str + libName);
+				if (c == null) c = Type.resolveEnum(str + libName);
+				set(libName, c);
 			} catch (e:Dynamic) {
 				var msg:String = e.message.substr(0, e.message.indexOf('\n'));
 				if(parentLua != null) {
@@ -242,7 +259,8 @@ class HScript extends SScript {
 		funk.addCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
 			var retVal:SCall = null;
 			#if (SScript >= "3.0.0")
-			initHaxeModuleCode(funk, codeToRun);
+			initHaxeModule(funk);
+			funk.hscript.doString(codeToRun);
 			if(varsToBring != null) {
 				for (key in Reflect.fields(varsToBring))
 					funk.hscript.set(key, Reflect.field(varsToBring, key));
@@ -282,7 +300,8 @@ class HScript extends SScript {
 			if(libPackage.length > 0) str = libPackage + '.';
 			else if(libName == null) libName = '';
 
-			var c = Type.resolveClass(str + libName);
+			var c:Dynamic = Type.resolveClass(str + libName);
+			if (c == null) c = Type.resolveEnum(str + libName);
 
 			#if (SScript >= "3.0.3")
 			if (c != null) SScript.globalVariables[libName] = c;

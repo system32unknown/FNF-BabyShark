@@ -1,6 +1,5 @@
 package;
 
-import flixel.custom.system.CustomLog;
 import haxe.Exception;
 
 import openfl.Lib;
@@ -9,6 +8,7 @@ import openfl.display.StageScaleMode;
 import openfl.events.Event;
 
 import states.TitleState;
+import backend.CustomLog;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
 import utils.FunkinGame;
@@ -100,8 +100,9 @@ class Main extends Sprite
 	   	});
 
 		#if CRASH_HANDLER
-		#if !hl Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash); #end
-		#if hl hl.Api.setErrorHandler(onCrash); #end
+		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
+		#if cpp untyped __global__.__hxcpp_set_critical_error_handler(onCrash);
+		#elseif hl hl.Api.setErrorHandler(onCrash); #end
 		#end
 
 		#if discord_rpc Discord.start(); #end
@@ -117,11 +118,9 @@ class Main extends Sprite
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
 	// very cool person for real they don't get enough credit for their work
 	#if CRASH_HANDLER
-	function onCrash(e:Dynamic):Void
-	{
+	function onCrash(e:Dynamic):Void {
 		var message:String = "";
-		if ((e is UncaughtErrorEvent))
-			message = e.error;
+		if ((e is UncaughtErrorEvent)) message = e.error;
 		else message = try Std.string(e) catch(_:Exception) "Unknown";
 
 		var errMsg:String = "";

@@ -27,17 +27,17 @@ class AssetCache implements IAssetCache
 	/**
 		Internal
 	**/
-	@:noCompletion @:dox(hide) public var bitmapData:Map<String, BitmapData>;
+	@:noCompletion public var bitmapData:Map<String, BitmapData>;
 
 	/**
 		Internal
 	**/
-	@:noCompletion @:dox(hide) public var font:Map<String, Font>;
+	@:noCompletion public var font:Map<String, Font>;
 
 	/**
 		Internal
 	**/
-	@:noCompletion @:dox(hide) public var sound:Map<String, Sound>;
+	@:noCompletion public var sound:Map<String, Sound>;
 
 	@:noCompletion private var __enabled:Bool = true;
 

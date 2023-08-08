@@ -68,6 +68,7 @@ class Note extends FlxSprite
 	public var gfNote:Bool = false;
 	public var lateHitMult:Float = 1;
 	public var earlyHitMult:Float = 1;
+	public var lowPriority:Bool = false;
 
 	public static var SUSTAIN_SIZE:Int = 44;
 	public static var swagWidth:Float = 160 * .7;
@@ -113,8 +114,7 @@ class Note extends FlxSprite
 
 	function set_multSpeed(value:Float):Float {
 		resizeByRatio(value / multSpeed);
-		multSpeed = value;
-		return value;
+		return multSpeed = value;
 	}
 
 	public function resizeByRatio(ratio:Float) { //haha funny twitter shit
@@ -146,6 +146,8 @@ class Note extends FlxSprite
 					reloadNote('HURT', 'NOTE_assets');
 					noteSplashTexture = 'HURTnoteSplashes';
 					colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
+
+					lowPriority = true;
 					missHealth = (isSustainNote ? .1 : .25);
 					hitCausesMiss = true;
 					hitsound = 'cancelMenu';
@@ -374,20 +376,13 @@ class Note extends FlxSprite
 			canBeHit = checkDiff(Conductor.songPosition);
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 				tooLate = true;
-		} else {
-			canBeHit = false;
-
-			if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult)) {
-				if((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition)
-					wasGoodHit = true;
-			}
-		}
+		} else canBeHit = false;
 
 		if (tooLate && !inEditor)
 			if (alpha > .3) alpha = .3;
 	}
 
-	public function followStrumNote(myStrum:StrumNote, fakeCrochet:Float, songSpeed:Float = 1) {
+	public function followStrumNote(myStrum:StrumNote, songSpeed:Float = 1) {
 		var strumX:Float = myStrum.x;
 		var strumY:Float = myStrum.y;
 		var strumAngle:Float = myStrum.angle;
@@ -405,42 +400,33 @@ class Note extends FlxSprite
 		if(copyAlpha) alpha = strumAlpha * multAlpha;
 		if(copyX) x = strumX + offsetX + Math.cos(angleDir) * distance;
 		if(copyY) {
-			y = strumY + offsetY + Math.sin(angleDir) * distance;
-
+			y = strumY + offsetY + correctionOffset + Math.sin(angleDir) * distance;
 			if(myStrum.downScroll && isSustainNote) {
-				if (animation.curAnim != null && animation.curAnim.name.endsWith('tail')) {
-					y += 10.5 * (fakeCrochet / 400) * 1.5 * songSpeed + (46 * (songSpeed - 1));
-					y -= 46 * (1 - (fakeCrochet / 600)) * songSpeed;
-					if(PlayState.isPixelStage)
-						y += 8 + (6 - originalHeight) * PlayState.daPixelZoom;
-					else y -= 19;
-				}
-				y += (swagWidth / 2) - (60.5 * (songSpeed - 1));
-				y += 27.5 * ((PlayState.SONG.bpm / 100) - 1) * (songSpeed - 1) * scales[mania];
+				if(PlayState.isPixelStage)
+					y -= PlayState.daPixelZoom * 9.5;
+				y -= (frameHeight * scale.y) - (Note.swagWidth / 2);
 			}
 		}
 	}
 
 	public function clipToStrumNote(myStrum:StrumNote) {
-		var missed = tooLate || hasMissed || (isSustainNote && (parent == null || parent.hasMissed));
-
-		var center:Float = myStrum.y + offsetY + swagWidth / 2;
-		if(myStrum.sustainReduce && isSustainNote && (mustPress || !ignoreNote) && (!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !missed && !canBeHit)))) {
-			if (myStrum.downScroll ? (y - offset.y * scale.y + height >= center) : (y + offset.y * scale.y <= center)) {
-				var swagRect = clipRect;
-				if (swagRect == null) swagRect = FlxRect.get(0, 0, frameWidth, frameHeight);
-				else swagRect.set(0, 0, frameWidth, frameHeight);
-				
-				if (myStrum.downScroll) {
+		var center:Float = myStrum.y + offsetY + Note.swagWidth / 2;
+		if(isSustainNote && (mustPress || !ignoreNote) && (!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !canBeHit)))) {
+			var swagRect:FlxRect = clipRect;
+			if(swagRect == null) swagRect = new FlxRect(0, 0, frameWidth, frameHeight);
+	
+			if (myStrum.downScroll) {
+				if(y - offset.y * scale.y + height >= center) {
+					swagRect.width = frameWidth;
 					swagRect.height = (center - y) / scale.y;
 					swagRect.y = frameHeight - swagRect.height;
-				} else {
-					swagRect.y = (center - y) / scale.y;
-					swagRect.height -= swagRect.y;
 				}
-
-				clipRect = swagRect;
+			} else if (y + offset.y * scale.y <= center) {
+				swagRect.y = (center - y) / scale.y;
+				swagRect.width = width / scale.x;
+				swagRect.height = (height / scale.y) - swagRect.y;
 			}
+			clipRect = swagRect;
 		}
 	}
 

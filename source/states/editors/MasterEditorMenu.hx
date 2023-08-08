@@ -90,7 +90,9 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Menu Character Editor': MusicBeatState.switchState(new MenuCharacterEditorState());
 				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), false);
 				case 'Dialogue Editor' :LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
-				case 'Chart Editor': LoadingState.loadAndSwitchState(new ChartingState(), false); //felt it would be cool maybe
+				case 'Chart Editor':
+					PlayState.chartingMode = true;
+					LoadingState.loadAndSwitchState(new ChartingState(), false); //felt it would be cool maybe
 				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditor());
 			}
 			FlxG.sound.music.volume = 0;

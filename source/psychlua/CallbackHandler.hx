@@ -6,11 +6,14 @@ class CallbackHandler {
 			var cbf:Dynamic = Lua_helper.callbacks.get(fname);
 
 			if(cbf == null)  {
-				for (script in PlayState.instance.luaArray)
-					if(script != null && script.lua == l) {
-						cbf = script.callbacks.get(fname);
-						break;
-					}
+				var last:FunkinLua = FunkinLua.lastCalledScript;
+				if(last == null || last.lua != l) {
+					for (script in PlayState.instance.luaArray)
+						if(script != FunkinLua.lastCalledScript && script != null && script.lua == l) {
+							cbf = script.callbacks.get(fname);
+							break;
+						}
+				} else cbf = last.callbacks.get(fname);
 			}
 			
 			if(cbf == null) return 0;
