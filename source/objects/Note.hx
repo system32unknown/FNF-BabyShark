@@ -68,7 +68,6 @@ class Note extends FlxSprite
 	public var gfNote:Bool = false;
 	public var lateHitMult:Float = 1;
 	public var earlyHitMult:Float = 1;
-	public var lowPriority:Bool = false;
 
 	public static var SUSTAIN_SIZE:Int = 44;
 	public static var swagWidth:Float = 160 * .7;
@@ -147,7 +146,6 @@ class Note extends FlxSprite
 					noteSplashTexture = 'HURTnoteSplashes';
 					colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
 
-					lowPriority = true;
 					missHealth = (isSustainNote ? .1 : .25);
 					hitCausesMiss = true;
 					hitsound = 'cancelMenu';

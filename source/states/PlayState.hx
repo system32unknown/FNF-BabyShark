@@ -9,6 +9,7 @@ import flixel.animation.FlxAnimationController;
 import flixel.ui.FlxBar;
 import flixel.util.FlxSort;
 import flixel.util.FlxSave;
+import flixel.tweens.misc.VarTween;
 import openfl.events.KeyboardEvent;
 #if !MODS_ALLOWED import openfl.utils.Assets as OpenFlAssets; #end
 import backend.Highscore;
@@ -193,7 +194,7 @@ class PlayState extends MusicBeatState {
 	var extraTxt:FlxText;
 
 	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
-	var msTimingTween:FlxTween;
+	var msTimingTween:VarTween;
 
 	var songNameText:FlxText;
 
@@ -1282,20 +1283,22 @@ class PlayState extends MusicBeatState {
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 				else oldNote = null;
 
-				var fixedSus:Int = Math.round(songNotes[2] / Conductor.stepCrochet);
-
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
 				swagNote.mustPress = gottaHitNote;
-				swagNote.sustainLength = fixedSus * Conductor.stepCrochet;
+				swagNote.sustainLength = songNotes[2];
 				swagNote.gfNote = (section.gfSection && (songNotes[1] < Note.ammo[mania]));
 				swagNote.noteType = songNotes[3];
 				if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
 				swagNote.scrollFactor.set();
 
+				var susLength:Float = swagNote.sustainLength;
+				susLength = susLength / Conductor.stepCrochet;
+
 				unspawnNotes.push(swagNote);
 
-				if(fixedSus > 0) {
-					for (susNote in 0...Math.floor(Math.max(fixedSus, 2))) {
+				var floorSus:Int = Math.floor(susLength);
+				if(floorSus > 0) {
+					for (susNote in 0...floorSus + 1) {
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
 						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + (Conductor.stepCrochet / FlxMath.roundDecimal(songSpeed, 2)), daNoteData, oldNote, true);
@@ -1306,6 +1309,7 @@ class PlayState extends MusicBeatState {
 						swagNote.tail.push(sustainNote);
 						sustainNote.parent = swagNote;
 						unspawnNotes.push(sustainNote);
+						sustainNote.correctionOffset = swagNote.height / 2;
 
 						if(!isPixelStage) {
 							if(oldNote.isSustainNote) {
@@ -2571,7 +2575,7 @@ class PlayState extends MusicBeatState {
 			
 			if (!ClientPrefs.getPref('comboStacking') && comboGroup.members.length > 0) {
 				for (spr in comboGroup) {
-					spr.destroy();
+					if(spr != mstimingTxt) spr.destroy();
 					comboGroup.remove(spr);
 				}
 			}
@@ -2613,8 +2617,7 @@ class PlayState extends MusicBeatState {
 				mstimingTxt.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 20, FlxColor.WHITE, CENTER);
 				mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 				mstimingTxt.visible = !hideHud;
-				mstimingTxt.text = msTiming + "ms";
-				mstimingTxt.antialiasing = antialias;
+				mstimingTxt.text = '${msTiming}ms';
 				mstimingTxt.color = CoolUtil.dominantColor(rating);
 				comboGroup.add(mstimingTxt);
 			}
@@ -2747,6 +2750,7 @@ class PlayState extends MusicBeatState {
 
 			var sortedNotesList:Array<Note> = [];				
 			var canMiss:Bool = !ClientPrefs.getPref('ghostTapping');
+			var notesStopped:Bool = false;
 
 			notes.forEachAlive(function(daNote:Note) {
 				if (!strumsBlocked[daNote.noteData] && daNote.mustPress && !daNote.blockHit && !daNote.tooLate) {
@@ -2761,28 +2765,23 @@ class PlayState extends MusicBeatState {
 				}
 			});
 			sortedNotesList.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
-			var notesStopped:Bool = false;
+			var pressNotes:Array<Note> = [];
 
 			if (sortedNotesList.length > 0) {
-				var epicNote:Note = sortedNotesList[0];
-				if (sortedNotesList.length > 1) {
-					for (bad in 1...sortedNotesList.length) {
-						var doubleNote:Note = sortedNotesList[bad];
-						if (doubleNote.noteData != epicNote.noteData) break;
-
+				for (epicNote in sortedNotesList) {
+					for (doubleNote in pressNotes) {
 						if (Math.abs(doubleNote.strumTime - epicNote.strumTime) < 1) {
 							notes.remove(doubleNote, true);
 							doubleNote.destroy();
-							break;
-						} else if (doubleNote.strumTime < epicNote.strumTime) {
-							epicNote = doubleNote;
-							break;
 						} else notesStopped = true;
 					}
 
 					if (!notesStopped) {
-						if (epicNote.isSustainNote)
+						if (epicNote.isSustainNote) {
 							strumPlayAnim(false, key);
+							continue;
+						}
+						pressNotes.push(epicNote);
 						goodNoteHit(epicNote);
 					}
 				}
@@ -2964,7 +2963,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (SONG.needsVoices) vocals.volume = 1;
-		strumPlayAnim(true, leData % Note.ammo[mania], Conductor.stepCrochet * 1.25 / 1000 / playbackRate);
+		strumPlayAnim(true, leData % Note.ammo[mania], Conductor.stepCrochet * 1.25 / 1000);
 
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
 		if (ClientPrefs.getPref('camMovement'))
@@ -3067,10 +3066,13 @@ class PlayState extends MusicBeatState {
 			}
 		}
 
-		if(!cpuControlled) {
-			var spr = playerStrums.members[note.noteData];
-			if(spr != null) spr.playAnim('confirm', true);
-		} else strumPlayAnim(false, leData % Note.ammo[mania], Conductor.stepCrochet * 1.25 / 1000 / playbackRate);
+		var time:Float = 0;
+		if(cpuControlled) {
+			time = 0.15;
+			if(isSus && !note.animation.curAnim.name.endsWith('tail'))
+				time += 0.15;
+		}
+		strumPlayAnim(false, leData % Note.ammo[mania], time);
 
 		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('goodNoteHit', [note]);
@@ -3441,7 +3443,7 @@ class PlayState extends MusicBeatState {
 
 		if(spr != null) {
 			spr.playAnim('confirm', true);
-			spr.resetAnim = time;
+			spr.resetAnim = time / playbackRate;
 		}
 	}
 
