@@ -80,12 +80,5 @@ class MemoryUtil {
 			return (size_t)info.WorkingSetSize;
 	")
 	public static function get_totalMemory():Int return 0;
-	
-	@:functionCode("
-		PROCESS_MEMORY_COUNTERS info;
-		if (GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info)))
-			return (size_t)info.PeakWorkingSetSize;
-	")
-	public static function get_memPeak():Int return 0;
 	#end
 }

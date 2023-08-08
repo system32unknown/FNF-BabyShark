@@ -287,6 +287,8 @@ class PlayState extends MusicBeatState {
 		fullComboFunction = fullComboUpdate;
 
 		keysArray = Keybinds.fill();
+		fillKeysPressed();
+		keysPressed = CoolUtil.dynamicArray(false, keysArray[mania].length);
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
