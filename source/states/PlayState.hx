@@ -809,9 +809,9 @@ class PlayState extends MusicBeatState {
 		// HScript
 		#if HSCRIPT_ALLOWED
 		var doPush:Bool = false;
-		var scriptFile:String = 'characters/' + name + '.hx';
+		var scriptFile:String = 'characters/$name.hx';
 		var replacePath:String = Paths.modFolders(scriptFile);
-		if(FileSystem.exists(replacePath)){
+		if(FileSystem.exists(replacePath)) {
 			scriptFile = replacePath;
 			doPush = true;
 		} else {
@@ -1253,8 +1253,6 @@ class PlayState extends MusicBeatState {
 		add(notes = new FlxTypedGroup<Note>());
 
 		var noteData:Array<SwagSection>;
-
-		// NEW SHIT
 		noteData = songData.notes;
 
 		var file:String = Paths.json('${Paths.CHART_PATH}/$songName/events');
@@ -1293,7 +1291,6 @@ class PlayState extends MusicBeatState {
 
 				var susLength:Float = swagNote.sustainLength;
 				susLength = susLength / Conductor.stepCrochet;
-
 				unspawnNotes.push(swagNote);
 
 				var floorSus:Int = Math.floor(susLength);
@@ -1301,7 +1298,7 @@ class PlayState extends MusicBeatState {
 					for (susNote in 0...floorSus + 1) {
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + (Conductor.stepCrochet / FlxMath.roundDecimal(songSpeed, 2)), daNoteData, oldNote, true);
+						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote), daNoteData, oldNote, true);
 						sustainNote.mustPress = gottaHitNote;
 						sustainNote.gfNote = (section.gfSection && (songNotes[1] < Note.ammo[mania]));
 						sustainNote.noteType = swagNote.noteType;
@@ -1331,9 +1328,8 @@ class PlayState extends MusicBeatState {
 					}
 				}
 
-				if (swagNote.mustPress) {
-					swagNote.x += FlxG.width / 2; // general offset
-				} else if(middleScroll) {
+				if (swagNote.mustPress) swagNote.x += FlxG.width / 2;
+				else if(middleScroll) {
 					swagNote.x += 310;
 					if(daNoteData > Note.separator[mania])
 						swagNote.x += FlxG.width / 2 + 25;
@@ -1961,14 +1957,6 @@ class PlayState extends MusicBeatState {
 		#if discord_rpc
 		changeDiscordPresence(true, true);
 		#end
-	}
-
-	public function openChangersMenu() {
-		persistentUpdate = false;
-		persistentDraw = true;
-		paused = true;
-
-		openSubState(new substates.GameplayChangersSubstate());
 	}
 
 	function openChartEditor() {

@@ -1,6 +1,8 @@
 package utils;
 
 import flixel.util.FlxSave;
+import flixel.addons.display.FlxBackdrop;
+import flixel.addons.display.FlxGridOverlay;
 import openfl.geom.Rectangle;
 import openfl.net.FileReference;
 #if sys
@@ -225,4 +227,8 @@ class CoolUtil {
 		lime.app.Application.current.window.alert(context, title);
 		#end
     }
+
+	public inline static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
+		return new FlxBackdrop(FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
+	}
 }

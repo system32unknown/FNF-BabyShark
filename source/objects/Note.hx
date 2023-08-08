@@ -267,7 +267,7 @@ class Note extends FlxSprite
 	public var originalHeight:Float = 6;
 	public var correctionOffset:Float = 0;
 	function reloadNote(texture:String = '', postfix:String = '') {
-		if (texture == null) texture = '';
+		if(texture == null) texture = '';
 		if(postfix == null) postfix = '';
 
 		var skin:String = texture;
@@ -391,9 +391,7 @@ class Note extends FlxSprite
 		if (!myStrum.downScroll) distance *= -1;
 
 		var angleDir = strumDirection * Math.PI / 180;
-		if(!isSustainNote)
-			if (copyAngle) angle = strumDirection - 90 + strumAngle + offsetAngle;
-		else angle = strumDirection - 90 + (copyAngle ? strumAngle + offsetAngle : 0);
+		if (copyAngle) angle = strumDirection - 90 + strumAngle + offsetAngle;
 
 		if(copyAlpha) alpha = strumAlpha * multAlpha;
 		if(copyX) x = strumX + offsetX + Math.cos(angleDir) * distance;

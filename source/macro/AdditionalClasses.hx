@@ -22,8 +22,9 @@ class AdditionalClasses {
 			#if hl "hl", #end
 			#if neko "neko", #end
 			#if sys "sys", #end
+			"shaders",
 			// BASE HAXE
-			"DateTools", "EReg", "Lambda", "StringBuf", "haxe"
+			"DateTools", "EReg", "Lambda", "StringBuf"
 		];
 		var exc:Array<String> = [
 			"flixel.addons.editors.spine",
