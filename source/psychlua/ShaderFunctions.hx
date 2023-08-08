@@ -67,12 +67,12 @@ class ShaderFunctions {
             var arr:Array<String> = funk.runtimeShaders.get(shader);
             var camera = getCam(cam);
             @:privateAccess {
-                    if (camera._filters == null)
-                        camera._filters = [];
-
-                    var filter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
-                    storedFilters.set(index, filter);
-                    camera._filters.push(filter);
+                if (camera._filters == null)
+                    camera._filters = [];
+				
+                var filter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
+                storedFilters.set(index, filter);
+                camera._filters.push(filter);
             }
             return true;
 			#else

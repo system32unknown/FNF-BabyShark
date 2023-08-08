@@ -1963,6 +1963,14 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
+	public function openChangersMenu() {
+		persistentUpdate = false;
+		persistentDraw = true;
+		paused = true;
+
+		openSubState(new GameplayChangersSubstate());
+	}
+
 	function openChartEditor() {
 		FlxG.camera.followLerp = 0;
 		persistentUpdate = false;
