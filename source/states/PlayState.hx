@@ -1968,7 +1968,7 @@ class PlayState extends MusicBeatState {
 		persistentDraw = true;
 		paused = true;
 
-		openSubState(new GameplayChangersSubstate());
+		openSubState(new substates.GameplayChangersSubstate());
 	}
 
 	function openChartEditor() {
