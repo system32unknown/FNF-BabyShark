@@ -1077,7 +1077,7 @@ class PlayState extends MusicBeatState {
 				stagesFunc(function(stage:BaseStage) stage.countdownTick(tick, swagCounter));
 				callOnScripts('onCountdownTick', [swagCounter]);
 				callOnHScript('onCountdownTick', [tick, swagCounter]);
-				swagCounter += 1;
+				swagCounter++;
 			}, 5);
 		}
 		return true;
@@ -1143,9 +1143,8 @@ class PlayState extends MusicBeatState {
 	var scoreTweenSetting:Array<Dynamic> = [1.075, .2, 'backOut'];
 	public function updateScore(miss:Bool = false) {
 		judgementCounter.text = 'Max Combos: ${maxCombo}';
-		for (rating in ratingsData) {
+		for (rating in ratingsData)
 			judgementCounter.text += '\n${flixel.addons.ui.U.FU(rating.name)}s: ${rating.hits}';
-		}
 		judgementCounter.text += '\n${getMissText(!ClientPrefs.getPref('movemissjudge'), '\n')}';
 		judgementCounter.screenCenter(Y);
 		if (!ClientPrefs.getPref('ShowNPSCounter'))
@@ -2764,6 +2763,7 @@ class PlayState extends MusicBeatState {
 			});
 			sortedNotesList.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
 			var pressNotes:Array<Note> = [];
+			var notesStopped:Bool = false;
 
 			if (sortedNotesList.length > 0) {
 				var epicNote:Note = sortedNotesList[0];
@@ -2779,13 +2779,14 @@ class PlayState extends MusicBeatState {
 						} else if (doubleNote.strumTime < epicNote.strumTime) {
 							epicNote = doubleNote;
 							break;
-						}
+						} else notesStopped = true;
 					}
 
-					if (epicNote.isSustainNote)
-						strumPlayAnim(false, key);
-					pressNotes.push(epicNote);
-					goodNoteHit(epicNote);
+					if (!notesStopped) {
+						if (epicNote.isSustainNote)
+							strumPlayAnim(false, key);
+						goodNoteHit(epicNote);
+					}
 				}
 			} else {
 				callOnScripts('onGhostTap', [key]);

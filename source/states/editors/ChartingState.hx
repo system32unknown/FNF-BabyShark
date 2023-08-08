@@ -1686,11 +1686,11 @@ class ChartingState extends MusicBeatState {
 
 			// Move note to other side
 			if(FlxG.keys.justPressed.RIGHT && FlxG.keys.pressed.CONTROL && curSelectedNote != null) {				
-				if(curSelectedNote[1] < 7) curSelectedNote[1] += 1;
+				if(curSelectedNote[1] < 7) curSelectedNote[1]++;
 				updateGrid();
 			}
 			if(FlxG.keys.justPressed.LEFT && FlxG.keys.pressed.CONTROL && curSelectedNote != null) {
-				if(curSelectedNote[1] > 0) curSelectedNote[1] -= 1;
+				if(curSelectedNote[1] > 0) curSelectedNote[1]--;
 				updateGrid();
 			}
 
@@ -1714,11 +1714,11 @@ class ChartingState extends MusicBeatState {
 
 			if (FlxG.keys.justPressed.TAB) {
 				if (FlxG.keys.pressed.SHIFT) {
-					UI_box.selected_tab -= 1;
+					UI_box.selected_tab--;
 					if (UI_box.selected_tab < 0)
 						UI_box.selected_tab = 2;
 				} else {
-					UI_box.selected_tab += 1;
+					UI_box.selected_tab++;
 					if (UI_box.selected_tab >= 3)
 						UI_box.selected_tab = 0;
 				}

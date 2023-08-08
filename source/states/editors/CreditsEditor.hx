@@ -395,7 +395,7 @@ class CreditsEditor extends MusicBeatState
 
 		if(curSelected > (creditsStuff.length - 1)) curSelected = creditsStuff.length;
 		do {
-			curSelected -= 1;
+			curSelected--;
 		} while(nullCheck(curSelected));
 
 		updateCreditObjects();

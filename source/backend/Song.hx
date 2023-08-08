@@ -51,7 +51,7 @@ class Song {
 		return Paths.formatToSongPath(folder) + '/' + Paths.formatToSongPath(song);
 	}
 
-	private static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
+	static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
 	{
 		if(songJson.gfVersion == null) {
 			songJson.gfVersion = songJson.player3;

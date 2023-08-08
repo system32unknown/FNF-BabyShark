@@ -198,17 +198,14 @@ class ControlsSubState extends MusicBeatSubstate {
 			}
 		}
 
-		if(nextAccept > 0) {
-			nextAccept -= 1;
-		}
+		if(nextAccept > 0) nextAccept--;
 		super.update(elapsed);
 	}
 
 	function getInputTextNum() {
 		var num:Int = 0;
-		for (i in 0...curSelected) {
+		for (i in 0...curSelected)
 			if(optionShit[i].length > 1) num++;
-		}
 		return num;
 	}
 	

@@ -188,7 +188,7 @@ class TitleState extends MusicBeatState
 			Conductor.songPosition = FlxG.sound.music.time;
 		} else if (skippedIntro) Conductor.songPosition += elapsed * 1000;
 
-		gradtimer += 1;
+		gradtimer++;
 		gradientBar.scale.y += Math.sin(gradtimer / 10) * .001;
 		gradientBar.updateHitbox();
 		gradientBar.y = FlxG.height - gradientBar.height;

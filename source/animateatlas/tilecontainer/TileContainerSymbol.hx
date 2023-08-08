@@ -28,18 +28,18 @@ class TileContainerSymbol extends TileContainer {
 	public var numLayers(get, never):Int;
 	public var numFrames(get, never):Int;
 
-	private var _data:SymbolData;
-	private var _library:TileAnimationLibrary;
-	private var _symbolName:String;
-	private var _type:String;
-	private var _loopMode:String;
-	private var _currentFrame:Int;
-	private var _composedFrame:Int;
-	private var _bitmap:Tile;
-	private var _numFrames:Int;
-	private var _numLayers:Int;
-	private var _frameLabels:Array<FrameLabel>;
-	private var _layers:Array<TileContainer>;
+	var _data:SymbolData;
+	var _library:TileAnimationLibrary;
+	var _symbolName:String;
+	var _type:String;
+	var _loopMode:String;
+	var _currentFrame:Int;
+	var _composedFrame:Int;
+	var _bitmap:Tile;
+	var _numFrames:Int;
+	var _numLayers:Int;
+	var _frameLabels:Array<FrameLabel>;
+	var _layers:Array<TileContainer>;
 
 	private function new(data:SymbolData, library:TileAnimationLibrary, tileset:Tileset) {
 		super();
@@ -58,8 +58,7 @@ class TileContainerSymbol extends TileContainer {
 
 		// Create FrameMap caches if don't exist
 		for (layer in data.TIMELINE.LAYERS) {
-			if (layer.FrameMap != null)
-				return;
+			if (layer.FrameMap != null) return;
 
 			var map = new Map();
 
@@ -90,16 +89,15 @@ class TileContainerSymbol extends TileContainer {
 
 	public function nextFrame():Void {
 		if (_loopMode != LoopMode.SINGLE_FRAME) {
-			currentFrame += 1;
+			currentFrame ++;
 		}
 
 		moveMovieclip_MovieClips(1);
 	}
 
 	public function prevFrame():Void {
-		if (_loopMode != LoopMode.SINGLE_FRAME) {
-			currentFrame -= 1;
-		}
+		if (_loopMode != LoopMode.SINGLE_FRAME)
+			currentFrame--;
 
 		moveMovieclip_MovieClips(-1);
 	}
@@ -121,24 +119,20 @@ class TileContainerSymbol extends TileContainer {
 	}
 
 	public function update():Void {
-		for (i in 0..._numLayers) {
-			updateLayer(i);
-		}
+		for (i in 0..._numLayers) updateLayer(i);
 
 		_composedFrame = _currentFrame;
 	}
 
 	@:access(animateatlas)
-	private function updateLayer(layerIndex:Int):Void {
+	function updateLayer(layerIndex:Int):Void {
 		var layer:TileContainer = getLayer(layerIndex);
 		var frameData:LayerFrameData = getFrameData(layerIndex, _currentFrame);
 		var elements:Array<ElementData> = (frameData != null) ? frameData.elements : null;
 		var numElements:Int = (elements != null) ? elements.length : 0;
 		for (i in 0...numElements) {
 			var elementData:SymbolInstanceData = elements[i].SYMBOL_Instance;
-			if (elementData == null) {
-				continue;
-			}
+			if (elementData == null) continue;
 			// this is confusing but needed :(
 			var oldSymbol:TileContainerSymbol = (layer.numTiles > i) ? try
 				cast(layer.getTileAt(i), TileContainerSymbol)
@@ -234,13 +228,12 @@ class TileContainerSymbol extends TileContainer {
 			_bitmap.__setRenderDirty(); // setTo() doesn't trigger the renderdirty
 
 			// aditional checks for rotation
+			_bitmap.x = data.Position.x;
 			if (spriteData.rotated) {
 				_bitmap.rotation = -90;
-				_bitmap.x = data.Position.x;
 				_bitmap.y = data.Position.y + spriteData.w;
 			} else {
 				_bitmap.rotation = 0;
-				_bitmap.x = data.Position.x;
 				_bitmap.y = data.Position.y;
 			}
 
@@ -279,12 +272,10 @@ class TileContainerSymbol extends TileContainer {
 		colorTransform = newTransform;
 	}
 
-	private function setLoop(data:String):Void {
-		if (data != null) {
+	function setLoop(data:String):Void {
+		if (data != null)
 			_loopMode = data;
-		} else {
-			_loopMode = LoopMode.LOOP;
-		}
+		else _loopMode = LoopMode.LOOP;
 	}
 
 	private function setType(data:String):Void {
@@ -435,11 +426,9 @@ class TileContainerSymbol extends TileContainer {
 	}
 
 	private function set_loopMode(value:String):String {
-		if (LoopMode.isValid(value)) {
+		if (LoopMode.isValid(value))
 			_loopMode = value;
-		} else {
-			throw new ArgumentError("Invalid loop mode: " + value);
-		}
+		else throw new ArgumentError("Invalid loop mode: " + value);
 		return value;
 	}
 
@@ -463,8 +452,7 @@ class TileContainerSymbol extends TileContainer {
 
 	private function getFrameData(layerIndex:Int, frameIndex:Int):LayerFrameData {
 		var layer = getLayerData(layerIndex);
-		if (layer == null)
-			return null;
+		if (layer == null) return null;
 
 		return layer.FrameMap.get(frameIndex);
 	}

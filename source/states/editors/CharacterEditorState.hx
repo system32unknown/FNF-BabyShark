@@ -1016,12 +1016,11 @@ class CharacterEditorState extends MusicBeatState
 			}
 
 			if(char.animationsArray.length > 0) {
-				if (FlxG.keys.justPressed.W) curAnim -= 1;
-				if (FlxG.keys.justPressed.S) curAnim += 1;
+				if (FlxG.keys.justPressed.W) curAnim--;
+				if (FlxG.keys.justPressed.S) curAnim++;
 
 				if (curAnim < 0)
 					curAnim = char.animationsArray.length - 1;
-
 				if (curAnim >= char.animationsArray.length)
 					curAnim = 0;
 

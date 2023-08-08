@@ -204,7 +204,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			}
 		}
 
-		if (nextAccept > 0) nextAccept -= 1;
+		if (nextAccept > 0) nextAccept--;
 		super.update(elapsed);
 	}
 

@@ -11,7 +11,7 @@ class MenuItem extends FlxSprite
 		antialiasing = ClientPrefs.getPref('Antialiasing');
 	}
 
-	private var isFlashing:Bool = false;
+	var isFlashing:Bool = false;
 
 	public function startFlashing():Void {
 		isFlashing = true;
@@ -23,12 +23,11 @@ class MenuItem extends FlxSprite
 	// I'm still learning how math works thanks whoever is reading this lol
 	var fakeFramerate:Int = Math.round((1 / FlxG.elapsed) / 10);
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 		y = FlxMath.lerp(y, (targetY * 120) + 480, FlxMath.bound(elapsed * 10.2, 0, 1));
 
-		if (isFlashing) flashingInt += 1;
+		if (isFlashing) flashingInt ++;
 
 		if (flashingInt % fakeFramerate >= Math.floor(fakeFramerate / 2)) color = 0xFF33ffff;
 		else color = FlxColor.WHITE;

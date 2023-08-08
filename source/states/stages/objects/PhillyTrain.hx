@@ -35,7 +35,7 @@ class PhillyTrain extends BGSprite
 					x -= 400;
 					if (x < -2000 && !finishing) {
 						x = -1150;
-						cars -= 1;
+						cars--;
 
 						if (cars <= 0) finishing = true;
 					}
@@ -50,7 +50,7 @@ class PhillyTrain extends BGSprite
 	}
 
 	public function beatHit(curBeat:Int):Void {
-		if (!moving) cooldown += 1;
+		if (!moving) cooldown++;
 
 		if (curBeat % 8 == 4 && FlxG.random.bool(30) && !moving && cooldown > 8) {
 			cooldown = FlxG.random.int(-4, 0);

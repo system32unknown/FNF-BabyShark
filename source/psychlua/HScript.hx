@@ -142,9 +142,7 @@ class HScript extends SScript {
 		#if (SScript >= "3.0.0")
 		super.preset();
 
-        for (key => type in getDefaultVariables()) {
-            set(key, type);
-        }
+        for (key => type in getDefaultVariables()) set(key, type);
 
 		// Functions & Variables
 		set('setVar', function(name:String, value:Dynamic) {
@@ -256,7 +254,7 @@ class HScript extends SScript {
 
 	public static function implement(funk:FunkinLua) {
 		#if LUA_ALLOWED
-		funk.addCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
+		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
 			var retVal:SCall = null;
 			#if (SScript >= "3.0.0")
 			initHaxeModule(funk);
@@ -281,7 +279,7 @@ class HScript extends SScript {
 			return null;
 		});
 		
-		funk.addCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
+		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
 			#if (SScript >= "3.0.0")
 			var callValue = funk.hscript.executeFunction(funcToRun, funcArgs);
 			if (!callValue.succeeded) {
@@ -295,7 +293,7 @@ class HScript extends SScript {
 			#end
 		});
 		// This function is unnecessary because import already exists in SScript as a native feature
-		funk.addCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
+		funk.addLocalCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
 			var str:String = '';
 			if(libPackage.length > 0) str = libPackage + '.';
 			else if(libName == null) libName = '';

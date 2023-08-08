@@ -96,7 +96,7 @@ class SpriteSymbol extends Sprite {
 
 	public function nextFrame():Void {
 		if (_loopMode != LoopMode.SINGLE_FRAME) {
-			currentFrame += 1;
+			currentFrame++;
 		}
 
 		moveMovieclip_MovieClips(1);
@@ -104,7 +104,7 @@ class SpriteSymbol extends Sprite {
 
 	public function prevFrame():Void {
 		if (_loopMode != LoopMode.SINGLE_FRAME) {
-			currentFrame -= 1;
+			currentFrame--;
 		}
 
 		moveMovieclip_MovieClips(-1);

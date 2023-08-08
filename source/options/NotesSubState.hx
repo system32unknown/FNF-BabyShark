@@ -191,9 +191,7 @@ class NotesSubState extends MusicBeatSubstate
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
-		if(nextAccept > 0) {
-			nextAccept -= 1;
-		}
+		if(nextAccept > 0) nextAccept --;
 		super.update(elapsed);
 	}
 
