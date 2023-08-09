@@ -988,21 +988,22 @@ class ChartingState extends MusicBeatState {
 		rightSectionNotetype.setGraphicSize(80, 30);
 		rightSectionNotetype.updateHitbox();
 
-		check_stackActive = new FlxUICheckBox(leftSectionNotetype.x, leftSectionNotetype.y + 60, null, null, "Spam Mode", 100);
+		check_stackActive = new FlxUICheckBox(leftSectionNotetype.x, leftSectionNotetype.y + 30, null, null, "Spam Mode", 100);
 		check_stackActive.name = 'check_stackActive';
-		stepperStackNum = new FlxUINumericStepper(check_stackActive.x + 80, check_stackActive.y, 1, 4, 0, 999999);
+		stepperStackNum = new FlxUINumericStepper(check_stackActive.x, check_stackActive.y + 40, 1, 4, 0, 999999);
 		stepperStackNum.name = 'stack_count';
 		blockPressWhileTypingOnStepper.push(stepperStackNum);
 		stepperStackOffset = new FlxUINumericStepper(stepperStackNum.x + 80, stepperStackNum.y, 1, 1, 0, 8192);
 		stepperStackOffset.name = 'stack_offset';
 		blockPressWhileTypingOnStepper.push(stepperStackOffset);
-		stepperStackSideOffset = new FlxUINumericStepper(10, 70, 1, 0, -9999, 9999);
+		stepperStackSideOffset = new FlxUINumericStepper(stepperStackOffset.x + 80, stepperStackOffset.y, 1, 0, -9999, 9999);
 		stepperStackSideOffset.name = 'stack_sideways';
 		blockPressWhileTypingOnStepper.push(stepperStackSideOffset);
 
 		tab_group_note.add(check_stackActive);
 		tab_group_note.add(stepperStackNum);
 		tab_group_note.add(stepperStackOffset);
+		tab_group_note.add(stepperStackSideOffset);
 		tab_group_note.add(new FlxText(stepperStackNum.x, stepperStackNum.y - 15, 0, "Spam Count"));
 		tab_group_note.add(new FlxText(stepperStackOffset.x, stepperStackOffset.y - 15, 0, "Spam Multiplier"));
 		tab_group_note.add(new FlxText(stepperStackSideOffset.x, stepperStackSideOffset.y - 15, 0, "Spam Scroll Amount"));
