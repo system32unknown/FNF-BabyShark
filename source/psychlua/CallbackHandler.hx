@@ -21,9 +21,8 @@ class CallbackHandler {
 			var nparams:Int = Lua.gettop(l);
 			var args:Array<Dynamic> = [];
 
-			for (i in 0...nparams) {
+			for (i in 0...nparams)
 				args[i] = Convert.fromLua(l, i + 1);
-			}
 
 			var ret:Dynamic = null;
 			ret = Reflect.callMethod(null, cbf, args);

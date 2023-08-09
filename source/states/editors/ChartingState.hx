@@ -885,6 +885,7 @@ class ChartingState extends MusicBeatState {
 	var check_stackActive:FlxUICheckBox;
 	var stepperStackNum:FlxUINumericStepper;
 	var stepperStackOffset:FlxUINumericStepper;
+	var stepperStackSideOffset:FlxUINumericStepper;
 
 	function addNoteUI():Void {
 		var tab_group_note = new FlxUI(null, UI_box);
@@ -964,7 +965,7 @@ class ChartingState extends MusicBeatState {
 			}
 		});
 
-		var leftSectionNotetype:FlxButton = new FlxButton(noteTypeDropDown.x, noteTypeDropDown.y + 40, "Left Section to Notetype", function() {
+		var leftSectionNotetype:FlxButton = new FlxButton(copyButton.x, noteTypeDropDown.y + 60, "Left Section to Notetype", function() {
 			for (sNotes in _song.notes[curSec].sectionNotes) {
 				var note:Array<Dynamic> = sNotes;
 				if (note[1] < Note.ammo[_song.mania])
@@ -975,7 +976,7 @@ class ChartingState extends MusicBeatState {
 		});
 		leftSectionNotetype.setGraphicSize(80, 30);
 		leftSectionNotetype.updateHitbox();
-		var rightSectionNotetype:FlxButton = new FlxButton(leftSectionNotetype.x + 90, leftSectionNotetype.y, "Right Section to Notetype", function() {
+		var rightSectionNotetype:FlxButton = new FlxButton(pasteButton.x, leftSectionNotetype.y, "Right Section to Notetype", function() {
 			for (sNotes in _song.notes[curSec].sectionNotes) {
 				var note:Array<Dynamic> = sNotes;
 				if (note[1] > (Note.ammo[_song.mania] - 1))
@@ -989,16 +990,22 @@ class ChartingState extends MusicBeatState {
 
 		check_stackActive = new FlxUICheckBox(leftSectionNotetype.x, leftSectionNotetype.y + 60, null, null, "Spam Mode", 100);
 		check_stackActive.name = 'check_stackActive';
-		stepperStackNum = new FlxUINumericStepper(check_stackActive.x + 40, check_stackActive.y, 1, 4, 0, 999999);
+		stepperStackNum = new FlxUINumericStepper(check_stackActive.x + 80, check_stackActive.y, 1, 4, 0, 999999);
 		stepperStackNum.name = 'stack_count';
-		stepperStackOffset = new FlxUINumericStepper(stepperStackNum.x + 60, stepperStackNum.y, 1, 1, 0, 8192);
+		blockPressWhileTypingOnStepper.push(stepperStackNum);
+		stepperStackOffset = new FlxUINumericStepper(stepperStackNum.x + 80, stepperStackNum.y, 1, 1, 0, 8192);
 		stepperStackOffset.name = 'stack_offset';
+		blockPressWhileTypingOnStepper.push(stepperStackOffset);
+		stepperStackSideOffset = new FlxUINumericStepper(10, 70, 1, 0, -9999, 9999);
+		stepperStackSideOffset.name = 'stack_sideways';
+		blockPressWhileTypingOnStepper.push(stepperStackSideOffset);
 
 		tab_group_note.add(check_stackActive);
 		tab_group_note.add(stepperStackNum);
 		tab_group_note.add(stepperStackOffset);
 		tab_group_note.add(new FlxText(stepperStackNum.x, stepperStackNum.y - 15, 0, "Spam Count"));
 		tab_group_note.add(new FlxText(stepperStackOffset.x, stepperStackOffset.y - 15, 0, "Spam Multiplier"));
+		tab_group_note.add(new FlxText(stepperStackSideOffset.x, stepperStackSideOffset.y - 15, 0, "Spam Scroll Amount"));
 		tab_group_note.add(new FlxText(10, 10, 0, 'Sustain length:'));
 		tab_group_note.add(new FlxText(10, 50, 0, 'Strum time (in miliseconds):'));
 		tab_group_note.add(new FlxText(10, 90, 0, 'Note type:'));
@@ -1631,10 +1638,9 @@ class ChartingState extends MusicBeatState {
 					FlxG.log.add('added note');
 					addNote();
 					if (check_stackActive.checked) {
-						var addCount = Math.floor(stepperStackNum.value) * Math.floor(stepperStackOffset.value);
-						for(i in 0...Std.int(addCount)) {
-							addNote(curSelectedNote[0] + 15000 / (_song.notes[curSec].changeBPM ? _song.notes[curSec].bpm : _song.bpm) / stepperStackOffset.value, curSelectedNote[1], curSelectedNote[2]);
-						}
+						var addCount = Math.floor(stepperStackNum.value) * Math.floor(stepperStackOffset.value) - 1;
+						for(_ in 0...Std.int(addCount))
+							addNote(curSelectedNote[0] + (_song.notes[curSec].changeBPM ? 15000 / _song.notes[curSec].bpm : 15000 / _song.bpm) / stepperStackOffset.value, curSelectedNote[1] + Math.floor(stepperStackSideOffset.value), currentType);
 					}
 				}
 			}

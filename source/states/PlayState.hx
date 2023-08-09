@@ -193,7 +193,6 @@ class PlayState extends MusicBeatState {
 	var judgementCounter:FlxText;
 	var extraTxt:FlxText;
 
-	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
 	var msTimingTween:VarTween;
 
 	var songNameText:FlxText;
@@ -1855,7 +1854,7 @@ class PlayState extends MusicBeatState {
 			if (songSpeed < 1) time /= songSpeed;
 			if (unspawnNotes[0].multSpeed < 1) time /= unspawnNotes[0].multSpeed;
 
-			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < spawnTime) {
+			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time) {
 				var dunceNote:Note = unspawnNotes[0];
 				notes.insert(0, dunceNote);
 				
@@ -2571,7 +2570,7 @@ class PlayState extends MusicBeatState {
 			
 			if (!ClientPrefs.getPref('comboStacking') && comboGroup.members.length > 0) {
 				for (spr in comboGroup) {
-					if(spr != mstimingTxt) spr.destroy();
+					spr.destroy();
 					comboGroup.remove(spr);
 				}
 			}
@@ -2607,9 +2606,9 @@ class PlayState extends MusicBeatState {
 			timing.visible = !hideHud && ClientPrefs.getPref('ShowLateEarly');
 			timing.antialiasing = antialias;
 		
-			if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
+			var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
+			if (ClientPrefs.getPref('ShowMsTiming')) {
 				msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
-				
 				mstimingTxt.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 20, FlxColor.WHITE, CENTER);
 				mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 				mstimingTxt.visible = !hideHud;
