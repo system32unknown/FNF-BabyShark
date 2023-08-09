@@ -162,7 +162,7 @@ class FunkinLua {
 				if(!ignoreAlreadyRunning)
 					for (luaInstance in game.luaArray)
 						if(luaInstance.scriptName == foundScript) {
-							luaTrace('addLuaScript: The script "' + foundScript + '" is already running!');
+							luaTrace('addLuaScript: The script "$foundScript" is already running!');
 							return;
 						}
 
@@ -178,7 +178,7 @@ class FunkinLua {
 				if(!ignoreAlreadyRunning)
 					for (script in game.hscriptArray)
 						if(script.origin == foundScript) {
-							luaTrace('addHScript: The script "' + foundScript + '" is already running!');
+							luaTrace('addHScript: The script "$foundScript" is already running!');
 							return;
 						}
 				PlayState.instance.initHScript(foundScript);
@@ -196,7 +196,7 @@ class FunkinLua {
 					for (luaInstance in game.luaArray)
 						if(luaInstance.scriptName == foundScript) {
 							luaInstance.stop();
-							trace('Closing script ' + luaInstance.scriptName);
+							trace('Closing script: ' + luaInstance.scriptName);
 							return true;
 						}
 			}
@@ -1071,9 +1071,8 @@ class FunkinLua {
 		});
 		addCallback("soundFadeCancel", function(tag:String) {
 			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music.fadeTween != null) {
+				if(FlxG.sound.music.fadeTween != null)
 					FlxG.sound.music.fadeTween.cancel();
-				}
 			} else if(game.modchartSounds.exists(tag)) {
 				var theSound:FlxSound = game.modchartSounds.get(tag);
 				if(theSound.fadeTween != null) {
@@ -1406,9 +1405,7 @@ class FunkinLua {
 			Lua.pop(lua, 1);
 			if(closed) stop();
 			return result;
-		} catch (e:Dynamic) {
-			trace(e);
-		}
+		} catch (e:Dynamic) trace(e);
 		#end
 		return Function_Continue;
 	}
