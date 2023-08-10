@@ -1,5 +1,6 @@
 package backend;
 
+import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
 import openfl.utils.AssetType;
@@ -11,8 +12,15 @@ import flash.media.Sound;
 import sys.io.File;
 import sys.FileSystem;
 #end
-import haxe.io.Path;
 
+typedef I8frame = {
+	var frame:{ x:Float, y:Float, w:Float, h:Float }
+	var rotated:Bool;
+	var trimmed:Bool;
+	var spriteSourceSize:{ x:Float, y:Float, w:Float, h:Float }
+	var sourceSize:{ w:Float, h:Float }
+	var duration:Float;
+}
 @:access(openfl.display.BitmapData.__texture)
 @:access(openfl.media.Sound.__buffer)
 class Paths
@@ -220,8 +228,7 @@ class Paths
 	#if (!MODS_ALLOWED) inline #end static public function voices(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
 		return returnSound('songs', '${formatToSongPath(song)}/Voices', !forceNoStream && (stream || streamMusic));
 
-	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
-	{
+	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String {
 		#if sys
 		#if MODS_ALLOWED
 		if (!ignoreMods && FileSystem.exists(modFolders(key)))
@@ -439,28 +446,6 @@ class Paths
 			if(FileSystem.exists(file)) return file;
 		}
 		return mods(key);
-	}
-	#end
-
-	#if LUA_ALLOWED
-	static public function getLuaPackagePath():String {
-		var toAdd:Array<String> = ['.'];
-		#if MODS_ALLOWED
-		toAdd.push('./mods');
-		if (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)
-			toAdd.push('./mods/${Mods.currentModDirectory}');
-		for (mod in Mods.getGlobalMods()) toAdd.push('./mods/$mod');
-		#end
-		toAdd.push('./assets');
-		var paths:Array<String> = [];
-		for (path in toAdd) {
-			#if sys
-			path = FileSystem.absolutePath(path);
-			#end
-			paths.push(Path.join([path, '?.lua']));
-			paths.push(Path.join([path, '?', 'init.lua']));
-		}
-		return paths.join(';');
 	}
 	#end
 }

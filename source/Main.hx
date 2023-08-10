@@ -23,8 +23,7 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
-class Main extends Sprite
-{
+class Main extends Sprite {
 	public static var COMMIT_HASH(get, never):String;
 	public static function get_COMMIT_HASH():String {
 		return macro.GitCommitMacro.commitHash;
@@ -40,6 +39,8 @@ class Main extends Sprite
 		skipSplash: true, // if the default flixel splash screen should be skipped
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
+
+	public static var current:Main;
 	public static var overlayVar:Overlay;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
@@ -48,16 +49,15 @@ class Main extends Sprite
 	}
 
 	public function new() {
+		current = this;
 		super();
 		utils.system.PlatformUtil.setDPIAware();
-
 		stage != null ? init() : addEventListener(Event.ADDED_TO_STAGE, init);
 	}
 
 	function init(?E:Event):Void {
-		if (hasEventListener(Event.ADDED_TO_STAGE)) {
+		if (hasEventListener(Event.ADDED_TO_STAGE))
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-		}
 		setupGame();
 	}
 

@@ -883,11 +883,9 @@ class CharacterEditorState extends MusicBeatState
 			var animFps:Int = anim.fps;
 			var animLoop:Bool = !!anim.loop; //Bruh
 			var animIndices:Array<Int> = anim.indices;
-			if(animIndices != null && animIndices.length > 0) {
+			if(animIndices != null && animIndices.length > 0)
 				ghostChar.animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
-			} else {
-				ghostChar.animation.addByPrefix(animAnim, animName, animFps, animLoop);
-			}
+			else ghostChar.animation.addByPrefix(animAnim, animName, animFps, animLoop);
 
 			if(anim.offsets != null && anim.offsets.length > 1) {
 				ghostChar.addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);

@@ -164,10 +164,8 @@ class ChartingState extends MusicBeatState {
 				song: 'Tutorial',
 				notes: [],
 				events: [],
-				bpm: 150.,
+				bpm: 100.,
 				needsVoices: true,
-				arrowSkin: '',
-				splashSkin: '',
 				player1: 'bf',
 				player2: 'gf',
 				gfVersion: 'gf',
@@ -1538,8 +1536,7 @@ class ChartingState extends MusicBeatState {
 
 	var lastConductorPos:Float;
 	var colorSine:Float = 0;
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		curStep = recalculateSteps();
 
 		PlayState.mania = _song.mania;
