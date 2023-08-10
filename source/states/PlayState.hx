@@ -2958,7 +2958,10 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (SONG.needsVoices) vocals.volume = 1;
-		strumPlayAnim(true, leData % Note.ammo[mania], Conductor.stepCrochet * 1.25 / 1000);
+		var time:Float = .15;
+		if(isSus && !note.animation.curAnim.name.endsWith('tail'))
+			time += .15;
+		strumPlayAnim(true, leData % Note.ammo[mania], time);
 
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
 		if (ClientPrefs.getPref('camMovement'))

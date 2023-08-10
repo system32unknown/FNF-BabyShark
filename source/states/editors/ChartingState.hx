@@ -53,9 +53,8 @@ class ChartingState extends MusicBeatState {
 		'GF Sing',
 		'No Animation'
 	];
-	var noteTypeIntMap:Map<Int, String> = new Map<Int, String>();
-	var noteTypeMap:Map<String, Null<Int>> = new Map<String, Null<Int>>();
 	public var ignoreWarnings = false;
+	var curNoteTypes:Array<String> = [];
 	var eventStuff:Array<Dynamic> = [
 		['', "Nothing. Yep, that's right."],
 		['Dadbattle Spotlight', "Used in Dad Battle,\nValue 1: 0/1 = ON/OFF,\n2 = Target Dad\n3 = Target BF\n\nDoes not work outside of Week 1 Stage."],
@@ -899,43 +898,30 @@ class ChartingState extends MusicBeatState {
 		blockPressWhileTypingOn.push(strumTimeInputText);
 
 		var key:Int = 0;
-		var displayNameList:Array<String> = [];
 		while (key < noteTypeList.length) {
-			displayNameList.push(noteTypeList[key]);
-			noteTypeMap.set(noteTypeList[key], key);
-			noteTypeIntMap.set(key, noteTypeList[key]);
+			curNoteTypes.push(noteTypeList[key]);
 			key++;
 		}
 
-		#if LUA_ALLOWED
-		var directories:Array<String> = [];
-
-		#if MODS_ALLOWED
-		directories.push(Paths.mods('custom_notetypes/'));
-		directories.push(Paths.mods(Mods.currentModDirectory + '/custom_notetypes/'));
-		for(mod in Mods.getGlobalMods())
-			directories.push(Paths.mods(mod + '/custom_notetypes/'));
-		#end
-
-		for (i in 0...directories.length) {
-			var directory:String =  directories[i];
-			if(FileSystem.exists(directory)) {
-				for (file in FileSystem.readDirectory(directory)) {
-					var path = Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.lua')) {
-						var fileToCheck:String = file.substr(0, file.length - 4);
-						if(!noteTypeMap.exists(fileToCheck)) {
-							displayNameList.push(fileToCheck);
-							noteTypeMap.set(fileToCheck, key);
-							noteTypeIntMap.set(key, fileToCheck);
-							key++;
-						}
+		#if sys
+		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getPreloadPath(), 'custom_notetypes/');
+		for (folder in foldersToCheck)
+			for (file in FileSystem.readDirectory(folder)) {
+				var fileName:String = file.toLowerCase().trim();
+				var wordLen:Int = 4; //length of word ".lua" and ".txt";
+				if((#if LUA_ALLOWED fileName.endsWith('.lua') || #end
+					#if HSCRIPT_ALLOWED (fileName.endsWith('.hx') && (wordLen = 3) == 3) #end
+					) && fileName != 'readme.txt') {
+					var fileToCheck:String = file.substr(0, file.length - wordLen);
+					if(!curNoteTypes.contains(fileToCheck)) {
+						curNoteTypes.push(fileToCheck);
+						key++;
 					}
 				}
 			}
-		}
 		#end
 
+		var displayNameList:Array<String> = curNoteTypes.copy();
 		for (i in 1...displayNameList.length) {
 			displayNameList[i] = '$i. ' + displayNameList[i];
 		}
@@ -943,7 +929,7 @@ class ChartingState extends MusicBeatState {
 		noteTypeDropDown = new FlxUIDropDownMenu(10, 105, FlxUIDropDownMenu.makeStrIdLabelArray(displayNameList, true), function(character:String) {
 			currentType = Std.parseInt(character);
 			if(curSelectedNote != null && curSelectedNote[1] > -1) {
-				curSelectedNote[3] = noteTypeIntMap.get(currentType);
+				curSelectedNote[3] = curNoteTypes[currentType];
 				updateGrid();
 			}
 		});
@@ -967,7 +953,7 @@ class ChartingState extends MusicBeatState {
 			for (sNotes in _song.notes[curSec].sectionNotes) {
 				var note:Array<Dynamic> = sNotes;
 				if (note[1] < Note.ammo[_song.mania])
-					note[3] = noteTypeIntMap.get(currentType);
+					note[3] = curNoteTypes[currentType];
 				sNotes = note;
 			}
 			updateGrid();
@@ -978,7 +964,7 @@ class ChartingState extends MusicBeatState {
 			for (sNotes in _song.notes[curSec].sectionNotes) {
 				var note:Array<Dynamic> = sNotes;
 				if (note[1] > (Note.ammo[_song.mania] - 1))
-					note[3] = noteTypeIntMap.get(currentType);
+					note[3] = curNoteTypes[currentType];
 				sNotes = note;
 			}
 			updateGrid();
@@ -1010,11 +996,11 @@ class ChartingState extends MusicBeatState {
 		tab_group_note.add(new FlxText(10, 90, 0, 'Note type:'));
 		tab_group_note.add(leftSectionNotetype);
 		tab_group_note.add(rightSectionNotetype);
+		tab_group_note.add(copyButton);
+		tab_group_note.add(pasteButton);
 		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(strumTimeInputText);
 		tab_group_note.add(noteTypeDropDown);
-		tab_group_note.add(copyButton);
-		tab_group_note.add(pasteButton);
 
 		UI_box.addGroup(tab_group_note);
 	}
@@ -1623,7 +1609,7 @@ class ChartingState extends MusicBeatState {
 							selectNote(note);
 						} else if (FlxG.keys.pressed.ALT) {
 							selectNote(note);
-							curSelectedNote[3] = noteTypeIntMap.get(currentType);
+							curSelectedNote[3] = curNoteTypes[currentType];
 							updateGrid();
 						} else deleteNote(note);
 					}
@@ -2453,16 +2439,15 @@ class ChartingState extends MusicBeatState {
 			if(curSelectedNote[2] != null) {
 				stepperSusLength.value = curSelectedNote[2];
 				if(curSelectedNote[3] != null) {
-					currentType = noteTypeMap.get(curSelectedNote[3]);
+					currentType = curNoteTypes.indexOf(curSelectedNote[3]);
 					if(currentType <= 0) noteTypeDropDown.selectedLabel = '';
 					else noteTypeDropDown.selectedLabel = '$currentType. ${curSelectedNote[3]}';
 				}
 			} else {
 				eventDropDown.selectedLabel = curSelectedNote[1][curEventSelected][0];
 				var selected:Int = Std.parseInt(eventDropDown.selectedId);
-				if(selected > 0 && selected < eventStuff.length) {
+				if(selected > 0 && selected < eventStuff.length)
 					descText.text = eventStuff[selected][1];
-				}
 				value1InputText.text = curSelectedNote[1][curEventSelected][1];
 				value2InputText.text = curSelectedNote[1][curEventSelected][2];
 			}
@@ -2503,9 +2488,9 @@ class ChartingState extends MusicBeatState {
 			}
 
 			if(i[3] != null && note.noteType != null && note.noteType.length > 0) {
-				var typeInt:Null<Int> = noteTypeMap.get(i[3]);
-				var theType:String = '' + typeInt;
-				if(typeInt == null) theType = '?';
+				var typeInt:Int = curNoteTypes.indexOf(curSelectedNote[3]);
+				var theType:String = Std.string(typeInt);
+				if(typeInt < 0) theType = '?';
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 100, theType, 24);
 				daText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER);
@@ -2572,7 +2557,7 @@ class ChartingState extends MusicBeatState {
 		var note:Note = new Note(daStrumTime, daNoteInfo % Note.ammo[_song.mania], null, null, true);
 		if(daSus != null) { //Common note
 			if(!Std.isOfType(i[3], String)) { //Convert old note type to new note type format
-				i[3] = noteTypeIntMap.get(i[3]);
+				i[3] = curNoteTypes[i[3]];
 			}
 			if(i.length > 3 && (i[3] == null || i[3].length < 1)) {
 				i.remove(i[3]);
@@ -2722,7 +2707,7 @@ class ChartingState extends MusicBeatState {
 		if (type != null) daType = type;
 
 		if(noteData > -1) {
-			_song.notes[curSec].sectionNotes.push([noteStrum, noteData % (Note.ammo[_song.mania] * 2), noteSus, noteTypeIntMap.get(daType)]);
+			_song.notes[curSec].sectionNotes.push([noteStrum, noteData % (Note.ammo[_song.mania] * 2), noteSus, curNoteTypes[daType]]);
 			curSelectedNote = _song.notes[curSec].sectionNotes[_song.notes[curSec].sectionNotes.length - 1];
 		} else {
 			var event = eventStuff[Std.parseInt(eventDropDown.selectedId)][0];
@@ -2735,7 +2720,7 @@ class ChartingState extends MusicBeatState {
 		changeEventSelected();
 
 		if (FlxG.keys.pressed.CONTROL && noteData > -1) {
-			_song.notes[curSec].sectionNotes.push([noteStrum, (noteData + Note.ammo[_song.mania]) % (Note.ammo[_song.mania] * 2), noteSus, noteTypeIntMap.get(daType)]);
+			_song.notes[curSec].sectionNotes.push([noteStrum, (noteData + Note.ammo[_song.mania]) % (Note.ammo[_song.mania] * 2), noteSus, curNoteTypes[daType]]);
 		}
 
 		strumTimeInputText.text = '' + curSelectedNote[0];
