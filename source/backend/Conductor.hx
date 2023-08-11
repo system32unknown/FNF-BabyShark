@@ -1,6 +1,6 @@
 package backend;
 
-import backend.Song.SwagSong;
+import backend.Song;
 
 typedef BPMChangeEvent = {
 	var stepTime:Int;
@@ -10,8 +10,7 @@ typedef BPMChangeEvent = {
 	@:optional var stepCrochet:Float;
 }
 
-class Conductor
-{
+class Conductor {
 	public static var bpm(default, set):Float = 100;
 	public static var crochet:Float = calculateCrochet(bpm); // beats in milliseconds
 	public static var stepCrochet:Float = crochet / 4; // steps in milliseconds

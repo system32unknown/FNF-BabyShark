@@ -8,17 +8,14 @@ import objects.Character;
 import states.StoryMenuState;
 import states.FreeplayState;
 
-class GameOverSubstate extends MusicBeatSubstate
-{
+class GameOverSubstate extends MusicBeatSubstate {
 	public var boyfriend:Character;
 
 	public var camOther:FlxCamera;
 	public var camHUD:FlxCamera;
-	public var camGame:FlxCamera;
 
 	var camFollow:FlxObject;
 	var updateCamera:Bool = false;
-	var playingDeathSound:Bool = false;
 
 	public static var characterName:String = 'bf-dead';
 	public static var deathSoundName:String = 'fnf_loss_sfx';
@@ -32,6 +29,14 @@ class GameOverSubstate extends MusicBeatSubstate
 		deathSoundName = 'fnf_loss_sfx';
 		loopSoundName = 'gameOver';
 		endSoundName = 'gameOverEnd';
+
+		var _song = PlayState.SONG;
+		if(_song != null) {
+			if(_song.gameOverChar != null && _song.gameOverChar.trim().length > 0) characterName = _song.gameOverChar;
+			if(_song.gameOverSound != null && _song.gameOverSound.trim().length > 0) deathSoundName = _song.gameOverSound;
+			if(_song.gameOverLoop != null && _song.gameOverLoop.trim().length > 0) loopSoundName = _song.gameOverLoop;
+			if(_song.gameOverEnd != null && _song.gameOverEnd.trim().length > 0) endSoundName = _song.gameOverEnd;
+		}
 	}
 
 	public static function cache() {
@@ -47,7 +52,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		instance = this;
 		camOther.zoom = camHUD.zoom = 1;
 		camOther.x = camOther.y = camOther.angle = camHUD.x = camHUD.y = camHUD.angle = 0;
-		PlayState.instance.callOnLuas('onGameOverStart', []);
+		PlayState.instance.callOnScripts('onGameOverStart', []);
 		utils.system.MemoryUtil.clearMajor();
 
 		FlxG.sound.play(Paths.sound(deathSoundName));
@@ -59,14 +64,12 @@ class GameOverSubstate extends MusicBeatSubstate
 		super.create();
 	}
 
-	public function new(x:Float, y:Float, camX:Float, camY:Float)
-	{
+	public function new(x:Float, y:Float, camX:Float, camY:Float) {
 		super();
 
 		PlayState.instance.setOnLuas('inGameOver', true);
 		camOther = PlayState.instance.camOther;
 		camHUD = PlayState.instance.camHUD;
-		camGame = PlayState.instance.camGame;
 
 		Conductor.songPosition = 0;
 		Conductor.bpm = 100;
@@ -87,17 +90,18 @@ class GameOverSubstate extends MusicBeatSubstate
 		add(camFollow);
 	}
 
-	public var startedDeath:Bool = false;
+	var startedDeath:Bool = false;
 	var isFollowingAlready:Bool = false;
 	override function update(elapsed:Float) {
 		PlayState.instance.cleanupLuas();
 		super.update(elapsed);
 
-		PlayState.instance.callOnLuas('onUpdate', [elapsed]);
+		PlayState.instance.callOnScripts('onUpdate', [elapsed]);
 
 		if (controls.ACCEPT) endBullshit();
 
 		if (controls.BACK) {
+			#if desktop Discord.resetClientID(); #end
 			FlxG.sound.music.stop();
 			PlayState.deathCounter = 0;
 			PlayState.seenCutscene = false;
@@ -108,7 +112,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			else MusicBeatState.switchState(new FreeplayState());
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
-			PlayState.instance.callOnLuas('onGameOverConfirm', [false]);
+			PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
 		}
 
 		if (boyfriend.animation.curAnim != null) {
@@ -122,7 +126,7 @@ class GameOverSubstate extends MusicBeatSubstate
 					isFollowingAlready = true;
 				}
 
-				if (boyfriend.animation.curAnim.finished && !playingDeathSound) {
+				if (boyfriend.animation.curAnim.finished) {
 					startedDeath = true;
 					coolStartDeath();
 				}
@@ -132,10 +136,9 @@ class GameOverSubstate extends MusicBeatSubstate
 		if(updateCamera) FlxG.camera.followLerp = FlxMath.bound(elapsed * 0.6 / (FlxG.updateFramerate / 60), 0, 1);
 		else FlxG.camera.followLerp = 0;
 
-		if (FlxG.sound.music.playing) {
+		if (FlxG.sound.music.playing)
 			Conductor.songPosition = FlxG.sound.music.time;
-		}
-		PlayState.instance.callOnLuas('onUpdatePost', [elapsed]);
+		PlayState.instance.callOnScripts('onUpdatePost', [elapsed]);
 	}
 
 	var isEnding:Bool = false;
@@ -190,7 +193,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			});
 		});
 
-		PlayState.instance.callOnLuas('onGameOverConfirm', [true]);
+		PlayState.instance.callOnScripts('onGameOverConfirm', [true]);
 	}
 
 	function getBoyfriend(x:Float, y:Float):Character {

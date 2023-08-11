@@ -14,14 +14,13 @@ import openfl.events.KeyboardEvent;
 #if !MODS_ALLOWED import openfl.utils.Assets as OpenFlAssets; #end
 import backend.Highscore;
 import backend.Song;
-import backend.Song.SwagSong;
 import backend.Rating;
 import states.editors.*;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
 import objects.Note.EventNote;
 import objects.*;
-import backend.Section.SwagSection;
+import backend.Section;
 import backend.PsychVideo;
 import utils.*;
 import data.*;

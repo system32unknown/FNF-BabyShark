@@ -7,9 +7,8 @@ import objects.Character;
 import objects.AttachedSprite;
 import objects.AttachedFlxText;
 import objects.ErrorDisplay;
-import backend.Section.SwagSection;
+import backend.Section;
 import backend.Song;
-import backend.Song.SwagSong;
 import data.StageData;
 import utils.CoolUtil;
 import substates.Prompt;
@@ -148,7 +147,6 @@ class ChartingState extends MusicBeatState {
 
 	public var quantizations:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 96, 192];
 
-	var text:String = "";
 	public static var vortex:Bool = false;
 	public var mouseQuant:Bool = false;
 	override function create() {
@@ -277,7 +275,7 @@ class ChartingState extends MusicBeatState {
 		UI_box.setPosition(640 + GRID_SIZE / 2 + 120, 25);
 		UI_box.scrollFactor.set();
 
-		text = "W/S or Mouse Wheel - Change Conductor's strum time
+		var text:String = "W/S or Mouse Wheel - Change Conductor's strum time
 		\nH - Go to the start of the chart
 		\nA/D - Go to the previous/next section
 		\nLeft/Right - Change Snap
@@ -2483,13 +2481,12 @@ class ChartingState extends MusicBeatState {
 		for (i in _song.notes[curSec].sectionNotes) {
 			var note:Note = setupNoteData(i, false);
 			curRenderedNotes.add(note);
-			if (note.sustainLength > 0) {
+			if (note.sustainLength > 0)
 				curRenderedSustains.add(setupSusNote(note, beats));
-			}
 
 			if(i[3] != null && note.noteType != null && note.noteType.length > 0) {
-				var typeInt:Int = curNoteTypes.indexOf(curSelectedNote[3]);
-				var theType:String = Std.string(typeInt);
+				var typeInt:Int = curNoteTypes.indexOf(i[3]);
+				var theType:String = '' + typeInt;
 				if(typeInt < 0) theType = '?';
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 100, theType, 24);
@@ -2556,12 +2553,10 @@ class ChartingState extends MusicBeatState {
 
 		var note:Note = new Note(daStrumTime, daNoteInfo % Note.ammo[_song.mania], null, null, true);
 		if(daSus != null) { //Common note
-			if(!Std.isOfType(i[3], String)) { //Convert old note type to new note type format
+			if(!Std.isOfType(i[3], String)) //Convert old note type to new note type format
 				i[3] = curNoteTypes[i[3]];
-			}
-			if(i.length > 3 && (i[3] == null || i[3].length < 1)) {
+			if(i.length > 3 && (i[3] == null || i[3].length < 1))
 				i.remove(i[3]);
-			}
 			note.sustainLength = daSus;
 			note.noteType = i[3];
 		} else { //Event note
@@ -2609,7 +2604,7 @@ class ChartingState extends MusicBeatState {
 		if(height < minHeight) height = minHeight;
 		if(height < 1) height = 1; //Prevents error of invalid height
 
-		return new FlxSprite(note.x + (GRID_SIZE * 0.5) - 4, note.y + GRID_SIZE / 2).makeGraphic(8, height);
+		return new FlxSprite(note.x + (GRID_SIZE * .5) - 4, note.y + GRID_SIZE / 2).makeGraphic(8, height);
 	}
 
 	function addSection(sectionBeats:Float = 4):Void {
@@ -2696,7 +2691,7 @@ class ChartingState extends MusicBeatState {
 		if (!delnote) addNote(cs, d, style);
 	}
 
-	function addNote(strum:Null<Float> = null, data:Null<Int> = null, type:Null<Int> = null, ?gridUpdate:Bool = true):Void {
+	function addNote(strum:Null<Float> = null, data:Null<Int> = null, type:Null<Int> = null):Void {
 		var noteStrum = getStrumTime(dummyArrow.y * (getSectionBeats() / 4), false) + sectionStartTime();
 		var noteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
 		var noteSus = 0;
@@ -2728,10 +2723,8 @@ class ChartingState extends MusicBeatState {
 		lastNoteData = noteData;
 		lastNoteStrum = noteStrum;
 
-		if (gridUpdate) {
-			updateGrid();
-			updateNoteUI();
-		}
+		updateGrid();
+		updateNoteUI();
 	}
 
 	function getStrumTime(yPos:Float, doZoomCalc:Bool = true):Float {
@@ -2763,6 +2756,7 @@ class ChartingState extends MusicBeatState {
 			} catch(e) {
 				errorDisplay.text = getErrorMessage('Error:', e.message, song.toLowerCase(), song.toLowerCase());
 				errorDisplay.displayError();
+				FlxG.sound.play(Paths.sound('cancelMenu'));
 				return;
 			}
 		}

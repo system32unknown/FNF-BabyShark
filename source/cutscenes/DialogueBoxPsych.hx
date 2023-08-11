@@ -182,10 +182,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 						daText.destroy();
 					}
 					updateBoxOffsets(box);
-					var ret:Dynamic = PlayState.instance.callOnLuas('onEndDialogue', []);
-					if(ret != FunkinLua.Function_Stop) {
-						FlxG.sound.music.fadeOut(1, 0);
-					}
+					FlxG.sound.music.fadeOut(1, 0);
 				} else startNextDialog();
 				FlxG.sound.play(Paths.sound(closeSound), closeVolume);
 			} else if (daText.finishedText) {
