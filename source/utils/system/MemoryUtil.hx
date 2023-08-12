@@ -53,7 +53,7 @@ class MemoryUtil {
 		#end
 	}
 
-	public static function get_gcMemory():Int {
+	public static function getGCMEM():Int {
 		#if cpp
 		return untyped __global__.__hxcpp_gc_used_bytes();
 		#elseif hl
@@ -66,13 +66,4 @@ class MemoryUtil {
 		return 0;
 		#end
 	}
-
-	#if windows
-	@:functionCode("
-		PROCESS_MEMORY_COUNTERS info;
-		if (GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info)))
-			return (size_t)info.WorkingSetSize;
-	")
-	public static function get_totalMemory():Int return 0;
-	#end
 }

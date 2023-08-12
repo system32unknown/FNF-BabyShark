@@ -52,10 +52,10 @@ class Overlay extends TextField {
 
 		memory = MemoryUtil.getMEM();
 		if (memory > mempeak) mempeak = memory;
-		gcmem = MemoryUtil.get_gcMemory();
-		if (gcmem > gcmempeak) gcmem = gcmempeak;
+		gcmem = MemoryUtil.getGCMEM();
+		if (gcmem > gcmempeak) gcmempeak = gcmem;
 
-		text = '${FPS.currentFPS} FPS ${(fpsStats == 'ms' || fpsStats == 'gc' || fpsStats == 'full') ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
+		text = '${FPS.currentFPS} FPS ${(fpsStats == 'ms' || fpsStats == 'full') ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
 			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
 		if (fpsStats == 'gc' || fpsStats == 'full')
