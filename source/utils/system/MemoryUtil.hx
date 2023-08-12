@@ -43,12 +43,6 @@ class MemoryUtil {
 		return '$size ${intervalArray[data]}';
 	}
 
-	inline public static function Gcenable(?enabled:Bool = true) {
-		#if (cpp || hl)
-		Gc.enable(enabled);
-		#end
-	}
-
 	inline public static function getMEM():Float {
 		#if cpp
 		return Gc.memInfo64(Gc.MEM_INFO_USAGE);

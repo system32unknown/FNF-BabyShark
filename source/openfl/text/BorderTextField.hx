@@ -1,8 +1,5 @@
 package openfl.text;
 
-import openfl.text.TextField;
-import openfl.text.TextFormat;
-
 /**
  * Original Code by sayofthelor, Lore Engine.
  * Modified by altertoriel to work text colors.

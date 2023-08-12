@@ -2746,8 +2746,8 @@ class PlayState extends MusicBeatState {
 			var canMiss:Bool = !ClientPrefs.getPref('ghostTapping');
 			var notesStopped:Bool = false;
 
-			notes.forEachAlive(function(daNote:Note) {
-				if (!strumsBlocked[daNote.noteData] && daNote.mustPress && !daNote.blockHit && !daNote.tooLate) {
+			for (daNote in notes) {
+				if (!strumsBlocked[daNote.noteData] && daNote.mustPress && daNote.exists && !daNote.blockHit && !daNote.tooLate) {
 					if (!daNote.isSustainNote && !daNote.wasGoodHit) {
 						if (!daNote.canBeHit && daNote.checkDiff(Conductor.songPosition)) daNote.update(0);
 						if (daNote.canBeHit) {
@@ -2757,28 +2757,33 @@ class PlayState extends MusicBeatState {
 							sortedNotesList.push(daNote);
 					}
 				}
-			});
+			}
 			sortedNotesList.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
-			var pressNotes:Array<Note> = [];
 
 			if (sortedNotesList.length > 0) {
-				for (epicNote in sortedNotesList) {
-					for (doubleNote in pressNotes) {
+				var epicNote:Note = sortedNotesList[0];
+				if (sortedNotesList.length > 1) {
+					for (bad in 1...sortedNotesList.length) {
+						var doubleNote:Note = sortedNotesList[bad];
+						if (doubleNote.noteData != epicNote.noteData) break;
+
 						if (Math.abs(doubleNote.strumTime - epicNote.strumTime) < 1) {
 							notes.remove(doubleNote, true);
 							doubleNote.destroy();
-						} else notesStopped = true;
-					}
-
-					if (!notesStopped) {
-						if (epicNote.isSustainNote) {
-							strumPlayAnim(false, key);
-							continue;
+							break;
+						} else if (doubleNote.strumTime < epicNote.strumTime) {
+							epicNote = doubleNote; 
+							break;
 						}
-						pressNotes.push(epicNote);
-						goodNoteHit(epicNote);
 					}
 				}
+
+				// eee jack detection before was not super good
+				if (epicNote.isSustainNote) {
+					strumPlayAnim(false, key);
+					continue;
+				}
+				goodNoteHit(epicNote);
 			} else {
 				callOnScripts('onGhostTap', [key]);
 				if (canMiss && !boyfriend.stunned) noteMissPress(key);

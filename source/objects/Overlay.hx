@@ -21,6 +21,10 @@ class Overlay extends TextField {
     @:allow(utils.system.FPSUtil) var memory:Dynamic = 0;
     var mempeak:Dynamic = 0;
 
+	//Garbage Collection
+	var gcmem:Int = 0;
+	var gcmempeak:Int = 0;
+
 	public function new(x:Float = 0, y:Float = 0) {
 		super();
 		if (instance == null) instance = this;
@@ -36,10 +40,10 @@ class Overlay extends TextField {
 		FPS = new FPSUtil();
 	}
 
-	//Yoinked from codename engine
+	var fpsStats:String = "";
 	override function __enterFrame(dt:Float):Void {
-		if (alpha <= .05) return;
 		FPS.update();
+		fpsStats = ClientPrefs.getPref('FPSStats');
 
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + 1;
@@ -48,10 +52,14 @@ class Overlay extends TextField {
 
 		memory = MemoryUtil.getMEM();
 		if (memory > mempeak) mempeak = memory;
+		gcmem = MemoryUtil.get_gcMemory();
+		if (gcmem > gcmempeak) gcmem = gcmempeak;
 
-		text = '${FPS.currentFPS} FPS ${ClientPrefs.getPref('FPSStats') ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
+		text = '${FPS.currentFPS} FPS ${(fpsStats == 'ms' || fpsStats == 'gc' || fpsStats == 'full') ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
 			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
+		if (fpsStats == 'gc' || fpsStats == 'full')
+			text += 'GC: ${MemoryUtil.getInterval(gcmem)} / ${MemoryUtil.getInterval(gcmempeak)}\n';
 
 		visible = ClientPrefs.getPref('showFPS');
 	}
