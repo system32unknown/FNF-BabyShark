@@ -25,11 +25,10 @@ class Alphabet extends FlxSpriteGroup
 	public var scaleY(default, set):Float = 1;
 	public var rows:Int = 0;
 
-	public var distancePerItem:FlxPoint = new FlxPoint(20, 120);
-	public var startPosition:FlxPoint = new FlxPoint(); //for the calculations
+	public var distancePerItem:FlxPoint = FlxPoint.get(20, 120);
+	public var startPosition:FlxPoint = FlxPoint.get(); //for the calculations
 
-	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = true)
-	{
+	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = true) {
 		super(x, y);
 
 		this.startPosition.set(x, y);
@@ -39,11 +38,10 @@ class Alphabet extends FlxSpriteGroup
 
 	function setAlignmentFromString(align:String)
 	{
-		switch(align.toLowerCase().trim())
-		{
-			case 'right': alignment = RIGHT;
-			case 'center' | 'centered': alignment = CENTERED;
-			default: alignment = LEFT;
+		alignment = switch(align.toLowerCase().trim()) {
+			case 'right': RIGHT;
+			case 'center' | 'centered': CENTERED;
+			default: LEFT;
 		}
 	}
 

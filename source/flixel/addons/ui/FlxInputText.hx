@@ -274,10 +274,8 @@ class FlxInputText extends FlxText
 	 * Helper function that makes sure sprites are drawn up even though they haven't been added.
 	 * @param	Sprite		The Sprite to be drawn.
 	 */
-	private function drawSprite(Sprite:FlxSprite):Void
-	{
-		if (Sprite != null && Sprite.visible)
-		{
+	private function drawSprite(Sprite:FlxSprite):Void {
+		if (Sprite != null && Sprite.visible) {
 			Sprite.scrollFactor = scrollFactor;
 			Sprite.cameras = cameras;
 			Sprite.draw();

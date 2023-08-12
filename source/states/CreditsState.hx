@@ -6,7 +6,6 @@ import sys.io.File;
 #end
 import objects.AttachedSprite;
 import objects.HealthIcon;
-import utils.CoolUtil;
 
 class CreditsState extends MusicBeatState
 {

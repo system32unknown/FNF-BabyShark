@@ -1,7 +1,5 @@
 package data;
 
-import utils.CoolUtil;
-
 class EKData {
     public static var keysShit:Map<Int, Map<String, Dynamic>> = [ // Amount of keys = num + 1
 		0 => [

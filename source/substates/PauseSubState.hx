@@ -56,11 +56,10 @@ class PauseSubState extends MusicBeatSubstate
 		difficultyChoices.push('BACK');
 
 		pauseMusic = new FlxSound();
-		if(songName != null) {
+		if(songName != null)
 			pauseMusic.loadEmbedded(Paths.music(songName), true, true);
-		} else if (songName != 'None') {
+		else if (songName != 'None')
 			pauseMusic.loadEmbedded(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), true, true);
-		}
 		pauseMusic.volume = 0;
 
 		FlxG.sound.list.add(pauseMusic);

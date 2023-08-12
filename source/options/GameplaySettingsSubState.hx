@@ -51,7 +51,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		var option:Option = new Option('Hitsound Type',
 			"What should the hitsounds like?",
 			'hitsoundTypes',
-			'string', ['Tick', 'Snap', 'DaveAndBambi']);
+			'string', ['Tick', 'Snap', 'Dave']);
 		addOption(option);
 		option.onChange = onChangeHitsoundVolume;
 

@@ -1,7 +1,5 @@
 package psychlua;
 
-import utils.CoolUtil;
-
 class TextFunctions {
     public static function implement(funk:FunkinLua) {
         var game:PlayState = PlayState.instance;
@@ -12,7 +10,7 @@ class TextFunctions {
 			var leText:FlxText = new FlxText(x, y, width, text, 16);
 			leText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 			leText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
-			leText.cameras = [game.camHUD];
+			leText.camera = game.camHUD;
 			leText.scrollFactor.set();
 			game.modchartTexts.set(tag, leText);
 		});

@@ -6,7 +6,6 @@ import sys.FileSystem;
 import haxe.io.Path;
 #end
 import tjson.TJSON as Json;
-import utils.CoolUtil;
 import openfl.utils.Assets as OpenFlAssets;
 
 typedef WeekFile = {

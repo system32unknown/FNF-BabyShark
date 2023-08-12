@@ -14,6 +14,10 @@ import utils.GameVersion;
 import utils.FunkinGame;
 import objects.Overlay;
 
+#if (target.threaded && sys)
+import sys.thread.ElasticThreadPool;
+#end
+
 //crash handler stuff
 #if CRASH_HANDLER
 import openfl.events.UncaughtErrorEvent;
@@ -43,10 +47,8 @@ class Main extends Sprite {
 	public static var current:Main;
 	public static var overlayVar:Overlay;
 
-	// You can pretty much ignore everything from here on - your code should go in your states.
-	public static function main():Void {
+	public static function main():Void
 		Lib.current.addChild(new Main());
-	}
 
 	public function new() {
 		current = this;
@@ -60,6 +62,10 @@ class Main extends Sprite {
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		setupGame();
 	}
+
+	#if (target.threaded && sys)
+	public var threadPool:ElasticThreadPool;
+	#end
 
 	function setupGame():Void {
 		var stageWidth:Int = Lib.current.stage.stageWidth;
@@ -78,6 +84,10 @@ class Main extends Sprite {
 		addChild(new FunkinGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(overlayVar = new Overlay());
 		
+		#if (target.threaded && sys)
+		threadPool = new ElasticThreadPool(12, 30);
+		#end
+
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		

@@ -9,7 +9,6 @@ import openfl.display.BitmapData;
 import data.WeekData;
 import objects.AttachedSprite;
 import backend.InputFormatter;
-import utils.CoolUtil;
 
 class ModsMenuState extends MusicBeatState
 {

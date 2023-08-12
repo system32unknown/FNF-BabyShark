@@ -183,6 +183,7 @@ class Note extends FlxSprite
 					}
 				#end
 			}
+			if (hitsound != 'hitsound' && ClientPrefs.getPref('hitsoundVolume') > 0) Paths.sound(hitsound); //precache new sound for being idiot-proof
 			noteType = value;
 		}
 		noteSplashHSB = [colorSwap.hue, colorSwap.saturation, colorSwap.brightness];

@@ -1,7 +1,6 @@
 package objects;
 
 import flixel.graphics.FlxGraphic;
-import utils.CoolUtil;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 

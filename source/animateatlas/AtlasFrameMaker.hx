@@ -95,7 +95,7 @@ class AtlasFrameMaker extends FlxFramesCollection
 		var bitMapArray:Array<BitmapData> = [];
 		var daFramez:Array<FlxFrame> = [];
 		var firstPass = true;
-		var frameSize:FlxPoint = new FlxPoint();
+		var frameSize:FlxPoint = FlxPoint.get();
 
 		for (i in t.getFrame(animation)...t.numFrames) {
 			t.currentFrame = i;
@@ -117,8 +117,7 @@ class AtlasFrameMaker extends FlxFramesCollection
 					frameSize.set(bitmapShit.width,bitmapShit.height);
 					firstPass = false;
 				}
-			}
-			else break;
+			} else break;
 		}
 		
 		for (i in 0...bitMapArray.length)
@@ -131,6 +130,7 @@ class AtlasFrameMaker extends FlxFramesCollection
 			theFrame.frame = new FlxRect(0, 0, bitMapArray[i].width, bitMapArray[i].height);
 			daFramez.push(theFrame);
 		}
+		frameSize.put();
 		return daFramez;
 	}
 }

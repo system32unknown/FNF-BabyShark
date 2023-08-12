@@ -5,7 +5,6 @@ import llua.Lua;
 #end
 
 #if discord_rpc import backend.Discord; #end
-
 import backend.Paths;
 import backend.Controls;
 import backend.MusicBeatState;
@@ -16,7 +15,6 @@ import backend.Conductor;
 import backend.BaseStage;
 import backend.Difficulty;
 #if MODS_ALLOWED import backend.Mods; #end
-
 import utils.CoolUtil;
 
 import objects.Alphabet;

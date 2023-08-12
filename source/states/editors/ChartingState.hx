@@ -10,7 +10,6 @@ import objects.ErrorDisplay;
 import backend.Section;
 import backend.Song;
 import data.StageData;
-import utils.CoolUtil;
 import substates.Prompt;
 
 import flixel.FlxObject;
@@ -2545,8 +2544,7 @@ class ChartingState extends MusicBeatState {
 		}
 	}
 
-	function setupNoteData(i:Array<Dynamic>, isNextSection:Bool):Note
-	{
+	function setupNoteData(i:Array<Dynamic>, isNextSection:Bool):Note {
 		var daNoteInfo = i[1];
 		var daStrumTime = i[0];
 		var daSus:Dynamic = i[2];
@@ -2681,7 +2679,7 @@ class ChartingState extends MusicBeatState {
 		var delnote = false;
 		if(strumLineNotes.members[d].overlaps(curRenderedNotes)) {
 			curRenderedNotes.forEachAlive(function(note:Note) {
-				if (note.overlapsPoint(new FlxPoint(strumLineNotes.members[d].x + 1, strumLine.y + 1)) && note.noteData == d % Note.ammo[_song.mania]) {
+				if (note.overlapsPoint(FlxPoint.weak(strumLineNotes.members[d].x + 1, strumLine.y + 1)) && note.noteData == d % Note.ammo[_song.mania]) {
 					if(!delnote) deleteNote(note);
 					delnote = true;
 				}

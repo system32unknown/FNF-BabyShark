@@ -17,7 +17,6 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import tjson.TJSON as Json;
 
-import utils.CoolUtil;
 import objects.Character;
 import objects.HealthIcon;
 import objects.Bar;
@@ -91,30 +90,30 @@ class CharacterEditorState extends MusicBeatState
 			onPixelBG = !onPixelBG;
 			reloadBGs();
 		});
-		changeBGbutton.cameras = [camMenu];
+		changeBGbutton.camera = camMenu;
 
 		loadChar(!daAnim.startsWith('bf'), false);
 
 		healthBar = new Bar(30, FlxG.height - 75);
 		healthBar.scrollFactor.set();
 		add(healthBar);
-		healthBar.cameras = [camHUD];
+		healthBar.camera = camHUD;
 
 		leHealthIcon = new HealthIcon(char.healthIcon);
 		leHealthIcon.y = FlxG.height - 150;
 		add(leHealthIcon);
-		leHealthIcon.cameras = [camHUD];
+		leHealthIcon.camera = camHUD;
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
 		add(dumbTexts);
-		dumbTexts.cameras = [camHUD];
+		dumbTexts.camera = camHUD;
 
 		textAnim = new FlxText(300, 16);
 		textAnim.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		textAnim.borderSize = 1;
 		textAnim.size = 32;
 		textAnim.scrollFactor.set();
-		textAnim.cameras = [camHUD];
+		textAnim.camera = camHUD;
 		add(textAnim);
 
 		genBoyOffsets();
@@ -134,7 +133,7 @@ class CharacterEditorState extends MusicBeatState
 
 		for (i in 0...tipTextArray.length - 1) {
 			var tipText:FlxText = new FlxText(FlxG.width - 320, FlxG.height - 15 - 16 * (tipTextArray.length - i), 300, tipTextArray[i], 12);
-			tipText.cameras = [camHUD];
+			tipText.camera = camHUD;
 			tipText.setFormat(null, 12, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 			tipText.scrollFactor.set();
 			tipText.borderSize = 1;
@@ -146,7 +145,7 @@ class CharacterEditorState extends MusicBeatState
 		var tabs = [{name: 'Settings', label: 'Settings'},];
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
-		UI_box.cameras = [camMenu];
+		UI_box.camera = camMenu;
 
 		UI_box.resize(250, 120);
 		UI_box.setPosition(FlxG.width - 275, 25);
@@ -158,7 +157,7 @@ class CharacterEditorState extends MusicBeatState
 			{name: 'Animations', label: 'Animations'},
 		];
 		UI_characterbox = new FlxUITabMenu(null, tabs, true);
-		UI_characterbox.cameras = [camMenu];
+		UI_characterbox.camera = camMenu;
 
 		UI_characterbox.resize(350, 250);
 		UI_characterbox.setPosition(UI_box.x - 100, UI_box.y + UI_box.height);
@@ -766,7 +765,7 @@ class CharacterEditorState extends MusicBeatState
 			text.scrollFactor.set();
 			text.borderSize = 1;
 			dumbTexts.add(text);
-			text.cameras = [camHUD];
+			text.camera = camHUD;
 
 			daLoop++;
 		}

@@ -91,7 +91,7 @@ class Discord {
 
 	public static function initialize() {
 		#if DISCORD_ALLOWED
-		sys.thread.Thread.create(() -> {
+		#if (target.threaded && sys) Main.current.threadPool.run #else sys.thread.Thread.create #end (() -> {
 			new Discord();
 		});
 		trace("Discord Client initialized");

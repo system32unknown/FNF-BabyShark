@@ -2,10 +2,8 @@ package substates;
 
 import flixel.graphics.FlxGraphic;
 import data.WeekData;
-import utils.CoolUtil;
 import states.StoryMenuState;
 import states.FreeplayState;
-
 
 /**
 * State used to decide which selection of songs should be loaded in `FreeplayState`.

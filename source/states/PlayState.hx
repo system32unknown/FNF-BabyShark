@@ -665,20 +665,27 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onCreatePost');
 		cleanupLuas();
 
-		cacheCountdown();
-		cachePopUpScore();
-		GameOverSubstate.cache();
-		for (key => type in precacheList) {
-			switch(type) {
-				case 'image': Paths.image(key);
-				case 'sound': Paths.sound(key);
-				case 'music': Paths.music(key);
-			}
-		}
 		super.create();
-		Paths.clearUnusedCache();
-		if(timeToStart > 0)	clearNotesBefore(timeToStart);
 
+		#if (target.threaded && sys)
+		Main.current.threadPool.run(() -> {
+		#end
+			cacheCountdown();
+			cachePopUpScore();
+			GameOverSubstate.cache();
+			for (key => type in precacheList) {
+				switch(type) {
+					case 'image': Paths.image(key);
+					case 'sound': Paths.sound(key);
+					case 'music': Paths.music(key);
+				}
+			}
+			Paths.clearUnusedCache();
+		#if (target.threaded && sys)
+		});
+		#end
+
+		if(timeToStart > 0)	clearNotesBefore(timeToStart);
 		CustomFadeTransition.nextCamera = camOther;
 		if(eventNotes.length < 1) checkEventNote();
 	}
@@ -953,8 +960,8 @@ class PlayState extends MusicBeatState {
 	public static var startOnTime:Float = 0;
 
 	public var camMovement:Float = 40;
-	public var campoint:FlxPoint = new FlxPoint();
-	public var camlockpoint:FlxPoint = new FlxPoint();
+	public var campoint:FlxPoint = FlxPoint.get();
+	public var camlockpoint:FlxPoint = FlxPoint.get();
 	public var camlock:Bool = false;
 	public var bfturn:Bool = false;
 

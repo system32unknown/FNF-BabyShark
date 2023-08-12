@@ -349,7 +349,7 @@ class WeekEditorState extends MusicBeatState
 
 		#if discord_rpc
 		// Updating Discord Rich Presence
-		Discord.changePresence("Week Editor", "Editting: " + weekFileName);
+		Discord.changePresence("Week Editor", "Editing: " + weekFileName);
 		#end
 	}
 	
@@ -699,7 +699,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 		iconInputText = new FlxUIInputText(10, bgColorStepperR.y + 70, 100, '', 8);
 
-		var hideFreeplayCheckbox:FlxUICheckBox = new FlxUICheckBox(10, iconInputText.y + 30, null, null, "Hide Week from Freeplay?", 100);
+		var hideFreeplayCheckbox:FlxUICheckBox = new FlxUICheckBox(iconInputText.x + 60, iconInputText.y + 30, null, null, "Hide Week from Freeplay?", 100);
 		hideFreeplayCheckbox.checked = weekFile.hideFreeplay;
 		hideFreeplayCheckbox.callback = function() {
 			weekFile.hideFreeplay = hideFreeplayCheckbox.checked;

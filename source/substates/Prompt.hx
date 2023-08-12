@@ -1,10 +1,8 @@
 package substates;
 
 import flixel.ui.FlxButton;
-import utils.CoolUtil;
 
-class Prompt extends MusicBeatSubstate
-{
+class Prompt extends MusicBeatSubstate {
 	public var okc:Void->Void;
 	public var cancelc:Void->Void;
 	var theText:String = '';

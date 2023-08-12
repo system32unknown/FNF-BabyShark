@@ -14,7 +14,6 @@ import sys.io.File;
 #end
 import objects.AttachedSprite;
 import substates.Prompt;
-import utils.CoolUtil;
 
 class CreditsEditor extends MusicBeatState
 {
@@ -24,7 +23,6 @@ class CreditsEditor extends MusicBeatState
 	var iconArray:Array<AttachedSprite> = [];
 	var creditsStuff:Array<Array<String>> = [];
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
-	public var ignoreWarnings = false;
 
 	public var camGame:FlxCamera;
 	public var camUI:FlxCamera;
@@ -41,8 +39,7 @@ class CreditsEditor extends MusicBeatState
 
 	var text:String = "";
 
-	override function create()
-	{
+	override function create() {
 		#if discord_rpc
 		// Updating Discord Rich Presence
 		Discord.changePresence("Credits Editor", null);
@@ -74,22 +71,20 @@ class CreditsEditor extends MusicBeatState
 		];
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
-		UI_box.cameras = [camUI];
+		UI_box.camera = camUI;
 		UI_box.resize(270, 380);
 		UI_box.setPosition(940, 25);
 		UI_box.scrollFactor.set();
 		add(UI_box);
 		UI_box.selected_tab = 0;
 
-		text =
-		"W/S or Up/Down - Change selected item
+		text = "W/S or Up/Down - Change selected item
 		\nEnter - Apply changes
 		\nSpace - Get selected item data
 		\nDelete - Delete selected item
 		\nR - Reset inputs
 		\n1 - Add title
-		\n2 - Add credit
-		";
+		\n2 - Add credit";
 
 		var tipTextArray:Array<String> = text.split('\n');
 		for (i in 0...tipTextArray.length) {
@@ -99,7 +94,7 @@ class CreditsEditor extends MusicBeatState
 			tipText.borderSize = 1;
 			tipText.scrollFactor.set();
 			add(tipText);
-			tipText.cameras = [camUI];
+			tipText.camera = camUI;
 		}
 
 		addCreditsUI();
@@ -118,8 +113,8 @@ class CreditsEditor extends MusicBeatState
 		descText.scrollFactor.set();
 		descBox.sprTracker = descText;
 		add(descText);
-		descBox.cameras = [camUI];
-		descText.cameras = [camUI];
+		descBox.camera = camUI;
+		descText.camera = camUI;
 
 		updateCreditObjects();
 
@@ -201,7 +196,7 @@ class CreditsEditor extends MusicBeatState
 				updateCreditObjects();
 				curSelected = 1;
 				changeSelection();
-			}, null, ignoreWarnings));
+			}, null, false));
 		});
 		resetAll.color = FlxColor.RED;
 		resetAll.label.color = FlxColor.WHITE;
@@ -247,18 +242,13 @@ class CreditsEditor extends MusicBeatState
 
 	function updateCreditObjects() {
 		if(creditsStuff != null && creditsStuff.length > 0) {
-			for (i in 0...iconArray.length) {
-				iconArray[i].kill();
-			}
+			for (i in 0...iconArray.length) iconArray[i].kill();
 			iconArray = [];
-			for (option in grpOptions) {
-				option.kill();
-			}
+			for (option in grpOptions) option.kill();
 			grpOptions.clear();
 		}
 
-		for (i in 0...creditsStuff.length)
-		{
+		for (i in 0...creditsStuff.length) {
 			var isSelectable:Bool = !unselectableCheck(i);
 			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 300, creditsStuff[i][0], !isSelectable);
 			optionText.isMenuItem = true;
@@ -270,9 +260,8 @@ class CreditsEditor extends MusicBeatState
 			grpOptions.add(optionText);
 
 			if(isSelectable) {
-				if(creditsStuff[i][5] != null) {
+				if(creditsStuff[i][5] != null)
 					Mods.currentModDirectory = creditsStuff[i][5];
-				}
 
 				var icon:AttachedSprite;
 				if(Paths.fileExists('images/credits/' + creditsStuff[i][1] + '.png', IMAGE))
@@ -291,8 +280,7 @@ class CreditsEditor extends MusicBeatState
 				Mods.currentModDirectory = '';
 
 				if(curSelected == -1) curSelected = i;
-			}
-			else optionText.alignment = CENTERED;
+			} else optionText.alignment = CENTERED;
 		}
 	}
 
@@ -325,9 +313,8 @@ class CreditsEditor extends MusicBeatState
 	}
 
 	function dataGoToInputs() {
-		if(curSelIsTitle) {
-			titleInput.text = creditsStuff[curSelected][0];
-		} else {
+		if(curSelIsTitle) titleInput.text = creditsStuff[curSelected][0];
+		else {
 			creditNameInput.text = creditsStuff[curSelected][0];
 			iconInput.text = creditsStuff[curSelected][1];
 			descInput.text = creditsStuff[curSelected][2];
@@ -376,9 +363,7 @@ class CreditsEditor extends MusicBeatState
 		var daStuff:Array<Array<String>> = [];
 		for(i in 0...creditsStuff.length) {
 			if(!unselectableCheck(curSelected)) {
-				if(i != curSelected) {
-					daStuff.push(creditsStuff[i]);
-				}
+				if(i != curSelected) daStuff.push(creditsStuff[i]);
 			} else {
 				var shit:Bool = true;
 				if(nullCheck(curSelected - 1)) { // remove space betwen title's
@@ -386,9 +371,8 @@ class CreditsEditor extends MusicBeatState
 					if(i == u) shit = false;
 				}
 
-				if(i != curSelected && shit) {
+				if(i != curSelected && shit)
 					daStuff.push(creditsStuff[i]);
-				}
 			}
 		}
 		creditsStuff = daStuff;

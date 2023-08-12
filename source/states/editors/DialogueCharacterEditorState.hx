@@ -426,7 +426,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 		#if discord_rpc
 		// Updating Discord Rich Presence
-		Discord.changePresence("Dialogue Character Editor", "Editting: " + character.jsonFile.image);
+		Discord.changePresence("Dialogue Character Editor", "Editing: " + character.jsonFile.image);
 		#end
 	}
 

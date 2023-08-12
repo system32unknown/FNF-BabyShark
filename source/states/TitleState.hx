@@ -7,7 +7,6 @@ import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxGradient;
 import tjson.TJSON as Json;
-import utils.CoolUtil;
 import backend.Highscore;
 import states.MainMenuState;
 #if sys

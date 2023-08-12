@@ -1,7 +1,6 @@
 package psychlua;
 
 import objects.StrumNote;
-import utils.CoolUtil;
 
 //
 // This is simply where i store deprecated functions for it to be more organized.
@@ -83,7 +82,7 @@ class DeprecatedFunctions
 		funk.addCallback("setLuaSpriteCamera", function(tag:String, camera:String = '') {
 			FunkinLua.luaTrace("setLuaSpriteCamera is deprecated! Use setObjectCamera instead", false, true);
 			if(PlayState.instance.modchartSprites.exists(tag)) {
-				PlayState.instance.modchartSprites.get(tag).cameras = [LuaUtils.cameraFromString(camera)];
+				PlayState.instance.modchartSprites.get(tag).camera = LuaUtils.cameraFromString(camera);
 				return true;
 			}
 			FunkinLua.luaTrace("Lua sprite with tag: " + tag + " doesn't exist!");

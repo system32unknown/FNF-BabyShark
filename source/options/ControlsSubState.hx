@@ -3,7 +3,6 @@ package options;
 import flixel.addons.display.FlxBackdrop;
 import flixel.input.keyboard.FlxKey;
 import data.EkData.Keybinds;
-import utils.CoolUtil;
 import backend.InputFormatter;
 import objects.AttachedText;
 import objects.AttachedSprite;

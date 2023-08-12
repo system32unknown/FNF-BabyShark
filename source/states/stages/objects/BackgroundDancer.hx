@@ -1,9 +1,6 @@
 package states.stages.objects;
 
-import utils.CoolUtil;
-
-class BackgroundDancer extends FlxSprite
-{
+class BackgroundDancer extends FlxSprite {
 	public function new(x:Float, y:Float)
 	{
 		super(x, y);
@@ -16,8 +13,7 @@ class BackgroundDancer extends FlxSprite
 	}
 
 	var danceDir:Bool = false;
-	public function dance():Void
-	{
+	public function dance():Void {
 		danceDir = !danceDir;
 
 		if (danceDir) animation.play('danceRight', true);

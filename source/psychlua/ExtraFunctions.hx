@@ -8,8 +8,6 @@ import sys.io.File;
 import flixel.util.FlxSave;
 import openfl.utils.Assets;
 
-import utils.CoolUtil;
-
 //
 // Things to trivialize some dumb stuff like splitting strings on older Lua
 //
@@ -215,7 +213,7 @@ class ExtraFunctions {
 			}
 
 			if (foundJson) {
-				var parsedJson = haxe.Json.parse(File.getContent(json));				
+				var parsedJson = Json.parse(File.getContent(json));				
 				PlayState.instance.variables.set(varName, parsedJson);
 				return true;
 			}
