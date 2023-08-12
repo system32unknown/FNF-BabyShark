@@ -687,7 +687,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 				}
 			}
 		});
-		var decideIconColor:FlxButton = new FlxButton(copyColor.x, copyColor.y + 20, "Get Icon Color", function() {
+		var decideIconColor:FlxButton = new FlxButton(copyColor.x, copyColor.y + 20, "Get BG Color", function() {
 			var coolColor = FlxColor.fromInt(CoolUtil.dominantColor(iconArray[curSelected]));
 			bgColorStepperR.value = coolColor.red;
 			bgColorStepperG.value = coolColor.green;
