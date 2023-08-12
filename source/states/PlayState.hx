@@ -9,7 +9,6 @@ import flixel.animation.FlxAnimationController;
 import flixel.ui.FlxBar;
 import flixel.util.FlxSort;
 import flixel.util.FlxSave;
-import flixel.tweens.misc.VarTween;
 import openfl.events.KeyboardEvent;
 #if !MODS_ALLOWED import openfl.utils.Assets as OpenFlAssets; #end
 import backend.Highscore;
@@ -192,7 +191,8 @@ class PlayState extends MusicBeatState {
 	var judgementCounter:FlxText;
 	var extraTxt:FlxText;
 
-	var msTimingTween:VarTween;
+	var msTimingTween:FlxTween;
+	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
 
 	var songNameText:FlxText;
 
@@ -2569,7 +2569,7 @@ class PlayState extends MusicBeatState {
 			
 			if (!ClientPrefs.getPref('comboStacking') && comboGroup.members.length > 0) {
 				for (spr in comboGroup) {
-					spr.destroy();
+					if(spr != mstimingTxt) spr.destroy();
 					comboGroup.remove(spr);
 				}
 			}
@@ -2605,8 +2605,7 @@ class PlayState extends MusicBeatState {
 			timing.visible = !hideHud && ClientPrefs.getPref('ShowLateEarly');
 			timing.antialiasing = antialias;
 		
-			var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
-			if (ClientPrefs.getPref('ShowMsTiming')) {
+			if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
 				msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
 				mstimingTxt.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 20, FlxColor.WHITE, CENTER);
 				mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);

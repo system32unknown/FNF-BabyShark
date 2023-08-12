@@ -36,8 +36,7 @@ class WeekEditorState extends MusicBeatState
 	var missingFileText:FlxText;
 
 	var weekFile:WeekFile = null;
-	public function new(weekFile:WeekFile = null)
-	{
+	public function new(weekFile:WeekFile = null) {
 		super();
 		this.weekFile = WeekData.createWeekFile();
 		if(weekFile != null) this.weekFile = weekFile;
@@ -324,9 +323,7 @@ class WeekEditorState extends MusicBeatState
 			}
 		}
 
-		if(isMissing) {
-			bgSprite.visible = false;
-		}
+		if(isMissing) bgSprite.visible = false;
 	}
 
 	function reloadWeekThing() {
@@ -690,6 +687,15 @@ class WeekEditorFreeplayState extends MusicBeatState
 				}
 			}
 		});
+		var decideIconColor:FlxButton = new FlxButton(copyColor.x, copyColor.y + 20, "Get Icon Color", function() {
+			var coolColor = FlxColor.fromInt(CoolUtil.dominantColor(iconArray[curSelected]));
+			bgColorStepperR.value = coolColor.red;
+			bgColorStepperG.value = coolColor.green;
+			bgColorStepperB.value = coolColor.blue;
+			getEvent(FlxUINumericStepper.CHANGE_EVENT, bgColorStepperR, null);
+			getEvent(FlxUINumericStepper.CHANGE_EVENT, bgColorStepperG, null);
+			getEvent(FlxUINumericStepper.CHANGE_EVENT, bgColorStepperB, null);
+		});
 
 		iconInputText = new FlxUIInputText(10, bgColorStepperR.y + 70, 100, '', 8);
 
@@ -706,6 +712,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		tab_group.add(bgColorStepperB);
 		tab_group.add(copyColor);
 		tab_group.add(pasteColor);
+		tab_group.add(decideIconColor);
 		tab_group.add(iconInputText);
 		tab_group.add(hideFreeplayCheckbox);
 		UI_box.addGroup(tab_group);
@@ -759,9 +766,8 @@ class WeekEditorFreeplayState extends MusicBeatState
 		
 		if(iconInputText.hasFocus) {
 			ClientPrefs.toggleVolumeKeys(false);
-			if(FlxG.keys.justPressed.ENTER) {
+			if(FlxG.keys.justPressed.ENTER)
 				iconInputText.hasFocus = false;
-			}
 		} else {
 			ClientPrefs.toggleVolumeKeys(true);
 			if(FlxG.keys.justPressed.ESCAPE) {

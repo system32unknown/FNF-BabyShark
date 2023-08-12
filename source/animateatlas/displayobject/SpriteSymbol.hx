@@ -160,9 +160,9 @@ class SpriteSymbol extends Sprite {
 				symbolName = SpriteAnimationLibrary.BITMAP_SYMBOL_NAME;
 			}
 
-			if (oldSymbol != null && oldSymbol._symbolName == symbolName) {
+			if (oldSymbol != null && oldSymbol._symbolName == symbolName)
 				newSymbol = oldSymbol;
-			} else {
+			else {
 				if (oldSymbol != null) {
 					if (oldSymbol.parent != null)
 						oldSymbol.removeChild(oldSymbol);
@@ -184,13 +184,11 @@ class SpriteSymbol extends Sprite {
 				var firstFrame:Int = elementData.firstFrame;
 				var frameAge:Int = Std.int(_currentFrame - frameData.index);
 
-				if (newSymbol.loopMode == LoopMode.SINGLE_FRAME) {
+				if (newSymbol.loopMode == LoopMode.SINGLE_FRAME)
 					newSymbol.currentFrame = firstFrame;
-				} else if (newSymbol.loopMode == LoopMode.LOOP) {
+				else if (newSymbol.loopMode == LoopMode.LOOP)
 					newSymbol.currentFrame = (firstFrame + frameAge) % newSymbol._numFrames;
-				} else {
-					newSymbol.currentFrame = firstFrame + frameAge;
-				}
+				else newSymbol.currentFrame = firstFrame + frameAge;
 			}
 			
 		}
@@ -212,9 +210,8 @@ class SpriteSymbol extends Sprite {
 			throw new Error("You must not call this twice");
 		_layers = new Array<Sprite>();
 
-		if (_numLayers <= 1) {
-			_layers.push(this);
-		} else {
+		if (_numLayers <= 1) _layers.push(this);
+		else {
 			for (i in 0..._numLayers) {
 				var layer:Sprite = new Sprite();
 				layer.name = getLayerData(i).Layer_name;

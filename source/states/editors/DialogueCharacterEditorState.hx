@@ -569,9 +569,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 					ghostIdle.visible = (currentGhosts != 2);
 					ghostLoop.alpha = (currentGhosts == 2 ? 1 : 0.6);
 					ghostIdle.alpha = (currentGhosts == 1 ? 1 : 0.6);
-				} else {
-					hudGroup.visible = !hudGroup.visible;
-				}
+				} else hudGroup.visible = !hudGroup.visible;
 			}
 			if(FlxG.keys.justPressed.R) {
 				camGame.zoom = 1;

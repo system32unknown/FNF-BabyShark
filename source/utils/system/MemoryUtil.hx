@@ -11,12 +11,6 @@ import neko.vm.Gc;
 #end
 import openfl.system.System;
 
-#if windows
-@:cppFileCode("
-#include <windows.h>
-#include <psapi.h>
-")
-#end
 class MemoryUtil {
 	inline public static function clearMajor(?minor:Bool = false) {
 		#if cpp

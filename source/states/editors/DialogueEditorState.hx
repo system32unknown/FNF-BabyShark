@@ -171,11 +171,9 @@ class DialogueEditorState extends MusicBeatState
 			case 'left':
 				box.flipX = true;
 			case 'center':
-				if(isAngry) {
+				if(isAngry)
 					anim = 'center-angry';
-				} else {
-					anim = 'center';
-				}
+				else anim = 'center';
 		}
 		box.animation.play(anim, true);
 		DialogueBoxPsych.updateBoxOffsets(box);

@@ -56,6 +56,7 @@ class ClientPrefs {
 		'healthBarAlpha' => 1,
 		'hitsoundVolume' => 0,
 		'autoPause' => true,
+		'fullscreen' => false,
 		'hitsoundTypes' => 'Tick',
 		'pauseMusic' => 'Tea Time',
 		'discordRPC' => true,
@@ -99,6 +100,7 @@ class ClientPrefs {
 		'volume' => 'volume',
 		'mute' => 'muted',
 		'autoPause' => 'autoPause',
+		'fullscreen' => 'fullscreen',
 	];
 
 	// Maps like gameplaySettings
@@ -389,7 +391,7 @@ class ClientPrefs {
 			if (value != null) {
 				if (setting == 'volume' || setting == 'muted')
 					Reflect.setField(FlxG.sound, name, value);
-				else if (setting == 'autoPause')
+				else if (setting == 'autoPause' || setting == 'fullscreen')
 					Reflect.setField(FlxG, name, value);
 			}
 		}

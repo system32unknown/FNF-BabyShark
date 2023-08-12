@@ -34,23 +34,42 @@ class BorderTextField extends TextField {
         }
     }
 
-    public override function setTextFormat(format:TextFormat, beginIndex:Int = -1, endIndex:Int = -1) {
+    @:noCompletion public override function setTextFormat(format:TextFormat, beginIndex:Int = -1, endIndex:Int = -1) {
         super.setTextFormat(format, beginIndex, endIndex);
         for (textborder in borders)
             textborder.setTextFormat(format, beginIndex, endIndex);
     }
 
-    override function set_textColor(value:Int):Int @:privateAccess {
-        super.set_textColor(value);
-        for (textborder in borders)
-            textborder.textColor = value;
-        return __textFormat.color = value;
+    @:noCompletion override function set_textColor(value:Int):Int @:privateAccess {
+        for (textborder in borders) textborder.textColor = value;
+        return super.set_textColor(value);
     }
 
-    override function set_visible(value:Bool):Bool @:privateAccess {
-        super.set_visible(value);
-        for (textborder in borders)
-            textborder.visible = value;
-        return __visible = value;
+    @:noCompletion override function set_visible(value:Bool):Bool @:privateAccess {
+        for (textborder in borders) textborder.visible = value;
+        return super.set_visible(value);
     }
+
+	@:noCompletion override function set_defaultTextFormat(value:TextFormat):TextFormat {
+		for (border in borders) {
+			border.defaultTextFormat = value;
+			border.textColor = 0xFF000000;
+		}
+		return super.set_defaultTextFormat(value);
+	}
+    
+	@:noCompletion override function set_x(x:Float):Float {
+		for (i in 0...8) borders[i].x = x + ([0, 3, 5].contains(i) ? borderSize : [2, 4, 7].contains(i) ? -borderSize : 0);
+		return super.set_x(x);
+	}
+
+	@:noCompletion override function set_y(y:Float):Float {
+		for (i in 0...8) borders[i].y = y + ([0, 1, 2].contains(i) ? borderSize : [5, 6, 7].contains(i) ? -borderSize : 0);
+		return super.set_y(y);
+	}
+
+	@:noCompletion override function set_text(text:String):String {
+		for (border in borders) border.text = text;
+		return super.set_text(text);
+	}
 }

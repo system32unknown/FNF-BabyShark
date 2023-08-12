@@ -157,11 +157,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 									if(controls.UI_LEFT_P) --num;
 									else num++;
 
-									if (num < 0) {
-										num = curOption.options.length - 1;
-									} else if (num >= curOption.options.length) {
-										num = 0;
-									}
+									if (num < 0) num = curOption.options.length - 1;
+									else if (num >= curOption.options.length) num = 0;
 
 									curOption.curOption = num;
 									curOption.setValue(curOption.options[num]); //lol
@@ -183,9 +180,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 						}
 					}
 
-					if(curOption.type != 'string') {
+					if(curOption.type != 'string')
 						holdTime += elapsed;
-					}
 				} else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) {
 					clearHold();
 				}

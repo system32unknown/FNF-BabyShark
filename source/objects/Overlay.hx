@@ -8,6 +8,9 @@ import utils.system.MemoryUtil;
 import utils.system.FPSUtil;
 import utils.MathUtil;
 
+#if (gl_stats && !disable_cffi)
+import openfl.display._internal.stats.Context3DStats;
+#end
 class Overlay extends TextField {
 	public static var instance:Overlay;
 	public var fontName:String = Assets.getFont("assets/fonts/Proggy.ttf").fontName;
@@ -20,10 +23,6 @@ class Overlay extends TextField {
 	//Memory
     @:allow(utils.system.FPSUtil) var memory:Dynamic = 0;
     var mempeak:Dynamic = 0;
-
-	//Garbage Collection
-	var gcmem:Int = 0;
-	var gcmempeak:Int = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
 		super();
@@ -52,14 +51,12 @@ class Overlay extends TextField {
 
 		memory = MemoryUtil.getMEM();
 		if (memory > mempeak) mempeak = memory;
-		gcmem = MemoryUtil.getGCMEM();
-		if (gcmem > gcmempeak) gcmempeak = gcmem;
 
 		text = '${FPS.currentFPS} FPS ${(fpsStats == 'ms' || fpsStats == 'full') ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
 			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
-		if (fpsStats == 'gc' || fpsStats == 'full')
-			text += 'GC: ${MemoryUtil.getInterval(gcmem)} / ${MemoryUtil.getInterval(gcmempeak)}\n';
+		if (fpsStats == 'flixel' || fpsStats == 'full')
+			text += 'State: ${Type.getClassName(Type.getClass(FlxG.state))} | Draws: ${Context3DStats.totalDrawCalls()}';
 
 		visible = ClientPrefs.getPref('showFPS');
 	}

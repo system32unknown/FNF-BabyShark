@@ -85,7 +85,6 @@ class SpriteAnimationLibrary {
 		return _symbolData.exists(name);
 	}
 
-	// # region Pooling
 	// todo migrate this to lime pool
 
 	@:access(animateatlas)
@@ -96,9 +95,7 @@ class SpriteAnimationLibrary {
 			var symbol:SpriteSymbol = new SpriteSymbol(getSymbolData(name), this, _texture);
 			symbol.smoothing = smoothing;
 			return symbol;
-		} else {
-			return pool.pop();
-		}
+		} else return pool.pop();
 	}
 
 	private function putSymbol(symbol:SpriteSymbol):Void {
@@ -117,16 +114,12 @@ class SpriteAnimationLibrary {
 		return pool;
 	}
 
-	// # end region
-	// # region helpers
 	private function parseAnimationData(data:AnimationData):Void {
 		var metaData = data.metadata;
 
-		if (metaData != null && metaData.framerate != null && metaData.framerate > 0) {
+		if (metaData != null && metaData.framerate != null && metaData.framerate > 0)
 			frameRate = (metaData.framerate);
-		} else {
-			frameRate = 24;
-		}
+		else frameRate = 24;
 
 		_symbolData = new Map();
 
@@ -181,10 +174,7 @@ class SpriteAnimationLibrary {
 								symbolType: SymbolType.GRAPHIC,
 								firstFrame: 0,
 								loop: LoopMode.LOOP,
-								transformationPoint: {
-									x: 0,
-									y: 0
-								},
+								transformationPoint: {x: 0, y: 0},
 								Matrix3D: STD_MATRIX3D_DATA
 							}
 						};
@@ -208,6 +198,4 @@ class SpriteAnimationLibrary {
 	private function getSymbolData(name:String):SymbolData {
 		return _symbolData.get(name);
 	}
-
-	// # end region
 }

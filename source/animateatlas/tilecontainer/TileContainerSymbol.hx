@@ -146,9 +146,9 @@ class TileContainerSymbol extends TileContainer {
 				symbolName = TileAnimationLibrary.BITMAP_SYMBOL_NAME;
 			}
 
-			if (oldSymbol != null && oldSymbol._symbolName == symbolName) {
+			if (oldSymbol != null && oldSymbol._symbolName == symbolName)
 				newSymbol = oldSymbol;
-			} else {
+			else {
 				if (oldSymbol != null) {
 					if (oldSymbol.parent != null)
 						oldSymbol.removeTile(oldSymbol);
@@ -169,13 +169,11 @@ class TileContainerSymbol extends TileContainer {
 				var firstFrame:Int = elementData.firstFrame;
 				var frameAge:Int = Std.int(_currentFrame - frameData.index);
 
-				if (newSymbol.loopMode == LoopMode.SINGLE_FRAME) {
+				if (newSymbol.loopMode == LoopMode.SINGLE_FRAME)
 					newSymbol.currentFrame = firstFrame;
-				} else if (newSymbol.loopMode == LoopMode.LOOP) {
+				else if (newSymbol.loopMode == LoopMode.LOOP)
 					newSymbol.currentFrame = (firstFrame + frameAge) % newSymbol._numFrames;
-				} else {
-					newSymbol.currentFrame = firstFrame + frameAge;
-				}
+				else newSymbol.currentFrame = firstFrame + frameAge;
 			}
 		}
 
@@ -197,16 +195,13 @@ class TileContainerSymbol extends TileContainer {
 		}
 		_layers = new Array<TileContainer>();
 
-		if (_numLayers <= 1) {
-			_layers.push(this);
-		} else {
+		if (_numLayers <= 1) _layers.push(this);
+		else {
 			for (i in 0..._numLayers) {
 				var layer:TileContainer = new TileContainer();
-				if (layer.data == null) {
+				if (layer.data == null)
 					layer.data = {layerName: getLayerData(i).Layer_name};
-				} else {
-					layer.data.layerName = getLayerData(i).Layer_name;
-				}
+				else layer.data.layerName = getLayerData(i).Layer_name;
 				addTile(layer);
 				_layers.push(layer);
 			}

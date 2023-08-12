@@ -90,6 +90,7 @@
 	<!-- ______________________________Haxedefines_____________________________ -->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
 	<haxedef name="queue_experimental_optimization"/>
+	<haxedef name="gl_stats"/>
 
 	<section unless="debug">
 		<!-- No deprecation warnings. -->
