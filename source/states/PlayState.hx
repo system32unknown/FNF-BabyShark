@@ -2744,7 +2744,6 @@ class PlayState extends MusicBeatState {
 
 			var sortedNotesList:Array<Note> = [];				
 			var canMiss:Bool = !ClientPrefs.getPref('ghostTapping');
-			var notesStopped:Bool = false;
 
 			for (daNote in notes) {
 				if (!strumsBlocked[daNote.noteData] && daNote.mustPress && daNote.exists && !daNote.blockHit && !daNote.tooLate) {
@@ -2779,10 +2778,8 @@ class PlayState extends MusicBeatState {
 				}
 
 				// eee jack detection before was not super good
-				if (epicNote.isSustainNote) {
+				if (epicNote.isSustainNote)
 					strumPlayAnim(false, key);
-					continue;
-				}
 				goodNoteHit(epicNote);
 			} else {
 				callOnScripts('onGhostTap', [key]);
