@@ -49,7 +49,7 @@ class Overlay extends TextField {
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		memory = MemoryUtil.getMEM();
+		memory = MemoryUtil.getGCMEM();
 		if (memory > mempeak) mempeak = memory;
 
 		text = '${FPS.currentFPS} FPS ${(fpsStats == 'ms' || fpsStats == 'full') ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
@@ -57,6 +57,8 @@ class Overlay extends TextField {
 			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
 		if (fpsStats == 'flixel' || fpsStats == 'full')
 			text += 'State: ${Type.getClassName(Type.getClass(FlxG.state))} | Draws: ${Context3DStats.totalDrawCalls()}';
+		if (fpsStats == 'totalmem' || fpsStats == 'full')
+			text += 'Total MEM: ${MemoryUtil.getMEM()}';
 
 		visible = ClientPrefs.getPref('showFPS');
 	}

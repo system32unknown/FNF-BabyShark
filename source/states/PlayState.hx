@@ -1808,9 +1808,8 @@ class PlayState extends MusicBeatState {
 			iconP2.setState(0);
 		}
 
-		if (controls.justPressed('debug_2') && !endingSong && !inCutscene) {
+		if (controls.justPressed('debug_2') && !endingSong && !inCutscene)
 			openCharacterEditor();
-		}
 
 		if (startingSong) {
 			if (startedCountdown && Conductor.songPosition >= 0) startSong();
@@ -2040,10 +2039,10 @@ class PlayState extends MusicBeatState {
 
 		switch(eventName) {
 			case 'Hey!':
-				var value:Int = 2;
-				switch(value1.toLowerCase().trim()) {
-					case 'bf' | 'boyfriend' | '0': value = 0;
-					case 'gf' | 'girlfriend' | '1': value = 1;
+				var value = switch(value1.toLowerCase().trim()) {
+					case 'bf' | 'boyfriend' | '0': 0;
+					case 'gf' | 'girlfriend' | '1': 1;
+					default: 2;
 				}
 
 				if(flValue2 == null || flValue2 <= 0) flValue2 = .6;
@@ -2556,15 +2555,8 @@ class PlayState extends MusicBeatState {
 		else if (noteDiff < Conductor.safeZoneOffset * -.1)
 			daTiming = "late";
 
-		if (!practiceMode && !cpuControlled) {
-			songScore += score;
-			if(!note.ratingDisabled) {
-				songHits++;
-				totalPlayed++;
-				RecalculateRating();
-			}
-		} else if (cpuControlled) {
-			botScore += score;
+		if (!practiceMode) {
+			(cpuControlled ? botScore : songScore) += score;
 			if(!note.ratingDisabled) {
 				songHits++;
 				totalPlayed++;

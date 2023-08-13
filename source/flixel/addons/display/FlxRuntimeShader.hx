@@ -387,8 +387,7 @@ class FlxRuntimeShader extends FlxShader
 				Reflect.setField(__data, name, input);
 				if (__isGenerated && thisHasField(name)) Reflect.setProperty(this, name, input);
 			} else if (!Reflect.hasField(__data, name) || Reflect.field(__data, name) == null) {
-				var parameterType:ShaderParameterType = switch (type)
-				{
+				var parameterType:ShaderParameterType = switch (type) {
 					case "bool": BOOL;
 					case "double", "float": FLOAT;
 					case "int", "uint": INT;
@@ -413,8 +412,7 @@ class FlxRuntimeShader extends FlxShader
 					default: null;
 				}
 
-				var length = switch (parameterType)
-				{
+				var length = switch (parameterType) {
 					case BOOL2, INT2, FLOAT2: 2;
 					case BOOL3, INT3, FLOAT3: 3;
 					case BOOL4, INT4, FLOAT4, MATRIX2X2: 4;
@@ -423,16 +421,14 @@ class FlxRuntimeShader extends FlxShader
 					default: 1;
 				}
 
-				var arrayLength = switch (parameterType)
-				{
+				var arrayLength = switch (parameterType) {
 					case MATRIX2X2: 2;
 					case MATRIX3X3: 3;
 					case MATRIX4X4: 4;
 					default: 1;
 				}
 
-				switch (parameterType)
-				{
+				switch (parameterType) {
 					case BOOL, BOOL2, BOOL3, BOOL4:
 						var parameter = new ShaderParameter<Bool>();
 						parameter.name = name;

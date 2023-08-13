@@ -1,6 +1,5 @@
 package utils.system;
 
-// lordryan wrote this :) (erizur added cross platform env vars)
 import sys.io.File;
 
 class SystemUtil {

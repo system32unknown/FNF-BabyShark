@@ -29,6 +29,7 @@ class FunkinLua {
 	
 	#if LUA_ALLOWED
 	public var lua:State = null;
+	public final addCallback:(String, Dynamic)->Bool;
 	#end
 	public var scriptName:String = '';
 	public var closed:Bool = false;
@@ -51,7 +52,9 @@ class FunkinLua {
 
 		initGlobals(game);
 
-		addCallback("getRunningScripts", function(_) {
+		addCallback = Lua_helper.add_callback.bind(lua);
+
+		addCallback("getRunningScripts", function() {
 			return [for (script in game.luaArray) script.scriptName];
 		});
 
@@ -434,7 +437,7 @@ class FunkinLua {
 		addCallback("addHealth", function(value:Float = 0) {
 			game.health += value;
 		});
-		addCallback("getHealth", function(_) {
+		addCallback("getHealth", function() {
 			return game.health;
 		});
 
@@ -1129,7 +1132,7 @@ class FunkinLua {
 
 		addCallback("debugPrint", function(text:Dynamic = '', color:String = 'WHITE') PlayState.instance.addTextToDebug(text, CoolUtil.colorFromString(color)));
 
-		addCallback("close", function(_):Bool {
+		addCallback("close", function():Bool {
 			trace('Closing script: $scriptName');
 			return closed = true;
 		});
@@ -1288,13 +1291,10 @@ class FunkinLua {
 	}
 	#end
 
-	inline public function addCallback(name:String, func:Function) {
-		Lua_helper.add_callback(lua, name, func);
-	}
 	public function addLocalCallback(name:String, myFunction:Dynamic) {
 		#if LUA_ALLOWED
 		callbacks.set(name, myFunction);
-		Lua_helper.add_callback(lua, name, null); //just so that it gets called
+		addCallback(name, null); //just so that it gets called
 		#end
 	}
 

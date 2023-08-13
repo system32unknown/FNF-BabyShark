@@ -11,6 +11,10 @@ import neko.vm.Gc;
 #end
 import openfl.system.System;
 
+@:cppFileCode("
+#include <windows.h>
+#include <psapi.h>
+")
 class MemoryUtil {
 	inline public static function clearMajor(?minor:Bool = false) {
 		#if cpp
@@ -37,9 +41,9 @@ class MemoryUtil {
 		return '$size ${intervalArray[data]}';
 	}
 
-	inline public static function getMEM():Float {
+	inline public static function getMEM():Dynamic {
 		#if cpp
-		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
+		return getTotalMEM();
 		#elseif sys
 		return cast(cast(System.totalMemory, UInt), Float);
 		#else
@@ -60,4 +64,11 @@ class MemoryUtil {
 		return 0;
 		#end
 	}
+
+	@:functionCode("
+		PROCESS_MEMORY_COUNTERS info;
+		if (GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info)))
+			return (size_t)info.WorkingSetSize;
+	")
+	static function getTotalMEM():Int return 0;
 }

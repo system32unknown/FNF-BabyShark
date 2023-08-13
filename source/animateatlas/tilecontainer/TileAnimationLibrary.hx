@@ -90,9 +90,9 @@ class TileAnimationLibrary {
 	@:access(animateatlas)
 	private function getSymbol(name:String):TileContainerSymbol {
 		var pool:Array<TileContainerSymbol> = getSymbolPool(name);
-		if (pool.length == 0) {
+		if (pool.length == 0)
 			return new TileContainerSymbol(getSymbolData(name), this, _texture);
-		} else return pool.pop();
+		else return pool.pop();
 	}
 
 	private function putSymbol(symbol:TileContainerSymbol):Void {

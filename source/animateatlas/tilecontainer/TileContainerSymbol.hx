@@ -326,13 +326,9 @@ class TileContainerSymbol extends TileContainer {
 	function sortLabels(i1:FrameLabel, i2:FrameLabel):Int {
 		var f1 = i1.frame;
 		var f2 = i2.frame;
-		if (f1 < f2) {
-			return -1;
-		} else if (f1 > f2) {
-			return 1;
-		} else {
-			return 0;
-		}
+		if (f1 < f2) return -1;
+		else if (f1 > f2) return 1;
+		else return 0;
 	}
 
 	private function getLayer(layerIndex:Int):TileContainer {
@@ -360,11 +356,9 @@ class TileContainerSymbol extends TileContainer {
 		for (i in 1...numLabels) {
 			var label:FrameLabel = _frameLabels[i];
 
-			if (label.frame <= _currentFrame) {
+			if (label.frame <= _currentFrame)
 				highestLabel = label;
-			} else {
-				break;
-			}
+			else break;
 		}
 
 		return (highestLabel != null) ? highestLabel.name : null;
@@ -391,11 +385,9 @@ class TileContainerSymbol extends TileContainer {
 			value += _numFrames;
 		}
 
-		if (_loopMode == LoopMode.PLAY_ONCE) {
+		if (_loopMode == LoopMode.PLAY_ONCE)
 			_currentFrame = Std.int(Math.min(Math.max(value, 0), _numFrames - 1));
-		} else {
-			_currentFrame = Std.int(Math.abs(value % _numFrames));
-		}
+		else _currentFrame = Std.int(Math.abs(value % _numFrames));
 
 		if (_composedFrame != _currentFrame) {
 			update();
@@ -408,11 +400,9 @@ class TileContainerSymbol extends TileContainer {
 	}
 
 	private function set_type(value:String):String {
-		if (SymbolType.isValid(value)) {
+		if (SymbolType.isValid(value))
 			_type = value;
-		} else {
-			throw new ArgumentError("Invalid symbol type: " + value);
-		}
+		else throw new ArgumentError("Invalid symbol type: " + value);
 		return value;
 	}
 

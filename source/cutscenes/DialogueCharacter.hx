@@ -57,13 +57,11 @@ class DialogueCharacter extends FlxSprite
 
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);
-		if (!FileSystem.exists(path)) {
+		if (!FileSystem.exists(path))
 			path = Paths.getPreloadPath(characterPath);
-		}
 
-		if(!FileSystem.exists(path)) {
+		if(!FileSystem.exists(path))
 			path = Paths.getPreloadPath('images/dialogue/' + DEFAULT_CHARACTER + '.json');
-		}
 		rawJson = File.getContent(path);
 
 		#else
@@ -104,11 +102,9 @@ class DialogueCharacter extends FlxSprite
 
 		if(dialogueAnimations.exists(leAnim)) {
 			var anim:DialogueAnimArray = dialogueAnimations.get(leAnim);
-			if(playIdle) {
+			if(playIdle)
 				offset.set(anim.idle_offsets[0], anim.idle_offsets[1]);
-			} else {
-				offset.set(anim.loop_offsets[0], anim.loop_offsets[1]);
-			}
+			else offset.set(anim.loop_offsets[0], anim.loop_offsets[1]);
 		} else {
 			offset.set();
 			trace('Offsets not found! Dialogue character is badly formatted, anim: ' + leAnim + ', ' + (playIdle ? 'idle anim' : 'loop anim'));

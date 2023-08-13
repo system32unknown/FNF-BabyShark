@@ -96,7 +96,7 @@ class ExtraFunctions {
 
 		// Save data management
 		funk.addCallback("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
-			if(!PlayState.instance.modchartSaves.exists(name)) {
+			if(PlayState.instance.modchartSaves.exists(name)) {
 				FunkinLua.luaTrace('initSaveData: Save file already initialized: ' + name);
 				return false;
 			}
