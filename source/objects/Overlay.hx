@@ -56,9 +56,9 @@ class Overlay extends TextField {
 		if (ClientPrefs.getPref('showMEM'))
 			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
 		if (fpsStats == 'flixel' || fpsStats == 'full')
-			text += 'State: ${Type.getClassName(Type.getClass(FlxG.state))} | Draws: ${Context3DStats.totalDrawCalls()}';
+			text += 'State: ${Type.getClassName(Type.getClass(FlxG.state))} | Draws: ${Context3DStats.totalDrawCalls()}\n';
 		if (fpsStats == 'totalmem' || fpsStats == 'full')
-			text += 'Total MEM: ${MemoryUtil.getMEM()}';
+			text += 'Total MEM: ${MemoryUtil.getInterval(MemoryUtil.getMEM())}\n';
 
 		visible = ClientPrefs.getPref('showFPS');
 	}
