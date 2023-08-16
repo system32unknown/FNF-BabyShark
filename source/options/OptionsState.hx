@@ -22,7 +22,7 @@ class OptionsState extends MusicBeatState
 			case 'Gameplay': openSubState(new GameplaySettingsSubState());
 			case 'Miscellaneous': openSubState(new MiscellaneousSubState());
 			case 'Saves': openSubState(new SaveSubState());
-			case 'Adjust Delay and Combo': MusicBeatState.switchState(new options.NoteOffsetState());
+			case 'Adjust Delay and Combo': MusicBeatState.switchState(new NoteOffsetState());
 		}
 	}
 

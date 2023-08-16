@@ -14,7 +14,7 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		var option:Option = new Option('Rainbow FPS', '', 'RainbowFps', 'bool');
 		addOption(option);
 
-		var option:Option = new Option('More Stats FPS', '', 'FPSStats', 'string', ['none', 'ms', 'flixel', 'totalmem', 'full']);
+		var option:Option = new Option('More Stats FPS', '', 'FPSStats', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Alternate Discord Large Image', '', 'AltDiscordImg', 'bool');

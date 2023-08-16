@@ -5,7 +5,7 @@ import flixel.input.keyboard.FlxKey;
 import data.EkData.Keybinds;
 import backend.InputFormatter;
 import objects.AttachedText;
-import objects.AttachedSprite;
+
 class ControlsSubState extends MusicBeatSubstate {
 	static var curSelected:Int = 1;
 	static var curAlt:Bool = false;
@@ -39,7 +39,6 @@ class ControlsSubState extends MusicBeatSubstate {
 		add(grid);
 
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
-
 		optionShit = Keybinds.optionShit();
 
 		var currentPage:String = "";
@@ -87,13 +86,12 @@ class ControlsSubState extends MusicBeatSubstate {
 		for (i in 0...optionShit.length) {
 			var isCentered:Bool = false;
 			var isDefaultKey:Bool = (optionShit[i][0] == defaultKey);
-			if(unselectableCheck(i, true)) {
+			if(unselectableCheck(i, true))
 				isCentered = true;
-			}
 
 			var isFirst:Bool = i == 0;
 			var text:String = optionShit[i][0];
-			if (isFirst) text = '< ' + text + ' >';
+			if (isFirst) text = '< $text >';
 
 			var optionText:Alphabet = new Alphabet(200, 300, text, (!isCentered || isDefaultKey));
 			optionText.isMenuItem = true;

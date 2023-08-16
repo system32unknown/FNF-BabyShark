@@ -2,5 +2,10 @@
     "search.exclude": {
       "export/**/*.hx": true
     },
-    "haxe.enableExtendedIndentation": true
+    "files.associations": {
+      "*.hx": "haxe",
+      "*.hscript": "haxe",
+      "*.hsc": "haxe",
+      "*.hxs": "haxe"
+    }
 }

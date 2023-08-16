@@ -12,8 +12,7 @@ import openfl.text.TextFormatAlign;
 /**
  * The flixel sound tray, the little volume meter that pops down sometimes.
  */
-class FlxSoundTray extends Sprite
-{
+class FlxSoundTray extends Sprite {
 	/**
 	 * Because reading any data from DisplayObject is insanely expensive in hxcpp, keep track of whether we need to update it or not.
 	 */
@@ -46,8 +45,7 @@ class FlxSoundTray extends Sprite
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
 	 */
 	@:keep
-	public function new()
-	{
+	public function new() {
 		super();
 
 		visible = false;
@@ -90,12 +88,11 @@ class FlxSoundTray extends Sprite
 	/**
 	 * This function just updates the soundtray object.
 	 */
-	public function update(MS:Float):Void
-	{
+	public function update(MS:Float):Void {
 		// Animate stupid sound tray thing
-		if (_timer > 0) {
+		if (_timer > 0)
 			_timer -= MS / 1000;
-		} else if (y > -height) {
+		else if (y > -height) {
 			y -= (MS / 1000) * FlxG.height * 2;
 
 			if (y <= -height) {
@@ -115,8 +112,7 @@ class FlxSoundTray extends Sprite
 	 *
 	 * @param slient Whether the volume is increasing.
 	 */
-	public function show(Silent:Bool = false):Void
-	{
+	public function show(Silent:Bool = false):Void {
 		if (!Silent) {
 			var sound = FlxAssets.getSound(volumeSound);
 			if (sound != null) FlxG.sound.load(sound).play();
@@ -128,13 +124,11 @@ class FlxSoundTray extends Sprite
 		active = true;
 		var globalVolume:Int = Math.round(FlxG.sound.volume * 10);
 
-		if (FlxG.sound.muted) {
+		if (FlxG.sound.muted)
 			globalVolume = 0;
-		}
 
-		for (i in 0..._bars.length) {
+		for (i in 0..._bars.length)
 			_bars[i].alpha = i < globalVolume ? 1 : .5;
-		}
 
 		text.text = 'Volume: ' + (FlxG.sound.muted ? 'Muted' : globalVolume * 10 + '%');
 	}

@@ -12,7 +12,7 @@ class ClientPrefs {
 		'downScroll' => false,
 		'middleScroll' => false,
 		'opponentStrums' => true,
-		'FPSStats' => 'ms',
+		'FPSStats' => false,
 		'showFPS' => true,
 		'showMEM' => true,
 		'flashing' => true,

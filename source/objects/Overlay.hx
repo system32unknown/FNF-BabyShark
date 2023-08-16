@@ -8,9 +8,6 @@ import utils.system.MemoryUtil;
 import utils.system.FPSUtil;
 import utils.MathUtil;
 
-#if (gl_stats && !disable_cffi)
-import openfl.display._internal.stats.Context3DStats;
-#end
 class Overlay extends TextField {
 	public static var instance:Overlay;
 	public var fontName:String = Assets.getFont("assets/fonts/Proggy.ttf").fontName;
@@ -39,10 +36,8 @@ class Overlay extends TextField {
 		FPS = new FPSUtil();
 	}
 
-	var fpsStats:String = "";
 	override function __enterFrame(dt:Float):Void {
 		FPS.update();
-		fpsStats = ClientPrefs.getPref('FPSStats');
 
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + 1;
@@ -52,14 +47,9 @@ class Overlay extends TextField {
 		memory = MemoryUtil.getGCMEM();
 		if (memory > mempeak) mempeak = memory;
 
-		text = '${FPS.currentFPS} FPS ${(fpsStats == 'ms' || fpsStats == 'full') ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
+		text = '${FPS.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
 			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
-		if (fpsStats == 'flixel' || fpsStats == 'full')
-			text += 'State: ${Type.getClassName(Type.getClass(FlxG.state))} | Draws: ${Context3DStats.totalDrawCalls()}\n';
-		if (fpsStats == 'totalmem' || fpsStats == 'full')
-			text += 'Total MEM: ${MemoryUtil.getInterval(MemoryUtil.getMEM())}\n';
-
 		visible = ClientPrefs.getPref('showFPS');
 	}
 }
