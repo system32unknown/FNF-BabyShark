@@ -18,6 +18,7 @@ jobs:
             folder: windows
 
     name: ${{ matrix.compile }}-${{ matrix.build }}
+    permissions: write-all
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -54,7 +55,7 @@ jobs:
         run: haxe -cp update -D analyzer-optimize -main Update --interp
 
       - name: Compile
-        run: haxelib run openfl build ${{ matrix.compile }} -${{ matrix.build }}
+        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
@@ -79,11 +80,13 @@ jobs:
             })
             for (const cache of caches.data.actions_caches) {
               if (cache.key == "cache-${{ matrix.compile }}-${{ matrix.build }}") {
+                console.log('Clearing ' + cache.key + '...')
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   cache_id: cache.id,
                 })
+                console.log("Cache cleared.")
               }
             }
 
