@@ -172,7 +172,7 @@ class CreditsEditor extends MusicBeatState
 			else pathIcon = 'credits/none';
 
 			var iconSprite:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pathIcon));
-			var daColor:String = CoolUtil.dominantColor(iconSprite).hex().substring(2, this.length);
+			var daColor:String = SpriteUtil.dominantColor(iconSprite).hex().substring(2, this.length);
 			colorInput.text = daColor;
 
 			iconSprite.kill();

@@ -18,7 +18,7 @@
 	<window orientation="landscape"/>
 
 	<!--Desktop-specific-->
-	<window if="desktop" width="1280" height="720" fullscreen="false" resizable="true" vsync="false" allowHighDPI="true"/>
+	<window if="desktop" width="1280" height="720" fullscreen="false" resizable="true" vsync="false"/>
 	<!-- _____________________________Path Settings____________________________ -->
 
 	<set name="BUILD_DIR" value="export/debug" if="debug"/>

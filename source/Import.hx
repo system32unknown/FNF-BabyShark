@@ -16,6 +16,7 @@ import backend.BaseStage;
 import backend.Difficulty;
 #if MODS_ALLOWED import backend.Mods; #end
 import utils.CoolUtil;
+import utils.SpriteUtil;
 
 import objects.Alphabet;
 import objects.BGSprite;

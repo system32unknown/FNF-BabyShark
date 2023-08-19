@@ -55,12 +55,12 @@ class TextFunctions {
 		funk.addCallback("setTextBorderStyle", function(tag:String, borderStyle:String = 'NONE') {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
-				obj.borderStyle = NONE;
-				switch(borderStyle.trim().toLowerCase()) {
-					case 'none': obj.borderStyle = NONE;
-					case 'shadow': obj.borderStyle = SHADOW;
-					case 'outline': obj.borderStyle = OUTLINE;
-					case 'outline_fast': obj.borderStyle = OUTLINE_FAST;
+				obj.borderStyle = switch(borderStyle.trim().toLowerCase()) {
+					case 'none': NONE;
+					case 'shadow': SHADOW;
+					case 'outline': OUTLINE;
+					case 'outline_fast': OUTLINE_FAST;
+					default: NONE;
 				}
 			}
 		});
@@ -94,10 +94,10 @@ class TextFunctions {
 		funk.addCallback("setTextAlignment", function(tag:String, alignment:String = 'left') {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
-				obj.alignment = LEFT;
-				switch(alignment.trim().toLowerCase()) {
-					case 'right': obj.alignment = RIGHT;
-					case 'center': obj.alignment = CENTER;
+				obj.alignment = switch(alignment.trim().toLowerCase()) {
+					case 'right': RIGHT;
+					case 'center': CENTER;
+					default: LEFT;
 				}
 				return true;
 			}

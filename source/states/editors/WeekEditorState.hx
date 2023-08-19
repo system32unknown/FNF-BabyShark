@@ -688,7 +688,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 			}
 		});
 		var decideIconColor:FlxButton = new FlxButton(pasteColor.x, pasteColor.y + 20, "Get BG Color", function() {
-			var coolColor = FlxColor.fromInt(CoolUtil.dominantColor(iconArray[curSelected]));
+			var coolColor = FlxColor.fromInt(SpriteUtil.dominantColor(iconArray[curSelected]));
 			bgColorStepperR.value = coolColor.red;
 			bgColorStepperG.value = coolColor.green;
 			bgColorStepperB.value = coolColor.blue;

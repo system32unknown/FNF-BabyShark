@@ -13,51 +13,15 @@ import openfl.utils.Assets;
 //
 class ExtraFunctions {
 	public static function implement(funk:FunkinLua) {
-		// Keyboard & Gamepads
+		// Keyboard
 		funk.addCallback("keyboardJustPressed", function(name:String) {
-			return Reflect.getProperty(FlxG.keys.justPressed, name);
+			return Reflect.getProperty(FlxG.keys.justPressed, name.toUpperCase());
 		});
 		funk.addCallback("keyboardPressed", function(name:String) {
-			return Reflect.getProperty(FlxG.keys.pressed, name);
+			return Reflect.getProperty(FlxG.keys.pressed, name.toUpperCase());
 		});
 		funk.addCallback("keyboardReleased", function(name:String) {
-			return Reflect.getProperty(FlxG.keys.justReleased, name);
-		});
-
-		funk.addCallback("anyGamepadJustPressed", function(name:String) {
-			return FlxG.gamepads.anyJustPressed(name);
-		});
-		funk.addCallback("anyGamepadPressed", function(name:String) {
-			return FlxG.gamepads.anyPressed(name);
-		});
-		funk.addCallback("anyGamepadReleased", function(name:String) {
-			return FlxG.gamepads.anyJustReleased(name);
-		});
-
-		funk.addCallback("gamepadAnalogX", function(id:Int, ?leftStick:Bool = true) {
-			var controller = FlxG.gamepads.getByID(id);
-			if (controller == null) return 0.;
-			return controller.getXAxis(leftStick ? LEFT_ANALOG_STICK : RIGHT_ANALOG_STICK);
-		});
-		funk.addCallback("gamepadAnalogY", function(id:Int, ?leftStick:Bool = true) {
-			var controller = FlxG.gamepads.getByID(id);
-			if (controller == null) return 0.;
-			return controller.getYAxis(leftStick ? LEFT_ANALOG_STICK : RIGHT_ANALOG_STICK);
-		});
-		funk.addCallback("gamepadJustPressed", function(id:Int, name:String) {
-			var controller = FlxG.gamepads.getByID(id);
-			if (controller == null) return false;
-			return Reflect.getProperty(controller.justPressed, name) == true;
-		});
-		funk.addCallback("gamepadPressed", function(id:Int, name:String) {
-			var controller = FlxG.gamepads.getByID(id);
-			if (controller == null) return false;
-			return Reflect.getProperty(controller.pressed, name) == true;
-		});
-		funk.addCallback("gamepadReleased", function(id:Int, name:String) {
-			var controller = FlxG.gamepads.getByID(id);
-			if (controller == null) return false;
-			return Reflect.getProperty(controller.justReleased, name) == true;
+			return Reflect.getProperty(FlxG.keys.justReleased, name.toUpperCase());
 		});
 
 		funk.addCallback("keyJustPressed", function(name:String = '') {
@@ -186,9 +150,8 @@ class ExtraFunctions {
 			#if sys
 			if(FileSystem.exists(folder)) {
 				for (folder in FileSystem.readDirectory(folder)) {
-					if (!list.contains(folder)) {
+					if (!list.contains(folder))
 						list.push(folder);
-					}
 				}
 			}
 			#end
@@ -206,7 +169,7 @@ class ExtraFunctions {
 			var json = Paths.modFolders('data/' + jsonStr + '.json');
 			var foundJson:Bool;
 
-			if #if sys (FileSystem.exists(json)) #else (Assets.exists(json)) #end foundJson = true;
+			if (#if sys FileSystem #else Assets #end.exists(json)) foundJson = true;
 			else {
 				FunkinLua.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
 				foundJson = false;

@@ -431,7 +431,7 @@ class CharacterEditorState extends MusicBeatState
 		});
 
 		var decideIconColor:FlxButton = new FlxButton(reloadImage.x, reloadImage.y + 30, "Get Icon Color", function() {
-			var coolColor = FlxColor.fromInt(CoolUtil.dominantColor(leHealthIcon));
+			var coolColor = FlxColor.fromInt(SpriteUtil.dominantColor(leHealthIcon));
 			healthColorStepperR.value = coolColor.red;
 			healthColorStepperG.value = coolColor.green;
 			healthColorStepperB.value = coolColor.blue;

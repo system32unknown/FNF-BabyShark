@@ -1,6 +1,5 @@
 package psychlua;
 
-import haxe.Constraints.Function;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
@@ -451,7 +450,7 @@ class FunkinLua {
 		});
 		addCallback("getDominantColor", function(tag:String) {
 			if (tag == null) return 0;
-			return CoolUtil.dominantColor(LuaUtils.getObjectDirectly(tag));
+			return SpriteUtil.dominantColor(LuaUtils.getObjectDirectly(tag));
 		});
 
 		addCallback("addCharacterToList", function(name:String, type:String) {
@@ -992,8 +991,7 @@ class FunkinLua {
 				} else luaTrace('Your dialogue file is badly formatted!', false, false, FlxColor.RED);
 			} else {
 				luaTrace('startDialogue: Dialogue file not found', false, false, FlxColor.RED);
-				if(game.endingSong) game.endSong();
-				else game.startCountdown();
+				game.startAndEnd();
 			}
 			return false;
 		});
@@ -1002,23 +1000,9 @@ class FunkinLua {
 			if(FileSystem.exists(Paths.video(videoFile))) {
 				game.startVideo(videoFile);
 				return true;
-			}
-			
-			luaTrace('startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
+			} else luaTrace('startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
 			return false;
 
-			#else
-			game.startAndEnd();
-			return true;
-			#end
-		});
-		addCallback("startVideoSprite", function(videoFile:String, x:Float = 0, y:Float = 0, op:Float = 1, cam:String = 'world', ?loop:Bool = false, ?pauseMusic:Bool = false) {
-			#if VIDEOS_ALLOWED
-			if(FileSystem.exists(Paths.video(videoFile))) {
-				game.startVideoSprite(videoFile, x, y, op, cam, loop, pauseMusic);
-				return true;
-			} else luaTrace('startVideoSprite: Video file not found: ' + videoFile, false, false, FlxColor.RED);
-			return false;
 			#else
 			game.startAndEnd();
 			return true;

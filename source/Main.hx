@@ -111,8 +111,7 @@ class Main extends Sprite {
 
 		#if CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
-		#if cpp untyped __global__.__hxcpp_set_critical_error_handler(onCrash);
-		#elseif hl hl.Api.setErrorHandler(onCrash); #end
+		#if hl hl.Api.setErrorHandler(onCrash); #end
 		#end
 
 		#if discord_rpc Discord.start(); #end

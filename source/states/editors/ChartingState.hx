@@ -71,7 +71,6 @@ class ChartingState extends MusicBeatState {
 		['Set Property', "Value 1: Variable name\nValue 2: New value\n\nIf the Value is boolean add ', bool' in Value 1\nExample: boyfriend.visible, bool"],
 		['Change Mania', "Value 1: The new mania value (min: " + Note.minMania + "; max: " + Note.maxMania + ")\nValue 2: Skip old strum fade tween\nPut 'true' to skip it, anything else or blank to not."],
 		['Extra Text Change', "Value 1: Text\n\nChanges the Extra text."],
-		['Play Video Sprite', "Value 1: Video Name (must be on the \"Videos\" Folder\nValue 2: X Position, Y Position, Opacity, Camera\nX and Y and Opacity are Float Values (e.g 1.5)\nCamera is a String (e.g: 'world')\n\nvalues are separated by commas."],
 		['Play Sound', "Value 1: Sound file name\nValue 2: Volume (Default: 1), ranges from 0 to 1"],
 	];
 
