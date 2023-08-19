@@ -1,18 +1,18 @@
 {
     "dependencies": [
-        {"name": "lime", "type": "haxelib", "dir": "lime"},
-        {"name": "openfl", "type": "haxelib", "dir": "openfl"},
-        {"name": "flixel", "type": "haxelib", "dir": "flixel"},
-        {"name": "flixel-addons", "type": "haxelib", "dir":"flixel-addons"},
-        {"name": "flixel-ui", "haxelib": "haxelib", "dir":"flixel-ui"},
-        {"name": "tjson", "type": "haxelib", "dir":"tjson"},
-        {"name": "hxCodec", "type":"haxelib", "dir":"hxCodec"},
-        {"name": "SScript", "type": "haxelib", "dir": "SScript"},
-        {"name": "discord_rpc", "type": "git", "dir": "discord_rpc",
+        {"name":"lime", "type":"haxelib", "dir":"lime"},
+        {"name":"openfl", "type":"haxelib", "dir":"openfl"},
+        {"name":"flixel", "type":"haxelib", "dir":"flixel"},
+        {"name":"flixel-addons", "type":"haxelib", "dir":"flixel"},
+        {"name":"flixel-ui", "haxelib":"haxelib", "dir":"flixel"},
+        {"name":"tjson", "type":"haxelib", "dir":"tjson"},
+        {"name":"hxCodec", "type":"haxelib", "dir":"hxCodec"},
+        {"name":"SScript", "type":"haxelib", "dir":"SScript"},
+        {"name":"discord_rpc", "type":"git", "dir":"discord_rpc",
             "ref": "master",
-        "url": "https://github.com/Aidan63/linc_discord-rpc"},
-        {"name": "linc_luajit", "type": "git", "dir": "linc_luajit",
+        "url":"https://github.com/Aidan63/linc_discord-rpc"},
+        {"name":"linc_luajit", "type":"git", "dir":"linc_luajit",
             "ref": "master",
-        "url": "https://github.com/superpowers04/linc_luajit"}
+        "url":"https://github.com/superpowers04/linc_luajit"}
     ]
   }
