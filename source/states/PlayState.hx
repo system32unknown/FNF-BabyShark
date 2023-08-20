@@ -553,7 +553,7 @@ class PlayState extends MusicBeatState {
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), 0);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-		if (downScroll) scoreTxt.y = FlxG.height - scoreTxt.height;
+		if (!downScroll) scoreTxt.y = FlxG.height - scoreTxt.height;
 		scoreTxt.visible = !hideHud;
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
