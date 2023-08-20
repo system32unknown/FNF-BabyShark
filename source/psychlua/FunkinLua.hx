@@ -1136,7 +1136,7 @@ class FunkinLua {
 			if(resultStr != null && result != 0) {
 				trace(resultStr);
 				#if windows
-				lime.app.Application.current.window.alert(resultStr, 'Error on lua script!');
+				utils.system.NativeUtil.showMessageBox('Error on lua script!', resultStr, utils.system.PlatformUtil.MessageBoxIcon.MSG_WARNING);
 				#else
 				luaTrace('$scriptName\n$resultStr', true, false, FlxColor.RED);
 				#end
@@ -1357,7 +1357,6 @@ class FunkinLua {
 
 		lastCalledFunction = func;
 		lastCalledScript = this;
-
 		try {
 			if(lua == null) return Function_Continue;
 
@@ -1410,7 +1409,6 @@ class FunkinLua {
 		if (lua == null) return;
 		Lua.close(lua);
 		lua = null;
-
 		#if (SScript >= "3.0.0")
 		if(hscript != null) {
 			hscript.active = false;

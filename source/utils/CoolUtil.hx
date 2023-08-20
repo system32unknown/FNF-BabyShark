@@ -5,6 +5,8 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import openfl.geom.Rectangle;
 import openfl.net.FileReference;
+import utils.system.PlatformUtil.MessageBoxIcon;
+import utils.system.NativeUtil;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
@@ -34,12 +36,15 @@ class CoolUtil {
 	}
 
 	inline public static function coolTextFile(path:String):Array<String> {
-		#if sys
-		if (FileSystem.exists(path)) return listFromString(File.getContent(path));
+		var daList:String = null;
+		#if (sys && MODS_ALLOWED)
+		var formatted:Array<String> = path.split(':'); //prevent "shared:", "preload:" and other library names on file path
+		path = formatted[formatted.length - 1];
+		if(FileSystem.exists(path)) daList = File.getContent(path);
 		#else
-		if (Assets.exists(path)) return listFromString(Assets.getText(path));
+		if(Assets.exists(path)) daList = Assets.getText(path);
 		#end
-		return [];
+		return daList != null ? listFromString(daList) : [];
 	}
 	inline public static function listFromString(string:String):Array<String> {
 		final daList = string.trim().split('\n');
@@ -199,11 +204,11 @@ class CoolUtil {
 		flags.set(IsError);
 		hl.UI.dialog(title, context, flags);
 		#else
-		lime.app.Application.current.window.alert(context, title);
+		NativeUtil.showMessageBox(title, context, MessageBoxIcon.MSG_ERROR);
 		#end
     }
 
-	public inline static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
+	public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
 		return new FlxBackdrop(FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
 	}
 }

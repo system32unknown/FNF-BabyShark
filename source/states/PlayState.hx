@@ -550,15 +550,10 @@ class PlayState extends MusicBeatState {
 			iconP2.iconType = 'psych';
 		}
 
-		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 40), 0);
+		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), 0);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-		if (ClientPrefs.getPref('ScoreType') == 'Psych') {
-			scoreTxt.y = healthBar.y + 40;
-			scoreTxt.borderSize = 1.25;
-			scoreTxt.size = 20;
-		} else if(ClientPrefs.getPref('ScoreType') == 'Kade')
-			scoreTxt.y = (downScroll ? healthBar.y + 50 : FlxG.height - scoreTxt.height);
+		if (downScroll) scoreTxt.y = FlxG.height - scoreTxt.height;
 		scoreTxt.visible = !hideHud;
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
@@ -1103,7 +1098,6 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	var scoreTweenSetting:Array<Dynamic> = [1.075, .2, 'backOut'];
 	public function updateScore(miss:Bool = false) {
 		var ret:Dynamic = callOnScripts('onUpdateScore', [miss]);
 		if(ret == FunkinLua.Function_Stop) return;
@@ -1114,17 +1108,6 @@ class PlayState extends MusicBeatState {
 		judgementCounter.text += '\n${getMissText(!ClientPrefs.getPref('movemissjudge'), '\n')}';
 		judgementCounter.screenCenter(Y);
 		if (!ClientPrefs.getPref('ShowNPSCounter')) UpdateScoreText();
-		if(ClientPrefs.getPref('scoreZoom') && !miss) {
-			if (scoreTxtTween != null) scoreTxtTween.cancel();
-
-			scoreTxt.scale.set(scoreTweenSetting[0], scoreTweenSetting[0]);
-			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, scoreTweenSetting[1] * playbackRate, {
-				ease: LuaUtils.getTweenEaseByString(scoreTweenSetting[2]),
-				onComplete: function(twn:FlxTween) {
-					scoreTxtTween = null;
-				}
-			});
-		}
 	}
 
 	public function setSongTime(time:Float) {
@@ -2419,30 +2402,15 @@ class PlayState extends MusicBeatState {
 
 	var scoreSeparator:String = "|";
 	function getMissText(hidden:Bool = false, sepa:String = ' '):String {
-		var missText = "";
-		var sepaSpace:String = (sepa != '\n' ? scoreSeparator + ' ' : '');
-		if (cpuControlled || hidden) return missText;
+		if (cpuControlled || hidden) return '';
 
-		switch (ClientPrefs.getPref('ScoreType')) {
-			case 'Alter' | 'Kade':
-				var breakText = (ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks');
-				missText = '${sepa != '\n' ? '$scoreSeparator $breakText:' : '$breakText: '}$songMisses';
-			case 'Psych': missText = sepaSpace + 'Misses: $songMisses';
-		} return missText + sepa;
-	}
-	function getNPSText() {
-		if (!ClientPrefs.getPref('ShowNPSCounter')) return '';
-
-		switch (ClientPrefs.getPref('ScoreType')) {
-			case 'Alter' | 'Kade':
-				return 'NPS:$nps (Max:$maxNPS) $scoreSeparator ';
-			default: return 'NPS: $nps $scoreSeparator ';
-		}
+		var breakText = (ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks');
+		return '${sepa != '\n' ? '$scoreSeparator $breakText:' : '$breakText: '}$songMisses' + sepa;
 	}
 
 	var updateScoreText:Bool = true;
 	function UpdateScoreText() {
-		var tempText:String = getNPSText();
+		var tempText:String = (!ClientPrefs.getPref('ShowNPSCounter') ? '' : 'NPS:$nps (Max:$maxNPS) $scoreSeparator ');
 		var tempMiss:String = getMissText(ClientPrefs.getPref('movemissjudge'));
 		
 		switch(ClientPrefs.getPref('ScoreType')) {
@@ -2450,10 +2418,6 @@ class PlayState extends MusicBeatState {
 				tempText += 'Score:${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
 				tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' | [$ratingName, $ratingFC] • $ranks' : ' | [?, ?] • F');
-			case 'Psych':
-				tempText += 'Score: ${!cpuControlled ? songScore : botScore} ';
-				tempText += tempMiss;
-				tempText += '$scoreSeparator Rating: ' + (ratingName != '?' ? '$ratingName [$accuracy% | $ratingFC]' : '? [0% | ?]');
 			case 'Kade':
 				tempText += 'Score:${!cpuControlled ? songScore : botScore} ';
 				tempText += tempMiss;
@@ -2786,9 +2750,7 @@ class PlayState extends MusicBeatState {
 
 				if (cpuControlled && !daNote.blockHit && daNote.mustPress && daNote.canBeHit && (daNote.isSustainNote ? (daNote.parent == null || daNote.parent.wasGoodHit) : daNote.checkHit(Conductor.songPosition)))
 					goodNoteHit(daNote);
-
 				if (cpuControlled || boyfriend.stunned) return;
-
 				if (daNote.isSustainNote && strumsBlocked[daNote.noteData] != true && keysPressed[daNote.noteData % Note.ammo[mania]] && (daNote.parent == null || daNote.parent.wasGoodHit) && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit)
 					goodNoteHit(daNote);
 			});
@@ -3421,18 +3383,13 @@ class PlayState extends MusicBeatState {
 	}
 
 	function fullComboUpdate() {
-		var epics = ratingsData[0].hits;
-		var sicks = ratingsData[1].hits;
-		var goods = ratingsData[2].hits;
-		var bads = ratingsData[3].hits;
-		var shits = ratingsData[4].hits;
-
+		var fullhits = [for(i in 0...4) ratingsData[0].hits];
 		ratingFC = 'Clear';
 		if(songMisses < 1) {
-			if (bads > 0 || shits > 0) ratingFC = 'FC';
-			else if (goods > 0) ratingFC = 'GFC';
-			else if (sicks > 0) ratingFC = 'SFC';
-			else if (epics > 0) ratingFC = "PFC";
+			if (fullhits[3] > 0 || fullhits[4] > 0) ratingFC = 'FC';
+			else if (fullhits[2] > 0) ratingFC = 'GFC';
+			else if (fullhits[1] > 0) ratingFC = 'SFC';
+			else if (fullhits[0] > 0) ratingFC = "PFC";
 		} else if (songMisses < 10) ratingFC = 'SDCB';
 	}
 }

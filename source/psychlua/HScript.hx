@@ -309,9 +309,7 @@ class HScript extends SScript {
 			if (funk.hscript != null) {
 				try {
 					if (c != null) funk.hscript.set(libName, c);
-				} catch (e:Dynamic) {
-					FunkinLua.luaTrace(funk.hscript.origin + ":" + funk.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
-				}
+				} catch (e:Dynamic) FunkinLua.luaTrace('${funk.hscript.origin}:${funk.lastCalledFunction} - $e', false, false, FlxColor.RED);
 			}
 			#else
 			FunkinLua.luaTrace("addHaxeLibrary: HScript isn't supported on this platform!", false, false, FlxColor.RED);

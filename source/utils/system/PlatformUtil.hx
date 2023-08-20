@@ -138,6 +138,27 @@ class PlatformUtil
         SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, (PVOID)p.c_str(), SPIF_UPDATEINIFILE);
     ')
 	static public function updateWallpaper(path = "", ?output = "") {return output;}
+
+	@:functionCode('
+	    if (!AllocConsole()) return;
+
+	    freopen("CONIN$", "r", stdin);
+	    freopen("CONOUT$", "w", stdout);
+	    freopen("CONOUT$", "w", stderr);
+	')
+	public static function allocConsole() {}
+	
+	@:functionCode('
+		HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); 
+		SetConsoleTextAttribute(console, color);
+	')
+	public static function setConsoleColors(color:Int) {}
+
+	@:functionCode('
+		system("CLS");
+		std::cout<< "" <<std::flush;
+	')
+	public static function clearScreen() {}
 }
 #else
 class PlatformUtil {
@@ -162,6 +183,12 @@ class PlatformUtil {
     static public function getCurrentWalllpaper(?path = "") {return null;}
 
     static public function updateWallpaper(path = "", ?output = "") {return null;}
+
+    static public function allocConsole() {}
+
+    static public function setConsoleColors(color:Int) {}
+
+    static public function clearScreen() {}
 }
 #end
 

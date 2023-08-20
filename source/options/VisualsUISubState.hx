@@ -47,7 +47,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		var option:Option = new Option('Score Styles:',
 			"",
 			'ScoreType',
-			'string', ['Alter', 'Kade', 'Psych']);
+			'string', ['Alter', 'Kade']);
 		addOption(option);
 
 		var option:Option = new Option('Rating Display:',
@@ -63,11 +63,6 @@ class VisualsUISubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Move \'Misses\' in Judgement Counter',
 			'', 'movemissjudge', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Score Text Zoom on Hit',
-			"If unchecked, disables the Score text zooming\neverytime you hit a note.",
-			'scoreZoom', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Show Combo Counter',

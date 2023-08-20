@@ -48,7 +48,6 @@ class ClientPrefs {
 		'ghostTapping' => true,
 		'HealthTypes' => 'Vanilla',
 		'timeBarType' => 'Time Left',
-		'scoreZoom' => false,
 		'noReset' => false,
 		'movemissjudge' => false,
 		'AltDiscordImg' => false,

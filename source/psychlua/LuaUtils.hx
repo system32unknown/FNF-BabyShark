@@ -146,8 +146,7 @@ class LuaUtils {
 
 	public static function getObjectDirectly(objectName:String, ?checkForTextsToo:Bool = true):Dynamic {
 		switch(objectName) {
-			case 'this' | 'instance' | 'game':
-				return PlayState.instance;
+			case 'this' | 'instance' | 'game': return PlayState.instance;
 			
 			default:
 				var obj:Dynamic = PlayState.instance.getLuaObject(objectName, checkForTextsToo);
@@ -170,8 +169,7 @@ class LuaUtils {
 		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
 	}
 
-	public static inline function getLowestCharacterGroup():FlxSpriteGroup
-	{
+	public static inline function getLowestCharacterGroup():FlxSpriteGroup {
 		var group:FlxSpriteGroup = PlayState.instance.gfGroup;
 		var pos:Int = PlayState.instance.members.indexOf(group);
 
