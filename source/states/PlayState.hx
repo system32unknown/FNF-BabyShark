@@ -2424,7 +2424,7 @@ class PlayState extends MusicBeatState {
 		score = daRating.score;
 
 		if(!note.ratingDisabled) daRating.hits++;
-		totalNotesHit += (ClientPrefs.getPref('ShowCombo') ? backend.EtternaFunctions.wife3(noteDiff, Conductor.safeZoneOffset / 180) : daRating.ratingMod);
+		totalNotesHit += (ClientPrefs.getPref('complexAccuracy') ? backend.EtternaFunctions.wife3(noteDiff, Conductor.safeZoneOffset / 180) : daRating.ratingMod);
 
 		if(daRating.noteSplash && !note.noteSplashDisabled)
 			spawnNoteSplashOnNote(note);
