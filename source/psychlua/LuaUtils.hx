@@ -335,6 +335,14 @@ class LuaUtils {
 		}
 	}
 
+	public static function axesFromString(axe:String):flixel.util.FlxAxes {
+		return switch (axe.trim().toLowerCase()) {
+			case 'x': flixel.util.FlxAxes.X;
+			case 'y': flixel.util.FlxAxes.Y;
+			default: flixel.util.FlxAxes.XY;
+		}
+	}
+
 	public static function typeToString(type:Int):String {
 		#if LUA_ALLOWED
 		switch(type) {

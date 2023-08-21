@@ -562,10 +562,9 @@ class FunkinLua {
 			}
 			return target;
 		});
-		addCallback("cameraShake", function(camera:String, intensity:Float, duration:Float) {
-			LuaUtils.cameraFromString(camera).shake(intensity, duration * game.playbackRate);
+		addCallback("cameraShake", function(camera:String, intensity:Float, duration:Float, axes:String) {
+			LuaUtils.cameraFromString(camera).shake(intensity, duration * game.playbackRate, true, LuaUtils.axesFromString(axes));
 		});
-
 		addCallback("cameraFlash", function(camera:String, color:String, duration:Float, forced:Bool) {
 			LuaUtils.cameraFromString(camera).flash(CoolUtil.colorFromString(color), duration * game.playbackRate, null, forced);
 		});
@@ -940,23 +939,12 @@ class FunkinLua {
 		});
 		addCallback("screenCenterGroup", function(tag:String, pos:String = 'xy') {
 			var leGroup:ModchartGroup = game.modchartGroups.get(tag);
-			if (leGroup != null) {
-				switch (pos.toLowerCase().trim()) {
-					case 'x': leGroup.screenCenter(X);
-					case 'y': leGroup.screenCenter(Y);
-					default: leGroup.screenCenter();
-				}
-			}
+			if (leGroup != null) leGroup.screenCenter(LuaUtils.axesFromString(pos));
 		});
 		addCallback("screenCenter", function(obj:String, pos:String = 'xy') {
 			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
 			if (spr == null) return false;
-
-			switch(pos.trim().toLowerCase()) {
-				case 'x': spr.screenCenter(X);
-				case 'y': spr.screenCenter(Y);
-				default: spr.screenCenter();
-			}
+			spr.screenCenter(LuaUtils.axesFromString(pos));
 			return true;
 		});
 		addCallback("objectsOverlap", function(obj1:String, obj2:String) {

@@ -71,6 +71,10 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		'UpdateCamSection', 'bool');
 		addOption(option);
 
+		var option:Option = new Option('Complex Accuracy',
+		'', 'complexAccuracy', 'bool');
+		addOption(option);
+
 		var option:Option = new Option('Note Diff Type:', 'Choose the type of Note Diffs.',
 			'NoteDiffTypes', 'string', ['Psych', 'Simple']);
 		addOption(option);

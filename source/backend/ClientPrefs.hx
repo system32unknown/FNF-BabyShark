@@ -29,6 +29,7 @@ class ClientPrefs {
 		'ShowMsTiming' => false,
 		'ShowCombo' => false,
 		'ShowNPSCounter' => false,
+		'complexAccuracy' => false,
 		'ShowLateEarly' => false,
 		'NoteDiffTypes' => "Simple",
 		'ScoreType' => 'Kade',

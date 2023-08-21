@@ -20,7 +20,7 @@ import flixel.system.FlxAssets.FlxShader;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
-import flixel.util.FlxSpriteUtil;
+#if FLX_DEBUG import flixel.util.FlxSpriteUtil; #end
 import flixel.math.FlxAngle;
 import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
