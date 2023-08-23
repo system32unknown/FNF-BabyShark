@@ -65,21 +65,12 @@ class HScript extends SScript {
     function getDefaultVariables():Map<String, Dynamic> {
         return [
             // Haxe related stuff
-            "Std"               => Std,
-            "Sys"               => Sys,
-            "Math"              => Math,
-            "Date"              => Date,
-            "StringTools"       => StringTools,
+
             "Reflect"           => Reflect,
             "Xml"               => Xml,
 
             "Json"              => haxe.Json,
-			#if sys
-            "File"              => sys.io.File,
-            "FileSystem"        => sys.FileSystem,
-			#end
             // OpenFL & Lime related stuff
-            "Assets"            => openfl.utils.Assets,
             "Application"       => lime.app.Application,
             "window"            => lime.app.Application.current.window,
 

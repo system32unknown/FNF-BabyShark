@@ -182,7 +182,6 @@ class PlayState extends MusicBeatState {
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
-	var scoreTxtTween:FlxTween;
 	
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
@@ -300,7 +299,7 @@ class PlayState extends MusicBeatState {
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
 		camGame.bgColor = 0xFF000000;
-		camHUD.bgColor = 0x001B0E0E;
+		camHUD.bgColor = 0x00000000;
 		camOther.bgColor = 0x00000000;
 
 		FlxG.cameras.reset(camGame);
@@ -434,7 +433,7 @@ class PlayState extends MusicBeatState {
 			dad.setPosition(GF_X, GF_Y);
 			if(gf != null) gf.visible = false;
 		}
-		stagesFunc(function(stage:BaseStage) stage.createPost());
+		stagesFunc((stage:BaseStage) -> stage.createPost());
 
 		uiGroup = new FlxSpriteGroup();
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
@@ -457,9 +456,9 @@ class PlayState extends MusicBeatState {
 		}
 
 		var showTime:Bool = timeType != 'Disabled';
-		timeTxt = new FlxText(0, 19, 400, "", 20);
+		timeTxt = new FlxText(0, 19, 400, "", 16);
 		timeTxt.screenCenter(X);
-		timeTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER);
+		timeTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
@@ -845,8 +844,7 @@ class PlayState extends MusicBeatState {
 		inCutscene = true;
 
 		var filepath:String = Paths.video(name);
-		if(!#if sys FileSystem #else OpenFlAssets #end.exists(filepath))
-		{
+		if(!#if sys FileSystem #else OpenFlAssets #end.exists(filepath)) {
 			FlxG.log.warn('Couldnt find video file: ' + name);
 			startAndEnd();
 			return;
@@ -854,7 +852,7 @@ class PlayState extends MusicBeatState {
 
 		var video:VideoHandler = new VideoHandler();
 		video.play(filepath);
-		video.onEndReached.add(function() {
+		video.onEndReached.add(() -> {
 			video.dispose();
 			startAndEnd();
 			return;
@@ -882,7 +880,7 @@ class PlayState extends MusicBeatState {
 			precacheList.set('dialogue', 'sound');
 			precacheList.set('dialogueClose', 'sound');
 			psychDialogue = new DialogueBoxPsych(dialogueFile, song);
-			psychDialogue.finishThing = function() {
+			psychDialogue.finishThing = () -> {
 				psychDialogue = null;
 				if(endingSong) endSong();
 				else startCountdown();
@@ -986,7 +984,7 @@ class PlayState extends MusicBeatState {
 				return true;
 			}
 
-			startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, function(tmr:FlxTimer) {
+			startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, (tmr:FlxTimer) -> {
 				charactersDance();
 
 				var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
@@ -1018,7 +1016,7 @@ class PlayState extends MusicBeatState {
 					case 4: tick = START;
 				}
 
-				notes.forEachAlive(function(note:Note) {
+				notes.forEachAlive((note:Note) -> {
 					if(ClientPrefs.getPref('opponentStrums') || note.mustPress) {
 						note.copyAlpha = false;
 						note.alpha = note.multAlpha;
@@ -1027,7 +1025,7 @@ class PlayState extends MusicBeatState {
 					}
 				});
 
-				stagesFunc(function(stage:BaseStage) stage.countdownTick(tick, swagCounter));
+				stagesFunc((stage:BaseStage) -> stage.countdownTick(tick, swagCounter));
 				callOnScripts('onCountdownTick', [swagCounter]);
 				callOnHScript('onCountdownTick', [tick, swagCounter]);
 				swagCounter++;
@@ -1049,7 +1047,7 @@ class PlayState extends MusicBeatState {
 		insert(members.indexOf(notes), spr);
 		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, Conductor.crochet / 1000, {
 			ease: FlxEase.cubeInOut,
-			onComplete: function(twn:FlxTween) {
+			onComplete: (twn:FlxTween) -> {
 				remove(spr, true);
 				spr.destroy();
 			}
@@ -1192,7 +1190,6 @@ class PlayState extends MusicBeatState {
 		FlxG.sound.list.add(vocals);
 
 		add(notes = new FlxTypedGroup<Note>());
-
 		var noteData:Array<SwagSection>;
 		noteData = songData.notes;
 
@@ -1281,8 +1278,7 @@ class PlayState extends MusicBeatState {
 			}
 		}
 		for (event in songData.events) //Event Notes
-			for (i in 0...event[1].length)
-				makeEvent(event, i);
+			for (i in 0...event[1].length) makeEvent(event, i);
 
 		unspawnNotes.sort(sortByTime);
 		generatedMusic = true;
@@ -1292,7 +1288,7 @@ class PlayState extends MusicBeatState {
 		eventPushedUnique(event);
 		if(eventsPushed.contains(event.event)) return;
 
-		stagesFunc(function(stage:BaseStage) stage.eventPushed(event));
+		stagesFunc((stage:BaseStage) -> stage.eventPushed(event));
 		eventsPushed.push(event.event);
 	}
 
@@ -1315,7 +1311,7 @@ class PlayState extends MusicBeatState {
 				precacheList.set(event.value1, 'sound');
 				Paths.sound(event.value1);
 		}
-		stagesFunc(function(stage:BaseStage) stage.eventPushedUnique(event));
+		stagesFunc((stage:BaseStage) -> stage.eventPushedUnique(event));
 	}
 
 	function eventEarlyTrigger(event:EventNote):Float {
@@ -1396,11 +1392,9 @@ class PlayState extends MusicBeatState {
 						daKeyTxt.y += 16;
 						daKeyTxt.alpha = 1;
 					}
-					new FlxTimer().start(Conductor.crochet * .001 * 12, function(_) {
+					new FlxTimer().start(Conductor.crochet * .001 * 12, (_) -> {
 						FlxTween.tween(daKeyTxt, {y: daKeyTxt.y + 32, alpha: 0}, twnDuration, {ease: FlxEase.circIn, startDelay: twnStart, 
-						onComplete: function(t) {
-							remove(daKeyTxt);
-						}});
+						onComplete: (t) -> {remove(daKeyTxt);}});
 					});
 				}
 			}
@@ -1477,9 +1471,7 @@ class PlayState extends MusicBeatState {
 				oldStrum.updateHitbox();
 				add(oldStrum);
 
-				FlxTween.tween(oldStrum, {alpha: 0}, 0.3, {onComplete: function(_) {
-					remove(oldStrum);
-				}});
+				FlxTween.tween(oldStrum, {alpha: 0}, .3, {onComplete: (_) -> {remove(oldStrum);}});
 			}
 		}
 
@@ -1503,7 +1495,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function openSubState(SubState:FlxSubState) {
-		stagesFunc(function(stage:BaseStage) stage.openSubState(SubState));
+		stagesFunc((stage:BaseStage) -> stage.openSubState(SubState));
 		if (paused) {
 			if (FlxG.sound.music != null) {
 				FlxG.sound.music.pause();
@@ -1515,7 +1507,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function closeSubState() {
-		stagesFunc(function(stage:BaseStage) stage.closeSubState());
+		stagesFunc((stage:BaseStage) -> stage.closeSubState());
 		if (paused) {
 			if (FlxG.sound.music != null && !startingSong)
 				resyncVocals();
@@ -1667,7 +1659,6 @@ class PlayState extends MusicBeatState {
 				nps = notesHitArray.length;
 				if (nps > maxNPS) maxNPS = nps;
 			}
-
 			UpdateScoreText();
 		}
 
@@ -1708,15 +1699,10 @@ class PlayState extends MusicBeatState {
 		if (healthBar.bounds.max != null)
 			if (health > healthBar.bounds.max) health = healthBar.bounds.max;
 		else if (health > healthMax) health = healthMax;
+		if (health < 0) health = 0;
 
-		if (iconP1.moves) {
-			if (iconP1.iconType == 'psych') iconP1.x = healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-			else iconP1.x = healthBar.barCenter - iconOffset;
-		} 
-		if (iconP2.moves) {
-			if (iconP2.iconType == 'psych') iconP2.x = healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
-			else iconP2.x = healthBar.barCenter - (iconP2.width - iconOffset);
-		} 
+		if (iconP1.moves) iconP1.x = (iconP1.iconType == 'psych' ? healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset : healthBar.barCenter - iconOffset);
+		if (iconP2.moves) iconP2.x = (iconP2.iconType == 'psych' ? healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2 : healthBar.barCenter - (iconP2.width - iconOffset));
 
 		if (healthBar.percent < 20) {
 			iconP1.setState(1);
@@ -2595,9 +2581,8 @@ class PlayState extends MusicBeatState {
 			}
 		
 			FlxTween.tween(comboSpr, {alpha: 0}, .2 / playbackRate, {
-				onComplete: function(tween:FlxTween) {
-					remove(comboSpr, true);
-					comboSpr.destroy();
+				onComplete: (tween:FlxTween) -> {
+					remove(comboSpr, true); comboSpr.destroy();
 				}, startDelay: Conductor.crochet * .002 / playbackRate
 			});
 		}
@@ -3363,7 +3348,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function fullComboUpdate() {
-		var fullhits = [for(i in 0...4) ratingsData[0].hits];
+		var fullhits = [for(i in 0...ratingsData.length) ratingsData[i].hits];
 		ratingFC = 'Clear';
 		if(songMisses < 1) {
 			if (fullhits[3] > 0 || fullhits[4] > 0) ratingFC = 'FC';
