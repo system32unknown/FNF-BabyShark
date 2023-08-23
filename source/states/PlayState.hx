@@ -1699,7 +1699,7 @@ class PlayState extends MusicBeatState {
 		if (healthBar.bounds.max != null)
 			if (health > healthBar.bounds.max) health = healthBar.bounds.max;
 		else if (health > healthMax) health = healthMax;
-		if (health < 0) health = 0;
+		if (practiceMode && health < 0) health = 0;
 
 		if (iconP1.moves) iconP1.x = (iconP1.iconType == 'psych' ? healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset : healthBar.barCenter - iconOffset);
 		if (iconP2.moves) iconP2.x = (iconP2.iconType == 'psych' ? healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2 : healthBar.barCenter - (iconP2.width - iconOffset));
