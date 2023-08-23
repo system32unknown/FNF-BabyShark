@@ -1734,7 +1734,7 @@ class PlayState extends MusicBeatState {
 
 			var secondsTotal:Int = Math.floor(Math.max(0, (songCalc / playbackRate) / 1000));
 			var formattedsec:String = CoolUtil.formatTime(secondsTotal);
-			var timePos:String = '$formattedsec / ' + CoolUtil.formatTime(Math.floor(songLength / 1000));
+			var timePos:String = '$formattedsec / ' + CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000));
 			if (timeType != 'Song Name')
 				switch (timeType) {
 					case 'Time Left' | 'Time Elapsed': timeTxt.text = formattedsec;
@@ -2410,7 +2410,7 @@ class PlayState extends MusicBeatState {
 		score = daRating.score;
 
 		if(!note.ratingDisabled) daRating.hits++;
-		totalNotesHit += (ClientPrefs.getPref('complexAccuracy') ? backend.EtternaFunctions.wife3(noteDiff, Conductor.safeZoneOffset / 180) : daRating.ratingMod);
+		totalNotesHit += (ClientPrefs.getPref('complexAccuracy') ? backend.EtternaFunctions.wife3(-noteDiff) : daRating.ratingMod);
 
 		if(daRating.noteSplash && !note.noteSplashDisabled)
 			spawnNoteSplashOnNote(note);
@@ -2420,20 +2420,11 @@ class PlayState extends MusicBeatState {
 		else if (noteDiff < Conductor.safeZoneOffset * -.1)
 			daTiming = "late";
 
-		if (!practiceMode && !cpuControlled) {
-			songScore += score;
-			if(!note.ratingDisabled) {
-				songHits++;
-				totalPlayed++;
-				RecalculateRating();
-			}
-		} else if (cpuControlled) {
-			botScore += score;
-			if(!note.ratingDisabled) {
-				songHits++;
-				totalPlayed++;
-				RecalculateRating();
-			}
+		if (cpuControlled) botScore += score; else songScore += score;
+		if(!note.ratingDisabled) {
+			songHits++;
+			totalPlayed++;
+			RecalculateRating();
 		}
 		if (ClientPrefs.getPref('ShowCombo')) {
 			var placement:Float = FlxG.width * 0.35;
