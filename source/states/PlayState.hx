@@ -193,7 +193,6 @@ class PlayState extends MusicBeatState {
 	var songNameText:FlxText;
 
 	public static var campaignScore:Int = 0;
-	public static var campaignMisses:Int = 0;
 	public static var deathCounter:Int = 0;
 
 	public static var chartingMode:Bool = false;
@@ -564,16 +563,15 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(judgementCounter);
 		judgementCounter.screenCenter(Y);
 
-		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
+		botplayTxt = new FlxText(400, healthBar.bg.y + (downScroll ? 100 : -100), 0, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.visible = cpuControlled;
 		botplayTxt.screenCenter(X);
 		uiGroup.add(botplayTxt);
-		if (downScroll) botplayTxt.y = timeBarBG.y - 78;
 
-		songNameText = new FlxText(2, 0, 0, SONG.song + " - " + storyDifficultyText + (playbackRate != 1 ? ' ($playbackRate' + 'x)' : ''), 16);
+		songNameText = new FlxText(2, 0, 0, '${SONG.song} - ${storyDifficultyText}' + (playbackRate != 1 ? ' ($playbackRate' + 'x)' : ''), 16);
 		songNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
 		songNameText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		songNameText.scrollFactor.set();
@@ -2285,8 +2283,6 @@ class PlayState extends MusicBeatState {
 
 			if (isStoryMode) {
 				campaignScore += songScore;
-				campaignMisses += songMisses;
-
 				storyPlaylist.remove(storyPlaylist[0]);
 
 				if (storyPlaylist.length <= 0) {
@@ -2717,7 +2713,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function opponentnoteMiss(daNote:Note):Void {
-		notes.forEachAlive(function(note:Note) {
+		notes.forEachAlive((note:Note) -> {
 			if (daNote != note && !daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) {
 				note.kill();
 				notes.remove(note, true);
@@ -2734,7 +2730,7 @@ class PlayState extends MusicBeatState {
 		daNote.hasMissed = true;
 		daNote.active = false;
 
-		notes.forEachAlive(function(note:Note) {
+		notes.forEachAlive((note:Note) -> {
 			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) {
 				note.kill();
 				notes.remove(note, true);

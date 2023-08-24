@@ -10,8 +10,7 @@ import data.WeekData;
 import objects.AttachedSprite;
 import backend.InputFormatter;
 
-class ModsMenuState extends MusicBeatState
-{
+class ModsMenuState extends MusicBeatState {
 	var mods:Array<ModMetadata> = [];
 	var bg:FlxSprite;
 	var intendedColor:Int;
@@ -74,7 +73,7 @@ class ModsMenuState extends MusicBeatState
 		//attached buttons
 		var startX:Int = 1120;
 
-		buttonToggle = new FlxButton(startX, 0, "ON", function() {
+		buttonToggle = new FlxButton(startX, 0, "ON", () -> {
 			if(mods[curSelected].restart) needaReset = true;
 			modsList[curSelected][1] = !modsList[curSelected][1];
 			updateButtonToggle();
@@ -90,7 +89,7 @@ class ModsMenuState extends MusicBeatState
 		setAllLabelsOffset(buttonToggle, -15, 10);
 		startX -= 70;
 
-		buttonUp = new FlxButton(startX, 0, "/\\", function() {
+		buttonUp = new FlxButton(startX, 0, "/\\", () -> {
 			moveMod(-1);
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.7);
 		});
@@ -103,7 +102,7 @@ class ModsMenuState extends MusicBeatState
 		setAllLabelsOffset(buttonUp, -15, 10);
 		startX -= 70;
 
-		buttonDown = new FlxButton(startX, 0, "\\/", function() {
+		buttonDown = new FlxButton(startX, 0, "\\/", () -> {
 			moveMod(1);
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.7);
 		});
@@ -206,9 +205,8 @@ class ModsMenuState extends MusicBeatState
 			//Don't ever cache the icons, it's a waste of loaded memory
 			var loadedIcon:BitmapData = null;
 			var iconToUse:String = Paths.mods(values[0] + '/pack.png');
-			if(FileSystem.exists(iconToUse)) {
+			if(FileSystem.exists(iconToUse))
 				loadedIcon = BitmapData.fromFile(iconToUse);
-			}
 
 			newMod.icon = new AttachedSprite();
 			if(loadedIcon != null) {
@@ -294,9 +292,7 @@ class ModsMenuState extends MusicBeatState
 		}
 
 		if(controls.BACK) {
-			if(colorTween != null) {
-				colorTween.cancel();
-			}
+			if(colorTween != null) colorTween.cancel();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			FlxG.mouse.visible = false;
 			saveTxt();
@@ -330,34 +326,25 @@ class ModsMenuState extends MusicBeatState
 	}
 
 	function setAllLabelsOffset(button:FlxButton, x:Float, y:Float) {
-		for (point in button.labelOffsets) {
-			point.set(x, y);
-		}
+		for (point in button.labelOffsets) point.set(x, y);
 	}
 
 	function changeSelection(change:Int = 0)
 	{
 		var noMods:Bool = (mods.length < 1);
-		for (obj in visibleWhenHasMods) {
-			obj.visible = !noMods;
-		}
-		for (obj in visibleWhenNoMods) {
-			obj.visible = noMods;
-		}
+		for (obj in visibleWhenHasMods) obj.visible = !noMods;
+		for (obj in visibleWhenNoMods) obj.visible = noMods;
 		if(noMods) return;
 
 		curSelected = FlxMath.wrap(curSelected + change, 0, mods.length - 1);
 
 		var newColor:Int = mods[curSelected].color;
 		if(newColor != intendedColor) {
-			if(colorTween != null) {
+			if(colorTween != null)
 				colorTween.cancel();
-			}
 			intendedColor = newColor;
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: function(twn:FlxTween) {
-					colorTween = null;
-				}
+				onComplete: (twn:FlxTween) -> {colorTween = null;}
 			});
 		}
 
@@ -397,9 +384,8 @@ class ModsMenuState extends MusicBeatState
 
 			if (i == curSelected) {
 				descriptionTxt.y = mod.alphabet.y + 160;
-				for (button in buttonsArray) {
+				for (button in buttonsArray)
 					button.y = mod.alphabet.y + 320;
-				}
 			}
 			i++;
 		}

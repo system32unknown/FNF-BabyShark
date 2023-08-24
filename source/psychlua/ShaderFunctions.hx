@@ -16,7 +16,6 @@ class ShaderFunctions {
 
 			#if (!flash && MODS_ALLOWED && sys)
 			return funk.initLuaShader(name, glslVersion);
-			trace('called from ${funk}');
 			#else
 			FunkinLua.luaTrace("initLuaShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
@@ -76,7 +75,7 @@ class ShaderFunctions {
             }
             return true;
 			#else
-                FunkinLua.luaTrace("addShaderToCam: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+            FunkinLua.luaTrace("addShaderToCam: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
 			return false;
 		});
@@ -172,7 +171,6 @@ class ShaderFunctions {
 			#else
 			FunkinLua.luaTrace("setShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
-
 			return false;
 		});
 		funk.addCallback("setShaderBoolArray", function(obj:String, prop:String, values:Dynamic) {
@@ -185,7 +183,6 @@ class ShaderFunctions {
 			#else
 			FunkinLua.luaTrace("setShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
-
 			return false;
 		});
 		funk.addCallback("setShaderInt", function(obj:String, prop:String, value:Int) {
@@ -198,7 +195,6 @@ class ShaderFunctions {
 			#else
 			FunkinLua.luaTrace("setShaderInt: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
-
 			return false;
 		});
 		funk.addCallback("setShaderIntArray", function(obj:String, prop:String, values:Dynamic) {
@@ -211,7 +207,6 @@ class ShaderFunctions {
 			#else
 			FunkinLua.luaTrace("setShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
-
 			return false;
 		});
 		funk.addCallback("setShaderFloat", function(obj:String, prop:String, value:Float) {
@@ -254,7 +249,6 @@ class ShaderFunctions {
 			#else
 			FunkinLua.luaTrace("setShaderSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
-
 			return false;
 		});
     }

@@ -1297,8 +1297,7 @@ class FunkinLua {
 	}
 	#end
 
-	function findScript(scriptFile:String, ext:String = '.lua')
-	{
+	function findScript(scriptFile:String, ext:String = '.lua') {
 		if(!scriptFile.endsWith(ext)) scriptFile += ext;
 		var preloadPath:String = Paths.getPreloadPath(scriptFile);
 		#if MODS_ALLOWED

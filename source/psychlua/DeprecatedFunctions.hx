@@ -6,8 +6,7 @@ import objects.StrumNote;
 // This is simply where i store deprecated functions for it to be more organized.
 // I would suggest not messing with these, as it could break mods.
 //
-class DeprecatedFunctions
-{
+class DeprecatedFunctions {
 	public static function implement(funk:FunkinLua) {
 		funk.addCallback("addAnimationByIndicesLoop", function(obj:String, name:String, prefix:String, indices:String, framerate:Int = 24) {
 			FunkinLua.luaTrace("addAnimationByIndicesLoop is deprecated! Use addAnimationByIndices instead", false, true);

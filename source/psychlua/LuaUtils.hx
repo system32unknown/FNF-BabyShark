@@ -187,27 +187,23 @@ class LuaUtils {
 		return group;
 	}
 
-	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false)
-		{
-			var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
-			if(obj != null && obj.animation != null) {
-				if(indices == null) indices = [];
-				if(Std.isOfType(indices, String)) {
-					var strIndices:Array<String> = cast (indices, String).trim().split(',');
-					var myIndices:Array<Int> = [];
-					for (i in 0...strIndices.length) {
-						myIndices.push(Std.parseInt(strIndices[i]));
-					}
-					indices = myIndices;
-				}
-	
-				obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
-				if(obj.animation.curAnim == null)
-					obj.animation.play(name, true);
-				return true;
+	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false) {
+		var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
+		if(obj != null && obj.animation != null) {
+			if(indices == null) indices = [];
+			if(Std.isOfType(indices, String)) {
+				var strIndices:Array<String> = cast (indices, String).trim().split(',');
+				var myIndices:Array<Int> = [for (i in 0...strIndices.length) Std.parseInt(strIndices[i])];
+				indices = myIndices;
 			}
-			return false;
+
+			obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
+			if(obj.animation.curAnim == null)
+				obj.animation.play(name, true);
+			return true;
 		}
+		return false;
+	}
 	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
 		spr.frames = switch(spriteType.toLowerCase().trim()) {
 			case "texture" | "textureatlas" | "tex": AtlasFrameMaker.construct(image);
