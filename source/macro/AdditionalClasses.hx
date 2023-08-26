@@ -15,7 +15,6 @@ class AdditionalClasses {
 			#if LUA_ALLOWED "llua", #end
 			#if desktop "discord_rpc", #end
 			#if SScript "tea", #end
-			#if SScript "ex", #end
 			// OTHER LIBRARIES & STUFF
 			#if flash "flash", #end
 			#if cpp "cpp", #end

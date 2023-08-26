@@ -1135,7 +1135,7 @@ class FunkinLua {
 			trace(e);
 			return;
 		}
-		trace('lua file loaded succesfully: $scriptName');
+		trace('lua file loaded successfully: $scriptName');
 
 		call('onCreate');
 		#end
@@ -1351,7 +1351,7 @@ class FunkinLua {
 			var type:Int = Lua.type(lua, -1);
 
 			if (type != Lua.LUA_TFUNCTION) {
-				if (type > Lua.LUA_TNIL) luaTrace('ERROR ($func): attempt to call a ' + LuaUtils.typeToString(type) + " value", false, false, FlxColor.RED);
+				if (type > Lua.LUA_TNIL) luaTrace('ERROR ($func) - attempt to call a ' + LuaUtils.typeToString(type) + " value", false, false, FlxColor.RED);
 
 				Lua.pop(lua, 1);
 				return Function_Continue;
