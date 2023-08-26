@@ -3146,9 +3146,8 @@ class PlayState extends MusicBeatState {
 		}
 		try {
 			var newScript:HScript = new HScript(null, file);
-			@:privateAccess
 			if(newScript.parsingException != null) {
-				doerror('ERROR ON LOADING - $e');
+				doerror('ERROR ON LOADING - ${newScript.parsingException}');
 				newScript.destroy();
 				return;
 			}
