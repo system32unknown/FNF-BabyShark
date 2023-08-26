@@ -82,7 +82,7 @@
 	<haxelib name="discord_rpc" if="DISCORD_ALLOWED"/>
 
 	<section if="HSCRIPT_ALLOWED">
-		<haxeflag name="-dce no"/>
+		<haxeflag name="-dce std"/>
 		<haxelib name="SScript"/>
 		<haxeflag name="--macro" value="macro.AdditionalClasses.add()" />
 	</section>

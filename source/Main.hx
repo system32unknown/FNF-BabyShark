@@ -8,7 +8,7 @@ import openfl.display.StageScaleMode;
 import openfl.events.Event;
 
 import states.TitleState;
-import backend.CustomLog;
+import backend.Log;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
 import utils.FunkinGame;
@@ -76,7 +76,7 @@ class Main extends Sprite {
 			game.height = Math.ceil(stageHeight / game.zoom);
 		}
 
-		CustomLog.init();
+		Log.init();
 		utils.FunkinCache.init();
 		#if LUA_ALLOWED Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();

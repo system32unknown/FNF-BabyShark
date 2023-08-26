@@ -389,8 +389,6 @@ class PlayState extends MusicBeatState {
 		add(luaDebugGroup);
 		#end
 
-		#if (SScript >= "4.1.0") SScript.defaultClassSupport = null; #end
-
 		// "GLOBAL" SCRIPTS
 		#if LUA_ALLOWED
 		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getPreloadPath(), 'scripts/');
@@ -3149,10 +3147,8 @@ class PlayState extends MusicBeatState {
 		try {
 			var newScript:HScript = new HScript(null, file);
 			@:privateAccess
-			if(newScript.parsingExceptions != null && newScript.parsingExceptions.length > 0) {
-				@:privateAccess
-				for (e in newScript.parsingExceptions)
-					if(e != null) addTextToDebug('ERROR ON LOADING ($file): ${e.message.substr(0, e.message.indexOf('\n'))}', FlxColor.RED);
+			if(newScript.parsingException != null) {
+				addTextToDebug('ERROR ON LOADING ($file): ${newScript.parsingException.message.substr(0, newScript.parsingException.message.indexOf('\n'))}', FlxColor.RED);
 				newScript.destroy();
 				return;
 			}

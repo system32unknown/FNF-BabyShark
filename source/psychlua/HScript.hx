@@ -22,37 +22,11 @@ class HScript extends SScript {
 		#end
 	}
 
-	public static function initHaxeModuleCode(parent:FunkinLua, code:String) {
-		#if (SScript >= "3.0.0")
-		var hs:HScript = parent.hscript;
-		if(hs == null) {
-			trace('initializing haxe interp for: ${parent.scriptName}');
-			parent.hscript = new HScript(parent, code);
-		} else {
-			hs.doString(code);
-			@:privateAccess
-			if(hs.parsingExceptions != null && hs.parsingExceptions.length > 0) {
-				@:privateAccess
-				for (e in hs.parsingExceptions)
-					if(e != null) PlayState.instance.addTextToDebug('ERROR ON LOADING (${hs.origin}): ${e.message.substr(0, e.message.indexOf('\n'))}', FlxColor.RED);
-			}
-		}
-		#end
-	}
-
 	public var origin:String;
 	override public function new(?parent:FunkinLua, ?file:String) {
-		var usesClasses = false;
 		if (file == null) file = '';
-		#if sys
-		else if (FileSystem.exists(file)) {
-			var fileWithoutComments = ~/(\/[*](?:[^*]|[\r\n]|([*]+([^*\/]|[\r\n])))*[*]+\/|\/\/.*)/gm.replace(File.getContent(file), '');
-			usesClasses = ~/class\s.*\s*{/.match(fileWithoutComments);
-		}
-		#end
 
 		super(null, false, false);
-		classSupport = usesClasses;
 		doFile(file);
 		
 		parentLua = parent;
@@ -65,7 +39,6 @@ class HScript extends SScript {
     function getDefaultVariables():Map<String, Dynamic> {
         return [
             // Haxe related stuff
-
             "Reflect"           => Reflect,
             "Xml"               => Xml,
 
@@ -189,8 +162,7 @@ class HScript extends SScript {
 				if(parentLua != null) {
 					FunkinLua.lastCalledScript = parentLua;
 					msg = origin + ":" + parentLua.lastCalledFunction + " - " + msg;
-				}
-				else msg = '$origin - $msg';
+				} else msg = '$origin - $msg';
 				FunkinLua.luaTrace(msg, parentLua == null, false, FlxColor.RED);
 			}
 		});
@@ -275,8 +247,7 @@ class HScript extends SScript {
 			var callValue = funk.hscript.executeFunction(funcToRun, funcArgs);
 			if (!callValue.succeeded) {
 				var e = callValue.exceptions[0];
-				if (e != null)
-					FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: ${callValue.calledFunction}) - ' + e.message.substr(0, e.message.indexOf('\n')), false, false, FlxColor.RED);
+				if (e != null) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: ${callValue.calledFunction}) - ' + e.message.substr(0, e.message.indexOf('\n')), false, false, FlxColor.RED);
 				return null;
 			} else return callValue.returnValue;
 			#else

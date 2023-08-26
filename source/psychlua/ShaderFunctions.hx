@@ -71,6 +71,7 @@ class ShaderFunctions {
 				
                 var filter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
                 storedFilters.set(index, filter);
+				trace(storedFilters);
                 camera._filters.push(filter);
             }
             return true;
@@ -257,9 +258,12 @@ class ShaderFunctions {
 		if (storedFilters.exists(obj))
 		    return cast(storedFilters[obj].shader, FlxRuntimeShader);
 
-		var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
-		if (leObj != null) return cast leObj.shader;
-		return null;
+		var target:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
+		if (target == null) {
+			FunkinLua.luaTrace('Error on getting shader: Object $obj not found', false, false, FlxColor.RED);
+			return null;
+		}
+		return cast (target.shader, FlxRuntimeShader);
 	}
 
 	public static function getCam(obj:String):Dynamic {

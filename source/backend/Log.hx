@@ -2,7 +2,7 @@ package backend;
 
 import haxe.PosInfos;
 
-class CustomLog {
+class Log {
 	public static function init() {
 		haxe.Log.trace = function(v, ?posInfos) {
 			Sys.println(formatOutput(v, posInfos));
@@ -14,7 +14,7 @@ class CustomLog {
 		var str = Std.string(v);
 		if (infos == null)
 			return str;
-		var pstr = fileName + ", Line " + infos.lineNumber;
+		var pstr = '$fileName [Line ${infos.lineNumber}]';
 
 		if (infos.customParams != null)
 			for (v in infos.customParams)
