@@ -20,15 +20,8 @@ class SystemUtil {
 	public static function generateTextFile(fileContent:String, fileName:String) {
 		#if desktop
 		var path = '${getTempPath()}/$fileName.txt';
-
 		File.saveContent(path, fileContent);
-		#if windows
-		Sys.command("start " + path);
-		#elseif linux
-		Sys.command("xdg-open " + path);
-		#else
-		Sys.command("open " + path);
-		#end
+		Sys.command(#if windows "start " #elseif linux "xdg-open " #else "open " #end + path);
 		#end
 	}
 }

@@ -81,8 +81,7 @@ class Song {
             songJson.mania = Note.defaultMania;
 	}
 
-	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
-	{
+	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong {
 		var rawJson = null;
 		
 		var formattedPath:String = getSongPath((folder == null ? jsonInput : folder), jsonInput);
@@ -94,13 +93,8 @@ class Song {
 		#end
 
 		var jsonPath = Paths.json(Paths.CHART_PATH + "/" + formattedPath);
-		if (rawJson == null && Paths.fileExists(jsonPath, TEXT, true, true)) {
-			#if sys
-			rawJson = File.getContent(jsonPath).trim();
-			#else
-			rawJson = Assets.getText(jsonPath).trim();
-			#end
-		}
+		if (rawJson == null && Paths.fileExists(jsonPath, TEXT, true, true))
+			rawJson = #if sys File.getContent(jsonPath) #else Assets.getText(jsonPath).trim() #end.trim();
 
 		if (rawJson == null) return null;
 		while (!rawJson.endsWith("}"))

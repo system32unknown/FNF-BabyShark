@@ -9,7 +9,6 @@ import openfl.utils.Assets;
 
 import objects.TypedAlphabet;
 import backend.Controls;
-import psychlua.FunkinLua;
 
 // Gonna try to kind of make it compatible to Forever Engine,
 // love u Shubs no homo :flushedh4:
@@ -48,8 +47,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 	var textBoxTypes:Array<String> = ['normal', 'angry'];
 	
-	public function new(dialogueList:DialogueFile, ?song:String = null)
-	{
+	public function new(dialogueList:DialogueFile, ?song:String = null) {
 		super();
 
 		if(song != null && song != '') {
@@ -357,9 +355,8 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		}
 		currentText++;
 
-		if(nextDialogueThing != null) {
+		if(nextDialogueThing != null)
 			nextDialogueThing();
-		}
 	}
 
 	public static function parseDialogue(path:String):DialogueFile {

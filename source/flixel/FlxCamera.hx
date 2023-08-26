@@ -12,7 +12,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
-import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -28,7 +27,7 @@ import openfl.Vector;
 
 using flixel.util.FlxColorTransformUtil;
 
-private typedef FlxDrawItem = #if FLX_DRAW_QUADS flixel.graphics.tile.FlxDrawQuadsItem; #else flixel.graphics.tile.FlxDrawTilesItem; #end
+typedef FlxDrawItem = #if FLX_DRAW_QUADS flixel.graphics.tile.FlxDrawQuadsItem; #else flixel.graphics.tile.FlxDrawTilesItem; #end
 
 /**
  * The camera class is used to display the game's visuals.
@@ -53,7 +52,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Random point used for the fixed `shake()` effect.
 	 */
-	 public var fxShakePoint:FlxPoint = FlxPoint.get();
+	public var fxShakePoint:FlxPoint = FlxPoint.get();
 
 	/**
 	 * Used behind-the-scenes during the draw phase so that members use the same default
