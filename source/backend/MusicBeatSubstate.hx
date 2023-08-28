@@ -8,11 +8,7 @@ class MusicBeatSubstate extends FlxSubState {
 	inline function get_controls():Controls
 		return Controls.instance;
 
-	public function new() {
-		super();
-	}
+	public function new() {super();}
 
-	override function update(elapsed:Float) {
-		super.update(elapsed);
-	}
+	override function update(elapsed:Float) {super.update(elapsed);}
 }

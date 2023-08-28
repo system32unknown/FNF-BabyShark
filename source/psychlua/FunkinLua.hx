@@ -110,8 +110,7 @@ class FunkinLua {
 			final blackListcpp = ["setDPIAware"];
 			if (blackListcpp.contains(trimmedpft)) return null;
 
-			var platFunc = Reflect.field(PlatformUtil, trimmedpft);
-			return Reflect.callMethod(null, platFunc, args);
+			return Reflect.callMethod(null, Reflect.field(PlatformUtil, trimmedpft), args);
 		});
 
 		addCallback("setGlobalFromScript", function(luaFile:String, global:String, val:Dynamic) { // returns the global from a script
@@ -1084,24 +1083,21 @@ class FunkinLua {
 			}
 		});
 		addCallback("getSoundPitch", function(tag:String) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music != null)
-					return FlxG.sound.music.pitch;
-			} else if (game.modchartSounds.exists(tag))
+			if(tag != null && tag.length > 0 && game.modchartSounds.exists(tag))
 				return game.modchartSounds.get(tag).pitch;
-			
-			return 1;
+			return 0;
 		});
-		addCallback("setSoundPitch", function(tag:String, value:Float = 1) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music != null)
-					FlxG.sound.music.pitch = value;
-			} else if (game.modchartSounds.exists(tag)) {
+		addCallback("setSoundPitch", function(tag:String, value:Float, doPause:Bool = false) {
+			if(tag != null && tag.length > 0 && game.modchartSounds.exists(tag)) {
 				var theSound:FlxSound = game.modchartSounds.get(tag);
-				if(theSound != null) theSound.pitch = value;
+				if(theSound != null) {
+					var wasResumed:Bool = theSound.playing;
+					if (doPause) theSound.pause();
+					theSound.pitch = value;
+					if (doPause && wasResumed) theSound.play();
+				}
 			}
 		});
-
 		addCallback("debugPrint", function(text:Dynamic = '', color:String = 'WHITE') PlayState.instance.addTextToDebug(text, CoolUtil.colorFromString(color)));
 
 		addCallback("close", function():Bool {

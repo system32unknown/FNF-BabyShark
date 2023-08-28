@@ -34,11 +34,10 @@ class Main extends Sprite {
 	}
 	public static var engineVersion:GameVersion = new GameVersion(0, 1, 1);
 
-	var game = {
+	var init_game = {
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height
 		initialState: TitleState, // initial game state
-		zoom: -1., // game state bounds
 		framerate: 60, // default framerate
 		skipSplash: true, // if the default flixel splash screen should be skipped
 		startFullscreen: false // if the game should start at fullscreen mode
@@ -68,20 +67,12 @@ class Main extends Sprite {
 	#end
 
 	function setupGame():Void {
-		var stageWidth:Int = Lib.current.stage.stageWidth;
-		var stageHeight:Int = Lib.current.stage.stageHeight;
-		if (game.zoom == -1.) {
-			game.zoom = Math.min(stageWidth / game.width, stageHeight / game.height);
-			game.width = Math.ceil(stageWidth / game.zoom);
-			game.height = Math.ceil(stageHeight / game.zoom);
-		}
-
 		Log.init();
 		utils.FunkinCache.init();
 		#if LUA_ALLOWED Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
 		ClientPrefs.loadDefaultKeys();
-		addChild(new FunkinGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom,#end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
+		addChild(new FunkinGame(init_game.width, init_game.height, init_game.initialState, init_game.framerate, init_game.framerate, init_game.skipSplash, init_game.startFullscreen));
 		addChild(overlayVar = new Overlay());
 		
 		#if (target.threaded && sys)
@@ -94,19 +85,19 @@ class Main extends Sprite {
 		FlxG.signals.preStateSwitch.add(() -> {Paths.clearStoredCache();});
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();
-			
 			MemoryUtil.clearMajor();
 			MemoryUtil.clearMajor(true);
 			MemoryUtil.clearMajor();
 		});
 		FlxG.signals.postGameReset.add(states.TitleState.onInit);
-		FlxG.signals.gameResized.add(function(w, h) {
+		FlxG.signals.gameResized.add((w, h) -> {
 			if (FlxG.cameras != null) for (cam in FlxG.cameras.list) {
 				@:privateAccess
 				if (cam != null && cam._filters != null)
 				   	resetSpriteCache(cam.flashSprite);
 			}
 			if (FlxG.game != null) resetSpriteCache(FlxG.game);
+			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
 	   	});
 
 		#if CRASH_HANDLER

@@ -13,8 +13,7 @@ import openfl.utils.Assets;
 import haxe.io.Path;
 import data.StageData;
 
-class LoadingState extends MusicBeatState
-{
+class LoadingState extends MusicBeatState {
 	inline static final MIN_TIME = 1.0;
 
 	// Browsers will load create(), you can make your song load a custom directory there

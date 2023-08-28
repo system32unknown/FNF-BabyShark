@@ -101,9 +101,7 @@ class CoolUtil {
 	{
 		panel.makeGraphic(w, h, color);
 		panel.pixels.fillRect(new Rectangle(0, 190, panel.width, 5), 0x0);
-		
-		// Why did i do this? Because i'm a lmao stupid, of course
-		// also i wanted to understand better how fillRect works so i did this shit lol???
+
 		panel.pixels.fillRect(new Rectangle(0, 0, cornerSize, cornerSize), 0x0);												//top left
 		drawCircleCornerOnSelector(panel, false, false, color, cornerSize);
 		panel.pixels.fillRect(new Rectangle(panel.width - cornerSize, 0, cornerSize, cornerSize), 0x0);						 	//top right
@@ -114,8 +112,7 @@ class CoolUtil {
 		drawCircleCornerOnSelector(panel, true, true, color, cornerSize);
 	}
 
-	static function drawCircleCornerOnSelector(panel:FlxSprite, flipX:Bool, flipY:Bool, color:FlxColor, cornerSize:Float)
-	{
+	static function drawCircleCornerOnSelector(panel:FlxSprite, flipX:Bool, flipY:Bool, color:FlxColor, cornerSize:Float) {
 		var antiX:Float = panel.width - cornerSize;
 		var antiY:Float = flipY ? (panel.height - 1) : 0;
 		if(flipY) antiY -= 2;
@@ -145,7 +142,7 @@ class CoolUtil {
 	public static function removeDuplicates(string:Array<String>):Array<String> {
 		var tempArray:Array<String> = new Array<String>();
 		var lastSeen:String = null;
-		string.sort(function(str1:String, str2:String) {
+		string.sort((str1:String, str2:String) -> {
 		  	return (str1 == str2) ? 0 : (str1 > str2) ? 1 : -1; 
 		});
 		for (str in string) {

@@ -561,15 +561,15 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(judgementCounter);
 		judgementCounter.screenCenter(Y);
 
-		botplayTxt = new FlxText(400, healthBar.bg.y + (downScroll ? 100 : -100), 0, "BOTPLAY", 32);
-		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		botplayTxt = new FlxText(400, healthBar.bg.y + (downScroll ? 100 : -100), 0, "BOTPLAY", 42);
+		botplayTxt.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, CENTER);
 		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.visible = cpuControlled;
 		botplayTxt.screenCenter(X);
 		uiGroup.add(botplayTxt);
 
-		songNameText = new FlxText(2, 0, 0, '${SONG.song} - ${storyDifficultyText}' + (playbackRate != 1 ? ' ($playbackRate' + 'x)' : ''), 16);
+		songNameText = new FlxText(2, 0, 0, '${SONG.song} - ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : ''), 16);
 		songNameText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
 		songNameText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		songNameText.scrollFactor.set();
