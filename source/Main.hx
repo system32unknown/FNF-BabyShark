@@ -85,6 +85,8 @@ class Main extends Sprite {
 		FlxG.signals.preStateSwitch.add(() -> {Paths.clearStoredCache();});
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();
+			FlxG.sound.destroy(false);
+
 			MemoryUtil.clearMajor();
 			MemoryUtil.clearMajor(true);
 			MemoryUtil.clearMajor();
@@ -103,7 +105,6 @@ class Main extends Sprite {
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#if hl hl.Api.setErrorHandler(onCrash); #end
 		#end
-
 		#if discord_rpc Discord.start(); #end
 	}
 

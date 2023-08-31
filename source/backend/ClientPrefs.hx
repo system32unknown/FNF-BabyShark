@@ -5,8 +5,8 @@ import flixel.input.keyboard.FlxKey;
 import states.TitleState;
 
 class ClientPrefs {
-	public static var isHardCInited:Bool = false;
-	public static var isStreMInited:Bool = false;
+	static var isHardCInited:Bool = false;
+	static var isStreMInited:Bool = false;
 
 	public static var prefs:Map<String, Dynamic> = [
 		'downScroll' => false,

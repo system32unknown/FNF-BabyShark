@@ -1922,9 +1922,10 @@ class ChartingState extends MusicBeatState {
 		vocals.pitch = playbackSpeed;
 
 		bpmTxt.text =
-		Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2)) + " / " + Std.string(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2)) +
+		'\n$currentSongName [${Difficulty.getString()}]'+
+		'\n${CoolUtil.formatTime(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))} / ${CoolUtil.formatTime(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))}' +
 		'\nSection: $curSec' +
-		"\nBeat: " + Std.string(curDecBeat).substring(0, 4) +
+		'\nBeat: ${Std.string(curDecBeat).substring(0, 4)}' +
 		'\nStep: $curStep' +
 		'\nZoom: $zoomFactorTxt' +
 		if ((quantization - 2) % 10 == 0 && quantization != 12) '\n\nBeat Snap ${quantization}nd';

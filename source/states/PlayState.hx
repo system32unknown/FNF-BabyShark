@@ -3142,7 +3142,7 @@ class PlayState extends MusicBeatState {
 	public function initHScript(file:String) {
 		function doerror(m:String) {
 			addTextToDebug(m, FlxColor.RED);
-			trace(m);
+			Logs.trace(m);
 		}
 		try {
 			var newScript:HScript = new HScript(null, file);
@@ -3163,7 +3163,7 @@ class PlayState extends MusicBeatState {
 					hscriptArray.remove(newScript);
 					return;
 				}
-				trace('initialized sscript interp successfully: $file');
+				Logs.trace('initialized sscript interp successfully: $file');
 			}
 		} catch(e) {
 			doerror('ERROR - $e');

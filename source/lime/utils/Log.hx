@@ -32,8 +32,7 @@ class Log {
 			FunkinLogs.trace('[${info.className}] $message', INFO, RED);
 	}
 
-	public static inline function print(message:Dynamic):Void
-	{
+	public static inline function print(message:Dynamic):Void {
 		#if sys
 		Sys.print(Std.string(message));
 		#elseif flash
@@ -45,8 +44,7 @@ class Log {
 		#end
 	}
 
-	public static inline function println(message:Dynamic):Void
-	{
+	public static inline function println(message:Dynamic):Void {
 		#if sys
 		Sys.println(Std.string(message));
 		#elseif flash

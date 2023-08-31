@@ -56,8 +56,7 @@ class Update {
 				}
 			}
 			Sys.println("Install Hxcpp with git manually and compile it.");
-		}
-		catch(e) trace(e);
+		} catch(e) trace(e);
 
 		Sys.setCwd(prevCwd);
 	}

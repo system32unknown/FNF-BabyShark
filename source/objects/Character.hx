@@ -230,14 +230,13 @@ class Character extends FlxSprite
 	public var danced:Bool = false;
 	public function dance(force:Bool = false, reversed:Bool = false, frame:Int = 0) {
 		if (!debugMode && !skipDance && !specialAnim) {
-			var anim = '';
+			var anim = 'idle';
 			if (danceIdle) {
 				danced = !danced;
 				anim = danced ? 'danceRight' : 'danceLeft';
-			} else if(animation.getByName('idle' + idleSuffix) != null) {
-				anim = 'idle';
 			}
-			playAnim(anim + idleSuffix, force, reversed, frame);
+			if(animation.getByName(anim + idleSuffix) != null)
+				playAnim(anim + idleSuffix, force, reversed, frame);
 		}
 	}
 
