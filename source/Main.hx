@@ -85,7 +85,6 @@ class Main extends Sprite {
 		FlxG.signals.preStateSwitch.add(() -> {Paths.clearStoredCache();});
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();
-			FlxG.sound.destroy(false);
 
 			MemoryUtil.clearMajor();
 			MemoryUtil.clearMajor(true);
