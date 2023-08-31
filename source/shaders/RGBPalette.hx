@@ -28,7 +28,7 @@ class RGBPalette {
 	}
 	
 	function set_mult(value:Float) {
-		mult = Math.max(0, Math.min(1, value));
+		mult = FlxMath.bound(value, 0, 1);
 		shader.mult.value = [mult];
 		return value;
 	}

@@ -84,9 +84,7 @@ class FreeplayState extends MusicBeatState
 			WeekData.setDirectoryFromWeek(leWeek);
 			for (song in leWeek.songs) {
 				var colors:Array<Int> = song[2];
-				if(colors == null || colors.length < 3) {
-					colors = [146, 113, 253];
-				}
+				if(colors == null || colors.length < 3) colors = [146, 113, 253];
 				addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
 			}
 		}
@@ -97,11 +95,8 @@ class FreeplayState extends MusicBeatState
 		add(bg);
 		bg.screenCenter();
 
-		grpSongs = new FlxTypedGroup<Alphabet>();
-		add(grpSongs);
-
-		for (i in 0...songs.length)
-		{
+		add(grpSongs = new FlxTypedGroup<Alphabet>());
+		for (i in 0...songs.length) {
 			Mods.currentModDirectory = songs[i].folder;
 			var songText:Alphabet = new Alphabet(90, 320, songs[i].songName, true);
 			songText.targetY = i;
@@ -495,8 +490,8 @@ class FreeplayState extends MusicBeatState
 		}
 		_lastVisibles = [];
 
-		var min:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected - _drawDistance)));
-		var max:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected + _drawDistance)));
+		var min:Int = Math.round(FlxMath.bound(lerpSelected - _drawDistance, 0, songs.length));
+		var max:Int = Math.round(FlxMath.bound(lerpSelected + _drawDistance, 0, songs.length));
 		for (i in min...max) {
 			var item:Alphabet = grpSongs.members[i];
 			item.visible = item.active = true;

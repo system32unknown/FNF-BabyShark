@@ -4,8 +4,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 
-class HealthIcon extends FlxSprite
-{
+class HealthIcon extends FlxSprite {
 	static final prefix:String = 'icons/';
 	static final credits:String = 'credits/';
 	static final defaultIcon:String = 'icon-unknown';
@@ -137,9 +136,11 @@ class HealthIcon extends FlxSprite
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		switch (ClientPrefs.getPref('IconBounceType')) {
-			case "Dave" | "GoldenApple":
-				offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
+		if (Std.isOfType(FlxG.state, PlayState)) {
+			switch (ClientPrefs.getPref('IconBounceType')) {
+				case "Dave" | "GoldenApple":
+					offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
+			}
 		}
 
 		if (sprTracker != null) setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);

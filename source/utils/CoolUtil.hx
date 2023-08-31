@@ -26,7 +26,6 @@ class CoolUtil {
 	}
 
 	inline public static function quantize(f:Float, snap:Float) {
-		// changed so this actually works lol
 		var m:Float = Math.fround(f * snap);
 		return (m / snap);
 	}
@@ -142,8 +141,8 @@ class CoolUtil {
 	public static function removeDuplicates(string:Array<String>):Array<String> {
 		var tempArray:Array<String> = new Array<String>();
 		var lastSeen:String = null;
-		string.sort((str1:String, str2:String) -> {
-		  	return (str1 == str2) ? 0 : (str1 > str2) ? 1 : -1; 
+		string.sort((a:String, b:String) -> {
+		  	return (a == b) ? 0 : (a > b) ? 1 : -1; 
 		});
 		for (str in string) {
 		  	if (str != lastSeen) tempArray.push(str);

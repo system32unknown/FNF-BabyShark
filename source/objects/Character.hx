@@ -119,9 +119,8 @@ class Character extends FlxSprite
 							animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
 						else animation.addByPrefix(animAnim, animName, animFps, animLoop);
 
-						if(anim.offsets != null && anim.offsets.length > 1) {
+						if(anim.offsets != null && anim.offsets.length > 1)
 							addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
-						}
 					}
 				} else quickAnimAdd('idle', 'BF idle dance');
 		}
@@ -149,12 +148,8 @@ class Character extends FlxSprite
 		#end
 			path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 
-		#if MODS_ALLOWED
-		var rawJson = File.getContent(path);
-		#else
-		var rawJson = Assets.getText(path);
-		#end
-
+		
+		var rawJson = #if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end;
 		return cast Json.parse(rawJson);
 	}
 
@@ -235,10 +230,12 @@ class Character extends FlxSprite
 	public var danced:Bool = false;
 	public function dance(force:Bool = false, reversed:Bool = false, frame:Int = 0) {
 		if (!debugMode && !skipDance && !specialAnim) {
-			var anim = 'idle';
+			var anim = '';
 			if (danceIdle) {
 				danced = !danced;
 				anim = danced ? 'danceRight' : 'danceLeft';
+			} else if(animation.getByName('idle' + idleSuffix) != null) {
+				anim = 'idle';
 			}
 			playAnim(anim + idleSuffix, force, reversed, frame);
 		}

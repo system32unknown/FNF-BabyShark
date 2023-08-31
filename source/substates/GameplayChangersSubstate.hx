@@ -215,12 +215,11 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 							curOption.change();
 							FlxG.sound.play(Paths.sound('scrollMenu'));
 						} else if (curOption.type != 'string') {
-							holdValue = Math.max(curOption.minValue, Math.min(curOption.maxValue, holdValue + curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1)));
-
+							holdValue = FlxMath.bound(holdValue + curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1), curOption.minValue, curOption.maxValue);
 							switch(curOption.type) {
 								case 'int': curOption.setValue(Math.round(holdValue));	
 								case 'float' | 'percent': 
-									var blah:Float = Math.max(curOption.minValue, Math.min(curOption.maxValue, holdValue + curOption.changeValue - (holdValue % curOption.changeValue)));
+									var blah:Float = FlxMath.bound(holdValue + curOption.changeValue - (holdValue % curOption.changeValue), curOption.minValue, curOption.maxValue);
 									curOption.setValue(FlxMath.roundDecimal(blah, curOption.decimals));
 							}
 							updateTextFrom(curOption);
@@ -228,12 +227,10 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 						}
 					}
 
-					if (curOption.type != 'string') {
+					if (curOption.type != 'string')
 						holdTime += elapsed;
-					}
-				} else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) {
+				} else if (controls.UI_LEFT_R || controls.UI_RIGHT_R)
 					clearHold();
-				}
 			}
 
 			if(controls.RESET) {

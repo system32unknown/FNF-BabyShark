@@ -186,6 +186,7 @@ class CharacterEditorState extends MusicBeatState
 		var playerXDifference = 0;
 		if(char.isPlayer) playerXDifference = 670;
 
+		var lastLevel:String = Paths.currentLevel;
 		if(onPixelBG) {
 			var playerYDifference:Float = 0;
 			if(char.isPlayer) {
@@ -238,92 +239,93 @@ class CharacterEditorState extends MusicBeatState
 			bgLayer.add(stageFront);
 			changeBGbutton.text = "Pixel BG";
 		}
+		Paths.setCurrentLevel(lastLevel);
 	}
 
 	final TemplateCharacter:String = '{
-			"animations": [
-				{
-					"loop": false,
-					"offsets": [
-						0,
-						0
-					],
-					"fps": 24,
-					"anim": "idle",
-					"indices": [],
-					"name": "Dad idle dance"
-				},
-				{
-					"offsets": [
-						0,
-						0
-					],
-					"indices": [],
-					"fps": 24,
-					"anim": "singLEFT",
-					"loop": false,
-					"name": "Dad Sing Note LEFT"
-				},
-				{
-					"offsets": [
-						0,
-						0
-					],
-					"indices": [],
-					"fps": 24,
-					"anim": "singDOWN",
-					"loop": false,
-					"name": "Dad Sing Note DOWN"
-				},
-				{
-					"offsets": [
-						0,
-						0
-					],
-					"indices": [],
-					"fps": 24,
-					"anim": "singUP",
-					"loop": false,
-					"name": "Dad Sing Note UP"
-				},
-				{
-					"offsets": [
-						0,
-						0
-					],
-					"indices": [],
-					"fps": 24,
-					"anim": "singRIGHT",
-					"loop": false,
-					"name": "Dad Sing Note RIGHT"
-				}
-			],
-			"no_antialiasing": false,
-			"image": "characters/DADDY_DEAREST",
-			"position": [
-				0,
-				0
-			],
-			"healthicon": "dad",
-			"flip_x": false,
-			"healthbar_colors": [
-				161,
-				161,
-				161
-			],
-			"camera_position": [
-				0,
-				0
-			],
-			"gameover_properties": [
-				"bf-dead",
-				"fnf_loss_sfx",
-				"gameOver",
-				"gameOverEnd"
-			],
-			"sing_duration": 6.1,
-			"scale": 1
-		}';
+		"animations": [
+			{
+				"loop": false,
+				"offsets": [
+					0,
+					0
+				],
+				"fps": 24,
+				"anim": "idle",
+				"indices": [],
+				"name": "Dad idle dance"
+			},
+			{
+				"offsets": [
+					0,
+					0
+				],
+				"indices": [],
+				"fps": 24,
+				"anim": "singLEFT",
+				"loop": false,
+				"name": "Dad Sing Note LEFT"
+			},
+			{
+				"offsets": [
+					0,
+					0
+				],
+				"indices": [],
+				"fps": 24,
+				"anim": "singDOWN",
+				"loop": false,
+				"name": "Dad Sing Note DOWN"
+			},
+			{
+				"offsets": [
+					0,
+					0
+				],
+				"indices": [],
+				"fps": 24,
+				"anim": "singUP",
+				"loop": false,
+				"name": "Dad Sing Note UP"
+			},
+			{
+				"offsets": [
+					0,
+					0
+				],
+				"indices": [],
+				"fps": 24,
+				"anim": "singRIGHT",
+				"loop": false,
+				"name": "Dad Sing Note RIGHT"
+			}
+		],
+		"no_antialiasing": false,
+		"image": "characters/DADDY_DEAREST",
+		"position": [
+			0,
+			0
+		],
+		"healthicon": "dad",
+		"flip_x": false,
+		"healthbar_colors": [
+			161,
+			161,
+			161
+		],
+		"camera_position": [
+			0,
+			0
+		],
+		"gameover_properties": [
+			"bf-dead",
+			"fnf_loss_sfx",
+			"gameOver",
+			"gameOverEnd"
+		],
+		"sing_duration": 6.1,
+		"scale": 1
+	}';
 
 	var charDropDown:FlxUIDropDownMenu;
 	function addSettingsUI() {
@@ -1094,7 +1096,6 @@ class CharacterEditorState extends MusicBeatState
 		};
 
 		var data:String = haxe.Json.stringify(json, "\t");
-
 		if (data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);

@@ -8,7 +8,7 @@ import openfl.display.StageScaleMode;
 import openfl.events.Event;
 
 import states.TitleState;
-import backend.Log;
+import backend.Logs;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
 import utils.FunkinGame;
@@ -67,7 +67,7 @@ class Main extends Sprite {
 	#end
 
 	function setupGame():Void {
-		Log.init();
+		Logs.init();
 		utils.FunkinCache.init();
 		#if LUA_ALLOWED Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
@@ -90,14 +90,13 @@ class Main extends Sprite {
 			MemoryUtil.clearMajor();
 		});
 		FlxG.signals.postGameReset.add(states.TitleState.onInit);
-		FlxG.signals.gameResized.add((w, h) -> {
+		FlxG.signals.gameResized.add((w, h) -> @:privateAccess {
 			if (FlxG.cameras != null) for (cam in FlxG.cameras.list) {
-				@:privateAccess
 				if (cam != null && cam._filters != null)
 				   	resetSpriteCache(cam.flashSprite);
 			}
 			if (FlxG.game != null) resetSpriteCache(FlxG.game);
-			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
+			FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
 	   	});
 
 		#if CRASH_HANDLER

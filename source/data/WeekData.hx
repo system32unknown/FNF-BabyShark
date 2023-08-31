@@ -58,7 +58,7 @@ class WeekData {
 			hideStoryMode: false,
 			hideFreeplay: false,
 			difficulties: '',
-			sections: ["Mods"]
+			sections: ["mods"]
 		};
 		return weekFile;
 	}
@@ -107,9 +107,8 @@ class WeekData {
 							var weekFile:WeekData = new WeekData(week, weekName);
 
 							#if MODS_ALLOWED
-							if(j >= originalLength) {
+							if(j >= originalLength)
 								weekFile.folder = directories[j].substring(Paths.mods().length, directories[j].length-1);
-							}
 							#end
 
 							if (weekFile != null && (isStoryMode == null || (isStoryMode && !weekFile.hideStoryMode) || (!isStoryMode && !weekFile.hideFreeplay))) {

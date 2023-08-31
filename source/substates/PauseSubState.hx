@@ -290,8 +290,7 @@ class PauseSubState extends MusicBeatSubstate
 		MusicBeatState.resetState();
 	}
 
-	override function destroy()
-	{
+	override function destroy() {
 		pauseMusic.destroy();
 		super.destroy();
 	}
@@ -356,6 +355,6 @@ class PauseSubState extends MusicBeatSubstate
 	}
 
 	function updateSkipTimeText() {
-		skipTimeText.text = FlxStringUtil.formatTime(Math.max(0, Math.floor(curTime / 1000))) + ' / ' + FlxStringUtil.formatTime(Math.max(0, Math.floor(FlxG.sound.music.length / 1000)));
+		skipTimeText.text = '${CoolUtil.formatTime(Math.floor(curTime / 1000))} / ${CoolUtil.formatTime(Math.floor(FlxG.sound.music.length / 1000))}';
 	}
 }
