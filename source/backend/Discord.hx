@@ -7,7 +7,6 @@ import psychlua.FunkinLua;
 
 class Discord {
 	public static var isInitialized:Bool = false;
-
 	static var _defaultID:String = "1013313492889108510";
 	public static var clientID(default, set):String = _defaultID;
 	#if DISCORD_ALLOWED
@@ -15,7 +14,10 @@ class Discord {
 		details: "In the Menus",
 		state: null,
 		largeImageKey: (ClientPrefs.getPref('AltDiscordImg') ? 'iconalt' : 'icon'),
-		largeImageText: 'Baby Shark\'s Funkin'
+		largeImageText: 'Baby Shark\'s Funkin',
+		smallImageKey : null,
+		startTimestamp : null,
+		endTimestamp : null
 	}
 	#end
 
@@ -48,7 +50,7 @@ class Discord {
 	public static function start() {
 		if (!isInitialized && ClientPrefs.getPref('discordRPC')) {
 			initialize();
-			Application.current.window.onClose.add(function() {
+			Application.current.window.onClose.add(() -> {
 				shutdown();
 			});
 		}
@@ -74,6 +76,7 @@ class Discord {
 		var change:Bool = (clientID != newID);
 		clientID = newID;
 		if(change && isInitialized) {
+			shutdown();
 			isInitialized = false;
 			start();
 			DiscordRpc.process();
@@ -91,7 +94,7 @@ class Discord {
 
 	public static function initialize() {
 		#if DISCORD_ALLOWED
-		#if (target.threaded && sys) Main.current.threadPool.run #else sys.thread.Thread.create #end (() -> {
+		sys.thread.Thread.create(() -> {
 			new Discord();
 		});
 		trace("Discord Client initialized");
@@ -100,7 +103,6 @@ class Discord {
 	}
 
 	public static function changePresence(details:String, state:Null<String>, ?smallImageKey : String, ?hasStartTimestamp : Bool, ?endTimestamp: Float) {
-		#if DISCORD_ALLOWED
 		var startTimestamp:Float = if(hasStartTimestamp) Date.now().getTime() else 0;
 		if (endTimestamp > 0) endTimestamp = startTimestamp + endTimestamp;
 
@@ -114,9 +116,7 @@ class Discord {
 			startTimestamp : Std.int(startTimestamp / 1000),
 			endTimestamp : Std.int(endTimestamp / 1000)
 		};
-
 		DiscordRpc.presence(presence);
-		#end
 	}
 
 	public static function resetClientID()
@@ -125,22 +125,18 @@ class Discord {
 	#if MODS_ALLOWED
 	public static function loadModRPC() {
 		var pack:Dynamic = Mods.getPack();
-		if(pack != null && pack.discordRPC != null && pack.discordRPC != clientID) {
+		if(pack != null && pack.discordRPC != null && pack.discordRPC != clientID)
 			clientID = pack.discordRPC;
-		}
 	}
 	#end
 
 	#if LUA_ALLOWED
-	public static function addLuaCallbacks(funk:FunkinLua) {
-		funk.addCallback("changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
-			#if discord_rpc
-			PlayState.instance.presenceChangedByLua = true;
+	public static function addLuaCallbacks(lua:State) {
+		Lua_helper.add_callback(lua, "changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
 			Discord.changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
-			#end
 		});
 
-		funk.addCallback("changeDiscordClientID", function(?newID:String = null) {
+		Lua_helper.add_callback(lua, "changeDiscordClientID", function(?newID:String = null) {
 			if(newID == null) newID = _defaultID;
 			clientID = newID;
 		});

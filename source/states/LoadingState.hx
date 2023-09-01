@@ -90,12 +90,11 @@ class LoadingState extends MusicBeatState {
 			callbacks = new MultiCallback(onLoad);
 			var introComplete = callbacks.add("introComplete");
 			checkLibrary("shared");
-			if(directory != null && directory.length > 0 && directory != 'shared') {
+			if(directory != null && directory.length > 0 && directory != 'shared')
 				checkLibrary('week_assets');
-			}
 			var fadeTime = .5;
 			FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
-			new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
+			new FlxTimer().start(fadeTime + MIN_TIME, (_) -> introComplete());
 		});
 	}
 	function checkLibrary(library:String) {
@@ -105,7 +104,7 @@ class LoadingState extends MusicBeatState {
 				throw new haxe.Exception("Missing library: " + library);
 
 			var callback = callbacks.add('library:$library');
-			Assets.loadLibrary(library).onComplete(function (_) { callback(); });
+			Assets.loadLibrary(library).onComplete((_) -> callback());
 		}
 	}
 	

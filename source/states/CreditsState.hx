@@ -469,9 +469,7 @@ class CreditSectionState extends MusicBeatState {
 			if(colorTween != null) colorTween.cancel();
 			intendedColor = newColor;
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: function(twn:FlxTween) {
-					colorTween = null;
-				}
+				onComplete: (twn:FlxTween) -> {colorTween = null;}
 			});
 		}
 
@@ -483,9 +481,8 @@ class CreditSectionState extends MusicBeatState {
 
 			if(!unselectableCheck(bullShit-1)) {
 				item.alpha = 0.6;
-				if (item.targetY == 0) {
+				if (item.targetY == 0)
 					item.alpha = 1;
-				}
 			}
 		}
 

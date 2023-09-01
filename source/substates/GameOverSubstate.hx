@@ -93,7 +93,6 @@ class GameOverSubstate extends MusicBeatSubstate {
 	var startedDeath:Bool = false;
 	var isFollowingAlready:Bool = false;
 	override function update(elapsed:Float) {
-		PlayState.instance.cleanupLuas();
 		super.update(elapsed);
 
 		PlayState.instance.callOnScripts('onUpdate', [elapsed]);

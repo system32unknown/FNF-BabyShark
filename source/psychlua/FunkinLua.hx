@@ -1105,7 +1105,7 @@ class FunkinLua {
 			return closed = true;
 		});
 
-		#if desktop Discord.addLuaCallbacks(this); #end
+		#if desktop Discord.addLuaCallbacks(lua); #end
 		#if HSCRIPT_ALLOWED HScript.implement(this); #end
 		TextFunctions.implement(this);
 		ReflectionFunctions.implement(this);
@@ -1114,7 +1114,7 @@ class FunkinLua {
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
 
-		try{
+		try {
 			var result:Dynamic = LuaL.dofile(lua, scriptName);
 			var resultStr:String = Lua.tostring(lua, result);
 			if(resultStr != null && result != 0) {
