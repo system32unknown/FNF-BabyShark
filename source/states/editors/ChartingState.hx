@@ -1725,10 +1725,8 @@ class ChartingState extends MusicBeatState {
 				}
 			}
 
-			if (!FlxG.keys.pressed.ALT && FlxG.keys.justPressed.R) {
-				if (FlxG.keys.pressed.SHIFT) resetSection(true);
-				else resetSection();
-			}
+			if (!FlxG.keys.pressed.ALT && FlxG.keys.justPressed.R)
+				resetSection(FlxG.keys.pressed.SHIFT);
 
 			if (FlxG.mouse.wheel != 0) {
 				FlxG.sound.music.pause();

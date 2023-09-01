@@ -111,8 +111,6 @@ class PlayState extends MusicBeatState {
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
-	public var playerLU:FlxTypedGroup<FlxSprite>;
-	public var opponentLU:FlxTypedGroup<FlxSprite>;
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
 	public var canTweenCamZoom:Bool = false;
@@ -149,7 +147,6 @@ class PlayState extends MusicBeatState {
 	public var endingSong:Bool = false;
 	public var startingSong:Bool = false;
 	var updateTime:Bool = true;
-	var updateLU:Bool = false;
 
 	//Gameplay settings
 	public var healthGain:Float = 1;
@@ -233,9 +230,7 @@ class PlayState extends MusicBeatState {
 
 	var keysArray:Array<Dynamic>;
 
-	// Stores Ratings and Combo Sprites in a group
 	public var comboGroup:FlxSpriteGroup;
-	// Stores HUD Elements in a Group
 	public var uiGroup:FlxSpriteGroup;
 
 	public var precacheList:Map<String, String> = new Map<String, String>();
@@ -259,7 +254,8 @@ class PlayState extends MusicBeatState {
 
 		firstStart = !MusicBeatState.previousStateIs(PlayState);
 		FlxG.fixedTimestep = false;
-		persistentUpdate = persistentDraw = true;
+		persistentUpdate = true;
+		persistentDraw = true;
 
 		Conductor.usePlayState = true;
 		Conductor.songPosition = Math.NEGATIVE_INFINITY;
@@ -429,20 +425,6 @@ class PlayState extends MusicBeatState {
 		comboGroup = new FlxSpriteGroup();
 
 		Conductor.songPosition = -5000 / Conductor.songPosition;
-
-		playerLU = new FlxTypedGroup<FlxSprite>();
-		playerLU.camera = camHUD;
-		opponentLU = new FlxTypedGroup<FlxSprite>();
-		opponentLU.camera = camHUD;
-
-		switch(ClientPrefs.getPref('LUType').toLowerCase()) {
-			case 'only p1': add(playerLU);
-			case 'both': 
-				if (!middleScroll) {
-					add(playerLU);
-					add(opponentLU);
-				}
-		}
 
 		var showTime:Bool = timeType != 'Disabled';
 		timeTxt = new FlxText(0, 19, 400, "", 16);
@@ -920,20 +902,6 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	public function addLUStrums():Void {
-		var strums:Array<Array<Dynamic>> = [[playerStrums, playerLU], [opponentStrums, opponentLU]];
-		for (istrums in strums) {
-			for (i in 0...istrums[0].members.length) {
-				var strumLay:FlxSprite = new FlxSprite(istrums[0].members[i].x, 0).makeGraphic(Std.int(istrums[0].members[i].width), FlxG.height, FlxColor.BLACK);
-				strumLay.alpha = ClientPrefs.getPref('LUAlpha');
-				strumLay.scrollFactor.set();
-				strumLay.camera = camHUD;
-				strumLay.screenCenter(Y);
-				istrums[1].add(strumLay);
-			}
-		}
-	}
-
 	public function startCountdown() {
 		if (startedCountdown) {
 			callOnScripts('onStartCountdown');
@@ -947,8 +915,6 @@ class PlayState extends MusicBeatState {
 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
-
-			addLUStrums();
 			updateLuaDefaultPos();
 	
 			setOnScripts('defaultMania', SONG.mania);
@@ -1139,9 +1105,7 @@ class PlayState extends MusicBeatState {
 		FlxTween.tween(timeBar, {alpha: 1}, .5 * playbackRate, {ease: FlxEase.circOut});
 		FlxTween.tween(timeTxt, {alpha: 1}, .5 * playbackRate, {ease: FlxEase.circOut});
 
-		#if discord_rpc
-		Discord.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter(), true, songLength);
-		#end
+		#if discord_rpc Discord.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter(), true, songLength); #end
 		setOnScripts('songLength', songLength);
 		callOnScripts('onSongStart');
 	}
@@ -1456,9 +1420,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		playerStrums.clear();
-		playerLU.clear();
 		opponentStrums.clear();
-		opponentLU.clear();
 		strumLineNotes.clear();
 		setOnScripts('defaultMania', mania);
 
@@ -1470,7 +1432,6 @@ class PlayState extends MusicBeatState {
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
-		addLUStrums();
 		updateLuaDefaultPos();
 	}
 
@@ -1491,12 +1452,8 @@ class PlayState extends MusicBeatState {
 			if (FlxG.sound.music != null && !startingSong)
 				resyncVocals();
 
-			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> {
-				if (!tmr.finished) tmr.active = true;
-			});
-			FlxTween.globalManager.forEach((twn:FlxTween) -> {
-				if (!twn.finished) twn.active = true;
-			});
+			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> {if (!tmr.finished) tmr.active = true;});
+			FlxTween.globalManager.forEach((twn:FlxTween) -> {if (!twn.finished) twn.active = true;});
 
 			paused = false;
 			callOnScripts('onResume');
@@ -1519,8 +1476,8 @@ class PlayState extends MusicBeatState {
 	override public function onFocusLost():Void {
 		callOnScripts('onFocusLost');
 		#if discord_rpc
-		if (health > 0 && !paused)
-			if (!tryPause()) Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter());
+		if (health > 0 && !paused && !tryPause())
+			Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter());
 		#end
 		super.onFocusLost();
 		callOnScripts('onFocusLostPost');
@@ -1598,24 +1555,6 @@ class PlayState extends MusicBeatState {
 
 		if(ClientPrefs.getPref('camMovement') && !isPixelStage)
 			if(camlock) camFollow.setPosition(camlockpoint.x, camlockpoint.y);
-
-		if (updateLU) {
-			switch(ClientPrefs.getPref('LUType').toLowerCase()) {
-				case 'only p1':
-					for (i in 0...playerLU.members.length) {
-						if (playerLU.members[i] != null)
-							playerLU.members[i].x = playerStrums.members[i].x;
-					}
-				case 'both':
-					var strums:Array<Array<Dynamic>> = [[playerStrums, playerLU], [opponentStrums, opponentLU]];
-					if (!middleScroll) {
-						for (strumLU in strums)
-							for (i in 0...strumLU[1].members.length)
-								if (strumLU[1].members[i] != null)
-									strumLU[1].members[i].x = strumLU[0].members[i].x;
-					}
-			}
-		}
 		
 		FlxG.camera.followLerp = 0;
 		if(!inCutscene && !paused)

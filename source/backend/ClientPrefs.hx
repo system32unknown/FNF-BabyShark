@@ -41,8 +41,6 @@ class ClientPrefs {
 		'showKeybindsOnStart' => false,
 		'hardwareCache' => false,
 		'streamMusic' => false,
-		'LUType' => 'Never',
-		'LUAlpha' => 0,
 		'AntiMash' => false,
 		'noteOffset' => 0,
 		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],

@@ -40,7 +40,7 @@ class MusicBeatState extends FlxUIState {
 		return Controls.instance;
 
 	static function getPathWithDir(songFolder:String, songLowercase:String):String {
-		return 'mods/${Mods.currentModDirectory}/data/' + Paths.CHART_PATH + '/$songFolder/$songLowercase.json';
+		return 'mods/${Mods.currentModDirectory}/data/${Paths.CHART_PATH}/$songFolder/$songLowercase.json';
 	}
 
 	public function getErrorMessage(error:String, reason:String, songFolder:String, songLowercase:String):String {
@@ -111,9 +111,7 @@ class MusicBeatState extends FlxUIState {
 
 		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
 
-		stagesFunc(function(stage:BaseStage) {
-			stage.update(elapsed);
-		});
+		stagesFunc((stage:BaseStage) -> {stage.update(elapsed);});
 
 		super.update(elapsed);
 	}
@@ -206,7 +204,7 @@ class MusicBeatState extends FlxUIState {
 		return previousStateClass == state;
 	
 	public function stepHit():Void {
-		stagesFunc(function(stage:BaseStage) {
+		stagesFunc((stage:BaseStage) -> {
 			stage.curStep = curStep;
 			stage.curDecStep = curDecStep;
 			stage.stepHit();
@@ -217,7 +215,7 @@ class MusicBeatState extends FlxUIState {
 
 	public var stages:Array<BaseStage> = [];
 	public function beatHit():Void {
-		stagesFunc(function(stage:BaseStage) {
+		stagesFunc((stage:BaseStage) -> {
 			stage.curBeat = curBeat;
 			stage.curDecBeat = curDecBeat;
 			stage.beatHit();
@@ -225,7 +223,7 @@ class MusicBeatState extends FlxUIState {
 	}
 
 	public function sectionHit():Void {
-		stagesFunc(function(stage:BaseStage) {
+		stagesFunc((stage:BaseStage) -> {
 			stage.curSection = curSection;
 			stage.sectionHit();
 		});

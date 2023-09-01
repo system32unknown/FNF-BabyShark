@@ -90,21 +90,6 @@ class VisualsUISubState extends BaseOptionsMenu
 			'ShowJudgementCount', 'bool');
 		addOption(option);
 
-		var option:Option = new Option('Lane Underlay Type',
-			'', 'LUType', 'string', ['Only P1', 'Both', 'Never']);
-		addOption(option);
-
-		var option:Option = new Option('Lane Underlay Opacity',
-			'How transparent your lane is, higher = more visible.',
-			'LUAlpha',
-			'percent');
-		option.scrollSpeed = 1.6;
-		option.minValue = 0.0;
-		option.maxValue = 1;
-		option.changeValue = 0.1;
-		option.decimals = 1;
-		addOption(option);
-
 		#if desktop
 		var option:Option = new Option('Discord Rich Presence',
 			"Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord",
