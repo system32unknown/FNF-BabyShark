@@ -663,10 +663,10 @@ class WeekEditorFreeplayState extends MusicBeatState
 		bgColorStepperG = new FlxUINumericStepper(80, 40, 20, 255, 0, 255, 0);
 		bgColorStepperB = new FlxUINumericStepper(150, 40, 20, 255, 0, 255, 0);
 
-		var copyColor:FlxButton = new FlxButton(10, bgColorStepperR.y + 25, "Copy Color", function() {
+		var copyColor:FlxButton = new FlxButton(10, bgColorStepperR.y + 25, "Copy Color", () -> {
 			Clipboard.text = bg.color.red + ',' + bg.color.green + ',' + bg.color.blue;
 		});
-		var pasteColor:FlxButton = new FlxButton(140, copyColor.y, "Paste Color", function() {
+		var pasteColor:FlxButton = new FlxButton(140, copyColor.y, "Paste Color", () -> {
 			if(Clipboard.text != null) {
 				var leColor:Array<Int> = [];
 				var splitted:Array<String> = Clipboard.text.trim().split(',');
@@ -731,9 +731,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		curSelected = FlxMath.wrap(curSelected + change, 0, weekFile.songs.length - 1);
 
 		var bullShit:Int = 0;
-		for (i in 0...iconArray.length) {
-			iconArray[i].alpha = 0.6;
-		}
+		for (icon in iconArray) icon.alpha = 0.6;
 
 		iconArray[curSelected].alpha = 1;
 
@@ -742,9 +740,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 			bullShit++;
 
 			item.alpha = 0.6;
-
-			if (item.targetY == 0)
-				item.alpha = 1;
+			if (item.targetY == 0) item.alpha = 1;
 		}
 		iconInputText.text = weekFile.songs[curSelected][1];
 		bgColorStepperR.value = Math.round(weekFile.songs[curSelected][2][0]);

@@ -81,9 +81,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		addTypeUI();
 		add(UI_typebox);
 
-		var tabs = [{
-			name: 'Character', label: 'Character'
-		}];
+		var tabs = [{name: 'Character', label: 'Character'}];
 		UI_mainbox = new FlxUITabMenu(null, tabs, true);
 		UI_mainbox.resize(240, 180);
 		UI_mainbox.setPosition(FlxG.width - UI_mainbox.width - 100, FlxG.height - UI_mainbox.height - 50);

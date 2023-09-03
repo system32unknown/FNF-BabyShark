@@ -48,6 +48,8 @@ class ErrorDisplay {
 	 ** `myDisplay.displayError();`
      */
     public function displayError() {
+		FlxG.sound.play(Paths.sound('cancelMenu'));
+
         if(this.errorBGTween != null) {
 			this.errorBGTween.cancel();
 			this.errorBGTween.destroy();

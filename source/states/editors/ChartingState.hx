@@ -1788,9 +1788,8 @@ class ChartingState extends MusicBeatState {
 			}
 
 			var style = currentType;
-			if (FlxG.keys.pressed.SHIFT) {
+			if (FlxG.keys.pressed.SHIFT)
 				style = 3;
-			}
 
 			var conductorTime = Conductor.songPosition;
 
@@ -1922,7 +1921,7 @@ class ChartingState extends MusicBeatState {
 		bpmTxt.text =
 		'$currentSongName [${Difficulty.getString()}]'+
 		'\n${CoolUtil.formatTime(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))} / ${CoolUtil.formatTime(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))}' +
-		'\n\nSection: $curSec' +
+		'\n\nMeasure: $curSec' +
 		'\nBeat: ${Std.string(curDecBeat).substring(0, 4)}' +
 		'\nStep: $curStep' +
 		'\nZoom: $zoomFactorTxt' +
