@@ -156,8 +156,7 @@ class PauseSubState extends MusicBeatSubstate
 		if (downP) changeSelection(1);
 
 		var daSelected:String = menuItems[curSelected];
-		switch (daSelected)
-		{
+		switch (daSelected) {
 			case 'Skip Time':
 				if (controls.UI_LEFT_P) {
 					FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
@@ -276,8 +275,7 @@ class PauseSubState extends MusicBeatSubstate
 		skipTimeTracker = null;
 	}
 
-	public static function restartSong(noTrans:Bool = false)
-	{
+	public static function restartSong(noTrans:Bool = false) {
 		PlayState.restarted = true;
 		PlayState.instance.paused = true; // For lua
 		FlxG.sound.music.volume = 0;

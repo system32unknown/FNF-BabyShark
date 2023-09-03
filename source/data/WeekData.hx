@@ -81,15 +81,14 @@ class WeekData {
 		this.fileName = fileName;
 	}
 
-	public static function reloadWeekFiles(isStoryMode:Null<Bool> = false)
-	{
+	public static function reloadWeekFiles(isStoryMode:Null<Bool> = false) {
 		weeksList = [];
 		weeksLoaded.clear();
 		#if MODS_ALLOWED
 		var directories:Array<String> = [Paths.mods(), Paths.getPreloadPath()];
 		var originalLength:Int = directories.length;
 		for (mod in Mods.parseList().enabled)
-			directories.push(Paths.mods(mod + '/'));
+			directories.push(Paths.mods('$mod/'));
 		#else
 		var directories:Array<String> = [Paths.getPreloadPath()];
 		var originalLength:Int = directories.length;

@@ -3,8 +3,7 @@ package cutscenes;
 import flixel.FlxBasic;
 import flixel.util.FlxSort;
 
-class CutsceneHandler extends FlxBasic
-{
+class CutsceneHandler extends FlxBasic {
 	public var timedEvents:Array<Dynamic> = [];
 	public var finishCallback:Void->Void = null;
 	public var finishCallback2:Void->Void = null;
@@ -16,7 +15,7 @@ class CutsceneHandler extends FlxBasic
 	public function new() {
 		super();
 
-		timer(0, function() {
+		timer(0, () -> {
 			if(music != null) {
 				FlxG.sound.playMusic(Paths.music(music), 0, false);
 				FlxG.sound.music.fadeIn();

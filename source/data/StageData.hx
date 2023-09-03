@@ -49,11 +49,11 @@ class StageData {
 	public static var forceNextDirectory:String = null;
 	public static function loadDirectory(SONG:SwagSong) {
 		var stage:String = '';
-		if(SONG.stage != null) {
+		if(SONG.stage != null)
 			stage = SONG.stage;
-		} else if(SONG.song != null) {
+		else if(SONG.song != null)
 			stage = vanillaSongStage(SONG.song.toLowerCase().replace(' ', '-'));
-		} else stage = 'stage';
+		else stage = 'stage';
 
 		var stageFile:StageFile = getStageFile(stage);
 		forceNextDirectory = (stageFile == null ? '' : stageFile.directory); // preventing crashes
@@ -75,16 +75,12 @@ class StageData {
 	}
 
 	public static function vanillaSongStage(songName):String {
-		switch (songName) {
-			case 'spookeez' | 'south' | 'monster':
-				return 'spooky';
-			case 'pico' | 'blammed' | 'philly' | 'philly-nice':
-				return 'philly';
-			case 'milf' | 'satin-panties' | 'high':
-				return 'limo';
-			case 'cocoa' | 'eggnog':
-				return 'mall';
+		return switch (songName) {
+			case 'spookeez' | 'south' | 'monster': 'spooky';
+			case 'pico' | 'blammed' | 'philly' | 'philly-nice': 'philly';
+			case 'milf' | 'satin-panties' | 'high': 'limo';
+			case 'cocoa' | 'eggnog': 'mall';
+			default: 'stage';
 		}
-		return 'stage';
 	}
 }

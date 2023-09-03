@@ -8,8 +8,7 @@ enum Alignment {
 	RIGHT;
 }
 
-class Alphabet extends FlxSpriteGroup
-{
+class Alphabet extends FlxSpriteGroup {
 	public var text(default, set):String;
 
 	public var bold:Bool = false;
@@ -119,9 +118,8 @@ class Alphabet extends FlxSpriteGroup
 	public function softReloadLetters(ratioX:Float = 1, ratioY:Null<Float> = null) {
 		if(ratioY == null) ratioY = ratioX;
 
-		for (letter in letters) {
+		for (letter in letters)
 			if(letter != null) letter.setupAlphaCharacter((letter.x - x) * ratioX + x, (letter.y - y) * ratioY + y);
-		}
 	}
 
 	public function setScale(newX:Float, newY:Null<Float> = null) {
@@ -131,8 +129,7 @@ class Alphabet extends FlxSpriteGroup
 		@:bypassAccessor scaleX = newX;
 		@:bypassAccessor scaleY = newY;
 
-		scale.x = newX;
-		scale.y = newY;
+		scale.set(newX, newY);
 		softReloadLetters(newX / lastX, newY / lastY);
 	}
 
@@ -382,8 +379,7 @@ class AlphaCharacter extends FlxSprite {
 			}
 		}
 		add *= scale.y;
-		offset.x += letterOffset[0] * scale.x;
-		offset.y += letterOffset[1] * scale.y - (add - height);
+		offset.add(letterOffset[0] * scale.x, letterOffset[1] * scale.y - (add - height));
 	}
 
 	override public function updateHitbox() {

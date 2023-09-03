@@ -2,15 +2,14 @@ package objects;
 
 import flixel.FlxState;
 
-class ErrorDisplay
-{
+class ErrorDisplay {
     public var text(default, set):String = 'Error!';
 
     public var errorBG:FlxSprite;
     public var errorText:FlxText;
 
     // Tween stuff
-    public var bgAlpha:Float = 0.6; // the BG's alpha when it becomes visible
+    public var bgAlpha:Float = .6; // the BG's alpha when it becomes visible
     public var bgPersistence:Float = 3; // how long the BG stays
 
     public var textAlpha:Float = 1; // the text's alpha when it becomes visible
@@ -30,7 +29,7 @@ class ErrorDisplay
      * Creates a new ErrorDisplay instance.
      */
     public function new(?errorMessage:String = 'Error!') {
-        this.errorBG = new FlxSprite().makeGraphic(FlxG.width, 160, 0xFF000000);
+        this.errorBG = new FlxSprite().makeGraphic(FlxG.width, 160, FlxColor.BLACK);
 		this.errorBG.scrollFactor.set();
 		this.errorBG.alpha = 0;
 		this.errorBG.screenCenter();
@@ -48,8 +47,7 @@ class ErrorDisplay
 	 ** `myDisplay.text = errorString;`
 	 ** `myDisplay.displayError();`
      */
-    public function displayError()
-    {
+    public function displayError() {
         if(this.errorBGTween != null) {
 			this.errorBGTween.cancel();
 			this.errorBGTween.destroy();
@@ -63,26 +61,22 @@ class ErrorDisplay
 
 		this.errorBGTween = FlxTween.tween(errorBG, {alpha: bgAlpha}, 0.5, {
 			ease: FlxEase.sineOut,
-			onComplete: function(twn:FlxTween) {
+			onComplete: (twn:FlxTween) -> {
 				this.errorBGTween = FlxTween.tween(errorBG, {alpha: 0}, 0.5, {
 					startDelay: bgPersistence,
 					ease: FlxEase.sineOut,
-					onComplete: function(twn:FlxTween) {
-						this.errorBGTween.destroy();
-					}
+					onComplete: (twn:FlxTween) -> {this.errorBGTween.destroy();}
 				});
 			}
 		});
 		
 		this.errorTextTween = FlxTween.tween(errorText, {alpha: textAlpha}, 0.5, {
 			ease: FlxEase.sineOut,
-			onComplete: function(twn:FlxTween) {
+			onComplete: (twn:FlxTween) -> {
 				this.errorTextTween = FlxTween.tween(errorText, {alpha: 0}, 0.5, {
 					startDelay: textPersistence,
 					ease: FlxEase.sineOut,
-					onComplete: function(twn:FlxTween) {
-						this.errorTextTween.destroy();
-					}
+					onComplete: (twn:FlxTween) -> {this.errorTextTween.destroy();}
 				});
 			}
 		});
@@ -102,8 +96,7 @@ class ErrorDisplay
 	 * Destroys the instance.
 	 * Do `myDisplay = null;` afterwards to get rid of it completely.
 	 */
-	public function destroy()
-	{
+	public function destroy() {
 		this.errorBG.destroy();
 		this.errorText.destroy();
 

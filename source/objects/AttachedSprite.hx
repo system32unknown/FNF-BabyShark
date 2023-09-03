@@ -13,8 +13,7 @@ class AttachedSprite extends FlxSprite
 	public var copyAlpha:Bool = true;
 	public var copyVisible:Bool = false;
 
-	public function new(?file:String = null, ?anim:String = null, ?library:String = null, ?loop:Bool = false)
-	{
+	public function new(?file:String = null, ?anim:String = null, ?library:String = null, ?loop:Bool = false) {
 		super();
 		if(anim != null) {
 			frames = Paths.getSparrowAtlas(file, library);
@@ -25,8 +24,7 @@ class AttachedSprite extends FlxSprite
 		scrollFactor.set();
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 
 		if (sprTracker != null) {

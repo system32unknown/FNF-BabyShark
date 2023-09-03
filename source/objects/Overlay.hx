@@ -19,7 +19,6 @@ class Overlay extends TextField {
 
 	//Memory
     @:allow(utils.system.FPSUtil) var memory:Dynamic = 0;
-    var mempeak:Dynamic = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
 		super();
@@ -45,11 +44,10 @@ class Overlay extends TextField {
 		} else textColor = FlxColor.WHITE;
 
 		memory = MemoryUtil.getGCMEM();
-		if (memory > mempeak) mempeak = memory;
 
 		text = '${FPS.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
-			text += '${MemoryUtil.getInterval(memory)} / ${MemoryUtil.getInterval(mempeak)}\n';
+			text += 'Memory: ${MemoryUtil.getInterval(memory)}';
 		visible = ClientPrefs.getPref('showFPS');
 	}
 }

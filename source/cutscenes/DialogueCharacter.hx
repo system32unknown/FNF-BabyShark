@@ -24,9 +24,8 @@ typedef DialogueAnimArray = {
 	var idle_offsets:Array<Int>;
 }
 
-class DialogueCharacter extends FlxSprite
-{
-	private static var IDLE_SUFFIX:String = '-IDLE';
+class DialogueCharacter extends FlxSprite {
+	static var IDLE_SUFFIX:String = '-IDLE';
 	public static var DEFAULT_CHARACTER:String = 'bf';
 	public static var DEFAULT_SCALE:Float = 0.7;
 

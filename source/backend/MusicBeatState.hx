@@ -80,8 +80,8 @@ class MusicBeatState extends FlxUIState {
 
 	override function create() {
 		if (curBPMChange != null && curBPMChange.bpm != Conductor.bpm) curBPMChange = Conductor.getDummyBPMChange();
-		var skip = FlxTransitionableState.skipNextTransOut;
 		camBeat = FlxG.camera;
+		var skip = FlxTransitionableState.skipNextTransOut;
 		#if MODS_ALLOWED Mods.updatedOnState = false; #end
 
 		super.create();
