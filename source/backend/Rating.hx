@@ -13,10 +13,8 @@ class Rating {
 		this.name = name;
 		this.image = name;
 		this.hitWindow = 0;
-
-		var window:String = name + 'Window';
 		try {
-			this.hitWindow = ClientPrefs.getPref(window);
+			this.hitWindow = ClientPrefs.getPref('${name}Window');
 		} catch(e) FlxG.log.error(e);
 	}
 
@@ -36,13 +34,13 @@ class Rating {
 		rating.noteSplash = false;
 		ratingsData.push(rating);
 
-		var rating:Rating = new Rating('bad');
+		var rating:Rating = new Rating('ok');
 		rating.ratingMod = .4;
 		rating.score = 100;
 		rating.noteSplash = false;
 		ratingsData.push(rating);
 		
-		var rating:Rating = new Rating('shit');
+		var rating:Rating = new Rating('bad');
 		rating.ratingMod = 0;
 		rating.score = 50;
 		rating.noteSplash = false;

@@ -360,7 +360,6 @@ class ChartingState extends MusicBeatState {
 		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function() {
 			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {loadJson(_song.song.toLowerCase());}, null, ignoreWarnings));
 		});
-		reloadSongJson.color = 0xffff7e00;
 		reloadSongJson.label.color = FlxColor.WHITE;
 
 		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, 'Load Autosave', function() {
@@ -1750,7 +1749,6 @@ class ChartingState extends MusicBeatState {
 				}
 			}
 
-			//ARROW VORTEX SHIT NO DEADASS
 			if (FlxG.keys.pressed.W || FlxG.keys.pressed.S) {
 				FlxG.sound.music.pause();
 
@@ -2324,7 +2322,6 @@ class ChartingState extends MusicBeatState {
 		updateGrid();
 
 		FlxG.sound.music.pause();
-		// Basically old shit from changeSection???
 		FlxG.sound.music.time = sectionStartTime();
 
 		if (songBeginning) {
