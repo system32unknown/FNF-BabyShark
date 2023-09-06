@@ -7,7 +7,7 @@ class Bar extends FlxSpriteGroup {
 	public var leftBar:FlxSprite;
 	public var rightBar:FlxSprite;
 	public var bg:FlxSprite;
-	public var valueFunction:Void->Float = function() return 0;
+	public var valueFunction:Void->Float = null;
 	public var percent(default, set):Float = 0;
 	public var bounded(default, null):Float = 0;
 	public var bounds:Dynamic = {min: 0, max: 1};
@@ -22,7 +22,7 @@ class Bar extends FlxSpriteGroup {
 	public function new(x:Float, y:Float, image:String = 'healthBar', valueFunction:Void->Float = null, boundX:Float = 0, boundY:Float = 1) {
 		super(x, y);
 
-		if(valueFunction != null) this.valueFunction = valueFunction;
+		this.valueFunction = valueFunction;
 		setBounds(boundX, boundY);
 
 		bg = new FlxSprite().loadGraphic(Paths.image(image));
@@ -39,10 +39,18 @@ class Bar extends FlxSpriteGroup {
 		regenerateClips();
 	}
 
+	public var enabled:Bool = true;
 	override function update(elapsed:Float) {
-		bounded = FlxMath.bound(valueFunction(), bounds.min, bounds.max);
-		var value:Null<Float> = FlxMath.remapToRange(bounded, bounds.min, bounds.max, 0, 100);
-		percent = (value != null ? value : 0);
+		if(!enabled) {
+			super.update(elapsed);
+			return;
+		}
+
+		if(valueFunction != null) {
+			bounded = FlxMath.bound(valueFunction(), bounds.min, bounds.max);
+			var value:Null<Float> = FlxMath.remapToRange(bounded, bounds.min, bounds.max, 0, 100);
+			percent = (value != null ? value : 0);
+		} else percent = 0;
 		super.update(elapsed);
 	}
 

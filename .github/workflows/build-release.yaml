@@ -52,7 +52,7 @@ jobs:
           cd ../../../
 
       - name: Install haxelibs
-        run: haxe -cp update -D analyzer-optimize -main Update --interp
+        run: haxe -cp ./setup -D analyzer-optimize -main Main --interp
 
       - name: Compile
         run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}

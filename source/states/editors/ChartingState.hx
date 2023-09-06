@@ -360,7 +360,6 @@ class ChartingState extends MusicBeatState {
 		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function() {
 			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {loadJson(_song.song.toLowerCase());}, null, ignoreWarnings));
 		});
-		reloadSongJson.label.color = FlxColor.WHITE;
 
 		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, 'Load Autosave', function() {
 			PlayState.SONG = Song.parseJSONshit(FlxG.save.data.autosave);
@@ -918,7 +917,7 @@ class ChartingState extends MusicBeatState {
 
 		var displayNameList:Array<String> = curNoteTypes.copy();
 		for (i in 1...displayNameList.length) {
-			displayNameList[i] = '$i. ' + displayNameList[i];
+			displayNameList[i] = '$i. ${displayNameList[i]}';
 		}
 
 		noteTypeDropDown = new FlxUIDropDownMenu(10, 105, FlxUIDropDownMenu.makeStrIdLabelArray(displayNameList, true), function(character:String) {
