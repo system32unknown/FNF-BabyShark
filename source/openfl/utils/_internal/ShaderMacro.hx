@@ -112,15 +112,15 @@ class ShaderMacro
 			if (glFragmentSource != null && glFragmentHeader != null && glFragmentBody != null)
 			{
 				glFragmentSourceRaw = glFragmentSource;
-				glFragmentSource = glFragmentSource.replace("#pragma header", glFragmentHeader);
-				glFragmentSource = glFragmentSource.replace("#pragma body", glFragmentBody);
+				glFragmentSource = StringTools.replace(glFragmentSource, "#pragma header", glFragmentHeader);
+				glFragmentSource = StringTools.replace(glFragmentSource, "#pragma body", glFragmentBody);
 			}
 
 			if (glVertexSource != null && glVertexHeader != null && glVertexBody != null)
 			{
 				glVertexSourceRaw = glVertexSource;
-				glVertexSource = glVertexSource.replace("#pragma header", glVertexHeader);
-				glVertexSource = glVertexSource.replace("#pragma body", glVertexBody);
+				glVertexSource = StringTools.replace(glVertexSource, "#pragma header", glVertexHeader);
+				glVertexSource = StringTools.replace(glVertexSource, "#pragma body", glVertexBody);
 			}
 
 			var shaderDataFields = new Array<Field>();
@@ -264,14 +264,14 @@ class ShaderMacro
 			type = regex.matched(1);
 			name = regex.matched(2);
 
-			if (name.startsWith("gl_"))
+			if (StringTools.startsWith(name, "gl_"))
 				continue;
 
-			if (name.startsWith("openfl_"))
+			if (StringTools.startsWith(name, "openfl_"))
 				fieldAccess = APrivate;
 			else fieldAccess = APublic;
 
-			if (type.startsWith("sampler")) {
+			if (StringTools.startsWith(type, "sampler")) {
 				field = {
 					name: name,
 					meta: [],
@@ -335,7 +335,7 @@ class ShaderMacro
 				}
 			}
 
-			if (name.startsWith("openfl_"))
+			if (StringTools.startsWith(name, "openfl_"))
 			{
 				field.meta = [
 					{name: ":keep", pos: pos},

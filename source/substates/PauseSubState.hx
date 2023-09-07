@@ -84,11 +84,11 @@ class PauseSubState extends MusicBeatSubstate
 		levelDifficulty.updateHitbox();
 		add(levelDifficulty);
 
-		var blueballedTxt:FlxText = new FlxText(20, 15 + 64, 0, "Blueballed: " + PlayState.deathCounter, 32);
-		blueballedTxt.scrollFactor.set();
-		blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
-		blueballedTxt.updateHitbox();
-		add(blueballedTxt);
+		var failTxt:FlxText = new FlxText(20, 15 + 64, 0, 'Fails: ${PlayState.deathCounter}', 32);
+		failTxt.scrollFactor.set();
+		failTxt.setFormat(Paths.font('vcr.ttf'), 32);
+		failTxt.updateHitbox();
+		add(failTxt);
 
 		var chartingText:FlxText = new FlxText(20, 15 + 101, 0, "CHARTING MODE", 32);
 		chartingText.scrollFactor.set();
