@@ -53,9 +53,7 @@ class FunkinLua {
 
 		addCallback = Lua_helper.add_callback.bind(lua);
 
-		addCallback("getRunningScripts", function() {
-			return [for (script in game.luaArray) script.scriptName];
-		});
+		addCallback("getRunningScripts", () -> return [for (script in game.luaArray) script.scriptName]);
 
 		addCallback("setOnScripts", function(varName:String, arg:Dynamic, ?ignoreSelf:Bool = false, ?exclusions:Array<String> = null) {
 			if(exclusions == null) exclusions = [];
@@ -107,8 +105,7 @@ class FunkinLua {
 		addCallback("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
 			final trimmedpft = platformType.trim();
 			if (args == null) args = [];
-			final blackListcpp = ["setDPIAware"];
-			if (blackListcpp.contains(trimmedpft)) return null;
+			if (["setDPIAware"].contains(trimmedpft)) return null;
 
 			return Reflect.callMethod(null, Reflect.field(PlatformUtil, trimmedpft), args);
 		});
@@ -153,9 +150,7 @@ class FunkinLua {
 			PlayState.instance.variables.set(varName, value);
 			return value;
 		});
-		addCallback("getVar", function(varName:String) {
-			return PlayState.instance.variables.get(varName);
-		});
+		addCallback("getVar", (varName:String) -> return PlayState.instance.variables.get(varName));
 
 		addCallback("addLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false) { //would be dope asf.
 			var foundScript:String = findScript(luaFile);
@@ -242,9 +237,7 @@ class FunkinLua {
 			return true;
 		});
 
-		addCallback("getPref", function(pref:String) {
-			return ClientPrefs.getPref(pref);
-		});
+		addCallback("getPref", (pref:String) -> return ClientPrefs.getPref(pref));
 		addCallback("setPref", function(pref:String, ?value:Dynamic = null) {
 			ClientPrefs.prefs.set(pref, value);
 		});
@@ -276,11 +269,11 @@ class FunkinLua {
 						startDelay: myOptions.startDelay,
 						loopDelay: myOptions.loopDelay,
 
-						onUpdate: function(twn:FlxTween) {
+						onUpdate: (twn:FlxTween) -> {
 							if(myOptions.onUpdate != null) game.callOnLuas(myOptions.onUpdate, [tag, vars]);
-						}, onStart: function(twn:FlxTween) {
+						}, onStart: (twn:FlxTween) -> {
 							if(myOptions.onStart != null) game.callOnLuas(myOptions.onStart, [tag, vars]);
-						}, onComplete: function(twn:FlxTween) {
+						}, onComplete: (twn:FlxTween) -> {
 							if(myOptions.onComplete != null) game.callOnLuas(myOptions.onComplete, [tag, vars]);
 							if(twn.type == FlxTweenType.ONESHOT || twn.type == FlxTweenType.BACKWARD) game.modchartTweens.remove(tag);
 						}
@@ -332,7 +325,7 @@ class FunkinLua {
 
 			if(testicle != null) {
 				game.modchartTweens.set(tag, FlxTween.tween(testicle, fieldsNValues, duration * game.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
+					onComplete: (twn:FlxTween) -> {
 						game.callOnLuas('onTweenCompleted', [tag]);
 						game.modchartTweens.remove(tag);
 					}
@@ -361,22 +354,16 @@ class FunkinLua {
 			}
 		});
 
-		addCallback("cancelTween", function(tag:String) {
-			LuaUtils.cancelTween(tag);
-		});
+		addCallback("cancelTween", (tag:String) -> LuaUtils.cancelTween(tag));
 
 		addCallback("runTimer", function(tag:String, time:Float = 1, loops:Int = 1) {
 			LuaUtils.cancelTimer(tag);
-			game.modchartTimers.set(tag, new FlxTimer().start(time, function(tmr:FlxTimer) {
-				if(tmr.finished) {
-					game.modchartTimers.remove(tag);
-				}
+			game.modchartTimers.set(tag, new FlxTimer().start(time, (tmr:FlxTimer) -> {
+				if(tmr.finished) game.modchartTimers.remove(tag);
 				game.callOnLuas('onTimerCompleted', [tag, tmr.loops, tmr.loopsLeft]);
 			}, loops));
 		});
-		addCallback("cancelTimer", function(tag:String) {
-			LuaUtils.cancelTimer(tag);
-		});
+		addCallback("cancelTimer", (tag:String) -> {LuaUtils.cancelTimer(tag);});
 
 		//stupid bietch ass functions
 		addCallback("addScore", function(value:Int = 0) {
@@ -403,46 +390,24 @@ class FunkinLua {
 			game.songHits = value;
 			game.RecalculateRating();
 		});
-		addCallback("getScore", function() {
-			return game.songScore;
-		});
-		addCallback("getMisses", function() {
-			return game.songMisses;
-		});
-		addCallback("getAccuracy", function() {
-			return game.accuracy;
-		});
-		addCallback("getHits", function() {
-			return game.songHits;
-		});
+		addCallback("getScore", () -> return game.songScore);
+		addCallback("getMisses", () -> return game.songMisses);
+		addCallback("getAccuracy", () -> return game.accuracy);
+		addCallback("getHits", () -> return game.songHits);
 
-		addCallback("getHighscore", function(song:String, diff:Int) {
-			return Highscore.getScore(song, diff);
-		});
-		addCallback("getSavedRating", function(song:String, diff:Int) {
-			return Highscore.getRating(song, diff);
-		});
-		addCallback("getSavedCombo", function(song:String, diff:Int) {
-			return Highscore.getCombo(song, diff);
-		});
-		addCallback("getWeekScore", function(week:String, diff:Int) {
-			return Highscore.getWeekScore(week, diff);
-		});
+		addCallback("getHighscore", (song:String, diff:Int) -> return Highscore.getScore(song, diff));
+		addCallback("getSavedRating", (song:String, diff:Int) -> return Highscore.getRating(song, diff));
+		addCallback("getSavedCombo", (song:String, diff:Int) -> return Highscore.getCombo(song, diff));
+		addCallback("getWeekScore", (week:String, diff:Int) -> return Highscore.getWeekScore(week, diff));
 
-		addCallback("setHealth", function(value:Float = 0) {
-			game.health = value;
-		});
-		addCallback("addHealth", function(value:Float = 0) {
-			game.health += value;
-		});
-		addCallback("getHealth", function() {
-			return game.health;
-		});
+		addCallback("setHealth", (value:Float = 0) -> game.health = value);
+		addCallback("addHealth", (value:Float = 0) -> game.health += value);
+		addCallback("getHealth", () -> return game.health);
 
-		addCallback("FlxColor", function(?color:String = '') return FlxColor.fromString(color));
-		addCallback("getColorFromName", function(?color:String = '') return FlxColor.fromString(color));
-		addCallback("getColorFromString", function(?color:String = '') return FlxColor.fromString(color));
-		addCallback("getColorFromHex", function(color:String) return FlxColor.fromString('#$color'));
+		addCallback("FlxColor", (?color:String = '') -> return FlxColor.fromString(color));
+		addCallback("getColorFromName", (?color:String = '') -> return FlxColor.fromString(color));
+		addCallback("getColorFromString", (?color:String = '') -> return FlxColor.fromString(color));
+		addCallback("getColorFromHex", (color:String) -> return FlxColor.fromString('#$color'));
 		
 		addCallback("getColorFromRgb", function(rgb:Array<Int>) {
 			return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]);
@@ -453,22 +418,16 @@ class FunkinLua {
 		});
 
 		addCallback("addCharacterToList", function(name:String, type:String) {
-			var charType:Int = 0;
-			switch(type.toLowerCase()) {
-				case 'dad': charType = 1;
-				case 'gf' | 'girlfriend': charType = 2;
+			var charType:Int = switch(type.toLowerCase()) {
+				case 'dad': 1;
+				case 'gf' | 'girlfriend': 2;
+				default: 0;
 			}
 			game.addCharacterToList(name, charType);
 		});
-		addCallback("precacheImage", function(name:String) {
-			Paths.returnGraphic(name);
-		});
-		addCallback("precacheSound", function(name:String) {
-			Paths.sound(name);
-		});
-		addCallback("precacheMusic", function(name:String) {
-			Paths.music(name);
-		});
+		addCallback("precacheImage", (name:String) -> Paths.returnGraphic(name));
+		addCallback("precacheSound", (name:String) -> Paths.sound(name));
+		addCallback("precacheMusic", (name:String) -> Paths.music(name));
 
 		addCallback("triggerEvent", function(name:String, arg1:Dynamic, arg2:Dynamic) {
 			var value1:String = arg1;
@@ -516,15 +475,13 @@ class FunkinLua {
 			Mods.loadTopMod();
 			return true;
 		});
-		addCallback("getSongPosition", function() {
-			return Conductor.songPosition;
-		});
+		addCallback("getSongPosition", () -> Conductor.songPosition);
 
 		addCallback("getCharacterX", function(type:String) {
-			switch(type.toLowerCase()) {
-				case 'dad' | 'opponent': return game.dadGroup.x;
-				case 'gf' | 'girlfriend': return game.gfGroup.x;
-				default: return game.boyfriendGroup.x;
+			return switch(type.toLowerCase()) {
+				case 'dad' | 'opponent': game.dadGroup.x;
+				case 'gf' | 'girlfriend': game.gfGroup.x;
+				default: game.boyfriendGroup.x;
 			}
 		});
 		addCallback("setCharacterX", function(type:String, value:Float) {
@@ -535,10 +492,10 @@ class FunkinLua {
 			}
 		});
 		addCallback("getCharacterY", function(type:String) {
-			switch(type.toLowerCase()) {
-				case 'dad' | 'opponent': return game.dadGroup.y;
-				case 'gf' | 'girlfriend': return game.gfGroup.y;
-				default: return game.boyfriendGroup.y;
+			return switch(type.toLowerCase()) {
+				case 'dad' | 'opponent': game.dadGroup.y;
+				case 'gf' | 'girlfriend': game.gfGroup.y;
+				default: game.boyfriendGroup.y;
 			}
 		});
 		addCallback("setCharacterY", function(type:String, value:Float) {
@@ -549,9 +506,7 @@ class FunkinLua {
 			}
 		});
 
-		addCallback("changeMania", function(newValue:Int, skipTwn:Bool = false) {
-			game.changeMania(newValue, skipTwn);
-		});
+		addCallback("changeMania", (newValue:Int, skipTwn:Bool = false) -> game.changeMania(newValue, skipTwn));
 
 		addCallback("cameraSetTarget", function(target:String) {
 			switch(target.toLowerCase()) { //we do some copy and pasteing.
@@ -570,15 +525,9 @@ class FunkinLua {
 		addCallback("cameraFade", function(camera:String, color:String, duration:Float, forced:Bool) {
 			LuaUtils.cameraFromString(camera).fade(CoolUtil.colorFromString(color), duration * game.playbackRate, false, null, forced);
 		});
-		addCallback("setRatingPercent", function(value:Float) {
-			game.ratingPercent = value;
-		});
-		addCallback("setRatingName", function(value:String) {
-			game.ratingName = value;
-		});
-		addCallback("setRatingFC", function(value:String) {
-			game.ratingFC = value;
-		});
+		addCallback("setRatingPercent", (value:Float) -> game.ratingPercent = value);
+		addCallback("setRatingName", (value:String) -> game.ratingName = value);
+		addCallback("setRatingFC", (value:String) -> game.ratingFC = value);
 		addCallback("getMouseX", function(camera:String) {
 			return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).x;
 		});
@@ -631,7 +580,6 @@ class FunkinLua {
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
 			if(image != null && image.length > 0) leSprite.loadGraphic(Paths.image(image));
 			leSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
-
 			game.modchartSprites.set(tag, leSprite);
 		});
 		addCallback("makeAnimatedLuaSprite", function(tag:String, image:String = null, x:Float = 0, y:Float = 0, ?spriteType:String = "sparrow") {
@@ -641,15 +589,12 @@ class FunkinLua {
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
 			leSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
 			LuaUtils.loadFrames(leSprite, image, spriteType);
-			
 			game.modchartSprites.set(tag, leSprite);
 		});
 		addCallback("makeLuaSpriteGroup", function(tag:String, ?x:Float = 0, ?y:Float = 0, ?maxSize:Int = 0) {
 			tag = tag.replace('.', '');
 			LuaUtils.resetSpriteTag(tag);
-
-			var leGroup:ModchartGroup = new ModchartGroup(x, y, maxSize);
-			game.modchartGroups.set(tag, leGroup);
+			game.modchartGroups.set(tag, new ModchartGroup(x, y, maxSize));
 		});
 
 		addCallback("makeGraphic", function(obj:String, width:Int = 256, height:Int = 256, color:String = 'FFFFFF') {
@@ -893,15 +838,9 @@ class FunkinLua {
 			return true;
 		});
 
-		addCallback("luaSpriteExists", function(tag:String) {
-			return game.modchartSprites.exists(tag);
-		});
-		addCallback("luaTextExists", function(tag:String) {
-			return game.modchartTexts.exists(tag);
-		});
-		addCallback("luaSoundExists", function(tag:String) {
-			return game.modchartSounds.exists(tag);
-		});
+		addCallback("luaSpriteExists", (tag:String) -> return game.modchartSprites.exists(tag));
+		addCallback("luaTextExists", (tag:String) -> return game.modchartTexts.exists(tag));
+		addCallback("luaSoundExists", (tag:String) -> return game.modchartSounds.exists(tag));
 
 		addCallback("setHealthBarColors", function(left:String, right:String) {
 			var left_color:Null<FlxColor> = null;
@@ -965,11 +904,8 @@ class FunkinLua {
 			#end
 				path = Paths.json('${Paths.CHART_PATH}/${Paths.formatToSongPath(PlayState.SONG.song)}/$dialogueFile');
 			luaTrace('startDialogue: Trying to load dialogue: ' + path);
-			#if MODS_ALLOWED
-			if(FileSystem.exists(path))
-			#else
-			if(Assets.exists(path))
-			#end {
+			
+			if(#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
 				var shit:DialogueFile = DialogueBoxPsych.parseDialogue(path);
 				if(shit.dialogue.length > 0) {
 					game.startDialogue(shit, music);
@@ -1098,14 +1034,14 @@ class FunkinLua {
 				}
 			}
 		});
-		addCallback("debugPrint", function(text:Dynamic = '', color:String = 'WHITE') PlayState.instance.addTextToDebug(text, CoolUtil.colorFromString(color)));
+		addCallback("debugPrint", (text:Dynamic = '', color:String = 'WHITE') -> PlayState.instance.addTextToDebug(text, CoolUtil.colorFromString(color)));
 
 		addCallback("close", function():Bool {
 			trace('Closing script: $scriptName');
 			return closed = true;
 		});
 
-		#if desktop Discord.addLuaCallbacks(lua); #end
+		#if desktop Discord.addLuaCallbacks(this); #end
 		#if HSCRIPT_ALLOWED HScript.implement(this); #end
 		TextFunctions.implement(this);
 		ReflectionFunctions.implement(this);
@@ -1198,8 +1134,12 @@ class FunkinLua {
 		set('ratingName', '');
 		set('ratingRank', '');
 		set('ratingFC', '');
-		set('version', Main.engineVersion.version.trim());
-		set('commit_hash', Main.COMMIT_HASH.trim());
+		set('engine', {
+			version: Main.engineVer.version.trim(),
+			app_version: lime.app.Application.current.meta.get('version'),
+			commit: Main.engineVer.COMMIT_NUM,
+			hash: Main.engineVer.COMMIT_HASH.trim()
+		});
 
 		set('inGameOver', false);
 		set('mustHitSection', false);

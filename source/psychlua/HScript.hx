@@ -3,11 +3,6 @@ package psychlua;
 import flixel.FlxBasic;
 import objects.Character;
 
-#if sys
-import sys.FileSystem;
-import sys.io.File;
-#end
-
 #if (HSCRIPT_ALLOWED && SScript >= "3.0.0")
 import tea.SScript;
 class HScript extends SScript {

@@ -28,11 +28,7 @@ import sys.io.File;
 #end
 
 class Main extends Sprite {
-	public static var COMMIT_HASH(get, never):String;
-	public static function get_COMMIT_HASH():String {
-		return macro.GitCommitMacro.commitHash;
-	}
-	public static var engineVersion:GameVersion = new GameVersion(0, 1, 1);
+	public static var engineVer:GameVersion = new GameVersion(0, 1, 0);
 
 	var init_game = {
 		width: 1280, // WINDOW width

@@ -131,12 +131,11 @@ class Discord {
 	#end
 
 	#if LUA_ALLOWED
-	public static function addLuaCallbacks(lua:State) {
-		Lua_helper.add_callback(lua, "changePresence", function(details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
+	public static function addLuaCallbacks(lua:FunkinLua) {
+		lua.addCallback("changePresence", (details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) -> {
 			Discord.changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
 		});
-
-		Lua_helper.add_callback(lua, "changeDiscordClientID", function(?newID:String = null) {
+		lua.addCallback("changeDiscordClientID", (?newID:String = null) -> {
 			if(newID == null) newID = _defaultID;
 			clientID = newID;
 		});

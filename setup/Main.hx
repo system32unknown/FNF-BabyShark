@@ -1,3 +1,5 @@
+package;
+
 import haxe.Json;
 import sys.io.File;
 import sys.io.Process;

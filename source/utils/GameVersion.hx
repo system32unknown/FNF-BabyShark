@@ -7,11 +7,16 @@ class GameVersion {
 	public var patch(default, null):String;
 	public var version(get, never):String;
 
-	public function new(Release:Int, Major:Int, Minor:Int, ?Patch:String = '') {
-		release = Release;
-		major = Major;
-		minor = Minor;
-		patch = Patch;
+	public var COMMIT_HASH(get, never):String;
+	public function get_COMMIT_HASH():String {return macro.GitCommitMacro.commitHash;}
+	public var COMMIT_NUM(get, never):Int;
+	public function get_COMMIT_NUM():Int {return macro.GitCommitMacro.commitNumber;}
+
+	public function new(release:Int, major:Int, minor:Int, ?patch:String = '') {
+		this.release = release;
+		this.major = major;
+		this.minor = minor;
+		this.patch = patch;
 	}
 
 	function get_version():String
