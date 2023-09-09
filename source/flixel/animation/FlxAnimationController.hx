@@ -431,12 +431,12 @@ class FlxAnimationController implements IFlxDestroyable
 	 */
 	function findSpriteFrame(prefix:String, index:Int, postfix:String):Int
 	{
-		final frames = _sprite.frames.frames;
+		var frames = _sprite.frames.frames;
 		for (i in 0...frames.length)
 		{
-			final frame = frames[i];
-			final name = frame.name;
-			if (name.startsWith(prefix) && name.startsWith(postfix)) {
+			var frame = frames[i];
+			var name = frame.name;
+			if (StringTools.startsWith(name, Prefix) && StringTools.endsWith(name, Postfix)) {
 				final frameIndex:Null<Int> = Std.parseInt(name.substring(prefix.length, name.length - postfix.length));
 				if (frameIndex == index)
 					return i;

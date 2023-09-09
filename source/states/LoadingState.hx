@@ -192,7 +192,7 @@ class LoadingState extends MusicBeatState {
 			path = libraryPaths[id];
 			rootPath = Path.directory(path);
 		} else {
-			if (path.endsWith(".bundle")) {
+			if (StringTools.endsWith(path, ".bundle")) {
 				rootPath = path;
 				path += "/library.json";
 			} else rootPath = Path.directory(path);

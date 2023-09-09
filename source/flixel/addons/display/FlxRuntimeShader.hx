@@ -231,8 +231,8 @@ class FlxRuntimeShader extends FlxShader
 	 */
 	function processFragmentSource(input:String):String
 	{
-		var result = input.replace(PRAGMA_HEADER, BASE_FRAGMENT_HEADER);
-		result = result.replace(PRAGMA_BODY, BASE_FRAGMENT_BODY);
+		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_FRAGMENT_HEADER);
+		result = StringTools.replace(result, PRAGMA_BODY, BASE_FRAGMENT_BODY);
 		return result;
 	}
 

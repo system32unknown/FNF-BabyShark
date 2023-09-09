@@ -335,7 +335,7 @@ class AlphaCharacter extends FlxSprite {
 	}
 
 	public static function isTypeAlphabet(c:String) { // thanks kade
-		var ascii = c.fastCodeAt(0);
+		var ascii = StringTools.fastCodeAt(c, 0);
 		return (ascii >= 65 && ascii <= 90) || (ascii >= 97 && ascii <= 122) || (ascii >= 192 && ascii <= 214) || (ascii >= 216 && ascii <= 246) || (ascii >= 248 && ascii <= 255);
 	}
 
