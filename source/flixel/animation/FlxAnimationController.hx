@@ -436,7 +436,7 @@ class FlxAnimationController implements IFlxDestroyable
 		{
 			var frame = frames[i];
 			var name = frame.name;
-			if (StringTools.startsWith(name, Prefix) && StringTools.endsWith(name, Postfix)) {
+			if (name.startsWith(prefix) && name.endsWith(postfix)) {
 				final frameIndex:Null<Int> = Std.parseInt(name.substring(prefix.length, name.length - postfix.length));
 				if (frameIndex == index)
 					return i;

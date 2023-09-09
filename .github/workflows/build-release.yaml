@@ -54,8 +54,11 @@ jobs:
       - name: Install haxelibs
         run: haxe -cp ./setup -D analyzer-optimize -main Main --interp
 
+      - name: Create Version Tag
+        run: echo "${{github.run_id}}" > VERSION
+
       - name: Compile
-        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
+        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }} --app-version="4.0.0-${{ github.run_id}}"
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
