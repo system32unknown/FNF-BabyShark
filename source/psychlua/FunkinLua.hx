@@ -1138,7 +1138,8 @@ class FunkinLua {
 			version: Main.engineVer.version.trim(),
 			app_version: lime.app.Application.current.meta.get('version'),
 			commit: Main.engineVer.COMMIT_NUM,
-			hash: Main.engineVer.COMMIT_HASH.trim()
+			hash: Main.engineVer.COMMIT_HASH.trim(),
+			build_target: getBuildTarget()
 		});
 
 		set('inGameOver', false);
@@ -1190,9 +1191,6 @@ class FunkinLua {
 		set('lowQuality', ClientPrefs.getPref('lowQuality'));
 		set('shadersEnabled', ClientPrefs.getPref('shaders'));
 		set('scriptName', scriptName);
-
-		set('currentModDirectory', Mods.currentModDirectory);
-		set('buildTarget', getBuildTarget());
 
 		for (name => func in customFunctions)
 			if(func != null) addCallback(name, func);

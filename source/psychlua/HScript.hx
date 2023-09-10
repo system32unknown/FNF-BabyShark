@@ -84,7 +84,8 @@ class HScript extends SScript {
 
             "DeltaTrail" => objects.DeltaTrail,
             "engine" => {
-                version: lime.app.Application.current.meta.get('version'),
+				version: Main.engineVer.version.trim(),
+				app_version: lime.app.Application.current.meta.get('version'),
                 commit: macro.GitCommitMacro.commitNumber,
                 hash: macro.GitCommitMacro.commitHash,
                 name: "Alter Engine"
