@@ -36,7 +36,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		var option:Option = new Option('Icon Bounce:',
 			"What should the Icon Bounces?",
 			'IconBounceType', 'string',
-			['Vanilla', 'Kade', 'Psych', 'Dave', 'Custom']);
+			['Vanilla', 'Kade', 'Psych', 'Dave', 'GoldenApple', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Health Bar Types:',
@@ -45,8 +45,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Score Styles:',
-			"",
-			'ScoreType',
+			"", 'ScoreType',
 			'string', ['Alter', 'Kade']);
 		addOption(option);
 
