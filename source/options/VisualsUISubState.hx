@@ -36,7 +36,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		var option:Option = new Option('Icon Bounce:',
 			"What should the Icon Bounces?",
 			'IconBounceType', 'string',
-			['Vanilla', 'Kade', 'Psych', 'Dave', 'GoldenApple', 'Custom']);
+			['Vanilla', 'Kade', 'Psych', 'Dave', 'Custom']);
 		addOption(option);
 
 		var option:Option = new Option('Health Bar Types:',

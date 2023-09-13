@@ -153,7 +153,6 @@ class CharacterEditorState extends MusicBeatState
 
 		var tabs = [
 			{name: 'Character', label: 'Character'},
-			{name: 'Properties', label: 'Properties'},
 			{name: 'Animations', label: 'Animations'},
 		];
 		UI_characterbox = new FlxUITabMenu(null, tabs, true);
@@ -316,12 +315,6 @@ class CharacterEditorState extends MusicBeatState
 		"camera_position": [
 			0,
 			0
-		],
-		"gameover_properties": [
-			"bf-dead",
-			"fnf_loss_sfx",
-			"gameOver",
-			"gameOverEnd"
 		],
 		"sing_duration": 6.1,
 		"scale": 1
