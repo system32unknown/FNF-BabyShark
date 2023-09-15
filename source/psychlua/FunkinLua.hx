@@ -47,8 +47,6 @@ class FunkinLua {
 		this.scriptName = script;
 		var game:PlayState = PlayState.instance;
 		game.luaArray.push(this);
-		trace('loading lua file: $scriptName');
-
 		initGlobals(game);
 
 		addCallback = Lua_helper.add_callback.bind(lua);
@@ -105,7 +103,7 @@ class FunkinLua {
 		addCallback("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
 			final trimmedpft = platformType.trim();
 			if (args == null) args = [];
-			if (["setDPIAware"].contains(trimmedpft)) return null;
+			if (["setDPIAware", "getCurrentWalllpaper", "updateWallpaper", "disableClose"].contains(trimmedpft)) return null;
 
 			return Reflect.callMethod(null, Reflect.field(PlatformUtil, trimmedpft), args);
 		});
@@ -285,7 +283,7 @@ class FunkinLua {
 			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, variable);
 			if(penisExam != null) {
 				game.modchartTweens.set(tag, FlxTween.tween(penisExam, fieldsNValues, duration * game.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
+					onComplete: (twn:FlxTween) -> {
 						game.modchartTweens.remove(tag);
 						game.callOnLuas('onTweenCompleted', [tag]);
 					}
@@ -296,7 +294,7 @@ class FunkinLua {
 			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if(penisExam != null) {
 				game.modchartTweens.set(tag, FlxTween.angle(penisExam, value[0], value[1], duration * game.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
+					onComplete: (twn:FlxTween) -> {
 						game.callOnLuas('onTweenCompleted', [tag]);
 						game.modchartTweens.remove(tag);
 					}
@@ -309,7 +307,7 @@ class FunkinLua {
 				var curColor:FlxColor = penisExam.color;
 				curColor.alphaFloat = penisExam.alpha;
 				game.modchartTweens.set(tag, FlxTween.color(penisExam, duration * game.playbackRate, curColor, CoolUtil.colorFromString(targetColor), {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: function(twn:FlxTween) {
+					onComplete: (twn:FlxTween) -> {
 						game.modchartTweens.remove(tag);
 						game.callOnLuas('onTweenCompleted', [tag, vars]);
 					}
@@ -409,9 +407,7 @@ class FunkinLua {
 		addCallback("getColorFromString", (?color:String = '') -> return FlxColor.fromString(color));
 		addCallback("getColorFromHex", (color:String) -> return FlxColor.fromString('#$color'));
 		
-		addCallback("getColorFromRgb", function(rgb:Array<Int>) {
-			return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]);
-		});
+		addCallback("getColorFromRgb", (rgb:Array<Int>) ->return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]));
 		addCallback("getDominantColor", function(tag:String) {
 			if (tag == null) return 0;
 			return SpriteUtil.dominantColor(LuaUtils.getObjectDirectly(tag));
@@ -516,24 +512,16 @@ class FunkinLua {
 			}
 			return target;
 		});
-		addCallback("cameraShake", function(camera:String, intensity:Float, duration:Float, axes:String) {
-			LuaUtils.cameraFromString(camera).shake(intensity, duration * game.playbackRate, true, LuaUtils.axesFromString(axes));
-		});
-		addCallback("cameraFlash", function(camera:String, color:String, duration:Float, forced:Bool) {
-			LuaUtils.cameraFromString(camera).flash(CoolUtil.colorFromString(color), duration * game.playbackRate, null, forced);
-		});
-		addCallback("cameraFade", function(camera:String, color:String, duration:Float, forced:Bool) {
-			LuaUtils.cameraFromString(camera).fade(CoolUtil.colorFromString(color), duration * game.playbackRate, false, null, forced);
-		});
+		addCallback("cameraShake", (camera:String, intensity:Float, duration:Float, axes:String) -> LuaUtils.cameraFromString(camera).shake(intensity, duration * game.playbackRate, true, LuaUtils.axesFromString(axes)));
+		addCallback("cameraFlash", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).flash(CoolUtil.colorFromString(color), duration * game.playbackRate, null, forced));
+		addCallback("cameraFade", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).fade(CoolUtil.colorFromString(color), duration * game.playbackRate, false, null, forced));
+
 		addCallback("setRatingPercent", (value:Float) -> game.ratingPercent = value);
 		addCallback("setRatingName", (value:String) -> game.ratingName = value);
 		addCallback("setRatingFC", (value:String) -> game.ratingFC = value);
-		addCallback("getMouseX", function(camera:String) {
-			return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).x;
-		});
-		addCallback("getMouseY", function(camera:String) {
-			return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).y;
-		});
+
+		addCallback("getMouseX", (camera:String) -> return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).x);
+		addCallback("getMouseY", (camera:String) -> return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).y);
 
 		addCallback("getMidpointX", function(obj:String) {
 			var obj:FlxObject = LuaUtils.getVarInstance(obj);
@@ -681,7 +669,7 @@ class FunkinLua {
 		});
 		addCallback("setGroupScrollFactor", function(obj:String, ?scrollX:Float = 0, ?scrollY:Float = 0) {
 			var leGroup:ModchartGroup = game.modchartGroups.get(obj);
-			if (leGroup != null)  leGroup.scrollFactor.set(scrollX, scrollY);
+			if (leGroup != null) leGroup.scrollFactor.set(scrollX, scrollY);
 		});
 
 		addCallback("addSpriteToGroup", function(tag:String, spr:String) {
@@ -1351,7 +1339,7 @@ class FunkinLua {
 		var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 		if(target != null) {
 			PlayState.instance.modchartTweens.set(tag, FlxTween.tween(target, tweenValue, duration, {ease: LuaUtils.getTweenEaseByString(ease),
-				onComplete: function(twn:FlxTween) {
+				onComplete: (twn:FlxTween) -> {
 					PlayState.instance.callOnLuas('onTweenCompleted', [tag, vars]);
 					PlayState.instance.modchartTweens.remove(tag);
 				}

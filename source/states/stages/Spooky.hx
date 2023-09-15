@@ -96,7 +96,7 @@ class Spooky extends BaseStage
 		FlxTween.tween(whiteScreen, {alpha: 0}, 1, {
 			startDelay: 0.1,
 			ease: FlxEase.linear,
-			onComplete: function(twn:FlxTween) {
+			onComplete: (twn:FlxTween) -> {
 				remove(whiteScreen);
 				whiteScreen.destroy();
 

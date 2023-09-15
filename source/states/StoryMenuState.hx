@@ -287,9 +287,7 @@ class StoryMenuState extends MusicBeatState
 			sprDifficulty.y = leftArrow.y - 15;
 
 			if(tweenDifficulty != null) tweenDifficulty.cancel();
-			tweenDifficulty = FlxTween.tween(sprDifficulty, {y: leftArrow.y + 15, alpha: 1}, 0.07, {onComplete: function(twn:FlxTween) {
-				tweenDifficulty = null;
-			}});
+			tweenDifficulty = FlxTween.tween(sprDifficulty, {y: leftArrow.y + 15, alpha: 1}, 0.07, {onComplete: (twn:FlxTween) -> tweenDifficulty = null});
 		}
 		lastDifficultyName = diff;
 

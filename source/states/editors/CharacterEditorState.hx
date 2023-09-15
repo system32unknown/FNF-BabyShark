@@ -179,7 +179,7 @@ class CharacterEditorState extends MusicBeatState
 	var onPixelBG:Bool = false;
 	var OFFSET_X:Float = 300;
 	function reloadBGs() {
-		bgLayer.forEachAlive(function(spr:FlxSprite) spr.destroy());
+		bgLayer.forEachAlive((spr:FlxSprite) -> spr.destroy());
 		bgLayer.clear();
 
 		var playerXDifference = 0;

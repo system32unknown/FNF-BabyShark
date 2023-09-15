@@ -414,9 +414,7 @@ class FreeplayState extends MusicBeatState
 			}
 			intendedColor = newColor;
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: function(twn:FlxTween) {
-					colorTween = null;
-				}
+				onComplete: (twn:FlxTween) -> colorTween = null
 			});
 		}
 

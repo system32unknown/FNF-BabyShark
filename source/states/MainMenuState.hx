@@ -101,7 +101,7 @@ class MainMenuState extends MusicBeatState
 			if (firstStart)
 				FlxTween.tween(menuItem, {y: (i * 140) + offset}, 1 + (i * 0.25), {
 					ease: FlxEase.expoInOut,
-					onComplete: function(flxTween:FlxTween) {
+					onComplete: (flxTween:FlxTween) -> {
 						finishedFunnyMove = true;
 						changeItem();
 					}
@@ -167,9 +167,7 @@ class MainMenuState extends MusicBeatState
 						numMenu++;
 						FlxTween.tween(spr, {alpha: 0, y: spr.y + 40}, .1 * numMenu, {
 							ease: FlxEase.quadOut,
-							onComplete: function(twn:FlxTween) {
-								spr.kill();
-							}
+							onComplete: (twn:FlxTween) -> spr.kill()
 						});
 					} else {
 						FlxFlicker.flicker(spr, 1, .06, false, false, function(flick:FlxFlicker) {

@@ -238,9 +238,7 @@ class CreditsState extends MusicBeatState
 			if (colorTween != null) colorTween.cancel();
 			intendedColor = newColor;
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: function(twn:FlxTween) {
-					colorTween = null;
-				}
+				onComplete: (twn:FlxTween) -> colorTween = null
 			});
 		}
 
@@ -328,8 +326,7 @@ class CreditSectionState extends MusicBeatState {
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
 		var prefix:String = CSectionisMod ? '' : curCSection + '/';
-		for (i in 0...creditsStuff.length)
-		{
+		for (i in 0...creditsStuff.length) {
 			var isSelectable:Bool = !unselectableCheck(i);
 			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 300, creditsStuff[i][0], !isSelectable);
 			optionText.isMenuItem = true;

@@ -83,7 +83,7 @@ class StageWeek1 extends BaseStage {
 						dadbattleBlack.visible = false;
 						dadbattleLight.visible = false;
 						defaultCamZoom -= 0.12;
-						FlxTween.tween(dadbattleFog, {alpha: 0}, .7, {onComplete: function(twn:FlxTween) dadbattleFog.visible = false});
+						FlxTween.tween(dadbattleFog, {alpha: 0}, .7, {onComplete: (twn:FlxTween) -> dadbattleFog.visible = false});
 				}
 		}
 	}
