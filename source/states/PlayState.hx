@@ -173,8 +173,8 @@ class PlayState extends MusicBeatState {
 	public var ranks:String = "";
 
 	var notesHitArray:Array<Date> = [];
-	var nps:Int = 0;
-	var maxNPS:Int = 0;
+	public var nps:Int = 0;
+	public var maxNPS:Int = 0;
 
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;

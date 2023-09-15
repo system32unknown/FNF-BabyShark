@@ -1,7 +1,6 @@
 package psychlua;
 
 import flixel.FlxBasic;
-import objects.Character;
 
 #if (HSCRIPT_ALLOWED && SScript >= "3.0.0")
 import tea.SScript;
@@ -57,10 +56,6 @@ class HScript extends SScript {
             "FlxTypeText"       => flixel.addons.text.FlxTypeText,
             "FlxText"           => FlxText,
             "FlxTimer"          => FlxTimer,
-            "FlxPoint"          => getMacroAbstractClass("flixel.math.FlxPoint"),
-            "FlxAxes"           => getMacroAbstractClass("flixel.util.FlxAxes"),
-            "FlxColor"          => getMacroAbstractClass("flixel.util.FlxColor"),
-            "FlxKey"            => getMacroAbstractClass("flixel.input.keyboard.FlxKey"),
 
             // Engine related stuff
             "PlayState"         => PlayState,
@@ -69,7 +64,7 @@ class HScript extends SScript {
             "NoteSplash"        => objects.NoteSplash,
             "HealthIcon"        => objects.HealthIcon,
             "StrumLine"         => objects.StrumNote,
-            "Character"         => Character,
+            "Character"         => objects.Character,
             "Paths"             => Paths,
             "Conductor"         => Conductor,
             "Alphabet"          => Alphabet,
@@ -87,14 +82,11 @@ class HScript extends SScript {
 				version: Main.engineVer.version.trim(),
 				app_version: lime.app.Application.current.meta.get('version'),
                 commit: macro.GitCommitMacro.commitNumber,
-                hash: macro.GitCommitMacro.commitHash,
+                hash: macro.GitCommitMacro.commitHash.trim(),
                 name: "Alter Engine"
             }
         ];
     }
-
-    function getMacroAbstractClass(className:String)
-		return Type.resolveClass('${className}_HSC');
 
 	override function preset() {
 		super.preset();
@@ -171,17 +163,11 @@ class HScript extends SScript {
 		return c;
 	}
 
-	@:deprecated("Use executeFunction instead.")
-	public function executeCode(?funcToRun:String, ?funcArgs:Array<Dynamic>):SCall {
-		return executeFunction(funcToRun, funcArgs);
-	}
-
 	public function executeFunction(?funcToRun:String, ?funcArgs:Array<Dynamic>):SCall {
 		var callValue:SCall = call(funcToRun, funcArgs);
 		if (!callValue.succeeded) {
 			var e = callValue.exceptions[0];
-			if (e != null)
-				FunkinLua.luaTrace('ERROR (${callValue.calledFunction}) - $e', false, false, FlxColor.RED);
+			if (e != null) FunkinLua.luaTrace('ERROR (${callValue.calledFunction}) - $e', false, false, FlxColor.RED);
 		}
 		return callValue;
 	}
