@@ -267,8 +267,7 @@ class ShaderFunctions {
 	}
 
 	public static function getCam(obj:String):Dynamic {
-		if (obj.toLowerCase().trim() == "global")
- 			return FlxG.game;
+		if (obj.toLowerCase().trim() == "global") return FlxG.game;
  		return LuaUtils.cameraFromString(obj);
 	}
 }

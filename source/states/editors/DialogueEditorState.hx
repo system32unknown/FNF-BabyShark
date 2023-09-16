@@ -203,8 +203,8 @@ class DialogueEditorState extends MusicBeatState
 		else animText.text = 'ERROR! NO ANIMATIONS FOUND';
 	}
 
-	private static var DEFAULT_TEXT:String = "coolswag";
-	private static var DEFAULT_BUBBLETYPE:String = "normal";
+	static var DEFAULT_TEXT:String = "coolswag";
+	static var DEFAULT_BUBBLETYPE:String = "normal";
 	function reloadText(skipDialogue:Bool) {
 
 		var textToType:String = lineInputText.text;

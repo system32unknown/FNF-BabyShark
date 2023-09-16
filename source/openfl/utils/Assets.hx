@@ -606,7 +606,7 @@ class Assets
 		}).onError(promise.error).onProgress(promise.progress);
 		return promise.future;
 		#else
-		var future = new Future<Sound>(function() return getMusic(id, useCache));
+		var future = new Future<Sound>(() -> return getMusic(id, useCache));
 		return future;
 		#end
 		#else

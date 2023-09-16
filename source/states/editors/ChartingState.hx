@@ -385,9 +385,7 @@ class ChartingState extends MusicBeatState {
 		loadEventJson.color = FlxColor.GREEN;
 		loadEventJson.label.color = FlxColor.WHITE;
 
-		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, 'Save Events', function () {
-			saveEvents();
-		});
+		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, 'Save Events', () -> saveEvents());
 
 		var clear_events:FlxButton = new FlxButton(320, 310, 'Clear events', function() {
 			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', clearEvents, null, ignoreWarnings));

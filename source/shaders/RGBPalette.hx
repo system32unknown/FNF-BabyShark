@@ -78,7 +78,7 @@ class RGBShaderReference {
 		if(allowNew && value != _original.b) cloneOriginal();
 		return (b = parent.b = value);
 	}
-	private function set_mult(value:Float) {
+	function set_mult(value:Float) {
 		if(allowNew && value != _original.mult) cloneOriginal();
 		return (mult = parent.mult = value);
 	}

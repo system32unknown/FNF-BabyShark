@@ -21,9 +21,8 @@ typedef FileSaveContext = {
 }
 
 class CoolUtil {
-	public static function saveFile(settings:FileSaveContext) {
-		new FileReference().save(settings.content, settings.fileDefaultName + '.' + settings.format);
-	}
+	public static function saveFile(settings:FileSaveContext) {new FileReference().save(settings.content, settings.fileDefaultName + '.' + settings.format);}
+	public static function loadFile() {new FileReference().load();}
 
 	inline public static function quantize(f:Float, snap:Float) {
 		var m:Float = Math.fround(f * snap);
@@ -135,7 +134,7 @@ class CoolUtil {
 
 	@:access(flixel.util.FlxSave.validate)
 	public static function getSavePath(folder:String = 'altertoriel'):String {
-		return FlxG.stage.application.meta.get('company') + '/' + FlxSave.validate(FlxG.stage.application.meta.get('file'));
+		return '${FlxG.stage.application.meta.get('company')}/${FlxSave.validate(FlxG.stage.application.meta.get('file'))}';
 	}
 
 	public static function removeDuplicates(string:Array<String>):Array<String> {

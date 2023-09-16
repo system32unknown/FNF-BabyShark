@@ -51,16 +51,13 @@ class Alphabet extends FlxSpriteGroup {
 		return align;
 	}
 
-	function updateAlignment()
-	{
-		for (letter in letters)
-		{
-			var newOffset:Float = 0;
-			switch(alignment) {
-				case CENTERED: newOffset = letter.rowWidth / 2;
-				case RIGHT: newOffset = letter.rowWidth;
-				default: newOffset = 0;
-			}
+	function updateAlignment() {
+		for (letter in letters) {
+			var newOffset:Float = switch(alignment) {
+				case CENTERED: letter.rowWidth / 2;
+				case RIGHT: letter.rowWidth;
+				default: 0;
+			};
 	
 			letter.offset.x -= letter.alignOffset;
 			letter.alignOffset = newOffset * scale.x;
@@ -68,7 +65,7 @@ class Alphabet extends FlxSpriteGroup {
 		}
 	}
 
-	private function set_text(newText:String)
+	function set_text(newText:String)
 	{
 		newText = newText.replace('\\n', '\n');
 		clearLetters();

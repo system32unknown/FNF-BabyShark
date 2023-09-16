@@ -146,20 +146,14 @@ class ExtraFunctions {
 			#if sys
 			if(FileSystem.exists(folder)) {
 				for (folder in FileSystem.readDirectory(folder)) {
-					if (!list.contains(folder))
-						list.push(folder);
+					if (!list.contains(folder)) list.push(folder);
 				}
 			}
 			#end
 			return list;
 		});
-		funk.addCallback("promptSaveFile", function(fileName:String, content:String, extension:String) {
-			CoolUtil.saveFile({
-				fileDefaultName: fileName,
-				format: extension,
-				content: content
-			});
-		});
+		funk.addCallback("promptSaveFile", (fileName:String, content:String, extension:String) -> CoolUtil.saveFile({fileDefaultName: fileName, format: extension, content: content}));
+		funk.addCallback("promptLoadFile", () -> CoolUtil.loadFile());
 
 		funk.addCallback("parseJson", function(jsonStr:String, varName:String) {
 			var json = Paths.modFolders('data/' + jsonStr + '.json');
@@ -180,26 +174,14 @@ class ExtraFunctions {
 		});
 
 		// String tools
-		funk.addCallback("stringStartsWith", function(str:String, start:String) {
-			return str.startsWith(start);
-		});
-		funk.addCallback("stringEndsWith", function(str:String, end:String) {
-			return str.endsWith(end);
-		});
-		funk.addCallback("stringSplit", function(str:String, split:String) {
-			return str.split(split);
-		});
-		funk.addCallback("stringTrim", function(str:String) {
-			return str.trim();
-		});
+		funk.addCallback("stringStartsWith", (str:String, start:String) -> return str.startsWith(start));
+		funk.addCallback("stringEndsWith", (str:String, end:String) -> return str.endsWith(end));
+		funk.addCallback("stringSplit", (str:String, split:String) -> return str.split(split));
+		funk.addCallback("stringTrim", (str:String) -> return str.trim());
 
 		// Regex
-		funk.addCallback("regexMatch", function(str:String, toMatch:String, flag:String = "i") {
-			return new EReg(str, flag).match(toMatch);
-		});
-		funk.addCallback("regexSubMatch", function(str:String, toMatch:String, pos:Int, len:Int = -1, flag:String = "i") {
-			return new EReg(str, flag).matchSub(toMatch, pos, len);
-		});
+		funk.addCallback("regexMatch", (str:String, toMatch:String, flag:String = "i") -> return new EReg(str, flag).match(toMatch));
+		funk.addCallback("regexSubMatch", (str:String, toMatch:String, pos:Int, len:Int = -1, flag:String = "i") -> return new EReg(str, flag).matchSub(toMatch, pos, len));
 		funk.addCallback("regexFindMatchAt", function(str:String, toMatch:String, n:Int, flag:String = "i") {
 			var theData = new EReg(str, flag);
 			theData.match(toMatch);
@@ -221,12 +203,8 @@ class ExtraFunctions {
 			var theData = data.matchedPos();
 			return [theData.pos, theData.len];
 		});
-		funk.addCallback("regexReplace", function(str:String, toReplace:String, replacement:String, flag:String = "i") {
-			return new EReg(str, flag).replace(toReplace, replacement);
-		});
-		funk.addCallback("regexSplit", function(str:String, toSplit:String, flag:String = "i") {
-			return new EReg(str, flag).split(toSplit);
-		});
+		funk.addCallback("regexReplace", (str:String, toReplace:String, replacement:String, flag:String = "i") -> return new EReg(str, flag).replace(toReplace, replacement));
+		funk.addCallback("regexSplit", (str:String, toSplit:String, flag:String = "i") -> return new EReg(str, flag).split(toSplit));
 
 		// Randomization
 		funk.addCallback("getRandomInt", function(min:Int, max:Int = FlxMath.MAX_VALUE_INT, exclude:String = '') {
@@ -243,15 +221,9 @@ class ExtraFunctions {
 				toExclude.push(Std.parseFloat(excludeArray[i].trim()));
 			return FlxG.random.float(min, max, toExclude);
 		});
-		funk.addCallback("getRandomBool", function(chance:Float = 50) {
-			return FlxG.random.bool(chance);
-		});
+		funk.addCallback("getRandomBool", (chance:Float = 50) -> return FlxG.random.bool(chance));
 
-		funk.addCallback("getGameplayChangerValue", function(tag:String) {
-			return ClientPrefs.getGameplaySetting(tag, false);
-		});
-		funk.addCallback("getFPS", function(type:String, num:Float) {
-			return utils.system.FPSUtil.getFPSAdjust(type, num);
-		});
+		funk.addCallback("getGameplayChangerValue", (tag:String) -> return ClientPrefs.getGameplaySetting(tag, false));
+		funk.addCallback("getFPS", (type:String, num:Float) -> return utils.system.FPSUtil.getFPSAdjust(type, num));
 	}
 }

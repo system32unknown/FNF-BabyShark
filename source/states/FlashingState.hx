@@ -12,7 +12,6 @@ class FlashingState extends MusicBeatState
 		super.create();
 
 		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK));
-
 		warnText = new FlxText(0, 0, FlxG.width,
 			"Hey, Welcome to Alter Engine!\n
 			Watch out!\n
@@ -26,8 +25,7 @@ class FlashingState extends MusicBeatState
 		add(warnText);
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		if(!leftState) {
 			var back:Bool = controls.BACK;
 			if (controls.ACCEPT || back) {
@@ -38,11 +36,7 @@ class FlashingState extends MusicBeatState
 					ClientPrefs.prefs.set('flashing', false);
 					ClientPrefs.saveSettings();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					FlxFlicker.flicker(warnText, 1, 0.1, false, true, function(flk:FlxFlicker) {
-						new FlxTimer().start(0.5, function (tmr:FlxTimer) {
-							MusicBeatState.switchState(new TitleState());
-						});
-					});
+					FlxFlicker.flicker(warnText, 1, .1, false, true, function(flk:FlxFlicker) new FlxTimer().start(.5, (tmr:FlxTimer) -> MusicBeatState.switchState(new TitleState())));
 				} else {
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					FlxTween.tween(warnText, {alpha: 0}, 1, {

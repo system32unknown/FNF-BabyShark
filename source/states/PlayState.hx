@@ -2266,7 +2266,7 @@ class PlayState extends MusicBeatState {
 		var tempText:String = (!ClientPrefs.getPref('ShowNPSCounter') ? '' : 'NPS:$nps (Max:$maxNPS) $scoreSeparator ');
 		var tempMiss:String = getMissText(ClientPrefs.getPref('movemissjudge'));
 		
-		tempText += 'Score:$songScore';
+		tempText += 'Score:$songScore ';
 		tempText += tempMiss;
 		switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter': tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' | [$ratingName, $ratingFC] • $ranks' : ' | [?, ?] • F');
@@ -2788,7 +2788,7 @@ class PlayState extends MusicBeatState {
 					if(char.animOffsets.exists(animCheck)) {
 						char.playAnim(animCheck, true);
 						char.specialAnim = true;
-						char.heyTimer = 0.6;
+						char.heyTimer = .6;
 					}
 				}
 			}

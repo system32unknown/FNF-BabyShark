@@ -31,7 +31,7 @@ class SaveSubState extends BaseOptionsMenu
 
 	function resetScore() {
 		FlxG.mouse.visible = true;
-		openSubState(new Prompt('This action will clear all score progress.\n\nProceed?', function() {
+		openSubState(new Prompt('This action will clear all score progress.\n\nProceed?', () -> {
 			FlxG.save.data.songScores = null;
 			for (key in Highscore.songScores.keys()) Highscore.songScores[key] = 0;
 			FlxG.save.data.songRating = null;
@@ -44,7 +44,7 @@ class SaveSubState extends BaseOptionsMenu
 
 	function resetWeek() {
 		FlxG.mouse.visible = true;
-		openSubState(new Prompt('This action will clear all score progress.\n\nProceed?', function() {
+		openSubState(new Prompt('This action will clear all score progress.\n\nProceed?', () -> {
 			FlxG.save.data.weekScores = null;
 			for (key in Highscore.weekScores.keys()) {
 				Highscore.weekScores[key] = 0;

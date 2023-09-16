@@ -103,7 +103,7 @@ class FunkinLua {
 		addCallback("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
 			final trimmedpft = platformType.trim();
 			if (args == null) args = [];
-			if (["setDPIAware", "getCurrentWalllpaper", "updateWallpaper", "disableClose"].contains(trimmedpft)) return null;
+			if (["setDPIAware"].contains(trimmedpft)) return null;
 
 			return Reflect.callMethod(null, Reflect.field(PlatformUtil, trimmedpft), args);
 		});
@@ -1024,7 +1024,7 @@ class FunkinLua {
 		});
 		addCallback("debugPrint", (text:Dynamic = '', color:String = 'WHITE') -> PlayState.instance.addTextToDebug(text, CoolUtil.colorFromString(color)));
 
-		addCallback("close", function():Bool {
+		addCallback("close", () -> {
 			trace('Closing script: $scriptName');
 			return closed = true;
 		});

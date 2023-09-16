@@ -138,7 +138,7 @@ class NoteOffsetState extends MusicBeatState {
 		timeTxt.scrollFactor.set();
 		timeTxt.borderSize = 2;
 
-		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 3), 'healthBar', function() return barPercent, delayMin, delayMax);
+		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 3), 'healthBar', () -> return barPercent, delayMin, delayMax);
 		timeBar.scrollFactor.set();
 		timeBar.screenCenter(X);
 		timeBar.leftBar.color = FlxColor.LIME;

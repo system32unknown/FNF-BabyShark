@@ -108,38 +108,6 @@ class PlatformUtil
     static public function disableClose(enable:Bool):Bool {return enable;}
 
 	@:functionCode('
-        WIN32_FIND_DATA FindFileData;
-        HANDLE hFind;
-
-        std::string bg(getenv("APPDATA"));
-        bg.append("\\\\Microsoft\\\\Windows\\\\Themes\\\\CachedFiles\\\\*.jpg");
-
-        hFind = (FindFirstFile(bg.c_str(), &FindFileData));
-        
-        std::string file(FindFileData.cFileName);
-
-        std::string fullPath(getenv("APPDATA"));
-        fullPath.append("\\\\Microsoft\\\\Windows\\\\Themes\\\\CachedFiles\\\\");
-        fullPath.append(file);
-
-        path = fullPath.c_str();
-
-        std::string game(_getcwd(NULL, 0));
-        game.append("\\\\assets\\\\images\\\\backgrounds\\\\yourBG.jpg");
-        
-        CopyFile(fullPath.c_str(), game.c_str(), FALSE);
-    ')
-	static public function getCurrentWalllpaper(?path = "") {return path;}
-
-	@:functionCode('
-        std::string p(_getcwd(NULL,0));
-        p.append(path);
-        output = p.c_str();
-        SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, (PVOID)p.c_str(), SPIF_UPDATEINIFILE);
-    ')
-	static public function updateWallpaper(path = "", ?output = "") {return output;}
-
-	@:functionCode('
 	    if (!AllocConsole()) return;
 
 	    freopen("CONIN$", "r", stdin);
