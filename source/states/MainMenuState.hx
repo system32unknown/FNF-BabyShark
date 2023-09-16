@@ -6,8 +6,7 @@ import flixel.effects.FlxFlicker;
 import states.editors.MasterEditorMenu;
 import options.OptionsState;
 
-class MainMenuState extends MusicBeatState
-{
+class MainMenuState extends MusicBeatState {
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;

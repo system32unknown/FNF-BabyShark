@@ -146,9 +146,7 @@ class CreditsEditor extends MusicBeatState
 		titleJump.textY += 4;
 		if (FlxG.save.data.jumpTitle == null) FlxG.save.data.jumpTitle = true;
 		titleJump.checked = FlxG.save.data.jumpTitle;
-		titleJump.callback = function() {
-			FlxG.save.data.jumpTitle = titleJump.checked;
-		};
+		titleJump.callback = () -> FlxG.save.data.jumpTitle = titleJump.checked;
 		var titleAdd:FlxButton = new FlxButton(20, titleJump.y + yDist + 10, "Add Title", function() {
 			addTitle();
 		});

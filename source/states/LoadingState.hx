@@ -244,18 +244,15 @@ class MultiCallback
 		length++;
 		numRemaining++;
 		var func:Void -> Void = null;
-		func = function() {
+		func = () -> {
 			if (unfired.exists(id)) {
 				unfired.remove(id);
 				fired.push(id);
 				numRemaining--;
 				
-				if (logId != null)
-					log('fired $id, $numRemaining remaining');
-				
+				if (logId != null) log('fired $id, $numRemaining remaining');
 				if (numRemaining == 0) {
-					if (logId != null)
-						log('all callbacks fired');
+					if (logId != null) log('all callbacks fired');
 					callback();
 				}
 			} else log('already fired $id');

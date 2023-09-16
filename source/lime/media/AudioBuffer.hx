@@ -308,13 +308,9 @@ class AudioBuffer
 			audioBuffer.__srcSound.addEventListener(flash.events.IOErrorEvent.IO_ERROR, promise.error);
 			#elseif (js && html5 && lime_howlerjs)
 			if (audioBuffer != null) {
-				audioBuffer.__srcHowl.on("load", function() {
-					promise.complete(audioBuffer);
-				});
+				audioBuffer.__srcHowl.on("load", () -> promise.complete(audioBuffer));
 
-				audioBuffer.__srcHowl.on("loaderror", function(id, msg) {
-					promise.error(msg);
-				});
+				audioBuffer.__srcHowl.on("loaderror", (id, msg) -> promise.error(msg));
 
 				audioBuffer.__srcHowl.load();
 			}
@@ -345,18 +341,13 @@ class AudioBuffer
 		var audioBuffer = AudioBuffer.fromFiles(paths);
 
 		if (audioBuffer != null) {
-			audioBuffer.__srcHowl.on("load", function() {
-				promise.complete(audioBuffer);
-			});
-
-			audioBuffer.__srcHowl.on("loaderror", function(){
-				promise.error(null);
-			});
+			audioBuffer.__srcHowl.on("load", () -> promise.complete(audioBuffer));
+			audioBuffer.__srcHowl.on("loaderror", () -> promise.error(null));
 
 			audioBuffer.__srcHowl.load();
 		} else promise.error(null);
 		#else
-		promise.completeWith(new Future<AudioBuffer>(function() return fromFiles(paths), true));
+		promise.completeWith(new Future<AudioBuffer>(() -> return fromFiles(paths), true));
 		#end
 
 		return promise.future;

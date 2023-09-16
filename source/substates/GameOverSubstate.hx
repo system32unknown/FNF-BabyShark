@@ -184,7 +184,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 				endCompleted = true;
 
 				if (!quick) {
-					slowass = new FlxTimer().start(1.3, function(tmr:FlxTimer) {
+					slowass = new FlxTimer().start(1.3, (tmr:FlxTimer) -> {
 						resetState();
 						return;
 					});

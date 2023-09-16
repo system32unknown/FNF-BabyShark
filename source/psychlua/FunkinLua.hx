@@ -432,11 +432,11 @@ class FunkinLua {
 			return true;
 		});
 
-		addCallback("startCountdown", function() {
+		addCallback("startCountdown", () -> {
 			game.startCountdown();
 			return true;
 		});
-		addCallback("endSong", function() {
+		addCallback("endSong", () -> {
 			game.KillNotes();
 			game.endSong();
 			return true;
@@ -929,7 +929,7 @@ class FunkinLua {
 				if(game.modchartSounds.exists(tag)) {
 					game.modchartSounds.get(tag).stop();
 				}
-				game.modchartSounds.set(tag, FlxG.sound.play(Paths.sound(sound), volume, false, function() {
+				game.modchartSounds.set(tag, FlxG.sound.play(Paths.sound(sound), volume, false, () -> {
 					game.modchartSounds.remove(tag);
 					game.callOnLuas('onSoundFinished', [tag]);
 				}));
