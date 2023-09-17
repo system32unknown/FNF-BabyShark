@@ -30,10 +30,7 @@ class HScript extends SScript {
 
     function getDefaultVariables():Map<String, Dynamic> {
         return [
-            // Haxe related stuff
-            "Reflect"           => Reflect,
             "Xml"               => Xml,
-
             "Json"              => haxe.Json,
             // OpenFL & Lime related stuff
             "Application"       => lime.app.Application,
@@ -69,6 +66,7 @@ class HScript extends SScript {
             "Paths"             => Paths,
             "Conductor"         => Conductor,
             "Alphabet"          => Alphabet,
+			"DeltaTrail" => objects.DeltaTrail,
 
             "CoolUtil"          => CoolUtil,
             "ClientPrefs"       => ClientPrefs,
@@ -78,7 +76,6 @@ class HScript extends SScript {
 			#end
 			'ShaderFilter'		=> openfl.filters.ShaderFilter,
 
-            "DeltaTrail" => objects.DeltaTrail,
             "engine" => {
 				version: Main.engineVer.version.trim(),
 				app_version: lime.app.Application.current.meta.get('version'),
