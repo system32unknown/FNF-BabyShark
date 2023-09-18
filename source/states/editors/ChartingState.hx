@@ -1576,9 +1576,7 @@ class ChartingState extends MusicBeatState {
 			var curNoteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
 			if (!((curNoteStrum == lastNoteStrum) && (curNoteData == lastNoteData))) {
 				if (FlxG.mouse.overlaps(curRenderedNotes)) {
-					curRenderedNotes.forEachAlive(function(note:Note) {
-						if (FlxG.mouse.overlaps(note)) deleteNote(note);
-					});
+					curRenderedNotes.forEachAlive((note:Note) -> if (FlxG.mouse.overlaps(note)) deleteNote(note));
 				} else {
 					if (FlxG.mouse.x > gridBG.x
 						&& FlxG.mouse.x < gridBG.x + gridBG.width
@@ -2441,15 +2439,15 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function updateGrid():Void {
-		curRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
+		curRenderedNotes.forEachAlive((spr:Note) -> spr.destroy());
 		curRenderedNotes.clear();
-		curRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
+		curRenderedSustains.forEachAlive((spr:FlxSprite) -> spr.destroy());
 		curRenderedSustains.clear();
-		curRenderedNoteType.forEachAlive(function(spr:FlxText) spr.destroy());
+		curRenderedNoteType.forEachAlive((spr:FlxText) -> spr.destroy());
 		curRenderedNoteType.clear();
-		nextRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
+		nextRenderedNotes.forEachAlive((spr:Note) -> spr.destroy());
 		nextRenderedNotes.clear();
-		nextRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
+		nextRenderedSustains.forEachAlive((spr:FlxSprite) -> spr.destroy());
 		nextRenderedSustains.clear();
 
 		if (_song.notes[curSec].changeBPM && _song.notes[curSec].bpm > 0)

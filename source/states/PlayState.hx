@@ -680,10 +680,7 @@ class PlayState extends MusicBeatState {
 		newText.alpha = 1;
 		newText.setPosition(10, 8 - newText.height);
 
-		luaDebugGroup.forEachAlive((spr:DebugLuaText) -> {
-			spr.y += newText.height + 2;
-		});
-
+		luaDebugGroup.forEachAlive((spr:DebugLuaText) -> spr.y += newText.height + 2);
 		luaDebugGroup.add(newText);
 		#end
 	}
@@ -1443,8 +1440,8 @@ class PlayState extends MusicBeatState {
 			if (FlxG.sound.music != null && !startingSong)
 				resyncVocals();
 
-			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> {if (!tmr.finished) tmr.active = true;});
-			FlxTween.globalManager.forEach((twn:FlxTween) -> {if (!twn.finished) twn.active = true;});
+			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = true);
+			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
 
 			paused = false;
 			callOnScripts('onResume');
@@ -1663,7 +1660,6 @@ class PlayState extends MusicBeatState {
 		FlxG.watch.addQuick("stepShit", curStep);
 		#end
 
-		// RESET = Quick Game Over Screen
 		if (!ClientPrefs.getPref('noReset') && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong)
 			health = 0;
 		doDeathCheck();
@@ -1755,12 +1751,8 @@ class PlayState extends MusicBeatState {
 			if (keysPressed[i]) inputRelease(i);
 
 		FlxG.camera.followLerp = 0;
-		FlxTimer.globalManager.forEach((tmr:FlxTimer) -> {
-			if (!tmr.finished) tmr.active = false;
-		});
-		FlxTween.globalManager.forEach((twn:FlxTween) -> {
-			if (!twn.finished) twn.active = false;
-		});
+		FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = false);
+		FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = false);
 		persistentUpdate = false;
 		persistentDraw = true;
 		paused = true;

@@ -24,7 +24,6 @@ class FreeplayState extends MusicBeatState
 	var scoreText:FlxText;
 	var comboText:FlxText;
 	var diffText:FlxText;
-	var countText:FlxText;
 	var lerpScore:Int = 0;
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
@@ -133,12 +132,6 @@ class FreeplayState extends MusicBeatState
 		comboText.y = scoreBG.height / 2 - 6;
 		comboText.font = diffText.font;
 
-		countText = new FlxText(0, 0, 0, "", 20);
-		countText.setFormat(scoreText.font, countText.size, FlxColor.WHITE, RIGHT);
-		countText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.25);
-		countText.y = scoreBG.height - countText.y;
-
-		add(countText);
 		add(diffText);
 		add(scoreText);
 		add(comboText);
@@ -462,9 +455,6 @@ class FreeplayState extends MusicBeatState
 	}
 
 	function positionHighscore() {
-		countText.text = "PAGES (" + ((curSelected + 1) + "/" + songs.length) + ")";
-		countText.x = FlxG.width - countText.width;
-
 		scoreText.x = FlxG.width - scoreText.width - 6;
 
 		scoreBG.scale.x = FlxG.width - scoreText.x + 6;

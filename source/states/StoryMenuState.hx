@@ -63,10 +63,7 @@ class StoryMenuState extends MusicBeatState
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 		add(grpLocks = new FlxTypedGroup<FlxSprite>());
 
-		#if discord_rpc
-		// Updating Discord Rich Presence
-		Discord.changePresence("In the Story Menu", null);
-		#end
+		#if discord_rpc Discord.changePresence("In the Story Menu", null); #end
 
 		var num:Int = 0;
 		for (i in 0...WeekData.weeksList.length) {
@@ -160,7 +157,7 @@ class StoryMenuState extends MusicBeatState
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, FlxMath.bound(elapsed * 30, 0, 1)));
 		if(Math.abs(intendedScore - lerpScore) < 10) lerpScore = intendedScore;
 
-		scoreText.text = "(" + ((curWeek + 1) + "/" + loadedWeeks.length) + ") | WEEK SCORE:" + lerpScore;
+		scoreText.text = 'WEEK SCORE: $lerpScore';
 
 		if (!movedBack && !selectedWeek)
 		{

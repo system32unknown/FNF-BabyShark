@@ -166,13 +166,8 @@ class Philly extends BaseStage
 						if(!ClientPrefs.getPref('flashing')) charColor.saturation *= 0.5;
 						else charColor.saturation *= 0.75;
 
-						for (who in chars)
-						{
-							who.color = charColor;
-						}
-						phillyGlowParticles.forEachAlive(function(particle:PhillyGlowParticle) {
-							particle.color = color;
-						});
+						for (who in chars) who.color = charColor;
+						phillyGlowParticles.forEachAlive((particle:PhillyGlowParticle) -> particle.color = color);
 						phillyGlowGradient.color = color;
 						phillyWindowEvent.color = color;
 
@@ -196,11 +191,9 @@ class Philly extends BaseStage
 		}
 	}
 
-	function doFlash()
-	{
+	function doFlash() {
 		var color:FlxColor = FlxColor.WHITE;
 		if(!ClientPrefs.getPref('flashing')) color.alphaFloat = 0.5;
-
 		FlxG.camera.flash(color, 0.15, null, true);
 	}
 }
