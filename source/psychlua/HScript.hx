@@ -1,12 +1,5 @@
 package psychlua;
 
-import flixel.FlxBasic;
-
-#if sys
-import sys.FileSystem;
-import sys.io.File;
-#end
-
 #if HSCRIPT_ALLOWED
 import hscript.Parser;
 import hscript.Interp;
@@ -65,7 +58,7 @@ class HScript extends Interp {
             // Flixel related stuff
             "FlxG"              => FlxG,
             "FlxSprite"         => FlxSprite,
-            "FlxBasic"          => FlxBasic,
+            "FlxBasic"          => flixel.FlxBasic,
             "FlxCamera"         => FlxCamera,
             "state"             => FlxG.state,
             "FlxTween"          => FlxTween,
@@ -107,8 +100,8 @@ class HScript extends Interp {
             "engine" => {
 				version: Main.engineVer.version.trim(),
 				app_version: lime.app.Application.current.meta.get('version'),
-                commit: macro.GitCommitMacro.commitNumber,
-                hash: macro.GitCommitMacro.commitHash.trim(),
+                commit: macros.GitCommitMacro.commitNumber,
+                hash: macros.GitCommitMacro.commitHash.trim(),
                 name: "Alter Engine"
             }
         ];
@@ -118,6 +111,11 @@ class HScript extends Interp {
 		return Type.resolveClass('${className}_HSC');
 	
 	function preset() {
+		parser = new Parser();
+		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
+		parser.preprocesorValues = getDefaultPreprocessors();
+		scriptObject = PlayState.instance; // allow use vars from playstate without "game" thing
+
         for (key => type in getDefaultVariables()) setVar(key, type);
 
 		// Functions & Variables
@@ -163,6 +161,15 @@ class HScript extends Interp {
 		setVar('Function_StopLua', FunkinLua.Function_StopLua); //doesnt do much cuz HScript has a lower priority than Lua
 		setVar('Function_StopHScript', FunkinLua.Function_StopHScript);
 		setVar('Function_StopAll', FunkinLua.Function_StopAll);
+	}
+
+	function getDefaultPreprocessors():Map<String, Dynamic> {
+		var defines = macros.DefinesMacro.defines;
+		defines.set("ALTER_ENGINE", true);
+		defines.set("ALTER_VER", lime.app.Application.current.meta.get('version'));
+		defines.set("ALTER_COMMIT", macros.GitCommitMacro.commitNumber);
+		defines.set("ALTER_HASH", macros.GitCommitMacro.commitHash);
+		return defines;
 	}
 
 	function resolveClassOrEnum(name:String):Dynamic {

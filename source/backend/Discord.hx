@@ -85,11 +85,11 @@ class Discord {
 	}
 
 	static function onError(_code:Int, _message:String) {
-		Logs.trace('Error! $_code : $_message');
+		Logs.trace('Error! $_code : $_message', ERROR);
 	}
 
 	static function onDisconnected(_code:Int, _message:String) {
-		Logs.trace('Disconnected! $_code : $_message');
+		Logs.trace('Disconnected! $_code : $_message', WARNING);
 	}
 
 	public static function initialize() {

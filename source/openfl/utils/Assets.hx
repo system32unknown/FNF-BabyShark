@@ -134,7 +134,6 @@ class Assets
 		@param	hardware		Hardware Caching (Default: false)
 		@return		A BitmapData object
 	**/
-	//public static var traceNewBitmaps:Bool = false;
 	public static function registerBitmapData(bitmap:BitmapData, key:String, useCache:Bool = true, hardware:Bool = false):BitmapData {
 		if (bitmap == null || key == null) return bitmap;
 
