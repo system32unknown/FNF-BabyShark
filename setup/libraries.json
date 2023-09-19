@@ -13,7 +13,9 @@
         "url": "https://github.com/HaxeFlixel/flixel-ui"},
         {"name":"tjson", "type":"haxelib", "dir":"tjson"},
         {"name":"hxCodec", "type":"haxelib", "dir":"hxCodec"},
-        {"name":"SScript", "type":"haxelib", "dir":"SScript"},
+        {"name":"hscript", "type":"git", "dir":"hscript",
+            "ref": "master",
+        "url": "https://github.com/TheLeerName/hscript-improved"},
         {"name":"discord_rpc", "type":"git", "dir":"discord_rpc",
             "ref": "master",
         "url":"https://github.com/Aidan63/linc_discord-rpc"},
@@ -21,4 +23,4 @@
             "ref": "master",
         "url":"https://github.com/superpowers04/linc_luajit"}
     ]
-  }
+}

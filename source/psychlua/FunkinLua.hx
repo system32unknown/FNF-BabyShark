@@ -33,9 +33,7 @@ class FunkinLua {
 	public var scriptName:String = '';
 	public var closed:Bool = false;
 
-	#if (SScript >= "3.0.0")
 	public var hscript:HScript = null;
-	#end
 
 	public var callbacks:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public static var customFunctions:Map<String, Dynamic> = new Map<String, Dynamic>();
@@ -1318,15 +1316,11 @@ class FunkinLua {
 		if (lua == null) return;
 		Lua.close(lua);
 		lua = null;
-		#if (SScript >= "3.0.0")
 		if(hscript != null) {
 			hscript.active = false;
-			#if (SScript >= "3.0.3")
 			hscript.destroy();
-			#end
 			hscript = null;
 		}
-		#end
 		#end
 	}
 

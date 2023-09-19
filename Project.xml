@@ -73,17 +73,16 @@
 	<haxelib name="flixel-addons"/>
 	<haxelib name="tjson"/>
 
-	<haxedef name="openflPos" />
-	<haxedef name="hscriptPos" />
+	<haxedef name="hscriptPos"/>
 
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
 	<haxelib name="discord_rpc" if="DISCORD_ALLOWED"/>
 
 	<section if="HSCRIPT_ALLOWED">
-		<haxeflag name="-dce std"/>
-		<haxelib name="SScript"/>
-		<haxeflag name="--macro" value="macro.AdditionalClasses.add()" />
+		<haxeflag name="-dce no"/>
+		<haxelib name="hscript"/>
+		<haxeflag name="--macro" value="macro.AdditionalClasses.add()"/>
 	</section>
 
 	<!-- ______________________________Haxedefines_____________________________ -->
@@ -108,7 +107,7 @@
 	<haxeflag name="--macro" value="allowPackage('flash')"/>
 	<haxeflag name="--macro" value="include('my.pack')"/>
 
-	<error value="Seems like you're not using NebulaZoruas github fork of luajit, please use it instead." if="${linc_luajit == 0.0.4}" />
+	<error value="Seems like you're not using NebulaZoruas github fork of luajit, please use it instead." if="${linc_luajit == 0.0.4}"/>
 	<error value="Seems like you're using Haxe ${haxe}, please update to latest version!" if="${haxe == 4.1.5}" unless="linux"/>
 
 	<!-- _________________________________Custom_______________________________ -->

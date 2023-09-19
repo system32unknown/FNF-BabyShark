@@ -14,15 +14,9 @@ import openfl.utils.Assets;
 class ExtraFunctions {
 	public static function implement(funk:FunkinLua) {
 		// Keyboard
-		funk.addCallback("keyboardJustPressed", function(name:String) {
-			return Reflect.getProperty(FlxG.keys.justPressed, name.toUpperCase());
-		});
-		funk.addCallback("keyboardPressed", function(name:String) {
-			return Reflect.getProperty(FlxG.keys.pressed, name.toUpperCase());
-		});
-		funk.addCallback("keyboardReleased", function(name:String) {
-			return Reflect.getProperty(FlxG.keys.justReleased, name.toUpperCase());
-		});
+		funk.addCallback("keyboardJustPressed", (name:String) -> return Reflect.getProperty(FlxG.keys.justPressed, name.toUpperCase()));
+		funk.addCallback("keyboardPressed", (name:String) -> return Reflect.getProperty(FlxG.keys.pressed, name.toUpperCase()));
+		funk.addCallback("keyboardReleased", (name:String) -> return Reflect.getProperty(FlxG.keys.justReleased, name.toUpperCase()));
 
 		funk.addCallback("keyJustPressed", function(name:String = '') {
 			name = name.toLowerCase();
@@ -138,9 +132,7 @@ class ExtraFunctions {
 			} catch (e:Dynamic) FunkinLua.luaTrace("deleteFile: Error trying to delete " + path + ": " + e, false, false, FlxColor.RED);
 			return false;
 		});
-		funk.addCallback("getTextFromFile", function(path:String, ?ignoreModFolders:Bool = false) {
-			return Paths.getTextFromFile(path, ignoreModFolders);
-		});
+		funk.addCallback("getTextFromFile", (path:String, ?ignoreModFolders:Bool = false, ?absolute:Bool = false) -> return Paths.getTextFromFile(path, ignoreModFolders, absolute));
 		funk.addCallback("directoryFileList", function(folder:String) {
 			var list:Array<String> = [];
 			#if sys

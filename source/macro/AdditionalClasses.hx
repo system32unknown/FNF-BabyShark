@@ -14,7 +14,7 @@ class AdditionalClasses {
 			#if VIDEOS_ALLOWED "hxcodec", #end
 			#if LUA_ALLOWED "llua", #end
 			#if desktop "discord_rpc", #end
-			#if SScript "tea", #end
+			"hscript",
 			// OTHER LIBRARIES & STUFF
 			#if flash "flash", #end
 			#if cpp "cpp", #end
@@ -40,6 +40,8 @@ class AdditionalClasses {
 		];
 
 		for (inc in include) Compiler.include(inc, true, exc);
+		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');
+		Compiler.addGlobalMetadata('haxe.CallStack', '@:build(hscript.UsingHandler.build())');
 	}
 }
 #end
