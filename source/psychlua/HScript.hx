@@ -151,6 +151,7 @@ class HScript extends Interp {
 		});
 		setVar('parentLua', parentLua);
 		setVar('this', this);
+		setVar('game', PlayState.instance);
 
 		setVar('buildTarget', FunkinLua.getBuildTarget());
 		setVar('customSubstate', CustomSubstate.instance);
