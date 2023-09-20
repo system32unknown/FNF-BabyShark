@@ -389,10 +389,10 @@ class FunkinLua {
 		set("getAccuracy", () -> return game.accuracy);
 		set("getHits", () -> return game.songHits);
 
-		set("getHighscore", return Highscore.getScore);
-		set("getSavedRating", return Highscore.getRating);
-		set("getSavedCombo", return Highscore.getCombo);
-		set("getWeekScore", return Highscore.getWeekScore);
+		set("getHighscore", (song:String, diff:Int) -> return Highscore.getScore(song, diff));
+		set("getSavedRating", (song:String, diff:Int) -> return Highscore.getRating(song, diff));
+		set("getSavedCombo", (song:String, diff:Int) -> return Highscore.getCombo(song, diff));
+		set("getWeekScore", (week:String, diff:Int) -> return Highscore.getWeekScore(week, diff));
 
 		set("setHealth", (value:Float = 0) -> game.health = value);
 		set("addHealth", (value:Float = 0) -> game.health += value);
