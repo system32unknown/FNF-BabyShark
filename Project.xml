@@ -81,7 +81,7 @@
 
 	<section if="HSCRIPT_ALLOWED">
 		<haxeflag name="-dce no"/>
-		<haxelib name="hscript"/>
+		<haxelib name="hscript-improved"/>
 		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
 	</section>
 

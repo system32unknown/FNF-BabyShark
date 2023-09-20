@@ -13,7 +13,7 @@
         "url": "https://github.com/HaxeFlixel/flixel-ui"},
         {"name":"tjson", "type":"haxelib", "dir":"tjson"},
         {"name":"hxCodec", "type":"haxelib", "dir":"hxCodec"},
-        {"name":"hscript", "type":"git", "dir":"hscript",
+        {"name":"hscript-improved", "type":"git", "dir":"hscript-improved",
             "ref": "master",
         "url": "https://github.com/TheLeerName/hscript-improved"},
         {"name":"discord_rpc", "type":"git", "dir":"discord_rpc",
