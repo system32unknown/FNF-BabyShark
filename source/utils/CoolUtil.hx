@@ -16,8 +16,6 @@ import openfl.utils.Assets;
 
 class CoolUtil {
 	public static function saveFile(content:String, format:String, filedefault:String) {new FileReference().save(content, '$filedefault.$format');}
-	public static function loadFile() {new FileReference().load();}
-
 	inline public static function quantize(f:Float, snap:Float) {
 		var m:Float = Math.fround(f * snap);
 		return (m / snap);

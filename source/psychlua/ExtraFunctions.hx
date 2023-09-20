@@ -145,7 +145,6 @@ class ExtraFunctions {
 			return list;
 		});
 		funk.set("promptSaveFile", CoolUtil.saveFile);
-		funk.set("promptLoadFile", CoolUtil.loadFile);
 
 		funk.set("parseJson", function(jsonStr:String, varName:String) {
 			var json = Paths.modFolders('data/' + jsonStr + '.json');
