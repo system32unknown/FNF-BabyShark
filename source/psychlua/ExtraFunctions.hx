@@ -216,6 +216,6 @@ class ExtraFunctions {
 		funk.set("getRandomBool", FlxG.random.bool);
 
 		funk.set("getGameplayChangerValue", (tag:String) -> return ClientPrefs.getGameplaySetting(tag, false));
-		funk.set("getFPS", return utils.system.FPSUtil.getFPSAdjust);
+		funk.set("getFPS", utils.system.FPSUtil.getFPSAdjust);
 	}
 }
