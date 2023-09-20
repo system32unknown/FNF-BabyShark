@@ -7,9 +7,9 @@ class CustomSubstate extends MusicBeatSubstate {
 	public static var instance:CustomSubstate;
 
 	public static function implement(funk:FunkinLua) {
-		funk.addCallback("openCustomSubstate", openCustomSubstate);
-		funk.addCallback("closeCustomSubstate", closeCustomSubstate);
-		funk.addCallback("insertToCustomSubstate", insertToCustomSubstate);
+		funk.set("openCustomSubstate", openCustomSubstate);
+		funk.set("closeCustomSubstate", closeCustomSubstate);
+		funk.set("insertToCustomSubstate", insertToCustomSubstate);
 	}
 
 	public static function openCustomSubstate(name:String, ?pauseGame:Bool = false) {

@@ -2052,7 +2052,7 @@ class PlayState extends MusicBeatState {
 					if (killMe.length > 1)
 						LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe, true, true), killMe[killMe.length - 1], trueVal != null ? trueVal : value2);
 					else LuaUtils.setVarInArray(this, value1, trueVal != null ? trueVal : value2);	
-				} catch(e:Dynamic) addTextToDebug('ERROR ("Set Property" Event) - $e', FlxColor.RED);
+				} catch(e:Dynamic) HScript.hscriptTrace('ERROR ("Set Property" Event) - $e', FlxColor.RED);
 			case 'Play Sound':
 				if(flValue2 == null) flValue2 = 1;
 				FlxG.sound.play(Paths.sound(value1), flValue2);
@@ -3002,11 +3002,12 @@ class PlayState extends MusicBeatState {
 			Logs.trace('failed to initialize hscript interp!!! ($file)', ERROR);
 		}
 		try {
+			var times:Float = Date.now().getTime();
 			var newScript:HScript = new HScript(null, file);
 			hscriptArray.push(newScript);
 
 			if (newScript.exception != null) {
-				addTextToDebug('ERROR ON LOADING - ${newScript.exception.message}', FlxColor.RED);
+				HScript.hscriptTrace('ERROR ON LOADING - ${newScript.exception.message}', FlxColor.RED);
 				makeError(newScript);
 				return;
 			}
@@ -3014,14 +3015,14 @@ class PlayState extends MusicBeatState {
 			if (newScript.variables.exists('onCreate')) {
 				var retVal:Dynamic = newScript.executeFunction('onCreate');
 				if (newScript.exception != null) {
-					addTextToDebug('ERROR (onCreate) - ${newScript.exception.message}', FlxColor.RED);
+					HScript.hscriptTrace('ERROR (onCreate) - ${newScript.exception.message}', FlxColor.RED);
 					makeError(newScript);
 					return;
 				}
 			}
-			trace('initialized hscript interp successfully: $file');
+			Logs.trace('initialized hscript interp successfully: $file (${Std.int(Date.now().getTime() - times)}ms)');
 		} catch(e) {
-			addTextToDebug('ERROR - $e', FlxColor.RED);
+			HScript.hscriptTrace('ERROR - $e', FlxColor.RED);
 			if (hscriptArray.length > 0)
 				makeError(hscriptArray[hscriptArray.length - 1]);
 		}
@@ -3080,13 +3081,13 @@ class PlayState extends MusicBeatState {
 		if (len < 1) return returnVal;
 		for(i in 0...len) {
 			var script:HScript = hscriptArray[i];
-			if(script == null || !script.variables.exists(funcToCall) || exclusions.contains(script.origin))
+			if(script == null || !script.active || !script.variables.exists(funcToCall) || exclusions.contains(script.origin))
 				continue;
 
 			try {
 				returnVal = script.executeFunction(funcToCall, args);
-				trace(returnVal, script.exception);
 				if (script.exception != null) {
+					script.active = false;
 					FunkinLua.luaTrace('ERROR ($funcToCall) - ${script.exception}', true, false, FlxColor.RED);
 				} else if((returnVal == FunkinLua.Function_StopHScript || returnVal == FunkinLua.Function_StopAll) && !excludeValues.contains(returnVal) && !ignoreStops) break;
 			}

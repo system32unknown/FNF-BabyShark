@@ -14,11 +14,11 @@ import openfl.utils.Assets;
 class ExtraFunctions {
 	public static function implement(funk:FunkinLua) {
 		// Keyboard
-		funk.addCallback("keyboardJustPressed", (name:String) -> return Reflect.getProperty(FlxG.keys.justPressed, name.toUpperCase()));
-		funk.addCallback("keyboardPressed", (name:String) -> return Reflect.getProperty(FlxG.keys.pressed, name.toUpperCase()));
-		funk.addCallback("keyboardReleased", (name:String) -> return Reflect.getProperty(FlxG.keys.justReleased, name.toUpperCase()));
+		funk.set("keyboardJustPressed", (name:String) -> return Reflect.getProperty(FlxG.keys.justPressed, name.toUpperCase()));
+		funk.set("keyboardPressed", (name:String) -> return Reflect.getProperty(FlxG.keys.pressed, name.toUpperCase()));
+		funk.set("keyboardReleased", (name:String) -> return Reflect.getProperty(FlxG.keys.justReleased, name.toUpperCase()));
 
-		funk.addCallback("keyJustPressed", function(name:String = '') {
+		funk.set("keyJustPressed", function(name:String = '') {
 			name = name.toLowerCase();
 			switch(name) {
 				case 'left': return PlayState.instance.controls.NOTE_LEFT_P;
@@ -29,7 +29,7 @@ class ExtraFunctions {
 			}
 			return false;
 		});
-		funk.addCallback("keyPressed", function(name:String = '') {
+		funk.set("keyPressed", function(name:String = '') {
 			name = name.toLowerCase();
 			switch(name) {
 				case 'left': return PlayState.instance.controls.NOTE_LEFT;
@@ -40,7 +40,7 @@ class ExtraFunctions {
 			}
 			return false;
 		});
-		funk.addCallback("keyReleased", function(name:String = '') {
+		funk.set("keyReleased", function(name:String = '') {
 			name = name.toLowerCase();
 			switch(name) {
 				case 'left': return PlayState.instance.controls.NOTE_LEFT_R;
@@ -53,7 +53,7 @@ class ExtraFunctions {
 		});
 
 		// Save data management
-		funk.addCallback("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
+		funk.set("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
 			if(PlayState.instance.modchartSaves.exists(name)) {
 				FunkinLua.luaTrace('initSaveData: Save file already initialized: ' + name);
 				return false;
@@ -63,7 +63,7 @@ class ExtraFunctions {
 			PlayState.instance.modchartSaves.set(name, save);
 			return true;
 		});
-		funk.addCallback("flushSaveData", function(name:String) {
+		funk.set("flushSaveData", function(name:String) {
 			if(PlayState.instance.modchartSaves.exists(name)) {
 				PlayState.instance.modchartSaves.get(name).flush();
 				return true;
@@ -71,7 +71,7 @@ class ExtraFunctions {
 			FunkinLua.luaTrace('flushSaveData: Save file not initialized: ' + name, false, false, FlxColor.RED);
 			return false;
 		});
-		funk.addCallback("getDataFromSave", function(name:String, field:String, ?defaultValue:Dynamic = null) {
+		funk.set("getDataFromSave", function(name:String, field:String, ?defaultValue:Dynamic = null) {
 			if(PlayState.instance.modchartSaves.exists(name)) {
 				var saveData = PlayState.instance.modchartSaves.get(name).data;
 				if(Reflect.hasField(saveData, field))
@@ -81,7 +81,7 @@ class ExtraFunctions {
 			FunkinLua.luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 			return defaultValue;
 		});
-		funk.addCallback("setDataFromSave", function(name:String, field:String, value:Dynamic) {
+		funk.set("setDataFromSave", function(name:String, field:String, value:Dynamic) {
 			if(!PlayState.instance.modchartSaves.exists(name)) {
 				FunkinLua.luaTrace('setDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 				return false;
@@ -91,7 +91,7 @@ class ExtraFunctions {
 		});
 
 		// File management
-		funk.addCallback("checkFileExists", function(filename:String, ?absolute:Bool = false) {
+		funk.set("checkFileExists", function(filename:String, ?absolute:Bool = false) {
 			#if MODS_ALLOWED
 			if(absolute) return FileSystem.exists(filename);
 
@@ -103,7 +103,7 @@ class ExtraFunctions {
 			return Assets.exists(Paths.getPath('assets/$filename', TEXT));
 			#end
 		});
-		funk.addCallback("saveFile", function(path:String, content:String, ?absolute:Bool = false) {
+		funk.set("saveFile", function(path:String, content:String, ?absolute:Bool = false) {
 			try {
 				if(!absolute)
 					File.saveContent(Paths.mods(path), content);
@@ -112,7 +112,7 @@ class ExtraFunctions {
 			} catch (e:Dynamic) FunkinLua.luaTrace("saveFile: Error trying to save " + path + ": " + e, false, false, FlxColor.RED);
 			return false;
 		});
-		funk.addCallback("deleteFile", function(path:String, ?ignoreModFolders:Bool = false) {
+		funk.set("deleteFile", function(path:String, ?ignoreModFolders:Bool = false) {
 			try {
 				#if MODS_ALLOWED
 				if(!ignoreModFolders) {
@@ -132,8 +132,8 @@ class ExtraFunctions {
 			} catch (e:Dynamic) FunkinLua.luaTrace("deleteFile: Error trying to delete " + path + ": " + e, false, false, FlxColor.RED);
 			return false;
 		});
-		funk.addCallback("getTextFromFile", (path:String, ?ignoreModFolders:Bool = false, ?absolute:Bool = false) -> return Paths.getTextFromFile(path, ignoreModFolders, absolute));
-		funk.addCallback("directoryFileList", function(folder:String) {
+		funk.set("getTextFromFile", Paths.getTextFromFile);
+		funk.set("directoryFileList", function(folder:String) {
 			var list:Array<String> = [];
 			#if sys
 			if(FileSystem.exists(folder)) {
@@ -144,10 +144,10 @@ class ExtraFunctions {
 			#end
 			return list;
 		});
-		funk.addCallback("promptSaveFile", (fileName:String, content:String, extension:String) -> CoolUtil.saveFile({fileDefaultName: fileName, format: extension, content: content}));
-		funk.addCallback("promptLoadFile", () -> CoolUtil.loadFile());
+		funk.set("promptSaveFile", CoolUtil.saveFile);
+		funk.set("promptLoadFile", CoolUtil.loadFile);
 
-		funk.addCallback("parseJson", function(jsonStr:String, varName:String) {
+		funk.set("parseJson", function(jsonStr:String, varName:String) {
 			var json = Paths.modFolders('data/' + jsonStr + '.json');
 			var foundJson:Bool;
 
@@ -166,56 +166,56 @@ class ExtraFunctions {
 		});
 
 		// String tools
-		funk.addCallback("stringStartsWith", (str:String, start:String) -> return str.startsWith(start));
-		funk.addCallback("stringEndsWith", (str:String, end:String) -> return str.endsWith(end));
-		funk.addCallback("stringSplit", (str:String, split:String) -> return str.split(split));
-		funk.addCallback("stringTrim", (str:String) -> return str.trim());
+		funk.set("stringStartsWith", StringTools.startsWith);
+		funk.set("stringEndsWith", StringTools.endsWith);
+		funk.set("stringSplit", (str:String, split:String) -> return str.split(split));
+		funk.set("stringTrim", StringTools.trim);
 
 		// Regex
-		funk.addCallback("regexMatch", (str:String, toMatch:String, flag:String = "i") -> return new EReg(str, flag).match(toMatch));
-		funk.addCallback("regexSubMatch", (str:String, toMatch:String, pos:Int, len:Int = -1, flag:String = "i") -> return new EReg(str, flag).matchSub(toMatch, pos, len));
-		funk.addCallback("regexFindMatchAt", function(str:String, toMatch:String, n:Int, flag:String = "i") {
+		funk.set("regexMatch", (str:String, toMatch:String, flag:String = "i") -> return new EReg(str, flag).match(toMatch));
+		funk.set("regexSubMatch", (str:String, toMatch:String, pos:Int, len:Int = -1, flag:String = "i") -> return new EReg(str, flag).matchSub(toMatch, pos, len));
+		funk.set("regexFindMatchAt", function(str:String, toMatch:String, n:Int, flag:String = "i") {
 			var theData = new EReg(str, flag);
 			theData.match(toMatch);
 			return theData.matched(n);
 		});
-		funk.addCallback("regexFindFirstMatch", function(str:String, toMatch:String, flag:String = "i") {
+		funk.set("regexFindFirstMatch", function(str:String, toMatch:String, flag:String = "i") {
 			var theData = new EReg(str, flag);
 			theData.match(toMatch);
 			return theData.matchedLeft();
 		});
-		funk.addCallback("regexFindLastMatch", function(str:String, toMatch:String, flag:String = "i") {
+		funk.set("regexFindLastMatch", function(str:String, toMatch:String, flag:String = "i") {
 			var theData = new EReg(str, flag);
 			theData.match(toMatch);
 			return theData.matchedRight();
 		});
-		funk.addCallback("regexMatchPosition", function(str:String, toMatch:String, flag:String = "i") {
+		funk.set("regexMatchPosition", function(str:String, toMatch:String, flag:String = "i") {
 			var data = new EReg(str, flag);
 			data.match(toMatch);
 			var theData = data.matchedPos();
 			return [theData.pos, theData.len];
 		});
-		funk.addCallback("regexReplace", (str:String, toReplace:String, replacement:String, flag:String = "i") -> return new EReg(str, flag).replace(toReplace, replacement));
-		funk.addCallback("regexSplit", (str:String, toSplit:String, flag:String = "i") -> return new EReg(str, flag).split(toSplit));
+		funk.set("regexReplace", (str:String, toReplace:String, replacement:String, flag:String = "i") -> return new EReg(str, flag).replace(toReplace, replacement));
+		funk.set("regexSplit", (str:String, toSplit:String, flag:String = "i") -> return new EReg(str, flag).split(toSplit));
 
 		// Randomization
-		funk.addCallback("getRandomInt", function(min:Int, max:Int = FlxMath.MAX_VALUE_INT, exclude:String = '') {
+		funk.set("getRandomInt", function(min:Int, max:Int = FlxMath.MAX_VALUE_INT, exclude:String = '') {
 			var excludeArray:Array<String> = exclude.split(',');
 			var toExclude:Array<Int> = [];
 			for (i in 0...excludeArray.length)
 				toExclude.push(Std.parseInt(excludeArray[i].trim()));
 			return FlxG.random.int(min, max, toExclude);
 		});
-		funk.addCallback("getRandomFloat", function(min:Float, max:Float = 1, exclude:String = '') {
+		funk.set("getRandomFloat", function(min:Float, max:Float = 1, exclude:String = '') {
 			var excludeArray:Array<String> = exclude.split(',');
 			var toExclude:Array<Float> = [];
 			for (i in 0...excludeArray.length)
 				toExclude.push(Std.parseFloat(excludeArray[i].trim()));
 			return FlxG.random.float(min, max, toExclude);
 		});
-		funk.addCallback("getRandomBool", (chance:Float = 50) -> return FlxG.random.bool(chance));
+		funk.set("getRandomBool", FlxG.random.bool);
 
-		funk.addCallback("getGameplayChangerValue", (tag:String) -> return ClientPrefs.getGameplaySetting(tag, false));
-		funk.addCallback("getFPS", (type:String, num:Float) -> return utils.system.FPSUtil.getFPSAdjust(type, num));
+		funk.set("getGameplayChangerValue", (tag:String) -> return ClientPrefs.getGameplaySetting(tag, false));
+		funk.set("getFPS", return utils.system.FPSUtil.getFPSAdjust);
 	}
 }

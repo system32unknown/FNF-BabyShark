@@ -25,7 +25,7 @@ class FPSUtil {
 		}
     }
 
-	public static function getFPSAdjust(type:String = 'PSYCH', fps:Float) {
+	public static function getFPSAdjust(type:String, fps:Float) {
 		return switch (type.toLowerCase()) {
 			case 'andromeda': FlxG.elapsed / (1 / 60) * fps;
 			case 'psychold': FlxMath.bound(1 - (fps * 30), 0, 1);

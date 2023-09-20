@@ -1,7 +1,5 @@
 package;
 
-import haxe.Exception;
-
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.display.StageScaleMode;
@@ -14,9 +12,7 @@ import utils.GameVersion;
 import utils.FunkinGame;
 import objects.Overlay;
 
-#if (target.threaded && sys)
-import sys.thread.ElasticThreadPool;
-#end
+#if (target.threaded && sys) import sys.thread.ElasticThreadPool; #end
 
 //crash handler stuff
 #if CRASH_HANDLER
@@ -65,7 +61,7 @@ class Main extends Sprite {
 	function setupGame():Void {
 		Logs.init();
 		utils.FunkinCache.init();
-		#if LUA_ALLOWED Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
+		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
 		ClientPrefs.loadDefaultKeys();
 		addChild(new FunkinGame(init_game.width, init_game.height, init_game.initialState, init_game.framerate, init_game.framerate, init_game.skipSplash, init_game.startFullscreen));
@@ -116,7 +112,7 @@ class Main extends Sprite {
 	function onCrash(e:Dynamic):Void {
 		var message:String = "";
 		if ((e is UncaughtErrorEvent)) message = e.error;
-		else message = try Std.string(e) catch(_:Exception) "Unknown";
+		else message = try Std.string(e) catch(_:haxe.Exception) "Unknown";
 
 		var errMsg:String = "";
 		final callStack:Array<StackItem> = CallStack.exceptionStack(true);

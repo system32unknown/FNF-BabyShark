@@ -1,8 +1,4 @@
 #if !macro
-#if LUA_ALLOWED
-import llua.*;
-import llua.Lua;
-#end
 
 #if discord_rpc import backend.Discord; #end
 import backend.Paths;

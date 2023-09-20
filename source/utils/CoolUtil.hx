@@ -14,14 +14,8 @@ import sys.FileSystem;
 import openfl.utils.Assets;
 #end
 
-typedef FileSaveContext = {
-	var content:String;
-	var format:String;
-	var fileDefaultName:String;
-}
-
 class CoolUtil {
-	public static function saveFile(settings:FileSaveContext) {new FileReference().save(settings.content, settings.fileDefaultName + '.' + settings.format);}
+	public static function saveFile(content:String, format:String, filedefault:String) {new FileReference().save(content, '$filedefault.$format');}
 	public static function loadFile() {new FileReference().load();}
 
 	inline public static function quantize(f:Float, snap:Float) {

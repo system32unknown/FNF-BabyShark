@@ -50,9 +50,7 @@ class Discord {
 	public static function start() {
 		if (!isInitialized && ClientPrefs.getPref('discordRPC')) {
 			initialize();
-			Application.current.window.onClose.add(() -> {
-				shutdown();
-			});
+			Application.current.window.onClose.add(() -> shutdown());
 		}
 	}
 
@@ -132,10 +130,10 @@ class Discord {
 
 	#if LUA_ALLOWED
 	public static function addLuaCallbacks(lua:FunkinLua) {
-		lua.addCallback("changePresence", (details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) -> {
-			Discord.changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
+		lua.set("changePresence", (details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) -> {
+			changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
 		});
-		lua.addCallback("changeDiscordClientID", (?newID:String = null) -> {
+		lua.set("changeDiscordClientID", (?newID:String = null) -> {
 			if(newID == null) newID = _defaultID;
 			clientID = newID;
 		});

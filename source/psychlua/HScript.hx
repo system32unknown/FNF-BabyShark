@@ -12,9 +12,15 @@ class HScript extends Interp {
 	
 	public static function initHaxeModule(parent:FunkinLua) {
 		if(parent.hscript == null) {
-			trace('initializing haxe interp for: ${parent.scriptName}');
+			var times:Float = Date.now().getTime();
 			parent.hscript = new HScript(parent);
+			Logs.trace('initialized hscript interp successfully: ${parent.scriptName} (${Std.int(Date.now().getTime() - times)}ms)');
 		}
+	}
+
+	public static function hscriptTrace(text:String, color:FlxColor = FlxColor.WHITE) {
+		PlayState.instance.addTextToDebug(text, color);
+		Logs.trace(text);
 	}
 
 	public var origin:String;
@@ -131,7 +137,7 @@ class HScript extends Interp {
 			#if LUA_ALLOWED
 			for (script in PlayState.instance.luaArray)
 				if(script != null && script.lua != null && !script.closed)
-					Lua_helper.add_callback(script.lua, name, func);
+					script.set(name, func);
 			#end
 			FunkinLua.customFunctions.set(name, func);
 		});
@@ -189,13 +195,13 @@ class HScript extends Interp {
 	}
 
 	public function executeFunction(?funcToRun:String, ?funcArgs:Array<Dynamic>):Dynamic {
-		if (funcToRun != null && active) {
-			if (variables.exists(funcToRun)) {
-				if (funcArgs == null) funcArgs = [];
-				try {
-					return Reflect.callMethod(null, variables.get(funcToRun), funcArgs);
-				} catch(e) exception = e;
-			}
+		if (funcToRun == null || !active) return null;
+
+		if (variables.exists(funcToRun)) {
+			if (funcArgs == null) funcArgs = [];
+			try {
+				return Reflect.callMethod(null, variables.get(funcToRun), funcArgs);
+			} catch(e) exception = e;
 		}
 		return null;
 	}
@@ -204,10 +210,10 @@ class HScript extends Interp {
 		#if LUA_ALLOWED
 		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any, ?funcToRun:String, ?funcArgs:Array<Dynamic>):Dynamic {
 			initHaxeModule(funk);
+			if (!funk.hscript.active) return null;
 
-			if(varsToBring != null) {
+			if(varsToBring != null)
 				for (key in Reflect.fields(varsToBring)) funk.hscript.setVar(key, Reflect.field(varsToBring, key));
-			}
 
 			var retVal:Dynamic = funk.hscript.executeCode(codeToRun);
 			if (funcToRun != null) {
@@ -215,30 +221,40 @@ class HScript extends Interp {
 				if (retFunc != null) retVal = retFunc;
 			}
 
-			if (funk.hscript.exception != null)
+			if (funk.hscript.exception != null) {
+				funk.hscript.active = false;
 				FunkinLua.luaTrace('ERROR (${funk.lastCalledFunction}) - ${funk.hscript.exception}', false, false, FlxColor.RED);
+			}
 
 			return retVal;
 		});
 		
 		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic>) {
+			if (!funk.hscript.active) return null;
 			var retVal:Dynamic = funk.hscript.executeFunction(funcToRun, funcArgs);
-			if (funk.hscript.exception != null)
+			if (funk.hscript.exception != null) {
+				funk.hscript.active = false;
 				FunkinLua.luaTrace('ERROR (${funk.lastCalledFunction}) - ${funk.hscript.exception}', false, false, FlxColor.RED);
+			}
 			return retVal;
 		});
 		// This function is unnecessary because import already exists in SScript as a native feature
-			funk.addLocalCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
-				initHaxeModule(funk);
+		funk.addLocalCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
+			initHaxeModule(funk);
+			if (!funk.hscript.active) return;
 	
-				var str:String = '';
-				if(libPackage.length > 0) str = '$libPackage.';
-				else if(libName == null) libName = '';
-	
-				try {
-					funk.hscript.setVar(libName, funk.hscript.resolveClassOrEnum(str + libName));
-				} catch(e) FunkinLua.luaTrace('ERROR (${funk.lastCalledFunction}) - $e', false, false, FlxColor.RED);
-			});
+			var str:String = '';
+			if(libPackage.length > 0) str = '$libPackage.';
+			else if(libName == null) libName = '';
+
+			var c:Dynamic = funk.hscript.resolveClassOrEnum(str + libName);
+			try {
+				funk.hscript.setVar(libName, c);
+			} catch(e) {
+				funk.hscript.active = false;
+				FunkinLua.luaTrace('ERROR (${funk.lastCalledFunction}) - $e', false, false, FlxColor.RED);
+			}
+		});
 		#end
 	}
 
