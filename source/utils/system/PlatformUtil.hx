@@ -19,8 +19,7 @@ package utils.system;
 #include <iostream>
 #include <string>
 ')
-class PlatformUtil
-{
+class PlatformUtil {
 	@:functionCode('
         HWND hWnd = GetActiveWindow();
         alpha = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
@@ -127,36 +126,6 @@ class PlatformUtil
 		std::cout<< "" <<std::flush;
 	')
 	public static function clearScreen() {}
-}
-#else
-class PlatformUtil {
-	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0, res:Int = 0) return 0;
-
-	static public function getWindowsBackward(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 1, res:Int = 0) return 0;
-
-    static public function sendWindowsNotification(title:String = "", desc:String = ""):Int return 0;
-
-	static public function setCursorPos(x:Int = 0, y:Int = 0):Int return 0;
-
-    static public function setWindowIcon(path:String) {}
-
-    static public function getMousePos(pos:Int):Int {return 0;}
-
-    static public function setWindowAtt(type:Int, enable:Bool) {}
-
-    static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
-
-    static public function setDPIAware() {}
-
-    static public function getCurrentWalllpaper(?path = "") {return null;}
-
-    static public function updateWallpaper(path = "", ?output = "") {return null;}
-
-    static public function allocConsole() {}
-
-    static public function setConsoleColors(color:Int) {}
-
-    static public function clearScreen() {}
 }
 #end
 

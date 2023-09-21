@@ -10,7 +10,7 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxSort;
 import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
-#if VIDEOS_ALLOWED import hxcodec.flixel.FlxVideo as VideoHandler; #end
+#if VIDEOS_ALLOWED import backend.VideoHandler; #end
 #if !MODS_ALLOWED import openfl.utils.Assets as OpenFlAssets; #end
 import backend.Highscore;
 import backend.Song;
@@ -794,7 +794,7 @@ class PlayState extends MusicBeatState {
 		char.y += char.positionArray[1];
 	}
 
-	public function startVideo(name:String) {
+	public function startVideo(name:String):VideoHandler {
 		#if VIDEOS_ALLOWED
 		inCutscene = true;
 
@@ -802,20 +802,20 @@ class PlayState extends MusicBeatState {
 		if(!#if sys FileSystem #else OpenFlAssets #end.exists(filepath)) {
 			FlxG.log.warn('Couldnt find video file: ' + name);
 			startAndEnd();
-			return;
+			return null;
 		}
 
 		var video:VideoHandler = new VideoHandler();
-		video.play(filepath);
-		video.onEndReached.add(() -> {
-			video.dispose();
+		video.startVideo(filepath);
+		video.setFinishCallBack(() -> {
 			startAndEnd();
-			return;
-		}, true);
+			return null;
+		});
+		return video;
 		#else
 		FlxG.log.warn('Platform not supported!');
 		startAndEnd();
-		return;
+		return null;
 		#end
 	}
 
@@ -2112,9 +2112,8 @@ class PlayState extends MusicBeatState {
 				if(daNote.strumTime < songLength - Conductor.safeZoneOffset)
 					health -= 0.05 * healthLoss;
 			});
-			for (daNote in unspawnNotes) {
-				if(daNote.strumTime < songLength - Conductor.safeZoneOffset)
-					health -= 0.05 * healthLoss;
+			for (daNote in unspawnNotes) if(daNote.strumTime < songLength - Conductor.safeZoneOffset) {
+				health -= 0.05 * healthLoss;
 			}
 
 			if(doDeathCheck()) return false;
@@ -2257,8 +2256,8 @@ class PlayState extends MusicBeatState {
 	function popUpScore(note:Note):Void {
 		if (note == null) return;
 
-		var noteDiff = getNoteDiff(note);
-		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff / playbackRate);
+		var noteDiff = getNoteDiff(note) / getActualPlaybackRate();
+		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
 		var score:Int = 500;
 
 		var daTiming:String = "";
@@ -2286,8 +2285,7 @@ class PlayState extends MusicBeatState {
 			RecalculateRating();
 		}
 		if (ClientPrefs.getPref('ShowCombo')) {
-			var placement:Float = FlxG.width * 0.35;
-			
+			var placement:Float = FlxG.width * .35;
 			if (!ClientPrefs.getPref('comboStacking') && comboGroup.members.length > 0) {
 				for (spr in comboGroup) {
 					if(spr != mstimingTxt) spr.destroy();
@@ -2357,8 +2355,7 @@ class PlayState extends MusicBeatState {
 				comboGroup.add(timing);
 		
 			for (daRatings in [rating, comboSpr, timing]) {
-				if (!isPixelStage)
-					daRatings.setGraphicSize(Std.int(daRatings.width * .7));
+				if (!isPixelStage) daRatings.setGraphicSize(Std.int(daRatings.width * .7));
 				else daRatings.setGraphicSize(Std.int(daRatings.width * daPixelZoom * .85));
 			}
 		
@@ -2438,7 +2435,7 @@ class PlayState extends MusicBeatState {
 	static function getNoteDiff(note:Note = null):Float {
 		var noteDiffTime:Float = note.strumTime - Conductor.songPosition;
 		return switch(ClientPrefs.getPref('NoteDiffTypes')) {
-			case 'Psych': Math.abs(noteDiffTime + ClientPrefs.getPref('ratingOffset')) / instance.getActualPlaybackRate();
+			case 'Psych': Math.abs(noteDiffTime + ClientPrefs.getPref('ratingOffset'));
 			case 'Simple': noteDiffTime;
 			default: 0;
 		}
@@ -2490,8 +2487,7 @@ class PlayState extends MusicBeatState {
 				}
 
 				// eee jack detection before was not super good
-				if (epicNote.isSustainNote)
-					strumPlayAnim(false, key);
+				if (epicNote.isSustainNote) strumPlayAnim(false, key);
 				goodNoteHit(epicNote);
 			} else {
 				callOnScripts('onGhostTap', [key]);

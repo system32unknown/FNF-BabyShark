@@ -39,15 +39,12 @@ class FreeplayState extends MusicBeatState
 
 	public static var section:String = '';
 
-	override function create()
-	{		
+	override function create() {		
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
 		WeekData.reloadWeekFiles(false);
 
-		#if discord_rpc
-		Discord.changePresence("Freeplay Menu", null);
-		#end
+		#if discord_rpc Discord.changePresence("Freeplay Menu", null); #end
 
 		section = FreeplaySectionSubstate.daSection;
 		if (section == null || section == '') section = 'Vanilla';
@@ -105,6 +102,7 @@ class FreeplayState extends MusicBeatState
 			songText.snapToPosition();
 
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
+			icon.iconType = 'psych';
 			icon.sprTracker = songText;
 
 			// too laggy with a lot of songs, so i had to recode the logic for it
@@ -195,13 +193,12 @@ class FreeplayState extends MusicBeatState
 	var instPlaying:Int = -1;
 	public static var vocals:FlxSound = null;
 	var holdTime:Float = 0;
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 
-		if (FlxG.sound.music.volume < 0.7)
-			FlxG.sound.music.volume += 0.5 * elapsed;
+		if (FlxG.sound.music.volume < .7)
+			FlxG.sound.music.volume += .5 * elapsed;
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, FlxMath.bound(elapsed * 24, 0, 1)));
 		lerpRating = FlxMath.lerp(lerpRating, intendedRating, FlxMath.bound(elapsed * 12, 0, 1));
@@ -247,9 +244,9 @@ class FreeplayState extends MusicBeatState
 			}
 
 			if (controls.UI_DOWN || controls.UI_UP) {
-				var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
+				var checkLastHold:Int = Math.floor((holdTime - .5) * 10);
 				holdTime += elapsed;
-				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+				var checkNewHold:Int = Math.floor((holdTime - .5) * 10);
 				
 				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));

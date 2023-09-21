@@ -44,16 +44,22 @@ class HScript extends Interp {
 			"Math"				=> Math,
 			"Reflect"			=> Reflect,
 			"Std"				=> Std,
+			"HScript"			=> HScript,
 			"Type"				=> Type,
             "Xml"               => Xml,
 			"EReg"				=> EReg,
-			"sys"				=> Sys,
-            "Json"              => haxe.Json,
+			"StringTools"		=> StringTools,
+
+			#if VIDEOS_ALLOWED
+			"VideoSpriteHandler"=> backend.VideoSpriteHandler,
+			"VideoHandler" 		=> backend.VideoHandler,
+			#end
 
 			// Sys related stuff
 			#if sys
 			"File"				=> sys.io.File,
 			"FileSystem"		=> sys.FileSystem,
+			"Sys"				=> Sys,
 			#end
 			"Assets"			=> openfl.Assets,
 
@@ -125,10 +131,10 @@ class HScript extends Interp {
         for (key => type in getDefaultVariables()) setVar(key, type);
 
 		// Functions & Variables
-		setVar('setVar', (name:String, value:Dynamic) -> {PlayState.instance.variables.set(name, value);});
-		setVar('getVar', (name:String) -> {return PlayState.instance.variables.get(name);});
-		setVar('removeVar', (name:String) -> {return PlayState.instance.variables.remove(name);});
-		setVar('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> {PlayState.instance.addTextToDebug(text, color);});
+		setVar('setVar', (name:String, value:Dynamic) -> PlayState.instance.variables.set(name, value));
+		setVar('getVar', (name:String) -> return PlayState.instance.variables.get(name));
+		setVar('removeVar', (name:String) -> return PlayState.instance.variables.remove(name));
+		setVar('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> PlayState.instance.addTextToDebug(text, color));
 
 		// For adding your own callbacks
 

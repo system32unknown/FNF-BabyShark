@@ -78,17 +78,26 @@ class MainMenuState extends MusicBeatState {
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 
-		var selectUi = new FlxSprite().loadGraphic(Paths.image('mainmenu/Select_Thing'));
-		selectUi.scrollFactor.set();
-		selectUi.antialiasing = false;
-		selectUi.updateHitbox();
-		add(selectUi);
+		var menuCover:FlxSprite = new FlxSprite().makeGraphic(Std.int(FlxG.width), FlxG.height - 360);
+		menuCover.alpha = .5;
+		menuCover.color = FlxColor.WHITE;
+		menuCover.scrollFactor.set();
+		menuCover.screenCenter();
+		menuCover.y += 200;
+		add(menuCover);
+
+		var menuCoverAlt:FlxSprite = new FlxSprite().makeGraphic(Std.int(menuCover.width), Std.int(menuCover.height  - 20));
+		menuCoverAlt.setPosition(menuCover.x, menuCover.y + 10);
+		menuCoverAlt.alpha = .7;
+		menuCoverAlt.color = FlxColor.BLACK;
+		menuCoverAlt.scrollFactor.set();
+		add(menuCoverAlt);
 
 		bigIcons = new FlxSprite();
 		bigIcons.frames = Paths.getSparrowAtlas('mainmenu/menu_big_icons');
 		for (i in 0...optionShit.length)
 			bigIcons.animation.addByPrefix(optionShit[i], optionShit[i] == 'freeplay' ? 'freeplay0' : optionShit[i], 24);
-		bigIcons.scrollFactor.set(0, 0);
+		bigIcons.scrollFactor.set();
 		bigIcons.antialiasing = true;
 		bigIcons.updateHitbox();
 		bigIcons.animation.play(optionShit[0]);
@@ -184,7 +193,6 @@ class MainMenuState extends MusicBeatState {
 				MusicBeatState.switchState(new TitleState());
 			}
 
-			var numMenu = 0;
 			if (controls.ACCEPT) {
 				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('confirmMenu'), .7);
@@ -193,8 +201,7 @@ class MainMenuState extends MusicBeatState {
 
 				menuItems.forEach(function(spr:FlxSprite) {
 					if (curSelected != spr.ID) {
-						numMenu++;
-						FlxTween.tween(spr, {alpha: 0}, 1.3 * numMenu, {
+						FlxTween.tween(spr, {alpha: 0}, 1.3, {
 							ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> spr.kill()
 						});
 					} else {
@@ -228,8 +235,7 @@ class MainMenuState extends MusicBeatState {
 	}
 
 	function changeItem(huh:Int = 0) {
-		if (finishedFunnyMove)
-			curSelected = FlxMath.wrap(curSelected + huh, 0, menuItems.length - 1);
+		if (finishedFunnyMove) curSelected = FlxMath.wrap(curSelected + huh, 0, menuItems.length - 1);
 		menuItems.forEach(function(spr:FlxSprite) {
 			spr.animation.play('idle');
 			spr.updateHitbox();
