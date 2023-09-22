@@ -51,8 +51,8 @@ class HScript extends Interp {
 			"StringTools"		=> StringTools,
 
 			#if VIDEOS_ALLOWED
-			"VideoSpriteHandler"=> backend.VideoSpriteHandler,
-			"VideoHandler" 		=> backend.VideoHandler,
+			"VideoSpriteManager"=> backend.VideoSpriteManager,
+			"VideoManager" 		=> backend.VideoManager,
 			#end
 
 			// Sys related stuff
@@ -99,7 +99,7 @@ class HScript extends Interp {
             "Paths"             => Paths,
             "Conductor"         => Conductor,
             "Alphabet"          => Alphabet,
-			"DeltaTrail" => objects.DeltaTrail,
+			"DeltaTrail" 		=> objects.DeltaTrail,
 
             "CoolUtil"          => CoolUtil,
             "ClientPrefs"       => ClientPrefs,

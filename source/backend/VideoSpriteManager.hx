@@ -1,15 +1,16 @@
 package backend;
 #if VIDEOS_ALLOWED 
-#if (hxCodec >= "3.0.0") import hxcodec.flixel.FlxVideoSprite as BaseVideoSprite;
-#elseif (hxCodec >= "2.6.1") import hxcodec.VideoSprite as BaseVideoSprite;
-#elseif (hxCodec == "2.6.0") import VideoSprite as BaseVideoSprite;
-#else import vlc.MP4Sprite as BaseVideoSprite; #end
+#if (hxCodec >= "3.0.0") import hxcodec.flixel.FlxVideoSprite as VideoSprite;
+#elseif (hxCodec >= "2.6.1") import hxcodec.VideoSprite;
+#elseif (hxCodec == "2.6.0") import VideoSprite;
+#else import vlc.MP4Sprite as VideoSprite; #end
 #end
 
 /*A class made to handle VideoSprite from diffrent hxCodec versions*/
-class VideoSpriteHandler extends BaseVideoSprite {
+class VideoSpriteManager extends VideoSprite {
     public function new(x:Float, y:Float) {
         super(x, y);
+        states.PlayState.instance.videoSprites.push(this); //hopefully will put the VideoSprite var in the array
     }
     #if VIDEOS_ALLOWED
 
@@ -17,9 +18,9 @@ class VideoSpriteHandler extends BaseVideoSprite {
 	 * Native video support for Flixel & OpenFL
 	 * @param Path Example: `your/video/here.mp4`
 	 * @param Loop Loop the video.
-	*/
-    public function startVideo(path:String, loop:Bool = false #if (hxCodec < "3.0.0") , pauseDaMusic:Bool = false #end) {
-        super.play(path, loop);
+	 */
+    public function startVideo(path:String, loop:Bool = false) {
+        this.play(path, loop);
     }
 
      /**
@@ -27,7 +28,7 @@ class VideoSpriteHandler extends BaseVideoSprite {
 	 * @param func Example: `function() { //code to run }`
 	 */
     public function setFinishCallBack(func:Dynamic) {
-        super.bitmap.onEndReached.add(() -> {
+        this.bitmap.onEndReached.add(function() {
             if(func != null) func();
         }, true);
     }
@@ -38,7 +39,7 @@ class VideoSpriteHandler extends BaseVideoSprite {
 	 */
     public function setStartCallBack(func:Dynamic) {
         if(func != null)
-        super.bitmap.onOpening.add(func, true);
+        this.bitmap.onOpening.add(func, true);
     }
     /*if you want do smth such as pausing the video just do this -> yourVideo.bitmap.pause();
      same thing for resume but call resume(); instead*/

@@ -10,7 +10,7 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxSort;
 import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
-#if VIDEOS_ALLOWED import backend.VideoHandler; #end
+#if VIDEOS_ALLOWED import backend.VideoManager; #end
 #if !MODS_ALLOWED import openfl.utils.Assets as OpenFlAssets; #end
 import backend.Highscore;
 import backend.Song;
@@ -243,6 +243,7 @@ class PlayState extends MusicBeatState {
 	// Callbacks for stages
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
+	#if VIDEOS_ALLOWED public var videoSprites:Array<backend.VideoSpriteManager> = []; #end
 	override function create() {
 		instance = this;
 
@@ -794,7 +795,7 @@ class PlayState extends MusicBeatState {
 		char.y += char.positionArray[1];
 	}
 
-	public function startVideo(name:String):VideoHandler {
+	public function startVideo(name:String):VideoManager {
 		#if VIDEOS_ALLOWED
 		inCutscene = true;
 
@@ -805,7 +806,7 @@ class PlayState extends MusicBeatState {
 			return null;
 		}
 
-		var video:VideoHandler = new VideoHandler();
+		var video:VideoManager = new VideoManager();
 		video.startVideo(filepath);
 		video.setFinishCallBack(() -> {
 			startAndEnd();
@@ -1433,6 +1434,16 @@ class PlayState extends MusicBeatState {
 			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = true);
 			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
 
+			#if VIDEOS_ALLOWED
+			if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length) {
+				videoSprites[daVideoSprite].bitmap.resume();
+				if (FlxG.autoPause) {
+					FlxG.signals.focusGained.add(videoSprites[daVideoSprite].bitmap.resume);
+					FlxG.signals.focusLost.add(videoSprites[daVideoSprite].bitmap.pause);
+				}
+			}
+			#end
+
 			paused = false;
 			callOnScripts('onResume');
 
@@ -1744,6 +1755,16 @@ class PlayState extends MusicBeatState {
 		persistentDraw = true;
 		paused = true;
 
+		#if VIDEOS_ALLOWED
+		if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length) {
+			videoSprites[daVideoSprite].bitmap.pause();
+			if (FlxG.autoPause) {
+				if (FlxG.signals.focusGained.has(videoSprites[daVideoSprite].bitmap.resume)) FlxG.signals.focusGained.remove(videoSprites[daVideoSprite].bitmap.resume);
+				if (FlxG.signals.focusLost.has(videoSprites[daVideoSprite].bitmap.pause)) FlxG.signals.focusLost.remove(videoSprites[daVideoSprite].bitmap.pause);
+			}
+		}
+		#end
+
 		if(FlxG.sound.music != null) {
 			FlxG.sound.music.pause();
 			vocals.pause();
@@ -1793,6 +1814,15 @@ class PlayState extends MusicBeatState {
 
 				persistentUpdate = false;
 				persistentDraw = false;
+				#if VIDEOS_ALLOWED
+				if(videoSprites.length > 0) {
+					for(daVideoSprite in 0...videoSprites.length) {
+						videoSprites[daVideoSprite].bitmap.onEndReached.dispatch();
+						videoSprites[daVideoSprite].kill();
+					}
+					for(i in videoSprites) videoSprites.remove(i);
+				}
+				#end
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollow.x, camFollow.y));
 
 				#if discord_rpc
@@ -2833,9 +2863,7 @@ class PlayState extends MusicBeatState {
 			script.executeFunction('onDestroy');
 			script.destroy();
 		}
-		while (hscriptArray.length > 0)
-			hscriptArray.pop();
-
+		while (hscriptArray.length > 0) hscriptArray.pop();
 		for (name => save in modchartSaves) save.close();
 
 		@:privateAccess
@@ -2848,6 +2876,16 @@ class PlayState extends MusicBeatState {
 				FlxG.sound.music.pitch = 1;
 			}
 		}
+
+		#if VIDEOS_ALLOWED
+		if(videoSprites.length > 0) {
+			for(daVideoSprite in 0...videoSprites.length) {
+				videoSprites[daVideoSprite].bitmap.onEndReached.dispatch();
+				videoSprites[daVideoSprite].kill();
+			}
+			for(i in videoSprites) videoSprites.remove(i);
+		}
+		#end
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
