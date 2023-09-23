@@ -35,8 +35,7 @@ class Alphabet extends FlxSpriteGroup {
 		this.text = text;
 	}
 
-	function setAlignmentFromString(align:String)
-	{
+	function setAlignmentFromString(align:String) {
 		alignment = switch(align.toLowerCase().trim()) {
 			case 'right': RIGHT;
 			case 'center' | 'centered': CENTERED;
@@ -44,8 +43,7 @@ class Alphabet extends FlxSpriteGroup {
 		}
 	}
 
-	function set_alignment(align:Alignment)
-	{
+	function set_alignment(align:Alignment) {
 		alignment = align;
 		updateAlignment();
 		return align;

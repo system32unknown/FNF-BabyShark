@@ -52,7 +52,6 @@ class MainMenuState extends MusicBeatState {
 		Mods.loadTopMod();
 
 		#if discord_rpc
-		// Updating Discord Rich Presence
 		Discord.changePresence("In the Menus", null);
 		#end
 
@@ -96,7 +95,7 @@ class MainMenuState extends MusicBeatState {
 		bigIcons = new FlxSprite();
 		bigIcons.frames = Paths.getSparrowAtlas('mainmenu/menu_big_icons');
 		for (i in 0...optionShit.length)
-			bigIcons.animation.addByPrefix(optionShit[i], optionShit[i] == 'freeplay' ? 'freeplay0' : optionShit[i], 24);
+			bigIcons.animation.addByPrefix(optionShit[i], optionShit[i], 24);
 		bigIcons.scrollFactor.set();
 		bigIcons.antialiasing = true;
 		bigIcons.updateHitbox();
@@ -183,7 +182,7 @@ class MainMenuState extends MusicBeatState {
 			}
 
 			if(FlxG.mouse.wheel != 0) {
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+				FlxG.sound.play(Paths.sound('scrollMenu'), .4);
 				changeItem(-FlxG.mouse.wheel);
 			}
 

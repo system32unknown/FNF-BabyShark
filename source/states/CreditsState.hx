@@ -7,8 +7,7 @@ import sys.io.File;
 import objects.AttachedSprite;
 import objects.HealthIcon;
 
-class CreditsState extends MusicBeatState
-{
+class CreditsState extends MusicBeatState {
 	// Title, Variable, Description, Color
 	static var titles(default, never):Array<Array<String>> = [
 		['Credits Sections'],
@@ -16,6 +15,7 @@ class CreditsState extends MusicBeatState
 		["Funkin' Crew",			'funkin',			'The only cool kickers of Friday Night Funkin\'',	'FD40AB'],
 		["Vs Dave and Bambi Team",	'daveandbambi',		'Developers of Dave and Bambi',						'FD40AB'],
 		["Psych Engine Extra Keys",	'psychek',			'Developers of Psych EK',							'FD40AB'],
+		["Baby Shark\'s Funkin Team",'babyshark',		'Developers of Baby Shark\'s Funkin',				'FD40AB'],
 		['']
 	];
 

@@ -17,8 +17,7 @@ class Highscore {
 		setWeekScore(formatSong(week, diff), 0);
 	}
 
-	public static function saveScore(song:String, score:Int = 0, ?diff:Int = 0, ?rating:Float = -1):Void
-	{
+	public static function saveScore(song:String, score:Int = 0, ?diff:Int = 0, ?rating:Float = -1):Void {
 		var daSong:String = formatSong(song, diff);
 
 		if (songScores.exists(daSong)) {
@@ -36,10 +35,9 @@ class Highscore {
 	{
 		var daWeek:String = formatSong(week, diff);
 
-		if (weekScores.exists(daWeek)) {
-			if (weekScores.get(daWeek) < score)
-				setWeekScore(daWeek, score);
-		} else setWeekScore(daWeek, score);
+		if (weekScores.exists(daWeek))
+			if (weekScores.get(daWeek) < score) setWeekScore(daWeek, score);
+		else setWeekScore(daWeek, score);
 	}
 
 	public static function saveCombo(song:String, combo:String, ?diff:Int = 0):Void {
@@ -56,27 +54,22 @@ class Highscore {
 	 * YOU SHOULD FORMAT SONG WITH formatSong() BEFORE TOSSING IN SONG VARIABLE
 	 */
 	static function setScore(song:String, score:Int):Void {
-		// Reminder that I don't need to format this song, it should come formatted!
 		songScores.set(song, score);
 		FlxG.save.data.songScores = songScores;
 		FlxG.save.flush();
 	}
 	static function setCombo(song:String, combo:String):Void {
-		
-		// Reminder that I don't need to format this song, it should come formatted!
 		songCombos.set(song, checkIfEmpty(combo) ? "Unclear, N/A" : combo);
 		FlxG.save.data.songCombos = songCombos;
 		FlxG.save.flush();
 	}
 	static function setWeekScore(week:String, score:Int):Void {
-		// Reminder that I don't need to format this song, it should come formatted!
 		weekScores.set(week, score);
 		FlxG.save.data.weekScores = weekScores;
 		FlxG.save.flush();
 	}
 
 	static function setRating(song:String, rating:Float):Void {
-		// Reminder that I don't need to format this song, it should come formatted!
 		songRating.set(song, rating);
 		FlxG.save.data.songRating = songRating;
 		FlxG.save.flush();
@@ -89,9 +82,8 @@ class Highscore {
 	static function getComboInt(combo:String):Int {
 		combo = combo.split(',')[0];
 		final ratings:Array<String> = ['Clear', 'SDCB', 'FC', 'GFC', 'SFC', 'PFC'];
-		for (i => item in ratings) {
+		for (i => item in ratings)
 			if (item == combo) return i + 1;
-		}
 		return 0;
 	}
 
@@ -111,16 +103,14 @@ class Highscore {
 	}
 	public static function getRating(song:String, diff:Int):Float {
 		var daSong:String = formatSong(song, diff);
-		if (!songRating.exists(daSong))
-			setRating(daSong, 0);
+		if (!songRating.exists(daSong)) setRating(daSong, 0);
 
 		return songRating.get(daSong);
 	}
 
 	public static function getWeekScore(week:String, diff:Int):Int {
 		var daWeek:String = formatSong(week, diff);
-		if (!weekScores.exists(daWeek))
-			setWeekScore(daWeek, 0);
+		if (!weekScores.exists(daWeek)) setWeekScore(daWeek, 0);
 
 		return weekScores.get(daWeek);
 	}

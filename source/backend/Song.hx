@@ -8,9 +8,7 @@ import tjson.TJSON as Json;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
-#else
-import lime.utils.Assets;
-#end
+#else import lime.utils.Assets; #end
 
 typedef SwagSong = {
 	var song:String;
@@ -48,7 +46,7 @@ class Song {
 	}
 
 	public static function getSongPath(folder:String, song:String):String {
-		return Paths.formatToSongPath(folder) + '/' + Paths.formatToSongPath(song);
+		return '${Paths.formatToSongPath(folder)}/${Paths.formatToSongPath(song)}';
 	}
 
 	static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
@@ -86,12 +84,12 @@ class Song {
 		
 		var formattedPath:String = getSongPath((folder == null ? jsonInput : folder), jsonInput);
 		#if MODS_ALLOWED
-		var moddyFile:String = Paths.modsJson(Paths.CHART_PATH + "/" + formattedPath);
+		var moddyFile:String = Paths.modsJson('${Paths.CHART_PATH}/$formattedPath');
 		if (FileSystem.exists(moddyFile))
 			rawJson = File.getContent(moddyFile).trim();
 		#end
 
-		var jsonPath = Paths.json(Paths.CHART_PATH + "/" + formattedPath);
+		var jsonPath = Paths.json('${Paths.CHART_PATH}/$formattedPath');
 		if (rawJson == null && Paths.fileExists(jsonPath, TEXT, true, true))
 			rawJson = #if sys File.getContent(jsonPath) #else Assets.getText(jsonPath).trim() #end.trim();
 

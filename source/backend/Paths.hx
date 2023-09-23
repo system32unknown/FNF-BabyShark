@@ -409,7 +409,7 @@ class Paths
 				sound = null;
 			}
 			if (sound == null) currentTrackedSounds.set(track, sound = _regSound(uwu, stream, #if MODS_ALLOWED true #else modExists #end));
-			else return sound;
+			if (sound != null) return sound;
 		#if (!MODS_ALLOWED) } #end
 
 		Logs.trace('returnSound returning null: $path' #if MODS_ALLOWED + ' | $modKey' #end, WARNING);

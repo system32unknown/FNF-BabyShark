@@ -51,17 +51,6 @@ class OptionsState extends MusicBeatState
 		add(selectorLeft = new Alphabet(0, 0, '>', true));
 		add(selectorRight = new Alphabet(0, 0, '<', true));
 
-		#if MODS_ALLOWED
-		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
-		textBG.alpha = 0.6;
-		add(textBG);
-
-		descTxt = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "PAGES (0 / 0)", 18);
-		descTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, CENTER);
-		descTxt.scrollFactor.set();
-		add(descTxt);
-		#end
-
 		changeSelection();
 		ClientPrefs.saveSettings();
 
@@ -91,8 +80,6 @@ class OptionsState extends MusicBeatState
 
 		if(controls.UI_LEFT_P) changePage(-1);
 		if(controls.UI_RIGHT_P) changePage(1);
-
-		descTxt.text = 'PAGES ($curPage / ${Lambda.count(options) - 1})';
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));

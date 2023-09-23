@@ -8,6 +8,8 @@ using haxe.macro.ExprTools;
 using haxe.macro.Tools;
 using haxe.macro.TypeTools;
 
+using StringTools;
+
 @SuppressWarnings("checkstyle:FieldDocComment")
 class ShaderMacro
 {
@@ -112,15 +114,15 @@ class ShaderMacro
 			if (glFragmentSource != null && glFragmentHeader != null && glFragmentBody != null)
 			{
 				glFragmentSourceRaw = glFragmentSource;
-				glFragmentSource = StringTools.replace(glFragmentSource, "#pragma header", glFragmentHeader);
-				glFragmentSource = StringTools.replace(glFragmentSource, "#pragma body", glFragmentBody);
+				glFragmentSource = glFragmentSource.replace("#pragma header", glFragmentHeader);
+				glFragmentSource = glFragmentSource.replace("#pragma body", glFragmentBody);
 			}
 
 			if (glVertexSource != null && glVertexHeader != null && glVertexBody != null)
 			{
 				glVertexSourceRaw = glVertexSource;
-				glVertexSource = StringTools.replace(glVertexSource, "#pragma header", glVertexHeader);
-				glVertexSource = StringTools.replace(glVertexSource, "#pragma body", glVertexBody);
+				glVertexSource = glVertexSource.replace("#pragma header", glVertexHeader);
+				glVertexSource = glVertexSource.replace("#pragma body", glVertexBody);
 			}
 
 			var shaderDataFields = new Array<Field>();
@@ -264,14 +266,14 @@ class ShaderMacro
 			type = regex.matched(1);
 			name = regex.matched(2);
 
-			if (StringTools.startsWith(name, "gl_"))
+			if (name.startsWith("gl_"))
 				continue;
 
-			if (StringTools.startsWith(name, "openfl_"))
+			if (name.startsWith("openfl_"))
 				fieldAccess = APrivate;
 			else fieldAccess = APublic;
 
-			if (StringTools.startsWith(type, "sampler")) {
+			if (type.startsWith("sampler")) {
 				field = {
 					name: name,
 					meta: [],
@@ -335,7 +337,7 @@ class ShaderMacro
 				}
 			}
 
-			if (StringTools.startsWith(name, "openfl_"))
+			if (name.startsWith("openfl_"))
 			{
 				field.meta = [
 					{name: ":keep", pos: pos},

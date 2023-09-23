@@ -60,10 +60,7 @@ class Logs {
 	}
 
 	public static function logText(text:String, color:ConsoleColor = LIGHTGRAY):LogText {
-		return {
-			text: text,
-			color: color
-		};
+		return {text: text, color: color};
 	}
 
 	public static function __showInConsole(text:Array<LogText>) {
@@ -87,10 +84,7 @@ class Logs {
 		__showInConsole(prepareColoredTrace(text, level));
 	}
 	public static function trace(text:String, level:Level = INFO, color:ConsoleColor = LIGHTGRAY) {
-		traceColored([{
-			text: text,
-			color: color
-		}], level);
+		traceColored([{text: text, color: color}], level);
 	}
 }
 
