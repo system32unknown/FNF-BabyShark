@@ -358,16 +358,10 @@ class DialogueCharacterEditorState extends MusicBeatState
 		tab_group.add(scaleStepper);
 		tab_group.add(noAntialiasingCheckbox);
 
-		var reloadImageButton:FlxButton = new FlxButton(10, scaleStepper.y + 60, "Reload Image", function() {
-			reloadCharacter();
-		});
-		
-		var loadButton:FlxButton = new FlxButton(reloadImageButton.x + 100, reloadImageButton.y, "Load Character", function() {
-			loadCharacter();
-		});
-		var saveButton:FlxButton = new FlxButton(loadButton.x, reloadImageButton.y - 25, "Save Character", function() {
-			saveCharacter();
-		});
+		var reloadImageButton:FlxButton = new FlxButton(10, scaleStepper.y + 60, "Reload Image", () -> reloadCharacter());
+
+		var loadButton:FlxButton = new FlxButton(reloadImageButton.x + 100, reloadImageButton.y, "Load Character", () -> loadCharacter());
+		var saveButton:FlxButton = new FlxButton(loadButton.x, reloadImageButton.y - 25, "Save Character", () -> saveCharacter());
 		tab_group.add(reloadImageButton);
 		tab_group.add(loadButton);
 		tab_group.add(saveButton);

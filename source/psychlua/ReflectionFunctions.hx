@@ -138,8 +138,7 @@ class ReflectionFunctions {
 				}
 
 				var obj:Dynamic = Type.createInstance(myType, args);
-				if(obj != null)
-					PlayState.instance.variables.set(variableToSave, obj);
+				if(obj != null) PlayState.instance.variables.set(variableToSave, obj);
 				else FunkinLua.luaTrace('createInstance: Failed to create $variableToSave, arguments are possibly wrong.', false, false, FlxColor.RED);
 
 				return (obj != null);
@@ -151,8 +150,7 @@ class ReflectionFunctions {
 				var obj:Dynamic = PlayState.instance.variables.get(objectName);
 				if (inFront) LuaUtils.getInstance().add(obj);
 				else {
-					if(!PlayState.instance.isDead)
-						PlayState.instance.insert(PlayState.instance.members.indexOf(LuaUtils.getLowestCharacterGroup()), obj);
+					if(!PlayState.instance.isDead) PlayState.instance.insert(PlayState.instance.members.indexOf(LuaUtils.getLowestCharacterGroup()), obj);
 					else GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), obj);
 				}
 			} else FunkinLua.luaTrace('addInstance: Can\'t add what doesn\'t exist~ ($objectName)', false, false, FlxColor.RED);

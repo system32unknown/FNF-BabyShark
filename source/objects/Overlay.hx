@@ -8,6 +8,10 @@ import utils.system.MemoryUtil;
 import utils.system.FPSUtil;
 import utils.MathUtil;
 
+#if !openfl_debug
+@:fileXml('tags="haxe,release"')
+@:noDebug
+#end
 class Overlay extends TextField {
 	public static var instance:Overlay;
 	public var fontName:String = Assets.getFont("assets/fonts/Proggy.ttf").fontName;

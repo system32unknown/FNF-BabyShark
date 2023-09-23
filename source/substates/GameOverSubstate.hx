@@ -179,7 +179,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		snd.onComplete = endSoundComplete;
 
 		new FlxTimer().start(0.7, function(tmr:FlxTimer) {
-			FlxG.camera.fade(FlxColor.BLACK, if (quick) 1 else 2, false, function() {
+			FlxG.camera.fade(FlxColor.BLACK, if (quick) 1 else 2, false, () -> {
 				if (quick || endCompleted) resetState();
 				endCompleted = true;
 

@@ -409,10 +409,10 @@ class Paths
 				sound = null;
 			}
 			if (sound == null) currentTrackedSounds.set(track, sound = _regSound(uwu, stream, #if MODS_ALLOWED true #else modExists #end));
-			if (sound != null) return sound;
+			else return sound;
 		#if (!MODS_ALLOWED) } #end
 
-		trace('returnSound returning null: $path' #if MODS_ALLOWED + ' | $modKey' #end);
+		Logs.trace('returnSound returning null: $path' #if MODS_ALLOWED + ' | $modKey' #end, WARNING);
 		return null;
 	}
 
@@ -436,7 +436,7 @@ class Paths
 		return modFolders('videos/$key.$VIDEO_EXT');
 
 	inline static public function modsSounds(path:String, key:String)
-		return modFolders(path + '/' + key + '.' + SOUND_EXT);
+		return modFolders('$path/$key.$SOUND_EXT');
 
 	inline static public function modsImages(key:String)
 		return modFolders('images/$key.png');

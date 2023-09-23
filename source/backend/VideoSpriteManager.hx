@@ -28,9 +28,7 @@ class VideoSpriteManager extends VideoSprite {
 	 * @param func Example: `function() { //code to run }`
 	 */
     public function setFinishCallBack(func:Dynamic) {
-        this.bitmap.onEndReached.add(function() {
-            if(func != null) func();
-        }, true);
+        this.bitmap.onEndReached.add(() -> if(func != null) func(), true);
     }
 
      /**

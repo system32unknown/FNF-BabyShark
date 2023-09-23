@@ -493,7 +493,7 @@ class FunkinLua {
 			}
 		});
 
-		set("changeMania", (newValue:Int, skipTwn:Bool = false) -> game.changeMania(newValue, skipTwn));
+		set("changeMania", game.changeMania);
 
 		set("cameraSetTarget", function(target:String) {
 			switch(target.toLowerCase()) { //we do some copy and pasteing.
@@ -910,109 +910,6 @@ class FunkinLua {
 			return true;
 			#end
 		});
-
-		set("playMusic", function(sound:String, volume:Float = 1, loop:Bool = false) {
-			FlxG.sound.playMusic(Paths.music(sound), volume, loop);
-		});
-		set("playSound", function(sound:String, volume:Float = 1, ?tag:String = null) {
-			if(tag != null && tag.length > 0) {
-				tag = tag.replace('.', '');
-				if(game.modchartSounds.exists(tag)) {
-					game.modchartSounds.get(tag).stop();
-				}
-				game.modchartSounds.set(tag, FlxG.sound.play(Paths.sound(sound), volume, false, () -> {
-					game.modchartSounds.remove(tag);
-					game.callOnLuas('onSoundFinished', [tag]);
-				}));
-				return;
-			}
-			FlxG.sound.play(Paths.sound(sound), volume);
-		});
-		set("stopSound", function(tag:String) {
-			if(tag != null && tag.length > 1 && game.modchartSounds.exists(tag)) {
-				game.modchartSounds.get(tag).stop();
-				game.modchartSounds.remove(tag);
-			}
-		});
-		set("pauseSound", function(tag:String) {
-			if(tag != null && tag.length > 1 && game.modchartSounds.exists(tag)) {
-				game.modchartSounds.get(tag).pause();
-			}
-		});
-		set("resumeSound", function(tag:String) {
-			if(tag != null && tag.length > 1 && game.modchartSounds.exists(tag)) {
-				game.modchartSounds.get(tag).play();
-			}
-		});
-		set("soundFadeIn", function(tag:String, duration:Float, fromValue:Float = 0, toValue:Float = 1) {
-			if(tag == null || tag.length < 1) {
-				FlxG.sound.music.fadeIn(duration, fromValue, toValue);
-			} else if(game.modchartSounds.exists(tag)) {
-				game.modchartSounds.get(tag).fadeIn(duration * game.playbackRate, fromValue, toValue);
-			}
-		});
-		set("soundFadeOut", function(tag:String, duration:Float, toValue:Float = 0) {
-			if(tag == null || tag.length < 1) {
-				FlxG.sound.music.fadeOut(duration, toValue);
-			} else if(game.modchartSounds.exists(tag)) {
-				game.modchartSounds.get(tag).fadeOut(duration * game.playbackRate, toValue);
-			}
-		});
-		set("soundFadeCancel", function(tag:String) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music.fadeTween != null)
-					FlxG.sound.music.fadeTween.cancel();
-			} else if(game.modchartSounds.exists(tag)) {
-				var theSound:FlxSound = game.modchartSounds.get(tag);
-				if(theSound.fadeTween != null) {
-					theSound.fadeTween.cancel();
-					game.modchartSounds.remove(tag);
-				}
-			}
-		});
-		set("getSoundVolume", function(tag:String) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music != null)
-					return FlxG.sound.music.volume;
-			} else if(game.modchartSounds.exists(tag))
-				return game.modchartSounds.get(tag).volume;
-			return 0;
-		});
-		set("setSoundVolume", function(tag:String, value:Float) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music != null)
-					FlxG.sound.music.volume = value;
-			} else if(game.modchartSounds.exists(tag)) {
-				game.modchartSounds.get(tag).volume = value;
-			}
-		});
-		set("getSoundTime", function(tag:String) {
-			if(tag != null && tag.length > 0 && game.modchartSounds.exists(tag))
-				return game.modchartSounds.get(tag).time;
-			return 0;
-		});
-		set("setSoundTime", function(tag:String, value:Float) {
-			if(tag != null && tag.length > 0 && game.modchartSounds.exists(tag)) {
-				var theSound:FlxSound = game.modchartSounds.get(tag);
-				if(theSound != null) theSound.time = value;
-			}
-		});
-		set("getSoundPitch", function(tag:String) {
-			if(tag != null && tag.length > 0 && game.modchartSounds.exists(tag))
-				return game.modchartSounds.get(tag).pitch;
-			return 0;
-		});
-		set("setSoundPitch", function(tag:String, value:Float, doPause:Bool = false) {
-			if(tag != null && tag.length > 0 && game.modchartSounds.exists(tag)) {
-				var theSound:FlxSound = game.modchartSounds.get(tag);
-				if(theSound != null) {
-					var wasResumed:Bool = theSound.playing;
-					if (doPause) theSound.pause();
-					theSound.pitch = value;
-					if (doPause && wasResumed) theSound.play();
-				}
-			}
-		});
 		set("debugPrint", (text:Dynamic = '', color:String = 'WHITE') -> PlayState.instance.addTextToDebug(text, CoolUtil.colorFromString(color)));
 
 		set("close", () -> {
@@ -1028,6 +925,7 @@ class FunkinLua {
 		CustomSubstate.implement(this);
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
+		SoundFunctions.implement(this);
 		try {
 			var result:Dynamic = LuaL.dofile(lua, scriptName);
 			var resultStr:String = Lua.tostring(lua, result);
@@ -1220,9 +1118,7 @@ class FunkinLua {
 		#else
 		if(Assets.exists(preloadPath))
 		#end
-		{
 			return preloadPath;
-		}
 		return null;
 	}
 
@@ -1235,9 +1131,9 @@ class FunkinLua {
 		if (v == null || v == "") {
 			return switch(status) {
 				case Lua.LUA_ERRSYNTAX: "Syntax Error";
-				case Lua.LUA_ERRRUN: return "Runtime Error";
-				case Lua.LUA_ERRMEM: return "Memory Allocation Error";
-				case Lua.LUA_ERRERR: return "Crtical Error";
+				case Lua.LUA_ERRRUN: "Runtime Error";
+				case Lua.LUA_ERRMEM: "Memory Allocation Error";
+				case Lua.LUA_ERRERR: "Crtical Error";
 				default: "Unknown Error";
 			}
 		}
@@ -1353,12 +1249,12 @@ class FunkinLua {
 			foldersToCheck.insert(0, Paths.mods(Mods.currentModDirectory + '/shaders/'));
 
 		for(mod in Mods.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
+			foldersToCheck.insert(0, Paths.mods('$mod/shaders/'));
 		
 		for (folder in foldersToCheck) {
 			if(FileSystem.exists(folder)) {
-				var frag:String = folder + name + '.frag';
-				var vert:String = folder + name + '.vert';
+				var frag:String = '$folder$name.frag';
+				var vert:String = '$folder$name.vert';
 				var found:Bool = false;
 				if(FileSystem.exists(frag)) {
 					frag = File.getContent(frag);

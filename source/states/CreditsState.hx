@@ -28,6 +28,7 @@ class CreditsState extends MusicBeatState
 		['Former Engine Members'],
 		['shubs',				'shubs',			'Ex-Programmer of Psych Engine',								'https://twitter.com/yoshubs',				'5E99DF'],
 		['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbsub3',				'3E813A'],
+		['Keoiki',				'keoiki',			'Ex-Artist and Note Splash Animations and Latin Alphabet', 		'https://twitter.com/Keoiki_',				'D2D2D2'],
 		[''],
 		['Engine Contributors'],
 		['iFlicky',				'flicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',		'https://twitter.com/flicky_i',				'9E29CF'],
@@ -36,7 +37,6 @@ class CreditsState extends MusicBeatState
 		['Gabriela',			'gabriela',			'Playback Rate Modifier\nand other PRs',						'https://twitter.com/BeastlyGabi',			'5E99DF'],
 		['PolybiusProxy',		'proxy',			'MP4 Video Loader Library (hxCodec)',							'https://twitter.com/polybiusproxy',		'DCD294'],
 		['KadeDev',				'kade',				'Fixed some cool stuff on Chart Editor\nand other PRs',			'https://twitter.com/kade0912',				'64A250'],
-		['Keoiki',				'keoiki',			'Note Splash Animations and Latin Alphabet',					'https://twitter.com/Keoiki_',				'D2D2D2'],
 		['superpowers04', 		'superpowers04', 	'linc_luaJIT Fork\n and lua reworks', 							'https://github.com/superpowers04',			'B957ED'],
 		['Smokey',				'smokey',			'Sprite Atlas Support',											'https://twitter.com/Smokey_5_',			'483D92'],
 		['Raltyro',				'raltyro',			'Bunch of lua fixes, Owner of Psike Engine',					'https://twitter.com/raltyro',				'F3F3F3'],
@@ -60,17 +60,24 @@ class CreditsState extends MusicBeatState
 		['TheBuilderXD',      	'TheBuilderXD',		'Page Manager, Tristan Sprite Creator, and more',       		'https://twitter.com/TheBuilderXD',			'FF0000'],
 		['Erizur',            	'Erizur',			'Programmer, Week Icon Artist',                       			'https://twitter.com/am_erizur',			'FF0000'],
 		['Pointy',           	'pointy',			'Artist & Charter',                           					'https://twitter.com/PointyyESM',			'FF0000'], 
-		['Zmac',           		'Zmac',				'3D Backgrounds, Intro text help',                           	'',											'FF0000'], 
+		['Zmac',           		'Zmac',				'3D Backgrounds, Intro text help',                           	'https://www.youtube.com/@ZmacRaivoli',		'FF0000'], 
 		['Billy Bobbo',         'billy',			'Moral Support & Idea Suggesting',                     			'https://twitter.com/BillyBobboLOL',		'FF0000'],
 		['Steph45',           	'Steph45',			'Minor programming, Moral support',                     		'https://twitter.com/Stats451',				'FF0000'],
-		['T5mpler',           	'T5mpler',			'Former Programmer & Supporter',                           		'https://twitter.com/RealT5mpler',			'FF0000']
+		['T5mpler',           	'T5mpler',			'Former Programmer & Supporter',                           		'https://twitter.com/RealT5mpler',			'FF0000'],
 	];
 
 	static var psychek(default, never):Array<Array<String>> = [
 		['Psych Engine Extra Keys'],
-		['tposejank', 			'tposejank',		'Main Programmer of Psych Engine EK', 							'https://twitter.com/tpose_jank', 			'B9AF27'],
-		['srPerez', 			'perez', 			'1-9 keys art', 												'https://twitter.com/newsrperez',			'FF9E00'],
+		['Tposejank', 			'tposejank',		'Main Programmer of Psych Engine EK', 							'https://twitter.com/tpose_jank', 			'B9AF27'],
+		['SrPerez', 			'perez', 			'1-9 keys art', 												'https://twitter.com/newsrperez',			'FF9E00'],
 		['Leather128', 			'leather', 			'12 - 16 keys art + coder', 									'https://twitter.com/newsrperez',			'FF9E00'],
+	];
+
+	static var babyshark(default, never):Array<Array<String>> = [
+		['Baby Shark\'s Funkin Team'],
+		['Altertoriel', 		'altertoriel',		'Main Developer', 												'https://twitter.com/Altertoriel2', 		'B9AF27'],
+		['Pinkfong', 			'pinkfong', 		'Creator of Baby Shark', 										'https://twitter.com/Pinkfong',				'FFC0CB'],
+		['Nickelodeon', 		'nickelodeon', 		'Creator of Baby Shark\'s Big Show!', 							'https://twitter.com/Nickelodeon',			'F57C13'],
 	];
 
 	public static var prevSelected:Int = 0;
@@ -104,22 +111,19 @@ class CreditsState extends MusicBeatState
 		#if MODS_ALLOWED
 		var activeMods = Mods.getActiveModDirectories(true);
 		pushModCredits();
-		for (mod in activeMods)
-			pushModCredits(mod);
+		for (mod in activeMods) pushModCredits(mod);
 
 		if (modCredits.length > 0) {
 			sections.push(['Modpack Credits Sections']);
 			modSectionsBound = sections.length;
 		}
-		for (mod in modCredits)
-			sections.push(mod);
+		for (mod in modCredits) sections.push(mod);
 		#end
 
 		if (curSelected > sections.length || curSelected < 0)
 			curSelected = -1;
 
-		for (i in 0...sections.length)
-		{
+		for (i in 0...sections.length) {
 			var isSelectable:Bool = !unselectableCheck(i);
 			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 335, sections[i][0], true);
 			optionText.isMenuItem = true;
@@ -142,8 +146,8 @@ class CreditsState extends MusicBeatState
 		descBox = new AttachedSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
 		descBox.addPoint.set(-10, -10);
-		descBox.alphaMult = 0.6;
-		descBox.alpha = 0.6;
+		descBox.alphaMult = .6;
+		descBox.alpha = .6;
 		add(descBox);
 
 		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
@@ -160,15 +164,12 @@ class CreditsState extends MusicBeatState
 
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
-	override function update(elapsed:Float)
-	{
-		if (FlxG.sound.music.volume < 0.7)
+	override function update(elapsed:Float) {
+		if (FlxG.sound.music.volume < .7)
 			FlxG.sound.music.volume = FlxMath.bound(FlxG.sound.music.volume + (.5 * elapsed), 0, .7);
 
-		if(!quitting)
-		{
-			if(sections.length > 1)
-			{
+		if(!quitting) {
+			if(sections.length > 1) {
 				var shiftMult:Int = 1;
 				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
@@ -201,20 +202,14 @@ class CreditsState extends MusicBeatState
 				if(colorTween != null) colorTween.cancel();
 
 				CreditSectionState.curCSection = sections[curSelected][1];
-
-				#if MODS_ALLOWED
-				CreditSectionState.CSectionisMod = modSectionsBound > 0 && curSelected >= modSectionsBound;
-				#else
-				CreditSectionState.CSectionisMod = false;
-				#end
+				CreditSectionState.cSectionisMod = #if MODS_ALLOWED modSectionsBound > 0 && curSelected >= modSectionsBound #else false #end;
 
 				prevSelected = curSelected;
 				MusicBeatState.switchState(new CreditSectionState());
 				quitting = true;
 			}
 
-			if (controls.BACK)
-			{
+			if (controls.BACK) {
 				if(colorTween != null) colorTween.cancel();
 				FlxG.sound.play(Paths.sound('cancelMenu'), .7);
 				MusicBeatState.switchState(new MainMenuState());
@@ -226,8 +221,7 @@ class CreditsState extends MusicBeatState
 	}
 
 	var moveTween:FlxTween = null;
-	function changeSelection(change:Int = 0)
-	{
+	function changeSelection(change:Int = 0) {
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		do {
 			curSelected = FlxMath.wrap(curSelected + change, 0, sections.length - 1);
@@ -248,10 +242,8 @@ class CreditsState extends MusicBeatState
 			bullShit++;
 
 			if(!unselectableCheck(bullShit - 1)) {
-				item.alpha = 0.6;
-				if (item.targetY == 0) {
-					item.alpha = 1;
-				}
+				item.alpha = .6;
+				if (item.targetY == 0) item.alpha = 1;
 			}
 		}
 
@@ -292,7 +284,7 @@ class CreditsState extends MusicBeatState
 
 class CreditSectionState extends MusicBeatState {
 	public static var curCSection:String = 'psych';
-	public static var CSectionisMod:Bool = false;
+	public static var cSectionisMod:Bool = false;
 	
 	var curSelected:Int = -1;
 	var prevModDir:String;
@@ -317,7 +309,7 @@ class CreditSectionState extends MusicBeatState {
 		persistentUpdate = true;
 
 		initializeList();
-		if (CSectionisMod) Mods.currentModDirectory = curCSection;
+		if (cSectionisMod) Mods.currentModDirectory = curCSection;
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.screenCenter();
@@ -325,7 +317,7 @@ class CreditSectionState extends MusicBeatState {
 
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
-		var prefix:String = CSectionisMod ? '' : curCSection + '/';
+		var prefix:String = cSectionisMod ? '' : curCSection + '/';
 		for (i in 0...creditsStuff.length) {
 			var isSelectable:Bool = !unselectableCheck(i);
 			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 300, creditsStuff[i][0], !isSelectable);
@@ -351,7 +343,7 @@ class CreditSectionState extends MusicBeatState {
 
 				// using a FlxGroup is too much fuss!
 				add(icon);
-				Mods.currentModDirectory = CSectionisMod ? curCSection : '';
+				Mods.currentModDirectory = cSectionisMod ? curCSection : '';
 
 				if(curSelected == -1) curSelected = i;
 			} else {
@@ -495,10 +487,10 @@ class CreditSectionState extends MusicBeatState {
 
 	function initializeList() {
 		#if MODS_ALLOWED
-		if (CSectionisMod) initializeModList(curCSection);
+		if (cSectionisMod) initializeModList(curCSection);
 		#end
 
-		if (!CSectionisMod) {
+		if (!cSectionisMod) {
 			var dyn:Dynamic = Reflect.field(CreditsState, curCSection);
 			var field:Array<Array<String>> = null;
 			if (Std.isOfType(dyn, Array)) {
@@ -534,7 +526,7 @@ class CreditSectionState extends MusicBeatState {
 
 	function switchToDefaultSection() {
 		curCSection = 'psych';
-		CSectionisMod = false;
+		cSectionisMod = false;
 	}
 
 	function getSimilarIcon(icon:String):String {

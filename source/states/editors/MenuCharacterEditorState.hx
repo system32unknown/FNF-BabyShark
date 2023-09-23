@@ -11,9 +11,7 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
 import tjson.TJSON as Json;
-#if sys
-import sys.io.File;
-#end
+#if sys import sys.io.File; #end
 import objects.MenuCharacter;
 
 class MenuCharacterEditorState extends MusicBeatState
@@ -89,16 +87,12 @@ class MenuCharacterEditorState extends MusicBeatState
 		addCharacterUI();
 		add(UI_mainbox);
 
-		var loadButton:FlxButton = new FlxButton(0, 480, "Load Character", function() {
-			loadCharacter();
-		});
+		var loadButton:FlxButton = new FlxButton(0, 480, "Load Character", () -> loadCharacter());
 		loadButton.screenCenter(X);
 		loadButton.x -= 60;
 		add(loadButton);
 	
-		var saveButton:FlxButton = new FlxButton(0, 480, "Save Character", function() {
-			saveCharacter();
-		});
+		var saveButton:FlxButton = new FlxButton(0, 480, "Save Character", () -> saveCharacter());
 		saveButton.screenCenter(X);
 		saveButton.x += 60;
 		add(saveButton);
@@ -158,9 +152,7 @@ class MenuCharacterEditorState extends MusicBeatState
 			characterFile.flipX = flipXCheckbox.checked;
 		};
 
-		var reloadImageButton:FlxButton = new FlxButton(140, confirmInputText.y + 30, "Reload Char", function() {
-			reloadSelectedCharacter();
-		});
+		var reloadImageButton:FlxButton = new FlxButton(140, confirmInputText.y + 30, "Reload Char", () -> reloadSelectedCharacter());
 		
 		scaleStepper = new FlxUINumericStepper(140, imageInputText.y, 0.05, 1, 0.1, 30, 2);
 

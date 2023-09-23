@@ -147,9 +147,7 @@ class CreditsEditor extends MusicBeatState
 		if (FlxG.save.data.jumpTitle == null) FlxG.save.data.jumpTitle = true;
 		titleJump.checked = FlxG.save.data.jumpTitle;
 		titleJump.callback = () -> FlxG.save.data.jumpTitle = titleJump.checked;
-		var titleAdd:FlxButton = new FlxButton(20, titleJump.y + yDist + 10, "Add Title", function() {
-			addTitle();
-		});
+		var titleAdd:FlxButton = new FlxButton(20, titleJump.y + yDist + 10, "Add Title", () -> addTitle());
 
 		blockPressWhileTypingOn.push(titleInput);
 
@@ -178,9 +176,7 @@ class CreditsEditor extends MusicBeatState
 			iconColorShow();
 		});
 
-		var creditAdd:FlxButton = new FlxButton(20, colorInput.y + yDist + 10, "Add credit", function() {
-			addCredit();
-		});
+		var creditAdd:FlxButton = new FlxButton(20, colorInput.y + yDist + 10, "Add credit", () -> addCredit());
 
 		blockPressWhileTypingOn.push(creditNameInput);
 		blockPressWhileTypingOn.push(iconInput);
@@ -188,8 +184,8 @@ class CreditsEditor extends MusicBeatState
 		blockPressWhileTypingOn.push(descInput);
 		blockPressWhileTypingOn.push(colorInput);
 
-		var resetAll:FlxButton = new FlxButton(50, 300, "Reset all", function() {
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
+		var resetAll:FlxButton = new FlxButton(50, 300, "Reset all", () -> {
+			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', () -> {
 				creditsStuff = templateArray();
 				updateCreditObjects();
 				curSelected = 1;
@@ -198,12 +194,8 @@ class CreditsEditor extends MusicBeatState
 		});
 		resetAll.color = FlxColor.RED;
 		resetAll.label.color = FlxColor.WHITE;
-		var loadFile:FlxButton = new FlxButton(resetAll.x, resetAll.y + 25, "Load Credits", function() {
-			loadCredits();
-		});
-		var saveFile:FlxButton = new FlxButton(loadFile.x + 90, loadFile.y, "Save Credits", function() {
-			saveCredits();
-		});
+		var loadFile:FlxButton = new FlxButton(resetAll.x, resetAll.y + 25, "Load Credits", () -> loadCredits());
+		var saveFile:FlxButton = new FlxButton(loadFile.x + 90, loadFile.y, "Save Credits", () -> saveCredits());
 
 		var tab_group_credits = new FlxUI(null, UI_box);
 		tab_group_credits.name = "Credits";

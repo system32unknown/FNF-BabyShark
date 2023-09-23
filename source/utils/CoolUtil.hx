@@ -87,8 +87,7 @@ class CoolUtil {
 		#end
 	}
 
-	public static function makeSelectorGraphic(panel:FlxSprite, w:Int, h:Int, color:FlxColor, cornerSize:Float)
-	{
+	public static function makeSelectorGraphic(panel:FlxSprite, w:Int, h:Int, color:FlxColor, cornerSize:Float) {
 		panel.makeGraphic(w, h, color);
 		panel.pixels.fillRect(new Rectangle(0, 190, panel.width, 5), 0x0);
 
@@ -119,7 +118,7 @@ class CoolUtil {
 
 	public static function getRandomizedText(max:Int):String {
         var temp_str:String = "";
-        for (i in 0...max)
+        for (_ in 0...max)
             temp_str += String.fromCharCode(FlxG.random.int(65, 122));
         return temp_str;
     }

@@ -2740,7 +2740,6 @@ class ChartingState extends MusicBeatState {
 			} catch(e) {
 				errorDisplay.text = getErrorMessage('Error:', e.message, song.toLowerCase(), song.toLowerCase());
 				errorDisplay.displayError();
-				FlxG.sound.play(Paths.sound('cancelMenu'));
 				return;
 			}
 		}

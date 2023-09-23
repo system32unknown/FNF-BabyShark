@@ -59,9 +59,6 @@ class PlatformUtil {
     ')
     static public function sendWindowsNotification(title:String = "", desc:String = ""):Int return 0;
     
-	@:functionCode('return SetCursorPos(x, y);')
-	static public function setCursorPos(x:Int = 0, y:Int = 0):Int return 0;
-
     @:functionCode('
         HWND window = GetActiveWindow();
         HICON smallIcon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);

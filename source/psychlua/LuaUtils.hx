@@ -160,11 +160,6 @@ class LuaUtils {
 		Reflect.getProperty(PlayState.instance, name);
 	}
 	
-	public static function isOfTypes(value:Any, types:Array<Dynamic>) {
-		for (type in types) if(Std.isOfType(value, type)) return true;
-		return false;
-	}
-	
 	public static inline function getInstance() {
 		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
 	}

@@ -219,8 +219,7 @@ class StoryMenuState extends MusicBeatState
 	var movedBack:Bool = false;
 	var selectedWeek:Bool = false;
 	var stopspamming:Bool = false;
-	function selectWeek()
-	{
+	function selectWeek() {
 		if (!weekIsLocked(loadedWeeks[curWeek].fileName)) {
 			var songArray:Array<String> = [];
 			var leWeek:Array<Dynamic> = loadedWeeks[curWeek].songs;
