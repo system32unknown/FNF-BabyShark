@@ -1,6 +1,5 @@
 package backend;
 
-import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
 import openfl.utils.AssetType;
@@ -13,14 +12,6 @@ import sys.io.File;
 import sys.FileSystem;
 #end
 
-typedef I8frame = {
-	var frame:{ x:Float, y:Float, w:Float, h:Float }
-	var rotated:Bool;
-	var trimmed:Bool;
-	var spriteSourceSize:{ x:Float, y:Float, w:Float, h:Float }
-	var sourceSize:{ w:Float, h:Float }
-	var duration:Float;
-}
 @:access(openfl.display.BitmapData.__texture)
 @:access(openfl.media.Sound.__buffer)
 class Paths

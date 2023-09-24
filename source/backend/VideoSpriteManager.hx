@@ -10,7 +10,8 @@ package backend;
 class VideoSpriteManager extends VideoSprite {
     public function new(x:Float, y:Float) {
         super(x, y);
-        states.PlayState.instance.videoSprites.push(this); //hopefully will put the VideoSprite var in the array
+        PlayState.instance.videoSprites.push(this); //hopefully will put the VideoSprite var in the array
+        this.setPlayBackRate(PlayState.instance.playbackRate);
     }
     #if VIDEOS_ALLOWED
 
@@ -55,6 +56,10 @@ class VideoSpriteManager extends VideoSprite {
             FlxG.signals.focusGained.add(this.bitmap.resume);
             FlxG.signals.focusLost.add(this.bitmap.pause);
         }
+    }
+
+    public function setPlayBackRate(multi:Float) {
+        this.bitmap.rate = multi;
     }
     #end
 }

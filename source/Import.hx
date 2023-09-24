@@ -1,5 +1,4 @@
 #if !macro
-
 #if discord_rpc import backend.Discord; #end
 import backend.Paths;
 import backend.Controls;
