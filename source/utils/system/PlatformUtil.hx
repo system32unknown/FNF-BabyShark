@@ -68,20 +68,7 @@ class PlatformUtil {
     ')
     static public function setWindowIcon(path:String) {}
 
-    @:functionCode('
-        POINT mousePos;
-
-        int mousePosArray[2] = {0, 0};
-        if (GetCursorPos(&mousePos)) { // retrieve the mouse position
-            mousePosArray[0] = mousePos.x;
-            mousePosArray[1] = mousePos.y;
-        }
-
-        if (pos == 0)
-            return mousePosArray[0];
-        else return mousePosArray[1];
-    ')
-    static public function getMousePos(pos:Int):Int {return 0;}
+    static public function getMousePos():Array<Float> {return [temp__getMousePos(0), temp__getMousePos(1)];}
 
     @:functionCode('
         int darkMode = enable ? 1 : 0;
@@ -93,8 +80,8 @@ class PlatformUtil {
     @:functionCode('MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND); ')
     static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
 
-    @:functionCode('SetProcessDPIAware();')
-    static public function setDPIAware() {}
+    @:functionCode('SetProcessDPIAware();') @:allow(Main)
+    static function setDPIAware() {}
 
     @:functionCode('
         UINT nMenuf = enable ? (MF_BYCOMMAND | MF_GRAYED | MF_DISABLED) : (MF_BYCOMMAND);
@@ -123,6 +110,20 @@ class PlatformUtil {
 		std::cout<< "" <<std::flush;
 	')
 	public static function clearScreen() {}
+
+    //PRIVATE FUNCTIONS
+    @:functionCode('
+        POINT mousePos;
+        if (!GetCursorPos(&mousePos)) return 0;
+
+        float mousePosArray[2] = {0., 0.};
+        mousePosArray[0] = mousePos.x;
+        mousePosArray[1] = mousePos.y;
+
+        if (pos == 0) return mousePosArray[0];
+        else return mousePosArray[1];
+    ')
+    static function temp__getMousePos(pos:Float):Float {return 0;}
 }
 #end
 

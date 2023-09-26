@@ -99,7 +99,7 @@ class FunkinLua {
 		set("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
 			final trimmedpft = platformType.trim();
 			if (args == null) args = [];
-			if (["setDPIAware"].contains(trimmedpft)) return null;
+			//if (["setDPIAware"].contains(trimmedpft)) return null;
 
 			return Reflect.callMethod(null, Reflect.field(PlatformUtil, trimmedpft), args);
 		});
