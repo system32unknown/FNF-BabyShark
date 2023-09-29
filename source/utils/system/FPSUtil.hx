@@ -41,4 +41,8 @@ class FPSUtil {
 	inline public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
 		return FlxMath.lerp(v1, v2, getFPSAdjust('codename', ratio));
 	}
+
+	public function checkFPSLag(maxMB:Int = 3000) {
+		return MemoryUtil.getPsychMEM() > maxMB || currentFPS <= ClientPrefs.getPref('framerate') / 2;
+	}
 }

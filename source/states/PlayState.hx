@@ -303,8 +303,8 @@ class PlayState extends MusicBeatState {
 		Conductor.bpm = SONG.bpm;
 
 		mania = SONG.mania;
-		if (mania < Note.minMania || mania > Note.maxMania)
-			mania = Note.defaultMania;
+		if (mania < EK.minMania || mania > EK.maxMania)
+			mania = EK.defaultMania;
 
 		storyDifficultyText = Difficulty.getString();
 
@@ -1137,10 +1137,10 @@ class PlayState extends MusicBeatState {
 		for (section in noteData) {
 			for (songNotes in section.sectionNotes) {
 				var daStrumTime:Float = songNotes[0];
-				var daNoteData:Int = Std.int(songNotes[1] % Note.ammo[mania]);
+				var daNoteData:Int = Std.int(songNotes[1] % EK.keys(mania));
 				var gottaHitNote:Bool = section.mustHitSection;
 
-				if (songNotes[1] > Note.ammo[mania] - 1)
+				if (songNotes[1] > mania)
 					gottaHitNote = !section.mustHitSection;
 
 				var oldNote:Note;
@@ -1151,7 +1151,7 @@ class PlayState extends MusicBeatState {
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
 				swagNote.mustPress = gottaHitNote;
 				swagNote.sustainLength = songNotes[2];
-				swagNote.gfNote = (section.gfSection && (songNotes[1] < Note.ammo[mania]));
+				swagNote.gfNote = (section.gfSection && (songNotes[1] < EK.keys(mania)));
 				swagNote.noteType = songNotes[3];
 				if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
 				swagNote.scrollFactor.set();
@@ -1167,7 +1167,7 @@ class PlayState extends MusicBeatState {
 
 						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote), daNoteData, oldNote, true);
 						sustainNote.mustPress = gottaHitNote;
-						sustainNote.gfNote = (section.gfSection && (songNotes[1] < Note.ammo[mania]));
+						sustainNote.gfNote = (section.gfSection && (songNotes[1] < EK.keys(mania)));
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
 						swagNote.tail.push(sustainNote);
@@ -1189,7 +1189,7 @@ class PlayState extends MusicBeatState {
 						if (sustainNote.mustPress) sustainNote.x += FlxG.width / 2; // general offset
 						else if (middleScroll) {
 							sustainNote.x += 310;
-							if (daNoteData > Note.separator[mania]) //Up and Right
+							if (daNoteData > [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 6, 5][mania]) //Up and Right
 								sustainNote.x += FlxG.width / 2 + 25;
 						}
 					}
@@ -1198,7 +1198,7 @@ class PlayState extends MusicBeatState {
 				if (swagNote.mustPress) swagNote.x += FlxG.width / 2;
 				else if(middleScroll) {
 					swagNote.x += 310;
-					if(daNoteData > Note.separator[mania])
+					if(daNoteData > [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 6, 5][mania])
 						swagNote.x += FlxG.width / 2 + 25;
 				}
 
@@ -1279,7 +1279,7 @@ class PlayState extends MusicBeatState {
 			else if (middleScroll) targetAlpha = .35;
 		}
 		
-		for (i in 0...Note.ammo[mania]) {
+		for (i in 0...EK.keys(mania)) {
 			var twnDuration:Float = (4 / mania) * playbackRate;
 			var twnStart:Float = .5 + ((.8 / mania) * i) * playbackRate;
 
@@ -1293,7 +1293,7 @@ class PlayState extends MusicBeatState {
 
 			if (player < 1 && middleScroll) {
 				babyArrow.x += 310;
-				if(i > Note.separator[mania]) //Up and Right
+				if(i > [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 6, 5][mania]) //Up and Right
 					babyArrow.x += FlxG.width / 2 + 25;
 			}
 
@@ -1965,7 +1965,7 @@ class PlayState extends MusicBeatState {
 				var skipTween:Bool = (value2 == "true");
 
 				newMania = Std.parseInt(value1);
-				if(Math.isNaN(newMania) && newMania < Note.minMania && newMania > Note.maxMania)
+				if(Math.isNaN(newMania) && newMania < EK.minMania && newMania > EK.maxMania)
 					newMania = 0;
 				changeMania(newMania, skipTween);
 
@@ -2269,7 +2269,7 @@ class PlayState extends MusicBeatState {
 		tempText += 'Score:$songScore ';
 		tempText += tempMiss;
 		switch(ClientPrefs.getPref('ScoreType')) {
-			case 'Alter': tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' | [$ratingName, $ratingFC] • $ranks' : ' | [?, ?] • F');
+			case 'Alter': tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator [$ratingName, $ratingFC] • $ranks' : ' $scoreSeparator [?, ?] • F');
 			case 'Kade': tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 		}
 		if (updateScoreText) scoreTxt.text = tempText;
@@ -2584,7 +2584,7 @@ class PlayState extends MusicBeatState {
 				if (cpuControlled && !daNote.blockHit && daNote.mustPress && daNote.canBeHit && (daNote.isSustainNote ? (daNote.parent == null || daNote.parent.wasGoodHit) : daNote.checkHit(Conductor.songPosition)))
 					goodNoteHit(daNote);
 				if (cpuControlled || boyfriend.stunned) return;
-				if (daNote.isSustainNote && strumsBlocked[daNote.noteData] != true && keysPressed[daNote.noteData % Note.ammo[mania]] && (daNote.parent == null || daNote.parent.wasGoodHit) && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit)
+				if (daNote.isSustainNote && strumsBlocked[daNote.noteData] != true && keysPressed[daNote.noteData % EK.keys(mania)] && (daNote.parent == null || daNote.parent.wasGoodHit) && daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit)
 					goodNoteHit(daNote);
 			});
 		}
@@ -2688,7 +2688,7 @@ class PlayState extends MusicBeatState {
 
 		if (SONG.needsVoices) vocals.volume = 1;
 
-		strumPlayAnim(true, leData % Note.ammo[mania], Conductor.stepCrochet * 1.25 / 1000);
+		strumPlayAnim(true, leData % EK.keys(mania), Conductor.stepCrochet * 1.25 / 1000);
 
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
 		if (ClientPrefs.getPref('camMovement'))
@@ -2794,7 +2794,7 @@ class PlayState extends MusicBeatState {
 		var time:Float = 0;
 		if(cpuControlled)
 			time = Conductor.stepCrochet * 1.25 / 1000;
-		strumPlayAnim(false, leData % Note.ammo[mania], time);
+		strumPlayAnim(false, leData % EK.keys(mania), time);
 
 		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('goodNoteHit', [note]);
@@ -2817,7 +2817,7 @@ class PlayState extends MusicBeatState {
 		var skin:String = 'noteSplashes';
 		if((SONG.splashSkin != null || SONG.splashSkin != '') && SONG.splashSkin.length > 0) skin = SONG.splashSkin;
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-		var arrowIndex:Int = Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[data] % Note.ammo[mania]);
+		var arrowIndex:Int = Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[data] % EK.keys(mania));
 
 		var hsb:Array<Float> = [0, 0, 0];
 		if (data > -1 && data < arrowHSV.length) {

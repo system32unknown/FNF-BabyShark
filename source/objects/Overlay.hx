@@ -37,6 +37,7 @@ class Overlay extends TextField {
 	}
 
 	override function __enterFrame(dt:Float):Void {
+		super.__enterFrame(Std.int(dt));
 		FPS.update();
 
 		if (ClientPrefs.getPref('RainbowFps')) {

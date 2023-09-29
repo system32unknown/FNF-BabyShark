@@ -387,10 +387,9 @@ class ClientPrefs {
 		for (setting => name in flixelData) {
 			var value:Dynamic = Reflect.field(save, setting);
 			if (value != null) {
-				if (setting == 'volume' || setting == 'muted')
-					Reflect.setField(FlxG.sound, name, value);
-				else if (setting == 'autoPause' || setting == 'fullscreen')
+				if (setting == 'autoPause' || setting == 'fullscreen')
 					Reflect.setField(FlxG, name, value);
+				else Reflect.setField(FlxG.sound, name, value);
 			}
 		}
 

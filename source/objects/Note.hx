@@ -11,12 +11,10 @@ typedef EventNote = {
 	value2:String
 }
 
-class Note extends FlxSprite
-{
+class Note extends FlxSprite {
 	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
 	public static var scales:Array<Float> = EKData.scales;
 	public static var lessX:Array<Int> = EKData.lessX;
-	public static var separator:Array<Int> = EKData.noteSep;
 	public static var xtra:Array<Float> = EKData.offsetX;
 	public static var posRest:Array<Float> = EKData.restPosition;
 	public static var gridSizes:Array<Int> = EKData.gridSizes;
@@ -24,11 +22,7 @@ class Note extends FlxSprite
 
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
-	public static var ammo:Array<Int> = EKData.gun;
-	public static var minMania:Int = 0;
-	public static var maxMania:Int = 17;
 	public static var xmlMax:Int = 17; // This specifies the max of the splashes can go
-	public static var defaultMania:Int = 3;
 
 	public static var pixelNotesDivisionValue:Int = 18;
 	public static var pixelScales:Array<Float> = EKData.pixelScales;
@@ -131,7 +125,7 @@ class Note extends FlxSprite
 	function set_noteType(value:String):String {
 		noteSplashTexture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-		var arrowIndex:Int = Std.int(keysShit.get(mania).get('pixelAnimIndex')[noteData] % ammo[mania]);
+		var arrowIndex:Int = Std.int(keysShit.get(mania).get('pixelAnimIndex')[noteData] % EK.keys(mania));
 		if (noteData > -1 && noteData < arrowHSV.length) {
 			colorSwap.hue = arrowHSV[arrowIndex][0] / 360;
 			colorSwap.saturation = arrowHSV[arrowIndex][1] / 100;
@@ -214,9 +208,9 @@ class Note extends FlxSprite
 			colorSwap = new ColorSwap();
 			shader = colorSwap.shader;
 
-			x += swagWidth * (noteData % ammo[mania]);
+			x += swagWidth * (noteData % EK.keys(mania));
 			if(!isSustainNote && noteData > -1)
-				animation.play(keysShit.get(mania).get('letters')[noteData % ammo[mania]]);
+				animation.play(keysShit.get(mania).get('letters')[noteData % EK.keys(mania)]);
 		}
 
 		if (isSustainNote && prevNote != null) {

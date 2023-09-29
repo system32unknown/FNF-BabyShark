@@ -11,6 +11,8 @@ import backend.BaseStage;
 import backend.Difficulty;
 import backend.Logs;
 #if MODS_ALLOWED import backend.Mods; #end
+import backend.EK;
+
 import utils.CoolUtil;
 import utils.SpriteUtil;
 

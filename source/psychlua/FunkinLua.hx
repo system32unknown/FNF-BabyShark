@@ -1030,7 +1030,7 @@ class FunkinLua {
 		set('botPlay', game.cpuControlled);
 		set('practice', game.practiceMode);
 
-		for (i in 0...Note.ammo[PlayState.mania]) {
+		for (i in 0...EK.keys(PlayState.mania)) {
 			set('defaultPlayerStrumX' + i, 0);
 			set('defaultPlayerStrumY' + i, 0);
 			set('defaultOpponentStrumX' + i, 0);

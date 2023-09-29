@@ -51,6 +51,10 @@ class MemoryUtil {
 		#end
 	}
 
+	public static function getPsychMEM():Float {
+		return Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
+	}
+
 	public static function getGCMEM():Int {
 		#if cpp
 		return untyped __global__.__hxcpp_gc_used_bytes();

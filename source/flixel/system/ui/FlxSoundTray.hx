@@ -100,9 +100,13 @@ class FlxSoundTray extends Sprite {
 				active = false;
 
 				// Save sound preferences
-				FlxG.save.data.mute = FlxG.sound.muted;
-				FlxG.save.data.volume = FlxG.sound.volume;
-				FlxG.save.flush();
+				#if FLX_SAVE
+				if (FlxG.save.isBound) {
+					FlxG.save.data.mute = FlxG.sound.muted;
+					FlxG.save.data.volume = FlxG.sound.volume;
+					FlxG.save.flush();
+				}
+				#end
 			}
 		}
 	}
@@ -124,8 +128,7 @@ class FlxSoundTray extends Sprite {
 		active = true;
 		var globalVolume:Int = Math.round(FlxG.sound.volume * 10);
 
-		if (FlxG.sound.muted)
-			globalVolume = 0;
+		if (FlxG.sound.muted) globalVolume = 0;
 
 		for (i in 0..._bars.length)
 			_bars[i].alpha = i < globalVolume ? 1 : .5;

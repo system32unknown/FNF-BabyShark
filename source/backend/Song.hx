@@ -2,7 +2,6 @@ package backend;
 
 import backend.Section.SwagSection;
 import data.StageData;
-import objects.Note;
 import tjson.TJSON as Json;
 
 #if sys
@@ -22,9 +21,9 @@ typedef SwagSong = {
 	var player2:String;
 	var gfVersion:String;
 	var stage:String;
-
-	var mania:Null<Int>;
 	var extraText:String;
+
+	@:optional var mania:Int;
 
 	@:optional var gameOverChar:String;
 	@:optional var gameOverSound:String;
@@ -76,7 +75,7 @@ class Song {
 		}
 
 		if (songJson.mania == null)
-            songJson.mania = Note.defaultMania;
+            songJson.mania = EK.defaultMania;
 	}
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong {
