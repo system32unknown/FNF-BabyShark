@@ -21,8 +21,8 @@ typedef SwagSong = {
 	var player2:String;
 	var gfVersion:String;
 	var stage:String;
-	var extraText:String;
-
+	
+	@:optional var extraText:String;
 	@:optional var mania:Int;
 
 	@:optional var gameOverChar:String;

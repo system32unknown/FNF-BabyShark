@@ -11,46 +11,8 @@ class StrumNote extends FlxSprite
 	public var direction:Float = 90;//plan on doing scroll directions soon -bb
 	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
 	public var sustainReduce:Bool = true;
-	
-	public var animationArray:Array<String> = ['static', 'pressed', 'confirm'];
-	public var static_anim(default, set):String = "static";
-	public var pressed_anim(default, set):String = "pressed"; // in case you would use this on lua
-	public var confirm_anim(default, set):String = "confirm";
-
-	function set_static_anim(value:String):String {
-		if (!PlayState.isPixelStage) {
-			animation.addByPrefix('static', value);
-			animationArray[0] = value;
-			if (animation.curAnim != null && animation.curAnim.name == 'static') {
-				playAnim('static');
-			}
-		}
-		return value;
-	}
-
-	function set_pressed_anim(value:String):String {
-		if (!PlayState.isPixelStage) {
-			animation.addByPrefix('pressed', value);
-			animationArray[1] = value;
-			if (animation.curAnim != null && animation.curAnim.name == 'pressed') {
-				playAnim('pressed');
-			}
-		}
-		return value;
-	}
-
-	function set_confirm_anim(value:String):String {
-		if (!PlayState.isPixelStage) {
-			animation.addByPrefix('confirm', value);
-			animationArray[2] = value;
-			if (animation.curAnim != null && animation.curAnim.name == 'confirm') {
-				playAnim('confirm');
-			}
-		}
-		return value;
-	}
-
 	public var player:Int;
+	public var animationArray:Array<String> = ['', ''];
 	
 	public var texture(default, set):String = null;
 	private function set_texture(value:String):String {
@@ -70,7 +32,7 @@ class StrumNote extends FlxSprite
 		super(x, y);
 
 		animationArray[0] = Note.keysShit.get(PlayState.mania).get('strumAnims')[leData];
-		animationArray[1] = animationArray[2] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
+		animationArray[1] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
 
 		var skin:String = null;
 		if(PlayState.SONG != null && PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
@@ -107,11 +69,11 @@ class StrumNote extends FlxSprite
 		} else {
 			frames = Paths.getSparrowAtlas(texture);
 			antialiasing = ClientPrefs.getPref('Antialiasing');
-			setGraphicSize(Std.int(width * Note.scales[PlayState.mania]));
+			setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
 	
-			animation.addByPrefix('static', 'arrow' + animationArray[0]);
-			animation.addByPrefix('pressed', animationArray[1] + ' press', 24, false);
-			animation.addByPrefix('confirm', animationArray[2] + ' confirm', 24, false);
+			animation.addByPrefix('static', 'arrow ${animationArray[0]}');
+			animation.addByPrefix('pressed', '${animationArray[1]} press', 24, false);
+			animation.addByPrefix('confirm', '${animationArray[1]} confirm', 24, false);
 		}
 		updateHitbox();
 
@@ -166,9 +128,7 @@ class StrumNote extends FlxSprite
 			}
 
 			if (!PlayState.isPixelStage) return;
-			if(animation.curAnim.name == 'confirm') {
-				centerOrigin();
-			}
+			if(animation.curAnim.name == 'confirm') centerOrigin();
 		}
 	}
 

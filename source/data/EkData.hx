@@ -112,14 +112,12 @@ class EKData {
         ],
 	];
 
-    public static var scales:Array<Float> = [.9, .85, .8, .7, .66, .6, .55, .50, .46, .39, .36, .32, .31, .31, .3, .26, .26, .22];
 	public static var lessX:Array<Int> = [0, 0, 0, 0, 0, 8, 7, 8, 8, 7, 6, 6, 8, 7, 6, 6, 7, 6, 6];
     public static var offsetX:Array<Float> = [150, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     public static var restPosition:Array<Float> = [0, 0, 0, 0, 25, 32, 46, 52, 60, 40, 45, 30, 30, 29, 72, 37, 61, 16];
     public static var gridSizes:Array<Int> = [40, 40, 40, 40, 40, 40, 40, 40, 40, 35, 30, 25, 25, 20, 20, 20, 20, 15];
 
     public static var splashScales:Array<Float> = [1.3, 1.2, 1.1, 1, 1, .9, .8, .7, .6, .5, .4, .3, .3, .3, .2, .18, .18, .15];
-    public static var pixelScales:Array<Float> = [1.2, 1.15, 1.1, 1, .9, .83, .8, .74, .7, .6, .55, .5, .48, .48, .42, .38, .38, .32];
 }
 
 class Keybinds {

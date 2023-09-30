@@ -302,7 +302,7 @@ class PlayState extends MusicBeatState {
 		Conductor.mapBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
 
-		mania = SONG.mania;
+		mania = SONG.mania != null ? SONG.mania : 3;
 		if (mania < EK.minMania || mania > EK.maxMania)
 			mania = EK.defaultMania;
 
@@ -530,7 +530,7 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(judgementCounter);
 		judgementCounter.screenCenter(Y);
 
-		botplayTxt = new FlxText(400, healthBar.bg.y + (downScroll ? 100 : -100), 0, "BOTPLAY", 32);
+		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), 0, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		botplayTxt.scrollFactor.set();
@@ -546,7 +546,7 @@ class PlayState extends MusicBeatState {
 		songNameTxt.visible = !hideHud;
 		uiGroup.add(songNameTxt);
 
-		extraTxt = new FlxText(2, songNameTxt.y, 0, SONG.extraText.trim(), 16);
+		extraTxt = new FlxText(2, songNameTxt.y, 0, SONG.extraText != null ? SONG.extraText.trim() : '', 16);
 		extraTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
 		extraTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		extraTxt.scrollFactor.set();
@@ -1326,7 +1326,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function updateNote(note:Note) {
-		var tMania:Int = mania + 1;
+		var tMania:Int = EK.keys(mania);
 		var noteData:Int = note.noteData;
 
 		note.scale.set(1, 1);
@@ -1339,7 +1339,6 @@ class PlayState extends MusicBeatState {
 			note.setGraphicSize(Std.int(note.width * Note.scales[mania]));
 			note.updateHitbox();
 		}
-
 		note.updateHitbox();
 
 		var prevNote:Note = note.prevNote;
@@ -1366,7 +1365,7 @@ class PlayState extends MusicBeatState {
 				prevNote.scale.y *= daPixelZoom * Note.pixelScales[mania]; //Fuck urself
 				prevNote.updateHitbox();
 			}
-		} else if (!note.isSustainNote && noteData > - 1 && noteData < tMania)
+		} else if (!note.isSustainNote && noteData > -1 && noteData < tMania)
 			if (note.changeAnim) note.animation.play(Note.keysShit.get(mania).get('letters')[noteData % tMania]);
 		
 		if (note.changeColSwap) {

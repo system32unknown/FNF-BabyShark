@@ -26,10 +26,13 @@ class ColorSwap {
 		return brightness;
 	}
 
-	public function new()
-	{
+	public function new() {
 		shader.uTime.value = [0, 0, 0];
 		shader.awesomeOutline.value = [false];
+	}
+
+	public function setHSB(h, s, b) {
+		hue = h; saturation = b; brightness = b;
 	}
 }
 
@@ -133,8 +136,7 @@ class ColorSwapShader extends FlxShader {
 
 			color = vec4(hsv2rgb(vec3(swagColor[0], swagColor[1], swagColor[2])), swagColor[3]);
 
-			if (awesomeOutline)
-			{
+			if (awesomeOutline) {
 				// Outline bullshit?
 				vec2 size = vec2(3, 3);
 

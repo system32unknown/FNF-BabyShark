@@ -13,7 +13,7 @@ typedef EventNote = {
 
 class Note extends FlxSprite {
 	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
-	public static var scales:Array<Float> = EKData.scales;
+	public static var scales:Array<Float> = EK.scales;
 	public static var lessX:Array<Int> = EKData.lessX;
 	public static var xtra:Array<Float> = EKData.offsetX;
 	public static var posRest:Array<Float> = EKData.restPosition;
@@ -25,7 +25,7 @@ class Note extends FlxSprite {
 	public static var xmlMax:Int = 17; // This specifies the max of the splashes can go
 
 	public static var pixelNotesDivisionValue:Int = 18;
-	public static var pixelScales:Array<Float> = EKData.pixelScales;
+	public static var pixelScales:Array<Float> = EK.pixelScales;
 
 	public static var keysShit:Map<Int, Map<String, Dynamic>> = EKData.keysShit;
 	public var mania:Int = 1;
