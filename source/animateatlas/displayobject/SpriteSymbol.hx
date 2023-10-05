@@ -33,27 +33,27 @@ class SpriteSymbol extends Sprite {
 	public var numLayers(get, never):Int;
 	public var numFrames(get, never):Int;
 
-	private var _data:SymbolData;
-	private var _library:SpriteAnimationLibrary;
-	private var _symbolName:String;
-	private var _type:String;
-	private var _loopMode:String;
+	var _data:SymbolData;
+	var _library:SpriteAnimationLibrary;
+	var _symbolName:String;
+	var _type:String;
+	var _loopMode:String;
 	
-	private var _currentFrame:Int;
-	private var _composedFrame:Int;
-	private var _bitmap:Bitmap;
-	private var _numFrames:Int;
-	private var _numLayers:Int;
-	private var _frameLabels:Array<FrameLabel>;
-	private var _layers:Array<Sprite>;
-	private var _texture:BitmapData;
-	private var _tempRect = new Rectangle();
-	private var _zeroPoint = new Point();
+	var _currentFrame:Int;
+	var _composedFrame:Int;
+	var _bitmap:Bitmap;
+	var _numFrames:Int;
+	var _numLayers:Int;
+	var _frameLabels:Array<FrameLabel>;
+	var _layers:Array<Sprite>;
+	var _texture:BitmapData;
+	var _tempRect = new Rectangle();
+	var _zeroPoint = new Point();
 	public var smoothing:Bool = true;
 
-	private static var sMatrix:Matrix = new Matrix();
+	static var sMatrix:Matrix = new Matrix();
 
-	private function new(data:SymbolData, library:SpriteAnimationLibrary, texture:BitmapData) {
+	function new(data:SymbolData, library:SpriteAnimationLibrary, texture:BitmapData) {
 		super();
 		_data = data;
 		_library = library;
@@ -111,7 +111,7 @@ class SpriteSymbol extends Sprite {
 	}
 
 	/** Moves all movie clips n frames, recursively. */
-	private function moveMovieclip_MovieClips(direction:Int = 1):Void {
+	function moveMovieclip_MovieClips(direction:Int = 1):Void {
 		if (_type == SymbolType.MOVIE_CLIP) {
 			currentFrame += direction;
 		}
@@ -135,7 +135,7 @@ class SpriteSymbol extends Sprite {
 	}
 
 	@:access(animateatlas)
-	private function updateLayer(layerIndex:Int):Void {
+	function updateLayer(layerIndex:Int):Void {
 		var layer:Sprite = getLayer(layerIndex);
 		var frameData:LayerFrameData = getFrameData(layerIndex, _currentFrame);
 		var elements:Array<ElementData> = (frameData != null) ? frameData.elements : null;
@@ -204,7 +204,7 @@ class SpriteSymbol extends Sprite {
 		}
 	}
 
-	private function createLayers():Void {
+	function createLayers():Void {
 		// todo safety check for not initialiing twice
 		if (_layers != null)
 			throw new Error("You must not call this twice");
@@ -237,8 +237,6 @@ class SpriteSymbol extends Sprite {
 				clippedTexture.copyPixels(_texture, _tempRect, _zeroPoint);
 				_bitmap.bitmapData = clippedTexture;
 				_bitmap.smoothing = smoothing;
-				
-	
 			}
 			// aditional checks for rotation
 			_bitmap.x = data.Position.x;
@@ -257,7 +255,7 @@ class SpriteSymbol extends Sprite {
 		}
 	}
 	@:access(animateatlas)
-	private function setFilterData(data:FilterData):Void{
+	function setFilterData(data:FilterData):Void{
 		var blur:BlurFilter;
 		if (data != null) {
 			if (data.BlurFilter != null) {
@@ -269,14 +267,14 @@ class SpriteSymbol extends Sprite {
 		}
 	}
 
-	private function setTransformationMatrix(data:Matrix3DData):Void {
+	function setTransformationMatrix(data:Matrix3DData):Void {
 		sMatrix.setTo(data.m00, data.m01, data.m10, data.m11, data.m30, data.m31);
 		if (sMatrix.a != transform.matrix.a || sMatrix.b != transform.matrix.b || sMatrix.c != transform.matrix.c || sMatrix.d != transform.matrix.d
 			|| sMatrix.tx != transform.matrix.tx || sMatrix.ty != transform.matrix.ty)
 			transform.matrix = sMatrix.clone(); // todo stop the cloning :(
 	}
 
-	private function setColor(data:ColorData):Void {
+	function setColor(data:ColorData):Void {
 		var newTransform = new ColorTransform();
 		if (data != null) {
 			newTransform.redOffset = (data.redOffset == null ? 0 : data.redOffset);
@@ -302,7 +300,7 @@ class SpriteSymbol extends Sprite {
 		}
 	}
 
-	private function getNumFrames():Int {
+	function getNumFrames():Int {
 		var numFrames:Int = 0;
 
 		for (i in 0..._numLayers) {
@@ -323,7 +321,7 @@ class SpriteSymbol extends Sprite {
 		return numFrames == 0 ? 1 : numFrames;
 	}
 
-	private function _getFrameLabels():Array<FrameLabel> {
+	function _getFrameLabels():Array<FrameLabel> {
 		var labels:Array<FrameLabel> = [];
 
 		for (i in 0..._numLayers) {
@@ -376,7 +374,7 @@ class SpriteSymbol extends Sprite {
 		return (_frameLabels != null) ? _frameLabels[0].name : null;
 	}
 
-	private function get_currentLabel():String {
+	function get_currentLabel():String {
 		var numLabels:Int = _frameLabels.length;
 		var highestLabel:FrameLabel = (numLabels != 0) ? _frameLabels[0] : null;
 
@@ -425,7 +423,7 @@ class SpriteSymbol extends Sprite {
 		return _type;
 	}
 
-	private function set_type(value:String):String {
+	function set_type(value:String):String {
 		if (SymbolType.isValid(value))
 			_type = value;
 		else throw new ArgumentError("Invalid symbol type: " + value);

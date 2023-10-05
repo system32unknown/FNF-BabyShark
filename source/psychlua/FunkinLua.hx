@@ -697,8 +697,7 @@ class FunkinLua {
 
 			if(front) LuaUtils.getInstance().add(shit);
 			else {
-				if(game.isDead)
-					GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), shit);
+				if(game.isDead) GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), shit);
 				else {
 					var position:Int = game.members.indexOf(game.gfGroup);
 					if(game.members.indexOf(game.boyfriendGroup) < position)

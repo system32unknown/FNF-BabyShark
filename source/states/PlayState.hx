@@ -24,7 +24,6 @@ import backend.Section;
 import utils.*;
 import data.*;
 import data.StageData.StageFile;
-import data.EkData.Keybinds;
 import psychlua.*;
 import cutscenes.DialogueBoxPsych;
 #if sys import sys.FileSystem; #end
@@ -269,9 +268,10 @@ class PlayState extends MusicBeatState {
 		GameOverSubstate.resetVariables();
 		PauseSubState.songName = null; //Reset to default
 
-		keysArray = Keybinds.fill();
+		keysArray = data.EkData.Keybinds.fill()[mania];
+		trace(keysArray);
 		fillKeysPressed();
-		keysPressed = CoolUtil.dynamicArray(false, keysArray[mania].length);
+		keysPressed = CoolUtil.dynamicArray(false, keysArray.length);
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
@@ -1303,8 +1303,8 @@ class PlayState extends MusicBeatState {
 			callOnScripts('onSpawnStrum', [strumLineNotes.members.indexOf(babyArrow), babyArrow.player, babyArrow.ID]);
 
 			if (ClientPrefs.getPref('showKeybindsOnStart') && player == 1) {
-				for (j in 0...keysArray[mania][i].length) {
-					var daKeyTxt:FlxText = new FlxText(babyArrow.x, babyArrow.y - 10, 0, backend.InputFormatter.getKeyName(keysArray[mania][i][j]), 32 - mania);
+				for (j in 0...1) {
+					var daKeyTxt:FlxText = new FlxText(babyArrow.x, babyArrow.y - 10, 0, backend.InputFormatter.getKeyName(keysArray[i][j]), 32 - mania);
 					daKeyTxt.setFormat(Paths.font("vcr.ttf"), 32 - mania, FlxColor.WHITE, CENTER);
 					daKeyTxt.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1.25);
 					daKeyTxt.alpha = 0;
@@ -1373,9 +1373,7 @@ class PlayState extends MusicBeatState {
 			var colSwap = note.colorSwap;
 
 			var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-			colSwap.hue = arrowHSV[hsvNumThing][0] / 360;
-			colSwap.saturation = arrowHSV[hsvNumThing][1] / 100;
-			colSwap.brightness = arrowHSV[hsvNumThing][2] / 100;
+			colSwap.setHSB(arrowHSV[hsvNumThing][0] / 360, arrowHSV[hsvNumThing][1] / 100, arrowHSV[hsvNumThing][2] / 100);
 		}
 	}
 
@@ -1627,10 +1625,7 @@ class PlayState extends MusicBeatState {
 			songPercent = curTime / songLength;
 			var songCalc:Float = songLength - curTime;
 
-			switch (timeType) {
-				case 'Time Elapsed' | 'Time Position' | 'Name Elapsed' | 'Name Time Position':
-					songCalc = curTime;
-			}
+			if (timeType == 'Time Elapsed' || timeType == 'Time Position' || timeType == 'Name Elapsed' || timeType == 'Name Time Position') songCalc = curTime;
 
 			var secondsTotal:Int = Math.floor(Math.max(0, (songCalc / playbackRate) / 1000));
 			var formattedsec:String = CoolUtil.formatTime(secondsTotal);
@@ -2122,7 +2117,7 @@ class PlayState extends MusicBeatState {
 		vocals.pause();
 		if(ClientPrefs.getPref('noteOffset') <= 0 || ignoreNoteOffset)
 			endCallback();
-		else finishTimer = new FlxTimer().start(ClientPrefs.getPref('noteOffset') / 1000, (tmr:FlxTimer) -> {endCallback();});
+		else finishTimer = new FlxTimer().start(ClientPrefs.getPref('noteOffset') / 1000, (tmr:FlxTimer) -> endCallback());
 	}
 
 	public var transitioning = false;
@@ -2558,16 +2553,16 @@ class PlayState extends MusicBeatState {
 	}
 
 	function fillKeysPressed() {
-		var keybinds:Int = keysArray[mania].length;
+		var keybinds:Int = keysArray.length;
 		if (strumsBlocked != null) while (strumsBlocked.length < keybinds) strumsBlocked.push(false);
 		if (keysPressed != null) while (keysPressed.length < keybinds) keysPressed.push(false);
 	}
 
 	function getKeyFromEvent(arr:Array<Dynamic>, key:FlxKey):Int {
 		if (key != NONE) {
-			for (i in 0...arr[mania].length)
-				for (j in 0...arr[mania][i].length)
-					if(key == arr[mania][i][j]) return i;
+			for (i in 0...arr.length)
+				for (j in 0...arr[i].length)
+					if(key == arr[i][j]) return i;
 		}
 		return -1;
 	}

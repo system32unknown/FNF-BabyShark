@@ -79,8 +79,5 @@ class Controls {
 	}
 
 	public static var instance:Controls;
-
-	public function new() {
-		keyboardBinds = ClientPrefs.keyBinds;
-	}
+	public function new() {keyboardBinds = ClientPrefs.keyBinds;}
 }

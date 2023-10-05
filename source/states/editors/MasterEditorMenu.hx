@@ -18,12 +18,12 @@ class MasterEditorMenu extends MusicBeatState {
 		'Chart Editor',
 		'Credit Editor'
 	];
-	private var grpTexts:FlxTypedGroup<Alphabet>;
-	private var directories:Array<String> = [null];
+	var grpTexts:FlxTypedGroup<Alphabet>;
+	var directories:Array<String> = [null];
 
-	private var curSelected = 0;
-	private var curDirectory = 0;
-	private var directoryTxt:FlxText;
+	var curSelected = 0;
+	var curDirectory = 0;
+	var directoryTxt:FlxText;
 
 	override function create()
 	{

@@ -111,7 +111,7 @@ class MusicBeatState extends FlxUIState {
 
 		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
 
-		stagesFunc((stage:BaseStage) -> {stage.update(elapsed);});
+		stagesFunc((stage:BaseStage) -> stage.update(elapsed));
 
 		super.update(elapsed);
 	}

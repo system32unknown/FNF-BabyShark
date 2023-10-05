@@ -79,7 +79,6 @@ class Bar extends FlxSpriteGroup {
         rightBar.clipRect.set(barOffset.x + leftSize, barOffset.y, barWidth - leftSize, barHeight);
 		barCenter = leftBar.x + leftSize + barOffset.x;
 
-		// flixel is retarded
 		leftBar.clipRect = leftBar.clipRect;
 		rightBar.clipRect = rightBar.clipRect;
 	}

@@ -39,10 +39,10 @@ class AssetCache implements IAssetCache
 	**/
 	@:noCompletion public var sound:Map<String, Sound>;
 
-	@:noCompletion private var __enabled:Bool = true;
+	@:noCompletion var __enabled:Bool = true;
 
 	#if openfljs
-	@:noCompletion private static function __init__()
+	@:noCompletion static function __init__()
 	{
 		untyped global.Object.defineProperty(AssetCache.prototype, "enabled", {
 			get: untyped #if haxe4 js.Syntax.code #else __js__ #end ("function () { return this.get_enabled (); }"),
@@ -364,12 +364,12 @@ class AssetCache implements IAssetCache
 	}
 
 	// Get & Set Methods
-	@:noCompletion private function get_enabled():Bool
+	@:noCompletion function get_enabled():Bool
 	{
 		return __enabled;
 	}
 
-	@:noCompletion private function set_enabled(value:Bool):Bool
+	@:noCompletion function set_enabled(value:Bool):Bool
 	{
 		return __enabled = value;
 	}

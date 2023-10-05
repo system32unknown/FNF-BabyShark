@@ -3,9 +3,7 @@ package psychlua;
 class SoundFunctions {
     public static function implement(funk:FunkinLua) {
         var game:PlayState = PlayState.instance;
-		funk.set("playMusic", (sound:String, volume:Float = 1, loop:Bool = false) -> {
-			FlxG.sound.playMusic(Paths.music(sound), volume, loop);
-		});
+		funk.set("playMusic", (sound:String, volume:Float = 1, loop:Bool = false) -> FlxG.sound.playMusic(Paths.music(sound), volume, loop));
 		funk.set("playSound", function(sound:String, volume:Float = 1, ?tag:String = null) {
 			if(tag != null && tag.length > 0) {
 				tag = tag.replace('.', '');

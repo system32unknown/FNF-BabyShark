@@ -21,16 +21,16 @@ import animateatlas.HelperEnums.SymbolType;
 class SpriteAnimationLibrary {
 	public var frameRate:Float;
 
-	private var _atlas:Map<String, SpriteData>;
-	private var _symbolData:Map<String, SymbolData>;
-	private var _symbolPool:Map<String, Array<SpriteSymbol>>;
-	private var _defaultSymbolName:String;
-	private var _texture:BitmapData;
+	var _atlas:Map<String, SpriteData>;
+	var _symbolData:Map<String, SymbolData>;
+	var _symbolPool:Map<String, Array<SpriteSymbol>>;
+	var _defaultSymbolName:String;
+	var _texture:BitmapData;
 	public var smoothing:Bool = true;
 
 	public static inline var BITMAP_SYMBOL_NAME:String = "___atlas_sprite___";
 
-	private static var STD_MATRIX3D_DATA:Matrix3DData = {
+	static var STD_MATRIX3D_DATA:Matrix3DData = {
 		m00: 1, m01: 0, m02: 0, m03: 0,
 		m10: 0, m11: 1, m12: 0, m13: 0,
 		m20: 0, m21: 0, m22: 1, m23: 0,
@@ -77,11 +77,11 @@ class SpriteAnimationLibrary {
 		return out;
 	}
 
-	private function getSpriteData(name:String):SpriteData {
+	function getSpriteData(name:String):SpriteData {
 		return _atlas.get(name);
 	}
 
-	private function hasSymbol(name:String):Bool {
+	function hasSymbol(name:String):Bool {
 		return _symbolData.exists(name);
 	}
 
@@ -89,7 +89,7 @@ class SpriteAnimationLibrary {
 
 	@:access(animateatlas)
 	@:allow(AtlasFrameMaker)
-	private function getSymbol(name:String):SpriteSymbol {
+	function getSymbol(name:String):SpriteSymbol {
 		var pool:Array<SpriteSymbol> = getSymbolPool(name);
 		if (pool.length == 0) {
 			var symbol:SpriteSymbol = new SpriteSymbol(getSymbolData(name), this, _texture);
@@ -98,14 +98,14 @@ class SpriteAnimationLibrary {
 		} else return pool.pop();
 	}
 
-	private function putSymbol(symbol:SpriteSymbol):Void {
+	function putSymbol(symbol:SpriteSymbol):Void {
 		symbol.reset();
 		var pool:Array<SpriteSymbol> = getSymbolPool(symbol.symbolName);
 		pool.push(symbol);
 		symbol.currentFrame = 0;
 	}
 
-	private function getSymbolPool(name:String):Array<SpriteSymbol> {
+	function getSymbolPool(name:String):Array<SpriteSymbol> {
 		var pool:Array<SpriteSymbol> = _symbolPool.get(name);
 		if (pool == null) {
 			pool = [];
@@ -114,7 +114,7 @@ class SpriteAnimationLibrary {
 		return pool;
 	}
 
-	private function parseAnimationData(data:AnimationData):Void {
+	function parseAnimationData(data:AnimationData):Void {
 		var metaData = data.metadata;
 
 		if (metaData != null && metaData.framerate != null && metaData.framerate > 0)
@@ -143,7 +143,7 @@ class SpriteAnimationLibrary {
 		});
 	}
 
-	private function preprocessSymbolData(symbolData:SymbolData):SymbolData {
+	function preprocessSymbolData(symbolData:SymbolData):SymbolData {
 		var timeLineData:SymbolTimelineData = symbolData.TIMELINE;
 		var layerDates:Array<LayerData> = timeLineData.LAYERS;
 
@@ -186,7 +186,7 @@ class SpriteAnimationLibrary {
 		return symbolData;
 	}
 
-	private function parseAtlasData(atlas:AtlasData):Void {
+	function parseAtlasData(atlas:AtlasData):Void {
 		_atlas = new Map<String, SpriteData>();
 		if (atlas.ATLAS != null && atlas.ATLAS.SPRITES != null) {
 			for (s in atlas.ATLAS.SPRITES) {
@@ -195,7 +195,7 @@ class SpriteAnimationLibrary {
 		}
 	}
 
-	private function getSymbolData(name:String):SymbolData {
+	function getSymbolData(name:String):SymbolData {
 		return _symbolData.get(name);
 	}
 }

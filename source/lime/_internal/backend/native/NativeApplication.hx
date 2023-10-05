@@ -33,28 +33,28 @@ import lime.ui.Touch;
 @:access(lime.ui.Window)
 class NativeApplication
 {
-	private var applicationEventInfo = new ApplicationEventInfo(UPDATE);
-	private var clipboardEventInfo = new ClipboardEventInfo();
-	private var currentTouches = new Map<Int, Touch>();
-	private var dropEventInfo = new DropEventInfo();
-	private var gamepadEventInfo = new GamepadEventInfo();
-	private var joystickEventInfo = new JoystickEventInfo();
-	private var keyEventInfo = new KeyEventInfo();
-	private var mouseEventInfo = new MouseEventInfo();
-	private var renderEventInfo = new RenderEventInfo(RENDER);
-	private var sensorEventInfo = new SensorEventInfo();
-	private var textEventInfo = new TextEventInfo();
-	private var touchEventInfo = new TouchEventInfo();
-	private var unusedTouchesPool = new List<Touch>();
-	private var windowEventInfo = new WindowEventInfo();
+	var applicationEventInfo = new ApplicationEventInfo(UPDATE);
+	var clipboardEventInfo = new ClipboardEventInfo();
+	var currentTouches = new Map<Int, Touch>();
+	var dropEventInfo = new DropEventInfo();
+	var gamepadEventInfo = new GamepadEventInfo();
+	var joystickEventInfo = new JoystickEventInfo();
+	var keyEventInfo = new KeyEventInfo();
+	var mouseEventInfo = new MouseEventInfo();
+	var renderEventInfo = new RenderEventInfo(RENDER);
+	var sensorEventInfo = new SensorEventInfo();
+	var textEventInfo = new TextEventInfo();
+	var touchEventInfo = new TouchEventInfo();
+	var unusedTouchesPool = new List<Touch>();
+	var windowEventInfo = new WindowEventInfo();
 
 	public var handle:Dynamic;
 
-	private var pauseTimer:Int;
-	private var parent:Application;
-	private var toggleFullscreen:Bool;
+	var pauseTimer:Int;
+	var parent:Application;
+	var toggleFullscreen:Bool;
 
-	private static function __init__()
+	static function __init__()
 	{
 		#if (lime_cffi && !macro)
 		var init = NativeCFFI;
@@ -78,7 +78,7 @@ class NativeApplication
 		#end
 	}
 
-	private function advanceTimer():Void
+	function advanceTimer():Void
 	{
 		#if lime_cffi
 		if (pauseTimer > -1)
@@ -151,7 +151,7 @@ class NativeApplication
 		#end
 	}
 
-	private function handleApplicationEvent():Void
+	function handleApplicationEvent():Void
 	{
 		switch (applicationEventInfo.type)
 		{
@@ -164,12 +164,12 @@ class NativeApplication
 		}
 	}
 
-	private function handleClipboardEvent():Void
+	function handleClipboardEvent():Void
 	{
 		Clipboard.__update();
 	}
 
-	private function handleDropEvent():Void
+	function handleDropEvent():Void
 	{
 		for (window in parent.windows)
 		{
@@ -177,7 +177,7 @@ class NativeApplication
 		}
 	}
 
-	private function handleGamepadEvent():Void
+	function handleGamepadEvent():Void
 	{
 		switch (gamepadEventInfo.type)
 		{
@@ -201,7 +201,7 @@ class NativeApplication
 		}
 	}
 
-	private function handleJoystickEvent():Void
+	function handleJoystickEvent():Void
 	{
 		switch (joystickEventInfo.type)
 		{
@@ -233,7 +233,7 @@ class NativeApplication
 		}
 	}
 
-	private function handleKeyEvent():Void
+	function handleKeyEvent():Void
 	{
 		var window = parent.__windowByID.get(keyEventInfo.windowID);
 
@@ -271,7 +271,7 @@ class NativeApplication
 		}
 	}
 
-	private function handleMouseEvent():Void
+	function handleMouseEvent():Void
 	{
 		var window = parent.__windowByID.get(mouseEventInfo.windowID);
 
@@ -297,7 +297,7 @@ class NativeApplication
 		}
 	}
 
-	private function handleRenderEvent():Void
+	function handleRenderEvent():Void
 	{
 		// TODO: Allow windows to render independently
 
@@ -352,7 +352,7 @@ class NativeApplication
 		}
 	}
 
-	private function handleSensorEvent():Void
+	function handleSensorEvent():Void
 	{
 		var sensor = Sensor.sensorByID.get(sensorEventInfo.id);
 
@@ -362,7 +362,7 @@ class NativeApplication
 		}
 	}
 
-	private function handleTextEvent():Void
+	function handleTextEvent():Void
 	{
 		var window = parent.__windowByID.get(textEventInfo.windowID);
 
@@ -382,7 +382,7 @@ class NativeApplication
 		}
 	}
 
-	private function handleTouchEvent():Void
+	function handleTouchEvent():Void
 	{
 		switch (touchEventInfo.type)
 		{
@@ -444,7 +444,7 @@ class NativeApplication
 		}
 	}
 
-	private function handleWindowEvent():Void
+	function handleWindowEvent():Void
 	{
 		var window = parent.__windowByID.get(windowEventInfo.windowID);
 
@@ -510,7 +510,7 @@ class NativeApplication
 		}
 	}
 
-	private function updateTimer():Void
+	function updateTimer():Void
 	{
 		#if lime_cffi
 		if (Timer.sRunningTimers.length > 0)
@@ -566,7 +566,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract ApplicationEventType(Int)
+@:enum abstract ApplicationEventType(Int)
 {
 	var UPDATE = 0;
 	var EXIT = 1;
@@ -587,7 +587,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract ClipboardEventType(Int)
+@:enum abstract ClipboardEventType(Int)
 {
 	var UPDATE = 0;
 }
@@ -609,7 +609,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract DropEventType(Int)
+@:enum abstract DropEventType(Int)
 {
 	var DROP_FILE = 0;
 }
@@ -637,7 +637,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract GamepadEventType(Int)
+@:enum abstract GamepadEventType(Int)
 {
 	var AXIS_MOVE = 0;
 	var BUTTON_DOWN = 1;
@@ -671,7 +671,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract JoystickEventType(Int)
+@:enum abstract JoystickEventType(Int)
 {
 	var AXIS_MOVE = 0;
 	var HAT_MOVE = 1;
@@ -703,7 +703,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract KeyEventType(Int)
+@:enum abstract KeyEventType(Int)
 {
 	var KEY_DOWN = 0;
 	var KEY_UP = 1;
@@ -736,7 +736,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract MouseEventType(Int)
+@:enum abstract MouseEventType(Int)
 {
 	var MOUSE_DOWN = 0;
 	var MOUSE_UP = 1;
@@ -759,7 +759,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract RenderEventType(Int)
+@:enum abstract RenderEventType(Int)
 {
 	var RENDER = 0;
 	var RENDER_CONTEXT_LOST = 1;
@@ -789,7 +789,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract SensorEventType(Int)
+@:enum abstract SensorEventType(Int)
 {
 	var ACCELEROMETER = 0;
 }
@@ -818,7 +818,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract TextEventType(Int)
+@:enum abstract TextEventType(Int)
 {
 	var TEXT_INPUT = 0;
 	var TEXT_EDIT = 1;
@@ -853,7 +853,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract TouchEventType(Int)
+@:enum abstract TouchEventType(Int)
 {
 	var TOUCH_START = 0;
 	var TOUCH_END = 1;
@@ -885,7 +885,7 @@ class NativeApplication
 	}
 }
 
-@:enum private abstract WindowEventType(Int)
+@:enum abstract WindowEventType(Int)
 {
 	var WINDOW_ACTIVATE = 0;
 	var WINDOW_CLOSE = 1;

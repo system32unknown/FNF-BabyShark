@@ -16,10 +16,10 @@ class TileContainerMovieClip extends TileContainer {
 	public var numFrames(get, never):Int;
 	public var layers(get, never):Array<TileContainer>; // ! Dangerous AF.
 
-	private var symbol:TileContainerSymbol;
-	private var _framerate:Null<Float> = null;
+	var symbol:TileContainerSymbol;
+	var _framerate:Null<Float> = null;
 
-	private var frameElapsed:Float = 0;
+	var frameElapsed:Float = 0;
 
 	public function new(symbol:TileContainerSymbol) {
 		super();
@@ -63,16 +63,16 @@ class TileContainerMovieClip extends TileContainer {
 
 	// # region Property setter and getter
 
-	private function set_currentLabel(value:String):String {
+	function set_currentLabel(value:String):String {
 		symbol.currentFrame = symbol.getFrame(value);
 		return value;
 	}
 
-	private function get_currentLabel():String {
+	function get_currentLabel():String {
 		return symbol.currentLabel;
 	}
 
-	private function set_currentFrame(value:Int):Int {
+	function set_currentFrame(value:Int):Int {
 		symbol.currentFrame = value;
 		return value;
 	}
@@ -82,29 +82,29 @@ class TileContainerMovieClip extends TileContainer {
 	}
 	
 
-	private function get_currentFrame():Int {
+	function get_currentFrame():Int {
 		return symbol.currentFrame;
 	}
 
-	private function set_type(value:SymbolType):SymbolType {
+	function set_type(value:SymbolType):SymbolType {
 		symbol.type = value;
 		return value;
 	}
 
-	private function get_type():SymbolType {
+	function get_type():SymbolType {
 		return symbol.type;
 	}
 
-	private function set_loopMode(value:LoopMode):LoopMode {
+	function set_loopMode(value:LoopMode):LoopMode {
 		symbol.loopMode = value;
 		return value;
 	}
 
-	private function get_loopMode():LoopMode {
+	function get_loopMode():LoopMode {
 		return symbol.loopMode;
 	}
 
-	private function get_symbolName():String {
+	function get_symbolName():String {
 		return symbol.symbolName;
 	}
 
@@ -112,7 +112,7 @@ class TileContainerMovieClip extends TileContainer {
 		return symbol.numLayers;
 	}
 
-	private function get_numFrames():Int {
+	function get_numFrames():Int {
 		return symbol.numFrames;
 	}
 	
@@ -121,11 +121,11 @@ class TileContainerMovieClip extends TileContainer {
 		return symbol._layers;
 	}
 
-	private function set_framerate(value:Float):Float {
+	function set_framerate(value:Float):Float {
 		return _framerate = value;
 	}
 
-	private function get_framerate():Float {
+	function get_framerate():Float {
 		return _framerate == null ? symbol._library.frameRate : _framerate;
 	}
 	// # end region

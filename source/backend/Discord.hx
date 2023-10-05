@@ -92,9 +92,7 @@ class Discord {
 
 	public static function initialize() {
 		#if DISCORD_ALLOWED
-		sys.thread.Thread.create(() -> {
-			new Discord();
-		});
+		sys.thread.Thread.create(() -> new Discord());
 		Logs.trace("Discord Client initialized");
 		isInitialized = true;
 		#end
@@ -130,9 +128,7 @@ class Discord {
 
 	#if LUA_ALLOWED
 	public static function addLuaCallbacks(lua:FunkinLua) {
-		lua.set("changePresence", (details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) -> {
-			changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp);
-		});
+		lua.set("changePresence", (details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) -> changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp));
 		lua.set("changeDiscordClientID", (?newID:String = null) -> {
 			if(newID == null) newID = _defaultID;
 			clientID = newID;

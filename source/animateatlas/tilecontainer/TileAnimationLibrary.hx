@@ -22,15 +22,15 @@ import animateatlas.HelperEnums.SymbolType;
 class TileAnimationLibrary {
 	public var frameRate:Float;
 
-	private var _atlas:Map<String, SpriteData>;
-	private var _symbolData:Map<String, SymbolData>;
-	private var _symbolPool:Map<String, Array<TileContainerSymbol>>;
-	private var _defaultSymbolName:String;
-	private var _texture:Tileset;
+	var _atlas:Map<String, SpriteData>;
+	var _symbolData:Map<String, SymbolData>;
+	var _symbolPool:Map<String, Array<TileContainerSymbol>>;
+	var _defaultSymbolName:String;
+	var _texture:Tileset;
 
 	public static inline var BITMAP_SYMBOL_NAME:String = "___atlas_sprite___";
 
-	private static var STD_MATRIX3D_DATA:Matrix3DData = {
+	static var STD_MATRIX3D_DATA:Matrix3DData = {
 		m00: 1, m01: 0, m02: 0, m03: 0,
 		m10: 0, m11: 1, m12: 0, m13: 0,
 		m20: 0, m21: 0, m22: 1, m23: 0,
@@ -76,11 +76,11 @@ class TileAnimationLibrary {
 		return out;
 	}
 
-	private function getSpriteData(name:String):SpriteData {
+	function getSpriteData(name:String):SpriteData {
 		return _atlas.get(name);
 	}
 
-	private function hasSymbol(name:String):Bool {
+	function hasSymbol(name:String):Bool {
 		return _symbolData.exists(name);
 	}
 
@@ -88,21 +88,21 @@ class TileAnimationLibrary {
 	// todo migrate this to lime pool
 
 	@:access(animateatlas)
-	private function getSymbol(name:String):TileContainerSymbol {
+	function getSymbol(name:String):TileContainerSymbol {
 		var pool:Array<TileContainerSymbol> = getSymbolPool(name);
 		if (pool.length == 0)
 			return new TileContainerSymbol(getSymbolData(name), this, _texture);
 		else return pool.pop();
 	}
 
-	private function putSymbol(symbol:TileContainerSymbol):Void {
+	function putSymbol(symbol:TileContainerSymbol):Void {
 		symbol.reset();
 		var pool:Array<TileContainerSymbol> = getSymbolPool(symbol.symbolName);
 		pool.push(symbol);
 		symbol.currentFrame = 0;
 	}
 
-	private function getSymbolPool(name:String):Array<TileContainerSymbol> {
+	function getSymbolPool(name:String):Array<TileContainerSymbol> {
 		var pool:Array<TileContainerSymbol> = _symbolPool.get(name);
 		if (pool == null) {
 			pool = [];
@@ -113,7 +113,7 @@ class TileAnimationLibrary {
 
 	// # end region
 	// # region helpers
-	private function parseAnimationData(data:AnimationData):Void {
+	function parseAnimationData(data:AnimationData):Void {
 		var metaData = data.metadata;
 
 		if (metaData != null && metaData.framerate != null && metaData.framerate > 0)
@@ -140,7 +140,7 @@ class TileAnimationLibrary {
 		});
 	}
 
-	private function preprocessSymbolData(symbolData:SymbolData):SymbolData {
+	function preprocessSymbolData(symbolData:SymbolData):SymbolData {
 		var timeLineData:SymbolTimelineData = symbolData.TIMELINE;
 		var layerDates:Array<LayerData> = timeLineData.LAYERS;
 
@@ -183,7 +183,7 @@ class TileAnimationLibrary {
 		return symbolData;
 	}
 
-	private function parseAtlasData(atlas:AtlasData):Void {
+	function parseAtlasData(atlas:AtlasData):Void {
 		_atlas = new Map<String, SpriteData>();
 		if (atlas.ATLAS != null && atlas.ATLAS.SPRITES != null) {
 			for (s in atlas.ATLAS.SPRITES) {
@@ -192,7 +192,7 @@ class TileAnimationLibrary {
 		}
 	}
 
-	private function getSymbolData(name:String):SymbolData {
+	function getSymbolData(name:String):SymbolData {
 		return _symbolData.get(name);
 	}
 

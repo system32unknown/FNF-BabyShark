@@ -38,9 +38,7 @@ class NoteSplash extends FlxSprite {
 		if(hsb == null) hsb = [0, 0, 0];
 
 		if(texture != null) loadAnims(texture);
-		colorSwap.hue = hsb[0];
-		colorSwap.saturation = hsb[1];
-		colorSwap.brightness = hsb[2];
+		colorSwap.setHSB(hsb[0], hsb[1], hsb[2]);
 
 		if(PlayState.isPixelStage || !ClientPrefs.getPref('antialiasing')) antialiasing = false;
 

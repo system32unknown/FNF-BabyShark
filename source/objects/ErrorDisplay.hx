@@ -18,7 +18,7 @@ class ErrorDisplay {
     public var errorBGTween:FlxTween;
     public var errorTextTween:FlxTween;
 
-    private function set_text(val:String):String {
+    function set_text(val:String):String {
         text = val;
         this.errorText.text = text;
 		this.errorText.screenCenter(); // just to be sure
@@ -67,7 +67,7 @@ class ErrorDisplay {
 				this.errorBGTween = FlxTween.tween(errorBG, {alpha: 0}, 0.5, {
 					startDelay: bgPersistence,
 					ease: FlxEase.sineOut,
-					onComplete: (twn:FlxTween) -> {this.errorBGTween.destroy();}
+					onComplete: (twn:FlxTween) -> this.errorBGTween.destroy()
 				});
 			}
 		});
@@ -78,7 +78,7 @@ class ErrorDisplay {
 				this.errorTextTween = FlxTween.tween(errorText, {alpha: 0}, 0.5, {
 					startDelay: textPersistence,
 					ease: FlxEase.sineOut,
-					onComplete: (twn:FlxTween) -> {this.errorTextTween.destroy();}
+					onComplete: (twn:FlxTween) -> this.errorTextTween.destroy()
 				});
 			}
 		});

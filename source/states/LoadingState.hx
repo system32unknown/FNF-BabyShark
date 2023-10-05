@@ -215,9 +215,7 @@ class LoadingState extends MusicBeatState {
 				library.onChange.add(LimeAssets.onChange.dispatch);
 				promise.completeWith(Future.withValue(library));
 			}
-		}).onError((_) -> {
-			promise.error("There is no asset library with an ID of \"" + id + "\"");
-		});
+		}).onError((_) -> promise.error("There is no asset library with an ID of \"" + id + "\""));
 
 		return promise.future;
 	}

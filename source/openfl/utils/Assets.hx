@@ -57,9 +57,9 @@ class Assets
 {
 	public static var cache:IAssetCache = new AssetCache();
 
-	@:noCompletion private static var dispatcher:EventDispatcher #if !macro = new EventDispatcher() #end;
+	@:noCompletion static var dispatcher:EventDispatcher #if !macro = new EventDispatcher() #end;
 	#if (openfl >= "9.2.0")
-	private static var libraryBindings:Map<String, AssetLibrary> = new Map();
+	static var libraryBindings:Map<String, AssetLibrary> = new Map();
 	#end
 
 	public static function addEventListener(type:String, listener:Dynamic, useCapture:Bool = false, priority:Int = 0, useWeakReference:Bool = false):Void
@@ -421,7 +421,7 @@ class Assets
 		return false;
 	}
 
-	@:analyzer(ignore) private static function isValidBitmapData(bitmapData:BitmapData):Bool
+	@:analyzer(ignore) static function isValidBitmapData(bitmapData:BitmapData):Bool
 	{
 		#if (lime && tools && !display)
 		@:privateAccess return (bitmapData != null && (#if !lime_hybrid bitmapData.image != null #else bitmapData.__handle != null #end || bitmapData.__texture != null));
@@ -430,7 +430,7 @@ class Assets
 		#end
 	}
 
-	@:noCompletion private static function isValidSound(sound:Sound):Bool
+	@:noCompletion static function isValidSound(sound:Sound):Bool
 	{
 		#if ((tools && !display) && (cpp || neko || nodejs))
 		return true;
@@ -761,7 +761,7 @@ class Assets
 	#end
 
 	// Event Handlers
-	@:noCompletion private static function LimeAssets_onChange():Void
+	@:noCompletion static function LimeAssets_onChange():Void
 	{
 		dispatchEvent(new Event(Event.CHANGE));
 	}

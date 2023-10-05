@@ -123,14 +123,14 @@ class NativeAudioSource {
 		stopTimer();
 	}
 
-	private function complete():Void {
+	function complete():Void {
 		stop();
 
 		completed = true;
 		parent.onComplete.dispatch();
 	}
 
-	private function readVorbisFileBuffer(vorbisFile:VorbisFile, length:Int):UInt8Array {
+	function readVorbisFileBuffer(vorbisFile:VorbisFile, length:Int):UInt8Array {
 		#if lime_vorbis
 		var buffer = bufferDatas[STREAM_NUM_BUFFERS - queuedBuffers], read = STREAM_NUM_BUFFERS - 1, total = 0, readMax;
 		for (i in (STREAM_NUM_BUFFERS - queuedBuffers)...read) {
@@ -158,7 +158,7 @@ class NativeAudioSource {
 		#end
 	}
 
-	private function fillBuffers(buffers:Array<ALBuffer>):Void {
+	function fillBuffers(buffers:Array<ALBuffer>):Void {
 		#if lime_vorbis
 		if (buffers.length < 1 || parent == null || parent.buffer == null) return dispose();
 
@@ -189,7 +189,7 @@ class NativeAudioSource {
 	// Timers
 	inline function stopStreamTimer():Void if (streamTimer != null) streamTimer.stop();
 
-	#if !lime_vorbis inline #end private function resetStreamTimer():Void {
+	#if !lime_vorbis inline #end function resetStreamTimer():Void {
 		stopStreamTimer();
 
 		#if lime_vorbis
@@ -200,7 +200,7 @@ class NativeAudioSource {
 
 	inline function stopTimer():Void if (timer != null) timer.stop();
 
-	private function resetTimer(timeRemaining:Float):Void {
+	function resetTimer(timeRemaining:Float):Void {
 		stopTimer();
 
 		if (timeRemaining <= 30) {
@@ -212,7 +212,7 @@ class NativeAudioSource {
 	}
 
 	// Event Handlers
-	private function streamTimer_onRun():Void {
+	function streamTimer_onRun():Void {
 		#if lime_vorbis
 		var vorbisFile;
 		if (disposed = (handle == null) || (vorbisFile = parent.buffer.__srcVorbisFile) == null) return;
@@ -227,7 +227,7 @@ class NativeAudioSource {
 		#end
 	}
 
-	private function timer_onRun():Void {
+	function timer_onRun():Void {
 		if (!safeEnd && bufferLoops <= 0) {
 			var ranOut = false;
 			#if lime_vorbis

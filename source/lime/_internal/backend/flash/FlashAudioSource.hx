@@ -7,14 +7,14 @@ import lime.media.AudioSource;
 @:access(lime.media.AudioBuffer)
 class FlashAudioSource
 {
-	private var channel:SoundChannel;
-	private var completed:Bool;
-	private var length:Null<Int>;
-	private var loops:Int;
-	private var parent:AudioSource;
-	private var pauseTime:Int;
-	private var playing:Bool;
-	private var position:Vector4;
+	var channel:SoundChannel;
+	var completed:Bool;
+	var length:Null<Int>;
+	var loops:Int;
+	var parent:AudioSource;
+	var pauseTime:Int;
+	var playing:Bool;
+	var position:Vector4;
 
 	public function new(parent:AudioSource) {
 		this.parent = parent;

@@ -188,7 +188,7 @@ class FlxRuntimeShader extends FlxShader
 	static final PRAGMA_PRECISION:String = "#pragma precision";
 	static final PRAGMA_VERSION:String = "#pragma version";
 
-	private var _glslVersion:Int;
+	var _glslVersion:Int;
 
 	/**
 	 * Constructs a GLSL shader.
@@ -262,7 +262,7 @@ class FlxRuntimeShader extends FlxShader
 	 * The parent function that initializes the shader.
 	 * This is done to add the `#version` shader directive.
 	 */
-	private override function __initGL():Void
+	override function __initGL():Void
 	{
 		if (__glSourceDirty || __paramBool == null)
 		{
@@ -349,7 +349,7 @@ class FlxRuntimeShader extends FlxShader
 	 * This is done because some shader fields (such as `bitmap`) have to automatically propagate from the shader,
 	 * but others may not exist or be properties rather than fields.
 	 */
-	private override function __processGLData(source:String, storageType:String):Void
+	override function __processGLData(source:String, storageType:String):Void
 	{
 		var position;
 		var name;

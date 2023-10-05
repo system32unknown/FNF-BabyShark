@@ -249,7 +249,7 @@ class ShaderMacro
 		return fields;
 	}
 
-	private static function processFields(source:String, storageType:String, fields:Array<Field>, pos:Position):Void
+	static function processFields(source:String, storageType:String, fields:Array<Field>, pos:Position):Void
 	{
 		if (source == null) return;
 

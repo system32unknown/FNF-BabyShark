@@ -131,9 +131,7 @@ class CoolUtil {
 	public static function removeDuplicates(string:Array<String>):Array<String> {
 		var tempArray:Array<String> = new Array<String>();
 		var lastSeen:String = null;
-		string.sort((a:String, b:String) -> {
-		  	return (a == b) ? 0 : (a > b) ? 1 : -1; 
-		});
+		string.sort((a:String, b:String) -> return (a == b) ? 0 : (a > b) ? 1 : -1);
 		for (str in string) {
 		  	if (str != lastSeen) tempArray.push(str);
 		  	lastSeen = str;

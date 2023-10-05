@@ -353,7 +353,7 @@ class AudioBuffer
 		return promise.future;
 	}
 
-	private static function __getCodec(bytes:Bytes):String
+	static function __getCodec(bytes:Bytes):String
 	{
 		var signature = bytes.getString(0, 4);
 
@@ -373,7 +373,7 @@ class AudioBuffer
 	}
 
 	// Get & Set Methods
-	@:noCompletion private function get_src():Dynamic
+	@:noCompletion function get_src():Dynamic
 	{
 		#if (js && html5)
 		#if lime_howlerjs
@@ -390,7 +390,7 @@ class AudioBuffer
 		#end
 	}
 
-	@:noCompletion private function set_src(value:Dynamic):Dynamic
+	@:noCompletion function set_src(value:Dynamic):Dynamic
 	{
 		#if (js && html5)
 		#if lime_howlerjs

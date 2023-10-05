@@ -62,9 +62,7 @@ class NotesSubState extends MusicBeatSubstate
 
 			var newShader:ColorSwap = new ColorSwap();
 			note.shader = newShader.shader;
-			newShader.hue = arrowHSV[i][0] / 360;
-			newShader.saturation = arrowHSV[i][1] / 100;
-			newShader.brightness = arrowHSV[i][2] / 100;
+			newShader.setHSB(arrowHSV[i][0] / 360, arrowHSV[i][1] / 100, arrowHSV[i][2] / 100);
 			shaderArray.push(newShader);
 		}
 

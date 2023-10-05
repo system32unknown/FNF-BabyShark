@@ -31,7 +31,7 @@ class ColorSwap {
 		shader.awesomeOutline.value = [false];
 	}
 
-	public function setHSB(h, s, b) {
+	public function setHSB(h:Float, s:Float, b:Float) {
 		hue = h; saturation = b; brightness = b;
 	}
 }

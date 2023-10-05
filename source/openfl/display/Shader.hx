@@ -276,7 +276,7 @@ class Shader
 	@:noCompletion var __textureSize:ShaderParameter<Float>;
 
 	#if openfljs
-	@:noCompletion private static function __init__()
+	@:noCompletion static function __init__()
 	{
 		untyped Object.defineProperties(Shader.prototype, {
 			"data": {
@@ -332,7 +332,7 @@ class Shader
 		__data = new ShaderData(code);
 	}
 
-	@:noCompletion private function __clearUseArray():Void
+	@:noCompletion function __clearUseArray():Void
 	{
 		for (parameter in __paramBool)
 		{
@@ -350,7 +350,7 @@ class Shader
 		}
 	}
 
-	@:noCompletion private function __createGLShader(source:String, type:Int):GLShader
+	@:noCompletion function __createGLShader(source:String, type:Int):GLShader
 	{
 		var gl = __context.gl;
 
@@ -374,7 +374,7 @@ class Shader
 		return shader;
 	}
 
-	@:noCompletion private function __createGLProgram(vertexSource:String, fragmentSource:String):GLProgram
+	@:noCompletion function __createGLProgram(vertexSource:String, fragmentSource:String):GLProgram
 	{
 		var gl = __context.gl;
 
@@ -407,7 +407,7 @@ class Shader
 		return program;
 	}
 
-	@:noCompletion private function __disable():Void
+	@:noCompletion function __disable():Void
 	{
 		if (program != null)
 		{
@@ -415,7 +415,7 @@ class Shader
 		}
 	}
 
-	@:noCompletion private function __disableGL():Void
+	@:noCompletion function __disableGL():Void
 	{
 		var gl = __context.gl;
 
@@ -453,7 +453,7 @@ class Shader
 		#end
 	}
 
-	@:noCompletion private function __enable():Void
+	@:noCompletion function __enable():Void
 	{
 		__init();
 
@@ -463,7 +463,7 @@ class Shader
 		}
 	}
 
-	@:noCompletion private function __enableGL():Void
+	@:noCompletion function __enableGL():Void
 	{
 		var textureCount = 0;
 
@@ -483,7 +483,7 @@ class Shader
 		#end
 	}
 
-	@:noCompletion private function __init():Void
+	@:noCompletion function __init():Void
 	{
 		if (__data == null)
 		{
@@ -496,7 +496,7 @@ class Shader
 		}
 	}
 
-	@:noCompletion private function __buildSourcePrefix():String
+	@:noCompletion function __buildSourcePrefix():String
 	{
 		return "#version "
 			+ __glVersion
@@ -513,7 +513,7 @@ class Shader
 				";
 	}
 
-	@:noCompletion private function __initGL():Void
+	@:noCompletion function __initGL():Void
 	{
 		if (__glSourceDirty || __paramBool == null)
 		{
@@ -595,7 +595,7 @@ class Shader
 		}
 	}
 
-	@:noCompletion private function __processGLData(source:String, storageType:String):Void
+	@:noCompletion function __processGLData(source:String, storageType:String):Void
 	{
 		var position, name, type;
 
@@ -750,7 +750,7 @@ class Shader
 		}
 	}
 
-	@:noCompletion private function __update():Void
+	@:noCompletion function __update():Void
 	{
 		if (program != null)
 		{
@@ -758,7 +758,7 @@ class Shader
 		}
 	}
 
-	@:noCompletion private function __updateFromBuffer(shaderBuffer:ShaderBuffer, bufferOffset:Int):Void
+	@:noCompletion function __updateFromBuffer(shaderBuffer:ShaderBuffer, bufferOffset:Int):Void
 	{
 		if (program != null)
 		{
@@ -766,7 +766,7 @@ class Shader
 		}
 	}
 
-	@:noCompletion private function __updateGL():Void
+	@:noCompletion function __updateGL():Void
 	{
 		var textureCount = 0;
 
@@ -792,7 +792,7 @@ class Shader
 		}
 	}
 
-	@:noCompletion private function __updateGLFromBuffer(shaderBuffer:ShaderBuffer, bufferOffset:Int):Void
+	@:noCompletion function __updateGLFromBuffer(shaderBuffer:ShaderBuffer, bufferOffset:Int):Void
 	{
 		var textureCount = 0;
 		var input, inputData, inputFilter, inputMipFilter, inputWrap;
@@ -900,7 +900,7 @@ class Shader
 	}
 
 	// Get & Set Methods
-	@:noCompletion private function get_data():ShaderData
+	@:noCompletion function get_data():ShaderData
 	{
 		if (__glSourceDirty || __data == null)
 		{
@@ -910,37 +910,37 @@ class Shader
 		return __data;
 	}
 
-	@:noCompletion private function set_data(value:ShaderData):ShaderData
+	@:noCompletion function set_data(value:ShaderData):ShaderData
 	{
 		return __data = cast value;
 	}
 
-	@:noCompletion private function get_glFragmentHeaderRaw():String
+	@:noCompletion function get_glFragmentHeaderRaw():String
 	{
 		return __glFragmentHeaderRaw;
 	}
 
-	@:noCompletion private function get_glFragmentBodyRaw():String
+	@:noCompletion function get_glFragmentBodyRaw():String
 	{
 		return __glFragmentBodyRaw;
 	}
 
-	@:noCompletion private function get_glFragmentSourceRaw():String
+	@:noCompletion function get_glFragmentSourceRaw():String
 	{
 		return __glFragmentSourceRaw;
 	}
 
-	@:noCompletion private function get_glFragmentSource():String
+	@:noCompletion function get_glFragmentSource():String
 	{
 		return __glFragmentSource;
 	}
 
-	@:noCompletion private function get_glVersion():Int
+	@:noCompletion function get_glVersion():Int
 	{
 		return __glVersion;
 	}
 
-	@:noCompletion private function set_glFragmentSource(value:String):String
+	@:noCompletion function set_glFragmentSource(value:String):String
 	{
 		if (value != __glFragmentSource)
 		{
@@ -950,7 +950,7 @@ class Shader
 		return __glFragmentSource = value;
 	}
 
-	@:noCompletion private function set_glVersion(value:Int):Int
+	@:noCompletion function set_glVersion(value:Int):Int
 	{
 		if (value != __glVersion)
 		{
@@ -960,27 +960,27 @@ class Shader
 		return __glVersion = value;
 	}
 
-	@:noCompletion private function get_glVertexHeaderRaw():String
+	@:noCompletion function get_glVertexHeaderRaw():String
 	{
 		return __glVertexHeaderRaw;
 	}
 
-	@:noCompletion private function get_glVertexBodyRaw():String
+	@:noCompletion function get_glVertexBodyRaw():String
 	{
 		return __glVertexBodyRaw;
 	}
 
-	@:noCompletion private function get_glVertexSourceRaw():String
+	@:noCompletion function get_glVertexSourceRaw():String
 	{
 		return __glVertexSourceRaw;
 	}
 
-	@:noCompletion private function get_glVertexSource():String
+	@:noCompletion function get_glVertexSource():String
 	{
 		return __glVertexSource;
 	}
 
-	@:noCompletion private function set_glVertexSource(value:String):String
+	@:noCompletion function set_glVertexSource(value:String):String
 	{
 		if (value != __glVertexSource)
 		{
@@ -990,9 +990,9 @@ class Shader
 		return __glVertexSource = value;
 	}
 
-	private var __fieldList:Array<String> = null;
+	var __fieldList:Array<String> = null;
 
-	private function thisHasField(name:String)
+	function thisHasField(name:String)
 	{
 		if (__fieldList == null)
 		{

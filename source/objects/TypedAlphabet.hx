@@ -14,15 +14,15 @@ class TypedAlphabet extends Alphabet
 		this.delay = delay;
 	}
 
-	override private function set_text(newText:String) {
+	override function set_text(newText:String) {
 		super.set_text(newText);
 
 		resetDialogue();
 		return newText;
 	}
 
-	private var _curLetter:Int = -1;
-	private var _timeToUpdate:Float = 0;
+	var _curLetter:Int = -1;
+	var _timeToUpdate:Float = 0;
 	override function update(elapsed:Float) {
 		if (!finishedText) {
 			var playedSound:Bool = false;

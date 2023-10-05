@@ -74,7 +74,7 @@ class Main extends Sprite {
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		
-		FlxG.signals.preStateSwitch.add(() -> {Paths.clearStoredCache();});
+		FlxG.signals.preStateSwitch.add(() -> Paths.clearStoredCache());
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();
 
@@ -85,7 +85,7 @@ class Main extends Sprite {
 		FlxG.signals.postGameReset.add(states.TitleState.onInit);
 		FlxG.signals.gameResized.add((w, h) -> @:privateAccess {
 			if (FlxG.cameras != null) for (cam in FlxG.cameras.list) {
-				if (cam != null && cam._filters != null)
+				if (cam != null && cam.filters != null)
 				   	resetSpriteCache(cam.flashSprite);
 			}
 			if (FlxG.game != null) resetSpriteCache(FlxG.game);

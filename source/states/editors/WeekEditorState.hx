@@ -490,7 +490,7 @@ class WeekEditorState extends MusicBeatState
 	/**
 		* Called when the save file dialog is cancelled.
 	*/
-	private static function onLoadCancel(_):Void
+	static function onLoadCancel(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
@@ -502,7 +502,7 @@ class WeekEditorState extends MusicBeatState
 	/**
 		* Called if there is an error while saving the gameplay recording.
 	**/
-	private static function onLoadError(_):Void
+	static function onLoadError(_):Void
 	{
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
@@ -523,7 +523,7 @@ class WeekEditorState extends MusicBeatState
 		}
 	}
 	
-	private static function onSaveComplete(_):Void
+	static function onSaveComplete(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -535,7 +535,7 @@ class WeekEditorState extends MusicBeatState
 	/**
 		* Called when the save file dialog is cancelled.
 	**/
-	private static function onSaveCancel(_):Void
+	static function onSaveCancel(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -546,7 +546,7 @@ class WeekEditorState extends MusicBeatState
 	/**
 		* Called if there is an error while saving the gameplay recording.
 	**/
-	private static function onSaveError(_):Void
+	static function onSaveError(_):Void
 	{
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);

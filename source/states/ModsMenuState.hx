@@ -340,11 +340,10 @@ class ModsMenuState extends MusicBeatState {
 
 		var newColor:Int = mods[curSelected].color;
 		if(newColor != intendedColor) {
-			if(colorTween != null)
-				colorTween.cancel();
+			if(colorTween != null) colorTween.cancel();
 			intendedColor = newColor;
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: (twn:FlxTween) -> {colorTween = null;}
+				onComplete: (twn:FlxTween) -> colorTween = null
 			});
 		}
 

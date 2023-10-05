@@ -76,17 +76,17 @@ import lime.media.AudioSource;
 	public var pitch(get, set):Float;
 	public var loops(get, set):Int;
 
-	@:noCompletion private var __isValid:Bool;
-	@:noCompletion private var __soundTransform:SoundTransform;
+	@:noCompletion var __isValid:Bool;
+	@:noCompletion var __soundTransform:SoundTransform;
 	#if lime
-	@:noCompletion private var __source:AudioSource;
+	@:noCompletion var __source:AudioSource;
 	#end
-	@:noCompletion private var __lastPeakTime:Float;
-	@:noCompletion private var __leftPeak:Float;
-	@:noCompletion private var __rightPeak:Float;
+	@:noCompletion var __lastPeakTime:Float;
+	@:noCompletion var __leftPeak:Float;
+	@:noCompletion var __rightPeak:Float;
 
 	#if openfljs
-	@:noCompletion private static function __init__() {
+	@:noCompletion static function __init__() {
 		untyped Object.defineProperties(SoundChannel.prototype, {
 			"position": {
 				get: untyped #if haxe4 js.Syntax.code #else __js__ #end ("function () { return this.get_position (); }"),
@@ -99,7 +99,7 @@ import lime.media.AudioSource;
 	}
 	#end
 
-	@:noCompletion private function new(source:#if lime AudioSource #else Dynamic #end = null, soundTransform:SoundTransform = null):Void
+	@:noCompletion function new(source:#if lime AudioSource #else Dynamic #end = null, soundTransform:SoundTransform = null):Void
 	{
 		super(this);
 
@@ -137,7 +137,7 @@ import lime.media.AudioSource;
 		__dispose();
 	}
 
-	@:noCompletion private function __dispose():Void
+	@:noCompletion function __dispose():Void
 	{
 		if (!__isValid) return;
 
@@ -150,7 +150,7 @@ import lime.media.AudioSource;
 		__isValid = false;
 	}
 
-	@:noCompletion private function __updateTransform():Void
+	@:noCompletion function __updateTransform():Void
 	{
 		this.soundTransform = soundTransform;
 	}
@@ -200,7 +200,7 @@ import lime.media.AudioSource;
 	#end
 	#end
 
-	@:noCompletion private function __updatePeaks():Void
+	@:noCompletion function __updatePeaks():Void
 	{
 		__leftPeak = __rightPeak = 0;
 
@@ -239,7 +239,7 @@ import lime.media.AudioSource;
 	}
 
 	// Get & Set Methods
-	@:noCompletion private function get_position():Float
+	@:noCompletion function get_position():Float
 	{
 		if (!__isValid) return 0;
 
@@ -250,7 +250,7 @@ import lime.media.AudioSource;
 		#end
 	}
 
-	@:noCompletion private function set_position(value:Float):Float
+	@:noCompletion function set_position(value:Float):Float
 	{
 		if (!__isValid) return 0;
 
@@ -260,7 +260,7 @@ import lime.media.AudioSource;
 		return value;
 	}
 
-	@:noCompletion private function get_soundTransform():SoundTransform
+	@:noCompletion function get_soundTransform():SoundTransform
 	{
 		return __soundTransform.clone();
 	}

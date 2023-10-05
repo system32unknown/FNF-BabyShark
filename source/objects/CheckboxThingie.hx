@@ -32,7 +32,7 @@ class CheckboxThingie extends FlxSprite {
 		super.update(elapsed);
 	}
 
-	private function set_daValue(check:Bool):Bool {
+	function set_daValue(check:Bool):Bool {
 		if(check) {
 			if(animation.curAnim.name != 'checked' && animation.curAnim.name != 'checking') {
 				animation.play('checking', true);
@@ -45,7 +45,7 @@ class CheckboxThingie extends FlxSprite {
 		return check;
 	}
 
-	private function animationFinished(name:String)
+	function animationFinished(name:String)
 	{
 		switch(name) {
 			case 'checking':

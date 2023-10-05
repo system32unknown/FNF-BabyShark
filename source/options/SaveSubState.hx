@@ -46,9 +46,8 @@ class SaveSubState extends BaseOptionsMenu
 		FlxG.mouse.visible = true;
 		openSubState(new Prompt('This action will clear all score progress.\n\nProceed?', () -> {
 			FlxG.save.data.weekScores = null;
-			for (key in Highscore.weekScores.keys()) {
+			for (key in Highscore.weekScores.keys())
 				Highscore.weekScores[key] = 0;
-			}
 			FlxG.mouse.visible = false;
 		}, cancelcallback));
 	}

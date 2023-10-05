@@ -163,8 +163,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		endCompleted = true;
 	}
 
-	function endBullshit():Void
-	{
+	function endBullshit():Void {
 		if (isEnding) {
 			quick = true;
 			if (endCompleted) resetState();
@@ -178,7 +177,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		var snd:FlxSound = FlxG.sound.play(Paths.sound(endSoundName));
 		snd.onComplete = endSoundComplete;
 
-		new FlxTimer().start(0.7, function(tmr:FlxTimer) {
+		new FlxTimer().start(.7, function(tmr:FlxTimer) {
 			FlxG.camera.fade(FlxColor.BLACK, if (quick) 1 else 2, false, () -> {
 				if (quick || endCompleted) resetState();
 				endCompleted = true;

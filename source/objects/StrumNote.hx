@@ -2,12 +2,11 @@ package objects;
 
 import shaders.ColorSwap;
 
-class StrumNote extends FlxSprite
-{
-	private var colorSwap:ColorSwap;
+class StrumNote extends FlxSprite {
+	var colorSwap:ColorSwap;
 
 	public var resetAnim:Float = 0;
-	private var noteData:Int = 0;
+	var noteData:Int = 0;
 	public var direction:Float = 90;//plan on doing scroll directions soon -bb
 	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
 	public var sustainReduce:Bool = true;
@@ -15,7 +14,7 @@ class StrumNote extends FlxSprite
 	public var animationArray:Array<String> = ['', ''];
 	
 	public var texture(default, set):String = null;
-	private function set_texture(value:String):String {
+	function set_texture(value:String):String {
 		if(texture != value) {
 			texture = value;
 			reloadNote();
@@ -53,10 +52,10 @@ class StrumNote extends FlxSprite
 		var pxDV:Int = Note.pixelNotesDivisionValue;
 
 		if(PlayState.isPixelStage) {
-			loadGraphic(Paths.image('pixelUI/' + texture));
+			loadGraphic(Paths.image('pixelUI/$texture'));
 			width /= pxDV;
 			height /= 5;
-			loadGraphic(Paths.image('pixelUI/' + texture), true, Math.floor(width), Math.floor(height));
+			loadGraphic(Paths.image('pixelUI/$texture'), true, Math.floor(width), Math.floor(height));
 			antialiasing = false;
 			var daFrames:Array<Int> = Note.keysShit.get(PlayState.mania).get('pixelAnimIndex');
 
@@ -71,7 +70,7 @@ class StrumNote extends FlxSprite
 			antialiasing = ClientPrefs.getPref('Antialiasing');
 			setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
 	
-			animation.addByPrefix('static', 'arrow ${animationArray[0]}');
+			animation.addByPrefix('static', 'arrow${animationArray[0]}');
 			animation.addByPrefix('pressed', '${animationArray[1]} press', 24, false);
 			animation.addByPrefix('confirm', '${animationArray[1]} confirm', 24, false);
 		}
@@ -116,16 +115,11 @@ class StrumNote extends FlxSprite
 		centerOrigin();
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 		var arrowIndex:Int = Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % EK.keys(PlayState.mania));
-		if(animation.curAnim == null || animation.curAnim.name == 'static') {
-			colorSwap.hue = 0;
-			colorSwap.saturation = 0;
-			colorSwap.brightness = 0;
-		} else {
-			if (noteData > -1 && noteData < arrowHSV.length) {
-				colorSwap.hue = arrowHSV[arrowIndex][0] / 360;
-				colorSwap.saturation = arrowHSV[arrowIndex][1] / 100;
-				colorSwap.brightness = arrowHSV[arrowIndex][2] / 100;
-			}
+		if(animation.curAnim == null || animation.curAnim.name == 'static')
+			colorSwap.setHSB(0, 0, 0);
+		else {
+			if (noteData > -1 && noteData < arrowHSV.length)
+				colorSwap.setHSB(arrowHSV[arrowIndex][0] / 360, arrowHSV[arrowIndex][1] / 100, arrowHSV[arrowIndex][2] / 100);
 
 			if (!PlayState.isPixelStage) return;
 			if(animation.curAnim.name == 'confirm') centerOrigin();

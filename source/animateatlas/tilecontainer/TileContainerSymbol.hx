@@ -41,7 +41,7 @@ class TileContainerSymbol extends TileContainer {
 	var _frameLabels:Array<FrameLabel>;
 	var _layers:Array<TileContainer>;
 
-	private function new(data:SymbolData, library:TileAnimationLibrary, tileset:Tileset) {
+	function new(data:SymbolData, library:TileAnimationLibrary, tileset:Tileset) {
 		super();
 		this.tileset = tileset;
 		_data = data;
@@ -103,7 +103,7 @@ class TileContainerSymbol extends TileContainer {
 	}
 
 	/** Moves all movie clips n frames, recursively. */
-	private function moveMovieclip_MovieClips(direction:Int = 1):Void {
+	function moveMovieclip_MovieClips(direction:Int = 1):Void {
 		if (_type == SymbolType.MOVIE_CLIP) {
 			currentFrame += direction;
 		}
@@ -188,7 +188,7 @@ class TileContainerSymbol extends TileContainer {
 		}
 	}
 
-	private function createLayers():Void {
+	function createLayers():Void {
 		// todo safety check for not initialiing twice
 		if (_layers != null) {
 			throw new Error("You must not call this twice");
@@ -239,7 +239,7 @@ class TileContainerSymbol extends TileContainer {
 		}
 	}
 
-	private function setTransformationMatrix(data:Matrix3DData):Void {
+	function setTransformationMatrix(data:Matrix3DData):Void {
 		if (data.m00 != matrix.a || data.m01 != matrix.b || data.m10 != matrix.c || data.m11 != matrix.d || data.m30 != matrix.tx || data.m31 != matrix.ty) {
 			matrix.setTo(data.m00, data.m01, data.m10, data.m11, data.m30, data.m31);
 
@@ -251,7 +251,7 @@ class TileContainerSymbol extends TileContainer {
 		}
 	}
 
-	private function setColor(data:ColorData):Void {
+	function setColor(data:ColorData):Void {
 		var newTransform = new ColorTransform();
 		if (data != null) {
 			newTransform.redOffset = (data.redOffset == null ? 0 : data.redOffset);
@@ -273,13 +273,13 @@ class TileContainerSymbol extends TileContainer {
 		else _loopMode = LoopMode.LOOP;
 	}
 
-	private function setType(data:String):Void {
+	function setType(data:String):Void {
 		if (data != null) {
 			_type = data;
 		}
 	}
 
-	private function getNumFrames():Int {
+	function getNumFrames():Int {
 		var numFrames:Int = 0;
 
 		for (i in 0..._numLayers) {
@@ -300,7 +300,7 @@ class TileContainerSymbol extends TileContainer {
 		return numFrames == 0 ? 1 : numFrames;
 	}
 
-	private function _getFrameLabels():Array<FrameLabel> {
+	function _getFrameLabels():Array<FrameLabel> {
 		var labels:Array<FrameLabel> = [];
 
 		for (i in 0..._numLayers) {
@@ -331,7 +331,7 @@ class TileContainerSymbol extends TileContainer {
 		else return 0;
 	}
 
-	private function getLayer(layerIndex:Int):TileContainer {
+	function getLayer(layerIndex:Int):TileContainer {
 		return _layers[layerIndex];
 	}
 
@@ -349,7 +349,7 @@ class TileContainerSymbol extends TileContainer {
 		return (_frameLabels != null) ? _frameLabels[0].name : null;
 	}
 
-	private function get_currentLabel():String {
+	function get_currentLabel():String {
 		var numLabels:Int = _frameLabels.length;
 		var highestLabel:FrameLabel = (numLabels != 0) ? _frameLabels[0] : null;
 
@@ -376,11 +376,11 @@ class TileContainerSymbol extends TileContainer {
 	}
 
 	
-	private function get_currentFrame():Int {
+	function get_currentFrame():Int {
 		return _currentFrame;
 	}
 
-	private function set_currentFrame(value:Int):Int {
+	function set_currentFrame(value:Int):Int {
 		while (value < 0) {
 			value += _numFrames;
 		}
@@ -395,29 +395,29 @@ class TileContainerSymbol extends TileContainer {
 		return value;
 	}
 
-	private function get_type():String {
+	function get_type():String {
 		return _type;
 	}
 
-	private function set_type(value:String):String {
+	function set_type(value:String):String {
 		if (SymbolType.isValid(value))
 			_type = value;
 		else throw new ArgumentError("Invalid symbol type: " + value);
 		return value;
 	}
 
-	private function get_loopMode():String {
+	function get_loopMode():String {
 		return _loopMode;
 	}
 
-	private function set_loopMode(value:String):String {
+	function set_loopMode(value:String):String {
 		if (LoopMode.isValid(value))
 			_loopMode = value;
 		else throw new ArgumentError("Invalid loop mode: " + value);
 		return value;
 	}
 
-	private function get_symbolName():String {
+	function get_symbolName():String {
 		return _symbolName;
 	}
 
@@ -431,11 +431,11 @@ class TileContainerSymbol extends TileContainer {
 
 	// data access
 
-	private function getLayerData(layerIndex:Int):LayerData {
+	function getLayerData(layerIndex:Int):LayerData {
 		return _data.TIMELINE.LAYERS[layerIndex];
 	}
 
-	private function getFrameData(layerIndex:Int, frameIndex:Int):LayerFrameData {
+	function getFrameData(layerIndex:Int, frameIndex:Int):LayerFrameData {
 		var layer = getLayerData(layerIndex);
 		if (layer == null) return null;
 

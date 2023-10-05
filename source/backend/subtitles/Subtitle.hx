@@ -20,11 +20,7 @@ class Subtitle extends FlxTypeText {
         if (properties.centerScreen)
             screenCenter(properties.screenCenter);
         
-        start(properties.typeSpeed, false, false, [], () -> {
-            new FlxTimer().start(showTime, (timer:FlxTimer) -> {
-                FlxTween.tween(this, {alpha: 0}, .5, {onComplete: (tween:FlxTween) -> finish()});
-            });
-        });
+        start(properties.typeSpeed, false, false, [], () -> new FlxTimer().start(showTime, (timer:FlxTimer) -> FlxTween.tween(this, {alpha: 0}, .5, {onComplete: (tween:FlxTween) -> finish()})));
     }
     public function finish() {
         if (onSubComplete != null) onSubComplete();

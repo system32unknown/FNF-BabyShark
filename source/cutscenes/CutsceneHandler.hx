@@ -25,8 +25,8 @@ class CutsceneHandler extends FlxBasic {
 		PlayState.instance.add(this);
 	}
 
-	private var cutsceneTime:Float = 0;
-	private var firstFrame:Bool = false;
+	var cutsceneTime:Float = 0;
+	var firstFrame:Bool = false;
 	override function update(elapsed) {
 		super.update(elapsed);
 

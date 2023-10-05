@@ -126,11 +126,8 @@ class Note extends FlxSprite {
 		noteSplashTexture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 		var arrowIndex:Int = Std.int(keysShit.get(mania).get('pixelAnimIndex')[noteData] % EK.keys(mania));
-		if (noteData > -1 && noteData < arrowHSV.length) {
-			colorSwap.hue = arrowHSV[arrowIndex][0] / 360;
-			colorSwap.saturation = arrowHSV[arrowIndex][1] / 100;
-			colorSwap.brightness = arrowHSV[arrowIndex][2] / 100;
-		}
+		if (noteData > -1 && noteData < arrowHSV.length)
+			colorSwap.setHSB(arrowHSV[arrowIndex][0] / 360, arrowHSV[arrowIndex][1] / 100, arrowHSV[arrowIndex][2] / 100);
 
 		if(noteData > -1 && noteType != value) {
 			switch(value) {
@@ -138,7 +135,7 @@ class Note extends FlxSprite {
 					ignoreNote = true;
 					reloadNote('HURT', 'NOTE_assets');
 					noteSplashTexture = 'HURTnoteSplashes';
-					colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
+					colorSwap.setHSB(0, 0, 0);
 
 					missHealth = (isSustainNote ? .1 : .25);
 					hitCausesMiss = true;
@@ -147,7 +144,7 @@ class Note extends FlxSprite {
 				case 'Danger Note':
 					reloadNote('DANGER', 'NOTE_assets');
 					noteSplashTexture = 'DANGERnoteSplashes';
-					colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
+					colorSwap.setHSB(0, 0, 0);
 					noMissAnimation = true;
 					missHealth = (isSustainNote ? .3 : .5);
 					hitCausesMiss = false;
@@ -155,7 +152,7 @@ class Note extends FlxSprite {
 					ignoreNote = true;
 					reloadNote('KILL', 'NOTE_assets');
 					noteSplashTexture = 'HURTnoteSplashes';
-					colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
+					colorSwap.setHSB(0, 0, 0);
 					missHealth = PlayState.instance.healthMax;
 					hitCausesMiss = true;
 					hitsound = 'cancelMenu';
@@ -173,7 +170,7 @@ class Note extends FlxSprite {
 					final luaPrefix = value.split(" ")[0].toUpperCase();
 					if (Paths.fileExists('images/${value.toUpperCase()}_assets.png', IMAGE)) {
 						reloadNote(luaPrefix, '_assets');
-						colorSwap.hue = colorSwap.saturation = colorSwap.brightness = 0;
+						colorSwap.setHSB(0, 0, 0);
 					}
 				#end
 			}

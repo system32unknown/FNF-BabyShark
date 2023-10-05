@@ -77,7 +77,7 @@ class PlatformUtil {
     ')
     static public function setWindowAtt(type:Int, enable:Bool) {}
 
-    @:functionCode('MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND); ')
+    @:functionCode('MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);')
     static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
 
     @:functionCode('SetProcessDPIAware();') @:allow(Main)
