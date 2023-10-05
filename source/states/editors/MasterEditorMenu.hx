@@ -1,8 +1,5 @@
 package states.editors;
 
-#if MODS_ALLOWED
-import sys.FileSystem;
-#end
 import states.MainMenuState;
 import states.FreeplayState;
 import data.WeekData;
@@ -16,7 +13,8 @@ class MasterEditorMenu extends MusicBeatState {
 		'Dialogue Portrait Editor',
 		'Character Editor',
 		'Chart Editor',
-		'Credit Editor'
+		'Credit Editor',
+		'Enter TerminaL'
 	];
 	var grpTexts:FlxTypedGroup<Alphabet>;
 	var directories:Array<String> = [null];
@@ -79,9 +77,7 @@ class MasterEditorMenu extends MusicBeatState {
 		if(controls.UI_RIGHT_P) changeDirectory(1);
 		#end
 
-		if (controls.BACK) {
-			MusicBeatState.switchState(new MainMenuState());
-		}
+		if (controls.BACK) MusicBeatState.switchState(new MainMenuState());
 
 		if (controls.ACCEPT) {
 			switch(options[curSelected]) {
@@ -94,6 +90,7 @@ class MasterEditorMenu extends MusicBeatState {
 					PlayState.chartingMode = true;
 					LoadingState.loadAndSwitchState(new ChartingState(), false); //felt it would be cool maybe
 				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditor());
+				case 'Enter TerminaL': LoadingState.loadAndSwitchState(new states.TerminalState(), false); //felt it would be cool maybe
 			}
 			FlxG.sound.music.volume = 0;
 			#if PRELOAD_ALL

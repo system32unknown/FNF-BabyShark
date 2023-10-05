@@ -14,7 +14,7 @@ class AdditionalClasses {
 			#if VIDEOS_ALLOWED "hxcodec", #end
 			#if LUA_ALLOWED "llua", #end
 			#if desktop "discord_rpc", #end
-			"hscript",
+			"hscript", "flxgif",
 			// OTHER LIBRARIES & STUFF
 			#if flash "flash", #end
 			#if cpp "cpp", #end

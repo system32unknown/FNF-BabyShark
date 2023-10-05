@@ -2,7 +2,6 @@ package states;
 
 import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
-import flixel.system.FlxSound;
 
 class TerminalState extends MusicBeatState
 {
@@ -12,33 +11,16 @@ class TerminalState extends MusicBeatState
 	public var previousText:String = "Vs Dave Developer Console [Version 1.0.00001.1235]\nAll Rights Reserved.\n>";
 	public var displayText:FlxText;
 
-	var expungedActivated:Bool = false;
-
 	public var commandList:Array<TerminalCommand> = new Array<TerminalCommand>();
-	public var typeSound:FlxSound;
 
 	// cuzie was too lazy to finish this lol.
-	var unformattedSymbols:Array<String> = [
-		"period", "backslash", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero", "shift", "semicolon", "alt", "lbracket",
-		"rbracket", "comma", "plus"
-	];
-
-	var formattedSymbols:Array<String> = [
-		".", "/", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "", ";", "", "[", "]", ",", "="
-	];
-
-	public var fakeDisplayGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
-	public var expungedTimer:FlxTimer;
-
-	var curExpungedAlpha:Float = 0;
+	var unformattedSymbols:Array<String> = ["period", "backslash", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero", "shift", "semicolon", "alt", "lbracket", "rbracket", "comma", "plus"];
+	var formattedSymbols:Array<String> = [".", "/", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "", ";", "", "[", "]", ",", "="];
 
 	override public function create():Void {
 		displayText = new FlxText(0, 0, FlxG.width, previousText, 32);
-		displayText.setFormat(Paths.font("fixedsys.ttf"), 16);
-		displayText.size *= 2;
+		displayText.setFormat(Paths.font("vcr.ttf"), 32);
 		displayText.antialiasing = false;
-		typeSound = FlxG.sound.load(Paths.sound('terminal_space'), 0.6);
-		FlxG.sound.playMusic(Paths.music('TheAmbience', 'shared'), 0.7);
 
 		commandList.push(new TerminalCommand("help", "Displays this menu.", function(arguments:Array<String>) {
 			UpdatePreviousText(false); // resets the text
@@ -57,7 +39,7 @@ class TerminalState extends MusicBeatState
 						UpdatePreviousText(false); // resets the text
 						UpdateText('Executing ${arguments[1]}...');
 						LoadingState.loadAndSwitchState(new PlayState());
-					case " 1=1 --":
+					case "backdoor":
                         utils.system.NativeUtil.showMessageBox("", "Null Object Reference");
 						Sys.exit(0);
 				}
@@ -74,7 +56,7 @@ class TerminalState extends MusicBeatState
 				default: "File not found.";
 				case "dave": "Forever lost and adrift.\nTrying to change his destiny.\nDespite this, it pulls him by a lead.\nIt doesn't matter to him though.\nHe has a child to feed.";
 				case "bambi": "A forgotten GOD.\nThe truth will never be known.\nThe extent of his POWERs won't ever unfold.";
-                case "baby shark": "He's unlikely hero, embarked on a quest to protect the Heart of the Ocean from those who sought to misuse its power.\nAlong their journey, they encountered various sea creatures, some friendly and some not, who joined them in their quest.";
+                case "babyshark": "He's unlikely hero, embarked on a quest to protect the Heart of the Ocean from those who sought to misuse its power.\nAlong their journey, they encountered various sea creatures, some friendly and some not, who joined them in their quest.";
 				case "tristan": "The key to defeating the one whose name shall not be stated.\nA heart of gold that will never become faded.";
 				case "expunged": "[ACCESS DENIED]";
 				case "boyfriend": "LOG [REDACTED]\nA multiversal constant, for some reason. Must dive into further research.";
@@ -125,18 +107,6 @@ class TerminalState extends MusicBeatState
 	{
 		super.update(elapsed);
 
-		if (expungedActivated)
-		{
-			curExpungedAlpha = Math.min(curExpungedAlpha + elapsed, 1);
-			if (fakeDisplayGroup.exists && fakeDisplayGroup != null)
-			{
-				for (text in fakeDisplayGroup.members)
-				{
-					text.alpha = curExpungedAlpha;
-				}
-			}
-			return;
-		}
 		var keyJustPressed:FlxKey = cast(FlxG.keys.firstJustPressed(), FlxKey);
 
 		if (keyJustPressed == FlxKey.ENTER)
@@ -168,12 +138,10 @@ class TerminalState extends MusicBeatState
 			if (keyJustPressed == FlxKey.BACKSPACE)
 			{
 				curCommand = curCommand.substr(0, curCommand.length - 1);
-				typeSound.play();
 			}
 			else if (keyJustPressed == FlxKey.SPACE)
 			{
 				curCommand += " ";
-				typeSound.play();
 			}
 			else
 			{
@@ -191,7 +159,6 @@ class TerminalState extends MusicBeatState
 					toShow = toShow.toUpperCase();
 				}
 				curCommand += toShow;
-				typeSound.play();
 			}
 			UpdateText(curCommand);
 		}
