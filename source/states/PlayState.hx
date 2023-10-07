@@ -2260,7 +2260,7 @@ class PlayState extends MusicBeatState {
 		tempText += 'Score:$songScore ';
 		tempText += tempMiss;
 		switch(ClientPrefs.getPref('ScoreType')) {
-			case 'Alter': tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator [$ratingName, $ratingFC] • $ranks' : ' $scoreSeparator [?, ?] • F');
+			case 'Alter': tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ratingFC] • $ranks' : ' $scoreSeparator [?, ?] • F');
 			case 'Kade': tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 		}
 		if (updateScoreText) scoreTxt.text = tempText;
