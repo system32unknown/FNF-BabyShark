@@ -1,6 +1,5 @@
 package states;
 
-import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
 
 class TerminalState extends MusicBeatState

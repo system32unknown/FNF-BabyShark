@@ -191,6 +191,9 @@ class Paths
 	inline static public function json(key:String, ?library:String)
 		return getPath('data/$key.json', TEXT, library);
 
+	inline static public function gif(key:String, ?library:String)
+		return getPath('images/$key.gif', library);
+
 	#if (!MODS_ALLOWED) inline #end static public function video(key:String) {
 		#if MODS_ALLOWED
 		var file:String = modsVideo(key);
@@ -431,6 +434,8 @@ class Paths
 
 	inline static public function modsImages(key:String)
 		return modFolders('images/$key.png');
+	inline static public function modsGif(key:String)
+		return modFolders('images/$key.gif');
 
 	inline static public function modsXml(key:String)
 		return modFolders('images/$key.xml');

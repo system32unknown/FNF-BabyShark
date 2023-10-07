@@ -66,13 +66,13 @@ class ShaderFunctions {
             var arr:Array<String> = funk.runtimeShaders.get(shader);
             var camera = getCam(cam);
             @:privateAccess {
-                if (camera._filters == null)
-                    camera._filters = [];
+                if (camera.filters == null)
+                    camera.filters = [];
 				
                 var filter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
                 storedFilters.set(index, filter);
 				trace(storedFilters);
-                camera._filters.push(filter);
+                camera.filters.push(filter);
             }
             return true;
 			#else
@@ -84,28 +84,26 @@ class ShaderFunctions {
         funk.addLocalCallback("removeCamShader", function(cam:String, shader:String) {
             #if (!flash && MODS_ALLOWED && sys)
             var camera = getCam(cam);
-            @:privateAccess {
-                if (!storedFilters.exists(shader)) {
-                    FunkinLua.luaTrace('removeCamShader: $shader does not exist!', false, false, FlxColor.YELLOW);
-                    return false;
-                }
-
-                if (camera._filters == null) {
-                    FunkinLua.luaTrace('removeCamShader: camera $cam does not have any shaders!', false, false, FlxColor.YELLOW);
-                    return false;
-                }
-
-                camera._filters.remove(storedFilters.get(shader));
-                storedFilters.remove(shader);
-                return true;
+            if (!storedFilters.exists(shader)) {
+                FunkinLua.luaTrace('removeCamShader: $shader does not exist!', false, false, FlxColor.YELLOW);
+                return false;
             }
+
+            if (camera.filters == null) {
+                FunkinLua.luaTrace('removeCamShader: camera $cam does not have any shaders!', false, false, FlxColor.YELLOW);
+                return false;
+            }
+
+            camera.filters.remove(storedFilters.get(shader));
+            storedFilters.remove(shader);
+            return true;
             #else
             FunkinLua.luaTrace('removeCamShader: Platform unsupported for Runtime Shaders!', false, false, FlxColor.RED);
             #end
             return false;
         });
 
-        funk.addLocalCallback("clearCamShaders", function(cam:String) getCam(cam).setFilters([]));
+        funk.addLocalCallback("clearCamShaders", (cam:String) -> getCam(cam).filters = []);
 
 		funk.set("getShaderBool", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)

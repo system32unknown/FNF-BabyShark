@@ -71,6 +71,7 @@
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-ui"/>
 	<haxelib name="flixel-addons"/>
+	<haxelib name="flxgif"/>
 	<haxelib name="tjson"/>
 
 	<haxedef name="hscriptPos"/>
