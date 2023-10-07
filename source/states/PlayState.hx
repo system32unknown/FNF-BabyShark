@@ -81,9 +81,7 @@ class PlayState extends MusicBeatState {
 	public static var curStage:String = '';
 	public static var stageUI:String = "normal";
 	public static var isPixelStage(get, never):Bool;
-
-	@:noCompletion
-	static function get_isPixelStage():Bool
+	@:noCompletion static function get_isPixelStage():Bool
 		return stageUI == "pixel";
 	public static var SONG:SwagSong = null;
 	public static var isStoryMode:Bool = false;
@@ -269,7 +267,6 @@ class PlayState extends MusicBeatState {
 		PauseSubState.songName = null; //Reset to default
 
 		keysArray = data.EkData.Keybinds.fill()[mania];
-		trace(keysArray);
 		fillKeysPressed();
 		keysPressed = CoolUtil.dynamicArray(false, keysArray.length);
 		if (FlxG.sound.music != null)
