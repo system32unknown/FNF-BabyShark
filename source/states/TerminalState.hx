@@ -10,6 +10,8 @@ class TerminalState extends MusicBeatState
 	public var previousText:String = "Vs Dave Developer Console [Version 1.0.00001.1235]\nAll Rights Reserved.\n>";
 	public var displayText:FlxText;
 
+	var what:Bool = false;
+
 	public var commandList:Array<TerminalCommand> = new Array<TerminalCommand>();
 
 	// cuzie was too lazy to finish this lol.
@@ -41,6 +43,11 @@ class TerminalState extends MusicBeatState
 					case "backdoor":
                         utils.system.NativeUtil.showMessageBox("", "Null Object Reference");
 						Sys.exit(0);
+					case ".what":
+						UpdatePreviousText(false);
+						what = true;
+						UpdateText("\n" + arguments[1] + "What.");
+						FlxTween.tween(FlxG.camera, {scaleX:.00001, scaleY:.00001, angle: 360}, 10, {onComplete: (twn:FlxTween) -> LoadingState.loadAndSwitchState(new MainMenuState())});
 				}
 			} else UpdateText("\nInvalid Parameter"); // todo: translate.
 		}));
@@ -87,13 +94,10 @@ class TerminalState extends MusicBeatState
 		for (i in split_end...splits.length)
 		{
 			var split:String = splits[i];
-			if (split == "")
-			{
-				finalthing = finalthing + "\n";
-			}
-			else
-			{
-				finalthing = finalthing + split + (i < (splits.length - 1) ? "\n" : "");
+			if (split == "") {
+				finalthing += "\n";
+			} else {
+				finalthing += split + (i < (splits.length - 1) ? "\n" : "");
 			}
 		}
 		previousText = finalthing;
@@ -102,8 +106,7 @@ class TerminalState extends MusicBeatState
 			displayText.y = 720 - displayText.height;
 	}
 
-	override function update(elapsed:Float):Void
-	{
+	override function update(elapsed:Float):Void {
 		super.update(elapsed);
 
 		var keyJustPressed:FlxKey = cast(FlxG.keys.firstJustPressed(), FlxKey);
