@@ -99,12 +99,11 @@ class FunkinLua {
 		set("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
 			final trimmedpft = platformType.trim();
 			if (args == null) args = [];
-			//if (["setDPIAware"].contains(trimmedpft)) return null;
 
 			return Reflect.callMethod(null, Reflect.field(PlatformUtil, trimmedpft), args);
 		});
 
-		set("setGlobalFromScript", function(luaFile:String, global:String, val:Dynamic) { // returns the global from a script
+		set("setGlobalFromScript", function(luaFile:String, global:String, val:Dynamic) { // sets the global from a script
 			var foundScript:String = findScript(luaFile);
 			if(foundScript != null)
 				for (luaInstance in game.luaArray)
@@ -1083,8 +1082,8 @@ class FunkinLua {
 		if(ignoreCheck || getBool('luaDebugMode')) {
 			if(deprecated && !getBool('luaDeprecatedWarnings')) return;
 			PlayState.instance.addTextToDebug(text, color);
+			trace(text);
 		}
-		trace(text);
 		#end
 	}
 

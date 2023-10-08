@@ -63,15 +63,13 @@
 	<assets path="assets/weeks" library="weeks"/>
 
 	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED"/>
-	
-	<!-- _______________________________Flags______________________________ -->
-	<haxeflag name="-dce full" unless="HSCRIPT_ALLOWED"/>
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-ui"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="tjson"/>
+	<haxelib name="hscript-improved"/>
 
 	<haxedef name="hscriptPos"/>
 
@@ -81,13 +79,13 @@
 
 	<section if="HSCRIPT_ALLOWED">
 		<haxeflag name="-dce no"/>
-		<haxelib name="hscript-improved"/>
 		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
 	</section>
 
 	<!-- ______________________________Haxedefines_____________________________ -->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
 	<haxedef name="queue_experimental_optimization"/>
+	<haxedef name="openfl_dpi_aware"/>
 
 	<section unless="debug">
 		<!-- No deprecation warnings. -->

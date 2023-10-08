@@ -11,10 +11,21 @@ import flixel.math.FlxPoint;
 class DeltaTrail extends FlxTrail {
 	var _timer:Float = 0;
 	var timerMax:Float;
-
-	public function new(Target:FlxSprite, ?Graphic:FlxGraphicAsset, Length:Int = 10, Delay:Float = 3 / 60, Alpha:Float = 0.4, Diff:Float = 0.05):Void {
-		super(Target, Graphic, Length, 0, Alpha, Diff);
-		timerMax = Delay;
+	
+	/**
+	 * Creates a new DeltaTrail effect for a specific FlxSprite.
+	 *
+	 * @param	Target		The FlxSprite the trail is attached to.
+	 * @param  	Graphic		The image to use for the trailsprites. Optional, uses the sprite's graphic if null.
+	 * @param	Length		The maximum amount of trailsprites to create.
+	 * @param	Delay		Amount of time in between each trail update 
+	 * @param	Alpha		The alpha value for the very first trailsprite.
+	 * @param	Diff		The amount subtracted from the trailsprite's alpha every update. If null, it will be auto calculated to end at 0 based on Length.
+	 */
+	public function new(target:FlxSprite, ?Graphic:FlxGraphicAsset, length:Int = 10, delay:Float = 3 / 60, alpha:Float = .5, diff:Float = null):Void {
+		if(diff == null) diff = alpha / length;
+		super(target, graphic, length, 0, alpha, diff);
+		timerMax = delay;
 	}
 
 	override public function update(elapsed:Float):Void {
@@ -26,11 +37,7 @@ class DeltaTrail extends FlxTrail {
 			_timer = 0;
 
 			// Push the current position into the positons array and drop one.
-			var spritePosition:FlxPoint = null;
-			if (_recentPositions.length == _trailLength)
-				spritePosition = _recentPositions.pop();
-			else spritePosition = FlxPoint.get();
-
+			var spritePosition:FlxPoint = (_recentPositions.length == _trailLength) ? _recentPositions.pop() : FlxPoint.get();
 			spritePosition.set(target.x - target.offset.x, target.y - target.offset.y);
 			_recentPositions.unshift(spritePosition);
 
@@ -40,11 +47,7 @@ class DeltaTrail extends FlxTrail {
 
 			// Again the same thing for Sprites scales if scalesEnabled
 			if (scalesEnabled) {
-				var spriteScale:FlxPoint = null; // sprite.scale;
-				if (_recentScales.length == _trailLength)
-					spriteScale = _recentScales.pop();
-                else spriteScale = FlxPoint.get();
-
+				var spriteScale:FlxPoint = (_recentScales.length == _trailLength) ? _recentScales.pop() : FlxPoint.get();
 				spriteScale.set(target.scale.x, target.scale.y);
 				_recentScales.unshift(spriteScale);
 			}
@@ -83,6 +86,7 @@ class DeltaTrail extends FlxTrail {
 					trailSprite.animation.curAnim = _recentAnimations[i];
 				}
 
+				// Is the trailsprite even visible?
 				trailSprite.exists = true;
 			}
 		}

@@ -148,27 +148,21 @@ class DeprecatedFunctions {
 		});
 
 		funk.set("doTweenX", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			FunkinLua.luaTrace("doTweenX is deprecated! Use doTween instead", false, true);
 			funk.oldTweenFunction(tag, vars, {x: value}, duration, ease, 'doTweenX');
 		});
 		funk.set("doTweenY", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			FunkinLua.luaTrace("doTweenY is deprecated! Use doTween instead", false, true);
 			funk.oldTweenFunction(tag, vars, {y: value}, duration, ease, 'doTweenY');
 		});
 		funk.set("doTweenAngle", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			FunkinLua.luaTrace("doTweenAngle is deprecated! Use doTween instead", false, true);
 			funk.oldTweenFunction(tag, vars, {angle: value}, duration, ease, 'doTweenAngle');
 		});
 		funk.set("doTweenAlpha", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			FunkinLua.luaTrace("doTweenAlpha is deprecated! Use doTween instead", false, true);
 			funk.oldTweenFunction(tag, vars, {alpha: value}, duration, ease, 'doTweenAlpha');
 		});
 		funk.set("doTweenZoom", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			FunkinLua.luaTrace("doTweenZoom is deprecated! Use doTween instead", false, true);
 			funk.oldTweenFunction(tag, vars, {zoom: value}, duration, ease, 'doTweenZoom');
 		});
 		funk.set("noteTweenX", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
-			FunkinLua.luaTrace("noteTweenX is deprecated! Use noteTween instead", false, true);
 			LuaUtils.cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -183,7 +177,6 @@ class DeprecatedFunctions {
 			}
 		});
 		funk.set("noteTweenY", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
-			FunkinLua.luaTrace("noteTweenY is deprecated! Use noteTween instead", false, true);
 			LuaUtils.cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -198,7 +191,6 @@ class DeprecatedFunctions {
 			}
 		});
 		funk.set("noteTweenAngle", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
-			FunkinLua.luaTrace("noteTweenAngle is deprecated! Use noteTween instead", false, true);
 			LuaUtils.cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -213,7 +205,6 @@ class DeprecatedFunctions {
 			}
 		});
 		funk.set("noteTweenDirection", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
-			FunkinLua.luaTrace("noteTweenDirection is deprecated! Use noteTween instead", false, true);
 			LuaUtils.cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -228,7 +219,6 @@ class DeprecatedFunctions {
 			}
 		});
 		funk.set("noteTweenAlpha", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
-			FunkinLua.luaTrace("noteTweenAlpha is deprecated! Use noteTween instead", false, true);
 			LuaUtils.cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];

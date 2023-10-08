@@ -15,7 +15,7 @@ import sys.FileSystem;
 typedef TitleData = {
 	starty:Float,
 	bgColor:String,
-	bpm:Int
+	bpm:Float
 }
 
 class TitleState extends MusicBeatState

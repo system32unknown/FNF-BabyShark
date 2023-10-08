@@ -15,11 +15,8 @@ class GitCommitMacro {
 	public static var commitHash(get, null):String;
 
 	// GETTERS
-	static inline function get_commitNumber()
-		return __getCommitNumber();
-
-	static inline function get_commitHash()
-		return __getCommitHash();
+	static inline function get_commitNumber() return __getCommitNumber();
+	static inline function get_commitHash() return __getCommitHash();
 
 	// INTERNAL MACROS
 	static macro function __getCommitHash() {
