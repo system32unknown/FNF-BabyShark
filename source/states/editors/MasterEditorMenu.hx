@@ -13,8 +13,7 @@ class MasterEditorMenu extends MusicBeatState {
 		'Dialogue Portrait Editor',
 		'Character Editor',
 		'Chart Editor',
-		'Credit Editor',
-		'Enter TerminaL'
+		'Credit Editor'
 	];
 	var grpTexts:FlxTypedGroup<Alphabet>;
 	var directories:Array<String> = [null];
@@ -23,8 +22,7 @@ class MasterEditorMenu extends MusicBeatState {
 	var curDirectory = 0;
 	var directoryTxt:FlxText;
 
-	override function create()
-	{
+	override function create() {
 		FlxG.camera.bgColor = FlxColor.BLACK;
 		#if discord_rpc
 		// Updating Discord Rich Presence
@@ -90,7 +88,6 @@ class MasterEditorMenu extends MusicBeatState {
 					PlayState.chartingMode = true;
 					LoadingState.loadAndSwitchState(new ChartingState(), false); //felt it would be cool maybe
 				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditor());
-				case 'Enter TerminaL': LoadingState.loadAndSwitchState(new states.TerminalState(), false); //felt it would be cool maybe
 			}
 			FlxG.sound.music.volume = 0;
 			#if PRELOAD_ALL

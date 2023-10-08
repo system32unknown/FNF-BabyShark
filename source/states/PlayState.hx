@@ -269,8 +269,7 @@ class PlayState extends MusicBeatState {
 		keysArray = data.EkData.Keybinds.fill()[mania];
 		fillKeysPressed();
 		keysPressed = CoolUtil.dynamicArray(false, keysArray.length);
-		if (FlxG.sound.music != null)
-			FlxG.sound.music.stop();
+		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		// Gameplay settings
 		healthGain = ClientPrefs.getGameplaySetting('healthgain');
@@ -290,7 +289,6 @@ class PlayState extends MusicBeatState {
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOther, false);
-
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
 
@@ -982,10 +980,7 @@ class PlayState extends MusicBeatState {
 		insert(members.indexOf(notes), spr);
 		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, Conductor.crochet / 1000, {
 			ease: FlxEase.cubeInOut,
-			onComplete: (twn:FlxTween) -> {
-				remove(spr, true);
-				spr.destroy();
-			}
+			onComplete: (twn:FlxTween) -> {remove(spr, true); spr.destroy();}
 		});
 		return spr;
 	}
@@ -1823,12 +1818,10 @@ class PlayState extends MusicBeatState {
 			if(Conductor.songPosition < leStrumTime) return;
 
 			var value1:String = '';
-			if(eventNotes[0].value1 != null)
-				value1 = eventNotes[0].value1;
+			if(eventNotes[0].value1 != null) value1 = eventNotes[0].value1;
 
 			var value2:String = '';
-			if(eventNotes[0].value2 != null)
-				value2 = eventNotes[0].value2;
+			if(eventNotes[0].value2 != null) value2 = eventNotes[0].value2;
 
 			triggerEvent(eventNotes[0].event, value1, value2, leStrumTime);
 			eventNotes.shift();
@@ -1874,8 +1867,8 @@ class PlayState extends MusicBeatState {
 
 			case 'Add Camera Zoom':
 				if(ClientPrefs.getPref('camZooms') && FlxG.camera.zoom < 1.35) {
-					if(flValue1 == null) flValue1 = 0.015;
-					if(flValue2 == null) flValue2 = 0.03;
+					if(flValue1 == null) flValue1 = .015;
+					if(flValue2 == null) flValue2 = .03;
 
 					FlxG.camera.zoom += flValue1;
 					camHUD.zoom += flValue2;
