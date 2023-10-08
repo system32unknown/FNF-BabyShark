@@ -45,8 +45,7 @@ class CheckboxThingie extends FlxSprite {
 		return check;
 	}
 
-	function animationFinished(name:String)
-	{
+	function animationFinished(name:String) {
 		switch(name) {
 			case 'checking':
 				animation.play('checked', true);

@@ -36,7 +36,10 @@ class FlxSoundTray extends Sprite {
 
 	var text:TextField = new TextField();
 	/**The sound used when decreasing the volume.**/
-	final volumeSound:String = 'flixel/sounds/beep';
+	public var volumeUpSound:String = "flixel/sounds/beep";
+
+	/**The sound used when decreasing the volume.**/
+	public var volumeDownSound:String = 'flixel/sounds/beep';
 
 	/**Whether or not changing the volume should make noise.**/
 	public var silent:Bool = false;
@@ -90,8 +93,7 @@ class FlxSoundTray extends Sprite {
 	 */
 	public function update(MS:Float):Void {
 		// Animate sound tray thing
-		if (_timer > 0)
-			_timer -= (MS / 1000);
+		if (_timer > 0) _timer -= (MS / 1000);
 		else if (y > -height) {
 			y -= (MS / 1000) * height * .5;
 
@@ -114,11 +116,11 @@ class FlxSoundTray extends Sprite {
 	/**
 	 * Makes the little volume tray slide out.
 	 *
-	 * @param slient Whether the volume is increasing.
+	 * @param up Whether the volume is increasing.
 	 */
-	public function show(Silent:Bool = false):Void {
-		if (!Silent) {
-			var sound = FlxAssets.getSound(volumeSound);
+	public function show(up:Bool = false):Void {
+		if (!silent) {
+			var sound = FlxAssets.getSound(up ? volumeUpSound : volumeDownSound);
 			if (sound != null) FlxG.sound.load(sound).play();
 		}
 
@@ -133,7 +135,7 @@ class FlxSoundTray extends Sprite {
 		for (i in 0..._bars.length)
 			_bars[i].alpha = i < globalVolume ? 1 : .5;
 
-		text.text = 'Volume: ' + (FlxG.sound.muted ? 'Muted' : globalVolume * 10 + '%');
+		text.text = 'Volume: ${(FlxG.sound.muted ? 'Muted' : globalVolume * 10 + '%')}';
 	}
 
 	public function screenCenter():Void {

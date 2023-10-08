@@ -64,8 +64,7 @@ class Bar extends FlxSpriteGroup {
 		if (right != null) rightBar.color = right;
 	}
 
-	public function updateBar()
-	{
+	public function updateBar() {
 		if(leftBar == null || rightBar == null) return;
 
 		leftBar.setPosition(bg.x, bg.y);

@@ -530,9 +530,9 @@ class PlayState extends MusicBeatState {
 		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		botplayTxt.screenCenter(X);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.visible = cpuControlled;
-		botplayTxt.screenCenter(X);
 		uiGroup.add(botplayTxt);
 
 		songNameTxt = new FlxText(2, 0, 0, '${SONG.song} - ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : ''), 16);
@@ -2260,7 +2260,7 @@ class PlayState extends MusicBeatState {
 		tempText += 'Score:$songScore ';
 		tempText += tempMiss;
 		switch(ClientPrefs.getPref('ScoreType')) {
-			case 'Alter': tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ratingFC] • $ranks' : ' $scoreSeparator [?, ?] • F');
+			case 'Alter': tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ratingFC] • $ranks' : ' [?, ?] • F');
 			case 'Kade': tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 		}
 		if (updateScoreText) scoreTxt.text = tempText;
