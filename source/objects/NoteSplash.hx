@@ -4,7 +4,7 @@ import shaders.ColorSwap;
 
 class NoteSplash extends FlxSprite {
 	public var colorSwap:ColorSwap = null;
-	var sc:Array<Float> = Note.noteSplashScales;
+	var sc:Array<Float> = EK.splashScales;
 
 	public static var defaultNoteSplash(default, never):String = 'noteSplashes/noteSplashes';
 
@@ -43,12 +43,12 @@ class NoteSplash extends FlxSprite {
 		if(PlayState.isPixelStage || !ClientPrefs.getPref('antialiasing')) antialiasing = false;
 
 		var mania:Int = PlayState.mania;
-		offset.set(-34 * Note.scales[PlayState.mania], -23 * Note.scales[PlayState.mania]);
+		offset.set(-34 * EK.scales[PlayState.mania], -23 * EK.scales[PlayState.mania]);
 		if (PlayState.isPixelStage || texture != 'noteSplashes')
-			offset.set(14 / Note.scales[mania], 14 / Note.scales[mania]);
+			offset.set(14 / EK.scales[mania], 14 / EK.scales[mania]);
 
 		var animNum:Int = FlxG.random.int(1, 2);
-		var animIndex:Int = Math.floor(Note.keysShit.get(mania).get('pixelAnimIndex')[note] % (Note.xmlMax + 1));
+		var animIndex:Int = Math.floor(Note.keysShit.get(mania).get('pixelAnimIndex')[note] % (EK.xmlMax + 1));
 		animation.play('note$animIndex-$animNum', true);
 
 		if(animation.curAnim != null)
@@ -79,18 +79,17 @@ class NoteSplash extends FlxSprite {
 			}
 		}
 		for (splash_frame in 1...3) {
-			for (gfx in 0...Note.gfxLetter.length) {
+			for (gfx in 0...Note.gfxLetter.length)
 				animation.addByPrefix('note$gfx-' + splash_frame, 'note splash ${Note.gfxLetter[gfx]} ' + splash_frame, 24, false);
-			}
 		}
 	}
 
 	static var aliveTime:Float = 0;
-	static var buggedKillTime:Float = 0.5; //automatically kills note splashes if they break to prevent it from flooding your HUD
+	static var buggedKillTime:Float = .5; //automatically kills note splashes if they break to prevent it from flooding your HUD
 	override function update(elapsed:Float) {
 		aliveTime += elapsed;
-		if((animation.curAnim != null && animation.curAnim.finished) ||
-			(animation.curAnim == null && aliveTime >= buggedKillTime)) kill();
+		if((animation.curAnim != null && animation.curAnim.finished) || (animation.curAnim == null && aliveTime >= buggedKillTime))
+			kill();
 
 		super.update(elapsed);
 	}

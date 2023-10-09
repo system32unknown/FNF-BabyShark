@@ -44,8 +44,7 @@ class StrumNote extends FlxSprite {
 		scrollFactor.set();
 	}
 
-	public function reloadNote()
-	{
+	public function reloadNote() {
 		var lastAnim:String = null;
 		if(animation.curAnim != null) lastAnim = animation.curAnim.name;
 
@@ -59,7 +58,7 @@ class StrumNote extends FlxSprite {
 			antialiasing = false;
 			var daFrames:Array<Int> = Note.keysShit.get(PlayState.mania).get('pixelAnimIndex');
 
-			setGraphicSize(Std.int(width * PlayState.daPixelZoom * Note.pixelScales[PlayState.mania]));
+			setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 			updateHitbox();
 			antialiasing = false;
 			animation.add('static', [daFrames[noteData]]);
@@ -76,26 +75,19 @@ class StrumNote extends FlxSprite {
 		}
 		updateHitbox();
 
-		if(lastAnim != null) {
-			playAnim(lastAnim, true);
-		}
+		if(lastAnim != null) playAnim(lastAnim, true);
 	}
 
 	public function postAddedToGroup() {
 		playAnim('static');
 
-		switch (PlayState.mania) {
-			case 0 | 1 | 2: x += width * noteData;
-			case 3: x += (Note.swagWidth * noteData);
-			default: x += ((width - Note.lessX[PlayState.mania]) * noteData);
-		}
-
-		x += Note.xtra[PlayState.mania];
+		x += (Note.swagWidth * EK.scales[PlayState.mania]) * noteData;
+		x += EK.offsetX[PlayState.mania];
+		x -= (EK.restPosition[PlayState.mania]) * noteData;
 
 		x += 50;
 		x += ((FlxG.width / 2) * player);
 		ID = noteData;
-		x -= Note.posRest[PlayState.mania];
 	}
 
 	override function update(elapsed:Float) {
@@ -111,8 +103,10 @@ class StrumNote extends FlxSprite {
 
 	public function playAnim(anim:String, ?force:Bool = false) {
 		animation.play(anim, force);
-		centerOffsets();
-		centerOrigin();
+		if(animation.curAnim != null) {
+			centerOffsets();
+			centerOrigin();
+		}
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
 		var arrowIndex:Int = Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % EK.keys(PlayState.mania));
 		if(animation.curAnim == null || animation.curAnim.name == 'static')

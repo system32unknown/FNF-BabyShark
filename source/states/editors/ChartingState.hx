@@ -747,7 +747,7 @@ class ChartingState extends MusicBeatState {
 		var swapSection:FlxButton = new FlxButton(10, check_notesSec.y + 40, "Swap section", function() {
 			for (i in 0..._song.notes[curSec].sectionNotes.length) {
 				var note:Array<Dynamic> = _song.notes[curSec].sectionNotes[i];
-				note[1] = (note[1] + EK.keys(_song.mania)) % EK.strums(_song.mania);
+				note[1] = (note[1] + EK.keys(_song.mania)) % (EK.strums(_song.mania) + 1);
 				_song.notes[curSec].sectionNotes[i] = note;
 			}
 			updateGrid();
@@ -1920,7 +1920,7 @@ class ChartingState extends MusicBeatState {
 								soundToPlay = 'gfnoise/GF_${Std.string(data + 1)}';
 							}
 
-							FlxG.sound.play(Paths.sound(soundToPlay)).pan = note.noteData < 4 ? -0.3 : 0.3; //would be coolio
+							FlxG.sound.play(Paths.sound(soundToPlay)).pan = note.noteData < 4 ? -.3 : .3; //would be coolio
 							playedSound[data] = true;
 						}
 
@@ -1967,7 +1967,7 @@ class ChartingState extends MusicBeatState {
 	var lastSecBeatsNext:Float = 0;
 	var columns:Int = 9;
 	function reloadGridLayer() {
-		GRID_SIZE = Note.gridSizes[_song.mania];
+		GRID_SIZE = EK.gridSizes[_song.mania];
 		PlayState.mania = _song.mania;
 		columns = EK.strums(_song.mania) + 2;
 
@@ -2013,7 +2013,7 @@ class ChartingState extends MusicBeatState {
 			gridBlack.setGraphicSize(Std.int(GRID_SIZE * columns), Std.int(nextGridBG.height));
 			gridBlack.updateHitbox();
 			gridBlack.antialiasing = false;
-			gridBlack.alpha = 0.4;
+			gridBlack.alpha = .4;
 			gridLayer.add(gridBlack);
 		}
 
@@ -2432,9 +2432,7 @@ class ChartingState extends MusicBeatState {
 		else {
 			// get last bpm
 			var daBPM:Float = _song.bpm;
-			for (i in 0...curSec)
-				if (_song.notes[i].changeBPM)
-					daBPM = _song.notes[i].bpm;
+			for (i in 0...curSec) if (_song.notes[i].changeBPM) daBPM = _song.notes[i].bpm;
 			Conductor.bpm = daBPM;
 		}
 

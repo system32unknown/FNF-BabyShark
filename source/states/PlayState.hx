@@ -803,10 +803,7 @@ class PlayState extends MusicBeatState {
 
 		var video:VideoManager = new VideoManager();
 		video.startVideo(filepath);
-		video.setFinishCallBack(() -> {
-			startAndEnd();
-			return null;
-		});
+		video.setFinishCallBack(() -> {startAndEnd(); return null;});
 		return video;
 		#else
 		FlxG.log.warn('Platform not supported!');
@@ -1073,10 +1070,7 @@ class PlayState extends MusicBeatState {
 		if(startOnTime > 0) setSongTime(startOnTime - 500);
 		startOnTime = 0;
 
-		if(paused) {
-			music.pause();
-			vocals.pause();
-		}
+		if(paused) {music.pause(); vocals.pause();}
 
 		// Song duration in a float, useful for the time left feature
 		songLength = music.length;
@@ -1190,7 +1184,7 @@ class PlayState extends MusicBeatState {
 				if (swagNote.mustPress) swagNote.x += FlxG.width / 2;
 				else if(middleScroll) {
 					swagNote.x += 310;
-					if(daNoteData > [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 6, 5][mania])
+					if(daNoteData > 1)
 						swagNote.x += FlxG.width / 2 + 25;
 				}
 
@@ -1239,9 +1233,7 @@ class PlayState extends MusicBeatState {
 		if(returnedValue != null && returnedValue != 0 && returnedValue != FunkinLua.Function_Continue)
 			return returnedValue;
 
-		switch(event.event) {
-			case 'Kill Henchmen': return 280;
-		}
+		switch(event.event) {case 'Kill Henchmen': return 280;}
 		return 0;
 	}
 
@@ -1265,22 +1257,24 @@ class PlayState extends MusicBeatState {
 		var strumLineX:Float = middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X;
 		var strumLineY:Float = downScroll ? (FlxG.height - 150) : 50;
 		var grp = player == 1 ? playerStrums : opponentStrums;
-		var targetAlpha:Float = 1;
-		if (player < 1) {
-			if (!ClientPrefs.getPref('opponentStrums')) targetAlpha = 0;
-			else if (middleScroll) targetAlpha = .35;
-		}
-		
 		for (i in 0...EK.keys(mania)) {
-			var twnDuration:Float = (4 / mania) * playbackRate;
-			var twnStart:Float = .5 + ((.8 / mania) * i) * playbackRate;
+			var tempMania:Int = mania;
+			if (tempMania == 0) tempMania = 1;
+			var twnDuration:Float = (4 / tempMania) * playbackRate;
+			var twnDelay:Float = .5 + ((.8 / tempMania) * i) * playbackRate;
+			var targetAlpha:Float = 1;
+
+			if (player < 1) {
+				if (!ClientPrefs.getPref('opponentStrums')) targetAlpha = 0;
+				else if (middleScroll) targetAlpha = .35;
+			}
 
 			var babyArrow:StrumNote = new StrumNote(strumLineX, strumLineY, i, player);
 			babyArrow.downScroll = downScroll;
 
 			if (arrowStartTween || ((!isStoryMode || restarted || firstStart || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
 				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {alpha: targetAlpha}, twnDuration, {ease: FlxEase.circOut, startDelay: twnStart});
+				FlxTween.tween(babyArrow, {alpha: targetAlpha}, twnDuration, {ease: FlxEase.circOut, startDelay: twnDelay});
 			} else babyArrow.alpha = targetAlpha;
 
 			if (player < 1 && middleScroll) {
@@ -1292,10 +1286,11 @@ class PlayState extends MusicBeatState {
 			grp.add(babyArrow);
 			strumLineNotes.add(babyArrow);
 			babyArrow.postAddedToGroup();
-			callOnScripts('onSpawnStrum', [strumLineNotes.members.indexOf(babyArrow), babyArrow.player, babyArrow.ID]);
+			callOnLuas('onSpawnStrum', [strumLineNotes.members.indexOf(babyArrow), babyArrow.player, babyArrow.ID]);
+			callOnHScript('onSpawnStrum', [babyArrow]);
 
 			if (ClientPrefs.getPref('showKeybindsOnStart') && player == 1) {
-				for (j in 0...1) {
+				for (j in 0...2) {
 					var daKeyTxt:FlxText = new FlxText(babyArrow.x, babyArrow.y - 10, 0, backend.InputFormatter.getKeyName(keysArray[i][j]), 32 - mania);
 					daKeyTxt.setFormat(Paths.font("vcr.ttf"), 32 - mania, FlxColor.WHITE, CENTER);
 					daKeyTxt.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1.25);
@@ -1305,11 +1300,10 @@ class PlayState extends MusicBeatState {
 					add(daKeyTxt);
 					daKeyTxt.camera = camHUD;
 
-					if (mania > 1 && !skipArrowStartTween)
-						FlxTween.tween(daKeyTxt, {y: textY + 32, alpha: 1}, twnDuration, {ease: FlxEase.circOut, startDelay: twnStart});
+					if (mania > 1 && !skipArrowStartTween) FlxTween.tween(daKeyTxt, {y: textY + 32, alpha: 1}, twnDuration, {ease: FlxEase.circOut, startDelay: twnDelay});
 					else {daKeyTxt.y += 16; daKeyTxt.alpha = 1;}
 					new FlxTimer().start(Conductor.crochet * .001 * 12, (_) -> {
-						FlxTween.tween(daKeyTxt, {y: daKeyTxt.y + 32, alpha: 0}, twnDuration, {ease: FlxEase.circIn, startDelay: twnStart, 
+						FlxTween.tween(daKeyTxt, {y: daKeyTxt.y + 32, alpha: 0}, twnDuration, {ease: FlxEase.circIn, startDelay: twnDelay, 
 						onComplete: (t) -> remove(daKeyTxt)});
 					});
 				}
@@ -1326,11 +1320,8 @@ class PlayState extends MusicBeatState {
 
 		if (isPixelStage) {
 			if (note.isSustainNote) note.originalHeight = note.height;
-			note.setGraphicSize(Std.int(note.width * daPixelZoom * Note.pixelScales[mania]));
-		} else {
-			note.setGraphicSize(Std.int(note.width * Note.scales[mania]));
-			note.updateHitbox();
-		}
+			note.setGraphicSize(Std.int(note.width * daPixelZoom * EK.scales[mania]));
+		} else note.setGraphicSize(Std.int(note.width * EK.scales[mania]));
 		note.updateHitbox();
 
 		var prevNote:Note = note.prevNote;
@@ -1354,7 +1345,7 @@ class PlayState extends MusicBeatState {
 			}
 
 			if (isPixelStage) {
-				prevNote.scale.y *= daPixelZoom * Note.pixelScales[mania]; //Fuck urself
+				prevNote.scale.y *= daPixelZoom * EK.scales[mania];
 				prevNote.updateHitbox();
 			}
 		} else if (!note.isSustainNote && noteData > -1 && noteData < tMania)
@@ -1380,7 +1371,7 @@ class PlayState extends MusicBeatState {
 				oldStrum.alpha = strumLineNotes.members[i].alpha;
 				oldStrum.scrollFactor.set();
 				oldStrum.camera = camHUD;
-				oldStrum.setGraphicSize(Std.int(oldStrum.width * Note.scales[daOldMania]));
+				oldStrum.setGraphicSize(Std.int(oldStrum.width * EK.scales[daOldMania]));
 				oldStrum.updateHitbox();
 				add(oldStrum);
 

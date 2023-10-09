@@ -13,23 +13,10 @@ typedef EventNote = {
 
 class Note extends FlxSprite {
 	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
-	public static var scales:Array<Float> = EK.scales;
-	public static var lessX:Array<Int> = EKData.lessX;
-	public static var xtra:Array<Float> = EKData.offsetX;
-	public static var posRest:Array<Float> = EKData.restPosition;
-	public static var gridSizes:Array<Int> = EKData.gridSizes;
-	public static var noteSplashScales:Array<Float> = EKData.splashScales;
-
-	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
-
-	public static var xmlMax:Int = 17; // This specifies the max of the splashes can go
-
 	public static var pixelNotesDivisionValue:Int = 18;
-	public static var pixelScales:Array<Float> = EK.pixelScales;
-
 	public static var keysShit:Map<Int, Map<String, Dynamic>> = EKData.keysShit;
-	public var mania:Int = 1;
-
+	
+	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public var strumTime:Float = 0;
 
 	public var mustPress:Bool = false;
@@ -64,7 +51,7 @@ class Note extends FlxSprite {
 	public var earlyHitMult:Float = 1;
 
 	public static var SUSTAIN_SIZE:Int = 44;
-	public static var swagWidth:Float = 160 * .7;
+	public static var swagWidth:Float = 160;
 	public static var defaultNoteSkin:String = 'noteSkins/NOTE_assets';
 
 	// Lua shit
@@ -101,9 +88,6 @@ class Note extends FlxSprite {
 	public var hitsound:String = 'hitsound';
 	public var changeAnim:Bool = true;
 	public var changeColSwap:Bool = true;
-	
-	var defaultWidth:Float = 157;
-	var defaultHeight:Float = 154;
 
 	function set_multSpeed(value:Float):Float {
 		resizeByRatio(value / multSpeed);
@@ -125,7 +109,7 @@ class Note extends FlxSprite {
 	function set_noteType(value:String):String {
 		noteSplashTexture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
 		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-		var arrowIndex:Int = Std.int(keysShit.get(mania).get('pixelAnimIndex')[noteData] % EK.keys(mania));
+		var arrowIndex:Int = Std.int(keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % EK.keys(PlayState.mania));
 		if (noteData > -1 && noteData < arrowHSV.length)
 			colorSwap.setHSB(arrowHSV[arrowIndex][0] / 360, arrowHSV[arrowIndex][1] / 100, arrowHSV[arrowIndex][2] / 100);
 
@@ -181,10 +165,11 @@ class Note extends FlxSprite {
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false) {
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?createdFrom:Dynamic = null) {
 		super();
 
-		mania = PlayState.mania;
+		antialiasing = ClientPrefs.getPref('Antialiasing');
+		if(createdFrom == null) createdFrom = PlayState.instance;
 
 		if (prevNote == null) prevNote = this;
 
@@ -205,9 +190,9 @@ class Note extends FlxSprite {
 			colorSwap = new ColorSwap();
 			shader = colorSwap.shader;
 
-			x += swagWidth * (noteData % EK.keys(mania));
+			x += swagWidth * (noteData % EK.keys(PlayState.mania));
 			if(!isSustainNote && noteData > -1)
-				animation.play(keysShit.get(mania).get('letters')[noteData % EK.keys(mania)]);
+				animation.play(keysShit.get(PlayState.mania).get('letters')[noteData % EK.keys(PlayState.mania)]);
 		}
 
 		if (isSustainNote && prevNote != null) {
@@ -219,21 +204,19 @@ class Note extends FlxSprite {
 			offsetX += width / 2;
 			copyAngle = false;
 
-			animation.play(keysShit.get(mania).get('letters')[noteData] + ' tail');
+			animation.play(keysShit.get(PlayState.mania).get('letters')[noteData] + ' tail');
 			updateHitbox();
 
 			offsetX -= width / 2;
 
 			if (PlayState.isPixelStage)
-				offsetX += 30 * pixelScales[mania];
+				offsetX += 30;
 
 			if (prevNote.isSustainNote) {
-				prevNote.animation.play(keysShit.get(mania).get('letters')[prevNote.noteData] + ' hold');
+				prevNote.animation.play(keysShit.get(PlayState.mania).get('letters')[prevNote.noteData] + ' hold');
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
-				if(PlayState.instance != null) {
-					prevNote.scale.y *= PlayState.instance.songSpeed;
-				}
+				if(createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
 
 				if(PlayState.isPixelStage) {
 					prevNote.scale.y *= 1.19;
@@ -274,7 +257,6 @@ class Note extends FlxSprite {
 			animName = animation.curAnim.name;
 
 		var skinPixel:String = skin;
-
 		var lastScaleY:Float = scale.y;
 		var skinPostfix:String = getNoteSkinPostfix();
 		var customSkin:String = skin + skinPostfix;
@@ -284,8 +266,6 @@ class Note extends FlxSprite {
 			_lastValidChecked = customSkin;
 		} else skinPostfix = '';
 
-		defaultWidth = 157;
-		defaultHeight = 154;
 		if(PlayState.isPixelStage) {
 			if(isSustainNote) {
 				var graphic = Paths.image('pixelUI/' + skinPixel + 'ENDS' + skinPostfix);
@@ -295,8 +275,7 @@ class Note extends FlxSprite {
 				var graphic = Paths.image('pixelUI/' + skinPixel + skinPostfix);
 				loadGraphic(graphic, true, Math.floor(graphic.width / pixelNotesDivisionValue), Math.floor(graphic.height / 5));
 			}
-			defaultWidth = width;
-			setGraphicSize(Std.int(width * PlayState.daPixelZoom * pixelScales[mania]));
+			setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 			loadPixelNoteAnims();
 			antialiasing = false;
 
@@ -327,6 +306,9 @@ class Note extends FlxSprite {
 	}
 
 	function loadNoteAnims() {
+		var defaultWidth = 157;
+		var defaultHeight = 154;
+
 		for (letter in gfxLetter) {
 			if (isSustainNote) {
 				animation.addByPrefix('$letter hold', '$letter hold', 24);
@@ -334,7 +316,9 @@ class Note extends FlxSprite {
 			} else animation.addByPrefix(letter, '${letter}0', 24);
 		}
 
-		setGraphicSize(Std.int(defaultWidth * scales[mania]), (isSustainNote ? Std.int(defaultHeight * scales[0]) : 0));
+		if (!isSustainNote)
+			setGraphicSize(Std.int(defaultWidth * EK.scales[PlayState.mania]));
+		else setGraphicSize(Std.int(defaultWidth * EK.scales[PlayState.mania]), Std.int(defaultHeight));
 		updateHitbox();
 	}
 
@@ -344,11 +328,8 @@ class Note extends FlxSprite {
 				animation.add('$letter hold', [i], 24);
 				animation.add('$letter tail', [i + pixelNotesDivisionValue], 24);
 			}
-		} else {
-			for (i => letter in gfxLetter) {
-				animation.add(letter, [i + pixelNotesDivisionValue], 24);
-			}
-		}
+		} else
+			for (i => letter in gfxLetter) animation.add(letter, [i + pixelNotesDivisionValue], 24);
 	}
 
 	inline public function checkDiff(songPos:Float):Bool {
@@ -379,7 +360,7 @@ class Note extends FlxSprite {
 		var strumAlpha:Float = myStrum.alpha;
 		var strumDirection:Float = myStrum.direction;
 
-		distance = (0.45 * (Conductor.songPosition - strumTime) * songSpeed * multSpeed);
+		distance = (.45 * (Conductor.songPosition - strumTime) * songSpeed * multSpeed);
 		if (!myStrum.downScroll) distance *= -1;
 
 		var angleDir = strumDirection * Math.PI / 180;
@@ -421,6 +402,7 @@ class Note extends FlxSprite {
 	override function destroy() {
 		shader = null;
 		colorSwap = null;
+		_lastValidChecked = '';
 		super.destroy();
 	}
 
