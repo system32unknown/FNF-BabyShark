@@ -251,7 +251,7 @@ class TitleState extends MusicBeatState
 	function addMoreText(text:String, offset:Float = 0, i:Int = -1) {
 		if (textGroup != null) {
 			var coolText:FlxText = new FlxText(0, ((i == -1 ? textGroup.length : i) * 60) + 200 + offset, FlxG.width, text, 48);
-			coolText.setFormat(Paths.font('comic.ttf'), 48, FlxColor.WHITE, CENTER);
+			coolText.setFormat(Paths.font("babyshark.ttf"), 48, FlxColor.WHITE, CENTER);
 			coolText.screenCenter(X);
 			textGroup.add(coolText);
 		}

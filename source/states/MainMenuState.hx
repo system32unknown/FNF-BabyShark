@@ -104,7 +104,7 @@ class MainMenuState extends MusicBeatState {
 		add(bigIcons);
 
 		curOptText = new FlxText(0, 0, FlxG.width, menuOptions[curSelected], 48);
-		curOptText.setFormat("VCR OSD Mono", 48, FlxColor.WHITE, CENTER);
+		curOptText.setFormat(Paths.font('babyshark.ttf'), 48, FlxColor.WHITE, CENTER);
 		curOptText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2.5);
 		curOptText.scrollFactor.set();
 		curOptText.screenCenter(X);
@@ -112,7 +112,7 @@ class MainMenuState extends MusicBeatState {
 		add(curOptText);
 
 		curOptDesc = new FlxText(0, 0, FlxG.width, menuDescription[curSelected], 24);
-		curOptDesc.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, CENTER);
+		curOptDesc.setFormat(Paths.font('babyshark.ttf'), 24, FlxColor.WHITE, CENTER);
 		curOptDesc.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		curOptDesc.scrollFactor.set();
 		curOptDesc.screenCenter(X);
@@ -152,7 +152,7 @@ class MainMenuState extends MusicBeatState {
 		var versionShit:FlxText = new FlxText(0, 0, 0, 
 			'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH.trim().substring(0, 7)})\n' +
 			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n', 16);
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT);
+		versionShit.setFormat(Paths.font('babyshark.ttf'), 16, FlxColor.WHITE, RIGHT);
 		versionShit.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		versionShit.scrollFactor.set();
 		versionShit.setPosition(FlxG.width - versionShit.width, FlxG.height - versionShit.height);

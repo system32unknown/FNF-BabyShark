@@ -66,7 +66,8 @@ class WeekData {
 	// HELP: Is there any way to convert a WeekFile to WeekData without having to put all variables there manually? I'm kind of a noob in haxe lmao
 	public function new(weekFile:WeekFile, fileName:String) {
 		for (field in Reflect.fields(weekFile))
-			Reflect.setProperty(this, field, Reflect.getProperty(weekFile, field));
+			try {Reflect.setProperty(this, field, Reflect.getProperty(weekFile, field)); }
+			catch(e) Logs.trace('INVAILD WEEKDATA: $e', ERROR);
 		this.fileName = fileName;
 	}
 
@@ -111,14 +112,13 @@ class WeekData {
 
 		#if MODS_ALLOWED
 		for (i in 0...directories.length) {
-			var directory:String = directories[i] + 'weeks/';
+			var directory:String = '${directories[i]}weeks/';
 			if(FileSystem.exists(directory)) {
 				var listOfWeeks:Array<String> = CoolUtil.coolTextFile(directory + 'weekList.txt');
 				for (daWeek in listOfWeeks) {
-					var path:String = directory + daWeek + '.json';
-					if(FileSystem.exists(path)) {
+					var path:String = directory + '$daWeek.json';
+					if(FileSystem.exists(path))
 						addWeek(daWeek, path, directories[i], i, originalLength);
-					}
 				}
 
 				for (file in FileSystem.readDirectory(directory)) {
@@ -164,19 +164,14 @@ class WeekData {
 	}
 
 	//To use on PlayState.hx or Highscore stuff
-	public static function getWeekFileName():String {
-		return weeksList[PlayState.storyWeek];
-	}
+	public static function getWeekFileName():String {return weeksList[PlayState.storyWeek];}
 
 	//Used on LoadingState, nothing really too relevant
-	public static function getCurrentWeek():WeekData {
-		return weeksLoaded.get(weeksList[PlayState.storyWeek]);
-	}
+	public static function getCurrentWeek():WeekData {return weeksLoaded.get(weeksList[PlayState.storyWeek]);}
 
 	public static function setDirectoryFromWeek(?data:WeekData = null) {
 		Mods.currentModDirectory = '';
-		if(data != null && data.folder != null && data.folder.length > 0) {
+		if(data != null && data.folder != null && data.folder.length > 0)
 			Mods.currentModDirectory = data.folder;
-		}
 	}
 }

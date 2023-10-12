@@ -48,10 +48,10 @@ class StoryMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		scoreText = new FlxText(10, 10, 0, "SCORE: 0", 36);
-		scoreText.setFormat("VCR OSD Mono", 32);
+		scoreText.setFormat(Paths.font("babyshark.ttf"), 32);
 
 		txtWeekTitle = new FlxText(FlxG.width * 0.7, 10, 0, "", 32);
-		txtWeekTitle.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, RIGHT);
+		txtWeekTitle.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, RIGHT);
 		txtWeekTitle.alpha = .7;
 
 		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
@@ -132,7 +132,7 @@ class StoryMenuState extends MusicBeatState
 		add(tracksSprite);
 
 		txtTracklist = new FlxText(FlxG.width * 0.05, tracksSprite.y + 60, 0, "", 32);
-		txtTracklist.setFormat("VCR OSD Mono", 32, 0xFFe55777, CENTER);
+		txtTracklist.setFormat(Paths.font("babyshark.ttf"), 32, 0xFFe55777, CENTER);
 		add(txtTracklist);
 		add(scoreText);
 		add(txtWeekTitle);

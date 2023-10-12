@@ -151,7 +151,7 @@ class CreditsState extends MusicBeatState {
 		add(descBox);
 
 		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
-		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		descText.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
 		descText.scrollFactor.set();
 		descBox.sprTracker = descText;
 		add(descText);
@@ -361,7 +361,7 @@ class CreditSectionState extends MusicBeatState {
 		add(descBox);
 
 		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
-		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
+		descText.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
 		descText.scrollFactor.set();
 		descBox.sprTracker = descText;
 		add(descText);

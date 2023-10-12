@@ -266,9 +266,6 @@ class PlayState extends MusicBeatState {
 		GameOverSubstate.resetVariables();
 		PauseSubState.songName = null; //Reset to default
 
-		keysArray = data.EkData.Keybinds.fill()[mania];
-		fillKeysPressed();
-		keysPressed = CoolUtil.dynamicArray(false, keysArray.length);
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		// Gameplay settings
@@ -301,8 +298,11 @@ class PlayState extends MusicBeatState {
 		if (mania < EK.minMania || mania > EK.maxMania)
 			mania = EK.defaultMania;
 
-		storyDifficultyText = Difficulty.getString();
+		keysArray = data.EkData.Keybinds.fill()[mania];
+		fillKeysPressed();
+		keysPressed = CoolUtil.dynamicArray(false, keysArray.length);
 
+		storyDifficultyText = Difficulty.getString();
 		#if discord_rpc
 		if (isStoryMode) detailsText = 'Story Mode: ${WeekData.getCurrentWeek().weekName}';
 		else detailsText = "Freeplay";
@@ -314,8 +314,7 @@ class PlayState extends MusicBeatState {
 		curStage = SONG.stage;
 
 		var stageData:StageFile = StageData.getStageFile(curStage);
-		if(stageData == null) //Stage couldn't be found, create a dummy stage for preventing a crash
-			stageData = StageData.dummy();
+		if(stageData == null) stageData = StageData.dummy(); //Stage couldn't be found, create a dummy stage for preventing a crash
 
 		stageUI = "normal";
 		defaultCamZoom = stageData.defaultZoom;
@@ -419,7 +418,7 @@ class PlayState extends MusicBeatState {
 		var showTime:Bool = timeType != 'Disabled';
 		timeTxt = new FlxText(0, 19, 400, "", 16);
 		timeTxt.screenCenter(X);
-		timeTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
+		timeTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
 		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
@@ -508,7 +507,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), 0);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
+		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		if (!downScroll) scoreTxt.y = FlxG.height - scoreTxt.height;
 		scoreTxt.visible = !hideHud;
@@ -517,7 +516,7 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(scoreTxt);
 
 		judgementCounter = new FlxText(2, 0, 0, "", 16);
-		judgementCounter.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
+		judgementCounter.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
 		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		judgementCounter.scrollFactor.set();
 		judgementCounter.visible = ClientPrefs.getPref('ShowJudgementCount') && !hideHud;
@@ -526,7 +525,7 @@ class PlayState extends MusicBeatState {
 		judgementCounter.screenCenter(Y);
 
 		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, "BOTPLAY", 32);
-		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
 		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		botplayTxt.screenCenter(X);
 		botplayTxt.scrollFactor.set();
@@ -534,7 +533,7 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(botplayTxt);
 
 		songNameTxt = new FlxText(2, 0, 0, '${SONG.song} - ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : ''), 16);
-		songNameTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
+		songNameTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
 		songNameTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		songNameTxt.scrollFactor.set();
 		songNameTxt.y = FlxG.height - songNameTxt.height;
@@ -542,7 +541,7 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(songNameTxt);
 
 		extraTxt = new FlxText(2, songNameTxt.y, 0, SONG.extraText != null ? SONG.extraText.trim() : '', 16);
-		extraTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
+		extraTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
 		extraTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		extraTxt.scrollFactor.set();
 		extraTxt.visible = !hideHud;
@@ -1290,9 +1289,9 @@ class PlayState extends MusicBeatState {
 			callOnHScript('onSpawnStrum', [babyArrow]);
 
 			if (ClientPrefs.getPref('showKeybindsOnStart') && player == 1) {
-				for (j in 0...2) {
+				for (j in 0...keysArray[i].length) {
 					var daKeyTxt:FlxText = new FlxText(babyArrow.x, babyArrow.y - 10, 0, backend.InputFormatter.getKeyName(keysArray[i][j]), 32 - mania);
-					daKeyTxt.setFormat(Paths.font("vcr.ttf"), 32 - mania, FlxColor.WHITE, CENTER);
+					daKeyTxt.setFormat(Paths.font("babyshark.ttf"), 32 - mania, FlxColor.WHITE, CENTER);
 					daKeyTxt.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1.25);
 					daKeyTxt.alpha = 0;
 					var textY:Float = (j == 0 ? babyArrow.y - 32 : ((babyArrow.y - 32) + babyArrow.height) - daKeyTxt.height);
@@ -1302,10 +1301,7 @@ class PlayState extends MusicBeatState {
 
 					if (mania > 1 && !skipArrowStartTween) FlxTween.tween(daKeyTxt, {y: textY + 32, alpha: 1}, twnDuration, {ease: FlxEase.circOut, startDelay: twnDelay});
 					else {daKeyTxt.y += 16; daKeyTxt.alpha = 1;}
-					new FlxTimer().start(Conductor.crochet * .001 * 12, (_) -> {
-						FlxTween.tween(daKeyTxt, {y: daKeyTxt.y + 32, alpha: 0}, twnDuration, {ease: FlxEase.circIn, startDelay: twnDelay, 
-						onComplete: (t) -> remove(daKeyTxt)});
-					});
+					new FlxTimer().start(Conductor.crochet * .001 * 12, (_) -> FlxTween.tween(daKeyTxt, {y: daKeyTxt.y + 32, alpha: 0}, twnDuration, {ease: FlxEase.circIn, startDelay: twnDelay, onComplete: (t) -> remove(daKeyTxt)}));
 				}
 			}
 		}
@@ -1431,9 +1427,7 @@ class PlayState extends MusicBeatState {
 
 	override public function onFocus():Void {
 		callOnScripts('onFocus');
-		#if discord_rpc
-		if (health > 0 && !paused) resetRPC(Conductor.songPosition > 0.);
-		#end
+		#if discord_rpc if (health > 0 && !paused) resetRPC(Conductor.songPosition > 0.); #end
 		super.onFocus();
 		callOnScripts('onFocusPost');
 	}
@@ -1740,9 +1734,7 @@ class PlayState extends MusicBeatState {
 		}
 		openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
-		#if discord_rpc
-		Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter());
-		#end
+		#if discord_rpc Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter()); #end
 	}
 
 	function openChartEditor() {
@@ -1794,9 +1786,7 @@ class PlayState extends MusicBeatState {
 				#end
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollow.x, camFollow.y));
 
-				#if discord_rpc
-				Discord.changePresence('Game Over - $detailsText', '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter());
-				#end
+				#if discord_rpc Discord.changePresence('Game Over - $detailsText', '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter()); #end
 				return isDead = true;
 			}
 		}
@@ -2031,8 +2021,7 @@ class PlayState extends MusicBeatState {
 					}
 	
 					killMe = killMe[0].split('.');
-					if (killMe.length > 1)
-						LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe, true, true), killMe[killMe.length - 1], trueVal != null ? trueVal : value2);
+					if (killMe.length > 1) LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe, true, true), killMe[killMe.length - 1], trueVal != null ? trueVal : value2);
 					else LuaUtils.setVarInArray(this, value1, trueVal != null ? trueVal : value2);	
 				} catch(e:Dynamic) HScript.hscriptTrace('ERROR ("Set Property" Event) - $e', FlxColor.RED);
 			case 'Play Sound':
@@ -2323,7 +2312,7 @@ class PlayState extends MusicBeatState {
 		
 			if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
 				msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
-				mstimingTxt.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 20, FlxColor.WHITE, CENTER);
+				mstimingTxt.setFormat(Paths.font('babyshark.ttf'), 20, FlxColor.WHITE, CENTER);
 				mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 				mstimingTxt.visible = !hideHud;
 				mstimingTxt.text = '${msTiming}ms';
