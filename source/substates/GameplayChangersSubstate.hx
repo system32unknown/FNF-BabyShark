@@ -14,14 +14,13 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	var grpTexts:FlxTypedGroup<AttachedText>;
 
 	function getOptions() {
-		var goption:GameplayOption = new GameplayOption('Scroll Type', 'scrolltype', 'string', 'multiplicative', ["multiplicative", "constant"]);
-		optionsArray.push(goption);
+		optionsArray.push(new GameplayOption('Scroll Type', 'scrolltype', 'string', 'multiplicative', ["multiplicative", "constant"]));
 
 		var option:GameplayOption = new GameplayOption('Scroll Speed', 'scrollspeed', 'float', 1);
 		option.scrollSpeed = 1.5;
 		option.minValue = 0.5;
 		option.changeValue = 0.1;
-		if (goption.getValue() != "constant") {
+		if (option.getValue() != "constant") {
 			option.displayFormat = '%vX';
 			option.maxValue = 3;
 		} else {
@@ -55,14 +54,9 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		option.displayFormat = '%vX';
 		optionsArray.push(option);
 
-		var option:GameplayOption = new GameplayOption('Instakill on Miss', 'instakill', 'bool', false);
-		optionsArray.push(option);
-
-		var option:GameplayOption = new GameplayOption('Practice Mode', 'practice', 'bool', false);
-		optionsArray.push(option);
-
-		var option:GameplayOption = new GameplayOption('Botplay', 'botplay', 'bool', false);
-		optionsArray.push(option);
+		optionsArray.push(new GameplayOption('Instakill on Miss', 'instakill', 'bool', false));
+		optionsArray.push(new GameplayOption('Practice Mode', 'practice', 'bool', false));
+		optionsArray.push(new GameplayOption('Botplay', 'botplay', 'bool', false));
 	}
 
 	public function getOptionByName(name:String) {

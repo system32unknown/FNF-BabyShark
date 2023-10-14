@@ -71,13 +71,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		'UpdateCamSection', 'bool');
 		addOption(option);
 
-		var option:Option = new Option('Complex Accuracy',
-		'', 'complexAccuracy', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Note Diff Type:', 'Choose the type of Note Diffs.',
-			'NoteDiffTypes', 'string', ['Psych', 'Simple']);
-		addOption(option);
+		addOption(new Option('Complex Accuracy', '', 'complexAccuracy', 'bool'));
+		addOption(new Option('Note Diff Type:', '', 'NoteDiffTypes', 'string', ['Psych', 'Simple']));
 		
 		var option:Option = new Option('Rating Offset',
 			'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.',

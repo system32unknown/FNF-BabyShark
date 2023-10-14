@@ -12,14 +12,10 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import flash.net.FileFilter;
 import tjson.TJSON as Json;
-import lime.system.Clipboard;
 import cutscenes.DialogueBoxPsych;
 import cutscenes.DialogueCharacter;
 import objects.TypedAlphabet;
-import states.TitleState;
-#if sys
-import sys.io.File;
-#end
+#if sys import sys.io.File; #end
 
 class DialogueCharacterEditorState extends MusicBeatState
 {
@@ -503,11 +499,8 @@ class DialogueCharacterEditorState extends MusicBeatState
 			var controlArray:Array<Bool> = [FlxG.keys.pressed.J, FlxG.keys.pressed.I, FlxG.keys.pressed.L, FlxG.keys.pressed.K];
 			for (i in 0...controlArray.length) {
 				if(controlArray[i]) {
-					if(i % 2 == 1) {
-						mainGroup.y += speed * elapsed * negaMult[i];
-					} else {
-						mainGroup.x += speed * elapsed * negaMult[i];
-					}
+					if(i % 2 == 1) mainGroup.y += speed * elapsed * negaMult[i];
+					else mainGroup.x += speed * elapsed * negaMult[i];
 				}
 			}
 
@@ -518,21 +511,17 @@ class DialogueCharacterEditorState extends MusicBeatState
 				var controlArrayIdle:Array<Bool> = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.DOWN];
 				for (i in 0...controlArrayLoop.length) {
 					if(controlArrayLoop[i]) {
-						if(i % 2 == 1) {
+						if(i % 2 == 1)
 							animShit.loop_offsets[1] += offsetAdd * negaMult[i];
-						} else {
-							animShit.loop_offsets[0] += offsetAdd * negaMult[i];
-						}
+						else animShit.loop_offsets[0] += offsetAdd * negaMult[i];
 						moved = true;
 					}
 				}
 				for (i in 0...controlArrayIdle.length) {
 					if(controlArrayIdle[i]) {
-						if(i % 2 == 1) {
+						if(i % 2 == 1)
 							animShit.idle_offsets[1] += offsetAdd * negaMult[i];
-						} else {
-							animShit.idle_offsets[0] += offsetAdd * negaMult[i];
-						}
+						else animShit.idle_offsets[0] += offsetAdd * negaMult[i];
 						moved = true;
 					}
 				}

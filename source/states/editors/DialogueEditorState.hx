@@ -14,7 +14,6 @@ import tjson.TJSON as Json;
 import cutscenes.DialogueBoxPsych;
 import cutscenes.DialogueCharacter;
 import objects.TypedAlphabet;
-import states.TitleState;
 #if sys
 import sys.io.File;
 #end
@@ -44,7 +43,7 @@ class DialogueEditorState extends MusicBeatState
 			sound: ''
 		};
 
-		dialogueFile = {dialogue: [ copyDefaultLine() ]};
+		dialogueFile = {dialogue: [copyDefaultLine()]};
 		
 		character = new DialogueCharacter();
 		character.scrollFactor.set();
@@ -91,9 +90,7 @@ class DialogueEditorState extends MusicBeatState
 
 	var UI_box:FlxUITabMenu;
 	function addEditorBox() {
-		var tabs = [
-			{name: 'Dialogue Line', label: 'Dialogue Line'},
-		];
+		var tabs = [{name: 'Dialogue Line', label: 'Dialogue Line'},];
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.resize(250, 210);
 		UI_box.setPosition(FlxG.width - UI_box.width - 10, 10);
@@ -164,11 +161,9 @@ class DialogueEditorState extends MusicBeatState
 		var anim:String = isAngry ? 'angry' : 'normal';
 
 		switch(character.jsonFile.dialogue_pos) {
-			case 'left':
-				box.flipX = true;
+			case 'left': box.flipX = true;
 			case 'center':
-				if(isAngry)
-					anim = 'center-angry';
+				if(isAngry) anim = 'center-angry';
 				else anim = 'center';
 		}
 		box.animation.play(anim, true);
