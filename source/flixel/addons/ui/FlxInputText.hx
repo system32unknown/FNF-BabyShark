@@ -1,13 +1,14 @@
 package flixel.addons.ui;
 
-import lime.system.Clipboard;
-import flash.errors.Error;
-import flash.events.KeyboardEvent;
-import flash.geom.Rectangle;
+import openfl.errors.Error;
+import openfl.events.KeyboardEvent;
+import openfl.geom.Rectangle;
 import flixel.addons.ui.FlxUI.NamedString;
+import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
+import lime.system.Clipboard;
 
 /**
  * FlxInputText v1.11, ported to Haxe
@@ -323,17 +324,12 @@ class FlxInputText extends FlxText
 	 */
 	function onKeyDown(e:KeyboardEvent):Void
 	{
-		var key:Int = e.keyCode;
+		final key:Int = e.keyCode;
 
 		if (hasFocus) {
 			  //// Crtl/Cmd + C to copy text to the clipboard
 			  // This copies the entire input, because i'm too lazy to do caret selection, and if i did it i whoud probabbly make it a pr in flixel-ui.
-
-			  #if (macos)
-			  if (key == 67 && e.commandKey) {
-			  #else
-			  if (key == 67 && e.ctrlKey) {
-		 	  #end
+			  if (key == C && #if macos e.commandKey #else e.ctrlKey #end) {
 				Clipboard.text = text;
 				onChange(COPY_ACTION);
 
@@ -342,11 +338,7 @@ class FlxInputText extends FlxText
 			  }
 
 			  //// Crtl/Cmd + V to paste in the clipboard text to the input
-			  #if (macos)
-			  if (key == 86 && e.commandKey) {
-			  #else
-			  if (key == 86 && e.ctrlKey) {
-			  #end
+			  if (key == V && #if macos e.commandKey #else e.ctrlKey #end) {
 				var newText:String = filter(Clipboard.text);
 
 				if (newText.length > 0 && (maxLength == 0 || (text.length + newText.length) < maxLength)) {
@@ -362,11 +354,7 @@ class FlxInputText extends FlxText
 
 			//// Crtl/Cmd + X to cut the text from the input to the clipboard
 			// Again, this copies the entire input text because there is no caret selection.
-			#if (macos)
-			if (key == 88 && e.commandKey) {
-			#else
-			if (key == 88 && e.ctrlKey) {
-			#end
+			if (key == X && #if macos e.commandKey #else e.ctrlKey #end) {
 				Clipboard.text = text;
 				text = '';
 				caretIndex = 0;
@@ -379,46 +367,40 @@ class FlxInputText extends FlxText
 			}
 
 			switch (key) {
-				case 16 | 17 | 220 | 27: return; // Do nothing for Shift, Ctrl, Esc, and flixel console hotkey
+				case SHIFT | CONTROL | BACKSLASH | ESCAPE: return; // Do nothing for Shift, Ctrl, Esc, and flixel console hotkey
 
-				case 37: // Left arrow
+				case LEFT:
 					if (caretIndex > 0) {
 						caretIndex--;
 						text = text; // forces scroll update
 					}
-
-				case 39: // Right arrow
+				case RIGHT:
 					if (caretIndex < text.length) {
 						caretIndex++;
 						text = text; // forces scroll update
 					}
-
-				case 35: //End key
+				case END:
 					caretIndex = text.length;
 					text = text; //forces scroll update
-				case 36: //Home key
+				case HOME:
 					caretIndex = 0;
 					text = text;
-
-				case 8: //Backspace
+				case BACKSPACE:
 					if (caretIndex > 0) {
 						caretIndex--;
 						text = text.substring(0, caretIndex) + text.substring(caretIndex + 1);
 						onChange(BACKSPACE_ACTION);
 					}
-					
-				case 46: //Delete
+				case DELETE:
 					if (text.length > 0 && caretIndex < text.length) {
 						text = text.substring(0, caretIndex) + text.substring(caretIndex + 1);
 						onChange(DELETE_ACTION);
 					}
 
-				case 13: onChange(ENTER_ACTION); //Enter
+				case ENTER: onChange(ENTER_ACTION); //Enter
 
 				default: // Actually add some text
-					if (e.charCode == 0) { // non-printable characters crash String.fromCharCode
-						return;
-					}
+					if (e.charCode == 0) return; //non-printable characters crash String.fromCharCode
 					var newText:String = filter(String.fromCharCode(e.charCode));
 	
 					if (newText.length > 0 && (maxLength == 0 || (text.length + newText.length) < maxLength)) {
@@ -531,8 +513,8 @@ class FlxInputText extends FlxText
 		if (_charBoundaries != null && _charBoundaries.length > 0) {
 			if (textField.textWidth <= textField.width) {
 				switch (getAlignStr()) {
-					case RIGHT: X = X - textField.width + textField.textWidth;
-					case CENTER: X = X - textField.width / 2 + textField.textWidth / 2;
+					case RIGHT: X -= (textField.width + textField.textWidth);
+					case CENTER: X -= (textField.width / 2 + textField.textWidth / 2);
 					default:
 				}
 			}

@@ -346,11 +346,8 @@ class TitleState extends MusicBeatState
 		Paths.clearStoredCache();
 		Paths.clearUnusedCache();
 
-		#if LUA_ALLOWED
-		Mods.pushGlobalMods();
-		#end
+		#if LUA_ALLOWED Mods.pushGlobalMods(); #end
 
-		FlxG.fixedTimestep = false;
 		FlxG.mouse.visible = false;
 		ClientPrefs.toggleVolumeKeys(true);
 		FlxG.keys.preventDefaultKeys = [TAB];

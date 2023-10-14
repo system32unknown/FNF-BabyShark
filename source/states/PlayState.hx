@@ -501,10 +501,7 @@ class PlayState extends MusicBeatState {
 		iconP2.alpha = healthBarAlpha;
 		uiGroup.add(iconP2);
 		reloadHealthBarColors();
-		if (ClientPrefs.getPref('HealthTypes') == 'Psych') {
-			iconP1.iconType = 'psych';
-			iconP2.iconType = 'psych';
-		}
+		if (ClientPrefs.getPref('HealthTypes') == 'Psych') {iconP1.iconType = 'psych'; iconP2.iconType = 'psych';}
 
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), 0);
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
@@ -523,6 +520,7 @@ class PlayState extends MusicBeatState {
 		judgementCounter.text = 'Max Combos: 0\nEpics: 0\nSicks: 0\nGoods: 0\nBads: 0\nShits: 0\n' + getMissText(!ClientPrefs.getPref('movemissjudge'), '\n');
 		uiGroup.add(judgementCounter);
 		judgementCounter.screenCenter(Y);
+		updateScore(false);
 
 		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
@@ -655,7 +653,7 @@ class PlayState extends MusicBeatState {
 			}
 		}
 		
-		FlxAnimationController.globalSpeed = value;
+		FlxG.animationTimeScale = value;
 		Conductor.safeZoneOffset = (ClientPrefs.getPref('safeFrames') / 60) * 1000 * value;
 		setOnScripts('playbackRate', playbackRate);
 		return playbackRate = value;
@@ -1022,7 +1020,7 @@ class PlayState extends MusicBeatState {
 			judgementCounter.text += '\n${flixel.addons.ui.U.FU(rating.name)}s: ${rating.hits}';
 		judgementCounter.text += '\n${getMissText(!ClientPrefs.getPref('movemissjudge'), '\n')}';
 		judgementCounter.screenCenter(Y);
-		if (!ClientPrefs.getPref('ShowNPSCounter')) UpdateScoreText();
+		UpdateScoreText();
 	}
 
 	public function setSongTime(time:Float) {
@@ -1517,7 +1515,7 @@ class PlayState extends MusicBeatState {
 		
 		FlxG.camera.followLerp = 0;
 		if(!inCutscene && !paused)
-			FlxG.camera.followLerp = FlxMath.bound(elapsed * 2.4 * cameraSpeed * playbackRate / (FlxG.updateFramerate / 60), 0, 1);
+			FlxG.camera.followLerp = FlxMath.bound(elapsed * 2.4 * cameraSpeed * playbackRate * (FlxG.updateFramerate / 60), 0, 1);
 
 		checkEventNote();
 
@@ -2845,7 +2843,7 @@ class PlayState extends MusicBeatState {
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-		FlxAnimationController.globalSpeed = 1;
+		FlxG.animationTimeScale = 1;
 		instance = null;
 		super.destroy();
 	}
@@ -3025,10 +3023,7 @@ class PlayState extends MusicBeatState {
 		var i:Int = 0;
 		while(i < len) {
 			var script:FunkinLua = luaArray[i];
-			if(exclusions.contains(script.scriptName)) {
-				i++;
-				continue;
-			}
+			if(exclusions.contains(script.scriptName)) {i++; continue;}
 
 			var ret:Dynamic = script.call(event, args);
 			if((ret == FunkinLua.Function_StopLua || ret == FunkinLua.Function_StopAll) && !excludeValues.contains(ret) && !ignoreStops) {
