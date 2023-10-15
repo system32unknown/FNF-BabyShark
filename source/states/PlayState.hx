@@ -1003,16 +1003,14 @@ class PlayState extends MusicBeatState {
 				daNote.visible = false;
 				daNote.ignoreNote = true;
 
-				daNote.kill();
-				notes.remove(daNote, true);
-				daNote.destroy();
+				invalidateNote(daNote);
 			}
 			--i;
 		}
 	}
 
 	public function updateScore(miss:Bool = false) {
-		var ret:Dynamic = callOnScripts('onUpdateScore', [miss]);
+		var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
 		if(ret == FunkinLua.Function_Stop) return;
 
 		judgementCounter.text = 'Max Combos: ${maxCombo}';
@@ -1021,6 +1019,8 @@ class PlayState extends MusicBeatState {
 		judgementCounter.text += '\n${getMissText(!ClientPrefs.getPref('movemissjudge'), '\n')}';
 		judgementCounter.screenCenter(Y);
 		UpdateScoreText();
+
+		callOnScripts('onUpdateScore', [miss]);
 	}
 
 	public function setSongTime(time:Float) {
@@ -1138,11 +1138,9 @@ class PlayState extends MusicBeatState {
 				swagNote.noteType = songNotes[3];
 				if(!Std.isOfType(songNotes[3], String)) swagNote.noteType = ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
 				swagNote.scrollFactor.set();
-
-				var susLength:Float = swagNote.sustainLength;
-				susLength = susLength / Conductor.stepCrochet;
 				unspawnNotes.push(swagNote);
 
+				final susLength:Float = swagNote.sustainLength / Conductor.stepCrochet;
 				var floorSus:Int = Math.floor(susLength);
 				if(floorSus > 0) {
 					for (susNote in 0...floorSus + 1) {
@@ -1153,9 +1151,9 @@ class PlayState extends MusicBeatState {
 						sustainNote.gfNote = (section.gfSection && (songNotes[1] < EK.keys(mania)));
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
-						swagNote.tail.push(sustainNote);
 						sustainNote.parent = swagNote;
 						unspawnNotes.push(sustainNote);
+						swagNote.tail.push(sustainNote);
 						sustainNote.correctionOffset = swagNote.height / 2;
 
 						if(!isPixelStage) {
@@ -1681,17 +1679,11 @@ class PlayState extends MusicBeatState {
 
 			// Kill extremely late notes and cause misses
 			if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
-				if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit))
-					noteMiss(daNote);
-				if (!daNote.mustPress && daNote.ignoreNote && !endingSong)
-					opponentnoteMiss(daNote);
+				if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
+				if (!daNote.mustPress && daNote.ignoreNote && !endingSong) opponentnoteMiss(daNote);
 			
-				daNote.active = false;
-				daNote.visible = false;
-			
-				daNote.kill();
-				notes.remove(daNote, true);
-				daNote.destroy();
+				daNote.active = daNote.visible = false;
+				invalidateNote(daNote);
 			}
 		});
 	}
@@ -2182,12 +2174,8 @@ class PlayState extends MusicBeatState {
 	public function KillNotes() {
 		while(notes.length > 0) {
 			var daNote:Note = notes.members[0];
-			daNote.active = false;
-			daNote.visible = false;
-
-			daNote.kill();
-			notes.remove(daNote, true);
-			daNote.destroy();
+			daNote.active = daNote.visible = false;
+			invalidateNote(daNote);
 		}
 		unspawnNotes = [];
 		eventNotes = [];
@@ -2457,8 +2445,7 @@ class PlayState extends MusicBeatState {
 						if (doubleNote.noteData != epicNote.noteData) break;
 
 						if (Math.abs(doubleNote.strumTime - epicNote.strumTime) < 1) {
-							notes.remove(doubleNote, true);
-							doubleNote.destroy();
+							invalidateNote(doubleNote);
 							break;
 						} else if (doubleNote.strumTime < epicNote.strumTime) {
 							epicNote = doubleNote; 
@@ -2477,12 +2464,10 @@ class PlayState extends MusicBeatState {
 			Conductor.songPosition = lastTime;
 		}
 
-		if (!strumsBlocked[key]) {
-			var spr:StrumNote = playerStrums.members[key];
-			if(spr != null && spr.animation.curAnim.name != 'confirm') {
-				spr.playAnim('pressed');
-				spr.resetAnim = 0;
-			}
+		var spr:StrumNote = playerStrums.members[key];
+		if(!strumsBlocked[key] && spr != null && spr.animation.curAnim.name != 'confirm') {
+			spr.playAnim('pressed');
+			spr.resetAnim = 0;
 		}
 		callOnScripts('onKeyPress', [key]);
 	}
