@@ -10,8 +10,11 @@ import states.MainMenuState;
 #if sys import sys.FileSystem; #end
 
 typedef TitleData = {
+	titlex:Float,
 	starty:Float,
-	bpm:Float
+	gfx:Float,
+	gfy:Float,
+	bpm:Float,
 }
 
 class TitleState extends MusicBeatState {
@@ -70,10 +73,12 @@ class TitleState extends MusicBeatState {
 		}
 	}
 
+	var gfDance:FlxSprite;
+	var danceLeft:Bool = false;
 	function createIntro() {
 		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 
-		logoBl = new FlxSprite(FlxG.width / 2, 1500);
+		logoBl = new FlxSprite(titleJSON.titlex, 1500);
 		logoBl.antialiasing = ClientPrefs.getPref('Antialiasing');
 		if (!FileSystem.exists(Paths.modsXml('logobumpin'))) {
 			logoBl.loadGraphic(Paths.image('logobumpin'));
@@ -86,6 +91,12 @@ class TitleState extends MusicBeatState {
 		}
 		logoBl.updateHitbox();
 		logoBl.screenCenter(X);
+
+		gfDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
+		gfDance.antialiasing = ClientPrefs.getPref('Antialiasing');
+		gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
+		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 
 		titleText = new FlxSprite(125, 576);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
@@ -131,6 +142,7 @@ class TitleState extends MusicBeatState {
 		}
 
 		add(bg);
+		add(gfDance);
 		add(logoBl);
 		add(titleText);
 
@@ -256,6 +268,11 @@ class TitleState extends MusicBeatState {
 		
 		if(logoBl != null && foundXml)
 			logoBl.animation.play('bump', true);
+
+		if(gfDance != null) {
+			danceLeft = !danceLeft;
+			gfDance.animation.play(danceLeft ? 'danceRight' : 'danceLeft');
+		}
 
 		if(!closedState) {
 			switch (sickBeats++) {

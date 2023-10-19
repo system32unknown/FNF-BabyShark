@@ -1,5 +1,7 @@
 {	
+	"titlex":640,
 	"starty":100,
-	"bgColor":"5C00CD",
+	"gfx":512,
+	"gfy":40,
 	"bpm":148
 }
