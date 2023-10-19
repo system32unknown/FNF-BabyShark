@@ -48,13 +48,11 @@ class LoadingState extends MusicBeatState {
 		bg.color = FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255));
 		add(bg);
 
-		var funkay:FlxBackdrop = new FlxBackdrop(Paths.getPath('images/thechecker.png', IMAGE));
-		funkay.velocity.set(100, 110);
-		funkay.alpha = .5;
+		var funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/funkay.png', IMAGE));
+		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
-		funkay.antialiasing = ClientPrefs.getPref('Antialiasing');
-		funkay.color = FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255));
 		add(funkay);
+		funkay.antialiasing = ClientPrefs.getPref('Antialiasing');
 		funkay.scrollFactor.set();
 		funkay.screenCenter(X);
 

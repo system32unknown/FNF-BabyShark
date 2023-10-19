@@ -310,7 +310,7 @@ class FreeplayState extends MusicBeatState
 						vocals.play();
 					}
 					vocals.looped = !(FlxG.sound.music.looped = true);
-					vocals.volume = FlxG.sound.music.volume = 0.7;
+					vocals.volume = FlxG.sound.music.volume = .7;
 					vocals.persist = true;
 					vocals.autoDestroy = false;
 	
@@ -336,13 +336,9 @@ class FreeplayState extends MusicBeatState
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
 
-				if(colorTween != null) {
-					colorTween.cancel();
-				}
+				if(colorTween != null) colorTween.cancel();
 
-				if (FlxG.keys.pressed.SHIFT)
-					LoadingState.loadAndSwitchState(new ChartingState());
-				else LoadingState.loadAndSwitchState(new PlayState());
+				LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new ChartingState() : new PlayState());
 
 				FlxG.sound.music.volume = 0;
 				destroyFreeplayVocals();
@@ -398,9 +394,7 @@ class FreeplayState extends MusicBeatState
 			
 		var newColor:Int = songs[curSelected].color;
 		if(newColor != intendedColor) {
-			if(colorTween != null) {
-				colorTween.cancel();
-			}
+			if(colorTween != null) colorTween.cancel();
 			intendedColor = newColor;
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
 				onComplete: (twn:FlxTween) -> colorTween = null

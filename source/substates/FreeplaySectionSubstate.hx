@@ -93,8 +93,8 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		if (controls.BACK && !transitioning) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(sectionTxt, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(sectionSpr, {alpha: 0}, .5, {ease: FlxEase.expoInOut,
+			FlxTween.tween(sectionTxt, {alpha: 0, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoInOut});
+			FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y - 200}, .5, {ease: FlxEase.expoInOut,
 				onComplete: (tween:FlxTween) -> {
 					daSection = FreeplayState.section;
 					close();
@@ -106,8 +106,8 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
 			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(sectionTxt, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(sectionSpr, {alpha: 0}, .5, {ease: FlxEase.expoInOut,
+			FlxTween.tween(sectionTxt, {alpha: 0, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoInOut});
+			FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y - 200}, .5, {ease: FlxEase.expoInOut,
 				onComplete: (tween:FlxTween) -> {
 					close();
 					FlxG.resetState();

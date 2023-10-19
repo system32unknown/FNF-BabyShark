@@ -1123,8 +1123,7 @@ class PlayState extends MusicBeatState {
 				var daNoteData:Int = Std.int(songNotes[1] % EK.keys(mania));
 				var gottaHitNote:Bool = section.mustHitSection;
 
-				if (songNotes[1] > mania)
-					gottaHitNote = !section.mustHitSection;
+				if (songNotes[1] > mania) gottaHitNote = !section.mustHitSection;
 
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)

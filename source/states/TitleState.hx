@@ -1,25 +1,20 @@
 package states;
 
-import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxFrame;
-import flixel.group.FlxGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxGradient;
 import tjson.TJSON as Json;
 import backend.Highscore;
 import states.MainMenuState;
-#if sys
-import sys.FileSystem;
-#end
+#if sys import sys.FileSystem; #end
+
 typedef TitleData = {
 	starty:Float,
-	bgColor:String,
 	bpm:Float
 }
 
-class TitleState extends MusicBeatState
-{
+class TitleState extends MusicBeatState {
 	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
@@ -27,7 +22,6 @@ class TitleState extends MusicBeatState
 	public static var initialized:Bool = false;
 	
 	var bg:FlxSprite;
-	var titlebg:FlxBackdrop;
 	var logoBl:FlxSprite;
 	var titleText:FlxSprite;
 
@@ -79,20 +73,14 @@ class TitleState extends MusicBeatState
 	function createIntro() {
 		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 
-		titlebg = new FlxBackdrop(Paths.image('thechecker'));
-		titlebg.velocity.set(0, 110);
-		titlebg.updateHitbox();
-		titlebg.color = CoolUtil.colorFromString(titleJSON.bgColor);
-		titlebg.screenCenter(X);
-
 		logoBl = new FlxSprite(FlxG.width / 2, 1500);
 		logoBl.antialiasing = ClientPrefs.getPref('Antialiasing');
-		if (!FileSystem.exists(Paths.modsXml('FinalLogo'))) {
-			logoBl.loadGraphic(Paths.image('FinalLogo'));
+		if (!FileSystem.exists(Paths.modsXml('logobumpin'))) {
+			logoBl.loadGraphic(Paths.image('logobumpin'));
 			logoBl.setGraphicSize(Std.int(logoBl.width * 1.5));
 		} else {
 			foundXml = true;
-			logoBl.frames = Paths.getSparrowAtlas('FinalLogo');
+			logoBl.frames = Paths.getSparrowAtlas('logobumpin');
 			logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 			logoBl.animation.play('bump');
 		}
@@ -143,7 +131,6 @@ class TitleState extends MusicBeatState
 		}
 
 		add(bg);
-		add(titlebg);
 		add(logoBl);
 		add(titleText);
 
@@ -300,9 +287,9 @@ class TitleState extends MusicBeatState
 					addMoreText('And Psych Engine Contributors!');
 				case 8:
 					deleteCoolText();
-					createCoolText(['Doo Doo Doo,']);
+					createCoolText(['Altertoriel']);
 				case 9:
-					addMoreText('Almost there!');
+					addMoreText('Presents!');
 				case 10:
 					deleteCoolText();
 					createCoolText([curWacky[0]]);
@@ -332,11 +319,9 @@ class TitleState extends MusicBeatState
 
 			FlxTween.tween(logoBl, {y: titleJSON.starty}, 1.4, {ease: FlxEase.expoInOut});
 			logoBl.angle = -4;
-			new FlxTimer().start(0.01, function(tmr:FlxTimer) {
-				if (logoBl.angle == -4)
-					FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
-				if (logoBl.angle == 4)
-					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
+			new FlxTimer().start(.01, (tmr:FlxTimer) -> {
+				if (logoBl.angle == -4) FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
+				if (logoBl.angle == 4) FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
 			}, 0);
 			skippedIntro = true;
 		}
