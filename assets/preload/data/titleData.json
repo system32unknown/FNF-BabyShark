@@ -3,5 +3,6 @@
 	"starty":100,
 	"gfx":512,
 	"gfy":40,
-	"bpm":148
+	"bpm":148,
+	"gradients": ["33FFFF", "3333CC"]
 }

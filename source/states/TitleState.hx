@@ -15,6 +15,7 @@ typedef TitleData = {
 	gfx:Float,
 	gfy:Float,
 	bpm:Float,
+	gradients:Array<String>
 }
 
 class TitleState extends MusicBeatState {
@@ -28,7 +29,6 @@ class TitleState extends MusicBeatState {
 	var logoBl:FlxSprite;
 	var titleText:FlxSprite;
 
-	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	var titleTextAlphas:Array<Float> = [1, .64];
 
 	var curWacky:Array<String> = [];
@@ -78,7 +78,7 @@ class TitleState extends MusicBeatState {
 	function createIntro() {
 		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 
-		logoBl = new FlxSprite(titleJSON.titlex, 1500);
+		logoBl = new FlxSprite(0, 1500);
 		logoBl.antialiasing = ClientPrefs.getPref('Antialiasing');
 		if (!FileSystem.exists(Paths.modsXml('logobumpin'))) {
 			logoBl.loadGraphic(Paths.image('logobumpin'));
@@ -90,7 +90,7 @@ class TitleState extends MusicBeatState {
 			logoBl.animation.play('bump');
 		}
 		logoBl.updateHitbox();
-		logoBl.screenCenter(X);
+		logoBl.x = titleJSON.titlex;
 
 		gfDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
 		gfDance.antialiasing = ClientPrefs.getPref('Antialiasing');
@@ -201,7 +201,7 @@ class TitleState extends MusicBeatState {
 			if (timer >= 1) timer = -timer + 2;
 			timer = FlxEase.quadInOut(timer);
 			
-			titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], timer);
+			titleText.color = FlxColor.interpolate(FlxColor.fromString(titleJSON.gradients[0]), FlxColor.fromString(titleJSON.gradients[1]), timer);
 			titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
 		}
 
