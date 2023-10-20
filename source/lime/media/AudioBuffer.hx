@@ -18,8 +18,8 @@ import lime.media.howlerjs.Howl;
 #if (js && html5)
 import js.html.Audio;
 #elseif flash
-import flash.media.Sound;
-import flash.net.URLRequest;
+import openfl.media.Sound;
+import openfl.net.URLRequest;
 #end
 
 @:access(lime._internal.backend.native.NativeCFFI)

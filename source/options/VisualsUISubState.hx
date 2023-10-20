@@ -45,14 +45,12 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Score Styles:',
-			"", 'ScoreType',
-			'string', ['Alter', 'Kade']);
+			"", 'ScoreType', 'string', ['Alter', 'Kade']);
 		addOption(option);
 
 		var option:Option = new Option('Rating Display:',
 			'Choose the type of rating you want to see.',
-			'RatingDisplay',
-			'string', ['Hud', 'World']);
+			'RatingDisplay', 'string', ['Hud', 'World']);
 		addOption(option);
 
 		var option:Option = new Option('Camera Zooms',
@@ -66,7 +64,7 @@ class VisualsUISubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Show Combo Counter',
 			'If checked, the combo counter will be shown.',
-			'ShowCombo', 'bool');
+			'ShowComboCounter', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Show ms Timing',

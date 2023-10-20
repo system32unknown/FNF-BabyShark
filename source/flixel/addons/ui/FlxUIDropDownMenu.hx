@@ -1,18 +1,10 @@
 package flixel.addons.ui;
 
 import flixel.ui.FlxButton;
-import flash.geom.Rectangle;
+import openfl.geom.Rectangle;
 import flixel.addons.ui.interfaces.IFlxUIClickable;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.addons.ui.interfaces.IHasParams;
-import flixel.addons.ui.FlxUIGroup;
-import flixel.addons.ui.FlxUIText;
-import flixel.addons.ui.FlxUIButton;
-import flixel.addons.ui.FlxUISpriteButton;
-import flixel.addons.ui.FlxUI9SliceSprite;
-import flixel.addons.ui.FlxUIAssets;
-import flixel.addons.ui.StrNameLabel;
-import flixel.addons.ui.FlxUI;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 
@@ -335,7 +327,7 @@ class FlxUIDropDownMenu extends FlxUIGroup implements IFlxUIWidget implements IF
 
 		t.loadGraphicSlice9([FlxUIAssets.IMG_INVIS, FlxUIAssets.IMG_HILIGHT, FlxUIAssets.IMG_HILIGHT], Std.int(header.background.width),
 			Std.int(header.background.height), [[1, 1, 3, 3], [1, 1, 3, 3], [1, 1, 3, 3]], FlxUI9SliceSprite.TILE_NONE);
-		t.labelOffsets[FlxButton.PRESSED].y--; // turn off the 1-pixel depress on click
+		t.labelOffsets[FlxButton.PRESSED].y -= 1; // turn off the 1-pixel depress on click
 
 		t.up_color = FlxColor.BLACK;
 		t.over_color = FlxColor.WHITE;

@@ -5,12 +5,12 @@ import openfl.events.Event;
 import openfl.media.Sound;
 import openfl.media.SoundChannel;
 import openfl.media.SoundTransform;
+import openfl.media.SoundMixer;
 import openfl.net.URLRequest;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.util.FlxStringUtil;
-import flash.media.SoundMixer;
 import openfl.Assets;
 #if flash11
 import openfl.utils.ByteArray;

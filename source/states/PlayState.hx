@@ -2241,10 +2241,8 @@ class PlayState extends MusicBeatState {
 		if(daRating.noteSplash && !note.noteSplashDisabled)
 			spawnNoteSplashOnNote(note);
 
-		if (noteDiff > Conductor.safeZoneOffset * .1)
-			daTiming = "early";
-		else if (noteDiff < Conductor.safeZoneOffset * -.1)
-			daTiming = "late";
+		if (noteDiff > Conductor.safeZoneOffset * .1) daTiming = "early";
+		else if (noteDiff < Conductor.safeZoneOffset * -.1) daTiming = "late";
 
 		songScore += score;
 		if(!note.ratingDisabled) {
@@ -2252,7 +2250,7 @@ class PlayState extends MusicBeatState {
 			totalPlayed++;
 			RecalculateRating();
 		}
-		if (ClientPrefs.getPref('ShowCombo')) {
+		if (ClientPrefs.getPref('ShowComboCounter')) {
 			var placement:Float = FlxG.width * .35;
 			if (!ClientPrefs.getPref('comboStacking') && comboGroup.members.length > 0) {
 				for (spr in comboGroup) {
@@ -2314,8 +2312,8 @@ class PlayState extends MusicBeatState {
 		
 			if (ClientPrefs.getPref('ShowMsTiming')) {
 				mstimingTxt.screenCenter();
-				var comboShowSpr:FlxSprite = (combo >= 10 ? comboSpr : rating);
-				mstimingTxt.setPosition(comboShowSpr.x + 100, comboShowSpr.y + (combo >= 10 ? 80 : 100));
+				var comboShowSpr:FlxSprite = (showCombo && combo >= 10 ? comboSpr : rating);
+				mstimingTxt.setPosition(comboShowSpr.x + 100, comboShowSpr.y + (showCombo && combo >= 10 ? 80 : 100));
 				mstimingTxt.updateHitbox();
 			}
 		
@@ -2360,25 +2358,19 @@ class PlayState extends MusicBeatState {
 				if(showComboNum) comboGroup.add(numScore);
 			
 				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {
-					onComplete: (tween:FlxTween) -> {
-						remove(numScore, true); numScore.destroy();
-					}, startDelay: Conductor.crochet * .002 / playbackRate
+					onComplete: (tween:FlxTween) -> {remove(numScore, true); numScore.destroy();}, startDelay: Conductor.crochet * .002 / playbackRate
 				});
 			
 				daLoop++;
 			}
 		
 			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {
-				onComplete: (tween:FlxTween) -> {
-					remove(rating, true); rating.destroy();
-				}, startDelay: Conductor.crochet * .001 / playbackRate
+				onComplete: (tween:FlxTween) -> {remove(rating, true); rating.destroy();}, startDelay: Conductor.crochet * .001 / playbackRate
 			});
 		
 			if (ClientPrefs.getPref('ShowLateEarly')) {
 				FlxTween.tween(timing, {alpha: 0}, .2 / playbackRate, {
-					onComplete: (tween:FlxTween) -> {
-						remove(timing, true); timing.destroy();
-					}, startDelay: Conductor.crochet * .001 / playbackRate
+					onComplete: (tween:FlxTween) -> {remove(timing, true); timing.destroy();}, startDelay: Conductor.crochet * .001 / playbackRate
 				});
 			}
 		
@@ -2387,15 +2379,11 @@ class PlayState extends MusicBeatState {
 					mstimingTxt.alpha = 1;
 					msTimingTween.cancel();
 				}
-				msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {
-					startDelay: Conductor.crochet * .001 / playbackRate
-				});
+				msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {startDelay: Conductor.crochet * .001 / playbackRate});
 			}
 		
 			FlxTween.tween(comboSpr, {alpha: 0}, .2 / playbackRate, {
-				onComplete: (tween:FlxTween) -> {
-					remove(comboSpr, true); comboSpr.destroy();
-				}, startDelay: Conductor.crochet * .002 / playbackRate
+				onComplete: (tween:FlxTween) -> {remove(comboSpr, true); comboSpr.destroy();}, startDelay: Conductor.crochet * .002 / playbackRate
 			});
 		}
 	}
@@ -2781,7 +2769,7 @@ class PlayState extends MusicBeatState {
 			script.destroy();
 		}
 		while (hscriptArray.length > 0) hscriptArray.pop();
-		for (name => save in modchartSaves) save.close();
+		for (_ => save in modchartSaves) save.close();
 
 		@:privateAccess
 		if (Std.isOfType(FlxG.game._requestedState, PlayState))

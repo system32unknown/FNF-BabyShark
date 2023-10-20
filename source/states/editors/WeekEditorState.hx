@@ -10,9 +10,9 @@ import flixel.addons.ui.FlxUITabMenu;
 import flixel.ui.FlxButton;
 import openfl.utils.Assets;
 import openfl.net.FileReference;
+import openfl.net.FileFilter;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-import flash.net.FileFilter;
 import lime.system.Clipboard;
 import tjson.TJSON as Json;
 #if sys

@@ -27,7 +27,7 @@ class ClientPrefs {
 		'camMovement' => true,
 		'hideHud' => false,
 		'ShowMsTiming' => false,
-		'ShowCombo' => false,
+		'ShowComboCounter' => false,
 		'ShowNPSCounter' => false,
 		'complexAccuracy' => false,
 		'ShowLateEarly' => false,

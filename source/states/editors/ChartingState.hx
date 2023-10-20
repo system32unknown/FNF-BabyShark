@@ -32,8 +32,8 @@ import lime.media.AudioBuffer;
 import haxe.io.Bytes;
 import haxe.io.Path;
 import tjson.TJSON as Json;
-import flash.geom.Rectangle;
-import flash.media.Sound;
+import openfl.geom.Rectangle;
+import openfl.media.Sound;
 #if sys
 import sys.io.File;
 import sys.FileSystem;

@@ -5,8 +5,8 @@ import flixel.graphics.FlxGraphic;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
+import openfl.media.Sound;
 import lime.utils.Assets;
-import flash.media.Sound;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
