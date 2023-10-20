@@ -58,9 +58,7 @@ class Assets
 	public static var cache:IAssetCache = new AssetCache();
 
 	@:noCompletion static var dispatcher:EventDispatcher #if !macro = new EventDispatcher() #end;
-	#if (openfl >= "9.2.0")
 	static var libraryBindings:Map<String, AssetLibrary> = new Map();
-	#end
 
 	public static function addEventListener(type:String, listener:Dynamic, useCapture:Bool = false, priority:Int = 0, useWeakReference:Bool = false):Void
 	{
@@ -166,10 +164,9 @@ class Assets
 		Gets an instance of an embedded binary asset
 		@usage		var bytes = Assets.getBytes ("file.zip");
 		@param	id		The ID or asset path for the asset
-		@param	useCache		(Optional) Whether to allow use of the asset cache (Default: false)
 		@return		A new ByteArray object
 	**/
-	public static function getBytes(id:String, useCache:Bool = false):ByteArray
+	public static function getBytes(id:String):ByteArray
 	{
 		#if lime
 		return LimeAssets.getBytes(id);
@@ -750,7 +747,6 @@ class Assets
 		#end
 	}
 
-	#if (openfl >= "9.2.0")
 	/**
 		Unregisters an AssetLibrary binding for use with @:bind or Assets.bind
 		@param	className		The class name to use for the binding
@@ -762,7 +758,6 @@ class Assets
 			libraryBindings.remove(className);
 		}
 	}
-	#end
 
 	// Event Handlers
 	@:noCompletion static function LimeAssets_onChange():Void

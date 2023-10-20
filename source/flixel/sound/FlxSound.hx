@@ -1,11 +1,11 @@
 package flixel.sound;
 
-import flash.events.IEventDispatcher;
-import flash.events.Event;
-import flash.media.Sound;
-import flash.media.SoundChannel;
-import flash.media.SoundTransform;
-import flash.net.URLRequest;
+import openfl.events.IEventDispatcher;
+import openfl.events.Event;
+import openfl.media.Sound;
+import openfl.media.SoundChannel;
+import openfl.media.SoundTransform;
+import openfl.net.URLRequest;
 import flixel.FlxBasic;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxSoundAsset;
@@ -13,7 +13,7 @@ import flixel.util.FlxStringUtil;
 import flash.media.SoundMixer;
 import openfl.Assets;
 #if flash11
-import flash.utils.ByteArray;
+import openfl.utils.ByteArray;
 #end
 #if (openfl >= "8.0.0")
 import openfl.utils.AssetType;

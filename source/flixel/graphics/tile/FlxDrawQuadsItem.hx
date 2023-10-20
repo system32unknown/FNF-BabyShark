@@ -6,7 +6,6 @@ package flixel.graphics.tile;
 	But yea, this is copy pasted to ensure ClientPrefs.antialiasing is APPLIED TO EVERYTHING.
  */
 #if FLX_DRAW_QUADS
-import backend.ClientPrefs;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.system.FlxAssets.FlxShader;
@@ -106,12 +105,10 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
 
 	#if !flash
 	override public function render(camera:FlxCamera):Void {
-		if (rects.length == 0)
-			return;
+		if (rects.length == 0) return;
 
 		var shader = shader != null ? shader : graphics.shader;
-		if (shader == null)
-			return;
+		if (shader == null) return;
 		shader.bitmap.input = graphics.bitmap;
 
 		shader.bitmap.filter = ((camera.antialiasing || antialiasing) && ClientPrefs.getPref('Antialiasing')) ? LINEAR : NEAREST;

@@ -223,9 +223,13 @@ class FlxInputText extends FlxText
 		}
 
 		lines = 1;
-		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown, false, 1);
 
 		if (Text == null) Text = "";
+
+		#if (js && html5)
+		FlxG.stage.window.onTextInput.add(handleClipboardText);
+		#end
 
 		text = Text; // ensure set_text is called to avoid bugs (like not preparing _charBoundaries on sys target, making it impossible to click)
 
@@ -250,6 +254,10 @@ class FlxInputText extends FlxText
 			}
 			_charBoundaries = null;
 		}
+		#end
+
+		#if (js && html5)
+		FlxG.stage.window.onTextInput.remove(handleClipboardText);
 		#end
 
 		super.destroy();
@@ -327,9 +335,9 @@ class FlxInputText extends FlxText
 		final key:Int = e.keyCode;
 
 		if (hasFocus) {
-			  //// Crtl/Cmd + C to copy text to the clipboard
-			  // This copies the entire input, because i'm too lazy to do caret selection, and if i did it i whoud probabbly make it a pr in flixel-ui.
-			  if (key == C && #if macos e.commandKey #else e.ctrlKey #end) {
+			//// Crtl/Cmd + C to copy text to the clipboard
+			// This copies the entire input, because i'm too lazy to do caret selection, and if i did it i whoud probabbly make it a pr in flixel-ui.
+			if (key == C && #if macos e.commandKey #else e.ctrlKey #end) {
 				Clipboard.text = text;
 				onChange(COPY_ACTION);
 
@@ -337,8 +345,8 @@ class FlxInputText extends FlxText
 				return;
 			  }
 
-			  //// Crtl/Cmd + V to paste in the clipboard text to the input
-			  if (key == V && #if macos e.commandKey #else e.ctrlKey #end) {
+			//// Crtl/Cmd + V to paste in the clipboard text to the input
+			if (key == V && #if macos e.commandKey #else e.ctrlKey #end) {
 				var newText:String = filter(Clipboard.text);
 
 				if (newText.length > 0 && (maxLength == 0 || (text.length + newText.length) < maxLength)) {
@@ -403,7 +411,7 @@ class FlxInputText extends FlxText
 					if (e.charCode == 0) return; //non-printable characters crash String.fromCharCode
 					var newText:String = filter(String.fromCharCode(e.charCode));
 	
-					if (newText.length > 0 && (maxLength == 0 || (text.length + newText.length) < maxLength)) {
+					if (newText.length > 0 && (maxLength == 0 || (text.length + newText.length) <= maxLength)) {
 						text = insertSubstring(text, newText, caretIndex);
 						caretIndex++;
 						onChange(INPUT_ACTION);
@@ -413,10 +421,15 @@ class FlxInputText extends FlxText
 	}
 
 	function onChange(action:String):Void {
-		if (callback != null) {
-			callback(text, action);
-		}
+		if (callback != null) callback(text, action);
 	}
+
+	#if (html5 && js)
+	function handleClipboardText(clipboardText:String) {
+		@:privateAccess if (Clipboard._text == clipboardText)
+			pasteClipboardText(clipboardText);
+	}
+	#end
 
 	/**
 	 * Inserts a substring into a string at a specific index
@@ -731,16 +744,31 @@ class FlxInputText extends FlxText
 				_caretTimer = new FlxTimer().start(0.5, toggleCaret, 0);
 				caret.visible = true;
 				caretIndex = text.length;
+				#if mobile
+				// Initialize soft keyboard
+				FlxG.stage.window.textInputEnabled = true;
+				#end
 			}
 		} else {
 			// Graphics
 			caret.visible = false;
 			if (_caretTimer != null)
 				_caretTimer.cancel();
+
+			#if mobile
+			// Remove soft keyboard
+			FlxG.stage.window.textInputEnabled = false;
+			#end
 		}
 
-		if (newFocus != hasFocus)
+		if (newFocus != hasFocus) {
 			calcFrame();
+
+			#if (js && html5)
+			var window = FlxG.stage.window;
+			@:privateAccess window.__backend.setTextInputEnabled(newFocus);
+			#end
+		}
 
 		return hasFocus = newFocus;
 	}
