@@ -1,8 +1,8 @@
 {	
-	"titlex":640,
-	"starty":100,
+	"titlex":0,
+	"starty":50,
 	"gfx":512,
 	"gfy":40,
 	"bpm":148,
-	"gradients": ["#33FFFF", "#3333CC"]
+	"gradients": ["#33FFFF", "#FCAEDD"]
 }

@@ -240,7 +240,7 @@ class NativeApplication
 		if (window != null)
 		{
 			var type:KeyEventType = keyEventInfo.type;
-			var keyCode:KeyCode = keyEventInfo.keyCode;
+			var keyCode:KeyCode = Std.int(keyEventInfo.keyCode);
 			var modifier:KeyModifier = keyEventInfo.modifier;
 
 			switch (type)
@@ -280,10 +280,14 @@ class NativeApplication
 			switch (mouseEventInfo.type)
 			{
 				case MOUSE_DOWN:
+					window.clickCount = mouseEventInfo.clickCount;
 					window.onMouseDown.dispatch(mouseEventInfo.x, mouseEventInfo.y, mouseEventInfo.button);
+					window.clickCount = 0;
 
 				case MOUSE_UP:
+					window.clickCount = mouseEventInfo.clickCount;
 					window.onMouseUp.dispatch(mouseEventInfo.x, mouseEventInfo.y, mouseEventInfo.button);
+					window.clickCount = 0;
 
 				case MOUSE_MOVE:
 					window.onMouseMove.dispatch(mouseEventInfo.x, mouseEventInfo.y);
@@ -506,6 +510,12 @@ class NativeApplication
 					window.__fullscreen = false;
 					window.__minimized = false;
 					window.onRestore.dispatch();
+
+				case WINDOW_SHOW:
+					window.onShow.dispatch();
+
+				case WINDOW_HIDE:
+					window.onHide.dispatch();
 			}
 		}
 	}
@@ -545,6 +555,18 @@ class NativeApplication
 				});
 			}
 		}
+
+		#if (haxe_ver >= 4.2)
+		#if target.threaded
+		sys.thread.Thread.current().events.progress();
+		#else
+		// Duplicate code required because Haxe 3 can't handle
+		// #if (haxe_ver >= 4.2 && target.threaded)
+		@:privateAccess haxe.EntryPoint.processEvents();
+		#end
+		#else
+		@:privateAccess haxe.EntryPoint.processEvents();
+		#end
 		#end
 	}
 }
@@ -566,7 +588,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract ApplicationEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract ApplicationEventType(Int)
 {
 	var UPDATE = 0;
 	var EXIT = 1;
@@ -587,7 +609,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract ClipboardEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract ClipboardEventType(Int)
 {
 	var UPDATE = 0;
 }
@@ -609,7 +631,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract DropEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract DropEventType(Int)
 {
 	var DROP_FILE = 0;
 }
@@ -637,7 +659,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract GamepadEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract GamepadEventType(Int)
 {
 	var AXIS_MOVE = 0;
 	var BUTTON_DOWN = 1;
@@ -671,7 +693,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract JoystickEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract JoystickEventType(Int)
 {
 	var AXIS_MOVE = 0;
 	var HAT_MOVE = 1;
@@ -684,12 +706,12 @@ class NativeApplication
 
 @:keep class KeyEventInfo
 {
-	public var keyCode:Int;
+	public var keyCode:Float;
 	public var modifier:Int;
 	public var type:KeyEventType;
 	public var windowID:Int;
 
-	public function new(type:KeyEventType = null, windowID:Int = 0, keyCode:Int = 0, modifier:Int = 0)
+	public function new(type:KeyEventType = null, windowID:Int = 0, keyCode:Float = 0, modifier:Int = 0)
 	{
 		this.type = type;
 		this.windowID = windowID;
@@ -703,7 +725,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract KeyEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract KeyEventType(Int)
 {
 	var KEY_DOWN = 0;
 	var KEY_UP = 1;
@@ -718,8 +740,9 @@ class NativeApplication
 	public var windowID:Int;
 	public var x:Float;
 	public var y:Float;
+	public var clickCount:Int;
 
-	public function new(type:MouseEventType = null, windowID:Int = 0, x:Float = 0, y:Float = 0, button:Int = 0, movementX:Float = 0, movementY:Float = 0)
+	public function new(type:MouseEventType = null, windowID:Int = 0, x:Float = 0, y:Float = 0, button:Int = 0, movementX:Float = 0, movementY:Float = 0, clickCount:Int = 0)
 	{
 		this.type = type;
 		this.windowID = 0;
@@ -728,15 +751,16 @@ class NativeApplication
 		this.button = button;
 		this.movementX = movementX;
 		this.movementY = movementY;
+		this.clickCount = clickCount;
 	}
 
 	public function clone():MouseEventInfo
 	{
-		return new MouseEventInfo(type, windowID, x, y, button, movementX, movementY);
+		return new MouseEventInfo(type, windowID, x, y, button, movementX, movementY, clickCount);
 	}
 }
 
-@:enum abstract MouseEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract MouseEventType(Int)
 {
 	var MOUSE_DOWN = 0;
 	var MOUSE_UP = 1;
@@ -759,7 +783,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract RenderEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract RenderEventType(Int)
 {
 	var RENDER = 0;
 	var RENDER_CONTEXT_LOST = 1;
@@ -789,7 +813,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract SensorEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract SensorEventType(Int)
 {
 	var ACCELEROMETER = 0;
 }
@@ -818,7 +842,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract TextEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract TextEventType(Int)
 {
 	var TEXT_INPUT = 0;
 	var TEXT_EDIT = 1;
@@ -853,7 +877,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract TouchEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract TouchEventType(Int)
 {
 	var TOUCH_START = 0;
 	var TOUCH_END = 1;
@@ -885,7 +909,7 @@ class NativeApplication
 	}
 }
 
-@:enum abstract WindowEventType(Int)
+#if (haxe_ver >= 4.0) enum #else @:enum #end abstract WindowEventType(Int)
 {
 	var WINDOW_ACTIVATE = 0;
 	var WINDOW_CLOSE = 1;
@@ -900,4 +924,6 @@ class NativeApplication
 	var WINDOW_MOVE = 10;
 	var WINDOW_RESIZE = 11;
 	var WINDOW_RESTORE = 12;
+	var WINDOW_SHOW = 13;
+	var WINDOW_HIDE = 14;
 }
