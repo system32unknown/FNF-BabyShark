@@ -1,7 +1,7 @@
 # Baby Shark's Funkin
-![Baby Shark's Funkin Logo](assets/preload/images/FinalLogo.png)
+![Baby Shark's Funkin Logo](assets/preload/images/logobumpin.png)
 
-Heavily Modded of Psych Engine. combined with Kade, Dave, Base Engines.
+Heavily Modified of Psych Engine. combined with Kade, Dave, Base Engines.
 
 ![Repo size](https://img.shields.io/github/repo-size/system32unknown/FNF-BabyShark)
 ![Last commit](https://img.shields.io/github/last-commit/system32unknown/FNF-BabyShark)
@@ -30,8 +30,3 @@ Heavily Modded of Psych Engine. combined with Kade, Dave, Base Engines.
 * Smokey - Sprite Atlas Support
 * superpowers04 - LUA JIT Fork and some Lua reworks
 * Raltyro - Maintainer of Psike Engine
-_____________________________________
-
-## Mod Support
-* Probably one of the main points of this engine, you can code in .lua or .hx files outside of the source code, making your own weeks without even messing with the source!
-* Comes with a Mod Organizing/Disabling Menu.
