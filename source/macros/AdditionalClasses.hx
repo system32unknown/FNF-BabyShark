@@ -16,7 +16,6 @@ class AdditionalClasses {
 			#if desktop "discord_rpc", #end
 			"hscript",
 			// OTHER LIBRARIES & STUFF
-			#if flash "flash", #end
 			#if cpp "cpp", #end
 			#if hl "hl", #end
 			#if neko "neko", #end

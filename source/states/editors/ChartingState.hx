@@ -532,7 +532,6 @@ class ChartingState extends MusicBeatState {
 		}
 
 		if(availableDifficulties == null || availableDifficulties.length <= 0) {
-			trace('Where are the difficulties...?');
 			availableDifficulties.push(PlayState.storyDifficulty);
 			availableDifficultiesTexts.push(Difficulty.list[0]);
 		}
