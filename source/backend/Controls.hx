@@ -67,17 +67,12 @@ class Controls {
 
 	public var keyboardBinds:Map<String, Array<FlxKey>>;
 	
-	public function justPressed(key:String) {
-		return FlxG.keys.anyJustPressed(keyboardBinds[key]);
-	}
-	public function pressed(key:String) {
-		return FlxG.keys.anyPressed(keyboardBinds[key]);
-	}
+	public function justPressed(key:String) return FlxG.keys.anyJustPressed(excludeNONEFromKeyChecks(keyboardBinds[key]));
+	public function pressed(key:String) return FlxG.keys.anyPressed(excludeNONEFromKeyChecks(keyboardBinds[key]));
+	public function justReleased(key:String) return FlxG.keys.anyJustReleased(excludeNONEFromKeyChecks(keyboardBinds[key]));
 
-	public function justReleased(key:String) {
-		return FlxG.keys.anyJustReleased(keyboardBinds[key]);
-	}
+	function excludeNONEFromKeyChecks(array:Array<FlxKey>):Array<FlxKey> return [key for (key in array) if (key != NONE)];
 
 	public static var instance:Controls;
-	public function new() {keyboardBinds = ClientPrefs.keyBinds;}
+	public function new() keyboardBinds = ClientPrefs.keyBinds;
 }

@@ -28,8 +28,7 @@ class VideoManager extends VideoHandler {
     public function setFinishCallBack(func:Dynamic) {
         this.onEndReached.add(() -> {
             this.dispose();
-            if(func != null)
-            func();
+            if(func != null) func();
         }, true);
     }
 

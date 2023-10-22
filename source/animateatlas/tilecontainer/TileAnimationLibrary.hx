@@ -50,9 +50,8 @@ class TileAnimationLibrary {
 
 	public function createAnimation(symbol:String = null):TileContainerMovieClip {
 		symbol = (symbol != null) ? symbol : _defaultSymbolName;
-		if (!hasSymbol(symbol)) {
+		if (!hasSymbol(symbol))
 			throw new ArgumentError("Symbol not found: " + symbol);
-		}
 		return new TileContainerMovieClip(getSymbol(symbol));
 	}
 
@@ -76,13 +75,8 @@ class TileAnimationLibrary {
 		return out;
 	}
 
-	function getSpriteData(name:String):SpriteData {
-		return _atlas.get(name);
-	}
-
-	function hasSymbol(name:String):Bool {
-		return _symbolData.exists(name);
-	}
+	function getSpriteData(name:String):SpriteData return _atlas.get(name);
+	function hasSymbol(name:String):Bool return _symbolData.exists(name);
 
 	// # region Pooling
 	// todo migrate this to lime pool
@@ -192,9 +186,5 @@ class TileAnimationLibrary {
 		}
 	}
 
-	function getSymbolData(name:String):SymbolData {
-		return _symbolData.get(name);
-	}
-
-	// # end region
+	function getSymbolData(name:String):SymbolData return _symbolData.get(name);
 }

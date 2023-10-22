@@ -207,8 +207,7 @@ class PlayState extends MusicBeatState {
 	public var girlfriendCameraOffset:Array<Float> = null;
 
 	var storyDifficultyText:String = "";
-	#if discord_rpc
-	// Discord RPC variables
+	#if discord_rpc // Discord RPC variables
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
 	#end
@@ -335,16 +334,13 @@ class PlayState extends MusicBeatState {
 		if(isPixelStage) introSoundsSuffix = '-pixel';
 
 		boyfriendCameraOffset = stageData.camera_boyfriend;
-		if(boyfriendCameraOffset == null) //Fucks sake should have done it since the start :rolling_eyes:
-			boyfriendCameraOffset = [0, 0];
+		if(boyfriendCameraOffset == null) boyfriendCameraOffset = [0, 0];
 
 		opponentCameraOffset = stageData.camera_opponent;
-		if(opponentCameraOffset == null)
-			opponentCameraOffset = [0, 0];
+		if(opponentCameraOffset == null) opponentCameraOffset = [0, 0];
 
 		girlfriendCameraOffset = stageData.camera_girlfriend;
-		if(girlfriendCameraOffset == null)
-			girlfriendCameraOffset = [0, 0];
+		if(girlfriendCameraOffset == null) girlfriendCameraOffset = [0, 0];
 
 		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
@@ -1761,15 +1757,7 @@ class PlayState extends MusicBeatState {
 
 				persistentUpdate = false;
 				persistentDraw = false;
-				#if VIDEOS_ALLOWED
-				if(videoSprites.length > 0) {
-					for(daVideoSprite in 0...videoSprites.length) {
-						videoSprites[daVideoSprite].destroy();
-						videoSprites[daVideoSprite].kill();
-					}
-					for(i in videoSprites) videoSprites.remove(i);
-				}
-				#end
+				destroyAllVideoSprites();
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollow.x, camFollow.y));
 
 				#if discord_rpc Discord.changePresence('Game Over - $detailsText', '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter()); #end
@@ -2782,6 +2770,16 @@ class PlayState extends MusicBeatState {
 			}
 		}
 
+		destroyAllVideoSprites();
+
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
+		FlxG.animationTimeScale = 1;
+		instance = null;
+		super.destroy();
+	}
+
+	function destroyAllVideoSprites() {
 		#if VIDEOS_ALLOWED
 		if(videoSprites.length > 0) {
 			for(daVideoSprite in 0...videoSprites.length) {
@@ -2791,12 +2789,6 @@ class PlayState extends MusicBeatState {
 			for(i in videoSprites) videoSprites.remove(i);
 		}
 		#end
-
-		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
-		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-		FlxG.animationTimeScale = 1;
-		instance = null;
-		super.destroy();
 	}
 
 	public static function cancelMusicFadeTween() {
@@ -2895,8 +2887,7 @@ class PlayState extends MusicBeatState {
 		if(OpenFlAssets.exists(luaToLoad))
 		#end
 		{
-			for (script in luaArray)
-				if(script.scriptName == luaToLoad) return false;
+			for (script in luaArray) if(script.scriptName == luaToLoad) return false;
 			new FunkinLua(luaToLoad);
 			return true;
 		}
@@ -2947,8 +2938,7 @@ class PlayState extends MusicBeatState {
 			Logs.trace('initialized hscript interp successfully: $file (${Std.int(Date.now().getTime() - times)}ms)');
 		} catch(e) {
 			HScript.hscriptTrace('ERROR - $e', FlxColor.RED);
-			if (hscriptArray.length > 0)
-				makeError(hscriptArray[hscriptArray.length - 1]);
+			if (hscriptArray.length > 0) makeError(hscriptArray[hscriptArray.length - 1]);
 		}
 	}
 	#end

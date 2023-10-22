@@ -89,15 +89,13 @@ class Highscore {
 
 	public static function getScore(song:String, diff:Int):Int {
 		var daSong:String = formatSong(song, diff);
-		if (!songScores.exists(daSong))
-			setScore(daSong, 0);
+		if (!songScores.exists(daSong)) setScore(daSong, 0);
 
 		return songScores.get(daSong);
 	}
 	public static function getCombo(song:String, diff:Int):String {
 		var daSong:String = formatSong(song, diff);
-		if (!songCombos.exists(daSong))
-			setCombo(daSong, '');
+		if (!songCombos.exists(daSong)) setCombo(daSong, '');
 
 		return songCombos.get(daSong);
 	}

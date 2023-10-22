@@ -1,9 +1,9 @@
 package animateatlas;
 
 import tjson.TJSON as Json;
+import openfl.Assets;
 import openfl.geom.Rectangle;
 import openfl.display.BitmapData;
-import openfl.Assets;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.graphics.FlxGraphic;
@@ -14,10 +14,7 @@ import animateatlas.JSONData.AnimationData;
 import animateatlas.displayobject.SpriteAnimationLibrary;
 import animateatlas.displayobject.SpriteMovieClip;
 
-#if desktop
-import sys.FileSystem;
-import sys.io.File;
-#end
+#if desktop import sys.FileSystem; #end
 
 class AtlasFrameMaker extends FlxFramesCollection
 {
@@ -50,17 +47,13 @@ class AtlasFrameMaker extends FlxFramesCollection
 		if(_excludeArray == null) {
 			_excludeArray = t.getFrameLabels();
 		}
-		trace('Creating: ' + _excludeArray);
+		trace('Creating: $_excludeArray');
 
 		frameCollection = new FlxFramesCollection(graphic, FlxFrameCollectionType.IMAGE);
-		for(x in _excludeArray) {
-			frameArray.push(getFramesArray(t, x));
-		}
+		for(x in _excludeArray) frameArray.push(getFramesArray(t, x));
 
 		for (x in frameArray) {
-			for (y in x) {
-				frameCollection.pushFrame(y);
-			}
+			for (y in x) frameCollection.pushFrame(y);
 		}
 		graphic.bitmap.dispose();
 		graphic.bitmap.disposeImage();

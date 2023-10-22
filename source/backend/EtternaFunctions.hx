@@ -11,13 +11,14 @@ class EtternaFunctions {
 		return sign * y;
 	}
 
+	public static var max_points = 1.0;
+	public static var miss_weight = -5.5;
+	public static var ts_pow = .75;
+
 	public static function wife3(maxms:Float) {
 		var ts = PlayState.instance.playbackRate;
-		var max_points = 1.0;
-		var miss_weight = -5.5;
 		var ridic = 5 * ts;
 		var max_boo_weight = PlayState.instance.ratingsData[0].hitWindow;
-		var ts_pow = .75;
 		var zero = 65 * Math.pow(ts, ts_pow);
 		var dev = 22.7 * Math.pow(ts, ts_pow);
 

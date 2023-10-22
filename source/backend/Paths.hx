@@ -342,7 +342,7 @@ class Paths
 			return graph;
 		} else modExists = FileSystem.exists(modKey);
 
-		var path:String = if (modExists) modKey; else srcKey;
+		var path:String = modExists ? modKey : srcKey;
 		#else
 		var path:String = getPath('images/$key.png', IMAGE, library);
 		if ((graph = currentTrackedAssets.get(path)) != null) return graph;
@@ -362,7 +362,7 @@ class Paths
 			}
 		}
 
-		trace('returnGraphic returning null: $path' #if MODS_ALLOWED + ' | Mods: $modKey' #end);
+		Logs.trace('returnGraphic returning null: $path' #if MODS_ALLOWED + ' | Mods: $modKey' #end, WARNING);
 		return null;
 	}
 
@@ -434,8 +434,6 @@ class Paths
 
 	inline static public function modsImages(key:String)
 		return modFolders('images/$key.png');
-	inline static public function modsGif(key:String)
-		return modFolders('images/$key.gif');
 
 	inline static public function modsXml(key:String)
 		return modFolders('images/$key.xml');

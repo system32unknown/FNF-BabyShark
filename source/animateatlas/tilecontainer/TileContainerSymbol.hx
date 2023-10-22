@@ -268,9 +268,7 @@ class TileContainerSymbol extends TileContainer {
 	}
 
 	function setLoop(data:String):Void {
-		if (data != null)
-			_loopMode = data;
-		else _loopMode = LoopMode.LOOP;
+		_loopMode = if (data != null) data else LoopMode.LOOP;
 	}
 
 	function setType(data:String):Void {
