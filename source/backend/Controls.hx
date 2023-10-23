@@ -71,7 +71,7 @@ class Controls {
 	public function pressed(key:String) return FlxG.keys.anyPressed(excludeNONEFromKeyChecks(keyboardBinds[key]));
 	public function justReleased(key:String) return FlxG.keys.anyJustReleased(excludeNONEFromKeyChecks(keyboardBinds[key]));
 
-	function excludeNONEFromKeyChecks(array:Array<FlxKey>):Array<FlxKey> return [key for (key in array) if (key != NONE)];
+	function excludeNONEFromKeyChecks(array:Array<FlxKey>):Array<FlxKey> return [for (key in array) if (key != NONE) key];
 
 	public static var instance:Controls;
 	public function new() keyboardBinds = ClientPrefs.keyBinds;

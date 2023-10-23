@@ -68,7 +68,7 @@ class PlatformUtil {
     ')
     static public function setWindowIcon(path:String) {}
 
-    static public function getMousePos():Array<Float> {return [temp__getMousePos(0), temp__getMousePos(1)];}
+    static public function getMousePos():Array<Float> return [temp__getMousePos(0), temp__getMousePos(1)];
 
     @:functionCode('
         int darkMode = enable ? 1 : 0;
@@ -88,7 +88,7 @@ class PlatformUtil {
         HWND hwnd = GetActiveWindow();
         EnableMenuItem(GetSystemMenu(hwnd, FALSE), SC_CLOSE, nMenuf);
     ')
-    static public function disableClose(enable:Bool):Bool {return enable;}
+    static public function disableClose(enable:Bool):Bool return enable;
 
 	@:functionCode('
 	    if (!AllocConsole()) return;
@@ -123,7 +123,7 @@ class PlatformUtil {
         if (pos == 0) return mousePosArray[0];
         else return mousePosArray[1];
     ')
-    static function temp__getMousePos(pos:Float):Float {return 0;}
+    static function temp__getMousePos(pos:Float):Float return 0;
 }
 #end
 

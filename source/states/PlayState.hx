@@ -3078,7 +3078,7 @@ class PlayState extends MusicBeatState {
 		setOnScripts('ratingFC', ratingFC);
 	}
 
-	public function getActualPlaybackRate():Float {return FlxG.sound.music != null ? FlxG.sound.music.getActualPitch() : playbackRate;}
+	public function getActualPlaybackRate():Float return FlxG.sound.music != null ? FlxG.sound.music.getActualPitch() : playbackRate;
 
 	function fullComboUpdate() {
 		var fullhits = [for(i in 0...ratingsData.length) ratingsData[i].hits];

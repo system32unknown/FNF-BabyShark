@@ -337,7 +337,7 @@ class ClientPrefs {
 		'debug_2'		=> [EIGHT]
 	];
 	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
-	public static function loadDefaultKeys() {defaultKeys = keyBinds.copy();}
+	public static function loadDefaultKeys() defaultKeys = keyBinds.copy();
 
 	public static function saveSettings() {
 		var save:Dynamic = FlxG.save.data;

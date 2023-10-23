@@ -201,7 +201,7 @@ class TitleState extends MusicBeatState {
 			if (timer >= 1) timer = -timer + 2;
 			timer = FlxEase.quadInOut(timer);
 			
-			titleText.color = FlxColor.interpolate(FlxColor.fromString(titleJSON.gradients[0]), FlxColor.fromString(titleJSON.gradients[1]), timer);
+			titleText.color = FlxColor.interpolate(CoolUtil.colorFromString(titleJSON.gradients[0]), CoolUtil.colorFromString(titleJSON.gradients[1]), timer);
 			titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
 		}
 

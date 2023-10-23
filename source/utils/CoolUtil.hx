@@ -41,9 +41,7 @@ class CoolUtil {
 		return [for(i in 0...daList.length) daList[i].trim()];
 	}
 
-	inline public static function numberArray(max:Int, ?min = 0):Array<Int> {
-		return [for (i in min...max) i];
-	}
+	inline public static function numberArray(max:Int, ?min = 0):Array<Int> return [for (i in min...max) i];
 
 	public static function GenerateLetterRank(accuracy:Float) { // generate a letter rankings
 		var ranking:String = "N/A";
@@ -139,9 +137,7 @@ class CoolUtil {
 		return tempArray;
 	}
 
-	inline public static function dynamicArray<T>(v:T, len:Int):Array<T> {
-		return [for (_ in 0...len) v];
-	}
+	inline public static function dynamicArray<T>(v:T, len:Int):Array<T> return [for (_ in 0...len) v];
 
 	public static function getOptionDefVal(type:String, ?options:Array<String> = null):Dynamic {
 		return switch(type) {
