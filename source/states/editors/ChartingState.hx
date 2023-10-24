@@ -28,12 +28,12 @@ import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
+import openfl.geom.Rectangle;
+import openfl.media.Sound;
 import lime.media.AudioBuffer;
 import haxe.io.Bytes;
 import haxe.io.Path;
 import tjson.TJSON as Json;
-import openfl.geom.Rectangle;
-import openfl.media.Sound;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
@@ -190,7 +190,6 @@ class ChartingState extends MusicBeatState {
 
 		waveformSprite = new FlxSprite(GRID_SIZE).makeGraphic(1, 1, FlxColor.BLACK);
 		waveformSprite.antialiasing = false;
-		waveformSprite.active = false;
 		add(waveformSprite);
 
 		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90).loadGraphic(Paths.image('eventArrow'));
@@ -2115,9 +2114,12 @@ class ChartingState extends MusicBeatState {
 
 		var size:Float = 1;
 
-		var leftLength:Int = (wavData[0][0].length > wavData[0][1].length ? wavData[0][0].length : wavData[0][1].length);
-		var rightLength:Int = (wavData[1][0].length > wavData[1][1].length ? wavData[1][0].length : wavData[1][1].length);
-
+		var leftLength:Int = (
+			wavData[0][0].length > wavData[0][1].length ? wavData[0][0].length : wavData[0][1].length
+		);
+		var rightLength:Int = (
+			wavData[1][0].length > wavData[1][1].length ? wavData[1][0].length : wavData[1][1].length
+		);
 		var length:Int = leftLength > rightLength ? leftLength : rightLength;
 
 		var index:Int;
@@ -2211,23 +2213,23 @@ class ChartingState extends MusicBeatState {
 				var rRMax:Float = rmax * multiply;
 
 				if (gotIndex > array[0][0].length) array[0][0].push(lRMin);
-				else array[0][0][gotIndex - 1] += lRMin;
+					else array[0][0][gotIndex - 1] += lRMin;
 
 				if (gotIndex > array[0][1].length) array[0][1].push(lRMax);
-				else array[0][1][gotIndex - 1] += lRMax;
+					else array[0][1][gotIndex - 1] += lRMax;
 
 				if (channels >= 2) {
 					if (gotIndex > array[1][0].length) array[1][0].push(rRMin);
-					else array[1][0][gotIndex - 1] += rRMin;
+						else array[1][0][gotIndex - 1] += rRMin;
 
 					if (gotIndex > array[1][1].length) array[1][1].push(rRMax);
-					else array[1][1][gotIndex - 1] += rRMax;
+						else array[1][1][gotIndex - 1] += rRMax;
 				} else {
 					if (gotIndex > array[1][0].length) array[1][0].push(lRMin);
-					else array[1][0][gotIndex - 1] += lRMin;
+						else array[1][0][gotIndex - 1] += lRMin;
 
 					if (gotIndex > array[1][1].length) array[1][1].push(lRMax);
-					else array[1][1][gotIndex - 1] += lRMax;
+						else array[1][1][gotIndex - 1] += lRMax;
 				}
 
 				lmin = 0;
