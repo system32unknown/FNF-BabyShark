@@ -22,12 +22,12 @@ class CreditsState extends MusicBeatState {
 	// Name - Icon name - Description - Link - BG Color
 	static var psych(default, never):Array<Array<String>> = [
 		['Psych Engine Team'],
-		['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',		'444444'],
-		['Riveren',				'riveren',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/riverennn',			'B42F71'],
+		['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://ko-fi.com/shadowmario',			'444444'],
+		['Riveren',				'riveren',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/riverennn',			'14967B'],
 		[''],
 		['Former Engine Members'],
-		['shubs',				'shubs',			'Ex-Programmer of Psych Engine',								'https://twitter.com/yoshubs',				'5E99DF'],
 		['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbsub3',				'3E813A'],
+		['shubs', 				'', 				'Ex-Programmer of Psych Engine\nI don\'t support them.', 		'', 										'A1A1A1'],
 		['Keoiki',				'keoiki',			'Ex-Artist and Note Splash Animations and Latin Alphabet', 		'https://twitter.com/Keoiki_',				'D2D2D2'],
 		[''],
 		['Engine Contributors'],
@@ -300,8 +300,7 @@ class CreditSectionState extends MusicBeatState {
 
 	final offsetThing:Float = -75;
 
-	override function create()
-	{
+	override function create() {
 		#if discord_rpc
 		Discord.changePresence("In the Menus", null);
 		#end
@@ -317,40 +316,37 @@ class CreditSectionState extends MusicBeatState {
 
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
-		var prefix:String = cSectionisMod ? '' : curCSection + '/';
 		for (i in 0...creditsStuff.length) {
 			var isSelectable:Bool = !unselectableCheck(i);
 			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 300, creditsStuff[i][0], !isSelectable);
 			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			optionText.changeX = false;
-			optionText.distancePerItem.y /= 1.1;
+			optionText.snapToPosition;
 			grpOptions.add(optionText);
 
 			if(isSelectable) {
 				if(creditsStuff[i][5] != null)
 					Mods.currentModDirectory = creditsStuff[i][5];
 
-				var icon:HealthIcon = new HealthIcon(false, true);
-				if (!icon.changeIcon(creditsStuff[i][1], curCSection, false))
-					icon.changeIcon(creditsStuff[i][1], getSimilarIcon(creditsStuff[i][1]));
+				var str:String = 'credits/missing_icon';
+				if(creditsStuff[i][1] != null && creditsStuff[i][1].length > 0) {
+					var fileName = 'credits/' + creditsStuff[i][1];
+					if (Paths.fileExists('images/$fileName.png', IMAGE)) str = fileName;
+					else if (Paths.fileExists('images/$fileName-pixel.png', IMAGE)) str = fileName + '-pixel';
+				}
 
-				icon.iconType = 'center';
-				icon.offset.y = -30;
-				icon.updateHitbox();
+				var icon:AttachedSprite = new AttachedSprite(str);
+				if(str.endsWith('-pixel')) icon.antialiasing = false;
+				icon.addPoint.x = optionText.width + 10;
 				icon.sprTracker = optionText;
-				icon.ID = i;
 
 				// using a FlxGroup is too much fuss!
 				add(icon);
 				Mods.currentModDirectory = cSectionisMod ? curCSection : '';
 
 				if(curSelected == -1) curSelected = i;
-			} else {
-				optionText.startPosition.y -= 28;
-				optionText.alignment = CENTERED;
-			}
-			optionText.snapToPosition();
+			} else optionText.alignment = CENTERED;
 		}
 
 		descBox = new AttachedSprite();
@@ -446,8 +442,7 @@ class CreditSectionState extends MusicBeatState {
 	}
 
 	var moveTween:FlxTween = null;
-	function changeSelection(change:Int = 0)
-	{
+	function changeSelection(change:Int = 0) {
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 		do {
 			curSelected = FlxMath.wrap(curSelected + change, 0, creditsStuff.length - 1);
@@ -457,9 +452,7 @@ class CreditSectionState extends MusicBeatState {
 		if(newColor != intendedColor) {
 			if(colorTween != null) colorTween.cancel();
 			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: (twn:FlxTween) -> colorTween = null
-			});
+			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {onComplete: (twn:FlxTween) -> colorTween = null});
 		}
 
 		var bullShit:Int = 0;
@@ -527,33 +520,6 @@ class CreditSectionState extends MusicBeatState {
 	function switchToDefaultSection() {
 		curCSection = 'psych';
 		cSectionisMod = false;
-	}
-
-	function getSimilarIcon(icon:String):String {
-		@:privateAccess var titles = CreditsState.titles;
-
-		var section:Array<String>;
-		var v:String;
-		for (i in 0...titles.length) {
-			section = titles[i];
-			if (section.length <= 1 || section[1] == 'mod') continue;
-
-			v = section[1];
-
-			var dyn:Dynamic = Reflect.field(CreditsState, v);
-			var field:Array<Array<String>> = null;
-			if (Std.isOfType(dyn, Array)) {
-				field = cast dyn;
-				if (field == null || field.length <= 0 || !Std.isOfType(field[0], Array) || !Std.isOfType(field[0][0], String))
-					field = null;
-			}
-			if (field == null || field.length <= 0) continue;
-
-			for (i in 0...field.length)
-				if (icon == field[i][1] && HealthIcon.returnGraphic(icon, v, false, true) != null) return v;
-		}
-
-		return null;
 	}
 
 	function unselectableCheck(num:Int):Bool {

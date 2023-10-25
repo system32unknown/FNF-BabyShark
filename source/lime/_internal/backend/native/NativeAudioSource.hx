@@ -1,8 +1,7 @@
 package lime._internal.backend.native;
 
-import haxe.Timer;
 import haxe.Int64;
-
+import haxe.Timer;
 import lime.math.Vector4;
 import lime.media.openal.AL;
 import lime.media.openal.ALBuffer;

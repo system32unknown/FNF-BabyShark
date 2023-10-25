@@ -159,6 +159,7 @@ class Alphabet extends FlxSpriteGroup {
 				if (AlphaCharacter.allLetters.exists(character.toLowerCase()) && (!bold || !spaceChar)) {
 					if (consecutiveSpaces > 0) {
 						xPos += 28 * consecutiveSpaces * scaleX;
+						rowData[rows] = xPos;
 						if(!bold && xPos >= FlxG.width * 0.65) {
 							xPos = 0;
 							rows++;
@@ -167,8 +168,8 @@ class Alphabet extends FlxSpriteGroup {
 					consecutiveSpaces = 0;
 
 					var letter:AlphaCharacter = cast recycle(AlphaCharacter, true);
-					letter.scale.x = scaleX;
-					letter.scale.y = scaleY;
+					letter.scale.set(scaleX, scaleY);
+					letter.rowWidth = 0;
 
 					letter.setupAlphaCharacter(xPos, rows * Y_PER_ROW * scale.y, character, bold);
 					@:privateAccess letter.parent = this;

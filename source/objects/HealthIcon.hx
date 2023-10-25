@@ -6,16 +6,13 @@ import flixel.util.FlxDestroyUtil;
 
 class HealthIcon extends FlxSprite {
 	static final prefix:String = 'icons/';
-	static final credits:String = 'credits/';
-	static final defaultIcon:String = 'icon-unknown';
-	static final altDefaultIcon:String = 'icon-face';
+	static final defaultIcon:String = 'icon-face';
 
 	public var iconOffsets:Array<Float> = [0, 0];
 	public var iconZoom:Float = 1;
 	public var sprTracker:FlxSprite;
 	public var isPixelIcon(get, null):Bool;
 	var isPlayer:Bool = false;
-	var isCredit:Bool;
 
 	var char:String = '';
 	
@@ -24,31 +21,23 @@ class HealthIcon extends FlxSprite {
 	var state:Int = 0;
 	var _scale:FlxPoint;
 	
-	public static function returnGraphic(char:String, ?folder:String, defaultIfMissing:Bool = false, creditIcon:Bool = false):FlxGraphic {
+	public static function returnGraphic(char:String, defaultIfMissing:Bool = false):FlxGraphic {
 		var path:String;
-		if (creditIcon) {
-			path = credits + ((folder != null || folder == '') ? '$folder/' : '') + char;
-			if ((folder != null || folder == '') && !Paths.fileExists('images/$path.png', IMAGE)) path = credits + char;
-			if (Paths.fileExists('images/$path.png', IMAGE)) return Paths.image(path);
-			if (defaultIfMissing) return Paths.image(prefix + defaultIcon);
-			return null;
-		}
 		path = prefix + char;
 		if (!Paths.fileExists('images/$path.png', IMAGE)) path = '${prefix}icon-$char'; //Older versions of psych engine's support
 		if (!Paths.fileExists('images/$path.png', IMAGE)) { //Prevents crash from missing icon
 			if (!defaultIfMissing) return null;
-			path = prefix + altDefaultIcon;
-			if (!Paths.fileExists('images/' + path + '.png', IMAGE, false, true)) path = prefix + defaultIcon;
+			path = prefix + defaultIcon;
+			if (!Paths.fileExists('images/$path.png', IMAGE, false, true)) path = prefix + defaultIcon;
 		}
 		return Paths.image(path);
 	}
 
-	public function new(?char:String, ?folder:String, isPlayer:Bool = false, isCredit = false) {
+	public function new(?char:String, isPlayer:Bool = false) {
 		this.isPlayer = isPlayer;
-		this.isCredit = isCredit;
 		super();
 		scrollFactor.set();
-		changeIcon(char == null ? (isCredit ? defaultIcon : 'bf') : char, folder);
+		changeIcon(char == null ? 'bf' : char);
 	}
 
 	@:noCompletion
@@ -70,11 +59,9 @@ class HealthIcon extends FlxSprite {
 		_scale.copyTo(scale);
 	}
 
-	public function changeIcon(char:String, ?folder:String, defaultIfMissing:Bool = true):Bool {
+	public function changeIcon(char:String, defaultIfMissing:Bool = true):Bool {
 		if (this.char == char) return false;
 		var graph:FlxGraphic = null;
-
-		if (isCredit) graph = returnGraphic(char, folder, false, true);
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing);
 		else {
 			availableStates = 1;
