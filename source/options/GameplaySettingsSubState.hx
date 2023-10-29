@@ -7,51 +7,20 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		title = 'Gameplay Settings';
 		rpcTitle = 'Gameplay Settings Menu'; //for Discord Rich Presence
 
-		var option:Option = new Option('Downscroll',
-			'If checked, notes go Down instead of Up, simple enough.',
-			'downScroll', 'bool');
-		addOption(option);
+		addOption(new Option('Downscroll', 'If checked, notes go Down instead of Up, simple enough.', 'downScroll', 'bool'));
+		addOption(new Option('Middlescroll', 'If checked, your notes get centered.', 'middleScroll', 'bool'));
+		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums', 'bool'));
+		addOption(new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping', 'bool'));
 
-		var option:Option = new Option('Middlescroll',
-			'If checked, your notes get centered.',
-			'middleScroll', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Opponent Notes',
-			'If unchecked, opponent notes get hidden.',
-			'opponentStrums', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Ghost Tapping',
-			"If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.",
-			'ghostTapping', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Auto Pause',
-			"If checked, the game automatically pauses if the screen isn't on focus.",
-			'autoPause', 'bool');
+		var option:Option = new Option('Auto Pause', "If checked, the game automatically pauses if the screen isn't on focus.", 'autoPause', 'bool');
 		addOption(option);
 		option.onChange = onChangeAutoPause;
 
-		var option:Option = new Option('Disable Reset Button',
-			"If checked, pressing Reset won't do anything.",
-			'noReset', 'bool');
-		addOption(option);
+		addOption(new Option('Disable Reset Button', "If checked, pressing Reset won't do anything.", 'noReset', 'bool'));
+		addOption(new Option('Antimash', "If unchecked, Antimash will not do anything.", 'AntiMash', 'bool'));
+		addOption(new Option('Dynamic Camera Movement', "If unchecked, \nthe camera won't move in the direction in which the characters sing.", 'camMovement', 'bool'));
 
-		var option:Option = new Option('Antimash',
-			"If unchecked, antimash will not do anything.",
-			'AntiMash', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Dynamic Camera Movement',
-			"If unchecked, \nthe camera won't move in the direction in which the characters sing.",
-			'camMovement', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Hitsound Type',
-			"What should the hitsounds like?",
-			'hitsoundTypes',
-			'string', ['Tick', 'Snap', 'Dave']);
+		var option:Option = new Option('Hitsound Type', "What should the hitsounds like?", 'hitsoundTypes', 'string', ['Tick', 'Snap', 'Dave', 'Custom']);
 		addOption(option);
 		option.onChange = onChangeHitsoundVolume;
 
@@ -66,11 +35,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
-		var option:Option = new Option('Update Cam Section',
-		'If checked, camera will always update,\nwhich makes the camera more precise',
-		'UpdateCamSection', 'bool');
-		addOption(option);
-
+		addOption(new Option('Update Cam Section', 'If checked, camera will always update,\nwhich makes the camera more precise.', 'UpdateCamSection', 'bool'));
 		addOption(new Option('Complex Accuracy', '', 'complexAccuracy', 'bool'));
 		addOption(new Option('Note Diff Type:', '', 'NoteDiffTypes', 'string', ['Psych', 'Simple']));
 		
@@ -131,11 +96,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		super();
 	}
 
-	function onChangeHitsoundVolume() {
-		FlxG.sound.play(Paths.sound('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}'), ClientPrefs.getPref('hitsoundVolume'));
-	}
-
-	function onChangeAutoPause() {
-		FlxG.autoPause = ClientPrefs.getPref('autoPause');
-	}
+	function onChangeHitsoundVolume() FlxG.sound.play(Paths.sound('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}'), ClientPrefs.getPref('hitsoundVolume'));
+	function onChangeAutoPause() FlxG.autoPause = ClientPrefs.getPref('autoPause');
 }

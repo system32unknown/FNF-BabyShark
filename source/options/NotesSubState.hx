@@ -155,8 +155,7 @@ class NotesSubState extends MusicBeatSubstate
 				scrollHoldTime += elapsed;
 				var checkNewHold:Int = Math.floor((scrollHoldTime - 0.5) * 10);
 
-				if(scrollHoldTime > 0.5 && checkNewHold - checkLastHold > 0)
-				{
+				if(scrollHoldTime > 0.5 && checkNewHold - checkLastHold > 0) {
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 				}
 			}

@@ -56,11 +56,10 @@ class TextFunctions {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
 				obj.borderStyle = switch(borderStyle.trim().toLowerCase()) {
-					case 'none': NONE;
 					case 'shadow': SHADOW;
 					case 'outline': OUTLINE;
 					case 'outline_fast': OUTLINE_FAST;
-					default: NONE;
+					case 'none' | _: NONE;
 				}
 			}
 		});

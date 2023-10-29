@@ -152,7 +152,10 @@ class Paths
 	public static function getPath(file:String, ?type:AssetType = TEXT, ?library:Null<String> = null, ?modsAllowed:Bool = false):String {
 		#if MODS_ALLOWED
 		if(modsAllowed) {
-			var modded:String = modFolders(file);
+			var customFile:String = file;
+			if (library != null) customFile = '$library/$file';
+
+			var modded:String = modFolders(customFile);
 			if(FileSystem.exists(modded)) return modded;
 		}
 		#end
