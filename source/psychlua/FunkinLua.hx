@@ -997,7 +997,6 @@ class FunkinLua {
 
 		set('score', 0);
 		set('misses', 0);
-		set('accuracy', 0);
 		set('hits', 0);
 		set('combo', 0);
 

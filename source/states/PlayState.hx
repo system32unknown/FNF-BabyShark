@@ -3059,7 +3059,7 @@ class PlayState extends MusicBeatState {
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
 
 				accuracy = MathUtil.floorDecimal(ratingPercent * 100, 2);
-				ranks = CoolUtil.GenerateLetterRank(accuracy);
+				ranks = Rating.GenerateLetterRank(accuracy);
 
 				// Rating Name
 				ratingName = ratingStuff[ratingStuff.length - 1][0]; //Uses last string

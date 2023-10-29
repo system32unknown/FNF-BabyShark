@@ -74,6 +74,7 @@ class TitleState extends MusicBeatState {
 	}
 
 	var gfDance:FlxSprite;
+	var versionShit:FlxText;
 	var danceLeft:Bool = false;
 	function createIntro() {
 		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
@@ -128,6 +129,14 @@ class TitleState extends MusicBeatState {
 		gradientBar.y = FlxG.height - gradientBar.height;
 		gradientBar.scale.y = 0;
 		gradientBar.updateHitbox();
+
+		versionShit = new FlxText(0, 0, 0, 
+			'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH.trim().substring(0, 7)})\n' +
+			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n', 16);
+		versionShit.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, RIGHT);
+		versionShit.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		versionShit.scrollFactor.set();
+		versionShit.setPosition(FlxG.width - versionShit.width, FlxG.height - versionShit.height);
 	}
 
 	var foundXml:Bool = false;
@@ -328,6 +337,7 @@ class TitleState extends MusicBeatState {
 	function skipIntro():Void {
 		if (!skippedIntro) {
 	    	add(gradientBar);
+			add(versionShit);
 			startingTween = FlxTween.tween(gradientBar, {'scale.y': 1.3}, 4, {ease: FlxEase.quadInOut});
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);

@@ -48,4 +48,38 @@ class Rating {
 
 		return ratingsData;
 	}
+
+	public static function GenerateLetterRank(accuracy:Float) { // generate a letter rankings
+		var ranking:String = "N/A";
+		var wifeConditions:Array<Dynamic> = [
+			[accuracy >= 99.9935, "P"],
+			[accuracy >= 99.980, "S+:"],
+			[accuracy >= 99.970, "S+."],
+			[accuracy >= 99.955, "S+"],
+			[accuracy >= 99.90, "SS:"],
+			[accuracy >= 99.80, "SS."],
+			[accuracy >= 99.70, "SS"],
+			[accuracy >= 99, "S:"],
+			[accuracy >= 96.50, "S."],
+			[accuracy >= 93, "S"],
+			[accuracy >= 90, "A:"],
+			[accuracy >= 85, "A."],
+			[accuracy >= 80, "A"],
+			[accuracy >= 70, "B"],
+			[accuracy >= 60, "C"],
+			[accuracy >= 50, "D"],
+			[accuracy >= 20, "E"],
+			[accuracy > 10, "F"],
+		];
+
+		for (i in 0...wifeConditions.length) {
+			if (wifeConditions[i][0]) {
+				ranking = wifeConditions[i][1];
+				break;
+			}
+		}
+
+		if (accuracy == 0) ranking = "N/A";
+		return ranking;
+	}
 }

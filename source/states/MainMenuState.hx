@@ -149,15 +149,6 @@ class MainMenuState extends MusicBeatState {
 		}
 		firstStart = false;
 
-		var versionShit:FlxText = new FlxText(0, 0, 0, 
-			'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH.trim().substring(0, 7)})\n' +
-			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n', 16);
-		versionShit.setFormat(Paths.font('babyshark.ttf'), 16, FlxColor.WHITE, RIGHT);
-		versionShit.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-		versionShit.scrollFactor.set();
-		versionShit.setPosition(FlxG.width - versionShit.width, FlxG.height - versionShit.height);
-		add(versionShit);
-
 		changeItem();
 
 		super.create();

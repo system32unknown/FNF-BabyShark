@@ -148,12 +148,17 @@ class FreeplayState extends MusicBeatState
 		textBG.scrollFactor.set();
 		textBG.y = FlxG.height - textBG.height;
 
+		#if PRELOAD_ALL
 		final leTextSplit:Array<String> = [
 			"[SPACE] - Listen to the Song / [CTRL] - Gameplay Changers Menu",
 			"[COMMA] - Change Sections / [RESET] - Reset Score and Accuracy"
 		];
 		var leText:String = '${leTextSplit[0]}\n${leTextSplit[1]}';
 		var size:Int = 16;
+		#else
+		var leText:String = "[COMMA] - Change Sections / [CTRL] - Gameplay Changers Menu / RESET - Reset Score and Accuracy";
+		var size:Int = 18;
+		#end
 		var text:FlxText = new FlxText(textBG.x, textBG.y / 2, FlxG.width, leText, size);
 		text.setFormat(Paths.font("babyshark.ttf"), size, FlxColor.WHITE, CENTER);
 		text.scrollFactor.set();
@@ -274,6 +279,7 @@ class FreeplayState extends MusicBeatState
 			openSubState(new GameplayChangersSubstate());
 		} else if(FlxG.keys.justPressed.SPACE) {
 			if(instPlaying != curSelected) {
+				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
 				Mods.currentModDirectory = songs[curSelected].folder;
@@ -303,6 +309,7 @@ class FreeplayState extends MusicBeatState
 						FlxG.sound.music.resume();
 						vocals.play();
 					}
+					#end
 					vocals.looped = !(FlxG.sound.music.looped = true);
 					vocals.volume = FlxG.sound.music.volume = .7;
 					vocals.persist = true;

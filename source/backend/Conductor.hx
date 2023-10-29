@@ -97,10 +97,6 @@ class Conductor {
 	}
 
 	@:noCompletion
-	public static function getCrotchetAtTime(time:Float, ?from:Int):Float
-		return getBPMFromSeconds(time, from).stepCrochet * 4;
-
-	@:noCompletion
 	public static function stepToSeconds(step:Float, offset:Float = 0, ?from:Int):Float {
 		var lastChange = getBPMFromStep(step, from);
 		return lastChange.songTime + (step - lastChange.stepTime - offset) * lastChange.stepCrochet;
