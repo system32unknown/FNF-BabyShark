@@ -7,7 +7,6 @@ import objects.Character;
 
 import states.stages.StageWeek1 as BackgroundStage;
 
-
 class NoteOffsetState extends MusicBeatState {
 	var delayMin:Int = -500;
 	var delayMax:Int = 500;
@@ -248,8 +247,7 @@ class NoteOffsetState extends MusicBeatState {
 			}
 
 			// probably there's a better way to do this but, oh well.
-			if (FlxG.mouse.justPressed)
-			{
+			if (FlxG.mouse.justPressed) {
 				holdingObjectType = null;
 				FlxG.mouse.getScreenPosition(camHUD, startMousePos);
 				if (selectObj(startMousePos, rating)) {
@@ -352,21 +350,19 @@ class NoteOffsetState extends MusicBeatState {
 		return obj1.x - obj2.x >= 0 && obj1.x - obj2.x <= obj2.width && obj1.y - obj2.y >= 0 && obj1.y - obj2.y <= obj2.height;
 	}
 
-	override public function beatHit()
-	{
+	override public function beatHit() {
 		super.beatHit();
 
 		if(curBeat % 2 == 0) boyfriend.dance();
 		gf.dance();
 		
 		if (!onComboMenu && camGame.zoom < 1.35)
-			camGame.zoom += 0.0075;
+			camGame.zoom += .0075;
 	}
 
 	override function sectionHit() {
 		super.sectionHit();
-
-		if (camGame.zoom < 1.35) camGame.zoom += 0.015;
+		if (camGame.zoom < 1.35) camGame.zoom += .015;
 	}
 
 	function repositionCombo() {

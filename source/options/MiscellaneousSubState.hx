@@ -5,8 +5,8 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		title = 'Miscellaneous';
 		rpcTitle = 'Miscellaneous Menu'; //for Discord Rich Presence
 
-		addOption(new Option('FPS Counter', 'If unchecked, hides the FPS Counter.', 'showFPS', 'bool'));
-		addOption(new Option('Memory Counter', 'If unchecked, hides the Memory Counter.', 'showMEM', 'bool'));
+		addOption(new Option('FPS Counter', 'If unchecked, hides FPS Counter.', 'showFPS', 'bool'));
+		addOption(new Option('Memory Counter', 'If unchecked, hides Memory Counter.', 'showMEM', 'bool'));
 		addOption(new Option('Rainbow FPS', '', 'RainbowFps', 'bool'));
 		addOption(new Option('More Stats FPS', '', 'FPSStats', 'bool'));
 		addOption(new Option('Alternate Discord Large Image', '', 'AltDiscordImg', 'bool'));

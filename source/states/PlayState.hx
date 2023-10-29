@@ -1498,13 +1498,12 @@ class PlayState extends MusicBeatState {
 			if (!startingSong && (syncDebounce += elapsed) > 1) {
 				syncDebounce = 0;
 				var resync = vocals.loaded && Math.abs(vocals.time - FlxG.sound.music.time) > (vocals.vorbis == null ? 6 : 12);
-				if (Math.abs(lastSongTime - Conductor.songPosition) > 16 || resync)
-					resyncVocals(resync);
+				if (Math.abs(lastSongTime - Conductor.songPosition) > 16 || resync) resyncVocals(resync);
 			}
 		}
 
-		if(ClientPrefs.getPref('camMovement') && !isPixelStage)
-			if(camlock) camFollow.setPosition(camlockpoint.x, camlockpoint.y);
+		if(ClientPrefs.getPref('camMovement') && !isPixelStage && camlock)
+			camFollow.setPosition(camlockpoint.x, camlockpoint.y);
 		
 		FlxG.camera.followLerp = 0;
 		if(!inCutscene && !paused)
@@ -2280,7 +2279,7 @@ class PlayState extends MusicBeatState {
 		
 			if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
 				msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
-				mstimingTxt.setFormat(Paths.font('babyshark.ttf'), 20, FlxColor.WHITE, CENTER);
+				mstimingTxt.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 20, FlxColor.WHITE, CENTER);
 				mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 				mstimingTxt.visible = !hideHud;
 				mstimingTxt.text = '${msTiming}ms';

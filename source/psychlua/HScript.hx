@@ -119,8 +119,7 @@ class HScript extends Interp {
         ];
     }
 
-    function getMacroAbstractClass(className:String)
-		return Type.resolveClass('${className}_HSC');
+    function getMacroAbstractClass(className:String) return Type.resolveClass('${className}_HSC');
 	
 	function preset() {
 		parser = new Parser();
@@ -157,8 +156,7 @@ class HScript extends Interp {
 
 		setVar('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
 			var str:String = '';
-			if(libPackage.length > 0)
-				str = '$libPackage.';
+			if(libPackage.length > 0) str = '$libPackage.';
 			setVar(libName, resolveClassOrEnum(str + libName));
 		});
 		setVar('parentLua', parentLua);

@@ -90,9 +90,7 @@ class OptionsState extends MusicBeatState
 			} else MusicBeatState.switchState(new MainMenuState());
 		}
 
-		if (controls.ACCEPT) {
-			openSelectedSubstate(options[curPage][curSelected]);
-		}
+		if (controls.ACCEPT) openSelectedSubstate(options[curPage][curSelected]);
 	}
 	
 	function changeSelection(change:Int = 0) {

@@ -7,7 +7,6 @@ import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 
 import flixel.FlxState;
-import flixel.addons.display.FlxBackdrop;
 
 import openfl.utils.Assets;
 import haxe.io.Path;
@@ -41,8 +40,7 @@ class LoadingState extends MusicBeatState {
 
 	var logo:FlxSprite;
 	var loadLogoText:FlxText;
-	override function create()
-	{
+	override function create() {
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.color = FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255));
@@ -125,13 +123,7 @@ class LoadingState extends MusicBeatState {
 		
 		MusicBeatState.switchState(target);
 	}
-	
-	static function getSongPath()
-		return Paths.inst(PlayState.SONG.song);
-	
-	static function getVocalPath()
-		return Paths.voices(PlayState.SONG.song);
-	
+
 	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false) {
 		MusicBeatState.switchState(getNextState(target, stopMusic));
 	}
@@ -145,26 +137,10 @@ class LoadingState extends MusicBeatState {
 
 		Paths.setCurrentLevel(directory);
 
-		#if NO_PRELOAD_ALL
-		var loaded:Bool = false;
-		if (PlayState.SONG != null) {
-			loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && checkLibrary('week_assets');
-		}
-		
-		if (!loaded) return new LoadingState(target, stopMusic, directory);
-		#end
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		
 		return target;
-	}
-	
-	static function isSoundLoaded(path:String):Bool {
-		return Assets.cache.hasSound(path);
-	}
-	
-	static function isLibraryLoaded(library:String):Bool {
-		return Assets.getLibrary(library) != null;
 	}
 	
 	override function destroy() {

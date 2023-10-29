@@ -90,11 +90,9 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditor());
 			}
 			FlxG.sound.music.volume = 0;
-			#if PRELOAD_ALL
 			Conductor.usePlayState = false;
 			Conductor.mapBPMChanges(true);
 			FreeplayState.destroyFreeplayVocals();
-			#end
 		}
 		
 		var bullShit:Int = 0;

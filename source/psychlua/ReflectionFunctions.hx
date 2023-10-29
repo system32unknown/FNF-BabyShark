@@ -13,8 +13,7 @@ class ReflectionFunctions {
 	public static function implement(funk:FunkinLua) {
 		funk.set("getProperty", function(variable:String, ?allowMaps:Bool = false) {
 			var split:Array<String> = variable.split('.');
-			if(split.length > 1)
-				return LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split, true, true, allowMaps), split[split.length - 1], allowMaps);
+			if(split.length > 1) return LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split, true, true, allowMaps), split[split.length - 1], allowMaps);
 			return LuaUtils.getVarInArray(LuaUtils.getInstance(), variable, allowMaps);
 		});
 		funk.set("setProperty", function(variable:String, value:Dynamic, allowMaps:Bool = false) {
@@ -38,7 +37,6 @@ class ReflectionFunctions {
 				var obj:Dynamic = LuaUtils.getVarInArray(myClass, split[0], allowMaps);
 				for (i in 1...split.length - 1)
 					obj = LuaUtils.getVarInArray(obj, split[i], allowMaps);
-
 				return LuaUtils.getVarInArray(obj, split[split.length-1], allowMaps);
 			}
 			return LuaUtils.getVarInArray(myClass, variable, allowMaps);
@@ -77,8 +75,7 @@ class ReflectionFunctions {
 			var leArray:Dynamic = realObject[index];
 			if(leArray != null) {
 				var result:Dynamic = null;
-				if(Type.typeof(variable) == ValueType.TInt)
-					result = leArray[variable];
+				if(Type.typeof(variable) == ValueType.TInt) result = leArray[variable];
 				else result = LuaUtils.getGroupStuff(leArray, variable, allowMaps);
 				return result;
 			}

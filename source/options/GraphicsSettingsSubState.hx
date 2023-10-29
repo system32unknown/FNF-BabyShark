@@ -19,14 +19,12 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 		//I'd suggest using "Low Quality" as an example for making your own option since it is the simplest here
 		var option:Option = new Option('Low Quality', //Name
 			'If checked, disables some background details,\ndecreases loading times and improves performance.', //Description
-			'lowQuality', //Save data variable name
-			'bool'); //Variable type
+			'lowQuality', 'bool');
 		addOption(option);
 
 		var option:Option = new Option('Anti-Aliasing',
 			'If unchecked, disables anti-aliasing, increases performance\nat the cost of sharper visuals.',
-			'Antialiasing',
-			'bool');
+			'Antialiasing', 'bool');
 		option.onChange = onChangeAntiAliasing; //Changing onChange is only needed if you want to make a special interaction after it changes the value
 		addOption(option);
 		antialiasingOption = optionsArray.length - 1;
@@ -38,22 +36,18 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 		
 		#if desktop
 		var option:Option = new Option('Hardware Caching',
-			'If checked, the game will use GPU to store images for to maintain MEM usage. ' +
-			'Restart the game for to apply changes.' +
-			'\n[UNCHECK THIS IF IMAGES ARE NOT SHOWING]',
+			'If checked, allows the GPU to be used for caching textures, decreasing RAM usage.\nDont turn this on if you have a shitty Graphics Card.\n[RESTART REQUIRED]',
 			'hardwareCache', 'bool');
 		addOption(option);
 		
 		var option:Option = new Option('Streaming Music',
-			'If checked, the game will simultaneously load music data while its playing, this also make looped musics seamlessly loop. ' +
-			'Restart the game for to apply changes.' +
-			'\n[UNCHECK THIS IF GAME IS CRASHING]',
+			'If checked, the game will simultaneously load music data while its playing, this also make looped musics seamlessly loop. Uncheck this if game is crashing. \n[RESTART REQUIRED]',
 			'streamMusic', 'bool');
 		addOption(option);
 		#end
 
 		var option:Option = new Option('Framerate',
-			"Pretty self explanatory, isn't it?",
+			"Pretty self explanatory, isn't it?\n(60 FPS are recommended.)",
 			'framerate', 'int');
 		addOption(option);
 		option.minValue = 60;

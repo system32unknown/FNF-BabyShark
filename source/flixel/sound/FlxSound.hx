@@ -87,19 +87,19 @@ class FlxSound extends FlxBasic
 	#end
 
 	/**
-	 * Stores the average wave amplitude of both stereo channels.
+	 * Stores the average wave amplitude of both stereo channels
 	 */
-	public var amplitude(#if flash default #elseif lime get #end, null):Float;
+	public var amplitude(default, null):Float;
 
 	/**
-	 * Just the amplitude of the left stereo channel.
+	 * Just the amplitude of the left stereo channel
 	 */
-	public var amplitudeLeft(#if flash default #elseif lime get #end, null):Float;
+	public var amplitudeLeft(default, null):Float;
 
 	/**
-	 * Just the amplitude of the left stereo channel.
+	 * Just the amplitude of the right stereo channel
 	 */
-	public var amplitudeRight(#if flash default #elseif lime get #end, null):Float;
+	public var amplitudeRight(default, null):Float;
 
 	/**
 	 * Whether to call `destroy()` when the sound has finished playing.
@@ -335,9 +335,7 @@ class FlxSound extends FlxBasic
 
 		if (_channel != null) {
 			_channel.removeEventListener(Event.SOUND_COMPLETE, stopped);
-			#if !flash
-			_channel.removeEventListener(Event.SOUND_LOOP, ev_looped);
-			#end
+			#if !flash _channel.removeEventListener(Event.SOUND_LOOP, ev_looped); #end
 			_channel.stop();
 			_channel = null;
 		}
@@ -401,9 +399,7 @@ class FlxSound extends FlxBasic
 			amplitudeRight = 0;
 			amplitude = 0;
 		}
-		#end
 
-		#if flash
 		if (endTime != null && _time >= endTime)
 			stopped();
 		#end
@@ -506,11 +502,7 @@ class FlxSound extends FlxBasic
 		pitch = 1;
 		#end
 		if (_sound != null) {
-			#if flash
-			_length = _sound.length;
-			#else
-			makeChannel();
-			#end
+			#if flash _length = _sound.length; #else makeChannel(); #end
 		} else _length = 0;
 
 		endTime = _length;
@@ -985,9 +977,8 @@ class FlxSound extends FlxBasic
 			LabelValuePair.weak("playing", playing),
 			LabelValuePair.weak("time", _time),
 			LabelValuePair.weak("length", length),
-			LabelValuePair.weak("volume", volume)#if FLX_PITCH,
-			LabelValuePair.weak("pitch", pitch)
-			#end
+			LabelValuePair.weak("volume", volume),
+			#if FLX_PITCH LabelValuePair.weak("pitch", pitch) #end
 		]);
 	}
 }

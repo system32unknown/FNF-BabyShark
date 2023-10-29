@@ -93,7 +93,6 @@ class FreeplayState extends MusicBeatState
 
 		add(grpSongs = new FlxTypedGroup<Alphabet>());
 		for (i in 0...songs.length) {
-			Mods.currentModDirectory = songs[i].folder;
 			var songText:Alphabet = new Alphabet(90, 320, songs[i].songName, true);
 			songText.targetY = i;
 			grpSongs.add(songText);
@@ -101,6 +100,7 @@ class FreeplayState extends MusicBeatState
 			songText.scaleX = Math.min(1, 980 / songText.width);
 			songText.snapToPosition();
 
+			Mods.currentModDirectory = songs[i].folder;
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.iconType = 'psych';
 			icon.sprTracker = songText;
@@ -148,21 +148,16 @@ class FreeplayState extends MusicBeatState
 		textBG.scrollFactor.set();
 		textBG.y = FlxG.height - textBG.height;
 
-		#if PRELOAD_ALL
 		final leTextSplit:Array<String> = [
 			"[SPACE] - Listen to the Song / [CTRL] - Gameplay Changers Menu",
 			"[COMMA] - Change Sections / [RESET] - Reset Score and Accuracy"
 		];
 		var leText:String = '${leTextSplit[0]}\n${leTextSplit[1]}';
 		var size:Int = 16;
-		#else
-		var leText:String = "[COMMA] - Change Sections / [CTRL] - Gameplay Changers Menu / RESET - Reset Score and Accuracy";
-		var size:Int = 18;
-		#end
 		var text:FlxText = new FlxText(textBG.x, textBG.y / 2, FlxG.width, leText, size);
 		text.setFormat(Paths.font("babyshark.ttf"), size, FlxColor.WHITE, CENTER);
 		text.scrollFactor.set();
-		text.y = FlxG.height - text.height;
+		text.y = FlxG.height - text.fieldHeight;
 		add(text);
 
 		textBG.height = text.height;
@@ -279,7 +274,6 @@ class FreeplayState extends MusicBeatState
 			openSubState(new GameplayChangersSubstate());
 		} else if(FlxG.keys.justPressed.SPACE) {
 			if(instPlaying != curSelected) {
-				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
 				Mods.currentModDirectory = songs[curSelected].folder;
@@ -321,7 +315,6 @@ class FreeplayState extends MusicBeatState
 					errorDisplay.text = getErrorMessage(missChart, 'chart required to play audio, $missFile', songLowercase, poop);
 					errorDisplay.displayError();
 				}
-				#end
 			}
 		} else if (controls.ACCEPT) {
 			var songFolder:String = Paths.formatToSongPath(songs[curSelected].songName);

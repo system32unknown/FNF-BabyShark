@@ -309,7 +309,7 @@ class StoryMenuState extends MusicBeatState
 		var unlocked:Bool = !weekIsLocked(leWeek.fileName);
 		for (item in grpWeekText.members) {
 			item.targetY = bullShit - curWeek;
-			if (item.targetY == Std.int(0) && unlocked)
+			if (item.targetY == 0 && unlocked)
 				item.alpha = 1;
 			else item.alpha = 0.6;
 			bullShit++;

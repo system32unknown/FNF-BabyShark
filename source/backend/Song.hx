@@ -3,11 +3,12 @@ package backend;
 import backend.Section.SwagSection;
 import data.StageData;
 import tjson.TJSON as Json;
+import lime.utils.Assets;
 
 #if sys
 import sys.io.File;
 import sys.FileSystem;
-#else import lime.utils.Assets; #end
+#end
 
 typedef SwagSong = {
 	var song:String;
@@ -88,9 +89,15 @@ class Song {
 			rawJson = File.getContent(moddyFile).trim();
 		#end
 
-		var jsonPath = Paths.json('${Paths.CHART_PATH}/$formattedPath');
-		if (rawJson == null && Paths.fileExists(jsonPath, TEXT, true, true))
-			rawJson = #if sys File.getContent(jsonPath) #else Assets.getText(jsonPath).trim() #end.trim();
+		if(rawJson == null) {
+			var path:String = Paths.json('${Paths.CHART_PATH}/$formattedPath');
+			#if sys
+			if(FileSystem.exists(path))
+				rawJson = File.getContent(path).trim();
+			else
+			#end
+				rawJson = Assets.getText(Paths.json('${Paths.CHART_PATH}/$formattedPath')).trim();
+		}
 
 		if (rawJson == null) return null;
 		while (!rawJson.endsWith("}"))
