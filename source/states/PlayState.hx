@@ -2197,10 +2197,8 @@ class PlayState extends MusicBeatState {
 	var updateScoreText:Bool = true;
 	function UpdateScoreText() {
 		var tempText:String = (!ClientPrefs.getPref('ShowNPSCounter') ? '' : 'NPS:$nps (Max:$maxNPS) $scoreSeparator ');
-		var tempMiss:String = getMissText(ClientPrefs.getPref('movemissjudge'));
-		
 		tempText += 'Score:$songScore ';
-		tempText += tempMiss;
+		tempText += getMissText(ClientPrefs.getPref('movemissjudge'));
 		switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter': tempText += '$scoreSeparator Acc:$accuracy%' + (ratingName != '?' ? ' [$ratingName, $ratingFC] • $ranks' : ' [?, ?] • F');
 			case 'Kade': tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
@@ -3071,7 +3069,8 @@ class PlayState extends MusicBeatState {
 			fullComboUpdate();
 		}
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce
-		setOnScripts('rating', accuracy);
+		setOnScripts('rating', ratingPercent);
+		setOnScripts('accuracy', accuracy);
 		setOnScripts('ratingName', ratingName);
 		setOnScripts('ratingRank', ranks);
 		setOnScripts('ratingFC', ratingFC);

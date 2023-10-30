@@ -222,11 +222,9 @@ class Paths
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false, ?absolute:Bool = false):String {
 		if (absolute) {
 			#if sys
-			if (FileSystem.exists(key))
-				return File.getContent(key);
+			if (FileSystem.exists(key)) return File.getContent(key);
 			#end
-			if(OpenFlAssets.exists(key, TEXT))
-				return Assets.getText(key);
+			if(OpenFlAssets.exists(key, TEXT)) return Assets.getText(key);
 
 			return null;
 		}
@@ -390,9 +388,7 @@ class Paths
 		#end
 		var uwu:String = folder + (modExists ? path : track);
 
-		#if (!MODS_ALLOWED)
-		if (OpenFlAssets.exists(uwu, SOUND)) {
-		#end
+		#if (!MODS_ALLOWED) if (OpenFlAssets.exists(uwu, SOUND)) {#end
 			localTrackedAssets.push(track);
 			var sound:Sound = currentTrackedSounds.get(track);
 

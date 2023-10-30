@@ -902,7 +902,6 @@ class FunkinLua {
 				return true;
 			} else luaTrace('startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
 			return false;
-
 			#else
 			game.startAndEnd();
 			return true;
@@ -999,6 +998,7 @@ class FunkinLua {
 		set('misses', 0);
 		set('hits', 0);
 		set('combo', 0);
+		set('accuracy', 0);
 
 		set('defaultMania', PlayState.SONG.mania);
 

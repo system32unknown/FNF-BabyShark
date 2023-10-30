@@ -15,8 +15,7 @@ import sys.io.File;
 import objects.AttachedSprite;
 import substates.Prompt;
 
-class CreditsEditor extends MusicBeatState
-{
+class CreditsEditor extends MusicBeatState {
 	var curSelected:Int = -1;
 
 	var grpOptions:FlxTypedGroup<Alphabet>;
@@ -397,11 +396,9 @@ class CreditsEditor extends MusicBeatState
 
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
-	override function update(elapsed:Float)
-	{
-		if (FlxG.sound.music.volume < .7) {
+	override function update(elapsed:Float) {
+		if (FlxG.sound.music.volume < .7)
 			FlxG.sound.music.volume += .5 * elapsed;
-		}
 
 		var blockInput:Bool = false;
 		for (inputText in blockPressWhileTypingOn) {
@@ -458,12 +455,8 @@ class CreditsEditor extends MusicBeatState
 				cleanInputs();
 			}
 
-			if(FlxG.keys.justPressed.ONE) {
-				addTitle();
-			}
-			if(FlxG.keys.justPressed.TWO) {
-				addCredit();
-			}
+			if(FlxG.keys.justPressed.ONE) addTitle();
+			if(FlxG.keys.justPressed.TWO) addCredit();
 
 			if (FlxG.keys.justPressed.BACKSPACE || FlxG.keys.justPressed.ESCAPE) {
 				if(colorTween != null) {
@@ -570,9 +563,9 @@ class CreditsEditor extends MusicBeatState
 
 	function showIconExist(text:String) {
 		var daColor:Int;
-		if(text.length == 0) {
+		if(text.length == 0)
 			daColor = Std.parseInt('0xFFFFC31E'); // no input then
-		} else {
+		else {
 			if(!Paths.fileExists('images/credits/' + text + '.png', IMAGE)) daColor = Std.parseInt('0xFFFF004C'); // icon not found
 			else daColor = Std.parseInt('0xFF00FF37'); // icon was found
 		}
@@ -592,17 +585,14 @@ class CreditsEditor extends MusicBeatState
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
-			if(sender == iconInput)
-				showIconExist(iconInput.text);
-			if(sender == colorInput)
-				iconColorShow();
+			if(sender == iconInput) showIconExist(iconInput.text);
+			if(sender == colorInput) iconColorShow();
 		}
 	}
 
 	// Save & Load functions
 	var _file:FileReference;
-	function onSaveComplete(_):Void
-	{
+	function onSaveComplete(_):Void {
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -610,16 +600,14 @@ class CreditsEditor extends MusicBeatState
 		FlxG.log.notice("Successfully saved file.");
 	}
 
-	function onSaveCancel(_):Void
-	{
+	function onSaveCancel(_):Void {
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 	}
 
-	function onSaveError(_):Void
-	{
+	function onSaveError(_):Void {
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -653,8 +641,7 @@ class CreditsEditor extends MusicBeatState
 	}
 
 	var loadError:Bool = false;
-	function onLoadComplete(_):Void
-	{
+	function onLoadComplete(_):Void {
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);

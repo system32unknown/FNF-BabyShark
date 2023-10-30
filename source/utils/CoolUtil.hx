@@ -51,6 +51,16 @@ class CoolUtil {
 		#end
 	}
 
+	inline public static function openFolder(folder:String, absolute:Bool = false) {
+		#if sys
+			if(!absolute) folder =  Sys.getCwd() + '$folder';
+
+			folder = folder.replace('/', '\\');
+			if(folder.endsWith('/')) folder.substr(0, folder.length - 1);
+			Sys.command(#if !linux 'explorer.exe' #else '/usr/bin/xdg-open' #end, [folder]);
+		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
+	}
+
 	public static function makeSelectorGraphic(panel:FlxSprite, w:Int, h:Int, color:FlxColor, cornerSize:Float) {
 		panel.makeGraphic(w, h, color);
 		panel.pixels.fillRect(new Rectangle(0, 190, panel.width, 5), 0x0);

@@ -124,6 +124,9 @@ class LoadingState extends MusicBeatState {
 		MusicBeatState.switchState(target);
 	}
 
+	static function getSongPath() return Paths.inst(PlayState.SONG.song);
+	static function getVocalPath() return Paths.voices(PlayState.SONG.song);
+
 	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false) {
 		MusicBeatState.switchState(getNextState(target, stopMusic));
 	}
@@ -137,12 +140,24 @@ class LoadingState extends MusicBeatState {
 
 		Paths.setCurrentLevel(directory);
 
+		#if NO_PRELOAD_ALL
+		var loaded:Bool = false;
+		if (PlayState.SONG != null) {
+			loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && checkLibrary('week_assets');
+		}
+
+		if (!loaded) return new LoadingState(target, stopMusic, directory);
+		#end
+
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		
 		return target;
 	}
-	
+
+	static function isSoundLoaded(path:String):Bool return Assets.cache.hasSound(path);
+	static function isLibraryLoaded(library:String):Bool return Assets.getLibrary(library) != null;
+
 	override function destroy() {
 		super.destroy();
 		callbacks = null;
