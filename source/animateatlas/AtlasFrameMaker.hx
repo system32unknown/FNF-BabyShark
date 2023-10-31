@@ -14,10 +14,7 @@ import animateatlas.JSONData.AnimationData;
 import animateatlas.displayobject.SpriteAnimationLibrary;
 import animateatlas.displayobject.SpriteMovieClip;
 
-#if desktop import sys.FileSystem; #end
-
-class AtlasFrameMaker extends FlxFramesCollection
-{
+class AtlasFrameMaker extends FlxFramesCollection {
 	/**
 	* Creates Frames from TextureAtlas(very early and broken ok) Originally made for FNF HD by Smokey and Rozebud
 	*

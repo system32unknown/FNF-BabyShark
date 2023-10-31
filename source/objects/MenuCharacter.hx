@@ -1,9 +1,5 @@
 package objects;
 
-#if MODS_ALLOWED
-import sys.io.File;
-import sys.FileSystem;
-#end
 import tjson.TJSON as Json;
 
 typedef MenuCharacterFile = {

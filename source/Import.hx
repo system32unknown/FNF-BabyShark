@@ -22,6 +22,13 @@ import objects.BGSprite;
 import states.PlayState;
 import states.LoadingState;
 
+#if sys
+import sys.*;
+import sys.io.*;
+#elseif js
+import js.html.*;
+#end
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;

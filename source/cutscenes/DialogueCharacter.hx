@@ -1,10 +1,6 @@
 package cutscenes;
 
 import tjson.TJSON as Json;
-#if sys
-import sys.FileSystem;
-import sys.io.File;
-#end
 
 typedef DialogueCharacterFile = {
 	var image:String;

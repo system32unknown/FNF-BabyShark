@@ -5,14 +5,9 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import openfl.geom.Rectangle;
 import openfl.net.FileReference;
+import openfl.utils.Assets;
 import utils.system.PlatformUtil.MessageBoxIcon;
 import utils.system.NativeUtil;
-#if sys
-import sys.io.File;
-import sys.FileSystem;
-#else
-import openfl.utils.Assets;
-#end
 
 class CoolUtil {
 	public static function saveFile(content:String, format:String, filedefault:String) {new FileReference().save(content, '$filedefault.$format');}

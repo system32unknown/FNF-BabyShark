@@ -26,7 +26,6 @@ import data.*;
 import data.StageData.StageFile;
 import psychlua.*;
 import cutscenes.DialogueBoxPsych;
-#if sys import sys.FileSystem; #end
 
 class PlayState extends MusicBeatState {
 	public static var STRUM_X = 48.5;
@@ -2385,6 +2384,9 @@ class PlayState extends MusicBeatState {
 	function inputPress(key:Int) {
 		fillKeysPressed();
 		keysPressed[key] = true;
+
+		var ret:Dynamic = callOnScripts('preKeyPress', [key], true);
+		if(ret == FunkinLua.Function_Stop) return;
 
 		//more accurate hit time for the ratings?
 		if(notes.length > 0 && !boyfriend.stunned && generatedMusic && !endingSong) {

@@ -15,10 +15,6 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import lime.system.Clipboard;
 import tjson.TJSON as Json;
-#if sys
-import sys.io.File;
-import sys.FileSystem;
-#end
 import data.WeekData;
 import states.TitleState;
 import objects.HealthIcon;

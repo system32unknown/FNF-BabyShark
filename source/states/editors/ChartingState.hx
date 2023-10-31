@@ -34,10 +34,6 @@ import lime.media.AudioBuffer;
 import haxe.io.Bytes;
 import haxe.io.Path;
 import tjson.TJSON as Json;
-#if sys
-import sys.io.File;
-import sys.FileSystem;
-#end
 
 class ChartingState extends MusicBeatState {
 	var songStarted:Bool = false;

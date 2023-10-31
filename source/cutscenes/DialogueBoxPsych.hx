@@ -1,10 +1,6 @@
 package cutscenes;
 
 import tjson.TJSON as Json;
-#if sys
-import sys.FileSystem;
-import sys.io.File;
-#end
 import openfl.utils.Assets;
 
 import objects.TypedAlphabet;

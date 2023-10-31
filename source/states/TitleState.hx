@@ -7,7 +7,6 @@ import flixel.util.FlxGradient;
 import tjson.TJSON as Json;
 import backend.Highscore;
 import states.MainMenuState;
-#if sys import sys.FileSystem; #end
 
 typedef TitleData = {
 	titlex:Float,

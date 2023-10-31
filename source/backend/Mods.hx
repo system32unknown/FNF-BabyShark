@@ -1,11 +1,5 @@
 package backend;
 
-#if sys
-import sys.FileSystem;
-import sys.io.File;
-#else
-import lime.utils.Assets;
-#end
 import tjson.TJSON as Json;
 import haxe.io.Path;
 

@@ -21,10 +21,6 @@ import objects.Character;
 import objects.HealthIcon;
 import objects.Bar;
 
-#if MODS_ALLOWED
-import sys.FileSystem;
-#end
-
 /**
 	*DEBUG MODE
 **/

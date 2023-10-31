@@ -7,10 +7,6 @@ import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
 import lime.utils.Assets;
-#if sys
-import sys.io.File;
-import sys.FileSystem;
-#end
 
 @:access(openfl.display.BitmapData.__texture)
 @:access(openfl.media.Sound.__buffer)

@@ -185,8 +185,8 @@ class LuaUtils {
 	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false) {
 		var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
 		if(obj != null && obj.animation != null) {
-			if(indices == null) indices = [];
-			if(Std.isOfType(indices, String)) {
+			if(indices == null) indices = [0];
+			else if(Std.isOfType(indices, String)) {
 				var strIndices:Array<String> = cast (indices, String).trim().split(',');
 				var myIndices:Array<Int> = [for (i in 0...strIndices.length) Std.parseInt(strIndices[i])];
 				indices = myIndices;

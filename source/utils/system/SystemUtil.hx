@@ -1,17 +1,9 @@
 package utils.system;
 
-import sys.io.File;
-
 class SystemUtil {
-	public static function getUsername():String {
-		return Sys.getEnv(#if windows "USERNAME" #else "USER" #end);
-	}
-	public static function getUserPath():String {
-		return Sys.getEnv(#if windows "USERPROFILE" #else "HOME" #end);
-	}
-	public static function getTempPath():String {
-		return Sys.getEnv(#if windows "TEMP" #else "HOME" #end);
-	}
+	public static function getUsername():String return Sys.getEnv(#if windows "USERNAME" #else "USER" #end);
+	public static function getUserPath():String return Sys.getEnv(#if windows "USERPROFILE" #else "HOME" #end);
+	public static function getTempPath():String return Sys.getEnv(#if windows "TEMP" #else "HOME" #end);
 
 	public static function executableFileName() {
 		var programPath = Sys.programPath().split(#if windows "\\" #else "/" #end);

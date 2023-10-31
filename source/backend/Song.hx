@@ -5,11 +5,6 @@ import data.StageData;
 import tjson.TJSON as Json;
 import lime.utils.Assets;
 
-#if sys
-import sys.io.File;
-import sys.FileSystem;
-#end
-
 typedef SwagSong = {
 	var song:String;
 	var notes:Array<SwagSection>;

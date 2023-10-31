@@ -9,9 +9,6 @@ import openfl.net.FileFilter;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-#if MODS_ALLOWED
-import sys.io.File;
-#end
 import objects.AttachedSprite;
 import substates.Prompt;
 

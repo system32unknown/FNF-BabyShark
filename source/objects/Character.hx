@@ -1,10 +1,6 @@
 package objects;
 
 import animateatlas.AtlasFrameMaker;
-#if MODS_ALLOWED
-import sys.io.File;
-import sys.FileSystem;
-#end
 import openfl.utils.Assets;
 import tjson.TJSON as Json;
 

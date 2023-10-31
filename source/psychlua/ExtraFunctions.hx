@@ -1,9 +1,5 @@
 package psychlua;
 
-#if sys
-import sys.FileSystem;
-import sys.io.File;
-#end
 #if MODS_ALLOWED import tjson.TJSON as Json; #end
 import flixel.util.FlxSave;
 import openfl.utils.Assets;

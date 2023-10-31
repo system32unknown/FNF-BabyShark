@@ -19,8 +19,6 @@ import objects.Overlay;
 import openfl.events.UncaughtErrorEvent;
 import haxe.CallStack;
 import haxe.io.Path;
-import sys.FileSystem;
-import sys.io.File;
 #end
 
 class Main extends Sprite {

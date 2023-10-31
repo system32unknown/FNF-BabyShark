@@ -14,9 +14,6 @@ import tjson.TJSON as Json;
 import cutscenes.DialogueBoxPsych;
 import cutscenes.DialogueCharacter;
 import objects.TypedAlphabet;
-#if sys
-import sys.io.File;
-#end
 
 class DialogueEditorState extends MusicBeatState
 {
