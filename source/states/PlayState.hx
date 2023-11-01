@@ -1010,7 +1010,7 @@ class PlayState extends MusicBeatState {
 
 		judgementCounter.text = 'Max Combos: ${maxCombo}';
 		for (rating in ratingsData)
-			judgementCounter.text += '\n${flixel.addons.ui.U.FU(rating.name)}s: ${rating.hits}';
+			judgementCounter.text += '\n${CoolUtil.capitalize(rating.name)}s: ${rating.hits}';
 		judgementCounter.text += '\n${getMissText(!ClientPrefs.getPref('movemissjudge'), '\n')}';
 		judgementCounter.screenCenter(Y);
 		UpdateScoreText();

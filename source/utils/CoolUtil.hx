@@ -5,7 +5,7 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import openfl.geom.Rectangle;
 import openfl.net.FileReference;
-import openfl.utils.Assets;
+#if (!sys && !MODS_ALLOWED) import openfl.utils.Assets; #end
 import utils.system.PlatformUtil.MessageBoxIcon;
 import utils.system.NativeUtil;
 
