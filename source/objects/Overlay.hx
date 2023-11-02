@@ -19,7 +19,7 @@ class Overlay extends TextField {
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
     public var FPS:FPSUtil;
-    @:allow(utils.system.FPSUtil) var memory:Dynamic = 0;
+    public var memory:Dynamic = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
 		super();
@@ -31,13 +31,19 @@ class Overlay extends TextField {
 
 		autoSize = LEFT;
 		multiline = wordWrap = false;
+		selectable = mouseEnabled = false;
 		text = "";
 		defaultTextFormat = new TextFormat(fontName, 16, -1);
 		FPS = new FPSUtil();
 	}
 
-	override function __enterFrame(dt:Float):Void {
+	var deltaTimeout:Float = .0;
+	@:noCompletion override function __enterFrame(dt:Float):Void {
 		super.__enterFrame(Std.int(dt));
+		if (deltaTimeout > 1000) {
+			deltaTimeout = .0;
+			return;
+		}
 		FPS.update();
 
 		if (ClientPrefs.getPref('RainbowFps')) {
@@ -51,5 +57,7 @@ class Overlay extends TextField {
 		if (ClientPrefs.getPref('showMEM'))
 			text += '${MemoryUtil.getInterval(memory)}';
 		visible = ClientPrefs.getPref('showFPS');
+
+		deltaTimeout += dt;
 	}
 }

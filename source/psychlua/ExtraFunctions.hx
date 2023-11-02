@@ -85,6 +85,13 @@ class ExtraFunctions {
 			Reflect.setField(PlayState.instance.modchartSaves.get(name).data, field, value);
 			return true;
 		});
+		funk.set("eraseSaveData", function(name:String) {
+			if (PlayState.instance.modchartSaves.exists(name)) {
+				PlayState.instance.modchartSaves.get(name).erase();
+				return;
+			}
+			FunkinLua.luaTrace('eraseSaveData: Save file not initialized: ' + name, false, false, FlxColor.RED);
+		});
 
 		// File management
 		funk.set("checkFileExists", function(filename:String, ?absolute:Bool = false) {

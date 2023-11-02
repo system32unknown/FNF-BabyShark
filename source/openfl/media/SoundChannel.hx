@@ -107,17 +107,7 @@ import lime.media.AudioSource;
 			__soundTransform = soundTransform;
 		else __soundTransform = new SoundTransform();
 
-		#if lime
-		if (source != null)
-		{
-			__source = source;
-			__source.onComplete.add(source_onComplete);
-			__source.onLoop.add(source_onLoop);
-			__isValid = true;
-
-			__source.play();
-		}
-		#end
+		__initAudioSource(source);
 
 		SoundMixer.__registerSoundChannel(this);
 	}
@@ -153,6 +143,19 @@ import lime.media.AudioSource;
 	@:noCompletion function __updateTransform():Void
 	{
 		this.soundTransform = soundTransform;
+	}
+
+	@:noCompletion private function __initAudioSource(audioSource:#if lime AudioSource #else Dynamic #end):Void {
+		#if lime
+		__source = audioSource;
+		if (__source == null) return;
+
+		__source.onComplete.add(source_onComplete);
+		__source.onLoop.add(source_onLoop);
+		__isValid = true;
+
+		__source.play();
+		#end
 	}
 
 	// hi i made these - raltyro
