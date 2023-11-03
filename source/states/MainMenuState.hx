@@ -33,7 +33,8 @@ class MainMenuState extends MusicBeatState {
 		'freeplay',
 		#if MODS_ALLOWED 'mods', #end
 		'credits',
-		'options'
+		'options',
+		'discord'
 	];
 
 	var bg:FlxSprite;
