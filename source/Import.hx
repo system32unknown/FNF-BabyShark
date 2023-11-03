@@ -29,6 +29,8 @@ import sys.io.*;
 import js.html.*;
 #end
 
+#if flxanimate import flxanimate.*; #end
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;

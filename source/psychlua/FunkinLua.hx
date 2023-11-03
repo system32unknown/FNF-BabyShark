@@ -610,7 +610,8 @@ class FunkinLua {
 				obj.playAnim(name, forced, reverse, startFrame);
 				return true;
 			} else {
-				obj.animation.play(name, forced, reverse, startFrame);
+				if(obj.anim != null) obj.anim.play(name, forced, reverse, startFrame); //FlxAnimate
+				else obj.animation.play(name, forced, reverse, startFrame);
 				return true;
 			}
 			return false;
@@ -686,20 +687,16 @@ class FunkinLua {
 			}
 		});
 		set("addLuaSprite", function(tag:String, front:Bool = false) {
-			var shit:ModchartSprite = game.modchartSprites.get(tag);
-			if (shit == null) return false;
+			var mySprite:FlxSprite = null;
+			if(game.modchartSprites.exists(tag)) mySprite = game.modchartSprites.get(tag);
+			else if(game.variables.exists(tag)) mySprite = game.variables.get(tag);
 
-			if(front) LuaUtils.getInstance().add(shit);
+			if(mySprite == null) return false;
+
+			if(front) LuaUtils.getInstance().add(mySprite);
 			else {
-				if(game.isDead) GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), shit);
-				else {
-					var position:Int = game.members.indexOf(game.gfGroup);
-					if(game.members.indexOf(game.boyfriendGroup) < position)
-						position = game.members.indexOf(game.boyfriendGroup);
-					else if(game.members.indexOf(game.dadGroup) < position)
-						position = game.members.indexOf(game.dadGroup);
-					game.insert(position, shit);
-				}
+				if(!game.isDead) game.insert(game.members.indexOf(LuaUtils.getLowestCharacterGroup()), mySprite);
+				else GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), mySprite);
 			}
 			return true;
 		});
@@ -911,8 +908,9 @@ class FunkinLua {
 
 		#if desktop Discord.addLuaCallbacks(this); #end
 		HScript.implement(this);
-		TextFunctions.implement(this);
+		#if flxanimate FlxAnimateFunctions.implement(this); #end
 		ReflectionFunctions.implement(this);
+		TextFunctions.implement(this);
 		ExtraFunctions.implement(this);
 		CustomSubstate.implement(this);
 		ShaderFunctions.implement(this);

@@ -49,6 +49,7 @@ class HScript extends Interp {
             "Xml"               => Xml,
 			"EReg"				=> EReg,
 			"StringTools"		=> StringTools,
+			"Lambda"			=> Lambda,
 
 			#if VIDEOS_ALLOWED
 			"VideoSpriteManager"=> backend.VideoSpriteManager,
@@ -75,6 +76,7 @@ class HScript extends Interp {
             "state"             => FlxG.state,
             "FlxTween"          => FlxTween,
             "FlxEase"           => FlxEase,
+			"FlxAnimate"		=> FlxAnimate,
             "FlxPoint"          => getMacroAbstractClass("flixel.math.FlxPoint"),
             "FlxAxes"           => getMacroAbstractClass("flixel.util.FlxAxes"),
             "FlxColor"          => getMacroAbstractClass("flixel.util.FlxColor"),
