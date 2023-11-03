@@ -25,10 +25,6 @@ class SaveSubState extends BaseOptionsMenu
 		super();
 	}
 
-	function cancelcallback() {
-		FlxG.mouse.visible = false;
-	}
-
 	function resetScore() {
 		FlxG.mouse.visible = true;
 		openSubState(new Prompt('This action will clear all score progress.\n\nProceed?', () -> {
@@ -39,7 +35,7 @@ class SaveSubState extends BaseOptionsMenu
 			FlxG.save.data.songCombos = null;
 			for (key in Highscore.songCombos.keys()) Highscore.songCombos[key] = '';
 			FlxG.mouse.visible = false;
-		}, cancelcallback));
+		}, () -> FlxG.mouse.visible = false));
 	}
 
 	function resetWeek() {
@@ -49,6 +45,6 @@ class SaveSubState extends BaseOptionsMenu
 			for (key in Highscore.weekScores.keys())
 				Highscore.weekScores[key] = 0;
 			FlxG.mouse.visible = false;
-		}, cancelcallback));
+		}, () -> FlxG.mouse.visible = false));
 	}
 }

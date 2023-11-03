@@ -73,7 +73,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 		else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.getPref('framerate');
 	}
 
-	override function changeSelection(change:Int = 0){
+	override function changeSelection(change:Int = 0) {
 		super.changeSelection(change); 
 		boyfriend.visible = (antialiasingOption == curSelected);
 	}

@@ -44,15 +44,9 @@ class MemoryUtil {
 	inline public static function getMEM():Dynamic {
 		#if cpp
 		return getTotalMEM();
-		#elseif sys
-		return cast(cast(System.totalMemory, UInt), Float);
 		#else
 		return 0;
 		#end
-	}
-
-	public static function getPsychMEM():Float {
-		return Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 	}
 
 	public static function getGCMEM():Int {
@@ -74,5 +68,5 @@ class MemoryUtil {
 		if (GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info)))
 			return (size_t)info.WorkingSetSize;
 	")
-	static function getTotalMEM():Int return 0;
+	public static function getTotalMEM():Int return 0;
 }
