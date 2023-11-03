@@ -14,14 +14,16 @@ class MainMenuState extends MusicBeatState {
 		"Freeplay",
 		"Mods",
 		"Credits",
-		"Options"
+		"Options",
+		"Discord"
 	];
 	var menuDescription:Array<String> = [
 		"Play the story mode to understand the story!",
 		"Play any song as you wish and get new scores!",
 		"Choose any mods as you can play mods!",
 		"Look at the people who have worked or contributed to the mod!",
-		"Adjust game settings."
+		"Adjust game settings and change Keybinds!",
+		"Join the official Baby Shark's Funkin Discord! (NOT DONE)"
 	];
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
