@@ -46,7 +46,10 @@ class Main {
 							Sys.command('git pull');
 						} else {
 							Sys.setCwd('${mainCwd}/${lib.dir}');
-							Sys.command('git clone --recurse-submodules ${lib.url} git');
+							if (lib.ref != null) 
+								Sys.command('git clone --recurse-submodules ${lib.url} git --branch ${lib.ref}');
+							else Sys.command('git clone --recurse-submodules ${lib.url} git');
+							
 							if (!isHMM) File.saveContent('.current', 'git');
 						}
 						Sys.setCwd(mainCwd);
