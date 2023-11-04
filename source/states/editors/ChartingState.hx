@@ -1525,9 +1525,8 @@ class ChartingState extends MusicBeatState {
 		camPos.y = strumLine.y;
 		if (!disableAutoScrolling.checked) {
 			if (Math.ceil(strumLine.y) >= gridBG.height) {
-				if (_song.notes[curSec + 1] == null) {
+				if (_song.notes[curSec + 1] == null)
 					addSection(getSectionBeats());
-				}
 				changeSection(curSec + 1, false);
 			} else if(strumLine.y < -10) {
 				changeSection(curSec - 1, false);
@@ -1553,9 +1552,9 @@ class ChartingState extends MusicBeatState {
 			var curNoteStrum = getStrumTime(dummyArrow.y, false) + sectionStartTime();
 			var curNoteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
 			if (!((curNoteStrum == lastNoteStrum) && (curNoteData == lastNoteData))) {
-				if (FlxG.mouse.overlaps(curRenderedNotes)) {
+				if (FlxG.mouse.overlaps(curRenderedNotes))
 					curRenderedNotes.forEachAlive((note:Note) -> if (FlxG.mouse.overlaps(note)) deleteNote(note));
-				} else {
+				else {
 					if (FlxG.mouse.x > gridBG.x && FlxG.mouse.x < gridBG.x + gridBG.width && FlxG.mouse.y > gridBG.y && FlxG.mouse.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom]) {
 						FlxG.log.add('added note');
 						addNote();
@@ -1881,7 +1880,7 @@ class ChartingState extends MusicBeatState {
 
 				if (curSelectedNote[0] == note.strumTime && ((curSelectedNote[2] == null && noteDataToCheck < 0) || (curSelectedNote[2] != null && curSelectedNote[1] == noteDataToCheck))) {
 					colorSine += elapsed;
-					var colorVal:Float = 0.7 + Math.sin(Math.PI * colorSine) * 0.3;
+					var colorVal:Float = .7 + Math.sin(Math.PI * colorSine) * 0.3;
 					note.color = FlxColor.fromRGBFloat(colorVal, colorVal, colorVal, 0.999); //Alpha can't be 100% or the color won't be updated for some reason, guess i will die
 				}
 			}
@@ -1949,12 +1948,13 @@ class ChartingState extends MusicBeatState {
 	function reloadGridLayer() {
 		GRID_SIZE = EK.gridSizes[_song.mania];
 		PlayState.mania = _song.mania;
-		columns = EK.strums(_song.mania) + 2;
-
+		
 		if (dummyArrow != null) {
 			dummyArrow.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			dummyArrow.updateHitbox();	
 		}
+		
+		columns = EK.strums(_song.mania) + 2;
 
 		gridLayer.clear();
 		gridBG = FlxGridOverlay.create(1, 1, columns, Std.int(getSectionBeats() * 4 * zoomList[curZoom]));
@@ -2135,8 +2135,7 @@ class ChartingState extends MusicBeatState {
 		#end
 	}
 
-	function waveformData(buffer:AudioBuffer, bytes:Bytes, time:Float, endTime:Float, multiply:Float = 1, ?array:Array<Array<Array<Float>>>, ?steps:Float):Array<Array<Array<Float>>>
-	{
+	function waveformData(buffer:AudioBuffer, bytes:Bytes, time:Float, endTime:Float, multiply:Float = 1, ?array:Array<Array<Array<Float>>>, ?steps:Float):Array<Array<Array<Float>>> {
 		#if (lime_cffi && !macro)
 		if (buffer == null || buffer.data == null) return [[[0], [0]], [[0], [0]]];
 

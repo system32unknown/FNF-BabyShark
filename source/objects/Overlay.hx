@@ -53,9 +53,9 @@ class Overlay extends TextField {
 
 		memory = MemoryUtil.getGCMEM();
 
-		text = '${FPS.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms]' : ''}\n';
+		text = '${FPS.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms] ~ [DT: ${Math.round(dt)}]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
-			text += '${MemoryUtil.getInterval(memory)} ${(ClientPrefs.getPref('FPSStats')) ? '[DT: ${Math.round(dt)}]' : ''}';
+			text += '${MemoryUtil.getInterval(memory)}';
 		visible = ClientPrefs.getPref('showFPS');
 
 		deltaTimeout += dt;

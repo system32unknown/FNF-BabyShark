@@ -98,9 +98,11 @@ class Main extends Sprite {
 	}
 
 	static function resetSpriteCache(sprite:Sprite):Void {
+		if (sprite == null) return;
 		@:privateAccess {
 		    sprite.__cacheBitmap = null;
-			sprite.__cacheBitmapData = null;
+			sprite.__cacheBitmapData = sprite.__cacheBitmapData2 = sprite.__cacheBitmapData3 = null;
+			sprite.__cacheBitmapColorTransform = null;
 		}
 	}
 
