@@ -39,16 +39,14 @@ class Main {
 						if (!FileSystem.exists(lib.dir)) FileSystem.createDirectory(lib.dir);
 						else if (!isHMM && FileSystem.exists('${lib.dir}/dev')) continue;
 
-						Sys.println('Installing "${lib.name}" from git url "${lib.url}"');
+						Sys.println('Installing "${lib.name}" from git url "${lib.url}" ${lib.ref != null ? '(with branch: ${lib.ref != null})' : ''}');
 
 						if (FileSystem.exists('${lib.dir}/git')) {
 							Sys.setCwd('${mainCwd}/${lib.dir}/git');
 							Sys.command('git pull');
 						} else {
 							Sys.setCwd('${mainCwd}/${lib.dir}');
-							if (lib.ref != null) 
-								Sys.command('git clone --recurse-submodules ${lib.url} git --branch ${lib.ref}');
-							else Sys.command('git clone --recurse-submodules ${lib.url} git');
+							Sys.command('git clone --recurse-submodules ${lib.url} git ${lib.ref != null ? '--branch' : ''} ${lib.ref}');
 							
 							if (!isHMM) File.saveContent('.current', 'git');
 						}
