@@ -396,22 +396,15 @@ class FreeplayState extends MusicBeatState
 		if(newColor != intendedColor) {
 			if(colorTween != null) colorTween.cancel();
 			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: (twn:FlxTween) -> colorTween = null
-			});
+			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {onComplete: (twn:FlxTween) -> colorTween = null});
 		}
 
-		var bullShit:Int = 0;
-
-		for (i in 0...iconArray.length) {
+		for (i in 0...iconArray.length)
 			iconArray[i].alpha = .6;
-		}
 
 		iconArray[curSelected].alpha = 1;
 
 		for (item in grpSongs.members) {
-			bullShit++;
-
 			item.alpha = .6;
 			if (item.targetY == curSelected) item.alpha = 1;
 		}

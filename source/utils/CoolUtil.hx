@@ -1,6 +1,7 @@
 package utils;
 
 import flixel.util.FlxSave;
+import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import openfl.geom.Rectangle;
@@ -57,32 +58,8 @@ class CoolUtil {
 	}
 
 	public static function makeSelectorGraphic(panel:FlxSprite, w:Int, h:Int, color:FlxColor, cornerSize:Float) {
-		panel.makeGraphic(w, h, color);
-		panel.pixels.fillRect(new Rectangle(0, 190, panel.width, 5), 0x0);
-
-		panel.pixels.fillRect(new Rectangle(0, 0, cornerSize, cornerSize), 0x0);												//top left
-		drawCircleCornerOnSelector(panel, false, false, color, cornerSize);
-		panel.pixels.fillRect(new Rectangle(panel.width - cornerSize, 0, cornerSize, cornerSize), 0x0);						 	//top right
-		drawCircleCornerOnSelector(panel, true, false, color, cornerSize);
-		panel.pixels.fillRect(new Rectangle(0, panel.height - cornerSize, cornerSize, cornerSize), 0x0);						//bottom left
-		drawCircleCornerOnSelector(panel, false, true, color, cornerSize);
-		panel.pixels.fillRect(new Rectangle(panel.width - cornerSize, panel.height - cornerSize, cornerSize, cornerSize), 0x0); //bottom right
-		drawCircleCornerOnSelector(panel, true, true, color, cornerSize);
-	}
-
-	static function drawCircleCornerOnSelector(panel:FlxSprite, flipX:Bool, flipY:Bool, color:FlxColor, cornerSize:Float) {
-		var antiX:Float = panel.width - cornerSize;
-		var antiY:Float = flipY ? (panel.height - 1) : 0;
-		if(flipY) antiY -= 2;
-		panel.pixels.fillRect(new Rectangle((flipX ? antiX : 1), Std.int(Math.abs(antiY - 8)), 10, 3), color);
-		if(flipY) antiY++;
-		panel.pixels.fillRect(new Rectangle((flipX ? antiX : 2), Std.int(Math.abs(antiY - 6)),  9, 2), color);
-		if(flipY) antiY++;
-		panel.pixels.fillRect(new Rectangle((flipX ? antiX : 3), Std.int(Math.abs(antiY - 5)),  8, 1), color);
-		panel.pixels.fillRect(new Rectangle((flipX ? antiX : 4), Std.int(Math.abs(antiY - 4)),  7, 1), color);
-		panel.pixels.fillRect(new Rectangle((flipX ? antiX : 5), Std.int(Math.abs(antiY - 3)),  6, 1), color);
-		panel.pixels.fillRect(new Rectangle((flipX ? antiX : 6), Std.int(Math.abs(antiY - 2)),  5, 1), color);
-		panel.pixels.fillRect(new Rectangle((flipX ? antiX : 8), Std.int(Math.abs(antiY - 1)),  3, 1), color);
+		panel.makeGraphic(w, h, FlxColor.TRANSPARENT);
+		FlxSpriteUtil.drawRoundRectComplex(panel, 0, 0, w, h, cornerSize, cornerSize, cornerSize, cornerSize, color);
 	}
 
 	public static function getRandomizedText(max:Int):String {
