@@ -39,7 +39,7 @@ class Main {
 						if (!FileSystem.exists(lib.dir)) FileSystem.createDirectory(lib.dir);
 						else if (!isHMM && FileSystem.exists('${lib.dir}/dev')) continue;
 
-						Sys.println('Installing "${lib.name}" from git url "${lib.url}" ${lib.ref != null ? '(with branch: ${lib.ref != null})' : ''}');
+						Sys.println('Installing "${lib.name}" from git url "${lib.url}" ${lib.ref != null ? '(with branch: ${lib.ref})' : ''}');
 
 						if (FileSystem.exists('${lib.dir}/git')) {
 							Sys.setCwd('${mainCwd}/${lib.dir}/git');

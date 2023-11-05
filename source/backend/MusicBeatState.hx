@@ -103,8 +103,7 @@ class MusicBeatState extends FlxUIState {
 		if (prevStep != curStep) {
 			if (curStep > 0 || !isPlayState) stepHit();
 			if (passedSections == null) passedSections = [];
-			if (curStep > prevStep)
-				updateSection();
+			if (curStep > prevStep) updateSection();
 			else rollbackSection();
 		}
 		updatedMusicBeat = false;
