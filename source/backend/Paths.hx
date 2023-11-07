@@ -5,6 +5,7 @@ import flixel.graphics.FlxGraphic;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
+import openfl.display3D.textures.RectangleTexture;
 import openfl.media.Sound;
 import lime.utils.Assets;
 
@@ -348,20 +349,37 @@ class Paths
 			localTrackedAssets.push(path);
 
 			var bitmap:BitmapData = _regBitmap(path, hardwareCache, modExists);
-			if (bitmap != null) graph = FlxGraphic.fromBitmapData(bitmap, false, path);
-
-			if (graph != null) {
-				graph.persist = true;
-				graph.destroyOnNoUse = false;
-				currentTrackedAssets.set(path, graph);
-				return graph;
-			}
+			if (bitmap != null) graph = cacheBitmap(path, bitmap);
+			if (graph != null) return graph;
 		}
 
 		Logs.trace('returnGraphic returning null: $path' #if MODS_ALLOWED + ' | Mods: $modKey' #end, WARNING);
 		return null;
 	}
 
+	static public function cacheBitmap(file:String, ?bitmap:BitmapData = null) {
+		if(bitmap == null) {
+			#if MODS_ALLOWED
+			if (FileSystem.exists(file))
+				bitmap = BitmapData.fromFile(file);
+			else
+			#end
+			{
+				if (OpenFlAssets.exists(file, IMAGE))
+					bitmap = OpenFlAssets.getBitmapData(file);
+			}
+
+			if(bitmap == null) return null;
+		}
+
+		localTrackedAssets.push(file);
+		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
+		newGraphic.persist = true;
+		newGraphic.destroyOnNoUse = false;
+		currentTrackedAssets.set(file, newGraphic);
+		return newGraphic;
+	}
+	
 	static function _regBitmap(key:String, hardware:Bool, file:Bool):BitmapData {
 		stepAssetCompress();
 		if (!file) return OpenFlAssets.getBitmapData(key, false, hardware);
@@ -446,6 +464,58 @@ class Paths
 			if(FileSystem.exists(file)) return file;
 		}
 		return mods(key);
+	}
+	#end
+
+	#if flxanimate
+	public static function loadAnimateAtlas(spr:FlxAnimate, folderOrImg:Dynamic, spriteJson:Dynamic = null, animationJson:Dynamic = null) {
+		var changedAnimJson = false;
+		var changedAtlasJson = false;
+		var changedImage = false;
+
+		if(spriteJson != null) {
+			changedAtlasJson = true;
+			spriteJson = File.getContent(spriteJson);
+		}
+
+		if(animationJson != null)  {
+			changedAnimJson = true;
+			animationJson = File.getContent(animationJson);
+		}
+
+		// is folder or image path
+		if(Std.isOfType(folderOrImg, String)) {
+			var originalPath:String = folderOrImg;
+			for (i in 0...10) {
+				var st:String = '$i';
+				if(i == 0) st = '';
+
+				if(!changedAtlasJson) {
+					spriteJson = getTextFromFile('images/$originalPath/spritemap$st.json');
+					if(spriteJson != null) {
+						changedImage = true;
+						changedAtlasJson = true;
+						folderOrImg = Paths.image('$originalPath/spritemap$st');
+						break;
+					}
+				} else if(Paths.fileExists('images/$originalPath/spritemap$st.png', IMAGE)) {
+					changedImage = true;
+					folderOrImg = Paths.image('$originalPath/spritemap$st');
+					break;
+				}
+			}
+
+			if(!changedImage) {
+				changedImage = true;
+				folderOrImg = Paths.image(originalPath);
+			}
+
+			if(!changedAnimJson) {
+				changedAnimJson = true;
+				animationJson = getTextFromFile('images/$originalPath/Animation.json');
+			}
+		}
+		spr.loadAtlasEx(folderOrImg, spriteJson, animationJson);
 	}
 	#end
 }

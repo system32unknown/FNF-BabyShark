@@ -266,7 +266,7 @@ class CreditsState extends MusicBeatState {
 
 		var arr:Array<String> = File.getContent(creditsFile).split('\n');
 		if (arr.length > 0) {
-			var metadata = new ModsMenuState.ModMetadata(folder);
+			var metadata = new ModsMenuState.ModItem(folder);
 			var name:String = metadata.name;
 			var color:FlxColor = metadata.color;
 

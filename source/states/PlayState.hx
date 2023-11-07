@@ -1995,7 +1995,11 @@ class PlayState extends MusicBeatState {
 					killMe = killMe[0].split('.');
 					if (killMe.length > 1) LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe, true, true), killMe[killMe.length - 1], trueVal != null ? trueVal : value2);
 					else LuaUtils.setVarInArray(this, value1, trueVal != null ? trueVal : value2);	
-				} catch(e:Dynamic) HScript.hscriptTrace('ERROR ("Set Property" Event) - $e', FlxColor.RED);
+				} catch(e:Dynamic) {
+					var len:Int = e.message.indexOf('\n') + 1;
+					if(len <= 0) len = e.message.length;
+					addTextToDebug('ERROR ("Set Property" Event) - ' + e.message.substr(0, len), FlxColor.RED);
+				}
 			case 'Play Sound':
 				if(flValue2 == null) flValue2 = 1;
 				FlxG.sound.play(Paths.sound(value1), flValue2);
@@ -2921,7 +2925,9 @@ class PlayState extends MusicBeatState {
 			hscriptArray.push(newScript);
 
 			if (newScript.exception != null) {
-				HScript.hscriptTrace('ERROR ON LOADING - ${newScript.exception.message}', FlxColor.RED);
+				var len:Int = newScript.exception.message.indexOf('\n') + 1;
+				if(len <= 0) len = newScript.exception.message.length;
+				HScript.hscriptTrace('ERROR ON LOADING - ${newScript.exception.message.substr(0, len)}', FlxColor.RED);
 				makeError(newScript);
 				return;
 			}
@@ -2929,14 +2935,18 @@ class PlayState extends MusicBeatState {
 			if (newScript.variables.exists('onCreate')) {
 				newScript.executeFunction('onCreate');
 				if (newScript.exception != null) {
-					HScript.hscriptTrace('ERROR (onCreate) - ${newScript.exception.message}', FlxColor.RED);
+					var len:Int = newScript.exception.message.indexOf('\n') + 1;
+					if(len <= 0) len = newScript.exception.message.length;
+					HScript.hscriptTrace('ERROR (onCreate) - ${newScript.exception.message.substr(0, len)}}', FlxColor.RED);
 					makeError(newScript);
 					return;
 				}
 			}
 			Logs.trace('initialized hscript interp successfully: $file (${Std.int(Date.now().getTime() - times)}ms)');
 		} catch(e) {
-			HScript.hscriptTrace('ERROR - $e', FlxColor.RED);
+			var len:Int = e.message.indexOf('\n') + 1;
+			if(len <= 0) len = e.message.length;
+			HScript.hscriptTrace('ERROR - ${e.message.substr(0, len)}', FlxColor.RED);
 			if (hscriptArray.length > 0) makeError(hscriptArray[hscriptArray.length - 1]);
 		}
 	}
