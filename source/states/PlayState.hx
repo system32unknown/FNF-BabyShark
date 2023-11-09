@@ -1544,7 +1544,7 @@ class PlayState extends MusicBeatState {
 			case "Vanilla":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .85)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .85)));
-			case "Kade": // Stolen from Vanilla Engine
+			case "Old": // Stolen from Vanilla Engine
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .5)));
 			case "Psych":
@@ -2795,7 +2795,7 @@ class PlayState extends MusicBeatState {
 		charactersDance(curBeat);
 		
 		switch (ClientPrefs.getPref('IconBounceType')) {
-			case 'Vanilla' | 'Kade':
+			case 'Vanilla' | 'Old':
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 			case "Psych":

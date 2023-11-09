@@ -18,22 +18,9 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud', 'bool'));
-		
-		var option:Option = new Option('Time Bar:',
-			"What should the Time Bar display?",
-			'timeBarType', 'string',
-			['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Name Percent', 'Disabled']);
-		addOption(option);
-
-		var option:Option = ;
+		addOption(new Option('Time Bar:', "What should the Time Bar display?", 'timeBarType', 'string', ['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Name Percent', 'Disabled']));
 		addOption(new Option('Flashing Lights', "Uncheck this if you're sensitive to flashing lights!", 'flashing', 'bool'));
-
-		var option:Option = new Option('Icon Bounce:',
-			"What should the Icon Bounces?",
-			'IconBounceType', 'string',
-			['Vanilla', 'Kade', 'Psych', 'Dave', 'GoldenApple', 'Custom']);
-		addOption(option);
-
+		addOption(new Option('Icon Bounce:', "What should the Icon Bounces?", 'IconBounceType', 'string', ['Vanilla', 'Old', 'Psych', 'Dave', 'GoldenApple', 'Custom']));
 		addOption(new Option('Health Bar Types:', "What should the Health Bar Types?", 'HealthTypes', 'string', ['Vanilla', 'Psych']));
 		addOption(new Option('Score Styles:', '', 'ScoreType', 'string', ['Alter', 'Kade']));
 		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'RatingDisplay', 'string', ['Hud', 'World']));
