@@ -17,10 +17,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.decimals = 1;
 		addOption(option);
 
-		var option:Option = new Option('Hide HUD',
-			'If checked, hides most HUD elements.',
-			'hideHud', 'bool');
-		addOption(option);
+		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud', 'bool'));
 		
 		var option:Option = new Option('Time Bar:',
 			"What should the Time Bar display?",
@@ -28,10 +25,8 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Name Percent', 'Disabled']);
 		addOption(option);
 
-		var option:Option = new Option('Flashing Lights',
-			"Uncheck this if you're sensitive to flashing lights!",
-			'flashing', 'bool');
-		addOption(option);
+		var option:Option = ;
+		addOption(new Option('Flashing Lights', "Uncheck this if you're sensitive to flashing lights!", 'flashing', 'bool'));
 
 		var option:Option = new Option('Icon Bounce:',
 			"What should the Icon Bounces?",
@@ -39,53 +34,15 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Vanilla', 'Kade', 'Psych', 'Dave', 'GoldenApple', 'Custom']);
 		addOption(option);
 
-		var option:Option = new Option('Health Bar Types:',
-			"What should the Health Bar Types?",
-			'HealthTypes', 'string', ['Vanilla', 'Psych']);
-		addOption(option);
-
-		var option:Option = new Option('Score Styles:',
-			"", 'ScoreType', 'string', ['Alter', 'Kade']);
-		addOption(option);
-
-		var option:Option = new Option('Rating Display:',
-			'Choose the type of rating you want to see.',
-			'RatingDisplay', 'string', ['Hud', 'World']);
-		addOption(option);
-
-		var option:Option = new Option('Camera Zooms',
-			"If unchecked, the camera won't zoom in on a beat hit.",
-			'camZooms', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Move \'Misses\' in Judgement Counter',
-			'', 'movemissjudge', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Show Combo Counter',
-			'If checked, the combo counter will be shown.',
-			'ShowComboCounter', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Show ms Timing',
-			'If checked, the ms timing will be shown.',
-			'ShowMsTiming', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Show Late/Early',
-			'If checked, the Late/Early counter will be shown.',
-			'ShowLateEarly', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Show NPS Display',
-			'If checked, Shows your current Notes Per Second on the info bar.',
-			'ShowNPSCounter', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Show Judgements Counter',
-			'If checked, the Judgements counter will be shown.',
-			'ShowJudgementCount', 'bool');
-		addOption(option);
+		addOption(new Option('Health Bar Types:', "What should the Health Bar Types?", 'HealthTypes', 'string', ['Vanilla', 'Psych']));
+		addOption(new Option('Score Styles:', '', 'ScoreType', 'string', ['Alter', 'Kade']));
+		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'RatingDisplay', 'string', ['Hud', 'World']));
+		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms', 'bool'));
+		addOption(new Option('Show Combo Counter', 'If checked, the combo counter will be shown.', 'ShowComboCounter', 'bool'));
+		addOption(new Option('Show ms Timing', 'If checked, the ms timing will be shown.', 'ShowMsTiming', 'bool'));
+		addOption(new Option('Show Late/Early', 'If checked, the Late/Early counter will be shown.', 'ShowLateEarly', 'bool'));
+		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'ShowNPS', 'bool'));
+		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'ShowJudgement', 'bool'));
 
 		#if desktop
 		var option:Option = new Option('Discord Rich Presence',

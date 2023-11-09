@@ -161,9 +161,9 @@ class FunkinLua {
 			}
 			luaTrace("addLuaScript: Script doesn't exist!", false, false, FlxColor.RED);
 		});
-		set("addHScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false) {
+		set("addHScript", function(hscriptFile:String, ?ignoreAlreadyRunning:Bool = false) {
 			#if HSCRIPT_ALLOWED
-			var foundScript:String = findScript(luaFile, '.hx');
+			var foundScript:String = findScript(hscriptFile, '.hx');
 			if(foundScript != null) {
 				if(!ignoreAlreadyRunning)
 					for (script in game.hscriptArray)
@@ -191,6 +191,28 @@ class FunkinLua {
 						}
 			}
 			luaTrace('removeLuaScript: Script $luaFile isn\'t running!', false, false, FlxColor.RED);
+			return false;
+		});
+		set("removeHScript", function(hscriptFile:String, ?ignoreAlreadyRunning:Bool = false) {
+			#if HSCRIPT_ALLOWED
+			var foundScript:String = findScript(hscriptFile, '.hx');
+	
+			if (foundScript != null) {
+				if (!ignoreAlreadyRunning)
+					for (script in game.hscriptArray)
+						if (script.origin == foundScript) {
+							trace('Closing script: ' + script.origin);
+							game.hscriptArray.remove(script);
+							script.destroy();
+							return true;
+						}
+			}
+	
+			luaTrace('removeHScript: Script $hscriptFile isn\'t running!', false, false, FlxColor.RED);
+			#else
+			luaTrace('removeHScript: HScript is not supported on this platform!', false, false, FlxColor.RED);
+			#end
+	
 			return false;
 		});
 
@@ -971,7 +993,12 @@ class FunkinLua {
 		DeprecatedFunctions.implement(this);
 		SoundFunctions.implement(this);
 		try {
-			var result:Dynamic = LuaL.dofile(lua, scriptName);
+			var isString:Bool = !FileSystem.exists(scriptName);
+			var result:Dynamic = null;
+			if(!isString)
+				result = LuaL.dofile(lua, scriptName);
+			else result = LuaL.dostring(lua, scriptName);
+
 			var resultStr:String = Lua.tostring(lua, result);
 			if(resultStr != null && result != 0) {
 				trace(resultStr);
@@ -983,6 +1010,7 @@ class FunkinLua {
 				lua = null;
 				return;
 			}
+			if(isString) scriptName = 'unknown';
 		} catch(e:Dynamic) {
 			trace(e);
 			return;
