@@ -53,9 +53,10 @@ class Overlay extends TextField {
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		text = '${FPS.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms, DT: ${Math.round(dt)}]' : ''}\n';
+		var tempText:String = '${FPS.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms, DT: ${Math.round(dt)}]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
-			text += '${MemoryUtil.getInterval(memory)}';
+			tempText += '${MemoryUtil.getInterval(memory)}';
+		text = tempText;
 	}
 
 	inline function get_memory():Dynamic
