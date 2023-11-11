@@ -110,19 +110,6 @@ class CoolUtil {
 		return colorNum != null ? colorNum : FlxColor.WHITE;
 	}
 
-	public static function formatTime(sec:Float):String {
-		var hours:Int = Std.int(sec / 3600);
-		var minutes:Int = Std.int((sec % 3600) / 60);
-		var seconds:Int = Std.int(sec % 60);
-	
-		var formattedTime:String = "";
-		if (hours > 0) formattedTime += hours + ":";
-		formattedTime += (minutes < 10 ? "0" : "") + minutes + ":";
-		formattedTime += (seconds < 10 ? "0" : "") + seconds;
-	
-		return formattedTime;
-	}
-
 	public static function callErrBox(title:String, context:String) {
         #if hl
 		var flags:haxe.EnumFlags<hl.UI.DialogFlags> = new haxe.EnumFlags<hl.UI.DialogFlags>();
