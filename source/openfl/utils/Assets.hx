@@ -44,10 +44,6 @@ import openfl.Lib;
 @:noDebug
 #end
 
-#if lime
-@:access(lime._internal.backend.native.NativeCFFI)
-#end
-
 @:access(openfl.display.BitmapData)
 @:access(openfl.display.Sprite)
 @:access(openfl.text.Font)

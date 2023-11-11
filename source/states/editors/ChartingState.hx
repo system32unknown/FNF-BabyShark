@@ -13,8 +13,8 @@ import data.StageData;
 import substates.Prompt;
 
 import flixel.FlxObject;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.ui.FlxButton;
+import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
@@ -35,6 +35,8 @@ import haxe.io.Bytes;
 import haxe.io.Path;
 import tjson.TJSON as Json;
 
+@:access(flixel.sound.FlxSound._sound)
+@:access(openfl.media.Sound.__buffer)
 class ChartingState extends MusicBeatState {
 	var songStarted:Bool = false;
 	public static var noteTypeList:Array<String> = [ //Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
@@ -219,10 +221,8 @@ class ChartingState extends MusicBeatState {
 		currentSongName = Paths.formatToSongPath(_song.song);
 		loadSong();
 		reloadGridLayer();
-		Conductor.usePlayState = true;
 		Conductor.bpm = _song.bpm;
 		Conductor.mapBPMChanges(_song);
-
 		if(curSec >= _song.notes.length) curSec = _song.notes.length - 1;
 
 		bpmTxt = new FlxText(1100, 50, 0, "", 16);
@@ -383,11 +383,6 @@ class ChartingState extends MusicBeatState {
 		});
 		clear_events.color = FlxColor.RED;
 		clear_events.label.color = FlxColor.WHITE;
-
-		var startHere:FlxButton = new FlxButton(clear_events.x, clear_events.y - 30, 'Start Here', function() {
-			PlayState.timeToStart = Conductor.songPosition;				
-			startSong();
-		});
 
 		var clear_notes:FlxButton = new FlxButton(320, clear_events.y + 30, 'Clear notes', function() {
 			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
@@ -552,7 +547,6 @@ class ChartingState extends MusicBeatState {
 		tab_group_song.add(check_voices);
 		tab_group_song.add(clear_events);
 		tab_group_song.add(clear_notes);
-		tab_group_song.add(startHere);
 		tab_group_song.add(saveButton);
 		tab_group_song.add(saveEvents);
 		tab_group_song.add(reloadSong);
@@ -2074,11 +2068,11 @@ class ChartingState extends MusicBeatState {
 
 		if (FlxG.save.data.chart_waveformInst) {
 			var sound:FlxSound = FlxG.sound.music;
-			if (sound.buffer != null) {
-				var bytes:Bytes = sound.buffer.data.toBytes();
+			if (sound._sound != null && sound._sound.__buffer != null) {
+				var bytes:Bytes = sound._sound.__buffer.data.toBytes();
 
 				wavData = waveformData(
-					sound.buffer, bytes,
+					sound._sound.__buffer, bytes,
 					st, et, 1, wavData,
 					Std.int(gridBG.height)
 				);
@@ -2087,11 +2081,11 @@ class ChartingState extends MusicBeatState {
 
 		if (FlxG.save.data.chart_waveformVoices) {
 			var sound:FlxSound = vocals;
-			if (sound.buffer != null) {
-				var bytes:Bytes = sound.buffer.data.toBytes();
+			if (sound._sound != null && sound._sound.__buffer != null) {
+				var bytes:Bytes = sound._sound.__buffer.data.toBytes();
 
 				wavData = waveformData(
-					sound.buffer, bytes,
+					sound._sound.__buffer, bytes,
 					st, et, 1, wavData,
 					Std.int(gridBG.height)
 				);
@@ -2258,7 +2252,17 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function recalculateSteps(add:Float = 0):Int {
-		curStep = Conductor.getStepRounded(FlxG.sound.music.time, -add);
+		var lastChange:BPMChangeEvent = {
+			stepTime: 0,
+			songTime: 0,
+			bpm: 0
+		}
+		for (i in 0...Conductor.bpmChangeMap.length) {
+			if (FlxG.sound.music.time > Conductor.bpmChangeMap[i].songTime)
+				lastChange = Conductor.bpmChangeMap[i];
+		}
+
+		curStep = lastChange.stepTime + Math.floor((FlxG.sound.music.time - lastChange.songTime + add) / Conductor.stepCrochet);
 		updateBeat();
 
 		return curStep;

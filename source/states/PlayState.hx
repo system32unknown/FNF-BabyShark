@@ -132,7 +132,6 @@ class PlayState extends MusicBeatState {
 
 	var timeBarBG:AttachedSprite;
 	public var timeBar:FlxBar;
-	public static var timeToStart:Float = 0;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
 
@@ -242,29 +241,19 @@ class PlayState extends MusicBeatState {
 	public var endCallback:Void->Void = null;
 	#if VIDEOS_ALLOWED public var videoSprites:Array<backend.VideoSpriteManager> = []; #end
 	override function create() {
-		instance = this;
+		Paths.clearStoredCache();
 
 		startCallback = startCountdown;
 		endCallback = endSong;
 
-		firstStart = !MusicBeatState.previousStateIs(PlayState);
-		FlxG.fixedTimestep = false;
-		persistentUpdate = true;
-		persistentDraw = true;
+		instance = this;
 
-		Conductor.usePlayState = true;
-		Conductor.songPosition = Math.NEGATIVE_INFINITY;
-		if (firstStart) FlxG.sound.destroy(true);
-		Paths.clearStoredCache();
+		PauseSubState.songName = null; //Reset to default
 
-		if (FlxG.sound.music != null) FlxG.sound.music.destroy();
 		var music:FlxSound = FlxG.sound.music = new FlxSound();
 		music.group = FlxG.sound.defaultMusicGroup;
 		music.persist = true;
 		music.volume = 1;
-
-		GameOverSubstate.resetVariables();
-		PauseSubState.songName = null; //Reset to default
 
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
@@ -279,18 +268,21 @@ class PlayState extends MusicBeatState {
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
-		camGame.bgColor = 0xFF000000;
 		camHUD.bgColor = 0x00000000;
 		camOther.bgColor = 0x00000000;
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOther, false);
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
 
+		persistentUpdate = true;
+		persistentDraw = true;
+
 		if (SONG == null) SONG = Song.loadFromJson('tutorial');
-		songName = Paths.formatToSongPath(SONG.song);
 		Conductor.mapBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
 
@@ -309,6 +301,9 @@ class PlayState extends MusicBeatState {
 		detailsPausedText = 'Paused - $detailsText';
 		#end
 
+		GameOverSubstate.resetVariables();
+		songName = Paths.formatToSongPath(SONG.song);
+
 		if(SONG.stage == null || SONG.stage.length < 1)
 			SONG.stage = StageData.vanillaSongStage(songName);
 		curStage = SONG.stage;
@@ -316,8 +311,9 @@ class PlayState extends MusicBeatState {
 		var stageData:StageFile = StageData.getStageFile(curStage);
 		if(stageData == null) stageData = StageData.dummy(); //Stage couldn't be found, create a dummy stage for preventing a crash
 
-		stageUI = "normal";
 		defaultCamZoom = stageData.defaultZoom;
+
+		stageUI = "normal";
 		if (stageData.stageUI != null && stageData.stageUI.trim().length > 0)
 			stageUI = stageData.stageUI;
 		else if (stageData.isPixelStage) stageUI = "pixel";
@@ -328,8 +324,6 @@ class PlayState extends MusicBeatState {
 		GF_Y = stageData.girlfriend[1];
 		DAD_X = stageData.opponent[0];
 		DAD_Y = stageData.opponent[1];
-
-		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 
 		if(stageData.camera_speed != null) cameraSpeed = stageData.camera_speed;
 		if(isPixelStage) introSoundsSuffix = '-pixel';
@@ -435,8 +429,7 @@ class PlayState extends MusicBeatState {
 		timeBarBG.addPoint.set(-4, -4);
 		uiGroup.add(timeBarBG);
 		
-		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
-			'songPercent', 0, 1);
+		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this, 'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
 		timeBar.createGradientBar([FlxColor.GRAY], [dad.getColor(), boyfriend.getColor()], 1, 90);
 		timeBar.numDivisions = 800; // How much lag this causes?? Should i tone it down to idk, 400 or 200?
@@ -471,16 +464,14 @@ class PlayState extends MusicBeatState {
 		}
 		add(camFollow);
 
-		camGame.follow(camFollow, LOCKON, 1);
+		camGame.follow(camFollow, LOCKON, 0);
 		camGame.zoom = defaultCamZoom;
 		camGame.snapToTarget();
 
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
-		
 		moveCameraSection();
 
-		healthBar = new Bar(0, 0, 'healthBar', () -> return health, 0, healthMax);
-		healthBar.y = (downScroll ? 50 : FlxG.height * .9);
+		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return health, 0, healthMax);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
@@ -622,7 +613,6 @@ class PlayState extends MusicBeatState {
 		});
 		#end
 
-		if(timeToStart > 0)	clearNotesBefore(timeToStart);
 		CustomFadeTransition.nextCamera = camOther;
 		if(eventNotes.length < 1) checkEventNote();
 	}
@@ -884,6 +874,7 @@ class PlayState extends MusicBeatState {
 			return false;
 		}
 
+		seenCutscene = true;
 		inCutscene = false;
 		var ret:Dynamic = callOnScripts('onStartCountdown', null, true);
 		if (ret != FunkinLua.Function_Stop) {
@@ -896,7 +887,7 @@ class PlayState extends MusicBeatState {
 			setOnScripts('defaultMania', SONG.mania);
 
 			startedCountdown = true;
-			Conductor.songPosition -= Conductor.crochet * 5;
+			Conductor.songPosition = -Conductor.crochet * 5;
 			setOnScripts('startedCountdown', true);
 			callOnScripts('onCountdownStarted');
 
@@ -909,6 +900,7 @@ class PlayState extends MusicBeatState {
 				setSongTime(0);
 				return true;
 			}
+			moveCameraSection();
 
 			startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, (tmr:FlxTimer) -> {
 				charactersDance(tmr.loopsLeft);
@@ -997,7 +989,6 @@ class PlayState extends MusicBeatState {
 				daNote.active = false;
 				daNote.visible = false;
 				daNote.ignoreNote = true;
-
 				invalidateNote(daNote);
 			}
 			--i;
@@ -1047,16 +1038,11 @@ class PlayState extends MusicBeatState {
 
 		var music:FlxSound = FlxG.sound.music;
 		music.loadEmbedded(Paths.inst(SONG.song), false);
-		music.onComplete = finishSong.bind();
 		music.pitch = playbackRate;
+		music.onComplete = finishSong.bind();
 		music.volume = 1;
 		vocals.time = music.time = 0;
 		music.play(); vocals.play();
-
-		if(timeToStart > 0) {
-			setSongTime(timeToStart);
-			timeToStart = 0;
-		}
 
 		if(startOnTime > 0) setSongTime(startOnTime - 500);
 		startOnTime = 0;
@@ -1135,7 +1121,7 @@ class PlayState extends MusicBeatState {
 				unspawnNotes.push(swagNote);
 
 				final susLength:Float = swagNote.sustainLength / Conductor.stepCrochet;
-				var floorSus:Int = Math.floor(susLength);
+				final floorSus:Int = Math.floor(susLength);
 				if(floorSus > 0) {
 					for (susNote in 0...floorSus + 1) {
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
@@ -1153,6 +1139,7 @@ class PlayState extends MusicBeatState {
 						if(!isPixelStage) {
 							if(oldNote.isSustainNote) {
 								oldNote.scale.y *= Note.SUSTAIN_SIZE / oldNote.frameHeight;
+								oldNote.scale.y /= playbackRate;
 								oldNote.updateHitbox();
 							}
 							if(downScroll) sustainNote.correctionOffset = 0;
@@ -1401,9 +1388,8 @@ class PlayState extends MusicBeatState {
 			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
 
 			#if VIDEOS_ALLOWED
-			if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length) {
+			if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length)
 				videoSprites[daVideoSprite].resume();
-			}
 			#end
 
 			paused = false;
@@ -1446,60 +1432,26 @@ class PlayState extends MusicBeatState {
 	}
 
 	function resyncVocals(resync:Bool = true):Void {
-		if (finishTimer != null || (transitioning && endingSong)) return;
-		FlxG.sound.music.pitch = playbackRate;
+		if(finishTimer != null) return;
 
-		if (Conductor.songPosition <= vocals.length) {
-			var stream = vocals.vorbis != null;
-			vocals.pitch = playbackRate;
+		vocals.pause();
 
-			if (!stream || resync) {
-				if (stream) {
-					FlxG.sound.music.pause();
-					vocals.pause();
-				}
-				Conductor.songPosition = (vocals.time = FlxG.sound.music.time) + Conductor.offset;
-			} else Conductor.songPosition = lastSongTime + Conductor.offset;
-			vocals.play();
-		} else Conductor.songPosition = lastSongTime + Conductor.offset;
-
-		var diff = lastSongTime - Conductor.songPosition;
-		if (diff < songElapsed && diff >= 0) {
-			var v = Conductor.songPosition;
-			Conductor.songPosition = lastSongTime;
-			lastSongTime = v;
-		} else lastSongTime = Conductor.songPosition;
 		FlxG.sound.music.play();
+		FlxG.sound.music.pitch = playbackRate;
+		Conductor.songPosition = FlxG.sound.music.time;
+		if (Conductor.songPosition <= vocals.length) {
+			vocals.time = Conductor.songPosition;
+			vocals.pitch = playbackRate;
+		}
+		vocals.play();
 	}
 
 	public var paused:Bool = false;
 	public var canReset:Bool = true;
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
-	var lastSongTime:Float = 0;
-	var songElapsed:Float = 0;
-	var syncDebounce:Float = 0;
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music.playing) {
-			var time = FlxG.sound.music.time;
-			songElapsed = time - lastSongTime;
-			lastSongTime = time;
-		}
-
 		callOnScripts('onUpdate', [elapsed]);
-		
-		if (startedCountdown && !paused) {
-			var delta = elapsed * 1000 * playbackRate;
-			if (!startingSong && FlxG.sound.music.playing && songElapsed > 0)
-				Conductor.songPosition = lastSongTime;
-			else Conductor.songPosition += delta;
-
-			if (!startingSong && (syncDebounce += elapsed) > 1) {
-				syncDebounce = 0;
-				var resync = vocals.loaded && Math.abs(vocals.time - FlxG.sound.music.time) > (vocals.vorbis == null ? 6 : 12);
-				if (Math.abs(lastSongTime - Conductor.songPosition) > 16 || resync) resyncVocals(resync);
-			}
-		}
 
 		if(ClientPrefs.getPref('camMovement') && !isPixelStage && camlock)
 			camFollow.setPosition(camlockpoint.x, camlockpoint.y);
@@ -1507,8 +1459,6 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.followLerp = 0;
 		if(!inCutscene && !paused)
 			FlxG.camera.followLerp = FlxMath.bound(elapsed * 2.4 * cameraSpeed * playbackRate * (FlxG.updateFramerate / 60), 0, 1);
-
-		checkEventNote();
 
 		if (generatedMusic && !endingSong && !isCameraOnForcedPos && ClientPrefs.getPref('UpdateCamSection'))
 			moveCameraSection();
@@ -1526,7 +1476,6 @@ class PlayState extends MusicBeatState {
 			UpdateScoreText();
 		}
 
-		updateMusicBeat();
 		setOnScripts('curDecStep', curDecStep);
 		setOnScripts('curDecBeat', curDecBeat);
 
@@ -1536,9 +1485,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (controls.PAUSE) tryPause();
-
-		if (controls.justPressed('debug_1') && !endingSong && !inCutscene)
-			openChartEditor();
+		if (controls.justPressed('debug_1') && !endingSong && !inCutscene) openChartEditor();
 
 		switch(ClientPrefs.getPref('IconBounceType')) {
 			case "Vanilla":
@@ -1581,6 +1528,9 @@ class PlayState extends MusicBeatState {
 
 		if (controls.justPressed('debug_2') && !endingSong && !inCutscene)
 			openCharacterEditor();
+
+		if (startedCountdown && !paused)
+			Conductor.songPosition += elapsed * 1000 * playbackRate;
 
 		if (startingSong) {
 			if (startedCountdown && Conductor.songPosition >= 0) startSong();
@@ -1693,8 +1643,6 @@ class PlayState extends MusicBeatState {
 	}
 
 	function openPauseMenu() {
-		for (i in 0...keysPressed.length) if (keysPressed[i]) inputRelease(i);
-
 		FlxG.camera.followLerp = 0;
 		FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = false);
 		FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = false);
@@ -1703,15 +1651,15 @@ class PlayState extends MusicBeatState {
 		paused = true;
 
 		#if VIDEOS_ALLOWED
-		if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length) {
+		if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length)
 			videoSprites[daVideoSprite].bitmap.pause();
-		}
 		#end
 
 		if(FlxG.sound.music != null) {
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
+		for (i in 0...keysPressed.length) if (keysPressed[i]) inputRelease(i);
 		openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
 		#if discord_rpc Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter()); #end
@@ -2049,11 +1997,8 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function tweenCamZoom(zoom:Float = 1) {
-		if (cameraTwn == null && camGame.zoom != zoom) {
-			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (Conductor.stepCrochet * 4 / 1000) * playbackRate, {ease: FlxEase.elasticInOut, 
-				onComplete: (_) -> cameraTwn = null
-			});
-		}
+		if (cameraTwn == null && camGame.zoom != zoom)
+			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (Conductor.stepCrochet * 4 / 1000) * playbackRate, {ease: FlxEase.elasticInOut, onComplete: (_) -> cameraTwn = null});
 	}
 
 	public function finishSong(?ignoreNoteOffset:Bool = false):Void {
@@ -2061,8 +2006,7 @@ class PlayState extends MusicBeatState {
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
 		vocals.pause();
-		if(ClientPrefs.getPref('noteOffset') <= 0 || ignoreNoteOffset)
-			endCallback();
+		if(ClientPrefs.getPref('noteOffset') <= 0 || ignoreNoteOffset) endCallback();
 		else finishTimer = new FlxTimer().start(ClientPrefs.getPref('noteOffset') / 1000, (tmr:FlxTimer) -> endCallback());
 	}
 
@@ -2070,14 +2014,9 @@ class PlayState extends MusicBeatState {
 	public function endSong() {
 		//Should kill you if you tried to cheat
 		if(!startingSong) {
-			notes.forEach((daNote:Note) -> {
-				if(daNote.strumTime < songLength - Conductor.safeZoneOffset)
-					health -= 0.05 * healthLoss;
-			});
-			for (daNote in unspawnNotes) if(daNote.strumTime < songLength - Conductor.safeZoneOffset) {
+			notes.forEach((daNote:Note) -> if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= 0.05 * healthLoss);
+			for (daNote in unspawnNotes) if(daNote.strumTime < songLength - Conductor.safeZoneOffset)
 				health -= 0.05 * healthLoss;
-			}
-
 			if(doDeathCheck()) return false;
 		}
 
@@ -2206,7 +2145,7 @@ class PlayState extends MusicBeatState {
 	function popUpScore(note:Note):Void {
 		if (note == null) return;
 
-		var noteDiff = getNoteDiff(note) / getActualPlaybackRate();
+		var noteDiff = getNoteDiff(note) / playbackRate;
 		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
 		var score:Int = 500;
 
@@ -2273,7 +2212,7 @@ class PlayState extends MusicBeatState {
 			timing.antialiasing = antialias;
 		
 			if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
-				msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
+				msTiming = MathUtil.truncateFloat(noteDiff / playbackRate);
 				mstimingTxt.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 20, FlxColor.WHITE, CENTER);
 				mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 				mstimingTxt.visible = !hideHud;
@@ -2826,8 +2765,6 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function sectionHit() {
-		super.sectionHit();
-
 		if (SONG.notes[curSection] != null) {
 			if (generatedMusic && !endingSong && !isCameraOnForcedPos && !ClientPrefs.getPref('UpdateCamSection'))
 				moveCameraSection();
@@ -2847,6 +2784,7 @@ class PlayState extends MusicBeatState {
 			setOnScripts('altAnim', SONG.notes[curSection].altAnim);
 			setOnScripts('gfSection', SONG.notes[curSection].gfSection);
 		}
+		super.sectionHit();
 		
 		setOnScripts('curSection', curSection);
 		callOnScripts('onSectionHit');
@@ -3062,8 +3000,6 @@ class PlayState extends MusicBeatState {
 		setOnScripts('ratingRank', ranks);
 		setOnScripts('ratingFC', ratingFC);
 	}
-
-	public function getActualPlaybackRate():Float return FlxG.sound.music != null ? FlxG.sound.music.getActualPitch() : playbackRate;
 
 	public dynamic function fullComboFunction() {
 		var fullhits = [for(i in 0...ratingsData.length) ratingsData[i].hits];

@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxGame;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.display.StageScaleMode;
@@ -9,7 +10,6 @@ import states.TitleState;
 import backend.Logs;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
-import utils.FunkinGame;
 import objects.Overlay;
 
 #if (target.threaded && sys) import sys.thread.ElasticThreadPool; #end
@@ -62,7 +62,7 @@ class Main extends Sprite {
 		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
 		ClientPrefs.loadDefaultKeys();
-		addChild(new FunkinGame(init_game.width, init_game.height, init_game.initialState, init_game.framerate, init_game.framerate, init_game.skipSplash, init_game.startFullscreen));
+		addChild(new FlxGame(init_game.width, init_game.height, init_game.initialState, init_game.framerate, init_game.framerate, init_game.skipSplash, init_game.startFullscreen));
 		addChild(overlayVar = new Overlay());
 		
 		#if (target.threaded && sys)
