@@ -248,7 +248,6 @@ class PlayState extends MusicBeatState {
 		endCallback = endSong;
 
 		firstStart = !MusicBeatState.previousStateIs(PlayState);
-		FlxG.fixedTimestep = false;
 		persistentUpdate = true;
 		persistentDraw = true;
 
@@ -279,7 +278,6 @@ class PlayState extends MusicBeatState {
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
-		camGame.bgColor = 0xFF000000;
 		camHUD.bgColor = 0x00000000;
 		camOther.bgColor = 0x00000000;
 
@@ -435,8 +433,7 @@ class PlayState extends MusicBeatState {
 		timeBarBG.addPoint.set(-4, -4);
 		uiGroup.add(timeBarBG);
 		
-		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
-			'songPercent', 0, 1);
+		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this, 'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
 		timeBar.createGradientBar([FlxColor.GRAY], [dad.getColor(), boyfriend.getColor()], 1, 90);
 		timeBar.numDivisions = 800; // How much lag this causes?? Should i tone it down to idk, 400 or 200?
@@ -479,8 +476,7 @@ class PlayState extends MusicBeatState {
 		
 		moveCameraSection();
 
-		healthBar = new Bar(0, 0, 'healthBar', () -> return health, 0, healthMax);
-		healthBar.y = (downScroll ? 50 : FlxG.height * .9);
+		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return health, 0, healthMax);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
@@ -884,6 +880,7 @@ class PlayState extends MusicBeatState {
 			return false;
 		}
 
+		seenCutscene = true;
 		inCutscene = false;
 		var ret:Dynamic = callOnScripts('onStartCountdown', null, true);
 		if (ret != FunkinLua.Function_Stop) {
@@ -896,7 +893,7 @@ class PlayState extends MusicBeatState {
 			setOnScripts('defaultMania', SONG.mania);
 
 			startedCountdown = true;
-			Conductor.songPosition -= Conductor.crochet * 5;
+			Conductor.songPosition = -Conductor.crochet * 5;
 			setOnScripts('startedCountdown', true);
 			callOnScripts('onCountdownStarted');
 
@@ -997,7 +994,6 @@ class PlayState extends MusicBeatState {
 				daNote.active = false;
 				daNote.visible = false;
 				daNote.ignoreNote = true;
-
 				invalidateNote(daNote);
 			}
 			--i;
@@ -1135,7 +1131,7 @@ class PlayState extends MusicBeatState {
 				unspawnNotes.push(swagNote);
 
 				final susLength:Float = swagNote.sustainLength / Conductor.stepCrochet;
-				var floorSus:Int = Math.floor(susLength);
+				final floorSus:Int = Math.floor(susLength);
 				if(floorSus > 0) {
 					for (susNote in 0...floorSus + 1) {
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
@@ -1153,6 +1149,7 @@ class PlayState extends MusicBeatState {
 						if(!isPixelStage) {
 							if(oldNote.isSustainNote) {
 								oldNote.scale.y *= Note.SUSTAIN_SIZE / oldNote.frameHeight;
+								oldNote.scale.y /= playbackRate;
 								oldNote.updateHitbox();
 							}
 							if(downScroll) sustainNote.correctionOffset = 0;
@@ -1401,9 +1398,8 @@ class PlayState extends MusicBeatState {
 			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
 
 			#if VIDEOS_ALLOWED
-			if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length) {
+			if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length)
 				videoSprites[daVideoSprite].resume();
-			}
 			#end
 
 			paused = false;
@@ -1510,8 +1506,7 @@ class PlayState extends MusicBeatState {
 
 		checkEventNote();
 
-		if (generatedMusic && !endingSong && !isCameraOnForcedPos && ClientPrefs.getPref('UpdateCamSection'))
-			moveCameraSection();
+		if (generatedMusic && !endingSong && !isCameraOnForcedPos && ClientPrefs.getPref('UpdateCamSection')) moveCameraSection();
 		super.update(elapsed);
 
 		scoreTxt.x = Math.floor((FlxG.width - scoreTxt.width) / 2);
@@ -1703,9 +1698,8 @@ class PlayState extends MusicBeatState {
 		paused = true;
 
 		#if VIDEOS_ALLOWED
-		if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length) {
+		if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length)
 			videoSprites[daVideoSprite].bitmap.pause();
-		}
 		#end
 
 		if(FlxG.sound.music != null) {
@@ -2061,8 +2055,7 @@ class PlayState extends MusicBeatState {
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
 		vocals.pause();
-		if(ClientPrefs.getPref('noteOffset') <= 0 || ignoreNoteOffset)
-			endCallback();
+		if(ClientPrefs.getPref('noteOffset') <= 0 || ignoreNoteOffset) endCallback();
 		else finishTimer = new FlxTimer().start(ClientPrefs.getPref('noteOffset') / 1000, (tmr:FlxTimer) -> endCallback());
 	}
 
@@ -2070,13 +2063,8 @@ class PlayState extends MusicBeatState {
 	public function endSong() {
 		//Should kill you if you tried to cheat
 		if(!startingSong) {
-			notes.forEach((daNote:Note) -> {
-				if(daNote.strumTime < songLength - Conductor.safeZoneOffset)
-					health -= 0.05 * healthLoss;
-			});
-			for (daNote in unspawnNotes) if(daNote.strumTime < songLength - Conductor.safeZoneOffset) {
-				health -= 0.05 * healthLoss;
-			}
+			notes.forEach((daNote:Note) -> if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= 0.05 * healthLoss);
+			for (daNote in unspawnNotes) if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= 0.05 * healthLoss;
 
 			if(doDeathCheck()) return false;
 		}
