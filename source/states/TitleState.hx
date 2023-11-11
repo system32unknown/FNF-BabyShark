@@ -58,6 +58,7 @@ class TitleState extends MusicBeatState {
 			if(FlxG.save.data.fullscreen != null) FlxG.fullscreen = FlxG.save.data.fullscreen;
 			if (FlxG.save.data.weekCompleted != null) StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
+
 		persistentUpdate = persistentDraw = true;
 
 		if (FlxG.save.data.flashing == null && !FlashingState.leftState) {
@@ -142,8 +143,11 @@ class TitleState extends MusicBeatState {
 		Conductor.songPosition = 0;
 		super.update(0);
 
-		if (FreeplayState.vocals == null)
+		if (FreeplayState.vocals == null) {
+			Conductor.usePlayState = false;
+			Conductor.mapBPMChanges(true);
 			Conductor.bpm = titleJSON.bpm;
+		}
 
 		add(bg);
 		add(gfDance);

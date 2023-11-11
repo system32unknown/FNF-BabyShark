@@ -288,7 +288,8 @@ class FreeplayState extends MusicBeatState
 				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
 				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 				if (PlayState.SONG != null) {
-					Conductor.mapBPMChanges(PlayState.SONG);
+					Conductor.usePlayState = true;
+					Conductor.mapBPMChanges(PlayState.SONG, true);
 					Conductor.bpm = PlayState.SONG.bpm;
 
 					if (PlayState.SONG.needsVoices) vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song, true));

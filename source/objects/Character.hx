@@ -181,8 +181,7 @@ class Character extends FlxSprite
 				dance(true, false, 10);
 
 			if (heyTimer > 0) {
-				var rate:Float = (PlayState.instance != null ? PlayState.instance.playbackRate : 1.0);
-				heyTimer -= elapsed * rate;
+				heyTimer -= elapsed * PlayState.instance.playbackRate;
 				if (heyTimer <= 0) {
 					if (specialAnim && animation.curAnim.name == 'hey' || animation.curAnim.name == 'cheer') {
 						specialAnim = false;

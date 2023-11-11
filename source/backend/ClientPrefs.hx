@@ -32,7 +32,6 @@ class ClientPrefs {
 		'complexAccuracy' => false,
 		'ShowLateEarly' => false,
 		'NoteDiffTypes' => "Simple",
-		'ScoreType' => 'Kade',
 		'ShowJudgement' => true,
 		'IconBounceType' => 'Vanilla',
 		'RatingDisplay' => 'World',
