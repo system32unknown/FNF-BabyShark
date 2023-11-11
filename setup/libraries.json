@@ -15,7 +15,7 @@
         {"name":"hxCodec", "type":"haxelib", "dir":"hxCodec"},
         {"name":"hscript-improved", "type":"git", "dir":"hscript-improved",
             "ref": "master",
-        "url": "https://github.com/TheLeerName/hscript-improved"},
+        "url": "https://github.com/system32unknown/hscript-improved"},
         {"name":"discord_rpc", "type":"git", "dir":"discord_rpc",
             "ref": "master",
         "url":"https://github.com/Aidan63/linc_discord-rpc"},
