@@ -1001,7 +1001,7 @@ class FunkinLua {
 
 			var resultStr:String = Lua.tostring(lua, result);
 			if(resultStr != null && result != 0) {
-				trace(resultStr);
+				Logs.trace(resultStr, ERROR);
 				#if windows
 				utils.system.NativeUtil.showMessageBox('Error on lua script!', resultStr, utils.system.PlatformUtil.MessageBoxIcon.MSG_WARNING);
 				#else
@@ -1012,7 +1012,7 @@ class FunkinLua {
 			}
 			if(isString) scriptName = 'unknown';
 		} catch(e:Dynamic) {
-			trace(e);
+			Logs.trace(e, ERROR);
 			return;
 		}
 		call('onCreate');
