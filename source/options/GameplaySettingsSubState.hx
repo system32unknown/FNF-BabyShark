@@ -24,9 +24,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		addOption(option);
 		option.onChange = onChangeHitsoundVolume;
 
-		var option:Option = new Option('Hitsound Volume',
-			'Funny notes does \"Tick!\" when you hit them.',
-			'hitsoundVolume', 'percent');
+		var option:Option = new Option('Hitsound Volume', 'Funny notes does \"Tick!\" when you hit them.', 'hitsoundVolume', 'percent');
 		addOption(option);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
@@ -39,54 +37,42 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		addOption(new Option('Complex Accuracy', '', 'complexAccuracy', 'bool'));
 		addOption(new Option('Note Diff Type:', '', 'NoteDiffTypes', 'string', ['Psych', 'Simple']));
 		
-		var option:Option = new Option('Rating Offset',
-			'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.',
-			'ratingOffset', 'int');
+		var option:Option = new Option('Rating Offset', 'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.', 'ratingOffset', 'int');
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 20;
 		option.minValue = -30;
 		option.maxValue = 30;
 		addOption(option);
 
-		var option:Option = new Option('Epic Hit Window',
-			'Changes the amount of time you have\nfor hitting a "Epic!" in milliseconds.',
-			'epicWindow', 'int');
+		var option:Option = new Option('Epic Hit Window', 'Changes the amount of time you have\nfor hitting a "Epic!" in milliseconds.', 'epicWindow', 'int');
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 15;
 		option.minValue = 1;
 		option.maxValue = 15;
 		addOption(option);
 		
-		var option:Option = new Option('Sick Hit Window',
-			'Changes the amount of time you have\nfor hitting a "Sick!" in milliseconds.',
-			'sickWindow', 'int');
+		var option:Option = new Option('Sick Hit Window', 'Changes the amount of time you have\nfor hitting a "Sick!" in milliseconds.', 'sickWindow', 'int');
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 15;
 		option.minValue = 15;
 		option.maxValue = 45;
 		addOption(option);
 
-		var option:Option = new Option('Good Hit Window',
-			'Changes the amount of time you have\nfor hitting a "Good" in milliseconds.',
-			'goodWindow', 'int');
+		var option:Option = new Option('Good Hit Window', 'Changes the amount of time you have\nfor hitting a "Good" in milliseconds.', 'goodWindow', 'int');
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 30;
 		option.minValue = 15;
 		option.maxValue = 90;
 		addOption(option);
 
-		var option:Option = new Option('Ok Hit Window',
-			'Changes the amount of time you have\nfor hitting a "Ok" in milliseconds.',
-			'okWindow', 'int');
+		var option:Option = new Option('Ok Hit Window', 'Changes the amount of time you have\nfor hitting a "Ok" in milliseconds.', 'okWindow', 'int');
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 60;
 		option.minValue = 15;
 		option.maxValue = 135;
 		addOption(option);
 
-		var option:Option = new Option('Safe Frames',
-			'Changes how many frames you have for\nhitting a note earlier or late.',
-			'safeFrames', 'float');
+		var option:Option = new Option('Safe Frames', 'Changes how many frames you have for\nhitting a note earlier or late.', 'safeFrames', 'float');
 		option.scrollSpeed = 5;
 		option.minValue = 2;
 		option.maxValue = 10;

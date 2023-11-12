@@ -31,22 +31,9 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'ShowNPS', 'bool'));
 		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'ShowJudgement', 'bool'));
 
-		#if desktop
-		var option:Option = new Option('Discord Rich Presence',
-			"Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord",
-			'discordRPC', 'bool');
-		addOption(option);
-		#end
-
-		var option:Option = new Option('Combo Stacking',
-			"If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read",
-			'comboStacking', 'bool');
-		addOption(option);
-
-		var option:Option = new Option('Show Keybinds on Start Song',
-			"If checked, your keybinds will be shown on the strum that they correspond to when you start a song.",
-			'showKeybindsOnStart', 'bool');
-		addOption(option);
+		#if desktop addOption(new Option('Discord Rich Presence', "Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord", 'discordRPC', 'bool')); #end
+		addOption(new Option('Combo Stacking', "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read", 'comboStacking', 'bool'));
+		addOption(new Option('Show Keybinds on Start Song', "If checked, your keybinds will be shown on the strum that they correspond to when you start a song.", 'showKeybindsOnStart', 'bool'));
 
 		var option:Option = new Option('Health Bar Opacity',
 			'How much opacity should the health bar and icons be.',
@@ -58,10 +45,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.decimals = 1;
 		addOption(option);
 		
-		var option:Option = new Option('Pause Screen Song:',
-			"What song do you prefer for the Pause Screen?",
-			'pauseMusic', 'string',
-			['None', 'Breakfast', 'Tea Time']);
+		var option:Option = new Option('Pause Screen Song:', "What song do you prefer for the Pause Screen?", 'pauseMusic', 'string', ['None', 'Breakfast', 'Tea Time']);
 		addOption(option);
 		option.onChange = onChangePauseMusic;
 
