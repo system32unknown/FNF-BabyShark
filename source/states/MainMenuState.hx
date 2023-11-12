@@ -187,37 +187,42 @@ class MainMenuState extends MusicBeatState {
 			}
 
 			if (controls.ACCEPT) {
-				selectedSomethin = true;
-				FlxG.sound.play(Paths.sound('confirmMenu'), .7);
-
-				if(ClientPrefs.getPref('flashing')) FlxFlicker.flicker(magenta, 1.1, .15, false);
-
-				menuItems.forEach(function(spr:FlxSprite) {
-					if (curSelected != spr.ID) {
-						FlxTween.tween(spr, {alpha: 0}, 1.3, {
-							ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> spr.kill()
-						});
-					} else {
-						FlxFlicker.flicker(spr, 1, .06, false, false, (flick:FlxFlicker) -> {
-							var daChoice:String = optionShit[curSelected];
-							switch (daChoice) {
-								case 'story_mode': MusicBeatState.switchState(new StoryMenuState());
-								case 'freeplay': MusicBeatState.switchState(new FreeplayState());
-								#if MODS_ALLOWED
-								case 'mods': MusicBeatState.switchState(new ModsMenuState());
-								#end
-								case 'credits': MusicBeatState.switchState(new CreditsState());
-								case 'options':
-									MusicBeatState.switchState(new OptionsState());
-									OptionsState.onPlayState = false;
-									if (PlayState.SONG != null) {
-										PlayState.SONG.arrowSkin = null;
-										PlayState.SONG.splashSkin = null;
-									}
-							}
-						});
-					}
-				});
+				if (optionShit[curSelected] == 'discord') {
+					FlxG.sound.play(Paths.sound('cancelMenu'), .7);
+					FlxG.camera.shake(.05, .1);
+				} else {
+					selectedSomethin = true;
+					FlxG.sound.play(Paths.sound('confirmMenu'), .7);
+	
+					if(ClientPrefs.getPref('flashing')) FlxFlicker.flicker(magenta, 1.1, .15, false);
+	
+					menuItems.forEach(function(spr:FlxSprite) {
+						if (curSelected != spr.ID) {
+							FlxTween.tween(spr, {alpha: 0}, 1.3, {
+								ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> spr.kill()
+							});
+						} else {
+							FlxFlicker.flicker(spr, 1, .06, false, false, (flick:FlxFlicker) -> {
+								var daChoice:String = optionShit[curSelected];
+								switch (daChoice) {
+									case 'story_mode': MusicBeatState.switchState(new StoryMenuState());
+									case 'freeplay': MusicBeatState.switchState(new FreeplayState());
+									#if MODS_ALLOWED
+									case 'mods': MusicBeatState.switchState(new ModsMenuState());
+									#end
+									case 'credits': MusicBeatState.switchState(new CreditsState());
+									case 'options':
+										MusicBeatState.switchState(new OptionsState());
+										OptionsState.onPlayState = false;
+										if (PlayState.SONG != null) {
+											PlayState.SONG.arrowSkin = null;
+											PlayState.SONG.splashSkin = null;
+										}
+								}
+							});
+						}
+					});					
+				}
 			} else if (controls.justPressed('debug_1')) {
 				selectedSomethin = true;
 				MusicBeatState.switchState(new MasterEditorMenu());

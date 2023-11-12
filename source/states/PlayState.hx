@@ -2631,6 +2631,7 @@ class PlayState extends MusicBeatState {
 
 		if (!dontZoomCam) camZooming = true;
 		vocals.volume = 1;
+		health += note.hitHealth * healthGain;
 
 		if(!note.noAnimation) {
 			var char:Character = boyfriend;
@@ -2659,7 +2660,6 @@ class PlayState extends MusicBeatState {
 		if(!isSus) {
 			combo++;
 			popUpScore(note);
-			health += note.hitHealth * healthGain;
 		}
 		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('goodNoteHit', [note]);

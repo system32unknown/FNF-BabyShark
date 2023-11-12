@@ -40,8 +40,8 @@ class AdditionalClasses {
 		];
 
 		for (inc in include) Compiler.include(inc, true, exc);
-		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');
-		Compiler.addGlobalMetadata('haxe.CallStack', '@:build(hscript.UsingHandler.build())');
+		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.macros.UsingHandler.build())');
+		Compiler.addGlobalMetadata('haxe.CallStack', '@:build(hscript.macros.UsingHandler.build())');
 	}
 }
 #end

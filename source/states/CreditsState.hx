@@ -93,9 +93,7 @@ class CreditsState extends MusicBeatState {
 	var offsetThing:Float = -75;
 
 	override function create() {
-		#if discord_rpc
-		Discord.changePresence("In the Credits", null);
-		#end
+		#if discord_rpc Discord.changePresence("In the Credits", null); #end
 
 		sections = [for (title in titles) title];
 
@@ -229,9 +227,7 @@ class CreditsState extends MusicBeatState {
 		if(newColor != intendedColor) {
 			if (colorTween != null) colorTween.cancel();
 			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: (twn:FlxTween) -> colorTween = null
-			});
+			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {onComplete: (twn:FlxTween) -> colorTween = null});
 		}
 
 		var bullShit:Int = 0;
@@ -320,7 +316,7 @@ class CreditSectionState extends MusicBeatState {
 			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			optionText.changeX = false;
-			optionText.snapToPosition;
+			optionText.snapToPosition();
 			grpOptions.add(optionText);
 
 			if(isSelectable) {
@@ -373,10 +369,8 @@ class CreditSectionState extends MusicBeatState {
 		if (FlxG.sound.music.volume < 0.7)
 			FlxG.sound.music.volume = FlxMath.bound(FlxG.sound.music.volume + (.5 * elapsed), 0, .7);
 
-		if(!quitting)
-		{
-			if(creditsStuff.length > 1)
-			{
+		if(!quitting) {
+			if(creditsStuff.length > 1) {
 				var shiftMult:Int = 1;
 				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
@@ -400,15 +394,13 @@ class CreditSectionState extends MusicBeatState {
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
+					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
-					}
 				}
 			}
 
-			if(controls.ACCEPT && (creditsStuff[curSelected][3] == null || creditsStuff[curSelected][3].length > 4)) {
+			if(controls.ACCEPT && (creditsStuff[curSelected][3] == null || creditsStuff[curSelected][3].length > 4))
 				CoolUtil.browserLoad(creditsStuff[curSelected][3]);
-			}
 
 			if(controls.BACK) {
 				if(colorTween != null) colorTween.cancel();
@@ -477,9 +469,7 @@ class CreditSectionState extends MusicBeatState {
 	}
 
 	function initializeList() {
-		#if MODS_ALLOWED
-		if (cSectionisMod) initializeModList(curCSection);
-		#end
+		#if MODS_ALLOWED if (cSectionisMod) initializeModList(curCSection); #end
 
 		if (!cSectionisMod) {
 			var dyn:Dynamic = Reflect.field(CreditsState, curCSection);
@@ -495,8 +485,7 @@ class CreditSectionState extends MusicBeatState {
 				field = cast Reflect.field(CreditsState, curCSection);
 			}
 
-			for (v in field)
-				creditsStuff.push(v);
+			for (v in field) creditsStuff.push(v);
 		}
 	}
 

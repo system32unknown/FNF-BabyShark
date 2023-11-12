@@ -3,8 +3,7 @@ package states;
 import flixel.effects.FlxFlicker;
 import flixel.addons.transition.FlxTransitionableState;
 
-class FlashingState extends MusicBeatState
-{
+class FlashingState extends MusicBeatState {
 	public static var leftState:Bool = false;
 
 	var warnText:FlxText;
