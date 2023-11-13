@@ -253,7 +253,7 @@ class CreditsEditor extends MusicBeatState {
 				if(Paths.fileExists('images/credits/' + creditsStuff[i][1] + '.png', IMAGE))
 					icon = new AttachedSprite('credits/' + creditsStuff[i][1]);
 				else {
-					icon = new AttachedSprite('credits/unknown'); // If icon didnt load it will load the unknown icon.
+					icon = new AttachedSprite('credits/missing_icon'); // If icon didnt load it will load the unknown icon.
 					if(creditsStuff[i][1] == null || creditsStuff[i][1] == '') icon = new AttachedSprite('credits/unknown');
 				}
 
@@ -348,9 +348,9 @@ class CreditsEditor extends MusicBeatState {
 
 		var daStuff:Array<Array<String>> = [];
 		for(i in 0...creditsStuff.length) {
-			if(!unselectableCheck(curSelected)) {
+			if(!unselectableCheck(curSelected))
 				if(i != curSelected) daStuff.push(creditsStuff[i]);
-			} else {
+			else {
 				var shit:Bool = true;
 				if(nullCheck(curSelected - 1)) { // remove space betwen title's
 					var u:Int = curSelected - 1;
@@ -440,17 +440,9 @@ class CreditsEditor extends MusicBeatState {
 				changeSelection();
 			}
 
-			if(FlxG.keys.justPressed.SPACE) {
-				dataGoToInputs();
-			}
-
-			if(FlxG.keys.justPressed.DELETE) {
-				deleteSelItem();
-			}
-
-			if(FlxG.keys.pressed.R) {
-				cleanInputs();
-			}
+			if(FlxG.keys.justPressed.SPACE) dataGoToInputs();
+			if(FlxG.keys.justPressed.DELETE) deleteSelItem();
+			if(FlxG.keys.pressed.R) cleanInputs();
 
 			if(FlxG.keys.justPressed.ONE) addTitle();
 			if(FlxG.keys.justPressed.TWO) addCredit();
@@ -484,8 +476,7 @@ class CreditsEditor extends MusicBeatState {
 
 	var moveTween:FlxTween = null;
 	var curSelIsTitle:Bool = false;
-	function changeSelection(change:Int = 0, playSound:Bool = true)
-	{
+	function changeSelection(change:Int = 0, playSound:Bool = true) {
 		if(change != 0 && playSound) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		do {
 			curSelected = FlxMath.wrap(curSelected + change, 0, creditsStuff.length - 1);
@@ -533,9 +524,7 @@ class CreditsEditor extends MusicBeatState {
 		descBox.updateHitbox();
 	}
 
-	function unselectableCheck(num:Int):Bool {
-		return creditsStuff[num].length <= 1;
-	}
+	function unselectableCheck(num:Int):Bool return creditsStuff[num].length <= 1;
 	function nullCheck(num:Int):Bool {
 		if(creditsStuff[num].length <= 1 && creditsStuff[num][0].length <= 0) return true;
 		return false;
@@ -543,9 +532,7 @@ class CreditsEditor extends MusicBeatState {
 
 	function getCurrentBGColor() {
 		var bgColor:String = creditsStuff[curSelected][4];
-		if(!bgColor.startsWith('0x')) {
-			bgColor = '0xFF' + bgColor;
-		}
+		if(!bgColor.startsWith('0x')) bgColor = '0xFF' + bgColor;
 		return Std.parseInt(bgColor);
 	}
 

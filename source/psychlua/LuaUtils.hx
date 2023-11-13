@@ -85,8 +85,7 @@ class LuaUtils {
 		return Reflect.getProperty(instance, variable);
 	}
 
-	public static function isMap(variable:Dynamic)
-	{
+	public static function isMap(variable:Dynamic) {
 		if(variable.exists != null && variable.keyValueIterator != null) return true;
 		return false;
 	}
@@ -187,7 +186,7 @@ class LuaUtils {
 		if(obj != null && obj.animation != null) {
 			if(indices == null) indices = [0];
 			else if(Std.isOfType(indices, String)) {
-				var strIndices:Array<String> = cast (indices, String).trim().split(',');
+				var strIndices:Array<String> = cast(indices, String).trim().split(',');
 				var myIndices:Array<Int> = [for (i in 0...strIndices.length) Std.parseInt(strIndices[i])];
 				indices = myIndices;
 			}
