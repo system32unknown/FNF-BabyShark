@@ -250,13 +250,14 @@ class CreditsEditor extends MusicBeatState {
 					Mods.currentModDirectory = creditsStuff[i][5];
 
 				var icon:AttachedSprite;
-				if(Paths.fileExists('images/credits/' + creditsStuff[i][1] + '.png', IMAGE))
-					icon = new AttachedSprite('credits/' + creditsStuff[i][1]);
+				if(Paths.fileExists('images/credits/${creditsStuff[i][1]}.png', IMAGE))
+					icon = new AttachedSprite('credits/${creditsStuff[i][1]}');
 				else {
 					icon = new AttachedSprite('credits/missing_icon'); // If icon didnt load it will load the unknown icon.
-					if(creditsStuff[i][1] == null || creditsStuff[i][1] == '') icon = new AttachedSprite('credits/unknown');
+					if(creditsStuff[i][1] == null || creditsStuff[i][1] == '') icon = new AttachedSprite('credits/missing_icon');
 				}
 
+				if(creditsStuff[i][1].endsWith('-pixel')) icon.antialiasing = false;
 				icon.addPoint.x = optionText.width + 10;
 				icon.sprTracker = optionText;
 
