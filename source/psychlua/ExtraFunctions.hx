@@ -1,6 +1,6 @@
 package psychlua;
 
-#if MODS_ALLOWED import tjson.TJSON as Json; #end
+#if MODS_ALLOWED import haxe.Json; #end
 import flixel.util.FlxSave;
 import openfl.utils.Assets;
 

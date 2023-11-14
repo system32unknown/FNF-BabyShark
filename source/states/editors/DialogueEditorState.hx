@@ -10,7 +10,7 @@ import openfl.net.FileReference;
 import openfl.net.FileFilter;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-import tjson.TJSON as Json;
+import haxe.Json;
 import cutscenes.DialogueBoxPsych;
 import cutscenes.DialogueCharacter;
 import objects.TypedAlphabet;

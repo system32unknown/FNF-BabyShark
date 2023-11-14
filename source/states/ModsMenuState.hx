@@ -4,7 +4,7 @@ import backend.Mods;
 
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
-import tjson.TJSON as Json;
+import haxe.Json;
 
 import flixel.util.FlxSpriteUtil;
 import options.ModSettingsSubState;

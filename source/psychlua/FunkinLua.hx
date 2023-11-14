@@ -12,7 +12,7 @@ import backend.Song;
 import objects.StrumNote;
 import utils.system.PlatformUtil;
 import data.WeekData;
-import tjson.TJSON as Json;
+import haxe.Json;
 
 class FunkinLua {
 	public static var Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";

@@ -2,7 +2,7 @@ package backend;
 
 import backend.Section.SwagSection;
 import data.StageData;
-import tjson.TJSON as Json;
+import haxe.Json;
 import lime.utils.Assets;
 
 typedef SwagSong = {

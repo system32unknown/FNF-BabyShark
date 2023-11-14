@@ -11,7 +11,6 @@
         {"name": "flixel-ui", "type": "git", "dir":"flixel-ui",
             "ref": "dev",
         "url": "https://github.com/HaxeFlixel/flixel-ui"},
-        {"name":"tjson", "type":"haxelib", "dir":"tjson"},
         {"name":"hxCodec", "type":"haxelib", "dir":"hxCodec"},
         {"name":"hscript-improved", "type":"git", "dir":"hscript-improved",
             "ref": "master",

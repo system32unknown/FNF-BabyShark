@@ -1,6 +1,6 @@
 package cutscenes;
 
-import tjson.TJSON as Json;
+import haxe.Json;
 
 typedef DialogueCharacterFile = {
 	var image:String;

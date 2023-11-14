@@ -1,6 +1,6 @@
 package objects;
 
-import tjson.TJSON as Json;
+import haxe.Json;
 
 typedef MenuCharacterFile = {
 	var image:String;

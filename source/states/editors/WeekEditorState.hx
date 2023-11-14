@@ -14,7 +14,7 @@ import openfl.net.FileFilter;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import lime.system.Clipboard;
-import tjson.TJSON as Json;
+import haxe.Json;
 import data.WeekData;
 import states.TitleState;
 import objects.HealthIcon;

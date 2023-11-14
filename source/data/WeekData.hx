@@ -1,7 +1,7 @@
 package data;
 
 import haxe.io.Path;
-import tjson.TJSON as Json;
+import haxe.Json;
 import openfl.utils.Assets as OpenFlAssets;
 
 typedef WeekFile = {

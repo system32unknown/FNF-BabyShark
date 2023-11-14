@@ -4,7 +4,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxFrame;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxGradient;
-import tjson.TJSON as Json;
+import haxe.Json;
 import backend.Highscore;
 import states.MainMenuState;
 

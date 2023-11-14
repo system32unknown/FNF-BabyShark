@@ -33,7 +33,7 @@ import openfl.media.Sound;
 import lime.media.AudioBuffer;
 import haxe.io.Bytes;
 import haxe.io.Path;
-import tjson.TJSON as Json;
+import haxe.Json;
 
 class ChartingState extends MusicBeatState {
 	var songStarted:Bool = false;

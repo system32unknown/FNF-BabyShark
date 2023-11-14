@@ -69,7 +69,6 @@
 	<haxelib name="flixel-ui"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="flxanimate"/>
-	<haxelib name="tjson"/>
 	<haxelib name="hscript-improved"/>
 
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>

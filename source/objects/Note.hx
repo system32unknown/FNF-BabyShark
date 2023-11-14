@@ -1,5 +1,6 @@
 package objects;
 
+import backend.animation.PsychAnimationController;
 import flixel.math.FlxRect;
 import shaders.ColorSwap;
 import data.EkData;
@@ -167,6 +168,8 @@ class Note extends FlxSprite {
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?createdFrom:Dynamic = null) {
 		super();
+
+		animation = new PsychAnimationController(this);
 
 		antialiasing = ClientPrefs.getPref('Antialiasing');
 		if(createdFrom == null) createdFrom = PlayState.instance;

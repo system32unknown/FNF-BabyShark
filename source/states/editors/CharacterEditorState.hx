@@ -15,7 +15,7 @@ import flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-import tjson.TJSON as Json;
+import haxe.Json;
 
 import objects.Character;
 import objects.HealthIcon;
