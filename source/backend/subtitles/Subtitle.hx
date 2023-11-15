@@ -17,15 +17,15 @@ class Subtitle extends FlxTypeText {
         antialiasing = true;
         borderSize = 2;
 
-        if (properties.centerScreen)
-            screenCenter(properties.screenCenter);
-        
+        if (properties.centerScreen) screenCenter(properties.screenCenter);
         start(properties.typeSpeed, false, false, [], () -> new FlxTimer().start(showTime, (timer:FlxTimer) -> FlxTween.tween(this, {alpha: 0}, .5, {onComplete: (tween:FlxTween) -> finish()})));
     }
+
     public function finish() {
         if (onSubComplete != null) onSubComplete();
         manager.onSubtitleComplete(this);
     }
+
     function init(properties:SubtitleProperties):SubtitleProperties {
         if (properties == null) properties = {};
         
@@ -36,7 +36,7 @@ class Subtitle extends FlxTypeText {
         if (properties.centerScreen == null) properties.centerScreen = true;
         if (properties.screenCenter == null) properties.screenCenter = FlxAxes.XY;
         if (properties.sounds == null) properties.sounds = null;
-        if (properties.fonts == null) properties.fonts = "Comic Sans MS Bold";
+        if (properties.fonts == null) properties.fonts = Paths.font("comic.ttf");
         return properties;
     }
 }

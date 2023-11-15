@@ -161,8 +161,7 @@ class ChartingState extends MusicBeatState {
 				gfVersion: 'gf',
 				speed: 1,
 				stage: 'stage',
-				mania: EK.defaultMania,
-				extraText: null
+				mania: EK.defaultMania
 			};
 			addSection();
 			PlayState.SONG = _song;
@@ -326,7 +325,6 @@ class ChartingState extends MusicBeatState {
 	var playSoundBf:FlxUICheckBox = null;
 	var playSoundDad:FlxUICheckBox = null;
 	var UI_songTitle:FlxUIInputText;
-	var extraInputText:FlxUIInputText;
 	var stageDropDown:FlxUIDropDownMenu;
 	var difficultyDropDown:FlxUIDropDownMenu;
 	var sliderRate:FlxUISlider;
@@ -537,9 +535,6 @@ class ChartingState extends MusicBeatState {
 		difficultyDropDown.selectedLabel = currentDifficultyName;
 		blockPressWhileScrolling.push(difficultyDropDown);
 
-		extraInputText = new FlxUIInputText(difficultyDropDown.x, player2DropDown.y - 2, Math.floor(difficultyDropDown.width), _song.extraText, 8);
-		blockPressWhileTypingOn.push(extraInputText);
-
 		var stepperMania:FlxUINumericStepper = new FlxUINumericStepper(100, stepperSpeed.y, 1, 3, EK.minMania, EK.maxMania, 1);
 		stepperMania.value = _song.mania;
 		stepperMania.name = 'song_mania';
@@ -562,7 +557,6 @@ class ChartingState extends MusicBeatState {
 		tab_group_song.add(stepperBPM);
 		tab_group_song.add(stepperSpeed);
 		tab_group_song.add(stepperMania);
-		tab_group_song.add(extraInputText);
 		tab_group_song.add(new FlxText(stepperBPM.x, stepperBPM.y - 15, 0, 'Song BPM:'));
 		tab_group_song.add(new FlxText(stepperSpeed.x, stepperSpeed.y - 15, 0, 'Song Speed:'));
 		tab_group_song.add(new FlxText(stepperMania.x, stepperMania.y - 15, 0, 'Mania:'));
@@ -571,7 +565,6 @@ class ChartingState extends MusicBeatState {
 		tab_group_song.add(new FlxText(player1DropDown.x, player1DropDown.y - 15, 0, '(P1) BF:'));
 		tab_group_song.add(new FlxText(difficultyDropDown.x, difficultyDropDown.y - 15, 0, 'Difficulty:'));
 		tab_group_song.add(new FlxText(stageDropDown.x, stageDropDown.y - 15, 0, 'Stage:'));
-		tab_group_song.add(new FlxText(extraInputText.x, extraInputText.y - 15, 0, 'Extra Text:'));
 		tab_group_song.add(player2DropDown);
 		tab_group_song.add(gfVersionDropDown);
 		tab_group_song.add(player1DropDown);
@@ -1500,10 +1493,6 @@ class ChartingState extends MusicBeatState {
 	override function update(elapsed:Float) {
 		curStep = recalculateSteps();
 		camPos.x = -80 + (GRID_SIZE * (EK.strums(_song.mania) + 1));
-
-		if (extraInputText.text == null || extraInputText.text ==  '')
-			_song.extraText = null;
-		else _song.extraText = extraInputText.text;
 
 		if (FlxG.sound.music.time < 0) {
 			FlxG.sound.music.pause();

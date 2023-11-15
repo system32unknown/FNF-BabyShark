@@ -31,8 +31,7 @@ class Highscore {
 		}
 	}
 
-	public static function saveWeekScore(week:String, score:Int = 0, ?diff:Int = 0):Void
-	{
+	public static function saveWeekScore(week:String, score:Int = 0, ?diff:Int = 0):Void {
 		var daWeek:String = formatSong(week, diff);
 
 		if (weekScores.exists(daWeek))

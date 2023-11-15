@@ -49,9 +49,7 @@ class MainMenuState extends MusicBeatState {
 	var curOptDesc:FlxText;
 
 	override function create() {
-		#if MODS_ALLOWED
-		Mods.pushGlobalMods();
-		#end
+		#if MODS_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();
 
 		#if discord_rpc

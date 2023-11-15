@@ -176,7 +176,6 @@ class PlayState extends MusicBeatState {
 	
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
-	var extraTxt:FlxText;
 
 	var msTimingTween:FlxTween;
 	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
@@ -533,17 +532,6 @@ class PlayState extends MusicBeatState {
 		songNameTxt.y = FlxG.height - songNameTxt.height;
 		songNameTxt.visible = !hideHud;
 		uiGroup.add(songNameTxt);
-
-		extraTxt = new FlxText(2, songNameTxt.y, 0, SONG.extraText != null ? SONG.extraText.trim() : '', 16);
-		extraTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
-		extraTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-		extraTxt.scrollFactor.set();
-		extraTxt.visible = !hideHud;
-		extraTxt.camera = camHUD;
-		uiGroup.add(extraTxt);
-
-		if (extraTxt.text != null && extraTxt.text != "")
-			songNameTxt.y -= 20;
 
 		uiGroup.camera = camHUD;
 		noteGroup.camera = camHUD;
@@ -1955,16 +1943,6 @@ class PlayState extends MusicBeatState {
 				}
 				reloadHealthBarColors();
 
-			case 'Extra Text Change':
-				if (extraTxt.text != null)
-					if (songNameTxt.y != songNameTxt.y - 20)
-						songNameTxt.y -= 20;
-
-				extraTxt.text = value1;
-				if(extraTxt.text == null || extraTxt.text == "")
-					songNameTxt.y = FlxG.height - songNameTxt.height;
-				else songNameTxt.y = (FlxG.height - songNameTxt.height) - 20;
-
 			case 'Change Scroll Speed':
 				if (songSpeedType != "constant") {
 					if(flValue1 == null) flValue1 = 1;
@@ -2043,11 +2021,8 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function tweenCamZoom(zoom:Float = 1) {
-		if (cameraTwn == null && camGame.zoom != zoom) {
-			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (Conductor.stepCrochet * 4 / 1000) * playbackRate, {ease: FlxEase.elasticInOut, 
-				onComplete: (_) -> cameraTwn = null
-			});
-		}
+		if (cameraTwn == null && camGame.zoom != zoom)
+			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (Conductor.stepCrochet * 4 / 1000) * playbackRate, {ease: FlxEase.elasticInOut, onComplete: (_) -> cameraTwn = null});
 	}
 
 	public function finishSong(?ignoreNoteOffset:Bool = false):Void {
@@ -2061,11 +2036,9 @@ class PlayState extends MusicBeatState {
 
 	public var transitioning = false;
 	public function endSong() {
-		//Should kill you if you tried to cheat
-		if(!startingSong) {
-			notes.forEach((daNote:Note) -> if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= 0.05 * healthLoss);
-			for (daNote in unspawnNotes) if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= 0.05 * healthLoss;
-
+		if(!startingSong) { //Should kill you if you tried to cheat
+			notes.forEach((daNote:Note) -> if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= .05 * healthLoss);
+			for (daNote in unspawnNotes) if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= .05 * healthLoss;
 			if(doDeathCheck()) return false;
 		}
 
@@ -2121,7 +2094,6 @@ class PlayState extends MusicBeatState {
 					changedDifficulty = false;
 				} else {
 					var difficulty:String = Difficulty.getFilePath();
-
 					FlxTransitionableState.skipNextTransIn = true;
 					FlxTransitionableState.skipNextTransOut = true;
 					prevCamFollow = camFollow;

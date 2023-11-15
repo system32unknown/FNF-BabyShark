@@ -6,7 +6,5 @@ class SubtitleManager extends FlxTypedGroup<Subtitle> {
 		subtitle.manager = this;
 		add(subtitle);
 	}
-	public function onSubtitleComplete(subtitle:Subtitle) {
-		remove(subtitle);
-	}
+	public function onSubtitleComplete(subtitle:Subtitle) remove(subtitle);
 }

@@ -18,13 +18,13 @@ typedef SwagSong = {
 	var gfVersion:String;
 	var stage:String;
 	
-	@:optional var extraText:String;
 	@:optional var mania:Int;
 
 	@:optional var gameOverChar:String;
 	@:optional var gameOverSound:String;
 	@:optional var gameOverLoop:String;
 	@:optional var gameOverEnd:String;
+	
 	@:optional var arrowSkin:String;
 	@:optional var splashSkin:String;
 }

@@ -179,7 +179,8 @@ class HScript extends Interp {
 	function getDefaultPreprocessors():Map<String, Dynamic> {
 		var defines = macros.DefinesMacro.defines;
 		defines.set("ALTER_ENGINE", true);
-		defines.set("ALTER_VER", lime.app.Application.current.meta.get('version'));
+		defines.set("ALTER_VER", Main.engineVer.version.trim());
+		defines.set("ALTER_APP_VER", lime.app.Application.current.meta.get('version'));
 		defines.set("ALTER_COMMIT", macros.GitCommitMacro.commitNumber);
 		defines.set("ALTER_HASH", macros.GitCommitMacro.commitHash);
 		return defines;
