@@ -4,7 +4,6 @@ package backend;
 import sys.net.Host;
 import sys.net.Socket as SysSocket;
 
-@:keep
 class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 	public var socket:SysSocket;
 
