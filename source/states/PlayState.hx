@@ -2163,6 +2163,8 @@ class PlayState extends MusicBeatState {
 		if (updateScoreText) scoreTxt.text = tempText;
 	}
 
+	public var ratingAcc:FlxPoint = FlxPoint.get();
+	public var ratingVel:FlxPoint = FlxPoint.get();
 	function popUpScore(note:Note):Void {
 		if (note == null) return;
 
@@ -2217,8 +2219,8 @@ class PlayState extends MusicBeatState {
 			rating.screenCenter();
 			rating.x = placement - 40 + comboOffset[0][0];
 			rating.y -= 60 - comboOffset[0][1];
-			rating.acceleration.y = 550 * playbackRate * playbackRate;
-			rating.velocity.subtract(FlxG.random.int(0, 10) * playbackRate, FlxG.random.int(140, 175) * playbackRate);
+			rating.acceleration.set(ratingAcc.x * playbackRate * playbackRate, 550 * playbackRate * playbackRate + ratingAcc.y);
+			rating.velocity.subtract(FlxG.random.int(0, 10) * playbackRate + ratingVel.x, FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
 			rating.visible = !hideHud && showRating;
 			rating.antialiasing = antialias;
 		
@@ -2227,8 +2229,8 @@ class PlayState extends MusicBeatState {
 			timing.screenCenter();
 			timing.x = placement - 130 + comboOffset[3][0];
 			timing.y -= comboOffset[3][1];
-			timing.acceleration.y = 550 * playbackRate * playbackRate;
-			timing.velocity.subtract(FlxG.random.int(0, 10) * playbackRate, FlxG.random.int(140, 175) * playbackRate);
+			timing.acceleration.set(ratingAcc.x * playbackRate * playbackRate, 550 * playbackRate * playbackRate + ratingAcc.y);
+			timing.velocity.subtract(FlxG.random.int(0, 10) * playbackRate + ratingVel.x, FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
 			timing.visible = !hideHud && ClientPrefs.getPref('ShowLateEarly');
 			timing.antialiasing = antialias;
 		
@@ -2246,9 +2248,9 @@ class PlayState extends MusicBeatState {
 			comboSpr.screenCenter();
 			comboSpr.x = placement + comboOffset[2][0];
 			comboSpr.y -= comboOffset[2][1];
-			comboSpr.acceleration.y = FlxG.random.int(200, 300) * playbackRate * playbackRate;
-			comboSpr.velocity.y -= FlxG.random.int(140, 160) * playbackRate;
-			comboSpr.velocity.x += FlxG.random.int(1, 10) * playbackRate;
+			comboSpr.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate + ratingAcc.y);
+			comboSpr.velocity.y -= FlxG.random.int(140, 160) * playbackRate + ratingVel.y;
+			comboSpr.velocity.x += FlxG.random.int(1, 10) * playbackRate - ratingVel.x;
 			comboSpr.visible = showCombo && !hideHud;
 			comboSpr.antialiasing = antialias;
 		
@@ -2284,14 +2286,13 @@ class PlayState extends MusicBeatState {
 				numScore.x = placement + (43 * daLoop) - 90 + comboOffset[1][0];
 				numScore.y += 80 - comboOffset[1][1];
 			
-				if (!isPixelStage)
-					numScore.setGraphicSize(Std.int(numScore.width * 0.5));
+				if (!isPixelStage) numScore.setGraphicSize(Std.int(numScore.width * .5));
 				else numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
 				numScore.updateHitbox();
 			
-				numScore.acceleration.y = FlxG.random.int(200, 300) * playbackRate * playbackRate;
-				numScore.velocity.y -= FlxG.random.int(140, 160) * playbackRate;
-				numScore.velocity.x = FlxG.random.float(-5, 5) * playbackRate;
+				numScore.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate + ratingAcc.y);
+				numScore.velocity.y -= FlxG.random.int(140, 160) * playbackRate + ratingVel.y;
+				numScore.velocity.x = FlxG.random.float(-5, 5) * playbackRate - ratingVel.x;
 				numScore.visible = !hideHud;
 				numScore.antialiasing = antialias;
 			
@@ -2300,7 +2301,6 @@ class PlayState extends MusicBeatState {
 				if(showComboNum) comboGroup.add(numScore);
 			
 				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (tween:FlxTween) -> {remove(numScore, true); numScore.destroy();}, startDelay: Conductor.crochet * .002 / playbackRate});
-			
 				daLoop++;
 			}
 		

@@ -345,9 +345,7 @@ class ChartingState extends MusicBeatState {
 			#if desktop updateWaveform(); #end
 		});
 
-		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function() {
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {loadJson(_song.song.toLowerCase());}, null, ignoreWarnings));
-		});
+		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, "Reload JSON", () -> openSubState(new Prompt('This action will clear current progress.\n\nProceed?', () -> loadJson(_song.song.toLowerCase()), null, ignoreWarnings)));
 
 		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, 'Load Autosave', function() {
 			PlayState.SONG = Song.parseJSONshit(FlxG.save.data.autosave);
@@ -671,7 +669,7 @@ class ChartingState extends MusicBeatState {
 
 						if(currentSectionSelected != 0)
 							if((currentSectionSelected == 1 ? copiedNote[1] <= EK.keys(_song.mania) : copiedNote[1] >= _song.mania))
-								copiedNote[1] -= 4;
+								copiedNote[1] -= EK.keys(_song.mania);
 
 						_song.notes[curSec].sectionNotes.push(copiedNote);
 					}
@@ -716,9 +714,7 @@ class ChartingState extends MusicBeatState {
 		clearSectionButton.label.color = FlxColor.WHITE;
 		
 		var sectionListItems:Array<String> = ['Both', 'Section 1', 'Section 2'];		
-		sectionSelectedDropDown = new FlxUIDropDownMenu(150, 100, FlxUIDropDownMenu.makeStrIdLabelArray(sectionListItems, true), function(selected:String) {
-			currentSectionSelected = Std.parseInt(selected);
-		});
+		sectionSelectedDropDown = new FlxUIDropDownMenu(150, 100, FlxUIDropDownMenu.makeStrIdLabelArray(sectionListItems, true), (selected:String) -> currentSectionSelected = Std.parseInt(selected));
 
 		check_notesSec = new FlxUICheckBox(10, clearSectionButton.y + 25, null, null, "Notes", 100);
 		check_notesSec.checked = true;
@@ -1080,18 +1076,14 @@ class ChartingState extends MusicBeatState {
 		setAllLabelsOffset(addButton, -30, 0);
 		tab_group_event.add(addButton);
 
-		var moveLeftButton:FlxButton = new FlxButton(addButton.x + addButton.width + 20, addButton.y, '<', function() {
-			changeEventSelected(-1);
-		});
+		var moveLeftButton:FlxButton = new FlxButton(addButton.x + addButton.width + 20, addButton.y, '<', () -> changeEventSelected(-1));
 		moveLeftButton.setGraphicSize(Std.int(addButton.width), Std.int(addButton.height));
 		moveLeftButton.updateHitbox();
 		moveLeftButton.label.size = 12;
 		setAllLabelsOffset(moveLeftButton, -30, 0);
 		tab_group_event.add(moveLeftButton);
 
-		var moveRightButton:FlxButton = new FlxButton(moveLeftButton.x + moveLeftButton.width + 10, moveLeftButton.y, '>', function() {
-			changeEventSelected(1);
-		});
+		var moveRightButton:FlxButton = new FlxButton(moveLeftButton.x + moveLeftButton.width + 10, moveLeftButton.y, '>', () -> changeEventSelected(1));
 		moveRightButton.setGraphicSize(Std.int(moveLeftButton.width), Std.int(moveLeftButton.height));
 		moveRightButton.updateHitbox();
 		moveRightButton.label.size = 12;
@@ -1213,21 +1205,15 @@ class ChartingState extends MusicBeatState {
 			}
 		};
 
-		playSoundBf = new FlxUICheckBox(check_mute_inst.x, check_mute_vocals.y + 30, null, null, 'Play Sound (Boyfriend notes)', 100, function() {
-			FlxG.save.data.chart_playSoundBf = playSoundBf.checked;
-		});
+		playSoundBf = new FlxUICheckBox(check_mute_inst.x, check_mute_vocals.y + 30, null, null, 'Play Sound (Boyfriend notes)', 100, () -> FlxG.save.data.chart_playSoundBf = playSoundBf.checked);
 		if (FlxG.save.data.chart_playSoundBf == null) FlxG.save.data.chart_playSoundBf = false;
 		playSoundBf.checked = FlxG.save.data.chart_playSoundBf;
 
-		playSoundDad = new FlxUICheckBox(check_mute_inst.x + 120, playSoundBf.y, null, null, 'Play Sound (Opponent notes)', 100, function() {
-			FlxG.save.data.chart_playSoundDad = playSoundDad.checked;
-		});
+		playSoundDad = new FlxUICheckBox(check_mute_inst.x + 120, playSoundBf.y, null, null, 'Play Sound (Opponent notes)', 100, () -> FlxG.save.data.chart_playSoundDad = playSoundDad.checked);
 		if (FlxG.save.data.chart_playSoundDad == null) FlxG.save.data.chart_playSoundDad = false;
 		playSoundDad.checked = FlxG.save.data.chart_playSoundDad;
 
-		metronome = new FlxUICheckBox(10, 15, null, null, "Metronome Enabled", 100, function() {
-			FlxG.save.data.chart_metronome = metronome.checked;
-		});
+		metronome = new FlxUICheckBox(10, 15, null, null, "Metronome Enabled", 100, () -> FlxG.save.data.chart_metronome = metronome.checked);
 		if (FlxG.save.data.chart_metronome == null) FlxG.save.data.chart_metronome = false;
 		metronome.checked = FlxG.save.data.chart_metronome;
 
@@ -1236,9 +1222,7 @@ class ChartingState extends MusicBeatState {
 		blockPressWhileTypingOnStepper.push(metronomeStepper);
 		blockPressWhileTypingOnStepper.push(metronomeOffsetStepper);
 
-		disableAutoScrolling = new FlxUICheckBox(metronome.x + 120, metronome.y, null, null, "Disable Autoscroll (Not Recommended)", 120, function() {
-			FlxG.save.data.chart_noAutoScroll = disableAutoScrolling.checked;
-		});
+		disableAutoScrolling = new FlxUICheckBox(metronome.x + 120, metronome.y, null, null, "Disable Autoscroll (Not Recommended)", 120, () -> FlxG.save.data.chart_noAutoScroll = disableAutoScrolling.checked);
 		if (FlxG.save.data.chart_noAutoScroll == null) FlxG.save.data.chart_noAutoScroll = false;
 		disableAutoScrolling.checked = FlxG.save.data.chart_noAutoScroll;
 

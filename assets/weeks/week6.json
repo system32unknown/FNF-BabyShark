@@ -1,0 +1,66 @@
+{
+	"songs": [
+		[
+			"party",
+			"sharkib",
+			[
+				230,
+				157,
+				254
+			]
+		],
+		[
+			"reunion",
+			"duos",
+			[
+				246,
+				206,
+				28
+			]
+		],
+		[
+			"shadow",
+			"turbo",
+			[
+				111,
+				154,
+				185
+			]
+		],
+		[
+			"shy",
+			"milo",
+			[
+				3,
+				153,
+				244
+			]
+		],
+		[
+			"crossover",
+			"sharkbill",
+			[
+				61,
+				107,
+				178
+			]
+		]
+	],
+	"sections": [
+		"Vanilla"
+	],
+	"hiddenUntilUnlocked": false,
+	"hideFreeplay": false,
+	"weekBackground": "stage",
+	"difficulties": "",
+	"weekCharacters": [
+		"",
+		"bs",
+		""
+	],
+	"storyName": "Your New Week",
+	"weekName": "Custom Week",
+	"hideStoryMode": false,
+	"weekBefore": "tutorial",
+	"startUnlocked": true
+}

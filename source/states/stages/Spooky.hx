@@ -48,17 +48,9 @@ class Spooky extends BaseStage
 		lightningStrikeBeat = curBeat;
 		lightningOffset = FlxG.random.int(8, 24);
 
-		if(boyfriend.animOffsets.exists('scared')) {
-			boyfriend.playAnim('scared', true);
-		}
-
-		if(dad.animOffsets.exists('scared')) {
-			dad.playAnim('scared', true);
-		}
-
-		if(gf != null && gf.animOffsets.exists('scared')) {
-			gf.playAnim('scared', true);
-		}
+		if(boyfriend.animOffsets.exists('scared')) boyfriend.playAnim('scared', true);
+		if(dad.animOffsets.exists('scared')) dad.playAnim('scared', true);
+		if(gf != null && gf.animOffsets.exists('scared')) gf.playAnim('scared', true);
 
 		if(ClientPrefs.getPref('camZooms')) {
 			FlxG.camera.zoom += 0.015;
@@ -81,7 +73,7 @@ class Spooky extends BaseStage
 		inCutscene = true;
 		camHUD.visible = false;
 		
-		FlxG.camera.focusOn(new FlxPoint(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100));
+		FlxG.camera.focusOn(FlxPoint.weak(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100));
 
 		// character anims
 		FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2));

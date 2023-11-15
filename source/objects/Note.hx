@@ -162,7 +162,7 @@ class Note extends FlxSprite {
 			if (hitsound != 'hitsound' && ClientPrefs.getPref('hitsoundVolume') > 0) Paths.sound(hitsound); //precache new sound for being idiot-proof
 			noteType = value;
 		}
-		noteSplashHSB = [colorSwap.hue, colorSwap.saturation, colorSwap.brightness];
+		if(colorSwap != null) noteSplashHSB = [colorSwap.hue, colorSwap.saturation, colorSwap.brightness];
 		return value;
 	}
 
@@ -374,8 +374,7 @@ class Note extends FlxSprite {
 		if(copyY) {
 			y = strumY + offsetY + correctionOffset + Math.sin(angleDir) * distance;
 			if(myStrum.downScroll && isSustainNote) {
-				if(PlayState.isPixelStage)
-					y -= PlayState.daPixelZoom * 9.5;
+				if(PlayState.isPixelStage) y -= PlayState.daPixelZoom * 9.5;
 				y -= (frameHeight * scale.y) - (Note.swagWidth / 2);
 			}
 		}
@@ -403,19 +402,13 @@ class Note extends FlxSprite {
 	}
 
 	override function destroy() {
-		shader = null;
-		colorSwap = null;
-		_lastValidChecked = '';
 		super.destroy();
+		_lastValidChecked = '';
 	}
 
-	@:noCompletion
-	override function set_clipRect(rect:FlxRect):FlxRect {
+	@:noCompletion override function set_clipRect(rect:FlxRect):FlxRect {
 		clipRect = rect;
-
-		if (frames != null)
-			frame = frames.frames[animation.frameIndex];
-
+		if (frames != null) frame = frames.frames[animation.frameIndex];
 		return rect;
 	}
 }

@@ -132,13 +132,9 @@ class BaseStage extends FlxBasic {
 	inline function get_isStoryMode() return PlayState.isStoryMode;
 	inline function get_seenCutscene() return PlayState.seenCutscene;
 	inline function get_inCutscene() return game.inCutscene;
-	inline function set_inCutscene(value:Bool) {
-		return game.inCutscene = value;
-	}
+	inline function set_inCutscene(value:Bool) return game.inCutscene = value;
 	inline function get_canPause() return game.canPause;
-	inline function set_canPause(value:Bool) {
-		return game.canPause = value;
-	}
+	inline function set_canPause(value:Bool) return game.canPause = value;
 	inline function get_members() return game.members;
 	inline function set_game(value:MusicBeatState) {
 		onPlayState = (Std.isOfType(value, PlayState));

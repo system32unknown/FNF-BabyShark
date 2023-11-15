@@ -73,9 +73,7 @@ class StageWeek1 extends BaseStage {
 						if(val > 2) who = boyfriend;
 						//2 only targets dad
 						dadbattleLight.alpha = 0;
-						new FlxTimer().start(0.12, function(tmr:FlxTimer) {
-							dadbattleLight.alpha = 0.375;
-						});
+						new FlxTimer().start(0.12, (tmr:FlxTimer) -> dadbattleLight.alpha = 0.375);
 						dadbattleLight.setPosition(who.getGraphicMidpoint().x - dadbattleLight.width / 2, who.y + who.height - dadbattleLight.height + 50);
 						FlxTween.tween(dadbattleFog, {alpha: 0.7}, 1.5, {ease: FlxEase.quadInOut});
 
