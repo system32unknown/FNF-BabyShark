@@ -21,7 +21,7 @@ class AdditionalClasses {
 			#if neko "neko", #end
 			#if sys "sys", #end
 			// BASE PATH LIBRARIES THAT DOESN'T INCLUDE
-			"shaders", "backend.subtitles",
+			"backend", "shaders", "objects", "backend.subtitles",
 			// BASE HAXE
 			"DateTools", "EReg", "Lambda", "StringBuf"
 		];

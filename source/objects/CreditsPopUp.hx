@@ -8,7 +8,6 @@ typedef SongHeading = {
 	var ?animation:Animation;
 }
 
-@:keep
 class CreditsPopUp extends FlxSpriteGroup {
 	public var bg:FlxSprite;
 	public var funnyText:FlxText;
