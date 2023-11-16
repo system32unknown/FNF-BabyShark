@@ -847,15 +847,11 @@ class FunkinLua {
 			game.healthBar.setColors(left_color, right_color);
 		});
 		set("setTimeBarColors", function(left:String, right:String) {
-			game.timeBar.createFilledBar(CoolUtil.colorFromString(left), CoolUtil.colorFromString(right));
-			game.timeBar.updateBar();
-		});
-		set("setTimeBarColorsWithGradient", function(leftHex:Array<String>, rightHex:Array<String>) {
-			var left:Array<FlxColor> = [CoolUtil.colorFromString(leftHex[0]), CoolUtil.colorFromString(leftHex[1])];
-			var right:Array<FlxColor> = [CoolUtil.colorFromString(rightHex[0]), CoolUtil.colorFromString(rightHex[1])];
-
-			game.timeBar.createGradientBar(left, right, 1, 90);
-			game.timeBar.updateBar();
+			var left_color:Null<FlxColor> = null;
+			var right_color:Null<FlxColor> = null;
+			if (left != null && left != '') left_color = CoolUtil.colorFromString(left);
+			if (right != null && right != '') right_color = CoolUtil.colorFromString(right);
+			game.timeBar.setColors(left_color, right_color);
 		});
 
 		set("setObjectCamera", function(obj:String, camera:String = '') {
