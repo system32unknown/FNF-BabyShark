@@ -130,8 +130,7 @@ class PlayState extends MusicBeatState {
 	public var healthBar:Bar;
 	var songPercent:Float = 0;
 
-	var timeBarBG:AttachedSprite;
-	public var timeBar:FlxBar;
+	public var timeBar:Bar;
 	public static var timeToStart:Float = 0;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
@@ -419,29 +418,16 @@ class PlayState extends MusicBeatState {
 		timeTxt.alpha = 0;
 		timeTxt.visible = updateTime = showTime;
 		if(downScroll) timeTxt.y = FlxG.height - 35;
-
 		if(timeType == 'Song Name') timeTxt.text = SONG.song;
-		updateTime = showTime;
-
-		timeBarBG = new AttachedSprite('timeBar');
-		timeBarBG.y = timeTxt.y + (timeTxt.height / 4) - 2;
-		timeBarBG.screenCenter(X);
-		timeBarBG.scrollFactor.set();
-		timeBarBG.alpha = 0;
-		timeBarBG.visible = showTime;
-		timeBarBG.addPoint.set(-4, -4);
-		uiGroup.add(timeBarBG);
 		
-		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this, 'songPercent', 0, 1);
+		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', function() return songPercent, 0, 1);
 		timeBar.scrollFactor.set();
-		timeBar.createGradientBar([FlxColor.GRAY], [dad.getColor(), boyfriend.getColor()], 1, 90);
-		timeBar.numDivisions = 800; // How much lag this causes?? Should i tone it down to idk, 400 or 200?
+		timeBar.screenCenter(X);
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
+		uiGroup.add(timeBar);
 		uiGroup.add(timeTxt);
 		
-		timeBarBG.sprTracker = timeBar;
-		uiGroup.insert(uiGroup.members.indexOf(timeBarBG), timeBar);
 		add(comboGroup);
 		add(noteGroup);
 		noteGroup.add(strumLineNotes);
@@ -495,7 +481,6 @@ class PlayState extends MusicBeatState {
 		iconP2.visible = !hideHud;
 		iconP2.alpha = healthBarAlpha;
 		uiGroup.add(iconP2);
-		reloadHealthBarColors();
 		if (ClientPrefs.getPref('HealthTypes') == 'Psych') {iconP1.iconType = 'psych'; iconP2.iconType = 'psych';}
 
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), 0);
@@ -657,8 +642,7 @@ class PlayState extends MusicBeatState {
 
 	public function reloadHealthBarColors() {
 		healthBar.setColors(dad.getColor(), boyfriend.getColor());
-		timeBar.createGradientBar([FlxColor.GRAY], [dad.getColor(), boyfriend.getColor()], 1, 90);
-		timeBar.updateBar();
+		timeBar.setColors(FlxColor.GRAY, dad.getColor());
 	}
 
 	public function addCharacterToList(newCharacter:String, type:Int) {
@@ -2042,7 +2026,7 @@ class PlayState extends MusicBeatState {
 			if(doDeathCheck()) return false;
 		}
 
-		timeBarBG.visible = timeBar.visible = timeTxt.visible = false;
+		timeBar.visible = timeTxt.visible = false;
 		canPause = false;
 		endingSong = true;
 		camZooming = false;
