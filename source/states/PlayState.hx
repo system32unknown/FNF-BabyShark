@@ -420,7 +420,7 @@ class PlayState extends MusicBeatState {
 		if(downScroll) timeTxt.y = FlxG.height - 35;
 		if(timeType == 'Song Name') timeTxt.text = SONG.song;
 		
-		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', function() return songPercent, 0, 1);
+		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', () -> return songPercent, 0, 1);
 		timeBar.scrollFactor.set();
 		timeBar.screenCenter(X);
 		timeBar.alpha = 0;
@@ -642,7 +642,7 @@ class PlayState extends MusicBeatState {
 
 	public function reloadHealthBarColors() {
 		healthBar.setColors(dad.getColor(), boyfriend.getColor());
-		timeBar.setColors(FlxColor.GRAY, dad.getColor());
+		timeBar.setColors(dad.getColor(), FlxColor.GRAY);
 	}
 
 	public function addCharacterToList(newCharacter:String, type:Int) {
