@@ -2663,7 +2663,7 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function autosaveSong():Void {
-		FlxG.save.data.autosave = haxe.Json.stringify({"song": _song});
+		FlxG.save.data.autosave = Json.stringify({"song": _song});
 		FlxG.save.flush();
 	}
 
@@ -2675,7 +2675,7 @@ class ChartingState extends MusicBeatState {
 	function saveLevel() {
 		if(_song.events != null && _song.events.length > 1) _song.events.sort(sortByTime);
 		var json = {"song": _song};
-		var data:String = haxe.Json.stringify(json, "\t");
+		var data:String = Json.stringify(json, "\t");
 
 		if (data != null && data.length > 0) {
 			_file = new FileReference();
@@ -2716,7 +2716,7 @@ class ChartingState extends MusicBeatState {
 		var eventsSong:Dynamic = {events: _song.events};
 		var json = {"song": eventsSong}
 
-		var data:String = haxe.Json.stringify(json, "\t");
+		var data:String = Json.stringify(json, "\t");
 		if (data != null && data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);

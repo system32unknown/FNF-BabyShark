@@ -362,7 +362,7 @@ class MenuCharacterEditorState extends MusicBeatState
 	}
 
 	function saveCharacter() {
-		var data:String = haxe.Json.stringify(characterFile, "\t");
+		var data:String = Json.stringify(characterFile, "\t");
 		if (data.length > 0)
 		{
 			var splittedImage:Array<String> = imageInputText.text.trim().split('_');

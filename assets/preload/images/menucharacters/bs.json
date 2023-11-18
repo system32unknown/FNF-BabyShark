@@ -1,10 +1,14 @@
 {
-	"idle_anim": "M BS Idle",
 	"image": "Menu_BS",
 	"position": [
 		0,
 		0
 	],
+	"confirmPosition": [
+		0,
+		0
+	],
 	"scale": 1,
+	"idle_anim": "M BS Idle",
 	"confirm_anim": "M bs HEY"
 }

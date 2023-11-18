@@ -459,7 +459,7 @@ class DialogueEditorState extends MusicBeatState
 	}
 
 	function saveDialogue() {
-		var data:String = haxe.Json.stringify(dialogueFile, "\t");
+		var data:String = Json.stringify(dialogueFile, "\t");
 		if (data.length > 0)
 		{
 			_file = new FileReference();

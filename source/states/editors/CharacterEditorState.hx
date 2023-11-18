@@ -21,17 +21,14 @@ import objects.Character;
 import objects.HealthIcon;
 import objects.Bar;
 
-/**
-	*DEBUG MODE
-**/
-class CharacterEditorState extends MusicBeatState
-{
+class CharacterEditorState extends MusicBeatState {
 	var char:Character;
 	var ghostChar:Character;
 	var textAnim:FlxText;
 	var bgLayer:FlxTypedGroup<FlxSprite>;
 	var charLayer:FlxTypedGroup<Character>;
 	var dumbTexts:FlxTypedGroup<FlxText>;
+
 	var curAnim:Int = 0;
 	var daAnim:String = 'spooky';
 	var goToPlayState:Bool = true;
@@ -57,8 +54,7 @@ class CharacterEditorState extends MusicBeatState
 	var cameraFollowPointer:FlxSprite;
 	var healthBar:Bar;
 
-	override function create()
-	{
+	override function create() {
 		camEditor = new FlxCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
@@ -106,9 +102,8 @@ class CharacterEditorState extends MusicBeatState
 		dumbTexts.camera = camHUD;
 
 		textAnim = new FlxText(300, 16);
-		textAnim.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		textAnim.borderSize = 1;
-		textAnim.size = 32;
+		textAnim.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
+		textAnim.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1);
 		textAnim.scrollFactor.set();
 		textAnim.camera = camHUD;
 		add(textAnim);
@@ -131,9 +126,9 @@ class CharacterEditorState extends MusicBeatState
 		for (i in 0...tipTextArray.length - 1) {
 			var tipText:FlxText = new FlxText(FlxG.width - 320, FlxG.height - 15 - 16 * (tipTextArray.length - i), 300, tipTextArray[i], 12);
 			tipText.camera = camHUD;
-			tipText.setFormat(null, 12, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+			tipText.setFormat(null, 12, FlxColor.WHITE, RIGHT);
+			tipText.setBorderStyle(FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK, 1);
 			tipText.scrollFactor.set();
-			tipText.borderSize = 1;
 			add(tipText);
 		}
 
@@ -189,8 +184,8 @@ class CharacterEditorState extends MusicBeatState
 				playerXDifference += 200;
 				playerYDifference = 220;
 			}
+			
 			Paths.setCurrentLevel('week6');
-
 			var bgSky:BGSprite = new BGSprite('weeb/weebSky', OFFSET_X - (playerXDifference / 2) - 300, 0 - playerYDifference, 0.1, 0.1);
 			bgLayer.add(bgSky);
 			bgSky.antialiasing = false;
@@ -226,8 +221,7 @@ class CharacterEditorState extends MusicBeatState
 			changeBGbutton.text = "Regular BG";
 		} else {
 			Paths.setCurrentLevel('week1');
-			var bg:BGSprite = new BGSprite('stageback', -600 + OFFSET_X - playerXDifference, -300, 0.9, 0.9);
-			bgLayer.add(bg);
+			bgLayer.add(new BGSprite('stageback', -600 + OFFSET_X - playerXDifference, -300, 0.9, 0.9));
 
 			var stageFront:BGSprite = new BGSprite('stagefront', -650 + OFFSET_X - playerXDifference, 500, 0.9, 0.9);
 			stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
@@ -626,7 +620,7 @@ class CharacterEditorState extends MusicBeatState
 					}
 					reloadAnimationDropDown();
 					genBoyOffsets();
-					trace('Removed animation: ' + animationInputText.text);
+					Logs.trace('Removed animation: ' + animationInputText.text);
 					break;
 				}
 			}
@@ -1085,7 +1079,7 @@ class CharacterEditorState extends MusicBeatState
 			"healthbar_colors": char.healthColorArray,
 		};
 
-		var data:String = haxe.Json.stringify(json, "\t");
+		var data:String = Json.stringify(json, "\t");
 		if (data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);

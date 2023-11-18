@@ -206,15 +206,14 @@ class Paths
 		return returnSound('music', key, library, stream || streamMusic);
 	}
 
-	// streamlined the assets process more
-	#if (!MODS_ALLOWED) inline #end static public function image(key:String, ?library:String):FlxGraphic
-		return returnGraphic(key, library);
-
 	#if (!MODS_ALLOWED) inline #end static public function inst(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
 		return returnSound('songs', '${formatToSongPath(song)}/Inst', !forceNoStream && (stream || streamMusic));
 
 	#if (!MODS_ALLOWED) inline #end static public function voices(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
 		return returnSound('songs', '${formatToSongPath(song)}/Voices', !forceNoStream && (stream || streamMusic));
+
+	#if (!MODS_ALLOWED) inline #end static public function image(key:String, ?library:String):FlxGraphic
+		return returnGraphic(key, library);
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false, ?absolute:Bool = false):String {
 		if (absolute) {

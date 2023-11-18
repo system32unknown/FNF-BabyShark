@@ -502,7 +502,7 @@ class WeekEditorState extends MusicBeatState
 	}
 
 	public static function saveWeek(weekFile:WeekFile) {
-		var data:String = haxe.Json.stringify(weekFile, "\t");
+		var data:String = Json.stringify(weekFile, "\t");
 		if (data.length > 0)
 		{
 			_file = new FileReference();

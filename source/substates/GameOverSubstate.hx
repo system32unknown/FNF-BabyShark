@@ -42,7 +42,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 	public static function cache() {
 		Paths.sound(deathSoundName);
 		Paths.music(loopSoundName);
-		Paths.sound(endSoundName);
+		Paths.music(endSoundName);
 
 		if (PlayState.instance != null)
 			PlayState.instance.gameOverChar = new Character(0, 0, characterName, true);
@@ -140,6 +140,11 @@ class GameOverSubstate extends MusicBeatSubstate {
 		PlayState.instance.callOnScripts('onUpdatePost', [elapsed]);
 	}
 
+	override function destroy() {
+		instance = null;
+		super.destroy();
+	}
+
 	var isEnding:Bool = false;
 	var endCompleted:Bool = false;
 	var quick:Bool = false;
@@ -172,9 +177,9 @@ class GameOverSubstate extends MusicBeatSubstate {
 		isEnding = true;
 
 		boyfriend.playAnim('deathConfirm', true);
+		
 		FlxG.sound.music.stop();
-
-		var snd:FlxSound = FlxG.sound.play(Paths.sound(endSoundName));
+		var snd:FlxSound = FlxG.sound.play(Paths.music(endSoundName));
 		snd.onComplete = endSoundComplete;
 
 		new FlxTimer().start(.7, function(tmr:FlxTimer) {
