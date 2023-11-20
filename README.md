@@ -1,7 +1,7 @@
 # Baby Shark's Funkin
 ![Baby Shark's Funkin Logo](assets/preload/images/logobumpin.png)
 
-Heavily Modified of Psych Engine. combined with Kade, Dave, Base Engines.
+Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (almost), Base Engines.
 
 ![Repo size](https://img.shields.io/github/repo-size/system32unknown/FNF-BabyShark)
 ![Last commit](https://img.shields.io/github/last-commit/system32unknown/FNF-BabyShark)
@@ -18,6 +18,10 @@ Heavily Modified of Psych Engine. combined with Kade, Dave, Base Engines.
 
 ### Base Engine:
 * Funkin' Crew
+
+### Codename Engine:
+* WizardMantis441 - Programmer
+* YoshiCrafter29 - Ex-Programmer
 
 ### Special Thanks:
 * bbpanzu - Ex-Programmer

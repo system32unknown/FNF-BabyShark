@@ -68,7 +68,12 @@ class PlatformUtil {
     ')
     static public function setWindowIcon(path:String) {}
 
-    static public function getMousePos():Array<Float> return [temp__getMousePos(0), temp__getMousePos(1)];
+    //Thanks leer lol
+    @:functionCode('
+        POINT mousePos;
+        if (!GetCursorPos(&mousePos)) return 0;
+    ')
+    static public function getMousePos():flixel.math.FlxPoint return flixel.math.FlxPoint.get(untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y"));
 
     @:functionCode('
         int darkMode = enable ? 1 : 0;
@@ -110,20 +115,6 @@ class PlatformUtil {
 		std::cout<< "" <<std::flush;
 	')
 	public static function clearScreen() {}
-
-    //PRIVATE FUNCTIONS
-    @:functionCode('
-        POINT mousePos;
-        if (!GetCursorPos(&mousePos)) return 0;
-
-        float mousePosArray[2] = {0., 0.};
-        mousePosArray[0] = mousePos.x;
-        mousePosArray[1] = mousePos.y;
-
-        if (pos == 0) return mousePosArray[0];
-        else return mousePosArray[1];
-    ')
-    static function temp__getMousePos(pos:Float):Float return 0;
 }
 #end
 
