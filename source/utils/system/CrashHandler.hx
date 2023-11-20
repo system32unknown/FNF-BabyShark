@@ -57,7 +57,7 @@ class CrashHandler {
 
 		if (!FileSystem.exists("./crash/"))
 			FileSystem.createDirectory("./crash/");
-		File.saveContent(path, 'errMsg\n');
+		File.saveContent(path, '$errMsg\n');
 
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
