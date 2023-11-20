@@ -14,7 +14,7 @@ class Overlay extends TextField {
 
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
-    public var FPS:FPSUtil;
+    public var fpsManager:FPSUtil;
     public var memory(get, never):Dynamic;
 
 	public function new(x:Float = 0, y:Float = 0) {
@@ -30,7 +30,7 @@ class Overlay extends TextField {
 		selectable = mouseEnabled = false;
 		text = "";
 		defaultTextFormat = new TextFormat(fontName, 16, -1);
-		FPS = new FPSUtil();
+		fpsManager = new FPSUtil();
 	}
 
 	var deltaTimeout:Float = .0;
@@ -40,7 +40,7 @@ class Overlay extends TextField {
 			deltaTimeout = .0;
 			return;
 		}
-		FPS.update();
+		fpsManager.update();
 		visible = ClientPrefs.getPref('showFPS');
 
 		updateText(dt);
@@ -53,7 +53,7 @@ class Overlay extends TextField {
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		var tempText:String = '${FPS.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / FPS.currentCount) * 1000)}ms, DT: ${Math.round(dt)}]' : ''}\n';
+		var tempText:String = '${fpsManager.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / fpsManager.currentCount) * 1000)}ms, DT: ${Math.round(dt)}]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
 			tempText += '${MemoryUtil.getInterval(memory)}';
 		text = tempText;

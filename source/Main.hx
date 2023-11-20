@@ -14,13 +14,6 @@ import objects.Overlay;
 
 #if (target.threaded && sys) import sys.thread.ElasticThreadPool; #end
 
-//crash handler stuff
-#if CRASH_HANDLER
-import openfl.events.UncaughtErrorEvent;
-import haxe.CallStack;
-import haxe.io.Path;
-#end
-
 class Main extends Sprite {
 	public static var engineVer:GameVersion = new GameVersion(0, 1, 0);
 
@@ -90,10 +83,7 @@ class Main extends Sprite {
 			FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
 	   	});
 
-		#if CRASH_HANDLER
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
-		#if hl hl.Api.setErrorHandler(onCrash); #end
-		#end
+		#if CRASH_HANDLER utils.system.CrashHandler.init(); #end
 		#if discord_rpc Discord.start(); #end
 	}
 
@@ -105,46 +95,4 @@ class Main extends Sprite {
 			sprite.__cacheBitmapColorTransform = null;
 		}
 	}
-
-	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
-	// very cool person for real they don't get enough credit for their work
-	#if CRASH_HANDLER
-	function onCrash(e:Dynamic):Void {
-		var message:String = "";
-		if ((e is UncaughtErrorEvent)) message = e.error;
-		else message = try Std.string(e) catch(_:haxe.Exception) "Unknown";
-
-		var errMsg:String = "";
-		final callStack:Array<StackItem> = CallStack.exceptionStack(true);
-		var dateNow:String = Date.now().toString();
-
-		dateNow = dateNow.replace(" ", "_").replace(":", "'");
-
-		final path = './crash/PsychEngine_$dateNow.txt';
-
-		for (stackItem in callStack) {
-			switch (stackItem) {
-				case FilePos(_, file, line, _): errMsg += file + " (line " + line + ")\n";
-				default: Sys.println(stackItem);
-			}
-		}
-
-		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/ShadowMario/FNF-PsychEngine\n\n Crash Handler written by: sqirra-rng';
-
-		if (!FileSystem.exists("./crash/"))
-			FileSystem.createDirectory("./crash/");
-
-		File.saveContent(path, errMsg + "\n");
-
-		Sys.println(errMsg);
-		Sys.println("Crash dump saved in " + Path.normalize(path));
-
-		CoolUtil.callErrBox("Alter Engine: Error!", errMsg);
-		
-		#if discord_rpc
-		Discord.shutdown();
-		#end
-		Sys.exit(1);
-	}
-	#end
 }

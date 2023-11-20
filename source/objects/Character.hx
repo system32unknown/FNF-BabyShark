@@ -134,7 +134,7 @@ class Character extends FlxSprite {
 	}
 
 	public static function getCharacterFile(char:String):CharacterFile {
-		var characterPath:String = 'characters/' + char + '.json';
+		var characterPath:String = 'characters/$char.json';
 
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);
@@ -148,9 +148,39 @@ class Character extends FlxSprite {
 		#end
 			path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 
-		
 		var rawJson = #if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end;
-		return cast Json.parse(rawJson);
+		try {
+			var json:CharacterFile = cast Json.parse(rawJson);
+			for (anim in json.animations)
+				anim.indices = parseIndices(anim.indices);
+			return json;
+		} catch(e) Logs.trace('Error loading character "$char" JSON file', ERROR);
+		return null;
+	}
+
+	public static function parseIndices(indices:Array<Any>):Array<Int> {
+		var parsed:Array<Int> = [];
+		for (val in indices) {
+			if (val is Int) parsed.push(val);
+			else if (val is String) {
+				var val:String = cast val;
+				var expression:Array<String> = val.split("..."); // might add something for "*" so you can repeat a frame a certain amount of times
+				var startIndex:Null<Int> = Std.parseInt(expression[0]);
+				var endIndex:Null<Int> = Std.parseInt(expression[1]);
+
+				if (startIndex == null) 
+					continue; // Can't do anything
+				else if (endIndex == null) {
+					parsed.push(startIndex); // hmm
+					continue;
+				}
+
+				for (idxNumber in startIndex...(endIndex + 1))
+					parsed.push(idxNumber);
+			}
+		}
+
+		return parsed;
 	}
 
 	public static function getSpriteType(json:CharacterFile):String {

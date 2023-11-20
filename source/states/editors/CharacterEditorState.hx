@@ -534,21 +534,8 @@ class CharacterEditorState extends MusicBeatState {
 		});
 
 		var addUpdateButton:FlxButton = new FlxButton(70, animationIndicesInputText.y + 30, "Add/Update", function() {
-			var indices:Array<Int> = [];
-			var indicesStr:Array<String> = animationIndicesInputText.text.trim().split(',');
-			if(indicesStr.length > 1) {
-				for (i in 0...indicesStr.length) {
-					var index:Int = Std.parseInt(indicesStr[i]);
-					if(indicesStr[i] != null && indicesStr[i] != '' && !Math.isNaN(index) && index > -1) {
-						indices.push(index);
-					}
-				}
-			}
-
-			var lastAnim:String = '';
-			if(char.animationsArray[curAnim] != null) {
-				lastAnim = char.animationsArray[curAnim].anim;
-			}
+			var indices:Array<Int> = Character.parseIndices(animationIndicesInputText.text.trim().split(','));
+			var lastAnim:String = char.animationsArray[curAnim] != null ? char.animationsArray[curAnim].anim : '';
 
 			var lastOffsets:Array<Int> = [0, 0];
 			for (anim in char.animationsArray) {
@@ -573,16 +560,15 @@ class CharacterEditorState extends MusicBeatState {
 				char.animation.addByIndices(newAnim.anim, newAnim.name, newAnim.indices, "", newAnim.fps, newAnim.loop);
 			else char.animation.addByPrefix(newAnim.anim, newAnim.name, newAnim.fps, newAnim.loop);
 
-			if (!char.animOffsets.exists(newAnim.anim)) {
+			if (!char.animOffsets.exists(newAnim.anim))
 				char.addOffset(newAnim.anim, 0, 0);
-			}
 			char.animationsArray.push(newAnim);
 
 			if (lastAnim == animationInputText.text) {
 				var leAnim:FlxAnimation = char.animation.getByName(lastAnim);
-				if (leAnim != null && leAnim.frames.length > 0) {
+				if (leAnim != null && leAnim.frames.length > 0)
 					char.playAnim(lastAnim, true);
-				} else {
+				else {
 					for(i in 0...char.animationsArray.length) {
 						if (char.animationsArray[i] != null) {
 							leAnim = char.animation.getByName(char.animationsArray[i].anim);
@@ -598,7 +584,7 @@ class CharacterEditorState extends MusicBeatState {
 
 			reloadAnimationDropDown();
 			genBoyOffsets();
-			trace('Added/Updated animation: ' + animationInputText.text);
+			Logs.trace('Added/Updated animation: ' + animationInputText.text);
 		});
 
 		var removeButton:FlxButton = new FlxButton(180, animationIndicesInputText.y + 30, "Remove", function() {
@@ -607,12 +593,8 @@ class CharacterEditorState extends MusicBeatState {
 					var resetAnim:Bool = false;
 					if(char.animation.curAnim != null && anim.anim == char.animation.curAnim.name) resetAnim = true;
 
-					if(char.animation.getByName(anim.anim) != null) {
-						char.animation.remove(anim.anim);
-					}
-					if(char.animOffsets.exists(anim.anim)) {
-						char.animOffsets.remove(anim.anim);
-					}
+					if(char.animation.getByName(anim.anim) != null) char.animation.remove(anim.anim);
+					if(char.animOffsets.exists(anim.anim)) char.animOffsets.remove(anim.anim);
 					char.animationsArray.remove(anim);
 
 					if(resetAnim && char.animationsArray.length > 0) {
@@ -729,8 +711,7 @@ class CharacterEditorState extends MusicBeatState {
 		reloadGhost();
 	}
 
-	function genBoyOffsets():Void
-	{
+	function genBoyOffsets():Void {
 		var daLoop:Int = 0;
 
 		var i:Int = dumbTexts.members.length - 1;
@@ -766,7 +747,7 @@ class CharacterEditorState extends MusicBeatState {
 		}
 	}
 
-	function loadChar(isDad:Bool, blahBlahBlah:Bool = true) {
+	function loadChar(isDad:Bool, offset:Bool = true) {
 		var i:Int = charLayer.members.length - 1;
 		while(i >= 0) {
 			var memb:Character = charLayer.members[i];
@@ -793,7 +774,7 @@ class CharacterEditorState extends MusicBeatState {
 
 		char.setPosition(char.positionArray[0] + OFFSET_X + 100, char.positionArray[1]);
 
-		if(blahBlahBlah) genBoyOffsets();
+		if(offset) genBoyOffsets();
 		reloadCharacterOptions();
 		reloadBGs();
 		updatePointerPos();
@@ -886,7 +867,7 @@ class CharacterEditorState extends MusicBeatState {
 			if(FileSystem.exists(directory)) {
 				for (file in FileSystem.readDirectory(directory)) {
 					var path = haxe.io.Path.join([directory, file]);
-					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json')) {
+					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
 						var charToCheck:String = file.substr(0, file.length - 5);
 						if(!charsLoaded.exists(charToCheck)) {
 							characterList.push(charToCheck);

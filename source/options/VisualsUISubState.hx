@@ -21,7 +21,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(new Option('Time Bar:', "What should the Time Bar display?", 'timeBarType', 'string', ['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Name Percent', 'Disabled']));
 		addOption(new Option('Flashing Lights', "Uncheck this if you're sensitive to flashing lights!", 'flashing', 'bool'));
 		addOption(new Option('Icon Bounce:', "What should the Icon Bounces?", 'IconBounceType', 'string', ['Vanilla', 'Old', 'Psych', 'Dave', 'GoldenApple', 'Custom']));
-		addOption(new Option('Health Bar Types:', "What should the Health Bar Types?", 'HealthTypes', 'string', ['Vanilla', 'Psych']));
+		addOption(new Option('Health Bar Type:', "What should the Health Bar Types?", 'HealthTypes', 'string', ['Vanilla', 'Psych']));
 		addOption(new Option('Score Styles:', '', 'ScoreType', 'string', ['Alter', 'Kade']));
 		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'RatingDisplay', 'string', ['Hud', 'World']));
 		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms', 'bool'));
