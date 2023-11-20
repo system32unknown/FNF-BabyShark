@@ -4,7 +4,6 @@ import flixel.util.FlxSave;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
-import openfl.geom.Rectangle;
 import openfl.net.FileReference;
 #if (!sys && !MODS_ALLOWED) import openfl.utils.Assets; #end
 import utils.system.PlatformUtil.MessageBoxIcon;
@@ -76,7 +75,7 @@ class CoolUtil {
 
 	public static function removeDuplicates(string:Array<String>):Array<String> {
 		var tempArray:Array<String> = new Array<String>();
-		var lastSeen:String = null;
+		var lastSeen:String = '';
 		string.sort((a:String, b:String) -> return (a == b) ? 0 : (a > b) ? 1 : -1);
 		for (str in string) {
 		  	if (str != lastSeen) tempArray.push(str);

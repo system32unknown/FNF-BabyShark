@@ -77,8 +77,8 @@ class Limo extends BaseStage
 		resetFastCar();
 		addBehindGF(fastCar);
 
-		var limo:BGSprite = new BGSprite('limo/limoDrive', -120, 550, 1, 1, ['Limo stage'], true);
-		addBehindGF(limo); //Shitty layering but whatev it works LOL
+		addBehindGF(new BGSprite('limo/limoDrive', -120, 550, 1, 1, ['Limo stage'], true)); //Shitty layering but whatev it works LOL
+		game.ratingAcc.x = 750 * game.playbackRate * game.playbackRate;
 	}
 
 	var limoSpeed:Float = 0;
