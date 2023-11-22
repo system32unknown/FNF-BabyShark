@@ -83,7 +83,7 @@ class Main extends Sprite {
 			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
 	   	});
 
-		#if CRASH_HANDLER utils.system.CrashHandler.init(); #end
+		#if CRASH_HANDLER backend.CrashHandler.init(); #end
 		#if discord_rpc Discord.start(); #end
 	}
 

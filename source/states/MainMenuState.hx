@@ -14,16 +14,14 @@ class MainMenuState extends MusicBeatState {
 		"Freeplay",
 		"Mods",
 		"Credits",
-		"Options",
-		"Discord"
+		"Options"
 	];
 	var menuDescription:Array<String> = [
 		"Play the story mode to understand the story!",
 		"Play any song as you wish and get new scores!",
 		"Choose any mods as you can play mods!",
 		"Look at the people who have worked or contributed to the mod!",
-		"Adjust game settings and change Keybinds!",
-		"Join the official Baby Shark's Funkin Discord! (NOT DONE)"
+		"Adjust game settings and change Keybinds!"
 	];
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -33,8 +31,7 @@ class MainMenuState extends MusicBeatState {
 		'freeplay',
 		#if MODS_ALLOWED 'mods', #end
 		'credits',
-		'options',
-		'discord'
+		'options'
 	];
 
 	var bg:FlxSprite;
@@ -120,11 +117,12 @@ class MainMenuState extends MusicBeatState {
 		curOptDesc.y = FlxG.height - 58;
 		add(curOptDesc);
 
+
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
 		for (i in 0...optionShit.length) {
 			var currentOptionShit = optionShit[i];
-			var menuItem:FlxSprite = new FlxSprite(FlxG.width * 1.6, FlxG.height / 2 + 130);
+			var menuItem:FlxSprite = new FlxSprite(-160, (i * 140));
 			menuItem.frames = Paths.getSparrowAtlas('mainmenu/main_menu_icons');
 			menuItem.animation.addByPrefix('idle', '$currentOptionShit basic', 24);
 			menuItem.animation.addByPrefix('selected', '$currentOptionShit white', 24);
@@ -134,9 +132,9 @@ class MainMenuState extends MusicBeatState {
 			menuItem.ID = i;
 			menuItem.updateHitbox();
 			menuItems.add(menuItem);
-			menuItem.scrollFactor.set(0, 1);
+			menuItem.scrollFactor.set();
 			if (firstStart)
-				FlxTween.tween(menuItem, {x: FlxG.width / 2 - 450 + (i * 160)}, 1 + (i * .25), {
+				FlxTween.tween(menuItem, {x: 20}, 1 + (i * .25), {
 					ease: FlxEase.expoInOut,
 					onComplete: (flxTween:FlxTween) -> {
 						finishedFunnyMove = true;
@@ -144,7 +142,7 @@ class MainMenuState extends MusicBeatState {
 					}
 				});
 			else {
-				menuItem.x = FlxG.width / 2 - 450 + (i * 160);
+				menuItem.x = 20;
 				changeItem();
 			}
 		}
@@ -164,11 +162,11 @@ class MainMenuState extends MusicBeatState {
 		FlxG.camera.followLerp = FlxMath.bound(elapsed * 9 * (FlxG.updateFramerate / 60), 0, 1);
 		
 		if (!selectedSomethin && finishedFunnyMove) {
-			if (controls.UI_LEFT_P) {
+			if (controls.UI_UP_P) {
 				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 				changeItem(-1);
 			}
-			if (controls.UI_RIGHT_P) {
+			if (controls.UI_DOWN_P) {
 				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 				changeItem(1);
 			}
@@ -185,42 +183,35 @@ class MainMenuState extends MusicBeatState {
 			}
 
 			if (controls.ACCEPT) {
-				if (optionShit[curSelected] == 'discord') {
-					FlxG.sound.play(Paths.sound('cancelMenu'), .7);
-					FlxG.camera.shake(.05, .1);
-				} else {
-					selectedSomethin = true;
-					FlxG.sound.play(Paths.sound('confirmMenu'), .7);
-	
-					if(ClientPrefs.getPref('flashing')) FlxFlicker.flicker(magenta, 1.1, .15, false);
-	
-					menuItems.forEach(function(spr:FlxSprite) {
-						if (curSelected != spr.ID) {
-							FlxTween.tween(spr, {alpha: 0}, 1.3, {
-								ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> spr.kill()
-							});
-						} else {
-							FlxFlicker.flicker(spr, 1, .06, false, false, (flick:FlxFlicker) -> {
-								var daChoice:String = optionShit[curSelected];
-								switch (daChoice) {
-									case 'story_mode': MusicBeatState.switchState(new StoryMenuState());
-									case 'freeplay': MusicBeatState.switchState(new FreeplayState());
-									#if MODS_ALLOWED
-									case 'mods': MusicBeatState.switchState(new ModsMenuState());
-									#end
-									case 'credits': MusicBeatState.switchState(new CreditsState());
-									case 'options':
-										MusicBeatState.switchState(new OptionsState());
-										OptionsState.onPlayState = false;
-										if (PlayState.SONG != null) {
-											PlayState.SONG.arrowSkin = null;
-											PlayState.SONG.splashSkin = null;
-										}
-								}
-							});
-						}
-					});					
-				}
+				selectedSomethin = true;
+				FlxG.sound.play(Paths.sound('confirmMenu'), .7);
+
+				if(ClientPrefs.getPref('flashing')) FlxFlicker.flicker(magenta, 1.1, .15, false);
+
+				menuItems.forEach(function(spr:FlxSprite) {
+					if (curSelected != spr.ID)
+						FlxTween.tween(spr, {alpha: 0}, 1.3, {ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> spr.kill()});
+					else {
+						FlxFlicker.flicker(spr, 1, .06, false, false, (flick:FlxFlicker) -> {
+							var daChoice:String = optionShit[curSelected];
+							switch (daChoice) {
+								case 'story_mode': MusicBeatState.switchState(new StoryMenuState());
+								case 'freeplay': MusicBeatState.switchState(new FreeplayState());
+								#if MODS_ALLOWED
+								case 'mods': MusicBeatState.switchState(new ModsMenuState());
+								#end
+								case 'credits': MusicBeatState.switchState(new CreditsState());
+								case 'options':
+									MusicBeatState.switchState(new OptionsState());
+									OptionsState.onPlayState = false;
+									if (PlayState.SONG != null) {
+										PlayState.SONG.arrowSkin = null;
+										PlayState.SONG.splashSkin = null;
+									}
+							}
+						});
+					}
+				});	
 			} else if (controls.justPressed('debug_1')) {
 				selectedSomethin = true;
 				MusicBeatState.switchState(new MasterEditorMenu());

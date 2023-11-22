@@ -1,4 +1,4 @@
-package utils.system;
+package backend;
 
 //crash handler stuff
 import openfl.Lib;
@@ -69,8 +69,7 @@ class CrashHandler {
 	}
 
 	#if (cpp || hl)
-	static function onError(message:Dynamic):Void {
+	static function onError(message:Dynamic):Void
 		throw Std.string(message);
-	}
 	#end
 }
