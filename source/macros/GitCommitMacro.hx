@@ -1,8 +1,6 @@
 package macros;
 
-#if macro
-import sys.io.Process;
-#end
+#if macro import sys.io.Process; #end
 
 class GitCommitMacro {
 	/**

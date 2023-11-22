@@ -1,5 +1,6 @@
 package psychlua;
 
+import macros.MacroFunctions;
 #if HSCRIPT_ALLOWED
 import hscript.Parser;
 import hscript.Interp;
@@ -137,6 +138,9 @@ class HScript extends Interp {
 		setVar('removeVar', (name:String) -> return PlayState.instance.variables.remove(name));
 		setVar('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> PlayState.instance.addTextToDebug(text, color));
 
+		//Macro Functions
+		setVar('nameOf', (v:Dynamic) -> macros.MacroFunctions.nameOf(v));
+
 		// For adding your own callbacks
 
 		// not very tested but should work
@@ -255,8 +259,7 @@ class HScript extends Interp {
 			else if(libName == null) libName = '';
 
 			var c:Dynamic = funk.hscript.resolveClassOrEnum(str + libName);
-			try {
-				funk.hscript.setVar(libName, c);
+			try { funk.hscript.setVar(libName, c);
 			} catch(e) {
 				funk.hscript.active = false;
 				FunkinLua.luaTrace('ERROR (${funk.lastCalledFunction}) - $e', false, false, FlxColor.RED);
