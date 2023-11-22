@@ -65,15 +65,12 @@ class ShaderFunctions {
 
             var arr:Array<String> = funk.runtimeShaders.get(shader);
             var camera = getCam(cam);
-            @:privateAccess {
-                if (camera.filters == null)
-                    camera.filters = [];
-				
-                var filter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
-                storedFilters.set(index, filter);
-				trace(storedFilters);
-                camera.filters.push(filter);
-            }
+            if (camera.filters == null) camera.filters = [];
+			
+            var filter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
+            storedFilters.set(index, filter);
+			trace(storedFilters);
+            camera.filters.push(filter);
             return true;
 			#else
             FunkinLua.luaTrace("addShaderToCam: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);

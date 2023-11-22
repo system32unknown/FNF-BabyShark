@@ -74,13 +74,13 @@ class Main extends Sprite {
 			MemoryUtil.clearMajor();
 		});
 		FlxG.signals.postGameReset.add(states.TitleState.onInit);
-		FlxG.signals.gameResized.add((w, h) -> @:privateAccess {
+		FlxG.signals.gameResized.add((w, h) ->  {
 			if (FlxG.cameras != null) for (cam in FlxG.cameras.list) {
 				if (cam != null && cam.filters != null)
 				   	resetSpriteCache(cam.flashSprite);
 			}
 			if (FlxG.game != null) resetSpriteCache(FlxG.game);
-			FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
+			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
 	   	});
 
 		#if CRASH_HANDLER utils.system.CrashHandler.init(); #end
