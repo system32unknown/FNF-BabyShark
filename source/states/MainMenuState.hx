@@ -1,6 +1,5 @@
 package states;
 
-import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import states.editors.MasterEditorMenu;
@@ -49,9 +48,7 @@ class MainMenuState extends MusicBeatState {
 		#if MODS_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();
 
-		#if discord_rpc
-		Discord.changePresence("In the Menus", null);
-		#end
+		#if discord_rpc Discord.changePresence("In the Menus", null); #end
 
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
@@ -75,16 +72,15 @@ class MainMenuState extends MusicBeatState {
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 
-		var menuCover:FlxSprite = new FlxSprite().makeGraphic(Std.int(FlxG.width), FlxG.height - 500);
+		var menuCover:FlxSprite = new FlxSprite().makeGraphic(FlxG.width - 1130, Std.int(FlxG.height));
 		menuCover.alpha = .5;
 		menuCover.color = FlxColor.WHITE;
 		menuCover.scrollFactor.set();
-		menuCover.screenCenter();
-		menuCover.y += 200;
+		menuCover.x += 8;
 		add(menuCover);
 
-		var menuCoverAlt:FlxSprite = new FlxSprite().makeGraphic(Std.int(menuCover.width), Std.int(menuCover.height  - 20));
-		menuCoverAlt.setPosition(menuCover.x, menuCover.y + 10);
+		var menuCoverAlt:FlxSprite = new FlxSprite().makeGraphic(Std.int(menuCover.width - 20), Std.int(menuCover.height));
+		menuCoverAlt.setPosition(menuCover.x + 10, menuCover.y);
 		menuCoverAlt.alpha = .7;
 		menuCoverAlt.color = FlxColor.BLACK;
 		menuCoverAlt.scrollFactor.set();
@@ -116,7 +112,6 @@ class MainMenuState extends MusicBeatState {
 		curOptDesc.screenCenter(X);
 		curOptDesc.y = FlxG.height - 58;
 		add(curOptDesc);
-
 
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 

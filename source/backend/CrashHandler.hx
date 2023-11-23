@@ -60,7 +60,7 @@ class CrashHandler {
 		File.saveContent(path, '$errMsg\n');
 
 		Sys.println(errMsg);
-		Sys.println("Crash dump saved in " + Path.normalize(path));
+		Sys.println('Crash dump saved in ${Path.normalize(path)}');
 
 		CoolUtil.callErrBox("Alter Engine: Error!", errMsg);
 		

@@ -7,6 +7,5 @@ typedef SubtitleProperties = {
     var ?typeSpeed:Float;
     var ?centerScreen:Bool;
     var ?screenCenter:flixel.util.FlxAxes;
-    var ?sounds:Array<FlxSound>;
     var ?fonts:String;
 }

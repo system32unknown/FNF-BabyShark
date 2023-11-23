@@ -10,12 +10,11 @@ class Subtitle extends FlxTypeText {
         properties = init(properties);
 
         super(properties.x, properties.y, FlxG.width, text, 36);
-        sounds = properties.sounds;
         onSubComplete = onComplete;
         
-        setFormat(Paths.font(properties.fonts), properties.subtitleSize, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+        setFormat(Paths.font(properties.fonts), properties.subtitleSize, FlxColor.WHITE, FlxTextAlign.CENTER);
+        setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
         antialiasing = true;
-        borderSize = 2;
 
         if (properties.centerScreen) screenCenter(properties.screenCenter);
         start(properties.typeSpeed, false, false, [], () -> new FlxTimer().start(showTime, (timer:FlxTimer) -> FlxTween.tween(this, {alpha: 0}, .5, {onComplete: (tween:FlxTween) -> finish()})));
@@ -35,7 +34,6 @@ class Subtitle extends FlxTypeText {
         if (properties.typeSpeed == null) properties.typeSpeed = .02;
         if (properties.centerScreen == null) properties.centerScreen = true;
         if (properties.screenCenter == null) properties.screenCenter = FlxAxes.XY;
-        if (properties.sounds == null) properties.sounds = null;
         if (properties.fonts == null) properties.fonts = Paths.font("comic.ttf");
         return properties;
     }
