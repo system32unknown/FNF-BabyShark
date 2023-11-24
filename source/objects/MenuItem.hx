@@ -12,9 +12,8 @@ class MenuItem extends FlxSprite
 	}
 
 	var isFlashing:Bool = false;
-	public function startFlashing():Void {
+	public function startFlashing():Void
 		isFlashing = true;
-	}
 
 	var time:Float = 0;
 	override function update(elapsed:Float) {

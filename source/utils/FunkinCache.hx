@@ -4,9 +4,7 @@ import openfl.utils.AssetCache;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
 import openfl.text.Font;
-#if lime
-import lime.utils.Assets as LimeAssets;
-#end
+#if lime import lime.utils.Assets as LimeAssets; #end
 
 class FunkinCache extends AssetCache {
 	public static var instance:FunkinCache;

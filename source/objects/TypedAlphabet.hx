@@ -10,7 +10,6 @@ class TypedAlphabet extends Alphabet
 
 	public function new(x:Float, y:Float, text:String = "", ?delay:Float = 0.05, ?bold:Bool = false) {
 		super(x, y, text, bold);
-
 		this.delay = delay;
 	}
 
@@ -29,9 +28,8 @@ class TypedAlphabet extends Alphabet
 			_timeToUpdate += elapsed;
 			while (_timeToUpdate >= delay) {
 				showCharacterUpTo(_curLetter + 1);
-				if (!playedSound && sound != '' && (delay > 0.025 || _curLetter % 2 == 0)) {
+				if (!playedSound && sound != '' && (delay > 0.025 || _curLetter % 2 == 0))
 					FlxG.sound.play(Paths.sound(sound), volume);
-				}
 				playedSound = true;
 
 				_curLetter++;
@@ -61,9 +59,8 @@ class TypedAlphabet extends Alphabet
 		_curLetter = -1;
 		finishedText = false;
 		_timeToUpdate = 0;
-		for (letter in letters) {
+		for (letter in letters)
 			letter.visible = false;
-		}
 	}
 
 	public function finishText() {

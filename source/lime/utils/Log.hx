@@ -21,10 +21,8 @@ class Log {
 	}
 
 	public static function error(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.ERROR) {
-			var message = '[${info.className}] $message';
-			FunkinLogs.trace(message, ERROR, RED);
-		}
+		if (level >= LogLevel.ERROR)
+			FunkinLogs.trace('[${info.className}] $message', ERROR, RED);
 	}
 
 	public static function info(message:Dynamic, ?info:PosInfos):Void {

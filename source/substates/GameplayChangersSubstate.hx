@@ -67,23 +67,17 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		return null;
 	}
 
-	public function new()
-	{
+	public function new() {
 		super();
 		
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		bg.alpha = 0.6;
+		bg.alpha = .6;
 		add(bg);
 
 		// avoids lagspikes while scrolling through menus!
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
-
-		grpTexts = new FlxTypedGroup<AttachedText>();
-		add(grpTexts);
-
-		checkboxGroup = new FlxTypedGroup<CheckboxThingie>();
-		add(checkboxGroup);
+		add(grpOptions = new FlxTypedGroup<Alphabet>());
+		add(grpTexts = new FlxTypedGroup<AttachedText>());
+		add(checkboxGroup = new FlxTypedGroup<CheckboxThingie>());
 		
 		getOptions();
 
@@ -123,12 +117,9 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	var nextAccept:Int = 5;
 	var holdTime:Float = 0;
 	var holdValue:Float = 0;
-	override function update(elapsed:Float)
-	{
-		if (controls.UI_UP_P)
-			changeSelection(-1);
-		if (controls.UI_DOWN_P)
-			changeSelection(1);
+	override function update(elapsed:Float) {
+		if (controls.UI_UP_P) changeSelection(-1);
+		if (controls.UI_DOWN_P) changeSelection(1);
 
 		if (controls.BACK) {
 			close();
@@ -136,8 +127,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
-		if(nextAccept <= 0)
-		{
+		if(nextAccept <= 0) {
 			var usesCheckbox = true;
 			if(curOption.type != 'bool') {
 				usesCheckbox = false;
@@ -344,17 +334,15 @@ class GameplayOption
 				case 'percent': defaultValue = 1;
 				case 'string':
 					defaultValue = '';
-					if(options.length > 0) {
+					if(options.length > 0)
 						defaultValue = options[0];
-					}
 			}
 		}
 
 		if(getValue() == null)
 			setValue(defaultValue);
 
-		switch(type)
-		{
+		switch(type) {
 			case 'string':
 				var num:Int = options.indexOf(getValue());
 				if(num > -1) curOption = num;
@@ -375,34 +363,29 @@ class GameplayOption
 
 	public function getValue():Dynamic
 		return ClientPrefs.gameplaySettings.get(variable);
-	public function setValue(value:Dynamic) {
+	public function setValue(value:Dynamic)
 		ClientPrefs.gameplaySettings.set(variable, value);
-	}
 
 	public function setChild(child:Alphabet) {
 		this.child = child;
 	}
 
 	function get_text() {
-		if(child != null) {
-			return child.text;
-		}
+		if(child != null) return child.text;
 		return null;
 	}
 	function set_text(newValue:String = '') {
-		if(child != null) {
-			child.text = newValue;
-		}
+		if(child != null) child.text = newValue;
 		return null;
 	}
 
 	function get_type() {
-		var newValue:String = 'bool';
-		switch(type.toLowerCase().trim()) {
-			case 'int' | 'float' | 'percent' | 'string': newValue = type;
-			case 'integer': newValue = 'int';
-			case 'str': newValue = 'string';
-			case 'fl': newValue = 'float';
+		var newValue:String = switch(type.toLowerCase().trim()) {
+			case 'int' | 'float' | 'percent' | 'string': type;
+			case 'integer': 'int';
+			case 'str': 'string';
+			case 'fl': 'float';
+			default: 'bool';
 		}
 		type = newValue;
 		return type;

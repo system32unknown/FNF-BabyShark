@@ -11,8 +11,7 @@ typedef MenuCharacterFile = {
 	var flipX:Bool;
 }
 
-class MenuCharacter extends FlxSprite
-{
+class MenuCharacter extends FlxSprite {
 	public var character:String;
 	public var hasConfirmAnimation:Bool = false;
 	static var DEFAULT_CHARACTER:String = 'bf';
@@ -30,31 +29,25 @@ class MenuCharacter extends FlxSprite
 		antialiasing = ClientPrefs.getPref('Antialiasing');
 		visible = true;
 
-		var dontPlayAnim:Bool = false;
 		scale.set(1, 1);
 		updateHitbox();
 
 		hasConfirmAnimation = false;
 		switch(character) {
-			case '':
-				visible = false;
-				dontPlayAnim = true;
+			case '': visible = false;
 			default:
 				var characterPath:String = 'images/menucharacters/' + character + '.json';
 				var rawJson = null;
 
 				#if MODS_ALLOWED
 				var path:String = Paths.modFolders(characterPath);
-				if(!FileSystem.exists(path))
-					path = Paths.getPreloadPath(characterPath);
-				if(!FileSystem.exists(path))
-					path = Paths.getPreloadPath('images/menucharacters/' + DEFAULT_CHARACTER + '.json');
+				if(!FileSystem.exists(path)) path = Paths.getPreloadPath(characterPath);
+				if(!FileSystem.exists(path)) path = Paths.getPreloadPath('images/menucharacters/' + DEFAULT_CHARACTER + '.json');
 				rawJson = File.getContent(path);
 
 				#else
 				var path:String = Paths.getPreloadPath(characterPath);
-				if(!Assets.exists(path))
-					path = Paths.getPreloadPath('images/menucharacters/' + DEFAULT_CHARACTER + '.json');
+				if(!Assets.exists(path)) path = Paths.getPreloadPath('images/menucharacters/' + DEFAULT_CHARACTER + '.json');
 				rawJson = Assets.getText(path);
 				#end
 				

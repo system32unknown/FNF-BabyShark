@@ -21,9 +21,7 @@ class FunkinLua {
 	public static var Function_StopHScript:Dynamic = "##PSYCHLUA_FUNCTIONSTOPHSCRIPT";
 	public static var Function_StopAll:Dynamic = "##PSYCHLUA_FUNCTIONSTOPALL";
 	
-	#if LUA_ALLOWED
-	public var lua:State = null;
-	#end
+	#if LUA_ALLOWED public var lua:State = null; #end
 	public var scriptName:String = '';
 	public var modFolder:String = null;
 	public var closed:Bool = false;
@@ -186,7 +184,7 @@ class FunkinLua {
 					for (luaInstance in game.luaArray)
 						if(luaInstance.scriptName == foundScript) {
 							luaInstance.stop();
-							trace('Closing script: ' + luaInstance.scriptName);
+							Logs.trace('Closing script: ' + luaInstance.scriptName);
 							return true;
 						}
 			}
@@ -201,7 +199,7 @@ class FunkinLua {
 				if (!ignoreAlreadyRunning)
 					for (script in game.hscriptArray)
 						if (script.origin == foundScript) {
-							trace('Closing script: ' + script.origin);
+							Logs.trace('Closing script: ' + script.origin);
 							game.hscriptArray.remove(script);
 							script.destroy();
 							return true;
@@ -974,7 +972,7 @@ class FunkinLua {
 			return null;
 		});
 		set("close", () -> {
-			trace('Closing script: $scriptName');
+			Logs.trace('Closing script: $scriptName');
 			return closed = true;
 		});
 

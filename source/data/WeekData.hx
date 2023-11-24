@@ -63,7 +63,7 @@ class WeekData {
 	public function new(weekFile:WeekFile, fileName:String) {
 		for (field in Reflect.fields(weekFile))
 			try {Reflect.setProperty(this, field, Reflect.getProperty(weekFile, field));}
-			catch(e) Logs.trace('INVAILD FILE DATA ($fileName): $e', ERROR);
+			catch(e) Logs.trace('INVAILD WEEKDATA ($fileName): $e', ERROR);
 		this.fileName = fileName;
 	}
 

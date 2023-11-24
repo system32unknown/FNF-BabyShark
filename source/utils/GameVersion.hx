@@ -5,6 +5,7 @@ class GameVersion {
 	public var major(default, null):Int;
 	public var minor(default, null):Int;
 	public var patch(default, null):String;
+	
 	public var version(get, never):String;
 
 	public var COMMIT_HASH(get, never):String;

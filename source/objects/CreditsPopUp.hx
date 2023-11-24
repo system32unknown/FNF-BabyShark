@@ -32,7 +32,7 @@ class CreditsPopUp extends FlxSpriteGroup {
 
 		rescaleBG();
 		var yValues = MathUtil.getMinAndMax(bg.height, funnyText.height);
-		funnyText.y = funnyText.y + ((yValues[0] - yValues[1]) / 2);
+		funnyText.y += ((yValues[0] - yValues[1]) / 2);
 	}
 
 	public function switchHeading(newHeading:SongHeading) {
