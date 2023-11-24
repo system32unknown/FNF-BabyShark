@@ -1,6 +1,5 @@
 package psychlua;
 
-import macros.MacroFunctions;
 #if HSCRIPT_ALLOWED
 import hscript.Parser;
 import hscript.Interp;

@@ -4,17 +4,14 @@ import flixel.system.FlxAssets.FlxShader;
 
 class GlitchEffect 
 {
-    public var shader(default,null):GlitchShader = new GlitchShader();
+    public var shader(default, null):GlitchShader = new GlitchShader();
 
     public var waveSpeed(default, set):Float = 0;
 	public var waveFrequency(default, set):Float = 0;
 	public var waveAmplitude(default, set):Float = 0;
     public var isBG(default, set):Bool = false;
-    public var enabled(default, set):Bool = true;
 
-	public function new() {
-		shader.uTime.value = [0];
-	}
+	public function new() {shader.uTime.value = [0];}
 
     public function update(elapsed:Float):Void {
         shader.uTime.value[0] += elapsed;
@@ -41,12 +38,6 @@ class GlitchEffect
     function set_isBG(v:Bool):Bool {
         isBG = v;
         shader.uDistortBG.value = [isBG];
-        return v;
-    }
-
-    function set_enabled(v:Bool):Bool {
-        enabled = v;
-        shader.uEnabled.value = [enabled];
         return v;
     }
 }
@@ -77,14 +68,8 @@ class GlitchShader extends FlxShader
      * Distort BG?
     */
     uniform bool uDistortBG;
-
-    /*
-     * Enabled?
-    */
-    uniform bool uEnabled;
     
     vec2 sineWave(vec2 pt) {
-        if (!uEnabled) return vec2(pt.x, pt.y);
 
         float x = 0.0;
         float y = 0.0;
