@@ -193,8 +193,7 @@ class NoteOffsetState extends MusicBeatState {
 		if(FlxG.keys.pressed.SHIFT)
 			addNum = onComboMenu ? 10 : 3;
 
-		if(onComboMenu)
-		{
+		if(onComboMenu) {
 			var controlArray:Array<Bool> = [
 				FlxG.keys.justPressed.LEFT,
 				FlxG.keys.justPressed.RIGHT,

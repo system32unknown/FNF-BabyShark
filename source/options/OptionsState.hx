@@ -7,7 +7,7 @@ class OptionsState extends MusicBeatState
 {
 	var options:Array<Array<Dynamic>> = [
 		['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'],
-		['Saves', 'Miscellaneous', 'Latency Test']
+		['Saves', 'Miscellaneous']
 	];
 	var grpOptions:FlxTypedGroup<Alphabet>;
 	static var curSelected:Int = 0;
@@ -23,7 +23,6 @@ class OptionsState extends MusicBeatState
 			case 'Miscellaneous': openSubState(new MiscellaneousSubState());
 			case 'Saves': openSubState(new SaveSubState());
 			case 'Adjust Delay and Combo': MusicBeatState.switchState(new NoteOffsetState());
-			case 'Latency Test': MusicBeatState.switchState(new LatencyState());
 		}
 	}
 
