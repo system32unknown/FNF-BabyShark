@@ -1,0 +1,100 @@
+{
+	"animations": [
+		{
+			"loop": false,
+			"offsets": [
+				0,
+				0
+			],
+			"anim": "idle",
+			"fps": 24,
+			"name": "bambi idle",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				70,
+				6
+			],
+			"anim": "singLEFT",
+			"fps": 24,
+			"name": "bambi left",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				22,
+				-28
+			],
+			"anim": "singDOWN",
+			"fps": 24,
+			"name": "bambi down",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				55,
+				36
+			],
+			"anim": "singUP",
+			"fps": 24,
+			"name": "bambi up",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				-16,
+				8
+			],
+			"anim": "singRIGHT",
+			"fps": 24,
+			"name": "bambi right",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				37,
+				23
+			],
+			"anim": "throw",
+			"fps": 24,
+			"name": "bambi throw",
+			"indices": []
+		},
+		{
+			"loop": false,
+			"offsets": [
+				98,
+				81
+			],
+			"anim": "singSmash",
+			"fps": 24,
+			"name": "bambi phone",
+			"indices": []
+		}
+	],
+	"no_antialiasing": false,
+	"gameover_properties": [
+		"bf-dead",
+		"fnf_loss_sfx",
+		"gameOver",
+		"gameOverEnd"
+	],
+	"image": "characters/bambiRemake",
+	"position": [100, 440],
+	"healthicon": "bambi",
+	"flip_x": false,
+	"healthbar_colors": [
+		37,
+		191,
+		55
+	],
+	"camera_position": [0, 0],
+	"sing_duration": 6.1,
+	"scale": 1
+}
