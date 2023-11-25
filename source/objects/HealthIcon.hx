@@ -88,7 +88,7 @@ class HealthIcon extends FlxSprite {
 		state = 0;
 
 		iconOffsets[1] = iconOffsets[0] = 0;
-		if (!animd) {
+		if (!animated) {
 			loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
