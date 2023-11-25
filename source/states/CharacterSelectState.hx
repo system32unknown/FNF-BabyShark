@@ -23,8 +23,7 @@ class CharacterForm
 	}
 }
 
-class CharacterSelectState extends MusicBeatState
-{
+class CharacterSelectState extends MusicBeatState {
 	public var char:Character;
 	public var current:Int = 0;
 	public var curForm:Int = 0;
@@ -38,7 +37,7 @@ class CharacterSelectState extends MusicBeatState
 
 	var camHUD:FlxCamera;
 	var camGame:FlxCamera;
-	var camTransition:FlxCamera;
+	var camOther:FlxCamera;
 
 	var currentSelectedCharacter:CharacterInSelect;
 	var basePosition:FlxPoint;
@@ -77,17 +76,17 @@ class CharacterSelectState extends MusicBeatState
 		Conductor.bpm = 110;
 
 		camGame = new FlxCamera();
-		camTransition = new FlxCamera();
-		camTransition.bgColor.alpha = 0;
+		camOther = new FlxCamera();
 		camHUD = new FlxCamera();
-		camHUD.bgColor.alpha = 0;
+		camHUD.bgColor = 0x00000000;
+		camOther.bgColor = 0x00000000;
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
-		FlxG.cameras.add(camTransition, false);
+		FlxG.cameras.add(camOther, false);
         
         FlxG.cameras.setDefaultDrawTarget(camGame, true);
-        CustomFadeTransition.nextCamera = camTransition;
+        CustomFadeTransition.nextCamera = camOther;
         FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
 		camGame.scroll.set(120, 130);
@@ -130,38 +129,34 @@ class CharacterSelectState extends MusicBeatState
 
 		basePosition = char.getPosition();
 
-		characterText = new FlxText((FlxG.width / 9) - 50, (FlxG.height / 8) - 225, "Boyfriend");
-		characterText.setFormat(Paths.font("comic.ttf"), 90, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		characterText = new FlxText((FlxG.width / 9) - 50, (FlxG.height / 8) - 225, 1080, "Boyfriend");
+		characterText.setFormat(Paths.font("comic.ttf"), 90, FlxColor.WHITE, CENTER);
+		characterText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 5);
 		characterText.autoSize = false;
-		characterText.fieldWidth = 1080;
-		characterText.borderSize = 5;
 		characterText.screenCenter(X);
 		characterText.camera = camHUD;
 		characterText.antialiasing = true;
 		characterText.y = FlxG.height - 180;
 		add(characterText);
 
-		var resetText = new FlxText(FlxG.width, FlxG.height, "Press R to Reset Character.");
-		resetText.setFormat(Paths.font("comic.ttf"), 30, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		resetText.autoSize = false;
-		resetText.fieldWidth = FlxG.height;
-		resetText.x -= resetText.textField.textWidth + 100;
-		resetText.y -= resetText.textField.textHeight - 100;
-		resetText.borderSize = 3;
+		var resetText = new FlxText(FlxG.width, FlxG.height, 600, "Press R to Reset Character.");
+		resetText.setFormat(Paths.font("comic.ttf"), 25, FlxColor.WHITE, CENTER);
+		resetText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 3);
+		resetText.y = FlxG.height - resetText.height;
+		characterText.screenCenter(X);
 		resetText.camera = camHUD;
 		resetText.antialiasing = true;
 		add(resetText);
 
 		funnyIconMan = new HealthIcon('bf', true);
 		funnyIconMan.camera = camHUD;
-		funnyIconMan.visible = false;
 		funnyIconMan.antialiasing = true;
 		updateIconPosition();
 		add(funnyIconMan);
 
 		super.create();
 
-		CustomFadeTransition.nextCamera = camTransition;
+		CustomFadeTransition.nextCamera = camOther;
 	}
 
 
@@ -258,7 +253,6 @@ class CharacterSelectState extends MusicBeatState
 		characterText.text = currentSelectedCharacter.forms[curForm].polishedName;
 		char.destroy();
 		char = new Character(basePosition.x, basePosition.y, currentSelectedCharacter.forms[curForm].name, true);
-		char.camera = camHUD;
 
 		switch (char.curCharacter) {
 			case 'bambi':
