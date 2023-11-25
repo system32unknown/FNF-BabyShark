@@ -13,6 +13,7 @@ class HealthIcon extends FlxSprite {
 	public var sprTracker:FlxSprite;
 	public var isPixelIcon(get, null):Bool;
 	var isPlayer:Bool = false;
+	public var animated:Bool;
 
 	var char:String = '';
 	
@@ -20,6 +21,7 @@ class HealthIcon extends FlxSprite {
 	var availableStates:Int = 1;
 	var state:Int = 0;
 	var _scale:FlxPoint;
+	final animatediconstates:Array<String> = ['normal', 'lose', 'win'];
 	
 	public static function returnGraphic(char:String, defaultIfMissing:Bool = false):FlxGraphic {
 		var path:String;
@@ -62,6 +64,9 @@ class HealthIcon extends FlxSprite {
 	public function changeIcon(char:String, defaultIfMissing:Bool = true):Bool {
 		if (this.char == char) return false;
 		var graph:FlxGraphic = null;
+
+		animated = Paths.exists('images/icons/$char.xml');
+
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing);
 		else {
 			availableStates = 1;
@@ -83,11 +88,18 @@ class HealthIcon extends FlxSprite {
 		state = 0;
 
 		iconOffsets[1] = iconOffsets[0] = 0;
-		loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
-		iconZoom = isPixelIcon ? 150 / graph.height : 1;
+		if (!animd) {
+			loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
+			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
-		animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
-		animation.play(char);
+			animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
+			animation.play(char);
+		} else {
+			frames = Paths.getSparrowAtlas('icons/$char');
+			for (animstate in animatediconstates)
+				animation.addByPrefix(animstate, animstate, 24, false, isPlayer, false);
+			animation.play(animatediconstates[0]);
+		}
 
 		updateHitbox();
 		antialiasing = iconZoom < 2.5 && ClientPrefs.getPref('Antialiasing');
@@ -114,20 +126,26 @@ class HealthIcon extends FlxSprite {
 	inline function get_isPixelIcon():Bool
 		return char.substr(-6, 6) == '-pixel';
 
-	public function setState(state:Int) {
+	public function setStateIndex(state:Int) {
 		if (state >= availableStates) state = 0;
 		if (animation.curAnim == null) return;
 		animation.curAnim.curFrame = this.state = state;
+	}
+
+	public function setState(state:Int) {
+		if (!animated) setStateIndex(state);
+		else if (animation.exists(animatediconstates[state])) {
+			animation.finish();
+			animation.play(animatediconstates[state]);
+		}
 	}
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
 		if (Std.isOfType(FlxG.state, PlayState)) {
-			switch (ClientPrefs.getPref('IconBounceType')) {
-				case "Dave" | "GoldenApple":
-					offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
-			}
+			if (ClientPrefs.getPref('IconBounceType') == 'Dave' || ClientPrefs.getPref('IconBounceType') == 'GoldenApple')
+				offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
 		}
 
 		if (sprTracker != null) setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);

@@ -951,8 +951,7 @@ class FunkinLua {
 							}
 						}
 						FlxG.save.data.modSettings.set(modName, settings);
-					}
-					catch(e:Dynamic) {
+					} catch(e:Dynamic) {
 						var errorTitle = 'Mod name: ' + Mods.currentModDirectory;
 						var errorMsg = 'An error occurred: $e';
 						#if windows

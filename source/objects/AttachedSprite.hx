@@ -5,7 +5,7 @@ import flixel.math.FlxPoint;
 class AttachedSprite extends FlxSprite
 {
 	public var sprTracker:FlxSprite;
-	public var addPoint:FlxPoint = new FlxPoint();
+	public var addPoint:FlxPoint = FlxPoint.get();
 	public var angleAdd:Float = 0;
 	public var alphaMult:Float = 1;
 

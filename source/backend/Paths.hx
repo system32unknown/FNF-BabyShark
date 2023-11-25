@@ -5,7 +5,6 @@ import flixel.graphics.FlxGraphic;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
-import openfl.display3D.textures.RectangleTexture;
 import openfl.media.Sound;
 import lime.utils.Assets;
 
@@ -452,6 +451,9 @@ class Paths
 	inline static public function modsTxt(key:String)
 		return modFolders('images/$key.txt');
 
+	inline static public function modsPacker(key:String)
+		return modFolders('images/$key.json');
+
 	static public function modFolders(key:String) {
 		if(Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0) {
 			var file:String = mods('${Mods.currentModDirectory}/$key');
@@ -517,4 +519,7 @@ class Paths
 		spr.loadAtlasEx(folderOrImg, spriteJson, animationJson);
 	}
 	#end
+
+	inline static public function exists(key:String)
+		return FileSystem.exists(modFolders(key)) || FileSystem.exists(getPreloadPath(key));
 }

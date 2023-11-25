@@ -408,21 +408,13 @@ class NoteOffsetState extends MusicBeatState {
 		if (m[i + 1] != null && m[i + 1].text != text2) m[i + 1].text = text2;
 	}
 
-	function setDumbTextVisible(i:Int, visible:Bool) {
-		i = Math.floor(i * 2);
-
-		var m = dumbTexts.members;
-		if (m[i] != null) m[i].visible = visible;
-		if (m[i + 1] != null) m[i + 1].visible = visible;
-	}
-
 	function updateNoteDelay() {
 		ClientPrefs.prefs.set('noteOffset', Math.round(barPercent));
 		timeTxt.text = 'Current offset: ' + Math.floor(barPercent) + ' ms';
 	}
 
 	function updateMode() {
-		for (i in 0...4) setDumbTextVisible(i, onComboMenu);
+		rating.visible = comboNums.visible = combo.visible = lateEarly.visible = onComboMenu;
 		dumbTexts.visible = onComboMenu;
 		
 		timeBar.visible = timeTxt.visible = !onComboMenu;

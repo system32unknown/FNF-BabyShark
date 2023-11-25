@@ -77,7 +77,8 @@ class CharacterSelectState extends MusicBeatState
         CustomFadeTransition.nextCamera = camTransition;
         FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
-		FlxG.camera.zoom = 1.2;
+		camGame.scroll.set(120, 130);
+		FlxG.camera.zoom = .7;
 		camHUD.zoom = 0.75;
 
 		if (FlxG.save.data.charactersUnlocked == null) reset();

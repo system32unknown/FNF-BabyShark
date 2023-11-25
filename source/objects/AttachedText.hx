@@ -3,7 +3,7 @@ package objects;
 import flixel.math.FlxPoint;
 
 class AttachedText extends Alphabet {
-	public var textoffset:FlxPoint = new FlxPoint();
+	public var textoffset:FlxPoint = FlxPoint.get();
 	public var sprTracker:FlxSprite;
 	public var copyVisible:Bool = true;
 	public var copyAlpha:Bool = false;

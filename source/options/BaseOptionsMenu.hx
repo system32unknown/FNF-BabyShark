@@ -177,8 +177,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 						}
 					}
 
-					if(curOption.type != 'string')
-						holdTime += elapsed;
+					if(curOption.type != 'string') holdTime += elapsed;
 				} else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) {
 					clearHold();
 				}
