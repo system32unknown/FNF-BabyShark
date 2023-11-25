@@ -1,6 +1,5 @@
 package states;
 
-
 import objects.AttachedSprite;
 import objects.HealthIcon;
 

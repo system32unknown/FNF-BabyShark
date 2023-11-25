@@ -274,6 +274,7 @@ class FreeplayState extends MusicBeatState
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
+		var holdingtoselection:Bool = FlxG.keys.pressed.Z;
 		if(FlxG.keys.justPressed.CONTROL) {
 			persistentUpdate = false;
 			openSubState(new GameplayChangersSubstate());
@@ -338,7 +339,9 @@ class FreeplayState extends MusicBeatState
 
 				if(colorTween != null) colorTween.cancel();
 
-				LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new ChartingState() : new PlayState());
+				if (!holdingtoselection)
+					LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new ChartingState() : new PlayState());
+				else MusicBeatState.switchState(new CharacterSelectState());
 
 				FlxG.sound.music.volume = 0;
 				destroyFreeplayVocals();
@@ -384,8 +387,7 @@ class FreeplayState extends MusicBeatState
 		positionHighscore();
 	}
 
-	function changeSelection(change:Int = 0, playSound:Bool = true)
-	{
+	function changeSelection(change:Int = 0, playSound:Bool = true) {
 		_updateSongLastDifficulty();
 		if(playSound) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 

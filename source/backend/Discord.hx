@@ -13,7 +13,7 @@ class Discord {
 	public static var queue:DiscordPresenceOptions = {
 		details: "In the Menus",
 		state: null,
-		largeImageKey: (ClientPrefs.getPref('AltDiscordImg') ? 'iconalt' : 'icon'),
+		largeImageKey: (ClientPrefs.getPref('AltDiscordImg') ? 'iconalt' + ClientPrefs.getPref('AltDiscordImgCount') : 'icon'),
 		largeImageText: 'Baby Shark\'s Funkin',
 		smallImageKey : null,
 		startTimestamp : null,
@@ -105,7 +105,7 @@ class Discord {
 		var presence:DiscordPresenceOptions = {
 			details: details,
 			state: state,
-			largeImageKey: (ClientPrefs.getPref('AltDiscordImg') ? 'iconalt' : 'icon'),
+			largeImageKey: (ClientPrefs.getPref('AltDiscordImg') ? 'iconalt'  + ClientPrefs.getPref('AltDiscordImgCount') : 'icon'),
 			largeImageText: 'Baby Shark\'s Funkin',
 			smallImageKey : smallImageKey,
 			// Obtained times are in milliseconds so they are divided so Discord can use it

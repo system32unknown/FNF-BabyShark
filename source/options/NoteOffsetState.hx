@@ -28,7 +28,6 @@ class NoteOffsetState extends MusicBeatState {
 	var boyfriend:Character;
 	var gf:Character;
 
-	var coolText:FlxText;
 	var combo:FlxSprite;
 	var rating:FlxSprite;
 	var lateEarly:FlxSprite;
@@ -56,7 +55,6 @@ class NoteOffsetState extends MusicBeatState {
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
-		camGame.bgColor = 0xFF000000;
 		camHUD.bgColor = 0x00000000;
 		camOther.bgColor = 0x00000000;
 
@@ -94,10 +92,6 @@ class NoteOffsetState extends MusicBeatState {
 		add(boyfriendGroup);
 
 		// Combo stuff
-		coolText = new FlxText(0, 0, 0, '', 32);
-		coolText.screenCenter();
-		coolText.x = FlxG.width * 0.35;
-
 		rating = new FlxSprite().loadGraphic(Paths.image('ratings/sick'));
 		rating.camera = camHUD;
 		rating.setGraphicSize(Std.int(rating.width * 0.7));
@@ -133,9 +127,9 @@ class NoteOffsetState extends MusicBeatState {
 		}
 
 		timeTxt = new FlxText(0, 600, FlxG.width, "", 32);
-		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		timeTxt.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
 		timeTxt.scrollFactor.set();
-		timeTxt.borderSize = 2;
 
 		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 3), 'healthBar', () -> return barPercent, delayMin, delayMax);
 		timeBar.scrollFactor.set();
@@ -365,49 +359,61 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	function repositionCombo() {
+		var placement:Float = FlxG.width * .35;
 		rating.screenCenter();
-		rating.x = coolText.x - 40 + comboOffset[0][0];
+		rating.x = placement - 40 + comboOffset[0][0];
 		rating.y -= 60 + comboOffset[0][1];
 
 		comboNums.screenCenter();
-		comboNums.x = coolText.x - 90 + comboOffset[1][0];
+		comboNums.x = placement - 90 + comboOffset[1][0];
 		comboNums.y += 80 - comboOffset[1][1];
 
 		combo.screenCenter();
-		combo.x = coolText.x + comboOffset[2][0];
+		combo.x = placement + comboOffset[2][0];
 		combo.y -= comboOffset[2][1];
 
 		lateEarly.screenCenter();
-		lateEarly.setPosition(coolText.x - 130 + comboOffset[3][0], coolText.y - comboOffset[3][1]);
+		lateEarly.x = placement - 130 + comboOffset[3][0];
+		lateEarly.y -= comboOffset[3][1];
 
 		reloadTexts();
 	}
 
 	function createTexts(i:Int) {
 		var text:FlxText = new FlxText(10, 48 + (i * 30), 0, '', 24);
-		text.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		text.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT);
+		text.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
 		text.scrollFactor.set();
-		text.borderSize = 2;
 		text.camera = camHUD;
 
 		dumbTexts.add(text);
 		text.y += Math.floor(i / 2) * 24;
 	}
 
-	function reloadTexts()
-	{
-		for (i in 0...dumbTexts.length) {
-			switch(i) {
-				case 0: dumbTexts.members[i].text = 'Rating Offset:';
-				case 1: dumbTexts.members[i].text = '[' + comboOffset[0][0] + ', ' + comboOffset[0][1] + ']';
-				case 2: dumbTexts.members[i].text = 'Numbers Offset:';
-				case 3: dumbTexts.members[i].text = '[' + comboOffset[1][0] + ', ' + comboOffset[1][1] + ']';
-				case 4: dumbTexts.members[i].text = 'Combo Offset:';
-				case 5: dumbTexts.members[i].text = '[' + comboOffset[2][0] + ', ' + comboOffset[2][1] + ']';
-				case 6: dumbTexts.members[i].text = 'Late/Early Offset:';
-				case 7: dumbTexts.members[i].text = '[' + comboOffset[3][0] + ', ' + comboOffset[3][1] + ']';
-			}
+	function reloadTexts() {
+		var num:Int = 0;
+		for (i in ['Rating', 'Number', 'Combo', 'Late/Early']) {
+			if (onComboMenu)
+				setDumbText(num, '$i Offset:', '[${comboOffset[num][0]}, ${comboOffset[num][1]}]');
+			else setDumbText(num, '', '');
+			num++;
 		}
+	}
+
+	function setDumbText(i:Int, text1:String, text2:String) {
+		i = Math.floor(i * 2);
+
+		var m = dumbTexts.members;
+		if (m[i] != null && m[i].text != text1) m[i].text = text1;
+		if (m[i + 1] != null && m[i + 1].text != text2) m[i + 1].text = text2;
+	}
+
+	function setDumbTextVisible(i:Int, visible:Bool) {
+		i = Math.floor(i * 2);
+
+		var m = dumbTexts.members;
+		if (m[i] != null) m[i].visible = visible;
+		if (m[i + 1] != null) m[i + 1].visible = visible;
 	}
 
 	function updateNoteDelay() {
@@ -416,17 +422,13 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	function updateMode() {
-		rating.visible = onComboMenu;
-		comboNums.visible = onComboMenu;
-		combo.visible = onComboMenu;
-		lateEarly.visible = onComboMenu;
+		for (i in 0...4) setDumbTextVisible(i, onComboMenu);
 		dumbTexts.visible = onComboMenu;
 		
 		timeBar.visible = timeTxt.visible = !onComboMenu;
 
-		var str:String;
 		var str2:String = '(Press Accept to Switch)';
-		str = onComboMenu ? 'Combo Offset' : 'Note/Beat Delay';
+		var str:String = onComboMenu ? 'Combo Offset' : 'Note/Beat Delay';
 
 		changeModeText.text = '< ${str.toUpperCase()} ${str2.toUpperCase()} >';
 

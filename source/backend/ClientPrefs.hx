@@ -49,6 +49,7 @@ class ClientPrefs {
 		'timeBarType' => 'Time Left',
 		'noReset' => false,
 		'AltDiscordImg' => false,
+		'AltDiscordImgCount' => 0,
 		'UpdateCamSection' => false,
 		'healthBarAlpha' => 1,
 		'hitsoundVolume' => 0,
