@@ -37,7 +37,7 @@ class ReflectionFunctions {
 				var obj:Dynamic = LuaUtils.getVarInArray(myClass, split[0], allowMaps);
 				for (i in 1...split.length - 1)
 					obj = LuaUtils.getVarInArray(obj, split[i], allowMaps);
-				return LuaUtils.getVarInArray(obj, split[split.length-1], allowMaps);
+				return LuaUtils.getVarInArray(obj, split[split.length - 1], allowMaps);
 			}
 			return LuaUtils.getVarInArray(myClass, variable, allowMaps);
 		});

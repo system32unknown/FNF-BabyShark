@@ -362,6 +362,8 @@ class FreeplayState extends MusicBeatState
 
 		updateTexts(elapsed);
 		super.update(elapsed);
+
+		for (icon in iconArray) icon.y = icon.sprTracker.y - 36;
 	}
 
 	public static function destroyFreeplayVocals() {

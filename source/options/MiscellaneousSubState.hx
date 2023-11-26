@@ -13,7 +13,7 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		var option:Option = new Option('Alt. Discord Large Images', '', 'AltDiscordImgCount', 'int');
 		option.scrollSpeed = 15;
 		option.minValue = 0;
-		option.maxValue = 3;
+		option.maxValue = 5;
 		addOption(option);
 
 		var option:Option = new Option('Fullscreen', '', 'fullscreen', 'bool');
@@ -23,7 +23,5 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		super();
 	}
 
-	function onChangeFullscreen() {
-		FlxG.fullscreen = ClientPrefs.getPref('fullscreen');
-	}
+	function onChangeFullscreen() FlxG.fullscreen = ClientPrefs.getPref('fullscreen');
 }

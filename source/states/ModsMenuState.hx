@@ -1,14 +1,12 @@
 package states;
 
-import backend.Mods;
-
 import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
-import haxe.Json;
-
 import flixel.util.FlxSpriteUtil;
-import options.ModSettingsSubState;
 import flixel.addons.transition.FlxTransitionableState;
+import backend.Mods;
+import options.ModSettingsSubState;
+import haxe.Json;
 
 class ModsMenuState extends MusicBeatState {
 	var bg:FlxSprite;
@@ -108,7 +106,7 @@ class ModsMenuState extends MusicBeatState {
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 		});
 		buttonEnableAll.bg.color = FlxColor.GREEN;
-		buttonEnableAll.focusChangeCallback = function(focus:Bool) if(!focus) buttonEnableAll.bg.color = FlxColor.GREEN;
+		buttonEnableAll.focusChangeCallback = (focus:Bool) -> if(!focus) buttonEnableAll.bg.color = FlxColor.GREEN;
 		add(buttonEnableAll);
 
 		buttonDisableAll = new MenuButton(buttonX, myY, buttonWidth, buttonHeight, "DISABLE ALL", function() {
@@ -128,7 +126,7 @@ class ModsMenuState extends MusicBeatState {
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 		});
 		buttonDisableAll.bg.color = 0xFFFF6666;
-		buttonDisableAll.focusChangeCallback = function(focus:Bool) if(!focus) buttonDisableAll.bg.color = 0xFFFF6666;
+		buttonDisableAll.focusChangeCallback = (focus:Bool) -> if(!focus) buttonDisableAll.bg.color = 0xFFFF6666;
 		add(buttonDisableAll);
 		checkToggleButtons();
 
@@ -246,9 +244,7 @@ class ModsMenuState extends MusicBeatState {
 		button.icon.animation.play('icon', true);
 		add(button);
 		buttons.push(button);
-		button.focusChangeCallback = (focus:Bool) -> {
-			if(!focus) button.bg.color = modsList.enabled.contains(modsGroup.members[curSelectedMod].folder) ? FlxColor.GREEN : 0xFFFF6666;
-		};
+		button.focusChangeCallback = (focus:Bool) -> if(!focus) button.bg.color = modsList.enabled.contains(modsGroup.members[curSelectedMod].folder) ? FlxColor.GREEN : 0xFFFF6666;
 
 		if(modsList.all.length < 1) {
 			for (btn in buttons) btn.enabled = false;
@@ -272,8 +268,7 @@ class ModsMenuState extends MusicBeatState {
 
 	override function update(elapsed:Float) {
 		if(controls.BACK && hoveringOnMods) {
-			if(colorTween != null)
-				colorTween.cancel();
+			if(colorTween != null) colorTween.cancel();
 			saveTxt();
 
 			FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -314,8 +309,7 @@ class ModsMenuState extends MusicBeatState {
 							hoveringOnMods = true;
 							var button = getButton();
 							button.ignoreCheck = button.onFocus = false;
-							mouseOffsets.x = FlxG.mouse.x - mod.x;
-							mouseOffsets.y = FlxG.mouse.y - mod.y;
+							mouseOffsets.set(FlxG.mouse.x - mod.x, FlxG.mouse.y - mod.y);
 							curSelectedMod = i;
 							changeSelectedMod();
 							break;
@@ -327,19 +321,17 @@ class ModsMenuState extends MusicBeatState {
 					gottaClickAgain = false;
 				}
 
-				if(hoveringOnMods)
-				{
-					var shiftMult:Int = (FlxG.keys.pressed.SHIFT || FlxG.gamepads.anyPressed(LEFT_SHOULDER) || FlxG.gamepads.anyPressed(RIGHT_SHOULDER)) ? 4 : 1;
+				if(hoveringOnMods) {
+					var shiftMult:Int = (FlxG.keys.pressed.SHIFT) ? 4 : 1;
 					if(controls.UI_DOWN_P)
 						changeSelectedMod(shiftMult);
 					else if(controls.UI_UP_P)
 						changeSelectedMod(-shiftMult);
 					else if(FlxG.mouse.wheel != 0 && curSelectedMod != 0 && curSelectedMod != modsList.all.length - 1)
 						changeSelectedMod(-FlxG.mouse.wheel * shiftMult);
-					else if(FlxG.keys.justPressed.HOME || FlxG.keys.justPressed.END ||
-						FlxG.gamepads.anyJustPressed(LEFT_TRIGGER) || FlxG.gamepads.anyJustPressed(RIGHT_TRIGGER))
+					else if(FlxG.keys.justPressed.HOME || FlxG.keys.justPressed.END)
 					{
-						if(FlxG.keys.justPressed.END || FlxG.gamepads.anyJustPressed(RIGHT_TRIGGER)) curSelectedMod = modsList.all.length-1;
+						if(FlxG.keys.justPressed.END) curSelectedMod = modsList.all.length - 1;
 						else curSelectedMod = 0;
 						changeSelectedMod();
 					}
@@ -390,8 +382,7 @@ class ModsMenuState extends MusicBeatState {
 										}
 									}
 								}
-								curMod.x = FlxG.mouse.x - mouseOffsets.x;
-								curMod.y = FlxG.mouse.y - mouseOffsets.y;
+								curMod.setPosition(FlxG.mouse.x - mouseOffsets.x, FlxG.mouse.y - mouseOffsets.y);
 							}
 						}
 						
@@ -442,16 +433,14 @@ class ModsMenuState extends MusicBeatState {
 									var button = getButton();
 									button.ignoreCheck = button.onFocus = false;
 									changeSelectedMod();
-								case -1:
-									changeSelectedButton(-1);
+								case -1: changeSelectedButton(-1);
 							}
 						}
 						else if(controls.UI_DOWN_P)
 						{
 							switch(curSelectedButton)
 							{
-								case -2:
-									changeSelectedButton(1);
+								case -2: changeSelectedButton(1);
 								case -1:
 									curSelectedMod = 0;
 									hoveringOnMods = true;
@@ -467,8 +456,7 @@ class ModsMenuState extends MusicBeatState {
 							curSelectedButton = 0;
 							changeSelectedButton();
 						}
-					}
-					else if(controls.UI_LEFT_P)
+					} else if(controls.UI_LEFT_P)
 						changeSelectedButton(-1);
 					else if(controls.UI_RIGHT_P)
 						changeSelectedButton(1);
@@ -486,8 +474,7 @@ class ModsMenuState extends MusicBeatState {
 				@:privateAccess
 				Mods.updateModList();
 				modsList = Mods.parseList();
-				if(modsList.all.length > 0)
-				{
+				if(modsList.all.length > 0) {
 					Logs.trace('mod(s) found! reloading');
 					reload();
 				}
@@ -531,7 +518,7 @@ class ModsMenuState extends MusicBeatState {
 		}
 
 		if(modsList.all.length < 1) return buttonReload; //prevent possible crash from my irresponsibility
-		return buttons[Std.int(Math.max(0, Math.min(buttons.length-1, curSelectedButton)))];
+		return buttons[Std.int(Math.max(0, Math.min(buttons.length - 1, curSelectedButton)))];
 	}
 
 	function changeSelectedMod(add:Int = 0) {
@@ -649,7 +636,7 @@ class ModsMenuState extends MusicBeatState {
 	function moveModToPosition(?mod:String = null, position:Int = 0) {
 		if(mod == null) mod = modsList.all[curSelectedMod];
 		if(position >= modsList.all.length) position = 0;
-		else if(position < 0) position = modsList.all.length-1;
+		else if(position < 0) position = modsList.all.length - 1;
 
 		Logs.trace('Moved mod $mod to position $position');
 		var id:Int = modsList.all.indexOf(mod);
