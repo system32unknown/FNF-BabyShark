@@ -71,8 +71,7 @@ class ModsMenuState extends MusicBeatState {
 			if(startMod == mod) curSelectedMod = i;
 
 			var modItem:ModItem = new ModItem(mod);
-			if(modsList.disabled.contains(mod))
-			{
+			if(modsList.disabled.contains(mod)) {
 				modItem.icon.color = 0xFFFF6666;
 				modItem.text.color = FlxColor.GRAY;
 			}

@@ -45,11 +45,8 @@ class LogFrontEnd
 	 */
 	public function advanced(data:Dynamic, ?style:LogStyle, fireOnce = false):Void
 	{
-		if (style == null)
-			style = LogStyle.NORMAL;
-		
-		if (!(data is Array))
-			data = [data];
+		if (style == null) style = LogStyle.NORMAL;
+		if (!(data is Array)) data = [data];
 		
 		#if FLX_DEBUG
 		// Check null game since `FlxG.save.bind` may be called before `new FlxGame`

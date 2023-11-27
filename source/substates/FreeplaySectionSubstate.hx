@@ -5,9 +5,6 @@ import data.WeekData;
 import states.StoryMenuState;
 import states.FreeplayState;
 
-/**
-* State used to decide which selection of songs should be loaded in `FreeplayState`.
-*/
 class FreeplaySectionSubstate extends MusicBeatSubstate {
 	public static var daSection:String = 'Vanilla';
 	var counter:Int = 0;
@@ -63,6 +60,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		sectionSpr.antialiasing = ClientPrefs.getPref('Antialiasing');
 		sectionSpr.scrollFactor.set();
 		sectionSpr.screenCenter();
+		sectionSpr.y -= 200;
 		sectionSpr.alpha = 0;
 		add(sectionSpr);
 
@@ -71,6 +69,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		sectionTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
 		sectionTxt.scrollFactor.set();
 		sectionTxt.screenCenter(X);
+		sectionTxt.y -= 200;
 		sectionTxt.alpha = 0;
 		add(sectionTxt);
 
@@ -78,9 +77,10 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		Discord.changePresence("Selecting a Freeplay Section", null);
 		#end
 
-		FlxTween.tween(sectionSpr, {alpha: 1}, 1, {ease: FlxEase.expoOut});
-		FlxTween.tween(sectionTxt, {alpha: 1}, 1, {ease: FlxEase.expoOut});
-		FlxTween.tween(bg, {alpha: 1}, 1, {ease: FlxEase.expoOut});
+		transitioning = true;
+		FlxTween.tween(bg, {alpha: 1}, 1, {ease: FlxEase.expoOut, onComplete: (_:FlxTween) -> transitioning = false});
+		FlxTween.tween(sectionSpr, {alpha: 1, y: sectionSpr.y + 200}, 1, {ease: FlxEase.expoOut});
+		FlxTween.tween(sectionTxt, {alpha: 1, y: sectionTxt.y + 200}, 1, {ease: FlxEase.expoOut});
 	}
 
 	override function update(elapsed:Float) {

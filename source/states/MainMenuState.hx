@@ -64,7 +64,9 @@ class MainMenuState extends MusicBeatState {
 		add(bg);
 
 		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		magenta.antialiasing = ClientPrefs.getPref('Antialiasing');
 		magenta.scrollFactor.set();
+		magenta.active = false;
 		magenta.setGraphicSize(Std.int(magenta.width * 1.1));
 		magenta.updateHitbox();
 		magenta.screenCenter();
@@ -124,7 +126,6 @@ class MainMenuState extends MusicBeatState {
 			menuItem.animation.play('idle');
 			menuItem.antialiasing = false;
 			menuItem.setGraphicSize(128, 128);
-			menuItem.ID = i;
 			menuItem.updateHitbox();
 			menuItems.add(menuItem);
 			menuItem.scrollFactor.set();
@@ -157,13 +158,9 @@ class MainMenuState extends MusicBeatState {
 		FlxG.camera.followLerp = FlxMath.bound(elapsed * 9 * (FlxG.updateFramerate / 60), 0, 1);
 		
 		if (!selectedSomethin && finishedFunnyMove) {
-			if (controls.UI_UP_P) {
+			if (controls.UI_UP_P || controls.UI_DOWN_P) {
 				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
-				changeItem(-1);
-			}
-			if (controls.UI_DOWN_P) {
-				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
-				changeItem(1);
+				changeItem(controls.UI_UP_P ? -1 : 1);
 			}
 
 			if(FlxG.mouse.wheel != 0) {
@@ -183,18 +180,18 @@ class MainMenuState extends MusicBeatState {
 
 				if(ClientPrefs.getPref('flashing')) FlxFlicker.flicker(magenta, 1.1, .15, false);
 
-				menuItems.forEach(function(spr:FlxSprite) {
-					if (curSelected != spr.ID)
-						FlxTween.tween(spr, {alpha: 0}, 1.3, {ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> spr.kill()});
+				for (item in menuItems.members) {
+					final itemIndex:Int = menuItems.members.indexOf(item);
+
+					if (curSelected != itemIndex)
+						FlxTween.tween(item, {alpha: 0}, 1.3, { ease: FlxEase.quadOut,  onComplete: (twn:FlxTween) -> item.destroy()});
 					else {
-						FlxFlicker.flicker(spr, 1, .06, false, false, (flick:FlxFlicker) -> {
-							var daChoice:String = optionShit[curSelected];
-							switch (daChoice) {
+						FlxFlicker.flicker(item, 1, .06, false, false, function(flicker:FlxFlicker) {
+							final choice:String = optionShit[curSelected];
+							switch (choice) {
 								case 'story_mode': MusicBeatState.switchState(new StoryMenuState());
 								case 'freeplay': MusicBeatState.switchState(new FreeplayState());
-								#if MODS_ALLOWED
-								case 'mods': MusicBeatState.switchState(new ModsMenuState());
-								#end
+								#if MODS_ALLOWED case 'mods': MusicBeatState.switchState(new ModsMenuState()); #end
 								case 'credits': MusicBeatState.switchState(new CreditsState());
 								case 'options':
 									MusicBeatState.switchState(new OptionsState());
@@ -206,7 +203,7 @@ class MainMenuState extends MusicBeatState {
 							}
 						});
 					}
-				});	
+				}
 			} else if (controls.justPressed('debug_1')) {
 				selectedSomethin = true;
 				MusicBeatState.switchState(new MasterEditorMenu());
@@ -218,14 +215,18 @@ class MainMenuState extends MusicBeatState {
 
 	function changeItem(huh:Int = 0) {
 		if (finishedFunnyMove) curSelected = FlxMath.wrap(curSelected + huh, 0, menuItems.length - 1);
-		menuItems.forEach(function(spr:FlxSprite) {
-			spr.animation.play('idle');
-			spr.updateHitbox();
 
-			if (spr.ID == curSelected && finishedFunnyMove)
-				spr.animation.play('selected');
-			spr.updateHitbox();
-		});
+		for (item in menuItems.members) {
+			final itemIndex:Int = menuItems.members.indexOf(item);
+
+			if (curSelected != itemIndex) {
+				item.animation.play('idle', true);
+				item.updateHitbox();
+			} else {
+				item.animation.play('selected');
+				item.centerOffsets();
+			}
+		}
 
 		bigIcons.animation.play(optionShit[curSelected]);
 		curOptText.text = menuOptions[curSelected];

@@ -5,13 +5,12 @@ package flixel.graphics.tile;
 	It was originally FlxSprite that was copied but one of the devs had issues compiling because he had a older flixel. (5.0.0 < 5.0.2).
 	But yea, this is copy pasted to ensure ClientPrefs.antialiasing is APPLIED TO EVERYTHING.
  */
-#if FLX_DRAW_QUADS
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.system.FlxAssets.FlxShader;
 import flixel.math.FlxMatrix;
-import openfl.display.ShaderParameter;
 import openfl.geom.ColorTransform;
+import openfl.display.ShaderParameter;
 import openfl.Vector;
 
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
@@ -137,4 +136,3 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
 	}
 	#end
 }
-#end

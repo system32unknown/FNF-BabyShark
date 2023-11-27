@@ -234,12 +234,9 @@ class FreeplayState extends MusicBeatState
 				changeSelection();
 				holdTime = 0;	
 			}
-			if (controls.UI_UP_P) {
-				changeSelection(-shiftMult);
-				holdTime = 0;
-			}
-			if (controls.UI_DOWN_P) {
-				changeSelection(shiftMult);
+
+			if (controls.UI_UP_P || controls.UI_DOWN_P) {
+				changeSelection(controls.UI_UP_P ? -shiftMult : shiftMult);
 				holdTime = 0;
 			}
 
@@ -274,7 +271,6 @@ class FreeplayState extends MusicBeatState
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
-		var holdingtoselection:Bool = FlxG.keys.pressed.Z;
 		if(FlxG.keys.justPressed.CONTROL) {
 			persistentUpdate = false;
 			openSubState(new GameplayChangersSubstate());
@@ -339,10 +335,7 @@ class FreeplayState extends MusicBeatState
 
 				if(colorTween != null) colorTween.cancel();
 
-				if (!holdingtoselection)
-					LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new ChartingState() : new PlayState());
-				else MusicBeatState.switchState(new CharacterSelectState());
-
+				LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new ChartingState() : new PlayState());
 				FlxG.sound.music.volume = 0;
 				destroyFreeplayVocals();
 				#if MODS_ALLOWED Discord.loadModRPC(); #end
