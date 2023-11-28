@@ -328,33 +328,24 @@ class ModsMenuState extends MusicBeatState {
 						changeSelectedMod(-shiftMult);
 					else if(FlxG.mouse.wheel != 0 && curSelectedMod != 0 && curSelectedMod != modsList.all.length - 1)
 						changeSelectedMod(-FlxG.mouse.wheel * shiftMult);
-					else if(FlxG.keys.justPressed.HOME || FlxG.keys.justPressed.END)
-					{
+					else if(FlxG.keys.justPressed.HOME || FlxG.keys.justPressed.END) {
 						if(FlxG.keys.justPressed.END) curSelectedMod = modsList.all.length - 1;
 						else curSelectedMod = 0;
 						changeSelectedMod();
-					}
-					else if(controls.UI_UP || controls.UI_DOWN)
-					{
+					} else if(controls.UI_UP || controls.UI_DOWN) {
 						var lastHoldTime:Float = holdTime;
 						holdTime += elapsed;
 						if(holdTime > 0.5 && Math.floor(lastHoldTime * 8) != Math.floor(holdTime * 8)) changeSelectedMod(shiftMult * (controls.UI_UP ? -1 : 1));
-					}
-					else if(FlxG.mouse.pressed && !gottaClickAgain)
-					{
+					} else if(FlxG.mouse.pressed && !gottaClickAgain) {
 						var curMod:ModItem = modsGroup.members[curSelectedMod];
-						if(curMod != null)
-						{
+						if(curMod != null) {
 							if(!holdingMod && FlxG.mouse.justMoved && FlxG.mouse.overlaps(curMod)) holdingMod = true;
 
-							if(holdingMod)
-							{
+							if(holdingMod) {
 								var moved:Bool = false;
-								for (i in centerMod-2...centerMod+3)
-								{
+								for (i in centerMod - 2...centerMod + 3) {
 									var mod = modsGroup.members[i];
-									if(mod != null && mod.visible && FlxG.mouse.overlaps(mod) && curSelectedMod != i)
-									{
+									if(mod != null && mod.visible && FlxG.mouse.overlaps(mod) && curSelectedMod != i) {
 										moveModToPosition(i);
 										moved = true;
 										break;
@@ -368,11 +359,9 @@ class ModsMenuState extends MusicBeatState {
 									else if(FlxG.mouse.y > bgList.y + bgList.height)
 										factor = Math.abs(Math.max(0.2, Math.min(0.5, 0.5 - (FlxG.mouse.y - bgList.y - bgList.height) / 100)));
 		
-									if(factor >= 0)
-									{
+									if(factor >= 0) {
 										holdingElapsed += elapsed;
-										if(holdingElapsed >= factor)
-										{
+										if(holdingElapsed >= factor) {
 											holdingElapsed = 0;
 											var newPos = curSelectedMod;
 											if(FlxG.mouse.y < bgList.y) newPos--;
@@ -384,10 +373,7 @@ class ModsMenuState extends MusicBeatState {
 								curMod.setPosition(FlxG.mouse.x - mouseOffsets.x, FlxG.mouse.y - mouseOffsets.y);
 							}
 						}
-						
-					}
-					else if(FlxG.mouse.justReleased && holdingMod)
-					{
+					} else if(FlxG.mouse.justReleased && holdingMod) {
 						holdingMod = false;
 						holdingElapsed = 0;
 						updateItemPositions();

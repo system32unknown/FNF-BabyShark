@@ -1,28 +1,18 @@
 package utils.system;
 
-import haxe.Timer;
-
 class FPSUtil {
     @:noCompletion var times:Array<Float> = [];
-	@:noCompletion var curTime:Float;
-	@:noCompletion var cacheCount:Int;
     public var currentFPS(default, null):Int;
 	public var currentCount(default, null):Int;
     public function new() {}
 
     public function update() {
-		curTime = Timer.stamp();
-		times.push(curTime);
-		while (times[0] < curTime - 1)
-			times.shift();
+		var now:Float = haxe.Timer.stamp();
+		times.push(now);
+		while (times[0] < now - 1) times.shift();
 
 		currentCount = times.length;
-        currentFPS = Math.round(currentCount);
-
-		if (currentCount == cacheCount) {
-			cacheCount = currentCount;
-			return;
-		}
+        currentFPS = currentFPS < FlxG.drawFramerate ? Math.round(currentCount) : FlxG.drawFramerate;
     }
 
 	public static function getFPSAdjust(type:String, fps:Float) {

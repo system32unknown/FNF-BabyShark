@@ -54,6 +54,7 @@ class ClientPrefs {
 		'healthBarAlpha' => 1,
 		'hitsoundVolume' => 0,
 		'autoPause' => true,
+		'autoPausePlayState' => true,
 		'fullscreen' => false,
 		'hitsoundTypes' => 'Tick',
 		'pauseMusic' => 'Tea Time',

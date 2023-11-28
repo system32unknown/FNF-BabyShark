@@ -218,9 +218,7 @@ class StoryMenuState extends MusicBeatState
 		if (!weekIsLocked(loadedWeeks[curWeek].fileName)) {
 			var songArray:Array<String> = [];
 			var leWeek:Array<Dynamic> = loadedWeeks[curWeek].songs;
-			for (i in 0...leWeek.length) {
-				songArray.push(leWeek[i][0]);
-			}
+			for (i in 0...leWeek.length) songArray.push(leWeek[i][0]);
 
 			// Nevermind that's stupid lmao
 			PlayState.storyPlaylist = songArray;
@@ -287,7 +285,6 @@ class StoryMenuState extends MusicBeatState
 
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
-
 	function changeWeek(change:Int = 0):Void
 	{
 		curWeek = FlxMath.wrap(curWeek + change, 0, loadedWeeks.length - 1);

@@ -20,6 +20,7 @@ class FlashingState extends MusicBeatState {
 			You've been warned!",
 			32);
 		warnText.setFormat(Paths.font('babyshark.ttf'), 32, FlxColor.WHITE, CENTER);
+		warnText.scrollFactor.set();
 		warnText.screenCenter();
 		add(warnText);
 	}

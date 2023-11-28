@@ -1395,8 +1395,9 @@ class PlayState extends MusicBeatState {
 	override public function onFocusLost():Void {
 		callOnScripts('onFocusLost');
 		#if discord_rpc
-		if (health > 0 && !paused && !tryPause())
-			Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter());
+		if (health > 0 && !paused)
+			if(ClientPrefs.getPref('autoPausePlayState') && !tryPause())
+				Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter());
 		#end
 		super.onFocusLost();
 		callOnScripts('onFocusLostPost');
@@ -2063,8 +2064,7 @@ class PlayState extends MusicBeatState {
 					#if desktop Discord.resetClientID(); #end
 
 					cancelMusicFadeTween();
-					if(FlxTransitionableState.skipNextTransIn)
-						CustomFadeTransition.nextCamera = null;
+					if(FlxTransitionableState.skipNextTransIn) CustomFadeTransition.nextCamera = null;
 					MusicBeatState.switchState(new StoryMenuState());
 
 					if(!practiceMode && !cpuControlled) {

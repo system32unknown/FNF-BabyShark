@@ -168,12 +168,8 @@ class CreditsState extends MusicBeatState {
 				var shiftMult:Int = 1;
 				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
-				if (controls.UI_UP_P) {
-					changeSelection(-shiftMult);
-					holdTime = 0;
-				}
-				if (controls.UI_DOWN_P) {
-					changeSelection(shiftMult);
+				if (controls.UI_UP_P || controls.UI_DOWN_P) {
+					changeSelection(controls.UI_UP_P ? -shiftMult : shiftMult);
 					holdTime = 0;
 				}
 
@@ -182,8 +178,7 @@ class CreditsState extends MusicBeatState {
 					changeSelection(-FlxG.mouse.wheel);
 				}
 
-				if(controls.UI_DOWN || controls.UI_UP)
-				{
+				if(controls.UI_DOWN || controls.UI_UP) {
 					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
@@ -373,13 +368,8 @@ class CreditSectionState extends MusicBeatState {
 				var shiftMult:Int = 1;
 				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
-				if (controls.UI_UP_P) {
-					changeSelection(-shiftMult);
-					holdTime = 0;
-				}
-
-				if (controls.UI_DOWN_P) {
-					changeSelection(shiftMult);
+				if (controls.UI_UP_P || controls.UI_DOWN_P) {
+					changeSelection(controls.UI_UP_P ? -shiftMult : shiftMult);
 					holdTime = 0;
 				}
 
