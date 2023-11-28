@@ -163,13 +163,8 @@ class StoryMenuState extends MusicBeatState
 		{
 			var upP = controls.UI_UP_P;
 			var downP = controls.UI_DOWN_P;
-			if (upP) {
-				changeWeek(-1);
-				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
-			}
-
-			if (downP) {
-				changeWeek(1);
+			if (upP || downP) {
+				changeWeek(upP ? -1 : 1);
 				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 			}
 

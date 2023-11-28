@@ -132,22 +132,13 @@ class NotesSubState extends MusicBeatSubstate
 			var shiftMult:Int = 1;
 			if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
-			if (controls.UI_UP_P) {
+			if (controls.UI_UP_P || controls.UI_DOWN_P) {
 				scrollHoldTime = 0;
-				changeSelection(-shiftMult);
+				changeSelection(controls.UI_UP_P ? -shiftMult : shiftMult);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
-			if (controls.UI_DOWN_P) {
-				scrollHoldTime = 0;
-				changeSelection(shiftMult);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-			}
-			if (controls.UI_LEFT_P) {
-				changeType(-1);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-			}
-			if (controls.UI_RIGHT_P) {
-				changeType(1);
+			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
+				changeType(controls.UI_LEFT_P ? -1 : 1);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			if(controls.UI_DOWN || controls.UI_UP) {
@@ -160,9 +151,7 @@ class NotesSubState extends MusicBeatSubstate
 				}
 			}
 			if(controls.RESET) {
-				for (i in 0...3) {
-					resetValue(curSelected, i);
-				}
+				for (i in 0...3) resetValue(curSelected, i);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			if (controls.ACCEPT && nextAccept <= 0) {

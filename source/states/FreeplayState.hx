@@ -256,11 +256,8 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if (controls.UI_LEFT_P) {
-			changeDiff(-1);
-			_updateSongLastDifficulty();
-		} else if (controls.UI_RIGHT_P) {
-			changeDiff(1);
+		if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
+			changeDiff(controls.UI_LEFT_P ? -1 : 1);
 			_updateSongLastDifficulty();
 		}
 

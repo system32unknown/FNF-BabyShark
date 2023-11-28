@@ -74,11 +74,8 @@ class OptionsState extends MusicBeatState
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (controls.UI_UP_P) changeSelection(-1);
-		if (controls.UI_DOWN_P) changeSelection(1);
-
-		if(controls.UI_LEFT_P) changePage(-1);
-		if(controls.UI_RIGHT_P) changePage(1);
+		if(controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);
+		if(controls.UI_LEFT_P || controls.UI_RIGHT_P) changePage(controls.UI_LEFT_P ? -1 : 1);
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));

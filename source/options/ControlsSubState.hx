@@ -131,14 +131,11 @@ class ControlsSubState extends MusicBeatSubstate {
 				}
 			} 
 
-			if (controls.UI_UP_P) {
-				changeSelection(-shiftMult);
+			if (controls.UI_UP_P || controls.UI_DOWN_P) {
+				changeSelection(controls.UI_UP_P ? -shiftMult : shiftMult);
 				holdTime = 0;
 			}
-			if (controls.UI_DOWN_P) {
-				changeSelection(shiftMult);
-				holdTime = 0;
-			}
+				
 			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
 				if (grpOptions.members[curSelected].ID == 1)
 					changePage(controls.UI_LEFT_P ? -1 : 1);

@@ -321,7 +321,7 @@ class Paths
 
 	public static var hardwareCache:Bool = false;
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
-	public static function returnGraphic(key:String, ?library:String):FlxGraphic {
+	public static function returnGraphic(key:String, ?library:String, ?posInfos:haxe.PosInfos):FlxGraphic {
 		var modExists:Bool = false, graph:FlxGraphic = null;
 
 		#if MODS_ALLOWED
@@ -351,7 +351,7 @@ class Paths
 			if (graph != null) return graph;
 		}
 
-		Logs.trace('returnGraphic returning null: $path' #if MODS_ALLOWED + ' | Mods: $modKey' #end, WARNING);
+		Logs.trace('Image with key "$key" could not be found' + (library == null ? '' : ' in the library "$library"') + '! ' + '(${posInfos.fileName}, ${posInfos.lineNumber})', WARNING);
 		return null;
 	}
 

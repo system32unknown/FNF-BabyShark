@@ -47,6 +47,9 @@ class TitleState extends MusicBeatState {
 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
 		Mods.loadTopMod();
 
+		FlxG.fixedTimestep = false;
+		FlxG.game.focusLostFramerate = 60;
+
 		super.create();
 		FlxG.save.bind('funkin', CoolUtil.getSavePath());
 		ClientPrefs.loadPrefs();
