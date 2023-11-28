@@ -289,6 +289,19 @@ class Paths
 		#end
 	}
 
+	inline static public function getJsonAtlas(key:String, ?library:String):FlxAtlasFrames {
+		var imageLoaded:FlxGraphic = image(key, library);
+		#if MODS_ALLOWED
+		var jsonExists:Bool = false;
+		var json:String = modsJson(key);
+		if (FileSystem.exists(json)) jsonExists = true;
+
+		return FlxAtlasFrames.fromTexturePackerJson(imageLoaded, (jsonExists ? File.getContent(json) : getPath('images/$key.json', library)));
+		#else
+		return FlxAtlasFrames.fromTexturePackerJson(imageLoaded, getPath('images/$key.json', library));
+		#end
+	}
+
 	inline static public function getPackerAtlas(key:String, ?library:String):FlxAtlasFrames {
 		var imageLoaded:FlxGraphic = image(key, library);
 		#if MODS_ALLOWED

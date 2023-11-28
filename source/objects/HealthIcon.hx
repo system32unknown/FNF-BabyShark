@@ -97,7 +97,7 @@ class HealthIcon extends FlxSprite {
 		} else {
 			frames = Paths.getSparrowAtlas('icons/$char');
 			for (animstate in animatediconstates)
-				animation.addByPrefix(animstate, animstate, 24, false, isPlayer, false);
+				animation.addByPrefix(animstate, animstate, 24, true, isPlayer, false);
 			animation.play(animatediconstates[0]);
 		}
 
@@ -119,8 +119,7 @@ class HealthIcon extends FlxSprite {
 		}
 	}
 
-	public function getCharacter():String
-		return char;
+	public function getCharacter():String return char;
 
 	@:noCompletion
 	inline function get_isPixelIcon():Bool
@@ -134,10 +133,8 @@ class HealthIcon extends FlxSprite {
 
 	public function setState(state:Int) {
 		if (!animated) setStateIndex(state);
-		else if (animation.exists(animatediconstates[state])) {
-			animation.finish();
+		else if (animation.exists(animatediconstates[state]))
 			animation.play(animatediconstates[state]);
-		}
 	}
 
 	override function update(elapsed:Float) {
