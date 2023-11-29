@@ -2,7 +2,6 @@ package psychlua;
 
 import openfl.display.BlendMode;
 import animateatlas.AtlasFrameMaker;
-
 import substates.GameOverSubstate;
 
 typedef LuaTweenOptions = {
@@ -182,7 +181,7 @@ class LuaUtils {
 	}
 
 	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false) {
-		var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
+		var obj:Dynamic = getObjectDirectly(obj, false);
 		if(obj != null && obj.animation != null) {
 			if(indices == null) indices = [0];
 			else if(Std.isOfType(indices, String)) {
@@ -203,6 +202,7 @@ class LuaUtils {
 			case "texture" | "textureatlas" | "tex": AtlasFrameMaker.construct(image);
 			case "texture_noaa" | "textureatlas_noaa" | "tex_noaa": AtlasFrameMaker.construct(image, null, true);
 			case "packer" | "packeratlas" | "pac": Paths.getPackerAtlas(image);
+			case 'json' | 'jsonatlas': Paths.getJsonAtlas(image);
 			default: Paths.getSparrowAtlas(image);
 		}
 	}

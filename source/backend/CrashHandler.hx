@@ -20,21 +20,17 @@ class CrashHandler {
 
 	public static function onCrash(e:UncaughtErrorEvent):Void {
 		var message:String = "";
-		if (Std.isOfType(e.error, Error)) {
-			var err = cast(e.error, Error);
-			message = '${err.message}';
-		} else if (Std.isOfType(e.error, ErrorEvent)) {
-			var err = cast(e.error, ErrorEvent);
-			message = '${err.text}';
-		} else message = try Std.string(e) catch(_:haxe.Exception) "Unknown";
+		if (Std.isOfType(e.error, Error))
+			message = cast(e.error, Error).message;
+		else if (Std.isOfType(e.error, ErrorEvent))
+			message = cast(e.error, ErrorEvent).text;
+		else message = try Std.string(e.error) catch(_:haxe.Exception) "Unknown";
 
 		var dateNow:String = Date.now().toString().replace(" ", "_").replace(":", "'");
 		final path = './crash/PsychEngine_$dateNow.txt';
 
-		final callStack:Array<StackItem> = CallStack.exceptionStack(true);
 		var errMsg:String = "";
-
-		for (stackItem in callStack) {
+		for (stackItem in CallStack.exceptionStack(true)) {
 			switch (stackItem) {
 				case CFunction: errMsg += "Non-Haxe (C) Function\n";
 				case Module(c): errMsg += 'Module ${c}\n';

@@ -262,14 +262,10 @@ class Paths
 		#if MODS_ALLOWED
 		if(!ignoreMods) {
 			for(mod in Mods.getGlobalMods())
-				if (FileSystem.exists(mods('$mod/$key')))
-					return true;
+				if (FileSystem.exists(mods('$mod/$key'))) return true;
 
-			if (FileSystem.exists(mods('${Mods.currentModDirectory}/$key')) || FileSystem.exists(mods(key)))
-				return true;
-
-			if (FileSystem.exists(mods('$key')))
-				return true;
+			if (FileSystem.exists(mods('${Mods.currentModDirectory}/$key')) || FileSystem.exists(mods(key))) return true;
+			if (FileSystem.exists(mods(key))) return true;
 		}
 		#end
 
@@ -293,7 +289,7 @@ class Paths
 		var imageLoaded:FlxGraphic = image(key, library);
 		#if MODS_ALLOWED
 		var jsonExists:Bool = false;
-		var json:String = modsJson(key);
+		var json:String = modsPacker(key);
 		if (FileSystem.exists(json)) jsonExists = true;
 
 		return FlxAtlasFrames.fromTexturePackerJson(imageLoaded, (jsonExists ? File.getContent(json) : getPath('images/$key.json', library)));

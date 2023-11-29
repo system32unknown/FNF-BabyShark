@@ -44,10 +44,8 @@ class VideoManager extends VideoHandler {
     override public function pause() {
         super.pause();
         if(FlxG.autoPause) {
-            if(FlxG.signals.focusLost.has(pause))
-                FlxG.signals.focusLost.remove(pause);
-            if(FlxG.signals.focusGained.has(resume))
-                FlxG.signals.focusGained.remove(resume);
+            if(FlxG.signals.focusLost.has(pause)) FlxG.signals.focusLost.remove(pause);
+            if(FlxG.signals.focusGained.has(resume)) FlxG.signals.focusGained.remove(resume);
         }
     }
 

@@ -44,10 +44,8 @@ class VideoSpriteManager extends VideoSprite {
     override public function pause() {
         super.pause();
         if (FlxG.autoPause) {
-            if (FlxG.signals.focusGained.has(this.bitmap.resume))
-                FlxG.signals.focusGained.remove(this.bitmap.resume);
-            if (FlxG.signals.focusLost.has(this.bitmap.pause))
-                FlxG.signals.focusLost.remove(this.bitmap.pause);
+            if (FlxG.signals.focusGained.has(this.bitmap.resume)) FlxG.signals.focusGained.remove(this.bitmap.resume);
+            if (FlxG.signals.focusLost.has(this.bitmap.pause)) FlxG.signals.focusLost.remove(this.bitmap.pause);
         }
     }
     override public function resume() {
