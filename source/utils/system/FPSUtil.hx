@@ -2,7 +2,6 @@ package utils.system;
 
 class FPSUtil {
     @:noCompletion var times:Array<Float> = [];
-	@:noCompletion var cacheCount:Int;
     public var currentFPS(default, null):Int;
 	public var currentCount(default, null):Int;
     public function new() {}
@@ -13,12 +12,7 @@ class FPSUtil {
 		while (times[0] < now - 1) times.shift();
 
 		currentCount = times.length;
-		currentFPS = Math.round(currentCount);
-
-		if (currentCount == cacheCount) {
-			cacheCount = currentCount;
-			return;
-		}
+		currentFPS = currentCount;
     }
 
 	public static function getFPSAdjust(type:String, fps:Float) {

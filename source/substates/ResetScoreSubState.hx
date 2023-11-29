@@ -4,8 +4,7 @@ import data.WeekData;
 import objects.HealthIcon;
 import backend.Highscore;
 
-class ResetScoreSubState extends MusicBeatSubstate
-{
+class ResetScoreSubState extends MusicBeatSubstate {
 	var bg:FlxSprite;
 	var alphabetArray:Array<Alphabet> = [];
 	var icon:HealthIcon;
@@ -27,8 +26,7 @@ class ResetScoreSubState extends MusicBeatSubstate
 		super();
 
 		var name:String = song;
-		if(week > -1)
-			name = WeekData.weeksLoaded.get(WeekData.weeksList[week]).weekName;
+		if(week > -1) name = WeekData.weeksLoaded.get(WeekData.weeksList[week]).weekName;
 		name += ' (${Difficulty.getString(difficulty)})?';
 
 		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
@@ -68,8 +66,7 @@ class ResetScoreSubState extends MusicBeatSubstate
 		updateOptions();
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		bg.alpha += elapsed * 1.5;
 		if(bg.alpha > 0.6) bg.alpha = 0.6;
 
@@ -107,6 +104,6 @@ class ResetScoreSubState extends MusicBeatSubstate
 		yesText.scale.set(scales[confirmInt], scales[confirmInt]);
 		noText.alpha = alphas[1 - confirmInt];
 		noText.scale.set(scales[1 - confirmInt], scales[1 - confirmInt]);
-		if(week == -1) icon.animation.curAnim.curFrame = confirmInt;
+		if(week == -1) icon.setState(confirmInt);
 	}
 }

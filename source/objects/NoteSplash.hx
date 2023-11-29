@@ -83,7 +83,7 @@ class NoteSplash extends FlxSprite {
 		}
 		for (splash_frame in 1...3) {
 			for (gfx in 0...Note.gfxLetter.length)
-				animation.addByPrefix('note$gfx-' + splash_frame, 'note splash ${Note.gfxLetter[gfx]} ' + splash_frame, 24, false);
+				animation.addByPrefix('note$gfx-$splash_frame', 'note splash ${Note.gfxLetter[gfx]} ' + splash_frame, 24, false);
 		}
 	}
 

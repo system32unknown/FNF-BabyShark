@@ -1,6 +1,5 @@
 package utils;
 
-import flixel.util.FlxSave;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
@@ -69,8 +68,10 @@ class CoolUtil {
     }
 
 	@:access(flixel.util.FlxSave.validate)
-	public static function getSavePath(folder:String = 'altertoriel'):String {
-		return '${FlxG.stage.application.meta.get('company')}/${FlxSave.validate(FlxG.stage.application.meta.get('file'))}';
+	public static function getSavePath():String {
+		final company:String = FlxG.stage.application.meta.get('company');
+		@:privateAccess final file:String = flixel.util.FlxSave.validate(FlxG.stage.application.meta.get('file'));
+		return '${company}/${file}';
 	}
 
 	public static function removeDuplicates(string:Array<String>):Array<String> {

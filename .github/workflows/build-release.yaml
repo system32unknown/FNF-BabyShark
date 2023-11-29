@@ -1,4 +1,4 @@
-name: Build Release
+name: Build Release (Windows)
 on:
   push:
     branches: [ main ]
@@ -38,6 +38,8 @@ jobs:
             export/${{ matrix.build }}/${{ matrix.folder }}/haxe/
             export/${{ matrix.build }}/${{ matrix.folder }}/obj/
             .haxelib/
+          restore-keys: |
+            cache-${{ matrix.compile }}-${{ matrix.build }}
 
       - name: Setup Haxelib
         run: |
@@ -101,7 +103,9 @@ jobs:
             export/${{ matrix.build }}/${{ matrix.folder }}/haxe/
             export/${{ matrix.build }}/${{ matrix.folder }}/obj/
             .haxelib/
-    
+          restore-keys: |
+            cache-${{ matrix.compile }}-${{ matrix.build }}
+
       - name: Discord Webhook Action
         uses: tsickert/discord-webhook@master
         with:

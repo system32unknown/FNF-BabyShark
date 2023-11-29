@@ -35,13 +35,12 @@ class Overlay extends TextField {
 
 	var deltaTimeout:Float = .0;
 	override function __enterFrame(dt:Float):Void {
-		super.__enterFrame(Std.int(dt));
 		if (deltaTimeout > 1000) {
 			deltaTimeout = .0;
 			return;
 		}
-		fpsManager.update();
 		visible = ClientPrefs.getPref('showFPS');
+		fpsManager.update();
 
 		updateText(dt);
 		deltaTimeout += dt;
@@ -53,10 +52,9 @@ class Overlay extends TextField {
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		var tempText:String = '${fpsManager.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / fpsManager.currentCount) * 1000)}ms, DT: ${Math.round(dt)}]' : ''}\n';
+		text = '${fpsManager.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / fpsManager.currentCount) * 1000)}ms, DT: ${Math.round(dt)}]' : ''}\n';
 		if (ClientPrefs.getPref('showMEM'))
-			tempText += '${MemoryUtil.getInterval(memory)}';
-		text = tempText;
+			text += '${MemoryUtil.getInterval(memory)}';
 	}
 
 	inline function get_memory():Dynamic
