@@ -313,6 +313,6 @@ class Character extends FlxSprite {
 	}
 
 	public function getColor():FlxColor {
-		return FlxColor.fromRGB(healthColorArray[0], healthColorArray[1], healthColorArray[2]);
+		return CoolUtil.getColor(healthColorArray);
 	}
 }

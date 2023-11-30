@@ -100,6 +100,25 @@ class CoolUtil {
 		}
 	}
 
+    public static function getColor(value:Dynamic):FlxColor {
+        if (value == null)
+            return FlxColor.WHITE;
+
+        if (value is Int)
+            return value;
+
+        if (value is String) return colorFromString(value);
+
+        if (value is Array) {
+            var arr:Array<Float> = cast value;
+            while (arr.length < 3)
+                arr.push(0);
+            return FlxColor.fromRGB(Std.int(arr[0]), Std.int(arr[1]), Std.int(arr[2]));
+        }
+
+        return FlxColor.WHITE;
+    }
+
 	inline public static function colorFromString(color:String):FlxColor {
 		var hideChars = ~/[\t\n\r]/;
 		var color:String = hideChars.split(color).join('').trim();

@@ -1,12 +1,9 @@
 package openfl.utils;
 
 #if lime
-#if (lime_vorbis && lime > "7.9.0")
-import lime.media.vorbis.VorbisFile;
-#end
-
 import lime.app.Promise;
 import lime.media.AudioBuffer;
+#if (lime_vorbis && lime > "7.9.0") import lime.media.vorbis.VorbisFile; #end
 import lime.utils.AssetLibrary as LimeAssetLibrary;
 import lime.utils.Assets as LimeAssets;
 #end
@@ -52,7 +49,6 @@ import openfl.Lib;
 @:access(openfl.display.Sprite)
 @:access(openfl.text.Font)
 @:access(openfl.utils.AssetLibrary)
-@:accesS(openfl.display3D.textures.TextureBase.__uploadFromImage)
 class Assets
 {
 	public static var cache:IAssetCache = new AssetCache();
@@ -108,7 +104,7 @@ class Assets
 		if (useCache && cache.enabled && cache.hasBitmapData(key))
 		{
 			var bitmapData = cache.getBitmapData(key);
-			if (isValidBitmapData(bitmapData))
+			if (isValidBitmapData(bitmapData) && (hardware || bitmapData.readable))
 				return bitmapData;
 		}
 

@@ -669,13 +669,13 @@ class CharacterEditorState extends MusicBeatState {
 				updatePointerPos();
 			} else if(sender == healthColorStepperR) {
 				char.healthColorArray[0] = Math.round(healthColorStepperR.value);
-				healthBar.color = FlxColor.fromRGB(char.healthColorArray[0], char.healthColorArray[1], char.healthColorArray[2]);
+				healthBar.color = CoolUtil.getColor(char.healthColorArray);
 			} else if(sender == healthColorStepperG) {
 				char.healthColorArray[1] = Math.round(healthColorStepperG.value);
-				healthBar.color = FlxColor.fromRGB(char.healthColorArray[0], char.healthColorArray[1], char.healthColorArray[2]);
+				healthBar.color = CoolUtil.getColor(char.healthColorArray);
 			} else if(sender == healthColorStepperB) {
 				char.healthColorArray[2] = Math.round(healthColorStepperB.value);
-				healthBar.color = FlxColor.fromRGB(char.healthColorArray[0], char.healthColorArray[1], char.healthColorArray[2]);
+				healthBar.color = CoolUtil.getColor(char.healthColorArray);
 			}
 		}
 	}
@@ -889,14 +889,11 @@ class CharacterEditorState extends MusicBeatState {
 		healthColorStepperR.value = char.healthColorArray[0];
 		healthColorStepperG.value = char.healthColorArray[1];
 		healthColorStepperB.value = char.healthColorArray[2];
-		healthBar.color = FlxColor.fromRGB(char.healthColorArray[0], char.healthColorArray[1], char.healthColorArray[2]);
+		healthBar.color = CoolUtil.getColor(char.healthColorArray);
 	}
 
 	function updatePresence() {
-		#if discord_rpc
-		// Updating Discord Rich Presence
-		Discord.changePresence("Character Editor", "Character: " + daAnim, leHealthIcon.getCharacter());
-		#end
+		#if discord_rpc Discord.changePresence("Character Editor", "Character: " + daAnim, leHealthIcon.getCharacter()); #end
 	}
 
 	override function update(elapsed:Float)
