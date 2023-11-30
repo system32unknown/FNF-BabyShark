@@ -6,7 +6,7 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		rpcTitle = 'Miscellaneous Menu'; //for Discord Rich Presence
 
 		addOption(new Option('FPS Counter', 'If unchecked, hides FPS Counter.', 'showFPS', 'bool'));
-		addOption(new Option('Memory Counter', 'If unchecked, hides Memory Counter.', 'showMEM', 'bool'));
+		addOption(new Option('Memory Counter', '', 'showMEM', 'string', ['MEM', 'MEM/PEAK', 'NONE']));
 		addOption(new Option('Rainbow FPS', '', 'RainbowFps', 'bool'));
 		addOption(new Option('More Stats FPS', '', 'FPSStats', 'bool'));
 		addOption(new Option('Alternate Discord Large Image', '', 'AltDiscordImg', 'bool'));
@@ -17,11 +17,9 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		addOption(option);
 
 		var option:Option = new Option('Fullscreen', '', 'fullscreen', 'bool');
-		option.onChange = onChangeFullscreen;
+		option.onChange = () -> FlxG.fullscreen = ClientPrefs.getPref('fullscreen');
 		addOption(option);
 
 		super();
 	}
-
-	function onChangeFullscreen() FlxG.fullscreen = ClientPrefs.getPref('fullscreen');
 }

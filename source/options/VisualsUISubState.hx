@@ -35,9 +35,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(new Option('Combo Stacking', "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read", 'comboStacking', 'bool'));
 		addOption(new Option('Show Keybinds on Start Song', "If checked, your keybinds will be shown on the strum that they correspond to when you start a song.", 'showKeybindsOnStart', 'bool'));
 
-		var option:Option = new Option('Health Bar Opacity',
-			'How much opacity should the health bar and icons be.',
-			'healthBarAlpha', 'percent');
+		var option:Option = new Option('Health Bar Opacity', 'How much opacity should the health bar and icons be.', 'healthBarAlpha', 'percent');
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
 		option.maxValue = 1;

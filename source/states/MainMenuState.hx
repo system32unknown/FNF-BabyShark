@@ -184,7 +184,7 @@ class MainMenuState extends MusicBeatState {
 					final itemIndex:Int = menuItems.members.indexOf(item);
 
 					if (curSelected != itemIndex)
-						FlxTween.tween(item, {alpha: 0}, 1.3, { ease: FlxEase.quadOut,  onComplete: (twn:FlxTween) -> item.destroy()});
+						FlxTween.tween(item, {alpha: 0}, 1.3, {ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> item.destroy()});
 					else {
 						FlxFlicker.flicker(item, 1, .06, false, false, function(flicker:FlxFlicker) {
 							final choice:String = optionShit[curSelected];

@@ -10,15 +10,11 @@ class SaveSubState extends BaseOptionsMenu
 		title = 'Saves';
 		rpcTitle = 'Save Menu'; //for Discord Rich Presence
 
-		var option:Option = new Option('Reset Score',
-			"Reset your score on all songs and weeks. This is irreversible!",
-			'resetScore', 'func');
+		var option:Option = new Option('Reset Score', "Reset your score on all songs and weeks. This is irreversible!", 'resetScore', 'func');
 		addOption(option);
 		option.onChange = resetScore;
 
-		var option:Option = new Option('Reset Week Score',
-			"Reset your story mode progress. This is irreversible!",
-			'resetWeekLink', 'func');
+		var option:Option = new Option('Reset Week Score', "Reset your story mode progress. This is irreversible!", 'resetWeekLink', 'func');
 		addOption(option);
 		option.onChange = resetWeek;
 

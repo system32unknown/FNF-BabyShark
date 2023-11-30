@@ -1,4 +1,4 @@
-package objects;
+package debug;
 
 import openfl.text.TextField;
 import openfl.text.TextFormat;
@@ -8,14 +8,15 @@ import utils.system.MemoryUtil;
 import utils.system.FPSUtil;
 import utils.MathUtil;
 
-class Overlay extends TextField {
-	public static var instance:Overlay;
+class FPSCounter extends TextField {
+	public static var instance:FPSCounter;
 	public var fontName:String = Assets.getFont("assets/fonts/Proggy.ttf").fontName;
 
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
     public var fpsManager:FPSUtil;
     public var memory(get, never):Dynamic;
+	var mempeak:Dynamic = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
 		super();
@@ -34,11 +35,13 @@ class Overlay extends TextField {
 	}
 
 	var deltaTimeout:Float = .0;
+    var memType:String = "";
 	override function __enterFrame(dt:Float):Void {
 		if (deltaTimeout > 1000) {
 			deltaTimeout = .0;
 			return;
 		}
+        memType = ClientPrefs.getPref('showMEM');
 		visible = ClientPrefs.getPref('showFPS');
 		fpsManager.update();
 
@@ -52,11 +55,14 @@ class Overlay extends TextField {
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		text = '${fpsManager.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / fpsManager.currentCount) * 1000)}ms, DT: ${Math.round(dt)}]' : ''}\n';
-		if (ClientPrefs.getPref('showMEM'))
-			text += '${MemoryUtil.getInterval(memory)}';
+		text = '${fpsManager.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / fpsManager.currentCount) * 1000)}ms]' : ''}\n';
+		if (memType == "MEM" || memType == "MEM/PEAK")
+			text += '${MemoryUtil.getInterval(memory)}' + (memType == "MEM/PEAK" ? ' / ${MemoryUtil.getInterval(mempeak)}' : '');
 	}
 
-	inline function get_memory():Dynamic
-		return MemoryUtil.getGCMEM();
+	inline function get_memory():Dynamic {
+		var mem:Float = MemoryUtil.getGCMEM();
+		if (mem > mempeak) mempeak = mem;
+		return mem;
+	}
 }

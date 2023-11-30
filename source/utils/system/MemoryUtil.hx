@@ -2,14 +2,9 @@ package utils.system;
 
 #if cpp
 import cpp.vm.Gc;
-#elseif hl
-import hl.Gc;
-#elseif java
-import java.vm.Gc;
-#elseif neko
-import neko.vm.Gc;
-#end
+#elseif sys
 import openfl.system.System;
+#end
 
 @:cppFileCode("
 #include <windows.h>
@@ -49,13 +44,13 @@ class MemoryUtil {
 		#end
 	}
 
-	public static function getGCMEM():Int {
+	public static function getGCMEM():Float {
 		#if cpp
-		return untyped __global__.__hxcpp_gc_used_bytes();
+		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
+		#elseif sys
+		return cast(System.totalMemory, UInt);
 		#elseif hl
-		return Gc.stats().totalAllocated;
-		#elseif (java || neko)
-		return Gc.stats().heap;
+		return hl.Gc.stats().totalAllocated;
 		#elseif (js && html5)
 		return untyped #if haxe4 js.Syntax.code #else __js__ #end ("(window.performance && window.performance.memory) ? window.performance.memory.usedJSHeapSize : 0");
 		#else

@@ -2,7 +2,7 @@ package utils.system;
 
 class FPSUtil {
     @:noCompletion var times:Array<Float> = [];
-    public var currentFPS(default, null):Int;
+    public var currentFPS(default, null):Float;
 	public var currentCount(default, null):Int;
     public function new() {}
 
@@ -12,7 +12,7 @@ class FPSUtil {
 		while (times[0] < now - 1) times.shift();
 
 		currentCount = times.length;
-		currentFPS = currentCount;
+		currentFPS = Math.min(FlxG.drawFramerate, currentCount);
     }
 
 	public static function getFPSAdjust(type:String, fps:Float) {

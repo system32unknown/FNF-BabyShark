@@ -14,7 +14,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Auto Pause', "If checked, the game automatically pauses if the screen isn't on focus.", 'autoPause', 'bool');
 		addOption(option);
-		option.onChange = onChangeAutoPause;
+		option.onChange = () -> FlxG.autoPause = ClientPrefs.getPref('autoPause');
 		addOption(new Option('Auto Pause Playstate', "If checked, in playstate, gameplay and notes will pause if it's unfocused.", 'autoPausePlayState', 'bool'));
 
 		addOption(new Option('Disable Reset Button', "If checked, pressing Reset won't do anything.", 'noReset', 'bool'));
@@ -84,5 +84,4 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 	}
 
 	function onChangeHitsoundVolume() FlxG.sound.play(Paths.sound('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}'), ClientPrefs.getPref('hitsoundVolume'));
-	function onChangeAutoPause() FlxG.autoPause = ClientPrefs.getPref('autoPause');
 }

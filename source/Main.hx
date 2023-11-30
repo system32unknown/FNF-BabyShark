@@ -10,7 +10,7 @@ import backend.Logs;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
 import utils.FunkinGame;
-import objects.Overlay;
+import debug.FPSCounter;
 
 #if (target.threaded && sys) import sys.thread.ElasticThreadPool; #end
 
@@ -27,7 +27,7 @@ class Main extends Sprite {
 	};
 
 	public static var current:Main;
-	public static var overlayVar:Overlay;
+	public static var fpsVar:FPSCounter;
 
 	public static function main():Void
 		Lib.current.addChild(new Main());
@@ -56,11 +56,9 @@ class Main extends Sprite {
 		Controls.instance = new Controls();
 		ClientPrefs.loadDefaultKeys();
 		addChild(new FunkinGame(init_game.width, init_game.height, init_game.initialState, init_game.framerate, init_game.framerate, init_game.skipSplash, init_game.startFullscreen));
-		addChild(overlayVar = new Overlay());
+		addChild(fpsVar = new FPSCounter());
 		
-		#if (target.threaded && sys)
-		threadPool = new ElasticThreadPool(12, 30);
-		#end
+		#if (target.threaded && sys) threadPool = new ElasticThreadPool(12, 30); #end
 
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;

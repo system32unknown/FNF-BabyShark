@@ -14,7 +14,7 @@ class ClientPrefs {
 		'opponentStrums' => true,
 		'FPSStats' => false,
 		'showFPS' => true,
-		'showMEM' => true,
+		'showMEM' => "MEM",
 		'flashing' => true,
 		'Antialiasing' => true,
 		'noteSkin' => 'Default',
