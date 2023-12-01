@@ -667,9 +667,11 @@ class ChartingState extends MusicBeatState {
 							copiedNote = [newStrumTime, note[1], note[2], note[3], note[4]];
 						else copiedNote = [newStrumTime, note[1], note[2], note[3]];
 
-						if(currentSectionSelected != 0)
-							if((currentSectionSelected == 1 ? copiedNote[1] <= EK.keys(_song.mania) : copiedNote[1] >= _song.mania))
-								copiedNote[1] -= EK.keys(_song.mania);
+						if(currentSectionSelected != 0) {
+							if(currentSectionSelected == 1)
+								if(copiedNote[1] >= EK.keys(_song.mania)) copiedNote[1] -= EK.keys(_song.mania);
+							else if(copiedNote[1] <= _song.mania) copiedNote[1] += EK.keys(_song.mania);
+						}
 
 						_song.notes[curSec].sectionNotes.push(copiedNote);
 					}
