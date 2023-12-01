@@ -15,8 +15,8 @@ class FPSCounter extends TextField {
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
     public var fpsManager:FPSUtil;
-    public var memory(get, never):Dynamic;
-	var mempeak:Dynamic = 0;
+    public var memory(get, never):Float;
+	var mempeak:Float = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
 		super();
@@ -60,7 +60,7 @@ class FPSCounter extends TextField {
 			text += '${MemoryUtil.getInterval(memory)}' + (memType == "MEM/PEAK" ? ' / ${MemoryUtil.getInterval(mempeak)}' : '');
 	}
 
-	inline function get_memory():Dynamic {
+	inline function get_memory():Float {
 		var mem:Float = MemoryUtil.getGCMEM();
 		if (mem > mempeak) mempeak = mem;
 		return mem;
