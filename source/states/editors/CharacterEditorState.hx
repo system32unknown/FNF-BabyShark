@@ -893,7 +893,7 @@ class CharacterEditorState extends MusicBeatState {
 	}
 
 	function updatePresence() {
-		#if discord_rpc Discord.changePresence("Character Editor", "Character: " + daAnim, leHealthIcon.getCharacter()); #end
+		#if discord_rpc Discord.changePresence("Character Editor", 'Character: $daAnim'); #end
 	}
 
 	override function update(elapsed:Float)

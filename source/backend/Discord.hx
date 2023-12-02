@@ -15,7 +15,6 @@ class Discord {
 		state: null,
 		largeImageKey: (ClientPrefs.getPref('AltDiscordImg') ? 'iconalt' + ClientPrefs.getPref('AltDiscordImgCount') : 'icon'),
 		largeImageText: 'Baby Shark\'s Funkin',
-		smallImageKey : null,
 		startTimestamp : null,
 		endTimestamp : null
 	}
@@ -63,7 +62,7 @@ class Discord {
 	static function onReady() {
 		#if DISCORD_ALLOWED
 		changePresence(
-			queue.details, queue.state, queue.smallImageKey,
+			queue.details, queue.state,
 			queue.startTimestamp == 1 ? true : false,
 			queue.endTimestamp
 		);
@@ -98,16 +97,15 @@ class Discord {
 		#end
 	}
 
-	public static function changePresence(details:String, state:Null<String>, ?smallImageKey : String, ?hasStartTimestamp : Bool, ?endTimestamp: Float) {
+	public static function changePresence(details:String, state:Null<String>, ?hasStartTimestamp:Bool, ?endTimestamp:Float) {
 		var startTimestamp:Float = if(hasStartTimestamp) Date.now().getTime() else 0;
 		if (endTimestamp > 0) endTimestamp = startTimestamp + endTimestamp;
 
 		var presence:DiscordPresenceOptions = {
 			details: details,
 			state: state,
-			largeImageKey: (ClientPrefs.getPref('AltDiscordImg') ? 'iconalt'  + ClientPrefs.getPref('AltDiscordImgCount') : 'icon'),
+			largeImageKey: (ClientPrefs.getPref('AltDiscordImg') ? 'iconalt' + ClientPrefs.getPref('AltDiscordImgCount') : 'icon'),
 			largeImageText: 'Baby Shark\'s Funkin',
-			smallImageKey : smallImageKey,
 			// Obtained times are in milliseconds so they are divided so Discord can use it
 			startTimestamp : Std.int(startTimestamp / 1000),
 			endTimestamp : Std.int(endTimestamp / 1000)
@@ -128,7 +126,7 @@ class Discord {
 
 	#if LUA_ALLOWED
 	public static function addLuaCallbacks(lua:FunkinLua) {
-		lua.set("changePresence", (details:String, state:Null<String>, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float) -> changePresence(details, state, smallImageKey, hasStartTimestamp, endTimestamp));
+		lua.set("changePresence", (details:String, state:Null<String>, ?hasStartTimestamp:Bool, ?endTimestamp:Float) -> changePresence(details, state, hasStartTimestamp, endTimestamp));
 		lua.set("changeDiscordClientID", (?newID:String = null) -> {
 			if(newID == null) newID = _defaultID;
 			clientID = newID;

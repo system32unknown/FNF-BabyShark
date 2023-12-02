@@ -22,7 +22,6 @@ class AtlasFrameMaker extends FlxFramesCollection {
 	* @param   _excludeArray       Use this to only create selected animations. Keep null to create all of them.
 	*
 	*/
-
 	public static function construct(key:String,?_excludeArray:Array<String> = null, ?noAntialiasing:Bool = false):FlxFramesCollection
 	{
 		var frameCollection:FlxFramesCollection;
@@ -31,7 +30,7 @@ class AtlasFrameMaker extends FlxFramesCollection {
 		if (Paths.fileExists('images/$key/spritemap1.json', TEXT))
 		{
 			PlayState.instance.addTextToDebug("Only Spritemaps made with Adobe Animate 2018 are supported", FlxColor.RED);
-			trace("Only Spritemaps made with Adobe Animate 2018 are supported");
+			Logs.trace("Only Spritemaps made with Adobe Animate 2018 are supported");
 			return null;
 		}
 
@@ -44,7 +43,7 @@ class AtlasFrameMaker extends FlxFramesCollection {
 		if(_excludeArray == null) {
 			_excludeArray = t.getFrameLabels();
 		}
-		trace('Creating: $_excludeArray');
+		Logs.trace('Creating: $_excludeArray');
 
 		frameCollection = new FlxFramesCollection(graphic, FlxFrameCollectionType.IMAGE);
 		for(x in _excludeArray) frameArray.push(getFramesArray(t, x));

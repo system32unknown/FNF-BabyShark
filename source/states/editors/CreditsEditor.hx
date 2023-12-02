@@ -650,7 +650,7 @@ class CreditsEditor extends MusicBeatState {
 		loadError = true;
 		_file = null;
 		#else
-		trace("File couldn't be loaded! You aren't on Desktop, are you?");
+		Logs.trace("File couldn't be loaded! You aren't on Desktop, are you?", WARNING);
 		#end
 	}
 
@@ -659,7 +659,7 @@ class CreditsEditor extends MusicBeatState {
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
-		trace("Cancelled file loading.");
+		Logs.trace("Cancelled file loading.");
 	}
 
 	function onLoadError(_):Void {
@@ -667,6 +667,6 @@ class CreditsEditor extends MusicBeatState {
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
-		trace("Problem loading file");
+		Logs.trace("Problem loading file", WARNING);
 	}
 }

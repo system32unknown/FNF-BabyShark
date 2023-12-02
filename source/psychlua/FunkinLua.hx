@@ -1247,7 +1247,7 @@ class FunkinLua {
 			Lua.pop(lua, 1);
 			if(closed) stop();
 			return result;
-		} catch (e:Dynamic) trace(e);
+		} catch (e:Dynamic) Logs.trace(e, ERROR);
 		#end
 		return Function_Continue;
 	}

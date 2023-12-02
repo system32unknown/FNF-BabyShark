@@ -291,8 +291,7 @@ class PlayState extends MusicBeatState {
 		Conductor.bpm = SONG.bpm;
 
 		mania = SONG.mania != null ? SONG.mania : 3;
-		if (mania < EK.minMania || mania > EK.maxMania)
-			mania = EK.defaultMania;
+		if (mania < EK.minMania || mania > EK.maxMania) mania = EK.defaultMania;
 
 		keysArray = data.EkData.Keybinds.fill()[mania];
 		fillKeysPressed();
@@ -793,8 +792,7 @@ class PlayState extends MusicBeatState {
 			psychDialogue = new DialogueBoxPsych(dialogueFile, song);
 			psychDialogue.finishThing = () -> {
 				psychDialogue = null;
-				if(endingSong) endSong();
-				else startCountdown();
+				startAndEnd();
 			}
 			psychDialogue.nextDialogueThing = startNextDialogue;
 			psychDialogue.skipDialogueThing = skipDialogue;
@@ -832,8 +830,7 @@ class PlayState extends MusicBeatState {
 		var introAlts:Array<String> = introAssets.get(stageUI);
 		for (asset in introAlts) Paths.image(asset);
 		
-		for (count in ['3', '2', '1', 'Go'])
-			Paths.sound('countdown/intro$count' + introSoundsSuffix);
+		for (count in ['3', '2', '1', 'Go']) Paths.sound('countdown/intro$count' + introSoundsSuffix);
 	}
 
 	public function updateLuaDefaultPos() {
@@ -1037,7 +1034,7 @@ class PlayState extends MusicBeatState {
 		FlxTween.tween(timeBar, {alpha: 1}, .5 * playbackRate, {ease: FlxEase.circOut});
 		FlxTween.tween(timeTxt, {alpha: 1}, .5 * playbackRate, {ease: FlxEase.circOut});
 
-		#if discord_rpc Discord.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter(), true, songLength); #end
+		#if discord_rpc Discord.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', true, songLength / playbackRate); #end
 		setOnScripts('songLength', songLength);
 		callOnScripts('onSongStart');
 	}
@@ -1135,7 +1132,7 @@ class PlayState extends MusicBeatState {
 						if (sustainNote.mustPress) sustainNote.x += FlxG.width / 2; // general offset
 						else if (middleScroll) {
 							sustainNote.x += 310;
-							if (daNoteData > [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 6, 5][mania]) //Up and Right
+							if (daNoteData > EK.noteSep[mania]) //Up and Right
 								sustainNote.x += FlxG.width / 2 + 25;
 						}
 					}
@@ -1239,7 +1236,7 @@ class PlayState extends MusicBeatState {
 
 			if (player < 1 && middleScroll) {
 				babyArrow.x += 310;
-				if(i > [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 6, 5][mania]) //Up and Right
+				if(i > EK.noteSep[mania]) //Up and Right
 					babyArrow.x += FlxG.width / 2 + 25;
 			}
 
@@ -1397,7 +1394,7 @@ class PlayState extends MusicBeatState {
 		#if discord_rpc
 		if (health > 0 && !paused)
 			if(ClientPrefs.getPref('autoPausePlayState') && !tryPause())
-				Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter());
+				Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)');
 		#end
 		super.onFocusLost();
 		callOnScripts('onFocusLostPost');
@@ -1411,8 +1408,8 @@ class PlayState extends MusicBeatState {
 
 	function resetRPC(?cond:Bool = false) {
 		#if desktop
-		if (cond) Discord.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset'));
-		else Discord.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter());
+		if (cond) Discord.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', true, (songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset')) / playbackRate);
+		else Discord.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)');
 		#end
 	}
 
@@ -1680,7 +1677,7 @@ class PlayState extends MusicBeatState {
 		}
 		openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
-		#if discord_rpc Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter()); #end
+		#if discord_rpc Discord.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)'); #end
 	}
 
 	function openChartEditor() {
@@ -1691,7 +1688,7 @@ class PlayState extends MusicBeatState {
 		chartingMode = true;
 
 		#if discord_rpc
-		Discord.changePresence("Chart Editor", null, null, true);
+		Discord.changePresence("Chart Editor", null, true);
 		Discord.resetClientID();
 		#end
 		MusicBeatState.switchState(new ChartingState());
@@ -1724,7 +1721,7 @@ class PlayState extends MusicBeatState {
 				destroyAllVideoSprites();
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollow.x, camFollow.y));
 
-				#if discord_rpc Discord.changePresence('Game Over - $detailsText', '${SONG.song} ($storyDifficultyText)', iconP2.getCharacter()); #end
+				#if discord_rpc Discord.changePresence('Game Over - $detailsText', '${SONG.song} ($storyDifficultyText)'); #end
 				return isDead = true;
 			}
 		}

@@ -6,6 +6,7 @@ class EK {
     public static var restPosition:Array<Float> = [0, -5, 0, 0, 16, 23, 25, 25, 24, 17, 16, 12, 15, 18, 19, 13, 14, 10];
     public static var gridSizes:Array<Int> = [40, 40, 40, 40, 40, 40, 40, 40, 40, 35, 30, 25, 25, 20, 20, 20, 20, 15];
     public static var splashScales:Array<Float> = [1.3, 1.2, 1.1, 1, 1, .9, .8, .7, .6, .5, .4, .3, .3, .3, .2, .18, .18, .15];
+	public static var noteSep:Array<Int> = [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 6, 5];
 	public static var xmlMax:Int = 17; // This specifies the max of the splashes can go
 
 	public static var defaultMania:Int = 3;

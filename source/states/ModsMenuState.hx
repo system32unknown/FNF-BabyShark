@@ -714,7 +714,7 @@ class ModItem extends FlxSpriteGroup
 				#if windows
 				lime.app.Application.current.window.alert(errorMsg, errorTitle);
 				#end
-				trace('$errorTitle - $errorMsg');
+				Logs.trace('$errorTitle - $errorMsg', ERROR);
 			}
 		}
 
