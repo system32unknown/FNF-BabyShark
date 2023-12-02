@@ -66,7 +66,7 @@ class Main extends Sprite {
 			MemoryUtil.clearMajor(true);
 			MemoryUtil.clearMajor();
 		});
-		FlxG.signals.gameResized.add((w, h) ->  {
+		FlxG.signals.gameResized.add((w, h) -> {
 			if (FlxG.cameras != null) for (cam in FlxG.cameras.list) {
 				if (cam != null && cam.filters != null)
 				   	resetSpriteCache(cam.flashSprite);

@@ -234,10 +234,10 @@ class AlphaCharacter extends FlxSprite {
 
 		//symbols
 		'&' => {offsetsBold: [0, 2]},
-		'('  => {offsetsBold: [0, 0]},
-		')'  => {offsetsBold: [0, 0]},
-		'['  => null,
-		']'  => {offsets: [0, -1]},
+		'(' => {offsetsBold: [0, 0]},
+		')' => {offsetsBold: [0, 0]},
+		'[' => null,
+		']' => {offsets: [0, -1]},
 		'*' => {offsets: [0, 28], offsetsBold: [0, 40]},
 		'+' => {offsets: [0, 7], offsetsBold: [0, 12]},
 		'-' => {offsets: [0, 16], offsetsBold: [0, 16]},

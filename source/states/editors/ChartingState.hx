@@ -989,7 +989,7 @@ class ChartingState extends MusicBeatState {
 		#end
 
 		for (i in 0...directories.length) {
-			var directory:String =  directories[i];
+			var directory:String = directories[i];
 			if(FileSystem.exists(directory)) {
 				for (file in FileSystem.readDirectory(directory)) {
 					var path = Path.join([directory, file]);
@@ -2459,7 +2459,7 @@ class ChartingState extends MusicBeatState {
 
 		var note:Note = new Note(daStrumTime, daNoteInfo % EK.keys(_song.mania), null, null, true);
 		if(daSus != null) { //Common note
-			if(!Std.isOfType(i[3], String))  i[3] = curNoteTypes[i[3]]; //Convert old note type to new note type format
+			if(!Std.isOfType(i[3], String)) i[3] = curNoteTypes[i[3]]; //Convert old note type to new note type format
 			if(i.length > 3 && (i[3] == null || i[3].length < 1)) i.remove(i[3]);
 			note.sustainLength = daSus;
 			note.noteType = i[3];
@@ -2765,7 +2765,7 @@ class ChartingState extends MusicBeatState {
 		return val != null ? val : 4;
 	}
 
-	override function updateCurStep():Void  {
+	override function updateCurStep():Void {
 		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
 
 		var shit = (Conductor.songPosition - lastChange.songTime) / lastChange.stepCrochet;

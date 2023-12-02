@@ -545,12 +545,12 @@ class FunkinLua {
 			return 0;
 		});
 		set("getGraphicMidpointX", function(obj:String) {
-			var spr:FlxSprite  = LuaUtils.getVarInstance(obj);
+			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
 			if (spr != null) return spr.getGraphicMidpoint().x;
 			return 0;
 		});
 		set("getGraphicMidpointY", function(obj:String) {
-			var spr:FlxSprite  = LuaUtils.getVarInstance(obj);
+			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
 			if (spr != null) return spr.getGraphicMidpoint().y;
 			return 0;
 		});

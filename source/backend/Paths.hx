@@ -488,7 +488,7 @@ class Paths
 			spriteJson = File.getContent(spriteJson);
 		}
 
-		if(animationJson != null)  {
+		if(animationJson != null) {
 			changedAnimJson = true;
 			animationJson = File.getContent(animationJson);
 		}

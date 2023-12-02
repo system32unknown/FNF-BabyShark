@@ -1,0 +1,57 @@
+{
+	"storyName": "Friends rap battle",
+	"difficulties": "",
+	"weekBackground": "stage",
+	"hideFreeplay": false,
+	"weekBefore": "tutorial",
+	"startUnlocked": true,
+	"hideStoryMode": false,
+	"sections": [
+		"Vanilla"
+	],
+	"songs": [
+		[
+			"Rocks",
+			"hank",
+			[
+				106,
+				190,
+				228
+			]
+		],
+		[
+			"Skating",
+			"lala",
+			[
+				74,
+				234,
+				80
+			]
+		],
+		[
+			"Golden",
+			"goldie",
+			[
+				251,
+				195,
+				60
+			]
+		],
+		[
+			"chuck",
+			"chuck",
+			[
+				157,
+				132,
+				189
+			]
+		]
+	],
+	"weekCharacters": [
+		"",
+		"bs",
+		"gf"
+	],
+	"weekName": "Quad Week",
+	"hiddenUntilUnlocked": false
+}

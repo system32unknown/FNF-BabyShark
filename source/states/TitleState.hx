@@ -11,6 +11,7 @@ import states.MainMenuState;
 @:structInit
 class TitleData {
 	public var titlex:Float = 0;
+	public var titley:Float = 1500;
 	public var starty:Float = 50;
 	public var gfx:Float = 512;
 	public var gfy:Float = 40;
@@ -50,6 +51,7 @@ class TitleState extends MusicBeatState {
 		final balls = Json.parse(Paths.getTextFromFile('data/titleData.json'));
 		titleJson = {
 			titlex: balls.titlex,
+			titley: balls.titley,
 			starty: balls.starty,
 			gfx: balls.gfx,
 			gfy: balls.gfy,
@@ -80,7 +82,7 @@ class TitleState extends MusicBeatState {
 		gf.alpha = .0001;
 		add(gf);
 
-		logo = new FlxSprite(0, 1500);
+		logo = new FlxSprite(titleJson.titlex, titleJson.titley);
 		logo.antialiasing = ClientPrefs.getPref('Antialiasing');
 		if (!FileSystem.exists(Paths.modsXml('logobumpin'))) {
 			logo.loadGraphic(Paths.image('logobumpin'));
@@ -92,7 +94,6 @@ class TitleState extends MusicBeatState {
 			logo.animation.play('bump');
 		}
 		logo.updateHitbox();
-		logo.x = titleJson.titlex;
 		logo.alpha = 0.0001;
 		logo.angle = -4;
 		add(logo);

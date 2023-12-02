@@ -5,7 +5,7 @@ class CallbackHandler {
 		try {
 			var cbf:Dynamic = Lua_helper.callbacks.get(fname);
 
-			if(cbf == null)  {
+			if(cbf == null) {
 				var last:FunkinLua = FunkinLua.lastCalledScript;
 				if(last == null || last.lua != l) {
 					for (script in PlayState.instance.luaArray)

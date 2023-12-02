@@ -527,7 +527,7 @@ class ModsMenuState extends MusicBeatState {
 		}
 		
 		if(limited && Math.abs(add) == 1) {
-			if(add < 0)  { // pressed up on first mod
+			if(add < 0) { // pressed up on first mod
 				curSelectedMod = lastSelected;
 				hoveringOnMods = false;
 				curSelectedButton = -1;

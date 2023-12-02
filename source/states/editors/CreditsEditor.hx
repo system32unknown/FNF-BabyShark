@@ -33,8 +33,6 @@ class CreditsEditor extends MusicBeatState {
 
 	final offsetThing:Float = -75;
 
-	var text:String = "";
-
 	override function create() {
 		#if discord_rpc
 		// Updating Discord Rich Presence
@@ -62,9 +60,7 @@ class CreditsEditor extends MusicBeatState {
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
 
-		var tabs = [
-			{name: 'Credits', label: 'Credits'}
-		];
+		var tabs = [{name: 'Credits', label: 'Credits'}];
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.camera = camUI;
@@ -74,15 +70,13 @@ class CreditsEditor extends MusicBeatState {
 		add(UI_box);
 		UI_box.selected_tab = 0;
 
-		text = "W/S or Up/Down - Change selected item
+		var tipTextArray:Array<String> = "W/S or Up/Down - Change selected item
 		\nEnter - Apply changes
 		\nSpace - Get selected item data
 		\nDelete - Delete selected item
 		\nR - Reset inputs
 		\n1 - Add title
-		\n2 - Add credit";
-
-		var tipTextArray:Array<String> = text.split('\n');
+		\n2 - Add credit".split('\n');
 		for (i in 0...tipTextArray.length) {
 			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 8, 0, tipTextArray[i], 14);
 			tipText.y += i * 9;
@@ -133,11 +127,11 @@ class CreditsEditor extends MusicBeatState {
 	var colorInput:FlxUIInputText;
 	var colorSquare:FlxSprite;
 
-	function addCreditsUI():Void
-	{
+	function addCreditsUI():Void {
 		var yDist:Float = 20;
 		titleInput = new FlxUIInputText(60, 20, 180, '', 8);
 		titleJump = new FlxUICheckBox(20, titleInput.y + yDist, null, null, 'Space betwen titles', 110);
+		
 		titleJump.textX += 3;
 		titleJump.textY += 4;
 		if (FlxG.save.data.jumpTitle == null) FlxG.save.data.jumpTitle = true;
@@ -411,12 +405,8 @@ class CreditsEditor extends MusicBeatState {
 			ClientPrefs.toggleVolumeKeys(true);
 			if(creditsStuff.length > 1) {
 				var shiftMult:Int = 1;
-				if (FlxG.keys.justPressed.W || FlxG.keys.justPressed.UP) {
-					changeSelection(-shiftMult);
-					holdTime = 0;
-				}
-				if (FlxG.keys.justPressed.S || FlxG.keys.justPressed.DOWN) {
-					changeSelection(shiftMult);
+				if ((FlxG.keys.justPressed.W || FlxG.keys.justPressed.UP) || (FlxG.keys.justPressed.S || FlxG.keys.justPressed.DOWN)) {
+					changeSelection((FlxG.keys.justPressed.W || FlxG.keys.justPressed.UP) ? -shiftMult : shiftMult);
 					holdTime = 0;
 				}
 				if(FlxG.mouse.wheel != 0) {
@@ -449,9 +439,7 @@ class CreditsEditor extends MusicBeatState {
 			if(FlxG.keys.justPressed.TWO) addCredit();
 
 			if (FlxG.keys.justPressed.BACKSPACE || FlxG.keys.justPressed.ESCAPE) {
-				if(colorTween != null) {
-					colorTween.cancel();
-				}
+				if(colorTween != null) colorTween.cancel();
 				FlxG.mouse.visible = false;
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new MasterEditorMenu());
