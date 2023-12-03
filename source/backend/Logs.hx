@@ -51,8 +51,7 @@ class Logs {
 				case TRACE: logText('TRACE', GRAY);
 				case VERBOSE: logText('VERBOSE', DARKMAGENTA);
 				default: logText('INFORMATION', CYAN);
-			},
-			logText('] ')
+			}, logText('] ')
 		];
 		for(k => e in superCoolText)
 			text.insert(k, e);

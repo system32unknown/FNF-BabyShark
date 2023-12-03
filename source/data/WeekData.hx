@@ -43,7 +43,7 @@ class WeekData {
 
 	public static function createWeekFile():WeekFile {
 		var weekFile:WeekFile = {
-			songs: [["Bopeebo", "daddyshark", [146, 113, 253]], ["Fresh", "daddyshark", [146, 113, 253]], ["Dad Battle", "daddyshark", [146, 113, 253]]],
+			songs: [["Bopeebo", "daddyshark", [146, 113, 253]], ["Fresh", "daddyshark", [146, 113, 253]], ["Tooth", "daddyshark", [146, 113, 253]]],
 			weekCharacters: ['', 'bf', 'gf'],
 			weekBackground: 'stage',
 			weekBefore: 'tutorial',
@@ -80,8 +80,7 @@ class WeekData {
 		var originalLength:Int = directories.length;
 		#end
 
-		var library = OpenFlAssets.getLibrary("weeks");
-		for (asset in library.list(null)) {
+		for (asset in OpenFlAssets.getLibrary("weeks").list(null)) {
 			for (j in 0...directories.length) {
 				if (asset.endsWith(".json")) {
 					var weekName = asset.replace('${directories[j]}weeks/', "").replace(".json", "");
@@ -93,7 +92,7 @@ class WeekData {
 
 							#if MODS_ALLOWED
 							if(j >= originalLength)
-								weekFile.folder = directories[j].substring(Paths.mods().length, directories[j].length-1);
+								weekFile.folder = directories[j].substring(Paths.mods().length, directories[j].length - 1);
 							#end
 
 							if (weekFile != null && (isStoryMode == null || (isStoryMode && !weekFile.hideStoryMode) || (!isStoryMode && !weekFile.hideFreeplay))) {
@@ -119,9 +118,8 @@ class WeekData {
 
 				for (file in FileSystem.readDirectory(directory)) {
 					var path = Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
+					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
 						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
-					}
 				}
 			}
 		}

@@ -23,7 +23,7 @@ class TitleState extends MusicBeatState {
 	public static var skippedIntro:Bool = false;
 	
 	var gf:FlxSprite;
-	var versionShit:FlxText;
+	var version:FlxText;
 	var foundXml:Bool = false;
 	
 	var logo:FlxSprite;
@@ -123,15 +123,14 @@ class TitleState extends MusicBeatState {
 		titleText.updateHitbox();
 		add(titleText);
 
-		versionShit = new FlxText(0, 0, 0, 
-			'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH.trim().substring(0, 7)})\n' +
-			'Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}\n', 16);
-		versionShit.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, RIGHT);
-		versionShit.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-		versionShit.scrollFactor.set();
-		versionShit.setPosition(FlxG.width - versionShit.width, FlxG.height - versionShit.height);
-		versionShit.visible = false;
-		add(versionShit);
+		version = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH.trim().substring(0, 7)}) | Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}', 16);
+		version.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, CENTER);
+		version.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		version.scrollFactor.set();
+		version.y = FlxG.height - version.height;
+		version.screenCenter(X);
+		version.visible = false;
+		add(version);
 
 		add(textGroup = new FlxTypedGroup<FlxText>());
 
@@ -287,7 +286,7 @@ class TitleState extends MusicBeatState {
 		logo.alpha = 1;
 		titleText.visible = true;
 		gradientBar.visible = true;
-		versionShit.visible = true;
+		version.visible = true;
 
 		FlxTween.tween(logo, {y: titleJson.starty}, 1.4, {ease: FlxEase.expoInOut});
 		new FlxTimer().start(.01, (tmr:FlxTimer) -> {

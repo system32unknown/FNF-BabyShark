@@ -31,8 +31,8 @@ class FlxSoundTray extends Sprite {
 	/**
 	 * How wide the sound tray background is.
 	 */
-	var _width:Int = 90;
-	var _defaultScale:Float = 2.0;
+	var _width:Int = 80;
+	var _defaultScale:Float = 2.;
 
 	var text:TextField = new TextField();
 	/**The sound used when decreasing the volume.**/
@@ -92,10 +92,11 @@ class FlxSoundTray extends Sprite {
 	 * This function updates the soundtray object.
 	 */
 	public function update(MS:Float):Void {
+		var elapsed:Float = MS / 1000;
 		// Animate sound tray thing
-		if (_timer > 0) _timer -= (MS / 1000);
+		if (_timer > 0) _timer -= elapsed;
 		else if (y > -height) {
-			y -= (MS / 1000) * height * .5;
+			y -= elapsed * height * .5;
 
 			if (y <= -height) {
 				visible = false;
@@ -128,14 +129,12 @@ class FlxSoundTray extends Sprite {
 		y = 0;
 		visible = true;
 		active = true;
-		var globalVolume:Int = Math.round(FlxG.sound.volume * 10);
 
-		if (FlxG.sound.muted) globalVolume = 0;
+		var globalVolume:Int = FlxG.sound.muted ? 0 : Math.round(FlxG.sound.volume * 10);
+		text.text = FlxG.sound.muted ? 'Muted' : 'Volume:${globalVolume * 10}%';
 
 		for (i in 0..._bars.length)
 			_bars[i].alpha = i < globalVolume ? 1 : .5;
-
-		text.text = FlxG.sound.muted ? 'Muted' : 'Volume:${globalVolume * 10}%';
 	}
 
 	public function screenCenter():Void {

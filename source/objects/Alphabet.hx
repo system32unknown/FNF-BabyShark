@@ -352,7 +352,6 @@ class AlphaCharacter extends FlxSprite {
 		if (lastAnim != null) {
 			animation.addByPrefix(lastAnim, lastAnim, 24);
 			animation.play(lastAnim, true);
-			
 			updateHitbox();
 		}
 		return name;

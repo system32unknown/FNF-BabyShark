@@ -40,10 +40,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 	override function create() {
 		super.create();
 
-		leTween = FlxTween.tween(this, {scale: 1}, duration, {
-			onComplete: onComplete,
-			ease: FlxEase.linear
-		});
+		leTween = FlxTween.tween(this, {scale: 1}, duration, {onComplete: onComplete, ease: FlxEase.linear});
 	}
 
 	function onComplete(_) {

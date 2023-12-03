@@ -201,9 +201,8 @@ class Paths
 		return sound(key + FlxG.random.int(min, max), library);
 
 	public static var streamMusic:Bool = false;
-	#if (!MODS_ALLOWED) inline #end static public function music(key:String, ?library:String, ?stream:Bool):Sound {
+	#if (!MODS_ALLOWED) inline #end static public function music(key:String, ?library:String, ?stream:Bool):Sound
 		return returnSound('music', key, library, stream || streamMusic);
-	}
 
 	#if (!MODS_ALLOWED) inline #end static public function inst(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
 		return returnSound('songs', '${formatToSongPath(song)}/Inst', !forceNoStream && (stream || streamMusic));

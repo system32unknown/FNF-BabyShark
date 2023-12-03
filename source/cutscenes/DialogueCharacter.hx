@@ -47,7 +47,7 @@ class DialogueCharacter extends FlxSprite {
 	}
 
 	public function reloadCharacterJson(character:String) {
-		var characterPath:String = 'images/dialogue/' + character + '.json';
+		var characterPath:String = 'images/dialogue/$character.json';
 		var rawJson = null;
 
 		#if MODS_ALLOWED
@@ -56,7 +56,7 @@ class DialogueCharacter extends FlxSprite {
 			path = Paths.getPreloadPath(characterPath);
 
 		if(!FileSystem.exists(path))
-			path = Paths.getPreloadPath('images/dialogue/' + DEFAULT_CHARACTER + '.json');
+			path = Paths.getPreloadPath('images/dialogue/$DEFAULT_CHARACTER.json');
 		rawJson = File.getContent(path);
 
 		#else
@@ -87,12 +87,8 @@ class DialogueCharacter extends FlxSprite {
 			}
 		}
 
-		if(dialogueAnimations.exists(leAnim) &&
-		(dialogueAnimations.get(leAnim).loop_name == null ||
-		dialogueAnimations.get(leAnim).loop_name.length < 1 ||
-		dialogueAnimations.get(leAnim).loop_name == dialogueAnimations.get(leAnim).idle_name)) {
+		if(dialogueAnimations.exists(leAnim) && (dialogueAnimations.get(leAnim).loop_name == null || dialogueAnimations.get(leAnim).loop_name.length < 1 || dialogueAnimations.get(leAnim).loop_name == dialogueAnimations.get(leAnim).idle_name))
 			playIdle = true;
-		}
 		animation.play(playIdle ? leAnim + IDLE_SUFFIX : leAnim, false);
 
 		if(dialogueAnimations.exists(leAnim)) {
