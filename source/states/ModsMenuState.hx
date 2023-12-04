@@ -380,12 +380,9 @@ class ModsMenuState extends MusicBeatState {
 				}
 			}
 
-			if(lastMode == hoveringOnMods)
-			{
-				if(hoveringOnMods)
-				{
-					if(controls.UI_RIGHT_P)
-					{
+			if(lastMode == hoveringOnMods) {
+				if(hoveringOnMods) {
+					if(controls.UI_RIGHT_P) {
 						hoveringOnMods = false;
 						var button = getButton();
 						button.ignoreCheck = button.onFocus = false;
@@ -393,24 +390,17 @@ class ModsMenuState extends MusicBeatState {
 						changeSelectedButton();
 					}
 				} else {
-					if(controls.BACK)
-					{
+					if(controls.BACK) {
 						hoveringOnMods = true;
 						var button = getButton();
 						button.ignoreCheck = button.onFocus = false;
 						changeSelectedMod();
-					}
-					else if(controls.ACCEPT)
-					{
+					} else if(controls.ACCEPT) {
 						var button = getButton();
 						if(button.onClick != null) button.onClick();
-					}
-					else if(curSelectedButton < 0)
-					{
-						if(controls.UI_UP_P)
-						{
-							switch(curSelectedButton)
-							{
+					} else if(curSelectedButton < 0) {
+						if(controls.UI_UP_P) {
+							switch(curSelectedButton) {
 								case -2:
 									curSelectedMod = 0;
 									hoveringOnMods = true;
@@ -419,11 +409,8 @@ class ModsMenuState extends MusicBeatState {
 									changeSelectedMod();
 								case -1: changeSelectedButton(-1);
 							}
-						}
-						else if(controls.UI_DOWN_P)
-						{
-							switch(curSelectedButton)
-							{
+						} else if(controls.UI_DOWN_P) {
+							switch(curSelectedButton) {
 								case -2: changeSelectedButton(1);
 								case -1:
 									curSelectedMod = 0;
@@ -432,9 +419,7 @@ class ModsMenuState extends MusicBeatState {
 									button.ignoreCheck = button.onFocus = false;
 									changeSelectedMod();
 							}
-						}
-						else if(controls.UI_RIGHT_P)
-						{
+						} else if(controls.UI_RIGHT_P) {
 							var button = getButton();
 							button.ignoreCheck = button.onFocus = false;
 							curSelectedButton = 0;

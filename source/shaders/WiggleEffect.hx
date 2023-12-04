@@ -90,13 +90,11 @@ class WiggleShader extends FlxShader {
 			
 			if (effectType == EFFECT_TYPE_DREAMY) 
 			{
-				float offsetX = sin(pt.y * uFrequency + uTime * uSpeed) * uWaveAmplitude;
-                pt.x += offsetX; // * (pt.y - 1.0); // <- Uncomment to stop bottom part of the screen from moving
+                pt.x += sin(pt.y * uFrequency + uTime * uSpeed) * uWaveAmplitude;
 			}
 			else if (effectType == EFFECT_TYPE_WAVY) 
 			{
-				float offsetY = sin(pt.x * uFrequency + uTime * uSpeed) * uWaveAmplitude;
-				pt.y += offsetY; // * (pt.y - 1.0); // <- Uncomment to stop bottom part of the screen from moving
+				pt.y += sin(pt.x * uFrequency + uTime * uSpeed) * uWaveAmplitude;
 			}
 			else if (effectType == EFFECT_TYPE_HEAT_WAVE_HORIZONTAL)
 			{

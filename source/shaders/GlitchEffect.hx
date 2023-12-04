@@ -74,10 +74,8 @@ class GlitchShader extends FlxShader
         float x = 0.0;
         float y = 0.0;
         
-        float offsetX = sin(pt.y * uFrequency + uTime * uSpeed) * (uWaveAmplitude / pt.x * pt.y);
-        float offsetY = sin(pt.x * uFrequency - uTime * uSpeed) * (uDistortBG ? (uWaveAmplitude / pt.y * pt.x) : (uWaveAmplitude));
-        pt.x += offsetX;
-        pt.y += offsetY;
+        pt.x += sin(pt.y * uFrequency + uTime * uSpeed) * (uWaveAmplitude / pt.x * pt.y);
+        pt.y += sin(pt.x * uFrequency - uTime * uSpeed) * (uDistortBG ? (uWaveAmplitude / pt.y * pt.x) : (uWaveAmplitude));
         return vec2(pt.x + x, pt.y + y);
     }
     

@@ -94,8 +94,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 				optionText.snapToPosition();
 				var checkbox:CheckboxThingie = new CheckboxThingie(optionText.x - 105, optionText.y, optionsArray[i].getValue() == true);
 				checkbox.sprTracker = optionText;
-				checkbox.offsetX -= 20;
-				checkbox.offsetY = -52;
+				checkbox.sprOffset.x -= 20;
+				checkbox.sprOffset.y = -52;
 				checkbox.ID = i;
 				checkboxGroup.add(checkbox);
 			} else {
@@ -112,6 +112,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 		changeSelection();
 		reloadCheckboxes();
+
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	var nextAccept:Int = 5;
@@ -254,16 +256,13 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		option.text = text.replace('%v', Std.string(val)).replace('%d', Std.string(def));
 	}
 
-	function clearHold()
-	{
-		if(holdTime > 0.5) {
+	function clearHold() {
+		if(holdTime > 0.5)
 			FlxG.sound.play(Paths.sound('scrollMenu'));
-		}
 		holdTime = 0;
 	}
 	
-	function changeSelection(change:Int = 0)
-	{
+	function changeSelection(change:Int = 0) {
 		curSelected = FlxMath.wrap(curSelected + change, 0, optionsArray.length - 1);
 
 		var bullShit:Int = 0;
@@ -271,17 +270,9 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = 0.6;
-			if (item.targetY == 0) {
-				item.alpha = 1;
-			}
+			item.alpha = item.targetY == 0 ? 1 : 0.6;
 		}
-		for (text in grpTexts) {
-			text.alpha = 0.6;
-			if(text.ID == curSelected) {
-				text.alpha = 1;
-			}
-		}
+		for (text in grpTexts) text.alpha = text.ID == curSelected ? 1 : 0.6;
 		curOption = optionsArray[curSelected]; //shorter lol
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}

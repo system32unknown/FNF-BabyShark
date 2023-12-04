@@ -12,13 +12,11 @@ class FlashingState extends MusicBeatState {
 
 		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK));
 		warnText = new FlxText(0, 0, 0,
-			"Hey, Welcome to Alter Engine!\n
-			Watch out!\n
+			"Welcome to Alter Engine!\n
 			This Mod contains some flashing lights!\n
 			Press ENTER to disable them now or go to Options Menu.\n
 			Press ESCAPE to ignore this message.\n
-			You've been warned!",
-			32);
+			You've been warned!", 32);
 		warnText.setFormat(Paths.font('babyshark.ttf'), 32, FlxColor.WHITE, CENTER);
 		warnText.scrollFactor.set();
 		warnText.screenCenter();

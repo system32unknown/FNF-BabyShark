@@ -12,7 +12,7 @@ class Difficulty {
 
 		var fileSuffix:String = list[num];
 		if(fileSuffix != defaultDifficulty)
-			fileSuffix = '-' + fileSuffix;
+			fileSuffix = '-$fileSuffix';
 		else fileSuffix = '';
 
 		return Paths.formatToSongPath(fileSuffix);
