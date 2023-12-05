@@ -373,9 +373,7 @@ class ChartingState extends MusicBeatState {
 
 		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, 'Save Events', () -> saveEvents());
 
-		var clear_events:FlxButton = new FlxButton(320, 310, 'Clear events', function() {
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', clearEvents, null, ignoreWarnings));
-		});
+		var clear_events:FlxButton = new FlxButton(320, 310, 'Clear events', () -> openSubState(new Prompt('This action will clear current progress.\n\nProceed?', clearEvents, null, ignoreWarnings)));
 		clear_events.color = FlxColor.RED;
 		clear_events.label.color = FlxColor.WHITE;
 
@@ -778,10 +776,8 @@ class ChartingState extends MusicBeatState {
 		var duetButton:FlxButton = new FlxButton(10, copyLastButton.y + 45, "Duet Notes", function() {
 			var duetNotes:Array<Array<Dynamic>> = [];
 			for (note in _song.notes[curSec].sectionNotes) {
-				if(currentSectionSelected == 1)
-					if(note[1] >= EK.keys(_song.mania)) continue;
-				if(currentSectionSelected == 2)
-					if(note[1] <= _song.mania) continue;
+				if(currentSectionSelected == 1) if(note[1] >= EK.keys(_song.mania)) continue;
+				if(currentSectionSelected == 2) if(note[1] <= _song.mania) continue;
 
 				var boob = note[1];
 				if (boob > _song.mania)

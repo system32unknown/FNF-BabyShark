@@ -7,11 +7,10 @@ class CreditsState extends MusicBeatState {
 	// Title, Variable, Description, Color
 	static var titles(default, never):Array<Array<String>> = [
 		['Credits Sections'],
-		['Psych Engine Team',		'psych',			'Developers of Psych Engine',						'D662EB'],
-		["Funkin' Crew",			'funkin',			'The only cool kickers of Friday Night Funkin\'',	'FD40AB'],
-		["Vs Dave and Bambi Team",	'daveandbambi',		'Developers of Dave and Bambi',						'FD40AB'],
-		["Psych Engine Extra Keys",	'psychek',			'Developers of Psych EK',							'FD40AB'],
-		["Baby Shark\'s Funkin Team",'babyshark',		'Developers of Baby Shark\'s Funkin',				'FD40AB'],
+		['Psych Engine / EK Team',		'psych',			'Developers of Psych Engine / EK',					'D662EB'],
+		["Funkin' Crew",				'funkin',			'The only cool kickers of Friday Night Funkin\'',	'FD40AB'],
+		["Vs Dave and Bambi Team",		'daveandbambi',		'Developers of Dave and Bambi',						'FD40AB'],
+		["Baby Shark\'s Funkin Team",	'babyshark',		'Developers of Baby Shark\'s Funkin',				'FD40AB'],
 		['']
 	];
 
@@ -27,7 +26,7 @@ class CreditsState extends MusicBeatState {
 		['Keoiki',				'keoiki',			'Ex-Artist and Note Splash Animations and Latin Alphabet', 		'https://twitter.com/Keoiki_',				'D2D2D2'],
 		[''],
 		['Engine Contributors'],
-		['CrowPlexus', 			'face', 			'Major Help and Other PRs\nTO DO: Add Icon', 	'https://twitter.com/crowplexus', 			'A1A1A1'],
+		['CrowPlexus', 			'face', 			'Major Help and Other PRs\nTO DO: Add Icon', 					'https://twitter.com/crowplexus', 			'A1A1A1'],
 		['iFlicky',				'flicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',		'https://twitter.com/flicky_i',				'9E29CF'],
 		['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',	'https://twitter.com/gedehari',				'E1843A'],
 		['EliteMasterEric',		'mastereric',		'Runtime Shaders support',										'https://twitter.com/EliteMasterEric',		'FFBD40'],
@@ -39,6 +38,11 @@ class CreditsState extends MusicBeatState {
 		['Raltyro',				'raltyro',			'Bunch of lua fixes, Owner of Psike Engine',					'https://twitter.com/raltyro',				'F3F3F3'],
 		['UncertainProd',		'prod',				'Sampler2D in Runtime Shaders',									'https://github.com/UncertainProd',			'D2D2D2'],
 		['ACrazyTown',			'acrazytown',		'Optimized PNGs',												'https://twitter.com/acrazytown',			'A03E3D'],
+		[''],
+		['Psych Engine Extra Keys'],
+		['Tposejank', 			'tposejank',		'Main Programmer of Psych Engine EK', 							'https://twitter.com/tpose_jank', 			'B9AF27'],
+		['SrPerez', 			'perez', 			'1-9 keys art', 												'https://twitter.com/newsrperez',			'FF9E00'],
+		['Leather128', 			'leather', 			'12 - 16 keys art + coder', 									'https://github.com/Leather128',			'FF9E00'],
 	];
 
 	static var funkin(default, never):Array<Array<String>> = [
@@ -63,18 +67,11 @@ class CreditsState extends MusicBeatState {
 		['T5mpler',           	'T5mpler',			'Former Programmer & Supporter',                           		'https://twitter.com/RealT5mpler',			'FF0000'],
 	];
 
-	static var psychek(default, never):Array<Array<String>> = [
-		['Psych Engine Extra Keys'],
-		['Tposejank', 			'tposejank',		'Main Programmer of Psych Engine EK', 							'https://twitter.com/tpose_jank', 			'B9AF27'],
-		['SrPerez', 			'perez', 			'1-9 keys art', 												'https://twitter.com/newsrperez',			'FF9E00'],
-		['Leather128', 			'leather', 			'12 - 16 keys art + coder', 									'https://twitter.com/newsrperez',			'FF9E00'],
-	];
-
 	static var babyshark(default, never):Array<Array<String>> = [
 		['Baby Shark\'s Funkin Team'],
 		['Altertoriel', 		'altertoriel',		'Main Developer', 												'https://twitter.com/Altertoriel2', 		'B9AF27'],
-		['Pinkfong', 			'pinkfong', 		'Creator of Baby Shark', 										'https://twitter.com/Pinkfong',				'FFC0CB'],
-		['Nickelodeon', 		'nickelodeon', 		'Creator of Baby Shark\'s Big Show!', 							'https://twitter.com/Nickelodeon',			'F57C13'],
+		['Pinkfong', 			'pinkfong', 		'Creator of Baby Shark', 										'https://pinkfong.com',						'FFC0CB'],
+		['Nickelodeon', 		'nickelodeon', 		'Creator of Baby Shark\'s Big Show!', 							'https://www.nick.com',						'F57C13'],
 	];
 
 	public static var prevSelected:Int = 0;
