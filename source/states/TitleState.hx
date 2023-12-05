@@ -209,13 +209,9 @@ class TitleState extends MusicBeatState {
 		}
 	}
 
-	function createText(textArray:Dynamic, offset:Float = 0) {
-		if (Std.isOfType(textArray, String))
-			addMoreText(textArray, offset, 1);
-		else {
-			for (i in 0...textArray.length)
-				addMoreText(textArray[i], offset, i);
-		}
+	function createText(textArray:Array<String>, offset:Float = 0) {
+		for (i in 0...textArray.length)
+			addMoreText(textArray[i], offset, i);
 	}
 
 	function addMoreText(text:String, offset:Float = 0, i:Int = -1) {
