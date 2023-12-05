@@ -2,7 +2,7 @@ package data;
 
 import haxe.io.Path;
 import haxe.Json;
-import openfl.utils.Assets as OpenFlAssets;
+import openfl.utils.Assets;
 
 typedef WeekFile = {
 	// JSON variables
@@ -80,7 +80,7 @@ class WeekData {
 		var originalLength:Int = directories.length;
 		#end
 
-		for (asset in OpenFlAssets.getLibrary("weeks").list(null)) {
+		for (asset in Assets.getLibrary("weeks").list(null)) {
 			for (j in 0...directories.length) {
 				if (asset.endsWith(".json")) {
 					var weekName = asset.replace('${directories[j]}weeks/', "").replace(".json", "");
@@ -149,7 +149,7 @@ class WeekData {
 		#if MODS_ALLOWED
 		if(FileSystem.exists(path)) rawJson = File.getContent(path);
 		#else
-		if(OpenFlAssets.exists(path)) rawJson = Assets.getText(path);
+		if(Assets.exists(path)) rawJson = lime.utils.Assets.getText(path);
 		#end
 
 		if(rawJson != null && rawJson.length > 0)

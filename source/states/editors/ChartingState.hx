@@ -24,7 +24,7 @@ import flixel.addons.ui.FlxUISlider;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSort;
-import openfl.utils.Assets as OpenFlAssets;
+import openfl.utils.Assets;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
@@ -65,7 +65,6 @@ class ChartingState extends MusicBeatState {
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
 		['Set Property', "Value 1: Variable name\nValue 2: New value\n\nIf the Value is boolean add ', bool' in Value 1\nExample: boyfriend.visible, bool"],
 		['Change Mania', 'Value 1: Mania (min: ${EK.minMania}; max: ${EK.maxMania})'],
-		['Extra Text Change', "Value 1: Text\n\nChanges the Extra text."],
 		['Play Sound', "Value 1: Sound file name\nValue 2: Volume (Default: 1), ranges from 0 to 1"],
 	];
 
@@ -360,7 +359,7 @@ class ChartingState extends MusicBeatState {
 			#if sys
 			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson(Paths.CHART_PATH + '/$songName/events')) || #end FileSystem.exists(file))
 			#else
-			if (OpenFlAssets.exists(file))
+			if (Assets.exists(file))
 			#end
 			{
 				clearEvents();
@@ -1009,14 +1008,9 @@ class ChartingState extends MusicBeatState {
 
 		descText = new FlxText(20, 200, 0, eventStuff[0][0]);
 
-		var leEvents:Array<String> = [];
-		for (i in 0...eventStuff.length) {
-			leEvents.push(eventStuff[i][0]);
-		}
-
 		var text:FlxText = new FlxText(20, 30, 0, "Event:");
 		tab_group_event.add(text);
-		eventDropDown = new FlxUIDropDownMenu(20, 50, FlxUIDropDownMenu.makeStrIdLabelArray(leEvents, true), function(pressed:String) {
+		eventDropDown = new FlxUIDropDownMenu(20, 50, FlxUIDropDownMenu.makeStrIdLabelArray([for (i in 0...eventStuff.length) eventStuff[i][0]], true), function(pressed:String) {
 			var selectedEvent:Int = Std.parseInt(pressed);
 			descText.text = eventStuff[selectedEvent][1];
 			if (curSelectedNote != null && eventStuff != null) {
@@ -1329,7 +1323,7 @@ class ChartingState extends MusicBeatState {
 		vocals = new FlxSound();
 		if (_song.needsVoices) {
 			var file:Dynamic = Paths.voices(currentSongName, false, true);
-			if (Std.isOfType(file, Sound) || OpenFlAssets.exists(file)) {
+			if (Std.isOfType(file, Sound) || Assets.exists(file)) {
 				vocals.loadEmbedded(file);
 				vocals.autoDestroy = false;
 				FlxG.sound.list.add(vocals);
@@ -2330,13 +2324,13 @@ class ChartingState extends MusicBeatState {
 		if (!FileSystem.exists(path))
 		#else
 		var path:String = Paths.getPreloadPath(characterPath);
-		if (!OpenFlAssets.exists(path))
+		if (!Assets.exists(path))
 		#end
 		{
 			path = Paths.getPreloadPath('characters/' + Character.DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 		}
 
-		var rawJson = #if MODS_ALLOWED File.getContent(path) #else OpenFlAssets.getText(path) #end;
+		var rawJson = #if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end;
 		var json:CharacterFile = cast Json.parse(rawJson);
 		return json.healthicon;
 	}

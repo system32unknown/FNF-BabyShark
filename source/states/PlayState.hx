@@ -12,7 +12,7 @@ import flixel.util.FlxSort;
 import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
 #if VIDEOS_ALLOWED import backend.VideoManager; #end
-#if !MODS_ALLOWED import openfl.utils.Assets as OpenFlAssets; #end
+#if !MODS_ALLOWED import openfl.utils.Assets; #end
 import backend.Highscore;
 import backend.Song;
 import backend.Rating;
@@ -699,7 +699,7 @@ class PlayState extends MusicBeatState {
 		}
 		#else
 		luaFile = Paths.getPreloadPath(luaFile);
-		if(Assets.exists(luaFile)) doPush = true;
+		if(lime.utils.Assets.exists(luaFile)) doPush = true;
 		#end
 
 		if(doPush) {
@@ -758,7 +758,7 @@ class PlayState extends MusicBeatState {
 		inCutscene = true;
 
 		var filepath:String = Paths.video(name);
-		if(!#if sys FileSystem #else OpenFlAssets #end.exists(filepath)) {
+		if(!#if sys FileSystem #else Assets #end.exists(filepath)) {
 			FlxG.log.warn('Couldnt find video file: ' + name);
 			startAndEnd();
 			return null;
@@ -1071,7 +1071,7 @@ class PlayState extends MusicBeatState {
 		#if MODS_ALLOWED
 		if (FileSystem.exists(Paths.modsJson('${Paths.CHART_PATH}/$songName/events')) || FileSystem.exists(file))
 		#else
-		if (OpenFlAssets.exists(file))
+		if (Assets.exists(file))
 		#end
 		{
 			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
@@ -2802,7 +2802,7 @@ class PlayState extends MusicBeatState {
 		if(FileSystem.exists(luaToLoad))
 		#elseif sys
 		var luaToLoad:String = Paths.getPreloadPath(luaFile);
-		if(OpenFlAssets.exists(luaToLoad))
+		if(Assets.exists(luaToLoad))
 		#end
 		{
 			for (script in luaArray) if(script.scriptName == luaToLoad) return false;

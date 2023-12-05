@@ -10,8 +10,7 @@ import lime.utils.Assets;
 
 @:access(openfl.display.BitmapData.__texture)
 @:access(openfl.media.Sound.__buffer)
-class Paths
-{
+class Paths {
 	inline public static final CHART_PATH = "charts";
 	inline public static var SOUND_EXT = "ogg";
 	inline public static var VIDEO_EXT = "mp4";
@@ -61,10 +60,7 @@ class Paths
 		OpenFlAssets.cache.removeSound(key);
 		Assets.cache.clear(key);
 		
-		if (obj.__buffer != null) {
-			obj.__buffer.dispose();
-			obj.__buffer = null;
-		}
+		obj.close();
 		obj = null;
 	}
 
@@ -121,7 +117,7 @@ class Paths
 
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
-		#if !html5 openfl.Assets.cache.clear("songs"); #end
+		OpenFlAssets.cache.clear("songs");
 		utils.system.MemoryUtil.clearMajor();
 		clearUnusedCache();
 	}
