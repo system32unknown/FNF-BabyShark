@@ -286,9 +286,7 @@ class CreditSectionState extends MusicBeatState {
 	final offsetThing:Float = -75;
 
 	override function create() {
-		#if discord_rpc
-		Discord.changePresence("In the Menus", null);
-		#end
+		#if discord_rpc Discord.changePresence("In the Menus", null); #end
 		prevModDir = Mods.currentModDirectory;
 		persistentUpdate = true;
 

@@ -510,16 +510,14 @@ class PlayState extends MusicBeatState {
 		botplayTxt.visible = cpuControlled;
 		uiGroup.add(botplayTxt);
 
-		songNameTxt = new FlxText(2, 0, 0, '${SONG.song} - ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : ''), 16);
+		songNameTxt = new FlxText(2, scoreTxt.y, 0, '${SONG.song} - ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : ''), 16);
 		songNameTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
 		songNameTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		songNameTxt.scrollFactor.set();
-		songNameTxt.y = FlxG.height - songNameTxt.height;
 		songNameTxt.visible = !hideHud;
 		uiGroup.add(songNameTxt);
 
-		uiGroup.camera = camHUD;
-		noteGroup.camera = camHUD;
+		uiGroup.camera = camHUD; noteGroup.camera = camHUD;
 		comboGroup.camera = (ClientPrefs.getPref('RatingDisplay') == "Hud" ? camHUD : camGame);
 		startingSong = true;
 
@@ -2199,7 +2197,7 @@ class PlayState extends MusicBeatState {
 			rating.screenCenter();
 			rating.x = placement - 40 + comboOffset[0][0];
 			rating.y -= 60 - comboOffset[0][1];
-			rating.acceleration.set(ratingAcc.x * playbackRate * playbackRate, 550 * playbackRate * playbackRate + ratingAcc.y);
+			rating.acceleration.set(ratingAcc.x * playbackRate, 550 * playbackRate + ratingAcc.y);
 			rating.velocity.subtract(FlxG.random.int(0, 10) * playbackRate + ratingVel.x, FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
 			rating.visible = !hideHud && showRating;
 			rating.antialiasing = antialias;
@@ -2209,7 +2207,7 @@ class PlayState extends MusicBeatState {
 			timing.screenCenter();
 			timing.x = placement - 130 + comboOffset[3][0];
 			timing.y -= comboOffset[3][1];
-			timing.acceleration.set(ratingAcc.x * playbackRate * playbackRate, 550 * playbackRate * playbackRate + ratingAcc.y);
+			timing.acceleration.set(ratingAcc.x * playbackRate, 550 * playbackRate + ratingAcc.y);
 			timing.velocity.subtract(FlxG.random.int(0, 10) * playbackRate + ratingVel.x, FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
 			timing.visible = !hideHud && ClientPrefs.getPref('ShowLateEarly');
 			timing.antialiasing = antialias;
@@ -2228,7 +2226,7 @@ class PlayState extends MusicBeatState {
 			comboSpr.screenCenter();
 			comboSpr.x = placement + comboOffset[2][0];
 			comboSpr.y -= comboOffset[2][1];
-			comboSpr.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate + ratingAcc.y);
+			comboSpr.acceleration.set(ratingAcc.x * playbackRate, FlxG.random.int(200, 300) * playbackRate + ratingAcc.y);
 			comboSpr.velocity.y -= FlxG.random.int(140, 160) * playbackRate + ratingVel.y;
 			comboSpr.velocity.x += FlxG.random.int(1, 10) * playbackRate - ratingVel.x;
 			comboSpr.visible = showCombo && !hideHud;
@@ -2270,7 +2268,7 @@ class PlayState extends MusicBeatState {
 				else numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
 				numScore.updateHitbox();
 			
-				numScore.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate + ratingAcc.y);
+				numScore.acceleration.set(ratingAcc.x * playbackRate, FlxG.random.int(200, 300) * playbackRate + ratingAcc.y);
 				numScore.velocity.y -= FlxG.random.int(140, 160) * playbackRate + ratingVel.y;
 				numScore.velocity.x = FlxG.random.float(-5, 5) * playbackRate - ratingVel.x;
 				numScore.visible = !hideHud;
@@ -2305,8 +2303,7 @@ class PlayState extends MusicBeatState {
 		var noteDiffTime:Float = note.strumTime - Conductor.songPosition;
 		return switch(ClientPrefs.getPref('NoteDiffTypes')) {
 			case 'Psych': Math.abs(noteDiffTime + ClientPrefs.getPref('ratingOffset'));
-			case 'Simple': noteDiffTime;
-			default: 0;
+			case 'Simple' | _: noteDiffTime;
 		}
 	}
 
@@ -2916,8 +2913,7 @@ class PlayState extends MusicBeatState {
 		if (len < 1) return returnVal;
 		for(i in 0...len) {
 			var script:HScript = hscriptArray[i];
-			if(script == null || !script.active || !script.variables.exists(funcToCall) || exclusions.contains(script.origin))
-				continue;
+			if(script == null || !script.active || !script.variables.exists(funcToCall) || exclusions.contains(script.origin)) continue;
 
 			try {
 				returnVal = script.executeFunction(funcToCall, args);

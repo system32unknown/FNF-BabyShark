@@ -6,7 +6,6 @@ import flixel.util.FlxSpriteUtil;
 import flixel.addons.transition.FlxTransitionableState;
 import backend.Mods;
 import options.ModSettingsSubState;
-import haxe.Json;
 
 class ModsMenuState extends MusicBeatState {
 	var bg:FlxSprite;
@@ -692,7 +691,7 @@ class ModItem extends FlxSpriteGroup
 		if(FileSystem.exists(path)) {
 			var data:String = File.getContent(path);
 			try {
-				settings = Json.parse(data);
+				settings = tjson.TJSON.parse(data);
 			} catch(e:Dynamic) {
 				var errorTitle = 'Mod name: ' + Mods.currentModDirectory;
 				var errorMsg = 'An error occurred: $e';

@@ -115,19 +115,18 @@ class FreeplayState extends MusicBeatState
 		}
 		WeekData.setDirectoryFromWeek();
 
-		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
-		scoreText.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, RIGHT);
+		scoreText = new FlxText(20, -60, 0, "", 32);
+		scoreText.font = Paths.font("babyshark.ttf");
 
-		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(1, 90, 0xFF000000);
+		scoreBG = new FlxSprite(scoreText.x - 6, -40).makeGraphic(FlxG.width, 66, FlxColor.BLACK);
 		scoreBG.alpha = 0.6;
+		scoreBG.screenCenter(X);
 		add(scoreBG);
 
-		diffText = new FlxText(scoreText.x, 0, 0, "", 24);
-		diffText.y = scoreBG.height - diffText.height + 10;
+		diffText = new FlxText(20, -40, 0, "", 24);
 		diffText.font = scoreText.font;
 
-		comboText = new FlxText(scoreText.x, 0, 0, "", 24);
-		comboText.y = scoreBG.height / 2 - 6;
+		comboText = new FlxText(scoreText.x, -80, 0, "", 24);
 		comboText.font = diffText.font;
 
 		add(diffText);
@@ -168,6 +167,11 @@ class FreeplayState extends MusicBeatState
 		textBG.height = text.height;
 		textBG.y = FlxG.height - textBG.height;
 		
+		FlxTween.tween(scoreBG, {y: 25}, .5, {ease: FlxEase.expoInOut});
+		FlxTween.tween(scoreText, {y: 20}, .5, {ease: FlxEase.expoInOut});
+		FlxTween.tween(comboText, {y: 44}, .5, {ease: FlxEase.expoInOut});
+		FlxTween.tween(diffText, {y: 66}, .5, {ease: FlxEase.expoInOut});
+
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
@@ -217,9 +221,8 @@ class FreeplayState extends MusicBeatState
 			ratingSplit[1] += '0';
 		}
 
-		comboText.text = 'Rating: ' + intendedcombo;
-		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%)';
-		positionHighscore();
+		comboText.text = 'Rating: $intendedcombo';
+		scoreText.text = 'PERSONAL BEST: $lerpScore (' + ratingSplit.join('.') + '%)';
 
 		var shiftMult:Int = 1;
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
@@ -375,8 +378,6 @@ class FreeplayState extends MusicBeatState
 		if (Difficulty.list.length > 1)
 			diffText.text = '< ' + lastDifficultyName.toUpperCase() + ' >';
 		else diffText.text = lastDifficultyName.toUpperCase();
-
-		positionHighscore();
 	}
 
 	function changeSelection(change:Int = 0, playSound:Bool = true) {
@@ -431,23 +432,9 @@ class FreeplayState extends MusicBeatState
 		songs[curSelected].lastDifficulty = Difficulty.getString(curDifficulty);
 	}
 
-	function positionHighscore() {
-		scoreText.x = FlxG.width - scoreText.width - 6;
-
-		scoreBG.scale.x = FlxG.width - scoreText.x + 6;
-		scoreBG.x = FlxG.width - (scoreBG.scale.x / 2);
-		
-		diffText.x = Std.int(scoreBG.x + (scoreBG.width / 2));
-		diffText.x -= diffText.width / 2;
-
-		comboText.x = Std.int(scoreBG.x + (scoreBG.width / 2));
-		comboText.x -= comboText.width / 2;
-	}
-
 	var _drawDistance:Int = 4;
 	var _lastVisibles:Array<Int> = [];
-	public function updateTexts(elapsed:Float = 0.0)
-	{
+	public function updateTexts(elapsed:Float = 0.0) {
 		lerpSelected = FlxMath.lerp(lerpSelected, curSelected, FlxMath.bound(elapsed * 9.6, 0, 1));
 		for (i in _lastVisibles) {
 			grpSongs.members[i].visible = grpSongs.members[i].active = false;

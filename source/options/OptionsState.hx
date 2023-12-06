@@ -32,9 +32,7 @@ class OptionsState extends MusicBeatState
 	var curPage:Int = 0;
 
 	override function create() {
-		#if discord_rpc
-		Discord.changePresence("Options Menu", null);
-		#end
+		#if discord_rpc Discord.changePresence("Options Menu", null); #end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;

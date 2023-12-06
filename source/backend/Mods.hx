@@ -1,6 +1,5 @@
 package backend;
 
-import haxe.Json;
 import haxe.io.Path;
 
 typedef ModsList = {
@@ -146,7 +145,7 @@ class Mods {
 		if(FileSystem.exists(path)) {
 			try {
 				var rawJson:String = #if sys File.getContent(path) #else Assets.getText(path) #end;
-				if(rawJson != null && rawJson.length > 0) return Json.parse(rawJson);
+				if(rawJson != null && rawJson.length > 0) return tjson.TJSON.parse(rawJson);
 			} catch(e:Dynamic) Logs.trace('ERROR: $e', ERROR);
 		}
 		#end
