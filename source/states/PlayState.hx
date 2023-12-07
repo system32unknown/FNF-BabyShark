@@ -2208,24 +2208,26 @@ class PlayState extends MusicBeatState {
 		
 			var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 
-			final rating:FlxSprite = new FlxSprite().loadGraphic(Paths.image(uiPrefix + 'ratings/' + daRating.image + uiSuffix));
-			rating.screenCenter();
+			final rating:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true).loadGraphic(Paths.image(uiPrefix + 'ratings/${daRating.image}' + uiSuffix));
+			rating.screenCenter(Y);
 			rating.x = placement - 40 + comboOffset[0][0];
 			rating.y -= 60 - comboOffset[0][1];
 			rating.acceleration.set(ratingAcc.x * playbackRate, 550 * playbackRate + ratingAcc.y);
 			rating.velocity.subtract(FlxG.random.int(0, 10) * playbackRate + ratingVel.x, FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
 			rating.antialiasing = antialias;
+			rating.setGraphicSize(rating.width * mult);
+			rating.updateHitbox();
 			if (showRating) comboGroup.add(rating);
 		
-			var timing:FlxSprite = new FlxSprite();
+			var timing:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true);
 			if (daTiming != "") timing.loadGraphic(Paths.image(uiPrefix + 'ratings/$daTiming' + uiSuffix));
 			timing.screenCenter();
 			timing.x = placement - 130 + comboOffset[3][0];
 			timing.y -= comboOffset[3][1];
 			timing.acceleration.set(ratingAcc.x * playbackRate, 550 * playbackRate + ratingAcc.y);
 			timing.velocity.subtract(FlxG.random.int(0, 10) * playbackRate + ratingVel.x, FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
-			timing.visible = ClientPrefs.getPref('ShowLateEarly');
 			timing.antialiasing = antialias;
+			timing.setGraphicSize(timing.width * mult);
 			timing.updateHitbox();
 			if (daTiming != "" && ClientPrefs.getPref('ShowLateEarly')) comboGroup.add(timing);
 		
@@ -2238,7 +2240,7 @@ class PlayState extends MusicBeatState {
 				comboGroup.add(mstimingTxt);
 			}
 		
-			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(uiPrefix + 'ratings/combo' + uiSuffix));
+			var comboSpr:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true).loadGraphic(Paths.image(uiPrefix + 'ratings/combo' + uiSuffix));
 			comboSpr.screenCenter(Y);
 			comboSpr.x = placement + comboOffset[2][0];
 			comboSpr.y -= comboOffset[2][1];
@@ -2257,8 +2259,6 @@ class PlayState extends MusicBeatState {
 				mstimingTxt.updateHitbox();
 			}
 		
-			for (daRatings in [rating, comboSpr, timing]) daRatings.setGraphicSize(daRatings.width * mult);
-		
 			var seperatedScore:Array<Int> = [];
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
 		
@@ -2266,9 +2266,9 @@ class PlayState extends MusicBeatState {
 				seperatedScore.push(Std.parseInt(comboSplit[i]));
 		
 			var daLoop:Int = 0;
-			final numMult = (isPixelStage ? daPixelZoom : 0.5);
+			final numMult = (isPixelStage ? daPixelZoom : .5);
 			for (i in seperatedScore) {
-				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiSuffix));
+				final numScore:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiSuffix));
 				numScore.screenCenter(Y);
 				numScore.x = placement + (43 * daLoop++) - 90 + comboOffset[1][0];
 				numScore.y += 80 - comboOffset[1][1];
@@ -2282,13 +2282,13 @@ class PlayState extends MusicBeatState {
 				numScore.antialiasing = antialias;
 				if(showComboNum) comboGroup.add(numScore);
 			
-				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (tween:FlxTween) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
+				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 			}
 		
-			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (tween:FlxTween) -> {timing.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
+			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {timing.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		
 			if (ClientPrefs.getPref('ShowLateEarly'))
-				FlxTween.tween(timing, {alpha: 0}, .2 / playbackRate, {onComplete: (tween:FlxTween) -> {timing.kill(); timing.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
+				FlxTween.tween(timing, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {timing.kill(); timing.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 
 			if (ClientPrefs.getPref('ShowMsTiming')) {
 				if (msTimingTween != null) {
