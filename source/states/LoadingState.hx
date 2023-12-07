@@ -41,7 +41,7 @@ class LoadingState extends MusicBeatState {
 	var logo:FlxSprite;
 	var loadLogoText:FlxText;
 	override function create() {
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.color = FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255));
 		add(bg);

@@ -779,17 +779,19 @@ class CharacterEditorState extends MusicBeatState {
 	}
 
 	function updatePointerPos() {
-		var x:Float = char.getMidpoint().x;
-		var y:Float = char.getMidpoint().y;
-		if(!char.isPlayer)
-			x += 150 + char.cameraPosition[0];
-		else x -= 100 + char.cameraPosition[0];
+		final mid:flixel.math.FlxPoint = char.getMidpoint();
+		var x:Float = mid.x;
+		var y:Float = mid.y;
+		if(char.isPlayer)
+			x -= 100 + char.cameraPosition[0];
+		else x += 150 + char.cameraPosition[0];
 
 		y -= 100 - char.cameraPosition[1];
 
 		x -= cameraFollowPointer.width / 2;
 		y -= cameraFollowPointer.height / 2;
 		cameraFollowPointer.setPosition(x, y);
+		mid.put();
 	}
 
 	function reloadCharacterOptions() {
@@ -891,7 +893,7 @@ class CharacterEditorState extends MusicBeatState {
 	}
 
 	function updatePresence() {
-		#if discord_rpc Discord.changePresence("Character Editor", 'Character: $daAnim'); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("Character Editor", 'Character: $daAnim'); #end
 	}
 
 	override function update(elapsed:Float)

@@ -33,7 +33,7 @@ class Character extends FlxSprite {
 	/**
 	 * In case a character is missing, it will use this on its place
 	**/
-	public static final DEFAULT_CHARACTER:String = 'bf';
+	inline public static final DEFAULT_CHARACTER:String = 'bf';
 	public var animOffsets:Map<String, Array<Dynamic>>;
 	public var debugMode:Bool = false;
 
@@ -45,7 +45,7 @@ class Character extends FlxSprite {
 	public var specialAnim:Bool = false;
 	public var stunned:Bool = false;
 	public var singDuration:Float = 4; //Multiplier of how long a character holds the sing pose
-	public var idleSuffix:String = '';
+	public var idleSuffix(default, set):String = '';
 	public var danceIdle:Bool = false; //Character use "danceLeft" and "danceRight" instead of "idle"
 	public var skipDance:Bool = false;
 
@@ -64,7 +64,7 @@ class Character extends FlxSprite {
 	public var originalFlipX:Bool = false;
 	public var healthColorArray:Array<Int> = [255, 0, 0];
 	
-	public function new(x:Float, y:Float, ?character:String = 'bf', ?isPlayer:Bool = false, ?library:String) {
+	public function new(x:Float, y:Float, ?character:String = DEFAULT_CHARACTER, ?isPlayer:Bool = false, ?library:String) {
 		super(x, y);
 
 		animation = new PsychAnimationController(this);
@@ -126,7 +126,11 @@ class Character extends FlxSprite {
 		}
 		originalFlipX = flipX;
 
-		if(animOffsets.exists('singLEFTmiss') || animOffsets.exists('singDOWNmiss') || animOffsets.exists('singUPmiss') || animOffsets.exists('singRIGHTmiss')) hasMissAnimations = true;
+		for (name => offset in animOffsets)
+			if (name.startsWith('sing') && name.contains('miss')) { // includes alt miss animations now
+				hasMissAnimations = true;
+				break;
+			}
 		recalculateDanceIdle();
 		dance();
 
@@ -168,8 +172,7 @@ class Character extends FlxSprite {
 				var startIndex:Null<Int> = Std.parseInt(expression[0]);
 				var endIndex:Null<Int> = Std.parseInt(expression[1]);
 
-				if (startIndex == null) 
-					continue; // Can't do anything
+				if (startIndex == null)  continue; // Can't do anything
 				else if (endIndex == null) {
 					parsed.push(startIndex); // hmm
 					continue;
@@ -210,40 +213,44 @@ class Character extends FlxSprite {
 	}
 
 	override function update(elapsed:Float) {
-		if(!debugMode && animation.curAnim != null) {
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished)
-				dance(true, false, 10);
-
-			if (heyTimer > 0) {
-				heyTimer -= elapsed * (PlayState.instance != null ? PlayState.instance.playbackRate : 1.0);
-				if (heyTimer <= 0) {
-					if (specialAnim && animation.curAnim.name == 'hey' || animation.curAnim.name == 'cheer') {
-						specialAnim = false;
-						dance();
-					}
-					heyTimer = 0;
-				}
-			} else if(specialAnim && animation.curAnim.finished) {
-				specialAnim = false;
-				dance();
-			} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished) {
-				dance();
-				animation.finish();
-			}
-
-			if (animation.curAnim.name.startsWith('sing'))
-				holdTimer += elapsed;
-			else if(isPlayer) holdTimer = 0;
-
-			var pitch = PlayState.instance != null ? PlayState.instance.playbackRate : FlxG.sound.music != null ? FlxG.sound.music.pitch : 1;
-			if (!isPlayer && holdTimer >= Conductor.stepCrochet * (.0011 / pitch) * singDuration) {
-				dance();
-				holdTimer = 0;
-			}
-
-			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
-				playAnim('${animation.curAnim.name}-loop');
+		if(debugMode || animation.curAnim == null) {
+			super.update(elapsed);
+			return;
 		}
+
+		if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished)
+			dance(true, false, 10);
+
+		if (heyTimer > 0) {
+			heyTimer -= elapsed * (PlayState.instance != null ? PlayState.instance.playbackRate : 1.0);
+			if (heyTimer <= 0) {
+				if (specialAnim && animation.curAnim.name == 'hey' || animation.curAnim.name == 'cheer') {
+					specialAnim = false;
+					dance();
+				}
+				heyTimer = 0;
+			}
+		} else if(specialAnim && animation.curAnim.finished) {
+			specialAnim = false;
+			dance();
+		} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished) {
+			dance();
+			animation.finish();
+		}
+
+		if (animation.curAnim.name.startsWith('sing'))
+			holdTimer += elapsed;
+		else if(isPlayer) holdTimer = 0;
+
+		var pitch = PlayState.instance != null ? PlayState.instance.playbackRate : FlxG.sound.music != null ? FlxG.sound.music.pitch : 1;
+		if (!isPlayer && holdTimer >= Conductor.stepCrochet * (.0011 / pitch) * singDuration) {
+			dance();
+			holdTimer = 0;
+		}
+
+		if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
+			playAnim('${animation.curAnim.name}-loop');
+
 		super.update(elapsed);
 	}
 
@@ -259,15 +266,15 @@ class Character extends FlxSprite {
 	**/
 	public var danced:Bool = false;
 	public function dance(force:Bool = false, reversed:Bool = false, frame:Int = 0) {
-		if (!debugMode && !skipDance && !specialAnim) {
-			var anim = 'idle';
-			if (danceIdle) {
-				danced = !danced;
-				anim = danced ? 'danceRight' : 'danceLeft';
-			}
-			if(animation.getByName(anim + idleSuffix) != null)
-				playAnim(anim + idleSuffix, force, reversed, frame);
+		if (debugMode || skipDance || specialAnim) return;
+
+		var anim = 'idle';
+		if (danceIdle) {
+			danced = !danced;
+			anim = danced ? 'danceRight' : 'danceLeft';
 		}
+		if(animation.getByName(anim + idleSuffix) != null)
+			playAnim(anim + idleSuffix, force, reversed, frame);
 	}
 
 	public function playAnim(animName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void {
@@ -290,8 +297,8 @@ class Character extends FlxSprite {
 	var settingCharacterUp:Bool = true;
 	public var danceEveryNumBeats:Int = 2;
 	public function recalculateDanceIdle() {
-		var lastDanceIdle:Bool = danceIdle;
-		danceIdle = (animation.getByName('danceLeft' + idleSuffix) != null && animation.getByName('danceRight' + idleSuffix) != null);
+		final lastDanceIdle:Bool = danceIdle;
+		danceIdle = (animation.exists('danceLeft' + idleSuffix) && animation.exists('danceRight' + idleSuffix));
 
 		if(settingCharacterUp) danceEveryNumBeats = danceIdle ? 1 : 2;
 		else if(lastDanceIdle != danceIdle) {
@@ -302,6 +309,15 @@ class Character extends FlxSprite {
 			danceEveryNumBeats = Math.round(Math.max(calc, 1));
 		}
 		settingCharacterUp = false;
+	}
+
+	function set_idleSuffix(newSuffix:String):String {
+		if (idleSuffix == newSuffix)
+			return newSuffix;
+
+		idleSuffix = newSuffix;
+		recalculateDanceIdle();
+		return idleSuffix;
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0) {

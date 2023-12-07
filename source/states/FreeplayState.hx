@@ -44,7 +44,7 @@ class FreeplayState extends MusicBeatState
 		PlayState.isStoryMode = false;
 		WeekData.reloadWeekFiles(false);
 
-		#if discord_rpc Discord.changePresence("Freeplay Menu", null); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("Freeplay Menu", null); #end
 
 		section = FreeplaySectionSubstate.daSection;
 		if (section == null || section == '') section = 'Vanilla';
@@ -86,7 +86,7 @@ class FreeplayState extends MusicBeatState
 		}
 		Mods.loadTopMod();
 
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(bg);
 		bg.screenCenter();
@@ -338,7 +338,7 @@ class FreeplayState extends MusicBeatState
 				LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new ChartingState() : new PlayState());
 				FlxG.sound.music.volume = 0;
 				destroyFreeplayVocals();
-				#if MODS_ALLOWED Discord.loadModRPC(); #end
+				#if MODS_ALLOWED DiscordClient.loadModRPC(); #end
 			} else {
 				errorDisplay.text = getErrorMessage(missChart, 'cannot play song, $missFile', songFolder, songLowercase);
 				errorDisplay.displayError();

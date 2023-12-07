@@ -10,7 +10,6 @@ class FlashingState extends MusicBeatState {
 	override function create() {
 		super.create();
 
-		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK));
 		warnText = new FlxText(0, 0, 0,
 			"Welcome to Alter Engine!\n
 			This Mod contains some flashing lights!\n

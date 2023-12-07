@@ -3,10 +3,11 @@ package data;
 import haxe.io.Path;
 import haxe.Json;
 import openfl.utils.Assets;
+import haxe.extern.EitherType;
 
 typedef WeekFile = {
 	// JSON variables
-	var songs:Array<Dynamic>;
+	var songs:Array<Array<EitherType<String, Array<Int>>>>;
 	var weekCharacters:Array<String>;
 	var weekBackground:String;
 	var weekBefore:String;
@@ -26,7 +27,7 @@ class WeekData {
 	public var folder:String = '';
 	
 	// JSON variables
-	public var songs:Array<Dynamic>;
+	public var songs:Array<Array<EitherType<String, Array<Int>>>>;
 	public var weekCharacters:Array<String>;
 	public var weekBackground:String;
 	public var weekBefore:String;
@@ -41,22 +42,27 @@ class WeekData {
 
 	public var fileName:String;
 
+	public static final DEFAULT_WEEK:WeekFile = {
+		songs: [
+			["Bopeebo",    "daddyshark", [146, 113, 253]],
+			["Fresh",      "daddyshark", [146, 113, 253]],
+			["Tooth", 	   "daddyshark", [146, 113, 253]]
+		],
+		weekCharacters: ['dad', 'bf', 'gf'],
+		weekBackground: 'stage',
+		weekBefore: 'tutorial',
+		storyName: 'Your New Week',
+		weekName: 'Custom Week',
+		startUnlocked: true,
+		hiddenUntilUnlocked: false,
+		hideStoryMode: false,
+		hideFreeplay: false,
+		difficulties: '',
+		sections: ["mods"]
+	};
+
 	public static function createWeekFile():WeekFile {
-		var weekFile:WeekFile = {
-			songs: [["Bopeebo", "daddyshark", [146, 113, 253]], ["Fresh", "daddyshark", [146, 113, 253]], ["Tooth", "daddyshark", [146, 113, 253]]],
-			weekCharacters: ['', 'bf', 'gf'],
-			weekBackground: 'stage',
-			weekBefore: 'tutorial',
-			storyName: 'Your New Week',
-			weekName: 'Custom Week',
-			startUnlocked: true,
-			hiddenUntilUnlocked: false,
-			hideStoryMode: false,
-			hideFreeplay: false,
-			difficulties: '',
-			sections: ["mods"]
-		};
-		return weekFile;
+		return DEFAULT_WEEK;
 	}
 
 	// HELP: Is there any way to convert a WeekFile to WeekData without having to put all variables there manually? I'm kind of a noob in haxe lmao

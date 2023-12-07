@@ -232,12 +232,13 @@ class PauseSubState extends MusicBeatSubstate
 					MusicBeatState.switchState(new OptionsState());
 					if(ClientPrefs.getPref('pauseMusic') != 'None') {
 						FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), pauseMusic.volume);
-						FlxTween.tween(FlxG.sound.music, {volume: 1}, 0.8);
+						FlxG.sound.music.fadeIn(0.8, pauseMusic.volume, 1);
 						FlxG.sound.music.time = pauseMusic.time;
+						pauseMusic.stop();
 					}
 					OptionsState.onPlayState = true;
 				case "Exit to menu":
-					#if desktop Discord.resetClientID(); #end
+					#if desktop DiscordClient.resetClientID(); #end
 					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
 
@@ -286,8 +287,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		var bullShit:Int = 0;
 		for (item in grpMenuShit.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
+			item.targetY = bullShit++ - curSelected;
 
 			item.alpha = 0.6;
 

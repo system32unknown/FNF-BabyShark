@@ -26,11 +26,9 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if(title == null) title = 'Options';
 		if(rpcTitle == null) rpcTitle = 'Options Menu';
 		
-		#if discord_rpc
-		Discord.changePresence(rpcTitle, null);
-		#end
+		#if DISCORD_ALLOWED DiscordClient.changePresence(rpcTitle, null); #end
 		
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.getPref('Antialiasing');

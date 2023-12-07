@@ -63,7 +63,7 @@ class StoryMenuState extends MusicBeatState
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 		add(grpLocks = new FlxTypedGroup<FlxSprite>());
 
-		#if discord_rpc Discord.changePresence("In the Story Menu", null); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Story Menu", null); #end
 
 		var num:Int = 0;
 		for (i in 0...WeekData.weeksList.length) {
@@ -237,7 +237,7 @@ class StoryMenuState extends MusicBeatState
 				if (!stopspamming) {
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 	
-					grpWeekText.members[curWeek].startFlashing();
+					grpWeekText.members[curWeek].isFlashing = true;
 	
 					for (char in grpWeekCharacters.members)
 						if (char.character != '' && char.hasConfirmAnimation)
@@ -300,10 +300,8 @@ class StoryMenuState extends MusicBeatState
 
 		var unlocked:Bool = !weekIsLocked(leWeek.fileName);
 		for (item in grpWeekText.members) {
-			item.targetY = bullShit - curWeek;
-			if (item.targetY == 0 && unlocked) item.alpha = 1;
-			else item.alpha = 0.6;
-			bullShit++;
+			item.targetY = bullShit++ - curWeek;
+			item.alpha = (item.targetY == 0 && unlocked ? 1 : 0.6);
 		}
 
 		bgSprite.visible = true;

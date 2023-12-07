@@ -428,7 +428,7 @@ class ClientPrefs {
 				}
 			}
 		}
-		#if desktop Discord.check(); #end
+		#if desktop DiscordClient.check(); #end
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {

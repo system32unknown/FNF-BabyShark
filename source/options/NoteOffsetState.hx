@@ -42,8 +42,8 @@ class NoteOffsetState extends MusicBeatState {
 	var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 
 	override public function create() {
-		#if discord_rpc
-		Discord.changePresence('Adjusting Offsets and Combos', null);
+		#if DISCORD_ALLOWED
+		DiscordClient.changePresence('Adjusting Offsets and Combos', null);
 		#end
 
 		FlxG.fixedTimestep = false;
@@ -94,7 +94,7 @@ class NoteOffsetState extends MusicBeatState {
 		// Combo stuff
 		rating = new FlxSprite().loadGraphic(Paths.image('ratings/sick'));
 		rating.camera = camHUD;
-		rating.setGraphicSize(Std.int(rating.width * 0.7));
+		rating.setGraphicSize(rating.width * 0.7);
 		rating.updateHitbox();
 		add(rating);
 
@@ -118,12 +118,11 @@ class NoteOffsetState extends MusicBeatState {
 
 		var daLoop:Int = 0;
 		for (i in seperatedScore) {
-			var numScore:FlxSprite = new FlxSprite(43 * daLoop).loadGraphic(Paths.image('number/num$i'));
+			var numScore:FlxSprite = new FlxSprite(43 * daLoop++).loadGraphic(Paths.image('number/num$i'));
 			numScore.camera = camHUD;
-			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
+			numScore.setGraphicSize(numScore.width * .5);
 			numScore.updateHitbox();
 			comboNums.add(numScore);
-			daLoop++;
 		}
 
 		timeTxt = new FlxText(0, 600, FlxG.width, "", 32);

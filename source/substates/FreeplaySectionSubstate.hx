@@ -48,7 +48,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
         }
 		daSection = sectionArray[counter];
 
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.updateHitbox();
 		bg.screenCenter();
@@ -73,8 +73,8 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		sectionTxt.alpha = 0;
 		add(sectionTxt);
 
-		#if discord_rpc
-		Discord.changePresence("Selecting a Freeplay Section", null);
+		#if DISCORD_ALLOWED
+		DiscordClient.changePresence("Selecting a Freeplay Section", null);
 		#end
 
 		transitioning = true;

@@ -168,14 +168,14 @@ class ChartingState extends MusicBeatState {
 		if (_song.mania == null) _song.mania = EK.defaultMania;
 		PlayState.mania = _song.mania;
 
-		#if discord_rpc
+		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
-		Discord.changePresence("Chart Editor", _song.song.replace('-', ' '));
+		DiscordClient.changePresence("Chart Editor", _song.song.replace('-', ' '));
 		#end
 
 		vortex = FlxG.save.data.chart_vortex;
 		ignoreWarnings = FlxG.save.data.ignoreWarnings;
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.color = 0xFF222222;
 		add(bg);
@@ -186,7 +186,7 @@ class ChartingState extends MusicBeatState {
 		waveformSprite.antialiasing = false;
 		add(waveformSprite);
 
-		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90).loadGraphic(Paths.image('eventArrow'));
+		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90, Paths.image('eventArrow'));
 		leftIcon = new HealthIcon('bs');
 		rightIcon = new HealthIcon('dad');
 

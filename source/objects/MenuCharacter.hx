@@ -14,14 +14,14 @@ typedef MenuCharacterFile = {
 class MenuCharacter extends FlxSprite {
 	public var character:String;
 	public var hasConfirmAnimation:Bool = false;
-	static var DEFAULT_CHARACTER:String = 'bf';
+	inline static final DEFAULT_CHARACTER:String = 'bf';
 
-	public function new(x:Float, character:String = 'bf') {
+	public function new(x:Float, character:String = DEFAULT_CHARACTER) {
 		super(x);
 		changeCharacter(character);
 	}
 
-	public function changeCharacter(?character:String = 'bf') {
+	public function changeCharacter(?character:String = DEFAULT_CHARACTER) {
 		if(character == null) character = '';
 		if(character == this.character) return;
 

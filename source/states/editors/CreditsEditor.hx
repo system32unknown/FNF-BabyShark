@@ -34,13 +34,13 @@ class CreditsEditor extends MusicBeatState {
 	final offsetThing:Float = -75;
 
 	override function create() {
-		#if discord_rpc
+		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
-		Discord.changePresence("Credits Editor", null);
+		DiscordClient.changePresence("Credits Editor", null);
 		#end
 
 		persistentUpdate = true;
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite(Paths.image('menuDesat'));
 		add(bg);
 		bg.screenCenter();
 		FlxG.mouse.visible = true;

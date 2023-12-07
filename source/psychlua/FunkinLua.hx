@@ -442,7 +442,7 @@ class FunkinLua {
 		set("triggerEvent", function(name:String, arg1:Dynamic, arg2:Dynamic) {
 			var value1:String = arg1;
 			var value2:String = arg2;
-			game.triggerEvent(name, value1, value2, Conductor.songPosition);
+			game.triggerEvent(name, value1, value2);
 			return true;
 		});
 
@@ -472,7 +472,7 @@ class FunkinLua {
 			if(PlayState.isStoryMode)
 				MusicBeatState.switchState(new StoryMenuState());
 			else MusicBeatState.switchState(new FreeplayState());
-			#if desktop Discord.resetClientID(); #end
+			#if desktop DiscordClient.resetClientID(); #end
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			PlayState.changedDifficulty = false;
@@ -564,11 +564,11 @@ class FunkinLua {
 			if (poop != null) return poop.getScreenPosition().y;
 			return 0;
 		});
-		set("characterDance", function(character:String) {
+		set("characterDance", function(character:String, force:Bool = false) {
 			switch(character.toLowerCase()) {
-				case 'dad': game.dad.dance();
-				case 'gf' | 'girlfriend': if(game.gf != null) game.gf.dance();
-				default: game.boyfriend.dance();
+				case 'dad': game.dad.dance(force);
+				case 'gf' | 'girlfriend': if(game.gf != null) game.gf.dance(force);
+				default: game.boyfriend.dance(force);
 			}
 		});
 
@@ -975,7 +975,7 @@ class FunkinLua {
 			return closed = true;
 		});
 
-		#if desktop Discord.addLuaCallbacks(this); #end
+		#if desktop DiscordClient.addLuaCallbacks(this); #end
 		HScript.implement(this);
 		#if flxanimate FlxAnimateFunctions.implement(this); #end
 		ReflectionFunctions.implement(this);

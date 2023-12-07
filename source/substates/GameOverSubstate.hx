@@ -85,9 +85,11 @@ class GameOverSubstate extends MusicBeatSubstate {
 		boyfriend.playAnim('firstDeath');
 
 		camFollow = new FlxObject(0, 0, 1, 1);
-		camFollow.setPosition(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
+		final mid:FlxPoint = boyfriend.getGraphicMidpoint();
+		camFollow.setPosition(mid.x, mid.y);
 		FlxG.camera.focusOn(FlxPoint.get(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2)));
 		add(camFollow);
+		mid.put();
 	}
 
 	var startedDeath:Bool = false;
@@ -100,7 +102,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		if (controls.ACCEPT) endBullshit();
 
 		if (controls.BACK) {
-			#if desktop Discord.resetClientID(); #end
+			#if desktop DiscordClient.resetClientID(); #end
 			FlxG.sound.music.stop();
 			PlayState.deathCounter = 0;
 			PlayState.seenCutscene = false;
@@ -132,7 +134,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 			}
 		}
 
-		if(updateCamera) FlxG.camera.followLerp = FlxMath.bound(elapsed * 0.6 * (FlxG.updateFramerate / 60), 0, 1);
+		if(updateCamera) FlxG.camera.followLerp = elapsed * .6 * (FlxG.updateFramerate / 60);
 		else FlxG.camera.followLerp = 0;
 
 		if (FlxG.sound.music.playing)

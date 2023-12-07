@@ -1,5 +1,5 @@
 #if !macro
-#if discord_rpc import backend.Discord; #end
+#if DISCORD_ALLOWED import backend.Discord; #end
 import backend.Paths;
 import backend.Controls;
 import backend.MusicBeatState;

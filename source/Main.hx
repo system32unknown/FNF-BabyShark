@@ -56,7 +56,7 @@ class Main extends Sprite {
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 
 		#if CRASH_HANDLER backend.CrashHandler.init(); #end
-		#if discord_rpc Discord.start(); #end
+		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 
 		FlxG.signals.preStateSwitch.add(() -> Paths.clearStoredCache());
 		FlxG.signals.postStateSwitch.add(() -> {

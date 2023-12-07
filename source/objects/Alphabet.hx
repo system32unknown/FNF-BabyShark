@@ -1,6 +1,7 @@
 package objects;
 
 import flixel.math.FlxPoint;
+import flixel.util.FlxDestroyUtil;
 
 enum Alignment {
 	LEFT;
@@ -135,6 +136,12 @@ class Alphabet extends FlxSpriteGroup {
 			if(changeY) y = FlxMath.lerp(y, (targetY * 1.3 * distancePerItem.y) + startPosition.y, lerpVal);
 		}
 		super.update(elapsed);
+	}
+
+	override function destroy() {
+		distancePerItem = FlxDestroyUtil.put(distancePerItem);
+		startPosition = FlxDestroyUtil.put(startPosition);
+		super.destroy();
 	}
 
 	public function snapToPosition() {

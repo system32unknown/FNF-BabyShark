@@ -89,12 +89,12 @@ class CreditsState extends MusicBeatState {
 	var offsetThing:Float = -75;
 
 	override function create() {
-		#if discord_rpc Discord.changePresence("In the Credits", null); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Credits", null); #end
 
 		sections = [for (title in titles) title];
 
 		persistentUpdate = true;
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite(Paths.image('menuDesat'));
 		add(bg);
 		bg.screenCenter();
 		
@@ -286,14 +286,14 @@ class CreditSectionState extends MusicBeatState {
 	final offsetThing:Float = -75;
 
 	override function create() {
-		#if discord_rpc Discord.changePresence("In the Menus", null); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Menus", null); #end
 		prevModDir = Mods.currentModDirectory;
 		persistentUpdate = true;
 
 		initializeList();
 		if (cSectionisMod) Mods.currentModDirectory = curCSection;
 
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.screenCenter();
 		add(bg);
 

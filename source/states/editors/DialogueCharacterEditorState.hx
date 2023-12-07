@@ -412,9 +412,9 @@ class DialogueCharacterEditorState extends MusicBeatState
 		curAnim = 0;
 		animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
 
-		#if discord_rpc
+		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
-		Discord.changePresence("Dialogue Character Editor", "Editing: " + character.jsonFile.image);
+		DiscordClient.changePresence("Dialogue Character Editor", "Editing: " + character.jsonFile.image);
 		#end
 	}
 
@@ -533,14 +533,9 @@ class DialogueCharacterEditorState extends MusicBeatState
 				}
 			}
 
-			if (FlxG.keys.pressed.Q && camGame.zoom > 0.1) {
-				camGame.zoom -= elapsed * camGame.zoom;
-				if(camGame.zoom < 0.1) camGame.zoom = 0.1;
-			}
-			if (FlxG.keys.pressed.E && camGame.zoom < 1) {
-				camGame.zoom += elapsed * camGame.zoom;
-				if(camGame.zoom > 1) camGame.zoom = 1;
-			}
+			if (FlxG.keys.pressed.Q && camGame.zoom > 0.1) camGame.zoom = Math.max(camGame.zoom - elapsed * camGame.zoom, .1);
+			if (FlxG.keys.pressed.E && camGame.zoom < 1) camGame.zoom = Math.min(camGame.zoom + elapsed * camGame.zoom, 1);
+
 			if(FlxG.keys.justPressed.H) {
 				if(UI_mainbox.selected_tab_id == 'Animations') {
 					currentGhosts++;
@@ -548,8 +543,8 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 					ghostLoop.visible = (currentGhosts != 1);
 					ghostIdle.visible = (currentGhosts != 2);
-					ghostLoop.alpha = (currentGhosts == 2 ? 1 : 0.6);
-					ghostIdle.alpha = (currentGhosts == 1 ? 1 : 0.6);
+					ghostLoop.alpha = (currentGhosts == 2 ? 1 : .6);
+					ghostIdle.alpha = (currentGhosts == 1 ? 1 : .6);
 				} else hudGroup.visible = !hudGroup.visible;
 			}
 			if(FlxG.keys.justPressed.R) {

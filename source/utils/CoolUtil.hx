@@ -68,10 +68,8 @@ class CoolUtil {
     }
 
 	@:access(flixel.util.FlxSave.validate)
-	public static function getSavePath():String {
-		final company:String = FlxG.stage.application.meta.get('company');
-		@:privateAccess final file:String = flixel.util.FlxSave.validate(FlxG.stage.application.meta.get('file'));
-		return '${company}/${file}';
+	inline public static function getSavePath():String {
+		return '${FlxG.stage.application.meta.get('company')}/${flixel.util.FlxSave.validate(FlxG.stage.application.meta.get('file'))}';
 	}
 
 	public static function removeDuplicates(string:Array<String>):Array<String> {
@@ -101,12 +99,8 @@ class CoolUtil {
 	}
 
     public static function getColor(value:Dynamic):FlxColor {
-        if (value == null)
-            return FlxColor.WHITE;
-
-        if (value is Int)
-            return value;
-
+        if (value == null) return FlxColor.WHITE;
+        if (value is Int) return value;
         if (value is String) return colorFromString(value);
 
         if (value is Array) {

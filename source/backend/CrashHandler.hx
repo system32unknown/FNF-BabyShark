@@ -60,7 +60,7 @@ class CrashHandler {
 
 		CoolUtil.callErrBox("Alter Engine: Error!", errMsg);
 		
-		#if discord_rpc Discord.shutdown(); #end
+		#if DISCORD_ALLOWED DiscordClient.shutdown(); #end
 		#if sys Sys.exit(1); #end
 	}
 
