@@ -48,7 +48,7 @@ class WeekData {
 			["Fresh",      "daddyshark", [146, 113, 253]],
 			["Tooth", 	   "daddyshark", [146, 113, 253]]
 		],
-		weekCharacters: ['dad', 'bf', 'gf'],
+		weekCharacters: ['', 'bf', 'gf'],
 		weekBackground: 'stage',
 		weekBefore: 'tutorial',
 		storyName: 'Your New Week',

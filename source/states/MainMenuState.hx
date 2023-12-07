@@ -55,7 +55,7 @@ class MainMenuState extends MusicBeatState {
 
 		persistentUpdate = persistentDraw = true;
 
-		bg = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite(-80, Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
@@ -63,7 +63,7 @@ class MainMenuState extends MusicBeatState {
 		bg.color = 0xFFFDE871;
 		add(bg);
 
-		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		magenta = new FlxSprite(-80, Paths.image('menuDesat'));
 		magenta.antialiasing = ClientPrefs.getPref('Antialiasing');
 		magenta.scrollFactor.set();
 		magenta.active = false;
@@ -145,7 +145,6 @@ class MainMenuState extends MusicBeatState {
 		firstStart = false;
 
 		changeItem();
-
 		super.create();
 	}
 
@@ -155,7 +154,7 @@ class MainMenuState extends MusicBeatState {
 			FlxG.sound.music.volume += .5 * elapsed;
 			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += .5 * elapsed;
 		}
-		FlxG.camera.followLerp = FlxMath.bound(elapsed * 9 * (FlxG.updateFramerate / 60), 0, 1);
+		FlxG.camera.followLerp = elapsed * 9 * (FlxG.updateFramerate / 60);
 		
 		if (!selectedSomethin && finishedFunnyMove) {
 			if (controls.UI_UP_P || controls.UI_DOWN_P) {

@@ -81,7 +81,7 @@ class FreeplayState extends MusicBeatState
 			for (song in leWeek.songs) {
 				var colors:Array<Int> = song[2];
 				if(colors == null || colors.length < 3) colors = [146, 113, 253];
-				addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
+				addSong(song[0], i, song[1], CoolUtil.getColor(colors));
 			}
 		}
 		Mods.loadTopMod();
@@ -169,7 +169,7 @@ class FreeplayState extends MusicBeatState
 		
 		FlxTween.tween(scoreBG, {y: 25}, .5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(scoreText, {y: 20}, .5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(comboText, {y: 44}, .5, {ease: FlxEase.expoInOut});
+		FlxTween.tween(comboText, {y: 45}, .5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(diffText, {y: 66}, .5, {ease: FlxEase.expoInOut});
 
 		errorDisplay = new ErrorDisplay();

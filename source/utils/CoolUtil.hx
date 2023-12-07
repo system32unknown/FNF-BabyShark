@@ -105,8 +105,7 @@ class CoolUtil {
 
         if (value is Array) {
             var arr:Array<Float> = cast value;
-            while (arr.length < 3)
-                arr.push(0);
+            while (arr.length < 3) arr.push(0);
             return FlxColor.fromRGB(Std.int(arr[0]), Std.int(arr[1]), Std.int(arr[2]));
         }
 
