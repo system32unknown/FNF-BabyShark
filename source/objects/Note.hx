@@ -138,7 +138,7 @@ class Note extends FlxSprite {
 					reloadNote('KILL', 'NOTE_assets');
 					noteSplashTexture = 'HURTnoteSplashes';
 					colorSwap.setHSB(0, 0, 0);
-					missHealth = PlayState.instance.healthMax;
+					missHealth = 2;
 					hitCausesMiss = true;
 					hitsound = 'cancelMenu';
 					hitsoundChartEditor = false;
