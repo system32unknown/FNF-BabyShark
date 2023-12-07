@@ -2187,119 +2187,113 @@ class PlayState extends MusicBeatState {
 			RecalculateRating();
 		}
 
-		if (hideHud) return;
+		if (!ClientPrefs.getPref('ShowComboCounter')) return;
 
-		if (!ClientPrefs.getPref('comboStacking'))
+		if (!ClientPrefs.getPref('comboStacking')) 
 			comboGroup.forEachAlive((spr:FlxSprite) -> FlxTween.globalManager.completeTweensOf(spr));
 
-		if (ClientPrefs.getPref('ShowComboCounter')) {
-			final placement:Float = FlxG.width * .35;
+		final placement:Float = FlxG.width * .35;
 
-			var uiPrefix:String = '';
-			var uiSuffix:String = '';
-			var antialias:Bool = ClientPrefs.getPref('Antialiasing');
-			final mult = (isPixelStage ? daPixelZoom * .85 : .7);
+		var uiPrefix:String = '';
+		var uiSuffix:String = '';
+		var antialias:Bool = ClientPrefs.getPref('Antialiasing');
+		final mult = (isPixelStage ? daPixelZoom * .85 : .7);
 
-			if (stageUI != "normal") {
-				uiPrefix = 'pixelUI/';
-				if (isPixelStage) uiSuffix = '-pixel';
-				antialias = !isPixelStage;
-			}
-		
-			var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
-
-			final rating:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true).loadGraphic(Paths.image(uiPrefix + 'ratings/${daRating.image}' + uiSuffix));
-			rating.screenCenter(Y);
-			rating.x = placement - 40 + comboOffset[0][0];
-			rating.y -= 60 - comboOffset[0][1];
-			rating.acceleration.set(ratingAcc.x * playbackRate, 550 * playbackRate + ratingAcc.y);
-			rating.velocity.subtract(FlxG.random.int(0, 10) * playbackRate + ratingVel.x, FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
-			rating.antialiasing = antialias;
-			rating.setGraphicSize(rating.width * mult);
-			rating.updateHitbox();
-			if (showRating) comboGroup.add(rating);
-		
-			var timing:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true);
-			if (daTiming != "") timing.loadGraphic(Paths.image(uiPrefix + 'ratings/$daTiming' + uiSuffix));
-			timing.screenCenter();
-			timing.x = placement - 130 + comboOffset[3][0];
-			timing.y -= comboOffset[3][1];
-			timing.acceleration.set(ratingAcc.x * playbackRate, 550 * playbackRate + ratingAcc.y);
-			timing.velocity.subtract(FlxG.random.int(0, 10) * playbackRate + ratingVel.x, FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
-			timing.antialiasing = antialias;
-			timing.setGraphicSize(timing.width * mult);
-			timing.updateHitbox();
-			if (daTiming != "" && ClientPrefs.getPref('ShowLateEarly')) comboGroup.add(timing);
-		
-			if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
-				msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
-				mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
-				mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-				mstimingTxt.text = '${msTiming}ms';
-				mstimingTxt.color = SpriteUtil.dominantColor(rating);
-				comboGroup.add(mstimingTxt);
-			}
-		
-			var comboSpr:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true).loadGraphic(Paths.image(uiPrefix + 'ratings/combo' + uiSuffix));
-			comboSpr.screenCenter(Y);
-			comboSpr.x = placement + comboOffset[2][0];
-			comboSpr.y -= comboOffset[2][1];
-			comboSpr.acceleration.set(ratingAcc.x * playbackRate, FlxG.random.int(200, 300) * playbackRate + ratingAcc.y);
-			comboSpr.velocity.set(FlxG.random.int(1, 10) * playbackRate - ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
-			comboSpr.visible = showCombo;
-			comboSpr.antialiasing = antialias;
-			comboSpr.setGraphicSize(comboSpr.width * mult);
-			comboSpr.updateHitbox();
-			if(combo >= 10) comboGroup.add(comboSpr);
-
-			if (ClientPrefs.getPref('ShowMsTiming')) {
-				mstimingTxt.screenCenter();
-				var comboShowSpr:FlxSprite = (showCombo && combo >= 10 ? comboSpr : rating);
-				mstimingTxt.setPosition(comboShowSpr.x + 100, comboShowSpr.y + (showCombo && combo >= 10 ? 80 : 100));
-				mstimingTxt.updateHitbox();
-			}
-		
-			var seperatedScore:Array<Int> = [];
-			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
-		
-			for (i in 0...comboSplit.length)
-				seperatedScore.push(Std.parseInt(comboSplit[i]));
-		
-			var daLoop:Int = 0;
-			final numMult = (isPixelStage ? daPixelZoom : .5);
-			for (i in seperatedScore) {
-				final numScore:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiSuffix));
-				numScore.screenCenter(Y);
-				numScore.x = placement + (43 * daLoop++) - 90 + comboOffset[1][0];
-				numScore.y += 80 - comboOffset[1][1];
-			
-				numScore.setGraphicSize(numScore.width * numMult);
-				numScore.updateHitbox();
-			
-				numScore.acceleration.set(ratingAcc.x * playbackRate, FlxG.random.int(200, 300) * playbackRate + ratingAcc.y);
-				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate - ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
-				numScore.visible = !hideHud;
-				numScore.antialiasing = antialias;
-				if(showComboNum) comboGroup.add(numScore);
-			
-				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
-			}
-		
-			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {timing.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
-		
-			if (ClientPrefs.getPref('ShowLateEarly'))
-				FlxTween.tween(timing, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {timing.kill(); timing.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
-
-			if (ClientPrefs.getPref('ShowMsTiming')) {
-				if (msTimingTween != null) {
-					mstimingTxt.alpha = 1;
-					msTimingTween.cancel();
-				}
-				msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {startDelay: Conductor.crochet * .001 / playbackRate});
-			}
-		
-			FlxTween.tween(comboSpr, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {comboSpr.kill(); comboSpr.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
+		if (stageUI != "normal") {
+			uiPrefix = 'pixelUI/';
+			if (isPixelStage) uiSuffix = '-pixel';
+			antialias = !isPixelStage;
 		}
+	
+		var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
+
+		final rating:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true).loadGraphic(Paths.image(uiPrefix + 'ratings/${daRating.image}' + uiSuffix));
+		rating.screenCenter(Y);
+		rating.x = placement - 40 + comboOffset[0][0];
+		rating.y -= 60 - comboOffset[0][1];
+		rating.acceleration.set(ratingAcc.x * playbackRate, 550 * playbackRate + ratingAcc.y);
+		rating.velocity.set(-FlxG.random.int(0, 10) * playbackRate + ratingVel.x, -FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
+		rating.antialiasing = antialias;
+		rating.setGraphicSize(rating.width * mult);
+		rating.updateHitbox();
+		if (showRating) comboGroup.add(rating);
+	
+		var timing:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true);
+		if (daTiming != "") timing.loadGraphic(Paths.image(uiPrefix + 'ratings/$daTiming' + uiSuffix));
+		timing.screenCenter(Y);
+		timing.x = placement - 130 + comboOffset[3][0];
+		timing.y -= comboOffset[3][1];
+		timing.acceleration.set(ratingAcc.x * playbackRate, 550 * playbackRate + ratingAcc.y);
+		timing.velocity.set(-FlxG.random.int(0, 10) * playbackRate + ratingVel.x, -FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
+		timing.antialiasing = antialias;
+		timing.setGraphicSize(timing.width * mult);
+		timing.updateHitbox();
+		if (daTiming != "" && ClientPrefs.getPref('ShowLateEarly')) comboGroup.add(timing);
+	
+		if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
+			msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
+			mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
+			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+			mstimingTxt.text = '${msTiming}ms';
+			mstimingTxt.color = SpriteUtil.dominantColor(rating);
+			comboGroup.add(mstimingTxt);
+		}
+	
+		var comboSpr:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true).loadGraphic(Paths.image(uiPrefix + 'ratings/combo' + uiSuffix));
+		comboSpr.screenCenter(Y);
+		comboSpr.x = placement + comboOffset[2][0];
+		comboSpr.y -= comboOffset[2][1];
+		comboSpr.acceleration.set(ratingAcc.x * playbackRate, FlxG.random.int(200, 300) * playbackRate + ratingAcc.y);
+		comboSpr.velocity.set(FlxG.random.int(1, 10) * playbackRate - ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
+		comboSpr.antialiasing = antialias;
+		comboSpr.setGraphicSize(comboSpr.width * mult);
+		comboSpr.updateHitbox();
+		if(showCombo && combo >= 10) comboGroup.add(comboSpr);
+
+		if (ClientPrefs.getPref('ShowMsTiming')) {
+			mstimingTxt.screenCenter(Y);
+			var comboShowSpr:FlxSprite = (showCombo && combo >= 10 ? comboSpr : rating);
+			mstimingTxt.setPosition(comboShowSpr.x + 100, comboShowSpr.y + (showCombo && combo >= 10 ? 80 : 100));
+			mstimingTxt.updateHitbox();
+		}
+	
+		var seperatedScore:Array<Int> = [];
+		var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
+		for (i in 0...comboSplit.length) seperatedScore.push(Std.parseInt(comboSplit[i]));
+	
+		var daLoop:Int = 0;
+		final numMult = (isPixelStage ? daPixelZoom : .5);
+		for (i in seperatedScore) {
+			final numScore:FlxSprite = comboGroup.remove(comboGroup.recycle(FlxSprite), true).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiSuffix));
+			numScore.screenCenter(Y);
+			numScore.x = placement + (43 * daLoop++) - 90 + comboOffset[1][0];
+			numScore.y += 80 - comboOffset[1][1];
+		
+			numScore.setGraphicSize(numScore.width * numMult);
+			numScore.updateHitbox();
+		
+			numScore.acceleration.set(ratingAcc.x * playbackRate, FlxG.random.int(200, 300) * playbackRate + ratingAcc.y);
+			numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate - ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
+			numScore.antialiasing = antialias;
+			if(showComboNum) comboGroup.add(numScore);
+		
+			FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
+		}
+	
+		FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
+	
+		if (ClientPrefs.getPref('ShowLateEarly'))
+			FlxTween.tween(timing, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {timing.kill(); timing.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
+
+		if (ClientPrefs.getPref('ShowMsTiming')) {
+			if (msTimingTween != null) {
+				mstimingTxt.alpha = 1;
+				msTimingTween.cancel();
+			}
+			msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {startDelay: Conductor.crochet * .001 / playbackRate});
+		}
+	
+		FlxTween.tween(comboSpr, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {comboSpr.kill(); comboSpr.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 	}
 
 	static function getNoteDiff(note:Note = null):Float {
