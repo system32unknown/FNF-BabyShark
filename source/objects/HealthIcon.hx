@@ -2,7 +2,6 @@ package objects;
 
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxPoint;
-import flixel.util.FlxDestroyUtil;
 
 class HealthIcon extends FlxSprite {
 	static final prefix:String = 'icons/';
@@ -50,7 +49,7 @@ class HealthIcon extends FlxSprite {
 
 	override function destroy():Void {
 		super.destroy();
-		_scale = FlxDestroyUtil.put(_scale);
+		_scale = flixel.util.FlxDestroyUtil.put(_scale);
 	}
 
 	override function draw() {

@@ -24,4 +24,9 @@ class AttachedText extends Alphabet {
 
 		super.update(elapsed);
 	}
+
+	override function destroy() {
+		textoffset = flixel.util.FlxDestroyUtil.put(textoffset);
+		super.destroy();
+	}
 }

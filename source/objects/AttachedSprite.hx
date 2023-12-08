@@ -36,4 +36,9 @@ class AttachedSprite extends FlxSprite
 			if(copyVisible) visible = sprTracker.visible;
 		}
 	}
+
+	override function destroy() {
+		addPoint = flixel.util.FlxDestroyUtil.put(addPoint);
+		super.destroy();
+	}
 }

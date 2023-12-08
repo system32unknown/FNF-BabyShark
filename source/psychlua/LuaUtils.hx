@@ -97,9 +97,7 @@ class LuaUtils {
 		}
 
 		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo);
-		while (ind != -1) {
-			obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
-		}
+		while (ind != -1) obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
 
 		return obj;
 	}

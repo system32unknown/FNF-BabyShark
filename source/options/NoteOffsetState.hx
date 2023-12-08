@@ -428,9 +428,8 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	override function destroy() {
+		startMousePos = flixel.util.FlxDestroyUtil.put(startMousePos);
+		startComboOffset = flixel.util.FlxDestroyUtil.put(startComboOffset);
 		super.destroy();
-
-		startMousePos.put();
-		startComboOffset.put();
 	}
 }

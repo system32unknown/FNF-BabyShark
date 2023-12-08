@@ -2,6 +2,7 @@ package psychlua;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;
+import flixel.math.FlxPoint;
 import flixel.addons.transition.FlxTransitionableState;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
@@ -531,39 +532,15 @@ class FunkinLua {
 		set("setRatingName", (value:String) -> game.ratingName = value);
 		set("setRatingFC", (value:String) -> game.ratingFC = value);
 
-		set("getMouseX", (camera:String) -> return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).x);
-		set("getMouseY", (camera:String) -> return FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera)).y);
+		set("getMouseX", (camera:String) -> return getMousePoint(camera, 'x'));
+		set("getMouseY", (camera:String) -> return getMousePoint(camera, 'y'));
+		set("getMidpointX", (variable:String) -> return getPoint(variable, 'midpoint', 'x'));
+		set("getMidpointY", (variable:String) -> return getPoint(variable, 'midpoint', 'y'));
+		set("getGraphicMidpointX", (variable:String) -> return getPoint(variable, 'graphic', 'x'));
+		set("getGraphicMidpointY", (variable:String) -> return getPoint(variable, 'graphic', 'y'));
+		set("getScreenPositionX", (variable:String, ?camera:String) -> return getPoint(variable, 'screen', 'x', camera));
+		set("getScreenPositionY", (variable:String, ?camera:String) -> return getPoint(variable, 'screen', 'y', camera));
 
-		set("getMidpointX", function(obj:String) {
-			var obj:FlxObject = LuaUtils.getVarInstance(obj);
-			if (obj != null) return obj.getMidpoint().x;
-			return 0;
-		});
-		set("getMidpointY", function(obj:String) {
-			var obj:FlxObject = LuaUtils.getVarInstance(obj);
-			if (obj != null) return obj.getMidpoint().y;
-			return 0;
-		});
-		set("getGraphicMidpointX", function(obj:String) {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
-			if (spr != null) return spr.getGraphicMidpoint().x;
-			return 0;
-		});
-		set("getGraphicMidpointY", function(obj:String) {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
-			if (spr != null) return spr.getGraphicMidpoint().y;
-			return 0;
-		});
-		set("getScreenPositionX", function(obj:String) {
-			var poop:FlxObject = LuaUtils.getVarInstance(obj);
-			if (poop != null) return poop.getScreenPosition().x;
-			return 0;
-		});
-		set("getScreenPositionY", function(obj:String) {
-			var poop:FlxObject = LuaUtils.getVarInstance(obj);
-			if (poop != null) return poop.getScreenPosition().y;
-			return 0;
-		});
 		set("characterDance", function(character:String, force:Bool = false) {
 			switch(character.toLowerCase()) {
 				case 'dad': game.dad.dance(force);
@@ -626,9 +603,7 @@ class FunkinLua {
 			return false;
 		});
 
-		set("addAnimationByIndices", function(obj:String, name:String, prefix:String, indices:Any, framerate:Int = 24, loop:Bool = false) {
-			return LuaUtils.addAnimByIndices(obj, name, prefix, indices, framerate, loop);
-		});
+		set("addAnimationByIndices", (obj:String, name:String, prefix:String, indices:Any, framerate:Int = 24, loop:Bool = false) -> return LuaUtils.addAnimByIndices(obj, name, prefix, indices, framerate, loop));
 
 		set("playAnim", function(obj:String, name:String, forced:Bool = false, ?reverse:Bool = false, ?startFrame:Int = 0) {
 			var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
@@ -1208,6 +1183,31 @@ class FunkinLua {
 		#end
 	}
 
+	var _lePoint:FlxPoint = FlxPoint.get();
+
+	function getMousePoint(camera:String, axis:String):Float {
+		FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera), _lePoint);
+		return (axis == 'y' ? _lePoint.y : _lePoint.x);
+	}
+
+	function getPoint(leVar:String, type:String, axis:String, ?camera:String):Float {
+		final split:Array<String> = leVar.split('.');
+		var obj:FlxSprite = null;
+		if (split.length > 1)
+			obj = LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split), split[split.length - 1]);
+		else obj = LuaUtils.getObjectDirectly(split[0]);
+
+		if (obj != null) {
+			switch(type) {
+				case 'graphic': obj.getGraphicMidpoint(_lePoint);
+				case 'screen': obj.getScreenPosition(_lePoint, LuaUtils.cameraFromString(camera));
+				default: obj.getMidpoint(_lePoint);
+			}
+			return (axis == 'y' ? _lePoint.y : _lePoint.x);
+		}
+		return 0;
+	}
+
 	public var lastCalledFunction:String = '';
 	public static var lastCalledScript:FunkinLua = null;
 	public function call(func:String, ?args:Array<Dynamic>):Dynamic {
@@ -1269,6 +1269,7 @@ class FunkinLua {
 	public function stop() {
 		#if LUA_ALLOWED
 		PlayState.instance.luaArray.remove(this);
+		_lePoint = flixel.util.FlxDestroyUtil.put(_lePoint);
 		closed = true;
 
 		if (lua == null) return;
