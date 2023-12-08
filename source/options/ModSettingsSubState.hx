@@ -5,8 +5,7 @@ import objects.Character;
 class ModSettingsSubState extends BaseOptionsMenu {
 	var save:Map<String, Dynamic> = new Map<String, Dynamic>();
 	var folder:String;
-	public function new(options:Array<Dynamic>, folder:String, name:String)
-	{
+	public function new(options:Array<Dynamic>, folder:String, name:String) {
 		this.folder = folder;
 
 		title = '';
@@ -60,7 +59,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 				addOption(newOption);
 			}
 		} catch(e:Dynamic) {
-			var errorTitle = 'Mod name: ' + folder;
+			var errorTitle = 'Mod name: $folder';
 			var errorMsg = 'An error occurred: $e';
 			#if windows
 			lime.app.Application.current.window.alert(errorMsg, errorTitle);
@@ -72,7 +71,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 
 		super();
 
-		bg.alpha = 0.75;
+		bg.alpha = .75;
 		bg.color = FlxColor.WHITE;
 		reloadCheckboxes();
 	}

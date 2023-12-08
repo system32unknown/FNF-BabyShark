@@ -1186,15 +1186,13 @@ class PlayState extends MusicBeatState {
 
 	function eventEarlyTrigger(event:EventNote):Float {
 		var returnedValue:Null<Float> = callOnScripts('eventEarlyTrigger', [event.event, event.value1, event.value2, event.strumTime], true, [], [0]);
-		if(returnedValue != null && returnedValue != 0 && returnedValue != FunkinLua.Function_Continue)
-			return returnedValue;
+		if(returnedValue != null && returnedValue != 0 && returnedValue != FunkinLua.Function_Continue) return returnedValue;
 
 		switch(event.event) {case 'Kill Henchmen': return 280;}
 		return 0;
 	}
 
-	function sortByTime(Obj1:Dynamic, Obj2:Dynamic):Int
-		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
+	function sortByTime(Obj1:Dynamic, Obj2:Dynamic):Int return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 
 	function makeEvent(event:Array<Dynamic>, i:Int) {
 		var subEvent:EventNote = {
@@ -1339,8 +1337,7 @@ class PlayState extends MusicBeatState {
 
 		notes.forEachAlive((note:Note) -> updateNote(note));
 
-		for (noteI in 0...unspawnNotes.length)
-			updateNote(unspawnNotes[noteI]);
+		for (noteI in 0...unspawnNotes.length) updateNote(unspawnNotes[noteI]);
 		callOnScripts('onChangeMania', [mania, daOldMania]);
 
 		generateStaticArrows(0);
@@ -2216,7 +2213,7 @@ class PlayState extends MusicBeatState {
 		}
 	
 		var comboSpr:FlxSprite = null;
-		if (showCombo) {
+		if (showCombo && combo >= 10) {
 			comboSpr = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/combo' + uiSuffix));
 			comboSpr.screenCenter(Y).y -= comboOffset[2][1];
 			comboSpr.x = placement + comboOffset[2][0];
@@ -2226,10 +2223,8 @@ class PlayState extends MusicBeatState {
 			comboSpr.antialiasing = antialias;
 			comboSpr.setGraphicSize(comboSpr.width * mult);
 			comboSpr.updateHitbox();
-			if(combo >= 10) {
-				comboGroup.remove(comboSpr, true);
-				comboGroup.add(comboSpr);
-			}
+			comboGroup.remove(comboSpr, true);
+			comboGroup.add(comboSpr);
 
 			FlxTween.tween(comboSpr, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {comboSpr.kill(); comboSpr.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 		}
@@ -2264,7 +2259,6 @@ class PlayState extends MusicBeatState {
 		}
 	
 		if (ClientPrefs.getPref('ShowMsTiming')) {
-			mstimingTxt.screenCenter(Y);
 			var comboShowSpr:FlxSprite = (showCombo && combo >= 10 ? comboSpr : rating);
 			mstimingTxt.setPosition(comboShowSpr.x + 100, comboShowSpr.y + (showCombo && combo >= 10 ? 80 : 100));
 			mstimingTxt.updateHitbox();

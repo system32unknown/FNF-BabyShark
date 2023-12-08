@@ -32,7 +32,8 @@ class CreditsState extends MusicBeatState {
 		['EliteMasterEric',		'mastereric',		'Runtime Shaders support',										'https://twitter.com/EliteMasterEric',		'FFBD40'],
 		['Gabriela',			'gabriela',			'Playback Rate Modifier\nand other PRs',						'https://twitter.com/BeastlyGabi',			'5E99DF'],
 		['PolybiusProxy',		'proxy',			'MP4 Video Loader Library (hxCodec)',							'https://twitter.com/polybiusproxy',		'DCD294'],
-		['KadeDev',				'kade',				'Fixed some cool stuff on Chart Editor\nand other PRs',			'https://twitter.com/kade0912',				'64A250'],
+		['KadeDev',				'kade',				'Fixed Chart Editor\nand other PRs, Kade Engine Dev',			'https://twitter.com/kade0912',				'64A250'],
+		['Tahir K.', 			'face', 			'Implementing on Psych\nTO DO: Add Icon',		   				'https://twitter.com/tahirk618', 			'A1A1A1'],
 		['superpowers04', 		'superpowers04', 	'linc_luaJIT Fork\n and lua reworks', 							'https://github.com/superpowers04',			'B957ED'],
 		['Smokey',				'smokey',			'Sprite Atlas Support',											'https://twitter.com/Smokey_5_',			'483D92'],
 		['Raltyro',				'raltyro',			'Bunch of lua fixes, Owner of Psike Engine',					'https://twitter.com/raltyro',				'F3F3F3'],
@@ -64,14 +65,40 @@ class CreditsState extends MusicBeatState {
 		['Zmac',           		'Zmac',				'3D Backgrounds, Intro text help',                           	'https://www.youtube.com/@ZmacRaivoli',		'FF0000'], 
 		['Billy Bobbo',         'billy',			'Moral Support & Idea Suggesting',                     			'https://twitter.com/BillyBobboLOL',		'FF0000'],
 		['Steph45',           	'Steph45',			'Minor programming, Moral support',                     		'https://twitter.com/Stats451',				'FF0000'],
-		['T5mpler',           	'T5mpler',			'Former Programmer & Supporter',                           		'https://twitter.com/RealT5mpler',			'FF0000'],
+		['T5mpler',           	'T5mpler',			'Programmer & Supporter',                           			'https://twitter.com/RealT5mpler',			'FF0000'],
+		[''],
+		['Golden Apple'],
+		['Sky!',           		'Sky',				'Creator, Charter, Composer, Artist, Programmer',               'https://twitter.com/SkyFactorial',			'FF0000'],
+		['Lancey',           	'lancey',			'Artist',               										'https://twitter.com/Lancey170',			'FF0000'],
+		['Ruby',           		'Ruby',				'Composer, Artist',               								'https://twitter.com/RubysArt_',			'FF0000'],
+		[''], // i put scary features because i got bored lolololol
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		[''],
+		['', 'gappleteam', 'Just an apple. eh? okay, get outta here. shoo.\nYou\'re not supposed to be here. also, dont try click that.', 'https://shorturl.at/tvzEM', '0d0d0d']
 	];
 
 	static var babyshark(default, never):Array<Array<String>> = [
 		['Baby Shark\'s Funkin Team'],
-		['Altertoriel', 		'altertoriel',		'Main Developer', 												'https://twitter.com/Altertoriel2', 		'B9AF27'],
-		['Pinkfong', 			'pinkfong', 		'Creator of Baby Shark', 										'https://pinkfong.com',						'FFC0CB'],
-		['Nickelodeon', 		'nickelodeon', 		'Creator of Baby Shark\'s Big Show!', 							'https://www.nick.com',						'F57C13'],
+		['Altertoriel', 		'altertoriel',		'Main Developer', 													'https://twitter.com/Altertoriel2', 		'B9AF27'],
+		['Pinkfong', 			'pinkfong', 		'Creator of Baby Shark', 											'https://pinkfong.com',						'FFC0CB'],
+		['Nickelodeon', 		'nickelodeon', 		'Creator of Baby Shark\'s Big Show / Baby Shark Ollie and William', 'https://www.nick.com',						'F57C13'],
 	];
 
 	public static var prevSelected:Int = 0;
@@ -125,8 +152,7 @@ class CreditsState extends MusicBeatState {
 
 			optionText.distancePerItem.y /= 1.2;
 
-			if (!isSelectable)
-				optionText.startPosition.y -= 47;
+			if (!isSelectable) optionText.startPosition.y -= 47;
 
 			optionText.snapToPosition();
 			grpOptions.add(optionText);
@@ -136,10 +162,8 @@ class CreditsState extends MusicBeatState {
 		}
 
 		descBox = new AttachedSprite();
-		descBox.makeGraphic(1, 1, FlxColor.BLACK);
+		descBox.makeGraphic(1, 1, 0x99000000);
 		descBox.addPoint.set(-10, -10);
-		descBox.alphaMult = .6;
-		descBox.alpha = .6;
 		add(descBox);
 
 		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
@@ -226,10 +250,7 @@ class CreditsState extends MusicBeatState {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			if(!unselectableCheck(bullShit - 1)) {
-				item.alpha = .6;
-				if (item.targetY == 0) item.alpha = 1;
-			}
+			if(!unselectableCheck(bullShit - 1)) item.alpha = (item.targetY == 0 ? 1 : .6);
 		}
 
 		descText.text = sections[curSelected][2];

@@ -118,8 +118,7 @@ class FreeplayState extends MusicBeatState
 		scoreText = new FlxText(20, -60, 0, "", 32);
 		scoreText.font = Paths.font("babyshark.ttf");
 
-		scoreBG = new FlxSprite(scoreText.x - 6, -40).makeGraphic(FlxG.width, 66, FlxColor.BLACK);
-		scoreBG.alpha = 0.6;
+		scoreBG = new FlxSprite(scoreText.x - 6, -40).makeGraphic(FlxG.width, 66, 0x99000000);
 		scoreBG.screenCenter(X);
 		add(scoreBG);
 
@@ -394,15 +393,8 @@ class FreeplayState extends MusicBeatState
 			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {onComplete: (twn:FlxTween) -> colorTween = null});
 		}
 
-		for (i in 0...iconArray.length)
-			iconArray[i].alpha = .6;
-
-		iconArray[curSelected].alpha = 1;
-
-		for (item in grpSongs.members) {
-			item.alpha = .6;
-			if (item.targetY == curSelected) item.alpha = 1;
-		}
+		for (i in 0...iconArray.length) iconArray[i].alpha = (i == curSelected ? 1 : .6);
+		for (item in grpSongs.members) item.alpha = (item.targetY == curSelected ? 1 : .6);
 		
 		Mods.currentModDirectory = songs[curSelected].folder;
 		PlayState.storyWeek = songs[curSelected].week;

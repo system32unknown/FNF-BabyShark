@@ -86,8 +86,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		for (i in 0...optionShit.length) {
 			var isCentered:Bool = false;
 			var isDefaultKey:Bool = (optionShit[i][0] == defaultKey);
-			if(unselectableCheck(i, true))
-				isCentered = true;
+			if(unselectableCheck(i, true)) isCentered = true;
 
 			var isFirst:Bool = i == 0;
 			var text:String = optionShit[i][0];
