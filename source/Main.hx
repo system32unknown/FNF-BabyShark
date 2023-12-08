@@ -15,7 +15,7 @@ import debug.FPSCounter;
 #if (target.threaded && sys) import sys.thread.ElasticThreadPool; #end
 
 class Main extends Sprite {
-	public static var engineVer:GameVersion = new GameVersion(0, 1, 0, "a");
+	public static var engineVer:GameVersion = new GameVersion(0, 1, 1, "a");
 
 	public static var game = {
 		width: 1280, // WINDOW width

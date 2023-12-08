@@ -47,7 +47,7 @@ class FreeplayState extends MusicBeatState
 		PlayState.isStoryMode = false;
 		WeekData.reloadWeekFiles(false);
 
-		#if DISCORD_ALLOWED DiscordClient.changePresence("Freeplay Menu", null); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Freeplay Menu", 'Section: $section'); #end
 
 		section = FreeplaySectionSubstate.daSection;
 		if (section == null || section == '') section = 'Vanilla';
