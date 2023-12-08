@@ -37,6 +37,9 @@ class FreeplayState extends MusicBeatState
 	var intendedColor:Int;
 	var colorTween:FlxTween;
 
+	var bottomText:FlxText;
+	var bottomBG:FlxSprite;
+
 	public static var section:String = '';
 
 	override function create() {		
@@ -115,14 +118,14 @@ class FreeplayState extends MusicBeatState
 		}
 		WeekData.setDirectoryFromWeek();
 
-		scoreText = new FlxText(20, -60, 0, "", 32);
+		scoreText = new FlxText(2, -60, 0, "", 32);
 		scoreText.font = Paths.font("babyshark.ttf");
 
-		scoreBG = new FlxSprite(scoreText.x - 6, -40).makeGraphic(FlxG.width, 66, 0x99000000);
+		scoreBG = new FlxSprite(0, -40).makeGraphic(FlxG.width, 66, 0x99000000);
 		scoreBG.screenCenter(X);
 		add(scoreBG);
 
-		diffText = new FlxText(20, -40, 0, "", 24);
+		diffText = new FlxText(2, -40, 0, "", 24);
 		diffText.font = scoreText.font;
 
 		comboText = new FlxText(scoreText.x, -80, 0, "", 24);
@@ -141,30 +144,22 @@ class FreeplayState extends MusicBeatState
 
 		changeSelection();
 
-		var textBG:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 32, 0x7F000000);
-		add(textBG);
-		textBG.scrollFactor.set();
-		textBG.y = FlxG.height - textBG.height;
+		bottomBG = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 32, 0x7F000000);
+		add(bottomBG);
+		bottomBG.scrollFactor.set();
 
-		#if PRELOAD_ALL
 		final leTextSplit:Array<String> = [
 			"[SPACE] - Listen to the Song / [CTRL] - Gameplay Changers Menu",
 			"[COMMA] - Change Sections / [RESET] - Reset Score and Accuracy"
 		];
-		var leText:String = '${leTextSplit[0]}\n${leTextSplit[1]}';
-		var size:Int = 16;
-		#else
-		var leText:String = "[COMMA] - Change Sections / [CTRL] - Gameplay Changers Menu / RESET - Reset Score and Accuracy";
-		var size:Int = 18;
-		#end
-		var text:FlxText = new FlxText(textBG.x, textBG.y / 2, FlxG.width, leText, size);
-		text.setFormat(Paths.font("babyshark.ttf"), size, FlxColor.WHITE, CENTER);
-		text.scrollFactor.set();
-		text.y = FlxG.height - text.fieldHeight;
-		add(text);
+		bottomText = new FlxText(bottomBG.x, bottomBG.y / 2, FlxG.width, '${leTextSplit[0]}\n${leTextSplit[1]}', 18);
+		bottomText.setFormat(Paths.font("babyshark.ttf"), 18, FlxColor.WHITE, CENTER);
+		bottomText.scrollFactor.set();
+		bottomText.y = FlxG.height - bottomText.height;
+		add(bottomText);
 
-		textBG.height = text.height;
-		textBG.y = FlxG.height - textBG.height;
+		bottomBG.height = bottomText.height;
+		bottomBG.y = FlxG.height - bottomBG.height;
 		
 		FlxTween.tween(scoreBG, {y: 25}, .5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(scoreText, {y: 20}, .5, {ease: FlxEase.expoInOut});

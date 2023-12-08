@@ -71,27 +71,6 @@ class CreditsState extends MusicBeatState {
 		['Sky!',           		'Sky',				'Creator, Charter, Composer, Artist, Programmer',               'https://twitter.com/SkyFactorial',			'FF0000'],
 		['Lancey',           	'lancey',			'Artist',               										'https://twitter.com/Lancey170',			'FF0000'],
 		['Ruby',           		'Ruby',				'Composer, Artist',               								'https://twitter.com/RubysArt_',			'FF0000'],
-		[''], // i put scary features because i got bored lolololol
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		[''],
-		['', 'gappleteam', 'Just an apple. eh? okay, get outta here. shoo.\nYou\'re not supposed to be here. also, dont try click that.', 'https://shorturl.at/tvzEM', '0d0d0d']
 	];
 
 	static var babyshark(default, never):Array<Array<String>> = [

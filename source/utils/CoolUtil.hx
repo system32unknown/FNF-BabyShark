@@ -132,7 +132,7 @@ class CoolUtil {
 		#end
     }
 
-	public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
+	inline public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
 		return new FlxBackdrop(FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
 	}
 }

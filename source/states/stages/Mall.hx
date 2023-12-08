@@ -2,14 +2,11 @@ package states.stages;
 
 import states.stages.objects.*;
 
-class Mall extends BaseStage
-{
+class Mall extends BaseStage {
 	var upperBoppers:BGSprite;
 	var bottomBoppers:MallCrowd;
-	var santa:BGSprite;
 
-	override function create()
-	{
+	override function create() {
 		var bg:BGSprite = new BGSprite('christmas/bgWalls', -1000, -500, 0.2, 0.2);
 		bg.setGraphicSize(Std.int(bg.width * 0.8));
 		bg.updateHitbox();
@@ -27,20 +24,11 @@ class Mall extends BaseStage
 			add(bgEscalator);
 		}
 
-		add(new BGSprite('christmas/christmasTree', 370, -250, 0.40, 0.40));
-
-		bottomBoppers = new MallCrowd(-300, 140);
-		add(bottomBoppers);
-
+		add(new BGSprite('christmas/christmasTree', 370, -250, .40, .40));
+		add(bottomBoppers = new MallCrowd(-300, 140));
 		add(new BGSprite('christmas/fgSnow', -600, 700));
 
-		santa = new BGSprite('christmas/santa', -840, 150, 1, 1, ['santa idle in fear']);
-		add(santa);
 		setDefaultGF('gf-christmas');
-
-		if(isStoryMode && !seenCutscene) {
-			setEndCallback(eggnogEndCutscene);
-		}
 	}
 
 	override function countdownTick(count:Countdown, num:Int) everyoneDance();
@@ -63,13 +51,5 @@ class Mall extends BaseStage
 			upperBoppers.dance(true);
 
 		bottomBoppers.dance(true);
-		santa.dance(true);
-	}
-
-	function eggnogEndCutscene() {
-		if(PlayState.storyPlaylist[1] == null) {
-			endSong();
-			return;
-		}
 	}
 }

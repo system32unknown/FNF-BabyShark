@@ -9,7 +9,7 @@ class DiscordClient {
 	static final _defaultID:String = "1013313492889108510";
 	public static var clientID(default, set):String = _defaultID;
 	static var presence:DiscordRichPresence = DiscordRichPresence.create();
-	
+
 	public static function check() {
 		if(ClientPrefs.getPref('discordRPC')) initialize();
 		else if(isInitialized) shutdown();
@@ -35,18 +35,6 @@ class DiscordClient {
 		changePresence();
 	}
 
-	static function set_clientID(newID:String) {
-		var change:Bool = (clientID != newID);
-		clientID = newID;
-
-		if(change && isInitialized) {
-			shutdown();
-			initialize();
-			Discord.UpdatePresence(cpp.RawConstPointer.addressOf(presence));
-		}
-		return newID;
-	}
-
 	static function onError(errorCode:Int, message:cpp.ConstCharStar):Void {
 		Logs.trace('Discord: Error ($errorCode: ${cast(message, String)})', ERROR);
 	}
@@ -69,7 +57,6 @@ class DiscordClient {
 			while (localID == clientID) {
 				#if DISCORD_DISABLE_IO_THREAD Discord.UpdateConnection(); #end
 				Discord.RunCallbacks();
-				
 				Sys.sleep(.5); // Wait 0.5 seconds until the next loop...
 			}
 		});
@@ -89,9 +76,21 @@ class DiscordClient {
 		presence.endTimestamp = Std.int(endTimestamp / 1000);
 		Discord.UpdatePresence(cpp.RawConstPointer.addressOf(presence));
 	}
-
+	
 	public static function resetClientID()
 		clientID = _defaultID;
+
+	static function set_clientID(newID:String) {
+		var change:Bool = (clientID != newID);
+		clientID = newID;
+
+		if(change && isInitialized) {
+			shutdown();
+			initialize();
+			Discord.UpdatePresence(cpp.RawConstPointer.addressOf(presence));
+		}
+		return newID;
+	}
 
 	#if MODS_ALLOWED
 	public static function loadModRPC() {

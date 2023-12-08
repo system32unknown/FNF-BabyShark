@@ -1,5 +1,6 @@
 package substates;
 
+import flixel.addons.display.FlxBackdrop;
 import flixel.graphics.FlxGraphic;
 import data.WeekData;
 import states.StoryMenuState;
@@ -15,6 +16,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 	var sectionSpr:FlxSprite;
 	var sectionTxt:FlxText;
 
+	var grid:FlxBackdrop;
 	var bg:FlxSprite;
 	var transitioning:Bool = false;
 
@@ -56,6 +58,11 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		bg.alpha = 0;
 		add(bg);
 
+		grid = CoolUtil.createBackDrop(80, 80, 160, 160, true, 0x8FFFFFFF, 0x0);
+		grid.velocity.set(40, 40);
+		grid.alpha = 0;
+		add(grid);
+
 		sectionSpr = new FlxSprite(sectionImageMap.get(daSection.toLowerCase()));
 		sectionSpr.antialiasing = ClientPrefs.getPref('Antialiasing');
 		sectionSpr.scrollFactor.set();
@@ -79,6 +86,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 
 		transitioning = true;
 		FlxTween.tween(bg, {alpha: 1}, 1, {ease: FlxEase.expoOut, onComplete: (_:FlxTween) -> transitioning = false});
+		FlxTween.tween(grid, {alpha: 1}, 1, {ease: FlxEase.expoOut});
 		FlxTween.tween(sectionSpr, {alpha: 1, y: sectionSpr.y + 200}, 1, {ease: FlxEase.expoOut});
 		FlxTween.tween(sectionTxt, {alpha: 1, y: sectionTxt.y + 200}, 1, {ease: FlxEase.expoOut});
 	}
@@ -92,6 +100,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		if (controls.BACK && !transitioning) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
+			FlxTween.tween(grid, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionTxt, {alpha: 0, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y - 200}, .5, {ease: FlxEase.expoInOut,
 				onComplete: (tween:FlxTween) -> {
@@ -105,6 +114,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
 			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
+			FlxTween.tween(grid, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionTxt, {alpha: 0, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y - 200}, .5, {ease: FlxEase.expoInOut,
 				onComplete: (tween:FlxTween) -> {

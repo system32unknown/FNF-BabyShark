@@ -1,0 +1,46 @@
+{
+	"songs": [
+		[
+			"Home",
+			"dave",
+			[
+				15,
+				95,
+				255
+			]
+		],
+		[
+			"swirling",
+			"dave",
+			[
+				15,
+				95,
+				255
+			]
+		],
+		[
+			"dimensional",
+			"dave-angey",
+			[
+				103,
+				35,
+				32
+			]
+		]
+	],
+	"sections": ["dave"],
+	"hiddenUntilUnlocked": false,
+	"hideFreeplay": false,
+	"weekBackground": "stage",
+	"difficulties": "",
+	"weekCharacters": [
+		"",
+		"bf",
+		"gf"
+	],
+	"storyName": "Your New Week",
+	"weekName": "Dave Week",
+	"hideStoryMode": false,
+	"weekBefore": "tutorial",
+	"startUnlocked": true
+}
