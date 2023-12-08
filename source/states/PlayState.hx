@@ -2151,8 +2151,8 @@ class PlayState extends MusicBeatState {
 	function popUpScore(?note:Note):Void {
 		if (note == null) return;
 
-		var noteDiff = getNoteDiff(note) / getActualPlaybackRate();
-		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
+		final noteDiff = getNoteDiff(note) / getActualPlaybackRate();
+		final daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
 		var score:Int = 500;
 
 		var daTiming:String = "";
@@ -2278,7 +2278,7 @@ class PlayState extends MusicBeatState {
 			var daLoop:Int = 0;
 			final numMult = (isPixelStage ? daPixelZoom : .5);
 			for (i in seperatedScore) {
-				final numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiSuffix));
+				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiSuffix));
 				numScore.screenCenter(Y).y += 80 - comboOffset[1][1];
 				numScore.x = placement + (43 * daLoop++) - 90 + comboOffset[1][0];
 			
