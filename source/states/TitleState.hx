@@ -171,8 +171,7 @@ class TitleState extends MusicBeatState {
 		super.update(elapsed);
 
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
-		gradtimer++;
-		gradientBar.scale.y += Math.sin(gradtimer / 10) * .001;
+		gradientBar.scale.y += Math.sin(++gradtimer / 10) * .001;
 		gradientBar.updateHitbox();
 		gradientBar.y = FlxG.height - gradientBar.height;
 
