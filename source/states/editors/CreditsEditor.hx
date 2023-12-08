@@ -157,7 +157,7 @@ class CreditsEditor extends MusicBeatState {
 			if(Paths.fileExists('images/credits/' + icon + '.png', IMAGE)) pathIcon = 'credits/' + icon;
 			else pathIcon = 'credits/none';
 
-			var iconSprite:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pathIcon));
+			var iconSprite:FlxSprite = new FlxSprite(Paths.image(pathIcon));
 			var daColor:String = SpriteUtil.dominantColor(iconSprite).hex().substring(2, this.length);
 			colorInput.text = daColor;
 

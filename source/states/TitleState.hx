@@ -15,6 +15,7 @@ class TitleData {
 	public var starty:Float = 50;
 	public var gfx:Float = 512;
 	public var gfy:Float = 40;
+	public var backgroundSprite:String = '';
 	public var bpm:Float = 148;
 	public var gradients:Array<String> = ["0x553D0468", "0xC4FFE600"];
 }
@@ -55,6 +56,7 @@ class TitleState extends MusicBeatState {
 			starty: balls.starty,
 			gfx: balls.gfx,
 			gfy: balls.gfy,
+			backgroundSprite: balls.backgroundSprite,
 			bpm: balls.bpm,
 			gradients: balls.gradients
 		}
@@ -63,6 +65,13 @@ class TitleState extends MusicBeatState {
 			Conductor.usePlayState = false;
 			Conductor.mapBPMChanges(true);
 			Conductor.bpm = titleJson.bpm;
+		}
+
+		if (titleJson.backgroundSprite != null && titleJson.backgroundSprite.length > 0 && titleJson.backgroundSprite != "none") {
+			final bg:FlxSprite = new FlxSprite(Paths.image(titleJson.backgroundSprite));
+			bg.antialiasing = ClientPrefs.getPref('Antialiasing');
+			bg.active = false;
+			add(bg);
 		}
 
 		gradientBar = FlxGradient.createGradientFlxSprite(Math.round(FlxG.width), 512, [0x00, CoolUtil.colorFromString(titleJson.gradients[0]), CoolUtil.colorFromString(titleJson.gradients[1])], 1, 90, true);

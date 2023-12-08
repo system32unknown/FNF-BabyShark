@@ -22,7 +22,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		this.isTransIn = isTransIn;
 		super();
 
-		transGradient = new FlxSprite().loadGraphic(getGradient());
+		transGradient = new FlxSprite(getGradient());
 		transGradient.scrollFactor.set();
 		transGradient.flipX = isTransIn;
 		add(transGradient);

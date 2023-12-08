@@ -92,7 +92,7 @@ class NoteOffsetState extends MusicBeatState {
 		add(boyfriendGroup);
 
 		// Combo stuff
-		rating = new FlxSprite().loadGraphic(Paths.image('ratings/sick'));
+		rating = new FlxSprite(Paths.image('ratings/sick'));
 		rating.camera = camHUD;
 		rating.setGraphicSize(rating.width * 0.7);
 		rating.updateHitbox();
@@ -102,13 +102,13 @@ class NoteOffsetState extends MusicBeatState {
 		comboNums.camera = camHUD;
 		add(comboNums);
 
-		combo = new FlxSprite().loadGraphic(Paths.image('ratings/combo'));
+		combo = new FlxSprite(Paths.image('ratings/combo'));
 		combo.camera = camHUD;
 		combo.setGraphicSize(Std.int(combo.width * 0.7));
 		combo.updateHitbox();
 		add(combo);
 
-		lateEarly = new FlxSprite().loadGraphic(Paths.image('ratings/early'));
+		lateEarly = new FlxSprite(Paths.image('ratings/combo'));
 		lateEarly.camera = camHUD;
 		lateEarly.setGraphicSize(Std.int(combo.width * 0.7));
 		lateEarly.updateHitbox();
@@ -118,7 +118,7 @@ class NoteOffsetState extends MusicBeatState {
 
 		var daLoop:Int = 0;
 		for (i in seperatedScore) {
-			var numScore:FlxSprite = new FlxSprite(43 * daLoop++).loadGraphic(Paths.image('number/num$i'));
+			var numScore:FlxSprite = new FlxSprite(43 * daLoop++, Paths.image('number/num$i'));
 			numScore.camera = camHUD;
 			numScore.setGraphicSize(numScore.width * .5);
 			numScore.updateHitbox();

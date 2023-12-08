@@ -27,7 +27,7 @@ class Bar extends FlxSpriteGroup {
 		this.valueFunction = valueFunction;
 		setBounds(boundX, boundY);
 
-		bg = new FlxSprite().loadGraphic(Paths.image(image));
+		bg = new FlxSprite(Paths.image(image));
 		barWidth = Std.int(bg.width - 6);
 		barHeight = Std.int(bg.height - 6);
 

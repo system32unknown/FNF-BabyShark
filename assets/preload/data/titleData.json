@@ -4,6 +4,7 @@
 	"starty":50,
 	"gfx":512,
 	"gfy":40,
+	"backgroundSprite":"",
 	"bpm":148,
 	"gradients": ["0x553D0468", "0xC4FFE600"]
 }

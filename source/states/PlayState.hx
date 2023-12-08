@@ -2230,9 +2230,8 @@ class PlayState extends MusicBeatState {
 		}
 
 		var timing:FlxSprite = null;
-		if (ClientPrefs.getPref('ShowLateEarly')) {
-			timing = comboGroup.recycle(FlxSprite);
-			if (daTiming != '') timing.loadGraphic(Paths.image(uiPrefix + 'ratings/$daTiming' + uiSuffix));
+		if (ClientPrefs.getPref('ShowLateEarly') && daTiming != '') {
+			timing = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/$daTiming' + uiSuffix));
 			timing.screenCenter(Y).y -= comboOffset[3][1];
 			timing.x = placement - 130 + comboOffset[3][0];
 
@@ -2242,10 +2241,8 @@ class PlayState extends MusicBeatState {
 			timing.setGraphicSize(timing.width * mult);
 			timing.updateHitbox();
 
-			if (daTiming != '') {
-				comboGroup.remove(timing, true);
-				comboGroup.add(timing);
-			}
+			comboGroup.remove(timing, true);
+			comboGroup.add(timing);
 			FlxTween.tween(timing, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {timing.kill(); timing.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 	

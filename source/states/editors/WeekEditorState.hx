@@ -21,8 +21,7 @@ import objects.HealthIcon;
 import objects.MenuCharacter;
 import objects.MenuItem;
 
-class WeekEditorState extends MusicBeatState
-{
+class WeekEditorState extends MusicBeatState {
 	var txtWeekTitle:FlxText;
 	var bgSprite:FlxSprite;
 	var lock:FlxSprite;
@@ -53,8 +52,7 @@ class WeekEditorState extends MusicBeatState
 		weekThing.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(weekThing);
 
-		var blackBarThingie:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 56, FlxColor.BLACK);
-		add(blackBarThingie);
+		add(new FlxSprite().makeGraphic(FlxG.width, 56, FlxColor.BLACK));
 		
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 		
@@ -82,7 +80,7 @@ class WeekEditorState extends MusicBeatState
 		add(bgSprite);
 		add(grpWeekCharacters);
 
-		var tracksSprite:FlxSprite = new FlxSprite(FlxG.width * 0.07, bgSprite.y + 435).loadGraphic(Paths.image('Menu_Tracks'));
+		var tracksSprite:FlxSprite = new FlxSprite(FlxG.width * 0.07, bgSprite.y + 435, Paths.image('Menu_Tracks'));
 		tracksSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(tracksSprite);
 

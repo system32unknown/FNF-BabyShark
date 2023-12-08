@@ -46,7 +46,7 @@ class LoadingState extends MusicBeatState {
 		bg.color = FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255));
 		add(bg);
 
-		var funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/funkay.png', IMAGE));
+		var funkay = new FlxSprite(Paths.getPath('images/funkay.png', IMAGE));
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		add(funkay);
@@ -54,13 +54,13 @@ class LoadingState extends MusicBeatState {
 		funkay.scrollFactor.set();
 		funkay.screenCenter(X);
 
-		logo = new FlxSprite().loadGraphic(Paths.getPath('images/FinalLogo.png', IMAGE));
+		logo = new FlxSprite(Paths.getPath('images/logobumpin.png', IMAGE));
 		logo.screenCenter();
 		logo.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(logo);
 
 		loadLogoText = new FlxText(0, logo.y - logo.height, 0, 'LOADING', 30);
-		loadLogoText.setFormat(flixel.system.FlxAssets.FONT_DEFAULT, 30, FlxColor.WHITE, FlxTextAlign.CENTER);
+		loadLogoText.setFormat(null, 30, FlxColor.WHITE, FlxTextAlign.CENTER);
 		loadLogoText.setBorderStyle(FlxTextBorderStyle.SHADOW, FlxColor.GRAY, 2);
 		loadLogoText.screenCenter(X);
 		add(loadLogoText);
@@ -142,9 +142,8 @@ class LoadingState extends MusicBeatState {
 
 		#if NO_PRELOAD_ALL
 		var loaded:Bool = false;
-		if (PlayState.SONG != null) {
+		if (PlayState.SONG != null)
 			loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && checkLibrary('week_assets');
-		}
 
 		if (!loaded) return new LoadingState(target, stopMusic, directory);
 		#end
