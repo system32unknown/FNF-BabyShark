@@ -87,6 +87,7 @@
 	<haxedef name="queue_experimental_optimization"/>
 	<haxedef name="openfl_dpi_aware"/>
 	<haxedef name="hscriptPos"/>
+	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc"/>
 
 	<section unless="debug">
 		<!-- No deprecation warnings. -->

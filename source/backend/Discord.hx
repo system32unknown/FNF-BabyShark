@@ -11,7 +11,7 @@ class DiscordClient {
 	static var presence:DiscordRichPresence = DiscordRichPresence.create();
 	
 	public static function check() {
-		if(!ClientPrefs.getPref('discordRPC')) initialize();
+		if(ClientPrefs.getPref('discordRPC')) initialize();
 		else if(isInitialized) shutdown();
 	}
 
@@ -25,7 +25,7 @@ class DiscordClient {
 		isInitialized = false;
 	}
 	
-	private static function onReady(request:cpp.RawConstPointer<DiscordUser>):Void {
+	static function onReady(request:cpp.RawConstPointer<DiscordUser>):Void {
 		var requestPtr:cpp.Star<DiscordUser> = cpp.ConstPointer.fromRaw(request).ptr;
 
 		if (Std.parseInt(cast(requestPtr.discriminator, String)) != 0) //New Discord IDs/Discriminator system
@@ -69,9 +69,8 @@ class DiscordClient {
 			while (localID == clientID) {
 				#if DISCORD_DISABLE_IO_THREAD Discord.UpdateConnection(); #end
 				Discord.RunCallbacks();
-
-				// Wait 0.5 seconds until the next loop...
-				Sys.sleep(.5);
+				
+				Sys.sleep(.5); // Wait 0.5 seconds until the next loop...
 			}
 		});
 		isInitialized = true;
