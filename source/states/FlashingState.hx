@@ -12,18 +12,14 @@ class FlashingState extends MusicBeatState {
 	override function create() {
 		super.create();
 
-		warnText = new FlxText(0, 0, 0,
-			'Welcome to Alter Engine! (v${Main.engineVer.version})\n
-			This Mod contains some flashing lights and swearing.\n
-			Most contents are unfinished.\n
-			You\'ve been warned!', 32);
+		warnText = new FlxText(0, 0, 0,'Welcome to Alter Engine! (v${Main.engineVer.version})\nThis Mod contains some flashing lights and swearing.\nMost contents are unfinished.\nYou\'ve been warned!', 32);
 		warnText.setFormat(Paths.font('babyshark.ttf'), 32, FlxColor.WHITE, CENTER);
 		warnText.scrollFactor.set();
 		warnText.screenCenter();
 		add(warnText);
 
-		pressText = new FlxText(0, warnText.y - 20, 0, "Press ENTER to disable them now or go to Options Menu.\nPress ESCAPE to ignore this message.", 32);
-		pressText.setFormat(Paths.font('vcr.ttf'), 32, FlxColor.WHITE, CENTER);
+		pressText = new FlxText(0, warnText.y + warnText.height, 0, "Press ENTER to disable them now or go to Options Menu.\nPress ESCAPE to ignore this message.", 16);
+		pressText.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, CENTER);
 		pressText.scrollFactor.set();
 		pressText.screenCenter(X);
 		add(pressText);
@@ -45,6 +41,7 @@ class FlashingState extends MusicBeatState {
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					FlxTween.tween(warnText, {alpha: 0}, 1, {onComplete: (twn:FlxTween) -> MusicBeatState.switchState(new TitleState())});
 				}
+				FlxTween.tween(pressText, {alpha: 0}, 1);
 			}
 
 			if(pressText != null) {

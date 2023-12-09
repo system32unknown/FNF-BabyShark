@@ -157,10 +157,6 @@ class MainMenuState extends MusicBeatState {
 		FlxG.camera.followLerp = elapsed * 9 * (FlxG.updateFramerate / 60);
 		
 		if (!selectedSomethin && finishedFunnyMove) {
-			if (FlxG.keys.justPressed.E) {
-				MusicBeatState.switchState(new FlashingState());
-			}
-
 			if (controls.UI_UP_P || controls.UI_DOWN_P) {
 				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 				changeItem(controls.UI_UP_P ? -1 : 1);
