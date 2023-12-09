@@ -126,7 +126,7 @@ class PlayState extends MusicBeatState {
 	function set_health(HP:Float):Float {
 		if (health == HP) return HP;
 
-		health = Math.min(HP, (healthBar.bounds != null ? healthBar.bounds.max : 2));
+		health = FlxMath.bound(HP, 0, (healthBar.bounds != null ? healthBar.bounds.max : 2));
 		doDeathCheck();
 		return health;
 	}
