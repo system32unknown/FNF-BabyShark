@@ -11,8 +11,7 @@ import substates.ResetScoreSubState;
 import substates.GameplayChangersSubstate;
 import substates.FreeplaySectionSubstate;
 
-class FreeplayState extends MusicBeatState
-{
+class FreeplayState extends MusicBeatState {
 	var songs:Array<SongMetadata> = [];
 
 	static var curSelected:Int = 0;

@@ -62,7 +62,7 @@ class MainMenuState extends MusicBeatState {
 		bg.screenCenter();
 		bg.color = 0xFFFDE871;
 		add(bg);
-
+		
 		magenta = new FlxSprite(-80, Paths.image('menuDesat'));
 		magenta.antialiasing = ClientPrefs.getPref('Antialiasing');
 		magenta.scrollFactor.set();
@@ -157,14 +157,24 @@ class MainMenuState extends MusicBeatState {
 		FlxG.camera.followLerp = elapsed * 9 * (FlxG.updateFramerate / 60);
 		
 		if (!selectedSomethin && finishedFunnyMove) {
+			if (FlxG.keys.justPressed.E) {
+				MusicBeatState.switchState(new FlashingState());
+			}
+
 			if (controls.UI_UP_P || controls.UI_DOWN_P) {
 				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 				changeItem(controls.UI_UP_P ? -1 : 1);
 			}
 
-			if(FlxG.mouse.wheel != 0) {
-				FlxG.sound.play(Paths.sound('scrollMenu'), .4);
-				changeItem(-FlxG.mouse.wheel);
+			for (item in menuItems.members) {
+				final itemIndex:Int = menuItems.members.indexOf(item);
+
+				if (FlxG.mouse.overlaps(item) && curSelected != itemIndex) {
+					curSelected = itemIndex;
+					FlxG.sound.play(Paths.sound('scrollMenu'));
+					changeItem();
+					break;
+				}
 			}
 
 			if (controls.BACK) {
@@ -173,7 +183,7 @@ class MainMenuState extends MusicBeatState {
 				MusicBeatState.switchState(new TitleState());
 			}
 
-			if (controls.ACCEPT) {
+			if (controls.ACCEPT || (FlxG.mouse.overlaps(menuItems.members[curSelected]) && FlxG.mouse.justPressed)) {
 				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('confirmMenu'), .7);
 

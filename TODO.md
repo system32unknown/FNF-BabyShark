@@ -5,3 +5,4 @@
 - [] Remake Charcter / New Charcters
 - [] New Main Menu / Freeplay Menu
 - [] Some Songs / Charts
+- [] Get Character Vocals
