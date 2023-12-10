@@ -23,11 +23,14 @@ class FreeplayState extends MusicBeatState {
 	var scoreText:FlxText;
 	var comboText:FlxText;
 	var diffText:FlxText;
+	var infoText:FlxText;
 	var lerpScore:Int = 0;
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
 	var intendedcombo:String = '';
+
+	var songLengthStr:String = '00:00';
 
 	var grpSongs:FlxTypedGroup<Alphabet>;
 	var iconArray:Array<HealthIcon> = [];
@@ -130,9 +133,14 @@ class FreeplayState extends MusicBeatState {
 		comboText = new FlxText(scoreText.x, -80, 0, "", 24);
 		comboText.font = diffText.font;
 
+		infoText = new FlxText(0, -60, 0, "", 24);
+		infoText.font = comboText.font;
+		infoText.alignment = RIGHT;
+
 		add(diffText);
 		add(scoreText);
 		add(comboText);
+		add(infoText);
 
 		if(curSelected >= songs.length) curSelected = 0;
 		bg.color = songs[curSelected].color;
@@ -143,24 +151,22 @@ class FreeplayState extends MusicBeatState {
 
 		changeSelection();
 
-		bottomBG = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 32, 0x7F000000);
-		add(bottomBG);
-		bottomBG.scrollFactor.set();
-
 		final leTextSplit:Array<String> = [
 			"[SPACE] - Listen to the Song / [CTRL] - Gameplay Changers Menu",
 			"[COMMA] - Change Sections / [RESET] - Reset Score and Accuracy"
 		];
-		bottomText = new FlxText(bottomBG.x, bottomBG.y / 2, FlxG.width, '${leTextSplit[0]}\n${leTextSplit[1]}', 18);
+		bottomText = new FlxText(0, 0, FlxG.width, '${leTextSplit[0]}\n${leTextSplit[1]}', 18);
 		bottomText.setFormat(Paths.font("babyshark.ttf"), 18, FlxColor.WHITE, CENTER);
 		bottomText.scrollFactor.set();
 		bottomText.y = FlxG.height - bottomText.height;
 		add(bottomText);
 
-		bottomBG.height = bottomText.height;
+		bottomBG = new FlxSprite().makeGraphic(FlxG.width, Std.int(bottomText.height), 0x7F000000);
+		bottomBG.scrollFactor.set();
 		bottomBG.y = FlxG.height - bottomBG.height;
+		insert(members.indexOf(bottomText), bottomBG);
 		
-		var scoreStuff:Array<Array<haxe.extern.EitherType<FlxSprite, Float>>> = [[scoreBG, 25], [scoreText, 20], [comboText, 45], [diffText, 66]];
+		var scoreStuff:Array<Array<haxe.extern.EitherType<FlxSprite, Float>>> = [[scoreBG, 25], [scoreText, 20], [infoText, 20], [comboText, 45], [diffText, 66]];
 		for (arr in scoreStuff) FlxTween.tween(arr[0], {y: arr[1]}, .5, {ease: FlxEase.expoInOut});
 
 		errorDisplay = new ErrorDisplay();
@@ -204,7 +210,9 @@ class FreeplayState extends MusicBeatState {
 
 		comboText.text = 'Rating: $intendedcombo';
 		scoreText.text = 'PERSONAL BEST: $lerpScore (' + ratingSplit.join('.') + '%)';
-		
+		infoText.text = 'Song Length: $songLengthStr';
+		infoText.x = FlxG.width - infoText.width;
+
 		var shiftMult:Int = 1;
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
@@ -229,7 +237,7 @@ class FreeplayState extends MusicBeatState {
 				holdTime += elapsed;
 				var checkNewHold:Int = Math.floor((holdTime - .5) * 10);
 				
-				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+				if(holdTime > .5 && checkNewHold - checkLastHold > 0)
 					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 			}
 
@@ -274,7 +282,9 @@ class FreeplayState extends MusicBeatState {
 					else vocals = new FlxSound();
 					FlxG.sound.list.add(vocals);
 	
-					FlxG.sound.music.loadEmbedded(Paths.inst(PlayState.SONG.song, true), false);
+					var instFile = Paths.inst(PlayState.SONG.song, true);
+					songLengthStr = flixel.util.FlxStringUtil.formatTime(instFile.length / 1000);
+					FlxG.sound.music.loadEmbedded(instFile, false);
 					FlxG.sound.music.onComplete = function() {
 						if (vocals == null) {
 							FlxG.sound.music.onComplete = null;
@@ -400,7 +410,6 @@ class FreeplayState extends MusicBeatState {
 		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
 		intendedcombo = Highscore.getCombo(songs[curSelected].songName, curDifficulty);
 	}
-
 
 	inline function _updateSongLastDifficulty() {
 		songs[curSelected].lastDifficulty = Difficulty.getString(curDifficulty);

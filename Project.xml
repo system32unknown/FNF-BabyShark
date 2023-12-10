@@ -3,7 +3,7 @@
 	<!-- _________________________Application Settings_________________________ -->
 	<app title="Baby Shark's Funkin: The Full Game" file="AlterEngine" version="0.1.0" company="Altertoriel"/>
 	<app packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark"/>
-	<app main="Main" preloader="flixel.system.FlxPreloader"/>
+	<app main="Main" preloader="backend.FunkinPreloader"/>
 
 	<!-- NOTE TO SELF: DISABLE THIS IF ISSUES ARE FOUND -->
 	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB"/> <!-- stable luas PUT AFTER FIRST LINE WITH APP NAME AND ETC -->
