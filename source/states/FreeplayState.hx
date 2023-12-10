@@ -143,7 +143,7 @@ class FreeplayState extends MusicBeatState {
 
 		changeSelection();
 
-		bottomBG = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 32, 0x7F000000);
+		bottomBG = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 32, 0x7F000000);
 		add(bottomBG);
 		bottomBG.scrollFactor.set();
 
@@ -160,10 +160,8 @@ class FreeplayState extends MusicBeatState {
 		bottomBG.height = bottomText.height;
 		bottomBG.y = FlxG.height - bottomBG.height;
 		
-		FlxTween.tween(scoreBG, {y: 25}, .5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(scoreText, {y: 20}, .5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(comboText, {y: 45}, .5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(diffText, {y: 66}, .5, {ease: FlxEase.expoInOut});
+		var scoreStuff:Array<Array<haxe.extern.EitherType<FlxSprite, Float>>> = [[scoreBG, 25], [scoreText, 20], [comboText, 45], [diffText, 66]];
+		for (arr in scoreStuff) FlxTween.tween(arr[0], {y: arr[1]}, .5, {ease: FlxEase.expoInOut});
 
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
@@ -191,32 +189,22 @@ class FreeplayState extends MusicBeatState {
 	public static var vocals:FlxSound = null;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music != null)
-			Conductor.songPosition = FlxG.sound.music.time;
-
-		if (FlxG.sound.music.volume < .7)
-			FlxG.sound.music.volume += .5 * elapsed;
+		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
+		if (FlxG.sound.music.volume < .7) FlxG.sound.music.volume += .5 * elapsed;
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, FlxMath.bound(elapsed * 24, 0, 1)));
 		lerpRating = FlxMath.lerp(lerpRating, intendedRating, FlxMath.bound(elapsed * 12, 0, 1));
 
-		if (Math.abs(lerpScore - intendedScore) <= 10)
-			lerpScore = intendedScore;
-		if (Math.abs(lerpRating - intendedRating) <= 0.01)
-			lerpRating = intendedRating;
+		if (Math.abs(lerpScore - intendedScore) <= 10) lerpScore = intendedScore;
+		if (Math.abs(lerpRating - intendedRating) <= .01) lerpRating = intendedRating;
 
 		var ratingSplit:Array<String> = Std.string(MathUtil.floorDecimal(lerpRating * 100, 2)).split('.');
-		if (ratingSplit.length < 2) { //No decimals, add an empty space
-			ratingSplit.push('');
-		}
-		
-		while (ratingSplit[1].length < 2) { //Less than 2 decimals in it, add decimals then
-			ratingSplit[1] += '0';
-		}
+		if (ratingSplit.length < 2)  ratingSplit.push(''); //No decimals, add an empty space
+		while (ratingSplit[1].length < 2) ratingSplit[1] += '0'; //Less than 2 decimals in it, add decimals then
 
 		comboText.text = 'Rating: $intendedcombo';
 		scoreText.text = 'PERSONAL BEST: $lerpScore (' + ratingSplit.join('.') + '%)';
-
+		
 		var shiftMult:Int = 1;
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 

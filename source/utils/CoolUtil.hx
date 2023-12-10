@@ -47,7 +47,7 @@ class CoolUtil {
 
 	inline public static function openFolder(folder:String, absolute:Bool = false) {
 		#if sys
-			if(!absolute) folder =  Sys.getCwd() + '$folder';
+			if(!absolute) folder = Sys.getCwd() + '$folder';
 
 			folder = folder.replace('/', '\\');
 			if(folder.endsWith('/')) folder.substr(0, folder.length - 1);

@@ -73,7 +73,7 @@ class PlatformUtil {
         POINT mousePos;
         if (!GetCursorPos(&mousePos)) return 0;
     ')
-    static public function getMousePos():flixel.math.FlxPoint return flixel.math.FlxPoint.get(untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y"));
+    static public function getMousePos():flixel.math.FlxPoint return flixel.math.FlxPoint.weak(untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y"));
 
     @:functionCode('
         int darkMode = enable ? 1 : 0;

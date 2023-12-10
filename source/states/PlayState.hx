@@ -2675,6 +2675,8 @@ class PlayState extends MusicBeatState {
 		}
 		for (_ => save in modchartSaves) save.close();
 
+		for (point in [campoint, camlockpoint, ratingAcc, ratingVel]) point = flixel.util.FlxDestroyUtil.put(point);
+
 		@:privateAccess
 		if (Std.isOfType(FlxG.game._requestedState, PlayState))
 			if (FlxG.sound.music != null) FlxG.sound.music.destroy();

@@ -475,15 +475,13 @@ class CreditsEditor extends MusicBeatState {
 		else curSelIsTitle = false;
 
 		var newColor:Int;
-		if(unselectableCheck(curSelected)) newColor =  Std.parseInt('0xFFe1e1e1');
-		else newColor =  getCurrentBGColor();
+		if(unselectableCheck(curSelected)) newColor = Std.parseInt('0xFFe1e1e1');
+		else newColor = getCurrentBGColor();
 
 		if(newColor != intendedColor) {
 			if(colorTween != null) colorTween.cancel();
 			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
-				onComplete: (twn:FlxTween) -> colorTween = null
-			});
+			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {onComplete: (twn:FlxTween) -> colorTween = null});
 		}
 
 		var bullShit:Int = 0;

@@ -63,7 +63,7 @@ class MainMenuState extends MusicBeatState {
 		bg.color = 0xFFFDE871;
 		add(bg);
 		
-		magenta = new FlxSprite(-80, Paths.image('menuDesat'));
+		magenta = new FlxSprite(-80, bg.graphic);
 		magenta.antialiasing = ClientPrefs.getPref('Antialiasing');
 		magenta.scrollFactor.set();
 		magenta.active = false;

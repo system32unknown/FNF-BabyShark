@@ -12,9 +12,12 @@ class CreditsPopUp extends FlxSpriteGroup {
 	public var bg:FlxSprite;
 	public var funnyText:FlxText;
 
-	public function new(x:Float, y:Float, text:String, songHead:SongHeading) {
+	var txtFont:String;
+
+	public function new(x:Float, y:Float, text:String, songHead:SongHeading, font:String = 'Comic Sans MS Bold') {
 		super(x, y);
 		add(bg = new FlxSprite().makeGraphic(400, 50, FlxColor.WHITE));
+		txtFont = font;
 		
 		var headingPath:SongHeading = songHead;
 		if (headingPath != null) {
@@ -62,7 +65,7 @@ class CreditsPopUp extends FlxSpriteGroup {
 	function createHeadingText(text:String) {
 		if (funnyText != null) remove(funnyText);
 		funnyText = new FlxText(1, 0, 650, text, 30);
-		funnyText.setFormat('Comic Sans MS Bold', 30, FlxColor.WHITE, LEFT);
+		funnyText.setFormat(txtFont, 30, FlxColor.WHITE, LEFT);
         funnyText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
 		funnyText.antialiasing = true;
 		add(funnyText);

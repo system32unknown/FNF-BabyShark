@@ -174,8 +174,7 @@ class Paths {
 		return '$library:assets/$level/$file';
 	}
 
-	inline public static function getPreloadPath(file:String = '')
-		return 'assets/$file';
+	inline public static function getPreloadPath(file:String = '') return 'assets/$file';
 
 	inline static public function txt(key:String, ?library:String)
 		return getPath('data/$key.txt', TEXT, library);
