@@ -2,6 +2,7 @@ package states;
 
 import data.WeekData;
 import utils.MathUtil;
+import utils.FlxInterpolateColor;
 import backend.Highscore;
 import backend.Song;
 import objects.HealthIcon;
@@ -23,21 +24,17 @@ class FreeplayState extends MusicBeatState {
 	var scoreText:FlxText;
 	var comboText:FlxText;
 	var diffText:FlxText;
-	var infoText:FlxText;
 	var lerpScore:Int = 0;
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
 	var intendedcombo:String = '';
 
-	var songLengthStr:String = '00:00';
-
 	var grpSongs:FlxTypedGroup<Alphabet>;
 	var iconArray:Array<HealthIcon> = [];
+	public var interpColor:FlxInterpolateColor;
 
 	var bg:FlxSprite;
-	var intendedColor:Int;
-	var colorTween:FlxTween;
 
 	var bottomText:FlxText;
 	var bottomBG:FlxSprite;
@@ -133,18 +130,11 @@ class FreeplayState extends MusicBeatState {
 		comboText = new FlxText(scoreText.x, -80, 0, "", 24);
 		comboText.font = diffText.font;
 
-		infoText = new FlxText(0, -60, 0, "", 24);
-		infoText.font = comboText.font;
-		infoText.alignment = RIGHT;
-
 		add(diffText);
 		add(scoreText);
 		add(comboText);
-		add(infoText);
 
 		if(curSelected >= songs.length) curSelected = 0;
-		bg.color = songs[curSelected].color;
-		intendedColor = bg.color;
 		lerpSelected = curSelected;
 
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
@@ -166,13 +156,14 @@ class FreeplayState extends MusicBeatState {
 		bottomBG.y = FlxG.height - bottomBG.height;
 		insert(members.indexOf(bottomText), bottomBG);
 		
-		var scoreStuff:Array<Array<haxe.extern.EitherType<FlxSprite, Float>>> = [[scoreBG, 25], [scoreText, 20], [infoText, 20], [comboText, 45], [diffText, 66]];
+		var scoreStuff:Array<Array<haxe.extern.EitherType<FlxSprite, Float>>> = [[scoreBG, 25], [scoreText, 20], [comboText, 45], [diffText, 66]];
 		for (arr in scoreStuff) FlxTween.tween(arr[0], {y: arr[1]}, .5, {ease: FlxEase.expoInOut});
 
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
 		updateTexts();
+		interpColor = new FlxInterpolateColor(bg.color);
 		super.create();
 	}
 
@@ -210,8 +201,9 @@ class FreeplayState extends MusicBeatState {
 
 		comboText.text = 'Rating: $intendedcombo';
 		scoreText.text = 'PERSONAL BEST: $lerpScore (' + ratingSplit.join('.') + '%)';
-		infoText.text = 'Song Length: $songLengthStr';
-		infoText.x = FlxG.width - infoText.width;
+
+		interpColor.fpsLerpTo(songs[curSelected].color, .0625);
+		bg.color = interpColor.color;
 
 		var shiftMult:Int = 1;
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
@@ -255,7 +247,6 @@ class FreeplayState extends MusicBeatState {
 
 		if (controls.BACK) {
 			persistentUpdate = false;
-			if(colorTween != null) colorTween.cancel();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			MusicBeatState.switchState(new MainMenuState());
 		}
@@ -282,9 +273,7 @@ class FreeplayState extends MusicBeatState {
 					else vocals = new FlxSound();
 					FlxG.sound.list.add(vocals);
 	
-					var instFile = Paths.inst(PlayState.SONG.song, true);
-					songLengthStr = flixel.util.FlxStringUtil.formatTime(instFile.length / 1000);
-					FlxG.sound.music.loadEmbedded(instFile, false);
+					FlxG.sound.music.loadEmbedded(Paths.inst(PlayState.SONG.song, true), false);
 					FlxG.sound.music.onComplete = function() {
 						if (vocals == null) {
 							FlxG.sound.music.onComplete = null;
@@ -323,8 +312,6 @@ class FreeplayState extends MusicBeatState {
 				persistentUpdate = false;
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
-
-				if(colorTween != null) colorTween.cancel();
 
 				LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new ChartingState() : new PlayState());
 				FlxG.sound.music.volume = 0;
@@ -377,13 +364,6 @@ class FreeplayState extends MusicBeatState {
 
 		var lastList:Array<String> = Difficulty.list;
 		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length - 1);
-			
-		var newColor:Int = songs[curSelected].color;
-		if(newColor != intendedColor) {
-			if(colorTween != null) colorTween.cancel();
-			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {onComplete: (twn:FlxTween) -> colorTween = null});
-		}
 
 		for (i in 0...iconArray.length) iconArray[i].alpha = (i == curSelected ? 1 : .6);
 		for (item in grpSongs.members) item.alpha = (item.targetY == curSelected ? 1 : .6);

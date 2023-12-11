@@ -45,6 +45,8 @@ class FPSCounter extends TextField {
 		visible = ClientPrefs.getPref('showFPS');
 		fpsManager.update();
 
+		if (memory > mempeak) mempeak = memory;
+
 		updateText(dt);
 		deltaTimeout += dt;
 		super.__enterFrame(Std.int(dt));
@@ -58,12 +60,9 @@ class FPSCounter extends TextField {
 
 		text = '${fpsManager.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / fpsManager.currentCount) * 1000)}ms]' : ''}\n';
 		if (memType == "MEM" || memType == "MEM/PEAK")
-			text += '${MemoryUtil.getInterval(memory)}' + (memType == "MEM/PEAK" ? ' / ${MemoryUtil.getInterval(mempeak)}' : '');
+			text += '${flixel.util.FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? ' / ${flixel.util.FlxStringUtil.formatBytes(mempeak)}' : '');
 	}
 
-	inline function get_memory():Float {
-		var mem:Float = MemoryUtil.getGCMEM();
-		if (mem > mempeak) mempeak = mem;
-		return mem;
-	}
+	inline function get_memory():Float
+		return MemoryUtil.getGCMEM();
 }

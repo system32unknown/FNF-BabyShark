@@ -32,7 +32,6 @@ class FPSUtil {
 		return FlxMath.lerp(v1, v2, getFPSAdjust('codename', ratio));
 	}
 
-	public function checkFPSLag() {
-		return currentFPS <= ClientPrefs.getPref('framerate') / 2;
-	}
+	public function checkFPSLag()
+		return currentFPS < FlxG.drawFramerate * .5;
 }

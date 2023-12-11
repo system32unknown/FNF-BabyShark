@@ -125,6 +125,7 @@ class HScript extends Interp {
 	
 	function preset() {
 		parser = new Parser();
+		allowStaticVariables = allowPublicVariables = true;
 		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
 		parser.preprocesorValues = getDefaultPreprocessors();
 		scriptObject = PlayState.instance; // allow use vars from playstate without "game" thing
@@ -138,7 +139,7 @@ class HScript extends Interp {
 		setVar('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> PlayState.instance.addTextToDebug(text, color));
 
 		//Macro Functions
-		setVar('nameOf', (v:Dynamic) -> macros.MacroFunctions.nameOf(v));
+		#if macro setVar('nameOf', (v:Dynamic) -> macros.MacroFunctions.nameOf(v)); #end
 
 		// For adding your own callbacks
 

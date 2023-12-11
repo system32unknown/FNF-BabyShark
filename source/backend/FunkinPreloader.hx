@@ -99,8 +99,8 @@ class FunkinPreloader extends FlxBasePreloader {
 		var _sprite = new Sprite();
         _sprite.addChild(new Bitmap(bitmap));
         _sprite.scaleX = _sprite.scaleY = scale;
-        _sprite.x = ((this._width / 2) - (_sprite.width / 2)) - x;
-        _sprite.y = ((this._height / 2) - (_sprite.height / 2)) - y;
+        _sprite.x = (this._width - _sprite.width) / 2 - x;
+        _sprite.y = (this._height - _sprite.height) / 2 - y;
         return _sprite;
 	}
 

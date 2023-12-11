@@ -17,31 +17,11 @@ class MemoryUtil {
 		if (!minor) Gc.compact();
 		#elseif hl
 		Gc.major();
-		#elseif (java || neko)
-		Gc.run(true);
 		#end
-	}
-
-	public static function getInterval(num:Float):String {
-		final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
-		
-		var size:Float = num;
-		var data = 0;
-		while (size > 1024 && data < intervalArray.length - 1) {
-			data++;
-			size /= 1024;
-		}
-
-		size = Math.round(size * 100) / 100;
-		return '$size ${intervalArray[data]}';
 	}
 
 	inline public static function getMEM():Dynamic {
-		#if cpp
-		return getTotalMEM();
-		#else
-		return 0;
-		#end
+		return #if cpp getTotalMEM() #else 0 #end;
 	}
 
 	public static function getGCMEM():Float {
