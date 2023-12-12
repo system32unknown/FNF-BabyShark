@@ -85,8 +85,8 @@ class TitleState extends MusicBeatState {
 		gf = new FlxSprite(titleJson.gfx, titleJson.gfy);
 		gf.antialiasing = ClientPrefs.getPref('Antialiasing');
 		gf.frames = Paths.getSparrowAtlas('gfDanceTitle');
-		gf.animation.addByIndices('left', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-		gf.animation.addByIndices('right', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+		gf.animation.addByIndices('left', 'gfDance', [30].concat([for (i in 0...15) i]), "", 24, false);
+		gf.animation.addByIndices('right', 'gfDance', [for (i in 15...30) i], "", 24, false);
 		gf.animation.play('right');
 		gf.alpha = .0001;
 		add(gf);

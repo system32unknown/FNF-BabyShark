@@ -2,7 +2,6 @@ package psychlua;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.math.FlxPoint;
 import flixel.addons.transition.FlxTransitionableState;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
@@ -235,7 +234,7 @@ class FunkinLua {
 			FlxG.camera.followLerp = 0;
 		});
 
-		set("loadGraphic", function( variable:String, image:String, ?gridX:Int = 0, ?gridY:Int = 0) {
+		set("loadGraphic", function(variable:String, image:String, ?gridX:Int = 0, ?gridY:Int = 0) {
 			var spr:FlxSprite = LuaUtils.getVarInstance(variable);
 
 			if (spr == null || image == null || image.length <= 0) return false;
@@ -244,7 +243,7 @@ class FunkinLua {
 			spr.loadGraphic(Paths.image(image), animated, gridX, gridY);
 			return true;
 		});
-		set("loadFrames", function( variable:String, image:String, spriteType:String = "sparrow") {
+		set("loadFrames", function(variable:String, image:String, spriteType:String = "sparrow") {
 			var spr:FlxSprite = LuaUtils.getVarInstance(variable);
 			if (spr == null || image == null || image.length <= 0) return false;
 
@@ -431,7 +430,7 @@ class FunkinLua {
 
 		set("addCharacterToList", function(name:String, type:String) {
 			game.addCharacterToList(name, switch(type.toLowerCase()) {
-				case 'dad': 1;
+				case 'dad' | 'opponent': 1;
 				case 'gf' | 'girlfriend': 2;
 				default: 0;
 			});
@@ -440,18 +439,14 @@ class FunkinLua {
 		set("precacheSound", Paths.sound);
 		set("precacheMusic", Paths.music);
 
-		set("triggerEvent", function(name:String, arg1:Dynamic, arg2:Dynamic) {
-			var value1:String = arg1;
-			var value2:String = arg2;
-			game.triggerEvent(name, value1, value2);
-			return true;
+		set("triggerEvent", function(name:String, arg1:Any, arg2:Any) {
+			game.triggerEvent(name, arg1, arg2);
 		});
 
 		set("startCountdown", game.startCountdown);
 		set("endSong", () -> {
 			game.KillNotes();
-			game.endSong();
-			return true;
+			return game.endSong();
 		});
 		set("restartSong", function(?skipTransition:Bool = false) {
 			game.persistentUpdate = false;
@@ -493,7 +488,7 @@ class FunkinLua {
 			}
 		});
 		set("setCharacterX", function(type:String, value:Float) {
-			switch(type.toLowerCase()) {
+			return switch(type.toLowerCase()) {
 				case 'dad' | 'opponent': game.dadGroup.x = value;
 				case 'gf' | 'girlfriend': game.gfGroup.x = value;
 				default: game.boyfriendGroup.x = value;
@@ -507,7 +502,7 @@ class FunkinLua {
 			}
 		});
 		set("setCharacterY", function(type:String, value:Float) {
-			switch(type.toLowerCase()) {
+			return switch(type.toLowerCase()) {
 				case 'dad' | 'opponent': game.dadGroup.y = value;
 				case 'gf' | 'girlfriend': game.gfGroup.y = value;
 				default: game.boyfriendGroup.y = value;
@@ -528,22 +523,22 @@ class FunkinLua {
 		set("cameraFlash", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).flash(CoolUtil.colorFromString(color), duration * game.playbackRate, null, forced));
 		set("cameraFade", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).fade(CoolUtil.colorFromString(color), duration * game.playbackRate, false, null, forced));
 
-		set("setRatingPercent", (value:Float) -> game.ratingPercent = value);
-		set("setRatingName", (value:String) -> game.ratingName = value);
-		set("setRatingFC", (value:String) -> game.ratingFC = value);
+		set("setRatingPercent", (value:Float) -> return game.ratingPercent = value);
+		set("setRatingName", (value:String) -> return game.ratingName = value);
+		set("setRatingFC", (value:String) -> return game.ratingFC = value);
 
-		set("getMouseX", (camera:String) -> return getMousePoint(camera, 'x'));
-		set("getMouseY", (camera:String) -> return getMousePoint(camera, 'y'));
-		set("getMidpointX", (variable:String) -> return getPoint(variable, 'midpoint', 'x'));
-		set("getMidpointY", (variable:String) -> return getPoint(variable, 'midpoint', 'y'));
-		set("getGraphicMidpointX", (variable:String) -> return getPoint(variable, 'graphic', 'x'));
-		set("getGraphicMidpointY", (variable:String) -> return getPoint(variable, 'graphic', 'y'));
-		set("getScreenPositionX", (variable:String, ?camera:String) -> return getPoint(variable, 'screen', 'x', camera));
-		set("getScreenPositionY", (variable:String, ?camera:String) -> return getPoint(variable, 'screen', 'y', camera));
+		set("getMouseX", (camera:String) -> return LuaUtils.getMousePoint(camera, 'x'));
+		set("getMouseY", (camera:String) -> return LuaUtils.getMousePoint(camera, 'y'));
+		set("getMidpointX", (variable:String) -> return LuaUtils.getPoint(variable, 'midpoint', 'x'));
+		set("getMidpointY", (variable:String) -> return LuaUtils.getPoint(variable, 'midpoint', 'y'));
+		set("getGraphicMidpointX", (variable:String) -> return LuaUtils.getPoint(variable, 'graphic', 'x'));
+		set("getGraphicMidpointY", (variable:String) -> return LuaUtils.getPoint(variable, 'graphic', 'y'));
+		set("getScreenPositionX", (variable:String, ?camera:String) -> return LuaUtils.getPoint(variable, 'screen', 'x', camera));
+		set("getScreenPositionY", (variable:String, ?camera:String) -> return LuaUtils.getPoint(variable, 'screen', 'y', camera));
 
 		set("characterDance", function(character:String, force:Bool = false) {
 			switch(character.toLowerCase()) {
-				case 'dad': game.dad.dance(force);
+				case 'dad' | 'opponent': game.dad.dance(force);
 				case 'gf' | 'girlfriend': if(game.gf != null) game.gf.dance(force);
 				default: game.boyfriend.dance(force);
 			}
@@ -812,20 +807,8 @@ class FunkinLua {
 		set("luaTextExists", game.modchartTexts.exists);
 		set("luaSoundExists", game.modchartSounds.exists);
 
-		set("setHealthBarColors", function(left:String, right:String) {
-			var left_color:Null<FlxColor> = null;
-			var right_color:Null<FlxColor> = null;
-			if (left != null && left != '') left_color = CoolUtil.colorFromString(left);
-			if (right != null && right != '') right_color = CoolUtil.colorFromString(right);
-			game.healthBar.setColors(left_color, right_color);
-		});
-		set("setTimeBarColors", function(left:String, right:String) {
-			var left_color:Null<FlxColor> = null;
-			var right_color:Null<FlxColor> = null;
-			if (left != null && left != '') left_color = CoolUtil.colorFromString(left);
-			if (right != null && right != '') right_color = CoolUtil.colorFromString(right);
-			game.timeBar.setColors(left_color, right_color);
-		});
+		set("setHealthBarColors", (left:String, right:String) -> LuaUtils.setBarColors(game.healthBar, left, right));
+		set("setTimeBarColors", (left:String, right:String) -> LuaUtils.setBarColors(game.timeBar, left, right));
 
 		set("setObjectCamera", function(obj:String, camera:String = '') {
 			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
@@ -961,13 +944,10 @@ class FunkinLua {
 		DeprecatedFunctions.implement(this);
 		SoundFunctions.implement(this);
 		try {
-			var isString:Bool = !FileSystem.exists(scriptName);
-			var result:Dynamic = null;
-			if(!isString)
-				result = LuaL.dofile(lua, scriptName);
-			else result = LuaL.dostring(lua, scriptName);
+			final isString:Bool = !FileSystem.exists(scriptName);
+			final result:Dynamic = (!isString ? LuaL.dofile(lua, scriptName) : LuaL.dostring(lua, scriptName));
 
-			var resultStr:String = Lua.tostring(lua, result);
+			final resultStr:String = Lua.tostring(lua, result);
 			if(resultStr != null && result != 0) {
 				Logs.trace(resultStr, ERROR);
 				#if windows
@@ -1136,9 +1116,8 @@ class FunkinLua {
 		var lua:State = lastCalledScript.lua;
 		if(lua == null) return false;
 
-		var result:String = null;
 		Lua.getglobal(lua, variable);
-		result = Convert.fromLua(lua, -1);
+		final result:String = Convert.fromLua(lua, -1);
 		Lua.pop(lua, 1);
 
 		if(result == null) return false;
@@ -1181,31 +1160,6 @@ class FunkinLua {
 		#else
 		return null;
 		#end
-	}
-
-	var _lePoint:FlxPoint = FlxPoint.get();
-
-	function getMousePoint(camera:String, axis:String):Float {
-		FlxG.mouse.getScreenPosition(LuaUtils.cameraFromString(camera), _lePoint);
-		return (axis == 'y' ? _lePoint.y : _lePoint.x);
-	}
-
-	function getPoint(leVar:String, type:String, axis:String, ?camera:String):Float {
-		final split:Array<String> = leVar.split('.');
-		var obj:FlxSprite = null;
-		if (split.length > 1)
-			obj = LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split), split[split.length - 1]);
-		else obj = LuaUtils.getObjectDirectly(split[0]);
-
-		if (obj != null) {
-			switch(type) {
-				case 'graphic': obj.getGraphicMidpoint(_lePoint);
-				case 'screen': obj.getScreenPosition(_lePoint, LuaUtils.cameraFromString(camera));
-				default: obj.getMidpoint(_lePoint);
-			}
-			return (axis == 'y' ? _lePoint.y : _lePoint.x);
-		}
-		return 0;
 	}
 
 	public var lastCalledFunction:String = '';
@@ -1269,7 +1223,6 @@ class FunkinLua {
 	public function stop() {
 		#if LUA_ALLOWED
 		PlayState.instance.luaArray.remove(this);
-		_lePoint = flixel.util.FlxDestroyUtil.put(_lePoint);
 		closed = true;
 
 		if (lua == null) return;

@@ -36,9 +36,9 @@ class School extends BaseStage
 
 		var bgTrees:FlxSprite = new FlxSprite(repositionShit - 380, -800);
 		bgTrees.frames = Paths.getPackerAtlas('weeb/weebTrees');
-		bgTrees.animation.add('treeLoop', CoolUtil.numberArray(18), 12);
+		bgTrees.animation.add('treeLoop', [for (i in 0...18) i], 12);
 		bgTrees.animation.play('treeLoop');
-		bgTrees.scrollFactor.set(0.85, 0.85);
+		bgTrees.scrollFactor.set(.85, .85);
 		add(bgTrees);
 		bgTrees.antialiasing = false;
 

@@ -202,7 +202,7 @@ class CharacterEditorState extends MusicBeatState {
 			var widShit = Std.int(bgSky.width * 6);
 			var bgTrees:FlxSprite = new FlxSprite(repositionShit - 380, -800 - playerYDifference);
 			bgTrees.frames = Paths.getPackerAtlas('weeb/weebTrees');
-			bgTrees.animation.add('treeLoop', CoolUtil.numberArray(18), 12);
+			bgTrees.animation.add('treeLoop', [for (i in 0...18) i], 12);
 			bgTrees.animation.play('treeLoop');
 			bgTrees.scrollFactor.set(.85, .85);
 			bgLayer.add(bgTrees);

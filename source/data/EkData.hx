@@ -24,7 +24,7 @@ class EKData {
             "letters" => ["A", "B", "C", "D"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT"], 
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT"], 
-            "pixelAnimIndex" => CoolUtil.numberArray(5), 
+            "pixelAnimIndex" => [for (i in 0...5) i], 
         ],
 		4 => [
             "letters" => ["A", "B", "E", "C", "D"], 
@@ -54,7 +54,7 @@ class EKData {
             "letters" => ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
 			"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT"], 
-            "pixelAnimIndex" => CoolUtil.numberArray(9),
+            "pixelAnimIndex" => [for (i in 0...9) i],
         ],
 		9 => [
             "letters" => ["A", "B", "C", "D", "E", "J", "F", "G", "H", "I"],
@@ -108,7 +108,7 @@ class EKData {
             "letters" => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "PLUS", "RLEFT", "RDOWN", "RUP", "RRIGHT"], 
-            "pixelAnimIndex" => CoolUtil.numberArray(18)
+            "pixelAnimIndex" => [for (i in 0...18) i]
         ],
 	];
 }

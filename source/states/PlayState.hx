@@ -331,6 +331,7 @@ class PlayState extends MusicBeatState {
 		DAD_Y = stageData.opponent[1];
 
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+		grpNoteSplashes.ID = 0;
 
 		if(stageData.camera_speed != null) cameraSpeed = stageData.camera_speed;
 		if(isPixelStage) introSoundsSuffix = '-pixel';
@@ -414,6 +415,7 @@ class PlayState extends MusicBeatState {
 		uiGroup = new FlxSpriteGroup();
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		comboGroup = new FlxSpriteGroup();
+		comboGroup.ID = 0;
 		noteGroup = new FlxTypedGroup<FlxBasic>();
 
 		Conductor.songPosition = -5000 / Conductor.songPosition;
@@ -2206,8 +2208,8 @@ class PlayState extends MusicBeatState {
 			rating.antialiasing = antialias;
 			rating.setGraphicSize(rating.width * mult);
 			rating.updateHitbox();
+			rating.ID = comboGroup.ID++;
 	
-			comboGroup.remove(rating, true); // (stupidly) fixes sprite layering
 			comboGroup.add(rating);
 			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
@@ -2223,9 +2225,9 @@ class PlayState extends MusicBeatState {
 			comboSpr.antialiasing = antialias;
 			comboSpr.setGraphicSize(comboSpr.width * mult);
 			comboSpr.updateHitbox();
-			comboGroup.remove(comboSpr, true);
-			comboGroup.add(comboSpr);
+			comboSpr.ID = comboGroup.ID++;
 
+			comboGroup.add(comboSpr);
 			FlxTween.tween(comboSpr, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {comboSpr.kill(); comboSpr.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 		}
 
@@ -2240,8 +2242,8 @@ class PlayState extends MusicBeatState {
 			timing.antialiasing = antialias;
 			timing.setGraphicSize(timing.width * mult);
 			timing.updateHitbox();
+			timing.ID = comboGroup.ID++;
 
-			comboGroup.remove(timing, true);
 			comboGroup.add(timing);
 			FlxTween.tween(timing, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {timing.kill(); timing.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
@@ -2252,13 +2254,12 @@ class PlayState extends MusicBeatState {
 			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 			mstimingTxt.text = '${msTiming}ms';
 			mstimingTxt.color = SpriteUtil.dominantColor(rating);
-			comboGroup.add(mstimingTxt);
-		}
-	
-		if (ClientPrefs.getPref('ShowMsTiming')) {
+
 			var comboShowSpr:FlxSprite = (showCombo && combo >= 10 ? comboSpr : rating);
 			mstimingTxt.setPosition(comboShowSpr.x + 100, comboShowSpr.y + (showCombo && combo >= 10 ? 80 : 100));
 			mstimingTxt.updateHitbox();
+			mstimingTxt.ID = comboGroup.ID++;
+			comboGroup.add(mstimingTxt);
 		}
 	
 		if (showComboNum) {
@@ -2273,14 +2274,13 @@ class PlayState extends MusicBeatState {
 				numScore.screenCenter(Y).y += 80 - comboOffset[1][1];
 				numScore.x = placement + (43 * daLoop++) - 90 + comboOffset[1][0];
 			
-				numScore.setGraphicSize(numScore.width * numMult);
-				numScore.updateHitbox();
-			
 				numScore.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate + ratingAcc.y);
 				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate - ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
 				numScore.antialiasing = antialias;
+				numScore.setGraphicSize(numScore.width * numMult);
+				numScore.updateHitbox();
+				numScore.ID = comboGroup.ID++;
 
-				comboGroup.remove(numScore, true);
 				comboGroup.add(numScore);
 				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 			}
@@ -2293,6 +2293,7 @@ class PlayState extends MusicBeatState {
 			}
 			msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {startDelay: Conductor.crochet * .001 / playbackRate});
 		}
+		comboGroup.sort(CoolUtil.sortByID);
 	}
 
 	static function getNoteDiff(note:Note = null):Float {
@@ -2642,7 +2643,9 @@ class PlayState extends MusicBeatState {
 
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
 		splash.setupNoteSplash(x, y, data, hsb);
+		splash.ID = grpNoteSplashes.ID++;
 		grpNoteSplashes.add(splash);
+		grpNoteSplashes.sort(CoolUtil.sortByID);
 	}
 
 	public function charactersDance(beat:Int, force:Bool = false):Void {

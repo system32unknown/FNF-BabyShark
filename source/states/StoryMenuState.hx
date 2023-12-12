@@ -285,8 +285,7 @@ class StoryMenuState extends MusicBeatState
 
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
-	function changeWeek(change:Int = 0):Void
-	{
+	function changeWeek(change:Int = 0):Void {
 		curWeek = FlxMath.wrap(curWeek + change, 0, loadedWeeks.length - 1);
 
 		var leWeek:WeekData = loadedWeeks[curWeek];

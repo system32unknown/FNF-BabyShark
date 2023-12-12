@@ -1,5 +1,6 @@
 package utils;
 
+import flixel.FlxBasic;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
@@ -10,10 +11,6 @@ import utils.system.NativeUtil;
 
 class CoolUtil {
 	public static function saveFile(content:String, format:String, filedefault:String) {new FileReference().save(content, '$filedefault.$format');}
-	inline public static function quantize(f:Float, snap:Float) {
-		var m:Float = Math.fround(f * snap);
-		return (m / snap);
-	}
 
 	inline public static function capitalize(text:String) {
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
@@ -28,14 +25,12 @@ class CoolUtil {
 		#else
 		if(Assets.exists(path)) daList = Assets.getText(path);
 		#end
-		return daList != null ? listFromString(daList) : [];
+		return daList == null ? [] : listFromString(daList);
 	}
 	inline public static function listFromString(string:String):Array<String> {
 		final daList = string.trim().split('\n');
 		return [for(i in 0...daList.length) daList[i].trim()];
 	}
-
-	inline public static function numberArray(max:Int, ?min = 0):Array<Int> return [for (i in min...max) i];
 
 	inline public static function browserLoad(site:String) {
 		#if linux
@@ -66,6 +61,10 @@ class CoolUtil {
             temp_str += String.fromCharCode(FlxG.random.int(65, 122));
         return temp_str;
     }
+
+	inline public static function sortByID(i:Int, basic1:FlxBasic, basic2:FlxBasic):Int {
+		return basic1.ID > basic2.ID ? -i : basic2.ID > basic1.ID ? i : 0;
+	}
 
 	@:access(flixel.util.FlxSave.validate)
 	inline public static function getSavePath():String {

@@ -1,5 +1,9 @@
 package psychlua;
 
+import objects.Bar;
+import flixel.util.FlxAxes;
+import flixel.util.FlxStringUtil;
+import flixel.math.FlxPoint;
 import openfl.display.BlendMode;
 import animateatlas.AtlasFrameMaker;
 import substates.GameOverSubstate;
@@ -7,15 +11,15 @@ import substates.GameOverSubstate;
 typedef LuaTweenOptions = {
 	type:FlxTweenType,
 	startDelay:Float,
-	onUpdate:Null<String>,
-	onStart:Null<String>,
-	onComplete:Null<String>,
+	?onUpdate:String,
+	?onStart:String,
+	?onComplete:String,
 	loopDelay:Float,
 	ease:EaseFunction
 }
 
 class LuaUtils {
-	public static function getLuaTween(options:Dynamic) {
+	public static function getLuaTween(options:Dynamic):LuaTweenOptions {
 		return {
 			type: getTweenTypeByString(options.type),
 			startDelay: options.startDelay,
@@ -85,8 +89,7 @@ class LuaUtils {
 	}
 
 	public static function isMap(variable:Dynamic) {
-		if(variable.exists != null && variable.keyValueIterator != null) return true;
-		return false;
+		return (variable.exists != null && variable.keyValueIterator != null);
 	}
 
 	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
@@ -131,12 +134,11 @@ class LuaUtils {
 		return Reflect.getProperty(leArray, variable);
 	}
 
-	public static function getPropertyLoop(killMe:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic {
-		var obj:Dynamic = getObjectDirectly(killMe[0], checkForTextsToo);
-		var end = killMe.length;
-		if(getProperty) end = killMe.length - 1;
+	public static function getPropertyLoop(split:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic {
+		var obj:Dynamic = getObjectDirectly(split[0], checkForTextsToo);
+		final end = (getProperty ? split.length - 1 : split.length);
 
-		for (i in 1...end) obj = getVarInArray(obj, killMe[i]);
+		for (i in 1...end) obj = getVarInArray(obj, split[i]);
 		return obj;
 	}
 
@@ -158,6 +160,32 @@ class LuaUtils {
 	
 	public static inline function getInstance() {
 		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
+	}
+
+	static final _lePoint:FlxPoint = FlxPoint.get();
+
+	inline public static function getMousePoint(camera:String, axis:String):Float {
+		FlxG.mouse.getScreenPosition(cameraFromString(camera), _lePoint);
+		return (axis == 'y' ? _lePoint.y : _lePoint.x);
+	}
+
+	inline public static function getPoint(leVar:String, type:String, axis:String, ?camera:String):Float {
+		var obj:FlxSprite = getVarInstance(leVar);
+		if (obj != null) {
+			switch(type) {
+				case 'graphic': obj.getGraphicMidpoint(_lePoint);
+				case 'screen': obj.getScreenPosition(_lePoint, LuaUtils.cameraFromString(camera));
+				default: obj.getMidpoint(_lePoint);
+			}
+			return (axis == 'y' ? _lePoint.y : _lePoint.x);
+		}
+		return 0;
+	}
+
+	public static function setBarColors(bar:Bar, color1:String, color2:String) {
+		final left_color:Null<FlxColor> = (color1 != null && color1 != '' ? CoolUtil.colorFromString(color1) : null);
+		final right_color:Null<FlxColor> = (color2 != null && color2 != '' ? CoolUtil.colorFromString(color2) : null);
+		bar.setColors(left_color, right_color);
 	}
 
 	public static inline function getLowestCharacterGroup():FlxSpriteGroup {
@@ -182,11 +210,7 @@ class LuaUtils {
 		var obj:Dynamic = getObjectDirectly(obj, false);
 		if(obj != null && obj.animation != null) {
 			if(indices == null) indices = [0];
-			else if(Std.isOfType(indices, String)) {
-				var strIndices:Array<String> = cast(indices, String).trim().split(',');
-				var myIndices:Array<Int> = [for (i in 0...strIndices.length) Std.parseInt(strIndices[i])];
-				indices = myIndices;
-			}
+			else if(Std.isOfType(indices, String)) indices = FlxStringUtil.toIntArray(cast indices);
 
 			obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
 			if(obj.animation.curAnim == null)
@@ -235,10 +259,10 @@ class LuaUtils {
 
 	public static function tweenPrepare(tag:String, vars:String) {
 		cancelTween(tag);
-		var variables:Array<String> = vars.split('.');
-		var sexyProp:Dynamic = getObjectDirectly(variables[0]);
-		if(variables.length > 1) sexyProp = getVarInArray(getPropertyLoop(variables), variables[variables.length - 1]);
-		return sexyProp;
+		final variables:Array<String> = vars.split('.');
+		return if (variables.length > 1)
+			LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(variables), variables[variables.length - 1]);
+		else LuaUtils.getObjectDirectly(variables[0]);
 	}
 
 	public static function cancelTimer(tag:String) {
@@ -251,7 +275,7 @@ class LuaUtils {
 	}
 
 	//buncho string stuffs
-	public static function getTweenTypeByString(?type:String = '') {
+	inline public static function getTweenTypeByString(?type:String = ''):FlxTweenType {
 		return switch(type.toLowerCase().trim()) {
 			case 'backward': FlxTweenType.BACKWARD;
 			case 'looping': FlxTweenType.LOOPING;
@@ -261,7 +285,7 @@ class LuaUtils {
 		}
 	}
 
-	public static function getTweenEaseByString(?ease:String = '') {
+	inline public static function getTweenEaseByString(?ease:String = '') {
 		return switch(ease.toLowerCase().trim()) {
 			case 'backin': FlxEase.backIn;
 			case 'backinout': FlxEase.backInOut;
@@ -303,46 +327,31 @@ class LuaUtils {
 		}
 	}
 
-	public static function blendModeFromString(blend:String):BlendMode {
-		return switch(blend.toLowerCase().trim()) {
-			case 'add': ADD;
-			case 'alpha': ALPHA;
-			case 'darken': DARKEN;
-			case 'difference': DIFFERENCE;
-			case 'erase': ERASE;
-			case 'hardlight': HARDLIGHT;
-			case 'invert': INVERT;
-			case 'layer': LAYER;
-			case 'lighten': LIGHTEN;
-			case 'multiply': MULTIPLY;
-			case 'overlay': OVERLAY;
-			case 'screen': SCREEN;
-			case 'shader': SHADER;
-			case 'subtract': SUBTRACT;
-			default: NORMAL; 
+	inline public static function blendModeFromString(blend:String):BlendMode {
+		return cast (blend.toLowerCase().trim() : BlendMode);
+	}
+
+	inline public static function axesFromString(axe:String):flixel.util.FlxAxes {
+		try {return FlxAxes.fromString(axe);}
+		catch(e) {
+			Logs.trace('axesFromString: invalid axes: $axe!', ERROR);
+			return FlxAxes.XY;
 		}
 	}
 
-	public static function axesFromString(axe:String):flixel.util.FlxAxes {
-		return switch (axe.trim().toLowerCase()) {
-			case 'x': flixel.util.FlxAxes.X;
-			case 'y': flixel.util.FlxAxes.Y;
-			default: flixel.util.FlxAxes.XY;
-		}
-	}
-
-	public static function typeToString(type:Int):String {
+	inline public static function typeToString(type:Int):String {
 		#if LUA_ALLOWED
-		switch(type) {
-			case Lua.LUA_TBOOLEAN: return "boolean";
-			case Lua.LUA_TNUMBER: return "number";
-			case Lua.LUA_TSTRING: return "string";
-			case Lua.LUA_TTABLE: return "table";
-			case Lua.LUA_TFUNCTION: return "function";
+		return switch(type) {
+			case Lua.LUA_TBOOLEAN:	 "boolean";
+			case Lua.LUA_TNUMBER:	 "number";
+			case Lua.LUA_TSTRING:	 "string";
+			case Lua.LUA_TTABLE:	 "table";
+			case Lua.LUA_TFUNCTION:	 "function";
+			default: (type <= Lua.LUA_TNIL ? "nil" : "unknown");
 		}
-		if (type <= Lua.LUA_TNIL) return "nil";
-		#end
+		#else
 		return "unknown";
+		#end
 	}
 
 	public static function cameraFromString(cam:String):FlxCamera {

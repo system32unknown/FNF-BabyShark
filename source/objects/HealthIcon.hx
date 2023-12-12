@@ -91,7 +91,7 @@ class HealthIcon extends FlxSprite {
 			loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
-			animation.add(char, CoolUtil.numberArray(availableStates), 0, false, isPlayer);
+			animation.add(char, [for (i in 0...availableStates) i], 0, false, isPlayer);
 			animation.play(char);
 		} else {
 			frames = Paths.getSparrowAtlas('icons/$char');

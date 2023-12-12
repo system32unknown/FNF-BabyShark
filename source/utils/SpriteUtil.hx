@@ -34,10 +34,10 @@ class SpriteUtil {
 	}
 
 	inline public static function dominantColor(sprite:FlxSprite):Int {
-		var countByColor:Map<Int, Int> = [];
+		final countByColor:Map<Int, Int> = [];
 		for(col in 0...sprite.frameWidth) {
 			for(row in 0...sprite.frameHeight) {
-			  	var colorOfThisPixel:Int = sprite.pixels.getPixel32(col, row);
+				final colorOfThisPixel:Int = sprite.pixels.getPixel32(col, row);
 			  	if(colorOfThisPixel != 0) {
 					if(countByColor.exists(colorOfThisPixel))
 					    countByColor[colorOfThisPixel]++;
@@ -55,6 +55,7 @@ class SpriteUtil {
 				maxKey = key;
 			}
 		}
+		countByColor.clear();
 		return maxKey;
 	}
 }
