@@ -1,0 +1,48 @@
+{
+	"storyName": "Your New Week",
+	"difficulties": "",
+	"weekBackground": "stage",
+	"hideFreeplay": false,
+	"weekBefore": "tutorial",
+	"startUnlocked": true,
+	"weekCharacters": [
+		"",
+		"bf",
+		"gf"
+	],
+	"songs": [
+		[
+			"Corn",
+			"bambi",
+			[
+				37,
+				191,
+				55
+			]
+		],
+		[
+			"Barn",
+			"bambi",
+			[
+				37,
+				191,
+				55
+			]
+		],
+		[
+			"Phone Breaker",
+			"bambi",
+			[
+				37,
+				191,
+				55
+			]
+		]
+	],
+	"hideStoryMode": false,
+	"sections": [
+		"dave"
+	],
+	"hiddenUntilUnlocked": false,
+	"weekName": "Dave Week"
+}

@@ -117,8 +117,7 @@ class WeekEditorState extends MusicBeatState {
 		add(UI_box);
 
 		var loadWeekButton:FlxButton = new FlxButton(0, 650, "Load Week", () -> loadWeek());
-		loadWeekButton.screenCenter(X);
-		loadWeekButton.x -= 120;
+		loadWeekButton.screenCenter(X).x -= 120;
 		add(loadWeekButton);
 		
 		var freeplayButton:FlxButton = new FlxButton(0, 650, "Freeplay", () -> MusicBeatState.switchState(new WeekEditorFreeplayState(weekFile)));
@@ -126,8 +125,7 @@ class WeekEditorState extends MusicBeatState {
 		add(freeplayButton);
 	
 		var saveWeekButton:FlxButton = new FlxButton(0, 650, "Save Week", () -> saveWeek(weekFile));
-		saveWeekButton.screenCenter(X);
-		saveWeekButton.x += 120;
+		saveWeekButton.screenCenter(X).x += 120;
 		add(saveWeekButton);
 	}
 
@@ -287,8 +285,7 @@ class WeekEditorState extends MusicBeatState {
 
 		txtTracklist.text = txtTracklist.text.toUpperCase();
 
-		txtTracklist.screenCenter(X);
-		txtTracklist.x -= FlxG.width * 0.35;
+		txtTracklist.screenCenter(X).x -= FlxG.width * 0.35;
 		
 		txtWeekTitle.text = weekFile.storyName.toUpperCase();
 		txtWeekTitle.x = FlxG.width - (txtWeekTitle.width + 10);
@@ -604,8 +601,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		add(blackBlack);
 
 		var loadWeekButton:FlxButton = new FlxButton(0, 685, "Load Week", () -> WeekEditorState.loadWeek());
-		loadWeekButton.screenCenter(X);
-		loadWeekButton.x -= 120;
+		loadWeekButton.screenCenter(X).x -= 120;
 		add(loadWeekButton);
 		
 		var storyModeButton:FlxButton = new FlxButton(0, 685, "Story Mode", () -> MusicBeatState.switchState(new WeekEditorState(weekFile)));
@@ -613,8 +609,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		add(storyModeButton);
 	
 		var saveWeekButton:FlxButton = new FlxButton(0, 685, "Save Week", () -> WeekEditorState.saveWeek(weekFile));
-		saveWeekButton.screenCenter(X);
-		saveWeekButton.x += 120;
+		saveWeekButton.screenCenter(X).x += 120;
 		add(saveWeekButton);
 	}
 	

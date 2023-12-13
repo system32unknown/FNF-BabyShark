@@ -85,7 +85,6 @@
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="cpp"/>
 	<haxedef name="queue_experimental_optimization"/>
-	<haxedef name="openfl_dpi_aware"/>
 	<haxedef name="hscriptPos"/>
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc"/>
 

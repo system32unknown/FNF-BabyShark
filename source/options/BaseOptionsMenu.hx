@@ -219,8 +219,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if (checkIfEmpty) descString = optionsArray[curSelected].description;
 		descBox.visible = checkIfEmpty;
 		descText.text = descString;
-		descText.screenCenter(Y);
-		descText.y += 270;
+		descText.screenCenter(Y).y += 270;
 
 		var bullShit:Int = 0;
 

@@ -129,7 +129,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 
 				if (boyfriend.animation.curAnim.finished) {
 					startedDeath = true;
-					coolStartDeath();
+					FlxG.sound.playMusic(Paths.music(loopSoundName));
 				}
 			}
 		}
@@ -158,18 +158,6 @@ class GameOverSubstate extends MusicBeatSubstate {
 		MusicBeatState.resetState();
 	}
 
-	function coolStartDeath(?volume:Float = 1):Void {
-		FlxG.sound.playMusic(Paths.music(loopSoundName), volume);
-	}
-
-	function endSoundComplete():Void {
-		if (endCompleted) {
-			resetState();
-			return;
-		}
-		endCompleted = true;
-	}
-
 	function endBullshit():Void {
 		if (isEnding) {
 			quick = true;
@@ -182,7 +170,13 @@ class GameOverSubstate extends MusicBeatSubstate {
 		
 		FlxG.sound.music.stop();
 		var snd:FlxSound = FlxG.sound.play(Paths.music(endSoundName));
-		snd.onComplete = endSoundComplete;
+		snd.onComplete = () -> {
+			if (endCompleted) {
+				resetState();
+				return;
+			}
+			endCompleted = true;
+		};
 
 		new FlxTimer().start(.7, function(tmr:FlxTimer) {
 			FlxG.camera.fade(FlxColor.BLACK, if (quick) 1 else 2, false, () -> {

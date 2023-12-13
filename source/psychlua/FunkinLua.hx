@@ -439,9 +439,7 @@ class FunkinLua {
 		set("precacheSound", Paths.sound);
 		set("precacheMusic", Paths.music);
 
-		set("triggerEvent", function(name:String, arg1:Any, arg2:Any) {
-			game.triggerEvent(name, arg1, arg2);
-		});
+		set("triggerEvent", (name:String, arg1:Any, arg2:Any) -> game.triggerEvent(name, arg1, arg2));
 
 		set("startCountdown", game.startCountdown);
 		set("endSong", () -> {

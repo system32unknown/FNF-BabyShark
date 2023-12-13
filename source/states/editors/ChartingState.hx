@@ -883,9 +883,7 @@ class ChartingState extends MusicBeatState {
 		#end
 
 		var displayNameList:Array<String> = curNoteTypes.copy();
-		for (i in 1...displayNameList.length) {
-			displayNameList[i] = '$i. ${displayNameList[i]}';
-		}
+		for (i in 1...displayNameList.length) displayNameList[i] = '$i. ${displayNameList[i]}';
 
 		noteTypeDropDown = new FlxUIDropDownMenu(10, 105, FlxUIDropDownMenu.makeStrIdLabelArray(displayNameList, true), function(character:String) {
 			currentType = Std.parseInt(character);

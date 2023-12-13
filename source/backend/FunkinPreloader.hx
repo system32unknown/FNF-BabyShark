@@ -14,9 +14,9 @@ import flixel.FlxG;
 @:bitmap("assets/preload/images/logobumpin.png")
 class FunkinLogoImage extends BitmapData {}
 
-@:bitmap("assets/preload/images/flixel/light.png")
-class GraphicLogoLight extends BitmapData {} 
-@:bitmap("assets/preload/images/flixel/corners.png")
+@:keep @:bitmap("assets/images/preloader/light.png")
+class GraphicLogoLight extends BitmapData {}
+@:keep @:bitmap("assets/images/preloader/corners.png")
 class GraphicLogoCorners extends BitmapData {}
 
 class FunkinPreloader extends FlxBasePreloader {

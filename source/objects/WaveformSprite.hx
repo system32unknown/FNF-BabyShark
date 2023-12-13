@@ -22,20 +22,16 @@ class WaveformSprite extends FlxSprite {
         }
     }
 
-    public function new(x:Float, y:Float, buffer:Dynamic, w:Int, h:Int) {
+    public function new(x:Float, y:Float, buffer:Dynamic, w:Int, h:Int) @:privateAccess {
         super(x, y);
         this.buffer = null;
         if (Std.isOfType(buffer, FlxSound)) {
-            @:privateAccess
-            this.buffer = cast(buffer, FlxSound)._sound.__buffer;
-            @:privateAccess
             this.sound = cast(buffer, FlxSound)._sound;
+            this.buffer = this.sound.__buffer;
         } else if (Std.isOfType(buffer, Sound)) {
-            @:privateAccess
-            this.buffer = cast(buffer, Sound).__buffer;
             this.sound = cast(buffer, Sound);
+            this.buffer = this.sound.__buffer;
         } else if (Std.isOfType(buffer, AudioBuffer)) {
-            @:privateAccess
             this.buffer = cast(buffer, AudioBuffer);
         } else {
             valid = false;

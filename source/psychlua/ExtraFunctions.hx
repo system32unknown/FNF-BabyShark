@@ -16,36 +16,33 @@ class ExtraFunctions {
 
 		funk.set("keyJustPressed", function(name:String = '') {
 			name = name.toLowerCase();
-			switch(name) {
-				case 'left': return PlayState.instance.controls.NOTE_LEFT_P;
-				case 'down': return PlayState.instance.controls.NOTE_DOWN_P;
-				case 'up': return PlayState.instance.controls.NOTE_UP_P;
-				case 'right': return PlayState.instance.controls.NOTE_RIGHT_P;
-				default: return PlayState.instance.controls.justPressed(name);
+			return switch(name) {
+				case 'left': PlayState.instance.controls.NOTE_LEFT_P;
+				case 'down': PlayState.instance.controls.NOTE_DOWN_P;
+				case 'up': PlayState.instance.controls.NOTE_UP_P;
+				case 'right': PlayState.instance.controls.NOTE_RIGHT_P;
+				default: PlayState.instance.controls.justPressed(name);
 			}
-			return false;
 		});
 		funk.set("keyPressed", function(name:String = '') {
 			name = name.toLowerCase();
-			switch(name) {
-				case 'left': return PlayState.instance.controls.NOTE_LEFT;
-				case 'down': return PlayState.instance.controls.NOTE_DOWN;
-				case 'up': return PlayState.instance.controls.NOTE_UP;
-				case 'right': return PlayState.instance.controls.NOTE_RIGHT;
-				default: return PlayState.instance.controls.pressed(name);
+			return switch(name) {
+				case 'left': PlayState.instance.controls.NOTE_LEFT;
+				case 'down': PlayState.instance.controls.NOTE_DOWN;
+				case 'up': PlayState.instance.controls.NOTE_UP;
+				case 'right': PlayState.instance.controls.NOTE_RIGHT;
+				default: PlayState.instance.controls.pressed(name);
 			}
-			return false;
 		});
 		funk.set("keyReleased", function(name:String = '') {
 			name = name.toLowerCase();
-			switch(name) {
-				case 'left': return PlayState.instance.controls.NOTE_LEFT_R;
-				case 'down': return PlayState.instance.controls.NOTE_DOWN_R;
-				case 'up': return PlayState.instance.controls.NOTE_UP_R;
-				case 'right': return PlayState.instance.controls.NOTE_RIGHT_R;
-				default: return PlayState.instance.controls.justReleased(name);
+			return switch(name) {
+				case 'left': PlayState.instance.controls.NOTE_LEFT_R;
+				case 'down': PlayState.instance.controls.NOTE_DOWN_R;
+				case 'up': PlayState.instance.controls.NOTE_UP_R;
+				case 'right': PlayState.instance.controls.NOTE_RIGHT_R;
+				default: PlayState.instance.controls.justReleased(name);
 			}
-			return false;
 		});
 
 		// Save data management

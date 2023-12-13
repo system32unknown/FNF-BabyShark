@@ -87,13 +87,11 @@ class MenuCharacterEditorState extends MusicBeatState
 		add(UI_mainbox);
 
 		var loadButton:FlxButton = new FlxButton(0, 480, "Load Character", () -> loadCharacter());
-		loadButton.screenCenter(X);
-		loadButton.x -= 60;
+		loadButton.screenCenter(X).x -= 60;
 		add(loadButton);
 	
 		var saveButton:FlxButton = new FlxButton(0, 480, "Save Character", () -> saveCharacter());
-		saveButton.screenCenter(X);
-		saveButton.x += 60;
+		saveButton.screenCenter(X).x += 60;
 		add(saveButton);
 	}
 

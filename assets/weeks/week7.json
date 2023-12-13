@@ -5,9 +5,14 @@
 	"hideFreeplay": false,
 	"weekBefore": "tutorial",
 	"startUnlocked": true,
-	"hideStoryMode": false,
 	"sections": [
 		"Vanilla"
+	],
+	"hideStoryMode": false,
+	"weekCharacters": [
+		"",
+		"bs",
+		""
 	],
 	"songs": [
 		[
@@ -38,6 +43,15 @@
 			]
 		],
 		[
+			"beauty",
+			"goldie",
+			[
+				251,
+				195,
+				60
+			]
+		],
+		[
 			"chuck",
 			"chuck",
 			[
@@ -45,12 +59,16 @@
 				132,
 				189
 			]
+		],
+		[
+			"rivals",
+			"turbo",
+			[
+				111,
+				154,
+				185
+			]
 		]
-	],
-	"weekCharacters": [
-		"",
-		"bs",
-		"gf"
 	],
 	"weekName": "Quad Week",
 	"hiddenUntilUnlocked": false

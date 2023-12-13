@@ -47,7 +47,7 @@ class StoryMenuState extends MusicBeatState
 		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
 		persistentUpdate = persistentDraw = true;
 
-		scoreText = new FlxText(10, 10, 0, "SCORE: 0", 36);
+		scoreText = new FlxText(10, 10, 0, "SCORE: 0", 32);
 		scoreText.setFormat(Paths.font("babyshark.ttf"), 32);
 
 		txtWeekTitle = new FlxText(FlxG.width * 0.7, 10, 0, "", 32);
@@ -342,8 +342,7 @@ class StoryMenuState extends MusicBeatState
 		}
 
 		txtTracklist.text = txtTracklist.text.toUpperCase();
-		txtTracklist.screenCenter(X);
-		txtTracklist.x -= FlxG.width * 0.35;
+		txtTracklist.screenCenter(X).x -= FlxG.width * 0.35;
 
 		intendedScore = Highscore.getWeekScore(loadedWeeks[curWeek].fileName, curDifficulty);
 	}

@@ -120,9 +120,8 @@ class HealthIcon extends FlxSprite {
 
 	public function getCharacter():String return char;
 
-	@:noCompletion
-	inline function get_isPixelIcon():Bool
-		return char.substr(-6, 6) == '-pixel';
+	@:noCompletion inline function get_isPixelIcon():Bool
+		return char.endsWith('-pixel');
 
 	public function setStateIndex(state:Int) {
 		if (state >= availableStates) state = 0;
@@ -131,6 +130,7 @@ class HealthIcon extends FlxSprite {
 	}
 
 	public function setState(state:Int) {
+		char.endsWith('a');
 		if (!animated) setStateIndex(state);
 		else if (animation.exists(animatediconstates[state]))
 			animation.play(animatediconstates[state]);
