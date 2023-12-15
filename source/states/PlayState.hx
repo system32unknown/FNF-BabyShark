@@ -301,7 +301,7 @@ class PlayState extends MusicBeatState {
 
 		keysArray = data.EkData.Keybinds.fill()[mania];
 		fillKeysPressed();
-		keysPressed = CoolUtil.dynamicArray(false, keysArray.length);
+		keysPressed = ArrayUtil.dynamicArray(false, keysArray.length);
 
 		storyDifficultyText = Difficulty.getString();
 		#if DISCORD_ALLOWED

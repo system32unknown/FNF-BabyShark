@@ -33,7 +33,16 @@ class Option {
 		this.options = options;
 
 		if(defaultValue == 'null variable value')
-			defaultValue = CoolUtil.getOptionDefVal(type, options);
+			defaultValue = switch(type) {
+				case 'bool': false;
+				case 'int' | 'float': 0;
+				case 'percent': 1;
+				case 'string':
+					if(options.length > 0) options[0];
+					else '';
+				case 'func': '';
+				default: null;
+			};
 
 		if(type == 'percent') {
 			displayFormat = '%v%';

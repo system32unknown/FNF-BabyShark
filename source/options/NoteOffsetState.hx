@@ -70,7 +70,7 @@ class NoteOffsetState extends MusicBeatState {
 		Paths.setCurrentLevel('week1');
 		new BackgroundStage();
 		camGame.scroll.set(120, 130);
-		defaultCamZoom = 0.7;
+		defaultCamZoom = .7;
 
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);

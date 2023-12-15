@@ -2,10 +2,8 @@ package states;
 
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxFrame;
-import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxGradient;
 import haxe.Json;
-import backend.Highscore;
 import states.MainMenuState;
 
 @:structInit
@@ -130,7 +128,7 @@ class TitleState extends MusicBeatState {
 		titleText.updateHitbox();
 		add(titleText);
 
-		version = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH.trim().substring(0, 7)}) | Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}', 16);
+		version = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH}) | Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}', 16);
 		version.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, CENTER);
 		version.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		version.scrollFactor.set();

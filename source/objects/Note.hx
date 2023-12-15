@@ -338,7 +338,6 @@ class Note extends FlxSprite {
 	inline public function checkDiff(songPos:Float):Bool {
 		return (strumTime > songPos - (Conductor.safeZoneOffset * lateHitMult) && strumTime < songPos + (Conductor.safeZoneOffset * earlyHitMult));
 	}
-
 	inline public function checkHit(songPos:Float):Bool {
 		return strumTime <= songPos + (Conductor.safeZoneOffset * earlyHitMult) && ((isSustainNote && prevNote.wasGoodHit) || strumTime <= songPos);
 	}
@@ -348,12 +347,10 @@ class Note extends FlxSprite {
 
 		if (mustPress) {
 			canBeHit = checkDiff(Conductor.songPosition);
-			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
-				tooLate = true;
+			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit) tooLate = true;
 		} else canBeHit = false;
 
-		if (tooLate && !inEditor)
-			if (alpha > .3) alpha = .3;
+		if (tooLate && !inEditor && alpha > .3) alpha = .3;
 	}
 
 	public function followStrumNote(myStrum:StrumNote, songSpeed:Float = 1) {
@@ -364,10 +361,10 @@ class Note extends FlxSprite {
 		var strumDirection:Float = myStrum.direction;
 
 		distance = (.45 * (Conductor.songPosition - strumTime) * songSpeed * multSpeed);
-		if (!myStrum.downScroll) distance *= -1;
+		if(!myStrum.downScroll) distance *= -1;
 
 		var angleDir = strumDirection * Math.PI / 180;
-		if (copyAngle) angle = strumDirection - 90 + strumAngle + offsetAngle;
+		if(copyAngle) angle = strumDirection - 90 + strumAngle + offsetAngle;
 
 		if(copyAlpha) alpha = strumAlpha * multAlpha;
 		if(copyX) x = strumX + offsetX + Math.cos(angleDir) * distance;

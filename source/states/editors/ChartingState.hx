@@ -894,10 +894,7 @@ class ChartingState extends MusicBeatState {
 		});
 		blockPressWhileScrolling.push(noteTypeDropDown);
 
-		var copyButton:FlxButton = new FlxButton(10, noteTypeDropDown.y + 30, "Copy Note", function() {
-			if(curSelectedNote != null && curSelectedNote.length > 2)
-				noteStuffCopied = curSelectedNote;
-		});
+		var copyButton:FlxButton = new FlxButton(10, noteTypeDropDown.y + 30, "Copy Note", () -> if(curSelectedNote != null && curSelectedNote.length > 2) noteStuffCopied = curSelectedNote);
 
 		var pasteButton:FlxButton = new FlxButton(copyButton.x + 100, copyButton.y, "Paste Note", function() {
 			if(noteStuffCopied != null) {
@@ -1108,9 +1105,7 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function setAllLabelsOffset(button:FlxButton, x:Float, y:Float) {
-		for (point in button.labelOffsets) {
-			point.set(x, y);
-		}
+		for (point in button.labelOffsets) point.set(x, y);
 	}
 
 	var metronome:FlxUICheckBox;

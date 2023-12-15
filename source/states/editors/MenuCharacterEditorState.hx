@@ -68,9 +68,7 @@ class MenuCharacterEditorState extends MusicBeatState
 	var UI_mainbox:FlxUITabMenu;
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 	function addEditorBox() {
-		var tabs = [{
-			name: 'Character Type', label: 'Character Type'
-		}];
+		var tabs = [{name: 'Character Type', label: 'Character Type'}];
 		UI_typebox = new FlxUITabMenu(null, tabs, true);
 		UI_typebox.resize(120, 180);
 		UI_typebox.setPosition(100, FlxG.height - UI_typebox.height - 50);
@@ -215,13 +213,9 @@ class MenuCharacterEditorState extends MusicBeatState
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
 			if(Paths.checkReservedFile(sender.text)) return;
-			if(sender == imageInputText) {
-				characterFile.image = imageInputText.text;
-			} else if(sender == idleInputText) {
-				characterFile.idle_anim = idleInputText.text;
-			} else if(sender == confirmInputText) {
-				characterFile.confirm_anim = confirmInputText.text;
-			}
+			if(sender == imageInputText) characterFile.image = imageInputText.text;
+			else if(sender == idleInputText) characterFile.idle_anim = idleInputText.text;
+			else if(sender == confirmInputText) characterFile.confirm_anim = confirmInputText.text;
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
 			if (sender == scaleStepper) {
 				characterFile.scale = scaleStepper.value;
@@ -275,9 +269,8 @@ class MenuCharacterEditorState extends MusicBeatState
 		}
 
 		var char:MenuCharacter = grpWeekCharacters.members[1];
-		if(char.animation.curAnim != null && char.animation.curAnim.name == 'confirm' && char.animation.curAnim.finished) {
+		if(char.animation.curAnim != null && char.animation.curAnim.name == 'confirm' && char.animation.curAnim.finished)
 			char.animation.play('idle', true);
-		}
 
 		super.update(elapsed);
 	}

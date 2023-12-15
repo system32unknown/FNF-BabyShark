@@ -1,16 +1,10 @@
 package debug;
 
-import openfl.text.TextField;
-import openfl.text.TextFormat;
-import openfl.utils.Assets;
-
-import utils.system.MemoryUtil;
 import utils.system.FPSUtil;
-import utils.MathUtil;
 
-class FPSCounter extends TextField {
+class FPSCounter extends openfl.text.TextField {
 	public static var instance:FPSCounter;
-	public var fontName:String = Assets.getFont("assets/fonts/Proggy.ttf").fontName;
+	public var fontName:String = openfl.utils.Assets.getFont("assets/fonts/Proggy.ttf").fontName;
 
  	@:noCompletion @:noPrivateAccess var timeColor = 0;
 
@@ -30,7 +24,7 @@ class FPSCounter extends TextField {
 		multiline = wordWrap = false;
 		selectable = mouseEnabled = false;
 		text = "";
-		defaultTextFormat = new TextFormat(fontName, 16, -1);
+		defaultTextFormat = new openfl.text.TextFormat(fontName, 16, -1);
 		fpsManager = new FPSUtil();
 	}
 
@@ -58,11 +52,11 @@ class FPSCounter extends TextField {
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		text = '${fpsManager.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${MathUtil.truncateFloat((1 / fpsManager.currentCount) * 1000)}ms]' : ''}\n';
+		text = '${fpsManager.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${utils.MathUtil.truncateFloat((1 / fpsManager.currentCount) * 1000)}ms]' : ''}\n';
 		if (memType == "MEM" || memType == "MEM/PEAK")
 			text += '${flixel.util.FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? ' / ${flixel.util.FlxStringUtil.formatBytes(mempeak)}' : '');
 	}
 
 	inline function get_memory():Float
-		return MemoryUtil.getGCMEM();
+		return utils.system.MemoryUtil.getGCMEM();
 }

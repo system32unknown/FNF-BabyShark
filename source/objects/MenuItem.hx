@@ -21,8 +21,7 @@ class MenuItem extends FlxSprite
 		return isFlashing = flashing;
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 		y = FlxMath.lerp(y, (targetY * 120) + 480, Math.max(elapsed * 10.2, 0));
 

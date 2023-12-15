@@ -2,14 +2,9 @@ package;
 
 import openfl.Lib;
 import openfl.display.Sprite;
-import openfl.display.StageScaleMode;
 import flixel.input.keyboard.FlxKey;
-
-import states.TitleState;
-import backend.Logs;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
-import utils.FunkinGame;
 import debug.FPSCounter;
 
 #if (target.threaded && sys) import sys.thread.ElasticThreadPool; #end
@@ -20,7 +15,7 @@ class Main extends Sprite {
 	public static var game = {
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height
-		initialState: TitleState, // initial game state
+		initialState: states.TitleState, // initial game state
 		framerate: 60, // default framerate
 		skipSplash: true, // if the default flixel splash screen should be skipped
 		startFullscreen: false // if the game should start at fullscreen mode
@@ -45,15 +40,15 @@ class Main extends Sprite {
 	#end
 
 	function setupGame():Void {
-		Logs.init();
+		backend.Logs.init();
 
-		addChild(new FunkinGame(game.width, game.height, Init, game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
+		addChild(new backend.FunkinGame(game.width, game.height, Init, game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(fpsVar = new FPSCounter());
 		
 		#if (target.threaded && sys) threadPool = new ElasticThreadPool(12, 30); #end
 
 		Lib.current.stage.align = "tl";
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
 
 		#if CRASH_HANDLER backend.CrashHandler.init(); #end
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
