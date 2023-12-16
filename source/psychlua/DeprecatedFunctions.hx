@@ -1,7 +1,5 @@
 package psychlua;
 
-import objects.StrumNote;
-
 //
 // This is simply where i store deprecated functions for it to be more organized.
 // I would suggest not messing with these, as it could break mods.
@@ -139,98 +137,24 @@ class DeprecatedFunctions {
 			return false;
 		});
 		funk.set("musicFadeIn", function(duration:Float, fromValue:Float = 0, toValue:Float = 1) {
-			FlxG.sound.music.fadeIn(duration, fromValue, toValue);
 			FunkinLua.luaTrace('musicFadeIn is deprecated! Use soundFadeIn instead.', false, true);
+			FlxG.sound.music.fadeIn(duration, fromValue, toValue);
 		});
 		funk.set("musicFadeOut", function(duration:Float, toValue:Float = 0) {
-			FlxG.sound.music.fadeOut(duration, toValue);
 			FunkinLua.luaTrace('musicFadeOut is deprecated! Use soundFadeOut instead.', false, true);
+			FlxG.sound.music.fadeOut(duration, toValue);
 		});
 
-		funk.set("doTweenX", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			funk.oldTweenFunction(tag, vars, {x: value}, duration, ease, 'doTweenX');
-		});
-		funk.set("doTweenY", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			funk.oldTweenFunction(tag, vars, {y: value}, duration, ease, 'doTweenY');
-		});
-		funk.set("doTweenAngle", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			funk.oldTweenFunction(tag, vars, {angle: value}, duration, ease, 'doTweenAngle');
-		});
-		funk.set("doTweenAlpha", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			funk.oldTweenFunction(tag, vars, {alpha: value}, duration, ease, 'doTweenAlpha');
-		});
-		funk.set("doTweenZoom", function(tag:String, vars:String, value:Dynamic, duration:Float, ease:String) {
-			funk.oldTweenFunction(tag, vars, {zoom: value}, duration, ease, 'doTweenZoom');
-		});
-		funk.set("noteTweenX", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
-			LuaUtils.cancelTween(tag);
-			if(note < 0) note = 0;
-			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
+		funk.set("doTweenX", (tag:String, vars:String, value:Dynamic, duration:Float, ease:String) -> funk.oldTweenFunction(tag, vars, {x: value}, duration, ease, 'doTweenX'));
+		funk.set("doTweenY", (tag:String, vars:String, value:Dynamic, duration:Float, ease:String) -> funk.oldTweenFunction(tag, vars, {y: value}, duration, ease, 'doTweenY'));
+		funk.set("doTweenAngle", (tag:String, vars:String, value:Dynamic, duration:Float, ease:String) -> funk.oldTweenFunction(tag, vars, {angle: value}, duration, ease, 'doTweenAngle'));
+		funk.set("doTweenAlpha", (tag:String, vars:String, value:Dynamic, duration:Float, ease:String) -> funk.oldTweenFunction(tag, vars, {alpha: value}, duration, ease, 'doTweenAlpha'));
+		funk.set("doTweenZoom", (tag:String, vars:String, value:Dynamic, duration:Float, ease:String) -> funk.oldTweenFunction(tag, vars, {zoom: value}, duration, ease, 'doTweenZoom'));
 
-			if(testicle != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {x: value}, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: (twn:FlxTween) -> {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			}
-		});
-		funk.set("noteTweenY", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
-			LuaUtils.cancelTween(tag);
-			if(note < 0) note = 0;
-			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
-
-			if(testicle != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {y: value}, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: (twn:FlxTween) -> {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			}
-		});
-		funk.set("noteTweenAngle", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
-			LuaUtils.cancelTween(tag);
-			if(note < 0) note = 0;
-			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
-
-			if(testicle != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {angle: value}, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: (twn:FlxTween) -> {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			}
-		});
-		funk.set("noteTweenDirection", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
-			LuaUtils.cancelTween(tag);
-			if(note < 0) note = 0;
-			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
-
-			if(testicle != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {direction: value}, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: (twn:FlxTween) -> {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			}
-		});
-		funk.set("noteTweenAlpha", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
-			LuaUtils.cancelTween(tag);
-			if(note < 0) note = 0;
-			var testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
-
-			if(testicle != null) {
-				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {alpha: value}, duration * PlayState.instance.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
-					onComplete: (twn:FlxTween) -> {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
-						PlayState.instance.modchartTweens.remove(tag);
-					}
-				}));
-			}
-		});
+		funk.set("noteTweenX", (tag:String, note:Int, value:Dynamic, duration:Float, ease:String) -> funk.oldnoteTweenFunction(tag, note, {x: value}, duration, ease));
+		funk.set("noteTweenY", (tag:String, note:Int, value:Dynamic, duration:Float, ease:String) -> funk.oldnoteTweenFunction(tag, note, {y: value}, duration, ease));
+		funk.set("noteTweenAngle", (tag:String, note:Int, value:Dynamic, duration:Float, ease:String) -> funk.oldnoteTweenFunction(tag, note, {angle: value}, duration, ease));
+		funk.set("noteTweenDirection", (tag:String, note:Int, value:Dynamic, duration:Float, ease:String) -> funk.oldnoteTweenFunction(tag, note, {direction: value}, duration, ease));
+		funk.set("noteTweenAlpha", (tag:String, note:Int, value:Dynamic, duration:Float, ease:String) -> funk.oldnoteTweenFunction(tag, note, {alpha: value}, duration, ease));
 	}
 }

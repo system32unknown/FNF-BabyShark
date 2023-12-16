@@ -327,9 +327,8 @@ class LuaUtils {
 		}
 	}
 
-	inline public static function blendModeFromString(blend:String):BlendMode {
+	inline public static function blendModeFromString(blend:String):BlendMode
 		return cast (blend.toLowerCase().trim() : BlendMode);
-	}
 
 	inline public static function axesFromString(axe:String):flixel.util.FlxAxes {
 		try {return FlxAxes.fromString(axe);}
@@ -342,11 +341,11 @@ class LuaUtils {
 	inline public static function typeToString(type:Int):String {
 		#if LUA_ALLOWED
 		return switch(type) {
-			case Lua.LUA_TBOOLEAN:	 "boolean";
-			case Lua.LUA_TNUMBER:	 "number";
-			case Lua.LUA_TSTRING:	 "string";
-			case Lua.LUA_TTABLE:	 "table";
-			case Lua.LUA_TFUNCTION:	 "function";
+			case Lua.LUA_TBOOLEAN: "boolean";
+			case Lua.LUA_TNUMBER: "number";
+			case Lua.LUA_TSTRING: "string";
+			case Lua.LUA_TTABLE: "table";
+			case Lua.LUA_TFUNCTION: "function";
 			default: (type <= Lua.LUA_TNIL ? "nil" : "unknown");
 		}
 		#else

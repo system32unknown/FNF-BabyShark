@@ -1234,10 +1234,6 @@ class FunkinLua {
 		#end
 	}
 
-	//clone functions
-	public static function getBuildTarget():String {
-		return Sys.systemName().toLowerCase();
-	}
 
 	public function oldTweenFunction(tag:String, vars:String, tweenValue:Any, duration:Float, ease:String, funcName:String) {
 		var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
@@ -1250,6 +1246,25 @@ class FunkinLua {
 			}));
 		} else luaTrace('$funcName: Couldnt find object: $vars', false, false, FlxColor.RED);
 	}
+
+	public function oldnoteTweenFunction(tag:String, note:Int, tweenValue:Any, duration:Float, ease:String) {
+		LuaUtils.cancelTween(tag);
+		if(note < 0) note = 0;
+		final testicle:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
+
+		if(testicle != null) {
+			PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, tweenValue, duration, {ease: LuaUtils.getTweenEaseByString(ease),
+				onComplete: (twn:FlxTween) -> {
+					PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
+					PlayState.instance.modchartTweens.remove(tag);
+				}
+			}));
+		}
+	}
+
+	//clone functions
+	inline public static function getBuildTarget():String
+		return Sys.systemName().toLowerCase();
 
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
 	public function initLuaShader(name:String, ?glslVersion:Int = 120) {

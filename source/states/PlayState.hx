@@ -1002,12 +1002,8 @@ class PlayState extends MusicBeatState {
 		Conductor.songPosition = time;
 	}
 
-	public function startNextDialogue() {
-		dialogueCount++;
-		callOnScripts('onNextDialogue', [dialogueCount]);
-	}
-
-	public function skipDialogue() {callOnScripts('onSkipDialogue', [dialogueCount]);}
+	public function startNextDialogue() callOnScripts('onNextDialogue', [dialogueCount++]);
+	public function skipDialogue() callOnScripts('onSkipDialogue', [dialogueCount]);
 
 	function startSong():Void {
 		startingSong = false;

@@ -139,7 +139,10 @@ class HScript extends Interp {
 		setVar('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> PlayState.instance.addTextToDebug(text, color));
 
 		//Macro Functions
-		#if macro setVar('nameOf', (v:Dynamic) -> macros.MacroFunctions.nameOf(v)); #end
+		#if macro
+		setVar('nameOf', (v:Dynamic) -> macros.MacroFunctions.nameOf(v));
+		setVar('validateJson', (v:String) -> macros.MacroFunctions.validateJson(v));
+		#end
 
 		// For adding your own callbacks
 

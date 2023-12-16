@@ -1,7 +1,5 @@
 package psychlua;
 
-import openfl.utils.Assets;
-
 #if (LUA_ALLOWED && flxanimate)
 class FlxAnimateFunctions {
 	public static function implement(funk:FunkinLua) {

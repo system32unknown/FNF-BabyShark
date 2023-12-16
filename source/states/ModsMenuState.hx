@@ -852,7 +852,7 @@ class MenuButton extends FlxSpriteGroup {
 	}
 
 	public function centerOnBg(spr:FlxSprite) {
-		spr.x = bg.width / 2 - spr.width / 2;
-		spr.y = bg.height / 2 - spr.height / 2;
+		spr.x = (bg.width - spr.width) / 2;
+		spr.y = (bg.height - spr.height) / 2;
 	}
 }
