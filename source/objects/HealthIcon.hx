@@ -1,7 +1,6 @@
 package objects;
 
 import flixel.graphics.FlxGraphic;
-import flixel.math.FlxPoint;
 
 class HealthIcon extends FlxSprite {
 	static final prefix:String = 'icons/';

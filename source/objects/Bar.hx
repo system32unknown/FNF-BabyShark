@@ -2,7 +2,6 @@ package objects;
 
 import flixel.util.helpers.FlxBounds;
 import flixel.util.FlxDestroyUtil;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 
 class Bar extends FlxSpriteGroup {

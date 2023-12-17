@@ -5,7 +5,6 @@ import flixel.FlxObject;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.input.keyboard.FlxKey;
-import flixel.math.FlxPoint;
 import flixel.animation.FlxAnimationController;
 import flixel.ui.FlxBar;
 import flixel.util.FlxSort;
@@ -123,11 +122,16 @@ class PlayState extends MusicBeatState {
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
-	function set_health(HP:Float):Float {
-		if (health == HP) return HP;
+	var iconsAnimations:Bool = true;
+	function set_health(value:Float):Float {
+		if(!iconsAnimations || healthBar == null || !healthBar.enabled || healthBar.valueFunction == null)
+			return health = value;
 
-		health = FlxMath.bound(HP, 0, (healthBar.bounds != null ? healthBar.bounds.max : 2));
-		doDeathCheck();
+		// update health bar
+		health = value;
+		var newPercent:Null<Float> = FlxMath.remapToRange(healthBar.bounded, healthBar.bounds.min, healthBar.bounds.max, 0, 100);
+		healthBar.percent = (newPercent != null ? newPercent : 0);
+
 		return health;
 	}
 	public var combo:Int = 0;
@@ -279,16 +283,14 @@ class PlayState extends MusicBeatState {
 		cpuControlled = ClientPrefs.getGameplaySetting('botplay');
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed');
 
-		camGame = new FlxCamera();
+		camGame = initPsychCamera();
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
 		camHUD.bgColor = 0x00000000;
 		camOther.bgColor = 0x00000000;
 
-		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOther, false);
-		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
 
 		if (SONG == null) SONG = Song.loadFromJson('tutorial');
@@ -370,8 +372,7 @@ class PlayState extends MusicBeatState {
 
 		// "GLOBAL" SCRIPTS
 		#if LUA_ALLOWED
-		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getPreloadPath(), 'scripts/');
-		for (folder in foldersToCheck) for (file in FileSystem.readDirectory(folder)) {
+		for (folder in Mods.directoriesWithFile(Paths.getPreloadPath(), 'scripts/')) for (file in FileSystem.readDirectory(folder)) {
 			if(file.toLowerCase().endsWith('.lua')) new FunkinLua(folder + file);
 			if(file.toLowerCase().endsWith('.hx')) initHScript(folder + file);
 		}
@@ -559,8 +560,7 @@ class PlayState extends MusicBeatState {
 			moveCameraSection();
 		}
 		// SONG SPECIFIC SCRIPTS
-		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getPreloadPath(), 'data/${Paths.CHART_PATH}/$songName/');
-		for (folder in foldersToCheck) for (file in FileSystem.readDirectory(folder)) {
+		for (folder in Mods.directoriesWithFile(Paths.getPreloadPath(), 'data/' + songName + '/')) for (file in FileSystem.readDirectory(folder)) {
 			if(file.toLowerCase().endsWith('.lua')) new FunkinLua(folder + file);
 			if(file.toLowerCase().endsWith('.hx')) initHScript(folder + file);
 		}
@@ -1400,9 +1400,9 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onResizePost', [width, height]);
 	}
 
-	function resetRPC(?cond:Bool = false) {
+	function resetRPC(?showTime:Bool = false) {
 		#if desktop
-		if (cond) DiscordClient.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', true, (songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset')) / playbackRate);
+		if (showTime) DiscordClient.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', true, (songLength - Conductor.songPosition - ClientPrefs.getPref('noteOffset')) / playbackRate);
 		else DiscordClient.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)');
 		#end
 	}
@@ -1438,6 +1438,8 @@ class PlayState extends MusicBeatState {
 	public var canReset:Bool = true;
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
+	var freezeCamera:Bool = false;
+
 	var lastSongTime:Float = 0;
 	var songElapsed:Float = 0;
 	var syncDebounce:Float = 0;
@@ -1447,8 +1449,6 @@ class PlayState extends MusicBeatState {
 			songElapsed = time - lastSongTime;
 			lastSongTime = time;
 		}
-
-		callOnScripts('onUpdate', [elapsed]);
 		
 		if (startedCountdown && !paused) {
 			var delta = elapsed * 1000 * playbackRate;
@@ -1466,9 +1466,10 @@ class PlayState extends MusicBeatState {
 		if(ClientPrefs.getPref('camMovement') && !isPixelStage && camlock)
 			camFollow.setPosition(camlockpoint.x, camlockpoint.y);
 		
-		FlxG.camera.followLerp = 0;
-		if(!inCutscene && !paused)
-			FlxG.camera.followLerp = elapsed * 2.4 * cameraSpeed * playbackRate * (FlxG.updateFramerate / 60);
+		if(!inCutscene && !paused && !freezeCamera)
+			FlxG.camera.followLerp = .04 * cameraSpeed * playbackRate;
+		else FlxG.camera.followLerp = 0;
+		callOnScripts('onUpdate', [elapsed]);
 
 		checkEventNote();
 
@@ -1497,9 +1498,6 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (controls.PAUSE) tryPause();
-
-		if (controls.justPressed('debug_1') && !endingSong && !inCutscene)
-			openChartEditor();
 
 		switch(ClientPrefs.getPref('IconBounceType')) {
 			case "Vanilla":
@@ -1536,13 +1534,14 @@ class PlayState extends MusicBeatState {
 			iconP2.setState(0);
 		}
 
-		if (controls.justPressed('debug_2') && !endingSong && !inCutscene)
-			openCharacterEditor();
+		if (!endingSong && !inCutscene) {
+			if (controls.justPressed('debug_1')) openChartEditor();
+			if (controls.justPressed('debug_2')) openCharacterEditor();
+		}
 
 		if (startingSong) {
 			if (startedCountdown && Conductor.songPosition >= 0) startSong();
-			else if(!startedCountdown)
-				Conductor.songPosition = -Conductor.crochet * 5;
+			else if(!startedCountdown) Conductor.songPosition = -Conductor.crochet * 5;
 		} else if (!paused && updateTime) {
 			var curTime:Float = Math.max(0, Conductor.songPosition - ClientPrefs.getPref('noteOffset'));
 			songPercent = curTime / songLength;
@@ -2883,11 +2882,14 @@ class PlayState extends MusicBeatState {
 		if(exclusions == null) exclusions = [];
 		if(excludeValues == null) excludeValues = [FunkinLua.Function_Continue];
 
-		var len:Int = luaArray.length;
-		var i:Int = 0;
-		while(i < len) {
-			var script:FunkinLua = luaArray[i];
-			if(exclusions.contains(script.scriptName)) {i++; continue;}
+		var arr:Array<FunkinLua> = [];
+		for (script in luaArray) {
+			if(script.closed) {
+				arr.push(script);
+				continue;
+			}
+
+			if(exclusions.contains(script.scriptName)) continue;
 
 			var ret:Dynamic = script.call(event, args);
 			if((ret == FunkinLua.Function_StopLua || ret == FunkinLua.Function_StopAll) && !excludeValues.contains(ret) && !ignoreStops) {
@@ -2896,9 +2898,10 @@ class PlayState extends MusicBeatState {
 			}
 			
 			if(ret != null && !excludeValues.contains(ret)) returnVal = ret;
-			if(!script.closed) i++;
-			else len--;
+			if(script.closed) arr.push(script);
 		}
+
+		if(arr.length > 0) for (script in arr) luaArray.remove(script);
 		#end
 		return returnVal;
 	}

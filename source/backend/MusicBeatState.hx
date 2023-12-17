@@ -34,7 +34,7 @@ class MusicBeatState extends FlxUIState {
 	final missFile:String = 'MISSING FILE AT:';
 
 	static var previousStateClass:Class<FlxState>;
-	public static var camBeat:FlxCamera;
+	var _psychCameraInitialized:Bool = false;
 
 	function get_controls():Controls
 		return Controls.instance;
@@ -80,9 +80,10 @@ class MusicBeatState extends FlxUIState {
 
 	override function create() {
 		if (curBPMChange != null && curBPMChange.bpm != Conductor.bpm) curBPMChange = Conductor.getDummyBPMChange();
-		camBeat = FlxG.camera;
 		var skip = FlxTransitionableState.skipNextTransOut;
 		#if MODS_ALLOWED Mods.updatedOnState = false; #end
+
+		if(!_psychCameraInitialized) initPsychCamera();
 
 		super.create();
 
@@ -96,6 +97,14 @@ class MusicBeatState extends FlxUIState {
 		passedSections = null;
 		utils.system.MemoryUtil.clearMajor();
 		super.destroy();
+	}
+
+	public function initPsychCamera():PsychCamera {
+		var camera = new PsychCamera();
+		FlxG.cameras.reset(camera);
+		FlxG.cameras.setDefaultDrawTarget(camera, true);
+		_psychCameraInitialized = true;
+		return camera;
 	}
 
 	override function update(elapsed:Float) {

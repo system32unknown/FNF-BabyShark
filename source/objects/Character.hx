@@ -18,6 +18,7 @@ typedef CharacterFile = {
 	var flip_x:Bool;
 	var no_antialiasing:Bool;
 	var healthbar_colors:Array<Int>;
+	@:optional var _editor_isPlayer:Null<Bool>;
 }
 
 typedef AnimArray = {
@@ -54,6 +55,7 @@ class Character extends FlxSprite {
 
 	public var positionArray:Array<Float> = [0, 0];
 	public var cameraPosition:Array<Float> = [0, 0];
+	public var healthColorArray:Array<Int> = [255, 0, 0];
 
 	public var hasMissAnimations:Bool = false;
 
@@ -62,7 +64,7 @@ class Character extends FlxSprite {
 	public var jsonScale:Float = 1;
 	public var noAntialiasing:Bool = false;
 	public var originalFlipX:Bool = false;
-	public var healthColorArray:Array<Int> = [255, 0, 0];
+	public var editorIsPlayer:Null<Bool> = null;
 	
 	public function new(x:Float, y:Float, ?character:String = DEFAULT_CHARACTER, ?isPlayer:Bool = false, ?library:String) {
 		super(x, y);
@@ -72,85 +74,26 @@ class Character extends FlxSprite {
 		animOffsets = new Map<String, Array<Dynamic>>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
-		switch (curCharacter) {
-			//case 'your character name in case you want to hardcode them instead':
-			default:
-				var json:CharacterFile = getCharacterFile(character);
-				var spriteType:String = getSpriteType(json);
-
-				switch (spriteType) {
-					case "packer": frames = Paths.getPackerAtlas(json.image);
-					case "sparrow": frames = Paths.getSparrowAtlas(json.image);
-					case "texture": frames = AtlasFrameMaker.construct(json.image);
-				}
-				imageFile = json.image;
-
-				if(json.scale != 1) {
-					jsonScale = json.scale;
-					setGraphicSize(Std.int(width * jsonScale));
-					updateHitbox();
-				}
-
-				positionArray = json.position;
-				cameraPosition = json.camera_position;
-
-				healthIcon = json.healthicon;
-				singDuration = json.sing_duration;
-				flipX = (json.flip_x == true);
-				if (json.no_antialiasing) {
-					antialiasing = false;
-					noAntialiasing = true;
-				}
-
-				if (json.healthbar_colors != null && json.healthbar_colors.length > 2)
-					healthColorArray = json.healthbar_colors;
-
-				if (!ClientPrefs.getPref('Antialiasing')) antialiasing = !noAntialiasing;
-
-				animationsArray = json.animations;
-				if (animationsArray != null && animationsArray.length > 0) {
-					for (anim in animationsArray) {
-						var animAnim:String = '' + anim.anim;
-						var animName:String = '' + anim.name;
-						var animFps:Int = anim.fps;
-						var animLoop:Bool = !!anim.loop; //Bruh
-						var animIndices:Array<Int> = anim.indices;
-						if (animIndices != null && animIndices.length > 0)
-							animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
-						else animation.addByPrefix(animAnim, animName, animFps, animLoop);
-
-						if(anim.offsets != null && anim.offsets.length > 1)
-							addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
-					}
-				} else quickAnimAdd('idle', 'BF idle dance');
-		}
+		try {
+			loadCharacterFile(getCharacterFile(character));
+		} catch (e:Dynamic) Logs.trace('Error loading character file of "$character": $e', ERROR);
 		originalFlipX = flipX;
 
-		for (name => offset in animOffsets)
+		for (name => _ in animOffsets)
 			if (name.startsWith('sing') && name.contains('miss')) { // includes alt miss animations now
 				hasMissAnimations = true;
 				break;
 			}
 		recalculateDanceIdle();
 		dance();
-
-		if (isPlayer) flipX = !flipX;
 	}
 
 	public static function getCharacterFile(char:String):CharacterFile {
 		var characterPath:String = 'characters/$char.json';
-
-		#if MODS_ALLOWED
-		var path:String = Paths.modFolders(characterPath);
-		if (!FileSystem.exists(path))
-			path = Paths.getPreloadPath(characterPath);
-
-		if (!FileSystem.exists(path))
-		#else
-		var path:String = Paths.getPreloadPath(characterPath);
-		if (!Assets.exists(path))
-		#end
-			path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+		var path:String = Paths.getPath(characterPath, TEXT, null, true);
+		
+		if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path))
+			path = Paths.getPreloadPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 
 		var rawJson = #if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end;
 		try {
@@ -212,6 +155,57 @@ class Character extends FlxSprite {
 		return spriteType;
 	}
 
+	public function loadCharacterFile(json:CharacterFile) {
+		var spriteType:String = getSpriteType(json);
+
+		scale.set(1, 1);
+		updateHitbox();
+
+		switch (spriteType) {
+			case "packer": frames = Paths.getPackerAtlas(json.image);
+			case "sparrow": frames = Paths.getSparrowAtlas(json.image);
+			case "texture": frames = AtlasFrameMaker.construct(json.image);
+		}
+
+		imageFile = json.image;
+		jsonScale = json.scale;
+		if(json.scale != 1) {
+			scale.set(jsonScale, jsonScale);
+			updateHitbox();
+		}
+
+		positionArray = json.position;
+		cameraPosition = json.camera_position;
+
+		healthIcon = json.healthicon;
+		singDuration = json.sing_duration;
+		flipX = (json.flip_x != isPlayer);
+		healthColorArray = (json.healthbar_colors != null && json.healthbar_colors.length > 2) ? json.healthbar_colors : [161, 161, 161];
+		originalFlipX = (json.flip_x == true);
+		editorIsPlayer = json._editor_isPlayer;
+
+		// antialiasing
+		noAntialiasing = (json.no_antialiasing == true);
+		antialiasing = ClientPrefs.getPref('Antialiasing') ? !noAntialiasing : false;
+
+		animationsArray = json.animations;
+		if (animationsArray != null && animationsArray.length > 0) {
+			for (anim in animationsArray) {
+				var animAnim:String = '' + anim.anim;
+				var animName:String = '' + anim.name;
+				var animFps:Int = anim.fps;
+				var animLoop:Bool = !!anim.loop; //Bruh
+				var animIndices:Array<Int> = anim.indices;
+				if (animIndices != null && animIndices.length > 0)
+					animation.addByIndices(animAnim, animName, animIndices, "", animFps, animLoop);
+				else animation.addByPrefix(animAnim, animName, animFps, animLoop);
+
+				if(anim.offsets != null && anim.offsets.length > 1)
+					addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
+			}
+		} else quickAnimAdd('idle', 'BF idle dance');
+	}
+
 	override function update(elapsed:Float) {
 		if(debugMode || animation.curAnim == null) {
 			super.update(elapsed);
@@ -233,17 +227,13 @@ class Character extends FlxSprite {
 		} else if(specialAnim && animation.curAnim.finished) {
 			specialAnim = false;
 			dance();
-		} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished) {
-			dance();
-			animation.finish();
 		}
-
+		
 		if (animation.curAnim.name.startsWith('sing'))
 			holdTimer += elapsed;
 		else if(isPlayer) holdTimer = 0;
 
-		var pitch = PlayState.instance != null ? PlayState.instance.playbackRate : FlxG.sound.music != null ? FlxG.sound.music.pitch : 1;
-		if (!isPlayer && holdTimer >= Conductor.stepCrochet * (.0011 / pitch) * singDuration) {
+		if (!isPlayer && holdTimer >= Conductor.stepCrochet * (.0011 / (PlayState.instance != null ? PlayState.instance.playbackRate : FlxG.sound.music != null ? FlxG.sound.music.pitch : 1)) * singDuration) {
 			dance();
 			holdTimer = 0;
 		}

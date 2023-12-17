@@ -1,7 +1,6 @@
 package substates;
 
 import flixel.FlxObject;
-import flixel.math.FlxPoint;
 import flixel.addons.transition.FlxTransitionableState;
 import objects.Character;
 
@@ -15,7 +14,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 	public var camHUD:FlxCamera;
 
 	var camFollow:FlxObject;
-	var updateCamera:Bool = false;
+	var moveCamera:Bool = false;
 
 	public static var characterName:String = 'bf-dead';
 	public static var deathSoundName:String = 'fnf_loss_sfx';
@@ -86,7 +85,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		final mid:FlxPoint = boyfriend.getGraphicMidpoint();
-		camFollow.setPosition(mid.x, mid.y);
+		camFollow.setPosition(mid.x + boyfriend.cameraPosition[0], mid.y + boyfriend.cameraPosition[1]);
 		FlxG.camera.focusOn(FlxPoint.get(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2)));
 		add(camFollow);
 		mid.put();
@@ -121,10 +120,9 @@ class GameOverSubstate extends MusicBeatSubstate {
 				boyfriend.playAnim('deathLoop');
 
 			if(boyfriend.animation.curAnim.name == 'firstDeath') {
-				if(boyfriend.animation.curAnim.curFrame >= 12 && !isFollowingAlready) {
-					FlxG.camera.follow(camFollow, LOCKON, 0);
-					updateCamera = true;
-					isFollowingAlready = true;
+				if(boyfriend.animation.curAnim.curFrame >= 12 && !moveCamera) {
+					FlxG.camera.follow(camFollow, LOCKON, .01);
+					moveCamera = true;
 				}
 
 				if (boyfriend.animation.curAnim.finished) {
@@ -133,9 +131,6 @@ class GameOverSubstate extends MusicBeatSubstate {
 				}
 			}
 		}
-
-		if(updateCamera) FlxG.camera.followLerp = elapsed * .6 * (FlxG.updateFramerate / 60);
-		else FlxG.camera.followLerp = 0;
 
 		if (FlxG.sound.music.playing)
 			Conductor.songPosition = FlxG.sound.music.time;

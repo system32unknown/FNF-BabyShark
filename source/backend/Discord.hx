@@ -50,7 +50,7 @@ class DiscordClient {
 		discordHandlers.errored = cpp.Function.fromStaticFunction(onError);
 		Discord.Initialize(clientID, cpp.RawPointer.addressOf(discordHandlers), 1, null);
 
-		Logs.trace("Discord Client initialized");
+		if(!isInitialized) Logs.trace("Discord Client initialized");
 
 		sys.thread.Thread.create(() -> {
 			var localID:String = clientID;
@@ -74,9 +74,12 @@ class DiscordClient {
 		// Obtained times are in milliseconds so they are divided so Discord can use it
 		presence.startTimestamp = Std.int(startTimestamp / 1000);
 		presence.endTimestamp = Std.int(endTimestamp / 1000);
-		Discord.UpdatePresence(cpp.RawConstPointer.addressOf(presence));
+		updatePresence();
 	}
 	
+	public static function updatePresence()
+		Discord.UpdatePresence(cpp.RawConstPointer.addressOf(presence));
+
 	public static function resetClientID()
 		clientID = _defaultID;
 
@@ -87,7 +90,7 @@ class DiscordClient {
 		if(change && isInitialized) {
 			shutdown();
 			initialize();
-			Discord.UpdatePresence(cpp.RawConstPointer.addressOf(presence));
+			updatePresence();
 		}
 		return newID;
 	}

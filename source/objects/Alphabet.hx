@@ -1,6 +1,5 @@
 package objects;
 
-import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 
 enum Alignment {

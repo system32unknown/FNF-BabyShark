@@ -23,7 +23,6 @@ import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUISlider;
 import flixel.addons.ui.FlxUIDropDownMenu;
-import flixel.math.FlxPoint;
 import flixel.util.FlxSort;
 import openfl.utils.Assets;
 import openfl.events.Event;
@@ -569,7 +568,7 @@ class ChartingState extends MusicBeatState {
 
 		UI_box.addGroup(tab_group_song);
 
-		FlxG.camera.follow(camPos);
+		initPsychCamera().follow(camPos);
 	}
 
 	var stepperBeats:FlxUINumericStepper;

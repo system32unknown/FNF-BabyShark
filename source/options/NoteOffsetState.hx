@@ -1,7 +1,6 @@
 package options;
 
 import flixel.FlxObject;
-import flixel.math.FlxPoint;
 import objects.Bar;
 import objects.Character;
 
@@ -52,17 +51,16 @@ class NoteOffsetState extends MusicBeatState {
 		FlxG.sound.destroy(true);
 		Paths.clearUnusedCache();
 		// Cameras
-		camGame = new FlxCamera();
-		camHUD = new FlxCamera();
-		camOther = new FlxCamera();
-		camHUD.bgColor = 0x00000000;
-		camOther.bgColor = 0x00000000;
+		camGame = initPsychCamera();
 
-		FlxG.cameras.reset(camGame);
+		camHUD = new FlxCamera();
+		camHUD.bgColor = 0x00000000;
 		FlxG.cameras.add(camHUD, false);
+
+		camOther = new FlxCamera();
+		camOther.bgColor = 0x00000000;
 		FlxG.cameras.add(camOther, false);
 
-		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 

@@ -1,7 +1,5 @@
 package objects;
 
-import flixel.math.FlxPoint;
-
 class CheckboxThingie extends FlxSprite {
 	public var sprTracker:FlxSprite;
 	public var daValue(default, set):Bool;

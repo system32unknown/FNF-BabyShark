@@ -4,7 +4,6 @@ import haxe.Json;
 import openfl.Assets;
 import openfl.geom.Rectangle;
 import openfl.display.BitmapData;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;

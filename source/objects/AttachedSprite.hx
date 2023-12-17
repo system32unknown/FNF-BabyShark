@@ -1,7 +1,5 @@
 package objects;
 
-import flixel.math.FlxPoint;
-
 class AttachedSprite extends FlxSprite
 {
 	public var sprTracker:FlxSprite;

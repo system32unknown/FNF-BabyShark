@@ -1,6 +1,5 @@
 package states;
 
-import flixel.math.FlxPoint;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.transition.FlxTransitionableState;

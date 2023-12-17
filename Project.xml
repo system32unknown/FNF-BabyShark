@@ -23,6 +23,7 @@
 
 	<set name="BUILD_DIR" value="export/debug" if="debug"/>
 	<set name="BUILD_DIR" value="export/release" unless="debug"/>
+	<set name="NO_PRECOMPILED_HEADERS" value="1"/>
 
 	<classpath name="source"/>
 	

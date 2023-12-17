@@ -5,7 +5,6 @@ import openfl.events.KeyboardEvent;
 import openfl.geom.Rectangle;
 import flixel.addons.ui.FlxUI.NamedString;
 import flixel.input.keyboard.FlxKey;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
 import lime.system.Clipboard;

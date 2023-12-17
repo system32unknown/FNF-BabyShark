@@ -8,7 +8,6 @@ import openfl.media.SoundTransform;
 import openfl.media.SoundMixer;
 import openfl.net.URLRequest;
 import flixel.FlxBasic;
-import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.util.FlxStringUtil;
 import openfl.Assets;

@@ -1,7 +1,5 @@
 package objects;
 
-import flixel.math.FlxPoint;
-
 class AttachedFlxText extends FlxText {
 	public var sprTracker:FlxSprite;
 	public var textoffset:FlxPoint = new FlxPoint();

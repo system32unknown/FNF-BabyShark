@@ -1,7 +1,5 @@
 package objects;
 
-import flixel.math.FlxPoint;
-
 class AttachedText extends Alphabet {
 	public var textoffset:FlxPoint = FlxPoint.get();
 	public var sprTracker:FlxSprite;

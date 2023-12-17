@@ -3,7 +3,6 @@ package psychlua;
 import objects.Bar;
 import flixel.util.FlxAxes;
 import flixel.util.FlxStringUtil;
-import flixel.math.FlxPoint;
 import openfl.display.BlendMode;
 import animateatlas.AtlasFrameMaker;
 import substates.GameOverSubstate;
