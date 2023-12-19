@@ -48,16 +48,14 @@ class CreditsEditor extends MusicBeatState {
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
-		camGame = new FlxCamera();
+		camGame = initPsychCamera();
 		camUI = new FlxCamera();
 		camOther = new FlxCamera();
 		camUI.bgColor.alpha = 0;
 		camOther.bgColor.alpha = 0;
 
-		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camUI, false);
 		FlxG.cameras.add(camOther, false);
-		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		CustomFadeTransition.nextCamera = camOther;
 
 		var tabs = [{name: 'Credits', label: 'Credits'}];

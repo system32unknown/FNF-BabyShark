@@ -43,7 +43,6 @@ class FPSCounter extends openfl.text.TextField {
 
 		updateText(dt);
 		deltaTimeout += dt;
-		super.__enterFrame(Std.int(dt));
 	}
 
 	public dynamic function updateText(dt:Float):Void {

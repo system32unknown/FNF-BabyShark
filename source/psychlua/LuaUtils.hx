@@ -223,7 +223,6 @@ class LuaUtils {
 			case "texture" | "textureatlas" | "tex": AtlasFrameMaker.construct(image);
 			case "texture_noaa" | "textureatlas_noaa" | "tex_noaa": AtlasFrameMaker.construct(image, null, true);
 			case "packer" | "packeratlas" | "pac": Paths.getPackerAtlas(image);
-			case 'json' | 'jsonatlas': Paths.getJsonAtlas(image);
 			default: Paths.getSparrowAtlas(image);
 		}
 	}

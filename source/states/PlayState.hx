@@ -650,8 +650,8 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function reloadHealthBarColors() {
-		healthBar.setColors(dad.getColor(), boyfriend.getColor());
-		timeBar.setColors(dad.getColor(), FlxColor.GRAY);
+		healthBar.setColors(CoolUtil.getColor(dad.healthColorArray), CoolUtil.getColor(boyfriend.healthColorArray));
+		timeBar.setColors(CoolUtil.getColor(dad.healthColorArray), FlxColor.GRAY);
 	}
 
 	public function addCharacterToList(newCharacter:String, type:Int) {
@@ -1597,9 +1597,10 @@ class PlayState extends MusicBeatState {
 			if(!inCutscene) {
 				processInputs();
 
-				if (!boyfriend.stunned && boyfriend.animation.curAnim != null && (cpuControlled || !keysPressed.contains(true) || endingSong)) {
-					var canDance = boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss');
-					if(boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 / playbackRate) * boyfriend.singDuration && canDance)
+				var anim:String = boyfriend.getAnimationName();
+				if (!boyfriend.stunned && !boyfriend.isAnimationNull() && (cpuControlled || !keysPressed.contains(true) || endingSong)) {
+					var canDance = anim.startsWith('sing') && !anim.endsWith('miss');
+					if(!boyfriend.isAnimationNull() && boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 / playbackRate) * boyfriend.singDuration && canDance)
 						boyfriend.dance();
 				}
 				
@@ -2557,7 +2558,7 @@ class PlayState extends MusicBeatState {
 			if(!note.noMissAnimation) {
 				switch(leType) {
 					case 'Hurt Note' | 'Kill Note': // Hurt note, Kill Note
-						if(boyfriend.animation.getByName('hurt') != null) {
+						if(boyfriend.animOffsets.exists('hurt')) {
 							boyfriend.playAnim('hurt', true);
 							boyfriend.specialAnim = true;
 						}
@@ -2647,8 +2648,8 @@ class PlayState extends MusicBeatState {
 		for (char in [gf, boyfriend, dad]) {
 			if (char == null) continue;
 			var speed = (gf != null && char == gf) ? gfSpeed : 1;
-			var curAnim = char.animation.curAnim;
-			if ((curAnim == null || !curAnim.name.startsWith('sing')) && !char.stunned && beat % Math.round(speed * char.danceEveryNumBeats) == 0)
+			
+			if ((char.isAnimationNull() || !char.getAnimationName().startsWith('sing')) && !char.stunned && beat % Math.round(speed * char.danceEveryNumBeats) == 0)
 				char.dance(force);
 		}
 	}

@@ -266,6 +266,16 @@ class Paths {
 		return OpenFlAssets.exists((isPath ? key : getPath(key, type, library, false)));
 	}
 
+	static public function getAtlas(key:String, ?library:String = null):FlxAtlasFrames {
+		#if MODS_ALLOWED
+		if(FileSystem.exists(modsXml(key)) || OpenFlAssets.exists(getPath('images/$key.xml', library), TEXT))
+		#else
+		if(OpenFlAssets.exists(getPath('images/$key.xml', library)))
+		#end
+			return getSparrowAtlas(key, library);
+		return getPackerAtlas(key, library);
+	}
+
 	inline static public function getSparrowAtlas(key:String, ?library:String):FlxAtlasFrames {
 		var imageLoaded:FlxGraphic = image(key, library);
 		#if MODS_ALLOWED
@@ -276,19 +286,6 @@ class Paths {
 		return FlxAtlasFrames.fromSparrow(imageLoaded, (xmlExists ? File.getContent(xml) : getPath('images/$key.xml', library)));
 		#else
 		return FlxAtlasFrames.fromSparrow(imageLoaded, getPath('images/$key.xml', library));
-		#end
-	}
-
-	inline static public function getJsonAtlas(key:String, ?library:String):FlxAtlasFrames {
-		var imageLoaded:FlxGraphic = image(key, library);
-		#if MODS_ALLOWED
-		var jsonExists:Bool = false;
-		var json:String = modsPacker(key);
-		if (FileSystem.exists(json)) jsonExists = true;
-
-		return FlxAtlasFrames.fromTexturePackerJson(imageLoaded, (jsonExists ? File.getContent(json) : getPath('images/$key.json', library)));
-		#else
-		return FlxAtlasFrames.fromTexturePackerJson(imageLoaded, getPath('images/$key.json', library));
 		#end
 	}
 
