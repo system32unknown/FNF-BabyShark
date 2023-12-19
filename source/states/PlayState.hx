@@ -560,7 +560,7 @@ class PlayState extends MusicBeatState {
 			moveCameraSection();
 		}
 		// SONG SPECIFIC SCRIPTS
-		for (folder in Mods.directoriesWithFile(Paths.getPreloadPath(), 'data/' + songName + '/')) for (file in FileSystem.readDirectory(folder)) {
+		for (folder in Mods.directoriesWithFile(Paths.getPreloadPath(), 'data/${Paths.CHART_PATH}/$songName/')) for (file in FileSystem.readDirectory(folder)) {
 			if(file.toLowerCase().endsWith('.lua')) new FunkinLua(folder + file);
 			if(file.toLowerCase().endsWith('.hx')) initHScript(folder + file);
 		}
