@@ -636,7 +636,6 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function addTextToDebug(text:String, color:FlxColor) {
-		#if LUA_ALLOWED
 		var newText:DebugLuaText = luaDebugGroup.recycle(DebugLuaText);
 		newText.text = text;
 		newText.color = color;
@@ -646,7 +645,7 @@ class PlayState extends MusicBeatState {
 
 		luaDebugGroup.forEachAlive((spr:DebugLuaText) -> spr.y += newText.height + 2);
 		luaDebugGroup.add(newText);
-		#end
+		Logs.trace(text);
 	}
 
 	public function reloadHealthBarColors() {
@@ -2841,7 +2840,7 @@ class PlayState extends MusicBeatState {
 			if (newScript.exception != null) {
 				var len:Int = newScript.exception.message.indexOf('\n') + 1;
 				if(len <= 0) len = newScript.exception.message.length;
-				HScript.hscriptTrace('ERROR ON LOADING - ${newScript.exception.message.substr(0, len)}', FlxColor.RED);
+				addTextToDebug('ERROR ON LOADING - ${newScript.exception.message.substr(0, len)}', FlxColor.RED);
 				makeError(newScript);
 				return;
 			}
@@ -2851,7 +2850,7 @@ class PlayState extends MusicBeatState {
 				if (newScript.exception != null) {
 					var len:Int = newScript.exception.message.indexOf('\n') + 1;
 					if(len <= 0) len = newScript.exception.message.length;
-					HScript.hscriptTrace('ERROR (onCreate) - ${newScript.exception.message.substr(0, len)}}', FlxColor.RED);
+					addTextToDebug('ERROR (onCreate) - ${newScript.exception.message.substr(0, len)}}', FlxColor.RED);
 					makeError(newScript);
 					return;
 				}
@@ -2860,7 +2859,7 @@ class PlayState extends MusicBeatState {
 		} catch(e) {
 			var len:Int = e.message.indexOf('\n') + 1;
 			if(len <= 0) len = e.message.length;
-			HScript.hscriptTrace('ERROR - ${e.message.substr(0, len)}', FlxColor.RED);
+			addTextToDebug('ERROR - ${e.message.substr(0, len)}', FlxColor.RED);
 			if (hscriptArray.length > 0) makeError(hscriptArray[hscriptArray.length - 1]);
 		}
 	}

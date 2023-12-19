@@ -18,11 +18,6 @@ class HScript extends Interp {
 		}
 	}
 
-	public static function hscriptTrace(text:String, color:FlxColor = FlxColor.WHITE) {
-		PlayState.instance.addTextToDebug(text, color);
-		Logs.trace(text);
-	}
-
 	public var origin:String;
 	override public function new(?parent:FunkinLua, ?file:String) {
 		super();
@@ -137,9 +132,9 @@ class HScript extends Interp {
         for (key => type in getDefaultVariables()) setVar(key, type);
 
 		// Functions & Variables
-		setVar('setVar', (name:String, value:Dynamic) -> PlayState.instance.variables.set(name, value));
-		setVar('getVar', (name:String) -> return PlayState.instance.variables.get(name));
-		setVar('removeVar', (name:String) -> return PlayState.instance.variables.remove(name));
+		setVar('setVar', (name:String, value:Dynamic) -> PlayState.instance.variables.set);
+		setVar('getVar', (name:String) -> return PlayState.instance.variables.get);
+		setVar('removeVar', (name:String) -> return PlayState.instance.variables.remove);
 		setVar('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> PlayState.instance.addTextToDebug(text, color));
 
 		//Macro Functions
