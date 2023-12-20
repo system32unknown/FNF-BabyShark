@@ -1,5 +1,9 @@
 package options;
 
+typedef Keybind = {
+	keyboard:String
+}
+
 class Option {
 	public var child:Alphabet;
 	public var text(get, set):String;
@@ -24,6 +28,9 @@ class Option {
 	public var description:String = '';
 	public var name:String = 'Unknown';
 
+	public var defaultKeys:Keybind = null; //Only used in keybind type
+	public var keys:Keybind = null; //Only used in keybind type
+
 	public function new(name:String, description:String = '', variable:String, type:String = 'bool', ?options:Array<String> = null) {
 		this.name = name;
 		this.description = description;
@@ -32,26 +39,30 @@ class Option {
 		this.defaultValue = ClientPrefs.defaultprefs.get(variable);
 		this.options = options;
 
-		if(defaultValue == 'null variable value')
-			defaultValue = switch(type) {
-				case 'bool': false;
-				case 'int' | 'float': 0;
-				case 'percent': 1;
+		if(defaultValue == 'null variable value' || type == 'keybind')
+			switch(type) {
+				case 'bool':
+					defaultValue = false;
+				case 'int' | 'float':
+					defaultValue = 0;
+				case 'percent':
+					defaultValue = 1;
+					displayFormat = '%v%';
+					changeValue = 0.01;
+					minValue = 0;
+					maxValue = 1;
+					scrollSpeed = 0.5;
+					decimals = 2;
 				case 'string':
-					if(options.length > 0) options[0];
-					else '';
-				case 'func': '';
-				default: null;
-			};
+					defaultValue = '';
+					if(options.length > 0) defaultValue = options[0];
+				case 'func': defaultValue = '';
 
-		if(type == 'percent') {
-			displayFormat = '%v%';
-			changeValue = 0.01;
-			minValue = 0;
-			maxValue = 1;
-			scrollSpeed = 0.5;
-			decimals = 2;
-		}
+				case 'keybind':
+					defaultValue = '';
+					defaultKeys = {keyboard: 'NONE'};
+					keys = {keyboard: 'NONE'};
+			}
 
 		try {
 			if(getValue() == null)
@@ -71,10 +82,21 @@ class Option {
 		if(onChange != null) onChange();
 	}
 
-	dynamic public function getValue():Dynamic
-		return ClientPrefs.getPref(variable);
-	dynamic public function setValue(value:Dynamic)
+	dynamic public function getValue():Dynamic {
+		var value = ClientPrefs.getPref(variable);
+		if(type == 'keybind') return value.keyboard;
+		return value;
+	}
+
+	dynamic public function setValue(value:Dynamic) {
+		if(type == 'keybind') {
+			var keys = ClientPrefs.getPref(variable);
+			keys.keyboard = value;
+			return value;
+		}
 		ClientPrefs.prefs.set(variable, value);
+		return ClientPrefs.getPref(variable);
+	}
 
 	function get_text() {
 		if(child != null) return child.text;
@@ -88,7 +110,8 @@ class Option {
 	function get_type() {
 		var newValue:String = 'bool';
 		switch(type.toLowerCase().trim()) {
-			case 'int' | 'float' | 'percent' | 'string' | 'func': newValue = type;
+			case 'key', 'keybind': newValue = 'keybind';
+			case 'int', 'float', 'percent', 'string': newValue = type;
 			case 'integer': newValue = 'int';
 			case 'str': newValue = 'string';
 			case 'fl': newValue = 'float';

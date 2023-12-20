@@ -1,7 +1,10 @@
 package options;
 
+import flixel.input.keyboard.FlxKey;
+
 import objects.AttachedText;
 import objects.CheckboxThingie;
+import backend.InputFormatter;
 
 class BaseOptionsMenu extends MusicBeatSubstate
 {
@@ -98,7 +101,21 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	var nextAccept:Int = 5;
 	var holdTime:Float = 0;
 	var holdValue:Float = 0;
+
+	var bindingKey:Bool = false;
+	var holdingEsc:Float = 0;
+	var bindingBlack:FlxSprite;
+	var bindingText:Alphabet;
+	var bindingText2:Alphabet;
 	override function update(elapsed:Float) {
+		super.update(elapsed);
+
+		if(bindingKey)
+		{
+			bindingKeyUpdate(elapsed);
+			return;
+		}
+
 		if (controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);
 
 		if (controls.BACK) {
@@ -120,14 +137,35 @@ class BaseOptionsMenu extends MusicBeatSubstate
 					reloadCheckboxes();
 				}
 			} else {
-				if(controls.UI_LEFT || controls.UI_RIGHT) {
+				if(curOption.type == 'keybind') {
+					if(controls.ACCEPT) {
+						bindingBlack = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+						bindingBlack.scale.set(FlxG.width, FlxG.height);
+						bindingBlack.updateHitbox();
+						bindingBlack.alpha = 0;
+						FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35, {ease: FlxEase.linear});
+						add(bindingBlack);
+
+						bindingText = new Alphabet(FlxG.width / 2, 160, "Rebinding " + curOption.name, false);
+						bindingText.alignment = CENTERED;
+						add(bindingText);
+
+						bindingText2 = new Alphabet(FlxG.width / 2, 340, "Hold ESC to Cancel\nHold Backspace to Delete", true);
+						bindingText2.alignment = CENTERED;
+						add(bindingText2);
+
+						bindingKey = true;
+						holdingEsc = 0;
+						ClientPrefs.toggleVolumeKeys(false);
+						FlxG.sound.play(Paths.sound('scrollMenu'));
+					}
+				} else if(controls.UI_LEFT || controls.UI_RIGHT) {
 					var pressed = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
 					if(holdTime > 0.5 || pressed) {
 						if(pressed) {
 							var add:Dynamic = null;
-							if(curOption.type != 'string') {
+							if(curOption.type != 'string')
 								add = controls.UI_LEFT ? -curOption.changeValue : curOption.changeValue;
-							}
 
 							switch(curOption.type) {
 								case 'int' | 'float' | 'percent':
@@ -175,16 +213,22 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 					if(curOption.type != 'string') holdTime += elapsed;
 				} else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) {
-					clearHold();
+					if(holdTime > .5) FlxG.sound.play(Paths.sound('scrollMenu'));
+					holdTime = 0;
 				}
 			}
 
 			if(controls.RESET) {
 				var leOption:Option = optionsArray[curSelected];
-				leOption.setValue(leOption.defaultValue);
-				if(leOption.type != 'bool') {
-					if(leOption.type == 'string') leOption.curOption = leOption.options.indexOf(leOption.getValue());
-					updateTextFrom(leOption);
+				if(leOption.type != 'keybind') {
+					leOption.setValue(leOption.defaultValue);
+					if(leOption.type != 'bool') {
+						if(leOption.type == 'string') leOption.curOption = leOption.options.indexOf(leOption.getValue());
+						updateTextFrom(leOption);
+					}
+				} else {
+					leOption.setValue(leOption.defaultKeys.keyboard);
+					updateBind(leOption);
 				}
 				leOption.change();
 				FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -193,22 +237,98 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		}
 
 		if (nextAccept > 0) nextAccept--;
-		super.update(elapsed);
+	}
+
+	function bindingKeyUpdate(elapsed:Float) {
+		if(FlxG.keys.pressed.ESCAPE) {
+			holdingEsc += elapsed;
+			if(holdingEsc > 0.5) {
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				closeBinding();
+			}
+		} else if (FlxG.keys.pressed.BACKSPACE) {
+			holdingEsc += elapsed;
+			if(holdingEsc > 0.5) {
+				curOption.keys.keyboard = NONE;
+				updateBind(InputFormatter.getKeyName(NONE));
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				closeBinding();
+			}
+		} else {
+			holdingEsc = 0;
+			var changed:Bool = false;
+			if(FlxG.keys.justPressed.ANY || FlxG.keys.justReleased.ANY) {
+				var keyPressed:FlxKey = cast (FlxG.keys.firstJustPressed(), FlxKey);
+				var keyReleased:FlxKey = cast (FlxG.keys.firstJustReleased(), FlxKey);
+
+				if(keyPressed != NONE && keyPressed != ESCAPE && keyPressed != BACKSPACE) {
+					changed = true;
+					curOption.keys.keyboard = keyPressed;
+				} else if(keyReleased != NONE && (keyReleased == ESCAPE || keyReleased == BACKSPACE)) {
+					changed = true;
+					curOption.keys.keyboard = keyReleased;
+				}
+			}
+
+			if(changed) {
+				var key:String = null;
+				if(curOption.keys.keyboard == null) curOption.keys.keyboard = 'NONE';
+				curOption.setValue(curOption.keys.keyboard);
+				key = InputFormatter.getKeyName(FlxKey.fromString(curOption.keys.keyboard));
+				updateBind(key);
+				FlxG.sound.play(Paths.sound('confirmMenu'));
+				closeBinding();
+			}
+		}
+	}
+
+	final MAX_KEYBIND_WIDTH = 320;
+	function updateBind(?text:String = null, ?option:Option = null) {
+		if(option == null) option = curOption;
+		if(text == null) {
+			text = option.getValue();
+			if(text == null) text = 'NONE';
+			text = InputFormatter.getKeyName(FlxKey.fromString(text));
+		}
+
+		var bind:AttachedText = cast option.child;
+		var attach:AttachedText = new AttachedText(text, bind.textoffset.x);
+		attach.sprTracker = bind.sprTracker;
+		attach.copyAlpha = true;
+		attach.ID = bind.ID;
+		attach.scaleX = Math.min(1, MAX_KEYBIND_WIDTH / attach.width);
+		attach.setPosition(bind.x, bind.y);
+
+		option.child = attach;
+		grpTexts.insert(grpTexts.members.indexOf(bind), attach);
+		grpTexts.remove(bind);
+		bind.destroy();
+	}
+
+	function closeBinding() {
+		bindingKey = false;
+		bindingBlack.destroy();
+		remove(bindingBlack);
+
+		bindingText.destroy();
+		remove(bindingText);
+
+		bindingText2.destroy();
+		remove(bindingText2);
+		ClientPrefs.toggleVolumeKeys(true);
 	}
 
 	function updateTextFrom(option:Option) {
+		if(option.type == 'keybind') {
+			updateBind(option);
+			return;
+		}
+
 		var text:String = option.displayFormat;
 		var val:Dynamic = option.getValue();
 		if(option.type == 'percent') val *= 100;
 		var def:Dynamic = option.defaultValue;
 		option.text = text.replace('%v', Std.string(val)).replace('%d', Std.string(def));
-	}
-
-	function clearHold() {
-		if(holdTime > 0.5) {
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-		}
-		holdTime = 0;
 	}
 	
 	function changeSelection(change:Int = 0) {
@@ -228,15 +348,11 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			bullShit++;
 
 			item.alpha = 0.6;
-			if (item.targetY == 0) {
-				item.alpha = 1;
-			}
+			if (item.targetY == 0) item.alpha = 1;
 		}
 		for (text in grpTexts) {
 			text.alpha = 0.6;
-			if(text.ID == curSelected) {
-				text.alpha = 1;
-			}
+			if(text.ID == curSelected) text.alpha = 1;
 		}
 
 		descBox.setPosition(descText.x - 10, descText.y - 10);

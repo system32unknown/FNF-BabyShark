@@ -4,7 +4,6 @@ import objects.Bar;
 import flixel.util.FlxAxes;
 import flixel.util.FlxStringUtil;
 import openfl.display.BlendMode;
-import animateatlas.AtlasFrameMaker;
 import substates.GameOverSubstate;
 
 typedef LuaTweenOptions = {
@@ -220,8 +219,6 @@ class LuaUtils {
 	}
 	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
 		spr.frames = switch(spriteType.toLowerCase().trim()) {
-			case "texture" | "textureatlas" | "tex": AtlasFrameMaker.construct(image);
-			case "texture_noaa" | "textureatlas_noaa" | "tex_noaa": AtlasFrameMaker.construct(image, null, true);
 			case "packer" | "packeratlas" | "pac": Paths.getPackerAtlas(image);
 			default: Paths.getSparrowAtlas(image);
 		}
@@ -253,6 +250,47 @@ class LuaUtils {
 			PlayState.instance.modchartTweens.get(tag).destroy();
 			PlayState.instance.modchartTweens.remove(tag);
 		}
+	}
+
+	public static function getModSetting(saveTag:String, ?modName:String = null) {
+		if(FlxG.save.data.modSettings == null) FlxG.save.data.modSettings = new Map<String, Dynamic>();
+
+		var settings:Map<String, Dynamic> = FlxG.save.data.modSettings.get(modName);
+		var path:String = Paths.mods('$modName/data/settings.json');
+		if(FileSystem.exists(path)) {
+			if(settings == null || !settings.exists(saveTag)) {
+				if(settings == null) settings = new Map<String, Dynamic>();
+				var data:String = File.getContent(path);
+				try {
+					var parsedJson:Dynamic = tjson.TJSON.parse(data);
+					for (i in 0...parsedJson.length) {
+						var sub:Dynamic = parsedJson[i];
+						if(sub != null && sub.save != null && !settings.exists(sub.save)) {
+							if(sub.type != 'keybind' && sub.type != 'key') {
+								if(sub.value != null)
+									settings.set(sub.save, sub.value);
+							} else settings.set(sub.save, {keyboard: (sub.keyboard != null ? sub.keyboard : 'NONE')});
+						}
+					}
+					FlxG.save.data.modSettings.set(modName, settings);
+				} catch(e:Dynamic) {
+					var errorTitle = 'Mod name: ' + Mods.currentModDirectory;
+					var errorMsg = 'An error occurred: $e';
+					#if windows
+					lime.app.Application.current.window.alert(errorMsg, errorTitle);
+					#end
+					Logs.trace('$errorTitle - $errorMsg', ERROR);
+				}
+			}
+		} else {
+			FlxG.save.data.modSettings.remove(modName);
+			PlayState.instance.addTextToDebug('getModSetting: $path could not be found!', FlxColor.RED);
+			return null;
+		}
+
+		if(settings.exists(saveTag)) return settings.get(saveTag);
+		PlayState.instance.addTextToDebug('getModSetting: "$saveTag" could not be found inside $modName\'s settings!', FlxColor.RED);
+		return null;
 	}
 
 	public static function tweenPrepare(tag:String, vars:String) {

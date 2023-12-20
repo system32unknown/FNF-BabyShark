@@ -65,7 +65,6 @@ class WeekData {
 		return DEFAULT_WEEK;
 	}
 
-	// HELP: Is there any way to convert a WeekFile to WeekData without having to put all variables there manually? I'm kind of a noob in haxe lmao
 	public function new(weekFile:WeekFile, fileName:String) {
 		for (field in Reflect.fields(weekFile))
 			try {Reflect.setProperty(this, field, Reflect.getProperty(weekFile, field));}

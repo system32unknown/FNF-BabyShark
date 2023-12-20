@@ -1,7 +1,6 @@
 package objects;
 
 import backend.animation.PsychAnimationController;
-import animateatlas.AtlasFrameMaker;
 import flixel.util.FlxDestroyUtil;
 import openfl.utils.Assets;
 import haxe.Json;

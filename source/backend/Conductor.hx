@@ -23,8 +23,6 @@ class Conductor {
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
 	public static var usePlayState:Bool = false;
 
-	public function new() {}
-
 	inline public static function calculateCrochet(bpm:Float):Float
 		return (60 / bpm) * 1000;
 

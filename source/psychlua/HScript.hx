@@ -8,6 +8,7 @@ class HScript extends Interp {
 	public var active:Bool = true;
 	public var parser:Parser;
 	public var parentLua:FunkinLua;
+	public var modFolder:String;
 	public var exception:haxe.Exception;
 	
 	public static function initHaxeModule(parent:FunkinLua) {
@@ -26,8 +27,16 @@ class HScript extends Interp {
 		if (file != null) content = Paths.getTextFromFile(file, false, true);
 		
 		parentLua = parent;
-		if (parent != null) origin = parent.scriptName;
-		if (content != null) origin = file;
+		if (parent != null) {
+			this.origin = parent.scriptName;
+			this.modFolder = parent.modFolder;
+		}
+		if (content != null) {
+			this.origin = content;
+			var myFolder:Array<String> = content.split('/');
+			if(myFolder[0] + '/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
+				this.modFolder = myFolder[1];
+		}
 		preset();
 		executeCode(content);
 	}
@@ -132,9 +141,22 @@ class HScript extends Interp {
         for (key => type in getDefaultVariables()) setVar(key, type);
 
 		// Functions & Variables
-		setVar('setVar', (name:String, value:Dynamic) -> PlayState.instance.variables.set);
-		setVar('getVar', (name:String) -> return PlayState.instance.variables.get);
-		setVar('removeVar', (name:String) -> return PlayState.instance.variables.remove);
+		setVar('setVar', (name:String, value:Dynamic) -> {
+			PlayState.instance.variables.set(name, value);
+			return value;
+		});
+		setVar('getVar', (name:String) -> {
+			if(PlayState.instance.variables.exists(name))
+				return PlayState.instance.variables.get(name);
+			return null;
+		});
+		setVar('removeVar', (name:String) -> {
+			if(PlayState.instance.variables.exists(name)) {
+				PlayState.instance.variables.remove(name);
+				return true;
+			}
+			return false;
+		});
 		setVar('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> PlayState.instance.addTextToDebug(text, color));
 
 		//Macro Functions
@@ -142,6 +164,55 @@ class HScript extends Interp {
 		setVar('nameOf', (v:Dynamic) -> macros.MacroFunctions.nameOf(v));
 		setVar('validateJson', (v:String) -> macros.MacroFunctions.validateJson(v));
 		#end
+
+		setVar('getModSetting', function(saveTag:String, ?modName:String = null) {
+			if(modName == null)
+			{
+				if(this.modFolder == null)
+				{
+					PlayState.instance.addTextToDebug('getModSetting: Argument #2 is null and script is not inside a packed Mod folder!', FlxColor.RED);
+					return null;
+				}
+				modName = this.modFolder;
+			}
+			return LuaUtils.getModSetting(saveTag, modName);
+		});
+
+		// Keyboard & Gamepads
+		setVar('keyboardJustPressed', (name:String) -> return Reflect.getProperty(FlxG.keys.justPressed, name));
+		setVar('keyboardPressed', (name:String) -> return Reflect.getProperty(FlxG.keys.pressed, name));
+		setVar('keyboardReleased', (name:String) -> return Reflect.getProperty(FlxG.keys.justReleased, name));
+
+		setVar('keyJustPressed', function(name:String = '') {
+			name = name.toLowerCase();
+			return switch(name) {
+				case 'left': return PlayState.instance.controls.NOTE_LEFT_P;
+				case 'down': return PlayState.instance.controls.NOTE_DOWN_P;
+				case 'up': return PlayState.instance.controls.NOTE_UP_P;
+				case 'right': return PlayState.instance.controls.NOTE_RIGHT_P;
+				default: return PlayState.instance.controls.justPressed(name);
+			}
+		});
+		setVar('keyPressed', function(name:String = '') {
+			name = name.toLowerCase();
+			return switch(name) {
+				case 'left': return PlayState.instance.controls.NOTE_LEFT;
+				case 'down': return PlayState.instance.controls.NOTE_DOWN;
+				case 'up': return PlayState.instance.controls.NOTE_UP;
+				case 'right': return PlayState.instance.controls.NOTE_RIGHT;
+				default: return PlayState.instance.controls.pressed(name);
+			}
+		});
+		setVar('keyReleased', function(name:String = '') {
+			name = name.toLowerCase();
+			return switch(name) {
+				case 'left': return PlayState.instance.controls.NOTE_LEFT_R;
+				case 'down': return PlayState.instance.controls.NOTE_DOWN_R;
+				case 'up': return PlayState.instance.controls.NOTE_UP_R;
+				case 'right': return PlayState.instance.controls.NOTE_RIGHT_R;
+				default: return PlayState.instance.controls.justReleased(name);
+			}
+		});
 
 		// For adding your own callbacks
 

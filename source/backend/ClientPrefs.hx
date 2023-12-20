@@ -442,16 +442,10 @@ class ClientPrefs {
 		Main.volumeUpKeys = keyBinds.get('volume_up').copy();
 		toggleVolumeKeys(true);
 	}
-	public static function toggleVolumeKeys(turnOn:Bool) {
-		if(turnOn) {
-			FlxG.sound.muteKeys = Main.muteKeys;
-			FlxG.sound.volumeDownKeys = Main.volumeDownKeys;
-			FlxG.sound.volumeUpKeys = Main.volumeUpKeys;
-		} else {
-			FlxG.sound.muteKeys = [];
-			FlxG.sound.volumeDownKeys = [];
-			FlxG.sound.volumeUpKeys = [];
-		}
+	public static function toggleVolumeKeys(turnOn:Bool = true) {
+		FlxG.sound.muteKeys = turnOn ? Main.muteKeys : [];
+		FlxG.sound.volumeDownKeys = turnOn ? Main.volumeDownKeys : [];
+		FlxG.sound.volumeUpKeys = turnOn ? Main.volumeUpKeys : [];
 	}
 
 	inline public static function getPref(name:String, ?defaultValue:Dynamic):Dynamic {
