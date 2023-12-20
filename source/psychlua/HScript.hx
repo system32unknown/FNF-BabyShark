@@ -25,7 +25,7 @@ class HScript extends Interp {
 
 		var content:String = null;
 		if (file != null) content = Paths.getTextFromFile(file, false, true);
-		
+
 		parentLua = parent;
 		if (parent != null) {
 			this.origin = parent.scriptName;
@@ -33,7 +33,7 @@ class HScript extends Interp {
 		}
 		if (content != null) {
 			this.origin = content;
-			var myFolder:Array<String> = content.split('/');
+			var myFolder:Array<String> = file.split('/');
 			if(myFolder[0] + '/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
 				this.modFolder = myFolder[1];
 		}
@@ -129,7 +129,7 @@ class HScript extends Interp {
         ];
     }
 
-    function getMacroAbstractClass(className:String) return Type.resolveClass('${className}_HSC');
+    inline function getMacroAbstractClass(className:String) return Type.resolveClass('${className}_HSC');
 	
 	function preset() {
 		parser = new Parser();
@@ -166,10 +166,8 @@ class HScript extends Interp {
 		#end
 
 		setVar('getModSetting', function(saveTag:String, ?modName:String = null) {
-			if(modName == null)
-			{
-				if(this.modFolder == null)
-				{
+			if(modName == null) {
+				if(this.modFolder == null) {
 					PlayState.instance.addTextToDebug('getModSetting: Argument #2 is null and script is not inside a packed Mod folder!', FlxColor.RED);
 					return null;
 				}
