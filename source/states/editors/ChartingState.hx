@@ -134,6 +134,9 @@ class ChartingState extends MusicBeatState {
 	var waveformSprite:FlxSprite;
 	var gridLayer:FlxTypedGroup<FlxSprite>;
 
+	var helpBg:FlxSprite;
+	var helpTexts:FlxSpriteGroup;
+
 	public static var quantization:Int = 16;
 	public static var curQuant = 3;
 
@@ -266,29 +269,14 @@ class ChartingState extends MusicBeatState {
 		UI_box.setPosition(FlxG.width / 2 + 120, 25);
 		UI_box.scrollFactor.set();
 
-		var text:String = "W/S or Mouse Wheel - Change Conductor's strum time
-		\nH - Go to the start of the chart
-		\nA/D - Go to the previous/next section
-		\nLeft/Right - Change Snap
-		\nUp/Down - Change Conductor's Strum Time with Snapping
-		\nLeft/Right Bracket - Change Song Playback Rate (SHIFT to go Faster)
-		\nALT + Brackets - Reset Song Playback Rate
-		\nHold Shift - Move 4x faster Conductor's strum time
-		\nHold Control + click on an arrow - Select it
-		\nZ/X - Zoom in/out
-		\nHold Right Mouse - Placing Notes by dragging mouse
-		\nEnter - Play your chart
-		\nQ/E - Decrease/Increase Note Sustain Length
-		\nSpace - Stop/Resume song";
+		var tipText:FlxText = new FlxText(FlxG.width - 300, FlxG.height - 24, 300, "Press F1 for Help", 16);
+		tipText.setFormat(null, 16, FlxColor.WHITE, RIGHT, OUTLINE_FAST, FlxColor.BLACK);
+		tipText.borderColor = FlxColor.BLACK;
+		tipText.scrollFactor.set();
+		tipText.borderSize = 1;
+		tipText.active = false;
+		add(tipText);
 
-		var tipTextArray:Array<String> = text.split('\n');
-		for (i in 0...tipTextArray.length) {
-			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 8, 0, tipTextArray[i], 14);
-			tipText.y += i * 9;
-			tipText.setFormat(Paths.font("vcr.ttf"), 12, FlxColor.WHITE, LEFT);
-			tipText.scrollFactor.set();
-			add(tipText);
-		}
 		add(UI_box);
 
 		addSongUI();
@@ -306,15 +294,61 @@ class ChartingState extends MusicBeatState {
 		add(nextRenderedSustains);
 		add(nextRenderedNotes);
 
-		if(lastSong != currentSongName)
-			changeSection();
+		if(lastSong != currentSongName) changeSection();
 		lastSong = currentSongName;
+
+		addHelpScreen();
 
 		updateGrid();
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
 		super.create();
+	}
+
+	function addHelpScreen() {
+		var str:String = "W/S or Mouse Wheel - Change Conductor's strum time
+		\nH - Go to the start of the chart
+		\nA/D - Go to the previous/next section
+		\nLeft/Right - Change Snap
+		\nUp/Down - Change Conductor's Strum Time with Snapping
+		\nLeft/Right Bracket - Change Song Playback Rate (SHIFT to go Faster)
+		\nALT + Brackets - Reset Song Playback Rate
+		\nHold Shift - Move 4x faster Conductor's strum time
+		\nHold Control + click on an arrow - Select it
+		\nZ/X - Zoom in/out
+		\nHold Right Mouse - Placing Notes by dragging mouse
+		\nEnter - Play your chart
+		\nQ/E - Decrease/Increase Note Sustain Length
+		\nSpace - Stop/Resume song";
+
+		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		helpBg.scale.set(FlxG.width, FlxG.height);
+		helpBg.scrollFactor.set();
+		helpBg.updateHitbox();
+		helpBg.alpha = 0.6;
+		helpBg.active = helpBg.visible = false;
+		add(helpBg);
+
+		var arr = str.split('\n');
+		helpTexts = new FlxSpriteGroup();
+		helpTexts.scrollFactor.set();
+		for (i in 0...arr.length) {
+			if(arr[i].length < 2) continue;
+
+			var helpText:FlxText = new FlxText(0, 0, 600, arr[i], 16);
+			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);
+			helpText.borderColor = FlxColor.BLACK;
+			helpText.scrollFactor.set();
+			helpText.borderSize = 1;
+			helpText.screenCenter();
+			add(helpText);
+			helpText.y += ((i - arr.length / 2) * 16);
+			helpText.active = false;
+			helpTexts.add(helpText);
+		}
+		helpTexts.active = helpTexts.visible = false;
+		add(helpTexts);
 	}
 
 	var check_mute_inst:FlxUICheckBox = null;
@@ -1583,6 +1617,11 @@ class ChartingState extends MusicBeatState {
 				if (FlxG.keys.justPressed.E) changeNoteSustain(Conductor.stepCrochet);
 				if (FlxG.keys.justPressed.Q) changeNoteSustain(-Conductor.stepCrochet);
 			}
+
+			if(FlxG.keys.justPressed.F1 || (helpBg.visible && FlxG.keys.justPressed.ESCAPE)) {
+				helpBg.visible = !helpBg.visible;
+				helpTexts.visible = helpBg.visible;
+			} 
 
 			if (FlxG.keys.justPressed.BACKSPACE) {
 				autosaveSong();
