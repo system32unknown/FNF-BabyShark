@@ -132,15 +132,9 @@ class MainMenuState extends MusicBeatState {
 			if (firstStart)
 				FlxTween.tween(menuItem, {x: 20}, 1 + (i * .25), {
 					ease: FlxEase.expoInOut,
-					onComplete: (flxTween:FlxTween) -> {
-						finishedFunnyMove = true;
-						changeItem();
-					}
+					onComplete: (flxTween:FlxTween) -> finishedFunnyMove = true
 				});
-			else {
-				menuItem.x = 20;
-				changeItem();
-			}
+			else menuItem.x = 20;
 		}
 		firstStart = false;
 
@@ -215,7 +209,7 @@ class MainMenuState extends MusicBeatState {
 	}
 
 	function changeItem(huh:Int = 0) {
-		if (!firstStart) FlxG.sound.play(Paths.sound('scrollMenu'));
+		FlxG.sound.play(Paths.sound('scrollMenu'));
 		if (finishedFunnyMove) curSelected = FlxMath.wrap(curSelected + huh, 0, menuItems.length - 1);
 
 		for (item in menuItems.members) {
