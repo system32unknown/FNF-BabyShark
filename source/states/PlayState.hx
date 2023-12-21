@@ -1438,6 +1438,7 @@ class PlayState extends MusicBeatState {
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
 	var freezeCamera:Bool = false;
+	var allowDebugKeys:Bool = true;
 
 	var lastSongTime:Float = 0;
 	var songElapsed:Float = 0;
@@ -1533,7 +1534,7 @@ class PlayState extends MusicBeatState {
 			iconP2.setState(0);
 		}
 
-		if (!endingSong && !inCutscene) {
+		if (!endingSong && !inCutscene && allowDebugKeys) {
 			if (controls.justPressed('debug_1')) openChartEditor();
 			if (controls.justPressed('debug_2')) openCharacterEditor();
 		}
@@ -2462,7 +2463,7 @@ class PlayState extends MusicBeatState {
 		var char:Character = boyfriend;
 		if((note != null && note.gfNote) || (SONG.notes[curSection] != null && SONG.notes[curSection].gfSection)) char = gf;
 		
-		if(char != null && char.hasMissAnimations) {
+		if(char != null && !note.noMissAnimation && char.hasMissAnimations) {
 			var suffix:String = '';
 			if(note != null) suffix = note.animSuffix;
 			char.playAnim('sing' + Note.keysShit.get(mania).get('anims')[direction] + 'miss' + suffix, true);

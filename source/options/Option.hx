@@ -36,17 +36,17 @@ class Option {
 		this.description = description;
 		this.variable = variable;
 		this.type = type;
-		this.defaultValue = ClientPrefs.defaultprefs.get(variable);
 		this.options = options;
 
-		if(defaultValue == 'null variable value' || type == 'keybind')
+		if(this.type != 'keybind') this.defaultValue = ClientPrefs.defaultprefs.get(variable);
+		if(defaultValue == 'null variable value')
 			switch(type) {
 				case 'bool':
-					defaultValue = false;
+					if(defaultValue == null) defaultValue = false;
 				case 'int' | 'float':
-					defaultValue = 0;
+					if(defaultValue == null) defaultValue = 0;
 				case 'percent':
-					defaultValue = 1;
+					if(defaultValue == null) defaultValue = 1;
 					displayFormat = '%v%';
 					changeValue = 0.01;
 					minValue = 0;
@@ -54,9 +54,9 @@ class Option {
 					scrollSpeed = 0.5;
 					decimals = 2;
 				case 'string':
-					defaultValue = '';
+					if(defaultValue == null) defaultValue = '';
 					if(options.length > 0) defaultValue = options[0];
-				case 'func': defaultValue = '';
+				case 'func': if(defaultValue == null) defaultValue = '';
 
 				case 'keybind':
 					defaultValue = '';

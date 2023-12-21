@@ -37,6 +37,7 @@ class Character extends FlxSprite {
 	inline public static final DEFAULT_CHARACTER:String = 'bf';
 	public var animOffsets:Map<String, Array<Dynamic>>;
 	public var debugMode:Bool = false;
+	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = DEFAULT_CHARACTER;
@@ -74,9 +75,7 @@ class Character extends FlxSprite {
 		animOffsets = new Map<String, Array<Dynamic>>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
-		try {
-			loadCharacterFile(getCharacterFile(character));
-		} catch (e:Dynamic) Logs.trace('Error loading character file of "$character": $e', ERROR);
+		loadCharacterFile(getCharacterFile(character));
 
 		for (name => _ in animOffsets)
 			if (name.startsWith('sing') && name.contains('miss')) { // includes alt miss animations now
@@ -100,7 +99,7 @@ class Character extends FlxSprite {
 			for (anim in json.animations)
 				anim.indices = parseIndices(anim.indices);
 			return json;
-		} catch(e) Logs.trace('Error loading character "$char" JSON file', ERROR);
+		} catch(e) Logs.trace('Error loading character file of "$char": $e', ERROR);
 		return null;
 	}
 
@@ -246,7 +245,7 @@ class Character extends FlxSprite {
 	}
 
 	inline public function isAnimationNull():Bool
-		return animation.curAnim == null;
+		return !isAnimateAtlas ? (animation.curAnim == null) : (atlas.anim.curSymbol == null);
 
 	inline public function getAnimationName():String {
 		var name:String = '';

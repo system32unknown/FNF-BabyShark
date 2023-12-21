@@ -156,17 +156,14 @@ class MainMenuState extends MusicBeatState {
 		}
 		
 		if (!selectedSomethin && finishedFunnyMove) {
-			if (controls.UI_UP_P || controls.UI_DOWN_P) {
-				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
+			if (controls.UI_UP_P || controls.UI_DOWN_P)
 				changeItem(controls.UI_UP_P ? -1 : 1);
-			}
 
 			for (item in menuItems.members) {
 				final itemIndex:Int = menuItems.members.indexOf(item);
 
 				if (FlxG.mouse.overlaps(item) && curSelected != itemIndex) {
 					curSelected = itemIndex;
-					FlxG.sound.play(Paths.sound('scrollMenu'));
 					changeItem();
 					break;
 				}
@@ -218,6 +215,7 @@ class MainMenuState extends MusicBeatState {
 	}
 
 	function changeItem(huh:Int = 0) {
+		if (!firstStart) FlxG.sound.play(Paths.sound('scrollMenu'));
 		if (finishedFunnyMove) curSelected = FlxMath.wrap(curSelected + huh, 0, menuItems.length - 1);
 
 		for (item in menuItems.members) {

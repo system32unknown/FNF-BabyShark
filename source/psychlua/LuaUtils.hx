@@ -396,4 +396,13 @@ class LuaUtils {
 			default: PlayState.instance.camGame;
 		}
 	}
+
+	public static function setTextBorderFromString(text:FlxText, border:String) {
+		text.borderStyle = switch(border.toLowerCase().trim()) {
+			case 'shadow': SHADOW;
+			case 'outline': OUTLINE;
+			case 'outline_fast', 'outlinefast': OUTLINE_FAST;
+			default: NONE;
+		}
+	}
 }

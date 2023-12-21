@@ -42,26 +42,18 @@ class TextFunctions {
 			FunkinLua.luaTrace("setTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
-		funk.set("setTextBorder", function(tag:String, size:Int, color:String) {
+		funk.set("setTextBorder", function(tag:String, size:Float, color:String, ?style:String = 'outline') {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
-				obj.borderSize = size;
+				if(size > 0) {
+					LuaUtils.setTextBorderFromString(obj, style);
+					obj.borderSize = size;
+				}
 				obj.borderColor = CoolUtil.colorFromString(color);
 				return true;
 			}
 			FunkinLua.luaTrace("setTextBorder: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
-		});
-		funk.set("setTextBorderStyle", function(tag:String, borderStyle:String = 'NONE') {
-			var obj:FlxText = LuaUtils.getTextObject(tag);
-			if(obj != null) {
-				obj.borderStyle = switch(borderStyle.trim().toLowerCase()) {
-					case 'shadow': SHADOW;
-					case 'outline': OUTLINE;
-					case 'outline_fast': OUTLINE_FAST;
-					case 'none' | _: NONE;
-				}
-			}
 		});
 		funk.set("setTextColor", function(tag:String, color:String) {
 			var obj:FlxText = LuaUtils.getTextObject(tag);

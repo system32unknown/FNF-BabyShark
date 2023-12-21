@@ -568,7 +568,7 @@ class ChartingState extends MusicBeatState {
 
 		UI_box.addGroup(tab_group_song);
 
-		initPsychCamera().follow(camPos, LOCKON, 1);
+		initPsychCamera().follow(camPos, LOCKON, 999);
 	}
 
 	var stepperBeats:FlxUINumericStepper;
@@ -1148,7 +1148,7 @@ class ChartingState extends MusicBeatState {
 		check_mute_inst = new FlxUICheckBox(10, 310, null, null, "Mute Instrumental (in editor)", 100);
 		check_mute_inst.checked = false;
 		check_mute_inst.callback = function() {
-			var vol:Float = 1;
+			var vol:Float = instVolume.value;
 			if (check_mute_inst.checked) vol = 0;
 			FlxG.sound.music.volume = vol;
 		};
@@ -1184,7 +1184,7 @@ class ChartingState extends MusicBeatState {
 		check_mute_vocals.checked = false;
 		check_mute_vocals.callback = function() {
 			if(vocals != null) {
-				var vol:Float = 1;
+				var vol:Float = voicesVolume.value;
 				if (check_mute_vocals.checked) vol = 0;
 				vocals.volume = vol;
 			}
