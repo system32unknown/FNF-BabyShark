@@ -269,8 +269,8 @@ class ChartingState extends MusicBeatState {
 		UI_box.setPosition(FlxG.width / 2 + 120, 25);
 		UI_box.scrollFactor.set();
 
-		var tipText:FlxText = new FlxText(FlxG.width - 300, FlxG.height - 24, 300, "Press F1 for Help", 16);
-		tipText.setFormat(null, 16, FlxColor.WHITE, RIGHT, OUTLINE_FAST, FlxColor.BLACK);
+		var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 8, 300, "Press F1 for Help", 16);
+		tipText.setFormat(null, 16, FlxColor.WHITE, LEFT, OUTLINE_FAST, FlxColor.BLACK);
 		tipText.borderColor = FlxColor.BLACK;
 		tipText.scrollFactor.set();
 		tipText.borderSize = 1;
@@ -312,15 +312,16 @@ class ChartingState extends MusicBeatState {
 		\nA/D - Go to the previous/next section
 		\nLeft/Right - Change Snap
 		\nUp/Down - Change Conductor's Strum Time with Snapping
-		\nLeft/Right Bracket - Change Song Playback Rate (SHIFT to go Faster)
-		\nALT + Brackets - Reset Song Playback Rate
+		\nBrackets - Change Song Playback Rate (SHIFT to go Faster)
+		\nAlt + Brackets - Reset Song Playback Rate
 		\nHold Shift - Move 4x faster Conductor's strum time
 		\nHold Control + click on an arrow - Select it
 		\nZ/X - Zoom in/out
 		\nHold Right Mouse - Placing Notes by dragging mouse
 		\nEnter - Play your chart
 		\nQ/E - Decrease/Increase Note Sustain Length
-		\nSpace - Stop/Resume song";
+		\nSpace - Stop/Resume song
+		\nHold Alt and Click - Place Both Notes";
 
 		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		helpBg.scale.set(FlxG.width, FlxG.height);
@@ -337,10 +338,8 @@ class ChartingState extends MusicBeatState {
 			if(arr[i].length < 2) continue;
 
 			var helpText:FlxText = new FlxText(0, 0, 600, arr[i], 16);
-			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);
-			helpText.borderColor = FlxColor.BLACK;
-			helpText.scrollFactor.set();
-			helpText.borderSize = 1;
+			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER, FlxColor.BLACK);
+			helpText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 			helpText.screenCenter();
 			add(helpText);
 			helpText.y += ((i - arr.length / 2) * 16);
@@ -1123,8 +1122,7 @@ class ChartingState extends MusicBeatState {
 		UI_box.addGroup(tab_group_event);
 	}
 
-	function changeEventSelected(change:Int = 0)
-	{
+	function changeEventSelected(change:Int = 0) {
 		if(curSelectedNote != null && curSelectedNote[2] == null) { //Is event note
 			curEventSelected += change;
 			if(curEventSelected < 0) curEventSelected = Std.int(curSelectedNote[1].length) - 1;
@@ -2420,7 +2418,7 @@ class ChartingState extends MusicBeatState {
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 100, theType, 24);
 				daText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER);
-				daText.setBorderStyle(FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK, 1);
+				daText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 				daText.textoffset.set(-32, 6);
 				curRenderedNoteType.add(daText);
 				daText.sprTracker = note;
@@ -2442,7 +2440,7 @@ class ChartingState extends MusicBeatState {
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 400, text, 12);
 				daText.setFormat(Paths.font("vcr.ttf"), 12, FlxColor.WHITE, RIGHT);
-				daText.setBorderStyle(FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK, 1);
+				daText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 				daText.textoffset.x = -410;
 				if(note.eventLength > 1) daText.textoffset.y += 8;
 				curRenderedNoteType.add(daText);

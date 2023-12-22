@@ -319,7 +319,7 @@ class PauseSubState extends MusicBeatSubstate
 			if(menuItems[i] == 'Skip Time') {
 				skipTimeText = new FlxText(0, 0, 0, '', 64);
 				skipTimeText.setFormat(Paths.font("babyshark.ttf"), 64, FlxColor.WHITE, CENTER);
-				skipTimeText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
+				skipTimeText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 				skipTimeText.scrollFactor.set();
 				skipTimeTracker = item;
 				add(skipTimeText);

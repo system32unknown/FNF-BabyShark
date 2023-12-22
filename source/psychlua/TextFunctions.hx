@@ -9,7 +9,7 @@ class TextFunctions {
 			LuaUtils.resetTextTag(tag);
 			var leText:FlxText = new FlxText(x, y, width, text, 16);
 			leText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
-			leText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
+			leText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 			leText.camera = game.camHUD;
 			leText.scrollFactor.set();
 			game.modchartTexts.set(tag, leText);
@@ -45,10 +45,8 @@ class TextFunctions {
 		funk.set("setTextBorder", function(tag:String, size:Float, color:String, ?style:String = 'outline') {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
-				if(size > 0) {
-					LuaUtils.setTextBorderFromString(obj, style);
-					obj.borderSize = size;
-				}
+				LuaUtils.setTextBorderFromString(obj, (size > 0 ? style : 'none'));
+				if(size > 0) obj.borderSize = size;
 				obj.borderColor = CoolUtil.colorFromString(color);
 				return true;
 			}

@@ -425,7 +425,7 @@ class PlayState extends MusicBeatState {
 		timeTxt = new FlxText(0, 19, 400, "", 16);
 		timeTxt.screenCenter(X);
 		timeTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
-		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
 		timeTxt.visible = updateTime = showTime;
@@ -497,7 +497,7 @@ class PlayState extends MusicBeatState {
 
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), 0);
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
-		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		if (!downScroll) scoreTxt.y = FlxG.height - scoreTxt.height;
 		scoreTxt.visible = !hideHud;
 		scoreTxt.scrollFactor.set();
@@ -506,7 +506,7 @@ class PlayState extends MusicBeatState {
 
 		judgementCounter = new FlxText(2, 0, 0, "", 16);
 		judgementCounter.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
-		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		judgementCounter.scrollFactor.set();
 		judgementCounter.visible = ClientPrefs.getPref('ShowJudgement') && !hideHud;
 		judgementCounter.text = 'Max Combos: 0\nEpics: 0\nSicks: 0\nGoods: 0\nBads: 0\nShits: 0\n';
@@ -516,7 +516,7 @@ class PlayState extends MusicBeatState {
 
 		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
-		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		botplayTxt.screenCenter(X);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.visible = cpuControlled;
@@ -524,7 +524,7 @@ class PlayState extends MusicBeatState {
 
 		songNameTxt = new FlxText(2, scoreTxt.y, 0, '${SONG.song} - ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : ''), 16);
 		songNameTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
-		songNameTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		songNameTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songNameTxt.scrollFactor.set();
 		songNameTxt.visible = !hideHud;
 		uiGroup.add(songNameTxt);
@@ -1244,7 +1244,7 @@ class PlayState extends MusicBeatState {
 				for (j in 0...keysArray[i].length) {
 					var daKeyTxt:FlxText = new FlxText(babyArrow.x, babyArrow.y - 10, 0, backend.InputFormatter.getKeyName(keysArray[i][j]), 32 - mania);
 					daKeyTxt.setFormat(Paths.font("babyshark.ttf"), 32 - mania, FlxColor.WHITE, CENTER);
-					daKeyTxt.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1.25);
+					daKeyTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.25);
 					daKeyTxt.alpha = 0;
 					var textY:Float = (j == 0 ? babyArrow.y - 32 : ((babyArrow.y - 32) + babyArrow.height) - daKeyTxt.height);
 					daKeyTxt.setPosition(babyArrow.x + ((babyArrow.width - daKeyTxt.width) / 2), textY);
@@ -1500,10 +1500,7 @@ class PlayState extends MusicBeatState {
 		if (controls.PAUSE) tryPause();
 
 		switch(ClientPrefs.getPref('IconBounceType')) {
-			case "Vanilla":
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .85)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .85)));
-			case "Old": // Stolen from Vanilla Engine
+			case "Old":
 				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .5)));
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .5)));
 			case "Psych":
@@ -2247,7 +2244,7 @@ class PlayState extends MusicBeatState {
 		if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
 			msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
 			mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
-			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 			mstimingTxt.text = '${msTiming}ms';
 			mstimingTxt.color = SpriteUtil.dominantColor(rating);
 
@@ -2739,7 +2736,7 @@ class PlayState extends MusicBeatState {
 		charactersDance(curBeat);
 		
 		switch (ClientPrefs.getPref('IconBounceType')) {
-			case 'Vanilla' | 'Old':
+			case "Old":
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 			case "Psych":

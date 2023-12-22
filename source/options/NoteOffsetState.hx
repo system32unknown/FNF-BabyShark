@@ -125,7 +125,7 @@ class NoteOffsetState extends MusicBeatState {
 
 		timeTxt = new FlxText(0, 600, FlxG.width, "", 32);
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
-		timeTxt.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
+		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		timeTxt.scrollFactor.set();
 
 		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 3), 'healthBar', () -> return barPercent, delayMin, delayMax);
@@ -379,7 +379,7 @@ class NoteOffsetState extends MusicBeatState {
 	function createTexts(i:Int) {
 		var text:FlxText = new FlxText(10, 48 + (i * 30), 0, '', 24);
 		text.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT);
-		text.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
+		text.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		text.scrollFactor.set();
 		text.camera = camHUD;
 

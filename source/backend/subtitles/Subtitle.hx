@@ -13,7 +13,7 @@ class Subtitle extends FlxTypeText {
         onSubComplete = onComplete;
         
         setFormat(Paths.font(properties.fonts), properties.subtitleSize, FlxColor.WHITE, FlxTextAlign.CENTER);
-        setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2);
+        setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
         antialiasing = true;
 
         if (properties.centerScreen) screenCenter(properties.screenCenter);

@@ -61,7 +61,7 @@ class LoadingState extends MusicBeatState {
 
 		loadLogoText = new FlxText(0, logo.y - logo.height, 0, 'LOADING', 30);
 		loadLogoText.setFormat(null, 30, FlxColor.WHITE, FlxTextAlign.CENTER);
-		loadLogoText.setBorderStyle(FlxTextBorderStyle.SHADOW, FlxColor.GRAY, 2);
+		loadLogoText.setBorderStyle(SHADOW, FlxColor.GRAY, 2);
 		loadLogoText.screenCenter(X);
 		add(loadLogoText);
 
@@ -78,7 +78,7 @@ class LoadingState extends MusicBeatState {
 
 		loadText = new FlxText(0, loadBarBack.y - 24, 0, '0%', 16);
 		loadText.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, FlxTextAlign.CENTER);
-		loadText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1);
+		loadText.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		loadText.screenCenter(X);
 		add(loadText);
 		
