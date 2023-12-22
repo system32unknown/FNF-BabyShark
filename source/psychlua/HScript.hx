@@ -32,7 +32,7 @@ class HScript extends Interp {
 			this.modFolder = parent.modFolder;
 		}
 		if (content != null) {
-			this.origin = content;
+			this.origin = file;
 			var myFolder:Array<String> = file.split('/');
 			if(myFolder[0] + '/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
 				this.modFolder = myFolder[1];
