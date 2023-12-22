@@ -1891,8 +1891,8 @@ class ChartingState extends MusicBeatState {
 					if(!playedSound[data]) {
 						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)) {
 							var soundToPlay = 'hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}';
-							if(_song.player1 == 'gf') { //Easter egg
-								soundToPlay = 'gfnoise/GF_${Std.string(data + 1)}';
+							if(_song.player1 == 'gf') { //Easter egg 
+								soundToPlay = 'gfnoise/GF_${EK.keys(data)}';
 							}
 
 							FlxG.sound.play(Paths.sound(soundToPlay)).pan = note.noteData < 4 ? -.3 : .3; //would be coolio
