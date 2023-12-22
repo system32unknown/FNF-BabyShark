@@ -1,62 +1,62 @@
 {
 	"animations": [
 		{
+			"loop": false,
 			"offsets": [
 				-11,
 				10
 			],
-			"loop": false,
-			"anim": "singLEFT",
 			"fps": 24,
-			"name": "Dad Sing Note LEFT",
-			"indices": []
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "Dad Sing Note LEFT"
 		},
 		{
+			"loop": false,
 			"offsets": [
 				0,
 				-30
 			],
-			"loop": false,
-			"anim": "singDOWN",
 			"fps": 24,
-			"name": "Dad Sing Note DOWN",
-			"indices": []
+			"anim": "singDOWN",
+			"indices": [],
+			"name": "Dad Sing Note DOWN"
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-6,
 				50
 			],
-			"loop": false,
-			"anim": "singUP",
 			"fps": 24,
-			"name": "Dad Sing Note UP",
-			"indices": []
+			"anim": "singUP",
+			"indices": [],
+			"name": "Dad Sing Note UP"
 		},
 		{
+			"loop": false,
 			"offsets": [
 				0,
 				27
 			],
-			"loop": false,
-			"anim": "singRIGHT",
 			"fps": 24,
-			"name": "Dad Sing Note RIGHT",
-			"indices": []
+			"anim": "singRIGHT",
+			"indices": [],
+			"name": "Dad Sing Note RIGHT"
 		},
 		{
+			"loop": false,
 			"offsets": [
 				0,
 				0
 			],
-			"loop": false,
-			"anim": "idle",
 			"fps": 24,
-			"name": "Dad idle dance",
-			"indices": []
+			"anim": "idle",
+			"indices": [],
+			"name": "Dad idle dance"
 		}
 	],
-	"no_antialiasing": false,
+	"no_antialiasing": true,
 	"image": "characters/DADDY_SHARK",
 	"position": [
 		0,
@@ -74,5 +74,6 @@
 		0
 	],
 	"sing_duration": 6.1,
-	"scale": 1
+	"scale": 1,
+	"_editor_isPlayer": false
 }

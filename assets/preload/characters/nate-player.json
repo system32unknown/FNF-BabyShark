@@ -100,7 +100,7 @@
 			"indices": []
 		}
 	],
-	"no_antialiasing": false,
+	"no_antialiasing": true,
 	"image": "characters/Nate_FNF_assets",
 	"position": [
 		0,

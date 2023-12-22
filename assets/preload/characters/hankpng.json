@@ -56,7 +56,7 @@
 			"name": "hankpng right"
 		}
 	],
-	"no_antialiasing": false,
+	"no_antialiasing": true,
 	"image": "characters/Hank_png",
 	"position": [
 		0,
