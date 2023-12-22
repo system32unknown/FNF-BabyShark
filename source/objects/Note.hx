@@ -331,8 +331,7 @@ class Note extends FlxSprite {
 				animation.add('$letter hold', [i], 24);
 				animation.add('$letter tail', [i + pixelNotesDivisionValue], 24);
 			}
-		} else
-			for (i => letter in gfxLetter) animation.add(letter, [i + pixelNotesDivisionValue], 24);
+		} else for (i => letter in gfxLetter) animation.add(letter, [i + pixelNotesDivisionValue], 24);
 	}
 
 	inline public function checkDiff(songPos:Float):Bool {
@@ -372,13 +371,13 @@ class Note extends FlxSprite {
 			y = strumY + offsetY + correctionOffset + Math.sin(angleDir) * distance;
 			if(myStrum.downScroll && isSustainNote) {
 				if(PlayState.isPixelStage) y -= PlayState.daPixelZoom * 9.5;
-				y -= (frameHeight * scale.y) - (Note.swagWidth / 2);
+				y -= (frameHeight * scale.y) - (swagWidth / 2);
 			}
 		}
 	}
 
 	public function clipToStrumNote(myStrum:StrumNote) {
-		final center:Float = myStrum.y + offsetY + Note.swagWidth / 2;
+		final center:Float = myStrum.y + offsetY + swagWidth / 2;
 		if(isSustainNote && (mustPress || !ignoreNote) && (!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !canBeHit)))) {
 			final swagRect:FlxRect = (clipRect == null ? FlxRect.get(0, 0, frameWidth, frameHeight) : clipRect);
 	

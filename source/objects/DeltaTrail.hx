@@ -39,6 +39,7 @@ class DeltaTrail extends FlxTrail {
 			var spritePosition:FlxPoint = (_recentPositions.length == _trailLength) ? _recentPositions.pop() : FlxPoint.get();
 			spritePosition.set(target.x - target.offset.x, target.y - target.offset.y);
 			_recentPositions.unshift(spritePosition);
+			spritePosition.put();
 
 			// Also do the same thing for the Sprites angle if rotationsEnabled
 			if (rotationsEnabled)
@@ -49,6 +50,7 @@ class DeltaTrail extends FlxTrail {
 				var spriteScale:FlxPoint = (_recentScales.length == _trailLength) ? _recentScales.pop() : FlxPoint.get();
 				spriteScale.set(target.scale.x, target.scale.y);
 				_recentScales.unshift(spriteScale);
+				spriteScale.put();
 			}
 
 			// Again the same thing for Sprites frames if framesEnabled

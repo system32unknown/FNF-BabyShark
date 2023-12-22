@@ -42,6 +42,24 @@ class TextFunctions {
 			FunkinLua.luaTrace("setTextWidth: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			return false;
 		});
+		funk.set("setTextHeight", function(tag:String, height:Float) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.fieldHeight = height;
+				return true;
+			}
+			FunkinLua.luaTrace("setTextHeight: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
+		funk.set("setTextAutoSize", function(tag:String, value:Bool) {
+			var obj:FlxText = LuaUtils.getTextObject(tag);
+			if(obj != null) {
+				obj.autoSize = value;
+				return true;
+			}
+			FunkinLua.luaTrace("setTextAutoSize: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			return false;
+		});
 		funk.set("setTextBorder", function(tag:String, size:Float, color:String, ?style:String = 'outline') {
 			var obj:FlxText = LuaUtils.getTextObject(tag);
 			if(obj != null) {
@@ -119,10 +137,7 @@ class TextFunctions {
 			return 0;
 		});
 
-		funk.set("addLuaText", function(tag:String) {
-			if(game.modchartTexts.exists(tag))
-				LuaUtils.getInstance().add(game.modchartTexts.get(tag));
-		});
+		funk.set("addLuaText", (tag:String) -> if(game.modchartTexts.exists(tag)) LuaUtils.getInstance().add(game.modchartTexts.get(tag)));
 		funk.set("removeLuaText", function(tag:String, destroy:Bool = true) {
 			if(!game.modchartTexts.exists(tag)) return;
 

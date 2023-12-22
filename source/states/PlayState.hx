@@ -1521,14 +1521,11 @@ class PlayState extends MusicBeatState {
 		if (iconP2.moves) iconP2.x = (iconP2.iconType == 'psych' ? healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2 : healthBar.barCenter - (iconP2.width - iconOffset));
 
 		if (healthBar.percent < 20) {
-			iconP1.setState(1);
-			iconP2.setState(2);
+			iconP1.setState(1); iconP2.setState(2);
 		} else if (healthBar.percent > 80) {
-			iconP1.setState(2);
-			iconP2.setState(1);
+			iconP1.setState(2); iconP2.setState(1);
 		} else {
-			iconP1.setState(0);
-			iconP2.setState(0);
+			iconP1.setState(0); iconP2.setState(0);
 		}
 
 		if (!endingSong && !inCutscene && allowDebugKeys) {
