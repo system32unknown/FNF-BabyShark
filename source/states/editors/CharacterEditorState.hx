@@ -748,7 +748,11 @@ class CharacterEditorState extends MusicBeatState {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if(animationInputText.hasFocus || animationNameInputText.hasFocus || animationIndicesInputText.hasFocus || imageInputText.hasFocus || healthIconInputText.hasFocus) return;
+		if(animationInputText.hasFocus || animationNameInputText.hasFocus || animationIndicesInputText.hasFocus || imageInputText.hasFocus || healthIconInputText.hasFocus) {
+			ClientPrefs.toggleVolumeKeys(false);
+			return;
+		}
+		ClientPrefs.toggleVolumeKeys(true);
 
 		var shiftMult:Float = 1;
 		var ctrlMult:Float = 1;

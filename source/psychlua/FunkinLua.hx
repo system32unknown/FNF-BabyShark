@@ -194,7 +194,6 @@ class FunkinLua {
 		set("removeHScript", function(hscriptFile:String, ?ignoreAlreadyRunning:Bool = false) {
 			#if HSCRIPT_ALLOWED
 			var foundScript:String = findScript(hscriptFile, '.hx');
-	
 			if (foundScript != null) {
 				if (!ignoreAlreadyRunning)
 					for (script in game.hscriptArray)
@@ -517,7 +516,7 @@ class FunkinLua {
 			}
 			return target;
 		});
-		set("cameraShake", (camera:String, intensity:Float, duration:Float, axes:String) -> LuaUtils.cameraFromString(camera).shake(intensity, duration * game.playbackRate, true, LuaUtils.axesFromString(axes)));
+		set("cameraShake", (camera:String, intensity:Float, duration:Float, axes:String = 'xy') -> LuaUtils.cameraFromString(camera).shake(intensity, duration * game.playbackRate, true, LuaUtils.axesFromString(axes)));
 		set("cameraFlash", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).flash(CoolUtil.colorFromString(color), duration * game.playbackRate, null, forced));
 		set("cameraFade", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).fade(CoolUtil.colorFromString(color), duration * game.playbackRate, false, null, forced));
 
