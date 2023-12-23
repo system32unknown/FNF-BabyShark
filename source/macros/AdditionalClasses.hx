@@ -17,7 +17,6 @@ class AdditionalClasses {
 			"hscript",
 			// OTHER LIBRARIES & STUFF
 			#if cpp "cpp", #end
-			#if hl "hl", #end
 			#if neko "neko", #end
 			#if sys "sys", #end
 			// BASE PATH LIBRARIES THAT DOESN'T INCLUDE

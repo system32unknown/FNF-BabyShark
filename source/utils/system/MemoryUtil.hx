@@ -15,8 +15,8 @@ class MemoryUtil {
 		#if cpp
 		Gc.run(!minor);
 		if (!minor) Gc.compact();
-		#elseif hl
-		Gc.major();
+		#else
+		System.gc();
 		#end
 	}
 
@@ -29,10 +29,6 @@ class MemoryUtil {
 		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
 		#elseif sys
 		return cast(System.totalMemory, UInt);
-		#elseif hl
-		return hl.Gc.stats().totalAllocated;
-		#elseif (js && html5)
-		return untyped #if haxe4 js.Syntax.code #else __js__ #end ("(window.performance && window.performance.memory) ? window.performance.memory.usedJSHeapSize : 0");
 		#else
 		return 0;
 		#end

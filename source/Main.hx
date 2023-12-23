@@ -1,6 +1,5 @@
 package;
 
-import openfl.Lib;
 import openfl.display.Sprite;
 import flixel.input.keyboard.FlxKey;
 import utils.system.MemoryUtil;
@@ -35,9 +34,7 @@ class Main extends Sprite {
 		setupGame();
 	}
 
-	#if (target.threaded && sys)
-	public var threadPool:ElasticThreadPool;
-	#end
+	#if (target.threaded && sys) public var threadPool:ElasticThreadPool; #end
 
 	function setupGame():Void {
 		backend.Logs.init();
@@ -46,9 +43,6 @@ class Main extends Sprite {
 		addChild(fpsVar = new FPSCounter());
 		
 		#if (target.threaded && sys) threadPool = new ElasticThreadPool(12, 30); #end
-
-		Lib.current.stage.align = "tl";
-		Lib.current.stage.scaleMode = openfl.display.StageScaleMode.NO_SCALE;
 
 		#if CRASH_HANDLER backend.CrashHandler.init(); #end
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end

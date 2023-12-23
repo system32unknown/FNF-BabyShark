@@ -129,7 +129,6 @@ class HealthIcon extends FlxSprite {
 	}
 
 	public function setState(state:Int) {
-		char.endsWith('a');
 		if (!animated) setStateIndex(state);
 		else if (animation.exists(animatediconstates[state]))
 			animation.play(animatediconstates[state]);

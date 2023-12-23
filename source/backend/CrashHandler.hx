@@ -11,11 +11,7 @@ import haxe.io.Path;
 class CrashHandler {
 	public static function init() {
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
-		#if cpp
-		untyped __global__.__hxcpp_set_critical_error_handler(onError);
-		#elseif hl
-		hl.Api.setErrorHandler(onError);
-		#end
+		#if cpp untyped __global__.__hxcpp_set_critical_error_handler(onError); #end
 	}
 
 	public static function onCrash(e:UncaughtErrorEvent):Void {
@@ -64,7 +60,7 @@ class CrashHandler {
 		#if sys Sys.exit(1); #end
 	}
 
-	#if (cpp || hl)
+	#if cpp
 	static function onError(message:Dynamic):Void
 		throw Std.string(message);
 	#end

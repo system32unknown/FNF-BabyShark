@@ -107,14 +107,8 @@ class CoolUtil {
 		return colorNum != null ? colorNum : FlxColor.WHITE;
 	}
 
-	public static function callErrBox(title:String, context:String) {
-        #if hl
-		var flags:haxe.EnumFlags<hl.UI.DialogFlags> = new haxe.EnumFlags<hl.UI.DialogFlags>();
-		flags.set(IsError);
-		hl.UI.dialog(title, context, flags);
-		#else
-		NativeUtil.showMessageBox(title, context, MessageBoxIcon.MSG_ERROR);
-		#end
+	inline public static function callErrBox(title:String, context:String) {
+        NativeUtil.showMessageBox(title, context, MessageBoxIcon.MSG_ERROR);
     }
 
 	inline public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
