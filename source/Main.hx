@@ -64,17 +64,17 @@ class Main extends Sprite {
 		FlxG.signals.gameResized.add((w, h) -> {
 			if (FlxG.cameras != null) for (cam in FlxG.cameras.list) {
 				if (cam != null && cam.filters != null)
-				   	resetSpriteCache(cam.flashSprite);
+					resetSpriteCache(cam.flashSprite);
 			}
 			if (FlxG.game != null) resetSpriteCache(FlxG.game);
 			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
-	   	});
+		});
 	}
 
 	static function resetSpriteCache(sprite:Sprite):Void {
 		if (sprite == null) return;
 		@:privateAccess {
-		    sprite.__cacheBitmap = null;
+			sprite.__cacheBitmap = null;
 			sprite.__cacheBitmapData = sprite.__cacheBitmapData2 = sprite.__cacheBitmapData3 = null;
 			sprite.__cacheBitmapColorTransform = null;
 		}

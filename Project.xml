@@ -1,20 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
-<project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xmlns="http://lime.openfl.org/project/1.0.4"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/xsd/project-1.0.4.xsd">
+
 	<!-- _________________________Application Settings_________________________ -->
 	<app title="Baby Shark's Funkin: The Full Game" file="AlterEngine" version="0.1.0" company="Altertoriel"/>
 	<app packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark"/>
 	<app main="Main" preloader="backend.FunkinPreloader"/>
 
-	<!-- NOTE TO SELF: DISABLE THIS IF ISSUES ARE FOUND -->
-	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB"/> <!-- stable luas PUT AFTER FIRST LINE WITH APP NAME AND ETC -->
-
-	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
-	<set name="SWF_VERSION" value="11.8"/>
-
 	<!-- ____________________________Window Settings___________________________ -->
 
 	<!--These window settings apply to all targets-->
-	<window hardware="true" fps="" background=""/>
+	<window hardware="true" fps="60" background=""/>
 	<window orientation="landscape"/>
 
 	<!--Desktop-specific-->
@@ -24,7 +22,7 @@
 	<set name="BUILD_DIR" value="export/debug" if="debug"/>
 	<set name="BUILD_DIR" value="export/release" unless="debug"/>
 
-	<classpath name="source"/>
+	<source path="source"/>
 	
 	<!-- ______________________PSYCH ENGINE CUSTOMIZATION______________________ -->
 	<section if="desktop">

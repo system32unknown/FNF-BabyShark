@@ -15,7 +15,7 @@ class CallbackHandler {
 						}
 				} else cbf = last.callbacks.get(fname);
 			}
-			
+
 			if(cbf == null) return 0;
 
 			var args:Array<Dynamic> = [for (i in 0...Lua.gettop(l)) Convert.fromLua(l, i + 1)];
