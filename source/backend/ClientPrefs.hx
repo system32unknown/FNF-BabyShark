@@ -72,6 +72,9 @@ class ClientPrefs {
 	// For custom functions after the save data is loaded
 	public static var loadFunctions:Map<String, Dynamic -> Void> = [
 		'framerate' => function(framerate:Int) {
+			if(FlxG.save.data.framerate == null)
+				framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate, 60, 240));
+
 			if (framerate > FlxG.drawFramerate) {
 				FlxG.updateFramerate = framerate;
 				FlxG.drawFramerate = framerate;

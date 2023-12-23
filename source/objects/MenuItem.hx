@@ -23,7 +23,7 @@ class MenuItem extends FlxSprite
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		y = FlxMath.lerp(y, (targetY * 120) + 480, FlxMath.bound(elapsed * 10.2, 0, 1));
+		y = FlxMath.lerp((targetY * 120) + 480, y, Math.exp(-elapsed * 10.2));
 		if (isFlashing) {
 			_flashingElapsed += elapsed;
 			color = (Math.floor(_flashingElapsed * FlxG.updateFramerate * flashes_ps) % 2 == 0) ? _flashColor : FlxColor.WHITE;

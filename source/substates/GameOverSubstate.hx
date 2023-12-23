@@ -121,7 +121,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 
 			if(boyfriend.animation.curAnim.name == 'firstDeath') {
 				if(boyfriend.animation.curAnim.curFrame >= 12 && !moveCamera) {
-					FlxG.camera.follow(camFollow, LOCKON, .01);
+					FlxG.camera.follow(camFollow, LOCKON, 0.6);
 					moveCamera = true;
 				}
 
