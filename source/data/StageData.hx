@@ -1,7 +1,6 @@
 package data;
 
 import openfl.utils.Assets;
-import haxe.Json;
 import backend.Song;
 
 typedef StageFile = {
@@ -66,7 +65,7 @@ class StageData {
 		if(Assets.exists(path)) rawJson = Assets.getText(path);
 		#end
 		else return null;
-		return cast Json.parse(rawJson);
+		return cast tjson.TJSON.parse(rawJson);
 	}
 
 	public static function vanillaSongStage(songName):String {

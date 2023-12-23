@@ -7,13 +7,13 @@ import objects.Character;
 
 class MasterEditorMenu extends MusicBeatState {
 	var options:Array<String> = [
+		'Chart Editor',
+		'Character Editor',
+		'Credit Editor',
 		'Week Editor',
 		'Menu Character Editor',
 		'Dialogue Editor',
 		'Dialogue Portrait Editor',
-		'Character Editor',
-		'Chart Editor',
-		'Credit Editor'
 	];
 	var grpTexts:FlxTypedGroup<Alphabet>;
 	var directories:Array<String> = [null];
@@ -25,7 +25,6 @@ class MasterEditorMenu extends MusicBeatState {
 	override function create() {
 		FlxG.camera.bgColor = FlxColor.BLACK;
 		#if DISCORD_ALLOWED
-		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Editors Main Menu", null);
 		#end
 
@@ -34,8 +33,7 @@ class MasterEditorMenu extends MusicBeatState {
 		bg.color = 0xFF353535;
 		add(bg);
 
-		grpTexts = new FlxTypedGroup<Alphabet>();
-		add(grpTexts);
+		add(grpTexts = new FlxTypedGroup<Alphabet>());
 
 		for (i in 0...options.length) {
 			var leText:Alphabet = new Alphabet(90, 320, options[i], true);
@@ -66,8 +64,7 @@ class MasterEditorMenu extends MusicBeatState {
 		super.create();
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		if (controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);
 		#if MODS_ALLOWED if (controls.UI_LEFT_P || controls.UI_RIGHT_P) changeDirectory(controls.UI_LEFT_P ? -1 : 1); #end
 
@@ -76,14 +73,12 @@ class MasterEditorMenu extends MusicBeatState {
 		if (controls.ACCEPT) {
 			switch(options[curSelected]) {
 				case 'Character Editor': LoadingState.loadAndSwitchState(new CharacterEditorState(Character.DEFAULT_CHARACTER, false), false);
+				case 'Chart Editor': LoadingState.loadAndSwitchState(new ChartingState(), false);
+				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditor());
 				case 'Week Editor': MusicBeatState.switchState(new WeekEditorState());
 				case 'Menu Character Editor': MusicBeatState.switchState(new MenuCharacterEditorState());
 				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), false);
 				case 'Dialogue Editor' :LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
-				case 'Chart Editor':
-					PlayState.chartingMode = true;
-					LoadingState.loadAndSwitchState(new ChartingState(), false); //felt it would be cool maybe
-				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditor());
 			}
 			FlxG.sound.music.volume = 0;
 			#if PRELOAD_ALL
@@ -95,26 +90,19 @@ class MasterEditorMenu extends MusicBeatState {
 		
 		var bullShit:Int = 0;
 		for (item in grpTexts.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			item.alpha = 0.6;
-
-			if (item.targetY == 0)
-				item.alpha = 1;
+			item.targetY = bullShit++ - curSelected;
+			item.alpha = (item.targetY == 0 ? 1 : .6);
 		}
 		super.update(elapsed);
 	}
 
-	function changeSelection(change:Int = 0)
-	{
+	function changeSelection(change:Int = 0) {
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		curSelected = FlxMath.wrap(curSelected + change, 0, options.length - 1);
 	}
 
 	#if MODS_ALLOWED
-	function changeDirectory(change:Int = 0)
-	{
+	function changeDirectory(change:Int = 0) {
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		curDirectory = FlxMath.wrap(curDirectory + change, 0, directories.length - 1);

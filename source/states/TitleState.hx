@@ -3,7 +3,6 @@ package states;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxGradient;
-import haxe.Json;
 import states.MainMenuState;
 
 @:structInit
@@ -47,7 +46,7 @@ class TitleState extends MusicBeatState {
 
 		super.create();
 
-		final balls = Json.parse(Paths.getTextFromFile('data/titleData.json'));
+		final balls = tjson.TJSON.parse(Paths.getTextFromFile('data/titleData.json'));
 		titleJson = {
 			titlex: balls.titlex,
 			titley: balls.titley,

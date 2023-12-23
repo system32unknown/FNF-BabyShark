@@ -1,7 +1,6 @@
 package data;
 
 import haxe.io.Path;
-import haxe.Json;
 import openfl.utils.Assets;
 import haxe.extern.EitherType;
 
@@ -158,7 +157,7 @@ class WeekData {
 		#end
 
 		if(rawJson != null && rawJson.length > 0)
-			return cast Json.parse(rawJson);
+			return cast tjson.TJSON.parse(rawJson);
 		return null;
 	}
 

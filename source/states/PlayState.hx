@@ -2457,7 +2457,7 @@ class PlayState extends MusicBeatState {
 		var char:Character = boyfriend;
 		if((note != null && note.gfNote) || (SONG.notes[curSection] != null && SONG.notes[curSection].gfSection)) char = gf;
 		
-		if(char != null && !note.noMissAnimation && char.hasMissAnimations) {
+		if(char != null && (note == null || !note.noMissAnimation) && char.hasMissAnimations) {
 			var suffix:String = '';
 			if(note != null) suffix = note.animSuffix;
 			char.playAnim('sing' + Note.keysShit.get(mania).get('anims')[direction] + 'miss' + suffix, true);
