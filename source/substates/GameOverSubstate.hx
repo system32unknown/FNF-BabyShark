@@ -82,6 +82,13 @@ class GameOverSubstate extends MusicBeatSubstate {
 		FlxG.camera.target = null;
 
 		boyfriend.playAnim('firstDeath');
+		boyfriend.animation.finishCallback = (name:String) -> {
+			if(name == 'firstDeath') {
+				boyfriend.playAnim('deathLoop');
+				FlxG.sound.playMusic(Paths.music(loopSoundName));
+			}
+			boyfriend.animation.finishCallback = null;
+		}
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		final mid:FlxPoint = boyfriend.getGraphicMidpoint();
@@ -91,8 +98,6 @@ class GameOverSubstate extends MusicBeatSubstate {
 		mid.put();
 	}
 
-	var startedDeath:Bool = false;
-	var isFollowingAlready:Bool = false;
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
@@ -115,21 +120,9 @@ class GameOverSubstate extends MusicBeatSubstate {
 			PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
 		}
 
-		if (boyfriend.animation.curAnim != null) {
-			if (boyfriend.animation.curAnim.name == 'firstDeath' && boyfriend.animation.curAnim.finished && startedDeath)
-				boyfriend.playAnim('deathLoop');
-
-			if(boyfriend.animation.curAnim.name == 'firstDeath') {
-				if(boyfriend.animation.curAnim.curFrame >= 12 && !moveCamera) {
-					FlxG.camera.follow(camFollow, LOCKON, 0.6);
-					moveCamera = true;
-				}
-
-				if (boyfriend.animation.curAnim.finished) {
-					startedDeath = true;
-					FlxG.sound.playMusic(Paths.music(loopSoundName));
-				}
-			}
+		if (boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name == 'firstDeath' && boyfriend.animation.curAnim.curFrame >= 12 && !moveCamera) {
+			FlxG.camera.follow(camFollow, LOCKON, .8);
+			moveCamera = true;
 		}
 
 		if (FlxG.sound.music.playing)
@@ -143,47 +136,20 @@ class GameOverSubstate extends MusicBeatSubstate {
 	}
 
 	var isEnding:Bool = false;
-	var endCompleted:Bool = false;
-	var quick:Bool = false;
-	var slowass:FlxTimer;
-
-	function resetState():Void {
-		if (slowass != null) slowass.cancel();
-		FlxTransitionableState.skipNextTransIn = true;
-		MusicBeatState.resetState();
-	}
-
 	function endBullshit():Void {
-		if (isEnding) {
-			quick = true;
-			if (endCompleted) resetState();
-			return;
-		}
+		if (isEnding) return;
+
 		isEnding = true;
-
 		boyfriend.playAnim('deathConfirm', true);
-		
 		FlxG.sound.music.stop();
+		
 		var snd:FlxSound = FlxG.sound.play(Paths.music(endSoundName));
-		snd.onComplete = () -> {
-			if (endCompleted) {
-				resetState();
-				return;
-			}
-			endCompleted = true;
-		};
-
+		var sndLength:Float = snd.length / 1000;
 		new FlxTimer().start(.7, function(tmr:FlxTimer) {
-			FlxG.camera.fade(FlxColor.BLACK, if (quick) 1 else 2, false, () -> {
-				if (quick || endCompleted) resetState();
-				endCompleted = true;
-
-				if (!quick) {
-					slowass = new FlxTimer().start(1.3, (tmr:FlxTimer) -> {
-						resetState();
-						return;
-					});
-				}
+			FlxG.camera.fade(FlxColor.BLACK, 2, false);
+			new FlxTimer().start(sndLength - .7, (tmr:FlxTimer) -> {
+				FlxTransitionableState.skipNextTransIn = true;
+				MusicBeatState.resetState();
 			});
 		});
 

@@ -134,7 +134,7 @@ class ModsMenuState extends MusicBeatState {
 			var myX = bgList.x + bgList.width + 20;
 			noModsTxt = new FlxText(myX, 0, FlxG.width - myX - 20, "NO MODS INSTALLED\nPRESS BACK TO EXIT OR INSTALL A MOD", 48);
 			if(FlxG.random.bool(0.1)) noModsTxt.text += '\nBITCH.'; //meanie
-			noModsTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			noModsTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 			noModsTxt.borderSize = 2;
 			add(noModsTxt);
 			noModsTxt.screenCenter(Y);
@@ -711,7 +711,7 @@ class ModItem extends FlxSpriteGroup
 		add(icon);
 
 		text = new FlxText(95, 38, 230, "", 16);
-		text.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		text.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		text.borderSize = 2;
 		text.y -= Std.int(text.height / 2);
 		add(text);

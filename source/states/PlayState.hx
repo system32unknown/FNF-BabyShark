@@ -468,7 +468,6 @@ class PlayState extends MusicBeatState {
 		camGame.follow(camFollow, LOCKON, 1);
 		camGame.zoom = defaultCamZoom;
 		camGame.snapToTarget();
-
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 		
 		moveCameraSection();
@@ -483,17 +482,14 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(healthBar);
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
-		iconP1.y = healthBar.y - (iconP1.height / 2);
-		iconP1.visible = !hideHud;
-		iconP1.alpha = healthBarAlpha;
-		uiGroup.add(iconP1);
-
 		iconP2 = new HealthIcon(dad.healthIcon, false);
-		iconP2.y = healthBar.y - (iconP2.height / 2);
-		iconP2.visible = !hideHud;
-		iconP2.alpha = healthBarAlpha;
-		uiGroup.add(iconP2);
-		if (ClientPrefs.getPref('HealthTypes') == 'Psych') {iconP1.iconType = 'psych'; iconP2.iconType = 'psych';}
+		for(icon in [iconP1, iconP2]) {
+			icon.y = healthBar.y - (icon.height / 2);
+			icon.visible = !hideHud;
+			icon.alpha = healthBarAlpha;
+			if (ClientPrefs.getPref('HealthTypes') == 'Psych') icon.iconType = 'psych';
+			uiGroup.add(icon);
+		}
 
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), 0);
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
@@ -832,7 +828,6 @@ class PlayState extends MusicBeatState {
 			default: ['${stageUI}UI/countdown/ready', '${stageUI}UI/countdown/set', '${stageUI}UI/countdown/go'];
 		};
 		for (asset in introAlts) Paths.image(asset);
-		
 		for (count in ['3', '2', '1', 'Go']) Paths.sound('countdown/intro$count' + introSoundsSuffix);
 	}
 
@@ -862,7 +857,7 @@ class PlayState extends MusicBeatState {
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 			updateLuaDefaultPos();
-	
+
 			setOnScripts('defaultMania', SONG.mania);
 
 			startedCountdown = true;
@@ -1476,7 +1471,6 @@ class PlayState extends MusicBeatState {
 		if (generatedMusic && !endingSong && !isCameraOnForcedPos && ClientPrefs.getPref('UpdateCamSection')) moveCameraSection();
 		super.update(elapsed);
 
-		scoreTxt.x = Math.floor((FlxG.width - scoreTxt.width) / 2);
 		if (ClientPrefs.getPref('ShowNPS')) {
 			for(i in 0...notesHitArray.length) {
 				var cock:Date = notesHitArray[i];
@@ -1487,6 +1481,7 @@ class PlayState extends MusicBeatState {
 			if (nps > maxNPS) maxNPS = nps;
 			UpdateScoreText();
 		}
+		scoreTxt.screenCenter(X);
 
 		updateMusicBeat();
 		setOnScripts('curDecStep', curDecStep);

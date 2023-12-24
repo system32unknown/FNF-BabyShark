@@ -35,7 +35,7 @@ class ErrorDisplay {
 		this.errorBG.screenCenter();
 
         this.errorText = new FlxText(0, 0, FlxG.width, '', 32);
-		this.errorText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		this.errorText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		this.errorText.scrollFactor.set();
 		this.errorText.alpha = 0;
 		this.text = errorMessage;

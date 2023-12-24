@@ -78,7 +78,7 @@ class CreditsEditor extends MusicBeatState {
 		for (i in 0...tipTextArray.length) {
 			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 8, 0, tipTextArray[i], 14);
 			tipText.y += i * 9;
-			tipText.setFormat(Paths.font("vcr.ttf"), 14, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			tipText.setFormat(Paths.font("vcr.ttf"), 14, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 			tipText.borderSize = 1;
 			tipText.scrollFactor.set();
 			add(tipText);
@@ -97,7 +97,7 @@ class CreditsEditor extends MusicBeatState {
 		add(descBox);
 
 		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
-		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
+		descText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		descText.scrollFactor.set();
 		descBox.sprTracker = descText;
 		add(descText);

@@ -106,7 +106,7 @@ class NoteOffsetState extends MusicBeatState {
 		combo.updateHitbox();
 		add(combo);
 
-		lateEarly = new FlxSprite(Paths.image('ratings/combo'));
+		lateEarly = new FlxSprite(Paths.image('ratings/late'));
 		lateEarly.camera = camHUD;
 		lateEarly.setGraphicSize(Std.int(combo.width * 0.7));
 		lateEarly.updateHitbox();
@@ -178,11 +178,10 @@ class NoteOffsetState extends MusicBeatState {
 		Conductor.songPosition = FlxG.sound.music.time;
 		super.update(elapsed);
 
-		camGame.zoom = FlxMath.lerp(camGame.zoom, defaultCamZoom, FlxMath.bound(elapsed * 3.125, 0, 1));
+		camGame.zoom = FlxMath.lerp(defaultCamZoom, camGame.zoom, Math.exp(-elapsed * 3.125));
 
 		var addNum:Int = 1;
-		if(FlxG.keys.pressed.SHIFT)
-			addNum = onComboMenu ? 10 : 3;
+		if(FlxG.keys.pressed.SHIFT) addNum = onComboMenu ? 10 : 3;
 
 		if(onComboMenu) {
 			var controlArray:Array<Bool> = [
@@ -301,7 +300,6 @@ class NoteOffsetState extends MusicBeatState {
 				holdTime += elapsed;
 				if(controls.UI_LEFT) mult = -1;
 			}
-
 			if(controls.UI_LEFT_R || controls.UI_RIGHT_R) holdTime = 0;
 
 			if(holdTime > 0.5) {
@@ -357,21 +355,18 @@ class NoteOffsetState extends MusicBeatState {
 
 	function repositionCombo() {
 		var placement:Float = FlxG.width * .35;
-		rating.screenCenter();
+
+		rating.screenCenter(Y).y -= 60 + comboOffset[0][1];
 		rating.x = placement - 40 + comboOffset[0][0];
-		rating.y -= 60 + comboOffset[0][1];
 
-		comboNums.screenCenter();
+		comboNums.screenCenter(Y).y += 80 - comboOffset[1][1];
 		comboNums.x = placement - 90 + comboOffset[1][0];
-		comboNums.y += 80 - comboOffset[1][1];
 
-		combo.screenCenter();
+		combo.screenCenter(Y).y -= comboOffset[2][1];
 		combo.x = placement + comboOffset[2][0];
-		combo.y -= comboOffset[2][1];
 
-		lateEarly.screenCenter();
+		lateEarly.screenCenter(Y).y -= comboOffset[3][1];
 		lateEarly.x = placement - 130 + comboOffset[3][0];
-		lateEarly.y -= comboOffset[3][1];
 
 		reloadTexts();
 	}
@@ -390,8 +385,7 @@ class NoteOffsetState extends MusicBeatState {
 	function reloadTexts() {
 		var num:Int = 0;
 		for (i in ['Rating', 'Number', 'Combo', 'Late/Early']) {
-			if (onComboMenu)
-				setDumbText(num, '$i Offset:', '[${comboOffset[num][0]}, ${comboOffset[num][1]}]');
+			if (onComboMenu) setDumbText(num, '$i Offset:', '[${comboOffset[num][0]}, ${comboOffset[num][1]}]');
 			else setDumbText(num, '', '');
 			num++;
 		}
