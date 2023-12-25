@@ -5,12 +5,15 @@ import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import openfl.net.FileReference;
-#if (!sys && !MODS_ALLOWED) import openfl.utils.Assets; #end
 import utils.system.PlatformUtil.MessageBoxIcon;
 import utils.system.NativeUtil;
 
 class CoolUtil {
-	public static function saveFile(content:String, format:String, filedefault:String) {new FileReference().save(content, '$filedefault.$format');}
+	public static function saveFile(content:String, format:String, filedefault:String, save:Bool = true) {
+		var fileRef:FileReference = new FileReference();
+		if (save) fileRef.save(content, '$filedefault.$format');
+		else fileRef.load();
+	}
 
 	inline public static function capitalize(text:String) {
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
@@ -23,7 +26,7 @@ class CoolUtil {
 		path = formatted[formatted.length - 1];
 		if(FileSystem.exists(path)) daList = File.getContent(path);
 		#else
-		if(Assets.exists(path)) daList = Assets.getText(path);
+		if(openfl.utils.Assets.exists(path)) daList = openfl.utils.Assets.getText(path);
 		#end
 		return daList == null ? [] : listFromString(daList);
 	}

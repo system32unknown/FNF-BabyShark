@@ -196,20 +196,11 @@ class MusicBeatState extends FlxUIState {
 		nextState = null;
 	}
 
-	public static function resetState()
-		MusicBeatState.switchState(null, true);
-
-	public static function getState(?state:FlxState):MusicBeatState
-		return cast(state != null ? state : FlxG.state);
-
-	public static function isState(state1:FlxState, state2:Class<FlxState>):Bool
-		return Std.isOfType(state1, state2);
-
-	public static function inState(state:Class<FlxState>):Bool
-		return inline isState(FlxG.state, state);
-
-	public static function previousStateIs(state:Class<FlxState>):Bool
-		return previousStateClass == state;
+	public static function resetState() MusicBeatState.switchState(null, true);
+	public static function getState(?state:FlxState):MusicBeatState return cast(state != null ? state : FlxG.state);
+	public static function isState(state1:FlxState, state2:Class<FlxState>):Bool return Std.isOfType(state1, state2);
+	public static function inState(state:Class<FlxState>):Bool return inline isState(FlxG.state, state);
+	public static function previousStateIs(state:Class<FlxState>):Bool return previousStateClass == state;
 	
 	public function stepHit():Void {
 		stagesFunc((stage:BaseStage) -> {

@@ -195,13 +195,23 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.instance.botplayTxt.visible = PlayState.instance.cpuControlled;
 					PlayState.instance.botplayTxt.alpha = 1;
 					PlayState.instance.botplaySine = 0;
+				case 'Mod Settings': // Custom
+					PlayState.instance.paused = true; // For lua
+					PlayState.instance.vocals.volume = 0;
+					MusicBeatState.switchState(new states.ModsMenuState());
+					if(ClientPrefs.getPref('pauseMusic') != 'None') {
+						FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), pauseMusic.volume);
+						FlxG.sound.music.fadeIn(.8, pauseMusic.volume, 1);
+						FlxG.sound.music.time = pauseMusic.time;
+					}
+					states.ModsMenuState.onPlayState = true;
 				case 'Options':
 					PlayState.instance.paused = true; // For lua
 					PlayState.instance.vocals.volume = 0;
 					MusicBeatState.switchState(new OptionsState());
 					if(ClientPrefs.getPref('pauseMusic') != 'None') {
 						FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), pauseMusic.volume);
-						FlxG.sound.music.fadeIn(0.8, pauseMusic.volume, 1);
+						FlxG.sound.music.fadeIn(.8, pauseMusic.volume, 1);
 						FlxG.sound.music.time = pauseMusic.time;
 						pauseMusic.stop();
 					}
