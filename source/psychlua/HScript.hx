@@ -159,12 +159,6 @@ class HScript extends Interp {
 		});
 		setVar('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> PlayState.instance.addTextToDebug(text, color));
 
-		//Macro Functions
-		#if macro
-		setVar('nameOf', (v:Dynamic) -> macros.MacroFunctions.nameOf(v));
-		setVar('validateJson', (v:String) -> macros.MacroFunctions.validateJson(v));
-		#end
-
 		setVar('getModSetting', function(saveTag:String, ?modName:String = null) {
 			if(modName == null) {
 				if(this.modFolder == null) {

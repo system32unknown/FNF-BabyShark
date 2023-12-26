@@ -363,7 +363,7 @@ class Keybinds {
 			], [
 				ClientPrefs.keyBinds.get('note_left').copy(),
 				ClientPrefs.keyBinds.get('note_down').copy(),
-				ClientPrefs.keyBinds.get('note_five3').copy(),
+				ClientPrefs.keyBinds.get('note_five1').copy(),
 				ClientPrefs.keyBinds.get('note_up').copy(),
 				ClientPrefs.keyBinds.get('note_right').copy()
 			], [
