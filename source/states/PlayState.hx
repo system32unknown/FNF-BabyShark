@@ -12,6 +12,10 @@ import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
 #if VIDEOS_ALLOWED import backend.VideoManager; #end
 #if !MODS_ALLOWED import openfl.utils.Assets; #end
+#if !flash
+import flixel.addons.display.FlxRuntimeShader;
+import openfl.filters.ShaderFilter;
+#end
 import backend.Highscore;
 import backend.Song;
 import backend.Rating;
@@ -2294,7 +2298,7 @@ class PlayState extends MusicBeatState {
 		fillKeysPressed();
 		keysPressed[key] = true;
 
-		var ret:Dynamic = callOnScripts('preKeyPress', [key], true);
+		var ret:Dynamic = callOnScripts('onKeyPressPre', [key], true);
 		if(ret == FunkinLua.Function_Stop) return;
 
 		//more accurate hit time for the ratings?
@@ -2359,6 +2363,9 @@ class PlayState extends MusicBeatState {
 		if (!keysPressed[key]) return;
 		fillKeysPressed();
 		keysPressed[key] = false;
+
+		var ret:Dynamic = callOnScripts('onKeyReleasePre', [key]);
+		if(ret == FunkinLua.Function_Stop) return;
 
 		var spr:StrumNote = playerStrums.members[key];
 		if(spr != null) {
@@ -3016,4 +3023,63 @@ class PlayState extends MusicBeatState {
 			else if (fullhits[0] > 0) ratingFC = "PFC";
 		} else if (songMisses < 10) ratingFC = 'SDCB';
 	}
+
+	#if (!flash && sys)
+	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
+	public function createRuntimeShader(name:String):FlxRuntimeShader {
+		if(!ClientPrefs.getPref('shaders')) return new FlxRuntimeShader();
+
+		#if (!flash && MODS_ALLOWED && sys)
+		if(!runtimeShaders.exists(name) && !initLuaShader(name)) {
+			FlxG.log.warn('Shader $name is missing!');
+			return new FlxRuntimeShader();
+		}
+
+		var arr:Array<String> = runtimeShaders.get(name);
+		return new FlxRuntimeShader(arr[0], arr[1]);
+		#else
+		FlxG.log.warn("Platform unsupported for Runtime Shaders!");
+		return null;
+		#end
+	}
+
+	public function initLuaShader(name:String, ?glslVersion:Int = 120) {
+		if(!ClientPrefs.getPref('shaders')) return false;
+
+		#if (MODS_ALLOWED && !flash && sys)
+		if(runtimeShaders.exists(name)) {
+			FlxG.log.warn('Shader $name was already initialized!');
+			return true;
+		}
+
+		for (folder in Mods.directoriesWithFile(Paths.getPreloadPath(), 'shaders/')) {
+			var frag:String = folder + name + '.frag';
+			var vert:String = folder + name + '.vert';
+			var found:Bool = false;
+			if(FileSystem.exists(frag)) {
+				frag = File.getContent(frag);
+				found = true;
+			} else frag = null;
+
+			if(FileSystem.exists(vert)) {
+				vert = File.getContent(vert);
+				found = true;
+			} else vert = null;
+
+			if(found) {
+				runtimeShaders.set(name, [frag, vert]);
+				return true;
+			}
+		}
+		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
+		addTextToDebug('Missing shader $name .frag AND .vert files!', FlxColor.RED);
+		#else
+		FlxG.log.warn('Missing shader $name .frag AND .vert files!');
+		#end
+		#else
+		FlxG.log.warn('This platform doesn\'t support Runtime Shaders!');
+		#end
+		return false;
+	}
+	#end
 }

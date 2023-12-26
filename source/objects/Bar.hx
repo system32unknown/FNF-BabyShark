@@ -149,7 +149,6 @@ class Bar extends FlxSpriteGroup {
 	override function set_antialiasing(Antialiasing:Bool):Bool {
 		for (member in members)
 			member.antialiasing = Antialiasing;
-
 		return antialiasing = Antialiasing;
 	}
 }

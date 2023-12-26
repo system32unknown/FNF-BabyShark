@@ -135,24 +135,13 @@ class ClientPrefs {
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
 		//Key Bind, Name for ControlsSubState
 		'note_one1'		=> [SPACE, NONE],
-
-		'note_two1'		=> [D, NONE],
-		'note_two2'		=> [K, NONE],
-
-		'note_three1'	=> [D, NONE],
-		'note_three2'	=> [SPACE, NONE],
-		'note_three3'	=> [K, NONE],
+		'note_three1'	=> [SPACE, NONE],
+		'note_five1'	=> [SPACE, NONE],
 
 		'note_left'		=> [A, LEFT],
 		'note_down'		=> [S, DOWN],
 		'note_up'		=> [W, UP],
 		'note_right'	=> [D, RIGHT],
-
-		'note_five1'	=> [D, NONE],
-		'note_five2'	=> [F, NONE],
-		'note_five3'	=> [SPACE, NONE],
-		'note_five4'	=> [J, NONE],
-		'note_five5'	=> [K, NONE],
 
 		'note_six1'		=> [S, NONE],
 		'note_six2'		=> [D, NONE],

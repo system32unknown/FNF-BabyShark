@@ -86,7 +86,7 @@ class Character extends FlxSprite {
 		dance();
 	}
 
-	public static function getCharacterFile(char:String):CharacterFile {
+	public static function getCharacterFile(char:String):Dynamic {
 		var characterPath:String = 'characters/$char.json';
 		var path:String = Paths.getPath(characterPath, TEXT, null, true);
 		
@@ -127,7 +127,7 @@ class Character extends FlxSprite {
 		return parsed;
 	}
 
-	public function loadCharacterFile(json:CharacterFile) {
+	public function loadCharacterFile(json:Dynamic) {
 		isAnimateAtlas = false;
 
 		#if flxanimate
