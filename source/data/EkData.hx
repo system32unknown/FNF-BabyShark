@@ -349,23 +349,23 @@ class Keybinds {
 			[
 				ClientPrefs.keyBinds.get('note_one1').copy()
 			],[
-				ClientPrefs.keyBinds.get('note_two1').copy(),
-				ClientPrefs.keyBinds.get('note_two2').copy()
+				ClientPrefs.keyBinds.get('note_left').copy(),
+				ClientPrefs.keyBinds.get('note_right').copy()
 			], [
+				ClientPrefs.keyBinds.get('note_left').copy(),
 				ClientPrefs.keyBinds.get('note_three1').copy(),
-				ClientPrefs.keyBinds.get('note_three2').copy(),
-				ClientPrefs.keyBinds.get('note_three3').copy()
+				ClientPrefs.keyBinds.get('note_right').copy()
 			], [
 				ClientPrefs.keyBinds.get('note_left').copy(),
 				ClientPrefs.keyBinds.get('note_down').copy(),
 				ClientPrefs.keyBinds.get('note_up').copy(),
 				ClientPrefs.keyBinds.get('note_right').copy()
 			], [
-				ClientPrefs.keyBinds.get('note_five1').copy(),
-				ClientPrefs.keyBinds.get('note_five2').copy(),
+				ClientPrefs.keyBinds.get('note_left').copy(),
+				ClientPrefs.keyBinds.get('note_down').copy(),
 				ClientPrefs.keyBinds.get('note_five3').copy(),
-				ClientPrefs.keyBinds.get('note_five4').copy(),
-				ClientPrefs.keyBinds.get('note_five5').copy()
+				ClientPrefs.keyBinds.get('note_up').copy(),
+				ClientPrefs.keyBinds.get('note_right').copy()
 			], [
 				ClientPrefs.keyBinds.get('note_six1').copy(),
 				ClientPrefs.keyBinds.get('note_six2').copy(),
