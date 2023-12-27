@@ -7,7 +7,7 @@ class ArrayUtil {
 	 * @param getVal Function that returns the position value of T
 	 * @return Index
 	 */
-	 public static inline function binarySearch<T>(array:Array<T>, val:Float, getVal:T -> Float):Int {
+	public static inline function binarySearch<T>(array:Array<T>, val:Float, getVal:T -> Float):Int {
 		if (array.length <= 0) return 0; // if the array is empty, it should be equal to zero (the beginning)
 		if (getVal(array[0]) > val) return 0; // in case its the minimum
 		if (getVal(array[array.length - 1]) < val) return array.length; // in case its the maximum

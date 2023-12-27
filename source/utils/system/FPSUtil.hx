@@ -7,7 +7,7 @@ class FPSUtil {
     public function new() {}
 
     public function update() {
-		var now:Float = haxe.Timer.stamp() * 1000;
+		final now:Float = haxe.Timer.stamp() * 1000;
 		times.push(now);
 		while (times[0] < now - 1000) times.shift();
 

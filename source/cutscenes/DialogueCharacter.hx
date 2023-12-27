@@ -1,6 +1,7 @@
 package cutscenes;
 
 import haxe.Json;
+import lime.utils.Assets;
 
 typedef DialogueCharacterFile = {
 	var image:String;

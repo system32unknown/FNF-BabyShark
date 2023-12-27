@@ -30,7 +30,7 @@ class Main extends Sprite {
 	public function new() {
 		current = this;
 		super();
-		utils.system.PlatformUtil.setDPIAware();
+		#if windows @:functionCode('#include <windows.h> SetProcessDPIAware();') #end
 		setupGame();
 	}
 
@@ -50,7 +50,6 @@ class Main extends Sprite {
 		FlxG.signals.preStateSwitch.add(() -> Paths.clearStoredCache());
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedCache();
-
 			MemoryUtil.clearMajor();
 			MemoryUtil.clearMajor(true);
 			MemoryUtil.clearMajor();

@@ -21,9 +21,8 @@ class FPSCounter extends openfl.text.TextField {
 		this.y = y;
 
 		autoSize = LEFT;
-		multiline = wordWrap = false;
 		selectable = mouseEnabled = false;
-		text = "";
+		text = "0 FPS";
 		defaultTextFormat = new openfl.text.TextFormat(fontName, 16, -1);
 		fpsManager = new FPSUtil();
 	}
@@ -37,8 +36,8 @@ class FPSCounter extends openfl.text.TextField {
 		}
         memType = ClientPrefs.getPref('showMEM');
 		visible = ClientPrefs.getPref('showFPS');
-		fpsManager.update();
 
+		fpsManager.update();
 		if (memory > mempeak) mempeak = memory;
 
 		updateText(dt);
