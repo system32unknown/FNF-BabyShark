@@ -44,16 +44,20 @@ class PauseSubState extends MusicBeatSubstate
 		menuItems = menuItemsOG;
 
 		for (i in 0...Difficulty.list.length) {
-			var diff:String = '' + Difficulty.getString(i);
-			difficultyChoices.push(diff);
+			difficultyChoices.push('' + Difficulty.getString(i));
 		}
 		difficultyChoices.push('BACK');
 
 		pauseMusic = new FlxSound();
-		if(songName != null)
-			pauseMusic.loadEmbedded(Paths.music(songName), true, true);
-		else if (songName != 'None')
-			pauseMusic.loadEmbedded(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), true, true);
+		try {
+			if (songName == null || songName.toLowerCase() != 'none') {
+				if(songName == null) {
+					var path:String = Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'));
+					if(path.toLowerCase() != 'none')
+						pauseMusic.loadEmbedded(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), true, true);
+				} else pauseMusic.loadEmbedded(Paths.music(songName), true, true);
+			}
+		} catch(e:Dynamic) Logs.trace(e, ERROR);
 		pauseMusic.volume = 0;
 		FlxG.sound.list.add(pauseMusic);
 

@@ -20,10 +20,6 @@ class MemoryUtil {
 		#end
 	}
 
-	inline public static function getMEM():Dynamic {
-		return #if cpp getTotalMEM() #else 0 #end;
-	}
-
 	public static function getGCMEM():Float {
 		#if cpp
 		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
@@ -39,5 +35,5 @@ class MemoryUtil {
 		if (GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info)))
 			return (size_t)info.WorkingSetSize;
 	")
-	public static function getTotalMEM():Int return 0;
+	public static function getMEM():Int return 0;
 }

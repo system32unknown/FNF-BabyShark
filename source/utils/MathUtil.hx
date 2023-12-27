@@ -17,7 +17,7 @@ class MathUtil {
 		if (decimals < 1) return Math.floor(value);
 
 		var tempMult:Float = 1;
-		for (i in 0...decimals) tempMult *= 10;
+		for (_ in 0...decimals) tempMult *= 10;
 		final newValue:Float = Math.floor(value * tempMult);
 		return newValue / tempMult;
 	}

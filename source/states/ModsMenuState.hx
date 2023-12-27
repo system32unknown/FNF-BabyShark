@@ -5,7 +5,7 @@ import flixel.util.FlxSpriteUtil;
 import flixel.addons.transition.FlxTransitionableState;
 import backend.Mods;
 import options.ModSettingsSubState;
-import data.StageData; // Custom
+import data.StageData;
 
 class ModsMenuState extends MusicBeatState {
 	var bg:FlxSprite;

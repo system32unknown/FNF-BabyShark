@@ -7,9 +7,9 @@ class FPSUtil {
     public function new() {}
 
     public function update() {
-		var now:Float = haxe.Timer.stamp();
+		var now:Float = haxe.Timer.stamp() * 1000;
 		times.push(now);
-		while (times[0] < now - 1) times.shift();
+		while (times[0] < now - 1000) times.shift();
 
 		currentCount = times.length;
 		currentFPS = Math.min(FlxG.drawFramerate, currentCount);
@@ -18,9 +18,9 @@ class FPSUtil {
 	public static function getFPSAdjust(type:String, fps:Float) {
 		return switch (type.toLowerCase()) {
 			case 'andromeda': FlxG.elapsed / (1 / 60) * fps;
-			case 'psychold': FlxMath.bound(1 - (fps * 30), 0, 1);
-			case 'kade': FlxMath.bound(1 - (fps * 70), 0, 1);
-			case 'codename': FlxMath.bound(fps * 60 * FlxG.elapsed, 0, 1);
+			case 'psychold': Math.exp(-fps * 30);
+			case 'kade': Math.exp(-fps * 70);
+			case 'codename': Math.exp(-fps * 60 * FlxG.elapsed);
 			case 'forever': fps * (60 / FlxG.drawFramerate);
 			case 'yoshi': FlxMath.lerp(1.15, 1, FlxEase.cubeOut(fps % 1));
 			case 'micdup': .09 / (fps / 60);
