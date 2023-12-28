@@ -37,7 +37,7 @@ class Main extends Sprite {
 	#if (target.threaded && sys) public var threadPool:ElasticThreadPool; #end
 
 	function setupGame():Void {
-		backend.Logs.init();
+		debug.Logs.init();
 
 		addChild(new backend.FunkinGame(game.width, game.height, Init, game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(fpsVar = new FPSCounter());

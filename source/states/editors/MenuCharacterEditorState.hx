@@ -337,7 +337,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
-		Logs.trace("Cancelled file loading.");
+		trace("Cancelled file loading.");
 	}
 
 	/**

@@ -440,14 +440,13 @@ class ModsMenuState extends MusicBeatState {
 			
 			// Keep refreshing mods list every 2 seconds until you add a mod on the folder
 			nextAttempt -= elapsed;
-			if(nextAttempt < 0)
-			{
+			if(nextAttempt < 0) {
 				nextAttempt = 1;
 				@:privateAccess
 				Mods.updateModList();
 				modsList = Mods.parseList();
 				if(modsList.all.length > 0) {
-					Logs.trace('mod(s) found! reloading');
+					trace('${modsList.all.length} mod(s) found! reloading');
 					reload();
 				}
 			}
@@ -610,7 +609,7 @@ class ModsMenuState extends MusicBeatState {
 		if(position >= modsList.all.length) position = 0;
 		else if(position < 0) position = modsList.all.length - 1;
 
-		Logs.trace('Moved mod $mod to position $position');
+		trace('Moved mod $mod to position $position');
 		var id:Int = modsList.all.indexOf(mod);
 		if(position == id) return;
 

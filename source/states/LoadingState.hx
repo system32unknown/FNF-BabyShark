@@ -248,6 +248,6 @@ class MultiCallback
 	}
 	
 	inline function log(msg):Void {
-		if (logId != null) Logs.trace('$logId: $msg');
+		if (logId != null) trace('$logId: $msg');
 	}
 }

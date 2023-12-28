@@ -501,7 +501,7 @@ class CharacterEditorState extends MusicBeatState {
 			reloadAnimList();
 			@:arrayAccess curAnim = Std.int(Math.max(0, character.animationsArray.indexOf(addedAnim)));
 			character.playAnim(addedAnim.anim, true);
-			Logs.trace('Added/Updated animation: ' + animationInputText.text);
+			trace('Added/Updated animation: ' + animationInputText.text);
 		});
 
 		var removeButton:FlxButton = new FlxButton(180, animationIndicesInputText.y + 30, "Remove", function() {
@@ -522,7 +522,7 @@ class CharacterEditorState extends MusicBeatState {
 						updateTextColors();
 					}
 					reloadAnimList();
-					Logs.trace('Removed animation: ' + animationInputText.text);
+					trace('Removed animation: ' + animationInputText.text);
 					break;
 				}
 		});

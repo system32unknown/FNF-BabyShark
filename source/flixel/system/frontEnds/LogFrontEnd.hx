@@ -73,8 +73,8 @@ class LogFrontEnd
 		}
 		#end
 		
-		if (style.throwException)
-			throw style.toLogString(data);
+		if (onLogs != null) onLogs(data, style, fireOnce);
+		if (style.throwException) throw style.toLogString(data);
 	}
 
 	/**

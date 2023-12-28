@@ -9,7 +9,7 @@ import backend.ClientPrefs;
 import backend.Conductor;
 import backend.BaseStage;
 import backend.Difficulty;
-import backend.Logs;
+import debug.Logs;
 #if MODS_ALLOWED import backend.Mods; #end
 import backend.EK;
 

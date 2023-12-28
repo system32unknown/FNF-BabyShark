@@ -69,7 +69,7 @@ class ShaderFunctions {
 			
             var filter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
             storedFilters.set(index, filter);
-			Logs.trace(Std.string(storedFilters));
+			trace("Stored Shaders:" + Std.string(storedFilters));
             camera.filters.push(filter);
             return true;
 			#else

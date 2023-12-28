@@ -15,7 +15,7 @@ class HScript extends Interp {
 		if(parent.hscript == null) {
 			var times:Float = Date.now().getTime();
 			parent.hscript = new HScript(parent);
-			Logs.trace('initialized hscript interp successfully: ${parent.scriptName} (${Std.int(Date.now().getTime() - times)}ms)');
+			trace('initialized hscript interp successfully: ${parent.scriptName} (${Std.int(Date.now().getTime() - times)}ms)');
 		}
 	}
 

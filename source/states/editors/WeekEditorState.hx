@@ -453,7 +453,7 @@ class WeekEditorState extends MusicBeatState {
 				if(loadedWeek.weekCharacters != null && loadedWeek.weekName != null) //Make sure it's really a week
 				{
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
-					Logs.trace("Successfully loaded file: " + cutName);
+					trace("Successfully loaded file: " + cutName);
 
 					weekFileName = cutName;
 					_file = null;
@@ -477,7 +477,7 @@ class WeekEditorState extends MusicBeatState {
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
-		Logs.trace("Cancelled file loading.");
+		trace("Cancelled file loading.");
 	}
 
 	/**

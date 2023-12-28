@@ -29,8 +29,8 @@ class DiscordClient {
 		var requestPtr:cpp.Star<DiscordUser> = cpp.ConstPointer.fromRaw(request).ptr;
 
 		if (Std.parseInt(cast(requestPtr.discriminator, String)) != 0) //New Discord IDs/Discriminator system
-			Logs.trace('(Discord) Connected to User (${cast(requestPtr.username, String)}#${cast(requestPtr.discriminator, String)})');
-		else Logs.trace('(Discord) Connected to User (${cast(requestPtr.username, String)})'); //Old discriminators
+			trace('(Discord) Connected to User (${cast(requestPtr.username, String)}#${cast(requestPtr.discriminator, String)})');
+		else trace('(Discord) Connected to User (${cast(requestPtr.username, String)})'); //Old discriminators
 
 		changePresence();
 	}
@@ -50,7 +50,7 @@ class DiscordClient {
 		discordHandlers.errored = cpp.Function.fromStaticFunction(onError);
 		Discord.Initialize(clientID, cpp.RawPointer.addressOf(discordHandlers), 1, null);
 
-		if(!isInitialized) Logs.trace("Discord Client initialized");
+		if(!isInitialized) trace("Discord Client initialized");
 
 		sys.thread.Thread.create(() -> {
 			var localID:String = clientID;

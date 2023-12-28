@@ -184,7 +184,7 @@ class FunkinLua {
 					for (luaInstance in game.luaArray)
 						if(luaInstance.scriptName == foundScript) {
 							luaInstance.stop();
-							Logs.trace('Closing script: ' + luaInstance.scriptName);
+							trace('Closing script: ' + luaInstance.scriptName);
 							return true;
 						}
 			}
@@ -198,7 +198,7 @@ class FunkinLua {
 				if (!ignoreAlreadyRunning)
 					for (script in game.hscriptArray)
 						if (script.origin == foundScript) {
-							Logs.trace('Closing script: ' + script.origin);
+							trace('Closing script: ' + script.origin);
 							game.hscriptArray.remove(script);
 							script.destroy();
 							return true;
@@ -889,7 +889,7 @@ class FunkinLua {
 			return LuaUtils.getModSetting(saveTag, modName);
 		});
 		set("close", () -> {
-			Logs.trace('Closing script: $scriptName');
+			trace('Closing script: $scriptName');
 			return closed = true;
 		});
 
@@ -924,7 +924,7 @@ class FunkinLua {
 			return;
 		}
 		call('onCreate');
-		Logs.trace('lua file loaded succesfully: $scriptName (${Std.int(Date.now().getTime() - times)}ms)');
+		trace('lua file loaded succesfully: $scriptName (${Std.int(Date.now().getTime() - times)}ms)');
 		#end
 	}
 

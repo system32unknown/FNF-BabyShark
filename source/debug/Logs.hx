@@ -1,4 +1,4 @@
-package backend;
+package debug;
 
 import flixel.system.debug.log.LogStyle;
 import flixel.system.frontEnds.LogFrontEnd;
@@ -43,6 +43,7 @@ class Logs {
 	}
 
 	public static function prepareColoredTrace(text:Array<LogText>, level:Level = INFO) {
+		var time = Date.now();
 		var superCoolText = [
 			logText('['),
 			switch(level) {

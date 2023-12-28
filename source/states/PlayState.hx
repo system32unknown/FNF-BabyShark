@@ -645,7 +645,7 @@ class PlayState extends MusicBeatState {
 
 		luaDebugGroup.forEachAlive((spr:DebugLuaText) -> spr.y += newText.height + 2);
 		luaDebugGroup.add(newText);
-		Logs.trace(text);
+		trace(text);
 	}
 
 	public function reloadHealthBarColors() {
@@ -2858,7 +2858,7 @@ class PlayState extends MusicBeatState {
 					return;
 				}
 			}
-			Logs.trace('initialized hscript interp successfully: $file (${Std.int(Date.now().getTime() - times)}ms)');
+			trace('initialized hscript interp successfully: $file (${Std.int(Date.now().getTime() - times)}ms)');
 		} catch(e) {
 			var len:Int = e.message.indexOf('\n') + 1;
 			if(len <= 0) len = e.message.length;
