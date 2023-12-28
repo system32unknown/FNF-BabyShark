@@ -4,6 +4,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxGradient;
 import states.MainMenuState;
+import openfl.utils.Assets;
 
 @:structInit
 class TitleData {
@@ -90,7 +91,7 @@ class TitleState extends MusicBeatState {
 
 		logo = new FlxSprite(titleJson.titlex, titleJson.titley);
 		logo.antialiasing = ClientPrefs.getPref('Antialiasing');
-		if (!FileSystem.exists(Paths.modsXml('logobumpin'))) {
+		if(!FileSystem.exists(Paths.modsXml('logobumpin')) || !Assets.exists(Paths.getPath('images/logobumpin.xml'), TEXT)) {
 			logo.loadGraphic(Paths.image('logobumpin'));
 			logo.setGraphicSize(Std.int(logo.width * 1.5));
 		} else {
