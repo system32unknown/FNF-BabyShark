@@ -1525,10 +1525,7 @@ class ChartingState extends MusicBeatState {
 		FlxG.watch.addQuick('daBeat', curBeat);
 		FlxG.watch.addQuick('daStep', curStep);
 
-		if (FlxG.mouse.x > gridBG.x
-			&& FlxG.mouse.x < gridBG.x + gridBG.width
-			&& FlxG.mouse.y > gridBG.y
-			&& FlxG.mouse.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom]) {
+		if (FlxG.mouse.x > gridBG.x && FlxG.mouse.x < gridBG.x + gridBG.width && FlxG.mouse.y > gridBG.y && FlxG.mouse.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom]) {
 			dummyArrow.visible = true;
 			dummyArrow.x = Math.floor(FlxG.mouse.x / GRID_SIZE) * GRID_SIZE;
 			if (FlxG.keys.pressed.SHIFT) dummyArrow.y = FlxG.mouse.y;
@@ -1728,8 +1725,7 @@ class ChartingState extends MusicBeatState {
 			}
 
 			var style = currentType;
-			if (FlxG.keys.pressed.SHIFT)
-				style = 3;
+			if (FlxG.keys.pressed.SHIFT) style = 3;
 
 			var conductorTime = Conductor.songPosition;
 
@@ -1891,9 +1887,7 @@ class ChartingState extends MusicBeatState {
 					if(!playedSound[data]) {
 						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)) {
 							var soundToPlay = 'hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}';
-							if(_song.player1 == 'gf') { //Easter egg 
-								soundToPlay = 'gfnoise/GF_${EK.keys(data)}';
-							}
+							if(_song.player1 == 'gf') soundToPlay = 'gfnoise/GF_${EK.keys(data)}'; //Easter egg 
 
 							FlxG.sound.play(Paths.sound(soundToPlay)).pan = note.noteData < 4 ? -.3 : .3; //would be coolio
 							playedSound[data] = true;
@@ -2396,8 +2390,7 @@ class ChartingState extends MusicBeatState {
 
 		if (_song.notes[curSec].changeBPM && _song.notes[curSec].bpm > 0)
 			Conductor.bpm = _song.notes[curSec].bpm;
-		else {
-			// get last bpm
+		else { // get last bpm
 			var daBPM:Float = _song.bpm;
 			for (i in 0...curSec) if (_song.notes[i].changeBPM) daBPM = _song.notes[i].bpm;
 			Conductor.bpm = daBPM;
