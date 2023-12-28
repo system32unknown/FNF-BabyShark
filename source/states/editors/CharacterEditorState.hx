@@ -75,13 +75,13 @@ class CharacterEditorState extends MusicBeatState {
 		silhouettes = new FlxSpriteGroup();
 		add(silhouettes);
 
-		var dad:FlxSprite = new FlxSprite(dadPosition.x, dadPosition.y).loadGraphic(Paths.image('editors/silhouetteDad'));
+		var dad:FlxSprite = new FlxSprite(dadPosition.x, dadPosition.y, Paths.image('editors/silhouetteDad'));
 		dad.antialiasing = ClientPrefs.getPref('Antialiasing');
 		dad.active = false;
 		dad.offset.set(-4, 1);
 		silhouettes.add(dad);
 		
-		var boyfriend:FlxSprite = new FlxSprite(bfPosition.x, bfPosition.y + 350).loadGraphic(Paths.image('editors/silhouetteBF'));
+		var boyfriend:FlxSprite = new FlxSprite(bfPosition.x, bfPosition.y + 350, Paths.image('editors/silhouetteBF'));
 		boyfriend.antialiasing = ClientPrefs.getPref('Antialiasing');
 		boyfriend.active = false;
 		boyfriend.offset.set(-6, 2);
@@ -96,7 +96,7 @@ class CharacterEditorState extends MusicBeatState {
 
 		addCharacter();
 
-		cameraFollowPointer = new FlxSprite().loadGraphic(FlxGraphic.fromClass(GraphicCursorCross));
+		cameraFollowPointer = new FlxSprite(FlxGraphic.fromClass(GraphicCursorCross));
 		cameraFollowPointer.setGraphicSize(40, 40);
 		cameraFollowPointer.updateHitbox();
 		add(cameraFollowPointer);

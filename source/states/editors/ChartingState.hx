@@ -321,7 +321,7 @@ class ChartingState extends MusicBeatState {
 		\nEnter - Play your chart
 		\nQ/E - Decrease/Increase Note Sustain Length
 		\nSpace - Stop/Resume song
-		\nHold Alt and Click - Place Both Notes";
+		\nHold Ctrl and Click - Place Both Notes";
 
 		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		helpBg.scale.set(FlxG.width, FlxG.height);

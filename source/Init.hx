@@ -11,6 +11,7 @@ class Init extends flixel.FlxState {
 		FlxTransitionableState.skipNextTransOut = true;
 		Paths.clearStoredCache();
 
+		@:privateAccess FlxG.game.getTimer = Main.getTimer;
 		utils.FunkinCache.init();
 
 		#if LUA_ALLOWED Mods.pushGlobalMods(); #end

@@ -1,5 +1,6 @@
 package;
 
+import openfl.Lib;
 import openfl.display.Sprite;
 import flixel.input.keyboard.FlxKey;
 import utils.system.MemoryUtil;
@@ -27,6 +28,7 @@ class Main extends Sprite {
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
+	public static var time:Int = 0;
 	public function new() {
 		current = this;
 		super();
@@ -35,6 +37,9 @@ class Main extends Sprite {
 	}
 
 	#if (target.threaded && sys) public var threadPool:ElasticThreadPool; #end
+
+	@:allow(Init)
+	static function getTimer():Int return time = Lib.getTimer();
 
 	function setupGame():Void {
 		debug.Logs.init();

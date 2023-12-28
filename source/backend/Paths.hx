@@ -451,9 +451,6 @@ class Paths {
 	inline static public function modsTxt(key:String)
 		return modFolders('images/$key.txt');
 
-	inline static public function modsPacker(key:String)
-		return modFolders('images/$key.json');
-
 	static public function modFolders(key:String) {
 		if(Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0) {
 			var file:String = mods('${Mods.currentModDirectory}/$key');
