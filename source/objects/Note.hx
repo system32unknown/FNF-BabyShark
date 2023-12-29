@@ -86,7 +86,7 @@ class Note extends FlxSprite {
 
 	public var hitsoundDisabled:Bool = false;
 	public var hitsoundChartEditor:Bool = true;
-	public var hitsound:String = Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase();
+	public var hitsound:String = 'hitsounds/' + Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase();
 	public var changeAnim:Bool = true;
 	public var changeColSwap:Bool = true;
 

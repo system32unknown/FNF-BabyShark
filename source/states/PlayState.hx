@@ -2537,7 +2537,7 @@ class PlayState extends MusicBeatState {
 		
 		note.wasGoodHit = true;
 		if (ClientPrefs.getPref('hitsoundVolume') > 0 && !note.hitsoundDisabled) 
-			FlxG.sound.play(Paths.sound('hitsounds/${note.hitsound}'), ClientPrefs.getPref('hitsoundVolume'));
+			FlxG.sound.play(Paths.sound('${note.hitsound}'), ClientPrefs.getPref('hitsoundVolume'));
 
 		var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
 		var leData:Int = Math.floor(Math.abs(note.noteData));
