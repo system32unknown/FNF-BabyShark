@@ -2,7 +2,6 @@ package backend;
 
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
-import states.TitleState;
 
 class ClientPrefs {
 	static var isHardCInited:Bool = false;

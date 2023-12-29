@@ -12,7 +12,7 @@ class FlashingState extends MusicBeatState {
 	override function create() {
 		super.create();
 
-		warnText = new FlxText(0, 0, 0,'Welcome to Alter Engine! (v${Main.engineVer.version})\nThis Mod contains some flashing lights and swearing.\nMost contents are unfinished.\nYou\'ve been warned!', 32);
+		warnText = new FlxText(0, 0, 0,'Welcome to Alter Engine! (v${Main.engineVer.version})\nThis Mod contains some flashing lights and swearing. (Or Maybe?)\nMost contents are unfinished.\nYou\'ve been warned!', 32);
 		warnText.setFormat(Paths.font('babyshark.ttf'), 32, FlxColor.WHITE, CENTER);
 		warnText.scrollFactor.set();
 		warnText.screenCenter();
