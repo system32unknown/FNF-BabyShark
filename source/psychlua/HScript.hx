@@ -85,10 +85,10 @@ class HScript extends Interp {
             "state"             => FlxG.state,
             "FlxTween"          => FlxTween,
             "FlxEase"           => FlxEase,
-            "FlxPoint"          => getMacroAbstractClass("flixel.math.FlxPoint"),
-            "FlxAxes"           => getMacroAbstractClass("flixel.util.FlxAxes"),
-            "FlxColor"          => getMacroAbstractClass("flixel.util.FlxColor"),
-            "FlxKey"            => getMacroAbstractClass("flixel.input.keyboard.FlxKey"),
+            "FlxPoint"          => getMAClass("flixel.math.FlxPoint"),
+            "FlxAxes"           => getMAClass("flixel.util.FlxAxes"),
+            "FlxColor"          => getMAClass("flixel.util.FlxColor"),
+            "FlxKey"            => getMAClass("flixel.input.keyboard.FlxKey"),
             "FlxSound"          => flixel.sound.FlxSound,
             "FlxAssets"         => flixel.system.FlxAssets,
             "FlxMath"           => FlxMath,
@@ -129,7 +129,7 @@ class HScript extends Interp {
         ];
     }
 
-    inline function getMacroAbstractClass(className:String) return Type.resolveClass('${className}_HSC');
+    inline function getMAClass(className:String) return Type.resolveClass('${className}_HSC');
 	
 	function preset() {
 		parser = new Parser();
