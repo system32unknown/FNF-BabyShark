@@ -6,55 +6,59 @@ package backend;
 #elseif (hxCodec == "2.6.0") import VideoHandler;
 #else import vlc.MP4Handler as VideoHandler; #end
 #end
+import haxe.extern.EitherType;
+import flixel.util.FlxSignal;
 
-/*A class made to handle Video functions from diffrent hxCodec versions*/
+#if VIDEOS_ALLOWED
 class VideoManager extends VideoHandler {
-    public function new() {super();}
-    #if VIDEOS_ALLOWED
+    public var playbackRate(get, set):EitherType<Single, Float>;
+    public var paused(default, set):Bool = false;
+    public var onVideoEnd:FlxSignal;
+    public var onVideoStart:FlxSignal;
 
-    /**
-	 * Native video support for Flixel & OpenFL
-	 * @param Path Example: `your/video/here.mp4`
-	 * @param Loop Loop the video.
-	 */
+    public function new(#if (hxCodec >= "3.0.0") ?autoDispose:Bool = true #end) {
+        super();
+        onVideoEnd = new FlxSignal();
+        onVideoStart = new FlxSignal();    
+
+        #if (hxCodec >= "3.0.0")
+        if(autoDispose) onEndReached.add(() -> dispose(), true);
+
+        onOpening.add(onVideoStart.dispatch);
+        onEndReached.add(onVideoEnd.dispatch);
+        #else
+        openingCallback = onVideoStart.dispatch;
+        finishCallback = onVideoEnd.dispatch;
+        #end    
+    }
+
     public function startVideo(path:String, loop:Bool = false) {
-        this.play(path, loop);
+        #if (hxCodec >= "3.0.0")
+        play(path, loop);
+        #else
+        playVideo(path, loop, false);
+        #end
     }
 
-    /**
-	 * Adds a function that is called when the Video ends.
-	 * @param func Example: `function() { //code to run}`
-	 */
-    public function setFinishCallBack(func:Dynamic) {
-        this.onEndReached.add(() -> {
-            this.dispose();
-            if(func != null) func();
-        }, true);
-    }
-
-    /**
-	 * Adds a function which is called when the Codec is opend(video starts).
-	 * @param func Example: `function() { //code to run}`
-	 */
-    public function setStartCallBack(func:Dynamic) {
-        if(func != null)
-        this.onOpening.add(func, true);
-    }
-
-    override public function pause() {
-        super.pause();
-        if(FlxG.autoPause) {
-            if(FlxG.signals.focusLost.has(pause)) FlxG.signals.focusLost.remove(pause);
-            if(FlxG.signals.focusGained.has(resume)) FlxG.signals.focusGained.remove(resume);
+    @:noCompletion
+    function set_paused(shouldPause:Bool) {
+        if(shouldPause) {
+            pause();
+            if(FlxG.autoPause) {
+                if(FlxG.signals.focusGained.has(pause)) FlxG.signals.focusGained.remove(pause);
+                if(FlxG.signals.focusLost.has(resume)) FlxG.signals.focusLost.remove(resume);
+            }
+        } else {
+            resume();
+            if(FlxG.autoPause) {
+                FlxG.signals.focusGained.add(pause);
+                FlxG.signals.focusLost.add(resume);
+            }
         }
+        return shouldPause;
     }
 
-    override public function resume() {
-        super.resume();
-        if(FlxG.autoPause) {
-            FlxG.signals.focusLost.add(pause);
-            FlxG.signals.focusGained.add(resume);
-        }
-    }
+    @:noCompletion function set_playbackRate(multi:EitherType<Single, Float>) return rate = multi;
+    @:noCompletion function get_playbackRate():Float return rate;
     #end
 }

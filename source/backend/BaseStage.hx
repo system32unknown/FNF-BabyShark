@@ -154,9 +154,6 @@ class BaseStage extends FlxBasic {
 	inline function get_camOther():FlxCamera return game.camOther;
 
 	inline function get_defaultCamZoom():Float return game.defaultCamZoom;
-	inline function set_defaultCamZoom(value:Float):Float {
-		game.defaultCamZoom = value;
-		return game.defaultCamZoom;
-	}
+	inline function set_defaultCamZoom(value:Float):Float return game.defaultCamZoom = value;
 	inline function get_camFollow():FlxObject return game.camFollow;
 }

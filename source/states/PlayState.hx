@@ -761,18 +761,18 @@ class PlayState extends MusicBeatState {
 
 	public function startVideo(name:String):VideoManager {
 		#if VIDEOS_ALLOWED
+		var filepath:String = Paths.video(name);
+		var video:VideoManager = new VideoManager();
 		inCutscene = true;
 
-		var filepath:String = Paths.video(name);
 		if(!#if sys FileSystem #else Assets #end.exists(filepath)) {
 			FlxG.log.warn('Couldnt find video file: ' + name);
 			startAndEnd();
 			return null;
 		}
 
-		var video:VideoManager = new VideoManager();
 		video.startVideo(filepath);
-		video.setFinishCallBack(() -> {startAndEnd(); return null;});
+		video.onVideoEnd.add(() -> {startAndEnd(); return;});
 		return video;
 		#else
 		FlxG.log.warn('Platform not supported!');
@@ -1360,10 +1360,7 @@ class PlayState extends MusicBeatState {
 			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = true);
 			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
 
-			#if VIDEOS_ALLOWED
-			if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length)
-				videoSprites[daVideoSprite].resume();
-			#end
+			#if VIDEOS_ALLOWED if(videoSprites.length > 0) for(video in videoSprites) if(video.exists) video.paused = false; #end
 
 			paused = false;
 			callOnScripts('onResume');
@@ -1653,10 +1650,7 @@ class PlayState extends MusicBeatState {
 		persistentDraw = true;
 		paused = true;
 
-		#if VIDEOS_ALLOWED
-		if(videoSprites.length > 0) for(daVideoSprite in 0...videoSprites.length)
-			videoSprites[daVideoSprite].bitmap.pause();
-		#end
+		#if VIDEOS_ALLOWED if(videoSprites.length > 0) for(video in videoSprites) if(video.exists) video.paused = true; #end
 
 		if(FlxG.sound.music != null) {
 			FlxG.sound.music.pause();
@@ -1708,7 +1702,7 @@ class PlayState extends MusicBeatState {
 
 				persistentUpdate = false;
 				persistentDraw = false;
-				destroyAllVideoSprites();
+				#if VIDEOS_ALLOWED if(videoSprites.length > 0) for(video in videoSprites) removeVideoSprite(video); #end
 
 				final pos:FlxPoint = boyfriend.getScreenPosition();
 				openSubState(new GameOverSubstate(pos.x - boyfriend.positionArray[0], pos.y - boyfriend.positionArray[1], camFollow.x, camFollow.y));
@@ -2689,8 +2683,6 @@ class PlayState extends MusicBeatState {
 			}
 		}
 
-		destroyAllVideoSprites();
-
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		FlxG.animationTimeScale = 1;
@@ -2698,17 +2690,13 @@ class PlayState extends MusicBeatState {
 		super.destroy();
 	}
 
-	function destroyAllVideoSprites() {
-		#if VIDEOS_ALLOWED
-		if(videoSprites.length > 0) {
-			for(daVideoSprite in 0...videoSprites.length) {
-				videoSprites[daVideoSprite].destroy();
-				videoSprites[daVideoSprite].kill();
-			}
-			for(i in videoSprites) videoSprites.remove(i);
-		}
-		#end
+	#if VIDEOS_ALLOWED
+	function removeVideoSprite(video:backend.VideoSpriteManager) {
+		if(members.contains(video)) remove(video, true);
+		else forEachOfType(FlxSpriteGroup, (group:FlxSpriteGroup) -> if(group.members.contains(video)) group.remove(video, true));
+		video.altDestroy();
 	}
+	#end
 
 	public static function cancelMusicFadeTween() {
 		if(FlxG.sound.music.fadeTween != null)

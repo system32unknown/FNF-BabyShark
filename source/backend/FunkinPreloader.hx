@@ -8,19 +8,17 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.Lib;
 import flixel.system.FlxAssets;
-import flixel.system.FlxBasePreloader;
-import flixel.FlxG;
 
 @:bitmap("assets/preload/images/logobumpin.png")
 class FunkinLogoImage extends BitmapData {}
-
 @:keep @:bitmap("assets/images/preloader/light.png")
 class GraphicLogoLight extends BitmapData {}
 @:keep @:bitmap("assets/images/preloader/corners.png")
 class GraphicLogoCorners extends BitmapData {}
 
-class FunkinPreloader extends FlxBasePreloader {
+class FunkinPreloader extends flixel.system.FlxBasePreloader {
     var _logo:Sprite = new Sprite();
+    var _loading:Sprite = new Sprite();
 	var _logoGlow:Sprite = new Sprite();
 
     var _text = new TextField();
@@ -47,7 +45,7 @@ class FunkinPreloader extends FlxBasePreloader {
 
 		_text.defaultTextFormat = new TextFormat("VCR OSD Mono", 12, 0xffffff);
 		_text.embedFonts = true;
-		_text.selectable = _text.multiline = false;
+		_text.selectable = false;
 		_text.x = 2;
 		_text.y = _bmpBar.y - 14;
 		_text.width = 200;
@@ -56,7 +54,7 @@ class FunkinPreloader extends FlxBasePreloader {
 		_flxtext.defaultTextFormat = new TextFormat(FlxAssets.FONT_DEFAULT, 14, 0xffffff);
 		_flxtext.text = Std.string(FlxG.VERSION);
 		_flxtext.embedFonts = true;
-		_flxtext.selectable = _flxtext.multiline = false;
+		_flxtext.selectable = false;
 		_flxtext.width = 200;
 		_flxtext.x = _text.x;
 		_flxtext.y = _text.y - 338;
@@ -119,6 +117,6 @@ class FunkinPreloader extends FlxBasePreloader {
 
 	override public function update(percent:Float):Void {
 		_bmpBar.scaleX = percent * (_width - 8);
-		_text.text = "BSF 1.0 - " + Std.int(percent * 100) + "%";
+		_text.text = "BSF 0.1.0 - " + Std.int(percent * 100) + "%";
     }
 }
