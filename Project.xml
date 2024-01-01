@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/xsd/project-1.0.4.xsd">
 
 	<!-- _________________________Application Settings_________________________ -->
-	<app title="Baby Shark's Funkin: The Full Game" file="AlterEngine" version="0.1.0" company="Altertoriel"/>
+	<app title="Baby Shark's Big Funkin!" file="AlterEngine" version="0.1.0" company="Altertoriel"/>
 	<app packageName="com.altertoriel.babyshark" package="com.altertoriel.babyshark"/>
 	<app main="Main" preloader="backend.FunkinPreloader"/>
 

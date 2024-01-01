@@ -2310,7 +2310,7 @@ class PlayState extends MusicBeatState {
 						if (!daNote.canBeHit && daNote.checkDiff(Conductor.songPosition)) daNote.update(0);
 						if (daNote.canBeHit) {
 							if (daNote.noteData == key) sortedNotesList.push(daNote);
-							canMiss = !ClientPrefs.getPref('AntiMash');
+							canMiss = !ClientPrefs.getPref('ghostTrapping') ? true : ClientPrefs.getPref('AntiMash');
 						} else if (daNote.isSustainNote && daNote.noteData == key && ((daNote.wasGoodHit || daNote.prevNote.wasGoodHit) && (daNote.parent != null && !daNote.parent.hasMissed && daNote.parent.wasGoodHit)))
 							sortedNotesList.push(daNote);
 					}

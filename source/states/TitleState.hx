@@ -4,12 +4,12 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxFrame;
 import flixel.util.FlxGradient;
 import states.MainMenuState;
-import openfl.utils.Assets;
 
 @:structInit
 class TitleData {
 	public var titlex:Float = 0;
 	public var titley:Float = 1500;
+	public var titlesize:Float = 1.5;
 	public var starty:Float = 50;
 	public var gfx:Float = 512;
 	public var gfy:Float = 40;
@@ -51,6 +51,7 @@ class TitleState extends MusicBeatState {
 		titleJson = {
 			titlex: balls.titlex,
 			titley: balls.titley,
+			titlesize: balls.titlesize,
 			starty: balls.starty,
 			gfx: balls.gfx,
 			gfy: balls.gfy,
@@ -91,9 +92,9 @@ class TitleState extends MusicBeatState {
 
 		logo = new FlxSprite(titleJson.titlex, titleJson.titley);
 		logo.antialiasing = ClientPrefs.getPref('Antialiasing');
-		if(!FileSystem.exists(Paths.modsXml('logobumpin')) || !Assets.exists(Paths.getPath('images/logobumpin.xml'), TEXT)) {
+		if(!FileSystem.exists(Paths.modsXml('logobumpin'))) {
 			logo.loadGraphic(Paths.image('logobumpin'));
-			logo.setGraphicSize(Std.int(logo.width * 1.5));
+			logo.setGraphicSize(Std.int(logo.width * titleJson.titlesize));
 		} else {
 			foundXml = true;
 			logo.frames = Paths.getSparrowAtlas('logobumpin');

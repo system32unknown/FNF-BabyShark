@@ -1,4 +1,4 @@
-# Baby Shark's Funkin TODO list
+# Baby Shark's Big Funkin TODO list
 
 ### `v1.1.5a`
 - [] Bug Fix / Tweaks
