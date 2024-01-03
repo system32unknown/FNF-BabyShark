@@ -1,12 +1,9 @@
 package states;
 
 import flixel.group.FlxGroup;
-import flixel.graphics.FlxGraphic;
 import data.WeekData;
 import backend.Highscore;
 import backend.Song;
-import substates.ResetScoreSubState;
-import substates.GameplayChangersSubstate;
 import objects.MenuItem;
 import objects.MenuCharacter;
 import objects.ErrorDisplay;
@@ -189,10 +186,10 @@ class StoryMenuState extends MusicBeatState
 
 			if(FlxG.keys.justPressed.CONTROL) {
 				persistentUpdate = false;
-				openSubState(new GameplayChangersSubstate());
+				openSubState(new substates.GameplayChangersSubstate());
 			} else if(controls.RESET) {
 				persistentUpdate = false;
-				openSubState(new ResetScoreSubState('', curDifficulty, '', curWeek));
+				openSubState(new substates.ResetScoreSubState('', curDifficulty, '', curWeek));
 			} else if (controls.ACCEPT) selectWeek();
 		}
 
@@ -265,7 +262,7 @@ class StoryMenuState extends MusicBeatState
 		WeekData.setDirectoryFromWeek(loadedWeeks[curWeek]);
 
 		var diff:String = Difficulty.getString(curDifficulty);
-		var newImage:FlxGraphic = Paths.image('menudifficulties/' + Paths.formatToSongPath(diff));
+		var newImage:flixel.graphics.FlxGraphic = Paths.image('menudifficulties/' + Paths.formatToSongPath(diff));
 
 		if(sprDifficulty.graphic != newImage) {
 			sprDifficulty.loadGraphic(newImage);

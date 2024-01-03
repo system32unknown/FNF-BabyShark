@@ -5,7 +5,6 @@ import openfl.Lib;
 import openfl.events.UncaughtErrorEvent;
 import openfl.events.ErrorEvent;
 import openfl.errors.Error;
-import haxe.CallStack;
 import haxe.io.Path;
 
 class CrashHandler {
@@ -26,7 +25,7 @@ class CrashHandler {
 		final path = './crash/PsychEngine_$dateNow.txt';
 
 		var errMsg:String = "";
-		for (stackItem in CallStack.exceptionStack(true)) {
+		for (stackItem in haxe.CallStack.exceptionStack(true)) {
 			switch (stackItem) {
 				case CFunction: errMsg += "Non-Haxe (C) Function\n";
 				case Module(c): errMsg += 'Module ${c}\n';

@@ -2,11 +2,8 @@ package states;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.input.keyboard.FlxKey;
-import flixel.animation.FlxAnimationController;
-import flixel.ui.FlxBar;
 import flixel.util.FlxSort;
 import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
@@ -24,10 +21,8 @@ import substates.GameOverSubstate;
 import substates.PauseSubState;
 import objects.Note.EventNote;
 import objects.*;
-import backend.Section;
 import utils.*;
 import data.*;
-import data.StageData.StageFile;
 import psychlua.*;
 import cutscenes.DialogueBoxPsych;
 
@@ -320,7 +315,7 @@ class PlayState extends MusicBeatState {
 			SONG.stage = StageData.vanillaSongStage(songName);
 		curStage = SONG.stage;
 
-		var stageData:StageFile = StageData.getStageFile(curStage);
+		var stageData:data.StageData.StageFile = StageData.getStageFile(curStage);
 		if(stageData == null) stageData = StageData.dummy(); //Stage couldn't be found, create a dummy stage for preventing a crash
 
 		stageUI = "normal";
@@ -1059,7 +1054,7 @@ class PlayState extends MusicBeatState {
 
 		notes = new FlxTypedGroup<Note>();
 		noteGroup.add(notes);
-		var noteData:Array<SwagSection>;
+		var noteData:Array<backend.Section.SwagSection>;
 		noteData = songData.notes;
 
 		var file:String = Paths.json('${Paths.CHART_PATH}/$songName/events');
@@ -1341,7 +1336,7 @@ class PlayState extends MusicBeatState {
 		updateLuaDefaultPos();
 	}
 
-	override function openSubState(SubState:FlxSubState) {
+	override function openSubState(SubState:flixel.FlxSubState) {
 		stagesFunc((stage:BaseStage) -> stage.openSubState(SubState));
 		if (paused) {
 			if (FlxG.sound.music != null) {

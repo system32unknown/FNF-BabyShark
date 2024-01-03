@@ -1,8 +1,6 @@
 package flixel.addons.ui;
 
 import flixel.addons.ui.interfaces.IFlxUIWidget;
-import flixel.FlxSprite;
-import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxRect;
 
 /**

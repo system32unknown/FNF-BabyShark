@@ -3,7 +3,6 @@ package states;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.transition.FlxTransitionableState;
-import backend.Mods;
 import options.ModSettingsSubState;
 import data.StageData;
 

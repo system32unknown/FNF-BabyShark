@@ -2,7 +2,6 @@ package backend;
 
 import openfl.display.BitmapData;
 import flixel.graphics.FlxGraphic;
-import flixel.util.FlxGradient;
 
 class CustomFadeTransition extends MusicBeatSubstate {
 	public static var finishCallback:Void->Void;
@@ -90,7 +89,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 	static function getGradient():FlxGraphic @:privateAccess {
 		if (cachedGradient != null && cachedGradient.frameCollections != null) return cachedGradient;
 
-		var bitmap:BitmapData = FlxGradient.createGradientBitmapData(FlxG.width, 1, [FlxColor.BLACK, 0x0], 1, 0);
+		var bitmap:BitmapData = flixel.util.FlxGradient.createGradientBitmapData(FlxG.width, 1, [FlxColor.BLACK, 0x0], 1, 0);
 		cachedGradient = FlxGraphic.fromBitmapData(bitmap, false, "FadeTransitionGradient");
 		cachedGradient.persist = true;
 

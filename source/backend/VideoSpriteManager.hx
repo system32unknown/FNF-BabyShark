@@ -6,7 +6,6 @@ package backend;
 #elseif (hxCodec == "2.6.0") import VideoSprite;
 #else import vlc.MP4Sprite as VideoSprite; #end
 #end
-import states.PlayState;
 import haxe.extern.EitherType;
 import flixel.util.FlxSignal;
 

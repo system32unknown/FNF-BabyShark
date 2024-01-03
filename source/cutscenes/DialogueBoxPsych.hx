@@ -3,7 +3,6 @@ package cutscenes;
 import haxe.Json;
 import openfl.utils.Assets;
 import objects.TypedAlphabet;
-import backend.Controls;
 
 // Gonna try to kind of make it compatible to Forever Engine,
 // love u Shubs no homo :flushedh4:

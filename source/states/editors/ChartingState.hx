@@ -7,7 +7,6 @@ import objects.Character;
 import objects.AttachedSprite;
 import objects.AttachedFlxText;
 import objects.ErrorDisplay;
-import backend.Section;
 import backend.Song;
 import data.StageData;
 import utils.MathUtil;
@@ -780,7 +779,6 @@ class ChartingState extends MusicBeatState {
 							_song.notes[daSec].sectionNotes.push(copiedNote);
 						}
 					}
-					_song.notes[daSec].sectionNotes.push(copiedNote);
 				}
 			}
 
@@ -2525,7 +2523,7 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function addSection(sectionBeats:Float = 4):Void {
-		var sec:SwagSection = {
+		var sec:backend.Section.SwagSection = {
 			sectionBeats: sectionBeats,
 			bpm: _song.bpm,
 			changeBPM: false,

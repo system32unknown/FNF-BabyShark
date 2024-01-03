@@ -6,14 +6,10 @@ import flixel.addons.ui.interfaces.IFlxUIButton;
 import flixel.addons.ui.interfaces.IFlxUIClickable;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.addons.ui.interfaces.IResizable;
-import flixel.FlxSprite;
 import flixel.system.FlxAssets;
-import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxArrayUtil;
-import flixel.math.FlxPoint;
 import flixel.util.FlxStringUtil;
-import flixel.util.FlxTimer;
 
 /**
  * @author Lars Doucet

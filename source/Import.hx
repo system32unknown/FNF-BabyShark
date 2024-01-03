@@ -25,8 +25,6 @@ import states.LoadingState;
 #if sys
 import sys.*;
 import sys.io.*;
-#elseif js
-import js.html.*;
 #end
 
 #if flxanimate import flxanimate.*; #end

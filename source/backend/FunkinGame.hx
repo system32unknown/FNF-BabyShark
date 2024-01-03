@@ -1,8 +1,6 @@
 package backend;
 
-import flixel.FlxGame;
-
-class FunkinGame extends FlxGame {
+class FunkinGame extends flixel.FlxGame {
     var skipNextTickUpdate:Bool = false;
     public override function switchState() {
         super.switchState();

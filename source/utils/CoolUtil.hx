@@ -3,7 +3,6 @@ package utils;
 import flixel.FlxBasic;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
-import flixel.addons.display.FlxGridOverlay;
 import openfl.net.FileReference;
 import utils.system.PlatformUtil.MessageBoxIcon;
 import utils.system.NativeUtil;
@@ -115,6 +114,6 @@ class CoolUtil {
     }
 
 	inline public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
-		return new FlxBackdrop(FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
+		return new FlxBackdrop(flixel.addons.display.FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
 	}
 }
