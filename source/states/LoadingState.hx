@@ -4,7 +4,6 @@ import lime.app.Promise;
 import lime.app.Future;
 import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
-import lime.utils.AssetManifest;
 
 import flixel.FlxState;
 
@@ -188,29 +187,28 @@ class LoadingState extends MusicBeatState {
 			path = LimeAssets.__cacheBreak(path);
 		}
 
-		AssetManifest.loadFromFile(path, rootPath).onComplete(function(manifest) {
+		lime.utils.AssetManifest.loadFromFile(path, rootPath).onComplete((manifest) -> {
 			if (manifest == null) {
-				promise.error("Cannot parse asset manifest for library \"" + id + "\"");
+				promise.error('Cannot parse asset manifest for library "$id"');
 				return;
 			}
 
 			var library = AssetLibrary.fromManifest(manifest);
 			if (library == null)
-				promise.error("Cannot open library \"" + id + "\"");
+				promise.error('Cannot open library "$id"');
 			else {
 				@:privateAccess
 				LimeAssets.libraries.set(id, library);
 				library.onChange.add(LimeAssets.onChange.dispatch);
 				promise.completeWith(Future.withValue(library));
 			}
-		}).onError((_) -> promise.error("There is no asset library with an ID of \"" + id + "\""));
+		}).onError((_) -> promise.error('There is no asset library with an ID of "$id"'));
 
 		return promise.future;
 	}
 }
 
-class MultiCallback
-{
+class MultiCallback {
 	public var callback:Void->Void;
 	public var logId:String = null;
 	public var length(default, null) = 0;
@@ -224,8 +222,7 @@ class MultiCallback
 		this.logId = logId;
 	}
 	
-	public function add(id = "untitled")
-	{
+	public function add(id = "untitled") {
 		id = '$length:$id';
 		length++;
 		numRemaining++;

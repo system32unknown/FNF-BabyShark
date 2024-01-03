@@ -154,7 +154,7 @@ class ReflectionFunctions {
 			} else FunkinLua.luaTrace('addInstance: Can\'t add what doesn\'t exist~ ($objectName)', false, false, FlxColor.RED);
 		});
 		funk.set("instanceArg", function(instanceName:String, ?className:String = null) {
-			var retStr:String ='$instanceStr::$instanceName';
+			var retStr:String = '$instanceStr::$instanceName';
 			if(className != null) retStr += '::$className';
 			return retStr;
 		});

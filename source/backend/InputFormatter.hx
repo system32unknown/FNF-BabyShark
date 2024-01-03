@@ -1,8 +1,7 @@
 package backend;
 
-import flixel.input.keyboard.FlxKey;
 class InputFormatter {
-	public static function getKeyName(key:FlxKey):String {
+	public static function getKeyName(key:flixel.input.keyboard.FlxKey):String {
 		switch (key) {
 			case BACKSPACE: return "BckSpc";
 			case CONTROL: return "Ctrl";

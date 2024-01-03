@@ -1,11 +1,10 @@
 package backend;
 
-import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
 import objects.ErrorDisplay;
 
-class MusicBeatState extends FlxUIState {
+class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	public var curBPMChange:BPMChangeEvent;
 
 	var passedSections:Array<Float> = [];

@@ -1,7 +1,5 @@
 package shaders;
 
-import flixel.system.FlxAssets.FlxShader;
-
 enum WiggleEffectType {
 	DREAMY;
 	WAVY;
@@ -54,7 +52,7 @@ class WiggleEffect {
 	}
 }
 
-class WiggleShader extends FlxShader {
+class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 	@:glFragmentSource('
 		#pragma header
 		//uniform float tx, ty; // x,y waves phase

@@ -1,18 +1,14 @@
 package psychlua;
 
 import flixel.FlxBasic;
-import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
-import substates.GameOverSubstate;
-import substates.PauseSubState;
-import states.*;
 import cutscenes.DialogueBoxPsych;
+import substates.GameOverSubstate;
+import states.*;
 import backend.Highscore;
 import backend.Song;
 import objects.StrumNote;
 import utils.system.PlatformUtil;
-import data.WeekData;
-import haxe.Json;
 
 class FunkinLua {
 	public static var Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
@@ -448,7 +444,7 @@ class FunkinLua {
 		set("restartSong", function(?skipTransition:Bool = false) {
 			game.persistentUpdate = false;
 			FlxG.camera.followLerp = 0;
-			PauseSubState.restartSong(skipTransition);
+			substates.PauseSubState.restartSong(skipTransition);
 			return true;
 		});
 		set("exitSong", function(?skipTransition:Bool = false) {
@@ -462,9 +458,7 @@ class FunkinLua {
 			if(FlxTransitionableState.skipNextTransIn)
 				CustomFadeTransition.nextCamera = null;
 
-			if(PlayState.isStoryMode)
-				MusicBeatState.switchState(new StoryMenuState());
-			else MusicBeatState.switchState(new FreeplayState());
+			MusicBeatState.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 			#if desktop DiscordClient.resetClientID(); #end
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
@@ -640,7 +634,7 @@ class FunkinLua {
 		});
 
 		set("setScrollFactor", function(obj:String, scrollX:Float, scrollY:Float) {
-			var obj:FlxObject = LuaUtils.getVarInstance(obj);
+			var obj:flixel.FlxObject = LuaUtils.getVarInstance(obj);
 			if (obj == null) return false;
 
 			obj.scrollFactor.set(scrollX, scrollY);
@@ -958,7 +952,7 @@ class FunkinLua {
 		set('difficultyName', Difficulty.getString());
 		set('difficultyPath', Paths.formatToSongPath(Difficulty.getString()));
 		set('weekRaw', PlayState.storyWeek);
-		set('week', WeekData.weeksList[PlayState.storyWeek]);
+		set('week', data.WeekData.weeksList[PlayState.storyWeek]);
 		set('seenCutscene', PlayState.seenCutscene);
 		set('hasVocals', PlayState.SONG.needsVoices);
 

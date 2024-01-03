@@ -1,9 +1,8 @@
 package backend;
 
-import lime.utils.Assets;
 class IniParser {
 	public static inline function parseAsset(assetPath:String, ?defaultVariables:Map<String, String>)
-		return parseString(Assets.getText(assetPath), defaultVariables);
+		return parseString(lime.utils.Assets.getText(assetPath), defaultVariables);
 
 	public static function parseString(data:String, ?defaultVariables:Map<String, String>) {
 		var trimmed:String;

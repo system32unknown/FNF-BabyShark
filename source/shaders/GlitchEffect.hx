@@ -1,9 +1,6 @@
 package shaders;
 
-import flixel.system.FlxAssets.FlxShader;
-
-class GlitchEffect 
-{
+class GlitchEffect {
     public var shader(default, null):GlitchShader = new GlitchShader();
 
     public var waveSpeed(default, set):Float = 0;
@@ -42,8 +39,7 @@ class GlitchEffect
     }
 }
  
-class GlitchShader extends FlxShader
-{
+class GlitchShader extends flixel.system.FlxAssets.FlxShader {
     @:glFragmentSource('
     #pragma header 
 

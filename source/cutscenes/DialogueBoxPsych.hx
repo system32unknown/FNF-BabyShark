@@ -1,7 +1,6 @@
 package cutscenes;
 
 import haxe.Json;
-import openfl.utils.Assets;
 import objects.TypedAlphabet;
 
 // Gonna try to kind of make it compatible to Forever Engine,
@@ -358,7 +357,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		if(FileSystem.exists(path))
 			return cast Json.parse(File.getContent(path));
 		#end
-		return cast Json.parse(Assets.getText(path));
+		return cast Json.parse(openfl.utils.Assets.getText(path));
 	}
 
 	public static function updateBoxOffsets(box:FlxSprite) { //Had to make it static because of the editors

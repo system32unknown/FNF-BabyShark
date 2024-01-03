@@ -1,7 +1,6 @@
 package states;
 
 import objects.AttachedSprite;
-import objects.HealthIcon;
 
 class CreditsState extends MusicBeatState {
 	// Title, Variable, Description, Color

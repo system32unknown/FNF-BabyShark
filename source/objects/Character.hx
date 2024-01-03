@@ -1,7 +1,5 @@
 package objects;
 
-import backend.animation.PsychAnimationController;
-import flixel.util.FlxDestroyUtil;
 import openfl.utils.Assets;
 import haxe.Json;
 
@@ -70,7 +68,7 @@ class Character extends FlxSprite {
 	public function new(x:Float, y:Float, ?character:String = DEFAULT_CHARACTER, ?isPlayer:Bool = false, ?library:String) {
 		super(x, y);
 
-		animation = new PsychAnimationController(this);
+		animation = new backend.animation.PsychAnimationController(this);
 
 		animOffsets = new Map<String, Array<Dynamic>>();
 		curCharacter = character;
@@ -389,7 +387,7 @@ class Character extends FlxSprite {
 	}
 
 	public function destroyAtlas() {
-		if (atlas != null) atlas = FlxDestroyUtil.destroy(atlas);
+		if (atlas != null) atlas = flixel.util.FlxDestroyUtil.destroy(atlas);
 	}
 	#end
 }

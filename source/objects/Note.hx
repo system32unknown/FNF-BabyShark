@@ -1,9 +1,7 @@
 package objects;
 
-import backend.animation.PsychAnimationController;
 import flixel.math.FlxRect;
 import shaders.ColorSwap;
-import data.EkData;
 
 typedef EventNote = {
 	strumTime:Float,
@@ -15,7 +13,7 @@ typedef EventNote = {
 class Note extends FlxSprite {
 	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
 	public static var pixelNotesDivisionValue:Int = 18;
-	public static var keysShit:Map<Int, Map<String, Dynamic>> = EKData.keysShit;
+	public static var keysShit:Map<Int, Map<String, Dynamic>> = data.EKData.keysShit;
 	
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public var strumTime:Float = 0;
@@ -169,7 +167,7 @@ class Note extends FlxSprite {
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?createdFrom:Dynamic = null) {
 		super();
 
-		animation = new PsychAnimationController(this);
+		animation = new backend.animation.PsychAnimationController(this);
 
 		antialiasing = ClientPrefs.getPref('Antialiasing');
 		if(createdFrom == null) createdFrom = PlayState.instance;

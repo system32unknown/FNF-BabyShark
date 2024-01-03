@@ -1,6 +1,5 @@
 package data;
 
-import haxe.io.Path;
 import openfl.utils.Assets;
 import haxe.extern.EitherType;
 
@@ -121,7 +120,7 @@ class WeekData {
 				}
 
 				for (file in FileSystem.readDirectory(directory)) {
-					var path = Path.join([directory, file]);
+					var path = haxe.io.Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
 						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
 				}

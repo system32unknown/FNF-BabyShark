@@ -1,7 +1,6 @@
 package options;
 
 import flixel.input.keyboard.FlxKey;
-import objects.Character;
 
 class ModSettingsSubState extends BaseOptionsMenu {
 	var save:Map<String, Dynamic> = new Map<String, Dynamic>();

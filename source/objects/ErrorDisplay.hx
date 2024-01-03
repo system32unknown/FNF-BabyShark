@@ -1,7 +1,5 @@
 package objects;
 
-import flixel.FlxState;
-
 class ErrorDisplay {
     public var text(default, set):String = 'Error!';
 
@@ -89,7 +87,7 @@ class ErrorDisplay {
      * Example: `myDisplay.addDisplay(this);`
      * @param state Which state to add it to
      */
-    public function addDisplay(state:FlxState) {
+    public function addDisplay(state:flixel.FlxState) {
         state.add(this.errorBG);
         state.add(this.errorText);
     }

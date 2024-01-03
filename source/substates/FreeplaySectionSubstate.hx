@@ -4,7 +4,6 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.graphics.FlxGraphic;
 import data.WeekData;
 import states.StoryMenuState;
-import states.FreeplayState;
 
 class FreeplaySectionSubstate extends MusicBeatSubstate {
 	public static var daSection:String = 'Vanilla';
@@ -101,7 +100,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			FlxTween.tween(sectionTxt, {alpha: 0, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y - 200}, .5, {ease: FlxEase.expoInOut,
 				onComplete: (tween:FlxTween) -> {
-					daSection = FreeplayState.section;
+					daSection = states.FreeplayState.section;
 					close();
 				}
 			});

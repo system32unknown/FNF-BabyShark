@@ -113,17 +113,13 @@ class Highscore {
 	}
 
 	public static function load():Void {
-		if (FlxG.save.data.weekScores != null)
-			weekScores = FlxG.save.data.weekScores;
-		if (FlxG.save.data.songScores != null)
-			songScores = FlxG.save.data.songScores;
-		if (FlxG.save.data.songRating != null)
-			songRating = FlxG.save.data.songRating;
-		if (FlxG.save.data.songCombos != null)
-			songCombos = FlxG.save.data.songCombos;
+		if (FlxG.save.data.weekScores != null) weekScores = FlxG.save.data.weekScores;
+		if (FlxG.save.data.songScores != null) songScores = FlxG.save.data.songScores;
+		if (FlxG.save.data.songRating != null) songRating = FlxG.save.data.songRating;
+		if (FlxG.save.data.songCombos != null) songCombos = FlxG.save.data.songCombos;
 	}
 
-	static function checkIfEmpty(s:String):Bool {
+	inline static function checkIfEmpty(s:String):Bool {
 		return s == null || s.length == 0 || s == '';
 	}
 }

@@ -1,10 +1,7 @@
 package options;
 
-import flixel.FlxObject;
 import objects.Bar;
 import objects.Character;
-
-import states.stages.StageWeek1 as BackgroundStage;
 
 class NoteOffsetState extends MusicBeatState {
 	var delayMin:Int = -500;
@@ -66,7 +63,7 @@ class NoteOffsetState extends MusicBeatState {
 
 		// Stage
 		Paths.setCurrentLevel('week1');
-		new BackgroundStage();
+		new states.stages.StageWeek1();
 		camGame.scroll.set(120, 130);
 		defaultCamZoom = .7;
 
@@ -334,7 +331,7 @@ class NoteOffsetState extends MusicBeatState {
 		}
 	}
 
-	inline function selectObj(obj1:FlxPoint, obj2:FlxObject):Bool {
+	inline function selectObj(obj1:FlxPoint, obj2:flixel.FlxObject):Bool {
 		return obj1.x - obj2.x >= 0 && obj1.x - obj2.x <= obj2.width && obj1.y - obj2.y >= 0 && obj1.y - obj2.y <= obj2.height;
 	}
 

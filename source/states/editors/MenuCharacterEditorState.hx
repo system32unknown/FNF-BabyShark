@@ -291,8 +291,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		_file.browse([jsonFilter]);
 	}
 
-	function onLoadComplete(_):Void
-	{
+	function onLoadComplete(_):Void {
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);

@@ -1,7 +1,6 @@
 package objects;
 
-class AttachedSprite extends FlxSprite
-{
+class AttachedSprite extends FlxSprite {
 	public var sprTracker:FlxSprite;
 	public var addPoint:FlxPoint = FlxPoint.get();
 	public var angleAdd:Float = 0;

@@ -1,7 +1,6 @@
 package states.stages;
 
 import states.stages.objects.*;
-import objects.Character;
 
 class StageWeek1 extends BaseStage {
 	var dadbattleBlack:BGSprite;
@@ -67,7 +66,7 @@ class StageWeek1 extends BaseStage {
 							defaultCamZoom += 0.12;
 						}
 
-						var who:Character = dad;
+						var who:objects.Character = dad;
 						if(val > 2) who = boyfriend;
 						//2 only targets dad
 						dadbattleLight.alpha = 0;

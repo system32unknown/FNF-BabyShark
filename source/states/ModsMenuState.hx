@@ -1,10 +1,7 @@
 package states;
 
-import flixel.graphics.FlxGraphic;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.transition.FlxTransitionableState;
-import options.ModSettingsSubState;
-import data.StageData;
 
 class ModsMenuState extends MusicBeatState {
 	var bg:FlxSprite;
@@ -206,7 +203,7 @@ class ModsMenuState extends MusicBeatState {
 		settingsButton = new MenuButton(onPlayState ? buttonsX + 400 : buttonsX + 300, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> { //Settings
 			var curMod:ModItem = modsGroup.members[curSelectedMod];
 			if(curMod != null && curMod.settings != null && curMod.settings.length > 0)
-				openSubState(new ModSettingsSubState(curMod.settings, curMod.folder, curMod.name));
+				openSubState(new options.ModSettingsSubState(curMod.settings, curMod.folder, curMod.name));
 		}, 54, 54);
 		settingsButton.icon.animation.add('icon', [3]);
 		settingsButton.icon.animation.play('icon', true);
@@ -254,7 +251,7 @@ class ModsMenuState extends MusicBeatState {
 	
 	var nextAttempt:Float = 1;
 	var holdingMod:Bool = false;
-	var mouseOffsets:FlxPoint = new FlxPoint();
+	var mouseOffsets:FlxPoint = FlxPoint.get();
 	var holdingElapsed:Float = 0;
 	var gottaClickAgain:Bool = false;
 
@@ -277,7 +274,7 @@ class ModsMenuState extends MusicBeatState {
 			} else MusicBeatState.switchState(new MainMenuState());
 
 			if(onPlayState) {
-				StageData.loadDirectory(PlayState.SONG);
+				data.StageData.loadDirectory(PlayState.SONG);
 				MusicBeatState.switchState(new PlayState());
 				FlxG.sound.music.volume = 0;
 				onPlayState = false;
@@ -663,6 +660,11 @@ class ModsMenuState extends MusicBeatState {
 		var path:String = 'modsList.txt';
 		File.saveContent(path, fileStr);
 	}
+
+	override function destroy() {
+		mouseOffsets = flixel.util.FlxDestroyUtil.put(mouseOffsets);
+		super.destroy();
+	}
 }
 
 class ModItem extends FlxSpriteGroup
@@ -760,7 +762,7 @@ class MenuButton extends FlxSpriteGroup {
 	public var icon:FlxSprite;
 	public var onClick:Void->Void = null;
 	public var enabled(default, set):Bool = true;
-	public function new(x:Float, y:Float, width:Int, height:Int, ?text:String = null, ?img:FlxGraphic = null, onClick:Void->Void = null, animWidth:Int = 0, animHeight:Int = 0) {
+	public function new(x:Float, y:Float, width:Int, height:Int, ?text:String = null, ?img:flixel.graphics.FlxGraphic = null, onClick:Void->Void = null, animWidth:Int = 0, animHeight:Int = 0) {
 		super(x, y);
 		
 		bg = FlxSpriteUtil.drawRoundRect(new FlxSprite().makeGraphic(width, height, FlxColor.TRANSPARENT), 0, 0, width, height, 15, 15, FlxColor.WHITE);

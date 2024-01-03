@@ -1,7 +1,7 @@
 package backend;
 
 class EtternaFunctions {
-	static var erfs:Array<Float> = [.254829592, -.284496736, 1.421413741, 1.453152027, 1.061405429, .3275911];
+	static final erfs:Array<Float> = [.254829592, -.284496736, 1.421413741, 1.453152027, 1.061405429, .3275911];
 	static function erf(x:Float):Float {
 		var sign = (x < 0 ? -1 : 1);
 		x = Math.abs(x);

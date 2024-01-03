@@ -1,6 +1,5 @@
 package options;
 
-import flixel.addons.display.FlxBackdrop;
 import flixel.input.keyboard.FlxKey;
 import data.EkData.Keybinds;
 import backend.InputFormatter;
@@ -32,7 +31,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		bg.screenCenter();
 		add(bg);
 
-		var grid:FlxBackdrop = CoolUtil.createBackDrop(80, 80, 160, 160, true, 0x33FFFFFF, 0x0);
+		var grid:flixel.addons.display.FlxBackdrop = CoolUtil.createBackDrop(80, 80, 160, 160, true, 0x33FFFFFF, 0x0);
 		grid.velocity.set(40, 40);
 		grid.alpha = 0;
 		FlxTween.tween(grid, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});

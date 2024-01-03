@@ -1,9 +1,7 @@
 package options;
 
-class GameplaySettingsSubState extends BaseOptionsMenu
-{
-	public function new()
-	{
+class GameplaySettingsSubState extends BaseOptionsMenu {
+	public function new() {
 		title = 'Gameplay Settings';
 		rpcTitle = 'Gameplay Settings Menu'; //for Discord Rich Presence
 

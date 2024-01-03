@@ -1,6 +1,6 @@
 package utils.system;
-import utils.system.PlatformUtil.MessageBoxIcon;
 
+import utils.system.PlatformUtil.MessageBoxIcon;
 /**
  * Class for Windows-only functions, such as transparent windows, message boxes, and more.
  * Does not have any effect on other platforms.

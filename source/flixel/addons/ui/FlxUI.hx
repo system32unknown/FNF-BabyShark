@@ -2144,35 +2144,16 @@ class FlxUI extends FlxUIGroup implements IEventGetter
 	{
 		var cs:String = U.xml_str(data.x, str, true, "nw");
 		var fp:FlxPoint = FlxPoint.get();
-		switch (cs)
-		{
-			case "nw", "ul":
-				fp.x = 0;
-				fp.y = 0;
-			case "n", "u":
-				fp.x = 0.5;
-				fp.y = 0;
-			case "ne", "ur":
-				fp.x = 1;
-				fp.y = 0;
-			case "e", "r":
-				fp.x = 1;
-				fp.y = 0.5;
-			case "se", "lr":
-				fp.x = 1;
-				fp.y = 1;
-			case "s":
-				fp.x = 0.5;
-				fp.y = 1;
-			case "sw", "ll":
-				fp.x = 0;
-				fp.y = 1;
-			case "w":
-				fp.x = 0.5;
-				fp.y = 0;
-			case "m", "c", "mid", "center":
-				fp.x = 0.5;
-				fp.y = 0.5;
+		switch (cs) {
+			case "nw", "ul": fp.set();
+			case "n", "u": fp.set(.5);
+			case "ne", "ur": fp.set(1);
+			case "e", "r": fp.set(1, .5);
+			case "se", "lr": fp.set(1, 1);
+			case "s": fp.set(.5, 1);
+			case "sw", "ll": fp.set(0, 1);
+			case "w": fp.set(.5);
+			case "m", "c", "mid", "center": fp.set(.5, .5);
 		}
 		return fp;
 	}

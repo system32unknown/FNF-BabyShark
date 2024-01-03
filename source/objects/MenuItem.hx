@@ -1,7 +1,6 @@
 package objects;
 
-class MenuItem extends FlxSprite
-{
+class MenuItem extends FlxSprite {
 	public var targetY:Float = 0;
 
 	public function new(x:Float, y:Float, weekName:String = '') {

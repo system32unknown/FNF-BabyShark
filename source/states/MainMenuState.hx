@@ -2,7 +2,6 @@ package states;
 
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
-import states.editors.MasterEditorMenu;
 import options.OptionsState;
 
 class MainMenuState extends MusicBeatState {
@@ -202,7 +201,7 @@ class MainMenuState extends MusicBeatState {
 				}
 			} else if (controls.justPressed('debug_1')) {
 				selectedSomethin = true;
-				MusicBeatState.switchState(new MasterEditorMenu());
+				MusicBeatState.switchState(new states.editors.MasterEditorMenu());
 			}
 		}
 

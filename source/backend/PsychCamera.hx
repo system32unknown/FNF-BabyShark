@@ -31,17 +31,11 @@ class PsychCamera extends FlxCamera {
 			var targetY:Float = target.y + targetOffset.y;
 
 			if (style == SCREEN_BY_SCREEN) {
-				if (targetX >= viewRight) {
-					_scrollTarget.x += viewWidth;
-				} else if (targetX + target.width < viewLeft) {
-					_scrollTarget.x -= viewWidth;
-				}
+				if (targetX >= viewRight) _scrollTarget.x += viewWidth;
+				else if (targetX + target.width < viewLeft) _scrollTarget.x -= viewWidth;
 
-				if (targetY >= viewBottom) {
-					_scrollTarget.y += viewHeight;
-				} else if (targetY + target.height < viewTop) {
-					_scrollTarget.y -= viewHeight;
-				}
+				if (targetY >= viewBottom) _scrollTarget.y += viewHeight;
+				else if (targetY + target.height < viewTop) _scrollTarget.y -= viewHeight;
 
 				// without this we see weird behavior when switching to SCREEN_BY_SCREEN at arbitrary scroll positions
 				bindScrollPos(_scrollTarget);
@@ -60,11 +54,9 @@ class PsychCamera extends FlxCamera {
 			if ((target is FlxSprite)) {
 				if (_lastTargetPosition == null)
 					_lastTargetPosition = FlxPoint.get(target.x, target.y); // Creates this point.
-				_scrollTarget.x += (target.x - _lastTargetPosition.x) * followLead.x;
-				_scrollTarget.y += (target.y - _lastTargetPosition.y) * followLead.y;
+				_scrollTarget.add((target.x - _lastTargetPosition.x) * followLead.x, (target.y - _lastTargetPosition.y) * followLead.y);
 
-				_lastTargetPosition.x = target.x;
-				_lastTargetPosition.y = target.y;
+				_lastTargetPosition.set(target.x, target.y);
 			}
 		}
 
@@ -72,8 +64,7 @@ class PsychCamera extends FlxCamera {
 		scroll.add((_scrollTarget.x - scroll.x) * mult, (_scrollTarget.y - scroll.y) * mult);
 	}
 
-	override function set_followLerp(value:Float)
-	{
+	override function set_followLerp(value:Float) {
 		return followLerp = value;
 	}
 }

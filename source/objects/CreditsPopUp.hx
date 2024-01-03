@@ -1,7 +1,5 @@
 package objects;
 
-import utils.MathUtil;
-
 typedef SongHeading = {
 	var path:String;
 	var antiAliasing:Bool;
@@ -34,7 +32,7 @@ class CreditsPopUp extends FlxSpriteGroup {
 		createHeadingText(text);
 
 		rescaleBG();
-		var yValues = MathUtil.getMinAndMax(bg.height, funnyText.height);
+		var yValues = utils.MathUtil.getMinAndMax(bg.height, funnyText.height);
 		funnyText.y += ((yValues[0] - yValues[1]) / 2);
 	}
 

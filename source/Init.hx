@@ -1,7 +1,6 @@
 package;
 
 import flixel.addons.transition.FlxTransitionableState;
-import backend.Highscore;
 import states.FlashingState;
 
 // THIS IS FOR INITIALIZING STUFF BECAUSE FLIXEL HATES INITIALIZING STUFF IN MAIN
@@ -29,7 +28,7 @@ class Init extends flixel.FlxState {
 		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
 		ClientPrefs.loadDefaultKeys();
-		Highscore.load();
+		backend.Highscore.load();
 
 		if(FlxG.save.data != null) {
 			if(FlxG.save.data.fullscreen != null) FlxG.fullscreen = FlxG.save.data.fullscreen;

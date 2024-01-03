@@ -1,15 +1,12 @@
 package options;
 
-class VisualsUISubState extends BaseOptionsMenu
-{
-	public function new()
-	{
+class VisualsUISubState extends BaseOptionsMenu {
+	var changedMusic:Bool = false;
+	public function new() {
 		title = 'Visuals and UI';
 		rpcTitle = 'Visuals & UI Settings Menu'; //for Discord Rich Presence
 
-		var option:Option = new Option('Note Splashes',
-			"Set the alpha for the Note Splashes, usually shown when hitting \"Sick!\" notes.",
-			'splashOpacity', 'percent');
+		var option:Option = new Option('Note Splashes', "Set the alpha for the Note Splashes, usually shown when hitting \"Sick!\" notes.", 'splashOpacity', 'percent');
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
 		option.maxValue = 1;
@@ -45,17 +42,14 @@ class VisualsUISubState extends BaseOptionsMenu
 		
 		var option:Option = new Option('Pause Screen Song:', "What song do you prefer for the Pause Screen?", 'pauseMusic', 'string', ['None', 'Breakfast', 'Tea Time']);
 		addOption(option);
-		option.onChange = onChangePauseMusic;
+		option.onChange = () -> {
+			if(ClientPrefs.getPref('pauseMusic') == 'None') FlxG.sound.music.volume = 0;
+			else FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))));
+	
+			changedMusic = true;
+		};
 
 		super();
-	}
-
-	var changedMusic:Bool = false;
-	function onChangePauseMusic() {
-		if(ClientPrefs.getPref('pauseMusic') == 'None') FlxG.sound.music.volume = 0;
-		else FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))));
-
-		changedMusic = true;
 	}
 
 	override function destroy() {

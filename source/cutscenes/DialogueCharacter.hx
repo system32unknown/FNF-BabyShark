@@ -1,7 +1,6 @@
 package cutscenes;
 
 import haxe.Json;
-import lime.utils.Assets;
 
 typedef DialogueCharacterFile = {
 	var image:String;
@@ -62,7 +61,7 @@ class DialogueCharacter extends FlxSprite {
 
 		#else
 		var path:String = Paths.getPreloadPath(characterPath);
-		rawJson = Assets.getText(path);
+		rawJson = openfl.utils.Assets.getText(path);
 		#end
 		
 		jsonFile = cast Json.parse(rawJson);

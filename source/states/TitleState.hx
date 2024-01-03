@@ -1,8 +1,6 @@
 package states;
 
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.graphics.frames.FlxFrame;
-import flixel.util.FlxGradient;
 import states.MainMenuState;
 
 @:structInit
@@ -73,7 +71,7 @@ class TitleState extends MusicBeatState {
 			add(bg);
 		}
 
-		gradientBar = FlxGradient.createGradientFlxSprite(Math.round(FlxG.width), 512, [0x00, CoolUtil.colorFromString(titleJson.gradients[0]), CoolUtil.colorFromString(titleJson.gradients[1])], 1, 90, true);
+		gradientBar = flixel.util.FlxGradient.createGradientFlxSprite(Math.round(FlxG.width), 512, [0x00, CoolUtil.colorFromString(titleJson.gradients[0]), CoolUtil.colorFromString(titleJson.gradients[1])], 1, 90, true);
 		gradientBar.y = FlxG.height - gradientBar.height;
 		gradientBar.scale.y = 0;
 		gradientBar.updateHitbox();
@@ -109,7 +107,7 @@ class TitleState extends MusicBeatState {
 		titleText = new FlxSprite(125, 576);
 		titleText.visible = false;
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
-		var animFrames:Array<FlxFrame> = [];
+		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
 		@:privateAccess {
 			titleText.animation.findByPrefix(animFrames, "ENTER IDLE");
 			titleText.animation.findByPrefix(animFrames, "ENTER FREEZE");

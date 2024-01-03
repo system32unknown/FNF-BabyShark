@@ -4,9 +4,6 @@ import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import objects.Character;
 
-import states.StoryMenuState;
-import states.FreeplayState;
-
 class GameOverSubstate extends MusicBeatSubstate {
 	public var boyfriend:Character;
 
@@ -113,8 +110,8 @@ class GameOverSubstate extends MusicBeatSubstate {
 			PlayState.chartingMode = false;
 
 			Mods.loadTopMod();
-			if (PlayState.isStoryMode) MusicBeatState.switchState(new StoryMenuState());
-			else MusicBeatState.switchState(new FreeplayState());
+			if (PlayState.isStoryMode) MusicBeatState.switchState(new states.StoryMenuState());
+			else MusicBeatState.switchState(new states.FreeplayState());
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			PlayState.instance.callOnScripts('onGameOverConfirm', [false]);

@@ -85,13 +85,6 @@ class PlatformUtil {
     @:functionCode('MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);')
     static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
 
-    @:functionCode('
-        UINT nMenuf = enable ? (MF_BYCOMMAND | MF_GRAYED | MF_DISABLED) : (MF_BYCOMMAND);
-        HWND hwnd = GetActiveWindow();
-        EnableMenuItem(GetSystemMenu(hwnd, FALSE), SC_CLOSE, nMenuf);
-    ')
-    static public function disableClose(enable:Bool):Bool return enable;
-
 	@:functionCode('
 	    if (!AllocConsole()) return;
 

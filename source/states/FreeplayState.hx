@@ -1,15 +1,11 @@
 package states;
 
 import data.WeekData;
-import utils.MathUtil;
 import utils.FlxInterpolateColor;
 import backend.Highscore;
 import backend.Song;
 import objects.HealthIcon;
 import objects.ErrorDisplay;
-import states.editors.ChartingState;
-import substates.ResetScoreSubState;
-import substates.GameplayChangersSubstate;
 import substates.FreeplaySectionSubstate;
 
 class FreeplayState extends MusicBeatState {
@@ -195,7 +191,7 @@ class FreeplayState extends MusicBeatState {
 		if (Math.abs(lerpScore - intendedScore) <= 10) lerpScore = intendedScore;
 		if (Math.abs(lerpRating - intendedRating) <= .01) lerpRating = intendedRating;
 
-		var ratingSplit:Array<String> = Std.string(MathUtil.floorDecimal(lerpRating * 100, 2)).split('.');
+		var ratingSplit:Array<String> = Std.string(utils.MathUtil.floorDecimal(lerpRating * 100, 2)).split('.');
 		if (ratingSplit.length < 2)  ratingSplit.push(''); //No decimals, add an empty space
 		while (ratingSplit[1].length < 2) ratingSplit[1] += '0'; //Less than 2 decimals in it, add decimals then
 
@@ -253,7 +249,7 @@ class FreeplayState extends MusicBeatState {
 
 		if(FlxG.keys.justPressed.CONTROL) {
 			persistentUpdate = false;
-			openSubState(new GameplayChangersSubstate());
+			openSubState(new substates.GameplayChangersSubstate());
 		} else if(FlxG.keys.justPressed.SPACE) {
 			if(instPlaying != curSelected) {
 				#if PRELOAD_ALL
@@ -313,7 +309,7 @@ class FreeplayState extends MusicBeatState {
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
 
-				LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new ChartingState() : new PlayState());
+				LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new states.editors.ChartingState() : new PlayState());
 				FlxG.sound.music.volume = 0;
 				destroyFreeplayVocals();
 				#if MODS_ALLOWED DiscordClient.loadModRPC(); #end
@@ -327,7 +323,7 @@ class FreeplayState extends MusicBeatState {
 			FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 		} else if(controls.RESET) {
 			persistentUpdate = false;
-			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
+			openSubState(new substates.ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
 			FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 		}
 

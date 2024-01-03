@@ -2,9 +2,7 @@ package psychlua;
 
 import objects.Bar;
 import flixel.util.FlxAxes;
-import flixel.util.FlxStringUtil;
 import openfl.display.BlendMode;
-import substates.GameOverSubstate;
 
 typedef LuaTweenOptions = {
 	type:FlxTweenType,
@@ -157,7 +155,7 @@ class LuaUtils {
 	}
 	
 	public static inline function getInstance() {
-		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
+		return PlayState.instance.isDead ? substates.GameOverSubstate.instance : PlayState.instance;
 	}
 
 	static final _lePoint:FlxPoint = FlxPoint.get();
@@ -208,7 +206,7 @@ class LuaUtils {
 		var obj:Dynamic = getObjectDirectly(obj, false);
 		if(obj != null && obj.animation != null) {
 			if(indices == null) indices = [0];
-			else if(Std.isOfType(indices, String)) indices = FlxStringUtil.toIntArray(cast indices);
+			else if(Std.isOfType(indices, String)) indices = flixel.util.FlxStringUtil.toIntArray(cast indices);
 
 			obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
 			if(obj.animation.curAnim == null)

@@ -1,7 +1,6 @@
 package data;
 
-import openfl.utils.Assets;
-import backend.Song;
+#if !MODS_ALLOWED import openfl.utils.Assets; #end
 
 typedef StageFile = {
 	var directory:String;
@@ -41,7 +40,7 @@ class StageData {
 	}
 
 	public static var forceNextDirectory:String = null;
-	public static function loadDirectory(SONG:SwagSong) {
+	public static function loadDirectory(SONG:backend.Song.SwagSong) {
 		var stage:String = '';
 		if(SONG.stage != null)
 			stage = SONG.stage;

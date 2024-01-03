@@ -1,10 +1,6 @@
 package options;
 
-import states.MainMenuState;
-import data.StageData;
-
-class OptionsState extends MusicBeatState
-{
+class OptionsState extends MusicBeatState {
 	var options:Array<Array<Dynamic>> = [
 		['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'],
 		['Saves', 'Miscellaneous']
@@ -78,10 +74,10 @@ class OptionsState extends MusicBeatState
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			if(onPlayState) {
-				StageData.loadDirectory(PlayState.SONG);
+				data.StageData.loadDirectory(PlayState.SONG);
 				MusicBeatState.switchState(new PlayState());
 				FlxG.sound.music.volume = 0;
-			} else MusicBeatState.switchState(new MainMenuState());
+			} else MusicBeatState.switchState(new states.MainMenuState());
 		}
 
 		if (controls.ACCEPT) openSelectedSubstate(options[curPage][curSelected]);
