@@ -13,7 +13,7 @@ typedef EventNote = {
 class Note extends FlxSprite {
 	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
 	public static var pixelNotesDivisionValue:Int = 18;
-	public static var keysShit:Map<Int, Map<String, Dynamic>> = data.EKData.keysShit;
+	public static var keysShit:Map<Int, Map<String, Dynamic>> = data.EkData.keysShit;
 	
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public var strumTime:Float = 0;

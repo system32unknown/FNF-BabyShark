@@ -1,6 +1,6 @@
 package data;
 
-class EKData {
+class EkData {
     public static var keysShit:Map<Int, Map<String, Dynamic>> = [ // Amount of keys = num + 1
 		0 => [
             "letters" => ["E"], 
