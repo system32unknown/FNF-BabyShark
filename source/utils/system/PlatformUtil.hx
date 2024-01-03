@@ -105,6 +105,9 @@ class PlatformUtil {
 		std::cout<< "" <<std::flush;
 	')
 	public static function clearScreen() {}
+
+    @:functionCode('return FindWindowA(className, windowName) != NULL;')
+    public static function findWindow(className:String = null, windowName:String = '') return false;
 }
 #end
 

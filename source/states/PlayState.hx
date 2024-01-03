@@ -490,7 +490,7 @@ class PlayState extends MusicBeatState {
 			uiGroup.add(icon);
 		}
 
-		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), 0);
+		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), FlxG.width);
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		if (!downScroll) scoreTxt.y = FlxG.height - scoreTxt.height;
@@ -1477,7 +1477,6 @@ class PlayState extends MusicBeatState {
 			if (nps > maxNPS) maxNPS = nps;
 			UpdateScoreText();
 		}
-		scoreTxt.screenCenter(X);
 
 		updateMusicBeat();
 		setOnScripts('curDecStep', curDecStep);
