@@ -964,6 +964,7 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
+	var updateScoreText:Bool = true;
 	public dynamic function updateScore(miss:Bool = false) {
 		var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
 		if(ret == FunkinLua.Function_Stop) return;
@@ -972,7 +973,7 @@ class PlayState extends MusicBeatState {
 		for (rating in ratingsData)
 			judgementCounter.text += '\n${CoolUtil.capitalize(rating.name)}s: ${rating.hits}';
 		judgementCounter.screenCenter(Y);
-		UpdateScoreText();
+		if (updateScoreText) scoreTxt.text = getScoreText();
 
 		callOnScripts('onUpdateScore', [miss]);
 	}
@@ -1475,7 +1476,7 @@ class PlayState extends MusicBeatState {
 			}
 			nps = Math.floor(notesHitArray.length);
 			if (nps > maxNPS) maxNPS = nps;
-			UpdateScoreText();
+			if (updateScoreText) scoreTxt.text = getScoreText();
 		}
 
 		updateMusicBeat();
@@ -2111,8 +2112,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	var scoreSeparator:String = "|";
-	var updateScoreText:Bool = true;
-	function UpdateScoreText() {
+	function getScoreText() {
 		var tempText:String = (!ClientPrefs.getPref('ShowNPS') ? '' : 'NPS:$nps (Max:$maxNPS) $scoreSeparator ');
 		tempText += 'Score:$songScore ';
 		tempText += (cpuControlled ? '' : '$scoreSeparator ${ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks'}:$songMisses ');
@@ -2120,7 +2120,7 @@ class PlayState extends MusicBeatState {
 			case 'Alter': tempText += '$scoreSeparator Acc:$accuracy% $scoreSeparator' + (ratingName != '?' ? ' $ratingName [$ratingFC, $ranks]' : ' N/A');
 			case 'Kade': tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 		}
-		if (updateScoreText) scoreTxt.text = tempText;
+		return '$tempText\n';
 	}
 
 	public var ratingAcc:FlxPoint = FlxPoint.get();

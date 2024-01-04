@@ -23,9 +23,9 @@ class PlatformUtil {
 	@:functionCode('
         HWND hWnd = GetActiveWindow();
         alpha = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
-        SetLayeredWindowAttributes(hWnd, RGB(r, g, b), 0, LWA_COLORKEY);
+        return SetLayeredWindowAttributes(hWnd, RGB(r, g, b), 0, LWA_COLORKEY);
     ')
-	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0) return alpha;
+	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0):Bool return false;
 
     @:functionCode('
         NOTIFYICONDATA m_NID;
@@ -57,7 +57,7 @@ class PlatformUtil {
 
         return Shell_NotifyIcon(NIM_MODIFY, &m_NID);
     ')
-    static public function sendWindowsNotification(title:String = "", desc:String = ""):Int return 0;
+    static public function sendWindowsNotification(title:String = "", desc:String = ""):Bool return false;
     
     @:functionCode('
         HWND window = GetActiveWindow();
@@ -82,8 +82,8 @@ class PlatformUtil {
     ')
     static public function setWindowAtt(type:Int, enable:Bool) {}
 
-    @:functionCode('MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);')
-    static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {}
+    @:functionCode('return MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);')
+    static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING):Int return 0;
 
 	@:functionCode('
 	    if (!AllocConsole()) return;
@@ -94,11 +94,8 @@ class PlatformUtil {
 	')
 	public static function allocConsole() {}
 	
-	@:functionCode('
-		HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); 
-		SetConsoleTextAttribute(console, color);
-	')
-	public static function setConsoleColors(color:Int) {}
+	@:functionCode('return SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);')
+	public static function setConsoleColors(color:Int):Bool return false;
 
 	@:functionCode('
 		system("CLS");
