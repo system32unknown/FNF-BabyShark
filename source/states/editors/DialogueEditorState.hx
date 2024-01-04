@@ -1,6 +1,5 @@
 package states.editors;
 
-import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
@@ -103,7 +102,7 @@ class DialogueEditorState extends MusicBeatState
 	var speedStepper:FlxUINumericStepper;
 	var soundInputText:FlxUIInputText;
 	function addDialogueLineUI() {
-		var tab_group = new FlxUI(null, UI_box);
+		var tab_group = new flixel.addons.ui.FlxUI(null, UI_box);
 		tab_group.name = "Dialogue Line";
 
 		characterInputText = new FlxUIInputText(10, 20, 80, DialogueCharacter.DEFAULT_CHARACTER, 8);

@@ -1,6 +1,5 @@
 package;
 
-import openfl.Lib;
 import openfl.display.Sprite;
 import flixel.input.keyboard.FlxKey;
 import utils.system.MemoryUtil;
@@ -39,7 +38,7 @@ class Main extends Sprite {
 	#if (target.threaded && sys) public var threadPool:ElasticThreadPool; #end
 
 	@:allow(Init)
-	static function getTimer():Int return time = Lib.getTimer();
+	static function getTimer():Int return time = openfl.Lib.getTimer();
 
 	function setupGame():Void {
 		debug.Logs.init();

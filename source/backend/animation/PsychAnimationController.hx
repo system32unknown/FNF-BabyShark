@@ -1,8 +1,6 @@
 package backend.animation;
 
-import flixel.animation.FlxAnimationController;
-
-class PsychAnimationController extends FlxAnimationController {
+class PsychAnimationController extends flixel.animation.FlxAnimationController {
     public var followGlobalSpeed:Bool = true;
 
     public override function update(elapsed:Float):Void {

@@ -2181,7 +2181,7 @@ class PlayState extends MusicBeatState {
 			rating.screenCenter(Y).y -= 60 + comboOffset[0][1];
 			rating.x = placement - 40 + comboOffset[0][0];
 	
-			rating.velocity.set(-FlxG.random.int(0, 10) * playbackRate, -FlxG.random.int(140, 175) * playbackRate);
+			rating.velocity.set(-FlxG.random.int(0, 10) * playbackRate - ratingVel.x, -FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
 			rating.acceleration.set(ratingAcc.x * playbackRate * playbackRate, 550 * playbackRate * playbackRate + ratingAcc.y);
 			rating.antialiasing = antialias;
 			rating.setGraphicSize(rating.width * mult);
@@ -2198,8 +2198,8 @@ class PlayState extends MusicBeatState {
 			comboSpr.screenCenter(Y).y -= comboOffset[2][1];
 			comboSpr.x = placement + comboOffset[2][0];
 	
+			comboSpr.velocity.set(FlxG.random.int(1, 10) * playbackRate + ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
 			comboSpr.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate + ratingAcc.y);
-			comboSpr.velocity.set(FlxG.random.int(1, 10) * playbackRate - ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
 			comboSpr.antialiasing = antialias;
 			comboSpr.setGraphicSize(comboSpr.width * mult);
 			comboSpr.updateHitbox();
@@ -2215,8 +2215,8 @@ class PlayState extends MusicBeatState {
 			timing.screenCenter(Y).y -= comboOffset[3][1];
 			timing.x = placement - 130 + comboOffset[3][0];
 
-			timing.acceleration.set(ratingAcc.x * playbackRate * playbackRate, 550 * playbackRate * playbackRate + ratingAcc.y);
 			timing.velocity.set(-FlxG.random.int(0, 10) * playbackRate + ratingVel.x, -FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
+			timing.acceleration.set(ratingAcc.x * playbackRate * playbackRate, 550 * playbackRate * playbackRate + ratingAcc.y);
 			timing.antialiasing = antialias;
 			timing.setGraphicSize(timing.width * mult);
 			timing.updateHitbox();
@@ -2252,8 +2252,8 @@ class PlayState extends MusicBeatState {
 				numScore.screenCenter(Y).y += 80 - comboOffset[1][1];
 				numScore.x = placement + (43 * daLoop++) - 90 + comboOffset[1][0];
 			
+				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate + ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
 				numScore.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate + ratingAcc.y);
-				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate - ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
 				numScore.antialiasing = antialias;
 				numScore.setGraphicSize(numScore.width * numMult);
 				numScore.updateHitbox();
@@ -2265,10 +2265,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (ClientPrefs.getPref('ShowMsTiming')) {
-			if (msTimingTween != null) {
-				mstimingTxt.alpha = 1;
-				msTimingTween.cancel();
-			}
+			if (msTimingTween != null) {mstimingTxt.alpha = 1; msTimingTween.cancel();}
 			msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 		comboGroup.sort(CoolUtil.sortByID);

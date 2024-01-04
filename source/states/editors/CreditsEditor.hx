@@ -10,7 +10,6 @@ import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import objects.AttachedSprite;
-import substates.Prompt;
 
 class CreditsEditor extends MusicBeatState {
 	var curSelected:Int = -1;
@@ -173,7 +172,7 @@ class CreditsEditor extends MusicBeatState {
 		blockPressWhileTypingOn.push(colorInput);
 
 		var resetAll:FlxButton = new FlxButton(50, 300, "Reset all", () -> {
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', () -> {
+			openSubState(new substates.Prompt('This action will clear current progress.\n\nProceed?', () -> {
 				creditsStuff = templateArray();
 				updateCreditObjects();
 				curSelected = 1;

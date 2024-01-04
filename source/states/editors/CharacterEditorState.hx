@@ -1,18 +1,11 @@
 package states.editors;
 
-import flixel.FlxObject;
-import flixel.graphics.FlxGraphic;
-
-import flixel.animation.FlxAnimation;
-import flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.*;
 import flixel.ui.FlxButton;
 
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-import lime.system.Clipboard;
 
 import objects.Character;
 import objects.HealthIcon;
@@ -96,7 +89,7 @@ class CharacterEditorState extends MusicBeatState {
 
 		addCharacter();
 
-		cameraFollowPointer = new FlxSprite(FlxGraphic.fromClass(GraphicCursorCross));
+		cameraFollowPointer = new FlxSprite(flixel.graphics.FlxGraphic.fromClass(flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross));
 		cameraFollowPointer.setGraphicSize(40, 40);
 		cameraFollowPointer.updateHitbox();
 		add(cameraFollowPointer);

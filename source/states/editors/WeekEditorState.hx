@@ -1,7 +1,6 @@
 package states.editors;
 
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.util.FlxStringUtil;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUICheckBox;
@@ -16,7 +15,6 @@ import openfl.events.IOErrorEvent;
 import lime.system.Clipboard;
 import haxe.Json;
 import data.WeekData;
-import states.TitleState;
 import objects.HealthIcon;
 import objects.MenuCharacter;
 import objects.MenuItem;
@@ -257,7 +255,7 @@ class WeekEditorState extends MusicBeatState {
 		difficultiesInputText.text = '';
 		if(weekFile.difficulties != null) difficultiesInputText.text = weekFile.difficulties;
 
-		sectionInputText.text = FlxStringUtil.formatArray(weekFile.sections);
+		sectionInputText.text = flixel.util.FlxStringUtil.formatArray(weekFile.sections);
 
 		lockedCheckbox.checked = !weekFile.startUnlocked;
 		lock.visible = lockedCheckbox.checked;
@@ -635,9 +633,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		bgColorStepperG = new FlxUINumericStepper(80, 40, 20, 255, 0, 255, 0);
 		bgColorStepperB = new FlxUINumericStepper(150, 40, 20, 255, 0, 255, 0);
 
-		var copyColor:FlxButton = new FlxButton(10, bgColorStepperR.y + 25, "Copy Color", () -> {
-			Clipboard.text = bg.color.red + ',' + bg.color.green + ',' + bg.color.blue;
-		});
+		var copyColor:FlxButton = new FlxButton(10, bgColorStepperR.y + 25, "Copy Color", () -> Clipboard.text = bg.color.red + ',' + bg.color.green + ',' + bg.color.blue);
 		var pasteColor:FlxButton = new FlxButton(140, copyColor.y, "Paste Color", () -> {
 			if(Clipboard.text != null) {
 				var leColor:Array<Int> = [];

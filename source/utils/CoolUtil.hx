@@ -1,11 +1,8 @@
 package utils;
 
 import flixel.FlxBasic;
-import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import openfl.net.FileReference;
-import utils.system.PlatformUtil.MessageBoxIcon;
-import utils.system.NativeUtil;
 
 class CoolUtil {
 	public static function saveFile(content:String, format:String, filedefault:String, save:Bool = true) {
@@ -55,7 +52,7 @@ class CoolUtil {
 
 	public static function makeSelectorGraphic(panel:FlxSprite, w:Int, h:Int, color:FlxColor, cornerSize:Float) {
 		panel.makeGraphic(w, h, FlxColor.TRANSPARENT);
-		FlxSpriteUtil.drawRoundRectComplex(panel, 0, 0, w, h, cornerSize, cornerSize, cornerSize, cornerSize, color);
+		flixel.util.FlxSpriteUtil.drawRoundRectComplex(panel, 0, 0, w, h, cornerSize, cornerSize, cornerSize, cornerSize, color);
 	}
 
 	public static function getRandomizedText(max:Int):String {
@@ -110,7 +107,7 @@ class CoolUtil {
 	}
 
 	inline public static function callErrBox(title:String, context:String) {
-        NativeUtil.showMessageBox(title, context, MessageBoxIcon.MSG_ERROR);
+        utils.system.NativeUtil.showMessageBox(title, context, utils.system.PlatformUtil.MessageBoxIcon.MSG_ERROR);
     }
 
 	inline public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {

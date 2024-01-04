@@ -1,10 +1,5 @@
 package states.editors;
 
-import states.MainMenuState;
-import states.FreeplayState;
-import data.WeekData;
-import objects.Character;
-
 class MasterEditorMenu extends MusicBeatState {
 	var options:Array<String> = [
 		'Chart Editor',
@@ -68,11 +63,11 @@ class MasterEditorMenu extends MusicBeatState {
 		if (controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);
 		#if MODS_ALLOWED if (controls.UI_LEFT_P || controls.UI_RIGHT_P) changeDirectory(controls.UI_LEFT_P ? -1 : 1); #end
 
-		if (controls.BACK) MusicBeatState.switchState(new MainMenuState());
+		if (controls.BACK) MusicBeatState.switchState(new states.MainMenuState());
 
 		if (controls.ACCEPT) {
 			switch(options[curSelected]) {
-				case 'Character Editor': LoadingState.loadAndSwitchState(new CharacterEditorState(Character.DEFAULT_CHARACTER, false), false);
+				case 'Character Editor': LoadingState.loadAndSwitchState(new CharacterEditorState(objects.Character.DEFAULT_CHARACTER, false), false);
 				case 'Chart Editor': LoadingState.loadAndSwitchState(new ChartingState(), false);
 				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditor());
 				case 'Week Editor': MusicBeatState.switchState(new WeekEditorState());
@@ -84,7 +79,7 @@ class MasterEditorMenu extends MusicBeatState {
 			#if PRELOAD_ALL
 			Conductor.usePlayState = false;
 			Conductor.mapBPMChanges(true);
-			FreeplayState.destroyFreeplayVocals();
+			states.FreeplayState.destroyFreeplayVocals();
 			#end
 		}
 		
@@ -107,7 +102,7 @@ class MasterEditorMenu extends MusicBeatState {
 
 		curDirectory = FlxMath.wrap(curDirectory + change, 0, directories.length - 1);
 	
-		WeekData.setDirectoryFromWeek();
+		data.WeekData.setDirectoryFromWeek();
 		if(directories[curDirectory] == null || directories[curDirectory].length < 1)
 			directoryTxt.text = '< No Mod Directory Loaded >';
 		else {
