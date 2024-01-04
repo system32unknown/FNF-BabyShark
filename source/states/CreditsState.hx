@@ -9,7 +9,7 @@ class CreditsState extends MusicBeatState {
 		['Psych Engine / EK Team',		'psych',			'Developers of Psych Engine / EK',					'D662EB'],
 		["Funkin' Crew",				'funkin',			'The only cool kickers of Friday Night Funkin\'',	'FD40AB'],
 		["Vs Dave and Bambi Team",		'daveandbambi',		'Developers of Dave and Bambi',						'FD40AB'],
-		["Baby Shark\'s Funkin Team",	'babyshark',		'Developers of Baby Shark\'s Funkin',				'FD40AB'],
+		["Baby Shark\'s Big Funkin Team",	'babyshark',	'Developers of Baby Shark\'s Big Funkin',			'FD40AB'],
 		['']
 	];
 

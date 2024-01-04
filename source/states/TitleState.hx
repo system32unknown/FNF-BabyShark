@@ -127,7 +127,7 @@ class TitleState extends MusicBeatState {
 		titleText.updateHitbox();
 		add(titleText);
 
-		version = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH}) | Baby Shark\'s Funkin\' v${FlxG.stage.application.meta.get('version')}', 16);
+		version = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH}) | Baby Shark\'s Big Funkin\'! v${FlxG.stage.application.meta.get('version')}', 16);
 		version.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, CENTER);
 		version.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		version.scrollFactor.set();
@@ -267,9 +267,7 @@ class TitleState extends MusicBeatState {
 				case 12: deleteText();
 				case 13: addMoreText('Baby');
 				case 14: addMoreText('Shark\'s');
-				case 15:
-					addMoreText('Funkin');
-					addMoreText('The Full Game');
+				case 15: addMoreText('Big Funkin!');
 				case 16: skipIntro();
 			}
 		}

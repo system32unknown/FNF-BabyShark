@@ -2181,7 +2181,7 @@ class PlayState extends MusicBeatState {
 			rating.screenCenter(Y).y -= 60 + comboOffset[0][1];
 			rating.x = placement - 40 + comboOffset[0][0];
 	
-			rating.velocity.set(-FlxG.random.int(0, 10) * playbackRate - ratingVel.x, -FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
+			rating.velocity.set(-FlxG.random.int(0, 10) * playbackRate + ratingVel.x, -FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
 			rating.acceleration.set(ratingAcc.x * playbackRate * playbackRate, 550 * playbackRate * playbackRate + ratingAcc.y);
 			rating.antialiasing = antialias;
 			rating.setGraphicSize(rating.width * mult);
