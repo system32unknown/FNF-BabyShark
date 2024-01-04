@@ -178,7 +178,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 		// Custom made Trans in
 		var state:MusicBeatState = getState();
 		CustomFadeTransition.finishCallback = reset ? postResetState : postSwitchState;
-		state.openSubState(new CustomFadeTransition(0.6, false));
+		state.openSubState(new CustomFadeTransition(.6, false));
 	}
 
 	static function postResetState() {
@@ -191,7 +191,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 		CustomFadeTransition.finishCallback = null;
 
 		FlxG.state.switchTo(nextState);
-		@:privateAccess FlxG.game._requestedState = nextState;
+		@:privateAccess FlxG.game._nextState = nextState;
 		nextState = null;
 	}
 
