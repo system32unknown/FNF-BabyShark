@@ -1,11 +1,12 @@
 # Baby Shark's Big Funkin!
 ![Baby Shark's Big Funkin Logo](assets/preload/images/logobumpin.png)
 
-Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (almost), Base Engines.
+Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor codes), Base Engines.
 
 ![Repo size](https://img.shields.io/github/repo-size/system32unknown/FNF-BabyShark)
 ![Last commit](https://img.shields.io/github/last-commit/system32unknown/FNF-BabyShark)
 ![License](https://img.shields.io/github/license/system32unknown/FNF-BabyShark)
+[![Build Release (Windows)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/build-release.yaml/badge.svg)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/build-release.yaml)
 
 # Credits:
 
@@ -31,6 +32,5 @@ Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (almost), B
 * iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds
 * PolybiusProxy - .MP4 Video Loader Library (hxCodec)
 * Keoiki - Note Splash Animations
-* Smokey - Sprite Atlas Support
 * superpowers04 - LUA JIT Fork and some Lua reworks
 * Raltyro - Maintainer of Psike Engine

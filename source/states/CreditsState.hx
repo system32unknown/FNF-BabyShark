@@ -46,6 +46,7 @@ class CreditsState extends MusicBeatState {
 
 	static var funkin(default, never):Array<Array<String>> = [
 		["Funkin' Crew"],
+		['ninjamuffin99', 		'ninjamuffin99', 	"Programmer of Friday Night Funkin'", 							'https://twitter.com/ninja_muffin99', 		'F73838'],
 		['PhantomArcade',		'phantomarcade',	"Animator of Friday Night Funkin'",								'https://twitter.com/PhantomArcade3K',		'FFBB1B'],
 		['evilsk8r',			'evilsk8r',			"Artist of Friday Night Funkin'",								'https://twitter.com/evilsk8r',				'53E52C'],
 		['kawaisprite',			'kawaisprite',		"Composer of Friday Night Funkin'",								'https://twitter.com/kawaisprite',			'6475F3']
@@ -71,7 +72,7 @@ class CreditsState extends MusicBeatState {
 	];
 
 	static var babyshark(default, never):Array<Array<String>> = [
-		['Baby Shark\'s Funkin Team'],
+		['Baby Shark\'s Big Funkin Team'],
 		['Altertoriel', 		'altertoriel',		'Main Developer', 													'https://twitter.com/Altertoriel2', 		'B9AF27'],
 		['Pinkfong', 			'pinkfong', 		'Creator of Baby Shark', 											'https://pinkfong.com',						'FFC0CB'],
 		['Nickelodeon', 		'nickelodeon', 		'Creator of Baby Shark\'s Big Show / Baby Shark Ollie and William', 'https://www.nick.com',						'F57C13'],

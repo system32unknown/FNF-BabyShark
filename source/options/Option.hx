@@ -111,7 +111,7 @@ class Option {
 		var newValue:String = 'bool';
 		switch(type.toLowerCase().trim()) {
 			case 'key', 'keybind': newValue = 'keybind';
-			case 'int', 'float', 'percent', 'string': newValue = type;
+			case 'int', 'float', 'percent', 'string', 'func': newValue = type;
 			case 'integer': newValue = 'int';
 			case 'str': newValue = 'string';
 			case 'fl': newValue = 'float';

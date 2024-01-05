@@ -200,7 +200,7 @@ class TitleState extends MusicBeatState {
 		}
 
 		if (newTitle && !pressedEnter) {
-			titleTextTimer += Math.exp(-elapsed);
+			titleTextTimer += FlxMath.bound(elapsed, 0, 1);
 			if (titleTextTimer > 2) titleTextTimer -= 2;
 
 			var timer:Float = titleTextTimer;
