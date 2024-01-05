@@ -58,4 +58,9 @@ class SpriteUtil {
 		countByColor.clear();
 		return maxKey;
 	}
+
+	public static function makeSelectorGraphic(panel:FlxSprite, w:Int, h:Int, color:FlxColor, cornerSize:Float) {
+		panel.makeGraphic(w, h, FlxColor.TRANSPARENT);
+		flixel.util.FlxSpriteUtil.drawRoundRectComplex(panel, 0, 0, w, h, cornerSize, cornerSize, cornerSize, cornerSize, color);
+	}
 }

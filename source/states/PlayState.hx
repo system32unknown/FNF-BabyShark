@@ -430,7 +430,7 @@ class PlayState extends MusicBeatState {
 		timeTxt.visible = updateTime = showTime;
 		if(downScroll) timeTxt.y = FlxG.height - 35;
 		if(timeType == 'Song Name') timeTxt.text = SONG.song;
-		
+
 		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', () -> return songPercent, 0, 1);
 		timeBar.scrollFactor.set();
 		timeBar.screenCenter(X);
@@ -438,7 +438,7 @@ class PlayState extends MusicBeatState {
 		timeBar.visible = showTime;
 		uiGroup.add(timeBar);
 		uiGroup.add(timeTxt);
-		
+
 		add(comboGroup);
 		add(noteGroup);
 		noteGroup.add(strumLineNotes);
@@ -452,7 +452,6 @@ class PlayState extends MusicBeatState {
 		playerStrums = new FlxTypedGroup<StrumNote>();
 
 		generateSong(SONG.song);
-
 		noteGroup.add(grpNoteSplashes);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
@@ -468,7 +467,7 @@ class PlayState extends MusicBeatState {
 		camGame.zoom = defaultCamZoom;
 		camGame.snapToTarget();
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
-		
+
 		moveCameraSection();
 
 		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return health, 0, 2);
@@ -2140,7 +2139,7 @@ class PlayState extends MusicBeatState {
 		score = daRating.score;
 
 		if(!note.ratingDisabled) daRating.hits++;
-		totalNotesHit += (ClientPrefs.getPref('complexAccuracy') ? backend.EtternaFunctions.wife3(-noteDiff) : daRating.ratingMod);
+		totalNotesHit += (ClientPrefs.getPref('complexAccuracy') ? backend.Wife3.getAcc(-noteDiff) : daRating.ratingMod);
 
 		if(daRating.noteSplash && !note.noteSplashDisabled)
 			spawnNoteSplashOnNote(note);

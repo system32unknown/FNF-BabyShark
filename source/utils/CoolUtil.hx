@@ -50,11 +50,6 @@ class CoolUtil {
 		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
 	}
 
-	public static function makeSelectorGraphic(panel:FlxSprite, w:Int, h:Int, color:FlxColor, cornerSize:Float) {
-		panel.makeGraphic(w, h, FlxColor.TRANSPARENT);
-		flixel.util.FlxSpriteUtil.drawRoundRectComplex(panel, 0, 0, w, h, cornerSize, cornerSize, cornerSize, cornerSize, color);
-	}
-
 	public static function getRandomizedText(max:Int):String {
         var temp_str:String = "";
         for (_ in 0...max)

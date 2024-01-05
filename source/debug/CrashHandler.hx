@@ -1,4 +1,4 @@
-package backend;
+package debug;
 
 //crash handler stuff
 import openfl.Lib;
@@ -44,7 +44,7 @@ class CrashHandler {
 		e.stopPropagation();
 		e.stopImmediatePropagation();
 
-		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/system32unknown/FNF-BabyShark\n\nCrash Handler written by: sqirra-rng\nCustom Crash by Codename Engine Team';
+		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/system32unknown/FNF-BabyShark\n\nCrash Handler written by: sqirra-rng\nCustom Crash Handler by: Codename Engine Team';
 
 		if (!FileSystem.exists("./crash/"))
 			FileSystem.createDirectory("./crash/");

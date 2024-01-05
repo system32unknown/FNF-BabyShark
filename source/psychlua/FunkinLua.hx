@@ -92,10 +92,8 @@ class FunkinLua {
 		});
 
 		set("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
-			final trimmedpft = platformType.trim();
 			if (args == null) args = [];
-
-			return Reflect.callMethod(null, Reflect.field(PlatformUtil, trimmedpft), args);
+			return Reflect.callMethod(null, Reflect.field(PlatformUtil, platformType.trim()), args);
 		});
 
 		set("setGlobalFromScript", function(luaFile:String, global:String, val:Dynamic) { // sets the global from a script
@@ -129,8 +127,7 @@ class FunkinLua {
 			var foundScript:String = findScript(luaFile);
 			if(foundScript != null)
 				for (luaInstance in game.luaArray)
-					if(luaInstance.scriptName == foundScript)
-						return true;
+					if(luaInstance.scriptName == foundScript) return true;
 			return false;
 		});
 
@@ -811,7 +808,6 @@ class FunkinLua {
 		set("setBlendMode", function(obj:String, blend:String = '') {
 			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
 			if (spr == null) return false;
-
 			spr.blend = LuaUtils.blendModeFromString(blend);
 			return true;
 		});

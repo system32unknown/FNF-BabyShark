@@ -9,7 +9,7 @@ import debug.FPSCounter;
 #if (target.threaded && sys) import sys.thread.ElasticThreadPool; #end
 
 class Main extends Sprite {
-	public static var engineVer:GameVersion = new GameVersion(0, 1, 4, "a");
+	public static var engineVer:GameVersion = new GameVersion(0, 1, 5, "b");
 
 	public static var game = {
 		width: 1280, // WINDOW width
@@ -48,7 +48,7 @@ class Main extends Sprite {
 		
 		#if (target.threaded && sys) threadPool = new ElasticThreadPool(12, 30); #end
 
-		#if CRASH_HANDLER backend.CrashHandler.init(); #end
+		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 
 		FlxG.signals.preStateSwitch.add(() -> Paths.clearStoredCache());
