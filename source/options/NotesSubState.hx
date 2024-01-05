@@ -75,7 +75,7 @@ class NotesSubState extends MusicBeatSubstate
 	var changingNote:Bool = false;
 	override function update(elapsed:Float) {
 		var rownum = 0;
-		var lerpVal:Float = FlxMath.bound(elapsed * 9.6, 0, 1);
+		var lerpVal:Float = Math.exp(-elapsed * 9.6);
 		for (i in 0...grpNumbers.length) {
 			var item = grpNumbers.members[i];
 			var scaledY = FlxMath.remapToRange(item.ID, 0, 1, 0, 1.3);

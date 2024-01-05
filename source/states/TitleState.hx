@@ -200,7 +200,7 @@ class TitleState extends MusicBeatState {
 		}
 
 		if (newTitle && !pressedEnter) {
-			titleTextTimer += FlxMath.bound(elapsed, 0, 1);
+			titleTextTimer += Math.exp(-elapsed);
 			if (titleTextTimer > 2) titleTextTimer -= 2;
 
 			var timer:Float = titleTextTimer;
@@ -213,8 +213,7 @@ class TitleState extends MusicBeatState {
 	}
 
 	function createText(textArray:Array<String>, offset:Float = 0) {
-		for (i in 0...textArray.length)
-			addMoreText(textArray[i], offset, i);
+		for (i in 0...textArray.length) addMoreText(textArray[i], offset, i);
 	}
 
 	function addMoreText(text:String, offset:Float = 0, i:Int = -1) {
