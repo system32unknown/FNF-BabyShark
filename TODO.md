@@ -8,3 +8,4 @@
 - [] New Main Menu / Freeplay Menu
 - [] Some Songs / Charts
 - [] Get Character Vocals
+- [] New Dialogue System

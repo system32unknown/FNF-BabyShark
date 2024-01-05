@@ -42,13 +42,14 @@ class Prompt extends MusicBeatSubstate {
 			if (okc != null) okc();
 			close();
 		} else {
-			for (panels in [panel, panelbg]) {
-				panels = new FlxSprite();
-				if (panels == panel) SpriteUtil.makeSelectorGraphic(panels, 300, 150, 0xff999999, 10);
-				else SpriteUtil.makeSelectorGraphic(panels, 304, 154, 0xff000000, 10);
-				panels.scrollFactor.set();
-				panels.screenCenter();
-			}
+			panel = new FlxSprite();
+			panelbg = new FlxSprite();
+			SpriteUtil.makeSelectorGraphic(panel, 300, 150, 0xff999999, 10);
+			SpriteUtil.makeSelectorGraphic(panelbg, 304, 154, 0xff000000, 10);
+			panel.scrollFactor.set();
+			panel.screenCenter();
+			panelbg.scrollFactor.set();
+			panelbg.screenCenter();
 			var textshit:FlxText = new FlxText(buttonNo.width * 2, panel.y, 300, theText, 16);
 			textshit.alignment = CENTER;
 			textshit.scrollFactor.set();

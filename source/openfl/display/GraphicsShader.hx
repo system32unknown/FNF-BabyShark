@@ -48,11 +48,8 @@ class GraphicsShader extends Shader
 	@:glFragmentBody("vec4 color = texture2D (bitmap, openfl_TextureCoordv);
 
 		if (color.a == 0.0) {
-
 			gl_FragColor = vec4 (0.0, 0.0, 0.0, 0.0);
-
 		} else if (openfl_HasColorTransform) {
-
 			color = vec4 (color.rgb / color.a, color.a);
 
 			mat4 colorMultiplier = mat4 (0);
@@ -68,7 +65,6 @@ class GraphicsShader extends Shader
 			} else {
 				gl_FragColor = vec4 (0.0, 0.0, 0.0, 0.0);
 			}
-
 		} else {
 			gl_FragColor = color * openfl_Alphav;
 		}")

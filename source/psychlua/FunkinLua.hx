@@ -1250,7 +1250,7 @@ class FunkinLua {
 				} else vert = null;
 
 				if(found) {
-					runtimeShaders.set(name, [frag, vert]);
+					runtimeShaders.set(name, [frag, vert, Std.string(glslVersion)]);
 					return true;
 				}
 			}
