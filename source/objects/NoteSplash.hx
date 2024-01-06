@@ -4,7 +4,6 @@ import shaders.ColorSwap;
 
 class NoteSplash extends FlxSprite {
 	public var colorSwap:ColorSwap = null;
-	var sc:Array<Float> = EK.splashScales;
 
 	public static var defaultNoteSplash(default, never):String = 'noteSplashes/noteSplashes';
 
@@ -15,7 +14,7 @@ class NoteSplash extends FlxSprite {
 
 		var skin:String = null;
 		if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
-		else skin = defaultNoteSplash + getSplashSkinPostfix();
+		else skin = defaultNoteSplash;
 
 		loadAnims(skin);
 		
@@ -30,12 +29,12 @@ class NoteSplash extends FlxSprite {
 	public function setupNoteSplash(x:Float, y:Float, note:Int = 0, texture:String = null, hsb:Array<Float> = null) {
 		setPosition(x - (Note.swagWidth * .7) * .95, y - (Note.swagWidth * .7));
 		aliveTime = 0;
-		setGraphicSize(Std.int(width * sc[PlayState.mania]));
+		setGraphicSize(Std.int(width * EK.splashScales[PlayState.mania]));
 		alpha = ClientPrefs.getPref('splashOpacity');
 
 		var texture:String = null;
 		if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) texture = PlayState.SONG.splashSkin;
-		else texture = defaultNoteSplash + getSplashSkinPostfix();
+		else texture = defaultNoteSplash;
 
 		if(hsb == null) hsb = [0, 0, 0];
 
@@ -57,23 +56,10 @@ class NoteSplash extends FlxSprite {
 			animation.curAnim.frameRate = 24 + FlxG.random.int(-2, 2);
 	}
 
-	override function destroy() {
-		shader = null;
-		colorSwap = null;
-		super.destroy();
-	}
-
-	public static function getSplashSkinPostfix() {
-		var skin:String = '';
-		if(ClientPrefs.getPref('splashSkin') != ClientPrefs.defaultprefs.get('splashSkin'))
-			skin = '-' + ClientPrefs.getPref('splashSkin').trim().toLowerCase().replace(' ', '_');
-		return skin;
-	}
-
 	function loadAnims(skin:String) {
 		frames = Paths.getSparrowAtlas(skin);
 		if(frames == null) {
-			skin = defaultNoteSplash + getSplashSkinPostfix();
+			skin = defaultNoteSplash;
 			frames = Paths.getSparrowAtlas(skin);
 			if(frames == null) { //if you really need this, you really fucked something up
 				skin = defaultNoteSplash;

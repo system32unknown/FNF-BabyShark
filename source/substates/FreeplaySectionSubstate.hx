@@ -70,12 +70,11 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		sectionSpr.alpha = 0;
 		add(sectionSpr);
 
-		sectionTxt = new FlxText(0, 620, 0, "", 32);
+		sectionTxt = new FlxText(0, 420, 0, "", 32);
 		sectionTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
 		sectionTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
 		sectionTxt.scrollFactor.set();
 		sectionTxt.screenCenter(X);
-		sectionTxt.y -= 200;
 		sectionTxt.alpha = 0;
 		add(sectionTxt);
 

@@ -90,9 +90,8 @@ class StoryMenuState extends MusicBeatState
 		}
 
 		WeekData.setDirectoryFromWeek(loadedWeeks[0]);
-		var charArray:Array<String> = loadedWeeks[0].weekCharacters;
 		for (char in 0...3) {
-			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, charArray[char]);
+			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, loadedWeeks[0].weekCharacters[char]);
 			weekCharacterThing.y += 70;
 			grpWeekCharacters.add(weekCharacterThing);
 		}
@@ -155,8 +154,7 @@ class StoryMenuState extends MusicBeatState
 
 		scoreText.text = 'WEEK SCORE: $lerpScore';
 
-		if (!movedBack && !selectedWeek)
-		{
+		if (!movedBack && !selectedWeek) {
 			var upP = controls.UI_UP_P;
 			var downP = controls.UI_DOWN_P;
 			if (upP || downP) {
