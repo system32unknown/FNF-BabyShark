@@ -323,7 +323,7 @@ class AudioBuffer
 		// TODO: Streaming
 
 		var request = new HTTPRequest<AudioBuffer>();
-		return request.load(path).then(function(buffer) {
+		return request.load(path).then((buffer) -> {
 			if (buffer != null) {
 				buffer.initBuffer();
 				return Future.withValue(buffer);

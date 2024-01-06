@@ -138,7 +138,7 @@ class TitleState extends MusicBeatState {
 
 		add(textGroup = new FlxTypedGroup<FlxText>());
 
-		randomPhrase = FlxG.random.getObject(getIntroTextShit());
+		randomPhrase = getIntroTextShit();
 
 		if (!skippedIntro) {
 			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
@@ -148,14 +148,14 @@ class TitleState extends MusicBeatState {
 		Paths.clearUnusedCache();
 	}
 
-	function getIntroTextShit():Array<Array<String>> {
+	function getIntroTextShit():Array<String> {
 		#if MODS_ALLOWED
 		var firstArray:Array<String> = Mods.mergeAllTextsNamed('data/introText.txt', Paths.getPreloadPath());
 		#else
 		var fullText:String = Assets.getText(Paths.txt('introText'));
 		var firstArray:Array<String> = fullText.split('\n');
 		#end
-		return [for (i in firstArray) i.split('--')];
+		return FlxG.random.getObject([for (i in firstArray) i.split('--')]);
 	}
 
 	var newTitle:Bool = false;
