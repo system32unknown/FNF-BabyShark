@@ -2692,7 +2692,7 @@ class ChartingState extends MusicBeatState {
 
 		if (data != null && data.length > 0) {
 			_file = new FileReference();
-			_file.addEventListener(Event.COMPLETE, onSaveComplete);
+			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data.trim(), convPathShit(getCurrrentDataPath()));
@@ -2732,7 +2732,7 @@ class ChartingState extends MusicBeatState {
 		var data:String = Json.stringify(json, "\t");
 		if (data != null && data.length > 0) {
 			_file = new FileReference();
-			_file.addEventListener(Event.COMPLETE, onSaveComplete);
+			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data.trim(), convPathShit(Path.directory(getCurrrentDataPath()) + "/events.json"));
@@ -2740,7 +2740,7 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function onSaveComplete(_):Void {
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
@@ -2751,7 +2751,7 @@ class ChartingState extends MusicBeatState {
 	 * Called when the save file dialog is cancelled.
 	 */
 	function onSaveCancel(_):Void {
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
@@ -2761,7 +2761,7 @@ class ChartingState extends MusicBeatState {
 	 * Called if there is an error while saving the gameplay recording.
 	 */
 	function onSaveError(_):Void {
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;

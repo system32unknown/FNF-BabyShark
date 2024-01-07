@@ -849,7 +849,7 @@ class PlayState extends MusicBeatState {
 		seenCutscene = true;
 		inCutscene = false;
 		var ret:Dynamic = callOnScripts('onStartCountdown', null, true);
-		if (ret != FunkinLua.Function_Stop) {
+		if (ret != LuaUtils.Function_Stop) {
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
 
 			generateStaticArrows(0);
@@ -966,7 +966,7 @@ class PlayState extends MusicBeatState {
 	var updateScoreText:Bool = true;
 	public dynamic function updateScore(miss:Bool = false) {
 		var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
-		if(ret == FunkinLua.Function_Stop) return;
+		if(ret == LuaUtils.Function_Stop) return;
 
 		judgementCounter.text = 'Max Combos: ${maxCombo}';
 		for (rating in ratingsData)
@@ -1177,7 +1177,7 @@ class PlayState extends MusicBeatState {
 
 	function eventEarlyTrigger(event:EventNote):Float {
 		var returnedValue:Null<Float> = callOnScripts('eventEarlyTrigger', [event.event, event.value1, event.value2, event.strumTime], true, [], [0]);
-		if(returnedValue != null && returnedValue != 0 && returnedValue != FunkinLua.Function_Continue) return returnedValue;
+		if(returnedValue != null && returnedValue != 0 && returnedValue != LuaUtils.Function_Continue) return returnedValue;
 
 		switch(event.event) {case 'Kill Henchmen': return 280;}
 		return 0;
@@ -1626,7 +1626,7 @@ class PlayState extends MusicBeatState {
 	function tryPause():Bool {
 		if (startedCountdown && canPause) {
 			var ret:Dynamic = callOnScripts('onPause', null, true);
-			if(ret != FunkinLua.Function_Stop) {
+			if(ret != LuaUtils.Function_Stop) {
 				openPauseMenu();
 				return true;
 			}
@@ -1676,7 +1676,7 @@ class PlayState extends MusicBeatState {
 		persistentUpdate = false;
 		paused = true;
 		cancelMusicFadeTween();
-		#if desktop DiscordClient.resetClientID(); #end
+		#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 		MusicBeatState.switchState(new CharacterEditorState(SONG.player2));
 	}
 
@@ -1685,7 +1685,7 @@ class PlayState extends MusicBeatState {
 		final hpBound = (healthBar.bounds != null ? healthBar.bounds.min : 0);
 		if (((skipHealthCheck && instakillOnMiss) || health <= hpBound) && !practiceMode && !isDead) {
 			var ret:Dynamic = callOnScripts('onGameOver', null, true);
-			if(ret != FunkinLua.Function_Stop) {
+			if(ret != LuaUtils.Function_Stop) {
 				boyfriend.stunned = true;
 				deathCounter++;
 
@@ -2015,7 +2015,7 @@ class PlayState extends MusicBeatState {
 		restarted = false;
 
 		var ret:Dynamic = callOnScripts('onEndSong', null, true);
-		if(ret != FunkinLua.Function_Stop && !transitioning) {
+		if(ret != LuaUtils.Function_Stop && !transitioning) {
 			var percent:Float = ratingPercent;
 			if(Math.isNaN(percent)) percent = 0;
 			if(!practiceMode && !cpuControlled) {
@@ -2038,7 +2038,7 @@ class PlayState extends MusicBeatState {
 				if (storyPlaylist.length <= 0) {
 					Mods.loadTopMod();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
-					#if desktop DiscordClient.resetClientID(); #end
+					#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
 					cancelMusicFadeTween();
 					if(FlxTransitionableState.skipNextTransIn) CustomFadeTransition.nextCamera = null;
@@ -2066,7 +2066,7 @@ class PlayState extends MusicBeatState {
 				}
 			} else {
 				Mods.loadTopMod();
-				#if desktop DiscordClient.resetClientID(); #end
+				#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
 				cancelMusicFadeTween();
 				if(FlxTransitionableState.skipNextTransIn)
@@ -2283,7 +2283,7 @@ class PlayState extends MusicBeatState {
 		keysPressed[key] = true;
 
 		var ret:Dynamic = callOnScripts('onKeyPressPre', [key], true);
-		if(ret == FunkinLua.Function_Stop) return;
+		if(ret == LuaUtils.Function_Stop) return;
 
 		//more accurate hit time for the ratings?
 		if(notes.length > 0 && !boyfriend.stunned && generatedMusic && !endingSong) {
@@ -2349,7 +2349,7 @@ class PlayState extends MusicBeatState {
 		keysPressed[key] = false;
 
 		var ret:Dynamic = callOnScripts('onKeyReleasePre', [key]);
-		if(ret == FunkinLua.Function_Stop) return;
+		if(ret == LuaUtils.Function_Stop) return;
 
 		var spr:StrumNote = playerStrums.members[key];
 		if(spr != null) {
@@ -2412,7 +2412,7 @@ class PlayState extends MusicBeatState {
 		notes.forEachAlive((note:Note) -> if (daNote != note && !daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) invalidateNote(note));
 
 		var result:Dynamic = callOnLuas('opponentnoteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
-		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('opponentnoteMiss', [daNote]);
+		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentnoteMiss', [daNote]);
 	}
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
@@ -2425,7 +2425,7 @@ class PlayState extends MusicBeatState {
 		var leData:Int = Std.int(Math.abs(daNote.noteData));
 		noteMissCommon(leData, daNote);
 		var result:Dynamic = callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
-		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('noteMiss', [daNote]);
+		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('noteMiss', [daNote]);
 	}
 
 	function noteMissCommon(direction:Int, ?note:Note) {
@@ -2473,8 +2473,8 @@ class PlayState extends MusicBeatState {
 		var leData:Int = Math.floor(Math.abs(note.noteData));
 		var leType:String = note.noteType;
 
-		var result:Dynamic = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
-		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('opponentNoteHit', [note]);
+		var result:Dynamic = callOnLuas('opponentNoteHitPre', [notes.members.indexOf(note), leData, leType, isSus]);
+		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHit', [note]);
 
 		note.hitByOpponent = true;
 
@@ -2499,8 +2499,8 @@ class PlayState extends MusicBeatState {
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
 		if (ClientPrefs.getPref('camMovement') && !bfturn) moveCamOnNote(animToPlay);
 
-		var result:Dynamic = callOnLuas('opponentNoteHitPost', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
-		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('opponentNoteHitPost', [note]);
+		var result:Dynamic = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
+		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHit', [note]);
 
 		if (!isSus) invalidateNote(note);
 	}
@@ -2533,8 +2533,8 @@ class PlayState extends MusicBeatState {
 		var leData:Int = Math.floor(Math.abs(note.noteData));
 		var leType:String = note.noteType;
 
-		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
-		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('goodNoteHit', [note]);
+		var result:Dynamic = callOnLuas('goodNoteHitPre', [notes.members.indexOf(note), leData, leType, isSus]);
+		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHitPre', [note]);
 		
 		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
 		if (ClientPrefs.getPref('camMovement') && bfturn) moveCamOnNote(animToPlay);
@@ -2590,8 +2590,8 @@ class PlayState extends MusicBeatState {
 			popUpScore(note);
 		}
 
-		var result:Dynamic = callOnLuas('goodNoteHitPost', [notes.members.indexOf(note), leData, leType, isSus]);
-		if(result != FunkinLua.Function_Stop && result != FunkinLua.Function_StopHScript && result != FunkinLua.Function_StopAll) callOnHScript('goodNoteHitPost', [note]);
+		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
+		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHit', [note]);
 		if(!isSus) invalidateNote(note);
 	}
 
@@ -2849,7 +2849,7 @@ class PlayState extends MusicBeatState {
 	public function callOnScripts(funcToCall:String, ?args:Array<Dynamic>, ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
 		if(args == null) args = [];
 		if(exclusions == null) exclusions = [];
-		if(excludeValues == null) excludeValues = [FunkinLua.Function_Continue];
+		if(excludeValues == null) excludeValues = [LuaUtils.Function_Continue];
 
 		var result:Dynamic = callOnLuas(funcToCall, args, ignoreStops, exclusions, excludeValues);
 		if(result == null || excludeValues.contains(result)) result = callOnHScript(funcToCall, args, ignoreStops, exclusions, excludeValues);
@@ -2857,11 +2857,11 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function callOnLuas(event:String, ?args:Array<Any>, ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
-		var returnVal = FunkinLua.Function_Continue;
+		var returnVal = LuaUtils.Function_Continue;
 		#if LUA_ALLOWED
 		if(args == null) args = [];
 		if(exclusions == null) exclusions = [];
-		if(excludeValues == null) excludeValues = [FunkinLua.Function_Continue];
+		if(excludeValues == null) excludeValues = [LuaUtils.Function_Continue];
 
 		var arr:Array<FunkinLua> = [];
 		for (script in luaArray) {
@@ -2873,7 +2873,7 @@ class PlayState extends MusicBeatState {
 			if(exclusions.contains(script.scriptName)) continue;
 
 			var ret:Dynamic = script.call(event, args);
-			if((ret == FunkinLua.Function_StopLua || ret == FunkinLua.Function_StopAll) && !excludeValues.contains(ret) && !ignoreStops) {
+			if((ret == LuaUtils.Function_StopLua || ret == LuaUtils.Function_StopAll) && !excludeValues.contains(ret) && !ignoreStops) {
 				returnVal = ret;
 				break;
 			}
@@ -2888,12 +2888,12 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function callOnHScript(funcToCall:String, ?args:Array<Dynamic>, ?ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
-		var returnVal:Dynamic = FunkinLua.Function_Continue;
+		var returnVal:Dynamic = LuaUtils.Function_Continue;
 
 		#if HSCRIPT_ALLOWED
 		if(exclusions == null) exclusions = new Array();
 		if(excludeValues == null) excludeValues = new Array();
-		excludeValues.push(FunkinLua.Function_Continue);
+		excludeValues.push(LuaUtils.Function_Continue);
 
 		var len:Int = hscriptArray.length;
 		if (len < 1) return returnVal;
@@ -2906,7 +2906,7 @@ class PlayState extends MusicBeatState {
 				if (script.exception != null) {
 					script.active = false;
 					FunkinLua.luaTrace('ERROR ($funcToCall) - ${script.exception}', true, false, FlxColor.RED);
-				} else if((returnVal == FunkinLua.Function_StopHScript || returnVal == FunkinLua.Function_StopAll) && !excludeValues.contains(returnVal) && !ignoreStops) break;
+				} else if((returnVal == LuaUtils.Function_StopHScript || returnVal == LuaUtils.Function_StopAll) && !excludeValues.contains(returnVal) && !ignoreStops) break;
 			}
 		}
 		#end
@@ -2960,7 +2960,7 @@ class PlayState extends MusicBeatState {
 		setOnScripts('combo', combo);
 
 		var ret:Dynamic = callOnScripts('onRecalculateRating', null, true);
-		if(ret != FunkinLua.Function_Stop) {
+		if(ret != LuaUtils.Function_Stop) {
 			ratingName = '?';
 			if(totalPlayed != 0) { // Rating Percent
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));

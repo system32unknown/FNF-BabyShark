@@ -38,8 +38,7 @@ class Init extends flixel.FlxState {
 		super.create();
 		
 		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
+			FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());
 		} else FlxG.switchState(Type.createInstance(Main.game.initialState, []));
 	}

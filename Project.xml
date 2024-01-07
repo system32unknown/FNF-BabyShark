@@ -11,11 +11,8 @@
 
 	<!-- ____________________________Window Settings___________________________ -->
 
-	<!--These window settings apply to all targets-->
-	<window hardware="true" fps="60" background=""/>
-	<window orientation="landscape"/>
-
 	<!--Desktop-specific-->
+	<window hardware="true" fps="60" background="" orientation="landscape"/>
 	<window if="desktop" width="1280" height="720" fullscreen="false" resizable="true" vsync="false"/>
 	<!-- _____________________________Path Settings____________________________ -->
 
@@ -31,7 +28,7 @@
 		<define name="LUA_ALLOWED" if="cpp"/>
 		<define name="CRASH_HANDLER" if="release"/>
 		<define name="VIDEOS_ALLOWED" if="windows || linux || android" unless="32bits"/>
-		<define name="DISCORD_ALLOWED" if="cpp"/>
+		<define name="DISCORD_ALLOWED"/>
 	</section>
 
 	<define name="PRELOAD_ALL" unless="web"/>

@@ -952,7 +952,7 @@ class CharacterEditorState extends MusicBeatState {
 	}
 
 	inline function updatePresence() {
-		#if desktop DiscordClient.changePresence("Character Editor", 'Character: $_char'); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("Character Editor", 'Character: $_char'); #end
 	}
 
 	inline function reloadAnimList() {
@@ -1059,7 +1059,7 @@ class CharacterEditorState extends MusicBeatState {
 	var _file:FileReference;
 	function onSaveComplete(_):Void {
 		if(_file == null) return;
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
@@ -1071,7 +1071,7 @@ class CharacterEditorState extends MusicBeatState {
 	**/
 	function onSaveCancel(_):Void {
 		if(_file == null) return;
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
@@ -1082,7 +1082,7 @@ class CharacterEditorState extends MusicBeatState {
 	**/
 	function onSaveError(_):Void {
 		if(_file == null) return;
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;

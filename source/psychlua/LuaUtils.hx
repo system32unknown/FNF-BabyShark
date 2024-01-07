@@ -15,6 +15,12 @@ typedef LuaTweenOptions = {
 }
 
 class LuaUtils {
+	public static var Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
+	public static var Function_Continue:Dynamic = "##PSYCHLUA_FUNCTIONCONTINUE";
+	public static var Function_StopLua:Dynamic = "##PSYCHLUA_FUNCTIONSTOPLUA";
+	public static var Function_StopHScript:Dynamic = "##PSYCHLUA_FUNCTIONSTOPHSCRIPT";
+	public static var Function_StopAll:Dynamic = "##PSYCHLUA_FUNCTIONSTOPALL";
+
 	public static function getLuaTween(options:Dynamic):LuaTweenOptions {
 		return {
 			type: getTweenTypeByString(options.type),
@@ -403,4 +409,7 @@ class LuaUtils {
 			default: NONE;
 		}
 	}
+
+	inline public static function getBuildTarget():String
+		return Sys.systemName().toLowerCase();
 }

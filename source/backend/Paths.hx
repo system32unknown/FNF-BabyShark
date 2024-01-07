@@ -396,7 +396,7 @@ class Paths {
 		var track:String = path.substr(path.indexOf(':') + 1);
 		var folder:String = './';
 		#else
-		var path:String = getPath('$path/$key.$SOUND_EXT', IMAGE, library), modExists:Bool = false;
+		var path:String = getPath('$path/$key.$SOUND_EXT', SOUND, library), modExists:Bool = false;
 		var track:String = path.substr(path.indexOf(':') + 1);
 		var folder:String = '';
 		if (path == 'songs') folder = 'songs:';

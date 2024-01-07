@@ -460,7 +460,7 @@ class DialogueEditorState extends MusicBeatState
 		if (data.length > 0)
 		{
 			_file = new FileReference();
-			_file.addEventListener(Event.COMPLETE, onSaveComplete);
+			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data, "dialogue.json");
@@ -469,7 +469,7 @@ class DialogueEditorState extends MusicBeatState
 
 	function onSaveComplete(_):Void
 	{
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
@@ -481,7 +481,7 @@ class DialogueEditorState extends MusicBeatState
 	*/
 	function onSaveCancel(_):Void
 	{
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
@@ -492,7 +492,7 @@ class DialogueEditorState extends MusicBeatState
 	*/
 	function onSaveError(_):Void
 	{
-		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;

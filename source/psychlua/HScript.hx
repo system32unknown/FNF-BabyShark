@@ -234,15 +234,15 @@ class HScript extends Interp {
 		setVar('this', this);
 		setVar('game', PlayState.instance);
 
-		setVar('buildTarget', FunkinLua.getBuildTarget());
+		setVar('buildTarget', LuaUtils.getBuildTarget());
 		setVar('customSubstate', CustomSubstate.instance);
 		setVar('customSubstateName', CustomSubstate.name);
 
-		setVar('Function_Stop', FunkinLua.Function_Stop);
-		setVar('Function_Continue', FunkinLua.Function_Continue);
-		setVar('Function_StopLua', FunkinLua.Function_StopLua); //doesnt do much cuz HScript has a lower priority than Lua
-		setVar('Function_StopHScript', FunkinLua.Function_StopHScript);
-		setVar('Function_StopAll', FunkinLua.Function_StopAll);
+		setVar('Function_Stop', LuaUtils.Function_Stop);
+		setVar('Function_Continue', LuaUtils.Function_Continue);
+		setVar('Function_StopLua', LuaUtils.Function_StopLua); //doesnt do much cuz HScript has a lower priority than Lua
+		setVar('Function_StopHScript', LuaUtils.Function_StopHScript);
+		setVar('Function_StopAll', LuaUtils.Function_StopAll);
 	}
 
 	function getDefaultPreprocessors():Map<String, Dynamic> {

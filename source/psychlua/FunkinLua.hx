@@ -11,12 +11,6 @@ import objects.StrumNote;
 import utils.system.PlatformUtil;
 
 class FunkinLua {
-	public static var Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
-	public static var Function_Continue:Dynamic = "##PSYCHLUA_FUNCTIONCONTINUE";
-	public static var Function_StopLua:Dynamic = "##PSYCHLUA_FUNCTIONSTOPLUA";
-	public static var Function_StopHScript:Dynamic = "##PSYCHLUA_FUNCTIONSTOPHSCRIPT";
-	public static var Function_StopAll:Dynamic = "##PSYCHLUA_FUNCTIONSTOPALL";
-	
 	#if LUA_ALLOWED public var lua:State = null; #end
 	public var scriptName:String = '';
 	public var modFolder:String = null;
@@ -456,7 +450,7 @@ class FunkinLua {
 				CustomFadeTransition.nextCamera = null;
 
 			MusicBeatState.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
-			#if desktop DiscordClient.resetClientID(); #end
+			#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			PlayState.changedDifficulty = false;
@@ -883,7 +877,7 @@ class FunkinLua {
 			return closed = true;
 		});
 
-		#if desktop DiscordClient.addLuaCallbacks(this); #end
+		#if DISCORD_ALLOWED DiscordClient.addLuaCallbacks(this); #end
 		HScript.implement(this);
 		#if flxanimate FlxAnimateFunctions.implement(this); #end
 		ReflectionFunctions.implement(this);
@@ -921,11 +915,11 @@ class FunkinLua {
 	#if LUA_ALLOWED
 	public function initGlobals(game:PlayState) {
 		// Lua shit
-		set('Function_StopLua', Function_StopLua);
-		set('Function_StopHScript', Function_StopHScript);
-		set('Function_StopAll', Function_StopAll);
-		set('Function_Stop', Function_Stop);
-		set('Function_Continue', Function_Continue);
+		set('Function_StopLua', LuaUtils.Function_StopLua);
+		set('Function_StopHScript', LuaUtils.Function_StopHScript);
+		set('Function_StopAll', LuaUtils.Function_StopAll);
+		set('Function_Stop', LuaUtils.Function_Stop);
+		set('Function_Continue', LuaUtils.Function_Continue);
 		set('luaDebugMode', false);
 		set('luaDeprecatedWarnings', true);
 		set('inChartEditor', false);
@@ -984,7 +978,7 @@ class FunkinLua {
 			app_version: lime.app.Application.current.meta.get('version'),
 			commit: Main.engineVer.COMMIT_NUM,
 			hash: Main.engineVer.COMMIT_HASH.trim(),
-			build_target: getBuildTarget()
+			build_target: LuaUtils.getBuildTarget()
 		});
 
 		set('inGameOver', false);
@@ -1116,12 +1110,12 @@ class FunkinLua {
 	public static var lastCalledScript:FunkinLua = null;
 	public function call(func:String, ?args:Array<Dynamic>):Dynamic {
 		#if LUA_ALLOWED
-		if (closed) return Function_Continue;
+		if (closed) return LuaUtils.Function_Continue;
 
 		lastCalledFunction = func;
 		lastCalledScript = this;
 		try {
-			if(lua == null) return Function_Continue;
+			if(lua == null) return LuaUtils.Function_Continue;
 
 			Lua.getglobal(lua, func);
 			var type:Int = Lua.type(lua, -1);
@@ -1130,7 +1124,7 @@ class FunkinLua {
 				if (type > Lua.LUA_TNIL) luaTrace('ERROR ($func) - attempt to call a ' + LuaUtils.typeToString(type) + " value", false, false, FlxColor.RED);
 
 				Lua.pop(lua, 1);
-				return Function_Continue;
+				return LuaUtils.Function_Continue;
 			}
 
 			var nargs:Int = 0;
@@ -1142,18 +1136,18 @@ class FunkinLua {
 
 			if (status != Lua.LUA_OK) {
 				luaTrace('ERROR ($func): ${getErrorMessage(status)}', false, false, FlxColor.RED);
-				return Function_Continue;
+				return LuaUtils.Function_Continue;
 			}
 
 			var result:Dynamic = cast Convert.fromLua(lua, -1);
-			if (result == null) result = Function_Continue;
+			if (result == null) result = LuaUtils.Function_Continue;
 
 			Lua.pop(lua, 1);
 			if(closed) stop();
 			return result;
 		} catch (e:Dynamic) Logs.trace(e, ERROR);
 		#end
-		return Function_Continue;
+		return LuaUtils.Function_Continue;
 	}
 
 	public function set(variable:String, data:Any) {
@@ -1212,10 +1206,6 @@ class FunkinLua {
 			}));
 		}
 	}
-
-	//clone functions
-	inline public static function getBuildTarget():String
-		return Sys.systemName().toLowerCase();
 
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
 	public function initLuaShader(name:String, ?glslVersion:Int = 120) {
