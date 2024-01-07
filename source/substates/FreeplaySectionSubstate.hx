@@ -1,6 +1,5 @@
 package substates;
 
-import flixel.addons.display.FlxBackdrop;
 import flixel.graphics.FlxGraphic;
 import data.WeekData;
 import states.StoryMenuState;
@@ -15,7 +14,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 	var sectionSpr:FlxSprite;
 	var sectionTxt:FlxText;
 
-	var grid:FlxBackdrop;
+	var grid:flixel.addons.display.FlxBackdrop;
 	var bg:FlxSprite;
 	var transitioning:Bool = false;
 

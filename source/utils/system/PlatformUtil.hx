@@ -25,7 +25,7 @@ class PlatformUtil {
         alpha = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
         return SetLayeredWindowAttributes(hWnd, RGB(r, g, b), 0, LWA_COLORKEY);
     ')
-	static public function getWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0):Bool return false;
+	static public function setWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0):Bool return false;
 
     @:functionCode('
         NOTIFYICONDATA m_NID;
@@ -74,13 +74,6 @@ class PlatformUtil {
         if (!GetCursorPos(&mousePos)) return 0;
     ')
     static public function getMousePos():Array<Float> return [untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y")];
-
-    @:functionCode('
-        int darkMode = enable ? 1 : 0;
-        HWND window = GetActiveWindow();
-        DwmSetWindowAttribute(window, type, &darkMode, sizeof(darkMode));
-    ')
-    static public function setWindowAtt(type:Int, enable:Bool) {}
 
     @:functionCode('return MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);')
     static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING):Int return 0;

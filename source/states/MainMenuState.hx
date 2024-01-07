@@ -180,9 +180,8 @@ class MainMenuState extends MusicBeatState {
 					if (curSelected != itemIndex)
 						FlxTween.tween(item, {alpha: 0}, 1.3, {ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> item.destroy()});
 					else {
-						FlxFlicker.flicker(item, 1, .06, false, false, function(flicker:FlxFlicker) {
-							final choice:String = optionShit[curSelected];
-							switch (choice) {
+						FlxFlicker.flicker(item, 1, .06, false, false, (flicker:FlxFlicker) -> {
+							switch (optionShit[curSelected]) {
 								case 'story_mode': MusicBeatState.switchState(new StoryMenuState());
 								case 'freeplay': MusicBeatState.switchState(new FreeplayState());
 								#if MODS_ALLOWED case 'mods': MusicBeatState.switchState(new ModsMenuState()); #end
@@ -196,6 +195,7 @@ class MainMenuState extends MusicBeatState {
 										PlayState.stageUI = 'normal';
 									}
 							}
+							FlxG.mouse.visible = false;
 						});
 					}
 				}
