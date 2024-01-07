@@ -86,6 +86,9 @@ class PlatformUtil {
 	    freopen("CONOUT$", "w", stderr);
 	')
 	public static function allocConsole() {}
+
+	@:functionCode('return SetConsoleCtrlHandler(NULL, add);')
+	public static function closeConsole(add:Bool = true):Bool return false;
 	
 	@:functionCode('return SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);')
 	public static function setConsoleColors(color:Int):Bool return false;
@@ -95,6 +98,12 @@ class PlatformUtil {
 		std::cout<< "" <<std::flush;
 	')
 	public static function clearScreen() {}
+
+    @:functionCode('
+        int darkMode = enable ? 1 : 0;
+        return DwmSetWindowAttribute(GetActiveWindow(), type, &darkMode, sizeof(darkMode));
+    ')
+    static public function setWindowAtt(type:Int, enable:Bool):Int return 0;
 
     @:functionCode('return FindWindowA(className, windowName) != NULL;')
     public static function findWindow(className:String = null, windowName:String = '') return false;
