@@ -16,10 +16,6 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		option.maxValue = 5;
 		addOption(option);
 
-		var option:Option = new Option('Fullscreen', '', 'fullscreen', 'bool');
-		option.onChange = () -> FlxG.fullscreen = ClientPrefs.getPref('fullscreen');
-		addOption(option);
-
 		super();
 	}
 }

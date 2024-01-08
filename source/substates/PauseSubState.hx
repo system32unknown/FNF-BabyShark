@@ -1,10 +1,6 @@
 package substates;
 
 import flixel.addons.transition.FlxTransitionableState;
-import backend.Highscore;
-import backend.Song;
-import states.StoryMenuState;
-import states.FreeplayState;
 import options.OptionsState;
 
 class PauseSubState extends MusicBeatSubstate
@@ -150,7 +146,7 @@ class PauseSubState extends MusicBeatSubstate
 			if (menuItems == difficultyChoices) {
 				if(menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected)) {
 					var name:String = PlayState.SONG.song;
-					PlayState.SONG = Song.loadFromJson(Highscore.formatSong(name, curSelected), name);
+					PlayState.SONG = backend.Song.loadFromJson(backend.Highscore.formatSong(name, curSelected), name);
 					PlayState.storyDifficulty = curSelected;
 					MusicBeatState.resetState();
 					FlxG.sound.music.volume = 0;
@@ -226,7 +222,7 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.seenCutscene = false;
 
 					Mods.loadTopMod();
-					MusicBeatState.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
+					MusicBeatState.switchState(PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
 					PlayState.cancelMusicFadeTween();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					PlayState.changedDifficulty = false;

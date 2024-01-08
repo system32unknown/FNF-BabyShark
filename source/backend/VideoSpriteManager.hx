@@ -49,13 +49,8 @@ class VideoSpriteManager extends VideoSprite {
 
     @:noCompletion
     function set_paused(shouldPause:Bool){
-        #if (hxCodec >= "3.0.0")
-        var parentResume = resume;
-        var parentPause = pause;
-        #else
-        var parentResume = bitmap.resume;
-        var parentPause = bitmap.pause;
-        #end
+        var parentResume = #if (hxCodec >= "3.0.0") resume #else bitmap.resume #end;
+        var parentPause = #if (hxCodec >= "3.0.0") pause #else bitmap.pause #end;
 
         if(shouldPause) {
             #if (hxCodec >= "3.0.0")

@@ -52,7 +52,6 @@ class ClientPrefs {
 		'hitsoundVolume' => 0,
 		'autoPause' => true,
 		'autoPausePlayState' => true,
-		'fullscreen' => false,
 		'hitsoundTypes' => 'Tick',
 		'pauseMusic' => 'Tea Time',
 		'discordRPC' => true,
@@ -99,7 +98,6 @@ class ClientPrefs {
 		'volume' => 'volume',
 		'mute' => 'muted',
 		'autoPause' => 'autoPause',
-		'fullscreen' => 'fullscreen',
 	];
 
 	// Maps like gameplaySettings
@@ -374,7 +372,7 @@ class ClientPrefs {
 		for (setting => name in flixelData) {
 			var value:Dynamic = Reflect.field(save, setting);
 			if (value != null) {
-				if (setting == 'autoPause' || setting == 'fullscreen')
+				if (setting == 'autoPause')
 					Reflect.setField(FlxG, name, value);
 				else Reflect.setField(FlxG.sound, name, value);
 			}

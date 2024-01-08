@@ -15,12 +15,12 @@ class Wife3 {
 	public static var max_points = 1.0;
 	public static var miss_weight = -5.5;
 	public static var ts_pow = .75;
+	public static var shit_weight:Float = 200;
 
 	public static function getAcc(noteDiff:Float):Float {
 		var ts = PlayState.instance.playbackRate;
 
 		var ridic:Float = 5 * ts;
-		var shit_weight:Float = 200;
 		var zero:Float = 65 * Math.pow(ts, ts_pow);
 		var dev:Float = 22.7 * Math.pow(ts, ts_pow);
 

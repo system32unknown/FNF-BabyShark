@@ -286,8 +286,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 	var lastCharacter:Int = -1;
 	var lastBoxType:String = '';
-	function startNextDialog():Void
-	{
+	function startNextDialog():Void {
 		var curDialogue:DialogueLine = null;
 		do {
 			curDialogue = dialogueList.dialogue[currentText];

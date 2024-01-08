@@ -117,7 +117,6 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 		updatedMusicBeat = false;
 
 		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
-
 		stagesFunc((stage:BaseStage) -> stage.update(elapsed));
 
 		super.update(elapsed);
