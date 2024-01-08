@@ -116,12 +116,8 @@ class ReflectionFunctions {
 			groupOrArray.remove(groupOrArray[index]);
 		});
 		
-		funk.set("callMethod", function(funcToRun:String, ?args:Array<Dynamic> = null) {
-			return callMethodFromObject(PlayState.instance, funcToRun, parseInstances(args));
-		});
-		funk.set("callMethodFromClass", function(className:String, funcToRun:String, ?args:Array<Dynamic> = null) {
-			return callMethodFromObject(Type.resolveClass(className), funcToRun, parseInstances(args));
-		});
+		funk.set("callMethod", (funcToRun:String, ?args:Array<Dynamic> = null) -> return callMethodFromObject(PlayState.instance, funcToRun, parseInstances(args)));
+		funk.set("callMethodFromClass", (className:String, funcToRun:String, ?args:Array<Dynamic> = null) -> return callMethodFromObject(Type.resolveClass(className), funcToRun, parseInstances(args)));
 
 		funk.set("createInstance", function(variableToSave:String, className:String, ?args:Array<Dynamic> = null) {
 			variableToSave = variableToSave.trim().replace('.', '');

@@ -108,4 +108,19 @@ class CoolUtil {
 	inline public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
 		return new FlxBackdrop(flixel.addons.display.FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
 	}
+
+	public static function formatTime(time:Float):String {
+		var secs:String = '' + Math.floor(time / 1000) % 60;
+		var mins:String = '' + Math.floor(time / 1000 / 60) % 60;
+		var hour:String = '' + Math.floor((time / 1000 / 3600)) % 24;
+
+		if (secs.length < 2) secs = '0$secs';
+
+		var formattedtime:String = '$mins:$secs';
+		if (hour != "0") {
+			if (mins.length < 2) mins = '0$mins';
+			formattedtime = '$hour:$mins:$secs';
+		}
+		return formattedtime;
+	}
 }
