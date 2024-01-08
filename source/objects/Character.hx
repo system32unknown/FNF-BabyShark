@@ -296,6 +296,7 @@ class Character extends FlxSprite {
 	}
 
 	public function playAnim(animName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void {
+		if (animation.getByName(animName) == null) return;
 		specialAnim = false;
 
 		if(!isAnimateAtlas) animation.play(animName, Force, Reversed, Frame);
