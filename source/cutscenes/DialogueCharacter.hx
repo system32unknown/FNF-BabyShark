@@ -1,7 +1,5 @@
 package cutscenes;
 
-import haxe.Json;
-
 typedef DialogueCharacterFile = {
 	var image:String;
 	var dialogue_pos:String;
@@ -31,8 +29,7 @@ class DialogueCharacter extends FlxSprite {
 	public var startingPos:Float = 0; //For center characters, it works as the starting Y, for everything else it works as starting X
 	public var isGhost:Bool = false; //For the editor
 	public var curCharacter:String = 'bf';
-	public function new(x:Float = 0, y:Float = 0, character:String = null)
-	{
+	public function new(x:Float = 0, y:Float = 0, character:String = null) {
 		super(x, y);
 
 		if(character == null) character = DEFAULT_CHARACTER;
@@ -58,13 +55,11 @@ class DialogueCharacter extends FlxSprite {
 		if(!FileSystem.exists(path))
 			path = Paths.getPreloadPath('images/dialogue/$DEFAULT_CHARACTER.json');
 		rawJson = File.getContent(path);
-
 		#else
-		var path:String = Paths.getPreloadPath(characterPath);
-		rawJson = openfl.utils.Assets.getText(path);
+		rawJson = openfl.utils.Assets.getText(Paths.getPreloadPath(characterPath));
 		#end
 		
-		jsonFile = cast Json.parse(rawJson);
+		jsonFile = cast haxe.Json.parse(rawJson);
 	}
 
 	public function reloadAnimations() {

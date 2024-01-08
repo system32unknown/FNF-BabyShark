@@ -177,13 +177,14 @@ class NotesSubState extends MusicBeatSubstate
 		}
 
 		if (controls.BACK || (changingNote && controls.ACCEPT)) {
+			FlxG.mouse.visible = false;
 			if(!changingNote) close();
 			else changeSelection();
 			changingNote = false;
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
-		if(nextAccept > 0) nextAccept --;
+		if(nextAccept > 0) nextAccept--;
 		super.update(elapsed);
 	}
 

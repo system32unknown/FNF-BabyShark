@@ -37,8 +37,7 @@ class Logs {
 			var d:Dynamic = Data;
 			if (!(d is Array)) d = [d];
 			var a:Array<Dynamic> = d;
-			var strs = [for(e in a) Std.string(e)];
-			for(e in strs) Logs.trace('$prefix $e', level, color);
+			for(e in [for(e in a) Std.string(e)]) Logs.trace('$prefix $e', level, color);
 		};
 	}
 

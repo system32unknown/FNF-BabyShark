@@ -1,5 +1,6 @@
 package debug;
 
+import flixel.util.FlxStringUtil;
 import utils.system.FPSUtil;
 
 class FPSCounter extends openfl.text.TextField {
@@ -52,7 +53,7 @@ class FPSCounter extends openfl.text.TextField {
 
 		text = '${fpsManager.currentFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${utils.MathUtil.truncateFloat((1 / fpsManager.currentCount) * 1000)}ms]' : ''}\n';
 		if (memType == "MEM" || memType == "MEM/PEAK")
-			text += '${flixel.util.FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? ' / ${flixel.util.FlxStringUtil.formatBytes(mempeak)}' : '');
+			text += '${FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
 	}
 
 	inline function get_memory():Float

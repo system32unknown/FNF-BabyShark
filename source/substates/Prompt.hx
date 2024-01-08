@@ -17,10 +17,10 @@ class Prompt extends MusicBeatSubstate {
 		cancelc = cancelCallback;
 		theText = promptText;
 		goAnyway = acceptOnDefault;
-		
+
 		var op1 = 'OK';
 		var op2 = 'CANCEL';
-		
+
 		if (option1 != null) op1 = option1;
 		if (option2 != null) op2 = option2;
 		buttonAccept = new FlxButton(473.3, 450, op1, function() {
@@ -57,7 +57,7 @@ class Prompt extends MusicBeatSubstate {
 			add(buttonAccept);
 			add(buttonNo);
 			add(textshit);
-			
+
 			buttonAccept.screenCenter();
 			buttonNo.screenCenter();
 			buttonAccept.x -= buttonNo.width / 1.5;

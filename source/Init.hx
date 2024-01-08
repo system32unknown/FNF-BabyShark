@@ -22,6 +22,7 @@ class Init extends flixel.FlxState {
 		FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.keys.preventDefaultKeys = [TAB];
+		FlxG.mouse.visible = false;
 
 		FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.getPref('framerate');
 
@@ -36,7 +37,7 @@ class Init extends flixel.FlxState {
 		}
 
 		super.create();
-		
+
 		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
 			FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new FlashingState());

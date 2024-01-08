@@ -46,7 +46,7 @@ class CoolUtil {
 
 			folder = folder.replace('/', '\\');
 			if(folder.endsWith('/')) folder.substr(0, folder.length - 1);
-			Sys.command(#if !linux 'explorer.exe' #else '/usr/bin/xdg-open' #end, [folder]);
+			Sys.command(#if windows 'explorer.exe' #else '/usr/bin/xdg-open' #end, [folder]);
 		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
 	}
 

@@ -44,6 +44,7 @@ class MainMenuState extends MusicBeatState {
 	var curOptDesc:FlxText;
 
 	override function create() {
+		FlxG.mouse.visible = true;
 		#if MODS_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();
 

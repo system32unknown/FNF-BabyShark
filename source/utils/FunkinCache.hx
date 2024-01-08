@@ -137,9 +137,7 @@ class FunkinCache extends openfl.utils.AssetCache {
 		@return	`true` if the asset was removed, `false` if it was not in the cache
 	**/
 	public override function removeBitmapData(id:String):Bool {
-		#if lime
-		LimeAssets.cache.image.remove(id);
-		#end
+		#if lime LimeAssets.cache.image.remove(id); #end
 		return bitmapData.remove(id) || bitmapData2.remove(id);
 	}
 
@@ -150,9 +148,7 @@ class FunkinCache extends openfl.utils.AssetCache {
 		@return	`true` if the asset was removed, `false` if it was not in the cache
 	**/
 	public override function removeFont(id:String):Bool {
-		#if lime
-		LimeAssets.cache.font.remove(id);
-		#end
+		#if lime LimeAssets.cache.font.remove(id); #end
 		return font.remove(id) || font2.remove(id);
 	}
 
@@ -163,9 +159,7 @@ class FunkinCache extends openfl.utils.AssetCache {
 		@return	`true` if the asset was removed, `false` if it was not in the cache
 	**/
 	public override function removeSound(id:String):Bool {
-		#if lime
-		LimeAssets.cache.audio.remove(id);
-		#end
+		#if lime LimeAssets.cache.audio.remove(id); #end
 		return sound.remove(id) || sound2.remove(id);
 	}
 }

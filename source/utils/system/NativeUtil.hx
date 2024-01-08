@@ -1,6 +1,5 @@
 package utils.system;
 
-import utils.system.PlatformUtil.MessageBoxIcon;
 /**
  * Class for Windows-only functions, such as transparent windows, message boxes, and more.
  * Does not have any effect on other platforms.
@@ -20,7 +19,7 @@ class NativeUtil {
 	/**
 	 * Shows a message box
 	 */
-	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
+	public static function showMessageBox(caption:String, message:String, icon:utils.system.PlatformUtil.MessageBoxIcon = MSG_WARNING) {
 		#if windows
 		PlatformUtil.showMessageBox(caption, message, icon);
 		#else

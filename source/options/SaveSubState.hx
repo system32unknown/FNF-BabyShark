@@ -3,10 +3,8 @@ package options;
 import substates.Prompt;
 import backend.Highscore;
 
-class SaveSubState extends BaseOptionsMenu
-{
-	public function new()
-	{
+class SaveSubState extends BaseOptionsMenu {
+	public function new() {
 		title = 'Saves';
 		rpcTitle = 'Save Menu'; //for Discord Rich Presence
 

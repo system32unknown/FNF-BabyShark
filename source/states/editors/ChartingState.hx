@@ -1516,10 +1516,9 @@ class ChartingState extends MusicBeatState {
 				if (_song.notes[curSec + 1] == null)
 					addSection(getSectionBeats());
 				changeSection(curSec + 1, false);
-			} else if(strumLine.y < -10) {
-				changeSection(curSec - 1, false);
-			}
+			} else if(strumLine.y < -10) changeSection(curSec - 1, false);
 		}
+		FlxG.watch.addQuick('daSection', curSection);
 		FlxG.watch.addQuick('daBeat', curBeat);
 		FlxG.watch.addQuick('daStep', curStep);
 

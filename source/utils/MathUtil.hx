@@ -18,8 +18,7 @@ class MathUtil {
 
 		var tempMult:Float = 1;
 		for (_ in 0...decimals) tempMult *= 10;
-		final newValue:Float = Math.floor(value * tempMult);
-		return newValue / tempMult;
+		return Math.floor(value * tempMult) / tempMult;
 	}
 
 	public static function getMinAndMax(value1:Float, value2:Float):Array<Float> {

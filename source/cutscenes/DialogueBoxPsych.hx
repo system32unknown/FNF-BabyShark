@@ -347,8 +347,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		}
 		currentText++;
 
-		if(nextDialogueThing != null)
-			nextDialogueThing();
+		if(nextDialogueThing != null) nextDialogueThing();
 	}
 
 	public static function parseDialogue(path:String):DialogueFile {
