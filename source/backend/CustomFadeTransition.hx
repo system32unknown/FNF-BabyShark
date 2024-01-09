@@ -1,99 +1,57 @@
 package backend;
 
-import openfl.display.BitmapData;
-import flixel.graphics.FlxGraphic;
-
 class CustomFadeTransition extends MusicBeatSubstate {
 	public static var finishCallback:Void->Void;
-	public static var nextCamera:FlxCamera;
-
-	var leTween:FlxTween;
-	var isTransIn:Bool;
-	var duration:Float;
+	var isTransIn:Bool = false;
 	var transBlack:FlxSprite;
 	var transGradient:FlxSprite;
 
-	var scale:Float = 0;
-	var finished:Bool = false;
-
-	public function new(duration:Float = .7, isTransIn:Bool = false) {
+	var duration:Float;
+	public function new(duration:Float, isTransIn:Bool) {
 		this.duration = duration;
 		this.isTransIn = isTransIn;
 		super();
-
-		transGradient = new FlxSprite(getGradient());
-		transGradient.scrollFactor.set();
-		transGradient.flipX = isTransIn;
-		add(transGradient);
-
-		transBlack = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		transBlack.scrollFactor.set();
-		add(transBlack);
-
-		updateHitbox();
-
-		camera = nextCamera != null ? nextCamera : FlxG.camera;
-		nextCamera = null;
 	}
 
 	override function create() {
-		super.create();
-
-		leTween = FlxTween.tween(this, {scale: 1}, duration, {onComplete: onComplete, ease: FlxEase.linear});
-	}
-
-	function onComplete(_) {
-		if (!finished && !isTransIn && finishCallback != null) finishCallback();
-		finished = true;
-
-		if (isTransIn) close();
-	}
-
-	function updateHitbox() {
-		var camera:FlxCamera = camera != null ? camera : FlxG.camera;
-		var width:Int = FlxG.width;
-		var height:Int = FlxG.height;
-		var scaleX:Float = 1;
-		var scaleY:Float = 1;
-
-		if (camera != null) {
-			width = camera.width;
-			height = camera.height;
-			scaleX = camera.scaleX;
-			scaleY = camera.scaleY;
-		}
-		width = Math.ceil(width / scaleX);
-		height = Math.ceil(height / scaleY);
-
-		transGradient.setGraphicSize(width, height);
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+		var width:Int = Std.int(FlxG.width / Math.max(camera.zoom, .001));
+		var height:Int = Std.int(FlxG.height / Math.max(camera.zoom, .001));
+		transGradient = flixel.util.FlxGradient.createGradientFlxSprite(width, 1, (isTransIn ? [0x0, FlxColor.BLACK] : [FlxColor.BLACK, 0x0]), 1, 0);
+		transGradient.scale.y = height;
 		transGradient.updateHitbox();
-		transGradient.x = FlxMath.remapToRange(scale, 0, 1, -width, width);
+		transGradient.scrollFactor.set();
+		transGradient.screenCenter(Y);
+		add(transGradient);
 
-		transBlack.setGraphicSize(width, height);
+		transBlack = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		transBlack.scale.set(width + 400, height);
 		transBlack.updateHitbox();
-		transBlack.x = transGradient.x + (isTransIn ? width : -width);
+		transBlack.scrollFactor.set();
+		transBlack.screenCenter(Y);
+		add(transBlack);
+
+		if(isTransIn) transGradient.x = transBlack.x - transBlack.width;
+		else transGradient.x = -transGradient.width;
+
+		super.create();
 	}
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		updateHitbox();
-	}
 
-	override function destroy() {
-		if (leTween != null) leTween.cancel();
-		finished = true;
-		super.destroy();
-	}
+		final width:Float = FlxG.width * Math.max(camera.zoom, .001);
+		final targetPos:Float = transGradient.width + 50 * Math.max(camera.zoom, .001);
+		if(duration > 0) transGradient.x += (width + targetPos) * elapsed / duration;
+		else transGradient.x = (targetPos) * elapsed;
 
-	static var cachedGradient:FlxGraphic;
-	static function getGradient():FlxGraphic @:privateAccess {
-		if (cachedGradient != null && cachedGradient.frameCollections != null) return cachedGradient;
+		if(isTransIn) transBlack.x = transGradient.x + transGradient.width;
+		else transBlack.x = transGradient.x - transBlack.width;
 
-		var bitmap:BitmapData = flixel.util.FlxGradient.createGradientBitmapData(FlxG.width, 1, [FlxColor.BLACK, 0x0], 1, 0);
-		cachedGradient = FlxGraphic.fromBitmapData(bitmap, false, "FadeTransitionGradient");
-		cachedGradient.persist = true;
-
-		Paths.excludeAsset("FadeTransitionGradient");
-		return cachedGradient;
+		if(transGradient.x >= targetPos) {
+			close();
+			if(finishCallback != null) finishCallback();
+			finishCallback = null;
+		}
 	}
 }

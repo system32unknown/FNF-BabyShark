@@ -3,8 +3,7 @@ package substates;
 import flixel.addons.transition.FlxTransitionableState;
 import options.OptionsState;
 
-class PauseSubState extends MusicBeatSubstate
-{
+class PauseSubState extends MusicBeatSubstate {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = [];
@@ -20,9 +19,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	public static var songName:String = '';
 
-	public function new(x:Float, y:Float)
-	{
-		super();
+	override function create() {
 		if(Difficulty.list.length < 2) menuItemsOG.remove('Change Difficulty'); //No need to change difficulty if there is only one!
 
 		if(PlayState.chartingMode) {
@@ -55,6 +52,7 @@ class PauseSubState extends MusicBeatSubstate
 			}
 		} catch(e:Dynamic) Logs.trace(e, ERROR);
 		pauseMusic.volume = 0;
+		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 		FlxG.sound.list.add(pauseMusic);
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
@@ -87,16 +85,8 @@ class PauseSubState extends MusicBeatSubstate
 
 		regenMenu();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-	}
 
-	override function create() {
 		super.create();
-		
-		if(FlxG.sound.music != null) {
-			FlxG.sound.music.pause();
-			PlayState.instance.vocals.pause();
-		}
-		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 	}
 
 	var holdTime:Float = 0;
@@ -223,7 +213,6 @@ class PauseSubState extends MusicBeatSubstate
 
 					Mods.loadTopMod();
 					MusicBeatState.switchState(PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
-					PlayState.cancelMusicFadeTween();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					PlayState.changedDifficulty = false;
 					PlayState.chartingMode = false;

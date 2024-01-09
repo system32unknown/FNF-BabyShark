@@ -58,7 +58,6 @@ class NoteOffsetState extends MusicBeatState {
 		camOther.bgColor = 0x00000000;
 		FlxG.cameras.add(camOther, false);
 
-		CustomFadeTransition.nextCamera = camOther;
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
 		// Stage
@@ -319,7 +318,6 @@ class NoteOffsetState extends MusicBeatState {
 
 		if(controls.BACK) {
 			persistentUpdate = false;
-			CustomFadeTransition.nextCamera = camOther;
 			MusicBeatState.switchState(new options.OptionsState());
 			if(OptionsState.onPlayState) {
 				if(ClientPrefs.getPref('pauseMusic') != 'None')

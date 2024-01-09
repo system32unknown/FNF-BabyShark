@@ -55,7 +55,6 @@ class CreditsEditor extends MusicBeatState {
 
 		FlxG.cameras.add(camUI, false);
 		FlxG.cameras.add(camOther, false);
-		CustomFadeTransition.nextCamera = camOther;
 
 		var tabs = [{name: 'Credits', label: 'Credits'}];
 

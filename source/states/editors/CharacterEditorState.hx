@@ -56,6 +56,7 @@ class CharacterEditorState extends MusicBeatState {
 	override function create() {
 		if(ClientPrefs.getPref('hardwareCache')) Paths.clearStoredCache();
 
+		FlxG.sound.music.stop();
 		camEditor = initPsychCamera();
 
 		camHUD = new FlxCamera();
@@ -689,6 +690,8 @@ class CharacterEditorState extends MusicBeatState {
 		
 		character.destroyAtlas();
 		character.isAnimateAtlas = false;
+		character.color = FlxColor.WHITE;
+		character.alpha = 1;
 
 		if(Paths.fileExists('images/' + character.imageFile + '/Animation.json', TEXT)) {
 			character.atlas = new FlxAnimate();
@@ -1092,7 +1095,7 @@ class CharacterEditorState extends MusicBeatState {
 	function saveCharacter() {
 		if(_file != null) return;
 
-		var json = {
+		var json:Dynamic = {
 			"animations": character.animationsArray,
 			"image": character.imageFile,
 			"scale": character.jsonScale,

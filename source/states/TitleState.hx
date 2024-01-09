@@ -137,7 +137,6 @@ class TitleState extends MusicBeatState {
 		add(version);
 
 		add(textGroup = new FlxTypedGroup<FlxText>());
-
 		randomPhrase = getIntroTextShit();
 
 		if (!skippedIntro) {

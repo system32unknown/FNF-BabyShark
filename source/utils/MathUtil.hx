@@ -2,8 +2,7 @@ package utils;
 
 class MathUtil {
 	inline public static function quantize(f:Float, snap:Float) {
-		final m:Float = Math.fround(f * snap);
-		return (m / snap);
+		return Math.fround(f * snap) / snap;
 	}
 
 	public static function truncateFloat(number:Float, ?precision:Int = 3):Float {

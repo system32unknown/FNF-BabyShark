@@ -71,9 +71,9 @@ class FunkinPreloader extends flixel.system.FlxBasePreloader {
 		_logoGlow = makeSpriteBitmap(new FunkinLogoImage(0, 0), ratio * 2, ratio / 2);
 		_buffer.addChild(_logoGlow);
 
-		var corners = createBitmap(GraphicLogoCorners, (corners) -> {
-			corners.width = _width;
-			corners.height = height;
+		var corners = createBitmap(GraphicLogoCorners, (crns) -> {
+			crns.width = _width;
+			crns.height = height;
 		});
 		corners.smoothing = true;
 		_buffer.addChild(corners);
@@ -117,6 +117,6 @@ class FunkinPreloader extends flixel.system.FlxBasePreloader {
 
 	override public function update(percent:Float):Void {
 		_bmpBar.scaleX = percent * (_width - 8);
-		_text.text = "BSF 0.1.0 - " + Std.int(percent * 100) + "%";
+		_text.text = 'BSF ${lime.app.Application.current.meta.get('version')} - ' + Std.int(percent * 100) + "%";
     }
 }

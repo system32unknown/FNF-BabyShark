@@ -46,34 +46,27 @@ class GameOverSubstate extends MusicBeatSubstate {
 
 	override function create() {
 		instance = this;
-		camOther.zoom = camHUD.zoom = 1;
-		camOther.x = camOther.y = camOther.angle = camHUD.x = camHUD.y = camHUD.angle = 0;
-		PlayState.instance.callOnScripts('onGameOverStart', []);
 		utils.system.MemoryUtil.clearMajor();
 
 		FlxG.sound.play(Paths.sound(deathSoundName));
+
+		boyfriend = getBoyfriend();
+		boyfriend.x += boyfriend.positionArray[0];
+		boyfriend.y += boyfriend.positionArray[1];
+		add(boyfriend);
 
 		var anim = boyfriend.animation.getByName('firstDeath');
 		boyfriend.playAnim('firstDeath');
 		boyfriend.animation.frameIndex = anim.frames[0];
 
-		super.create();
-	}
-
-	public function new(x:Float, y:Float, camX:Float, camY:Float) {
-		super();
-
-		PlayState.instance.setOnLuas('inGameOver', true);
 		camOther = PlayState.instance.camOther;
 		camHUD = PlayState.instance.camHUD;
 
+		camOther.zoom = camHUD.zoom = 1;
+		camOther.x = camOther.y = camOther.angle = camHUD.x = camHUD.y = camHUD.angle = 0;
+
 		Conductor.songPosition = 0;
 		Conductor.bpm = 100;
-
-		boyfriend = getBoyfriend(x, y);
-		boyfriend.x += boyfriend.positionArray[0];
-		boyfriend.y += boyfriend.positionArray[1];
-		add(boyfriend);
 
 		FlxG.camera.scroll.set();
 		FlxG.camera.target = null;
@@ -93,6 +86,9 @@ class GameOverSubstate extends MusicBeatSubstate {
 		FlxG.camera.focusOn(FlxPoint.get(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2)));
 		add(camFollow);
 		mid.put();
+
+		PlayState.instance.setOnScripts('inGameOver', true);
+		PlayState.instance.callOnScripts('onGameOverStart', []);
 	}
 
 	override function update(elapsed:Float) {
@@ -153,8 +149,14 @@ class GameOverSubstate extends MusicBeatSubstate {
 		PlayState.instance.callOnScripts('onGameOverConfirm', [true]);
 	}
 
-	function getBoyfriend(x:Float, y:Float):Character {
+	function getBoyfriend():Character {
 		var ins:PlayState = PlayState.instance;
+
+		final pos:FlxPoint = ins.boyfriend.getScreenPosition();
+		var x:Float = pos.x - ins.boyfriend.positionArray[0];
+		var y:Float = pos.y - ins.boyfriend.positionArray[1];
+		pos.put();
+
 		if (ins != null) {
 			var bf = ins.gameOverChar;
 			if (bf != null && bf.curCharacter == characterName) {

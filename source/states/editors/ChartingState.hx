@@ -216,6 +216,7 @@ class ChartingState extends MusicBeatState {
 
 		FlxG.mouse.visible = true;
 
+		updateJsonData();
 		currentSongName = Paths.formatToSongPath(_song.song);
 		loadSong();
 		reloadGridLayer();
@@ -371,6 +372,7 @@ class ChartingState extends MusicBeatState {
 		var saveButton:FlxButton = new FlxButton(110, 8, "Save", () -> saveLevel());
 
 		var reloadSong:FlxButton = new FlxButton(saveButton.x + 90, saveButton.y, "Reload Audio", function() {
+			updateJsonData();
 			currentSongName = Paths.formatToSongPath(UI_songTitle.text);
 			loadSong();
 			#if desktop updateWaveform(); #end
@@ -468,6 +470,7 @@ class ChartingState extends MusicBeatState {
 
 		var player1DropDown = new FlxUIDropDownMenu(10, stepperSpeed.y + 45, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String) {
 			_song.player1 = characters[Std.parseInt(character)];
+			updateJsonData();
 			updateHeads();
 		});
 		player1DropDown.selectedLabel = _song.player1;
@@ -475,6 +478,7 @@ class ChartingState extends MusicBeatState {
 
 		var gfVersionDropDown = new FlxUIDropDownMenu(player1DropDown.x, player1DropDown.y + 40, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String) {
 			_song.gfVersion = characters[Std.parseInt(character)];
+			updateJsonData();
 			updateHeads();
 		});
 		gfVersionDropDown.selectedLabel = _song.gfVersion;
@@ -482,6 +486,7 @@ class ChartingState extends MusicBeatState {
 
 		var player2DropDown = new FlxUIDropDownMenu(player1DropDown.x, gfVersionDropDown.y + 40, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String) {
 			_song.player2 = characters[Std.parseInt(character)];
+			updateJsonData();
 			updateHeads();
 		});
 		player2DropDown.selectedLabel = _song.player2;
@@ -1336,8 +1341,7 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function loadSong():Void {
-		if (FlxG.sound.music != null)
-			FlxG.sound.music.stop();
+		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		vocals = new FlxSound();
 		if (_song.needsVoices) {
@@ -2314,29 +2318,37 @@ class ChartingState extends MusicBeatState {
 		updateHeads();
 	}
 
-	function updateHeads():Void {
-		var healthIconP1:String = loadHealthIconFromCharacter(_song.player1);
-		var healthIconP2:String = loadHealthIconFromCharacter(_song.player2);
-		var gfIcon:String = loadHealthIconFromCharacter(_song.gfVersion);
+	var characterData:Dynamic = {
+		iconP1: null,
+		iconP2: null
+	};
 
-		if (_song.notes[curSec].mustHitSection) {
-			leftIcon.changeIcon(healthIconP1);
-			rightIcon.changeIcon(healthIconP2);
-			if (_song.notes[curSec].gfSection) leftIcon.changeIcon(gfIcon);
-		} else {
-			leftIcon.changeIcon(healthIconP2);
-			rightIcon.changeIcon(healthIconP1);
-			if (_song.notes[curSec].gfSection) leftIcon.changeIcon(gfIcon);
+	function updateJsonData():Void {
+		for (i in 1...3) {
+			var data:CharacterFile = loadCharacterFile(Reflect.field(_song, 'player$i'));
+			Reflect.setField(characterData, 'iconP$i', !characterFailed ? data.healthicon : 'face');
 		}
 	}
 
-	function loadHealthIconFromCharacter(char:String) {
-		var characterPath:String = 'characters/' + char + '.json';
+	function updateHeads():Void {
+		if (_song.notes[curSec].mustHitSection) {
+			leftIcon.changeIcon(characterData.iconP1);
+			rightIcon.changeIcon(characterData.iconP2);
+			if (_song.notes[curSec].gfSection) leftIcon.changeIcon('gf');
+		} else {
+			leftIcon.changeIcon(characterData.iconP2);
+			rightIcon.changeIcon(characterData.iconP1);
+			if (_song.notes[curSec].gfSection) leftIcon.changeIcon('gf');
+		}
+	}
+
+	var characterFailed:Bool = false;
+	function loadCharacterFile(char:String):CharacterFile {
+		characterFailed = false;
+		var characterPath:String = 'characters/$char.json';
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);
-		if (!FileSystem.exists(path)) {
-			path = Paths.getPreloadPath(characterPath);
-		}
+		if (!FileSystem.exists(path)) path = Paths.getPreloadPath(characterPath);
 
 		if (!FileSystem.exists(path))
 		#else
@@ -2345,11 +2357,10 @@ class ChartingState extends MusicBeatState {
 		#end
 		{
 			path = Paths.getPreloadPath('characters/' + Character.DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+			characterFailed = true;
 		}
 
-		var rawJson = #if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end;
-		var json:CharacterFile = cast Json.parse(rawJson);
-		return json.healthicon;
+		return cast Json.parse(#if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end);
 	}
 
 	function updateNoteUI():Void {

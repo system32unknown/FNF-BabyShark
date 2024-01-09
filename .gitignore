@@ -1,6 +1,7 @@
 #PSYCH FOLDERS
 export/
 .haxelib/
+.github/
 dump/
 
 ### VS Code
@@ -12,5 +13,6 @@ dump/
 # Including to allow others to use already set-up configuration tweaked for the project.
 .vscode/*
 !.vscode/launch.json
+!.vscode/tasks.json
 !.vscode/extensions.json
 !.vscode/settings.json

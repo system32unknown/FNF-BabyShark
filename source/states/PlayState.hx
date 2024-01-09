@@ -290,7 +290,6 @@ class PlayState extends MusicBeatState {
 
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOther, false);
-		CustomFadeTransition.nextCamera = camOther;
 
 		if (SONG == null) SONG = Song.loadFromJson('tutorial');
 		songName = Paths.formatToSongPath(SONG.song);
@@ -417,8 +416,6 @@ class PlayState extends MusicBeatState {
 		comboGroup = new FlxSpriteGroup();
 		comboGroup.ID = 0;
 		noteGroup = new FlxTypedGroup<FlxBasic>();
-
-		Conductor.songPosition = -5000 / Conductor.songPosition;
 
 		var showTime:Bool = timeType != 'Disabled';
 		timeTxt = new FlxText(0, 19, 400, "", 16);
@@ -595,7 +592,6 @@ class PlayState extends MusicBeatState {
 		#end
 
 		if(timeToStart > 0)	clearNotesBefore(timeToStart);
-		CustomFadeTransition.nextCamera = camOther;
 		if(eventNotes.length < 1) checkEventNote();
 	}
 
@@ -1348,6 +1344,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function closeSubState() {
+		super.closeSubState();
 		stagesFunc((stage:BaseStage) -> stage.closeSubState());
 		if (paused) {
 			if (FlxG.sound.music != null && !startingSong) resyncVocals();
@@ -1362,8 +1359,6 @@ class PlayState extends MusicBeatState {
 
 			#if DISCORD_ALLOWED resetRPC(startTimer != null && startTimer.finished); #end
 		}
-
-		super.closeSubState();
 	}
 
 	override public function onFocus():Void {
@@ -1650,9 +1645,7 @@ class PlayState extends MusicBeatState {
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
-		final pos:FlxPoint = boyfriend.getScreenPosition();
-		openSubState(new PauseSubState(pos.x, pos.y));
-		pos.put();
+		openSubState(new PauseSubState());
 
 		#if DISCORD_ALLOWED DiscordClient.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)'); #end
 	}
@@ -1661,6 +1654,7 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.followLerp = 0;
 		persistentUpdate = false;
 		paused = true;
+		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 		cancelMusicFadeTween();
 		chartingMode = true;
 
@@ -1675,6 +1669,7 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.followLerp = 0;
 		persistentUpdate = false;
 		paused = true;
+		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 		cancelMusicFadeTween();
 		#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 		MusicBeatState.switchState(new CharacterEditorState(SONG.player2));
@@ -1696,11 +1691,15 @@ class PlayState extends MusicBeatState {
 
 				persistentUpdate = false;
 				persistentDraw = false;
+				FlxTimer.globalManager.clear();
+				FlxTween.globalManager.clear();
+				#if LUA_ALLOWED
+				modchartTimers.clear();
+				modchartTweens.clear();
+				#end
 				#if VIDEOS_ALLOWED if(videoSprites.length > 0) for(video in videoSprites) removeVideoSprite(video); #end
 
-				final pos:FlxPoint = boyfriend.getScreenPosition();
-				openSubState(new GameOverSubstate(pos.x - boyfriend.positionArray[0], pos.y - boyfriend.positionArray[1], camFollow.x, camFollow.y));
-				pos.put();
+				openSubState(new GameOverSubstate());
 
 				#if DISCORD_ALLOWED DiscordClient.changePresence('Game Over - $detailsText', '${SONG.song} ($storyDifficultyText)'); #end
 				return isDead = true;
@@ -2041,7 +2040,6 @@ class PlayState extends MusicBeatState {
 					#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
 					cancelMusicFadeTween();
-					if(FlxTransitionableState.skipNextTransIn) CustomFadeTransition.nextCamera = null;
 					MusicBeatState.switchState(new StoryMenuState());
 
 					if(!practiceMode && !cpuControlled) {
@@ -2069,8 +2067,6 @@ class PlayState extends MusicBeatState {
 				#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
 				cancelMusicFadeTween();
-				if(FlxTransitionableState.skipNextTransIn)
-					CustomFadeTransition.nextCamera = null;
 				MusicBeatState.switchState(new FreeplayState());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				changedDifficulty = false;
@@ -2155,9 +2151,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (!ClientPrefs.getPref('ShowComboCounter') || (!showRating && !showCombo && !showComboNum)) return;
-
-		if (!ClientPrefs.getPref('comboStacking')) 
-			comboGroup.forEachAlive((spr:FlxSprite) -> FlxTween.globalManager.completeTweensOf(spr));
+		if (!ClientPrefs.getPref('comboStacking')) comboGroup.forEachAlive((spr:FlxSprite) -> FlxTween.globalManager.completeTweensOf(spr));
 
 		final placement:Float = FlxG.width * .35;
 

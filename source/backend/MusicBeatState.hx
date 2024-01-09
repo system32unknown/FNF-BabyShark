@@ -86,7 +86,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 
 		super.create();
 
-		if (!skip) openSubState(new CustomFadeTransition(.7, true));
+		if (!skip) openSubState(new CustomFadeTransition(.6, true));
 		FlxTransitionableState.skipNextTransOut = false;
 	}
 

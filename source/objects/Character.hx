@@ -73,7 +73,27 @@ class Character extends FlxSprite {
 		animOffsets = new Map<String, Array<Dynamic>>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
-		loadCharacterFile(getCharacterFile(character));
+		switch (curCharacter) {
+			//case 'your character name in case you want to hardcode them instead':
+
+			default:
+				var characterPath:String = 'characters/$curCharacter.json';
+				var path:String = Paths.getPath(characterPath, TEXT, null, true);
+				
+				if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
+					path = Paths.getPreloadPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+					color = FlxColor.BLACK;
+					alpha = 0.6;
+				}
+		
+				var rawJson = #if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end;
+				try {
+					var json:CharacterFile = cast Json.parse(rawJson);
+					for (anim in json.animations)
+						anim.indices = parseIndices(anim.indices);
+					loadCharacterFile(json);
+				} catch(e) Logs.trace('Error loading character file of "$curCharacter": $e', ERROR);
+		}
 
 		for (name => _ in animOffsets)
 			if (name.startsWith('sing') && name.contains('miss')) { // includes alt miss animations now
@@ -82,23 +102,6 @@ class Character extends FlxSprite {
 			}
 		recalculateDanceIdle();
 		dance();
-	}
-
-	public static function getCharacterFile(char:String):Dynamic {
-		var characterPath:String = 'characters/$char.json';
-		var path:String = Paths.getPath(characterPath, TEXT, null, true);
-		
-		if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path))
-			path = Paths.getPreloadPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
-
-		var rawJson = #if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end;
-		try {
-			var json:CharacterFile = cast Json.parse(rawJson);
-			for (anim in json.animations)
-				anim.indices = parseIndices(anim.indices);
-			return json;
-		} catch(e) Logs.trace('Error loading character file of "$char": $e', ERROR);
-		return null;
 	}
 
 	public static function parseIndices(indices:Array<Any>):Array<Int> {
