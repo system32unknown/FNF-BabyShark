@@ -267,12 +267,17 @@ class Paths {
 	}
 
 	static public function getAtlas(key:String, ?library:String = null):FlxAtlasFrames {
-		#if MODS_ALLOWED
-		if(FileSystem.exists(modsXml(key)) || OpenFlAssets.exists(getPath('images/$key.xml', library), TEXT))
-		#else
-		if(OpenFlAssets.exists(getPath('images/$key.xml', library)))
-		#end
-			return getSparrowAtlas(key, library);
+		var useMod = false;
+		var imageLoaded:FlxGraphic = image(key, library);
+
+		var myXml:Dynamic = getPath('images/$key.xml', TEXT, library, true);
+		if(OpenFlAssets.exists(myXml) #if MODS_ALLOWED || (FileSystem.exists(myXml) && (useMod = true)) #end)
+			return FlxAtlasFrames.fromSparrow(imageLoaded, #if MODS_ALLOWED (useMod ? File.getContent(myXml) : myXml) #else myXml #end);
+		else {
+			var myJson:Dynamic = getPath('images/$key.json', TEXT, library, true);
+			if(OpenFlAssets.exists(myJson) #if MODS_ALLOWED || (FileSystem.exists(myJson) && (useMod = true)) #end )
+				return FlxAtlasFrames.fromTexturePackerJson(imageLoaded, #if MODS_ALLOWED (useMod ? File.getContent(myJson) : myJson) #else myJson #end);
+		}
 		return getPackerAtlas(key, library);
 	}
 

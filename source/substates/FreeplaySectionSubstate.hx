@@ -93,6 +93,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		
 		if (controls.BACK && !transitioning) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
+			transitioning = true;
 			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(grid, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionTxt, {alpha: 0, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoInOut});

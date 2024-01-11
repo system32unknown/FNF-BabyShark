@@ -3,6 +3,11 @@ package substates;
 import flixel.addons.transition.FlxTransitionableState;
 import options.OptionsState;
 
+#if (target.threaded)
+import sys.thread.Thread;
+import sys.thread.Mutex;
+#end
+
 class PauseSubState extends MusicBeatSubstate {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
@@ -42,6 +47,27 @@ class PauseSubState extends MusicBeatSubstate {
 		difficultyChoices.push('BACK');
 
 		pauseMusic = new FlxSound();
+
+		#if (target.threaded)
+		var mutex:Mutex = new Mutex();
+
+		Thread.create(() -> {
+			mutex.acquire();
+			try {
+				if (songName == null || songName.toLowerCase() != 'none') {
+					if(songName == null) {
+						var path:String = Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'));
+						if(path.toLowerCase() != 'none')
+							pauseMusic.loadEmbedded(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), true, true);
+					} else pauseMusic.loadEmbedded(Paths.music(songName), true, true);
+				}
+			} catch(e:Dynamic) Logs.trace(e, ERROR);
+			pauseMusic.volume = 0;
+			pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
+			FlxG.sound.list.add(pauseMusic);
+			mutex.release();
+		});
+		#else
 		try {
 			if (songName == null || songName.toLowerCase() != 'none') {
 				if(songName == null) {
@@ -54,6 +80,7 @@ class PauseSubState extends MusicBeatSubstate {
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 		FlxG.sound.list.add(pauseMusic);
+		#end
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		bg.scale.set(FlxG.width, FlxG.height);
@@ -79,7 +106,7 @@ class PauseSubState extends MusicBeatSubstate {
 		}
 		chartingText.visible = PlayState.chartingMode;
 		practiceText.visible = PlayState.instance.practiceMode;
-		FlxTween.tween(bg, {alpha: 0.2}, 0.4, {ease: FlxEase.quartInOut});
+		FlxTween.tween(bg, {alpha: .2}, .4, {ease: FlxEase.quartInOut});
 
 		add(grpMenuShit = new FlxTypedGroup<Alphabet>());
 
