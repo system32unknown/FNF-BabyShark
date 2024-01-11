@@ -102,6 +102,7 @@ class CreditsEditor extends MusicBeatState {
 		descBox.camera = camUI;
 		descText.camera = camUI;
 
+		interpColor = new FlxInterpolateColor(bg.color);
 		updateCreditObjects();
 		changeSelection();
 
