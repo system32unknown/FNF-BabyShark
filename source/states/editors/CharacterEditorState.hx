@@ -101,7 +101,7 @@ class CharacterEditorState extends MusicBeatState {
 		healthBar.camera = camHUD;
 
 		healthIcon = new HealthIcon(character.healthIcon, false);
-		healthIcon.y = FlxG.height - 150;
+		healthIcon.y = healthBar.y - (healthIcon.height / 2);
 		add(healthIcon);
 		healthIcon.camera = camHUD;
 
@@ -301,10 +301,10 @@ class CharacterEditorState extends MusicBeatState {
 					spr.flipX = character.flipX;
 					spr.alpha = ghostAlpha;
 
-					spr.scale.set(character.scale.x, character.scale.y);
+					spr.scale.copyFrom(character.scale);
 					spr.updateHitbox();
 
-					spr.offset.set(character.offset.x, character.offset.y);
+					spr.offset.copyFrom(character.offset);
 					spr.visible = true;
 
 					var otherSpr:FlxSprite = (spr == animateGhost) ? ghost : animateGhost;
@@ -563,8 +563,7 @@ class CharacterEditorState extends MusicBeatState {
 			var lastAnim = character.getAnimationName();
 			character.imageFile = imageInputText.text;
 			reloadCharacterImage();
-			if(!character.isAnimationNull())
-				character.playAnim(lastAnim, true);
+			if(!character.isAnimationNull()) character.playAnim(lastAnim, true);
 		});
 
 		var decideIconColor:FlxButton = new FlxButton(reloadImage.x, reloadImage.y + 30, "Get Icon Color", function() {
@@ -794,8 +793,7 @@ class CharacterEditorState extends MusicBeatState {
 		var moveKeysP = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.DOWN];
 		var moveKeys = [FlxG.keys.pressed.LEFT, FlxG.keys.pressed.RIGHT, FlxG.keys.pressed.UP, FlxG.keys.pressed.DOWN];
 		if(moveKeysP.contains(true)) {
-			character.offset.x += ((moveKeysP[0] ? 1 : 0) - (moveKeysP[1] ? 1 : 0)) * shiftMultBig;
-			character.offset.y += ((moveKeysP[2] ? 1 : 0) - (moveKeysP[3] ? 1 : 0)) * shiftMultBig;
+			character.offset.add(((moveKeys[0] ? 1 : 0) - (moveKeys[1] ? 1 : 0)) * shiftMultBig, ((moveKeys[2] ? 1 : 0) - (moveKeys[3] ? 1 : 0)) * shiftMultBig);
 			changedOffset = true;
 		}
 
@@ -804,8 +802,7 @@ class CharacterEditorState extends MusicBeatState {
 			if(holdingArrowsTime > 0.6) {
 				holdingArrowsElapsed += elapsed;
 				while(holdingArrowsElapsed > (1 / 60)) {
-					character.offset.x += ((moveKeys[0] ? 1 : 0) - (moveKeys[1] ? 1 : 0)) * shiftMultBig;
-					character.offset.y += ((moveKeys[2] ? 1 : 0) - (moveKeys[3] ? 1 : 0)) * shiftMultBig;
+					character.offset.add(((moveKeys[0] ? 1 : 0) - (moveKeys[1] ? 1 : 0)) * shiftMultBig, ((moveKeys[2] ? 1 : 0) - (moveKeys[3] ? 1 : 0)) * shiftMultBig);
 					holdingArrowsElapsed -= (1 / 60);
 					changedOffset = true;
 				}
@@ -813,8 +810,7 @@ class CharacterEditorState extends MusicBeatState {
 		} else holdingArrowsTime = 0;
 
 		if(FlxG.mouse.pressedRight && (FlxG.mouse.deltaScreenX != 0 || FlxG.mouse.deltaScreenY != 0)) {
-			character.offset.x -= FlxG.mouse.deltaScreenX;
-			character.offset.y -= FlxG.mouse.deltaScreenY;
+			character.offset.subtract(FlxG.mouse.deltaScreenX, FlxG.mouse.deltaScreenY);
 			changedOffset = true;
 		}
 
@@ -825,16 +821,14 @@ class CharacterEditorState extends MusicBeatState {
 				changedOffset = true;
 			} else if(FlxG.keys.justPressed.V) {
 				undoOffsets = [character.offset.x, character.offset.y];
-				character.offset.x = copiedOffset[0];
-				character.offset.y = copiedOffset[1];
+				character.offset.set(copiedOffset[0], copiedOffset[1]);
 				changedOffset = true;
 			} else if(FlxG.keys.justPressed.R) {
 				undoOffsets = [character.offset.x, character.offset.y];
-				character.offset.set(0, 0);
+				character.offset.set();
 				changedOffset = true;
 			} else if(FlxG.keys.justPressed.Z && undoOffsets != null) {
-				character.offset.x = undoOffsets[0];
-				character.offset.y = undoOffsets[1];
+				character.offset.set(undoOffsets[0], undoOffsets[1]);
 				changedOffset = true;
 			}
 		}
@@ -881,7 +875,7 @@ class CharacterEditorState extends MusicBeatState {
 				}
 			}
 
-			txt = 'Frames: ( $frames / ${length-1} )';
+			txt = 'Frames: ( $frames / ${length - 1} )';
 
 			clr = FlxColor.WHITE;
 		}

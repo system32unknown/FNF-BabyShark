@@ -2111,11 +2111,11 @@ class PlayState extends MusicBeatState {
 		var tempText:String = (!ClientPrefs.getPref('ShowNPS') ? '' : 'NPS:$nps (Max:$maxNPS) $scoreSeparator ');
 		tempText += 'Score:$songScore ';
 		tempText += (cpuControlled ? '' : '$scoreSeparator ${ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks'}:$songMisses ');
-		switch(ClientPrefs.getPref('ScoreType')) {
-			case 'Alter': tempText += '$scoreSeparator Acc:$accuracy% $scoreSeparator' + (ratingName != '?' ? ' $ratingName [$ratingFC, $ranks]' : ' N/A');
-			case 'Kade': tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
+		tempText += switch(ClientPrefs.getPref('ScoreType')) {
+			case 'Alter': '$scoreSeparator Acc:$accuracy -' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
+			case 'Kade' | _: tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 		}
-		return '$tempText\n';
+		return tempText;
 	}
 
 	public var ratingAcc:FlxPoint = FlxPoint.get();
@@ -2378,9 +2378,7 @@ class PlayState extends MusicBeatState {
 
 	function getKeyFromEvent(arr:Array<Dynamic>, key:FlxKey):Int {
 		if (key != NONE) {
-			for (i in 0...arr.length)
-				for (j in 0...arr[i].length)
-					if(key == arr[i][j]) return i;
+			for (i in 0...arr.length) for (j in 0...arr[i].length) if(key == arr[i][j]) return i;
 		}
 		return -1;
 	}

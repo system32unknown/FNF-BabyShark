@@ -120,7 +120,7 @@ class PauseSubState extends MusicBeatSubstate {
 	var cantUnpause:Float = 0.1;
 	override function update(elapsed:Float) {
 		cantUnpause -= elapsed;
-		if (pauseMusic.volume < .5)
+		if (pauseMusic != null && pauseMusic.volume < .5)
 			pauseMusic.volume += .01 * elapsed;
 
 		super.update(elapsed);
@@ -272,7 +272,7 @@ class PauseSubState extends MusicBeatSubstate {
 	}
 
 	override function destroy() {
-		pauseMusic.destroy();
+		if (pauseMusic != null) pauseMusic.destroy();
 		super.destroy();
 	}
 

@@ -94,22 +94,22 @@
 	<SubTexture name="mods white0000" x="453" y="675" width="204" height="205"/>
 	<SubTexture name="mods white0001" x="672" y="675" width="204" height="205"/>
 	<SubTexture name="mods white0002" x="891" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0000" x="1110" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0001" x="1110" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0002" x="1110" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0003" x="1110" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0004" x="1110" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0005" x="1329" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0006" x="1329" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0007" x="1329" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0008" x="1329" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0009" x="1329" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0010" x="1548" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0011" x="1548" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0012" x="1548" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0013" x="1548" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode basic0014" x="1548" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode white0000" x="1767" y="675" width="204" height="205"/>
-	<SubTexture name="story_mode white0001" x="15" y="895" width="204" height="205"/>
-	<SubTexture name="story_mode white0002" x="234" y="895" width="204" height="205"/>
+	<SubTexture name="story mode basic0000" x="1110" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0001" x="1110" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0002" x="1110" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0003" x="1110" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0004" x="1110" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0005" x="1329" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0006" x="1329" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0007" x="1329" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0008" x="1329" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0009" x="1329" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0010" x="1548" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0011" x="1548" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0012" x="1548" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0013" x="1548" y="675" width="204" height="205"/>
+	<SubTexture name="story mode basic0014" x="1548" y="675" width="204" height="205"/>
+	<SubTexture name="story mode white0000" x="1767" y="675" width="204" height="205"/>
+	<SubTexture name="story mode white0001" x="15" y="895" width="204" height="205"/>
+	<SubTexture name="story mode white0002" x="234" y="895" width="204" height="205"/>
 </TextureAtlas>

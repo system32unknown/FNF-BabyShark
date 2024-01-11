@@ -10,7 +10,7 @@ class MainMenuState extends MusicBeatState {
 	var menuOptions:Array<String> = [
 		"Story Mode",
 		"Freeplay",
-		"Mods",
+		#if MODS_ALLOWED "Mods", #end
 		"Credits",
 		"Options"
 	];
@@ -23,14 +23,6 @@ class MainMenuState extends MusicBeatState {
 	];
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
-	
-	var optionShit:Array<String> = [
-		'story_mode',
-		'freeplay',
-		#if MODS_ALLOWED 'mods', #end
-		'credits',
-		'options'
-	];
 
 	var bg:FlxSprite;
 	var magenta:FlxSprite;
@@ -90,12 +82,12 @@ class MainMenuState extends MusicBeatState {
 
 		bigIcons = new FlxSprite();
 		bigIcons.frames = Paths.getSparrowAtlas('mainmenu/menu_big_icons');
-		for (i in 0...optionShit.length)
-			bigIcons.animation.addByPrefix(optionShit[i], optionShit[i], 24);
+		for (i in 0...menuOptions.length)
+			bigIcons.animation.addByPrefix(menuOptions[i].toLowerCase(), menuOptions[i].toLowerCase(), 24);
 		bigIcons.scrollFactor.set();
 		bigIcons.antialiasing = true;
 		bigIcons.updateHitbox();
-		bigIcons.animation.play(optionShit[0]);
+		bigIcons.animation.play(menuOptions[0]);
 		bigIcons.screenCenter(X);
 		add(bigIcons);
 
@@ -117,8 +109,8 @@ class MainMenuState extends MusicBeatState {
 
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
-		for (i in 0...optionShit.length) {
-			var currentOptionShit = optionShit[i];
+		for (i in 0...menuOptions.length) {
+			var currentOptionShit = menuOptions[i].toLowerCase();
 			var menuItem:FlxSprite = new FlxSprite(-160, (i * 140));
 			menuItem.frames = Paths.getSparrowAtlas('mainmenu/main_menu_icons');
 			menuItem.animation.addByPrefix('idle', '$currentOptionShit basic', 24);
@@ -182,7 +174,7 @@ class MainMenuState extends MusicBeatState {
 						FlxTween.tween(item, {alpha: 0}, 1.3, {ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> item.destroy()});
 					else {
 						FlxFlicker.flicker(item, 1, .06, false, false, (flicker:FlxFlicker) -> {
-							switch (optionShit[curSelected]) {
+							switch (menuOptions[curSelected].toLowerCase()) {
 								case 'story_mode': MusicBeatState.switchState(new StoryMenuState());
 								case 'freeplay': MusicBeatState.switchState(new FreeplayState());
 								#if MODS_ALLOWED case 'mods': MusicBeatState.switchState(new ModsMenuState()); #end
@@ -225,7 +217,7 @@ class MainMenuState extends MusicBeatState {
 			}
 		}
 
-		bigIcons.animation.play(optionShit[curSelected]);
+		bigIcons.animation.play(menuOptions[curSelected].toLowerCase());
 		curOptText.text = menuOptions[curSelected];
 		curOptDesc.text = menuDescription[curSelected];
 	}
