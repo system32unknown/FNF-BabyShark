@@ -10,6 +10,7 @@ import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import objects.AttachedSprite;
+import utils.FlxInterpolateColor;
 
 class CreditsEditor extends MusicBeatState {
 	var curSelected:Int = -1;
@@ -25,9 +26,8 @@ class CreditsEditor extends MusicBeatState {
 
 	var bg:FlxSprite;
 	var descText:FlxText;
-	var intendedColor:Int;
-	var colorTween:FlxTween;
 	var descBox:AttachedSprite;
+	var interpColor:FlxInterpolateColor;
 	var UI_box:FlxUITabMenu;
 
 	final offsetThing:Float = -75;
@@ -103,9 +103,6 @@ class CreditsEditor extends MusicBeatState {
 		descText.camera = camUI;
 
 		updateCreditObjects();
-
-		bg.color = getCurrentBGColor();
-		intendedColor = bg.color;
 		changeSelection();
 
 		super.create();
@@ -384,6 +381,7 @@ class CreditsEditor extends MusicBeatState {
 
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
+	var newColor:Int = 0;
 	override function update(elapsed:Float) {
 		if (FlxG.sound.music.volume < .7)
 			FlxG.sound.music.volume += .5 * elapsed;
@@ -421,6 +419,9 @@ class CreditsEditor extends MusicBeatState {
 				}
 			}
 
+			interpColor.fpsLerpTo(newColor, .0625);
+			bg.color = interpColor.color;
+
 			if(FlxG.keys.justPressed.ENTER) {
 				setItemData();
 				updateCreditObjects();
@@ -435,7 +436,6 @@ class CreditsEditor extends MusicBeatState {
 			if(FlxG.keys.justPressed.TWO) addCredit();
 
 			if (FlxG.keys.justPressed.BACKSPACE || FlxG.keys.justPressed.ESCAPE) {
-				if(colorTween != null) colorTween.cancel();
 				FlxG.mouse.visible = false;
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				MusicBeatState.switchState(new MasterEditorMenu());
@@ -470,15 +470,8 @@ class CreditsEditor extends MusicBeatState {
 		if(unselectableCheck(curSelected)) curSelIsTitle = true;
 		else curSelIsTitle = false;
 
-		var newColor:Int;
 		if(unselectableCheck(curSelected)) newColor = Std.parseInt('0xFFe1e1e1');
 		else newColor = getCurrentBGColor();
-
-		if(newColor != intendedColor) {
-			if(colorTween != null) colorTween.cancel();
-			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {onComplete: (twn:FlxTween) -> colorTween = null});
-		}
 
 		var bullShit:Int = 0;
 		for (item in grpOptions.members) {

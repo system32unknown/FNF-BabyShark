@@ -549,7 +549,7 @@ class ModsMenuState extends MusicBeatState {
 			colorTween.cancel();
 			colorTween.destroy();
 		}
-		colorTween = FlxTween.color(bg, 1, bg.color, curMod.bgColor, {onComplete: function(twn:FlxTween) colorTween = null});
+		colorTween = FlxTween.color(bg, 1, bg.color, curMod.bgColor, {onComplete: (twn:FlxTween) -> colorTween = null});
 
 		if(Math.abs(centerMod - curSelectedMod) > 2) {
 			if(centerMod < curSelectedMod)

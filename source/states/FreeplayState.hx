@@ -28,7 +28,7 @@ class FreeplayState extends MusicBeatState {
 
 	var grpSongs:FlxTypedGroup<Alphabet>;
 	var iconArray:Array<HealthIcon> = [];
-	public var interpColor:FlxInterpolateColor;
+	var interpColor:FlxInterpolateColor;
 
 	var bg:FlxSprite;
 

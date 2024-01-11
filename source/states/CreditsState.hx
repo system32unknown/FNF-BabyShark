@@ -1,6 +1,7 @@
 package states;
 
 import objects.AttachedSprite;
+import utils.FlxInterpolateColor;
 
 class CreditsState extends MusicBeatState {
 	// Title, Variable, Description, Color
@@ -87,8 +88,7 @@ class CreditsState extends MusicBeatState {
 	var bg:FlxSprite;
 	var descText:FlxText;
 	var descBox:AttachedSprite;
-	var intendedColor:Int;
-	var colorTween:FlxTween;
+	var interpColor:FlxInterpolateColor;
 
 	var offsetThing:Float = -75;
 
@@ -149,8 +149,7 @@ class CreditsState extends MusicBeatState {
 		descBox.sprTracker = descText;
 		add(descText);
 
-		bg.color = CoolUtil.colorFromString(sections[curSelected][4]);
-		intendedColor = bg.color;
+		interpColor = new FlxInterpolateColor(bg.color);
 		changeSelection();
 		super.create();
 	}
@@ -186,9 +185,10 @@ class CreditsState extends MusicBeatState {
 				}
 			}
 
-			if(controls.ACCEPT && sections[curSelected][1] != null) {
-				if(colorTween != null) colorTween.cancel();
+			interpColor.fpsLerpTo(CoolUtil.colorFromString(sections[curSelected][4]), .0625);
+			bg.color = interpColor.color;
 
+			if(controls.ACCEPT && sections[curSelected][1] != null) {
 				CreditSectionState.curCSection = sections[curSelected][1];
 				CreditSectionState.cSectionisMod = #if MODS_ALLOWED modSectionsBound > 0 && curSelected >= modSectionsBound #else false #end;
 
@@ -198,7 +198,6 @@ class CreditsState extends MusicBeatState {
 			}
 
 			if (controls.BACK) {
-				if(colorTween != null) colorTween.cancel();
 				FlxG.sound.play(Paths.sound('cancelMenu'), .7);
 				MusicBeatState.switchState(new MainMenuState());
 				quitting = true;
@@ -214,13 +213,6 @@ class CreditsState extends MusicBeatState {
 		do {
 			curSelected = FlxMath.wrap(curSelected + change, 0, sections.length - 1);
 		} while(unselectableCheck(curSelected));
-
-		var newColor:Int = CoolUtil.colorFromString(sections[curSelected][4]);
-		if(newColor != intendedColor) {
-			if (colorTween != null) colorTween.cancel();
-			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {onComplete: (twn:FlxTween) -> colorTween = null});
-		}
 
 		var bullShit:Int = 0;
 		for (item in grpOptions.members) {
@@ -277,8 +269,7 @@ class CreditSectionState extends MusicBeatState {
 
 	var bg:FlxSprite;
 	var descText:FlxText;
-	var intendedColor:Int;
-	var colorTween:FlxTween;
+	var interpColor:FlxInterpolateColor;
 	var descBox:AttachedSprite;
 
 	final offsetThing:Float = -75;
@@ -343,8 +334,7 @@ class CreditSectionState extends MusicBeatState {
 		descBox.sprTracker = descText;
 		add(descText);
 
-		bg.color = CoolUtil.colorFromString(creditsStuff[curSelected][4]);
-		intendedColor = bg.color;
+		interpColor = new FlxInterpolateColor(bg.color);
 		changeSelection();
 		super.create();
 	}
@@ -381,11 +371,13 @@ class CreditSectionState extends MusicBeatState {
 				}
 			}
 
+			interpColor.fpsLerpTo(CoolUtil.colorFromString(creditsStuff[curSelected][4]), .0625);
+			bg.color = interpColor.color;
+
 			if(controls.ACCEPT && (creditsStuff[curSelected][3] == null || creditsStuff[curSelected][3].length > 4))
 				CoolUtil.browserLoad(creditsStuff[curSelected][3]);
 
 			if(controls.BACK) {
-				if(colorTween != null) colorTween.cancel();
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				
 				var state:CreditsState = new CreditsState();
@@ -419,13 +411,6 @@ class CreditSectionState extends MusicBeatState {
 		do {
 			curSelected = FlxMath.wrap(curSelected + change, 0, creditsStuff.length - 1);
 		} while(unselectableCheck(curSelected));
-
-		var newColor:Int = CoolUtil.colorFromString(creditsStuff[curSelected][4]);
-		if(newColor != intendedColor) {
-			if(colorTween != null) colorTween.cancel();
-			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {onComplete: (twn:FlxTween) -> colorTween = null});
-		}
 
 		var bullShit:Int = 0;
 
