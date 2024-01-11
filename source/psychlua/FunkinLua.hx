@@ -238,9 +238,7 @@ class FunkinLua {
 		});
 
 		set("getPref", ClientPrefs.getPref);
-		set("setPref", function(pref:String, ?value:Dynamic = null) {
-			ClientPrefs.prefs.set(pref, value);
-		});
+		set("setPref", ClientPrefs.prefs.set);
 
 		//shitass stuff for epic coders like me B)  *image of obama giving himself a medal*
 		set("getObjectOrder", function(obj:String) {
