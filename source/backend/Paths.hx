@@ -307,6 +307,19 @@ class Paths {
 		#end
 	}
 
+	inline static public function getAsepriteAtlas(key:String, ?library:String = null):FlxAtlasFrames {
+		var imageLoaded:FlxGraphic = image(key, library);
+		#if MODS_ALLOWED
+		var jsonExists:Bool = false;
+		var json:String = modsImagesJson(key);
+		if(FileSystem.exists(json)) jsonExists = true;
+
+		return FlxAtlasFrames.fromTexturePackerJson(imageLoaded, (jsonExists ? File.getContent(json) : getPath('images/$key.json', library)));
+		#else
+		return FlxAtlasFrames.fromTexturePackerJson(imageLoaded, getPath('images/$key.json', library));
+		#end
+	}
+
 	inline static public function formatToSongPath(path:String) {
 		var invalidChars = ~/[~&\\;:<>#]+/g;
 		var hideChars = ~/[.,'"%?!]+/g;
@@ -455,6 +468,9 @@ class Paths {
 
 	inline static public function modsTxt(key:String)
 		return modFolders('images/$key.txt');
+
+	inline static public function modsImagesJson(key:String)
+		return modFolders('images/$key.json');
 
 	static public function modFolders(key:String) {
 		if(Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0) {
