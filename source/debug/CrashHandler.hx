@@ -22,7 +22,7 @@ class CrashHandler {
 		else message = try Std.string(e.error) catch(_:haxe.Exception) "Unknown";
 
 		var dateNow:String = Date.now().toString().replace(" ", "_").replace(":", "'");
-		final path = './crash/PsychEngine_$dateNow.txt';
+		final path = './crash/AlterEngine_$dateNow.txt';
 
 		var errMsg:String = "";
 		for (stackItem in haxe.CallStack.exceptionStack(true)) {
