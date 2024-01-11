@@ -1855,7 +1855,7 @@ class ChartingState extends MusicBeatState {
 
 		bpmTxt.text =
 		'$currentSongName [${Difficulty.getString()}]'+
-		'\n${flixel.util.FlxStringUtil.formatTime(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))} / ${flixel.util.FlxStringUtil.formatTime(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))}' +
+		'\n${CoolUtil.formatTime(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))} / ${CoolUtil.formatTime(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))}' +
 		'\n\nMeasure: $curSec' +
 		'\nBeat: ${Std.string(curDecBeat).substring(0, 4)}' +
 		'\nStep: $curStep' +

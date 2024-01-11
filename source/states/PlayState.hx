@@ -1530,8 +1530,8 @@ class PlayState extends MusicBeatState {
 			if (timeType == 'Time Elapsed' || timeType == 'Time Position' || timeType == 'Name Elapsed' || timeType == 'Name Time Position') songCalc = curTime;
 
 			var secondsTotal:Int = Math.floor(Math.max(0, (songCalc / playbackRate) / 1000));
-			var formattedsec:String = flixel.util.FlxStringUtil.formatTime(secondsTotal);
-			var timePos:String = '$formattedsec / ' + flixel.util.FlxStringUtil.formatTime(Math.floor((songLength / playbackRate) / 1000));
+			var formattedsec:String = CoolUtil.formatTime(secondsTotal);
+			var timePos:String = '$formattedsec / ' + CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000));
 			if (timeType != 'Song Name')
 				switch (timeType) {
 					case 'Time Left' | 'Time Elapsed': timeTxt.text = formattedsec;

@@ -110,9 +110,9 @@ class CoolUtil {
 	}
 
 	public static function formatTime(time:Float):String {
-		var secs:String = '' + Math.floor(time / 1000) % 60;
-		var mins:String = '' + Math.floor(time / 1000 / 60) % 60;
-		var hour:String = '' + Math.floor((time / 1000 / 3600)) % 24;
+		var secs:String = '' + Math.floor(time) % 60;
+		var mins:String = '' + Math.floor(time / 60) % 60;
+		var hour:String = '' + Math.floor(time / 3600) % 24;
 
 		if (secs.length < 2) secs = '0$secs';
 
