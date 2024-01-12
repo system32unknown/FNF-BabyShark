@@ -42,7 +42,6 @@ class Logs {
 	}
 
 	public static function prepareColoredTrace(text:Array<LogText>, level:Level = INFO) {
-		var time = Date.now();
 		var superCoolText = [
 			logText('['),
 			switch(level) {
@@ -53,8 +52,7 @@ class Logs {
 				default: logText('INFORMATION', CYAN);
 			}, logText('] ')
 		];
-		for(k => e in superCoolText)
-			text.insert(k, e);
+		for(k => e in superCoolText) text.insert(k, e);
 		return text;
 	}
 

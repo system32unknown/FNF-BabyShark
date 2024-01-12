@@ -87,7 +87,7 @@ class MainMenuState extends MusicBeatState {
 		bigIcons.scrollFactor.set();
 		bigIcons.antialiasing = true;
 		bigIcons.updateHitbox();
-		bigIcons.animation.play(menuOptions[0]);
+		bigIcons.animation.play(menuOptions[0].toLowerCase());
 		bigIcons.screenCenter(X);
 		add(bigIcons);
 

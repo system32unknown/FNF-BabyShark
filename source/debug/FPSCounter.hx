@@ -29,14 +29,12 @@ class FPSCounter extends openfl.text.TextField {
 	}
 
 	var deltaTimeout:Float = .0;
-    var memType:String = "";
+    public var memType:String = "";
 	override function __enterFrame(dt:Float):Void {
 		if (deltaTimeout > 1000) {
 			deltaTimeout = .0;
 			return;
 		}
-        memType = ClientPrefs.getPref('showMEM');
-		visible = ClientPrefs.getPref('showFPS');
 
 		fpsManager.update();
 		if (memory > mempeak) mempeak = memory;

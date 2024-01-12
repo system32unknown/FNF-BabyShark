@@ -13,7 +13,7 @@ class ClientPrefs {
 		'opponentStrums' => true,
 		'FPSStats' => true,
 		'showFPS' => true,
-		'showMEM' => "MEM",
+		'memType' => "MEM/PEAK",
 		'flashing' => true,
 		'Antialiasing' => true,
 		'splashOpacity' => .6,
@@ -90,7 +90,8 @@ class ClientPrefs {
 				Paths.streamMusic = bool;
 				isStreMInited = true;
 			}
-		}
+		}, 'showFPS' => (bool:Bool) -> if(Main.fpsVar != null) Main.fpsVar.visible = bool,
+		'memType' => (type:String) -> if(Main.fpsVar != null) Main.fpsVar.memType = type
 	];
 
 	// Flixel data to load, i.e 'mute' or 'volume'
@@ -368,7 +369,7 @@ class ClientPrefs {
 				if (loadFunctions.exists(setting)) loadFunctions.get(setting)(value); // Call the load function
 			}
 		}
-		
+
 		for (setting => name in flixelData) {
 			var value:Dynamic = Reflect.field(save, setting);
 			if (value != null) {
@@ -384,8 +385,7 @@ class ClientPrefs {
 				if (data != null) {
 					var loadTo:Dynamic = Reflect.field(map[0], map[1]);
 					for (name => value in data) {
-						if (loadTo.exists(name))
-							loadTo.set(name, value);
+						if (loadTo.exists(name)) loadTo.set(name, value);
 					}
 					if (loadFunctions.exists(savedAs)) loadFunctions.get(savedAs)(loadTo); // Call the load function
 				}

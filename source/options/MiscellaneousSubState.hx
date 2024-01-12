@@ -5,8 +5,13 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		title = 'Miscellaneous';
 		rpcTitle = 'Miscellaneous Menu'; //for Discord Rich Presence
 
-		addOption(new Option('FPS Counter', 'If unchecked, hides FPS Counter.', 'showFPS', 'bool'));
-		addOption(new Option('Memory Counter', '', 'showMEM', 'string', ['MEM', 'MEM/PEAK', 'NONE']));
+		var opt:Option = new Option('FPS Counter', 'If unchecked, hides FPS Counter.', 'showFPS', 'bool');
+		addOption(opt);
+		opt.onChange = onChangeFPSCounter;
+		var opt:Option = new Option('Memory Counter', '', 'memType', 'string', ['MEM', 'MEM/PEAK', 'NONE']);
+		addOption(opt);
+		opt.onChange = onChangeFPSCounter;
+		
 		addOption(new Option('Rainbow FPS', '', 'RainbowFps', 'bool'));
 		addOption(new Option('More Stats FPS', '', 'FPSStats', 'bool'));
 		addOption(new Option('Alternate Discord Large Image', '', 'AltDiscordImg', 'bool'));
@@ -17,5 +22,12 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		addOption(option);
 
 		super();
+	}
+
+	function onChangeFPSCounter() {
+		if(Main.fpsVar != null) {
+			Main.fpsVar.visible = ClientPrefs.getPref('showFPS');
+			Main.fpsVar.memType = ClientPrefs.getPref('memType');
+		}
 	}
 }
