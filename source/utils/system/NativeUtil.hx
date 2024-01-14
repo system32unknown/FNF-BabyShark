@@ -12,7 +12,6 @@ class NativeUtil {
 		#if windows
 		PlatformUtil.allocConsole();
 		PlatformUtil.clearScreen();
-		PlatformUtil.closeConsole(true);
 		#end
 	}
 

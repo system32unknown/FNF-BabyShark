@@ -95,11 +95,7 @@ class Paths {
 				decacheGraphic(key);
 		}
 
-		#if cpp
-		utils.system.MemoryUtil.clearMajor();
-		#else
-		openfl.system.System.gc();
-		#end
+		#if cpp utils.system.MemoryUtil.clearMajor #else openfl.system.System.gc #end();
 	}
 
 	// define the locally tracked assets
@@ -434,7 +430,7 @@ class Paths {
 			if (sound != null) return sound;
 		#if (!MODS_ALLOWED) } #end
 
-		Logs.trace('returnSound returning null: $path' #if MODS_ALLOWED + ' | $modKey' #end, WARNING);
+		FlxG.log.warn('Could not find sound with key: "$key"' + (library == null ? "" : 'in library: "$library"'));
 		return null;
 	}
 

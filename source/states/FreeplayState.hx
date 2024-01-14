@@ -244,6 +244,7 @@ class FreeplayState extends MusicBeatState {
 			openSubState(new substates.GameplayChangersSubstate());
 		} else if(FlxG.keys.justPressed.SPACE) {
 			if(instPlaying != curSelected) {
+				var playrateback:Float = ClientPrefs.getGameplaySetting('songspeed');
 				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
@@ -261,8 +262,9 @@ class FreeplayState extends MusicBeatState {
 					else vocals = new FlxSound();
 					FlxG.sound.list.add(vocals);
 	
-					FlxG.sound.music.loadEmbedded(Paths.inst(PlayState.SONG.song, true), false);
-					FlxG.sound.music.onComplete = function() {
+					FlxG.sound.music.loadEmbedded(Paths.inst(PlayState.SONG.song, true));
+					FlxG.sound.music.pitch = playrateback;
+					FlxG.sound.music.onComplete = () -> {
 						if (vocals == null) {
 							FlxG.sound.music.onComplete = null;
 							return;
@@ -276,6 +278,7 @@ class FreeplayState extends MusicBeatState {
 					}
 					#end
 					vocals.looped = !(FlxG.sound.music.looped = true);
+					vocals.pitch = playrateback;
 					vocals.volume = FlxG.sound.music.volume = .7;
 					vocals.persist = true;
 					vocals.autoDestroy = false;
@@ -303,6 +306,7 @@ class FreeplayState extends MusicBeatState {
 
 				LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new states.editors.ChartingState() : new PlayState());
 				FlxG.sound.music.volume = 0;
+				FlxG.sound.music.pitch = 1;
 				destroyFreeplayVocals();
 				#if MODS_ALLOWED DiscordClient.loadModRPC(); #end
 			} else {
@@ -327,6 +331,7 @@ class FreeplayState extends MusicBeatState {
 
 	public static function destroyFreeplayVocals() {
 		if(vocals != null) {
+			vocals.pitch = 1;
 			vocals.stop();
 			vocals.destroy();
 		}

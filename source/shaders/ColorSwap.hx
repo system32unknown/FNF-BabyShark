@@ -150,21 +150,6 @@ class ColorSwapShader extends flixel.system.FlxAssets.FlxShader {
 				}
 			}
 			gl_FragColor = color;
-
-			/* 
-			if (color.a > 0.5)
-				gl_FragColor = color;
-			else
-			{
-				float a = flixel_texture2D(bitmap, vec2(openfl_TextureCoordv + offset, openfl_TextureCoordv.y)).a +
-						  flixel_texture2D(bitmap, vec2(openfl_TextureCoordv, openfl_TextureCoordv.y - offset)).a +
-						  flixel_texture2D(bitmap, vec2(openfl_TextureCoordv - offset, openfl_TextureCoordv.y)).a +
-						  flixel_texture2D(bitmap, vec2(openfl_TextureCoordv, openfl_TextureCoordv.y + offset)).a;
-				if (color.a < 1.0 && a > 0.0)
-					gl_FragColor = vec4(0.0, 0.0, 0.0, 0.8);
-				else
-					gl_FragColor = color;
-			} */
 		}')
 	@:glVertexSource('
 		attribute float openfl_Alpha;
@@ -207,8 +192,5 @@ class ColorSwapShader extends flixel.system.FlxAssets.FlxShader {
 			}
 		}')
 
-	public function new()
-	{
-		super();
-	}
+	public function new() {super();}
 }

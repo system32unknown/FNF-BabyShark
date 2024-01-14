@@ -167,37 +167,35 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	public function getBeatsOnSection():Float
 		return inline Conductor.getSectionBeats(PlayState.SONG, curSection);
 
-	static var nextState:FlxState;
-	public static function switchState(nextState:FlxState, reset:Bool = false) {
-		reset = reset ? reset : inState(Type.getClass(nextState));
+	public static function switchState(nextState:FlxState = null) {
+		if(nextState == null) nextState = FlxG.state;
+		if(nextState == FlxG.state) {
+			resetState();
+			return;
+		}
 
-		MusicBeatState.nextState = nextState;
-		if (FlxTransitionableState.skipNextTransIn) return reset ? postResetState() : postSwitchState();
-
-		// Custom made Trans in
-		var state:MusicBeatState = getState();
-		CustomFadeTransition.finishCallback = reset ? postResetState : postSwitchState;
-		state.openSubState(new CustomFadeTransition(.6, false));
-	}
-
-	static function postResetState() {
-		nextState = Type.createInstance(Type.getClass(FlxG.state), []);
-		postSwitchState();
-	}
-
-	static function postSwitchState() {
+		if(FlxTransitionableState.skipNextTransIn) FlxG.switchState(nextState);
+		else startTransition(nextState);
 		FlxTransitionableState.skipNextTransIn = false;
-		CustomFadeTransition.finishCallback = null;
-
-		FlxG.state.switchTo(nextState);
-		@:privateAccess FlxG.game._nextState = nextState;
-		nextState = null;
 	}
 
-	public static function resetState() MusicBeatState.switchState(null, true);
+	public static function resetState() {
+		if(FlxTransitionableState.skipNextTransIn) FlxG.resetState();
+		else startTransition();
+		FlxTransitionableState.skipNextTransIn = false;
+	}
+
+	// Custom made Trans in
+	public static function startTransition(nextState:FlxState = null) {
+		if(nextState == null) nextState = FlxG.state;
+
+		FlxG.state.openSubState(new CustomFadeTransition(0.6, false));
+		if(nextState == FlxG.state)
+			CustomFadeTransition.finishCallback = () -> FlxG.resetState();
+		else CustomFadeTransition.finishCallback = () -> FlxG.switchState(nextState);
+	}
+
 	public static function getState(?state:FlxState):MusicBeatState return cast(state != null ? state : FlxG.state);
-	public static function isState(state1:FlxState, state2:Class<FlxState>):Bool return Std.isOfType(state1, state2);
-	public static function inState(state:Class<FlxState>):Bool return inline isState(FlxG.state, state);
 	public static function previousStateIs(state:Class<FlxState>):Bool return previousStateClass == state;
 	
 	public function stepHit():Void {

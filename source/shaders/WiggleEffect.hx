@@ -55,7 +55,6 @@ class WiggleEffect {
 class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 	@:glFragmentSource('
 		#pragma header
-		//uniform float tx, ty; // x,y waves phase
 		uniform float uTime;
 		
 		const int EFFECT_TYPE_DREAMY = 0;
