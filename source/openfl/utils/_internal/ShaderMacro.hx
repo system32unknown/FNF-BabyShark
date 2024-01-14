@@ -13,9 +13,7 @@ using StringTools;
 @SuppressWarnings("checkstyle:FieldDocComment")
 class ShaderMacro
 {
-	#if 0
-	static var __suppressWarning:Array<Class<Dynamic>> = [Expr];
-	#end
+	#if 0 static var __suppressWarning:Array<Class<Dynamic>> = [Expr]; #end
 
 	public static function build():Array<Field>
 	{

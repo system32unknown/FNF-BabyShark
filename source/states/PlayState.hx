@@ -1553,7 +1553,7 @@ class PlayState extends MusicBeatState {
 		FlxG.watch.addQuick("stepShit", curStep);
 		#end
 
-		if (!ClientPrefs.getPref('noReset') && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong)
+		if (!ClientPrefs.getPref('noReset') && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong && !practiceMode)
 			health = 0;
 		doDeathCheck();
 
@@ -2112,7 +2112,7 @@ class PlayState extends MusicBeatState {
 		tempText += 'Score:$songScore ';
 		tempText += (cpuControlled ? '' : '$scoreSeparator ${ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks'}:$songMisses ');
 		tempText += switch(ClientPrefs.getPref('ScoreType')) {
-			case 'Alter': '$scoreSeparator Acc:$accuracy -' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
+			case 'Alter': '$scoreSeparator Acc:$accuracy% -' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
 			case 'Kade' | _: tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 		}
 		return tempText;
@@ -2470,6 +2470,7 @@ class PlayState extends MusicBeatState {
 
 		note.hitByOpponent = true;
 
+		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
 		if(leType == 'Hey!' && dad.animOffsets.exists('hey')) {
 			dad.playAnim('hey', true);
 			dad.specialAnim = true;
@@ -2480,15 +2481,13 @@ class PlayState extends MusicBeatState {
 				altAnim = '-alt';
 
 			var char:Character = note.gfNote ? gf : dad;
-			var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData] + altAnim;
 			if(char != null) {
-				char.playAnim(animToPlay, true);
+				char.playAnim(animToPlay + altAnim, true);
 				char.holdTimer = 0;
 			}
 		}
 
 		strumPlayAnim(true, leData % EK.keys(mania), Conductor.stepCrochet * 1.25 / 1000);
-		var animToPlay:String = 'sing' + Note.keysShit.get(mania).get('anims')[leData];
 		if (ClientPrefs.getPref('camMovement') && !bfturn) moveCamOnNote(animToPlay);
 
 		var result:Dynamic = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
@@ -2933,7 +2932,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {
-		var grp = isDad ? opponentStrums : playerStrums;
+		final grp = isDad ? opponentStrums : playerStrums;
 		var spr:StrumNote = grp.members[id];
 
 		if(spr != null) {

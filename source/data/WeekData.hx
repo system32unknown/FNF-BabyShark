@@ -76,8 +76,7 @@ class WeekData {
 		#if MODS_ALLOWED
 		var directories:Array<String> = [Paths.mods(), Paths.getPreloadPath()];
 		var originalLength:Int = directories.length;
-		for (mod in Mods.parseList().enabled)
-			directories.push(Paths.mods('$mod/'));
+		for (mod in Mods.parseList().enabled) directories.push(Paths.mods('$mod/'));
 		#else
 		var directories:Array<String> = [Paths.getPreloadPath()];
 		var originalLength:Int = directories.length;
@@ -135,9 +134,7 @@ class WeekData {
 			if(week != null) {
 				var weekFile:WeekData = new WeekData(week, weekToCheck);
 				if (i >= originalLength) {
-					#if MODS_ALLOWED
-					weekFile.folder = directory.substring(Paths.mods().length, directory.length - 1);
-					#end
+					#if MODS_ALLOWED weekFile.folder = directory.substring(Paths.mods().length, directory.length - 1); #end
 				}
 				if ((PlayState.isStoryMode && !weekFile.hideStoryMode) || (!PlayState.isStoryMode && !weekFile.hideFreeplay)) {
 					weeksLoaded.set(weekToCheck, weekFile);

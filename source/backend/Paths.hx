@@ -339,7 +339,7 @@ class Paths {
 
 	public static var hardwareCache:Bool = false;
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
-	public static function returnGraphic(key:String, ?library:String, ?posInfos:haxe.PosInfos):FlxGraphic {
+	public static function returnGraphic(key:String, ?library:String):FlxGraphic {
 		var modExists:Bool = false, graph:FlxGraphic = null;
 
 		#if MODS_ALLOWED
@@ -369,7 +369,7 @@ class Paths {
 			if (graph != null) return graph;
 		}
 
-		Logs.trace('Image with key "$key" could not be found' + (library == null ? '' : ' in the library "$library"') + '! ' + '(${posInfos.fileName}, ${posInfos.lineNumber})', WARNING);
+		FlxG.log.warn('Could not find image with key: "$key"' + (library == null ? "" : 'in library: "$library"'));
 		return null;
 	}
 

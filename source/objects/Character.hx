@@ -86,9 +86,8 @@ class Character extends FlxSprite {
 					alpha = 0.6;
 				}
 		
-				var rawJson = #if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end;
 				try {
-					var json:CharacterFile = cast Json.parse(rawJson);
+					var json:CharacterFile = cast Json.parse(#if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end);
 					for (anim in json.animations)
 						anim.indices = parseIndices(anim.indices);
 					loadCharacterFile(json);

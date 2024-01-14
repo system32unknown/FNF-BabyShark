@@ -60,8 +60,7 @@ class PhillyTrain extends BGSprite
 	
 	public function start():Void {
 		moving = true;
-		if (!sound.playing)
-			sound.play(true);
+		if (!sound.playing) sound.play(true);
 	}
 
 	public function restart():Void

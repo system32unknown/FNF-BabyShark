@@ -67,8 +67,7 @@ class ExtraFunctions {
 		funk.set("getDataFromSave", function(name:String, field:String, ?defaultValue:Dynamic = null) {
 			if(PlayState.instance.modchartSaves.exists(name)) {
 				var saveData = PlayState.instance.modchartSaves.get(name).data;
-				if(Reflect.hasField(saveData, field))
-					return Reflect.field(saveData, field);
+				if(Reflect.hasField(saveData, field)) return Reflect.field(saveData, field);
 				else return defaultValue;
 			}
 			FunkinLua.luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
@@ -201,15 +200,19 @@ class ExtraFunctions {
 		funk.set("getRandomInt", function(min:Int, max:Int = FlxMath.MAX_VALUE_INT, exclude:String = '') {
 			var excludeArray:Array<String> = exclude.split(',');
 			var toExclude:Array<Int> = [];
-			for (i in 0...excludeArray.length)
+			for (i in 0...excludeArray.length) {
+				if (exclude == '') break;
 				toExclude.push(Std.parseInt(excludeArray[i].trim()));
+			}
 			return FlxG.random.int(min, max, toExclude);
 		});
 		funk.set("getRandomFloat", function(min:Float, max:Float = 1, exclude:String = '') {
 			var excludeArray:Array<String> = exclude.split(',');
 			var toExclude:Array<Float> = [];
-			for (i in 0...excludeArray.length)
+			for (i in 0...excludeArray.length) {
+				if (exclude == '') break;
 				toExclude.push(Std.parseFloat(excludeArray[i].trim()));
+			}
 			return FlxG.random.float(min, max, toExclude);
 		});
 		funk.set("getRandomBool", FlxG.random.bool);

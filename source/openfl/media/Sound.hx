@@ -243,30 +243,30 @@ class Sound extends EventDispatcher
 	public var url(default, null):String;
 
 	#if lime
-	@:noCompletion private var __buffer:AudioBuffer;
+	@:noCompletion var __buffer:AudioBuffer;
 	#end
 
 	#if (js && html5)
 	public var sampleRate(get, never):Int;
 
-	private var __audioContext:WebAudioContext = null;
-	private var __processor:js.html.audio.ScriptProcessorNode;
-	private var __sampleData:SampleDataEvent;
-	private var __firstRun:Bool = true;
+	var __audioContext:WebAudioContext = null;
+	var __processor:js.html.audio.ScriptProcessorNode;
+	var __sampleData:SampleDataEvent;
+	var __firstRun:Bool = true;
 	#end
 
 	#if lime_openal
 	public var sampleRate(get, never):Int;
 
-	private var __ALAudioContext:OpenALAudioContext = null;
-	private var __sampleData:SampleDataEvent;
-	private var __source:ALSource;
-	private var __outputBuffer:ByteArray;
-	private var __bufferView:ArrayBufferView;
-	private var __buffers:Array<ALBuffer>;
-	private var __numberOFBuffers:Int = 3;
-	private var __listenerRemoved:Bool = false;
-	private var __emptyBuffers:Array<ALBuffer>;
+	var __ALAudioContext:OpenALAudioContext = null;
+	var __sampleData:SampleDataEvent;
+	var __source:ALSource;
+	var __outputBuffer:ByteArray;
+	var __bufferView:ArrayBufferView;
+	var __buffers:Array<ALBuffer>;
+	var __numberOFBuffers:Int = 3;
+	var __listenerRemoved:Bool = false;
+	var __emptyBuffers:Array<ALBuffer>;
 	#end
 
 	#if openfljs
@@ -315,23 +315,17 @@ class Sound extends EventDispatcher
 			load(stream, context);
 		}
 		#if (js && html5)
-		if (stream == null && AudioManager.context != null)
-		{
-			switch (AudioManager.context.type)
-			{
-				case WEB:
-					__audioContext = AudioManager.context.web;
+		if (stream == null && AudioManager.context != null) {
+			switch (AudioManager.context.type) {
+				case WEB: __audioContext = AudioManager.context.web;
 				default:
 			}
 		}
 		#end
 		#if lime_openal
-		if (stream == null && AudioManager.context != null)
-		{
-			switch (AudioManager.context.type)
-			{
-				case OPENAL:
-					__ALAudioContext = AudioManager.context.openal;
+		if (stream == null && AudioManager.context != null) {
+			switch (AudioManager.context.type) {
+				case OPENAL: __ALAudioContext = AudioManager.context.openal;
 				default:
 			}
 		}
@@ -410,13 +404,8 @@ class Sound extends EventDispatcher
 		@param	path	A local file path containing a sound
 		@returns	A new Sound if successful, or `null` if unsuccessful
 	**/
-	public static function fromFile(path:String):Sound
-	{
-		#if lime
-		return fromAudioBuffer(AudioBuffer.fromFile(path));
-		#else
-		return null;
-		#end
+	public static function fromFile(path:String):Sound {
+		return #if lime fromAudioBuffer(AudioBuffer.fromFile(path)) #else null #end;
 	}
 
 	/**
@@ -501,21 +490,12 @@ class Sound extends EventDispatcher
 		var defaultLibrary = lime.utils.Assets.getLibrary("default"); // TODO: Improve this
 
 		if (defaultLibrary != null && defaultLibrary.cachedAudioBuffers.exists(url))
-		{
 			AudioBuffer_onURLLoad(defaultLibrary.cachedAudioBuffers.get(url));
-		}
-		else
-		{
-			AudioBuffer.loadFromFile(url).onComplete(AudioBuffer_onURLLoad).onError(function(_)
-			{
-				AudioBuffer_onURLLoad(null);
-			});
+		else {
+			AudioBuffer.loadFromFile(url).onComplete(AudioBuffer_onURLLoad).onError((_) -> AudioBuffer_onURLLoad(null));
 		}
 		#else
-		AudioBuffer.loadFromFile(url).onComplete(AudioBuffer_onURLLoad).onError(function(_)
-		{
-			AudioBuffer_onURLLoad(null);
-		});
+		AudioBuffer.loadFromFile(url).onComplete(AudioBuffer_onURLLoad).onError((_) -> AudioBuffer_onURLLoad(null));
 		#end
 		#end
 	}
@@ -548,13 +528,8 @@ class Sound extends EventDispatcher
 		__buffer = AudioBuffer.fromBytes(bytes);
 
 		if (__buffer == null)
-		{
 			dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-		}
-		else
-		{
-			dispatchEvent(new Event(Event.COMPLETE));
-		}
+		else dispatchEvent(new Event(Event.COMPLETE));
 		#else
 		dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 		#end
@@ -573,10 +548,7 @@ class Sound extends EventDispatcher
 	public static function loadFromFile(path:String):Future<Sound>
 	{
 		#if lime
-		return AudioBuffer.loadFromFile(path).then(function(audioBuffer)
-		{
-			return Future.withValue(fromAudioBuffer(audioBuffer));
-		});
+		return AudioBuffer.loadFromFile(path).then((audioBuffer) -> return Future.withValue(fromAudioBuffer(audioBuffer)));
 		#else
 		return cast Future.withError("Cannot load audio file");
 		#end
@@ -596,10 +568,7 @@ class Sound extends EventDispatcher
 	public static function loadFromFiles(paths:Array<String>):Future<Sound>
 	{
 		#if lime
-		return AudioBuffer.loadFromFiles(paths).then(function(audioBuffer)
-		{
-			return Future.withValue(fromAudioBuffer(audioBuffer));
-		});
+		return AudioBuffer.loadFromFiles(paths).then((audioBuffer) -> return Future.withValue(fromAudioBuffer(audioBuffer)));
 		#else
 		return cast Future.withError("Cannot load audio files");
 		#end
@@ -685,13 +654,8 @@ class Sound extends EventDispatcher
 		}
 
 		if (sndTransform == null)
-		{
 			sndTransform = new SoundTransform();
-		}
-		else
-		{
-			sndTransform = sndTransform.clone();
-		}
+		else sndTransform = sndTransform.clone();
 
 		var pan = SoundMixer.__soundTransform.pan + sndTransform.pan;
 
@@ -743,14 +707,11 @@ class Sound extends EventDispatcher
 
 			for (a in 0...__numberOFBuffers)
 			{
-				if (bufferSize == 0)
-				{
+				if (bufferSize == 0) {
 					bufferSize = @:privateAccess __sampleData.getBufferSize();
 					@:privateAccess __sampleData.getSamples(__outputBuffer);
 					__ALAudioContext.bufferData(__buffers[a], __ALAudioContext.FORMAT_STEREO16, __bufferView, bufferSize * 4, 44100);
-				}
-				else
-				{
+				} else {
 					dispatchEvent(__sampleData);
 					@:privateAccess __sampleData.getSamples(__outputBuffer);
 					__ALAudioContext.bufferData(__buffers[a], __ALAudioContext.FORMAT_STEREO16, __bufferView, bufferSize * 4, 44100);
@@ -773,14 +734,8 @@ class Sound extends EventDispatcher
 	#if (js && html5)
 	private function onSample(event:js.html.audio.AudioProcessingEvent):Void
 	{
-		if (__firstRun)
-		{
-			__firstRun = false;
-		}
-		else
-		{
-			dispatchEvent(__sampleData);
-		}
+		if (__firstRun) __firstRun = false;
+		else dispatchEvent(__sampleData);
 		@:privateAccess __sampleData.getSamples(event);
 	}
 
@@ -865,20 +820,13 @@ class Sound extends EventDispatcher
 			#if (js && html5 && howlerjs)
 			return Std.int(__buffer.src.duration() * 1000);
 			#else
-			if (__buffer.data != null)
-			{
+			if (__buffer.data != null) {
 				var samples = (__buffer.data.length * 8) / (__buffer.channels * __buffer.bitsPerSample);
 				return Std.int(samples / __buffer.sampleRate * 1000);
-			}
-			else if (__buffer.__srcVorbisFile != null)
-			{
+			} else if (__buffer.__srcVorbisFile != null) {
 				var samples = Int64.toInt(__buffer.__srcVorbisFile.pcmTotal());
 				return Std.int(samples / __buffer.sampleRate * 1000);
-			}
-			else
-			{
-				return 0;
-			}
+			} else return 0;
 			#end
 		}
 		#end
@@ -891,11 +839,8 @@ class Sound extends EventDispatcher
 	@:noCompletion private function AudioBuffer_onURLLoad(buffer:AudioBuffer):Void
 	{
 		if (buffer == null)
-		{
 			dispatchEvent(new IOErrorEvent(IOErrorEvent.IO_ERROR));
-		}
-		else
-		{
+		else {
 			__buffer = buffer;
 			dispatchEvent(new Event(Event.COMPLETE));
 		}

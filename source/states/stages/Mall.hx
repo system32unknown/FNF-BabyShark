@@ -47,9 +47,7 @@ class Mall extends BaseStage {
 	}
 
 	function everyoneDance() {
-		if(!lowQuality)
-			upperBoppers.dance(true);
-
+		if(!lowQuality) upperBoppers.dance(true);
 		bottomBoppers.dance(true);
 	}
 }

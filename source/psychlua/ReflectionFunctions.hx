@@ -1,7 +1,6 @@
 package psychlua;
 
 import Type.ValueType;
-import haxe.Constraints;
 import substates.GameOverSubstate;
 
 /**
@@ -177,7 +176,7 @@ class ReflectionFunctions {
 		if(args == null) args = [];
 
 		var split:Array<String> = funcStr.split('.');
-		var funcToRun:Function = null;
+		var funcToRun:haxe.Constraints.Function = null;
 		var obj:Dynamic = classObj;
 		if(obj == null) return null;
 

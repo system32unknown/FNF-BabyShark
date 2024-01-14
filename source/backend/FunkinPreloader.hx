@@ -104,19 +104,12 @@ class FunkinPreloader extends flixel.system.FlxBasePreloader {
 
     override function destroy() {
 		if (_buffer != null) removeChild(_buffer);
-
-		_buffer = null;
-		_bmpBar = null;
-		_text = null;
-		_flxtext = null;
-		_flxlogo = null;
-		_logo = null;
-		_logoGlow = null;
+		for (remove_spr in [_buffer, _bmpBar, _text, _flxtext, _flxlogo, _logo, _logoGlow]) remove_spr = null;
         super.destroy();
     }
 
 	override public function update(percent:Float):Void {
 		_bmpBar.scaleX = percent * (_width - 8);
-		_text.text = 'BSF ${lime.app.Application.current.meta.get('version')} - ' + Std.int(percent * 100) + "%";
+		_text.text = 'BSF v${lime.app.Application.current.meta.get('version')} - ' + Std.int(percent * 100) + "%";
     }
 }

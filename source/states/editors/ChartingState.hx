@@ -1343,15 +1343,17 @@ class ChartingState extends MusicBeatState {
 	function loadSong():Void {
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
-		vocals = new FlxSound();
-		if (_song.needsVoices) {
-			var file:Dynamic = Paths.voices(currentSongName, false, true);
-			if (Std.isOfType(file, Sound) || Assets.exists(file)) {
-				vocals.loadEmbedded(file);
-				vocals.autoDestroy = false;
-				FlxG.sound.list.add(vocals);
+		try {
+			if (_song.needsVoices) {
+				var file:Dynamic = Paths.voices(currentSongName, false, true);
+				vocals = new FlxSound();
+				if ((Std.isOfType(file, Sound) || Assets.exists(file)) && file != null) {
+					vocals.loadEmbedded(file);
+					vocals.autoDestroy = false;
+					FlxG.sound.list.add(vocals);
+				}
 			}
-		}
+		} catch(e:Dynamic) Logs.trace("ERROR VOCALS ON LOAD: " + e.message);
 		generateSong();
 		FlxG.sound.music.pause();
 		Conductor.songPosition = sectionStartTime();

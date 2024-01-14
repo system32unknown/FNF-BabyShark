@@ -19,9 +19,7 @@ class Philly extends BaseStage
 
 	override function create()
 	{
-		if(!lowQuality) {
-			add(new BGSprite('philly/sky', -100, 0, 0.1, 0.1));
-		}
+		if(!lowQuality) add(new BGSprite('philly/sky', -100, 0, 0.1, 0.1));
 
 		var city:BGSprite = new BGSprite('philly/city', -10, 0, 0.3, 0.3);
 		city.setGraphicSize(Std.int(city.width * 0.85));
@@ -35,9 +33,7 @@ class Philly extends BaseStage
 		add(phillyWindow);
 		phillyWindow.alpha = 0;
 
-		if(!lowQuality) {
-			add(new BGSprite('philly/behindTrain', -40, 50));
-		}
+		if(!lowQuality) add(new BGSprite('philly/behindTrain', -40, 50));
 
 		phillyTrain = new PhillyTrain(2000, 360);
 		add(phillyTrain);
@@ -59,7 +55,6 @@ class Philly extends BaseStage
 				phillyWindowEvent.updateHitbox();
 				phillyWindowEvent.visible = false;
 				insert(members.indexOf(blammedLightsBlack) + 1, phillyWindowEvent);
-
 
 				phillyGlowGradient = new PhillyGlowGradient(-400, 225); //This shit was refusing to properly load FlxGradient so fuck it
 				phillyGlowGradient.visible = false;

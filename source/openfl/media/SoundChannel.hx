@@ -121,9 +121,7 @@ import lime.media.AudioSource;
 
 		if (!__isValid) return;
 
-		#if lime
-		__source.stop();
-		#end
+		#if lime __source.stop(); #end
 		__dispose();
 	}
 
@@ -163,8 +161,7 @@ import lime.media.AudioSource;
 	@:noCompletion inline static var scanSamples = 480;
 
 	#if (lime_cffi && !macro)
-	@:noCompletion function __checkUpdatePeaks(time:Float):Bool
-	{
+	@:noCompletion function __checkUpdatePeaks(time:Float):Bool {
 		if (Math.abs(__lastPeakTime - time) < Math.max(1, pitch * 8)) return false;
 		__lastPeakTime = time;
 		return true;
@@ -203,8 +200,7 @@ import lime.media.AudioSource;
 	#end
 	#end
 
-	@:noCompletion function __updatePeaks():Void
-	{
+	@:noCompletion function __updatePeaks():Void {
 		__leftPeak = __rightPeak = 0;
 
 		#if (lime_cffi && !macro)
@@ -242,24 +238,14 @@ import lime.media.AudioSource;
 	}
 
 	// Get & Set Methods
-	@:noCompletion function get_position():Float
-	{
+	@:noCompletion function get_position():Float {
 		if (!__isValid) return 0;
-
-		#if lime
-		return __source.currentTime + __source.offset;
-		#else
-		return 0;
-		#end
+		return #if lime __source.currentTime + __source.offset #else 0 #end;
 	}
 
-	@:noCompletion function set_position(value:Float):Float
-	{
+	@:noCompletion function set_position(value:Float):Float {
 		if (!__isValid) return 0;
-
-		#if lime
-		__source.currentTime = value - __source.offset;
-		#end
+		#if lime __source.currentTime = value - __source.offset; #end
 		return value;
 	}
 
@@ -297,90 +283,44 @@ import lime.media.AudioSource;
 		return value;
 	}
 
-	@:noCompletion function get_pitch():Float
-	{
+	@:noCompletion function get_pitch():Float {
 		if (!__isValid) return 1;
-
-		#if lime
-		return __source.pitch;
-		#else
-		return 0;
-		#end
+		return #if lime __source.pitch #else 0 #end;
 	}
 
-	@:noCompletion function set_pitch(value:Float):Float
-	{
+	@:noCompletion function set_pitch(value:Float):Float {
 		if (!__isValid) return 1;
-
-		#if lime
-		return __source.pitch = value;
-		#else
-		return 0;
-		#end
+		return #if lime __source.pitch = value #else 0 #end;
 	}
 
-	@:noCompletion function get_loopTime():Float
-	{
+	@:noCompletion function get_loopTime():Float {
 		if (!__isValid) return -1;
-
-		#if lime
-		return __source.loopTime;
-		#else
-		return -1;
-		#end
+		return #if lime __source.loopTime #else -1 #end;
 	}
 
-	@:noCompletion function set_loopTime(value:Float):Float
-	{
+	@:noCompletion function set_loopTime(value:Float):Float {
 		if (!__isValid) return -1;
-
-		#if lime
-		return __source.loopTime = value;
-		#else
-		return -1;
-		#end
+		return #if lime __source.loopTime = value #else -1 #end;
 	}
 
-	@:noCompletion function get_endTime():Null<Float>
-	{
+	@:noCompletion function get_endTime():Null<Float> {
 		if (!__isValid) return null;
-
-		#if lime
-		return __source.length;
-		#else
-		return null;
-		#end
+		return #if lime __source.length #else null #end;
 	}
 
-	@:noCompletion function set_endTime(value:Null<Float>):Null<Float>
-	{
+	@:noCompletion function set_endTime(value:Null<Float>):Null<Float> {
 		if (!__isValid) return null;
-
-		#if lime
-		return __source.length = value;
-		#else
-		return null;
-		#end
+		return #if lime __source.length = value #else null #end;
 	}
 
 	@:noCompletion function get_loops():Int {
 		if (!__isValid) return 0;
-
-		#if lime
-		return __source.loops;
-		#else
-		return 0;
-		#end
+		return #if lime __source.loops #else 0 #end;
 	}
 
 	@:noCompletion function set_loops(value:Int):Int {
 		if (!__isValid) return 0;
-
-		#if lime
-		return __source.loops = value;
-		#else
-		return 0;
-		#end
+		return #if lime __source.loops = value #else 0 #end;
 	}
 
 	@:noCompletion function get_leftPeak():Float {

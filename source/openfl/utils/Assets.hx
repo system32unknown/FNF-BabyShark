@@ -17,7 +17,6 @@ import openfl.events.EventDispatcher;
 import openfl.media.Sound;
 import openfl.text.Font;
 
-import openfl.display3D.Context3DTextureFormat;
 import openfl.Lib;
 
 /**
@@ -134,9 +133,7 @@ class Assets
 		#if (lime && tools && !display)
 
 		if (hardware && bitmap.image != null) {
-			var texture = Lib.current.stage.context3D.createRectangleTexture(
-				bitmap.width, bitmap.height, Context3DTextureFormat.BGRA, true
-			);
+			var texture = Lib.current.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, openfl.display3D.Context3DTextureFormat.BGRA, true);
 			texture.uploadFromBitmapData(bitmap);
 			bitmap.image.data = null;
 			bitmap.dispose();
@@ -162,13 +159,8 @@ class Assets
 		@param	id		The ID or asset path for the asset
 		@return		A new ByteArray object
 	**/
-	public static function getBytes(id:String):ByteArray
-	{
-		#if lime
-		return LimeAssets.getBytes(id);
-		#else
-		return null;
-		#end
+	public static function getBytes(id:String):ByteArray {
+		return #if lime LimeAssets.getBytes(id) #else null #end;
 	}
 
 	/**
@@ -206,11 +198,7 @@ class Assets
 
 	public static function getLibrary(name:String):#if lime LimeAssetLibrary #else AssetLibrary #end
 	{
-		#if lime
-		return LimeAssets.getLibrary(name);
-		#else
-		return null;
-		#end
+		return #if lime LimeAssets.getLibrary(name) #else null #end;
 	}
 
 	/**
@@ -247,8 +235,7 @@ class Assets
 		return null;
 	}
 
-	public static function getMusic(id:String, useCache:Bool = true, ?key:String):Sound
-	{
+	public static function getMusic(id:String, useCache:Bool = true, ?key:String):Sound {
 		return getSound(id, useCache, key, true);
 	}
 
@@ -258,13 +245,8 @@ class Assets
 		@param	id		The ID or asset path for the asset
 		@return		The path to the asset, or null if it does not exist
 	**/
-	public static function getPath(id:String):String
-	{
-		#if lime
-		return LimeAssets.getPath(id);
-		#else
-		return null;
-		#end
+	public static function getPath(id:String):String {
+		return #if lime LimeAssets.getPath(id); #else null; #end
 	}
 
 	/**
@@ -332,27 +314,16 @@ class Assets
 		@param	id		The ID or asset path for the asset
 		@return		A new String object
 	**/
-	public static function getText(id:String):String
-	{
-		#if lime
-		return LimeAssets.getText(id);
-		#else
-		return null;
-		#end
+	public static function getText(id:String):String {
+		return #if lime LimeAssets.getText(id) #else null #end;
 	}
 
-	public static function hasEventListener(type:String):Bool
-	{
+	public static function hasEventListener(type:String):Bool {
 		return dispatcher.hasEventListener(type);
 	}
 
-	public static function hasLibrary(name:String):Bool
-	{
-		#if lime
-		return LimeAssets.hasLibrary(name);
-		#else
-		return false;
-		#end
+	public static function hasLibrary(name:String):Bool {
+		return #if lime LimeAssets.hasLibrary(name) #else null #end;
 	}
 
 	#if (openfl >= "9.2.0")
@@ -437,13 +408,8 @@ class Assets
 		@param	type	The asset type to match, or null to match any type
 		@return	An array of asset ID values
 	**/
-	public static function list(type:AssetType = null):Array<String>
-	{
-		#if lime
-		return LimeAssets.list(cast type);
-		#else
-		return [];
-		#end
+	public static function list(type:AssetType = null):Array<String> {
+		return #if lime LimeAssets.list(cast type) #else [] #end;
 	}
 
 	/**
@@ -697,14 +663,8 @@ class Assets
 		@param	useCache		(Optional) Whether to allow use of the asset cache (Default: true)
 		@return		Returns a Future<String>
 	**/
-	public static function loadText(id:String):Future<String>
-	{
-		#if lime
-		var future = LimeAssets.loadText(id);
-		return future;
-		#else
-		return Future.withValue(getText(id));
-		#end
+	public static function loadText(id:String):Future<String> {
+		return #if lime LimeAssets.loadText(id) #else Future.withValue(getText(id)) #end;
 	}
 
 	#if (openfl >= "9.2.0")

@@ -531,8 +531,7 @@ class ModsMenuState extends MusicBeatState {
 		updateModDisplayData();
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 		
-		if(hoveringOnMods)
-		{
+		if(hoveringOnMods) {
 			var curMod:ModItem = modsGroup.members[curSelectedMod];
 			if(curMod != null) curMod.selectBg.visible = true;
 			bgButtons.color = FlxColor.BLACK;

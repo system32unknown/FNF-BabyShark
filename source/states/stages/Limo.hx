@@ -117,10 +117,8 @@ class Limo extends BaseStage
 									particle.flipX = true;
 									particle.angle = -57.5;
 									grpLimoParticles.add(particle);
-								case 1:
-									limoCorpse.visible = true;
-								case 2:
-									limoCorpseTwo.visible = true;
+								case 1: limoCorpse.visible = true;
+								case 2: limoCorpseTwo.visible = true;
 							} //Note: Nobody cares about the fifth dancer because he is mostly hidden offscreen :(
 							dancers[i].x += FlxG.width * 2;
 						}
@@ -166,9 +164,7 @@ class Limo extends BaseStage
 
 	override function beatHit()
 	{
-		if(!lowQuality) {
-			grpLimoDancers.forEach((dancer:BackgroundDancer) -> dancer.dance());
-		}
+		if(!lowQuality) grpLimoDancers.forEach((dancer:BackgroundDancer) -> dancer.dance());
 
 		if (FlxG.random.bool(10) && fastCarCanDrive)
 			fastCarDrive();
@@ -176,15 +172,11 @@ class Limo extends BaseStage
 
 	// Substates for pausing/resuming tweens and timers
 	override function closeSubState() {
-		if(paused) {
-			if(carTimer != null) carTimer.active = true;
-		}
+		if(paused) if(carTimer != null) carTimer.active = true;
 	}
 
 	override function openSubState(SubState:flixel.FlxSubState) {
-		if(paused) {
-			if(carTimer != null) carTimer.active = false;
-		}
+		if(paused) if(carTimer != null) carTimer.active = false;
 	}
 
 	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {
@@ -195,9 +187,7 @@ class Limo extends BaseStage
 
 	function dancersParenting() {
 		var dancers:Array<BackgroundDancer> = grpLimoDancers.members;
-		for (i in 0...dancers.length) {
-			dancers[i].x = (370 * i) + dancersDiff + bgLimo.x;
-		}
+		for (i in 0...dancers.length) dancers[i].x = (370 * i) + dancersDiff + bgLimo.x;
 	}
 
 	function resetLimoKill():Void {
