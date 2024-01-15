@@ -1040,7 +1040,6 @@ class FunkinLua {
 		if(ignoreCheck || getBool('luaDebugMode')) {
 			if(deprecated && !getBool('luaDeprecatedWarnings')) return;
 			PlayState.instance.addTextToDebug(text, color);
-			trace(text);
 		}
 		#end
 	}
