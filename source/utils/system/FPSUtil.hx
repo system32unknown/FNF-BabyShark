@@ -1,18 +1,25 @@
 package utils.system;
 
 class FPSUtil {
-    @:noCompletion var times:Array<Float> = [];
-    public var currentFPS(default, null):Float;
-	public var currentCount(default, null):Int;
-    public function new() {}
+    @:noCompletion var times:Array<Float>;
+	@:noCompletion public var curCount(default, null):Float;
+
+    public var totalFPS(default, null):Float;
+	public var curFPS(default, null):Float;
+
+    public function new() {
+		totalFPS = curFPS = curCount = 0;
+		times = [];
+	}
 
     public function update() {
 		final now:Float = haxe.Timer.stamp() * 1000;
 		times.push(now);
 		while (times[0] < now - 1000) times.shift();
 
-		currentCount = times.length;
-		currentFPS = Math.min(FlxG.drawFramerate, currentCount);
+		curCount = times.length;
+		curFPS = Math.min(FlxG.drawFramerate, curCount);
+		totalFPS = Math.round(curFPS + curCount / 8);
     }
 
 	public static function getFPSAdjust(type:String, fps:Float) {
@@ -28,10 +35,7 @@ class FPSUtil {
 		};
 	}
 
-	inline public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
-		return FlxMath.lerp(v1, v2, getFPSAdjust('codename', ratio));
-	}
-
-	public function checkFPSLag():Bool
-		return currentFPS < FlxG.drawFramerate * .5;
+	inline public static function fpsLerp(a:Float, b:Float, ratio:Float):Float
+		return FlxMath.lerp(a, b, getFPSAdjust('codename', ratio));
+	public function checkFPSLag():Bool return curFPS < FlxG.drawFramerate * .5;
 }
