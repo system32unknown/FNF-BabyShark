@@ -189,10 +189,8 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	public static function startTransition(nextState:FlxState = null) {
 		if(nextState == null) nextState = FlxG.state;
 
-		FlxG.state.openSubState(new CustomFadeTransition(0.6, false));
-		if(nextState == FlxG.state)
-			CustomFadeTransition.finishCallback = () -> FlxG.resetState();
-		else CustomFadeTransition.finishCallback = () -> FlxG.switchState(nextState);
+		FlxG.state.openSubState(new CustomFadeTransition(.6, false));
+		CustomFadeTransition.finishCallback = () -> (nextState == FlxG.state ? FlxG.resetState() : FlxG.switchState(nextState));
 	}
 
 	public static function getState(?state:FlxState):MusicBeatState return cast(state != null ? state : FlxG.state);

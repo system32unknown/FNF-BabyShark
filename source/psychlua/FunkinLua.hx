@@ -442,7 +442,6 @@ class FunkinLua {
 				FlxTransitionableState.skipNextTransOut = true;
 			}
 
-			PlayState.cancelMusicFadeTween();
 			MusicBeatState.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 			#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
@@ -535,7 +534,7 @@ class FunkinLua {
 
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
 			leSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
-			LuaUtils.loadFrames(leSprite, image, spriteType);
+			if(image != null && image.length > 0) LuaUtils.loadFrames(leSprite, image, spriteType);
 			game.modchartSprites.set(tag, leSprite);
 		});
 		set("makeLuaSpriteGroup", function(tag:String, ?x:Float = 0, ?y:Float = 0, ?maxSize:Int = 0) {
@@ -645,8 +644,7 @@ class FunkinLua {
 				if (!leGroup.wasAdded) {
 					if (front) LuaUtils.getInstance().add(leGroup);
 					else {
-						if(game.isDead)
-							GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), leGroup);
+						if(game.isDead) GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), leGroup);
 						else {
 							var position:Int = playMembers.indexOf(game.gfGroup);
 							if(playMembers.indexOf(game.boyfriendGroup) < position) position = playMembers.indexOf(game.boyfriendGroup);
@@ -1202,7 +1200,7 @@ class FunkinLua {
 	}
 
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
-	public function initLuaShader(name:String, ?glslVersion:Int = 120) {
+	public function initLuaShader(name:String) {
 		if(!ClientPrefs.getPref('shaders')) return false;
 
 		#if (MODS_ALLOWED && !flash && sys)
@@ -1234,7 +1232,7 @@ class FunkinLua {
 				} else vert = null;
 
 				if(found) {
-					runtimeShaders.set(name, [frag, vert, Std.string(glslVersion)]);
+					runtimeShaders.set(name, [frag, vert]);
 					return true;
 				}
 			}

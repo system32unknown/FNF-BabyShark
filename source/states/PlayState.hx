@@ -234,8 +234,6 @@ class PlayState extends MusicBeatState {
 	public var uiGroup:FlxSpriteGroup;
 	public var noteGroup:FlxTypedGroup<FlxBasic>;
 
-	public var precacheList:Map<String, String> = new Map<String, String>();
-
 	public var songName:String;
 
 	var downScroll:Bool = ClientPrefs.getPref('downScroll');
@@ -559,18 +557,18 @@ class PlayState extends MusicBeatState {
 		startCallback();
 		RecalculateRating();
 
-		if(ClientPrefs.getPref('hitsoundVolume') > 0) precacheList.set('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}', 'sound');
-		for (i in 1...4) precacheList.set('missnote$i', 'sound');
-
-		if (PauseSubState.songName != null)
-			precacheList.set(PauseSubState.songName, 'music');
-		else if (ClientPrefs.getPref('pauseMusic') != 'None')
-			precacheList.set(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic')), 'music');
-		precacheList.set('alphabet', 'image');
-		resetRPC();
-	
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
+
+		if(ClientPrefs.getPref('hitsoundVolume') > 0) Paths.sound('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}');
+		for (i in 1...4) Paths.sound('missnote$i');
+		Paths.image('alphabet');
+
+		if (PauseSubState.songName != null) Paths.music(PauseSubState.songName);
+		else if(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic')) != 'none')
+			Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic')));
+		resetRPC();
+	
 		callOnScripts('onCreatePost');
 
 		super.create();
@@ -581,11 +579,6 @@ class PlayState extends MusicBeatState {
 			cacheCountdown();
 			cachePopUpScore();
 			GameOverSubstate.cache();
-			for (key => type in precacheList) switch(type) {
-				case 'image': Paths.image(key);
-				case 'sound': Paths.sound(key);
-				case 'music': Paths.music(key);
-			}
 			Paths.clearUnusedCache();
 		#if (target.threaded && sys)
 		});
@@ -783,8 +776,6 @@ class PlayState extends MusicBeatState {
 
 		if(dialogueFile.dialogue.length > 0) {
 			inCutscene = true;
-			precacheList.set('dialogue', 'sound');
-			precacheList.set('dialogueClose', 'sound');
 			psychDialogue = new DialogueBoxPsych(dialogueFile, song);
 			psychDialogue.finishThing = () -> {
 				psychDialogue = null;
@@ -1164,9 +1155,7 @@ class PlayState extends MusicBeatState {
 				}
 				addCharacterToList(event.value2, charType);
 
-			case 'Play Sound':
-				precacheList.set(event.value1, 'sound');
-				Paths.sound(event.value1);
+			case 'Play Sound': Paths.sound(event.value1);
 		}
 		stagesFunc((stage:BaseStage) -> stage.eventPushedUnique(event));
 	}
@@ -1655,7 +1644,6 @@ class PlayState extends MusicBeatState {
 		persistentUpdate = false;
 		paused = true;
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
-		cancelMusicFadeTween();
 		chartingMode = true;
 
 		#if DISCORD_ALLOWED
@@ -1670,7 +1658,6 @@ class PlayState extends MusicBeatState {
 		persistentUpdate = false;
 		paused = true;
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
-		cancelMusicFadeTween();
 		#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 		MusicBeatState.switchState(new CharacterEditorState(SONG.player2));
 	}
@@ -2039,7 +2026,6 @@ class PlayState extends MusicBeatState {
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
-					cancelMusicFadeTween();
 					MusicBeatState.switchState(new StoryMenuState());
 
 					if(!practiceMode && !cpuControlled) {
@@ -2059,14 +2045,11 @@ class PlayState extends MusicBeatState {
 					SONG = Song.loadFromJson(storyPlaylist[0] + difficulty, storyPlaylist[0]);
 					FlxG.sound.music.stop();
 
-					cancelMusicFadeTween();
 					LoadingState.loadAndSwitchState(new PlayState());
 				}
 			} else {
 				Mods.loadTopMod();
 				#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
-
-				cancelMusicFadeTween();
 				MusicBeatState.switchState(new FreeplayState());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				changedDifficulty = false;
@@ -2110,7 +2093,7 @@ class PlayState extends MusicBeatState {
 	function getScoreText() {
 		var tempText:String = (!ClientPrefs.getPref('ShowNPS') ? '' : 'NPS:$nps (Max:$maxNPS) $scoreSeparator ');
 		tempText += 'Score:$songScore ';
-		tempText += (cpuControlled ? '' : '$scoreSeparator ${ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks'}:$songMisses ');
+		tempText += (cpuControlled || instakillOnMiss ? '' : '$scoreSeparator ${ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks'}:$songMisses ');
 		tempText += switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter': '$scoreSeparator Acc:$accuracy% -' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
 			case 'Kade' | _: tempText += '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
@@ -2658,15 +2641,13 @@ class PlayState extends MusicBeatState {
 			if (FlxG.sound.music != null) FlxG.sound.music.destroy();
 		else {
 			Paths.clearStoredCache();
-			if (FlxG.sound.music != null) {
-				FlxG.sound.music.onComplete = null;
-				FlxG.sound.music.pitch = 1;
-			}
+			if (FlxG.sound.music != null) FlxG.sound.music.onComplete = null;
 		}
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		FlxG.animationTimeScale = 1;
+		#if FLX_PITCH FlxG.sound.music.pitch = 1; #end
 		instance = null;
 		super.destroy();
 	}
@@ -2678,12 +2659,6 @@ class PlayState extends MusicBeatState {
 		video.altDestroy();
 	}
 	#end
-
-	public static function cancelMusicFadeTween() {
-		if(FlxG.sound.music.fadeTween != null)
-			FlxG.sound.music.fadeTween.cancel();
-		FlxG.sound.music.fadeTween = null;
-	}
 
 	var lastStepHit:Int = -1;
 	override function stepHit() {
@@ -3012,7 +2987,7 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
-	public function initLuaShader(name:String, ?glslVersion:Int = 120) {
+	public function initLuaShader(name:String) {
 		if(!ClientPrefs.getPref('shaders')) return false;
 
 		#if (MODS_ALLOWED && !flash && sys)

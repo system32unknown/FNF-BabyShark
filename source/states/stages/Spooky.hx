@@ -12,16 +12,12 @@ class Spooky extends BaseStage
 		add(halloweenBG);
 
 		//PRECACHE SOUNDS
-		precacheSound('thunder_1');
-		precacheSound('thunder_2');
+		Paths.sound('thunder_1');
+		Paths.sound('thunder_2');
 
 		//Monster cutscene
-		if (isStoryMode && !seenCutscene) {
-			switch(songName) {
-				case 'monster':
-					setStartCallback(monsterCutscene);
-			}
-		}
+		if (isStoryMode && !seenCutscene && songName == 'monster')
+			setStartCallback(monsterCutscene);
 	}
 	override function createPost() {
 		halloweenWhite = new BGSprite(null, -800, -400, 0, 0);
@@ -34,9 +30,8 @@ class Spooky extends BaseStage
 	var lightningStrikeBeat:Int = 0;
 	var lightningOffset:Int = 8;
 	override function beatHit() {
-		if (FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset) {
+		if (FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset)
 			lightningStrikeShit();
-		}
 	}
 
 	function lightningStrikeShit():Void {

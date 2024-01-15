@@ -36,21 +36,15 @@ class PauseSubState extends MusicBeatSubstate {
 		}
 		menuItems = menuItemsOG;
 
-		for (i in 0...Difficulty.list.length) {
+		for (i in 0...Difficulty.list.length)
 			difficultyChoices.push('' + Difficulty.getString(i));
-		}
 		difficultyChoices.push('BACK');
 
 		pauseMusic = new FlxSound();
 		try {
-			if (songName == null || songName.toLowerCase() != 'none') {
-				if(songName == null) {
-					var path:String = Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'));
-					if(path.toLowerCase() != 'none')
-						pauseMusic.loadEmbedded(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), true, true);
-				} else pauseMusic.loadEmbedded(Paths.music(songName), true, true);
-			}
-		} catch(e:Dynamic) Logs.trace(e, ERROR);
+			var pauseSong:String = getPauseSong();
+			if(pauseSong != null) pauseMusic.loadEmbedded(Paths.music(pauseSong), true, true);
+		} catch(e:Dynamic) Logs.trace("ERROR PAUSE MUSIC ON LOAD: " + e, ERROR);
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 		FlxG.sound.list.add(pauseMusic);
@@ -87,6 +81,14 @@ class PauseSubState extends MusicBeatSubstate {
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		super.create();
+	}
+
+	function getPauseSong() {
+		var formattedSongName:String = (songName != null ? Paths.formatToSongPath(songName) : '');
+		var formattedPauseMusic:String = Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'));
+		if(formattedSongName == 'none' || (formattedSongName != 'none' && formattedPauseMusic == 'none')) return null;
+
+		return (formattedSongName != '') ? formattedSongName : formattedPauseMusic;
 	}
 
 	var holdTime:Float = 0;
@@ -212,7 +214,6 @@ class PauseSubState extends MusicBeatSubstate {
 
 					Mods.loadTopMod();
 					MusicBeatState.switchState(PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
-					PlayState.cancelMusicFadeTween();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					PlayState.changedDifficulty = false;
 					PlayState.chartingMode = false;

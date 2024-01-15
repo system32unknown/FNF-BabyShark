@@ -1353,7 +1353,7 @@ class ChartingState extends MusicBeatState {
 					FlxG.sound.list.add(vocals);
 				}
 			}
-		} catch(e:Dynamic) Logs.trace("ERROR VOCALS ON LOAD: " + e.message);
+		} catch(e:Dynamic) Logs.trace("ERROR VOCALS ON LOAD: " + e, ERROR);
 		generateSong();
 		FlxG.sound.music.pause();
 		Conductor.songPosition = sectionStartTime();

@@ -248,6 +248,7 @@ class FreeplayState extends MusicBeatState {
 				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
+				FlxG.sound.music.pitch = 1;
 				Mods.currentModDirectory = songs[curSelected].folder;
 
 				var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);

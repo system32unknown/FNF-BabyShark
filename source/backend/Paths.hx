@@ -46,8 +46,6 @@ class Paths {
 
 	public static var keyExclusions:Array<String> = [
 		'music/freakyMenu.$SOUND_EXT',
-		'music/breakfast.$SOUND_EXT',
-		'music/tea-time.$SOUND_EXT',
 	];
 
 	public static function decacheSound(key:String) {
@@ -106,8 +104,8 @@ class Paths {
 				decacheGraphic(key);
 		}
 
-		for (key in currentTrackedSounds.keys()) {
-			if (key != null && !localTrackedAssets.contains(key) && !assetExcluded(key))
+		for (key => asset in currentTrackedSounds) {
+			if (!localTrackedAssets.contains(key) && !assetExcluded(key) && asset != null)
 				decacheSound(key);
 		}
 
@@ -405,7 +403,11 @@ class Paths {
 	public static var currentTrackedSounds:Map<String, Sound> = [];
 	public static function returnSound(path:String, key:String, ?library:String, ?stream:Bool):Sound {
 		#if MODS_ALLOWED
-		var modKey:String = modsSounds(path, key), modExists:Bool = FileSystem.exists(modKey);
+		var modLibPath:String = '';
+		if (library != null) modLibPath = '$library/';
+		if (path != null) modLibPath += '$path';
+
+		var modKey:String = modsSounds(modLibPath, key), modExists:Bool = FileSystem.exists(modKey);
 		var path:String = if (modExists) modKey; else getPath('$path/$key.$SOUND_EXT', SOUND, library);
 		var track:String = path.substr(path.indexOf(':') + 1);
 		var folder:String = './';
