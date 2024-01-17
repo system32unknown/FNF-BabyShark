@@ -40,7 +40,7 @@ class PlayState extends MusicBeatState {
 		['Good', .8], //From 70% to 79%
 		['Great', .9], //From 80% to 89%
 		['Sick!', 1.], //From 90% to 99%
-		['Amazing!!', 1.]
+		['Superb!!', 1.]
 	];
 	//event variables
 	var isCameraOnForcedPos:Bool = false;

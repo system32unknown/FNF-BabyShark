@@ -19,7 +19,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Antimash', "If unchecked, Antimash will not do anything.", 'AntiMash', 'bool'));
 		addOption(new Option('Dynamic Camera Movement', "If unchecked, \nthe camera won't move in the direction in which the characters sing.", 'camMovement', 'bool'));
 
-		var option:Option = new Option('Hitsound Type', "What should the hitsounds like?", 'hitsoundTypes', 'string', ['Tick', 'Snap', 'Dave']);
+		var option:Option = new Option('Hitsound Type:', "What should the hitsounds like?", 'hitsoundTypes', 'string', ['Tick', 'Snap', 'Dave']);
 		addOption(option);
 		option.onChange = onChangeHitsoundVolume;
 

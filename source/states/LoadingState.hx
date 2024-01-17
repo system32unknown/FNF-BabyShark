@@ -81,7 +81,7 @@ class LoadingState extends MusicBeatState {
 		loadText.screenCenter(X);
 		add(loadText);
 		
-		initSongsManifest().onComplete(function(lib) {
+		initSongsManifest().onComplete((lib) -> {
 			callbacks = new MultiCallback(onLoad);
 			var introComplete = callbacks.add("introComplete");
 			checkLibrary("shared");

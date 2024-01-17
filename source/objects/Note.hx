@@ -320,7 +320,7 @@ class Note extends FlxSprite {
 		return (strumTime > songPos - (Conductor.safeZoneOffset * lateHitMult) && strumTime < songPos + (Conductor.safeZoneOffset * earlyHitMult));
 	}
 	inline public function checkHit(songPos:Float):Bool {
-		return strumTime <= songPos + (Conductor.safeZoneOffset * earlyHitMult) && ((isSustainNote && prevNote.wasGoodHit) || strumTime <= songPos);
+		return (strumTime <= songPos + (Conductor.safeZoneOffset * earlyHitMult) && ((isSustainNote && prevNote.wasGoodHit) || strumTime <= songPos));
 	}
 
 	override function update(elapsed:Float) {

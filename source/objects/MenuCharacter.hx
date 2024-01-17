@@ -1,7 +1,5 @@
 package objects;
 
-import haxe.Json;
-
 typedef MenuCharacterFile = {
 	var image:String;
 	var scale:Float;
@@ -51,7 +49,7 @@ class MenuCharacter extends FlxSprite {
 				rawJson = Assets.getText(path);
 				#end
 				
-				var charFile:MenuCharacterFile = cast Json.parse(rawJson);
+				var charFile:MenuCharacterFile = cast haxe.Json.parse(rawJson);
 				frames = Paths.getSparrowAtlas('menucharacters/' + charFile.image);
 				animation.addByPrefix('idle', charFile.idle_anim, 24);
 
