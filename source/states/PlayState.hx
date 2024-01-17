@@ -807,12 +807,11 @@ class PlayState extends MusicBeatState {
 	public var bfturn:Bool = false;
 
 	function cacheCountdown() {
-		final introAlts:Array<String> = switch(stageUI) {
+		for (asset in switch(stageUI) {
 			case "pixel": ['${stageUI}UI/countdown/ready-pixel', '${stageUI}UI/countdown/set-pixel', '${stageUI}UI/countdown/date-pixel'];
 			case "normal": ["countdown/ready", "countdown/set", "countdown/go"];
 			default: ['${stageUI}UI/countdown/ready', '${stageUI}UI/countdown/set', '${stageUI}UI/countdown/go'];
-		};
-		for (asset in introAlts) Paths.image(asset);
+		}) Paths.image(asset);
 		for (count in ['3', '2', '1', 'Go']) Paths.sound('countdown/intro$count' + introSoundsSuffix);
 	}
 
@@ -1078,8 +1077,7 @@ class PlayState extends MusicBeatState {
 				swagNote.scrollFactor.set();
 				unspawnNotes.push(swagNote);
 
-				final susLength:Float = swagNote.sustainLength / Conductor.stepCrochet;
-				final floorSus:Int = Math.floor(susLength);
+				final floorSus:Int = Math.floor(swagNote.sustainLength / Conductor.stepCrochet);
 				if(floorSus > 0) {
 					for (susNote in 0...floorSus + 1) {
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
@@ -2546,12 +2544,10 @@ class PlayState extends MusicBeatState {
 			if(char != null) {
 				char.playAnim(animToPlay + note.animSuffix, true);
 				char.holdTimer = 0;
-				if(leType == 'Hey!') {
-					if(char.animOffsets.exists(animCheck)) {
-						char.playAnim(animCheck, true);
-						char.specialAnim = true;
-						char.heyTimer = .6;
-					}
+				if(leType == 'Hey!' && char.animOffsets.exists(animCheck)) {
+					char.playAnim(animCheck, true);
+					char.specialAnim = true;
+					char.heyTimer = .6;
 				}
 			}
 		}

@@ -6,7 +6,6 @@ class HealthIcon extends FlxSprite {
 	static final prefix:String = 'icons/';
 	static final defaultIcon:String = 'icon-face';
 
-	public var iconOffsets:Array<Float> = [0, 0];
 	public var iconZoom:Float = 1;
 	public var sprTracker:FlxSprite;
 	public var isPixelIcon(get, null):Bool;
@@ -22,8 +21,7 @@ class HealthIcon extends FlxSprite {
 	final animatediconstates:Array<String> = ['normal', 'lose', 'win'];
 	
 	public static function returnGraphic(char:String, defaultIfMissing:Bool = false):FlxGraphic {
-		var path:String;
-		path = prefix + char;
+		var path:String = prefix + char;
 		if (!Paths.fileExists('images/$path.png', IMAGE)) path = '${prefix}icon-$char'; //Older versions of psych engine's support
 		if (!Paths.fileExists('images/$path.png', IMAGE)) { //Prevents crash from missing icon
 			if (!defaultIfMissing) return null;
@@ -71,7 +69,6 @@ class HealthIcon extends FlxSprite {
 			this.char = char;
 			state = 0;
 
-			iconOffsets[1] = iconOffsets[0] = 0;
 			loadGraphic(graph, true, graph.width, graph.height);
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
@@ -85,7 +82,6 @@ class HealthIcon extends FlxSprite {
 		this.char = char;
 		state = 0;
 
-		iconOffsets[1] = iconOffsets[0] = 0;
 		if (!animated) {
 			loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
@@ -107,14 +103,11 @@ class HealthIcon extends FlxSprite {
 	override function updateHitbox() {
 		if (iconType.toLowerCase() == 'center') centerOrigin();
 		else if (iconType.toLowerCase() == 'psych') {
-			width = Math.abs(scale.x) * frameWidth * iconZoom;
-			height = Math.abs(scale.y) * frameHeight * iconZoom;
-			offset.set(-.5 * (frameWidth * iconZoom - frameWidth) + iconOffsets[0], -.5 * (frameHeight * iconZoom - frameHeight) + iconOffsets[1]);
-		} else {
-			width = Math.abs(scale.x) * frameWidth;
-			height = Math.abs(scale.y) * frameHeight;
-			offset.set(-.5 * (width - frameWidth), -.5 * (height - frameHeight));
-		}
+			super.updateHitbox();
+			width *= iconZoom;
+			height *= iconZoom;
+			offset.set(-.5 * (frameWidth * iconZoom - frameWidth), -.5 * (frameHeight * iconZoom - frameHeight));
+		} else super.updateHitbox();
 	}
 
 	public function getCharacter():String return char;

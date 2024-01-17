@@ -73,8 +73,7 @@ class DeltaTrail extends FlxTrail {
 				}
 
 				// the scale...
-				if (scalesEnabled)
-                    trailSprite.scale.copyFrom(_recentScales[i]);
+				if (scalesEnabled) trailSprite.scale.copyFrom(_recentScales[i]);
 
 				// and frame...
 				if (framesEnabled && _graphic == null) {

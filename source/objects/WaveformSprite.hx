@@ -61,7 +61,7 @@ class WaveformSprite extends FlxSprite {
             }
             var thing = max;
             var w = thing / peak * pixels.width;
-            pixels.fillRect(new Rectangle((pixels.width / 2) - (w / 2), y, w, 1), 0xFFFFFFFF);
+            pixels.fillRect(new Rectangle((pixels.width / 2) - (w / 2), y, w, 1), FlxColor.WHITE);
         }
         pixels.unlock();
     }

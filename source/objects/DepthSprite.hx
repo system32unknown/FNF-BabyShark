@@ -18,7 +18,10 @@ class DepthSprite extends FlxSprite {
 					animation.play(anim);
 				}
 			}
-		} else if(image != null) loadGraphic(Paths.image(image));
+		} else {
+			if (image != null) loadGraphic(Paths.image(image));
+			active = false;
+		}
 		scrollFactor.set(scrollX, scrollY);
 		antialiasing = ClientPrefs.getPref('Antialiasing');
 	}
