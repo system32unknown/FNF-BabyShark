@@ -60,8 +60,16 @@ class HealthIcon extends FlxSprite {
 	public function changeIcon(char:String, defaultIfMissing:Bool = true):Bool {
 		if (this.char == char) return false;
 		var graph:FlxGraphic = null;
+		var name:String = 'icons/$char';
 
-		animated = Paths.exists('images/icons/$char.xml');
+		#if MODS_ALLOWED
+		var modXmlToFind:String = Paths.modsXml(name);
+		var xmlToFind:String = Paths.getPath('images/$name.xml', TEXT);
+		if (FileSystem.exists(modXmlToFind) || FileSystem.exists(xmlToFind) || openfl.utils.Assets.exists(xmlToFind))
+		#else
+		if (Assets.exists(Paths.getPath('images/$name.xml', TEXT)))
+		#end
+			animated = true;
 
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing);
 		else {
@@ -89,7 +97,7 @@ class HealthIcon extends FlxSprite {
 			animation.add(char, [for (i in 0...availableStates) i], 0, false, isPlayer);
 			animation.play(char);
 		} else {
-			frames = Paths.getSparrowAtlas('icons/$char');
+			frames = Paths.getSparrowAtlas(name);
 			for (animstate in animatediconstates)
 				animation.addByPrefix(animstate, animstate, 24, true, isPlayer, false);
 			animation.play(animatediconstates[0]);

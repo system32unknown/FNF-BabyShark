@@ -2036,8 +2036,8 @@ class ChartingState extends MusicBeatState {
 	var lastWaveformHeight:Int = 0;
 	function updateWaveform() {
 		#if desktop
+		var width:Int = Std.int(GRID_SIZE * (EK.strums(_song.mania) + 1));
 		if(waveformPrinted) {
-			var width:Int = Std.int(GRID_SIZE * EK.strums(_song.mania));
 			var height:Int = Std.int(gridBG.height);
 			if(lastWaveformHeight != height && waveformSprite.pixels != null) {
 				waveformSprite.pixels.dispose();
@@ -2086,25 +2086,21 @@ class ChartingState extends MusicBeatState {
 		}
 
 		// Draws
-		var gSize:Int = Std.int(GRID_SIZE * EK.strums(_song.mania));
-		var hSize:Int = Std.int(gSize / 2);
+		var hSize:Int = Std.int(width / 2);
 		var size:Float = 1;
 
 		var leftLength:Int = (wavData[0][0].length > wavData[0][1].length ? wavData[0][0].length : wavData[0][1].length);
 		var rightLength:Int = (wavData[1][0].length > wavData[1][1].length ? wavData[1][0].length : wavData[1][1].length);
 		var length:Int = leftLength > rightLength ? leftLength : rightLength;
 
-		var index:Int;
-		for (i in 0...length) {
-			index = i;
+		for (index in 0...length) {
+			var lmin:Float = FlxMath.bound(((index < wavData[0][0].length && index >= 0) ? wavData[0][0][index] : 0) * (width / 1.12), -hSize, hSize) / 2;
+			var lmax:Float = FlxMath.bound(((index < wavData[0][1].length && index >= 0) ? wavData[0][1][index] : 0) * (width / 1.12), -hSize, hSize) / 2;
 
-			var lmin:Float = FlxMath.bound(((index < wavData[0][0].length && index >= 0) ? wavData[0][0][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
-			var lmax:Float = FlxMath.bound(((index < wavData[0][1].length && index >= 0) ? wavData[0][1][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
+			var rmin:Float = FlxMath.bound(((index < wavData[1][0].length && index >= 0) ? wavData[1][0][index] : 0) * (width / 1.12), -hSize, hSize) / 2;
+			var rmax:Float = FlxMath.bound(((index < wavData[1][1].length && index >= 0) ? wavData[1][1][index] : 0) * (width / 1.12), -hSize, hSize) / 2;
 
-			var rmin:Float = FlxMath.bound(((index < wavData[1][0].length && index >= 0) ? wavData[1][0][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
-			var rmax:Float = FlxMath.bound(((index < wavData[1][1].length && index >= 0) ? wavData[1][1][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
-
-			waveformSprite.pixels.fillRect(new Rectangle(hSize - (lmin + rmin), i * size, (lmin + rmin) + (lmax + rmax), size), FlxColor.BLUE);
+			waveformSprite.pixels.fillRect(new Rectangle(hSize - (lmin + rmin), index * size, (lmin + rmin) + (lmax + rmax), size), FlxColor.BLUE);
 		}
 
 		waveformPrinted = true;
