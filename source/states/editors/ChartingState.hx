@@ -204,8 +204,7 @@ class ChartingState extends MusicBeatState {
 		add(leftIcon);
 		add(rightIcon);
 
-		leftIcon.setPosition(GRID_SIZE + 10, -100);
-		rightIcon.setPosition(GRID_SIZE * 5.2, -100);
+		reloadIconPosition();
 
 		curRenderedSustains = new FlxTypedGroup<FlxSprite>();
 		curRenderedNotes = new FlxTypedGroup<Note>();
@@ -1930,6 +1929,14 @@ class ChartingState extends MusicBeatState {
 		reloadGridLayer();
 	}
 
+	function reloadIconPosition() {
+		var gridLaneMidPoint = (GRID_SIZE * EK.keys(_song.mania)) / 2;
+		var leftIconX = (GRID_SIZE + gridLaneMidPoint) - (leftIcon.width / 2);
+		var rightIconX = leftIconX + (GRID_SIZE * EK.keys(_song.mania));
+		leftIcon.setPosition(leftIconX, -100);
+		rightIcon.setPosition(rightIconX, -100);
+	}
+
 	var lastSecBeats:Float = 0;
 	var lastSecBeatsNext:Float = 0;
 	var columns:Int = 9;
@@ -1954,12 +1961,7 @@ class ChartingState extends MusicBeatState {
 		if(FlxG.save.data.chart_waveformInst || FlxG.save.data.chart_waveformVoices)
 			updateWaveform();
 		#end
-
-		var gridLaneMidPoint = (GRID_SIZE * EK.keys(_song.mania)) / 2;
-		var leftIconX = (GRID_SIZE + gridLaneMidPoint) - (leftIcon.width / 2);
-		var rightIconX = leftIconX + (GRID_SIZE * EK.keys(_song.mania));
-		leftIcon.setPosition(leftIconX, -100);
-		rightIcon.setPosition(rightIconX, -100);
+		reloadIconPosition();
 
 		var leHeight:Int = Std.int(gridBG.height);
 		var foundNextSec:Bool = false;
