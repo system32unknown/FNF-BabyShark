@@ -1,7 +1,6 @@
 package debug;
 
 import flixel.system.debug.log.LogStyle;
-import flixel.system.frontEnds.LogFrontEnd;
 import haxe.Log;
 import utils.system.NativeUtil;
 import utils.system.NativeUtil.ConsoleColor;
@@ -24,7 +23,7 @@ class Logs {
 			__showInConsole(prepareColoredTrace(data, TRACE));
 		};
 
-		LogFrontEnd.onLogs = function(Data, Style, FireOnce) {
+		flixel.system.frontEnds.LogFrontEnd.onLogs = function(Data, Style, FireOnce) {
 			var prefix = "[FLIXEL]";
 			var color:ConsoleColor = LIGHTGRAY;
 			var level:Level = INFO;

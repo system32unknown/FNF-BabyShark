@@ -137,7 +137,6 @@ class Assets
 			texture.uploadFromBitmapData(bitmap);
 			bitmap.image.data = null;
 			bitmap.dispose();
-			bitmap.disposeImage();
 			utils.system.MemoryUtil.clearMajor(true);
 
 			bitmap = BitmapData.fromTexture(texture);

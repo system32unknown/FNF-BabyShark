@@ -1,9 +1,6 @@
 package backend.subtitles;
 
-import flixel.util.FlxAxes;
-import flixel.addons.text.FlxTypeText;
-
-class Subtitle extends FlxTypeText {
+class Subtitle extends flixel.addons.text.FlxTypeText {
     public var manager:SubtitleManager;
     public var onSubComplete:Void->Void;
     public function new(text:String, ?typeSpeed, showTime:Float, properties:SubtitleProperties, onComplete:Void->Void) {
@@ -33,7 +30,7 @@ class Subtitle extends FlxTypeText {
         if (properties.subtitleSize == null) properties.subtitleSize = 36;
         if (properties.typeSpeed == null) properties.typeSpeed = .02;
         if (properties.centerScreen == null) properties.centerScreen = true;
-        if (properties.screenCenter == null) properties.screenCenter = FlxAxes.XY;
+        if (properties.screenCenter == null) properties.screenCenter = flixel.util.FlxAxes.XY;
         if (properties.fonts == null) properties.fonts = Paths.font("comic.ttf");
         return properties;
     }

@@ -47,7 +47,7 @@ class StrumNote extends FlxSprite {
 		var lastAnim:String = null;
 		if(animation.curAnim != null) lastAnim = animation.curAnim.name;
 
-		var pxDV:Int = Note.pixelNotesDivisionValue;
+		var pxDV:Int = EK.pixelNotesDivisionValue;
 
 		if(PlayState.isPixelStage) {
 			loadGraphic(Paths.image('pixelUI/$texture'));

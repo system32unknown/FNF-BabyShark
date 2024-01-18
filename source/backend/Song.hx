@@ -1,9 +1,7 @@
 package backend;
 
 import backend.Section.SwagSection;
-import data.StageData;
 import haxe.Json;
-import lime.utils.Assets;
 
 typedef SwagSong = {
 	var song:String;
@@ -91,7 +89,7 @@ class Song {
 				rawJson = File.getContent(path).trim();
 			else
 			#end
-				rawJson = Assets.getText(Paths.json('${Paths.CHART_PATH}/$formattedPath')).trim();
+				rawJson = lime.utils.Assets.getText(Paths.json('${Paths.CHART_PATH}/$formattedPath')).trim();
 		}
 
 		if (rawJson == null) return null;
@@ -99,7 +97,7 @@ class Song {
 			rawJson = rawJson.substr(0, rawJson.length - 1);
 		
 		var songJson:Dynamic = parseJSONshit(rawJson);
-		if(jsonInput != 'events') StageData.loadDirectory(songJson);
+		if(jsonInput != 'events') data.StageData.loadDirectory(songJson);
 		onLoadJson(songJson);
 		return songJson;
 	}

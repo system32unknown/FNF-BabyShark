@@ -1,7 +1,5 @@
 package backend;
 
-import haxe.io.Path;
-
 typedef ModsList = {
 	enabled:Array<String>,
 	disabled:Array<String>,
@@ -74,7 +72,7 @@ class Mods {
 		if (!FileSystem.exists(modsFolder)) return list;
 
 		for (folder in FileSystem.readDirectory(modsFolder)) {
-			var path:String = Path.join([modsFolder, folder]);
+			var path:String = haxe.io.Path.join([modsFolder, folder]);
 			var lower:String = folder.toLowerCase();
 
 			if (FileSystem.isDirectory(path) && !ignoreModFolders.contains(lower) && !list.contains(folder))

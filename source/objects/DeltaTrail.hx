@@ -1,13 +1,12 @@
 package objects;
 
-import flixel.addons.effects.FlxTrail;
 import flixel.system.FlxAssets;
 
 /**
  * FlxTrail but it uses delta time.
  * @author Rozebud :]
 */
-class DeltaTrail extends FlxTrail {
+class DeltaTrail extends flixel.addons.effects.FlxTrail {
 	var _timer:Float = 0;
 	var timerMax:Float;
 	

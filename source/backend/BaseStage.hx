@@ -2,7 +2,6 @@ package backend;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.FlxSubState;
 
 import objects.Note.EventNote;
 import objects.Character;
@@ -75,7 +74,7 @@ class BaseStage extends FlxBasic {
 
 	// Substate close/open, for pausing Tweens/Timers
 	public function closeSubState() {}
-	public function openSubState(SubState:FlxSubState) {}
+	public function openSubState(SubState:flixel.FlxSubState) {}
 
 	// Events
 	public function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {}

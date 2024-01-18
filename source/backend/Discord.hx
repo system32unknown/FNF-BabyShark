@@ -2,7 +2,6 @@ package backend;
 
 import hxdiscord_rpc.Discord;
 import hxdiscord_rpc.Types;
-import psychlua.FunkinLua;
 
 class DiscordClient {
 	public static var isInitialized:Bool = false;
@@ -104,7 +103,7 @@ class DiscordClient {
 	#end
 
 	#if LUA_ALLOWED
-	public static function addLuaCallbacks(lua:FunkinLua) {
+	public static function addLuaCallbacks(lua:psychlua.FunkinLua) {
 		lua.set("changePresence", (details:String, state:Null<String>, ?hasStartTimestamp:Bool, ?endTimestamp:Float) -> changePresence(details, state, hasStartTimestamp, endTimestamp));
 		lua.set("changeDiscordClientID", (?newID:String = null) -> {
 			if(newID == null) newID = _defaultID;

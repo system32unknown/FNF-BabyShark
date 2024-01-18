@@ -1658,8 +1658,7 @@ class ChartingState extends MusicBeatState {
 				} else {
 					if(vocals != null) {
 						vocals.play();
-						vocals.pause();
-						vocals.time = FlxG.sound.music.time;
+						pauseAndSetVocalsTime();
 						vocals.play();
 					}
 					FlxG.sound.music.play();
@@ -1671,8 +1670,7 @@ class ChartingState extends MusicBeatState {
 
 			if (FlxG.mouse.wheel != 0) {
 				FlxG.sound.music.pause();
-				if (!mouseQuant)
-					FlxG.sound.music.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * .8);
+				if (!mouseQuant) FlxG.sound.music.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * .8);
 				else {
 					var beat:Float = curDecBeat;
 					var snap:Float = quantization / 4;
@@ -1685,10 +1683,7 @@ class ChartingState extends MusicBeatState {
 						FlxG.sound.music.time = Conductor.beatToSeconds(fuck);
 					}
 				}
-				if(vocals != null) {
-					vocals.pause();
-					vocals.time = FlxG.sound.music.time;
-				}
+				pauseAndSetVocalsTime();
 			}
 
 			if (FlxG.keys.pressed.W || FlxG.keys.pressed.S) {
@@ -1704,10 +1699,7 @@ class ChartingState extends MusicBeatState {
 					FlxG.sound.music.time -= daTime;
 				else FlxG.sound.music.time += daTime;
 
-				if(vocals != null) {
-					vocals.pause();
-					vocals.time = FlxG.sound.music.time;
-				}
+				pauseAndSetVocalsTime();
 			}
 
 			if(!vortex) {
@@ -1771,10 +1763,7 @@ class ChartingState extends MusicBeatState {
 						feces = Conductor.beatToSeconds(fuck);
 					}
 					FlxTween.tween(FlxG.sound.music, {time:feces}, 0.1, {ease:FlxEase.circOut});
-					if(vocals != null) {
-						vocals.pause();
-						vocals.time = FlxG.sound.music.time;
-					}
+					pauseAndSetVocalsTime();
 
 					var dastrum = 0;
 					if (curSelectedNote != null) {
@@ -1927,6 +1916,13 @@ class ChartingState extends MusicBeatState {
 		LoadingState.loadAndSwitchState(new PlayState(), true);
 	}
 
+	function pauseAndSetVocalsTime() {
+		if(vocals != null) {
+			vocals.pause();
+			vocals.time = FlxG.sound.music.time;
+		}
+	}
+
 	function updateZoom() {
 		var daZoom:Float = zoomList[curZoom];
 		zoomFactorTxt = '1 / $daZoom';
@@ -2045,7 +2041,6 @@ class ChartingState extends MusicBeatState {
 			var height:Int = Std.int(gridBG.height);
 			if(lastWaveformHeight != height && waveformSprite.pixels != null) {
 				waveformSprite.pixels.dispose();
-				waveformSprite.pixels.disposeImage();
 				waveformSprite.makeGraphic(width, height, 0x00FFFFFF);
 				lastWaveformHeight = height;
 			}
@@ -2093,32 +2088,21 @@ class ChartingState extends MusicBeatState {
 		// Draws
 		var gSize:Int = Std.int(GRID_SIZE * EK.strums(_song.mania));
 		var hSize:Int = Std.int(gSize / 2);
-
-		var lmin:Float = 0;
-		var lmax:Float = 0;
-
-		var rmin:Float = 0;
-		var rmax:Float = 0;
-
 		var size:Float = 1;
 
-		var leftLength:Int = (
-			wavData[0][0].length > wavData[0][1].length ? wavData[0][0].length : wavData[0][1].length
-		);
-		var rightLength:Int = (
-			wavData[1][0].length > wavData[1][1].length ? wavData[1][0].length : wavData[1][1].length
-		);
+		var leftLength:Int = (wavData[0][0].length > wavData[0][1].length ? wavData[0][0].length : wavData[0][1].length);
+		var rightLength:Int = (wavData[1][0].length > wavData[1][1].length ? wavData[1][0].length : wavData[1][1].length);
 		var length:Int = leftLength > rightLength ? leftLength : rightLength;
 
 		var index:Int;
 		for (i in 0...length) {
 			index = i;
 
-			lmin = FlxMath.bound(((index < wavData[0][0].length && index >= 0) ? wavData[0][0][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
-			lmax = FlxMath.bound(((index < wavData[0][1].length && index >= 0) ? wavData[0][1][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
+			var lmin:Float = FlxMath.bound(((index < wavData[0][0].length && index >= 0) ? wavData[0][0][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
+			var lmax:Float = FlxMath.bound(((index < wavData[0][1].length && index >= 0) ? wavData[0][1][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
 
-			rmin = FlxMath.bound(((index < wavData[1][0].length && index >= 0) ? wavData[1][0][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
-			rmax = FlxMath.bound(((index < wavData[1][1].length && index >= 0) ? wavData[1][1][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
+			var rmin:Float = FlxMath.bound(((index < wavData[1][0].length && index >= 0) ? wavData[1][0][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
+			var rmax:Float = FlxMath.bound(((index < wavData[1][1].length && index >= 0) ? wavData[1][1][index] : 0) * (gSize / 1.12), -hSize, hSize) / 2;
 
 			waveformSprite.pixels.fillRect(new Rectangle(hSize - (lmin + rmin), i * size, (lmin + rmin) + (lmax + rmax), size), FlxColor.BLUE);
 		}
@@ -2165,11 +2149,10 @@ class ChartingState extends MusicBeatState {
 
 				var sample:Float = (byte / 65535);
 
-				if (sample > 0) {
+				if (sample > 0)
 					if (sample > lmax) lmax = sample;
-				} else if (sample < 0) {
+				else if (sample < 0)
 					if (sample < lmin) lmin = sample;
-				}
 
 				if (channels >= 2) {
 					byte = bytes.getUInt16((index * channels * 2) + 2);
@@ -2238,11 +2221,9 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function changeNoteSustain(value:Float):Void {
-		if (curSelectedNote != null) {
-			if (curSelectedNote[2] != null) {
-				curSelectedNote[2] += Math.ceil(value);
-				curSelectedNote[2] = Math.max(curSelectedNote[2], 0);
-			}
+		if (curSelectedNote != null && curSelectedNote[2] != null) {
+			curSelectedNote[2] += Math.ceil(value);
+			curSelectedNote[2] = Math.max(curSelectedNote[2], 0);
 		}
 
 		updateNoteUI();
@@ -2267,10 +2248,7 @@ class ChartingState extends MusicBeatState {
 			curSec = 0;
 		}
 
-		if(vocals != null) {
-			vocals.pause();
-			vocals.time = FlxG.sound.music.time;
-		}
+		pauseAndSetVocalsTime();
 		updateCurStep();
 
 		updateGrid();
@@ -2286,10 +2264,7 @@ class ChartingState extends MusicBeatState {
 				FlxG.sound.music.pause();
 
 				FlxG.sound.music.time = sectionStartTime();
-				if(vocals != null) {
-					vocals.pause();
-					vocals.time = FlxG.sound.music.time;
-				}
+				pauseAndSetVocalsTime();
 				updateCurStep();
 			}
 

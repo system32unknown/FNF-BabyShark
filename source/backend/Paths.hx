@@ -75,7 +75,6 @@ class Paths {
 			obj.bitmap.lock();
 			if (obj.bitmap.__texture != null) obj.bitmap.__texture.dispose();
 			if (obj.bitmap.image != null) obj.bitmap.image.data = null;
-			obj.bitmap.disposeImage();
 		}
 
 		obj.persist = false;

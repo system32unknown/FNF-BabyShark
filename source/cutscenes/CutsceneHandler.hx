@@ -5,7 +5,6 @@ import flixel.util.FlxSort;
 class CutsceneHandler extends flixel.FlxBasic {
 	public var timedEvents:Array<Dynamic> = [];
 	public var finishCallback:Void->Void = null;
-	public var finishCallback2:Void->Void = null;
 	public var onStart:Void->Void = null;
 	public var endTime:Float = 0;
 	public var objects:Array<FlxSprite> = [];
@@ -37,7 +36,6 @@ class CutsceneHandler extends flixel.FlxBasic {
 		cutsceneTime += elapsed;
 		if (endTime <= cutsceneTime) {
 			finishCallback();
-			if (finishCallback2 != null) finishCallback2();
 
 			for (spr in objects) {
 				spr.kill();

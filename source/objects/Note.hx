@@ -11,8 +11,6 @@ typedef EventNote = {
 }
 
 class Note extends FlxSprite {
-	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
-	public static var pixelNotesDivisionValue:Int = 18;
 	public static var keysShit:Map<Int, Map<String, Dynamic>> = data.EkData.keysShit;
 	
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
@@ -261,11 +259,11 @@ class Note extends FlxSprite {
 		if(PlayState.isPixelStage) {
 			if(isSustainNote) {
 				var graphic = Paths.image('pixelUI/' + skinPixel + 'ENDS');
-				loadGraphic(graphic, true, Math.floor(graphic.width / pixelNotesDivisionValue), Math.floor(graphic.height / 2));
+				loadGraphic(graphic, true, Math.floor(graphic.width / EK.pixelNotesDivisionValue), Math.floor(graphic.height / 2));
 				originalHeight = graphic.height / 2;
 			} else {
 				var graphic = Paths.image('pixelUI/' + skinPixel);
-				loadGraphic(graphic, true, Math.floor(graphic.width / pixelNotesDivisionValue), Math.floor(graphic.height / 5));
+				loadGraphic(graphic, true, Math.floor(graphic.width / EK.pixelNotesDivisionValue), Math.floor(graphic.height / 5));
 			}
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 			loadPixelNoteAnims();
@@ -294,7 +292,7 @@ class Note extends FlxSprite {
 		var defaultWidth = 157;
 		var defaultHeight = 154;
 
-		for (letter in gfxLetter) {
+		for (letter in EK.gfxLetter) {
 			if (isSustainNote) {
 				animation.addByPrefix('$letter hold', '$letter hold', 24);
 				animation.addByPrefix('$letter tail', '$letter tail', 24);
@@ -309,11 +307,11 @@ class Note extends FlxSprite {
 
 	function loadPixelNoteAnims() {
 		if(isSustainNote) {
-			for (i => letter in gfxLetter) {
+			for (i => letter in EK.gfxLetter) {
 				animation.add('$letter hold', [i], 24);
-				animation.add('$letter tail', [i + pixelNotesDivisionValue], 24);
+				animation.add('$letter tail', [i + EK.pixelNotesDivisionValue], 24);
 			}
-		} else for (i => letter in gfxLetter) animation.add(letter, [i + pixelNotesDivisionValue], 24);
+		} else for (i => letter in EK.gfxLetter) animation.add(letter, [i + EK.pixelNotesDivisionValue], 24);
 	}
 
 	inline public function checkDiff(songPos:Float):Bool {
