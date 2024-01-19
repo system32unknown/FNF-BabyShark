@@ -60,7 +60,7 @@ class StoryMenuState extends MusicBeatState
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 		add(grpLocks = new FlxTypedGroup<FlxSprite>());
 
-		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Story Menu", null); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Story Menu"); #end
 
 		var num:Int = 0;
 		for (i in 0...WeekData.weeksList.length) {

@@ -12,7 +12,7 @@ import openfl.events.IOErrorEvent;
 import objects.AttachedSprite;
 import utils.FlxInterpolateColor;
 
-class CreditsEditor extends MusicBeatState {
+class CreditsEditorState extends MusicBeatState {
 	var curSelected:Int = -1;
 
 	var grpOptions:FlxTypedGroup<Alphabet>;
@@ -20,9 +20,7 @@ class CreditsEditor extends MusicBeatState {
 	var creditsStuff:Array<Array<String>> = [];
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 
-	public var camGame:FlxCamera;
-	public var camUI:FlxCamera;
-	public var camOther:FlxCamera;
+	var camUI:FlxCamera;
 
 	var bg:FlxSprite;
 	var descText:FlxText;
@@ -33,10 +31,7 @@ class CreditsEditor extends MusicBeatState {
 	final offsetThing:Float = -75;
 
 	override function create() {
-		#if DISCORD_ALLOWED
-		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Credits Editor", null);
-		#end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("Credits Editor"); #end
 
 		persistentUpdate = true;
 		bg = new FlxSprite(Paths.image('menuDesat'));
@@ -47,14 +42,9 @@ class CreditsEditor extends MusicBeatState {
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
-		camGame = initPsychCamera();
 		camUI = new FlxCamera();
-		camOther = new FlxCamera();
 		camUI.bgColor.alpha = 0;
-		camOther.bgColor.alpha = 0;
-
 		FlxG.cameras.add(camUI, false);
-		FlxG.cameras.add(camOther, false);
 
 		var tabs = [{name: 'Credits', label: 'Credits'}];
 
@@ -326,9 +316,9 @@ class CreditsEditor extends MusicBeatState {
 
 			creditsStuff[curSelected][3] = linkInput.text;
 
-			if(colorInput.text != null && colorInput.text.length > 0) {
+			if(colorInput.text != null && colorInput.text.length > 0)
 				creditsStuff[curSelected][4] = colorInput.text;
-			} else creditsStuff[curSelected][4] = 'e1e1e1';
+			else creditsStuff[curSelected][4] = 'e1e1e1';
 		}
 	}
 
@@ -414,9 +404,8 @@ class CreditsEditor extends MusicBeatState {
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
+					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
-					}
 				}
 			}
 
@@ -446,17 +435,14 @@ class CreditsEditor extends MusicBeatState {
 			if(blockInput) {
 				if (FlxG.keys.justPressed.ENTER) {
 					for (i in 0...blockPressWhileTypingOn.length) {
-						if(blockPressWhileTypingOn[i].hasFocus) {
+						if(blockPressWhileTypingOn[i].hasFocus)
 							blockPressWhileTypingOn[i].hasFocus = false;
-						}
 					}
 				}
 			}
 		}
 
-		for (item in grpOptions.members) {
-			if(!item.bold) item.x = 200;
-		}
+		for (item in grpOptions.members) if(!item.bold) item.x = 200;
 		super.update(elapsed);
 	}
 
@@ -503,7 +489,7 @@ class CreditsEditor extends MusicBeatState {
 
 	function unselectableCheck(num:Int):Bool return creditsStuff[num].length <= 1;
 	function nullCheck(num:Int):Bool {
-		if(creditsStuff[num].length <= 1 && creditsStuff[num][0].length <= 0) return true;
+		if((creditsStuff[num].length <= 1 && creditsStuff[num][0].length <= 0) || (creditsStuff[num] != null && creditsStuff[num][0] != null)) return true;
 		return false;
 	}
 
@@ -513,13 +499,12 @@ class CreditsEditor extends MusicBeatState {
 		return Std.parseInt(bgColor);
 	}
 
-	function makeSquareBorder(object:FlxSprite, size:Int) { // Just to make color squares look a little nice and easier to see
+	function makeSquareBorder(object:FlxSprite, size:Int):FlxSprite { // Just to make color squares look a little nice and easier to see
 		var x:Float = object.x;
 		var y:Float = object.y;
 		var offset:Float = 1.5;
 
-		var border:FlxSprite = new FlxSprite(x - offset, y - offset).makeGraphic(size, size, 0xFF000000);
-		return(border);
+		return new FlxSprite(x - offset, y - offset).makeGraphic(size, size, FlxColor.BLACK);
 	}
 
 	function showIconExist(text:String) {

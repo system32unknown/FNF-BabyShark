@@ -1338,10 +1338,10 @@ class ChartingState extends MusicBeatState {
 	function loadSong():Void {
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
+		vocals = new FlxSound();
 		try {
 			if (_song.needsVoices) {
 				var file:Dynamic = Paths.voices(currentSongName, false, true);
-				vocals = new FlxSound();
 				if ((Std.isOfType(file, Sound) || Assets.exists(file)) && file != null) {
 					vocals.loadEmbedded(file);
 					vocals.autoDestroy = false;
