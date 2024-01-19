@@ -306,7 +306,15 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function addHelpScreen() {
-		var str:String = "W/S or Mouse Wheel - Change Conductor's strum time
+		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		helpBg.scale.set(FlxG.width, FlxG.height);
+		helpBg.scrollFactor.set();
+		helpBg.updateHitbox();
+		helpBg.alpha = 0.6;
+		helpBg.active = helpBg.visible = false;
+		add(helpBg);
+
+		var arr = "W/S or Mouse Wheel - Change Conductor's strum time
 		\nH - Go to the start of the chart
 		\nA/D - Go to the previous/next section
 		\nLeft/Right - Change Snap
@@ -320,17 +328,7 @@ class ChartingState extends MusicBeatState {
 		\nEnter - Play your chart
 		\nQ/E - Decrease/Increase Note Sustain Length
 		\nSpace - Stop/Resume song
-		\nHold Ctrl and Click - Place Both Notes";
-
-		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		helpBg.scale.set(FlxG.width, FlxG.height);
-		helpBg.scrollFactor.set();
-		helpBg.updateHitbox();
-		helpBg.alpha = 0.6;
-		helpBg.active = helpBg.visible = false;
-		add(helpBg);
-
-		var arr = str.split('\n');
+		\nHold Ctrl and Click - Place Both Notes".split('\n');
 		helpTexts = new FlxSpriteGroup();
 		helpTexts.scrollFactor.set();
 		for (i in 0...arr.length) {
@@ -526,9 +524,7 @@ class ChartingState extends MusicBeatState {
 		
 		if(stages.length < 1) stages.push('stage');
 
-		stageDropDown = new FlxUIDropDownMenu(player1DropDown.x + 140, player1DropDown.y, FlxUIDropDownMenu.makeStrIdLabelArray(stages, true), function(character:String) {
-			_song.stage = stages[Std.parseInt(character)];
-		});
+		stageDropDown = new FlxUIDropDownMenu(player1DropDown.x + 140, player1DropDown.y, FlxUIDropDownMenu.makeStrIdLabelArray(stages, true), (character:String) -> _song.stage = stages[Std.parseInt(character)]);
 		stageDropDown.selectedLabel = _song.stage;
 		blockPressWhileScrolling.push(stageDropDown);
 
@@ -2135,7 +2131,6 @@ class ChartingState extends MusicBeatState {
 		var rows:Float = 0;
 
 		var simpleSample:Bool = true;
-		var v1:Bool = false;
 
 		if (array == null) array = [[[0], [0]], [[0], [0]]];
 
@@ -2167,7 +2162,7 @@ class ChartingState extends MusicBeatState {
 				}
 			}
 
-			v1 = samplesPerRowI > 0 ? (index % samplesPerRowI == 0) : false;
+			var v1:Bool = samplesPerRowI > 0 ? (index % samplesPerRowI == 0) : false;
 			while (simpleSample ? v1 : rows >= samplesPerRow) {
 				v1 = false;
 				rows -= samplesPerRow;
@@ -2188,16 +2183,16 @@ class ChartingState extends MusicBeatState {
 
 				if (channels >= 2) {
 					if (gotIndex > array[1][0].length) array[1][0].push(rRMin);
-						else array[1][0][gotIndex - 1] += rRMin;
+					else array[1][0][gotIndex - 1] += rRMin;
 
 					if (gotIndex > array[1][1].length) array[1][1].push(rRMax);
-						else array[1][1][gotIndex - 1] += rRMax;
+					else array[1][1][gotIndex - 1] += rRMax;
 				} else {
 					if (gotIndex > array[1][0].length) array[1][0].push(lRMin);
-						else array[1][0][gotIndex - 1] += lRMin;
+					else array[1][0][gotIndex - 1] += lRMin;
 
 					if (gotIndex > array[1][1].length) array[1][1].push(lRMax);
-						else array[1][1][gotIndex - 1] += lRMax;
+					else array[1][1][gotIndex - 1] += lRMax;
 				}
 
 				lmin = 0;
@@ -2260,7 +2255,6 @@ class ChartingState extends MusicBeatState {
 			curSec = sec;
 			if (updateMusic) {
 				FlxG.sound.music.pause();
-
 				FlxG.sound.music.time = sectionStartTime();
 				pauseAndSetVocalsTime();
 				updateCurStep();
@@ -2293,10 +2287,7 @@ class ChartingState extends MusicBeatState {
 		updateHeads();
 	}
 
-	var characterData:Dynamic = {
-		iconP1: null,
-		iconP2: null
-	};
+	var characterData:Dynamic = {iconP1: null, iconP2: null};
 
 	function updateJsonData():Void {
 		for (i in 1...3) {
@@ -2699,9 +2690,7 @@ class ChartingState extends MusicBeatState {
 
 	function convPathShit(path:String):String {
 		path = Path.normalize(Sys.getCwd() + path);
-		#if windows
-		path = path.replace("/", "\\");
-		#end
+		#if windows path = path.replace("/", "\\"); #end
 		return path;
 	}
 
@@ -2729,7 +2718,7 @@ class ChartingState extends MusicBeatState {
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
-		FlxG.log.notice("Successfully saved LEVEL DATA.");
+		FlxG.log.notice("Successfully saved file.");
 	}
 
 	/**
@@ -2750,7 +2739,7 @@ class ChartingState extends MusicBeatState {
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
-		FlxG.log.error("Problem saving Level data");
+		FlxG.log.error("Problem saving file");
 	}
 
 	function getSectionBeats(?section:Null<Int> = null) {
