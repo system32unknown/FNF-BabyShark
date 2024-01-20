@@ -105,9 +105,3 @@ jobs:
             .haxelib/
           restore-keys: |
             cache-${{ matrix.compile }}-${{ matrix.build }}
-
-      - name: Discord Webhook Action
-        uses: tsickert/discord-webhook@master
-        with:
-          webhook-url: ${{ secrets.WEBHOOK_URL }}
-          content: "Build Action Completed"
