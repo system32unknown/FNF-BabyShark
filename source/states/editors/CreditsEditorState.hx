@@ -20,7 +20,9 @@ class CreditsEditorState extends MusicBeatState {
 	var creditsStuff:Array<Array<String>> = [];
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 
+	var camGame:FlxCamera;
 	var camUI:FlxCamera;
+	var camOther:FlxCamera;
 
 	var bg:FlxSprite;
 	var descText:FlxText;
@@ -42,9 +44,14 @@ class CreditsEditorState extends MusicBeatState {
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
+		camGame = initPsychCamera();
 		camUI = new FlxCamera();
+		camOther = new FlxCamera();
 		camUI.bgColor.alpha = 0;
+		camOther.bgColor.alpha = 0;
+
 		FlxG.cameras.add(camUI, false);
+		FlxG.cameras.add(camOther, false);
 
 		var tabs = [{name: 'Credits', label: 'Credits'}];
 
@@ -432,12 +439,10 @@ class CreditsEditorState extends MusicBeatState {
 				quitting = true;
 			}
 
-			if(blockInput) {
-				if (FlxG.keys.justPressed.ENTER) {
-					for (i in 0...blockPressWhileTypingOn.length) {
-						if(blockPressWhileTypingOn[i].hasFocus)
-							blockPressWhileTypingOn[i].hasFocus = false;
-					}
+			if (blockInput && FlxG.keys.justPressed.ENTER) {
+				for (i in 0...blockPressWhileTypingOn.length) {
+					if(blockPressWhileTypingOn[i].hasFocus)
+						blockPressWhileTypingOn[i].hasFocus = false;
 				}
 			}
 		}
@@ -489,7 +494,7 @@ class CreditsEditorState extends MusicBeatState {
 
 	function unselectableCheck(num:Int):Bool return creditsStuff[num].length <= 1;
 	function nullCheck(num:Int):Bool {
-		if((creditsStuff[num].length <= 1 && creditsStuff[num][0].length <= 0) || (creditsStuff[num] != null && creditsStuff[num][0] != null)) return true;
+		if(creditsStuff[num].length <= 1 && creditsStuff[num][0].length <= 0) return true;
 		return false;
 	}
 

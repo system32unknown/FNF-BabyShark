@@ -1406,7 +1406,6 @@ class ChartingState extends MusicBeatState {
 		} else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
 			var nums:FlxUINumericStepper = cast sender;
 			var wname = nums.name;
-			FlxG.log.add(wname);
 			switch (wname) {
 				case 'section_beats':
 					_song.notes[curSec].sectionBeats = nums.value;
@@ -1539,12 +1538,8 @@ class ChartingState extends MusicBeatState {
 			if (!((curNoteStrum == lastNoteStrum) && (curNoteData == lastNoteData))) {
 				if (FlxG.mouse.overlaps(curRenderedNotes))
 					curRenderedNotes.forEachAlive((note:Note) -> if (FlxG.mouse.overlaps(note)) deleteNote(note));
-				else {
-					if (FlxG.mouse.x > gridBG.x && FlxG.mouse.x < gridBG.x + gridBG.width && FlxG.mouse.y > gridBG.y && FlxG.mouse.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom]) {
-						FlxG.log.add('added note');
-						addNote();
-					}
-				}
+				else if (FlxG.mouse.x > gridBG.x && FlxG.mouse.x < gridBG.x + gridBG.width && FlxG.mouse.y > gridBG.y && FlxG.mouse.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom])
+					addNote();
 			}
 		}
 		if (FlxG.mouse.justPressed) {
@@ -1603,7 +1598,7 @@ class ChartingState extends MusicBeatState {
 			}
 		}
 
-		if (!blockInput) {
+		if(!blockInput) {
 			if (FlxG.keys.justPressed.ENTER) startSong();
 
 			if(curSelectedNote != null && curSelectedNote[1] > -1) {

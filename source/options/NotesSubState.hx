@@ -56,6 +56,7 @@ class NotesSubState extends MusicBeatSubstate
 			note.frames = Paths.getSparrowAtlas(Note.defaultNoteSkin);
 			note.animation.addByPrefix('idle', EK.gfxLetter[i] + '0');
 			note.animation.play('idle');
+			note.antialiasing = ClientPrefs.getPref('Antialiasing');
 			note.ID = i;
 			grpNotes.add(note);
 
@@ -70,6 +71,8 @@ class NotesSubState extends MusicBeatSubstate
 		add(hsbText);
 
 		changeSelection();
+
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	var changingNote:Bool = false;
@@ -79,16 +82,16 @@ class NotesSubState extends MusicBeatSubstate
 		for (i in 0...grpNumbers.length) {
 			var item = grpNumbers.members[i];
 			var scaledY = FlxMath.remapToRange(item.ID, 0, 1, 0, 1.3);
-			item.y = FlxMath.lerp(item.y, (scaledY * 165) + 270 + 60, lerpVal);
-			item.x = FlxMath.lerp(item.x, (item.ID * 20) + 90 + posX + (225 * rownum + 250), lerpVal);
+			item.y = FlxMath.lerp((scaledY * 165) + 270 + 60, item.y, lerpVal);
+			item.x = FlxMath.lerp((item.ID * 20) + 90 + posX + (225 * rownum + 250), item.x, lerpVal);
 			rownum++;
 			if (rownum == 3) rownum = 0;
 		}
 		for (i in 0...grpNotes.length) {
 			var item = grpNotes.members[i];
 			var scaledY = FlxMath.remapToRange(item.ID, 0, 1, 0, 1.3);
-			item.y = FlxMath.lerp(item.y, (scaledY * 165) + 270, lerpVal);
-			item.x = FlxMath.lerp(item.x, (item.ID * 20) + 90, lerpVal);
+			item.y = FlxMath.lerp((scaledY * 165) + 270, item.y, lerpVal);
+			item.x = FlxMath.lerp((item.ID * 20) + 90, item.x, lerpVal);
 			if (i == curSelected) {
 				hsbText.y = item.y - 70;
 				blackBG.setPosition(item.x - 20, item.y - 20);

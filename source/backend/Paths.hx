@@ -534,7 +534,4 @@ class Paths {
 		spr.loadAtlasEx(folderOrImg, spriteJson, animationJson);
 	}
 	#end
-
-	inline static public function exists(key:String)
-		return FileSystem.exists(modFolders(key)) || FileSystem.exists(getPreloadPath(key));
 }
