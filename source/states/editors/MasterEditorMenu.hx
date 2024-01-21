@@ -20,7 +20,7 @@ class MasterEditorMenu extends MusicBeatState {
 	override function create() {
 		FlxG.camera.bgColor = FlxColor.BLACK;
 		#if DISCORD_ALLOWED
-		DiscordClient.changePresence("Editors Main Menu", null);
+		DiscordClient.changePresence("Editors Main Menu");
 		#end
 
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
@@ -39,7 +39,7 @@ class MasterEditorMenu extends MusicBeatState {
 		}
 		
 		#if MODS_ALLOWED
-		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 42).makeGraphic(FlxG.width, 42, 0xFF000000);
+		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 42).makeGraphic(FlxG.width, 42, FlxColor.BLACK);
 		textBG.alpha = 0.6;
 		add(textBG);
 

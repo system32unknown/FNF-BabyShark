@@ -49,7 +49,7 @@ class ModsMenuState extends MusicBeatState {
 		Mods.currentModDirectory = modsList.all[0] != null ? modsList.all[0] : '';
 
 		#if desktop
-		DiscordClient.changePresence("In the Menus", null);
+		DiscordClient.changePresence("In the Menus");
 		#end
 
 		bg = new FlxSprite(Paths.image('menuDesat'));

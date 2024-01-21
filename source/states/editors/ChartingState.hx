@@ -1387,8 +1387,7 @@ class ChartingState extends MusicBeatState {
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if (id == FlxUICheckBox.CLICK_EVENT) {
 			var check:FlxUICheckBox = cast sender;
-			var label = check.getLabel().text;
-			switch (label) {
+			switch (check.getLabel().text) {
 				case 'Must hit section':
 					_song.notes[curSec].mustHitSection = check.checked;
 					updateGrid();
@@ -1405,8 +1404,7 @@ class ChartingState extends MusicBeatState {
 			}
 		} else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
 			var nums:FlxUINumericStepper = cast sender;
-			var wname = nums.name;
-			switch (wname) {
+			switch (nums.name) {
 				case 'section_beats':
 					_song.notes[curSec].sectionBeats = nums.value;
 					reloadGridLayer();
@@ -1468,9 +1466,7 @@ class ChartingState extends MusicBeatState {
 				}
 			}
 		} else if (id == FlxUISlider.CHANGE_EVENT && (sender is FlxUISlider)) {
-			switch (sender) {
-				case 'playbackSpeed': playbackSpeed = Std.int(sliderRate.value);
-			}
+			if (sender == 'playbackSpeed') playbackSpeed = Std.int(sliderRate.value);
 		}
 	}
 

@@ -54,8 +54,7 @@ class OptionsState extends MusicBeatState {
 		if (re) grpOptions.clear();
 		for (i in 0...options[curPage].length) {
 			var optionText:Alphabet = new Alphabet(0, 0, options[curPage][i], true);
-			optionText.screenCenter();
-			optionText.y += (100 * (i - (options[curPage].length / 2))) + 50;
+			optionText.screenCenter().y += (100 * (i - (options[curPage].length / 2))) + 50;
 			grpOptions.add(optionText);
 		}
 	}

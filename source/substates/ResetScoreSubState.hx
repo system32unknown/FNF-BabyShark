@@ -56,12 +56,11 @@ class ResetScoreSubState extends MusicBeatSubstate {
 		}
 
 		yesText = new Alphabet(0, text.y + 150, 'Yes', true);
-		yesText.screenCenter(X);
-		yesText.x -= 200;
+		yesText.screenCenter(X).x -= 200;
+		yesText
 		add(yesText);
 		noText = new Alphabet(0, text.y + 150, 'No', true);
-		noText.screenCenter(X);
-		noText.x += 200;
+		noText.screenCenter(X).x += 200;
 		add(noText);
 		updateOptions();
 	}

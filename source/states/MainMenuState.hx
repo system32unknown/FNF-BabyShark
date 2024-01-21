@@ -40,7 +40,7 @@ class MainMenuState extends MusicBeatState {
 		#if MODS_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();
 
-		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Menus", null); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Menus"); #end
 
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
@@ -103,8 +103,7 @@ class MainMenuState extends MusicBeatState {
 		curOptDesc.setFormat(Paths.font('babyshark.ttf'), 24, FlxColor.WHITE, CENTER);
 		curOptDesc.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		curOptDesc.scrollFactor.set();
-		curOptDesc.screenCenter(X);
-		curOptDesc.y = FlxG.height - 58;
+		curOptDesc.screenCenter(X).y = FlxG.height - 58;
 		add(curOptDesc);
 
 		add(menuItems = new FlxTypedGroup<FlxSprite>());

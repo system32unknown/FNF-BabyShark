@@ -93,7 +93,7 @@ class CreditsState extends MusicBeatState {
 	var offsetThing:Float = -75;
 
 	override function create() {
-		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Credits", null); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Credits"); #end
 
 		sections = [for (title in titles) title];
 
@@ -275,7 +275,7 @@ class CreditSectionState extends MusicBeatState {
 	final offsetThing:Float = -75;
 
 	override function create() {
-		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Menus", null); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Menus"); #end
 		prevModDir = Mods.currentModDirectory;
 		persistentUpdate = true;
 
@@ -392,8 +392,7 @@ class CreditSectionState extends MusicBeatState {
 				var lerpVal:Float = Math.exp(-elapsed * 12);
 				if(item.targetY == 0) {
 					var lastX:Float = item.x;
-					item.screenCenter(X);
-					item.x = FlxMath.lerp(item.x - 70, lastX, lerpVal);
+					item.screenCenter(X).x = FlxMath.lerp(item.x - 70, lastX, lerpVal);
 				} else item.x = FlxMath.lerp(200 + -40 * Math.abs(item.targetY), item.x, lerpVal);
 			}
 		}

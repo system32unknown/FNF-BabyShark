@@ -274,7 +274,6 @@ class WeekEditorState extends MusicBeatState {
 		}
 
 		var stringThing:Array<String> = [for (i in 0...weekFile.songs.length) weekFile.songs[i][0]];
-
 		txtTracklist.text = '';
 		for (i in 0...stringThing.length) {
 			txtTracklist.text += stringThing[i] + '\n';
