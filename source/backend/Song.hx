@@ -1,7 +1,6 @@
 package backend;
 
 import backend.Section.SwagSection;
-import haxe.Json;
 
 typedef SwagSong = {
 	var song:String;
@@ -103,5 +102,5 @@ class Song {
 	}
 
 	public static function parseJSONshit(rawJson:String):SwagSong
-		return cast Json.parse(rawJson).song;
+		return cast haxe.Json.parse(rawJson).song;
 }

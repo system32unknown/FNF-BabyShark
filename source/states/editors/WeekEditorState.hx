@@ -9,7 +9,6 @@ import flixel.addons.ui.FlxUITabMenu;
 import flixel.ui.FlxButton;
 import openfl.utils.Assets;
 import openfl.net.FileReference;
-import openfl.net.FileFilter;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import lime.system.Clipboard;
@@ -424,12 +423,11 @@ class WeekEditorState extends MusicBeatState {
 
 	static var _file:FileReference;
 	public static function loadWeek() {
-		var jsonFilter:FileFilter = new FileFilter('JSON', 'json');
 		_file = new FileReference();
 		_file.addEventListener(Event.SELECT, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-		_file.browse([jsonFilter]);
+		_file.browse([new openfl.net.FileFilter('JSON', 'json')]);
 	}
 	
 	public static var loadedWeek:WeekFile = null;

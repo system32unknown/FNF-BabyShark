@@ -263,7 +263,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		return optionShit[num].length < 2 && optionShit[num][0] != defaultKey;
 	}
 
-	private function addBindTexts(optionText:Alphabet, num:Int) {
+	function addBindTexts(optionText:Alphabet, num:Int) {
 		var keys:Array<Dynamic> = ClientPrefs.keyBinds.get(optionShit[num][1]);
 		var text1 = new AttachedText(InputFormatter.getKeyName(keys[0]), 400, -55);
 		text1.setPosition(optionText.x + 400, optionText.y - 55);

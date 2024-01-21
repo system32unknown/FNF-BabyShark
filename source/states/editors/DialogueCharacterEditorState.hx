@@ -8,7 +8,6 @@ import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.ui.FlxButton;
 import openfl.net.FileReference;
-import openfl.net.FileFilter;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import haxe.Json;
@@ -257,14 +256,13 @@ class DialogueCharacterEditorState extends MusicBeatState
 					ghostIdle.playAnim(theAnim, true);
 				}
 			} else { //Add
-				var newAnim:DialogueAnimArray = {
+				character.jsonFile.animations.push({
 					anim: theAnim,
 					loop_name: loopInputText.text,
 					loop_offsets: [0, 0],
 					idle_name: idleInputText.text,
 					idle_offsets: [0, 0]
-				}
-				character.jsonFile.animations.push(newAnim);
+				});
 
 				var lastSelected:String = animationDropDown.selectedLabel;
 				character.reloadAnimations();
@@ -620,16 +618,14 @@ class DialogueCharacterEditorState extends MusicBeatState
 	
 	var _file:FileReference = null;
 	function loadCharacter() {
-		var jsonFilter:FileFilter = new FileFilter('JSON', 'json');
 		_file = new FileReference();
 		_file.addEventListener(Event.SELECT, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-		_file.browse([jsonFilter]);
+		_file.browse([new openfl.net.FileFilter('JSON', 'json')]);
 	}
 
-	function onLoadComplete(_):Void
-	{
+	function onLoadComplete(_):Void {
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);

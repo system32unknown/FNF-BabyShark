@@ -2,7 +2,6 @@ package backend;
 
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
-import openfl.display.BlendMode;
 import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
@@ -86,7 +85,7 @@ class FunkinPreloader extends flixel.system.FlxBasePreloader {
 				bitmap.bitmapData.setPixel(j++, i, 0);
 			i += 2;
 		}
-		bitmap.blendMode = BlendMode.OVERLAY;
+		bitmap.blendMode = openfl.display.BlendMode.OVERLAY;
 		bitmap.alpha = .25;
 		_buffer.addChild(bitmap);
 

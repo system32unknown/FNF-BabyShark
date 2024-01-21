@@ -5,7 +5,6 @@ import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUITabMenu;
-import openfl.net.FileFilter;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
@@ -20,9 +19,7 @@ class CreditsEditorState extends MusicBeatState {
 	var creditsStuff:Array<Array<String>> = [];
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 
-	var camGame:FlxCamera;
 	var camUI:FlxCamera;
-	var camOther:FlxCamera;
 
 	var bg:FlxSprite;
 	var descText:FlxText;
@@ -44,14 +41,10 @@ class CreditsEditorState extends MusicBeatState {
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
-		camGame = initPsychCamera();
+		initPsychCamera();
 		camUI = new FlxCamera();
-		camOther = new FlxCamera();
 		camUI.bgColor.alpha = 0;
-		camOther.bgColor.alpha = 0;
-
 		FlxG.cameras.add(camUI, false);
-		FlxG.cameras.add(camOther, false);
 
 		var tabs = [{name: 'Credits', label: 'Credits'}];
 
@@ -583,12 +576,11 @@ class CreditsEditorState extends MusicBeatState {
 	}
 
 	function loadCredits() {
-		var txtFilter:FileFilter = new FileFilter('TXT', 'txt');
 		_file = new FileReference();
 		_file.addEventListener(Event.SELECT, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-		_file.browse([txtFilter]);
+		_file.browse([new openfl.net.FileFilter('TXT', 'txt')]);
 	}
 
 	var loadError:Bool = false;

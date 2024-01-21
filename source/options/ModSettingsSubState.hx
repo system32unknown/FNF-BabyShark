@@ -44,12 +44,12 @@ class ModSettingsSubState extends BaseOptionsMenu {
 						var keyboardKey:FlxKey = cast FlxKey.fromString(keyboardStr);
 
 						@:privateAccess {
-							newOption.getValue = function() {
+							newOption.getValue = () -> {
 								var data = save.get(newOption.variable);
 								if(data == null) return 'NONE';
 								return data.keyboard;
 							};
-							newOption.setValue = function(value:Dynamic) {
+							newOption.setValue = (value:Dynamic) -> {
 								var data = save.get(newOption.variable);
 								if(data == null) data = {keyboard: 'NONE'};
 								data.keyboard = value;

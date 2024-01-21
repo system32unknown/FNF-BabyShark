@@ -6,7 +6,6 @@ import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.ui.FlxButton;
 import openfl.net.FileReference;
-import openfl.net.FileFilter;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import haxe.Json;
@@ -140,7 +139,7 @@ class DialogueEditorState extends MusicBeatState
 	}
 
 	function copyDefaultLine():DialogueLine {
-		var copyLine:DialogueLine = {
+		return {
 			portrait: defaultLine.portrait,
 			expression: defaultLine.expression,
 			text: defaultLine.text,
@@ -148,7 +147,6 @@ class DialogueEditorState extends MusicBeatState
 			speed: defaultLine.speed,
 			sound: ''
 		};
-		return copyLine;
 	}
 
 	function updateTextBox() {
@@ -320,17 +318,13 @@ class DialogueEditorState extends MusicBeatState
 					}
 					animText.text = 'Animation: ' + animToPlay + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
 				}
-				if(controlText[i]) {
-					changeText(negaMult[i]);
-				}
+				if(controlText[i]) changeText(negaMult[i]);
 			}
 
 			if(FlxG.keys.justPressed.O) {
 				dialogueFile.dialogue.remove(dialogueFile.dialogue[curSelected]);
 				if(dialogueFile.dialogue.length < 1) //You deleted everything, dumbo!
-				{
 					dialogueFile.dialogue = [copyDefaultLine()];
-				}
 				changeText();
 			} else if(FlxG.keys.justPressed.P) {
 				dialogueFile.dialogue.insert(curSelected + 1, copyDefaultLine());
@@ -391,12 +385,11 @@ class DialogueEditorState extends MusicBeatState
 
 	var _file:FileReference = null;
 	function loadDialogue() {
-		var jsonFilter:FileFilter = new FileFilter('JSON', 'json');
 		_file = new FileReference();
 		_file.addEventListener(Event.SELECT, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-		_file.browse([jsonFilter]);
+		_file.browse([new openfl.net.FileFilter('JSON', 'json')]);
 	}
 
 	function onLoadComplete(_):Void

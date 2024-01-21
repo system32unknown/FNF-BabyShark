@@ -7,7 +7,6 @@ import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.ui.FlxButton;
 import openfl.net.FileReference;
-import openfl.net.FileFilter;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import haxe.Json;
@@ -151,13 +150,12 @@ class MenuCharacterEditorState extends MusicBeatState
 		
 		scaleStepper = new FlxUINumericStepper(140, imageInputText.y, 0.05, 1, 0.1, 30, 2);
 
-		var confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Confirm animation on the .XML:');
 		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Image file name:'));
 		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Idle animation on the .XML:'));
 		tab_group.add(new FlxText(scaleStepper.x, scaleStepper.y - 18, 0, 'Scale:'));
 		tab_group.add(flipXCheckbox);
 		tab_group.add(reloadImageButton);
-		tab_group.add(confirmDescText);
+		tab_group.add(new FlxText(10, confirmInputText.y - 18, 0, 'Confirm animation on the .XML:'));
 		tab_group.add(imageInputText);
 		tab_group.add(idleInputText);
 		tab_group.add(confirmInputText);
@@ -283,12 +281,11 @@ class MenuCharacterEditorState extends MusicBeatState
 
 	var _file:FileReference = null;
 	function loadCharacter() {
-		var jsonFilter:FileFilter = new FileFilter('JSON', 'json');
 		_file = new FileReference();
 		_file.addEventListener(Event.SELECT, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-		_file.browse([jsonFilter]);
+		_file.browse([new openfl.net.FileFilter('JSON', 'json')]);
 	}
 
 	function onLoadComplete(_):Void {

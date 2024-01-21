@@ -1,15 +1,13 @@
 package debug;
 
 //crash handler stuff
-import openfl.Lib;
 import openfl.events.UncaughtErrorEvent;
 import openfl.events.ErrorEvent;
 import openfl.errors.Error;
-import haxe.io.Path;
 
 class CrashHandler {
 	public static function init() {
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
+		openfl.Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#if cpp untyped __global__.__hxcpp_set_critical_error_handler(onError); #end
 	}
 
@@ -51,7 +49,7 @@ class CrashHandler {
 		File.saveContent(path, '$errMsg\n');
 
 		Sys.println(errMsg);
-		Sys.println('Crash dump saved in ${Path.normalize(path)}');
+		Sys.println('Crash dump saved in ${haxe.io.Path.normalize(path)}');
 
 		CoolUtil.callErrBox("Alter Engine: Error!", errMsg);
 		

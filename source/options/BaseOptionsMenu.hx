@@ -62,8 +62,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		descText.borderSize = 2.4;
 		add(descText);
 
-		for (i in 0...optionsArray.length)
-		{
+		for (i in 0...optionsArray.length) {
 			var optionText:Alphabet = new Alphabet(290, 260, optionsArray[i].name, optionsArray[i].type == 'func');
 			optionText.isMenuItem = true;
 			optionText.x += 300;
@@ -110,8 +109,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if(bindingKey)
-		{
+		if(bindingKey) {
 			bindingKeyUpdate(elapsed);
 			return;
 		}

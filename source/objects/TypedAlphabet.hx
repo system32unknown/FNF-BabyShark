@@ -14,7 +14,6 @@ class TypedAlphabet extends Alphabet {
 
 	override function set_text(newText:String) {
 		super.set_text(newText);
-
 		resetDialogue();
 		return newText;
 	}
@@ -58,8 +57,7 @@ class TypedAlphabet extends Alphabet {
 		_curLetter = -1;
 		finishedText = false;
 		_timeToUpdate = 0;
-		for (letter in letters)
-			letter.visible = false;
+		for (letter in letters) letter.visible = false;
 	}
 
 	public function finishText() {

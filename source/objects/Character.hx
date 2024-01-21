@@ -197,9 +197,7 @@ class Character extends FlxSprite {
 				else addOffset(anim.anim, 0, 0);
 			}
 		}
-		#if flxanimate
-		if(isAnimateAtlas) copyAtlasValues();
-		#end
+		#if flxanimate if(isAnimateAtlas) copyAtlasValues(); #end
 	}
 
 	override function update(elapsed:Float) {

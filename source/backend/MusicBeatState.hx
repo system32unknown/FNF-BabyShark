@@ -59,7 +59,6 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	public function new() {
 		isPlayState = (stateClass = Type.getClass(this)) == PlayState;
 		curBPMChange = Conductor.getDummyBPMChange();
-
 		super();
 	}
 
@@ -223,8 +222,6 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	}
 
 	function stagesFunc(func:BaseStage -> Void) {
-		for (stage in stages)
-			if(stage != null && stage.exists && stage.active)
-				func(stage);
+		for (stage in stages) if(stage != null && stage.exists && stage.active) func(stage);
 	}
 }
