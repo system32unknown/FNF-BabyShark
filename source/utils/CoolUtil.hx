@@ -42,11 +42,11 @@ class CoolUtil {
 
 	inline public static function openFolder(folder:String, absolute:Bool = false) {
 		#if sys
-			if(!absolute) folder = Sys.getCwd() + '$folder';
+		if(!absolute) folder = Sys.getCwd() + '$folder';
 
-			folder = folder.replace('/', '\\');
-			if(folder.endsWith('/')) folder.substr(0, folder.length - 1);
-			Sys.command(#if windows 'explorer.exe' #else '/usr/bin/xdg-open' #end, [folder]);
+		folder = folder.replace('/', '\\');
+		if(folder.endsWith('/')) folder.substr(0, folder.length - 1);
+		Sys.command(#if windows 'explorer.exe' #else '/usr/bin/xdg-open' #end, [folder]);
 		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
 	}
 
@@ -109,6 +109,7 @@ class CoolUtil {
 		return new FlxBackdrop(flixel.addons.display.FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
 	}
 
+	// formatTime but epic
 	public static function formatTime(time:Float):String {
 		var secs:String = '' + Math.floor(time) % 60;
 		var mins:String = '' + Math.floor(time / 60) % 60;

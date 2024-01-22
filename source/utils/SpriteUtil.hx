@@ -18,7 +18,7 @@ class SpriteUtil {
                 fixedColor = FlxColor.BLACK + (color % 0x1000000);
                 if (colorMap[fixedColor] == null) colorMap[fixedColor] = 0;
 
-				if (saturated) colorMap[fixedColor] += color.alphaFloat * .33 + (.67 * (color.saturation * (2 * (color.lightness > .5 ? .5 - (color.lightness) : color.lightness))));
+				if (saturated) colorMap[fixedColor] += color.alphaFloat * .33 + (.67 * (color.saturation * (2 * (color.lightness > .5 ? .5 - color.lightness : color.lightness))));
 				else colorMap[fixedColor] += color.alphaFloat;
 			}
 		}
@@ -46,8 +46,8 @@ class SpriteUtil {
 			  	}
 			}
 		}
-		var maxCount = 0;
-		var maxKey:Int = 0;//after the loop this will store the max color
+		var maxCount:Int = 0;
+		var maxKey:Int = 0; //after the loop this will store the max color
 		countByColor[FlxColor.BLACK] = 0;
 		for (key in countByColor.keys()) {
 			if (countByColor[key] >= maxCount) {

@@ -2485,7 +2485,7 @@ class PlayState extends MusicBeatState {
 			case "singRIGHT": camlockpoint.set(campoint.x + camMovement, campoint.y);
 		}
 
-		var camTimer:FlxTimer = new FlxTimer().start(1);
+		var camTimer:FlxTimer = new FlxTimer().start();
 		camlock = true;
 		if(camTimer.finished) {
 			camlock = false;

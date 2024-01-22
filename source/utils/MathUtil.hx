@@ -20,15 +20,7 @@ class MathUtil {
 		return Math.floor(value * tempMult) / tempMult;
 	}
 
-	public static function getMinAndMax(value1:Float, value2:Float):Array<Float> {
-		var minAndMaxs = new Array<Float>();
-
-		var min = Math.min(value1, value2);
-		var max = Math.max(value1, value2);
-
-		minAndMaxs.push(min);
-		minAndMaxs.push(max);
-
-		return minAndMaxs;
+	inline public static function getMinAndMax(v1:Float, v2:Float):Array<Float> {
+		return [Math.min(v1, v2), Math.max(v1, v2)];
 	}
 }
