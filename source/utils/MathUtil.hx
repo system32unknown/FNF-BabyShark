@@ -23,4 +23,25 @@ class MathUtil {
 	inline public static function getMinAndMax(v1:Float, v2:Float):Array<Float> {
 		return [Math.min(v1, v2), Math.max(v1, v2)];
 	}
+
+    public static function fastInverseSquareRoot(x: Float): Float {
+        var i:Int = cast(x);
+        var y:Float = x;
+
+        // The magic number 0x5f3759df helps in the approximation
+        // Adjust the iteration count for better accuracy
+        var threehalfs:Float = 1.5;
+        var half:Float = 0.5;
+        var iterations:Int = 2;
+
+        i = 0x5f3759df - (i >> 1);
+        y = cast(i);
+
+        // Newton-Raphson iteration
+        for (_ in 0...iterations) {
+            y *= (threehalfs - (half * x * y * y));
+        }
+
+        return y;
+    }
 }

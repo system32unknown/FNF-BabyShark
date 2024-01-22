@@ -180,8 +180,7 @@ class CharacterEditorState extends MusicBeatState {
 		var arr = str.split('\n');
 		helpTexts = new FlxSpriteGroup();
 		helpTexts.camera = camHUD;
-		for (i in 0...arr.length)
-		{
+		for (i in 0...arr.length) {
 			if(arr[i].length < 2) continue;
 
 			var helpText:FlxText = new FlxText(0, 0, 600, arr[i], 16);
@@ -301,10 +300,10 @@ class CharacterEditorState extends MusicBeatState {
 					spr.flipX = character.flipX;
 					spr.alpha = ghostAlpha;
 
-					spr.scale.copyFrom(character.scale);
+					spr.scale.set(character.scale.x, character.scale.y);
 					spr.updateHitbox();
 
-					spr.offset.copyFrom(character.offset);
+					spr.offset.set(character.offset.x, character.offset.y);
 					spr.visible = true;
 
 					var otherSpr:FlxSprite = (spr == animateGhost) ? ghost : animateGhost;
