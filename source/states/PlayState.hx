@@ -2093,7 +2093,7 @@ class PlayState extends MusicBeatState {
 		tempText += 'Score:$songScore ';
 		tempText += (cpuControlled || instakillOnMiss ? '' : '$scoreSeparator ${ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks'}:$songMisses ');
 		tempText += switch(ClientPrefs.getPref('ScoreType')) {
-			case 'Alter': '$scoreSeparator Acc:$accuracy% -' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
+			case 'Alter': '$scoreSeparator Acc:$accuracy% •' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
 			case 'Kade' | _: '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 		}
 		return tempText;

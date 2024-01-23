@@ -62,14 +62,7 @@ class HealthIcon extends FlxSprite {
 		var graph:FlxGraphic = null;
 		var name:String = 'icons/$char';
 
-		#if MODS_ALLOWED
-		var modXmlToFind:String = Paths.modsXml(name);
-		var xmlToFind:String = Paths.getPath('images/$name.xml', TEXT);
-		if (FileSystem.exists(modXmlToFind) || FileSystem.exists(xmlToFind) || openfl.utils.Assets.exists(xmlToFind))
-		#else
-		if (Assets.exists(Paths.getPath('images/$name.xml', TEXT)))
-		#end
-			animated = true;
+		animated = Paths.exists('images/$name.xml');
 
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing);
 		else {
