@@ -381,8 +381,6 @@ class ChartingState extends MusicBeatState {
 			PlayState.SONG = Song.parseJSONshit(FlxG.save.data.autosave);
 			MusicBeatState.resetState();
 		});
-		loadAutosaveBtn.color = FlxColor.GREEN;
-		loadAutosaveBtn.label.color = FlxColor.WHITE;
 
 		var loadEventJson:FlxButton = new FlxButton(loadAutosaveBtn.x, loadAutosaveBtn.y + 30, 'Load Events', function() {
 			var songName:String = Paths.formatToSongPath(_song.song);
@@ -399,8 +397,6 @@ class ChartingState extends MusicBeatState {
 				changeSection(curSec);
 			}
 		});
-		loadEventJson.color = FlxColor.GREEN;
-		loadEventJson.label.color = FlxColor.WHITE;
 
 		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, 'Save Events', () -> saveEvents());
 

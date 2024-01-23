@@ -388,6 +388,8 @@ class CharacterEditorState extends MusicBeatState {
 			};
 
 			character.loadCharacterFile(_template);
+			character.color = FlxColor.WHITE;
+			character.alpha = 1;
 			reloadAnimList();
 			reloadCharacterOptions();
 			updateCharacterPositions();
@@ -590,9 +592,8 @@ class CharacterEditorState extends MusicBeatState {
 		noAntialiasingCheckBox.checked = character.noAntialiasing;
 		noAntialiasingCheckBox.callback = function() {
 			character.antialiasing = false;
-			if(!noAntialiasingCheckBox.checked && ClientPrefs.getPref('Antialiasing')) {
+			if(!noAntialiasingCheckBox.checked && ClientPrefs.getPref('Antialiasing'))
 				character.antialiasing = true;
-			}
 			character.noAntialiasing = noAntialiasingCheckBox.checked;
 		};
 
