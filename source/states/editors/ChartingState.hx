@@ -942,7 +942,7 @@ class ChartingState extends MusicBeatState {
 		});
 		leftSectionNotetype.setGraphicSize(80, 30);
 		leftSectionNotetype.updateHitbox();
-		var rightSectionNotetype:FlxButton = new FlxButton(pasteButton.x, leftSectionNotetype.y, "Right Section to Notetype", function() {
+		var rightSectionNotetype:FlxButton = new FlxButton(pasteButton.x, leftSectionNotetype.y, "Right Section to Notetype", () -> {
 			for (sNotes in _song.notes[curSec].sectionNotes) {
 				var note:Array<Dynamic> = sNotes;
 				if (note[1] > _song.mania)
@@ -954,7 +954,7 @@ class ChartingState extends MusicBeatState {
 		rightSectionNotetype.setGraphicSize(80, 30);
 		rightSectionNotetype.updateHitbox();
 
-		check_stackActive = new FlxUICheckBox(leftSectionNotetype.x, leftSectionNotetype.y + 30, null, null, "Spam Mode", 100);
+		check_stackActive = new FlxUICheckBox(leftSectionNotetype.x, leftSectionNotetype.y + 60, null, null, "Spam Mode", 100);
 		check_stackActive.name = 'check_stackActive';
 		stepperStackNum = new FlxUINumericStepper(check_stackActive.x, check_stackActive.y + 40, 1, 4, 0, 999999);
 		stepperStackNum.name = 'stack_count';

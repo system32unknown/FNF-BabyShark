@@ -32,7 +32,7 @@ class CoolUtil {
 		return [for(i in 0...daList.length) daList[i].trim()];
 	}
 
-	inline public static function browserLoad(site:String) {
+	public static function browserLoad(site:String) {
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site, "&"]);
 		#else
@@ -77,19 +77,25 @@ class CoolUtil {
 		return tempArray;
 	}
 
-    public static function getColor(value:Dynamic):FlxColor {
+    public static function getColor(value:Dynamic, ?defValue:Array<Int>):FlxColor {
         if (value == null) return FlxColor.WHITE;
         if (value is Int) return value;
         if (value is String) return colorFromString(value);
-
-        if (value is Array) {
-            var arr:Array<Float> = cast value;
-            while (arr.length < 3) arr.push(0);
-            return FlxColor.fromRGB(Std.int(arr[0]), Std.int(arr[1]), Std.int(arr[2]));
-        }
-
+        if (value is Array) return colorFromArray(value, defValue);
         return FlxColor.WHITE;
     }
+
+	inline public static function colorFromArray(colors:Array<Int>, ?defColors:Array<Int>) {
+		colors = fixRGBColorArray(colors, defColors);
+		return FlxColor.fromRGB(colors[0], colors[1], colors[2], colors[3]);
+	}
+
+	inline public static function fixRGBColorArray(colors:Array<Int>, ?defColors:Array<Int>) {
+		// helper function used on characters n such
+		final endResult:Array<Int> = (defColors != null && defColors.length > 2) ? defColors : [255, 255, 255, 255]; // Red, Green, Blue, Alpha
+		for (i in 0...endResult.length) if (colors[i] > -1) endResult[i] = colors[i];
+		return endResult;
+	}
 
 	inline public static function colorFromString(color:String):FlxColor {
 		var hideChars = ~/[\t\n\r]/;

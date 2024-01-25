@@ -6,16 +6,19 @@ import haxe.extern.EitherType;
 typedef WeekFile = {
 	// JSON variables
 	var songs:Array<Array<EitherType<String, Array<Int>>>>;
-	var weekCharacters:Array<String>;
-	var weekBackground:String;
-	var weekBefore:String;
-	var storyName:String;
-	var weekName:String;
+	var difficulties:String;
 	var startUnlocked:Bool;
 	var hiddenUntilUnlocked:Bool;
+	var weekName:String;
+	// -- STORY MENU SPECIFIC -- //
+	var weekCharacters:Array<String>;
+	var weekBackground:String;
+	var flashingColor:Array<Int>;
 	var hideStoryMode:Bool;
+	var weekBefore:String;
+	var storyName:String;
+	// -- FREEPLAY MENU SPECIFIC -- //
 	var hideFreeplay:Bool;
-	var difficulties:String;
 	var sections:Array<String>;
 }
 
@@ -26,16 +29,19 @@ class WeekData {
 	
 	// JSON variables
 	public var songs:Array<Array<EitherType<String, Array<Int>>>>;
-	public var weekCharacters:Array<String>;
-	public var weekBackground:String;
-	public var weekBefore:String;
-	public var storyName:String;
-	public var weekName:String;
+	public var difficulties:String;
 	public var startUnlocked:Bool;
 	public var hiddenUntilUnlocked:Bool;
+	public var weekName:String;
+	// -- STORY MENU SPECIFIC -- //
+	public var weekCharacters:Array<String>;
+	public var weekBackground:String;
+	public var flashingColor:FlxColor = 0xFF33FFFF;
 	public var hideStoryMode:Bool;
+	public var weekBefore:String;
+	public var storyName:String;
+	// -- FREEPLAY MENU SPECIFIC -- //
 	public var hideFreeplay:Bool;
-	public var difficulties:String;
 	public var sections:Array<String>;
 
 	public var fileName:String;
@@ -51,6 +57,7 @@ class WeekData {
 		weekBefore: 'tutorial',
 		storyName: 'Your New Week',
 		weekName: 'Custom Week',
+		flashingColor: [51, 255, 255],
 		startUnlocked: true,
 		hiddenUntilUnlocked: false,
 		hideStoryMode: false,
@@ -64,9 +71,11 @@ class WeekData {
 	}
 
 	public function new(weekFile:WeekFile, fileName:String) {
-		for (field in Reflect.fields(weekFile))
-			if(Reflect.fields(this).contains(field)) // Reflect.hasField() won't fucking work :/
-				Reflect.setProperty(this, field, Reflect.getProperty(weekFile, field));
+		for (field in Reflect.fields(weekFile)) {
+			if(Reflect.fields(this).contains(field) && field != "flashingColor") // Reflect.hasField() won't fucking work :/
+				Reflect.setProperty(this, field,Reflect.field(weekFile, field));
+		}
+		if (weekFile.flashingColor != null) flashingColor = CoolUtil.colorFromArray(weekFile.flashingColor);
 		this.fileName = fileName;
 	}
 
