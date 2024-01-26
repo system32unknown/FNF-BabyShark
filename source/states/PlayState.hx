@@ -1699,7 +1699,7 @@ class PlayState extends MusicBeatState {
 			if(Conductor.songPosition < leStrumTime) return;
 
 			var value1:String = eventNotes[0].value1 != null ? eventNotes[0].value1 : '';
-			var value2:String = eventNotes[1].value1 != null ? eventNotes[1].value1 : '';
+			var value2:String = eventNotes[0].value2 != null ? eventNotes[0].value2 : '';
 			triggerEvent(eventNotes[0].event, value1, value2, leStrumTime);
 			eventNotes.shift();
 		}
