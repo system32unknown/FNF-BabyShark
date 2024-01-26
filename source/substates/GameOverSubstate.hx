@@ -1,7 +1,6 @@
 package substates;
 
 import flixel.FlxObject;
-import flixel.addons.transition.FlxTransitionableState;
 import objects.Character;
 
 class GameOverSubstate extends MusicBeatSubstate {
@@ -89,6 +88,8 @@ class GameOverSubstate extends MusicBeatSubstate {
 
 		PlayState.instance.setOnScripts('inGameOver', true);
 		PlayState.instance.callOnScripts('onGameOverStart', []);
+
+		super.create();
 	}
 
 	override function update(elapsed:Float) {
@@ -106,8 +107,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 			PlayState.chartingMode = false;
 
 			Mods.loadTopMod();
-			if (PlayState.isStoryMode) MusicBeatState.switchState(new states.StoryMenuState());
-			else MusicBeatState.switchState(new states.FreeplayState());
+			MusicBeatState.switchState(PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
@@ -141,7 +141,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		new FlxTimer().start(.7, function(tmr:FlxTimer) {
 			FlxG.camera.fade(FlxColor.BLACK, 2, false);
 			new FlxTimer().start(sndLength - .7, (tmr:FlxTimer) -> {
-				FlxTransitionableState.skipNextTransIn = true;
+				flixel.addons.transition.FlxTransitionableState.skipNextTransIn = true;
 				MusicBeatState.resetState();
 			});
 		});

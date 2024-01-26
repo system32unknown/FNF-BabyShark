@@ -24,24 +24,15 @@ class MathUtil {
 		return [Math.min(v1, v2), Math.max(v1, v2)];
 	}
 
-    public static function fastInverseSquareRoot(x: Float): Float {
+    public static function fastInverseSquareRoot(x: Float):Float {
         var i:Int = cast(x);
         var y:Float = x;
+        var x2:Float = x * .5;
 
-        // The magic number 0x5f3759df helps in the approximation
-        // Adjust the iteration count for better accuracy
-        var threehalfs:Float = 1.5;
-        var half:Float = 0.5;
-        var iterations:Int = 2;
-
-        i = 0x5f3759df - (i >> 1);
+        i = 0x5f3759df - (i >> 1); // what the fuck?
         y = cast(i);
 
-        // Newton-Raphson iteration
-        for (_ in 0...iterations) {
-            y *= (threehalfs - (half * x * y * y));
-        }
-
+        y = y * (1.5 - (x2 * y * y));
         return y;
     }
 }

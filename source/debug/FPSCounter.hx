@@ -47,7 +47,7 @@ class FPSCounter extends openfl.text.TextField {
 		if (ClientPrefs.getPref('RainbowFps')) {
 			timeColor = (timeColor % 360) + 1;
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
-		} else if (fpsManager.checkFPSLag()) textColor = FlxColor.WHITE;
+		} else textColor = FlxColor.WHITE;
 
 		text = '${fpsManager.curFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${utils.MathUtil.truncateFloat((1 / fpsManager.curCount) * 1000)}ms]' : ''}\n';
 		if (memType == "MEM" || memType == "MEM/PEAK")

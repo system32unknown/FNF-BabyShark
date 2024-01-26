@@ -22,7 +22,7 @@ class GitCommitMacro {
 		return macro $v{"-"};
 		#else
 		try {
-			var proc = new Process('git', ['rev-parse', '--short', 'HEAD'], false);
+			var proc:Process = new Process('git', ['rev-parse', '--short', 'HEAD'], false);
 			proc.exitCode(true);
 			return macro $v{proc.stdout.readLine()};
 		} catch(e) {}
@@ -35,7 +35,7 @@ class GitCommitMacro {
 		return macro $v{0};
 		#else
 		try {
-			var proc = new Process('git', ['rev-list', 'HEAD', '--count'], false);
+			var proc:Process = new Process('git', ['rev-list', 'HEAD', '--count'], false);
 			proc.exitCode(true);
 			return macro $v{Std.parseInt(proc.stdout.readLine())};
 		} catch(e) {}

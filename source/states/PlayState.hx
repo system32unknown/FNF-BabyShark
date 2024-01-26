@@ -1162,8 +1162,10 @@ class PlayState extends MusicBeatState {
 		var returnedValue:Null<Float> = callOnScripts('eventEarlyTrigger', [event.event, event.value1, event.value2, event.strumTime], true, [], [0]);
 		if(returnedValue != null && returnedValue != 0 && returnedValue != LuaUtils.Function_Continue) return returnedValue;
 
-		switch(event.event) {case 'Kill Henchmen': return 280;}
-		return 0;
+		return switch(event.event) {
+			case 'Kill Henchmen': 280;
+			default: 0;
+		}
 	}
 
 	function sortByTime(Obj1:Dynamic, Obj2:Dynamic):Int return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
@@ -1367,9 +1369,8 @@ class PlayState extends MusicBeatState {
 	}
 
 	override public function onResize(width:Int, height:Int):Void {
-		callOnScripts('onResize', [width, height]);
 		super.onResize(width, height);
-		callOnScripts('onResizePost', [width, height]);
+		callOnScripts('onResize', [width, height]);
 	}
 
 	function resetRPC(?showTime:Bool = false) {
@@ -1594,8 +1595,7 @@ class PlayState extends MusicBeatState {
 
 			if(daNote.isSustainNote && strum.sustainReduce) daNote.clipToStrumNote(strum);
 
-			// Kill extremely late notes and cause misses
-			if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
+			if (Conductor.songPosition - daNote.strumTime > noteKillOffset) { // Kill extremely late notes and cause misses
 				if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
 				if (!daNote.mustPress && daNote.ignoreNote && !endingSong) opponentnoteMiss(daNote);
 			
@@ -1698,12 +1698,8 @@ class PlayState extends MusicBeatState {
 			var leStrumTime:Float = eventNotes[0].strumTime;
 			if(Conductor.songPosition < leStrumTime) return;
 
-			var value1:String = '';
-			if(eventNotes[0].value1 != null) value1 = eventNotes[0].value1;
-
-			var value2:String = '';
-			if(eventNotes[0].value2 != null) value2 = eventNotes[0].value2;
-
+			var value1:String = eventNotes[0].value1 != null ? eventNotes[0].value1 : '';
+			var value2:String = eventNotes[1].value1 != null ? eventNotes[1].value1 : '';
 			triggerEvent(eventNotes[0].event, value1, value2, leStrumTime);
 			eventNotes.shift();
 		}
