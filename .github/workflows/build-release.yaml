@@ -28,7 +28,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.2.5
+          haxe-version: 4.3.0
 
       - name: Restore action cache
         uses: actions/cache@main
@@ -60,7 +60,7 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
 
       - name: Compile
-        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }} --app-version="4.0.0-${{ github.run_id}}"
+        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }} --app-version="4.0.0-${{ github.run_id}}" -Dghaction
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
