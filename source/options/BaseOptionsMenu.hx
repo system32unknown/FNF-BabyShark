@@ -362,8 +362,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	}
 
 	function reloadCheckboxes() {
-		for (checkbox in checkboxGroup) {
+		for (checkbox in checkboxGroup)
 			checkbox.daValue = Std.string(optionsArray[checkbox.ID].getValue()) == 'true';
-		}
 	}
 }
