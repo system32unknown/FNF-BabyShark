@@ -79,12 +79,6 @@
 		}
 	],
 	"no_antialiasing": false,
-	"gameover_properties": [
-		"bf-dead",
-		"fnf_loss_sfx",
-		"gameOver",
-		"gameOverEnd"
-	],
 	"image": "characters/bambiRemake",
 	"position": [100, 440],
 	"healthicon": "bambi",

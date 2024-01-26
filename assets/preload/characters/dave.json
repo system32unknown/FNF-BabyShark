@@ -112,12 +112,6 @@
 		}
 	],
 	"no_antialiasing": false,
-	"gameover_properties": [
-		"bf-dead",
-		"fnf_loss_sfx",
-		"gameOver",
-		"gameOverEnd"
-	],
 	"image": "characters/dave_sheet",
 	"position": [
 		0,

@@ -57,12 +57,6 @@
 		}
 	],
 	"no_antialiasing": true,
-	"gameover_properties": [
-		"bf-dead",
-		"fnf_loss_sfx",
-		"gameOver",
-		"gameOverEnd"
-	],
 	"image": "characters/ExpungedFinal",
 	"position": [
 		0,

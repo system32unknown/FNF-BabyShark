@@ -113,12 +113,6 @@
 		214,
 		246
 	],
-	"gameover_properties": [
-		"bf-pixel-dead",
-		"fnf_loss_sfx-pixel",
-		"gameOver-pixel",
-		"gameOverEnd-pixel"
-	],
 	"camera_position": [
 		50,
 		-60

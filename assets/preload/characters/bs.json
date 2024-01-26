@@ -120,39 +120,6 @@
 			"fps": 24,
 			"name": "BS NOTE RIGHT MISS",
 			"indices": []
-		},
-		{
-			"loop": true,
-			"offsets": [
-				37,
-				5
-			],
-			"anim": "deathLoop",
-			"fps": 24,
-			"name": "BS Dead Loop",
-			"indices": []
-		},
-		{
-			"loop": false,
-			"offsets": [
-				37,
-				69
-			],
-			"anim": "deathConfirm",
-			"fps": 24,
-			"name": "BS Dead confirm",
-			"indices": []
-		},
-		{
-			"offsets": [
-				37,
-				11
-			],
-			"loop": false,
-			"fps": 24,
-			"anim": "firstDeath",
-			"indices": [],
-			"name": "BS dies"
 		}
 	],
 	"no_antialiasing": false,
@@ -167,12 +134,6 @@
 		255,
 		255,
 		0
-	],
-	"gameover_properties": [
-		"bf-dead",
-		"fnf_loss_sfx",
-		"gameOver",
-		"gameOverEnd"
 	],
 	"camera_position": [
 		0,
