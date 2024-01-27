@@ -6,16 +6,18 @@ class FPSUtil {
 
     public var totalFPS(default, null):Float;
 	public var curFPS(default, null):Float;
+	public var fpsInterval:Float;
 
     public function new() {
 		totalFPS = curFPS = curCount = 0;
+		fpsInterval = 1000;
 		times = [];
 	}
 
     public function update() {
-		final now:Float = haxe.Timer.stamp() * 1000;
+		final now:Float = haxe.Timer.stamp() * fpsInterval;
 		times.push(now);
-		while (times[0] < now - 1000) times.shift();
+		while (times[0] < now - fpsInterval) times.shift();
 
 		curCount = times.length;
 		curFPS = Math.min(FlxG.drawFramerate, curCount);

@@ -1878,9 +1878,8 @@ class ChartingState extends MusicBeatState {
 			var metroInterval:Float = 60 / metronomeStepper.value;
 			var metroStep:Int = Math.floor(((Conductor.songPosition + metronomeOffsetStepper.value) / metroInterval) / 1000);
 			var lastMetroStep:Int = Math.floor(((lastConductorPos + metronomeOffsetStepper.value) / metroInterval) / 1000);
-			if(metroStep != lastMetroStep) {
-				FlxG.sound.play(Paths.sound('Metronome_Tick'));
-			}
+
+			if(metroStep != lastMetroStep) FlxG.sound.play(Paths.sound('Metronome_Tick'));
 		}
 		lastConductorPos = Conductor.songPosition;
 		super.update(elapsed);
@@ -2129,11 +2128,10 @@ class ChartingState extends MusicBeatState {
 
 					sample = (byte / 65535);
 
-					if (sample > 0) {
+					if (sample > 0)
 						if (sample > rmax) rmax = sample;
-					} else if (sample < 0) {
+					else if (sample < 0)
 						if (sample < rmin) rmin = sample;
-					}
 				}
 			}
 
@@ -2264,10 +2262,7 @@ class ChartingState extends MusicBeatState {
 	var characterData:Dynamic = {iconP1: null, iconP2: null};
 
 	function updateJsonData():Void {
-		for (i in 1...3) {
-			var data:CharacterFile = loadCharacterFile(Reflect.field(_song, 'player$i'));
-			Reflect.setField(characterData, 'iconP$i', !characterFailed ? data.healthicon : 'face');
-		}
+		for (i in 1...3) Reflect.setField(characterData, 'iconP$i', !characterFailed ? loadCharacterFile(Reflect.field(_song, 'player$i')).healthicon : 'face');
 	}
 
 	function updateHeads():Void {
@@ -2396,8 +2391,7 @@ class ChartingState extends MusicBeatState {
 				var note:Note = setupNoteData(i, true);
 				note.alpha = .6;
 				nextRenderedNotes.add(note);
-				if (note.sustainLength > 0)
-					nextRenderedSustains.add(setupSusNote(note, beats));
+				if (note.sustainLength > 0) nextRenderedSustains.add(setupSusNote(note, beats));
 			}
 		}
 

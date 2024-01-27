@@ -2085,7 +2085,7 @@ class PlayState extends MusicBeatState {
 		var tempText:String = (!ClientPrefs.getPref('ShowNPS') ? '' : 'NPS:$nps (Max:$maxNPS) $scoreSeparator ');
 		tempText += 'Score:$songScore ';
 		tempText += (cpuControlled || instakillOnMiss ? '' : '$scoreSeparator ${ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks'}:$songMisses ');
-		if (ClientPrefs.getPref('complexAccuracy')) tempText += switch(ClientPrefs.getPref('ScoreType')) {
+		tempText += switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter': '$scoreSeparator Acc:$accuracy% •' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
 			case 'Kade' | _: '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 		}

@@ -31,9 +31,10 @@ class MemoryUtil {
 	}
 
 	@:functionCode("
-		PROCESS_MEMORY_COUNTERS info;
-		if (GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info)))
-			return (size_t)info.WorkingSetSize;
+		PROCESS_MEMORY_COUNTERS_EX pmc;
+		if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc)))
+			return static_cast<int>(pmc.WorkingSetSize);
+		else return 0;
 	")
 	public static function getMEM():Int return 0;
 }

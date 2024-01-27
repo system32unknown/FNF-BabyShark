@@ -9,15 +9,15 @@ class CreditsState extends MusicBeatState {
 		['Credits Sections'],
 		['Psych Engine / EK Team',		'psych',			'Developers of Psych Engine / EK',					'D662EB'],
 		["Funkin' Crew",				'funkin',			'The only cool kickers of Friday Night Funkin\'',	'FD40AB'],
-		["Vs Dave and Bambi Team",		'daveandbambi',		'Developers of Dave and Bambi',						'FD40AB'],
-		["Baby Shark\'s Big Funkin Team",	'babyshark',	'Developers of Baby Shark\'s Big Funkin',			'FD40AB'],
+		["Vs Dave and Bambi Team",		'daveandbambi',		'Developers of Dave and Bambi',						'216AFF'],
+		["Baby Shark\'s Big Funkin Team",	'babyshark',	'Developers of Baby Shark\'s Big Funkin',			'F8CB23'],
 		['']
 	];
 
 	// Name - Icon name - Description - Link - BG Color
 	static var psych(default, never):Array<Array<String>> = [
 		['Psych Engine Team'],
-		['Shadow Mario',		'shadowmario',		'Main Programmer and Head of Psych Engine',						'https://ko-fi.com/shadowmario',			'444444'],
+		['Shadow Mario',		'shadowmario',		'Main Programmer and Head of Psych Engine',						'https://twitter.com/Shadow_Mario_',		'444444'],
 		['Riveren',				'riveren',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/riverennn',			'14967B'],
 		[''],
 		['Former Engine Members'],
@@ -42,7 +42,7 @@ class CreditsState extends MusicBeatState {
 		['Psych Engine Extra Keys'],
 		['Tposejank', 			'tposejank',		'Main Programmer of Psych Engine EK', 							'https://twitter.com/tpose_jank', 			'B9AF27'],
 		['SrPerez', 			'perez', 			'1-9 keys art', 												'https://twitter.com/newsrperez',			'FF9E00'],
-		['Leather128', 			'leather', 			'12 - 16 keys art + coder', 									'https://github.com/Leather128',			'FF9E00'],
+		['Leather128', 			'leather', 			'12 - 16 keys art + coder', 									'https://github.com/Leather128',			'01A1FF'],
 	];
 
 	static var funkin(default, never):Array<Array<String>> = [
@@ -55,28 +55,28 @@ class CreditsState extends MusicBeatState {
 
 	static var daveandbambi(default, never):Array<Array<String>> = [
 		['Vs Dave and Bambi Team'],
-		['MoldyGH',				'MoldyGH',			'Creator / Main Dev',				                        	'https://twitter.com/moldy_gh',		    	'FF0000'],
-		['MTM101',				'MTM10',			'Secondary Dev',				                        		'https://twitter.com/OfficialMTM101',		'FF0000'],
+		['MoldyGH',				'MoldyGH',			'Creator / Main Dev',				                        	'https://twitter.com/moldy_gh',		    	'FF2626'],
+		['MTM101',				'MTM10',			'Secondary Dev',				                        		'https://twitter.com/OfficialMTM101',		'FF00FF'],
 		['rapparep lol',      	'rapparep',			'Main Artist',				                            		'https://twitter.com/rappareplol',			'FF0000'],
-		['TheBuilderXD',      	'TheBuilderXD',		'Page Manager, Tristan Sprite Creator, and more',       		'https://twitter.com/TheBuilderXD',			'FF0000'],
-		['Erizur',            	'Erizur',			'Programmer, Week Icon Artist',                       			'https://twitter.com/am_erizur',			'FF0000'],
-		['Pointy',           	'pointy',			'Artist & Charter',                           					'https://twitter.com/PointyyESM',			'FF0000'], 
-		['Zmac',           		'Zmac',				'3D Backgrounds, Intro text help',                           	'https://www.youtube.com/@ZmacRaivoli',		'FF0000'], 
+		['TheBuilderXD',      	'TheBuilderXD',		'Page Manager, Tristan Sprite Creator, and more',       		'https://twitter.com/TheBuilderXD',			'CC6600'],
+		['Erizur',            	'Erizur',			'Programmer, Week Icon Artist',                       			'https://twitter.com/am_erizur',			'FFFFFF'],
+		['Pointy',           	'pointy',			'Artist & Charter',                           					'https://twitter.com/PointyyESM',			'0700FE'], 
+		['Zmac',           		'Zmac',				'3D Backgrounds, Intro text help',                           	'https://www.youtube.com/@ZmacRavioli',		'FFFFFF'], 
 		['Billy Bobbo',         'billy',			'Moral Support & Idea Suggesting',                     			'https://twitter.com/BillyBobboLOL',		'FF0000'],
-		['Steph45',           	'Steph45',			'Minor programming, Moral support',                     		'https://twitter.com/Stats451',				'FF0000'],
-		['T5mpler',           	'T5mpler',			'Programmer & Supporter',                           			'https://twitter.com/RealT5mpler',			'FF0000'],
+		['Steph45',           	'Steph45',			'Minor programming, Moral support',                     		'https://twitter.com/Stats451',				'FFF729'],
+		['T5mpler',           	'T5mpler',			'Programmer & Supporter',                           			'https://twitter.com/RealT5mpler',			'363B59'],
 		[''],
 		['Golden Apple'],
-		['Sky!',           		'Sky',				'Creator, Charter, Composer, Artist, Programmer',               'https://twitter.com/SkyFactorial',			'FF0000'],
-		['Lancey',           	'lancey',			'Artist',               										'https://twitter.com/Lancey170',			'FF0000'],
-		['Ruby',           		'Ruby',				'Composer, Artist',               								'https://twitter.com/RubysArt_',			'FF0000'],
+		['Sky!',           		'Sky',				'Creator, Charter, Composer, Artist, Programmer',               'https://twitter.com/SkyFactorial',			'5C89BF'],
+		['Lancey',           	'lancey',			'Artist',               										'https://twitter.com/Lancey170',			'00FF5E'],
+		['Ruby',           		'Ruby',				'Composer, Artist',               								'https://twitter.com/RubysArt_',			'5A00BD'],
 	];
 
 	static var babyshark(default, never):Array<Array<String>> = [
 		['Baby Shark\'s Big Funkin Team'],
-		['Altertoriel', 		'altertoriel',		'Main Developer', 													'https://twitter.com/Altertoriel2', 		'B9AF27'],
-		['Pinkfong', 			'pinkfong', 		'Creator of Baby Shark', 											'https://pinkfong.com',						'FFC0CB'],
-		['Nickelodeon', 		'nickelodeon', 		'Creator of Baby Shark\'s Big Show / Baby Shark Ollie and William', 'https://www.nick.com',						'F57C13'],
+		['Altertoriel', 		'altertoriel',		'Main Developer', 													'https://twitter.com/Altertoriel2', 	'B9AF27'],
+		['Pinkfong', 			'pinkfong', 		'Creator of Baby Shark', 											'https://pinkfong.com',					'F93FA2'],
+		['Nickelodeon', 		'nickelodeon', 		'Creator of Baby Shark\'s Big Show / Baby Shark Ollie and William', 'https://www.nick.com',					'F57C13'],
 	];
 
 	public static var prevSelected:Int = 0;
@@ -134,8 +134,7 @@ class CreditsState extends MusicBeatState {
 			optionText.snapToPosition();
 			grpOptions.add(optionText);
 
-			if(isSelectable && curSelected == -1)
-				curSelected = i;
+			if(isSelectable && curSelected == -1) curSelected = i;
 		}
 
 		descBox = new AttachedSprite();
@@ -185,7 +184,7 @@ class CreditsState extends MusicBeatState {
 				}
 			}
 
-			interpColor.fpsLerpTo(CoolUtil.colorFromString(sections[curSelected][4]), .0625);
+			interpColor.fpsLerpTo(CoolUtil.colorFromString(sections[curSelected][3]), .0625);
 			bg.color = interpColor.color;
 
 			if(controls.ACCEPT && sections[curSelected][1] != null) {
@@ -252,9 +251,7 @@ class CreditsState extends MusicBeatState {
 	}
 	#end
 
-	function unselectableCheck(num:Int):Bool {
-		return sections[num].length <= 1;
-	}
+	inline function unselectableCheck(num:Int):Bool return sections[num].length <= 1;
 }
 
 class CreditSectionState extends MusicBeatState {
@@ -324,8 +321,8 @@ class CreditSectionState extends MusicBeatState {
 		descBox = new AttachedSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
 		descBox.addPoint.set(-10, -10);
-		descBox.alphaMult = 0.6;
-		descBox.alpha = 0.6;
+		descBox.alphaMult = .6;
+		descBox.alpha = .6;
 		add(descBox);
 
 		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
@@ -341,10 +338,8 @@ class CreditSectionState extends MusicBeatState {
 
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
-	override function update(elapsed:Float)
-	{
-		if (FlxG.sound.music.volume < 0.7)
-			FlxG.sound.music.volume = FlxMath.bound(FlxG.sound.music.volume + (.5 * elapsed), 0, .7);
+	override function update(elapsed:Float) {
+		if (FlxG.sound.music.volume < .7) FlxG.sound.music.volume = .5 * elapsed;
 
 		if(!quitting) {
 			if(creditsStuff.length > 1) {
@@ -417,7 +412,7 @@ class CreditSectionState extends MusicBeatState {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			if(!unselectableCheck(bullShit-1)) {
+			if(!unselectableCheck(bullShit - 1)) {
 				item.alpha = 0.6;
 				if (item.targetY == 0)
 					item.alpha = 1;
@@ -475,7 +470,5 @@ class CreditSectionState extends MusicBeatState {
 		cSectionisMod = false;
 	}
 
-	function unselectableCheck(num:Int):Bool {
-		return creditsStuff[num].length <= 1;
-	}
+	inline function unselectableCheck(num:Int):Bool return creditsStuff[num].length <= 1;
 }
