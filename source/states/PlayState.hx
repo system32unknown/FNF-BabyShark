@@ -1844,8 +1844,7 @@ class PlayState extends MusicBeatState {
 				switch(charType) {
 					case 0:
 						if(boyfriend.curCharacter != value2) {
-							if(!boyfriendMap.exists(value2))
-								addCharacterToList(value2, charType);
+							if(!boyfriendMap.exists(value2)) addCharacterToList(value2, charType);
 
 							var lastVisible:Bool = boyfriend.visible;
 							boyfriend.visible = false;
@@ -1857,8 +1856,7 @@ class PlayState extends MusicBeatState {
 
 					case 1:
 						if(dad.curCharacter != value2) {
-							if(!dadMap.exists(value2))
-								addCharacterToList(value2, charType);
+							if(!dadMap.exists(value2)) addCharacterToList(value2, charType);
 
 							var wasGf:Bool = dad.curCharacter.startsWith('gf-') || dad.curCharacter == 'gf';
 							var lastVisible:Bool = dad.visible;
@@ -1873,8 +1871,7 @@ class PlayState extends MusicBeatState {
 					case 2:
 						if(gf != null) {
 							if(gf.curCharacter != value2) {
-								if(!gfMap.exists(value2))
-									addCharacterToList(value2, charType);
+								if(!gfMap.exists(value2)) addCharacterToList(value2, charType);
 
 								var lastVisible:Bool = gf.visible;
 								gf.visible = false;
@@ -2088,7 +2085,7 @@ class PlayState extends MusicBeatState {
 		var tempText:String = (!ClientPrefs.getPref('ShowNPS') ? '' : 'NPS:$nps (Max:$maxNPS) $scoreSeparator ');
 		tempText += 'Score:$songScore ';
 		tempText += (cpuControlled || instakillOnMiss ? '' : '$scoreSeparator ${ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks'}:$songMisses ');
-		tempText += switch(ClientPrefs.getPref('ScoreType')) {
+		if (ClientPrefs.getPref('complexAccuracy')) tempText += switch(ClientPrefs.getPref('ScoreType')) {
 			case 'Alter': '$scoreSeparator Acc:$accuracy% •' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
 			case 'Kade' | _: '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
 		}

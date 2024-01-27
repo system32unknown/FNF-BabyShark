@@ -81,34 +81,29 @@ class Highscore {
 	static function getComboInt(combo:String):Int {
 		combo = combo.split(',')[0];
 		final ratings:Array<String> = ['Clear', 'SDCB', 'FC', 'GFC', 'SFC', 'PFC'];
-		for (i => item in ratings)
-			if (item == combo) return i + 1;
+		for (i => item in ratings) if (item == combo) return i + 1;
 		return 0;
 	}
 
 	public static function getScore(song:String, diff:Int):Int {
 		var daSong:String = formatSong(song, diff);
 		if (!songScores.exists(daSong)) setScore(daSong, 0);
-
 		return songScores.get(daSong);
 	}
 	public static function getCombo(song:String, diff:Int):String {
 		var daSong:String = formatSong(song, diff);
 		if (!songCombos.exists(daSong)) setCombo(daSong, '');
-
 		return songCombos.get(daSong);
 	}
 	public static function getRating(song:String, diff:Int):Float {
 		var daSong:String = formatSong(song, diff);
 		if (!songRating.exists(daSong)) setRating(daSong, 0);
-
 		return songRating.get(daSong);
 	}
 
 	public static function getWeekScore(week:String, diff:Int):Int {
 		var daWeek:String = formatSong(week, diff);
 		if (!weekScores.exists(daWeek)) setWeekScore(daWeek, 0);
-
 		return weekScores.get(daWeek);
 	}
 

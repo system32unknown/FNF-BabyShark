@@ -26,8 +26,10 @@ class Conductor {
 	inline public static function calculateCrochet(bpm:Float):Float
 		return (60 / bpm) * 1000;
 
-	public static function judgeNote(arr:Array<Rating>, diff:Float = 0):Rating { // die
+	public static function judgeNote(arr:Array<Rating>, diff:Float = 0):Rating {
 		var data:Array<Rating> = arr;
+		if (PlayState.instance.cpuControlled) return data[0]; // botplay returns first rating
+
 		for(i in 0...data.length - 1) //skips last window (Shit)
 			if (diff <= data[i].hitWindow) return data[i];
 		return data[data.length - 1];
