@@ -63,8 +63,7 @@ class Alphabet extends FlxSpriteGroup {
 		}
 	}
 
-	function set_text(newText:String)
-	{
+	function set_text(newText:String) {
 		newText = newText.replace('\\n', '\n');
 		clearLetters();
 		createLetters(newText);
@@ -73,14 +72,12 @@ class Alphabet extends FlxSpriteGroup {
 		return newText;
 	}
 
-	public function clearLetters()
-	{
+	public function clearLetters() {
 		var i:Int = letters.length;
 		while (i > 0) {
 			--i;
 			var letter:AlphaCharacter = letters[i];
-			if(letter != null)
-			{
+			if(letter != null) {
 				letter.kill();
 				letters.remove(letter);
 				remove(letter);

@@ -83,7 +83,7 @@ class Character extends FlxSprite {
 				if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
 					path = Paths.getPreloadPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 					color = FlxColor.BLACK;
-					alpha = 0.6;
+					alpha = .6;
 				}
 		
 				try {
@@ -113,14 +113,13 @@ class Character extends FlxSprite {
 				var startIndex:Null<Int> = Std.parseInt(expression[0]);
 				var endIndex:Null<Int> = Std.parseInt(expression[1]);
 
-				if (startIndex == null)  continue; // Can't do anything
+				if (startIndex == null) continue; // Can't do anything
 				else if (endIndex == null) {
 					parsed.push(startIndex); // hmm
 					continue;
 				}
 
-				for (idxNumber in startIndex...(endIndex + 1))
-					parsed.push(idxNumber);
+				for (idxNumber in startIndex...(endIndex + 1)) parsed.push(idxNumber);
 			}
 		}
 

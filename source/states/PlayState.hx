@@ -2271,7 +2271,7 @@ class PlayState extends MusicBeatState {
 						if (!daNote.canBeHit && daNote.checkDiff(Conductor.songPosition)) daNote.update(0);
 						if (daNote.canBeHit) {
 							if (daNote.noteData == key) sortedNotesList.push(daNote);
-							canMiss = !ClientPrefs.getPref('ghostTrapping') ? true : ClientPrefs.getPref('AntiMash');
+							canMiss = canMiss ? true : ClientPrefs.getPref('AntiMash');
 						} else if (daNote.isSustainNote && daNote.noteData == key && ((daNote.wasGoodHit || daNote.prevNote.wasGoodHit) && (daNote.parent != null && !daNote.parent.hasMissed && daNote.parent.wasGoodHit)))
 							sortedNotesList.push(daNote);
 					}
@@ -2405,7 +2405,6 @@ class PlayState extends MusicBeatState {
 		if(instakillOnMiss) doDeathCheck(true);
 		if (combo > maxCombo) maxCombo = combo;
 
-		if(!practiceMode) songScore -= 10;
 		if(!endingSong) songMisses++;
 		totalPlayed++;
 		RecalculateRating(true);

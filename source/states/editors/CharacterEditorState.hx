@@ -368,7 +368,7 @@ class CharacterEditorState extends MusicBeatState {
 		});
 
 		var templateCharacter:FlxButton = new FlxButton(140, 50, "Load Template", function() {
-			final _template:CharacterFile = {
+			character.loadCharacterFile({
 				animations: [
 					newAnim('idle', 'BF idle dance'),
 					newAnim('singLEFT', 'BF NOTE LEFT0'),
@@ -385,9 +385,7 @@ class CharacterEditorState extends MusicBeatState {
 				healthbar_colors: [161, 161, 161],
 				camera_position: [0, 0],
 				position: [0, 0]
-			};
-
-			character.loadCharacterFile(_template);
+			});
 			character.color = FlxColor.WHITE;
 			character.alpha = 1;
 			reloadAnimList();
@@ -1088,7 +1086,7 @@ class CharacterEditorState extends MusicBeatState {
 	function saveCharacter() {
 		if(_file != null) return;
 
-		var json:Dynamic = {
+		var data:String = haxe.Json.stringify({
 			"animations": character.animationsArray,
 			"image": character.imageFile,
 			"scale": character.jsonScale,
@@ -1102,9 +1100,7 @@ class CharacterEditorState extends MusicBeatState {
 			"no_antialiasing": character.noAntialiasing,
 			"healthbar_colors": character.healthColorArray,
 			"_editor_isPlayer": character.isPlayer
-		};
-
-		var data:String = haxe.Json.stringify(json, "\t");
+		}, "\t");
 
 		if (data.length > 0) {
 			_file = new FileReference();

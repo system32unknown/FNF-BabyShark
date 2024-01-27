@@ -399,7 +399,6 @@ class ChartingState extends MusicBeatState {
 		});
 
 		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, 'Save Events', () -> saveEvents());
-
 		var clear_events:FlxButton = new FlxButton(320, 310, 'Clear events', () -> openSubState(new Prompt('This action will clear current progress.\n\nProceed?', clearEvents, null, ignoreWarnings)));
 		clear_events.color = FlxColor.RED;
 		clear_events.label.color = FlxColor.WHITE;
@@ -2047,26 +2046,15 @@ class ChartingState extends MusicBeatState {
 		if (FlxG.save.data.chart_waveformInst) {
 			var sound:FlxSound = FlxG.sound.music;
 			if (sound.buffer != null) {
-				var bytes:Bytes = sound.buffer.data.toBytes();
-
-				wavData = waveformData(
-					sound.buffer, bytes,
-					st, et, 1, wavData,
-					Std.int(gridBG.height)
-				);
+				var buffer:AudioBuffer = sound.buffer;
+				wavData = waveformData(buffer, buffer.data.toBytes(), st, et, 1, wavData, Std.int(gridBG.height));
 			}
 		}
-
 		if (FlxG.save.data.chart_waveformVoices) {
 			var sound:FlxSound = vocals;
 			if (sound.buffer != null) {
-				var bytes:Bytes = sound.buffer.data.toBytes();
-
-				wavData = waveformData(
-					sound.buffer, bytes,
-					st, et, 1, wavData,
-					Std.int(gridBG.height)
-				);
+				var buffer:AudioBuffer = sound.buffer;
+				wavData = waveformData(buffer, buffer.data.toBytes(), st, et, 1, wavData, Std.int(gridBG.height));
 			}
 		}
 
@@ -2163,10 +2151,10 @@ class ChartingState extends MusicBeatState {
 				var rRMax:Float = rmax * multiply;
 
 				if (gotIndex > array[0][0].length) array[0][0].push(lRMin);
-					else array[0][0][gotIndex - 1] += lRMin;
+				else array[0][0][gotIndex - 1] += lRMin;
 
 				if (gotIndex > array[0][1].length) array[0][1].push(lRMax);
-					else array[0][1][gotIndex - 1] += lRMax;
+				else array[0][1][gotIndex - 1] += lRMax;
 
 				if (channels >= 2) {
 					if (gotIndex > array[1][0].length) array[1][0].push(rRMin);
@@ -2210,10 +2198,9 @@ class ChartingState extends MusicBeatState {
 		updateGrid();
 	}
 
-	function recalculateSteps(add:Float = 0):Int {
-		curStep = Conductor.getStepRounded(FlxG.sound.music.time, -add);
+	function recalculateSteps():Int {
+		curStep = Conductor.getStepRounded(FlxG.sound.music.time);
 		updateBeat();
-
 		return curStep;
 	}
 
@@ -2486,7 +2473,7 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function addSection(sectionBeats:Float = 4):Void {
-		var sec:backend.Section.SwagSection = {
+		_song.notes.push({
 			sectionBeats: sectionBeats,
 			bpm: _song.bpm,
 			changeBPM: false,
@@ -2494,9 +2481,7 @@ class ChartingState extends MusicBeatState {
 			gfSection: false,
 			sectionNotes: [],
 			altAnim: false
-		};
-
-		_song.notes.push(sec);
+		});
 	}
 
 	function selectNote(note:Note):Void {
@@ -2650,8 +2635,7 @@ class ChartingState extends MusicBeatState {
 
 	function saveLevel() {
 		if(_song.events != null && _song.events.length > 1) _song.events.sort(sortByTime);
-		var json = {"song": _song};
-		var data:String = Json.stringify(json, "\t");
+		var data:String = Json.stringify({"song": _song}, "\t");
 
 		if (data != null && data.length > 0) {
 			_file = new FileReference();
@@ -2687,10 +2671,7 @@ class ChartingState extends MusicBeatState {
 
 	function saveEvents() {
 		if(_song.events != null && _song.events.length > 1) _song.events.sort(sortByTime);
-		var eventsSong:Dynamic = {events: _song.events};
-		var json = {"song": eventsSong}
-
-		var data:String = Json.stringify(json, "\t");
+		var data:String = Json.stringify({"song": {events: _song.events}}, "\t");
 		if (data != null && data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
