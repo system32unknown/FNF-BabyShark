@@ -21,13 +21,11 @@ class Log {
 	}
 
 	public static function error(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.ERROR)
-			FunkinLogs.trace('[${info.className}] $message', ERROR, RED);
+		if (level >= LogLevel.ERROR) FunkinLogs.trace('[${info.className}] $message', ERROR, RED);
 	}
 
 	public static function info(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.INFO)
-			FunkinLogs.trace('[${info.className}] $message', INFO, RED);
+		if (level >= LogLevel.INFO) FunkinLogs.trace('[${info.className}] $message', INFO, RED);
 	}
 
 	public static inline function print(message:Dynamic):Void {
@@ -55,13 +53,11 @@ class Log {
 	}
 
 	public static function verbose(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.VERBOSE)
-			FunkinLogs.trace('[${info.className}] $message', VERBOSE);
+		if (level >= LogLevel.VERBOSE) FunkinLogs.trace('[${info.className}] $message', VERBOSE);
 	}
 
 	public static function warn(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.WARN)
-			FunkinLogs.trace('[${info.className}] $message', WARNING, YELLOW);
+		if (level >= LogLevel.WARN) FunkinLogs.trace('[${info.className}] $message', WARNING, YELLOW);
 	}
 
 	static function __init__():Void {
@@ -76,9 +72,7 @@ class Log {
 			level = VERBOSE;
 		} else
 		#end
-		{
 			level = #if debug DEBUG #else INFO #end;
-		}
 		#end
 
 		#if js

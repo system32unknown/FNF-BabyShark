@@ -59,9 +59,7 @@ class Assets
 	{
 		#if lime
 		if (!LimeAssets.onChange.has(LimeAssets_onChange))
-		{
 			LimeAssets.onChange.add(LimeAssets_onChange);
-		}
 		#end
 
 		dispatcher.addEventListener(type, listener, useCapture, priority, useWeakReference);
@@ -80,11 +78,7 @@ class Assets
 	**/
 	public static function exists(id:String, type:AssetType = null):Bool
 	{
-		#if lime
-		return LimeAssets.exists(id, cast type);
-		#else
-		return false;
-		#end
+		return #if lime LimeAssets.exists(id, cast type) #else false #end;
 	}
 
 	/**
@@ -100,19 +94,14 @@ class Assets
 		#if (lime && tools && !display)
 		key = key != null ? key : id;
 		
-		if (useCache && cache.enabled && cache.hasBitmapData(key))
-		{
+		if (useCache && cache.enabled && cache.hasBitmapData(key)) {
 			var bitmapData = cache.getBitmapData(key);
 			if (isValidBitmapData(bitmapData) && (hardware || bitmapData.readable))
 				return bitmapData;
 		}
 
 		var image = LimeAssets.getImage(id, false);
-		if (image != null)
-		{
-			var bitmapData:BitmapData = BitmapData.fromImage(image);
-			return registerBitmapData(bitmapData, key, useCache, hardware);
-		}
+		if (image != null) return registerBitmapData(BitmapData.fromImage(image), key, useCache, hardware);
 		#end
 
 		return null;
@@ -131,7 +120,6 @@ class Assets
 		if (bitmap == null || key == null) return bitmap;
 
 		#if (lime && tools && !display)
-
 		if (hardware && bitmap.image != null) {
 			var texture = Lib.current.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, openfl.display3D.Context3DTextureFormat.BGRA, true);
 			texture.uploadFromBitmapData(bitmap);
@@ -140,13 +128,9 @@ class Assets
 			utils.system.MemoryUtil.clearMajor(true);
 
 			bitmap = BitmapData.fromTexture(texture);
-		} else {
-			if (useCache && cache.enabled)
-				cache.setBitmapData(key, bitmap);
-		}
+		} else if (useCache && cache.enabled) cache.setBitmapData(key, bitmap);
 
-		if (useCache && cache.enabled)
-			cache.setBitmapData(key, bitmap);
+		if (useCache && cache.enabled) cache.setBitmapData(key, bitmap);
 		#end
 
 		return bitmap;
@@ -175,9 +159,7 @@ class Assets
 		key = key != null ? key : id;
 		
 		if (useCache && cache.enabled && cache.hasFont(key))
-		{
 			return cache.getFont(key);
-		}
 
 		var limeFont = LimeAssets.getFont(id, false);
 
@@ -216,8 +198,7 @@ class Assets
 		if (limeLibrary != null) {
 			if ((limeLibrary is AssetLibrary)) {
 				var library:AssetLibrary = cast limeLibrary;
-				if (library.exists(symbolName, cast AssetType.MOVIE_CLIP))
-				{
+				if (library.exists(symbolName, cast AssetType.MOVIE_CLIP)) {
 					if (library.isLocal(symbolName, cast AssetType.MOVIE_CLIP))
 						return library.getMovieClip(symbolName);
 					else {
@@ -226,7 +207,6 @@ class Assets
 					}
 				}
 			}
-
 			Log.error("There is no MovieClip asset with an ID of \"" + id + "\"");
 		} else Log.error("There is no asset library named \"" + libraryName + "\"");
 		#end
@@ -265,15 +245,12 @@ class Assets
 		
 		if (useCache && cache.enabled && cache.hasSound(key)) {
 			var sound = cache.getSound(key);
-			if (isValidSound(sound))
-				return sound;
+			if (isValidSound(sound)) return sound;
 		}
 
 		var sound = getRawSound(id, stream);
 		if (sound != null) {
-			if (useCache && cache.enabled)
-				cache.setSound(key, sound);
-
+			if (useCache && cache.enabled) cache.setSound(key, sound);
 			return sound;
 		}
 		#end
@@ -285,14 +262,13 @@ class Assets
 	{
 		var buffer;
 		#if (lime_vorbis && lime > "7.9.0")
-		if (stream)
-			buffer = AudioBuffer.fromVorbisFile(VorbisFile.fromFile(id));
+		if (stream) buffer = AudioBuffer.fromVorbisFile(VorbisFile.fromFile(id));
 		else
 		#end
 		#if (js && html5 && lime_howlerjs)
-		buffer = (fromFile && stream) ? AudioBuffer.fromFile(id, true) : LimeAssets.getAudioBuffer(id, false);
+			buffer = (fromFile && stream) ? AudioBuffer.fromFile(id, true) : LimeAssets.getAudioBuffer(id, false);
 		#else
-		buffer = fromFile ? AudioBuffer.fromFile(id) : LimeAssets.getAudioBuffer(id, false);
+			buffer = fromFile ? AudioBuffer.fromFile(id) : LimeAssets.getAudioBuffer(id, false);
 		#end
 		
 		return buffer;
@@ -301,8 +277,7 @@ class Assets
 	public static function getRawSound(id:String, stream:Bool = false, fromFile:Bool = false):Sound
 	{
 		var buffer = getRawAudioBuffer(id, stream, fromFile);
-		if (buffer != null)
-			return Sound.fromAudioBuffer(buffer);
+		if (buffer != null) return Sound.fromAudioBuffer(buffer);
 		
 		return null;
 	}
@@ -340,11 +315,9 @@ class Assets
 	{
 		if (libraryBindings.exists(className)) {
 			var library = libraryBindings.get(className);
-			if (instance == null) {
-				Sprite.__constructor = function(instance:Sprite) {
-					instance.__bind(library, className);
-				}
-			} else {
+			if (instance == null)
+				Sprite.__constructor = (instance:Sprite) -> instance.__bind(library, className);
+			else {
 				Sprite.__constructor = null;
 				instance.__bind(library, className);
 			}
@@ -363,22 +336,16 @@ class Assets
 	{
 		#if (lime && tools && !display)
 		if (useCache && cache.enabled) {
-			if (type == AssetType.IMAGE || type == null)
-				if (cache.hasBitmapData(id)) return true;
-
-			if (type == AssetType.FONT || type == null)
-				if (cache.hasFont(id)) return true;
-
-			if (type == AssetType.SOUND || type == AssetType.MUSIC || type == null)
-				if (cache.hasSound(id)) return true;
+			if ((type == AssetType.IMAGE || type == null) && cache.hasBitmapData(id)) return true;
+			if ((type == AssetType.FONT || type == null) && cache.hasFont(id)) return true;
+			if ((type == AssetType.SOUND || type == AssetType.MUSIC || type == null) && cache.hasSound(id)) return true;
 		}
 
 		var libraryName = id.substring(0, id.indexOf(":"));
 		var symbolName = id.substr(id.indexOf(":") + 1);
 		var library = getLibrary(libraryName);
 
-		if (library != null)
-			return library.isLocal(symbolName, cast type);
+		if (library != null) return library.isLocal(symbolName, cast type);
 		#end
 
 		return false;
@@ -393,13 +360,8 @@ class Assets
 		#end
 	}
 
-	@:noCompletion static function isValidSound(sound:Sound):Bool
-	{
-		#if ((tools && !display) && (cpp || neko || nodejs))
+	@:noCompletion static function isValidSound(sound:Sound):Bool {
 		return true;
-		#else
-		return true;
-		#end
 	}
 
 	/**
@@ -439,10 +401,8 @@ class Assets
 		}
 
 		LimeAssets.loadImage(id, false).onComplete(function(image) {
-			if (image != null) {
-				var bitmapData:BitmapData = BitmapData.fromImage(image);
-				promise.complete(registerBitmapData(bitmapData, key, useCache, hardware));
-			} else promise.error("[Assets] Could not load Image \"" + id + "\"");
+			if (image != null) promise.complete(registerBitmapData(BitmapData.fromImage(image), key, useCache, hardware));
+			else promise.error("[Assets] Could not load Image \"" + id + "\"");
 		}).onError(promise.error).onProgress(promise.progress);
 
 		return promise.future;
@@ -463,9 +423,9 @@ class Assets
 		var promise = new Promise<ByteArray>();
 		var future = LimeAssets.loadBytes(id);
 
-		future.onComplete(function(bytes) promise.complete(bytes));
-		future.onProgress(function(progress, total) promise.progress(progress, total));
-		future.onError(function(msg) promise.error(msg));
+		future.onComplete((bytes) -> promise.complete(bytes));
+		future.onProgress((progress, total) -> promise.progress(progress, total));
+		future.onError((msg) -> promise.error(msg));
 
 		return promise.future;
 		#else
@@ -559,16 +519,13 @@ class Assets
 		LimeAssets.loadAudioBuffer(id, useCache).onComplete(function(buffer) {
 			if (buffer != null) {
 				var sound = Sound.fromAudioBuffer(buffer);
-
-				if (useCache && cache.enabled)
-					cache.setSound(id, sound);
+				if (useCache && cache.enabled) cache.setSound(id, sound);
 				promise.complete(sound);
 			} else promise.error("[Assets] Could not load Sound \"" + id + "\"");
 		}).onError(promise.error).onProgress(promise.progress);
 		return promise.future;
 		#else
-		var future = new Future<Sound>(() -> return getMusic(id, useCache));
-		return future;
+		return new Future<Sound>(() -> return getMusic(id, useCache));
 		#end
 		#else
 		return Future.withValue(getMusic(id, useCache));
@@ -591,14 +548,10 @@ class Assets
 		var symbolName = id.substr(id.indexOf(":") + 1);
 		var limeLibrary = getLibrary(libraryName);
 
-		if (limeLibrary != null)
-		{
-			if ((limeLibrary is AssetLibrary))
-			{
+		if (limeLibrary != null) {
+			if ((limeLibrary is AssetLibrary)) {
 				var library:AssetLibrary = cast limeLibrary;
-
-				if (library.exists(symbolName, cast AssetType.MOVIE_CLIP))
-				{
+				if (library.exists(symbolName, cast AssetType.MOVIE_CLIP)) {
 					promise.completeWith(library.loadMovieClip(symbolName));
 					return promise.future;
 				}
@@ -628,24 +581,18 @@ class Assets
 		
 		var promise = new Promise<Sound>();
 		
-		if (useCache && cache.enabled && cache.hasSound(key))
-		{
+		if (useCache && cache.enabled && cache.hasSound(key)) {
 			var sound = cache.getSound(key);
-
-			if (isValidSound(sound))
-			{
+			if (isValidSound(sound)) {
 				promise.complete(sound);
 				return promise.future;
 			}
 		}
 
-		LimeAssets.loadAudioBuffer(id, useCache) .onComplete(function(buffer) {
+		LimeAssets.loadAudioBuffer(id, useCache).onComplete(function(buffer) {
 			if (buffer != null) {
 				var sound = Sound.fromAudioBuffer(buffer);
-
-				if (useCache && cache.enabled)
-					cache.setSound(key, sound);
-
+				if (useCache && cache.enabled) cache.setSound(key, sound);
 				promise.complete(sound);
 			} else promise.error("[Assets] Could not load Sound \"" + id + "\"");
 		}).onError(promise.error).onProgress(promise.progress);
@@ -683,11 +630,8 @@ class Assets
 		@param	name		The name (prefix) to use for the library
 		@param	library		An AssetLibrary instance to register
 	**/
-	public static function registerLibrary(name:String, library:AssetLibrary):Void
-	{
-		#if lime
-		LimeAssets.registerLibrary(name, library);
-		#end
+	public static function registerLibrary(name:String, library:AssetLibrary):Void {
+		#if lime LimeAssets.registerLibrary(name, library); #end
 	}
 
 	public static function removeEventListener(type:String, listener:Dynamic, capture:Bool = false):Void
@@ -697,9 +641,7 @@ class Assets
 
 	public static function unloadLibrary(name:String):Void
 	{
-		#if lime
-		LimeAssets.unloadLibrary(name);
-		#end
+		#if lime LimeAssets.unloadLibrary(name); #end
 	}
 
 	/**

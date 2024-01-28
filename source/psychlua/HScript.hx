@@ -263,9 +263,9 @@ class HScript extends Interp {
 
 		if(PlayState.instance == FlxG.state) {
 			var psInstance:PlayState = PlayState.instance;
-			setVar('addBehindGF', (obj:FlxBasic) -> psInstance.insert(psInstance.members.indexOf(psInstance.gfGroup), obj));
-			setVar('addBehindDad', (obj:FlxBasic) -> psInstance.insert(psInstance.members.indexOf(psInstance.dadGroup), obj));
-			setVar('addBehindBF', (obj:FlxBasic) -> psInstance.insert(psInstance.members.indexOf(psInstance.boyfriendGroup), obj));
+			setVar('addBehindGF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.gfGroup) - order, obj));
+			setVar('addBehindDad', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.dadGroup) - order, obj));
+			setVar('addBehindBF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.boyfriendGroup) - order, obj));
 			scriptObject = psInstance; // allow use vars from playstate without "game" thing
 		}
 	}

@@ -50,9 +50,7 @@ class AudioBuffer
 	#if commonjs
 	static function __init__() {
 		var p = untyped AudioBuffer.prototype;
-		untyped Object.defineProperties(p, {
-			"src": {get: p.get_src, set: p.set_src}
-		});
+		untyped Object.defineProperties(p, {"src": {get: p.get_src, set: p.set_src}});
 	}
 	#end
 
@@ -63,26 +61,16 @@ class AudioBuffer
 		#if lime_cffi
 		__format = 0;
 		if (channels == 1) {
-			if (bitsPerSample == 8) {
-				__format = AL.FORMAT_MONO8;
-			} else if (bitsPerSample == 16) {
-				__format = AL.FORMAT_MONO16;
-			}
+			if (bitsPerSample == 8) __format = AL.FORMAT_MONO8;
+			else if (bitsPerSample == 16) __format = AL.FORMAT_MONO16;
 		} else if (channels == 2) {
-			if (bitsPerSample == 8) {
-				__format = AL.FORMAT_STEREO8;
-			} else if (bitsPerSample == 16) {
-				__format = AL.FORMAT_STEREO16;
-			}
+			if (bitsPerSample == 8) __format = AL.FORMAT_STEREO8;
+			else if (bitsPerSample == 16) __format = AL.FORMAT_STEREO16;
 		}
 
-		if (__srcBuffer == null && data != null)
-		{
+		if (__srcBuffer == null && data != null) {
 			__srcBuffer = AL.createBuffer();
-
-			if (__srcBuffer != null) {
-				AL.bufferData(__srcBuffer, __format, data, data.length, sampleRate);
-			}
+			if (__srcBuffer != null) AL.bufferData(__srcBuffer, __format, data, data.length, sampleRate);
 		}
 		#end
 	}
@@ -296,21 +284,13 @@ class AudioBuffer
 
 		if (audioBuffer != null) {
 			#if flash
-			audioBuffer.__srcSound.addEventListener(flash.events.Event.COMPLETE, function(event) {
-				promise.complete(audioBuffer);
-			});
-
-			audioBuffer.__srcSound.addEventListener(flash.events.ProgressEvent.PROGRESS, function(event) {
-				promise.progress(Std.int(event.bytesLoaded), Std.int(event.bytesTotal));
-			});
-
+			audioBuffer.__srcSound.addEventListener(flash.events.Event.COMPLETE, (event) -> promise.complete(audioBuffer));
+			audioBuffer.__srcSound.addEventListener(flash.events.ProgressEvent.PROGRESS, (event) -> promise.progress(Std.int(event.bytesLoaded), Std.int(event.bytesTotal)));
 			audioBuffer.__srcSound.addEventListener(flash.events.IOErrorEvent.IO_ERROR, promise.error);
 			#elseif (js && html5 && lime_howlerjs)
 			if (audioBuffer != null) {
 				audioBuffer.__srcHowl.on("load", () -> promise.complete(audioBuffer));
-
 				audioBuffer.__srcHowl.on("loaderror", (id, msg) -> promise.error(msg));
-
 				audioBuffer.__srcHowl.load();
 			}
 			#else

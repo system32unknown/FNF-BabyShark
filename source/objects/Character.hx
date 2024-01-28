@@ -33,7 +33,7 @@ class Character extends FlxSprite {
 	 * In case a character is missing, it will use this on its place
 	**/
 	inline public static final DEFAULT_CHARACTER:String = 'bf';
-	public var animOffsets:Map<String, Array<Dynamic>>;
+	public var animOffsets:Map<String, Array<Float>>;
 	public var debugMode:Bool = false;
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
@@ -70,7 +70,7 @@ class Character extends FlxSprite {
 
 		animation = new backend.animation.PsychAnimationController(this);
 
-		animOffsets = new Map<String, Array<Dynamic>>();
+		animOffsets = new Map<String, Array<Float>>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 		switch (curCharacter) {
@@ -302,8 +302,8 @@ class Character extends FlxSprite {
 		else atlas.anim.play(animName, Force, Reversed, Frame);
 
 		if (animOffsets.exists(animName)) {
-			var daOffset = animOffsets.get(animName);
-			offset.set(daOffset[0], daOffset[1]);
+			final daOffset = animOffsets.get(animName);
+			offset.set(daOffset[0] * scale.x, daOffset[1] * scale.y);
 		}
 
 		if (danceIdle) {

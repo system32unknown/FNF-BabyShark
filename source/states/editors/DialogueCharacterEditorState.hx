@@ -522,12 +522,12 @@ class DialogueCharacterEditorState extends MusicBeatState
 				if(moved) {
 					offsetLoopText.text = 'Loop: ' + animShit.loop_offsets;
 					offsetIdleText.text = 'Idle: ' + animShit.idle_offsets;
-					ghostLoop.offset.set(animShit.loop_offsets[0], animShit.loop_offsets[1]);
-					ghostIdle.offset.set(animShit.idle_offsets[0], animShit.idle_offsets[1]);
+					ghostLoop.offset.set(animShit.loop_offsets[0] * ghostLoop.scale.x, animShit.loop_offsets[1] * ghostLoop.scale.x);
+					ghostIdle.offset.set(animShit.idle_offsets[0] * ghostLoop.scale.y, animShit.idle_offsets[1] * ghostLoop.scale.y);
 				}
 			}
 
-			if (FlxG.keys.pressed.Q && camGame.zoom > 0.1) camGame.zoom = Math.max(camGame.zoom - elapsed * camGame.zoom, .1);
+			if (FlxG.keys.pressed.Q && camGame.zoom > .1) camGame.zoom = Math.max(camGame.zoom - elapsed * camGame.zoom, .1);
 			if (FlxG.keys.pressed.E && camGame.zoom < 1) camGame.zoom = Math.min(camGame.zoom + elapsed * camGame.zoom, 1);
 
 			if(FlxG.keys.justPressed.H) {
@@ -594,9 +594,8 @@ class DialogueCharacterEditorState extends MusicBeatState
 							else if(curAnim >= character.jsonFile.animations.length) curAnim = 0;
 
 							var animToPlay:String = character.jsonFile.animations[curAnim].anim;
-							if(character.dialogueAnimations.exists(animToPlay)) {
+							if(character.dialogueAnimations.exists(animToPlay))
 								character.playAnim(animToPlay, daText.finishedText);
-							}
 						}
 					}
 					animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
@@ -639,8 +638,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 			var rawJson:String = File.getContent(fullPath);
 			if(rawJson != null) {
 				var loadedChar:DialogueCharacterFile = cast Json.parse(rawJson);
-				if(loadedChar.dialogue_pos != null) //Make sure it's really a dialogue character
-				{
+				if(loadedChar.dialogue_pos != null) { //Make sure it's really a dialogue character
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
 					trace("Successfully loaded file: " + cutName);
 					character.jsonFile = loadedChar;
@@ -679,8 +677,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 	/**
 		* Called if there is an error while saving the gameplay recording.
 	*/
-	function onLoadError(_):Void
-	{
+	function onLoadError(_):Void {
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);

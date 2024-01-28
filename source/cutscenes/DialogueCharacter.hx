@@ -88,9 +88,8 @@ class DialogueCharacter extends FlxSprite {
 
 		if(dialogueAnimations.exists(leAnim)) {
 			var anim:DialogueAnimArray = dialogueAnimations.get(leAnim);
-			if(playIdle)
-				offset.set(anim.idle_offsets[0], anim.idle_offsets[1]);
-			else offset.set(anim.loop_offsets[0], anim.loop_offsets[1]);
+			if(playIdle) offset.set(anim.idle_offsets[0] * scale.x, anim.idle_offsets[1] * scale.y);
+			else offset.set(anim.loop_offsets[0] * scale.x, anim.loop_offsets[1] * scale.y);
 		} else {
 			offset.set();
 			Logs.trace('Offsets not found! Dialogue character is badly formatted, anim: ' + leAnim + ', ' + (playIdle ? 'idle anim' : 'loop anim'), WARNING);

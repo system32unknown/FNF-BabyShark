@@ -83,7 +83,7 @@ class NativeAudioSource {
 			buffers = new Array();
 			bufferDatas = new Array();
 			bufferTimeBlocks = new Array();
-			for (i in 0...STREAM_NUM_BUFFERS) {
+			for (_ in 0...STREAM_NUM_BUFFERS) {
 				buffers.push(AL.createBuffer());
 				bufferDatas.push(new UInt8Array(STREAM_BUFFER_SIZE));
 				bufferTimeBlocks.push(0);
@@ -358,16 +358,10 @@ class NativeAudioSource {
 	}
 
 	inline public function getLoops():Int return loops;
-
 	inline public function setLoops(value:Int):Int return loops = value;
-
 	inline public function getLoopTime():Float return loopTime;
-
 	inline public function setLoopTime(value:Float):Float return loopTime = value;
 
-	#if emscripten
-	inline public function getPosition():Vector4 return position;
-	#else
 	public function getPosition():Vector4 {
 		if (!disposed) {
 			var value = AL.getSource3f(handle, AL.POSITION);
@@ -377,8 +371,6 @@ class NativeAudioSource {
 		}
 		return position;
 	}
-	#end
-
 	public function setPosition(value:Vector4):Vector4 {
 		position.x = value.x;
 		position.y = value.y;
