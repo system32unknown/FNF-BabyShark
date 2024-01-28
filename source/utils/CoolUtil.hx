@@ -50,10 +50,12 @@ class CoolUtil {
 		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
 	}
 
-	public static function getRandomizedText(max:Int):String {
+	public static function getRandomizedText(max:Int, ?includespace:Bool):String {
         var temp_str:String = "";
-        for (_ in 0...max)
+        for (_ in 0...max) {
             temp_str += String.fromCharCode(FlxG.random.int(65, 122));
+			if (includespace && FlxG.random.bool()) temp_str += "\n";
+		}
         return temp_str;
     }
 
