@@ -12,14 +12,9 @@ class Logs {
 	public static var nativeTrace = Log.trace;
 	public static function init() {
 		Log.trace = function(v:Dynamic, ?infos:Null<haxe.PosInfos>) {
-			var data = [
-				logText('${infos.fileName}:${infos.lineNumber}: ', CYAN),
-				logText(Std.string(v))
-			];
+			var data = [logText('${infos.fileName}:${infos.lineNumber}: ', CYAN), logText(Std.string(v))];
 
-			if (infos.customParams != null)
-				for (i in infos.customParams)
-					data.push(logText("," + Std.string(i)));
+			if (infos.customParams != null) for (i in infos.customParams) data.push(logText("," + Std.string(i)));
 			__showInConsole(prepareColoredTrace(data, TRACE));
 		};
 
@@ -36,7 +31,7 @@ class Logs {
 			var d:Dynamic = Data;
 			if (!(d is Array)) d = [d];
 			var a:Array<Dynamic> = d;
-			for(e in [for(e in a) Std.string(e)]) Logs.trace('$prefix $e', level, color);
+			for(e in [for (e in a) Std.string(e)]) Logs.trace('$prefix $e', level, color);
 		};
 	}
 

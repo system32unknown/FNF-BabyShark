@@ -408,12 +408,10 @@ class ChartingState extends MusicBeatState {
 			startSong();
 		});
 
-		var clear_notes:FlxButton = new FlxButton(320, clear_events.y + 30, 'Clear notes', function() {
-			openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
-				for (sec in 0..._song.notes.length) _song.notes[sec].sectionNotes = [];
-				updateGrid();
-			}, null, ignoreWarnings));
-		});
+		var clear_notes:FlxButton = new FlxButton(320, clear_events.y + 30, 'Clear notes', () -> openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
+			for (sec in 0..._song.notes.length) _song.notes[sec].sectionNotes = [];
+			updateGrid();
+		}, null, ignoreWarnings)));
 		clear_notes.color = FlxColor.RED;
 		clear_notes.label.color = FlxColor.WHITE;
 
@@ -436,10 +434,7 @@ class ChartingState extends MusicBeatState {
 
 		var tempArray:Array<String> = [];
 		var characters:Array<String> = Mods.mergeAllTextsNamed('data/characterList.txt', Paths.getPreloadPath());
-		for (character in characters) {
-			if(character.trim().length > 0)
-				tempArray.push(character);
-		}
+		for (character in characters) if(character.trim().length > 0) tempArray.push(character);
 
 		#if MODS_ALLOWED
 		for (i in 0...directories.length) {
@@ -503,8 +498,7 @@ class ChartingState extends MusicBeatState {
 			var directory:String = directories[i];
 			if(FileSystem.exists(directory)) {
 				for (file in FileSystem.readDirectory(directory)) {
-					var path = Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
+					if (!FileSystem.isDirectory(Path.join([directory, file])) && file.endsWith('.json')) {
 						var stageToCheck:String = file.substr(0, file.length - 5);
 						if(stageToCheck.trim().length > 0 && !tempArray.contains(stageToCheck)) {
 							tempArray.push(stageToCheck);
@@ -531,8 +525,7 @@ class ChartingState extends MusicBeatState {
 			if(curDifficulty.toLowerCase() == 'normal') jsonInput = _song.song.toLowerCase();
 			else jsonInput = '${_song.song.toLowerCase()}-$curDifficulty';
 
-			var folder:String = _song.song.toLowerCase();
-			var formattedFolder:String = Paths.formatToSongPath(folder);
+			var formattedFolder:String = Paths.formatToSongPath(_song.song.toLowerCase());
 			var formattedSong:String = Paths.formatToSongPath(jsonInput);
 
 			if(Paths.fileExists('data/${Paths.CHART_PATH}/$formattedFolder/$formattedSong.json', BINARY)) {
@@ -687,8 +680,7 @@ class ChartingState extends MusicBeatState {
 					}
 				} else {
 					if(check_notesSec.checked) {
-						if(note[4] != null)
-							copiedNote = [newStrumTime, note[1], note[2], note[3], note[4]];
+						if(note[4] != null) copiedNote = [newStrumTime, note[1], note[2], note[3], note[4]];
 						else copiedNote = [newStrumTime, note[1], note[2], note[3]];
 
 						if(currentSectionSelected != 0) {
@@ -706,8 +698,7 @@ class ChartingState extends MusicBeatState {
 
 		var clearSectionButton:FlxButton = new FlxButton(pasteButton.x + 100, pasteButton.y, "Clear", function() {
 			if(check_notesSec.checked) {
-				if(currentSectionSelected == 0)
-					_song.notes[curSec].sectionNotes = [];
+				if(currentSectionSelected == 0) _song.notes[curSec].sectionNotes = [];
 				else {
 					var stupidArray = [];
 					for (i in 0..._song.notes[curSec].sectionNotes.length){
@@ -806,16 +797,13 @@ class ChartingState extends MusicBeatState {
 				if(currentSectionSelected == 2) if(note[1] <= _song.mania) continue;
 
 				var boob = note[1];
-				if (boob > _song.mania)
-					boob -= EK.keys(_song.mania);
+				if (boob > _song.mania) boob -= EK.keys(_song.mania);
 				else boob += EK.keys(_song.mania);
 
-				var copiedNote:Array<Dynamic> = [note[0], boob, note[2], note[3]];
-				duetNotes.push(copiedNote);
+				duetNotes.push([note[0], boob, note[2], note[3]]);
 			}
 
-			for (i in duetNotes)
-				_song.notes[curSec].sectionNotes.push(i);
+			for (i in duetNotes) _song.notes[curSec].sectionNotes.push(i);
 
 			updateGrid();
 		});
@@ -895,9 +883,7 @@ class ChartingState extends MusicBeatState {
 			for (file in FileSystem.readDirectory(folder)) {
 				var fileName:String = file.toLowerCase().trim();
 				var wordLen:Int = 4; //length of word ".lua";
-				if((#if LUA_ALLOWED fileName.endsWith('.lua') || #end
-					#if HSCRIPT_ALLOWED (fileName.endsWith('.hx') && (wordLen = 3) == 3) #end
-					) && fileName != 'readme.txt') {
+				if((#if LUA_ALLOWED fileName.endsWith('.lua') || #end #if HSCRIPT_ALLOWED (fileName.endsWith('.hx') && (wordLen = 3) == 3) #end) && fileName != 'readme.txt') {
 					var fileToCheck:String = file.substr(0, file.length - wordLen);
 					if(!curNoteTypes.contains(fileToCheck)) {
 						curNoteTypes.push(fileToCheck);
@@ -1031,9 +1017,8 @@ class ChartingState extends MusicBeatState {
 			var selectedEvent:Int = Std.parseInt(pressed);
 			descText.text = eventStuff[selectedEvent][1];
 			if (curSelectedNote != null && eventStuff != null) {
-				if (curSelectedNote != null && curSelectedNote[2] == null) {
+				if (curSelectedNote != null && curSelectedNote[2] == null)
 					curSelectedNote[1][curEventSelected][0] = eventStuff[selectedEvent][0];
-				}
 				updateGrid();
 			}
 		});
@@ -2599,21 +2584,18 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function loadJson(song:String):Void {
-		if (Paths.checkReservedFile(song)) return;
-		else {
-			try {
-				if (Difficulty.getString() != Difficulty.getDefault()) {
-					if(Difficulty.getString() == null)
-						PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
-					else PlayState.SONG = Song.loadFromJson(song.toLowerCase() + "-" + Difficulty.getString(), song.toLowerCase());
-				} else PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
-				Paths.clearUnusedCache();
-				MusicBeatState.resetState();
-			} catch(e) {
-				errorDisplay.text = getErrorMessage('Error:', e.message, song.toLowerCase(), song.toLowerCase());
-				errorDisplay.displayError();
-				return;
-			}
+		try {
+			if (Difficulty.getString() != Difficulty.getDefault()) {
+				if(Difficulty.getString() == null)
+					PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
+				else PlayState.SONG = Song.loadFromJson(song.toLowerCase() + "-" + Difficulty.getString(), song.toLowerCase());
+			} else PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
+			Paths.clearUnusedCache();
+			MusicBeatState.resetState();
+		} catch(e) {
+			errorDisplay.text = getErrorMessage('Error:', e.message, song.toLowerCase(), song.toLowerCase());
+			errorDisplay.displayError();
+			return;
 		}
 	}
 
@@ -2629,8 +2611,8 @@ class ChartingState extends MusicBeatState {
 
 	function saveLevel() {
 		if(_song.events != null && _song.events.length > 1) _song.events.sort(sortByTime);
-		var data:String = Json.stringify({"song": _song}, "\t");
 
+		var data:String = Json.stringify({"song": _song}, "\t");
 		if (data != null && data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
@@ -2642,13 +2624,14 @@ class ChartingState extends MusicBeatState {
 
 	function getCurrrentDataPath():String {
 		var diffSuffix:String = Difficulty.getString() != null && Difficulty.getString() != Difficulty.getDefault() ? "-" + Difficulty.getString().toLowerCase() : "";
+		var songPath:String = '${Paths.CHART_PATH}/$currentSongName/$currentSongName/$diffSuffix';
 
 		var path:String;
 		#if MODS_ALLOWED
-		path = Paths.modsJson(Paths.CHART_PATH + "/" + currentSongName + "/" + currentSongName + diffSuffix);
+		path = Paths.modsJson(songPath);
 		if (!FileSystem.exists(path))
 		#end
-			path = Paths.json(Paths.CHART_PATH + "/" + currentSongName + "/" + currentSongName + diffSuffix);
+			path = Paths.json(songPath);
 
 		return path;
 	}

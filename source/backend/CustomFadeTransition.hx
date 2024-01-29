@@ -43,7 +43,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		final width:Float = FlxG.width * Math.max(camera.zoom, .001);
 		final targetPos:Float = transGradient.width + 50 * Math.max(camera.zoom, .001);
 		if(duration > 0) transGradient.x += (width + targetPos) * elapsed / duration;
-		else transGradient.x = (targetPos) * elapsed;
+		else transGradient.x = targetPos * elapsed;
 
 		if(isTransIn) transBlack.x = transGradient.x + transGradient.width;
 		else transBlack.x = transGradient.x - transBlack.width;

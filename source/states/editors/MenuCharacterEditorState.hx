@@ -210,7 +210,6 @@ class MenuCharacterEditorState extends MusicBeatState
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
-			if(Paths.checkReservedFile(sender.text)) return;
 			if(sender == imageInputText) characterFile.image = imageInputText.text;
 			else if(sender == idleInputText) characterFile.idle_anim = idleInputText.text;
 			else if(sender == confirmInputText) characterFile.confirm_anim = confirmInputText.text;

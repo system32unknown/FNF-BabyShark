@@ -120,10 +120,6 @@ class Conductor {
 	public static function getBeat(time:Float, ?offset:Float = 0, ?from:Int):Float
 		return (inline getStep(time, offset, from)) / 4;
 
-	@:noCompletion
-	public static function getBeatRounded(time:Float, ?offset:Float, ?from:Int):Int
-		return Math.floor(inline getBeat(time, offset, from));
-
 	public static function mapBPMChanges(?song:SwagSong, reuse:Bool = false) {
 		if (reuse) bpmChangeMap.resize(0);
 		else bpmChangeMap = [];

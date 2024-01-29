@@ -38,8 +38,7 @@ class CreditsEditorState extends MusicBeatState {
 		bg.screenCenter();
 		FlxG.mouse.visible = true;
 
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
+		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
 		initPsychCamera();
 		camUI = new FlxCamera();

@@ -50,11 +50,11 @@ class CoolUtil {
 		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
 	}
 
-	public static function getRandomizedText(max:Int, ?includespace:Bool):String {
+	public static function getRNGTxt(max:Int, ?includespace:Bool, ?chance:Int = 50):String {
         var temp_str:String = "";
         for (_ in 0...max) {
             temp_str += String.fromCharCode(FlxG.random.int(65, 122));
-			if (includespace && FlxG.random.bool()) temp_str += "\n";
+			if (includespace && FlxG.random.bool(chance)) temp_str += "\n";
 		}
         return temp_str;
     }
@@ -108,10 +108,6 @@ class CoolUtil {
 		if(colorNum == null) colorNum = FlxColor.fromString('#$color');
 		return colorNum != null ? colorNum : FlxColor.WHITE;
 	}
-
-	inline public static function callErrBox(title:String, context:String) {
-        utils.system.NativeUtil.showMessageBox(title, context, utils.system.PlatformUtil.MessageBoxIcon.MSG_ERROR);
-    }
 
 	inline public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
 		return new FlxBackdrop(flixel.addons.display.FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));

@@ -875,7 +875,6 @@ class CharacterEditorState extends MusicBeatState {
 			}
 
 			txt = 'Frames: ( $frames / ${length - 1} )';
-
 			clr = FlxColor.WHITE;
 		}
 		if(txt != frameAdvanceText.text) frameAdvanceText.text = txt;
@@ -961,8 +960,7 @@ class CharacterEditorState extends MusicBeatState {
 		var daLoop = 0;
 		for (anim in anims) {
 			var text:FlxText = animsTxtGroup.recycle(FlxText);
-			text.x = 10;
-			text.y = 32 + (20 * daLoop);
+			text.setPosition(10, 32 + (20 * daLoop));
 			text.fieldWidth = 400;
 			text.fieldHeight = 20;
 			text.text = anim.anim + ": " + anim.offsets;
@@ -1009,8 +1007,7 @@ class CharacterEditorState extends MusicBeatState {
 			else character.atlas.anim.addBySymbol(anim, name, fps, loop);
 		}
 
-		if(!character.animOffsets.exists(anim))
-			character.addOffset(anim, 0, 0);
+		if(!character.animOffsets.exists(anim)) character.addOffset(anim);
 	}
 
 	inline function newAnim(anim:String, name:String):AnimArray {
@@ -1030,11 +1027,9 @@ class CharacterEditorState extends MusicBeatState {
 		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getPreloadPath(), 'characters/');
 		for (folder in foldersToCheck)
 			for (file in FileSystem.readDirectory(folder))
-				if(file.toLowerCase().endsWith('.json'))
-				{
+				if(file.toLowerCase().endsWith('.json')) {
 					var charToCheck:String = file.substr(0, file.length - 5);
-					if(!characterList.contains(charToCheck))
-						characterList.push(charToCheck);
+					if(!characterList.contains(charToCheck)) characterList.push(charToCheck);
 				}
 
 		if(characterList.length < 1) characterList.push('');

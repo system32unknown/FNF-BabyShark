@@ -345,10 +345,9 @@ class WeekEditorState extends MusicBeatState {
 	}
 	
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
-		if(Paths.checkReservedFile(sender.text)) return;
 		if(id == FlxUINumericStepper.CHANGE_EVENT && sender != FlxUINumericStepper) {
 			if (sender == flashColSteppers[0] || sender == flashColSteppers[1] || sender == flashColSteppers[2])
-				weekFile.flashingColor = [Math.floor(flashColSteppers[0].value), Math.floor(flashColSteppers[1].value), Math.floor(flashColSteppers[2].value) ];
+				weekFile.flashingColor = [Math.floor(flashColSteppers[0].value), Math.floor(flashColSteppers[1].value), Math.floor(flashColSteppers[2].value)];
 		} else if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
 			if(sender == opponentInputText || sender == boyfriendInputText || sender == girlfriendInputText) {
 				weekFile.weekCharacters[0] = opponentInputText.text.trim();

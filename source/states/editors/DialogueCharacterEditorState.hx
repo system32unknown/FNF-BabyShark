@@ -426,7 +426,6 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if(id == FlxUIInputText.CHANGE_EVENT && sender == imageInputText) {
-			if(Paths.checkReservedFile(sender.text)) return;
 			character.jsonFile.image = imageInputText.text;
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
 			if(sender == scaleStepper) {
@@ -504,16 +503,14 @@ class DialogueCharacterEditorState extends MusicBeatState
 				var controlArrayIdle:Array<Bool> = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.DOWN];
 				for (i in 0...controlArrayLoop.length) {
 					if(controlArrayLoop[i]) {
-						if(i % 2 == 1)
-							animShit.loop_offsets[1] += offsetAdd * negaMult[i];
+						if(i % 2 == 1) animShit.loop_offsets[1] += offsetAdd * negaMult[i];
 						else animShit.loop_offsets[0] += offsetAdd * negaMult[i];
 						moved = true;
 					}
 				}
 				for (i in 0...controlArrayIdle.length) {
 					if(controlArrayIdle[i]) {
-						if(i % 2 == 1)
-							animShit.idle_offsets[1] += offsetAdd * negaMult[i];
+						if(i % 2 == 1) animShit.idle_offsets[1] += offsetAdd * negaMult[i];
 						else animShit.idle_offsets[0] += offsetAdd * negaMult[i];
 						moved = true;
 					}

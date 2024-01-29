@@ -83,7 +83,6 @@ class HScript extends Interp {
             "FlxBasic"          => FlxBasic,
             "FlxCamera"         => FlxCamera,
 			"PsychCamera"		=> backend.PsychCamera,
-            "state"             => FlxG.state,
             "FlxTween"          => FlxTween,
             "FlxEase"           => FlxEase,
             "FlxPoint"          => getMAClass("flixel.math.FlxPoint"),
