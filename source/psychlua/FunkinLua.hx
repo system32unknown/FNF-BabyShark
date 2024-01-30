@@ -537,11 +537,6 @@ class FunkinLua {
 			if(image != null && image.length > 0) LuaUtils.loadFrames(leSprite, image, spriteType);
 			game.modchartSprites.set(tag, leSprite);
 		});
-		set("makeLuaSpriteGroup", function(tag:String, ?x:Float = 0, ?y:Float = 0, ?maxSize:Int = 0) {
-			tag = tag.replace('.', '');
-			LuaUtils.resetSpriteTag(tag);
-			game.modchartGroups.set(tag, new ModchartGroup(x, y, maxSize));
-		});
 
 		set("makeGraphic", function(obj:String, width:Int = 256, height:Int = 256, color:String = 'FFFFFF') {
 			var spr:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
@@ -587,27 +582,7 @@ class FunkinLua {
 			}
 			return false;
 		});
-		set("playAnimGroup", function(obj:String, name:String, forced:Bool = false, ?reverse:Bool = false, ?startFrame:Int = 0) {
-			var leGroup:ModchartGroup = game.modchartGroups.get(obj);
-			if (leGroup != null) {
-				leGroup.forEach(function(spr:ModchartSprite) {
-					var offsetX:Float = 0;
-					var offsetY:Float = 0;
 
-					if (spr.animOffsets.exists(name)) {
-						offsetX = spr.animOffsets.get(name)[0];
-						offsetY = spr.animOffsets.get(name)[1];
-					}
-
-					if (spr.animation.getByName(name) != null) {
-						spr.animation.play(name, forced, reverse, startFrame);
-						spr.offset.set(offsetX, offsetY);
-					}
-				});
-				return true;	
-			}
-			return false;
-		});
 		set("addOffset", function(obj:String, anim:String, x:Float, y:Float) {
 			var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
 			if(obj != null && obj.addOffset != null) {
@@ -624,38 +599,7 @@ class FunkinLua {
 			obj.scrollFactor.set(scrollX, scrollY);
 			return true;
 		});
-		set("setGroupScrollFactor", function(obj:String, ?scrollX:Float = 0, ?scrollY:Float = 0) {
-			var leGroup:ModchartGroup = game.modchartGroups.get(obj);
-			if (leGroup != null) leGroup.scrollFactor.set(scrollX, scrollY);
-		});
 
-		set("addSpriteToGroup", function(tag:String, spr:String) {
-			var leGroup:ModchartGroup = game.modchartGroups.get(tag);
-			if (leGroup != null) {
-				var leSprite:ModchartSprite = game.modchartSprites.get(spr);
-				if (leSprite != null) leGroup.add(leSprite);
-			}
-		});
-
-		set("addLuaSpriteGroup", function(tag:String, front:Bool = false) {
-			var leGroup:ModchartGroup = game.modchartGroups.get(tag);
-			var playMembers:Array<FlxBasic> = game.members;
-			if (leGroup != null) {
-				if (!leGroup.wasAdded) {
-					if (front) LuaUtils.getInstance().add(leGroup);
-					else {
-						if(game.isDead) GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), leGroup);
-						else {
-							var position:Int = playMembers.indexOf(game.gfGroup);
-							if(playMembers.indexOf(game.boyfriendGroup) < position) position = playMembers.indexOf(game.boyfriendGroup);
-							else if(playMembers.indexOf(game.dadGroup) < position) position = playMembers.indexOf(game.dadGroup);
-							game.insert(position, leGroup);
-						}
-					}
-					leGroup.wasAdded = true;
-				}
-			}
-		});
 		set("addLuaSprite", function(tag:String, front:Bool = false) {
 			var mySprite:FlxSprite = null;
 			if(game.modchartSprites.exists(tag)) mySprite = game.modchartSprites.get(tag);
@@ -678,13 +622,6 @@ class FunkinLua {
 			if (updateHitbox) poop.updateHitbox();
 			return true;
 		});
-		set("setGroupGraphicSize", function(tag:String, x:Int, y:Int = 0, updateHitbox:Bool = true) {
-			var leGroup:ModchartGroup = game.modchartGroups.get(tag);
-			if (leGroup != null) {
-				leGroup.setGraphicSize(x, y);
-				if (updateHitbox) leGroup.updateHitbox();
-			}
-		});
 		set("scaleObject", function(obj:String, x:Float, y:Float, updateHitbox:Bool = true) {
 			var poop:FlxSprite = LuaUtils.getVarInstance(obj);
 			if (poop == null) return false;
@@ -693,21 +630,9 @@ class FunkinLua {
 			if (updateHitbox) poop.updateHitbox();
 			return true;
 		});
-		set("scaleGroup", function(tag:String, x:Float, y:Float, updateHitbox:Bool = true) {
-			var leGroup:ModchartGroup = game.modchartGroups.get(tag);
-			if (leGroup != null) {
-				leGroup.scale.set(x, y);
-				if (updateHitbox) leGroup.updateHitbox();
-			}
-		});
-		set("updateGroupHitbox", function(tag:String) {
-			var leGroup:ModchartGroup = game.modchartGroups.get(tag);
-			if (leGroup != null) leGroup.updateHitbox();	
-		});
 		set("updateHitbox", function(obj:String) {
 			if(game.getLuaObject(obj) != null) {
-				var shit:FlxSprite = game.getLuaObject(obj);
-				shit.updateHitbox();
+				game.getLuaObject(obj).updateHitbox();
 				return;
 			}
 
@@ -728,8 +653,7 @@ class FunkinLua {
 
 		set("centerOffsets", function(obj:String) {
 			if(game.getLuaObject(obj) != null) {
-				var shit:FlxSprite = game.getLuaObject(obj);
-				shit.centerOffsets();
+				game.getLuaObject(obj).centerOffsets();
 				return;
 			}
 
@@ -748,16 +672,6 @@ class FunkinLua {
 			Reflect.getProperty(LuaUtils.getInstance(), group)[index].centerOffsets();
 		});
 
-		set("removeSpriteFromGroup", function(tag:String, spr:String, destroy:Bool = true) {
-			var leGroup:ModchartGroup = game.modchartGroups.get(tag);
-			if (leGroup != null) {
-				var leSprite:ModchartSprite = game.modchartSprites.get(spr);
-				if (leSprite != null && leGroup.members.contains(leSprite)) {
-					leGroup.remove(leSprite);
-					if (destroy) leGroup.destroy();
-				}
-			}
-		});
 		set("removeLuaSprite", function(tag:String, destroy:Bool = true) {
 			var pee:ModchartSprite = game.modchartSprites.get(tag);
 			if (pee == null) return false;
@@ -787,7 +701,6 @@ class FunkinLua {
 		set("setObjectCamera", function(obj:String, camera:String = '') {
 			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
 			if (poop == null) return false;
-
 			poop.camera = LuaUtils.cameraFromString(camera);
 			return true;
 		});
@@ -796,10 +709,6 @@ class FunkinLua {
 			if (spr == null) return false;
 			spr.blend = LuaUtils.blendModeFromString(blend);
 			return true;
-		});
-		set("screenCenterGroup", function(tag:String, pos:String = 'xy') {
-			var leGroup:ModchartGroup = game.modchartGroups.get(tag);
-			if (leGroup != null) leGroup.screenCenter(LuaUtils.axesFromString(pos));
 		});
 		set("screenCenter", function(obj:String, pos:String = 'xy') {
 			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
@@ -887,7 +796,7 @@ class FunkinLua {
 			if(resultStr != null && result != 0) {
 				Logs.trace(resultStr, ERROR);
 				#if windows
-				utils.system.NativeUtil.showMessageBox('Error on lua script!', resultStr, utils.system.PlatformUtil.MessageBoxIcon.MSG_WARNING);
+				utils.system.NativeUtil.showMessageBox('Error on lua script!', resultStr);
 				#else
 				luaTrace('$scriptName\n$resultStr', true, false, FlxColor.RED);
 				#end

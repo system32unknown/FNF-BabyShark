@@ -100,10 +100,6 @@
 	<!--Macro fixes-->
 	<haxeflag name="--macro" value="allowPackage('flash')"/>
 	<haxeflag name="--macro" value="include('my.pack')"/>
-
-	<error value="Seems like you're not using NebulaZoruas github fork of luajit, please use it instead." if="${linc_luajit == 0.0.4}"/>
-	<error value="Seems like you're using Haxe ${haxe}, please update to latest version!" if="${haxe == 4.1.5}" unless="linux"/>
-
 	<!-- _________________________________Custom_______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->

@@ -67,8 +67,7 @@ class ReflectionFunctions {
 			else realObject = Reflect.getProperty(LuaUtils.getInstance(), obj);
 
 			if(Std.isOfType(realObject, FlxTypedGroup)) {
-				var result:Dynamic = LuaUtils.getGroupStuff(realObject.members[index], variable, allowMaps);
-				return result;
+				return LuaUtils.getGroupStuff(realObject.members[index], variable, allowMaps);
 			}
 
 			var leArray:Dynamic = realObject[index];

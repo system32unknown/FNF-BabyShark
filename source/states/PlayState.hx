@@ -55,7 +55,6 @@ class PlayState extends MusicBeatState {
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, FlxText> = new Map<String, FlxText>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
-	public var modchartGroups:Map<String, ModchartGroup> = new Map<String, ModchartGroup>();
 	#end
 
 	public var BF_X:Float = 770;
@@ -2208,9 +2207,8 @@ class PlayState extends MusicBeatState {
 		}
 	
 		if (showComboNum) {
-			var seperatedScore:Array<Int> = [];
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
-			for (i in 0...comboSplit.length) seperatedScore.push(Std.parseInt(comboSplit[i]));
+			var seperatedScore:Array<Int> = [for (i in 0...comboSplit.length) Std.parseInt(comboSplit[i])];
 		
 			var daLoop:Int = 0;
 			final numMult = (isPixelStage ? daPixelZoom : .5);

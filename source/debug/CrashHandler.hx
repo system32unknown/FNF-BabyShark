@@ -51,7 +51,7 @@ class CrashHandler {
 		Sys.println(errMsg);
 		Sys.println('Crash dump saved in ${haxe.io.Path.normalize(path)}');
 
-		utils.system.NativeUtil.showMessageBox("Alter Engine: Error!", errMsg, utils.system.PlatformUtil.MessageBoxIcon.MSG_ERROR);
+		utils.system.NativeUtil.showMessageBox("Alter Engine: Error!", errMsg, MSG_ERROR);
 		
 		#if DISCORD_ALLOWED DiscordClient.shutdown(); #end
 		#if sys Sys.exit(1); #end

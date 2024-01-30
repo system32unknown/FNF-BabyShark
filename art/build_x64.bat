@@ -2,7 +2,7 @@
 color 0a
 cd ..
 title BUILDING GAME
-lime build windows -release
+haxelib run lime build windows -release
 
 if not "%ERRORLEVEL%" == "0" goto ERROR
 goto OK
