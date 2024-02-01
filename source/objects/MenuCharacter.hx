@@ -42,7 +42,6 @@ class MenuCharacter extends FlxSprite {
 				if(!FileSystem.exists(path)) path = Paths.getPreloadPath(characterPath);
 				if(!FileSystem.exists(path)) path = Paths.getPreloadPath('images/menucharacters/$DEFAULT_CHARACTER.json');
 				rawJson = File.getContent(path);
-
 				#else
 				var path:String = Paths.getPreloadPath(characterPath);
 				if(!Assets.exists(path)) path = Paths.getPreloadPath('images/menucharacters/$DEFAULT_CHARACTER.json');

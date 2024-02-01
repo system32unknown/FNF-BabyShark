@@ -39,10 +39,8 @@ class NotesSubState extends MusicBeatSubstate
 		blackBG.alpha = 0.4;
 		add(blackBG);
 
-		grpNotes = new FlxTypedGroup<FlxSprite>();
-		add(grpNotes);
-		grpNumbers = new FlxTypedGroup<Alphabet>();
-		add(grpNumbers);
+		add(grpNotes = new FlxTypedGroup<FlxSprite>());
+		add(grpNumbers = new FlxTypedGroup<Alphabet>());
 
 		for (i in 0...arrowHSV.length) {
 			var yPos:Float = (165 * i) + 35;
@@ -117,14 +115,9 @@ class NotesSubState extends MusicBeatSubstate
 				}
 			} else {
 				var add:Float = 90;
-				switch(typeSelected) {
-					case 1 | 2: add = 50;
-				}
-				if(controls.UI_LEFT) {
-					updateValue(elapsed * -add);
-				} else if(controls.UI_RIGHT) {
-					updateValue(elapsed * add);
-				}
+				if(typeSelected == 1 || typeSelected == 2) add = 50;
+				if(controls.UI_LEFT || controls.UI_RIGHT)
+					updateValue(elapsed * (controls.UI_LEFT ? -add : add));
 				if(controls.UI_LEFT_R || controls.UI_RIGHT_R) {
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					holdTime = 0;

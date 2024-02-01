@@ -7,104 +7,87 @@ class EkData {
             "anims" => ["UP"], 
             "strumAnims" => ["SPACE"], 
             "pixelAnimIndex" => [4], 
-        ],
-		1 => [
+        ], 1 => [
             "letters" => ["A", "D"],
             "anims" => ["LEFT", "RIGHT"], 
             "strumAnims" => ["LEFT", "RIGHT"], 
             "pixelAnimIndex" => [0, 3], 
-        ],
-		2 => [
+        ], 2 => [
             "letters" => ["A", "E", "D"], 
             "anims" => ["LEFT", "UP", "RIGHT"], 
             "strumAnims" => ["LEFT", "SPACE", "RIGHT"], 
             "pixelAnimIndex" => [0, 4, 3], 
-        ],
-		3 => [
+        ], 3 => [
             "letters" => ["A", "B", "C", "D"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT"], 
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [for (i in 0...5) i], 
-        ],
-		4 => [
+        ], 4 => [
             "letters" => ["A", "B", "E", "C", "D"], 
             "anims" => ["LEFT", "DOWN", "UP", "UP", "RIGHT"],
 			"strumAnims" => ["LEFT", "DOWN", "SPACE", "UP", "RIGHT"],
             "pixelAnimIndex" => [0, 1, 4, 2, 3],
-        ],
-		5 => [
+        ], 5 => [
             "letters" => ["A", "C", "D", "F", "B", "I"], 
             "anims" => ["LEFT", "UP", "RIGHT", "LEFT", "DOWN", "RIGHT"],
 			"strumAnims" => ["LEFT", "UP", "RIGHT", "LEFT", "DOWN", "RIGHT"], 
             "pixelAnimIndex" => [0, 2, 3, 5, 1, 8], 
-        ],
-		6 => [
+        ], 6 => [
             "letters" => ["A", "C", "D", "E", "F", "B", "I"],
             "anims" => ["LEFT", "UP", "RIGHT", "UP", "LEFT", "DOWN", "RIGHT"],
 			"strumAnims" => ["LEFT", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "RIGHT"], 
             "pixelAnimIndex" => [0, 2, 3, 4, 5, 1, 8],
-        ],
-		7 => [
+        ], 7 => [
             "letters" => ["A", "B", "C", "D", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "UP", "DOWN", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
 			"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
             "pixelAnimIndex" => [0, 1, 2, 3, 5, 6, 7, 8],
-        ],
-		8 => [
+        ], 8 => [
             "letters" => ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
 			"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [for (i in 0...9) i],
-        ],
-		9 => [
+        ], 9 => [
             "letters" => ["A", "B", "C", "D", "E", "J", "F", "G", "H", "I"],
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
 			"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "PLUS", "LEFT", "DOWN", "UP", "RIGHT"],
             "pixelAnimIndex" => [0, 1, 2, 3, 4, 9, 5, 6, 7, 8],
-        ],
-        10 => [
+        ], 10 => [
             "letters" => ["A", "B", "C", "D", "J", "E", "M", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "PLUS", "SPACE", "PLUS", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 4, 12, 5, 6, 7, 8]
-        ],
-        11 => [
+        ], 11 => [
             "letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 5, 6, 7, 8]
-        ],
-        12 => [
+        ], 12 => [
             "letters" => ["A", "B", "C", "D", "J", "K", "N", "L", "M", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "SPACE", "RUP", "RRIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 13, 11, 12, 5, 6, 7, 8]
-        ],
-        13 => [
+        ], 13 => [
             "letters" => ["A", "B", "C", "D", "J", "K", "E", "N", "L", "M", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "SPACE", "PLUS", "RUP", "RRIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 4, 13, 11, 12, 5, 6, 7, 8]
-        ],
-        14 => [
+        ], 14 => [
             "letters" => ["A", "B", "C", "D", "J", "K", "E", "N", "E", "L", "M", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "SPACE", "PLUS", "SPACE", "RUP", "RRIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 4, 13, 4, 11, 12, 5, 6, 7, 8]
-        ],
-        15 => [
+        ], 15 => [
             "letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "O", "P", "Q", "R", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 14, 15, 16, 17, 5, 6, 7, 8]
-        ],
-        16 => [
+        ], 16 => [
             "letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "F", "G", "H", "I"], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "SPACE", "RLEFT", "RDOWN", "RUP", "RRIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
             "pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 13, 14, 15, 16, 17, 5, 6, 7, 8]
-        ],
-        17 => [
+        ], 17 => [
             "letters" => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'], 
             "anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
             "strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT", "RLEFT", "RDOWN", "RUP", "RRIGHT", "PLUS", "RLEFT", "RDOWN", "RUP", "RRIGHT"], 

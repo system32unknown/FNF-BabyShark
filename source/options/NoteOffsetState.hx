@@ -98,13 +98,13 @@ class NoteOffsetState extends MusicBeatState {
 
 		combo = new FlxSprite(Paths.image('ratings/combo'));
 		combo.camera = camHUD;
-		combo.setGraphicSize(Std.int(combo.width * 0.7));
+		combo.setGraphicSize(Std.int(combo.width * .7));
 		combo.updateHitbox();
 		add(combo);
 
 		lateEarly = new FlxSprite(Paths.image('ratings/late'));
 		lateEarly.camera = camHUD;
-		lateEarly.setGraphicSize(Std.int(combo.width * 0.7));
+		lateEarly.setGraphicSize(Std.int(combo.width * .7));
 		lateEarly.updateHitbox();
 		add(lateEarly);
 
@@ -339,8 +339,7 @@ class NoteOffsetState extends MusicBeatState {
 		if(curBeat % 2 == 0) boyfriend.dance();
 		gf.dance();
 		
-		if (!onComboMenu && camGame.zoom < 1.35)
-			camGame.zoom += .0075;
+		if (!onComboMenu && camGame.zoom < 1.35) camGame.zoom += .0075;
 	}
 
 	override function sectionHit() {
