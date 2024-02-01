@@ -70,7 +70,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	public function new() {
 		super();
 		
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		bg.scale.set(FlxG.width, FlxG.height);
 		bg.alpha = .6;
 		add(bg);
 
@@ -130,9 +131,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 		if(nextAccept <= 0) {
 			var usesCheckbox = true;
-			if(curOption.type != 'bool') {
-				usesCheckbox = false;
-			}
+			if(curOption.type != 'bool') usesCheckbox = false;
 
 			if(usesCheckbox) {
 				if(controls.ACCEPT) {
@@ -212,10 +211,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 						}
 					}
 
-					if (curOption.type != 'string')
-						holdTime += elapsed;
-				} else if (controls.UI_LEFT_R || controls.UI_RIGHT_R)
-					clearHold();
+					if (curOption.type != 'string') holdTime += elapsed;
+				} else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) clearHold();
 			}
 
 			if(controls.RESET) {
@@ -223,18 +220,14 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 					var leOption:GameplayOption = optionsArray[i];
 					leOption.setValue(leOption.defaultValue);
 					if(leOption.type != 'bool') {
-						if(leOption.type == 'string') {
-							leOption.curOption = leOption.options.indexOf(leOption.getValue());
-						}
+						if(leOption.type == 'string') leOption.curOption = leOption.options.indexOf(leOption.getValue());
 						updateTextFrom(leOption);
 					}
 
 					if(leOption.name == 'Scroll Speed') {
 						leOption.displayFormat = "%vX";
 						leOption.maxValue = 3;
-						if(leOption.getValue() > 3) {
-							leOption.setValue(3);
-						}
+						if(leOption.getValue() > 3) leOption.setValue(3);
 						updateTextFrom(leOption);
 					}
 					leOption.change();
@@ -257,8 +250,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	}
 
 	function clearHold() {
-		if(holdTime > 0.5)
-			FlxG.sound.play(Paths.sound('scrollMenu'));
+		if(holdTime > .5) FlxG.sound.play(Paths.sound('scrollMenu'));
 		holdTime = 0;
 	}
 	
@@ -278,9 +270,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	}
 
 	function reloadCheckboxes() {
-		for (checkbox in checkboxGroup) {
+		for (checkbox in checkboxGroup)
 			checkbox.daValue = (optionsArray[checkbox.ID].getValue() == true);
-		}
 	}
 }
 
@@ -309,8 +300,7 @@ class GameplayOption
 	public var displayFormat:String = '%v'; //How String/Float/Percent/Int values are shown, %v = Current value, %d = Default value
 	public var name:String = 'Unknown';
 
-	public function new(name:String, variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String> = null)
-	{
+	public function new(name:String, variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String> = null) {
 		this.name = name;
 		this.variable = variable;
 		this.type = type;
@@ -324,8 +314,7 @@ class GameplayOption
 				case 'percent': defaultValue = 1;
 				case 'string':
 					defaultValue = '';
-					if(options.length > 0)
-						defaultValue = options[0];
+					if(options.length > 0) defaultValue = options[0];
 			}
 		}
 

@@ -68,10 +68,8 @@ class ResetScoreSubState extends MusicBeatSubstate {
 		bg.alpha += elapsed * 1.5;
 		if(bg.alpha > 0.6) bg.alpha = 0.6;
 
-		for (i in 0...alphabetArray.length) {
-			var spr = alphabetArray[i];
-			spr.alpha += elapsed * 2.5;
-		}
+		for (i in 0...alphabetArray.length)
+			alphabetArray[i].alpha += elapsed * 2.5;
 		if(week == -1) icon.alpha += elapsed * 2.5;
 
 		if(controls.UI_LEFT_P || controls.UI_RIGHT_P) {

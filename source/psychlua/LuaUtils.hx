@@ -223,6 +223,7 @@ class LuaUtils {
 	}
 	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
 		spr.frames = switch(spriteType.toLowerCase().trim()) {
+			case 'aseprite' | 'jsoni8': Paths.getAsepriteAtlas(image);
 			case "packer" | "packeratlas" | "pac": Paths.getPackerAtlas(image);
 			default: Paths.getSparrowAtlas(image);
 		}

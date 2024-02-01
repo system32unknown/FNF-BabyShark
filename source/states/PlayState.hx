@@ -1471,21 +1471,16 @@ class PlayState extends MusicBeatState {
 
 		if (controls.PAUSE) tryPause();
 
-		switch(ClientPrefs.getPref('IconBounceType')) {
-			case "Old":
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .5)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .5)));
-			case "Psych":
-				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, Math.exp(-elapsed * 9 * playbackRate));
-				iconP1.scale.set(mult, mult);
-				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, Math.exp(-elapsed * 9 * playbackRate));
-				iconP2.scale.set(mult, mult);
-			case "Dave":
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, .88)), Std.int(FlxMath.lerp(150, iconP1.height, .88)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, .88)), Std.int(FlxMath.lerp(150, iconP2.height, .88)));
+		for (icon in [iconP1, iconP2]) {
+			switch(ClientPrefs.getPref('IconBounceType')) {
+				case "Old": icon.setGraphicSize(Std.int(FlxMath.lerp(150, icon.width, .5)));
+				case "Psych":
+					var mult:Float = FlxMath.lerp(1, icon.scale.x, Math.exp(-elapsed * 9 * playbackRate));
+					icon.scale.set(mult, mult);
+				case "Dave": icon.setGraphicSize(Std.int(FlxMath.lerp(150, icon.width, .88)), Std.int(FlxMath.lerp(150, icon.height, .88)));
+			}
+			icon.updateHitbox();
 		}
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
 
 		final iconOffset:Int = 26;
 		if (iconP1.moves) iconP1.x = (iconP1.iconType == 'psych' ? healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset : healthBar.barCenter - iconOffset);
@@ -1540,8 +1535,7 @@ class PlayState extends MusicBeatState {
 		FlxG.watch.addQuick("stepShit", curStep);
 		#end
 
-		if (!ClientPrefs.getPref('noReset') && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong && !practiceMode)
-			health = 0;
+		if (!ClientPrefs.getPref('noReset') && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong && !practiceMode) health = 0;
 		doDeathCheck();
 
 		if (unspawnNotes[0] != null) {
@@ -1591,7 +1585,6 @@ class PlayState extends MusicBeatState {
 			if(!daNote.mustPress) strumGroup = opponentStrums;
 			var strum:StrumNote = strumGroup.members[daNote.noteData];
 			daNote.followStrumNote(strum, songSpeed / playbackRate);
-
 			if(daNote.isSustainNote && strum.sustainReduce) daNote.clipToStrumNote(strum);
 
 			if (Conductor.songPosition - daNote.strumTime > noteKillOffset) { // Kill extremely late notes and cause misses
@@ -2254,8 +2247,8 @@ class PlayState extends MusicBeatState {
 		//more accurate hit time for the ratings?
 		if(notes.length > 0 && !boyfriend.stunned && generatedMusic && !endingSong) {
 			var lastTime:Float = Conductor.songPosition;
-			if (FlxG.sound.music != null && FlxG.sound.music.playing && !startingSong)
-				if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time;
+			if (FlxG.sound.music != null && FlxG.sound.music.playing && !startingSong && Conductor.songPosition >= 0)
+				Conductor.songPosition = FlxG.sound.music.time;
 
 			var sortedNotesList:Array<Note> = [];				
 			var canMiss:Bool = !ClientPrefs.getPref('ghostTapping');
@@ -2349,9 +2342,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function getKeyFromEvent(arr:Array<Dynamic>, key:FlxKey):Int {
-		if (key != NONE) {
-			for (i in 0...arr.length) for (j in 0...arr[i].length) if(key == arr[i][j]) return i;
-		}
+		if (key != NONE) for (i in 0...arr.length) for (j in 0...arr[i].length) if(key == arr[i][j]) return i;
 		return -1;
 	}
 
@@ -2502,14 +2493,9 @@ class PlayState extends MusicBeatState {
 		if (ClientPrefs.getPref('camMovement') && bfturn) moveCamOnNote(animToPlay);
 
 		if(note.hitCausesMiss) {
-			if(!note.noMissAnimation) {
-				switch(leType) {
-					case 'Hurt Note' | 'Kill Note': // Hurt note, Kill Note
-						if(boyfriend.animOffsets.exists('hurt')) {
-							boyfriend.playAnim('hurt', true);
-							boyfriend.specialAnim = true;
-						}
-				}
+			if(!note.noMissAnimation && (leType == 'Hurt Note' || leType == 'Kill Note') && boyfriend.animOffsets.exists('hurt')) {
+				boyfriend.playAnim('hurt', true);
+				boyfriend.specialAnim = true;
 			}
 
 			noteMiss(note);

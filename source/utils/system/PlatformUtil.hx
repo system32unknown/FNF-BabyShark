@@ -87,9 +87,6 @@ class PlatformUtil {
 	')
 	public static function allocConsole() {}
 
-	@:functionCode('return SetConsoleCtrlHandler(NULL, add);')
-	public static function closeConsole(add:Bool = true):Bool return false;
-	
 	@:functionCode('return SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);')
 	public static function setConsoleColors(color:Int):Bool return false;
 

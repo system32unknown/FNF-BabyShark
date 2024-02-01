@@ -104,8 +104,7 @@ class ExtraFunctions {
 		});
 		funk.set("saveFile", function(path:String, content:String, ?absolute:Bool = false) {
 			try {
-				if(!absolute)
-					File.saveContent(Paths.mods(path), content);
+				if(!absolute) File.saveContent(Paths.mods(path), content);
 				else File.saveContent(path, content);
 				return true;
 			} catch (e:Dynamic) FunkinLua.luaTrace("saveFile: Error trying to save " + path + ": " + e, false, false, FlxColor.RED);

@@ -245,6 +245,7 @@ class HScript extends Interp {
 		setVar('parentLua', parentLua);
 		setVar('this', this);
 		setVar('game', FlxG.state);
+		setVar('controls', Controls.instance);
 
 		setVar('buildTarget', LuaUtils.getBuildTarget());
 		setVar('customSubstate', CustomSubstate.instance);
@@ -347,8 +348,7 @@ class HScript extends Interp {
 			if(libPackage.length > 0) str = '$libPackage.';
 			else if(libName == null) libName = '';
 
-			var c:Dynamic = funk.hscript.resolveClassOrEnum(str + libName);
-			try { funk.hscript.setVar(libName, c);
+			try { funk.hscript.setVar(libName, funk.hscript.resolveClassOrEnum(str + libName));
 			} catch(e) {
 				funk.hscript.active = false;
 				FunkinLua.luaTrace('ERROR (${funk.lastCalledFunction}) - $e', false, false, FlxColor.RED);

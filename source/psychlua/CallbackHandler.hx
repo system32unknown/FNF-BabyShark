@@ -18,16 +18,13 @@ class CallbackHandler {
 
 			if(cbf == null) return 0;
 
-			var args:Array<Dynamic> = [for (i in 0...Lua.gettop(l)) Convert.fromLua(l, i + 1)];
-
-			var ret:Dynamic = null;
-			ret = Reflect.callMethod(null, cbf, args);
+			var ret:Dynamic = Reflect.callMethod(null, cbf, [for (i in 0...Lua.gettop(l)) Convert.fromLua(l, i + 1)]);
 			if(ret != null) {
 				Convert.toLua(l, ret);
 				return 1;
 			}
 		} catch(e:Dynamic) {
-			if(Lua_helper.sendErrorsToLua) {LuaL.error(l, 'CALLBACK ERROR! ${if(e.message != null) e.message else e}'); return 0;}
+			if(Lua_helper.sendErrorsToLua) {LuaL.error(l, 'CALLBACK ERROR! ${e.message != null ? e.message : e}'); return 0;}
 			Logs.trace(e, ERROR);
 			throw(e);
 		}

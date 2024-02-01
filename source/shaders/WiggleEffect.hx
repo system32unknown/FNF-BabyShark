@@ -29,7 +29,7 @@ class WiggleEffect {
 
 	function set_effectType(v:WiggleEffectType):WiggleEffectType {
 		effectType = v;
-		shader.effectType.value = [WiggleEffectType.getConstructors().indexOf(Std.string(v))];
+		shader.effectType.value = [WiggleEffectType.getConstructors().indexOf(Std.string(v).toUpperCase())];
 		return v;
 	}
 

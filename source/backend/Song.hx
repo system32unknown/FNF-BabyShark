@@ -85,15 +85,11 @@ class Song {
 			var path:String = Paths.json('${Paths.CHART_PATH}/$formattedPath');
 			#if sys
 			if(FileSystem.exists(path))
-				rawJson = File.getContent(path).trim();
+				rawJson = File.getContent(path);
 			else
 			#end
-				rawJson = lime.utils.Assets.getText(Paths.json('${Paths.CHART_PATH}/$formattedPath')).trim();
+				rawJson = lime.utils.Assets.getText(path);
 		}
-
-		if (rawJson == null) return null;
-		while (!rawJson.endsWith("}"))
-			rawJson = rawJson.substr(0, rawJson.length - 1);
 		
 		var songJson:Dynamic = parseJSONshit(rawJson);
 		if(jsonInput != 'events') data.StageData.loadDirectory(songJson);

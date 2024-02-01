@@ -23,6 +23,7 @@ class Prompt extends MusicBeatSubstate {
 
 		if (option1 != null) op1 = option1;
 		if (option2 != null) op2 = option2;
+
 		buttonAccept = new FlxButton(473.3, 450, op1, function() {
 			if(okc != null) okc();
 			close();

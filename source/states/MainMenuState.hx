@@ -14,13 +14,6 @@ class MainMenuState extends MusicBeatState {
 		"Credits",
 		"Options"
 	];
-	var menuDescription:Array<String> = [
-		"Play the story mode to understand the story!",
-		"Play any song as you wish and get new scores!",
-		"Choose any mods as you can play mods!",
-		"Look at the people who have worked or contributed to the mod!",
-		"Adjust game settings and change Keybinds!"
-	];
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
@@ -33,7 +26,6 @@ class MainMenuState extends MusicBeatState {
 
 	var bigIcons:FlxSprite;
 	var curOptText:FlxText;
-	var curOptDesc:FlxText;
 
 	override function create() {
 		FlxG.mouse.visible = true;
@@ -98,13 +90,6 @@ class MainMenuState extends MusicBeatState {
 		curOptText.screenCenter(X);
 		curOptText.y = FlxG.height / 2 + 28;
 		add(curOptText);
-
-		curOptDesc = new FlxText(0, 0, FlxG.width, menuDescription[curSelected], 24);
-		curOptDesc.setFormat(Paths.font('babyshark.ttf'), 24, FlxColor.WHITE, CENTER);
-		curOptDesc.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-		curOptDesc.scrollFactor.set();
-		curOptDesc.screenCenter(X).y = FlxG.height - 58;
-		add(curOptDesc);
 
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
@@ -218,6 +203,5 @@ class MainMenuState extends MusicBeatState {
 
 		bigIcons.animation.play(menuOptions[curSelected].toLowerCase());
 		curOptText.text = menuOptions[curSelected];
-		curOptDesc.text = menuDescription[curSelected];
 	}
 }

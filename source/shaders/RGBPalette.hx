@@ -127,7 +127,6 @@ class RGBPaletteShader extends flixel.system.FlxAssets.FlxShader {
 			}
 			return vec4(0.0, 0.0, 0.0, 0.0);
 		}')
-
 	@:glFragmentSource('
 		#pragma header
 

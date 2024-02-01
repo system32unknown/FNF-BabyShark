@@ -1113,8 +1113,11 @@ class FunkinLua {
 
 		#if (MODS_ALLOWED && !flash && sys)
 		if(runtimeShaders.exists(name)) {
-			luaTrace('Shader $name was already initialized!');
-			return true;
+			var shaderData:Array<String> = runtimeShaders.get(name);
+			if(shaderData != null && (shaderData[0] != null || shaderData[1] != null)) {
+				luaTrace('Shader $name was already initialized!');
+				return true;
+			}
 		}
 
 		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
