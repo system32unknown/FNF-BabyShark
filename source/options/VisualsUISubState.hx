@@ -19,7 +19,7 @@ class VisualsUISubState extends BaseOptionsMenu {
 		addOption(new Option('Flashing Lights', "Uncheck this if you're sensitive to flashing lights!", 'flashing', 'bool'));
 		addOption(new Option('Icon Bounce:', "What should the Icon Bounces?", 'IconBounceType', 'string', ['Old', 'Psych', 'Dave', 'GoldenApple', 'Custom']));
 		addOption(new Option('Health Bar Type:', "What should the Health Bar Types?", 'HealthTypes', 'string', ['Vanilla', 'Psych']));
-		addOption(new Option('Score Styles:', '', 'ScoreType', 'string', ['Alter', 'Kade']));
+		addOption(new Option('Smooth Health', '', 'SmoothHealth', 'bool'));
 		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'RatingDisplay', 'string', ['Hud', 'World']));
 		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms', 'bool'));
 		addOption(new Option('Show Combo Counter', 'If checked, the combo counter will be shown.', 'ShowComboCounter', 'bool'));

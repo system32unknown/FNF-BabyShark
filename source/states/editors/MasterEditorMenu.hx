@@ -76,11 +76,9 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Dialogue Editor' : LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
 			}
 			FlxG.sound.music.volume = 0;
-			#if PRELOAD_ALL
 			Conductor.usePlayState = false;
 			Conductor.mapBPMChanges(true);
 			states.FreeplayState.destroyFreeplayVocals();
-			#end
 		}
 		
 		var bullShit:Int = 0;

@@ -30,34 +30,20 @@
 		<define name="VIDEOS_ALLOWED" if="windows || linux || android" unless="32bits"/>
 		<define name="DISCORD_ALLOWED"/>
 	</section>
-
-	<define name="PRELOAD_ALL" unless="web"/>
-	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
 	
 	<assets path="assets/fonts"/>
-	<assets path="assets/preload" rename="assets"/>
+	<assets path="assets/shared"/>
 
 	<library name="videos" preload="true"/>
-	<library name="weeks" preload="true"/>
-	
-	<section if="PRELOAD_ALL">
-		<library name="songs" preload="true"/>
-		<library name="shared" preload="true"/>
-		<library name="week_assets" preload="true"/>
-	</section>
-	<section if="NO_PRELOAD_ALL">
-		<library name="songs" preload="false"/>
-		<library name="shared" preload="false"/>
-		<library name="week_assets" preload="false"/>
-	</section>
+	<library name="songs" preload="true"/>
+	<library name="shared" preload="true"/>
+	<library name="week_assets" preload="true"/>
 	
 	<assets path="assets/videos" library="videos" if="VIDEOS_ALLOWED"/>
 	<assets path="assets/songs" library="songs"/>
-	<assets path="assets/shared" library="shared"/>
 	<assets path="assets/week_assets" library="week_assets" rename="assets"/>
-	<assets path="assets/weeks" library="weeks"/>
 
-	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED"/>
+	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED" type='template'/>
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>

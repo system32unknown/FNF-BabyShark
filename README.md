@@ -1,5 +1,5 @@
 # Baby Shark's Big Funkin!
-![Baby Shark's Big Funkin Logo](assets/preload/images/logobumpin.png)
+![Baby Shark's Big Funkin Logo](assets/shared/images/logobumpin.png)
 
 Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor codes), and Base Engine.
 

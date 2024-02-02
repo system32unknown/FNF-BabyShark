@@ -159,7 +159,7 @@ class MainMenuState extends MusicBeatState {
 					else {
 						FlxFlicker.flicker(item, 1, .06, false, false, (flicker:FlxFlicker) -> {
 							switch (menuOptions[curSelected].toLowerCase()) {
-								case 'story_mode': MusicBeatState.switchState(new StoryMenuState());
+								case 'story mode': MusicBeatState.switchState(new StoryMenuState());
 								case 'freeplay': MusicBeatState.switchState(new FreeplayState());
 								#if MODS_ALLOWED case 'mods': MusicBeatState.switchState(new ModsMenuState()); #end
 								case 'credits': MusicBeatState.switchState(new CreditsState());

@@ -8,7 +8,7 @@ import openfl.text.TextFormat;
 import openfl.Lib;
 import flixel.system.FlxAssets;
 
-@:bitmap("assets/preload/images/logobumpin.png")
+@:bitmap("assets/shared/images/logobumpin.png")
 class FunkinLogoImage extends BitmapData {}
 @:keep @:bitmap("assets/images/preloader/light.png")
 class GraphicLogoLight extends BitmapData {}

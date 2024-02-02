@@ -120,6 +120,7 @@ class PlayState extends MusicBeatState {
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
+	public var smoothHealth(default, null):Float = 1;
 	var iconsAnimations:Bool = true;
 	function set_health(value:Float):Float {
 		if(!iconsAnimations || healthBar == null || !healthBar.enabled || healthBar.valueFunction == null)
@@ -367,7 +368,7 @@ class PlayState extends MusicBeatState {
 
 		// "GLOBAL" SCRIPTS
 		#if LUA_ALLOWED
-		for (folder in Mods.directoriesWithFile(Paths.getPreloadPath(), 'scripts/')) for (file in FileSystem.readDirectory(folder)) {
+		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'scripts/')) for (file in FileSystem.readDirectory(folder)) {
 			if(file.toLowerCase().endsWith('.lua')) new FunkinLua(folder + file);
 			if(file.toLowerCase().endsWith('.hx')) initHScript(folder + file);
 		}
@@ -464,7 +465,7 @@ class PlayState extends MusicBeatState {
 
 		moveCameraSection();
 
-		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return health, 0, 2);
+		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> (ClientPrefs.getPref('smoothHealth') ? return smoothHealth : return health), 0, 2);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
@@ -497,7 +498,6 @@ class PlayState extends MusicBeatState {
 		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		judgementCounter.scrollFactor.set();
 		judgementCounter.visible = ClientPrefs.getPref('ShowJudgement') && !hideHud;
-		judgementCounter.text = 'Max Combos: 0\nEpics: 0\nSicks: 0\nGoods: 0\nBads: 0\nShits: 0\n';
 		uiGroup.add(judgementCounter);
 		judgementCounter.screenCenter(Y);
 		updateScore(false);
@@ -548,7 +548,7 @@ class PlayState extends MusicBeatState {
 			moveCameraSection();
 		}
 		// SONG SPECIFIC SCRIPTS
-		for (folder in Mods.directoriesWithFile(Paths.getPreloadPath(), 'data/${Paths.CHART_PATH}/$songName/')) for (file in FileSystem.readDirectory(folder)) {
+		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'data/${Paths.CHART_PATH}/$songName/')) for (file in FileSystem.readDirectory(folder)) {
 			if(file.toLowerCase().endsWith('.lua')) new FunkinLua(folder + file);
 			if(file.toLowerCase().endsWith('.hx')) initHScript(folder + file);
 		}
@@ -683,11 +683,11 @@ class PlayState extends MusicBeatState {
 			luaFile = replacePath;
 			doPush = true;
 		} else {
-			luaFile = Paths.getPreloadPath(luaFile);
+			luaFile = Paths.getSharedPath(luaFile);
 			if(FileSystem.exists(luaFile)) doPush = true;
 		}
 		#else
-		luaFile = Paths.getPreloadPath(luaFile);
+		luaFile = Paths.getSharedPath(luaFile);
 		if(lime.utils.Assets.exists(luaFile)) doPush = true;
 		#end
 
@@ -709,7 +709,7 @@ class PlayState extends MusicBeatState {
 			scriptFile = replacePath;
 			doPush = true;
 		} else {
-			scriptFile = Paths.getPreloadPath(scriptFile);
+			scriptFile = Paths.getSharedPath(scriptFile);
 			if(FileSystem.exists(scriptFile)) doPush = true;
 		}
 		
@@ -953,9 +953,8 @@ class PlayState extends MusicBeatState {
 		var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
 		if(ret == LuaUtils.Function_Stop) return;
 
-		judgementCounter.text = 'Max Combos: ${maxCombo}';
-		for (rating in ratingsData)
-			judgementCounter.text += '\n${CoolUtil.capitalize(rating.name)}s: ${rating.hits}';
+		judgementCounter.text = 'Max Combo: ${maxCombo}';
+		for (rating in ratingsData) judgementCounter.text += '\n${CoolUtil.capitalize(rating.name)}: ${rating.hits}';
 		judgementCounter.screenCenter(Y);
 		if (updateScoreText) scoreTxt.text = getScoreText();
 
@@ -1500,6 +1499,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (healthBar.bounds != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
+		if (ClientPrefs.getPref('smoothHealth')) smoothHealth = FlxMath.lerp(health, smoothHealth, ((health / smoothHealth) * Math.exp(-elapsed * 8)) * playbackRate);
 
 		if (startingSong) {
 			if (startedCountdown && Conductor.songPosition >= 0) startSong();
@@ -2074,13 +2074,10 @@ class PlayState extends MusicBeatState {
 
 	var scoreSeparator:String = "|";
 	function getScoreText() {
-		var tempText:String = (!ClientPrefs.getPref('ShowNPS') ? '' : 'NPS:$nps (Max:$maxNPS) $scoreSeparator ');
+		var tempText:String = (!ClientPrefs.getPref('ShowNPS') ? '' : 'NPS:$nps / $maxNPS $scoreSeparator ');
 		tempText += 'Score:$songScore ';
-		tempText += (cpuControlled || instakillOnMiss ? '' : '$scoreSeparator ${ClientPrefs.getPref('ScoreType') == 'Kade' ? 'Combo Breaks' : 'Breaks'}:$songMisses ');
-		tempText += switch(ClientPrefs.getPref('ScoreType')) {
-			case 'Alter': '$scoreSeparator Acc:$accuracy% •' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
-			case 'Kade' | _: '$scoreSeparator Accuracy:$accuracy%' + (ratingName != '?' ? ' $scoreSeparator ($ratingFC) $ratingName' : ' $scoreSeparator N/A');
-		}
+		tempText += (cpuControlled || instakillOnMiss ? '' : '$scoreSeparator Breaks:$songMisses ');
+		tempText += '$scoreSeparator Acc:$accuracy% •' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
 		return tempText;
 	}
 
@@ -2714,11 +2711,11 @@ class PlayState extends MusicBeatState {
 		#if MODS_ALLOWED
 		var luaToLoad:String = Paths.modFolders(luaFile);
 		if(!FileSystem.exists(luaToLoad))
-			luaToLoad = Paths.getPreloadPath(luaFile);
+			luaToLoad = Paths.getSharedPath(luaFile);
 		
 		if(FileSystem.exists(luaToLoad))
 		#elseif sys
-		var luaToLoad:String = Paths.getPreloadPath(luaFile);
+		var luaToLoad:String = Paths.getSharedPath(luaFile);
 		if(Assets.exists(luaToLoad))
 		#end
 		{
@@ -2734,7 +2731,7 @@ class PlayState extends MusicBeatState {
 	public function startHScriptsNamed(scriptFile:String) {
 		var scriptToLoad:String = Paths.modFolders(scriptFile);
 		if(!FileSystem.exists(scriptToLoad))
-			scriptToLoad = Paths.getPreloadPath(scriptFile);
+			scriptToLoad = Paths.getSharedPath(scriptFile);
 		
 		if(FileSystem.exists(scriptToLoad)) {
 			for (hx in hscriptArray) if (hx.origin == scriptToLoad) return false;
@@ -2968,7 +2965,7 @@ class PlayState extends MusicBeatState {
 			return true;
 		}
 
-		for (folder in Mods.directoriesWithFile(Paths.getPreloadPath(), 'shaders/')) {
+		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'shaders/')) {
 			var frag:String = folder + name + '.frag';
 			var vert:String = folder + name + '.vert';
 			var found:Bool = false;

@@ -127,8 +127,6 @@ class FreeplayState extends MusicBeatState {
 
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
 
-		changeSelection();
-
 		final leTextSplit:Array<String> = [
 			"[SPACE] - Listen to the Song / [CTRL] - Gameplay Changers Menu",
 			"[COMMA] - Change Sections / [RESET] - Reset Score and Accuracy"
@@ -150,6 +148,7 @@ class FreeplayState extends MusicBeatState {
 		errorDisplay = new ErrorDisplay();
 		errorDisplay.addDisplay(this);
 
+		changeSelection();
 		updateTexts();
 		interpColor = new FlxInterpolateColor(bg.color);
 		super.create();
@@ -244,13 +243,10 @@ class FreeplayState extends MusicBeatState {
 			openSubState(new substates.GameplayChangersSubstate());
 		} else if(FlxG.keys.justPressed.SPACE) {
 			if(instPlaying != curSelected) {
-				var playrateback:Float = ClientPrefs.getGameplaySetting('songspeed');
-				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
-				FlxG.sound.music.pitch = 1;
-				Mods.currentModDirectory = songs[curSelected].folder;
 
+				Mods.currentModDirectory = songs[curSelected].folder;
 				var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
 				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
@@ -264,7 +260,6 @@ class FreeplayState extends MusicBeatState {
 					FlxG.sound.list.add(vocals);
 	
 					FlxG.sound.music.loadEmbedded(Paths.inst(PlayState.SONG.song, true));
-					FlxG.sound.music.pitch = playrateback;
 					FlxG.sound.music.onComplete = () -> {
 						if (vocals == null) {
 							FlxG.sound.music.onComplete = null;
@@ -277,9 +272,8 @@ class FreeplayState extends MusicBeatState {
 						FlxG.sound.music.resume();
 						vocals.play();
 					}
-					#end
+
 					vocals.looped = !(FlxG.sound.music.looped = true);
-					vocals.pitch = playrateback;
 					vocals.volume = FlxG.sound.music.volume = .7;
 					vocals.persist = true;
 					vocals.autoDestroy = false;

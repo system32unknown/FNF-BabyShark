@@ -84,9 +84,10 @@ class LoadingState extends MusicBeatState {
 		initSongsManifest().onComplete((lib) -> {
 			callbacks = new MultiCallback(onLoad);
 			var introComplete = callbacks.add("introComplete");
-			checkLibrary("shared");
+
 			if(directory != null && directory.length > 0 && directory != 'shared')
 				checkLibrary('week_assets');
+
 			var fadeTime = .5;
 			FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
 			new FlxTimer().start(fadeTime + MIN_TIME, (_) -> introComplete());
@@ -123,9 +124,6 @@ class LoadingState extends MusicBeatState {
 		MusicBeatState.switchState(target);
 	}
 
-	static function getSongPath() return Paths.inst(PlayState.SONG.song);
-	static function getVocalPath() return Paths.voices(PlayState.SONG.song);
-
 	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false) {
 		MusicBeatState.switchState(getNextState(target, stopMusic));
 	}
@@ -139,24 +137,10 @@ class LoadingState extends MusicBeatState {
 
 		Paths.setCurrentLevel(directory);
 
-		#if NO_PRELOAD_ALL
-		var loaded:Bool = false;
-		if (PlayState.SONG != null)
-			loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && checkLibrary('week_assets');
-
-		if (!loaded) return new LoadingState(target, stopMusic, directory);
-		#end
-
-		if (stopMusic && FlxG.sound.music != null)
-			FlxG.sound.music.stop();
+		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
 		
 		return target;
 	}
-
-	#if NO_PRELOAD_ALL
-	static function isSoundLoaded(path:String):Bool return Assets.cache.hasSound(path);
-	static function isLibraryLoaded(library:String):Bool return Assets.getLibrary(library) != null;
-	#end
 
 	override function destroy() {
 		super.destroy();
@@ -164,16 +148,14 @@ class LoadingState extends MusicBeatState {
 	}
 	
 	static function initSongsManifest() {
-		var id = "songs";
-		var promise = new Promise<AssetLibrary>();
+		var id:String = "songs";
+		var promise:Promise<AssetLibrary> = new Promise<AssetLibrary>();
 
-		var library = LimeAssets.getLibrary(id);
+		var library:AssetLibrary = LimeAssets.getLibrary(id);
+		if (library != null) return Future.withValue(library);
 
-		if (library != null)
-			return Future.withValue(library);
-
-		var path = id;
-		var rootPath = null;
+		var path:String = id;
+		var rootPath:String = null;
 
 		@:privateAccess
 		var libraryPaths = LimeAssets.libraryPaths;
@@ -195,9 +177,8 @@ class LoadingState extends MusicBeatState {
 				return;
 			}
 
-			var library = AssetLibrary.fromManifest(manifest);
-			if (library == null)
-				promise.error('Cannot open library "$id"');
+			var library:AssetLibrary = AssetLibrary.fromManifest(manifest);
+			if (library == null) promise.error('Cannot open library "$id"');
 			else {
 				@:privateAccess
 				LimeAssets.libraries.set(id, library);

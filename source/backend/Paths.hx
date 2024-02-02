@@ -45,7 +45,7 @@ class Paths {
 	}
 
 	public static var keyExclusions:Array<String> = [
-		'music/freakyMenu.$SOUND_EXT',
+		'assets/shared/music/freakyMenu.$SOUND_EXT',
 	];
 
 	public static function decacheSound(key:String) {
@@ -153,16 +153,13 @@ class Paths {
 				levelPath = getLibraryPathForce(file, 'week_assets', currentLevel);
 				if (OpenFlAssets.exists(levelPath, type)) return levelPath;
 			}
-
-			levelPath = getLibraryPathForce(file, "shared");
-			if (OpenFlAssets.exists(levelPath, type)) return levelPath;
 		}
 
-		return getPreloadPath(file);
+		return getSharedPath(file);
 	}
 
-	static public function getLibraryPath(file:String, library = "preload") {
-		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
+	static public function getLibraryPath(file:String, library = "shared") {
+		return (library == "shared" ? getSharedPath(file) : getLibraryPathForce(file, library));
 	}
 
 	inline static function getLibraryPathForce(file:String, library:String, ?level:String) {
@@ -170,7 +167,7 @@ class Paths {
 		return '$library:assets/$level/$file';
 	}
 
-	inline public static function getPreloadPath(file:String = '') return 'assets/$file';
+	inline public static function getSharedPath(file:String = '') return 'assets/shared/$file';
 
 	inline static public function txt(key:String, ?library:String)
 		return getPath('data/$key.txt', TEXT, library);
@@ -206,9 +203,7 @@ class Paths {
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false, ?absolute:Bool = false):String {
 		if (absolute) {
-			#if sys
-			if (FileSystem.exists(key)) return File.getContent(key);
-			#end
+			#if sys if (FileSystem.exists(key)) return File.getContent(key); #end
 			if(OpenFlAssets.exists(key, TEXT)) return Assets.getText(key);
 
 			return null;
@@ -219,20 +214,15 @@ class Paths {
 			return File.getContent(modFolders(key));
 		#end
 
-		if (FileSystem.exists(getPreloadPath(key)))
-			return File.getContent(getPreloadPath(key));
+		if (FileSystem.exists(getSharedPath(key)))
+			return File.getContent(getSharedPath(key));
 
 		if (currentLevel != null) {
 			var levelPath:String = '';
 			if(currentLevel != 'shared') {
 				levelPath = getLibraryPathForce(key, 'week_assets', currentLevel);
-				if (FileSystem.exists(levelPath))
-					return File.getContent(levelPath);
+				if (FileSystem.exists(levelPath)) return File.getContent(levelPath);
 			}
-
-			levelPath = getLibraryPathForce(key, 'shared');
-			if (FileSystem.exists(levelPath))
-				return File.getContent(levelPath);
 		}
 		#end
 		var path:String = getPath(key, TEXT);
@@ -376,10 +366,7 @@ class Paths {
 				bitmap = BitmapData.fromFile(file);
 			else
 			#end
-			{
-				if (OpenFlAssets.exists(file, IMAGE))
-					bitmap = OpenFlAssets.getBitmapData(file);
-			}
+				if (OpenFlAssets.exists(file, IMAGE)) bitmap = OpenFlAssets.getBitmapData(file);
 
 			if(bitmap == null) return null;
 		}
@@ -539,5 +526,5 @@ class Paths {
 	#end
 
 	inline static public function exists(key:String)
-		return FileSystem.exists(modFolders(key)) || FileSystem.exists(getPreloadPath(key));
+		return FileSystem.exists(modFolders(key)) || FileSystem.exists(getSharedPath(key));
 }
