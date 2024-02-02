@@ -41,8 +41,7 @@ class Song {
 		return '${Paths.formatToSongPath(folder)}/${Paths.formatToSongPath(song)}';
 	}
 
-	static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
-	{
+	static function onLoadJson(songJson:Dynamic)  { // Convert old charts to newest format
 		if(songJson.gfVersion == null) {
 			songJson.gfVersion = songJson.player3;
 			songJson.player3 = null;
@@ -91,6 +90,9 @@ class Song {
 				rawJson = lime.utils.Assets.getText(path);
 		}
 		
+		if (rawJson == null) return null;
+		while (!rawJson.endsWith("}")) rawJson = rawJson.substr(0, rawJson.length - 1);
+
 		var songJson:Dynamic = parseJSONshit(rawJson);
 		if(jsonInput != 'events') data.StageData.loadDirectory(songJson);
 		onLoadJson(songJson);

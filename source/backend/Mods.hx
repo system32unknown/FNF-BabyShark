@@ -98,8 +98,7 @@ class Mods {
 		}
 
 		for (file in paths) {
-			var list:Array<String> = CoolUtil.coolTextFile(file);
-			for (value in list)
+			for (value in CoolUtil.coolTextFile(file))
 				if((allowDuplicates || !mergedList.contains(value)) && value.length > 0)
 					mergedList.push(value);
 		}

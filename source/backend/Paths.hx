@@ -192,11 +192,11 @@ class Paths {
 	#if (!MODS_ALLOWED) inline #end static public function music(key:String, ?library:String, ?stream:Bool):Sound
 		return returnSound('music', key, library, stream || streamMusic);
 
-	#if (!MODS_ALLOWED) inline #end static public function inst(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
-		return returnSound('songs', '${formatToSongPath(song)}/Inst', !forceNoStream && (stream || streamMusic));
+	inline static public function inst(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
+		return returnSound('', '${formatToSongPath(song)}/Inst', 'songs', !forceNoStream && (stream || streamMusic));
 
-	#if (!MODS_ALLOWED) inline #end static public function voices(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
-		return returnSound('songs', '${formatToSongPath(song)}/Voices', !forceNoStream && (stream || streamMusic));
+	inline static public function voices(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
+		return returnSound('', '${formatToSongPath(song)}/Voices', 'songs', !forceNoStream && (stream || streamMusic));
 
 	#if (!MODS_ALLOWED) inline #end static public function image(key:String, ?library:String):FlxGraphic
 		return returnGraphic(key, library);
@@ -421,7 +421,7 @@ class Paths {
 			if (sound != null) return sound;
 		#if (!MODS_ALLOWED) } #end
 
-		FlxG.log.warn('Could not find sound with key: "$key"' + (library == null ? "" : 'in library: "$library"'));
+		FlxG.log.warn('Could not find sound with key: "$key"' + (library == null ? "" : ' in library: "$library"'));
 		return null;
 	}
 

@@ -120,7 +120,7 @@ class PlayState extends MusicBeatState {
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
-	public var smoothHealth(default, null):Float = 1;
+	public var smoothHealth:Float = 1;
 	var iconsAnimations:Bool = true;
 	function set_health(value:Float):Float {
 		if(!iconsAnimations || healthBar == null || !healthBar.enabled || healthBar.valueFunction == null)
@@ -1499,7 +1499,10 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (healthBar.bounds != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
-		if (ClientPrefs.getPref('smoothHealth')) smoothHealth = FlxMath.lerp(health, smoothHealth, ((health / smoothHealth) * Math.exp(-elapsed * 8)) * playbackRate);
+		if (ClientPrefs.getPref('smoothHealth')) {
+			var mult:Float = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 8)) * playbackRate);
+			smoothHealth = mult;
+		}
 
 		if (startingSong) {
 			if (startedCountdown && Conductor.songPosition >= 0) startSong();
