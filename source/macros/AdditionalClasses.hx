@@ -11,7 +11,7 @@ class AdditionalClasses {
 		var include:Array<String> = [
 			// FLIXEL
 			"flixel", "lime", "haxe", "openfl",
-			#if VIDEOS_ALLOWED "hxcodec", #end
+			#if VIDEOS_ALLOWED "hxvlc", #end
 			#if LUA_ALLOWED "llua", #end
 			#if desktop "discord_rpc", #end
 			"hscript",

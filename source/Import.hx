@@ -22,6 +22,11 @@ import objects.BGSprite;
 import states.PlayState;
 import states.LoadingState;
 
+#if VIDEOS_ALLOWED
+import hxvlc.flixel.*;
+import hxvlc.openfl.*;
+#end
+
 #if sys
 import sys.*;
 import sys.io.*;

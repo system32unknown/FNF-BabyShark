@@ -68,7 +68,7 @@
 	<haxelib name="tjson"/>
 
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
-	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
+	<haxelib name="hxvlc" if="VIDEOS_ALLOWED"/>
 	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
 
 	<section if="HSCRIPT_ALLOWED">
@@ -100,6 +100,14 @@
 	<!--Macro fixes-->
 	<haxeflag name="--macro" value="allowPackage('flash')"/>
 	<haxeflag name="--macro" value="include('my.pack')"/>
+	<!--hxVLC Defines-->
+	<section if="VIDEOS_ALLOWED">
+		<!--The level of verbosity that is being used for logging-->
+		<haxedef name="HXVLC_VERBOSE" value="2" if="debug"/>
+		<!--Enable libVLC logging on hxVLC-->
+		<haxedef name="HXVLC_LOGGING" if="debug"/>
+	</section>
+
 	<!-- _________________________________Custom_______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->

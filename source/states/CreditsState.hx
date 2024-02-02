@@ -31,7 +31,7 @@ class CreditsState extends MusicBeatState {
 		['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',	'https://twitter.com/gedehari',				'E1843A'],
 		['EliteMasterEric',		'mastereric',		'Runtime Shaders support',										'https://twitter.com/EliteMasterEric',		'FFBD40'],
 		['Gabriela',			'gabriela',			'Playback Rate Modifier\nand other PRs',						'https://twitter.com/BeastlyGabi',			'5E99DF'],
-		['PolybiusProxy',		'proxy',			'MP4 Video Loader Library (hxCodec)',							'https://twitter.com/polybiusproxy',		'DCD294'],
+		['MAJigsaw77',			'jigsaw',			'MP4 Video Loader Library (hxvlc)',								'https://twitter.com/MAJigsaw77',			'FFFFFF'],
 		['KadeDev',				'kade',				'Fixed Chart Editor\nand other PRs, Kade Engine Dev',			'https://twitter.com/kade0912',				'64A250'],
 		['superpowers04', 		'superpowers04', 	'linc_luaJIT Fork\n and lua reworks', 							'https://github.com/superpowers04',			'B957ED'],
 		['Raltyro',				'raltyro',			'Bunch of lua fixes, Owner of Psike Engine',					'https://twitter.com/raltyro',				'F3F3F3'],

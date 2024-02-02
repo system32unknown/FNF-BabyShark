@@ -748,7 +748,7 @@ class PlayState extends MusicBeatState {
 		inCutscene = true;
 
 		if(!#if sys FileSystem #else Assets #end.exists(filepath)) {
-			FlxG.log.warn('Couldnt find video file: ' + name);
+			FlxG.log.warn('Couldnt find video file: $name');
 			startAndEnd();
 			return null;
 		}

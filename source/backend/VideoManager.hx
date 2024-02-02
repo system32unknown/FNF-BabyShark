@@ -1,43 +1,28 @@
 package backend;
 
-#if VIDEOS_ALLOWED 
-#if (hxCodec >= "3.0.0") import hxcodec.flixel.FlxVideo as VideoHandler;
-#elseif (hxCodec >= "2.6.1") import hxcodec.VideoHandler;
-#elseif (hxCodec == "2.6.0") import VideoHandler;
-#else import vlc.MP4Handler as VideoHandler; #end
-#end
 import haxe.extern.EitherType;
 import flixel.util.FlxSignal;
 
 #if VIDEOS_ALLOWED
-class VideoManager extends VideoHandler {
+class VideoManager extends hxvlc.flixel.FlxVideo {
     public var playbackRate(get, set):EitherType<Single, Float>;
     public var paused(default, set):Bool = false;
     public var onVideoEnd:FlxSignal;
     public var onVideoStart:FlxSignal;
 
-    public function new(#if (hxCodec >= "3.0.0") ?autoDispose:Bool = true #end) {
+    public function new(autoDispose:Bool = true, ?smoothing:Bool = true) {
         super();
         onVideoEnd = new FlxSignal();
         onVideoStart = new FlxSignal();    
 
-        #if (hxCodec >= "3.0.0")
         if(autoDispose) onEndReached.add(() -> dispose(), true);
 
         onOpening.add(onVideoStart.dispatch);
         onEndReached.add(onVideoEnd.dispatch);
-        #else
-        openingCallback = onVideoStart.dispatch;
-        finishCallback = onVideoEnd.dispatch;
-        #end    
     }
 
-    public function startVideo(path:String, loop:Bool = false) {
-        #if (hxCodec >= "3.0.0")
-        play(path, loop);
-        #else
-        playVideo(path, loop, false);
-        #end
+    public function startVideo(path:String, ?args:Array<String>) {
+        if (load(path, args)) play();
     }
 
     @:noCompletion
