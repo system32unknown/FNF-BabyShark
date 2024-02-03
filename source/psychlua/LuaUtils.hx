@@ -80,8 +80,7 @@ class LuaUtils {
 			return target;
 		}
 		
-		if(allowMaps && isMap(instance))
-			return instance.get(variable);
+		if(allowMaps && isMap(instance)) return instance.get(variable);
 
 		if(PlayState.instance.variables.exists(variable)) {
 			var retVal:Dynamic = PlayState.instance.variables.get(variable);
@@ -215,8 +214,7 @@ class LuaUtils {
 			else if(Std.isOfType(indices, String)) indices = flixel.util.FlxStringUtil.toIntArray(cast indices);
 
 			obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
-			if(obj.animation.curAnim == null)
-				obj.animation.play(name, true);
+			if(obj.animation.curAnim == null) obj.animation.play(name, true);
 			return true;
 		}
 		return false;
@@ -272,8 +270,7 @@ class LuaUtils {
 						var sub:Dynamic = parsedJson[i];
 						if(sub != null && sub.save != null && !settings.exists(sub.save)) {
 							if(sub.type != 'keybind' && sub.type != 'key') {
-								if(sub.value != null)
-									settings.set(sub.save, sub.value);
+								if(sub.value != null) settings.set(sub.save, sub.value);
 							} else settings.set(sub.save, {keyboard: (sub.keyboard != null ? sub.keyboard : 'NONE')});
 						}
 					}
@@ -369,7 +366,7 @@ class LuaUtils {
 	}
 
 	inline public static function blendModeFromString(blend:String):BlendMode
-		return cast (blend.toLowerCase().trim() : BlendMode);
+		return cast(blend.toLowerCase().trim():BlendMode);
 
 	inline public static function axesFromString(axe:String):flixel.util.FlxAxes {
 		try {return FlxAxes.fromString(axe);}

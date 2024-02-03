@@ -120,7 +120,6 @@ class PlayState extends MusicBeatState {
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
-	public var smoothHealth:Float = 1;
 	var iconsAnimations:Bool = true;
 	function set_health(value:Float):Float {
 		if(!iconsAnimations || healthBar == null || !healthBar.enabled || healthBar.valueFunction == null)
@@ -465,7 +464,7 @@ class PlayState extends MusicBeatState {
 
 		moveCameraSection();
 
-		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> (ClientPrefs.getPref('smoothHealth') ? return smoothHealth : return health), 0, 2);
+		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return health, 0, 2);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
@@ -493,7 +492,7 @@ class PlayState extends MusicBeatState {
 		scoreTxt.screenCenter(X);
 		uiGroup.add(scoreTxt);
 
-		judgementCounter = new FlxText(2, 0, 0, "", 16);
+		judgementCounter = new FlxText(2, 0, 0, "Max Combo: 0\nEpic: 0\nSick: 0\nGood: 0\nOk: 0\nBad: 0", 16);
 		judgementCounter.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
 		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		judgementCounter.scrollFactor.set();
@@ -510,7 +509,7 @@ class PlayState extends MusicBeatState {
 		botplayTxt.visible = cpuControlled;
 		uiGroup.add(botplayTxt);
 
-		songNameTxt = new FlxText(2, scoreTxt.y, 0, '${SONG.song} - ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : ''), 16);
+		songNameTxt = new FlxText(2, scoreTxt.y, 0, '${SONG.song} • ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : ''), 16);
 		songNameTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
 		songNameTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		songNameTxt.scrollFactor.set();
@@ -1499,10 +1498,6 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (healthBar.bounds != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
-		if (ClientPrefs.getPref('smoothHealth')) {
-			var mult:Float = FlxMath.lerp(smoothHealth, health, ((health / smoothHealth) * (elapsed * 8)) * playbackRate);
-			smoothHealth = mult;
-		}
 
 		if (startingSong) {
 			if (startedCountdown && Conductor.songPosition >= 0) startSong();
@@ -1516,7 +1511,7 @@ class PlayState extends MusicBeatState {
 
 			var secondsTotal:Int = Math.floor(Math.max(0, (songCalc / playbackRate) / 1000));
 			var formattedsec:String = CoolUtil.formatTime(secondsTotal);
-			var timePos:String = '$formattedsec / ' + CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000));
+			var timePos:String = '$formattedsec / ${CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000))}';
 			if (timeType != 'Song Name')
 				switch (timeType) {
 					case 'Time Left' | 'Time Elapsed': timeTxt.text = formattedsec;

@@ -54,8 +54,7 @@ class ShaderFunctions {
 		funk.addLocalCallback("addShaderToCam", function(cam:String, shader:String, ?index:String) {
 			if (!ClientPrefs.getPref('shaders')) return false;
 
-			if (index == null || index.length < 1)
-			    index = shader;
+			if (index == null || index.length < 1)  index = shader;
 
 			#if (!flash && MODS_ALLOWED && sys)
 			if (!funk.runtimeShaders.exists(shader) && !funk.initLuaShader(shader)) {

@@ -176,11 +176,10 @@ class ReflectionFunctions {
 
 		var split:Array<String> = funcStr.split('.');
 		var funcToRun:haxe.Constraints.Function = null;
+
 		var obj:Dynamic = classObj;
 		if(obj == null) return null;
-
-		for (i in 0...split.length)
-			obj = LuaUtils.getVarInArray(obj, split[i].trim());
+		for (i in 0...split.length) obj = LuaUtils.getVarInArray(obj, split[i].trim());
 
 		funcToRun = cast obj;
 		return funcToRun != null ? Reflect.callMethod(obj, funcToRun, args) : null;
