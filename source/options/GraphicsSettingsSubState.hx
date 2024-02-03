@@ -30,6 +30,8 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Streaming Music', 'If checked, the game will simultaneously load music data while its playing, this also make looped musics seamlessly loop. Uncheck this if game is crashing. \n[RESTART REQUIRED]', 'streamMusic', 'bool'));
 		#end
 
+		addOption(new Option('Loading Screens', "EXPERIMENTAL: Allows Loading Screen, broken with GPU Caching", 'loadingScreen', 'bool'));
+
 		final refreshRate:Int = FlxG.stage.application.window.displayMode.refreshRate;
 		var option:Option = new Option('Framerate', "Pretty self explanatory, isn't it?\n(60 FPS are recommended.)", 'framerate', 'int');
 		addOption(option);

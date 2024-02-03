@@ -299,9 +299,8 @@ class FreeplayState extends MusicBeatState {
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
 
+				LoadingState.prepareToSong();
 				LoadingState.loadAndSwitchState(FlxG.keys.pressed.SHIFT ? new states.editors.ChartingState() : new PlayState());
-				FlxG.sound.music.volume = 0;
-				FlxG.sound.music.pitch = 1;
 				destroyFreeplayVocals();
 				#if MODS_ALLOWED DiscordClient.loadModRPC(); #end
 			} else {

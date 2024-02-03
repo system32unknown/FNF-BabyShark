@@ -1,6 +1,6 @@
 package data;
 
-#if !MODS_ALLOWED import openfl.utils.Assets; #end
+import openfl.utils.Assets;
 
 typedef StageFile = {
 	var directory:String;
@@ -17,6 +17,8 @@ typedef StageFile = {
 	var camera_opponent:Array<Float>;
 	var camera_girlfriend:Array<Float>;
 	var camera_speed:Null<Float>;
+
+	@:optional var preload:Dynamic;
 }
 
 class StageData {
@@ -42,10 +44,8 @@ class StageData {
 	public static var forceNextDirectory:String = null;
 	public static function loadDirectory(SONG:backend.Song.SwagSong) {
 		var stage:String = '';
-		if(SONG.stage != null)
-			stage = SONG.stage;
-		else if(SONG.song != null)
-			stage = vanillaSongStage(SONG.song.toLowerCase().replace(' ', '-'));
+		if(SONG.stage != null) stage = SONG.stage;
+		else if(SONG.song != null) stage = vanillaSongStage(SONG.song.toLowerCase().replace(' ', '-'));
 		else stage = 'stage';
 
 		var stageFile:StageFile = getStageFile(stage);
@@ -56,14 +56,18 @@ class StageData {
 		var rawJson:String = null;
 		var path:String = Paths.getSharedPath('stages/$stage.json');
 
+		#if sys
 		#if MODS_ALLOWED
 		var modPath:String = Paths.modFolders('stages/$stage.json');
-		if(FileSystem.exists(modPath)) rawJson = File.getContent(modPath);
-		else if(FileSystem.exists(path)) rawJson = File.getContent(path);
-		#else
-		if(Assets.exists(path)) rawJson = Assets.getText(path);
+		if (FileSystem.exists(modPath)) rawJson = File.getContent(modPath);
+		else
 		#end
+		if (FileSystem.exists(path)) rawJson = File.getContent(path);
+		else
+		#end
+		if (Assets.exists(path)) rawJson = Assets.getText(path);
 		else return null;
+
 		return cast tjson.TJSON.parse(rawJson);
 	}
 

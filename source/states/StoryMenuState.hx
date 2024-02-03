@@ -241,9 +241,10 @@ class StoryMenuState extends MusicBeatState
 				}
 
 				selectedWeek = true;
-
 				PlayState.campaignScore = 0;
-				new FlxTimer().start(1, function(tmr:FlxTimer) {
+
+				new FlxTimer().start(1, (tmr:FlxTimer) -> {
+					LoadingState.prepareToSong();
 					LoadingState.loadAndSwitchState(new PlayState(), true);
 					FreeplayState.destroyFreeplayVocals();
 				});

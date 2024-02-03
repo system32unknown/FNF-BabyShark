@@ -27,6 +27,7 @@ class ClientPrefs {
 		'ShowComboCounter' => false,
 		'ShowNPS' => false,
 		'SmoothHealth' => false,
+		'loadingScreen' => false,
 		'complexAccuracy' => false,
 		'ShowLateEarly' => false,
 		'NoteDiffTypes' => "Simple",
