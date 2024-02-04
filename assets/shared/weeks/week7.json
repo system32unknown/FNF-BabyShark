@@ -5,9 +5,7 @@
 	"hideFreeplay": false,
 	"weekBefore": "tutorial",
 	"startUnlocked": true,
-	"sections": [
-		"Vanilla"
-	],
+	"section": "Vanilla",
 	"hideStoryMode": false,
 	"weekCharacters": [
 		"",

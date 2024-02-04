@@ -269,7 +269,7 @@ class WeekEditorState extends MusicBeatState {
 		difficultiesInputText.text = '';
 		if(weekFile.difficulties != null) difficultiesInputText.text = weekFile.difficulties;
 
-		sectionInputText.text = flixel.util.FlxStringUtil.formatArray(weekFile.sections);
+		sectionInputText.text = weekFile.section;
 
 		lockedCheckbox.checked = !weekFile.startUnlocked;
 		lock.visible = lockedCheckbox.checked;
@@ -383,7 +383,7 @@ class WeekEditorState extends MusicBeatState {
 				updateText();
 			} else if(sender == weekBeforeInputText) weekFile.weekBefore = weekBeforeInputText.text.trim();
 			else if(sender == difficultiesInputText) weekFile.difficulties = difficultiesInputText.text.trim();
-			else if(sender == sectionInputText) weekFile.sections = sectionInputText.text.trim().split(',');
+			else if(sender == sectionInputText) weekFile.section = sectionInputText.text.trim();
 		}
 	}
 	

@@ -20,7 +20,7 @@ typedef WeekFile = {
 	var storyName:String;
 	// -- FREEPLAY MENU SPECIFIC -- //
 	var hideFreeplay:Bool;
-	var sections:Array<String>;
+	var section:String;
 }
 
 class WeekData {
@@ -43,7 +43,7 @@ class WeekData {
 	public var storyName:String;
 	// -- FREEPLAY MENU SPECIFIC -- //
 	public var hideFreeplay:Bool;
-	public var sections:Array<String>;
+	public var section:String;
 
 	public var fileName:String;
 
@@ -65,7 +65,7 @@ class WeekData {
 			hideStoryMode: false,
 			hideFreeplay: false,
 			difficulties: '',
-			sections: ["mods"]
+			section: "mods"
 		};
 	}
 

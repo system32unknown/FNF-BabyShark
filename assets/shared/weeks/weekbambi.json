@@ -40,9 +40,7 @@
 		]
 	],
 	"hideStoryMode": false,
-	"sections": [
-		"dave"
-	],
+	"section": "dave",
 	"hiddenUntilUnlocked": false,
-	"weekName": "Dave Week"
+	"weekName": "Bambi Week"
 }

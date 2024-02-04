@@ -40,9 +40,7 @@
 		]
 	],
 	"hideStoryMode": false,
-	"sections": [
-		"Vanilla"
-	],
+	"section": "Vanilla",
 	"hiddenUntilUnlocked": false,
 	"weekName": "Sharki L Week"
 }

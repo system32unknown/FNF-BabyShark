@@ -8,12 +8,12 @@
 	"weekCharacters": ["", "bf", "gf"],
 	"weekBackground": "limo",
 
-	"storyName": "BEAUTY MOMMY SHARK",
+	"storyName": "OFFICER MOMMY SHARK",
 	"weekBefore": "week3",
 	"weekName": "Week 4",
 	"startUnlocked": true,
 
 	"hideStoryMode": false,
 	"hideFreeplay": false,
-	"sections": ["Vanilla"]
+	"section": "Vanilla"
 }

@@ -26,14 +26,13 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 
 			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
-			if(leWeek.hideFreeplay || leWeek.sections == null) continue;
+			if(leWeek.hideFreeplay || leWeek.section == null) continue;
 			WeekData.setDirectoryFromWeek(leWeek);
-			if (leWeek.sections != null) {
-				for (fuck => section in leWeek.sections) {
-					if (section.toLowerCase() != sectionArray[fuck].toLowerCase()) {
-						sectionArray.push(section);
-						sectionImageMap.set(section.toLowerCase(), Paths.image('freeplaysections/${section.toLowerCase()}'));
-					}
+			if (leWeek.section != null) {
+				var curSection:String = leWeek.section;
+				if (curSection.toLowerCase() != sectionArray[0].toLowerCase()) {
+					sectionArray.push(curSection);
+					sectionImageMap.set(curSection.toLowerCase(), Paths.image('freeplaysections/${curSection.toLowerCase()}'));
 				}
 			}
 		}

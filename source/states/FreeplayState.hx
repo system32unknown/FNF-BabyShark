@@ -54,14 +54,9 @@ class FreeplayState extends MusicBeatState {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 
 			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
-			if (leWeek.sections != null) {
-				for (sec in leWeek.sections) {
-					if (sec != section) foundSection = true;
-					else {
-						foundSection = false;
-						break;
-					}	
-				}
+			if (leWeek.section != null) {
+				if (leWeek.section != section) foundSection = true;
+				else foundSection = false;
 			} else foundSection = true;
 
 			if (foundSection) {
@@ -303,8 +298,6 @@ class FreeplayState extends MusicBeatState {
 				PlayState.SONG = Song.loadFromJson(songLowercase, songFolder);
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
-
-				trace('CURRENT WEEK: ' + WeekData.getWeekFileName());
 			} catch(e:Dynamic) {
 				Logs.trace('ERROR! $e', ERROR);
 				var errorStr:String = e.toString();

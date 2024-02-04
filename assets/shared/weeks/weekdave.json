@@ -28,7 +28,7 @@
 			]
 		]
 	],
-	"sections": ["dave"],
+	"section": "dave",
 	"hiddenUntilUnlocked": false,
 	"hideFreeplay": false,
 	"weekBackground": "stage",
