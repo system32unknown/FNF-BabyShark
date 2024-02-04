@@ -2,7 +2,6 @@ package backend;
 
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
-import objects.ErrorDisplay;
 
 class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	public var curBPMChange:BPMChangeEvent;
@@ -28,33 +27,10 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	var stateClass:Class<MusicBeatState>;
 	var isPlayState:Bool;
 
-	var errorDisplay:ErrorDisplay;
-	final missChart:String = 'Error! Chart not found;';
-	final missFile:String = 'MISSING FILE AT:';
-
 	static var previousStateClass:Class<FlxState>;
 	var _psychCameraInitialized:Bool = false;
 
-	function get_controls():Controls
-		return Controls.instance;
-
-	static function getPathWithDir(songFolder:String, songLowercase:String):String {
-		return 'mods/${Mods.currentModDirectory}/data/${Paths.CHART_PATH}/$songFolder/$songLowercase.json';
-	}
-
-	public function getErrorMessage(error:String, reason:String, songFolder:String, songLowercase:String):String {
-		var formattedSong:String = Song.getSongPath(songFolder, songLowercase);
-		var songString:String = Paths.json(Paths.CHART_PATH + "/" + formattedSong);
-		var modsSongString:String = Paths.modsJson(Paths.CHART_PATH + "/" + formattedSong);
-		var modDirString:String = '';
-
-		if (Mods.currentModDirectory.length < 1)
-			return error + '\n$reason\n\'$songString\' or\n\'$modsSongString\'';
-		else {
-			modDirString = getPathWithDir(songFolder, songLowercase);
-			return error + '\n$reason\n\'$songString\',\n\'$modsSongString\' or\n\'$modDirString\'';
-		}
-	}
+	function get_controls():Controls return Controls.instance;
 
 	public function new() {
 		isPlayState = (stateClass = Type.getClass(this)) == PlayState;

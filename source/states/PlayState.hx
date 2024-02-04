@@ -986,7 +986,7 @@ class PlayState extends MusicBeatState {
 
 		var music:FlxSound = FlxG.sound.music;
 		music.loadEmbedded(Paths.inst(SONG.song), false);
-		music.onComplete = finishSong.bind();
+		music.onComplete = () -> finishSong();
 		music.pitch = playbackRate;
 		music.volume = 1;
 		vocals.time = music.time = 0;
@@ -2026,6 +2026,7 @@ class PlayState extends MusicBeatState {
 					SONG = Song.loadFromJson(storyPlaylist[0] + difficulty, storyPlaylist[0]);
 					FlxG.sound.music.stop();
 
+					LoadingState.prepareToSong();
 					LoadingState.loadAndSwitchState(new PlayState());
 				}
 			} else {
@@ -2074,7 +2075,7 @@ class PlayState extends MusicBeatState {
 	function getScoreText() {
 		var tempText:String = (!ClientPrefs.getPref('ShowNPS') ? '' : 'NPS:$nps / $maxNPS $scoreSeparator ');
 		tempText += 'Score:$songScore ';
-		tempText += (cpuControlled || instakillOnMiss ? '' : '$scoreSeparator Breaks:$songMisses ');
+		if (!(cpuControlled || instakillOnMiss)) tempText += '$scoreSeparator Breaks:$songMisses ';
 		tempText += '$scoreSeparator Acc:$accuracy% •' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
 		return tempText;
 	}
@@ -2623,7 +2624,7 @@ class PlayState extends MusicBeatState {
 	function removeVideoSprite(video:backend.VideoSpriteManager) {
 		if(members.contains(video)) remove(video, true);
 		else forEachOfType(FlxSpriteGroup, (group:FlxSpriteGroup) -> if(group.members.contains(video)) group.remove(video, true));
-		video.altDestroy();
+		video.destroy();
 	}
 	#end
 

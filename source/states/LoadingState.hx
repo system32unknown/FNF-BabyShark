@@ -19,14 +19,14 @@ class LoadingState extends MusicBeatState {
 	static var mutex:Mutex = new Mutex();
 
 	function new(target:FlxState, stopMusic:Bool) {
-		super();
 		this.target = target;
 		this.stopMusic = stopMusic;
 		startThreads();
+		super();
 	}
 
-	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false)
-		MusicBeatState.switchState(getNextState(target, stopMusic));
+	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false, intrusive:Bool = true)
+		MusicBeatState.switchState(getNextState(target, stopMusic, intrusive));
 
 	var target:FlxState = null;
 	var stopMusic = false;
@@ -98,29 +98,28 @@ class LoadingState extends MusicBeatState {
 
 	var finishedLoading:Bool = false;
 	function onLoad() {
-		FlxG.camera.visible = false;
-		flixel.addons.transition.FlxTransitionableState.skipNextTransIn = true;
-		transitioning = finishedLoading = true;
-
+		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
 		imagesToPrepare = [];
 		soundsToPrepare = [];
 		musicToPrepare = [];
 		songsToPrepare = [];
-		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
-
+		
+		FlxG.camera.visible = false;
+		flixel.addons.transition.FlxTransitionableState.skipNextTransIn = true;
 		MusicBeatState.switchState(target);
+		transitioning = finishedLoading = true;
 	}
 
 	static function checkLoaded():Bool {
 		for (key => bitmap in requestedBitmaps) {
-			if (Paths.cacheBitmap(key, bitmap) != null) trace('finished preloading image $key');
+			if (bitmap != null && Paths.cacheBitmap(key, bitmap) != null) trace('finished preloading image $key');
 			else trace('failed to cache image $key', ERROR);
-			requestedBitmaps.remove(key);
 		}
+		requestedBitmaps.clear();
 		return (loaded == loadMax);
 	}
 
-	static function getNextState(target:FlxState, stopMusic = false):FlxState {
+	static function getNextState(target:FlxState, stopMusic = false, intrusive:Bool = true):FlxState {
 		var directory:String = 'shared';
 		var weekDir:String = StageData.forceNextDirectory;
 		StageData.forceNextDirectory = null;
@@ -130,13 +129,29 @@ class LoadingState extends MusicBeatState {
 		Paths.setCurrentLevel(directory);
 		trace('Setting asset folder to ' + directory);
 
+		var doPrecache:Bool = false;
 		if(ClientPrefs.getPref('loadingScreen')) {
 			clearInvalids();
-			if (imagesToPrepare.length > 0 || soundsToPrepare.length > 0 || musicToPrepare.length > 0 || songsToPrepare.length > 0)
-				return new LoadingState(target, stopMusic);
+			if(intrusive) {
+				if (imagesToPrepare.length > 0 || soundsToPrepare.length > 0 || musicToPrepare.length > 0 || songsToPrepare.length > 0)
+					return new LoadingState(target, stopMusic);
+			} else doPrecache = true;
 		}
 
 		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
+
+		if(doPrecache) {
+			startThreads();
+			while(true) {
+				if(checkLoaded()) {
+					imagesToPrepare = [];
+					soundsToPrepare = [];
+					musicToPrepare = [];
+					songsToPrepare = [];
+					break;
+				} else Sys.sleep(.01);
+			}
+		}
 		return target;
 	}
 
@@ -211,19 +226,17 @@ class LoadingState extends MusicBeatState {
 			}
 		}
 
-		var useLibrary:Bool = library != null;
-		var i:Int = arr.length;
-		while (i-- > 0) {
+		var i:Int = 0;
+		while(i < arr.length) {
 			var member:String = arr[i];
-			var remove:Bool = member.endsWith('/');
-			if (!remove) {
-				if (useLibrary) remove = !OpenFlAssets.exists(Paths.getPath('$member$ext', type, library), type);
-				else remove = !Paths.fileExists('$prefix/$member$ext', type, library);
-			}
-			if (remove) {
+			var myKey = '$prefix/$member$ext';
+			if(library == 'songs') myKey = '$member$ext';
+
+			var doTrace:Bool = false;
+			if(member.endsWith('/') || (!Paths.fileExists(myKey, type, false, library) && (doTrace = true))) {
 				arr.remove(member);
-				trace('Removed invalid $prefix: $member');
-			}
+				if(doTrace) trace('Removed invalid $prefix: $member');
+			} else i++;
 		}
 	}
 

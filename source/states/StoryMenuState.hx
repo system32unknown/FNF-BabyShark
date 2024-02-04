@@ -6,7 +6,6 @@ import backend.Highscore;
 import backend.Song;
 import objects.MenuItem;
 import objects.MenuCharacter;
-import objects.ErrorDisplay;
 
 class StoryMenuState extends MusicBeatState
 {
@@ -35,8 +34,7 @@ class StoryMenuState extends MusicBeatState
 
 	var loadedWeeks:Array<WeekData> = [];
 
-	override function create()
-	{
+	override function create() {
 		if (PlayState.SONG == null) Paths.clearUnusedCache();
 
 		PlayState.isStoryMode = true;
@@ -133,9 +131,6 @@ class StoryMenuState extends MusicBeatState
 		add(scoreText);
 		add(txtWeekTitle);
 
-		errorDisplay = new ErrorDisplay();
-		errorDisplay.addDisplay(this);
-
 		changeWeek();
 		changeDifficulty();
 
@@ -215,43 +210,39 @@ class StoryMenuState extends MusicBeatState
 			for (i in 0...leWeek.length) songArray.push(leWeek[i][0]);
 
 			// Nevermind that's stupid lmao
-			PlayState.storyPlaylist = songArray;
-			PlayState.isStoryMode = true;
-
-			var diffic = Difficulty.getFilePath(curDifficulty);
-			if(diffic == null) diffic = '';
-
-			PlayState.storyDifficulty = curDifficulty;
-
-			var songFolder:String = PlayState.storyPlaylist[0].toLowerCase();
-			var songLowercase:String = songFolder + diffic;
-			PlayState.SONG = Song.loadFromJson(songLowercase, songFolder);
-
-			if (PlayState.SONG != null) {
-				if (!stopspamming) {
-					FlxG.sound.play(Paths.sound('confirmMenu'));
-	
-					grpWeekText.members[curWeek].startFlashing();
-	
-					for (char in grpWeekCharacters.members)
-						if (char.character != '' && char.hasConfirmAnimation)
-							char.animation.play('confirm');
-					
-					stopspamming = true;
-				}
-
+			try {
+				PlayState.storyPlaylist = songArray;
+				PlayState.isStoryMode = true;
 				selectedWeek = true;
+	
+				var diffic = Difficulty.getFilePath(curDifficulty);
+				if(diffic == null) diffic = '';
+	
+				PlayState.storyDifficulty = curDifficulty;
+				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
 				PlayState.campaignScore = 0;
-
-				new FlxTimer().start(1, (tmr:FlxTimer) -> {
-					LoadingState.prepareToSong();
-					LoadingState.loadAndSwitchState(new PlayState(), true);
-					FreeplayState.destroyFreeplayVocals();
-				});
-			} else {
-				errorDisplay.text = getErrorMessage(missChart, 'cannot play week, $missFile', songFolder, songLowercase);
-				errorDisplay.displayError();
+			} catch(e:Dynamic) {
+				Logs.trace('ERROR! $e', ERROR);
+				return;
 			}
+
+			if (!stopspamming) {
+				FlxG.sound.play(Paths.sound('confirmMenu'));
+	
+				grpWeekText.members[curWeek].startFlashing();
+				for (char in grpWeekCharacters.members)
+					if (char.character != '' && char.hasConfirmAnimation)
+						char.animation.play('confirm');
+				stopspamming = true;
+			}
+
+			new FlxTimer().start(1, (tmr:FlxTimer) -> {
+				LoadingState.prepareToSong();
+				LoadingState.loadAndSwitchState(new PlayState(), true);
+				FreeplayState.destroyFreeplayVocals();
+			});
+
+			#if (MODS_ALLOWED && DISCORD_ALLOWED) DiscordClient.loadModRPC(); #end
 		} else FlxG.sound.play(Paths.sound('cancelMenu'), .7);
 	}
 

@@ -119,21 +119,6 @@ class Paths {
 	static public function setCurrentLevel(name:String)
 		currentLevel = name.toLowerCase();
 
-	public static function checkReservedFile(text:String):Bool {
-		final forbidden:Array<String> = ['AUX', 'CON', 'PRN', 'NUL']; // thanks kingyomoma
-		for (i in 1...9) {
-			forbidden.push('COM$i');
-			forbidden.push('LPT$i');
-		}
-		for (donot in forbidden) {
-			if (text == donot) {
-				return true;
-				break;
-			}
-		}
-		return false;
-	}
-
 	public static function getPath(file:String, ?type:AssetType = TEXT, ?library:Null<String> = null, ?modsAllowed:Bool = false):String {
 		#if MODS_ALLOWED
 		if(modsAllowed) {
@@ -241,11 +226,12 @@ class Paths {
 	static public function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?isPath:Bool = false, ?library:String):Bool {
 		#if MODS_ALLOWED
 		if(!ignoreMods) {
-			for(mod in Mods.getGlobalMods())
-				if (FileSystem.exists(mods('$mod/$key'))) return true;
+			var modKey:String = key;
+			if(library == 'songs') modKey = 'songs/$key';
 
-			if (FileSystem.exists(mods('${Mods.currentModDirectory}/$key')) || FileSystem.exists(mods(key))) return true;
-			if (FileSystem.exists(mods(key))) return true;
+			for(mod in Mods.getGlobalMods()) if (FileSystem.exists(mods('$mod/$modKey'))) return true;
+			if (FileSystem.exists(mods(Mods.currentModDirectory + '/' + modKey)) || FileSystem.exists(mods(modKey)))
+				return true;
 		}
 		#end
 
@@ -307,8 +293,8 @@ class Paths {
 	}
 
 	inline static public function formatToSongPath(path:String) {
-		var invalidChars = ~/[~&\\;:<>#]+/g;
-		var hideChars = ~/[.,'"%?!]+/g;
+		var invalidChars:EReg = ~/[~&\\;:<>#]+/g;
+		var hideChars:EReg = ~/[.,'"%?!]+/g;
 
 		var path = invalidChars.split(path.replace(' ', '-')).join("-");
 		return hideChars.split(path).join("").toLowerCase();

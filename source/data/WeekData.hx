@@ -47,34 +47,32 @@ class WeekData {
 
 	public var fileName:String;
 
-	public static final DEFAULT_WEEK:WeekFile = {
-		songs: [
-			["Bopeebo",    "daddyshark", [146, 113, 253]],
-			["Fresh",      "daddyshark", [146, 113, 253]],
-			["Tooth", 	   "daddyshark", [146, 113, 253]]
-		],
-		weekCharacters: ['', 'bf', 'gf'],
-		weekBackground: 'stage',
-		weekBefore: 'tutorial',
-		storyName: 'Your New Week',
-		weekName: 'Custom Week',
-		flashingColor: [51, 255, 255],
-		startUnlocked: true,
-		hiddenUntilUnlocked: false,
-		hideStoryMode: false,
-		hideFreeplay: false,
-		difficulties: '',
-		sections: ["mods"]
-	};
-
 	public static function createWeekFile():WeekFile {
-		return DEFAULT_WEEK;
+		return {
+			songs: [
+				["Bopeebo",    "daddyshark", [146, 113, 253]],
+				["Fresh",      "daddyshark", [146, 113, 253]],
+				["Tooth", 	   "daddyshark", [146, 113, 253]]
+			],
+			weekCharacters: ['', 'bf', 'gf'],
+			weekBackground: 'stage',
+			weekBefore: 'tutorial',
+			storyName: 'Your New Week',
+			weekName: 'Custom Week',
+			flashingColor: [51, 255, 255],
+			startUnlocked: true,
+			hiddenUntilUnlocked: false,
+			hideStoryMode: false,
+			hideFreeplay: false,
+			difficulties: '',
+			sections: ["mods"]
+		};
 	}
 
 	public function new(weekFile:WeekFile, fileName:String) {
 		for (field in Reflect.fields(weekFile)) {
 			if(Reflect.fields(this).contains(field) && field != "flashingColor") // Reflect.hasField() won't fucking work :/
-				Reflect.setProperty(this, field,Reflect.field(weekFile, field));
+				Reflect.setProperty(this, field, Reflect.field(weekFile, field));
 		}
 		if (weekFile.flashingColor != null) flashingColor = CoolUtil.colorFromArray(weekFile.flashingColor);
 		this.fileName = fileName;

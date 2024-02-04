@@ -91,7 +91,7 @@ class HealthIcon extends FlxSprite {
 			animation.play(char);
 		} else {
 			frames = Paths.getSparrowAtlas(name);
-			for (animstate in animatediconstates)
+			for (animstate in animatediconstates) if(getIconAnims(name).contains(animstate))
 				animation.addByPrefix(animstate, animstate, 24, true, isPlayer, false);
 			animation.play(animatediconstates[0]);
 		}
@@ -137,5 +137,10 @@ class HealthIcon extends FlxSprite {
 		}
 
 		if (sprTracker != null) setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
+	}
+
+	function getIconAnims(file:String):Array<String> {
+		final regNum = ~/[\d-]/;
+		return CoolUtil.removeDuplicates([for (icon in new haxe.xml.Access(Xml.parse(Paths.getTextFromFile('images/$file.xml')).firstElement()).nodes.SubTexture) regNum.split(icon.att.name)[0]]);
 	}
 }

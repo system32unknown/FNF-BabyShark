@@ -27,21 +27,11 @@ typedef SwagSong = {
 }
 
 class Song {
-	public var song:String;
-	public var notes:Array<SwagSection>;
-	public var bpm:Float;
-
-	public function new(song, notes, bpm) {
-		this.song = song;
-		this.notes = notes;
-		this.bpm = bpm;
-	}
-
 	public static function getSongPath(folder:String, song:String):String {
 		return '${Paths.formatToSongPath(folder)}/${Paths.formatToSongPath(song)}';
 	}
 
-	static function onLoadJson(songJson:Dynamic)  { // Convert old charts to newest format
+	static function onLoadJson(songJson:Dynamic) { // Convert old charts to newest format
 		if(songJson.gfVersion == null) {
 			songJson.gfVersion = songJson.player3;
 			songJson.player3 = null;
@@ -66,32 +56,26 @@ class Song {
 			}
 		}
 
-		if (songJson.mania == null)
-            songJson.mania = EK.defaultMania;
+		if (songJson.mania == null) songJson.mania = EK.defaultMania;
 	}
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong {
-		var rawJson = null;
+		var rawJson:String = null;
 		
-		var formattedPath:String = getSongPath((folder == null ? jsonInput : folder), jsonInput);
+		var formattedPath:String = getSongPath(folder, jsonInput);
 		#if MODS_ALLOWED
 		var moddyFile:String = Paths.modsJson('${Paths.CHART_PATH}/$formattedPath');
-		if (FileSystem.exists(moddyFile))
-			rawJson = File.getContent(moddyFile).trim();
+		if(FileSystem.exists(moddyFile)) rawJson = File.getContent(moddyFile).trim();
 		#end
 
 		if(rawJson == null) {
 			var path:String = Paths.json('${Paths.CHART_PATH}/$formattedPath');
 			#if sys
-			if(FileSystem.exists(path))
-				rawJson = File.getContent(path);
+			if(FileSystem.exists(path)) rawJson = File.getContent(path);
 			else
 			#end
 				rawJson = lime.utils.Assets.getText(path);
 		}
-		
-		if (rawJson == null) return null;
-		while (!rawJson.endsWith("}")) rawJson = rawJson.substr(0, rawJson.length - 1);
 
 		var songJson:Dynamic = parseJSONshit(rawJson);
 		if(jsonInput != 'events') data.StageData.loadDirectory(songJson);

@@ -58,10 +58,5 @@ class VideoSpriteManager extends hxvlc.flixel.FlxVideoSprite {
     @:noCompletion function set_playbackRate(multi:EitherType<Single, Float>) return bitmap.rate = multi;
     @:noCompletion function get_playbackRate():Float return bitmap.rate;
     @:noCompletion function get_onPlayState():Bool return Std.isOfType(MusicBeatState.getState(), PlayState);
-
-    public function altDestroy() {
-        super.destroy();
-        bitmap.dispose();
-    }
     #end
 }

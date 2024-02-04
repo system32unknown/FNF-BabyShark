@@ -6,7 +6,6 @@ import objects.Note;
 import objects.Character;
 import objects.AttachedSprite;
 import objects.AttachedFlxText;
-import objects.ErrorDisplay;
 import backend.Song;
 import data.StageData;
 import utils.MathUtil;
@@ -297,11 +296,7 @@ class ChartingState extends MusicBeatState {
 		lastSong = currentSongName;
 
 		addHelpScreen();
-
 		updateGrid();
-		errorDisplay = new ErrorDisplay();
-		errorDisplay.addDisplay(this);
-
 		super.create();
 	}
 
@@ -2583,6 +2578,8 @@ class ChartingState extends MusicBeatState {
 		return GRID_SIZE * beats * 4 * zoomList[curZoom] * value + gridBG.y;
 	}
 
+	var missingText:FlxText;
+	var missingTextTimer:FlxTimer;
 	function loadJson(song:String):Void {
 		try {
 			if (Difficulty.getString() != Difficulty.getDefault()) {
@@ -2593,9 +2590,26 @@ class ChartingState extends MusicBeatState {
 			Paths.clearUnusedCache();
 			MusicBeatState.resetState();
 		} catch(e) {
-			errorDisplay.text = getErrorMessage('Error:', e.message, song.toLowerCase(), song.toLowerCase());
-			errorDisplay.displayError();
-			return;
+			Logs.trace('ERROR! $e', ERROR);
+
+			var errorStr:String = e.toString();
+			if(errorStr.startsWith('[file_contents,assets/data/charts/')) errorStr = 'Missing file: ' + errorStr.substring(27, errorStr.length-1); //Missing chart
+			
+			if(missingText == null) {
+				missingText = new FlxText(50, 0, FlxG.width - 100, '', 24);
+				missingText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+				missingText.scrollFactor.set();
+				add(missingText);
+			} else missingTextTimer.cancel();
+
+			missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
+			missingText.screenCenter(Y);
+
+			missingTextTimer = new FlxTimer().start(5, (tmr:FlxTimer) -> {
+				remove(missingText);
+				missingText.destroy();
+			});
+			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 	}
 
