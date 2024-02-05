@@ -18,17 +18,17 @@ class Prompt extends MusicBeatSubstate {
 		theText = promptText;
 		goAnyway = acceptOnDefault;
 
-		var op1 = 'OK';
-		var op2 = 'CANCEL';
+		var op1:String = 'OK';
+		var op2:String = 'CANCEL';
 
 		if (option1 != null) op1 = option1;
 		if (option2 != null) op2 = option2;
 
-		buttonAccept = new FlxButton(473.3, 450, op1, function() {
+		buttonAccept = new FlxButton(473.3, 450, op1, () -> {
 			if(okc != null) okc();
 			close();
 		});
-		buttonNo = new FlxButton(633.3, 450, op2, function() {
+		buttonNo = new FlxButton(633.3, 450, op2, () -> {
 			if(cancelc != null) cancelc();
 			close();
 		});

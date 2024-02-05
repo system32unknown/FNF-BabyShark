@@ -158,14 +158,14 @@ class GameOverSubstate extends MusicBeatSubstate {
 		pos.put();
 
 		if (ins != null) {
-			var bf = ins.gameOverChar;
+			var bf:Character = ins.gameOverChar;
 			if (bf != null && bf.curCharacter == characterName) {
 				bf.setPosition(x, y);
 				return bf;
 			}
 		}
 
-		var bf = ins.boyfriendMap.get(characterName);
+		var bf:Character = ins.boyfriendMap.get(characterName);
 		if (bf != null) {
 			bf.setPosition(x, y);
 			bf.visible = true;

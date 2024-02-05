@@ -87,8 +87,7 @@ class MainMenuState extends MusicBeatState {
 		curOptText.setFormat(Paths.font('babyshark.ttf'), 48, FlxColor.WHITE, CENTER);
 		curOptText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2.5);
 		curOptText.scrollFactor.set();
-		curOptText.screenCenter(X);
-		curOptText.y = FlxG.height / 2 + 28;
+		curOptText.screenCenter(X).y = FlxG.height / 2 + 28;
 		add(curOptText);
 
 		add(menuItems = new FlxTypedGroup<FlxSprite>());

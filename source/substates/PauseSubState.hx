@@ -17,7 +17,10 @@ class PauseSubState extends MusicBeatSubstate {
 	var skipTimeTracker:Alphabet;
 	var curTime:Float = Math.max(0, Conductor.songPosition);
 
-	public static var songName:String = '';
+	var missingTextBG:FlxSprite;
+	var missingText:FlxText;
+
+	public static var songName:String = null;
 
 	override function create() {
 		if(Difficulty.list.length < 2) menuItemsOG.remove('Change Difficulty'); //No need to change difficulty if there is only one!
@@ -68,7 +71,7 @@ class PauseSubState extends MusicBeatSubstate {
 			label.updateHitbox();
 			label.alpha = 0;
 			label.setPosition(FlxG.width - (label.width + 20), 15 + (32 * k));
-			FlxTween.tween(label, {alpha: 1, y: label.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: .3 * (k + 1)});
+			FlxTween.tween(label, {alpha: 1, y: label.y + 5}, .4, {ease: FlxEase.quartInOut, startDelay: .3 * (k + 1)});
 			add(label);
 		}
 		chartingText.visible = PlayState.chartingMode;
@@ -111,21 +114,23 @@ class PauseSubState extends MusicBeatSubstate {
 		switch (daSelected) {
 			case 'Skip Time':
 				if (controls.UI_LEFT_P) {
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+					FlxG.sound.play(Paths.sound('scrollMenu'), .4);
 					curTime -= 1000;
 					holdTime = 0;
 				}
 				if (controls.UI_RIGHT_P) {
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+					FlxG.sound.play(Paths.sound('scrollMenu'), .4);
 					curTime += 1000;
 					holdTime = 0;
 				}
 
 				if(controls.UI_LEFT || controls.UI_RIGHT) {
 					holdTime += elapsed;
-					if(holdTime > .5) curTime += 45000 * elapsed * (controls.UI_LEFT ? -1 : 1);
-					if(holdTime > .5 && FlxG.sound.music.length >= 600000) curTime += 150000 * elapsed * (controls.UI_LEFT ? -1 : 1);
-					if(holdTime > .5 && FlxG.sound.music.length >= 3600000) curTime += 450000 * elapsed * (controls.UI_LEFT ? -1 : 1);
+					if(holdTime > .5) {
+						curTime += 45000 * elapsed * (controls.UI_LEFT ? -1 : 1);
+						if(FlxG.sound.music.length >= 600000) curTime += 150000 * elapsed * (controls.UI_LEFT ? -1 : 1);
+						if(FlxG.sound.music.length >= 3600000) curTime += 450000 * elapsed * (controls.UI_LEFT ? -1 : 1);
+					}
 
 					if(curTime >= FlxG.sound.music.length) curTime -= FlxG.sound.music.length;
 					else if(curTime < 0) curTime += FlxG.sound.music.length;
@@ -135,14 +140,28 @@ class PauseSubState extends MusicBeatSubstate {
 
 		if (controls.ACCEPT && cantUnpause <= 0) {
 			if (menuItems == difficultyChoices) {
-				if(menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected)) {
-					var name:String = PlayState.SONG.song;
-					PlayState.SONG = backend.Song.loadFromJson(backend.Highscore.formatSong(name, curSelected), name);
-					PlayState.storyDifficulty = curSelected;
-					MusicBeatState.resetState();
-					FlxG.sound.music.volume = 0;
-					PlayState.changedDifficulty = true;
-					PlayState.chartingMode = false;
+				try {
+					if(menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected)) {
+						var name:String = PlayState.SONG.song;
+						PlayState.SONG = backend.Song.loadFromJson(backend.Highscore.formatSong(name, curSelected), name);
+						PlayState.storyDifficulty = curSelected;
+						MusicBeatState.resetState();
+						FlxG.sound.music.volume = 0;
+						PlayState.changedDifficulty = true;
+						PlayState.chartingMode = false;
+						return;
+					}
+				} catch(e:Dynamic) {
+					Logs.trace('ERROR! $e', ERROR);
+
+					var errorStr:String = e.toString();
+					if(errorStr.startsWith('[file_contents,assets/data/${Paths.CHART_PATH}')) errorStr = 'Missing file: ' + errorStr.substring(27, errorStr.length - 1); //Missing chart
+					missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
+					missingText.screenCenter(Y);
+					missingText.visible = missingTextBG.visible = true;
+					FlxG.sound.play(Paths.sound('cancelMenu'));
+
+					super.update(elapsed);
 					return;
 				}
 

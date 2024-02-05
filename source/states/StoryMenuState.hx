@@ -7,8 +7,7 @@ import backend.Song;
 import objects.MenuItem;
 import objects.MenuCharacter;
 
-class StoryMenuState extends MusicBeatState
-{
+class StoryMenuState extends MusicBeatState {
 	public static var weekCompleted:Map<String, Bool> = new Map<String, Bool>();
 
 	var scoreText:FlxText;
@@ -104,8 +103,7 @@ class StoryMenuState extends MusicBeatState
 		difficultySelectors.add(leftArrow);
 
 		Difficulty.resetList();
-		if(lastDifficultyName == '')
-			lastDifficultyName = Difficulty.getDefault();
+		if(lastDifficultyName == '') lastDifficultyName = Difficulty.getDefault();
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
 		
 		sprDifficulty = new FlxSprite(0, leftArrow.y);
@@ -277,8 +275,7 @@ class StoryMenuState extends MusicBeatState
 		var leWeek:WeekData = loadedWeeks[curWeek];
 		WeekData.setDirectoryFromWeek(leWeek);
 
-		var leName:String = leWeek.storyName;
-		txtWeekTitle.text = leName.toUpperCase();
+		txtWeekTitle.text = leWeek.storyName.toUpperCase();
 		txtWeekTitle.x = FlxG.width - (txtWeekTitle.width + 10);
 
 		var bullShit:Int = 0;

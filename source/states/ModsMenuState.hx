@@ -48,9 +48,7 @@ class ModsMenuState extends MusicBeatState {
 		modsList = Mods.parseList();
 		Mods.currentModDirectory = modsList.all[0] != null ? modsList.all[0] : '';
 
-		#if desktop
-		DiscordClient.changePresence("In the Menus");
-		#end
+		#if desktop DiscordClient.changePresence("In the Menus"); #end
 
 		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFF665AFF;
@@ -132,9 +130,8 @@ class ModsMenuState extends MusicBeatState {
 
 			var myX = bgList.x + bgList.width + 20;
 			noModsTxt = new FlxText(myX, 0, FlxG.width - myX - 20, "NO MODS INSTALLED\nPRESS BACK TO EXIT OR INSTALL A MOD", 48);
-			if(FlxG.random.bool(0.1)) noModsTxt.text += '\nBITCH.'; //meanie
-			noModsTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-			noModsTxt.borderSize = 2;
+			noModsTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+			noModsTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 			add(noModsTxt);
 			noModsTxt.screenCenter(Y);
 
@@ -320,10 +317,8 @@ class ModsMenuState extends MusicBeatState {
 
 				if(hoveringOnMods) {
 					var shiftMult:Int = (FlxG.keys.pressed.SHIFT) ? 4 : 1;
-					if(controls.UI_DOWN_P)
-						changeSelectedMod(shiftMult);
-					else if(controls.UI_UP_P)
-						changeSelectedMod(-shiftMult);
+					if(controls.UI_DOWN_P) changeSelectedMod(shiftMult);
+					else if(controls.UI_UP_P) changeSelectedMod(-shiftMult);
 					else if(FlxG.mouse.wheel != 0)
 						changeSelectedMod(-FlxG.mouse.wheel * shiftMult, true);
 					else if(FlxG.keys.justPressed.HOME || FlxG.keys.justPressed.END) {
@@ -457,10 +452,8 @@ class ModsMenuState extends MusicBeatState {
 		button.ignoreCheck = button.onFocus = false;
 
 		curSelectedButton += add;
-		if(curSelectedButton < -2)
-			curSelectedButton = -2;
-		else if(curSelectedButton > max)
-			curSelectedButton = max;
+		if(curSelectedButton < -2) curSelectedButton = -2;
+		else if(curSelectedButton > max) curSelectedButton = max;
 
 		var button = getButton();
 		button.ignoreCheck = button.onFocus = true;

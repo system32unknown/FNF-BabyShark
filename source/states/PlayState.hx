@@ -1363,8 +1363,9 @@ class PlayState extends MusicBeatState {
 	}
 
 	override public function onResize(width:Int, height:Int):Void {
-		super.onResize(width, height);
 		callOnScripts('onResize', [width, height]);
+		super.onResize(width, height);
+		callOnScripts('onResizePost', [width, height]);
 	}
 
 	function resetRPC(?showTime:Bool = false) {
@@ -1782,7 +1783,10 @@ class PlayState extends MusicBeatState {
 					default:
 						var val:Int = Std.parseInt(value1);
 						if(Math.isNaN(val)) val = 0;
-						char = (val == 1 ? boyfriend : gf);
+						switch(val) {
+							case 1: char = boyfriend;
+							case 2: char = gf;
+						}
 				}
 
 				if (char != null) {
@@ -1802,8 +1806,7 @@ class PlayState extends MusicBeatState {
 					if(Math.isNaN(duration)) duration = 0;
 					if(Math.isNaN(intensity)) intensity = 0;
 
-					if(duration > 0 && intensity != 0)
-						targetsArray[i].shake(intensity, duration * playbackRate);
+					if(duration > 0 && intensity != 0) targetsArray[i].shake(intensity, duration * playbackRate);
 				}
 
 			case 'Change Mania':

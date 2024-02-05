@@ -32,7 +32,7 @@ class MathUtil {
         i = 0x5f3759df - (i >> 1); // what the fuck?
         y = cast(i);
 
-        y = y * (1.5 - (x2 * y * y));
+        y *= (1.5 - (x2 * y * y));
         return y;
     }
 }

@@ -131,8 +131,7 @@ class TitleState extends MusicBeatState {
 		version.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, CENTER);
 		version.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		version.scrollFactor.set();
-		version.y = FlxG.height - version.height;
-		version.screenCenter(X);
+		version.screenCenter(X).y = FlxG.height - version.height;
 		version.visible = false;
 		add(version);
 
