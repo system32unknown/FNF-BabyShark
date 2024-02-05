@@ -336,8 +336,9 @@ class FreeplayState extends MusicBeatState {
 				super.update(elapsed);
 				return;
 			}
-			LoadingState.prepareToSong();
-			LoadingState.loadAndSwitchState(new PlayState());
+
+			CharacterSelectionState.characterFile = 'bf';
+			MusicBeatState.switchState(new CharacterSelectionState());
 
 			destroyFreeplayVocals();
 			#if MODS_ALLOWED DiscordClient.loadModRPC(); #end
