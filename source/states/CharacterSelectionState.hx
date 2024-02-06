@@ -68,7 +68,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 		curText = new FlxText(0, -100, 0, characterData[curSelected][1][0][0], 50);
 		curText.setFormat(Paths.font("comic.ttf"), 50, FlxColor.WHITE, CENTER);
-		curText.setBorderStyle(OUTLINE, FlxColor.BLACK, 7);
+		curText.setBorderStyle(OUTLINE, FlxColor.BLACK, 5);
 
 		controlsText = new FlxText(-125, 125, 0, 'Press P to enter preview mode.', 20);
 		controlsText.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -127,7 +127,7 @@ class CharacterSelectionState extends MusicBeatState {
 				switch (curSelected) {
 					case 0:
 						FlxG.sound.music.stop();
-						FlxTween.tween(camHUD, {alpha: 0}, 0.25, {ease: FlxEase.circOut});
+						FlxTween.tween(camHUD, {alpha: 0}, .25, {ease: FlxEase.circOut});
 
                         LoadingState.prepareToSong();
 						LoadingState.loadAndSwitchState(new PlayState());
@@ -272,10 +272,7 @@ class CharacterUnlockObject extends flixel.group.FlxSpriteGroup {
 		var cam:Array<FlxCamera> = @:privateAccess FlxCamera._defaultCameras;
 		if (camera != null) cam = [camera];
 		alpha = 0;
-		characterBG.cameras = cam;
-		characterName.cameras = cam;
-		characterText.cameras = cam;
-		characterIcon.cameras = cam;
+		characterBG.cameras = characterName.cameras = characterText.cameras = characterIcon.cameras = cam;
 		alphaTween = FlxTween.tween(this, {alpha: 1}, 0.5, {
 			onComplete: (twn:FlxTween) -> {
 				alphaTween = FlxTween.tween(this, {alpha: 0}, 0.5, {

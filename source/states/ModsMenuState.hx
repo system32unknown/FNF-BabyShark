@@ -35,7 +35,6 @@ class ModsMenuState extends MusicBeatState {
 
 	var startMod:String = null;
 
-	public static var onPlayState:Bool = false; // Custom
 	public function new(startMod:String = null) {
 		this.startMod = startMod;
 		super();
@@ -120,7 +119,7 @@ class ModsMenuState extends MusicBeatState {
 		});
 		buttonDisableAll.bg.color = 0xFFFF6666;
 		buttonDisableAll.focusChangeCallback = (focus:Bool) -> if(!focus) buttonDisableAll.bg.color = 0xFFFF6666;
-		if(!onPlayState) add(buttonDisableAll);
+		add(buttonDisableAll);
 		checkToggleButtons();
 
 		if(modsList.all.length < 1)
@@ -177,19 +176,19 @@ class ModsMenuState extends MusicBeatState {
 		var buttonsX = bgButtons.x + 320;
 		var buttonsY = bgButtons.y + 10;
 
-		var button = new MenuButton(onPlayState ? buttonsX + 100 : buttonsX, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> moveModToPosition(0), 54, 54); //Move to the top
+		var button = new MenuButton(buttonsX, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> moveModToPosition(0), 54, 54); //Move to the top
 		button.icon.animation.add('icon', [0]);
 		button.icon.animation.play('icon', true);
 		add(button);
 		buttons.push(button);
 
-		var button = new MenuButton(onPlayState ? buttonsX + 200 : buttonsX + 100, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> moveModToPosition(curSelectedMod - 1), 54, 54); //Move up
+		var button = new MenuButton(buttonsX + 100, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> moveModToPosition(curSelectedMod - 1), 54, 54); //Move up
 		button.icon.animation.add('icon', [1]);
 		button.icon.animation.play('icon', true);
 		add(button);
 		buttons.push(button);
 
-		var button = new MenuButton(onPlayState ? buttonsX + 300 : buttonsX + 200, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> moveModToPosition(curSelectedMod + 1), 54, 54); //Move down
+		var button = new MenuButton(buttonsX + 200, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> moveModToPosition(curSelectedMod + 1), 54, 54); //Move down
 		button.icon.animation.add('icon', [2]);
 		button.icon.animation.play('icon', true);
 		add(button);
@@ -197,7 +196,7 @@ class ModsMenuState extends MusicBeatState {
 		
 		if(modsList.all.length < 2) for (button in buttons) button.enabled = false;
 
-		settingsButton = new MenuButton(onPlayState ? buttonsX + 400 : buttonsX + 300, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> { //Settings
+		settingsButton = new MenuButton(buttonsX + 300, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> { //Settings
 			var curMod:ModItem = modsGroup.members[curSelectedMod];
 			if(curMod != null && curMod.settings != null && curMod.settings.length > 0)
 				openSubState(new options.ModSettingsSubState(curMod.settings, curMod.folder, curMod.name));
@@ -230,7 +229,7 @@ class ModsMenuState extends MusicBeatState {
 		}, 54, 54);
 		button.icon.animation.add('icon', [4]);
 		button.icon.animation.play('icon', true);
-		if(!onPlayState) add(button);
+		add(button);
 		buttons.push(button);
 		button.focusChangeCallback = (focus:Bool) -> if(!focus) button.bg.color = modsList.enabled.contains(modsGroup.members[curSelectedMod].folder) ? FlxColor.GREEN : 0xFFFF6666;
 
@@ -268,13 +267,6 @@ class ModsMenuState extends MusicBeatState {
 					FreeplayState.vocals = null;
 				}
 				FlxG.camera.fade(FlxColor.BLACK, 0.5, false, FlxG.resetGame, false);
-			} else MusicBeatState.switchState(new MainMenuState());
-
-			if(onPlayState) {
-				data.StageData.loadDirectory(PlayState.SONG);
-				MusicBeatState.switchState(new PlayState());
-				FlxG.sound.music.volume = 0;
-				onPlayState = false;
 			} else MusicBeatState.switchState(new MainMenuState());
 
 			persistentUpdate = false;

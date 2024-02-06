@@ -3,11 +3,12 @@ package substates;
 import flixel.addons.transition.FlxTransitionableState;
 import options.OptionsState;
 
+//TODO: Add "Change Character" Option
 class PauseSubState extends MusicBeatSubstate {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = [];
-	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Mod Settings', 'Exit to menu'];
+	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Exit to menu'];
 	var difficultyChoices = [];
 	var curSelected:Int = 0;
 
@@ -79,6 +80,19 @@ class PauseSubState extends MusicBeatSubstate {
 		FlxTween.tween(bg, {alpha: .2}, .4, {ease: FlxEase.quartInOut});
 
 		add(grpMenuShit = new FlxTypedGroup<Alphabet>());
+
+		missingTextBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		missingTextBG.scale.set(FlxG.width, FlxG.height);
+		missingTextBG.updateHitbox();
+		missingTextBG.alpha = 0.6;
+		missingTextBG.visible = false;
+		add(missingTextBG);
+		
+		missingText = new FlxText(50, 0, FlxG.width - 100, '', 24);
+		missingText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		missingText.scrollFactor.set();
+		missingText.visible = false;
+		add(missingText);
 
 		regenMenu();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
@@ -205,16 +219,6 @@ class PauseSubState extends MusicBeatSubstate {
 					PlayState.instance.botplayTxt.visible = PlayState.instance.cpuControlled;
 					PlayState.instance.botplayTxt.alpha = 1;
 					PlayState.instance.botplaySine = 0;
-				case 'Mod Settings': // Custom
-					PlayState.instance.paused = true; // For lua
-					PlayState.instance.vocals.volume = 0;
-					MusicBeatState.switchState(new states.ModsMenuState());
-					if(ClientPrefs.getPref('pauseMusic') != 'None') {
-						FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), pauseMusic.volume);
-						FlxG.sound.music.fadeIn(.8, pauseMusic.volume, 1);
-						FlxG.sound.music.time = pauseMusic.time;
-					}
-					states.ModsMenuState.onPlayState = true;
 				case 'Options':
 					PlayState.instance.paused = true; // For lua
 					PlayState.instance.vocals.volume = 0;

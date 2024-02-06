@@ -120,6 +120,7 @@ class PlayState extends MusicBeatState {
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
+	var displayedHealth:Float;
 	var iconsAnimations:Bool = true;
 	function set_health(value:Float):Float {
 		if(!iconsAnimations || healthBar == null || !healthBar.enabled || healthBar.valueFunction == null)
@@ -464,7 +465,7 @@ class PlayState extends MusicBeatState {
 
 		moveCameraSection();
 
-		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return health, 0, 2);
+		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return (ClientPrefs.getPref('SmoothHealth') ? displayedHealth : health), 0, 2);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
@@ -1454,6 +1455,11 @@ class PlayState extends MusicBeatState {
 			nps = Math.floor(notesHitArray.length);
 			if (nps > maxNPS) maxNPS = nps;
 			if (updateScoreText) scoreTxt.text = getScoreText();
+		}
+
+		if (ClientPrefs.getPref('SmoothHealth')) {
+			if (ClientPrefs.getPref('framerate') > 60) displayedHealth = FlxMath.lerp(displayedHealth, health, .1);
+			else if (ClientPrefs.getPref('framerate') == 60) displayedHealth = FlxMath.lerp(displayedHealth, health, .4);
 		}
 
 		updateMusicBeat();
