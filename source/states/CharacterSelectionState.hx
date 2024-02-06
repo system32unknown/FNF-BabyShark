@@ -8,10 +8,14 @@ import objects.HealthIcon;
     Modified by Altertoriel. (Ported to Psych 0.7.1b)
 **/
 class CharacterSelectionState extends MusicBeatState {
+	//["character name", [["form 1 name", 'character json name'], ["form 2 name (can add more than just one)", 'character json name 2']], true], 
     public static var characterData:Array<Dynamic> = [
-        //["character name", /*forms are here*/[["form 1 name", 'character json name'], ["form 2 name (can add more than just one)", 'character json name 2']]/*forms end here*/, /*hide it completely*/ true], 
         ["Boyfriend", [["Boyfriend", 'bf'], ["Boyfriend (Pixel)", 'bf-pixel'], ["Boyfriend (Christmas)", 'bf-christmas'], ["Boyfriend and Girlfriend", 'bf-holding-gf']], false],
-        ["Ollie", [["Ollie", 'bs'], ["Ollie (Pixel)", 'bs-pixel']], false], 
+        ["Ollie", [["Baby Shark Ollie", 'bs'], ["Baby Shark Ollie (Pixel)", 'bs-pixel'], ["Baby Shark Ollie And Altertoriel", 'alter-holding-bs']], false], 
+		["Dave", [["Dave", 'dave']], false],
+		["Bambi", [["Bambi", 'bambi'], ["Bambi (Angry)", 'bambi-mad']], false],
+		["Tristan", [["Tristan", 'tristan'], ["Golden Tristan", 'golden-tristan']], false],
+		["Expunged", [["Expunged (Cheating)", 'cheating-expunged'], ["Expunged (Unfair)", 'unfair-expunged'], ["True Expunged", 'true-Expunged']], false],
     ];
 
 	var characterSprite:Character;
@@ -21,6 +25,7 @@ class CharacterSelectionState extends MusicBeatState {
 	var curSelected:Int = 0;
 	var curSelectedForm:Int = 0;
 	var curText:FlxText;
+	var curIcon:HealthIcon;
 	var controlsText:FlxText;
 	var entering:Bool = false;
 
@@ -61,26 +66,32 @@ class CharacterSelectionState extends MusicBeatState {
 		tutorialThing.antialiasing = true;
 		add(tutorialThing);
 
-		curText = new FlxText(0, -100, 0, characterData[curSelected][1][0][0], 20);
-		curText.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-		curText.size = 50;
+		curText = new FlxText(0, -100, 0, characterData[curSelected][1][0][0], 50);
+		curText.setFormat(Paths.font("comic.ttf"), 50, FlxColor.WHITE, CENTER);
+		curText.setBorderStyle(OUTLINE, FlxColor.BLACK, 7);
 
 		controlsText = new FlxText(-125, 125, 0, 'Press P to enter preview mode.', 20);
 		controlsText.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-		controlsText.size = 20;
 
 		characterSprite = new Character(0, 0, "bf", true);
 		add(characterSprite);
 		characterSprite.dance();
 		characterSprite.screenCenter().y += 250;
 
+		curIcon = new HealthIcon(characterSprite.healthIcon, true);
+		curIcon.antialiasing = true;
+		curIcon.y = curText.y + curIcon.height;
+
 		add(curText);
+		add(curIcon);
 		add(controlsText);
 		curText.camera = camHUD;
 		controlsText.camera = camHUD;
 		tutorialThing.camera = camHUD;
+		curIcon.camera = camHUD;
 
 		curText.screenCenter(X);
+		curIcon.screenCenter(X);
 		changeCharacter(0);
 	}
 
@@ -179,9 +190,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 				curText.text = characterData[curSelected][1][curSelectedForm][0];
 				characterFile = characterData[curSelected][1][curSelectedForm][1];
-
 				reloadCharacter();
-
 				curText.screenCenter(X);
 			}
 		}
@@ -194,8 +203,12 @@ class CharacterSelectionState extends MusicBeatState {
 		characterSprite.updateHitbox();
 		characterSprite.dance();
 
+		curIcon.changeIcon(characterSprite.healthIcon);
+		curIcon.y = curText.y + curIcon.height;
+
 		characterSprite.screenCenter().y += 250;
 		if (!unlocked) characterSprite.color = FlxColor.BLACK;
+		curIcon.color = unlocked ? FlxColor.WHITE : FlxColor.BLACK;
 	}
 
 	function acceptCharacter() {
@@ -206,10 +219,14 @@ class CharacterSelectionState extends MusicBeatState {
 			else characterSprite.playAnim('singUP');
 
 			FlxG.sound.playMusic(Paths.music('gameOverEnd'));
-			new FlxTimer().start(1.5, function(tmr:FlxTimer) {
-				if (characterFile == 'bf-pixel') PlayState.SONG.gfVersion = 'gf-pixel';
-				if (characterFile == 'bf-christmas') PlayState.SONG.gfVersion = 'gf-christmas';
-				if (characterFile == 'bs') PlayState.SONG.gfVersion = 'gfbf';
+			new FlxTimer().start(1.5, (tmr:FlxTimer) -> {
+				var lastGF:String = PlayState.SONG.gfVersion;
+				PlayState.SONG.gfVersion = switch (characterFile) {
+					case 'bf-pixel': 'gf-pixel';
+					case 'bf-christmas': 'gf-christmas';
+					case 'bs': 'gfbf';
+					default: lastGF;
+				}
 
 				PlayState.SONG.player1 = characterFile;
                 LoadingState.prepareToSong();

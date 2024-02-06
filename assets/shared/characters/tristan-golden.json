@@ -13,8 +13,8 @@
 		},
 		{
 			"offsets": [
-				12,
-				7
+				-9,
+				-4
 			],
 			"loop": false,
 			"fps": 24,
@@ -24,8 +24,8 @@
 		},
 		{
 			"offsets": [
-				-10,
-				-10
+				-60,
+				-31
 			],
 			"loop": false,
 			"fps": 24,
@@ -35,8 +35,8 @@
 		},
 		{
 			"offsets": [
-				-29,
-				10
+				-96,
+				67
 			],
 			"loop": false,
 			"fps": 24,
@@ -46,8 +46,8 @@
 		},
 		{
 			"offsets": [
-				-41,
-				23
+				-68,
+				-7
 			],
 			"loop": false,
 			"fps": 24,
@@ -57,8 +57,8 @@
 		},
 		{
 			"offsets": [
-				12,
-				7
+				-17,
+				-5
 			],
 			"loop": false,
 			"fps": 24,
@@ -68,8 +68,8 @@
 		},
 		{
 			"offsets": [
-				-10,
-				-10
+				-58,
+				-27
 			],
 			"loop": false,
 			"fps": 24,
@@ -79,8 +79,8 @@
 		},
 		{
 			"offsets": [
-				-29,
-				10
+				-98,
+				69
 			],
 			"loop": false,
 			"fps": 24,
@@ -90,8 +90,8 @@
 		},
 		{
 			"offsets": [
-				-41,
-				33
+				-74,
+				-8
 			],
 			"loop": false,
 			"fps": 24,
@@ -100,35 +100,89 @@
 			"name": "BF NOTE RIGHT MISS"
 		},
 		{
-			"loop": false,
 			"offsets": [
-				0,
-				90
+				-5,
+				1
 			],
-			"anim": "bfCatch",
+			"loop": false,
 			"fps": 24,
-			"name": "BF catches GF",
-			"indices": []
+			"anim": "hey",
+			"indices": [],
+			"name": "BF HEY"
+		},
+		{
+			"offsets": [
+				14,
+				18
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "hurt",
+			"indices": [],
+			"name": "BF hit"
+		},
+		{
+			"offsets": [
+				-9,
+				-2
+			],
+			"loop": true,
+			"fps": 24,
+			"anim": "scared",
+			"indices": [],
+			"name": "BF idle shaking"
+		},
+		{
+			"offsets": [
+				-10,
+				-38
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "dodge",
+			"indices": [],
+			"name": "boyfriend dodge"
+		},
+		{
+			"offsets": [
+				294,
+				267
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "attack",
+			"indices": [],
+			"name": "boyfriend attack"
+		},
+		{
+			"offsets": [
+				-40,
+				-40
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "pre-attack",
+			"indices": [],
+			"name": "bf pre attack"
 		}
 	],
 	"no_antialiasing": false,
-	"image": "characters/bfAndGF",
+	"image": "dave/tristan_golden",
 	"position": [
 		0,
 		350
 	],
-	"healthicon": "bfandgf",
+	"healthicon": "tristan-golden",
 	"flip_x": true,
 	"healthbar_colors": [
-		49,
-		176,
-		209
+		255,
+		204,
+		0
 	],
 	"camera_position": [
 		0,
 		0
 	],
 	"sing_duration": 4,
-	"scale": 1,
-	"_editor_isPlayer": true
+	"scale": 1
 }
