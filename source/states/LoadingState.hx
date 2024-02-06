@@ -311,7 +311,7 @@ class LoadingState extends MusicBeatState {
 		});
 	}
 
-	inline private static function preloadCharacter(char:String) {
+	inline static function preloadCharacter(char:String) {
 		try {
 			var path:String = Paths.getPath('characters/$char.json', TEXT, null, true);
 			var character:Dynamic = Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));

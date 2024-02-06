@@ -2,6 +2,7 @@ package objects;
 
 class TypedAlphabet extends Alphabet {
 	public var onFinish:Void->Void = null;
+	public var onUpdate:String->Void = null;
 	public var finishedText:Bool = false;
 	public var delay:Float = 0.05;
 	public var sound:String = 'dialogue';
@@ -19,6 +20,7 @@ class TypedAlphabet extends Alphabet {
 	}
 
 	var _curLetter:Int = -1;
+	var _trueCurLetter:Int = -1;
 	var _timeToUpdate:Float = 0;
 	override function update(elapsed:Float) {
 		if (!finishedText) {
@@ -31,6 +33,10 @@ class TypedAlphabet extends Alphabet {
 				playedSound = true;
 
 				_curLetter++;
+				_trueCurLetter++;
+
+				// If the current char is a space
+				while (text.charAt(_trueCurLetter) == ' ') _trueCurLetter++;
 				if (_curLetter >= letters.length - 1) {
 					finishedText = true;
 					if(onFinish != null) onFinish();
@@ -48,13 +54,14 @@ class TypedAlphabet extends Alphabet {
 		var start:Int = _curLetter;
 		if(start < 0) start = 0;
 
-		for (i in start...(upTo + 1)) {
-			if(letters[i] != null) letters[i].visible = true;
-		}
+		for (i in start...(upTo + 1)) if(letters[i] != null) letters[i].visible = true;
+
+		if(onUpdate != null) onUpdate(text.substr(0, _trueCurLetter + 1));
 	}
 
 	public function resetDialogue() {
 		_curLetter = -1;
+		_trueCurLetter = -1;
 		finishedText = false;
 		_timeToUpdate = 0;
 		for (letter in letters) letter.visible = false;
@@ -63,6 +70,7 @@ class TypedAlphabet extends Alphabet {
 	public function finishText() {
 		if(finishedText) return;
 
+		_trueCurLetter = text.length - 1;
 		showCharacterUpTo(letters.length - 1);
 		if(sound != '') FlxG.sound.play(Paths.sound(sound), volume);
 		finishedText = true;

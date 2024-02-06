@@ -34,7 +34,6 @@ class Init extends flixel.FlxState {
 		if(FlxG.save.data != null) {
 			if(FlxG.save.data.fullscreen != null) FlxG.fullscreen = FlxG.save.data.fullscreen;
 			if(FlxG.save.data.weekCompleted != null) states.StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
-			if(FlxG.save.data.unlockedCharacters == null) FlxG.save.data.unlockedCharacters = ["Boyfriend", "Ollie"];
 		}
 
 		super.create();

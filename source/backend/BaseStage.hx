@@ -120,8 +120,8 @@ class BaseStage extends FlxBasic {
 	inline function set_canPause(value:Bool) return game.canPause = value;
 	inline function get_members() return game.members;
 
-	inline private function get_game() return cast FlxG.state;
-	inline private function get_onPlayState() return (Std.isOfType(FlxG.state, states.PlayState));
+	inline function get_game() return cast FlxG.state;
+	inline function get_onPlayState() return (Std.isOfType(FlxG.state, states.PlayState));
 
 	inline function get_boyfriend():Character return game.boyfriend;
 	inline function get_dad():Character return game.dad;

@@ -36,17 +36,14 @@ class CharacterSelectionState extends MusicBeatState {
 		camHUD.bgColor.alpha = 0;
 		FlxG.cameras.add(camHUD);
 
-		FlxG.sound.playMusic(Paths.music('good-ending'));
+		Conductor.usePlayState = false;
+		Conductor.mapBPMChanges(true);
 		Conductor.bpm = 110;
+		FlxG.sound.playMusic(Paths.music('good-ending'));
 
 		var lastLoaded:String = Paths.currentLevel;
 		Paths.currentLevel = assetFolder;
-		add(new BGSprite('stageback', -600, -200, .9, .9));
-
-		var stageFront:BGSprite = new BGSprite('stagefront', -650, 600, 0.9, 0.9);
-		stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-		stageFront.updateHitbox();
-		add(stageFront);
+		new states.stages.StageWeek1();
 
 		FlxG.camera.zoom = .75;
 		camHUD.zoom = .75;
@@ -149,7 +146,8 @@ class CharacterSelectionState extends MusicBeatState {
 			if (playSound) FlxG.sound.play(Paths.sound('scrollMenu'));
 			curSelectedForm = 0;
             curSelected = FlxMath.wrap(curSelected + change, 0, characterData.length - 1);
-			if (FlxG.save.data.unlockedCharacters.contains(characterData[curSelected][0]))
+			var unlockedChrs:Array<String> = ClientPrefs.getPref('unlockedCharacters');
+			if (unlockedChrs.contains(characterData[curSelected][0]))
 				unlocked = true;
 			else unlocked = #if debug true #else false #end;
 
