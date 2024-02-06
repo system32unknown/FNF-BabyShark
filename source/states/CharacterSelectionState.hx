@@ -69,9 +69,11 @@ class CharacterSelectionState extends MusicBeatState {
 		curText = new FlxText(0, -100, 0, characterData[curSelected][1][0][0], 50);
 		curText.setFormat(Paths.font("comic.ttf"), 50, FlxColor.WHITE, CENTER);
 		curText.setBorderStyle(OUTLINE, FlxColor.BLACK, 5);
+		curText.scrollFactor.set();
 
 		controlsText = new FlxText(-125, 125, 0, 'Press P to enter preview mode.', 20);
 		controlsText.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		controlsText.scrollFactor.set();
 
 		characterSprite = new Character(0, 0, "bf", true);
 		add(characterSprite);
@@ -79,6 +81,8 @@ class CharacterSelectionState extends MusicBeatState {
 		characterSprite.screenCenter().y += 250;
 
 		curIcon = new HealthIcon(characterSprite.healthIcon, true);
+		curIcon.scrollFactor.set();
+		curIcon.camera = camHUD;
 		curIcon.antialiasing = true;
 		curIcon.y = curText.y + curIcon.height;
 
@@ -88,7 +92,6 @@ class CharacterSelectionState extends MusicBeatState {
 		curText.camera = camHUD;
 		controlsText.camera = camHUD;
 		tutorialThing.camera = camHUD;
-		curIcon.camera = camHUD;
 
 		curText.screenCenter(X);
 		curIcon.screenCenter(X);

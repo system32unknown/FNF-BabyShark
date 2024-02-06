@@ -56,6 +56,61 @@
 			"indices": []
 		},
 		{
+			"offsets": [
+				22,
+				2
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singLEFT-alt",
+			"indices": [],
+			"name": "bambi alt left"
+		},
+		{
+			"offsets": [
+				13,
+				10
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singRIGHT-alt",
+			"indices": [],
+			"name": "bambi alt right"
+		},
+		{
+			"offsets": [
+				22,
+				3
+			],
+			"indices": [],
+			"fps": 24,
+			"anim": "singDOWN-alt",
+			"loop": false,
+			"name": "bambi alt left"
+		},
+		{
+			"offsets": [
+				13,
+				11
+			],
+			"indices": [],
+			"fps": 24,
+			"anim": "singUP-alt",
+			"loop": false,
+			"name": "bambi alt right"
+		},
+		{
+			"offsets": [
+				2,
+				8
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "hey",
+			"indices": [],
+			"name": "bambi look"
+		},
+		{
 			"loop": false,
 			"offsets": [
 				37,

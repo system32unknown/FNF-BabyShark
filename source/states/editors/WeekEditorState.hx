@@ -150,6 +150,7 @@ class WeekEditorState extends MusicBeatState {
 		boyfriendInputText = new FlxUIInputText(opponentInputText.x + 75, opponentInputText.y, 70, '', 8);
 		girlfriendInputText = new FlxUIInputText(boyfriendInputText.x + 75, opponentInputText.y, 70, '', 8);
 
+		backgroundInputText = new FlxUIInputText(10, opponentInputText.y + 40, 120, '', 8);
 		displayNameInputText = new FlxUIInputText(10, backgroundInputText.y + 40, 200, '', 8);
 		weekNameInputText = new FlxUIInputText(10, displayNameInputText.y + 40, 150, '', 8);
 		weekFileInputText = new FlxUIInputText(10, weekNameInputText.y + 40, 100, '', 8);
@@ -196,7 +197,7 @@ class WeekEditorState extends MusicBeatState {
 		UI_box.addGroup(tab_group);
 	}
 
-	var _currentWeekColor(get, never): FlxColor;
+	var _currentWeekColor(get, never):FlxColor;
 
 	function get__currentWeekColor() {
 		return CoolUtil.colorFromArray([
@@ -307,8 +308,7 @@ class WeekEditorState extends MusicBeatState {
 
 		var isMissing:Bool = true;
 		if(assetName != null && assetName.length > 0) {
-			if( #if MODS_ALLOWED FileSystem.exists(Paths.modsImages('menubackgrounds/menu_' + assetName)) || #end
-			Assets.exists(Paths.getPath('images/menubackgrounds/menu_' + assetName + '.png', IMAGE), IMAGE)) {
+			if( #if MODS_ALLOWED FileSystem.exists(Paths.modsImages('menubackgrounds/menu_' + assetName)) || #end Assets.exists(Paths.getPath('images/menubackgrounds/menu_' + assetName + '.png', IMAGE), IMAGE)) {
 				bgSprite.loadGraphic(Paths.image('menubackgrounds/menu_' + assetName));
 				isMissing = false;
 			}
@@ -324,8 +324,7 @@ class WeekEditorState extends MusicBeatState {
 		
 		var isMissing:Bool = true;
 		if(assetName != null && assetName.length > 0) {
-			if( #if MODS_ALLOWED FileSystem.exists(Paths.modsImages('storymenu/' + assetName)) || #end
-			Assets.exists(Paths.getPath('images/storymenu/' + assetName + '.png', IMAGE), IMAGE)) {
+			if( #if MODS_ALLOWED FileSystem.exists(Paths.modsImages('storymenu/' + assetName)) || #end Assets.exists(Paths.getPath('images/storymenu/' + assetName + '.png', IMAGE), IMAGE)) {
 				weekThing.loadGraphic(Paths.image('storymenu/' + assetName));
 				isMissing = false;
 			}
@@ -387,8 +386,7 @@ class WeekEditorState extends MusicBeatState {
 		}
 	}
 	
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		if(loadedWeek != null) {
 			weekFile = loadedWeek;
 			loadedWeek = null;
@@ -476,8 +474,7 @@ class WeekEditorState extends MusicBeatState {
 	/**
 		* Called when the save file dialog is cancelled.
 	*/
-	static function onLoadCancel(_):Void
-	{
+	static function onLoadCancel(_):Void {
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
@@ -488,8 +485,7 @@ class WeekEditorState extends MusicBeatState {
 	/**
 		* Called if there is an error while saving the gameplay recording.
 	**/
-	static function onLoadError(_):Void
-	{
+	static function onLoadError(_):Void {
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
@@ -499,8 +495,7 @@ class WeekEditorState extends MusicBeatState {
 
 	public static function saveWeek(weekFile:WeekFile) {
 		var data:String = Json.stringify(weekFile, "\t");
-		if (data.length > 0)
-		{
+		if (data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
@@ -509,8 +504,7 @@ class WeekEditorState extends MusicBeatState {
 		}
 	}
 	
-	static function onSaveComplete(_):Void
-	{
+	static function onSaveComplete(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -521,8 +515,7 @@ class WeekEditorState extends MusicBeatState {
 	/**
 		* Called when the save file dialog is cancelled.
 	**/
-	static function onSaveCancel(_):Void
-	{
+	static function onSaveCancel(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -532,8 +525,7 @@ class WeekEditorState extends MusicBeatState {
 	/**
 		* Called if there is an error while saving the gameplay recording.
 	**/
-	static function onSaveError(_):Void
-	{
+	static function onSaveError(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -542,11 +534,9 @@ class WeekEditorState extends MusicBeatState {
 	}
 }
 
-class WeekEditorFreeplayState extends MusicBeatState
-{
+class WeekEditorFreeplayState extends MusicBeatState {
 	var weekFile:WeekFile = null;
-	public function new(weekFile:WeekFile = null)
-	{
+	public function new(weekFile:WeekFile = null) {
 		super();
 		this.weekFile = WeekData.createWeekFile();
 		if(weekFile != null) this.weekFile = weekFile;
@@ -589,9 +579,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 	
 	var UI_box:FlxUITabMenu;
 	function addEditorBox() {
-		var tabs = [
-			{name: 'Freeplay', label: 'Freeplay'},
-		];
+		var tabs = [{name: 'Freeplay', label: 'Freeplay'}];
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.resize(250, 200);
 		UI_box.setPosition(FlxG.width - UI_box.width - 100, FlxG.height - UI_box.height - 60);

@@ -20,7 +20,7 @@ class MainMenuState extends MusicBeatState {
 	var bg:FlxSprite;
 	var magenta:FlxSprite;
 
-	//Stolen from Kade Engine
+	// Stolen from Kade Engine
 	public static var firstStart:Bool = true;
 	public static var finishedFunnyMove:Bool = false;
 
@@ -28,7 +28,6 @@ class MainMenuState extends MusicBeatState {
 	var curOptText:FlxText;
 
 	override function create() {
-		FlxG.mouse.visible = true;
 		#if MODS_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();
 
@@ -104,11 +103,7 @@ class MainMenuState extends MusicBeatState {
 			menuItem.updateHitbox();
 			menuItems.add(menuItem);
 			menuItem.scrollFactor.set();
-			if (firstStart)
-				FlxTween.tween(menuItem, {x: 20}, 1 + (i * .25), {
-					ease: FlxEase.expoInOut,
-					onComplete: (flxTween:FlxTween) -> finishedFunnyMove = true
-				});
+			if (firstStart) FlxTween.tween(menuItem, {x: 20}, 1 + (i * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> finishedFunnyMove = true});
 			else menuItem.x = 20;
 		}
 		firstStart = false;
@@ -125,18 +120,7 @@ class MainMenuState extends MusicBeatState {
 		}
 		
 		if (!selectedSomethin && finishedFunnyMove) {
-			if (controls.UI_UP_P || controls.UI_DOWN_P)
-				changeItem(controls.UI_UP_P ? -1 : 1);
-
-			for (item in menuItems.members) {
-				final itemIndex:Int = menuItems.members.indexOf(item);
-
-				if (FlxG.mouse.overlaps(item) && curSelected != itemIndex) {
-					curSelected = itemIndex;
-					changeItem();
-					break;
-				}
-			}
+			if (controls.UI_UP_P || controls.UI_DOWN_P) changeItem(controls.UI_UP_P ? -1 : 1);
 
 			if (controls.BACK) {
 				selectedSomethin = true;
@@ -144,17 +128,16 @@ class MainMenuState extends MusicBeatState {
 				MusicBeatState.switchState(new TitleState());
 			}
 
-			if (controls.ACCEPT || (FlxG.mouse.overlaps(menuItems.members[curSelected]) && FlxG.mouse.justPressed)) {
+			if (controls.ACCEPT) {
 				selectedSomethin = true;
-				FlxG.sound.play(Paths.sound('confirmMenu'), .7);
+				FlxG.sound.play(Paths.sound('confirmMenu'));
 
 				if(ClientPrefs.getPref('flashing')) FlxFlicker.flicker(magenta, 1.1, .15, false);
 
 				for (item in menuItems.members) {
 					final itemIndex:Int = menuItems.members.indexOf(item);
-
 					if (curSelected != itemIndex)
-						FlxTween.tween(item, {alpha: 0}, 1.3, {ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> item.destroy()});
+						FlxTween.tween(item, {alpha: 0}, .4, {ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> item.destroy()});
 					else {
 						FlxFlicker.flicker(item, 1, .06, false, false, (flicker:FlxFlicker) -> {
 							switch (menuOptions[curSelected].toLowerCase()) {
@@ -171,7 +154,6 @@ class MainMenuState extends MusicBeatState {
 										PlayState.stageUI = 'normal';
 									}
 							}
-							FlxG.mouse.visible = false;
 						});
 					}
 				}
@@ -190,7 +172,6 @@ class MainMenuState extends MusicBeatState {
 
 		for (item in menuItems.members) {
 			final itemIndex:Int = menuItems.members.indexOf(item);
-
 			if (curSelected != itemIndex) {
 				item.animation.play('idle', true);
 				item.updateHitbox();

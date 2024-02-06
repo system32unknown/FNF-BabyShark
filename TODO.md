@@ -8,7 +8,7 @@
 - [ ] New Main Menu / Freeplay Menu / Options Menu
 - [ ] Some Songs / Charts
 - [ ] Get Character Vocals
-- [ ] New Dialogue System
+- [ ] New Credit Menu (Social Links)
 - [ ] Language System
 - [ ] New Preloading System
 

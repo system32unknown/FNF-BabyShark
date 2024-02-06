@@ -139,7 +139,7 @@ class Mods {
 		var path = Paths.mods('$folder/pack.json');
 		if(FileSystem.exists(path)) {
 			try {
-				var rawJson:String = #if sys File.getContent(path) #else Assets.getText(path) #end;
+				var rawJson:String = #if sys File.getContent #else Assets.getText #end(path);
 				if(rawJson != null && rawJson.length > 0) return tjson.TJSON.parse(rawJson);
 			} catch(e:Dynamic) Logs.trace('ERROR: $e', ERROR);
 		}
@@ -151,7 +151,6 @@ class Mods {
 	inline public static function parseList():ModsList {
 		if(!updatedOnState) updateModList();
 		var list:ModsList = {enabled: [], disabled: [], all: []};
-
 		try {
 			for (mod in CoolUtil.coolTextFile('modsList.txt')) {
 				if(mod.trim().length < 1) continue;

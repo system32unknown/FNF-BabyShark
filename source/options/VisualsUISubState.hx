@@ -40,7 +40,7 @@ class VisualsUISubState extends BaseOptionsMenu {
 		option.decimals = 1;
 		addOption(option);
 		
-		var option:Option = new Option('Pause Screen Song:', "What song do you prefer for the Pause Screen?", 'pauseMusic', 'string', ['None', 'Breakfast', 'Tea Time']);
+		var option:Option = new Option('Pause Screen Song:', "What song do you prefer for the Pause Screen?", 'pauseMusic', 'string', ['None', 'Breakfast', 'Tea Time', 'Breakfast Dave']);
 		addOption(option);
 		option.onChange = () -> {
 			if(ClientPrefs.getPref('pauseMusic') == 'None') FlxG.sound.music.volume = 0;

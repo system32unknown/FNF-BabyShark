@@ -90,7 +90,7 @@ class CreditsState extends MusicBeatState {
 	var descBox:AttachedSprite;
 	var interpColor:FlxInterpolateColor;
 
-	var offsetThing:Float = -75;
+	final offsetThing:Float = -75;
 
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Credits"); #end
@@ -156,8 +156,7 @@ class CreditsState extends MusicBeatState {
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music.volume < .7)
-			FlxG.sound.music.volume = FlxMath.bound(FlxG.sound.music.volume + (.5 * elapsed), 0, .7);
+		if (FlxG.sound.music.volume < .7) FlxG.sound.music.volume = FlxMath.bound(FlxG.sound.music.volume + (.5 * elapsed), 0, .7);
 
 		if(!quitting) {
 			if(sections.length > 1) {
