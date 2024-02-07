@@ -209,7 +209,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		updatePlaybackTxt();
 
 		if (playingMusic) {
-			instance.bottomText.text = "Press SPACE to Pause / Press ESCAPE to Exit / Press R to Reset the Song";
+			instance.bottomText.text = "[SPACE] Pause • [ESCAPE] Exit • [R] Reset the Song";
 			positionSong();
 			
 			progressBar.setRange(0, FlxG.sound.music.length);

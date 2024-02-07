@@ -6,8 +6,7 @@ class StageWeek1 extends BaseStage {
 	var dadbattleBlack:BGSprite;
 	var dadbattleLight:BGSprite;
 	var dadbattleFog:DadBattleFog;
-	override function create()
-	{
+	override function create() {
 		add(new BGSprite('stageback', -600, -200, 0.9, 0.9));
 
 		final stageFront:BGSprite = new BGSprite('stagefront', -650, 600, 0.9, 0.9);

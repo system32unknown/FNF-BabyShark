@@ -12,8 +12,8 @@ class CharacterSelectionState extends MusicBeatState {
     public static var characterData:Array<Dynamic> = [
         ["Boyfriend", [["Boyfriend", 'bf'], ["Boyfriend (Pixel)", 'bf-pixel'], ["Boyfriend (Christmas)", 'bf-christmas'], ["Boyfriend and Girlfriend", 'bf-holding-gf']], false],
         ["Ollie", [["Baby Shark Ollie", 'bs'], ["Baby Shark Ollie (Pixel)", 'bs-pixel'], ["Baby Shark Ollie And Altertoriel", 'alter-holding-bs']], false], 
-		["Dave", [["Dave", 'dave']], false],
-		["Bambi", [["Bambi", 'bambi'], ["Bambi (Angry)", 'bambi-mad']], false],
+		["Dave", [["Dave", 'dave-playable']], false],
+		["Bambi", [["Bambi", 'bambi-playable']], false],
 		["Tristan", [["Tristan", 'tristan'], ["Golden Tristan", 'golden-tristan']], false],
 		["Expunged", [["Expunged (Cheating)", 'cheating-expunged'], ["Expunged (Unfair)", 'unfair-expunged'], ["True Expunged", 'true-Expunged']], false],
     ];
@@ -39,7 +39,7 @@ class CharacterSelectionState extends MusicBeatState {
 		initPsychCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
-		FlxG.cameras.add(camHUD);
+		FlxG.cameras.add(camHUD, false);
 
 		Conductor.usePlayState = false;
 		Conductor.mapBPMChanges(true);
@@ -64,16 +64,22 @@ class CharacterSelectionState extends MusicBeatState {
 		var tutorialThing:FlxSprite = new FlxSprite(-125, -100).loadGraphic(Paths.image('charSelectGuide'));
 		tutorialThing.setGraphicSize(Std.int(tutorialThing.width * 1.25));
 		tutorialThing.antialiasing = true;
+		tutorialThing.camera = camHUD;
 		add(tutorialThing);
 
 		curText = new FlxText(0, -100, 0, characterData[curSelected][1][0][0], 50);
 		curText.setFormat(Paths.font("comic.ttf"), 50, FlxColor.WHITE, CENTER);
 		curText.setBorderStyle(OUTLINE, FlxColor.BLACK, 5);
+		curText.camera = camHUD;
 		curText.scrollFactor.set();
+		curText.screenCenter(X);
+		add(curText);
 
 		controlsText = new FlxText(-125, 125, 0, 'Press P to enter preview mode.', 20);
 		controlsText.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		controlsText.scrollFactor.set();
+		controlsText.camera = camHUD;
+		add(controlsText);
 
 		characterSprite = new Character(0, 0, "bf", true);
 		add(characterSprite);
@@ -82,19 +88,10 @@ class CharacterSelectionState extends MusicBeatState {
 
 		curIcon = new HealthIcon(characterSprite.healthIcon, true);
 		curIcon.scrollFactor.set();
-		curIcon.camera = camHUD;
 		curIcon.antialiasing = true;
-		curIcon.y = curText.y + curIcon.height;
-
-		add(curText);
+		curIcon.screenCenter(X).y = (curText.y + curIcon.height) - 100;
+		curIcon.camera = camHUD;
 		add(curIcon);
-		add(controlsText);
-		curText.camera = camHUD;
-		controlsText.camera = camHUD;
-		tutorialThing.camera = camHUD;
-
-		curText.screenCenter(X);
-		curIcon.screenCenter(X);
 		changeCharacter(0);
 	}
 
@@ -207,7 +204,7 @@ class CharacterSelectionState extends MusicBeatState {
 		characterSprite.dance();
 
 		curIcon.changeIcon(characterSprite.healthIcon);
-		curIcon.y = curText.y + curIcon.height;
+		curIcon.y = (curText.y + curIcon.height) - 100;
 
 		characterSprite.screenCenter().y += 250;
 		if (!unlocked) characterSprite.color = FlxColor.BLACK;
@@ -228,6 +225,7 @@ class CharacterSelectionState extends MusicBeatState {
 					case 'bf-pixel': 'gf-pixel';
 					case 'bf-christmas': 'gf-christmas';
 					case 'bs': 'gfbf';
+					case 'dave-playable' | 'bambi-playable' | 'bf-holding-gf': 'speaker';
 					default: lastGF;
 				}
 

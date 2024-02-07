@@ -143,7 +143,7 @@ class FreeplayState extends MusicBeatState {
 
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
 
-		var leText:String = '[SPACE] - Listen to the Song • [CTRL] - Gameplay Changers Menu • [HOLD Z] - Skip Character Selection\n[COMMA] - Change Sections • [RESET] - Reset Score and Accuracy';
+		var leText:String = '[SPACE] Listen to the Song • [CTRL] Gameplay Changers Menu • [HOLD Z] Skip Character Selection\n[COMMA] Change Sections • [RESET] Reset Score and Accuracy';
 		bottomString = leText;
 		bottomText = new FlxText(0, 0, FlxG.width, leText, 18);
 		bottomText.setFormat(Paths.font("babyshark.ttf"), 18, FlxColor.WHITE, CENTER);
