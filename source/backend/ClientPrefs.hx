@@ -34,7 +34,7 @@ class ClientPrefs {
 		'ShowJudgement' => true,
 		'IconBounceType' => 'Vanilla',
 		'RatingDisplay' => 'World',
-		'RainbowFps' => false,
+		'RainbowFps' => 'HSB',
 		'comboStacking' => false,
 		'showKeybindsOnStart' => false,
 		'hardwareCache' => false,

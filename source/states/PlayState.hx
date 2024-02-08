@@ -120,7 +120,7 @@ class PlayState extends MusicBeatState {
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
-	var displayedHealth:Float;
+	var displayedHealth(default, null):Float = 1;
 	var iconsAnimations:Bool = true;
 	function set_health(value:Float):Float {
 		if(!iconsAnimations || healthBar == null || !healthBar.enabled || healthBar.valueFunction == null)
@@ -2385,7 +2385,7 @@ class PlayState extends MusicBeatState {
 		health -= subtract * healthLoss;
 
 		if(instakillOnMiss) doDeathCheck(true);
-		if (combo > maxCombo) maxCombo = combo;
+		if(combo > maxCombo) maxCombo = combo;
 
 		if(!endingSong) songMisses++;
 		totalPlayed++;

@@ -103,10 +103,8 @@ class ModsMenuState extends MusicBeatState {
 
 		buttonDisableAll = new MenuButton(buttonX, myY, buttonWidth, buttonHeight, "DISABLE ALL", function() {
 			buttonDisableAll.ignoreCheck = false;
-			for (mod in modsGroup.members)
-			{
-				if(modsList.enabled.contains(mod.folder))
-				{
+			for (mod in modsGroup.members) {
+				if(modsList.enabled.contains(mod.folder)) {
 					modsList.enabled.remove(mod.folder);
 					modsList.disabled.push(mod.folder);
 					mod.icon.color = 0xFFFF6666;
@@ -122,8 +120,7 @@ class ModsMenuState extends MusicBeatState {
 		add(buttonDisableAll);
 		checkToggleButtons();
 
-		if(modsList.all.length < 1)
-		{
+		if(modsList.all.length < 1) {
 			buttonDisableAll.visible = buttonDisableAll.enabled = false;
 			buttonEnableAll.visible = true;
 
