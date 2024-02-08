@@ -18,7 +18,7 @@ class CharacterSelectionState extends MusicBeatState {
 		["Expunged", [["Expunged (Cheating)", 'cheating-expunged'], ["Expunged (Unfair)", 'unfair-expunged'], ["True Expunged", 'true-Expunged']], false],
     ];
 
-	var characterSprite:Character;
+	var boyfriend:Character;
 
 	public static var characterFile:String = 'bf';
 
@@ -53,14 +53,6 @@ class CharacterSelectionState extends MusicBeatState {
 		FlxG.camera.zoom = .75;
 		camHUD.zoom = .75;
 
-		spawnSelection();
-        Paths.currentLevel = lastLoaded;
-		super.create();
-	}
-
-	var selectionStart:Bool = false;
-	function spawnSelection() {
-		selectionStart = true;
 		var tutorialThing:FlxSprite = new FlxSprite(-125, -100).loadGraphic(Paths.image('charSelectGuide'));
 		tutorialThing.setGraphicSize(Std.int(tutorialThing.width * 1.25));
 		tutorialThing.antialiasing = true;
@@ -81,14 +73,21 @@ class CharacterSelectionState extends MusicBeatState {
 		controlsText.camera = camHUD;
 		add(controlsText);
 
-		characterSprite = new Character(0, 0, "bf", true);
-		add(characterSprite);
-		characterSprite.dance();
-		characterSprite.screenCenter().y += 250;
+		spawnSelection();
+        Paths.currentLevel = lastLoaded;
+		super.create();
+	}
 
-		curIcon = new HealthIcon(characterSprite.healthIcon, true);
+	var selectionStart:Bool = false;
+	function spawnSelection() {
+		selectionStart = true;
+		boyfriend = new Character(0, 0, "bf", true);
+		add(boyfriend);
+		boyfriend.dance();
+		boyfriend.screenCenter().y += 250;
+
+		curIcon = new HealthIcon(boyfriend.healthIcon, true);
 		curIcon.scrollFactor.set();
-		curIcon.antialiasing = true;
 		curIcon.screenCenter(X).y = (curText.y + curIcon.height) - 100;
 		curIcon.camera = camHUD;
 		add(curIcon);
@@ -99,7 +98,7 @@ class CharacterSelectionState extends MusicBeatState {
 		if (previewMode) controlsText.text = "PREVIEW MODE\nPress I to play idle animation.\nPress your controls to play an animation.\n";
 		else {
 			controlsText.text = "Press P to enter preview mode.";
-			characterSprite.playAnim('idle');
+			boyfriend.playAnim('idle');
 		}
 	}
 
@@ -112,36 +111,12 @@ class CharacterSelectionState extends MusicBeatState {
 			if (controls.UI_RIGHT_P || controls.UI_LEFT_P) changeCharacter(controls.UI_RIGHT_P ? 1 : -1);
 			if ((controls.UI_DOWN_P || controls.UI_UP_P) && unlocked) changeForm(controls.UI_DOWN_P ? 1 : -1);
 			if (controls.ACCEPT && unlocked) acceptCharacter();
-		} else if (!previewMode) {
-			if (controls.UI_RIGHT_P) {
-				curSelected += 1;
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-			}
-			if (controls.UI_LEFT_P) {
-				curSelected = -1;
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-			}
-			if (curSelected < 0) curSelected = 0;
-			if (curSelected >= 2) curSelected = 0;
-			if (controls.ACCEPT) {
-				switch (curSelected) {
-					case 0:
-						FlxG.sound.music.stop();
-						FlxTween.tween(camHUD, {alpha: 0}, .25, {ease: FlxEase.circOut});
-
-                        LoadingState.prepareToSong();
-						LoadingState.loadAndSwitchState(new PlayState());
-					case 1:
-						curSelected = 0;
-						spawnSelection();
-				}
-			}
 		} else {
-			if (controls.NOTE_LEFT_P) if (characterSprite.animOffsets.exists('singLEFT')) characterSprite.playAnim('singLEFT');
-			if (controls.NOTE_DOWN_P) if (characterSprite.animOffsets.exists('singDOWN')) characterSprite.playAnim('singDOWN');
-			if (controls.NOTE_UP_P) if (characterSprite.animOffsets.exists('singUP')) characterSprite.playAnim('singUP');
-			if (controls.NOTE_RIGHT_P) if (characterSprite.animOffsets.exists('singRIGHT')) characterSprite.playAnim('singRIGHT');
-			if (FlxG.keys.justPressed.I) characterSprite.playAnim('idle');
+			if (controls.NOTE_LEFT_P) if (boyfriend.animOffsets.exists('singLEFT')) boyfriend.playAnim('singLEFT');
+			if (controls.NOTE_DOWN_P) if (boyfriend.animOffsets.exists('singDOWN')) boyfriend.playAnim('singDOWN');
+			if (controls.NOTE_UP_P) if (boyfriend.animOffsets.exists('singUP')) boyfriend.playAnim('singUP');
+			if (controls.NOTE_RIGHT_P) if (boyfriend.animOffsets.exists('singRIGHT')) boyfriend.playAnim('singRIGHT');
+			if (FlxG.keys.justPressed.I) boyfriend.playAnim('idle');
 		}
 
 		if (controls.BACK) {
@@ -197,43 +172,44 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	function reloadCharacter() {
-		characterSprite.destroy();
-		characterSprite = new Character(0, 0, characterFile, true);
-		add(characterSprite);
-		characterSprite.updateHitbox();
-		characterSprite.dance();
+		boyfriend.destroy();
+		remove(boyfriend, true);
+		boyfriend = new Character(0, 0, characterFile, true);
+		add(boyfriend);
+		boyfriend.updateHitbox();
+		boyfriend.dance();
 
-		curIcon.changeIcon(characterSprite.healthIcon);
+		curIcon.changeIcon(boyfriend.healthIcon);
 		curIcon.y = (curText.y + curIcon.height) - 100;
 
-		characterSprite.screenCenter().y += 250;
-		if (!unlocked) characterSprite.color = FlxColor.BLACK;
+		boyfriend.screenCenter().y += 250;
+		if (!unlocked) boyfriend.color = FlxColor.BLACK;
 		curIcon.color = unlocked ? FlxColor.WHITE : FlxColor.BLACK;
 	}
 
 	function acceptCharacter() {
-		if (!entering) {
-			entering = true;
-			if (characterSprite.animOffsets.exists('hey') && characterSprite.animation.getByName('hey') != null)
-				characterSprite.playAnim('hey');
-			else characterSprite.playAnim('singUP');
+		if (!entering) return;
 
-			FlxG.sound.playMusic(Paths.music('gameOverEnd'));
-			new FlxTimer().start(1.5, (tmr:FlxTimer) -> {
-				var lastGF:String = PlayState.SONG.gfVersion;
-				PlayState.SONG.gfVersion = switch (characterFile) {
-					case 'bf-pixel': 'gf-pixel';
-					case 'bf-christmas': 'gf-christmas';
-					case 'bs': 'gfbf';
-					case 'dave-playable' | 'bambi-playable' | 'bf-holding-gf': 'speaker';
-					default: lastGF;
-				}
+		entering = true;
+		if (boyfriend.animOffsets.exists('hey') && boyfriend.animation.getByName('hey') != null)
+			boyfriend.playAnim('hey');
+		else boyfriend.playAnim('singUP');
 
-				PlayState.SONG.player1 = characterFile;
-                LoadingState.prepareToSong();
-				LoadingState.loadAndSwitchState(new PlayState());
-			});
-		}
+		FlxG.sound.playMusic(Paths.music('gameOverEnd'));
+		new FlxTimer().start(1.5, (tmr:FlxTimer) -> {
+			var lastGF:String = PlayState.SONG.gfVersion;
+			PlayState.SONG.gfVersion = switch (characterFile) {
+				case 'bf-pixel': 'gf-pixel';
+				case 'bf-christmas': 'gf-christmas';
+				case 'bs': 'gfbf';
+				case 'dave-playable' | 'bambi-playable' | 'bf-holding-gf': 'speaker';
+				default: lastGF;
+			}
+
+			PlayState.SONG.player1 = characterFile;
+            LoadingState.prepareToSong();
+			LoadingState.loadAndSwitchState(new PlayState());
+		});
 	}
 }
 

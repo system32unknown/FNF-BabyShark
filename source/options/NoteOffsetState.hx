@@ -13,9 +13,9 @@ class NoteOffsetState extends MusicBeatState {
 	var GF_X:Float = 400;
 	var GF_Y:Float = 130;
 	
-	public var camHUD:FlxCamera;
-	public var camGame:FlxCamera;
-	public var camOther:FlxCamera;
+	var camHUD:FlxCamera;
+	var camGame:FlxCamera;
+	var camOther:FlxCamera;
 	public var defaultCamZoom:Float = 1;
 
 	var boyfriendGroup:FlxSpriteGroup;
@@ -108,10 +108,8 @@ class NoteOffsetState extends MusicBeatState {
 		lateEarly.updateHitbox();
 		add(lateEarly);
 
-		var seperatedScore:Array<Int> = [for (_ in 0...3) FlxG.random.int(0, 9)];
-
 		var daLoop:Int = 0;
-		for (i in seperatedScore) {
+		for (i in [for (_ in 0...FlxG.random.int(3, 4)) FlxG.random.int(0, 9)]) {
 			var numScore:FlxSprite = new FlxSprite(43 * daLoop++, Paths.image('number/num$i'));
 			numScore.camera = camHUD;
 			numScore.setGraphicSize(numScore.width * .5);
