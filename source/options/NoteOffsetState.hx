@@ -73,7 +73,7 @@ class NoteOffsetState extends MusicBeatState {
 		gf = new Character(0, 0, 'gf');
 		gf.x += gf.positionArray[0];
 		gf.y += gf.positionArray[1];
-		gf.scrollFactor.set(0.95, 0.95);
+		gf.scrollFactor.set(.95, .95);
 		gf.danceEveryNumBeats = 2;
 		gfGroup.add(gf);
 		

@@ -18,9 +18,18 @@ class CharacterSelectionState extends MusicBeatState {
 		["Expunged", [["Expunged (Cheating)", 'cheating-expunged'], ["Expunged (Unfair)", 'unfair-expunged'], ["True Expunged", 'true-Expunged']], false],
     ];
 
+	var boyfriendGroup:FlxSpriteGroup;
+	var gfGroup:FlxSpriteGroup;
+
 	var boyfriend:Character;
+	var gf:Character;
 
 	public static var characterFile:String = 'bf';
+
+	var BF_X:Float = 770;
+	var BF_Y:Float = 100;
+	var GF_X:Float = 400;
+	var GF_Y:Float = 130;
 
 	var curSelected:Int = 0;
 	var curSelectedForm:Int = 0;
@@ -32,26 +41,46 @@ class CharacterSelectionState extends MusicBeatState {
 	var previewMode:Bool = false;
 	var unlocked:Bool = true;
 
-	public var camHUD:FlxCamera;
+	var camGame:FlxCamera;
+	var camHUD:FlxCamera;
 
-    final assetFolder = 'week1';
 	override function create() {
-		initPsychCamera();
+		#if DISCORD_ALLOWED DiscordClient.changePresence('Selecting Character'); #end
+
+		persistentUpdate = true;
+
+		camGame = initPsychCamera();
+
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 		FlxG.cameras.add(camHUD, false);
 
-		Conductor.usePlayState = false;
-		Conductor.mapBPMChanges(true);
-		Conductor.bpm = 110;
-		FlxG.sound.playMusic(Paths.music('good-ending'));
+		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
 		var lastLoaded:String = Paths.currentLevel;
-		Paths.currentLevel = assetFolder;
+		Paths.currentLevel = 'week1';
 		new states.stages.StageWeek1();
 
-		FlxG.camera.zoom = .75;
+		camGame.zoom = .75;
 		camHUD.zoom = .75;
+
+		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
+		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
+
+		gf = new Character(0, 0, 'gf');
+		gf.x += gf.positionArray[0];
+		gf.y += gf.positionArray[1];
+		gf.scrollFactor.set(0.95, 0.95);
+		gf.danceEveryNumBeats = 2;
+		gfGroup.add(gf);
+		
+		boyfriend = new Character(0, 0, 'bf', true);
+		boyfriend.x += boyfriend.positionArray[0];
+		boyfriend.y += boyfriend.positionArray[1];
+		boyfriendGroup.add(boyfriend);
+
+		add(gfGroup);
+		add(boyfriendGroup);
 
 		var tutorialThing:FlxSprite = new FlxSprite(-125, -100).loadGraphic(Paths.image('charSelectGuide'));
 		tutorialThing.setGraphicSize(Std.int(tutorialThing.width * 1.25));
@@ -73,25 +102,21 @@ class CharacterSelectionState extends MusicBeatState {
 		controlsText.camera = camHUD;
 		add(controlsText);
 
-		spawnSelection();
-        Paths.currentLevel = lastLoaded;
-		super.create();
-	}
-
-	var selectionStart:Bool = false;
-	function spawnSelection() {
-		selectionStart = true;
-		boyfriend = new Character(0, 0, "bf", true);
-		add(boyfriend);
-		boyfriend.dance();
-		boyfriend.screenCenter().y += 250;
-
 		curIcon = new HealthIcon(boyfriend.healthIcon, true);
 		curIcon.scrollFactor.set();
 		curIcon.screenCenter(X).y = (curText.y + curIcon.height) - 100;
 		curIcon.camera = camHUD;
 		add(curIcon);
-		changeCharacter(0);
+
+		changeCharacter();
+        Paths.currentLevel = lastLoaded;
+
+		Conductor.usePlayState = false;
+		Conductor.mapBPMChanges(true);
+		Conductor.bpm = 110;
+		FlxG.sound.playMusic(Paths.music('good-ending'));
+
+		super.create();
 	}
 
 	function checkPreview() {
@@ -103,11 +128,11 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	override function update(elapsed) {
-		if (FlxG.keys.justPressed.P && selectionStart && unlocked && !entering) {
+		if (FlxG.keys.justPressed.P && unlocked && !entering) {
 			previewMode = !previewMode;
 			checkPreview();
 		}
-		if (selectionStart && !previewMode) {
+		if (!previewMode) {
 			if (controls.UI_RIGHT_P || controls.UI_LEFT_P) changeCharacter(controls.UI_RIGHT_P ? 1 : -1);
 			if ((controls.UI_DOWN_P || controls.UI_UP_P) && unlocked) changeForm(controls.UI_DOWN_P ? 1 : -1);
 			if (controls.ACCEPT && unlocked) acceptCharacter();
@@ -127,7 +152,7 @@ class CharacterSelectionState extends MusicBeatState {
 		super.update(elapsed);
 	}
 
-	function changeCharacter(change:Int, playSound:Bool = true) {
+	function changeCharacter(change:Int = 0, playSound:Bool = true) {
 		if (!entering) {
 			if (playSound) FlxG.sound.play(Paths.sound('scrollMenu'));
 			curSelectedForm = 0;
@@ -166,10 +191,11 @@ class CharacterSelectionState extends MusicBeatState {
 
 	function reloadCharacter() {
 		boyfriend.destroy();
+		boyfriendGroup.remove(boyfriend, true);
 		boyfriend = new Character(0, 0, characterFile, true);
-		add(boyfriend);
 		boyfriend.updateHitbox();
 		boyfriend.dance();
+		boyfriendGroup.add(boyfriend);
 
 		curIcon.changeIcon(boyfriend.healthIcon);
 		curIcon.y = (curText.y + curIcon.height) - 100;
@@ -189,13 +215,12 @@ class CharacterSelectionState extends MusicBeatState {
 
 		FlxG.sound.playMusic(Paths.music('gameOverEnd'));
 		new FlxTimer().start(1.5, (tmr:FlxTimer) -> {
-			var lastGF:String = PlayState.SONG.gfVersion;
 			PlayState.SONG.gfVersion = switch (characterFile) {
 				case 'bf-pixel': 'gf-pixel';
 				case 'bf-christmas': 'gf-christmas';
 				case 'bs': 'gfbf';
 				case 'dave-playable' | 'bambi-playable' | 'bf-holding-gf': 'speaker';
-				default: lastGF;
+				default: PlayState.SONG.gfVersion;
 			}
 
 			PlayState.SONG.player1 = characterFile;
@@ -209,7 +234,6 @@ class CharacterUnlockObject extends flixel.group.FlxSpriteGroup {
 	public var onFinish:Void->Void = null;
 
 	var alphaTween:FlxTween;
-
 	public function new(name:String, ?camera:FlxCamera = null, characterIcon:String, color:FlxColor = FlxColor.BLACK) {
 		super(x, y);
 		ClientPrefs.saveSettings();
