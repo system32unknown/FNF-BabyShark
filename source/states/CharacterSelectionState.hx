@@ -152,28 +152,20 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	function changeForm(change:Int) {
-		if (!entering) {
-			if (characterData[curSelected][1].length >= 2) {
-				FlxG.sound.play(Paths.sound('scrollMenu'));
-				curSelectedForm += change;
+		var chrData:Array<Array<String>> = characterData[curSelected][1];
+		if (!entering && chrData.length >= 2) {
+			FlxG.sound.play(Paths.sound('scrollMenu'));
+			curSelectedForm = FlxMath.wrap(curSelectedForm + change, 0, chrData.length - 1);
 
-				if (curSelectedForm < 0) {
-					curSelectedForm = characterData[curSelected][1].length;
-					curSelectedForm -= 1;
-				}
-				if (curSelectedForm >= characterData[curSelected][1].length) curSelectedForm = 0;
-
-				curText.text = characterData[curSelected][1][curSelectedForm][0];
-				characterFile = characterData[curSelected][1][curSelectedForm][1];
-				reloadCharacter();
-				curText.screenCenter(X);
-			}
+			curText.text = chrData[curSelectedForm][0];
+			characterFile = chrData[curSelectedForm][1];
+			reloadCharacter();
+			curText.screenCenter(X);
 		}
 	}
 
 	function reloadCharacter() {
 		boyfriend.destroy();
-		remove(boyfriend, true);
 		boyfriend = new Character(0, 0, characterFile, true);
 		add(boyfriend);
 		boyfriend.updateHitbox();
@@ -188,7 +180,7 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	function acceptCharacter() {
-		if (!entering) return;
+		if (entering) return;
 
 		entering = true;
 		if (boyfriend.animOffsets.exists('hey') && boyfriend.animation.getByName('hey') != null)
