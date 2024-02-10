@@ -259,7 +259,7 @@ class FreeplayState extends MusicBeatState {
 			} else {
 				persistentUpdate = false;
 				FlxG.sound.play(Paths.sound('cancelMenu'));
-				MusicBeatState.switchState(new MainMenuState());
+				FlxG.switchState(() -> new MainMenuState());
 			}
 		}
 
@@ -341,10 +341,10 @@ class FreeplayState extends MusicBeatState {
 
 			if (FlxG.keys.pressed.Z) {
 				LoadingState.prepareToSong();
-				LoadingState.loadAndSwitchState(new PlayState());
+				LoadingState.loadAndSwitchState(() -> new PlayState());
 			} else {
 				CharacterSelectionState.characterFile = 'bf';
-				MusicBeatState.switchState(new CharacterSelectionState());
+				FlxG.switchState(() -> new CharacterSelectionState());
 			}
 
 			destroyFreeplayVocals();

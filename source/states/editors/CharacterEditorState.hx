@@ -890,9 +890,9 @@ class CharacterEditorState extends MusicBeatState {
 		} else if(FlxG.keys.justPressed.ESCAPE) {
 			FlxG.mouse.visible = false;
 			if(!_goToPlayState){
-				MusicBeatState.switchState(new states.editors.MasterEditorMenu());
+				FlxG.switchState(() -> new states.editors.MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-			} else MusicBeatState.switchState(new PlayState());
+			} else FlxG.switchState(() -> new PlayState());
 			return;
 		}
 	}

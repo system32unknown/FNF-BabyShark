@@ -191,13 +191,13 @@ class CreditsState extends MusicBeatState {
 				CreditSectionState.cSectionisMod = #if MODS_ALLOWED modSectionsBound > 0 && curSelected >= modSectionsBound #else false #end;
 
 				prevSelected = curSelected;
-				MusicBeatState.switchState(new CreditSectionState());
+				FlxG.switchState(() -> new CreditSectionState());
 				quitting = true;
 			}
 
 			if (controls.BACK) {
 				FlxG.sound.play(Paths.sound('cancelMenu'), .7);
-				MusicBeatState.switchState(new MainMenuState());
+				FlxG.switchState(() -> new MainMenuState());
 				quitting = true;
 			}
 		}
@@ -376,7 +376,7 @@ class CreditSectionState extends MusicBeatState {
 				
 				var state:CreditsState = new CreditsState();
 				state.curSelected = CreditsState.prevSelected;
-				MusicBeatState.switchState(state);
+				FlxG.switchState(() -> state);
 				quitting = true;
 			}
 		}

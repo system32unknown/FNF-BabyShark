@@ -191,7 +191,7 @@ class TitleState extends MusicBeatState {
 	
 					new FlxTimer().start(1.5, function(tmr:FlxTimer) {
 						FlxTransitionableState.skipNextTransIn = false;
-						MusicBeatState.switchState(new MainMenuState());
+						FlxG.switchState(() -> new MainMenuState());
 					});
 				}
 			} else skipIntro();

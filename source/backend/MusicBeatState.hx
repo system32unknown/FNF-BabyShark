@@ -74,7 +74,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	}
 
 	public function initPsychCamera():PsychCamera {
-		var camera = new PsychCamera();
+		var camera:PsychCamera = new PsychCamera();
 		FlxG.cameras.reset(camera);
 		FlxG.cameras.setDefaultDrawTarget(camera, true);
 		_psychCameraInitialized = true;
@@ -142,30 +142,15 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	public function getBeatsOnSection():Float
 		return inline Conductor.getSectionBeats(PlayState.SONG, curSection);
 
-	public static function switchState(nextState:FlxState = null) {
-		if(nextState == null) nextState = FlxG.state;
-		if(nextState == FlxG.state) {
-			resetState();
+	override function startOutro(onOutroComplete:()->Void):Void {
+		if (!FlxTransitionableState.skipNextTransIn) {
+			FlxG.state.openSubState(new CustomFadeTransition(.6, false));
+			CustomFadeTransition.finishCallback = onOutroComplete;
 			return;
 		}
 
-		if(FlxTransitionableState.skipNextTransIn) FlxG.switchState(nextState);
-		else startTransition(nextState);
 		FlxTransitionableState.skipNextTransIn = false;
-	}
-
-	public static function resetState() {
-		if(FlxTransitionableState.skipNextTransIn) FlxG.resetState();
-		else startTransition();
-		FlxTransitionableState.skipNextTransIn = false;
-	}
-
-	// Custom made Trans in
-	public static function startTransition(nextState:FlxState = null) {
-		if(nextState == null) nextState = FlxG.state;
-
-		FlxG.state.openSubState(new CustomFadeTransition(.6, false));
-		CustomFadeTransition.finishCallback = () -> (nextState == FlxG.state ? FlxG.resetState() : FlxG.switchState(nextState));
+		onOutroComplete();
 	}
 
 	public static function getState(?state:FlxState):MusicBeatState return cast(state != null ? state : FlxG.state);

@@ -63,17 +63,17 @@ class MasterEditorMenu extends MusicBeatState {
 		if (controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);
 		#if MODS_ALLOWED if (controls.UI_LEFT_P || controls.UI_RIGHT_P) changeDirectory(controls.UI_LEFT_P ? -1 : 1); #end
 
-		if (controls.BACK) MusicBeatState.switchState(new states.MainMenuState());
+		if (controls.BACK) FlxG.switchState(() -> new states.MainMenuState());
 
 		if (controls.ACCEPT) {
 			switch(options[curSelected]) {
-				case 'Character Editor': LoadingState.loadAndSwitchState(new CharacterEditorState(objects.Character.DEFAULT_CHARACTER, false), false);
-				case 'Chart Editor': LoadingState.loadAndSwitchState(new ChartingState(), false);
-				case 'Credit Editor': MusicBeatState.switchState(new CreditsEditorState());
-				case 'Week Editor': MusicBeatState.switchState(new WeekEditorState());
-				case 'Menu Character Editor': MusicBeatState.switchState(new MenuCharacterEditorState());
-				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), false);
-				case 'Dialogue Editor' : LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
+				case 'Character Editor': LoadingState.loadAndSwitchState(() -> new CharacterEditorState(objects.Character.DEFAULT_CHARACTER, false), false);
+				case 'Chart Editor': LoadingState.loadAndSwitchState(() -> new ChartingState(), false);
+				case 'Credit Editor': FlxG.switchState(() -> new CreditsEditorState());
+				case 'Week Editor': FlxG.switchState(() -> new WeekEditorState());
+				case 'Menu Character Editor': FlxG.switchState(() -> new MenuCharacterEditorState());
+				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(() -> new DialogueCharacterEditorState(), false);
+				case 'Dialogue Editor' : LoadingState.loadAndSwitchState(() -> new DialogueEditorState(), false);
 			}
 			FlxG.sound.music.volume = 0;
 			Conductor.usePlayState = false;

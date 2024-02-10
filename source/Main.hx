@@ -43,7 +43,7 @@ class Main extends Sprite {
 	function setupGame():Void {
 		debug.Logs.init();
 
-		addChild(new backend.FunkinGame(game.width, game.height, Init, game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
+		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(fpsVar = new FPSCounter());
 		if(Main.fpsVar != null) {
 			Main.fpsVar.visible = ClientPrefs.getPref('showFPS');

@@ -18,7 +18,7 @@ class OptionsState extends MusicBeatState {
 			case 'Gameplay': openSubState(new GameplaySettingsSubState());
 			case 'Miscellaneous': openSubState(new MiscellaneousSubState());
 			case 'Saves': openSubState(new SaveSubState());
-			case 'Adjust Delay and Combo': MusicBeatState.switchState(new NoteOffsetState());
+			case 'Adjust Delay and Combo': FlxG.switchState(() -> new NoteOffsetState());
 		}
 	}
 
@@ -74,9 +74,9 @@ class OptionsState extends MusicBeatState {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			if(onPlayState) {
 				data.StageData.loadDirectory(PlayState.SONG);
-				LoadingState.loadAndSwitchState(new PlayState());
+				LoadingState.loadAndSwitchState(() -> new PlayState());
 				FlxG.sound.music.volume = 0;
-			} else MusicBeatState.switchState(new states.MainMenuState());
+			} else FlxG.switchState(() -> new states.MainMenuState());
 		}
 
 		if (controls.ACCEPT) openSelectedSubstate(options[curPage][curSelected]);

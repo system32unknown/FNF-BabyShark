@@ -107,7 +107,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 			PlayState.chartingMode = false;
 
 			Mods.loadTopMod();
-			MusicBeatState.switchState(PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
+			FlxG.switchState(() -> PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
@@ -142,7 +142,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 			FlxG.camera.fade(FlxColor.BLACK, 2, false);
 			new FlxTimer().start(sndLength - .7, (tmr:FlxTimer) -> {
 				flixel.addons.transition.FlxTransitionableState.skipNextTransIn = true;
-				MusicBeatState.resetState();
+				FlxG.resetState();
 			});
 		});
 

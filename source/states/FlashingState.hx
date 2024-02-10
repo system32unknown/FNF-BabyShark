@@ -36,10 +36,10 @@ class FlashingState extends MusicBeatState {
 					ClientPrefs.prefs.set('flashing', false);
 					ClientPrefs.saveSettings();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					FlxFlicker.flicker(warnText, 1, .1, false, true, (flk:FlxFlicker) -> new FlxTimer().start(.5, (tmr:FlxTimer) -> MusicBeatState.switchState(new TitleState())));
+					FlxFlicker.flicker(warnText, 1, .1, false, true, (flk:FlxFlicker) -> new FlxTimer().start(.5, (tmr:FlxTimer) -> FlxG.switchState(() -> new TitleState())));
 				} else {
 					FlxG.sound.play(Paths.sound('cancelMenu'));
-					FlxTween.tween(warnText, {alpha: 0}, 1, {onComplete: (twn:FlxTween) -> MusicBeatState.switchState(new TitleState())});
+					FlxTween.tween(warnText, {alpha: 0}, 1, {onComplete: (twn:FlxTween) -> FlxG.switchState(() -> new TitleState())});
 				}
 				FlxTween.tween(pressText, {alpha: 0}, 1);
 			}

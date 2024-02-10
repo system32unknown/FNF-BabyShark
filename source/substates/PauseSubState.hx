@@ -158,7 +158,7 @@ class PauseSubState extends MusicBeatSubstate {
 						var name:String = PlayState.SONG.song;
 						PlayState.SONG = backend.Song.loadFromJson(backend.Highscore.formatSong(name, curSelected), name);
 						PlayState.storyDifficulty = curSelected;
-						MusicBeatState.resetState();
+						FlxG.resetState();
 						FlxG.sound.music.volume = 0;
 						PlayState.changedDifficulty = true;
 						PlayState.chartingMode = false;
@@ -188,7 +188,7 @@ class PauseSubState extends MusicBeatSubstate {
 					menuItems = difficultyChoices;
 					deleteSkipTimeText();
 					regenMenu();
-				case 'Change Character': MusicBeatState.switchState(new states.CharacterSelectionState());
+				case 'Change Character': FlxG.switchState(() -> new states.CharacterSelectionState());
 				case 'Toggle Practice Mode':
 					PlayState.instance.practiceMode = !PlayState.instance.practiceMode;
 					PlayState.changedDifficulty = true;
@@ -222,7 +222,7 @@ class PauseSubState extends MusicBeatSubstate {
 				case 'Options':
 					PlayState.instance.paused = true; // For lua
 					PlayState.instance.vocals.volume = 0;
-					MusicBeatState.switchState(new OptionsState());
+					FlxG.switchState(() -> new OptionsState());
 					if(ClientPrefs.getPref('pauseMusic') != 'None') {
 						FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), pauseMusic.volume);
 						FlxG.sound.music.fadeIn(.8, pauseMusic.volume, 1);
@@ -236,7 +236,7 @@ class PauseSubState extends MusicBeatSubstate {
 					PlayState.seenCutscene = false;
 
 					Mods.loadTopMod();
-					MusicBeatState.switchState(PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
+					FlxG.switchState(() -> PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					PlayState.changedDifficulty = false;
 					PlayState.chartingMode = false;
@@ -265,7 +265,7 @@ class PauseSubState extends MusicBeatSubstate {
 			FlxTransitionableState.skipNextTransOut = true;
 			FlxTransitionableState.skipNextTransIn = true;
 		}
-		MusicBeatState.resetState();
+		FlxG.resetState();
 	}
 
 	override function destroy() {

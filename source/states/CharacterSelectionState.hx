@@ -4,12 +4,11 @@ import objects.Character;
 import objects.HealthIcon;
 
 /**
-    This is not from the D&B source code, it's completely made by me (Delta).
-    Modified by Altertoriel. (Ported to Psych 0.7.1b)
+    This is not from the D&B source code, it's completely made by me (Delta), and Modified by Altertoriel.
 **/
 class CharacterSelectionState extends MusicBeatState {
 	//["character name", [["form 1 name", 'character json name'], ["form 2 name (can add more than just one)", 'character json name 2']], true], 
-    public static var characterData:Array<Dynamic> = [
+    static var characterData:Array<Dynamic> = [
         ["Boyfriend", [["Boyfriend", 'bf'], ["Boyfriend (Pixel)", 'bf-pixel'], ["Boyfriend (Christmas)", 'bf-christmas'], ["Boyfriend and Girlfriend", 'bf-holding-gf']], false],
         ["Ollie", [["Baby Shark Ollie", 'bs'], ["Baby Shark Ollie (Pixel)", 'bs-pixel'], ["Baby Shark Ollie And Altertoriel", 'alter-holding-bs']], false], 
 		["Dave", [["Dave", 'dave-playable']], false],
@@ -19,17 +18,11 @@ class CharacterSelectionState extends MusicBeatState {
     ];
 
 	var boyfriendGroup:FlxSpriteGroup;
-	var gfGroup:FlxSpriteGroup;
-
 	var boyfriend:Character;
-	var gf:Character;
 
 	public static var characterFile:String = 'bf';
 
-	var BF_X:Float = 770;
-	var BF_Y:Float = 100;
-	var GF_X:Float = 400;
-	var GF_Y:Float = 130;
+	final BF_POS:Array<Float> = [770, 100];
 
 	var curSelected:Int = 0;
 	var curSelectedForm:Int = 0;
@@ -44,9 +37,12 @@ class CharacterSelectionState extends MusicBeatState {
 	var camGame:FlxCamera;
 	var camHUD:FlxCamera;
 
+	var defaultCamZoom:Float = 1;
+
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Selecting Character'); #end
 
+		FlxG.fixedTimestep = false;
 		persistentUpdate = true;
 
 		camGame = initPsychCamera();
@@ -60,31 +56,24 @@ class CharacterSelectionState extends MusicBeatState {
 		var lastLoaded:String = Paths.currentLevel;
 		Paths.currentLevel = 'week1';
 		new states.stages.StageWeek1();
+		camGame.scroll.set(120, 130);
+		defaultCamZoom = .7;
 
 		camGame.zoom = .75;
 		camHUD.zoom = .75;
 
-		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
-		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
-
-		gf = new Character(0, 0, 'gf');
-		gf.x += gf.positionArray[0];
-		gf.y += gf.positionArray[1];
-		gf.scrollFactor.set(0.95, 0.95);
-		gf.danceEveryNumBeats = 2;
-		gfGroup.add(gf);
+		boyfriendGroup = new FlxSpriteGroup(BF_POS[0], BF_POS[1]);
 		
 		boyfriend = new Character(0, 0, 'bf', true);
 		boyfriend.x += boyfriend.positionArray[0];
 		boyfriend.y += boyfriend.positionArray[1];
 		boyfriendGroup.add(boyfriend);
 
-		add(gfGroup);
 		add(boyfriendGroup);
-
+		
 		var tutorialThing:FlxSprite = new FlxSprite(-125, -100).loadGraphic(Paths.image('charSelectGuide'));
 		tutorialThing.setGraphicSize(Std.int(tutorialThing.width * 1.25));
-		tutorialThing.antialiasing = true;
+		curText.scrollFactor.set();
 		tutorialThing.camera = camHUD;
 		add(tutorialThing);
 
@@ -127,7 +116,17 @@ class CharacterSelectionState extends MusicBeatState {
 		}
 	}
 
+	override public function beatHit() {
+		super.beatHit();
+		if (!entering && camGame.zoom < 1.35) camGame.zoom += .0075;
+	}
+
 	override function update(elapsed) {
+		Conductor.songPosition = FlxG.sound.music.time;
+		super.update(elapsed);
+
+		camGame.zoom = FlxMath.lerp(defaultCamZoom, camGame.zoom, Math.exp(-elapsed * 3.125));
+
 		if (FlxG.keys.justPressed.P && unlocked && !entering) {
 			previewMode = !previewMode;
 			checkPreview();
@@ -146,34 +145,33 @@ class CharacterSelectionState extends MusicBeatState {
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			MusicBeatState.switchState(new FreeplayState());
+			FlxG.switchState(() -> new FreeplayState());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		}
-		super.update(elapsed);
 	}
 
 	function changeCharacter(change:Int = 0, playSound:Bool = true) {
-		if (!entering) {
-			if (playSound) FlxG.sound.play(Paths.sound('scrollMenu'));
-			curSelectedForm = 0;
-            curSelected = FlxMath.wrap(curSelected + change, 0, characterData.length - 1);
-			var unlockedChrs:Array<String> = ClientPrefs.getPref('unlockedCharacters');
-			if (unlockedChrs.contains(characterData[curSelected][0]))
-				unlocked = true;
-			else unlocked = #if debug true #else false #end;
+		if (entering) return;
 
-			characterFile = characterData[curSelected][1][0][1];
+		if (playSound) FlxG.sound.play(Paths.sound('scrollMenu'));
+		curSelectedForm = 0;
+        curSelected = FlxMath.wrap(curSelected + change, 0, characterData.length - 1);
+		var unlockedChrs:Array<String> = ClientPrefs.getPref('unlockedCharacters');
+		if (unlockedChrs.contains(characterData[curSelected][0]))
+			unlocked = true;
+		else unlocked = #if debug true #else false #end;
 
-			if (unlocked) {
-				curText.text = characterData[curSelected][1][0][0];
-				reloadCharacter();
-			} else if (!characterData[curSelected][3]) {
-				curText.text = "???";
-				reloadCharacter();
-			} else changeCharacter(change, false);
+		characterFile = characterData[curSelected][1][0][1];
 
-			curText.screenCenter(X);
-		}
+		if (unlocked) {
+			curText.text = characterData[curSelected][1][0][0];
+			reloadCharacter();
+		} else if (!characterData[curSelected][3]) {
+			curText.text = "???";
+			reloadCharacter();
+		} else changeCharacter(change, false);
+
+		curText.screenCenter(X);
 	}
 
 	function changeForm(change:Int) {
@@ -193,14 +191,14 @@ class CharacterSelectionState extends MusicBeatState {
 		boyfriend.destroy();
 		boyfriendGroup.remove(boyfriend, true);
 		boyfriend = new Character(0, 0, characterFile, true);
-		boyfriend.updateHitbox();
+		boyfriend.x += boyfriend.positionArray[0];
+		boyfriend.y += boyfriend.positionArray[1];
 		boyfriend.dance();
 		boyfriendGroup.add(boyfriend);
 
 		curIcon.changeIcon(boyfriend.healthIcon);
 		curIcon.y = (curText.y + curIcon.height) - 100;
 
-		boyfriend.screenCenter().y += 250;
 		if (!unlocked) boyfriend.color = FlxColor.BLACK;
 		curIcon.color = unlocked ? FlxColor.WHITE : FlxColor.BLACK;
 	}
@@ -215,7 +213,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 		FlxG.sound.playMusic(Paths.music('gameOverEnd'));
 		new FlxTimer().start(1.5, (tmr:FlxTimer) -> {
-			PlayState.SONG.gfVersion = switch (characterFile) {
+			PlayState.SONG.gfVersion = switch(characterFile) {
 				case 'bf-pixel': 'gf-pixel';
 				case 'bf-christmas': 'gf-christmas';
 				case 'bs': 'gfbf';
@@ -225,7 +223,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 			PlayState.SONG.player1 = characterFile;
             LoadingState.prepareToSong();
-			LoadingState.loadAndSwitchState(new PlayState());
+			LoadingState.loadAndSwitchState(() -> new PlayState());
 		});
 	}
 }
