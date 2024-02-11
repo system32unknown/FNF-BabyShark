@@ -10,8 +10,8 @@ class Difficulty {
 	inline public static function getFilePath(num:Null<Int> = null) {
 		if(num == null) num = PlayState.storyDifficulty;
 
-		var fileSuffix:String = list[num];
-		if(fileSuffix != defaultDifficulty)
+		var fileSuffix:String = list[num].toLowerCase();
+		if(fileSuffix != defaultDifficulty.toLowerCase())
 			fileSuffix = '-$fileSuffix';
 		else fileSuffix = '';
 

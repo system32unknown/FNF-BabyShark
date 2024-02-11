@@ -73,7 +73,7 @@ class CharacterSelectionState extends MusicBeatState {
 		
 		var tutorialThing:FlxSprite = new FlxSprite(-125, -100).loadGraphic(Paths.image('charSelectGuide'));
 		tutorialThing.setGraphicSize(Std.int(tutorialThing.width * 1.25));
-		curText.scrollFactor.set();
+		tutorialThing.scrollFactor.set();
 		tutorialThing.camera = camHUD;
 		add(tutorialThing);
 

@@ -2076,7 +2076,7 @@ class PlayState extends MusicBeatState {
 
 	var scoreSeparator:String = "|";
 	function getScoreText() {
-		var tempText:String = '${!ClientPrefs.getPref('ShowNPS') ? '' : 'NPS:$nps / $maxNPS $scoreSeparator '}Score:$songScore ';
+		var tempText:String = '${!ClientPrefs.getPref('ShowNPS') ? '' : 'NPS:$nps/$maxNPS $scoreSeparator '}Score:$songScore ';
 		if (!(cpuControlled || instakillOnMiss)) tempText += '$scoreSeparator Breaks:$songMisses ';
 		tempText += '$scoreSeparator Acc:$accuracy% •' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
 		return tempText;
