@@ -77,6 +77,7 @@ class StageData {
 			case 'pico' | 'blammed' | 'philly' | 'philly-nice': 'philly';
 			case 'milf' | 'satin-panties' | 'high': 'limo';
 			case 'cocoa' | 'eggnog': 'mall';
+			case 'home' | 'swirling' | 'dimensional': 'house';
 			default: 'stage';
 		}
 	}

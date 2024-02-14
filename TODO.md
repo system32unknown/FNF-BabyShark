@@ -2,6 +2,7 @@
 
 ### `v1.1.5a`
 - [ ] Bug Fix / Tweaks
+    - [ ] Fix Freeplay No Vocals on Musicplayer
 
 ### Future versions
 - [ ] Remake Charcter / New Charcters

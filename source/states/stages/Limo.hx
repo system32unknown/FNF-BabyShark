@@ -26,10 +26,8 @@ class Limo extends BaseStage
 	var grpLimoParticles:FlxTypedGroup<BGSprite>;
 	var dancersDiff:Float = 320;
 
-	override function create()
-	{
-		var skyBG:BGSprite = new BGSprite('limo/limoSunset', -120, -50, .1, .1);
-		add(skyBG);
+	override function create() {
+		add(new BGSprite('limo/limoSunset', -120, -50, .1, .1));
 
 		if(!lowQuality) {
 			limoMetalPole = new BGSprite('gore/metalPole', -500, 220, 0.4, 0.4);

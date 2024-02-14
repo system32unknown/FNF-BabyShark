@@ -13,15 +13,17 @@
 	"camera_girlfriend": [0, 0],
 	"camera_speed": 1,
 
-	"images":
-	[
-		"stageback",
-		"stagefront",
-		"stagecurtains",
-		"stage_light"
-	],
-	"images_low": [
-		"stageback",
-		"stagefront"
-	]
+	"preload": {
+		"images":
+		[
+			"stageback",
+			"stagefront",
+			"stagecurtains",
+			"stage_light"
+		],
+		"images_low": [
+			"stageback",
+			"stagefront"
+		]
+	}
 }

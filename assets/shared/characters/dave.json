@@ -1,121 +1,121 @@
 {
 	"animations": [
 		{
-			"loop": false,
 			"offsets": [
 				0,
 				0
 			],
-			"anim": "idle",
+			"loop": false,
 			"fps": 24,
-			"name": "idle",
-			"indices": []
+			"anim": "idle",
+			"indices": [],
+			"name": "idle"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				8,
 				11
 			],
-			"anim": "hey",
+			"loop": false,
 			"fps": 24,
-			"name": "hey",
-			"indices": []
+			"anim": "hey",
+			"indices": [],
+			"name": "hey"
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-30,
 				18
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singDOWN",
-			"indices": [],
-			"name": "down0"
+			"fps": 24,
+			"name": "down0",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				2,
 				14
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singLEFT",
-			"indices": [],
-			"name": "left0"
+			"fps": 24,
+			"name": "left0",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-15,
 				22
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singUP",
-			"indices": [],
-			"name": "up0"
+			"fps": 24,
+			"name": "up0",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-29,
 				3
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singRIGHT",
-			"indices": [],
-			"name": "right0"
+			"fps": 24,
+			"name": "right0",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				5,
 				14
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singLEFTmiss",
-			"indices": [],
-			"name": "left miss0"
+			"fps": 24,
+			"name": "left miss0",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-26,
 				13
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singDOWNmiss",
-			"indices": [],
-			"name": "down miss0"
+			"fps": 24,
+			"name": "down miss0",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-16,
 				23
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singUPmiss",
-			"indices": [],
-			"name": "up miss0"
+			"fps": 24,
+			"name": "up miss0",
+			"indices": []
 		},
 		{
+			"loop": false,
 			"offsets": [
 				-40,
 				1
 			],
-			"loop": false,
-			"fps": 24,
 			"anim": "singRIGHTmiss",
-			"indices": [],
-			"name": "right miss0"
+			"fps": 24,
+			"name": "right miss0",
+			"indices": []
 		}
 	],
 	"no_antialiasing": false,
 	"image": "characters/dave_sheet",
 	"position": [
 		0,
-		-170
+		190
 	],
 	"healthicon": "dave",
 	"flip_x": false,
@@ -129,5 +129,6 @@
 		0
 	],
 	"sing_duration": 4,
-	"scale": 1
+	"scale": 1,
+	"_editor_isPlayer": false
 }
