@@ -20,9 +20,13 @@ class CharacterSelectionState extends MusicBeatState {
 	var boyfriendGroup:FlxSpriteGroup;
 	var boyfriend:Character;
 
+	var gfGroup:FlxSpriteGroup;
+	var gf:Character;
+
 	public static var characterFile:String = 'bf';
 
 	final BF_POS:Array<Float> = [770, 100];
+	final GF_POS:Array<Float> = [400, 130];
 
 	var curSelected:Int = 0;
 	var curSelectedForm:Int = 0;
@@ -36,8 +40,6 @@ class CharacterSelectionState extends MusicBeatState {
 
 	var camGame:FlxCamera;
 	var camHUD:FlxCamera;
-
-	var defaultCamZoom:Float = 1;
 
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Selecting Character'); #end
@@ -57,18 +59,26 @@ class CharacterSelectionState extends MusicBeatState {
 		Paths.currentLevel = 'week1';
 		new states.stages.StageWeek1();
 		camGame.scroll.set(120, 130);
-		defaultCamZoom = .7;
 
 		camGame.zoom = .75;
 		camHUD.zoom = .75;
 
+		gfGroup = new FlxSpriteGroup(GF_POS[0], GF_POS[1]);
 		boyfriendGroup = new FlxSpriteGroup(BF_POS[0], BF_POS[1]);
 		
+		gf = new Character(0, 0, 'gf');
+		gf.x += gf.positionArray[0];
+		gf.y += gf.positionArray[1];
+		gf.scrollFactor.set(.95, .95);
+		gf.danceEveryNumBeats = 2;
+		gfGroup.add(gf);
+
 		boyfriend = new Character(0, 0, 'bf', true);
 		boyfriend.x += boyfriend.positionArray[0];
 		boyfriend.y += boyfriend.positionArray[1];
 		boyfriendGroup.add(boyfriend);
 
+		add(gfGroup);
 		add(boyfriendGroup);
 		
 		var tutorialThing:FlxSprite = new FlxSprite(-125, -100).loadGraphic(Paths.image('charSelectGuide'));
@@ -118,14 +128,18 @@ class CharacterSelectionState extends MusicBeatState {
 
 	override public function beatHit() {
 		super.beatHit();
-		if (!entering && camGame.zoom < 1.35) camGame.zoom += .0075;
+		if (!entering) {
+			if (camGame.zoom < 1.35) camGame.zoom += .0075;
+			if (curBeat % 2 == 0) boyfriend.dance();
+			gf.dance();
+		}
 	}
 
 	override function update(elapsed) {
 		Conductor.songPosition = FlxG.sound.music.time;
 		super.update(elapsed);
 
-		camGame.zoom = FlxMath.lerp(defaultCamZoom, camGame.zoom, Math.exp(-elapsed * 3.125));
+		camGame.zoom = FlxMath.lerp(.7, camGame.zoom, Math.exp(-elapsed * 3.125));
 
 		if (FlxG.keys.justPressed.P && unlocked && !entering) {
 			previewMode = !previewMode;
@@ -210,6 +224,9 @@ class CharacterSelectionState extends MusicBeatState {
 		if (boyfriend.animOffsets.exists('hey') && boyfriend.animation.getByName('hey') != null)
 			boyfriend.playAnim('hey');
 		else boyfriend.playAnim('singUP');
+
+		if (gf.animOffsets.exists('cheer') && gf.animation.getByName('cheer') != null)
+			gf.playAnim('cheer');
 
 		FlxG.sound.playMusic(Paths.music('gameOverEnd'));
 		new FlxTimer().start(1.5, (tmr:FlxTimer) -> {

@@ -38,9 +38,7 @@ class NoteOffsetState extends MusicBeatState {
 	var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
 
 	override public function create() {
-		#if DISCORD_ALLOWED
-		DiscordClient.changePresence('Adjusting Offsets and Combos');
-		#end
+		#if DISCORD_ALLOWED DiscordClient.changePresence('Adjusting Offsets and Combos'); #end
 
 		FlxG.fixedTimestep = false;
 		persistentUpdate = true;

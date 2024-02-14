@@ -2593,7 +2593,7 @@ class ChartingState extends MusicBeatState {
 			Logs.trace('ERROR! $e', ERROR);
 
 			var errorStr:String = e.toString();
-			if(errorStr.startsWith('[file_contents,assets/data/charts/')) errorStr = 'Missing file: ' + errorStr.substring(27, errorStr.length-1); //Missing chart
+			if(errorStr.startsWith('[file_contents,assets/data/charts/')) errorStr = 'Missing file: ' + errorStr.substring(27, errorStr.length - 1); //Missing chart
 			
 			if(missingText == null) {
 				missingText = new FlxText(50, 0, FlxG.width - 100, '', 24);

@@ -1479,7 +1479,7 @@ class PlayState extends MusicBeatState {
 				case "Psych":
 					var mult:Float = FlxMath.lerp(1, icon.scale.x, Math.exp(-elapsed * 9 * playbackRate));
 					icon.scale.set(mult, mult);
-				case "Dave": icon.setGraphicSize(Std.int(FlxMath.lerp(150, icon.width, .88)), Std.int(FlxMath.lerp(150, icon.height, .88)));
+				case "Dave" | "Purgatory": icon.setGraphicSize(Std.int(FlxMath.lerp(150, icon.width, .88)), Std.int(FlxMath.lerp(150, icon.height, .88)));
 			}
 			icon.updateHitbox();
 		}
@@ -2654,7 +2654,12 @@ class PlayState extends MusicBeatState {
 			case "Psych":
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
-			case "Dave":
+			case "Dave" | "Purgatory":
+				if (ClientPrefs.getPref('IconBounceType') == "Purgatory") {
+					FlxTween.angle(iconP1, -15, 0, Conductor.crochet / 1300 * gfSpeed, {ease: FlxEase.quadOut});
+					FlxTween.angle(iconP2, 15, 0, Conductor.crochet / 1300 * gfSpeed, {ease: FlxEase.quadOut});
+				}
+
 				var funny:Float = Math.max(Math.min(healthBar.bounded, 1.9), .1);
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));

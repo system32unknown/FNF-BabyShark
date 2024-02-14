@@ -68,10 +68,8 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		}
 
 		if (!dialogueEnded) {
-			bgFade.alpha += 0.5 * elapsed;
-
-			if (bgFade.alpha > 0.5)
-				bgFade.alpha = 0.5;
+			bgFade.alpha += .5 * elapsed;
+			if (bgFade.alpha > .5) bgFade.alpha = .5;
 
 			var ret:Dynamic = PlayState.instance.callOnScripts('onDialogueConfirm', null, false);
 			if ((confirmDialogue || Controls.instance.ACCEPT) && ret != LuaUtils.Function_Stop) {
@@ -312,8 +310,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		if (shouldBoxRecenter) updateBoxOffsets(box);
 	}
 
-	public static function updateBoxOffsets(box:FlxSprite):Void
-	{ // Had to make it static because of the editors
+	public static function updateBoxOffsets(box:FlxSprite):Void { // Had to make it static because of the editors
 		box.centerOffsets();
 		box.updateHitbox();
 
@@ -347,8 +344,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 	var dialogueCharacters:Array<DialogueCharacter> = [];
 	var lastCharacter:Int = -1;
 
-	function getCharacter(index:Int):Null<DialogueCharacter>
-	{
+	function getCharacter(index:Int):Null<DialogueCharacter> {
 		if (index < 0 || index >= dialogueCharacters.length)
 			return null;
 
@@ -414,7 +410,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		// If no animation is played
 		if (char.animation.curAnim == null) return;
 
-		var rate:Float = 24 - (((dialogue.speed - 0.05) / 5) * 480);
+		var rate:Float = 24 - (((dialogue.speed - .05) / 5) * 480);
 		char.animation.curAnim.frameRate = FlxMath.bound(rate, 12, 48); // [12; 48]
 	}
 
@@ -485,7 +481,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		}
 
 		currentCharAlpha -= 3 * elapsed;
-		if (currentCharAlpha < 0.00001) currentCharAlpha = 0.00001;
+		if (currentCharAlpha < .00001) currentCharAlpha = .00001;
 	}
 
 	// --- UI ---
