@@ -4,17 +4,19 @@ import objects.Character;
 import objects.HealthIcon;
 
 /**
-    This is not from the D&B source code, it's completely made by me (Delta), and Modified by Altertoriel.
+    This is not from the D&B source code, it's completely made by LatestRelic825, Modified by Altertoriel.
 **/
 class CharacterSelectionState extends MusicBeatState {
 	//["character name", [["form 1 name", 'character json name'], ["form 2 name (can add more than just one)", 'character json name 2']], true], 
     static var characterData:Array<Dynamic> = [
         ["Boyfriend", [["Boyfriend", 'bf'], ["Boyfriend (Pixel)", 'bf-pixel'], ["Boyfriend (Christmas)", 'bf-christmas'], ["Boyfriend and Girlfriend", 'bf-holding-gf']], false],
         ["Ollie", [["Baby Shark Ollie", 'bs'], ["Baby Shark Ollie (Pixel)", 'bs-pixel'], ["Baby Shark Ollie And Altertoriel", 'alter-holding-bs']], false], 
-		["Dave", [["Dave", 'dave-playable']], false],
-		["Bambi", [["Bambi", 'bambi-playable']], false],
+		["Dave", [["Dave", 'dave-player']], false],
+		["Bambi", [["Bambi", 'bambi-player']], false],
 		["Tristan", [["Tristan", 'tristan'], ["Golden Tristan", 'golden-tristan']], false],
-		["Expunged", [["Expunged (Cheating)", 'cheating-expunged'], ["Expunged (Unfair)", 'unfair-expunged'], ["True Expunged", 'true-Expunged']], false],
+		["Expunged", [["Expunged (Cheating)", 'cheating-expunged'], ["Expunged (Unfair)", 'unfair-player'], ["True Expunged", 'true-expunged-player']], false],
+		["Pico", [["Pico", 'pico-player']], false],
+		["Nate", [["Nate", 'nate-player']], false],
     ];
 
 	var boyfriendGroup:FlxSpriteGroup;
@@ -170,6 +172,7 @@ class CharacterSelectionState extends MusicBeatState {
 		if (playSound) FlxG.sound.play(Paths.sound('scrollMenu'));
 		curSelectedForm = 0;
         curSelected = FlxMath.wrap(curSelected + change, 0, characterData.length - 1);
+
 		var unlockedChrs:Array<String> = ClientPrefs.getPref('unlockedCharacters');
 		if (unlockedChrs.contains(characterData[curSelected][0]))
 			unlocked = true;
@@ -233,8 +236,8 @@ class CharacterSelectionState extends MusicBeatState {
 			PlayState.SONG.gfVersion = switch(characterFile) {
 				case 'bf-pixel': 'gf-pixel';
 				case 'bf-christmas': 'gf-christmas';
-				case 'bs': 'gfbf';
-				case 'dave-playable' | 'bambi-playable' | 'bf-holding-gf': 'speaker';
+				case 'bs' | 'pico-player' | 'nate-player': 'gfbf';
+				case 'bf-holding-gf': 'speaker';
 				default: PlayState.SONG.gfVersion;
 			}
 

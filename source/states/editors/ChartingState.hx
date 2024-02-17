@@ -34,7 +34,6 @@ import haxe.io.Path;
 import haxe.Json;
 
 class ChartingState extends MusicBeatState {
-	var songStarted:Bool = false;
 	public static var noteTypeList:Array<String> = [ //Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
 		'',
 		'Alt Animation',
@@ -1480,7 +1479,6 @@ class ChartingState extends MusicBeatState {
 			strumLineNotes.members[i].y = strumLine.y;
 		}
 
-		FlxG.mouse.visible = !songStarted;
 		camPos.y = strumLine.y;
 		if (!disableAutoScrolling.checked) {
 			if (Math.ceil(strumLine.y) >= gridBG.height) {
@@ -1587,7 +1585,7 @@ class ChartingState extends MusicBeatState {
 				PlayState.chartingMode = false;
 				FlxG.switchState(() -> new MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-				songStarted = true;
+				FlxG.mouse.visible = false;
 				return;
 			}
 
@@ -1867,7 +1865,7 @@ class ChartingState extends MusicBeatState {
 
 	function startSong() {
 		autosaveSong();
-		songStarted = true;
+		FlxG.mouse.visible = false;
 		PlayState.SONG = _song;
 		FlxG.sound.music.stop();
 		if(vocals != null) vocals.stop();
