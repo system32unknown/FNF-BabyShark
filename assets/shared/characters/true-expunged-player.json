@@ -57,12 +57,12 @@
 		}
 	],
 	"no_antialiasing": true,
-	"image": "characters/expungedfinal",
+	"image": "characters/ExpungedFinal",
 	"position": [
 		100,
 		-300
 	],
-	"healthicon": "expunged",
+	"healthicon": "true_expunged",
 	"flip_x": false,
 	"healthbar_colors": [
 		9,

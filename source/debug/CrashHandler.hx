@@ -7,7 +7,7 @@ import openfl.errors.Error;
 
 class CrashHandler {
 	public static function init() {
-		openfl.Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
+		FlxG.stage.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#if cpp untyped __global__.__hxcpp_set_critical_error_handler(onError); #end
 	}
 

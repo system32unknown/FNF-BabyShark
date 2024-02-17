@@ -160,21 +160,21 @@ class Paths {
 	inline static public function json(key:String, ?library:String)
 		return getPath('data/$key.json', TEXT, library);
 
-	#if (!MODS_ALLOWED) inline #end static public function video(key:String) {
+	static public function video(key:String) {
 		#if MODS_ALLOWED
 		var file:String = modsVideo(key);
 		if (FileSystem.exists(file)) return file;
 		#end
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
-	#if (!MODS_ALLOWED) inline #end static public function sound(key:String, ?library:String):Sound
+	static public function sound(key:String, ?library:String):Sound
 		return returnSound('sounds', key, library);
 
-	#if (!MODS_ALLOWED) inline #end static public function soundRandom(key:String, min:Int, max:Int, ?library:String):Sound
+	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String):Sound
 		return sound(key + FlxG.random.int(min, max), library);
 
 	public static var streamMusic:Bool = false;
-	#if (!MODS_ALLOWED) inline #end static public function music(key:String, ?library:String, ?stream:Bool):Sound
+	inline static public function music(key:String, ?library:String, ?stream:Bool):Sound
 		return returnSound('music', key, library, stream || streamMusic);
 
 	inline static public function inst(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
@@ -183,7 +183,7 @@ class Paths {
 	inline static public function voices(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
 		return returnSound('', '${formatToSongPath(song)}/Voices', 'songs', !forceNoStream && (stream || streamMusic));
 
-	#if (!MODS_ALLOWED) inline #end static public function image(key:String, ?library:String):FlxGraphic
+	static public function image(key:String, ?library:String):FlxGraphic
 		return returnGraphic(key, library);
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false, ?absolute:Bool = false):String {
@@ -337,16 +337,15 @@ class Paths {
 			localTrackedAssets.push(path);
 
 			var bitmap:BitmapData = _regBitmap(path, hardwareCache, modExists);
-			if (bitmap != null) graph = cacheBitmap(path, bitmap);
-			if (graph != null) return graph;
+			if (bitmap != null) return cacheBitmap(path, bitmap);
 		}
 
 		FlxG.log.warn('Could not find image with key: "$key"' + (library == null ? "" : 'in library: "$library"'));
 		return null;
 	}
 
-	static public function cacheBitmap(file:String, ?bitmap:BitmapData = null) {
-		if(bitmap == null) {
+	public static function cacheBitmap(file:String, ?bitmap:BitmapData) {
+		if (bitmap == null) {
 			#if MODS_ALLOWED
 			if (FileSystem.exists(file))
 				bitmap = BitmapData.fromFile(file);
@@ -357,12 +356,12 @@ class Paths {
 			if(bitmap == null) return null;
 		}
 
+		var graph:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
+		graph.persist = true;
+		graph.destroyOnNoUse = false;
+		currentTrackedAssets.set(file, graph);
 		localTrackedAssets.push(file);
-		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
-		newGraphic.persist = true;
-		newGraphic.destroyOnNoUse = false;
-		currentTrackedAssets.set(file, newGraphic);
-		return newGraphic;
+		return graph;
 	}
 	
 	static function _regBitmap(key:String, hardware:Bool, file:Bool):BitmapData {
@@ -394,7 +393,7 @@ class Paths {
 		#end
 		var uwu:String = folder + (modExists ? path : track);
 
-		#if (!MODS_ALLOWED) if (OpenFlAssets.exists(uwu, SOUND)) {#end
+		#if !MODS_ALLOWED if (OpenFlAssets.exists(uwu, SOUND)) {#end
 			localTrackedAssets.push(track);
 			var sound:Sound = currentTrackedSounds.get(track);
 
@@ -405,7 +404,7 @@ class Paths {
 			}
 			if (sound == null) currentTrackedSounds.set(track, sound = _regSound(uwu, stream, #if MODS_ALLOWED true #else modExists #end));
 			if (sound != null) return sound;
-		#if (!MODS_ALLOWED) } #end
+		#if !MODS_ALLOWED } #end
 
 		FlxG.log.warn('Could not find sound with key: "$key"' + (library == null ? "" : ' in library: "$library"'));
 		return null;
