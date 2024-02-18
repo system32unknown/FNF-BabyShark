@@ -342,10 +342,7 @@ class FreeplayState extends MusicBeatState {
 			if (FlxG.keys.pressed.Z) {
 				LoadingState.prepareToSong();
 				LoadingState.loadAndSwitchState(() -> new PlayState());
-			} else {
-				CharacterSelectionState.characterFile = 'bf';
-				FlxG.switchState(() -> new CharacterSelectionState());
-			}
+			} else FlxG.switchState(() -> new CharacterSelectionState());
 
 			destroyFreeplayVocals();
 			#if MODS_ALLOWED DiscordClient.loadModRPC(); #end

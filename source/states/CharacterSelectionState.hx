@@ -3,24 +3,47 @@ package states;
 import objects.Character;
 import objects.HealthIcon;
 
+class CharacterInSelect {
+	public var name:String;
+	public var forms:Array<CharacterForm>;
+
+	public function new(name:String, forms:Array<CharacterForm>) {
+		this.name = name;
+		this.forms = forms;
+	}
+}
+
+class CharacterForm {
+	public var name:String;
+	public var polishedName:String;
+
+	public function new(name:String, polishedName:String) {
+		this.name = name;
+		this.polishedName = polishedName;
+	}
+}
+
 /**
     This is not from the D&B source code, it's completely made by LatestRelic825, Modified by Altertoriel.
 **/
 class CharacterSelectionState extends MusicBeatState {
-	//["character name", [["form 1 name", 'character json name'], ["form 2 name (can add more than just one)", 'character json name 2']], true], 
-    static var characterData:Array<Dynamic> = [
-        ["Boyfriend", [["Boyfriend", 'bf'], ["Boyfriend (Pixel)", 'bf-pixel'], ["Boyfriend (Christmas)", 'bf-christmas'], ["Boyfriend and Girlfriend", 'bf-holding-gf']], false],
-        ["Ollie", [["Baby Shark Ollie", 'bs'], ["Baby Shark Ollie (Pixel)", 'bs-pixel'], ["Baby Shark Ollie And Altertoriel", 'alter-holding-bs']], false], 
-		["Dave", [["Dave", 'dave-player']], false],
-		["Bambi", [["Bambi", 'bambi-player']], false],
-		["Tristan", [["Tristan", 'tristan'], ["Golden Tristan", 'golden-tristan']], false],
-		["Expunged", [["Expunged (Cheating)", 'cheating-expunged'], ["Expunged (Unfair)", 'unfair-player'], ["True Expunged", 'true-expunged-player']], false],
-		["Pico", [["Pico", 'pico-player']], false],
-		["Nate", [["Nate", 'nate-player']], false],
-    ];
+	var characters:Array<CharacterInSelect> = [
+		new CharacterInSelect('bf', [new CharacterForm('bf', 'Boyfriend'), new CharacterForm('bf-pixel', 'Boyfriend (Pixel)'), new CharacterForm('bf-christmas', 'Boyfriend (Christmas)'), new CharacterForm('bf-holding-gf', 'Boyfriend and Girlfriend')]),
+		new CharacterInSelect('bs', [new CharacterForm('bs', 'Baby Shark Ollie'), new CharacterForm('bs-pixel', 'Baby Shark Ollie (Pixel)'), new CharacterForm('alter-holding-bs', 'Baby Shark Ollie And Altertoriel')]),
+		new CharacterInSelect('dave', [new CharacterForm('dave-player', 'Dave'),]),
+		new CharacterInSelect('bambi', [new CharacterForm('bambi-player', 'Bambi'),]),
+		new CharacterInSelect('tristan', [new CharacterForm('tristan', 'Tristan'), new CharacterForm('tristan-golden', 'Golden Tristan')]),
+		new CharacterInSelect('expunged', [new CharacterForm('cheating-player', 'Expunged (Cheating)'), new CharacterForm('unfair-player', 'Expunged (Unfair)'), new CharacterForm('true-expunged-player', 'Expunged (True form)'),]),
+		new CharacterInSelect('pico-player', [new CharacterForm('pico-player', 'Pico'),]),
+		new CharacterInSelect('nate-player', [new CharacterForm('nate-player', 'Nate'),]),
+	];
+	static var unlockedChrs:Array<String>;
+	
+	var current:Int = 0;
+	var curForm:Int = 0;
 
 	var boyfriendGroup:FlxSpriteGroup;
-	var boyfriend:Character;
+	var char:Character;
 
 	var gfGroup:FlxSpriteGroup;
 	var gf:Character;
@@ -30,21 +53,23 @@ class CharacterSelectionState extends MusicBeatState {
 	final BF_POS:Array<Float> = [770, 100];
 	final GF_POS:Array<Float> = [400, 130];
 
-	var curSelected:Int = 0;
-	var curSelectedForm:Int = 0;
-	var curText:FlxText;
+	var characterText:FlxText;
 	var curIcon:HealthIcon;
 	var controlsText:FlxText;
-	var entering:Bool = false;
 
 	var previewMode:Bool = false;
-	var unlocked:Bool = true;
+	var selectedCharacter:Bool = false;
+	var pressedTheFunny:Bool = false;
 
 	var camGame:FlxCamera;
 	var camHUD:FlxCamera;
 
+	var currentSelectedCharacter:CharacterInSelect;
+	final singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Selecting Character'); #end
+		unlockedChrs = ClientPrefs.getPref('unlockedCharacters');
 
 		FlxG.fixedTimestep = false;
 		persistentUpdate = true;
@@ -75,10 +100,10 @@ class CharacterSelectionState extends MusicBeatState {
 		gf.danceEveryNumBeats = 2;
 		gfGroup.add(gf);
 
-		boyfriend = new Character(0, 0, 'bf', true);
-		boyfriend.x += boyfriend.positionArray[0];
-		boyfriend.y += boyfriend.positionArray[1];
-		boyfriendGroup.add(boyfriend);
+		char = new Character(0, 0, 'bf', true);
+		char.x += char.positionArray[0];
+		char.y += char.positionArray[1];
+		boyfriendGroup.add(char);
 
 		add(gfGroup);
 		add(boyfriendGroup);
@@ -89,13 +114,13 @@ class CharacterSelectionState extends MusicBeatState {
 		tutorialThing.camera = camHUD;
 		add(tutorialThing);
 
-		curText = new FlxText(0, -100, 0, characterData[curSelected][1][0][0], 50);
-		curText.setFormat(Paths.font("comic.ttf"), 50, FlxColor.WHITE, CENTER);
-		curText.setBorderStyle(OUTLINE, FlxColor.BLACK, 5);
-		curText.camera = camHUD;
-		curText.scrollFactor.set();
-		curText.screenCenter(X);
-		add(curText);
+		characterText = new FlxText(0, -100, 0, "Boyfriend", 50);
+		characterText.setFormat(Paths.font("comic.ttf"), 50, FlxColor.WHITE, CENTER);
+		characterText.setBorderStyle(OUTLINE, FlxColor.BLACK, 5);
+		characterText.camera = camHUD;
+		characterText.scrollFactor.set();
+		characterText.screenCenter(X);
+		add(characterText);
 
 		controlsText = new FlxText(-125, 125, 0, 'Press P to enter preview mode.', 20);
 		controlsText.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -103,13 +128,15 @@ class CharacterSelectionState extends MusicBeatState {
 		controlsText.camera = camHUD;
 		add(controlsText);
 
-		curIcon = new HealthIcon(boyfriend.healthIcon, true);
+		curIcon = new HealthIcon(char.healthIcon, true);
 		curIcon.scrollFactor.set();
-		curIcon.screenCenter(X).y = (curText.y + curIcon.height) - 100;
+		curIcon.screenCenter(X);
 		curIcon.camera = camHUD;
+		updateIconPosition();
 		add(curIcon);
 
-		changeCharacter();
+		if (unlockedChrs == null) currentSelectedCharacter = characters[current];
+
         Paths.currentLevel = lastLoaded;
 
 		Conductor.usePlayState = false;
@@ -124,39 +151,74 @@ class CharacterSelectionState extends MusicBeatState {
 		if (previewMode) controlsText.text = "PREVIEW MODE\nPress I to play idle animation.\nPress your controls to play an animation.\n";
 		else {
 			controlsText.text = "Press P to enter preview mode.";
-			boyfriend.playAnim('idle');
+			char.playAnim('idle');
 		}
 	}
 
 	override public function beatHit() {
 		super.beatHit();
-		if (!entering) {
+		if (!selectedCharacter) {
 			if (camGame.zoom < 1.35) camGame.zoom += .0075;
-			if (curBeat % 2 == 0) boyfriend.dance();
+			if (curBeat % 2 == 0 && char != null) char.dance();
 			gf.dance();
 		}
 	}
 
 	override function update(elapsed) {
 		Conductor.songPosition = FlxG.sound.music.time;
+		var controlSet:Array<Bool> = [controls.NOTE_LEFT_P, controls.NOTE_DOWN_P, controls.NOTE_UP_P, controls.NOTE_RIGHT_P];
 		super.update(elapsed);
 
 		camGame.zoom = FlxMath.lerp(.7, camGame.zoom, Math.exp(-elapsed * 3.125));
 
-		if (FlxG.keys.justPressed.P && unlocked && !entering) {
+		for (i in 0...controlSet.length) {
+			if (controlSet[i] && !pressedTheFunny && char.animOffsets.exists(singAnimations[i])) {
+				char.playAnim(singAnimations[i], true);
+			}
+		}
+
+		if (controls.ACCEPT) {
+			if (isLocked(characters[current].forms[curForm].name)) {
+				FlxG.camera.shake(.05, .1);
+				FlxG.sound.play(Paths.sound('badnoise1'), .9);
+				return;
+			}
+
+			if (pressedTheFunny) return;
+			else pressedTheFunny = true;
+
+			selectedCharacter = true;
+			if (char.animOffsets.exists('hey') && char.animation.getByName('hey') != null)
+				char.playAnim('hey', true);
+			else char.playAnim('singUP', true);
+			if (gf.animOffsets.exists('cheer') && gf.animation.getByName('cheer') != null)
+				gf.playAnim('cheer', true);
+
+			FlxG.sound.playMusic(Paths.music('gameOverEnd'));
+
+			new FlxTimer().start(1.9, endIt);
+		}
+
+		if (FlxG.keys.justPressed.P && !selectedCharacter) {
 			previewMode = !previewMode;
 			checkPreview();
 		}
-		if (!previewMode) {
-			if (controls.UI_RIGHT_P || controls.UI_LEFT_P) changeCharacter(controls.UI_RIGHT_P ? 1 : -1);
-			if ((controls.UI_DOWN_P || controls.UI_UP_P) && unlocked) changeForm(controls.UI_DOWN_P ? 1 : -1);
-			if (controls.ACCEPT && unlocked) acceptCharacter();
-		} else {
-			if (controls.NOTE_LEFT_P) if (boyfriend.animOffsets.exists('singLEFT')) boyfriend.playAnim('singLEFT');
-			if (controls.NOTE_DOWN_P) if (boyfriend.animOffsets.exists('singDOWN')) boyfriend.playAnim('singDOWN');
-			if (controls.NOTE_UP_P) if (boyfriend.animOffsets.exists('singUP')) boyfriend.playAnim('singUP');
-			if (controls.NOTE_RIGHT_P) if (boyfriend.animOffsets.exists('singRIGHT')) boyfriend.playAnim('singRIGHT');
-			if (FlxG.keys.justPressed.I) boyfriend.playAnim('idle');
+		if (!selectedCharacter) {
+			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
+				curForm = 0;
+				current = FlxMath.wrap(current += (controls.UI_LEFT_P ? -1 : 1), 0, characters.length - 1);
+				UpdateBF();
+			}
+
+			if (controls.UI_DOWN_P || controls.UI_UP_P) {
+				curForm = FlxMath.wrap(curForm += (controls.UI_DOWN_P ? -1 : 1), 0, characters[current].forms.length - 1);
+				UpdateBF();
+			}
+	
+			if (controls.RESET) {
+				reset();
+				FlxG.resetState();
+			}
 		}
 
 		if (controls.BACK) {
@@ -166,140 +228,62 @@ class CharacterSelectionState extends MusicBeatState {
 		}
 	}
 
-	function changeCharacter(change:Int = 0, playSound:Bool = true) {
-		if (entering) return;
-
-		if (playSound) FlxG.sound.play(Paths.sound('scrollMenu'));
-		curSelectedForm = 0;
-        curSelected = FlxMath.wrap(curSelected + change, 0, characterData.length - 1);
-
-		var unlockedChrs:Array<String> = ClientPrefs.getPref('unlockedCharacters');
-		if (unlockedChrs.contains(characterData[curSelected][0]))
-			unlocked = true;
-		else unlocked = #if debug true #else false #end;
-
-		characterFile = characterData[curSelected][1][0][1];
-
-		if (unlocked) {
-			curText.text = characterData[curSelected][1][0][0];
-			reloadCharacter();
-		} else if (!characterData[curSelected][3]) {
-			curText.text = "???";
-			reloadCharacter();
-		} else changeCharacter(change, false);
-
-		curText.screenCenter(X);
+	public static function unlockCharacter(character:String, save:Bool = false) {
+		if (!unlockedChrs.contains(character)) unlockedChrs.push(character);
+		ClientPrefs.prefs.set('unlockedCharacters', unlockedChrs);
+		if (save) ClientPrefs.saveSettings();
 	}
 
-	function changeForm(change:Int) {
-		var chrData:Array<Array<String>> = characterData[curSelected][1];
-		if (!entering && chrData.length >= 2) {
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-			curSelectedForm = FlxMath.wrap(curSelectedForm + change, 0, chrData.length - 1);
-
-			curText.text = chrData[curSelectedForm][0];
-			characterFile = chrData[curSelectedForm][1];
-			reloadCharacter();
-			curText.screenCenter(X);
-		}
+	public static function isLocked(character:String):Bool {
+		return !unlockedChrs.contains(character);
 	}
 
-	function reloadCharacter() {
-		boyfriend.destroy();
-		boyfriendGroup.remove(boyfriend, true);
-		boyfriend = new Character(0, 0, characterFile, true);
-		boyfriend.x += boyfriend.positionArray[0];
-		boyfriend.y += boyfriend.positionArray[1];
-		boyfriend.dance();
-		boyfriendGroup.add(boyfriend);
-
-		curIcon.changeIcon(boyfriend.healthIcon);
-		curIcon.y = (curText.y + curIcon.height) - 100;
-
-		if (!unlocked) boyfriend.color = FlxColor.BLACK;
-		curIcon.color = unlocked ? FlxColor.WHITE : FlxColor.BLACK;
-	}
-
-	function acceptCharacter() {
-		if (entering) return;
-
-		entering = true;
-		if (boyfriend.animOffsets.exists('hey') && boyfriend.animation.getByName('hey') != null)
-			boyfriend.playAnim('hey');
-		else boyfriend.playAnim('singUP');
-
-		if (gf.animOffsets.exists('cheer') && gf.animation.getByName('cheer') != null)
-			gf.playAnim('cheer');
-
-		FlxG.sound.playMusic(Paths.music('gameOverEnd'));
-		new FlxTimer().start(1.5, (tmr:FlxTimer) -> {
-			PlayState.SONG.gfVersion = switch(characterFile) {
-				case 'bf-pixel': 'gf-pixel';
-				case 'bf-christmas': 'gf-christmas';
-				case 'bs' | 'pico-player' | 'nate-player': 'gfbf';
-				case 'bf-holding-gf': 'speaker';
-				default: PlayState.SONG.gfVersion;
-			}
-
-			PlayState.SONG.player1 = characterFile;
-            LoadingState.prepareToSong();
-			LoadingState.loadAndSwitchState(() -> new PlayState());
-		});
-	}
-}
-
-class CharacterUnlockObject extends flixel.group.FlxSpriteGroup {
-	public var onFinish:Void->Void = null;
-
-	var alphaTween:FlxTween;
-	public function new(name:String, ?camera:FlxCamera = null, characterIcon:String, color:FlxColor = FlxColor.BLACK) {
-		super(x, y);
+	public static function reset() {
+		ClientPrefs.prefs.set("unlockedCharacters", ClientPrefs.defaultprefs.get('unlockedCharacters'));
 		ClientPrefs.saveSettings();
-
-		var characterBG:FlxSprite = new FlxSprite(60, 50).makeGraphic(420, 120, color);
-		characterBG.scrollFactor.set();
-
-		var characterIcon:HealthIcon = new HealthIcon(characterIcon, false);
-		characterIcon.animation.curAnim.curFrame = 2;
-        characterIcon.setPosition(characterBG.x + 10, characterBG.y + 10);
-		characterIcon.scrollFactor.set();
-		characterIcon.setGraphicSize(Std.int(characterIcon.width * (2 / 3)));
-		characterIcon.updateHitbox();
-		characterIcon.antialiasing = ClientPrefs.getPref('Antialiasing');
-
-		var characterName:FlxText = new FlxText(characterIcon.x + characterIcon.width + 20, characterIcon.y + 16, 280, name, 16);
-		characterName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-		characterName.scrollFactor.set();
-
-		var characterText:FlxText = new FlxText(characterName.x, characterName.y + 32, 280, "Play as this character in freeplay!", 16);
-		characterText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-		characterText.scrollFactor.set();
-
-		add(characterBG);
-		add(characterName);
-		add(characterText);
-		add(characterIcon);
-
-		var cam:Array<FlxCamera> = @:privateAccess FlxCamera._defaultCameras;
-		if (camera != null) cam = [camera];
-		alpha = 0;
-		characterBG.cameras = characterName.cameras = characterText.cameras = characterIcon.cameras = cam;
-		alphaTween = FlxTween.tween(this, {alpha: 1}, 0.5, {
-			onComplete: (twn:FlxTween) -> {
-				alphaTween = FlxTween.tween(this, {alpha: 0}, 0.5, {
-					startDelay: 2.5,
-					onComplete: (twn:FlxTween) -> {
-						alphaTween = null;
-						remove(this);
-						if (onFinish != null) onFinish();
-					}
-				});
-			}
-		});
 	}
 
-	override function destroy() {
-		if (alphaTween != null) alphaTween.cancel();
-		super.destroy();
+	function UpdateBF() {
+		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+
+		currentSelectedCharacter = characters[current];
+		characterText.text = currentSelectedCharacter.forms[curForm].polishedName;
+		characterFile = currentSelectedCharacter.forms[curForm].name;
+
+		char.destroy();
+		boyfriendGroup.remove(char, true);
+		char = new Character(0, 0, currentSelectedCharacter.forms[curForm].name, true);
+		char.x += char.positionArray[0];
+		char.y += char.positionArray[1];
+		boyfriendGroup.add(char);
+
+		curIcon.changeIcon(char.healthIcon);
+		curIcon.color = FlxColor.WHITE;
+
+		if (isLocked(characters[current].forms[curForm].name)) {
+			char.color = FlxColor.BLACK;
+			curIcon.color = FlxColor.BLACK;
+			characterText.text = '???';
+		}
+		characterText.screenCenter(X);
+		updateIconPosition();
+	}
+
+	function updateIconPosition() {
+		var yValues = utils.MathUtil.getMinAndMax(curIcon.height, characterText.height);
+		curIcon.y = characterText.y - ((yValues[0] - yValues[1]) / 2);
+	}
+
+	public function endIt(e:FlxTimer = null) {
+		PlayState.SONG.gfVersion = switch(characterFile) {
+			case 'bf-pixel': 'gf-pixel';
+			case 'bf-christmas': 'gf-christmas';
+			case 'bs' | 'pico-player' | 'nate-player': 'gfbf';
+			case 'bf-holding-gf': 'speaker';
+			default: PlayState.SONG.gfVersion;
+		}
+		PlayState.SONG.player1 = characterFile;
+        LoadingState.prepareToSong();
+		LoadingState.loadAndSwitchState(() -> new PlayState());
 	}
 }

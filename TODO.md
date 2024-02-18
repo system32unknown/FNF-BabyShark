@@ -12,6 +12,7 @@
 - [ ] New Credit Menu (Social Links)
 - [ ] Language System
 - [ ] New Preloading System
+- [ ] Input Type Options (PE, Alter)
 
 ### Characters List
 - [ ] Stariana

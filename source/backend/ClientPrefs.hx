@@ -55,7 +55,7 @@ class ClientPrefs {
 		'autoPausePlayState' => true,
 		'hitsoundTypes' => 'Tick',
 		'pauseMusic' => 'Tea Time',
-		'unlockedCharacters' => ["Boyfriend", "Ollie", "Pico", "Nate"],
+		'unlockedCharacters' => ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'],
 		'discordRPC' => true,
 		// Gameplay settings
 		'comboOffset' => [[0, 0], [0, 0], [0, 0], [0, 0]],
