@@ -172,7 +172,7 @@ class CharacterSelectionState extends MusicBeatState {
 		camGame.zoom = FlxMath.lerp(.7, camGame.zoom, Math.exp(-elapsed * 3.125));
 
 		for (i in 0...controlSet.length) {
-			if (controlSet[i] && !pressedTheFunny && char.animOffsets.exists(singAnimations[i])) {
+			if (controlSet[i] && !pressedTheFunny && previewMode && char.animOffsets.exists(singAnimations[i])) {
 				char.playAnim(singAnimations[i], true);
 			}
 		}
@@ -203,7 +203,7 @@ class CharacterSelectionState extends MusicBeatState {
 			previewMode = !previewMode;
 			checkPreview();
 		}
-		if (!selectedCharacter) {
+		if (!selectedCharacter && !previewMode) {
 			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
 				curForm = 0;
 				current = FlxMath.wrap(current += (controls.UI_LEFT_P ? -1 : 1), 0, characters.length - 1);
