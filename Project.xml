@@ -67,6 +67,7 @@
 	<haxedef name="queue_experimental_optimization"/>
 	<haxedef name="hscriptPos"/>
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc"/>
+	<haxedef name="NDLLS_SUPPORTED" if="cpp"/>
 
 	<section unless="debug">
 		<!-- No deprecation warnings. -->

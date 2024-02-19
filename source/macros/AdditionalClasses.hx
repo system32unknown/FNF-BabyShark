@@ -13,14 +13,14 @@ class AdditionalClasses {
 			"flixel", "lime", "haxe", "openfl",
 			#if VIDEOS_ALLOWED "hxvlc", #end
 			#if LUA_ALLOWED "llua", #end
-			#if desktop "discord_rpc", #end
+			#if (desktop && DISCORD_ALLOWED) "hxdiscord_rpc", #end
 			"hscript",
 			// OTHER LIBRARIES & STUFF
 			#if cpp "cpp", #end
 			#if neko "neko", #end
 			#if sys "sys", #end
 			// BASE PATH LIBRARIES THAT DOESN'T INCLUDE
-			"backend", "shaders", "objects",
+			"backend", "shaders", "objects", "utils",
 			// BASE HAXE
 			"DateTools", "EReg", "Lambda", "StringBuf"
 		];

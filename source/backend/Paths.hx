@@ -154,6 +154,9 @@ class Paths {
 
 	inline public static function getSharedPath(file:String = '') return 'assets/shared/$file';
 
+	public static inline function ndll(key:String)
+		return getPath('data/ndlls/$key.ndll');
+
 	inline static public function txt(key:String, ?library:String)
 		return getPath('data/$key.txt', TEXT, library);
 	
@@ -443,6 +446,9 @@ class Paths {
 
 	inline static public function modsImagesJson(key:String)
 		return modFolders('images/$key.json');
+
+	inline static public function modsNdll(key:String)
+		return modFolders('data/ndlls/$key.ndll');
 
 	static public function modFolders(key:String) {
 		if(Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0) {

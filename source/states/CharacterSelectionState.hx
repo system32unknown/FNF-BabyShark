@@ -4,11 +4,8 @@ import objects.Character;
 import objects.HealthIcon;
 
 class CharacterInSelect {
-	public var name:String;
 	public var forms:Array<CharacterForm>;
-
-	public function new(name:String, forms:Array<CharacterForm>) {
-		this.name = name;
+	public function new(forms:Array<CharacterForm>) {
 		this.forms = forms;
 	}
 }
@@ -28,14 +25,14 @@ class CharacterForm {
 **/
 class CharacterSelectionState extends MusicBeatState {
 	var characters:Array<CharacterInSelect> = [
-		new CharacterInSelect('bf', [new CharacterForm('bf', 'Boyfriend'), new CharacterForm('bf-pixel', 'Boyfriend (Pixel)'), new CharacterForm('bf-christmas', 'Boyfriend (Christmas)'), new CharacterForm('bf-holding-gf', 'Boyfriend and Girlfriend')]),
-		new CharacterInSelect('bs', [new CharacterForm('bs', 'Baby Shark Ollie'), new CharacterForm('bs-pixel', 'Baby Shark Ollie (Pixel)'), new CharacterForm('alter-holding-bs', 'Baby Shark Ollie And Altertoriel')]),
-		new CharacterInSelect('dave', [new CharacterForm('dave-player', 'Dave'),]),
-		new CharacterInSelect('bambi', [new CharacterForm('bambi-player', 'Bambi'),]),
-		new CharacterInSelect('tristan', [new CharacterForm('tristan', 'Tristan'), new CharacterForm('tristan-golden', 'Golden Tristan')]),
-		new CharacterInSelect('expunged', [new CharacterForm('cheating-player', 'Expunged (Cheating)'), new CharacterForm('unfair-player', 'Expunged (Unfair)'), new CharacterForm('true-expunged-player', 'Expunged (True form)'),]),
-		new CharacterInSelect('pico-player', [new CharacterForm('pico-player', 'Pico'),]),
-		new CharacterInSelect('nate-player', [new CharacterForm('nate-player', 'Nate'),]),
+		new CharacterInSelect([new CharacterForm('bf', 'Boyfriend'), new CharacterForm('bf-pixel', 'Boyfriend (Pixel)'), new CharacterForm('bf-christmas', 'Boyfriend (Christmas)'), new CharacterForm('bf-holding-gf', 'Boyfriend and Girlfriend')]),
+		new CharacterInSelect([new CharacterForm('bs', 'Baby Shark Ollie'), new CharacterForm('bs-pixel', 'Baby Shark Ollie (Pixel)'), new CharacterForm('alter-holding-bs', 'Baby Shark Ollie And Altertoriel')]),
+		new CharacterInSelect([new CharacterForm('dave-player', 'Dave'),]),
+		new CharacterInSelect([new CharacterForm('bambi-player', 'Bambi'),]),
+		new CharacterInSelect([new CharacterForm('tristan', 'Tristan'), new CharacterForm('tristan-golden', 'Golden Tristan')]),
+		new CharacterInSelect([new CharacterForm('cheating-player', 'Expunged (Cheating)'), new CharacterForm('unfair-player', 'Expunged (Unfair)'), new CharacterForm('true-expunged-player', 'Expunged (True form)'),]),
+		new CharacterInSelect([new CharacterForm('pico-player', 'Pico'),]),
+		new CharacterInSelect([new CharacterForm('nate-player', 'Nate'),]),
 	];
 	static var unlockedChrs:Array<String>;
 	
@@ -151,7 +148,7 @@ class CharacterSelectionState extends MusicBeatState {
 		if (previewMode) controlsText.text = "PREVIEW MODE\nPress I to play idle animation.\nPress your controls to play an animation.\n";
 		else {
 			controlsText.text = "Press P to enter preview mode.";
-			char.playAnim('idle');
+			char.playAnim('idle', true);
 		}
 	}
 
@@ -196,7 +193,18 @@ class CharacterSelectionState extends MusicBeatState {
 
 			FlxG.sound.playMusic(Paths.music('gameOverEnd'));
 
-			new FlxTimer().start(1.9, endIt);
+			new FlxTimer().start(1.9, (e:FlxTimer) -> {
+				PlayState.SONG.gfVersion = switch(characterFile) {
+					case 'bf-pixel': 'gf-pixel';
+					case 'bf-christmas': 'gf-christmas';
+					case 'bs' | 'pico-player' | 'nate-player': 'gfbf';
+					case 'bf-holding-gf': 'speaker';
+					default: PlayState.SONG.gfVersion;
+				}
+				PlayState.SONG.player1 = characterFile;
+				LoadingState.prepareToSong();
+				LoadingState.loadAndSwitchState(() -> new PlayState());
+			});
 		}
 
 		if (FlxG.keys.justPressed.P && !selectedCharacter) {
@@ -272,18 +280,5 @@ class CharacterSelectionState extends MusicBeatState {
 	function updateIconPosition() {
 		var yValues = utils.MathUtil.getMinAndMax(curIcon.height, characterText.height);
 		curIcon.y = characterText.y - ((yValues[0] - yValues[1]) / 2);
-	}
-
-	public function endIt(e:FlxTimer = null) {
-		PlayState.SONG.gfVersion = switch(characterFile) {
-			case 'bf-pixel': 'gf-pixel';
-			case 'bf-christmas': 'gf-christmas';
-			case 'bs' | 'pico-player' | 'nate-player': 'gfbf';
-			case 'bf-holding-gf': 'speaker';
-			default: PlayState.SONG.gfVersion;
-		}
-		PlayState.SONG.player1 = characterFile;
-        LoadingState.prepareToSong();
-		LoadingState.loadAndSwitchState(() -> new PlayState());
 	}
 }

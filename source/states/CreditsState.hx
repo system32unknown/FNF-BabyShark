@@ -356,9 +356,9 @@ class CreditSectionState extends MusicBeatState {
 				}
 
 				if(controls.UI_DOWN || controls.UI_UP) {
-					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
+					var checkLastHold:Int = Math.floor((holdTime - .5) * 10);
 					holdTime += elapsed;
-					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+					var checkNewHold:Int = Math.floor((holdTime - .5) * 10);
 
 					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
@@ -413,8 +413,7 @@ class CreditSectionState extends MusicBeatState {
 
 			if(!unselectableCheck(bullShit - 1)) {
 				item.alpha = 0.6;
-				if (item.targetY == 0)
-					item.alpha = 1;
+				if (item.targetY == 0) item.alpha = 1;
 			}
 		}
 

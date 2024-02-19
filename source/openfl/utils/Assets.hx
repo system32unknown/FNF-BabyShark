@@ -225,7 +225,7 @@ class Assets
 		@return		The path to the asset, or null if it does not exist
 	**/
 	public static function getPath(id:String):String {
-		return #if lime LimeAssets.getPath(id); #else null; #end
+		return #if lime LimeAssets.getPath(id) #else null #end;
 	}
 
 	/**
