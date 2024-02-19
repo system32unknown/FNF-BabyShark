@@ -5,7 +5,6 @@ class Highscore {
 	public static var songScores:Map<String, Int> = new Map<String, Int>();
 	public static var songRating:Map<String, Float> = new Map<String, Float>();
 	public static var songCombos:Map<String, String> = new Map<String, String>();
-	public static var songChars:Map<String, String> = new Map<String, String>();
 
 	public static function resetSong(song:String, diff:Int = 0):Void {
 		var daSong:String = formatSong(song, diff);
@@ -58,11 +57,6 @@ class Highscore {
 		FlxG.save.data.songScores = songScores;
 		FlxG.save.flush();
 	}
-	static function setChar(song:String, char:String):Void {
-		songChars.set(song, char);
-		FlxG.save.data.songNames = songChars;
-		FlxG.save.flush();
-	}
 	static function setCombo(song:String, combo:String):Void {
 		songCombos.set(song, checkIfEmpty(combo) ? "Unclear, N/A" : combo);
 		FlxG.save.data.songCombos = songCombos;
@@ -106,16 +100,6 @@ class Highscore {
 		if (!songRating.exists(daSong)) setRating(daSong, 0);
 		return songRating.get(daSong);
 	}
-	public static function getChar(song:String, diff:Int):String {
-		if (songChars == null) return 'ERROR';
-
-		var daSong:String = formatSong(song, diff);
-		if (!songChars.exists(daSong)) {
-			setChar(daSong, "bf");
-			return "bf";
-		}
-		return songChars.get(daSong);
-	}
 
 	public static function getWeekScore(week:String, diff:Int):Int {
 		var daWeek:String = formatSong(week, diff);
@@ -127,7 +111,6 @@ class Highscore {
 		if (FlxG.save.data.songScores != null) songScores = FlxG.save.data.songScores;
 		if (FlxG.save.data.songRating != null) songRating = FlxG.save.data.songRating;
 		if (FlxG.save.data.songCombos != null) songCombos = FlxG.save.data.songCombos;
-		if (FlxG.save.data.songNames != null) songChars = FlxG.save.data.songNames;
 	}
 
 	inline static function checkIfEmpty(s:String):Bool {
