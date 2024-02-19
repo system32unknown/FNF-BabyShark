@@ -2636,7 +2636,7 @@ class ChartingState extends MusicBeatState {
 
 	function getCurrrentDataPath():String {
 		var diffSuffix:String = Difficulty.getString() != null && Difficulty.getString() != Difficulty.getDefault() ? "-" + Difficulty.getString().toLowerCase() : "";
-		var songPath:String = '${Paths.CHART_PATH}/$currentSongName/$currentSongName/$diffSuffix';
+		var songPath:String = '${Paths.CHART_PATH}/$currentSongName/$currentSongName$diffSuffix';
 
 		var path:String;
 		#if MODS_ALLOWED
@@ -2682,7 +2682,7 @@ class ChartingState extends MusicBeatState {
 	 * Called when the save file dialog is cancelled.
 	 */
 	function onSaveCancel(_):Void {
-		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
+		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
@@ -2692,7 +2692,7 @@ class ChartingState extends MusicBeatState {
 	 * Called if there is an error while saving the gameplay recording.
 	 */
 	function onSaveError(_):Void {
-		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
+		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
@@ -2710,7 +2710,7 @@ class ChartingState extends MusicBeatState {
 	override function updateCurStep():Void {
 		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
 
-		var shit = (Conductor.songPosition - lastChange.songTime) / lastChange.stepCrochet;
+		var shit:Float = (Conductor.songPosition - lastChange.songTime) / lastChange.stepCrochet;
 		curDecStep = lastChange.stepTime + shit;
 		curStep = lastChange.stepTime + Math.floor(shit);
 	}

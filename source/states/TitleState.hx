@@ -41,6 +41,7 @@ class TitleState extends MusicBeatState {
 	override function create():Void {
 		Paths.clearStoredCache();
 		FlxTransitionableState.skipNextTransOut = false;
+		FlxG.mouse.visible = false;
 		persistentUpdate = true;
 
 		super.create();

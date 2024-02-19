@@ -25,6 +25,7 @@ class FreeplayState extends MusicBeatState {
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
 	var intendedcombo:String = '';
+	var curChar:String = "unknown";
 
 	var grpSongs:FlxTypedGroup<Alphabet>;
 	var iconArray:Array<HealthIcon> = [];
@@ -42,8 +43,7 @@ class FreeplayState extends MusicBeatState {
 	var player:MusicPlayer;
 
 	public static var section:String = '';
-
-	var characterSelectText:FlxText;
+	var skipSelect:Array<String>;
 
 	override function create() {		
 		persistentUpdate = true;
@@ -76,6 +76,7 @@ class FreeplayState extends MusicBeatState {
 				if(colors == null || colors.length < 3) colors = [146, 113, 253];
 				addSong(song[0], i, song[1], CoolUtil.getColor(colors));
 			}
+			if (leWeek.skipSelects != null) skipSelect = leWeek.skipSelects;
 		}
 		Mods.loadTopMod();
 
@@ -378,8 +379,8 @@ class FreeplayState extends MusicBeatState {
 
 		lastDifficultyName = Difficulty.getString(curDifficulty);
 		if (Difficulty.list.length > 1)
-			diffText.text = '< ' + lastDifficultyName.toUpperCase() + ' >';
-		else diffText.text = lastDifficultyName.toUpperCase();
+			diffText.text = '< ' + lastDifficultyName.toUpperCase() + ' >' + curChar == 'unknown' ? '' : ' - $curChar';
+		else diffText.text = lastDifficultyName.toUpperCase() + curChar == 'unknown' ? '' : ' - $curChar';
 
 		missingText.visible = missingTextBG.visible = false;
 		positionHighscore();
@@ -415,6 +416,7 @@ class FreeplayState extends MusicBeatState {
 
 		_updateSongLastDifficulty();
 
+		curChar = Highscore.getChar(songs[curSelected].songName, curDifficulty);
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
 		intendedcombo = Highscore.getCombo(songs[curSelected].songName, curDifficulty);

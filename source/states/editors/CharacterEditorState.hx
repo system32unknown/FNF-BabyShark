@@ -1049,7 +1049,7 @@ class CharacterEditorState extends MusicBeatState {
 	var _file:FileReference;
 	function onSaveComplete(_):Void {
 		if(_file == null) return;
-		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
+		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
@@ -1061,7 +1061,7 @@ class CharacterEditorState extends MusicBeatState {
 	**/
 	function onSaveCancel(_):Void {
 		if(_file == null) return;
-		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
+		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
@@ -1072,7 +1072,7 @@ class CharacterEditorState extends MusicBeatState {
 	**/
 	function onSaveError(_):Void {
 		if(_file == null) return;
-		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
+		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
