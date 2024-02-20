@@ -38,6 +38,7 @@ class HScript extends Interp {
 			if(myFolder[0] + '/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
 				this.modFolder = myFolder[1];
 		}
+		trace("Hscript Name: " + origin);
 		preset();
 		executeCode(content);
 	}

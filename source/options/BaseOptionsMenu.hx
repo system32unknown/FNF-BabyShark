@@ -51,7 +51,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		descBox.alpha = 0.6;
 		add(descBox);
 
-		var titleText:Alphabet = new Alphabet(75, 45, title, true);
+		var titleText:Alphabet = new Alphabet(75, 45, title);
 		titleText.setScale(0.6);
 		titleText.alpha = 0.4;
 		add(titleText);
@@ -148,7 +148,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 						bindingText.alignment = CENTERED;
 						add(bindingText);
 
-						bindingText2 = new Alphabet(FlxG.width / 2, 340, "Hold ESC to Cancel\nHold Backspace to Delete", true);
+						bindingText2 = new Alphabet(FlxG.width / 2, 340, "Hold ESC to Cancel\nHold Backspace to Delete");
 						bindingText2.alignment = CENTERED;
 						add(bindingText2);
 

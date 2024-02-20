@@ -47,7 +47,7 @@ class PauseSubState extends MusicBeatSubstate {
 		try {
 			var pauseSong:String = getPauseSong();
 			if(pauseSong != null) pauseMusic.loadEmbedded(Paths.music(pauseSong), true, true);
-		} catch(e:Dynamic) Logs.trace("ERROR PAUSE MUSIC ON LOAD: " + e, ERROR);
+		} catch(e:Dynamic) Logs.trace('ERROR PAUSE MUSIC ON LOAD: $e', ERROR);
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 		FlxG.sound.list.add(pauseMusic);
@@ -83,7 +83,7 @@ class PauseSubState extends MusicBeatSubstate {
 		missingTextBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		missingTextBG.scale.set(FlxG.width, FlxG.height);
 		missingTextBG.updateHitbox();
-		missingTextBG.alpha = 0.6;
+		missingTextBG.alpha = .6;
 		missingTextBG.visible = false;
 		add(missingTextBG);
 		
@@ -99,7 +99,7 @@ class PauseSubState extends MusicBeatSubstate {
 		super.create();
 	}
 
-	function getPauseSong() {
+	function getPauseSong():String {
 		var formattedSongName:String = (songName != null ? Paths.formatToSongPath(songName) : '');
 		var formattedPauseMusic:String = Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'));
 		if(formattedSongName == 'none' || (formattedSongName != 'none' && formattedPauseMusic == 'none')) return null;
@@ -275,14 +275,13 @@ class PauseSubState extends MusicBeatSubstate {
 
 	function changeSelection(change:Int = 0):Void {
 		curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		FlxG.sound.play(Paths.sound('scrollMenu'), .4);
 
 		var bullShit:Int = 0;
 		for (item in grpMenuShit.members) {
 			item.targetY = bullShit++ - curSelected;
 
 			item.alpha = 0.6;
-
 			if (item.targetY == 0) {
 				item.alpha = 1;
 
@@ -303,7 +302,7 @@ class PauseSubState extends MusicBeatSubstate {
 		}
 
 		for (i in 0...menuItems.length) {
-			var item = new Alphabet(90, 320, menuItems[i], true);
+			var item = new Alphabet(90, 320, menuItems[i]);
 			item.isMenuItem = true;
 			item.targetY = i;
 			grpMenuShit.add(item);

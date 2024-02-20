@@ -50,24 +50,17 @@ class DeprecatedFunctions {
 			if(PlayState.instance.modchartSprites.exists(tag)) {
 				var cock:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
 				cock.animation.addByPrefix(name, prefix, framerate, loop);
-				if(cock.animation.curAnim == null) {
-					cock.animation.play(name, true);
-				}
+				if(cock.animation.curAnim == null) cock.animation.play(name, true);
 			}
 		});
 		funk.set("luaSpriteAddAnimationByIndices", function(tag:String, name:String, prefix:String, indices:String, framerate:Int = 24) {
 			FunkinLua.luaTrace("luaSpriteAddAnimationByIndices is deprecated! Use addAnimationByIndices instead", false, true);
 			if(PlayState.instance.modchartSprites.exists(tag)) {
 				var strIndices:Array<String> = indices.trim().split(',');
-				var die:Array<Int> = [];
-				for (i in 0...strIndices.length) {
-					die.push(Std.parseInt(strIndices[i]));
-				}
+				var die:Array<Int> = [for (i in 0...strIndices.length) Std.parseInt(strIndices[i])];
 				var pussy:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
 				pussy.animation.addByIndices(name, prefix, die, '', framerate, false);
-				if(pussy.animation.curAnim == null) {
-					pussy.animation.play(name, true);
-				}
+				if(pussy.animation.curAnim == null) pussy.animation.play(name, true);
 			}
 		});
 		funk.set("luaSpritePlayAnimation", function(tag:String, name:String, forced:Bool = false) {

@@ -29,7 +29,6 @@ class SaveSubState extends BaseOptionsMenu {
             FlxG.save.data.songRating = Highscore.songRating;
             FlxG.save.data.weekScores = Highscore.weekScores;
             FlxG.save.flush();
-
 			FlxG.mouse.visible = false;
 		}, () -> FlxG.mouse.visible = false));
 	}

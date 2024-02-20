@@ -45,7 +45,7 @@ class NotesSubState extends MusicBeatSubstate
 		for (i in 0...arrowHSV.length) {
 			var yPos:Float = (165 * i) + 35;
 			for (j in 0...3) {
-				var optionText:Alphabet = new Alphabet(posX + (225 * j) + 250, yPos + 60, Std.string(arrowHSV[i][j]), true);
+				var optionText:Alphabet = new Alphabet(posX + (225 * j) + 250, yPos + 60, Std.string(arrowHSV[i][j]));
 				optionText.ID = i;
 				grpNumbers.add(optionText);
 			}

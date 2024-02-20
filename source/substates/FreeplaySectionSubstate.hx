@@ -84,8 +84,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 	}
 
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music != null)
-			Conductor.songPosition = FlxG.sound.music.time;
+		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
 		if ((controls.UI_LEFT_P || controls.UI_RIGHT_P) && !transitioning) changeSection(controls.UI_LEFT_P ? -1 : 1);
 		

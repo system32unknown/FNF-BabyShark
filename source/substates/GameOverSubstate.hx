@@ -118,8 +118,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 			moveCamera = true;
 		}
 
-		if (FlxG.sound.music.playing)
-			Conductor.songPosition = FlxG.sound.music.time;
+		if (FlxG.sound.music.playing) Conductor.songPosition = FlxG.sound.music.time;
 		PlayState.instance.callOnScripts('onUpdatePost', [elapsed]);
 	}
 
@@ -138,8 +137,8 @@ class GameOverSubstate extends MusicBeatSubstate {
 		
 		var snd:FlxSound = FlxG.sound.play(Paths.music(endSoundName));
 		var sndLength:Float = snd.length / 1000;
-		new FlxTimer().start(.7, function(tmr:FlxTimer) {
-			FlxG.camera.fade(FlxColor.BLACK, 2, false);
+		new FlxTimer().start(.7, (tmr:FlxTimer) -> {
+			FlxG.camera.fade(FlxColor.BLACK, 2);
 			new FlxTimer().start(sndLength - .7, (tmr:FlxTimer) -> {
 				flixel.addons.transition.FlxTransitionableState.skipNextTransIn = true;
 				FlxG.resetState();

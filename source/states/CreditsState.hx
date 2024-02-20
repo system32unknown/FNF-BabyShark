@@ -121,7 +121,7 @@ class CreditsState extends MusicBeatState {
 
 		for (i in 0...sections.length) {
 			var isSelectable:Bool = !unselectableCheck(i);
-			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 335, sections[i][0], true);
+			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 335, sections[i][0]);
 			optionText.isMenuItem = true;
 			optionText.changeX = false;
 			optionText.targetY = i;

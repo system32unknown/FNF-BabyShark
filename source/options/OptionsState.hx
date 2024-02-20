@@ -41,8 +41,8 @@ class OptionsState extends MusicBeatState {
 
 		reload();
 
-		add(selectorLeft = new Alphabet(0, 0, '>', true));
-		add(selectorRight = new Alphabet(0, 0, '<', true));
+		add(selectorLeft = new Alphabet(0, 0, '>'));
+		add(selectorRight = new Alphabet(0, 0, '<'));
 
 		changeSelection();
 		ClientPrefs.saveSettings();
@@ -53,7 +53,7 @@ class OptionsState extends MusicBeatState {
 	function reload(re:Bool = false) {
 		if (re) grpOptions.clear();
 		for (i in 0...options[curPage].length) {
-			var optionText:Alphabet = new Alphabet(0, 0, options[curPage][i], true);
+			var optionText:Alphabet = new Alphabet(0, 0, options[curPage][i]);
 			optionText.screenCenter().y += (100 * (i - (options[curPage].length / 2))) + 50;
 			grpOptions.add(optionText);
 		}

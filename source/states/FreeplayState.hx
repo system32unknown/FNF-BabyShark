@@ -86,7 +86,7 @@ class FreeplayState extends MusicBeatState {
 
 		add(grpSongs = new FlxTypedGroup<Alphabet>());
 		for (i in 0...songs.length) {
-			var songText:Alphabet = new Alphabet(90, 320, songs[i].songName, true);
+			var songText:Alphabet = new Alphabet(90, 320, songs[i].songName);
 			songText.targetY = i;
 			grpSongs.add(songText);
 
