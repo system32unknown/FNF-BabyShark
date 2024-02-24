@@ -145,7 +145,7 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	function checkPreview() {
-		if (previewMode) controlsText.text = "PREVIEW MODE\nPress I to play idle animation.\nPress your controls to play an animation.\n";
+		if (previewMode) controlsText.text = "PREVIEW MODE\nPress your controls to play an animation.\n(Press P to exit.)";
 		else {
 			controlsText.text = "Press P to enter preview mode.";
 			char.playAnim('idle', true);

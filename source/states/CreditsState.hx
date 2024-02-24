@@ -7,7 +7,7 @@ class CreditsState extends MusicBeatState {
 	// Title, Variable, Description, Color
 	static var titles(default, never):Array<Array<String>> = [
 		['Credits Sections'],
-		['Psych Engine / EK Team',		'psych',			'Developers of Psych Engine / EK',					'D662EB'],
+		['Psych Engine',				'psych',			'Developers of Psych Engine',						'D662EB'],
 		["Funkin' Crew",				'funkin',			'The only cool kickers of Friday Night Funkin\'',	'FD40AB'],
 		["Vs Dave and Bambi Team",		'daveandbambi',		'Developers of Dave and Bambi',						'216AFF'],
 		["Baby Shark\'s Big Funkin Team",	'babyshark',	'Developers of Baby Shark\'s Big Funkin',			'F8CB23'],
@@ -39,10 +39,13 @@ class CreditsState extends MusicBeatState {
 		['ACrazyTown',			'acrazytown',		'Optimized PNGs',												'https://twitter.com/acrazytown',			'A03E3D'],
 		['CheemsAndFriends', 	'face', 			'Creator of FlxAnimate\n(Icon will be added later)', 			'https://twitter.com/CheemsnFriendos', 		'A1A1A1'],
 		[''],
-		['Psych Engine Extra Keys'],
+		['Extra Keys Team'],
 		['Tposejank', 			'tposejank',		'Main Programmer of Psych Engine EK', 							'https://twitter.com/tpose_jank', 			'B9AF27'],
 		['SrPerez', 			'perez', 			'1-9 keys art', 												'https://twitter.com/newsrperez',			'FF9E00'],
 		['Leather128', 			'leather', 			'12 - 16 keys art + coder', 									'https://github.com/Leather128',			'01A1FF'],
+		[''],
+		['Special Thanks'],
+		['Denpa Engine',		'denpa',			'The Freeplay Section code used for this engine',				'https://github.com/UmbratheUmbreon/PublicDenpaEngine',			'FF9300'],
 	];
 
 	static var funkin(default, never):Array<Array<String>> = [

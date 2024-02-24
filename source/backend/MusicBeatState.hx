@@ -54,7 +54,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 
 	override function create() {
 		if (curBPMChange != null && curBPMChange.bpm != Conductor.bpm) curBPMChange = Conductor.getDummyBPMChange();
-		var skip = FlxTransitionableState.skipNextTransOut;
+		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		#if MODS_ALLOWED Mods.updatedOnState = false; #end
 
 		if(!_psychCameraInitialized) initPsychCamera();
@@ -121,7 +121,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 			return updateSection();
 		}
 
-		var lastSection = prevSection = curSection;
+		var lastSection:Int = prevSection = curSection;
 		while((curSection = passedSections.length) > 0 && curStep < passedSections[curSection - 1])
 			stepsToDo = passedSections.pop();
 

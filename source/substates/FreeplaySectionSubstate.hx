@@ -18,6 +18,9 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 	var bg:FlxSprite;
 	var transitioning:Bool = false;
 
+	var loadedWeeks:Array<WeekData> = [];
+	var txtTracklist:FlxText;
+
 	override public function new() {
 		super();
 		WeekData.reloadWeekFiles(false);
@@ -31,12 +34,13 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			if (leWeek.section != null) {
 				var curSection:String = leWeek.section;
 				if (curSection.toLowerCase() != sectionArray[0].toLowerCase()) {
+					loadedWeeks.push(leWeek);
 					sectionArray.push(curSection);
 					sectionImageMap.set(curSection.toLowerCase(), Paths.image('freeplaysections/${curSection.toLowerCase()}'));
 				}
 			}
 		}
-		sectionArray = CoolUtil.removeDuplicates(sectionArray);
+		sectionArray = CoolUtil.removeDupString(sectionArray);
 		Mods.loadTopMod();
 
         for (i in 0...sectionArray.length) {
@@ -74,6 +78,12 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		sectionTxt.screenCenter(X);
 		sectionTxt.alpha = 0;
 		add(sectionTxt);
+
+		txtTracklist = new FlxText(sectionTxt.x + 50, sectionTxt.y + 60, 0, "", 32);
+		txtTracklist.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
+		txtTracklist.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
+		txtTracklist.scrollFactor.set();
+		add(txtTracklist);
 
 		transitioning = true;
 		FlxTween.tween(bg, {alpha: 1}, 1, {ease: FlxEase.expoOut, onComplete: (_:FlxTween) -> transitioning = false});
@@ -130,10 +140,21 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		sectionSpr.loadGraphic(sectionImageMap.get(daSection.toLowerCase()));
 		sectionSpr.screenCenter();
 		sectionSpr.updateHitbox();
+
+		updateText();
 	}
 
 	function weekIsLocked(name:String):Bool {
 		var leWeek:WeekData = WeekData.weeksLoaded.get(name);
 		return (!leWeek.startUnlocked && leWeek.weekBefore.length > 0 && (!StoryMenuState.weekCompleted.exists(leWeek.weekBefore) || !StoryMenuState.weekCompleted.get(leWeek.weekBefore)));
+	}
+
+	function updateText() {
+		var leWeek:WeekData = loadedWeeks[counter];
+		var stringThing:Array<String> = [for (i in 0...leWeek.songs.length) leWeek.songs[i][0]];
+		txtTracklist.text = '';
+		for (i in 0...stringThing.length) txtTracklist.text += '${stringThing[i]}\n';
+
+		txtTracklist.text = txtTracklist.text.toUpperCase();
 	}
 }

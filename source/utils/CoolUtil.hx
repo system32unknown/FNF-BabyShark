@@ -68,7 +68,7 @@ class CoolUtil {
 		return '${FlxG.stage.application.meta.get('company')}/${flixel.util.FlxSave.validate(FlxG.stage.application.meta.get('file'))}';
 	}
 
-	public static function removeDuplicates(string:Array<String>):Array<String> {
+	public static function removeDupString(string:Array<String>):Array<String> {
 		var tempArray:Array<String> = new Array<String>();
 		var lastSeen:String = '';
 		string.sort((a:String, b:String) -> return (a == b) ? 0 : (a > b) ? 1 : -1);

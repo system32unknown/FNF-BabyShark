@@ -138,6 +138,6 @@ class HealthIcon extends FlxSprite {
 
 	function getIconAnims(file:String):Array<String> {
 		final regNum = ~/[\d-]/;
-		return CoolUtil.removeDuplicates([for (icon in new haxe.xml.Access(Xml.parse(Paths.getTextFromFile('images/$file.xml')).firstElement()).nodes.SubTexture) regNum.split(icon.att.name)[0]]);
+		return CoolUtil.removeDupString([for (icon in new haxe.xml.Access(Xml.parse(Paths.getTextFromFile('images/$file.xml')).firstElement()).nodes.SubTexture) regNum.split(icon.att.name)[0]]);
 	}
 }
