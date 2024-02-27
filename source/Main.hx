@@ -47,7 +47,7 @@ class Main extends Sprite {
 		addChild(fpsVar = new FPSCounter());
 		if(Main.fpsVar != null) {
 			Main.fpsVar.visible = ClientPrefs.getPref('showFPS');
-			Main.fpsVar.memType = ClientPrefs.getPref('memType');
+			Main.fpsVar.memCounterType = ClientPrefs.getPref('memCounterType');
 		}
 
 		#if (target.threaded && sys) threadPool = new ElasticThreadPool(12, 30); #end

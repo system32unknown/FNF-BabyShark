@@ -13,7 +13,7 @@ class ClientPrefs {
 		'opponentStrums' => true,
 		'FPSStats' => true,
 		'showFPS' => true,
-		'memType' => "MEM/PEAK",
+		'memCounterType' => "MEM/PEAK",
 		'flashing' => true,
 		'Antialiasing' => true,
 		'splashOpacity' => .6,
@@ -34,7 +34,7 @@ class ClientPrefs {
 		'ShowJudgement' => true,
 		'IconBounceType' => 'Vanilla',
 		'RatingDisplay' => 'World',
-		'RainbowFps' => 'HSB',
+		'RainbowFps' => false,
 		'comboStacking' => false,
 		'showKeybindsOnStart' => false,
 		'hardwareCache' => false,
@@ -93,7 +93,7 @@ class ClientPrefs {
 				isStreMInited = true;
 			}
 		}, 'showFPS' => (bool:Bool) -> if(Main.fpsVar != null) Main.fpsVar.visible = bool,
-		'memType' => (type:String) -> if(Main.fpsVar != null) Main.fpsVar.memType = type
+		'memCounterType' => (type:String) -> if(Main.fpsVar != null) Main.fpsVar.memCounterType = type
 	];
 
 	// Flixel data to load, i.e 'mute' or 'volume'

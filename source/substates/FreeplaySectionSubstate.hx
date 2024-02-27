@@ -90,6 +90,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		FlxTween.tween(grid, {alpha: 1}, 1, {ease: FlxEase.expoOut});
 		FlxTween.tween(sectionSpr, {alpha: 1, y: sectionSpr.y + 200}, 1, {ease: FlxEase.expoOut});
 		FlxTween.tween(sectionTxt, {alpha: 1, y: sectionTxt.y + 200}, 1, {ease: FlxEase.expoOut});
+		FlxTween.tween(txtTracklist, {alpha: 1, y: txtTracklist.y + 200}, 1, {ease: FlxEase.expoOut});
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Selecting a Freeplay Section", '${sectionArray.length} Sections'); #end
 	}
 
@@ -104,6 +105,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(grid, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionTxt, {alpha: 0, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoInOut});
+			FlxTween.tween(txtTracklist, {alpha: 1, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoOut});
 			FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y - 200}, .5, {ease: FlxEase.expoInOut,
 				onComplete: (tween:FlxTween) -> {
 					daSection = states.FreeplayState.section;
@@ -118,6 +120,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(grid, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 			FlxTween.tween(sectionTxt, {alpha: 0, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoInOut});
+			FlxTween.tween(txtTracklist, {alpha: 1, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoOut});
 			FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y - 200}, .5, {ease: FlxEase.expoInOut,
 				onComplete: (tween:FlxTween) -> {
 					close();

@@ -8,11 +8,11 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		var opt:Option = new Option('FPS Counter', 'If unchecked, hides FPS Counter.', 'showFPS', 'bool');
 		addOption(opt);
 		opt.onChange = onChangeFPSCounter;
-		var opt:Option = new Option('Memory Counter:', '', 'memType', 'string', ['MEM', 'MEM/PEAK', 'NONE']);
+		var opt:Option = new Option('Memory Counter Type:', '', 'memCounterType', 'string', ['MEM', 'MEM/PEAK', 'NONE']);
 		addOption(opt);
 		opt.onChange = onChangeFPSCounter;
 		
-		addOption(new Option('Rainbow FPS Type:', '', 'RainbowFps', 'string', ['HSB', 'Kade', 'None']));
+		addOption(new Option('Rainbow FPS:', '', 'RainbowFps', 'bool'));
 		addOption(new Option('More Stats FPS', '', 'FPSStats', 'bool'));
 		addOption(new Option('Alternate Discord Large Image', '', 'AltDiscordImg', 'bool'));
 		var option:Option = new Option('Alt. Discord Large Images:', '', 'AltDiscordImgCount', 'int');
@@ -27,7 +27,7 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 	function onChangeFPSCounter() {
 		if(Main.fpsVar != null) {
 			Main.fpsVar.visible = ClientPrefs.getPref('showFPS');
-			Main.fpsVar.memType = ClientPrefs.getPref('memType');
+			Main.fpsVar.memCounterType = ClientPrefs.getPref('memCounterType');
 		}
 	}
 }

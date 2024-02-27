@@ -39,6 +39,9 @@ class LoadingState extends MusicBeatState {
 	var intendedPercent:Float = 0;
 	var curPercent:Float = 0;
 
+	var timePassed:Float;
+	var loadingText:FlxText;
+
 	override function create() {
 		#if !LOADING_SCREEN_ALLOWED while(true) #end {
 			if (checkLoaded()) {
@@ -61,6 +64,11 @@ class LoadingState extends MusicBeatState {
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		add(funkay);
+
+		loadingText = new FlxText(520, 600, 400, 'Now Loading...', 32);
+		loadingText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT);
+		loadingText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK, 2);
+		add(loadingText);
 
 		var bg:FlxSprite = new FlxSprite(0, 660).makeGraphic(1, 1, FlxColor.BLACK);
 		bg.scale.set(FlxG.width - 300, 25);
@@ -92,13 +100,21 @@ class LoadingState extends MusicBeatState {
 			intendedPercent = loaded / loadMax;
 		}
 
-		if(curPercent != intendedPercent) {
+		if (curPercent != intendedPercent) {
 			if (Math.abs(curPercent - intendedPercent) < .001) curPercent = intendedPercent;
 			else curPercent = FlxMath.lerp(intendedPercent, curPercent, Math.exp(-elapsed * 15));
 
 			bar.scale.x = barWidth * curPercent;
 			bar.updateHitbox();
 		}
+
+		timePassed += elapsed;
+		var txt:String = 'Now Loading.';
+		switch(Math.floor(timePassed % 1 * 3)) {
+			case 1: txt += '.';
+			case 2: txt += '..';
+		}
+		loadingText.text = txt;
 	}
 
 	var finishedLoading:Bool = false;
@@ -175,7 +191,7 @@ class LoadingState extends MusicBeatState {
 		Thread.create(() -> {
 			// LOAD NOTE IMAGE
 			var noteSkin:String = Note.defaultNoteSkin;
-			if(PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) noteSkin = PlayState.SONG.arrowSkin;
+			if(song.arrowSkin != null && song.arrowSkin.length > 1) noteSkin = song.arrowSkin;
 
 			var customSkin:String = noteSkin;
 			if(Paths.fileExists('images/$customSkin.png', IMAGE)) noteSkin = customSkin;
@@ -183,15 +199,15 @@ class LoadingState extends MusicBeatState {
 
 			// LOAD NOTE SPLASH IMAGE
 			var noteSplash:String = NoteSplash.defaultNoteSplash;
-			if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) noteSplash = PlayState.SONG.splashSkin;
+			if(song.splashSkin != null && song.splashSkin.length > 0) noteSplash = song.splashSkin;
 			imagesToPrepare.push(noteSplash);
 
 			try {
-				var path:String = Paths.json('$folder/preload');
+				var path:String = Paths.json('charts/$folder/preload');
 				var json:Dynamic = null;
 
 				#if MODS_ALLOWED
-				var moddyFile:String = Paths.modsJson('$folder/preload');
+				var moddyFile:String = Paths.modsJson('charts/$folder/preload');
 				if (FileSystem.exists(moddyFile)) json = Json.parse(File.getContent(moddyFile));
 				else json = Json.parse(File.getContent(path));
 				#else
@@ -220,10 +236,8 @@ class LoadingState extends MusicBeatState {
 			if (gfVersion == null) gfVersion = 'gf';
 
 			preloadCharacter(player1);
-			if (prefixVocals != null) {
-				if(Paths.fileExists('$prefixVocals.${Paths.SOUND_EXT}', SOUND, false, 'songs'))
-					songsToPrepare.push(prefixVocals);
-			}
+			if (prefixVocals != null && Paths.fileExists('$prefixVocals.${Paths.SOUND_EXT}', SOUND, false, 'songs'))
+				songsToPrepare.push(prefixVocals);
 
 			if (player2 != player1) {
 				threadsMax++;
@@ -313,7 +327,7 @@ class LoadingState extends MusicBeatState {
 						} else if (OpenFlAssets.exists(file, IMAGE))
 							bitmap = OpenFlAssets.getBitmapData(file);
 						else {
-							trace('no such image $image exists');
+							Logs.trace('no such image $image exists', WARNING);
 							mutex.release();
 							loaded++;
 							return;
@@ -322,10 +336,10 @@ class LoadingState extends MusicBeatState {
 					mutex.release();
 
 					if (bitmap != null) requestedBitmaps.set(file, bitmap);
-					else trace('oh no the image is null NOOOO ($image)', WARNING);
+					else Logs.trace('oh no the image is null NOOOO ($image)', WARNING);
 				} catch(e:Dynamic) {
 					mutex.release();
-					trace('ERROR! fail on preloading image $image', ERROR);
+					Logs.trace('ERROR! fail on preloading image $image', ERROR);
 				}
 				loaded++;
 			});
@@ -339,10 +353,10 @@ class LoadingState extends MusicBeatState {
 				mutex.release();
 
 				if (ret != null) trace('finished preloading $traceData');
-				else trace('ERROR! fail on preloading $traceData', ERROR);
+				else Logs.trace('ERROR! fail on preloading $traceData', ERROR);
 			} catch(e:Dynamic) {
 				mutex.release();
-				trace('ERROR! fail on preloading $traceData', ERROR);
+				Logs.trace('ERROR! fail on preloading $traceData', ERROR);
 			}
 			loaded++;
 		});
