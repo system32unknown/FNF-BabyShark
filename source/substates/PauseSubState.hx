@@ -277,20 +277,20 @@ class PauseSubState extends MusicBeatSubstate {
 		curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
 		FlxG.sound.play(Paths.sound('scrollMenu'), .4);
 
-		var bullShit:Int = 0;
-		for (item in grpMenuShit.members) {
-			item.targetY = bullShit++ - curSelected;
-
+		for (num => item in grpMenuShit.members) {
+			item.targetY = num - curSelected;
 			item.alpha = 0.6;
 			if (item.targetY == 0) {
 				item.alpha = 1;
-
 				if(item == skipTimeTracker) {
 					curTime = Math.max(0, Conductor.songPosition);
 					updateSkipTimeText();
 				}
 			}
 		}
+		missingText.visible = false;
+		missingTextBG.visible = false;
+		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 	}
 
 	function regenMenu():Void {

@@ -234,8 +234,9 @@ class StoryMenuState extends MusicBeatState {
 				stopspamming = true;
 			}
 
+			LoadingState.prepareToSong();
 			new FlxTimer().start(1, (tmr:FlxTimer) -> {
-				LoadingState.prepareToSong();
+				#if !LOADING_SCREEN_ALLOWED FlxG.sound.music.stop(); #end
 				LoadingState.loadAndSwitchState(() -> new PlayState(), true);
 				FreeplayState.destroyFreeplayVocals();
 			});
@@ -278,12 +279,11 @@ class StoryMenuState extends MusicBeatState {
 		txtWeekTitle.text = leWeek.storyName.toUpperCase();
 		txtWeekTitle.x = FlxG.width - (txtWeekTitle.width + 10);
 
-		var bullShit:Int = 0;
-
 		var unlocked:Bool = !weekIsLocked(leWeek.fileName);
-		for (item in grpWeekText.members) {
-			item.targetY = bullShit++ - curWeek;
-			item.alpha = (item.targetY == 0 && unlocked ? 1 : 0.6);
+		for (num => item in grpWeekText.members) {
+			item.targetY = num - curWeek;
+			item.alpha = .6;
+			if (item.targetY == Std.int(0) && unlocked) item.alpha = 1;
 		}
 
 		bgSprite.visible = true;

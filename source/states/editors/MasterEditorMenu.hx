@@ -81,10 +81,10 @@ class MasterEditorMenu extends MusicBeatState {
 			states.FreeplayState.destroyFreeplayVocals();
 		}
 		
-		var bullShit:Int = 0;
-		for (item in grpTexts.members) {
-			item.targetY = bullShit++ - curSelected;
-			item.alpha = (item.targetY == 0 ? 1 : .6);
+		for (num => item in grpTexts.members) {
+			item.targetY = num - curSelected;
+			item.alpha = .6;
+			if (item.targetY == 0) item.alpha = 1;
 		}
 		super.update(elapsed);
 	}

@@ -204,6 +204,7 @@ class CharacterSelectionState extends MusicBeatState {
 				PlayState.SONG.player1 = characterFile;
 				LoadingState.prepareToSong();
 				LoadingState.loadAndSwitchState(() -> new PlayState());
+				#if !LOADING_SCREEN_ALLOWED FlxG.sound.music.stop(); #end
 			});
 		}
 

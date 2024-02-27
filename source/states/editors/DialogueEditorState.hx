@@ -360,17 +360,17 @@ class DialogueEditorState extends MusicBeatState
 		reloadText(false);
 		updateTextBox();
 
-		var leLength:Int = character.jsonFile.animations.length;
-		if(leLength > 0) {
-			for (i in 0...leLength) {
-				var leAnim:DialogueAnimArray = character.jsonFile.animations[i];
-				if(leAnim != null && leAnim.anim == curDialogue.expression) {
-					curAnim = i;
+		if(character.jsonFile.animations.length > 0) {
+			for (num => animData in character.jsonFile.animations) {
+				if(animData != null && animData.anim == curDialogue.expression) {
+					curAnim = num;
 					break;
 				}
 			}
-			character.playAnim(character.jsonFile.animations[curAnim].anim, daText.finishedText);
-			animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + leLength + ') - Press W or S to scroll';
+
+			var selectedAnim:String = character.jsonFile.animations[curAnim].anim;
+			character.playAnim(selectedAnim, daText.finishedText);
+			animText.text = 'Animation: $selectedAnim (${curAnim + 1} / ${character.jsonFile.animations.length} ) - Press W or S to scroll';
 		} else animText.text = 'ERROR! NO ANIMATIONS FOUND';
 		characterAnimSpeed();
 

@@ -215,12 +215,9 @@ class CreditsState extends MusicBeatState {
 			curSelected = FlxMath.wrap(curSelected + change, 0, sections.length - 1);
 		} while(unselectableCheck(curSelected));
 
-		var bullShit:Int = 0;
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			if(!unselectableCheck(bullShit - 1)) item.alpha = (item.targetY == 0 ? 1 : .6);
+		for (num => item in grpOptions.members) {
+			item.targetY = num - curSelected;
+			if(!unselectableCheck(num)) item.alpha = (item.targetY == 0 ? 1 : .6);
 		}
 
 		descText.text = sections[curSelected][2];
@@ -408,13 +405,9 @@ class CreditSectionState extends MusicBeatState {
 			curSelected = FlxMath.wrap(curSelected + change, 0, creditsStuff.length - 1);
 		} while(unselectableCheck(curSelected));
 
-		var bullShit:Int = 0;
-
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			if(!unselectableCheck(bullShit - 1)) {
+		for (num => item in grpOptions.members) {
+			item.targetY = num - curSelected;
+			if(!unselectableCheck(num)) {
 				item.alpha = 0.6;
 				if (item.targetY == 0) item.alpha = 1;
 			}

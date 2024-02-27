@@ -30,25 +30,26 @@ class MenuCharacter extends FlxSprite {
 		scale.set(1, 1);
 		updateHitbox();
 
+		color = FlxColor.WHITE;
+		alpha = 1;
+
 		hasConfirmAnimation = false;
 		switch(character) {
 			case '': visible = false;
 			default:
 				var characterPath:String = 'images/menucharacters/$character.json';
-				var rawJson = null;
-
-				#if MODS_ALLOWED
-				var path:String = Paths.modFolders(characterPath);
-				if(!FileSystem.exists(path)) path = Paths.getSharedPath(characterPath);
-				if(!FileSystem.exists(path)) path = Paths.getSharedPath('images/menucharacters/$DEFAULT_CHARACTER.json');
-				rawJson = File.getContent(path);
-				#else
-				var path:String = Paths.getSharedPath(characterPath);
-				if(!Assets.exists(path)) path = Paths.getSharedPath('images/menucharacters/$DEFAULT_CHARACTER.json');
-				rawJson = Assets.getText(path);
-				#end
+				var path:String = Paths.getPath(characterPath, TEXT, null, true);
 				
-				var charFile:MenuCharacterFile = cast haxe.Json.parse(rawJson);
+				if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
+					path = Paths.getSharedPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+					color = FlxColor.BLACK;
+					alpha = 0.6;
+				}
+
+				var charFile:MenuCharacterFile = null;
+				try {
+					charFile = haxe.Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
+				} catch(e:Dynamic) Logs.trace('Error loading menu character file of "$character": $e', ERROR);
 				frames = Paths.getSparrowAtlas('menucharacters/' + charFile.image);
 				animation.addByPrefix('idle', charFile.idle_anim, 24);
 

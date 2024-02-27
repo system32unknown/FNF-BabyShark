@@ -1,6 +1,6 @@
 package data;
 
-import openfl.utils.Assets;
+#if !MODS_ALLOWED import openfl.utils.Assets; #end
 
 typedef StageFile = {
 	var directory:String;
@@ -45,27 +45,24 @@ class StageData {
 	public static function loadDirectory(SONG:backend.Song.SwagSong) {
 		var stage:String = '';
 		if(SONG.stage != null) stage = SONG.stage;
-		else if(SONG.song != null) stage = vanillaSongStage(SONG.song.toLowerCase().replace(' ', '-'));
+		else if(SONG.song != null) stage = vanillaSongStage(Paths.formatToSongPath(SONG.song));
 		else stage = 'stage';
 
 		var stageFile:StageFile = getStageFile(stage);
-		forceNextDirectory = (stageFile == null ? '' : stageFile.directory); // preventing crashes
+		forceNextDirectory = (stageFile != null) ? stageFile.directory : ''; //preventing crashes
 	}
 
 	public static function getStageFile(stage:String):StageFile {
 		var rawJson:String = null;
 		var path:String = Paths.getSharedPath('stages/$stage.json');
 
-		#if sys
 		#if MODS_ALLOWED
 		var modPath:String = Paths.modFolders('stages/$stage.json');
 		if (FileSystem.exists(modPath)) rawJson = File.getContent(modPath);
-		else
-		#end
-		if (FileSystem.exists(path)) rawJson = File.getContent(path);
-		else
-		#end
+		else if (FileSystem.exists(path)) rawJson = File.getContent(path);
+		#else
 		if (Assets.exists(path)) rawJson = Assets.getText(path);
+		#end
 		else return null;
 
 		return cast tjson.TJSON.parse(rawJson);

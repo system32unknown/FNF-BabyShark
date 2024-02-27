@@ -690,23 +690,23 @@ class WeekEditorFreeplayState extends MusicBeatState {
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		curSelected = FlxMath.wrap(curSelected + change, 0, weekFile.songs.length - 1);
-
-		var bullShit:Int = 0;
-		for (icon in iconArray) icon.alpha = 0.6;
-
-		iconArray[curSelected].alpha = 1;
-
-		for (item in grpSongs.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			item.alpha = 0.6;
-			if (item.targetY == 0) item.alpha = 1;
+		for (num => item in grpSongs.members) {
+			var icon:HealthIcon = iconArray[num];
+			item.targetY = num - curSelected;
+			item.alpha = .6;
+			icon.alpha = .6;
+			if (item.targetY == 0) {
+				item.alpha = 1;
+				icon.alpha = 1;
+			}
 		}
+
 		iconInputText.text = weekFile.songs[curSelected][1];
-		bgColorStepperR.value = Math.round(weekFile.songs[curSelected][2][0]);
-		bgColorStepperG.value = Math.round(weekFile.songs[curSelected][2][1]);
-		bgColorStepperB.value = Math.round(weekFile.songs[curSelected][2][2]);
+
+		var colors = weekFile.songs[curSelected][2];
+		bgColorStepperR.value = Math.round(colors[0]);
+		bgColorStepperG.value = Math.round(colors[1]);
+		bgColorStepperB.value = Math.round(colors[2]);
 		updateBG();
 	}
 

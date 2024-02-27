@@ -85,11 +85,8 @@ class OptionsState extends MusicBeatState {
 	function changeSelection(change:Int = 0) {
 		curSelected = FlxMath.wrap(curSelected + change, 0, options[curPage].length - 1);
 
-		var bullShit:Int = 0;
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
+		for (num => item in grpOptions.members) {
+			item.targetY = num - curSelected;
 			item.alpha = 0.6;
 			if (item.targetY == 0) {
 				item.alpha = 1;
@@ -105,10 +102,8 @@ class OptionsState extends MusicBeatState {
 		curSelected = 0;
 		reload(true);
 
-		var bullShit:Int = 0;
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
+		for (num => item in grpOptions.members) {
+			item.targetY = num - curSelected;
 
 			item.alpha = 0.6;
 			if (item.targetY == 0) {

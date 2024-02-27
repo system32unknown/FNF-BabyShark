@@ -3,15 +3,16 @@ package substates;
 import objects.CheckboxThingie;
 import objects.AttachedText;
 
-class GameplayChangersSubstate extends MusicBeatSubstate
-{
-	var curOption:GameplayOption = null;
+class GameplayChangersSubstate extends MusicBeatSubstate {
 	var curSelected:Int = 0;
 	var optionsArray:Array<Dynamic> = [];
 
 	var grpOptions:FlxTypedGroup<Alphabet>;
 	var checkboxGroup:FlxTypedGroup<CheckboxThingie>;
 	var grpTexts:FlxTypedGroup<AttachedText>;
+
+	var curOption(get, never):GameplayOption;
+	function get_curOption() return optionsArray[curSelected]; //shorter lol
 
 	function getOptions() {
 		optionsArray.push(new GameplayOption('Scroll Type', 'scrolltype', 'string', 'multiplicative', ["multiplicative", "constant"]));
@@ -255,16 +256,15 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	
 	function changeSelection(change:Int = 0) {
 		curSelected = FlxMath.wrap(curSelected + change, 0, optionsArray.length - 1);
-
-		var bullShit:Int = 0;
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			item.alpha = item.targetY == 0 ? 1 : 0.6;
+		for (num => item in grpOptions.members) {
+			item.targetY = num - curSelected;
+			item.alpha = 0.6;
+			if (item.targetY == 0) item.alpha = 1;
 		}
-		for (text in grpTexts) text.alpha = text.ID == curSelected ? 1 : 0.6;
-		curOption = optionsArray[curSelected]; //shorter lol
+		for (text in grpTexts) {
+			text.alpha = 0.6;
+			if(text.ID == curSelected) text.alpha = 1;
+		}
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 

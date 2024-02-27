@@ -457,12 +457,10 @@ class CreditsEditorState extends MusicBeatState {
 		if(unselectableCheck(curSelected)) newColor = Std.parseInt('0xFFe1e1e1');
 		else newColor = getCurrentBGColor();
 
-		var bullShit:Int = 0;
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
+		for (num => item in grpOptions.members) {
+			item.targetY = num - curSelected;
 
-			if(!nullCheck(bullShit - 1)) {
+			if(!nullCheck(num)) {
 				item.alpha = 0.6;
 				if (item.targetY == 0) {
 					item.alpha = 1;

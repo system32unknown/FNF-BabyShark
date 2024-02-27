@@ -252,7 +252,6 @@ class ModsMenuState extends MusicBeatState {
 
 	override function update(elapsed:Float) {
 		if(controls.BACK && hoveringOnMods) {
-			if(colorTween != null) colorTween.cancel();
 			saveTxt();
 
 			FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -521,16 +520,12 @@ class ModsMenuState extends MusicBeatState {
 		}
 	}
 
-	var colorTween:FlxTween = null;
 	function updateModDisplayData() {
 		var curMod:ModItem = modsGroup.members[curSelectedMod];
 		if(curMod == null) return;
 
-		if(colorTween != null) {
-			colorTween.cancel();
-			colorTween.destroy();
-		}
-		colorTween = FlxTween.color(bg, 1, bg.color, curMod.bgColor, {onComplete: (twn:FlxTween) -> colorTween = null});
+		FlxTween.cancelTweensOf(bg);
+		FlxTween.color(bg, 1, bg.color, curMod.bgColor);
 
 		if(Math.abs(centerMod - curSelectedMod) > 2) {
 			if(centerMod < curSelectedMod)

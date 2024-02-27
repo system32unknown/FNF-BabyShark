@@ -305,24 +305,24 @@ class AlphaCharacter extends FlxSprite {
 			if(allLetters.exists(lowercase)) curLetter = allLetters.get(lowercase);
 			else curLetter = allLetters.get('?');
 
-			var suffix:String = '';
+			var postfix:String = '';
 			if(!bold) {
 				if(isTypeAlphabet(lowercase)) {
 					if(lowercase != this.character)
-						suffix = ' uppercase';
-					else suffix = ' lowercase';
-				} else suffix = ' normal';
-			} else suffix = ' bold';
+						postfix = ' uppercase';
+					else postfix = ' lowercase';
+				} else postfix = ' normal';
+			} else postfix = ' bold';
 
 			var alphaAnim:String = lowercase;
 			if(curLetter != null && curLetter.anim != null) alphaAnim = curLetter.anim;
 
-			var anim:String = alphaAnim + suffix;
+			var anim:String = alphaAnim + postfix;
 			animation.addByPrefix(anim, anim, 24);
 			animation.play(anim, true);
 			if(animation.curAnim == null) {
-				if(suffix != ' bold') suffix = ' normal';
-				anim = 'question' + suffix;
+				if(postfix != ' bold') postfix = ' normal';
+				anim = 'question' + postfix;
 				animation.addByPrefix(anim, anim, 24);
 				animation.play(anim, true);
 			}

@@ -214,16 +214,11 @@ class ControlsSubState extends MusicBeatSubstate {
 			return;
 		}
 
-		var bullShit:Int = 0;
-		for (grp in [grpInputs, grpInputsAlt]) {
-			for (grps in grp) grps.alpha = 0.6;
-		}
-
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			if(!unselectableCheck(bullShit - 1) || item.ID == 1) {
+		for (grp in [grpInputs, grpInputsAlt]) for (grps in grp) grps.alpha = 0.6;
+		
+		for (num => item in grpOptions.members) {
+			item.targetY = num - curSelected;
+			if(!unselectableCheck(num) || item.ID == 1) {
 				item.alpha = 0.6;
 				if (item.targetY == 0) {
 					item.alpha = 1;
@@ -293,15 +288,13 @@ class ControlsSubState extends MusicBeatSubstate {
 			}
 		}
 
-		var bullShit:Int = 0;
 		for (grp in [grpInputs, grpInputsAlt])
 			for (grps in grp) grps.alpha = .6;
 
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
+		for (num => item in grpOptions.members) {
+			item.targetY = num - curSelected;
 
-			if(!unselectableCheck(bullShit - 1)) {
+			if(!unselectableCheck(num)) {
 				item.alpha = 0.6;
 				if (item.targetY == 0) {
 					item.alpha = 1;

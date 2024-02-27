@@ -10,12 +10,12 @@ class Difficulty {
 	inline public static function getFilePath(num:Null<Int> = null) {
 		if(num == null) num = PlayState.storyDifficulty;
 
-		var fileSuffix:String = list[num].toLowerCase();
-		if(fileSuffix != defaultDifficulty.toLowerCase())
-			fileSuffix = '-$fileSuffix';
-		else fileSuffix = '';
+		var filePostfix:String = list[num];
+		if(Paths.formatToSongPath(filePostfix) != Paths.formatToSongPath(defaultDifficulty))
+			filePostfix = '-$filePostfix';
+		else filePostfix = '';
 
-		return Paths.formatToSongPath(fileSuffix);
+		return Paths.formatToSongPath(filePostfix);
 	}
 	
 	inline public static function loadFromWeek(week:WeekData = null) {

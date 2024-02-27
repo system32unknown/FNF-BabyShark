@@ -1,5 +1,7 @@
 package states;
 
+import flixel.util.FlxDestroyUtil;
+
 import data.WeekData;
 import utils.FlxInterpolateColor;
 import backend.Highscore;
@@ -182,6 +184,7 @@ class FreeplayState extends MusicBeatState {
 	var instPlaying:Int = -1;
 	public static var vocals:FlxSound = null;
 	var holdTime:Float = 0;
+	var stopMusicPlay:Bool = false;
 	override function update(elapsed:Float) {
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 		if (FlxG.sound.music.volume < .7) FlxG.sound.music.volume += .5 * elapsed;
@@ -272,48 +275,39 @@ class FreeplayState extends MusicBeatState {
 				FlxG.sound.music.volume = 0;
 
 				Mods.currentModDirectory = songs[curSelected].folder;
-				var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
+				var songLowercase:String = songs[curSelected].songName.toLowerCase();
 				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
 				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
-				if (PlayState.SONG != null) {
+				if (PlayState.SONG.needsVoices) {
 					Conductor.usePlayState = true;
 					Conductor.mapBPMChanges(PlayState.SONG, true);
 					Conductor.bpm = PlayState.SONG.bpm;
 
-					if (PlayState.SONG.needsVoices) vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song, true));
-					else vocals = new FlxSound();
-					FlxG.sound.list.add(vocals);
-	
-					FlxG.sound.music.loadEmbedded(Paths.inst(PlayState.SONG.song, true));
-					FlxG.sound.music.onComplete = () -> {
-						if (vocals == null) {
-							FlxG.sound.music.onComplete = null;
-							return;
-						}
-						FlxG.sound.music.pause();
-						vocals.stop();
-	
-						vocals.time = FlxG.sound.music.time = FlxG.sound.music.time - 1;
-						FlxG.sound.music.resume();
-						vocals.play();
-						trace(FlxG.sound.music.onComplete);
-					}
+					vocals = new FlxSound();
+					try {
+						var loadedVocals = Paths.voices(PlayState.SONG.song, true);
+						
+						if(loadedVocals != null && loadedVocals.length > 0) {
+							vocals.loadEmbedded(loadedVocals);
+							FlxG.sound.list.add(vocals);
+							vocals.persist = vocals.looped = true;
+							vocals.volume = .8;
+							vocals.play();
+							vocals.pause();
+						} else vocals = FlxDestroyUtil.destroy(vocals);
+					} catch(e:Dynamic) vocals = FlxDestroyUtil.destroy(vocals);
+				}
 
-					vocals.looped = !(FlxG.sound.music.looped = true);
-					vocals.volume = FlxG.sound.music.volume = .8;
-					vocals.persist = true;
-					vocals.autoDestroy = false;
-	
-					FlxG.sound.music.play();
-					vocals.play();
-					instPlaying = curSelected;
-				
-					player.playingMusic = true;
-					player.curTime = 0;
-					player.switchPlayMusic();
-				} else if (instPlaying == curSelected && player.playingMusic)
-					player.pauseOrResume(player.paused);
-			}
+				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song, true), .8);
+				FlxG.sound.music.pause();
+				instPlaying = curSelected;
+
+				player.playingMusic = true;
+				player.curTime = 0;
+				player.switchPlayMusic();
+				player.pauseOrResume(true);
+			} else if (instPlaying == curSelected && player.playingMusic)
+				player.pauseOrResume(!player.playing);
 		} else if (controls.ACCEPT && !player.playingMusic) {
 			persistentUpdate = false;
 			var songFolder:String = Paths.formatToSongPath(songs[curSelected].songName);
@@ -343,7 +337,9 @@ class FreeplayState extends MusicBeatState {
 			if (FlxG.keys.pressed.Z || (skipSelect != null && skipSelect.contains(songs[curSelected].songName))) {
 				LoadingState.prepareToSong();
 				LoadingState.loadAndSwitchState(() -> new PlayState());
+				#if !LOADING_SCREEN_ALLOWED FlxG.sound.music.stop(); #end
 			} else FlxG.switchState(() -> new CharacterSelectionState());
+			stopMusicPlay = true;
 
 			destroyFreeplayVocals();
 			#if MODS_ALLOWED DiscordClient.loadModRPC(); #end
@@ -362,11 +358,8 @@ class FreeplayState extends MusicBeatState {
 	}
 
 	public static function destroyFreeplayVocals() {
-		if(vocals != null) {
-			vocals.stop();
-			vocals.destroy();
-		}
-		vocals = null;
+		if(vocals != null) vocals.stop();
+		vocals = FlxDestroyUtil.destroy(vocals);
 	}
 
 	function changeDiff(change:Int = 0) {
@@ -389,14 +382,19 @@ class FreeplayState extends MusicBeatState {
 	function changeSelection(change:Int = 0, playSound:Bool = true) {
 		if (player.playingMusic) return;
 
+		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length - 1);
 		_updateSongLastDifficulty();
 		if(playSound) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
-		var lastList:Array<String> = Difficulty.list;
-		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length - 1);
-
-		for (i in 0...iconArray.length) iconArray[i].alpha = (i == curSelected ? 1 : .6);
-		for (item in grpSongs.members) item.alpha = (item.targetY == curSelected ? 1 : .6);
+		for (num => item in grpSongs.members) {
+			var icon:HealthIcon = iconArray[num];
+			item.alpha = .6;
+			icon.alpha = .6;
+			if (item.targetY == curSelected) {
+				item.alpha = 1;
+				icon.alpha = 1;
+			}
+		}
 		
 		Mods.currentModDirectory = songs[curSelected].folder;
 		PlayState.storyWeek = songs[curSelected].week;
@@ -405,7 +403,7 @@ class FreeplayState extends MusicBeatState {
 		
 		var savedDiff:String = songs[curSelected].lastDifficulty;
 		var lastDiff:Int = Difficulty.list.indexOf(lastDifficultyName);
-		if(savedDiff != null && !lastList.contains(savedDiff) && Difficulty.list.contains(savedDiff))
+		if(savedDiff != null && !Difficulty.list.contains(savedDiff) && Difficulty.list.contains(savedDiff))
 			curDifficulty = Math.round(Math.max(0, Difficulty.list.indexOf(savedDiff)));
 		else if(lastDiff > -1) curDifficulty = lastDiff;
 		else if(Difficulty.list.contains(Difficulty.getDefault()))
@@ -458,6 +456,14 @@ class FreeplayState extends MusicBeatState {
 			_lastVisibles.push(i);
 		}
 	}
+
+	override function destroy():Void {
+		super.destroy();
+
+		FlxG.autoPause = ClientPrefs.getPref('autoPause');
+		if (!FlxG.sound.music.playing && !stopMusicPlay)
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+	}	
 }
 
 class SongMetadata {
