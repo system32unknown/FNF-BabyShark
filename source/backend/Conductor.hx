@@ -83,7 +83,7 @@ class Conductor {
 		var lastChange = getBPMFromIndex(from), reverse = lastChange.stepTime > step;
 		from = lastChange.id;
 
-		var i = from < 0 ? (reverse ? bpmChangeMap.length : -1) : from, v;
+		var i:Int = from < 0 ? (reverse ? bpmChangeMap.length : -1) : from, v;
 		while (reverse ? --i >= 0 : ++i < bpmChangeMap.length) {
 			if ((v = bpmChangeMap[i]).id != i) {
 				sortBPMChangeMap();
@@ -114,10 +114,6 @@ class Conductor {
 	@:noCompletion
 	public static function getStepRounded(time:Float, ?offset:Float, ?from:Int):Int
 		return Math.floor(inline getStep(time, offset, from));
-
-	@:noCompletion
-	public static function getBeat(time:Float, ?offset:Float = 0, ?from:Int):Float
-		return (inline getStep(time, offset, from)) / 4;
 
 	public static function mapBPMChanges(?song:SwagSong, reuse:Bool = false) {
 		if (reuse) bpmChangeMap.resize(0);

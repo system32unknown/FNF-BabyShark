@@ -22,7 +22,6 @@ class Init extends flixel.FlxState {
 		FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.keys.preventDefaultKeys = [TAB];
-		FlxG.mouse.visible = false;
 
 		FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.getPref('framerate');
 

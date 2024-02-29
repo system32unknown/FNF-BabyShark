@@ -32,7 +32,7 @@ class ClientPrefs {
 		'ShowLateEarly' => false,
 		'NoteDiffTypes' => "Simple",
 		'ShowJudgement' => true,
-		'IconBounceType' => 'Vanilla',
+		'IconBounceType' => 'Psych',
 		'RatingDisplay' => 'World',
 		'RainbowFps' => false,
 		'comboStacking' => false,
@@ -80,7 +80,7 @@ class ClientPrefs {
 				FlxG.drawFramerate = framerate;
 				FlxG.updateFramerate = framerate;
 			}
-		}, 'keyboard' => function(controls:Map<String, Array<FlxKey>>) {
+		}, 'keyboard' => (controls:Map<String, Array<FlxKey>>) -> {
 			reloadVolumeKeys();
 		}, 'hardwareCache' => function(bool:Bool) {
 			if (!isHardCInited) {

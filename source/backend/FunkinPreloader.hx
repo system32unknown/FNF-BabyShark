@@ -70,7 +70,7 @@ class FunkinPreloader extends flixel.system.FlxBasePreloader {
 		_logoGlow = makeSpriteBitmap(new FunkinLogoImage(0, 0), ratio * 2, ratio / 2);
 		_buffer.addChild(_logoGlow);
 
-		var corners:Bitmap = createBitmap(GraphicLogoCorners, (crns) -> {
+		var corners:Bitmap = createBitmap(GraphicLogoCorners, (crns:Bitmap) -> {
 			crns.width = _width;
 			crns.height = height;
 		});
@@ -92,7 +92,7 @@ class FunkinPreloader extends flixel.system.FlxBasePreloader {
     }
 
 	function makeSpriteBitmap(bitmap:BitmapData, scale:Float, x:Float = 0, y:Float = 0) {
-		var _sprite = new Sprite();
+		var _sprite:Sprite = new Sprite();
         _sprite.addChild(new Bitmap(bitmap));
         _sprite.scaleX = _sprite.scaleY = scale;
         _sprite.x = (this._width - _sprite.width) / 2 - x;

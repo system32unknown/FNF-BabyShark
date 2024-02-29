@@ -168,9 +168,10 @@ class CharacterSelectionState extends MusicBeatState {
 
 		camGame.zoom = FlxMath.lerp(.7, camGame.zoom, Math.exp(-elapsed * 3.125));
 
-		for (i in 0...controlSet.length) {
-			if (controlSet[i] && !pressedTheFunny && previewMode && char.animOffsets.exists(singAnimations[i])) {
-				char.playAnim(singAnimations[i], true);
+		if (previewMode) {
+			for (i in 0...controlSet.length) {
+				if (controlSet[i] && !pressedTheFunny && char.animOffsets.exists(singAnimations[i]))
+					char.playAnim(singAnimations[i], true);
 			}
 		}
 

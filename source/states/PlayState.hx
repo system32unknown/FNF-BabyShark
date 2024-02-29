@@ -310,10 +310,9 @@ class PlayState extends MusicBeatState {
 		curStage = SONG.stage;
 
 		var stageData:data.StageData.StageFile = StageData.getStageFile(curStage);
-		if(stageData == null) stageData = StageData.dummy(); //Stage couldn't be found, create a dummy stage for preventing a crash
 
-		stageUI = "normal";
 		defaultCamZoom = stageData.defaultZoom;
+		stageUI = "normal";
 		if (stageData.stageUI != null && stageData.stageUI.trim().length > 0)
 			stageUI = stageData.stageUI;
 		else if (stageData.isPixelStage) stageUI = "pixel";
@@ -1908,13 +1907,17 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
 	}
 
+	var lastCharFocus:String;
 	public function moveCameraSection():Void {
 		var section = SONG.notes[curSection];
 		if (section == null) return;
 
 		if (gf != null && section.gfSection) {
 			moveCamera('gf');
-			callOnScripts('onMoveCamera', ['gf']);
+			if (lastCharFocus != 'gf') {
+				callOnScripts('onMoveCamera', ['gf']);
+				lastCharFocus = 'gf';
+			}
 			return;
 		}
 
@@ -1925,7 +1928,10 @@ class PlayState extends MusicBeatState {
 			bfturn = (camCharacter == 'boyfriend');
 			camlock = false;
 		}
-		callOnScripts('onMoveCamera', [camCharacter]);
+		if (bfturn)
+			if (lastCharFocus != 'boyfriend') callOnScripts('onMoveCamera', ['boyfriend']);
+		else if (lastCharFocus != 'dad') callOnScripts('onMoveCamera', ['dad']);
+		lastCharFocus = bfturn ? 'boyfriend' : 'dad';
 	}
 
 	var cameraTwn:FlxTween;

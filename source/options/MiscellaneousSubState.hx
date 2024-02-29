@@ -8,7 +8,7 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		var opt:Option = new Option('FPS Counter', 'If unchecked, hides FPS Counter.', 'showFPS', 'bool');
 		addOption(opt);
 		opt.onChange = onChangeFPSCounter;
-		var opt:Option = new Option('Memory Counter Type:', '', 'memCounterType', 'string', ['MEM', 'MEM/PEAK', 'NONE']);
+		var opt:Option = new Option('Memory Counter:', '', 'memCounterType', 'string', ['MEM', 'MEM/PEAK', 'NONE']);
 		addOption(opt);
 		opt.onChange = onChangeFPSCounter;
 		

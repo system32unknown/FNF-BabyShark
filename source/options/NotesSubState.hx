@@ -229,9 +229,7 @@ class NotesSubState extends MusicBeatSubstate
 		for (i in 0...grpNumbers.length) {
 			var item = grpNumbers.members[i];
 			item.alpha = 0.6;
-			if ((curSelected * 3) + typeSelected == i) {
-				item.alpha = 1;
-			}
+			if ((curSelected * 3) + typeSelected == i) item.alpha = 1;
 		}
 	}
 

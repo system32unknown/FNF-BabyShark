@@ -91,8 +91,8 @@ class ResetScoreSubState extends MusicBeatSubstate {
 	}
 
 	function updateOptions() {
-		var scales:Array<Float> = [0.75, 1];
-		var alphas:Array<Float> = [0.6, 1.25];
+		var scales:Array<Float> = [.75, 1];
+		var alphas:Array<Float> = [.6, 1.25];
 		var confirmInt:Int = onYes ? 1 : 0;
 
 		yesText.alpha = alphas[confirmInt];
