@@ -56,7 +56,7 @@ class DiscordClient {
 			while (localID == clientID) {
 				#if DISCORD_DISABLE_IO_THREAD Discord.UpdateConnection(); #end
 				Discord.RunCallbacks();
-				Sys.sleep(.5); // Wait 0.5 seconds until the next loop...
+				Sys.sleep(2); // Wait 2 seconds until the next loop...
 			}
 		});
 		isInitialized = true;
