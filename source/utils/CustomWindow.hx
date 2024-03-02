@@ -21,8 +21,7 @@ class CustomWindow {
         window.y = y;
     }
 
-
-    function _createSprite(spr:FlxSprite):Sprite {
+    public function addSprite(spr:FlxSprite, x:Float, y:Float):Sprite {
         var openflSprite:Sprite = new Sprite();
 
 		var m:Matrix = new Matrix();
@@ -31,6 +30,10 @@ class CustomWindow {
 		openflSprite.graphics.beginBitmapFill(spr.pixels, m);
 		openflSprite.graphics.drawRect(0, 0, spr.pixels.width, spr.pixels.height);
 		openflSprite.graphics.endFill();
+
+        openflSprite.x = x;
+        openflSprite.y = y;
+
         window.stage.addChild(openflSprite);
 
         return openflSprite;

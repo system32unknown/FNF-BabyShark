@@ -28,10 +28,10 @@ class AdditionalClasses {
 			"flixel.addons.editors.spine",
 			"flixel.addons.nape",
 			"flixel.system.macros",
-
+	
 			"haxe.macro",
 			#if (js || hxcpp) "haxe.atomic.AtomicObject", #end
-
+	
 			"lime._internal.backend.air",
 			"lime._internal.backend.html5",
 			"lime._internal.backend.kha",
