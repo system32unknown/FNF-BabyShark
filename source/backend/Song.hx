@@ -27,10 +27,6 @@ typedef SwagSong = {
 }
 
 class Song {
-	public static function getSongPath(folder:String, song:String):String {
-		return '${Paths.formatToSongPath(folder)}/${Paths.formatToSongPath(song)}';
-	}
-
 	static function onLoadJson(songJson:Dynamic) { // Convert old charts to newest format
 		if(songJson.gfVersion == null) {
 			songJson.gfVersion = songJson.player3;
@@ -62,14 +58,15 @@ class Song {
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong {
 		var rawJson:String = null;
 		
-		var formattedPath:String = getSongPath(folder, jsonInput);
+		var formattedFolder:String = Paths.formatToSongPath(folder);
+		var formattedSong:String = Paths.formatToSongPath(jsonInput);
 		#if MODS_ALLOWED
-		var moddyFile:String = Paths.modsJson('${Paths.CHART_PATH}/$formattedPath');
+		var moddyFile:String = Paths.modsJson('${Paths.CHART_PATH}/$formattedFolder/$formattedSong');
 		if(FileSystem.exists(moddyFile)) rawJson = File.getContent(moddyFile).trim();
 		#end
 
 		if(rawJson == null) {
-			var path:String = Paths.json('${Paths.CHART_PATH}/$formattedPath');
+			var path:String = Paths.json('${Paths.CHART_PATH}/$formattedFolder/$formattedSong');
 			#if sys
 			if(FileSystem.exists(path)) rawJson = File.getContent(path);
 			else

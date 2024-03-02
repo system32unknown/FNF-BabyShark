@@ -46,7 +46,7 @@ class TitleState extends MusicBeatState {
 
 		super.create();
 
-		final balls = tjson.TJSON.parse(Paths.getTextFromFile('data/titleData.json'));
+		final balls:Dynamic = tjson.TJSON.parse(Paths.getTextFromFile('data/titleData.json'));
 		titleJson = {
 			titlex: balls.titlex,
 			titley: balls.titley,
@@ -165,7 +165,7 @@ class TitleState extends MusicBeatState {
 		super.update(elapsed);
 
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
-		gradientBar.scale.y += Math.sin(++gradtimer / 10) * .001;
+		gradientBar.scale.y += Math.sin(gradtimer++ / 10) * .001;
 		gradientBar.updateHitbox();
 		gradientBar.y = FlxG.height - gradientBar.height;
 

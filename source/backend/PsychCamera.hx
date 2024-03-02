@@ -24,7 +24,7 @@ class PsychCamera extends FlxCamera {
 		if (deadzone == null) {
 			target.getMidpoint(_point);
 			_point.addPoint(targetOffset);
-			_scrollTarget.set(_point.x - width * 0.5, _point.y - height * 0.5);
+			_scrollTarget.set(_point.x - width * .5, _point.y - height * .5);
 		} else {
 			var edge:Float;
 			var targetX:Float = target.x + targetOffset.x;

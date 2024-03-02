@@ -286,7 +286,6 @@ class FreeplayState extends MusicBeatState {
 					vocals = new FlxSound();
 					try {
 						var loadedVocals = Paths.voices(PlayState.SONG.song, true);
-						
 						if(loadedVocals != null && loadedVocals.length > 0) {
 							vocals.loadEmbedded(loadedVocals);
 							FlxG.sound.list.add(vocals);
@@ -306,14 +305,18 @@ class FreeplayState extends MusicBeatState {
 				player.curTime = 0;
 				player.switchPlayMusic();
 				player.pauseOrResume(true);
-			} else if (instPlaying == curSelected && player.playingMusic)
-				player.pauseOrResume(!player.playing);
+			} else if (instPlaying == curSelected && player.playingMusic) player.pauseOrResume(!player.playing);
 		} else if (controls.ACCEPT && !player.playingMusic) {
 			persistentUpdate = false;
 			var songFolder:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var songLowercase:String = Highscore.formatSong(songFolder, curDifficulty);
 			
 			if (songLowercase == "" || songLowercase.length < 1) return;
+
+			if (songLowercase == "enter-terminal-hard") {
+				FlxG.switchState(() -> new TerminalState());
+				return;
+			}
 
 			try {
 				PlayState.SONG = Song.loadFromJson(songLowercase, songFolder);

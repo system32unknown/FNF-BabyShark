@@ -466,9 +466,9 @@ class Paths {
 
 	#if flxanimate
 	public static function loadAnimateAtlas(spr:FlxAnimate, folderOrImg:Dynamic, spriteJson:Dynamic = null, animationJson:Dynamic = null) {
-		var changedAnimJson = false;
-		var changedAtlasJson = false;
-		var changedImage = false;
+		var changedAnimJson:Bool = false;
+		var changedAtlasJson:Bool = false;
+		var changedImage:Bool = false;
 
 		if(spriteJson != null) {
 			changedAtlasJson = true;

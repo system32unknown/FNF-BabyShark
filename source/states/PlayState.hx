@@ -185,8 +185,6 @@ class PlayState extends MusicBeatState {
 	var msTimingTween:FlxTween;
 	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
 
-	var songNameTxt:FlxText;
-
 	public static var campaignScore:Int = 0;
 	public static var deathCounter:Int = 0;
 
@@ -421,7 +419,7 @@ class PlayState extends MusicBeatState {
 		timeTxt.alpha = 0;
 		timeTxt.visible = updateTime = showTime;
 		if(downScroll) timeTxt.y = FlxG.height - 35;
-		if(timeType == 'Song Name') timeTxt.text = SONG.song;
+		if(timeType == 'Song Name') timeTxt.text = SONG.song + ' - ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : '');
 
 		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', () -> return songPercent, 0, 1);
 		timeBar.scrollFactor.set();
@@ -506,13 +504,6 @@ class PlayState extends MusicBeatState {
 		botplayTxt.scrollFactor.set();
 		botplayTxt.visible = cpuControlled;
 		uiGroup.add(botplayTxt);
-
-		songNameTxt = new FlxText(2, scoreTxt.y, 0, '${SONG.song} • ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : ''), 16);
-		songNameTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
-		songNameTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		songNameTxt.scrollFactor.set();
-		songNameTxt.visible = !hideHud;
-		uiGroup.add(songNameTxt);
 
 		uiGroup.camera = camHUD; noteGroup.camera = camHUD;
 		comboGroup.camera = (ClientPrefs.getPref('RatingDisplay') == "Hud" ? camHUD : camGame);
@@ -1516,9 +1507,9 @@ class PlayState extends MusicBeatState {
 				timeTxt.text = switch(timeType) {
 					case 'Time Left' | 'Time Elapsed': formattedsec;
 					case 'Time Position': timePos;
-					case 'Name Left' | 'Name Elapsed': '${SONG.song} ($formattedsec)';
-					case 'Name Percent': '${SONG.song} (${timeBar.percent}%)';
-					case 'Name Time Position' | _: '${SONG.song} ($timePos)';
+					case 'Name Left' | 'Name Elapsed': '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}($formattedsec)';
+					case 'Name Percent': '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}(${timeBar.percent}%)';
+					case 'Name Time Position' | _: '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}($timePos)';
 				}
 		}
 

@@ -134,7 +134,7 @@ class Mods {
 
 	public static function getPack(?folder:String = null):Dynamic {
 		#if MODS_ALLOWED
-		if(folder == null) folder = Mods.currentModDirectory;
+		if(folder == null) folder = currentModDirectory;
 
 		var path = Paths.mods('$folder/pack.json');
 		if(FileSystem.exists(path)) {
