@@ -90,7 +90,7 @@ class PlayState extends MusicBeatState {
 	public var boyfriend:Character = null;
 	public var gameOverChar:Character = null;
 
-	public var notes:FlxTypedGroup<Note>;
+	public var notes:NoteGroup;
 	public var unspawnNotes:Array<Note> = [];
 	public var eventNotes:Array<EventNote> = [];
 
@@ -1024,7 +1024,7 @@ class PlayState extends MusicBeatState {
 		vocals.pitch = playbackRate;
 		FlxG.sound.list.add(vocals);
 
-		notes = new FlxTypedGroup<Note>();
+		notes = new NoteGroup();
 		noteGroup.add(notes);
 		var noteData:Array<backend.Section.SwagSection> = songData.notes;
 
@@ -1503,14 +1503,13 @@ class PlayState extends MusicBeatState {
 			var secondsTotal:Int = Math.floor(Math.max(0, (songCalc / playbackRate) / 1000));
 			var formattedsec:String = CoolUtil.formatTime(secondsTotal);
 			var timePos:String = '$formattedsec / ${CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000))}';
-			if (timeType != 'Song Name')
-				timeTxt.text = switch(timeType) {
-					case 'Time Left' | 'Time Elapsed': formattedsec;
-					case 'Time Position': timePos;
-					case 'Name Left' | 'Name Elapsed': '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}($formattedsec)';
-					case 'Name Percent': '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}(${timeBar.percent}%)';
-					case 'Name Time Position' | _: '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}($timePos)';
-				}
+			if (timeType != 'Song Name') timeTxt.text = switch(timeType) {
+				case 'Time Left' | 'Time Elapsed': formattedsec;
+				case 'Time Position': timePos;
+				case 'Name Left' | 'Name Elapsed': '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}($formattedsec)';
+				case 'Name Percent': '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}(${timeBar.percent}%)';
+				case 'Name Time Position' | _: '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}($timePos)';
+			}
 		}
 
 		if (camZooming) {

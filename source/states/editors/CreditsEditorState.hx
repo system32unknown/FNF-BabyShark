@@ -461,10 +461,8 @@ class CreditsEditorState extends MusicBeatState {
 			item.targetY = num - curSelected;
 
 			if(!nullCheck(num)) {
-				item.alpha = 0.6;
-				if (item.targetY == 0) {
-					item.alpha = 1;
-				}
+				item.alpha = .6;
+				if (item.targetY == 0) item.alpha = 1;
 			}
 		}
 
