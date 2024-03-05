@@ -128,6 +128,10 @@ class PlayState extends MusicBeatState {
 		var newPercent:Null<Float> = FlxMath.remapToRange(healthBar.bounded, healthBar.bounds.min, healthBar.bounds.max, 0, 100);
 		healthBar.percent = (newPercent != null ? newPercent : 0);
 
+		if (healthBar.percent < 20) {iconP1.setState(1); iconP2.setState(2);}
+		else if (healthBar.percent > 80) {iconP1.setState(2); iconP2.setState(1);}
+		else {iconP1.setState(0); iconP2.setState(0);}
+
 		return health;
 	}
 	public var combo:Int = 0;
@@ -1466,7 +1470,7 @@ class PlayState extends MusicBeatState {
 				case "Psych":
 					var mult:Float = FlxMath.lerp(1, icon.scale.x, Math.exp(-elapsed * 9 * playbackRate));
 					icon.scale.set(mult, mult);
-				case "Dave" | "Purgatory": icon.setGraphicSize(Std.int(FlxMath.lerp(150, icon.width, .88)), Std.int(FlxMath.lerp(150, icon.height, .88)));
+				case "Dave": icon.setGraphicSize(Std.int(FlxMath.lerp(150, icon.width, .88)), Std.int(FlxMath.lerp(150, icon.height, .88)));
 			}
 			icon.updateHitbox();
 		}
@@ -1474,14 +1478,6 @@ class PlayState extends MusicBeatState {
 		final iconOffset:Int = 26;
 		if (iconP1.moves) iconP1.x = (iconP1.iconType == 'psych' ? healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset : healthBar.barCenter - iconOffset);
 		if (iconP2.moves) iconP2.x = (iconP2.iconType == 'psych' ? healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2 : healthBar.barCenter - (iconP2.width - iconOffset));
-
-		if (healthBar.percent < 20) {
-			iconP1.setState(1); iconP2.setState(2);
-		} else if (healthBar.percent > 80) {
-			iconP1.setState(2); iconP2.setState(1);
-		} else {
-			iconP1.setState(0); iconP2.setState(0);
-		}
 
 		if (!endingSong && !inCutscene && allowDebugKeys) {
 			if (controls.justPressed('debug_1')) openChartEditor();
@@ -2645,12 +2641,7 @@ class PlayState extends MusicBeatState {
 			case "Psych":
 				iconP1.scale.set(1.2, 1.2);
 				iconP2.scale.set(1.2, 1.2);
-			case "Dave" | "Purgatory":
-				if (ClientPrefs.getPref('IconBounceType') == "Purgatory") {
-					FlxTween.angle(iconP1, -15, 0, Conductor.crochet / 1300 * gfSpeed, {ease: FlxEase.quadOut});
-					FlxTween.angle(iconP2, 15, 0, Conductor.crochet / 1300 * gfSpeed, {ease: FlxEase.quadOut});
-				}
-
+			case "Dave":
 				var funny:Float = Math.max(Math.min(healthBar.bounded, 1.9), .1);
 				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
 				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));

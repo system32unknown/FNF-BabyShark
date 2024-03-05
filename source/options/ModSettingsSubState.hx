@@ -20,7 +20,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 
 		try {
 			for (option in options) {
-				var newOption = new Option(
+				var newOption:Option = new Option(
 					option.name != null ? option.name : option.save,
 					option.description != null ? option.description : 'No description provided.',
 					option.save,
@@ -58,8 +58,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 						}
 
 					default:
-						if(option.value != null)
-							newOption.defaultValue = option.value;
+						if(option.value != null) newOption.defaultValue = option.value;
 
 						@:privateAccess {
 							newOption.getValue = () -> return save.get(newOption.variable);
