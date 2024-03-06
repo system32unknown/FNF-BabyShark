@@ -29,10 +29,10 @@ class LoadingState extends MusicBeatState {
 
 	inline static public function loadAndSwitchState(target:NextState, stopMusic = false, intrusive:Bool = true)
 		FlxG.switchState(getNextState(target, stopMusic, intrusive));
-
+	
 	var target:NextState = null;
-	var stopMusic = false;
-	var skipUpdate:Bool = false;
+	var stopMusic:Bool = false;
+	var dontUpdate:Bool = false;
 
 	var bar:FlxSprite;
 	var barWidth:Int = 0;
@@ -45,7 +45,7 @@ class LoadingState extends MusicBeatState {
 	override function create() {
 		#if !LOADING_SCREEN_ALLOWED while(true) #end {
 			if (checkLoaded()) {
-				skipUpdate = true;
+				dontUpdate = true;
 				super.create();
 				onLoad();
 				return;
@@ -89,10 +89,10 @@ class LoadingState extends MusicBeatState {
 	var transitioning:Bool = false;
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		if(skipUpdate) return;
+		if (dontUpdate) return;
 
-		if(!transitioning) {
-			if(!finishedLoading && checkLoaded()) {
+		if (!transitioning) {
+			if (!finishedLoading && checkLoaded()) {
 				transitioning = true;
 				onLoad();
 				return;
@@ -120,7 +120,7 @@ class LoadingState extends MusicBeatState {
 	var finishedLoading:Bool = false;
 	function onLoad() {
 		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
-		
+
 		FlxG.camera.visible = false;
 		flixel.addons.transition.FlxTransitionableState.skipNextTransIn = true;
 		FlxG.switchState(target);
@@ -130,7 +130,7 @@ class LoadingState extends MusicBeatState {
 	public static function checkLoaded():Bool {
 		for (key => bitmap in requestedBitmaps) {
 			if (bitmap != null && Paths.cacheBitmap(key, bitmap) != null) trace('finished preloading image $key');
-			else trace('failed to cache image $key', ERROR);
+			else Logs.trace('failed to cache image $key', ERROR);
 		}
 		requestedBitmaps.clear();
 		return (loaded == loadMax && initialThreadCompleted);
@@ -141,7 +141,7 @@ class LoadingState extends MusicBeatState {
 		var weekDir:String = StageData.forceNextDirectory;
 		StageData.forceNextDirectory = null;
 
-		if(weekDir != null && weekDir.length > 0 && weekDir != '') directory = weekDir;
+		if (weekDir != null && weekDir.length > 0 && weekDir != '') directory = weekDir;
 
 		Paths.setCurrentLevel(directory);
 		trace('Setting asset folder to ' + directory);
@@ -162,12 +162,12 @@ class LoadingState extends MusicBeatState {
 	static var musicToPrepare:Array<String> = [];
 	static var songsToPrepare:Array<String> = [];
 	public static function prepare(images:Array<String> = null, sounds:Array<String> = null, music:Array<String> = null) {
-		if(images != null) imagesToPrepare = imagesToPrepare.concat(images);
-		if(sounds != null) soundsToPrepare = soundsToPrepare.concat(sounds);
-		if(music != null) musicToPrepare = musicToPrepare.concat(music);
+		if (images != null) imagesToPrepare = imagesToPrepare.concat(images);
+		if (sounds != null) soundsToPrepare = soundsToPrepare.concat(sounds);
+		if (music != null) musicToPrepare = musicToPrepare.concat(music);
 	}
 
-	static var initialThreadCompleted:Bool = false;
+	static var initialThreadCompleted:Bool = true;
 	public static function prepareToSong() {
 		imagesToPrepare = [];
 		soundsToPrepare = [];
@@ -202,17 +202,15 @@ class LoadingState extends MusicBeatState {
 			if(song.splashSkin != null && song.splashSkin.length > 0) noteSplash = song.splashSkin;
 			imagesToPrepare.push(noteSplash);
 
-			try {
-				var path:String = Paths.json('charts/$folder/preload');
+			try{
+				var path:String = Paths.json('${Paths.CHART_PATH}/$folder/preload');
 				var json:Dynamic = null;
 
 				#if MODS_ALLOWED
-				var moddyFile:String = Paths.modsJson('charts/$folder/preload');
+				var moddyFile:String = Paths.modsJson('${Paths.CHART_PATH}/$folder/preload');
 				if (FileSystem.exists(moddyFile)) json = Json.parse(File.getContent(moddyFile));
 				else json = Json.parse(File.getContent(path));
-				#else
-				json = Json.parse(Assets.getText(path));
-				#end
+				#else json = Json.parse(Assets.getText(path)); #end
 
 				if (json != null) prepare((!ClientPrefs.getPref('lowQuality') || json.images_low) ? json.images : json.images_low, json.sounds, json.music);
 			} catch(e:Dynamic) Logs.trace("ERROR PREPARING SONG: " + e, ERROR);
@@ -236,8 +234,7 @@ class LoadingState extends MusicBeatState {
 			if (gfVersion == null) gfVersion = 'gf';
 
 			preloadCharacter(player1);
-			if (prefixVocals != null && Paths.fileExists('$prefixVocals.${Paths.SOUND_EXT}', SOUND, false, 'songs'))
-				songsToPrepare.push(prefixVocals);
+			if(Paths.fileExists('$prefixVocals.${Paths.SOUND_EXT}', SOUND, false, 'songs')) songsToPrepare.push(prefixVocals);
 
 			if (player2 != player1) {
 				threadsMax++;

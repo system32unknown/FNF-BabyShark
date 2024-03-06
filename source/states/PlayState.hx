@@ -4,8 +4,6 @@ import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.input.keyboard.FlxKey;
-import flixel.util.FlxSort;
-import flixel.util.FlxSave;
 import openfl.events.KeyboardEvent;
 #if VIDEOS_ALLOWED import backend.VideoManager; #end
 #if !MODS_ALLOWED import openfl.utils.Assets; #end
@@ -51,7 +49,7 @@ class PlayState extends MusicBeatState {
 	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, FlxText> = new Map<String, FlxText>();
-	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
+	public var modchartSaves:Map<String, flixel.util.FlxSave> = new Map<String, flixel.util.FlxSave>();
 	#end
 
 	public var BF_X:Float = 770;
@@ -118,6 +116,13 @@ class PlayState extends MusicBeatState {
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
 	var displayedHealth(default, null):Float = 1;
+
+	public dynamic function updateIconsPosition() {
+		final iconOffset:Int = 26;
+		iconP1.x = (iconP1.iconType == 'psych' ? healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset : healthBar.barCenter - iconOffset);
+		iconP2.x = (iconP2.iconType == 'psych' ? healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2 : healthBar.barCenter - (iconP2.width - iconOffset));
+	}
+
 	var iconsAnimations:Bool = true;
 	function set_health(value:Float):Float {
 		if(!iconsAnimations || healthBar == null || !healthBar.enabled || healthBar.valueFunction == null)
@@ -1155,7 +1160,7 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	function sortByTime(Obj1:Dynamic, Obj2:Dynamic):Int return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
+	function sortByTime(Obj1:Dynamic, Obj2:Dynamic):Int return flixel.util.FlxSort.byValues(-1, Obj1.strumTime, Obj2.strumTime);
 
 	function makeEvent(event:Array<Dynamic>, i:Int) {
 		var subEvent:EventNote = {
@@ -1376,10 +1381,7 @@ class PlayState extends MusicBeatState {
 			vocals.pitch = playbackRate;
 
 			if (!stream || resync) {
-				if (stream) {
-					FlxG.sound.music.pause();
-					vocals.pause();
-				}
+				if (stream) {FlxG.sound.music.pause(); vocals.pause();}
 				Conductor.songPosition = (vocals.time = FlxG.sound.music.time) + Conductor.offset;
 			} else Conductor.songPosition = lastSongTime + Conductor.offset;
 			vocals.play();
@@ -1474,10 +1476,7 @@ class PlayState extends MusicBeatState {
 			}
 			icon.updateHitbox();
 		}
-
-		final iconOffset:Int = 26;
-		if (iconP1.moves) iconP1.x = (iconP1.iconType == 'psych' ? healthBar.barCenter + (150 * iconP1.scale.x - 150) / 2 - iconOffset : healthBar.barCenter - iconOffset);
-		if (iconP2.moves) iconP2.x = (iconP2.iconType == 'psych' ? healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2 : healthBar.barCenter - (iconP2.width - iconOffset));
+		updateIconsPosition();
 
 		if (!endingSong && !inCutscene && allowDebugKeys) {
 			if (controls.justPressed('debug_1')) openChartEditor();
@@ -1985,10 +1984,7 @@ class PlayState extends MusicBeatState {
 			vocals.volume = 0;
 			vocals.stop();
 
-			if (chartingMode) {
-				openChartEditor();
-				return false;
-			}
+			if (chartingMode) {openChartEditor(); return false;}
 
 			if (isStoryMode) {
 				campaignScore += songScore;
@@ -2052,15 +2048,15 @@ class PlayState extends MusicBeatState {
 
 	function cachePopUpScore() {
 		var uiPrefix:String = '';
-		var uiSuffix:String = '';
+		var uiPostfix:String = '';
 		if (stageUI != "normal") {
 			uiPrefix = '${stageUI}UI/';
-			if (isPixelStage) uiSuffix = '-pixel';
+			if (isPixelStage) uiPostfix = '-pixel';
 		}
 
-		for (rating in ratingsData) Paths.image(uiPrefix + 'ratings/${rating.image}' + uiSuffix);
-		for (i in 0...10) Paths.image(uiPrefix + 'number/num$i' + uiSuffix);
-		for (miscRatings in ['combo', 'early', 'late']) Paths.image(uiPrefix + 'ratings/$miscRatings' + uiSuffix);
+		for (rating in ratingsData) Paths.image(uiPrefix + 'ratings/${rating.image}' + uiPostfix);
+		for (i in 0...10) Paths.image(uiPrefix + 'number/num$i' + uiPostfix);
+		for (miscRatings in ['combo', 'early', 'late']) Paths.image(uiPrefix + 'ratings/$miscRatings' + uiPostfix);
 	}
 
 	var scoreSeparator:String = "|";
@@ -2109,13 +2105,13 @@ class PlayState extends MusicBeatState {
 		final placement:Float = FlxG.width * .35;
 
 		var uiPrefix:String = '';
-		var uiSuffix:String = '';
+		var uiPostfix:String = '';
 		var antialias:Bool = ClientPrefs.getPref('Antialiasing');
 		final mult:Float = (isPixelStage ? daPixelZoom * .85 : .7);
 
 		if (stageUI != "normal") {
 			uiPrefix = 'pixelUI/';
-			if (isPixelStage) uiSuffix = '-pixel';
+			if (isPixelStage) uiPostfix = '-pixel';
 			antialias = !isPixelStage;
 		}
 	
@@ -2123,7 +2119,7 @@ class PlayState extends MusicBeatState {
 
 		var rating:FlxSprite = null;
 		if (showRating) {
-			rating = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/${daRating.image}' + uiSuffix));
+			rating = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/${daRating.image}' + uiPostfix));
 			rating.screenCenter(Y).y -= 60 + comboOffset[0][1];
 			rating.x = placement - 40 + comboOffset[0][0];
 	
@@ -2140,7 +2136,7 @@ class PlayState extends MusicBeatState {
 	
 		var comboSpr:FlxSprite = null;
 		if (showCombo && combo >= 10) {
-			comboSpr = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/combo' + uiSuffix));
+			comboSpr = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/combo' + uiPostfix));
 			comboSpr.screenCenter(Y).y -= comboOffset[2][1];
 			comboSpr.x = placement + comboOffset[2][0];
 	
@@ -2157,7 +2153,7 @@ class PlayState extends MusicBeatState {
 
 		var timing:FlxSprite = null;
 		if (ClientPrefs.getPref('ShowLateEarly') && daTiming != '') {
-			timing = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/$daTiming' + uiSuffix));
+			timing = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/$daTiming' + uiPostfix));
 			timing.screenCenter(Y).y -= comboOffset[3][1];
 			timing.x = placement - 130 + comboOffset[3][0];
 
@@ -2192,7 +2188,7 @@ class PlayState extends MusicBeatState {
 			var daLoop:Int = 0;
 			final numMult:Float = (isPixelStage ? daPixelZoom : .5);
 			for (i in [for (i in 0...comboSplit.length) Std.parseInt(comboSplit[i])]) {
-				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiSuffix));
+				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiPostfix));
 				numScore.screenCenter(Y).y += 80 - comboOffset[1][1];
 				numScore.x = placement + (43 * daLoop++) - 90 + comboOffset[1][0];
 			
@@ -2696,8 +2692,7 @@ class PlayState extends MusicBeatState {
 	public function startLuasNamed(luaFile:String) {
 		#if MODS_ALLOWED
 		var luaToLoad:String = Paths.modFolders(luaFile);
-		if(!FileSystem.exists(luaToLoad))
-			luaToLoad = Paths.getSharedPath(luaFile);
+		if(!FileSystem.exists(luaToLoad)) luaToLoad = Paths.getSharedPath(luaFile);
 		
 		if(FileSystem.exists(luaToLoad))
 		#elseif sys
@@ -2716,8 +2711,7 @@ class PlayState extends MusicBeatState {
 	#if HSCRIPT_ALLOWED
 	public function startHScriptsNamed(scriptFile:String) {
 		var scriptToLoad:String = Paths.modFolders(scriptFile);
-		if(!FileSystem.exists(scriptToLoad))
-			scriptToLoad = Paths.getSharedPath(scriptFile);
+		if(!FileSystem.exists(scriptToLoad)) scriptToLoad = Paths.getSharedPath(scriptFile);
 		
 		if(FileSystem.exists(scriptToLoad)) {
 			for (hx in hscriptArray) if (hx.origin == scriptToLoad) return false;
