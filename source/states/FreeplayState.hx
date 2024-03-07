@@ -277,6 +277,9 @@ class FreeplayState extends MusicBeatState {
 				Mods.currentModDirectory = songs[curSelected].folder;
 				var songLowercase:String = songs[curSelected].songName.toLowerCase();
 				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+
+				if (songLowercase == "enter terminal") return;
+
 				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 				if (PlayState.SONG.needsVoices) {
 					Conductor.usePlayState = true;

@@ -79,6 +79,7 @@ class TerminalState extends MusicBeatState {
 				case "recurser": "A being of chaos that wants to spread ORDER.\nDespite this, his sanity is at the border.";
 				case "ollie" | "babyshark": "[I HATE HIM. BECAUSE HE KEEPS FOLLOWING ME, AND WANTS FRIENDS. BUT I LIKE HIM.]";
 				case "t5" | "t5mpler": "What the fuck are you doing in here?";
+				case "redacted": "[THE OTHER ME. BUT HE'S POWERFUL. CAN DESTROY BOYFRIEND.]";
 				default: "File not found.";
 			}
 			updateText('\n$tx');

@@ -24,7 +24,6 @@ class VisualsUISubState extends BaseOptionsMenu {
 		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms', 'bool'));
 		addOption(new Option('Show Combo Counter', 'If checked, the combo counter will be shown.', 'ShowComboCounter', 'bool'));
 		addOption(new Option('Show ms Timing', 'If checked, the ms timing will be shown.', 'ShowMsTiming', 'bool'));
-		addOption(new Option('Show Late/Early', 'If checked, the Late/Early counter will be shown.', 'ShowLateEarly', 'bool'));
 		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'ShowNPS', 'bool'));
 		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'ShowJudgement', 'bool'));
 

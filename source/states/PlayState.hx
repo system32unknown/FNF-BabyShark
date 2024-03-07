@@ -2076,7 +2076,6 @@ class PlayState extends MusicBeatState {
 		final daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
 		var score:Int = 500;
 
-		var daTiming:String = "";
 		var msTiming:Float = 0;
 
 		note.ratingMod = daRating.ratingMod;
@@ -2088,9 +2087,6 @@ class PlayState extends MusicBeatState {
 
 		if(daRating.noteSplash && !note.noteSplashDisabled)
 			spawnNoteSplashOnNote(note);
-
-		if (noteDiff > Conductor.safeZoneOffset * .1) daTiming = "early";
-		else if (noteDiff < Conductor.safeZoneOffset * -.1) daTiming = "late";
 
 		songScore += score;
 		if(!note.ratingDisabled) {
@@ -2151,23 +2147,6 @@ class PlayState extends MusicBeatState {
 			FlxTween.tween(comboSpr, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {comboSpr.kill(); comboSpr.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 		}
 
-		var timing:FlxSprite = null;
-		if (ClientPrefs.getPref('ShowLateEarly') && daTiming != '') {
-			timing = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/$daTiming' + uiPostfix));
-			timing.screenCenter(Y).y -= comboOffset[3][1];
-			timing.x = placement - 130 + comboOffset[3][0];
-
-			timing.velocity.set(-FlxG.random.int(0, 10) * playbackRate + ratingVel.x, -FlxG.random.int(140, 175) * playbackRate + ratingVel.y);
-			timing.acceleration.set(ratingAcc.x * playbackRate * playbackRate, 550 * playbackRate * playbackRate + ratingAcc.y);
-			timing.antialiasing = antialias;
-			timing.setGraphicSize(timing.width * mult);
-			timing.updateHitbox();
-			timing.ID = comboGroup.ID++;
-
-			comboGroup.add(timing);
-			FlxTween.tween(timing, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {timing.kill(); timing.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
-		}
-	
 		if (ClientPrefs.getPref('ShowMsTiming') && mstimingTxt != null) {
 			msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
 			mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
@@ -2184,9 +2163,7 @@ class PlayState extends MusicBeatState {
 	
 		if (showComboNum) {
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
-
 			var daLoop:Int = 0;
-			final numMult:Float = (isPixelStage ? daPixelZoom : .5);
 			for (i in [for (i in 0...comboSplit.length) Std.parseInt(comboSplit[i])]) {
 				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiPostfix));
 				numScore.screenCenter(Y).y += 80 - comboOffset[1][1];
@@ -2195,7 +2172,7 @@ class PlayState extends MusicBeatState {
 				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate + ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
 				numScore.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate + ratingAcc.y);
 				numScore.antialiasing = antialias;
-				numScore.setGraphicSize(numScore.width * numMult);
+				numScore.setGraphicSize(numScore.width * (isPixelStage ? daPixelZoom : .5));
 				numScore.updateHitbox();
 				numScore.ID = comboGroup.ID++;
 
