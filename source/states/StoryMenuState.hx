@@ -235,7 +235,7 @@ class StoryMenuState extends MusicBeatState {
 			}
 
 			LoadingState.prepareToSong();
-			new FlxTimer().start(1, (tmr:FlxTimer) -> {
+			FlxTimer.wait(1, () -> {
 				#if !LOADING_SCREEN_ALLOWED FlxG.sound.music.stop(); #end
 				LoadingState.loadAndSwitchState(() -> new PlayState(), true);
 				FreeplayState.destroyFreeplayVocals();

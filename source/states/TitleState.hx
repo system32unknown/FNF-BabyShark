@@ -190,7 +190,7 @@ class TitleState extends MusicBeatState {
 					MainMenuState.firstStart = true;
 					MainMenuState.finishedFunnyMove = false;
 	
-					new FlxTimer().start(1.5, function(tmr:FlxTimer) {
+					FlxTimer.wait(1.5, () -> {
 						FlxTransitionableState.skipNextTransIn = false;
 						FlxG.switchState(() -> new MainMenuState());
 					});

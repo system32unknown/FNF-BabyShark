@@ -135,7 +135,6 @@ class HScript extends Interp {
 	function preset() {
 		parser = new Parser();
 		allowStaticVariables = allowPublicVariables = true;
-		parser.line = 1;
 		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
 		parser.preprocesorValues = getDefaultPreprocessors();
 

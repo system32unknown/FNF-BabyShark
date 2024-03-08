@@ -1,5 +1,6 @@
 package flixel.sound;
 
+import flixel.util.FlxStringUtil;
 import openfl.events.IEventDispatcher;
 import openfl.events.Event;
 import openfl.media.Sound;
@@ -7,24 +8,17 @@ import openfl.media.SoundChannel;
 import openfl.media.SoundTransform;
 import openfl.media.SoundMixer;
 import openfl.net.URLRequest;
-import flixel.FlxBasic;
-import flixel.system.FlxAssets.FlxSoundAsset;
-import flixel.util.FlxStringUtil;
 import openfl.Assets;
-#if (openfl >= "8.0.0")
-import openfl.utils.AssetType;
-#end
+#if (openfl >= "8.0.0") import openfl.utils.AssetType; #end
 #if lime
 import lime.media.AudioBuffer;
-#if lime_vorbis
-import lime.media.vorbis.VorbisFile;
-#end
+#if lime_vorbis import lime.media.vorbis.VorbisFile; #end
 #end
 
 /**
  * This is the universal flixel sound object, used for streaming, music, and sound effects.
  */
-class FlxSound extends FlxBasic
+class FlxSound extends flixel.FlxBasic
 {
 	/**
 	 * The x position of this sound in world coordinates.
@@ -148,7 +142,8 @@ class FlxSound extends FlxBasic
 	public var length(get, never):Float;
 
 	/**
-	 * The sound group this sound belongs to
+	 * The sound group this sound belongs to, can only be in one group.
+	 * NOTE: This setter is deprecated, use `group.add(sound)` or `group.remove(sound)`.
 	 */
 	public var group(default, set):FlxSoundGroup;
 
@@ -320,8 +315,10 @@ class FlxSound extends FlxBasic
 		_transform.pan = 0;
 	}
 
-	override public function destroy():Void
-	{
+	override public function destroy():Void {
+		// Prevents double destroy
+		if (group != null) group.remove(this);
+
 		_transform = null;
 		exists = false;
 		active = false;
@@ -416,7 +413,7 @@ class FlxSound extends FlxBasic
 	 * @param	OnComplete		Called when the sound finished playing
 	 * @return	This FlxSound instance (nice for chaining stuff together, if you're into that).
 	 */
-	public function loadEmbedded(EmbeddedSound:FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound {
+	public function loadEmbedded(EmbeddedSound:flixel.system.FlxAssets.FlxSoundAsset, Looped:Bool = false, AutoDestroy:Bool = false, ?OnComplete:Void->Void):FlxSound {
 		if (EmbeddedSound == null) return this;
 
 		cleanup(true);
@@ -798,21 +795,13 @@ class FlxSound extends FlxBasic
 	}
 	#end
 
-	function set_group(group:FlxSoundGroup):FlxSoundGroup
+	@:deprecated("sound.group = myGroup is deprecated, use myGroup.add(sound)") // 5.7.0
+	function set_group(value:FlxSoundGroup):FlxSoundGroup
 	{
-		if (this.group != group)
-		{
-			var oldGroup:FlxSoundGroup = this.group;
+		if (value != null) value.add(this); // add to new group, also removes from prev and calls updateTransform
+		else group.remove(this); // remove from prev group, also calls updateTransform
 
-			// New group must be set before removing sound to prevent infinite recursion
-			this.group = group;
-
-			if (oldGroup != null) oldGroup.remove(this);
-			if (group != null) group.add(this);
-
-			updateTransform();
-		}
-		return group;
+		return value;
 	}
 
 	inline function get_playing():Bool
@@ -824,7 +813,7 @@ class FlxSound extends FlxBasic
 	function set_volume(Volume:Float):Float {
 		_volume = FlxMath.bound(Volume, 0, 1);
 		updateTransform();
-		return _volume;
+		return Volume;
 	}
 
 	inline function get_loaded():Bool

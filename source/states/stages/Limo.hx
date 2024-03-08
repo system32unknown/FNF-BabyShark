@@ -213,7 +213,7 @@ class Limo extends BaseStage
 
 		fastCar.velocity.x = (FlxG.random.int(170, 220) / FlxG.elapsed) * 3;
 		fastCarCanDrive = false;
-		carTimer = new FlxTimer().start(2, function(tmr:FlxTimer) {
+		carTimer = FlxTimer.wait(2, () -> {
 			resetFastCar();
 			carTimer = null;
 		});

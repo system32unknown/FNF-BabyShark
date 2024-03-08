@@ -267,9 +267,9 @@ class PlayState extends MusicBeatState {
 
 		if (FlxG.sound.music != null) FlxG.sound.music.destroy();
 		var music:FlxSound = FlxG.sound.music = new FlxSound();
-		music.group = FlxG.sound.defaultMusicGroup;
 		music.persist = true;
 		music.volume = 1;
+		FlxG.sound.defaultMusicGroup.add(music);
 
 		GameOverSubstate.resetVariables();
 		PauseSubState.songName = null; //Reset to default
@@ -1029,8 +1029,8 @@ class PlayState extends MusicBeatState {
 
 		vocals = new FlxSound();
 		if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));
-		vocals.group = FlxG.sound.defaultMusicGroup;
 		vocals.pitch = playbackRate;
+		FlxG.sound.defaultMusicGroup.add(vocals);
 		FlxG.sound.list.add(vocals);
 
 		notes = new NoteGroup();
@@ -1038,15 +1038,8 @@ class PlayState extends MusicBeatState {
 		var noteData:Array<backend.Section.SwagSection> = songData.notes;
 
 		var file:String = Paths.json('${Paths.CHART_PATH}/$songName/events');
-		#if MODS_ALLOWED
-		if (FileSystem.exists(Paths.modsJson('${Paths.CHART_PATH}/$songName/events')) || FileSystem.exists(file))
-		#else
-		if (Assets.exists(file))
-		#end
-		{
-			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
-			for (event in eventsData) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
-		}
+		if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson('${Paths.CHART_PATH}/$songName/events')) || FileSystem.exists(file) #else Assets.exists(file) #end)
+			for (event in Song.loadFromJson('events', songName).events) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
 
 		for (section in noteData) {
 			for (songNotes in section.sectionNotes) {
@@ -1224,7 +1217,7 @@ class PlayState extends MusicBeatState {
 
 					if (mania > 1 && !skipArrowStartTween) FlxTween.tween(daKeyTxt, {y: textY + 32, alpha: 1}, twnDuration, {ease: FlxEase.circOut, startDelay: twnDelay});
 					else {daKeyTxt.y += 16; daKeyTxt.alpha = 1;}
-					new FlxTimer().start(Conductor.crochet * .001 * 12, (_) -> FlxTween.tween(daKeyTxt, {y: daKeyTxt.y + 32, alpha: 0}, twnDuration, {ease: FlxEase.circIn, startDelay: twnDelay, onComplete: (t) -> remove(daKeyTxt)}));
+					FlxTimer.wait(Conductor.crochet * .001 * 12, () -> FlxTween.tween(daKeyTxt, {y: daKeyTxt.y + 32, alpha: 0}, twnDuration, {ease: FlxEase.circIn, startDelay: twnDelay, onComplete: (t) -> remove(daKeyTxt)}));
 				}
 			}
 		}
@@ -1450,10 +1443,7 @@ class PlayState extends MusicBeatState {
 			if (updateScoreText) scoreTxt.text = getScoreText();
 		}
 
-		if (ClientPrefs.getPref('SmoothHealth')) {
-			if (ClientPrefs.getPref('framerate') > 60) displayedHealth = FlxMath.lerp(displayedHealth, health, .1);
-			else if (ClientPrefs.getPref('framerate') == 60) displayedHealth = FlxMath.lerp(displayedHealth, health, .4);
-		}
+		if (ClientPrefs.getPref('SmoothHealth')) displayedHealth = FlxMath.lerp(displayedHealth, health, .1 / (ClientPrefs.getPref('framerate') / 60));
 
 		updateMusicBeat();
 		setOnScripts('curDecStep', curDecStep);
@@ -1653,10 +1643,7 @@ class PlayState extends MusicBeatState {
 				persistentDraw = false;
 				FlxTimer.globalManager.clear();
 				FlxTween.globalManager.clear();
-				#if LUA_ALLOWED
-				modchartTimers.clear();
-				modchartTweens.clear();
-				#end
+				#if LUA_ALLOWED modchartTimers.clear(); modchartTweens.clear(); #end
 				#if VIDEOS_ALLOWED if(videoSprites.length > 0) for(video in videoSprites) removeVideoSprite(video); #end
 
 				openSubState(new GameOverSubstate());
@@ -1689,7 +1676,7 @@ class PlayState extends MusicBeatState {
 
 		switch(eventName) {
 			case 'Hey!':
-				var value = switch(value1.toLowerCase().trim()) {
+				var value:Int = switch(value1.toLowerCase().trim()) {
 					case 'bf' | 'boyfriend' | '0': 0;
 					case 'gf' | 'girlfriend' | '1': 1;
 					default: 2;
@@ -1913,8 +1900,7 @@ class PlayState extends MusicBeatState {
 			bfturn = (camCharacter == 'boyfriend');
 			camlock = false;
 		}
-		if (bfturn)
-			if (lastCharFocus != 'boyfriend') callOnScripts('onMoveCamera', ['boyfriend']);
+		if (bfturn && lastCharFocus != 'boyfriend') callOnScripts('onMoveCamera', ['boyfriend']);
 		else if (lastCharFocus != 'dad') callOnScripts('onMoveCamera', ['dad']);
 		lastCharFocus = bfturn ? 'boyfriend' : 'dad';
 	}
@@ -1950,7 +1936,7 @@ class PlayState extends MusicBeatState {
 		vocals.volume = 0;
 		vocals.pause();
 		if(ClientPrefs.getPref('noteOffset') <= 0 || ignoreNoteOffset) endCallback();
-		else finishTimer = new FlxTimer().start(ClientPrefs.getPref('noteOffset') / 1000, (tmr:FlxTimer) -> endCallback());
+		else finishTimer = FlxTimer.wait(ClientPrefs.getPref('noteOffset') / 1000, () -> endCallback());
 	}
 
 	public var transitioning = false;

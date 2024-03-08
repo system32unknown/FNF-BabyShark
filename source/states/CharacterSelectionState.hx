@@ -194,7 +194,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 			FlxG.sound.playMusic(Paths.music('gameOverEnd'));
 
-			new FlxTimer().start(1.9, (e:FlxTimer) -> {
+			FlxTimer.wait(1.9, () -> {
 				PlayState.SONG.gfVersion = switch(characterFile) {
 					case 'bf-pixel': 'gf-pixel';
 					case 'bf-christmas': 'gf-christmas';

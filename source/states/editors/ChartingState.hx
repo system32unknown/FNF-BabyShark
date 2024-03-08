@@ -2603,7 +2603,7 @@ class ChartingState extends MusicBeatState {
 			missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
 			missingText.screenCenter(Y);
 
-			missingTextTimer = new FlxTimer().start(5, (tmr:FlxTimer) -> {
+			missingTextTimer = FlxTimer.wait(5, () -> {
 				remove(missingText);
 				missingText.destroy();
 			});
