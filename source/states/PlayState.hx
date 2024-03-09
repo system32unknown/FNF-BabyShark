@@ -2071,8 +2071,7 @@ class PlayState extends MusicBeatState {
 		if(!note.ratingDisabled) daRating.hits++;
 		totalNotesHit += (ClientPrefs.getPref('complexAccuracy') ? backend.Wife3.getAcc(-noteDiff) : daRating.ratingMod);
 
-		if(daRating.noteSplash && !note.noteSplashDisabled)
-			spawnNoteSplashOnNote(note);
+		if(daRating.noteSplash && !note.noteSplashDisabled) spawnNoteSplashOnNote(note);
 
 		songScore += score;
 		if(!note.ratingDisabled) {
