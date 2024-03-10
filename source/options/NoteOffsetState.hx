@@ -26,7 +26,6 @@ class NoteOffsetState extends MusicBeatState {
 
 	var combo:FlxSprite;
 	var rating:FlxSprite;
-	var lateEarly:FlxSprite;
 	var comboNums:FlxSpriteGroup;
 
 	var dumbTexts:FlxTypedGroup<FlxText>;
@@ -99,12 +98,6 @@ class NoteOffsetState extends MusicBeatState {
 		combo.setGraphicSize(Std.int(combo.width * .7));
 		combo.updateHitbox();
 		add(combo);
-
-		lateEarly = new FlxSprite(Paths.image('ratings/late'));
-		lateEarly.camera = camHUD;
-		lateEarly.setGraphicSize(Std.int(combo.width * .7));
-		lateEarly.updateHitbox();
-		add(lateEarly);
 
 		var daLoop:Int = 0;
 		for (i in [for (_ in 0...FlxG.random.int(3, 4)) FlxG.random.int(0, 9)]) {
@@ -191,11 +184,6 @@ class NoteOffsetState extends MusicBeatState {
 				FlxG.keys.justPressed.H,
 				FlxG.keys.justPressed.T,
 				FlxG.keys.justPressed.G,
-
-				FlxG.keys.justPressed.J,
-				FlxG.keys.justPressed.L,
-				FlxG.keys.justPressed.K,
-				FlxG.keys.justPressed.I
 			];
 
 			if(controlArray.contains(true)) {
@@ -216,11 +204,6 @@ class NoteOffsetState extends MusicBeatState {
 							case 9: comboOffset[2][0] += addNum;
 							case 10: comboOffset[2][1] += addNum;
 							case 11: comboOffset[2][1] -= addNum;
-
-							case 12: comboOffset[3][0] -= addNum;
-							case 13: comboOffset[3][0] += addNum;
-							case 14: comboOffset[3][1] += addNum;
-							case 15: comboOffset[3][1] -= addNum;
 						}
 					}
 				}
@@ -240,10 +223,7 @@ class NoteOffsetState extends MusicBeatState {
 				} else if (selectObj(startMousePos, combo)) {
 					holdingObjectType = 'combo';
 					startComboOffset.set(comboOffset[2][0], comboOffset[2][1]);
-				} else if (selectObj(startMousePos, lateEarly)) {
-					holdingObjectType = 'lateearly';
-					startComboOffset.set(comboOffset[3][0], comboOffset[3][1]);
-		   		}
+				}
 			}
 			if(FlxG.mouse.justReleased) {
 				holdingObjectType = null;
@@ -262,20 +242,13 @@ class NoteOffsetState extends MusicBeatState {
 						case 'combo':
 							comboOffset[2][0] = Math.round((mousePos.x - startMousePos.x) + startComboOffset.x);
 							comboOffset[2][1] = -Math.round((mousePos.y - startMousePos.y) - startComboOffset.y);
-						case 'lateearly':
-							comboOffset[3][0] = Math.round((mousePos.x - startMousePos.x) + startComboOffset.x);
-							comboOffset[3][1] = -Math.round((mousePos.y - startMousePos.y) - startComboOffset.y);
 					}
 					repositionCombo();
 				}
 			}
 
 			if(controls.RESET) {
-				for (i in 0...comboOffset.length) {
-					for (j in 0... comboOffset[i].length) {
-						comboOffset[i][j] = 0;
-					}
-				}
+				for (i in 0...comboOffset.length) for (j in 0... comboOffset[i].length) comboOffset[i][j] = 0;
 				repositionCombo();
 			}
 		} else {
@@ -355,9 +328,6 @@ class NoteOffsetState extends MusicBeatState {
 		combo.screenCenter(Y).y -= comboOffset[2][1];
 		combo.x = placement + comboOffset[2][0];
 
-		lateEarly.screenCenter(Y).y -= comboOffset[3][1];
-		lateEarly.x = placement - 130 + comboOffset[3][0];
-
 		reloadTexts();
 	}
 
@@ -395,7 +365,7 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	function updateMode() {
-		rating.visible = comboNums.visible = combo.visible = lateEarly.visible = onComboMenu;
+		rating.visible = comboNums.visible = combo.visible = onComboMenu;
 		dumbTexts.visible = onComboMenu;
 		
 		timeBar.visible = timeTxt.visible = !onComboMenu;

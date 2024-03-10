@@ -110,8 +110,7 @@ class Alphabet extends FlxSpriteGroup {
 	public function softReloadLetters(ratioX:Float = 1, ratioY:Null<Float> = null) {
 		if(ratioY == null) ratioY = ratioX;
 
-		for (letter in letters)
-			if(letter != null) letter.setupAlphaCharacter((letter.x - x) * ratioX + x, (letter.y - y) * ratioY + y);
+		for (letter in letters) if(letter != null) letter.setupAlphaCharacter((letter.x - x) * ratioX + x, (letter.y - y) * ratioY + y);
 	}
 
 	public function setScale(newX:Float, newY:Null<Float> = null) {

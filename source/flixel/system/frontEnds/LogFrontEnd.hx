@@ -51,25 +51,17 @@ class LogFrontEnd
 		#if FLX_DEBUG
 		// Check null game since `FlxG.save.bind` may be called before `new FlxGame`
 		if (FlxG.game == null || FlxG.game.debugger == null)
-		{
 			_standardTraceFunction(data);
-		}
-		else if (FlxG.game.debugger.log.add(data, style, fireOnce))
-		{
+		else if (FlxG.game.debugger.log.add(data, style, fireOnce)) {
 			#if (FLX_SOUND_SYSTEM && !FLX_UNIT_TEST)
-			if (style.errorSound != null)
-			{
+			if (style.errorSound != null) {
 				final sound = FlxAssets.getSound(style.errorSound);
-				if (sound != null)
-					FlxG.sound.load(sound).play();
+				if (sound != null) FlxG.sound.load(sound).play();
 			}
 			#end
 			
-			if (style.openConsole)
-				FlxG.debugger.visible = true;
-			
-			if (style.callbackFunction != null)
-				style.callbackFunction();
+			if (style.openConsole) FlxG.debugger.visible = true;
+			if (style.callbackFunction != null) style.callbackFunction();
 		}
 		#end
 		
@@ -80,11 +72,8 @@ class LogFrontEnd
 	/**
 	 * Clears the log output.
 	 */
-	public inline function clear():Void
-	{
-		#if FLX_DEBUG
-		FlxG.game.debugger.log.clear();
-		#end
+	public inline function clear():Void {
+		#if FLX_DEBUG FlxG.game.debugger.log.clear(); #end
 	}
 
 	@:allow(flixel.FlxG)

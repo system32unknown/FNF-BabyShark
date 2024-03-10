@@ -58,7 +58,7 @@ class ClientPrefs {
 		'unlockedCharacters' => ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'],
 		'discordRPC' => true,
 		// Gameplay settings
-		'comboOffset' => [[0, 0], [0, 0], [0, 0], [0, 0]],
+		'comboOffset' => [[0, 0], [0, 0], [0, 0]],
 		'ratingOffset' => 0,
 		'epicWindow' => 15,
 		'sickWindow' => 45,
