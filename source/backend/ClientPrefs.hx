@@ -41,7 +41,6 @@ class ClientPrefs {
 		'streamMusic' => false,
 		'AntiMash' => false,
 		'noteOffset' => 0,
-		'arrowHSV' => [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
 		'ghostTapping' => true,
 		'HealthTypes' => 'Vanilla',
 		'timeBarType' => 'Name Time Position',
@@ -57,6 +56,30 @@ class ClientPrefs {
 		'pauseMusic' => 'Tea Time',
 		'unlockedCharacters' => ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'],
 		'discordRPC' => true,
+
+		'arrowRGBExtra' => [
+			[0xFFC24B99, 0xFFFFFFFF, 0xFF3C1F56],
+			[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
+			[0xFF12FA05, 0xFFFFFFFF, 0xFF0A4447],
+			[0xFFF9393F, 0xFFFFFFFF, 0xFF651038],
+			[0xFF999999, 0xFFFFFFFF, 0xFF201E31],
+			[0xFFFFFF00, 0xFFFFFFFF, 0xFF993300],
+			[0xFF8b4aff, 0xFFFFFFFF, 0xFF3b177d],
+			[0xFFFF0000, 0xFFFFFFFF, 0xFF660000],
+			[0xFF0033ff, 0xFFFFFFFF, 0xFF000066]
+		],
+		'arrowRGBPixelExtra' => [
+			[0xFFE276FF, 0xFFFFF9FF, 0xFF60008D],
+			[0xFF3DCAFF, 0xFFF4FFFF, 0xFF003060],
+			[0xFF71E300, 0xFFF6FFE6, 0xFF003100],
+			[0xFFFF884E, 0xFFFFFAF5, 0xFF6C0000],
+			[0xFFb6b6b6, 0xFFFFFFFF, 0xFF444444],
+			[0xFFffd94a, 0xFFfffff9, 0xFF663500],
+			[0xFFB055BC, 0xFFf4f4ff, 0xFF4D0060],
+			[0xFFdf3e23, 0xFFffe6e9, 0xFF440000],
+			[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D]
+		],
+
 		// Gameplay settings
 		'comboOffset' => [[0, 0], [0, 0], [0, 0]],
 		'ratingOffset' => 0,

@@ -1,13 +1,28 @@
 package objects;
 
 import flixel.math.FlxRect;
-import shaders.ColorSwap;
+import backend.NoteTypesConfig;
+
+import shaders.RGBPalette;
+import shaders.RGBPalette.RGBShaderReference;
 
 typedef EventNote = {
 	strumTime:Float,
 	event:String,
 	value1:String,
 	value2:String
+}
+
+typedef NoteSplashData = {
+	disabled:Bool,
+	texture:String,
+	useGlobalShader:Bool, //breaks r/g/b/a but makes it copy default colors for your custom note
+	useRGBShader:Bool,
+	antialiasing:Bool,
+	r:FlxColor,
+	g:FlxColor,
+	b:FlxColor,
+	a:Float
 }
 
 class Note extends FlxSprite {
@@ -40,22 +55,35 @@ class Note extends FlxSprite {
 	public var eventVal1:String = '';
 	public var eventVal2:String = '';
 
-	public var colorSwap:ColorSwap;
+	public var rgbShader:RGBShaderReference;
+	public static var globalRgbShaders:Array<RGBPalette> = [];
 	public var inEditor:Bool = false;
 
 	public var animSuffix:String = '';
 	public var gfNote:Bool = false;
-	public var lateHitMult:Float = 1;
 	public var earlyHitMult:Float = 1;
+	public var lateHitMult:Float = 1;
 
 	public static var SUSTAIN_SIZE:Int = 44;
-	public static var swagWidth:Float = 160;
+	public static var swagWidth:Float = 160 * .7;
 	public static var defaultNoteSkin:String = 'noteSkins/NOTE_assets';
 
 	// Lua shit
 	public var noteSplashDisabled:Bool = false;
 	public var noteSplashTexture:String = null;
 	public var noteSplashHSB:Array<Float> = [0, 0, 0];
+
+	public var noteSplashData:NoteSplashData = {
+		disabled: false,
+		texture: null,
+		antialiasing: !PlayState.isPixelStage,
+		useGlobalShader: false,
+		useRGBShader: (PlayState.SONG != null) ? !(PlayState.SONG.disableNoteRGB) : true,
+		r: -1,
+		g: -1,
+		b: -1,
+		a: ClientPrefs.getPref('splashOpacity')
+	};
 
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
@@ -68,8 +96,8 @@ class Note extends FlxSprite {
 	public var copyAngle:Bool = true;
 	public var copyAlpha:Bool = true;
 
-	public var hitHealth:Float = 0.023;
-	public var missHealth:Float = 0.0475;
+	public var hitHealth:Float = .023;
+	public var missHealth:Float = .0475;
 	public var rating:String = 'unknown';
 	public var ratingMod:Float = 0; //9 = unknown, 0.25 = shit, 0.5 = bad, 0.75 = good, 1 = sick
 	public var ratingDisabled:Bool = false;
@@ -84,8 +112,6 @@ class Note extends FlxSprite {
 	public var hitsoundDisabled:Bool = false;
 	public var hitsoundChartEditor:Bool = true;
 	public var hitsound:String = 'hitsounds/' + Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase();
-	public var changeAnim:Bool = true;
-	public var changeColSwap:Bool = true;
 
 	function set_multSpeed(value:Float):Float {
 		resizeByRatio(value / multSpeed);
@@ -104,40 +130,38 @@ class Note extends FlxSprite {
 		return texture = value;
 	}
 
+	public function defaultRGB() {
+		var arr:Array<FlxColor> = ClientPrefs.getPref('arrowRGBExtra')[EK.gfxIndex[PlayState.mania][noteData]];
+		if(PlayState.isPixelStage) arr = ClientPrefs.getPref('arrowRGBPixelExtra')[EK.gfxIndex[PlayState.mania][noteData]];
+
+		if (noteData > -1 && noteData <= PlayState.mania) {
+			rgbShader.r = arr[0];
+			rgbShader.g = arr[1];
+			rgbShader.b = arr[2];
+		}
+	}
+
 	function set_noteType(value:String):String {
 		noteSplashTexture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
-		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-		var arrowIndex:Int = Std.int(keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % EK.keys(PlayState.mania));
-		if (noteData > -1 && noteData < arrowHSV.length)
-			colorSwap.setHSB(arrowHSV[arrowIndex][0] / 360, arrowHSV[arrowIndex][1] / 100, arrowHSV[arrowIndex][2] / 100);
+		defaultRGB();
 
 		if(noteData > -1 && noteType != value) {
 			switch(value) {
 				case 'Hurt Note':
 					ignoreNote = true;
-					reloadNote('HURT', 'NOTE_assets');
-					noteSplashTexture = 'HURTnoteSplashes';
-					colorSwap.setHSB(0, 0, 0);
 
-					missHealth = (isSustainNote ? .25 : .1);
+					rgbShader.r = 0xFF101010;
+					rgbShader.g = 0xFFFF0000;
+					rgbShader.b = 0xFF990022;
+
+					// splash data and colors
+					noteSplashData.r = 0xFFFF0000;
+					noteSplashData.g = 0xFF101010;
+					noteSplashData.texture = 'noteSplashes/noteSplashes-electric';
+
+					missHealth = isSustainNote ? .25 : .1;
 					hitCausesMiss = true;
 					isHideableNote = true;
-					hitsound = 'cancelMenu';
-					hitsoundChartEditor = false;
-				case 'Danger Note':
-					reloadNote('DANGER', 'NOTE_assets');
-					noteSplashTexture = 'DANGERnoteSplashes';
-					colorSwap.setHSB(0, 0, 0);
-					noMissAnimation = true;
-					missHealth = (isSustainNote ? .3 : .5);
-					hitCausesMiss = false;
-				case 'Kill Note':
-					ignoreNote = true;
-					reloadNote('KILL', 'NOTE_assets');
-					noteSplashTexture = 'HURTnoteSplashes';
-					colorSwap.setHSB(0, 0, 0);
-					missHealth = 2;
-					hitCausesMiss = true;
 					hitsound = 'cancelMenu';
 					hitsoundChartEditor = false;
 				case 'Alt Animation':
@@ -147,20 +171,11 @@ class Note extends FlxSprite {
 					noMissAnimation = true;
 				case 'GF Sing':
 					gfNote = true;
-				#if MODS_ALLOWED
-				case '' | 'Hey!':
-				default:
-					final luaPrefix = value.split(" ")[0].toUpperCase();
-					if (Paths.fileExists('images/${value.toUpperCase()}_assets.png', IMAGE)) {
-						reloadNote(luaPrefix, '_assets');
-						colorSwap.setHSB(0, 0, 0);
-					}
-				#end
 			}
+			if (value != null && value.length > 1) NoteTypesConfig.applyNoteTypeData(this, value);
 			if (hitsound != 'hitsound' && ClientPrefs.getPref('hitsoundVolume') > 0) Paths.sound(hitsound); //precache new sound for being idiot-proof
 			noteType = value;
 		}
-		if(colorSwap != null) noteSplashHSB = [colorSwap.hue, colorSwap.saturation, colorSwap.brightness];
 		return value;
 	}
 
@@ -179,7 +194,7 @@ class Note extends FlxSprite {
 		this.inEditor = inEditor;
 		this.moves = false;
 
-		x += (ClientPrefs.getPref('middleScroll') ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50;
+		x += (ClientPrefs.getPref('middleScroll') ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50 - EK.posRest[PlayState.mania];
 		y -= 2000;
 		this.strumTime = strumTime;
 		if(!inEditor) this.strumTime += ClientPrefs.getPref('noteOffset');
@@ -188,12 +203,12 @@ class Note extends FlxSprite {
 
 		if(noteData > -1) {
 			texture = '';
-			colorSwap = new ColorSwap();
-			shader = colorSwap.shader;
+			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
+			if(PlayState.SONG != null && PlayState.SONG.disableNoteRGB) rgbShader.enabled = false;
 
-			x += swagWidth * (noteData % EK.keys(PlayState.mania));
-			if(!isSustainNote && noteData > -1)
-				animation.play(keysShit.get(PlayState.mania).get('letters')[noteData % EK.keys(PlayState.mania)]);
+			if (PlayState.mania != 0) x += EK.swidths[PlayState.mania] * (noteData % (PlayState.mania + 1));
+			if(!isSustainNote && noteData < PlayState.mania + 1)
+				animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
 		}
 
 		if (isSustainNote && prevNote != null) {
@@ -205,13 +220,12 @@ class Note extends FlxSprite {
 			offsetX += width / 2;
 			copyAngle = false;
 
-			animation.play(keysShit.get(PlayState.mania).get('letters')[noteData] + ' tail');
+			animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'holdend');
 			updateHitbox();
 
 			offsetX -= width / 2;
 
-			if (PlayState.isPixelStage)
-				offsetX += 30;
+			if (PlayState.isPixelStage) offsetX += 30;
 
 			if (prevNote.isSustainNote) {
 				prevNote.animation.play(keysShit.get(PlayState.mania).get('letters')[prevNote.noteData] + ' hold');

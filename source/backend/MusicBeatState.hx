@@ -14,13 +14,10 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 
 	var curDecStep:Float = 0;
 	var curStep:Int = 0;
-	var prevDecStep:Float = 0;
 	var prevStep:Int = 0;
 
 	var curDecBeat:Float = 0;
 	var curBeat:Int = 0;
-	var prevDecBeat:Float = 0;
-	var prevBeat:Int = 0;
 
 	public var controls(get, never):Controls;
 
@@ -40,11 +37,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 
 	var updatedMusicBeat:Bool = false;
 	public function updateMusicBeat() {
-		prevDecStep = curDecStep;
 		prevStep = curStep;
-
-		prevDecBeat = curDecBeat;
-		prevBeat = curBeat;
 
 		updateCurStep();
 		updateBeat();

@@ -21,6 +21,8 @@ typedef SwagSong = {
 	@:optional var gameOverSound:String;
 	@:optional var gameOverLoop:String;
 	@:optional var gameOverEnd:String;
+
+	@:optional var disableNoteRGB:Bool;
 	
 	@:optional var arrowSkin:String;
 	@:optional var splashSkin:String;
@@ -73,6 +75,8 @@ class Song {
 			#end
 				rawJson = lime.utils.Assets.getText(path);
 		}
+
+		while (!rawJson.endsWith("}")) rawJson = rawJson.substr(0, rawJson.length - 1);
 
 		var songJson:Dynamic = parseJSONshit(rawJson);
 		if(jsonInput != 'events') data.StageData.loadDirectory(songJson);
