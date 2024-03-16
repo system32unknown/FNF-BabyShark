@@ -314,8 +314,7 @@ class HScript extends Interp {
 			initHaxeModule(funk);
 			if (!funk.hscript.active) return null;
 
-			if(varsToBring != null)
-				for (key in Reflect.fields(varsToBring)) funk.hscript.setVar(key, Reflect.field(varsToBring, key));
+			if(varsToBring != null) for (key in Reflect.fields(varsToBring)) funk.hscript.setVar(key, Reflect.field(varsToBring, key));
 
 			var retVal:Dynamic = funk.hscript.executeCode(codeToRun);
 			if (funcToRun != null) {

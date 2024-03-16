@@ -190,12 +190,10 @@ class AssetCache implements IAssetCache
 	{
 		var result:Array<String> = [];
 		if (prefix == null) {
-			for (key in font.keys())
-				result.push(key);
+			for (key in font.keys()) result.push(key);
 		} else {
 			for (key in font.keys()) {
-				if (key.startsWith(prefix))
-					result.push(key);
+				if (key.startsWith(prefix)) result.push(key);
 			}
 		}
 		return result;

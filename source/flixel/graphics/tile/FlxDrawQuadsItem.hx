@@ -70,13 +70,10 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
 			alphas.push(transform != null ? transform.alphaMultiplier : 1.0);
 
 		if (colored || hasColorOffsets) {
-			if (colorMultipliers == null)
-				colorMultipliers = [];
+			if (colorMultipliers == null) colorMultipliers = [];
+			if (colorOffsets == null) colorOffsets = [];
 
-			if (colorOffsets == null)
-				colorOffsets = [];
-
-			for (i in 0...VERTICES_PER_QUAD) {
+			for (_ in 0...VERTICES_PER_QUAD) {
 				if (transform != null) {
 					colorMultipliers.push(transform.redMultiplier);
 					colorMultipliers.push(transform.greenMultiplier);
@@ -106,10 +103,11 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
 	override public function render(camera:FlxCamera):Void {
 		if (rects.length == 0) return;
 
-		var shader = shader != null ? shader : graphics.shader;
-		if (shader == null) return;
-		shader.bitmap.input = graphics.bitmap;
+		if (shader == null && graphics.isDestroyed)
+			throw 'Attempted to render an invalid FlxDrawItem, did you destroy a cached sprite?';
 
+		final shader = shader != null ? shader : graphics.shader;
+		shader.bitmap.input = graphics.bitmap;
 		shader.bitmap.filter = ((camera.antialiasing || antialiasing) && ClientPrefs.getPref('Antialiasing')) ? LINEAR : NEAREST;
 		shader.alpha.value = alphas;
 
@@ -121,17 +119,14 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
 		setParameterValue(shader.hasTransform, true);
 		setParameterValue(shader.hasColorTransform, colored || hasColorOffsets);
 
-		#if (openfl > "8.7.0")
-		camera.canvas.graphics.overrideBlendMode(blend);
-		#end
+		#if (openfl > "8.7.0") camera.canvas.graphics.overrideBlendMode(blend); #end
 		camera.canvas.graphics.beginShaderFill(shader);
 		camera.canvas.graphics.drawQuads(rects, null, transforms);
 		super.render(camera);
 	}
 
 	inline function setParameterValue(parameter:ShaderParameter<Bool>, value:Bool):Void {
-		if (parameter.value == null)
-			parameter.value = [];
+		if (parameter.value == null) parameter.value = [];
 		parameter.value[0] = value;
 	}
 	#end

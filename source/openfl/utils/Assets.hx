@@ -55,8 +55,7 @@ class Assets
 	@:noCompletion static var dispatcher:EventDispatcher #if !macro = new EventDispatcher() #end;
 	static var libraryBindings:Map<String, AssetLibrary> = new Map();
 
-	public static function addEventListener(type:String, listener:Dynamic, useCapture:Bool = false, priority:Int = 0, useWeakReference:Bool = false):Void
-	{
+	public static function addEventListener(type:String, listener:Dynamic, useCapture:Bool = false, priority:Int = 0, useWeakReference:Bool = false):Void {
 		#if lime
 		if (!LimeAssets.onChange.has(LimeAssets_onChange))
 			LimeAssets.onChange.add(LimeAssets_onChange);
@@ -65,8 +64,7 @@ class Assets
 		dispatcher.addEventListener(type, listener, useCapture, priority, useWeakReference);
 	}
 
-	public static function dispatchEvent(event:Event):Bool
-	{
+	public static function dispatchEvent(event:Event):Bool {
 		return dispatcher.dispatchEvent(event);
 	}
 
@@ -95,7 +93,7 @@ class Assets
 		key = key != null ? key : id;
 		
 		if (useCache && cache.enabled && cache.hasBitmapData(key)) {
-			var bitmapData = cache.getBitmapData(key);
+			var bitmapData:BitmapData = cache.getBitmapData(key);
 			if (isValidBitmapData(bitmapData) && (hardware || bitmapData.readable))
 				return bitmapData;
 		}
@@ -238,17 +236,16 @@ class Assets
 		
 		@return		A new Sound object
 	**/
-	public static function getSound(id:String, useCache:Bool = true, ?key:String, stream:Bool = false):Sound
-	{
+	public static function getSound(id:String, useCache:Bool = true, ?key:String, stream:Bool = false):Sound {
 		#if (lime && tools && !display)
 		key = key != null ? key : id;
 		
 		if (useCache && cache.enabled && cache.hasSound(key)) {
-			var sound = cache.getSound(key);
+			var sound:Sound = cache.getSound(key);
 			if (isValidSound(sound)) return sound;
 		}
 
-		var sound = getRawSound(id, stream);
+		var sound:Sound = getRawSound(id, stream);
 		if (sound != null) {
 			if (useCache && cache.enabled) cache.setSound(key, sound);
 			return sound;
@@ -258,8 +255,7 @@ class Assets
 		return null;
 	}
 
-	public static function getRawAudioBuffer(id:String, stream:Bool = false, fromFile:Bool = false):AudioBuffer
-	{
+	public static function getRawAudioBuffer(id:String, stream:Bool = false, fromFile:Bool = false):AudioBuffer {
 		var buffer;
 		#if (lime_vorbis && lime > "7.9.0")
 		if (stream) buffer = AudioBuffer.fromVorbisFile(VorbisFile.fromFile(id));
@@ -274,8 +270,7 @@ class Assets
 		return buffer;
 	}
 	
-	public static function getRawSound(id:String, stream:Bool = false, fromFile:Bool = false):Sound
-	{
+	public static function getRawSound(id:String, stream:Bool = false, fromFile:Bool = false):Sound {
 		var buffer = getRawAudioBuffer(id, stream, fromFile);
 		if (buffer != null) return Sound.fromAudioBuffer(buffer);
 		
@@ -400,7 +395,7 @@ class Assets
 			}
 		}
 
-		LimeAssets.loadImage(id, false).onComplete(function(image) {
+		LimeAssets.loadImage(id, false).onComplete((image) -> {
 			if (image != null) promise.complete(registerBitmapData(BitmapData.fromImage(image), key, useCache, hardware));
 			else promise.error("[Assets] Could not load Image \"" + id + "\"");
 		}).onError(promise.error).onProgress(promise.progress);
@@ -589,7 +584,7 @@ class Assets
 			}
 		}
 
-		LimeAssets.loadAudioBuffer(id, useCache).onComplete(function(buffer) {
+		LimeAssets.loadAudioBuffer(id, useCache).onComplete((buffer) -> {
 			if (buffer != null) {
 				var sound = Sound.fromAudioBuffer(buffer);
 				if (useCache && cache.enabled) cache.setSound(key, sound);

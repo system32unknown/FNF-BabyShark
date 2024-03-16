@@ -66,12 +66,11 @@ class GlitchShader extends flixel.system.FlxAssets.FlxShader {
     uniform bool uDistortBG;
     
     vec2 sineWave(vec2 pt) {
-
         float x = 0.0;
         float y = 0.0;
         
         pt.x += sin(pt.y * uFrequency + uTime * uSpeed) * (uWaveAmplitude / pt.x * pt.y);
-        pt.y += sin(pt.x * uFrequency - uTime * uSpeed) * (uDistortBG ? (uWaveAmplitude / pt.y * pt.x) : (uWaveAmplitude));
+        pt.y += sin(pt.x * uFrequency - uTime * uSpeed) * (uDistortBG ? (uWaveAmplitude / pt.y * pt.x) : uWaveAmplitude);
         return vec2(pt.x + x, pt.y + y);
     }
     

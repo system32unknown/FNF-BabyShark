@@ -94,7 +94,7 @@ class LuaUtils {
 	}
 
 	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
-		var ind = variable.indexOf('.');
+		var ind:Int = variable.indexOf('.');
 		if (ind == -1) {
 			if (PlayState.instance.variables.exists(variable)) return PlayState.instance.variables.get(variable);
 			return checkLuaFirst ? getObjectDirectly(variable, checkForTextsToo) : getVarInArray(getInstance(), variable);

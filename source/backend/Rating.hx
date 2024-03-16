@@ -19,33 +19,15 @@ class Rating {
 	}
 
 	public static function loadDefault():Array<Rating> {
-		//Ratings
 		var ratingsData:Array<Rating> = [new Rating('epic')];
-
-		var rating:Rating = new Rating('sick');
-		rating.ratingMod = 1;
-		rating.score = 350;
-		rating.noteSplash = true;
-		ratingsData.push(rating);
-
-		var rating:Rating = new Rating('good');
-		rating.ratingMod = .7;
-		rating.score = 200;
-		rating.noteSplash = false;
-		ratingsData.push(rating);
-
-		var rating:Rating = new Rating('ok');
-		rating.ratingMod = .4;
-		rating.score = 100;
-		rating.noteSplash = false;
-		ratingsData.push(rating);
-		
-		var rating:Rating = new Rating('bad');
-		rating.ratingMod = 0;
-		rating.score = 50;
-		rating.noteSplash = false;
-		ratingsData.push(rating);
-
+		var ratingNames:Array<String> = ['sick', 'good', 'ok', 'bad'];
+		for (i => _rating in ratingNames) {
+			var _:Rating = new Rating(_rating);
+			_.ratingMod = .68 - (.68 * (i * .5));
+			_.score = Math.floor(200 * Math.pow(.5, i));
+			_.noteSplash = (_rating == 'sick');
+			ratingsData.push(_);
+		} 
 		return ratingsData;
 	}
 

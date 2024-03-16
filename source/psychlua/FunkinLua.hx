@@ -1079,7 +1079,6 @@ class FunkinLua {
 		#end
 	}
 
-
 	public function oldTweenFunction(tag:String, vars:String, tweenValue:Any, duration:Float, ease:String, funcName:String) {
 		var target:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 		if(target != null) {

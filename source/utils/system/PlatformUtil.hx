@@ -107,7 +107,7 @@ class PlatformUtil {
 }
 #end
 
-@:enum abstract MessageBoxIcon(Int) {
+enum abstract MessageBoxIcon(Int) {
     var MSG_ERROR:MessageBoxIcon = 0x00000010;
     var MSG_QUESTION:MessageBoxIcon = 0x00000020;
     var MSG_WARNING:MessageBoxIcon = 0x00000030;

@@ -1,7 +1,7 @@
 package lime.utils;
 
 import haxe.PosInfos;
-import debug.Logs as FunkinLogs;
+#if !macro import debug.Logs as FunkinLogs; #end
 
 #if !lime_debug
 @:fileXml('tags="haxe,release"')
@@ -21,11 +21,11 @@ class Log {
 	}
 
 	public static function error(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.ERROR) FunkinLogs.trace('[${info.className}] $message', ERROR, RED);
+		if (level >= LogLevel.ERROR) #if !macro FunkinLogs.trace('[${info.className}] $message', ERROR, RED); #else trace('[${info.className}] $message'); #end
 	}
 
 	public static function info(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.INFO) FunkinLogs.trace('[${info.className}] $message', INFO, RED);
+		if (level >= LogLevel.INFO) #if !macro FunkinLogs.trace('[${info.className}] $message', INFO, RED); #else trace('[${info.className}] $message'); #end
 	}
 
 	public static inline function print(message:Dynamic):Void {
@@ -53,11 +53,11 @@ class Log {
 	}
 
 	public static function verbose(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.VERBOSE) FunkinLogs.trace('[${info.className}] $message', VERBOSE);
+		if (level >= LogLevel.VERBOSE) #if !macro FunkinLogs.trace('[${info.className}] $message', VERBOSE); #else trace('[${info.className}] $message'); #end
 	}
 
 	public static function warn(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.WARN) FunkinLogs.trace('[${info.className}] $message', WARNING, YELLOW);
+		if (level >= LogLevel.WARN) #if !macro FunkinLogs.trace('[${info.className}] $message', WARNING, YELLOW); #else trace('[${info.className}] $message'); #end
 	}
 
 	static function __init__():Void {
