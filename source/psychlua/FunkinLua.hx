@@ -484,8 +484,6 @@ class FunkinLua {
 			}
 		});
 
-		set("changeMania", game.changeMania);
-
 		set("cameraSetTarget", function(target:String) {
 			switch(target.toLowerCase()) { //we do some copy and pasteing.
 				case 'dad' | 'opponent': game.moveCamera('dad');

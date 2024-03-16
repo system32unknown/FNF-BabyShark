@@ -208,6 +208,7 @@ class PlayState extends MusicBeatState {
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
+	var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT', 'singUP'];
 
 	public var inCutscene:Bool = false;
 	public var skipCountdown:Bool = false;
@@ -298,10 +299,10 @@ class PlayState extends MusicBeatState {
 		Conductor.mapBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
 
-		mania = SONG.mania != null ? SONG.mania : 3;
 		if (mania < EK.minMania || mania > EK.maxMania) mania = EK.defaultMania;
+		mania = SONG.mania != null ? SONG.mania : 3;
 
-		keysArray = data.EkData.Keybinds.fill()[mania];
+		keysArray = EK.fillKeys()[mania];
 		fillKeysPressed();
 		keysPressed = ArrayUtil.dynamicArray(false, keysArray.length);
 
@@ -1094,7 +1095,7 @@ class PlayState extends MusicBeatState {
 						if (sustainNote.mustPress) sustainNote.x += FlxG.width / 2; // general offset
 						else if (middleScroll) {
 							sustainNote.x += 310;
-							if (daNoteData > EK.noteSep[mania]) //Up and Right
+							if (daNoteData > 1) //Up and Right
 								sustainNote.x += FlxG.width / 2 + 25;
 						}
 					}
@@ -1194,8 +1195,7 @@ class PlayState extends MusicBeatState {
 
 			if (player < 1 && middleScroll) {
 				babyArrow.x += 310;
-				if(i > EK.noteSep[mania]) //Up and Right
-					babyArrow.x += FlxG.width / 2 + 25;
+				if(i > 1) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
 			}
 
 			grp.add(babyArrow);
@@ -1221,89 +1221,6 @@ class PlayState extends MusicBeatState {
 				}
 			}
 		}
-	}
-
-	function updateNote(note:Note) {
-		var tMania:Int = EK.keys(mania);
-		var noteData:Int = note.noteData;
-
-		note.scale.set(1, 1);
-		note.updateHitbox();
-
-		if (isPixelStage) {
-			if (note.isSustainNote) note.originalHeight = note.height;
-			note.setGraphicSize(Std.int(note.width * daPixelZoom * EK.scales[mania]));
-		} else note.setGraphicSize(Std.int(note.width * EK.scales[mania]));
-		note.updateHitbox();
-
-		var prevNote:Note = note.prevNote;
-		if (note.isSustainNote && prevNote != null) {
-			note.offsetX += note.width / 2;
-			note.animation.play(Note.keysShit[mania].get('letters')[noteData] + ' tail');
-			note.updateHitbox();
-			note.offsetX -= note.width / 2;
-
-			if (note != null && prevNote != null && prevNote.isSustainNote && prevNote.animation != null) {
-				prevNote.animation.play(Note.keysShit[mania].get('letters')[noteData % tMania] + ' hold');
-
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
-				prevNote.scale.y *= songSpeed;
-
-				if(isPixelStage) {
-					prevNote.scale.y *= 1.19;
-					prevNote.scale.y *= (6 / note.height);
-				}
-				prevNote.updateHitbox();
-			}
-
-			if (isPixelStage) {
-				prevNote.scale.y *= daPixelZoom * EK.scales[mania];
-				prevNote.updateHitbox();
-			}
-		} else if (!note.isSustainNote && noteData > -1 && noteData < tMania)
-			if (note.changeAnim) note.animation.play(Note.keysShit[mania].get('letters')[noteData % tMania]);
-		
-		if (note.changeColSwap) {
-			var hsvNumThing:Int = Std.int(Note.keysShit[mania].get('pixelAnimIndex')[noteData % tMania]);
-			var colSwap:shaders.ColorSwap = note.colorSwap;
-
-			var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-			colSwap.setHSB(arrowHSV[hsvNumThing][0] / 360, arrowHSV[hsvNumThing][1] / 100, arrowHSV[hsvNumThing][2] / 100);
-		}
-	}
-
-	public function changeMania(newValue:Int, skipStrumFadeOut:Bool = false) {
-		var daOldMania:Int = mania;
-		mania = newValue;
-
-		if (!skipStrumFadeOut) {
-			for (i in 0...strumLineNotes.members.length) {
-				var oldStrum:FlxSprite = strumLineNotes.members[i].clone();
-				oldStrum.setPosition(strumLineNotes.members[i].x, strumLineNotes.members[i].y);
-				oldStrum.alpha = strumLineNotes.members[i].alpha;
-				oldStrum.scrollFactor.set();
-				oldStrum.camera = camHUD;
-				oldStrum.setGraphicSize(Std.int(oldStrum.width * EK.scales[daOldMania]));
-				oldStrum.updateHitbox();
-				add(oldStrum);
-
-				FlxTween.tween(oldStrum, {alpha: 0}, .3, {onComplete: (_) -> remove(oldStrum)});
-			}
-		}
-
-		playerStrums.clear();
-		opponentStrums.clear();
-		strumLineNotes.clear();
-		setOnScripts('defaultMania', mania);
-
-		notes.forEachAlive((note:Note) -> updateNote(note));
-
-		for (noteI in 0...unspawnNotes.length) updateNote(unspawnNotes[noteI]);
-		callOnScripts('onChangeMania', [mania, daOldMania]);
-
-		generateStaticArrows(0);
-		generateStaticArrows(1);
-		updateLuaDefaultPos();
 	}
 
 	override function openSubState(SubState:flixel.FlxSubState) {
@@ -1782,15 +1699,6 @@ class PlayState extends MusicBeatState {
 
 					if(duration > 0 && intensity != 0) targetsArray[i].shake(intensity, duration * playbackRate);
 				}
-
-			case 'Change Mania':
-				var newMania:Int = 0;
-				var skipTween:Bool = (value2 == "true");
-
-				newMania = Std.parseInt(value1);
-				if(Math.isNaN(newMania) && newMania < EK.minMania && newMania > EK.maxMania)
-					newMania = 0;
-				changeMania(newMania, skipTween);
 
 			case 'Change Character':
 				var charType:Int = 0;
@@ -2343,7 +2251,7 @@ class PlayState extends MusicBeatState {
 		if(char != null && (note == null || !note.noMissAnimation) && char.hasMissAnimations) {
 			var suffix:String = '';
 			if(note != null) suffix = note.animSuffix;
-			char.playAnim('sing' + Note.keysShit[mania].get('anims')[direction] + 'miss' + suffix, true);
+			char.playAnim('sing' + singAnimations[EK.gfxHud[mania][Std.int(Math.abs(direction))]] + 'miss$suffix', true);
 			if(char != gf && combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
 				gf.playAnim('sad');
 				gf.specialAnim = true;
@@ -2374,7 +2282,7 @@ class PlayState extends MusicBeatState {
 
 		note.hitByOpponent = true;
 
-		var animToPlay:String = 'sing' + Note.keysShit[mania].get('anims')[leData];
+		var animToPlay:String = 'sing' + singAnimations[EK.gfxHud[mania][Std.int(Math.abs(leData))]];
 		if(leType == 'Hey!' && dad.animOffsets.exists('hey')) {
 			dad.playAnim('hey', true);
 			dad.specialAnim = true;
@@ -2430,7 +2338,7 @@ class PlayState extends MusicBeatState {
 		var result:Dynamic = callOnLuas('goodNoteHitPre', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHitPre', [note]);
 		
-		var animToPlay:String = 'sing' + Note.keysShit[mania].get('anims')[leData];
+		var animToPlay:String = 'sing' + singAnimations[EK.gfxHud[mania][Std.int(Math.abs(leData))]];
 		if (ClientPrefs.getPref('camMovement') && bfturn) moveCamOnNote(animToPlay);
 
 		if(note.hitCausesMiss) {
@@ -2491,27 +2399,17 @@ class PlayState extends MusicBeatState {
 	public function spawnNoteSplashOnNote(note:Note) {
 		if(ClientPrefs.getPref('splashOpacity') > 0 && note != null) {
 			var strum:StrumNote = playerStrums.members[note.noteData];
-			if(strum != null) spawnNoteSplash(strum.x, strum.y, note.noteData, note);
+			if(strum != null) {
+				var x:Float = strum.x + EK.swidths[mania] / 2 - Note.swagWidth / 2;
+				var y:Float = strum.y + EK.swidths[mania] / 2 - Note.swagWidth / 2;
+				spawnNoteSplash(x, y, note.noteData, note);
+			}
 		}
 	}
 
 	public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note) {
-		var skin:String = 'noteSplashes';
-		if((SONG.splashSkin != null || SONG.splashSkin != '') && SONG.splashSkin.length > 0) skin = SONG.splashSkin;
-		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-		var arrowIndex:Int = Std.int(Note.keysShit[mania].get('pixelAnimIndex')[data] % EK.keys(mania));
-
-		var hsb:Array<Float> = [0, 0, 0];
-		if (data > -1 && data < arrowHSV.length) {
-			hsb = [arrowHSV[arrowIndex][0] / 360, arrowHSV[arrowIndex][1] / 100, arrowHSV[arrowIndex][2] / 100];
-			if(note != null) {
-				skin = note.noteSplashTexture;
-				hsb = note.noteSplashHSB;
-			}
-		}
-
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash(x, y, data, skin, hsb);
+		splash.setupNoteSplash(x, y, data, note);
 		splash.ID = grpNoteSplashes.ID++;
 		grpNoteSplashes.add(splash);
 		grpNoteSplashes.sort(CoolUtil.sortByID);

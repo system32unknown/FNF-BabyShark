@@ -1,17 +1,15 @@
 package objects;
 
-import shaders.ColorSwap;
+import shaders.RGBPalette.RGBShaderReference;
 
 class StrumNote extends FlxSprite {
-	var colorSwap:ColorSwap;
-
+	public var rgbShader:RGBShaderReference;
 	public var resetAnim:Float = 0;
 	var noteData:Int = 0;
 	public var direction:Float = 90;//plan on doing scroll directions soon -bb
 	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
 	public var sustainReduce:Bool = true;
 	public var player:Int;
-	public var animationArray:Array<String> = ['', ''];
 	
 	public var texture(default, set):String = null;
 	function set_texture(value:String):String {
@@ -22,22 +20,36 @@ class StrumNote extends FlxSprite {
 		return value;
 	}
 
+	public var useRGBShader:Bool = true;
 	public function new(x:Float, y:Float, leData:Int, player:Int) {
 		animation = new backend.animation.PsychAnimationController(this);
 		
-		colorSwap = new ColorSwap();
-		shader = colorSwap.shader;
+		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(leData));
+		rgbShader.enabled = false;
+		if(PlayState.SONG != null && PlayState.SONG.disableNoteRGB) useRGBShader = false;
+
+		var arr:Array<FlxColor> = ClientPrefs.getPref('arrowRGBExtra')[EK.gfxIndex[PlayState.mania][leData]];
+		if(PlayState.isPixelStage) arr = ClientPrefs.getPref('arrowRGBPixelExtra')[EK.gfxIndex[PlayState.mania][leData]];
+		
+		if(leData <= PlayState.mania) {
+			@:bypassAccessor {
+				rgbShader.r = arr[0];
+				rgbShader.g = arr[1];
+				rgbShader.b = arr[2];
+			}
+		}
+
 		noteData = leData;
 		this.player = player;
 		this.noteData = leData;
 		super(x, y);
 
-		animationArray[0] = Note.keysShit.get(PlayState.mania).get('strumAnims')[leData];
-		animationArray[1] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
-
 		var skin:String = null;
 		if(PlayState.SONG != null && PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
 		else skin = Note.defaultNoteSkin;
+
+		var customSkin:String = skin + Note.getNoteSkinPostfix();
+		if(Paths.fileExists('images/$customSkin.png', IMAGE)) skin = customSkin;
 
 		texture = skin; //Load texture and anims
 		scrollFactor.set();
@@ -47,30 +59,43 @@ class StrumNote extends FlxSprite {
 		var lastAnim:String = null;
 		if(animation.curAnim != null) lastAnim = animation.curAnim.name;
 
-		var pxDV:Int = EK.pixelNotesDivisionValue;
-
 		if(PlayState.isPixelStage) {
 			loadGraphic(Paths.image('pixelUI/$texture'));
-			width /= pxDV;
+			width /= 9;
 			height /= 5;
 			loadGraphic(Paths.image('pixelUI/$texture'), true, Math.floor(width), Math.floor(height));
-			antialiasing = false;
-			var daFrames:Array<Int> = Note.keysShit.get(PlayState.mania).get('pixelAnimIndex');
 
-			setGraphicSize(Std.int(width * PlayState.daPixelZoom));
-			updateHitbox();
 			antialiasing = false;
-			animation.add('static', [daFrames[noteData]]);
-			animation.add('pressed', [daFrames[noteData] + pxDV, daFrames[noteData] + (pxDV * 2)], 12, false);
-			animation.add('confirm', [daFrames[noteData] + (pxDV * 3), daFrames[noteData] + (pxDV * 4)], 24, false);
+			setGraphicSize(Std.int(width * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]));
+	
+			for (i => k in EK.colArrayAlt) animation.add(k, [i + 9]);
+
+			var dataNum = EK.gfxIndex[PlayState.mania][noteData];
+			animation.add('static', [dataNum]);
+			animation.add('pressed', [9 + dataNum, 18 + dataNum], 12, false);
+			animation.add('confirm', [27 + dataNum, 36 + dataNum], 24, false);
 		} else {
 			frames = Paths.getSparrowAtlas(texture);
-			antialiasing = ClientPrefs.getPref('Antialiasing');
+			animation.addByPrefix('purple', 'arrowLEFT');
+			animation.addByPrefix('blue', 'arrowDOWN');
+			animation.addByPrefix('green', 'arrowUP');
+			animation.addByPrefix('red', 'arrowRIGHT');
+			animation.addByPrefix('white', 'arrowSPACE');
+			animation.addByPrefix('yellow', 'arrowLEFT');
+			animation.addByPrefix('violet', 'arrowDOWN');
+			animation.addByPrefix('black', 'arrowUP');
+			animation.addByPrefix('dark', 'arrowRIGHT');
+
+			antialiasing =  ClientPrefs.getPref('Antialiasing');
 			setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
-	
-			animation.addByPrefix('static', 'arrow${animationArray[0]}');
-			animation.addByPrefix('pressed', '${animationArray[1]} press', 24, false);
-			animation.addByPrefix('confirm', '${animationArray[1]} confirm', 24, false);
+
+			var pressName = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
+			var pressNameAlt = EK.pressArrayAlt[EK.gfxIndex[PlayState.mania][noteData]];
+			animation.addByPrefix('static', 'arrow' + EK.gfxDir[EK.gfxHud[PlayState.mania][noteData]]);
+			animation.addByPrefix('pressed', pressNameAlt + ' press', 24, false);
+			animation.addByPrefix('confirm', pressNameAlt + ' confirm', 24, false);
+			animation.addByPrefix('pressed', pressName + ' press', 24, false);
+			animation.addByPrefix('confirm', pressName + ' confirm', 24, false);
 		}
 		updateHitbox();
 
@@ -79,13 +104,10 @@ class StrumNote extends FlxSprite {
 
 	public function postAddedToGroup() {
 		playAnim('static');
-
-		x += (Note.swagWidth * EK.scales[PlayState.mania]) * noteData;
-		x += EK.offsetX[PlayState.mania];
-		x -= (EK.restPosition[PlayState.mania]) * noteData;
-
+		x += EK.swidths[PlayState.mania] * noteData;
 		x += 50;
 		x += ((FlxG.width / 2) * player);
+		x -= EK.posRest[PlayState.mania];
 		ID = noteData;
 	}
 
@@ -106,22 +128,6 @@ class StrumNote extends FlxSprite {
 			centerOffsets();
 			centerOrigin();
 		}
-		var arrowHSV:Array<Array<Int>> = ClientPrefs.getPref('arrowHSV');
-		var arrowIndex:Int = Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % EK.keys(PlayState.mania));
-		if(animation.curAnim == null || animation.curAnim.name == 'static')
-			colorSwap.setHSB(0, 0, 0);
-		else {
-			if (noteData > -1 && noteData < arrowHSV.length)
-				colorSwap.setHSB(arrowHSV[arrowIndex][0] / 360, arrowHSV[arrowIndex][1] / 100, arrowHSV[arrowIndex][2] / 100);
-
-			if (!PlayState.isPixelStage) return;
-			if(animation.curAnim.name == 'confirm') centerOrigin();
-		}
-	}
-
-	override function destroy() {
-		shader = null;
-		colorSwap = null;
-		super.destroy();
+		if(useRGBShader) rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
 	}
 }

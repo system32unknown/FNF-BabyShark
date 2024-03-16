@@ -26,8 +26,6 @@ typedef NoteSplashData = {
 }
 
 class Note extends FlxSprite {
-	public static var keysShit:Map<Int, Map<String, Dynamic>> = data.EkData.keysShit;
-	
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public var strumTime:Float = 0;
 
@@ -225,10 +223,10 @@ class Note extends FlxSprite {
 
 			offsetX -= width / 2;
 
-			if (PlayState.isPixelStage) offsetX += 30;
+			if (PlayState.isPixelStage) offsetX += 30 * EK.scalesPixel[PlayState.mania];
 
 			if (prevNote.isSustainNote) {
-				prevNote.animation.play(keysShit.get(PlayState.mania).get('letters')[prevNote.noteData] + ' hold');
+				prevNote.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][prevNote.noteData]] + 'hold');
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
 				if(createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
@@ -252,7 +250,24 @@ class Note extends FlxSprite {
 		x += offsetX;
 	}
 
+	public static function initializeGlobalRGBShader(noteData:Int) {
+		var dataNum = EK.gfxIndex[PlayState.mania][noteData];
+		if(globalRgbShaders[dataNum] == null) {
+			var newRGB:RGBPalette = new RGBPalette();
+			globalRgbShaders[dataNum] = newRGB;
+
+			var arr:Array<FlxColor> = !PlayState.isPixelStage ? ClientPrefs.getPref('arrowRGBExtra')[dataNum] : ClientPrefs.getPref('arrowRGBPixelExtra')[dataNum];
+			if (noteData > -1 && noteData <= PlayState.mania) {
+				newRGB.r = arr[0];
+				newRGB.g = arr[1];
+				newRGB.b = arr[2];
+			}
+		}
+		return globalRgbShaders[dataNum];
+	}
+
 	var _lastNoteOffX:Float = 0;
+	static var _lastValidChecked:String; //optimization
 	public var originalHeight:Float = 6;
 	public var correctionOffset:Float = 0;
 	function reloadNote(texture:String = '', postfix:String = '') {
@@ -267,27 +282,34 @@ class Note extends FlxSprite {
 		}
 
 		var animName:String = null;
-		if(animation.curAnim != null)
-			animName = animation.curAnim.name;
+		if(animation.curAnim != null) animName = animation.curAnim.name;
 
 		var skinPixel:String = skin;
 		var lastScaleY:Float = scale.y;
+		var skinPostfix:String = getNoteSkinPostfix();
+		var customSkin:String = skin + skinPostfix;
+		var path:String = PlayState.isPixelStage ? 'pixelUI/' : '';
+		if(customSkin == _lastValidChecked || Paths.fileExists('images/' + path + customSkin + '.png', IMAGE)) {
+			skin = customSkin;
+			_lastValidChecked = customSkin;
+		} else skinPostfix = '';
+
 		if(PlayState.isPixelStage) {
 			if(isSustainNote) {
-				var graphic = Paths.image('pixelUI/' + skinPixel + 'ENDS');
-				loadGraphic(graphic, true, Math.floor(graphic.width / EK.pixelNotesDivisionValue), Math.floor(graphic.height / 2));
+				var graphic = Paths.image('pixelUI/' + skinPixel + 'ENDS' + skinPostfix);
+				loadGraphic(graphic, true, Math.floor(graphic.width / 9), Math.floor(graphic.height / 2));
 				originalHeight = graphic.height / 2;
 			} else {
-				var graphic = Paths.image('pixelUI/' + skinPixel);
-				loadGraphic(graphic, true, Math.floor(graphic.width / EK.pixelNotesDivisionValue), Math.floor(graphic.height / 5));
+				var graphic = Paths.image('pixelUI/' + skinPixel + skinPostfix);
+				loadGraphic(graphic, true, Math.floor(graphic.width / 9), Math.floor(graphic.height / 5));
 			}
-			setGraphicSize(Std.int(width * PlayState.daPixelZoom));
+			setGraphicSize(Std.int(width * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]));
 			loadPixelNoteAnims();
 			antialiasing = false;
 
 			if(isSustainNote) {
 				offsetX += _lastNoteOffX;
-				_lastNoteOffX = (width - 7) * (PlayState.daPixelZoom / 2);
+				_lastNoteOffX = (width - 7) * (PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania] / 2);
 				offsetX -= _lastNoteOffX;
 			}
 		} else {
@@ -304,30 +326,49 @@ class Note extends FlxSprite {
 		if(animName != null) animation.play(animName, true);
 	}
 
-	function loadNoteAnims() {
-		var defaultWidth = 157;
-		var defaultHeight = 154;
+	public static function getNoteSkinPostfix() {
+		var skin:String = '';
+		if(ClientPrefs.getPref('noteSkin') != ClientPrefs.defaultprefs['noteSkin'])
+			skin = '-' + ClientPrefs.getPref('noteSkin').trim().toLowerCase().replace(' ', '_');
+		return skin;
+	}
 
-		for (letter in EK.gfxLetter) {
-			if (isSustainNote) {
-				animation.addByPrefix('$letter hold', '$letter hold', 24);
-				animation.addByPrefix('$letter tail', '$letter tail', 24);
-			} else animation.addByPrefix(letter, '${letter}0', 24);
+	function loadNoteAnims() {
+		var playAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
+		var playAnimAlt:String = EK.colArrayAlt[EK.gfxIndex[PlayState.mania][noteData]];
+		if (isSustainNote) {
+			attemptToAddAnimationByPrefix('purpleholdend', 'pruple end hold', 24, true); // this fixes some retarded typo from the original note .FLA
+			attemptToAddAnimationByPrefix(playAnim + 'holdend', playAnim + ' tail0', 24, true);
+			attemptToAddAnimationByPrefix(playAnim + 'hold', playAnim + ' hold0', 24, true);
+			attemptToAddAnimationByPrefix(playAnim + 'holdend', playAnimAlt + ' hold end', 24, true);
+			attemptToAddAnimationByPrefix(playAnim + 'hold', playAnimAlt + ' hold piece', 24, true);
+			animation.addByPrefix(playAnim + 'holdend', playAnim + ' hold end', 24, true);
+			animation.addByPrefix(playAnim + 'hold', playAnim + ' hold piece', 24, true);
+		} else {
+			attemptToAddAnimationByPrefix(playAnim + 'Scroll', playAnimAlt + '0');
+			animation.addByPrefix(playAnim + 'Scroll', playAnim + '0');
 		}
 
-		if (!isSustainNote)
-			setGraphicSize(Std.int(defaultWidth * EK.scales[PlayState.mania]));
-		else setGraphicSize(Std.int(defaultWidth * EK.scales[PlayState.mania]), Std.int(defaultHeight));
+		setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
 		updateHitbox();
 	}
 
 	function loadPixelNoteAnims() {
+		var playAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
+		var noteIndex:Int = EK.gfxIndex[PlayState.mania][noteData];
 		if(isSustainNote) {
-			for (i => letter in EK.gfxLetter) {
-				animation.add('$letter hold', [i], 24);
-				animation.add('$letter tail', [i + EK.pixelNotesDivisionValue], 24);
-			}
-		} else for (i => letter in EK.gfxLetter) animation.add(letter, [i + EK.pixelNotesDivisionValue], 24);
+			animation.add(playAnim + 'holdend', [noteIndex + 9], 24, true);
+			animation.add(playAnim + 'hold', [noteIndex], 24, true);
+		} else animation.add(playAnim + 'Scroll', [noteIndex + 9], 24, true);
+	}
+
+	function attemptToAddAnimationByPrefix(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
+		var animFrames = [];
+		@:privateAccess
+		animation.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
+		if(animFrames.length < 1) return;
+
+		animation.addByPrefix(name, prefix, framerate, doLoop);
 	}
 
 	inline public function checkDiff(songPos:Float):Bool {
@@ -366,14 +407,14 @@ class Note extends FlxSprite {
 		if(copyY) {
 			y = strumY + offsetY + correctionOffset + Math.sin(angleDir) * distance;
 			if(myStrum.downScroll && isSustainNote) {
-				if(PlayState.isPixelStage) y -= PlayState.daPixelZoom * 9.5;
-				y -= (frameHeight * scale.y) - (swagWidth / 2);
+				if(PlayState.isPixelStage) y -= PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania] * 9.5;
+				y -= (frameHeight * scale.y) - (EK.swidths[PlayState.mania] / 2);
 			}
 		}
 	}
 
 	public function clipToStrumNote(myStrum:StrumNote) {
-		final center:Float = myStrum.y + offsetY + swagWidth / 2;
+		final center:Float = myStrum.y + offsetY + EK.swidths[PlayState.mania] / 2;
 		if(isSustainNote && (mustPress || !ignoreNote) && (!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !canBeHit)))) {
 			final swagRect:FlxRect = (clipRect == null ? FlxRect.get(0, 0, frameWidth, frameHeight) : clipRect);
 	
@@ -395,6 +436,7 @@ class Note extends FlxSprite {
 	override function destroy() {
 		clipRect = flixel.util.FlxDestroyUtil.put(clipRect);
 		super.destroy();
+		_lastValidChecked = '';
 	}
 
 	@:noCompletion override function set_clipRect(rect:FlxRect):FlxRect {
