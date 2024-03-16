@@ -30,6 +30,8 @@ class OptionsState extends MusicBeatState {
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Options Menu", null); #end
 
+		PlayState.mania = 8;
+
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.updateHitbox();

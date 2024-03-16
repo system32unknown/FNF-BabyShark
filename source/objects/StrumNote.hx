@@ -51,6 +51,8 @@ class StrumNote extends FlxSprite {
 		var customSkin:String = skin + Note.getNoteSkinPostfix();
 		if(Paths.fileExists('images/$customSkin.png', IMAGE)) skin = customSkin;
 
+		trace(skin);
+
 		texture = skin; //Load texture and anims
 		scrollFactor.set();
 	}
@@ -68,7 +70,15 @@ class StrumNote extends FlxSprite {
 			antialiasing = false;
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]));
 	
-			for (i => k in EK.colArrayAlt) animation.add(k, [i + 9]);
+			animation.add('purple', [9]);
+			animation.add('blue', [10]);
+			animation.add('green', [11]);
+			animation.add('red', [12]);
+			animation.add('white', [13]);
+			animation.add('yellow', [14]);
+			animation.add('violet', [15]);
+			animation.add('black', [16]);
+			animation.add('dark', [17]);
 
 			var dataNum = EK.gfxIndex[PlayState.mania][noteData];
 			animation.add('static', [dataNum]);
@@ -86,7 +96,7 @@ class StrumNote extends FlxSprite {
 			animation.addByPrefix('black', 'arrowUP');
 			animation.addByPrefix('dark', 'arrowRIGHT');
 
-			antialiasing =  ClientPrefs.getPref('Antialiasing');
+			antialiasing = ClientPrefs.getPref('Antialiasing');
 			setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
 
 			var pressName = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];

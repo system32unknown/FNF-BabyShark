@@ -1,12 +1,8 @@
 package options;
 
 import flixel.addons.display.FlxBackdrop;
-import flixel.addons.display.FlxGridOverlay;
-import flixel.addons.display.shapes.FlxShapeCircle;
 import flixel.input.keyboard.FlxKey;
-import flixel.input.gamepad.FlxGamepadInputID;
 import lime.system.Clipboard;
-import flixel.util.FlxGradient;
 import objects.StrumNote;
 import objects.Note;
 
@@ -57,7 +53,7 @@ class NotesSubState extends MusicBeatSubstate {
 		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
 		add(bg);
 
-		var grid:FlxBackdrop = new FlxBackdrop(FlxGridOverlay.createGrid(80, 80, 160, 160, true, 0x33FFFFFF, 0x0));
+		var grid:FlxBackdrop = CoolUtil.createBackDrop(80, 80, 160, 160, true, 0x33FFFFFF, 0x0);
 		grid.velocity.set(40, 40);
 		grid.alpha = 0;
 		FlxTween.tween(grid, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
@@ -99,7 +95,7 @@ class NotesSubState extends MusicBeatSubstate {
 		pasteButton.alpha = 0.6;
 		add(pasteButton);
 
-		colorGradient = FlxGradient.createGradientFlxSprite(60, 360, [FlxColor.WHITE, FlxColor.BLACK]);
+		colorGradient = flixel.util.FlxGradient.createGradientFlxSprite(60, 360, [FlxColor.WHITE, FlxColor.BLACK]);
 		colorGradient.setPosition(780, 200);
 		add(colorGradient);
 
@@ -118,7 +114,7 @@ class NotesSubState extends MusicBeatSubstate {
 		colorWheel.updateHitbox();
 		add(colorWheel);
 
-		colorWheelSelector = new FlxShapeCircle(0, 0, 8, {thickness: 0}, FlxColor.WHITE);
+		colorWheelSelector = new flixel.addons.display.shapes.FlxShapeCircle(0, 0, 8, {thickness: 0}, FlxColor.WHITE);
 		colorWheelSelector.offset.set(8, 8);
 		colorWheelSelector.alpha = 0.6;
 		add(colorWheelSelector);
@@ -152,18 +148,12 @@ class NotesSubState extends MusicBeatSubstate {
 		tipTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		tipTxt.borderSize = 2;
 		add(tipTxt);
-		updateTip();
+		tipTxt.text = 'Hold Shift + Press RESET key to fully reset the selected Note.';
 		
 		FlxG.mouse.visible = true;
 	}
 
-	function updateTip()
-	{
-		tipTxt.text = 'Hold Shift + Press RESET key to fully reset the selected Note.';
-	}
-
 	var _storedColor:FlxColor;
-	var changingNote:Bool = false;
 	var holdingOnObj:FlxSprite;
 	var allowedTypeKeys:Map<FlxKey, String> = [
 		ZERO => '0', ONE => '1', TWO => '2', THREE => '3', FOUR => '4', FIVE => '5', SIX => '6', SEVEN => '7', EIGHT => '8', NINE => '9',
@@ -291,8 +281,7 @@ class NotesSubState extends MusicBeatSubstate {
 		}
 
 		// Click
-		if(generalPressed)
-		{
+		if(generalPressed) {
 			hexTypeNum = -1;
 			if (pointerOverlaps(modeNotes))
 			{
@@ -369,20 +358,16 @@ class NotesSubState extends MusicBeatSubstate {
 				updateColors();
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 			}
-			else if (generalMoved || generalPressed)
-			{
-				if (holdingOnObj == colorGradient)
-				{
+			else if (generalMoved || generalPressed) {
+				if (holdingOnObj == colorGradient) {
 					var newBrightness = 1 - FlxMath.bound((pointerY() - colorGradient.y) / colorGradient.height, 0, 1);
 					_storedColor.alpha = 1;
 					if(_storedColor.brightness == 0) //prevent bug
 						setShaderColor(FlxColor.fromRGBFloat(newBrightness, newBrightness, newBrightness));
 					else setShaderColor(FlxColor.fromHSB(_storedColor.hue, _storedColor.saturation, newBrightness));
 					updateColors(_storedColor);
-				}
-				else if (holdingOnObj == colorWheel)
-				{
-					var center:FlxPoint = new FlxPoint(colorWheel.x + colorWheel.width/2, colorWheel.y + colorWheel.height/2);
+				} else if (holdingOnObj == colorWheel) {
+					var center:FlxPoint = new FlxPoint(colorWheel.x + colorWheel.width / 2, colorWheel.y + colorWheel.height / 2);
 					var mouse:FlxPoint = pointerFlxPoint();
 					var hue:Float = FlxMath.wrap(FlxMath.wrap(Std.int(mouse.degreesTo(center)), 0, 360) - 90, 0, 360);
 					var sat:Float = FlxMath.bound(mouse.dist(center) / colorWheel.width*2, 0, 1);
@@ -400,20 +385,16 @@ class NotesSubState extends MusicBeatSubstate {
 				{
 					var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
 					var color:FlxColor = !onPixel ? ClientPrefs.defaultprefs['arrowRGBExtra'][curSelectedNote][i] : ClientPrefs.defaultprefs['arrowRGBPixelExtra'][curSelectedNote][i];
-					switch(i)
-					{
-						case 0:
-							getShader().r = strumRGB.r = color;
-						case 1:
-							getShader().g = strumRGB.g = color;
-						case 2:
-							getShader().b = strumRGB.b = color;
+					switch(i) {
+						case 0: getShader().r = strumRGB.r = color;
+						case 1: getShader().g = strumRGB.g = color;
+						case 2: getShader().b = strumRGB.b = color;
 					}
 					dataArray[curSelectedNote][i] = color;
 				}
 			}
 			setShaderColor(!onPixel ? ClientPrefs.defaultprefs['arrowRGBExtra'][curSelectedNote][curSelectedMode] : ClientPrefs.defaultprefs['arrowRGBPixelExtra'][curSelectedNote][curSelectedMode]);
-			FlxG.sound.play(Paths.sound('cancelMenu'), 0.6);
+			FlxG.sound.play(Paths.sound('cancelMenu'), .6);
 			updateColors();
 		}
 	}
@@ -454,7 +435,7 @@ class NotesSubState extends MusicBeatSubstate {
 	function changeSelectionNote(change:Int = 0) {
 		curSelectedNote += change;
 		if (curSelectedNote < 0)
-			curSelectedNote = dataArray.length-1;
+			curSelectedNote = dataArray.length - 1;
 		if (curSelectedNote >= dataArray.length)
 			curSelectedNote = 0;
 		
@@ -467,11 +448,10 @@ class NotesSubState extends MusicBeatSubstate {
 	}
 
 	// alphabets
-	function makeColorAlphabet(x:Float = 0, y:Float = 0):Alphabet
-	{
-		var text:Alphabet = new Alphabet(x, y, '', true);
+	function makeColorAlphabet(x:Float = 0, y:Float = 0):Alphabet {
+		var text:Alphabet = new Alphabet(x, y, '');
 		text.alignment = CENTERED;
-		text.setScale(0.6);
+		text.setScale(.6);
 		add(text);
 		return text;
 	}
@@ -583,11 +563,11 @@ class NotesSubState extends MusicBeatSubstate {
 		for (letter in alphabetHex.letters) letter.color = color;
 
 		colorWheel.color = FlxColor.fromHSB(0, 0, color.brightness);
-		colorWheelSelector.setPosition(colorWheel.x + colorWheel.width/2, colorWheel.y + colorWheel.height/2);
+		colorWheelSelector.setPosition(colorWheel.x + colorWheel.width / 2, colorWheel.y + colorWheel.height / 2);
 		if(wheelColor.brightness != 0) {
 			var hueWrap:Float = wheelColor.hue * Math.PI / 180;
-			colorWheelSelector.x += Math.sin(hueWrap) * colorWheel.width/2 * wheelColor.saturation;
-			colorWheelSelector.y -= Math.cos(hueWrap) * colorWheel.height/2 * wheelColor.saturation;
+			colorWheelSelector.x += Math.sin(hueWrap) * colorWheel.width / 2 * wheelColor.saturation;
+			colorWheelSelector.y -= Math.cos(hueWrap) * colorWheel.height / 2 * wheelColor.saturation;
 		}
 		colorGradientSelector.y = colorGradient.y + colorGradient.height * (1 - color.brightness);
 

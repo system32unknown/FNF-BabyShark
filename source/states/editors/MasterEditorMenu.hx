@@ -73,7 +73,8 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Week Editor': FlxG.switchState(() -> new WeekEditorState());
 				case 'Menu Character Editor': FlxG.switchState(() -> new MenuCharacterEditorState());
 				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(() -> new DialogueCharacterEditorState());
-				case 'Dialogue Editor' : LoadingState.loadAndSwitchState(() -> new DialogueEditorState());
+				case 'Dialogue Editor': LoadingState.loadAndSwitchState(() -> new DialogueEditorState());
+				case 'Note Splash Debug': FlxG.switchState(() -> new NoteSplashDebugState());
 			}
 			FlxG.sound.music.volume = 0;
 			Conductor.usePlayState = false;

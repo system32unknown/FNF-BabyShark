@@ -14,7 +14,6 @@ class EK {
 
 	public static var scales:Array<Float> = [.7, .7, .7, .7, .65, .6, .55, .5, .46];
 	public static var scalesPixel:Array<Float> = [1, 1, 1, 1, .93, .86, .79, .71, .66];
-	public static var splashOffsetScale:Array<Float> = [1, 1, 1, 1, 1.08, 1.17, 1.27, 1.4, 1.52];
 	public static var swidths:Array<Float> = [112, 112, 112, 112, 98, 84, 77, 70, 63];
 	public static var posRest:Array<Int> = [-168, -112, -56, 0, 15, 35, 45, 55, 60];
 	public static var gfxIndex:Array<Dynamic> = [

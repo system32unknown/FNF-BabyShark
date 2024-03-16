@@ -150,7 +150,7 @@ class PlayState extends MusicBeatState {
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
 
-	public static var mania:Int = 0;
+	public static var mania:Int = 3;
 
 	var generatedMusic:Bool = false;
 	public var endingSong:Bool = false;
@@ -299,8 +299,8 @@ class PlayState extends MusicBeatState {
 		Conductor.mapBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
 
-		if (mania < EK.minMania || mania > EK.maxMania) mania = EK.defaultMania;
-		mania = SONG.mania != null ? SONG.mania : 3;
+		if (SONG.mania == null || SONG.mania < EK.minMania || SONG.mania > EK.maxMania) SONG.mania = EK.defaultMania;
+		mania = SONG.mania;
 
 		keysArray = EK.fillKeys()[mania];
 		fillKeysPressed();

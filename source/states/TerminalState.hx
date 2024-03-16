@@ -162,7 +162,7 @@ class TerminalState extends MusicBeatState {
 
 		if (FlxG.keys.justPressed.ESCAPE) {
 			Main.fpsVar.visible = true;
-			FlxG.switchState(new MainMenuState());
+			FlxG.switchState(() -> new FreeplayState());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		}
 	}

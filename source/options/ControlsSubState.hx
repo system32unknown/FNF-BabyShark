@@ -2,7 +2,6 @@ package options;
 
 import backend.InputFormatter;
 import flixel.addons.display.FlxBackdrop;
-import flixel.addons.display.FlxGridOverlay;
 import objects.AttachedSprite;
 
 import flixel.input.keyboard.FlxKey;
@@ -107,7 +106,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		bg.screenCenter();
 		add(bg);
 
-		var grid:FlxBackdrop = new FlxBackdrop(FlxGridOverlay.createGrid(80, 80, 160, 160, true, 0x33FFFFFF, 0x0));
+		var grid:FlxBackdrop = CoolUtil.createBackDrop(80, 80, 160, 160, true, 0x33FFFFFF, 0x0);
 		grid.velocity.set(40, 40);
 		grid.alpha = 0;
 		FlxTween.tween(grid, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
@@ -126,11 +125,6 @@ class ControlsSubState extends MusicBeatSubstate {
 		add(selectSpr);
 		grpBinds = new FlxTypedGroup<Alphabet>();
 		add(grpBinds);
-
-		var text:Alphabet = new Alphabet(60, 90, 'CTRL', false);
-		text.alignment = CENTERED;
-		text.setScale(0.4);
-		add(text);
 
 		var text2:Alphabet = new Alphabet(50, 600, 'SHIFT + < or > to\nChange Key Number');
 		text2.alignment = LEFT;

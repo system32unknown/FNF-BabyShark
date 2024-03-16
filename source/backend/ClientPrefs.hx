@@ -57,6 +57,9 @@ class ClientPrefs {
 		'unlockedCharacters' => ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'],
 		'discordRPC' => true,
 
+		'noteSkin' => 'Default',
+		'splashSkin' => 'Psych',
+
 		'arrowRGBExtra' => [
 			[0xFFC24B99, 0xFFFFFFFF, 0xFF3C1F56],
 			[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
