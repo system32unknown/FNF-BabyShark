@@ -283,11 +283,9 @@ class NotesSubState extends MusicBeatSubstate {
 		// Click
 		if(generalPressed) {
 			hexTypeNum = -1;
-			if (pointerOverlaps(modeNotes))
-			{
-				modeNotes.forEachAlive(function(note:FlxSprite) {
-					if (curSelectedMode != note.ID && pointerOverlaps(note))
-					{
+			if (pointerOverlaps(modeNotes)) {
+				modeNotes.forEachAlive((note:FlxSprite) ->{
+					if (curSelectedMode != note.ID && pointerOverlaps(note)) {
 						modeBG.visible = notesBG.visible = false;
 						curSelectedMode = note.ID;
 						onModeColumn = true;
@@ -295,12 +293,9 @@ class NotesSubState extends MusicBeatSubstate {
 						FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 					}
 				});
-			}
-			else if (pointerOverlaps(myNotes))
-			{
-				myNotes.forEachAlive(function(note:StrumNote) {
-					if (curSelectedNote != note.ID && pointerOverlaps(note))
-					{
+			} else if (pointerOverlaps(myNotes)) {
+				myNotes.forEachAlive((note:StrumNote) -> {
+					if (curSelectedNote != note.ID && pointerOverlaps(note)) {
 						modeBG.visible = notesBG.visible = false;
 						curSelectedNote = note.ID;
 						onModeColumn = false;
@@ -310,35 +305,26 @@ class NotesSubState extends MusicBeatSubstate {
 						FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 					}
 				});
-			}
-			else if (pointerOverlaps(colorWheel)) {
+			} else if (pointerOverlaps(colorWheel)) {
 				_storedColor = getShaderColor();
 				holdingOnObj = colorWheel;
-			}
-			else if (pointerOverlaps(colorGradient)) {
+			} else if (pointerOverlaps(colorGradient)) {
 				_storedColor = getShaderColor();
 				holdingOnObj = colorGradient;
-			}
-			else if (pointerOverlaps(colorPalette)) {
+			} else if (pointerOverlaps(colorPalette)) {
 				setShaderColor(colorPalette.pixels.getPixel32(
 					Std.int((pointerX() - colorPalette.x) / colorPalette.scale.x), 
 					Std.int((pointerY() - colorPalette.y) / colorPalette.scale.y)));
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 				updateColors();
-			}
-			else if (pointerOverlaps(skinNote))
-			{
+			} else if (pointerOverlaps(skinNote)) {
 				onPixel = !onPixel;
 				spawnNotes();
 				updateNotes(true);
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
-			}
-			else if(pointerY() >= hexTypeLine.y && pointerY() < hexTypeLine.y + hexTypeLine.height &&
-					Math.abs(pointerX() - 1000) <= 84)
-			{
+			} else if(pointerY() >= hexTypeLine.y && pointerY() < hexTypeLine.y + hexTypeLine.height && Math.abs(pointerX() - 1000) <= 84) {
 				hexTypeNum = 0;
-				for (letter in alphabetHex.letters)
-				{
+				for (letter in alphabetHex.letters) {
 					if(letter.x - letter.offset.x + letter.width <= pointerX()) hexTypeNum++;
 					else break;
 				}
@@ -349,16 +335,13 @@ class NotesSubState extends MusicBeatSubstate {
 			else holdingOnObj = null;
 		}
 		// holding
-		if(holdingOnObj != null)
-		{
-			if (FlxG.mouse.justReleased)
-			{
+		if(holdingOnObj != null) {
+			if (FlxG.mouse.justReleased) {
 				holdingOnObj = null;
 				_storedColor = getShaderColor();
 				updateColors();
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
-			}
-			else if (generalMoved || generalPressed) {
+				FlxG.sound.play(Paths.sound('scrollMenu'), .6);
+			} else if (generalMoved || generalPressed) {
 				if (holdingOnObj == colorGradient) {
 					var newBrightness = 1 - FlxMath.bound((pointerY() - colorGradient.y) / colorGradient.height, 0, 1);
 					_storedColor.alpha = 1;
@@ -376,15 +359,11 @@ class NotesSubState extends MusicBeatSubstate {
 					updateColors();
 				}
 			} 
-		}
-		else if(controls.RESET && hexTypeNum < 0)
-		{
-			if(FlxG.keys.pressed.SHIFT)
-			{
-				for (i in 0...3)
-				{
+		} else if(controls.RESET && hexTypeNum < 0) {
+			if(FlxG.keys.pressed.SHIFT) {
+				for (i in 0...3) {
 					var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
-					var color:FlxColor = !onPixel ? ClientPrefs.defaultprefs['arrowRGBExtra'][curSelectedNote][i] : ClientPrefs.defaultprefs['arrowRGBPixelExtra'][curSelectedNote][i];
+					var color:FlxColor = !onPixel ? ClientPrefs.defaultData.arrowRGBExtra[curSelectedNote][i] : ClientPrefs.defaultData.arrowRGBPixelExtra[curSelectedNote][i];
 					switch(i) {
 						case 0: getShader().r = strumRGB.r = color;
 						case 1: getShader().g = strumRGB.g = color;
@@ -393,7 +372,7 @@ class NotesSubState extends MusicBeatSubstate {
 					dataArray[curSelectedNote][i] = color;
 				}
 			}
-			setShaderColor(!onPixel ? ClientPrefs.defaultprefs['arrowRGBExtra'][curSelectedNote][curSelectedMode] : ClientPrefs.defaultprefs['arrowRGBPixelExtra'][curSelectedNote][curSelectedMode]);
+			setShaderColor(!onPixel ? ClientPrefs.defaultData.arrowRGBExtra[curSelectedNote][curSelectedMode] : ClientPrefs.defaultData.arrowRGBPixelExtra[curSelectedNote][curSelectedMode]);
 			FlxG.sound.play(Paths.sound('cancelMenu'), .6);
 			updateColors();
 		}

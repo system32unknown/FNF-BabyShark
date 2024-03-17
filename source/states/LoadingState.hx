@@ -212,7 +212,7 @@ class LoadingState extends MusicBeatState {
 				else json = Json.parse(File.getContent(path));
 				#else json = Json.parse(Assets.getText(path)); #end
 
-				if (json != null) prepare((!ClientPrefs.getPref('lowQuality') || json.images_low) ? json.images : json.images_low, json.sounds, json.music);
+				if (json != null) prepare((!ClientPrefs.data.lowQuality || json.images_low) ? json.images : json.images_low, json.sounds, json.music);
 			} catch(e:Dynamic) Logs.trace("ERROR PREPARING SONG: " + e, ERROR);
 			completedThread();
 		});
@@ -223,7 +223,7 @@ class LoadingState extends MusicBeatState {
 
 			var stageData:StageFile = StageData.getStageFile(song.stage);
 			if (stageData != null && stageData.preload != null)
-				prepare((!ClientPrefs.getPref('lowQuality') || stageData.preload.images_low) ? stageData.preload.images : stageData.preload.images_low, stageData.preload.sounds, stageData.preload.music);
+				prepare((!ClientPrefs.data.lowQuality || stageData.preload.images_low) ? stageData.preload.images : stageData.preload.images_low, stageData.preload.sounds, stageData.preload.music);
 
 			songsToPrepare.push('$folder/Inst');
 

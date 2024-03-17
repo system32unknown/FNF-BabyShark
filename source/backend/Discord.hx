@@ -68,7 +68,7 @@ class DiscordClient {
 
 		presence.details = details;
 		presence.state = state;
-		presence.largeImageKey = (ClientPrefs.data.AltDiscordImg ? 'iconalt' + ClientPrefs.data.AltDiscordImgCount : 'icon');
+		presence.largeImageKey = (ClientPrefs.data.altDiscordImg ? 'iconalt' + ClientPrefs.data.altDiscordImgCount : 'icon');
 		presence.largeImageText = 'Baby Shark\'s Big Funkin!';
 		// Obtained times are in milliseconds so they are divided so Discord can use it
 		presence.startTimestamp = Std.int(startTimestamp / 1000);

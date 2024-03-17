@@ -339,10 +339,8 @@ class GameplayOption
 		if(onChange != null) onChange();
 	}
 
-	public function getValue():Dynamic
-		return ClientPrefs.gameplaySettings.get(variable);
-	public function setValue(value:Dynamic)
-		ClientPrefs.gameplaySettings.set(variable, value);
+	public function getValue():Dynamic return ClientPrefs.data.gameplaySettings.get(variable);
+	public function setValue(value:Dynamic) ClientPrefs.data.gameplaySettings.set(variable, value);
 
 	public function setChild(child:Alphabet) {
 		this.child = child;

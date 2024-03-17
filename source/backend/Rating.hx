@@ -14,7 +14,7 @@ class Rating {
 		this.image = name;
 		this.hitWindow = 0;
 		try {
-			this.hitWindow = Reflect.field(ClientPrefs.data, window);
+			this.hitWindow = Reflect.field(ClientPrefs.data, name + 'Window');
 		} catch(e) FlxG.log.error(e);
 	}
 

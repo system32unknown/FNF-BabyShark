@@ -131,7 +131,7 @@ class HealthIcon extends FlxSprite {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (Std.isOfType(FlxG.state, PlayState) && (ClientPrefs.data.IconBounceType == 'Dave' || ClientPrefs.data.IconBounceType == 'GoldenApple'))
+		if (Std.isOfType(FlxG.state, PlayState) && (ClientPrefs.data.iconBounceType == 'Dave' || ClientPrefs.data.iconBounceType == 'GoldenApple'))
 			offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
 		if (sprTracker != null) setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 	}

@@ -34,7 +34,7 @@ class NoteOffsetState extends MusicBeatState {
 	var timeTxt:FlxText;
 
 	var changeModeText:FlxText;
-	var comboOffset:Array<Array<Int>> = ClientPrefs.getPref('comboOffset');
+	var comboOffset:Array<Array<Int>> = ClientPrefs.data.comboOffset;
 
 	override public function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Adjusting Offsets and Combos'); #end
@@ -360,7 +360,7 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	function updateNoteDelay() {
-		ClientPrefs.prefs.set('noteOffset', Math.round(barPercent));
+		ClientPrefs.data.noteOffset = Math.round(barPercent);
 		timeTxt.text = 'Current offset: ' + Math.floor(barPercent) + ' ms';
 	}
 

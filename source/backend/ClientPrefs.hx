@@ -64,7 +64,7 @@ import flixel.input.keyboard.FlxKey;
 	public var hardwareCache:Bool = false;
 	public var streamMusic:Bool = false;
 	public var antiMash:Bool = false;
-	public var HealthTypes:String = 'Vanilla';
+	public var healthTypes:String = 'Vanilla';
 	public var timeBarType:String = 'Name Time Position';
 	public var altDiscordImg:Bool = false;
 	public var altDiscordImgCount:Int = 0;
