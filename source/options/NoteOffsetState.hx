@@ -325,7 +325,7 @@ class NoteOffsetState extends MusicBeatState {
 						setObjectAlpha(i, i == holdingObject ? 1 : .5);
 					}
 
-					var v = holdingObject * 2;
+					var v = holdingObject;
 					holdingObjectOffset.x = comboOffset[v][0] - (nativeHoldingObject ? mousePointer.x : mouse.x);
 					holdingObjectOffset.y = -comboOffset[v][1] - (nativeHoldingObject ? mousePointer.y : mouse.y);
 				} else if (!nativeHoldingObject || holdingObject == -1)
@@ -333,7 +333,7 @@ class NoteOffsetState extends MusicBeatState {
 			}
 
 			if (holdingObject != -1) {
-				var v = holdingObject * 2;
+				var v = holdingObject;
 				comboOffset[v][0] = Math.floor((nativeHoldingObject ? mousePointer.x : mouse.x) + holdingObjectOffset.x);
 				comboOffset[v][1] = -Math.floor((nativeHoldingObject ? mousePointer.y : mouse.y) + holdingObjectOffset.y);
 			}
@@ -353,17 +353,16 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	function setObjectAlpha(i:Int, alpha:Float) {
-		var obj = i == 0 ? rating : (i == 1 ? combo : null);
+		var obj = i == 0 ? rating : (i == 2 ? combo : null);
 		if (obj != null) obj.alpha = alpha;
 
-		var arr = i == 1 ? comboNums : null;
-		if (arr != null) for (v in arr) v.alpha = alpha;
+		if (i == 1 && comboNums != null) for (v in comboNums) v.alpha = alpha;
 	}
 
 	function getOverlappedObject(pos:flixel.FlxObject):Int {
 		if (rating != null && rating.overlaps(pos)) return 0;
-		if (combo != null && combo.overlaps(pos)) return 1;
 		if (comboNums != null) for (v in comboNums) if (v.overlaps(pos)) return 1;
+		if (combo != null && combo.overlaps(pos)) return 2;
 		return -1;
 	}
 
