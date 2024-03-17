@@ -17,7 +17,6 @@ class GraphicLogoCorners extends BitmapData {}
 
 class FunkinPreloader extends flixel.system.FlxBasePreloader {
     var _logo:Sprite = new Sprite();
-    var _loading:Sprite = new Sprite();
 	var _logoGlow:Sprite = new Sprite();
 
     var _text = new TextField();

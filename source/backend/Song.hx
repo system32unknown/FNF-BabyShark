@@ -76,8 +76,6 @@ class Song {
 				rawJson = lime.utils.Assets.getText(path);
 		}
 
-		while (!rawJson.endsWith("}")) rawJson = rawJson.substr(0, rawJson.length - 1);
-
 		var songJson:Dynamic = parseJSONshit(rawJson);
 		if(jsonInput != 'events') data.StageData.loadDirectory(songJson);
 		onLoadJson(songJson);
