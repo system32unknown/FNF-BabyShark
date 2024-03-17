@@ -65,6 +65,13 @@ class Controls {
 	function get_PAUSE() return justPressed('pause');
 	function get_RESET() return justPressed('reset');
 
+	public var ACCEPT_P(get, never):Bool;
+	function get_ACCEPT_P() return pressed('accept');
+	public var RESET_P(get, never):Bool;
+	function get_RESET_P() return pressed('reset');
+	public var PAUSE_P(get, never):Bool;
+	function get_PAUSE_P() return pressed('pause');
+
 	public var keyboardBinds:Map<String, Array<FlxKey>>;
 	
 	public function justPressed(key:String) return FlxG.keys.anyJustPressed(excludeNONEFromKeyChecks(keyboardBinds[key]));

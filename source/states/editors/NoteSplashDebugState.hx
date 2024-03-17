@@ -77,8 +77,7 @@ class NoteSplashDebugState extends MusicBeatState
 						missingTextBG.visible = true;
 						FlxG.sound.play(Paths.sound('cancelMenu'));
 
-						new FlxTimer().start(2.5, function(tmr:FlxTimer)
-						{
+						FlxTimer.wait(2.5, () -> {
 							missingText.visible = false;
 							missingTextBG.visible = false;
 						});
