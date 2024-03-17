@@ -12,11 +12,11 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 
 		var option:Option = new Option('Auto Pause', "If checked, the game automatically pauses if the screen isn't on focus.", 'autoPause', 'bool');
 		addOption(option);
-		option.onChange = () -> FlxG.autoPause = ClientPrefs.getPref('autoPause');
+		option.onChange = () -> FlxG.autoPause = ClientPrefs.data.autoPause;
 		addOption(new Option('Auto Pause Playstate', "If checked, in playstate, gameplay and notes will pause if it's unfocused.", 'autoPausePlayState', 'bool'));
 
 		addOption(new Option('Disable Reset Button', "If checked, pressing Reset won't do anything.", 'noReset', 'bool'));
-		addOption(new Option('Antimash', "If unchecked, Antimash will not do anything.", 'AntiMash', 'bool'));
+		addOption(new Option('Antimash', "If unchecked, Antimash will not do anything.", 'antiMash', 'bool'));
 		addOption(new Option('Dynamic Camera Movement', "If unchecked, \nthe camera won't move in the direction in which the characters sing.", 'camMovement', 'bool'));
 
 		var option:Option = new Option('Hitsound Type:', "What should the hitsounds like?", 'hitsoundTypes', 'string', ['Tick', 'Snap', 'Dave']);
@@ -32,9 +32,9 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
-		addOption(new Option('Update Cam Section', 'If checked, camera will always update,\nwhich makes the camera more precise.', 'UpdateCamSection', 'bool'));
+		addOption(new Option('Update Cam Section', 'If checked, camera will always update,\nwhich makes the camera more precise.', 'updateCamSection', 'bool'));
 		addOption(new Option('Complex Accuracy', '', 'complexAccuracy', 'bool'));
-		addOption(new Option('Note Diff Type:', '', 'NoteDiffTypes', 'string', ['Psych', 'Simple']));
+		addOption(new Option('Note Diff Type:', '', 'noteDiffTypes', 'string', ['Psych', 'Simple']));
 		
 		var option:Option = new Option('Rating Offset', 'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.', 'ratingOffset', 'int');
 		option.displayFormat = '%vms';
@@ -81,5 +81,5 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		super();
 	}
 
-	function onChangeHitsoundVolume() FlxG.sound.play(Paths.sound('hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}'), ClientPrefs.getPref('hitsoundVolume'));
+	function onChangeHitsoundVolume() FlxG.sound.play(Paths.sound('hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}'), ClientPrefs.data.hitsoundVolume);
 }

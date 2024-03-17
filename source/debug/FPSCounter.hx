@@ -45,12 +45,12 @@ class FPSCounter extends openfl.text.TextField {
 	}
 
 	public dynamic function updateText(dt:Float):Void {
-		if (ClientPrefs.getPref('RainbowFps')) {
+		if (ClientPrefs.data.RainbowFps) {
 			timeColor = (timeColor % 360) + 1;
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		text = '${fpsManager.curFPS} FPS ${(ClientPrefs.getPref('FPSStats')) ? '[${utils.MathUtil.truncateFloat((1 / fpsManager.curCount) * 1000)}ms]' : ''}\n';
+		text = '${fpsManager.curFPS} FPS ${(ClientPrefs.data.FPSStats) ? '[${utils.MathUtil.truncateFloat((1 / fpsManager.curCount) * 1000)}ms]' : ''}\n';
 		if (memCounterType == "MEM" || memCounterType == "MEM/PEAK")
 			text += '${FlxStringUtil.formatBytes(memory)}' + (memCounterType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
 	}

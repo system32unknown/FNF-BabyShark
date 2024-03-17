@@ -54,7 +54,7 @@ class CharacterEditorState extends MusicBeatState {
 	}
 
 	override function create() {
-		if(ClientPrefs.getPref('hardwareCache')) Paths.clearStoredCache();
+		if(ClientPrefs.data.hardwareCache) Paths.clearStoredCache();
 
 		FlxG.sound.music.stop();
 		camEditor = initPsychCamera();
@@ -70,13 +70,13 @@ class CharacterEditorState extends MusicBeatState {
 		add(silhouettes);
 
 		var dad:FlxSprite = new FlxSprite(dadPosition.x, dadPosition.y, Paths.image('editors/silhouetteDad'));
-		dad.antialiasing = ClientPrefs.getPref('Antialiasing');
+		dad.antialiasing = ClientPrefs.data.antialiasing;
 		dad.active = false;
 		dad.offset.set(-4, 1);
 		silhouettes.add(dad);
 		
 		var boyfriend:FlxSprite = new FlxSprite(bfPosition.x, bfPosition.y + 350, Paths.image('editors/silhouetteBF'));
-		boyfriend.antialiasing = ClientPrefs.getPref('Antialiasing');
+		boyfriend.antialiasing = ClientPrefs.data.antialiasing;
 		boyfriend.active = false;
 		boyfriend.offset.set(-6, 2);
 		silhouettes.add(boyfriend);
@@ -143,7 +143,7 @@ class CharacterEditorState extends MusicBeatState {
 		updateHealthBar();
 		character.finishAnimation();
 
-		if(ClientPrefs.getPref('hardwareCache')) Paths.clearUnusedCache();
+		if(ClientPrefs.data.hardwareCache) Paths.clearUnusedCache();
 		
 		super.create();
 	}
@@ -590,7 +590,7 @@ class CharacterEditorState extends MusicBeatState {
 		noAntialiasingCheckBox.checked = character.noAntialiasing;
 		noAntialiasingCheckBox.callback = function() {
 			character.antialiasing = false;
-			if(!noAntialiasingCheckBox.checked && ClientPrefs.getPref('Antialiasing'))
+			if(!noAntialiasingCheckBox.checked && ClientPrefs.data.antialiasing)
 				character.antialiasing = true;
 			character.noAntialiasing = noAntialiasingCheckBox.checked;
 		};

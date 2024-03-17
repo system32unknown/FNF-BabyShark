@@ -514,7 +514,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		box.animation.addByPrefix('center-angryOpen', 'speech bubble Middle loud open', 24, false);
 		box.animation.play('normal', true);
 		box.visible = false;
-		box.antialiasing = ClientPrefs.getPref('Antialiasing');
+		box.antialiasing = ClientPrefs.data.antialiasing;
 
 		box.setPosition(70, 370);
 		box.scrollFactor.set();

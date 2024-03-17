@@ -74,7 +74,7 @@ class HealthIcon extends FlxSprite {
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
 			updateHitbox();
-			antialiasing = iconZoom < 2.5 && ClientPrefs.getPref('Antialiasing');
+			antialiasing = iconZoom < 2.5 && ClientPrefs.data.antialiasing;
 			return true;
 		}
 
@@ -97,7 +97,7 @@ class HealthIcon extends FlxSprite {
 		}
 
 		updateHitbox();
-		antialiasing = iconZoom < 2.5 && ClientPrefs.getPref('Antialiasing');
+		antialiasing = iconZoom < 2.5 && ClientPrefs.data.antialiasing;
 		return true;
 	}
 
@@ -131,7 +131,7 @@ class HealthIcon extends FlxSprite {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (Std.isOfType(FlxG.state, PlayState) && (ClientPrefs.getPref('IconBounceType') == 'Dave' || ClientPrefs.getPref('IconBounceType') == 'GoldenApple' || ClientPrefs.getPref('IconBounceType') == 'Purgatory'))
+		if (Std.isOfType(FlxG.state, PlayState) && (ClientPrefs.data.IconBounceType == 'Dave' || ClientPrefs.data.IconBounceType == 'GoldenApple'))
 			offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
 		if (sprTracker != null) setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 	}

@@ -192,7 +192,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 	}
 
 	public function switchPlayMusic() {
-		FlxG.autoPause = (!playingMusic && ClientPrefs.getPref('autoPause'));
+		FlxG.autoPause = (!playingMusic && ClientPrefs.data.autoPause);
 		active = visible = playingMusic;
 
 		instance.scoreBG.visible = instance.diffText.visible = instance.scoreText.visible = instance.comboText.visible = !playingMusic; //Hide Freeplay texts and boxes if playingMusic is true

@@ -18,7 +18,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 
 		addOption(new Option('Low Quality', 'If checked, disables some background details,\ndecreases loading times and improves performance.', 'lowQuality', 'bool'));
 
-		var option:Option = new Option('Anti-Aliasing', 'If unchecked, disables anti-aliasing, increases performance\nat the cost of sharper visuals.', 'Antialiasing', 'bool');
+		var option:Option = new Option('Anti-Aliasing', 'If unchecked, disables anti-aliasing, increases performance\nat the cost of sharper visuals.', 'antialiasing', 'bool');
 		option.onChange = onChangeAntiAliasing; //Changing onChange is only needed if you want to make a special interaction after it changes the value
 		addOption(option);
 		antialiasingOption = optionsArray.length - 1;
@@ -47,14 +47,14 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 		for (sprite in members) {
 			var sprite:FlxSprite = cast sprite;
 			if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText))
-				sprite.antialiasing = ClientPrefs.getPref('Antialiasing');
+				sprite.antialiasing = ClientPrefs.data.antialiasing;
 		}
 	}
 
 	function onChangeFramerate() {
-		if (ClientPrefs.getPref('framerate') > FlxG.drawFramerate)
-			FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.getPref('framerate');
-		else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.getPref('framerate');
+		if (ClientPrefs.data.framerate > FlxG.drawFramerate)
+			FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
+		else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
 	}
 
 	override function changeSelection(change:Int = 0) {

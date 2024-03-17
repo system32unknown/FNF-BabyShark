@@ -66,7 +66,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Selecting Character'); #end
-		unlockedChrs = ClientPrefs.getPref('unlockedCharacters');
+		unlockedChrs = ClientPrefs.data.unlockedCharacters;
 
 		FlxG.fixedTimestep = false;
 		persistentUpdate = true;
@@ -133,7 +133,6 @@ class CharacterSelectionState extends MusicBeatState {
 		add(curIcon);
 
 		if (unlockedChrs == null) currentSelectedCharacter = characters[current];
-
         Paths.currentLevel = lastLoaded;
 
 		Conductor.usePlayState = false;
@@ -240,7 +239,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 	public static function unlockCharacter(character:String, save:Bool = false) {
 		if (!unlockedChrs.contains(character)) unlockedChrs.push(character);
-		ClientPrefs.prefs.set('unlockedCharacters', unlockedChrs);
+		ClientPrefs.data.unlockedCharacters = unlockedChrs;
 		if (save) ClientPrefs.saveSettings();
 	}
 
@@ -249,7 +248,7 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	public static function reset() {
-		ClientPrefs.prefs.set("unlockedCharacters", ClientPrefs.defaultprefs.get('unlockedCharacters'));
+		ClientPrefs.data.unlockedCharacters = ClientPrefs.defaultData.unlockedCharacters;
 		ClientPrefs.saveSettings();
 	}
 

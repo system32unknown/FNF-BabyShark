@@ -16,7 +16,7 @@ class Conductor {
 	public static var stepCrochet:Float = crochet / 4; // steps in milliseconds
 	public static var songPosition:Float = 0;
 	
-	public static var safeZoneOffset:Float = (ClientPrefs.getPref('safeFrames') / 60) * 1000; // is calculated in create(), is safeFrames in milliseconds
+	public static var safeZoneOffset:Float = (ClientPrefs.data.safeFrames / 60) * 1000; // is calculated in create(), is safeFrames in milliseconds
 	public static var offset:Float = 0;
 
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];

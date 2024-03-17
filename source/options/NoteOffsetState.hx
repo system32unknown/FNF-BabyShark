@@ -118,7 +118,7 @@ class NoteOffsetState extends MusicBeatState {
 		timeBar.screenCenter(X);
 		timeBar.leftBar.color = FlxColor.LIME;
 
-		barPercent = ClientPrefs.getPref('noteOffset');
+		barPercent = ClientPrefs.data.noteOffset;
 		updateNoteDelay();
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
@@ -253,10 +253,10 @@ class NoteOffsetState extends MusicBeatState {
 			}
 		} else {
 			if(controls.UI_LEFT_P) {
-				barPercent = Math.max(delayMin, Math.min(ClientPrefs.getPref('noteOffset') - 1, delayMax));
+				barPercent = Math.max(delayMin, Math.min(ClientPrefs.data.noteOffset - 1, delayMax));
 				updateNoteDelay();
 			} else if(controls.UI_RIGHT_P) {
-				barPercent = Math.max(delayMin, Math.min(ClientPrefs.getPref('noteOffset') + 1, delayMax));
+				barPercent = Math.max(delayMin, Math.min(ClientPrefs.data.noteOffset + 1, delayMax));
 				updateNoteDelay();
 			}
 
@@ -289,8 +289,8 @@ class NoteOffsetState extends MusicBeatState {
 			persistentUpdate = false;
 			FlxG.switchState(() -> new options.OptionsState());
 			if(OptionsState.onPlayState) {
-				if(ClientPrefs.getPref('pauseMusic') != 'None')
-					FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))));
+				if(ClientPrefs.data.pauseMusic != 'None')
+					FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
 				else FlxG.sound.music.volume = 0;
 			}
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));

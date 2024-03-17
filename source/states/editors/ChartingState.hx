@@ -234,7 +234,7 @@ class ChartingState extends MusicBeatState {
 		camPos.setPosition(strumLine.x + CAM_OFFSET, strumLine.y);
 
 		dummyArrow = new FlxSprite().makeGraphic(GRID_SIZE, GRID_SIZE);
-		dummyArrow.antialiasing = ClientPrefs.getPref('Antialiasing');
+		dummyArrow.antialiasing = ClientPrefs.data.antialiasing;
 		add(dummyArrow);
 
 		var tabs = [
@@ -1823,7 +1823,7 @@ class ChartingState extends MusicBeatState {
 					strumLineNotes.members[noteDataToCheck].resetAnim = ((note.sustainLength / 1000) + .15) / playbackSpeed;
 					if(!playedSound[data]) {
 						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)) {
-							var soundToPlay = 'hitsounds/${Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase()}';
+							var soundToPlay = 'hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}';
 							if(_song.player1 == 'gf') soundToPlay = 'gfnoise/GF_${EK.keys(data)}'; //Easter egg 
 
 							FlxG.sound.play(Paths.sound(soundToPlay)).pan = note.noteData < 4 ? -.3 : .3; //would be coolio

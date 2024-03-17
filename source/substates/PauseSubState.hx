@@ -101,7 +101,7 @@ class PauseSubState extends MusicBeatSubstate {
 
 	function getPauseSong():String {
 		var formattedSongName:String = (songName != null ? Paths.formatToSongPath(songName) : '');
-		var formattedPauseMusic:String = Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'));
+		var formattedPauseMusic:String = Paths.formatToSongPath(ClientPrefs.data.pauseMusic);
 		if(formattedSongName == 'none' || (formattedSongName != 'none' && formattedPauseMusic == 'none')) return null;
 
 		return (formattedSongName != '') ? formattedSongName : formattedPauseMusic;
@@ -223,8 +223,8 @@ class PauseSubState extends MusicBeatSubstate {
 					PlayState.instance.paused = true; // For lua
 					PlayState.instance.vocals.volume = 0;
 					FlxG.switchState(() -> new OptionsState());
-					if(ClientPrefs.getPref('pauseMusic') != 'None') {
-						FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.getPref('pauseMusic'))), pauseMusic.volume);
+					if(ClientPrefs.data.pauseMusic != 'None') {
+						FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)), pauseMusic.volume);
 						FlxG.sound.music.fadeIn(.8, pauseMusic.volume, 1);
 						FlxG.sound.music.time = pauseMusic.time;
 						pauseMusic.stop();

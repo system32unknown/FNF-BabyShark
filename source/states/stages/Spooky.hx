@@ -45,7 +45,7 @@ class Spooky extends BaseStage
 		if(dad.animOffsets.exists('scared')) dad.playAnim('scared', true);
 		if(gf != null && gf.animOffsets.exists('scared')) gf.playAnim('scared', true);
 
-		if(ClientPrefs.getPref('camZooms')) {
+		if(ClientPrefs.data.camZooms) {
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;
 
@@ -55,7 +55,7 @@ class Spooky extends BaseStage
 			}
 		}
 
-		if(ClientPrefs.getPref('flashing')) {
+		if(ClientPrefs.data.flashing) {
 			halloweenWhite.alpha = 0.4;
 			FlxTween.tween(halloweenWhite, {alpha: 0.5}, 0.075);
 			FlxTween.tween(halloweenWhite, {alpha: 0}, 0.25, {startDelay: 0.15});

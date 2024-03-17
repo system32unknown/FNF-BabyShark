@@ -71,12 +71,12 @@ class NoteSplash extends FlxSprite {
 			} else tempShader = Note.globalRgbShaders[direction];
 		}
 
-		alpha = ClientPrefs.getPref('splashOpacity');
+		alpha = ClientPrefs.data.splashAlpha;
 		if(note != null) alpha = note.noteSplashData.a;
 		rgbShader.copyValues(tempShader);
 
 		if(note != null) antialiasing = note.noteSplashData.antialiasing;
-		if(PlayState.isPixelStage || !ClientPrefs.getPref('Antialiasing')) antialiasing = false;
+		if(PlayState.isPixelStage || !ClientPrefs.data.antialiasing) antialiasing = false;
 
 		_textureLoaded = texture;
 		offset.set(10, 10);
@@ -103,8 +103,8 @@ class NoteSplash extends FlxSprite {
 
 	public static function getSplashSkinPostfix() {
 		var skin:String = '';
-		if(ClientPrefs.getPref('splashSkin') != ClientPrefs.defaultprefs['splashSkin'])
-			skin = '-' + ClientPrefs.getPref('splashSkin').trim().toLowerCase().replace(' ', '_');
+		if(ClientPrefs.data.splashSkin != ClientPrefs.defaultData.noteSkin)
+			skin = '-' + ClientPrefs.data.splashSkin.trim().toLowerCase().replace(' ', '_');
 		return skin;
 	}
 

@@ -55,7 +55,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		bg.scrollFactor.set();
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
+		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.alpha = 0;
 		add(bg);
 
@@ -65,7 +65,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		add(grid);
 
 		sectionSpr = new FlxSprite(sectionImageMap.get(daSection.toLowerCase()));
-		sectionSpr.antialiasing = ClientPrefs.getPref('Antialiasing');
+		sectionSpr.antialiasing = ClientPrefs.data.antialiasing;
 		sectionSpr.scrollFactor.set();
 		sectionSpr.screenCenter().y -= 200;
 		sectionSpr.alpha = 0;

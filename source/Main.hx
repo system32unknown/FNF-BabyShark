@@ -46,8 +46,8 @@ class Main extends Sprite {
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(fpsVar = new FPSCounter());
 		if(Main.fpsVar != null) {
-			Main.fpsVar.visible = ClientPrefs.getPref('showFPS');
-			Main.fpsVar.memCounterType = ClientPrefs.getPref('memCounterType');
+			Main.fpsVar.visible = ClientPrefs.data.showFPS;
+			Main.fpsVar.memCounterType = ClientPrefs.data.memCounterType;
 		}
 
 		#if (target.threaded && sys) threadPool = new ElasticThreadPool(12, 30); #end

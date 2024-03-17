@@ -237,9 +237,6 @@ class FunkinLua {
 			return true;
 		});
 
-		set("getPref", ClientPrefs.getPref);
-		set("setPref", ClientPrefs.prefs.set);
-
 		//shitass stuff for epic coders like me B)  *image of obama giving himself a medal*
 		set("getObjectOrder", function(obj:String) {
 			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
@@ -523,7 +520,7 @@ class FunkinLua {
 
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
 			if(image != null && image.length > 0) leSprite.loadGraphic(Paths.image(image));
-			leSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
+			leSprite.antialiasing = ClientPrefs.data.antialiasing;
 			game.modchartSprites.set(tag, leSprite);
 		});
 		set("makeAnimatedLuaSprite", function(tag:String, image:String = null, x:Float = 0, y:Float = 0, ?spriteType:String = "sparrow") {
@@ -531,7 +528,7 @@ class FunkinLua {
 			LuaUtils.resetSpriteTag(tag);
 
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
-			leSprite.antialiasing = ClientPrefs.getPref('Antialiasing');
+			leSprite.antialiasing = ClientPrefs.data.antialiasing;
 			if(image != null && image.length > 0) LuaUtils.loadFrames(leSprite, image, spriteType);
 			game.modchartSprites.set(tag, leSprite);
 		});
@@ -866,7 +863,7 @@ class FunkinLua {
 		set('combo', 0);
 		set('accuracy', 0);
 
-		set('defaultMania', PlayState.SONG.mania);
+		set('mania', PlayState.SONG.mania);
 
 		set('rating', 0);
 		set('ratingName', '');
@@ -914,21 +911,25 @@ class FunkinLua {
 		set('gfName', PlayState.SONG.gfVersion);
 
 		// Some settings, no jokes
-		set('downscroll', ClientPrefs.getPref('downScroll'));
-		set('middlescroll', ClientPrefs.getPref('middleScroll'));
-		set('framerate', ClientPrefs.getPref('framerate'));
-		set('ghostTapping', ClientPrefs.getPref('ghostTapping'));
-		set('hideHud', ClientPrefs.getPref('hideHud'));
-		set('timeBarType', ClientPrefs.getPref('timeBarType'));
-		set('scoreZoom', ClientPrefs.getPref('scoreZoom'));
-		set('cameraZoomOnBeat', ClientPrefs.getPref('camZooms'));
-		set('flashingLights', ClientPrefs.getPref('flashing'));
-		set('noteOffset', ClientPrefs.getPref('noteOffset'));
-		set('healthBarAlpha', ClientPrefs.getPref('healthBarAlpha'));
-		set('noResetButton', ClientPrefs.getPref('noReset'));
-		set('lowQuality', ClientPrefs.getPref('lowQuality'));
-		set('shadersEnabled', ClientPrefs.getPref('shaders'));
+		set('downscroll', ClientPrefs.data.downScroll);
+		set('middlescroll', ClientPrefs.data.middleScroll);
+		set('framerate', ClientPrefs.data.framerate);
+		set('ghostTapping', ClientPrefs.data.ghostTapping);
+		set('hideHud', ClientPrefs.data.hideHud);
+		set('timeBarType', ClientPrefs.data.timeBarType);
+		set('scoreZoom', ClientPrefs.data.scoreZoom);
+		set('cameraZoomOnBeat', ClientPrefs.data.camZooms);
+		set('flashingLights', ClientPrefs.data.flashing);
+		set('noteOffset', ClientPrefs.data.noteOffset);
+		set('healthBarAlpha', ClientPrefs.data.healthBarAlpha);
+		set('noResetButton', ClientPrefs.data.noReset);
+		set('lowQuality', ClientPrefs.data.lowQuality);
+		set('shadersEnabled', ClientPrefs.data.shaders);
 		set('scriptName', scriptName);
+		set('currentModDirectory', Mods.currentModDirectory);
+
+		set('noteSkinPostfix', objects.Note.getNoteSkinPostfix());
+		set('splashSkinPostfix', objects.NoteSplash.getSplashSkinPostfix());
 
 		for (name => func in customFunctions)
 			if(func != null) set(name, func);

@@ -482,7 +482,7 @@ class NoteSplashDebugState extends MusicBeatState
 			splash.setPosition(spX - Note.swagWidth * 0.95, spY - Note.swagWidth);
 			splash.setGraphicSize(Std.int(splash.width * EK.scalesPixel[PlayState.mania]));
 			splash.shader = note.rgbShader.parent.shader;
-			splash.antialiasing = ClientPrefs.getPref('Antialiasing');
+			splash.antialiasing = ClientPrefs.data.antialiasing;
 			splashes.add(splash);
 		}
 	}

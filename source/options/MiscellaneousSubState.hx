@@ -12,10 +12,10 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		addOption(opt);
 		opt.onChange = onChangeFPSCounter;
 		
-		addOption(new Option('Rainbow FPS', '', 'RainbowFps', 'bool'));
-		addOption(new Option('More Stats FPS', '', 'FPSStats', 'bool'));
-		addOption(new Option('Alternate Discord Large Image', '', 'AltDiscordImg', 'bool'));
-		var option:Option = new Option('Alt. Discord Large Images:', '', 'AltDiscordImgCount', 'int');
+		addOption(new Option('Rainbow FPS', '', 'rainbowFps', 'bool'));
+		addOption(new Option('More Stats FPS', '', 'fpsStats', 'bool'));
+		addOption(new Option('Alternate Discord Large Image', '', 'altDiscordImg', 'bool'));
+		var option:Option = new Option('Alt. Discord Large Images:', '', 'altDiscordImgCount', 'int');
 		option.scrollSpeed = 15;
 		option.minValue = 0;
 		option.maxValue = 5;
@@ -26,8 +26,8 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 
 	function onChangeFPSCounter() {
 		if(Main.fpsVar != null) {
-			Main.fpsVar.visible = ClientPrefs.getPref('showFPS');
-			Main.fpsVar.memCounterType = ClientPrefs.getPref('memCounterType');
+			Main.fpsVar.visible = ClientPrefs.data.showFPS;
+			Main.fpsVar.memCounterType = ClientPrefs.data.memCounterType;
 		}
 	}
 }

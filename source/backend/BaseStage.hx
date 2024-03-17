@@ -16,8 +16,8 @@ enum Countdown {
 
 class BaseStage extends FlxBasic {
 	var game(get, never):Dynamic;
-	var lowQuality(default, null):Bool = ClientPrefs.getPref('lowQuality');
-	var antialiasing(default, null):Bool = ClientPrefs.getPref('Antialiasing');
+	var lowQuality(default, null):Bool = ClientPrefs.data.lowQuality;
+	var antialiasing(default, null):Bool = ClientPrefs.data.antialiasing;
 
 	public var onPlayState(get, never):Bool;
 

@@ -128,7 +128,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 
 	function updateCurStep():Void {
 		curBPMChange = Conductor.getBPMFromSeconds(Conductor.songPosition, curBPMChange != null ? curBPMChange.id : -1);
-		curDecStep = Conductor.getStep(Conductor.songPosition, ClientPrefs.getPref('noteOffset'), curBPMChange.id);
+		curDecStep = Conductor.getStep(Conductor.songPosition, ClientPrefs.data.noteOffset, curBPMChange.id);
 		curStep = Math.floor(curDecStep);
 	}
 

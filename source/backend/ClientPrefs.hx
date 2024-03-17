@@ -3,157 +3,104 @@ package backend;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 
-class ClientPrefs {
-	static var isHardCInited:Bool = false;
-	static var isStreMInited:Bool = false;
+@:structInit class SaveVariables {
+	public var downScroll:Bool = false;
+	public var middleScroll:Bool = false;
+	public var opponentStrums:Bool = true;
+	public var showFPS:Bool = true;
+	public var flashing:Bool = true;
+	public var autoPause:Bool = true;
+	public var antialiasing:Bool = true;
+	public var noteSkin:String = 'Default';
+	public var splashSkin:String = 'Psych';
+	public var splashAlpha:Float = .6;
+	public var lowQuality:Bool = false;
+	public var shaders:Bool = true;
+	public var framerate:Int = 60;
+	public var camZooms:Bool = true;
+	public var hideHud:Bool = false;
+	public var noteOffset:Int = 0;
+	public var arrowRGBExtra:Array<Array<FlxColor>> = [
+		[0xFFC24B99, 0xFFFFFFFF, 0xFF3C1F56],
+		[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
+		[0xFF12FA05, 0xFFFFFFFF, 0xFF0A4447],
+		[0xFFF9393F, 0xFFFFFFFF, 0xFF651038],
+		[0xFF999999, 0xFFFFFFFF, 0xFF201E31],
+		[0xFFFFFF00, 0xFFFFFFFF, 0xFF993300],
+		[0xFF8b4aff, 0xFFFFFFFF, 0xFF3b177d],
+		[0xFFFF0000, 0xFFFFFFFF, 0xFF660000],
+		[0xFF0033ff, 0xFFFFFFFF, 0xFF000066]];
+	public var arrowRGBPixelExtra:Array<Array<FlxColor>> = [
+		[0xFFE276FF, 0xFFFFF9FF, 0xFF60008D],
+		[0xFF3DCAFF, 0xFFF4FFFF, 0xFF003060],
+		[0xFF71E300, 0xFFF6FFE6, 0xFF003100],
+		[0xFFFF884E, 0xFFFFFAF5, 0xFF6C0000],
+		[0xFFb6b6b6, 0xFFFFFFFF, 0xFF444444],
+		[0xFFffd94a, 0xFFfffff9, 0xFF663500],
+		[0xFFB055BC, 0xFFf4f4ff, 0xFF4D0060],
+		[0xFFdf3e23, 0xFFffe6e9, 0xFF440000],
+		[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D]];
 
-	public static var prefs:Map<String, Dynamic> = [
-		'downScroll' => false,
-		'middleScroll' => false,
-		'opponentStrums' => true,
-		'FPSStats' => true,
-		'showFPS' => true,
-		'memCounterType' => "MEM/PEAK",
-		'flashing' => true,
-		'Antialiasing' => true,
-		'splashOpacity' => .6,
-		'lowQuality' => false,
-		'shaders' => true,
-		'framerate' => 60,
-		'camZooms' => true,
-		'camMovement' => true,
-		'hideHud' => false,
-		'ShowMsTiming' => false,
-		'ShowComboCounter' => false,
-		'ShowNPS' => false,
-		'SmoothHealth' => false,
-		'loadingScreen' => false,
-		'complexAccuracy' => false,
-		'ShowLateEarly' => false,
-		'NoteDiffTypes' => "Simple",
-		'ShowJudgement' => true,
-		'IconBounceType' => 'Psych',
-		'RatingDisplay' => 'World',
-		'RainbowFps' => false,
-		'comboStacking' => false,
-		'showKeybindsOnStart' => false,
-		'hardwareCache' => false,
-		'streamMusic' => false,
-		'AntiMash' => false,
-		'noteOffset' => 0,
-		'ghostTapping' => true,
-		'HealthTypes' => 'Vanilla',
-		'timeBarType' => 'Name Time Position',
-		'noReset' => false,
-		'AltDiscordImg' => false,
-		'AltDiscordImgCount' => 0,
-		'UpdateCamSection' => false,
-		'healthBarAlpha' => 1,
-		'hitsoundVolume' => 0,
-		'autoPause' => true,
-		'autoPausePlayState' => true,
-		'hitsoundTypes' => 'Tick',
-		'pauseMusic' => 'Tea Time',
-		'unlockedCharacters' => ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'],
-		'discordRPC' => true,
-
-		'noteSkin' => 'Default',
-		'splashSkin' => 'Psych',
-
-		'arrowRGBExtra' => [
-			[0xFFC24B99, 0xFFFFFFFF, 0xFF3C1F56],
-			[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
-			[0xFF12FA05, 0xFFFFFFFF, 0xFF0A4447],
-			[0xFFF9393F, 0xFFFFFFFF, 0xFF651038],
-			[0xFF999999, 0xFFFFFFFF, 0xFF201E31],
-			[0xFFFFFF00, 0xFFFFFFFF, 0xFF993300],
-			[0xFF8b4aff, 0xFFFFFFFF, 0xFF3b177d],
-			[0xFFFF0000, 0xFFFFFFFF, 0xFF660000],
-			[0xFF0033ff, 0xFFFFFFFF, 0xFF000066]
-		],
-		'arrowRGBPixelExtra' => [
-			[0xFFE276FF, 0xFFFFF9FF, 0xFF60008D],
-			[0xFF3DCAFF, 0xFFF4FFFF, 0xFF003060],
-			[0xFF71E300, 0xFFF6FFE6, 0xFF003100],
-			[0xFFFF884E, 0xFFFFFAF5, 0xFF6C0000],
-			[0xFFb6b6b6, 0xFFFFFFFF, 0xFF444444],
-			[0xFFffd94a, 0xFFfffff9, 0xFF663500],
-			[0xFFB055BC, 0xFFf4f4ff, 0xFF4D0060],
-			[0xFFdf3e23, 0xFFffe6e9, 0xFF440000],
-			[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D]
-		],
-
-		// Gameplay settings
-		'comboOffset' => [[0, 0], [0, 0], [0, 0]],
-		'ratingOffset' => 0,
-		'epicWindow' => 15,
-		'sickWindow' => 45,
-		'goodWindow' => 90,
-		'okWindow' => 135,
-		'safeFrames' => 10
-	];
-
-	// For custom functions after the save data is loaded
-	public static var loadFunctions:Map<String, Dynamic -> Void> = [
-		'framerate' => function(framerate:Int) {
-			if(FlxG.save.data.framerate == null)
-				framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate, 60, 240));
-
-			if (framerate > FlxG.drawFramerate) {
-				FlxG.updateFramerate = framerate;
-				FlxG.drawFramerate = framerate;
-			} else {
-				FlxG.drawFramerate = framerate;
-				FlxG.updateFramerate = framerate;
-			}
-		}, 'keyboard' => (controls:Map<String, Array<FlxKey>>) -> {
-			reloadVolumeKeys();
-		}, 'hardwareCache' => function(bool:Bool) {
-			if (!isHardCInited) {
-				Paths.hardwareCache = bool;
-				isHardCInited = true;
-			}
-		}, 'streamMusic' => function(bool:Bool) {
-			if (!isStreMInited) {
-				Paths.streamMusic = bool;
-				isStreMInited = true;
-			}
-		}, 'showFPS' => (bool:Bool) -> if(Main.fpsVar != null) Main.fpsVar.visible = bool,
-		'memCounterType' => (type:String) -> if(Main.fpsVar != null) Main.fpsVar.memCounterType = type
-	];
-
-	// Flixel data to load, i.e 'mute' or 'volume'
-	public static var flixelData:Map<String, String> = [
-		'volume' => 'volume',
-		'mute' => 'muted',
-		'autoPause' => 'autoPause',
-	];
-
-	// Maps like gameplaySettings
-	public static var mapData:Map<String, Array<Dynamic>> = [
-		'gameplaySettings' => [ClientPrefs, 'gameplaySettings'],
-		'keyboard' => [ClientPrefs, 'keyBinds'],
-	];
-
-	// For stuff that needs to be in the controls save
-	public static var separateSaves:Array<String> = [
-		'keyboard'
-	];
-
-	public static var gameplaySettings:Map<String, Dynamic> = [
+	public var fpsStats:Bool = true;
+	public var memCounterType:String = "MEM/PEAK";
+	public var camMovement:Bool = true;
+	public var ghostTapping:Bool = true;
+	public var scoreZoom:Bool = true;
+	public var noReset:Bool = false;
+	public var healthBarAlpha:Float = 1;
+	public var hitsoundVolume:Float = 0;
+	public var pauseMusic:String = 'Tea Time';
+	public var comboStacking:Bool = false;
+	public var showMsTiming:Bool = false;
+	public var showComboCounter:Bool = false;
+	public var showNPS:Bool = false;
+	public var smoothHealth:Bool = false;
+	public var complexAccuracy:Bool = false;
+	public var noteDiffTypes:String = "Simple";
+	public var showJudgement:Bool = true;
+	public var iconBounceType:String = 'Psych';
+	public var ratingDisplay:String = 'World';
+	public var rainbowFps:Bool = false;
+	public var hardwareCache:Bool = false;
+	public var streamMusic:Bool = false;
+	public var antiMash:Bool = false;
+	public var HealthTypes:String = 'Vanilla';
+	public var timeBarType:String = 'Name Time Position';
+	public var altDiscordImg:Bool = false;
+	public var altDiscordImgCount:Int = 0;
+	public var updateCamSection:Bool = false;
+	public var autoPausePlayState:Bool = true;
+	public var hitsoundTypes:String = 'Tick';
+	public var unlockedCharacters:Array<String> = ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'];
+	public var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.,
 		'scrolltype' => 'multiplicative',
-		
+
 		'songspeed' => 1.,
 		'healthgain' => 1.,
 		'healthloss' => 1.,
 		'instakill' => false,
 		'practice' => false,
-		'botplay' => false
+		'botplay' => false,
 	];
 
-	public static var defaultgameplaySettings:Map<String, Dynamic> = gameplaySettings.copy();
-	public static var defaultprefs:Map<String, Dynamic> = prefs.copy();
+	public var comboOffset:Array<Array<Int>> = [[0, 0], [0, 0], [0, 0]];
+	public var ratingOffset:Int = 0;
+
+	public var epicWindow:Int = 15;
+	public var sickWindow:Int = 45;
+	public var goodWindow:Int = 90;
+	public var okWindow:Int = 135;
+	public var safeFrames:Float = 10;
+	public var discordRPC:Bool = false;
+}
+
+class ClientPrefs {
+	public static var data:SaveVariables = {};
+	public static var defaultData:SaveVariables = {};
+
+	static var isHardCInited:Bool = false;
+	static var isStreMInited:Bool = false;
 
 	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
@@ -231,98 +178,72 @@ class ClientPrefs {
 	}
 
 	public static function saveSettings() {
-		var save:Dynamic = FlxG.save.data;
+		for (key in Reflect.fields(data)) Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
 
-		for (setting => value in prefs) {
-			if (!separateSaves.contains(setting))
-				Reflect.setField(save, setting, value);
-		}
-		for (savedAs => map in mapData) {
-			if (!separateSaves.contains(savedAs))
-				Reflect.setField(save, savedAs, Reflect.field(map[0], map[1]));
-		}
 		FlxG.save.flush();
-
+		//Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
 		var save:FlxSave = new FlxSave();
 		save.bind('controls', CoolUtil.getSavePath());
-
-		for (name in separateSaves) {
-			if (prefs.exists(name)) {
-				Reflect.setField(save.data, name, prefs.get(name));
-				continue;
-			}
-			if (mapData.exists(name)) {
-				var map:Array<Dynamic> = mapData.get(name);
-				Reflect.setField(save.data, name, Reflect.field(map[0], map[1]));
-				continue;
-			}
-		}
-
+		save.data.keyboard = keyBinds;
 		save.flush();
 		FlxG.log.add("Settings saved!");
 	}
 
 	public static function loadPrefs() {
-		var save:Dynamic = FlxG.save.data;
-		for (setting in prefs.keys()) {
-			var value:Dynamic = Reflect.getProperty(save, setting);
-			if (value != null && !separateSaves.contains(setting)) {
-				prefs.set(setting, value);
-				if (loadFunctions.exists(setting)) loadFunctions.get(setting)(value); // Call the load function
-			}
+		for (key in Reflect.fields(data))
+			if (key != 'gameplaySettings' && Reflect.hasField(FlxG.save.data, key))
+				Reflect.setField(data, key, Reflect.field(FlxG.save.data, key));
+		
+		if(Main.fpsVar != null) {
+			Main.fpsVar.visible = data.showFPS;
+			Main.fpsVar.memCounterType = data.memCounterType;
 		}
 
-		for (setting => name in flixelData) {
-			var value:Dynamic = Reflect.field(save, setting);
-			if (value != null) {
-				if (setting == 'autoPause')
-					Reflect.setField(FlxG, name, value);
-				else Reflect.setField(FlxG.sound, name, value);
-			}
+		FlxG.autoPause = data.autoPause;
+
+		if(FlxG.save.data.framerate == null) data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate, 60, 240));
+		if(data.framerate > FlxG.drawFramerate) {
+			FlxG.updateFramerate = data.framerate;
+			FlxG.drawFramerate = data.framerate;
+		} else {
+			FlxG.drawFramerate = data.framerate;
+			FlxG.updateFramerate = data.framerate;
 		}
 
-		for (savedAs => map in mapData) {
-			if (!separateSaves.contains(savedAs)) {
-				var data:Map<Dynamic, Dynamic> = Reflect.field(save, savedAs);
-				if (data != null) {
-					var loadTo:Dynamic = Reflect.field(map[0], map[1]);
-					for (name => value in data) {
-						if (loadTo.exists(name)) loadTo.set(name, value);
-					}
-					if (loadFunctions.exists(savedAs)) loadFunctions.get(savedAs)(loadTo); // Call the load function
-				}
-			}
+		if(FlxG.save.data.gameplaySettings != null) {
+			var savedMap:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
+			for (name => value in savedMap) data.gameplaySettings.set(name, value);
 		}
 
-		var save:FlxSave = new FlxSave();
-		save.bind('controls', CoolUtil.getSavePath());
-		if (save != null) {
-			for (name in separateSaves) {
-				var data:Dynamic = Reflect.field(save.data, name);
-				if (data != null) {
-					if (prefs.exists(name)) {
-						prefs.set(name, data);
-						continue;
-					}
-					if (mapData.exists(name)) {
-						var map:Array<Dynamic> = mapData.get(name);
-						var loadTo:Dynamic = Reflect.field(map[0], map[1]);
-
-						for (name => value in cast(data, Map<Dynamic, Dynamic>)) {
-							if (loadTo.exists(name)) loadTo.set(name, value);
-						}
-						if (loadFunctions.exists(name)) loadFunctions.get(name)(loadTo); // Call the load function
-						continue;
-					}
-				}
-			}
+		if (!isHardCInited) {
+			Paths.hardwareCache = data.hardwareCache;
+			isHardCInited = true;
 		}
+		if (!isStreMInited) {
+			Paths.streamMusic = data.streamMusic;
+			isStreMInited = true;
+		}
+
+		// flixel automatically saves your volume!
+		if(FlxG.save.data.volume != null) FlxG.sound.volume = FlxG.save.data.volume;
+		if(FlxG.save.data.mute != null) FlxG.sound.muted = FlxG.save.data.mute;
+
 		#if DISCORD_ALLOWED DiscordClient.check(); #end
+
+		var save:FlxSave = new FlxSave(); // controls on a separate save file
+		save.bind('controls', CoolUtil.getSavePath());
+		if(save != null) {
+			if(save.data.keyboard != null) {
+				var loadedControls:Map<String, Array<FlxKey>> = save.data.keyboard;
+				for (control => keys in loadedControls) if(keyBinds.exists(control)) keyBinds.set(control, keys);
+			}
+			reloadVolumeKeys();
+		}
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
-		if(!customDefaultValue) defaultValue = defaultgameplaySettings.get(name);
-		return (gameplaySettings.exists(name) ? gameplaySettings.get(name) : defaultValue);
+		if(!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
+		return (data.gameplaySettings.exists(name) ? data.gameplaySettings.get(name) : defaultValue);
 	}
 
 	public static function reloadVolumeKeys() {
@@ -335,10 +256,5 @@ class ClientPrefs {
 		FlxG.sound.muteKeys = turnOn ? Main.muteKeys : [];
 		FlxG.sound.volumeDownKeys = turnOn ? Main.volumeDownKeys : [];
 		FlxG.sound.volumeUpKeys = turnOn ? Main.volumeUpKeys : [];
-	}
-
-	inline public static function getPref(name:String, ?defaultValue:Dynamic):Dynamic {
-		if (prefs.exists(name)) return prefs.get(name);
-		return defaultValue;
 	}
 }

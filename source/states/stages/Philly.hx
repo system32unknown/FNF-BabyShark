@@ -43,8 +43,7 @@ class Philly extends BaseStage
 	}
 	override function eventPushed(event:objects.Note.EventNote)
 	{
-		switch(event.event)
-		{
+		switch(event.event) {
 			case "Philly Glow":
 				blammedLightsBlack = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5).makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
 				blammedLightsBlack.visible = false;
@@ -59,7 +58,7 @@ class Philly extends BaseStage
 				phillyGlowGradient = new PhillyGlowGradient(-400, 225); //This shit was refusing to properly load FlxGradient so fuck it
 				phillyGlowGradient.visible = false;
 				insert(members.indexOf(blammedLightsBlack) + 1, phillyGlowGradient);
-				if(!ClientPrefs.getPref('flashing')) phillyGlowGradient.intendedAlpha = 0.7;
+				if(!ClientPrefs.data.flashing) phillyGlowGradient.intendedAlpha = 0.7;
 
 				Paths.image('philly/particle'); //precache philly glow particle image
 				phillyGlowParticles = new FlxTypedGroup<PhillyGlowParticle>();
@@ -74,11 +73,9 @@ class Philly extends BaseStage
 		if(phillyGlowParticles != null)
 		{
 			var i:Int = phillyGlowParticles.members.length - 1;
-			while (i > 0)
-			{
+			while (i > 0) {
 				var particle = phillyGlowParticles.members[i];
-				if(particle.alpha <= 0)
-				{
+				if(particle.alpha <= 0) {
 					particle.kill();
 					phillyGlowParticles.remove(particle, true);
 					particle.destroy();
@@ -88,11 +85,9 @@ class Philly extends BaseStage
 		}
 	}
 
-	override function beatHit()
-	{
+	override function beatHit() {
 		phillyTrain.beatHit(curBeat);
-		if (curBeat % 4 == 0)
-		{
+		if (curBeat % 4 == 0) {
 			curLight = FlxG.random.int(0, phillyLightsColors.length - 1, [curLight]);
 			phillyWindow.color = phillyLightsColors[curLight];
 			phillyWindow.alpha = 1;
@@ -114,7 +109,7 @@ class Philly extends BaseStage
 						if(phillyGlowGradient.visible)
 						{
 							doFlash();
-							if(ClientPrefs.getPref('camZooms'))
+							if(ClientPrefs.data.camZooms)
 							{
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
@@ -139,7 +134,7 @@ class Philly extends BaseStage
 
 						if(!phillyGlowGradient.visible) {
 							doFlash();
-							if(ClientPrefs.getPref('camZooms'))
+							if(ClientPrefs.data.camZooms)
 							{
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
@@ -150,14 +145,14 @@ class Philly extends BaseStage
 							phillyWindowEvent.visible = true;
 							phillyGlowGradient.visible = true;
 							phillyGlowParticles.visible = true;
-						} else if(ClientPrefs.getPref('flashing')) {
+						} else if(ClientPrefs.data.flashing) {
 							var colorButLower:FlxColor = color;
 							colorButLower.alphaFloat = 0.25;
 							FlxG.camera.flash(colorButLower, 0.5, null, true);
 						}
 
 						var charColor:FlxColor = color;
-						if(!ClientPrefs.getPref('flashing')) charColor.saturation *= 0.5;
+						if(!ClientPrefs.data.flashing) charColor.saturation *= 0.5;
 						else charColor.saturation *= 0.75;
 
 						for (who in chars) who.color = charColor;
@@ -187,7 +182,7 @@ class Philly extends BaseStage
 
 	function doFlash() {
 		var color:FlxColor = FlxColor.WHITE;
-		if(!ClientPrefs.getPref('flashing')) color.alphaFloat = 0.5;
+		if(!ClientPrefs.data.flashing) color.alphaFloat = 0.5;
 		FlxG.camera.flash(color, 0.15, null, true);
 	}
 }

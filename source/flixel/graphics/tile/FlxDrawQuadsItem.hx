@@ -108,7 +108,7 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
 
 		final shader = shader != null ? shader : graphics.shader;
 		shader.bitmap.input = graphics.bitmap;
-		shader.bitmap.filter = ((camera.antialiasing || antialiasing) && ClientPrefs.getPref('Antialiasing')) ? LINEAR : NEAREST;
+		shader.bitmap.filter = ((camera.antialiasing || antialiasing) && ClientPrefs.data.antialiasing) ? LINEAR : NEAREST;
 		shader.alpha.value = alphas;
 
 		if (colored || hasColorOffsets) {

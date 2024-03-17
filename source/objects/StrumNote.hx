@@ -28,8 +28,8 @@ class StrumNote extends FlxSprite {
 		rgbShader.enabled = false;
 		if(PlayState.SONG != null && PlayState.SONG.disableNoteRGB) useRGBShader = false;
 
-		var arr:Array<FlxColor> = ClientPrefs.getPref('arrowRGBExtra')[EK.gfxIndex[PlayState.mania][leData]];
-		if(PlayState.isPixelStage) arr = ClientPrefs.getPref('arrowRGBPixelExtra')[EK.gfxIndex[PlayState.mania][leData]];
+		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGBExtra[EK.gfxIndex[PlayState.mania][leData]];
+		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixelExtra[EK.gfxIndex[PlayState.mania][leData]];
 		
 		if(leData <= PlayState.mania) {
 			@:bypassAccessor {
@@ -50,8 +50,6 @@ class StrumNote extends FlxSprite {
 
 		var customSkin:String = skin + Note.getNoteSkinPostfix();
 		if(Paths.fileExists('images/$customSkin.png', IMAGE)) skin = customSkin;
-
-		trace(skin);
 
 		texture = skin; //Load texture and anims
 		scrollFactor.set();
@@ -96,7 +94,7 @@ class StrumNote extends FlxSprite {
 			animation.addByPrefix('black', 'arrowUP');
 			animation.addByPrefix('dark', 'arrowRIGHT');
 
-			antialiasing = ClientPrefs.getPref('Antialiasing');
+			antialiasing = ClientPrefs.data.antialiasing;
 			setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
 
 			var pressName = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];

@@ -80,7 +80,7 @@ class Note extends FlxSprite {
 		r: -1,
 		g: -1,
 		b: -1,
-		a: ClientPrefs.getPref('splashOpacity')
+		a: ClientPrefs.data.splashAlpha
 	};
 
 	public var offsetX:Float = 0;
@@ -109,7 +109,7 @@ class Note extends FlxSprite {
 
 	public var hitsoundDisabled:Bool = false;
 	public var hitsoundChartEditor:Bool = true;
-	public var hitsound:String = 'hitsounds/' + Std.string(ClientPrefs.getPref('hitsoundTypes')).toLowerCase();
+	public var hitsound:String = 'hitsounds/' + Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase();
 
 	function set_multSpeed(value:Float):Float {
 		resizeByRatio(value / multSpeed);
@@ -129,8 +129,8 @@ class Note extends FlxSprite {
 	}
 
 	public function defaultRGB() {
-		var arr:Array<FlxColor> = ClientPrefs.getPref('arrowRGBExtra')[EK.gfxIndex[PlayState.mania][noteData]];
-		if(PlayState.isPixelStage) arr = ClientPrefs.getPref('arrowRGBPixelExtra')[EK.gfxIndex[PlayState.mania][noteData]];
+		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGBExtra[EK.gfxIndex[PlayState.mania][noteData]];
+		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixelExtra[EK.gfxIndex[PlayState.mania][noteData]];
 
 		if (noteData > -1 && noteData <= PlayState.mania) {
 			rgbShader.r = arr[0];
@@ -171,7 +171,7 @@ class Note extends FlxSprite {
 					gfNote = true;
 			}
 			if (value != null && value.length > 1) NoteTypesConfig.applyNoteTypeData(this, value);
-			if (hitsound != 'hitsound' && ClientPrefs.getPref('hitsoundVolume') > 0) Paths.sound(hitsound); //precache new sound for being idiot-proof
+			if (hitsound != 'hitsound' && ClientPrefs.data.hitsoundVolume > 0) Paths.sound(hitsound); //precache new sound for being idiot-proof
 			noteType = value;
 		}
 		return value;
@@ -182,7 +182,7 @@ class Note extends FlxSprite {
 
 		animation = new backend.animation.PsychAnimationController(this);
 
-		antialiasing = ClientPrefs.getPref('Antialiasing');
+		antialiasing = ClientPrefs.data.antialiasing;
 		if(createdFrom == null) createdFrom = PlayState.instance;
 
 		if (prevNote == null) prevNote = this;
@@ -192,10 +192,10 @@ class Note extends FlxSprite {
 		this.inEditor = inEditor;
 		this.moves = false;
 
-		x += (ClientPrefs.getPref('middleScroll') ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50 - EK.posRest[PlayState.mania];
+		x += (ClientPrefs.data.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50 - EK.posRest[PlayState.mania];
 		y -= 2000;
 		this.strumTime = strumTime;
-		if(!inEditor) this.strumTime += ClientPrefs.getPref('noteOffset');
+		if(!inEditor) this.strumTime += ClientPrefs.data.noteOffset;
 
 		this.noteData = noteData;
 
@@ -213,7 +213,7 @@ class Note extends FlxSprite {
 			alpha = .6;
 			multAlpha = .6;
 			hitsoundDisabled = true;
-			if(ClientPrefs.getPref('downScroll')) flipY = true;
+			if(ClientPrefs.data.downScroll) flipY = true;
 
 			offsetX += width / 2;
 			copyAngle = false;
@@ -256,7 +256,7 @@ class Note extends FlxSprite {
 			var newRGB:RGBPalette = new RGBPalette();
 			globalRgbShaders[dataNum] = newRGB;
 
-			var arr:Array<FlxColor> = !PlayState.isPixelStage ? ClientPrefs.getPref('arrowRGBExtra')[dataNum] : ClientPrefs.getPref('arrowRGBPixelExtra')[dataNum];
+			var arr:Array<FlxColor> = !PlayState.isPixelStage ? ClientPrefs.data.arrowRGBExtra[dataNum] : ClientPrefs.data.arrowRGBPixelExtra[dataNum];
 			if (noteData > -1 && noteData <= PlayState.mania) {
 				newRGB.r = arr[0];
 				newRGB.g = arr[1];
@@ -328,8 +328,8 @@ class Note extends FlxSprite {
 
 	public static function getNoteSkinPostfix() {
 		var skin:String = '';
-		if(ClientPrefs.getPref('noteSkin') != ClientPrefs.defaultprefs['noteSkin'])
-			skin = '-' + ClientPrefs.getPref('noteSkin').trim().toLowerCase().replace(' ', '_');
+		if(ClientPrefs.data.noteSkin != ClientPrefs.defaultData.noteSkin)
+			skin = '-' + ClientPrefs.data.noteSkin.trim().toLowerCase().replace(' ', '_');
 		return skin;
 	}
 

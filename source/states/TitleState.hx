@@ -67,7 +67,7 @@ class TitleState extends MusicBeatState {
 
 		if (titleJson.backgroundSprite != null && titleJson.backgroundSprite.length > 0 && titleJson.backgroundSprite != "none") {
 			final bg:FlxSprite = new FlxSprite(Paths.image(titleJson.backgroundSprite));
-			bg.antialiasing = ClientPrefs.getPref('Antialiasing');
+			bg.antialiasing = ClientPrefs.data.antialiasing;
 			bg.active = false;
 			add(bg);
 		}
@@ -81,7 +81,7 @@ class TitleState extends MusicBeatState {
 		add(gradientBar);
 
 		gf = new FlxSprite(titleJson.gfx, titleJson.gfy);
-		gf.antialiasing = ClientPrefs.getPref('Antialiasing');
+		gf.antialiasing = ClientPrefs.data.antialiasing;
 		gf.frames = Paths.getSparrowAtlas('gfDanceTitle');
 		gf.animation.addByIndices('left', 'gfDance', [30].concat([for (i in 0...15) i]), "", 24, false);
 		gf.animation.addByIndices('right', 'gfDance', [for (i in 15...30) i], "", 24, false);
@@ -90,7 +90,7 @@ class TitleState extends MusicBeatState {
 		add(gf);
 
 		logo = new FlxSprite(titleJson.titlex, titleJson.titley);
-		logo.antialiasing = ClientPrefs.getPref('Antialiasing');
+		logo.antialiasing = ClientPrefs.data.antialiasing;
 		if(!FileSystem.exists(Paths.modsXml('logobumpin'))) {
 			logo.loadGraphic(Paths.image('logobumpin'));
 			logo.setGraphicSize(Std.int(logo.width * titleJson.titlesize));
@@ -117,7 +117,7 @@ class TitleState extends MusicBeatState {
 		if (animFrames.length > 0) {
 			newTitle = true;
 			titleText.animation.addByPrefix('idle', "ENTER IDLE", 24);
-			titleText.animation.addByPrefix('press', ClientPrefs.getPref('flashing') ? "ENTER PRESSED" : "ENTER FREEZE", 24);
+			titleText.animation.addByPrefix('press', ClientPrefs.data.flashing ? "ENTER PRESSED" : "ENTER FREEZE", 24);
 		} else {
 			newTitle = false;
 			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
@@ -179,12 +179,12 @@ class TitleState extends MusicBeatState {
 						FlxTween.tween(logo, {y: -700}, 1, {ease: FlxEase.backIn});
 					}
 	
-					if (ClientPrefs.getPref('flashing')) titleText.active = true;
+					if (ClientPrefs.data.flashing) titleText.active = true;
 					titleText.animation.play('press');
 					titleText.color = FlxColor.WHITE;
 					titleText.alpha = 1;
 	
-					FlxG.camera.flash(ClientPrefs.getPref('flashing') ? FlxColor.WHITE : 0x4CFFFFFF, 1);
+					FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 1);
 					FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 	
 					MainMenuState.firstStart = true;

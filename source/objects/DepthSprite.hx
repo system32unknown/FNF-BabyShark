@@ -23,7 +23,7 @@ class DepthSprite extends FlxSprite {
 			active = false;
 		}
 		scrollFactor.set(scrollX, scrollY);
-		antialiasing = ClientPrefs.getPref('Antialiasing');
+		antialiasing = ClientPrefs.data.antialiasing;
 	}
 
 	override function update(elapsed:Float) {

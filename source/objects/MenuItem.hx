@@ -5,7 +5,7 @@ class MenuItem extends FlxSprite {
 
 	public function new(x:Float, y:Float, weekName:String = '', flashColor: FlxColor = 0xFF33FFFF) {
 		super(x, y, Paths.image('storymenu/$weekName'));
-		antialiasing = ClientPrefs.getPref('Antialiasing');
+		antialiasing = ClientPrefs.data.antialiasing;
 		this.flashColor = flashColor;
 	}
 

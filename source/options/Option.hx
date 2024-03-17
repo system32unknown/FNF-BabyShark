@@ -38,7 +38,7 @@ class Option {
 		this.type = type;
 		this.options = options;
 
-		if(this.type != 'keybind') this.defaultValue = ClientPrefs.defaultprefs.get(variable);
+		if(this.type != 'keybind') this.defaultValue = Reflect.getProperty(ClientPrefs.defaultData, variable);
 		if(defaultValue == 'null variable value')
 			switch(type) {
 				case 'bool':
@@ -71,9 +71,7 @@ class Option {
 			switch(type) {
 				case 'string':
 					var num:Int = options.indexOf(getValue());
-					if(num > -1) {
-						curOption = num;
-					}
+					if(num > -1) curOption = num;
 			}
 		} catch(e) {}
 	}
@@ -83,19 +81,18 @@ class Option {
 	}
 
 	dynamic public function getValue():Dynamic {
-		var value = ClientPrefs.getPref(variable);
+		var value = Reflect.getProperty(ClientPrefs.data, variable);
 		if(type == 'keybind') return value.keyboard;
 		return value;
 	}
 
 	dynamic public function setValue(value:Dynamic) {
 		if(type == 'keybind') {
-			var keys = ClientPrefs.getPref(variable);
+			var keys = Reflect.getProperty(ClientPrefs.data, variable);
 			keys.keyboard = value;
 			return value;
 		}
-		ClientPrefs.prefs.set(variable, value);
-		return ClientPrefs.getPref(variable);
+		return Reflect.setProperty(ClientPrefs.data, variable, value);
 	}
 
 	function get_text() {

@@ -51,7 +51,7 @@ class ModsMenuState extends MusicBeatState {
 
 		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFF665AFF;
-		bg.antialiasing = ClientPrefs.getPref('Antialiasing');
+		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 		bg.screenCenter();
 
@@ -266,7 +266,7 @@ class ModsMenuState extends MusicBeatState {
 			} else FlxG.switchState(() -> new MainMenuState());
 
 			persistentUpdate = false;
-			FlxG.autoPause = ClientPrefs.getPref('autoPause');
+			FlxG.autoPause = ClientPrefs.data.autoPause;
 			FlxG.mouse.visible = false;
 			return;
 		}
@@ -613,7 +613,7 @@ class ModsMenuState extends MusicBeatState {
 
 	function reload() {
 		saveTxt();
-		FlxG.autoPause = ClientPrefs.getPref('autoPause');
+		FlxG.autoPause = ClientPrefs.data.autoPause;
 		FlxTransitionableState.skipNextTransIn = true;
 		FlxTransitionableState.skipNextTransOut = true;
 		var curMod:ModItem = modsGroup.members[curSelectedMod];
@@ -688,7 +688,7 @@ class ModItem extends FlxSpriteGroup
 		add(selectBg);
 
 		icon = new FlxSprite(5, 5);
-		icon.antialiasing = ClientPrefs.getPref('Antialiasing');
+		icon.antialiasing = ClientPrefs.data.antialiasing;
 		add(icon);
 
 		text = new FlxText(95, 38, 230, "", 16);

@@ -10,12 +10,12 @@ class DiscordClient {
 	static var presence:DiscordRichPresence = DiscordRichPresence.create();
 
 	public static function check() {
-		if(ClientPrefs.getPref('discordRPC')) initialize();
+		if(ClientPrefs.data.discordRPC) initialize();
 		else if(isInitialized) shutdown();
 	}
 
 	public static function prepare() {
-		if (!isInitialized && ClientPrefs.getPref('discordRPC')) initialize();
+		if (!isInitialized && ClientPrefs.data.discordRPC) initialize();
 		lime.app.Application.current.window.onClose.add(() -> if(isInitialized) shutdown());
 	}
 
@@ -68,7 +68,7 @@ class DiscordClient {
 
 		presence.details = details;
 		presence.state = state;
-		presence.largeImageKey = (ClientPrefs.getPref('AltDiscordImg') ? 'iconalt' + ClientPrefs.getPref('AltDiscordImgCount') : 'icon');
+		presence.largeImageKey = (ClientPrefs.data.AltDiscordImg ? 'iconalt' + ClientPrefs.data.AltDiscordImgCount : 'icon');
 		presence.largeImageText = 'Baby Shark\'s Big Funkin!';
 		// Obtained times are in milliseconds so they are divided so Discord can use it
 		presence.startTimestamp = Std.int(startTimestamp / 1000);

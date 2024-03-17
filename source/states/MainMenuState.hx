@@ -47,7 +47,7 @@ class MainMenuState extends MusicBeatState {
 		add(bg);
 		
 		magenta = new FlxSprite(-80, bg.graphic);
-		magenta.antialiasing = ClientPrefs.getPref('Antialiasing');
+		magenta.antialiasing = ClientPrefs.data.antialiasing;
 		magenta.scrollFactor.set();
 		magenta.active = false;
 		magenta.setGraphicSize(Std.int(magenta.width * 1.1));
@@ -132,7 +132,7 @@ class MainMenuState extends MusicBeatState {
 				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 
-				if(ClientPrefs.getPref('flashing')) FlxFlicker.flicker(magenta, 1.1, .15, false);
+				if(ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, .15, false);
 
 				for (item in menuItems.members) {
 					final itemIndex:Int = menuItems.members.indexOf(item);

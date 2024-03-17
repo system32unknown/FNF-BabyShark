@@ -34,7 +34,7 @@ class Bar extends FlxSpriteGroup {
 		rightBar = new FlxSprite().makeGraphic(Std.int(bg.width), Std.int(bg.height));
 		rightBar.color = FlxColor.BLACK;
 
-		antialiasing = ClientPrefs.getPref('Antialiasing');
+		antialiasing = ClientPrefs.data.antialiasing;
 
 		add(leftBar);
 		add(rightBar);

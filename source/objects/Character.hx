@@ -168,7 +168,7 @@ class Character extends FlxSprite {
 
 		// antialiasing
 		noAntialiasing = (json.no_antialiasing == true);
-		antialiasing = ClientPrefs.getPref('Antialiasing') ? !noAntialiasing : false;
+		antialiasing = ClientPrefs.data.antialiasing ? !noAntialiasing : false;
 
 		animationsArray = json.animations;
 		if (animationsArray != null && animationsArray.length > 0) {
