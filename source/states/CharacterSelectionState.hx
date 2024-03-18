@@ -253,7 +253,7 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	function UpdateBF() {
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		FlxG.sound.play(Paths.sound('scrollMenu'), .4);
 
 		currentSelectedCharacter = characters[current];
 		characterText.text = currentSelectedCharacter.forms[curForm].polishedName;

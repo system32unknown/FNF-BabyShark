@@ -248,7 +248,7 @@ class ChartingState extends MusicBeatState {
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.resize(300, 400);
-		UI_box.setPosition(FlxG.width / 2 + 120, 25);
+		UI_box.setPosition(640 + GRID_SIZE * 3, 25);
 		UI_box.scrollFactor.set();
 
 		var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 8, 300, "Press F1 for Help", 16);
@@ -719,7 +719,7 @@ class ChartingState extends MusicBeatState {
 		var swapSection:FlxButton = new FlxButton(10, check_notesSec.y + 40, "Swap section", function() {
 			for (i in 0..._song.notes[curSec].sectionNotes.length) {
 				var note:Array<Dynamic> = _song.notes[curSec].sectionNotes[i];
-				note[1] = (note[1] + EK.keys(_song.mania)) % (EK.strums(_song.mania) + 1);
+				note[1] = (note[1] + EK.keys(_song.mania)) % EK.strums(_song.mania);
 				_song.notes[curSec].sectionNotes[i] = note;
 			}
 			updateGrid();
@@ -1153,7 +1153,7 @@ class ChartingState extends MusicBeatState {
 		if (FlxG.save.data.chart_vortex == null) FlxG.save.data.chart_vortex = false;
 		check_vortex.checked = FlxG.save.data.chart_vortex;
 
-		check_vortex.callback = function() {
+		check_vortex.callback = () -> {
 			FlxG.save.data.chart_vortex = check_vortex.checked;
 			vortex = FlxG.save.data.chart_vortex;
 			reloadGridLayer();
@@ -1163,19 +1163,17 @@ class ChartingState extends MusicBeatState {
 		if (FlxG.save.data.ignoreWarnings == null) FlxG.save.data.ignoreWarnings = false;
 		check_warnings.checked = FlxG.save.data.ignoreWarnings;
 
-		check_warnings.callback = function() {
+		check_warnings.callback = () -> {
 			FlxG.save.data.ignoreWarnings = check_warnings.checked;
 			ignoreWarnings = FlxG.save.data.ignoreWarnings;
 		};
 
 		check_mute_vocals = new FlxUICheckBox(check_mute_inst.x + 120, check_mute_inst.y, null, null, "Mute Vocals (in editor)", 100);
 		check_mute_vocals.checked = false;
-		check_mute_vocals.callback = function() {
-			if(vocals != null) {
-				var vol:Float = voicesVolume.value;
-				if (check_mute_vocals.checked) vol = 0;
-				vocals.volume = vol;
-			}
+		check_mute_vocals.callback = () -> {
+			var vol:Float = voicesVolume.value;
+			if (check_mute_vocals.checked) vol = 0;
+			if(vocals != null) vocals.volume = vol;
 		};
 
 		playSoundBf = new FlxUICheckBox(check_mute_inst.x, check_mute_vocals.y + 30, null, null, 'Play Sound (Boyfriend notes)', 100, () -> FlxG.save.data.chart_playSoundBf = playSoundBf.checked);
@@ -1451,7 +1449,7 @@ class ChartingState extends MusicBeatState {
 	override function update(elapsed:Float) {
 		curStep = recalculateSteps();
 
-		var gWidth:Float = GRID_SIZE * (EK.strums(_song.mania) + 1);
+		var gWidth:Float = GRID_SIZE * EK.strums(_song.mania);
 		camPos.x = -80 + gWidth;
 		strumLine.width = gWidth;
 
@@ -1488,7 +1486,7 @@ class ChartingState extends MusicBeatState {
 			dummyArrow.x = Math.floor(FlxG.mouse.x / GRID_SIZE) * GRID_SIZE;
 			if (FlxG.keys.pressed.SHIFT) dummyArrow.y = FlxG.mouse.y;
 			else {
-				var gridmult = GRID_SIZE / (quantization / 16);
+				var gridmult:Float = GRID_SIZE / (quantization / 16);
 				dummyArrow.y = Math.floor(FlxG.mouse.y / gridmult) * gridmult;
 			}
 		} else dummyArrow.visible = false;
@@ -1890,7 +1888,7 @@ class ChartingState extends MusicBeatState {
 	var columns:Int = 9;
 	function reloadGridLayer() {
 		PlayState.mania = _song.mania;
-		columns = EK.strums(_song.mania) + 2;
+		columns = EK.strums(_song.mania) + 1;
 
 		gridLayer.clear();
 		gridBG = FlxGridOverlay.create(1, 1, columns, Std.int(getSectionBeats() * 4 * zoomList[curZoom]));
@@ -1961,7 +1959,7 @@ class ChartingState extends MusicBeatState {
 
 		if (strumLineNotes != null)	{
 			strumLineNotes.clear();
-			for (i in 0...EK.strums(_song.mania) + 1) {
+			for (i in 0...EK.strums(_song.mania)) {
 				var note:StrumNote = new StrumNote(GRID_SIZE * (i + 1), strumLine.y, i % EK.keys(_song.mania), 0);
 				note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 				note.updateHitbox();
@@ -1983,16 +1981,19 @@ class ChartingState extends MusicBeatState {
 
 	var waveformPrinted:Bool = true;
 	var wavData:Array<Array<Array<Float>>> = [[[0], [0]], [[0], [0]]];
+
 	var lastWaveformHeight:Int = 0;
+	var lastMania:Int = 3;
 	function updateWaveform() {
 		#if desktop
-		var width:Int = Std.int(GRID_SIZE * (EK.strums(_song.mania) + 1));
+		var width:Int = Std.int(GRID_SIZE * EK.keys(_song.mania));
 		if(waveformPrinted) {
 			var height:Int = Std.int(gridBG.height);
-			if(lastWaveformHeight != height && waveformSprite.pixels != null) {
+			if((lastWaveformHeight != height && waveformSprite.pixels != null) || lastMania != _song.mania) {
 				waveformSprite.pixels.dispose();
 				waveformSprite.makeGraphic(width, height, 0x00FFFFFF);
 				lastWaveformHeight = height;
+				lastMania = _song.mania;
 			}
 			waveformSprite.pixels.fillRect(new Rectangle(0, 0, width, height), 0x00FFFFFF);
 		}
@@ -2009,19 +2010,11 @@ class ChartingState extends MusicBeatState {
 		var st:Float = sectionStartTime();
 		var et:Float = st + (Conductor.stepCrochet * steps);
 
-		if (FlxG.save.data.chart_waveformInst) {
-			var sound:FlxSound = FlxG.sound.music;
-			if (sound.buffer != null) {
-				var buffer:AudioBuffer = sound.buffer;
-				wavData = waveformData(buffer, buffer.data.toBytes(), st, et, 1, wavData, Std.int(gridBG.height));
-			}
-		}
-		if (FlxG.save.data.chart_waveformVoices) {
-			var sound:FlxSound = vocals;
-			if (sound.buffer != null) {
-				var buffer:AudioBuffer = sound.buffer;
-				wavData = waveformData(buffer, buffer.data.toBytes(), st, et, 1, wavData, Std.int(gridBG.height));
-			}
+		var sound:FlxSound = FlxG.sound.music;
+		if (FlxG.save.data.chart_waveformVoices) sound = vocals;
+		if (sound.buffer != null) {
+			var buffer:AudioBuffer = sound.buffer;
+			wavData = waveformData(buffer, buffer.data.toBytes(), st, et, 1, wavData, Std.int(gridBG.height));
 		}
 
 		// Draws
