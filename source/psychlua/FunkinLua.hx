@@ -237,18 +237,18 @@ class FunkinLua {
 			return true;
 		});
 
-		//shitass stuff for epic coders like me B)  *image of obama giving himself a medal*
+		//shitass stuff for epic coders like me B) *image of obama giving himself a medal*
 		set("getObjectOrder", function(obj:String) {
-			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
-			if (poop != null) return LuaUtils.getInstance().members.indexOf(poop);
+			var obj:FlxBasic = LuaUtils.getVarInstance(obj);
+			if (obj != null) return LuaUtils.getInstance().members.indexOf(obj);
 			return -1;
 		});
 		set("setObjectOrder", function(obj:String, position:Int) {
-			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
-			if (poop == null) return false;
+			var obj:FlxBasic = LuaUtils.getVarInstance(obj);
+			if (obj == null) return false;
 
-			LuaUtils.getInstance().remove(poop, true);
-			LuaUtils.getInstance().insert(position, poop);
+			LuaUtils.getInstance().remove(obj, true);
+			LuaUtils.getInstance().insert(position, obj);
 			return true;
 		});
 
@@ -452,33 +452,25 @@ class FunkinLua {
 		});
 		set("getSongPosition", () -> return Conductor.songPosition);
 
-		set("getCharacterX", function(type:String) {
-			return switch(type.toLowerCase()) {
-				case 'dad' | 'opponent': game.dadGroup.x;
-				case 'gf' | 'girlfriend': game.gfGroup.x;
-				default: game.boyfriendGroup.x;
-			}
+		set("getCharacterX", (type:String) -> return switch(type.toLowerCase()) {
+			case 'dad' | 'opponent': game.dadGroup.x;
+			case 'gf' | 'girlfriend': game.gfGroup.x;
+			default: game.boyfriendGroup.x;
 		});
-		set("setCharacterX", function(type:String, value:Float) {
-			return switch(type.toLowerCase()) {
-				case 'dad' | 'opponent': game.dadGroup.x = value;
-				case 'gf' | 'girlfriend': game.gfGroup.x = value;
-				default: game.boyfriendGroup.x = value;
-			}
+		set("setCharacterX", (type:String, value:Float) -> return switch(type.toLowerCase()) {
+			case 'dad' | 'opponent': game.dadGroup.x = value;
+			case 'gf' | 'girlfriend': game.gfGroup.x = value;
+			default: game.boyfriendGroup.x = value;
 		});
-		set("getCharacterY", function(type:String) {
-			return switch(type.toLowerCase()) {
-				case 'dad' | 'opponent': game.dadGroup.y;
-				case 'gf' | 'girlfriend': game.gfGroup.y;
-				default: game.boyfriendGroup.y;
-			}
+		set("getCharacterY", (type:String) -> return switch(type.toLowerCase()) {
+			case 'dad' | 'opponent': game.dadGroup.y;
+			case 'gf' | 'girlfriend': game.gfGroup.y;
+			default: game.boyfriendGroup.y;
 		});
-		set("setCharacterY", function(type:String, value:Float) {
-			return switch(type.toLowerCase()) {
-				case 'dad' | 'opponent': game.dadGroup.y = value;
-				case 'gf' | 'girlfriend': game.gfGroup.y = value;
-				default: game.boyfriendGroup.y = value;
-			}
+		set("setCharacterY", (type:String, value:Float) -> return switch(type.toLowerCase()) {
+			case 'dad' | 'opponent': game.dadGroup.y = value;
+			case 'gf' | 'girlfriend': game.gfGroup.y = value;
+			default: game.boyfriendGroup.y = value;
 		});
 
 		set("cameraSetTarget", function(target:String) {
@@ -694,9 +686,9 @@ class FunkinLua {
 		set("setTimeBarColors", (left:String, right:String) -> LuaUtils.setBarColors(game.timeBar, left, right));
 
 		set("setObjectCamera", function(obj:String, camera:String = '') {
-			var poop:FlxBasic = LuaUtils.getVarInstance(obj);
-			if (poop == null) return false;
-			poop.camera = LuaUtils.cameraFromString(camera);
+			var spr:FlxBasic = LuaUtils.getVarInstance(obj);
+			if (spr == null) return false;
+			spr.camera = LuaUtils.cameraFromString(camera);
 			return true;
 		});
 		set("setBlendMode", function(obj:String, blend:String = '') {
@@ -723,12 +715,13 @@ class FunkinLua {
 		});
 
 		set("startDialogue", function(dialogueFile:String, music:String = null) {
+			final dialoguePath:String = '${Paths.CHART_PATH}/${Paths.formatToSongPath(PlayState.SONG.song)}/$dialogueFile';
 			var path:String;
 			#if MODS_ALLOWED
-			path = Paths.modsJson('${Paths.CHART_PATH}/${Paths.formatToSongPath(PlayState.SONG.song)}/$dialogueFile');
+			path = Paths.modsJson(dialoguePath);
 			if(!FileSystem.exists(path))
 			#end
-				path = Paths.json('${Paths.CHART_PATH}/${Paths.formatToSongPath(PlayState.SONG.song)}/$dialogueFile');
+				path = Paths.json(dialoguePath);
 			luaTrace('startDialogue: Trying to load dialogue: ' + path);
 			
 			if(#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {

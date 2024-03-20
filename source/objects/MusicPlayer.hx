@@ -236,13 +236,13 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		playbackTxt.text = text + 'x';
 	}
 
-	function positionSong()  {
+	function positionSong() {
 		var length:Int = instance.songs[FreeplayState.curSelected].songName.length;
 		var shortName:Bool = length < 5; // Fix for song names like Ugh, Guns
 		songTxt.x = FlxG.width - songTxt.width - 6;
 		if (shortName) songTxt.x -= 10 * length - length;
 		songBG.scale.x = FlxG.width - songTxt.x + 12;
-		if (shortName)  songBG.scale.x += 6 * length;
+		if (shortName) songBG.scale.x += 6 * length;
 		songBG.x = FlxG.width - (songBG.scale.x / 2);
 		timeTxt.x = Std.int(songBG.x + (songBG.width / 2));
 		timeTxt.x -= timeTxt.width / 2;
@@ -274,7 +274,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		timeTxt.text = '< ${FlxStringUtil.formatTime(FlxG.sound.music.time / 1000, false) + ' / ' + FlxStringUtil.formatTime(FlxG.sound.music.length / 1000, false)} >';
 	}
 
-	function setPlaybackRate()  {
+	function setPlaybackRate() {
 		FlxG.sound.music.pitch = playbackRate;
 		if (FreeplayState.vocals != null)
 			FreeplayState.vocals.pitch = playbackRate;

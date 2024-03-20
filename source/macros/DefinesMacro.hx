@@ -14,10 +14,6 @@ class DefinesMacro {
 
 	// INTERNAL MACROS
 	static macro function __getDefines() {
-		#if display
-		return macro $v{[]};
-		#else
-		return macro $v{Context.getDefines()};
-		#end
+		return macro $v{#if display [] #else Context.getDefines() #end};
 	}
 }

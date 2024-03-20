@@ -115,7 +115,7 @@ class NoteSplash extends FlxSprite {
 		if(frames == null) {
 			skin = defaultNoteSplash + getSplashSkinPostfix();
 			frames = Paths.getSparrowAtlas(skin);
-			if(frames == null)  { //if you really need this, you really fucked something up
+			if(frames == null) { //if you really need this, you really fucked something up
 				skin = defaultNoteSplash;
 				frames = Paths.getSparrowAtlas(skin);
 			}

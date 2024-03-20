@@ -4,7 +4,7 @@ class Wife3 {
 	static final erfs:Array<Float> = [.254829592, -.284496736, 1.421413741, 1.453152027, 1.061405429];
 	static final p:Float = .3275911;
 	static function erf(x:Float):Float {
-		var sign = (x < 0 ? -1 : 1);
+		var sign:Int = (x < 0 ? -1 : 1);
 		x = Math.abs(x);
 
 		var t:Float = 1 / (1 + p * x);
@@ -18,7 +18,7 @@ class Wife3 {
 	public static var shit_weight:Float = 200;
 
 	public static function getAcc(noteDiff:Float):Float {
-		var ts = PlayState.instance.playbackRate;
+		var ts:Float = PlayState.instance.playbackRate;
 
 		var ridic:Float = 5 * ts;
 		var zero:Float = 65 * Math.pow(ts, ts_pow);

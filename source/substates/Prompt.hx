@@ -12,7 +12,7 @@ class Prompt extends MusicBeatSubstate {
 	var buttonAccept:FlxButton;
 	var buttonNo:FlxButton;
 	
-	public function new(promptText:String = '', okCallback:Void->Void, cancelCallback:Void->Void, acceptOnDefault:Bool = false, option1:String = null, option2:String = null)  {
+	public function new(promptText:String = '', okCallback:Void->Void, cancelCallback:Void->Void, acceptOnDefault:Bool = false, option1:String = null, option2:String = null) {
 		okc = okCallback;
 		cancelc = cancelCallback;
 		theText = promptText;

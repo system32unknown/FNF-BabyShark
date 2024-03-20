@@ -192,6 +192,11 @@ class NoteOffsetState extends MusicBeatState {
 		if (controls.BACK) {
 			persistentUpdate = false;
 			FlxG.switchState(() -> new options.OptionsState());
+			if(OptionsState.onPlayState) {
+				if(ClientPrefs.data.pauseMusic != 'None')
+					FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
+				else FlxG.sound.music.volume = 0;
+			}
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			FlxG.mouse.visible = false;
 		}
@@ -251,7 +256,7 @@ class NoteOffsetState extends MusicBeatState {
 	function setDumbText(i:Int, text1:String, text2:String) {
 		i = Math.floor(i * 2);
 
-		var m = dumbTexts.members;
+		var m:Array<FlxText> = dumbTexts.members;
 		if (m[i] != null && m[i].text != text1) m[i].text = text1;
 		if (m[i + 1] != null && m[i + 1].text != text2) m[i + 1].text = text2;
 	}
@@ -265,9 +270,9 @@ class NoteOffsetState extends MusicBeatState {
 	function updateMode() {
 		for (i in 0...3) setObjectAlpha(i, onComboMenu ? 1 : .5);
 
-		if (onComboMenu) modeConfigText.text = '< Rating Pop-up Position (Hold Accept to Switch) >';
-		else modeConfigText.text = '< Timing Offset (Hold Accept to Switch) >';
-		modeConfigText.text = modeConfigText.text.toUpperCase();
+		var str2:String = '(Hold Accept to Switch)';
+		var str:String = onComboMenu ? 'Rating Pop-up Position' : 'Timing Offset';
+		modeConfigText.text = '< ${str.toUpperCase()} ${str2.toUpperCase()} >';
 		FlxG.mouse.visible = onComboMenu;
 
 		timeTxt.visible = timeBar.visible = !onComboMenu;
@@ -279,17 +284,17 @@ class NoteOffsetState extends MusicBeatState {
 	function setDumbTextAlpha(i:Int, alpha:Float) {
 		i = Math.floor(i * 2);
 
-		var m = dumbTexts.members;
+		var m:Array<FlxText> = dumbTexts.members;
 		if (m[i] != null) m[i].alpha = alpha;
 		if (m[i + 1] != null) m[i + 1].alpha = alpha;
 	}
 
 	var holdTime:Float = 0;
 	function updateInput(elapsed:Float) {
-		var byPixel = FlxG.keys.justPressed.CONTROL;
-		var addNum = (FlxG.keys.pressed.SHIFT || controls.PAUSE_P) ? 2.5 : (FlxG.keys.pressed.CONTROL && !byPixel) ? 0 : 1;
-		var left = controls.UI_LEFT, right = controls.UI_RIGHT;
-		var down = controls.UI_DOWN, up = controls.UI_UP;
+		var byPixel:Bool = FlxG.keys.justPressed.CONTROL;
+		var addNum:Float = (FlxG.keys.pressed.SHIFT || controls.PAUSE_P) ? 2.5 : (FlxG.keys.pressed.CONTROL && !byPixel) ? 0 : 1;
+		var left:Bool = controls.UI_LEFT, right:Bool = controls.UI_RIGHT;
+		var down:Bool = controls.UI_DOWN, up:Bool = controls.UI_UP;
 
 		FlxG.mouse.getScreenPosition(camOther, mousePointer);
 
@@ -300,7 +305,7 @@ class NoteOffsetState extends MusicBeatState {
 			if (left || right || down || up) mouse.visible = true;
 			else if (FlxG.mouse.justPressed) mouse.visible = false;
 
-			var justpressed = false;
+			var justpressed:Bool = false;
 			if (holdingObject != -1 && (justpressed = (controls.RESET || (nativeHoldingObject ? FlxG.mouse.justReleased : controls.ACCEPT)))) {
 				if (nativeHoldingObject) mouse.setPosition(mousePointer.x, mousePointer.y);
 				modeConfigText.alpha = 1;
@@ -316,7 +321,7 @@ class NoteOffsetState extends MusicBeatState {
 				nativeHoldingObject = !controls.ACCEPT;
 				if (nativeHoldingObject) mouse.setPosition(mousePointer.x, mousePointer.y);
 
-				var overlappedObj = getOverlappedObject(mouse);
+				var overlappedObj:Int = getOverlappedObject(mouse);
 				if (overlappedObj != -1) {
 					holdingObject = overlappedObj;
 					modeConfigText.alpha = .5;
@@ -325,7 +330,7 @@ class NoteOffsetState extends MusicBeatState {
 						setObjectAlpha(i, i == holdingObject ? 1 : .5);
 					}
 
-					var v = holdingObject;
+					var v:Int = holdingObject;
 					holdingObjectOffset.x = comboOffset[v][0] - (nativeHoldingObject ? mousePointer.x : mouse.x);
 					holdingObjectOffset.y = -comboOffset[v][1] - (nativeHoldingObject ? mousePointer.y : mouse.y);
 				} else if (!nativeHoldingObject || holdingObject == -1)
@@ -333,14 +338,14 @@ class NoteOffsetState extends MusicBeatState {
 			}
 
 			if (holdingObject != -1) {
-				var v = holdingObject;
+				var v:Int = holdingObject;
 				comboOffset[v][0] = Math.floor((nativeHoldingObject ? mousePointer.x : mouse.x) + holdingObjectOffset.x);
 				comboOffset[v][1] = -Math.floor((nativeHoldingObject ? mousePointer.y : mouse.y) + holdingObjectOffset.y);
 			}
 
 			if (controls.RESET) for (i in 0...comboOffset.length) for (j in 0...comboOffset[i].length) comboOffset[i][j] = 0;
 		} else {
-			var pix = controls.UI_LEFT_P || controls.UI_RIGHT_P;
+			var pix:Bool = controls.UI_LEFT_P || controls.UI_RIGHT_P;
 			mouse.visible = false;
 
 			if (left || right) holdTime += elapsed;
@@ -353,7 +358,7 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	function setObjectAlpha(i:Int, alpha:Float) {
-		var obj = i == 0 ? rating : (i == 2 ? combo : null);
+		var obj:Null<FlxSprite> = i == 0 ? rating : (i == 2 ? combo : null);
 		if (obj != null) obj.alpha = alpha;
 
 		if (i == 1 && comboNums != null) for (v in comboNums) v.alpha = alpha;

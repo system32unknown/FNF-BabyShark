@@ -41,7 +41,7 @@ class EK {
 	public static var gfxDir:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT', 'SPACE'];
 
     public static function fillKeys():Array<Array<Dynamic>> {
-        return [
+		return [
 			[
 				ClientPrefs.keyBinds.get('note_1').copy()
 			],[
@@ -98,5 +98,5 @@ class EK {
 				ClientPrefs.keyBinds.get('note_9i').copy()
 			]
 		];
-    }
+	}
 }

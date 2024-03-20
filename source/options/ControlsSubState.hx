@@ -245,7 +245,7 @@ class ControlsSubState extends MusicBeatSubstate {
 
 	var timeForMoving:Float = 0.1;
 	override function update(elapsed:Float) {
-		if(timeForMoving > 0)  { //Fix controller bug
+		if(timeForMoving > 0) { //Fix controller bug
 			timeForMoving = Math.max(0, timeForMoving - elapsed);
 			super.update(elapsed);
 			return;

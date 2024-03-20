@@ -12,14 +12,14 @@ class Logs {
 	public static var nativeTrace = Log.trace;
 	public static function init() {
 		Log.trace = function(v:Dynamic, ?infos:Null<haxe.PosInfos>) {
-			var data = [logText('${infos.fileName}:${infos.lineNumber}: ', CYAN), logText(Std.string(v))];
+			var data:Array<LogText> = [logText('${infos.fileName}:${infos.lineNumber}: ', CYAN), logText(Std.string(v))];
 
 			if (infos.customParams != null) for (i in infos.customParams) data.push(logText("," + Std.string(i)));
 			__showInConsole(prepareColoredTrace(data, TRACE));
 		};
 
 		flixel.system.frontEnds.LogFrontEnd.onLogs = function(Data, Style, FireOnce) {
-			var prefix = "[FLIXEL]";
+			var prefix:String = "[FLIXEL]";
 			var color:ConsoleColor = LIGHTGRAY;
 			var level:Level = INFO;
 			if (Style == LogStyle.CONSOLE) {prefix = "> "; color = WHITE;	level = INFO;} else
@@ -36,7 +36,7 @@ class Logs {
 	}
 
 	public static function prepareColoredTrace(text:Array<LogText>, level:Level = INFO) {
-		var superCoolText = [
+		var superCoolText:Array<LogText> = [
 			logText('['),
 			switch(level) {
 				case WARNING: logText('WARNING', DARKYELLOW);

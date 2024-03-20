@@ -58,16 +58,4 @@ class ArrayUtil {
 	}
 
 	inline public static function dynamicArray<T>(v:T, len:Int):Array<T> return [for (_ in 0...len) v];
-
-	public static function sortByAlphabet(arr:Array<String>):Array<String> {
-		arr.sort((a:String, b:String) -> {
-			a = a.toUpperCase();
-			b = b.toUpperCase();
-	
-			if (a < b) return -1;
-			else if (a > b) return 1;
-			else return 0;
-		});
-		return arr;
-	}
 }

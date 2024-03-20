@@ -65,9 +65,10 @@ class LoadingState extends MusicBeatState {
 		funkay.updateHitbox();
 		add(funkay);
 
-		loadingText = new FlxText(520, 600, 400, 'Now Loading...', 32);
-		loadingText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT);
+		loadingText = new FlxText(520, 600, 450, 'Now Loading...', 32);
+		loadingText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		loadingText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK, 2);
+		loadingText.screenCenter(X);
 		add(loadingText);
 
 		var bg:FlxSprite = new FlxSprite(0, 660).makeGraphic(1, 1, FlxColor.BLACK);
@@ -109,7 +110,7 @@ class LoadingState extends MusicBeatState {
 		}
 
 		timePassed += elapsed;
-		var txt:String = 'Now Loading.';
+		var txt:String = '${utils.MathUtil.floorDecimal(curPercent * 100, 2)}% Now Loading.';
 		switch(Math.floor(timePassed % 1 * 3)) {
 			case 1: txt += '.';
 			case 2: txt += '..';

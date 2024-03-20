@@ -11,7 +11,7 @@ class CrashHandler {
 		#if cpp untyped __global__.__hxcpp_set_critical_error_handler(onError); #end
 	}
 
-	public static function onCrash(e:UncaughtErrorEvent):Void {
+	static function onCrash(e:UncaughtErrorEvent):Void {
 		var message:String = "";
 		if (Std.isOfType(e.error, Error))
 			message = cast(e.error, Error).message;
@@ -20,7 +20,7 @@ class CrashHandler {
 		else message = try Std.string(e.error) catch(_:haxe.Exception) "Unknown";
 
 		var dateNow:String = Date.now().toString().replace(" ", "_").replace(":", "'");
-		final path = './crash/AlterEngine_$dateNow.txt';
+		final path:String = './crash/AlterEngine_$dateNow.txt';
 
 		var errMsg:String = "";
 		for (stackItem in haxe.CallStack.exceptionStack(true)) {

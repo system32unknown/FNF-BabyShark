@@ -176,7 +176,7 @@ class AudioBuffer
 		return null;
 	}
 
-	public static function fromFile(path:String #if (js && html5 && lime_howlerjs), ?howlHtml5 = false #end):AudioBuffer
+	public static function fromFile(path:String):AudioBuffer
 	{
 		if (path == null) return null;
 
@@ -186,12 +186,12 @@ class AudioBuffer
 		#if force_html5_audio
 		audioBuffer.__srcHowl = new Howl({src: [path], html5: true, preload: false});
 		#else
-		audioBuffer.__srcHowl = new Howl({src: [path], html5: howlHtml5, preload: false});
+		audioBuffer.__srcHowl = new Howl({src: [path], html5: preload: false});
 		#end
 
 		return audioBuffer;
 		#elseif flash
-		switch (Path.extension(path)) {
+		switch (haxe.io.Path.extension(path)) {
 			case "ogg", "wav":
 				return null;
 			default:
@@ -229,7 +229,7 @@ class AudioBuffer
 		#end
 	}
 
-	public static function fromFiles(paths:Array<String> #if (js && html5 && lime_howlerjs), ?howlHtml5 = false #end):AudioBuffer
+	public static function fromFiles(paths:Array<String>):AudioBuffer
 	{
 		#if (js && html5 && lime_howlerjs)
 		var audioBuffer = new AudioBuffer();
@@ -237,7 +237,7 @@ class AudioBuffer
 		#if force_html5_audio
 		audioBuffer.__srcHowl = new Howl({src: paths, html5: true, preload: false});
 		#else
-		audioBuffer.__srcHowl = new Howl({src: paths, html5: howlHtml5, preload: false});
+		audioBuffer.__srcHowl = new Howl({src: paths, preload: false});
 		#end
 
 		return audioBuffer;

@@ -41,7 +41,7 @@ class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 
 	public function acceptConnection():Socket {
 		socket.setBlocking(true);
-		var accept = new Socket(socket.accept());
+		var accept:Socket = new Socket(socket.accept());
 		socket.setBlocking(false);
 		return accept;
 	}

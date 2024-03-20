@@ -2,7 +2,7 @@
 
 ### `v1.1.5a`
 - [ ] Bug Fix / Tweaks
-    - [ ] Fix Freeplay No Vocals on Musicplayer
+    - [x] Fix Freeplay No Vocals on Musicplayer
 
 ### Future versions
 - [ ] Remake Charcter / New Charcters
@@ -11,8 +11,6 @@
 - [ ] Get Character Vocals
 - [ ] New Credit Menu (Social Links)
 - [ ] Language System
-- [ ] New Preloading System
-- [ ] Input Type Options (PE, Alter)
 
 ### Characters List
 - [ ] Stariana

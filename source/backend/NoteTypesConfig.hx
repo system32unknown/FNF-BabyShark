@@ -43,7 +43,7 @@ class NoteTypesConfig {
 		var data:Array<NoteTypeProperty> = loadNoteTypeData(name);
 		if(data == null || data.length < 1) return;
 		
-		for (line in data)  {
+		for (line in data) {
 			var obj:Dynamic = note;
 			var split:Array<String> = line.property;
 			try {

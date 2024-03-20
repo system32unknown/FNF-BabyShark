@@ -279,7 +279,7 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	function updateIconPosition() {
-		var yValues = utils.MathUtil.getMinAndMax(curIcon.height, characterText.height);
+		var yValues:Array<Float> = utils.MathUtil.getMinAndMax(curIcon.height, characterText.height);
 		curIcon.y = characterText.y - ((yValues[0] - yValues[1]) / 2);
 	}
 }

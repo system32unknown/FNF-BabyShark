@@ -195,7 +195,7 @@ class FreeplayState extends MusicBeatState {
 		if (Math.abs(lerpRating - intendedRating) <= .01) lerpRating = intendedRating;
 
 		var ratingSplit:Array<String> = Std.string(utils.MathUtil.floorDecimal(lerpRating * 100, 2)).split('.');
-		if (ratingSplit.length < 2)  ratingSplit.push(''); //No decimals, add an empty space
+		if (ratingSplit.length < 2) ratingSplit.push(''); //No decimals, add an empty space
 		while (ratingSplit[1].length < 2) ratingSplit[1] += '0'; //Less than 2 decimals in it, add decimals then
 		
 		var shiftMult:Int = 1;

@@ -179,8 +179,8 @@ class ClientPrefs {
 
 	public static function saveSettings() {
 		for (key in Reflect.fields(data)) Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
-
 		FlxG.save.flush();
+
 		//Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
 		var save:FlxSave = new FlxSave();
 		save.bind('controls', CoolUtil.getSavePath());

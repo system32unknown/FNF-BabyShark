@@ -42,9 +42,7 @@ class PixelSplashShader extends flixel.system.FlxAssets.FlxShader {
 		vec4 flixel_texture2DCustom(sampler2D bitmap, vec2 coord) {
 			vec2 blocks = openfl_TextureSize / uBlocksize;
 			vec4 color = flixel_texture2D(bitmap, floor(coord * blocks) / blocks);
-			if (!hasTransform) {
-				return color;
-			}
+			if (!hasTransform) return color;
 
 			if(color.a == 0.0 || mult == 0.0) {
 				return color * openfl_Alphav;
