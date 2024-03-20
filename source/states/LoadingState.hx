@@ -110,7 +110,7 @@ class LoadingState extends MusicBeatState {
 		}
 
 		timePassed += elapsed;
-		var txt:String = '${utils.MathUtil.floorDecimal(curPercent * 100, 2)}% Now Loading.';
+		var txt:String = '(${utils.MathUtil.floorDecimal(curPercent * 100, 2)}%) Now Loading.';
 		switch(Math.floor(timePassed % 1 * 3)) {
 			case 1: txt += '.';
 			case 2: txt += '..';
