@@ -1927,7 +1927,7 @@ class PlayState extends MusicBeatState {
 
 		for (rating in ratingsData) Paths.image(uiPrefix + 'ratings/${rating.image}' + uiPostfix);
 		for (i in 0...10) Paths.image(uiPrefix + 'number/num$i' + uiPostfix);
-		for (miscRatings in ['combo', 'early', 'late']) Paths.image(uiPrefix + 'ratings/$miscRatings' + uiPostfix);
+		Paths.image(uiPrefix + 'ratings/combo' + uiPostfix);
 	}
 
 	var scoreSeparator:String = "|";
