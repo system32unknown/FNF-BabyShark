@@ -432,12 +432,9 @@ class NoteSplashDebugState extends MusicBeatState
 		updateOffsetText();
 	}
 
-	function changeSelection(change:Int = 0)
-	{
+	function changeSelection(change:Int = 0) {
 		var max:Int = PlayState.mania + 1;
-		curSelected += change;
-		if(curSelected < 0) curSelected = max - 1;
-		else if(curSelected >= max) curSelected = 0;
+		curSelected = FlxMath.wrap(curSelected + change, 0, max - 1);
 
 		selection.x = setPosX(curSelected) - 20 * EK.scalesPixel[PlayState.mania];
 		selection.y = setPosY() - 20 * EK.scalesPixel[PlayState.mania];
@@ -450,8 +447,7 @@ class NoteSplashDebugState extends MusicBeatState
 	{
 		if(sel < 0) sel = curSelected;
 		var animID:Int = sel + ((curAnim - 1) * PlayState.mania + 1);
-		if(config.offsets[animID] == null)
-		{
+		if(config.offsets[animID] == null) {
 			while(config.offsets[animID] == null)
 				config.offsets.push(config.offsets[FlxMath.wrap(animID, 0, config.offsets.length - 1)].copy());
 		}

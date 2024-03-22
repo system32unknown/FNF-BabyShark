@@ -143,10 +143,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 	var UI_typebox:FlxUITabMenu;
 	var UI_mainbox:FlxUITabMenu;
 	function addEditorBox() {
-		var tabs = [
-			{name: 'Character Type', label: 'Character Type'},
-		];
-		UI_typebox = new FlxUITabMenu(null, tabs, true);
+		UI_typebox = new FlxUITabMenu(null, [{name: 'Character Type', label: 'Character Type'}], true);
 		UI_typebox.resize(120, 180);
 		UI_typebox.setPosition(900, FlxG.height - UI_typebox.height - 50);
 		UI_typebox.scrollFactor.set();
@@ -154,11 +151,10 @@ class DialogueCharacterEditorState extends MusicBeatState
 		addTypeUI();
 		add(UI_typebox);
 
-		var tabs = [
+		UI_mainbox = new FlxUITabMenu(null, [
 			{name: 'Animations', label: 'Animations'},
 			{name: 'Character', label: 'Character'},
-		];
-		UI_mainbox = new FlxUITabMenu(null, tabs, true);
+		], true);
 		UI_mainbox.resize(200, 250);
 		UI_mainbox.setPosition(UI_typebox.x + UI_typebox.width, FlxG.height - UI_mainbox.height - 50);
 		UI_mainbox.scrollFactor.set();
@@ -375,8 +371,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 	static var DEFAULT_TEXT:String = 'Lorem ipsum dolor sit amet';
 
 	function reloadCharacter() {
-		var charsArray:Array<DialogueCharacter> = [character, ghostLoop, ghostIdle];
-		for (char in charsArray) {
+		for (char in [character, ghostLoop, ghostIdle]) {
 			char.frames = Paths.getSparrowAtlas('dialogue/' + character.jsonFile.image);
 			char.jsonFile = character.jsonFile;
 			char.reloadAnimations();
@@ -407,10 +402,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 		curAnim = 0;
 		animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
 
-		#if DISCORD_ALLOWED
-		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Dialogue Character Editor", "Editing: " + character.jsonFile.image);
-		#end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("Dialogue Character Editor", "Editing: " + character.jsonFile.image); #end
 	}
 
 	function updateTextBox() {
@@ -452,9 +444,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 		if(character.animation.curAnim != null) {
 			if(daText.finishedText) {
-				if(character.animationIsLoop()) {
-					character.playAnim(character.animation.curAnim.name, true);
-				}
+				if(character.animationIsLoop()) character.playAnim(character.animation.curAnim.name, true);
 			} else if(character.animation.curAnim.finished) {
 				character.animation.curAnim.restart();
 			}
@@ -577,13 +567,11 @@ class DialogueCharacterEditorState extends MusicBeatState
 				currentGhosts = 0;
 			}
 			
-			if(UI_mainbox.selected_tab_id == 'Character')
-			{
+			if(UI_mainbox.selected_tab_id == 'Character') {
 				var negaMult:Array<Int> = [1, -1];
 				var controlAnim:Array<Bool> = [FlxG.keys.justPressed.W, FlxG.keys.justPressed.S];
 
-				if(controlAnim.contains(true))
-				{
+				if(controlAnim.contains(true)) {
 					for (i in 0...controlAnim.length) {
 						if(controlAnim[i] && character.jsonFile.animations.length > 0) {
 							curAnim -= negaMult[i];
@@ -654,16 +642,13 @@ class DialogueCharacterEditorState extends MusicBeatState
 			}
 		}
 		_file = null;
-		#else
-		Logs.trace("File couldn't be loaded! You aren't on Desktop, are you?", WARNING);
-		#end
+		#else Logs.trace("File couldn't be loaded! You aren't on Desktop, are you?", WARNING); #end
 	}
 
 	/**
 		* Called when the save file dialog is cancelled.
 	*/
-	function onLoadCancel(_):Void
-	{
+	function onLoadCancel(_):Void {
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);

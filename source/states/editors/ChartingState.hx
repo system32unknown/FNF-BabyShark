@@ -237,16 +237,14 @@ class ChartingState extends MusicBeatState {
 		dummyArrow.antialiasing = ClientPrefs.data.antialiasing;
 		add(dummyArrow);
 
-		var tabs = [
+		UI_box = new FlxUITabMenu(null, [
 			{name: "Song", label: 'Song'},
 			{name: "Section", label: 'Section'},
 			{name: "Note", label: 'Note'},
 			{name: "Events", label: 'Events'},
 			{name: "Charting", label: 'Charting'},
 			{name: "Data", label: 'Data'},
-		];
-
-		UI_box = new FlxUITabMenu(null, tabs, true);
+		], true);
 		UI_box.resize(300, 400);
 		UI_box.setPosition(640 + GRID_SIZE * 3, 25);
 		UI_box.scrollFactor.set();

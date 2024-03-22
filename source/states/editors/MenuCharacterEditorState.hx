@@ -67,16 +67,14 @@ class MenuCharacterEditorState extends MusicBeatState
 	var UI_mainbox:FlxUITabMenu;
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 	function addEditorBox() {
-		var tabs = [{name: 'Character Type', label: 'Character Type'}];
-		UI_typebox = new FlxUITabMenu(null, tabs, true);
+		UI_typebox = new FlxUITabMenu(null, [{name: 'Character Type', label: 'Character Type'}], true);
 		UI_typebox.resize(120, 180);
 		UI_typebox.setPosition(100, FlxG.height - UI_typebox.height - 50);
 		UI_typebox.scrollFactor.set();
 		addTypeUI();
 		add(UI_typebox);
 
-		var tabs = [{name: 'Character', label: 'Character'}];
-		UI_mainbox = new FlxUITabMenu(null, tabs, true);
+		UI_mainbox = new FlxUITabMenu(null, [{name: 'Character', label: 'Character'}], true);
 		UI_mainbox.resize(240, 180);
 		UI_mainbox.setPosition(FlxG.width - UI_mainbox.width - 100, FlxG.height - UI_mainbox.height - 50);
 		UI_mainbox.scrollFactor.set();

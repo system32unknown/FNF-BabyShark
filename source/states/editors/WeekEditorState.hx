@@ -99,11 +99,10 @@ class WeekEditorState extends MusicBeatState {
 	var UI_box:FlxUITabMenu;
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 	function addEditorBox() {
-		final tabs = [
+		UI_box = new FlxUITabMenu(null, [
 			{name: 'Week', label: 'Week'},
 			{name: 'Other', label: 'Other'},
-		];
-		UI_box = new FlxUITabMenu(null, tabs, true);
+		], true);
 		UI_box.resize(250, 375);
 		UI_box.setPosition(FlxG.width - UI_box.width, FlxG.height - UI_box.height);
 		UI_box.scrollFactor.set();
@@ -579,8 +578,7 @@ class WeekEditorFreeplayState extends MusicBeatState {
 	
 	var UI_box:FlxUITabMenu;
 	function addEditorBox() {
-		var tabs = [{name: 'Freeplay', label: 'Freeplay'}];
-		UI_box = new FlxUITabMenu(null, tabs, true);
+		UI_box = new FlxUITabMenu(null, [{name: 'Freeplay', label: 'Freeplay'}], true);
 		UI_box.resize(250, 200);
 		UI_box.setPosition(FlxG.width - UI_box.width - 100, FlxG.height - UI_box.height - 60);
 		UI_box.scrollFactor.set();

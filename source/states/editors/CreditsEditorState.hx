@@ -45,9 +45,7 @@ class CreditsEditorState extends MusicBeatState {
 		camUI.bgColor.alpha = 0;
 		FlxG.cameras.add(camUI, false);
 
-		var tabs = [{name: 'Credits', label: 'Credits'}];
-
-		UI_box = new FlxUITabMenu(null, tabs, true);
+		UI_box = new FlxUITabMenu(null, [{name: 'Credits', label: 'Credits'}], true);
 		UI_box.camera = camUI;
 		UI_box.resize(270, 380);
 		UI_box.setPosition(940, 25);
@@ -263,14 +261,8 @@ class CreditsEditorState extends MusicBeatState {
 	}
 
 	function addTitle() {
-		var daData:Array<String> = [];
-		daData.push('Title');
-		pushAtPos(curSelected + 1, daData);
-
-		if(titleJump.checked) {
-			var daData:Array<String> = [];
-			pushAtPos(curSelected + 1, daData);
-		}
+		pushAtPos(curSelected + 1, ['Title']);
+		if(titleJump.checked) pushAtPos(curSelected + 1, []);
 
 		updateCreditObjects();
 		changeSelection();
@@ -350,7 +342,7 @@ class CreditsEditorState extends MusicBeatState {
 		changeSelection(-1);
 	}
 
-	function templateArray() {
+	function templateArray():Array<Array<String>> {
 		return([
 			['Title'],
 			['User', '', 'Description here...',	'',	'e1e1e1']
@@ -363,9 +355,7 @@ class CreditsEditorState extends MusicBeatState {
 			if(i == pos) daStuff.push(data);
 			daStuff.push(creditsStuff[i]);
 		}
-		if(pos == creditsStuff.length) {
-			daStuff.push(data);
-		}
+		if(pos == creditsStuff.length) daStuff.push(data);
 		creditsStuff = daStuff;
 	}
 
@@ -373,8 +363,7 @@ class CreditsEditorState extends MusicBeatState {
 	var holdTime:Float = 0;
 	var newColor:Int = 0;
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music.volume < .7)
-			FlxG.sound.music.volume += .5 * elapsed;
+		if (FlxG.sound.music.volume < .7) FlxG.sound.music.volume += .5 * elapsed;
 
 		var blockInput:Bool = false;
 		for (inputText in blockPressWhileTypingOn) {
@@ -403,7 +392,7 @@ class CreditsEditorState extends MusicBeatState {
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
-					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+					if(holdTime > .5 && checkNewHold - checkLastHold > 0)
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 				}
 			}
@@ -505,7 +494,7 @@ class CreditsEditorState extends MusicBeatState {
 		if(text.length == 0)
 			daColor = Std.parseInt('0xFFFFC31E'); // no input then
 		else {
-			if(!Paths.fileExists('images/credits/' + text + '.png', IMAGE)) daColor = Std.parseInt('0xFFFF004C'); // icon not found
+			if(!Paths.fileExists('images/credits/$text.png', IMAGE)) daColor = Std.parseInt('0xFFFF004C'); // icon not found
 			else daColor = Std.parseInt('0xFF00FF37'); // icon was found
 		}
 		iconExistCheck.color = daColor;
@@ -515,8 +504,7 @@ class CreditsEditorState extends MusicBeatState {
 		if(colorInput.text.length > 10) return;
 		var daColor:Int;
 		if(colorInput.text != null && colorInput.text.length > 0) {
-			if(!colorInput.text.startsWith('0xFF'))
-				daColor = Std.parseInt('0xFF' + colorInput.text);
+			if(!colorInput.text.startsWith('0xFF')) daColor = Std.parseInt('0xFF' + colorInput.text);
 			else daColor = Std.parseInt(colorInput.text);
 		} else daColor = Std.parseInt('0xFFe1e1e1');
 		colorSquare.color = daColor;

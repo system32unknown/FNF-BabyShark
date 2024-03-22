@@ -400,11 +400,7 @@ class NotesSubState extends MusicBeatSubstate {
 	}
 
 	function changeSelectionMode(change:Int = 0) {
-		curSelectedMode += change;
-		if (curSelectedMode < 0)
-			curSelectedMode = 2;
-		if (curSelectedMode >= 3)
-			curSelectedMode = 0;
+		curSelectedMode = FlxMath.wrap(curSelectedMode + change, 0, 3);
 
 		modeBG.visible = true;
 		notesBG.visible = false;
@@ -412,11 +408,7 @@ class NotesSubState extends MusicBeatSubstate {
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 	function changeSelectionNote(change:Int = 0) {
-		curSelectedNote += change;
-		if (curSelectedNote < 0)
-			curSelectedNote = dataArray.length - 1;
-		if (curSelectedNote >= dataArray.length)
-			curSelectedNote = 0;
+		curSelectedNote = FlxMath.wrap(curSelectedNote + change, 0, dataArray.length - 1);
 		
 		modeBG.visible = false;
 		notesBG.visible = true;

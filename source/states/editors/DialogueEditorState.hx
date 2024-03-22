@@ -89,12 +89,11 @@ class DialogueEditorState extends MusicBeatState
 
 	var UI_box:FlxUITabMenu;
 	function addEditorBox() {
-		var tabs = [{name: 'Dialogue Line', label: 'Dialogue Line'},];
-		UI_box = new FlxUITabMenu(null, tabs, true);
+		UI_box = new FlxUITabMenu(null, [{name: 'Dialogue Line', label: 'Dialogue Line'}], true);
 		UI_box.resize(250, 210);
 		UI_box.setPosition(FlxG.width - UI_box.width - 10, 10);
 		UI_box.scrollFactor.set();
-		UI_box.alpha = 0.8;
+		UI_box.alpha = .8;
 		addDialogueLineUI();
 		add(UI_box);
 	}

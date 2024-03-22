@@ -223,24 +223,19 @@ class CharacterEditorState extends MusicBeatState {
 	}
 
 	function makeUIMenu() {
-		var tabs = [
+		UI_box = new FlxUITabMenu(null, [
 			{name: 'Ghost', label: 'Ghost'},
 			{name: 'Settings', label: 'Settings'}
-		];
-
-		UI_box = new FlxUITabMenu(null, tabs, true);
+		], true);
 		UI_box.camera = camHUD;
-
 		UI_box.resize(250, 120);
-		UI_box.x = FlxG.width - 275;
-		UI_box.y = 25;
+		UI_box.setPosition(FlxG.width - 275, 25);
 		UI_box.scrollFactor.set();
 
-		var tabs = [
+		UI_characterbox = new FlxUITabMenu(null, [
 			{name: 'Character', label: 'Character'},
 			{name: 'Animations', label: 'Animations'},
-		];
-		UI_characterbox = new FlxUITabMenu(null, tabs, true);
+		], true);
 		UI_characterbox.camera = camHUD;
 
 		UI_characterbox.resize(350, 250);
