@@ -18,6 +18,7 @@ class Init extends flixel.FlxState {
 
 		FlxG.save.bind('funkin', CoolUtil.getSavePath());
 		ClientPrefs.loadPrefs();
+		Language.reloadPhrases();
 
 		FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 60;

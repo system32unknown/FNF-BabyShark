@@ -2,6 +2,7 @@ package states;
 
 import flixel.group.FlxGroup;
 import data.WeekData;
+import data.StageData;
 import backend.Highscore;
 import backend.Song;
 import objects.MenuItem;
@@ -142,10 +143,12 @@ class StoryMenuState extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float) {
-		lerpScore = Math.floor(FlxMath.lerp(intendedScore, lerpScore, Math.exp(-elapsed * 30)));
-		if(Math.abs(intendedScore - lerpScore) < 10) lerpScore = intendedScore;
+		if(intendedScore != lerpScore) {
+			lerpScore = Math.floor(FlxMath.lerp(intendedScore, lerpScore, Math.exp(-elapsed * 30)));
+			if(Math.abs(intendedScore - lerpScore) < 10) lerpScore = intendedScore;
 
-		scoreText.text = 'WEEK SCORE: $lerpScore';
+			scoreText.text = Language.getPhrase('week_score', 'WEEK SCORE: {1}', [lerpScore]);
+		}
 
 		if (!movedBack && !selectedWeek) {
 			var upP = controls.UI_UP_P;
@@ -233,6 +236,10 @@ class StoryMenuState extends MusicBeatState {
 						char.animation.play('confirm');
 				stopspamming = true;
 			}
+
+			var directory = StageData.forceNextDirectory;
+			LoadingState.loadNextDirectory();
+			StageData.forceNextDirectory = directory;
 
 			LoadingState.prepareToSong();
 			FlxTimer.wait(1, () -> {

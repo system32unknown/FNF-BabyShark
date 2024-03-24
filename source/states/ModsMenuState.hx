@@ -2,6 +2,8 @@ package states;
 
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.transition.FlxTransitionableState;
+import openfl.display.BitmapData;
+import lime.utils.Assets;
 
 class ModsMenuState extends MusicBeatState {
 	var bg:FlxSprite;
@@ -698,14 +700,18 @@ class ModItem extends FlxSpriteGroup
 		add(text);
 
 		var isPixel = false;
-		var bmp = Paths.cacheBitmap(Paths.mods('$folder/pack.png'));
-		if(bmp == null) {
-			bmp = Paths.cacheBitmap(Paths.mods('$folder/pack-pixel.png'));
+		var file:String = Paths.mods('$folder/pack.png');
+		if (!FileSystem.exists(file)) {
+			file = Paths.mods('$folder/pack-pixel.png');
 			isPixel = true;
 		}
 
-		if(bmp != null) {
-			icon.loadGraphic(bmp, true, 150, 150);
+		var bmp:BitmapData = null;
+		if (FileSystem.exists(file)) bmp = BitmapData.fromFile(file);
+		else isPixel = false;
+
+		if(FileSystem.exists(file)) {
+			icon.loadGraphic(Paths.cacheBitmap(file, bmp), true, 150, 150);
 			if(isPixel) icon.antialiasing = false;
 		} else icon.loadGraphic(Paths.image('unknownMod'), true, 150, 150);
 		icon.scale.set(0.5, 0.5);

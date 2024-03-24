@@ -25,8 +25,7 @@ class HScript extends Interp {
 		super();
 
 		var content:String = null;
-		if (file != null) content = Paths.getTextFromFile(file);
-		trace(content);
+		if (file != null) content = Paths.getTextFromFile(file, true);
 
 		parentLua = parent;
 		if (parent != null) {
