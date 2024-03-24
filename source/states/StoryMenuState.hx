@@ -177,7 +177,7 @@ class StoryMenuState extends MusicBeatState {
 
 			if(FlxG.keys.justPressed.CONTROL) {
 				persistentUpdate = false;
-				openSubState(new substates.GameplayChangersSubstate());
+				openSubState(new options.GameplayChangersSubstate());
 			} else if(controls.RESET) {
 				persistentUpdate = false;
 				openSubState(new substates.ResetScoreSubState('', curDifficulty, '', curWeek));
@@ -236,7 +236,7 @@ class StoryMenuState extends MusicBeatState {
 
 			LoadingState.prepareToSong();
 			FlxTimer.wait(1, () -> {
-				#if !LOADING_SCREEN_ALLOWED FlxG.sound.music.stop(); #end
+				#if !SHOW_LOADING_SCREEN FlxG.sound.music.stop(); #end
 				LoadingState.loadAndSwitchState(() -> new PlayState(), true);
 				FreeplayState.destroyFreeplayVocals();
 			});

@@ -409,7 +409,7 @@ class ChartingState extends MusicBeatState {
 		#end
 
 		var tempArray:Array<String> = [];
-		var characters:Array<String> = Mods.mergeAllTextsNamed('data/characterList.txt', Paths.getSharedPath());
+		var characters:Array<String> = Mods.mergeAllTextsNamed('data/characterList.txt');
 		for (character in characters) if(character.trim().length > 0) tempArray.push(character);
 
 		#if MODS_ALLOWED
@@ -462,9 +462,8 @@ class ChartingState extends MusicBeatState {
 		var directories:Array<String> = [Paths.getSharedPath('stages/')];
 		#end
 
-		var stageFile:Array<String> = Mods.mergeAllTextsNamed('data/stageList.txt', Paths.getSharedPath());
 		var stages:Array<String> = [];
-		for (stage in stageFile) {
+		for (stage in Mods.mergeAllTextsNamed('data/stageList.txt')) {
 			if(stage.trim().length > 0) stages.push(stage);
 			tempArray.push(stage);
 		}
@@ -1296,10 +1295,7 @@ class ChartingState extends MusicBeatState {
 
 		vocals = new FlxSound();
 		try {
-			if (_song.needsVoices) {
-				var file:Dynamic = Paths.voices(currentSongName, false, true);
-				if ((Std.isOfType(file, Sound) || Assets.exists(file)) && file != null) vocals.loadEmbedded(file);
-			}
+			vocals.loadEmbedded(Paths.voices(currentSongName));
 		} catch(e:Dynamic) Logs.trace("ERROR VOCALS ON LOAD: " + e, ERROR);
 		vocals.autoDestroy = false;
 		FlxG.sound.list.add(vocals);
@@ -1319,7 +1315,7 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function generateSong() {
-		FlxG.sound.playMusic(Paths.inst(currentSongName, false, true), .6);
+		FlxG.sound.playMusic(Paths.inst(currentSongName), .6);
 		FlxG.sound.music.autoDestroy = false;
 		if (instVolume != null) FlxG.sound.music.volume = instVolume.value;
 		if (check_mute_inst != null && check_mute_inst.checked) FlxG.sound.music.volume = 0;

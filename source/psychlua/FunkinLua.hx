@@ -416,7 +416,7 @@ class FunkinLua {
 				default: 0;
 			});
 		});
-		set("precacheImage", Paths.returnGraphic);
+		set("precacheImage", (name:String, ?allowGPU:Bool = true) -> Paths.image(name, allowGPU));
 		set("precacheSound", Paths.sound);
 		set("precacheMusic", Paths.music);
 
@@ -715,22 +715,24 @@ class FunkinLua {
 		});
 
 		set("startDialogue", function(dialogueFile:String, music:String = null) {
-			final dialoguePath:String = '${Paths.CHART_PATH}/${Paths.formatToSongPath(PlayState.SONG.song)}/$dialogueFile';
 			var path:String;
-			#if MODS_ALLOWED
-			path = Paths.modsJson(dialoguePath);
-			if(!FileSystem.exists(path))
+			var songPath:String = Paths.formatToSongPath(PlayState.SONG.song);
+			#if TRANSLATIONS_ALLOWED
+			path = Paths.getPath('data/${Paths.CHART_PATH}/$songPath/${dialogueFile}_${ClientPrefs.data.language}.json', TEXT);
+			if(!#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end)
 			#end
-				path = Paths.json(dialoguePath);
+				path = Paths.getPath('data/${Paths.CHART_PATH}/$songPath/$dialogueFile.json', TEXT);
+
 			luaTrace('startDialogue: Trying to load dialogue: ' + path);
+
 			
-			if(#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
+			if(#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end) {
 				var shit:DialogueFile = DialogueBoxPsych.parseDialogue(path);
 				if(shit.dialogue.length > 0) {
 					game.startDialogue(shit, music);
-					luaTrace('Successfully loaded dialogue', false, false, FlxColor.GREEN);
+					luaTrace('startDialogue: Successfully loaded dialogue', false, false, FlxColor.GREEN);
 					return true;
-				} else luaTrace('Your dialogue file is badly formatted!', false, false, FlxColor.RED);
+				} else luaTrace('startDialogue: Your dialogue file is badly formatted!', false, false, FlxColor.RED);
 			} else {
 				luaTrace('startDialogue: Dialogue file not found', false, false, FlxColor.RED);
 				game.startAndEnd();
@@ -745,7 +747,11 @@ class FunkinLua {
 			} else luaTrace('startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
 			return false;
 			#else
-			game.startAndEnd();
+			PlayState.instance.inCutscene = true;
+			FlxTimer.wait(.1, () -> {
+				PlayState.instance.inCutscene = false;
+				game.startAndEnd();
+			});
 			return true;
 			#end
 		});

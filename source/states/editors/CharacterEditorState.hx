@@ -54,7 +54,7 @@ class CharacterEditorState extends MusicBeatState {
 	}
 
 	override function create() {
-		if(ClientPrefs.data.hardwareCache) Paths.clearStoredCache();
+		if(ClientPrefs.data.cacheOnGPU) Paths.clearStoredCache();
 
 		FlxG.sound.music.stop();
 		camEditor = initPsychCamera();
@@ -143,7 +143,7 @@ class CharacterEditorState extends MusicBeatState {
 		updateHealthBar();
 		character.finishAnimation();
 
-		if(ClientPrefs.data.hardwareCache) Paths.clearUnusedCache();
+		if(ClientPrefs.data.cacheOnGPU) Paths.clearUnusedCache();
 		
 		super.create();
 	}
@@ -1018,7 +1018,7 @@ class CharacterEditorState extends MusicBeatState {
 
 	var characterList:Array<String> = [];
 	function reloadCharacterDropDown() {
-		characterList = Mods.mergeAllTextsNamed('data/characterList.txt', Paths.getSharedPath());
+		characterList = Mods.mergeAllTextsNamed('data/characterList.txt');
 		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getSharedPath(), 'characters/');
 		for (folder in foldersToCheck)
 			for (file in FileSystem.readDirectory(folder))

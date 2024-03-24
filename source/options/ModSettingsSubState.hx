@@ -1,6 +1,6 @@
 package options;
 
-import flixel.input.keyboard.FlxKey;
+import options.Option.OptionType;
 
 class ModSettingsSubState extends BaseOptionsMenu {
 	var save:Map<String, Dynamic> = new Map<String, Dynamic>();
@@ -24,12 +24,12 @@ class ModSettingsSubState extends BaseOptionsMenu {
 					option.name != null ? option.name : option.save,
 					option.description != null ? option.description : 'No description provided.',
 					option.save,
-					option.type,
+					convertType(option.type),
 					option.options
 				);
 
 				switch(newOption.type) {
-					case 'keybind':
+					case KEYBIND:
 						//Defaulting and error checking
 						var keyboardStr:String = option.keyboard;
 						if(keyboardStr == null) keyboardStr = 'NONE';
@@ -41,8 +41,6 @@ class ModSettingsSubState extends BaseOptionsMenu {
 						}
 
 						// getting inputs and checking
-						var keyboardKey:FlxKey = cast FlxKey.fromString(keyboardStr);
-
 						@:privateAccess {
 							newOption.getValue = () -> {
 								var data = save.get(newOption.variable);
@@ -66,7 +64,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 						}
 				}
 
-				if(option.type != 'keybind') {
+				if(option.type != KEYBIND) {
 					if(option.format != null) newOption.displayFormat = option.format;
 					if(option.min != null) newOption.minValue = option.min;
 					if(option.max != null) newOption.maxValue = option.max;
@@ -78,7 +76,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 					var myValue:Dynamic = null;
 					if(save.get(option.save) != null) {
 						myValue = save.get(option.save);
-						if(newOption.type != 'keybind') newOption.setValue(myValue);
+						if(newOption.type != KEYBIND) newOption.setValue(myValue);
 						else newOption.setValue(myValue.keyboard);
 					} else {
 						myValue = newOption.getValue();
@@ -86,9 +84,10 @@ class ModSettingsSubState extends BaseOptionsMenu {
 					}
 	
 					switch(newOption.type) {
-						case 'string':
+						case STRING:
 							var num:Int = newOption.options.indexOf(myValue);
 							if(num > -1) newOption.curOption = num;
+						default:
 					}
 	
 					save.set(option.save, myValue);
@@ -112,6 +111,21 @@ class ModSettingsSubState extends BaseOptionsMenu {
 		bg.alpha = .75;
 		bg.color = FlxColor.WHITE;
 		reloadCheckboxes();
+	}
+
+	function convertType(str:String):OptionType {
+		return switch(str.toLowerCase().trim()) {
+			case 'bool': BOOL;
+			case 'int', 'integer': INT;
+			case 'float', 'fl': FLOAT;
+			case 'percent': PERCENT;
+			case 'string', 'str': STRING;
+			case 'keybind', 'key': KEYBIND;
+			case 'function', 'func': FUNC;
+			default:
+				FlxG.log.error("Could not find option type: " + str);
+				BOOL;
+		}
 	}
 
 	override public function update(elapsed:Float) {

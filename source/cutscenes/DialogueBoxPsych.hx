@@ -18,7 +18,7 @@ typedef DialogueLine = {
 	var text:Null<String>;
 	var boxState:Null<String>;
 	var speed:Null<Float>;
-	var sound:Null<String>;
+	@:optional var sound:Null<String>;
 
 	var events:Null<Array<DialogueEvent>>;
 }
@@ -252,11 +252,21 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		FlxG.sound.music.fadeOut(1, 0);
 	}
 
-	public static function parseDialogue(path:String):DialogueFile {
-		#if MODS_ALLOWED
-		if (FileSystem.exists(path)) return cast Json.parse(File.getContent(path));
-		#end
-		return cast Json.parse(Assets.getText(path));
+	inline public static function parseDialogue(path:String):DialogueFile {
+		return cast #if MODS_ALLOWED (FileSystem.exists(path)) ? Json.parse(File.getContent(path)) #else (Assets.exists(path, TEXT)) ? Json.parse(Assets.getText(path)) #end : dummy();
+	}
+
+	inline public static function dummy():DialogueFile {
+		return {
+			dialogue: [{
+				expression: "talk",
+				text: "DIALOGUE NOT FOUND",
+				boxState: "normal",
+				speed: 0.05,
+				portrait: "bf",
+				events: []
+			}], bubble: 'speech_bubble'
+		};
 	}
 
 	// --- BOX ---

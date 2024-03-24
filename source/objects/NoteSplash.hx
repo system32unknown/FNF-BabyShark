@@ -38,6 +38,7 @@ class NoteSplash extends FlxSprite {
 		this.moves = false;
 		_configLoaded = skin;
 		scrollFactor.set();
+		setupNoteSplash(x, y, 0);
 	}
 
 	override function destroy() {
@@ -87,7 +88,7 @@ class NoteSplash extends FlxSprite {
 		var minFps:Int = 22;
 		var maxFps:Int = 26;
 		if(config != null) {
-			var animID:Int = direction + ((animNum - 1) * (PlayState.mania + 1));
+			var animID:Int = direction + ((animNum - 1) * EK.keys(PlayState.mania));
 			var offs:Array<Float> = config.offsets[FlxMath.wrap(animID, 0, config.offsets.length - 1)];
 			offset.x += offs[0];
 			offset.y += offs[1];
@@ -128,9 +129,8 @@ class NoteSplash extends FlxSprite {
 
 		while(true) {
 			var animID:Int = maxAnims + 1;
-			for (i in 0...(PlayState.mania + 1)) {
-				if (!addAnimAndCheck('note$i-$animID', '$animName ${EK.colArrayAlt[EK.gfxIndex[PlayState.mania][i]]} $animID', 24, false) &&
-					!addAnimAndCheck('note$i-$animID', '$animName ${EK.colArray[EK.gfxIndex[PlayState.mania][i]]} $animID', 24, false)) {
+			for (i in 0...EK.keys(PlayState.mania)) {
+				if (!addAnimAndCheck('note$i-$animID', '$animName ${EK.colArrayAlt[EK.gfxIndex[PlayState.mania][i]]} $animID', 24, false) && !addAnimAndCheck('note$i-$animID', '$animName ${EK.colArray[EK.gfxIndex[PlayState.mania][i]]} $animID', 24, false)) {
 					return config;
 				}
 			}
@@ -141,7 +141,7 @@ class NoteSplash extends FlxSprite {
 	public static function precacheConfig(skin:String) {
 		if(configs.exists(skin)) return configs.get(skin);
 
-		var path:String = Paths.getPath('images/$skin.txt', TEXT, true);
+		var path:String = Paths.getPath('images/$skin.txt');
 		var configFile:Array<String> = CoolUtil.coolTextFile(path);
 		if(configFile.length < 1) return null;
 		

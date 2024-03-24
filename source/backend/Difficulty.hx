@@ -44,8 +44,9 @@ class Difficulty {
 		list = diffs.copy();
 	}
 
-	inline public static function getString(num:Null<Int> = null):String {
-		return list[num == null ? PlayState.storyDifficulty : num];
+	inline public static function getString(?num:Null<Int> = null, ?canTranslate:Bool = true):String {
+		var diffName:String = list[num == null ? PlayState.storyDifficulty : num];
+		return canTranslate ? Language.getPhrase('difficulty_$diffName', diffName) : diffName;
 	}
 
 	inline public static function getDefault():String {

@@ -5,17 +5,17 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		title = 'Miscellaneous';
 		rpcTitle = 'Miscellaneous Menu'; //for Discord Rich Presence
 
-		var opt:Option = new Option('FPS Counter', 'If unchecked, hides FPS Counter.', 'showFPS', 'bool');
+		var opt:Option = new Option('FPS Counter', 'If unchecked, hides FPS Counter.', 'showFPS', BOOL);
 		addOption(opt);
 		opt.onChange = onChangeFPSCounter;
-		var opt:Option = new Option('Memory Counter:', '', 'memCounterType', 'string', ['MEM', 'MEM/PEAK', 'NONE']);
+		var opt:Option = new Option('Memory Counter:', '', 'memCounterType', STRING, ['MEM', 'MEM/PEAK', 'NONE']);
 		addOption(opt);
 		opt.onChange = onChangeFPSCounter;
 		
-		addOption(new Option('Rainbow FPS', '', 'rainbowFps', 'bool'));
-		addOption(new Option('More Stats FPS', '', 'fpsStats', 'bool'));
-		addOption(new Option('Alternate Discord Large Image', '', 'altDiscordImg', 'bool'));
-		var option:Option = new Option('Alt. Discord Large Images:', '', 'altDiscordImgCount', 'int');
+		addOption(new Option('Rainbow FPS', '', 'rainbowFps', BOOL));
+		addOption(new Option('More Stats FPS', '', 'fpsStats', BOOL));
+		addOption(new Option('Alternate Discord Large Image', '', 'altDiscordImg', BOOL));
+		var option:Option = new Option('Alt. Discord Large Images:', '', 'altDiscordImgCount', INT);
 		option.scrollSpeed = 15;
 		option.minValue = 0;
 		option.maxValue = 5;

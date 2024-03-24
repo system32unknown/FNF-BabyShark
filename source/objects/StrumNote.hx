@@ -97,8 +97,8 @@ class StrumNote extends FlxSprite {
 			antialiasing = ClientPrefs.data.antialiasing;
 			setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
 
-			var pressName = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
-			var pressNameAlt = EK.pressArrayAlt[EK.gfxIndex[PlayState.mania][noteData]];
+			var pressName:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
+			var pressNameAlt:String = EK.pressArrayAlt[EK.gfxIndex[PlayState.mania][noteData]];
 			animation.addByPrefix('static', 'arrow' + EK.gfxDir[EK.gfxHud[PlayState.mania][noteData]]);
 			animation.addByPrefix('pressed', pressNameAlt + ' press', 24, false);
 			animation.addByPrefix('confirm', pressNameAlt + ' confirm', 24, false);

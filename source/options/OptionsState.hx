@@ -2,8 +2,8 @@ package options;
 
 class OptionsState extends MusicBeatState {
 	var options:Array<Array<Dynamic>> = [
-		['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'],
-		['Saves', 'Miscellaneous']
+		['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals', 'Gameplay'],
+		['Saves', 'Miscellaneous', #if TRANSLATIONS_ALLOWED 'Language', #end]
 	];
 	var grpOptions:FlxTypedGroup<Alphabet>;
 	static var curSelected:Int = 0;
@@ -14,11 +14,12 @@ class OptionsState extends MusicBeatState {
 			case 'Note Colors': openSubState(new NotesSubState());
 			case 'Controls': openSubState(new ControlsSubState());
 			case 'Graphics': openSubState(new GraphicsSettingsSubState());
-			case 'Visuals and UI': openSubState(new VisualsUISubState());
+			case 'Visuals': openSubState(new VisualsSettingsSubState());
 			case 'Gameplay': openSubState(new GameplaySettingsSubState());
 			case 'Miscellaneous': openSubState(new MiscellaneousSubState());
 			case 'Saves': openSubState(new SaveSubState());
 			case 'Adjust Delay and Combo': FlxG.switchState(() -> new NoteOffsetState());
+			case 'Language': openSubState(new LanguageSubState());
 		}
 	}
 

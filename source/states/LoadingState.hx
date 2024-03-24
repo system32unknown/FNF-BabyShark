@@ -43,14 +43,14 @@ class LoadingState extends MusicBeatState {
 	var loadingText:FlxText;
 
 	override function create() {
-		#if !LOADING_SCREEN_ALLOWED while(true) #end {
+		#if !SHOW_LOADING_SCREEN while(true) #end {
 			if (checkLoaded()) {
 				dontUpdate = true;
 				super.create();
 				onLoad();
 				return;
 			}
-			#if !LOADING_SCREEN_ALLOWED Sys.sleep(.01); #end
+			#if !SHOW_LOADING_SCREEN Sys.sleep(.01); #end
 		}
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, 0xFFCAFF4D);
@@ -137,7 +137,7 @@ class LoadingState extends MusicBeatState {
 		return (loaded == loadMax && initialThreadCompleted);
 	}
 
-	static function getNextState(target:NextState, stopMusic = false, intrusive:Bool = true):NextState {
+	public static function loadNextDirectory() {
 		var directory:String = 'shared';
 		var weekDir:String = StageData.forceNextDirectory;
 		StageData.forceNextDirectory = null;
@@ -146,9 +146,11 @@ class LoadingState extends MusicBeatState {
 
 		Paths.setCurrentLevel(directory);
 		trace('Setting asset folder to ' + directory);
+	}
 
+	static function getNextState(target:NextState, stopMusic = false, intrusive:Bool = true):NextState {
+		loadNextDirectory();
 		if(intrusive) return new LoadingState(target, stopMusic);
-
 		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		while(true) {
@@ -266,7 +268,7 @@ class LoadingState extends MusicBeatState {
 			while (arr.contains(null)) arr.remove(null);
 	}
 
-	static function clearInvalidFrom(arr:Array<String>, prefix:String, ext:String, type:openfl.utils.AssetType, ?library:String = null) {
+	static function clearInvalidFrom(arr:Array<String>, prefix:String, ext:String, type:openfl.utils.AssetType, ?parentFolder:String = null) {
 		for (i in 0...arr.length) {
 			var folder:String = arr[i];
 			if(folder.trim().endsWith('/')) {
@@ -279,11 +281,11 @@ class LoadingState extends MusicBeatState {
 		var i:Int = 0;
 		while(i < arr.length) {
 			var member:String = arr[i];
-			var myKey = '$prefix/$member$ext';
-			if(library == 'songs') myKey = '$member$ext';
+			var myKey:String = '$prefix/$member$ext';
+			if(parentFolder == 'songs') myKey = '$member$ext';
 
 			var doTrace:Bool = false;
-			if(member.endsWith('/') || (!Paths.fileExists(myKey, type, false, library) && (doTrace = true))) {
+			if(member.endsWith('/') || (!Paths.fileExists(myKey, type, false, parentFolder) && (doTrace = true))) {
 				arr.remove(member);
 				if(doTrace) trace('Removed invalid $prefix: $member');
 			} else i++;
@@ -297,7 +299,7 @@ class LoadingState extends MusicBeatState {
 		//then start threads
 		for (sound in soundsToPrepare) initThread(() -> Paths.sound(sound), 'sound $sound');
 		for (music in musicToPrepare) initThread(() -> Paths.music(music), 'music $music');
-		for (song in songsToPrepare) initThread(() -> Paths.returnSound('', song, 'songs'), 'song $song');
+		for (song in songsToPrepare) initThread(() -> Paths.returnSound(song, 'songs', true, false), 'song $song');
 
 		// for images, they get to have their own thread
 		for (image in imagesToPrepare)
@@ -305,33 +307,17 @@ class LoadingState extends MusicBeatState {
 				mutex.acquire();
 				try {
 					var bitmap:BitmapData;
-					var file:String = null;
-
-					#if MODS_ALLOWED
-					file = Paths.modsImages(image);
+					var file:String = Paths.getPath('images/$image.png', IMAGE);
 					if (Paths.currentTrackedAssets.exists(file)) {
 						mutex.release();
 						loaded++;
 						return;
-					} else if (FileSystem.exists(file))
-						bitmap = BitmapData.fromFile(file);
-					else
-					#end
-					{
-						file = Paths.getPath('images/$image.png', IMAGE);
-						if (Paths.currentTrackedAssets.exists(file)) {
-							mutex.release();
-							loaded++;
-							return;
-						} else if (OpenFlAssets.exists(file, IMAGE))
-							bitmap = OpenFlAssets.getBitmapData(file);
-						else {
-							Logs.trace('no such image $image exists', WARNING);
-							mutex.release();
-							loaded++;
-							return;
-						}
-					}
+					} else if (!OpenFlAssets.exists(file, IMAGE)) {
+						Logs.trace('no such image $image exists', WARNING);
+						mutex.release();
+						loaded++;
+						return;
+					} else bitmap = OpenFlAssets.getBitmapData(file);
 					mutex.release();
 
 					if (bitmap != null) requestedBitmaps.set(file, bitmap);
@@ -363,7 +349,7 @@ class LoadingState extends MusicBeatState {
 
 	inline static function preloadCharacter(char:String) {
 		try {
-			var path:String = Paths.getPath('characters/$char.json', TEXT, null, true);
+			var path:String = Paths.getPath('characters/$char.json', TEXT);
 			var character:Dynamic = Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
 			imagesToPrepare.push(character.image);
 		} catch(e:Dynamic) Logs.trace("ERROR PRELOADING CHARACTER: " + e, ERROR);

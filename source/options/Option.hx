@@ -4,14 +4,25 @@ typedef Keybind = {
 	keyboard:String
 }
 
+enum OptionType {
+	// Bool will use checkboxes
+	// Everything else will use a text
+	BOOL;
+	INT;
+	FLOAT;
+	PERCENT;
+	STRING;
+	KEYBIND;
+	FUNC;
+}
+
 class Option {
 	public var child:Alphabet;
 	public var text(get, set):String;
 	public var onChange:Void->Void = null; //Pressed enter (on Bool type options) or pressed/held left/right (on other types)
 
-	public var type(get, default):String = 'bool'; //bool, int (or integer), float (or fl), percent, string (or str)
-	// Bool will use checkboxes
-	// Everything else will use a text
+	public var type:OptionType = BOOL;
+
 	public var scrollSpeed:Float = 50; //Only works on int/float, defines how fast it scrolls per second while holding left/right
 
 	var variable:String = null; //Variable from ClientPrefs.hx
@@ -31,21 +42,23 @@ class Option {
 	public var defaultKeys:Keybind = null; //Only used in keybind type
 	public var keys:Keybind = null; //Only used in keybind type
 
-	public function new(name:String, description:String = '', variable:String, type:String = 'bool', ?options:Array<String> = null) {
-		this.name = name;
+	public function new(name:String, description:String = '', variable:String, type:OptionType = BOOL, ?options:Array<String> = null) {
+		_name = name;
+		this.name = Language.getPhrase('setting_$name', name);
+		this.description = Language.getPhrase('description_$name', description);
 		this.description = description;
 		this.variable = variable;
 		this.type = type;
 		this.options = options;
 
-		if(this.type != 'keybind') this.defaultValue = Reflect.getProperty(ClientPrefs.defaultData, variable);
+		if(this.type != KEYBIND) this.defaultValue = Reflect.getProperty(ClientPrefs.defaultData, variable);
 		if(defaultValue == 'null variable value')
 			switch(type) {
-				case 'bool':
+				case BOOL:
 					if(defaultValue == null) defaultValue = false;
-				case 'int' | 'float':
+				case INT, FLOAT:
 					if(defaultValue == null) defaultValue = 0;
-				case 'percent':
+				case PERCENT:
 					if(defaultValue == null) defaultValue = 1;
 					displayFormat = '%v%';
 					changeValue = 0.01;
@@ -53,12 +66,12 @@ class Option {
 					maxValue = 1;
 					scrollSpeed = 0.5;
 					decimals = 2;
-				case 'string':
-					if(defaultValue == null) defaultValue = '';
-					if(options.length > 0) defaultValue = options[0];
-				case 'func': if(defaultValue == null) defaultValue = '';
+					case STRING:
+						if(options.length > 0) defaultValue = options[0];
+						if(defaultValue == null) defaultValue = '';
+				case FUNC: if(defaultValue == null) defaultValue = '';
 
-				case 'keybind':
+				case KEYBIND:
 					defaultValue = '';
 					defaultKeys = {keyboard: 'NONE'};
 					keys = {keyboard: 'NONE'};
@@ -69,9 +82,10 @@ class Option {
 				setValue(defaultValue);
 
 			switch(type) {
-				case 'string':
+				case STRING:
 					var num:Int = options.indexOf(getValue());
 					if(num > -1) curOption = num;
+				default:
 			}
 		} catch(e) {}
 	}
@@ -82,12 +96,12 @@ class Option {
 
 	dynamic public function getValue():Dynamic {
 		var value = Reflect.getProperty(ClientPrefs.data, variable);
-		if(type == 'keybind') return value.keyboard;
+		if(type == KEYBIND) return value.keyboard;
 		return value;
 	}
 
 	dynamic public function setValue(value:Dynamic) {
-		if(type == 'keybind') {
+		if(type == KEYBIND) {
 			var keys = Reflect.getProperty(ClientPrefs.data, variable);
 			keys.keyboard = value;
 			return value;
@@ -95,25 +109,16 @@ class Option {
 		return Reflect.setProperty(ClientPrefs.data, variable, value);
 	}
 
-	function get_text() {
-		if(child != null) return child.text;
-		return null;
-	}
-	function set_text(newValue:String = '') {
-		if(child != null) child.text = newValue;
-		return null;
-	}
+	var _name:String = null;
+	var _text:String = null;
+	function get_text() return _text;
 
-	function get_type() {
-		var newValue:String = 'bool';
-		switch(type.toLowerCase().trim()) {
-			case 'key', 'keybind': newValue = 'keybind';
-			case 'int', 'float', 'percent', 'string', 'func': newValue = type;
-			case 'integer': newValue = 'int';
-			case 'str': newValue = 'string';
-			case 'fl': newValue = 'float';
+	function set_text(newValue:String = '') {
+		if(child != null) {
+			_text = newValue;
+			child.text = Language.getPhrase('setting_$_name-$_text', _text);
+			return _text;
 		}
-		type = newValue;
-		return type;
+		return null;
 	}
 }

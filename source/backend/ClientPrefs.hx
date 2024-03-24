@@ -61,8 +61,7 @@ import flixel.input.keyboard.FlxKey;
 	public var iconBounceType:String = 'Psych';
 	public var ratingDisplay:String = 'World';
 	public var rainbowFps:Bool = false;
-	public var hardwareCache:Bool = false;
-	public var streamMusic:Bool = false;
+	public var cacheOnGPU:Bool = false;
 	public var antiMash:Bool = false;
 	public var healthTypes:String = 'Vanilla';
 	public var timeBarType:String = 'Name Time Position';
@@ -93,14 +92,12 @@ import flixel.input.keyboard.FlxKey;
 	public var okWindow:Int = 135;
 	public var safeFrames:Float = 10;
 	public var discordRPC:Bool = false;
+	public var language:String = 'en-US';
 }
 
 class ClientPrefs {
 	public static var data:SaveVariables = {};
 	public static var defaultData:SaveVariables = {};
-
-	static var isHardCInited:Bool = false;
-	static var isStreMInited:Bool = false;
 
 	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
@@ -213,15 +210,6 @@ class ClientPrefs {
 		if(FlxG.save.data.gameplaySettings != null) {
 			var savedMap:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
 			for (name => value in savedMap) data.gameplaySettings.set(name, value);
-		}
-
-		if (!isHardCInited) {
-			Paths.hardwareCache = data.hardwareCache;
-			isHardCInited = true;
-		}
-		if (!isStreMInited) {
-			Paths.streamMusic = data.streamMusic;
-			isStreMInited = true;
 		}
 
 		// flixel automatically saves your volume!

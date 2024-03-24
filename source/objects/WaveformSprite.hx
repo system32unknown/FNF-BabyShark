@@ -47,20 +47,20 @@ class WaveformSprite extends FlxSprite {
         endPos -= endPos % buffer.bitsPerSample;
         pixels.lock();
         pixels.fillRect(new Rectangle(0, 0, pixels.width, pixels.height), 0); 
-        var diff = endPos - startPos;
-        var diffRange = Math.floor(diff / pixels.height);
+        var diff:Int = endPos - startPos;
+        var diffRange:Int = Math.floor(diff / pixels.height);
         for(y in 0...pixels.height) {
-            var d = Math.floor(diff * (y / pixels.height));
+            var d:Int = Math.floor(diff * (y / pixels.height));
             d -= d % buffer.bitsPerSample;
-            var pos = startPos + d;
+            var pos:Int = startPos + d;
             var max:Int = 0;
             for(i in 0...Math.floor(diffRange / buffer.bitsPerSample)) {
                 var thing = buffer.data.buffer.get(pos + (i * buffer.bitsPerSample)) | (buffer.data.buffer.get(pos + (i * buffer.bitsPerSample) + 1) << 8);
                 if (thing > 256 * 128) thing -= 256 * 256;
                 if (max < thing) max = thing;
             }
-            var thing = max;
-            var w = thing / peak * pixels.width;
+            var thing:Int = max;
+            var w:Float = thing / peak * pixels.width;
             pixels.fillRect(new Rectangle((pixels.width / 2) - (w / 2), y, w, 1), FlxColor.WHITE);
         }
         pixels.unlock();
@@ -68,8 +68,8 @@ class WaveformSprite extends FlxSprite {
 
     public function generateFlixel(startPos:Float, endPos:Float) {
         if (!valid) return;
-        var rateFrequency = (1 / buffer.sampleRate);
-        var multiplicator = 1 / rateFrequency; // 1 hz/s
+        var rateFrequency:Float = (1 / buffer.sampleRate);
+        var multiplicator:Float = 1 / rateFrequency; // 1 hz/s
         multiplicator *= buffer.bitsPerSample;
         multiplicator -= multiplicator % buffer.bitsPerSample;
 
@@ -77,9 +77,9 @@ class WaveformSprite extends FlxSprite {
     }
 
     public function getNumberFromBuffer(pos:Int, bytes:Int):Int {
-        var am = 0;
+        var am:Int = 0;
         for(i in 0...bytes) {
-            var val = buffer.data.buffer.get(pos + i);
+            var val:Int = buffer.data.buffer.get(pos + i);
             if (val < 0) val += 256;
             for(_ in 0...(bytes - i)) val *= 256;
             am += val;

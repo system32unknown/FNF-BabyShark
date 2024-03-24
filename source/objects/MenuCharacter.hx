@@ -38,7 +38,7 @@ class MenuCharacter extends FlxSprite {
 			case '': visible = false;
 			default:
 				var characterPath:String = 'images/menucharacters/$character.json';
-				var path:String = Paths.getPath(characterPath, TEXT, null, true);
+				var path:String = Paths.getPath(characterPath, TEXT);
 				
 				if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
 					path = Paths.getSharedPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash

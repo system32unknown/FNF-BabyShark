@@ -268,7 +268,7 @@ class FreeplayState extends MusicBeatState {
 
 		if(FlxG.keys.justPressed.CONTROL && !player.playingMusic) {
 			persistentUpdate = false;
-			openSubState(new substates.GameplayChangersSubstate());
+			openSubState(new options.GameplayChangersSubstate());
 		} else if(FlxG.keys.justPressed.SPACE) {
 			if(instPlaying != curSelected && !player.playingMusic) {
 				destroyFreeplayVocals();
@@ -343,7 +343,7 @@ class FreeplayState extends MusicBeatState {
 			if (FlxG.keys.pressed.Z || (skipSelect != null && skipSelect.contains(songs[curSelected].songName))) {
 				LoadingState.prepareToSong();
 				LoadingState.loadAndSwitchState(() -> new PlayState());
-				#if !LOADING_SCREEN_ALLOWED FlxG.sound.music.stop(); #end
+				#if !SHOW_LOADING_SCREEN FlxG.sound.music.stop(); #end
 			} else FlxG.switchState(() -> new CharacterSelectionState());
 			stopMusicPlay = true;
 

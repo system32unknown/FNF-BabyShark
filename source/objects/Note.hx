@@ -204,8 +204,8 @@ class Note extends FlxSprite {
 			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
 			if(PlayState.SONG != null && PlayState.SONG.disableNoteRGB) rgbShader.enabled = false;
 
-			if (PlayState.mania != 0) x += EK.swidths[PlayState.mania] * (noteData % (PlayState.mania + 1));
-			if(!isSustainNote && noteData < PlayState.mania + 1)
+			if (PlayState.mania != 0) x += EK.swidths[PlayState.mania] * (noteData % EK.keys(PlayState.mania));
+			if(!isSustainNote && noteData < EK.keys(PlayState.mania))
 				animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
 		}
 

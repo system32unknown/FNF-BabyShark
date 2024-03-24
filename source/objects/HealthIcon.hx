@@ -26,16 +26,16 @@ class HealthIcon extends FlxSprite {
 		if (!Paths.fileExists('images/$path.png', IMAGE)) { //Prevents crash from missing icon
 			if (!defaultIfMissing) return null;
 			path = prefix + defaultIcon;
-			if (!Paths.fileExists('images/$path.png', IMAGE, false, true)) path = prefix + defaultIcon;
+			if (!Paths.fileExists('images/$path.png', IMAGE)) path = prefix + defaultIcon;
 		}
 		return Paths.image(path);
 	}
 
-	public function new(?char:String, isPlayer:Bool = false) {
-		this.isPlayer = isPlayer;
+	public function new(?char:String = 'bf', isPlayer:Bool = false) {
 		super();
+		this.isPlayer = isPlayer;
+		changeIcon(char);
 		scrollFactor.set();
-		changeIcon(char == null ? 'bf' : char);
 	}
 
 	@:noCompletion

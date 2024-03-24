@@ -284,7 +284,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 	function get_paused():Bool @:privateAccess return FlxG.sound.music._paused;
 
 	function set_playbackRate(value:Float):Float  {
-		var value = FlxMath.roundDecimal(value, 2);
+		var value:Float = FlxMath.roundDecimal(value, 2);
 		if (value > 3) value = 3;
 		else if (value <= 0.25) value = 0.25;
 		return playbackRate = value;

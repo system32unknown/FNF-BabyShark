@@ -1,7 +1,5 @@
 package objects;
 
-import flixel.util.FlxSort;
-
 class NoteGroup extends FlxTypedGroup<Note> {
 	var __loopSprite:Note;
 	var i:Int = 0;
@@ -20,7 +18,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	}
 
 	public override function draw() {
-		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
+		@:privateAccess var oldDefaultCameras:Array<FlxCamera> = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
 
 		var oldCur:Bool = __currentlyLooping;

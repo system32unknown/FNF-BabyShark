@@ -3,15 +3,15 @@ package options;
 import objects.Note;
 import objects.StrumNote;
 
-class VisualsUISubState extends BaseOptionsMenu {
+class VisualsSettingsSubState extends BaseOptionsMenu {
 	var noteOptionID:Int = -1;
 	var notes:FlxTypedGroup<StrumNote>;
 	var notesTween:Array<FlxTween> = [];
 	var noteY:Float = 90;
 	var changedMusic:Bool = false;
 	public function new() {
-		title = 'Visuals and UI';
-		rpcTitle = 'Visuals & UI Settings Menu'; //for Discord Rich Presence
+		title = 'Visuals Settings';
+		rpcTitle = 'Visuals Settings Menu'; //for Discord Rich Presence
 
 		// for note skins
 		notes = new FlxTypedGroup<StrumNote>();
@@ -31,7 +31,7 @@ class VisualsUISubState extends BaseOptionsMenu {
 				ClientPrefs.data.noteSkin = ClientPrefs.defaultData.noteSkin; //Reset to default if saved noteskin couldnt be found
 
 			noteSkins.insert(0, ClientPrefs.defaultData.noteSkin); //Default skin always comes first
-			var option:Option = new Option('Note Skins:', "Select your prefered Note skin.", 'noteSkin', 'string', noteSkins);
+			var option:Option = new Option('Note Skins:', "Select your prefered Note skin.", 'noteSkin', STRING, noteSkins);
 			addOption(option);
 			option.onChange = onChangeNoteSkin;
 			noteOptionID = optionsArray.length - 1;
@@ -43,10 +43,10 @@ class VisualsUISubState extends BaseOptionsMenu {
 				ClientPrefs.data.splashSkin = ClientPrefs.defaultData.splashSkin; //Reset to default if saved splashskin couldnt be found
 
 			noteSplashes.insert(0, ClientPrefs.defaultData.splashSkin); //Default skin always comes first
-			addOption(new Option('Note Splashes:', "Select your prefered Note Splash variation or turn it off.", 'splashSkin', 'string', noteSplashes));
+			addOption(new Option('Note Splashes:', "Select your prefered Note Splash variation or turn it off.", 'splashSkin', STRING, noteSplashes));
 		}
 
-		var option:Option = new Option('Note Splashes', "Set the alpha for the Note Splashes, usually shown when hitting \"Epic!\" or \"Sick!\" notes.", 'splashAlpha', 'percent');
+		var option:Option = new Option('Note Splashes', "Set the alpha for the Note Splashes, usually shown when hitting \"Epic!\" or \"Sick!\" notes.", 'splashAlpha', PERCENT);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
 		option.maxValue = 1;
@@ -54,23 +54,23 @@ class VisualsUISubState extends BaseOptionsMenu {
 		option.decimals = 1;
 		addOption(option);
 
-		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud', 'bool'));
-		addOption(new Option('Time Bar:', "What should the Time Bar display?", 'timeBarType', 'string', ['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Name Percent', 'Disabled']));
-		addOption(new Option('Flashing Lights', "Uncheck this if you're sensitive to flashing lights!", 'flashing', 'bool'));
-		addOption(new Option('Icon Bounce:', "What should the Icon Bounces?", 'iconBounceType', 'string', ['Old', 'Psych', 'Dave', 'GoldenApple', 'Custom']));
-		addOption(new Option('Health Bar Type:', "What should the Health Bar Types?", 'healthTypes', 'string', ['Vanilla', 'Psych']));
-		addOption(new Option('Smooth Health', '', 'smoothHealth', 'bool'));
-		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'ratingDisplay', 'string', ['Hud', 'World']));
-		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms', 'bool'));
-		addOption(new Option('Show Combo Counter', 'If checked, the combo counter will be shown.', 'showComboCounter', 'bool'));
-		addOption(new Option('Show ms Timing', 'If checked, the ms timing will be shown.', 'showMsTiming', 'bool'));
-		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'showNPS', 'bool'));
-		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'showJudgement', 'bool'));
+		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud', BOOL));
+		addOption(new Option('Time Bar:', "What should the Time Bar display?", 'timeBarType', STRING, ['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Name Percent', 'Disabled']));
+		addOption(new Option('Flashing Lights', "Uncheck this if you're sensitive to flashing lights!", 'flashing', BOOL));
+		addOption(new Option('Icon Bounce:', "What should the Icon Bounces?", 'iconBounceType', STRING, ['Old', 'Psych', 'Dave', 'GoldenApple', 'Custom']));
+		addOption(new Option('Health Bar Type:', "What should the Health Bar Types?", 'healthTypes', STRING, ['Vanilla', 'Psych']));
+		addOption(new Option('Smooth Health', '', 'smoothHealth', BOOL));
+		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'ratingDisplay', STRING, ['Hud', 'World']));
+		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms', BOOL));
+		addOption(new Option('Show Combo Counter', 'If checked, the combo counter will be shown.', 'showComboCounter', BOOL));
+		addOption(new Option('Show ms Timing', 'If checked, the ms timing will be shown.', 'showMsTiming', BOOL));
+		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'showNPS', BOOL));
+		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'showJudgement', BOOL));
 
-		#if desktop addOption(new Option('Discord Rich Presence', "Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord", 'discordRPC', 'bool')); #end
-		addOption(new Option('Combo Stacking', "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read", 'comboStacking', 'bool'));
+		#if desktop addOption(new Option('Discord Rich Presence', "Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord", 'discordRPC', BOOL)); #end
+		addOption(new Option('Combo Stacking', "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read", 'comboStacking', BOOL));
 
-		var option:Option = new Option('Health Bar Opacity', 'How much opacity should the health bar and icons be.', 'healthBarAlpha', 'percent');
+		var option:Option = new Option('Health Bar Opacity', 'How much opacity should the health bar and icons be.', 'healthBarAlpha', PERCENT);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
 		option.maxValue = 1;
@@ -78,7 +78,7 @@ class VisualsUISubState extends BaseOptionsMenu {
 		option.decimals = 1;
 		addOption(option);
 		
-		var option:Option = new Option('Pause Screen Song:', "What song do you prefer for the Pause Screen?", 'pauseMusic', 'string', ['None', 'Breakfast', 'Tea Time', 'Breakfast Dave']);
+		var option:Option = new Option('Pause Screen Song:', "What song do you prefer for the Pause Screen?", 'pauseMusic', STRING, ['None', 'Breakfast', 'Tea Time', 'Breakfast Dave']);
 		addOption(option);
 		option.onChange = () -> {
 			if(ClientPrefs.data.pauseMusic == 'None') FlxG.sound.music.volume = 0;

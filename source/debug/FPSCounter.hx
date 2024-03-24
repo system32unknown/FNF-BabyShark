@@ -50,7 +50,7 @@ class FPSCounter extends openfl.text.TextField {
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else textColor = FlxColor.WHITE;
 
-		text = '${fpsManager.curFPS} FPS ${(ClientPrefs.data.fpsStats) ? '[${utils.MathUtil.truncateFloat((1 / fpsManager.curCount) * 1000)}ms]' : ''}\n';
+		text = '${fpsManager.curFPS}FPS ${(ClientPrefs.data.fpsStats) ? '[${utils.MathUtil.truncateFloat((1 / fpsManager.curCount) * 1000)}ms]' : ''}\n';
 		if (memCounterType == "MEM" || memCounterType == "MEM/PEAK")
 			text += '${FlxStringUtil.formatBytes(memory)}' + (memCounterType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
 	}
