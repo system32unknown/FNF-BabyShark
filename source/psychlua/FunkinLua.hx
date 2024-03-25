@@ -782,6 +782,9 @@ class FunkinLua {
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
 		SoundFunctions.implement(this);
+
+		for (name => func in customFunctions) if(func != null) set(name, func);
+
 		try {
 			final isString:Bool = !FileSystem.exists(scriptName);
 			final result:Dynamic = (!isString ? LuaL.dofile(lua, scriptName) : LuaL.dostring(lua, scriptName));
@@ -929,9 +932,6 @@ class FunkinLua {
 
 		set('noteSkinPostfix', objects.Note.getNoteSkinPostfix());
 		set('splashSkinPostfix', objects.NoteSplash.getSplashSkinPostfix());
-
-		for (name => func in customFunctions)
-			if(func != null) set(name, func);
 	}
 	#end
 

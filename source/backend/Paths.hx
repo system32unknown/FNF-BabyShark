@@ -185,8 +185,7 @@ class Paths {
 
 	inline static public function getTextFromFile(key:String, ?absolute:Bool = false):String {
 		if (absolute) {
-			#if sys
-			if (FileSystem.exists(key)) return File.getContent(key); #end
+			#if sys if (FileSystem.exists(key)) return File.getContent(key); #end
 			if (OpenFlAssets.exists(key, TEXT)) return Assets.getText(key);
 			return null;
 		}

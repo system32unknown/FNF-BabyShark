@@ -4,28 +4,33 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import options.OptionsState;
 
+enum MainMenuColumn {
+	CENTER;
+	RIGHT;
+}
+
 class MainMenuState extends MusicBeatState {
 	public static var curSelected:Int = 0;
+	public static var curColumn:MainMenuColumn = CENTER;
 
-	var menuOptions:Array<String> = [
-		"Story Mode",
-		"Freeplay",
-		#if MODS_ALLOWED "Mods", #end
-		"Credits",
-		"Options"
+	var optionShit:Array<String> = [
+		'story_mode',
+		'freeplay',
+		#if MODS_ALLOWED 'mods', #end
+		'credits'
 	];
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
+	var rightItem:FlxSprite;
 
+	var rightOption:String = 'options';
+	
 	var bg:FlxSprite;
 	var magenta:FlxSprite;
 
 	// Stolen from Kade Engine
 	public static var firstStart:Bool = true;
 	public static var finishedFunnyMove:Bool = false;
-
-	var bigIcons:FlxSprite;
-	var curOptText:FlxText;
 
 	override function create() {
 		#if MODS_ALLOWED Mods.pushGlobalMods(); #end
@@ -71,40 +76,14 @@ class MainMenuState extends MusicBeatState {
 		menuCoverAlt.scrollFactor.set();
 		add(menuCoverAlt);
 
-		bigIcons = new FlxSprite();
-		bigIcons.frames = Paths.getSparrowAtlas('mainmenu/menu_big_icons');
-		for (i in 0...menuOptions.length)
-			bigIcons.animation.addByPrefix(menuOptions[i].toLowerCase(), menuOptions[i].toLowerCase(), 24);
-		bigIcons.scrollFactor.set();
-		bigIcons.antialiasing = true;
-		bigIcons.updateHitbox();
-		bigIcons.animation.play(menuOptions[0].toLowerCase());
-		bigIcons.screenCenter(X);
-		add(bigIcons);
-
-		curOptText = new FlxText(0, 0, FlxG.width, menuOptions[curSelected], 48);
-		curOptText.setFormat(Paths.font('babyshark.ttf'), 48, FlxColor.WHITE, CENTER);
-		curOptText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2.5);
-		curOptText.scrollFactor.set();
-		curOptText.screenCenter(X).y = FlxG.height / 2 + 28;
-		add(curOptText);
-
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
-		for (i in 0...menuOptions.length) {
-			var currentOptionShit = menuOptions[i].toLowerCase();
-			var menuItem:FlxSprite = new FlxSprite(-160, (i * 140));
-			menuItem.frames = Paths.getSparrowAtlas('mainmenu/main_menu_icons');
-			menuItem.animation.addByPrefix('idle', '$currentOptionShit basic', 24);
-			menuItem.animation.addByPrefix('selected', '$currentOptionShit white', 24);
-			menuItem.animation.play('idle');
-			menuItem.antialiasing = false;
-			menuItem.setGraphicSize(128, 128);
-			menuItem.updateHitbox();
-			menuItems.add(menuItem);
-			menuItem.scrollFactor.set();
-			if (firstStart) FlxTween.tween(menuItem, {x: 20}, 1 + (i * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> finishedFunnyMove = true});
-			else menuItem.x = 20;
+		for (num => option in optionShit) {
+			var menuY:Float = (num * 140) + 100 + ((4 - optionShit.length) * 70);
+			var item:FlxSprite = createMenuItem(option, 0, FlxG.height * 1.6);
+			item.screenCenter(X);
+			if (firstStart) FlxTween.tween(item, {y: menuY}, 1 + (num * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> finishedFunnyMove = true});
+			else item.y = menuY;
 		}
 		firstStart = false;
 
@@ -112,15 +91,44 @@ class MainMenuState extends MusicBeatState {
 		super.create();
 	}
 
+	function createMenuItem(name:String, x:Float, y:Float):FlxSprite {
+		var menuItem:FlxSprite = new FlxSprite(x, y);
+		menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_$name');
+		menuItem.animation.addByPrefix('idle', '$name idle', 24, true);
+		menuItem.animation.addByPrefix('selected', '$name selected', 24, true);
+		menuItem.animation.play('idle');
+		menuItem.updateHitbox();
+		
+		menuItem.antialiasing = ClientPrefs.data.antialiasing;
+		menuItem.scrollFactor.set();
+		menuItems.add(menuItem);
+		return menuItem;
+	}
+
 	var selectedSomethin:Bool = false;
 	override function update(elapsed:Float) {
 		if (FlxG.sound.music.volume < .8) {
-			FlxG.sound.music.volume += .5 * elapsed;
+			FlxG.sound.music.volume = Math.min(FlxG.sound.music.volume + .5 * elapsed, .8);
 			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += .5 * elapsed;
 		}
 		
 		if (!selectedSomethin && finishedFunnyMove) {
 			if (controls.UI_UP_P || controls.UI_DOWN_P) changeItem(controls.UI_UP_P ? -1 : 1);
+
+			switch(curColumn)
+			{
+				case CENTER:
+					if(controls.UI_RIGHT_P && rightOption != null) {
+						curColumn = RIGHT;
+						changeItem();
+					}
+
+				case RIGHT:
+					if(controls.UI_LEFT_P) {
+						curColumn = CENTER;
+						changeItem();
+					}
+			}
 
 			if (controls.BACK) {
 				selectedSomethin = true;
@@ -129,33 +137,42 @@ class MainMenuState extends MusicBeatState {
 			}
 
 			if (controls.ACCEPT) {
-				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('confirmMenu'));
+				selectedSomethin = true;
 
 				if(ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, .15, false);
 
-				for (item in menuItems.members) {
-					final itemIndex:Int = menuItems.members.indexOf(item);
-					if (curSelected != itemIndex)
-						FlxTween.tween(item, {alpha: 0}, .4, {ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> item.destroy()});
-					else {
-						FlxFlicker.flicker(item, 1, .06, false, false, (flicker:FlxFlicker) -> {
-							switch (menuOptions[curSelected].toLowerCase()) {
-								case 'story mode': FlxG.switchState(() -> new StoryMenuState());
-								case 'freeplay': FlxG.switchState(() -> new FreeplayState());
-								#if MODS_ALLOWED case 'mods': FlxG.switchState(() -> new ModsMenuState()); #end
-								case 'credits': FlxG.switchState(() -> new CreditsState());
-								case 'options':
-									FlxG.switchState(() -> new OptionsState());
-									OptionsState.onPlayState = false;
-									if (PlayState.SONG != null) {
-										PlayState.SONG.arrowSkin = null;
-										PlayState.SONG.splashSkin = null;
-										PlayState.stageUI = 'normal';
-									}
+				var item:FlxSprite;
+				var option:String;
+				switch(curColumn) {
+					case CENTER:
+						option = optionShit[curSelected];
+						item = menuItems.members[curSelected];
+					case RIGHT:
+						option = rightOption;
+						item = rightItem;
+				}
+
+				FlxFlicker.flicker(item, 1, .06, false, false, (flicker:FlxFlicker) -> {
+					switch (option) {
+						case 'story_mode': FlxG.switchState(() -> new StoryMenuState());
+						case 'freeplay': FlxG.switchState(() -> new FreeplayState());
+						#if MODS_ALLOWED case 'mods': FlxG.switchState(() -> new ModsMenuState()); #end
+						case 'credits': FlxG.switchState(() -> new CreditsState());
+						case 'options':
+							FlxG.switchState(() -> new OptionsState());
+							OptionsState.onPlayState = false;
+							if (PlayState.SONG != null) {
+								PlayState.SONG.arrowSkin = null;
+								PlayState.SONG.splashSkin = null;
+								PlayState.stageUI = 'normal';
 							}
-						});
 					}
+				});
+
+				for (memb in menuItems) {
+					if(memb == item) continue;
+					FlxTween.tween(memb, {alpha: 0}, .4, {ease: FlxEase.quadOut});
 				}
 			} else if (controls.justPressed('debug_1')) {
 				selectedSomethin = true;
@@ -166,22 +183,22 @@ class MainMenuState extends MusicBeatState {
 		super.update(elapsed);
 	}
 
-	function changeItem(huh:Int = 0) {
+	function changeItem(change:Int = 0) {
+		if(change != 0) curColumn = CENTER;
 		FlxG.sound.play(Paths.sound('scrollMenu'));
-		if (finishedFunnyMove) curSelected = FlxMath.wrap(curSelected + huh, 0, menuItems.length - 1);
+		if (finishedFunnyMove) curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
 
-		for (item in menuItems.members) {
-			final itemIndex:Int = menuItems.members.indexOf(item);
-			if (curSelected != itemIndex) {
-				item.animation.play('idle', true);
-				item.updateHitbox();
-			} else {
-				item.animation.play('selected');
-				item.centerOffsets();
-			}
+		for (item in menuItems) {
+			item.animation.play('idle');
+			item.centerOffsets();
 		}
 
-		bigIcons.animation.play(menuOptions[curSelected].toLowerCase());
-		curOptText.text = menuOptions[curSelected];
+		var selectedItem:FlxSprite;
+		switch(curColumn) {
+			case CENTER: selectedItem = menuItems.members[curSelected];
+			case RIGHT: selectedItem = rightItem;
+		}
+		selectedItem.animation.play('selected');
+		selectedItem.centerOffsets();
 	}
 }

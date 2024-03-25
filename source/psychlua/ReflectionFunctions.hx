@@ -15,7 +15,7 @@ class ReflectionFunctions {
 			if(split.length > 1) return LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split, true, true, allowMaps), split[split.length - 1], allowMaps);
 			return LuaUtils.getVarInArray(LuaUtils.getInstance(), variable, allowMaps);
 		});
-		funk.set("setProperty", function(variable:String, value:Dynamic, allowMaps:Bool = false) {
+		funk.set("setProperty", function(variable:String, value:Dynamic, ?allowMaps:Bool = false) {
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1) {
 				LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split, true, true, allowMaps), split[split.length - 1], value, allowMaps);

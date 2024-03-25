@@ -56,6 +56,9 @@ class Character extends FlxSprite {
 	public var cameraPosition:Array<Float> = [0, 0];
 	public var healthColorArray:Array<Int> = [255, 0, 0];
 
+	public var missingCharacter:Bool = false;
+	public var missingText:FlxText;
+
 	public var hasMissAnimations:Bool = false;
 
 	//Used on Character Editor
@@ -82,12 +85,13 @@ class Character extends FlxSprite {
 				
 				if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
 					path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
-					color = FlxColor.BLACK;
-					alpha = .6;
+					missingCharacter = true;
+					missingText = new FlxText(0, 0, 300, 'ERROR:\n$curCharacter.json', 16);
+					missingText.alignment = CENTER;
 				}
 		
 				try {
-					var json:CharacterFile = cast Json.parse(#if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end);
+					var json:CharacterFile = cast Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
 					for (anim in json.animations) anim.indices = parseIndices(anim.indices);
 					loadCharacterFile(json);
 				} catch(e) Logs.trace('Error loading character file of "$curCharacter": $e', ERROR);
@@ -348,12 +352,32 @@ class Character extends FlxSprite {
 	#if flxanimate
 	public var atlas:FlxAnimate;
 	public override function draw() {
+		var lastAlpha:Float = alpha;
+		var lastColor:FlxColor = color;
+		if(missingCharacter)
+		{
+			alpha *= 0.6;
+			color = FlxColor.BLACK;
+		}
+
 		if(isAnimateAtlas) {
 			copyAtlasValues();
 			atlas.draw();
-			return;
+			if(missingCharacter) {
+				alpha = lastAlpha;
+				color = lastColor;
+
+				missingText.setPosition(getMidpoint().x - 150, getMidpoint().y - 10);
+				missingText.draw();
+			}
 		}
 		super.draw();
+		if(missingCharacter) {
+			alpha = lastAlpha;
+			color = lastColor;
+			missingText.setPosition(getMidpoint().x - 150, getMidpoint().y - 10);
+			missingText.draw();
+		}
 	}
 
 	public function copyAtlasValues() {
