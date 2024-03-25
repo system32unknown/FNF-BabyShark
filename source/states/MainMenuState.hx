@@ -1,5 +1,6 @@
 package states;
 
+import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import options.OptionsState;
@@ -27,6 +28,7 @@ class MainMenuState extends MusicBeatState {
 	
 	var bg:FlxSprite;
 	var magenta:FlxSprite;
+	var camFollow:FlxObject;
 
 	// Stolen from Kade Engine
 	public static var firstStart:Bool = true;
@@ -51,6 +53,8 @@ class MainMenuState extends MusicBeatState {
 		bg.color = 0xFFFDE871;
 		add(bg);
 		
+		add(camFollow = new FlxObject(0, 0, 1, 1));
+
 		magenta = new FlxSprite(-80, bg.graphic);
 		magenta.antialiasing = ClientPrefs.data.antialiasing;
 		magenta.scrollFactor.set();
@@ -62,11 +66,11 @@ class MainMenuState extends MusicBeatState {
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 
-		var menuCover:FlxSprite = new FlxSprite().makeGraphic(FlxG.width - 1130, Std.int(FlxG.height));
+		var menuCover:FlxSprite = new FlxSprite().makeGraphic(FlxG.width - 500, Std.int(FlxG.height));
 		menuCover.alpha = .5;
 		menuCover.color = FlxColor.WHITE;
 		menuCover.scrollFactor.set();
-		menuCover.x += 8;
+		menuCover.screenCenter(X);
 		add(menuCover);
 
 		var menuCoverAlt:FlxSprite = new FlxSprite().makeGraphic(Std.int(menuCover.width - 20), Std.int(menuCover.height));
@@ -85,10 +89,23 @@ class MainMenuState extends MusicBeatState {
 			if (firstStart) FlxTween.tween(item, {y: menuY}, 1 + (num * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> finishedFunnyMove = true});
 			else item.y = menuY;
 		}
+
+		if (rightOption != null) {
+			rightItem = createMenuItem(rightOption, FlxG.width - 60, 490);
+			rightItem.x -= rightItem.width;
+		}
 		firstStart = false;
 
+		var version:FlxText = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH}, ${Main.engineVer.COMMIT_NUM})\nBaby Shark\'s Big Funkin! v${FlxG.stage.application.meta.get('version')}', 16);
+		version.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, RIGHT);
+		version.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		version.scrollFactor.set();
+		version.setPosition(FlxG.width - version.width, FlxG.height - version.height);
+		add(version);
 		changeItem();
+
 		super.create();
+		FlxG.camera.follow(camFollow, null, 9);
 	}
 
 	function createMenuItem(name:String, x:Float, y:Float):FlxSprite {
@@ -115,8 +132,7 @@ class MainMenuState extends MusicBeatState {
 		if (!selectedSomethin && finishedFunnyMove) {
 			if (controls.UI_UP_P || controls.UI_DOWN_P) changeItem(controls.UI_UP_P ? -1 : 1);
 
-			switch(curColumn)
-			{
+			switch(curColumn) {
 				case CENTER:
 					if(controls.UI_RIGHT_P && rightOption != null) {
 						curColumn = RIGHT;
@@ -200,5 +216,6 @@ class MainMenuState extends MusicBeatState {
 		}
 		selectedItem.animation.play('selected');
 		selectedItem.centerOffsets();
+		camFollow.y = selectedItem.getGraphicMidpoint().y;
 	}
 }

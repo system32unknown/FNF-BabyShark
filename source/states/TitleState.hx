@@ -20,7 +20,6 @@ class TitleState extends MusicBeatState {
 	public static var skippedIntro:Bool = false;
 	
 	var gf:FlxSprite;
-	var version:FlxText;
 	var foundXml:Bool = false;
 	
 	var logo:FlxSprite;
@@ -127,14 +126,6 @@ class TitleState extends MusicBeatState {
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
 		add(titleText);
-
-		version = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH}, ${Main.engineVer.COMMIT_NUM}) | Baby Shark\'s Big Funkin! v${FlxG.stage.application.meta.get('version')}', 16);
-		version.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, CENTER);
-		version.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		version.scrollFactor.set();
-		version.screenCenter(X).y = FlxG.height - version.height;
-		version.visible = false;
-		add(version);
 
 		add(textGroup = new FlxTypedGroup<FlxText>());
 		randomPhrase = getIntroTextShit();
@@ -281,7 +272,6 @@ class TitleState extends MusicBeatState {
 		logo.alpha = 1;
 		titleText.visible = true;
 		gradientBar.visible = true;
-		version.visible = true;
 
 		FlxTween.tween(logo, {y: titleJson.starty}, 1.4, {ease: FlxEase.expoInOut});
 		new FlxTimer().start(.01, (tmr:FlxTimer) -> {

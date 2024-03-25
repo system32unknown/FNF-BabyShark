@@ -2271,6 +2271,10 @@ class PlayState extends MusicBeatState {
 
 			var char:Character = note.gfNote ? gf : dad;
 			if(char != null) {
+				if(isSus) {
+					var holdAnim:String = animToPlay + altAnim + '-hold';
+					if(char.animation.exists(holdAnim)) animToPlay = holdAnim;
+				}
 				char.playAnim(animToPlay + altAnim, true);
 				char.holdTimer = 0;
 			}
@@ -2344,6 +2348,10 @@ class PlayState extends MusicBeatState {
 			}
 
 			if(char != null) {
+				if(isSus) {
+					var holdAnim:String = animToPlay + note.animSuffix + '-hold';
+					if(char.animation.exists(holdAnim)) animToPlay = holdAnim;
+				}
 				char.playAnim(animToPlay + note.animSuffix, true);
 				char.holdTimer = 0;
 				if(leType == 'Hey!' && char.animOffsets.exists(animCheck)) {

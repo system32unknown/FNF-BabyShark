@@ -19,7 +19,7 @@
 			"fps": 24,
 			"anim": "singLEFT",
 			"loop": false,
-			"name": "bambi left",
+			"name": "bambi right",
 			"indices": []
 		},
 		{
@@ -52,7 +52,7 @@
 			"fps": 24,
 			"anim": "singRIGHT",
 			"loop": false,
-			"name": "bambi right",
+			"name": "bambi left",
 			"indices": []
 		},
 		{
