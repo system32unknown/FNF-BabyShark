@@ -12,6 +12,7 @@ class Init extends flixel.FlxState {
 
 		@:privateAccess FlxG.game.getTimer = Main.getTimer;
 		utils.FunkinCache.init();
+		#if VIDEOS_ALLOWED hxvlc.util.Handle.init(); #end
 
 		#if LUA_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();

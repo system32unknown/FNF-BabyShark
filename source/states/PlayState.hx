@@ -505,7 +505,7 @@ class PlayState extends MusicBeatState {
 		judgementCounter.screenCenter(Y);
 		updateScore(false);
 
-		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, "[BOTPLAY]", 32);
+		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, Language.getPhrase("Botplay", "[BOTPLAY]"), 32);
 		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
 		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		botplayTxt.screenCenter(X);

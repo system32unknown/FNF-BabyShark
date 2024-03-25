@@ -206,13 +206,17 @@ class LuaUtils {
 	}
 
 	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false) {
-		var obj:Dynamic = getObjectDirectly(obj, false);
+		var obj:FlxSprite = cast LuaUtils.getObjectDirectly(obj, false);
 		if(obj != null && obj.animation != null) {
 			if(indices == null) indices = [0];
 			else if(Std.isOfType(indices, String)) indices = flixel.util.FlxStringUtil.toIntArray(cast indices);
 
 			obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
-			if(obj.animation.curAnim == null) obj.animation.play(name, true);
+			if(obj.animation.curAnim == null) {
+				var dyn:Dynamic = cast obj;
+				if(dyn.playAnim != null) dyn.playAnim(name, true);
+				else dyn.animation.play(name, true);
+			}
 			return true;
 		}
 		return false;
