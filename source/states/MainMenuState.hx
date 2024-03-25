@@ -83,7 +83,9 @@ class MainMenuState extends MusicBeatState {
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
 		for (num => option in optionShit) {
-			var menuY:Float = (num * 140) + 100 + ((4 - optionShit.length) * 70);
+			var menuY:Float = (num * 140) + 90;
+			menuY += (4 - optionShit.length) * 70;
+			
 			var item:FlxSprite = createMenuItem(option, 0, FlxG.height * 1.6);
 			item.screenCenter(X);
 			if (firstStart) FlxTween.tween(item, {y: menuY}, 1 + (num * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> finishedFunnyMove = true});
@@ -190,7 +192,8 @@ class MainMenuState extends MusicBeatState {
 					if(memb == item) continue;
 					FlxTween.tween(memb, {alpha: 0}, .4, {ease: FlxEase.quadOut});
 				}
-			} else if (controls.justPressed('debug_1')) {
+			}
+			if (controls.justPressed('debug_1')) {
 				selectedSomethin = true;
 				FlxG.switchState(() -> new states.editors.MasterEditorMenu());
 			}
@@ -201,8 +204,8 @@ class MainMenuState extends MusicBeatState {
 
 	function changeItem(change:Int = 0) {
 		if(change != 0) curColumn = CENTER;
+		if (finishedFunnyMove) curSelected = FlxMath.wrap(curSelected + change, 0, optionShit.length - 1);
 		FlxG.sound.play(Paths.sound('scrollMenu'));
-		if (finishedFunnyMove) curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
 
 		for (item in menuItems) {
 			item.animation.play('idle');

@@ -5,7 +5,6 @@ import flixel.FlxObject;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
-#if VIDEOS_ALLOWED import backend.VideoManager; #end
 #if !MODS_ALLOWED import openfl.utils.Assets; #end
 #if !flash import flixel.addons.display.FlxRuntimeShader; #end
 import backend.Highscore;
@@ -250,7 +249,6 @@ class PlayState extends MusicBeatState {
 	// Callbacks for stages
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
-	#if VIDEOS_ALLOWED public var videoSprites:Array<backend.VideoSpriteManager> = []; #end
 	override function create() {
 		instance = this;
 
@@ -739,26 +737,44 @@ class PlayState extends MusicBeatState {
 		char.y += char.positionArray[1];
 	}
 
-	public function startVideo(name:String):VideoManager {
+	public var videoCutscene:VideoSprite = null;
+	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, playOnLoad:Bool = true) {
 		#if VIDEOS_ALLOWED
-		var filepath:String = Paths.video(name);
-		var video:VideoManager = new VideoManager();
 		inCutscene = true;
 
-		if(!#if sys FileSystem #else Assets #end.exists(filepath)) {
-			FlxG.log.warn('Couldnt find video file: $name');
-			startAndEnd();
-			return null;
-		}
+		var foundFile:Bool = false;
+		var fileName:String = Paths.video(name);
 
-		video.startVideo(filepath);
-		video.onVideoEnd.add(() -> {startAndEnd(); return;});
-		return video;
+		if (#if sys FileSystem #else Assets #end.exists(fileName))
+			foundFile = true;
+
+		if (foundFile) {
+			var cutscene:VideoSprite = new VideoSprite(fileName, forMidSong, canSkip, loop);
+			if (!forMidSong) {
+				cutscene.finishCallback = () -> {
+					if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos) {
+						moveCameraSection();
+						FlxG.camera.snapToTarget();
+					}
+					startAndEnd();
+				};
+
+				cutscene.onSkip = () -> startAndEnd();
+			}
+			add(cutscene);
+			if (playOnLoad) cutscene.videoSprite.play();
+			return cutscene;
+		}
+		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
+		else addTextToDebug("Video not found: " + fileName, FlxColor.RED);
+		#else
+		else FlxG.log.error("Video not found: " + fileName);
+		#end
 		#else
 		FlxG.log.warn('Platform not supported!');
 		startAndEnd();
-		return null;
 		#end
+		return null;
 	}
 
 	public function startAndEnd() {
@@ -1220,8 +1236,6 @@ class PlayState extends MusicBeatState {
 			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = true);
 			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
 
-			#if VIDEOS_ALLOWED if(videoSprites.length > 0) for(video in videoSprites) if(video.exists) video.paused = false; #end
-
 			paused = false;
 			callOnScripts('onResume');
 
@@ -1485,8 +1499,6 @@ class PlayState extends MusicBeatState {
 		persistentDraw = true;
 		paused = true;
 
-		#if VIDEOS_ALLOWED if(videoSprites.length > 0) for(video in videoSprites) if(video.exists) video.paused = true; #end
-
 		if(FlxG.sound.music != null) {
 			FlxG.sound.music.pause();
 			vocals.pause();
@@ -1538,7 +1550,6 @@ class PlayState extends MusicBeatState {
 				FlxTimer.globalManager.clear();
 				FlxTween.globalManager.clear();
 				#if LUA_ALLOWED modchartTimers.clear(); modchartTweens.clear(); #end
-				#if VIDEOS_ALLOWED if(videoSprites.length > 0) for(video in videoSprites) removeVideoSprite(video); #end
 
 				openSubState(new GameOverSubstate());
 
@@ -2447,14 +2458,6 @@ class PlayState extends MusicBeatState {
 		instance = null;
 		super.destroy();
 	}
-
-	#if VIDEOS_ALLOWED
-	function removeVideoSprite(video:backend.VideoSpriteManager) {
-		if(members.contains(video)) remove(video, true);
-		else forEachOfType(FlxSpriteGroup, (group:FlxSpriteGroup) -> if(group.members.contains(video)) group.remove(video, true));
-		video.destroy();
-	}
-	#end
 
 	var lastStepHit:Int = -1;
 	override function stepHit() {

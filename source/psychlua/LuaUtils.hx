@@ -274,8 +274,8 @@ class LuaUtils {
 					}
 					FlxG.save.data.modSettings.set(modName, settings);
 				} catch(e:Dynamic) {
-					var errorTitle = 'Mod name: ' + Mods.currentModDirectory;
-					var errorMsg = 'An error occurred: $e';
+					var errorTitle:String = 'Mod name: ' + Mods.currentModDirectory;
+					var errorMsg:String = 'An error occurred: $e';
 					#if windows
 					lime.app.Application.current.window.alert(errorMsg, errorTitle);
 					#end

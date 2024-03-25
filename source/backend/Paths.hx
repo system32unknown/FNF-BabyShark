@@ -168,7 +168,7 @@ class Paths {
 
 	inline static public function inst(song:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('${formatToSongPath(song)}/Inst', 'songs', modsAllowed);
-	inline static public function voices(song:String, postfix:String = null, ?modsAllowed:Bool = true):Sound
+	inline static public function voices(song:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('${formatToSongPath(song)}/Voices', 'songs', modsAllowed, false);
 
 	static public function image(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxGraphic {
@@ -334,7 +334,12 @@ class Paths {
 			}
 		}
 		localTrackedAssets.push(file);
-		return currentTrackedSounds.get(file);
+		var sound:Sound = currentTrackedSounds.get(file);
+		@:privateAccess if (sound != null && sound.__buffer != null && sound.__buffer.__srcVorbisFile != null) {
+			decacheSound(file);
+			sound = null;
+		}
+		return sound;
 	}
 
 	#if MODS_ALLOWED

@@ -61,11 +61,6 @@ class HScript extends Interp {
 			"FlxAnimate"		=> FlxAnimate,
 			#end
 
-			#if VIDEOS_ALLOWED
-			"VideoSpriteManager"=> backend.VideoSpriteManager,
-			"VideoManager" 		=> backend.VideoManager,
-			#end
-
 			// Sys related stuff
 			#if sys
 			"File"				=> sys.io.File,

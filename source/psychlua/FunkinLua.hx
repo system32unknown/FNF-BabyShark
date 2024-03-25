@@ -742,10 +742,14 @@ class FunkinLua {
 			}
 			return false;
 		});
-		set("startVideo", function(videoFile:String) {
+		set("startVideo", (videoFile:String, ?canSkip:Bool = true) -> {
 			#if VIDEOS_ALLOWED
 			if(FileSystem.exists(Paths.video(videoFile))) {
-				game.startVideo(videoFile);
+				if(game.videoCutscene != null) {
+					game.remove(game.videoCutscene);
+					game.videoCutscene.destroy();
+				}
+				game.videoCutscene = game.startVideo(videoFile, false, canSkip);
 				return true;
 			} else luaTrace('startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
 			return false;
@@ -777,6 +781,7 @@ class FunkinLua {
 
 		#if DISCORD_ALLOWED DiscordClient.addLuaCallbacks(this); #end
 		HScript.implement(this);
+		#if TRANSLATIONS_ALLOWED Language.addLuaCallbacks(this); #end
 		#if flxanimate FlxAnimateFunctions.implement(this); #end
 		ReflectionFunctions.implement(this);
 		TextFunctions.implement(this);
@@ -840,8 +845,10 @@ class FunkinLua {
 		set('isStoryMode', PlayState.isStoryMode);
 		set('difficulty', PlayState.storyDifficulty);
 
-		set('difficultyName', Difficulty.getString());
-		set('difficultyPath', Paths.formatToSongPath(Difficulty.getString()));
+		set('difficultyName', Difficulty.getString(false));
+		set('difficultyPath', Paths.formatToSongPath(Difficulty.getString(false)));
+		set('difficultyNameTranslation', Difficulty.getString(true));
+
 		set('weekRaw', PlayState.storyWeek);
 		set('week', data.WeekData.weeksList[PlayState.storyWeek]);
 		set('seenCutscene', PlayState.seenCutscene);
@@ -874,6 +881,7 @@ class FunkinLua {
 		set('ratingName', '');
 		set('ratingRank', '');
 		set('ratingFC', '');
+
 		set('engine', {
 			version: Main.engineVer.version.trim(),
 			app_version: lime.app.Application.current.meta.get('version'),
@@ -915,7 +923,7 @@ class FunkinLua {
 		set('dadName', PlayState.SONG.player2);
 		set('gfName', PlayState.SONG.gfVersion);
 
-		// Some settings, no jokes
+		// Other settings
 		set('downscroll', ClientPrefs.data.downScroll);
 		set('middlescroll', ClientPrefs.data.middleScroll);
 		set('framerate', ClientPrefs.data.framerate);
@@ -933,8 +941,11 @@ class FunkinLua {
 		set('scriptName', scriptName);
 		set('currentModDirectory', Mods.currentModDirectory);
 
+		set('noteSkin', ClientPrefs.data.noteSkin);
 		set('noteSkinPostfix', objects.Note.getNoteSkinPostfix());
+		set('splashSkin', ClientPrefs.data.splashSkin);
 		set('splashSkinPostfix', objects.NoteSplash.getSplashSkinPostfix());
+		set('splashAlpha', ClientPrefs.data.splashAlpha);
 	}
 	#end
 
