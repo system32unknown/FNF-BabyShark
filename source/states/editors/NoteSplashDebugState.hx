@@ -6,8 +6,7 @@ import objects.NoteSplash;
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 
-class NoteSplashDebugState extends MusicBeatState
-{
+class NoteSplashDebugState extends MusicBeatState {
 	var config:NoteSplashConfig;
 	var forceFrame:Int = -1;
 	var curSelected:Int = 0;
@@ -158,14 +157,12 @@ class NoteSplashDebugState extends MusicBeatState
 	var curAnim:Int = 1;
 	var visibleTime:Float = 0;
 	var pressEnterToSave:Float = 0;
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		@:privateAccess
 		cast(stepperMinFps.text_field, FlxInputText).hasFocus = cast(stepperMaxFps.text_field, FlxInputText).hasFocus = false;
 
 		var notTyping:Bool = !nameInputText.hasFocus && !imageInputText.hasFocus;
-		if(controls.BACK && notTyping)
-		{
+		if(controls.BACK && notTyping) {
 			FlxG.switchState(() -> new MasterEditorMenu());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			FlxG.mouse.visible = false;
@@ -179,8 +176,7 @@ class NoteSplashDebugState extends MusicBeatState
 
 		if(maxAnims < 1) return;
 
-		if(selecArr != null)
-		{
+		if(selecArr != null) {
 			var movex = 0;
 			var movey = 0;
 			if(FlxG.keys.justPressed.LEFT) movex = -1;
@@ -189,14 +185,12 @@ class NoteSplashDebugState extends MusicBeatState
 			if(FlxG.keys.justPressed.UP) movey = 1;
 			else if(FlxG.keys.justPressed.DOWN) movey = -1;
 			
-			if(FlxG.keys.pressed.SHIFT)
-			{
+			if(FlxG.keys.pressed.SHIFT) {
 				movex *= 10;
 				movey *= 10;
 			}
 
-			if(movex != 0 || movey != 0)
-			{
+			if(movex != 0 || movey != 0) {
 				selecArr[0] -= movex;
 				selecArr[1] += movey;
 				updateOffsetText();
@@ -205,17 +199,13 @@ class NoteSplashDebugState extends MusicBeatState
 		}
 
 		// Copy & Paste
-		if(FlxG.keys.pressed.CONTROL)
-		{
-			if(FlxG.keys.justPressed.C)
-			{
+		if(FlxG.keys.pressed.CONTROL) {
+			if(FlxG.keys.justPressed.C) {
 				var arr:Array<Float> = selectedArray();
 				if(copiedArray == null) copiedArray = [0, 0];
 				copiedArray[0] = arr[0];
 				copiedArray[1] = arr[1];
-			}
-			else if(FlxG.keys.justPressed.V && copiedArray != null)
-			{
+			} else if(FlxG.keys.justPressed.V && copiedArray != null) {
 				var offs:Array<Float> = selectedArray();
 				offs[0] = copiedArray[0];
 				offs[1] = copiedArray[1];
@@ -226,20 +216,16 @@ class NoteSplashDebugState extends MusicBeatState
 
 		// Saving
 		pressEnterToSave -= elapsed;
-		if(visibleTime >= 0)
-		{
+		if(visibleTime >= 0) {
 			visibleTime -= elapsed;
-			if(visibleTime <= 0)
-				savedText.visible = false;
+			if(visibleTime <= 0) savedText.visible = false;
 		}
 
-		if(FlxG.keys.justPressed.ENTER)
-		{
+		if(FlxG.keys.justPressed.ENTER) {
 			savedText.text = 'Press ENTER again to save.';
-			if(pressEnterToSave > 0) //save
-			{
+			if(pressEnterToSave > 0)  { //save
 				saveFile();
-				FlxG.sound.play(Paths.sound('confirmMenu'), 0.4);
+				FlxG.sound.play(Paths.sound('confirmMenu'), .4);
 				pressEnterToSave = 0;
 				visibleTime = 3;
 			} else {
@@ -342,7 +328,7 @@ class NoteSplashDebugState extends MusicBeatState
 			var animID:Int = maxAnims + 1;
 			splashes.forEachAlive(function(spr:FlxSprite) {
 				for (i in 0...EK.colArray.length) {
-					var animName = 'note$i-$animID';
+					var animName:String = 'note$i-$animID';
 					if (!addAnimAndCheck(spr, animName, '${config.anim} ${EK.colArray[i]} $animID', 24, false)) {
 						loopContinue = false;
 						return;
@@ -415,8 +401,8 @@ class NoteSplashDebugState extends MusicBeatState
 	function addStrumAndSplash() {
 		maxNotes = EK.keys(PlayState.mania);
 		for (i in 0...maxNotes) {
-			var x = setPosX(i);
-			var y = setPosY();
+			var x:Float = setPosX(i);
+			var y:Float = setPosY();
 			var note:StrumNote = new StrumNote(x, y, i, 0);
 			note.alpha = 0.75;
 			note.playAnim('static');

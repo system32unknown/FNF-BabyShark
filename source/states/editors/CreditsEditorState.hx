@@ -247,14 +247,7 @@ class CreditsEditorState extends MusicBeatState {
 	}
 
 	function addCredit() {
-		var daData:Array<String> = [];
-		daData.push('User');
-		daData.push('');
-		daData.push('Description here...');
-		daData.push('');
-		daData.push('e1e1e1');
-
-		pushAtPos(curSelected + 1, daData);
+		pushAtPos(curSelected + 1, ['User', '', 'Description here...', '', 'e1e1e1']);
 
 		updateCreditObjects();
 		changeSelection();

@@ -289,13 +289,11 @@ class WeekEditorState extends MusicBeatState {
 
 		var stringThing:Array<String> = [for (i in 0...weekFile.songs.length) weekFile.songs[i][0]];
 		txtTracklist.text = '';
-		for (i in 0...stringThing.length) {
-			txtTracklist.text += stringThing[i] + '\n';
-		}
+		for (i in 0...stringThing.length) txtTracklist.text += stringThing[i] + '\n';
 
 		txtTracklist.text = txtTracklist.text.toUpperCase();
 
-		txtTracklist.screenCenter(X).x -= FlxG.width * 0.35;
+		txtTracklist.screenCenter(X).x -= FlxG.width * .35;
 		
 		txtWeekTitle.text = weekFile.storyName.toUpperCase();
 		txtWeekTitle.x = FlxG.width - (txtWeekTitle.width + 10);
@@ -308,7 +306,7 @@ class WeekEditorState extends MusicBeatState {
 		var isMissing:Bool = true;
 		if(assetName != null && assetName.length > 0) {
 			if(#if MODS_ALLOWED FileSystem.exists(Paths.modsImages('menubackgrounds/menu_$assetName')) || #end Assets.exists(Paths.getPath('images/menubackgrounds/menu_$assetName.png', IMAGE), IMAGE)) {
-				bgSprite.loadGraphic(Paths.image('menubackgrounds/menu_' + assetName));
+				bgSprite.loadGraphic(Paths.image('menubackgrounds/menu_$assetName'));
 				isMissing = false;
 			}
 		}
@@ -323,8 +321,8 @@ class WeekEditorState extends MusicBeatState {
 		
 		var isMissing:Bool = true;
 		if(assetName != null && assetName.length > 0) {
-			if( #if MODS_ALLOWED FileSystem.exists(Paths.modsImages('storymenu/' + assetName)) || #end Assets.exists(Paths.getPath('images/storymenu/' + assetName + '.png', IMAGE), IMAGE)) {
-				weekThing.loadGraphic(Paths.image('storymenu/' + assetName));
+			if( #if MODS_ALLOWED FileSystem.exists(Paths.modsImages('storymenu/$assetName')) || #end Assets.exists(Paths.getPath('images/storymenu/$assetName.png', IMAGE), IMAGE)) {
+				weekThing.loadGraphic(Paths.image('storymenu/$assetName'));
 				isMissing = false;
 			}
 		}
@@ -332,13 +330,13 @@ class WeekEditorState extends MusicBeatState {
 		if(isMissing) {
 			weekThing.visible = false;
 			missingFileText.visible = true;
-			missingFileText.text = 'MISSING FILE: images/storymenu/' + assetName + '.png';
+			missingFileText.text = 'MISSING FILE: images/storymenu/$assetName.png';
 		}
 		recalculateStuffPosition();
 
 		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Week Editor", "Editing: " + weekFileName);
+		DiscordClient.changePresence("Week Editor", 'Editing: $weekFileName');
 		#end
 	}
 	

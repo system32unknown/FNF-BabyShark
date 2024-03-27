@@ -46,7 +46,7 @@ class MainMenuState extends MusicBeatState {
 		persistentUpdate = persistentDraw = true;
 
 		var yScroll:Float = .25;
-		bg = new FlxSprite(0, -80, Paths.image('menuDesat'));
+		bg = new FlxSprite(-80, Paths.image('menuDesat'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
@@ -56,7 +56,7 @@ class MainMenuState extends MusicBeatState {
 		
 		add(camFollow = new FlxObject(0, 0, 1, 1));
 
-		magenta = new FlxSprite(0, -80, bg.graphic);
+		magenta = new FlxSprite(-80, bg.graphic);
 		magenta.antialiasing = ClientPrefs.data.antialiasing;
 		magenta.scrollFactor.set(0, yScroll);
 		magenta.active = false;

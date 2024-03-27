@@ -81,9 +81,10 @@ class MusicPlayer extends flixel.group.FlxGroup {
 
 		if (!playingMusic) return;
 
+		var songName:String = instance.songs[FreeplayState.curSelected].songName;
 		if (playing && !wasPlaying)
-			songTxt.text = 'PLAYING: ' + instance.songs[FreeplayState.curSelected].songName;
-		else songTxt.text = 'PLAYING: ' + instance.songs[FreeplayState.curSelected].songName + ' (PAUSED)';
+			songTxt.text = Language.getPhrase('musicplayer_playing', 'PLAYING: {1}', [songName]);
+		else songTxt.text = Language.getPhrase('musicplayer_paused', 'PLAYING: {1} (PAUSED)', [songName]);
 		positionSong();
 
 		if (controls.UI_LEFT_P) {
@@ -206,7 +207,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		updatePlaybackTxt();
 
 		if (playingMusic) {
-			instance.bottomText.text = "[SPACE] Pause • [ESCAPE] Exit • [R] Reset the Song";
+			instance.bottomText.text = Language.getPhrase('musicplayer_tip', "[SPACE] Pause • [ESCAPE] Exit • [R] Reset the Song");
 			positionSong();
 			
 			progressBar.setRange(0, FlxG.sound.music.length);

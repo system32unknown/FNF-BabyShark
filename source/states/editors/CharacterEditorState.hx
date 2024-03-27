@@ -343,7 +343,7 @@ class CharacterEditorState extends MusicBeatState {
 	var check_player:FlxUICheckBox;
 	var charDropDown:FlxUIDropDownMenu;
 	function addSettingsUI() {
-		var tab_group = new FlxUI(null, UI_box);
+		var tab_group:FlxUI = new FlxUI(null, UI_box);
 		tab_group.name = "Settings";
 
 		check_player = new FlxUICheckBox(10, 60, null, null, "Playable Character", 100);
@@ -394,13 +394,10 @@ class CharacterEditorState extends MusicBeatState {
 		templateCharacter.label.color = FlxColor.WHITE;
 
 		charDropDown = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray([''], true), function(index:String) {
-			var intended = characterList[Std.parseInt(index)];
+			var intended:String = characterList[Std.parseInt(index)];
 			if(intended == null || intended.length < 1) return;
 
-			var characterPath:String = 'characters/$intended.json';
-			var path:String = Paths.getPath(characterPath, TEXT, null, true);
-			
-			if (#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
+			if (#if MODS_ALLOWED FileSystem #else Assets #end.exists(Paths.getPath('characters/$intended.json'))) {
 				_char = intended;
 				check_player.checked = character.isPlayer;
 				addCharacter();
@@ -892,9 +889,9 @@ class CharacterEditorState extends MusicBeatState {
 		}
 	}
 
-	final assetFolder = 'week1';  //load from assets/week1/
+	final assetFolder:String = 'week1';  //load from assets/week1/
 	inline function loadBG() {
-		var lastLoaded = Paths.currentLevel;
+		var lastLoaded:String = Paths.currentLevel;
 		Paths.currentLevel = assetFolder;
 
 		/////////////
@@ -949,10 +946,9 @@ class CharacterEditorState extends MusicBeatState {
 		if(anims.length > 0) character.playAnim(anims[0].anim, true);
 		curAnim = 0;
 
-		for (text in animsTxtGroup)
-			text.kill();
+		for (text in animsTxtGroup) text.kill();
 
-		var daLoop = 0;
+		var daLoop:Int = 0;
 		for (anim in anims) {
 			var text:FlxText = animsTxtGroup.recycle(FlxText);
 			text.setPosition(10, 32 + (20 * daLoop));
@@ -971,7 +967,7 @@ class CharacterEditorState extends MusicBeatState {
 	}
 
 	inline function updateTextColors() {
-		var daLoop = 0;
+		var daLoop:Int = 0;
 		for (text in animsTxtGroup) {
 			text.color = FlxColor.WHITE;
 			if(daLoop == curAnim) text.color = FlxColor.LIME;

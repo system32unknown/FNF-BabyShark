@@ -1,7 +1,6 @@
 package objects;
 
 import flixel.math.FlxRect;
-import backend.NoteTypesConfig;
 
 import shaders.RGBPalette;
 import shaders.RGBPalette.RGBShaderReference;
@@ -27,14 +26,17 @@ typedef NoteSplashData = {
 
 class Note extends FlxSprite {
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
+
 	public var strumTime:Float = 0;
+	public var noteData:Int = 0;
 
 	public var mustPress:Bool = false;
-	public var noteData:Int = 0;
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
-	public var hasMissed:Bool = false;
+
 	public var wasGoodHit:Bool = false;
+	public var hasMissed:Bool = false;
+
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;
 	public var prevNote:Note;
@@ -65,11 +67,6 @@ class Note extends FlxSprite {
 	public static var SUSTAIN_SIZE:Int = 44;
 	public static var swagWidth:Float = 160 * .7;
 	public static var defaultNoteSkin:String = 'noteSkins/NOTE_assets';
-
-	// Lua shit
-	public var noteSplashDisabled:Bool = false;
-	public var noteSplashTexture:String = null;
-	public var noteSplashHSB:Array<Float> = [0, 0, 0];
 
 	public var noteSplashData:NoteSplashData = {
 		disabled: false,
@@ -140,7 +137,7 @@ class Note extends FlxSprite {
 	}
 
 	function set_noteType(value:String):String {
-		noteSplashTexture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
+		noteSplashData.texture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
 		defaultRGB();
 
 		if(noteData > -1 && noteType != value) {
@@ -170,7 +167,7 @@ class Note extends FlxSprite {
 				case 'GF Sing':
 					gfNote = true;
 			}
-			if (value != null && value.length > 1) NoteTypesConfig.applyNoteTypeData(this, value);
+			if (value != null && value.length > 1) backend.NoteTypesConfig.applyNoteTypeData(this, value);
 			if (hitsound != 'hitsound' && ClientPrefs.data.hitsoundVolume > 0) Paths.sound(hitsound); //precache new sound for being idiot-proof
 			noteType = value;
 		}
@@ -251,7 +248,7 @@ class Note extends FlxSprite {
 	}
 
 	public static function initializeGlobalRGBShader(noteData:Int) {
-		var dataNum = EK.gfxIndex[PlayState.mania][noteData];
+		var dataNum:Int = EK.gfxIndex[PlayState.mania][noteData];
 		if(globalRgbShaders[dataNum] == null) {
 			var newRGB:RGBPalette = new RGBPalette();
 			globalRgbShaders[dataNum] = newRGB;

@@ -15,8 +15,7 @@ import cutscenes.DialogueBoxPsych;
 import cutscenes.DialogueCharacter;
 import objects.TypedAlphabet;
 
-class DialogueCharacterEditorState extends MusicBeatState
-{
+class DialogueCharacterEditorState extends MusicBeatState {
 	var box:FlxSprite;
 	var daText:TypedAlphabet = null;
 
@@ -292,7 +291,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 				}
 			}
 		});
-		
+
 		tab_group.add(new FlxText(animationDropDown.x, animationDropDown.y - 18, 0, 'Animations:'));
 		tab_group.add(new FlxText(animationInputText.x, animationInputText.y - 18, 0, 'Animation name:'));
 		tab_group.add(new FlxText(loopInputText.x, loopInputText.y - 18, 0, 'Loop name on .XML file:'));

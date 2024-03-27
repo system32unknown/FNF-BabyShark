@@ -2063,10 +2063,8 @@ class ChartingState extends MusicBeatState {
 
 				var sample:Float = (byte / 65535);
 
-				if (sample > 0)
-					if (sample > lmax) lmax = sample;
-				else if (sample < 0)
-					if (sample < lmin) lmin = sample;
+				if (sample > 0 && sample > lmax) lmax = sample;
+				else if (sample < 0 && sample < lmin) lmin = sample;
 
 				if (channels >= 2) {
 					byte = bytes.getUInt16((index * channels * 2) + 2);
@@ -2075,10 +2073,8 @@ class ChartingState extends MusicBeatState {
 
 					sample = (byte / 65535);
 
-					if (sample > 0)
-						if (sample > rmax) rmax = sample;
-					else if (sample < 0)
-						if (sample < rmin) rmin = sample;
+					if (sample > 0 && sample > rmax) rmax = sample;
+					else if (sample < 0 && sample < rmin) rmin = sample;
 				}
 			}
 
@@ -2367,6 +2363,7 @@ class ChartingState extends MusicBeatState {
 			note.noteType = i[3];
 		} else { //Event note
 			note.loadGraphic(Paths.image('eventArrow'));
+			note.rgbShader.enabled = false;
 			note.eventName = getEventName(i[1]);
 			note.eventLength = i[1].length;
 			if(i[1].length < 2) {

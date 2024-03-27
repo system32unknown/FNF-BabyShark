@@ -1967,7 +1967,7 @@ class PlayState extends MusicBeatState {
 		if(!note.ratingDisabled) daRating.hits++;
 		totalNotesHit += (ClientPrefs.data.complexAccuracy ? backend.Wife3.getAcc(-noteDiff) : daRating.ratingMod);
 
-		if(daRating.noteSplash && !note.noteSplashDisabled) spawnNoteSplashOnNote(note);
+		if(daRating.noteSplash && !note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
 
 		songScore += score;
 		if(!note.ratingDisabled) {
@@ -2340,7 +2340,7 @@ class PlayState extends MusicBeatState {
 			}
 
 			noteMiss(note);
-			if(!note.noteSplashDisabled && !isSus) spawnNoteSplashOnNote(note);
+			if(!note.noteSplashData.disabled  && !isSus) spawnNoteSplashOnNote(note);
 			if(!isSus) invalidateNote(note);
 			return;
 		}

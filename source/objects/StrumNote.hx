@@ -78,7 +78,7 @@ class StrumNote extends FlxSprite {
 			animation.add('black', [16]);
 			animation.add('dark', [17]);
 
-			var dataNum = EK.gfxIndex[PlayState.mania][noteData];
+			var dataNum:Int = EK.gfxIndex[PlayState.mania][noteData];
 			animation.add('static', [dataNum]);
 			animation.add('pressed', [9 + dataNum, 18 + dataNum], 12, false);
 			animation.add('confirm', [27 + dataNum, 36 + dataNum], 24, false);

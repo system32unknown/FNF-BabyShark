@@ -16,7 +16,7 @@ class EK {
 	public static var scalesPixel:Array<Float> = [1, 1, 1, 1, .93, .86, .79, .71, .66];
 	public static var swidths:Array<Float> = [112, 112, 112, 112, 98, 84, 77, 70, 63];
 	public static var posRest:Array<Int> = [-168, -112, -56, 0, 15, 35, 45, 55, 60];
-	public static var gfxIndex:Array<Dynamic> = [
+	public static var gfxIndex:Array<Array<Int>> = [
 		[4],
 		[0, 3],
 		[0, 4, 3],
@@ -27,7 +27,7 @@ class EK {
 		[0, 1, 2, 3, 5, 6, 7, 8],
 		[for (i in 0...9) i]
 	];
-	public static var gfxHud:Array<Dynamic> = [
+	public static var gfxHud:Array<Array<Int>> = [
 		[4],
 		[0, 3],
 		[0, 4, 3],

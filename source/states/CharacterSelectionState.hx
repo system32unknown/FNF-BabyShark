@@ -55,6 +55,7 @@ class CharacterSelectionState extends MusicBeatState {
 	var controlsText:FlxText;
 
 	var previewMode:Bool = false;
+	var noGFSkin:Bool = false;
 	var selectedCharacter:Bool = false;
 	var pressedTheFunny:Bool = false;
 
@@ -119,7 +120,7 @@ class CharacterSelectionState extends MusicBeatState {
 		characterText.screenCenter(X);
 		add(characterText);
 
-		controlsText = new FlxText(-125, 125, 0, 'Press P to enter preview mode.', 20);
+		controlsText = new FlxText(-125, 125, 0, Language.getPhrase('before_previewmode', 'Press P to enter preview mode.\nNo GF Skin: {1}', [noGFSkin]), 20);
 		controlsText.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		controlsText.scrollFactor.set();
 		controlsText.camera = camHUD;
@@ -144,9 +145,9 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	function checkPreview() {
-		if (previewMode) controlsText.text = "PREVIEW MODE\nPress your controls to play an animation.\n(Press P to exit.)";
+		if (previewMode) controlsText.text = Language.getPhrase('after_previewmode', 'PREVIEW MODE\nPress your controls to play an animation.\n(Press P to exit.)\nNo GF Skin: {1}', [noGFSkin]);
 		else {
-			controlsText.text = "Press P to enter preview mode.";
+			controlsText.text = Language.getPhrase('before_previewmode', 'Press P to enter preview mode.\nNo GF Skin: {1}', [noGFSkin]);
 			char.playAnim('idle', true);
 		}
 	}
@@ -177,7 +178,7 @@ class CharacterSelectionState extends MusicBeatState {
 		if (controls.ACCEPT) {
 			if (isLocked(characters[current].forms[curForm].name)) {
 				FlxG.camera.shake(.05, .1);
-				FlxG.sound.play(Paths.sound('badnoise1'), .9);
+				FlxG.sound.play(Paths.sound('missnote1'), .9);
 				return;
 			}
 
@@ -194,7 +195,7 @@ class CharacterSelectionState extends MusicBeatState {
 			FlxG.sound.playMusic(Paths.music('gameOverEnd'));
 
 			FlxTimer.wait(1.9, () -> {
-				PlayState.SONG.gfVersion = switch(characterFile) {
+				if (!noGFSkin) PlayState.SONG.gfVersion = switch(characterFile) {
 					case 'bf-pixel': 'gf-pixel';
 					case 'bf-christmas': 'gf-christmas';
 					case 'bs' | 'pico-player' | 'nate-player': 'gfbf';
@@ -208,10 +209,17 @@ class CharacterSelectionState extends MusicBeatState {
 			});
 		}
 
-		if (FlxG.keys.justPressed.P && !selectedCharacter) {
-			previewMode = !previewMode;
-			checkPreview();
+		if (!selectedCharacter) {
+			if (FlxG.keys.justPressed.TAB) {
+				noGFSkin = !noGFSkin;
+				checkPreview();
+			}
+			if (FlxG.keys.justPressed.P) {
+				previewMode = !previewMode;
+				checkPreview();
+			}
 		}
+
 		if (!selectedCharacter && !previewMode) {
 			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
 				curForm = 0;

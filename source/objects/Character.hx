@@ -80,8 +80,7 @@ class Character extends FlxSprite {
 			//case 'your character name in case you want to hardcode them instead':
 
 			default:
-				var characterPath:String = 'characters/$curCharacter.json';
-				var path:String = Paths.getPath(characterPath, TEXT);
+				var path:String = Paths.getPath('characters/$curCharacter.json');
 				
 				if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
 					path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
@@ -133,7 +132,7 @@ class Character extends FlxSprite {
 		isAnimateAtlas = false;
 
 		#if flxanimate
-		var animToFind:String = Paths.getPath('images/${json.image}/Animation.json', TEXT);
+		var animToFind:String = Paths.getPath('images/${json.image}/Animation.json');
 		if (#if MODS_ALLOWED FileSystem.exists(animToFind) || #end Assets.exists(animToFind))
 			isAnimateAtlas = true;
 		#end

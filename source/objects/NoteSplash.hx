@@ -141,8 +141,7 @@ class NoteSplash extends FlxSprite {
 	public static function precacheConfig(skin:String) {
 		if(configs.exists(skin)) return configs.get(skin);
 
-		var path:String = Paths.getPath('images/$skin.txt');
-		var configFile:Array<String> = CoolUtil.coolTextFile(path);
+		var configFile:Array<String> = CoolUtil.coolTextFile(Paths.getPath('images/$skin.txt'));
 		if(configFile.length < 1) return null;
 		
 		var framerates:Array<String> = configFile[1].split(' ');
