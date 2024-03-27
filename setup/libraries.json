@@ -4,6 +4,7 @@
         {"name":"openfl", "type":"haxelib", "dir":"openfl"},
         {"name":"tjson", "type":"haxelib", "dir":"tjson"},
         {"name":"hxdiscord_rpc", "type":"git", "dir":"hxdiscord_rpc",
+            "ref": "main",
         "url":"https://github.com/FNF-CNE-Devs/hxdiscord_rpc"},
         {"name":"hxvlc", "type":"haxelib", "dir":"hxvlc"},
         {"name":"flixel","type":"git", "dir":"flixel",
