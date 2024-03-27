@@ -78,8 +78,7 @@ class Option {
 			}
 
 		try {
-			if(getValue() == null)
-				setValue(defaultValue);
+			if(getValue() == null) setValue(defaultValue);
 
 			switch(type) {
 				case STRING:
@@ -95,14 +94,14 @@ class Option {
 	}
 
 	dynamic public function getValue():Dynamic {
-		var value = Reflect.getProperty(ClientPrefs.data, variable);
+		var value:Dynamic = Reflect.getProperty(ClientPrefs.data, variable);
 		if(type == KEYBIND) return value.keyboard;
 		return value;
 	}
 
 	dynamic public function setValue(value:Dynamic) {
 		if(type == KEYBIND) {
-			var keys = Reflect.getProperty(ClientPrefs.data, variable);
+			var keys:Dynamic = Reflect.getProperty(ClientPrefs.data, variable);
 			keys.keyboard = value;
 			return value;
 		}

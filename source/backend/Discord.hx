@@ -9,6 +9,8 @@ class DiscordClient {
 	public static var clientID(default, set):String = _defaultID;
 	static var presence:DiscordRichPresence = DiscordRichPresence.create();
 
+	public static var user:DUser = null;
+
 	public static function check() {
 		if(ClientPrefs.data.discordRPC) initialize();
 		else if(isInitialized) shutdown();
@@ -25,29 +27,39 @@ class DiscordClient {
 	}
 	
 	static function onReady(request:cpp.RawConstPointer<DiscordUser>):Void {
-		var requestPtr:cpp.Star<DiscordUser> = cpp.ConstPointer.fromRaw(request).ptr;
-
-		if (Std.parseInt(cast(requestPtr.discriminator, String)) != 0) //New Discord IDs/Discriminator system
-			trace('(Discord) Connected to User (${cast(requestPtr.username, String)}#${cast(requestPtr.discriminator, String)})');
-		else trace('(Discord) Connected to User (${cast(requestPtr.username, String)})'); //Old discriminators
+		user = DUser.initRaw(request);
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText("Connected to User " + user.globalName + " ("),
+			Logs.logText(user.handle, GRAY),
+			Logs.logText(")")
+		], INFO);
 
 		changePresence();
 	}
 
 	static function onError(errorCode:Int, message:cpp.ConstCharStar):Void {
-		Logs.trace('Discord: Error ($errorCode: ${cast(message, String)})', ERROR);
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText('Error ($errorCode: ${cast(message, String)})', RED)
+		], ERROR);
 	}
 
 	static function onDisconnected(errorCode:Int, message:cpp.ConstCharStar):Void {
-		Logs.trace('Discord: Disconnected ($errorCode: ${cast(message, String)})', WARNING);
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText("Disconnected ("),
+			Logs.logText('$errorCode: ${cast(message, String)}', RED),
+			Logs.logText(")")
+		], INFO);
 	}
 
 	public static function initialize() {
-		var discordHandlers:DiscordEventHandlers = DiscordEventHandlers.create();
-		discordHandlers.ready = cpp.Function.fromStaticFunction(onReady);
-		discordHandlers.disconnected = cpp.Function.fromStaticFunction(onDisconnected);
-		discordHandlers.errored = cpp.Function.fromStaticFunction(onError);
-		Discord.Initialize(clientID, cpp.RawPointer.addressOf(discordHandlers), 1, null);
+		var handlers:DiscordEventHandlers = DiscordEventHandlers.create();
+		handlers.ready = cpp.Function.fromStaticFunction(onReady);
+		handlers.disconnected = cpp.Function.fromStaticFunction(onDisconnected);
+		handlers.errored = cpp.Function.fromStaticFunction(onError);
+		Discord.Initialize(clientID, cpp.RawPointer.addressOf(handlers), 1, null);
 
 		if(!isInitialized) trace("Discord Client initialized");
 
@@ -111,4 +123,87 @@ class DiscordClient {
 		});
 	}
 	#end
+}
+
+final class DUser {
+	/**
+	 * The username + discriminator if they have it
+	**/
+	public var handle:String;
+
+	/**
+	 * The user id, aka 860561967383445535
+	**/
+	public var userId:String;
+
+	/**
+	 * The user's username
+	**/
+	public var username:String;
+
+	/**
+	 * The #number from before discord changed to usernames only, if the user has changed to a username them its just a 0
+	**/
+	public var discriminator:Int;
+
+	/**
+	 * The user's avatar filename
+	**/
+	public var avatar:String;
+
+	/**
+	 * The user's display name
+	**/
+	public var globalName:String;
+
+	/**
+	 * If the user is a bot or not
+	**/
+	public var bot:Bool;
+
+	/**
+	 * Idk check discord docs
+	**/
+	public var flags:Int;
+
+	/**
+	 * If the user has nitro
+	**/
+	public var premiumType:NitroType;
+
+	function new() {}
+
+	public static function initRaw(req:cpp.RawConstPointer<DiscordUser>) {
+		return init(cpp.ConstPointer.fromRaw(req).ptr);
+	}
+
+	public static function init(userData:cpp.Star<DiscordUser>):DUser {
+		var d:DUser = new DUser();
+		d.userId = userData.userId;
+		d.username = userData.username;
+		d.discriminator = Std.parseInt(userData.discriminator);
+		d.avatar = userData.avatar;
+		d.globalName = userData.globalName;
+		d.bot = userData.bot;
+		d.flags = userData.flags;
+		d.premiumType = userData.premiumType;
+
+		if (d.discriminator != 0)
+			d.handle = '${d.username}#${d.discriminator}';
+		else d.handle = '${d.username}';
+		return d;
+	}
+
+	/**
+	 * Calling this function gets the BitmapData of the user
+	**/
+	public function getAvatar(size:Int = 256):openfl.display.BitmapData
+		return openfl.display.BitmapData.fromBytes(utils.HttpUtil.requestBytes('https://cdn.discordapp.com/avatars/$userId/$avatar.png?size=$size'));
+}
+
+enum abstract NitroType(Int) to Int from Int {
+	var NONE = 0;
+	var NITRO_CLASSIC = 1;
+	var NITRO = 2;
+	var NITRO_BASIC = 3;
 }

@@ -2,6 +2,7 @@ package states;
 
 import flixel.addons.transition.FlxTransitionableState;
 import states.MainMenuState;
+import flixel.group.FlxGroup;
 
 @:structInit
 class TitleData {
@@ -25,6 +26,9 @@ class TitleState extends MusicBeatState {
 	var logo:FlxSprite;
 	var titleText:FlxSprite;
 
+	var credGroup:FlxGroup;
+	var textGroup:FlxGroup;
+
 	final titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	final titleTextAlphas:Array<Float> = [1, .64];
 
@@ -34,8 +38,6 @@ class TitleState extends MusicBeatState {
 	var startingTween:FlxTween;
 	var gradientBar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 1, 0xFF0F5FFF);
 	var gradtimer:Float = 0;
-
-	var textGroup:FlxTypedGroup<FlxText>;
 
 	override function create():Void {
 		Paths.clearStoredCache();
@@ -127,7 +129,9 @@ class TitleState extends MusicBeatState {
 		titleText.updateHitbox();
 		add(titleText);
 
-		add(textGroup = new FlxTypedGroup<FlxText>());
+		add(credGroup = new FlxGroup());
+		textGroup = new FlxGroup();
+
 		randomPhrase = getIntroTextShit();
 
 		if (!skippedIntro) {
@@ -176,7 +180,7 @@ class TitleState extends MusicBeatState {
 					titleText.alpha = 1;
 	
 					FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 1);
-					FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
+					FlxG.sound.play(Paths.sound('confirmMenu'), .7);
 	
 					MainMenuState.firstStart = true;
 					MainMenuState.finishedFunnyMove = false;
@@ -202,20 +206,32 @@ class TitleState extends MusicBeatState {
 		}
 	}
 
-	function createText(textArray:Array<String>, offset:Float = 0) {
-		for (i in 0...textArray.length) addMoreText(textArray[i], offset, i);
-	}
-
-	function addMoreText(text:String, offset:Float = 0, i:Int = -1) {
-		if (textGroup != null) {
-			final txt:FlxText = new FlxText(0, ((i == -1 ? textGroup.length : i) * 60) + 200 + offset, FlxG.width, text, 48);
-			txt.screenCenter(X);
-			txt.setFormat(Paths.font("babyshark.ttf"), 48, FlxColor.WHITE, CENTER);
-			textGroup.add(txt);
+	function createCoolText(textArray:Array<String>, ?offset:Float = 0) {
+		for (i in 0...textArray.length) {
+			var money:Alphabet = new Alphabet(0, 0, textArray[i]);
+			money.screenCenter(X).y += (i * 60) + 200 + offset;
+			if(credGroup != null && textGroup != null) {
+				credGroup.add(money);
+				textGroup.add(money);
+			}
 		}
 	}
 
-	inline function deleteText() while (textGroup.members.length > 0) textGroup.remove(textGroup.members[0], true);
+	function addMoreText(text:String, ?offset:Float = 0) {
+		if(textGroup != null && credGroup != null) {
+			var coolText:Alphabet = new Alphabet(0, 0, text);
+			coolText.screenCenter(X).y += (textGroup.length * 60) + 200 + offset;
+			credGroup.add(coolText);
+			textGroup.add(coolText);
+		}
+	}
+
+	function deleteText() {
+		while (textGroup.members.length > 0) {
+			credGroup.remove(textGroup.members[0], true);
+			textGroup.remove(textGroup.members[0], true);
+		}
+	}
 
 	override function beatHit() {
 		super.beatHit();
@@ -225,33 +241,33 @@ class TitleState extends MusicBeatState {
 
 		if(!skippedIntro) {
 			switch (curBeat) {
-				case 2: createText(['Vs Dave and Bambi by:']);
+				case 2: createCoolText(['Vs Dave and Bambi by:']);
 				case 3:
 					addMoreText('MoldyGH, MTM101, Stats45');
 					addMoreText('Rapparep lol, TheBuilderXD, Edival');
 					addMoreText('T5mpler, Erizur, Billy Bobbo');
 				case 4:
 					deleteText();
-					createText(['Baby Shark\'s Big Show by:']);
+					createCoolText(['Baby Shark\'s Big Show by:']);
 				case 5:
 					addMoreText('Pinkfong');
 					addMoreText('Nickelodeon');
 					addMoreText('SmartStudy');
 				case 6:
 					deleteText();
-					createText(['Psych Engine by:']);
+					createCoolText(['Psych Engine by:']);
 				case 7:
 					addMoreText('Shadow Mario');
 					addMoreText('Riveren');
 					addMoreText('And Psych Engine Contributors!');
 				case 8:
 					deleteText();
-					createText(['Altertoriel']);
+					createCoolText(['Altertoriel']);
 				case 9:
 					addMoreText('Presents!');
 				case 10:
 					deleteText();
-					createText([randomPhrase[0]]);
+					createCoolText([randomPhrase[0]]);
 				case 11: addMoreText(randomPhrase[1]);
 				case 12: deleteText();
 				case 13: addMoreText('Baby');

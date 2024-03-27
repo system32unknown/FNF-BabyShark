@@ -110,12 +110,13 @@ class LoadingState extends MusicBeatState {
 		}
 
 		timePassed += elapsed;
-		var txt:String = '(${utils.MathUtil.floorDecimal(curPercent * 100, 2)}%) Now Loading.';
+		var dots:String = '';
 		switch(Math.floor(timePassed % 1 * 3)) {
-			case 1: txt += '.';
-			case 2: txt += '..';
+			case 0: dots = '.';
+			case 1: dots = '..';
+			case 2: dots = '...';
 		}
-		loadingText.text = txt;
+		loadingText.text = Language.getPhrase('now_loading', '({1}%) Now Loading{2}', [utils.MathUtil.floorDecimal(curPercent * 100, 2), dots]);
 	}
 
 	var finishedLoading:Bool = false;

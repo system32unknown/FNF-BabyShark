@@ -2,7 +2,7 @@ package options;
 
 class MiscellaneousSubState extends BaseOptionsMenu {
 	public function new() {
-		title = 'Miscellaneous';
+		title = Language.getPhrase('miscs_menu', 'Miscellaneous Settings');
 		rpcTitle = 'Miscellaneous Menu'; //for Discord Rich Presence
 
 		var opt:Option = new Option('FPS Counter', 'If unchecked, hides FPS Counter.', 'showFPS', BOOL);

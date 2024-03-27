@@ -6,8 +6,8 @@ class BackgroundDancer extends FlxSprite {
 		super(x, y);
 
 		frames = Paths.getSparrowAtlas("limo/limoDancer");
-		animation.addByIndices('danceLeft', 'bg dancer sketch PINK', [for (i in 0...14) i], "", 24, false);
-		animation.addByIndices('danceRight', 'bg dancer sketch PINK', [for (i in 15...30) i], "", 24, false);
+		animation.addByIndices('danceLeft', 'bg dancer sketch', [for (i in 0...14) i], "", 24, false);
+		animation.addByIndices('danceRight', 'bg dancer sketch', [for (i in 15...30) i], "", 24, false);
 		animation.play('danceLeft');
 		antialiasing = ClientPrefs.data.antialiasing;
 	}

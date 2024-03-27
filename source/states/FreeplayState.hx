@@ -145,7 +145,7 @@ class FreeplayState extends MusicBeatState {
 
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
 
-		var leText:String = '[SPACE] Listen to the Song • [CTRL] Gameplay Changers Menu • [HOLD Z] Skip Character Selection\n[COMMA] Change Sections • [RESET] Reset Score and Accuracy';
+		var leText:String = Language.getPhrase("freeplay_tip", '[SPACE] Listen to the Song • [CTRL] Gameplay Changers Menu • [HOLD Z] Skip Character Selection\n[COMMA] Change Sections • [RESET] Reset Score and Accuracy');
 		bottomString = leText;
 		bottomText = new FlxText(0, 0, FlxG.width, leText, 18);
 		bottomText.setFormat(Paths.font("babyshark.ttf"), 18, FlxColor.WHITE, CENTER);
@@ -203,7 +203,7 @@ class FreeplayState extends MusicBeatState {
 
 		if (!player.playingMusic) {
 			comboText.text = 'Rating: $intendedcombo';
-			scoreText.text = 'PERSONAL BEST: $lerpScore (' + ratingSplit.join('.') + '%)';
+			scoreText.text = Language.getPhrase('personal_best', 'PERSONAL BEST: {1} ({2}%)', [lerpScore, ratingSplit.join('.')]);
 			positionHighscore();
 
 			if(songs.length > 1) {
@@ -376,10 +376,11 @@ class FreeplayState extends MusicBeatState {
 		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
 		intendedcombo = Highscore.getCombo(songs[curSelected].songName, curDifficulty);
 
-		lastDifficultyName = Difficulty.getString(curDifficulty);
+		lastDifficultyName = Difficulty.getString(curDifficulty, false);
+		var displayDiff:String = Difficulty.getString(curDifficulty);
 		if (Difficulty.list.length > 1)
-			diffText.text = '< ${lastDifficultyName.toUpperCase()} >';
-		else diffText.text = lastDifficultyName.toUpperCase();
+			diffText.text = '< ' + displayDiff.toUpperCase() + ' >';
+		else diffText.text = displayDiff.toUpperCase();
 
 		missingText.visible = missingTextBG.visible = false;
 		positionHighscore();
@@ -426,7 +427,7 @@ class FreeplayState extends MusicBeatState {
 	}
 
 	inline function _updateSongLastDifficulty() {
-		songs[curSelected].lastDifficulty = Difficulty.getString(curDifficulty);
+		songs[curSelected].lastDifficulty = Difficulty.getString(curDifficulty, false);
 	}
 
 	function positionHighscore() {

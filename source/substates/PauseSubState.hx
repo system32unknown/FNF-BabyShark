@@ -61,9 +61,9 @@ class PauseSubState extends MusicBeatSubstate {
 
 		var levelInfo:FlxText = new FlxText(20, 15, 0, PlayState.SONG.song, 32);
 		var levelDifficulty:FlxText = new FlxText(20, 15, 0, Difficulty.getString().toUpperCase(), 32);
-		var failTxt:FlxText = new FlxText(20, 15, 0, 'Fails: ${PlayState.deathCounter}', 32);
-		var chartingText:FlxText = new FlxText(20, 15, 0, "CHARTING MODE", 32);
-		practiceText = new FlxText(20, 15, 0, "PRACTICE MODE", 32);
+		var failTxt:FlxText = new FlxText(20, 15, 0, Language.getPhrase("fails", "Fails: {1}", [PlayState.deathCounter]), 32);
+		var chartingText:FlxText = new FlxText(20, 15, 0, Language.getPhrase("Charting Mode").toUpperCase(), 32);
+		practiceText = new FlxText(20, 15, 0, Language.getPhrase("Practice Mode").toUpperCase(), 32);
 
 		for(k => label in [levelInfo, levelDifficulty, failTxt, chartingText, practiceText]) {
 			label.scrollFactor.set();
@@ -295,19 +295,19 @@ class PauseSubState extends MusicBeatSubstate {
 
 	function regenMenu():Void {
 		for (_ in 0...grpMenuShit.members.length) {
-			var obj = grpMenuShit.members[0];
+			var obj:Alphabet = grpMenuShit.members[0];
 			obj.kill();
 			grpMenuShit.remove(obj, true);
 			obj.destroy();
 		}
 
-		for (i in 0...menuItems.length) {
-			var item = new Alphabet(90, 320, menuItems[i]);
+		for (num => str in menuItems) {
+			var item = new Alphabet(90, 320, Language.getPhrase('pause_$str', str));
 			item.isMenuItem = true;
-			item.targetY = i;
+			item.targetY = num;
 			grpMenuShit.add(item);
 
-			if(menuItems[i] == 'Skip Time') {
+			if(str == 'Skip Time') {
 				skipTimeText = new FlxText(0, 0, 0, '', 64);
 				skipTimeText.setFormat(Paths.font("babyshark.ttf"), 64, FlxColor.WHITE, CENTER);
 				skipTimeText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);

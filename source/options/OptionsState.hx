@@ -55,9 +55,9 @@ class OptionsState extends MusicBeatState {
 
 	function reload(re:Bool = false) {
 		if (re) grpOptions.clear();
-		for (i in 0...options[curPage].length) {
-			var optionText:Alphabet = new Alphabet(0, 0, options[curPage][i]);
-			optionText.screenCenter().y += (100 * (i - (options[curPage].length / 2))) + 50;
+		for (num => option in options) {
+			var optionText:Alphabet = new Alphabet(0, 0, Language.getPhrase('options_$option', option));
+			optionText.screenCenter().y += (92 * (num - (options.length / 2))) + 45;
 			grpOptions.add(optionText);
 		}
 	}
@@ -108,14 +108,13 @@ class OptionsState extends MusicBeatState {
 		for (num => item in grpOptions.members) {
 			item.targetY = num - curSelected;
 
-			item.alpha = 0.6;
+			item.alpha = .6;
 			if (item.targetY == 0) {
 				item.alpha = 1;
 				selectorLeft.setPosition(item.x - 63, item.y);
 				selectorRight.setPosition(item.x + item.width + 15, item.y);
 			}
 		}
-
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 

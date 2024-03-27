@@ -2,7 +2,7 @@ package options;
 
 class GameplaySettingsSubState extends BaseOptionsMenu {
 	public function new() {
-		title = 'Gameplay Settings';
+		title = Language.getPhrase('gameplay_menu', 'Gameplay Settings');
 		rpcTitle = 'Gameplay Settings Menu'; //for Discord Rich Presence
 
 		addOption(new Option('Downscroll', 'If checked, notes go Down instead of Up, simple enough.', 'downScroll', BOOL));

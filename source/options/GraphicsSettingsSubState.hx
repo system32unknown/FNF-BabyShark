@@ -6,7 +6,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 	var antialiasingOption:Int;
 	var boyfriend:Character = null;
 	public function new() {
-		title = 'Graphics';
+		title = Language.getPhrase('graphics_menu', 'Graphics Settings');
 		rpcTitle = 'Graphics Settings Menu'; //for Discord Rich Presence
 
 		boyfriend = new Character(840, 170, 'bf', true);

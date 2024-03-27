@@ -2239,7 +2239,7 @@ class PlayState extends MusicBeatState {
 		if(char != null && (note == null || !note.noMissAnimation) && char.hasMissAnimations) {
 			var suffix:String = '';
 			if(note != null) suffix = note.animSuffix;
-			char.playAnim('sing' + singAnimations[EK.gfxHud[mania][Std.int(Math.abs(direction))]] + 'miss$suffix', true);
+			char.playAnim(singAnimations[EK.gfxHud[mania][Std.int(Math.abs(direction))]] + 'miss$suffix', true);
 			if(char != gf && combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
 				gf.playAnim('sad');
 				gf.specialAnim = true;
