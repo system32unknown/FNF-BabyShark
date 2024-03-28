@@ -66,7 +66,7 @@ class ShaderFunctions {
             var camera = getCam(cam);
             if (camera.filters == null) camera.filters = [];
 			
-            var filter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
+            var filter:ShaderFilter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
             storedFilters.set(index, filter);
 			trace("Stored Shaders:" + Std.string(storedFilters));
             camera.filters.push(filter);

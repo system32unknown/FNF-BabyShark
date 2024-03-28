@@ -57,9 +57,8 @@ class DeprecatedFunctions {
 			FunkinLua.luaTrace("luaSpriteAddAnimationByIndices is deprecated! Use addAnimationByIndices instead", false, true);
 			if(PlayState.instance.modchartSprites.exists(tag)) {
 				var strIndices:Array<String> = indices.trim().split(',');
-				var die:Array<Int> = [for (i in 0...strIndices.length) Std.parseInt(strIndices[i])];
 				var pussy:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
-				pussy.animation.addByIndices(name, prefix, die, '', framerate, false);
+				pussy.animation.addByIndices(name, prefix, [for (i in 0...strIndices.length) Std.parseInt(strIndices[i])], '', framerate, false);
 				if(pussy.animation.curAnim == null) pussy.animation.play(name, true);
 			}
 		});

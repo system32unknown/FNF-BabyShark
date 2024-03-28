@@ -205,8 +205,7 @@ class FunkinLua {
 			if(name == null || name.length <= 0) name = PlayState.SONG.song;
 			if (difficultyNum == -1) difficultyNum = PlayState.storyDifficulty;
 
-			var formattedsong = Highscore.formatSong(name, difficultyNum);
-			PlayState.SONG = Song.loadFromJson(formattedsong, name);
+			PlayState.SONG = Song.loadFromJson(Highscore.formatSong(name, difficultyNum), name);
 			PlayState.storyDifficulty = difficultyNum;
 			game.persistentUpdate = false;
 			LoadingState.loadAndSwitchState(() -> new PlayState());
@@ -224,7 +223,7 @@ class FunkinLua {
 			var spr:FlxSprite = LuaUtils.getVarInstance(variable);
 
 			if (spr == null || image == null || image.length <= 0) return false;
-			var animated = gridX != 0 || gridY != 0;
+			var animated:Bool = gridX != 0 || gridY != 0;
 
 			spr.loadGraphic(Paths.image(image), animated, gridX, gridY);
 			return true;

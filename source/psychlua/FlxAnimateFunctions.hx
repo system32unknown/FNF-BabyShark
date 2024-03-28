@@ -42,10 +42,7 @@ class FlxAnimateFunctions {
 			if(indices == null) indices = [0];
 			else if(Std.isOfType(indices, String)) {
 				var strIndices:Array<String> = cast (indices, String).trim().split(',');
-				var myIndices:Array<Int> = [];
-				for (i in 0...strIndices.length)
-					myIndices.push(Std.parseInt(strIndices[i]));
-				indices = myIndices;
+				indices = [for (i in 0...strIndices.length) Std.parseInt(strIndices[i])];
 			}
 
 			obj.anim.addBySymbolIndices(name, symbol, indices, framerate, loop, matX, matY);

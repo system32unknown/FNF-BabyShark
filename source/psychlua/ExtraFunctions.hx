@@ -131,8 +131,8 @@ class ExtraFunctions {
 		});
 		funk.set("promptFile", CoolUtil.saveFile);
 
-		funk.set("parseJson", function(jsonStr:String, varName:String) {
-			var json = Paths.modFolders('data/' + jsonStr + '.json');
+		funk.set("parseJson", (jsonStr:String, varName:String) -> {
+			var json:String = Paths.modFolders('data/$jsonStr.json');
 			var foundJson:Bool;
 
 			if (#if sys FileSystem #else Assets #end.exists(json)) foundJson = true;
@@ -142,7 +142,7 @@ class ExtraFunctions {
 			}
 
 			if (foundJson) {
-				var parsedJson = Json.parse(File.getContent(json));				
+				var parsedJson:Dynamic = Json.parse(File.getContent(json));				
 				PlayState.instance.variables.set(varName, parsedJson);
 				return true;
 			}
@@ -159,22 +159,22 @@ class ExtraFunctions {
 		funk.set("regexMatch", (str:String, toMatch:String, flag:String = "i") -> return new EReg(str, flag).match(toMatch));
 		funk.set("regexSubMatch", (str:String, toMatch:String, pos:Int, len:Int = -1, flag:String = "i") -> return new EReg(str, flag).matchSub(toMatch, pos, len));
 		funk.set("regexFindMatchAt", function(str:String, toMatch:String, n:Int, flag:String = "i") {
-			var theData = new EReg(str, flag);
+			var theData:EReg = new EReg(str, flag);
 			theData.match(toMatch);
 			return theData.matched(n);
 		});
 		funk.set("regexFindFirstMatch", function(str:String, toMatch:String, flag:String = "i") {
-			var theData = new EReg(str, flag);
+			var theData:EReg = new EReg(str, flag);
 			theData.match(toMatch);
 			return theData.matchedLeft();
 		});
 		funk.set("regexFindLastMatch", function(str:String, toMatch:String, flag:String = "i") {
-			var theData = new EReg(str, flag);
+			var theData:EReg = new EReg(str, flag);
 			theData.match(toMatch);
 			return theData.matchedRight();
 		});
 		funk.set("regexMatchPosition", function(str:String, toMatch:String, flag:String = "i") {
-			var data = new EReg(str, flag);
+			var data:EReg = new EReg(str, flag);
 			data.match(toMatch);
 			var theData = data.matchedPos();
 			return [theData.pos, theData.len];

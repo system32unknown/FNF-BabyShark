@@ -223,7 +223,7 @@ class NoteSplashDebugState extends MusicBeatState {
 
 		if(FlxG.keys.justPressed.ENTER) {
 			savedText.text = 'Press ENTER again to save.';
-			if(pressEnterToSave > 0)  { //save
+			if(pressEnterToSave > 0) { //save
 				saveFile();
 				FlxG.sound.play(Paths.sound('confirmMenu'), .4);
 				pressEnterToSave = 0;

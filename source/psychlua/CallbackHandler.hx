@@ -4,7 +4,6 @@ class CallbackHandler {
 	public static inline function call(l:State, fname:String):Int {
 		try {
 			var cbf:Dynamic = Lua_helper.callbacks.get(fname);
-
 			if(cbf == null) {
 				var last:FunkinLua = FunkinLua.lastCalledScript;
 				if(last == null || last.lua != l) {

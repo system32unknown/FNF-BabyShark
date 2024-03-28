@@ -28,7 +28,7 @@ class CustomSubstate extends MusicBeatSubstate {
 		PlayState.instance.setOnHScript('customSubstateName', name);
 	}
 
-	public static function closeCustomSubstate() {
+	public static function closeCustomSubstate():Bool {
 		if(instance != null) {
 			PlayState.instance.closeSubState();
 			instance = null;
@@ -37,7 +37,7 @@ class CustomSubstate extends MusicBeatSubstate {
 		return false;
 	}
 
-	public static function insertToCustomSubstate(tag:String, ?pos:Int = -1) {
+	public static function insertToCustomSubstate(tag:String, ?pos:Int = -1):Bool {
 		if(instance != null) {
 			var tagObject:FlxObject = cast (PlayState.instance.variables.get(tag), FlxObject);
 			if(tagObject == null) tagObject = cast (PlayState.instance.modchartSprites.get(tag), FlxObject);
@@ -58,13 +58,13 @@ class CustomSubstate extends MusicBeatSubstate {
 		super.create();
 		PlayState.instance.callOnScripts('onCustomSubstateCreatePost', [name]);
 	}
-	
+
 	public function new(name:String) {
 		CustomSubstate.name = name;
 		super();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
-	
+
 	override function update(elapsed:Float) {
 		PlayState.instance.callOnScripts('onCustomSubstateUpdate', [name, elapsed]);
 		super.update(elapsed);

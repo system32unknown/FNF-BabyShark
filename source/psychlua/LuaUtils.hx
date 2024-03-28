@@ -73,8 +73,8 @@ class LuaUtils {
 				if(retVal != null) target = retVal;
 			} else target = Reflect.getProperty(instance, splitProps[0]);
 
-			for (prop in splitProps) {
-				var j:Dynamic = prop.substr(0, prop.length - 1);
+			for (i in 1...splitProps.length) {
+				var j:Dynamic = splitProps[i].substr(0, splitProps[i].length - 1);
 				target = target[j];
 			}
 			return target;
@@ -136,7 +136,7 @@ class LuaUtils {
 
 	public static function getPropertyLoop(split:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic {
 		var obj:Dynamic = getObjectDirectly(split[0], checkForTextsToo);
-		final end = (getProperty ? split.length - 1 : split.length);
+		final end:Int = (getProperty ? split.length - 1 : split.length);
 
 		for (i in 1...end) obj = getVarInArray(obj, split[i]);
 		return obj;
@@ -157,7 +157,7 @@ class LuaUtils {
 		return #if LUA_ALLOWED PlayState.instance.modchartTexts.exists(name) ? PlayState.instance.modchartTexts.get(name) : #end Reflect.getProperty(PlayState.instance, name);
 	}
 	
-	public static inline function getInstance() {
+	public static inline function getInstance():flixel.FlxState {
 		return PlayState.instance.isDead ? substates.GameOverSubstate.instance : PlayState.instance;
 	}
 
@@ -258,6 +258,7 @@ class LuaUtils {
 	}
 
 	public static function getModSetting(saveTag:String, ?modName:String = null) {
+		#if MODS_ALLOWED
 		if(FlxG.save.data.modSettings == null) FlxG.save.data.modSettings = new Map<String, Dynamic>();
 
 		var settings:Map<String, Dynamic> = FlxG.save.data.modSettings.get(modName);
@@ -288,12 +289,21 @@ class LuaUtils {
 			}
 		} else {
 			FlxG.save.data.modSettings.remove(modName);
+			#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
 			PlayState.instance.addTextToDebug('getModSetting: $path could not be found!', FlxColor.RED);
+			#else
+			FlxG.log.warn('getModSetting: $path could not be found!');
+			#end
 			return null;
 		}
 
 		if(settings.exists(saveTag)) return settings.get(saveTag);
+		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
 		PlayState.instance.addTextToDebug('getModSetting: "$saveTag" could not be found inside $modName\'s settings!', FlxColor.RED);
+		#else
+		FlxG.log.warn('getModSetting: "$saveTag" could not be found inside $modName\'s settings!');
+		#end
+		#end
 		return null;
 	}
 

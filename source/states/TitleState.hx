@@ -4,8 +4,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import states.MainMenuState;
 import flixel.group.FlxGroup;
 
-@:structInit
-class TitleData {
+@:structInit class TitleData {
 	public var titlex:Float = 0;
 	public var titley:Float = 1500;
 	public var titlesize:Float = 1.5;

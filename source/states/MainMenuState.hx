@@ -85,10 +85,11 @@ class MainMenuState extends MusicBeatState {
 
 		for (num => option in optionShit) {
 			var menuY:Float = (num * 140) + 90;
-			menuY += (4 - optionShit.length) * 70;
 			
 			var item:FlxSprite = createMenuItem(option, 0, FlxG.height * 1.6);
+			item.y += (4 - optionShit.length) * 70;
 			item.screenCenter(X);
+
 			if (firstStart) FlxTween.tween(item, {y: menuY}, 1 + (num * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> finishedFunnyMove = true});
 			else item.y = menuY;
 		}
