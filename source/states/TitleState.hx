@@ -25,8 +25,7 @@ class TitleState extends MusicBeatState {
 	var logo:FlxSprite;
 	var titleText:FlxSprite;
 
-	var credGroup:FlxGroup;
-	var textGroup:FlxGroup;
+	var textGroup:FlxTypedGroup<FlxText>;
 
 	final titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	final titleTextAlphas:Array<Float> = [1, .64];
@@ -128,8 +127,7 @@ class TitleState extends MusicBeatState {
 		titleText.updateHitbox();
 		add(titleText);
 
-		add(credGroup = new FlxGroup());
-		textGroup = new FlxGroup();
+		add(textGroup = new FlxTypedGroup<FlxText>());
 
 		randomPhrase = getIntroTextShit();
 
@@ -205,32 +203,20 @@ class TitleState extends MusicBeatState {
 		}
 	}
 
-	function createCoolText(textArray:Array<String>, ?offset:Float = 0) {
-		for (i in 0...textArray.length) {
-			var money:Alphabet = new Alphabet(0, 0, textArray[i]);
-			money.screenCenter(X).y += (i * 60) + 200 + offset;
-			if(credGroup != null && textGroup != null) {
-				credGroup.add(money);
-				textGroup.add(money);
-			}
+	function createText(textArray:Array<String>, offset:Float = 0) {
+		for (i in 0...textArray.length) addMoreText(textArray[i], offset, i);
+	}
+
+	function addMoreText(text:String, offset:Float = 0, i:Int = -1) {
+		if (textGroup != null) {
+			final txt:FlxText = new FlxText(0, ((i == -1 ? textGroup.length : i) * 60) + 200 + offset, FlxG.width, text, 48);
+			txt.screenCenter(X);
+			txt.setFormat(Paths.font("babyshark.ttf"), 48, FlxColor.WHITE, CENTER);
+			textGroup.add(txt);
 		}
 	}
 
-	function addMoreText(text:String, ?offset:Float = 0) {
-		if(textGroup != null && credGroup != null) {
-			var coolText:Alphabet = new Alphabet(0, 0, text);
-			coolText.screenCenter(X).y += (textGroup.length * 60) + 200 + offset;
-			credGroup.add(coolText);
-			textGroup.add(coolText);
-		}
-	}
-
-	function deleteText() {
-		while (textGroup.members.length > 0) {
-			credGroup.remove(textGroup.members[0], true);
-			textGroup.remove(textGroup.members[0], true);
-		}
-	}
+	inline function deleteText() while (textGroup.members.length > 0) textGroup.remove(textGroup.members[0], true);
 
 	override function beatHit() {
 		super.beatHit();
@@ -240,33 +226,33 @@ class TitleState extends MusicBeatState {
 
 		if(!skippedIntro) {
 			switch (curBeat) {
-				case 2: createCoolText(['Vs Dave and Bambi by:']);
+				case 2: createText(['Vs Dave and Bambi by:']);
 				case 3:
 					addMoreText('MoldyGH, MTM101, Stats45');
 					addMoreText('Rapparep lol, TheBuilderXD, Edival');
 					addMoreText('T5mpler, Erizur, Billy Bobbo');
 				case 4:
 					deleteText();
-					createCoolText(['Baby Shark\'s Big Show by:']);
+					createText(['Baby Shark\'s Big Show by:']);
 				case 5:
 					addMoreText('Pinkfong');
 					addMoreText('Nickelodeon');
 					addMoreText('SmartStudy');
 				case 6:
 					deleteText();
-					createCoolText(['Psych Engine by:']);
+					createText(['Psych Engine by:']);
 				case 7:
 					addMoreText('Shadow Mario');
 					addMoreText('Riveren');
 					addMoreText('And Psych Engine Contributors!');
 				case 8:
 					deleteText();
-					createCoolText(['Altertoriel']);
+					createText(['Altertoriel']);
 				case 9:
 					addMoreText('Presents!');
 				case 10:
 					deleteText();
-					createCoolText([randomPhrase[0]]);
+					createText([randomPhrase[0]]);
 				case 11: addMoreText(randomPhrase[1]);
 				case 12: deleteText();
 				case 13: addMoreText('Baby');

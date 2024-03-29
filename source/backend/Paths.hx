@@ -310,7 +310,7 @@ class Paths {
 			bitmap.readable = true;
 		}
 
-		var graph:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
+		var graph:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, key);
 		graph.persist = true;
 		graph.destroyOnNoUse = false;
 
@@ -345,31 +345,22 @@ class Paths {
 	#if MODS_ALLOWED
 	inline static public function mods(key:String = '')
 		return 'mods/$key';
-
 	inline static public function modsFont(key:String)
 		return modFolders('fonts/$key');
-
 	inline static public function modsJson(key:String)
 		return modFolders('data/$key.json');
-
 	inline static public function modsVideo(key:String)
 		return modFolders('videos/$key.$VIDEO_EXT');
-
 	inline static public function modsSounds(path:String, key:String)
 		return modFolders('$path/$key.$SOUND_EXT');
-
 	inline static public function modsImages(key:String)
 		return modFolders('images/$key.png');
-
 	inline static public function modsXml(key:String)
 		return modFolders('images/$key.xml');
-
 	inline static public function modsTxt(key:String)
 		return modFolders('images/$key.txt');
-
 	inline static public function modsImagesJson(key:String)
 		return modFolders('images/$key.json');
-
 	inline static public function modsNdll(key:String)
 		return modFolders('data/ndlls/$key.ndll');
 
