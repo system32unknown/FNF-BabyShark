@@ -99,15 +99,13 @@ class Bar extends FlxSpriteGroup {
 		if (leftBar != null) {
 			leftBar.setGraphicSize(width, height);
 			leftBar.updateHitbox();
-			if (leftBar.clipRect == null)
-				leftBar.clipRect = FlxRect.get(0, 0, width, height);
+			if (leftBar.clipRect == null) leftBar.clipRect = FlxRect.get(0, 0, width, height);
 			else leftBar.clipRect.set(0, 0, width, height);
 		}
 		if (rightBar != null) {
 			rightBar.setGraphicSize(width, height);
 			rightBar.updateHitbox();
-			if (rightBar.clipRect == null)
-				rightBar.clipRect = FlxRect.get(0, 0, width, height);
+			if (rightBar.clipRect == null) rightBar.clipRect = FlxRect.get(0, 0, width, height);
 			else rightBar.clipRect.set(0, 0, width, height);
 		}
 		updateBar();

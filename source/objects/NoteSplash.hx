@@ -4,8 +4,6 @@ import shaders.RGBPalette;
 import shaders.PixelSplashShader;
 import shaders.PixelSplashShader.PixelSplashShaderRef;
 
-import flixel.graphics.frames.FlxFrame;
-
 typedef NoteSplashConfig = {
 	anim:String,
 	minFps:Int,
@@ -90,14 +88,10 @@ class NoteSplash extends FlxSprite {
 		if(config != null) {
 			var animID:Int = direction + ((animNum - 1) * EK.keys(PlayState.mania));
 			var offs:Array<Float> = config.offsets[FlxMath.wrap(animID, 0, config.offsets.length - 1)];
-			offset.x += offs[0];
-			offset.y += offs[1];
+			offset.add(offs[0], offs[1]);
 			minFps = config.minFps;
 			maxFps = config.maxFps;
-		} else {
-			offset.x += -58;
-			offset.y += -55;
-		}
+		} else offset.add(-58, -55);
 
 		if(animation.curAnim != null) animation.curAnim.frameRate = FlxG.random.int(minFps, maxFps);
 	}
@@ -124,8 +118,7 @@ class NoteSplash extends FlxSprite {
 		config = precacheConfig(skin);
 		_configLoaded = skin;
 
-		if(animName == null)
-			animName = config != null ? config.anim : 'note splash';
+		if(animName == null) animName = config != null ? config.anim : 'note splash';
 
 		while(true) {
 			var animID:Int = maxAnims + 1;

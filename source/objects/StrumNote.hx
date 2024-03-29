@@ -100,8 +100,8 @@ class StrumNote extends FlxSprite {
 			var pressName:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
 			var pressNameAlt:String = EK.pressArrayAlt[EK.gfxIndex[PlayState.mania][noteData]];
 			animation.addByPrefix('static', 'arrow' + EK.gfxDir[EK.gfxHud[PlayState.mania][noteData]]);
-			animation.addByPrefix('pressed', pressNameAlt + ' press', 24, false);
-			animation.addByPrefix('confirm', pressNameAlt + ' confirm', 24, false);
+			attemptToAddAnimationByPrefix('pressed', pressNameAlt + ' press', 24, false);
+			attemptToAddAnimationByPrefix('confirm', pressNameAlt + ' confirm', 24, false);
 			animation.addByPrefix('pressed', pressName + ' press', 24, false);
 			animation.addByPrefix('confirm', pressName + ' confirm', 24, false);
 		}
@@ -137,5 +137,14 @@ class StrumNote extends FlxSprite {
 			centerOrigin();
 		}
 		if(useRGBShader) rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
+	}
+
+	function attemptToAddAnimationByPrefix(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
+		var animFrames = [];
+		@:privateAccess
+		animation.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
+		if(animFrames.length < 1) return;
+
+		animation.addByPrefix(name, prefix, framerate, doLoop);
 	}
 }

@@ -331,10 +331,8 @@ class NoteOffsetState extends MusicBeatState {
 					}
 
 					var v:Int = holdingObject;
-					holdingObjectOffset.x = comboOffset[v][0] - (nativeHoldingObject ? mousePointer.x : mouse.x);
-					holdingObjectOffset.y = -comboOffset[v][1] - (nativeHoldingObject ? mousePointer.y : mouse.y);
-				} else if (!nativeHoldingObject || holdingObject == -1)
-					holdingObject = -1;
+					holdingObjectOffset.set(comboOffset[v][0] - (nativeHoldingObject ? mousePointer.x : mouse.x), -comboOffset[v][1] - (nativeHoldingObject ? mousePointer.y : mouse.y));
+				} else if (!nativeHoldingObject || holdingObject == -1) holdingObject = -1;
 			}
 
 			if (holdingObject != -1) {

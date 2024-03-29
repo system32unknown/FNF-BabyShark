@@ -3,7 +3,6 @@ package flixel.custom;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.text.TextFormat;
-import openfl.text.TextFormatAlign;
 import openfl.text.TextField;
 
 class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
@@ -25,7 +24,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 		text.selectable = false;
 
 		var dtf:TextFormat = new TextFormat("VCR OSD Mono", 10, FlxColor.WHITE);
-		dtf.align = TextFormatAlign.CENTER;
+		dtf.align = openfl.text.TextFormatAlign.CENTER;
 		text.defaultTextFormat = dtf;
 		addChild(text);
 		text.text = "Volume: 100%";

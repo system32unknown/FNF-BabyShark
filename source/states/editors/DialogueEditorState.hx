@@ -319,7 +319,7 @@ class DialogueEditorState extends MusicBeatState
 						character.playAnim(animToPlay, daText.finishedText);
 						dialogueFile.dialogue[curSelected].expression = animToPlay;
 					}
-					animText.text = 'Animation: ' + animToPlay + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
+					animText.text = 'Animation: $animToPlay (${(curAnim + 1)} / ${character.jsonFile.animations.length}) - Press W or S to scroll';
 				}
 				if(controlText[i]) changeText(negaMult[i]);
 			}
