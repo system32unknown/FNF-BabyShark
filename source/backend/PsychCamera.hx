@@ -54,16 +54,14 @@ class PsychCamera extends FlxCamera {
 			if ((target is FlxSprite)) {
 				if (_lastTargetPosition == null)
 					_lastTargetPosition = FlxPoint.get(target.x, target.y); // Creates this point.
-				_scrollTarget.x += (target.x - _lastTargetPosition.x) * followLead.x;
-				_scrollTarget.y += (target.y - _lastTargetPosition.y) * followLead.y;
+				_scrollTarget.add((target.x - _lastTargetPosition.x) * followLead.x, (target.y - _lastTargetPosition.y) * followLead.y);
 
 				_lastTargetPosition.set(target.x, target.y);
 			}
 		}
 
 		var mult:Float = 1 - Math.exp(-elapsed * followLerp);
-		scroll.x += (_scrollTarget.x - scroll.x) * mult;
-		scroll.y += (_scrollTarget.y - scroll.y) * mult;
+		scroll.add((_scrollTarget.x - scroll.x) * mult, (_scrollTarget.y - scroll.y) * mult);
 	}
 
 	override function set_followLerp(value:Float) {

@@ -135,7 +135,6 @@ class PlayState extends MusicBeatState {
 		if (healthBar.percent < 20) {iconP1.setState(1); iconP2.setState(2);}
 		else if (healthBar.percent > 80) {iconP1.setState(2); iconP2.setState(1);}
 		else {iconP1.setState(0); iconP2.setState(0);}
-
 		return health;
 	}
 	public var combo:Int = 0;
@@ -262,7 +261,7 @@ class PlayState extends MusicBeatState {
 		Conductor.usePlayState = true;
 		Conductor.songPosition = Math.NEGATIVE_INFINITY;
 		if (firstStart) FlxG.sound.destroy(true);
-		Paths.clearStoredCache();
+		Paths.clearStoredMemory();
 
 		if (FlxG.sound.music != null) FlxG.sound.music.destroy();
 		var music:FlxSound = FlxG.sound.music = new FlxSound();
@@ -468,7 +467,7 @@ class PlayState extends MusicBeatState {
 
 		moveCameraSection();
 
-		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return (ClientPrefs.data.smoothHealth ? displayedHealth : health), 0, 2);
+		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return displayedHealth, 0, 2);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
@@ -574,7 +573,7 @@ class PlayState extends MusicBeatState {
 			cacheCountdown();
 			cachePopUpScore();
 			GameOverSubstate.cache();
-			Paths.clearUnusedCache();
+			Paths.clearUnusedMemory();
 		#if (target.threaded && sys)
 		});
 		#end
@@ -1351,7 +1350,7 @@ class PlayState extends MusicBeatState {
 			if (updateScoreText) scoreTxt.text = getScoreText();
 		}
 
-		if (ClientPrefs.data.smoothHealth) displayedHealth = FlxMath.lerp(displayedHealth, health, .1 / (ClientPrefs.data.framerate / 60));
+		displayedHealth = ClientPrefs.data.smoothHealth ? FlxMath.lerp(displayedHealth, health, .1 / (ClientPrefs.data.framerate / 60)) : health;
 
 		updateMusicBeat();
 		setOnScripts('curDecStep', curDecStep);
@@ -2447,7 +2446,7 @@ class PlayState extends MusicBeatState {
 		if (Std.isOfType(FlxG.game._nextState, PlayState))
 			if (FlxG.sound.music != null) FlxG.sound.music.destroy();
 		else {
-			Paths.clearStoredCache();
+			Paths.clearStoredMemory();
 			if (FlxG.sound.music != null) FlxG.sound.music.onComplete = null;
 		}
 

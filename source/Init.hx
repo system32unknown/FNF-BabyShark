@@ -8,7 +8,7 @@ import states.FlashingState;
 class Init extends flixel.FlxState {
 	override function create():Void {
 		FlxTransitionableState.skipNextTransOut = true;
-		Paths.clearStoredCache();
+		Paths.clearStoredMemory();
 
 		@:privateAccess FlxG.game.getTimer = Main.getTimer;
 		utils.FunkinCache.init();

@@ -50,7 +50,7 @@ class NoteOffsetState extends MusicBeatState {
 		persistentUpdate = true;
 
 		FlxG.sound.destroy(true);
-		Paths.clearUnusedCache();
+		Paths.clearUnusedMemory();
 		// Cameras
 		camGame = initPsychCamera();
 

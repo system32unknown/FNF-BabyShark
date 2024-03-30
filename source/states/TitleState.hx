@@ -38,7 +38,7 @@ class TitleState extends MusicBeatState {
 	var gradtimer:Float = 0;
 
 	override function create():Void {
-		Paths.clearStoredCache();
+		Paths.clearStoredMemory();
 		FlxTransitionableState.skipNextTransOut = false;
 		FlxG.mouse.visible = false;
 		persistentUpdate = true;
@@ -136,7 +136,7 @@ class TitleState extends MusicBeatState {
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		} else skipIntro();
 
-		Paths.clearUnusedCache();
+		Paths.clearUnusedMemory();
 	}
 
 	function getIntroTextShit():Array<String> {

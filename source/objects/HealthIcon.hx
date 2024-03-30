@@ -20,7 +20,7 @@ class HealthIcon extends FlxSprite {
 	var _scale:FlxPoint;
 	final animatediconstates:Array<String> = ['normal', 'lose', 'win'];
 	
-	public static function returnGraphic(char:String, defaultIfMissing:Bool = false):FlxGraphic {
+	public static function returnGraphic(char:String, defaultIfMissing:Bool = false, ?allowGPU:Bool = true):FlxGraphic {
 		var path:String = prefix + char;
 		if (!Paths.fileExists('images/$path.png', IMAGE)) path = '${prefix}icon-$char'; //Older versions of psych engine's support
 		if (!Paths.fileExists('images/$path.png', IMAGE)) { //Prevents crash from missing icon
@@ -28,13 +28,13 @@ class HealthIcon extends FlxSprite {
 			path = prefix + defaultIcon;
 			if (!Paths.fileExists('images/$path.png', IMAGE)) path = prefix + defaultIcon;
 		}
-		return Paths.image(path);
+		return Paths.image(path, allowGPU);
 	}
 
-	public function new(?char:String = 'bf', isPlayer:Bool = false) {
+	public function new(?char:String = 'bf', isPlayer:Bool = false, ?allowGPU:Bool = true) {
 		super();
 		this.isPlayer = isPlayer;
-		changeIcon(char);
+		changeIcon(char, allowGPU);
 		scrollFactor.set();
 	}
 
@@ -57,14 +57,14 @@ class HealthIcon extends FlxSprite {
 		_scale.copyTo(scale);
 	}
 
-	public function changeIcon(char:String, defaultIfMissing:Bool = true):Bool {
+	public function changeIcon(char:String, defaultIfMissing:Bool = true, ?allowGPU:Bool = true):Bool {
 		if (this.char == char) return false;
 		var graph:FlxGraphic = null;
 		var name:String = 'icons/$char';
 
 		animated = Paths.exists('images/$name.xml');
 
-		if (graph == null) graph = returnGraphic(char, defaultIfMissing);
+		if (graph == null) graph = returnGraphic(char, defaultIfMissing, allowGPU);
 		else {
 			availableStates = 1;
 			this.char = char;
@@ -118,14 +118,13 @@ class HealthIcon extends FlxSprite {
 
 	public function setStateIndex(state:Int) {
 		if (state >= availableStates) state = 0;
-		if (animation.curAnim == null) return;
+		if (this.state == state || animation.curAnim == null) return;
 		animation.curAnim.curFrame = this.state = state;
 	}
 
 	public function setState(state:Int) {
 		if (!animated) setStateIndex(state);
-		else if (animation.exists(animatediconstates[state]))
-			animation.play(animatediconstates[state]);
+		else if (animation.exists(animatediconstates[state])) animation.play(animatediconstates[state]);
 	}
 
 	override function update(elapsed:Float) {
@@ -137,7 +136,7 @@ class HealthIcon extends FlxSprite {
 	}
 
 	function getIconAnims(file:String):Array<String> {
-		final regNum = ~/[\d-]/;
+		final regNum:EReg = ~/[\d-]/;
 		return CoolUtil.removeDupString([for (icon in new haxe.xml.Access(Xml.parse(Paths.getTextFromFile('images/$file.xml')).firstElement()).nodes.SubTexture) regNum.split(icon.att.name)[0]]);
 	}
 }

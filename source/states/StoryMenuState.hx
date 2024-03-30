@@ -35,7 +35,7 @@ class StoryMenuState extends MusicBeatState {
 	var loadedWeeks:Array<WeekData> = [];
 
 	override function create() {
-		if (PlayState.SONG == null) Paths.clearUnusedCache();
+		if (PlayState.SONG == null) Paths.clearUnusedMemory();
 
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);

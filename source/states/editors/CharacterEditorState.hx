@@ -53,7 +53,7 @@ class CharacterEditorState extends MusicBeatState {
 	}
 
 	override function create() {
-		if(ClientPrefs.data.cacheOnGPU) Paths.clearStoredCache();
+		if(ClientPrefs.data.cacheOnGPU) Paths.clearStoredMemory();
 
 		FlxG.sound.music.stop();
 		camEditor = initPsychCamera();
@@ -98,7 +98,7 @@ class CharacterEditorState extends MusicBeatState {
 		add(healthBar);
 		healthBar.camera = camHUD;
 
-		healthIcon = new HealthIcon(character.healthIcon, false);
+		healthIcon = new HealthIcon(character.healthIcon, false, false);
 		healthIcon.y = healthBar.y - (healthIcon.height / 2);
 		add(healthIcon);
 		healthIcon.camera = camHUD;
@@ -141,7 +141,7 @@ class CharacterEditorState extends MusicBeatState {
 		updateHealthBar();
 		character.finishAnimation();
 
-		if(ClientPrefs.data.cacheOnGPU) Paths.clearUnusedCache();
+		if(ClientPrefs.data.cacheOnGPU) Paths.clearUnusedMemory();
 		
 		super.create();
 	}
@@ -512,7 +512,7 @@ class CharacterEditorState extends MusicBeatState {
 		tab_group.add(new FlxText(animationDropDown.x, animationDropDown.y - 18, 0, 'Animations:'));
 		tab_group.add(new FlxText(animationInputText.x, animationInputText.y - 18, 0, 'Animation name:'));
 		tab_group.add(new FlxText(animationFramerate.x, animationFramerate.y - 18, 0, 'Framerate:'));
-		tab_group.add(new FlxText(animationNameInputText.x, animationNameInputText.y - 18, 0, 'Animation on .XML/.TXT file:'));
+		tab_group.add(new FlxText(animationNameInputText.x, animationNameInputText.y - 18, 0, 'Animation Symbol Name/Tag:'));
 		tab_group.add(new FlxText(animationIndicesInputText.x, animationIndicesInputText.y - 18, 0, 'ADVANCED - Animation Indices:'));
 
 		tab_group.add(animationInputText);
@@ -638,7 +638,6 @@ class CharacterEditorState extends MusicBeatState {
 				character.jsonScale = sender.value;
 				character.scale.set(character.jsonScale, character.jsonScale);
 				character.updateHitbox();
-				character.playAnim(anims[curAnim].anim, true);
 				updatePointerPos(false);
 			} else if(sender == positionXStepper) {
 				character.positionArray[0] = positionXStepper.value;
@@ -779,7 +778,7 @@ class CharacterEditorState extends MusicBeatState {
 		var moveKeysP:Array<Bool> = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.DOWN];
 		var moveKeys:Array<Bool> = [FlxG.keys.pressed.LEFT, FlxG.keys.pressed.RIGHT, FlxG.keys.pressed.UP, FlxG.keys.pressed.DOWN];
 		if(moveKeysP.contains(true)) {
-			character.offset.add(((moveKeys[0] ? 1 : 0) - (moveKeys[1] ? 1 : 0)) * shiftMultBig, ((moveKeys[2] ? 1 : 0) - (moveKeys[3] ? 1 : 0)) * shiftMultBig);
+			character.offset.add(((moveKeysP[0] ? 1 : 0) - (moveKeysP[1] ? 1 : 0)) * shiftMultBig, ((moveKeysP[2] ? 1 : 0) - (moveKeysP[3] ? 1 : 0)) * shiftMultBig);
 			changedOffset = true;
 		}
 
@@ -851,13 +850,15 @@ class CharacterEditorState extends MusicBeatState {
 			}
 
 			if(FlxG.keys.justPressed.A || FlxG.keys.justPressed.D || holdingFrameTime > 0.5) {
-				var isLeft = false;
-				if((holdingFrameTime > 0.5 && FlxG.keys.pressed.A) || FlxG.keys.justPressed.A) isLeft = true;
+				var isLeft:Bool = false;
+				if((holdingFrameTime > .5 && FlxG.keys.pressed.A) || FlxG.keys.justPressed.A) isLeft = true;
 				character.animPaused = true;
 
-				if(holdingFrameTime <= 0.5 || holdingFrameElapsed > 0.1) {
-					character.animation.curAnim.curFrame = FlxMath.wrap(character.animation.curAnim.curFrame + Std.int(isLeft ? -shiftMult : shiftMult), 0, character.animation.curAnim.numFrames - 1);
-					holdingFrameElapsed -= 0.1;
+				if(holdingFrameTime <= .5 || holdingFrameElapsed > .1) {
+					frames = FlxMath.wrap(frames + Std.int(isLeft ? -shiftMult : shiftMult), 0, length - 1);
+					if(!character.isAnimateAtlas) character.animation.curAnim.curFrame = frames;
+					else character.atlas.anim.curFrame = frames;
+					holdingFrameElapsed -= .1;
 				}
 			}
 
@@ -891,6 +892,7 @@ class CharacterEditorState extends MusicBeatState {
 
 		/////////////
 		// bg data //
+		camEditor.bgColor = 0xFF666666;
 		add(new BGSprite('stageback', -600, -200, 0.9, 0.9));
 
 		var stageFront:BGSprite = new BGSprite('stagefront', -650, 600, 0.9, 0.9);

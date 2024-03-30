@@ -86,7 +86,7 @@ class Paths {
 	}
 
 	// haya I love you for the base cache dump I took to the max
-	public static function clearUnusedCache() {
+	public static function clearUnusedMemory() {
 		for (key in currentTrackedAssets.keys()) {
 			if (!localTrackedAssets.contains(key) && !keyExclusions.contains(key))
 				decacheGraphic(key);
@@ -97,7 +97,7 @@ class Paths {
 
 	// define the locally tracked assets
 	public static var localTrackedAssets:Array<String> = [];
-	public static function clearStoredCache() {
+	public static function clearStoredMemory() {
 		for (key in @:privateAccess FlxG.bitmap._cache.keys()) {
 			if (key != null && !currentTrackedAssets.exists(key) && !assetExcluded(key))
 				decacheGraphic(key);
@@ -112,7 +112,7 @@ class Paths {
 		localTrackedAssets = [];
 		OpenFlAssets.cache.clear("songs");
 		utils.system.MemoryUtil.clearMajor();
-		clearUnusedCache();
+		clearUnusedMemory();
 	}
 
 	static public var currentLevel:String;

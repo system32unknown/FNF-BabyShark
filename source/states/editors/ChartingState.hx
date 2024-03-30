@@ -138,7 +138,7 @@ class ChartingState extends MusicBeatState {
 	public static var vortex:Bool = false;
 	public var mouseQuant:Bool = false;
 	override function create() {
-		Paths.clearUnusedCache();
+		Paths.clearUnusedMemory();
 
 		if (PlayState.SONG != null)
 			_song = PlayState.SONG;
@@ -1808,7 +1808,7 @@ class ChartingState extends MusicBeatState {
 					strumLineNotes.members[noteDataToCheck].resetAnim = ((note.sustainLength / 1000) + .15) / playbackSpeed;
 					if(!playedSound[data]) {
 						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)) {
-							var soundToPlay = 'hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}';
+							var soundToPlay:String = 'hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}';
 							if(_song.player1 == 'gf') soundToPlay = 'gfnoise/GF_${EK.keys(data)}'; //Easter egg 
 
 							FlxG.sound.play(Paths.sound(soundToPlay)).pan = note.noteData < 4 ? -.3 : .3; //would be coolio
@@ -1866,8 +1866,9 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function reloadIconPosition() {
-		leftIcon.setPosition(GRID_SIZE + 10 + (GRID_SIZE * (_song.mania - 3) / 2), -100);
-		rightIcon.setPosition(GRID_SIZE + GRID_SIZE * EK.keys(_song.mania) + 10 + (GRID_SIZE * (_song.mania - 3) / 2), -100);
+		var iconPos:Float = 10 + (GRID_SIZE * (_song.mania - 3) / 2);
+		leftIcon.setPosition(GRID_SIZE + iconPos, -100);
+		rightIcon.setPosition(GRID_SIZE + GRID_SIZE * EK.keys(_song.mania) + iconPos, -100);
 	}
 
 	var lastSecBeats:Float = 0;
@@ -1973,7 +1974,7 @@ class ChartingState extends MusicBeatState {
 	var lastMania:Int = 3;
 	function updateWaveform() {
 		#if desktop
-		var width:Int = Std.int(GRID_SIZE * EK.keys(_song.mania));
+		var width:Int = Std.int(GRID_SIZE * EK.strums(_song.mania));
 		if(waveformPrinted) {
 			var height:Int = Std.int(gridBG.height);
 			if((lastWaveformHeight != height && waveformSprite.pixels != null) || lastMania != _song.mania) {
@@ -2551,7 +2552,7 @@ class ChartingState extends MusicBeatState {
 					PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
 				else PlayState.SONG = Song.loadFromJson(song.toLowerCase() + "-" + Difficulty.getString(), song.toLowerCase());
 			} else PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
-			Paths.clearUnusedCache();
+			Paths.clearUnusedMemory();
 			FlxG.resetState();
 		} catch(e) {
 			Logs.trace('ERROR! $e', ERROR);

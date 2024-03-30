@@ -55,9 +55,9 @@ class Main extends Sprite {
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 
-		FlxG.signals.preStateSwitch.add(() -> Paths.clearStoredCache());
+		FlxG.signals.preStateSwitch.add(() -> Paths.clearStoredMemory());
 		FlxG.signals.postStateSwitch.add(() -> {
-			Paths.clearUnusedCache();
+			Paths.clearUnusedMemory();
 			MemoryUtil.clearMajor();
 			MemoryUtil.clearMajor(true);
 			MemoryUtil.clearMajor();
