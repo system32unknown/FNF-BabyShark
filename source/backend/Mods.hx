@@ -136,7 +136,7 @@ class Mods {
 		#if MODS_ALLOWED
 		if(folder == null) folder = currentModDirectory;
 
-		var path = Paths.mods('$folder/pack.json');
+		var path:String = Paths.mods('$folder/pack.json');
 		if(FileSystem.exists(path)) {
 			try {
 				var rawJson:String = #if sys File.getContent #else Assets.getText #end(path);
@@ -155,10 +155,9 @@ class Mods {
 			for (mod in CoolUtil.coolTextFile('modsList.txt')) {
 				if(mod.trim().length < 1) continue;
 
-				var dat = mod.split("|");
+				var dat:Array<String> = mod.split("|");
 				list.all.push(dat[0]);
-				if (dat[1] == "1")
-					list.enabled.push(dat[0]);
+				if (dat[1] == "1") list.enabled.push(dat[0]);
 				else list.disabled.push(dat[0]);
 			}
 		} catch(e) Logs.trace('ERROR: $e', ERROR);
@@ -183,8 +182,7 @@ class Mods {
 
 		// Scan for folders that aren't on modsList.txt yet
 		for (folder in getModDirectories()) {
-			if(FileSystem.exists(Paths.mods(folder)) && FileSystem.isDirectory(Paths.mods(folder)) &&
-			!ignoreModFolders.contains(folder.toLowerCase()) && !added.contains(folder)) {
+			if(FileSystem.exists(Paths.mods(folder)) && FileSystem.isDirectory(Paths.mods(folder)) && !ignoreModFolders.contains(folder.toLowerCase()) && !added.contains(folder)) {
 				added.push(folder);
 				list.push([folder, true]);
 			}
@@ -207,8 +205,7 @@ class Mods {
 
 		#if MODS_ALLOWED
 		var list:Array<String> = parseList().enabled;
-		if(list != null && list[0] != null)
-			currentModDirectory = list[0];
+		if(list != null && list[0] != null) currentModDirectory = list[0];
 		#end
 	}
 }

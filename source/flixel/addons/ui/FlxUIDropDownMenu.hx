@@ -1,12 +1,23 @@
 package flixel.addons.ui;
 
-import flixel.ui.FlxButton;
 import openfl.geom.Rectangle;
 import flixel.addons.ui.interfaces.IFlxUIClickable;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.addons.ui.interfaces.IHasParams;
+import flixel.ui.FlxButton;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
+
+#if (flixel < version("5.7.0"))
+import flixel.ui.FlxButton.NORMAL;
+import flixel.ui.FlxButton.HIGHLIGHT;
+import flixel.ui.FlxButton.PRESSED;
+#else
+import flixel.ui.FlxButton.FlxButtonState.NORMAL;
+import flixel.ui.FlxButton.FlxButtonState.HIGHLIGHT;
+import flixel.ui.FlxButton.FlxButtonState.PRESSED;
+import flixel.ui.FlxButton.FlxButtonState.DISABLED;
+#end
 
 /*
 	THIS IS AN EDIT OF FlxUIDropDownMenu I'VE MADE BECAUSE I'M TIRED OF IT NOT SUPPORTING SCROLLING UP/DOWN
@@ -327,7 +338,7 @@ class FlxUIDropDownMenu extends FlxUIGroup implements IFlxUIWidget implements IF
 
 		t.loadGraphicSlice9([FlxUIAssets.IMG_INVIS, FlxUIAssets.IMG_HILIGHT, FlxUIAssets.IMG_HILIGHT], Std.int(header.background.width),
 			Std.int(header.background.height), [[1, 1, 3, 3], [1, 1, 3, 3], [1, 1, 3, 3]], FlxUI9SliceSprite.TILE_NONE);
-		t.labelOffsets[FlxButton.PRESSED].y -= 1; // turn off the 1-pixel depress on click
+		t.labelOffsets[PRESSED].y -= 1; // turn off the 1-pixel depress on click
 
 		t.up_color = FlxColor.BLACK;
 		t.over_color = FlxColor.WHITE;

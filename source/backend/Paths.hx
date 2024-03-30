@@ -2,7 +2,6 @@ package backend;
 
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
-import flixel.system.FlxAssets;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
@@ -277,8 +276,7 @@ class Paths {
 		var invalidChars:EReg = ~/[~&\\;:<>#]+/g;
 		var hideChars:EReg = ~/[.,'"%?!]+/g;
 
-		var path = invalidChars.split(path.replace(' ', '-')).join("-");
-		return hideChars.split(path).join("").toLowerCase();
+		return hideChars.split(invalidChars.split(path.replace(' ', '-')).join("-")).join("").toLowerCase();
 	}
 
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
@@ -330,7 +328,7 @@ class Paths {
 			#end
 			else if(beepOnNull) {
 				FlxG.log.error('SOUND NOT FOUND: $key, PATH: $path');
-				return FlxAssets.getSound('flixel/sounds/beep');
+				return flixel.system.FlxAssets.getSound('flixel/sounds/beep');
 			}
 		}
 		localTrackedAssets.push(file);

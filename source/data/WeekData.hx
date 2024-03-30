@@ -96,7 +96,7 @@ class WeekData {
 		var sexList:Array<String> = CoolUtil.coolTextFile(Paths.getSharedPath('weeks/weekList.txt'));
 		for (i in 0...sexList.length) {
 			for (j in 0...directories.length) {
-				var fileToCheck:String = directories[j] + 'weeks/${sexList[i]}.json';
+				var fileToCheck:String = '${directories[j]}weeks/${sexList[i]}.json';
 				if(!weeksLoaded.exists(sexList[i])) {
 					var week:WeekFile = getWeekFile(fileToCheck);
 					if(week != null) {
@@ -123,7 +123,7 @@ class WeekData {
 				}
 
 				for (file in FileSystem.readDirectory(directory)) {
-					var path = haxe.io.Path.join([directory, file]);
+					var path:String = haxe.io.Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.json'))
 						addWeek(file.substr(0, file.length - 5), path, directories[i], i, originalLength);
 				}

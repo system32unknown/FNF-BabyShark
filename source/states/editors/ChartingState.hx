@@ -1801,7 +1801,7 @@ class ChartingState extends MusicBeatState {
 			if(note.strumTime <= Conductor.songPosition) {
 				note.alpha = 0.4;
 				if(note.strumTime > lastConductorPos && FlxG.sound.music.playing && note.noteData > -1) {
-					var data:Int = note.noteData % EK.keys(_song.mania);
+					var data:Int = note.noteData % 4;
 					var noteDataToCheck:Int = note.noteData;
 					if(noteDataToCheck > -1 && note.mustPress != _song.notes[curSec].mustHitSection) noteDataToCheck += EK.keys(_song.mania);
 					strumLineNotes.members[noteDataToCheck].playAnim('confirm', true);
@@ -2234,11 +2234,11 @@ class ChartingState extends MusicBeatState {
 		if (!Assets.exists(path))
 		#end
 		{
-			path = Paths.getSharedPath('characters/' + Character.DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+			path = Paths.getSharedPath('characters/${Character.DEFAULT_CHARACTER}.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 			characterFailed = true;
 		}
 
-		return cast Json.parse(#if MODS_ALLOWED File.getContent(path) #else Assets.getText(path) #end);
+		return cast Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
 	}
 
 	function updateNoteUI():Void {

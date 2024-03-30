@@ -17,7 +17,6 @@ class CharacterEditorState extends MusicBeatState {
 	var animateGhost:FlxAnimate;
 	var animateGhostImage:String;
 	var cameraFollowPointer:FlxSprite;
-	var isAnimateSprite:Bool = false;
 
 	var silhouettes:FlxSpriteGroup;
 	var dadPosition = FlxPoint.weak();
@@ -66,8 +65,7 @@ class CharacterEditorState extends MusicBeatState {
 		loadBG();
 
 		animsTxtGroup = new FlxTypedGroup<FlxText>();
-		silhouettes = new FlxSpriteGroup();
-		add(silhouettes);
+		add(silhouettes = new FlxSpriteGroup());
 
 		var dad:FlxSprite = new FlxSprite(dadPosition.x, dadPosition.y, Paths.image('editors/silhouetteDad'));
 		dad.antialiasing = ClientPrefs.data.antialiasing;
@@ -255,7 +253,7 @@ class CharacterEditorState extends MusicBeatState {
 
 	var ghostAlpha:Float = 0.6;
 	function addGhostUI() {
-		var tab_group = new FlxUI(null, UI_box);
+		var tab_group:FlxUI = new FlxUI(null, UI_box);
 		tab_group.name = "Ghost";
 
 		var makeGhostButton:FlxButton = new FlxButton(25, 15, "Make Ghost", function() {
@@ -427,7 +425,7 @@ class CharacterEditorState extends MusicBeatState {
 	var animationFramerate:FlxUINumericStepper;
 	var animationLoopCheckBox:FlxUICheckBox;
 	function addAnimationsUI() {
-		var tab_group = new FlxUI(null, UI_box);
+		var tab_group:FlxUI = new FlxUI(null, UI_box);
 		tab_group.name = "Animations";
 
 		animationInputText = new FlxUIInputText(15, 85, 80, '', 8);
@@ -460,7 +458,6 @@ class CharacterEditorState extends MusicBeatState {
 				}
 			}
 
-			var lastAnim:String = (character.animationsArray[curAnim] != null) ? character.animationsArray[curAnim].anim : '';
 			var lastOffsets:Array<Int> = [0, 0];
 			for (anim in character.animationsArray)
 				if(animationInputText.text == anim.anim) {
@@ -546,7 +543,7 @@ class CharacterEditorState extends MusicBeatState {
 	var healthColorStepperG:FlxUINumericStepper;
 	var healthColorStepperB:FlxUINumericStepper;
 	function addCharacterUI() {
-		var tab_group = new FlxUI(null, UI_box);
+		var tab_group:FlxUI = new FlxUI(null, UI_box);
 		tab_group.name = "Character";
 
 		imageInputText = new FlxUIInputText(15, 30, 200, character.imageFile, 8);
@@ -573,14 +570,14 @@ class CharacterEditorState extends MusicBeatState {
 		flipXCheckBox = new FlxUICheckBox(singDurationStepper.x + 80, singDurationStepper.y, null, null, "Flip X", 50);
 		flipXCheckBox.checked = character.flipX;
 		if(character.isPlayer) flipXCheckBox.checked = !flipXCheckBox.checked;
-		flipXCheckBox.callback = function() {
+		flipXCheckBox.callback = () -> {
 			character.originalFlipX = !character.originalFlipX;
 			character.flipX = (character.originalFlipX != character.isPlayer);
 		};
 
 		noAntialiasingCheckBox = new FlxUICheckBox(flipXCheckBox.x, flipXCheckBox.y + 40, null, null, "No Antialiasing", 80);
 		noAntialiasingCheckBox.checked = character.noAntialiasing;
-		noAntialiasingCheckBox.callback = function() {
+		noAntialiasingCheckBox.callback = () -> {
 			character.antialiasing = false;
 			if(!noAntialiasingCheckBox.checked && ClientPrefs.data.antialiasing)
 				character.antialiasing = true;
@@ -634,9 +631,7 @@ class CharacterEditorState extends MusicBeatState {
 				healthIcon.changeIcon(healthIconInputText.text, false);
 				character.healthIcon = healthIconInputText.text;
 				if(lastIcon != healthIcon.getCharacter()) updatePresence();
-			} else if(sender == imageInputText) {
-				character.imageFile = imageInputText.text;
-			}
+			} else if(sender == imageInputText) character.imageFile = imageInputText.text;
 		} else if(sender is FlxUINumericStepper) {
 			if (sender == scaleStepper) {
 				reloadCharacterImage();
@@ -780,9 +775,9 @@ class CharacterEditorState extends MusicBeatState {
 			}
 		}
 
-		var changedOffset = false;
-		var moveKeysP = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.DOWN];
-		var moveKeys = [FlxG.keys.pressed.LEFT, FlxG.keys.pressed.RIGHT, FlxG.keys.pressed.UP, FlxG.keys.pressed.DOWN];
+		var changedOffset:Bool = false;
+		var moveKeysP:Array<Bool> = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.DOWN];
+		var moveKeys:Array<Bool> = [FlxG.keys.pressed.LEFT, FlxG.keys.pressed.RIGHT, FlxG.keys.pressed.UP, FlxG.keys.pressed.DOWN];
 		if(moveKeysP.contains(true)) {
 			character.offset.add(((moveKeys[0] ? 1 : 0) - (moveKeys[1] ? 1 : 0)) * shiftMultBig, ((moveKeys[2] ? 1 : 0) - (moveKeys[3] ? 1 : 0)) * shiftMultBig);
 			changedOffset = true;
@@ -834,8 +829,8 @@ class CharacterEditorState extends MusicBeatState {
 			character.addOffset(anim.anim, character.offset.x, character.offset.y);
 		}
 
-		var txt = 'ERROR: No Animation Found';
-		var clr = FlxColor.RED;
+		var txt:String = 'ERROR: No Animation Found';
+		var clr:FlxColor = FlxColor.RED;
 		if(!character.isAnimationNull()) {
 			if(FlxG.keys.pressed.A || FlxG.keys.pressed.D) {
 				holdingFrameTime += elapsed;
@@ -912,9 +907,9 @@ class CharacterEditorState extends MusicBeatState {
 
 
 	inline function updatePointerPos(?snap:Bool = true) {
-		final mid:FlxPoint = character.getMidpoint();
 		var offX:Float = 0;
 		var offY:Float = 0;
+		final mid:FlxPoint = character.getMidpoint();
 		if(!character.isPlayer) {
 			offX = mid.x + 150 + character.cameraPosition[0];
 			offY = mid.y - 100 + character.cameraPosition[1];
@@ -925,7 +920,12 @@ class CharacterEditorState extends MusicBeatState {
 		cameraFollowPointer.setPosition(offX, offY);
 		mid.put();
 
-		if(snap) FlxG.camera.scroll.set(cameraFollowPointer.getMidpoint().x - FlxG.width / 2, cameraFollowPointer.getMidpoint().y - FlxG.height / 2);
+		if(snap) {
+			final midcam:FlxPoint = cameraFollowPointer.getMidpoint();
+			FlxG.camera.scroll.x = midcam.x - FlxG.width / 2;
+			FlxG.camera.scroll.y = midcam.y - FlxG.height / 2;
+			midcam.put();
+		}
 	}
 
 	inline function updateHealthBar() {

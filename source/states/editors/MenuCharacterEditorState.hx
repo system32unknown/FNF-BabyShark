@@ -35,9 +35,9 @@ class MenuCharacterEditorState extends MusicBeatState
 
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 		for (char in 0...3) {
-			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, defaultCharacters[char]);
+			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * .25) * (1 + char) - 150, defaultCharacters[char]);
 			weekCharacterThing.y += 70;
-			weekCharacterThing.alpha = 0.2;
+			weekCharacterThing.alpha = .2;
 			grpWeekCharacters.add(weekCharacterThing);
 		}
 
@@ -95,7 +95,7 @@ class MenuCharacterEditorState extends MusicBeatState
 	var girlfriendCheckbox:FlxUICheckBox;
 	var curTypeSelected:Int = 0; //0 = Dad, 1 = BF, 2 = GF
 	function addTypeUI() {
-		var tab_group = new FlxUI(null, UI_typebox);
+		var tab_group:FlxUI = new FlxUI(null, UI_typebox);
 		tab_group.name = "Character Type";
 
 		opponentCheckbox = new FlxUICheckBox(10, 20, null, null, "Opponent", 100);
@@ -128,7 +128,7 @@ class MenuCharacterEditorState extends MusicBeatState
 	var scaleStepper:FlxUINumericStepper;
 	var flipXCheckbox:FlxUICheckBox;
 	function addCharacterUI() {
-		var tab_group = new FlxUI(null, UI_mainbox);
+		var tab_group:FlxUI = new FlxUI(null, UI_mainbox);
 		tab_group.name = "Character";
 		
 		imageInputText = new FlxUIInputText(10, 20, 80, characterFile.image, 8);

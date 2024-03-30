@@ -95,8 +95,8 @@ class ModSettingsSubState extends BaseOptionsMenu {
 				addOption(newOption);
 			}
 		} catch(e:Dynamic) {
-			var errorTitle = 'Mod name: $folder';
-			var errorMsg = 'An error occurred: $e';
+			var errorTitle:String = 'Mod name: $folder';
+			var errorMsg:String = 'An error occurred: $e';
 			#if windows
 			lime.app.Application.current.window.alert(errorMsg, errorTitle);
 			#end

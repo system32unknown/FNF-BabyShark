@@ -10,7 +10,7 @@
 - [ ] Some Songs / Charts
 - [ ] Get Character Vocals
 - [ ] New Credit Menu (Social Links)
-- [ ] Language System
+- [x] Language System
 
 ### Characters List
 - [ ] Stariana

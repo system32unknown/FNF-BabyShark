@@ -12,7 +12,7 @@ class Wife3 {
 		return sign * y;
 	}
 
-	public static var max_points = 1.0;
+	public static var max_points = 1.;
 	public static var miss_weight = -5.5;
 	public static var ts_pow = .75;
 	public static var shit_weight:Float = 200;
