@@ -12,22 +12,21 @@ class OutdatedState extends MusicBeatState {
 
 		add(new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK));
 
-		logo = new FlxSprite(FlxG.width, 0);
+		logo = new FlxSprite();
 		logo.antialiasing = ClientPrefs.data.antialiasing;
 		if(!FileSystem.exists(Paths.modsXml('logobumpin'))) {
-            logo.loadGraphic(Paths.image('logobumpin'));
+			logo.loadGraphic(Paths.image('logobumpin'));
+			logo.setGraphicSize(Std.int(logo.width * 1.5));
 		} else {
-            foundXml = true;
+			foundXml = true;
 			logo.frames = Paths.getSparrowAtlas('logobumpin');
 			logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 			logo.animation.play('bump');
 		}
-        logo.scale.set(.3, .3);
 		logo.updateHitbox();
-        logo.x -= logo.frameHeight;
-		logo.y -= 180;
+		logo.alpha = .8;
 		logo.angle = -4;
-        logo.alpha = .8;
+        logo.screenCenter();
 		add(logo);
 
 		warnText = new FlxText(0, 0, FlxG.width,
@@ -40,7 +39,6 @@ class OutdatedState extends MusicBeatState {
 		warnText.screenCenter(Y);
 		add(warnText);
 
-        FlxTween.angle(logo, logo.angle, -10, 2, {ease: FlxEase.quartInOut});
         new FlxTimer().start(2, (tmr:FlxTimer) -> {
             if (logo.angle == -10)
                 FlxTween.angle(logo, logo.angle, 10, 2, {ease: FlxEase.quartInOut});
@@ -61,5 +59,10 @@ class OutdatedState extends MusicBeatState {
 			}
 		}
 		super.update(elapsed);
+	}
+
+	override function beatHit() {
+		super.beatHit();
+		if(foundXml) logo.animation.play('bump', true);
 	}
 }

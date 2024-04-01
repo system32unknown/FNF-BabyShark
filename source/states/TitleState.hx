@@ -51,7 +51,7 @@ class TitleState extends MusicBeatState {
 		#if CHECK_FOR_UPDATES
 		if(ClientPrefs.data.checkForUpdates && !skippedIntro) {
 			trace('checking for update');
-			var http = new haxe.Http("https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/main/gitVersion.txt");
+			var http = new haxe.Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/gitVersion.txt");
 
 			http.onData = (data:String) -> {
 				updateVersion = data.split('\n')[0].trim();
