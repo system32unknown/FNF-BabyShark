@@ -116,9 +116,7 @@ class DeprecatedFunctions {
 				var killMe:Array<String> = variable.split('.');
 				if(killMe.length > 1) {
 					var coverMeInPiss:Dynamic = Reflect.getProperty(PlayState.instance.modchartSprites.get(tag), killMe[0]);
-					for (i in 1...killMe.length - 1) {
-						coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
-					}
+					for (i in 1...killMe.length - 1) coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
 					Reflect.setProperty(coverMeInPiss, killMe[killMe.length - 1], value);
 					return true;
 				}

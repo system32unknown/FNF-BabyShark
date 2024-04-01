@@ -37,6 +37,9 @@ class TitleState extends MusicBeatState {
 	var gradientBar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 1, 0xFF0F5FFF);
 	var gradtimer:Float = 0;
 
+	public static var updateVersion:String;
+	var mustUpdate:Bool = false;
+
 	override function create():Void {
 		Paths.clearStoredMemory();
 		FlxTransitionableState.skipNextTransOut = false;
@@ -44,6 +47,26 @@ class TitleState extends MusicBeatState {
 		persistentUpdate = true;
 
 		super.create();
+
+		#if CHECK_FOR_UPDATES
+		if(ClientPrefs.data.checkForUpdates && !skippedIntro) {
+			trace('checking for update');
+			var http = new haxe.Http("https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/main/gitVersion.txt");
+
+			http.onData = (data:String) -> {
+				updateVersion = data.split('\n')[0].trim();
+				final curVersion:String = Main.engineVer.version.trim();
+				trace('version online: $updateVersion, your version: $curVersion');
+				if(updateVersion != curVersion) {
+					trace('versions arent matching!');
+					mustUpdate = true;
+				}
+			}
+
+			http.onError = (error:String) -> Logs.trace('error: $error', ERROR);
+			http.request();
+		}
+		#end
 
 		final balls:Dynamic = tjson.TJSON.parse(Paths.getTextFromFile('data/titleData.json'));
 		titleJson = {
@@ -184,7 +207,8 @@ class TitleState extends MusicBeatState {
 	
 					FlxTimer.wait(1.5, () -> {
 						FlxTransitionableState.skipNextTransIn = false;
-						FlxG.switchState(() -> new MainMenuState());
+						if (mustUpdate) FlxG.switchState(() -> new OutdatedState());
+						else FlxG.switchState(() -> new MainMenuState());
 					});
 				}
 			} else skipIntro();

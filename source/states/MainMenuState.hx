@@ -108,6 +108,9 @@ class MainMenuState extends MusicBeatState {
 		add(version);
 		changeItem();
 
+		var leDate:Date = Date.now();
+		if (leDate.getMonth() == 3 && leDate.getDate() == 1)
+
 		super.create();
 		FlxG.camera.follow(camFollow, null, 9);
 	}

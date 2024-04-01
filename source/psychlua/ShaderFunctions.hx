@@ -211,11 +211,10 @@ class ShaderFunctions {
 				shader.setFloat(prop, value);
 				return true;
 			}
-			return false;
 			#else
 			FunkinLua.luaTrace("setShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return false;
 			#end
+			return false;
 		});
 		funk.set("setShaderFloatArray", function(obj:String, prop:String, values:Dynamic) {
 			#if (!flash && MODS_ALLOWED && sys)
@@ -224,11 +223,10 @@ class ShaderFunctions {
 				shader.setFloatArray(prop, values);
 				return true;
 			}
-			return false;
 			#else
 			FunkinLua.luaTrace("setShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			return false;
 			#end
+			return false;
 		});
 
 		funk.set("setShaderSampler2D", function(obj:String, prop:String, bitmapdataPath:String) {

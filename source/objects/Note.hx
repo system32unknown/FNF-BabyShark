@@ -48,7 +48,6 @@ class Note extends FlxSprite {
 	public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
 	public var noteType(default, set):String = null;
-	public var isHideableNote:Bool = false;
 
 	public var eventName:String = '';
 	public var eventLength:Int = 0;
@@ -156,7 +155,6 @@ class Note extends FlxSprite {
 
 					missHealth = isSustainNote ? .25 : .1;
 					hitCausesMiss = true;
-					isHideableNote = true;
 					hitsound = 'cancelMenu';
 					hitsoundChartEditor = false;
 				case 'Alt Animation':

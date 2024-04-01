@@ -32,6 +32,7 @@
 	<define name="DISCORD_ALLOWED"/>
 	<define name="TRANSLATIONS_ALLOWED"/>
 
+	<define name="CHECK_FOR_UPDATES" if="desktop"/>
 	<define name="SHOW_LOADING_SCREEN"/>
 	
 	<assets path="assets/fonts"/>

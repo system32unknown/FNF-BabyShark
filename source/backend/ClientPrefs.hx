@@ -70,6 +70,7 @@ import flixel.input.keyboard.FlxKey;
 	public var updateCamSection:Bool = false;
 	public var autoPausePlayState:Bool = true;
 	public var hitsoundTypes:String = 'Tick';
+	public var checkForUpdates:Bool = true;
 	public var unlockedCharacters:Array<String> = ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'];
 	public var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.,

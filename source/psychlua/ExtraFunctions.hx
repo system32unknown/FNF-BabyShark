@@ -45,6 +45,8 @@ class ExtraFunctions {
 			}
 		});
 
+		funk.set("isOfType", (tag:String, cls:String) -> return Std.isOfType(LuaUtils.getObjectDirectly(tag), Type.resolveClass(cls)));
+
 		// Save data management
 		funk.set("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
 			if(PlayState.instance.modchartSaves.exists(name)) {
@@ -141,9 +143,8 @@ class ExtraFunctions {
 				foundJson = false;
 			}
 
-			if (foundJson) {
-				var parsedJson:Dynamic = Json.parse(File.getContent(json));				
-				PlayState.instance.variables.set(varName, parsedJson);
+			if (foundJson) {	
+				PlayState.instance.variables.set(varName, Json.parse(File.getContent(json)));
 				return true;
 			}
 			return false;
@@ -176,7 +177,7 @@ class ExtraFunctions {
 		funk.set("regexMatchPosition", function(str:String, toMatch:String, flag:String = "i") {
 			var data:EReg = new EReg(str, flag);
 			data.match(toMatch);
-			var theData = data.matchedPos();
+			var theData:{pos:Int, len:Int} = data.matchedPos();
 			return [theData.pos, theData.len];
 		});
 		funk.set("regexReplace", (str:String, toReplace:String, replacement:String, flag:String = "i") -> return new EReg(str, flag).replace(toReplace, replacement));

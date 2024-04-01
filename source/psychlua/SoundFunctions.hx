@@ -37,9 +37,9 @@ class SoundFunctions {
 				game.modchartSounds.get(tag).fadeOut(duration * game.playbackRate, toValue);
 		});
 		funk.set("soundFadeCancel", function(tag:String) {
-			if(tag == null || tag.length < 1) {
-				if(FlxG.sound.music.fadeTween != null) FlxG.sound.music.fadeTween.cancel();
-			} else if(game.modchartSounds.exists(tag)) {
+			if((tag == null || tag.length < 1) && FlxG.sound.music.fadeTween != null)
+				FlxG.sound.music.fadeTween.cancel();
+			else if(game.modchartSounds.exists(tag)) {
 				var theSound:FlxSound = game.modchartSounds.get(tag);
 				if(theSound.fadeTween != null) {
 					theSound.fadeTween.cancel();
@@ -48,15 +48,15 @@ class SoundFunctions {
 			}
 		});
 		funk.set("getSoundVolume", function(tag:String) {
-			if(tag == null || tag.length < 1)
-				if(FlxG.sound.music != null) return FlxG.sound.music.volume;
+			if((tag == null || tag.length < 1) && FlxG.sound.music != null)
+				return FlxG.sound.music.volume;
 			else if(game.modchartSounds.exists(tag))
 				return game.modchartSounds.get(tag).volume;
 			return 0;
 		});
 		funk.set("setSoundVolume", function(tag:String, value:Float) {
-			if(tag == null || tag.length < 1)
-				if(FlxG.sound.music != null) FlxG.sound.music.volume = value;
+			if((tag == null || tag.length < 1) && FlxG.sound.music != null)
+				FlxG.sound.music.volume = value;
 			else if(game.modchartSounds.exists(tag))
 				game.modchartSounds.get(tag).volume = value;
 		});
