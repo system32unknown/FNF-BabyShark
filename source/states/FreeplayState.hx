@@ -44,7 +44,6 @@ class FreeplayState extends MusicBeatState {
 	var player:MusicPlayer;
 
 	public static var section:String = '';
-	var skipSelect:Array<String>;
 
 	override function create() {		
 		persistentUpdate = true;
@@ -77,7 +76,6 @@ class FreeplayState extends MusicBeatState {
 				if(colors == null || colors.length < 3) colors = [146, 113, 253];
 				addSong(song[0], i, song[1], CoolUtil.getColor(colors));
 			}
-			if (leWeek.skipSelects != null) skipSelect = leWeek.skipSelects;
 		}
 		Mods.loadTopMod();
 
@@ -145,7 +143,7 @@ class FreeplayState extends MusicBeatState {
 
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
 
-		var leText:String = Language.getPhrase("freeplay_tip", '[SPACE] Listen to the Song • [CTRL] Gameplay Changers Menu • [HOLD Z] Skip Character Selection\n[COMMA] Change Sections • [RESET] Reset Score and Accuracy');
+		var leText:String = Language.getPhrase("freeplay_tip", '[SPACE] Listen to the Song • [CTRL] Gameplay Changers Menu • [HOLD TAB] Character Selection\n[COMMA] Change Sections • [RESET] Reset Score and Accuracy');
 		bottomString = leText;
 		bottomText = new FlxText(0, 0, FlxG.width, leText, 18);
 		bottomText.setFormat(Paths.font("babyshark.ttf"), 18, FlxColor.WHITE, CENTER);
@@ -340,11 +338,12 @@ class FreeplayState extends MusicBeatState {
 				return;
 			}
 
-			if (FlxG.keys.pressed.Z || (skipSelect != null && skipSelect.contains(songs[curSelected].songName))) {
+			if (FlxG.keys.pressed.TAB) FlxG.switchState(() -> new CharacterSelectionState());
+			else {
 				LoadingState.prepareToSong();
 				LoadingState.loadAndSwitchState(() -> new PlayState());
 				#if !SHOW_LOADING_SCREEN FlxG.sound.music.stop(); #end
-			} else FlxG.switchState(() -> new CharacterSelectionState());
+			}
 			stopMusicPlay = true;
 
 			destroyFreeplayVocals();

@@ -21,7 +21,6 @@ typedef WeekFile = {
 	// -- FREEPLAY MENU SPECIFIC -- //
 	var hideFreeplay:Bool;
 	var section:String;
-	var skipSelects:Array<String>;
 }
 
 class WeekData {
@@ -45,7 +44,6 @@ class WeekData {
 	// -- FREEPLAY MENU SPECIFIC -- //
 	public var hideFreeplay:Bool;
 	public var section:String;
-	public var skipSelects:Array<String>;
 
 	public var fileName:String;
 
@@ -67,8 +65,7 @@ class WeekData {
 			hideStoryMode: false,
 			hideFreeplay: false,
 			difficulties: '',
-			section: "mods",
-			skipSelects: []
+			section: "mods"
 		};
 	}
 
@@ -116,8 +113,7 @@ class WeekData {
 		for (i in 0...directories.length) {
 			var directory:String = '${directories[i]}weeks/';
 			if(FileSystem.exists(directory)) {
-				var listOfWeeks:Array<String> = CoolUtil.coolTextFile(directory + 'weekList.txt');
-				for (daWeek in listOfWeeks) {
+				for (daWeek in CoolUtil.coolTextFile(directory + 'weekList.txt')) {
 					var path:String = directory + '$daWeek.json';
 					if(FileSystem.exists(path)) addWeek(daWeek, path, directories[i], i, originalLength);
 				}

@@ -151,11 +151,9 @@ class AssetCache implements IAssetCache
 	public function getKeys(prefix:String = null):Array<String>
 	{
 		var result:Array<String> = [];
-
 		result = result.concat(getBitmapKeys(prefix));
 		result = result.concat(getFontKeys(prefix));
 		result = result.concat(getSoundKeys(prefix));
-
 		return result;
 	}
 
@@ -169,12 +167,10 @@ class AssetCache implements IAssetCache
 	{
 		var result:Array<String> = [];
 		if (prefix == null) {
-			for (key in bitmapData.keys())
-				result.push(key);
+			for (key in bitmapData.keys()) result.push(key);
 		} else {
 			for (key in bitmapData.keys()) {
-				if (key.startsWith(prefix))
-					result.push(key);
+				if (key.startsWith(prefix)) result.push(key);
 			}
 		}
 		return result;
@@ -294,9 +290,7 @@ class AssetCache implements IAssetCache
 	**/
 	public function removeBitmapData(id:String):Bool
 	{
-		#if lime
-		LimeAssets.cache.image.remove(id);
-		#end
+		#if lime LimeAssets.cache.image.remove(id); #end
 		return bitmapData.remove(id);
 	}
 
@@ -308,9 +302,7 @@ class AssetCache implements IAssetCache
 	**/
 	public function removeFont(id:String):Bool
 	{
-		#if lime
-		LimeAssets.cache.font.remove(id);
-		#end
+		#if lime LimeAssets.cache.font.remove(id); #end
 		return font.remove(id);
 	}
 
@@ -322,9 +314,7 @@ class AssetCache implements IAssetCache
 	**/
 	public function removeSound(id:String):Bool
 	{
-		#if lime
-		LimeAssets.cache.audio.remove(id);
-		#end
+		#if lime LimeAssets.cache.audio.remove(id); #end
 		return sound.remove(id);
 	}
 

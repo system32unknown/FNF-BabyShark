@@ -13,12 +13,11 @@ class Logs {
 	public static function init() {
 		Log.trace = function(v:Dynamic, ?infos:Null<haxe.PosInfos>) {
 			var data:Array<LogText> = [logText('${infos.fileName}:${infos.lineNumber}: ', CYAN), logText(Std.string(v))];
-
 			if (infos.customParams != null) for (i in infos.customParams) data.push(logText("," + Std.string(i)));
 			__showInConsole(prepareColoredTrace(data, TRACE));
 		};
 
-		flixel.system.frontEnds.LogFrontEnd.onLogs = function(Data, Style, FireOnce) {
+		flixel.system.frontEnds.LogFrontEnd.onLogs = (Data, Style, FireOnce) -> {
 			var prefix:String = "[FLIXEL]";
 			var color:ConsoleColor = LIGHTGRAY;
 			var level:Level = INFO;
