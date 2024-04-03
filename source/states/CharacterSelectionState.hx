@@ -106,7 +106,7 @@ class CharacterSelectionState extends MusicBeatState {
 		add(gfGroup);
 		add(boyfriendGroup);
 		
-		var tutorialThing:FlxSprite = new FlxSprite(-125, -100).loadGraphic(Paths.image('charSelectGuide'));
+		var tutorialThing:FlxSprite = new FlxSprite(-125, -100, Paths.image('charSelectGuide'));
 		tutorialThing.setGraphicSize(Std.int(tutorialThing.width * 1.25));
 		tutorialThing.scrollFactor.set();
 		tutorialThing.camera = camHUD;

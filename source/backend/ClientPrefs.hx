@@ -164,17 +164,17 @@ class ClientPrefs {
 		'debug_2'		=> [EIGHT]
 	];
 	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
-	public static function loadDefaultKeys() defaultKeys = keyBinds.copy();
-
+	
 	public static function resetKeys() {
 		for (key in keyBinds.keys()) if(defaultKeys.exists(key)) keyBinds.set(key, defaultKeys.get(key).copy());
 	}
-
+	
 	public static function clearInvalidKeys(key:String) {
 		var keyBind:Array<FlxKey> = keyBinds.get(key);
 		while(keyBind != null && keyBind.contains(NONE)) keyBind.remove(NONE);
 	}
-
+	
+	public static function loadDefaultKeys() defaultKeys = keyBinds.copy();
 	public static function saveSettings() {
 		for (key in Reflect.fields(data)) Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
 		FlxG.save.flush();

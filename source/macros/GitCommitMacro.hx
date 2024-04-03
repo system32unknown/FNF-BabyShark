@@ -18,28 +18,24 @@ class GitCommitMacro {
 
 	// INTERNAL MACROS
 	static macro function __getCommitHash() {
-		#if display
-		return macro $v{"-"};
-		#else
+		#if !display
 		try {
 			var proc:Process = new Process('git', ['rev-parse', '--short', 'HEAD'], false);
 			proc.exitCode(true);
 			return macro $v{proc.stdout.readLine()};
 		} catch(e) {}
-		return macro $v{"-"}
 		#end
+		return macro $v{"-"}
 	}
 
 	static macro function __getCommitNumber() {
-		#if display
-		return macro $v{0};
-		#else
+		#if !display
 		try {
 			var proc:Process = new Process('git', ['rev-list', 'HEAD', '--count'], false);
 			proc.exitCode(true);
 			return macro $v{Std.parseInt(proc.stdout.readLine())};
 		} catch(e) {}
-		return macro $v{0}
 		#end
+		return macro $v{0}
 	}
 }

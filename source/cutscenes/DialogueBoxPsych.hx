@@ -51,7 +51,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 		if (song != null && song != '') {
 			FlxG.sound.playMusic(Paths.music(song), 0);
-			FlxG.sound.music.fadeIn(2, 0, 1);
+			FlxG.sound.music.fadeIn(2);
 		}
 
 		this.createDialogueUI(dialogueList);
@@ -163,7 +163,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 		// Set default speed
 		if (curDialogue.speed == null || Math.isNaN(curDialogue.speed))
-			curDialogue.speed = 0.05;
+			curDialogue.speed = .05;
 
 		if (curDialogue.events != null) {
 			for (i in 0...curDialogue.events.length) {
@@ -195,8 +195,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 		var shouldKillCharacters:Bool = box == null && bgFade == null;
 
-		for (i in 0...dialogueCharacters.length)
-		{
+		for (i in 0...dialogueCharacters.length) {
 			var currentCharacter:DialogueCharacter = dialogueCharacters[i];
 			if (currentCharacter == null) continue;
 
@@ -249,7 +248,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		this.killAll(sprites); // Kill all sprites
 
 		if (shouldBoxRecenter) updateBoxOffsets(box);
-		FlxG.sound.music.fadeOut(1, 0);
+		FlxG.sound.music.fadeOut(1);
 	}
 
 	inline public static function parseDialogue(path:String):DialogueFile {

@@ -46,15 +46,16 @@ class ChartingState extends MusicBeatState {
 	var curNoteTypes:Array<String> = [];
 	var eventStuff:Array<Dynamic> = [
 		['', "Nothing. Yep, that's right."],
-		['Dadbattle Spotlight', "Used in Dad Battle,\nValue 1: 0/1 = ON/OFF,\n2 = Target Dad\n3 = Target BF\n\nDoes not work outside of Week 1 Stage."],
+		['Dadbattle Spotlight', "Used in Dad Battle,\nValue 1: 0/1 = ON/OFF,\n2 = Target Dad\n3 = Target BF"],
 		['Hey!', "Plays the \"Hey!\" animation from Bopeebo,\nValue 1: BF = Only Boyfriend, GF = Only Girlfriend,\nSomething else = Both.\nValue 2: Custom animation duration,\nleave it blank for 0.6s"],
 		['Set GF Speed', "Sets GF head bopping speed,\nValue 1: 1 = Normal speed,\n2 = 1/2 speed, 4 = 1/4 speed etc.\nUsed on Fresh during the beatbox parts.\n\nWarning: Value must be integer!"],
 		['Philly Glow', "Exclusive to Week 3\nValue 1: 0/1/2 = OFF/ON/Reset Gradient\n \nNo, i won't add it to other weeks."],
+		['Kill Henchmen', "For Mom's songs, don't use this please, i love them :("],
 		['Add Camera Zoom', "Used on MILF on that one \"hard\" part\nValue 1: Camera zoom add (Default: 0.015)\nValue 2: UI zoom add (Default: 0.03)\nLeave the values blank if you want to use Default."],
 		['Set Camera Zoom', "Used to set the default camera zoom to a constant value\nValue 1: Camera zoom set (Default: 1.05)\nValue 2: UI zoom set (Default: 1)\nLeave the values blank if you want to use Default."],
 		['Play Animation', "Plays an animation on a Character,\nonce the animation is completed,\nthe animation changes to Idle\n\nValue 1: Animation to play.\nValue 2: Character (Dad, BF, GF)"],
 		['Camera Follow Pos', "Value 1: X\nValue 2: Y\n\nThe camera won't change the follow point\nafter using this, for getting it back\nto normal, leave both values blank."],
-		['Alt Idle Animation', "Sets a specified suffix after the idle animation name.\nYou can use this to trigger 'idle-alt' if you set\nValue 2 to -alt\n\nValue 1: Character to set (Dad, BF or GF)\nValue 2: New suffix (Leave it blank to disable)"],
+		['Alt Idle Animation', "Sets a specified postfix after the idle animation name.\nYou can use this to trigger 'idle-alt' if you set\nValue 2 to -alt\n\nValue 1: Character to set (Dad, BF or GF)\nValue 2: New suffix (Leave it blank to disable)"],
 		['Screen Shake', "Value 1: Camera shake\nValue 2: HUD shake\n\nEvery value works as the following example: \"1, 0.05\".\nThe first number (1) is the duration.\nThe second number (0.05) is the intensity."],
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
 		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
@@ -169,6 +170,7 @@ class ChartingState extends MusicBeatState {
 		vortex = FlxG.save.data.chart_vortex;
 		ignoreWarnings = FlxG.save.data.ignoreWarnings;
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
+		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.scrollFactor.set();
 		bg.color = 0xFF222222;
 		add(bg);
@@ -215,7 +217,7 @@ class ChartingState extends MusicBeatState {
 		Conductor.mapBPMChanges(_song);
 		if(curSec >= _song.notes.length) curSec = _song.notes.length - 1;
 
-		bpmTxt = new FlxText(1100, 50, 0, "", 16);
+		bpmTxt = new FlxText(1000, 50, 0, "", 16);
 		bpmTxt.scrollFactor.set();
 		add(bpmTxt);
 
@@ -457,7 +459,7 @@ class ChartingState extends MusicBeatState {
 
 		#if MODS_ALLOWED
 		var directories:Array<String> = [Paths.mods('stages/'), Paths.mods(Mods.currentModDirectory + '/stages/'), Paths.getSharedPath('stages/')];
-		for(mod in Mods.getGlobalMods()) directories.push(Paths.mods(mod + '/stages/'));
+		for(mod in Mods.getGlobalMods()) directories.push(Paths.mods('$mod/stages/'));
 		#else
 		var directories:Array<String> = [Paths.getSharedPath('stages/')];
 		#end
@@ -959,7 +961,7 @@ class ChartingState extends MusicBeatState {
 		#if MODS_ALLOWED
 		directories.push(Paths.mods('custom_events/'));
 		directories.push(Paths.mods(Mods.currentModDirectory + '/custom_events/'));
-		for(mod in Mods.getGlobalMods()) directories.push(Paths.mods(mod + '/custom_events/'));
+		for(mod in Mods.getGlobalMods()) directories.push(Paths.mods('$mod/custom_events/'));
 		#end
 
 		for (i in 0...directories.length) {
@@ -1094,10 +1096,6 @@ class ChartingState extends MusicBeatState {
 	var metronomeStepper:FlxUINumericStepper;
 	var metronomeOffsetStepper:FlxUINumericStepper;
 	var disableAutoScrolling:FlxUICheckBox;
-	#if desktop
-	var waveformUseInstrumental:FlxUICheckBox;
-	var waveformUseVoices:FlxUICheckBox;
-	#end
 	var instVolume:FlxUINumericStepper;
 	var voicesVolume:FlxUINumericStepper;
 	function addChartingUI() {
@@ -1108,7 +1106,10 @@ class ChartingState extends MusicBeatState {
 		if (FlxG.save.data.chart_waveformInst == null) FlxG.save.data.chart_waveformInst = false;
 		if (FlxG.save.data.chart_waveformVoices == null) FlxG.save.data.chart_waveformVoices = false;
 
-		waveformUseInstrumental = new FlxUICheckBox(10, 90, null, null, "Waveform for Instrumental", 100);
+		var waveformUseInstrumental:FlxUICheckBox;
+		var waveformUseVoices:FlxUICheckBox;
+
+		waveformUseInstrumental = new FlxUICheckBox(10, 90, null, null, "Waveform\nInstrumental", 85);
 		waveformUseInstrumental.checked = FlxG.save.data.chart_waveformInst;
 		waveformUseInstrumental.callback = function() {
 			waveformUseVoices.checked = false;
@@ -1117,7 +1118,7 @@ class ChartingState extends MusicBeatState {
 			updateWaveform();
 		};
 
-		waveformUseVoices = new FlxUICheckBox(waveformUseInstrumental.x + 120, waveformUseInstrumental.y, null, null, "Waveform for Voices", 100);
+		waveformUseVoices = new FlxUICheckBox(waveformUseInstrumental.x + 100, waveformUseInstrumental.y, null, null, "Waveform\n(Main Vocals)", 85);
 		waveformUseVoices.checked = FlxG.save.data.chart_waveformVoices;
 		waveformUseVoices.callback = function() {
 			waveformUseInstrumental.checked = false;
@@ -1127,14 +1128,14 @@ class ChartingState extends MusicBeatState {
 		};
 		#end
 
-		check_mute_inst = new FlxUICheckBox(10, 310, null, null, "Mute Instrumental (in editor)", 100);
+		check_mute_inst = new FlxUICheckBox(10, 280, null, null, "Mute Instrumental (in editor)", 100);
 		check_mute_inst.checked = false;
 		check_mute_inst.callback = function() {
 			var vol:Float = instVolume.value;
 			if (check_mute_inst.checked) vol = 0;
 			FlxG.sound.music.volume = vol;
 		};
-		mouseScrollingQuant = new FlxUICheckBox(10, 200, null, null, "Mouse Scrolling Quantization", 100);
+		mouseScrollingQuant = new FlxUICheckBox(10, 190, null, null, "Mouse Scrolling Quantization", 100);
 		if (FlxG.save.data.mouseScrollingQuant == null) FlxG.save.data.mouseScrollingQuant = false;
 		mouseScrollingQuant.checked = FlxG.save.data.mouseScrollingQuant;
 
@@ -1162,7 +1163,7 @@ class ChartingState extends MusicBeatState {
 			ignoreWarnings = FlxG.save.data.ignoreWarnings;
 		};
 
-		check_mute_vocals = new FlxUICheckBox(check_mute_inst.x + 120, check_mute_inst.y, null, null, "Mute Vocals (in editor)", 100);
+		check_mute_vocals = new FlxUICheckBox(check_mute_inst.x, check_mute_inst.y + 30, null, null, "Mute Main Vocals (in editor)", 100);
 		check_mute_vocals.checked = false;
 		check_mute_vocals.callback = () -> {
 			var vol:Float = voicesVolume.value;
@@ -1191,7 +1192,7 @@ class ChartingState extends MusicBeatState {
 		if (FlxG.save.data.chart_noAutoScroll == null) FlxG.save.data.chart_noAutoScroll = false;
 		disableAutoScrolling.checked = FlxG.save.data.chart_noAutoScroll;
 
-		instVolume = new FlxUINumericStepper(metronomeStepper.x, 270, 0.1, 1, 0, 1, 1);
+		instVolume = new FlxUINumericStepper(metronomeStepper.x, 250, 0.1, 1, 0, 1, 1);
 		instVolume.value = FlxG.sound.music.volume;
 		instVolume.name = 'inst_volume';
 		blockPressWhileTypingOnStepper.push(instVolume);
@@ -1201,14 +1202,14 @@ class ChartingState extends MusicBeatState {
 		voicesVolume.name = 'voices_volume';
 		blockPressWhileTypingOnStepper.push(voicesVolume);
 
-		sliderRate = new FlxUISlider(this, 'playbackSpeed', 120, 120, 0.5, 3, 150, 15, 5, FlxColor.WHITE, FlxColor.BLACK);
-		sliderRate.nameLabel.text = "Playback Rate";
+		sliderRate = new FlxUISlider(this, 'playbackSpeed', 120, 120, 0.5, 3, null, 15, 5, FlxColor.WHITE, FlxColor.BLACK);
+		sliderRate.nameLabel.text = 'Playback Rate';
 		tab_group_chart.add(sliderRate);
 
 		tab_group_chart.add(new FlxText(metronomeStepper.x, metronomeStepper.y - 15, 0, 'BPM:'));
 		tab_group_chart.add(new FlxText(metronomeOffsetStepper.x, metronomeOffsetStepper.y - 15, 0, 'Offset (ms):'));
 		tab_group_chart.add(new FlxText(instVolume.x, instVolume.y - 15, 0, 'Inst Volume'));
-		tab_group_chart.add(new FlxText(voicesVolume.x, voicesVolume.y - 15, 0, 'Voices Volume'));
+		tab_group_chart.add(new FlxText(voicesVolume.x, voicesVolume.y - 15, 0, 'Main Vocals'));
 		tab_group_chart.add(metronome);
 		tab_group_chart.add(disableAutoScrolling);
 		tab_group_chart.add(metronomeStepper);
@@ -1254,7 +1255,12 @@ class ChartingState extends MusicBeatState {
 
 		gameOverEndInputText = new FlxUIInputText(10, gameOverLoopInputText.y + 35, 150, _song.gameOverEnd != null ? _song.gameOverEnd : '', 8);
 		blockPressWhileTypingOn.push(gameOverEndInputText);
-
+		var check_disableNoteRGB:FlxUICheckBox = new FlxUICheckBox(10, 170, null, null, "Disable Note RGB", 100);
+		check_disableNoteRGB.checked = (_song.disableNoteRGB == true);
+		check_disableNoteRGB.callback = function() {
+			_song.disableNoteRGB = check_disableNoteRGB.checked;
+			updateGrid();
+		};
 		noteSkinInputText = new FlxUIInputText(10, 280, 150, skin[0], 8);
 		blockPressWhileTypingOn.push(noteSkinInputText);
 
@@ -1270,6 +1276,8 @@ class ChartingState extends MusicBeatState {
 		tab_group_data.add(gameOverSoundInputText);
 		tab_group_data.add(gameOverLoopInputText);
 		tab_group_data.add(gameOverEndInputText);
+
+		tab_group_data.add(check_disableNoteRGB);
 
 		tab_group_data.add(reloadNotesButton);
 		tab_group_data.add(noteSkinInputText);
@@ -1508,7 +1516,7 @@ class ChartingState extends MusicBeatState {
 					FlxG.log.add('added note');
 					addNote();
 					if (check_stackActive.checked) {
-						var addCount = Math.floor(stepperStackNum.value) * Math.floor(stepperStackOffset.value) - 1;
+						var addCount:Int = Math.floor(stepperStackNum.value) * Math.floor(stepperStackOffset.value) - 1;
 						for(_ in 0...Std.int(addCount)) addNote(curSelectedNote[0] + (_song.notes[curSec].changeBPM ? 15000 / _song.notes[curSec].bpm : 15000 / _song.bpm) / stepperStackOffset.value, curSelectedNote[1] + Math.floor(stepperStackSideOffset.value), currentType);
 					}
 				}
@@ -1630,10 +1638,7 @@ class ChartingState extends MusicBeatState {
 				else if (FlxG.keys.pressed.SHIFT) holdingShift = 4;
 
 				var daTime:Float = 700 * elapsed * holdingShift;
-
-				if (FlxG.keys.pressed.W)
-					FlxG.sound.music.time -= daTime;
-				else FlxG.sound.music.time += daTime;
+				FlxG.sound.music.time += daTime * (FlxG.keys.pressed.W ? -1 : 1);
 
 				pauseAndSetVocalsTime();
 			}
@@ -1768,7 +1773,7 @@ class ChartingState extends MusicBeatState {
 		if (FlxG.keys.pressed.ALT && (pressedLB || pressedRB || holdingLB || holdingRB))
 			playbackSpeed = 1;
 
-		if (playbackSpeed <= 0.5) playbackSpeed = 0.5;
+		if (playbackSpeed <= .5) playbackSpeed = .5;
 		if (playbackSpeed >= 3) playbackSpeed = 3;
 
 		FlxG.sound.music.pitch = playbackSpeed;
@@ -1793,8 +1798,8 @@ class ChartingState extends MusicBeatState {
 
 				if (curSelectedNote[0] == note.strumTime && ((curSelectedNote[2] == null && noteDataToCheck < 0) || (curSelectedNote[2] != null && curSelectedNote[1] == noteDataToCheck))) {
 					colorSine += elapsed;
-					var colorVal:Float = .7 + Math.sin(Math.PI * colorSine) * 0.3;
-					note.color = FlxColor.fromRGBFloat(colorVal, colorVal, colorVal, 0.999); //Alpha can't be 100% or the color won't be updated for some reason, guess i will die
+					var colorVal:Float = .7 + Math.sin(Math.PI * colorSine) * .3;
+					note.color = FlxColor.fromRGBFloat(colorVal, colorVal, colorVal, .999); //Alpha can't be 100% or the color won't be updated for some reason, guess i will die
 				}
 			}
 
@@ -1807,7 +1812,7 @@ class ChartingState extends MusicBeatState {
 					strumLineNotes.members[noteDataToCheck].playAnim('confirm', true);
 					strumLineNotes.members[noteDataToCheck].resetAnim = ((note.sustainLength / 1000) + .15) / playbackSpeed;
 					if(!playedSound[data]) {
-						if((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)) {
+						if(note.hitsoundChartEditor && ((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress))) {
 							var soundToPlay:String = 'hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}';
 							if(_song.player1 == 'gf') soundToPlay = 'gfnoise/GF_${EK.keys(data)}'; //Easter egg 
 
@@ -2480,7 +2485,7 @@ class ChartingState extends MusicBeatState {
 	}
 
 	public function doANoteThing(cs, d, style) {
-		var delnote = false;
+		var delnote:Bool = false;
 		if(strumLineNotes.members[d].overlaps(curRenderedNotes)) {
 			curRenderedNotes.forEachAlive(function(note:Note) {
 				if (note.overlapsPoint(FlxPoint.weak(strumLineNotes.members[d].x + 1, strumLine.y + 1)) && note.noteData == d % EK.keys(_song.mania)) {
@@ -2558,7 +2563,7 @@ class ChartingState extends MusicBeatState {
 			Logs.trace('ERROR! $e', ERROR);
 
 			var errorStr:String = e.toString();
-			if(errorStr.startsWith('[file_contents,assets/data/charts/')) errorStr = 'Missing file: ' + errorStr.substring(27, errorStr.length - 1); //Missing chart
+			if(errorStr.startsWith('[lime.utils.Assets] ERROR:')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(Paths.formatToSongPath(PlayState.SONG.song)), errorStr.length - 1); //Missing chart
 			
 			if(missingText == null) {
 				missingText = new FlxText(50, 0, FlxG.width - 100, '', 24);
@@ -2638,7 +2643,7 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function onSaveComplete(_):Void {
-		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
+		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;

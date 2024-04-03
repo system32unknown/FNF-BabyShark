@@ -139,8 +139,9 @@ class FreeplayState extends MusicBeatState {
 		add(missingText);
 
 		if(curSelected >= songs.length) curSelected = 0;
+		interpColor = new FlxInterpolateColor(bg.color);
 		lerpSelected = curSelected;
-
+		
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
 
 		var leText:String = Language.getPhrase("freeplay_tip", '[SPACE] Listen to the Song • [CTRL] Gameplay Changers Menu • [HOLD TAB] Character Selection\n[COMMA] Change Sections • [RESET] Reset Score and Accuracy');
@@ -160,7 +161,6 @@ class FreeplayState extends MusicBeatState {
 
 		changeSelection();
 		updateTexts();
-		interpColor = new FlxInterpolateColor(bg.color);
 		super.create();
 	}
 
@@ -200,7 +200,7 @@ class FreeplayState extends MusicBeatState {
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 		if (!player.playingMusic) {
-			comboText.text = 'Rating: $intendedcombo';
+			comboText.text = Language.getPhrase('personal_combo', 'Rating: {1}', [intendedcombo]);
 			scoreText.text = Language.getPhrase('personal_best', 'PERSONAL BEST: {1} ({2}%)', [lerpScore, ratingSplit.join('.')]);
 			positionHighscore();
 
@@ -232,7 +232,6 @@ class FreeplayState extends MusicBeatState {
 				if (FlxG.mouse.wheel != 0) {
 					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
 					changeSelection(-shiftMult * FlxG.mouse.wheel, false);
-					changeDiff();
 				}
 			}
 
@@ -286,7 +285,7 @@ class FreeplayState extends MusicBeatState {
 
 					vocals = new FlxSound();
 					try {
-						var loadedVocals = Paths.voices(PlayState.SONG.song, true);
+						var loadedVocals = Paths.voices(PlayState.SONG.song);
 						if(loadedVocals != null && loadedVocals.length > 0) {
 							vocals.loadEmbedded(loadedVocals);
 							FlxG.sound.list.add(vocals);
@@ -313,7 +312,6 @@ class FreeplayState extends MusicBeatState {
 			var songLowercase:String = Highscore.formatSong(songFolder, curDifficulty);
 			
 			if (songLowercase == "" || songLowercase.length < 1) return;
-
 			if (songLowercase == "enter-terminal-hard") {
 				FlxG.switchState(() -> new TerminalState());
 				return;
@@ -347,15 +345,15 @@ class FreeplayState extends MusicBeatState {
 			stopMusicPlay = true;
 
 			destroyFreeplayVocals();
-			#if MODS_ALLOWED DiscordClient.loadModRPC(); #end
+			#if (MODS_ALLOWED && DISCORD_ALLOWED) DiscordClient.loadModRPC(); #end
 		} else if (FlxG.keys.justPressed.COMMA && !player.playingMusic) {
 			persistentUpdate = false;
 			openSubState(new FreeplaySectionSubstate());
-			FlxG.sound.play(Paths.sound('scrollMenu'), .7);
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 		} else if(controls.RESET && !player.playingMusic) {
 			persistentUpdate = false;
 			openSubState(new substates.ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
-			FlxG.sound.play(Paths.sound('scrollMenu'), .7);
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
 
 		updateTexts(elapsed);
@@ -378,11 +376,11 @@ class FreeplayState extends MusicBeatState {
 		lastDifficultyName = Difficulty.getString(curDifficulty, false);
 		var displayDiff:String = Difficulty.getString(curDifficulty);
 		if (Difficulty.list.length > 1)
-			diffText.text = '< ' + displayDiff.toUpperCase() + ' >';
+			diffText.text = '< ${displayDiff.toUpperCase()} >';
 		else diffText.text = displayDiff.toUpperCase();
 
-		missingText.visible = missingTextBG.visible = false;
 		positionHighscore();
+		missingText.visible = missingTextBG.visible = false;
 	}
 
 	function changeSelection(change:Int = 0, playSound:Bool = true) {
@@ -419,10 +417,6 @@ class FreeplayState extends MusicBeatState {
 		changeDiff();
 
 		_updateSongLastDifficulty();
-
-		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
-		intendedcombo = Highscore.getCombo(songs[curSelected].songName, curDifficulty);
 	}
 
 	inline function _updateSongLastDifficulty() {

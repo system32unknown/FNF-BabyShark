@@ -87,13 +87,24 @@ class Alphabet extends FlxSpriteGroup {
 		rows = 0;
 	}
 
+	public function setScale(newX:Float, newY:Null<Float> = null) {
+		var lastX:Float = scale.x;
+		var lastY:Float = scale.y;
+		if(newY == null) newY = newX;
+		@:bypassAccessor scaleX = newX;
+		@:bypassAccessor scaleY = newY;
+
+		scale.set(newX, newY);
+		softReloadLetters(newX / lastX, newY / lastY);
+	}
+
 	function set_scaleX(value:Float) {
 		if (value == scaleX) return value;
 
 		var ratio:Float = value / scale.x;
 		scale.x = value;
-		softReloadLetters(ratio, 1);
 		scaleX = value;
+		softReloadLetters(ratio, 1);
 		return value;
 	}
 
@@ -110,17 +121,6 @@ class Alphabet extends FlxSpriteGroup {
 	public function softReloadLetters(ratioX:Float = 1, ratioY:Null<Float> = null) {
 		if(ratioY == null) ratioY = ratioX;
 		for (letter in letters) if(letter != null) letter.setupAlphaCharacter((letter.x - x) * ratioX + x, (letter.y - y) * ratioY + y);
-	}
-
-	public function setScale(newX:Float, newY:Null<Float> = null) {
-		var lastX:Float = scale.x;
-		var lastY:Float = scale.y;
-		if(newY == null) newY = newX;
-		@:bypassAccessor scaleX = newX;
-		@:bypassAccessor scaleY = newY;
-
-		scale.set(newX, newY);
-		softReloadLetters(newX / lastX, newY / lastY);
 	}
 
 	override function update(elapsed:Float) {

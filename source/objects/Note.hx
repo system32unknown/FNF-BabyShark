@@ -66,14 +66,14 @@ class Note extends FlxSprite {
 
 	public static var SUSTAIN_SIZE:Int = 44;
 	public static var swagWidth:Float = 160 * .7;
-	public static var defaultNoteSkin:String = 'noteSkins/NOTE_assets';
+	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
 
 	public var noteSplashData:NoteSplashData = {
 		disabled: false,
 		texture: null,
 		antialiasing: !PlayState.isPixelStage,
 		useGlobalShader: false,
-		useRGBShader: (PlayState.SONG != null) ? !(PlayState.SONG.disableNoteRGB) : true,
+		useRGBShader: (PlayState.SONG != null) ? !(PlayState.SONG.disableNoteRGB == true) : true,
 		r: -1,
 		g: -1,
 		b: -1,
@@ -114,7 +114,7 @@ class Note extends FlxSprite {
 	}
 
 	public function resizeByRatio(ratio:Float) { //haha funny twitter shit
-		if(isSustainNote && animation.curAnim != null && !animation.curAnim.name.endsWith('tail')) {
+		if(isSustainNote && animation.curAnim != null && !animation.curAnim.name.endsWith('end')) {
 			scale.y *= ratio;
 			updateHitbox();
 		}
@@ -333,6 +333,7 @@ class Note extends FlxSprite {
 		var playAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
 		var playAnimAlt:String = EK.colArrayAlt[EK.gfxIndex[PlayState.mania][noteData]];
 		if (isSustainNote) {
+			attemptToAddAnimationByPrefix('purpleholdend', 'pruple end hold', 24, true);
 			attemptToAddAnimationByPrefix(playAnim + 'holdend', playAnim + ' tail0', 24, true);
 			attemptToAddAnimationByPrefix(playAnim + 'hold', playAnim + ' hold0', 24, true);
 			attemptToAddAnimationByPrefix(playAnim + 'holdend', playAnimAlt + ' hold end', 24, true);

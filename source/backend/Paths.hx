@@ -162,14 +162,15 @@ class Paths {
 		return returnSound('sounds/$key', modsAllowed);
 	inline static public function music(key:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('music/$key', modsAllowed);
-	inline static public function soundRandom(key:String, min:Int, max:Int, ?modsAllowed:Bool = true):Sound
-		return sound(key + FlxG.random.int(min, max), modsAllowed);
 
 	inline static public function inst(song:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('${formatToSongPath(song)}/Inst', 'songs', modsAllowed);
 	inline static public function voices(song:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('${formatToSongPath(song)}/Voices', 'songs', modsAllowed, false);
+	inline static public function soundRandom(key:String, min:Int, max:Int, ?modsAllowed:Bool = true):Sound
+		return sound(key + FlxG.random.int(min, max), modsAllowed);
 
+	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	static public function image(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxGraphic {
 		key = Language.getFileTranslation('images/$key');
 		if(key.lastIndexOf('.') < 0) key += '.png';
@@ -182,13 +183,49 @@ class Paths {
 		return cacheBitmap(key, parentFolder, bitmap, allowGPU);
 	}
 
+	public static function cacheBitmap(key:String, ?parentFolder:String = null, ?bitmap:BitmapData, ?allowGPU:Bool = true) {
+		var file:String = getPath(key, IMAGE, parentFolder);
+		if (bitmap == null) {
+			#if MODS_ALLOWED
+			if (FileSystem.exists(file)) bitmap = BitmapData.fromFile(file);
+			#else
+			if (OpenFlAssets.exists(file, IMAGE)) bitmap = OpenFlAssets.getBitmapData(file);
+			#end
+
+			if(bitmap == null) {
+				FlxG.log.warn('Could not find image with key: "$key"' + (parentFolder == null ? "" : 'in parent folder: "$parentFolder"'));
+				return null;
+			}
+		}
+
+		if (allowGPU && ClientPrefs.data.cacheOnGPU && bitmap.image != null) @:privateAccess {
+			bitmap.lock();
+			if (bitmap.__texture == null) {
+				bitmap.image.premultiplied = true;
+				bitmap.getTexture(FlxG.stage.context3D);
+			}
+			bitmap.getSurface();
+			bitmap.disposeImage();
+			bitmap.image.data = null;
+			bitmap.image = null;
+			bitmap.readable = true;
+		}
+
+		var graph:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, key);
+		graph.persist = true;
+		graph.destroyOnNoUse = false;
+
+		currentTrackedAssets.set(key, graph);
+		localTrackedAssets.push(key);
+		return graph;
+	}
+
 	inline static public function getTextFromFile(key:String, ?absolute:Bool = false):String {
 		if (absolute) {
 			#if sys if (FileSystem.exists(key)) return File.getContent(key); #end
 			if (OpenFlAssets.exists(key, TEXT)) return Assets.getText(key);
 			return null;
 		}
-
 		var path:String = getPath(key, TEXT, true);
 		return (#if sys FileSystem.exists(path)) ? File.getContent(path) #else OpenFlAssets.exists(path, TEXT)) ? Assets.getText(path) #end : null;
 	}
@@ -201,7 +238,7 @@ class Paths {
 		return 'assets/fonts/$key';
 	}
 
-	static public function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?parentFolder:String):Bool {
+	public static function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?parentFolder:String = null):Bool {
 		#if MODS_ALLOWED
 		if(!ignoreMods) {
 			var modKey:String = key;
@@ -277,44 +314,6 @@ class Paths {
 		var hideChars:EReg = ~/[.,'"%?!]+/g;
 
 		return hideChars.split(invalidChars.split(path.replace(' ', '-')).join("-")).join("").toLowerCase();
-	}
-
-	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
-	public static function cacheBitmap(key:String, ?parentFolder:String = null, ?bitmap:BitmapData, ?allowGPU:Bool = true) {
-		var file:String = getPath(key, IMAGE, parentFolder);
-		if (bitmap == null) {
-			#if MODS_ALLOWED
-			if (FileSystem.exists(file)) bitmap = BitmapData.fromFile(file);
-			#else
-			if (OpenFlAssets.exists(file, IMAGE)) bitmap = OpenFlAssets.getBitmapData(file);
-			#end
-
-			if(bitmap == null) {
-				FlxG.log.warn('Could not find image with key: "$key"' + (parentFolder == null ? "" : 'in parent folder: "$parentFolder"'));
-				return null;
-			}
-		}
-
-		if (allowGPU && ClientPrefs.data.cacheOnGPU && bitmap.image != null) @:privateAccess {
-			bitmap.lock();
-			if (bitmap.__texture == null) {
-				bitmap.image.premultiplied = true;
-				bitmap.getTexture(FlxG.stage.context3D);
-			}
-			bitmap.getSurface();
-			bitmap.disposeImage();
-			bitmap.image.data = null;
-			bitmap.image = null;
-			bitmap.readable = true;
-		}
-
-		var graph:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, key);
-		graph.persist = true;
-		graph.destroyOnNoUse = false;
-
-		currentTrackedAssets.set(key, graph);
-		localTrackedAssets.push(key);
-		return graph;
 	}
 
 	public static var currentTrackedSounds:Map<String, Sound> = [];

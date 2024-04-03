@@ -317,8 +317,8 @@ class Character extends FlxSprite {
 		}		
 	}
 
-	var settingCharacterUp:Bool = true;
 	public var danceEveryNumBeats:Int = 2;
+	var settingCharacterUp:Bool = true;
 	public function recalculateDanceIdle() {
 		final lastDanceIdle:Bool = danceIdle;
 		danceIdle = (animOffsets.exists('danceLeft' + idleSuffix) && animOffsets.exists('danceRight' + idleSuffix));
@@ -401,10 +401,7 @@ class Character extends FlxSprite {
 		}
 	}
 
-	override function destroy() {
-		animationsArray = null;
-		animOffsets = null;
-		shader = null;
+	public override function destroy() {
 		super.destroy();
 		destroyAtlas();
 	}

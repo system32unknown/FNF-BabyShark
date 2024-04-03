@@ -441,7 +441,7 @@ class PlayState extends MusicBeatState {
 		noteGroup.add(strumLineNotes);
 		add(uiGroup);
 
-		var splash:NoteSplash = new NoteSplash(100, 100, 0);
+		var splash:NoteSplash = new NoteSplash(100, 100);
 		grpNoteSplashes.add(splash);
 		splash.alpha = .000001;
 

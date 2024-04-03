@@ -67,7 +67,7 @@ class StoryMenuState extends MusicBeatState {
 			if(!isLocked || !weekFile.hiddenUntilUnlocked) {
 				loadedWeeks.push(weekFile);
 				WeekData.setDirectoryFromWeek(weekFile);
-				var weekThing:MenuItem = new MenuItem(0, bgSprite.y + 396, WeekData.weeksList[i], weekFile.flashingColor);
+				var weekThing:MenuItem = new MenuItem(0, bgSprite.y + 396, WeekData.weeksList[i]);
 				weekThing.y += ((weekThing.height + 20) * num);
 				weekThing.targetY = num;
 				grpWeekText.add(weekThing);
@@ -121,8 +121,9 @@ class StoryMenuState extends MusicBeatState {
 		add(bgSprite);
 		add(grpWeekCharacters);
 
-		var tracksSprite:FlxSprite = new FlxSprite(FlxG.width * .07 + 100, bgSprite.y + 425).loadGraphic(Paths.image('Menu_Tracks'));
+		var tracksSprite:FlxSprite = new FlxSprite(FlxG.width * .07 + 100, bgSprite.y + 425, Paths.image('Menu_Tracks'));
 		tracksSprite.antialiasing = ClientPrefs.data.antialiasing;
+		tracksSprite.x -= tracksSprite.width / 2;
 		add(tracksSprite);
 
 		txtTracklist = new FlxText(FlxG.width * 0.05, tracksSprite.y + 60, 0, "", 32);
@@ -231,14 +232,14 @@ class StoryMenuState extends MusicBeatState {
 			if (!stopspamming) {
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 	
-				grpWeekText.members[curWeek].startFlashing();
+				grpWeekText.members[curWeek].isFlashing = true;
 				for (char in grpWeekCharacters.members)
 					if (char.character != '' && char.hasConfirmAnimation)
 						char.animation.play('confirm');
 				stopspamming = true;
 			}
 
-			var directory = StageData.forceNextDirectory;
+			var directory:String = StageData.forceNextDirectory;
 			LoadingState.loadNextDirectory();
 			StageData.forceNextDirectory = directory;
 

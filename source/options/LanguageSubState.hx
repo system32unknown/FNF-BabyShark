@@ -11,7 +11,7 @@ class LanguageSubState extends MusicBeatSubstate {
 	public function new() {
 		super();
 
-		var bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		var bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.screenCenter();
@@ -68,8 +68,7 @@ class LanguageSubState extends MusicBeatSubstate {
 			text.distancePerItem.y = 100;
 			if(languages.length < 7) {
 				text.changeY = false;
-				text.screenCenter(Y);
-				text.y += (100 * (num - (languages.length / 2))) + 45;
+				text.screenCenter(Y).y += (100 * (num - (languages.length / 2))) + 45;
 			}
 			text.screenCenter(X);
 			grpLanguages.add(text);

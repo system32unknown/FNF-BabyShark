@@ -65,7 +65,7 @@ class LoadingState extends MusicBeatState {
 		funkay.updateHitbox();
 		add(funkay);
 
-		loadingText = new FlxText(520, 600, 450, 'Now Loading...', 32);
+		loadingText = new FlxText(520, 600, 450, Language.getPhrase('now_loading', 'Now Loading', ['...']), 32);
 		loadingText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		loadingText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK, 2);
 		loadingText.screenCenter(X);

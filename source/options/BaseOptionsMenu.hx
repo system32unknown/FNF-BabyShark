@@ -65,7 +65,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		for (i in 0...optionsArray.length) {
 			var optionText:Alphabet = new Alphabet(290, 260, optionsArray[i].name, optionsArray[i].type == FUNC);
 			optionText.isMenuItem = true;
-			optionText.x += 300;
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
@@ -239,13 +238,13 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	function bindingKeyUpdate(elapsed:Float) {
 		if(FlxG.keys.pressed.ESCAPE) {
 			holdingEsc += elapsed;
-			if(holdingEsc > 0.5) {
+			if(holdingEsc > .5) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				closeBinding();
 			}
 		} else if (FlxG.keys.pressed.BACKSPACE) {
 			holdingEsc += elapsed;
-			if(holdingEsc > 0.5) {
+			if(holdingEsc > .5) {
 				curOption.keys.keyboard = NONE;
 				updateBind(InputFormatter.getKeyName(NONE));
 				FlxG.sound.play(Paths.sound('cancelMenu'));

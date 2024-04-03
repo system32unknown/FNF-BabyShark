@@ -38,17 +38,14 @@ class NoteSplashDebugState extends MusicBeatState {
 		selection.alpha = 0.4;
 		add(selection);
 
-		notes = new FlxTypedGroup<StrumNote>();
-		add(notes);
-
-		splashes = new FlxTypedGroup<FlxSprite>();
-		add(splashes);
+		add(notes = new FlxTypedGroup<StrumNote>());
+		add(splashes = new FlxTypedGroup<FlxSprite>());
 
 		PlayState.mania = 3;
 		addStrumAndSplash();
 
-		var txtx = 60;
-		var txty = 640;
+		var txtx:Float = 60;
+		var txty:Float = 640;
 
 		add(new FlxText(txtx, txty - 120, 'Image Name:', 16));
 
@@ -88,7 +85,6 @@ class NoteSplashDebugState extends MusicBeatState {
 		nameInputText.callback = function(text:String, action:String) {
 			switch(action) {
 				case 'enter': nameInputText.hasFocus = false;
-				
 				default:
 					trace('changed anim name to $text');
 					config.anim = text;
@@ -177,8 +173,8 @@ class NoteSplashDebugState extends MusicBeatState {
 		if(maxAnims < 1) return;
 
 		if(selecArr != null) {
-			var movex = 0;
-			var movey = 0;
+			var movex:Int = 0;
+			var movey:Int = 0;
 			if(FlxG.keys.justPressed.LEFT) movex = -1;
 			else if(FlxG.keys.justPressed.RIGHT) movex = 1;
 
@@ -300,7 +296,6 @@ class NoteSplashDebugState extends MusicBeatState {
 		var path:String = pathSplit[pathSplit.length - 1].trim();
 		savedText.text = 'Saved to: $path';
 		File.saveContent(path, strToSave);
-
 		#else
 		savedText.text = 'Can\'t save on this platform, too bad.';
 		#end

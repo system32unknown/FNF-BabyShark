@@ -14,7 +14,6 @@ typedef WeekFile = {
 	// -- STORY MENU SPECIFIC -- //
 	var weekCharacters:Array<String>;
 	var weekBackground:String;
-	var flashingColor:Array<Int>;
 	var hideStoryMode:Bool;
 	var weekBefore:String;
 	var storyName:String;
@@ -37,7 +36,6 @@ class WeekData {
 	// -- STORY MENU SPECIFIC -- //
 	public var weekCharacters:Array<String>;
 	public var weekBackground:String;
-	public var flashingColor:FlxColor = 0xFF33FFFF;
 	public var hideStoryMode:Bool;
 	public var weekBefore:String;
 	public var storyName:String;
@@ -59,7 +57,6 @@ class WeekData {
 			weekBefore: 'tutorial',
 			storyName: 'Your New Week',
 			weekName: 'Custom Week',
-			flashingColor: [51, 255, 255],
 			startUnlocked: true,
 			hiddenUntilUnlocked: false,
 			hideStoryMode: false,
@@ -71,10 +68,9 @@ class WeekData {
 
 	public function new(weekFile:WeekFile, fileName:String) {
 		for (field in Reflect.fields(weekFile)) {
-			if(Reflect.fields(this).contains(field) && field != "flashingColor") // Reflect.hasField() won't fucking work :/
+			if(Reflect.fields(this).contains(field))
 				Reflect.setProperty(this, field, Reflect.field(weekFile, field));
 		}
-		if (weekFile.flashingColor != null) flashingColor = CoolUtil.colorFromArray(weekFile.flashingColor);
 		this.fileName = fileName;
 	}
 

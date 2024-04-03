@@ -20,11 +20,9 @@ class Option {
 	public var child:Alphabet;
 	public var text(get, set):String;
 	public var onChange:Void->Void = null; //Pressed enter (on Bool type options) or pressed/held left/right (on other types)
-
 	public var type:OptionType = BOOL;
 
 	public var scrollSpeed:Float = 50; //Only works on int/float, defines how fast it scrolls per second while holding left/right
-
 	var variable:String = null; //Variable from ClientPrefs.hx
 	public var defaultValue:Dynamic = null;
 
@@ -46,36 +44,35 @@ class Option {
 		_name = name;
 		this.name = Language.getPhrase('setting_$name', name);
 		this.description = Language.getPhrase('description_$name', description);
-		this.description = description;
 		this.variable = variable;
 		this.type = type;
 		this.options = options;
 
 		if(this.type != KEYBIND) this.defaultValue = Reflect.getProperty(ClientPrefs.defaultData, variable);
-		if(defaultValue == 'null variable value')
-			switch(type) {
-				case BOOL:
-					if(defaultValue == null) defaultValue = false;
-				case INT, FLOAT:
-					if(defaultValue == null) defaultValue = 0;
-				case PERCENT:
-					if(defaultValue == null) defaultValue = 1;
-					displayFormat = '%v%';
-					changeValue = 0.01;
-					minValue = 0;
-					maxValue = 1;
-					scrollSpeed = 0.5;
-					decimals = 2;
-					case STRING:
-						if(options.length > 0) defaultValue = options[0];
-						if(defaultValue == null) defaultValue = '';
-				case FUNC: if(defaultValue == null) defaultValue = '';
+		switch(type) {
+			case BOOL:
+				if(defaultValue == null) defaultValue = false;
+			case INT, FLOAT:
+				if(defaultValue == null) defaultValue = 0;
+			case PERCENT:
+				if(defaultValue == null) defaultValue = 1;
+				displayFormat = '%v%';
+				changeValue = 0.01;
+				minValue = 0;
+				maxValue = 1;
+				scrollSpeed = 0.5;
+				decimals = 2;
+			case STRING:
+				if(options.length > 0) defaultValue = options[0];
+				if(defaultValue == null) defaultValue = '';
+			case FUNC: if(defaultValue == null) defaultValue = '';
 
-				case KEYBIND:
-					defaultValue = '';
-					defaultKeys = {keyboard: 'NONE'};
-					keys = {keyboard: 'NONE'};
-			}
+			case KEYBIND:
+				defaultValue = '';
+				defaultKeys = {keyboard: 'NONE'};
+				keys = {keyboard: 'NONE'};
+		}
+			
 
 		try {
 			if(getValue() == null) setValue(defaultValue);

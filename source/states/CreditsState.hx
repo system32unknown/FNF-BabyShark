@@ -45,6 +45,7 @@ class CreditsState extends MusicBeatState {
 		[''],
 		['Special Thanks'],
 		['Denpa Engine',		'denpa',			'The Freeplay Section code used for this engine',				'https://github.com/UmbratheUmbreon/PublicDenpaEngine',			'FF9300'],
+		['Codename Engine',		'codename',			'Some stuffs used for this engine',				'https://github.com/FNF-CNE-Devs/CodenameEngine',			'FF9300'],
 	];
 
 	static var funkin(default, never):Array<Array<String>> = [
@@ -107,7 +108,7 @@ class CreditsState extends MusicBeatState {
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
 		#if MODS_ALLOWED
-		var activeMods = Mods.getActiveModDirectories(true);
+		var activeMods:Array<String> = Mods.getActiveModDirectories(true);
 		pushModCredits();
 		for (mod in activeMods) pushModCredits(mod);
 
@@ -298,7 +299,7 @@ class CreditSectionState extends MusicBeatState {
 
 				var str:String = 'credits/missing_icon';
 				if(creditsStuff[i][1] != null && creditsStuff[i][1].length > 0) {
-					var fileName = 'credits/' + creditsStuff[i][1];
+					var fileName:String = 'credits/${creditsStuff[i][1]}';
 					if (Paths.fileExists('images/$fileName.png', IMAGE)) str = fileName;
 					else if (Paths.fileExists('images/$fileName-pixel.png', IMAGE)) str = fileName + '-pixel';
 				}

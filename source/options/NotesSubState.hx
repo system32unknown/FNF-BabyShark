@@ -43,7 +43,7 @@ class NotesSubState extends MusicBeatSubstate {
 		
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Note Colors Menu"); #end
 		
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFEA71FD;
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.data.antialiasing;
@@ -80,11 +80,11 @@ class NotesSubState extends MusicBeatSubstate {
 		text.setScale(0.4);
 		add(text);
 
-		copyButton = new FlxSprite(760, 50).loadGraphic(Paths.image('noteColorMenu/copy'));
+		copyButton = new FlxSprite(760, 50, Paths.image('noteColorMenu/copy'));
 		copyButton.alpha = 0.6;
 		add(copyButton);
 
-		pasteButton = new FlxSprite(1180, 50).loadGraphic(Paths.image('noteColorMenu/paste'));
+		pasteButton = new FlxSprite(1180, 50, Paths.image('noteColorMenu/paste'));
 		pasteButton.alpha = 0.6;
 		add(pasteButton);
 
@@ -96,13 +96,13 @@ class NotesSubState extends MusicBeatSubstate {
 		colorGradientSelector.offset.y = 5;
 		add(colorGradientSelector);
 
-		colorPalette = new FlxSprite(820, 580).loadGraphic(Paths.image('noteColorMenu/palette'));
+		colorPalette = new FlxSprite(820, 580, Paths.image('noteColorMenu/palette'));
 		colorPalette.scale.set(20, 20);
 		colorPalette.updateHitbox();
 		colorPalette.antialiasing = false;
 		add(colorPalette);
 		
-		colorWheel = new FlxSprite(860, 200).loadGraphic(Paths.image('noteColorMenu/colorWheel'));
+		colorWheel = new FlxSprite(860, 200, Paths.image('noteColorMenu/colorWheel'));
 		colorWheel.setGraphicSize(360, 360);
 		colorWheel.updateHitbox();
 		add(colorWheel);

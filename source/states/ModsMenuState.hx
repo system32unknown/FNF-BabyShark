@@ -549,8 +549,8 @@ class ModsMenuState extends MusicBeatState {
 
 	var centerMod:Int = 2;
 	function updateItemPositions() {
-		var maxVisible = Math.max(4, centerMod + 2);
-		var minVisible = Math.max(0, centerMod - 2);
+		var maxVisible:Float = Math.max(4, centerMod + 2);
+		var minVisible:Float = Math.max(0, centerMod - 2);
 		for (i => mod in modsGroup.members) {
 			if(mod == null) {
 				Logs.trace('Mod #$i is null, maybe it was ${modsList.all[i]}', WARNING);
@@ -561,7 +561,7 @@ class ModsMenuState extends MusicBeatState {
 			mod.x = bgList.x + 5;
 			mod.y = bgList.y + (86 * (i - centerMod + 2)) + 5;
 			
-			mod.alpha = 0.6;
+			mod.alpha = .6;
 			if(i == curSelectedMod) mod.alpha = 1;
 			mod.selectBg.visible = (i == curSelectedMod && hoveringOnMods);
 		}
@@ -619,7 +619,7 @@ class ModsMenuState extends MusicBeatState {
 
 			if(fileStr.length > 0) fileStr += '\n';
 
-			var on = '1';
+			var on:String = '1';
 			if(modsList.disabled.contains(mod)) on = '0';
 			fileStr += '$mod|$on';
 		}

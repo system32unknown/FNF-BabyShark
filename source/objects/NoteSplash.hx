@@ -20,7 +20,7 @@ class NoteSplash extends FlxSprite {
 	public static var defaultNoteSplash(default, never):String = 'noteSplashes/noteSplashes';
 	public static var configs:Map<String, NoteSplashConfig> = new Map<String, NoteSplashConfig>();
 
-	public function new(x:Float = 0, y:Float = 0, ?note:Int = 0) {
+	public function new(x:Float = 0, y:Float = 0) {
 		super(x, y);
 
 		animation = new backend.animation.PsychAnimationController(this);

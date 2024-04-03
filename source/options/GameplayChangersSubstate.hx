@@ -19,9 +19,10 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 		optionsArray.push(new GameplayOption('Scroll Type', 'scrolltype', STRING, 'multiplicative', ["multiplicative", "constant"]));
 
 		var option:GameplayOption = new GameplayOption('Scroll Speed', 'scrollspeed', FLOAT, 1);
-		option.scrollSpeed = 1.5;
-		option.minValue = 0.5;
-		option.changeValue = 0.1;
+		option.scrollSpeed = 2.;
+		option.minValue = .35;
+		option.changeValue = .05;
+		option.decimals = 2;
 		if (option.getValue() != "constant") {
 			option.displayFormat = '%vX';
 			option.maxValue = 3;
@@ -163,7 +164,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 										case FLOAT, PERCENT:
 											holdValue = FlxMath.roundDecimal(holdValue, curOption.decimals);
 											curOption.setValue(holdValue);
-											default:
+										default:
 									}
 
 								case STRING:

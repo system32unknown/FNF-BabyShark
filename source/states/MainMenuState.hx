@@ -14,6 +14,9 @@ class MainMenuState extends MusicBeatState {
 	public static var curSelected:Int = 0;
 	public static var curColumn:MainMenuColumn = CENTER;
 
+	var menuItems:FlxTypedGroup<FlxSprite>;
+	var rightItem:FlxSprite;
+
 	var optionShit:Array<String> = [
 		'story_mode',
 		'freeplay',
@@ -21,12 +24,9 @@ class MainMenuState extends MusicBeatState {
 		'credits'
 	];
 
-	var menuItems:FlxTypedGroup<FlxSprite>;
-	var rightItem:FlxSprite;
 
 	var rightOption:String = 'options';
-	
-	var bg:FlxSprite;
+
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 
@@ -46,7 +46,8 @@ class MainMenuState extends MusicBeatState {
 		persistentUpdate = persistentDraw = true;
 
 		var yScroll:Float = .25;
-		bg = new FlxSprite(-80, Paths.image('menuDesat'));
+		var bg:FlxSprite = new FlxSprite(-80, Paths.image('menuDesat'));
+		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
@@ -85,7 +86,6 @@ class MainMenuState extends MusicBeatState {
 
 		for (num => option in optionShit) {
 			var menuY:Float = (num * 140) + 90;
-			
 			var item:FlxSprite = createMenuItem(option, 0, FlxG.height * 1.6);
 			item.screenCenter(X);
 
