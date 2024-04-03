@@ -1106,8 +1106,8 @@ class ChartingState extends MusicBeatState {
 		if (FlxG.save.data.chart_waveformInst == null) FlxG.save.data.chart_waveformInst = false;
 		if (FlxG.save.data.chart_waveformVoices == null) FlxG.save.data.chart_waveformVoices = false;
 
-		var waveformUseInstrumental:FlxUICheckBox;
-		var waveformUseVoices:FlxUICheckBox;
+		var waveformUseInstrumental:FlxUICheckBox = null;
+		var waveformUseVoices:FlxUICheckBox = null;
 
 		waveformUseInstrumental = new FlxUICheckBox(10, 90, null, null, "Waveform\nInstrumental", 85);
 		waveformUseInstrumental.checked = FlxG.save.data.chart_waveformInst;
