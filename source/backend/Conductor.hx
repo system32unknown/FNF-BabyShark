@@ -35,7 +35,7 @@ class Conductor {
 	}
 
 	public static function getDummyBPMChange():BPMChangeEvent {
-		var bpm = (usePlayState && PlayState.SONG != null) ? PlayState.SONG.bpm : bpm;
+		var bpm:Float = (usePlayState && PlayState.SONG != null) ? PlayState.SONG.bpm : bpm;
 		return {
 			stepTime: 0,
 			songTime: 0,
@@ -46,12 +46,12 @@ class Conductor {
 	}
 
 	static function sortBPMChangeMap():Void {
-		bpmChangeMap.sort((v1, v2) -> (v1.songTime > v2.songTime ? 1 : -1));
+		bpmChangeMap.sort((v1:BPMChangeEvent, v2:BPMChangeEvent) -> (v1.songTime > v2.songTime ? 1 : -1));
 		for (i in 0...bpmChangeMap.length) bpmChangeMap[i].id = i;
 	}
 
 	public static function getBPMFromIndex(index:Int):BPMChangeEvent {
-		var map = bpmChangeMap[index];
+		var map:BPMChangeEvent = bpmChangeMap[index];
 		if (map == null) return getDummyBPMChange();
 		if (map.id == index) return map;
 
@@ -97,7 +97,7 @@ class Conductor {
 
 	@:noCompletion
 	public static function stepToSeconds(step:Float, offset:Float = 0, ?from:Int):Float {
-		var lastChange = getBPMFromStep(step, from);
+		var lastChange:BPMChangeEvent = getBPMFromStep(step, from);
 		return lastChange.songTime + (step - lastChange.stepTime - offset) * lastChange.stepCrochet;
 	}
 
@@ -107,7 +107,7 @@ class Conductor {
 
 	@:noCompletion
 	public static function getStep(time:Float, offset:Float = 0, ?from:Int):Float {
-		var lastChange = getBPMFromSeconds(time, from);
+		var lastChange:BPMChangeEvent = getBPMFromSeconds(time, from);
 		return lastChange.stepTime + (time - lastChange.songTime - offset) / lastChange.stepCrochet;
 	}
 

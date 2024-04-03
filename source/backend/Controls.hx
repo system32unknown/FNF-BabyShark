@@ -1,7 +1,5 @@
 package backend;
 
-import flixel.input.keyboard.FlxKey;
-
 //Keeping same use cases on stuff for it to be easier to understand/use
 class Controls {
 	public var UI_UP_P(get, never):Bool;
@@ -72,7 +70,7 @@ class Controls {
 	public var PAUSE_P(get, never):Bool;
 	function get_PAUSE_P() return pressed('pause');
 
-	public var keyboardBinds:Map<String, Array<FlxKey>>;
+	public var keyboardBinds:Map<String, Array<flixel.input.keyboard.FlxKey>>;
 	
 	public function justPressed(key:String) return FlxG.keys.anyJustPressed(keyboardBinds[key]);
 	public function pressed(key:String) return FlxG.keys.anyPressed(keyboardBinds[key]);

@@ -33,6 +33,7 @@ class Character extends FlxSprite {
 	 * In case a character is missing, it will use this on its place
 	**/
 	inline public static final DEFAULT_CHARACTER:String = 'bf';
+
 	public var animOffsets:Map<String, Array<Float>>;
 	public var debugMode:Bool = false;
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
@@ -195,7 +196,7 @@ class Character extends FlxSprite {
 				#end
 	
 				if(anim.offsets != null && anim.offsets.length > 1) addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
-				else addOffset(anim.anim, 0, 0);
+				else addOffset(anim.anim);
 			}
 		}
 		#if flxanimate if(isAnimateAtlas) copyAtlasValues(); #end
@@ -305,7 +306,7 @@ class Character extends FlxSprite {
 
 		if (animOffsets.exists(animName)) {
 			final daOffset = animOffsets.get(animName);
-			offset.set(daOffset[0] * scale.x, daOffset[1] * scale.y);
+			offset.set(daOffset[0], daOffset[1]);
 		}
 
 		if (danceIdle) {

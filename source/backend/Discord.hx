@@ -26,6 +26,10 @@ class DiscordClient {
 		isInitialized = false;
 	}
 	
+	public static function respond(userId:String, reply:Int) {
+		Discord.Respond(fixString(userId), reply);
+	}
+
 	static function onReady(request:cpp.RawConstPointer<DiscordUser>):Void {
 		user = DUser.initRaw(request);
 		Logs.traceColored([
@@ -54,11 +58,32 @@ class DiscordClient {
 		], INFO);
 	}
 
+	static function onJoin(joinSecret:cpp.ConstCharStar):Void {
+		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone has just joined", GREEN)], INFO);
+	}
+
+	static function onSpectate(spectateSecret:cpp.ConstCharStar):Void {
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText("Someone started spectating your game", YELLOW)
+		], INFO);
+	}
+
+	static function onJoinReq(request:cpp.RawConstPointer<DiscordUser>):Void {
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText("Someone has just requested to join", YELLOW)
+		], WARNING);
+	}
+
 	public static function initialize() {
 		var handlers:DiscordEventHandlers = DiscordEventHandlers.create();
 		handlers.ready = cpp.Function.fromStaticFunction(onReady);
 		handlers.disconnected = cpp.Function.fromStaticFunction(onDisconnected);
 		handlers.errored = cpp.Function.fromStaticFunction(onError);
+		handlers.joinGame = cpp.Function.fromStaticFunction(onJoin);
+		handlers.joinRequest = cpp.Function.fromStaticFunction(onJoinReq);
+		handlers.spectateGame = cpp.Function.fromStaticFunction(onSpectate);
 		Discord.Initialize(clientID, cpp.RawPointer.addressOf(handlers), 1, null);
 
 		if(!isInitialized) trace("Discord Client initialized");
@@ -123,6 +148,10 @@ class DiscordClient {
 		});
 	}
 	#end
+
+	@:noCompletion public static function fixString(str:String) {
+		return new cpp.ConstCharStar(cast(str, String));
+	}
 }
 
 final class DUser {

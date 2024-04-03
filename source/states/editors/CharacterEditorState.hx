@@ -296,17 +296,12 @@ class CharacterEditorState extends MusicBeatState {
 					spr.scale.set(character.scale.x, character.scale.y);
 					spr.updateHitbox();
 
-					spr.offset.set(character.offset.x * spr.scale.x, character.offset.y * spr.scale.y);
+					spr.offset.set(character.offset.x, character.offset.y);
 					spr.visible = true;
 
 					var otherSpr:FlxSprite = (spr == animateGhost) ? ghost : animateGhost;
 					if(otherSpr != null) otherSpr.visible = false;
 				}
-
-				ghost.frames.frames = character.frames.frames;
-				ghost.animation.copyFrom(character.animation);
-				ghost.animation.play(character.getAnimationName(), true, false, character.animation.curAnim.curFrame);
-				ghost.animation.pause();
 			}
 		});
 
@@ -346,7 +341,7 @@ class CharacterEditorState extends MusicBeatState {
 
 		check_player = new FlxUICheckBox(10, 60, null, null, "Playable Character", 100);
 		check_player.checked = character.isPlayer;
-		check_player.callback = function() {
+		check_player.callback = () -> {
 			character.isPlayer = !character.isPlayer;
 			character.flipX = !character.flipX;
 			updateCharacterPositions();
@@ -409,7 +404,7 @@ class CharacterEditorState extends MusicBeatState {
 		});
 		reloadCharacterDropDown();
 		charDropDown.selectedLabel = _char;
-		
+
 		tab_group.add(new FlxText(charDropDown.x, charDropDown.y - 18, 0, 'Character:'));
 		tab_group.add(check_player);
 		tab_group.add(reloadCharacter);
@@ -435,8 +430,7 @@ class CharacterEditorState extends MusicBeatState {
 		animationLoopCheckBox = new FlxUICheckBox(animationNameInputText.x + 170, animationNameInputText.y - 1, null, null, "Should it Loop?", 100);
 
 		animationDropDown = new FlxUIDropDownMenu(15, animationInputText.y - 55, FlxUIDropDownMenu.makeStrIdLabelArray([''], true), function(pressed:String) {
-			var selectedAnimation:Int = Std.parseInt(pressed);
-			var anim:AnimArray = character.animationsArray[selectedAnimation];
+			var anim:AnimArray = character.animationsArray[Std.parseInt(pressed)];
 			animationInputText.text = anim.anim;
 			animationNameInputText.text = anim.name;
 			animationLoopCheckBox.checked = anim.loop;
@@ -675,15 +669,15 @@ class CharacterEditorState extends MusicBeatState {
 		character.color = FlxColor.WHITE;
 		character.alpha = 1;
 
-		if(Paths.fileExists('images/' + character.imageFile + '/Animation.json', TEXT)) {
+		if(Paths.fileExists('images/${character.imageFile}/Animation.json', TEXT)) {
 			character.atlas = new FlxAnimate();
 			character.atlas.showPivot = false;
 			try {
 				Paths.loadAnimateAtlas(character.atlas, character.imageFile);
 			} catch(e:Dynamic) FlxG.log.warn('Could not load atlas ${character.imageFile}: $e');
 			character.isAnimateAtlas = true;
-		} else if(Paths.fileExists('images/' + character.imageFile + '.txt', TEXT)) character.frames = Paths.getPackerAtlas(character.imageFile);
-		else if(Paths.fileExists('images/' + character.imageFile + '.json', TEXT)) character.frames = Paths.getAsepriteAtlas(character.imageFile);
+		} else if(Paths.fileExists('images/${character.imageFile}.txt', TEXT)) character.frames = Paths.getPackerAtlas(character.imageFile);
+		else if(Paths.fileExists('images/${character.imageFile}.json', TEXT)) character.frames = Paths.getAsepriteAtlas(character.imageFile);
 		else character.frames = Paths.getSparrowAtlas(character.imageFile);
 
 		for (anim in anims) {
@@ -784,7 +778,7 @@ class CharacterEditorState extends MusicBeatState {
 
 		if(moveKeys.contains(true)) {
 			holdingArrowsTime += elapsed;
-			if(holdingArrowsTime > 0.6) {
+			if(holdingArrowsTime > .6) {
 				holdingArrowsElapsed += elapsed;
 				while(holdingArrowsElapsed > (1 / 60)) {
 					character.offset.add(((moveKeys[0] ? 1 : 0) - (moveKeys[1] ? 1 : 0)) * shiftMultBig, ((moveKeys[2] ? 1 : 0) - (moveKeys[3] ? 1 : 0)) * shiftMultBig);

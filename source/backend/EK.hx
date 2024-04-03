@@ -40,62 +40,62 @@ class EK {
 	];
 	public static var gfxDir:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT', 'SPACE'];
 
-    public static function fillKeys():Array<Array<Dynamic>> {
+    public static function fillKeys():Array<Array<String>> {
 		return [
 			[
-				ClientPrefs.keyBinds.get('note_1').copy()
-			],[
-				ClientPrefs.keyBinds.get('note_left').copy(),
-				ClientPrefs.keyBinds.get('note_right').copy()
+				'note_1'
 			], [
-				ClientPrefs.keyBinds.get('note_left').copy(),
-				ClientPrefs.keyBinds.get('note_3a').copy(),
-				ClientPrefs.keyBinds.get('note_right').copy()
+				'note_left',
+				'note_right'
 			], [
-				ClientPrefs.keyBinds.get('note_left').copy(),
-				ClientPrefs.keyBinds.get('note_down').copy(),
-				ClientPrefs.keyBinds.get('note_up').copy(),
-				ClientPrefs.keyBinds.get('note_right').copy()
+				'note_left',
+				'note_3a',
+				'note_right'
 			], [
-				ClientPrefs.keyBinds.get('note_left').copy(),
-				ClientPrefs.keyBinds.get('note_down').copy(),
-				ClientPrefs.keyBinds.get('note_5a').copy(),
-				ClientPrefs.keyBinds.get('note_up').copy(),
-				ClientPrefs.keyBinds.get('note_right').copy()
+				'note_left',
+				'note_down',
+				'note_up',
+				'note_right'
 			], [
-				ClientPrefs.keyBinds.get('note_6a').copy(),
-				ClientPrefs.keyBinds.get('note_6b').copy(),
-				ClientPrefs.keyBinds.get('note_6c').copy(),
-				ClientPrefs.keyBinds.get('note_6d').copy(),
-				ClientPrefs.keyBinds.get('note_6e').copy(),
-				ClientPrefs.keyBinds.get('note_6f').copy()
+				'note_left',
+				'note_down',
+				'note_5a',
+				'note_up',
+				'note_right'
 			], [
-				ClientPrefs.keyBinds.get('note_7a').copy(),
-				ClientPrefs.keyBinds.get('note_7b').copy(),
-				ClientPrefs.keyBinds.get('note_7c').copy(),
-				ClientPrefs.keyBinds.get('note_7d').copy(),
-				ClientPrefs.keyBinds.get('note_7e').copy(),
-				ClientPrefs.keyBinds.get('note_7f').copy(),
-				ClientPrefs.keyBinds.get('note_7g').copy()
+				'note_6a',
+				'note_6b',
+				'note_6c',
+				'note_6d',
+				'note_6e',
+				'note_6f'
 			], [
-				ClientPrefs.keyBinds.get('note_8a').copy(),
-				ClientPrefs.keyBinds.get('note_8b').copy(),
-				ClientPrefs.keyBinds.get('note_8c').copy(),
-				ClientPrefs.keyBinds.get('note_8d').copy(),
-				ClientPrefs.keyBinds.get('note_8e').copy(),
-				ClientPrefs.keyBinds.get('note_8f').copy(),
-				ClientPrefs.keyBinds.get('note_8g').copy(),
-				ClientPrefs.keyBinds.get('note_8h').copy()
+				'note_7a',
+				'note_7b',
+				'note_7c',
+				'note_7d',
+				'note_7e',
+				'note_7f',
+				'note_7g'
 			], [
-				ClientPrefs.keyBinds.get('note_9a').copy(),
-				ClientPrefs.keyBinds.get('note_9b').copy(),
-				ClientPrefs.keyBinds.get('note_9c').copy(),
-				ClientPrefs.keyBinds.get('note_9d').copy(),
-				ClientPrefs.keyBinds.get('note_9e').copy(),
-				ClientPrefs.keyBinds.get('note_9f').copy(),
-				ClientPrefs.keyBinds.get('note_9g').copy(),
-				ClientPrefs.keyBinds.get('note_9h').copy(),
-				ClientPrefs.keyBinds.get('note_9i').copy()
+				'note_8a',
+				'note_8b',
+				'note_8c',
+				'note_8d',
+				'note_8e',
+				'note_8f',
+				'note_8g',
+				'note_8h'
+			], [
+				'note_9a',
+				'note_9b',
+				'note_9c',
+				'note_9d',
+				'note_9e',
+				'note_9f',
+				'note_9g',
+				'note_9h',
+				'note_9i'
 			]
 		];
 	}

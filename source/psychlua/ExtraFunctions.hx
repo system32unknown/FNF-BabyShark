@@ -133,21 +133,12 @@ class ExtraFunctions {
 		});
 		funk.set("promptFile", CoolUtil.saveFile);
 
-		funk.set("parseJson", (jsonStr:String, varName:String) -> {
-			var json:String = Paths.modFolders('data/$jsonStr.json');
-			var foundJson:Bool;
-
-			if (#if sys FileSystem #else Assets #end.exists(json)) foundJson = true;
-			else {
-				FunkinLua.luaTrace('parseJson: Invalid json file path!', false, false, FlxColor.RED);
-				foundJson = false;
-			}
-
-			if (foundJson) {	
-				PlayState.instance.variables.set(varName, Json.parse(File.getContent(json)));
-				return true;
-			}
-			return false;
+		funk.set("parseJson", (location:String) -> {
+			var parsed:{} = {};
+			if (FileSystem.exists(Paths.getPath('data/$location')))
+				parsed = tjson.TJSON.parse(File.getContent(Paths.getPath('data/$location')));
+			else parsed = tjson.TJSON.parse(location);
+			return parsed;
 		});
 
 		// String tools
