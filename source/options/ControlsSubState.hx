@@ -126,10 +126,10 @@ class ControlsSubState extends MusicBeatSubstate {
 		grpBinds = new FlxTypedGroup<Alphabet>();
 		add(grpBinds);
 
-		var text2:Alphabet = new Alphabet(50, 600, 'SHIFT + < or > to\nChange Key Number');
-		text2.alignment = LEFT;
-		text2.setScale(0.4);
-		add(text2);
+		var text:Alphabet = new Alphabet(50, 600, 'SHIFT + < or > to\nChange Key Number');
+		text.alignment = LEFT;
+		text.setScale(.4);
+		add(text);
 
 		createTexts();
 	}
@@ -163,8 +163,7 @@ class ControlsSubState extends MusicBeatSubstate {
 					text.changeX = false;
 					text.distancePerItem.y = 60;
 					text.targetY = myID;
-					if(text.text.endsWith('KEY'))
-						text.text = curNoteKeys + ' KEY';
+					if(text.text.endsWith('KEY')) text.text = '$curNoteKeys KEY';
 					if(isDisplayKey)
 						grpDisplay.add(text);
 					else {
@@ -367,14 +366,9 @@ class ControlsSubState extends MusicBeatSubstate {
 		ClientPrefs.reloadVolumeKeys();
 	}
 
-	function updateText(?move:Int = 0)
+	function updateText(?change:Int = 0)
 	{
-		if(move != 0) {
-			curSelected += move;
-
-			if(curSelected < 0) curSelected = curOptions.length - 1;
-			else if (curSelected >= curOptions.length) curSelected = 0;
-		}
+		curSelected = FlxMath.wrap(curSelected + change, 0, curOptions.length - 1);
 
 		var num:Int = curOptionsValid[curSelected];
 		var addNum:Int = 0;

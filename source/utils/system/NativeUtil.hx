@@ -59,7 +59,7 @@ class NativeUtil {
 	}
 }
 
-@:enum abstract ConsoleColor(Int) {
+enum abstract ConsoleColor(Int) {
 	var BLACK:ConsoleColor = 0;
 	var DARKBLUE:ConsoleColor = 1;
 	var DARKGREEN:ConsoleColor = 2;

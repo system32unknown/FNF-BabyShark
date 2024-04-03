@@ -23,7 +23,9 @@ class PlatformUtil {
 	@:functionCode('
         HWND hWnd = GetActiveWindow();
         alpha = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
-        return SetLayeredWindowAttributes(hWnd, RGB(r, g, b), 0, LWA_COLORKEY);
+        if (alpha)
+            return SetLayeredWindowAttributes(hWnd, RGB(r, g, b), 0, LWA_COLORKEY);
+        else return FALSE;
     ')
 	static public function setWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0):Bool return false;
 

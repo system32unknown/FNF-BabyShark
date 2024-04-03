@@ -48,7 +48,7 @@ class ModsMenuState extends MusicBeatState {
 		modsList = Mods.parseList();
 		Mods.currentModDirectory = modsList.all[0] != null ? modsList.all[0] : '';
 
-		#if desktop DiscordClient.changePresence("In the Menus"); #end
+		#if desktop DiscordClient.changePresence("In the Mod Menus"); #end
 
 		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFF665AFF;
@@ -102,7 +102,7 @@ class ModsMenuState extends MusicBeatState {
 		buttonEnableAll.focusChangeCallback = (focus:Bool) -> if(!focus) buttonEnableAll.bg.color = FlxColor.GREEN;
 		add(buttonEnableAll);
 
-		buttonDisableAll = new MenuButton(buttonX, myY, buttonWidth, buttonHeight, "DISABLE ALL", function() {
+		buttonDisableAll = new MenuButton(buttonX, myY, buttonWidth, buttonHeight, Language.getPhrase('disable_all_button', 'DISABLE ALL'), function() {
 			buttonDisableAll.ignoreCheck = false;
 			for (mod in modsGroup.members) {
 				if(modsList.enabled.contains(mod.folder)) {
@@ -126,13 +126,13 @@ class ModsMenuState extends MusicBeatState {
 			buttonEnableAll.visible = true;
 
 			var myX:Float = bgList.x + bgList.width + 20;
-			noModsTxt = new FlxText(myX, 0, FlxG.width - myX - 20, "NO MODS INSTALLED\nPRESS BACK TO EXIT OR INSTALL A MOD", 48);
+			noModsTxt = new FlxText(myX, 0, FlxG.width - myX - 20, Language.getPhrase('no_mods_installed', 'NO MODS INSTALLED\nPRESS BACK TO EXIT OR INSTALL A MOD'), 48);
 			noModsTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 			noModsTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 			add(noModsTxt);
 			noModsTxt.screenCenter(Y);
 
-			var txt:FlxText = new FlxText(bgList.x + 15, bgList.y + 15, bgList.width - 30, "No Mods found.", 16);
+			var txt:FlxText = new FlxText(bgList.x + 15, bgList.y + 15, bgList.width - 30, Language.getPhrase('no_mods_found', "No Mods found."), 16);
 			txt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE);
 			add(txt);
 
@@ -162,7 +162,7 @@ class ModsMenuState extends MusicBeatState {
 		add(modDesc);
 
 		var myHeight = 100;
-		modRestartText = new FlxText(bgDescription.x + 15, bgDescription.y + bgDescription.height - myHeight - 25, bgDescription.width - 30, "* Moving or Toggling On/Off this Mod will restart the game.", 16);
+		modRestartText = new FlxText(bgDescription.x + 15, bgDescription.y + bgDescription.height - myHeight - 25, bgDescription.width - 30, Language.getPhrase('mod_restart', '* Moving or Toggling On/Off this Mod will restart the game.'), 16);
 		modRestartText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
 		add(modRestartText);
 

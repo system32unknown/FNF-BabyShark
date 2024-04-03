@@ -129,7 +129,7 @@ class NotesSubState extends MusicBeatSubstate {
 
 		var tipX:Int = 20;
 		var tipY:Int = 660;
-		var tip:FlxText = new FlxText(tipX, tipY, 0, "Press RELOAD to Reset the selected Note Part.", 16);
+		var tip:FlxText = new FlxText(tipX, tipY, 0, Language.getPhrase('note_colors_tip', 'Press RESET to Reset the selected Note Part.'), 16);
 		tip.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		tip.borderSize = 2;
 		add(tip);
@@ -138,7 +138,7 @@ class NotesSubState extends MusicBeatSubstate {
 		tipTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		tipTxt.borderSize = 2;
 		add(tipTxt);
-		tipTxt.text = 'Hold Shift + Press RESET key to fully reset the selected Note.';
+		tipTxt.text = Language.getPhrase('note_colors_hold_tip', 'Hold {1} + Press RESET key to fully reset the selected Note.', [Language.getPhrase('note_colors_shift', 'Shift')]);
 		
 		FlxG.mouse.visible = true;
 	}
@@ -191,7 +191,7 @@ class NotesSubState extends MusicBeatSubstate {
 			
 			var end:Bool = false;
 			if(changed) {
-				if (hexTypeNum > 5)  { //Typed last letter
+				if (hexTypeNum > 5) { //Typed last letter
 					hexTypeNum = -1;
 					end = true;
 					hexTypeLine.visible = false;
@@ -257,7 +257,7 @@ class NotesSubState extends MusicBeatSubstate {
 		if(generalPressed) {
 			hexTypeNum = -1;
 			if (pointerOverlaps(modeNotes)) {
-				modeNotes.forEachAlive((note:FlxSprite) ->{
+				modeNotes.forEachAlive((note:FlxSprite) -> {
 					if (curSelectedMode != note.ID && pointerOverlaps(note)) {
 						modeBG.visible = notesBG.visible = false;
 						curSelectedMode = note.ID;
