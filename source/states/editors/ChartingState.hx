@@ -222,7 +222,7 @@ class ChartingState extends MusicBeatState {
 		add(bpmTxt);
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
-		for (i in 0...EK.keys(_song.mania)) {
+		for (i in 0...EK.strums(_song.mania)) {
 			var note:StrumNote = new StrumNote(GRID_SIZE * (i + 1), strumLine.y, i % EK.keys(_song.mania), 0);
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			note.updateHitbox();
