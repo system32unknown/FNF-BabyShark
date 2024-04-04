@@ -1,7 +1,7 @@
 package options;
 
 class OptionsState extends MusicBeatState {
-	var options:Array<Array<Dynamic>> = [
+	var options:Array<Array<String>> = [
 		['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals', 'Gameplay'],
 		['Saves', 'Miscellaneous', #if TRANSLATIONS_ALLOWED 'Language', #end]
 	];
@@ -29,7 +29,7 @@ class OptionsState extends MusicBeatState {
 	var curPage:Int = 0;
 
 	override function create() {
-		#if DISCORD_ALLOWED DiscordClient.changePresence("Options Menu", null); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("Options Menu"); #end
 
 		PlayState.mania = 8;
 
@@ -101,7 +101,7 @@ class OptionsState extends MusicBeatState {
 	}
 
 	function changePage(change:Int = 0) {
-		curPage = FlxMath.wrap(curPage + change, 0, Lambda.count(options) - 1);
+		curPage = FlxMath.wrap(curPage + change, 0, options.length - 1);
 		curSelected = 0;
 		reload(true);
 

@@ -135,7 +135,7 @@ class CreditsEditorState extends MusicBeatState {
 			else icon = creditsStuff[curSelected][1];
 
 			var pathIcon:String;
-			if(Paths.fileExists('images/credits/' + icon + '.png', IMAGE)) pathIcon = 'credits/' + icon;
+			if(Paths.fileExists('images/credits/$icon.png', IMAGE)) pathIcon = 'credits/' + icon;
 			else pathIcon = 'credits/none';
 
 			var iconSprite:FlxSprite = new FlxSprite(Paths.image(pathIcon));
@@ -168,7 +168,7 @@ class CreditsEditorState extends MusicBeatState {
 		var loadFile:FlxButton = new FlxButton(resetAll.x, resetAll.y + 25, "Load Credits", () -> loadCredits());
 		var saveFile:FlxButton = new FlxButton(loadFile.x + 90, loadFile.y, "Save Credits", () -> saveCredits());
 
-		var tab_group_credits = new FlxUI(null, UI_box);
+		var tab_group_credits:FlxUI = new FlxUI(null, UI_box);
 		tab_group_credits.name = "Credits";
 
 		tab_group_credits.add(titleInput);
@@ -381,9 +381,9 @@ class CreditsEditorState extends MusicBeatState {
 				}
 
 				if((FlxG.keys.justPressed.S || FlxG.keys.justPressed.DOWN) || (FlxG.keys.justPressed.W || FlxG.keys.justPressed.UP)) {
-					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
+					var checkLastHold:Int = Math.floor((holdTime - .5) * 10);
 					holdTime += elapsed;
-					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+					var checkNewHold:Int = Math.floor((holdTime - .5) * 10);
 
 					if(holdTime > .5 && checkNewHold - checkLastHold > 0)
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
@@ -455,7 +455,7 @@ class CreditsEditorState extends MusicBeatState {
 		if(change != 0) {
 			descText.y = FlxG.height - descText.height + offsetThing - 60;
 			if(moveTween != null) moveTween.cancel();
-			moveTween = FlxTween.tween(descText, {y : descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
+			moveTween = FlxTween.tween(descText, {y : descText.y + 75}, .25, {ease: FlxEase.sineOut});
 		}
 
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
@@ -475,17 +475,13 @@ class CreditsEditorState extends MusicBeatState {
 	}
 
 	function makeSquareBorder(object:FlxSprite, size:Int):FlxSprite { // Just to make color squares look a little nice and easier to see
-		var x:Float = object.x;
-		var y:Float = object.y;
-		var offset:Float = 1.5;
-
-		return new FlxSprite(x - offset, y - offset).makeGraphic(size, size, FlxColor.BLACK);
+		final offset:Float = 1.5;
+		return new FlxSprite(object.x - offset, object.y - offset).makeGraphic(size, size, FlxColor.BLACK);
 	}
 
 	function showIconExist(text:String) {
 		var daColor:Int;
-		if(text.length == 0)
-			daColor = Std.parseInt('0xFFFFC31E'); // no input then
+		if(text.length == 0) daColor = Std.parseInt('0xFFFFC31E'); // no input then
 		else {
 			if(!Paths.fileExists('images/credits/$text.png', IMAGE)) daColor = Std.parseInt('0xFFFF004C'); // icon not found
 			else daColor = Std.parseInt('0xFF00FF37'); // icon was found
@@ -536,12 +532,7 @@ class CreditsEditorState extends MusicBeatState {
 	}
 
 	function saveCredits() {
-		var daStuff:Array<String> = [];
-		for(i in 0...creditsStuff.length) {
-			daStuff.push(creditsStuff[i].join('::'));
-		}
-
-		var data:String = daStuff.join('\n');
+		var data:String = [for(i in 0...creditsStuff.length) creditsStuff[i].join('::')].join('\n');
 		if (data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
@@ -553,7 +544,7 @@ class CreditsEditorState extends MusicBeatState {
 
 	function loadCredits() {
 		_file = new FileReference();
-		_file.addEventListener(Event.SELECT, onLoadComplete);
+		_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file.browse([new openfl.net.FileFilter('TXT', 'txt')]);
@@ -561,7 +552,7 @@ class CreditsEditorState extends MusicBeatState {
 
 	var loadError:Bool = false;
 	function onLoadComplete(_):Void {
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 
@@ -574,8 +565,7 @@ class CreditsEditorState extends MusicBeatState {
 			var rawTxt:String = File.getContent(fullPath);
 			if(rawTxt != null) {
 				creditsStuff = [];
-				for(i in rawTxt.split('\n'))
-					creditsStuff.push(i.replace('\\n', '\n').split("::"));
+				for(i in rawTxt.split('\n')) creditsStuff.push(i.replace('\\n', '\n').split("::"));
 				updateCreditObjects();
 				changeSelection();
 				return;
@@ -589,7 +579,7 @@ class CreditsEditorState extends MusicBeatState {
 	}
 
 	function onLoadCancel(_):Void {
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
@@ -597,7 +587,7 @@ class CreditsEditorState extends MusicBeatState {
 	}
 
 	function onLoadError(_):Void {
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;

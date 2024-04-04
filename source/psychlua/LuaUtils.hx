@@ -7,9 +7,9 @@ import openfl.display.BlendMode;
 typedef LuaTweenOptions = {
 	type:FlxTweenType,
 	startDelay:Float,
-	?onUpdate:String,
-	?onStart:String,
-	?onComplete:String,
+	onUpdate:Null<String>,
+	onStart:Null<String>,
+	onComplete:Null<String>,
 	loopDelay:Float,
 	ease:EaseFunction
 }
@@ -89,174 +89,6 @@ class LuaUtils {
 		return Reflect.getProperty(instance, variable);
 	}
 
-	public static function isMap(variable:Dynamic) {
-		return (variable.exists != null && variable.keyValueIterator != null);
-	}
-
-	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
-		var ind:Int = variable.indexOf('.');
-		if (ind == -1) {
-			if (PlayState.instance.variables.exists(variable)) return PlayState.instance.variables.get(variable);
-			return checkLuaFirst ? getObjectDirectly(variable, checkForTextsToo) : getVarInArray(getInstance(), variable);
-		}
-
-		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo);
-		while (ind != -1) obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
-		return obj;
-	}
-
-	public static function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic, ?allowMaps:Bool = false) {
-		var split:Array<String> = variable.split('.');
-		if(split.length > 1) {
-			var obj:Dynamic = Reflect.getProperty(leArray, split[0]);
-			for (i in 1...split.length - 1)
-				obj = Reflect.getProperty(obj, split[i]);
-
-			leArray = obj;
-			variable = split[split.length - 1];
-		}
-		if(allowMaps && isMap(leArray)) leArray.set(variable, value);
-		else Reflect.setProperty(leArray, variable, value);
-		return value;
-	}
-	public static function getGroupStuff(leArray:Dynamic, variable:String, ?allowMaps:Bool = false) {
-		var split:Array<String> = variable.split('.');
-		if(split.length > 1) {
-			var obj:Dynamic = Reflect.getProperty(leArray, split[0]);
-			for (i in 1...split.length - 1)
-				obj = Reflect.getProperty(obj, split[i]);
-
-			leArray = obj;
-			variable = split[split.length - 1];
-		}
-
-		if(allowMaps && isMap(leArray)) return leArray.get(variable);
-		return Reflect.getProperty(leArray, variable);
-	}
-
-	public static function getPropertyLoop(split:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic {
-		var obj:Dynamic = getObjectDirectly(split[0], checkForTextsToo);
-		final end:Int = (getProperty ? split.length - 1 : split.length);
-
-		for (i in 1...end) obj = getVarInArray(obj, split[i]);
-		return obj;
-	}
-
-	public static function getObjectDirectly(objectName:String, ?checkForTextsToo:Bool = true):Dynamic {
-		switch(objectName) {
-			case 'this' | 'instance' | 'game': return PlayState.instance;
-			
-			default:
-				var obj:Dynamic = PlayState.instance.getLuaObject(objectName, checkForTextsToo);
-				if(obj == null) obj = getVarInArray(getInstance(), objectName);
-				return obj;
-		}
-	}
-
-	inline public static function getTextObject(name:String):FlxText {
-		return #if LUA_ALLOWED PlayState.instance.modchartTexts.exists(name) ? PlayState.instance.modchartTexts.get(name) : #end Reflect.getProperty(PlayState.instance, name);
-	}
-	
-	public static inline function getInstance():flixel.FlxState {
-		return PlayState.instance.isDead ? substates.GameOverSubstate.instance : PlayState.instance;
-	}
-
-	static final _lePoint:FlxPoint = FlxPoint.get();
-
-	inline public static function getMousePoint(camera:String, axis:String):Float {
-		FlxG.mouse.getScreenPosition(cameraFromString(camera), _lePoint);
-		return (axis == 'y' ? _lePoint.y : _lePoint.x);
-	}
-
-	inline public static function getPoint(leVar:String, type:String, axis:String, ?camera:String):Float {
-		var obj:FlxSprite = getVarInstance(leVar);
-		if (obj != null) {
-			switch(type) {
-				case 'graphic': obj.getGraphicMidpoint(_lePoint);
-				case 'screen': obj.getScreenPosition(_lePoint, LuaUtils.cameraFromString(camera));
-				default: obj.getMidpoint(_lePoint);
-			}
-			return (axis == 'y' ? _lePoint.y : _lePoint.x);
-		}
-		return 0;
-	}
-
-	public static function setBarColors(bar:Bar, color1:String, color2:String) {
-		final left_color:Null<FlxColor> = (color1 != null && color1 != '' ? CoolUtil.colorFromString(color1) : null);
-		final right_color:Null<FlxColor> = (color2 != null && color2 != '' ? CoolUtil.colorFromString(color2) : null);
-		bar.setColors(left_color, right_color);
-	}
-
-	public static inline function getLowestCharacterGroup():FlxSpriteGroup {
-		var group:FlxSpriteGroup = PlayState.instance.gfGroup;
-		var pos:Int = PlayState.instance.members.indexOf(group);
-
-		var newPos:Int = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
-		if(newPos < pos) {
-			group = PlayState.instance.boyfriendGroup;
-			pos = newPos;
-		}
-		
-		newPos = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
-		if(newPos < pos) {
-			group = PlayState.instance.dadGroup;
-			pos = newPos;
-		}
-		return group;
-	}
-
-	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false) {
-		var obj:FlxSprite = cast LuaUtils.getObjectDirectly(obj, false);
-		if(obj != null && obj.animation != null) {
-			if(indices == null) indices = [0];
-			else if(Std.isOfType(indices, String)) indices = flixel.util.FlxStringUtil.toIntArray(cast indices);
-
-			obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
-			if(obj.animation.curAnim == null) {
-				var dyn:Dynamic = cast obj;
-				if(dyn.playAnim != null) dyn.playAnim(name, true);
-				else dyn.animation.play(name, true);
-			}
-			return true;
-		}
-		return false;
-	}
-	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
-		spr.frames = switch(spriteType.toLowerCase().trim()) {
-			case 'aseprite' | 'jsoni8': Paths.getAsepriteAtlas(image);
-			case "packer" | "packeratlas" | "pac": Paths.getPackerAtlas(image);
-			default: Paths.getSparrowAtlas(image);
-		}
-	}
-
-	public static function resetTextTag(tag:String) {
-		if(!PlayState.instance.modchartTexts.exists(tag)) return;
-
-		var target:FlxText = PlayState.instance.modchartTexts.get(tag);
-		target.kill();
-		PlayState.instance.remove(target, true);
-		target.destroy();
-		PlayState.instance.modchartTexts.remove(tag);
-	}
-
-	public static function resetSpriteTag(tag:String) {
-		if(!PlayState.instance.modchartSprites.exists(tag)) return;
-
-		var target:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
-		target.kill();
-		PlayState.instance.remove(target, true);
-		target.destroy();
-		PlayState.instance.modchartSprites.remove(tag);
-	}
-
-	public static function cancelTween(tag:String) {
-		if(PlayState.instance.modchartTweens.exists(tag)) {
-			PlayState.instance.modchartTweens.get(tag).cancel();
-			PlayState.instance.modchartTweens.get(tag).destroy();
-			PlayState.instance.modchartTweens.remove(tag);
-		}
-	}
-
 	public static function getModSetting(saveTag:String, ?modName:String = null) {
 		#if MODS_ALLOWED
 		if(FlxG.save.data.modSettings == null) FlxG.save.data.modSettings = new Map<String, Dynamic>();
@@ -307,12 +139,184 @@ class LuaUtils {
 		return null;
 	}
 
+	public static function isMap(variable:Dynamic) {
+		return (variable.exists != null && variable.keyValueIterator != null);
+	}
+
+	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
+		var ind:Int = variable.indexOf('.');
+		if (ind == -1) {
+			if (PlayState.instance.variables.exists(variable)) return PlayState.instance.variables.get(variable);
+			return checkLuaFirst ? getObjectDirectly(variable, checkForTextsToo) : getVarInArray(getInstance(), variable);
+		}
+
+		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo);
+		while (ind != -1) obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
+		return obj;
+	}
+
+	public static function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic, ?allowMaps:Bool = false) {
+		var split:Array<String> = variable.split('.');
+		if(split.length > 1) {
+			var obj:Dynamic = Reflect.getProperty(leArray, split[0]);
+			for (i in 1...split.length - 1)
+				obj = Reflect.getProperty(obj, split[i]);
+
+			leArray = obj;
+			variable = split[split.length - 1];
+		}
+		if(allowMaps && isMap(leArray)) leArray.set(variable, value);
+		else Reflect.setProperty(leArray, variable, value);
+		return value;
+	}
+	public static function getGroupStuff(leArray:Dynamic, variable:String, ?allowMaps:Bool = false) {
+		var split:Array<String> = variable.split('.');
+		if(split.length > 1) {
+			var obj:Dynamic = Reflect.getProperty(leArray, split[0]);
+			for (i in 1...split.length - 1)
+				obj = Reflect.getProperty(obj, split[i]);
+
+			leArray = obj;
+			variable = split[split.length - 1];
+		}
+
+		if(allowMaps && isMap(leArray)) return leArray.get(variable);
+		return Reflect.getProperty(leArray, variable);
+	}
+
+	public static function getPropertyLoop(split:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic {
+		var obj:Dynamic = getObjectDirectly(split[0], checkForTextsToo);
+		for (i in 1...(getProperty ? split.length - 1 : split.length)) obj = getVarInArray(obj, split[i], allowMaps);
+		return obj;
+	}
+
+	public static function getObjectDirectly(objectName:String, ?checkForTextsToo:Bool = true, ?allowMaps:Bool = false):Dynamic {
+		switch(objectName) {
+			case 'this' | 'instance' | 'game': return PlayState.instance;
+			
+			default:
+				var obj:Dynamic = PlayState.instance.getLuaObject(objectName, checkForTextsToo);
+				if(obj == null) obj = getVarInArray(getInstance(), objectName, allowMaps);
+				return obj;
+		}
+	}
+
+	inline public static function getTextObject(name:String):FlxText {
+		return #if LUA_ALLOWED PlayState.instance.modchartTexts.exists(name) ? PlayState.instance.modchartTexts.get(name) : #end Reflect.getProperty(PlayState.instance, name);
+	}
+	
+	public static inline function getInstance():flixel.FlxState {
+		return PlayState.instance.isDead ? substates.GameOverSubstate.instance : PlayState.instance;
+	}
+
+	static final _lePoint:FlxPoint = FlxPoint.get();
+
+	inline public static function getMousePoint(camera:String, axis:String):Float {
+		FlxG.mouse.getScreenPosition(cameraFromString(camera), _lePoint);
+		return (axis == 'y' ? _lePoint.y : _lePoint.x);
+	}
+
+	inline public static function getPoint(leVar:String, type:String, axis:String, ?camera:String):Float {
+		var obj:FlxSprite = getVarInstance(leVar);
+		if (obj != null) {
+			switch(type) {
+				case 'graphic': obj.getGraphicMidpoint(_lePoint);
+				case 'screen': obj.getScreenPosition(_lePoint, cameraFromString(camera));
+				default: obj.getMidpoint(_lePoint);
+			}
+			return (axis == 'y' ? _lePoint.y : _lePoint.x);
+		}
+		return 0;
+	}
+
+	public static function setBarColors(bar:Bar, color1:String, color2:String) {
+		final left_color:Null<FlxColor> = (color1 != null && color1 != '' ? CoolUtil.colorFromString(color1) : null);
+		final right_color:Null<FlxColor> = (color2 != null && color2 != '' ? CoolUtil.colorFromString(color2) : null);
+		bar.setColors(left_color, right_color);
+	}
+
+	public static inline function getLowestCharacterGroup():FlxSpriteGroup {
+		var group:FlxSpriteGroup = PlayState.instance.gfGroup;
+		var pos:Int = PlayState.instance.members.indexOf(group);
+
+		var newPos:Int = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
+		if(newPos < pos) {
+			group = PlayState.instance.boyfriendGroup;
+			pos = newPos;
+		}
+		
+		newPos = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
+		if(newPos < pos) {
+			group = PlayState.instance.dadGroup;
+			pos = newPos;
+		}
+		return group;
+	}
+
+	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false) {
+		var obj:FlxSprite = cast getObjectDirectly(obj, false);
+		if(obj != null && obj.animation != null) {
+			if(indices == null) indices = [0];
+			else if(Std.isOfType(indices, String)) indices = flixel.util.FlxStringUtil.toIntArray(cast indices);
+
+			obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
+			if(obj.animation.curAnim == null) {
+				var dyn:Dynamic = cast obj;
+				if(dyn.playAnim != null) dyn.playAnim(name, true);
+				else dyn.animation.play(name, true);
+			}
+			return true;
+		}
+		return false;
+	}
+	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
+		spr.frames = switch(spriteType.toLowerCase().trim()) {
+			case 'aseprite' | 'jsoni8': Paths.getAsepriteAtlas(image);
+			case "packer" | "packeratlas" | "pac": Paths.getPackerAtlas(image);
+			default: Paths.getSparrowAtlas(image);
+		}
+	}
+
+	public static function resetTextTag(tag:String) {
+		#if LUA_ALLOWED
+		if(!PlayState.instance.modchartTexts.exists(tag)) return;
+
+		var target:FlxText = PlayState.instance.modchartTexts.get(tag);
+		target.kill();
+		PlayState.instance.remove(target, true);
+		target.destroy();
+		PlayState.instance.modchartTexts.remove(tag);
+		#end
+	}
+
+	public static function resetSpriteTag(tag:String) {
+		#if LUA_ALLOWED
+		if(!PlayState.instance.modchartSprites.exists(tag)) return;
+
+		var target:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+		target.kill();
+		PlayState.instance.remove(target, true);
+		target.destroy();
+		PlayState.instance.modchartSprites.remove(tag);
+		#end
+	}
+
+	public static function cancelTween(tag:String) {
+		#if LUA_ALLOWED
+		if(PlayState.instance.modchartTweens.exists(tag)) {
+			PlayState.instance.modchartTweens.get(tag).cancel();
+			PlayState.instance.modchartTweens.get(tag).destroy();
+			PlayState.instance.modchartTweens.remove(tag);
+		}
+		#end
+	}
+
 	public static function tweenPrepare(tag:String, vars:String) {
 		cancelTween(tag);
 		final variables:Array<String> = vars.split('.');
 		return if (variables.length > 1)
-			LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(variables), variables[variables.length - 1]);
-		else LuaUtils.getObjectDirectly(variables[0]);
+			getVarInArray(getPropertyLoop(variables), variables[variables.length - 1]);
+		else getObjectDirectly(variables[0]);
 	}
 
 	public static function cancelTimer(tag:String) {
@@ -328,7 +332,7 @@ class LuaUtils {
 	inline public static function getTweenTypeByString(?type:String = ''):FlxTweenType {
 		return switch(type.toLowerCase().trim()) {
 			case 'backward': FlxTweenType.BACKWARD;
-			case 'looping': FlxTweenType.LOOPING;
+			case 'looping' | 'loop': FlxTweenType.LOOPING;
 			case 'persist': FlxTweenType.PERSIST;
 			case 'pingpong': FlxTweenType.PINGPONG;
 			default: FlxTweenType.ONESHOT;

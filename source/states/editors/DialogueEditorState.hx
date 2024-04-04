@@ -389,15 +389,14 @@ class DialogueEditorState extends MusicBeatState
 	var _file:FileReference = null;
 	function loadDialogue() {
 		_file = new FileReference();
-		_file.addEventListener(Event.SELECT, onLoadComplete);
+		_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file.browse([new openfl.net.FileFilter('JSON', 'json')]);
 	}
 
-	function onLoadComplete(_):Void
-	{
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+	function onLoadComplete(_):Void {
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 
@@ -410,10 +409,8 @@ class DialogueEditorState extends MusicBeatState
 			var rawJson:String = File.getContent(fullPath);
 			if(rawJson != null) {
 				var loadedDialog:DialogueFile = cast Json.parse(rawJson);
-				if(loadedDialog.dialogue != null && loadedDialog.dialogue.length > 0) //Make sure it's really a dialogue file
-				{
-					var cutName:String = _file.name.substr(0, _file.name.length - 5);
-					trace("Successfully loaded file: " + cutName);
+				if(loadedDialog.dialogue != null && loadedDialog.dialogue.length > 0) { //Make sure it's really a dialogue file
+					trace('Successfully loaded file: ${_file.name.substr(0, _file.name.length - 5)}');
 					dialogueFile = loadedDialog;
 					changeText();
 					_file = null;
@@ -430,9 +427,8 @@ class DialogueEditorState extends MusicBeatState
 	/**
 		* Called when the save file dialog is cancelled.
 	*/
-	function onLoadCancel(_):Void
-	{
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+	function onLoadCancel(_):Void {
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
@@ -442,9 +438,8 @@ class DialogueEditorState extends MusicBeatState
 	/**
 		* Called if there is an error while saving the gameplay recording.
 	*/
-	function onLoadError(_):Void
-	{
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+	function onLoadError(_):Void {
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
@@ -453,8 +448,7 @@ class DialogueEditorState extends MusicBeatState
 
 	function saveDialogue() {
 		var data:String = Json.stringify(dialogueFile, "\t");
-		if (data.length > 0)
-		{
+		if (data.length > 0) {
 			_file = new FileReference();
 			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
@@ -463,8 +457,7 @@ class DialogueEditorState extends MusicBeatState
 		}
 	}
 
-	function onSaveComplete(_):Void
-	{
+	function onSaveComplete(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -475,8 +468,7 @@ class DialogueEditorState extends MusicBeatState
 	/**
 		* Called when the save file dialog is cancelled.
 	*/
-	function onSaveCancel(_):Void
-	{
+	function onSaveCancel(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -486,8 +478,7 @@ class DialogueEditorState extends MusicBeatState
 	/**
 		* Called if there is an error while saving the gameplay recording.
 	*/
-	function onSaveError(_):Void
-	{
+	function onSaveError(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);

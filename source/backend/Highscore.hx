@@ -80,8 +80,7 @@ class Highscore {
 
 	static function getComboInt(combo:String):Int {
 		combo = combo.split(',')[0];
-		final ratings:Array<String> = ['Clear', 'SDCB', 'FC', 'GFC', 'SFC', 'PFC'];
-		for (i => item in ratings) if (item == combo) return i + 1;
+		for (i => item in ['Clear', 'SDCB', 'FC', 'GFC', 'SFC', 'PFC']) if (item == combo) return i + 1;
 		return 0;
 	}
 

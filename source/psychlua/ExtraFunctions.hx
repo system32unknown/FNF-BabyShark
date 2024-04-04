@@ -1,6 +1,6 @@
 package psychlua;
 
-#if MODS_ALLOWED import haxe.Json; #end
+import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
 import openfl.utils.Assets;
 
@@ -14,7 +14,23 @@ class ExtraFunctions {
 		funk.set("keyboardPressed", (name:String) -> return Reflect.getProperty(FlxG.keys.pressed, name.toUpperCase()));
 		funk.set("keyboardReleased", (name:String) -> return Reflect.getProperty(FlxG.keys.justReleased, name.toUpperCase()));
 
-		funk.set("keyJustPressed", function(name:String = '') {
+		funk.set("firstKeyJustPressed", () -> {
+			var result:String = cast (FlxG.keys.firstJustPressed(), FlxKey).toString();
+			if (result == null || result.length < 1) result = "NONE";
+			return result;
+		});
+		funk.set("firstKeyPressed", () -> {
+			var result:String = cast (FlxG.keys.firstPressed(), FlxKey).toString();
+			if (result == null || result.length < 1) result = "NONE";
+			return result;
+		});
+		funk.set("firstKeyJustReleased", () -> {
+			var result:String = cast (FlxG.keys.firstJustReleased(), FlxKey).toString();
+			if (result == null || result.length < 1) result = "NONE";
+			return result;
+		});
+
+		funk.set("keyJustPressed", (name:String = '') -> {
 			name = name.toLowerCase();
 			return switch(name) {
 				case 'left': PlayState.instance.controls.NOTE_LEFT_P;
@@ -23,8 +39,9 @@ class ExtraFunctions {
 				case 'right': PlayState.instance.controls.NOTE_RIGHT_P;
 				default: PlayState.instance.controls.justPressed(name);
 			}
+			return false;
 		});
-		funk.set("keyPressed", function(name:String = '') {
+		funk.set("keyPressed", (name:String = '') -> {
 			name = name.toLowerCase();
 			return switch(name) {
 				case 'left': PlayState.instance.controls.NOTE_LEFT;
@@ -33,8 +50,9 @@ class ExtraFunctions {
 				case 'right': PlayState.instance.controls.NOTE_RIGHT;
 				default: PlayState.instance.controls.pressed(name);
 			}
+			return false;
 		});
-		funk.set("keyReleased", function(name:String = '') {
+		funk.set("keyReleased", (name:String = '') -> {
 			name = name.toLowerCase();
 			return switch(name) {
 				case 'left': PlayState.instance.controls.NOTE_LEFT_R;
@@ -43,6 +61,7 @@ class ExtraFunctions {
 				case 'right': PlayState.instance.controls.NOTE_RIGHT_R;
 				default: PlayState.instance.controls.justReleased(name);
 			}
+			return false;
 		});
 
 		funk.set("isOfType", (tag:String, cls:String) -> return Std.isOfType(LuaUtils.getObjectDirectly(tag), Type.resolveClass(cls)));

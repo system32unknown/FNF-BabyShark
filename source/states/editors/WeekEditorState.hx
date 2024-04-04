@@ -401,7 +401,7 @@ class WeekEditorState extends MusicBeatState {
 	static var _file:FileReference;
 	public static function loadWeek() {
 		_file = new FileReference();
-		_file.addEventListener(Event.SELECT, onLoadComplete);
+		_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file.browse([new openfl.net.FileFilter('JSON', 'json')]);
@@ -409,7 +409,7 @@ class WeekEditorState extends MusicBeatState {
 	
 	public static var loadedWeek:WeekFile = null;
 	static function onLoadComplete(_):Void {
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 
@@ -443,7 +443,7 @@ class WeekEditorState extends MusicBeatState {
 		* Called when the save file dialog is cancelled.
 	*/
 	static function onLoadCancel(_):Void {
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
@@ -454,7 +454,7 @@ class WeekEditorState extends MusicBeatState {
 		* Called if there is an error while saving the gameplay recording.
 	**/
 	static function onLoadError(_):Void {
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;

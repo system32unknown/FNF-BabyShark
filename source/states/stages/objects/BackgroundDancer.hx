@@ -1,8 +1,7 @@
 package states.stages.objects;
 
 class BackgroundDancer extends FlxSprite {
-	public function new(x:Float, y:Float)
-	{
+	public function new(x:Float, y:Float) {
 		super(x, y);
 
 		frames = Paths.getSparrowAtlas("limo/limoDancer");

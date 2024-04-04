@@ -602,14 +602,14 @@ class DialogueCharacterEditorState extends MusicBeatState {
 	var _file:FileReference = null;
 	function loadCharacter() {
 		_file = new FileReference();
-		_file.addEventListener(Event.SELECT, onLoadComplete);
+		_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file.browse([new openfl.net.FileFilter('JSON', 'json')]);
 	}
 
 	function onLoadComplete(_):Void {
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 
@@ -623,8 +623,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 			if(rawJson != null) {
 				var loadedChar:DialogueCharacterFile = cast Json.parse(rawJson);
 				if(loadedChar.dialogue_pos != null) { //Make sure it's really a dialogue character
-					var cutName:String = _file.name.substr(0, _file.name.length - 5);
-					trace("Successfully loaded file: " + cutName);
+					trace('Successfully loaded file: ${_file.name.substr(0, _file.name.length - 5)}');
 					character.jsonFile = loadedChar;
 					reloadCharacter();
 					reloadAnimationsDropDown();
@@ -648,7 +647,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		* Called when the save file dialog is cancelled.
 	*/
 	function onLoadCancel(_):Void {
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
@@ -659,7 +658,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		* Called if there is an error while saving the gameplay recording.
 	*/
 	function onLoadError(_):Void {
-		_file.removeEventListener(Event.SELECT, onLoadComplete);
+		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
@@ -680,8 +679,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		}
 	}
 
-	function onSaveComplete(_):Void
-	{
+	function onSaveComplete(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -692,8 +690,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 	/**
 		* Called when the save file dialog is cancelled.
 	*/
-	function onSaveCancel(_):Void
-	{
+	function onSaveCancel(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
@@ -703,8 +700,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 	/**
 		* Called if there is an error while saving the gameplay recording.
 	*/
-	function onSaveError(_):Void
-	{
+	function onSaveError(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);

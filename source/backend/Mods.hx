@@ -124,7 +124,7 @@ class Mods {
 
 			// And lastly, the loaded mod's folder
 			if(currentModDirectory != null && currentModDirectory.length > 0) {
-				var folder:String = Paths.mods(currentModDirectory + '/' + fileToFind);
+				var folder:String = Paths.mods('$currentModDirectory/$fileToFind');
 				if(FileSystem.exists(folder) && !foldersToCheck.contains(folder)) foldersToCheck.push(folder);
 			}
 		}
@@ -173,7 +173,7 @@ class Mods {
 			for (mod in CoolUtil.coolTextFile('modsList.txt')) {
 				var dat:Array<String> = mod.split("|");
 				var folder:String = dat[0];
-				if(FileSystem.exists(Paths.mods(folder)) && FileSystem.isDirectory(Paths.mods(folder)) && !added.contains(folder)) {
+				if(folder.trim().length > 0 && FileSystem.exists(Paths.mods(folder)) && FileSystem.isDirectory(Paths.mods(folder)) && !added.contains(folder)) {
 					added.push(folder);
 					list.push([folder, (dat[1] == "1")]);
 				}
@@ -182,7 +182,7 @@ class Mods {
 
 		// Scan for folders that aren't on modsList.txt yet
 		for (folder in getModDirectories()) {
-			if(FileSystem.exists(Paths.mods(folder)) && FileSystem.isDirectory(Paths.mods(folder)) && !ignoreModFolders.contains(folder.toLowerCase()) && !added.contains(folder)) {
+			if(folder.trim().length > 0 && FileSystem.exists(Paths.mods(folder)) && FileSystem.isDirectory(Paths.mods(folder)) && !ignoreModFolders.contains(folder.toLowerCase()) && !added.contains(folder)) {
 				added.push(folder);
 				list.push([folder, true]);
 			}
