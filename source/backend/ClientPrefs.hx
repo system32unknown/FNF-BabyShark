@@ -94,6 +94,7 @@ import flixel.input.keyboard.FlxKey;
 	public var safeFrames:Float = 10;
 	public var discordRPC:Bool = false;
 	public var language:String = 'en-US';
+	public var colorFilter:String = "NONE";
 }
 
 class ClientPrefs {

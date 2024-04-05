@@ -20,8 +20,8 @@ class Main extends Sprite {
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
 
-	public static var current:Main;
 	public static var fpsVar:FPSCounter;
+	public static var colorFilter:backend.ColorBlindness;
 
 	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
@@ -29,13 +29,12 @@ class Main extends Sprite {
 
 	public static var time:Int = 0;
 	public function new() {
-		current = this;
 		super();
 		#if windows @:functionCode('#include <windows.h> SetProcessDPIAware();') #end
 		setupGame();
 	}
 
-	#if (target.threaded && sys) public var threadPool:ElasticThreadPool; #end
+	#if (target.threaded && sys) public static var threadPool:ElasticThreadPool; #end
 
 	@:allow(Init)
 	static function getTimer():Int return time = openfl.Lib.getTimer();

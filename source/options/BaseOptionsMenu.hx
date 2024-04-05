@@ -38,14 +38,9 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		add(bg);
 
 		// avoids lagspikes while scrolling through menus!
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
-
-		grpTexts = new FlxTypedGroup<AttachedText>();
-		add(grpTexts);
-
-		checkboxGroup = new FlxTypedGroup<CheckboxThingie>();
-		add(checkboxGroup);
+		add(grpOptions = new FlxTypedGroup<Alphabet>());
+		add(grpTexts = new FlxTypedGroup<AttachedText>());
+		add(checkboxGroup = new FlxTypedGroup<CheckboxThingie>());
 
 		descBox = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		descBox.alpha = 0.6;
@@ -155,7 +150,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 				default:
 					if(controls.UI_LEFT || controls.UI_RIGHT) {
-						var pressed = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
+						var pressed:Bool = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
 						if(holdTime > .5 || pressed) {
 							if(pressed) {
 								var add:Dynamic = null;

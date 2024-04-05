@@ -29,12 +29,12 @@ typedef SwagSong = {
 }
 
 @:structInit class ChartNoteData {
-	public var time: Null<Float> = null;
-	public var id: Null<Int> = null;
-	public var type: Null<String> = null;
-	public var strumLine: Null<Int> = null;
-	public var isGfNote: Null<Bool> = null;
-	public var sLen: Null<Float> = null;
+	public var time:Null<Float> = null;
+	public var id:Null<Int> = null;
+	public var type:Null<String> = null;
+	public var strumLine:Null<Int> = null;
+	public var isGfNote:Null<Bool> = null;
+	public var sLen:Null<Float> = null;
 
 	public function dispose() {
 		// will be cleared by the GC later
@@ -72,8 +72,6 @@ class Song {
 				}
 			}
 		}
-
-		if (songJson.mania == null) songJson.mania = EK.defaultMania;
 	}
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong {

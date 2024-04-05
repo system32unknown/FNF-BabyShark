@@ -87,7 +87,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		mid.put();
 
 		PlayState.instance.setOnScripts('inGameOver', true);
-		PlayState.instance.callOnScripts('onGameOverStart', []);
+		PlayState.instance.callOnScripts('onGameOverStart');
 
 		super.create();
 	}
@@ -136,10 +136,9 @@ class GameOverSubstate extends MusicBeatSubstate {
 		FlxG.sound.music.stop();
 		
 		var snd:FlxSound = FlxG.sound.play(Paths.music(endSoundName));
-		var sndLength:Float = snd.length / 1000;
 		FlxTimer.wait(.7, () -> {
 			FlxG.camera.fade(FlxColor.BLACK, 2);
-			FlxTimer.wait(sndLength - .7, () -> {
+			FlxTimer.wait((snd.length / 1000) - .7, () -> {
 				flixel.addons.transition.FlxTransitionableState.skipNextTransIn = true;
 				FlxG.resetState();
 			});

@@ -419,8 +419,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		// If no animation is played
 		if (char.animation.curAnim == null) return;
 
-		var rate:Float = 24 - (((dialogue.speed - .05) / 5) * 480);
-		char.animation.curAnim.frameRate = FlxMath.bound(rate, 12, 48); // [12; 48]
+		char.animation.curAnim.frameRate = FlxMath.bound(((dialogue.speed - .05) / 5) * 480, 12, 48); // [12; 48]
 	}
 
 	function onCharacterAnimationCheck():Void {

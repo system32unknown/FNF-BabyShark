@@ -352,7 +352,7 @@ class CreditSectionState extends MusicBeatState {
 				}
 
 				if(FlxG.mouse.wheel != 0) {
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+					FlxG.sound.play(Paths.sound('scrollMenu'), .2);
 					changeSelection(-shiftMult * FlxG.mouse.wheel);
 				}
 
@@ -450,9 +450,8 @@ class CreditSectionState extends MusicBeatState {
 		var creditsFile:String = Paths.mods((folder != null ? folder + '/' : '') + 'data/credits.txt');
 		if (!FileSystem.exists(creditsFile)) return switchToDefaultSection();
 
-		var firstarray:Array<String> = File.getContent(creditsFile).split('\n');
-		for (v in firstarray) {
-			var arr:Array<String> = v.replace('\\n', '\n').split("::");
+		for (i in File.getContent(creditsFile).split('\n')) {
+			var arr:Array<String> = i.replace('\\n', '\n').split("::");
 			if(arr.length >= 5) arr.push(folder);
 			creditsStuff.push(arr);
 		}

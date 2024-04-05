@@ -9,9 +9,9 @@ import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import haxe.Json;
+import objects.TypedAlphabet;
 import cutscenes.DialogueBoxPsych;
 import cutscenes.DialogueCharacter;
-import objects.TypedAlphabet;
 
 class DialogueEditorState extends MusicBeatState
 {
@@ -49,9 +49,9 @@ class DialogueEditorState extends MusicBeatState
 		add(character);
 
 		box = new FlxSprite(70, 370);
+		box.antialiasing = ClientPrefs.data.antialiasing;
 		box.frames = Paths.getSparrowAtlas('speech_bubble');
 		box.scrollFactor.set();
-		box.antialiasing = ClientPrefs.data.antialiasing;
 		box.animation.addByPrefix('normal', 'speech bubble normal', 24);
 		box.animation.addByPrefix('angry', 'AHH speech bubble', 24);
 		box.animation.addByPrefix('center', 'speech bubble middle', 24);
@@ -80,8 +80,7 @@ class DialogueEditorState extends MusicBeatState
 		add(animText);
 
 		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, DEFAULT_TEXT);
-		daText.scaleX = 0.7;
-		daText.scaleY = 0.7;
+		daText.setScale(.7);
 		add(daText);
 		changeText();
 		super.create();

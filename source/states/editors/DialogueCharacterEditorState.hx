@@ -89,9 +89,9 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		add(ghostIdle);
 
 		box = new FlxSprite(70, 370);
+		box.antialiasing = ClientPrefs.data.antialiasing;
 		box.frames = Paths.getSparrowAtlas('speech_bubble');
 		box.scrollFactor.set();
-		box.antialiasing = ClientPrefs.data.antialiasing;
 		box.animation.addByPrefix('normal', 'speech bubble normal', 24);
 		box.animation.addByPrefix('center', 'speech bubble middle', 24);
 		box.animation.play('normal', true);
@@ -173,19 +173,19 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		tab_group.name = "Character Type";
 
 		leftCheckbox = new FlxUICheckBox(10, 20, null, null, "Left", 100);
-		leftCheckbox.callback = function() {
+		leftCheckbox.callback = () -> {
 			character.jsonFile.dialogue_pos = 'left';
 			updateCharTypeBox();
 		};
 
 		centerCheckbox = new FlxUICheckBox(leftCheckbox.x, leftCheckbox.y + 40, null, null, "Center", 100);
-		centerCheckbox.callback = function() {
+		centerCheckbox.callback = () -> {
 			character.jsonFile.dialogue_pos = 'center';
 			updateCharTypeBox();
 		};
 
 		rightCheckbox = new FlxUICheckBox(centerCheckbox.x, centerCheckbox.y + 40, null, null, "Right", 100);
-		rightCheckbox.callback = function() {
+		rightCheckbox.callback = () -> {
 			character.jsonFile.dialogue_pos = 'right';
 			updateCharTypeBox();
 		};
@@ -508,8 +508,8 @@ class DialogueCharacterEditorState extends MusicBeatState {
 				if(moved) {
 					offsetLoopText.text = 'Loop: ' + animShit.loop_offsets;
 					offsetIdleText.text = 'Idle: ' + animShit.idle_offsets;
-					ghostLoop.offset.set(animShit.loop_offsets[0] * ghostLoop.scale.x, animShit.loop_offsets[1] * ghostLoop.scale.x);
-					ghostIdle.offset.set(animShit.idle_offsets[0] * ghostLoop.scale.y, animShit.idle_offsets[1] * ghostLoop.scale.y);
+					ghostLoop.offset.set(animShit.loop_offsets[0], animShit.loop_offsets[1]);
+					ghostIdle.offset.set(animShit.idle_offsets[0], animShit.idle_offsets[1]);
 				}
 			}
 

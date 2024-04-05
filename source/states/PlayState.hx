@@ -199,7 +199,6 @@ class PlayState extends MusicBeatState {
 
 	public static var seenCutscene:Bool = false;
 	public static var changedDifficulty:Bool = false;
-	public static var restarted:Bool = false;
 
 	public var defaultCamZoom:Float = 1.05;
 	public var defaultHudCamZoom:Float = 1.;
@@ -568,7 +567,7 @@ class PlayState extends MusicBeatState {
 		super.create();
 
 		#if (target.threaded && sys)
-		Main.current.threadPool.run(() -> {
+		Main.threadPool.run(() -> {
 		#end
 			cacheCountdown();
 			cachePopUpScore();
@@ -1217,7 +1216,7 @@ class PlayState extends MusicBeatState {
 			var babyArrow:StrumNote = new StrumNote(strumLineX, strumLineY, i, player);
 			babyArrow.downScroll = downScroll;
 
-			if (arrowStartTween || ((!isStoryMode || restarted || firstStart || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
+			if (arrowStartTween || ((!isStoryMode || firstStart || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
 				babyArrow.alpha = 0;
 				FlxTween.tween(babyArrow, {alpha: targetAlpha}, playbackRate, {ease: FlxEase.circOut, startDelay: .5 + (.2 * i) * playbackRate});
 			} else babyArrow.alpha = targetAlpha;
@@ -1872,7 +1871,6 @@ class PlayState extends MusicBeatState {
 
 		deathCounter = 0;
 		seenCutscene = false;
-		restarted = false;
 
 		var ret:Dynamic = callOnScripts('onEndSong', null, true);
 		if(ret != LuaUtils.Function_Stop && !transitioning) {

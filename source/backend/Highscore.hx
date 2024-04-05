@@ -43,10 +43,9 @@ class Highscore {
 		var daSong:String = formatSong(song, diff);
 		var finalCombo:String = combo;
 
-		if (songCombos.exists(daSong)) {
-			if (getComboInt(songCombos.get(daSong)) < getComboInt(finalCombo))
-				setCombo(daSong, finalCombo);
-		} else setCombo(daSong, finalCombo);
+		if (songCombos.exists(daSong) && getComboInt(songCombos.get(daSong)) < getComboInt(finalCombo))
+			setCombo(daSong, finalCombo);
+		else setCombo(daSong, finalCombo);
 	}
 
 	/**

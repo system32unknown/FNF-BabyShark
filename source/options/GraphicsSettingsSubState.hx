@@ -25,6 +25,10 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 
 		addOption(new Option('Shaders', 'If unchecked, disables shaders.\nIt\'s used for some visual effects, and also CPU intensive for weaker PCs.', 'shaders', BOOL));
 		
+		var option:Option = new Option('Color Filter: ', 'Choose your color blindness filter of your choice.', 'colorFilter', STRING, ['NONE', "DEUTERANOPIA", "PROTANOPIA", "TRITANOPIA"]);
+		option.onChange = () -> backend.ColorBlindness.setFilter();
+		addOption(option);
+
 		#if desktop addOption(new Option('GPU Caching', 'If checked, allows the GPU to be used for caching textures, decreasing RAM usage.\nDon\'t turn this on if you have a shitty Graphics Card.', 'cacheOnGPU', BOOL)); #end
 
 		final refreshRate:Int = FlxG.stage.application.window.displayMode.refreshRate;

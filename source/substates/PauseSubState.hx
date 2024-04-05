@@ -40,7 +40,7 @@ class PauseSubState extends MusicBeatSubstate {
 		menuItems = menuItemsOG;
 
 		for (i in 0...Difficulty.list.length)
-			difficultyChoices.push('' + Difficulty.getString(i));
+			difficultyChoices.push(Difficulty.getString(i));
 		difficultyChoices.push('BACK');
 
 		pauseMusic = new FlxSound();
@@ -225,7 +225,7 @@ class PauseSubState extends MusicBeatSubstate {
 					FlxG.switchState(() -> new OptionsState());
 					if(ClientPrefs.data.pauseMusic != 'None') {
 						FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)), pauseMusic.volume);
-						FlxG.sound.music.fadeIn(.8, pauseMusic.volume, 1);
+						FlxG.sound.music.fadeIn(.8, pauseMusic.volume);
 						FlxG.sound.music.time = pauseMusic.time;
 						pauseMusic.stop();
 					}
@@ -256,14 +256,13 @@ class PauseSubState extends MusicBeatSubstate {
 	}
 
 	public static function restartSong(noTrans:Bool = false) {
-		PlayState.restarted = true;
 		PlayState.instance.paused = true; // For lua
 		FlxG.sound.music.volume = 0;
 		PlayState.instance.vocals.volume = 0;
 
 		if(noTrans) {
-			FlxTransitionableState.skipNextTransOut = true;
 			FlxTransitionableState.skipNextTransIn = true;
+			FlxTransitionableState.skipNextTransOut = true;
 		}
 		FlxG.resetState();
 	}
@@ -275,8 +274,6 @@ class PauseSubState extends MusicBeatSubstate {
 
 	function changeSelection(change:Int = 0):Void {
 		curSelected = FlxMath.wrap(curSelected + change, 0, menuItems.length - 1);
-		FlxG.sound.play(Paths.sound('scrollMenu'), .4);
-
 		for (num => item in grpMenuShit.members) {
 			item.targetY = num - curSelected;
 			item.alpha = 0.6;
@@ -302,7 +299,7 @@ class PauseSubState extends MusicBeatSubstate {
 		}
 
 		for (num => str in menuItems) {
-			var item = new Alphabet(90, 320, Language.getPhrase('pause_$str', str));
+			var item:Alphabet = new Alphabet(90, 320, Language.getPhrase('pause_$str', str));
 			item.isMenuItem = true;
 			item.targetY = num;
 			grpMenuShit.add(item);

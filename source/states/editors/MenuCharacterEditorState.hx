@@ -28,10 +28,7 @@ class MenuCharacterEditorState extends MusicBeatState
 			confirm_anim: 'M Dad Idle',
 			flipX: false
 		};
-		#if DISCORD_ALLOWED
-		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Menu Character Editor", "Editing: " + characterFile.image);
-		#end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("Menu Character Editor", 'Editing: ${characterFile.image}'); #end
 
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 		for (char in 0...3) {
@@ -44,7 +41,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		add(new FlxSprite(0, 56).makeGraphic(FlxG.width, 386, 0xFFF9CF51));
 		add(grpWeekCharacters);
 
-		txtOffsets = new FlxText(20, 10, 0, "", 32);
+		txtOffsets = new FlxText(20, 10, 0, "[0, 0]", 32);
 		txtOffsets.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		txtOffsets.alpha = 0.7;
 		add(txtOffsets);
@@ -200,10 +197,7 @@ class MenuCharacterEditorState extends MusicBeatState
 
 		updateOffset();
 		
-		#if DISCORD_ALLOWED
-		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Menu Character Editor", "Editing: " + characterFile.image);
-		#end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("Menu Character Editor", "Editing: " + characterFile.image); #end
 	}
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {

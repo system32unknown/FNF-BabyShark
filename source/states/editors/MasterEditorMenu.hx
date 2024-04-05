@@ -9,7 +9,7 @@ class MasterEditorMenu extends MusicBeatState {
 		'Dialogue Editor',
 		'Dialogue Portrait Editor',
 		'Note Splash Debug',
-		'Credit Editor',
+		'Credit Editor'
 	];
 	var grpTexts:FlxTypedGroup<Alphabet>;
 	var directories:Array<String> = [null];
