@@ -7,7 +7,7 @@ class SpriteUtil {
 	 * @param saturated Bool
 	 * @return Int Color that is the most present.
 	 */
-	inline public static function getMostPresentColor(sprite:FlxSprite, saturated:Bool):Int {
+	inline public static function getMostPresentColor(sprite:FlxSprite, saturated:Bool):FlxColor {
 		var colorMap:Map<FlxColor, Float> = [];
 		var color:FlxColor = 0;
 		var fixedColor:FlxColor = 0;

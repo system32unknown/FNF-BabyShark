@@ -9,6 +9,7 @@ class DiscordClient {
 	public static var clientID(default, set):String = _defaultID;
 	static var presence:DiscordRichPresence = DiscordRichPresence.create();
 
+	public static var icon_img:String = "icon";
 	public static var user:DUser = null;
 
 	public static function check() {
@@ -63,17 +64,11 @@ class DiscordClient {
 	}
 
 	static function onSpectate(spectateSecret:cpp.ConstCharStar):Void {
-		Logs.traceColored([
-			Logs.logText("[Discord] ", BLUE),
-			Logs.logText("Someone started spectating your game", YELLOW)
-		], INFO);
+		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone started spectating your game", YELLOW)], INFO);
 	}
 
 	static function onJoinReq(request:cpp.RawConstPointer<DiscordUser>):Void {
-		Logs.traceColored([
-			Logs.logText("[Discord] ", BLUE),
-			Logs.logText("Someone has just requested to join", YELLOW)
-		], WARNING);
+		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone has just requested to join", YELLOW)], WARNING);
 	}
 
 	public static function initialize() {
@@ -105,7 +100,7 @@ class DiscordClient {
 
 		presence.details = details;
 		presence.state = state;
-		presence.largeImageKey = (ClientPrefs.data.altDiscordImg ? 'iconalt' + ClientPrefs.data.altDiscordImgCount : 'icon');
+		presence.largeImageKey = (ClientPrefs.data.altDiscordImg ? 'iconalt' + ClientPrefs.data.altDiscordImgCount : icon_img);
 		presence.largeImageText = 'Baby Shark\'s Big Funkin!';
 		// Obtained times are in milliseconds so they are divided so Discord can use it
 		presence.startTimestamp = Std.int(startTimestamp / 1000);

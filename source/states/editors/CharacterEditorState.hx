@@ -886,7 +886,6 @@ class CharacterEditorState extends MusicBeatState {
 
 		/////////////
 		// bg data //
-		camEditor.bgColor = 0xFF666666;
 		add(new BGSprite('stageback', -600, -200, 0.9, 0.9));
 
 		var stageFront:BGSprite = new BGSprite('stagefront', -650, 600, 0.9, 0.9);
@@ -916,12 +915,12 @@ class CharacterEditorState extends MusicBeatState {
 		cameraFollowPointer.setPosition(offX, offY);
 		mid.put();
 
+		final midcam:FlxPoint = cameraFollowPointer.getMidpoint();
 		if(snap) {
-			final midcam:FlxPoint = cameraFollowPointer.getMidpoint();
 			FlxG.camera.scroll.x = midcam.x - FlxG.width / 2;
 			FlxG.camera.scroll.y = midcam.y - FlxG.height / 2;
-			midcam.put();
 		}
+		midcam.put();
 	}
 
 	inline function updateHealthBar() {

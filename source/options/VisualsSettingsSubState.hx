@@ -33,7 +33,12 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 			noteSkins.insert(0, ClientPrefs.defaultData.noteSkin); //Default skin always comes first
 			var option:Option = new Option('Note Skins:', "Select your prefered Note skin.", 'noteSkin', STRING, noteSkins);
 			addOption(option);
-			option.onChange = onChangeNoteSkin;
+			option.onChange = () -> notes.forEachAlive((note:StrumNote) -> {
+				changeNoteSkin(note);
+				note.setGraphicSize(112);
+				note.centerOffsets();
+				note.centerOrigin();
+			});
 			noteOptionID = optionsArray.length - 1;
 		}
 		
@@ -67,9 +72,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'showNPS', BOOL));
 		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'showJudgement', BOOL));
 
-		#if CHECK_FOR_UPDATES
-		addOption(new Option('Check for Updates', 'On Release builds, turn this on to check for updates when you start the game.', 'checkForUpdates', BOOL));
-		#end
+		#if CHECK_FOR_UPDATES addOption(new Option('Check for Updates', 'On Release builds, turn this on to check for updates when you start the game.', 'checkForUpdates', BOOL)); #end
 
 		#if desktop addOption(new Option('Discord Rich Presence', "Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord", 'discordRPC', BOOL)); #end
 		addOption(new Option('Combo Stacking', "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read", 'comboStacking', BOOL));
@@ -87,7 +90,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		option.onChange = () -> {
 			if(ClientPrefs.data.pauseMusic == 'None') FlxG.sound.music.volume = 0;
 			else FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
-	
 			changedMusic = true;
 		};
 
@@ -107,15 +109,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 				notesTween[i] = FlxTween.tween(note, {y: noteY}, Math.abs(note.y / (200 + noteY)) / 3, {ease: FlxEase.quadInOut});
 			else notesTween[i] = FlxTween.tween(note, {y: -200}, Math.abs(note.y / (200 + noteY)) / 3, {ease: FlxEase.quadInOut});
 		}
-	}
-
-	function onChangeNoteSkin() {
-		notes.forEachAlive((note:StrumNote) -> {
-			changeNoteSkin(note);
-			note.setGraphicSize(112);
-			note.centerOffsets();
-			note.centerOrigin();
-		});
 	}
 
 	function changeNoteSkin(note:StrumNote) {

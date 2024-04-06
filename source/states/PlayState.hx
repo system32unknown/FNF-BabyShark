@@ -1415,13 +1415,14 @@ class PlayState extends MusicBeatState {
 
 			var secondsTotal:Int = Math.floor(Math.max(0, (songCalc / playbackRate) / 1000));
 			var formattedsec:String = CoolUtil.formatTime(secondsTotal);
+			var formattedtxt:String = '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}';
 			var timePos:String = '$formattedsec / ${CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000))}';
 			if (timeType != 'Song Name') timeTxt.text = switch(timeType) {
 				case 'Time Left' | 'Time Elapsed': formattedsec;
 				case 'Time Position': timePos;
-				case 'Name Left' | 'Name Elapsed': '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}($formattedsec)';
-				case 'Name Percent': '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}(${timeBar.percent}%)';
-				case 'Name Time Position' | _: '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}($timePos)';
+				case 'Name Left' | 'Name Elapsed': '$formattedtxt($formattedsec)';
+				case 'Name Percent': '$formattedtxt(${timeBar.percent}%)';
+				case 'Name Time Position' | _: '$formattedtxt($timePos)';
 			}
 		}
 
@@ -1972,8 +1973,8 @@ class PlayState extends MusicBeatState {
 	function popUpScore(?note:Note):Void {
 		if (note == null) return;
 
-		final noteDiff:Float = getNoteDiff(note) / getActualPlaybackRate();
-		final daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
+		var noteDiff:Float = getNoteDiff(note) / getActualPlaybackRate();
+		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
 		var score:Int = 500;
 
 		var msTiming:Float = 0;
@@ -1983,7 +1984,12 @@ class PlayState extends MusicBeatState {
 		score = daRating.score;
 
 		if(!note.ratingDisabled) daRating.hits++;
-		totalNotesHit += (ClientPrefs.data.complexAccuracy ? backend.Wife3.getAcc(-noteDiff) : daRating.ratingMod);
+		totalNotesHit += switch (ClientPrefs.data.accuracyType) {
+			case 'Note': 1;
+			case 'Millisecond': (daRating.name == 'epic' ? 1 : ratingsData[0].hitWindow / (noteDiff / playbackRate)); // Much like Kade's "Complex" but less broken
+			case 'Wife3': backend.Wife3.getAcc(-noteDiff);
+			default: daRating.ratingMod;
+		}
 
 		if(daRating.noteSplash && !note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
 

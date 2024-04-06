@@ -31,14 +31,17 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 
 		#if desktop addOption(new Option('GPU Caching', 'If checked, allows the GPU to be used for caching textures, decreasing RAM usage.\nDon\'t turn this on if you have a shitty Graphics Card.', 'cacheOnGPU', BOOL)); #end
 
-		final refreshRate:Int = FlxG.stage.application.window.displayMode.refreshRate;
 		var option:Option = new Option('Framerate', "Pretty self explanatory, isn't it?\n(The Default Value is 60 FPS)", 'framerate', INT);
 		addOption(option);
 		option.minValue = 60;
 		option.maxValue = 240;
-		option.defaultValue = Std.int(FlxMath.bound(refreshRate, option.minValue, option.maxValue));
+		option.defaultValue = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate, option.minValue, option.maxValue));
 		option.displayFormat = '%v FPS';
-		option.onChange = onChangeFramerate;
+		option.onChange = () -> {
+			if (ClientPrefs.data.framerate > FlxG.drawFramerate)
+				FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
+			else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
+		};
 
 		super();
 		insert(1, boyfriend);
@@ -50,12 +53,6 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 			if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText))
 				sprite.antialiasing = ClientPrefs.data.antialiasing;
 		}
-	}
-
-	function onChangeFramerate() {
-		if (ClientPrefs.data.framerate > FlxG.drawFramerate)
-			FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
-		else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
 	}
 
 	override function changeSelection(change:Int = 0) {

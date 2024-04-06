@@ -202,9 +202,6 @@ class TitleState extends MusicBeatState {
 					FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 1);
 					FlxG.sound.play(Paths.sound('confirmMenu'), .7);
 	
-					MainMenuState.firstStart = true;
-					MainMenuState.finishedFunnyMove = false;
-	
 					FlxTimer.wait(1.5, () -> {
 						FlxTransitionableState.skipNextTransIn = false;
 						if (mustUpdate) FlxG.switchState(() -> new OutdatedState());

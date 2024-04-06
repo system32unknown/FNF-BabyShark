@@ -1,12 +1,12 @@
 package utils;
 
 class MathUtil {
-	inline public static function quantize(f:Float, snap:Float) {
+	inline public static function quantize(f:Float, snap:Float):Float {
 		return Math.fround(f * snap) / snap;
 	}
 
 	public static function truncateFloat(number:Float, ?precision:Int = 3):Float {
-        var num = number;
+        var num:Float = number;
         num *= Math.pow(10, precision);
         num = Math.round(num) / Math.pow(10, precision);
         return num;
@@ -24,7 +24,7 @@ class MathUtil {
 		return [Math.min(v1, v2), Math.max(v1, v2)];
 	}
 
-    public static function fastInverseSquareRoot(x: Float):Float {
+    public static function fastInverseSquareRoot(x:Float):Float {
         var i:Int = cast(x);
         var y:Float = x;
         var x2:Float = x * .5;

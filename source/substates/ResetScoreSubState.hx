@@ -68,7 +68,7 @@ class ResetScoreSubState extends MusicBeatSubstate {
 
 	override function update(elapsed:Float) {
 		bg.alpha += elapsed * 1.5;
-		if(bg.alpha > 0.6) bg.alpha = .6;
+		if(bg.alpha > .6) bg.alpha = .6;
 
 		for (i in 0...alphabetArray.length)
 			alphabetArray[i].alpha += elapsed * 2.5;

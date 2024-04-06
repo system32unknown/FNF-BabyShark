@@ -1,6 +1,6 @@
 package utils;
 
-import lime.utils.Assets;
+#if !MODS_ALLOWED import lime.utils.Assets; #end
 
 /**
  * Small util that allows you to load any function from ndlls via `getFunction`.
@@ -54,7 +54,7 @@ class NdllUtil {
 			Logs.trace('Couldn\'t find ndll at ${ndll}.', WARNING);
 			return noop;
 		}
-		var func = lime.system.CFFI.load(ndll, name, args);
+		var func:Dynamic = lime.system.CFFI.load(ndll, name, args);
 		if (func == null) {
 			Logs.trace('Method ${name} in ndll ${ndll} with ${args} args was not found.', ERROR);
 			return noop;

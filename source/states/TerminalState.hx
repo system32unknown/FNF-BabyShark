@@ -5,12 +5,13 @@ import flixel.input.keyboard.FlxKey;
 class TerminalState extends MusicBeatState {
 	// dont just yoink this code and use it in your own mod. this includes you, psych engine porters.
 	// if you ingore this message and use it anyway, atleast give credit.
-	public var curCmd:String = "";
-	public var previousText:String = 'Vs Dave Developer Console[Version 1.0.00001.1235]\nAll Rights Reserved.\n>';
-	public var displayText:FlxText;
+	var curCmd:String = "";
+	var previousText:String = Language.getPhrase('term_introduction', 'Vs Dave Developer Console[Version 1.0.00001.1235]\nAll Rights Reserved.\n>');
+	var displayText:FlxText;
+	var adminUnlocked:Bool = false;
 
-	public var cmdList:Array<TerminalCommand> = new Array<TerminalCommand>();
-	public var typeSound:FlxSound;
+	var cmdList:Array<TerminalCommand> = new Array<TerminalCommand>();
+	var typeSound:FlxSound;
 
 	// [BAD PERSON] was too lazy to finish this lol.
 	var unformattedSymbols:Array<String> = [
@@ -25,7 +26,7 @@ class TerminalState extends MusicBeatState {
 		Main.fpsVar.visible = false;
 		PlayState.isStoryMode = false;
 
-		displayText = new FlxText(0, 0, FlxG.width, previousText, 32);
+		displayText = new FlxText(0, 0, FlxG.width, previousText, 16);
 		displayText.setFormat(Paths.font("fixedsys.ttf"), 16);
 		displayText.size *= 2;
 		displayText.antialiasing = false;
@@ -35,36 +36,44 @@ class TerminalState extends MusicBeatState {
 		cmdList.push(new TerminalCommand("help", "Displays this menu.", (args:Array<String>) -> {
 			updatePreviousText(false); // resets the text
 			var helpText:String = "";
-			for (v in cmdList) if (v.showInHelp) helpText += '${v.commandName} - ${v.commandHelp}\n';
+			for (v in cmdList) if (v.showInHelp) helpText += '${v.commandName} - ${Language.getPhrase('termcommand_${v.commandName}', v.commandHelp)}\n';
 			updateText('\n$helpText');
 		}));
 
-		cmdList.push(new TerminalCommand("characters", "Shows the list of characters.", (args:Array<String>) -> {
-			updatePreviousText(false); // resets the text
-			updateText("\ndave.dat\nbambi.dat\ntristan.dat\nexpunged.dat\nexbungo.dat\nrecurser.dat\nmoldy.dat");
-		}));
 		cmdList.push(new TerminalCommand("admin", "Shows the admin list, use grant to grant rights.", (args:Array<String>) -> {
 			if (args.length == 0) {
 				updatePreviousText(false); // resets the text
-				updateText("\nTo add extra users, add the grant parameter and the name.\n(Example: admin grant expungo.dat)\nNOTE: ADDING CHARACTERS AS ADMINS CAN CAUSE UNEXPECTED CHANGES.");
+				updateText('\n${Language.getPhrase("term_admlist_ins", 'To add extra users, add the grant parameter and the name.\n(Example: admin grant expungo.dat)\nNOTE: ADDING CHARACTERS AS ADMINS CAN CAUSE UNEXPECTED CHANGES.')}');
 				return;
 			} else if (args.length != 2) {
 				updatePreviousText(false); // resets the text
-				updateText('\nNo version of the "admin" command takes ${args.length} parameter(s).');
+				updateText('\n${Language.getPhrase("term_admin_error1", 'No version of the "admin" command takes')} ${args.length} ${Language.getPhrase("term_admin_error2", 'parameter(s)')}.');
 			} else {
-				if (args[0] == "grant") {
-					switch (args[1]) {
-						default:
-							updatePreviousText(false); // resets the text
-							updateText('\n${args[1]}is not a valid user or character.');
-					}
-				} else updateText("\nInvalid Parameter"); // todo: translate.
+				switch (args[0]) {
+					case 'unlock':
+						if (args[1] == "expunged") {
+							adminUnlocked = true;
+							updateText('\nUnlocked.');
+						}
+					case 'login':
+						//TODO
+						updateText('\nNot Implemented.');
+							
+					default: updateText("\nInvalid Parameter"); // todo: translate.
+				}
 			}
 		}));
 		cmdList.push(new TerminalCommand("clear", "Clears the screen.", (args:Array<String>) -> {
 			previousText = "> ";
 			displayText.y = 0;
 			updateText("");
+		}));
+		cmdList.push(new TerminalCommand("access", "Accesses the secret song.", (args:Array<String>) -> {
+			if (!adminUnlocked) {
+				updateText('\nAccess Denied.');
+				return;
+			}
+			updateText('\nNot Implemented.');
 		}));
 		cmdList.push(new TerminalCommand("open", "Searches for a text file with the specified ID, and if it exists, display it.", (args:Array<String>) -> {
 			updatePreviousText(false); // resets the text

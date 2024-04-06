@@ -30,10 +30,6 @@ class MainMenuState extends MusicBeatState {
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 
-	// Stolen from Kade Engine
-	public static var firstStart:Bool = true;
-	public static var finishedFunnyMove:Bool = false;
-
 	override function create() {
 		#if MODS_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();
@@ -85,20 +81,15 @@ class MainMenuState extends MusicBeatState {
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
 		for (num => option in optionShit) {
-			var menuY:Float = (num * 140) + 90;
-			var item:FlxSprite = createMenuItem(option, 0, FlxG.height * 1.6);
+			var item:FlxSprite = createMenuItem(option, 0, (num * 140) + 90);
+			item.y += (4 - optionShit.length) * 70; // Offsets for when you have anything other than 4 items
 			item.screenCenter(X);
-
-			if (firstStart) FlxTween.tween(item, {y: menuY}, 1 + (num * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> finishedFunnyMove = true});
-			else item.y = menuY;
-			item.y += (4 - optionShit.length) * 70;
 		}
 
 		if (rightOption != null) {
-			rightItem = createMenuItem(rightOption, FlxG.width - 60, 490);
+			rightItem = createMenuItem(rightOption, FlxG.width - 60, 490, true);
 			rightItem.x -= rightItem.width;
 		}
-		firstStart = false;
 
 		var version:FlxText = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH}, ${Main.engineVer.COMMIT_NUM})\nBaby Shark\'s Big Funkin! v${FlxG.stage.application.meta.get('version')}', 16);
 		version.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, RIGHT);
@@ -112,11 +103,11 @@ class MainMenuState extends MusicBeatState {
 		FlxG.camera.follow(camFollow, null, 9);
 	}
 
-	function createMenuItem(name:String, x:Float, y:Float):FlxSprite {
+	function createMenuItem(name:String, x:Float, y:Float, looping:Bool = false):FlxSprite {
 		var menuItem:FlxSprite = new FlxSprite(x, y);
 		menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_$name');
 		menuItem.animation.addByPrefix('idle', '$name idle', 24, true);
-		menuItem.animation.addByPrefix('selected', '$name selected', 24, true);
+		menuItem.animation.addByPrefix('selected', '$name selected', 24, !looping);
 		menuItem.animation.play('idle');
 		menuItem.updateHitbox();
 		
@@ -133,7 +124,7 @@ class MainMenuState extends MusicBeatState {
 			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += .5 * elapsed;
 		}
 		
-		if (!selectedSomethin && finishedFunnyMove) {
+		if (!selectedSomethin) {
 			if (controls.UI_UP_P || controls.UI_DOWN_P) changeItem(controls.UI_UP_P ? -1 : 1);
 
 			switch(curColumn) {
@@ -206,7 +197,7 @@ class MainMenuState extends MusicBeatState {
 
 	function changeItem(change:Int = 0) {
 		if(change != 0) curColumn = CENTER;
-		if (finishedFunnyMove) curSelected = FlxMath.wrap(curSelected + change, 0, optionShit.length - 1);
+		curSelected = FlxMath.wrap(curSelected + change, 0, optionShit.length - 1);
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		for (item in menuItems) {

@@ -30,14 +30,10 @@ class NativeUtil {
 	 * Sets the console colors
 	 */
 	public static function setConsoleColors(foregroundColor:ConsoleColor = LIGHTGRAY, ?backgroundColor:ConsoleColor = BLACK) {
-		#if windows
-		var fg = cast(foregroundColor, Int);
-		var bg = cast(backgroundColor, Int);
-		PlatformUtil.setConsoleColors((bg * 16) + fg);
-		#end
+		#if windows PlatformUtil.setConsoleColors((cast(backgroundColor, Int) * 16) + cast(foregroundColor, Int)); #end
 	}
 
-	public static function consoleColorToOpenFL(color:ConsoleColor) {
+	public static function consoleColorToOpenFL(color:ConsoleColor):FlxColor {
 		return switch(color) {
 			case BLACK:		 0xFF000000;
 			case DARKBLUE:	 0xFF000088;

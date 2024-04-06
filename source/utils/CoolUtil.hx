@@ -98,7 +98,7 @@ class CoolUtil {
 	}
 
 	inline public static function colorFromString(color:String):FlxColor {
-		var hideChars = ~/[\t\n\r]/;
+		var hideChars:EReg = ~/[\t\n\r]/;
 		var color:String = hideChars.split(color).join('').trim();
 		if(color.startsWith('0x')) color = color.substring(color.length - 6);
 

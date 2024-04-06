@@ -55,7 +55,7 @@ import flixel.input.keyboard.FlxKey;
 	public var showComboCounter:Bool = false;
 	public var showNPS:Bool = false;
 	public var smoothHealth:Bool = false;
-	public var complexAccuracy:Bool = false;
+	public var accuracyType:String = 'Judgement';
 	public var noteDiffTypes:String = "Simple";
 	public var showJudgement:Bool = true;
 	public var iconBounceType:String = 'Psych';

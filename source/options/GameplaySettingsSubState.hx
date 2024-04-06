@@ -7,6 +7,10 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 
 		addOption(new Option('Downscroll', 'If checked, notes go Down instead of Up, simple enough.', 'downScroll', BOOL));
 		addOption(new Option('Middlescroll', 'If checked, your notes get centered.', 'middleScroll', BOOL));
+
+		addOption(new Option('Note Diff Type:', '', 'noteDiffTypes', STRING, ['Psych', 'Simple']));
+		addOption(new Option('Accuracy Type:', "The way accuracy is calculated. \nNote = Depending on if a note is hit or not.\nJudgement = Depending on Judgement.\nMillisecond = Depending on milliseconds.", 'accuracyType', STRING, ['Note', 'Judgement', 'Millisecond', 'Wife3']));
+
 		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums', BOOL));
 		addOption(new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping', BOOL));
 
@@ -33,8 +37,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.onChange = onChangeHitsoundVolume;
 
 		addOption(new Option('Update Cam Section', 'If checked, camera will always update,\nwhich makes the camera more precise.', 'updateCamSection', BOOL));
-		addOption(new Option('Complex Accuracy', '', 'complexAccuracy', BOOL));
-		addOption(new Option('Note Diff Type:', '', 'noteDiffTypes', STRING, ['Psych', 'Simple']));
 		
 		var option:Option = new Option('Rating Offset', 'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.', 'ratingOffset', INT);
 		option.displayFormat = '%vms';

@@ -691,9 +691,14 @@ class FunkinLua {
 
 		set("setObjectCamera", function(obj:String, camera:String = '') {
 			var spr:FlxBasic = LuaUtils.getVarInstance(obj);
-			if (spr == null) return false;
-			spr.camera = LuaUtils.cameraFromString(camera);
-			return true;
+			var realCamera:Dynamic = LuaUtils.getObjectDirectly(camera);
+			if(realCamera == null || !Std.isOfType(realCamera, FlxCamera)) realCamera = LuaUtils.cameraFromString(camera);
+			if (spr != null) {
+				spr.camera = realCamera;
+				return true;
+			} 
+			luaTrace('setObjectCamera: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
+			return false;
 		});
 		set("setBlendMode", function(obj:String, blend:String = '') {
 			var spr:FlxSprite = LuaUtils.getVarInstance(obj);

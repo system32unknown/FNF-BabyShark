@@ -1,11 +1,12 @@
 package utils;
 
 import haxe.Http;
+import haxe.io.Bytes;
 
 class HttpUtil {
 	public static var userAgent:String = "request";
-	public static function requestText(url:String) {
-		var r = null;
+	public static function requestText(url:String):String {
+		var r:String = null;
 		var h:Http = new Http(url);
 		h.setHeader("User-Agent", userAgent);
 
@@ -17,13 +18,13 @@ class HttpUtil {
 		return r;
 	}
 
-	public static function requestBytes(url:String) {
-		var r = null;
+	public static function requestBytes(url:String):Bytes {
+		var r:Bytes = null;
 		var h:Http = new Http(url);
 		h.setHeader("User-Agent", userAgent);
 
 		h.onStatus = (s:Int) -> if (isRedirect(s)) r = requestBytes(h.responseHeaders.get("Location"));
-		h.onBytes = (d:haxe.io.Bytes) -> if (r == null) r = d;
+		h.onBytes = (d:Bytes) -> if (r == null) r = d;
 		h.onError = (e:String) -> throw e;
 
 		h.request(false);
