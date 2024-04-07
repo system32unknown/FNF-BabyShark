@@ -35,11 +35,8 @@ class Philly extends BaseStage
 
 		if(!lowQuality) add(new BGSprite('philly/behindTrain', -40, 50));
 
-		phillyTrain = new PhillyTrain(2000, 360);
-		add(phillyTrain);
-
-		phillyStreet = new BGSprite('philly/street', -40, 50);
-		add(phillyStreet);
+		add(phillyTrain = new PhillyTrain(2000, 360));
+		add(phillyStreet = new BGSprite('philly/street', -40, 50));
 	}
 	override function eventPushed(event:objects.Note.EventNote)
 	{

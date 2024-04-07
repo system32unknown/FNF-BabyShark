@@ -170,11 +170,11 @@ class Limo extends BaseStage
 
 	// Substates for pausing/resuming tweens and timers
 	override function closeSubState() {
-		if(paused) if(carTimer != null) carTimer.active = true;
+		if(paused && carTimer != null) carTimer.active = true;
 	}
 
 	override function openSubState(SubState:flixel.FlxSubState) {
-		if(paused) if(carTimer != null) carTimer.active = false;
+		if(paused && carTimer != null) carTimer.active = false;
 	}
 
 	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {

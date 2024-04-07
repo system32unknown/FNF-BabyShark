@@ -354,7 +354,7 @@ class PlayState extends MusicBeatState {
 			case 'limo': new states.stages.Limo(); //Week 4
 			case 'mall': new states.stages.Mall(); //Week 5
 			case 'school': new states.stages.School(); //Week 6 (placeholder)
-			case 'davehouse': new states.stages.DaveHouse(); //Week Dave
+			case 'davehouse' | 'davehouse-night' | 'davehouse-sunset': new states.stages.DaveHouse(); //Week Dave
 		}
 
 		add(gfGroup);
@@ -1054,7 +1054,6 @@ class PlayState extends MusicBeatState {
 		if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson('${Paths.CHART_PATH}/$songName/events')) || FileSystem.exists(file) #else Assets.exists(file) #end)
 			for (event in Song.loadFromJson('events', songName).events) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
 
-		var ghostNotesCleared:Int = 0;
 		var noteDatas:Array<ChartNoteData> = [];
 
 		for (section in songData.notes) {
@@ -1080,7 +1079,6 @@ class PlayState extends MusicBeatState {
 						if (evilNoteData.id == leNoteData.id && evilNoteData.strumLine == leNoteData.strumLine && Math.abs(evilNoteData.time - leNoteData.time) < 1.) { // is it in the same step?
 							evilNoteData.dispose();
 							noteDatas.remove(evilNoteData);
-							ghostNotesCleared++;
 						}
 					}
 				}
@@ -1145,7 +1143,6 @@ class PlayState extends MusicBeatState {
 		}
 
 		for (event in songData.events) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
-		trace('["${SONG.song.toUpperCase()}" CHART INFO]: Ghost Notes Cleared: $ghostNotesCleared');
 		unspawnNotes.sort(sortByTime);
 		generatedMusic = true;
 	}
@@ -1205,7 +1202,6 @@ class PlayState extends MusicBeatState {
 	public function generateStaticArrows(player:Int, arrowStartTween:Bool = false):Void {
 		var strumLineX:Float = middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X;
 		var strumLineY:Float = downScroll ? (FlxG.height - 150) : 50;
-		var grp = player == 1 ? playerStrums : opponentStrums;
 		for (i in 0...EK.keys(mania)) {
 			var targetAlpha:Float = 1;
 			if (player < 1) {
@@ -1226,7 +1222,7 @@ class PlayState extends MusicBeatState {
 				if(i > 1) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
 			}
 
-			grp.add(babyArrow);
+			(player == 1 ? playerStrums : opponentStrums).add(babyArrow);
 			strumLineNotes.add(babyArrow);
 			babyArrow.postAddedToGroup();
 			callOnLuas('onSpawnStrum', [strumLineNotes.members.indexOf(babyArrow), babyArrow.player, babyArrow.ID]);
@@ -1236,11 +1232,9 @@ class PlayState extends MusicBeatState {
 
 	override function openSubState(SubState:flixel.FlxSubState) {
 		stagesFunc((stage:BaseStage) -> stage.openSubState(SubState));
-		if (paused) {
-			if (FlxG.sound.music != null) {
-				FlxG.sound.music.pause();
-				vocals.pause();
-			}
+		if (paused && FlxG.sound.music != null) {
+			FlxG.sound.music.pause();
+			vocals.pause();
 		}
 		super.openSubState(SubState);
 	}
@@ -1347,7 +1341,7 @@ class PlayState extends MusicBeatState {
 			}
 		}
 
-		if(ClientPrefs.data.camMovement && !isPixelStage && camlock)
+		if(ClientPrefs.data.camMovement && camlock)
 			camFollow.setPosition(camlockpoint.x, camlockpoint.y);
 		
 		if(!inCutscene && !paused && !freezeCamera)
@@ -1483,9 +1477,7 @@ class PlayState extends MusicBeatState {
 
 	function renderNotes():Void {
 		notes.forEachAlive((daNote:Note) -> {
-			var strumGroup:FlxTypedGroup<StrumNote> = playerStrums;
-			if(!daNote.mustPress) strumGroup = opponentStrums;
-			var strum:StrumNote = strumGroup.members[daNote.noteData];
+			var strum:StrumNote = (daNote.mustPress ? playerStrums : opponentStrums).members[daNote.noteData];
 			daNote.followStrumNote(strum, songSpeed / playbackRate);
 			if(daNote.isSustainNote && strum.sustainReduce) daNote.clipToStrumNote(strum);
 
@@ -1811,7 +1803,7 @@ class PlayState extends MusicBeatState {
 
 		var camCharacter:String = (!section.mustHitSection ? 'dad' : 'boyfriend');
 		moveCamera(camCharacter);
-		if(ClientPrefs.data.camMovement && !isPixelStage) {
+		if(ClientPrefs.data.camMovement) {
 			campoint.set(camFollow.x, camFollow.y);
 			bfturn = (camCharacter == 'boyfriend');
 			camlock = false;
@@ -2518,8 +2510,7 @@ class PlayState extends MusicBeatState {
 		super.sectionHit();
 
 		if (SONG.notes[curSection] != null) {
-			if (generatedMusic && !endingSong && !isCameraOnForcedPos && !ClientPrefs.data.updateCamSection)
-				moveCameraSection();
+			if (generatedMusic && !endingSong && !isCameraOnForcedPos && !ClientPrefs.data.updateCamSection) moveCameraSection();
 
 			if (ClientPrefs.data.camZooms && camZooming && FlxG.camera.zoom < 1.35) {
 				FlxG.camera.zoom += .015 * camZoomingMult;
@@ -2710,9 +2701,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {
-		final grp = isDad ? opponentStrums : playerStrums;
-		var spr:StrumNote = grp.members[id];
-
+		var spr:StrumNote =  (isDad ? opponentStrums : playerStrums).members[id];
 		if(spr != null) {
 			spr.playAnim('confirm', true);
 			spr.resetAnim = time / playbackRate;

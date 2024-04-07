@@ -691,10 +691,8 @@ class FunkinLua {
 
 		set("setObjectCamera", function(obj:String, camera:String = '') {
 			var spr:FlxBasic = LuaUtils.getVarInstance(obj);
-			var realCamera:Dynamic = LuaUtils.getObjectDirectly(camera);
-			if(realCamera == null || !Std.isOfType(realCamera, FlxCamera)) realCamera = LuaUtils.cameraFromString(camera);
 			if (spr != null) {
-				spr.camera = realCamera;
+				spr.camera = LuaUtils.cameraFromString(camera);
 				return true;
 			} 
 			luaTrace('setObjectCamera: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
@@ -713,9 +711,9 @@ class FunkinLua {
 			return true;
 		});
 		set("objectsOverlap", function(obj1:String, obj2:String) {
-			var guh1:FlxBasic = LuaUtils.getVarInstance(obj1), guh2:FlxBasic = LuaUtils.getVarInstance(obj2);
-			if (guh1 == null || guh2 == null) return false;
-			return FlxG.overlap(guh1, guh2);
+			var obj1:FlxBasic = LuaUtils.getVarInstance(obj1), obj2:FlxBasic = LuaUtils.getVarInstance(obj2);
+			if (obj1 == null || obj2 == null) return false;
+			return FlxG.overlap(obj1, obj2);
 		});
 		set("getPixelColor", function(obj:String, x:Int, y:Int) {
 			var spr:FlxSprite = LuaUtils.getVarInstance(obj);

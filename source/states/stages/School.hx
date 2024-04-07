@@ -2,8 +2,7 @@ package states.stages;
 
 import substates.GameOverSubstate;
 
-class School extends BaseStage
-{
+class School extends BaseStage {
 	override function create() {
 		var _song = PlayState.SONG;
 		if(_song.gameOverSound == null || _song.gameOverSound.trim().length < 1) GameOverSubstate.deathSoundName = 'fnf_loss_sfx-pixel';
@@ -15,7 +14,7 @@ class School extends BaseStage
 		add(bgSky);
 		bgSky.antialiasing = false;
 
-		var repositionShit = -200;
+		var repositionShit:Int = -200;
 
 		var bgSchool:BGSprite = new BGSprite('weeb/weebSchool', repositionShit, 0, 0.6, 0.90);
 		add(bgSchool);

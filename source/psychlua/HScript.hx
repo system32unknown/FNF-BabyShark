@@ -238,6 +238,9 @@ class HScript extends Interp {
 				else Logs.trace('$origin - $msg', ERROR);
 			}
 		});
+
+		setVar('close', () -> active = false);
+
 		setVar('parentLua', parentLua);
 		setVar('this', this);
 		setVar('game', FlxG.state);

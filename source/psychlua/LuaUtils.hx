@@ -408,11 +408,14 @@ class LuaUtils {
 	}
 
 	public static function cameraFromString(cam:String):FlxCamera {
-		return switch(cam.toLowerCase()) {
-			case 'camhud' | 'hud': PlayState.instance.camHUD;
-			case 'camother' | 'other': PlayState.instance.camOther;
-			default: PlayState.instance.camGame;
+		switch(cam.toLowerCase()) {
+			case 'camgame' | 'game': return PlayState.instance.camGame;
+			case 'camhud' | 'hud': return PlayState.instance.camHUD;
+			case 'camother' | 'other': return PlayState.instance.camOther;
 		}
+		var camera:Dynamic = PlayState.instance.variables.get(cam);
+		if (camera == null || !Std.isOfType(camera, FlxCamera)) camera = PlayState.instance.camGame;
+		return camera;
 	}
 
 	public static function setTextBorderFromString(text:FlxText, border:String) {

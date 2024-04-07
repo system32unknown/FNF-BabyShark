@@ -271,7 +271,7 @@ class Note extends FlxSprite {
 		if(postfix == null) postfix = '';
 
 		var skin:String = texture + postfix;
-		if (texture.length < 1) {
+		if(texture.length < 1) {
 			skin = PlayState.SONG != null ? PlayState.SONG.arrowSkin : null;
 			if(skin == null || skin.length < 1)
 				skin = defaultNoteSkin + postfix;
