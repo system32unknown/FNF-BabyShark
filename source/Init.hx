@@ -42,7 +42,7 @@ class Init extends flixel.FlxState {
 		
 		super.create();
 		
-		if (Argument.parse(Sys.args())) return;
+		if (debug.Argument.parse(Sys.args())) return;
 		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
 			FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
 			FlxG.switchState(() -> new FlashingState());
