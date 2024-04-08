@@ -55,7 +55,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 	override function create() {
 		persistentUpdate = persistentDraw = true;
 		camGame = initPsychCamera();
-		camGame.bgColor = FlxColor.fromHSL(0, 0, 0.5);
+		camGame.bgColor = FlxColor.fromHSL(0, 0, .5);
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 
@@ -99,7 +99,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		box.updateHitbox();
 		hudGroup.add(box);
 
-		tipText = new FlxText(10, 10, FlxG.width - 20, TIP_TEXT_MAIN, 8);
+		tipText = new FlxText(10, 10, FlxG.width - 20, TIP_TEXT_MAIN, 16);
 		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
 		tipText.camera = camHUD;
 		tipText.scrollFactor.set();
@@ -127,7 +127,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 
 		reloadCharacter();
 		updateTextBox();
-		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, '', 0.05, false);
+		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y);
 		daText.setScale(.7);
 		daText.text = DEFAULT_TEXT;
 		hudGroup.add(daText);
@@ -169,7 +169,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 	var centerCheckbox:FlxUICheckBox;
 	var rightCheckbox:FlxUICheckBox;
 	function addTypeUI() {
-		var tab_group = new FlxUI(null, UI_typebox);
+		var tab_group:FlxUI = new FlxUI(null, UI_typebox);
 		tab_group.name = "Character Type";
 
 		leftCheckbox = new FlxUICheckBox(10, 20, null, null, "Left", 100);
@@ -203,7 +203,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 	var loopInputText:FlxUIInputText;
 	var idleInputText:FlxUIInputText;
 	function addAnimationsUI() {
-		var tab_group = new FlxUI(null, UI_mainbox);
+		var tab_group:FlxUI = new FlxUI(null, UI_mainbox);
 		tab_group.name = "Animations";
 
 		animationDropDown = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray([''], true), function(animation:String) {
@@ -318,7 +318,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 	var yStepper:FlxUINumericStepper;
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 	function addCharacterUI() {
-		var tab_group = new FlxUI(null, UI_mainbox);
+		var tab_group:FlxUI = new FlxUI(null, UI_mainbox);
 		tab_group.name = "Character";
 
 		imageInputText = new FlxUIInputText(10, 30, 80, character.jsonFile.image, 8);
@@ -344,7 +344,6 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		tab_group.add(noAntialiasingCheckbox);
 
 		var reloadImageButton:FlxButton = new FlxButton(10, scaleStepper.y + 60, "Reload Image", () -> reloadCharacter());
-
 		var loadButton:FlxButton = new FlxButton(reloadImageButton.x + 100, reloadImageButton.y, "Load Character", () -> loadCharacter());
 		var saveButton:FlxButton = new FlxButton(loadButton.x, reloadImageButton.y - 25, "Save Character", () -> saveCharacter());
 		tab_group.add(reloadImageButton);

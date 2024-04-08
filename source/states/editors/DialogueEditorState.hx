@@ -378,7 +378,7 @@ class DialogueEditorState extends MusicBeatState
 	function characterAnimSpeed() {
 		if(character.animation.curAnim != null) {
 			var speed:Float = speedStepper.value;
-			var rate:Float = 24 - (((speed - 0.05) / 5) * 480);
+			var rate:Float = 24 - (((speed - .05) / 5) * 480);
 			if(rate < 12) rate = 12;
 			else if(rate > 48) rate = 48;
 			character.animation.curAnim.frameRate = rate;

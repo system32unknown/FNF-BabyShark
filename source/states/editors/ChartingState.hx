@@ -854,8 +854,7 @@ class ChartingState extends MusicBeatState {
 		}
 
 		#if sys
-		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getSharedPath(), 'custom_notetypes/');
-		for (folder in foldersToCheck)
+		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'custom_notetypes/'))
 			for (file in FileSystem.readDirectory(folder)) {
 				var fileName:String = file.toLowerCase().trim();
 				var wordLen:Int = 4; //length of word ".lua";
@@ -883,7 +882,7 @@ class ChartingState extends MusicBeatState {
 
 		var copyButton:FlxButton = new FlxButton(10, noteTypeDropDown.y + 30, "Copy Note", () -> if(curSelectedNote != null && curSelectedNote.length > 2) noteStuffCopied = curSelectedNote);
 
-		var pasteButton:FlxButton = new FlxButton(copyButton.x + 100, copyButton.y, "Paste Note", function() {
+		var pasteButton:FlxButton = new FlxButton(copyButton.x + 100, copyButton.y, "Paste Note", () -> {
 			if(noteStuffCopied != null) {
 				curSelectedNote[2] = noteStuffCopied[2];
 				curSelectedNote[3] = noteStuffCopied[3];
@@ -1518,7 +1517,7 @@ class ChartingState extends MusicBeatState {
 					addNote();
 					if (check_stackActive.checked) {
 						var addCount:Int = Math.floor(stepperStackNum.value) * Math.floor(stepperStackOffset.value) - 1;
-						for(_ in 0...Std.int(addCount)) addNote(curSelectedNote[0] + (_song.notes[curSec].changeBPM ? 15000 / _song.notes[curSec].bpm : 15000 / _song.bpm) / stepperStackOffset.value, curSelectedNote[1] + Math.floor(stepperStackSideOffset.value), currentType);
+						for(_ in 0...Std.int(addCount)) addNote(curSelectedNote[0] + (_song.notes[curSec].changeBPM ? 15000 / _song.notes[curSec].bpm : 15000 / _song.bpm) / stepperStackOffset.value, curSelectedNote[1] + (Math.floor(stepperStackSideOffset.value) % EK.keys(_song.mania)), currentType);
 					}
 				}
 			}
@@ -1635,7 +1634,7 @@ class ChartingState extends MusicBeatState {
 				FlxG.sound.music.pause();
 
 				var holdingShift:Float = 1;
-				if (FlxG.keys.pressed.CONTROL) holdingShift = 0.25;
+				if (FlxG.keys.pressed.CONTROL) holdingShift = .25;
 				else if (FlxG.keys.pressed.SHIFT) holdingShift = 4;
 
 				var daTime:Float = 700 * elapsed * holdingShift;
@@ -1706,16 +1705,15 @@ class ChartingState extends MusicBeatState {
 					FlxTween.tween(FlxG.sound.music, {time:feces}, .1, {ease:FlxEase.circOut});
 					pauseAndSetVocalsTime();
 
-					var dastrum = 0;
+					var dastrum:Int = 0;
 					if (curSelectedNote != null) {
 						dastrum = curSelectedNote[0];
 					}
 
 					var secStart:Float = sectionStartTime();
-					var datime = (feces - secStart) - (dastrum - secStart); //idk math find out why it doesn't work on any other section other than 0
+					var datime:Float = (feces - secStart) - (dastrum - secStart); //idk math find out why it doesn't work on any other section other than 0
 					if (curSelectedNote != null) {
 						var controlArray:Array<Bool> = [FlxG.keys.pressed.ONE, FlxG.keys.pressed.TWO, FlxG.keys.pressed.THREE, FlxG.keys.pressed.FOUR, FlxG.keys.pressed.FIVE, FlxG.keys.pressed.SIX, FlxG.keys.pressed.SEVEN, FlxG.keys.pressed.EIGHT];
-
 						if(controlArray.contains(true)) {
 							for (i in 0...controlArray.length) {
 								if(controlArray[i] && curSelectedNote[1] == i) curSelectedNote[2] += datime - curSelectedNote[2] - Conductor.stepCrochet;
@@ -1781,7 +1779,7 @@ class ChartingState extends MusicBeatState {
 		vocals.pitch = playbackSpeed;
 
 		bpmTxt.text =
-		'$currentSongName [${Difficulty.getString()}]'+
+		'$currentSongName [${Difficulty.getString()}]' +
 		'\n${CoolUtil.formatTime(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))} / ${CoolUtil.formatTime(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))}' +
 		'\n\nMeasure: $curSec' +
 		'\nBeat: ${Std.string(curDecBeat).substring(0, 4)}' +
@@ -1822,8 +1820,7 @@ class ChartingState extends MusicBeatState {
 						}
 
 						data = note.noteData;
-						if(note.mustPress != _song.notes[curSec].mustHitSection)
-							data += 4;
+						if(note.mustPress != _song.notes[curSec].mustHitSection) data += 4;
 					}
 				}
 			}
@@ -2500,10 +2497,10 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function addNote(strum:Null<Float> = null, data:Null<Int> = null, type:Null<Int> = null):Void {
-		var noteStrum = getStrumTime(dummyArrow.y * (getSectionBeats() / 4), false) + sectionStartTime();
-		var noteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
-		var noteSus = 0;
-		var daType = currentType;
+		var noteStrum:Float = getStrumTime(dummyArrow.y * (getSectionBeats() / 4), false) + sectionStartTime();
+		var noteData:Int = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
+		var noteSus:Int = 0;
+		var daType:Int = currentType;
 
 		if (strum != null) noteStrum = strum;
 		if (data != null) noteData = data;
@@ -2513,10 +2510,7 @@ class ChartingState extends MusicBeatState {
 			_song.notes[curSec].sectionNotes.push([noteStrum, noteData, noteSus, curNoteTypes[daType]]);
 			curSelectedNote = _song.notes[curSec].sectionNotes[_song.notes[curSec].sectionNotes.length - 1];
 		} else {
-			var event = eventStuff[Std.parseInt(eventDropDown.selectedId)][0];
-			var text1 = value1InputText.text;
-			var text2 = value2InputText.text;
-			_song.events.push([noteStrum, [[event, text1, text2]]]);
+			_song.events.push([noteStrum, [[eventStuff[Std.parseInt(eventDropDown.selectedId)][0], value1InputText.text, value2InputText.text]]]);
 			curSelectedNote = _song.events[_song.events.length - 1];
 			curEventSelected = 0;
 		}

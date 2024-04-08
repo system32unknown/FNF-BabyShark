@@ -544,10 +544,8 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 	public function addSprite(tag:String, front:Bool = false):Void {
 		var obj:FlxSprite = PlayState.instance.getLuaObject(tag);
-
 		if (front) add(obj);
 		else insert(0, obj);
-
 		sprites.push(tag);
 	}
 
