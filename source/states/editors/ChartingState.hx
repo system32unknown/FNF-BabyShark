@@ -705,8 +705,7 @@ class ChartingState extends MusicBeatState {
 		clearSectionButton.color = FlxColor.RED;
 		clearSectionButton.label.color = FlxColor.WHITE;
 		
-		var sectionListItems:Array<String> = ['Both', 'Section 1', 'Section 2'];		
-		sectionSelectedDropDown = new FlxUIDropDownMenu(150, 100, FlxUIDropDownMenu.makeStrIdLabelArray(sectionListItems, true), (selected:String) -> currentSectionSelected = Std.parseInt(selected));
+		sectionSelectedDropDown = new FlxUIDropDownMenu(150, 100, FlxUIDropDownMenu.makeStrIdLabelArray(['Both', 'Section 1', 'Section 2'], true), (selected:String) -> currentSectionSelected = Std.parseInt(selected));
 
 		check_notesSec = new FlxUICheckBox(10, clearSectionButton.y + 25, null, null, "Notes", 100);
 		check_notesSec.checked = true;
@@ -768,10 +767,10 @@ class ChartingState extends MusicBeatState {
 		var duetButton:FlxButton = new FlxButton(10, copyLastButton.y + 45, "Duet Notes", function() {
 			var duetNotes:Array<Array<Dynamic>> = [];
 			for (note in _song.notes[curSec].sectionNotes) {
-				if(currentSectionSelected == 1) if(note[1] >= EK.keys(_song.mania)) continue;
-				if(currentSectionSelected == 2) if(note[1] <= _song.mania) continue;
+				if(currentSectionSelected == 1 && note[1] >= EK.keys(_song.mania)) continue;
+				if(currentSectionSelected == 2 && note[1] <= _song.mania) continue;
 
-				var boob = note[1];
+				var boob:Int = note[1];
 				if (boob > _song.mania) boob -= EK.keys(_song.mania);
 				else boob += EK.keys(_song.mania);
 
@@ -779,12 +778,11 @@ class ChartingState extends MusicBeatState {
 			}
 
 			for (i in duetNotes) _song.notes[curSec].sectionNotes.push(i);
-
 			updateGrid();
 		});
 		var mirrorButton:FlxButton = new FlxButton(duetButton.x + 100, duetButton.y, "Mirror Notes", function() {
 			for (note in _song.notes[curSec].sectionNotes) {
-				var boob = note[1] % EK.keys(_song.mania);
+				var boob:Float = note[1] % EK.keys(_song.mania);
 				boob = _song.mania - boob;
 				if (note[1] > _song.mania) boob += EK.keys(_song.mania);
 				note[1] = boob;
@@ -793,7 +791,10 @@ class ChartingState extends MusicBeatState {
 		});
 		var randomizeNotes:FlxButton = new FlxButton(mirrorButton.x + 100, duetButton.y, "Randomize Notes", function() {
 			for (note in _song.notes[curSec].sectionNotes) {
-				var boob = note[1] % EK.keys(_song.mania);
+				if(currentSectionSelected == 1 && note[1] >= EK.keys(_song.mania)) continue;
+				if(currentSectionSelected == 2 && note[1] <= _song.mania) continue;
+
+				var boob:Float = note[1] % EK.keys(_song.mania);
 				boob = FlxG.random.int(0, EK.strums(_song.mania) - 1);
 				note[1] = boob;
 			}

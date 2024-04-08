@@ -476,7 +476,7 @@ class PlayState extends MusicBeatState {
 		if (!instakillOnMiss) uiGroup.add(healthBar);
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
-		iconP2 = new HealthIcon(dad.healthIcon, false);
+		iconP2 = new HealthIcon(dad.healthIcon);
 		for(icon in [iconP1, iconP2]) {
 			icon.y = healthBar.y - (icon.height / 2);
 			icon.visible = !hideHud;
@@ -501,7 +501,7 @@ class PlayState extends MusicBeatState {
 		judgementCounter.visible = ClientPrefs.data.showJudgement && !hideHud;
 		uiGroup.add(judgementCounter);
 		judgementCounter.screenCenter(Y);
-		updateScore(false);
+		updateScore();
 
 		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, Language.getPhrase("Botplay", "[BOTPLAY]"), 32);
 		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
@@ -1199,10 +1199,12 @@ class PlayState extends MusicBeatState {
 	}
 
 	public var skipArrowStartTween:Bool = false; //for lua
-	public function generateStaticArrows(player:Int, arrowStartTween:Bool = false):Void {
+	public function generateStaticArrows(player:Int):Void {
 		var strumLineX:Float = middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X;
 		var strumLineY:Float = downScroll ? (FlxG.height - 150) : 50;
 		for (i in 0...EK.keys(mania)) {
+			var tempMania:Int = mania;
+			if (tempMania == 0) tempMania = 1;
 			var targetAlpha:Float = 1;
 			if (player < 1) {
 				if (!ClientPrefs.data.opponentStrums) targetAlpha = 0;
@@ -1211,10 +1213,9 @@ class PlayState extends MusicBeatState {
 
 			var babyArrow:StrumNote = new StrumNote(strumLineX, strumLineY, i, player);
 			babyArrow.downScroll = downScroll;
-
-			if (arrowStartTween || ((!isStoryMode || firstStart || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
+			if (((!isStoryMode || firstStart || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
 				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {alpha: targetAlpha}, playbackRate, {ease: FlxEase.circOut, startDelay: .5 + (.2 * i) * playbackRate});
+				FlxTween.tween(babyArrow, {alpha: targetAlpha}, (4 / tempMania) * playbackRate, {ease: FlxEase.circOut, startDelay: .5 + ((.8 / tempMania) * i) * playbackRate});
 			} else babyArrow.alpha = targetAlpha;
 
 			if (player < 1 && middleScroll) {
