@@ -73,9 +73,9 @@ class StageData {
 		return switch (songName) {
 			case 'spookeez' | 'south' | 'monster': 'spooky';
 			case 'pico' | 'blammed' | 'philly' | 'philly-nice': 'philly';
-			case 'milf' | 'satin-panties' | 'high': 'limo';
+			case 'milf' | 'satin' | 'high': 'limo';
 			case 'cocoa' | 'eggnog': 'mall';
-			case 'home' | 'swirling' | 'dimensional': 'house';
+			case 'home' | 'swirling' | 'dimensional': 'davehouse';
 			default: 'stage';
 		}
 	}

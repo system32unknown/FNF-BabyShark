@@ -1,0 +1,23 @@
+{
+	"directory": "weekdave",
+	"defaultZoom": 0.8,
+	"isPixelStage": false,
+
+	"boyfriend": [1100, 100],
+	"girlfriend": [700, 100],
+	"opponent": [600, 100],
+
+	"preload": {
+		"images":
+		[
+			"farm/cornbag.png",
+			"farm/cornFence.png",
+			"farm/cornFence2.png",
+			"farm/funfarmhouse.png",
+			"farm/gm_flatgrass.png",
+			"farm/grass lands.png",
+			"farm/orangey hills.png",
+			"farm/sign.png"
+		]
+	}
+}

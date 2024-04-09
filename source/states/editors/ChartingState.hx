@@ -1515,10 +1515,7 @@ class ChartingState extends MusicBeatState {
 				if (FlxG.mouse.x > gridBG.x && FlxG.mouse.x < gridBG.x + gridBG.width && FlxG.mouse.y > gridBG.y && FlxG.mouse.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom]) {
 					FlxG.log.add('added note');
 					addNote();
-					if (check_stackActive.checked) {
-						var addCount:Int = Math.floor(stepperStackNum.value) * Math.floor(stepperStackOffset.value) - 1;
-						for(_ in 0...Std.int(addCount)) addNote(curSelectedNote[0] + (_song.notes[curSec].changeBPM ? 15000 / _song.notes[curSec].bpm : 15000 / _song.bpm) / stepperStackOffset.value, curSelectedNote[1] + (Math.floor(stepperStackSideOffset.value) % EK.keys(_song.mania)), currentType);
-					}
+					if (check_stackActive.checked) for(_ in 0...Math.floor(stepperStackNum.value * stepperStackOffset.value - 1)) addNote(curSelectedNote[0] + (15000 / Conductor.bpm) / stepperStackOffset.value, curSelectedNote[1] + Math.floor(stepperStackSideOffset.value), currentType);
 				}
 			}
 		}

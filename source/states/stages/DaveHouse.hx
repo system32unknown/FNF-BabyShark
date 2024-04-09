@@ -2,14 +2,13 @@ package states.stages;
 
 class DaveHouse extends BaseStage {
     override function create() {
-        var variousMode:String = 'day'; // Day
+        var variousMode:String = 'day';
         if (PlayState.curStage.endsWith('-night')) variousMode = 'night';
         else if (PlayState.curStage.endsWith('-sunset')) variousMode = 'sunset';
 
         var assetType:String = (variousMode == 'day' || variousMode == 'sunset' ? '' : 'night/');
 
-        var bg:BGSprite;
-		add(bg = new BGSprite('house/skys/$variousMode', -600, -300, .6, .6));
+		add(new BGSprite('skys/$variousMode', -600, -300, .6, .6));
 
         var hills:BGSprite;
         add(hills = new BGSprite('house/${assetType}hills', -834, -159, .7, .7));

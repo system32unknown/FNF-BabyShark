@@ -355,6 +355,7 @@ class PlayState extends MusicBeatState {
 			case 'mall': new states.stages.Mall(); //Week 5
 			case 'school': new states.stages.School(); //Week 6 (placeholder)
 			case 'davehouse' | 'davehouse-night' | 'davehouse-sunset': new states.stages.DaveHouse(); //Week Dave
+			case 'bambifarm' | 'bambifarm-night' | 'bambifarm-sunset': new states.stages.BambiFarm(); //Week Bambi
 		}
 
 		add(gfGroup);

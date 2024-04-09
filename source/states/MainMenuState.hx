@@ -24,7 +24,6 @@ class MainMenuState extends MusicBeatState {
 		'credits'
 	];
 
-
 	var rightOption:String = 'options';
 
 	var magenta:FlxSprite;
