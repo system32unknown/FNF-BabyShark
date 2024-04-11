@@ -12,7 +12,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 	var sectionImageMap:Map<String, FlxGraphic> = new Map<String, FlxGraphic>();
 
 	var sectionSpr:FlxSprite;
-	var sectionTxt:FlxText;
+	var sectionTxt:Alphabet;
 
 	var grid:flixel.addons.display.FlxBackdrop;
 	var bg:FlxSprite;
@@ -63,23 +63,19 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		sectionSpr = new FlxSprite(sectionImageMap.get(daSection.toLowerCase()));
 		sectionSpr.antialiasing = ClientPrefs.data.antialiasing;
 		sectionSpr.scrollFactor.set();
-		sectionSpr.screenCenter().y -= 200;
+		sectionSpr.screenCenter();
 		sectionSpr.alpha = 0;
 		add(sectionSpr);
 
-		sectionTxt = new FlxText(0, 420, 0, "", 32);
-		sectionTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
-		sectionTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
-		sectionTxt.scrollFactor.set();
-		sectionTxt.screenCenter(X);
-		sectionTxt.alpha = 0;
+		sectionTxt = new Alphabet(0, 0, daSection.toUpperCase());
+		sectionTxt.screenCenter(X).y = sectionSpr.y;
 		add(sectionTxt);
 
 		transitioning = true;
-		FlxTween.tween(bg, {alpha: 1}, 1, {ease: FlxEase.expoOut, onComplete: (_:FlxTween) -> transitioning = false});
+		FlxTween.tween(bg, {alpha: 1}, 1, {ease: FlxEase.expoOut});
 		FlxTween.tween(grid, {alpha: 1}, 1, {ease: FlxEase.expoOut});
-		FlxTween.tween(sectionSpr, {alpha: 1, y: sectionSpr.y + 200}, 1, {ease: FlxEase.expoOut});
-		FlxTween.tween(sectionTxt, {alpha: 1, y: sectionTxt.y + 200}, 1, {ease: FlxEase.expoOut});
+		FlxTween.tween(sectionSpr, {alpha: 1}, 1, {ease: FlxEase.expoOut});
+		FlxTween.tween(sectionTxt, {alpha: 1}, 1, {ease: FlxEase.expoOut, onComplete: (_:FlxTween) -> transitioning = false});
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Selecting a Freeplay Section", '${sectionArray.length} Sections'); #end
 	}
 
@@ -91,35 +87,32 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		if (controls.BACK && !transitioning) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			transitioning = true;
-			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(grid, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(sectionTxt, {alpha: 0, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y - 200}, .5, {ease: FlxEase.expoInOut,
-				onComplete: (tween:FlxTween) -> {
-					daSection = states.FreeplayState.section;
-					close();
-				}
+			closeFreeplaysection((_:FlxTween) -> {
+				daSection = states.FreeplayState.section;
+				close();
 			});
 		}
 
 		if (controls.ACCEPT && !transitioning) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
-			FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(grid, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(sectionTxt, {alpha: 0, y: sectionTxt.y - 200}, .5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y - 200}, .5, {ease: FlxEase.expoInOut,
-				onComplete: (tween:FlxTween) -> {
-					close();
-					FlxG.resetState();
-				}
+			closeFreeplaysection((_:FlxTween) -> {
+				close();
+				FlxG.resetState();
 			});
 		}
 
 		sectionTxt.text = daSection.toUpperCase();
-		sectionTxt.screenCenter(X);
+		sectionTxt.screenCenter(X).y = sectionSpr.y;
 		
 		super.update(elapsed);
+	}
+
+	function closeFreeplaysection(func:FlxTween->Void) {
+		FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
+		FlxTween.tween(grid, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
+		FlxTween.tween(sectionTxt, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
+		FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y + 200}, .5, {ease: FlxEase.expoInOut, onComplete: func});
 	}
 
 	function changeSection(change:Int = 0) {
