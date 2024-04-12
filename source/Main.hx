@@ -1,6 +1,7 @@
 package;
 
 import openfl.display.Sprite;
+import flixel.FlxGame;
 import flixel.input.keyboard.FlxKey;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
@@ -21,13 +22,11 @@ class Main extends Sprite {
 	};
 
 	public static var fpsVar:FPSCounter;
-	public static var colorFilter:backend.ColorBlindness;
 
 	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
-	public static var time:Int = 0;
 	public function new() {
 		super();
 		#if windows @:functionCode('#include <windows.h> SetProcessDPIAware();') #end
@@ -35,9 +34,6 @@ class Main extends Sprite {
 	}
 
 	#if (target.threaded && sys) public static var threadPool:ElasticThreadPool; #end
-
-	@:allow(Init)
-	static function getTimer():Int return time = openfl.Lib.getTimer();
 
 	function setupGame():Void {
 		debug.Logs.init();

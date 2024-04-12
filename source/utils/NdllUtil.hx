@@ -1,7 +1,5 @@
 package utils;
 
-#if !MODS_ALLOWED import lime.utils.Assets; #end
-
 /**
  * Small util that allows you to load any function from ndlls via `getFunction`.
  *
@@ -50,7 +48,7 @@ class NdllUtil {
 	 */
 	public static function getFunctionFromPath(ndll:String, name:String, args:Int):Dynamic {
 		#if NDLLS_SUPPORTED
-		if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(ndll)) {
+		if (!#if MODS_ALLOWED FileSystem #else lime.utils.Assets #end.exists(ndll)) {
 			Logs.trace('Couldn\'t find ndll at ${ndll}.', WARNING);
 			return noop;
 		}

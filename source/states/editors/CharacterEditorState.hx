@@ -915,12 +915,12 @@ class CharacterEditorState extends MusicBeatState {
 		cameraFollowPointer.setPosition(offX, offY);
 		mid.put();
 
-		final midcam:FlxPoint = cameraFollowPointer.getMidpoint();
 		if(snap) {
+			final midcam:FlxPoint = cameraFollowPointer.getMidpoint();
 			FlxG.camera.scroll.x = midcam.x - FlxG.width / 2;
 			FlxG.camera.scroll.y = midcam.y - FlxG.height / 2;
+			midcam.put();
 		}
-		midcam.put();
 	}
 
 	inline function updateHealthBar() {

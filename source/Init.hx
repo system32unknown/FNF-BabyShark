@@ -10,7 +10,6 @@ class Init extends flixel.FlxState {
 		FlxTransitionableState.skipNextTransOut = true;
 		Paths.clearStoredMemory();
 
-		@:privateAccess FlxG.game.getTimer = Main.getTimer;
 		utils.FunkinCache.init();
 		#if VIDEOS_ALLOWED hxvlc.util.Handle.init(); #end
 
@@ -21,7 +20,6 @@ class Init extends flixel.FlxState {
 
 		ClientPrefs.loadPrefs();
 		Language.reloadPhrases();
-		backend.ColorBlindness.setFilter();
 
 		FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 60;

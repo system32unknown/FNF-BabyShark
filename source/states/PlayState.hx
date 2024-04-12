@@ -1463,7 +1463,7 @@ class PlayState extends MusicBeatState {
 						boyfriend.dance();
 				}
 				
-				if(notes.length > 0) {
+				if(notes.length != 0) {
 					if(startedCountdown) renderNotes();
 					else notes.forEachAlive((daNote:Note) -> {daNote.canBeHit = false; daNote.wasGoodHit = false;});
 				}
@@ -2210,11 +2210,9 @@ class PlayState extends MusicBeatState {
 	}
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
-		if (daNote.hasMissed) return;
+		if (daNote.hasMissed || daNote.animation.curAnim.name.endsWith("end")) return;
 		daNote.hasMissed = true;
 		daNote.active = false;
-
-		notes.forEachAlive((note:Note) -> if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) invalidateNote(note));
 
 		noteMissCommon(daNote.noteData, daNote);
 		var result:Dynamic = callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);

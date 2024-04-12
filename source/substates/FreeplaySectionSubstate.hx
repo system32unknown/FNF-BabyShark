@@ -69,6 +69,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 
 		sectionTxt = new Alphabet(0, 0, daSection.toUpperCase());
 		sectionTxt.screenCenter(X).y = sectionSpr.y;
+		sectionTxt.alpha = 0;
 		add(sectionTxt);
 
 		transitioning = true;
