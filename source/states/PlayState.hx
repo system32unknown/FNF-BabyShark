@@ -1459,7 +1459,7 @@ class PlayState extends MusicBeatState {
 				var anim:String = boyfriend.getAnimationName();
 				if (!boyfriend.stunned && !boyfriend.isAnimationNull() && (cpuControlled || !keysPressed.contains(true) || endingSong)) {
 					var canDance:Bool = anim.startsWith('sing') && !anim.endsWith('miss');
-					if(!boyfriend.isAnimationNull() && boyfriend.holdTimer > Conductor.stepCrochet * (0.0011 / playbackRate) * boyfriend.singDuration && canDance)
+					if(!boyfriend.isAnimationNull() && boyfriend.holdTimer > Conductor.stepCrochet * (.0011 / playbackRate) * boyfriend.singDuration && canDance)
 						boyfriend.dance();
 				}
 				

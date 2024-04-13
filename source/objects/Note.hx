@@ -273,8 +273,7 @@ class Note extends FlxSprite {
 		var skin:String = texture + postfix;
 		if(texture.length < 1) {
 			skin = PlayState.SONG != null ? PlayState.SONG.arrowSkin : null;
-			if(skin == null || skin.length < 1)
-				skin = defaultNoteSkin + postfix;
+			if(skin == null || skin.length < 1) skin = defaultNoteSkin + postfix;
 		}
 
 		var animName:String = null;
@@ -359,7 +358,7 @@ class Note extends FlxSprite {
 	}
 
 	function attemptToAddAnimationByPrefix(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
-		var animFrames = [];
+		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
 		@:privateAccess
 		animation.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
 		if(animFrames.length < 1) return;

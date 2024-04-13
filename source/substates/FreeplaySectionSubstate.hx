@@ -117,7 +117,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 	}
 
 	function changeSection(change:Int = 0) {
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		FlxG.sound.play(Paths.sound('scrollMenu'));
 		counter = FlxMath.wrap(counter + change, 0, sectionArray.length - 1);
 
 		daSection = sectionArray[counter];

@@ -11,13 +11,7 @@ class Log {
 	public static var level:LogLevel;
 
 	public static function debug(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.DEBUG) {
-			#if js
-			untyped __js__("console").debug("[" + info.className + "] " + message);
-			#else
-			println("[" + info.className + "] " + Std.string(message));
-			#end
-		}
+		if (level >= LogLevel.DEBUG) #if js untyped __js__("console").debug #else println #end('[${info.className}] $message');
 	}
 
 	public static function error(message:Dynamic, ?info:PosInfos):Void {
@@ -76,10 +70,8 @@ class Log {
 		#end
 
 		#if js
-		if (untyped __js__("typeof console") == "undefined")
-			untyped __js__("console = {}");
-		if (untyped __js__("console").log == null)
-			untyped __js__("console").log = function() {};
+		if (untyped __js__("typeof console") == "undefined") untyped __js__("console = {}");
+		if (untyped __js__("console").log == null) untyped __js__("console").log = function() {};
 		#end
 	}
 }

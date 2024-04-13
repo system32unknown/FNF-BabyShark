@@ -25,7 +25,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		loopSoundName = 'gameOver';
 		endSoundName = 'gameOverEnd';
 
-		var _song = PlayState.SONG;
+		var _song:backend.Song.SwagSong = PlayState.SONG;
 		if(_song != null) {
 			if(_song.gameOverChar != null && _song.gameOverChar.trim().length > 0) characterName = _song.gameOverChar;
 			if(_song.gameOverSound != null && _song.gameOverSound.trim().length > 0) deathSoundName = _song.gameOverSound;
@@ -54,9 +54,9 @@ class GameOverSubstate extends MusicBeatSubstate {
 		boyfriend.y += boyfriend.positionArray[1];
 		add(boyfriend);
 
-		var anim = boyfriend.animation.getByName('firstDeath');
+		var anim:flixel.animation.FlxAnimation = boyfriend.animation.getByName('firstDeath');
 		boyfriend.playAnim('firstDeath');
-		boyfriend.animation.frameIndex = anim.frames[0];
+		if (anim != null) boyfriend.animation.frameIndex = anim.frames[0];
 
 		camOther = PlayState.instance.camOther;
 		camHUD = PlayState.instance.camHUD;
@@ -82,9 +82,9 @@ class GameOverSubstate extends MusicBeatSubstate {
 		camFollow = new FlxObject(0, 0, 1, 1);
 		final mid:FlxPoint = boyfriend.getGraphicMidpoint();
 		camFollow.setPosition(mid.x + boyfriend.cameraPosition[0], mid.y + boyfriend.cameraPosition[1]);
+		mid.put();
 		FlxG.camera.focusOn(FlxPoint.get(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2)));
 		add(camFollow);
-		mid.put();
 
 		PlayState.instance.setOnScripts('inGameOver', true);
 		PlayState.instance.callOnScripts('onGameOverStart');

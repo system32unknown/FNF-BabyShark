@@ -140,7 +140,7 @@ class StrumNote extends FlxSprite {
 	}
 
 	function attemptToAddAnimationByPrefix(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
-		var animFrames = [];
+		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
 		@:privateAccess
 		animation.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
 		if(animFrames.length < 1) return;
