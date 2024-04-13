@@ -17,7 +17,6 @@ class FPSCounter extends openfl.text.TextField {
 	public function new(x:Float = 0, y:Float = 0) {
 		super();
 		if (instance == null) instance = this;
-		else throw "Cannot create another instance.";
 
 		this.x = x;
 		this.y = y;

@@ -48,7 +48,7 @@ class Rating {
 		return ratingsData;
 	}
 
-	public static function GenerateLetterRank(accuracy:Float) { // generate a letter rankings
+	public static function GenerateLetterRank(accuracy:Float):String { // generate a letter rankings
 		var ranking:String = "N/A";
 		final wifeConditions:Array<Dynamic> = [
 			[accuracy >= 99.9935, "P"],

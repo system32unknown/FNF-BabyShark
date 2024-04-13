@@ -67,7 +67,7 @@ class CoolUtil {
 	}
 
 	public static function removeDupString(string:Array<String>):Array<String> {
-		var tempArray:Array<String> = new Array<String>();
+		var tempArray:Array<String> = [];
 		var lastSeen:String = '';
 		string.sort((a:String, b:String) -> return (a == b) ? 0 : (a > b) ? 1 : -1);
 		for (str in string) {

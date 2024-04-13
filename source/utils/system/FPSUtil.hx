@@ -8,9 +8,9 @@ class FPSUtil {
 	public var curFPS(default, null):Float;
 	public var fpsInterval:Float;
 
-    public function new() {
+    public function new(fpsInterval:Float = 1000) {
 		totalFPS = curFPS = curCount = 0;
-		fpsInterval = 1000;
+		this.fpsInterval = fpsInterval;
 		times = [];
 	}
 

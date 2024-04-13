@@ -11,7 +11,7 @@ class Subtitle extends flixel.addons.text.FlxTypeText {
         
         setFormat(Paths.font(properties.fonts), properties.subtitleSize, FlxColor.WHITE, CENTER);
         setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-        antialiasing = true;
+        antialiasing = ClientPrefs.data.antialiasing;
 
         if (properties.centerScreen) screenCenter(properties.screenCenter);
         start(properties.typeSpeed, false, false, [], () -> FlxTimer.wait(showTime, () -> FlxTween.tween(this, {alpha: 0}, .5, {onComplete: (tween:FlxTween) -> finish()})));

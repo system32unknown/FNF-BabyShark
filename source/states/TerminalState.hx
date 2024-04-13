@@ -10,7 +10,7 @@ class TerminalState extends MusicBeatState {
 	var displayText:FlxText;
 	var adminUnlocked:Bool = false;
 
-	var cmdList:Array<TerminalCommand> = new Array<TerminalCommand>();
+	var cmdList:Array<TerminalCommand> = [];
 	var typeSound:FlxSound;
 
 	// [BAD PERSON] was too lazy to finish this lol.
