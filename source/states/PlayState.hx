@@ -2009,9 +2009,8 @@ class PlayState extends MusicBeatState {
 			if (isPixelStage) uiPostfix = '-pixel';
 			antialias = !isPixelStage;
 		}
-	
-		var comboOffset:Array<Array<Int>> = ClientPrefs.data.comboOffset;
 
+		var comboOffset:Array<Array<Int>> = ClientPrefs.data.comboOffset;
 		var rating:FlxSprite = null;
 		if (showRating) {
 			rating = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/${daRating.image}' + uiPostfix));
@@ -2028,7 +2027,7 @@ class PlayState extends MusicBeatState {
 			comboGroup.add(rating);
 			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
-	
+
 		var comboSpr:FlxSprite = null;
 		if (showCombo && combo >= 10) {
 			comboSpr = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/combo' + uiPostfix));
@@ -2059,7 +2058,7 @@ class PlayState extends MusicBeatState {
 			mstimingTxt.ID = comboGroup.ID++;
 			comboGroup.add(mstimingTxt);
 		}
-	
+
 		if (showComboNum) {
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
 			var daLoop:Int = 0;
@@ -2203,7 +2202,8 @@ class PlayState extends MusicBeatState {
 	}
 
 	function opponentnoteMiss(daNote:Note):Void {
-		notes.forEachAlive((note:Note) -> if (daNote != note && !daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) invalidateNote(note));
+		if (daNote.hasMissed || daNote.animation.curAnim.name.endsWith("end")) return;
+		daNote.hasMissed = true; daNote.active = false;
 
 		var result:Dynamic = callOnLuas('opponentnoteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentnoteMiss', [daNote]);
@@ -2211,8 +2211,7 @@ class PlayState extends MusicBeatState {
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		if (daNote.hasMissed || daNote.animation.curAnim.name.endsWith("end")) return;
-		daNote.hasMissed = true;
-		daNote.active = false;
+		daNote.hasMissed = true; daNote.active = false;
 
 		noteMissCommon(daNote.noteData, daNote);
 		var result:Dynamic = callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);

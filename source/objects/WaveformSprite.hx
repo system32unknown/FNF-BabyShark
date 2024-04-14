@@ -45,6 +45,7 @@ class WaveformSprite extends FlxSprite {
         if (!valid) return;
         startPos -= startPos % buffer.bitsPerSample;
         endPos -= endPos % buffer.bitsPerSample;
+
         pixels.lock();
         pixels.fillRect(new Rectangle(0, 0, pixels.width, pixels.height), 0); 
         var diff:Int = endPos - startPos;
@@ -59,6 +60,7 @@ class WaveformSprite extends FlxSprite {
                 if (thing > 256 * 128) thing -= 256 * 256;
                 if (max < thing) max = thing;
             }
+
             var thing:Int = max;
             var w:Float = thing / peak * pixels.width;
             pixels.fillRect(new Rectangle((pixels.width / 2) - (w / 2), y, w, 1), FlxColor.WHITE);
