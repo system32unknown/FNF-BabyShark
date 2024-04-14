@@ -1450,8 +1450,7 @@ class PlayState extends MusicBeatState {
 
 				var anim:String = boyfriend.getAnimationName();
 				if (!boyfriend.stunned && !boyfriend.isAnimationNull() && (cpuControlled || !keysPressed.contains(true) || endingSong)) {
-					var canDance:Bool = anim.startsWith('sing') && !anim.endsWith('miss');
-					if(!boyfriend.isAnimationNull() && boyfriend.holdTimer > Conductor.stepCrochet * (.0011 / playbackRate) * boyfriend.singDuration && canDance)
+					if(!boyfriend.isAnimationNull() && boyfriend.holdTimer > Conductor.stepCrochet * (.0011 / playbackRate) * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss'))
 						boyfriend.dance();
 				}
 				
@@ -2109,7 +2108,7 @@ class PlayState extends MusicBeatState {
 						if (daNote.canBeHit) {
 							if (daNote.noteData == key) sortedNotesList.push(daNote);
 							canMiss = canMiss ? true : ClientPrefs.data.antiMash;
-						} else if (daNote.isSustainNote && daNote.noteData == key && ((daNote.wasGoodHit || daNote.prevNote.wasGoodHit) && (daNote.parent != null && !daNote.parent.hasMissed && daNote.parent.wasGoodHit)))
+						} else if (daNote.isSustainNote && daNote.noteData == key && ((daNote.wasGoodHit || daNote.prevNote.wasGoodHit) && (daNote.parent != null && daNote.parent.wasGoodHit)))
 							sortedNotesList.push(daNote);
 					}
 				}
@@ -2194,16 +2193,14 @@ class PlayState extends MusicBeatState {
 	}
 
 	function opponentnoteMiss(daNote:Note):Void {
-		if (daNote.hasMissed || daNote.animation.curAnim.name.endsWith("end")) return;
-		daNote.hasMissed = true;
+		if (daNote.animation.curAnim.name.endsWith("end")) return;
 
 		var result:Dynamic = callOnLuas('opponentnoteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentnoteMiss', [daNote]);
 	}
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
-		if (daNote.hasMissed || daNote.animation.curAnim.name.endsWith("end")) return;
-		daNote.hasMissed = true;
+		if (daNote.animation.curAnim.name.endsWith("end")) return;
 
 		noteMissCommon(daNote.noteData, daNote);
 		var result:Dynamic = callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
