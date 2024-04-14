@@ -827,14 +827,8 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function updateLuaDefaultPos() {
-		for (i in 0...playerStrums.length) {
-			setOnScripts('defaultPlayerStrumX' + i, playerStrums.members[i].x);
-			setOnScripts('defaultPlayerStrumY' + i, playerStrums.members[i].y);
-		}
-		for (i in 0...opponentStrums.length) {
-			setOnScripts('defaultOpponentStrumX' + i, opponentStrums.members[i].x);
-			setOnScripts('defaultOpponentStrumY' + i, opponentStrums.members[i].y);
-		}
+		for (i in 0...playerStrums.length) {setOnScripts('defaultPlayerStrumX$i', playerStrums.members[i].x); setOnScripts('defaultPlayerStrumY$i', playerStrums.members[i].y);}
+		for (i in 0...opponentStrums.length) {setOnScripts('defaultOpponentStrumX$i', opponentStrums.members[i].x); setOnScripts('defaultOpponentStrumY$i', opponentStrums.members[i].y);}
 	}
 
 	public function startCountdown() {
@@ -2203,7 +2197,7 @@ class PlayState extends MusicBeatState {
 
 	function opponentnoteMiss(daNote:Note):Void {
 		if (daNote.hasMissed || daNote.animation.curAnim.name.endsWith("end")) return;
-		daNote.hasMissed = true; daNote.active = false;
+		daNote.hasMissed = true;
 
 		var result:Dynamic = callOnLuas('opponentnoteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentnoteMiss', [daNote]);
@@ -2211,7 +2205,7 @@ class PlayState extends MusicBeatState {
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		if (daNote.hasMissed || daNote.animation.curAnim.name.endsWith("end")) return;
-		daNote.hasMissed = true; daNote.active = false;
+		daNote.hasMissed = true;
 
 		noteMissCommon(daNote.noteData, daNote);
 		var result:Dynamic = callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
@@ -2226,6 +2220,7 @@ class PlayState extends MusicBeatState {
 		if(instakillOnMiss) doDeathCheck(true);
 		if(combo > maxCombo) maxCombo = combo;
 
+		songScore -= 10;
 		if(!endingSong) songMisses++;
 		totalPlayed++;
 		RecalculateRating(true);
@@ -2234,9 +2229,9 @@ class PlayState extends MusicBeatState {
 		if((note != null && note.gfNote) || (SONG.notes[curSection] != null && SONG.notes[curSection].gfSection)) char = gf;
 		
 		if(char != null && (note == null || !note.noMissAnimation) && char.hasMissAnimations) {
-			var suffix:String = '';
-			if(note != null) suffix = note.animSuffix;
-			char.playAnim(singAnimations[EK.gfxHud[mania][Std.int(Math.abs(direction))]] + 'miss$suffix', true);
+			var postfix:String = '';
+			if(note != null) postfix = note.animSuffix;
+			char.playAnim(singAnimations[EK.gfxHud[mania][Std.int(Math.abs(direction))]] + 'miss$postfix', true);
 			if(char != gf && combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
 				gf.playAnim('sad');
 				gf.specialAnim = true;
@@ -2293,7 +2288,7 @@ class PlayState extends MusicBeatState {
 
 		var result:Dynamic = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHit', [note]);
-		if (!isSus) invalidateNote(note);
+		if(!isSus) invalidateNote(note);
 	}
 
 	function moveCamOnNote(singArrows:String) {
