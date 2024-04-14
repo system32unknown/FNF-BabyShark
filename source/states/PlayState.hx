@@ -241,7 +241,6 @@ class PlayState extends MusicBeatState {
 	var downScroll:Bool = ClientPrefs.data.downScroll;
 	var middleScroll:Bool = ClientPrefs.data.middleScroll;
 	var hideHud:Bool = ClientPrefs.data.hideHud;
-	var healthBarAlpha:Float = ClientPrefs.data.healthBarAlpha;
 	var timeType:String = ClientPrefs.data.timeBarType; 
 
 	// Callbacks for stages
@@ -472,7 +471,7 @@ class PlayState extends MusicBeatState {
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
 		healthBar.visible = !hideHud;
-		healthBar.alpha = healthBarAlpha;
+		healthBar.alpha = ClientPrefs.data.healthBarAlpha;
 		reloadHealthBarColors();
 		if (!instakillOnMiss) uiGroup.add(healthBar);
 
@@ -481,7 +480,7 @@ class PlayState extends MusicBeatState {
 		for(icon in [iconP1, iconP2]) {
 			icon.y = healthBar.y - (icon.height / 2);
 			icon.visible = !hideHud;
-			icon.alpha = healthBarAlpha;
+			icon.alpha = ClientPrefs.data.healthBarAlpha;
 			if (ClientPrefs.data.healthTypes == 'Psych') icon.iconType = 'psych';
 			if (!instakillOnMiss) uiGroup.add(icon);
 		}
@@ -1042,8 +1041,7 @@ class PlayState extends MusicBeatState {
 		FlxG.sound.defaultMusicGroup.add(vocals);
 		FlxG.sound.list.add(vocals);
 
-		notes = new NoteGroup();
-		noteGroup.add(notes);
+		noteGroup.add(notes = new NoteGroup());
 
 		var file:String = Paths.json('${Paths.CHART_PATH}/$songName/events');
 		if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson('${Paths.CHART_PATH}/$songName/events')) || FileSystem.exists(file) #else Assets.exists(file) #end)
