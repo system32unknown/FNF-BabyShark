@@ -11,6 +11,9 @@ import objects.Character;
 import objects.HealthIcon;
 import objects.Bar;
 
+@:bitmap("assets/images/debugger/cursorCross.png")
+class EditorPointer extends openfl.display.BitmapData {}
+
 class CharacterEditorState extends MusicBeatState {
 	var character:Character;
 	var ghost:FlxSprite;
@@ -88,7 +91,7 @@ class CharacterEditorState extends MusicBeatState {
 
 		addCharacter();
 
-		cameraFollowPointer = new FlxSprite(flixel.graphics.FlxGraphic.fromClass(flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross));
+		cameraFollowPointer = new FlxSprite(flixel.graphics.FlxGraphic.fromClass(EditorPointer));
 		cameraFollowPointer.setGraphicSize(40, 40);
 		cameraFollowPointer.updateHitbox();
 		add(cameraFollowPointer);
