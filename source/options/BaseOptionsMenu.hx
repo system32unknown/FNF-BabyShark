@@ -306,7 +306,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		bindingText2.destroy();
 		remove(bindingText2);
-		ClientPrefs.toggleVolumeKeys(true);
+		ClientPrefs.toggleVolumeKeys();
 	}
 
 	function updateTextFrom(option:Option) {

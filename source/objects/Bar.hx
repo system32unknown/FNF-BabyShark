@@ -61,8 +61,6 @@ class Bar extends FlxSpriteGroup {
 	override public function destroy() {
 		bounds = null;
 		barOffset = FlxDestroyUtil.put(barOffset);
-		if (leftBar.clipRect != null) leftBar.clipRect = FlxDestroyUtil.put(leftBar.clipRect);
-		if (rightBar.clipRect != null) rightBar.clipRect = FlxDestroyUtil.put(rightBar.clipRect);
 		super.destroy();
 	}
 

@@ -530,7 +530,7 @@ class ChartingState extends MusicBeatState {
 		stepperMania.name = 'song_mania';
 		blockPressWhileTypingOnStepper.push(stepperMania);
 
-		var tab_group_song = new FlxUI(null, UI_box);
+		var tab_group_song:FlxUI = new FlxUI(null, UI_box);
 		tab_group_song.name = "Song";
 		tab_group_song.add(UI_songTitle);
 
@@ -579,7 +579,7 @@ class ChartingState extends MusicBeatState {
 	var notesCopied:Array<Dynamic>;
 
 	function addSectionUI():Void {
-		var tab_group_section = new FlxUI(null, UI_box);
+		var tab_group_section:FlxUI = new FlxUI(null, UI_box);
 		tab_group_section.name = 'Section';
 
 		check_mustHitSection = new FlxUICheckBox(10, 15, null, null, "Must hit section", 100);
@@ -835,7 +835,7 @@ class ChartingState extends MusicBeatState {
 	var stepperStackSideOffset:FlxUINumericStepper;
 
 	function addNoteUI():Void {
-		var tab_group_note = new FlxUI(null, UI_box);
+		var tab_group_note:FlxUI = new FlxUI(null, UI_box);
 		tab_group_note.name = 'Note';
 
 		stepperSusLength = new FlxUINumericStepper(10, 25, Conductor.stepCrochet / 2, 0, 0, Conductor.stepCrochet * 64);
@@ -951,7 +951,7 @@ class ChartingState extends MusicBeatState {
 	var descText:FlxText;
 	var selectedEventText:FlxText;
 	function addEventsUI():Void {
-		var tab_group_event = new FlxUI(null, UI_box);
+		var tab_group_event:FlxUI = new FlxUI(null, UI_box);
 		tab_group_event.name = 'Events';
 
 		#if LUA_ALLOWED
@@ -1099,7 +1099,7 @@ class ChartingState extends MusicBeatState {
 	var instVolume:FlxUINumericStepper;
 	var voicesVolume:FlxUINumericStepper;
 	function addChartingUI() {
-		var tab_group_chart = new FlxUI(null, UI_box);
+		var tab_group_chart:FlxUI = new FlxUI(null, UI_box);
 		tab_group_chart.name = 'Charting';
 
 		#if desktop
@@ -1237,10 +1237,10 @@ class ChartingState extends MusicBeatState {
 	var noteSkinInputText:FlxUIInputText;
 	var noteSplashesInputText:FlxUIInputText;
 	function addDataUI() {
-		var tab_group_data = new FlxUI(null, UI_box);
+		var tab_group_data:FlxUI = new FlxUI(null, UI_box);
 		tab_group_data.name = 'Data';
 
-		var skin = [PlayState.SONG.arrowSkin, PlayState.SONG.splashSkin];
+		var skin:Array<Null<String>> = [PlayState.SONG.arrowSkin, PlayState.SONG.splashSkin];
 		if(skin[0] == null || skin[0].length < 1) skin[0] = 'NOTE_assets';
 		if(skin[1] == null || skin[1].length < 1) skin[1] = 'noteSplashes';
 
@@ -1435,8 +1435,7 @@ class ChartingState extends MusicBeatState {
 		var daPos:Float = 0;
 		for (i in 0...curSec + add) {
 			if(_song.notes[i] != null) {
-				if (_song.notes[i].changeBPM)
-					daBPM = _song.notes[i].bpm;
+				if (_song.notes[i].changeBPM) daBPM = _song.notes[i].bpm;
 				daPos += getSectionBeats(i) * (1000 * 60 / daBPM);
 			}
 		}
@@ -1542,7 +1541,7 @@ class ChartingState extends MusicBeatState {
 		}
 
 		if(!blockInput) {
-			ClientPrefs.toggleVolumeKeys(true);
+			ClientPrefs.toggleVolumeKeys();
 			for (dropDownMenu in blockPressWhileScrolling) {
 				if(dropDownMenu.dropPanel.visible) {
 					blockInput = true;

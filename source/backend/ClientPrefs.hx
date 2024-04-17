@@ -240,7 +240,7 @@ class ClientPrefs {
 		Main.muteKeys = keyBinds.get('volume_mute').copy();
 		Main.volumeDownKeys = keyBinds.get('volume_down').copy();
 		Main.volumeUpKeys = keyBinds.get('volume_up').copy();
-		toggleVolumeKeys(true);
+		toggleVolumeKeys();
 	}
 	public static function toggleVolumeKeys(turnOn:Bool = true) {
 		FlxG.sound.muteKeys = turnOn ? Main.muteKeys : [];

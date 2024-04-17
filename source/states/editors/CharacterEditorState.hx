@@ -175,7 +175,7 @@ class CharacterEditorState extends MusicBeatState {
 		helpBg.active = helpBg.visible = false;
 		add(helpBg);
 
-		var arr = str.split('\n');
+		var arr:Array<String> = str.split('\n');
 		helpTexts = new FlxSpriteGroup();
 		helpTexts.camera = camHUD;
 		for (i in 0...arr.length) {
@@ -204,7 +204,7 @@ class CharacterEditorState extends MusicBeatState {
 			character.destroy();
 		}
 
-		var isPlayer = (reload ? character.isPlayer : !predictCharacterIsNotPlayer(_char));
+		var isPlayer:Bool = (reload ? character.isPlayer : !predictCharacterIsNotPlayer(_char));
 		character = new Character(0, 0, _char, isPlayer);
 		if(!reload && character.editorIsPlayer != null && isPlayer != character.editorIsPlayer) {
 			character.isPlayer = !character.isPlayer;
@@ -307,7 +307,7 @@ class CharacterEditorState extends MusicBeatState {
 
 		var highlightGhost:FlxUICheckBox = new FlxUICheckBox(20 + makeGhostButton.x + makeGhostButton.width, makeGhostButton.y, null, null, "Highlight Ghost", 100);
 		highlightGhost.callback = function() {
-			var value = highlightGhost.checked ? 125 : 0;
+			var value:Int = highlightGhost.checked ? 125 : 0;
 			ghost.colorTransform.redOffset = value;
 			ghost.colorTransform.greenOffset = value;
 			ghost.colorTransform.blueOffset = value;
@@ -725,7 +725,7 @@ class CharacterEditorState extends MusicBeatState {
 			ClientPrefs.toggleVolumeKeys(false);
 			return;
 		}
-		ClientPrefs.toggleVolumeKeys(true);
+		ClientPrefs.toggleVolumeKeys();
 
 		var shiftMult:Float = 1;
 		var ctrlMult:Float = 1;

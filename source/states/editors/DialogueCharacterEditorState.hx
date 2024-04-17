@@ -119,7 +119,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		add(offsetIdleText);
 		offsetIdleText.visible = false;
 
-		animText = new FlxText(10, 22, FlxG.width - 20, '', 8);
+		animText = new FlxText(10, 22, FlxG.width - 20, '', 24);
 		animText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		animText.scrollFactor.set();
 		animText.camera = camHUD;
@@ -460,7 +460,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		}
 
 		if(!blockInput && !animationDropDown.dropPanel.visible) {
-			ClientPrefs.toggleVolumeKeys(true);
+			ClientPrefs.toggleVolumeKeys();
 			if(FlxG.keys.justPressed.SPACE && UI_mainbox.selected_tab_id == 'Character') {
 				character.playAnim(character.jsonFile.animations[curAnim].anim);
 				daText.resetDialogue();

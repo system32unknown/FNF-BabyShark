@@ -226,7 +226,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		}
 
 		if(!blockInput) {
-			ClientPrefs.toggleVolumeKeys(true);
+			ClientPrefs.toggleVolumeKeys();
 
 			if(FlxG.keys.justPressed.ESCAPE) {
 				FlxG.switchState(() -> new MasterEditorMenu());
@@ -345,7 +345,7 @@ class MenuCharacterEditorState extends MusicBeatState
 			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data, characterName + ".json");
+			_file.save(data, '$characterName.json');
 		}
 	}
 

@@ -58,7 +58,7 @@ class NoteSplashDebugState extends MusicBeatState {
 					try {
 						loadFrames();
 					} catch(e:Dynamic) {
-						trace('ERROR! $e');
+						trace('ERROR! $e', ERROR);
 						textureName = defaultTexture;
 						loadFrames();
 

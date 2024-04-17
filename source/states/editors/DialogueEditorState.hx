@@ -13,8 +13,7 @@ import objects.TypedAlphabet;
 import cutscenes.DialogueBoxPsych;
 import cutscenes.DialogueCharacter;
 
-class DialogueEditorState extends MusicBeatState
-{
+class DialogueEditorState extends MusicBeatState {
 	var character:DialogueCharacter;
 	var box:FlxSprite;
 	var daText:TypedAlphabet;
@@ -57,24 +56,24 @@ class DialogueEditorState extends MusicBeatState
 		box.animation.addByPrefix('center', 'speech bubble middle', 24);
 		box.animation.addByPrefix('center-angry', 'AHH Speech Bubble middle', 24);
 		box.animation.play('normal', true);
-		box.setGraphicSize(Std.int(box.width * 0.9));
+		box.setGraphicSize(Std.int(box.width * .9));
 		box.updateHitbox();
 		add(box);
 
 		addEditorBox();
 		FlxG.mouse.visible = true;
 
-		var addLineText:FlxText = new FlxText(10, 10, FlxG.width - 20, 'Press O to remove the current dialogue line, Press P to add another line after the current one.', 8);
+		var addLineText:FlxText = new FlxText(10, 10, FlxG.width - 20, 'Press O to remove the current dialogue line, Press P to add another line after the current one.', 24);
 		addLineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		addLineText.scrollFactor.set();
 		add(addLineText);
 
-		selectedText = new FlxText(10, 32, FlxG.width - 20, '', 8);
+		selectedText = new FlxText(10, 32, FlxG.width - 20, '', 24);
 		selectedText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		selectedText.scrollFactor.set();
 		add(selectedText);
 
-		animText = new FlxText(10, 62, FlxG.width - 20, '', 8);
+		animText = new FlxText(10, 62, FlxG.width - 20, '', 24);
 		animText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		animText.scrollFactor.set();
 		add(animText);
@@ -295,10 +294,8 @@ class DialogueEditorState extends MusicBeatState
 		}
 
 		if(!blockInput) {
-			ClientPrefs.toggleVolumeKeys(true);
-			if(FlxG.keys.justPressed.SPACE) {
-				reloadText(false);
-			}
+			ClientPrefs.toggleVolumeKeys();
+			if(FlxG.keys.justPressed.SPACE) reloadText(false);
 			if(FlxG.keys.justPressed.ESCAPE) {
 				FlxG.switchState(() -> new MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));

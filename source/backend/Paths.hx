@@ -49,7 +49,7 @@ class Paths {
 	];
 
 	public static function decacheSound(key:String) {
-		var obj = currentTrackedSounds.get(key);
+		var obj:Sound = currentTrackedSounds.get(key);
 		currentTrackedSounds.remove(key);
 
 		if (obj == null && OpenFlAssets.cache.hasSound(key)) obj = OpenFlAssets.cache.getSound(key);
@@ -63,7 +63,7 @@ class Paths {
 	}
 
 	public static function decacheGraphic(key:String) @:privateAccess {
-		var obj = currentTrackedAssets.get(key);
+		var obj:FlxGraphic = currentTrackedAssets.get(key);
 		currentTrackedAssets.remove(key);
 		if ((obj == null && (obj = FlxG.bitmap._cache.get(key)) == null) || assetExcluded(obj)) return;
 

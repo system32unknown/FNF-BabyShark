@@ -380,7 +380,7 @@ class WeekEditorState extends MusicBeatState {
 		}
 
 		if(!blockInput) {
-			ClientPrefs.toggleVolumeKeys(true);
+			ClientPrefs.toggleVolumeKeys();
 			if(FlxG.keys.justPressed.ESCAPE) {
 				FlxG.switchState(() -> new MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
@@ -690,7 +690,7 @@ class WeekEditorFreeplayState extends MusicBeatState {
 			ClientPrefs.toggleVolumeKeys(false);
 			if(FlxG.keys.justPressed.ENTER) iconInputText.hasFocus = false;
 		} else {
-			ClientPrefs.toggleVolumeKeys(true);
+			ClientPrefs.toggleVolumeKeys();
 			if(FlxG.keys.justPressed.ESCAPE) {
 				FlxG.switchState(() -> new MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));

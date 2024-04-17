@@ -241,7 +241,7 @@ class NotesSubState extends MusicBeatSubstate {
 		} else if (pointerOverlaps(pasteButton)) {
 			pasteButton.alpha = 1;
 			if(generalPressed) {
-				var formattedText = Clipboard.text.trim().toUpperCase().replace('#', '').replace('0x', '');
+				var formattedText:String = Clipboard.text.trim().toUpperCase().replace('#', '').replace('0x', '');
 				var newColor:Null<FlxColor> = FlxColor.fromString('#' + formattedText);
 				if(newColor != null && formattedText.length == 6) {
 					setShaderColor(newColor);

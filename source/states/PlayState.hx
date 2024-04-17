@@ -1539,8 +1539,7 @@ class PlayState extends MusicBeatState {
 
 	public var isDead:Bool = false; //Don't mess with this on Lua!!!
 	function doDeathCheck(?skipHealthCheck:Bool = false) {
-		final hpBound:Float = (healthBar.bounds != null ? healthBar.bounds.min : 0);
-		if (((skipHealthCheck && instakillOnMiss) || health <= hpBound) && !practiceMode && !isDead) {
+		if (((skipHealthCheck && instakillOnMiss) || health <= (healthBar.bounds != null ? healthBar.bounds.min : 0)) && !practiceMode && !isDead) {
 			var ret:Dynamic = callOnScripts('onGameOver', null, true);
 			if(ret != LuaUtils.Function_Stop) {
 				boyfriend.stunned = true;
@@ -1782,7 +1781,7 @@ class PlayState extends MusicBeatState {
 
 	var lastCharFocus:String;
 	public function moveCameraSection():Void {
-		var section = SONG.notes[curSection];
+		var section:backend.Section.SwagSection = SONG.notes[curSection];
 		if (section == null) return;
 
 		if (gf != null && section.gfSection) {

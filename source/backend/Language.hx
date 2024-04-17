@@ -30,7 +30,7 @@ class Language {
 			n = value.indexOf('"');
 			if(n < 0) continue;
 
-			phrases.set(key, value.substring(n+1, value.lastIndexOf('"')).replace('\\n', '\n'));
+			phrases.set(key, value.substring(n + 1, value.lastIndexOf('"')).replace('\\n', '\n'));
 			hasPhrases = true;
 		}
 

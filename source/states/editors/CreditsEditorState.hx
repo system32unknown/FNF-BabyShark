@@ -368,7 +368,7 @@ class CreditsEditorState extends MusicBeatState {
 		}		
 
 		if(!quitting && !blockInput) {
-			ClientPrefs.toggleVolumeKeys(true);
+			ClientPrefs.toggleVolumeKeys();
 			if(creditsStuff.length > 1) {
 				var shiftMult:Int = 1;
 				if ((FlxG.keys.justPressed.W || FlxG.keys.justPressed.UP) || (FlxG.keys.justPressed.S || FlxG.keys.justPressed.DOWN)) {

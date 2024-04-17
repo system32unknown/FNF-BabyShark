@@ -908,8 +908,11 @@ class FlxSound extends flixel.FlxBasic
 	inline function get_pan():Float
 		return _transform.pan;
 
-	inline function set_pan(pan:Float):Float
-		return _transform.pan = pan;
+	inline function set_pan(pan:Float):Float {
+		_transform.pan = pan;
+		updateTransform();
+		return pan;
+	}
 
 	inline function get_time():Float
 		return (playing && _realPitch > 0) ? _time = _channel.position : _time;

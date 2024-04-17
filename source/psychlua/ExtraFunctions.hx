@@ -213,8 +213,6 @@ class ExtraFunctions {
 			return FlxG.random.float(min, max, toExclude);
 		});
 		funk.set("getRandomBool", FlxG.random.bool);
-
-		funk.set("getGameplayChangerValue", (tag:String) -> return ClientPrefs.getGameplaySetting(tag, false));
 		funk.set("getFPS", utils.system.FPSUtil.getFPSAdjust);
 	}
 }
