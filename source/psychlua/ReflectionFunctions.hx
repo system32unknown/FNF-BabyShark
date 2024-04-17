@@ -114,14 +114,8 @@ class ReflectionFunctions {
 			groupOrArray.remove(groupOrArray[index]);
 		});
 		
-		funk.set("callMethod", (funcToRun:String, ?args:Array<Dynamic> = null) -> {
-			if (args == null) args = [];
-			return callMethodFromObject(PlayState.instance, funcToRun, parseInstances(args));
-		});
-		funk.set("callMethodFromClass", (className:String, funcToRun:String, ?args:Array<Dynamic> = null) -> {
-			if (args == null) args = [];
-			return callMethodFromObject(Type.resolveClass(className), funcToRun, parseInstances(args));
-		});
+		funk.set("callMethod", (funcToRun:String, ?args:Array<Dynamic> = null) -> return callMethodFromObject(PlayState.instance, funcToRun, parseInstances(args)));
+		funk.set("callMethodFromClass", (className:String, funcToRun:String, ?args:Array<Dynamic> = null) -> return callMethodFromObject(Type.resolveClass(className), funcToRun, parseInstances(args)));
 
 		funk.set("createInstance", function(variableToSave:String, className:String, ?args:Array<Dynamic> = null) {
 			variableToSave = variableToSave.trim().replace('.', '');
@@ -171,19 +165,19 @@ class ReflectionFunctions {
 	}
 
 	static function parseInstances(args:Array<Dynamic>) {
-		if (args != null) {
-			for (i in 0...args.length) {
-				var myArg:String = cast args[i];
-				if(myArg != null && myArg.length > instanceStr.length) {
-					var index:Int = myArg.indexOf('::');
-					if (index > -1) {
-						myArg = myArg.substring(index + 2);
-						var lastIndex:Int = myArg.lastIndexOf('::');
-	
-						var split:Array<String> = myArg.split('.');
-						args[i] = (lastIndex > -1) ? Type.resolveClass(myArg.substring(0, lastIndex)) : PlayState.instance;
-						for (j in 0...split.length) args[i] = LuaUtils.getVarInArray(args[i], split[j].trim());
-					}
+		if (args == null) args = [];
+
+		for (i in 0...args.length) {
+			var myArg:String = cast args[i];
+			if(myArg != null && myArg.length > instanceStr.length) {
+				var index:Int = myArg.indexOf('::');
+				if (index > -1) {
+					myArg = myArg.substring(index + 2);
+					var lastIndex:Int = myArg.lastIndexOf('::');
+
+					var split:Array<String> = myArg.split('.');
+					args[i] = (lastIndex > -1) ? Type.resolveClass(myArg.substring(0, lastIndex)) : PlayState.instance;
+					for (j in 0...split.length) args[i] = LuaUtils.getVarInArray(args[i], split[j].trim());
 				}
 			}
 		}
