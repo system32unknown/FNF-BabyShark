@@ -111,7 +111,7 @@ class FreeplayState extends MusicBeatState {
 		scoreText = new FlxText(FlxG.width * .7, 5, 0, "", 32);
 		scoreText.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, RIGHT);
 
-		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(1, 90, 0xFF000000);
+		scoreBG = new FlxSprite(scoreText.x - 6).makeGraphic(1, 90, FlxColor.BLACK);
 		scoreBG.alpha = 0.6;
 		add(scoreBG);
 

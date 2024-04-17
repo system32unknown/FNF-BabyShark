@@ -143,7 +143,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 				}
 			} else {
 				if(controls.UI_LEFT || controls.UI_RIGHT) {
-					var pressed = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
+					var pressed:Bool = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
 					if(holdTime > 0.5 || pressed) {
 						if(pressed) {
 							var add:Dynamic = null;

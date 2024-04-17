@@ -29,15 +29,9 @@ class DeprecatedFunctions {
 		funk.set("characterPlayAnim", function(character:String, anim:String, ?forced:Bool = false) {
 			FunkinLua.luaTrace("characterPlayAnim is deprecated! Use playAnim instead", false, true);
 			switch(character.toLowerCase()) {
-				case 'dad':
-					if(PlayState.instance.dad.animOffsets.exists(anim))
-						PlayState.instance.dad.playAnim(anim, forced);
-				case 'gf' | 'girlfriend':
-					if(PlayState.instance.gf != null && PlayState.instance.gf.animOffsets.exists(anim))
-						PlayState.instance.gf.playAnim(anim, forced);
-				default:
-					if(PlayState.instance.boyfriend.animOffsets.exists(anim))
-						PlayState.instance.boyfriend.playAnim(anim, forced);
+				case 'dad': if(PlayState.instance.dad.animOffsets.exists(anim)) PlayState.instance.dad.playAnim(anim, forced);
+				case 'gf' | 'girlfriend': if(PlayState.instance.gf != null && PlayState.instance.gf.animOffsets.exists(anim)) PlayState.instance.gf.playAnim(anim, forced);
+				default: if(PlayState.instance.boyfriend.animOffsets.exists(anim)) PlayState.instance.boyfriend.playAnim(anim, forced);
 			}
 		});
 		funk.set("luaSpriteMakeGraphic", function(tag:String, width:Int, height:Int, color:String) {
@@ -64,9 +58,7 @@ class DeprecatedFunctions {
 		});
 		funk.set("luaSpritePlayAnimation", function(tag:String, name:String, forced:Bool = false) {
 			FunkinLua.luaTrace("luaSpritePlayAnimation is deprecated! Use playAnim instead", false, true);
-			if(PlayState.instance.modchartSprites.exists(tag)) {
-				PlayState.instance.modchartSprites.get(tag).animation.play(name, forced);
-			}
+			if(PlayState.instance.modchartSprites.exists(tag)) PlayState.instance.modchartSprites.get(tag).animation.play(name, forced);
 		});
 		funk.set("setLuaSpriteCamera", function(tag:String, camera:String = '') {
 			FunkinLua.luaTrace("setLuaSpriteCamera is deprecated! Use setObjectCamera instead", false, true);

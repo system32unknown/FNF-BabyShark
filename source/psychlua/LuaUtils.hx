@@ -44,8 +44,7 @@ class LuaUtils {
 
 			for (i in 1...splitProps.length) {
 				var j:Dynamic = splitProps[i].substr(0, splitProps[i].length - 1);
-				if(i >= splitProps.length - 1) //Last array
-					target[j] = value;
+				if(i >= splitProps.length - 1) target[j] = value; //Last array
 				else target = target[j]; //Anything else
 			}
 			return target;

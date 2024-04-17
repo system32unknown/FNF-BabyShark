@@ -31,7 +31,7 @@ class FunkinLua {
 		game.luaArray.push(this);
 
 		var myFolder:Array<String> = this.scriptName.split('/');
-		if(myFolder[0] + '/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
+		if('${myFolder[0]}/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
 			this.modFolder = myFolder[1];
 
 		initGlobals(game);
@@ -83,11 +83,6 @@ class FunkinLua {
 						luaInstance.call(funcName, args);
 						return;
 					}
-		});
-
-		set("callCppUtil", function(platformType:String, ?args:Array<Dynamic>) {
-			if (args == null) args = [];
-			return Reflect.callMethod(null, Reflect.field(PlatformUtil, platformType.trim()), args);
 		});
 
 		set("setGlobalFromScript", function(luaFile:String, global:String, val:Dynamic) { // sets the global from a script
@@ -221,11 +216,9 @@ class FunkinLua {
 
 		set("loadGraphic", function(variable:String, image:String, ?gridX:Int = 0, ?gridY:Int = 0) {
 			var spr:FlxSprite = LuaUtils.getVarInstance(variable);
-
 			if (spr == null || image == null || image.length <= 0) return false;
-			var animated:Bool = gridX != 0 || gridY != 0;
 
-			spr.loadGraphic(Paths.image(image), animated, gridX, gridY);
+			spr.loadGraphic(Paths.image(image), (gridX != 0 || gridY != 0), gridX, gridY);
 			return true;
 		});
 		set("loadFrames", function(variable:String, image:String, spriteType:String = "sparrow") {
@@ -244,11 +237,14 @@ class FunkinLua {
 		});
 		set("setObjectOrder", function(obj:String, position:Int) {
 			var obj:FlxBasic = LuaUtils.getVarInstance(obj);
-			if (obj == null) return false;
 
-			LuaUtils.getInstance().remove(obj, true);
-			LuaUtils.getInstance().insert(position, obj);
-			return true;
+			if (obj != null) {
+				LuaUtils.getInstance().remove(obj, true);
+				LuaUtils.getInstance().insert(position, obj);
+				return true;
+			}
+			luaTrace('setObjectOrder: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
+			return false;
 		});
 
 		// gay ass tweens
@@ -263,11 +259,9 @@ class FunkinLua {
 						startDelay: myOptions.startDelay,
 						loopDelay: myOptions.loopDelay,
 
-						onUpdate: (twn:FlxTween) -> {
-							if(myOptions.onUpdate != null) game.callOnLuas(myOptions.onUpdate, [tag, vars]);
-						}, onStart: (twn:FlxTween) -> {
-							if(myOptions.onStart != null) game.callOnLuas(myOptions.onStart, [tag, vars]);
-						}, onComplete: (twn:FlxTween) -> {
+						onUpdate: (twn:FlxTween) -> if(myOptions.onUpdate != null) game.callOnLuas(myOptions.onUpdate, [tag, vars]),
+						onStart: (twn:FlxTween) -> if(myOptions.onStart != null) game.callOnLuas(myOptions.onStart, [tag, vars]),
+						onComplete: (twn:FlxTween) -> {
 							if(myOptions.onComplete != null) game.callOnLuas(myOptions.onComplete, [tag, vars]);
 							if(twn.type == FlxTweenType.ONESHOT || twn.type == FlxTweenType.BACKWARD) game.modchartTweens.remove(tag);
 						}
@@ -891,7 +885,7 @@ class FunkinLua {
 			app_version: lime.app.Application.current.meta.get('version'),
 			commit: Main.engineVer.COMMIT_NUM,
 			hash: Main.engineVer.COMMIT_HASH.trim(),
-			build_target: LuaUtils.getBuildTarget()
+			buildTarget: LuaUtils.getBuildTarget()
 		});
 
 		set('inGameOver', false);

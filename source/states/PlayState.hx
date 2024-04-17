@@ -408,7 +408,7 @@ class PlayState extends MusicBeatState {
 			dad.setPosition(GF_X, GF_Y);
 			if(gf != null) gf.visible = false;
 		}
-		stagesFunc((stage:BaseStage) -> stage.createPost());
+		stagesFunc(stage -> stage.createPost());
 
 		uiGroup = new FlxSpriteGroup();
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
@@ -898,7 +898,7 @@ class PlayState extends MusicBeatState {
 					}
 				});
 
-				stagesFunc((stage:BaseStage) -> stage.countdownTick(tick, swagCounter));
+				stagesFunc(stage -> stage.countdownTick(tick, swagCounter));
 				callOnLuas('onCountdownTick', [swagCounter]);
 				callOnHScript('onCountdownTick', [tick, swagCounter]);
 				swagCounter++;
@@ -1144,7 +1144,7 @@ class PlayState extends MusicBeatState {
 		eventPushedUnique(event);
 		if(eventsPushed.contains(event.event)) return;
 
-		stagesFunc((stage:BaseStage) -> stage.eventPushed(event));
+		stagesFunc(stage -> stage.eventPushed(event));
 		eventsPushed.push(event.event);
 	}
 
@@ -1225,7 +1225,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function openSubState(SubState:flixel.FlxSubState) {
-		stagesFunc((stage:BaseStage) -> stage.openSubState(SubState));
+		stagesFunc(stage -> stage.openSubState(SubState));
 		if (paused && FlxG.sound.music != null) {
 			FlxG.sound.music.pause();
 			vocals.pause();
@@ -1235,7 +1235,7 @@ class PlayState extends MusicBeatState {
 
 	override function closeSubState() {
 		super.closeSubState();
-		stagesFunc((stage:BaseStage) -> stage.closeSubState());
+		stagesFunc(stage -> stage.closeSubState());
 		if (paused) {
 			if (FlxG.sound.music != null && !startingSong) resyncVocals();
 
@@ -1775,7 +1775,7 @@ class PlayState extends MusicBeatState {
 				if(flValue2 == null) flValue2 = 1;
 				FlxG.sound.play(Paths.sound(value1), flValue2);
 		}
-		stagesFunc((stage:BaseStage) -> stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
+		stagesFunc(stage -> stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
 	}
 
@@ -2562,6 +2562,7 @@ class PlayState extends MusicBeatState {
 		}
 		try {
 			var times:Float = Date.now().getTime();
+			trace(file);
 			var newScript:HScript = new HScript(null, file);
 			hscriptArray.push(newScript);
 

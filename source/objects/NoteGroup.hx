@@ -4,7 +4,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	var __loopSprite:Note;
 	var i:Int = 0;
 	var __currentlyLooping:Bool = false;
-	var __time:Float = -1.0;
+	var __time:Float = -1.;
 
 	public override function update(elapsed:Float) {
 		i = length - 1;

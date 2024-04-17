@@ -39,15 +39,15 @@ class MusicPlayer extends flixel.group.FlxGroup {
 
 		var xPos:Float = FlxG.width * .7;
 
-		songBG = new FlxSprite(xPos - 6, 0).makeGraphic(1, 100, 0xFF000000);
-		songBG.alpha = 0.6;
+		songBG = new FlxSprite(xPos - 6).makeGraphic(1, 100, 0xFF000000);
+		songBG.alpha = .6;
 		add(songBG);
 
-		playbackBG = new FlxSprite(xPos - 6, 0).makeGraphic(1, 100, 0xFF000000);
-		playbackBG.alpha = 0.6;
+		playbackBG = new FlxSprite(xPos - 6).makeGraphic(1, 100, 0xFF000000);
+		playbackBG.alpha = .6;
 		add(playbackBG);
 
-		songTxt = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
+		songTxt = new FlxText(FlxG.width * .7, 5, 0, "", 32);
 		songTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 		add(songTxt);
 
@@ -117,7 +117,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 
 		if(controls.UI_LEFT || controls.UI_RIGHT) {
 			instance.holdTime += elapsed;
-			if(instance.holdTime > 0.5)
+			if(instance.holdTime > .5)
 				curTime += 40000 * elapsed * (controls.UI_LEFT ? -1 : 1);
 
 			var difference:Float = Math.abs(curTime - FlxG.sound.music.time);

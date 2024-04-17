@@ -80,8 +80,7 @@ class LanguageSubState extends MusicBeatSubstate {
 		super.update(elapsed);
 
 		var mult:Int = (FlxG.keys.pressed.SHIFT) ? 4 : 1;
-		if(controls.UI_UP_P) changeSelected(-1 * mult);
-		if(controls.UI_DOWN_P) changeSelected(1 * mult);
+		if(controls.UI_DOWN_P || controls.UI_UP_P) changeSelected((controls.UI_DOWN_P ? 1 : -1) * mult);
 		if(FlxG.mouse.wheel != 0) changeSelected(FlxG.mouse.wheel * mult);
 
 		if(controls.BACK) {
@@ -103,7 +102,7 @@ class LanguageSubState extends MusicBeatSubstate {
 	}
 
 	function changeSelected(change:Int = 0) {
-		curSelected = FlxMath.wrap(curSelected + change, 0, languages.length-1);
+		curSelected = FlxMath.wrap(curSelected + change, 0, languages.length - 1);
 		for (num => lang in grpLanguages) {
 			lang.targetY = num - curSelected;
 			lang.alpha = .6;

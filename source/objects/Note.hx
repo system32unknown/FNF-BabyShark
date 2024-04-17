@@ -145,11 +145,11 @@ class Note extends FlxSprite {
 					ignoreNote = true;
 
 					rgbShader.r = 0xFF101010;
-					rgbShader.g = 0xFFFF0000;
+					rgbShader.g = FlxColor.RED;
 					rgbShader.b = 0xFF990022;
 
 					// splash data and colors
-					noteSplashData.r = 0xFFFF0000;
+					noteSplashData.r = FlxColor.RED;
 					noteSplashData.g = 0xFF101010;
 					noteSplashData.texture = 'noteSplashes/noteSplashes-electric';
 

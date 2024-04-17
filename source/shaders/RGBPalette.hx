@@ -32,9 +32,9 @@ class RGBPalette {
 	}
 
 	public function new() {
-		r = 0xFFFF0000;
-		g = 0xFF00FF00;
-		b = 0xFF0000FF;
+		r = FlxColor.RED;
+		g = FlxColor.LIME;
+		b = FlxColor.BLUE;
 		mult = 1.0;
 	}
 }

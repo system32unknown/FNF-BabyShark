@@ -20,7 +20,7 @@ class CrashHandler {
 		else message = try Std.string(e.error) catch(_:haxe.Exception) "Unknown";
 
 		var dateNow:String = Date.now().toString().replace(" ", "_").replace(":", "'");
-		final path:String = './crash/AlterEngine_$dateNow.txt';
+		final path:String = './crash/${FlxG.stage.application.meta.get('file')}$dateNow.txt';
 
 		var errMsg:String = "";
 		for (stackItem in haxe.CallStack.exceptionStack(true)) {
@@ -43,15 +43,15 @@ class CrashHandler {
 		e.stopImmediatePropagation();
 
 		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/system32unknown/FNF-BabyShark\n\nCrash Handler written by: sqirra-rng\nCustom Crash Handler by: Codename Engine Team';
+		try {
+			if (!FileSystem.exists("./crash/")) FileSystem.createDirectory("./crash/");
+			File.saveContent(path, errMsg);
 
-		if (!FileSystem.exists("./crash/")) FileSystem.createDirectory("./crash/");
-		File.saveContent(path, '$errMsg\n');
-
-		Sys.println(errMsg);
-		Sys.println('Crash dump saved in ${haxe.io.Path.normalize(path)}');
+			Sys.println(errMsg);
+			Sys.println('Crash dump saved in ${haxe.io.Path.normalize(path)}');
+		} catch (e:Dynamic) Sys.println("Error!\nClouldn't save the crash dump because:\n" + e);
 
 		utils.system.NativeUtil.showMessageBox("Alter Engine: Error!", errMsg, MSG_ERROR);
-		
 		#if DISCORD_ALLOWED DiscordClient.shutdown(); #end
 		#if sys Sys.exit(1); #end
 	}
