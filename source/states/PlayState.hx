@@ -2562,7 +2562,6 @@ class PlayState extends MusicBeatState {
 		}
 		try {
 			var times:Float = Date.now().getTime();
-			trace(file);
 			var newScript:HScript = new HScript(null, file);
 			hscriptArray.push(newScript);
 
