@@ -20,7 +20,7 @@ class CrashHandler {
 		else message = try Std.string(e.error) catch(_:haxe.Exception) "Unknown";
 
 		var dateNow:String = Date.now().toString().replace(" ", "_").replace(":", "'");
-		final path:String = './crash/${FlxG.stage.application.meta.get('file')}$dateNow.txt';
+		final path:String = './crash/${FlxG.stage.application.meta.get('file')}_$dateNow.txt';
 
 		var errMsg:String = "";
 		for (stackItem in haxe.CallStack.exceptionStack(true)) {
@@ -49,7 +49,7 @@ class CrashHandler {
 
 			Sys.println(errMsg);
 			Sys.println('Crash dump saved in ${haxe.io.Path.normalize(path)}');
-		} catch (e:Dynamic) Sys.println("Error!\nClouldn't save the crash dump because:\n" + e);
+		} catch (e:Dynamic) Sys.println('Error!\nCouldn\'t save the crash dump because:\n$e');
 
 		utils.system.NativeUtil.showMessageBox("Alter Engine: Error!", errMsg, MSG_ERROR);
 		#if DISCORD_ALLOWED DiscordClient.shutdown(); #end

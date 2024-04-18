@@ -331,7 +331,7 @@ class Note extends FlxSprite {
 		var playAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
 		var playAnimAlt:String = EK.colArrayAlt[EK.gfxIndex[PlayState.mania][noteData]];
 		if (isSustainNote) {
-			attemptToAddAnimationByPrefix('purpleholdend', 'pruple end hold', 24, true);
+			attemptToAddAnimationByPrefix('Aholdend', 'pruple end hold', 24, true);
 			attemptToAddAnimationByPrefix(playAnim + 'holdend', playAnim + ' tail0', 24, true);
 			attemptToAddAnimationByPrefix(playAnim + 'hold', playAnim + ' hold0', 24, true);
 			attemptToAddAnimationByPrefix(playAnim + 'holdend', playAnimAlt + ' hold end', 24, true);
