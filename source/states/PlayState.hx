@@ -500,7 +500,7 @@ class PlayState extends MusicBeatState {
 		judgementCounter.scrollFactor.set();
 		judgementCounter.visible = ClientPrefs.data.showJudgement && !hideHud;
 		uiGroup.add(judgementCounter);
-		judgementCounter.updateHitbox().screenCenter(Y);
+		judgementCounter.updateHitbox(); judgementCounter.screenCenter(Y);
 		updateScore();
 
 		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, Language.getPhrase("Botplay", "[BOTPLAY]"), 32);
