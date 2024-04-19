@@ -1,6 +1,6 @@
 package macros;
-#if macro
-import haxe.macro.Compiler;
+
+#if macro import haxe.macro.Compiler; #end
 
 class KeepClassMacro {
     // JUST WRITE THE CLASS PACKAGE AS STRING (e.g  "flixel.effects.particles.FlxParticle") IT'S AS SIMPLE AS THAT
@@ -22,4 +22,3 @@ class KeepClassMacro {
         Compiler.keep(null, classesToKeep, true);
     }
 }
-#end
