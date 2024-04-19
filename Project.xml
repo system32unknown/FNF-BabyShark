@@ -59,7 +59,6 @@
 	<section if="HSCRIPT_ALLOWED">
 		<haxeflag name="-dce no"/>
 		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
-		<haxeflag name="--macro" value="macros.KeepClassMacro.keepClasses()"/>
 	</section>
 
 	<!-- ______________________________Haxedefines_____________________________ -->
