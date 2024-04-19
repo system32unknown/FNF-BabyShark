@@ -4,7 +4,10 @@ import haxe.macro.Compiler;
 
 class KeepClassMacro {
     // JUST WRITE THE CLASS PACKAGE AS STRING (e.g  "flixel.effects.particles.FlxParticle") IT'S AS SIMPLE AS THAT
-    public static var classesToKeep:Array<String> = ["flixel.effects.particles.FlxParticle"];
+    public static var classesToKeep:Array<String> = [
+        "flixel.effects.particles.FlxParticle",
+        "flixel.effects.particles.FlxEmitter"
+    ];
 
     public static function keepClasses(){
         var packagesArray = [];
