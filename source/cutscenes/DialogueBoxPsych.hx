@@ -33,7 +33,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 	public static var DEFAULT_TEXT_Y = 460;
 	public static var LONG_TEXT_ADD = 24;
 
-	var scrollSpeed = 4000;
+	var scrollSpeed:Int = 4000;
 
 	var offsetPos:Float = -600;
 
@@ -298,9 +298,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		var centerPrefix:String = dialoguePosition == 'center' ? 'center-' : '';
 
 		box.animation.play(centerPrefix + boxType + extraSuffix, true);
-
-		if (shouldBoxRecenter)
-			updateBoxOffsets(box);
+		if (shouldBoxRecenter) updateBoxOffsets(box);
 
 		if (isDifferentCharacter && shouldBoxFlip)
 			box.flipX = (dialoguePosition == 'left');
@@ -375,7 +373,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		char.setGraphicSize(Std.int(char.width * DialogueCharacter.DEFAULT_SCALE * char.jsonFile.scale));
 		char.updateHitbox();
 		char.scrollFactor.set();
-		char.alpha = 0.00001;
+		char.alpha = .00001;
 		add(char);
 
 		var saveY:Bool = false;

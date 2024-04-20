@@ -8,7 +8,6 @@ import states.*;
 import backend.Highscore;
 import backend.Song;
 import objects.StrumNote;
-import utils.system.PlatformUtil;
 
 class FunkinLua {
 	#if LUA_ALLOWED public var lua:State = null; #end

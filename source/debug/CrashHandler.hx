@@ -19,8 +19,7 @@ class CrashHandler {
 			message = cast(e.error, ErrorEvent).text;
 		else message = try Std.string(e.error) catch(_:haxe.Exception) "Unknown";
 
-		var dateNow:String = Date.now().toString().replace(" ", "_").replace(":", "'");
-		final path:String = './crash/${FlxG.stage.application.meta.get('file')}_$dateNow.txt';
+		final path:String = './crash/${FlxG.stage.application.meta.get('file')}_${Date.now().toString().replace(" ", "_").replace(":", "'")}.txt';
 
 		var errMsg:String = "";
 		for (stackItem in haxe.CallStack.exceptionStack(true)) {
