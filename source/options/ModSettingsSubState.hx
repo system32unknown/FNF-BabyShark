@@ -43,12 +43,12 @@ class ModSettingsSubState extends BaseOptionsMenu {
 						// getting inputs and checking
 						@:privateAccess {
 							newOption.getValue = () -> {
-								var data = save.get(newOption.variable);
+								var data:Dynamic = save.get(newOption.variable);
 								if(data == null) return 'NONE';
 								return data.keyboard;
 							};
 							newOption.setValue = (value:Dynamic) -> {
-								var data = save.get(newOption.variable);
+								var data:Dynamic = save.get(newOption.variable);
 								if(data == null) data = {keyboard: 'NONE'};
 								data.keyboard = value;
 								save.set(newOption.variable, data);

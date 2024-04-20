@@ -2579,7 +2579,7 @@ class PlayState extends MusicBeatState {
 				if (newScript.exception != null) {
 					var len:Int = newScript.exception.message.indexOf('\n') + 1;
 					if(len <= 0) len = newScript.exception.message.length;
-					addTextToDebug('ERROR (onCreate) - ${newScript.exception.message.substr(0, len)}}', FlxColor.RED);
+					addTextToDebug('ERROR (onCreate) - ${newScript.exception.message.substr(0, len)}', FlxColor.RED);
 					makeError(newScript);
 					return;
 				}

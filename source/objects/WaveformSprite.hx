@@ -77,15 +77,4 @@ class WaveformSprite extends FlxSprite {
 
         generate(Math.floor(startPos * multiplicator / 4000 / buffer.bitsPerSample) * buffer.bitsPerSample, Math.floor(endPos * multiplicator / 4000 / buffer.bitsPerSample) * buffer.bitsPerSample);
     }
-
-    public function getNumberFromBuffer(pos:Int, bytes:Int):Int {
-        var am:Int = 0;
-        for(i in 0...bytes) {
-            var val:Int = buffer.data.buffer.get(pos + i);
-            if (val < 0) val += 256;
-            for(_ in 0...(bytes - i)) val *= 256;
-            am += val;
-        }
-        return am;
-    }
 }

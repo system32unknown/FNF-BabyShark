@@ -1,7 +1,6 @@
 package objects;
 
 import shaders.RGBPalette;
-import shaders.PixelSplashShader;
 import shaders.PixelSplashShader.PixelSplashShaderRef;
 
 typedef NoteSplashConfig = {
@@ -13,7 +12,6 @@ typedef NoteSplashConfig = {
 
 class NoteSplash extends FlxSprite {
 	public var rgbShader:PixelSplashShaderRef;
-	var idleAnim:String;
 	var _textureLoaded:String = null;
 	var _configLoaded:String = null;
 

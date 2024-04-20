@@ -7,7 +7,8 @@ import openfl.text.TextField;
 
 class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 	var text:TextField = new TextField();
-    public function new() {
+	var _intendedY:Float;
+	public function new() {
         super();
         removeChildren();
 
@@ -32,7 +33,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 
 		var bx:Int = 10;
 		var by:Int = 14;
-		_bars = new Array();
+		_bars = [];
 
 		for (i in 0...10) {
 			tmp = new Bitmap(new BitmapData(4, i + 1, false, FlxColor.GREEN));
@@ -46,16 +47,17 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 
 		y = -height;
 		visible = false;
+		_intendedY = y;
     }
 
 	override function update(MS:Float):Void {
 		var elapsed:Float = MS / 1000;
 		// Animate sound tray thing
 		if (_timer > 0) _timer -= elapsed;
-		else if (y > -height) {
-			y -= elapsed * height * .5;
+		else if (_intendedY > -height) {
+			_intendedY -= elapsed * height * 4;
 
-			if (y <= -height) {
+			if (_intendedY <= -height) {
 				visible = false;
 				active = false;
 
@@ -69,6 +71,8 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 				#end
 			}
 		}
+
+		y = FlxMath.lerp(y, _intendedY, FlxMath.bound(elapsed * 24, 0, 1));
 	}
 
     override function show(up:Bool = false):Void {
@@ -78,7 +82,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 		}
 
 		_timer = 1;
-		y = 0;
+		_intendedY = 0;
 		visible = true;
 		active = true;
 

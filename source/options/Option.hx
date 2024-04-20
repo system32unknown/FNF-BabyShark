@@ -57,10 +57,10 @@ class Option {
 			case PERCENT:
 				if(defaultValue == null) defaultValue = 1;
 				displayFormat = '%v%';
-				changeValue = 0.01;
+				changeValue = .01;
 				minValue = 0;
 				maxValue = 1;
-				scrollSpeed = 0.5;
+				scrollSpeed = .5;
 				decimals = 2;
 			case STRING:
 				if(options.length > 0) defaultValue = options[0];
@@ -72,7 +72,6 @@ class Option {
 				defaultKeys = {keyboard: 'NONE'};
 				keys = {keyboard: 'NONE'};
 		}
-			
 
 		try {
 			if(getValue() == null) setValue(defaultValue);

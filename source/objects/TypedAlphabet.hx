@@ -4,7 +4,7 @@ class TypedAlphabet extends Alphabet {
 	public var onFinish:Void->Void = null;
 	public var onUpdate:String->Void = null;
 	public var finishedText:Bool = false;
-	public var delay:Float = 0.05;
+	public var delay:Float = .05;
 	public var sound:String = 'dialogue';
 	public var volume:Float = 1;
 
