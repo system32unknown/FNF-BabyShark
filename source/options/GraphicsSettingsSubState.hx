@@ -19,7 +19,13 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Low Quality', 'If checked, disables some background details,\ndecreases loading times and improves performance.', 'lowQuality', BOOL));
 
 		var option:Option = new Option('Anti-Aliasing', 'If unchecked, disables anti-aliasing, increases performance\nat the cost of sharper visuals.', 'antialiasing', BOOL);
-		option.onChange = onChangeAntiAliasing; //Changing onChange is only needed if you want to make a special interaction after it changes the value
+		option.onChange = () -> {
+			for (sprite in members) {
+				var sprite:FlxSprite = cast sprite;
+				if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText))
+					sprite.antialiasing = ClientPrefs.data.antialiasing;
+			}
+		}; //Changing onChange is only needed if you want to make a special interaction after it changes the value
 		addOption(option);
 		antialiasingOption = optionsArray.length - 1;
 
@@ -37,18 +43,11 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 			if (ClientPrefs.data.framerate > FlxG.drawFramerate)
 				FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
 			else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
+			FlxG.game.focusLostFramerate = Math.ceil(ClientPrefs.data.framerate / 2);
 		};
 
 		super();
 		insert(1, boyfriend);
-	}
-
-	function onChangeAntiAliasing() {
-		for (sprite in members) {
-			var sprite:FlxSprite = cast sprite;
-			if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText))
-				sprite.antialiasing = ClientPrefs.data.antialiasing;
-		}
 	}
 
 	override function changeSelection(change:Int = 0) {
