@@ -104,10 +104,11 @@ class Paths {
 	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
 	public static function clearStoredMemory() {
 		for (key in FlxG.bitmap._cache.keys()) {
-			if (!currentTrackedAssets.exists(key) && !assetExcluded(key))
+			if (!currentTrackedAssets.exists(key) && !assetExcluded(key)) {
 				if (ClientPrefs.data.clearCacheMethod == "New")
 					destroyGraphic(FlxG.bitmap.get(key));
 				else decacheGraphic(key);
+			}
 		}
 
 		for (key => asset in currentTrackedSounds) {
