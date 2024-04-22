@@ -45,7 +45,7 @@ class StoryMenuState extends MusicBeatState {
 		scoreText = new FlxText(10, 10, 0, Language.getPhrase('week_score', 'WEEK SCORE: {1}', [lerpScore]), 32);
 		scoreText.setFormat(Paths.font("babyshark.ttf"), 32);
 
-		txtWeekTitle = new FlxText(FlxG.width * 0.7, 10, 0, "", 32);
+		txtWeekTitle = new FlxText(FlxG.width * .7, 10, 0, "", 32);
 		txtWeekTitle.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, RIGHT);
 		txtWeekTitle.alpha = .7;
 
@@ -197,7 +197,7 @@ class StoryMenuState extends MusicBeatState {
 
 		super.update(elapsed);
 
-		grpLocks.forEach(function(lock:FlxSprite) {
+		grpLocks.forEach((lock:FlxSprite) -> {
 			lock.y = grpWeekText.members[lock.ID].y;
 			lock.visible = (lock.y > FlxG.height / 2);
 		});
@@ -318,10 +318,7 @@ class StoryMenuState extends MusicBeatState {
 	}
 
 	function updateText() {
-		var weekArray:Array<String> = loadedWeeks[curWeek].weekCharacters;
-		for (i in 0...grpWeekCharacters.length) {
-			grpWeekCharacters.members[i].changeCharacter(weekArray[i]);
-		}
+		for (i in 0...grpWeekCharacters.length) grpWeekCharacters.members[i].changeCharacter(loadedWeeks[curWeek].weekCharacters[i]);
 
 		var leWeek:WeekData = loadedWeeks[curWeek];
 		var stringThing:Array<String> = [for (i in 0...leWeek.songs.length) leWeek.songs[i][0]];

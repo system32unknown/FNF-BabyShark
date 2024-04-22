@@ -280,8 +280,9 @@ class CreditSectionState extends MusicBeatState {
 		if (cSectionisMod) Mods.currentModDirectory = curCSection;
 
 		bg = new FlxSprite(Paths.image('menuDesat'));
-		bg.screenCenter();
+		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
+		bg.screenCenter();
 
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
 

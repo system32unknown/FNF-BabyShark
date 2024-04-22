@@ -1193,8 +1193,7 @@ class PlayState extends MusicBeatState {
 
 	public var skipArrowStartTween:Bool = false; //for lua
 	public function generateStaticArrows(player:Int):Void {
-		var strumLineX:Float = middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X;
-		var strumLineY:Float = downScroll ? (FlxG.height - 150) : 50;
+		var strumLine:FlxPoint = FlxPoint.get(middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, downScroll ? (FlxG.height - 150) : 50);
 		for (i in 0...EK.keys(mania)) {
 			var tempMania:Int = mania;
 			if (tempMania == 0) tempMania = 1;
@@ -1204,7 +1203,7 @@ class PlayState extends MusicBeatState {
 				else if (middleScroll) targetAlpha = .35;
 			}
 
-			var babyArrow:StrumNote = new StrumNote(strumLineX, strumLineY, i, player);
+			var babyArrow:StrumNote = new StrumNote(strumLine.x, strumLine.y, i, player);
 			babyArrow.downScroll = downScroll;
 			if (((!isStoryMode || firstStart || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
 				babyArrow.alpha = 0;
@@ -1222,6 +1221,7 @@ class PlayState extends MusicBeatState {
 			callOnLuas('onSpawnStrum', [strumLineNotes.members.indexOf(babyArrow), babyArrow.player, babyArrow.ID]);
 			callOnHScript('onSpawnStrum', [babyArrow]);
 		}
+		strumLine.put();
 	}
 
 	override function openSubState(SubState:flixel.FlxSubState) {
