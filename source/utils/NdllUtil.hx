@@ -3,7 +3,7 @@ package utils;
 /**
  * Small util that allows you to load any function from ndlls via `getFunction`.
  *
- * NDLLs must be in your mod's "data/ndlls" folder, and must follow this name scheme:
+ * NDLLs must be in your mod's "ndlls" folder, and must follow this name scheme:
  * - `name.ndll` for Windows targeted ndlls
  *
  * If:

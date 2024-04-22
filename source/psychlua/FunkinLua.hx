@@ -232,6 +232,7 @@ class FunkinLua {
 		set("getObjectOrder", function(obj:String) {
 			var obj:FlxBasic = LuaUtils.getVarInstance(obj);
 			if (obj != null) return LuaUtils.getInstance().members.indexOf(obj);
+			luaTrace('getObjectOrder: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
 			return -1;
 		});
 		set("setObjectOrder", function(obj:String, position:Int) {

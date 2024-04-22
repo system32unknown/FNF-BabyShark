@@ -6,7 +6,7 @@ import haxe.macro.Expr;
 class GameBuildTime {
 	public static macro function getBuildTime():Array<Field> {
 		var fields:Array<Field> = Context.getBuildFields();
-		var buildTime = Date.now().toString();
+		var buildTime:String = Date.now().toString();
 
 		fields.push({
 			name: "buildTime",

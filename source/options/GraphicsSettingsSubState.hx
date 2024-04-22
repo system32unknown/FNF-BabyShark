@@ -43,7 +43,6 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 			if (ClientPrefs.data.framerate > FlxG.drawFramerate)
 				FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
 			else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
-			FlxG.game.focusLostFramerate = Math.ceil(ClientPrefs.data.framerate / 2);
 		};
 
 		super();
