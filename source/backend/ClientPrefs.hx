@@ -57,6 +57,7 @@ import flixel.input.keyboard.FlxKey;
 	public var smoothHealth:Bool = false;
 	public var accuracyType:String = 'Judgement';
 	public var noteDiffTypes:String = "Simple";
+	public var clearCacheMethod:String = "Old";
 	public var showJudgement:Bool = true;
 	public var iconBounceType:String = 'Psych';
 	public var ratingDisplay:String = 'World';

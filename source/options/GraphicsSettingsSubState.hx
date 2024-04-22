@@ -44,6 +44,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 				FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
 			else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
 		};
+		addOption(new Option('Clear Cache Method:', '', 'clearCacheMethod', STRING, ['Old', 'New']));
 
 		super();
 		insert(1, boyfriend);

@@ -8,8 +8,7 @@ import openfl.display.BitmapData;
 import openfl.media.Sound;
 import lime.utils.Assets;
 
-@:access(openfl.display.BitmapData.__texture)
-@:access(openfl.media.Sound.__buffer)
+@:access(openfl.display.BitmapData)
 class Paths {
 	inline public static final CHART_PATH = "charts";
 	inline public static var SOUND_EXT = "ogg";
@@ -88,8 +87,13 @@ class Paths {
 	// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
 		for (key in currentTrackedAssets.keys()) {
-			if (!localTrackedAssets.contains(key) && !keyExclusions.contains(key))
-				decacheGraphic(key);
+			// if it is not currently contained within the used local assets
+			if (!localTrackedAssets.contains(key) && !keyExclusions.contains(key)) {
+				if (ClientPrefs.data.clearCacheMethod == "New") {
+					destroyGraphic(currentTrackedAssets.get(key)); // get rid of the graphic
+					currentTrackedAssets.remove(key); // and remove the key from local cache map
+				} else decacheGraphic(key);
+			}
 		}
 
 		#if cpp utils.system.MemoryUtil.clearMajor #else openfl.system.System.gc #end();
@@ -97,10 +101,13 @@ class Paths {
 
 	// define the locally tracked assets
 	public static var localTrackedAssets:Array<String> = [];
+	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
 	public static function clearStoredMemory() {
-		for (key in @:privateAccess FlxG.bitmap._cache.keys()) {
-			if (key != null && !currentTrackedAssets.exists(key) && !assetExcluded(key))
-				decacheGraphic(key);
+		for (key in FlxG.bitmap._cache.keys()) {
+			if (!currentTrackedAssets.exists(key) && !assetExcluded(key))
+				if (ClientPrefs.data.clearCacheMethod == "New")
+					destroyGraphic(FlxG.bitmap.get(key));
+				else decacheGraphic(key);
 		}
 
 		for (key => asset in currentTrackedSounds) {
@@ -113,6 +120,13 @@ class Paths {
 		OpenFlAssets.cache.clear("songs");
 		utils.system.MemoryUtil.clearMajor();
 		clearUnusedMemory();
+	}
+
+	inline static function destroyGraphic(graphic:FlxGraphic) {
+		// free some gpu memory
+		if (graphic != null && graphic.bitmap != null && graphic.bitmap.__texture != null)
+			graphic.bitmap.__texture.dispose();
+		FlxG.bitmap.remove(graphic);
 	}
 
 	static public var currentLevel:String;
@@ -198,7 +212,7 @@ class Paths {
 			}
 		}
 
-		if (allowGPU && ClientPrefs.data.cacheOnGPU && bitmap.image != null) @:privateAccess {
+		if (allowGPU && ClientPrefs.data.cacheOnGPU && bitmap.image != null) {
 			bitmap.lock();
 			if (bitmap.__texture == null) {
 				bitmap.image.premultiplied = true;
