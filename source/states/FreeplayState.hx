@@ -48,7 +48,7 @@ class FreeplayState extends MusicBeatState {
 	override function create() {		
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
-		WeekData.reloadWeekFiles(false);
+		WeekData.reloadWeekFiles();
 
 		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Freeplay Menu", 'Section: $section'); #end
 

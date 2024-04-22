@@ -245,7 +245,7 @@ class NoteSplashDebugState extends MusicBeatState {
 			if(forceFrame < 0) forceFrame = 0;
 			else if(forceFrame >= maxFrame) forceFrame = maxFrame - 1;
 			
-			curFrameText.text = 'Force Frame: ${forceFrame+1} / $maxFrame\n(Press Q/E to change)';
+			curFrameText.text = 'Force Frame: ${forceFrame + 1} / $maxFrame\n(Press Q/E to change)';
 			splashes.forEachAlive(function(spr:FlxSprite) {
 				spr.animation.curAnim.paused = true;
 				spr.animation.curAnim.curFrame = forceFrame;

@@ -20,7 +20,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 
 	override public function new() {
 		super();
-		WeekData.reloadWeekFiles(false);
+		WeekData.reloadWeekFiles();
 
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
