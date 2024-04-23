@@ -17,7 +17,7 @@
             "ref": "dev",
         "url":"https://github.com/HaxeFlixel/flixel-ui"},
         {"name":"hscript-improved", "type":"git", "dir":"hscript-improved",
-            "ref": "custom-classes",
+            "ref": "master",
         "url":"https://www.github.com/FNF-CNE-Devs/hscript-improved"},
         {"name":"linc_luajit", "type":"git", "dir":"linc_luajit",
             "ref": "master",

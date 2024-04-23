@@ -199,8 +199,8 @@ class Paths {
 	}
 
 	public static function cacheBitmap(key:String, ?parentFolder:String = null, ?bitmap:BitmapData, ?allowGPU:Bool = true) {
-		var file:String = getPath(key, IMAGE, parentFolder);
 		if (bitmap == null) {
+			var file:String = getPath(key, IMAGE, parentFolder);
 			#if MODS_ALLOWED
 			if (FileSystem.exists(file)) bitmap = BitmapData.fromFile(file);
 			#else
