@@ -908,7 +908,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	inline function createCountdownSprite(image:String):FlxSprite {
-		final spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(image));
+		final spr:FlxSprite = new FlxSprite(Paths.image(image));
 		spr.camera = camHUD;
 		spr.scrollFactor.set();
 		spr.updateHitbox();
