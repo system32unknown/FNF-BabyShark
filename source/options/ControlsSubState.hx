@@ -109,7 +109,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		var grid:FlxBackdrop = CoolUtil.createBackDrop(80, 80, 160, 160, true, 0x33FFFFFF, 0x0);
 		grid.velocity.set(40, 40);
 		grid.alpha = 0;
-		FlxTween.tween(grid, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
+		FlxTween.tween(grid, {alpha: 1}, .5, {ease: FlxEase.quadOut});
 		add(grid);
 
 		grpDisplay = new FlxTypedGroup<Alphabet>();
@@ -164,8 +164,7 @@ class ControlsSubState extends MusicBeatSubstate {
 					text.distancePerItem.y = 60;
 					text.targetY = myID;
 					if(text.text.endsWith('KEY')) text.text = '$curNoteKeys KEY';
-					if(isDisplayKey)
-						grpDisplay.add(text);
+					if(isDisplayKey) grpDisplay.add(text);
 					else {
 						grpOptions.add(text);
 						curOptions.push(i);
@@ -366,8 +365,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		ClientPrefs.reloadVolumeKeys();
 	}
 
-	function updateText(?change:Int = 0)
-	{
+	function updateText(?change:Int = 0) {
 		curSelected = FlxMath.wrap(curSelected + change, 0, curOptions.length - 1);
 
 		var num:Int = curOptionsValid[curSelected];

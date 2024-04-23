@@ -428,7 +428,6 @@ class Note extends FlxSprite {
 	}
 
 	override function destroy() {
-		clipRect = flixel.util.FlxDestroyUtil.put(clipRect);
 		super.destroy();
 		_lastValidChecked = '';
 	}
