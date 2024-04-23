@@ -7,8 +7,6 @@ import utils.system.MemoryUtil;
 import utils.GameVersion;
 import debug.FPSCounter;
 
-#if (target.threaded && sys) import sys.thread.ElasticThreadPool; #end
-
 class Main extends Sprite {
 	public static var engineVer:GameVersion = new GameVersion(0, 1, 5, "a");
 
@@ -33,8 +31,6 @@ class Main extends Sprite {
 		setupGame();
 	}
 
-	#if (target.threaded && sys) public static var threadPool:ElasticThreadPool; #end
-
 	function setupGame():Void {
 		debug.Logs.init();
 
@@ -44,8 +40,6 @@ class Main extends Sprite {
 			Main.fpsVar.visible = ClientPrefs.data.showFPS;
 			Main.fpsVar.memCounterType = ClientPrefs.data.memCounterType;
 		}
-
-		#if (target.threaded && sys) threadPool = new ElasticThreadPool(12, 30); #end
 
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end

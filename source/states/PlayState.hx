@@ -566,16 +566,10 @@ class PlayState extends MusicBeatState {
 
 		super.create();
 
-		#if (target.threaded && sys)
-		Main.threadPool.run(() -> {
-		#end
-			cacheCountdown();
-			cachePopUpScore();
-			GameOverSubstate.cache();
-			Paths.clearUnusedMemory();
-		#if (target.threaded && sys)
-		});
-		#end
+		cacheCountdown();
+		cachePopUpScore();
+		GameOverSubstate.cache();
+		Paths.clearUnusedMemory();
 
 		if(timeToStart > 0)	clearNotesBefore(timeToStart);
 		if(eventNotes.length < 1) checkEventNote();
