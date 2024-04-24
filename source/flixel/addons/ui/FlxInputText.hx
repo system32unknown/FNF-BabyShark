@@ -398,7 +398,7 @@ class FlxInputText extends FlxText
 
 				default: // Actually add some text
 					if (e.charCode == 0) return; //non-printable characters crash String.fromCharCode
-					var newText:String = filter(String.fromCharCode(e.charCode));
+					final newText:String = filter(String.fromCharCode(e.charCode));
 	
 					if (newText.length > 0 && (maxLength == 0 || (text.length + newText.length) <= maxLength)) {
 						text = insertSubstring(text, newText, caretIndex);

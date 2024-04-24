@@ -36,7 +36,7 @@ Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor code
 * SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
 * KadeDev - Fixed some cool stuff on Chart Editor and other PRs, Programmer of Kade Engine
 * iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds
-* MAJigsaw77 - .MP4 Video Loader Library (hxvlc)
+* MAJigsaw77 - .MP4 Video Loader Library (hxvlc) and hxdiscord_rpc
 * Keoiki - Note Splash Animations
 * superpowers04 - LUA JIT Fork and some Lua reworks
 * Raltyro - Maintainer of Psike Engine

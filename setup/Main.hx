@@ -15,7 +15,7 @@ typedef Library = {
 
 class Main {
 	public static function main() {
-		var isHMM = getProcessOutput('haxelib', ['list', 'hmm']).contains('hmm'), prevCwd = Sys.getCwd(), mainCwd;
+		var isHMM:Bool = getProcessOutput('haxelib', ['list', 'hmm']).contains('hmm'), prevCwd = Sys.getCwd(), mainCwd;
 		var json:Array<Library> = Json.parse(File.getContent('./setup/libraries.json')).dependencies;
 		if (isHMM) {
 			if (!FileSystem.exists('.haxelib')) FileSystem.createDirectory('.haxelib');
@@ -29,7 +29,7 @@ class Main {
 				switch(lib.type) {
 					case "haxelib":
 						Sys.println('Installing "${lib.name}"...');   
-						var vers = lib.version != null ? lib.version : "";          
+						var vers:String = lib.version != null ? lib.version : "";          
 						if (isHMM) Sys.command('hmm haxelib ${lib.name} ${vers}');
 						else {
 							Sys.command('haxelib install ${lib.name} ${vers} --quiet');
@@ -63,7 +63,7 @@ class Main {
 
 	public static function getProcessOutput(cmd:String, args:Array<String>):String {
 		try {
-			var process = new Process(cmd, args), output = "";
+			var process:Process = new Process(cmd, args), output = "";
 			try {output = process.stdout.readAll().toString();}
 			catch (_) {}
 

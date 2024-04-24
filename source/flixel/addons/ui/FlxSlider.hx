@@ -1,14 +1,15 @@
 package flixel.addons.ui;
 
 #if FLX_MOUSE
-import flixel.util.FlxDestroyUtil;
+import flixel.group.*;
 import flixel.math.FlxRect;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * A slider GUI element for float and integer manipulation.
  * @author Gama11
  */
-class FlxSlider extends FlxSpriteGroup
+class FlxSlider extends #if (flixel < "5.7.0") FlxSpriteGroup #else FlxSpriteContainer #end
 {
 	/**
 	 * The horizontal line in the background.
@@ -254,6 +255,9 @@ class FlxSlider extends FlxSpriteGroup
 	override public function update(elapsed:Float):Void
 	{
 		// Clicking and sound logic
+		#if (flixel >= "5.7.0")
+		final camera = getCameras()[0];// else use this.camera
+		#end
 		if (mouseInRect(_bounds))
 		{
 			if (hoverAlpha != 1) alpha = hoverAlpha;

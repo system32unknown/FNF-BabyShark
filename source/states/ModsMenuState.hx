@@ -648,8 +648,7 @@ class ModItem extends FlxSpriteGroup {
 	public var mustRestart:Bool = false;
 	public var settings:Array<Dynamic> = null;
 
-	public function new(folder:String)
-	{
+	public function new(folder:String) {
 		super();
 
 		this.folder = folder;
