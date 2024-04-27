@@ -1,6 +1,5 @@
 package states;
 
-import flixel.addons.transition.FlxTransitionableState;
 import states.MainMenuState;
 import flixel.group.FlxGroup;
 

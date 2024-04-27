@@ -1,7 +1,6 @@
 package states;
 
 import flixel.effects.FlxFlicker;
-import flixel.addons.transition.FlxTransitionableState;
 
 class FlashingState extends MusicBeatState {
 	public static var leftState:Bool = false;
@@ -36,7 +35,7 @@ class FlashingState extends MusicBeatState {
 					ClientPrefs.data.flashing = false;
 					ClientPrefs.saveSettings();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					FlxFlicker.flicker(warnText, 1, .1, false, true, (flk:FlxFlicker) -> FlxTimer.wait(.5, () -> FlxG.switchState(() -> new TitleState())));
+					FlxFlicker.flicker(warnText, 1, .1, false, true, (_) -> FlxTimer.wait(.5, () -> FlxG.switchState(() -> new TitleState())));
 				} else {
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					FlxTween.tween(warnText, {alpha: 0}, 1, {onComplete: (twn:FlxTween) -> FlxG.switchState(() -> new TitleState())});

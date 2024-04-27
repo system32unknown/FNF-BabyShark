@@ -1,7 +1,6 @@
 package states;
 
 import flixel.FlxObject;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import options.OptionsState;
 

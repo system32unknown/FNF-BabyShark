@@ -1,7 +1,6 @@
 package states;
 
 import flixel.util.FlxSpriteUtil;
-import flixel.addons.transition.FlxTransitionableState;
 import openfl.display.BitmapData;
 
 class ModsMenuState extends MusicBeatState {

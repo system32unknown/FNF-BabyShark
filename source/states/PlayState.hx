@@ -2,7 +2,6 @@ package states;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 #if !MODS_ALLOWED import openfl.utils.Assets; #end

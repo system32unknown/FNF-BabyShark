@@ -5,7 +5,7 @@
     - [x] Fix Freeplay No Vocals on Musicplayer
 
 ### Future versions
-- [ ] Remake Charcter / New Charcters
+- [ ] Remake Character / New Characters
 - [ ] New Main Menu / Freeplay Menu / Options Menu
 - [ ] Some Songs / Charts
 - [ ] Get Character Vocals

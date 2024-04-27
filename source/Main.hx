@@ -1,7 +1,6 @@
 package;
 
 import openfl.display.Sprite;
-import flixel.FlxGame;
 import flixel.input.keyboard.FlxKey;
 import utils.system.MemoryUtil;
 import utils.GameVersion;

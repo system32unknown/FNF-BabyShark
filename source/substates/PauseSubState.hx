@@ -1,6 +1,5 @@
 package substates;
 
-import flixel.addons.transition.FlxTransitionableState;
 import options.OptionsState;
 
 class PauseSubState extends MusicBeatSubstate {

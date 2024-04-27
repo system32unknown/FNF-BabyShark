@@ -55,6 +55,16 @@ class FreeplayState extends MusicBeatState {
 		section = FreeplaySectionSubstate.daSection;
 		if (section == null || section == '') section = 'Vanilla';
 
+		if(WeekData.weeksList.length < 1) {
+			FlxTransitionableState.skipNextTransIn = true;
+			persistentUpdate = false;
+			FlxG.switchState(() -> new ErrorState("NO WEEKS ADDED FOR FREEPLAY\n\nPress ACCEPT to go to the Week Editor Menu.\nPress BACK to return to Main Menu.",
+				() -> FlxG.switchState(() -> new states.editors.WeekEditorState()),
+				() -> FlxG.switchState(() -> new MainMenuState()))
+			);
+			return;
+		}
+
 		var foundSection = false;
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
@@ -184,6 +194,7 @@ class FreeplayState extends MusicBeatState {
 	var holdTime:Float = 0;
 	var stopMusicPlay:Bool = false;
 	override function update(elapsed:Float) {
+		if(WeekData.weeksList.length < 1) return;
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 		if (FlxG.sound.music.volume < .7) FlxG.sound.music.volume += .5 * elapsed;
 

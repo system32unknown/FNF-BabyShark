@@ -8,7 +8,6 @@ import openfl.errors.Error;
 class CrashHandler {
 	public static function init() {
 		FlxG.stage.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
-		#if cpp untyped __global__.__hxcpp_set_critical_error_handler((message:Dynamic) -> throw Std.string(message)); #end
 	}
 
 	static function onCrash(e:UncaughtErrorEvent):Void {
@@ -17,7 +16,7 @@ class CrashHandler {
 			message = cast(e.error, Error).message;
 		else if (Std.isOfType(e.error, ErrorEvent))
 			message = cast(e.error, ErrorEvent).text;
-		else message = try Std.string(e.error) catch(_:haxe.Exception) "Unknown";
+		else message = Std.string(e.error);
 
 		final path:String = './crash/${FlxG.stage.application.meta.get('file')}_${Date.now().toString().replace(" ", "_").replace(":", "'")}.txt';
 
@@ -38,7 +37,6 @@ class CrashHandler {
 		}
 
 		e.preventDefault();
-		e.stopPropagation();
 		e.stopImmediatePropagation();
 
 		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/system32unknown/FNF-BabyShark\n\nCrash Handler written by: sqirra-rng\nCustom Crash Handler by: Codename Engine Team';
@@ -52,6 +50,6 @@ class CrashHandler {
 
 		utils.system.NativeUtil.showMessageBox("Alter Engine: Error!", errMsg, MSG_ERROR);
 		#if DISCORD_ALLOWED DiscordClient.shutdown(); #end
-		#if sys Sys.exit(1); #end
+		lime.system.System.exit(1);
 	}
 }

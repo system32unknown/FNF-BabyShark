@@ -1,6 +1,5 @@
 package;
 
-import flixel.addons.transition.FlxTransitionableState;
 import states.FlashingState;
 
 // THIS IS FOR INITIALIZING STUFF BECAUSE FLIXEL HATES INITIALIZING STUFF IN MAIN

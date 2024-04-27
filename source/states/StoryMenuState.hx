@@ -39,6 +39,18 @@ class StoryMenuState extends MusicBeatState {
 
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
+		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Story Menu"); #end
+
+		if(WeekData.weeksList.length < 1) {
+			FlxTransitionableState.skipNextTransIn = true;
+			persistentUpdate = false;
+			FlxG.switchState(() -> new ErrorState("NO WEEKS ADDED FOR STORY MODE\n\nPress ACCEPT to go to the Week Editor Menu.\nPress BACK to return to Main Menu.",
+				() -> FlxG.switchState(() -> new states.editors.WeekEditorState()),
+				() -> FlxG.switchState(() -> new MainMenuState()))
+			);
+			return;
+		}
+
 		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
 		persistentUpdate = persistentDraw = true;
 
@@ -58,7 +70,6 @@ class StoryMenuState extends MusicBeatState {
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 		add(grpLocks = new FlxTypedGroup<FlxSprite>());
 
-		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Story Menu"); #end
 
 		var num:Int = 0;
 		for (i in 0...WeekData.weeksList.length) {
@@ -145,6 +156,8 @@ class StoryMenuState extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float) {
+		if(WeekData.weeksList.length < 1) return;
+
 		if(intendedScore != lerpScore) {
 			lerpScore = Math.floor(FlxMath.lerp(intendedScore, lerpScore, Math.exp(-elapsed * 30)));
 			if(Math.abs(intendedScore - lerpScore) < 10) lerpScore = intendedScore;

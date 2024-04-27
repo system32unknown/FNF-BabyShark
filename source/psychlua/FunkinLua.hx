@@ -1,7 +1,6 @@
 package psychlua;
 
 import flixel.FlxBasic;
-import flixel.addons.transition.FlxTransitionableState;
 import cutscenes.DialogueBoxPsych;
 import substates.GameOverSubstate;
 import states.*;
