@@ -33,6 +33,8 @@ import haxe.io.Bytes;
 import haxe.io.Path;
 import haxe.Json;
 
+@:access(openfl.media.Sound.__buffer)
+@:access(flixel.sound.FlxSound._sound)
 class ChartingState extends MusicBeatState {
 	public static var noteTypeList:Array<String> = [ //Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
 		'',
@@ -1999,8 +2001,8 @@ class ChartingState extends MusicBeatState {
 
 		var sound:FlxSound = FlxG.sound.music;
 		if (FlxG.save.data.chart_waveformVoices) sound = vocals;
-		if (sound.buffer != null) {
-			var buffer:AudioBuffer = sound.buffer;
+		if (sound != null && sound._sound != null && sound._sound.__buffer != null) {
+			var buffer:AudioBuffer = sound._sound.__buffer;
 			wavData = waveformData(buffer, buffer.data.toBytes(), st, et, 1, wavData, Std.int(gridBG.height));
 		}
 

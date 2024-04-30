@@ -911,7 +911,7 @@ class PlayState extends MusicBeatState {
 		spr.screenCenter();
 		spr.antialiasing = (ClientPrefs.data.antialiasing && !isPixelStage);
 		insert(members.indexOf(noteGroup), spr);
-		FlxTween.tween(spr, {y: spr.y + 100, alpha: 0}, Conductor.crochet / 1000, {ease: FlxEase.cubeInOut, onComplete: (twn:FlxTween) -> {remove(spr, true); spr.destroy();}});
+		FlxTween.tween(spr, {alpha: 0}, Conductor.crochet / 1000, {ease: FlxEase.cubeInOut, onComplete: (twn:FlxTween) -> {remove(spr, true); spr.destroy();}});
 		return spr;
 	}
 
@@ -994,7 +994,7 @@ class PlayState extends MusicBeatState {
 			timeToStart = 0;
 		}
 
-		if(startOnTime > 0) setSongTime(startOnTime - 500);
+		setSongTime(Math.max(0, startOnTime - 500));
 		startOnTime = 0;
 
 		if(paused) {music.pause(); vocals.pause();}
@@ -1235,7 +1235,6 @@ class PlayState extends MusicBeatState {
 
 			paused = false;
 			callOnScripts('onResume');
-
 			#if DISCORD_ALLOWED resetRPC(startTimer != null && startTimer.finished); #end
 		}
 	}
@@ -1273,27 +1272,16 @@ class PlayState extends MusicBeatState {
 	}
 
 	function resyncVocals(resync:Bool = true):Void {
-		if (finishTimer != null || (transitioning && endingSong)) return;
-		FlxG.sound.music.pitch = playbackRate;
+		if(finishTimer != null) return;
+		FlxG.sound.music.play();
+		#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
+		Conductor.songPosition = FlxG.sound.music.time;
 
 		if (Conductor.songPosition <= vocals.length) {
-			var stream:Bool = vocals.vorbis != null;
-			vocals.pitch = playbackRate;
-
-			if (!stream || resync) {
-				if (stream) {FlxG.sound.music.pause(); vocals.pause();}
-				Conductor.songPosition = (vocals.time = FlxG.sound.music.time) + Conductor.offset;
-			} else Conductor.songPosition = lastSongTime + Conductor.offset;
+			vocals.time = Conductor.songPosition;
+			#if FLX_PITCH vocals.pitch = playbackRate; #end
 			vocals.play();
-		} else Conductor.songPosition = lastSongTime + Conductor.offset;
-
-		var diff:Float = lastSongTime - Conductor.songPosition;
-		if (diff < songElapsed && diff >= 0) {
-			var v:Float = Conductor.songPosition;
-			Conductor.songPosition = lastSongTime;
-			lastSongTime = v;
-		} else lastSongTime = Conductor.songPosition;
-		FlxG.sound.music.play();
+		}
 	}
 
 	public var paused:Bool = false;
@@ -1303,26 +1291,14 @@ class PlayState extends MusicBeatState {
 	var freezeCamera:Bool = false;
 	var allowDebugKeys:Bool = true;
 
-	var lastSongTime:Float = 0;
-	var songElapsed:Float = 0;
-	var syncDebounce:Float = 0;
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music.playing) {
-			var time:Float = FlxG.sound.music.time;
-			songElapsed = time - lastSongTime;
-			lastSongTime = time;
-		}
-		
 		if (startedCountdown && !paused) {
-			var delta:Float = elapsed * 1000 * playbackRate;
-			if (!startingSong && FlxG.sound.music.playing && songElapsed > 0)
-				Conductor.songPosition = lastSongTime;
-			else Conductor.songPosition += delta;
-
-			if (!startingSong && (syncDebounce += elapsed) > 1) {
-				syncDebounce = 0;
-				var resync:Bool = vocals.loaded && Math.abs(vocals.time - FlxG.sound.music.time) > (vocals.vorbis == null ? 6 : 12);
-				if (Math.abs(lastSongTime - Conductor.songPosition) > 16 || resync) resyncVocals(resync);
+			Conductor.songPosition += elapsed * 1000 * playbackRate;
+			if (Conductor.songPosition >= 0) {
+				var timeDiff:Float = Math.abs(FlxG.sound.music.time - Conductor.songPosition - Conductor.offset);
+				Conductor.songPosition = FlxMath.lerp(Conductor.songPosition, FlxG.sound.music.time, FlxMath.bound(elapsed * 2.5, 0, 1));
+				if (timeDiff > 1000 * playbackRate)
+					Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
 			}
 		}
 
@@ -1948,7 +1924,7 @@ class PlayState extends MusicBeatState {
 	function popUpScore(?note:Note):Void {
 		if (note == null) return;
 
-		var noteDiff:Float = getNoteDiff(note) / getActualPlaybackRate();
+		var noteDiff:Float = getNoteDiff(note) / playbackRate;
 		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
 		var score:Int = 500;
 
@@ -2027,7 +2003,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
-			msTiming = MathUtil.truncateFloat(noteDiff / getActualPlaybackRate());
+			msTiming = MathUtil.truncateFloat(noteDiff / playbackRate);
 			mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
 			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 			mstimingTxt.text = '${msTiming}ms';
@@ -2724,8 +2700,6 @@ class PlayState extends MusicBeatState {
 		setOnScripts('ratingRank', ranks);
 		setOnScripts('ratingFC', ratingFC);
 	}
-
-	public function getActualPlaybackRate():Float return FlxG.sound.music != null ? FlxG.sound.music.getActualPitch() : playbackRate;
 
 	public dynamic function fullComboFunction() {
 		var fullhits = [for(i in 0...ratingsData.length) ratingsData[i].hits];

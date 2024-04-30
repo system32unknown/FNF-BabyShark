@@ -346,12 +346,7 @@ class Paths {
 			}
 		}
 		localTrackedAssets.push(file);
-		var sound:Sound = currentTrackedSounds.get(file);
-		@:privateAccess if (sound != null && sound.__buffer != null && sound.__buffer.__srcVorbisFile != null) {
-			decacheSound(file);
-			sound = null;
-		}
-		return sound;
+		return currentTrackedSounds.get(file);
 	}
 
 	#if MODS_ALLOWED
