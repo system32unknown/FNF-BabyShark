@@ -211,7 +211,7 @@ class FreeplayState extends MusicBeatState {
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 		if (!player.playingMusic) {
-			comboText.text = Language.getPhrase('personal_combo', 'Rating: {1}', [intendedcombo]);
+			comboText.text = Language.getPhrase('personal_combo', 'RATING: {1}', [intendedcombo]);
 			scoreText.text = Language.getPhrase('personal_best', 'PERSONAL BEST: {1} ({2}%)', [lerpScore, ratingSplit.join('.')]);
 			positionHighscore();
 

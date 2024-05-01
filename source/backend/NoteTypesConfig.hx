@@ -1,7 +1,5 @@
 package backend;
 
-import objects.Note;
-
 typedef NoteTypeProperty = {
 	property:Array<String>,
 	value:Dynamic
@@ -39,7 +37,7 @@ class NoteTypesConfig {
 		return parsed;
 	}
 
-	public static function applyNoteTypeData(note:Note, name:String) {
+	public static function applyNoteTypeData(note:objects.Note, name:String) {
 		var data:Array<NoteTypeProperty> = loadNoteTypeData(name);
 		if(data == null || data.length < 1) return;
 		

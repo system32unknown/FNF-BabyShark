@@ -358,7 +358,6 @@ class NoteOffsetState extends MusicBeatState {
 	function setObjectAlpha(i:Int, alpha:Float) {
 		var obj:Null<FlxSprite> = i == 0 ? rating : (i == 2 ? combo : null);
 		if (obj != null) obj.alpha = alpha;
-
 		if (i == 1 && comboNums != null) for (v in comboNums) v.alpha = alpha;
 	}
 

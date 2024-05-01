@@ -58,13 +58,12 @@ class PauseSubState extends MusicBeatSubstate {
 		bg.scrollFactor.set();
 		add(bg);
 
-		var levelInfo:FlxText = new FlxText(20, 15, 0, PlayState.SONG.song, 32);
-		var levelDifficulty:FlxText = new FlxText(20, 15, 0, Difficulty.getString().toUpperCase(), 32);
+		var levelInfo:FlxText = new FlxText(20, 15, 0, PlayState.SONG.song + " - " + Difficulty.getString().toUpperCase(), 32);
 		var failTxt:FlxText = new FlxText(20, 15, 0, Language.getPhrase("fails", "Fails: {1}", [PlayState.deathCounter]), 32);
 		var chartingText:FlxText = new FlxText(20, 15, 0, Language.getPhrase("Charting Mode").toUpperCase(), 32);
 		practiceText = new FlxText(20, 15, 0, Language.getPhrase("Practice Mode").toUpperCase(), 32);
 
-		for(k => label in [levelInfo, levelDifficulty, failTxt, chartingText, practiceText]) {
+		for(k => label in [levelInfo, failTxt, chartingText, practiceText]) {
 			label.scrollFactor.set();
 			label.setFormat(Paths.font('babyshark.ttf'), 32);
 			label.updateHitbox();
