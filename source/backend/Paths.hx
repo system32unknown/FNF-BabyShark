@@ -240,7 +240,7 @@ class Paths {
 	}
 
 	static public function getAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
-		var useMod = false;
+		var useMod:Bool = false;
 		var imageLoaded:FlxGraphic = image(key, parentFolder, allowGPU);
 
 		var myXml:Dynamic = getPath('images/$key.xml', TEXT, parentFolder);
@@ -296,7 +296,7 @@ class Paths {
 		#end
 	}
 
-	inline static public function formatToSongPath(path:String) {
+	inline static public function formatToSongPath(path:String):String {
 		var invalidChars:EReg = ~/[~&\\;:<>#]+/g;
 		var hideChars:EReg = ~/[.,'"%?!]+/g;
 
@@ -304,7 +304,7 @@ class Paths {
 	}
 
 	public static var currentTrackedSounds:Map<String, Sound> = [];
-	public static function returnSound(key:String, ?path:String, ?modsAllowed:Bool = true, ?beepOnNull:Bool = true) {
+	public static function returnSound(key:String, ?path:String, ?modsAllowed:Bool = true, ?beepOnNull:Bool = true):Sound {
 		var file:String = getPath(Language.getFileTranslation(key) + '.$SOUND_EXT', SOUND, path, modsAllowed);
 		if(!currentTrackedSounds.exists(file)) {
 			#if sys
@@ -409,6 +409,6 @@ class Paths {
 	}
 	#end
 
-	inline static public function exists(key:String)
+	inline static public function exists(key:String):Bool
 		return FileSystem.exists(modFolders(key)) || FileSystem.exists(getSharedPath(key));
 }

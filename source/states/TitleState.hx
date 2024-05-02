@@ -1,8 +1,5 @@
 package states;
 
-import states.MainMenuState;
-import flixel.group.FlxGroup;
-
 @:structInit class TitleData {
 	public var titlex:Float = 0;
 	public var titley:Float = 1500;
