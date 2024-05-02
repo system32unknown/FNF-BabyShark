@@ -70,7 +70,6 @@ class StoryMenuState extends MusicBeatState {
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 		add(grpLocks = new FlxTypedGroup<FlxSprite>());
 
-
 		var num:Int = 0;
 		for (i in 0...WeekData.weeksList.length) {
 			var weekFile:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
@@ -166,7 +165,7 @@ class StoryMenuState extends MusicBeatState {
 		}
 
 		if (!movedBack && !selectedWeek) {
-			var changeDiff = false;
+			var changeDiff:Bool = false;
 			if (controls.UI_UP_P || controls.UI_DOWN_P) {
 				changeWeek(controls.UI_UP_P ? -1 : 1);
 				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
@@ -187,10 +186,8 @@ class StoryMenuState extends MusicBeatState {
 				leftArrow.animation.play('press');
 			else leftArrow.animation.play('idle');
 
-			if (controls.UI_RIGHT_P)
-				changeDifficulty(1);
-			else if (controls.UI_LEFT_P)
-				changeDifficulty(-1);
+			if (controls.UI_RIGHT_P) changeDifficulty(1);
+			else if (controls.UI_LEFT_P) changeDifficulty(-1);
 			else if (changeDiff) changeDifficulty();
 
 			if(FlxG.keys.justPressed.CONTROL) {
@@ -231,7 +228,7 @@ class StoryMenuState extends MusicBeatState {
 				PlayState.isStoryMode = true;
 				selectedWeek = true;
 	
-				var diffic = Difficulty.getFilePath(curDifficulty);
+				var diffic:String = Difficulty.getFilePath(curDifficulty);
 				if(diffic == null) diffic = '';
 	
 				PlayState.storyDifficulty = curDifficulty;
@@ -272,7 +269,7 @@ class StoryMenuState extends MusicBeatState {
 		WeekData.setDirectoryFromWeek(loadedWeeks[curWeek]);
 
 		var diff:String = Difficulty.getString(curDifficulty, false);
-		var newImage:flixel.graphics.FlxGraphic = Paths.image('menudifficulties/' + Paths.formatToSongPath(diff));
+		var newImage:flixel.graphics.FlxGraphic = Paths.image('menudifficulties/${Paths.formatToSongPath(diff)}');
 
 		if(sprDifficulty.graphic != newImage) {
 			sprDifficulty.loadGraphic(newImage);

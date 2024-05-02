@@ -982,7 +982,7 @@ class PlayState extends MusicBeatState {
 		startingSong = false;
 
 		var music:FlxSound = FlxG.sound.music;
-		music.loadEmbedded(Paths.inst(SONG.song));
+		try {music.loadEmbedded(Paths.inst(SONG.song));}
 		music.onComplete = () -> finishSong();
 		music.pitch = playbackRate;
 		music.volume = 1;
@@ -1023,13 +1023,9 @@ class PlayState extends MusicBeatState {
 		var songData:SwagSong = SONG;
 		Conductor.bpm = songData.bpm;
 
-		var inst = Paths.inst(songData.song);
-		songLength = inst != null ? inst.length : 0;
-
 		vocals = new FlxSound();
-		if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));
+		try {if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));}
 		vocals.pitch = playbackRate;
-		FlxG.sound.defaultMusicGroup.add(vocals);
 		FlxG.sound.list.add(vocals);
 
 		noteGroup.add(notes = new NoteGroup());
@@ -1271,7 +1267,7 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
-	function resyncVocals(resync:Bool = true):Void {
+	function resyncVocals():Void {
 		if(finishTimer != null) return;
 		FlxG.sound.music.play();
 		#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
@@ -2348,11 +2344,7 @@ class PlayState extends MusicBeatState {
 	public function spawnNoteSplashOnNote(note:Note) {
 		if(ClientPrefs.data.splashAlpha > 0 && note != null) {
 			var strum:StrumNote = playerStrums.members[note.noteData];
-			if(strum != null) {
-				var x:Float = strum.x + EK.swidths[mania] / 2 - Note.swagWidth / 2;
-				var y:Float = strum.y + EK.swidths[mania] / 2 - Note.swagWidth / 2;
-				spawnNoteSplash(x, y, note.noteData, note);
-			}
+			if(strum != null) spawnNoteSplash(strum.x + EK.swidths[mania] / 2 - Note.swagWidth / 2, strum.y + EK.swidths[mania] / 2 - Note.swagWidth / 2, note.noteData, note);
 		}
 	}
 
