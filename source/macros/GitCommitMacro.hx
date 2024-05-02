@@ -11,16 +11,32 @@ class GitCommitMacro {
 	 * Returns the current commit hash
 	 */
 	public static var commitHash(get, null):String;
+	/**
+	 * Returns the current commit branch
+	 */
+	public static var commitBranch(get, null):String;
 
 	// GETTERS
 	static inline function get_commitNumber() return __getCommitNumber();
 	static inline function get_commitHash() return __getCommitHash();
+	static inline function get_commitBranch() return __getCommitBranch();
 
 	// INTERNAL MACROS
 	static macro function __getCommitHash() {
 		#if !display
 		try {
 			var proc:Process = new Process('git', ['rev-parse', '--short', 'HEAD'], false);
+			proc.exitCode(true);
+			return macro $v{proc.stdout.readLine()};
+		} catch(e) {}
+		#end
+		return macro $v{"-"}
+	}
+
+	static macro function __getCommitBranch() {
+		#if !display
+		try {
+			var proc:Process = new Process('git', ['rev-parse', '--abbrev-ref', 'HEAD'], false);
 			proc.exitCode(true);
 			return macro $v{proc.stdout.readLine()};
 		} catch(e) {}

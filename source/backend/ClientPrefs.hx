@@ -29,7 +29,8 @@ import flixel.input.keyboard.FlxKey;
 		[0xFFFFFF00, 0xFFFFFFFF, 0xFF993300],
 		[0xFF8b4aff, 0xFFFFFFFF, 0xFF3b177d],
 		[0xFFFF0000, 0xFFFFFFFF, 0xFF660000],
-		[0xFF0033ff, 0xFFFFFFFF, 0xFF000066]];
+		[0xFF0033ff, 0xFFFFFFFF, 0xFF000066]
+	];
 	public var arrowRGBPixelExtra:Array<Array<FlxColor>> = [
 		[0xFFE276FF, 0xFFFFF9FF, 0xFF60008D],
 		[0xFF3DCAFF, 0xFFF4FFFF, 0xFF003060],
@@ -39,13 +40,12 @@ import flixel.input.keyboard.FlxKey;
 		[0xFFffd94a, 0xFFfffff9, 0xFF663500],
 		[0xFFB055BC, 0xFFf4f4ff, 0xFF4D0060],
 		[0xFFdf3e23, 0xFFffe6e9, 0xFF440000],
-		[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D]];
+		[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D]
+	];
 
-	public var fpsStats:Bool = true;
 	public var memCounterType:String = "MEM/PEAK";
 	public var camMovement:Bool = true;
 	public var ghostTapping:Bool = true;
-	public var scoreZoom:Bool = true;
 	public var noReset:Bool = false;
 	public var healthBarAlpha:Float = 1;
 	public var hitsoundVolume:Float = 0;
@@ -57,7 +57,6 @@ import flixel.input.keyboard.FlxKey;
 	public var smoothHealth:Bool = false;
 	public var accuracyType:String = 'Judgement';
 	public var noteDiffTypes:String = "Simple";
-	public var clearCacheMethod:String = "Old";
 	public var showJudgement:Bool = true;
 	public var iconBounceType:String = 'Psych';
 	public var ratingDisplay:String = 'World';
@@ -95,7 +94,6 @@ import flixel.input.keyboard.FlxKey;
 	public var safeFrames:Float = 10;
 	public var discordRPC:Bool = false;
 	public var language:String = 'en-US';
-	public var colorFilter:String = "NONE";
 }
 
 class ClientPrefs {

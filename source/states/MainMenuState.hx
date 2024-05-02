@@ -32,7 +32,7 @@ class MainMenuState extends MusicBeatState {
 		#if MODS_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();
 
-		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Menus"); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence(); #end
 
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;

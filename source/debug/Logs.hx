@@ -9,7 +9,7 @@ import utils.system.NativeUtil.ConsoleColor;
 class Logs {
 	static var __showing:Bool = false;
 
-	public static var nativeTrace = Log.trace;
+	#if !sys public static var nativeTrace = Log.trace; #end
 	public static function init() {
 		Log.trace = function(v:Dynamic, ?infos:Null<haxe.PosInfos>) {
 			var data:Array<LogText> = [logText('${infos.fileName}:${infos.lineNumber}: ', CYAN), logText(Std.string(v))];

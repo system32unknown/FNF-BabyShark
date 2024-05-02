@@ -1023,6 +1023,9 @@ class PlayState extends MusicBeatState {
 		var songData:SwagSong = SONG;
 		Conductor.bpm = songData.bpm;
 
+		var inst = Paths.inst(songData.song);
+		songLength = inst != null ? inst.length : 0;
+
 		vocals = new FlxSound();
 		try {if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));}
 		vocals.pitch = playbackRate;
@@ -2140,7 +2143,7 @@ class PlayState extends MusicBeatState {
 	function processInputs():Void {
 		if (!startedCountdown) return;
 
-		if(notes.length > 0) {
+		if(notes.length != 0) {
 			notes.forEachAlive((daNote:Note) -> {
 				if (!daNote.mustPress && !daNote.hitByOpponent && !daNote.ignoreNote && daNote.checkHit(Conductor.songPosition))
 					opponentNoteHit(daNote);

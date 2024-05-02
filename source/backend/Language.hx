@@ -73,7 +73,7 @@ class Language {
 	#if LUA_ALLOWED
 	public static function addLuaCallbacks(lua:psychlua.FunkinLua) {
 		lua.set("getTranslationPhrase", (key:String, ?defaultPhrase:String, ?values:Array<Dynamic> = null) -> return getPhrase(key, defaultPhrase, values));
-		lua.set("getFileTranslation", (key:String) -> return getFileTranslation(key));
+		lua.set("getFileTranslation", getFileTranslation);
 	}
 	#end
 }

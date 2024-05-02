@@ -173,16 +173,16 @@ class CreditsState extends MusicBeatState {
 				}
 
 				if(FlxG.mouse.wheel != 0) {
-					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+					FlxG.sound.play(Paths.sound('scrollMenu'), .2);
 					changeSelection(-FlxG.mouse.wheel);
 				}
 
 				if(controls.UI_DOWN || controls.UI_UP) {
-					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
+					var checkLastHold:Int = Math.floor((holdTime - .5) * 10);
 					holdTime += elapsed;
-					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+					var checkNewHold:Int = Math.floor((holdTime - .5) * 10);
 
-					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+					if(holdTime > .5 && checkNewHold - checkLastHold > 0)
 						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
 				}
 			}
@@ -272,7 +272,7 @@ class CreditSectionState extends MusicBeatState {
 	final offsetThing:Float = -75;
 
 	override function create() {
-		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Menus"); #end
+		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Credits"); #end
 		prevModDir = Mods.currentModDirectory;
 		persistentUpdate = true;
 

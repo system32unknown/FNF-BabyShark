@@ -1,11 +1,9 @@
 package states.stages;
 
-class Spooky extends BaseStage
-{
+class Spooky extends BaseStage {
 	var halloweenBG:BGSprite;
 	var halloweenWhite:BGSprite;
-	override function create()
-	{
+	override function create() {
 		if(!lowQuality)
 			halloweenBG = new BGSprite('halloween_bg', -200, -100, ['halloweem bg0', 'halloweem bg lightning strike']);
 		else halloweenBG = new BGSprite('halloween_bg_low', -200, -100);

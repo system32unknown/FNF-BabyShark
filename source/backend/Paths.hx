@@ -61,38 +61,13 @@ class Paths {
 		obj = null;
 	}
 
-	public static function decacheGraphic(key:String) @:privateAccess {
-		var obj:FlxGraphic = currentTrackedAssets.get(key);
-		currentTrackedAssets.remove(key);
-		if ((obj == null && (obj = FlxG.bitmap._cache.get(key)) == null) || assetExcluded(obj)) return;
-
-		OpenFlAssets.cache.removeBitmapData(key);
-		OpenFlAssets.cache.clear(key);
-		FlxG.bitmap._cache.remove(key);
-
-		if (obj.bitmap != null) {
-			obj.bitmap.lock();
-			if (obj.bitmap.__texture != null) obj.bitmap.__texture.dispose();
-			if (obj.bitmap.image != null) obj.bitmap.image.data = null;
-		}
-
-		obj.persist = false;
-		obj.destroyOnNoUse = true;
-
-		obj.dump();
-		obj.destroy();
-		obj = null;
-	}
-
 	// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
 		for (key in currentTrackedAssets.keys()) {
 			// if it is not currently contained within the used local assets
 			if (!localTrackedAssets.contains(key) && !keyExclusions.contains(key)) {
-				if (ClientPrefs.data.clearCacheMethod == "New") {
-					destroyGraphic(currentTrackedAssets.get(key)); // get rid of the graphic
-					currentTrackedAssets.remove(key); // and remove the key from local cache map
-				} else decacheGraphic(key);
+				destroyGraphic(currentTrackedAssets.get(key)); // get rid of the graphic
+				currentTrackedAssets.remove(key); // and remove the key from local cache map
 			}
 		}
 
@@ -104,11 +79,8 @@ class Paths {
 	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
 	public static function clearStoredMemory() {
 		for (key in FlxG.bitmap._cache.keys()) {
-			if (!currentTrackedAssets.exists(key) && !assetExcluded(key)) {
-				if (ClientPrefs.data.clearCacheMethod == "New")
-					destroyGraphic(FlxG.bitmap.get(key));
-				else decacheGraphic(key);
-			}
+			if (!currentTrackedAssets.exists(key) && !assetExcluded(key))
+				destroyGraphic(FlxG.bitmap.get(key));
 		}
 
 		for (key => asset in currentTrackedSounds) {

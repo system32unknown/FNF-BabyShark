@@ -13,7 +13,6 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		opt.onChange = onChangeFPSCounter;
 		
 		addOption(new Option('Rainbow FPS', '', 'rainbowFps', BOOL));
-		addOption(new Option('More Stats FPS', '', 'fpsStats', BOOL));
 		addOption(new Option('Alternate Discord Large Image', '', 'altDiscordImg', BOOL));
 		var option:Option = new Option('Alt. Discord Large Images:', '', 'altDiscordImgCount', INT);
 		option.scrollSpeed = 15;
