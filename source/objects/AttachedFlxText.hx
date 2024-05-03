@@ -13,4 +13,9 @@ class AttachedFlxText extends FlxText {
 			alpha = sprTracker.alpha;
 		}
 	}
+
+	override function destroy() {
+		textoffset = flixel.util.FlxDestroyUtil.put(textoffset);
+		super.destroy();
+	}
 }
