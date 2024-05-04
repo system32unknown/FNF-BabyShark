@@ -34,7 +34,7 @@ class CreditsState extends MusicBeatState {
 		['MAJigsaw77',			'jigsaw',			'MP4 Video and Discord Library (hxvlc) and hxdiscord_rpc',		'https://twitter.com/MAJigsaw77',			'FFFFFF'],
 		['KadeDev',				'kade',				'Fixed Chart Editor\nand other PRs, Kade Engine Dev',			'https://twitter.com/kade0912',				'64A250'],
 		['superpowers04', 		'superpowers04', 	'linc_luaJIT Fork\n and lua reworks', 							'https://github.com/superpowers04',			'B957ED'],
-		['Raltyro',				'raltyro',			'Bunch of lua fixes, Owner of Psike Engine',					'https://twitter.com/raltyro',				'F3F3F3'],
+		['Raltyro',				'raltyro',			'Bunch of lua fixes, Psike Engine Dev',							'https://twitter.com/raltyro',				'F3F3F3'],
 		['UncertainProd',		'prod',				'Sampler2D in Runtime Shaders',									'https://github.com/UncertainProd',			'D2D2D2'],
 		['ACrazyTown',			'acrazytown',		'Optimized PNGs',												'https://twitter.com/acrazytown',			'A03E3D'],
 		['CheemsAndFriends', 	'face', 			'Creator of FlxAnimate\n(Icon will be added later)', 			'https://twitter.com/CheemsnFriendos', 		'A1A1A1'],
@@ -44,7 +44,7 @@ class CreditsState extends MusicBeatState {
 		['SrPerez', 			'perez', 			'1-9 keys art', 												'https://twitter.com/newsrperez',			'FF9E00'],
 		[''],
 		['Special Thanks'],
-		['Denpa Engine',		'denpa',			'The Freeplay Section code used for this engine',				'https://github.com/UmbratheUmbreon/PublicDenpaEngine',			'FF9300'],
+		['Denpa Engine',		'denpa',			'The Freeplay Section used for this engine',	'https://github.com/UmbratheUmbreon/PublicDenpaEngine',	    'FF9300'],
 		['Codename Engine',		'codename',			'Some stuffs used for this engine',				'https://github.com/FNF-CNE-Devs/CodenameEngine',			'FF9300'],
 	];
 

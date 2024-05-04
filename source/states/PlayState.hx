@@ -264,7 +264,6 @@ class PlayState extends MusicBeatState {
 		var music:FlxSound = FlxG.sound.music = new FlxSound();
 		music.persist = true;
 		music.volume = 1;
-		FlxG.sound.defaultMusicGroup.add(music);
 
 		GameOverSubstate.resetVariables();
 		PauseSubState.songName = null; //Reset to default
@@ -1910,11 +1909,10 @@ class PlayState extends MusicBeatState {
 		Paths.image(uiPrefix + 'ratings/combo' + uiPostfix);
 	}
 
-	var scoreSeparator:String = "|";
 	function getScoreText() {
-		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : 'NPS:$nps/$maxNPS $scoreSeparator '}Score:$songScore ';
-		if (!(cpuControlled || instakillOnMiss)) tempText += '$scoreSeparator Breaks:$songMisses ';
-		tempText += '$scoreSeparator Acc:$accuracy% •' + (ratingName != '?' ? ' ($ratingFC, $ranks) $ratingName' : ' N/A');
+		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps, maxNPS])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
+		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('break_text', '| Breaks:{1} ', [songMisses]); 
+		tempText += Language.getPhrase('| Acc:{1}% •', [accuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}, $ranks) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' N/A');
 		return tempText;
 	}
 
@@ -2697,7 +2695,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public dynamic function fullComboFunction() {
-		var fullhits = [for(i in 0...ratingsData.length) ratingsData[i].hits];
+		var fullhits:Array<Int> = [for(i in 0...ratingsData.length) ratingsData[i].hits];
 		ratingFC = 'Clear';
 		if(songMisses < 1) {
 			if (fullhits[3] > 0 || fullhits[4] > 0) ratingFC = 'FC';
