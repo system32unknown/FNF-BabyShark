@@ -15,7 +15,11 @@ class Log {
 	}
 
 	public static function error(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.ERROR) #if !macro FunkinLogs.trace('[${info.className}] $message', ERROR, RED); #else trace('[${info.className}] $message'); #end
+		if (level >= LogLevel.ERROR) {
+			var message:String = '[${info.className}] $message';
+			#if !macro FunkinLogs.trace(message, ERROR, RED); #else trace(message); #end
+			throw message;
+		}
 	}
 
 	public static function info(message:Dynamic, ?info:PosInfos):Void {

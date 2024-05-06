@@ -6,8 +6,7 @@ import objects.AttachedText;
 import objects.CheckboxThingie;
 import backend.InputFormatter;
 
-class BaseOptionsMenu extends MusicBeatSubstate
-{
+class BaseOptionsMenu extends MusicBeatSubstate {
 	var curOption:Option = null;
 	var curSelected:Int = 0;
 	var optionsArray:Array<Option>;

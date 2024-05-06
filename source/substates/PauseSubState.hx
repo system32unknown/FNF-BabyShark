@@ -163,8 +163,6 @@ class PauseSubState extends MusicBeatSubstate {
 						return;
 					}
 				} catch(e:Dynamic) {
-					Logs.trace('ERROR! $e', ERROR);
-
 					var errorStr:String = e.toString();
 					if(errorStr.startsWith('[file_contents,assets/data/${Paths.CHART_PATH}')) errorStr = 'Missing file: ' + errorStr.substring(27, errorStr.length - 1); //Missing chart
 					missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';

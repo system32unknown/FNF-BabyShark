@@ -79,6 +79,7 @@ class PlayState extends MusicBeatState {
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 
+	public var inst:FlxSound;
 	public var vocals:FlxSound;
 
 	public var dad:Character = null;
@@ -86,7 +87,7 @@ class PlayState extends MusicBeatState {
 	public var boyfriend:Character = null;
 	public var gameOverChar:Character = null;
 
-	public var notes:NoteGroup;
+	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
 	public var eventNotes:Array<EventNote> = [];
 
@@ -108,8 +109,6 @@ class PlayState extends MusicBeatState {
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
 	public var camZoomingDecay:Float = 1;
-
-	public var firstStart:Bool = false;
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
@@ -141,18 +140,17 @@ class PlayState extends MusicBeatState {
 
 	public var healthBar:Bar;
 	var songPercent:Float = 0;
-
 	public var timeBar:Bar;
-	public static var timeToStart:Float = 0;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
-
 	public static var mania:Int = 3;
 
 	var generatedMusic:Bool = false;
 	public var endingSong:Bool = false;
 	public var startingSong:Bool = false;
 	var updateTime:Bool = true;
+	public static var changedDifficulty:Bool = false;
+	public static var chartingMode:Bool = false;
 
 	//Gameplay settings
 	public var healthGain:Float = 1;
@@ -173,6 +171,9 @@ class PlayState extends MusicBeatState {
 	public var cameraSpeed:Float = 1;
 
 	public var songScore:Int = 0;
+	public var songHits:Int = 0;
+	public var songMisses:Int = 0;
+	public var scoreTxt:FlxText;
 
 	public var accuracy:Float = 0;
 	public var ranks:String = "";
@@ -180,10 +181,6 @@ class PlayState extends MusicBeatState {
 	var notesHitArray:Array<Date> = [];
 	public var nps:Int = 0;
 	public var maxNPS:Int = 0;
-
-	public var songHits:Int = 0;
-	public var songMisses:Int = 0;
-	public var scoreTxt:FlxText;
 	
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
@@ -193,11 +190,7 @@ class PlayState extends MusicBeatState {
 
 	public static var campaignScore:Int = 0;
 	public static var deathCounter:Int = 0;
-
-	public static var chartingMode:Bool = false;
-
 	public static var seenCutscene:Bool = false;
-	public static var changedDifficulty:Bool = false;
 
 	public var defaultCamZoom:Float = 1.05;
 	public var defaultHudCamZoom:Float = 1.;
@@ -251,24 +244,17 @@ class PlayState extends MusicBeatState {
 		startCallback = startCountdown;
 		endCallback = endSong;
 
-		firstStart = !MusicBeatState.previousStateIs(PlayState);
 		persistentUpdate = true;
 		persistentDraw = true;
 
 		Conductor.usePlayState = true;
 		Conductor.songPosition = Math.NEGATIVE_INFINITY;
-		if (firstStart) FlxG.sound.destroy(true);
 		Paths.clearStoredMemory();
-
-		if (FlxG.sound.music != null) FlxG.sound.music.destroy();
-		var music:FlxSound = FlxG.sound.music = new FlxSound();
-		music.persist = true;
-		music.volume = 1;
 
 		GameOverSubstate.resetVariables();
 		PauseSubState.songName = null; //Reset to default
 
-		if (FlxG.sound.music != null) FlxG.sound.music.stop();
+		if(FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		// Gameplay settings
 		healthGain = ClientPrefs.getGameplaySetting('healthgain');
@@ -281,8 +267,7 @@ class PlayState extends MusicBeatState {
 		camGame = initPsychCamera();
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
-		camHUD.bgColor = 0x00000000;
-		camOther.bgColor = 0x00000000;
+		camHUD.bgColor = camOther.bgColor = 0x00000000;
 
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOther, false);
@@ -461,7 +446,6 @@ class PlayState extends MusicBeatState {
 		camGame.zoom = defaultCamZoom;
 		camGame.snapToTarget();
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
-
 		moveCameraSection();
 
 		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return displayedHealth, 0, 2);
@@ -536,8 +520,6 @@ class PlayState extends MusicBeatState {
 			canTweenCamZoomBoyfriend = 1;
 			canTweenCamZoomDad = 1.3;
 			canTweenCamZoomGf = 1.3;
-	
-			moveCameraSection();
 		}
 		// SONG SPECIFIC SCRIPTS
 		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'data/${Paths.CHART_PATH}/$songName/')) for (file in FileSystem.readDirectory(folder)) {
@@ -569,7 +551,6 @@ class PlayState extends MusicBeatState {
 		GameOverSubstate.cache();
 		Paths.clearUnusedMemory();
 
-		if(timeToStart > 0)	clearNotesBefore(timeToStart);
 		if(eventNotes.length < 1) checkEventNote();
 	}
 
@@ -817,11 +798,6 @@ class PlayState extends MusicBeatState {
 		for (count in ['3', '2', '1', 'Go']) Paths.sound('countdown/intro$count' + introSoundsSuffix);
 	}
 
-	public function updateLuaDefaultPos() {
-		for (i in 0...playerStrums.length) {setOnScripts('defaultPlayerStrumX$i', playerStrums.members[i].x); setOnScripts('defaultPlayerStrumY$i', playerStrums.members[i].y);}
-		for (i in 0...opponentStrums.length) {setOnScripts('defaultOpponentStrumX$i', opponentStrums.members[i].x); setOnScripts('defaultOpponentStrumY$i', opponentStrums.members[i].y);}
-	}
-
 	public function startCountdown() {
 		if (startedCountdown) {
 			callOnScripts('onStartCountdown');
@@ -836,7 +812,8 @@ class PlayState extends MusicBeatState {
 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
-			updateLuaDefaultPos();
+			for (i in 0...playerStrums.length) {setOnScripts('defaultPlayerStrumX$i', playerStrums.members[i].x); setOnScripts('defaultPlayerStrumY$i', playerStrums.members[i].y);}
+			for (i in 0...opponentStrums.length) {setOnScripts('defaultOpponentStrumX$i', opponentStrums.members[i].x); setOnScripts('defaultOpponentStrumY$i', opponentStrums.members[i].y);}
 
 			setOnScripts('mania', SONG.mania);
 
@@ -854,6 +831,7 @@ class PlayState extends MusicBeatState {
 				setSongTime(0);
 				return true;
 			}
+			moveCameraSection();
 
 			final introAlts:Array<String> = switch(stageUI) {
 				case "pixel": ['${stageUI}UI/countdown/ready-pixel', '${stageUI}UI/countdown/set-pixel', '${stageUI}UI/countdown/date-pixel'];
@@ -980,26 +958,19 @@ class PlayState extends MusicBeatState {
 	function startSong():Void {
 		startingSong = false;
 
-		var music:FlxSound = FlxG.sound.music;
-		try {music.loadEmbedded(Paths.inst(SONG.song));}
-		music.onComplete = () -> finishSong();
-		music.pitch = playbackRate;
-		music.volume = 1;
-		vocals.time = music.time = 0;
-		music.play(); vocals.play();
-
-		if(timeToStart > 0) {
-			setSongTime(timeToStart);
-			timeToStart = 0;
-		}
+		@:privateAccess
+		FlxG.sound.playMusic(inst._sound, 1, false);
+		#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
+		FlxG.sound.music.onComplete = finishSong.bind();
+		vocals.play();
 
 		setSongTime(Math.max(0, startOnTime - 500));
 		startOnTime = 0;
 
-		if(paused) {music.pause(); vocals.pause();}
+		if(paused) {FlxG.sound.music.pause(); vocals.pause();}
 
 		// Song duration in a float, useful for the time left feature
-		songLength = music.length;
+		songLength = FlxG.sound.music.length;
 		FlxTween.tween(timeBar, {alpha: 1}, .5 * playbackRate, {ease: FlxEase.circOut});
 		FlxTween.tween(timeTxt, {alpha: 1}, .5 * playbackRate, {ease: FlxEase.circOut});
 
@@ -1022,15 +993,16 @@ class PlayState extends MusicBeatState {
 		var songData:SwagSong = SONG;
 		Conductor.bpm = songData.bpm;
 
-		var inst = Paths.inst(songData.song);
-		songLength = inst != null ? inst.length : 0;
-
 		vocals = new FlxSound();
 		try {if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));}
 		vocals.pitch = playbackRate;
 		FlxG.sound.list.add(vocals);
 
-		noteGroup.add(notes = new NoteGroup());
+		inst = new FlxSound();
+		try {inst.loadEmbedded(Paths.inst(songData.song));}
+		FlxG.sound.list.add(inst);
+
+		noteGroup.add(notes = new FlxTypedGroup<Note>());
 
 		var file:String = Paths.json('${Paths.CHART_PATH}/$songName/events');
 		if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson('${Paths.CHART_PATH}/$songName/events')) || FileSystem.exists(file) #else Assets.exists(file) #end)
@@ -1194,7 +1166,7 @@ class PlayState extends MusicBeatState {
 
 			var babyArrow:StrumNote = new StrumNote(strumLine.x, strumLine.y, i, player);
 			babyArrow.downScroll = downScroll;
-			if (((!isStoryMode || firstStart || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
+			if (((!isStoryMode || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
 				babyArrow.alpha = 0;
 				FlxTween.tween(babyArrow, {alpha: targetAlpha}, (4 / tempMania) * playbackRate, {ease: FlxEase.circOut, startDelay: .5 + ((.8 / tempMania) * i) * playbackRate});
 			} else babyArrow.alpha = targetAlpha;
@@ -1295,8 +1267,7 @@ class PlayState extends MusicBeatState {
 			if (Conductor.songPosition >= 0) {
 				var timeDiff:Float = Math.abs(FlxG.sound.music.time - Conductor.songPosition - Conductor.offset);
 				Conductor.songPosition = FlxMath.lerp(Conductor.songPosition, FlxG.sound.music.time, FlxMath.bound(elapsed * 2.5, 0, 1));
-				if (timeDiff > 1000 * playbackRate)
-					Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
+				if (timeDiff > 1000 * playbackRate) Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
 			}
 		}
 
@@ -1362,8 +1333,8 @@ class PlayState extends MusicBeatState {
 		} else if (!paused && updateTime) {
 			var curTime:Float = Math.max(0, Conductor.songPosition - ClientPrefs.data.noteOffset);
 			songPercent = curTime / songLength;
-			var songCalc:Float = songLength - curTime;
 
+			var songCalc:Float = songLength - curTime;
 			if (timeType == 'Time Elapsed' || timeType == 'Time Position' || timeType == 'Name Elapsed' || timeType == 'Name Time Position') songCalc = curTime;
 
 			var secondsTotal:Int = Math.floor(Math.max(0, (songCalc / playbackRate) / 1000));
@@ -1414,13 +1385,24 @@ class PlayState extends MusicBeatState {
 				processInputs();
 
 				var anim:String = boyfriend.getAnimationName();
-				if (!boyfriend.stunned && !boyfriend.isAnimationNull() && (cpuControlled || !keysPressed.contains(true) || endingSong)) {
-					if(!boyfriend.isAnimationNull() && boyfriend.holdTimer > Conductor.stepCrochet * (.0011 / playbackRate) * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss'))
-						boyfriend.dance();
-				}
+				if(boyfriend.holdTimer > Conductor.stepCrochet * (.0011 #if FLX_PITCH / FlxG.sound.music.pitch #end) * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss'))
+					boyfriend.dance();
 				
-				if(notes.length != 0) {
-					if(startedCountdown) renderNotes();
+				if(notes.length > 0) {
+					if(startedCountdown)
+						notes.forEachAlive((daNote:Note) -> {
+							var strum:StrumNote = (daNote.mustPress ? playerStrums : opponentStrums).members[daNote.noteData];
+							daNote.followStrumNote(strum, songSpeed / playbackRate);
+							if(daNote.isSustainNote && strum.sustainReduce) daNote.clipToStrumNote(strum);
+				
+							if (Conductor.songPosition - daNote.strumTime > noteKillOffset) { // Kill extremely late notes and cause misses
+								if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
+								if (!daNote.mustPress && daNote.ignoreNote && !endingSong) opponentnoteMiss(daNote);
+							
+								daNote.active = daNote.visible = false;
+								invalidateNote(daNote);
+							}
+						});
 					else notes.forEachAlive((daNote:Note) -> {daNote.canBeHit = false; daNote.wasGoodHit = false;});
 				}
 			}
@@ -1431,22 +1413,6 @@ class PlayState extends MusicBeatState {
 		setOnScripts('cameraY', camFollow.y);
 		setOnScripts('botPlay', cpuControlled);
 		callOnScripts('onUpdatePost', [elapsed]);
-	}
-
-	function renderNotes():Void {
-		notes.forEachAlive((daNote:Note) -> {
-			var strum:StrumNote = (daNote.mustPress ? playerStrums : opponentStrums).members[daNote.noteData];
-			daNote.followStrumNote(strum, songSpeed / playbackRate);
-			if(daNote.isSustainNote && strum.sustainReduce) daNote.clipToStrumNote(strum);
-
-			if (Conductor.songPosition - daNote.strumTime > noteKillOffset) { // Kill extremely late notes and cause misses
-				if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
-				if (!daNote.mustPress && daNote.ignoreNote && !endingSong) opponentnoteMiss(daNote);
-			
-				daNote.active = daNote.visible = false;
-				invalidateNote(daNote);
-			}
-		});
 	}
 
 	function tryPause():Bool {
@@ -2056,11 +2022,10 @@ class PlayState extends MusicBeatState {
 		if(ret == LuaUtils.Function_Stop) return;
 
 		//more accurate hit time for the ratings?
-		if(notes.length > 0 && !boyfriend.stunned && generatedMusic && !endingSong) {
-			var lastTime:Float = Conductor.songPosition;
-			if (FlxG.sound.music != null && FlxG.sound.music.playing && !startingSong && Conductor.songPosition >= 0)
-				Conductor.songPosition = FlxG.sound.music.time;
+		var lastTime:Float = Conductor.songPosition;
+		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time;
 
+		if(notes.length > 0 && !boyfriend.stunned && generatedMusic && !endingSong) {
 			var sortedNotesList:Array<Note> = [];				
 			var canMiss:Bool = !ClientPrefs.data.ghostTapping;
 
@@ -2078,14 +2043,14 @@ class PlayState extends MusicBeatState {
 			}
 			sortedNotesList.sort((a:Note, b:Note) -> Std.int(a.strumTime - b.strumTime));
 
-			if (sortedNotesList.length != 0)
-				goodNoteHit(sortedNotesList[0]);
+			if (sortedNotesList.length != 0) goodNoteHit(sortedNotesList[0]);
 			else {
 				callOnScripts('onGhostTap', [key]);
 				if (canMiss && !boyfriend.stunned) noteMissPress(key);
 			}
-			Conductor.songPosition = lastTime;
 		}
+
+		Conductor.songPosition = lastTime;
 
 		var spr:StrumNote = playerStrums.members[key];
 		if(!strumsBlocked[key] && spr != null && spr.animation.curAnim.name != 'confirm') {
@@ -2386,20 +2351,14 @@ class PlayState extends MusicBeatState {
 			hscript.destroy();
 		}
 		for (_ => save in modchartSaves) save.close();
-
 		for (point in [campoint, camlockpoint, ratingAcc, ratingVel]) point = flixel.util.FlxDestroyUtil.put(point);
-
-		@:privateAccess
-		if (Std.isOfType(FlxG.game._nextState, PlayState) && FlxG.sound.music != null) FlxG.sound.music.destroy();
-		else {
-			Paths.clearStoredMemory();
-			if (FlxG.sound.music != null) FlxG.sound.music.onComplete = null;
-		}
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		FlxG.animationTimeScale = 1;
 		#if FLX_PITCH FlxG.sound.music.pitch = 1; #end
+		Note.globalRgbShaders = [];
+		backend.NoteTypesConfig.clearNoteTypesData();
 		instance = null;
 		super.destroy();
 	}

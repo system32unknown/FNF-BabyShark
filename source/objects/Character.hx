@@ -91,9 +91,7 @@ class Character extends FlxSprite {
 				}
 		
 				try {
-					var json:CharacterFile = cast Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
-					for (anim in json.animations) anim.indices = parseIndices(anim.indices);
-					loadCharacterFile(json);
+					loadCharacterFile(Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path)));
 				} catch(e) Logs.trace('Error loading character file of "$curCharacter": $e', ERROR);
 		}
 
@@ -104,29 +102,6 @@ class Character extends FlxSprite {
 			}
 		recalculateDanceIdle();
 		dance();
-	}
-
-	public static function parseIndices(indices:Array<Any>):Array<Int> {
-		var parsed:Array<Int> = [];
-		for (val in indices) {
-			if (val is Int) parsed.push(val);
-			else if (val is String) {
-				var val:String = cast val;
-				var expression:Array<String> = val.split("..."); // might add something for "*" so you can repeat a frame a certain amount of times
-				var startIndex:Null<Int> = Std.parseInt(expression[0]);
-				var endIndex:Null<Int> = Std.parseInt(expression[1]);
-
-				if (startIndex == null) continue; // Can't do anything
-				else if (endIndex == null) {
-					parsed.push(startIndex); // hmm
-					continue;
-				}
-
-				for (idxNumber in startIndex...(endIndex + 1)) parsed.push(idxNumber);
-			}
-		}
-
-		return parsed;
 	}
 
 	public function loadCharacterFile(json:Dynamic) {
@@ -231,7 +206,7 @@ class Character extends FlxSprite {
 		if (getAnimationName().startsWith('sing')) holdTimer += elapsed;
 		else if(isPlayer) holdTimer = 0;
 
-		if (!isPlayer && holdTimer >= Conductor.stepCrochet * (.0011 / (PlayState.instance != null ? PlayState.instance.playbackRate : FlxG.sound.music != null ? FlxG.sound.music.pitch : 1)) * singDuration) {
+		if (!isPlayer && holdTimer >= Conductor.stepCrochet * (.0011 / (FlxG.sound.music != null ? FlxG.sound.music.pitch : 1)) * singDuration) {
 			dance();
 			holdTimer = 0;
 		}
@@ -288,7 +263,7 @@ class Character extends FlxSprite {
 	public function dance(force:Bool = false, reversed:Bool = false, frame:Int = 0) {
 		if (debugMode || skipDance || specialAnim) return;
 
-		var anim = 'idle';
+		var anim:String = 'idle';
 		if (danceIdle) {
 			danced = !danced;
 			anim = danced ? 'danceRight' : 'danceLeft';
@@ -354,8 +329,7 @@ class Character extends FlxSprite {
 	public override function draw() {
 		var lastAlpha:Float = alpha;
 		var lastColor:FlxColor = color;
-		if(missingCharacter)
-		{
+		if(missingCharacter) {
 			alpha *= 0.6;
 			color = FlxColor.BLACK;
 		}
@@ -387,8 +361,7 @@ class Character extends FlxSprite {
 			atlas.scale = scale;
 			atlas.offset = offset;
 			atlas.origin = origin;
-			atlas.x = x;
-			atlas.y = y;
+			atlas.setPosition(x, y);
 			atlas.angle = angle;
 			atlas.alpha = alpha;
 			atlas.visible = visible;

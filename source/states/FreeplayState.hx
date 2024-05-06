@@ -333,7 +333,6 @@ class FreeplayState extends MusicBeatState {
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
 			} catch(e:Dynamic) {
-				Logs.trace('ERROR! $e', ERROR);
 				var errorStr:String = e.toString();
 				if(errorStr.startsWith('[lime.utils.Assets] ERROR:')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1); //Missing chart
 

@@ -21,7 +21,8 @@ class CharacterForm {
 }
 
 /**
-    This is not from the D&B source code, it's completely made by LatestRelic825, Modified by Altertoriel.
+    This is not from the D&B source code, it's completely made by LatestRelic825,
+	Modified by Altertoriel. (Ported to PE 1.0b)
 **/
 class CharacterSelectionState extends MusicBeatState {
 	var characters:Array<CharacterInSelect> = [

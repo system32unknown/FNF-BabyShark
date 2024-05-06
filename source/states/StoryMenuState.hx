@@ -234,10 +234,7 @@ class StoryMenuState extends MusicBeatState {
 				PlayState.storyDifficulty = curDifficulty;
 				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
 				PlayState.campaignScore = 0;
-			} catch(e:Dynamic) {
-				Logs.trace('ERROR! $e', ERROR);
-				return;
-			}
+			} catch(e:Dynamic) return;
 
 			if (!stopspamming) {
 				FlxG.sound.play(Paths.sound('confirmMenu'));

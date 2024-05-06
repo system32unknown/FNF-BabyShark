@@ -134,10 +134,10 @@ class ChartingState extends MusicBeatState {
 	public static var quantization:Int = 16;
 	public static var curQuant = 3;
 
-	public var quantizations:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 96, 192];
+	var quantizations:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 96, 192];
 
 	public static var vortex:Bool = false;
-	public var mouseQuant:Bool = false;
+	var mouseQuant:Bool = false;
 	override function create() {
 		Paths.clearUnusedMemory();
 
@@ -382,11 +382,6 @@ class ChartingState extends MusicBeatState {
 		clear_events.color = FlxColor.RED;
 		clear_events.label.color = FlxColor.WHITE;
 
-		var startHere:FlxButton = new FlxButton(clear_events.x, clear_events.y - 30, 'Start Here', function() {
-			PlayState.timeToStart = Conductor.songPosition;				
-			startSong();
-		});
-
 		var clear_notes:FlxButton = new FlxButton(320, clear_events.y + 30, 'Clear notes', () -> openSubState(new Prompt('This action will clear current progress.\n\nProceed?', function() {
 			for (sec in 0..._song.notes.length) _song.notes[sec].sectionNotes = [];
 			updateGrid();
@@ -537,7 +532,6 @@ class ChartingState extends MusicBeatState {
 		tab_group_song.add(check_voices);
 		tab_group_song.add(clear_events);
 		tab_group_song.add(clear_notes);
-		tab_group_song.add(startHere);
 		tab_group_song.add(saveButton);
 		tab_group_song.add(saveEvents);
 		tab_group_song.add(reloadSong);
@@ -914,7 +908,7 @@ class ChartingState extends MusicBeatState {
 		rightSectionNotetype.setGraphicSize(80, 30);
 		rightSectionNotetype.updateHitbox();
 
-		check_stackActive = new FlxUICheckBox(leftSectionNotetype.x, leftSectionNotetype.y + 60, null, null, "Spam Mode", 100);
+		check_stackActive = new FlxUICheckBox(leftSectionNotetype.x, leftSectionNotetype.y + 50, null, null, "Spam Mode", 100);
 		check_stackActive.name = 'check_stackActive';
 		stepperStackNum = new FlxUINumericStepper(check_stackActive.x, check_stackActive.y + 40, 1, 4, 0, 999999);
 		stepperStackNum.name = 'stack_count';
@@ -2551,8 +2545,6 @@ class ChartingState extends MusicBeatState {
 			Paths.clearUnusedMemory();
 			FlxG.resetState();
 		} catch(e) {
-			Logs.trace('ERROR! $e', ERROR);
-
 			var errorStr:String = e.toString();
 			if(errorStr.startsWith('[lime.utils.Assets] ERROR:')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(Paths.formatToSongPath(PlayState.SONG.song)), errorStr.length - 1); //Missing chart
 			

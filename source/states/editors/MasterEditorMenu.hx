@@ -8,8 +8,7 @@ class MasterEditorMenu extends MusicBeatState {
 		'Menu Character Editor',
 		'Dialogue Editor',
 		'Dialogue Portrait Editor',
-		'Note Splash Debug',
-		'Credit Editor'
+		'Note Splash Debug'
 	];
 	var grpTexts:FlxTypedGroup<Alphabet>;
 	var directories:Array<String> = [null];
@@ -73,7 +72,6 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Dialogue Editor': LoadingState.loadAndSwitchState(() -> new DialogueEditorState());
 				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(() -> new DialogueCharacterEditorState());
 				case 'Note Splash Debug': FlxG.switchState(() -> new NoteSplashDebugState());
-				case 'Credit Editor': FlxG.switchState(() -> new CreditsEditorState());
 			}
 			FlxG.sound.music.volume = 0;
 			Conductor.usePlayState = false;
