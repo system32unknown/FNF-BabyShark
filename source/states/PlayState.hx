@@ -1295,7 +1295,7 @@ class PlayState extends MusicBeatState {
 			if (updateScoreText) scoreTxt.text = getScoreText();
 		}
 
-		displayedHealth = ClientPrefs.data.smoothHealth ? FlxMath.lerp(displayedHealth, health, .1 / (ClientPrefs.data.framerate / 60)) : health;
+		displayedHealth = ClientPrefs.data.smoothHealth ? FlxMath.lerp(displayedHealth, health, ((health / displayedHealth) * (elapsed * 8)) * playbackRate) : health;
 
 		updateMusicBeat();
 		setOnScripts('curDecStep', curDecStep);
