@@ -79,7 +79,6 @@ class PlayState extends MusicBeatState {
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 
-	public var inst:FlxSound;
 	public var vocals:FlxSound;
 
 	public var dad:Character = null;
@@ -109,6 +108,8 @@ class PlayState extends MusicBeatState {
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
 	public var camZoomingDecay:Float = 1;
+
+	public var firstStart:Bool = false;
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
@@ -244,12 +245,19 @@ class PlayState extends MusicBeatState {
 		startCallback = startCountdown;
 		endCallback = endSong;
 
+		firstStart = !MusicBeatState.previousStateIs(PlayState);
 		persistentUpdate = true;
 		persistentDraw = true;
 
 		Conductor.usePlayState = true;
 		Conductor.songPosition = Math.NEGATIVE_INFINITY;
+		if (firstStart) FlxG.sound.destroy(true);
 		Paths.clearStoredMemory();
+
+		if (FlxG.sound.music != null) FlxG.sound.music.destroy();
+		var music:FlxSound = FlxG.sound.music = new FlxSound();
+		music.persist = true;
+		music.volume = 1;
 
 		GameOverSubstate.resetVariables();
 		PauseSubState.songName = null; //Reset to default
@@ -958,19 +966,21 @@ class PlayState extends MusicBeatState {
 	function startSong():Void {
 		startingSong = false;
 
-		@:privateAccess
-		FlxG.sound.playMusic(inst._sound, 1, false);
-		#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
-		FlxG.sound.music.onComplete = finishSong.bind();
-		vocals.play();
+		var music:FlxSound = FlxG.sound.music;
+		try {music.loadEmbedded(Paths.inst(SONG.song));}
+		music.onComplete = () -> finishSong();
+		music.pitch = playbackRate;
+		music.volume = 1;
+		vocals.time = music.time = 0;
+		music.play(); vocals.play();
 
 		setSongTime(Math.max(0, startOnTime - 500));
 		startOnTime = 0;
 
-		if(paused) {FlxG.sound.music.pause(); vocals.pause();}
+		if(paused) {music.pause(); vocals.pause();}
 
 		// Song duration in a float, useful for the time left feature
-		songLength = FlxG.sound.music.length;
+		songLength = music.length;
 		FlxTween.tween(timeBar, {alpha: 1}, .5 * playbackRate, {ease: FlxEase.circOut});
 		FlxTween.tween(timeTxt, {alpha: 1}, .5 * playbackRate, {ease: FlxEase.circOut});
 
@@ -993,14 +1003,13 @@ class PlayState extends MusicBeatState {
 		var songData:SwagSong = SONG;
 		Conductor.bpm = songData.bpm;
 
+		var inst = Paths.inst(songData.song);
+		songLength = inst != null ? inst.length : 0;
+
 		vocals = new FlxSound();
 		try {if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));}
 		vocals.pitch = playbackRate;
 		FlxG.sound.list.add(vocals);
-
-		inst = new FlxSound();
-		try {inst.loadEmbedded(Paths.inst(songData.song));}
-		FlxG.sound.list.add(inst);
 
 		noteGroup.add(notes = new FlxTypedGroup<Note>());
 
@@ -1166,7 +1175,7 @@ class PlayState extends MusicBeatState {
 
 			var babyArrow:StrumNote = new StrumNote(strumLine.x, strumLine.y, i, player);
 			babyArrow.downScroll = downScroll;
-			if (((!isStoryMode || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
+			if (((!isStoryMode || firstStart || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
 				babyArrow.alpha = 0;
 				FlxTween.tween(babyArrow, {alpha: targetAlpha}, (4 / tempMania) * playbackRate, {ease: FlxEase.circOut, startDelay: .5 + ((.8 / tempMania) * i) * playbackRate});
 			} else babyArrow.alpha = targetAlpha;
