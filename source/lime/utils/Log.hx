@@ -16,7 +16,7 @@ class Log {
 
 	public static function error(message:Dynamic, ?info:PosInfos):Void {
 		if (level >= LogLevel.ERROR) {
-			var message:String = '[${info.className}] $message';
+			var message:String = '[${info.className}] ERROR: $message';
 			#if !macro FunkinLogs.trace(message, ERROR, RED); #else trace(message); #end
 			throw message;
 		}
