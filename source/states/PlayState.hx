@@ -568,7 +568,7 @@ class PlayState extends MusicBeatState {
 
 	function set_playbackRate(value:Float):Float {
 		if(generatedMusic) {
-			if(vocals != null) vocals.pitch = value;
+			vocals.pitch = value;
 			FlxG.sound.music.pitch = value;
 
 			final ratio:Float = playbackRate / value; //funny word huh
@@ -1187,10 +1187,7 @@ class PlayState extends MusicBeatState {
 
 	override function openSubState(SubState:flixel.FlxSubState) {
 		stagesFunc(stage -> stage.openSubState(SubState));
-		if (paused && FlxG.sound.music != null) {
-			FlxG.sound.music.pause();
-			vocals.pause();
-		}
+		if (paused && FlxG.sound.music != null) {FlxG.sound.music.pause(); vocals.pause();}
 		super.openSubState(SubState);
 	}
 
@@ -1385,8 +1382,10 @@ class PlayState extends MusicBeatState {
 				processInputs();
 
 				var anim:String = boyfriend.getAnimationName();
-				if(boyfriend.holdTimer > Conductor.stepCrochet * (.0011 #if FLX_PITCH / FlxG.sound.music.pitch #end) * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss'))
-					boyfriend.dance();
+				if (!boyfriend.stunned && !boyfriend.isAnimationNull() && (cpuControlled || !keysPressed.contains(true) || endingSong)) {
+					if(boyfriend.holdTimer > Conductor.stepCrochet * (.0011 #if FLX_PITCH / FlxG.sound.music.pitch #end) * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss'))
+						boyfriend.dance();
+				}
 				
 				if(notes.length > 0) {
 					if(startedCountdown)
@@ -1436,10 +1435,7 @@ class PlayState extends MusicBeatState {
 		persistentDraw = true;
 		paused = true;
 
-		if(FlxG.sound.music != null) {
-			FlxG.sound.music.pause();
-			vocals.pause();
-		}
+		if(FlxG.sound.music != null) {FlxG.sound.music.pause(); vocals.pause();}
 		openSubState(new PauseSubState());
 
 		#if DISCORD_ALLOWED if(autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)'); #end
@@ -1473,6 +1469,7 @@ class PlayState extends MusicBeatState {
 		if (((skipHealthCheck && instakillOnMiss) || health <= (healthBar.bounds != null ? healthBar.bounds.min : 0)) && !practiceMode && !isDead) {
 			var ret:Dynamic = callOnScripts('onGameOver', null, true);
 			if(ret != LuaUtils.Function_Stop) {
+				FlxG.animationTimeScale = 1;
 				boyfriend.stunned = true;
 				deathCounter++;
 
@@ -1987,8 +1984,8 @@ class PlayState extends MusicBeatState {
 				numScore.screenCenter(Y).y += 80 - comboOffset[1][1];
 				numScore.x = placement + (43 * daLoop++) - 90 + comboOffset[1][0];
 			
-				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate + ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
-				numScore.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate + ratingAcc.y);
+				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate + ratingVel.x, -FlxG.random.int(130, 150) * playbackRate + ratingVel.y);
+				numScore.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(250, 300) * playbackRate * playbackRate + ratingAcc.y);
 				numScore.antialiasing = antialias;
 				numScore.setGraphicSize(numScore.width * (isPixelStage ? daPixelZoom : .5));
 				numScore.updateHitbox();

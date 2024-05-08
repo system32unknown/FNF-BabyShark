@@ -17,8 +17,7 @@ class Philly extends BaseStage
 	var phillyWindowEvent:BGSprite;
 	var curLightEvent:Int = -1;
 
-	override function create()
-	{
+	override function create() {
 		if(!lowQuality) add(new BGSprite('philly/sky', -100, 0, 0.1, 0.1));
 
 		var city:BGSprite = new BGSprite('philly/city', -10, 0, 0.3, 0.3);
@@ -38,8 +37,7 @@ class Philly extends BaseStage
 		add(phillyTrain = new PhillyTrain(2000, 360));
 		add(phillyStreet = new BGSprite('philly/street', -40, 50));
 	}
-	override function eventPushed(event:objects.Note.EventNote)
-	{
+	override function eventPushed(event:objects.Note.EventNote) {
 		switch(event.event) {
 			case "Philly Glow":
 				blammedLightsBlack = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5).makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
@@ -64,11 +62,9 @@ class Philly extends BaseStage
 		}
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		phillyWindow.alpha -= (Conductor.crochet / 1000) * elapsed * 1.5;
-		if(phillyGlowParticles != null)
-		{
+		if(phillyGlowParticles != null) {
 			var i:Int = phillyGlowParticles.members.length - 1;
 			while (i > 0) {
 				var particle = phillyGlowParticles.members[i];
@@ -91,23 +87,18 @@ class Philly extends BaseStage
 		}
 	}
 
-	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float)
-	{
-		switch(eventName)
-		{
+	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {
+		switch(eventName) {
 			case "Philly Glow":
 				if(flValue1 == null || flValue1 <= 0) flValue1 = 0;
 				var lightId:Int = Math.round(flValue1);
 
 				var chars:Array<objects.Character> = [boyfriend, gf, dad];
-				switch(lightId)
-				{
+				switch(lightId) {
 					case 0:
-						if(phillyGlowGradient.visible)
-						{
+						if(phillyGlowGradient.visible) {
 							doFlash();
-							if(ClientPrefs.data.camZooms)
-							{
+							if(ClientPrefs.data.camZooms) {
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
 							}
@@ -118,10 +109,7 @@ class Philly extends BaseStage
 							phillyGlowParticles.visible = false;
 							curLightEvent = -1;
 
-							for (who in chars)
-							{
-								who.color = FlxColor.WHITE;
-							}
+							for (who in chars) who.color = FlxColor.WHITE;
 							phillyStreet.color = FlxColor.WHITE;
 						}
 
@@ -131,8 +119,7 @@ class Philly extends BaseStage
 
 						if(!phillyGlowGradient.visible) {
 							doFlash();
-							if(ClientPrefs.data.camZooms)
-							{
+							if(ClientPrefs.data.camZooms) {
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
 							}

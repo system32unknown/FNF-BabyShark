@@ -1,6 +1,7 @@
 package states.stages;
 
 import states.stages.objects.*;
+import shaders.OverlayBlend;
 
 enum HenchmenKillState {
 	WAIT;
@@ -27,7 +28,16 @@ class Limo extends BaseStage
 	var dancersDiff:Float = 320;
 
 	override function create() {
-		add(new BGSprite('limo/limoSunset', -120, -50, .1, .1));
+		var limoSunset:BGSprite;
+		add(limoSunset = new BGSprite('limo/limoSunset', -120, -50, .1, .1));
+		if (ClientPrefs.data.shaders) {
+			var skyOverlay:OverlayBlend = new OverlayBlend();
+			var sunOverlay:BGSprite = new BGSprite('limo/limoOverlay');
+			sunOverlay.setGraphicSize(Std.int(sunOverlay.width * 2));
+			sunOverlay.updateHitbox();
+			skyOverlay.funnyShit.input = sunOverlay.pixels;
+			limoSunset.shader = skyOverlay;
+		}
 
 		if(!lowQuality) {
 			limoMetalPole = new BGSprite('gore/metalPole', -500, 220, 0.4, 0.4);
@@ -78,8 +88,7 @@ class Limo extends BaseStage
 	}
 
 	var limoSpeed:Float = 0;
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		if(!lowQuality) {
 			grpLimoParticles.forEach(function(spr:BGSprite) {
 				spr.animation.finishCallback = name -> {
@@ -160,12 +169,10 @@ class Limo extends BaseStage
 		}
 	}
 
-	override function beatHit()
-	{
+	override function beatHit() {
 		if(!lowQuality) grpLimoDancers.forEach((dancer:BackgroundDancer) -> dancer.dance());
 
-		if (FlxG.random.bool(10) && fastCarCanDrive)
-			fastCarDrive();
+		if (FlxG.random.bool(10) && fastCarCanDrive) fastCarDrive();
 	}
 
 	// Substates for pausing/resuming tweens and timers
@@ -199,10 +206,8 @@ class Limo extends BaseStage
 		limoCorpseTwo.visible = false;
 	}
 
-	function resetFastCar():Void
-	{
-		fastCar.x = -12600;
-		fastCar.y = FlxG.random.int(140, 250);
+	function resetFastCar():Void {
+		fastCar.setPosition(-12600, FlxG.random.int(140, 250));
 		fastCar.velocity.x = 0;
 		fastCarCanDrive = true;
 	}
@@ -219,8 +224,7 @@ class Limo extends BaseStage
 		});
 	}
 
-	function killHenchmen():Void
-	{
+	function killHenchmen():Void {
 		if(!lowQuality) {
 			if(limoKillingState == WAIT) {
 				limoMetalPole.x = -400;
