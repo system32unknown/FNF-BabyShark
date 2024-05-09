@@ -87,7 +87,7 @@ class PlayState extends MusicBeatState {
 	public var boyfriend:Character = null;
 	public var gameOverChar:Character = null;
 
-	public var notes:FlxTypedGroup<Note>;
+	public var notes:NoteGroup;
 	public var unspawnNotes:Array<Note> = [];
 	public var eventNotes:Array<EventNote> = [];
 
@@ -1002,7 +1002,7 @@ class PlayState extends MusicBeatState {
 		try {inst.loadEmbedded(Paths.inst(songData.song));}
 		FlxG.sound.list.add(inst);
 
-		noteGroup.add(notes = new FlxTypedGroup<Note>());
+		noteGroup.add(notes = new NoteGroup());
 
 		var file:String = Paths.json('${Paths.CHART_PATH}/$songName/events');
 		if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson('${Paths.CHART_PATH}/$songName/events')) || FileSystem.exists(file) #else Assets.exists(file) #end)

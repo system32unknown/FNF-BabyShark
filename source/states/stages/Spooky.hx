@@ -48,15 +48,15 @@ class Spooky extends BaseStage {
 			camHUD.zoom += 0.03;
 
 			if(!game.camZooming) { //Just a way for preventing it to be permanently zoomed until Skid & Pump hits a note
-				FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.5);
-				FlxTween.tween(camHUD, {zoom: 1}, 0.5);
+				FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, .5);
+				FlxTween.tween(camHUD, {zoom: 1}, .5);
 			}
 		}
 
 		if(ClientPrefs.data.flashing) {
-			halloweenWhite.alpha = 0.4;
-			FlxTween.tween(halloweenWhite, {alpha: 0.5}, 0.075);
-			FlxTween.tween(halloweenWhite, {alpha: 0}, 0.25, {startDelay: 0.15});
+			halloweenWhite.alpha = .4;
+			FlxTween.tween(halloweenWhite, {alpha: .5}, .075);
+			FlxTween.tween(halloweenWhite, {alpha: 0}, .25, {startDelay: .15});
 		}
 	}
 

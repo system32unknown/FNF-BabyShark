@@ -40,8 +40,7 @@ class PhillyTrain extends BGSprite
 						if (cars <= 0) finishing = true;
 					}
 
-					if (x < -4000 && finishing)
-						restart();
+					if (x < -4000 && finishing) restart();
 				}
 				frameTiming = 0;
 			}
@@ -63,8 +62,7 @@ class PhillyTrain extends BGSprite
 		if (!sound.playing) sound.play(true);
 	}
 
-	public function restart():Void
-	{
+	public function restart():Void {
 		if(PlayState.instance.gf != null) {
 			PlayState.instance.gf.danced = false; //Makes she bop her head to the correct side once the animation ends
 			PlayState.instance.gf.playAnim('hairFall');

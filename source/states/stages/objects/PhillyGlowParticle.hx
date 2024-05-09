@@ -30,13 +30,10 @@ class PhillyGlowParticle extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		lifeTime -= elapsed;
-		if(lifeTime < 0)
-		{
+		if(lifeTime < 0) {
 			lifeTime = 0;
 			alpha -= decay * elapsed;
-			if(alpha > 0) {
-				scale.set(originalScale * alpha, originalScale * alpha);
-			}
+			if(alpha > 0) scale.set(originalScale * alpha, originalScale * alpha);
 		}
 		super.update(elapsed);
 	}
