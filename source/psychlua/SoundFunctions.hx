@@ -4,84 +4,150 @@ class SoundFunctions {
     public static function implement(funk:FunkinLua) {
         var game:PlayState = PlayState.instance;
 		funk.set("playMusic", (sound:String, volume:Float = 1, loop:Bool = false) -> FlxG.sound.playMusic(Paths.music(sound), volume, loop));
-		funk.set("playSound", function(sound:String, volume:Float = 1, ?tag:String = null) {
+		funk.set("playSound", function(sound:String, volume:Float = 1, ?tag:String = null, ?loop:Bool = false) {
 			if(tag != null && tag.length > 0) {
-				tag = tag.replace('.', '');
-				if(game.modchartSounds.exists(tag)) game.modchartSounds.get(tag).stop();
-				game.modchartSounds.set(tag, FlxG.sound.play(Paths.sound(sound), volume, false, () -> {
-					game.modchartSounds.remove(tag);
-					game.callOnLuas('onSoundFinished', [tag]);
+				var originalTag:String = tag;
+				tag = LuaUtils.formatVariable('sound_$tag');
+				var variables = MusicBeatState.getVariables();
+				var oldSnd = variables.get(tag);
+				if(oldSnd != null) {
+					oldSnd.stop();
+					oldSnd.destroy();
+				}
+	
+				variables.set(tag, FlxG.sound.play(Paths.sound(sound), volume, loop, null, true, () -> {
+					if(!loop) variables.remove(tag);
+					if(game != null) game.callOnLuas('onSoundFinished', [originalTag]);
 				}));
 				return;
 			}
 			FlxG.sound.play(Paths.sound(sound), volume);
 		});
 		funk.set("stopSound", function(tag:String) {
-			if(tag != null && tag.length > 1 && game.modchartSounds.exists(tag)) {
-				game.modchartSounds.get(tag).stop();
-				game.modchartSounds.remove(tag);
-			}
-		});
-		funk.set("pauseSound", (tag:String) -> if(tag != null && tag.length > 1 && game.modchartSounds.exists(tag)) game.modchartSounds.get(tag).pause());
-		funk.set("resumeSound", (tag:String) -> if(tag != null && tag.length > 1 && game.modchartSounds.exists(tag)) game.modchartSounds.get(tag).play());
-		funk.set("soundFadeIn", function(tag:String, duration:Float, fromValue:Float = 0, toValue:Float = 1) {
-			if(tag == null || tag.length < 1)
-				FlxG.sound.music.fadeIn(duration, fromValue, toValue);
-			else if(game.modchartSounds.exists(tag))
-				game.modchartSounds.get(tag).fadeIn(duration * game.playbackRate, fromValue, toValue);
-		});
-		funk.set("soundFadeOut", function(tag:String, duration:Float, toValue:Float = 0) {
-			if(tag == null || tag.length < 1)
-				FlxG.sound.music.fadeOut(duration, toValue);
-			else if(game.modchartSounds.exists(tag))
-				game.modchartSounds.get(tag).fadeOut(duration * game.playbackRate, toValue);
-		});
-		funk.set("soundFadeCancel", function(tag:String) {
-			if((tag == null || tag.length < 1) && FlxG.sound.music.fadeTween != null)
-				FlxG.sound.music.fadeTween.cancel();
-			else if(game.modchartSounds.exists(tag)) {
-				var theSound:FlxSound = game.modchartSounds.get(tag);
-				if(theSound.fadeTween != null) {
-					theSound.fadeTween.cancel();
-					game.modchartSounds.remove(tag);
+			if((tag == null || tag.length < 1) && FlxG.sound.music != null) FlxG.sound.music.stop();
+			else {
+				tag = LuaUtils.formatVariable('sound_$tag');
+				var variables = MusicBeatState.getVariables();
+				var snd:FlxSound = variables.get(tag);
+				if(snd != null) {
+					snd.stop();
+					variables.remove(tag);
 				}
 			}
 		});
-		funk.set("getSoundVolume", function(tag:String) {
+		funk.set("pauseSound", (tag:String) -> {
+			if((tag == null || tag.length < 1) && FlxG.sound.music != null) FlxG.sound.music.pause();
+			else {
+				tag = LuaUtils.formatVariable('sound_$tag');
+				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+				if(snd != null) snd.pause();
+			}
+		});
+		funk.set("resumeSound", (tag:String) -> {
+			if((tag == null || tag.length < 1) && FlxG.sound.music != null) FlxG.sound.music.play();
+			else {
+				tag = LuaUtils.formatVariable('sound_$tag');
+				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+				if(snd != null) snd.play();
+			}
+		});
+		funk.set("soundFadeIn", function(tag:String, duration:Float, fromValue:Float = 0, toValue:Float = 1) {
 			if((tag == null || tag.length < 1) && FlxG.sound.music != null)
-				return FlxG.sound.music.volume;
-			else if(game.modchartSounds.exists(tag))
-				return game.modchartSounds.get(tag).volume;
+				FlxG.sound.music.fadeIn(duration, fromValue, toValue);
+			else {
+				tag = LuaUtils.formatVariable('sound_$tag');
+				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+				if(snd != null) snd.fadeIn(duration, fromValue, toValue);
+			}
+		});
+		funk.set("soundFadeOut", function(tag:String, duration:Float, toValue:Float = 0) {
+			if((tag == null || tag.length < 1) && FlxG.sound.music != null)
+				FlxG.sound.music.fadeOut(duration, toValue);
+			else {
+				tag = LuaUtils.formatVariable('sound_$tag');
+				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+				if(snd != null) snd.fadeOut(duration, toValue);
+			}
+		});
+		funk.set("soundFadeCancel", function(tag:String) {
+			if(tag == null || tag.length < 1) {
+				if(FlxG.sound.music != null && FlxG.sound.music.fadeTween != null) FlxG.sound.music.fadeTween.cancel();
+			} else {
+				tag = LuaUtils.formatVariable('sound_$tag');
+				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+				if(snd != null && snd.fadeTween != null) snd.fadeTween.cancel();
+			}
+		});
+		funk.set("getSoundVolume", function(tag:String) {
+			if((tag == null || tag.length < 1) && FlxG.sound.music != null) return FlxG.sound.music.volume;
+			else {
+				tag = LuaUtils.formatVariable('sound_$tag');
+				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+				if(snd != null) return snd.volume;
+			}
 			return 0;
 		});
 		funk.set("setSoundVolume", function(tag:String, value:Float) {
-			if((tag == null || tag.length < 1) && FlxG.sound.music != null)
-				FlxG.sound.music.volume = value;
-			else if(game.modchartSounds.exists(tag))
-				game.modchartSounds.get(tag).volume = value;
+			if(tag == null || tag.length < 1) {
+				tag = LuaUtils.formatVariable('sound_$tag');
+				if(FlxG.sound.music != null) {
+					FlxG.sound.music.volume = value;
+					return;
+				}
+			} else {
+				tag = LuaUtils.formatVariable('sound_$tag');
+				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+				if(snd != null) snd.volume = value;
+			}
 		});
 		funk.set("getSoundTime", function(tag:String) {
-			if(tag != null && tag.length > 0 && game.modchartSounds.exists(tag)) return game.modchartSounds.get(tag).time;
-			return 0;
+			if(tag == null || tag.length < 1) return FlxG.sound.music != null ? FlxG.sound.music.time : 0;
+			tag = LuaUtils.formatVariable('sound_$tag');
+			var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+			return snd != null ? snd.time : 0;
 		});
 		funk.set("setSoundTime", function(tag:String, value:Float) {
-			if(tag != null && tag.length > 0 && game.modchartSounds.exists(tag)) {
-				var theSound:FlxSound = game.modchartSounds.get(tag);
-				if(theSound != null) theSound.time = value;
+			if(tag == null || tag.length < 1) {
+				if(FlxG.sound.music != null) {
+					FlxG.sound.music.time = value;
+					return;
+				}
+			} else {
+				tag = LuaUtils.formatVariable('sound_$tag');
+				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+				if(snd != null) snd.time = value;
 			}
 		});
 		funk.set("getSoundPitch", function(tag:String) {
-			if(tag != null && tag.length > 0 && game.modchartSounds.exists(tag)) return game.modchartSounds.get(tag).pitch;
-			return 0;
+			tag = LuaUtils.formatVariable('sound_$tag');
+			var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+			return snd != null ? snd.pitch : 0;
 		});
 		funk.set("setSoundPitch", function(tag:String, value:Float, doPause:Bool = false) {
-			if(tag != null && tag.length > 0 && game.modchartSounds.exists(tag)) {
-				var theSound:FlxSound = game.modchartSounds.get(tag);
-				if(theSound != null) {
-					var wasResumed:Bool = theSound.playing;
-					if (doPause) theSound.pause();
-					theSound.pitch = value;
-					if (doPause && wasResumed) theSound.play();
+			tag = LuaUtils.formatVariable('sound_$tag');
+			var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+			if(snd != null) {
+				var wasResumed:Bool = snd.playing;
+				if (doPause) snd.pause();
+				snd.pitch = value;
+				if (doPause && wasResumed) snd.play();
+			}
+
+			if(tag == null || tag.length < 1) {
+				if(FlxG.sound.music != null) {
+					var wasResumed:Bool = FlxG.sound.music.playing;
+					if (doPause) FlxG.sound.music.pause();
+					FlxG.sound.music.pitch = value;
+					if (doPause && wasResumed) FlxG.sound.music.play();
+					return;
+				}
+			} else {
+				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
+				if(snd != null) {
+					var wasResumed:Bool = snd.playing;
+					if (doPause) snd.pause();
+					snd.pitch = value;
+					if (doPause && wasResumed) snd.play();
 				}
 			}
 		});

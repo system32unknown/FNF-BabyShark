@@ -114,7 +114,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		}
 
 		if (boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name == 'firstDeath' && boyfriend.animation.curAnim.curFrame >= 12 && !moveCamera) {
-			FlxG.camera.follow(camFollow, LOCKON, .8);
+			FlxG.camera.follow(camFollow, LOCKON, .01);
 			moveCamera = true;
 		}
 

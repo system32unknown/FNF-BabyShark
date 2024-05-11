@@ -40,7 +40,7 @@ class CustomSubstate extends MusicBeatSubstate {
 	public static function insertToCustomSubstate(tag:String, ?pos:Int = -1):Bool {
 		if(instance != null) {
 			var tagObject:FlxObject = cast (MusicBeatState.getVariables().get(tag), FlxObject);
-			if(tagObject == null) tagObject = cast (PlayState.instance.modchartSprites.get(tag), FlxObject);
+			#if LUA_ALLOWED if(tagObject == null) tagObject = cast (MusicBeatState.getVariables().get(tag), FlxObject); #end
 
 			if(tagObject != null) {
 				if(pos < 0) instance.add(tagObject);

@@ -45,8 +45,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	}
 
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
-	public static function getVariables()
-		return getState().variables;
+	public static function getVariables() return getState().variables;
 	
 	override function create() {
 		if (curBPMChange != null && curBPMChange.bpm != Conductor.bpm) curBPMChange = Conductor.getDummyBPMChange();

@@ -49,6 +49,7 @@ class StageData {
 			camera_opponent: [0, 0],
 			camera_girlfriend: [0, 0],
 			camera_speed: 1,
+
 			_editorMeta: {
 				gf: "gf",
 				dad: "dad",

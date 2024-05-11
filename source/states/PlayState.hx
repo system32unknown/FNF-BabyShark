@@ -40,14 +40,6 @@ class PlayState extends MusicBeatState {
 	public var boyfriendMap:Map<String, Character> = new Map<String, Character>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
 	public var gfMap:Map<String, Character> = new Map<String, Character>();
-	#if LUA_ALLOWED
-	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
-	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
-	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
-	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
-	public var modchartTexts:Map<String, FlxText> = new Map<String, FlxText>();
-	public var modchartSaves:Map<String, flixel.util.FlxSave> = new Map<String, flixel.util.FlxSave>();
-	#end
 
 	public var BF_X:Float = 770;
 	public var BF_Y:Float = 100;
@@ -349,36 +341,38 @@ class PlayState extends MusicBeatState {
 		add(luaDebugGroup);
 		#end
 
-		// "GLOBAL" SCRIPTS
-		#if LUA_ALLOWED
+		if (!stageData.hide_girlfriend) {
+			if(SONG.gfVersion == null || SONG.gfVersion.length < 1) SONG.gfVersion = 'gf'; //Fix for the Chart Editor
+			gf = new Character(0, 0, SONG.gfVersion);
+			startCharacterPos(gf);
+			gfGroup.scrollFactor.set(.95, .95);
+			gfGroup.add(gf);
+		}
+
+		dad = new Character(0, 0, SONG.player2);
+		startCharacterPos(dad, true);
+		dadGroup.add(dad);
+
+		boyfriend = new Character(0, 0, SONG.player1, true);
+		startCharacterPos(boyfriend);
+		boyfriendGroup.add(boyfriend);
+	
+		if(stageData.objects != null && stageData.objects.length > 0) {
+			var list:Map<String, FlxSprite> = StageData.addObjectsToState(stageData.objects, !stageData.hide_girlfriend ? gfGroup : null, dadGroup, boyfriendGroup, this);
+			for (key => spr in list) if(!StageData.reservedNames.contains(key)) variables.set(key, spr);
+		} else {
+			add(gfGroup);
+			add(dadGroup);
+			add(boyfriendGroup);
+		}
+
+		#if (LUA_ALLOWED && HSCRIPT_ALLOWED) // "SCRIPTS FOLDER" SCRIPTS
 		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'scripts/')) for (file in FileSystem.readDirectory(folder)) {
 			if(file.toLowerCase().endsWith('.lua')) new FunkinLua(folder + file);
 			if(file.toLowerCase().endsWith('.hx')) initHScript(folder + file);
 		}
 		#end
 
-		// STAGE SCRIPTS
-		#if LUA_ALLOWED startLuasNamed('stages/$curStage.lua'); #end
-		#if HSCRIPT_ALLOWED startHScriptsNamed('stages/$curStage.hx'); #end
-
-		if (!stageData.hide_girlfriend) {
-			if(SONG.gfVersion == null || SONG.gfVersion.length < 1) SONG.gfVersion = 'gf'; //Fix for the Chart Editor
-			gf = new Character(0, 0, SONG.gfVersion);
-			startCharacterPos(gf);
-			gfGroup.add(gf);
-			startCharacterScripts(gf.curCharacter);
-		}
-
-		dad = new Character(0, 0, SONG.player2);
-		startCharacterPos(dad, true);
-		dadGroup.add(dad);
-		startCharacterScripts(dad.curCharacter);
-
-		boyfriend = new Character(0, 0, SONG.player1, true);
-		startCharacterPos(boyfriend);
-		boyfriendGroup.add(boyfriend);
-		startCharacterScripts(boyfriend.curCharacter);
-	
 		var camPos:FlxPoint = FlxPoint.get(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
 		if(gf != null) {
 			final mid:FlxPoint = gf.getGraphicMidpoint();
@@ -390,7 +384,15 @@ class PlayState extends MusicBeatState {
 			dad.setPosition(GF_X, GF_Y);
 			if(gf != null) gf.visible = false;
 		}
+
+		// STAGE SCRIPTS
 		stagesFunc(stage -> stage.createPost());
+		#if LUA_ALLOWED startLuasNamed('stages/$curStage.lua'); #end
+		#if HSCRIPT_ALLOWED startHScriptsNamed('stages/$curStage.hx'); #end
+
+		if(gf != null) startCharacterScripts(gf.curCharacter);
+		startCharacterScripts(dad.curCharacter);
+		startCharacterScripts(boyfriend.curCharacter);
 
 		uiGroup = new FlxSpriteGroup();
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
@@ -689,14 +691,8 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
-	public function getLuaObject(tag:String, text:Bool = true):FlxSprite {
-		#if LUA_ALLOWED
-		if(modchartSprites.exists(tag)) return modchartSprites.get(tag);
-		if(text && modchartTexts.exists(tag)) return modchartTexts.get(tag);
-		if(variables.exists(tag)) return variables.get(tag);
-		#end
-		return null;
-	}
+	public function getLuaObject(tag:String):FlxSprite
+		return variables.get(tag);
 
 	function startCharacterPos(char:Character, ?gfCheck:Bool = false) {
 		if(gfCheck && char.curCharacter.startsWith('gf')) { //IF DAD IS GIRLFRIEND, HE GOES TO HER POSITION
@@ -1262,7 +1258,7 @@ class PlayState extends MusicBeatState {
 			camFollow.setPosition(camlockpoint.x, camlockpoint.y);
 		
 		if(!inCutscene && !paused && !freezeCamera)
-			FlxG.camera.followLerp = 2.4 * cameraSpeed * playbackRate;
+			FlxG.camera.followLerp = .04 * cameraSpeed * playbackRate;
 		else FlxG.camera.followLerp = 0;
 		callOnScripts('onUpdate', [elapsed]);
 
@@ -1480,7 +1476,6 @@ class PlayState extends MusicBeatState {
 				persistentUpdate = false;
 				persistentDraw = false;
 				FlxTimer.globalManager.clear(); FlxTween.globalManager.clear();
-				#if LUA_ALLOWED modchartTimers.clear(); modchartTweens.clear(); #end
 
 				openSubState(new GameOverSubstate());
 
@@ -2345,7 +2340,6 @@ class PlayState extends MusicBeatState {
 			hscript.executeFunction('onDestroy');
 			hscript.destroy();
 		}
-		for (_ => save in modchartSaves) save.close();
 		for (point in [campoint, camlockpoint, ratingAcc, ratingVel]) point = flixel.util.FlxDestroyUtil.put(point);
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);

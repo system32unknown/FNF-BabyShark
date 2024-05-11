@@ -12,13 +12,13 @@ class ReflectionFunctions {
 	public static function implement(funk:FunkinLua) {
 		funk.set("getProperty", function(variable:String, ?allowMaps:Bool = false) {
 			var split:Array<String> = variable.split('.');
-			if(split.length > 1) return LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split, true, true, allowMaps), split[split.length - 1], allowMaps);
+			if(split.length > 1) return LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split, true, allowMaps), split[split.length - 1], allowMaps);
 			return LuaUtils.getVarInArray(LuaUtils.getInstance(), variable, allowMaps);
 		});
 		funk.set("setProperty", function(variable:String, value:Dynamic, ?allowMaps:Bool = false) {
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1) {
-				LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split, true, true, allowMaps), split[split.length - 1], value, allowMaps);
+				LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split, true, allowMaps), split[split.length - 1], value, allowMaps);
 				return true;
 			}
 			LuaUtils.setVarInArray(LuaUtils.getInstance(), variable, value, allowMaps);
@@ -34,8 +34,7 @@ class ReflectionFunctions {
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1) {
 				var obj:Dynamic = LuaUtils.getVarInArray(myClass, split[0], allowMaps);
-				for (i in 1...split.length - 1)
-					obj = LuaUtils.getVarInArray(obj, split[i], allowMaps);
+				for (i in 1...split.length - 1) obj = LuaUtils.getVarInArray(obj, split[i], allowMaps);
 				return LuaUtils.getVarInArray(obj, split[split.length - 1], allowMaps);
 			}
 			return LuaUtils.getVarInArray(myClass, variable, allowMaps);
@@ -50,8 +49,7 @@ class ReflectionFunctions {
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1) {
 				var obj:Dynamic = LuaUtils.getVarInArray(myClass, split[0], allowMaps);
-				for (i in 1...split.length - 1)
-					obj = LuaUtils.getVarInArray(obj, split[i], allowMaps);
+				for (i in 1...split.length - 1) obj = LuaUtils.getVarInArray(obj, split[i], allowMaps);
 
 				LuaUtils.setVarInArray(obj, split[split.length - 1], value, allowMaps);
 				return value;
@@ -63,7 +61,7 @@ class ReflectionFunctions {
 			var split:Array<String> = obj.split('.');
 			var realObject:Dynamic = null;
 			if(split.length > 1)
-				realObject = LuaUtils.getPropertyLoop(split, true, false, allowMaps);
+				realObject = LuaUtils.getPropertyLoop(split, false, allowMaps);
 			else realObject = Reflect.getProperty(LuaUtils.getInstance(), obj);
 
 			if(Std.isOfType(realObject, FlxTypedGroup)) {
@@ -84,7 +82,7 @@ class ReflectionFunctions {
 			var split:Array<String> = obj.split('.');
 			var realObject:Dynamic = null;
 			if(split.length > 1)
-				realObject = LuaUtils.getPropertyLoop(split, true, false, allowMaps);
+				realObject = LuaUtils.getPropertyLoop(split, false, allowMaps);
 			else realObject = Reflect.getProperty(LuaUtils.getInstance(), obj);
 
 			if(Std.isOfType(realObject, FlxTypedGroup)) {

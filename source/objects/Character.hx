@@ -75,25 +75,26 @@ class Character extends FlxSprite {
 		animation = new backend.animation.PsychAnimationController(this);
 
 		animOffsets = new Map<String, Array<Float>>();
-		curCharacter = character;
 		this.isPlayer = isPlayer;
-		switch (curCharacter) {
-			//case 'your character name in case you want to hardcode them instead':
+		changeCharacter(character);
+	}
 
-			default:
-				var path:String = Paths.getPath('characters/$curCharacter.json');
-				
-				if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
-					path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
-					missingCharacter = true;
-					missingText = new FlxText(0, 0, 300, 'ERROR:\n$curCharacter.json', 16);
-					missingText.alignment = CENTER;
-				}
-		
-				try {
-					loadCharacterFile(Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path)));
-				} catch(e) Logs.trace('Error loading character file of "$curCharacter": $e', ERROR);
+	public function changeCharacter(character:String) {
+		animationsArray = [];
+		animOffsets = [];
+		curCharacter = character;
+
+		var path:String = Paths.getPath('characters/$curCharacter.json');
+		if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
+			path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+			missingCharacter = true;
+			missingText = new FlxText(0, 0, 300, 'ERROR:\n$character.json', 16);
+			missingText.alignment = CENTER;
 		}
+
+		try {
+			loadCharacterFile(Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path)));
+		} catch(e) Logs.trace('Error loading character file of "$curCharacter": $e', ERROR);
 
 		for (name => _ in animOffsets)
 			if (name.startsWith('sing') && name.contains('miss')) { // includes alt miss animations now

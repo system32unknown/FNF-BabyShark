@@ -51,6 +51,7 @@ class CharacterEditorState extends MusicBeatState {
 	var UI_box:FlxUITabMenu;
 	var UI_characterbox:FlxUITabMenu;
 
+	var unsavedProgress:Bool = false;
 	public function new(char:String = null, goToPlayState:Bool = true) {
 		this._char = char;
 		this._goToPlayState = goToPlayState;
@@ -624,6 +625,7 @@ class CharacterEditorState extends MusicBeatState {
 	}
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
+		if(id == FlxUICheckBox.CLICK_EVENT) unsavedProgress = true;
 		if(id != FlxUIInputText.CHANGE_EVENT && id != FlxUINumericStepper.CHANGE_EVENT) return;
 
 		if(sender is FlxUIInputText) {
@@ -632,7 +634,11 @@ class CharacterEditorState extends MusicBeatState {
 				healthIcon.changeIcon(healthIconInputText.text, false);
 				character.healthIcon = healthIconInputText.text;
 				if(lastIcon != healthIcon.getCharacter()) updatePresence();
-			} else if(sender == imageInputText) character.imageFile = imageInputText.text;
+				unsavedProgress = true;
+			} else if(sender == imageInputText) {
+				character.imageFile = imageInputText.text;
+				unsavedProgress = true;
+			}
 		} else if(sender is FlxUINumericStepper) {
 			if (sender == scaleStepper) {
 				reloadCharacterImage();
@@ -640,29 +646,38 @@ class CharacterEditorState extends MusicBeatState {
 				character.scale.set(character.jsonScale, character.jsonScale);
 				character.updateHitbox();
 				updatePointerPos(false);
+				unsavedProgress = true;
 			} else if(sender == positionXStepper) {
 				character.positionArray[0] = positionXStepper.value;
 				updateCharacterPositions();
+				unsavedProgress = true;
 			} else if(sender == positionYStepper) {
 				character.positionArray[1] = positionYStepper.value;
 				updateCharacterPositions();
+				unsavedProgress = true;
 			} else if(sender == singDurationStepper) {
 				character.singDuration = singDurationStepper.value;
+				unsavedProgress = true;
 			} else if(sender == positionCameraXStepper) {
 				character.cameraPosition[0] = positionCameraXStepper.value;
 				updatePointerPos();
+				unsavedProgress = true;
 			} else if(sender == positionCameraYStepper) {
 				character.cameraPosition[1] = positionCameraYStepper.value;
 				updatePointerPos();
+				unsavedProgress = true;
 			} else if(sender == healthColorStepperR) {
 				character.healthColorArray[0] = Math.round(healthColorStepperR.value);
 				updateHealthBar();
+				unsavedProgress = true;
 			} else if(sender == healthColorStepperG) {
 				character.healthColorArray[1] = Math.round(healthColorStepperG.value);
 				updateHealthBar();
+				unsavedProgress = true;
 			} else if(sender == healthColorStepperB) {
 				character.healthColorArray[2] = Math.round(healthColorStepperB.value);
 				updateHealthBar();
+				unsavedProgress = true;
 			}
 		}
 	}
@@ -878,9 +893,11 @@ class CharacterEditorState extends MusicBeatState {
 			helpTexts.visible = helpBg.visible;
 		} else if(FlxG.keys.justPressed.ESCAPE) {
 			FlxG.mouse.visible = false;
-			if(!_goToPlayState){
-				FlxG.switchState(() -> new states.editors.MasterEditorMenu());
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			if(!_goToPlayState) {
+				if(!unsavedProgress) {
+					FlxG.switchState(() -> new states.editors.MasterEditorMenu());
+					FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				} else openSubState(new ConfirmationPopupSubstate());
 			} else FlxG.switchState(() -> new PlayState());
 			return;
 		}
@@ -906,7 +923,6 @@ class CharacterEditorState extends MusicBeatState {
 
 		Paths.currentLevel = lastLoaded;
 	}
-
 
 	inline function updatePointerPos(?snap:Bool = true) {
 		var offX:Float = 0;
