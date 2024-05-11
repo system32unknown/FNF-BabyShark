@@ -98,7 +98,7 @@ class MainMenuState extends MusicBeatState {
 		changeItem();
 
 		super.create();
-		FlxG.camera.follow(camFollow, null, 9);
+		FlxG.camera.follow(camFollow, null, .15);
 	}
 
 	function createMenuItem(name:String, x:Float, y:Float, looping:Bool = false):FlxSprite {

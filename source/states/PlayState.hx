@@ -40,7 +40,6 @@ class PlayState extends MusicBeatState {
 	public var boyfriendMap:Map<String, Character> = new Map<String, Character>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
 	public var gfMap:Map<String, Character> = new Map<String, Character>();
-	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 	#if LUA_ALLOWED
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
 	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
@@ -139,8 +138,8 @@ class PlayState extends MusicBeatState {
 	public var maxCombo:Int = 0;
 
 	public var healthBar:Bar;
-	var songPercent:Float = 0;
 	public var timeBar:Bar;
+	var songPercent:Float = 0;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
 	public static var mania:Int = 3;
@@ -189,8 +188,8 @@ class PlayState extends MusicBeatState {
 	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
 
 	public static var campaignScore:Int = 0;
-	public static var deathCounter:Int = 0;
 	public static var seenCutscene:Bool = false;
+	public static var deathCounter:Int = 0;
 
 	public var defaultCamZoom:Float = 1.05;
 	public var defaultHudCamZoom:Float = 1.;
@@ -1239,7 +1238,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function resyncVocals():Void {
-		if(finishTimer != null) return;
+		if(finishTimer != null || (transitioning && endingSong)) return;
 		FlxG.sound.music.play();
 		#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
 		Conductor.songPosition = FlxG.sound.music.time;
@@ -1259,15 +1258,6 @@ class PlayState extends MusicBeatState {
 	var allowDebugKeys:Bool = true;
 
 	override function update(elapsed:Float) {
-		if (startedCountdown && !paused) {
-			Conductor.songPosition += elapsed * 1000 * playbackRate;
-			if (Conductor.songPosition >= 0) {
-				var timeDiff:Float = Math.abs(FlxG.sound.music.time - Conductor.songPosition - Conductor.offset);
-				Conductor.songPosition = FlxMath.lerp(Conductor.songPosition, FlxG.sound.music.time, FlxMath.bound(elapsed * 2.5, 0, 1));
-				if (timeDiff > 1000 * playbackRate) Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
-			}
-		}
-
 		if(ClientPrefs.data.camMovement && camlock)
 			camFollow.setPosition(camlockpoint.x, camlockpoint.y);
 		
@@ -1304,6 +1294,12 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (controls.PAUSE) tryPause();
+		if (!endingSong && !inCutscene && allowDebugKeys) {
+			if (controls.justPressed('debug_1')) openChartEditor();
+			else if (controls.justPressed('debug_2')) openCharacterEditor();
+		}
+
+		if (healthBar.bounds.max != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
 
 		for (icon in [iconP1, iconP2]) {
 			switch(ClientPrefs.data.iconBounceType) {
@@ -1317,12 +1313,15 @@ class PlayState extends MusicBeatState {
 		}
 		updateIconsPosition();
 
-		if (!endingSong && !inCutscene && allowDebugKeys) {
-			if (controls.justPressed('debug_1')) openChartEditor();
-			if (controls.justPressed('debug_2')) openCharacterEditor();
+		if (startedCountdown && !paused) {
+			Conductor.songPosition += elapsed * 1000 * playbackRate;
+			if (Conductor.songPosition >= 0) {
+				var timeDiff:Float = Math.abs(FlxG.sound.music.time - Conductor.songPosition - Conductor.offset);
+				Conductor.songPosition = FlxMath.lerp(Conductor.songPosition, FlxG.sound.music.time, FlxMath.bound(elapsed * 2.5, 0, 1));
+				if (timeDiff > 1000 * playbackRate) Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
+			}
 		}
 
-		if (healthBar.bounds != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
 
 		if (startingSong) {
 			if (startedCountdown && Conductor.songPosition >= 0) startSong();
@@ -1353,7 +1352,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		#if debug
-		FlxG.watch.addQuick("sectionShit", curSection);
+		FlxG.watch.addQuick("secShit", curSection);
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
 		#end
@@ -1363,8 +1362,8 @@ class PlayState extends MusicBeatState {
 
 		if (unspawnNotes[0] != null) {
 			var time:Float = spawnTime * playbackRate;
-			if (songSpeed < 1) time /= songSpeed;
-			if (unspawnNotes[0].multSpeed < 1) time /= unspawnNotes[0].multSpeed;
+			if(songSpeed < 1) time /= songSpeed;
+			if(unspawnNotes[0].multSpeed < 1) time /= unspawnNotes[0].multSpeed;
 
 			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time) {
 				var dunceNote:Note = unspawnNotes[0];
@@ -1445,7 +1444,7 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.followLerp = 0;
 		persistentUpdate = false;
 		paused = true;
-		if (FlxG.sound.music != null) FlxG.sound.music.stop();
+		if(FlxG.sound.music != null) FlxG.sound.music.stop();
 		chartingMode = true;
 
 		#if DISCORD_ALLOWED
@@ -2019,10 +2018,10 @@ class PlayState extends MusicBeatState {
 		if(ret == LuaUtils.Function_Stop) return;
 
 		//more accurate hit time for the ratings?
-		var lastTime:Float = Conductor.songPosition;
-		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time;
-
 		if(notes.length > 0 && !boyfriend.stunned && generatedMusic && !endingSong) {
+			var lastTime:Float = Conductor.songPosition;
+			if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time;
+
 			var sortedNotesList:Array<Note> = [];				
 			var canMiss:Bool = !ClientPrefs.data.ghostTapping;
 
@@ -2045,9 +2044,8 @@ class PlayState extends MusicBeatState {
 				callOnScripts('onGhostTap', [key]);
 				if (canMiss && !boyfriend.stunned) noteMissPress(key);
 			}
+			Conductor.songPosition = lastTime;
 		}
-
-		Conductor.songPosition = lastTime;
 
 		var spr:StrumNote = playerStrums.members[key];
 		if(!strumsBlocked[key] && spr != null && spr.animation.curAnim.name != 'confirm') {

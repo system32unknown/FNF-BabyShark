@@ -119,7 +119,7 @@ class ReflectionFunctions {
 
 		funk.set("createInstance", function(variableToSave:String, className:String, ?args:Array<Dynamic> = null) {
 			variableToSave = variableToSave.trim().replace('.', '');
-			if(!PlayState.instance.variables.exists(variableToSave)) {
+			if(!MusicBeatState.getVariables().exists(variableToSave)) {
 				if(args == null) args = [];
 				var myType:Dynamic = Type.resolveClass(className);
 		
@@ -129,7 +129,7 @@ class ReflectionFunctions {
 				}
 
 				var obj:Dynamic = Type.createInstance(myType, args);
-				if(obj != null) PlayState.instance.variables.set(variableToSave, obj);
+				if(obj != null) MusicBeatState.getVariables().set(variableToSave, obj);
 				else FunkinLua.luaTrace('createInstance: Failed to create $variableToSave, arguments are possibly wrong.', false, false, FlxColor.RED);
 
 				return (obj != null);
@@ -137,8 +137,8 @@ class ReflectionFunctions {
 			return false;
 		});
 		funk.set("addInstance", function(objectName:String, ?inFront:Bool = false) {
-			if(PlayState.instance.variables.exists(objectName)) {
-				var obj:Dynamic = PlayState.instance.variables.get(objectName);
+			if(MusicBeatState.getVariables().exists(objectName)) {
+				var obj:Dynamic = MusicBeatState.getVariables().get(objectName);
 				if (inFront) LuaUtils.getInstance().add(obj);
 				else {
 					if(!PlayState.instance.isDead) PlayState.instance.insert(PlayState.instance.members.indexOf(LuaUtils.getLowestCharacterGroup()), obj);
@@ -147,13 +147,13 @@ class ReflectionFunctions {
 			} else FunkinLua.luaTrace('addInstance: Can\'t add what doesn\'t exist~ ($objectName)', false, false, FlxColor.RED);
 		});
 		funk.set("removeInstance", function(objectName:String, destroy:Bool = true) {
-			if(PlayState.instance.variables.exists(objectName)) {
-				var obj:Dynamic = PlayState.instance.variables.get(objectName);
+			if(MusicBeatState.getVariables().exists(objectName)) {
+				var obj:Dynamic = MusicBeatState.getVariables().get(objectName);
 				LuaUtils.getInstance().remove(obj, true);
 				if(destroy) {
 					obj.kill();
 					obj.destroy();
-					PlayState.instance.variables.remove(objectName);
+					MusicBeatState.getVariables().remove(objectName);
 				}
 			} else FunkinLua.luaTrace('removeInstance: Variable $objectName does not exist and cannot be removed!');
 		});

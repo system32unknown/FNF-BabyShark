@@ -137,17 +137,17 @@ class HScript extends Interp {
 
 		// Functions & Variables
 		setVar('setVar', (name:String, value:Dynamic) -> {
-			PlayState.instance.variables.set(name, value);
+			MusicBeatState.getVariables().set(name, value);
 			return value;
 		});
 		setVar('getVar', (name:String) -> {
-			if(PlayState.instance.variables.exists(name))
-				return PlayState.instance.variables.get(name);
+			if(MusicBeatState.getVariables().exists(name))
+				return MusicBeatState.getVariables().get(name);
 			return null;
 		});
 		setVar('removeVar', (name:String) -> {
-			if(PlayState.instance.variables.exists(name)) {
-				PlayState.instance.variables.remove(name);
+			if(MusicBeatState.getVariables().exists(name)) {
+				MusicBeatState.getVariables().remove(name);
 				return true;
 			}
 			return false;

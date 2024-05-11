@@ -119,10 +119,10 @@ class FunkinLua {
 		});
 
 		set("setVar", function(varName:String, value:Dynamic) {
-			PlayState.instance.variables.set(varName, value);
+			MusicBeatState.getVariables().set(varName, value);
 			return value;
 		});
-		set("getVar", PlayState.instance.variables.get);
+		set("getVar", MusicBeatState.getVariables().get);
 
 		set("addLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false) { //would be dope asf.
 			var foundScript:String = findScript(luaFile);

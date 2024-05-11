@@ -37,8 +37,8 @@ class LuaUtils {
 		var splitProps:Array<String> = variable.split('[');
 		if(splitProps.length > 1) {
 			var target:Dynamic = null;
-			if(PlayState.instance.variables.exists(splitProps[0])) {
-				var retVal:Dynamic = PlayState.instance.variables.get(splitProps[0]);
+			if(MusicBeatState.getVariables().exists(splitProps[0])) {
+				var retVal:Dynamic = MusicBeatState.getVariables().get(splitProps[0]);
 				if(retVal != null) target = retVal;
 			} else target = Reflect.getProperty(instance, splitProps[0]);
 
@@ -55,8 +55,8 @@ class LuaUtils {
 			return value;
 		}
 
-		if(PlayState.instance.variables.exists(variable)) {
-			PlayState.instance.variables.set(variable, value);
+		if(MusicBeatState.getVariables().exists(variable)) {
+			MusicBeatState.getVariables().set(variable, value);
 			return value;
 		}
 		Reflect.setProperty(instance, variable, value);
@@ -67,8 +67,8 @@ class LuaUtils {
 		var splitProps:Array<String> = variable.split('[');
 		if(splitProps.length > 1) {
 			var target:Dynamic = null;
-			if(PlayState.instance.variables.exists(splitProps[0])) {
-				var retVal:Dynamic = PlayState.instance.variables.get(splitProps[0]);
+			if(MusicBeatState.getVariables().exists(splitProps[0])) {
+				var retVal:Dynamic = MusicBeatState.getVariables().get(splitProps[0]);
 				if(retVal != null) target = retVal;
 			} else target = Reflect.getProperty(instance, splitProps[0]);
 
@@ -81,8 +81,8 @@ class LuaUtils {
 		
 		if(allowMaps && isMap(instance)) return instance.get(variable);
 
-		if(PlayState.instance.variables.exists(variable)) {
-			var retVal:Dynamic = PlayState.instance.variables.get(variable);
+		if(MusicBeatState.getVariables().exists(variable)) {
+			var retVal:Dynamic = MusicBeatState.getVariables().get(variable);
 			if(retVal != null) return retVal;
 		}
 		return Reflect.getProperty(instance, variable);
@@ -145,7 +145,7 @@ class LuaUtils {
 	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
 		var ind:Int = variable.indexOf('.');
 		if (ind == -1) {
-			if (PlayState.instance.variables.exists(variable)) return PlayState.instance.variables.get(variable);
+			if (MusicBeatState.getVariables().exists(variable)) return MusicBeatState.getVariables().get(variable);
 			return checkLuaFirst ? getObjectDirectly(variable, checkForTextsToo) : getVarInArray(getInstance(), variable);
 		}
 
@@ -412,7 +412,7 @@ class LuaUtils {
 			case 'camhud' | 'hud': return PlayState.instance.camHUD;
 			case 'camother' | 'other': return PlayState.instance.camOther;
 		}
-		var camera:Dynamic = PlayState.instance.variables.get(cam);
+		var camera:Dynamic = MusicBeatState.getVariables().get(cam);
 		if (camera == null || !Std.isOfType(camera, FlxCamera)) camera = PlayState.instance.camGame;
 		return camera;
 	}
