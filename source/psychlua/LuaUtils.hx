@@ -271,18 +271,6 @@ class LuaUtils {
 		}
 	}
 
-	public static function resetTextTag(tag:String) {
-		#if LUA_ALLOWED
-		if(!PlayState.instance.modchartTexts.exists(tag)) return;
-
-		var target:FlxText = PlayState.instance.modchartTexts.get(tag);
-		target.kill();
-		PlayState.instance.remove(target, true);
-		target.destroy();
-		PlayState.instance.modchartTexts.remove(tag);
-		#end
-	}
-
 	public static function destroyObject(tag:String) {
 		var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 		var obj:FlxSprite = variables.get(tag);

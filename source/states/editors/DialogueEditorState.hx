@@ -23,6 +23,7 @@ class DialogueEditorState extends MusicBeatState {
 
 	var defaultLine:DialogueLine;
 	var dialogueFile:DialogueFile = null;
+	var unsavedProgress:Bool = false;
 
 	override function create() {
 		persistentUpdate = persistentDraw = true;
@@ -220,6 +221,8 @@ class DialogueEditorState extends MusicBeatState {
 	}
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
+		if(id == FlxUICheckBox.CLICK_EVENT) unsavedProgress = true;
+
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
 			if (sender == characterInputText) {
 				character.reloadCharacterJson(characterInputText.text);
@@ -247,6 +250,7 @@ class DialogueEditorState extends MusicBeatState {
 				daText.sound = soundInputText.text;
 				if(daText.sound == null) daText.sound = '';
 			}
+			unsavedProgress = true;
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender == speedStepper)) {
 			dialogueFile.dialogue[curSelected].speed = speedStepper.value;
 			if(Math.isNaN(dialogueFile.dialogue[curSelected].speed) || dialogueFile.dialogue[curSelected].speed == null || dialogueFile.dialogue[curSelected].speed < 0.001) {
@@ -254,6 +258,7 @@ class DialogueEditorState extends MusicBeatState {
 			}
 			daText.delay = dialogueFile.dialogue[curSelected].speed;
 			reloadText(false);
+			unsavedProgress = true;
 		}
 	}
 
@@ -297,9 +302,12 @@ class DialogueEditorState extends MusicBeatState {
 			ClientPrefs.toggleVolumeKeys();
 			if(FlxG.keys.justPressed.SPACE) reloadText(false);
 			if(FlxG.keys.justPressed.ESCAPE) {
-				FlxG.switchState(() -> new MasterEditorMenu());
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-				transitioning = true;
+				if(!unsavedProgress) {
+					FlxG.switchState(() -> new MasterEditorMenu());
+					FlxG.sound.playMusic(Paths.music('freakyMenu'));
+					transitioning = true;
+				} else openSubState(new ConfirmationPopupSubstate(() -> transitioning = true));
+				return;
 			}
 			var negaMult:Array<Int> = [1, -1];
 			var controlAnim:Array<Bool> = [FlxG.keys.justPressed.W, FlxG.keys.justPressed.S];

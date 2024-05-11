@@ -6,7 +6,7 @@ class TextFunctions {
 
 		funk.set("makeLuaText", function(tag:String, text:String, width:Int, x:Float, y:Float) {
 			tag = tag.replace('.', '');
-			LuaUtils.resetTextTag(tag);
+			LuaUtils.destroyObject(tag);
 			var leText:FlxText = new FlxText(x, y, width, text, 16);
 			leText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
 			leText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);

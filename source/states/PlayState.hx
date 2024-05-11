@@ -1295,7 +1295,7 @@ class PlayState extends MusicBeatState {
 			else if (controls.justPressed('debug_2')) openCharacterEditor();
 		}
 
-		if (healthBar.bounds.max != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
+		if (healthBar.bounds != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
 
 		for (icon in [iconP1, iconP2]) {
 			switch(ClientPrefs.data.iconBounceType) {
