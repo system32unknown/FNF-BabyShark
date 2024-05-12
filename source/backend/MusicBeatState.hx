@@ -148,8 +148,9 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 		onOutroComplete();
 	}
 
-	public static function getState(?state:FlxState):MusicBeatState return cast(state != null ? state : FlxG.state);
-	public static function previousStateIs(state:Class<FlxState>):Bool return previousStateClass == state;
+	public static function getState(?state:FlxState):MusicBeatState {
+		return cast(state != null ? state : FlxG.state, MusicBeatState);
+	}
 	
 	public function stepHit():Void {
 		stagesFunc((stage:BaseStage) -> {

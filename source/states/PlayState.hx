@@ -292,7 +292,7 @@ class PlayState extends MusicBeatState {
 		stageUI = "normal";
 		if (stageData.stageUI != null && stageData.stageUI.trim().length > 0)
 			stageUI = stageData.stageUI;
-		else if (stageData.isPixelStage) stageUI = "pixel";
+		else if (stageData.isPixelStage == true) stageUI = "pixel";
 
 		BF_X = stageData.boyfriend[0];
 		BF_Y = stageData.boyfriend[1];

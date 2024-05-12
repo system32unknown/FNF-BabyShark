@@ -3,14 +3,10 @@ package states.editors;
 import data.StageData;
 import backend.PsychCamera;
 import objects.Character;
-import psychlua.LuaUtils;
 
 import flixel.FlxObject;
 import flixel.addons.ui.*;
-import flixel.addons.display.FlxBackdrop;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.ui.FlxButton;
-import flixel.math.FlxRect;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.Sprite;
 
@@ -20,10 +16,9 @@ import openfl.events.IOErrorEvent;
 import psychlua.ModchartSprite;
 import flash.net.FileFilter;
 
-class StageEditorState extends MusicBeatState
-{
-	final minZoom = 0.1;
-	final maxZoom = 2;
+class StageEditorState extends MusicBeatState {
+	final minZoom:Float = 0.1;
+	final maxZoom:Int = 2;
 
 	var gf:Character;
 	var dad:Character;
@@ -87,7 +82,7 @@ class StageEditorState extends MusicBeatState
 		repositionGirlfriend();
 		repositionDad();
 		repositionBoyfriend();
-		var point = focusOnTarget('boyfriend');
+		var point:FlxPoint = focusOnTarget('boyfriend');
 		FlxG.camera.scroll.set(point.x - FlxG.width / 2, point.y - FlxG.height / 2);
 
 		screenUI();
@@ -357,7 +352,7 @@ class StageEditorState extends MusicBeatState
 		add(targetTxt);
 
 		focusRadioGroup = new FlxUIRadioGroup(targetTxt.x, FlxG.height - 24, ['dad', 'boyfriend', 'gf'], ['Opponent', 'Boyfriend', 'Girlfriend'], function(target:String) {
-			var point = focusOnTarget(target);
+			var point:FlxPoint = focusOnTarget(target);
 			camFollow.setPosition(point.x, point.y);
 			FlxG.camera.target = camFollow;
 		}, 0, 200, 20, 200);
@@ -1022,7 +1017,7 @@ class StageEditorState extends MusicBeatState
 
 		if(stageJson.camera_speed != null) cameraSpeedStepper.value = stageJson.camera_speed;
 		else cameraSpeedStepper.value = 1;
-		FlxG.camera.followLerp = 0.04 * cameraSpeedStepper.value;
+		FlxG.camera.followLerp = .04 * cameraSpeedStepper.value;
 
 		if(stageJson.camera_opponent != null && stageJson.camera_opponent.length > 1) {
 			camDadStepperX.value = stageJson.camera_opponent[0];
@@ -1040,7 +1035,7 @@ class StageEditorState extends MusicBeatState
 		} else camBfStepperX.value = camBfStepperY.value = 0;
 
 		if(focusRadioGroup.selectedId != null) {
-			var point = focusOnTarget(focusRadioGroup.selectedId);
+			var point:FlxPoint = focusOnTarget(focusRadioGroup.selectedId);
 			camFollow.setPosition(point.x, point.y);
 		}
 		loadJsonAssetDirectory();
@@ -1350,7 +1345,7 @@ class StageEditorState extends MusicBeatState
 		if (!spr.isOnScreen(FlxG.camera)) return;
 
 		@:privateAccess
-		var rect:FlxRect = spr.getBoundingBox(FlxG.camera);
+		var rect:flixel.math.FlxRect = spr.getBoundingBox(FlxG.camera);
 		var gfx:openfl.display.Graphics = camGame.debugLayer.graphics;
 		gfx.lineStyle(3, FlxColor.LIME, 0.8);
 		gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
