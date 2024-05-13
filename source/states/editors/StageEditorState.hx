@@ -25,11 +25,7 @@ class StageEditorState extends MusicBeatState {
 	var boyfriend:Character;
 	var stageJson:StageFile;
 
-	#if FLX_DEBUG
-	var camGame:FlxCamera;
-	#else
-	var camGame:DebugCamera;
-	#end
+	var camGame:#if FLX_DEBUG FlxCamera #else DebugCamera #end;
 	public var camHUD:FlxCamera;
 
 	var UI_stagebox:FlxUITabMenu;
@@ -1450,8 +1446,7 @@ class StageEditorState extends MusicBeatState {
 				tryLoadImage(selected, imageToLoad);
 
 				if(_makeNewSprite != null) {
-					selected.sprite.x = Math.round(FlxG.camera.scroll.x + FlxG.width / 2 - selected.sprite.width / 2);
-					selected.sprite.y = Math.round(FlxG.camera.scroll.y + FlxG.height / 2 - selected.sprite.height / 2);
+					selected.sprite.setPosition(Math.round(FlxG.camera.scroll.x + FlxG.width / 2 - selected.sprite.width / 2), Math.round(FlxG.camera.scroll.y + FlxG.height / 2 - selected.sprite.height / 2));
 					posTxt.visible = true;
 					posTxt.text = 'X: ${selected.sprite.x}\nY: ${selected.sprite.y}';
 				}
@@ -1565,6 +1560,12 @@ class StageEditorMetaSprite {
 	function set_x(v:Float) return (sprite.x = v);
 	function get_y() return sprite.y;
 	function set_y(v:Float) return (sprite.y = v);
+
+	public function setPosition(x:Float, y:Float) {
+		this.x = x;
+		this.y = y;
+	}
+
 	function get_alpha() return sprite.alpha;
 	function set_alpha(v:Float) return (sprite.alpha = v);
 	function get_angle() return sprite.angle;
@@ -1691,8 +1692,7 @@ class StageEditorAnimationSubstate extends MusicBeatSubstate {
 
 	var UI_animationbox:FlxUITabMenu;
 	var camHUD:FlxCamera = cast(FlxG.state, StageEditorState).camHUD;
-	public function new()
-	{
+	public function new() {
 		super();
 
 		add(CoolUtil.createBackDrop(50, 50, 100, 100, true, 0xFFAAAAAA, 0xFF666666));
@@ -1732,8 +1732,7 @@ class StageEditorAnimationSubstate extends MusicBeatSubstate {
 			FlxG.camera.scroll.set(originalCamPoint.x, originalCamPoint.y);
 			FlxG.camera.target = originalCamTarget;
 
-			target.x = originalPosition.x;
-			target.y = originalPosition.y;
+			target.setPosition(originalPosition.x, originalPosition.y);
 			target.alpha = originalAlpha;
 			remove(target.sprite);
 
@@ -1984,7 +1983,7 @@ class StageEditorAnimationSubstate extends MusicBeatSubstate {
 			if(moveKeysP.contains(true)) {
 				if(spr.animOffsets.get(anim) != null)
 					spr.offset.add(((moveKeysP[0] ? 1 : 0) - (moveKeysP[1] ? 1 : 0)) * shiftMultBig, ((moveKeysP[2] ? 1 : 0) - (moveKeysP[3] ? 1 : 0)) * shiftMultBig);
-				else spr.offset.x = spr.offset.y = 0;
+				else spr.offset.set();
 				changedOffset = true;
 			}
 
@@ -1995,7 +1994,7 @@ class StageEditorAnimationSubstate extends MusicBeatSubstate {
 					while(holdingArrowsElapsed > (1 / 60)) {
 						if(spr.animOffsets.get(anim) != null)
 							spr.offset.add(((moveKeys[0] ? 1 : 0) - (moveKeys[1] ? 1 : 0)) * shiftMultBig, ((moveKeys[2] ? 1 : 0) - (moveKeys[3] ? 1 : 0)) * shiftMultBig);
-						else spr.offset.x = spr.offset.y = 0;
+						else spr.offset.set();
 						holdingArrowsElapsed -= (1 / 60);
 						changedOffset = true;
 					}

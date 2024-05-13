@@ -31,7 +31,7 @@ class TitleState extends MusicBeatState {
 
 	var startingTween:FlxTween;
 	var gradientBar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 1, 0xFF0F5FFF);
-	var gradtimer:Float = 0;
+	var titletimer:Float = 0;
 
 	public static var updateVersion:String;
 	var mustUpdate:Bool = false;
@@ -176,9 +176,13 @@ class TitleState extends MusicBeatState {
 		super.update(elapsed);
 
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
-		gradientBar.scale.y += Math.sin(gradtimer++ / 10) * .001;
+
+		titletimer++;
+		gradientBar.scale.y += Math.sin(titletimer / 10) * .001;
 		gradientBar.updateHitbox();
 		gradientBar.y = FlxG.height - gradientBar.height;
+
+		if (skippedIntro) logo.angle = Math.sin(titletimer / 270) * 5;
 
 		if (controls.ACCEPT) {
 			if (skippedIntro) {
@@ -227,8 +231,8 @@ class TitleState extends MusicBeatState {
 	function addMoreText(text:String, offset:Float = 0, i:Int = -1) {
 		if (textGroup != null) {
 			final txt:FlxText = new FlxText(0, ((i == -1 ? textGroup.length : i) * 60) + 200 + offset, FlxG.width, text, 48);
-			txt.screenCenter(X);
 			txt.setFormat(Paths.font("babyshark.ttf"), 48, FlxColor.WHITE, CENTER);
+			txt.screenCenter(X);
 			textGroup.add(txt);
 		}
 	}
@@ -292,10 +296,6 @@ class TitleState extends MusicBeatState {
 		gradientBar.visible = true;
 
 		FlxTween.tween(logo, {y: titleJson.starty}, 1.4, {ease: FlxEase.expoInOut});
-		new FlxTimer().start(.01, (tmr:FlxTimer) -> {
-			if (logo.angle == -4) FlxTween.angle(logo, logo.angle, 4, 4, {ease: FlxEase.quartInOut});
-			if (logo.angle == 4) FlxTween.angle(logo, logo.angle, -4, 4, {ease: FlxEase.quartInOut});
-		}, 0);
 
 		deleteText();
 	}

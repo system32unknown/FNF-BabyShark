@@ -31,7 +31,7 @@ class ShaderFunctions {
 				return false;
 			}
 
-			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
+			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true);
 			if(leObj != null) {
 				var arr:Array<String> = funk.runtimeShaders.get(shader);
 				leObj.shader = new FlxRuntimeShader(arr[0], arr[1]);
@@ -43,7 +43,7 @@ class ShaderFunctions {
 			return false;
 		});
 		funk.set("removeSpriteShader", function(obj:String) {
-			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
+			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true);
 			if (leObj != null) {
 				leObj.shader = null;
 				return true;
@@ -233,7 +233,7 @@ class ShaderFunctions {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader != null) {
-				var value = Paths.image(bitmapdataPath);
+				var value:flixel.graphics.FlxGraphic = Paths.image(bitmapdataPath);
 				if (value == null || value.bitmap == null) return false;
 
 				shader.setSampler2D(prop, value.bitmap);
@@ -250,7 +250,7 @@ class ShaderFunctions {
 		if (storedFilters.exists(obj))
 		    return cast(storedFilters[obj].shader, FlxRuntimeShader);
 
-		var target:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
+		var target:FlxSprite = LuaUtils.getVarInstance(obj, true);
 		if (target == null) {
 			FunkinLua.luaTrace('Error on getting shader: Object $obj not found', false, false, FlxColor.RED);
 			return null;

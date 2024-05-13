@@ -138,18 +138,18 @@ class LuaUtils {
 		return null;
 	}
 
-	public static function isMap(variable:Dynamic) {
+	public static function isMap(variable:Dynamic):Bool {
 		return (variable.exists != null && variable.keyValueIterator != null);
 	}
 
-	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true, checkForTextsToo:Bool = true):Dynamic {
+	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true):Dynamic {
 		var ind:Int = variable.indexOf('.');
 		if (ind == -1) {
 			if (MusicBeatState.getVariables().exists(variable)) return MusicBeatState.getVariables().get(variable);
-			return checkLuaFirst ? getObjectDirectly(variable, checkForTextsToo) : getVarInArray(MusicBeatState.getState(), variable);
+			return checkLuaFirst ? getObjectDirectly(variable) : getVarInArray(MusicBeatState.getState(), variable);
 		}
 
-		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind), checkForTextsToo);
+		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind));
 		while (ind != -1) obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
 		return obj;
 	}
@@ -247,7 +247,7 @@ class LuaUtils {
 		return group;
 	}
 
-	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false) {
+	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false):Bool {
 		var obj:FlxSprite = cast getObjectDirectly(obj, false);
 		if(obj != null && obj.animation != null) {
 			if(indices == null) indices = [0];

@@ -202,8 +202,6 @@ class HScript extends Interp {
 		});
 
 		// For adding your own callbacks
-
-		// not very tested but should work
 		setVar('createGlobalCallback', function(name:String, func:haxe.Constraints.Function) {
 			#if LUA_ALLOWED
 			for (script in PlayState.instance.luaArray)
@@ -213,7 +211,6 @@ class HScript extends Interp {
 			FunkinLua.customFunctions.set(name, func);
 		});
 
-		// tested
 		setVar('createCallback', function(name:String, func:Dynamic, ?funk:FunkinLua = null) {
 			if(funk == null) funk = parentLua;
 			if(funk != null) funk.addLocalCallback(name, func);
@@ -265,6 +262,9 @@ class HScript extends Interp {
 			setVar('addBehindGF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.gfGroup) - order, obj));
 			setVar('addBehindDad', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.dadGroup) - order, obj));
 			setVar('addBehindBF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.boyfriendGroup) - order, obj));
+
+			setVar('rating', 0.0);
+			setVar('ratingRank', '');
 			scriptObject = psInstance; // allow use vars from playstate without "game" thing
 		}
 	}

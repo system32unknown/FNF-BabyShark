@@ -649,7 +649,7 @@ class FunkinLua {
 		});
 
 		set("makeGraphic", function(obj:String, width:Int = 256, height:Int = 256, color:String = 'FFFFFF') {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj, true, false);
+			var spr:FlxSprite = LuaUtils.getVarInstance(obj, true);
 
 			if (spr == null) return false;
 			spr.makeGraphic(width, height, CoolUtil.colorFromString(color));
