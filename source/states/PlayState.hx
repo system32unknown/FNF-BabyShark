@@ -128,7 +128,6 @@ class PlayState extends MusicBeatState {
 	}
 	public var combo:Int = 0;
 	public var maxCombo:Int = 0;
-	var displayedcombo:Int = 0;
 
 	public var healthBar:Bar;
 	public var timeBar:Bar;
@@ -2286,7 +2285,6 @@ class PlayState extends MusicBeatState {
 		if(!isSus) {
 			notesHitArray.push(Date.now());
 			combo++;
-			displayedcombo++;
 			popUpScore(note);
 		}
 
@@ -2399,19 +2397,6 @@ class PlayState extends MusicBeatState {
 		}
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
-
-		var shouldShowComboText:Bool = false;
-		if (SONG.notes[curSection] != null) shouldShowComboText = (!SONG.notes[curSection].mustHitSection && displayedcombo > 5);
-	
-		if (shouldShowComboText) {
-		  	var animShit:ComboMilestone = new ComboMilestone(-100, 300, displayedcombo);
-		  	animShit.scrollFactor.set(.6, .6);
-		  	add(animShit);
-	
-		  	var frameShit:Float = (1 / 24) * 2; // equals 2 frames in the animation
-		  	FlxTimer.wait(((Conductor.crochet / 1000) * 1.25) - frameShit, () -> animShit.forceFinish());
-			displayedcombo = 0;
-		}
 
 		lastBeatHit = curBeat;
 
