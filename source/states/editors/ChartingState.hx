@@ -7,7 +7,6 @@ import objects.Character;
 import objects.AttachedSprite;
 import objects.AttachedFlxText;
 import backend.Song;
-import data.StageData;
 import utils.MathUtil;
 import substates.Prompt;
 
@@ -414,8 +413,7 @@ class ChartingState extends MusicBeatState {
 			var directory:String = directories[i];
 			if(FileSystem.exists(directory)) {
 				for (file in FileSystem.readDirectory(directory)) {
-					var path:String = Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
+					if (!FileSystem.isDirectory(Path.join([directory, file])) && file.endsWith('.json')) {
 						var charToCheck:String = file.substr(0, file.length - 5);
 						if(charToCheck.trim().length > 0 && !charToCheck.endsWith('-dead') && !tempArray.contains(charToCheck)) {
 							tempArray.push(charToCheck);
@@ -1834,7 +1832,7 @@ class ChartingState extends MusicBeatState {
 		FlxG.sound.music.stop();
 		if(vocals != null) vocals.stop();
 
-		StageData.loadDirectory(_song);
+		data.StageData.loadDirectory(_song);
 		LoadingState.loadAndSwitchState(() -> new PlayState(), true);
 	}
 

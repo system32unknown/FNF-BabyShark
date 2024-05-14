@@ -8,13 +8,13 @@ import flixel.FlxObject;
 import flixel.addons.ui.*;
 import flixel.ui.FlxButton;
 import flixel.util.FlxDestroyUtil;
-import openfl.display.Sprite;
 
+import openfl.display.Sprite;
 import openfl.net.FileReference;
+import openfl.net.FileFilter;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import psychlua.ModchartSprite;
-import flash.net.FileFilter;
 
 class StageEditorState extends MusicBeatState {
 	final minZoom:Float = 0.1;
@@ -210,8 +210,7 @@ class StageEditorState extends MusicBeatState {
 		buttonMoveUp.camera = camHUD;
 		add(buttonMoveUp);
 
-		buttonMoveDown = new FlxButton(buttonX, buttonY + 30, 'Move Down', () ->
-		{
+		buttonMoveDown = new FlxButton(buttonX, buttonY + 30, 'Move Down', () -> {
 			var selected:Int = spriteListRadioGroup.selectedIndex;
 			if(selected < 0) return;
 
@@ -244,8 +243,7 @@ class StageEditorState extends MusicBeatState {
 
 			var copiedSpr:ModchartSprite = new ModchartSprite();
 			var copiedMeta:StageEditorMetaSprite = new StageEditorMetaSprite(null, copiedSpr);
-			for (field in Reflect.fields(spr))
-			{
+			for (field in Reflect.fields(spr)) {
 				if(field == 'sprite') continue; //do NOT copy sprite or it might get messy
 
 				try {
@@ -353,8 +351,7 @@ class StageEditorState extends MusicBeatState {
 			FlxG.camera.target = camFollow;
 		}, 0, 200, 20, 200);
 
-		for (id => check in focusRadioGroup.getRadios())
-		{
+		for (id => check in focusRadioGroup.getRadios()) {
 			check.x += id * 100;
 			check.textY -= 4;
 			check.getLabel().size = 11;
@@ -385,10 +382,7 @@ class StageEditorState extends MusicBeatState {
 		add(posTxt);
 
 		errorTxt = new FlxText(0, 0, 800, '', 24);
-		errorTxt.alignment = CENTER;
-		errorTxt.borderStyle = OUTLINE_FAST;
-		errorTxt.borderSize = 1;
-		errorTxt.color = FlxColor.RED;
+		errorTxt.setFormat(null, 24, FlxColor.RED, CENTER, OUTLINE_FAST);
 		errorTxt.camera = camHUD;
 		errorTxt.screenCenter();
 		errorTxt.alpha = 0;
@@ -571,8 +565,7 @@ class StageEditorState extends MusicBeatState {
 				folderList.push(folder);
 		#end
 
-		var saveButton:FlxButton = new FlxButton(UI_box.width - 90, UI_box.height - 50, 'Save', () -> saveData());
-		tab_group.add(saveButton);
+		tab_group.add(new FlxButton(UI_box.width - 90, UI_box.height - 50, 'Save', () -> saveData()));
 
 		directoryDropDown = new FlxUIDropDownMenu(objX, objY, FlxUIDropDownMenu.makeStrIdLabelArray(folderList), function(selected:String) {
 			stageJson.directory = selected;
@@ -783,17 +776,15 @@ class StageEditorState extends MusicBeatState {
 		colorInputText = new FlxUIInputText(objX, objY, 80, 'FFFFFF', 8);
 		colorInputText.filterMode = FlxInputText.ONLY_ALPHANUMERIC;
 		colorInputText.params = [() -> {
-			// change color
 			var selected:StageEditorMetaSprite = getSelected();
-			if(selected != null) selected.color = colorInputText.text;
+			if(selected != null) selected.color = colorInputText.text; // change color
 		}];
 		focusCheck.push(colorInputText);
 		tab_group.add(colorInputText);
 
 		function updateScale() {
-			// scale
 			var selected:StageEditorMetaSprite = getSelected();
-			if(selected != null) selected.setScale(scaleStepperX.value, scaleStepperY.value);
+			if(selected != null) selected.setScale(scaleStepperX.value, scaleStepperY.value); // scale
 		}
 
 		objY += 45;
@@ -805,9 +796,8 @@ class StageEditorState extends MusicBeatState {
 		tab_group.add(scaleStepperY);
 
 		function updateScroll() {
-			// scroll factor
 			var selected:StageEditorMetaSprite = getSelected();
-			if(selected != null) selected.setScrollFactor(scrollStepperX.value, scrollStepperY.value);
+			if(selected != null) selected.setScrollFactor(scrollStepperX.value, scrollStepperY.value); // scroll factor
 		}
 
 		objY += 40;
@@ -822,15 +812,13 @@ class StageEditorState extends MusicBeatState {
 		tab_group.add(new FlxText(objX, objY - 18, 80, 'Opacity:'));
 		alphaStepper = new FlxUINumericStepper(objX, objY, 0.1, 1, 0, 1, 2, FlxUINumericStepper.STACK_HORIZONTAL, null, null, null, true);
 		alphaStepper.params = [() -> {
-			// alpha/opacity
 			var selected:StageEditorMetaSprite = getSelected();
-			if(selected != null) selected.alpha = alphaStepper.value;
+			if(selected != null) selected.alpha = alphaStepper.value; // alpha/opacity
 		}];
 		tab_group.add(alphaStepper);
 
 		antialiasingCheckbox = new FlxUICheckBox(objX + 90, objY, null, null, 'Anti-Aliasing', 80);
-		antialiasingCheckbox.callback = () ->
-		{
+		antialiasingCheckbox.callback = () -> {
 			// antialiasing
 			var selected:StageEditorMetaSprite = getSelected();
 			if(selected != null) {
@@ -847,9 +835,8 @@ class StageEditorState extends MusicBeatState {
 		tab_group.add(new FlxText(objX, objY - 18, 80, 'Angle:'));
 		angleStepper = new FlxUINumericStepper(objX, objY, 10, 0, 0, 360, 0);
 		angleStepper.params = [() -> {
-			// alpha/opacity
 			var selected:StageEditorMetaSprite = getSelected();
-			if(selected != null) selected.angle = angleStepper.value;
+			if(selected != null) selected.angle = angleStepper.value; // alpha/opacity
 		}];
 		tab_group.add(angleStepper);
 
@@ -903,14 +890,12 @@ class StageEditorState extends MusicBeatState {
 		var tab_group:FlxUI = new FlxUI(null, UI_stagebox);
 		tab_group.name = 'Meta';
 
-		var characterList = Mods.mergeAllTextsNamed('data/characterList.txt');
-		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getSharedPath(), 'characters/');
-		for (folder in foldersToCheck)
+		var characterList:Array<String> = Mods.mergeAllTextsNamed('data/characterList.txt');
+		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'characters/'))
 			for (file in FileSystem.readDirectory(folder))
 				if(file.toLowerCase().endsWith('.json')) {
 					var charToCheck:String = file.substr(0, file.length - 5);
-					if(!characterList.contains(charToCheck))
-						characterList.push(charToCheck);
+					if(!characterList.contains(charToCheck)) characterList.push(charToCheck);
 				}
 
 		if(characterList.length < 1) characterList.push(''); //Prevents crash
@@ -978,9 +963,7 @@ class StageEditorState extends MusicBeatState {
 		dummyStage.label.color = FlxColor.WHITE;
 
 		stageDropDown = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray([''], true), (selected:String) -> {
-			var characterPath:String = 'stages/$selected.json';
-			var path:String = Paths.getPath(characterPath, TEXT, null, true);
-			
+			var path:String = Paths.getPath('stages/$selected.json');
 			if (#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
 				stageJson = StageData.getStageFile(selected);
 				lastLoadedStage = selected;
@@ -1111,14 +1094,11 @@ class StageEditorState extends MusicBeatState {
 
 	function reloadStageDropDown() {
 		var stageList:Array<String> = [];
-		var foldersToCheck:Array<String> = Mods.directoriesWithFile(Paths.getSharedPath(), 'stages/');
-		for (folder in foldersToCheck)
+		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'stages/'))
 			for (file in FileSystem.readDirectory(folder))
-				if(file.toLowerCase().endsWith('.json'))
-				{
+				if(file.toLowerCase().endsWith('.json')) {
 					var stageToCheck:String = file.substr(0, file.length - '.json'.length);
-					if(!stageList.contains(stageToCheck))
-						stageList.push(stageToCheck);
+					if(!stageList.contains(stageToCheck)) stageList.push(stageToCheck);
 				}
 
 		if(stageList.length < 1) stageList.push('');
@@ -1940,8 +1920,6 @@ class StageEditorAnimationSubstate extends MusicBeatSubstate {
 	final maxZoom:Int = 2;
 	var holdingArrowsTime:Float = 0;
 	var holdingArrowsElapsed:Float = 0;
-	var holdingFrameTime:Float = 0;
-	var holdingFrameElapsed:Float = 0;
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 

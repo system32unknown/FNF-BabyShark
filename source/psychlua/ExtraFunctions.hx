@@ -90,7 +90,7 @@ class ExtraFunctions {
 		funk.set("getDataFromSave", function(name:String, field:String, ?defaultValue:Dynamic = null) {
 			var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 			if(variables.exists('save_$name')) {
-				var saveData = variables.get('save_$name').data;
+				var saveData:Dynamic = variables.get('save_$name').data;
 				if(Reflect.hasField(saveData, field)) return Reflect.field(saveData, field);
 				else return defaultValue;
 			}
@@ -119,7 +119,7 @@ class ExtraFunctions {
 		funk.set("checkFileExists", function(filename:String, ?absolute:Bool = false) {
 			#if MODS_ALLOWED
 			if(absolute) return FileSystem.exists(filename);
-			return FileSystem.exists(Paths.getPath(filename, TEXT));
+			return FileSystem.exists(Paths.getPath(filename));
 			#else
 			if(absolute) return Assets.exists(filename, TEXT);
 			return Assets.exists(Paths.getPath(filename, TEXT));

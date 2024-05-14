@@ -29,11 +29,11 @@ class HScript extends Interp {
 
 		parentLua = parent;
 		if (parent != null) {
-			this.origin = parent.scriptName;
+			origin = parent.scriptName;
 			this.modFolder = parent.modFolder;
 		}
 		if (content != null) {
-			this.origin = file;
+			origin = file;
 			var myFolder:Array<String> = file.split('/');
 			if('${myFolder[0]}/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
 				this.modFolder = myFolder[1];
@@ -63,8 +63,8 @@ class HScript extends Interp {
 
 			// Sys related stuff
 			#if sys
-			"File"				=> sys.io.File,
-			"FileSystem"		=> sys.FileSystem,
+			"File"				=> File,
+			"FileSystem"		=> FileSystem,
 			"Sys"				=> Sys,
 			#end
 			"Assets"			=> openfl.Assets,
@@ -85,7 +85,7 @@ class HScript extends Interp {
             "FlxAxes"           => getMAClass("flixel.util.FlxAxes"),
             "FlxColor"          => getMAClass("flixel.util.FlxColor"),
             "FlxKey"            => getMAClass("flixel.input.keyboard.FlxKey"),
-            "FlxSound"          => flixel.sound.FlxSound,
+            "FlxSound"          => FlxSound,
             "FlxAssets"         => flixel.system.FlxAssets,
             "FlxMath"           => FlxMath,
             "FlxGroup"          => flixel.group.FlxGroup,

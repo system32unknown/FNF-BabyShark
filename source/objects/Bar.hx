@@ -1,7 +1,6 @@
 package objects;
 
 import flixel.util.helpers.FlxBounds;
-import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxRect;
 
 class Bar extends FlxSpriteGroup {
@@ -60,7 +59,7 @@ class Bar extends FlxSpriteGroup {
 
 	override public function destroy() {
 		bounds = null;
-		barOffset = FlxDestroyUtil.put(barOffset);
+		barOffset = flixel.util.FlxDestroyUtil.put(barOffset);
 		super.destroy();
 	}
 
