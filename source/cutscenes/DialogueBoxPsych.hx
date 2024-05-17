@@ -248,7 +248,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		this.killAll(sprites); // Kill all sprites
 
 		if (shouldBoxRecenter) updateBoxOffsets(box);
-		FlxG.sound.music.fadeOut(1);
+		FlxG.sound.music.fadeOut(1, 0, (_) -> FlxG.sound.music.stop());
 	}
 
 	inline public static function parseDialogue(path:String):DialogueFile {

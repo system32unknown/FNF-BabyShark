@@ -26,7 +26,8 @@ class MenuCharacterEditorState extends MusicBeatState {
 			position: [0, 0],
 			idle_anim: 'M Dad Idle',
 			confirm_anim: 'M Dad Idle',
-			flipX: false
+			flipX: false,
+			antialiasing: true
 		};
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Menu Character Editor", 'Editing: ${characterFile.image}'); #end
 
@@ -72,7 +73,7 @@ class MenuCharacterEditorState extends MusicBeatState {
 		add(UI_typebox);
 
 		UI_mainbox = new FlxUITabMenu(null, [{name: 'Character', label: 'Character'}], true);
-		UI_mainbox.resize(240, 180);
+		UI_mainbox.resize(240, 215);
 		UI_mainbox.setPosition(FlxG.width - UI_mainbox.width - 100, FlxG.height - UI_mainbox.height - 50);
 		UI_mainbox.scrollFactor.set();
 		addCharacterUI();
@@ -124,6 +125,7 @@ class MenuCharacterEditorState extends MusicBeatState {
 	var confirmInputText:FlxUIInputText;
 	var scaleStepper:FlxUINumericStepper;
 	var flipXCheckbox:FlxUICheckBox;
+	var antialiasingCheckbox:FlxUICheckBox;
 	function addCharacterUI() {
 		var tab_group:FlxUI = new FlxUI(null, UI_mainbox);
 		tab_group.name = "Character";
@@ -141,6 +143,13 @@ class MenuCharacterEditorState extends MusicBeatState {
 			characterFile.flipX = flipXCheckbox.checked;
 		};
 
+		antialiasingCheckbox = new FlxUICheckBox(10, flipXCheckbox.y + 30, null, null, "Antialiasing", 100);
+		antialiasingCheckbox.checked = grpWeekCharacters.members[curTypeSelected].antialiasing;
+		antialiasingCheckbox.callback = function() {
+			grpWeekCharacters.members[curTypeSelected].antialiasing = antialiasingCheckbox.checked;
+			characterFile.antialiasing = antialiasingCheckbox.checked;
+		};
+
 		var reloadImageButton:FlxButton = new FlxButton(140, confirmInputText.y + 30, "Reload Char", () -> reloadSelectedCharacter());
 		
 		scaleStepper = new FlxUINumericStepper(140, imageInputText.y, 0.05, 1, 0.1, 30, 2);
@@ -149,6 +158,7 @@ class MenuCharacterEditorState extends MusicBeatState {
 		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Idle animation on the .XML:'));
 		tab_group.add(new FlxText(scaleStepper.x, scaleStepper.y - 18, 0, 'Scale:'));
 		tab_group.add(flipXCheckbox);
+		tab_group.add(antialiasingCheckbox);
 		tab_group.add(reloadImageButton);
 		tab_group.add(new FlxText(10, confirmInputText.y - 18, 0, 'Confirm animation on the .XML:'));
 		tab_group.add(imageInputText);

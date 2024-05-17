@@ -8,16 +8,13 @@
 	"opponent": [600, 100],
 
 	"preload": {
-		"images":
-		[
-			"farm/cornbag.png",
-			"farm/cornFence.png",
-			"farm/cornFence2.png",
-			"farm/funfarmhouse.png",
-			"farm/gm_flatgrass.png",
-			"farm/grass lands.png",
-			"farm/orangey hills.png",
-			"farm/sign.png"
-		]
+		"images/farm/cornbag.png": 3,
+		"images/farm/cornFence.png": 3,
+		"images/farm/cornFence3.png": 3,
+		"images/farm/funfarmhouse.png": 3,
+		"images/farm/gm_flatgrass.png": 3,
+		"images/farm/grass lands.png": 3,
+		"images/farm/orangey hills.png": 3,
+		"images/farm/sign.png": 3
 	}
 }

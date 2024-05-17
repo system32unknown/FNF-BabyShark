@@ -14,21 +14,11 @@
 	"camera_speed": 1,
 
 	"preload": {
-		"images":
-		[
-			"christmas/bgWalls",
-			"christmas/upperBop",
-			"christmas/bottomBop",
-			"christmas/bgEscalator",
-			"christmas/christmasTree",
-			"christmas/fgSnow"
-		],
-		"images_low":
-		[
-			"christmas/bgWalls",
-			"christmas/bottomBop",
-			"christmas/christmasTree",
-			"christmas/fgSnow"
-		]
+		"images/christmas/bgWalls": 3,
+		"images/christmas/bottomBop": 3,
+		"images/christmas/christmasTree": 3,
+		"images/christmas/fgSnow": 3,
+		"images/christmas/upperBop": 2,
+		"images/christmas/bgEscalator": 2
 	}
 }

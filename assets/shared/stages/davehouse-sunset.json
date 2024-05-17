@@ -14,13 +14,10 @@
 	"camera_speed": 1,
 
 	"preload": {
-		"images":
-		[
-			"house/skys/sunset",
-			"house/hills",
-			"house/grass bg",
-			"house/gate",
-			"house/grass"
-		]
+		"images/house/skys/sunset": 3,
+		"images/house/hills": 3,
+		"images/house/grass bg": 3,
+		"images/house/gate": 3,
+		"images/house/grass": 3
 	}
 }

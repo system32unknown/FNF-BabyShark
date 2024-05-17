@@ -14,21 +14,11 @@
 	"camera_speed": 1,
 
 	"preload": {
-		"images":
-		[
-			"weeb/weebSky",
-			"weeb/weebSchool",
-			"weeb/weebStreet",
-			"weeb/weebTreesBack",
-			"weeb/weebTrees",
-			"weeb/petals"
-		],
-		"images_low":
-		[
-			"weeb/weebSky",
-			"weeb/weebSchool",
-			"weeb/weebStreet",
-			"weeb/weebTrees"
-		]
+		"images/weeb/weebSky": 3,
+		"images/weeb/weebSchool": 3,
+		"images/weeb/weebStreet": 3,
+		"images/weeb/weebTrees": 3,
+		"images/weeb/weebTreesBack": 2,
+		"images/weeb/petals": 2
 	}
 }
