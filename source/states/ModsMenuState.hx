@@ -328,10 +328,8 @@ class ModsMenuState extends MusicBeatState {
 								
 								if(!moved) {
 									var factor:Float = -1;
-									if(FlxG.mouse.y < bgList.y)
-										factor = Math.abs(Math.max(.2, Math.min(.5, .5 - (bgList.y - FlxG.mouse.y) / 100)));
-									else if(FlxG.mouse.y > bgList.y + bgList.height)
-										factor = Math.abs(Math.max(.2, Math.min(.5, .5 - (FlxG.mouse.y - bgList.y - bgList.height) / 100)));
+									if(FlxG.mouse.y < bgList.y) factor = Math.abs(FlxMath.bound(.5 - (bgList.y - FlxG.mouse.y) / 100, .2, .5));
+									else if(FlxG.mouse.y > bgList.y + bgList.height) factor = Math.abs(FlxMath.bound(.5 - (FlxG.mouse.y - bgList.y - bgList.height) / 100, .2, .5));
 		
 									if(factor >= 0) {
 										holdingElapsed += elapsed;
@@ -340,7 +338,8 @@ class ModsMenuState extends MusicBeatState {
 											var newPos:Int = curSelectedMod;
 											if(FlxG.mouse.y < bgList.y) newPos--;
 											else newPos++;
-											moveModToPosition(Std.int(Math.max(0, Math.min(modsGroup.length - 1, newPos))));
+											
+											moveModToPosition(Std.int(FlxMath.bound(newPos, 0, modsGroup.length - 1)));
 										}
 									}
 								}

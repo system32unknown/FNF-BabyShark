@@ -94,7 +94,7 @@ class VideoSprite extends FlxSpriteGroup {
 
 	override function update(elapsed:Float) {
 		if(canSkip) {
-			if(Controls.instance.pressed('accept')) holdingTime = Math.max(0, Math.min(_timeToSkip, holdingTime + elapsed));
+			if(Controls.instance.pressed('accept')) holdingTime = FlxMath.bound(holdingTime + elapsed, 0, _timeToSkip);
 			else if (holdingTime > 0) holdingTime = Math.max(0, FlxMath.lerp(holdingTime, -.1, FlxMath.bound(elapsed * 3, 0, 1)));
 			updateSkipAlpha();
 
