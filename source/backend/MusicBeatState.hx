@@ -1,7 +1,5 @@
 package backend;
 
-import flixel.FlxState;
-
 class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	var curSection:Int = 0;
 	var stepsToDo:Int = 0;
@@ -33,6 +31,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	}
 
 	override function destroy() {
+		persistentUpdate = false;
 		utils.system.MemoryUtil.clearMajor();
 		super.destroy();
 	}
@@ -116,7 +115,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 		onOutroComplete();
 	}
 
-	public static function getState(?state:FlxState):MusicBeatState {
+	public static function getState(?state:flixel.FlxState):MusicBeatState {
 		return cast (FlxG.state, MusicBeatState);
 	}
 	
