@@ -47,20 +47,6 @@ class Paths {
 		'assets/shared/music/freakyMenu.$SOUND_EXT',
 	];
 
-	public static function decacheSound(key:String) {
-		var obj:Sound = currentTrackedSounds.get(key);
-		currentTrackedSounds.remove(key);
-
-		if (obj == null && OpenFlAssets.cache.hasSound(key)) obj = OpenFlAssets.cache.getSound(key);
-		if (obj == null || assetExcluded(obj)) return;
-
-		OpenFlAssets.cache.removeSound(key);
-		Assets.cache.clear(key);
-		
-		obj.close();
-		obj = null;
-	}
-
 	// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
 		for (key in currentTrackedAssets.keys()) {
@@ -84,8 +70,10 @@ class Paths {
 		}
 
 		for (key => asset in currentTrackedSounds) {
-			if (!localTrackedAssets.contains(key) && !assetExcluded(key) && asset != null)
-				decacheSound(key);
+			if (!localTrackedAssets.contains(key) && !assetExcluded(key) && asset != null) {
+				Assets.cache.clear(key);
+				currentTrackedSounds.remove(key);
+			}
 		}
 
 		// flags everything to be cleared out next unused memory clear

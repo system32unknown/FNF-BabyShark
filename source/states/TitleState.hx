@@ -198,7 +198,7 @@ class TitleState extends MusicBeatState {
 					titleText.animation.play('press');
 					titleText.color = FlxColor.WHITE;
 					titleText.alpha = 1;
-	
+
 					FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 1);
 					FlxG.sound.play(Paths.sound('confirmMenu'), .7);
 	

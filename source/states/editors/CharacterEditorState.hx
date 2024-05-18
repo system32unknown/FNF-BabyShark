@@ -264,7 +264,7 @@ class CharacterEditorState extends MusicBeatState {
 		var tab_group:FlxUI = new FlxUI(null, UI_box);
 		tab_group.name = "Ghost";
 
-		var makeGhostButton:FlxButton = new FlxButton(25, 15, "Make Ghost", function() {
+		var makeGhostButton:FlxButton = new FlxButton(25, 15, "Make Ghost", () -> {
 			if(!character.isAnimationNull()) {
 				var myAnim = anims[curAnim];
 				if(!character.isAnimateAtlas) {
@@ -314,7 +314,7 @@ class CharacterEditorState extends MusicBeatState {
 		});
 
 		var highlightGhost:FlxUICheckBox = new FlxUICheckBox(20 + makeGhostButton.x + makeGhostButton.width, makeGhostButton.y, null, null, "Highlight Ghost", 100);
-		highlightGhost.callback = function() {
+		highlightGhost.callback = () -> {
 			var value:Int = highlightGhost.checked ? 125 : 0;
 			ghost.colorTransform.redOffset = value;
 			ghost.colorTransform.greenOffset = value;
@@ -356,14 +356,14 @@ class CharacterEditorState extends MusicBeatState {
 			updatePointerPos(false);
 		};
 
-		var reloadCharacter:FlxButton = new FlxButton(140, 20, "Reload Char", function() {
+		var reloadCharacter:FlxButton = new FlxButton(140, 20, "Reload Char", () -> {
 			addCharacter(true);
 			updatePointerPos();
 			reloadCharacterOptions();
 			reloadCharacterDropDown();
 		});
 
-		var templateCharacter:FlxButton = new FlxButton(140, 50, "Load Template", function() {
+		var templateCharacter:FlxButton = new FlxButton(140, 50, "Load Template", () -> {
 			character.loadCharacterFile({
 				animations: [
 					newAnim('idle', 'BF idle dance'),
@@ -448,7 +448,7 @@ class CharacterEditorState extends MusicBeatState {
 			animationIndicesInputText.text = indicesStr.substr(1, indicesStr.length - 2);
 		});
 
-		var addUpdateButton:FlxButton = new FlxButton(70, animationIndicesInputText.y + 30, "Add/Update", function() {
+		var addUpdateButton:FlxButton = new FlxButton(70, animationIndicesInputText.y + 30, "Add/Update", () -> {
 			var indices:Array<Int> = [];
 			var indicesStr:Array<String> = animationIndicesInputText.text.trim().split(',');
 			if(indicesStr.length > 1) {
@@ -486,7 +486,7 @@ class CharacterEditorState extends MusicBeatState {
 			trace('Added/Updated animation: ' + animationInputText.text);
 		});
 
-		var removeButton:FlxButton = new FlxButton(180, animationIndicesInputText.y + 30, "Remove", function() {
+		var removeButton:FlxButton = new FlxButton(180, animationIndicesInputText.y + 30, "Remove", () -> {
 			for (anim in character.animationsArray)
 				if(animationInputText.text == anim.anim) {
 					var resetAnim:Bool = false;
@@ -549,14 +549,14 @@ class CharacterEditorState extends MusicBeatState {
 		tab_group.name = "Character";
 
 		imageInputText = new FlxUIInputText(15, 30, 200, character.imageFile, 8);
-		var reloadImage:FlxButton = new FlxButton(imageInputText.x + 210, imageInputText.y - 3, "Reload Image", function() {
+		var reloadImage:FlxButton = new FlxButton(imageInputText.x + 210, imageInputText.y - 3, "Reload Image", () -> {
 			var lastAnim = character.getAnimationName();
 			character.imageFile = imageInputText.text;
 			reloadCharacterImage();
 			if(!character.isAnimationNull()) character.playAnim(lastAnim, true);
 		});
 
-		var decideIconColor:FlxButton = new FlxButton(reloadImage.x, reloadImage.y + 30, "Get Icon Color", function() {
+		var decideIconColor:FlxButton = new FlxButton(reloadImage.x, reloadImage.y + 30, "Get Icon Color", () -> {
 			var coolColor:FlxColor = FlxColor.fromInt(SpriteUtil.dominantColor(healthIcon));
 			character.healthColorArray[0] = coolColor.red;
 			character.healthColorArray[1] = coolColor.green;

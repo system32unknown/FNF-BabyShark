@@ -202,7 +202,7 @@ class WeekEditorState extends MusicBeatState {
 		tab_group.name = "Other";
 
 		lockedCheckbox = new FlxUICheckBox(10, 30, null, null, "Week starts Locked", 100);
-		lockedCheckbox.callback = function() {
+		lockedCheckbox.callback = () -> {
 			weekFile.startUnlocked = !lockedCheckbox.checked;
 			lock.visible = lockedCheckbox.checked;
 			hiddenUntilUnlockCheckbox.alpha = 0.4 + 0.6 * (lockedCheckbox.checked ? 1 : 0);
@@ -407,7 +407,7 @@ class WeekEditorState extends MusicBeatState {
 				if(!unsavedProgress) {
 					FlxG.switchState(() -> new MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
-				} else openSubState(new ConfirmationPopupSubstate(function() unsavedProgress = false));
+				} else openSubState(new ConfirmationPopupSubstate(() -> unsavedProgress = false));
 			}
 		}
 
@@ -643,7 +643,7 @@ class WeekEditorFreeplayState extends MusicBeatState {
 				}
 			}
 		});
-		var decideIconColor:FlxButton = new FlxButton(pasteColor.x, pasteColor.y + 20, "Get BG Color", function() {
+		var decideIconColor:FlxButton = new FlxButton(pasteColor.x, pasteColor.y + 20, "Get BG Color", () -> {
 			var coolColor:FlxColor = FlxColor.fromInt(SpriteUtil.dominantColor(iconArray[curSelected]));
 			bgColorStepperR.value = coolColor.red;
 			bgColorStepperG.value = coolColor.green;

@@ -75,15 +75,14 @@ class ModsMenuState extends MusicBeatState {
 		if(mod != null) bg.color = mod.bgColor;
 
 		var buttonX:Float = bgList.x;
-		var buttonWidth = Std.int(bgList.width);
+		var buttonWidth:Int = Std.int(bgList.width);
 		var buttonHeight:Int = 80;
 
-		buttonReload = new MenuButton(buttonX, bgList.y + bgList.height + 20, buttonWidth, buttonHeight, "RELOAD", reload);
-		add(buttonReload);
+		add(buttonReload = new MenuButton(buttonX, bgList.y + bgList.height + 20, buttonWidth, buttonHeight, "RELOAD", reload));
 		
 		var myY:Float = buttonReload.y + buttonReload.bg.height + 20;
 
-		buttonEnableAll = new MenuButton(buttonX, myY, buttonWidth, buttonHeight, "ENABLE ALL", function() {
+		buttonEnableAll = new MenuButton(buttonX, myY, buttonWidth, buttonHeight, "ENABLE ALL", () -> {
 			buttonEnableAll.ignoreCheck = false;
 			for (mod in modsGroup.members) {
 				if(modsList.disabled.contains(mod.folder)) {
@@ -101,7 +100,7 @@ class ModsMenuState extends MusicBeatState {
 		buttonEnableAll.focusChangeCallback = (focus:Bool) -> if(!focus) buttonEnableAll.bg.color = FlxColor.GREEN;
 		add(buttonEnableAll);
 
-		buttonDisableAll = new MenuButton(buttonX, myY, buttonWidth, buttonHeight, Language.getPhrase('disable_all_button', 'DISABLE ALL'), function() {
+		buttonDisableAll = new MenuButton(buttonX, myY, buttonWidth, buttonHeight, Language.getPhrase('disable_all_button', 'DISABLE ALL'), () -> {
 			buttonDisableAll.ignoreCheck = false;
 			for (mod in modsGroup.members) {
 				if(modsList.enabled.contains(mod.folder)) {
@@ -160,7 +159,7 @@ class ModsMenuState extends MusicBeatState {
 		modDesc.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT);
 		add(modDesc);
 
-		var myHeight = 100;
+		var myHeight:Int = 100;
 		modRestartText = new FlxText(bgDescription.x + 15, bgDescription.y + bgDescription.height - myHeight - 25, bgDescription.width - 30, Language.getPhrase('mod_restart', '* Moving or Toggling On/Off this Mod will restart the game.'), 16);
 		modRestartText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
 		add(modRestartText);
@@ -206,7 +205,7 @@ class ModsMenuState extends MusicBeatState {
 		if(modsGroup.members[curSelectedMod].settings == null || modsGroup.members[curSelectedMod].settings.length < 1)
 			settingsButton.enabled = false;
 
-		var button:MenuButton = new MenuButton(buttonsX + 400, buttonsY, 80, 80, Paths.image('modsMenuButtons'), function() { //On/Off
+		var button:MenuButton = new MenuButton(buttonsX + 400, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> { //On/Off
 			var curMod:ModItem = modsGroup.members[curSelectedMod];
 			var mod:String = curMod.folder;
 			if(!modsList.disabled.contains(mod)) { //Enable

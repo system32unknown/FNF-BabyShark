@@ -5,6 +5,7 @@ class OutdatedState extends MusicBeatState {
 
     var logo:FlxSprite;
     var foundXml:Bool = false;
+	var logotimer:Float = 0;
 
 	var warnText:FlxText;
 	override function create() {
@@ -38,15 +39,12 @@ class OutdatedState extends MusicBeatState {
 		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
 		add(warnText);
-
-        new FlxTimer().start(2, (tmr:FlxTimer) -> {
-            if (logo.angle == -10)
-                FlxTween.angle(logo, logo.angle, 10, 2, {ease: FlxEase.quartInOut});
-            else FlxTween.angle(logo, logo.angle, -10, 2, {ease: FlxEase.quartInOut});
-        }, 0);
 	}
 
 	override function update(elapsed:Float) {
+		logotimer++;
+		logo.angle = Math.sin(logotimer / 270) * 5;
+
 		if(!leftState) {
 			if (controls.ACCEPT) {
 				leftState = true;

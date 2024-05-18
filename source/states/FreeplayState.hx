@@ -8,6 +8,7 @@ import backend.Highscore;
 import backend.Song;
 import objects.HealthIcon;
 import objects.MusicPlayer;
+import objects.BGScrollingText;
 import substates.FreeplaySectionSubstate;
 
 class FreeplayState extends MusicBeatState {

@@ -231,10 +231,9 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		idleInputText = new FlxUIInputText(loopInputText.x, loopInputText.y + 40, 150, '', 8);
 		blockPressWhileTypingOn.push(idleInputText);
 		
-		var addUpdateButton:FlxButton = new FlxButton(10, idleInputText.y + 30, "Add/Update", function() {
+		var addUpdateButton:FlxButton = new FlxButton(10, idleInputText.y + 30, "Add/Update", () -> {
 			var theAnim:String = animationInputText.text.trim();
-			if(character.dialogueAnimations.exists(theAnim)) //Update
-			{
+			if(character.dialogueAnimations.exists(theAnim))  { //Update
 				for (i in 0...character.jsonFile.animations.length) {
 					var animArray:DialogueAnimArray = character.jsonFile.animations[i];
 					if(animArray.anim.trim() == theAnim) {
@@ -269,7 +268,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 			}
 		});
 		
-		var removeUpdateButton:FlxButton = new FlxButton(100, addUpdateButton.y, "Remove", function() {
+		var removeUpdateButton:FlxButton = new FlxButton(100, addUpdateButton.y, "Remove", () -> {
 			for (i in 0...character.jsonFile.animations.length) {
 				var animArray:DialogueAnimArray = character.jsonFile.animations[i];
 				if(animArray != null && animArray.anim.trim() == animationInputText.text.trim()) {
@@ -330,7 +329,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 
 		var noAntialiasingCheckbox:FlxUICheckBox = new FlxUICheckBox(scaleStepper.x + 80, scaleStepper.y, null, null, "No Antialiasing", 100);
 		noAntialiasingCheckbox.checked = (character.jsonFile.no_antialiasing == true);
-		noAntialiasingCheckbox.callback = function() {
+		noAntialiasingCheckbox.callback = () -> {
 			character.jsonFile.no_antialiasing = noAntialiasingCheckbox.checked;
 			character.antialiasing = !character.jsonFile.no_antialiasing;
 		};

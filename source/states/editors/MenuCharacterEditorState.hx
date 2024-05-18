@@ -97,19 +97,19 @@ class MenuCharacterEditorState extends MusicBeatState {
 		tab_group.name = "Character Type";
 
 		opponentCheckbox = new FlxUICheckBox(10, 20, null, null, "Opponent", 100);
-		opponentCheckbox.callback = function() {
+		opponentCheckbox.callback = () -> {
 			curTypeSelected = 0;
 			updateCharTypeBox();
 		};
 
 		boyfriendCheckbox = new FlxUICheckBox(opponentCheckbox.x, opponentCheckbox.y + 40, null, null, "Boyfriend", 100);
-		boyfriendCheckbox.callback = function() {
+		boyfriendCheckbox.callback = () -> {
 			curTypeSelected = 1;
 			updateCharTypeBox();
 		};
 
 		girlfriendCheckbox = new FlxUICheckBox(boyfriendCheckbox.x, boyfriendCheckbox.y + 40, null, null, "Girlfriend", 100);
-		girlfriendCheckbox.callback = function() {
+		girlfriendCheckbox.callback = () -> {
 			curTypeSelected = 2;
 			updateCharTypeBox();
 		};
@@ -138,14 +138,14 @@ class MenuCharacterEditorState extends MusicBeatState {
 		blockPressWhileTypingOn.push(confirmInputText);
 
 		flipXCheckbox = new FlxUICheckBox(10, confirmInputText.y + 30, null, null, "Flip X", 100);
-		flipXCheckbox.callback = function() {
+		flipXCheckbox.callback = () -> {
 			grpWeekCharacters.members[curTypeSelected].flipX = flipXCheckbox.checked;
 			characterFile.flipX = flipXCheckbox.checked;
 		};
 
 		antialiasingCheckbox = new FlxUICheckBox(10, flipXCheckbox.y + 30, null, null, "Antialiasing", 100);
 		antialiasingCheckbox.checked = grpWeekCharacters.members[curTypeSelected].antialiasing;
-		antialiasingCheckbox.callback = function() {
+		antialiasingCheckbox.callback = () -> {
 			grpWeekCharacters.members[curTypeSelected].antialiasing = antialiasingCheckbox.checked;
 			characterFile.antialiasing = antialiasingCheckbox.checked;
 		};
