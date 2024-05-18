@@ -238,8 +238,6 @@ class PlayState extends MusicBeatState {
 		persistentUpdate = true;
 		persistentDraw = true;
 
-		Conductor.usePlayState = true;
-		Conductor.songPosition = Math.NEGATIVE_INFINITY;
 		Paths.clearStoredMemory();
 
 		GameOverSubstate.resetVariables();
@@ -400,6 +398,7 @@ class PlayState extends MusicBeatState {
 		comboGroup.ID = 0;
 		noteGroup = new FlxTypedGroup<FlxBasic>();
 
+		Conductor.songPosition = -5000 / Conductor.songPosition;
 		var showTime:Bool = timeType != 'Disabled';
 		timeTxt = new FlxText(0, 19, 400, "", 16);
 		timeTxt.screenCenter(X);
@@ -1282,7 +1281,6 @@ class PlayState extends MusicBeatState {
 
 		displayedHealth = ClientPrefs.data.smoothHealth ? FlxMath.lerp(displayedHealth, health, ((health / displayedHealth) * (elapsed * 8)) * playbackRate) : health;
 
-		updateMusicBeat();
 		setOnScripts('curDecStep', curDecStep);
 		setOnScripts('curDecBeat', curDecBeat);
 

@@ -76,8 +76,6 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Note Splash Debug': FlxG.switchState(() -> new NoteSplashDebugState());
 			}
 			FlxG.sound.music.volume = 0;
-			Conductor.usePlayState = false;
-			Conductor.mapBPMChanges(true);
 			states.FreeplayState.destroyFreeplayVocals();
 		}
 		

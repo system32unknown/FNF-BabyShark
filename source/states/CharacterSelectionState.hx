@@ -137,8 +137,6 @@ class CharacterSelectionState extends MusicBeatState {
 		if (unlockedChrs == null) currentSelectedCharacter = characters[current];
         Paths.currentLevel = lastLoaded;
 
-		Conductor.usePlayState = false;
-		Conductor.mapBPMChanges(true);
 		Conductor.bpm = 110;
 		FlxG.sound.playMusic(Paths.music('good-ending'));
 

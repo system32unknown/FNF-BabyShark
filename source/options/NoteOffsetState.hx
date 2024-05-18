@@ -163,8 +163,6 @@ class NoteOffsetState extends MusicBeatState {
 
 		updateMode();
 
-		Conductor.usePlayState = false;
-		Conductor.mapBPMChanges(true);
 		Conductor.bpm = 128;
 		FlxG.sound.playMusic(Paths.music('offsetSong'));
 

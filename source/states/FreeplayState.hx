@@ -291,10 +291,6 @@ class FreeplayState extends MusicBeatState {
 
 				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 				if (PlayState.SONG.needsVoices) {
-					Conductor.usePlayState = true;
-					Conductor.mapBPMChanges(PlayState.SONG, true);
-					Conductor.bpm = PlayState.SONG.bpm;
-
 					vocals = new FlxSound();
 					try {
 						var loadedVocals = Paths.voices(PlayState.SONG.song);

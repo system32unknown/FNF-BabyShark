@@ -211,7 +211,6 @@ class ChartingState extends MusicBeatState {
 		currentSongName = Paths.formatToSongPath(_song.song);
 		loadSong();
 		reloadGridLayer();
-		Conductor.usePlayState = true;
 		Conductor.bpm = _song.bpm;
 		Conductor.mapBPMChanges(_song);
 		if(curSec >= _song.notes.length) curSec = _song.notes.length - 1;
@@ -2132,8 +2131,19 @@ class ChartingState extends MusicBeatState {
 	}
 
 	function recalculateSteps():Int {
-		curStep = Conductor.getStepRounded(FlxG.sound.music.time);
+		var lastChange:BPMChangeEvent = {
+			stepTime: 0,
+			songTime: 0,
+			bpm: 0
+		}
+		for (i in 0...Conductor.bpmChangeMap.length) {
+			if (FlxG.sound.music.time > Conductor.bpmChangeMap[i].songTime)
+				lastChange = Conductor.bpmChangeMap[i];
+		}
+
+		curStep = lastChange.stepTime + Math.floor((FlxG.sound.music.time - lastChange.songTime) / Conductor.stepCrochet);
 		updateBeat();
+
 		return curStep;
 	}
 
@@ -2658,13 +2668,5 @@ class ChartingState extends MusicBeatState {
 		
 		if(_song.notes[section] != null) val = _song.notes[section].sectionBeats;
 		return val != null ? val : 4;
-	}
-
-	override function updateCurStep():Void {
-		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
-
-		var shit:Float = (Conductor.songPosition - lastChange.songTime) / lastChange.stepCrochet;
-		curDecStep = lastChange.stepTime + shit;
-		curStep = lastChange.stepTime + Math.floor(shit);
 	}
 }

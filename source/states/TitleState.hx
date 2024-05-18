@@ -77,11 +77,7 @@ class TitleState extends MusicBeatState {
 			gradients: balls.gradients
 		}
 
-		if (FreeplayState.vocals == null) {
-			Conductor.usePlayState = false;
-			Conductor.mapBPMChanges(true);
-			Conductor.bpm = titleJson.bpm;
-		}
+		if (FreeplayState.vocals == null) Conductor.bpm = titleJson.bpm;
 
 		if (titleJson.backgroundSprite != null && titleJson.backgroundSprite.length > 0 && titleJson.backgroundSprite != "none") {
 			final bg:FlxSprite = new FlxSprite(Paths.image(titleJson.backgroundSprite));

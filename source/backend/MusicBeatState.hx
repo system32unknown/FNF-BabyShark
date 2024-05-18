@@ -55,8 +55,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 			if(curStep > 0) stepHit();
 
 			if(PlayState.SONG != null) {
-				if (oldStep < curStep)
-					updateSection();
+				if (oldStep < curStep) updateSection();
 				else rollbackSection();
 			}
 		}
@@ -99,9 +98,9 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	}
 
 	function updateCurStep():Void {
-		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
+		var lastChange:Conductor.BPMChangeEvent = Conductor.getBPMFromSeconds(Conductor.songPosition);
 
-		var shit = ((Conductor.songPosition - ClientPrefs.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
+		var shit:Float = ((Conductor.songPosition - ClientPrefs.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
 		curDecStep = lastChange.stepTime + shit;
 		curStep = lastChange.stepTime + Math.floor(shit);
 	}
@@ -118,7 +117,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 	}
 
 	public static function getState(?state:FlxState):MusicBeatState {
-		return cast(state != null ? state : FlxG.state, MusicBeatState);
+		return cast (FlxG.state, MusicBeatState);
 	}
 	
 	public function stepHit():Void {
