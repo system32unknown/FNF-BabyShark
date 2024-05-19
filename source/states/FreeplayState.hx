@@ -43,6 +43,7 @@ class FreeplayState extends MusicBeatState {
 	var bottomBG:FlxSprite;
 
 	var player:MusicPlayer;
+	var lastBPM:Float = 0;
 
 	public static var section:String = '';
 
@@ -50,6 +51,7 @@ class FreeplayState extends MusicBeatState {
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
 		WeekData.reloadWeekFiles();
+		lastBPM = Conductor.bpm;
 
 		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Freeplay Menu", 'Section: $section'); #end
 
@@ -266,6 +268,7 @@ class FreeplayState extends MusicBeatState {
 				player.playingMusic = false;
 				player.switchPlayMusic();
 	
+				Conductor.bpm = lastBPM;
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 				FlxTween.tween(FlxG.sound.music, {volume: 1}, 1);
 			} else {
@@ -291,6 +294,7 @@ class FreeplayState extends MusicBeatState {
 
 				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 				if (PlayState.SONG.needsVoices) {
+					Conductor.bpm = PlayState.SONG.bpm;
 					vocals = new FlxSound();
 					try {
 						var loadedVocals = Paths.voices(PlayState.SONG.song);

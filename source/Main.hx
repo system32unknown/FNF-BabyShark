@@ -4,7 +4,7 @@ import openfl.display.Sprite;
 import flixel.input.keyboard.FlxKey;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
-import debug.FPSCounter;
+import debug.framerate.Framerate;
 
 class Main extends Sprite {
 	public static var engineVer:GameVersion = new GameVersion(0, 1, 5, "a");
@@ -18,7 +18,7 @@ class Main extends Sprite {
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
 
-	public static var fpsVar:FPSCounter;
+	public static var fpsVar:Framerate;
 
 	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
@@ -34,11 +34,8 @@ class Main extends Sprite {
 		debug.Logs.init();
 
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
-		addChild(fpsVar = new FPSCounter());
-		if(Main.fpsVar != null) {
-			Main.fpsVar.visible = ClientPrefs.data.showFPS;
-			Main.fpsVar.memCounterType = ClientPrefs.data.memCounterType;
-		}
+		addChild(fpsVar = new Framerate());
+		fpsVar.fpsCounter.memCounterType = ClientPrefs.data.memCounterType;
 
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
@@ -52,14 +49,10 @@ class Main extends Sprite {
 		});
 		FlxG.signals.gameResized.add((w, h) -> {
 			if (FlxG.cameras != null) for (cam in FlxG.cameras.list) {
-				if (cam != null && cam.filters != null)
-					resetSpriteCache(cam.flashSprite);
+				if (cam != null && cam.filters != null) resetSpriteCache(cam.flashSprite);
 			}
 			if (FlxG.game != null) resetSpriteCache(FlxG.game);
 			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
-
-			final scale:Float = Math.min(FlxG.stage.stageWidth / FlxG.width, FlxG.stage.stageHeight / FlxG.height);
-			if (fpsVar != null) fpsVar.scaleX = fpsVar.scaleY = (scale > 1 ? scale : 1);
 		});
 	}
 
