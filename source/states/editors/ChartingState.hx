@@ -2289,8 +2289,7 @@ class ChartingState extends MusicBeatState {
 		for (i in _song.notes[curSec].sectionNotes) {
 			var note:Note = setupNoteData(i, false);
 			curRenderedNotes.add(note);
-			if (note.sustainLength > 0)
-				curRenderedSustains.add(setupSusNote(note, beats));
+			if (note.sustainLength > 0) curRenderedSustains.add(setupSusNote(note, beats));
 
 			if(i[3] != null && note.noteType != null && note.noteType.length > 0) {
 				var typeInt:Int = curNoteTypes.indexOf(i[3]);
@@ -2380,10 +2379,8 @@ class ChartingState extends MusicBeatState {
 		note.updateHitbox();
 		note.x = Math.floor(daNoteInfo * GRID_SIZE) + GRID_SIZE;
 		if(isNextSection && _song.notes[curSec].mustHitSection != _song.notes[curSec + 1].mustHitSection) {
-			if(daNoteInfo > _song.mania)
-				note.x -= GRID_SIZE * EK.keys(_song.mania);
-			else if(daSus != null)
-				note.x += GRID_SIZE * EK.keys(_song.mania);
+			if(daNoteInfo > _song.mania) note.x -= GRID_SIZE * EK.keys(_song.mania);
+			else if(daSus != null) note.x += GRID_SIZE * EK.keys(_song.mania);
 		}
 
 		var beats:Float = getSectionBeats(isNextSection ? 1 : 0);
@@ -2480,10 +2477,10 @@ class ChartingState extends MusicBeatState {
 		updateGrid();
 	}
 
-	public function doANoteThing(cs, d, style) {
+	public function doANoteThing(cs, d, style):Void {
 		var delnote:Bool = false;
 		if(strumLineNotes.members[d].overlaps(curRenderedNotes)) {
-			curRenderedNotes.forEachAlive(function(note:Note) {
+			curRenderedNotes.forEachAlive((note:Note) -> {
 				if (note.overlapsPoint(FlxPoint.weak(strumLineNotes.members[d].x + 1, strumLine.y + 1)) && note.noteData == d % EK.keys(_song.mania)) {
 					if(!delnote) deleteNote(note);
 					delnote = true;

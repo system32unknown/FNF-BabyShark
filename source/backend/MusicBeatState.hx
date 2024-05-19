@@ -83,7 +83,6 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 			if (PlayState.SONG.notes[i] != null) {
 				stepsToDo += Math.round(getBeatsOnSection() * 4);
 				if(stepsToDo > curStep) break;
-				
 				curSection++;
 			}
 		}
@@ -115,7 +114,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 		onOutroComplete();
 	}
 
-	public static function getState(?state:flixel.FlxState):MusicBeatState {
+	public static function getState():MusicBeatState {
 		return cast (FlxG.state, MusicBeatState);
 	}
 	

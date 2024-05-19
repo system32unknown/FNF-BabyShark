@@ -7,6 +7,7 @@ import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
 import lime.utils.Assets;
+import utils.system.MemoryUtil;
 
 @:access(openfl.display.BitmapData)
 class Paths {
@@ -14,63 +15,34 @@ class Paths {
 	inline public static var SOUND_EXT = "ogg";
 	inline public static var VIDEO_EXT = "mp4";
 
-	public static function excludeAsset(asset:Dynamic) {
-		if ((asset is String)) {
-			var key:String = asset;
-			for (v in keyExclusions) if (key.endsWith(v)) return;
-			keyExclusions.push(key);
-			return;
-		}
-		if (!keyExclusions.contains(asset)) keyExclusions.push(asset);
+	public static function excludeAsset(key:String) {
+		if (!dumpExclusions.contains(key)) dumpExclusions.push(key);
 	}
 
-	public static function unexcludeAsset(asset:Dynamic) {
-		if ((asset is String)) {
-			var key:String = asset;
-			for (v in keyExclusions) if (key.endsWith(v)) keyExclusions.remove(v);
-			return;
-		}
-		keyExclusions.remove(asset);
-	}
-
-	public static function assetExcluded(asset:Dynamic):Bool {
-		if ((asset is String)) {
-			var key:String = asset;
-			for (v in keyExclusions) if (key.endsWith(v)) return true;
-			return false;
-		}
-		for (v in keyExclusions) if (v == asset) return true;
-		return false;
-	}
-
-	public static var keyExclusions:Array<String> = [
-		'assets/shared/music/freakyMenu.$SOUND_EXT',
-	];
+	public static var dumpExclusions:Array<String> = ['assets/shared/music/freakyMenu.$SOUND_EXT',];
 
 	// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
 		for (key in currentTrackedAssets.keys()) {
 			// if it is not currently contained within the used local assets
-			if (!localTrackedAssets.contains(key) && !keyExclusions.contains(key)) {
+			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key)) {
 				destroyGraphic(currentTrackedAssets.get(key)); // get rid of the graphic
 				currentTrackedAssets.remove(key); // and remove the key from local cache map
 			}
 		}
 
-		#if cpp utils.system.MemoryUtil.clearMajor #else openfl.system.System.gc #end();
+		MemoryUtil.clearMajor();
 	}
 
 	// define the locally tracked assets
 	public static var localTrackedAssets:Array<String> = [];
+
 	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
 	public static function clearStoredMemory() {
-		for (key in FlxG.bitmap._cache.keys()) {
-			if (!currentTrackedAssets.exists(key) && !assetExcluded(key))
-				destroyGraphic(FlxG.bitmap.get(key));
-		}
+		for (key in FlxG.bitmap._cache.keys()) if (!currentTrackedAssets.exists(key)) destroyGraphic(FlxG.bitmap.get(key));
 
 		for (key => asset in currentTrackedSounds) {
-			if (!localTrackedAssets.contains(key) && !assetExcluded(key) && asset != null) {
+			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && asset != null) {
 				Assets.cache.clear(key);
 				currentTrackedSounds.remove(key);
 			}
@@ -78,8 +50,8 @@ class Paths {
 
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
-		OpenFlAssets.cache.clear("songs");
-		utils.system.MemoryUtil.clearMajor();
+		openfl.Assets.cache.clear("songs");
+		MemoryUtil.clearMajor();
 		clearUnusedMemory();
 	}
 
@@ -115,8 +87,11 @@ class Paths {
 		return getSharedPath(file);
 	}
 
-	inline static public function getFolderPath(file:String, folder = "shared") return 'assets/$folder/$file';
-	inline public static function getSharedPath(file:String = '') return 'assets/shared/$file';
+	inline static public function getFolderPath(file:String, folder = "shared")
+		return 'assets/$folder/$file';
+
+	inline public static function getSharedPath(file:String = '')
+		return 'assets/shared/$file';
 
 	public static inline function ndll(key:String, ?folder:String)
 		return getPath('data/ndlls/$key.ndll', folder);
@@ -128,18 +103,20 @@ class Paths {
 	static public function video(key:String) {
 		#if MODS_ALLOWED
 		var file:String = modsVideo(key);
-		if (FileSystem.exists(file)) return file;
+		if(FileSystem.exists(file)) return file;
 		#end
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
 
 	inline static public function sound(key:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('sounds/$key', modsAllowed);
+
 	inline static public function music(key:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('music/$key', modsAllowed);
 
 	inline static public function inst(song:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('${formatToSongPath(song)}/Inst', 'songs', modsAllowed);
+
 	inline static public function voices(song:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('${formatToSongPath(song)}/Voices', 'songs', modsAllowed, false);
 	inline static public function soundRandom(key:String, min:Int, max:Int, ?modsAllowed:Bool = true):Sound
@@ -158,7 +135,7 @@ class Paths {
 		return cacheBitmap(key, parentFolder, bitmap, allowGPU);
 	}
 
-	public static function cacheBitmap(key:String, ?parentFolder:String = null, ?bitmap:BitmapData, ?allowGPU:Bool = true) {
+	public static function cacheBitmap(key:String, ?parentFolder:String = null, ?bitmap:BitmapData, ?allowGPU:Bool = true):FlxGraphic {
 		if (bitmap == null) {
 			var file:String = getPath(key, IMAGE, parentFolder);
 			#if MODS_ALLOWED

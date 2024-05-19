@@ -1005,7 +1005,6 @@ class PlayState extends MusicBeatState {
 			for (event in Song.loadFromJson('events', songName).events) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
 
 		var noteDatas:Array<ChartNoteData> = [];
-
 		for (section in songData.notes) {
 			for (i in 0...section.sectionNotes.length) {
 				final songNotes:Array<Dynamic> = section.sectionNotes[i];

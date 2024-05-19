@@ -57,6 +57,9 @@ class Main extends Sprite {
 			}
 			if (FlxG.game != null) resetSpriteCache(FlxG.game);
 			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
+
+			final scale:Float = Math.min(FlxG.stage.stageWidth / FlxG.width, FlxG.stage.stageHeight / FlxG.height);
+			if (fpsVar != null) fpsVar.scaleX = fpsVar.scaleY = (scale > 1 ? scale : 1);
 		});
 	}
 
