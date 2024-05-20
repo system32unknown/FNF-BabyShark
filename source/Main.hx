@@ -35,6 +35,7 @@ class Main extends Sprite {
 
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(fpsVar = new Framerate());
+		debug.framerate.SystemInfo.init();
 		fpsVar.fpsCounter.memCounterType = ClientPrefs.data.memCounterType;
 
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end

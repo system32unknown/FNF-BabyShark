@@ -51,6 +51,7 @@ class Framerate extends Sprite {
 		__addToList(fpsCounter = new FPSCounter());
 		__addCategory(new FlixelInfo());
 		__addCategory(new MusicBeatInfo());
+		__addCategory(new SystemInfo());
 	}
 
 	function __addCategory(category:FramerateCategory) {

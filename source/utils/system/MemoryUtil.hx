@@ -25,4 +25,12 @@ class MemoryUtil {
 		else return 0;
 	")
 	public static function getMEM():Int return 0;
+
+	@:functionCode("
+		// simple but effective code
+		unsigned long long allocatedRAM = 0;
+		GetPhysicallyInstalledSystemMemory(&allocatedRAM);
+		return (allocatedRAM / 1024);
+	")
+	public static function getTotalRam():Float return 0;
 }
