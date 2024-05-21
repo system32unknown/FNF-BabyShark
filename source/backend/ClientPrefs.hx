@@ -42,6 +42,7 @@ import flixel.input.keyboard.FlxKey;
 		[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D]
 	];
 
+	public var showFPS:Bool = false;
 	public var memCounterType:String = "MEM/PEAK";
 	public var camMovement:Bool = true;
 	public var ghostTapping:Bool = true;
@@ -191,7 +192,10 @@ class ClientPrefs {
 			if (key != 'gameplaySettings' && Reflect.hasField(FlxG.save.data, key))
 				Reflect.setField(data, key, Reflect.field(FlxG.save.data, key));
 		
-		if(Main.fpsVar != null) Main.fpsVar.fpsCounter.memCounterType = data.memCounterType;
+		if(Main.fpsVar != null) {
+			Main.fpsVar.visible = data.showFPS;
+			Main.fpsVar.fpsCounter.memCounterType = data.memCounterType;
+		}
 
 		FlxG.autoPause = data.autoPause;
 
