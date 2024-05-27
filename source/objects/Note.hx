@@ -136,18 +136,6 @@ class Note extends FlxSprite {
 	public var hitsoundChartEditor:Bool = true;
 	public var hitsound:String = 'hitsounds/' + Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase();
 
-	function set_multSpeed(value:Float):Float {
-		resizeByRatio(value / multSpeed);
-		return multSpeed = value;
-	}
-
-	public function resizeByRatio(ratio:Float) { //haha funny twitter shit
-		if(isSustainNote && animation.curAnim != null && !animation.curAnim.name.endsWith('end')) {
-			scale.y *= ratio;
-			updateHitbox();
-		}
-	}
-
 	function set_texture(value:String):String {
 		if(texture != value) reloadNote(value);
 		return texture = value;
@@ -243,15 +231,21 @@ class Note extends FlxSprite {
 			copyAngle = false;
 
 			animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'holdend');
+			isSustainEnd = true;
+			hitHealth = 0;
+			missHealth = 0;
+			
 			updateHitbox();
-
 			offsetX -= width / 2;
 
 			if (PlayState.isPixelStage) offsetX += 30 * EK.scalesPixel[PlayState.mania];
 
 			if (prevNote.isSustainNote) {
 				prevNote.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][prevNote.noteData]] + 'hold');
-
+				prevNote.isSustainEnd = false; 
+				prevNote.hitHealth = (.023 / 2) / (PlayState.SONG.bpm / 150);
+				prevNote.missHealth = (.0475 / 2) / (PlayState.SONG.bpm / 150);
+				
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
 				if(createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
 
@@ -405,9 +399,15 @@ class Note extends FlxSprite {
 		super.update(elapsed);
 
 		if (mustPress) {
-			canBeHit = checkDiff(Conductor.songPosition);
+			canBeHit = (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult) && strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult));
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit) tooLate = true;
-		} else canBeHit = false;
+		} else {
+			canBeHit = false;
+
+			if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult)) {
+				if((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition) wasGoodHit = true;
+			}
+		}
 
 		if (tooLate && !inEditor && alpha > .3) alpha = .3;
 	}
@@ -456,8 +456,7 @@ class Note extends FlxSprite {
 		}
 	}
 
-	public function setupNoteData(chartNoteData:PreloadedChartNote):Note
-	{
+	public function setupNoteData(chartNoteData:PreloadedChartNote):Note {
 		wasGoodHit = hitByOpponent = tooLate = false; // Don't make an update call of this for the note group
 
 		strumTime = chartNoteData.strumTime;
@@ -486,10 +485,11 @@ class Note extends FlxSprite {
 
 		if (PlayState.isPixelStage) reloadNote('', texture);
 		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]]);
-		if (isSustainNote) animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + (chartNoteData.isSustainEnd ? ' holdend' : ' hold'));
+		if (isSustainNote) {
+			animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + (chartNoteData.isSustainEnd ? ' holdend' : ' hold'));
 			sustainScale = chartNoteData.sustainScale;
-
-		if (isSustainNote) correctionOffset = ClientPrefs.data.downScroll ? 0 : 55;
+			correctionOffset = ClientPrefs.data.downScroll ? 0 : 55;
+		}
 		return this;
 	}
 
