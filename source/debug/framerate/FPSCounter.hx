@@ -1,12 +1,11 @@
 package debug.framerate;
 
-import openfl.display.Sprite;
 import openfl.text.TextField;
 
 import utils.system.FPSUtil;
 import flixel.util.FlxStringUtil;
 
-class FPSCounter extends Sprite {
+class FPSCounter extends openfl.display.Sprite {
 	public var fpsTxt:TextField;
 	@:noCompletion @:noPrivateAccess var timeColor:Int = 0;
 	public var memCounterType:String = "";

@@ -1,11 +1,9 @@
 package debug.framerate;
 
 import openfl.display.Bitmap;
-import openfl.text.TextFormat;
-import openfl.display.Sprite;
 import openfl.text.TextField;
 
-class FramerateCategory extends Sprite {
+class FramerateCategory extends openfl.display.Sprite {
 	public var title:TextField;
 	public var text:TextField;
 
@@ -28,7 +26,7 @@ class FramerateCategory extends Sprite {
 			label.autoSize = LEFT;
 			label.x = 0;
 			label.y = 0;
-			label.defaultTextFormat = new TextFormat(Framerate.fontName, label == this.title ? 16 : 15, -1);
+			label.defaultTextFormat = new openfl.text.TextFormat(Framerate.fontName, label == this.title ? 16 : 15, -1);
 			addChild(label);
 		}
 		this.title.text = title;

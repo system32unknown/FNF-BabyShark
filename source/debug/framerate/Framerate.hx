@@ -3,12 +3,11 @@ package debug.framerate;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
-import openfl.display.Sprite;
 import openfl.text.TextFormat;
 import openfl.events.KeyboardEvent;
 import utils.system.FPSUtil;
 
-class Framerate extends Sprite {
+class Framerate extends openfl.display.Sprite {
 	public static var instance:Framerate;
 
 	public static var textFormat:TextFormat;

@@ -90,13 +90,12 @@ class FunkinLua {
 			set('misses', 0);
 			set('hits', 0);
 			set('combo', 0);
-			set('accuracy', 0);
 	
 			set('mania', PlayState.SONG.mania);
 	
 			set('rating', 0);
+			set('ratingAccuracy', 0);
 			set('ratingName', '');
-			set('ratingRank', '');
 			set('ratingFC', '');
 	
 			set('inGameOver', false);
@@ -510,7 +509,7 @@ class FunkinLua {
 		});
 		set("getScore", () -> return game.songScore);
 		set("getMisses", () -> return game.songMisses);
-		set("getAccuracy", () -> return game.accuracy);
+		set("getAccuracy", () -> return game.ratingAccuracy);
 		set("getHits", () -> return game.songHits);
 
 		set("getHighscore", Highscore.getScore);

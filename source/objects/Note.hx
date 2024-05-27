@@ -5,6 +5,34 @@ import flixel.math.FlxRect;
 import shaders.RGBPalette;
 import shaders.RGBPalette.RGBShaderReference;
 
+typedef PreloadedChartNote = {
+	strumTime:Float,
+	noteData:Int,
+	mustPress:Bool,
+	noteType:String,
+	animSuffix:String,
+	noteskin:String,
+	texture:String,
+	noAnimation:Bool,
+	noMissAnimation:Bool,
+	gfNote:Bool,
+	isSustainNote:Bool,
+	isSustainEnd:Bool,
+	sustainLength:Float,
+	sustainScale:Float,
+	prevNote:Note,
+	strum:StrumNote,
+	mania:Int,
+	hitHealth:Float,
+	missHealth:Float,
+	hitCausesMiss:Null<Bool>,
+	wasHit:Bool,
+	multSpeed:Float,
+	canBeHit:Bool,
+	ignoreNote:Bool,
+	wasMissed:Bool
+}
+
 typedef EventNote = {
 	strumTime:Float,
 	event:String,

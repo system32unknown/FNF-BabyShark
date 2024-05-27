@@ -1,9 +1,9 @@
 package debug.framerate;
 
 import flixel.util.FlxStringUtil;
-import utils.system.MemoryUtil;
-import lime.system.System;
 import openfl.display3D.Context3D;
+import lime.system.System;
+import haxe.macro.Compiler;
 
 class SystemInfo extends FramerateCategory {
 	public static var osInfo:String = "Unknown";
@@ -33,7 +33,7 @@ class SystemInfo extends FramerateCategory {
 		}
 
 		#if cpp
-		totalMem = '${MemoryUtil.getTotalRam() / 1024}GB';
+		totalMem = '${utils.system.MemoryUtil.getTotalRam() / 1024}GB';
 		#else
 		Logs.trace('Unable to grab RAM Amount', ERROR, RED);
 		#end
@@ -68,6 +68,7 @@ class SystemInfo extends FramerateCategory {
 		if (totalMem != "Unknown") __formattedSysText += '\nTotal MEM: $totalMem';
 		__formattedSysText += "\nGL Render: " + '${getGLInfo(RENDERER)}';
 		__formattedSysText += "\nGL Shading version: " + '${getGLInfo(SHADING_LANGUAGE_VERSION)}';
+		__formattedSysText += "\nHaxe: " + Compiler.getDefine("haxe") + " / " + FlxG.VERSION;
 	}
 
 	public function new() {

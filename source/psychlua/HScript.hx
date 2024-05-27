@@ -264,7 +264,6 @@ class HScript extends Interp {
 			setVar('addBehindBF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.boyfriendGroup) - order, obj));
 
 			setVar('rating', 0.0);
-			setVar('ratingRank', '');
 			scriptObject = psInstance; // allow use vars from playstate without "game" thing
 		}
 	}

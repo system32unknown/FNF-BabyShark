@@ -166,9 +166,6 @@ class PlayState extends MusicBeatState {
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
 
-	public var accuracy:Float = 0;
-	public var ranks:String = "";
-
 	var notesHitArray:Array<Date> = [];
 	public var nps:Int = 0;
 	public var maxNPS:Int = 0;
@@ -1079,14 +1076,14 @@ class PlayState extends MusicBeatState {
 					if (sustainNote.mustPress) sustainNote.x += FlxG.width / 2; // general offset
 					else if (middleScroll) {
 						sustainNote.x += 310;
-						if (noteDatas[i].id > 1) sustainNote.x += FlxG.width / 2 + 25; //Up and Right
+						if (noteDatas[i].id > EK.midArray[mania]) sustainNote.x += FlxG.width / 2 + 25; //Up and Right
 					}
 				}
 			}
 			if (swagNote.mustPress) swagNote.x += FlxG.width / 2;
 			else if(middleScroll) {
 				swagNote.x += 310;
-				if(noteDatas[i].id > 1) swagNote.x += FlxG.width / 2 + 25;
+				if(noteDatas[i].id > EK.midArray[mania]) swagNote.x += FlxG.width / 2 + 25;
 			}
 			if(!noteTypes.contains(swagNote.noteType)) noteTypes.push(swagNote.noteType);
 		}
@@ -1168,7 +1165,7 @@ class PlayState extends MusicBeatState {
 
 			if (player < 1 && middleScroll) {
 				babyArrow.x += 310;
-				if(i > 1) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
+				if(i > EK.midArray[mania]) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
 			}
 
 			(player == 1 ? playerStrums : opponentStrums).add(babyArrow);
@@ -1868,7 +1865,7 @@ class PlayState extends MusicBeatState {
 	function getScoreText() {
 		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps, maxNPS])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
 		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('break_text', '| Breaks:{1} ', [songMisses]); 
-		tempText += Language.getPhrase('| Acc:{1}% •', [accuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}, $ranks) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' N/A');
+		tempText += Language.getPhrase('| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' N/A');
 		return tempText;
 	}
 
@@ -2605,6 +2602,7 @@ class PlayState extends MusicBeatState {
 	public var ratingName:String = '?';
 	public var ratingPercent:Float;
 	public var ratingFC:String;
+	public var ratingAccuracy:Float = 0;
 	public function RecalculateRating(badHit:Bool = false) {
 		setOnScripts('score', songScore);
 		setOnScripts('misses', songMisses);
@@ -2616,12 +2614,8 @@ class PlayState extends MusicBeatState {
 			ratingName = '?';
 			if(totalPlayed != 0) { // Rating Percent
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
-
-				accuracy = MathUtil.floorDecimal(ratingPercent * 100, 2);
-				ranks = Rating.GenerateLetterRank(accuracy);
-
-				// Rating Name
-				if(ratingPercent < 1)
+				ratingAccuracy = MathUtil.floorDecimal(ratingPercent * 100, 2);
+				if(ratingPercent < 1) // Rating Name
 					for (i in 0...ratingStuff.length - 1) {
 						final daRating = ratingStuff[i];
 						if(ratingPercent < cast daRating[1]) {
@@ -2635,9 +2629,8 @@ class PlayState extends MusicBeatState {
 		}
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce
 		setOnScripts('rating', ratingPercent);
-		setOnScripts('accuracy', accuracy);
+		setOnScripts('ratingAccuracy', ratingAccuracy);
 		setOnScripts('ratingName', ratingName);
-		setOnScripts('ratingRank', ranks);
 		setOnScripts('ratingFC', ratingFC);
 	}
 
