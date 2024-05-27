@@ -22,6 +22,7 @@ typedef PreloadedChartNote = {
 	sustainScale:Float,
 	prevNote:Note,
 	strum:StrumNote,
+	strumLine:Int,
 	mania:Int,
 	hitHealth:Float,
 	missHealth:Float,
@@ -453,6 +454,43 @@ class Note extends FlxSprite {
 			}
 			clipRect = swagRect;
 		}
+	}
+
+	public function setupNoteData(chartNoteData:PreloadedChartNote):Note
+	{
+		wasGoodHit = hitByOpponent = tooLate = false; // Don't make an update call of this for the note group
+
+		strumTime = chartNoteData.strumTime;
+		if(!inEditor) strumTime += ClientPrefs.data.noteOffset;
+		noteData = Std.int(chartNoteData.noteData % EK.keys(PlayState.mania));
+		noteType = chartNoteData.noteType;
+		noAnimation = chartNoteData.noAnimation;
+		mustPress = chartNoteData.mustPress;
+		gfNote = chartNoteData.gfNote;
+		isSustainNote = chartNoteData.isSustainNote;
+		if (chartNoteData.noteskin.length > 0 && chartNoteData.noteskin != '' && chartNoteData.noteskin != texture) texture = 'noteskins/' + chartNoteData.noteskin;
+		if (chartNoteData.texture.length > 0 && chartNoteData.texture != texture) texture = chartNoteData.texture;
+		if (chartNoteData.texture.length < 1 && texture != defaultNoteSkin) texture = defaultNoteSkin;
+		sustainLength = chartNoteData.sustainLength;
+
+		hitHealth = chartNoteData.hitHealth;
+		missHealth = chartNoteData.missHealth;
+		hitCausesMiss = chartNoteData.hitCausesMiss;
+		multSpeed = chartNoteData.multSpeed;
+		isSustainEnd = chartNoteData.isSustainEnd;
+
+		if (!isSustainEnd && isSustainNote) {
+			hitHealth = (.023 / 2) / (PlayState.SONG.bpm / 150);
+			missHealth = (.0475 / 2) / (PlayState.SONG.bpm / 150);
+		}
+
+		if (PlayState.isPixelStage) reloadNote('', texture);
+		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]]);
+		if (isSustainNote) animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + (chartNoteData.isSustainEnd ? ' holdend' : ' hold'));
+			sustainScale = chartNoteData.sustainScale;
+
+		if (isSustainNote) correctionOffset = ClientPrefs.data.downScroll ? 0 : 55;
+		return this;
 	}
 
 	override function destroy() {

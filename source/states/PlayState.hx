@@ -1028,7 +1028,7 @@ class PlayState extends MusicBeatState {
 						}
 					}
 				}
-				noteDatas.push(leNoteData);
+				inline noteDatas.push(leNoteData);
 			}
 		}
 
@@ -1357,15 +1357,17 @@ class PlayState extends MusicBeatState {
 			if(songSpeed < 1) time /= songSpeed;
 			if(unspawnNotes[0].multSpeed < 1) time /= unspawnNotes[0].multSpeed;
 
-			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time) {
-				var dunceNote:Note = unspawnNotes[0];
-				notes.insert(0, dunceNote);
-				
+			var notesAddedCount = 0;
+			if (notesAddedCount > unspawnNotes.length)
+				notesAddedCount -= (notesAddedCount - unspawnNotes.length);
+
+			while (unspawnNotes.length > 0 && unspawnNotes[notesAddedCount] != null && unspawnNotes[notesAddedCount].strumTime - Conductor.songPosition < time) {
+				final dunceNote:Note = (unspawnNotes[notesAddedCount].isSustainNote ? sustains : notes).recycle(Note).setupNoteData(unspawnNotes[notesAddedCount]);
 				callOnLuas('onSpawnNote', [notes.members.indexOf(dunceNote), dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
 				callOnHScript('onSpawnNote', [dunceNote]);
-
-				unspawnNotes.splice(unspawnNotes.indexOf(dunceNote), 1);
+				notesAddedCount++;
 			}
+			if (notesAddedCount > 0) unspawnNotes.splice(0, notesAddedCount);
 		}
 
 		if (generatedMusic) {
