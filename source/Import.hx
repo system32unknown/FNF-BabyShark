@@ -19,6 +19,7 @@ import utils.SpriteUtil;
 
 import objects.Alphabet;
 import objects.BGSprite;
+import objects.Note.PreloadedChartNote;
 
 import states.PlayState;
 import states.LoadingState;
