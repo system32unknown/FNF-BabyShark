@@ -287,12 +287,9 @@ class PlayState extends MusicBeatState {
 			stageUI = stageData.stageUI;
 		else if (stageData.isPixelStage == true) stageUI = "pixel";
 
-		BF_X = stageData.boyfriend[0];
-		BF_Y = stageData.boyfriend[1];
-		GF_X = stageData.girlfriend[0];
-		GF_Y = stageData.girlfriend[1];
-		DAD_X = stageData.opponent[0];
-		DAD_Y = stageData.opponent[1];
+		BF_X = stageData.boyfriend[0]; BF_Y = stageData.boyfriend[1];
+		GF_X = stageData.girlfriend[0]; GF_Y = stageData.girlfriend[1];
+		DAD_X = stageData.opponent[0]; DAD_Y = stageData.opponent[1];
 
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 		grpNoteSplashes.ID = 0;
@@ -462,7 +459,7 @@ class PlayState extends MusicBeatState {
 			if (!instakillOnMiss) uiGroup.add(icon);
 		}
 
-		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 30), FlxG.width);
+		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 35), FlxG.width);
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		scoreTxt.visible = !hideHud;
@@ -1019,7 +1016,7 @@ class PlayState extends MusicBeatState {
 
 				if (i != 0) { // CLEAR ANY POSSIBLE JACKS
 					for (evilNoteData in noteDatas) {
-						if (evilNoteData.id == leNoteData.id && evilNoteData.strumLine == leNoteData.strumLine && Math.abs(evilNoteData.time - leNoteData.time) < 1.) { // is it in the same step?
+						if (evilNoteData.id == leNoteData.id && evilNoteData.strumLine == leNoteData.strumLine && Math.abs(evilNoteData.time - leNoteData.time) == .0) { // is it in the same step?
 							evilNoteData.dispose();
 							noteDatas.remove(evilNoteData);
 						}
@@ -1309,7 +1306,6 @@ class PlayState extends MusicBeatState {
 				if (timeDiff > 1000 * playbackRate) Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
 			}
 		}
-
 
 		if (startingSong) {
 			if (startedCountdown && Conductor.songPosition >= 0) startSong();
@@ -1865,18 +1861,13 @@ class PlayState extends MusicBeatState {
 
 	public var ratingAcc:FlxPoint = FlxPoint.get();
 	public var ratingVel:FlxPoint = FlxPoint.get();
-	function popUpScore(?note:Note):Void {
-		if (note == null) return;
-
+	function popUpScore(note:Note = null):Void {
 		var noteDiff:Float = getNoteDiff(note) / playbackRate;
 		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
-		var score:Int = 500;
-
-		var msTiming:Float = 0;
 
 		note.ratingMod = daRating.ratingMod;
 		note.rating = daRating.name;
-		score = daRating.score;
+		var score:Int = daRating.score;
 
 		if(!note.ratingDisabled) daRating.hits++;
 		totalNotesHit += switch (ClientPrefs.data.accuracyType) {
@@ -1946,10 +1937,9 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
-			msTiming = MathUtil.truncateFloat(noteDiff / playbackRate);
 			mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
 			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
-			mstimingTxt.text = '${msTiming}ms';
+			mstimingTxt.text = '${MathUtil.truncateFloat(noteDiff / playbackRate)}ms';
 			mstimingTxt.color = SpriteUtil.dominantColor(rating);
 
 			var comboShowSpr:FlxSprite = (showCombo && combo >= 10 ? comboSpr : rating);

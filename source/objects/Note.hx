@@ -142,7 +142,7 @@ class Note extends FlxSprite {
 		if(noteData > -1 && noteType != value) {
 			switch(value) {
 				case 'Hurt Note':
-					ignoreNote = true;
+					ignoreNote = mustPress;
 
 					rgbShader.r = 0xFF101010;
 					rgbShader.g = FlxColor.RED;
@@ -180,8 +180,6 @@ class Note extends FlxSprite {
 		antialiasing = ClientPrefs.data.antialiasing;
 		if(createdFrom == null) createdFrom = PlayState.instance;
 
-		if (prevNote == null) prevNote = this;
-
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
 		this.inEditor = inEditor;
@@ -203,6 +201,8 @@ class Note extends FlxSprite {
 			if(!isSustainNote && noteData < EK.keys(PlayState.mania))
 				animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
 		}
+		
+		if (prevNote == null) prevNote = this;
 
 		if (isSustainNote && prevNote != null) {
 			alpha = .6;
