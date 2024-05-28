@@ -62,7 +62,6 @@ import flixel.input.keyboard.FlxKey;
 	public var ratingDisplay:String = 'World';
 	public var rainbowFps:Bool = false;
 	public var cacheOnGPU:Bool = false;
-	public var antiMash:Bool = false;
 	public var healthTypes:String = 'Vanilla';
 	public var timeBarType:String = 'Name Time Position';
 	public var altDiscordImg:Bool = false;

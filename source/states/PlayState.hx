@@ -465,7 +465,6 @@ class PlayState extends MusicBeatState {
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), FlxG.width);
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		if (!downScroll) scoreTxt.y = FlxG.height - scoreTxt.height;
 		scoreTxt.visible = !hideHud;
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
@@ -1249,8 +1248,7 @@ class PlayState extends MusicBeatState {
 	var allowDebugKeys:Bool = true;
 
 	override function update(elapsed:Float) {
-		if(ClientPrefs.data.camMovement && camlock)
-			camFollow.setPosition(camlockpoint.x, camlockpoint.y);
+		if(ClientPrefs.data.camMovement && camlock) camFollow.setPosition(camlockpoint.x, camlockpoint.y);
 		
 		if(!inCutscene && !paused && !freezeCamera)
 			FlxG.camera.followLerp = .04 * cameraSpeed * playbackRate;
@@ -1858,10 +1856,10 @@ class PlayState extends MusicBeatState {
 		Paths.image(uiPrefix + 'ratings/combo' + uiPostfix);
 	}
 
-	function getScoreText() {
+	function getScoreText():String {
 		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps, maxNPS])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
 		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('break_text', '| Breaks:{1} ', [songMisses]); 
-		tempText += Language.getPhrase('| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' N/A');
+		if (!cpuControlled) tempText += Language.getPhrase('| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' N/A');
 		return tempText;
 	}
 
@@ -1884,7 +1882,6 @@ class PlayState extends MusicBeatState {
 		totalNotesHit += switch (ClientPrefs.data.accuracyType) {
 			case 'Note': 1;
 			case 'Millisecond': (daRating.name == 'epic' ? 1 : ratingsData[0].hitWindow / (noteDiff / playbackRate)); // Much like Kade's "Complex" but less broken
-			case 'Wife3': backend.Wife3.getAcc(-noteDiff);
 			default: daRating.ratingMod;
 		}
 
@@ -2073,13 +2070,10 @@ class PlayState extends MusicBeatState {
 		for (key in keysArray) holdArray.push(controls.pressed(key));
 
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
-			if (notes.length > 0) {
-				for (n in notes) { // I can't do a filter here, that's kinda awesome
-					var canHit:Bool = (n != null && !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit);
-					if (canHit && n.isSustainNote && holdArray[n.noteData]) goodNoteHit(n);
-				}
+			if (notes.length != 0) {
+				final sustains:Array<Note> = notes.members.filter((n:Note) -> return !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit);
+				for (sustainNote in sustains) if (holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
 			}
-
 			if (!holdArray.contains(true) || endingSong) playerDance();
 		}
 	}

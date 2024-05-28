@@ -9,7 +9,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Middlescroll', 'If checked, your notes get centered.', 'middleScroll', BOOL));
 
 		addOption(new Option('Note Diff Type:', '', 'noteDiffTypes', STRING, ['Psych', 'Simple']));
-		addOption(new Option('Accuracy Type:', "The way accuracy is calculated. \nNote = Depending on if a note is hit or not.\nJudgement = Depending on Judgement.\nMillisecond = Depending on milliseconds.", 'accuracyType', STRING, ['Note', 'Judgement', 'Millisecond', 'Wife3']));
+		addOption(new Option('Accuracy Type:', "The way accuracy is calculated. \nNote = Depending on if a note is hit or not.\nJudgement = Depending on Judgement.\nMillisecond = Depending on milliseconds.", 'accuracyType', STRING, ['Note', 'Judgement', 'Millisecond']));
 
 		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums', BOOL));
 		addOption(new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping', BOOL));
@@ -20,7 +20,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Auto Pause Playstate', "If checked, in playstate, gameplay and notes will pause if it's unfocused.", 'autoPausePlayState', BOOL));
 
 		addOption(new Option('Disable Reset Button', "If checked, pressing Reset won't do anything.", 'noReset', BOOL));
-		addOption(new Option('Antimash', "If unchecked, Antimash will not do anything.", 'antiMash', BOOL));
 		addOption(new Option('Dynamic Camera Movement', "If unchecked, \nthe camera won't move in the direction in which the characters sing.", 'camMovement', BOOL));
 
 		var option:Option = new Option('Hitsound Type:', "What should the hitsounds like?", 'hitsoundTypes', STRING, ['Tick', 'Snap', 'Dave']);
