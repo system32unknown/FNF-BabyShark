@@ -11,6 +11,7 @@
 - [ ] Get Character Vocals
 - [ ] New Credit Menu (Social Links)
 - [x] Language System
+- [ ] Note Recycling System
 
 ### Characters List
 - [ ] Stariana

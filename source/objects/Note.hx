@@ -5,35 +5,6 @@ import flixel.math.FlxRect;
 import shaders.RGBPalette;
 import shaders.RGBPalette.RGBShaderReference;
 
-typedef PreloadedChartNote = {
-	strumTime:Float,
-	noteData:Int,
-	mustPress:Bool,
-	noteType:String,
-	animSuffix:String,
-	noteskin:String,
-	texture:String,
-	noAnimation:Bool,
-	noMissAnimation:Bool,
-	gfNote:Bool,
-	isSustainNote:Bool,
-	isSustainEnd:Bool,
-	sustainLength:Float,
-	sustainScale:Float,
-	prevNote:Note,
-	strum:StrumNote,
-	strumLine:Int,
-	mania:Int,
-	hitHealth:Float,
-	missHealth:Float,
-	hitCausesMiss:Null<Bool>,
-	wasHit:Bool,
-	multSpeed:Float,
-	canBeHit:Bool,
-	ignoreNote:Bool,
-	wasMissed:Bool
-}
-
 typedef EventNote = {
 	strumTime:Float,
 	event:String,
@@ -394,20 +365,19 @@ class Note extends FlxSprite {
 		animation.addByPrefix(name, prefix, framerate, doLoop);
 	}
 
-	inline public function checkDiff(songPos:Float):Bool {
-		return (strumTime > songPos - (Conductor.safeZoneOffset * lateHitMult) && strumTime < songPos + (Conductor.safeZoneOffset * earlyHitMult));
-	}
-	inline public function checkHit(songPos:Float):Bool {
-		return (strumTime <= songPos + (Conductor.safeZoneOffset * earlyHitMult) && ((isSustainNote && prevNote.wasGoodHit) || strumTime <= songPos));
-	}
-
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
 		if (mustPress) {
-			canBeHit = checkDiff(Conductor.songPosition);
+			canBeHit = (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult) && strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult));
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit) tooLate = true;
-		} else canBeHit = false;
+		} else {
+			canBeHit = false;
+
+			if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult)) {
+				if((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition) wasGoodHit = true;
+			}
+		}
 
 		if (tooLate && !inEditor && alpha > .3) alpha = .3;
 	}
@@ -454,43 +424,6 @@ class Note extends FlxSprite {
 			}
 			clipRect = swagRect;
 		}
-	}
-
-	public function setupNoteData(chartNoteData:PreloadedChartNote):Note
-	{
-		wasGoodHit = hitByOpponent = tooLate = false; // Don't make an update call of this for the note group
-
-		strumTime = chartNoteData.strumTime;
-		if(!inEditor) strumTime += ClientPrefs.data.noteOffset;
-		noteData = Std.int(chartNoteData.noteData % EK.keys(PlayState.mania));
-		noteType = chartNoteData.noteType;
-		noAnimation = chartNoteData.noAnimation;
-		mustPress = chartNoteData.mustPress;
-		gfNote = chartNoteData.gfNote;
-		isSustainNote = chartNoteData.isSustainNote;
-		if (chartNoteData.noteskin.length > 0 && chartNoteData.noteskin != '' && chartNoteData.noteskin != texture) texture = 'noteskins/' + chartNoteData.noteskin;
-		if (chartNoteData.texture.length > 0 && chartNoteData.texture != texture) texture = chartNoteData.texture;
-		if (chartNoteData.texture.length < 1 && texture != defaultNoteSkin) texture = defaultNoteSkin;
-		sustainLength = chartNoteData.sustainLength;
-
-		hitHealth = chartNoteData.hitHealth;
-		missHealth = chartNoteData.missHealth;
-		hitCausesMiss = chartNoteData.hitCausesMiss;
-		multSpeed = chartNoteData.multSpeed;
-		isSustainEnd = chartNoteData.isSustainEnd;
-
-		if (!isSustainEnd && isSustainNote) {
-			hitHealth = (.023 / 2) / (PlayState.SONG.bpm / 150);
-			missHealth = (.0475 / 2) / (PlayState.SONG.bpm / 150);
-		}
-
-		if (PlayState.isPixelStage) reloadNote('', texture);
-		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]]);
-		if (isSustainNote) animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + (chartNoteData.isSustainEnd ? ' holdend' : ' hold'));
-			sustainScale = chartNoteData.sustainScale;
-
-		if (isSustainNote) correctionOffset = ClientPrefs.data.downScroll ? 0 : 55;
-		return this;
 	}
 
 	override function destroy() {
