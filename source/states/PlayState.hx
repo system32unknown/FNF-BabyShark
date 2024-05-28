@@ -462,7 +462,7 @@ class PlayState extends MusicBeatState {
 			if (!instakillOnMiss) uiGroup.add(icon);
 		}
 
-		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 50), FlxG.width);
+		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 30), FlxG.width);
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		scoreTxt.visible = !hideHud;
