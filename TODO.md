@@ -3,6 +3,7 @@
 ### `v1.1.5a`
 - [ ] Bug Fix / Tweaks
     - [x] Fix Freeplay No Vocals on Musicplayer
+    - [ ] Fix Psych Input, Notes hite while holding input
 
 ### Future versions
 - [ ] Remake Character / New Characters

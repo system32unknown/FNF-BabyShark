@@ -2053,10 +2053,7 @@ class PlayState extends MusicBeatState {
 				for (sustainNote in sustains) {
 					var hit:Bool = true;
 					if (newSustainBehavior) hit = sustainNote.parent != null && sustainNote.parent.wasGoodHit;
-					if (hit) {
-						final released:Bool = !holdArray[sustainNote.noteData];
-						if (!released) goodNoteHit(sustainNote);
-					}
+					if (hit && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
 				}
 			}
 			if (!holdArray.contains(true) || endingSong) playerDance();
