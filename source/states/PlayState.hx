@@ -114,7 +114,7 @@ class PlayState extends MusicBeatState {
 	var iconsAnimations:Bool = true;
 	function set_health(value:Float):Float {
 		if(!iconsAnimations || healthBar == null || !healthBar.enabled || healthBar.valueFunction == null)
-			return health = value;
+			{health = value; return health;}
 
 		// update health bar
 		health = value;
@@ -202,7 +202,6 @@ class PlayState extends MusicBeatState {
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
 	#end
-
 
 	// Lua shit
 	public static var instance:PlayState;
@@ -460,7 +459,7 @@ class PlayState extends MusicBeatState {
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
 		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		scoreTxt.visible = !hideHud;
-		scoreTxt.scrollFactor.set(); updateScore(false);
+		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
 		uiGroup.add(scoreTxt);
 
@@ -526,8 +525,7 @@ class PlayState extends MusicBeatState {
 		Paths.image('alphabet');
 
 		if (PauseSubState.songName != null) Paths.music(PauseSubState.songName);
-		else if(Paths.formatToSongPath(ClientPrefs.data.pauseMusic) != 'none')
-			Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic));
+		else if(Paths.formatToSongPath(ClientPrefs.data.pauseMusic) != 'none') Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic));
 		resetRPC();
 	
 		callOnScripts('onCreatePost');
@@ -549,8 +547,9 @@ class PlayState extends MusicBeatState {
 				for (note in unspawnNotes) note.resizeByRatio(ratio);
 			}
 		}
+		songSpeed = value;
 		noteKillOffset = Math.max(Conductor.stepCrochet, 350 / songSpeed * playbackRate);
-		return songSpeed = value;
+		return value;
 	}
 
 	function set_playbackRate(value:Float):Float {
@@ -565,10 +564,11 @@ class PlayState extends MusicBeatState {
 			}
 		}
 		
+		playbackRate = value;
 		FlxG.animationTimeScale = value;
 		Conductor.safeZoneOffset = (ClientPrefs.data.safeFrames / 60) * 1000 * value;
 		setOnScripts('playbackRate', playbackRate);
-		return playbackRate = value;
+		return value;
 	}
 
 	public function addTextToDebug(text:String, color:FlxColor) {
@@ -1995,8 +1995,7 @@ class PlayState extends MusicBeatState {
 		var ret:Dynamic = callOnScripts('onKeyPressPre', [key]);
 		if(ret == LuaUtils.Function_Stop) return;
 
-		// more accurate hit time for the ratings?
-		var lastTime:Float = Conductor.songPosition;
+		var lastTime:Float = Conductor.songPosition; // more accurate hit time for the ratings?
 		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time;
 
 		// obtain notes that the player can hit
@@ -2011,7 +2010,6 @@ class PlayState extends MusicBeatState {
 			callOnScripts('onGhostTap', [key]);
 			noteMissPress(key);
 		}
-
 		Conductor.songPosition = lastTime;
 
 		final spr:StrumNote = playerStrums.members[key];
@@ -2021,7 +2019,6 @@ class PlayState extends MusicBeatState {
 		}
 		callOnScripts('onKeyPress', [key]);
 	}
-
 
 	function onKeyRelease(event:KeyboardEvent):Void {
 		var key:Int = getKeyFromEvent(keysArray, event.keyCode);
@@ -2049,7 +2046,6 @@ class PlayState extends MusicBeatState {
 
 	function keysCheck():Void {
 		var holdArray:Array<Bool> = [];
-		var releaseArray:Array<Bool> = [];
 		for (key in keysArray) holdArray.push(controls.pressed(key));
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
 			if (notes.length != 0) {
@@ -2057,13 +2053,14 @@ class PlayState extends MusicBeatState {
 				for (sustainNote in sustains) {
 					var hit:Bool = true;
 					if (newSustainBehavior) hit = sustainNote.parent != null && sustainNote.parent.wasGoodHit;
-					if (hit && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
+					if (hit) {
+						final released:Bool = !holdArray[sustainNote.noteData];
+						if (!released) goodNoteHit(sustainNote);
+					}
 				}
 			}
 			if (!holdArray.contains(true) || endingSong) playerDance();
 		}
-
-		if(strumsBlocked.contains(true) && releaseArray.contains(true)) for (i in 0...releaseArray.length) if(releaseArray[i] || strumsBlocked[i] == true) keyReleased(i);
 	}
 
 	function noteMiss(daNote:Note, opponent:Bool = false):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
@@ -2087,9 +2084,9 @@ class PlayState extends MusicBeatState {
 		
 		if (note != null && newSustainBehavior && note.parent == null) {
 			if(note.tail.length != 0) {
-				note.alpha = 0.3;
+				note.alpha = .35;
 				for(childNote in note.tail) {
-					childNote.alpha = 0.3;
+					childNote.alpha = note.alpha;
 					childNote.missed = true;
 					childNote.canBeHit = false;
 					childNote.ignoreNote = true;
@@ -2227,7 +2224,6 @@ class PlayState extends MusicBeatState {
 			if(!isSus) invalidateNote(note);
 			return;
 		}
-
 		if (!dontZoomCam) camZooming = true;
 
 		if(!note.noAnimation) {

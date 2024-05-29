@@ -1,7 +1,6 @@
 package objects;
 
 import flixel.FlxObject;
-import flixel.util.FlxSort;
 
 // its kinda like marqeee html lol!
 class BGScrollingText extends FlxSpriteGroup {
@@ -30,8 +29,7 @@ class BGScrollingText extends FlxSpriteGroup {
 		testText.updateHitbox();
 		grpTexts.add(testText);
 
-		var needed:Int = Math.ceil(widthShit / testText.frameWidth) + 1;
-		for (i in 0...needed) {
+		for (i in 0...Math.ceil(widthShit / testText.frameWidth) + 1) {
 			var lmfao:Int = i + 1;
 
 			var coolText:FlxText = new FlxText((lmfao * testText.frameWidth) + (lmfao * 20), 0, 0, text, this.size);
@@ -74,6 +72,6 @@ class BGScrollingText extends FlxSpriteGroup {
 	}
 
 	function sortTextShit():Void {
-		grpTexts.sort((Order:Int, Obj1:FlxObject, Obj2:FlxObject) -> return FlxSort.byValues(Order, Obj1.x, Obj2.x));
+		grpTexts.sort((Order:Int, Obj1:FlxObject, Obj2:FlxObject) -> return flixel.util.FlxSort.byValues(Order, Obj1.x, Obj2.x));
 	}
 }
