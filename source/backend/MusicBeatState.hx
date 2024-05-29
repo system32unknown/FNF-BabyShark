@@ -148,7 +148,7 @@ class MusicBeatState extends flixel.addons.ui.FlxUIState {
 		for (stage in stages) if(stage != null && stage.exists && stage.active) func(stage);
 	}
 
-	function getBeatsOnSection() {
+	function getBeatsOnSection():Float {
 		var val:Null<Float> = 4;
 		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null) val = PlayState.SONG.notes[curSection].sectionBeats;
 		return val == null ? 4 : val;

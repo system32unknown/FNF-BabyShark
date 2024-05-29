@@ -3,6 +3,7 @@ package states;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
+import flixel.util.FlxSort;
 import openfl.events.KeyboardEvent;
 #if !MODS_ALLOWED import openfl.utils.Assets; #end
 #if !flash import flixel.addons.display.FlxRuntimeShader; #end
@@ -526,7 +527,6 @@ class PlayState extends MusicBeatState {
 
 		if(ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}');
 		for (i in 1...4) Paths.sound('missnote$i');
-		Paths.sound('comboSound');
 		Paths.image('alphabet');
 
 		if (PauseSubState.songName != null) Paths.music(PauseSubState.songName);
@@ -1124,7 +1124,7 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	function sortByTime(Obj1:Dynamic, Obj2:Dynamic):Int return flixel.util.FlxSort.byValues(-1, Obj1.strumTime, Obj2.strumTime);
+	public static function sortByTime(Obj1:Dynamic, Obj2:Dynamic):Int return FlxSort.byValues(-1, Obj1.strumTime, Obj2.strumTime);
 
 	function makeEvent(event:Array<Dynamic>, i:Int) {
 		var subEvent:EventNote = {
@@ -1976,7 +1976,7 @@ class PlayState extends MusicBeatState {
 		comboGroup.sort(CoolUtil.sortByID);
 	}
 
-	static function getNoteDiff(note:Note = null):Float {
+	public static function getNoteDiff(note:Note = null):Float {
 		var noteDiffTime:Float = note.strumTime - Conductor.songPosition;
 		return switch(ClientPrefs.data.noteDiffTypes) {
 			case 'Psych': Math.abs(noteDiffTime + ClientPrefs.data.ratingOffset);
@@ -2002,8 +2002,7 @@ class PlayState extends MusicBeatState {
 		plrInputNotes.sort((a:Note, b:Note) -> Std.int(a.strumTime - b.strumTime));
 
 		final shouldMiss:Bool = !ClientPrefs.data.ghostTapping;
-		if (plrInputNotes.length != 0) // nicer on the GPU usage than doing `> 0` lol
-			goodNoteHit(plrInputNotes[0]);
+		if (plrInputNotes.length != 0) goodNoteHit(plrInputNotes[0]); // nicer on the GPU usage than doing `> 0` lol
 		else if(shouldMiss) {
 			callOnScripts('onGhostTap', [key]);
 			noteMissPress(key);
@@ -2036,21 +2035,17 @@ class PlayState extends MusicBeatState {
 
 	var strumsBlocked:Array<Bool> = [];
 	function onKeyPress(event:KeyboardEvent):Void {
-		if (cpuControlled || !startedCountdown || paused) return;
-
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = getKeyFromEvent(keysArray, eventKey);
 		if (key >= 0 && FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(key);
 	}
 
 	function onKeyRelease(event:KeyboardEvent):Void {
-		if (cpuControlled || !startedCountdown || paused) return;
-
 		var key:Int = getKeyFromEvent(keysArray, event.keyCode);
 		if(key > -1) keyReleased(key);
 	}
 
-	function getKeyFromEvent(arr:Array<String>, key:FlxKey):Int {
+	public static function getKeyFromEvent(arr:Array<String>, key:FlxKey):Int {
 		if(key != NONE) for (i in 0...arr.length) for (noteKey in Controls.instance.keyboardBinds[arr[i]]) if(key == noteKey) return i;
 		return -1;
 	}
@@ -2062,7 +2057,10 @@ class PlayState extends MusicBeatState {
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
 			if (notes.length != 0) {
 				final sustains:Array<Note> = notes.members.filter((n:Note) -> return !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit);
-				for (sustainNote in sustains) if (holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
+				for (sustainNote in sustains) {
+					final released:Bool = !holdArray[sustainNote.noteData];
+					if (!released) goodNoteHit(sustainNote);
+				}
 			}
 			if (!holdArray.contains(true) || endingSong) playerDance();
 		}
@@ -2203,7 +2201,7 @@ class PlayState extends MusicBeatState {
 			}
 
 			noteMiss(note);
-			if(!note.noteSplashData.disabled  && !isSus) spawnNoteSplashOnNote(note);
+			if(!note.noteSplashData.disabled && !isSus) spawnNoteSplashOnNote(note);
 			if(!isSus) invalidateNote(note);
 			return;
 		}
@@ -2326,6 +2324,7 @@ class PlayState extends MusicBeatState {
 		super.beatHit();
 
 		if(lastBeatHit >= curBeat) return;
+		if (generatedMusic) notes.sort(FlxSort.byY, ClientPrefs.data.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 
 		charactersDance(curBeat);
 		
@@ -2560,7 +2559,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {
-		var spr:StrumNote =  (isDad ? opponentStrums : playerStrums).members[id];
+		var spr:StrumNote = (isDad ? opponentStrums : playerStrums).members[id];
 		if(spr != null) {
 			spr.playAnim('confirm', true);
 			spr.resetAnim = time / playbackRate;

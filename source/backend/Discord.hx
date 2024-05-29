@@ -104,7 +104,7 @@ class DiscordClient {
 	public static function changePresence(?details:String = 'In the Menus', ?state:Null<String>, ?hasStartTimestamp:Bool, ?endTimestamp:Float, ?largeImageKey:Null<String>) {
 		if (largeImageKey == null) largeImageKey = (ClientPrefs.data.altDiscordImg ? 'iconalt' + ClientPrefs.data.altDiscordImgCount : icon_img);
 
-		var startTimestamp:Float = hasStartTimestamp ?  Date.now().getTime() : 0;
+		var startTimestamp:Float = hasStartTimestamp ? Date.now().getTime() : 0;
 		if (endTimestamp > 0) endTimestamp = startTimestamp + endTimestamp;
 
 		presence.state = state;

@@ -1313,6 +1313,29 @@ class ChartingState extends MusicBeatState {
 		}
 	}
 
+	var playtesting:Bool = false;
+	var playtestingTime:Float = 0;
+	var playtestingOnComplete:Void->Void = null;
+	override function closeSubState() {
+		if(playtesting) {
+			FlxG.sound.music.pause();
+			FlxG.sound.music.time = playtestingTime;
+			FlxG.sound.music.onComplete = playtestingOnComplete;
+			if (instVolume != null) FlxG.sound.music.volume = instVolume.value;
+			if (check_mute_inst != null && check_mute_inst.checked) FlxG.sound.music.volume = 0;
+
+			if(vocals != null) {
+				vocals.pause();
+				vocals.time = playtestingTime;
+				if (voicesVolume != null) vocals.volume = voicesVolume.value;
+				if (check_mute_vocals != null && check_mute_vocals.checked) vocals.volume = 0;
+			}
+
+			#if DISCORD_ALLOWED DiscordClient.changePresence("Chart Editor", _song.song.replace('-', ' ')); #end
+		}
+		super.closeSubState();
+	}
+
 	function generateSong() {
 		FlxG.sound.playMusic(Paths.inst(currentSongName), .6);
 		FlxG.sound.music.autoDestroy = false;
@@ -1542,7 +1565,20 @@ class ChartingState extends MusicBeatState {
 		}
 
 		if(!blockInput) {
-			if (FlxG.keys.justPressed.ENTER) startSong();
+			if (FlxG.keys.justPressed.ESCAPE) {
+				if(FlxG.sound.music != null) FlxG.sound.music.stop();
+	
+				if(vocals != null) {
+					vocals.pause();
+					vocals.volume = 0;
+				}
+	
+				autosaveSong();
+				playtesting = true;
+				playtestingTime = Conductor.songPosition;
+				playtestingOnComplete = FlxG.sound.music.onComplete;
+				openSubState(new EditorPlayState(playbackSpeed));
+			} else if (FlxG.keys.justPressed.ENTER) startSong();
 
 			if(curSelectedNote != null && curSelectedNote[1] > -1) {
 				if (FlxG.keys.justPressed.E) changeNoteSustain(Conductor.stepCrochet);

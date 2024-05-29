@@ -66,7 +66,6 @@
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="cpp"/>
 	<haxedef name="hscriptPos"/>
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc"/>
-	<haxedef name="NDLLS_SUPPORTED" if="cpp"/>
 
 	<section unless="debug">
 		<haxedef name="no-deprecation-warnings"/> <!-- No deprecation warnings. -->
