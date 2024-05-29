@@ -386,6 +386,11 @@ class Note extends FlxSprite {
 		if (tooLate && !inEditor && alpha > .3) alpha = .3;
 	}
 
+	override function destroy() {
+		super.destroy();
+		_lastValidChecked = '';
+	}
+
 	public function followStrumNote(myStrum:StrumNote, songSpeed:Float = 1) {
 		var strumX:Float = myStrum.x;
 		var strumY:Float = myStrum.y;
@@ -428,11 +433,6 @@ class Note extends FlxSprite {
 			}
 			clipRect = swagRect;
 		}
-	}
-
-	override function destroy() {
-		super.destroy();
-		_lastValidChecked = '';
 	}
 
 	@:noCompletion override function set_clipRect(rect:FlxRect):FlxRect {
