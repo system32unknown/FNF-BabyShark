@@ -91,6 +91,7 @@ import flixel.input.keyboard.FlxKey;
 	public var goodWindow:Int = 90;
 	public var okWindow:Int = 135;
 	public var safeFrames:Float = 10;
+	public var newSustainBehavior:Bool = true;
 	public var discordRPC:Bool = false;
 	public var language:String = 'en-US';
 }

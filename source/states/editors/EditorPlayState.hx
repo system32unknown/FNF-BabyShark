@@ -59,6 +59,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	var scoreTxt:FlxText;
 	var dataTxt:FlxText;
+	var guitarHeroSustains:Bool = false;
 
 	var msTimingTween:FlxTween;
 	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
@@ -84,6 +85,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		cachePopUpScore();
+		guitarHeroSustains = ClientPrefs.data.newSustainBehavior;
 		if(ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}');
 
 		/* setting up Editor PlayState stuff */
@@ -95,10 +97,13 @@ class EditorPlayState extends MusicBeatSubstate {
 		add(bg);
 		
 		/**** NOTES ****/
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+		grpNoteSplashes.ID = 0;
+
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		comboGroup = new FlxSpriteGroup();
 		comboGroup.ID = 0;
-		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+		noteGroup = new FlxTypedGroup<FlxBasic>();
 		
 		add(comboGroup);
 		add(noteGroup);
@@ -175,7 +180,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		keysCheck();
 		if(notes.length > 0) {
 			notes.forEachAlive((daNote:Note) -> {
-				var strum:StrumNote = (!daNote.mustPress ? opponentStrums : playerStrums).members[daNote.noteData];
+				var strum:StrumNote = (daNote.mustPress ? playerStrums : opponentStrums).members[daNote.noteData];
 				daNote.followStrumNote(strum, songSpeed / playbackRate);
 
 				if(!daNote.mustPress && daNote.wasGoodHit && !daNote.hitByOpponent && !daNote.ignoreNote) opponentNoteHit(daNote);
@@ -219,8 +224,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	
 	override function sectionHit() {
 		if (PlayState.SONG.notes[curSection] != null) {
-			if (PlayState.SONG.notes[curSection].changeBPM)
-				Conductor.bpm = PlayState.SONG.notes[curSection].bpm;
+			if (PlayState.SONG.notes[curSection].changeBPM) Conductor.bpm = PlayState.SONG.notes[curSection].bpm;
 		}
 		super.sectionHit();
 	}
@@ -262,7 +266,6 @@ class EditorPlayState extends MusicBeatSubstate {
 		try {
 			if (songData.needsVoices) vocals.loadEmbedded(Paths.voices(songData.song));
 		} catch(e:Dynamic) Logs.trace('ERROR LOADING VOCALS: $e', ERROR);
-
 		vocals.volume = 0;
 
 		#if FLX_PITCH vocals.pitch = playbackRate; #end
@@ -272,7 +275,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		FlxG.sound.list.add(inst);
 		FlxG.sound.music.volume = 0;
 
-		add(notes = new NoteGroup());
+		noteGroup.add(notes = new NoteGroup());
 
 		var noteDatas:Array<ChartNoteData> = [];
 		for (section in songData.notes) {
@@ -283,7 +286,7 @@ class EditorPlayState extends MusicBeatSubstate {
 				var gottaHitNote:Bool = section.mustHitSection;
 				if (songNotes[1] > mania) gottaHitNote = !section.mustHitSection;
 
-				final leNoteData: ChartNoteData = {
+				final leNoteData:ChartNoteData = {
 					time: songNotes[0],
 					id: Std.int(songNotes[1] % EK.keys(mania)),
 					sLen: songNotes[2],
@@ -295,7 +298,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 				if (i != 0) {
 					for (evilNoteData in noteDatas) {
-						if (evilNoteData.id == leNoteData.id && evilNoteData.strumLine == leNoteData.strumLine && Math.abs(evilNoteData.time - leNoteData.time) < 1.0) { // is it in the same step?
+						if (evilNoteData.id == leNoteData.id && evilNoteData.strumLine == leNoteData.strumLine && Math.abs(evilNoteData.time - leNoteData.time) == .0) { // is it in the same step?
 							evilNoteData.dispose();
 							noteDatas.remove(evilNoteData);
 						}
@@ -309,7 +312,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			var oldNote:Note = null;
 			if (unspawnNotes.length > 0) oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-			var swagNote:Note = new Note(noteDatas[i].time, noteDatas[i].id, oldNote);
+			var swagNote:Note = new Note(noteDatas[i].time, noteDatas[i].id, oldNote, this);
 			swagNote.mustPress = noteDatas[i].strumLine == 1;
 			swagNote.sustainLength = noteDatas[i].sLen;
 			swagNote.strumLine = noteDatas[i].strumLine;
@@ -323,7 +326,7 @@ class EditorPlayState extends MusicBeatSubstate {
 				for (susNote in 0...floorSus + 1) {
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note = new Note(noteDatas[i].time + (Conductor.stepCrochet * susNote), noteDatas[i].id, oldNote, true);
+					var sustainNote:Note = new Note(noteDatas[i].time + (Conductor.stepCrochet * susNote), noteDatas[i].id, oldNote, true, this);
 					sustainNote.mustPress = swagNote.mustPress;
 					sustainNote.gfNote = swagNote.gfNote;
 					sustainNote.strumLine = swagNote.strumLine;
@@ -332,15 +335,14 @@ class EditorPlayState extends MusicBeatSubstate {
 					sustainNote.parent = swagNote;
 					unspawnNotes.push(sustainNote);
 					swagNote.tail.push(sustainNote);
-
 					sustainNote.correctionOffset = swagNote.height / 2;
+
 					if(!PlayState.isPixelStage) {
 						if(oldNote.isSustainNote) {
 							oldNote.scale.y *= Note.SUSTAIN_SIZE / oldNote.frameHeight;
 							oldNote.scale.y /= playbackRate;
 							oldNote.updateHitbox();
 						}
-
 						if(downScroll) sustainNote.correctionOffset = 0;
 					} else if(oldNote.isSustainNote) {
 						oldNote.scale.y /= playbackRate;
@@ -355,9 +357,8 @@ class EditorPlayState extends MusicBeatSubstate {
 				}
 			}
 
-			if (swagNote.mustPress) {
-				swagNote.x += FlxG.width / 2; // general offset
-			} else if(ClientPrefs.data.middleScroll) {
+			if (swagNote.mustPress) swagNote.x += FlxG.width / 2; // general offset
+			else if(ClientPrefs.data.middleScroll) {
 				swagNote.x += 310;
 				if(noteDatas[i].id > EK.midArray[mania]) swagNote.x += FlxG.width / 2 + 25; //Up and Right
 			}
@@ -413,7 +414,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function popUpScore(note:Note = null):Void {
-		var noteDiff:Float = PlayState.getNoteDiff(note) / playbackRate;
+		var noteDiff:Float = getNoteDiff(note) / playbackRate;
 		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
 
 		note.ratingMod = daRating.ratingMod;
@@ -517,6 +518,14 @@ class EditorPlayState extends MusicBeatSubstate {
 		comboGroup.sort(CoolUtil.sortByID);
 	}
 
+	function getNoteDiff(note:Note = null):Float {
+		var noteDiffTime:Float = note.strumTime - Conductor.songPosition;
+		return switch(ClientPrefs.data.noteDiffTypes) {
+			case 'Psych': Math.abs(noteDiffTime + ClientPrefs.data.ratingOffset);
+			case 'Simple' | _: noteDiffTime;
+		}
+	}
+
 	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = PlayState.getKeyFromEvent(keysArray, eventKey);
@@ -567,10 +576,11 @@ class EditorPlayState extends MusicBeatSubstate {
 		for (key in keysArray) holdArray.push(controls.pressed(key));
 
 		if (notes.length != 0) {
-			final sustains:Array<Note> = notes.members.filter((n: Note) -> return n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit);
+			final sustains:Array<Note> = notes.members.filter((n:Note) -> return n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit);
 			for (sustainNote in sustains) {
-                final released:Bool = !holdArray[sustainNote.noteData];
-                if (!released) goodNoteHit(sustainNote);
+				var hit:Bool = true;
+				if (guitarHeroSustains) hit = sustainNote.parent != null && sustainNote.parent.wasGoodHit;
+				if (hit && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
 			}
 		}
 	}
@@ -615,6 +625,35 @@ class EditorPlayState extends MusicBeatSubstate {
 			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1)
 				invalidateNote(daNote);
 		});
+
+		if (daNote != null && guitarHeroSustains && daNote.parent == null) {
+			if(daNote.tail.length != 0) {
+				daNote.alpha = 0.35;
+				for(childNote in daNote.tail) {
+					childNote.alpha = daNote.alpha;
+					childNote.missed = true;
+					childNote.canBeHit = false;
+					childNote.ignoreNote = true;
+					childNote.tooLate = true;
+				}
+				daNote.missed = true;
+				daNote.canBeHit = false;
+			}
+			if (daNote.missed) return;
+		}
+
+		if (daNote != null && guitarHeroSustains && daNote.parent != null && daNote.isSustainNote) {
+			if (daNote.missed) return; 
+			var parentNote:Note = daNote.parent;
+			if (parentNote.wasGoodHit && parentNote.tail.length != 0) {
+				for (child in parentNote.tail) if (child != daNote) {
+					child.missed = true;
+					child.canBeHit = false;
+					child.ignoreNote = true;
+					child.tooLate = true;
+				}
+			}
+		}
 
 		// score and data
 		songMisses++;

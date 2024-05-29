@@ -1578,7 +1578,16 @@ class ChartingState extends MusicBeatState {
 				playtestingTime = Conductor.songPosition;
 				playtestingOnComplete = FlxG.sound.music.onComplete;
 				openSubState(new EditorPlayState(playbackSpeed));
-			} else if (FlxG.keys.justPressed.ENTER) startSong();
+			} else if (FlxG.keys.justPressed.ENTER) {
+				autosaveSong();
+				FlxG.mouse.visible = false;
+				PlayState.SONG = _song;
+				FlxG.sound.music.stop();
+				if(vocals != null) vocals.stop();
+		
+				data.StageData.loadDirectory(_song);
+				LoadingState.loadAndSwitchState(() -> new PlayState());
+			}
 
 			if(curSelectedNote != null && curSelectedNote[1] > -1) {
 				if (FlxG.keys.justPressed.E) changeNoteSustain(Conductor.stepCrochet);
@@ -1858,17 +1867,6 @@ class ChartingState extends MusicBeatState {
 		}
 		lastConductorPos = Conductor.songPosition;
 		super.update(elapsed);
-	}
-
-	function startSong() {
-		autosaveSong();
-		FlxG.mouse.visible = false;
-		PlayState.SONG = _song;
-		FlxG.sound.music.stop();
-		if(vocals != null) vocals.stop();
-
-		data.StageData.loadDirectory(_song);
-		LoadingState.loadAndSwitchState(() -> new PlayState(), true);
 	}
 
 	function pauseAndSetVocalsTime() {

@@ -36,10 +36,12 @@ class Note extends FlxSprite {
 	public var tooLate:Bool = false;
 
 	public var wasGoodHit:Bool = false;
+	public var missed:Bool = false;
 
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;
 	public var prevNote:Note;
+	public var nextNote:Note;
 
 	public var tail:Array<Note> = []; // for sustains
 	public var parent:Note;
@@ -180,6 +182,8 @@ class Note extends FlxSprite {
 		antialiasing = ClientPrefs.data.antialiasing;
 		if(createdFrom == null) createdFrom = PlayState.instance;
 
+		if (prevNote == null) prevNote = this;
+
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
 		this.inEditor = inEditor;
@@ -201,8 +205,8 @@ class Note extends FlxSprite {
 			if(!isSustainNote && noteData < EK.keys(PlayState.mania))
 				animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
 		}
-		
-		if (prevNote == null) prevNote = this;
+
+		if(prevNote != null) prevNote.nextNote = this;
 
 		if (isSustainNote && prevNote != null) {
 			alpha = .6;

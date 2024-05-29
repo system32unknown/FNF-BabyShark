@@ -36,7 +36,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.onChange = onChangeHitsoundVolume;
 
 		addOption(new Option('Update Cam Section', 'If checked, camera will always update,\nwhich makes the camera more precise.', 'updateCamSection', BOOL));
-		
+		addOption(new Option('New Sustain Behavior',"If checked, Hold Notes can't be pressed if you miss or don't hit their arrow note first,\nand count as a single Hit/Miss.\nUncheck this if you prefer the old Input System.", 'newSustainBehavior', BOOL));
+
 		var option:Option = new Option('Rating Offset', 'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.', 'ratingOffset', INT);
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 20;

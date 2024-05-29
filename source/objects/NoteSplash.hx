@@ -94,7 +94,7 @@ class NoteSplash extends FlxSprite {
 		if(animation.curAnim != null) animation.curAnim.frameRate = FlxG.random.int(minFps, maxFps);
 	}
 
-	public static function getSplashSkinPostfix() {
+	public static function getSplashSkinPostfix():String {
 		var skin:String = '';
 		if(ClientPrefs.data.splashSkin != ClientPrefs.defaultData.splashSkin)
 			skin = '-' + ClientPrefs.data.splashSkin.trim().toLowerCase().replace(' ', '_');
@@ -152,7 +152,7 @@ class NoteSplash extends FlxSprite {
 		return config;
 	}
 
-	function addAnimAndCheck(name:String, anim:String, ?framerate:Int = 24, ?loop:Bool = false) {
+	function addAnimAndCheck(name:String, anim:String, ?framerate:Int = 24, ?loop:Bool = false):Bool {
 		var animFrames = [];
 		@:privateAccess
 		animation.findByPrefix(animFrames, anim); // adds valid frames to animFrames

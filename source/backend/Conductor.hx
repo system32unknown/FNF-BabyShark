@@ -20,9 +20,9 @@ class Conductor {
 
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
 
-	public static function judgeNote(arr:Array<Rating>, diff:Float = 0):Rating {
+	public static function judgeNote(arr:Array<Rating>, diff:Float = 0, bot:Bool = false):Rating {
 		var data:Array<Rating> = arr;
-		if (PlayState.instance.cpuControlled) return data[0]; // botplay returns first rating
+		if (bot) return data[0]; // botplay returns first rating
 
 		for(i in 0...data.length - 1) //skips last window (Shit)
 			if (diff <= data[i].hitWindow) return data[i];
