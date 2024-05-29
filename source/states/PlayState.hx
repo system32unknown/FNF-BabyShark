@@ -2045,12 +2045,10 @@ class PlayState extends MusicBeatState {
 	}
 
 	function keysCheck():Void {
-		var holdArray:Array<Bool> = [];
-		for (key in keysArray) holdArray.push(controls.pressed(key));
+		var holdArray:Array<Bool> = [for (key in keysArray) controls.pressed(key)];
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
 			if (notes.length != 0) {
-				final sustains:Array<Note> = notes.members.filter((n:Note) -> return !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit);
-				for (sustainNote in sustains) {
+				for (sustainNote in notes.members.filter((n:Note) -> return !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit)) {
 					var hit:Bool = true;
 					if (newSustainBehavior) hit = sustainNote.parent != null && sustainNote.parent.wasGoodHit;
 					if (hit && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
