@@ -147,7 +147,6 @@ class PlayState extends MusicBeatState {
 	public var healthGain:Float = 1;
 	public var healthLoss:Float = 1;
 
-	public var newSustainBehavior:Bool = false;
 	public var instakillOnMiss:Bool = false;
 	public var cpuControlled:Bool = false;
 	public var practiceMode:Bool = false;
@@ -245,7 +244,6 @@ class PlayState extends MusicBeatState {
 		practiceMode = ClientPrefs.getGameplaySetting('practice');
 		cpuControlled = ClientPrefs.getGameplaySetting('botplay');
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed');
-		newSustainBehavior = ClientPrefs.data.newSustainBehavior;
 
 		camGame = initPsychCamera();
 		camHUD = new FlxCamera();
@@ -1860,7 +1858,7 @@ class PlayState extends MusicBeatState {
 	public var ratingAcc:FlxPoint = FlxPoint.get();
 	public var ratingVel:FlxPoint = FlxPoint.get();
 	function popUpScore(note:Note = null):Void {
-		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.data.ratingOffset) / playbackRate;
+		var noteDiff:Float = getNoteDiff(note) / playbackRate;
 		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff, cpuControlled);
 
 		totalNotesHit += switch (ClientPrefs.data.accuracyType) {
@@ -1974,6 +1972,14 @@ class PlayState extends MusicBeatState {
 		comboGroup.sort(CoolUtil.sortByID);
 	}
 
+	public static function getNoteDiff(note:Note = null):Float {
+		var noteDiffTime:Float = note.strumTime - Conductor.songPosition;
+		return switch(ClientPrefs.data.noteDiffTypes) {
+			case 'Psych': Math.abs(noteDiffTime + ClientPrefs.data.ratingOffset);
+			case 'Simple' | _: noteDiffTime;
+		}
+	}
+
 	var strumsBlocked:Array<Bool> = [];
 	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:FlxKey = event.keyCode;
@@ -2041,9 +2047,7 @@ class PlayState extends MusicBeatState {
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
 			if (notes.length != 0) {
 				for (sustainNote in notes.members.filter((n:Note) -> return !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit)) {
-					var hit:Bool = true;
-					if (newSustainBehavior) hit = sustainNote.parent != null && sustainNote.parent.wasGoodHit;
-					if (hit && sustainNote.isSustainNote && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
+					if (sustainNote.isSustainNote && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
 				}
 			}
 			if (!holdArray.contains(true) || endingSong) playerDance();
@@ -2068,37 +2072,6 @@ class PlayState extends MusicBeatState {
 	function noteMissCommon(direction:Int, note:Note = null) {
 		var subtract:Float = .05;
 		if(note != null) subtract = note.missHealth;
-		
-		if (note != null && newSustainBehavior && note.parent == null) {
-			if(note.tail.length != 0) {
-				note.alpha = .35;
-				for(childNote in note.tail) {
-					childNote.alpha = note.alpha;
-					childNote.missed = true;
-					childNote.canBeHit = false;
-					childNote.ignoreNote = true;
-					childNote.tooLate = true;
-				}
-				note.missed = true;
-				note.canBeHit = false;
-
-				subtract *= note.tail.length + 1;
-			}
-			if (note.missed) return;
-		}
-		if (note != null && newSustainBehavior && note.parent != null && note.isSustainNote) {
-			if (note.missed) return;
-
-			var parentNote:Note = note.parent;
-			if (parentNote.wasGoodHit && parentNote.tail.length != 0) {
-				for (child in parentNote.tail) if (child != note) {
-					child.missed = true;
-					child.canBeHit = false;
-					child.ignoreNote = true;
-					child.tooLate = true;
-				}
-			}
-		}
 
 		if(instakillOnMiss) doDeathCheck(true);
 		if(combo > maxCombo) maxCombo = combo;
@@ -2244,9 +2217,7 @@ class PlayState extends MusicBeatState {
 			combo++;
 			popUpScore(note);
 		}
-		var gainHealth:Bool = true; // prevent health gain, *if* sustains are treated as a singular note
-		if (newSustainBehavior && note.isSustainNote) gainHealth = false;
-		if (gainHealth) health += note.hitHealth * healthGain;
+		health += note.hitHealth * healthGain;
 
 		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHit', [note]);

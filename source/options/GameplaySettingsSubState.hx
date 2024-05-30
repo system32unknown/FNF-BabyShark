@@ -8,6 +8,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Downscroll', 'If checked, notes go Down instead of Up, simple enough.', 'downScroll', BOOL));
 		addOption(new Option('Middlescroll', 'If checked, your notes get centered.', 'middleScroll', BOOL));
 
+		addOption(new Option('Note Diff Type:', '', 'noteDiffTypes', STRING, ['Psych', 'Simple']));
 		addOption(new Option('Accuracy Type:', "The way accuracy is calculated. \nNote = Depending on if a note is hit or not.\nJudgement = Depending on Judgement.\nMillisecond = Depending on milliseconds.", 'accuracyType', STRING, ['Note', 'Judgement', 'Millisecond']));
 
 		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums', BOOL));
@@ -35,7 +36,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.onChange = onChangeHitsoundVolume;
 
 		addOption(new Option('Update Cam Section', 'If checked, camera will always update,\nwhich makes the camera more precise.', 'updateCamSection', BOOL));
-		addOption(new Option('New Sustain Behavior',"If checked, Hold Notes can't be pressed if you miss or don't hit their arrow note first,\nand count as a single Hit/Miss.\nUncheck this if you prefer the old Input System.", 'newSustainBehavior', BOOL));
 
 		var option:Option = new Option('Rating Offset', 'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.', 'ratingOffset', INT);
 		option.displayFormat = '%vms';

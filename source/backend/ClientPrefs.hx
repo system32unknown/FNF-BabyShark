@@ -55,6 +55,7 @@ import flixel.input.keyboard.FlxKey;
 	public var showComboCounter:Bool = false;
 	public var showNPS:Bool = false;
 	public var smoothHealth:Bool = false;
+	public var noteDiffTypes:String = "Simple";
 	public var accuracyType:String = 'Judgement';
 	public var showJudgement:Bool = true;
 	public var iconBounceType:String = 'Psych';
@@ -90,7 +91,6 @@ import flixel.input.keyboard.FlxKey;
 	public var goodWindow:Int = 90;
 	public var okWindow:Int = 135;
 	public var safeFrames:Float = 10;
-	public var newSustainBehavior:Bool = true;
 	public var discordRPC:Bool = false;
 	public var language:String = 'en-US';
 }

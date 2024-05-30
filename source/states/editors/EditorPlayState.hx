@@ -59,7 +59,6 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	var scoreTxt:FlxText;
 	var dataTxt:FlxText;
-	var guitarHeroSustains:Bool = false;
 
 	var msTimingTween:FlxTween;
 	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
@@ -85,7 +84,6 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		cachePopUpScore();
-		guitarHeroSustains = ClientPrefs.data.newSustainBehavior;
 		if(ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}');
 
 		/* setting up Editor PlayState stuff */
@@ -414,7 +412,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function popUpScore(note:Note = null):Void {
-		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.data.ratingOffset) / playbackRate;
+		var noteDiff:Float = PlayState.getNoteDiff(note) / playbackRate;
 		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
 
 		note.ratingMod = daRating.ratingMod;
@@ -566,11 +564,8 @@ class EditorPlayState extends MusicBeatSubstate {
 	function keysCheck():Void {
 		var holdArray:Array<Bool> = [for (key in keysArray) controls.pressed(key)];
 		if (notes.length != 0) {
-			final sustains:Array<Note> = notes.members.filter((n:Note) -> return n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit);
-			for (sustainNote in sustains) {
-				var hit:Bool = true;
-				if (guitarHeroSustains) hit = sustainNote.parent != null && sustainNote.parent.wasGoodHit;
-				if (hit && sustainNote.isSustainNote && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
+			for (sustainNote in notes.members.filter((n:Note) -> return n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit)) {
+				if (sustainNote.isSustainNote && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
 			}
 		}
 	}
@@ -611,35 +606,6 @@ class EditorPlayState extends MusicBeatSubstate {
 	
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		if (daNote.animation.curAnim.name.endsWith("end")) return;
-
-		if (daNote != null && guitarHeroSustains && daNote.parent == null) {
-			if(daNote.tail.length != 0) {
-				daNote.alpha = 0.35;
-				for(childNote in daNote.tail) {
-					childNote.alpha = daNote.alpha;
-					childNote.missed = true;
-					childNote.canBeHit = false;
-					childNote.ignoreNote = true;
-					childNote.tooLate = true;
-				}
-				daNote.missed = true;
-				daNote.canBeHit = false;
-			}
-			if (daNote.missed) return;
-		}
-
-		if (daNote != null && guitarHeroSustains && daNote.parent != null && daNote.isSustainNote) {
-			if (daNote.missed) return; 
-			var parentNote:Note = daNote.parent;
-			if (parentNote.wasGoodHit && parentNote.tail.length != 0) {
-				for (child in parentNote.tail) if (child != daNote) {
-					child.missed = true;
-					child.canBeHit = false;
-					child.ignoreNote = true;
-					child.tooLate = true;
-				}
-			}
-		}
 
 		// score and data
 		songMisses++;
