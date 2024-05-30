@@ -1860,7 +1860,7 @@ class PlayState extends MusicBeatState {
 	public var ratingAcc:FlxPoint = FlxPoint.get();
 	public var ratingVel:FlxPoint = FlxPoint.get();
 	function popUpScore(note:Note = null):Void {
-		var noteDiff:Float = getNoteDiff(note) / playbackRate;
+		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.data.ratingOffset) / playbackRate;
 		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff, cpuControlled);
 
 		totalNotesHit += switch (ClientPrefs.data.accuracyType) {
@@ -1974,14 +1974,6 @@ class PlayState extends MusicBeatState {
 		comboGroup.sort(CoolUtil.sortByID);
 	}
 
-	function getNoteDiff(note:Note = null):Float {
-		var noteDiffTime:Float = note.strumTime - Conductor.songPosition;
-		return switch(ClientPrefs.data.noteDiffTypes) {
-			case 'Psych': Math.abs(noteDiffTime + ClientPrefs.data.ratingOffset);
-			case 'Simple' | _: noteDiffTime;
-		}
-	}
-
 	var strumsBlocked:Array<Bool> = [];
 	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:FlxKey = event.keyCode;
@@ -2051,7 +2043,7 @@ class PlayState extends MusicBeatState {
 				for (sustainNote in notes.members.filter((n:Note) -> return !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit)) {
 					var hit:Bool = true;
 					if (newSustainBehavior) hit = sustainNote.parent != null && sustainNote.parent.wasGoodHit;
-					if (hit && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
+					if (hit && sustainNote.isSustainNote && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
 				}
 			}
 			if (!holdArray.contains(true) || endingSong) playerDance();

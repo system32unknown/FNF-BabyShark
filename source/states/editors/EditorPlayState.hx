@@ -265,7 +265,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		vocals = new FlxSound();
 		try {
 			if (songData.needsVoices) vocals.loadEmbedded(Paths.voices(songData.song));
-		} catch(e:Dynamic) Logs.trace('ERROR LOADING VOCALS: $e', ERROR);
+		} catch(e:Dynamic) Logs.trace('ERROR LOADING VOCALS ON LOAD: $e', ERROR);
 		vocals.volume = 0;
 
 		#if FLX_PITCH vocals.pitch = playbackRate; #end
@@ -358,7 +358,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			}
 
 			if (swagNote.mustPress) swagNote.x += FlxG.width / 2; // general offset
-			else if(ClientPrefs.data.middleScroll) {
+			else if(middleScroll) {
 				swagNote.x += 310;
 				if(noteDatas[i].id > EK.midArray[mania]) swagNote.x += FlxG.width / 2 + 25; //Up and Right
 			}
@@ -373,7 +373,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			var targetAlpha:Float = 1;
 			if (player < 1) {
 				if(!ClientPrefs.data.opponentStrums) targetAlpha = 0;
-				else if(ClientPrefs.data.middleScroll) targetAlpha = 0.35;
+				else if(middleScroll) targetAlpha = 0.35;
 			}
 
 			var babyArrow:StrumNote = new StrumNote(strumLine.x, strumLine.y, i, player);
@@ -414,7 +414,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function popUpScore(note:Note = null):Void {
-		var noteDiff:Float = getNoteDiff(note) / playbackRate;
+		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.data.ratingOffset) / playbackRate;
 		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
 
 		note.ratingMod = daRating.ratingMod;
@@ -518,14 +518,6 @@ class EditorPlayState extends MusicBeatSubstate {
 		comboGroup.sort(CoolUtil.sortByID);
 	}
 
-	function getNoteDiff(note:Note = null):Float {
-		var noteDiffTime:Float = note.strumTime - Conductor.songPosition;
-		return switch(ClientPrefs.data.noteDiffTypes) {
-			case 'Psych': Math.abs(noteDiffTime + ClientPrefs.data.ratingOffset);
-			case 'Simple' | _: noteDiffTime;
-		}
-	}
-
 	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:FlxKey = event.keyCode;
 		var key:Int = PlayState.getKeyFromEvent(keysArray, eventKey);
@@ -572,15 +564,13 @@ class EditorPlayState extends MusicBeatSubstate {
 	
 	// Hold notes
 	function keysCheck():Void {
-		var holdArray:Array<Bool> = []; // HOLDING
-		for (key in keysArray) holdArray.push(controls.pressed(key));
-
+		var holdArray:Array<Bool> = [for (key in keysArray) controls.pressed(key)];
 		if (notes.length != 0) {
 			final sustains:Array<Note> = notes.members.filter((n:Note) -> return n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit);
 			for (sustainNote in sustains) {
 				var hit:Bool = true;
 				if (guitarHeroSustains) hit = sustainNote.parent != null && sustainNote.parent.wasGoodHit;
-				if (hit && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
+				if (hit && sustainNote.isSustainNote && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
 			}
 		}
 	}
@@ -620,11 +610,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 	
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
-		//Dupe note remove
-		notes.forEachAlive(function(note:Note) {
-			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1)
-				invalidateNote(daNote);
-		});
+		if (daNote.animation.curAnim.name.endsWith("end")) return;
 
 		if (daNote != null && guitarHeroSustains && daNote.parent == null) {
 			if(daNote.tail.length != 0) {
