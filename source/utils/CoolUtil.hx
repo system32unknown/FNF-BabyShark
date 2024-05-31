@@ -2,16 +2,9 @@ package utils;
 
 import flixel.FlxBasic;
 import flixel.addons.display.FlxBackdrop;
-import openfl.net.FileReference;
 
 class CoolUtil {
-	public static function saveFile(content:String, format:String, filedefault:String, save:Bool = true) {
-		var fileRef:FileReference = new FileReference();
-		if (save) fileRef.save(content, '$filedefault.$format');
-		else fileRef.load();
-	}
-
-	inline public static function capitalize(text:String) {
+	inline public static function capitalize(text:String):String {
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
 	}
 
@@ -85,12 +78,12 @@ class CoolUtil {
         return FlxColor.WHITE;
     }
 
-	inline public static function colorFromArray(colors:Array<Int>, ?defColors:Array<Int>) {
+	inline public static function colorFromArray(colors:Array<Int>, ?defColors:Array<Int>):FlxColor {
 		colors = fixRGBColorArray(colors, defColors);
 		return FlxColor.fromRGB(colors[0], colors[1], colors[2], colors[3]);
 	}
 
-	inline public static function fixRGBColorArray(colors:Array<Int>, ?defColors:Array<Int>) {
+	inline public static function fixRGBColorArray(colors:Array<Int>, ?defColors:Array<Int>):Array<Int> {
 		// helper function used on characters n such
 		final endResult:Array<Int> = (defColors != null && defColors.length > 2) ? defColors : [255, 255, 255, 255]; // Red, Green, Blue, Alpha
 		for (i in 0...endResult.length) if (colors[i] > -1) endResult[i] = colors[i];
@@ -112,17 +105,32 @@ class CoolUtil {
 	}
 
 	// formatTime but epic
-	public static function formatTime(time:Float):String {
+	public static function formatTime(time:Float, precision:Int = 0):String {
 		var secs:String = '' + Math.floor(time) % 60;
 		var mins:String = '' + Math.floor(time / 60) % 60;
 		var hour:String = '' + Math.floor(time / 3600) % 24;
+		var days:String = '' + Math.floor(time / 86400) % 7;
+		var weeks:String = '' + Math.floor(time / (86400 * 7));
 
 		if (secs.length < 2) secs = '0$secs';
 
 		var formattedtime:String = '$mins:$secs';
-		if (hour != "0") {
+		if (hour != "0" && days == '0') {
 			if (mins.length < 2) mins = '0$mins';
 			formattedtime = '$hour:$mins:$secs';
+		}
+
+		if (days != "0" && weeks == '0') formattedtime = days + 'd ' + hour + 'h ' + mins + "m " + secs + 's';
+		if (weeks != "0") formattedtime = weeks + 'w ' + days + 'd ' + hour + 'h ' + mins + "m " + secs + 's';
+
+		if (precision > 0) {
+			var secondsForMS:Float = time % 60;
+			var seconds:Int = Std.int((secondsForMS - Std.int(secondsForMS)) * Math.pow(10, precision));
+			formattedtime += ".";
+			if (precision > 1 && Std.string(seconds).length < precision) {
+				for (_ in 0...precision - Std.string(seconds).length) formattedtime += '0';
+			}
+			formattedtime += seconds;
 		}
 		return formattedtime;
 	}

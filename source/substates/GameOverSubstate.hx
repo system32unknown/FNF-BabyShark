@@ -39,8 +39,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		Paths.music(loopSoundName);
 		Paths.music(endSoundName);
 
-		if (PlayState.instance != null)
-			PlayState.instance.gameOverChar = new Character(0, 0, characterName, true);
+		if (PlayState.instance != null) PlayState.instance.gameOverChar = new Character(0, 0, characterName, true);
 	}
 
 	override function create() {
@@ -113,7 +112,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 			PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
 		}
 
-		if (boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name == 'firstDeath' && boyfriend.animation.curAnim.curFrame >= 12 && !moveCamera) {
+		if (!boyfriend.isAnimationNull() && boyfriend.getAnimationName() == 'firstDeath' && (!boyfriend.isAnimateAtlas && boyfriend.animation.curAnim.curFrame >= 12 || boyfriend.isAnimateAtlas && boyfriend.atlas.anim.curFrame >= 12) && !moveCamera) {
 			FlxG.camera.follow(camFollow, LOCKON, .01);
 			moveCamera = true;
 		}

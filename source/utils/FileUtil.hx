@@ -3,6 +3,7 @@ package utils;
 import lime.utils.Bytes;
 import lime.ui.FileDialog;
 import openfl.net.FileFilter;
+import openfl.net.FileReference;
 
 class FileUtil {
 	public static function saveFile(data:Bytes, ?typeFilter:Array<FileFilter>, ?onSave:String->Void, ?onCancel:Void->Void, ?defaultFileName:String, ?dialogTitle:String):Bool {
@@ -16,6 +17,12 @@ class FileUtil {
         onCancel();
         return false;
         #end
+	}
+
+	public static function saveFileRef(content:String, format:String, filedefault:String, save:Bool = true) {
+		var fileRef:FileReference = new FileReference();
+		if (save) fileRef.save(content, '$filedefault.$format');
+		else fileRef.load();
 	}
 
     public static function browseForSaveFile(?typeFilter:Array<FileFilter>, ?onSelect:String->Void, ?onCancel:Void->Void, ?defaultPath:String, ?dialogTitle:String):Bool {

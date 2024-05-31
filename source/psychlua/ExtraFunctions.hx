@@ -156,7 +156,7 @@ class ExtraFunctions {
 			#end
 			return list;
 		});
-		funk.set("promptFile", CoolUtil.saveFile);
+		funk.set("promptFile", utils.FileUtil.saveFileRef);
 
 		funk.set("parseJson", (location:String) -> {
 			var parsed:{} = {};
