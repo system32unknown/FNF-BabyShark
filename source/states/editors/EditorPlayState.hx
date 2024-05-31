@@ -70,6 +70,9 @@ class EditorPlayState extends MusicBeatSubstate {
 	var nps:Int = 0;
 	var maxNPS:Int = 0;
 
+	var botplayTxt:FlxText;
+	var cpuControlled:Bool = false;
+
 	public function new(playbackRate:Float) {
 		super();
 		
@@ -133,7 +136,13 @@ class EditorPlayState extends MusicBeatSubstate {
 		dataTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		dataTxt.scrollFactor.set();
 		dataTxt.borderSize = 1.25;
-		add(dataTxt);
+		add(dataTxt); dataTxt.updateHitbox();
+
+		botplayTxt = new FlxText(10, dataTxt.y - dataTxt.height, FlxG.width - 20, "Botplay: OFF", 20);
+		botplayTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		botplayTxt.scrollFactor.set();
+		botplayTxt.borderSize = 1.25;
+		add(botplayTxt);
 
 		var tipText:FlxText = new FlxText(10, FlxG.height - 24, 0, 'Press ESC to Go Back to Chart Editor', 16);
 		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
@@ -160,6 +169,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			super.update(elapsed);
 			return;
 		}
+		if (FlxG.keys.justPressed.SIX) cpuControlled = !cpuControlled;
 		
 		if (startingSong) {
 			timerToStart -= elapsed * 1000;
@@ -179,13 +189,15 @@ class EditorPlayState extends MusicBeatSubstate {
 			}
 		}
 
-		keysCheck();
+		if (!cpuControlled) keysCheck();
 		if(notes.length > 0) {
 			notes.forEachAlive((daNote:Note) -> {
 				var strum:StrumNote = (daNote.mustPress ? playerStrums : opponentStrums).members[daNote.noteData];
 				daNote.followStrumNote(strum, songSpeed / playbackRate);
 
-				if(!daNote.mustPress && daNote.wasGoodHit && !daNote.hitByOpponent && !daNote.ignoreNote) opponentNoteHit(daNote);
+				if(daNote.mustPress) {
+					if(cpuControlled && !daNote.blockHit && daNote.canBeHit && ((daNote.isSustainNote && daNote.prevNote.wasGoodHit) || daNote.strumTime <= Conductor.songPosition)) goodNoteHit(daNote);
+				} else if (daNote.wasGoodHit && !daNote.hitByOpponent && !daNote.ignoreNote) opponentNoteHit(daNote);
 				if(daNote.isSustainNote && strum.sustainReduce) daNote.clipToStrumNote(strum);
 
 				// Kill extremely late notes and cause misses
@@ -210,6 +222,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 		var time:Float = MathUtil.floorDecimal((Conductor.songPosition - ClientPrefs.data.noteOffset) / 1000, 1);
 		dataTxt.text = 'Time: $time / ${songLength / 1000}\nSection:$curSection\nBeat:$curBeat\nStep:$curStep';
+		botplayTxt.text = 'Botplay: ' + (cpuControlled ? 'ON' : 'OFF');
 		super.update(elapsed);
 	}
 	
@@ -218,7 +231,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (PlayState.SONG.needsVoices && FlxG.sound.music.time >= -ClientPrefs.data.noteOffset) {
 			var timeSub:Float = Conductor.songPosition - Conductor.offset;
 			var syncTime:Float = 20 * playbackRate;
-			if (Math.abs(FlxG.sound.music.time - timeSub) > syncTime || (vocals.length > 0 && Math.abs(vocals.time - timeSub) > syncTime))  resyncVocals();
+			if (Math.abs(FlxG.sound.music.time - timeSub) > syncTime || (vocals.length > 0 && Math.abs(vocals.time - timeSub) > syncTime)) resyncVocals();
 		}
 		super.stepHit();
 
@@ -236,9 +249,8 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 	
 	override function sectionHit() {
-		if (PlayState.SONG.notes[curSection] != null) {
-			if (PlayState.SONG.notes[curSection].changeBPM) Conductor.bpm = PlayState.SONG.notes[curSection].bpm;
-		}
+		if (PlayState.SONG.notes[curSection] != null && PlayState.SONG.notes[curSection].changeBPM)
+			Conductor.bpm = PlayState.SONG.notes[curSection].bpm;
 		super.sectionHit();
 	}
 
@@ -538,7 +550,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function keyPressed(key:Int) {
-		if(key < 0 || key > playerStrums.length) return;
+		if(cpuControlled || key < 0 || key > playerStrums.length) return;
 
 		// more accurate hit time for the ratings?
 		var lastTime:Float = Conductor.songPosition;
@@ -568,6 +580,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function keyReleased(key:Int) {
+		if(cpuControlled || key < 0 || key > playerStrums.length) return;
 		var spr:StrumNote = playerStrums.members[key];
 		if(spr != null) {
 			spr.playAnim('static');
@@ -609,11 +622,12 @@ class EditorPlayState extends MusicBeatSubstate {
 		}
 
 		if (!note.isSustainNote) {
+			notesHitArray.push(Date.now());
 			combo++;
 			popUpScore(note);
 		}
 
-        strumPlayAnim(false, note.noteData % EK.keys(mania));
+		strumPlayAnim(false, note.noteData % EK.keys(mania), cpuControlled ? Conductor.stepCrochet * 1.25 / 1000 : 0);
 		vocals.volume = 1;
 
 		if (!note.isSustainNote) invalidateNote(note);
@@ -622,8 +636,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		if (daNote.animation.curAnim.name.endsWith("end")) return;
 
-		// score and data
-		songMisses++;
+		songMisses++; // score and data
 		totalPlayed++;
 		RecalculateRating();
 		vocals.volume = 0;
@@ -663,7 +676,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		vocals.play();
 	}
 
-	function RecalculateRating() {
+	function RecalculateRating():Void {
 		if(totalPlayed != 0) ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
 		fullComboUpdate();
 		if(!ClientPrefs.data.showNPS) updateScore(); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
@@ -671,11 +684,8 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	function updateScore() {
 		var str:String = '?';
-		if(totalPlayed != 0) {
-			var percent:Float = MathUtil.floorDecimal(ratingPercent * 100, 2);
-			str = '$percent% - $ratingFC';
-		}
-		scoreTxt.text = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps, maxNPS])}' + 'Hits: $songHits | Misses: $songMisses | Rating: $str';
+		if(totalPlayed != 0) str = '${MathUtil.floorDecimal(ratingPercent * 100, 2)}% • $ratingFC';
+		scoreTxt.text = '${!ClientPrefs.data.showNPS ? '' : 'NPS:$nps/$maxNPS | '}' + 'Hits:$songHits | Breaks:$songMisses | Acc:$str';
 	}
 	
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {

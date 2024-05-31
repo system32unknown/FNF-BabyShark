@@ -1871,7 +1871,6 @@ class PlayState extends MusicBeatState {
 		note.rating = daRating.name;
 		var score:Int = daRating.score;
 
-
 		if(daRating.noteSplash && !note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
 
 		songScore += score;
@@ -2249,7 +2248,6 @@ class PlayState extends MusicBeatState {
 		for (char in [gf, boyfriend, dad]) {
 			if (char == null) continue;
 			var speed:Int = (gf != null && char == gf) ? gfSpeed : 1;
-			
 			if ((char.isAnimationNull() || !char.getAnimationName().startsWith('sing')) && !char.stunned && beat % Math.round(speed * char.danceEveryNumBeats) == 0)
 				char.dance(force);
 		}
