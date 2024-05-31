@@ -66,6 +66,10 @@ class EditorPlayState extends MusicBeatSubstate {
 	var downScroll:Bool = ClientPrefs.data.downScroll;
 	var middleScroll:Bool = ClientPrefs.data.middleScroll;
 
+	var notesHitArray:Array<Date> = [];
+	var nps:Int = 0;
+	var maxNPS:Int = 0;
+
 	public function new(playbackRate:Float) {
 		super();
 		
@@ -193,6 +197,17 @@ class EditorPlayState extends MusicBeatSubstate {
 			});
 		}
 		
+		if (ClientPrefs.data.showNPS) {
+			for(i in 0...notesHitArray.length) {
+				var curNPS:Date = notesHitArray[i];
+				if (curNPS != null && curNPS.getTime() + (1000 / playbackRate) < Date.now().getTime())
+					notesHitArray.remove(curNPS);
+			}
+			nps = Math.floor(notesHitArray.length);
+			if (nps > maxNPS) maxNPS = nps;
+			updateScore();
+		}
+
 		var time:Float = MathUtil.floorDecimal((Conductor.songPosition - ClientPrefs.data.noteOffset) / 1000, 1);
 		dataTxt.text = 'Time: $time / ${songLength / 1000}\nSection:$curSection\nBeat:$curBeat\nStep:$curStep';
 		super.update(elapsed);
@@ -651,7 +666,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	function RecalculateRating() {
 		if(totalPlayed != 0) ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
 		fullComboUpdate();
-		updateScore(); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
+		if(!ClientPrefs.data.showNPS) updateScore(); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
 	}
 
 	function updateScore() {
@@ -660,7 +675,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			var percent:Float = MathUtil.floorDecimal(ratingPercent * 100, 2);
 			str = '$percent% - $ratingFC';
 		}
-		scoreTxt.text = 'Hits: $songHits | Misses: $songMisses | Rating: $str';
+		scoreTxt.text = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps, maxNPS])}' + 'Hits: $songHits | Misses: $songMisses | Rating: $str';
 	}
 	
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {
