@@ -5,7 +5,6 @@ import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
 import openfl.text.TextFormat;
 import openfl.events.KeyboardEvent;
-import utils.system.FPSUtil;
 
 class Framerate extends openfl.display.Sprite {
 	public static var instance:Framerate;
@@ -66,7 +65,7 @@ class Framerate extends openfl.display.Sprite {
 
 	var debugAlpha:Float = 0;
 	public override function __enterFrame(t:Int) {
-		debugAlpha = FPSUtil.fpsLerp(debugAlpha, debugMode ? 1 : 0, .5);
+		debugAlpha = utils.system.FPSUtil.fpsLerp(debugAlpha, debugMode ? 1 : 0, .5);
 		super.__enterFrame(t);
 		bgSprite.alpha = debugAlpha * 0.5;
 

@@ -8,7 +8,6 @@ import utils.MathUtil;
 
 import flixel.FlxBasic;
 import flixel.util.FlxSort;
-import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
 
 class EditorPlayState extends MusicBeatSubstate {
@@ -72,6 +71,9 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	var botplayTxt:FlxText;
 	var cpuControlled:Bool = false;
+	
+	var timeTxt:FlxText;
+	var showTime:Bool = true;
 
 	public function new(playbackRate:Float) {
 		super();
@@ -110,6 +112,15 @@ class EditorPlayState extends MusicBeatSubstate {
 		comboGroup.ID = 0;
 		noteGroup = new FlxTypedGroup<FlxBasic>();
 		
+		timeTxt = new FlxText(0, 19, 400, "", 32);
+		timeTxt.screenCenter(X);
+		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		timeTxt.scrollFactor.set();
+		timeTxt.visible = showTime;
+		if(downScroll) timeTxt.y = FlxG.height - 35;
+		add(timeTxt);
+
 		add(comboGroup);
 		add(noteGroup);
 		noteGroup.add(strumLineNotes);
@@ -125,8 +136,8 @@ class EditorPlayState extends MusicBeatSubstate {
 		generateStaticArrows(0);
 		generateStaticArrows(1);
 		
-		scoreTxt = new FlxText(10, FlxG.height - 50, FlxG.width - 20, "", 20);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		scoreTxt = new FlxText(10, FlxG.height - 54, FlxG.width - 20, "", 16);
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.data.hideHud;
@@ -176,6 +187,8 @@ class EditorPlayState extends MusicBeatSubstate {
 			Conductor.songPosition = startPos - timerToStart;
 			if(timerToStart < 0) startSong();
 		} else Conductor.songPosition += elapsed * 1000 * playbackRate;
+
+		if (showTime) timeTxt.text = CoolUtil.formatTime(Math.floor(Math.max(0, (Math.max(0, Conductor.songPosition - ClientPrefs.data.noteOffset) / playbackRate) / 1000))) + " / " + CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000));	
 
 		if (unspawnNotes[0] != null) {
 			var time:Float = spawnTime * playbackRate;
@@ -544,7 +557,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function onKeyPress(event:KeyboardEvent):Void {
-		var eventKey:FlxKey = event.keyCode;
+		var eventKey:flixel.input.keyboard.FlxKey = event.keyCode;
 		var key:Int = PlayState.getKeyFromEvent(keysArray, eventKey);
 		if(FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(key);
 	}
@@ -552,8 +565,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	function keyPressed(key:Int) {
 		if(cpuControlled || key < 0 || key > playerStrums.length) return;
 
-		// more accurate hit time for the ratings?
-		var lastTime:Float = Conductor.songPosition;
+		var lastTime:Float = Conductor.songPosition; // more accurate hit time for the ratings?
 		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time;
 
 		// obtain notes that the player can hit
@@ -574,13 +586,13 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function onKeyRelease(event:KeyboardEvent):Void {
-		var eventKey:FlxKey = event.keyCode;
-		var key:Int = PlayState.getKeyFromEvent(keysArray, eventKey);
+		var key:Int = PlayState.getKeyFromEvent(keysArray, event.keyCode);
 		if(key > -1) keyReleased(key);
 	}
 
 	function keyReleased(key:Int) {
 		if(cpuControlled || key < 0 || key > playerStrums.length) return;
+
 		var spr:StrumNote = playerStrums.members[key];
 		if(spr != null) {
 			spr.playAnim('static');
@@ -672,7 +684,6 @@ class EditorPlayState extends MusicBeatSubstate {
 			vocals.time = Conductor.songPosition;
 			#if FLX_PITCH vocals.pitch = playbackRate; #end
 		}
-
 		vocals.play();
 	}
 

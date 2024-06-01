@@ -40,8 +40,8 @@ class FramerateCategory extends openfl.display.Sprite {
 		if (alpha <= .05) return;
 		super.__enterFrame(t);
 
-		var width = Math.max(this.title.width, this.text.width) + (Framerate.instance.x * 2);
-		var height = this.text.height + this.text.y;
+		var width:Float = Math.max(this.title.width, this.text.width) + (Framerate.instance.x * 2);
+		var height:Float = this.text.height + this.text.y;
 		bgSprite.x = -Framerate.instance.x;
 		bgSprite.scaleX = width;
 		bgSprite.scaleY = height;
