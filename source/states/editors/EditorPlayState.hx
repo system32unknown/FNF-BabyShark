@@ -69,7 +69,6 @@ class EditorPlayState extends MusicBeatSubstate {
 	var nps:Int = 0;
 	var maxNPS:Int = 0;
 
-	var botplayTxt:FlxText;
 	var cpuControlled:Bool = false;
 	
 	var timeTxt:FlxText;
@@ -112,13 +111,12 @@ class EditorPlayState extends MusicBeatSubstate {
 		comboGroup.ID = 0;
 		noteGroup = new FlxTypedGroup<FlxBasic>();
 		
-		timeTxt = new FlxText(0, 19, 400, "", 32);
-		timeTxt.screenCenter(X);
+		timeTxt = new FlxText(PlayState.STRUM_X + (FlxG.width / 2) - 248, 19, 400, "", 32);
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.visible = showTime;
-		if(downScroll) timeTxt.y = FlxG.height - 35;
+		if(downScroll) timeTxt.y = FlxG.height - 44;
 		add(timeTxt);
 
 		add(comboGroup);
@@ -136,7 +134,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		generateStaticArrows(0);
 		generateStaticArrows(1);
 		
-		scoreTxt = new FlxText(10, FlxG.height - 54, FlxG.width - 20, "", 16);
+		scoreTxt = new FlxText(10, FlxG.height - 35, FlxG.width - 20, "", 16);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.25;
@@ -148,12 +146,6 @@ class EditorPlayState extends MusicBeatSubstate {
 		dataTxt.scrollFactor.set();
 		dataTxt.borderSize = 1.25;
 		add(dataTxt); dataTxt.updateHitbox();
-
-		botplayTxt = new FlxText(10, dataTxt.y - dataTxt.height, FlxG.width - 20, "Botplay: OFF", 20);
-		botplayTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-		botplayTxt.scrollFactor.set();
-		botplayTxt.borderSize = 1.25;
-		add(botplayTxt);
 
 		var tipText:FlxText = new FlxText(10, FlxG.height - 24, 0, 'Press ESC to Go Back to Chart Editor', 16);
 		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
@@ -203,7 +195,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		}
 
 		if (!cpuControlled) keysCheck();
-		if(notes.length > 0) {
+		if(notes.length != 0) {
 			notes.forEachAlive((daNote:Note) -> {
 				var strum:StrumNote = (daNote.mustPress ? playerStrums : opponentStrums).members[daNote.noteData];
 				daNote.followStrumNote(strum, songSpeed / playbackRate);
@@ -225,17 +217,14 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (ClientPrefs.data.showNPS) {
 			for(i in 0...notesHitArray.length) {
 				var curNPS:Date = notesHitArray[i];
-				if (curNPS != null && curNPS.getTime() + (1000 / playbackRate) < Date.now().getTime())
-					notesHitArray.remove(curNPS);
+				if (curNPS != null && curNPS.getTime() + (1000 / playbackRate) < Date.now().getTime()) notesHitArray.remove(curNPS);
 			}
 			nps = Math.floor(notesHitArray.length);
 			if (nps > maxNPS) maxNPS = nps;
 			updateScore();
 		}
 
-		var time:Float = MathUtil.floorDecimal((Conductor.songPosition - ClientPrefs.data.noteOffset) / 1000, 1);
-		dataTxt.text = 'Time: $time / ${songLength / 1000}\nSection:$curSection\nBeat:$curBeat\nStep:$curStep';
-		botplayTxt.text = 'Botplay: ' + (cpuControlled ? 'ON' : 'OFF');
+		dataTxt.text = 'Section:$curSection\nBeat:$curBeat\nStep:$curStep\nBot:${(cpuControlled ? 'ON' : 'OFF')}';
 		super.update(elapsed);
 	}
 	

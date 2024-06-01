@@ -1255,8 +1255,7 @@ class PlayState extends MusicBeatState {
 		if (ClientPrefs.data.showNPS) {
 			for(i in 0...notesHitArray.length) {
 				var curNPS:Date = notesHitArray[i];
-				if (curNPS != null && curNPS.getTime() + (1000 / playbackRate) < Date.now().getTime())
-					notesHitArray.remove(curNPS);
+				if (curNPS != null && curNPS.getTime() + (1000 / playbackRate) < Date.now().getTime()) notesHitArray.remove(curNPS);
 			}
 			nps = Math.floor(notesHitArray.length);
 			if (nps > maxNPS) maxNPS = nps;
