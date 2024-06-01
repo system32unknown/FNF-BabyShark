@@ -290,17 +290,19 @@ class ChartingState extends MusicBeatState {
 		helpBg.active = helpBg.visible = false;
 		add(helpBg);
 
-		var arr = "W/S or Mouse Wheel - Change Conductor's strum time
+		var arr:Array<String> = "W/S or Mouse Wheel - Change Conductor's strum time
 		\nH - Go to the start of the chart
 		\nA/D - Go to the previous/next section
 		\nLeft/Right - Change Snap
 		\nUp/Down - Change Conductor's Strum Time with Snapping
 		\nBrackets - Change Song Playback Rate (SHIFT to go Faster)
-		\nAlt + Brackets - Reset Song Playback Rate
+		\nALT + Brackets - Reset Song Playback Rate
 		\nHold Shift - Move 4x faster Conductor's strum time
 		\nHold Control + click on an arrow - Select it
 		\nZ/X - Zoom in/out
+		\n
 		\nHold Right Mouse - Placing Notes by dragging mouse
+		\nEsc - Test your chart inside Chart Editor
 		\nEnter - Play your chart
 		\nQ/E - Decrease/Increase Note Sustain Length
 		\nSpace - Stop/Resume song

@@ -95,11 +95,12 @@ class EditorPlayState extends MusicBeatSubstate {
 		if(ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}');
 
 		/* setting up Editor PlayState stuff */
-		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, 0xFF101010);
+		bg.scale.set(FlxG.width, FlxG.height);
+		bg.updateHitbox();
 		bg.scrollFactor.set();
-		bg.color = 0xFF101010;
 		bg.alpha = 0.9;
+		bg.active = false;
 		add(bg);
 		
 		/**** NOTES ****/
@@ -421,7 +422,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	public function finishSong():Void {
 		if(ClientPrefs.data.noteOffset <= 0) endSong();
-		else FlxTimer.wait(ClientPrefs.data.noteOffset / 1000, () -> endSong());
+		else finishTimer = FlxTimer.wait(ClientPrefs.data.noteOffset / 1000, () -> endSong());
 	}
 
 	public function endSong() {
@@ -442,7 +443,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	function popUpScore(note:Note = null):Void {
 		var noteDiff:Float = PlayState.getNoteDiff(note) / playbackRate;
-		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff);
+		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff, cpuControlled);
 
 		note.ratingMod = daRating.ratingMod;
 		note.rating = daRating.name;
@@ -466,7 +467,6 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (!ClientPrefs.data.comboStacking) comboGroup.forEachAlive((spr:FlxSprite) -> FlxTween.globalManager.completeTweensOf(spr));
 
 		final placement:Float = FlxG.width * .35;
-
 		var antialias:Bool = ClientPrefs.data.antialiasing;
         final mult:Float = .7;
 

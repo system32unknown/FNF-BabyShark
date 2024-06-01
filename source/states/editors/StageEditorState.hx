@@ -1294,7 +1294,7 @@ class StageEditorState extends MusicBeatState {
 				focusPoint.add(dad.getMidpoint().x + dad.cameraPosition[0] + 150, dad.getMidpoint().y + dad.cameraPosition[1] - 100);
 				if(stageJson.camera_opponent != null && stageJson.camera_opponent.length > 1) focusPoint.add(stageJson.camera_opponent[0], stageJson.camera_opponent[1]);
 			case 'gf':
-				if(gf.visible) focusPoint.add(gf.getMidpoint().x + gf.cameraPosition[0], gf.getMidpoint().x + gf.cameraPosition[1]);
+				if(gf.visible) focusPoint.add(gf.getMidpoint().x + gf.cameraPosition[0], gf.getMidpoint().y + gf.cameraPosition[1]);
 				if(stageJson.camera_girlfriend != null && stageJson.camera_girlfriend.length > 1) focusPoint.add(stageJson.camera_girlfriend[0], stageJson.camera_girlfriend[1]);
 		}
 		return focusPoint;
@@ -1329,11 +1329,9 @@ class StageEditorState extends MusicBeatState {
 	}
 
 	// save
-
 	function saveObjectsToJson() {
 		stageJson.objects = [];
-		for (basic in stageSprites)
-			stageJson.objects.push(basic.formatToJson());
+		for (basic in stageSprites) stageJson.objects.push(basic.formatToJson());
 	}
 
 	function saveData() {

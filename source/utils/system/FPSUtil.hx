@@ -2,7 +2,7 @@ package utils.system;
 
 class FPSUtil {
     @:noCompletion var times:Array<Float>;
-	@:noCompletion public var curCount(default, null):Float;
+	@:noCompletion var curCount(default, null):Int;
 
     public var totalFPS(default, null):Float;
 	public var curFPS(default, null):Float;
@@ -38,6 +38,6 @@ class FPSUtil {
 	}
 
 	inline public static function fpsLerp(a:Float, b:Float, ratio:Float):Float
-		return FlxMath.lerp(a, b, getFPSAdjust('codename', ratio));
+		return FlxMath.lerp(b, a, getFPSAdjust('codename', ratio));
 	public function checkFPSLag():Bool return curFPS < FlxG.drawFramerate * .5;
 }

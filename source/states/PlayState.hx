@@ -626,8 +626,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function startCharacterScripts(name:String) {
-		// Lua
-		#if LUA_ALLOWED
+		#if LUA_ALLOWED // Lua
 		var doPush:Bool = false;
 		var luaFile:String = 'characters/$name.lua';
 		#if MODS_ALLOWED
@@ -653,8 +652,7 @@ class PlayState extends MusicBeatState {
 		}
 		#end
 
-		// HScript
-		#if HSCRIPT_ALLOWED
+		#if HSCRIPT_ALLOWED // HScript
 		var doPush:Bool = false;
 		var scriptFile:String = 'characters/$name.hx';
 		#if MODS_ALLOWED

@@ -48,7 +48,6 @@ class TitleState extends MusicBeatState {
 		if(ClientPrefs.data.checkForUpdates && !skippedIntro) {
 			trace('checking for update');
 			var http = new haxe.Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/gitVersion.txt");
-
 			http.onData = (data:String) -> {
 				updateVersion = data.split('\n')[0].trim();
 				final curVersion:String = Main.engineVer.version.trim();
@@ -58,7 +57,6 @@ class TitleState extends MusicBeatState {
 					mustUpdate = true;
 				}
 			}
-
 			http.onError = (error:String) -> Logs.trace('error: $error', ERROR);
 			http.request();
 		}
