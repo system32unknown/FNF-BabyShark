@@ -66,7 +66,6 @@ import flixel.input.keyboard.FlxKey;
 	public var timeBarType:String = 'Name Time Position';
 	public var altDiscordImg:Bool = false;
 	public var altDiscordImgCount:Int = 0;
-	public var updateCamSection:Bool = false;
 	public var autoPausePlayState:Bool = true;
 	public var hitsoundTypes:String = 'Tick';
 	public var checkForUpdates:Bool = true;

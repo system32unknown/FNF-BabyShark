@@ -5,8 +5,8 @@ class EK {
 	public static var minMania:Int = 0;
 	public static var maxMania:Int = 8;
 
-	inline public static function keys(mania:Int) return mania + 1;
-	inline public static function strums(mania:Int) return (mania + 1) * 2;
+	inline public static function keys(mania:Int):Int return mania + 1;
+	inline public static function strums(mania:Int):Int return (mania + 1) * 2;
 
 	public static var colArray:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
 	public static var colArrayAlt:Array<String> = ['purple', 'blue', 'green', 'red', 'white', 'yellow', 'violet', 'black', 'dark'];

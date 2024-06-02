@@ -99,7 +99,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		bg.scale.set(FlxG.width, FlxG.height);
 		bg.updateHitbox();
 		bg.scrollFactor.set();
-		bg.alpha = 0.9;
+		bg.alpha = .9;
 		bg.active = false;
 		add(bg);
 		
@@ -112,10 +112,11 @@ class EditorPlayState extends MusicBeatSubstate {
 		comboGroup.ID = 0;
 		noteGroup = new FlxTypedGroup<FlxBasic>();
 		
-		timeTxt = new FlxText(PlayState.STRUM_X + (FlxG.width / 2) - 248, 19, 400, "", 32);
+		timeTxt = new FlxText(0, 19, 400, "", 32);
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
+		timeTxt.screenCenter(X);
 		timeTxt.visible = showTime;
 		if(downScroll) timeTxt.y = FlxG.height - 44;
 		add(timeTxt);
@@ -126,7 +127,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 		var splash:NoteSplash = new NoteSplash(100, 100);
 		grpNoteSplashes.add(splash);
-		splash.alpha = 0.000001; //cant make it invisible or it won't allow precaching
+		splash.alpha = .000001; //cant make it invisible or it won't allow precaching
         noteGroup.add(grpNoteSplashes);
 
 		opponentStrums = new FlxTypedGroup<StrumNote>();
@@ -547,8 +548,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:flixel.input.keyboard.FlxKey = event.keyCode;
-		var key:Int = PlayState.getKeyFromEvent(keysArray, eventKey);
-		if(FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(key);
+		if(FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(PlayState.getKeyFromEvent(keysArray, eventKey));
 	}
 
 	function keyPressed(key:Int) {
@@ -607,11 +607,10 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function goodNoteHit(note:Note):Void {
-		if(note.wasGoodHit) return;
+		if (note.wasGoodHit || (cpuControlled && note.ignoreNote)) return;
 
 		note.wasGoodHit = true;
-		if (ClientPrefs.data.hitsoundVolume > 0 && !note.hitsoundDisabled) 
-			FlxG.sound.play(Paths.sound('${note.hitsound}'), ClientPrefs.data.hitsoundVolume);
+		if (ClientPrefs.data.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound('${note.hitsound}'), ClientPrefs.data.hitsoundVolume);
 
 		if(note.hitCausesMiss) {
 			noteMiss(note);

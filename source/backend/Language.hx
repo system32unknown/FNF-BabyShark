@@ -56,7 +56,6 @@ class Language {
 
 		if(str == null) str = key;
 		if(values != null) for (num => value in values) str = str.replace('{${num + 1}}', value);
-
 		return str;
 	}
 

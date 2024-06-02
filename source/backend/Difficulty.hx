@@ -7,7 +7,7 @@ class Difficulty {
 	public static var list:Array<String> = [];
 	static var defaultDifficulty(default, never):String = 'Normal'; //The chart that has no suffix and starting difficulty on Freeplay/Story Mode
 	
-	inline public static function getFilePath(num:Null<Int> = null) {
+	inline public static function getFilePath(num:Null<Int> = null):String {
 		if(num == null) num = PlayState.storyDifficulty;
 
 		var filePostfix:String = list[num].toLowerCase();

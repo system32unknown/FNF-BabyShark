@@ -7,8 +7,7 @@ typedef NoteTypeProperty = {
 
 class NoteTypesConfig {
 	static var noteTypesData:Map<String, Array<NoteTypeProperty>> = new Map<String, Array<NoteTypeProperty>>();
-	public static function clearNoteTypesData()
-		noteTypesData.clear();
+	public static function clearNoteTypesData() noteTypesData.clear();
 
 	public static function loadNoteTypeData(name:String) {
 		if(noteTypesData.exists(name)) return noteTypesData.get(name);

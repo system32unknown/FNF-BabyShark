@@ -159,6 +159,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		UI_mainbox.setPosition(UI_typebox.x + UI_typebox.width, FlxG.height - UI_mainbox.height - 50);
 		UI_mainbox.scrollFactor.set();
 		UI_mainbox.camera = camHUD;
+
 		addAnimationsUI();
 		addCharacterUI();
 		add(UI_mainbox);
@@ -233,7 +234,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 		
 		var addUpdateButton:FlxButton = new FlxButton(10, idleInputText.y + 30, "Add/Update", () -> {
 			var theAnim:String = animationInputText.text.trim();
-			if(character.dialogueAnimations.exists(theAnim))  { //Update
+			if(character.dialogueAnimations.exists(theAnim)) { //Update
 				for (i in 0...character.jsonFile.animations.length) {
 					var animArray:DialogueAnimArray = character.jsonFile.animations[i];
 					if(animArray.anim.trim() == theAnim) {
@@ -376,8 +377,7 @@ class DialogueCharacterEditorState extends MusicBeatState {
 			char.setGraphicSize(Std.int(char.width * DialogueCharacter.DEFAULT_SCALE * character.jsonFile.scale));
 			char.updateHitbox();
 		}
-		character.x = DialogueBoxPsych.LEFT_CHAR_X;
-		character.y = DialogueBoxPsych.DEFAULT_CHAR_Y;
+		character.setPosition(DialogueBoxPsych.LEFT_CHAR_X, DialogueBoxPsych.DEFAULT_CHAR_Y);
 
 		switch(character.jsonFile.dialogue_pos) {
 			case 'right': character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;

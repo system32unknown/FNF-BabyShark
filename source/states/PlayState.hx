@@ -1247,7 +1247,6 @@ class PlayState extends MusicBeatState {
 		else FlxG.camera.followLerp = 0;
 		callOnScripts('onUpdate', [elapsed]);
 
-		if (generatedMusic && !endingSong && !isCameraOnForcedPos && ClientPrefs.data.updateCamSection) moveCameraSection();
 		super.update(elapsed);
 
 		if (ClientPrefs.data.showNPS) {
@@ -1697,10 +1696,10 @@ class PlayState extends MusicBeatState {
 		}
 
 		var camCharacter:String = (!section.mustHitSection ? 'dad' : 'boyfriend');
+		bfturn = (camCharacter == 'boyfriend');
 		moveCamera(camCharacter);
 		if(ClientPrefs.data.camMovement) {
 			campoint.set(camFollow.x, camFollow.y);
-			bfturn = (camCharacter == 'boyfriend');
 			camlock = false;
 		}
 		if (bfturn && lastCharFocus != 'boyfriend') callOnScripts('onMoveCamera', ['boyfriend']);
@@ -1979,8 +1978,7 @@ class PlayState extends MusicBeatState {
 	var strumsBlocked:Array<Bool> = [];
 	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:FlxKey = event.keyCode;
-		var key:Int = getKeyFromEvent(keysArray, eventKey);
-		if (FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(key);
+		if (FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(getKeyFromEvent(keysArray, eventKey));
 	}
 
 	function keyPressed(key:Int) {
@@ -2163,8 +2161,7 @@ class PlayState extends MusicBeatState {
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHitPre', [note]);
 
 		note.wasGoodHit = true;
-		if (ClientPrefs.data.hitsoundVolume > 0 && !note.hitsoundDisabled)
-			FlxG.sound.play(Paths.sound(note.hitsound), ClientPrefs.data.hitsoundVolume);
+		if (ClientPrefs.data.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound(note.hitsound), ClientPrefs.data.hitsoundVolume);
 
 		var animToPlay:String = singAnimations[EK.gfxHud[mania][leData]];
 		if (ClientPrefs.data.camMovement && bfturn) moveCamOnNote(animToPlay);
@@ -2335,7 +2332,7 @@ class PlayState extends MusicBeatState {
 
 	override function sectionHit() {
 		if (SONG.notes[curSection] != null) {
-			if (generatedMusic && !endingSong && !isCameraOnForcedPos && !ClientPrefs.data.updateCamSection) moveCameraSection();
+			if (generatedMusic && !endingSong && !isCameraOnForcedPos) moveCameraSection();
 
 			if (ClientPrefs.data.camZooms && camZooming && FlxG.camera.zoom < 1.35) {
 				FlxG.camera.zoom += .015 * camZoomingMult;

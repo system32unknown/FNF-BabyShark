@@ -4,6 +4,7 @@ import sys.thread.Thread;
 import hxdiscord_rpc.Discord;
 import hxdiscord_rpc.Types;
 import flixel.util.FlxStringUtil;
+import cpp.ConstCharStar;
 
 class DiscordClient {
 	public static var isInitialized:Bool = false;
@@ -47,14 +48,14 @@ class DiscordClient {
 		changePresence();
 	}
 
-	static function onError(errorCode:Int, message:cpp.ConstCharStar):Void {
+	static function onError(errorCode:Int, message:ConstCharStar):Void {
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
 			Logs.logText('Error ($errorCode: ${cast(message, String)})', RED)
 		], ERROR);
 	}
 
-	static function onDisconnected(errorCode:Int, message:cpp.ConstCharStar):Void {
+	static function onDisconnected(errorCode:Int, message:ConstCharStar):Void {
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
 			Logs.logText("Disconnected ("),
@@ -63,11 +64,11 @@ class DiscordClient {
 		], INFO);
 	}
 
-	static function onJoin(joinSecret:cpp.ConstCharStar):Void {
+	static function onJoin(joinSecret:ConstCharStar):Void {
 		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone has just joined", GREEN)], INFO);
 	}
 
-	static function onSpectate(spectateSecret:cpp.ConstCharStar):Void {
+	static function onSpectate(spectateSecret:ConstCharStar):Void {
 		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone started spectating your game", YELLOW)], INFO);
 	}
 
@@ -153,8 +154,8 @@ class DiscordClient {
 	}
 	#end
 
-	@:noCompletion public static function fixString(str:String) {
-		return new cpp.ConstCharStar(cast(str, String));
+	@:noCompletion public static function fixString(str:String):ConstCharStar {
+		return new ConstCharStar(cast(str, String));
 	}
 }
 
@@ -184,53 +185,23 @@ final class DiscordPresence {
 		]);
 	}
 
-	@:noCompletion inline function get_state():String {
-		return __presence.state;
-	}
+	@:noCompletion inline function get_state():String {return __presence.state;}
+	@:noCompletion inline function set_state(value:String):String {return __presence.state = value;}
 
-	@:noCompletion inline function set_state(value:String):String {
-		return __presence.state = value;
-	}
+	@:noCompletion inline function get_details():String {return __presence.details;}
+	@:noCompletion inline function set_details(value:String):String {return __presence.details = value;}
 
-	@:noCompletion inline function get_details():String {
-		return __presence.details;
-	}
+	@:noCompletion inline function get_largeImageKey():String {return __presence.largeImageKey;}
+	@:noCompletion inline function set_largeImageKey(value:String):String {return __presence.largeImageKey = value;}
 
-	@:noCompletion inline function set_details(value:String):String {
-		return __presence.details = value;
-	}
+	@:noCompletion inline function get_largeImageText():String {return __presence.largeImageText;}
+	@:noCompletion inline function set_largeImageText(value:String):String {return __presence.largeImageText = value;}
 
-	@:noCompletion inline function get_largeImageKey():String {
-		return __presence.largeImageKey;
-	}
+	@:noCompletion inline function get_startTimestamp():Int {return __presence.startTimestamp;}
+	@:noCompletion inline function set_startTimestamp(value:Int):Int {return __presence.startTimestamp = value;}
 
-	@:noCompletion inline function set_largeImageKey(value:String):String {
-		return __presence.largeImageKey = value;
-	}
-
-	@:noCompletion inline function get_largeImageText():String {
-		return __presence.largeImageText;
-	}
-
-	@:noCompletion inline function set_largeImageText(value:String):String {
-		return __presence.largeImageText = value;
-	}
-
-	@:noCompletion inline function get_startTimestamp():Int {
-		return __presence.startTimestamp;
-	}
-
-	@:noCompletion inline function set_startTimestamp(value:Int):Int {
-		return __presence.startTimestamp = value;
-	}
-
-	@:noCompletion inline function get_endTimestamp():Int {
-		return __presence.endTimestamp;
-	}
-
-	@:noCompletion inline function set_endTimestamp(value:Int):Int {
-		return __presence.endTimestamp = value;
-	}
+	@:noCompletion inline function get_endTimestamp():Int {return __presence.endTimestamp;}
+	@:noCompletion inline function set_endTimestamp(value:Int):Int {return __presence.endTimestamp = value;}
 }
 
 final class DUser {

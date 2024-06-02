@@ -24,8 +24,7 @@ class Conductor {
 		var data:Array<Rating> = arr;
 		if (bot) return data[0]; // botplay returns first rating
 
-		for(i in 0...data.length - 1) //skips last window (Shit)
-			if (diff <= data[i].hitWindow) return data[i];
+		for(i in 0...data.length - 1) if (diff <= data[i].hitWindow) return data[i]; //skips last window (Shit)
 		return data[data.length - 1];
 	}
 

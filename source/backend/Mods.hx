@@ -27,10 +27,10 @@ class Mods {
 
 	static var globalMods:Array<String> = [];
 
-	inline public static function getGlobalMods()
+	inline public static function getGlobalMods():Array<String>
 		return globalMods;
 
-	inline public static function pushGlobalMods() { // prob a better way to do this but idc
+	inline public static function pushGlobalMods():Array<String> { // prob a better way to do this but idc
 		globalMods = [];
 		for(mod in parseList().enabled) {
 			var pack:Dynamic = getPack(mod);
@@ -82,7 +82,7 @@ class Mods {
 		return list;
 	}
 
-	inline public static function mergeAllTextsNamed(path:String, ?defaultDirectory:String = null, allowDuplicates:Bool = false) {
+	inline public static function mergeAllTextsNamed(path:String, ?defaultDirectory:String = null, allowDuplicates:Bool = false):Array<String> {
 		if(defaultDirectory == null) defaultDirectory = Paths.getSharedPath();
 		defaultDirectory = defaultDirectory.trim();
 		if(!defaultDirectory.endsWith('/')) defaultDirectory += '/';
@@ -105,7 +105,7 @@ class Mods {
 		return mergedList;
 	}
 
-	inline public static function directoriesWithFile(path:String, fileToFind:String, mods:Bool = true) {
+	inline public static function directoriesWithFile(path:String, fileToFind:String, mods:Bool = true):Array<String> {
 		var foldersToCheck:Array<String> = [];
 		#if sys if(FileSystem.exists(path + fileToFind)) #end
 			foldersToCheck.push(path + fileToFind);
@@ -118,13 +118,11 @@ class Mods {
 				if(FileSystem.exists(folder) && !foldersToCheck.contains(folder)) foldersToCheck.push(folder);
 			}
 
-			// Then "PsychEngine/mods/" main folder
-			var folder:String = Paths.mods(fileToFind);
+			var folder:String = Paths.mods(fileToFind); // Then "PsychEngine/mods/" main folder
 			if(FileSystem.exists(folder) && !foldersToCheck.contains(folder)) foldersToCheck.push(Paths.mods(fileToFind));
 
-			// And lastly, the loaded mod's folder
 			if(currentModDirectory != null && currentModDirectory.length > 0) {
-				var folder:String = Paths.mods('$currentModDirectory/$fileToFind');
+				var folder:String = Paths.mods('$currentModDirectory/$fileToFind'); // And lastly, the loaded mod's folder
 				if(FileSystem.exists(folder) && !foldersToCheck.contains(folder)) foldersToCheck.push(folder);
 			}
 		}

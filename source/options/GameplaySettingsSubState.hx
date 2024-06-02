@@ -35,8 +35,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
-		addOption(new Option('Update Cam Section', 'If checked, camera will always update,\nwhich makes the camera more precise.', 'updateCamSection', BOOL));
-
 		var option:Option = new Option('Rating Offset', 'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.', 'ratingOffset', INT);
 		option.displayFormat = '%vms';
 		option.scrollSpeed = 20;
