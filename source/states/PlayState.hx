@@ -2409,7 +2409,7 @@ class PlayState extends MusicBeatState {
 				return;
 			}
 
-			if (newScript.variables.exists('onCreate')) {
+			if (newScript.interp.variables.exists('onCreate')) {
 				newScript.executeFunction('onCreate');
 				if (newScript.exception != null) {
 					var len:Int = newScript.exception.message.indexOf('\n') + 1;
@@ -2481,7 +2481,7 @@ class PlayState extends MusicBeatState {
 		if (len < 1) return returnVal;
 		for(i in 0...len) {
 			var script:HScript = hscriptArray[i];
-			if(script == null || !script.active || !script.variables.exists(funcToCall) || exclusions.contains(script.origin)) continue;
+			if(script == null || !script.active || !script.interp.variables.exists(funcToCall) || exclusions.contains(script.origin)) continue;
 
 			try {
 				returnVal = script.executeFunction(funcToCall, args);
@@ -2517,7 +2517,7 @@ class PlayState extends MusicBeatState {
 		if(exclusions == null) exclusions = [];
 		for (script in hscriptArray) {
 			if(exclusions.contains(script.origin)) continue;
-			script.setVar(variable, arg);
+			script.interp.setVar(variable, arg);
 		}
 		#end
 	}

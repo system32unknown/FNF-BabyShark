@@ -5,9 +5,10 @@ import flixel.FlxBasic;
 import hscript.Parser;
 import hscript.Interp;
 
-class HScript extends Interp {
+class HScript {
 	public var active:Bool = true;
-	public var parser:Parser;
+	public var parser(default, null):Parser;
+    public var interp(default, null):Interp;
 	public var parentLua:FunkinLua;
 	public var modFolder:String;
 	public var exception:haxe.Exception;
@@ -21,11 +22,12 @@ class HScript extends Interp {
 	}
 
 	public var origin:String;
-	override public function new(?parent:FunkinLua, ?file:String) {
-		super();
-
+	public function new(?parent:FunkinLua, ?file:String) {
 		var content:String = null;
 		if (file != null) content = Paths.getTextFromFile(file, true);
+
+		parser = new Parser();
+        interp = new Interp();
 
 		parentLua = parent;
 		if (parent != null) {
@@ -81,10 +83,10 @@ class HScript extends Interp {
 			"PsychCamera"		=> backend.PsychCamera,
             "FlxTween"          => FlxTween,
             "FlxEase"           => FlxEase,
-            "FlxPoint"          => getMAClass("flixel.math.FlxPoint"),
-            "FlxAxes"           => getMAClass("flixel.util.FlxAxes"),
-            "FlxColor"          => getMAClass("flixel.util.FlxColor"),
-            "FlxKey"            => getMAClass("flixel.input.keyboard.FlxKey"),
+            "FlxPoint"          => flixel.math.FlxPoint.FlxPoint_HSC,
+            "FlxAxes"           => flixel.util.FlxAxes.FlxAxes_HSC,
+            "FlxColor"          => flixel.util.FlxColor.FlxColor_HSC,
+            "FlxKey"            => flixel.input.keyboard.FlxKey.FlxKey_HSC,
             "FlxSound"          => FlxSound,
             "FlxAssets"         => flixel.system.FlxAssets,
             "FlxMath"           => FlxMath,
@@ -125,36 +127,33 @@ class HScript extends Interp {
         ];
     }
 
-    inline function getMAClass(className:String) return Type.resolveClass('${className}_HSC');
-	
 	function preset() {
-		parser = new Parser();
-		allowStaticVariables = allowPublicVariables = true;
+		interp.allowStaticVariables = interp.allowPublicVariables = true;
 		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
 		parser.preprocesorValues = getDefaultPreprocessors();
 
-        for (key => type in getDefaultVariables()) setVar(key, type);
+        for (key => type in getDefaultVariables()) interp.setVar(key, type);
 
 		// Functions & Variables
-		setVar('setVar', (name:String, value:Dynamic) -> {
+		interp.setVar('setVar', (name:String, value:Dynamic) -> {
 			MusicBeatState.getVariables().set(name, value);
 			return value;
 		});
-		setVar('getVar', (name:String) -> {
+		interp.setVar('getVar', (name:String) -> {
 			if(MusicBeatState.getVariables().exists(name))
 				return MusicBeatState.getVariables().get(name);
 			return null;
 		});
-		setVar('removeVar', (name:String) -> {
+		interp.setVar('removeVar', (name:String) -> {
 			if(MusicBeatState.getVariables().exists(name)) {
 				MusicBeatState.getVariables().remove(name);
 				return true;
 			}
 			return false;
 		});
-		setVar('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> PlayState.instance.addTextToDebug(text, color));
+		interp.setVar('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> PlayState.instance.addTextToDebug(text, color));
 
-		setVar('getModSetting', function(saveTag:String, ?modName:String = null) {
+		interp.setVar('getModSetting', function(saveTag:String, ?modName:String = null) {
 			if(modName == null) {
 				if(this.modFolder == null) {
 					PlayState.instance.addTextToDebug('getModSetting: Argument #2 is null and script is not inside a packed Mod folder!', FlxColor.RED);
@@ -166,11 +165,11 @@ class HScript extends Interp {
 		});
 
 		// Keyboard & Gamepads
-		setVar('keyboardJustPressed', (name:String) -> return Reflect.getProperty(FlxG.keys.justPressed, name));
-		setVar('keyboardPressed', (name:String) -> return Reflect.getProperty(FlxG.keys.pressed, name));
-		setVar('keyboardReleased', (name:String) -> return Reflect.getProperty(FlxG.keys.justReleased, name));
+		interp.setVar('keyboardJustPressed', (name:String) -> return Reflect.getProperty(FlxG.keys.justPressed, name));
+		interp.setVar('keyboardPressed', (name:String) -> return Reflect.getProperty(FlxG.keys.pressed, name));
+		interp.setVar('keyboardReleased', (name:String) -> return Reflect.getProperty(FlxG.keys.justReleased, name));
 
-		setVar('keyJustPressed', function(name:String = '') {
+		interp.setVar('keyJustPressed', function(name:String = '') {
 			name = name.toLowerCase();
 			return switch(name) {
 				case 'left': Controls.instance.NOTE_LEFT_P;
@@ -180,7 +179,7 @@ class HScript extends Interp {
 				default: Controls.instance.justPressed(name);
 			}
 		});
-		setVar('keyPressed', function(name:String = '') {
+		interp.setVar('keyPressed', function(name:String = '') {
 			name = name.toLowerCase();
 			return switch(name) {
 				case 'left': Controls.instance.NOTE_LEFT;
@@ -190,7 +189,7 @@ class HScript extends Interp {
 				default: Controls.instance.pressed(name);
 			}
 		});
-		setVar('keyReleased', function(name:String = '') {
+		interp.setVar('keyReleased', function(name:String = '') {
 			name = name.toLowerCase();
 			return switch(name) {
 				case 'left': Controls.instance.NOTE_LEFT_R;
@@ -202,7 +201,7 @@ class HScript extends Interp {
 		});
 
 		// For adding your own callbacks
-		setVar('createGlobalCallback', function(name:String, func:haxe.Constraints.Function) {
+		interp.setVar('createGlobalCallback', function(name:String, func:haxe.Constraints.Function) {
 			#if LUA_ALLOWED
 			for (script in PlayState.instance.luaArray)
 				if(script != null && script.lua != null && !script.closed)
@@ -211,17 +210,17 @@ class HScript extends Interp {
 			FunkinLua.customFunctions.set(name, func);
 		});
 
-		setVar('createCallback', function(name:String, func:Dynamic, ?funk:FunkinLua = null) {
+		interp.setVar('createCallback', function(name:String, func:Dynamic, ?funk:FunkinLua = null) {
 			if(funk == null) funk = parentLua;
 			if(funk != null) funk.addLocalCallback(name, func);
 			else FunkinLua.luaTrace('createCallback ($name): 3rd argument is null', false, false, FlxColor.RED);
 		});
 
-		setVar('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
+		interp.setVar('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
 			try {
 				var str:String = '';
 				if(libPackage.length > 0) str = '$libPackage.';
-				setVar(libName, resolveClassOrEnum(str + libName));
+				interp.setVar(libName, resolveClassOrEnum(str + libName));
 			} catch (e:Dynamic) {
 				var msg:String = e.message.substr(0, e.message.indexOf('\n'));
 				#if LUA_ALLOWED
@@ -236,35 +235,35 @@ class HScript extends Interp {
 			}
 		});
 
-		setVar('close', () -> active = false);
+		interp.setVar('close', destroy);
 
-		setVar('parentLua', parentLua);
-		setVar('this', this);
-		setVar('game', FlxG.state);
-		setVar('controls', Controls.instance);
+		interp.setVar('parentLua', parentLua);
+		interp.setVar('this', this);
+		interp.setVar('game', FlxG.state);
+		interp.setVar('controls', Controls.instance);
 
-		setVar('buildTarget', LuaUtils.getBuildTarget());
-		setVar('customSubstate', CustomSubstate.instance);
-		setVar('customSubstateName', CustomSubstate.name);
+		interp.setVar('buildTarget', LuaUtils.getBuildTarget());
+		interp.setVar('customSubstate', CustomSubstate.instance);
+		interp.setVar('customSubstateName', CustomSubstate.name);
 
-		setVar('Function_Stop', LuaUtils.Function_Stop);
-		setVar('Function_Continue', LuaUtils.Function_Continue);
-		setVar('Function_StopLua', LuaUtils.Function_StopLua); //doesnt do much cuz HScript has a lower priority than Lua
-		setVar('Function_StopHScript', LuaUtils.Function_StopHScript);
-		setVar('Function_StopAll', LuaUtils.Function_StopAll);
+		interp.setVar('Function_Stop', LuaUtils.Function_Stop);
+		interp.setVar('Function_Continue', LuaUtils.Function_Continue);
+		interp.setVar('Function_StopLua', LuaUtils.Function_StopLua); //doesnt do much cuz HScript has a lower priority than Lua
+		interp.setVar('Function_StopHScript', LuaUtils.Function_StopHScript);
+		interp.setVar('Function_StopAll', LuaUtils.Function_StopAll);
 
-		setVar('add', FlxG.state.add);
-		setVar('insert', FlxG.state.insert);
-		setVar('remove', FlxG.state.remove);
+		interp.setVar('add', FlxG.state.add);
+		interp.setVar('insert', FlxG.state.insert);
+		interp.setVar('remove', FlxG.state.remove);
 
 		if(PlayState.instance == FlxG.state) {
 			var psInstance:PlayState = PlayState.instance;
-			setVar('addBehindGF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.gfGroup) - order, obj));
-			setVar('addBehindDad', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.dadGroup) - order, obj));
-			setVar('addBehindBF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.boyfriendGroup) - order, obj));
+			interp.setVar('addBehindGF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.gfGroup) - order, obj));
+			interp.setVar('addBehindDad', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.dadGroup) - order, obj));
+			interp.setVar('addBehindBF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.boyfriendGroup) - order, obj));
 
-			setVar('rating', 0.0);
-			scriptObject = psInstance; // allow use vars from playstate without "game" thing
+			interp.setVar('rating', 0.0);
+			interp.scriptObject = psInstance; // allow use vars from playstate without "game" thing
 		}
 	}
 
@@ -288,20 +287,18 @@ class HScript extends Interp {
 		if (codeToRun == null || !active) return null;
 
 		try {
-			return execute(parser.parseString(codeToRun, origin));
+			return interp.execute(parser.parseString(codeToRun, origin));
 		} catch(e) exception = e;
 		return null;
 	}
 
 	public function executeFunction(?funcToRun:String, ?funcArgs:Array<Dynamic>):Dynamic {
-		if (funcToRun == null || !active) return null;
+		if (funcToRun == null || !active || !interp.variables.exists(funcToRun)) return null;
 
-		if (variables.exists(funcToRun)) {
-			if (funcArgs == null) funcArgs = [];
-			try {
-				return Reflect.callMethod(null, variables.get(funcToRun), funcArgs);
-			} catch(e) exception = e;
-		}
+		if (funcArgs == null) funcArgs = [];
+		var func:Dynamic = interp.variables.get(funcToRun);
+		if (func != null && Reflect.isFunction(func)) return Reflect.callMethod(null, func, funcArgs);
+
 		return null;
 	}
 
@@ -310,8 +307,7 @@ class HScript extends Interp {
 		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any, ?funcToRun:String, ?funcArgs:Array<Dynamic>):Dynamic {
 			initHaxeModule(funk);
 			if (!funk.hscript.active) return null;
-
-			if(varsToBring != null) for (key in Reflect.fields(varsToBring)) funk.hscript.setVar(key, Reflect.field(varsToBring, key));
+			if(varsToBring != null) for (key in Reflect.fields(varsToBring)) funk.hscript.interp.setVar(key, Reflect.field(varsToBring, key));
 
 			var retVal:Dynamic = funk.hscript.executeCode(codeToRun);
 			if (funcToRun != null) {
@@ -345,7 +341,7 @@ class HScript extends Interp {
 			if(libPackage.length > 0) str = '$libPackage.';
 			else if(libName == null) libName = '';
 
-			try { funk.hscript.setVar(libName, funk.hscript.resolveClassOrEnum(str + libName));
+			try { funk.hscript.interp.setVar(libName, funk.hscript.resolveClassOrEnum(str + libName));
 			} catch(e) {
 				funk.hscript.active = false;
 				FunkinLua.luaTrace('ERROR (${funk.lastCalledFunction}) - $e', false, false, FlxColor.RED);
@@ -354,18 +350,18 @@ class HScript extends Interp {
 		#end
 	}
 
-	public function destroy() {
+	public function destroy() @:privateAccess {
 		active = false;
 		parser = null;
 		origin = null;
 		parentLua = null;
-		__instanceFields = [];
-		binops.clear();
-		customClasses.clear();
-		declared = [];
-		importBlocklist = [];
-		locals.clear();
-		resetVariables();
+		interp.__instanceFields = [];
+		interp.binops.clear();
+		interp.customClasses.clear();
+		interp.declared = [];
+		interp.importBlocklist = [];
+		interp.locals.clear();
+		interp.resetVariables();
 	}
 }
 #end
