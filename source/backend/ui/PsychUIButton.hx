@@ -5,12 +5,10 @@ import backend.ui.PsychUIBox.UIStyleData;
 class PsychUIButton extends FlxSpriteGroup {
 	public static final CLICK_EVENT = 'button_click';
 
-	public var name:String;
 	public var label(default, set):String;
 	public var bg:FlxSprite;
 	public var text:FlxText;
 
-	public var onChangeState:String->Void;
 	public var onClick:Void->Void;
 	
 	public var clickStyle:UIStyleData = {

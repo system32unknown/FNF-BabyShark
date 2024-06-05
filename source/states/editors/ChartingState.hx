@@ -229,13 +229,12 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		UI_box.selectedName = 'Song';
 		UI_box.scrollFactor.set();
 
-		var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 8, 300, "Press F1 for Help", 16);
+		var tipText:FlxText = new FlxText(FlxG.width - 200, FlxG.height - 32, 200, "Press F1 for Help", 16);
 		tipText.setFormat(null, 16, FlxColor.WHITE, LEFT);
 		tipText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 		tipText.scrollFactor.set();
 		tipText.active = false;
 		add(tipText);
-
 		add(UI_box);
 
 		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
@@ -492,7 +491,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		stepperMania.name = 'song_mania';
 
 		var tab_group_song:FlxSpriteGroup = UI_box.getTab('Song').menu;
-
+		tab_group_song.add(UI_songTitle);
 		tab_group_song.add(check_voices);
 		tab_group_song.add(clear_events);
 		tab_group_song.add(clear_notes);
@@ -721,8 +720,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			}
 			updateGrid();
 		});
-		copyLastButton.setGraphicSize(80, 30);
-		copyLastButton.updateHitbox();
+		copyLastButton.resize(80, 30);
 		
 		stepperCopy = new PsychUINumericStepper(copyLastButton.x + 100, copyLastButton.y, 1, 1, -999, 999, 0);
 
@@ -1490,14 +1488,16 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				updateZoom();
 			}
 
-			if (FlxG.keys.pressed.SHIFT) {
-				var id:Int = UI_box.selectedIndex - 1;
-				if (id < 0) id = UI_box.tabs.length-1;
-				UI_box.selectedIndex = id;
-			} else {
-				var id:Int = UI_box.selectedIndex + 1;
-				if (id >= UI_box.tabs.length) id = 0;
-				UI_box.selectedIndex = id;
+			if (FlxG.keys.justPressed.TAB) {
+				if (FlxG.keys.pressed.SHIFT) {
+					var id:Int = UI_box.selectedIndex - 1;
+					if (id < 0) id = UI_box.tabs.length - 1;
+					UI_box.selectedIndex = id;
+				} else {
+					var id:Int = UI_box.selectedIndex + 1;
+					if (id >= UI_box.tabs.length) id = 0;
+					UI_box.selectedIndex = id;
+				}
 			}
 
 			if (FlxG.keys.justPressed.SPACE) {

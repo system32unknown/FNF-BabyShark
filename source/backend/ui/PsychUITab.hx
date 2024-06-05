@@ -61,7 +61,6 @@ class PsychUITab extends FlxSprite {
 		return (name = v);
 	}
 
-
 	override function set_cameras(v:Array<FlxCamera>) {
 		text.cameras = v;
 		menu.cameras = v;

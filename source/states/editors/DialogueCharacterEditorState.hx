@@ -95,20 +95,20 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 
 		tipText = new FlxText(10, 10, FlxG.width - 20, TIP_TEXT_MAIN, 16);
 		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
-		tipText.camera = camHUD;
+		tipText.cameras = [camHUD];
 		tipText.scrollFactor.set();
 		add(tipText);
 
 		offsetLoopText = new FlxText(10, 10, 0, '', 32);
 		offsetLoopText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-		offsetLoopText.camera = camHUD;
+		offsetLoopText.cameras = [camHUD];
 		offsetLoopText.scrollFactor.set();
 		add(offsetLoopText);
 		offsetLoopText.visible = false;
 
 		offsetIdleText = new FlxText(10, 46, 0, '', 32);
 		offsetIdleText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-		offsetIdleText.camera = camHUD;
+		offsetIdleText.cameras = [camHUD];
 		offsetIdleText.scrollFactor.set();
 		add(offsetIdleText);
 		offsetIdleText.visible = false;
@@ -116,7 +116,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		animText = new FlxText(10, 22, FlxG.width - 20, '', 24);
 		animText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		animText.scrollFactor.set();
-		animText.camera = camHUD;
+		animText.cameras = [camHUD];
 		add(animText);
 
 		reloadCharacter();
@@ -138,13 +138,13 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 	function addEditorBox() {
 		UI_typebox = new PsychUIBox(900, FlxG.height - 230, 120, 180, ['Character Type']);
 		UI_typebox.scrollFactor.set();
-		UI_typebox.camera = camHUD;
+		UI_typebox.cameras = [camHUD];
 		addTypeUI();
 		add(UI_typebox);
 
 		UI_mainbox = new PsychUIBox(UI_typebox.x + UI_typebox.width + 10, FlxG.height - 300, 200, 250, ['Animations', 'Character']);
 		UI_mainbox.scrollFactor.set();
-		UI_mainbox.camera = camHUD;
+		UI_mainbox.cameras = [camHUD];
 		addAnimationsUI();
 		addCharacterUI();
 		add(UI_mainbox);

@@ -1,7 +1,9 @@
 package backend.ui;
 
+import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
-import openfl.events.KeyboardEvent;
+import flixel.util.FlxDestroyUtil;
+import flash.events.KeyboardEvent;
 import lime.system.Clipboard;
 
 enum abstract AccentCode(Int) from Int from UInt to Int to UInt
@@ -473,7 +475,7 @@ class PsychUIInputText extends FlxSpriteGroup
 			caret.y = textObj.y + 2;
 			caret.x = textObj.x + 1 - textObj.textField.scrollH;
 			if(caretIndex > 0)
-				caret.x += _boundaries[Std.int(Math.max(0, Math.min(_boundaries.length - 1, caretIndex-1)))];
+				caret.x += _boundaries[Std.int(Math.max(0, Math.min(_boundaries.length - 1, caretIndex - 1)))];
 		}
 		
 		if(selection != null && selection.exists)
@@ -481,7 +483,7 @@ class PsychUIInputText extends FlxSpriteGroup
 			selection.y = textObj.y + 2;
 			selection.x = textObj.x + 1 - textObj.textField.scrollH;
 			if(selectIndex > 0)
-				selection.x += _boundaries[Std.int(Math.max(0, Math.min(_boundaries.length - 1, selectIndex-1)))];
+				selection.x += _boundaries[Std.int(Math.max(0, Math.min(_boundaries.length - 1, selectIndex - 1)))];
 
 			selection.scale.y = textField.textHeight;
 			selection.scale.x = caret.x - selection.x;
@@ -692,8 +694,7 @@ class PsychUIInputText extends FlxSpriteGroup
 		return customFilterPattern;
 	}
 	
-	function filter(text:String):String
-	{
+	function filter(text:String):String {
 		switch(forceCase) {
 			case UPPER_CASE: text = text.toUpperCase();
 			case LOWER_CASE: text = text.toLowerCase();

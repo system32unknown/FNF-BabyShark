@@ -77,7 +77,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		dad.active = false;
 		dad.offset.set(-4, 1);
 		silhouettes.add(dad);
-		
+
 		var boyfriend:FlxSprite = new FlxSprite(bfPosition.x, bfPosition.y + 350, Paths.image('editors/silhouetteBF'));
 		boyfriend.antialiasing = ClientPrefs.data.antialiasing;
 		boyfriend.active = false;
@@ -101,18 +101,18 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		healthBar = new Bar(30, FlxG.height - 75);
 		healthBar.scrollFactor.set();
 		add(healthBar);
-		healthBar.camera = camHUD;
+		healthBar.cameras = [camHUD];
 
 		healthIcon = new HealthIcon(character.healthIcon, false, false);
 		healthIcon.y = healthBar.y - (healthIcon.height / 2);
 		add(healthIcon);
-		healthIcon.camera = camHUD;
+		healthIcon.cameras = [camHUD];
 
-		animsTxtGroup.camera = camHUD;
+		animsTxtGroup.cameras = [camHUD];
 		add(animsTxtGroup);
 		
 		var tipText:FlxText = new FlxText(FlxG.width - 300, FlxG.height - 24, 300, "Press F1 for Help", 16);
-		tipText.camera = camHUD;
+		tipText.cameras = [camHUD];
 		tipText.setFormat(null, 16, FlxColor.WHITE, RIGHT, OUTLINE_FAST, FlxColor.BLACK);
 		tipText.borderColor = FlxColor.BLACK;
 		tipText.scrollFactor.set();
@@ -125,7 +125,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		cameraZoomText.scrollFactor.set();
 		cameraZoomText.borderSize = 1;
 		cameraZoomText.screenCenter(X);
-		cameraZoomText.camera = camHUD;
+		cameraZoomText.cameras = [camHUD];
 		add(cameraZoomText);
 
 		frameAdvanceText = new FlxText(0, 75, 350, '');
@@ -133,7 +133,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		frameAdvanceText.scrollFactor.set();
 		frameAdvanceText.borderSize = 1;
 		frameAdvanceText.screenCenter(X);
-		frameAdvanceText.camera = camHUD;
+		frameAdvanceText.cameras = [camHUD];
 		add(frameAdvanceText);
 
 		addHelpScreen();
@@ -147,7 +147,6 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		character.finishAnimation();
 
 		if(ClientPrefs.data.cacheOnGPU) Paths.clearUnusedMemory();
-		
 		super.create();
 	}
 
@@ -176,13 +175,13 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		helpBg.scale.set(FlxG.width, FlxG.height);
 		helpBg.updateHitbox();
 		helpBg.alpha = 0.6;
-		helpBg.camera = camHUD;
+		helpBg.cameras = [camHUD];
 		helpBg.active = helpBg.visible = false;
 		add(helpBg);
 
 		var arr:Array<String> = str.split('\n');
 		helpTexts = new FlxSpriteGroup();
-		helpTexts.camera = camHUD;
+		helpTexts.cameras = [camHUD];
 		for (i in 0...arr.length) {
 			if(arr[i].length < 2) continue;
 
@@ -228,11 +227,11 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	function makeUIMenu() {
 		UI_box = new PsychUIBox(FlxG.width - 275, 25, 250, 120, ['Ghost', 'Settings']);
 		UI_box.scrollFactor.set();
-		UI_box.camera = camHUD;
+		UI_box.cameras = [camHUD];
 
-		UI_characterbox = new PsychUIBox(UI_box.x - 100, UI_box.y + UI_box.height + 10, 350, 280, ['Character', 'Animations']);
+		UI_characterbox = new PsychUIBox(UI_box.x - 100, UI_box.y + UI_box.height + 10, 350, 280, ['Animations', 'Character']);
 		UI_characterbox.scrollFactor.set();
-		UI_characterbox.camera = camHUD;
+		UI_characterbox.cameras = [camHUD];
 		add(UI_characterbox);
 		add(UI_box);
 
@@ -490,11 +489,11 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		reloadAnimList();
 		animationDropDown.selectedLabel = anims[0] != null ? anims[0].anim : '';
 
-		tab_group.add(new FlxText(animationDropDown.x, animationDropDown.y - 18, 0, 'Animations:'));
-		tab_group.add(new FlxText(animationInputText.x, animationInputText.y - 18, 0, 'Animation name:'));
-		tab_group.add(new FlxText(animationFramerate.x, animationFramerate.y - 18, 0, 'Framerate:'));
-		tab_group.add(new FlxText(animationNameInputText.x, animationNameInputText.y - 18, 0, 'Animation Symbol Name/Tag:'));
-		tab_group.add(new FlxText(animationIndicesInputText.x, animationIndicesInputText.y - 18, 0, 'ADVANCED - Animation Indices:'));
+		tab_group.add(new FlxText(animationDropDown.x, animationDropDown.y - 18, 100, 'Animations:'));
+		tab_group.add(new FlxText(animationInputText.x, animationInputText.y - 18, 100, 'Animation name:'));
+		tab_group.add(new FlxText(animationFramerate.x, animationFramerate.y - 18, 100, 'Framerate:'));
+		tab_group.add(new FlxText(animationNameInputText.x, animationNameInputText.y - 18, 150, 'Animation Symbol Name/Tag:'));
+		tab_group.add(new FlxText(animationIndicesInputText.x, animationIndicesInputText.y - 18, 170, 'ADVANCED - Animation Indices:'));
 
 		tab_group.add(animationInputText);
 		tab_group.add(animationNameInputText);
@@ -523,7 +522,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	var healthColorStepperG:PsychUINumericStepper;
 	var healthColorStepperB:PsychUINumericStepper;
 	function addCharacterUI() {
-		var tab_group:FlxSpriteGroup = UI_box.getTab('Character').menu;
+		var tab_group:FlxSpriteGroup = UI_characterbox.getTab('Character').menu;
 
 		imageInputText = new PsychUIInputText(15, 30, 200, character.imageFile, 8);
 		var reloadImage:PsychUIButton = new PsychUIButton(imageInputText.x + 210, imageInputText.y - 3, "Reload Image", () -> {
@@ -575,13 +574,13 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		healthColorStepperG = new PsychUINumericStepper(singDurationStepper.x + 65, saveCharacterButton.y, 20, character.healthColorArray[1], 0, 255, 0);
 		healthColorStepperB = new PsychUINumericStepper(singDurationStepper.x + 130, saveCharacterButton.y, 20, character.healthColorArray[2], 0, 255, 0);
 
-		tab_group.add(new FlxText(15, imageInputText.y - 18, 0, 'Image file name:'));
-		tab_group.add(new FlxText(15, healthIconInputText.y - 18, 0, 'Health icon name:'));
-		tab_group.add(new FlxText(15, singDurationStepper.y - 18, 0, 'Sing Animation length:'));
-		tab_group.add(new FlxText(15, scaleStepper.y - 18, 0, 'Scale:'));
-		tab_group.add(new FlxText(positionXStepper.x, positionXStepper.y - 18, 0, 'Character X/Y:'));
-		tab_group.add(new FlxText(positionCameraXStepper.x, positionCameraXStepper.y - 18, 0, 'Camera X/Y:'));
-		tab_group.add(new FlxText(healthColorStepperR.x, healthColorStepperR.y - 18, 0, 'Health bar R/G/B:'));
+		tab_group.add(new FlxText(15, imageInputText.y - 18, 100, 'Image file name:'));
+		tab_group.add(new FlxText(15, healthIconInputText.y - 18, 100, 'Health icon name:'));
+		tab_group.add(new FlxText(15, singDurationStepper.y - 18, 120, 'Sing Animation length:'));
+		tab_group.add(new FlxText(15, scaleStepper.y - 18, 100, 'Scale:'));
+		tab_group.add(new FlxText(positionXStepper.x, positionXStepper.y - 18, 100, 'Character X/Y:'));
+		tab_group.add(new FlxText(positionCameraXStepper.x, positionCameraXStepper.y - 18, 100, 'Camera X/Y:'));
+		tab_group.add(new FlxText(healthColorStepperR.x, healthColorStepperR.y - 18, 100, 'Health bar R/G/B:'));
 		tab_group.add(imageInputText);
 		tab_group.add(reloadImage);
 		tab_group.add(decideIconColor);
@@ -859,7 +858,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		}
 		if(txt != frameAdvanceText.text) frameAdvanceText.text = txt;
 		frameAdvanceText.color = clr;
-		
+
 		// OTHER CONTROLS
 		if(FlxG.keys.justPressed.F12)
 			silhouettes.visible = !silhouettes.visible;
@@ -879,23 +878,14 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		}
 	}
 
-	final assetFolder:String = 'week1';  //load from assets/week1/
+	final assetFolder = 'week1';  //load from assets/week1/
 	inline function loadBG() {
 		var lastLoaded:String = Paths.currentLevel;
 		Paths.currentLevel = assetFolder;
 
-		/////////////
-		// bg data //
-		add(new BGSprite('stageback', -600, -200, 0.9, 0.9));
-
-		var stageFront:BGSprite = new BGSprite('stagefront', -650, 600, 0.9, 0.9);
-		stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-		stageFront.updateHitbox();
-		add(stageFront);
-
+		camEditor.bgColor = 0xFF666666;
 		dadPosition.set(100, 100);
 		bfPosition.set(770, 100);
-		////////////
 
 		Paths.currentLevel = lastLoaded;
 	}
@@ -912,7 +902,6 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			offY = mid.y - 100 + character.cameraPosition[1];
 		}
 		cameraFollowPointer.setPosition(offX, offY);
-		mid.put();
 
 		if(snap) {
 			final midcam:FlxPoint = cameraFollowPointer.getMidpoint();

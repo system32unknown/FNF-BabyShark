@@ -11,7 +11,6 @@ class ConfirmationPopupSubstate extends MusicBeatSubstate {
 	var blockInput:Float = .1;
 	override function create() {
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-		bg = new FlxSpriteGroup();
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		bg.alpha = .6;
