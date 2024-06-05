@@ -1,70 +1,59 @@
 package substates;
 
-import flixel.ui.FlxButton;
-
 class Prompt extends MusicBeatSubstate {
 	public var okc:Void->Void;
 	public var cancelc:Void->Void;
 	var theText:String = '';
 	var goAnyway:Bool = false;
 	var panel:FlxSprite;
-	var panelbg:FlxSprite;
-	var buttonAccept:FlxButton;
-	var buttonNo:FlxButton;
-	
-	public function new(promptText:String = '', okCallback:Void->Void, cancelCallback:Void->Void, acceptOnDefault:Bool = false, option1:String = null, option2:String = null) {
+	var panelText:FlxText;
+	var buttonAccept:PsychUIButton;
+	var buttonNo:PsychUIButton;
+	public function new(promptText:String, ?okCallback:Void->Void = null, ?cancelCallback:Void->Void = null, ?acceptOnDefault:Bool=false)  {
 		okc = okCallback;
 		cancelc = cancelCallback;
 		theText = promptText;
 		goAnyway = acceptOnDefault;
-
-		var op1:String = 'OK';
-		var op2:String = 'CANCEL';
-
-		if (option1 != null) op1 = option1;
-		if (option2 != null) op2 = option2;
-
-		buttonAccept = new FlxButton(473.3, 450, op1, () -> {
-			if(okc != null) okc();
-			close();
-		});
-		buttonNo = new FlxButton(633.3, 450, op2, () -> {
-			if(cancelc != null) cancelc();
-			close();
-		});
 		super();	
 	}
 	
-	override public function create():Void {
+	override public function create():Void  {
 		super.create();
 		if (goAnyway) {
-			if (okc != null) okc();
+			if(okc != null) okc();
 			close();
 		} else {
-			panel = new FlxSprite();
-			panelbg = new FlxSprite();
-			SpriteUtil.makeSelectorGraphic(panel, 300, 150, 0xff999999, 10);
-			SpriteUtil.makeSelectorGraphic(panelbg, 304, 154, 0xff000000, 10);
+			panel = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+			panel.setGraphicSize(300, 150);
+			panel.updateHitbox();
+			panel.alpha = 0.6;
 			panel.scrollFactor.set();
 			panel.screenCenter();
-			panelbg.scrollFactor.set();
-			panelbg.screenCenter();
-			var textshit:FlxText = new FlxText(buttonNo.width * 2, panel.y, 300, theText, 16);
-			textshit.alignment = CENTER;
-			textshit.scrollFactor.set();
-			textshit.screenCenter();
-			add(panelbg);
 			add(panel);
-			add(buttonAccept);
-			add(buttonNo);
-			add(textshit);
 
-			buttonAccept.screenCenter();
-			buttonNo.screenCenter();
-			buttonAccept.x -= buttonNo.width / 1.5;
-			buttonAccept.y = panel.y + panel.height - 30;
-			buttonNo.x += buttonNo.width / 1.5;
-			buttonNo.y = panel.y + panel.height - 30;
+			panelText = new FlxText(0, 0, 300, theText, 16);
+			panelText.scrollFactor.set();
+			panelText.alignment = CENTER;
+			panelText.screenCenter();
+			add(panelText);
+
+			buttonAccept = new PsychUIButton(0, panel.y + panel.height - 30, 'OK', () -> {
+				if(okc != null) okc();
+				close();
+			});
+			buttonAccept.scrollFactor.set();
+			buttonAccept.screenCenter(X);
+			buttonAccept.x -= 55;
+			add(buttonAccept);
+
+			buttonNo = new PsychUIButton(0, panel.y + panel.height - 30, 'CANCEL', () -> {
+				if(cancelc != null) cancelc();
+				close();
+			});
+			buttonNo.scrollFactor.set();
+			buttonNo.screenCenter(X);
+			buttonNo.x += 55;
+			add(buttonNo);
 		}
 	}
 }

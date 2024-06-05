@@ -1,6 +1,6 @@
 package backend;
 
-class MusicBeatState extends flixel.addons.ui.FlxUIState {
+class MusicBeatState extends flixel.FlxState {
 	var curSection:Int = 0;
 	var stepsToDo:Int = 0;
 

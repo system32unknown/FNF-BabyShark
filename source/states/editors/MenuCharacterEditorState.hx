@@ -1,18 +1,12 @@
 package states.editors;
 
-import flixel.addons.ui.FlxUI;
-import flixel.addons.ui.FlxUICheckBox;
-import flixel.addons.ui.FlxUIInputText;
-import flixel.addons.ui.FlxUINumericStepper;
-import flixel.addons.ui.FlxUITabMenu;
-import flixel.ui.FlxButton;
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import haxe.Json;
 import objects.MenuCharacter;
 
-class MenuCharacterEditorState extends MusicBeatState {
+class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent {
 	var grpWeekCharacters:FlxTypedGroup<MenuCharacter>;
 	var characterFile:MenuCharacterFile = null;
 	var txtOffsets:FlxText;
@@ -56,103 +50,70 @@ class MenuCharacterEditorState extends MusicBeatState {
 
 		addEditorBox();
 		FlxG.mouse.visible = true;
-		updateCharTypeBox();
-
 		super.create();
 	}
 
-	var UI_typebox:FlxUITabMenu;
-	var UI_mainbox:FlxUITabMenu;
-	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
+	var UI_typebox:PsychUIBox;
+	var UI_mainbox:PsychUIBox;
 	function addEditorBox() {
-		UI_typebox = new FlxUITabMenu(null, [{name: 'Character Type', label: 'Character Type'}], true);
-		UI_typebox.resize(120, 180);
-		UI_typebox.setPosition(100, FlxG.height - UI_typebox.height - 50);
+		UI_typebox = new PsychUIBox(100, FlxG.height - 230, 120, 180, ['Character Type']);
 		UI_typebox.scrollFactor.set();
 		addTypeUI();
 		add(UI_typebox);
 
-		UI_mainbox = new FlxUITabMenu(null, [{name: 'Character', label: 'Character'}], true);
-		UI_mainbox.resize(240, 215);
-		UI_mainbox.setPosition(FlxG.width - UI_mainbox.width - 100, FlxG.height - UI_mainbox.height - 50);
+		UI_mainbox = new PsychUIBox(FlxG.width - 340, FlxG.height - 265, 240, 215, ['Character']);
 		UI_mainbox.scrollFactor.set();
 		addCharacterUI();
 		add(UI_mainbox);
 
-		var loadButton:FlxButton = new FlxButton(0, 480, "Load Character", () -> loadCharacter());
+		var loadButton:PsychUIButton = new PsychUIButton(0, 480, "Load Character", () -> loadCharacter());
 		loadButton.screenCenter(X).x -= 60;
 		add(loadButton);
 	
-		var saveButton:FlxButton = new FlxButton(0, 480, "Save Character", () -> saveCharacter());
+		var saveButton:PsychUIButton = new PsychUIButton(0, 480, "Save Character", () -> saveCharacter());
 		saveButton.screenCenter(X).x += 60;
 		add(saveButton);
 	}
 
-	var opponentCheckbox:FlxUICheckBox;
-	var boyfriendCheckbox:FlxUICheckBox;
-	var girlfriendCheckbox:FlxUICheckBox;
-	var curTypeSelected:Int = 0; //0 = Dad, 1 = BF, 2 = GF
+	var characterTypeRadio:PsychUIRadioGroup;
 	function addTypeUI() {
-		var tab_group:FlxUI = new FlxUI(null, UI_typebox);
-		tab_group.name = "Character Type";
+		var tab_group:FlxSpriteGroup = UI_typebox.getTab('Character Type').menu;
 
-		opponentCheckbox = new FlxUICheckBox(10, 20, null, null, "Opponent", 100);
-		opponentCheckbox.callback = () -> {
-			curTypeSelected = 0;
-			updateCharTypeBox();
-		};
-
-		boyfriendCheckbox = new FlxUICheckBox(opponentCheckbox.x, opponentCheckbox.y + 40, null, null, "Boyfriend", 100);
-		boyfriendCheckbox.callback = () -> {
-			curTypeSelected = 1;
-			updateCharTypeBox();
-		};
-
-		girlfriendCheckbox = new FlxUICheckBox(boyfriendCheckbox.x, boyfriendCheckbox.y + 40, null, null, "Girlfriend", 100);
-		girlfriendCheckbox.callback = () -> {
-			curTypeSelected = 2;
-			updateCharTypeBox();
-		};
-
-		tab_group.add(opponentCheckbox);
-		tab_group.add(boyfriendCheckbox);
-		tab_group.add(girlfriendCheckbox);
-		UI_typebox.addGroup(tab_group);
+		characterTypeRadio = new PsychUIRadioGroup(10, 20, ['Opponent', 'Boyfriend', 'Girlfriend'], 40);
+		characterTypeRadio.checked = 0;
+		characterTypeRadio.onClick = updateCharacters;
+		tab_group.add(characterTypeRadio);
 	}
 
-	var imageInputText:FlxUIInputText;
-	var idleInputText:FlxUIInputText;
-	var confirmInputText:FlxUIInputText;
-	var scaleStepper:FlxUINumericStepper;
-	var flipXCheckbox:FlxUICheckBox;
-	var antialiasingCheckbox:FlxUICheckBox;
+	var imageInputText:PsychUIInputText;
+	var idleInputText:PsychUIInputText;
+	var confirmInputText:PsychUIInputText;
+	var scaleStepper:PsychUINumericStepper;
+	var flipXCheckbox:PsychUICheckBox;
+	var antialiasingCheckbox:PsychUICheckBox;
 	function addCharacterUI() {
-		var tab_group:FlxUI = new FlxUI(null, UI_mainbox);
-		tab_group.name = "Character";
+		var tab_group:FlxSpriteGroup = UI_mainbox.getTab('Character').menu;
 		
-		imageInputText = new FlxUIInputText(10, 20, 80, characterFile.image, 8);
-		blockPressWhileTypingOn.push(imageInputText);
-		idleInputText = new FlxUIInputText(10, imageInputText.y + 35, 100, characterFile.idle_anim, 8);
-		blockPressWhileTypingOn.push(idleInputText);
-		confirmInputText = new FlxUIInputText(10, idleInputText.y + 35, 100, characterFile.confirm_anim, 8);
-		blockPressWhileTypingOn.push(confirmInputText);
+		imageInputText = new PsychUIInputText(10, 20, 80, characterFile.image, 8);
+		idleInputText = new PsychUIInputText(10, imageInputText.y + 35, 100, characterFile.idle_anim, 8);
+		confirmInputText = new PsychUIInputText(10, idleInputText.y + 35, 100, characterFile.confirm_anim, 8);
 
-		flipXCheckbox = new FlxUICheckBox(10, confirmInputText.y + 30, null, null, "Flip X", 100);
-		flipXCheckbox.callback = () -> {
-			grpWeekCharacters.members[curTypeSelected].flipX = flipXCheckbox.checked;
+		flipXCheckbox = new PsychUICheckBox(10, confirmInputText.y + 30, "Flip X", 100);
+		flipXCheckbox.onClick = () -> {
+			grpWeekCharacters.members[characterTypeRadio.checked].flipX = flipXCheckbox.checked;
 			characterFile.flipX = flipXCheckbox.checked;
 		};
 
-		antialiasingCheckbox = new FlxUICheckBox(10, flipXCheckbox.y + 30, null, null, "Antialiasing", 100);
-		antialiasingCheckbox.checked = grpWeekCharacters.members[curTypeSelected].antialiasing;
-		antialiasingCheckbox.callback = () -> {
-			grpWeekCharacters.members[curTypeSelected].antialiasing = antialiasingCheckbox.checked;
+		antialiasingCheckbox = new PsychUICheckBox(10, flipXCheckbox.y + 30, "Antialiasing", 100);
+		antialiasingCheckbox.checked = grpWeekCharacters.members[characterTypeRadio.checked].antialiasing;
+		antialiasingCheckbox.onClick = () -> {
+			grpWeekCharacters.members[characterTypeRadio.checked].antialiasing = antialiasingCheckbox.checked;
 			characterFile.antialiasing = antialiasingCheckbox.checked;
 		};
 
-		var reloadImageButton:FlxButton = new FlxButton(140, confirmInputText.y + 30, "Reload Char", () -> reloadSelectedCharacter());
+		var reloadImageButton:PsychUIButton = new PsychUIButton(140, confirmInputText.y + 30, "Reload Char", () -> reloadSelectedCharacter());
 		
-		scaleStepper = new FlxUINumericStepper(140, imageInputText.y, 0.05, 1, 0.1, 30, 2);
+		scaleStepper = new PsychUINumericStepper(140, imageInputText.y, 0.05, 1, 0.1, 30, 2);
 
 		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Image file name:'));
 		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Idle animation on the .XML:'));
@@ -165,21 +126,6 @@ class MenuCharacterEditorState extends MusicBeatState {
 		tab_group.add(idleInputText);
 		tab_group.add(confirmInputText);
 		tab_group.add(scaleStepper);
-		UI_mainbox.addGroup(tab_group);
-	}
-
-	function updateCharTypeBox() {
-		opponentCheckbox.checked = false;
-		boyfriendCheckbox.checked = false;
-		girlfriendCheckbox.checked = false;
-
-		switch(curTypeSelected) {
-			case 0: opponentCheckbox.checked = true;
-			case 1: boyfriendCheckbox.checked = true;
-			case 2: girlfriendCheckbox.checked = true;
-		}
-
-		updateCharacters();
 	}
 
 	function updateCharacters() {
@@ -193,12 +139,12 @@ class MenuCharacterEditorState extends MusicBeatState {
 	}
 	
 	function reloadSelectedCharacter() {
-		var char:MenuCharacter = grpWeekCharacters.members[curTypeSelected];
+		var char:MenuCharacter = grpWeekCharacters.members[characterTypeRadio.checked];
 
 		char.alpha = 1;
 		char.frames = Paths.getSparrowAtlas('menucharacters/' + characterFile.image);
 		char.animation.addByPrefix('idle', characterFile.idle_anim, 24);
-		if(characterFile.confirm_anim != null && characterFile.confirm_anim != '' && characterFile.confirm_anim != characterFile.idle_anim) char.animation.addByPrefix('confirm', characterFile.confirm_anim, 24, false);
+		if(characterTypeRadio.checked == 1 && characterFile.confirm_anim != null && characterFile.confirm_anim != '' && characterFile.confirm_anim != characterFile.idle_anim) char.animation.addByPrefix('confirm', characterFile.confirm_anim, 24, false);
 		char.flipX = (characterFile.flipX == true);
 
 		char.scale.set(characterFile.scale, characterFile.scale);
@@ -210,9 +156,9 @@ class MenuCharacterEditorState extends MusicBeatState {
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Menu Character Editor", "Editing: " + characterFile.image); #end
 	}
 
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
-		if(id == FlxUICheckBox.CLICK_EVENT) unsavedProgress = true;
-		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
+	public function UIEvent(id:String, sender:Dynamic) {
+		if(id == PsychUICheckBox.CLICK_EVENT) unsavedProgress = true;
+		if(id == PsychUIInputText.CHANGE_EVENT && (sender is PsychUIInputText)) {
 			if(sender == imageInputText) {
 				characterFile.image = imageInputText.text;
 				unsavedProgress = true;
@@ -223,7 +169,7 @@ class MenuCharacterEditorState extends MusicBeatState {
 				characterFile.confirm_anim = confirmInputText.text;
 				unsavedProgress = true;
 			}
-		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
+		} else if(id == PsychUINumericStepper.CHANGE_EVENT && (sender is PsychUINumericStepper)) {
 			if (sender == scaleStepper) {
 				characterFile.scale = scaleStepper.value;
 				reloadSelectedCharacter();
@@ -233,18 +179,7 @@ class MenuCharacterEditorState extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float) {
-		var blockInput:Bool = false;
-		for (inputText in blockPressWhileTypingOn) {
-			if(inputText.hasFocus) {
-				ClientPrefs.toggleVolumeKeys(false);
-				blockInput = true;
-
-				if(FlxG.keys.justPressed.ENTER) inputText.hasFocus = false;
-				break;
-			}
-		}
-
-		if(!blockInput) {
+		if(PsychUIInputText.focusOn == null) {
 			ClientPrefs.toggleVolumeKeys();
 
 			if(FlxG.keys.justPressed.ESCAPE) {
@@ -273,8 +208,8 @@ class MenuCharacterEditorState extends MusicBeatState {
 				updateOffset();
 			}
 
-			if(FlxG.keys.justPressed.SPACE && curTypeSelected == 1) {
-				grpWeekCharacters.members[curTypeSelected].animation.play('confirm', true);
+			if(FlxG.keys.justPressed.SPACE && characterTypeRadio.checked == 1) {
+				grpWeekCharacters.members[characterTypeRadio.checked].animation.play('confirm', true);
 			}
 		}
 
@@ -286,7 +221,7 @@ class MenuCharacterEditorState extends MusicBeatState {
 	}
 
 	function updateOffset() {
-		var char:MenuCharacter = grpWeekCharacters.members[curTypeSelected];
+		var char:MenuCharacter = grpWeekCharacters.members[characterTypeRadio.checked];
 		char.offset.set(characterFile.position[0], characterFile.position[1]);
 		txtOffsets.text = '' + characterFile.position;
 	}

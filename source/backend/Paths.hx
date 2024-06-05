@@ -140,9 +140,8 @@ class Paths {
 			var file:String = getPath(key, IMAGE, parentFolder);
 			#if MODS_ALLOWED
 			if (FileSystem.exists(file)) bitmap = BitmapData.fromFile(file);
-			#else
-			if (OpenFlAssets.exists(file, IMAGE)) bitmap = OpenFlAssets.getBitmapData(file);
-			#end
+			else #end if (OpenFlAssets.exists(file, IMAGE))
+				bitmap = OpenFlAssets.getBitmapData(file);
 
 			if(bitmap == null) {
 				FlxG.log.warn('Could not find image with key: "$key"' + (parentFolder == null ? "" : 'in parent folder: "$parentFolder"'));

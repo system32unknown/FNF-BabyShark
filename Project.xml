@@ -37,6 +37,7 @@
 	
 	<assets path="assets/fonts"/>
 	<assets path="assets/shared"/>
+	<assets path="assets/embed"/>
 	<assets path="assets/videos" if="VIDEOS_ALLOWED"/>
 	<assets path="assets/songs"/>
 	<assets path="assets/week_assets" rename="assets"/>
@@ -46,7 +47,6 @@
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>
-	<haxelib name="flixel-ui"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="flxanimate"/>
 	<haxelib name="hscript-improved"/>

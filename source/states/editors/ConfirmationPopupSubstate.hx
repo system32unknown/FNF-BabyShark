@@ -1,7 +1,5 @@
 package states.editors;
 
-import flixel.ui.FlxButton;
-
 class ConfirmationPopupSubstate extends MusicBeatSubstate {
 	var bg:FlxSprite;
 	var finishCallback:Void->Void;
@@ -22,23 +20,25 @@ class ConfirmationPopupSubstate extends MusicBeatSubstate {
 		bg.screenCenter();
 		add(bg);
 
-		var txt:FlxText = new FlxText(0, bg.y + 25, 400, 'There\'s unsaved progress,\nare you sure you want to exit?', 16);
+		var txt:FlxText = new FlxText(0, bg.y + 30, 400, 'There\'s unsaved progress,\nare you sure you want to exit?', 16);
 		txt.screenCenter(X);
 		txt.alignment = CENTER;
 		add(txt);
 
 		var btnY:Int = 390;
-		var btn:FlxButton = new FlxButton(0, btnY, 'Exit', () -> {
+		var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Exit', () -> {
 			FlxG.mouse.visible = false;
 			FlxG.switchState(() -> new MasterEditorMenu());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			if(finishCallback != null) finishCallback();
 		});
+		btn.normalStyle.bgColor = FlxColor.RED;
+		btn.normalStyle.textColor = FlxColor.WHITE;
 		btn.screenCenter(X);
 		btn.x -= 100;
 		add(btn);
 
-		var btn:FlxButton = new FlxButton(0, btnY, 'Cancel', () -> close());
+		var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', () -> close());
 		btn.screenCenter(X);
 		btn.x += 100;
 		add(btn);

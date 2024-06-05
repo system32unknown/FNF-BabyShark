@@ -110,10 +110,8 @@ class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 			return vec2(pt.x + x, pt.y + y);
 		}
 
-		void main()
-		{
-			vec2 uv = sineWave(openfl_TextureCoordv);
-			gl_FragColor = texture2D(bitmap, uv);
+		void main() {
+			gl_FragColor = texture2D(bitmap, sineWave(openfl_TextureCoordv));
 		}
 	')
 	public function new() {super();}

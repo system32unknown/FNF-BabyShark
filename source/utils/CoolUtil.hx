@@ -115,13 +115,13 @@ class CoolUtil {
 		if (secs.length < 2) secs = '0$secs';
 
 		var formattedtime:String = '$mins:$secs';
-		if (hour != "0" && days == '0') {
+		if (hour != '0' && days == '0') {
 			if (mins.length < 2) mins = '0$mins';
 			formattedtime = '$hour:$mins:$secs';
 		}
 
-		if (days != "0" && weeks == '0') formattedtime = days + 'd ' + hour + 'h ' + mins + "m " + secs + 's';
-		if (weeks != "0") formattedtime = weeks + 'w ' + days + 'd ' + hour + 'h ' + mins + "m " + secs + 's';
+		if (days != '0' && weeks == '0') formattedtime = days + 'd ' + hour + 'h ' + mins + "m " + secs + 's';
+		if (weeks != '0') formattedtime = weeks + 'w ' + days + 'd ' + hour + 'h ' + mins + "m " + secs + 's';
 
 		if (precision > 0) {
 			var secondsForMS:Float = time % 60;

@@ -66,8 +66,8 @@ class SystemInfo extends FramerateCategory {
 			if(vramKnown) __formattedSysText += 'VRAM: $vRAM'; // 1000 bytes of vram (apus)
 		}
 		if (totalMem != "Unknown") __formattedSysText += '\nTotal MEM: $totalMem';
-		__formattedSysText += "\nGL Render: " + '${getGLInfo(RENDERER)}';
-		__formattedSysText += "\nGL Shading version: " + '${getGLInfo(SHADING_LANGUAGE_VERSION)}';
+		__formattedSysText += "\nGL Render: " + getGLInfo(RENDERER);
+		__formattedSysText += "\nGL Shading version: " + getGLInfo(SHADING_LANGUAGE_VERSION);
 		__formattedSysText += "\nHaxe " + Compiler.getDefine("haxe") + " / " + FlxG.VERSION;
 	}
 

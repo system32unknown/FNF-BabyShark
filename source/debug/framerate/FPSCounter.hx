@@ -1,7 +1,6 @@
 package debug.framerate;
 
 import openfl.text.TextField;
-
 import utils.system.FPSUtil;
 import flixel.util.FlxStringUtil;
 
@@ -39,7 +38,7 @@ class FPSCounter extends openfl.display.Sprite {
 		} else if (fpsManager.checkFPSLag()) fpsTxt.textColor = FlxColor.RED;
 		else fpsTxt.textColor = FlxColor.WHITE;
 
-		fpsTxt.text = '${fpsManager.curFPS}FPS\n';
+		fpsTxt.text = '${fpsManager.curFPS}FPS [${Std.int((1 / fpsManager.curFPS) * 1000)}ms]\n';
 		if (memCounterType == "MEM" || memCounterType == "MEM/PEAK")
 			fpsTxt.text += '${FlxStringUtil.formatBytes(memory)}' + (memCounterType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
 	}

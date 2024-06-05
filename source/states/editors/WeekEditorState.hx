@@ -1,11 +1,5 @@
 package states.editors;
 
-import flixel.addons.ui.FlxUI;
-import flixel.addons.ui.FlxUIInputText;
-import flixel.addons.ui.FlxUICheckBox;
-import flixel.addons.ui.FlxUINumericStepper;
-import flixel.addons.ui.FlxUITabMenu;
-import flixel.ui.FlxButton;
 import openfl.utils.Assets;
 import openfl.net.FileReference;
 import openfl.events.Event;
@@ -17,7 +11,7 @@ import objects.HealthIcon;
 import objects.MenuCharacter;
 import objects.MenuItem;
 
-class WeekEditorState extends MusicBeatState {
+class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent {
 	var txtWeekTitle:FlxText;
 	var bgSprite:FlxSprite;
 	var lock:FlxSprite;
@@ -96,78 +90,63 @@ class WeekEditorState extends MusicBeatState {
 		super.create();
 	}
 
-	var UI_box:FlxUITabMenu;
-	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
+	var UI_box:PsychUIBox;
 	function addEditorBox() {
-		UI_box = new FlxUITabMenu(null, [
-			{name: 'Week', label: 'Week'},
-			{name: 'Other', label: 'Other'},
-		], true);
-		UI_box.resize(250, 375);
-		UI_box.setPosition(FlxG.width - UI_box.width, FlxG.height - UI_box.height);
+		UI_box = new PsychUIBox(FlxG.width, FlxG.height, 250, 375, ['Other', 'Week']);
+		UI_box.x -= UI_box.width;
+		UI_box.y -= UI_box.height;
 		UI_box.scrollFactor.set();
-		addWeekUI();
+		add(UI_box);
 		addOtherUI();
-		
-		UI_box.selected_tab_id = 'Week';
+		addWeekUI();
+
+		UI_box.selectedName = 'Week';
 		add(UI_box);
 
-		var loadWeekButton:FlxButton = new FlxButton(0, 650, "Load Week", () -> loadWeek());
+		var loadWeekButton:PsychUIButton = new PsychUIButton(0, 650, "Load Week", () -> loadWeek());
 		loadWeekButton.screenCenter(X).x -= 120;
 		add(loadWeekButton);
-		
-		var freeplayButton:FlxButton = new FlxButton(0, 650, "Freeplay", () -> FlxG.switchState(() -> new WeekEditorFreeplayState(weekFile)));
+
+		var freeplayButton:PsychUIButton = new PsychUIButton(0, 650, "Freeplay", () -> FlxG.switchState(() -> new WeekEditorFreeplayState(weekFile)));
 		freeplayButton.screenCenter(X);
 		add(freeplayButton);
-	
-		var saveWeekButton:FlxButton = new FlxButton(0, 650, "Save Week", () -> saveWeek(weekFile));
+
+		var saveWeekButton:PsychUIButton = new PsychUIButton(0, 650, "Save Week", () -> saveWeek(weekFile));
 		saveWeekButton.screenCenter(X).x += 120;
 		add(saveWeekButton);
 	}
 
-	var songsInputText:FlxUIInputText;
-	var backgroundInputText:FlxUIInputText;
-	var displayNameInputText:FlxUIInputText;
-	var weekNameInputText:FlxUIInputText;
-	var weekFileInputText:FlxUIInputText;
+	var songsInputText:PsychUIInputText;
+	var backgroundInputText:PsychUIInputText;
+	var displayNameInputText:PsychUIInputText;
+	var weekNameInputText:PsychUIInputText;
+	var weekFileInputText:PsychUIInputText;
 	
-	var opponentInputText:FlxUIInputText;
-	var boyfriendInputText:FlxUIInputText;
-	var girlfriendInputText:FlxUIInputText;
+	var opponentInputText:PsychUIInputText;
+	var boyfriendInputText:PsychUIInputText;
+	var girlfriendInputText:PsychUIInputText;
 
-	var hideCheckbox:FlxUICheckBox;
+	var hideCheckbox:PsychUICheckBox;
 
 	public static var weekFileName:String = 'week1';
 	
 	function addWeekUI() {
-		final tab_group:FlxUI = new FlxUI(null, UI_box);
-		tab_group.name = "Week";
+		var tab_group:FlxSpriteGroup = UI_box.getTab('Week').menu;
 		
-		songsInputText = new FlxUIInputText(10, 30, 200, '', 8);
+		songsInputText = new PsychUIInputText(10, 30, 200, '', 8);
 
-		opponentInputText = new FlxUIInputText(10, songsInputText.y + 40, 70, '', 8);
-		boyfriendInputText = new FlxUIInputText(opponentInputText.x + 75, opponentInputText.y, 70, '', 8);
-		girlfriendInputText = new FlxUIInputText(boyfriendInputText.x + 75, opponentInputText.y, 70, '', 8);
+		opponentInputText = new PsychUIInputText(10, songsInputText.y + 40, 70, '', 8);
+		boyfriendInputText = new PsychUIInputText(opponentInputText.x + 75, opponentInputText.y, 70, '', 8);
+		girlfriendInputText = new PsychUIInputText(boyfriendInputText.x + 75, opponentInputText.y, 70, '', 8);
 
-		backgroundInputText = new FlxUIInputText(10, opponentInputText.y + 40, 120, '', 8);
-		displayNameInputText = new FlxUIInputText(10, backgroundInputText.y + 40, 200, '', 8);
-		weekNameInputText = new FlxUIInputText(10, displayNameInputText.y + 40, 150, '', 8);
-		weekFileInputText = new FlxUIInputText(10, weekNameInputText.y + 40, 100, '', 8);
-
-		blockPressWhileTypingOn.push(songsInputText);
-
-		blockPressWhileTypingOn.push(opponentInputText);
-		blockPressWhileTypingOn.push(boyfriendInputText);
-		blockPressWhileTypingOn.push(girlfriendInputText);
-
-		blockPressWhileTypingOn.push(backgroundInputText);
-		blockPressWhileTypingOn.push(displayNameInputText);
-		blockPressWhileTypingOn.push(weekNameInputText);
-
+		backgroundInputText = new PsychUIInputText(10, opponentInputText.y + 40, 120, '', 8);
+		displayNameInputText = new PsychUIInputText(10, backgroundInputText.y + 40, 200, '', 8);
+		weekNameInputText = new PsychUIInputText(10, displayNameInputText.y + 40, 150, '', 8);
+		weekFileInputText = new PsychUIInputText(10, weekNameInputText.y + 40, 100, '', 8);
 		reloadWeekThing();
 
-		hideCheckbox = new FlxUICheckBox(10, weekFileInputText.y + 40, null, null, "Hide Week from Story Mode?", 100);
-		hideCheckbox.callback = () -> {
+		hideCheckbox = new PsychUICheckBox(10, weekFileInputText.y + 40, "Hide Week from Story Mode?", 100);
+		hideCheckbox.onClick = () -> {
 			weekFile.hideStoryMode = hideCheckbox.checked;
 			unsavedProgress = true;
 		};
@@ -189,41 +168,34 @@ class WeekEditorState extends MusicBeatState {
 		tab_group.add(weekNameInputText);
 		tab_group.add(weekFileInputText);
 		tab_group.add(hideCheckbox);
-		UI_box.addGroup(tab_group);
 	}
 
-	var weekBeforeInputText:FlxUIInputText;
-	var difficultiesInputText:FlxUIInputText;
-	var lockedCheckbox:FlxUICheckBox;
-	var hiddenUntilUnlockCheckbox:FlxUICheckBox;
-	var sectionInputText:FlxUIInputText;
+	var weekBeforeInputText:PsychUIInputText;
+	var difficultiesInputText:PsychUIInputText;
+	var lockedCheckbox:PsychUICheckBox;
+	var hiddenUntilUnlockCheckbox:PsychUICheckBox;
+	var sectionInputText:PsychUIInputText;
 	function addOtherUI() {
-		final tab_group:FlxUI = new FlxUI(null, UI_box);
-		tab_group.name = "Other";
+		var tab_group:FlxSpriteGroup = UI_box.getTab('Other').menu;
 
-		lockedCheckbox = new FlxUICheckBox(10, 30, null, null, "Week starts Locked", 100);
-		lockedCheckbox.callback = () -> {
+		lockedCheckbox = new PsychUICheckBox(10, 30, "Week starts Locked", 100);
+		lockedCheckbox.onClick = () -> {
 			weekFile.startUnlocked = !lockedCheckbox.checked;
 			lock.visible = lockedCheckbox.checked;
 			hiddenUntilUnlockCheckbox.alpha = 0.4 + 0.6 * (lockedCheckbox.checked ? 1 : 0);
 			unsavedProgress = true;
 		};
 
-		hiddenUntilUnlockCheckbox = new FlxUICheckBox(10, lockedCheckbox.y + 25, null, null, "Hidden until Unlocked", 110);
-		hiddenUntilUnlockCheckbox.callback = () -> {
+		hiddenUntilUnlockCheckbox = new PsychUICheckBox(10, lockedCheckbox.y + 25, "Hidden until Unlocked", 110);
+		hiddenUntilUnlockCheckbox.onClick = () -> {
 			weekFile.hiddenUntilUnlocked = hiddenUntilUnlockCheckbox.checked;
 			unsavedProgress = true;
 		};
 		hiddenUntilUnlockCheckbox.alpha = 0.4;
 
-		weekBeforeInputText = new FlxUIInputText(10, hiddenUntilUnlockCheckbox.y + 55, 100, '', 8);
-		blockPressWhileTypingOn.push(weekBeforeInputText);
-
-		difficultiesInputText = new FlxUIInputText(10, weekBeforeInputText.y + 60, 200, '', 8);
-		blockPressWhileTypingOn.push(difficultiesInputText);
-		
-		sectionInputText = new FlxUIInputText(10, difficultiesInputText.y + 75, 200, 'Vanilla', 8);
-		blockPressWhileTypingOn.push(sectionInputText);
+		weekBeforeInputText = new PsychUIInputText(10, hiddenUntilUnlockCheckbox.y + 55, 100, '', 8);
+		difficultiesInputText = new PsychUIInputText(10, weekBeforeInputText.y + 60, 200, '', 8);
+		sectionInputText = new PsychUIInputText(10, difficultiesInputText.y + 75, 200, 'Vanilla', 8);
 
 		tab_group.add(new FlxText(weekBeforeInputText.x, weekBeforeInputText.y - 28, 0, 'Week File name of the Week you have\nto finish for Unlocking:'));
 		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y - 20, 0, 'Difficulties:'));
@@ -234,7 +206,6 @@ class WeekEditorState extends MusicBeatState {
 		tab_group.add(sectionInputText);
 		tab_group.add(hiddenUntilUnlockCheckbox);
 		tab_group.add(lockedCheckbox);
-		UI_box.addGroup(tab_group);
 	}
 
 	//Used on onCreate and when you load a week
@@ -328,9 +299,9 @@ class WeekEditorState extends MusicBeatState {
 		#end
 	}
 	
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
-		if(id == FlxUICheckBox.CLICK_EVENT) unsavedProgress = true;
-		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
+	public function UIEvent(id:String, sender:Dynamic) {
+		if(id == PsychUICheckBox.CLICK_EVENT) unsavedProgress = true;
+		if(id == PsychUIInputText.CHANGE_EVENT && (sender is PsychUIInputText)) {
 			if(sender == opponentInputText || sender == boyfriendInputText || sender == girlfriendInputText) {
 				weekFile.weekCharacters[0] = opponentInputText.text.trim();
 				weekFile.weekCharacters[1] = boyfriendInputText.text.trim();
@@ -390,18 +361,7 @@ class WeekEditorState extends MusicBeatState {
 			reloadAllShit();
 		}
 
-		var blockInput:Bool = false;
-		for (inputText in blockPressWhileTypingOn) {
-			if(inputText.hasFocus) {
-				ClientPrefs.toggleVolumeKeys(false);
-				blockInput = true;
-
-				if(FlxG.keys.justPressed.ENTER) inputText.hasFocus = false;
-				break;
-			}
-		}
-
-		if(!blockInput) {
+		if(PsychUIInputText.focusOn == null) {
 			ClientPrefs.toggleVolumeKeys();
 			if(FlxG.keys.justPressed.ESCAPE) {
 				if(!unsavedProgress) {
@@ -409,7 +369,7 @@ class WeekEditorState extends MusicBeatState {
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				} else openSubState(new ConfirmationPopupSubstate(() -> unsavedProgress = false));
 			}
-		}
+		} else ClientPrefs.toggleVolumeKeys(false);
 
 		super.update(elapsed);
 
@@ -528,7 +488,7 @@ class WeekEditorState extends MusicBeatState {
 	}
 }
 
-class WeekEditorFreeplayState extends MusicBeatState {
+class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent {
 	var weekFile:WeekFile = null;
 	public function new(weekFile:WeekFile = null) {
 		super();
@@ -570,14 +530,12 @@ class WeekEditorFreeplayState extends MusicBeatState {
 		super.create();
 	}
 	
-	var UI_box:FlxUITabMenu;
+	var UI_box:PsychUIBox;
 	function addEditorBox() {
-		UI_box = new FlxUITabMenu(null, [{name: 'Freeplay', label: 'Freeplay'}], true);
-		UI_box.resize(250, 200);
-		UI_box.setPosition(FlxG.width - UI_box.width - 100, FlxG.height - UI_box.height - 60);
+		UI_box = new PsychUIBox(FlxG.width, FlxG.height, 250, 200, ['Freeplay']);
+		UI_box.x -= UI_box.width + 100;
+		UI_box.y -= UI_box.height + 60;
 		UI_box.scrollFactor.set();
-		
-		UI_box.selected_tab_id = 'Week';
 		addFreeplayUI();
 		add(UI_box);
 
@@ -585,44 +543,43 @@ class WeekEditorFreeplayState extends MusicBeatState {
 		blackBlack.alpha = 0.6;
 		add(blackBlack);
 
-		var loadWeekButton:FlxButton = new FlxButton(0, 685, "Load Week", () -> WeekEditorState.loadWeek());
+		var loadWeekButton:PsychUIButton = new PsychUIButton(0, 685, "Load Week", () -> WeekEditorState.loadWeek());
 		loadWeekButton.screenCenter(X).x -= 120;
 		add(loadWeekButton);
 		
-		var storyModeButton:FlxButton = new FlxButton(0, 685, "Story Mode", () -> FlxG.switchState(() -> new WeekEditorState(weekFile)));
+		var storyModeButton:PsychUIButton = new PsychUIButton(0, 685, "Story Mode", () -> FlxG.switchState(() -> new WeekEditorState(weekFile)));
 		storyModeButton.screenCenter(X);
 		add(storyModeButton);
 	
-		var saveWeekButton:FlxButton = new FlxButton(0, 685, "Save Week", () -> WeekEditorState.saveWeek(weekFile));
+		var saveWeekButton:PsychUIButton = new PsychUIButton(0, 685, "Save Week", () -> WeekEditorState.saveWeek(weekFile));
 		saveWeekButton.screenCenter(X).x += 120;
 		add(saveWeekButton);
 	}
 	
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
-		if(id == FlxUICheckBox.CLICK_EVENT) WeekEditorState.unsavedProgress = true;
-		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
+	public function UIEvent(id:String, sender:Dynamic) {
+		if(id == PsychUICheckBox.CLICK_EVENT) WeekEditorState.unsavedProgress = true;
+		if(id == PsychUIInputText.CHANGE_EVENT && (sender is PsychUIInputText)) {
 			weekFile.songs[curSelected][1] = iconInputText.text;
 			iconArray[curSelected].changeIcon(iconInputText.text);
-		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
+		} else if(id == PsychUINumericStepper.CHANGE_EVENT && (sender is PsychUINumericStepper)) {
 			if(sender == bgColorStepperR || sender == bgColorStepperG || sender == bgColorStepperB)
 				updateBG();
 		}
 	}
 
-	var bgColorStepperR:FlxUINumericStepper;
-	var bgColorStepperG:FlxUINumericStepper;
-	var bgColorStepperB:FlxUINumericStepper;
-	var iconInputText:FlxUIInputText;
+	var bgColorStepperR:PsychUINumericStepper;
+	var bgColorStepperG:PsychUINumericStepper;
+	var bgColorStepperB:PsychUINumericStepper;
+	var iconInputText:PsychUIInputText;
 	function addFreeplayUI() {
-		final tab_group:FlxUI = new FlxUI(null, UI_box);
-		tab_group.name = "Freeplay";
+		var tab_group:FlxSpriteGroup = UI_box.getTab('Freeplay').menu;
 
-		bgColorStepperR = new FlxUINumericStepper(10, 40, 20, 255, 0, 255, 0);
-		bgColorStepperG = new FlxUINumericStepper(80, 40, 20, 255, 0, 255, 0);
-		bgColorStepperB = new FlxUINumericStepper(150, 40, 20, 255, 0, 255, 0);
+		bgColorStepperR = new PsychUINumericStepper(10, 40, 20, 255, 0, 255, 0);
+		bgColorStepperG = new PsychUINumericStepper(80, 40, 20, 255, 0, 255, 0);
+		bgColorStepperB = new PsychUINumericStepper(150, 40, 20, 255, 0, 255, 0);
 
-		var copyColor:FlxButton = new FlxButton(10, bgColorStepperR.y + 25, "Copy Color", () -> Clipboard.text = bg.color.red + ',' + bg.color.green + ',' + bg.color.blue);
-		var pasteColor:FlxButton = new FlxButton(140, copyColor.y, "Paste Color", () -> {
+		var copyColor:PsychUIButton = new PsychUIButton(10, bgColorStepperR.y + 25, "Copy Color", () -> Clipboard.text = bg.color.red + ',' + bg.color.green + ',' + bg.color.blue);
+		var pasteColor:PsychUIButton = new PsychUIButton(140, copyColor.y, "Paste Color", () -> {
 			if(Clipboard.text != null) {
 				var leColor:Array<Int> = [];
 				var splitted:Array<String> = Clipboard.text.trim().split(',');
@@ -643,21 +600,21 @@ class WeekEditorFreeplayState extends MusicBeatState {
 				}
 			}
 		});
-		var decideIconColor:FlxButton = new FlxButton(pasteColor.x, pasteColor.y + 20, "Get BG Color", () -> {
+		var decideIconColor:PsychUIButton = new PsychUIButton(pasteColor.x, pasteColor.y + 20, "Get BG Color", () -> {
 			var coolColor:FlxColor = FlxColor.fromInt(SpriteUtil.dominantColor(iconArray[curSelected]));
 			bgColorStepperR.value = coolColor.red;
 			bgColorStepperG.value = coolColor.green;
 			bgColorStepperB.value = coolColor.blue;
-			getEvent(FlxUINumericStepper.CHANGE_EVENT, bgColorStepperR, null);
-			getEvent(FlxUINumericStepper.CHANGE_EVENT, bgColorStepperG, null);
-			getEvent(FlxUINumericStepper.CHANGE_EVENT, bgColorStepperB, null);
+			UIEvent(PsychUINumericStepper.CHANGE_EVENT, bgColorStepperR);
+			UIEvent(PsychUINumericStepper.CHANGE_EVENT, bgColorStepperG);
+			UIEvent(PsychUINumericStepper.CHANGE_EVENT, bgColorStepperB);
 		});
 
-		iconInputText = new FlxUIInputText(10, bgColorStepperR.y + 70, 100, '', 8);
+		iconInputText = new PsychUIInputText(10, bgColorStepperR.y + 70, 100, '', 8);
 
-		var hideFreeplayCheckbox:FlxUICheckBox = new FlxUICheckBox(iconInputText.x + 60, iconInputText.y + 30, null, null, "Hide Week from Freeplay?", 100);
+		var hideFreeplayCheckbox:PsychUICheckBox = new PsychUICheckBox(iconInputText.x + 60, iconInputText.y + 30, "Hide Week from Freeplay?", 100);
 		hideFreeplayCheckbox.checked = weekFile.hideFreeplay;
-		hideFreeplayCheckbox.callback = () -> {
+		hideFreeplayCheckbox.onClick = () -> {
 			weekFile.hideFreeplay = hideFreeplayCheckbox.checked;
 			WeekEditorState.unsavedProgress = true;
 		};
@@ -672,7 +629,6 @@ class WeekEditorFreeplayState extends MusicBeatState {
 		tab_group.add(decideIconColor);
 		tab_group.add(iconInputText);
 		tab_group.add(hideFreeplayCheckbox);
-		UI_box.addGroup(tab_group);
 	}
 
 	function updateBG() {
@@ -716,10 +672,8 @@ class WeekEditorFreeplayState extends MusicBeatState {
 			return;
 		}
 		
-		if(iconInputText.hasFocus) {
-			ClientPrefs.toggleVolumeKeys(false);
-			if(FlxG.keys.justPressed.ENTER) iconInputText.hasFocus = false;
-		} else {
+		if(PsychUIInputText.focusOn != null) ClientPrefs.toggleVolumeKeys(false);
+		else {
 			ClientPrefs.toggleVolumeKeys();
 			if(FlxG.keys.justPressed.ESCAPE) {
 				if(!WeekEditorState.unsavedProgress) {

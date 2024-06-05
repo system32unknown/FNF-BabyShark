@@ -168,7 +168,7 @@ final class DiscordPresence {
 	public var startTimestamp(get, set):Int;
 	public var endTimestamp(get, set):Int;
 
-	@:noCompletion private var __presence:DiscordRichPresence;
+	@:noCompletion var __presence:DiscordRichPresence;
 
 	function new() {
 		__presence = DiscordRichPresence.create();
@@ -269,7 +269,7 @@ final class DUser {
 
 		if (d.discriminator != 0)
 			d.handle = '${d.username}#${d.discriminator}';
-		else d.handle = '${d.username}';
+		else d.handle = d.username;
 		return d;
 	}
 

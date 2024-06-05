@@ -34,10 +34,6 @@ class MainMenuState extends MusicBeatState {
 		Mods.loadTopMod();
 
 		#if DISCORD_ALLOWED DiscordClient.changePresence(); #end
-
-		transIn = FlxTransitionableState.defaultTransIn;
-		transOut = FlxTransitionableState.defaultTransOut;
-
 		persistentUpdate = persistentDraw = true;
 
 		var yScroll:Float = .25;

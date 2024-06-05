@@ -72,8 +72,7 @@ class GlitchShader extends flixel.system.FlxAssets.FlxShader {
     }
     
     void main() {
-        vec2 uv = sineWave(openfl_TextureCoordv);
-        gl_FragColor = texture2D(bitmap, uv);
+        gl_FragColor = texture2D(bitmap, sineWave(openfl_TextureCoordv));
     }')
 
     public function new() {super();}

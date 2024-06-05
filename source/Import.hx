@@ -10,6 +10,9 @@ import backend.Conductor;
 import backend.BaseStage;
 import backend.Difficulty;
 import backend.Language;
+
+import backend.ui.*; //Psych-UI
+
 import debug.Logs;
 #if MODS_ALLOWED import backend.Mods; #end
 import backend.EK;

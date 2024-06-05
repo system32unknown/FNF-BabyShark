@@ -72,15 +72,14 @@ class Framerate extends openfl.display.Sprite {
 		x = offset.x;
 		y = offset.y;
 
-		var width = Math.max(fpsCounter.width, fpsCounter.width) + (x * 2);
-		var height = fpsCounter.y + fpsCounter.height;
+		var width:Float = Math.max(fpsCounter.width, fpsCounter.width) + (x * 2);
+		var height:Float = fpsCounter.y + fpsCounter.height;
 		bgSprite.x = -x;
 		bgSprite.y = offset.x;
 		bgSprite.scaleX = width;
 		bgSprite.scaleY = height;
 
 		var y:Float = height + 4;
-
 		for(c in categories) {
 			c.alpha = debugAlpha;
 			c.x = FlxMath.lerp(-c.width - offset.x, 0, debugAlpha);

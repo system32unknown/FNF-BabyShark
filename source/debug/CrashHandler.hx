@@ -32,11 +32,11 @@ class CrashHandler {
 						case Method(cla, func): errMsg += '[$file] ${cla.split(".")[cla.split(".").length - 1]}.$func() - (line $line)';
 						case _: errMsg += '$file (line $line)';
 					}
-					if (column != null) errMsg += ':${column}';
+					if (column != null) errMsg += ':$column';
 				case CFunction: errMsg += "Non-Haxe (C) Function";
-				case Module(c): errMsg += 'Module ${c}';
-				case Method(cl, m): errMsg += '${cl} - ${m}';
-				case LocalFunction(v): errMsg += 'Local Function ${v}';
+				case Module(c): errMsg += 'Module $c';
+				case Method(cl, m): errMsg += '$cl - $m';
+				case LocalFunction(v): errMsg += 'Local Function $v';
 			}
 			errMsg += '\n';
 		}

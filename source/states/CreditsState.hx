@@ -232,7 +232,7 @@ class CreditsState extends MusicBeatState {
 	}
 
 	#if MODS_ALLOWED
-	static var modDescription = 'Credits Section for the mod "%s"';
+	static var modDescription:String = 'Credits Section for the mod "%s"';
 	var modSectionsBound:Int = -1;
 
 	var modCredits:Array<Array<String>> = [];
@@ -242,7 +242,7 @@ class CreditsState extends MusicBeatState {
 
 		var arr:Array<String> = File.getContent(creditsFile).split('\n');
 		if (arr.length > 0) {
-			var metadata = new ModsMenuState.ModItem(folder);
+			var metadata:ModsMenuState.ModItem = new ModsMenuState.ModItem(folder);
 			var name:String = metadata.name;
 			var color:FlxColor = metadata.color;
 
@@ -296,8 +296,7 @@ class CreditSectionState extends MusicBeatState {
 			grpOptions.add(optionText);
 
 			if(isSelectable) {
-				if(creditsStuff[i][5] != null)
-					Mods.currentModDirectory = creditsStuff[i][5];
+				if(creditsStuff[i][5] != null) Mods.currentModDirectory = creditsStuff[i][5];
 
 				var str:String = 'credits/missing_icon';
 				if(creditsStuff[i][1] != null && creditsStuff[i][1].length > 0) {

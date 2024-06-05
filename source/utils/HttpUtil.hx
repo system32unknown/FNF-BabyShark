@@ -34,7 +34,7 @@ class HttpUtil {
 	static function isRedirect(status:Int):Bool {
 		switch (status) {
 			case 301 | 302 | 307 | 308:
-				Logs.traceColored([Logs.logText('[Connection Status] ', BLUE), Logs.logText('Redirected with status code: ', YELLOW), Logs.logText('$status', GREEN)], WARNING);
+				Logs.traceColored([Logs.logText('[Connection Status] ', BLUE), Logs.logText('Redirected with status code: ', YELLOW), Logs.logText(Std.string(status), GREEN)], WARNING);
 				return true;
 		}
 		return false;

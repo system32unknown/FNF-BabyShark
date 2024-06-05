@@ -86,15 +86,6 @@ class ColorSwapShader extends flixel.system.FlxAssets.FlxShader {
 		uniform vec3 uTime;
 		uniform bool awesomeOutline;
 
-		const float offset = 1.0 / 128.0;
-		vec3 normalizeColor(vec3 color) {
-			return vec3(
-				color[0] / 255.0,
-				color[1] / 255.0,
-				color[2] / 255.0
-			);
-		}
-
 		vec3 rgb2hsv(vec3 c) {
 			vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
 			vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
@@ -115,7 +106,6 @@ class ColorSwapShader extends flixel.system.FlxAssets.FlxShader {
 		void main()
 		{
 			vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
-
 			vec4 swagColor = vec4(rgb2hsv(vec3(color[0], color[1], color[2])), color[3]);
 
 			// [0] is the hue???
