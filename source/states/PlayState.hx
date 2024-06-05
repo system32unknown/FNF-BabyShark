@@ -1847,7 +1847,7 @@ class PlayState extends MusicBeatState {
 	function getScoreText():String {
 		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps, maxNPS])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
 		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('break_text', '| Breaks:{1} ', [songMisses]); 
-		if (!cpuControlled) tempText += Language.getPhrase('| {1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' N/A');
+		if (!cpuControlled) tempText += Language.getPhrase('| Acc: {1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' N/A');
 		return tempText;
 	}
 

@@ -684,7 +684,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	function updateScore() {
 		var str:String = '?';
 		if(totalPlayed != 0) str = '${MathUtil.floorDecimal(ratingPercent * 100, 2)}% • $ratingFC';
-		scoreTxt.text = '${!ClientPrefs.data.showNPS ? '' : 'NPS:$nps/$maxNPS | '}' + 'Hits:$songHits | Breaks:$songMisses | $str';
+		scoreTxt.text = '${!ClientPrefs.data.showNPS ? '' : 'NPS:$nps/$maxNPS | '}' + 'Hits:$songHits | Breaks:$songMisses | Acc:$str';
 	}
 	
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {
