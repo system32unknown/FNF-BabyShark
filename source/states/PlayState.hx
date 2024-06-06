@@ -2485,10 +2485,12 @@ class PlayState extends MusicBeatState {
 
 			try {
 				returnVal = script.executeFunction(funcToCall, args);
+				final stopHscript:Bool = (returnVal == LuaUtils.Function_StopHScript);
+				final stopAll:Bool = (returnVal == LuaUtils.Function_StopAll);
 				if (script.exception != null) {
 					script.active = false;
 					FunkinLua.luaTrace('ERROR ($funcToCall) - ${script.exception}', true, false, FlxColor.RED);
-				} else if((returnVal == LuaUtils.Function_StopHScript || returnVal == LuaUtils.Function_StopAll) && !excludeValues.contains(returnVal) && !ignoreStops) break;
+				} else if((stopHscript || stopAll) && !excludeValues.contains(returnVal) && !ignoreStops) break;
 			}
 		}
 		#end

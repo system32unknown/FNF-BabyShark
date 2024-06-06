@@ -58,6 +58,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	var scoreTxt:FlxText;
 	var dataTxt:FlxText;
+	var noteTxt:FlxText;
 
 	var msTimingTween:FlxTween;
 	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");

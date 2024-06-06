@@ -244,35 +244,39 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		helpBg.alpha = 0.6;
 		helpBg.active = helpBg.visible = false;
 
-		var arr:Array<String> = "W/S or Mouse Wheel - Change Conductor's strum time
-		\nH - Go to the start of the chart
-		\nA/D - Go to the previous/next section
-		\nLeft/Right - Change Snap
-		\nUp/Down - Change Conductor's Strum Time with Snapping
-		\nBrackets - Change Song Playback Rate (SHIFT to go Faster)
-		\nALT + Brackets - Reset Song Playback Rate
-		\nHold Shift - Move 4x faster Conductor's strum time
-		\nHold Control + click on an arrow - Select it
-		\nZ/X - Zoom in/out
-		\n
-		\nHold Right Mouse - Placing Notes by dragging mouse
-		\nEsc - Test your chart inside Chart Editor
-		\nEnter - Play your chart
-		\nQ/E - Decrease/Increase Note Sustain Length
-		\nSpace - Stop/Resume song
-		\nHold Ctrl and Click - Place Both Notes".split('\n');
+		var str:Array<String> = [
+			"W/S or Mouse Wheel - Change Conductor's strum time",
+			"H - Go to the start of the chart",
+			"A/D - Go to the previous/next section",
+			"Left/Right - Change Snap",
+			"Up/Down - Change Conductor's Strum Time with Snapping",
+			"",
+			"Brackets - Change Song Playback Rate (SHIFT to go Faster)",
+			"ALT + Brackets - Reset Song Playback Rate",
+			"",
+			"Hold Shift - Move 4x faster Conductor's strum time",
+			"Hold Control + click on an arrow - Select it",
+			"Z/X - Zoom in/out",
+			"",
+			"Hold Right Mouse - Placing Notes by dragging mouse",
+			"Esc - Test your chart inside Chart Editor",
+			"Enter - Play your chart",
+			"Q/E - Decrease/Increase Note Sustain Length",
+			"Space - Stop/Resume song",
+			"Hold Ctrl and Click - Place Both Notes",
+		];
 
 		helpTexts = new FlxSpriteGroup();
 		helpTexts.scrollFactor.set();
-		for (i in 0...arr.length) {
-			if(arr[i].length < 2) continue;
-
-			var helpText:FlxText = new FlxText(0, 0, 720, arr[i], 16);
+		for (i => txt in str) {
+			if(txt.length < 1) continue;
+	
+			var helpText:FlxText = new FlxText(0, 0, 720, txt, 16);
 			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER, FlxColor.BLACK);
 			helpText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 			helpText.screenCenter();
 			add(helpText);
-			helpText.y += ((i - arr.length / 2) * 16);
+			helpText.y += ((i - str.length / 2) * 32) + 16;
 			helpText.active = false;
 			helpTexts.add(helpText);
 		}
@@ -828,7 +832,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var displayNameList:Array<String> = curNoteTypes.copy();
 		for (i in 1...displayNameList.length) displayNameList[i] = '$i. ${displayNameList[i]}';
 
-		noteTypeDropDown = new PsychUIDropDownMenu(10, 105, displayNameList, function(currentType:Int, character:String) {
+		noteTypeDropDown = new PsychUIDropDownMenu(10, 105, displayNameList, function(curType:Int, character:String) {
+			currentType = curType;
 			if(curSelectedNote != null && curSelectedNote[1] > -1) {
 				curSelectedNote[3] = curNoteTypes[currentType];
 				updateGrid();
@@ -855,8 +860,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			}
 			updateGrid();
 		});
-		leftSectionNotetype.setGraphicSize(80, 30);
-		leftSectionNotetype.updateHitbox();
+		leftSectionNotetype.resize(80, 30);
 		var rightSectionNotetype:PsychUIButton = new PsychUIButton(pasteButton.x, leftSectionNotetype.y, "Right Section to Notetype", () -> {
 			for (sNotes in _song.notes[curSec].sectionNotes) {
 				var note:Array<Dynamic> = sNotes;
@@ -866,8 +870,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			}
 			updateGrid();
 		});
-		rightSectionNotetype.setGraphicSize(80, 30);
-		rightSectionNotetype.updateHitbox();
+		rightSectionNotetype.resize(80, 30);
 
 		check_stackActive = new PsychUICheckBox(leftSectionNotetype.x, leftSectionNotetype.y + 50, "Spam Mode", 100);
 		check_stackActive.name = 'check_stackActive';
