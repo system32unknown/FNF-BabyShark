@@ -225,7 +225,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		dummyArrow.antialiasing = ClientPrefs.data.antialiasing;
 		add(dummyArrow);
 
-		UI_box = new PsychUIBox(640 + GRID_SIZE * 3, 25, 300, 400, ['Charting', 'Data', 'Note', 'Events', 'Section', 'Song']);
+		UI_box = new PsychUIBox(640 + GRID_SIZE * 3, 25, 300, 400, ['Charting', 'Data', 'Events', 'Note', 'Section', 'Song']);
 		UI_box.selectedName = 'Song';
 		UI_box.scrollFactor.set();
 
@@ -267,7 +267,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		for (i in 0...arr.length) {
 			if(arr[i].length < 2) continue;
 
-			var helpText:FlxText = new FlxText(0, 0, 700, arr[i], 16);
+			var helpText:FlxText = new FlxText(0, 0, 720, arr[i], 16);
 			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER, FlxColor.BLACK);
 			helpText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 			helpText.screenCenter();
@@ -1674,6 +1674,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		FlxG.sound.music.pitch = playbackSpeed;
 		vocals.pitch = playbackSpeed;
+		sliderRate.value = playbackSpeed;
 
 		bpmTxt.text =
 		'$currentSongName [${Difficulty.getString()}]' +

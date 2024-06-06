@@ -785,14 +785,17 @@ class FunkinLua {
 			Reflect.getProperty(LuaUtils.getInstance(), group)[index].centerOffsets();
 		});
 
-		set("removeLuaSprite", function(tag:String, destroy:Bool = true) {
-			var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
-			var obj:FlxSprite = variables.get(tag);
+		set("removeLuaSprite", function(tag:String, destroy:Bool = true, ?group:String = null) {
+			var obj:FlxSprite = LuaUtils.getObjectDirectly(tag);
 			if(obj == null || obj.destroy == null) return false;
 
-			LuaUtils.getInstance().remove(obj, true);
+			var groupObj:Dynamic = null;
+			if(group == null) groupObj = LuaUtils.getInstance();
+			else groupObj = LuaUtils.getObjectDirectly(group);
+
+			groupObj.remove(obj, true);
 			if(destroy) {
-				variables.remove(tag);
+				MusicBeatState.getVariables().remove(tag);
 				obj.destroy();
 			}
 			return true;

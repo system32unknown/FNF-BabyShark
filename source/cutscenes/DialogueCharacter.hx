@@ -49,7 +49,7 @@ class DialogueCharacter extends FlxSprite {
 
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);
-		if (!FileSystem.exists(path)) path = Paths.getSharedPath(characterPath);
+		if(!FileSystem.exists(path)) path = Paths.getSharedPath(characterPath);
 		if(!FileSystem.exists(path)) path = Paths.getSharedPath('images/dialogue/$DEFAULT_CHARACTER.json');
 		rawJson = File.getContent(path);
 		#else

@@ -35,11 +35,13 @@ class ConfirmationPopupSubstate extends MusicBeatSubstate {
 		btn.normalStyle.textColor = FlxColor.WHITE;
 		btn.screenCenter(X);
 		btn.x -= 100;
+		btn.cameras = cameras;
 		add(btn);
 
 		var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', () -> close());
 		btn.screenCenter(X);
 		btn.x += 100;
+		btn.cameras = cameras;
 		add(btn);
 
 		FlxG.mouse.visible = true;

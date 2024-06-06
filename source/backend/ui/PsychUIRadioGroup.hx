@@ -3,8 +3,7 @@ package backend.ui;
 import flixel.util.FlxDestroyUtil;
 import flixel.FlxObject;
 
-class PsychUIRadioGroup extends FlxSpriteGroup
-{
+class PsychUIRadioGroup extends FlxSpriteGroup {
 	public static final CLICK_EVENT = 'radiogroup_click';
 
 	public var labels(default, set):Array<String> = [];
@@ -25,8 +24,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 	public var onClick:Void->Void;
 
 	var _hitbox:FlxObject;
-	public function new(x:Float, y:Float, labels:Array<String>, space:Float = 25, maxItems:Int = 0, ?isHorizontal:Bool = false, ?textWidth:Int = 100)
-	{
+	public function new(x:Float, y:Float, labels:Array<String>, space:Float = 25, maxItems:Int = 0, ?isHorizontal:Bool = false, ?textWidth:Int = 100) {
 		super(x, y);
 		
 		_hitbox = new FlxObject();
@@ -49,56 +47,41 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 		this.maxItems = maxItems;
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		_hitbox.x = x;
-		_hitbox.y = y;
+		_hitbox.setPosition(x, y);
 		_hitbox.width = width;
 		_hitbox.height = height;
 		if(maxItems > 0 && maxItems < labels.length && FlxG.mouse.wheel != 0 && FlxG.mouse.overlaps(_hitbox, camera))
-		{
 			curScroll -= FlxG.mouse.wheel;
-			//trace('just scrolled: ' + FlxG.mouse.wheel);
-		}
 
 		var baseY:Float = y + radios.length * space;
 		if(stackHorizontal) baseY = y + 25;
 
 		var hasArrowUp:Bool = false;
 		var hasArrowDown:Bool = false;
-		if(arrowDown != null && arrowDown.exists && arrowDown.active)
-		{
-			arrowDown.x = x;
-			arrowDown.y = baseY;
+		if(arrowDown != null && arrowDown.exists && arrowDown.active) {
+			arrowDown.setPosition(x, baseY);
 			hasArrowDown = true;
 		}
 
-		if(arrowUp != null && arrowUp.exists && arrowUp.active)
-		{
-			arrowUp.x = x;
-			arrowUp.y = baseY;
+		if(arrowUp != null && arrowUp.exists && arrowUp.active) {
+			arrowUp.setPosition(x, baseY);
 			hasArrowUp = true;
-			if(hasArrowDown)
-				arrowDown.x += arrowUp.width + 8;
+			if(hasArrowDown) arrowDown.x += arrowUp.width + 8;
 		}
 
-		if(FlxG.mouse.justPressed)
-		{
-			if(hasArrowUp && maxItems > 0 && curScroll > 0 && FlxG.mouse.overlaps(arrowUp, camera))
-			{
+		if(FlxG.mouse.justPressed) {
+			if(hasArrowUp && maxItems > 0 && curScroll > 0 && FlxG.mouse.overlaps(arrowUp, camera)) {
 				curScroll--;
 				arrowUp.animation.play('press');
-			}
-			else if(hasArrowDown && maxItems > 0 && curScroll < (labels.length - maxItems) && FlxG.mouse.overlaps(arrowDown, camera))
-			{
+			} else if(hasArrowDown && maxItems > 0 && curScroll < (labels.length - maxItems) && FlxG.mouse.overlaps(arrowDown, camera)) {
 				curScroll++;
 				arrowDown.animation.play('press');
 			}
 		}
-		else if(FlxG.mouse.released)
-		{
+		else if(FlxG.mouse.released) {
 			if(hasArrowUp && arrowUp.animation.curAnim != null && arrowUp.animation.curAnim.name != 'normal')
 				arrowUp.animation.play('normal');
 			if(hasArrowDown && arrowDown.animation.curAnim != null && arrowDown.animation.curAnim.name != 'normal')
@@ -106,19 +89,14 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 		}
 	}
 
-	override function draw()
-	{
+	override function draw() {
 		super.draw();
 
-		if(arrowUp != null && arrowUp.exists && arrowUp.active)
-			arrowUp.draw();
-
-		if(arrowDown != null && arrowDown.exists && arrowDown.active)
-			arrowDown.draw();
+		if(arrowUp != null && arrowUp.exists && arrowUp.active) arrowUp.draw();
+		if(arrowDown != null && arrowDown.exists && arrowDown.active) arrowDown.draw();
 	}
 
-	override function destroy()
-	{
+	override function destroy() {
 		_hitbox = FlxDestroyUtil.destroy(_hitbox);
 		arrowUp = FlxDestroyUtil.destroy(arrowUp);
 		arrowDown = FlxDestroyUtil.destroy(arrowDown);
@@ -126,79 +104,63 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 	}
 
 	public var curScroll(default, set):Int = 0;
-	function set_curScroll(v:Int)
-	{
+	function set_curScroll(v:Int) {
 		var lastScroll:Int = curScroll;
-		if(maxItems > 0 && labels.length > maxItems)
-		{
+		if(maxItems > 0 && labels.length > maxItems) {
 			curScroll = Std.int(Math.max(0, Math.min(labels.length - maxItems, v)));
-			if(arrowUp != null && arrowUp.exists) 
-			{
+			if(arrowUp != null && arrowUp.exists) {
 				arrowUp.visible = arrowUp.active = true;
 				arrowUp.alpha = (curScroll != 0) ? 1 : 0.4;
 			}
-			if(arrowDown != null && arrowDown.exists) 
-			{
+			if(arrowDown != null && arrowDown.exists) {
 				arrowDown.visible = arrowDown.active = true;
 				arrowDown.alpha = (curScroll != (labels.length - maxItems)) ? 1 : 0.4;
 			}
-		}
-		else
-		{
+		} else {
 			curScroll = 0;
-			if(arrowUp != null && arrowUp.exists) 
-			{
+			if(arrowUp != null && arrowUp.exists)  {
 				arrowUp.visible = arrowUp.active = false;
 				arrowUp.alpha = 1;
 			}
-			if(arrowDown != null && arrowDown.exists) 
-			{
+			if(arrowDown != null && arrowDown.exists)  {
 				arrowDown.visible = arrowDown.active = false;
 				arrowDown.alpha = 1;
 			}
 		}
-		if(curScroll != lastScroll)
-		{
+		if(curScroll != lastScroll) {
 			checked += (lastScroll - curScroll);
 			updateRadioItems();
 		}
 		return curScroll;
 	}
 
-	function set_stackHorizontal(v:Bool)
-	{
+	function set_stackHorizontal(v:Bool) {
 		stackHorizontal = v;
 		updateRadioItems();
 		return stackHorizontal;
 	}
 
-	function set_checked(v:Int)
-	{
+	function set_checked(v:Int) {
 		checked = Std.int(Math.max(-1, Math.min(radios.length - 1, v)));
-		for (num => radio in radios)
-		{
+		for (num => radio in radios) {
 			radio.checked = (num == checked);
 			if(num == checked) @:bypassAccessor checkedRadio = radio;
 		}
 		return checked;
 	}
 
-	function set_labels(v:Array<String>)
-	{
+	function set_labels(v:Array<String>) {
 		labels = v;
 		updateRadioItems();
 		set_curScroll(curScroll);
 		return labels;
 	}
 
-	function set_checkedRadio(v:PsychUIRadioItem)
-	{
+	function set_checkedRadio(v:PsychUIRadioItem) {
 		checkedRadio = null;
-		for (num => radio in radios)
-		{
+		for (num => radio in radios) {
 			radio.checked = (v == radio);
-			if(v == radio)
-			{
+			if(v == radio) {
 				checkedRadio = radio;
 				@:bypassAccessor checked = num;
 			}
@@ -206,23 +168,18 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 		return checkedRadio;
 	}
 
-	function set_space(v:Float)
-	{
+	function set_space(v:Float) {
 		space = v;
-		for (num => radio in radios)
-		{
+		for (num => radio in radios) {
 			if(!stackHorizontal)
 				radio.y = y + num * space;
-			else
-				radio.x = x + num * (textWidth + space);
+			else radio.x = x + num * (textWidth + space);
 		}
 
 		return space;
 	}
 
-
-	function set_textWidth(v:Int)
-	{
+	function set_textWidth(v:Int) {
 		textWidth = v;
 		for (num => radio in radios)
 			radio.text.fieldWidth = textWidth;
@@ -230,8 +187,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 		return textWidth;
 	}
 
-	function set_maxItems(v:Int)
-	{
+	function set_maxItems(v:Int) {
 		maxItems = v;
 		set_curScroll(curScroll);
 
@@ -239,70 +195,50 @@ class PsychUIRadioGroup extends FlxSpriteGroup
 		return maxItems;
 	}
 
-	public function updateRadioItems()
-	{
-		if(maxItems > 0)
-		{
-			for (radio in radios)
-				radio.kill();
+	public function updateRadioItems() {
+		if(maxItems > 0) {
+			for (radio in radios) radio.kill();
 
 			radios = [];
-			for (i in 0...maxItems)
-			{
+			for (i in 0...maxItems) {
 				var rad = _addNewRadio();
 				if(i >= labels.length)
 					rad.visible = rad.active = false;
 			}
-		}
-		else
-		{
-			while(radios.length > labels.length)
-			{
+		} else {
+			while(radios.length > labels.length) {
 				//kill extra radios
 				radios[radios.length - 1].kill();
 				radios.pop();
 			}
-			while(radios.length < labels.length)
-			{
+			while(radios.length < labels.length) {
 				//recycle radios to fit number
 				_addNewRadio();
 			}
 		}
 		
-		for (num => radio in radios)
-		{
+		for (num => radio in radios) {
 			radio.visible = radio.active = (num < labels.length || labels.length > maxItems);
 			radio.label = labels[num + curScroll] != null ? labels[num + curScroll] : '';
-			if(!stackHorizontal)
-			{
-				radio.x = x;
-				radio.y = y + num * space;
-			}
-			else
-			{
-				radio.x = x + num * (textWidth + space);
-				radio.y = y;
-			}
+			if(!stackHorizontal) radio.setPosition(x, y + num * space);
+			else radio.setPosition(x + num * (textWidth + space), y);
 		}
 	}
 
-	override function set_cameras(v:Array<FlxCamera>)
-	{
+	override function set_cameras(v:Array<FlxCamera>) {
 		if(arrowUp != null && arrowUp.exists) arrowUp.cameras = v;
 		if(arrowDown != null && arrowDown.exists) arrowDown.cameras = v;
 		return super.set_cameras(v);
 	}
 
-	override function set_camera(v:FlxCamera)
-	{
+	override function set_camera(v:FlxCamera) {
 		if(arrowUp != null && arrowUp.exists) arrowUp.camera = v;
 		if(arrowDown != null && arrowDown.exists) arrowDown.camera = v;
 		return super.set_camera(v);
 	}
 
 	public var broadcastRadioGroupEvent:Bool = true;
-	function _addNewRadio()
-	{
+	function _addNewRadio() {
 		var radio:PsychUIRadioItem = cast recycle(PsychUIRadioItem);
 		radio.onClick = function() {
 			checkedRadio = radio;

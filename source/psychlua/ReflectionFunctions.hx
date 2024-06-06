@@ -144,17 +144,6 @@ class ReflectionFunctions {
 				}
 			} else FunkinLua.luaTrace('addInstance: Can\'t add what doesn\'t exist~ ($objectName)', false, false, FlxColor.RED);
 		});
-		funk.set("removeInstance", function(objectName:String, destroy:Bool = true) {
-			if(MusicBeatState.getVariables().exists(objectName)) {
-				var obj:Dynamic = MusicBeatState.getVariables().get(objectName);
-				LuaUtils.getInstance().remove(obj, true);
-				if(destroy) {
-					obj.kill();
-					obj.destroy();
-					MusicBeatState.getVariables().remove(objectName);
-				}
-			} else FunkinLua.luaTrace('removeInstance: Variable $objectName does not exist and cannot be removed!');
-		});
 		funk.set("instanceArg", function(instanceName:String, ?className:String = null) {
 			var retStr:String = '$instanceStr::$instanceName';
 			if(className != null) retStr += '::$className';

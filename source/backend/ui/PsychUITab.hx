@@ -22,8 +22,7 @@ class PsychUITab extends FlxSprite {
 		super.draw();
 
 		if(visible && text != null && text.exists && text.visible) {
-			text.x = x;
-			text.y = y + height / 2 - text.height / 2;
+			text.setPosition(x, y + height / 2 - text.height / 2);
 			text.draw();
 		}
 	}
@@ -43,14 +42,12 @@ class PsychUITab extends FlxSprite {
 
 	public function drawMenu(parent:PsychUIBox) {
 		if(menu != null && menu.exists && menu.visible) {
-			menu.x = parent.x;
-			menu.y = parent.y + parent.tabHeight;
+			menu.setPosition(parent.x, parent.y + parent.tabHeight);
 			menu.draw();
 		}
 	}
 
-	public function resize(width:Int, height:Int)
-	{
+	public function resize(width:Int, height:Int) {
 		setGraphicSize(width, height);
 		updateHitbox();
 		text.fieldWidth = width;

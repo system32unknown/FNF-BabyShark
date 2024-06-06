@@ -1,7 +1,6 @@
 package backend.ui;
 
-class PsychUICheckBox extends FlxSpriteGroup
-{
+class PsychUICheckBox extends FlxSpriteGroup {
 	public static final CLICK_EVENT = 'checkbox_click';
 
 	public var name:String;
@@ -12,8 +11,7 @@ class PsychUICheckBox extends FlxSpriteGroup
 	public var checked(default, set):Bool = false;
 	public var onClick:Void->Void = null;
 
-	public function new(x:Float, y:Float, label:String, ?textWid:Int = 100, ?callback:Void->Void)
-	{
+	public function new(x:Float, y:Float, label:String, ?textWid:Int = 100, ?callback:Void->Void) {
 		super(x, y);
 
 		box = new FlxSprite();
@@ -27,8 +25,7 @@ class PsychUICheckBox extends FlxSpriteGroup
 		this.onClick = callback;
 	}
 
-	public function boxGraphic()
-	{
+	public function boxGraphic() {
 		box.loadGraphic(Paths.image('psych-ui/checkbox', 'embed'), true, 16, 16);
 		box.animation.add('false', [0]);
 		box.animation.add('true', [1]);
@@ -36,17 +33,13 @@ class PsychUICheckBox extends FlxSpriteGroup
 	}
 
 	public var broadcastCheckBoxEvent:Bool = true;
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if(FlxG.mouse.justPressed)
-		{
+		if(FlxG.mouse.justPressed) {
 			var screenPos:FlxPoint = getScreenPosition(null, camera);
 			var mousePos:FlxPoint = FlxG.mouse.getPositionInCameraView(camera);
-			if((mousePos.x >= screenPos.x && mousePos.x < screenPos.x + width) &&
-				(mousePos.y >= screenPos.y && mousePos.y < screenPos.y + height))
-			{
+			if((mousePos.x >= screenPos.x && mousePos.x < screenPos.x + width) && (mousePos.y >= screenPos.y && mousePos.y < screenPos.y + height)) {
 				checked = !checked;
 				if(onClick != null) onClick();
 				if(broadcastCheckBoxEvent) PsychUIEventHandler.event(CLICK_EVENT, this);
@@ -54,8 +47,7 @@ class PsychUICheckBox extends FlxSpriteGroup
 		}
 	}
 
-	function set_checked(v:Any)
-	{
+	function set_checked(v:Any) {
 		var v:Bool = (v != null && v != false);
 		box.animation.play(Std.string(v));
 		return (checked = v);

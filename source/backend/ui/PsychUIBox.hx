@@ -77,8 +77,7 @@ class PsychUIBox extends FlxSpriteGroup {
 			_draggingPos = null;
 			_draggingPoint = null;
 			_draggingBox = false;
-			if(FlxG.mouse.released)
-			{
+			if(FlxG.mouse.released) {
 				if(_pressedBox) forceCheckNext = true;
 				_pressedBox = false;
 			}

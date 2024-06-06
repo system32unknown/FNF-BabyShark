@@ -229,7 +229,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		UI_box.scrollFactor.set();
 		UI_box.cameras = [camHUD];
 
-		UI_characterbox = new PsychUIBox(UI_box.x - 100, UI_box.y + UI_box.height + 10, 350, 280, ['Animations', 'Character']);
+		UI_characterbox = new PsychUIBox(UI_box.x - 100, UI_box.y + UI_box.height + 10, 350, 250, ['Animations', 'Character']);
 		UI_characterbox.scrollFactor.set();
 		UI_characterbox.cameras = [camHUD];
 		add(UI_characterbox);
@@ -316,7 +316,6 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			if(animateGhost != null) animateGhost.alpha = ghostAlpha;
 		}, ghostAlpha, 0, 1);
 		ghostAlphaSlider.label = 'Opacity:';
-		ghostAlphaSlider.decimals = 2;
 
 		tab_group.add(makeGhostButton);
 		tab_group.add(highlightGhost);
