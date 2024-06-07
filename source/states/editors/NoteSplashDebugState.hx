@@ -31,7 +31,7 @@ class NoteSplashDebugState extends MusicBeatState implements PsychUIEventHandler
 	public static final defaultTexture:String = 'noteSplashes';
 
 	override function create() {
-		FlxG.camera.bgColor = FlxColor.fromHSL(0, 0, 0.5);
+		FlxG.camera.bgColor = FlxColor.fromHSL(0, 0, .5);
 		selection = new FlxSprite(0, 270).makeGraphic(150, 150, FlxColor.BLACK);
 		selection.alpha = 0.4;
 		add(selection);

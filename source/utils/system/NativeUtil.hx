@@ -29,10 +29,38 @@ class NativeUtil {
 	/**
 	 * Sets the console colors
 	 */
-	public static function setConsoleColors(foregroundColor:ConsoleColor = LIGHTGRAY, ?backgroundColor:ConsoleColor = BLACK) {
-		#if windows PlatformUtil.setConsoleColors((cast(backgroundColor, Int) * 16) + cast(foregroundColor, Int)); #end
+	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
+		#if (windows && !hl)
+		if(foregroundColor == NONE) foregroundColor = LIGHTGRAY;
+		if(backgroundColor == NONE) backgroundColor = BLACK;
+		PlatformUtil.setConsoleColors((cast(backgroundColor, Int) * 16) + cast(foregroundColor, Int));
+		#elseif sys
+		Sys.print("\x1b[0m");
+		if(foregroundColor != NONE) Sys.print("\x1b[" + Std.int(consoleColorToANSI(foregroundColor)) + "m");
+		if(backgroundColor != NONE) Sys.print("\x1b[" + Std.int(consoleColorToANSI(backgroundColor) + 10) + "m");
+		#end
 	}
 
+	public static function consoleColorToANSI(color:ConsoleColor):Int {
+		return switch(color) {
+			case BLACK:			30;
+			case DARKBLUE:		34;
+			case DARKGREEN:		32;
+			case DARKCYAN:		36;
+			case DARKRED:		31;
+			case DARKMAGENTA:	35;
+			case DARKYELLOW:	33;
+			case LIGHTGRAY:		37;
+			case GRAY:			90;
+			case BLUE:			94;
+			case GREEN:			92;
+			case CYAN:			96;
+			case RED:			91;
+			case MAGENTA:		95;
+			case YELLOW:		93;
+			case WHITE | _:		97;
+		}
+	}
 	public static function consoleColorToOpenFL(color:ConsoleColor):FlxColor {
 		return switch(color) {
 			case BLACK:		 0xFF000000;
@@ -72,4 +100,6 @@ enum abstract ConsoleColor(Int) {
 	var MAGENTA:ConsoleColor = 13;
 	var YELLOW:ConsoleColor = 14;
 	var WHITE:ConsoleColor = 15;
+
+	var NONE:ConsoleColor = -1;
 }

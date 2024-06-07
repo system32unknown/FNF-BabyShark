@@ -240,7 +240,7 @@ class ClientPrefs {
 		toggleVolumeKeys();
 	}
 	public static function toggleVolumeKeys(turnOn:Bool = true) {
-		final emptyArray = [];
+		final emptyArray:Array<FlxKey> = [];
 		FlxG.sound.muteKeys = turnOn ? Main.muteKeys : emptyArray;
 		FlxG.sound.volumeDownKeys = turnOn ? Main.volumeDownKeys : emptyArray;
 		FlxG.sound.volumeUpKeys = turnOn ? Main.volumeUpKeys : emptyArray;

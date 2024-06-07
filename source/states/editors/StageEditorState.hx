@@ -233,7 +233,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		visibilityFilterUpdate();
 
 		posTxt = new FlxText(0, 50, 500, 'X: 0\nY: 0', 24);
-		posTxt.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		posTxt.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		posTxt.borderSize = 2;
 		posTxt.cameras = [camHUD];
 		posTxt.screenCenter(X);
@@ -241,10 +241,8 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		add(posTxt);
 
 		errorTxt = new FlxText(0, 0, 800, '', 24);
-		errorTxt.alignment = CENTER;
-		errorTxt.borderStyle = OUTLINE_FAST;
-		errorTxt.borderSize = 1;
-		errorTxt.color = FlxColor.RED;
+		errorTxt.setFormat(null, 24, FlxColor.RED, CENTER);
+		errorTxt.setBorderStyle(OUTLINE_FAST);
 		errorTxt.cameras = [camHUD];
 		errorTxt.screenCenter();
 		errorTxt.alpha = 0;
@@ -1830,9 +1828,9 @@ class StageEditorAnimationSubstate extends MusicBeatSubstate {
 				text.text = '${anim.anim}: ${spr.animOffsets.get(anim.anim)}';
 			else text.text = '${anim.anim}: No offsets';
 
-			text.setFormat(null, 16, FlxColor.WHITE, LEFT, OUTLINE_FAST, FlxColor.BLACK);
+			text.setFormat(null, 16, FlxColor.WHITE, LEFT);
+			text.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 			text.scrollFactor.set();
-			text.borderSize = 1;
 			animsTxtGroup.add(text);
 		}
 		updateTextColors();

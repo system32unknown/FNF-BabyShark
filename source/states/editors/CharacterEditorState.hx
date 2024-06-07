@@ -92,9 +92,9 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		add(ghost);
 
 		animsTxt = new FlxText(10, 32, 400, '');
-		animsTxt.setFormat(null, 16, FlxColor.WHITE, LEFT, OUTLINE_FAST, FlxColor.BLACK);
+		animsTxt.setFormat(null, 16, FlxColor.WHITE, LEFT);
+		animsTxt.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 		animsTxt.scrollFactor.set();
-		animsTxt.borderSize = 1;
 		animsTxt.cameras = [camHUD];
 
 		addCharacter();
@@ -118,25 +118,25 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 
 		var tipText:FlxText = new FlxText(FlxG.width - 300, FlxG.height - 24, 300, "Press F1 for Help", 16);
 		tipText.cameras = [camHUD];
-		tipText.setFormat(null, 16, FlxColor.WHITE, RIGHT, OUTLINE_FAST, FlxColor.BLACK);
+		tipText.setFormat(null, 16, FlxColor.WHITE, RIGHT);
+		tipText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 		tipText.borderColor = FlxColor.BLACK;
 		tipText.scrollFactor.set();
-		tipText.borderSize = 1;
 		tipText.active = false;
 		add(tipText);
 
 		cameraZoomText = new FlxText(0, 50, 200, 'Zoom: 1x');
-		cameraZoomText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);
+		cameraZoomText.setFormat(null, 16, FlxColor.WHITE, CENTER);
+		cameraZoomText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 		cameraZoomText.scrollFactor.set();
-		cameraZoomText.borderSize = 1;
 		cameraZoomText.screenCenter(X);
 		cameraZoomText.cameras = [camHUD];
 		add(cameraZoomText);
 
 		frameAdvanceText = new FlxText(0, 75, 350, '');
-		frameAdvanceText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);
+		frameAdvanceText.setFormat(null, 16, FlxColor.WHITE, CENTER);
+		frameAdvanceText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 		frameAdvanceText.scrollFactor.set();
-		frameAdvanceText.borderSize = 1;
 		frameAdvanceText.screenCenter(X);
 		frameAdvanceText.cameras = [camHUD];
 		add(frameAdvanceText);
@@ -190,10 +190,9 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			if(txt.length < 1) continue;
 
 			var helpText:FlxText = new FlxText(0, 0, 600, txt, 16);
-			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);
-			helpText.borderColor = FlxColor.BLACK;
+			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER);
+			helpText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 			helpText.scrollFactor.set();
-			helpText.borderSize = 1;
 			helpText.screenCenter();
 			add(helpText);
 			helpText.y += ((i - str.length / 2) * 32) + 16;

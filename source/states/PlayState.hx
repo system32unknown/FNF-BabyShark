@@ -321,7 +321,7 @@ class PlayState extends MusicBeatState {
 
 		#if LUA_ALLOWED
 		luaDebugGroup = new FlxTypedGroup<DebugLuaText>();
-		luaDebugGroup.camera = camOther;
+		luaDebugGroup.cameras = [camOther];
 		add(luaDebugGroup);
 		#end
 
@@ -478,8 +478,8 @@ class PlayState extends MusicBeatState {
 		botplayTxt.visible = cpuControlled;
 		uiGroup.add(botplayTxt);
 
-		uiGroup.camera = camHUD; noteGroup.camera = camHUD;
-		comboGroup.camera = (ClientPrefs.data.ratingDisplay == "Hud" ? camHUD : camGame);
+		uiGroup.cameras = [camHUD]; noteGroup.cameras = [camHUD];
+		comboGroup.cameras = (ClientPrefs.data.ratingDisplay == "Hud" ? [camHUD] : [camGame]);
 		startingSong = true;
 
 		for (notetype in noteTypes) {
@@ -748,7 +748,7 @@ class PlayState extends MusicBeatState {
 			}
 			psychDialogue.nextDialogueThing = startNextDialogue;
 			psychDialogue.skipDialogueThing = skipDialogue;
-			psychDialogue.camera = camHUD;
+			psychDialogue.cameras = [camHUD];
 			add(psychDialogue);
 		} else {
 			FlxG.log.warn('Your dialogue file is badly formatted!');
@@ -861,7 +861,7 @@ class PlayState extends MusicBeatState {
 
 	inline function createCountdownSprite(image:String):FlxSprite {
 		final spr:FlxSprite = new FlxSprite(Paths.image(image));
-		spr.camera = camHUD;
+		spr.cameras = [camHUD];
 		spr.scrollFactor.set();
 		spr.updateHitbox();
 
@@ -1315,7 +1315,6 @@ class PlayState extends MusicBeatState {
 				case 'Time Left' | 'Time Elapsed': formattedsec;
 				case 'Time Position': timePos;
 				case 'Name Left' | 'Name Elapsed': '$formattedtxt($formattedsec)';
-				case 'Name Percent': '$formattedtxt(${timeBar.percent}%)';
 				case 'Name Time Position' | _: '$formattedtxt($timePos)';
 			}
 		}

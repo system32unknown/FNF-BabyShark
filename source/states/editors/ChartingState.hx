@@ -203,7 +203,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		Conductor.mapBPMChanges(_song);
 		if(curSec >= _song.notes.length) curSec = _song.notes.length - 1;
 
-		bpmTxt = new FlxText(1100, 50, 0, "", 16);
+		bpmTxt = new FlxText(1060, 50, 0, "", 16);
 		bpmTxt.scrollFactor.set();
 		add(bpmTxt);
 
@@ -1505,17 +1505,12 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			}
 
 			if (FlxG.keys.justPressed.SPACE) {
-				if (FlxG.sound.music.playing) {
-					FlxG.sound.music.pause();
-					if(vocals != null) vocals.pause();
-				} else {
-					if(vocals != null) {
-						vocals.play();
-						pauseAndSetVocalsTime();
-						vocals.play();
-					}
+				if(vocals != null) vocals.play();
+				pauseAndSetVocalsTime();
+				if (!FlxG.sound.music.playing) {
 					FlxG.sound.music.play();
-				}
+					if(vocals != null) vocals.play();
+				} else FlxG.sound.music.pause();
 			}
 
 			if (!FlxG.keys.pressed.ALT && FlxG.keys.justPressed.R)
@@ -1585,6 +1580,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				quantization = quantizations[curQuant];
 			}
 			quant.animation.play('q', true, false, curQuant);
+
 			if(vortex) {
 				var controlArray:Array<Bool> = [FlxG.keys.justPressed.ONE, FlxG.keys.justPressed.TWO, FlxG.keys.justPressed.THREE, FlxG.keys.justPressed.FOUR, FlxG.keys.justPressed.FIVE, FlxG.keys.justPressed.SIX, FlxG.keys.justPressed.SEVEN, FlxG.keys.justPressed.EIGHT];
 				if(controlArray.contains(true) && _song.mania == 3) {
@@ -2108,7 +2104,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	}
 
 	var characterData:Dynamic = {iconP1: null, iconP2: null};
-
 	function updateJsonData():Void {
 		for (i in 1...3) Reflect.setField(characterData, 'iconP$i', !characterFailed ? loadCharacterFile(Reflect.field(_song, 'player$i')).healthicon : 'face');
 	}
@@ -2132,7 +2127,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);
 		if (!FileSystem.exists(path)) path = Paths.getSharedPath(characterPath);
-
 		if (!FileSystem.exists(path))
 		#else
 		var path:String = Paths.getSharedPath(characterPath);
