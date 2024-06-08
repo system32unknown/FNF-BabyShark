@@ -296,8 +296,10 @@ class HScript {
 		if (funcToRun == null || !active || !interp.variables.exists(funcToRun)) return null;
 
 		if (funcArgs == null) funcArgs = [];
-		var func:Dynamic = interp.variables.get(funcToRun);
-		if (func != null && Reflect.isFunction(func)) return Reflect.callMethod(null, func, funcArgs);
+		try {
+			var func:Dynamic = interp.variables.get(funcToRun);
+			if (func != null && Reflect.isFunction(func)) return Reflect.callMethod(null, func, funcArgs);
+		} catch(e) exception = e;
 
 		return null;
 	}

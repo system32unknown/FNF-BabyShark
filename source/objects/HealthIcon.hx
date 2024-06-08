@@ -38,8 +38,7 @@ class HealthIcon extends FlxSprite {
 		scrollFactor.set();
 	}
 
-	@:noCompletion
-	override function initVars():Void {
+	@:noCompletion override function initVars():Void {
 		super.initVars();
 		_scale = FlxPoint.get();
 	}
