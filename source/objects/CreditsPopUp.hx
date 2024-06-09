@@ -62,7 +62,7 @@ class CreditsPopUp extends FlxSpriteGroup {
 	function createHeadingText(text:String) {
 		if (funnyText != null) remove(funnyText);
 		funnyText = new FlxText(1, 0, 650, text, 30);
-		funnyText.setFormat(txtFont, 30, FlxColor.WHITE, LEFT);
+		funnyText.setFormat(txtFont, 30, FlxColor.WHITE);
         funnyText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		funnyText.antialiasing = true;
 		add(funnyText);

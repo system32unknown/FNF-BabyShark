@@ -118,11 +118,11 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 			}
 		} else {
 			curScroll = 0;
-			if(arrowUp != null && arrowUp.exists)  {
+			if(arrowUp != null && arrowUp.exists) {
 				arrowUp.visible = arrowUp.active = false;
 				arrowUp.alpha = 1;
 			}
-			if(arrowDown != null && arrowDown.exists)  {
+			if(arrowDown != null && arrowDown.exists) {
 				arrowDown.visible = arrowDown.active = false;
 				arrowDown.alpha = 1;
 			}

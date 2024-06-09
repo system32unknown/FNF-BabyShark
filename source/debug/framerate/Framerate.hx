@@ -14,7 +14,7 @@ class Framerate extends openfl.display.Sprite {
 	public var fpsCounter:FPSCounter;
 
 	public static var debugMode:Bool = false;
-	public static var offset:FlxPoint = new FlxPoint();
+	public static var offset:FlxPoint = FlxPoint.get();
 
 	public var bgSprite:Bitmap;
 

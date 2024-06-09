@@ -92,7 +92,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		add(ghost);
 
 		animsTxt = new FlxText(10, 32, 400, '');
-		animsTxt.setFormat(null, 16, FlxColor.WHITE, LEFT);
+		animsTxt.setFormat(null, 16, FlxColor.WHITE);
 		animsTxt.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 		animsTxt.scrollFactor.set();
 		animsTxt.cameras = [camHUD];
@@ -877,7 +877,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		}
 	}
 
-	final assetFolder = 'week1';  //load from assets/week1/
+	final assetFolder = 'week1'; //load from assets/week1/
 	inline function loadBG() {
 		var lastLoaded:String = Paths.currentLevel;
 		Paths.currentLevel = assetFolder;

@@ -156,7 +156,7 @@ class ModsMenuState extends MusicBeatState {
 		add(bgDescription);
 		
 		modDesc = new FlxText(bgDescription.x + 15, bgDescription.y + 15, bgDescription.width - 30, "", 24);
-		modDesc.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT);
+		modDesc.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE);
 		add(modDesc);
 
 		var myHeight:Int = 100;

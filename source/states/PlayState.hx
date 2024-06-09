@@ -462,7 +462,7 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(scoreTxt);
 
 		judgementCounter = new FlxText(2, 0, 0, "Max Combo: 0\nEpic: 0\nSick: 0\nGood: 0\nOk: 0\nBad: 0", 16);
-		judgementCounter.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, LEFT);
+		judgementCounter.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE);
 		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		judgementCounter.scrollFactor.set();
 		judgementCounter.visible = ClientPrefs.data.showJudgement && !hideHud;

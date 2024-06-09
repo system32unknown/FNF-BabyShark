@@ -233,7 +233,7 @@ class NoteOffsetState extends MusicBeatState {
 
 	function createTexts(i:Int) {
 		var text:FlxText = new FlxText(10, 48 + (i * 30), 0, '', 24);
-		text.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT);
+		text.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE);
 		text.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		text.scrollFactor.set();
 		text.camera = camHUD;

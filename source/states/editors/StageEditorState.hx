@@ -1828,7 +1828,7 @@ class StageEditorAnimationSubstate extends MusicBeatSubstate {
 				text.text = '${anim.anim}: ${spr.animOffsets.get(anim.anim)}';
 			else text.text = '${anim.anim}: No offsets';
 
-			text.setFormat(null, 16, FlxColor.WHITE, LEFT);
+			text.setFormat(null, 16, FlxColor.WHITE);
 			text.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 			text.scrollFactor.set();
 			animsTxtGroup.add(text);

@@ -9,7 +9,7 @@ class Prompt extends MusicBeatSubstate {
 	var panelText:FlxText;
 	var buttonAccept:PsychUIButton;
 	var buttonNo:PsychUIButton;
-	public function new(promptText:String, ?okCallback:Void->Void = null, ?cancelCallback:Void->Void = null, ?acceptOnDefault:Bool=false)  {
+	public function new(promptText:String, ?okCallback:Void->Void = null, ?cancelCallback:Void->Void = null, ?acceptOnDefault:Bool = false) {
 		okc = okCallback;
 		cancelc = cancelCallback;
 		theText = promptText;
@@ -17,7 +17,7 @@ class Prompt extends MusicBeatSubstate {
 		super();	
 	}
 	
-	override public function create():Void  {
+	override public function create():Void {
 		super.create();
 		if (goAnyway) {
 			if(okc != null) okc();

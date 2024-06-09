@@ -230,7 +230,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		UI_box.scrollFactor.set();
 
 		var tipText:FlxText = new FlxText(FlxG.width - 200, FlxG.height - 32, 200, "Press F1 for Help", 16);
-		tipText.setFormat(null, 16, FlxColor.WHITE, LEFT);
+		tipText.setFormat(null, 16, FlxColor.WHITE);
 		tipText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 		tipText.scrollFactor.set();
 		tipText.active = false;
