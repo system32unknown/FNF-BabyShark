@@ -162,7 +162,7 @@ class NoteSplash extends FlxSprite {
 		return true;
 	}
 
-	static var aliveTime:Float = 0;
+	var aliveTime:Float = 0;
 	static var buggedKillTime:Float = .5; //automatically kills note splashes if they break to prevent it from flooding your HUD
 	override function update(elapsed:Float) {
 		aliveTime += elapsed;

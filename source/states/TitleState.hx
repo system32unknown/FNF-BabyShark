@@ -9,7 +9,6 @@ package states;
 	public var gfy:Float = 40;
 	public var backgroundSprite:String = '';
 	public var bpm:Float = 148;
-	public var gradients:Array<String> = ["0x553D0468", "0xC4FFE600"];
 }
 
 class TitleState extends MusicBeatState {
@@ -28,9 +27,6 @@ class TitleState extends MusicBeatState {
 
 	var randomPhrase:Array<String> = [];
 	var titleJson:TitleData;
-
-	var startingTween:FlxTween;
-	var gradientBar:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 1, 0xFF0F5FFF);
 	var titletimer:Float = 0;
 
 	public static var updateVersion:String;
@@ -71,8 +67,7 @@ class TitleState extends MusicBeatState {
 			gfx: balls.gfx,
 			gfy: balls.gfy,
 			backgroundSprite: balls.backgroundSprite,
-			bpm: balls.bpm,
-			gradients: balls.gradients
+			bpm: balls.bpm
 		}
 
 		Conductor.bpm = titleJson.bpm;
@@ -83,14 +78,6 @@ class TitleState extends MusicBeatState {
 			bg.active = false;
 			add(bg);
 		}
-
-		gradientBar = flixel.util.FlxGradient.createGradientFlxSprite(Math.round(FlxG.width), 512, [0x00, CoolUtil.colorFromString(titleJson.gradients[0]), CoolUtil.colorFromString(titleJson.gradients[1])], 1, 90, true);
-		gradientBar.y = FlxG.height - gradientBar.height;
-		gradientBar.scale.y = 0;
-		gradientBar.updateHitbox();
-		gradientBar.visible = false;
-		gradientBar.alpha = .75;
-		add(gradientBar);
 
 		gf = new FlxSprite(titleJson.gfx, titleJson.gfy);
 		gf.antialiasing = ClientPrefs.data.antialiasing;
@@ -172,21 +159,13 @@ class TitleState extends MusicBeatState {
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
 		titletimer++;
-		gradientBar.scale.y += Math.sin(titletimer / 10) * .001;
-		gradientBar.updateHitbox();
-		gradientBar.y = FlxG.height - gradientBar.height;
-
 		if (skippedIntro) logo.angle = Math.sin(titletimer / 270) * 5;
 
 		if (controls.ACCEPT) {
 			if (skippedIntro) {
 				if (!pressedEnter) {
 					pressedEnter = true;
-					if (startingTween != null) {
-						startingTween.cancel();
-						startingTween = null;
-						FlxTween.tween(logo, {y: -700}, 1, {ease: FlxEase.backIn});
-					}
+					FlxTween.tween(logo, {y: -700}, 1, {ease: FlxEase.backIn});
 	
 					if (ClientPrefs.data.flashing) titleText.active = true;
 					titleText.animation.play('press');
@@ -279,15 +258,12 @@ class TitleState extends MusicBeatState {
 	}
 
 	function skipIntro() {
-		startingTween = FlxTween.tween(gradientBar, {'scale.y': 1.3}, 4, {ease: FlxEase.quadInOut});
-
 		FlxG.camera.flash(FlxColor.WHITE, 2);
 		skippedIntro = true;
 
 		gf.alpha = 1;
 		logo.alpha = 1;
 		titleText.visible = true;
-		gradientBar.visible = true;
 
 		FlxTween.tween(logo, {y: titleJson.starty}, 1.4, {ease: FlxEase.expoInOut});
 

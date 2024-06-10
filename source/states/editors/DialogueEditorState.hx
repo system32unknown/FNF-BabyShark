@@ -255,7 +255,6 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 
 	var curSelected:Int = 0;
 	var curAnim:Int = 0;
-	var blockPressWhileTypingOn:Array<PsychUIInputText> = [];
 	var transitioning:Bool = false;
 	override function update(elapsed:Float) {
 		if(transitioning) {
