@@ -313,7 +313,7 @@ class NotesSubState extends MusicBeatSubstate {
 				FlxG.sound.play(Paths.sound('scrollMenu'), .6);
 			} else if (generalMoved || generalPressed) {
 				if (holdingOnObj == colorGradient) {
-					var newBrightness = 1 - FlxMath.bound((pointerY() - colorGradient.y) / colorGradient.height, 0, 1);
+					var newBrightness:Float = 1 - FlxMath.bound((pointerY() - colorGradient.y) / colorGradient.height, 0, 1);
 					_storedColor.alpha = 1;
 					if(_storedColor.brightness == 0) //prevent bug
 						setShaderColor(FlxColor.fromRGBFloat(newBrightness, newBrightness, newBrightness));

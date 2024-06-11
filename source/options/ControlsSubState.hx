@@ -112,19 +112,15 @@ class ControlsSubState extends MusicBeatSubstate {
 		FlxTween.tween(grid, {alpha: 1}, .5, {ease: FlxEase.quadOut});
 		add(grid);
 
-		grpDisplay = new FlxTypedGroup<Alphabet>();
-		add(grpDisplay);
-		grpOptions = new FlxTypedGroup<Alphabet>();
-		add(grpOptions);
-		grpBlacks = new FlxTypedGroup<AttachedSprite>();
-		add(grpBlacks);
+		add(grpDisplay = new FlxTypedGroup<Alphabet>());
+		add(grpOptions = new FlxTypedGroup<Alphabet>());
+		add(grpBlacks = new FlxTypedGroup<AttachedSprite>());
 		selectSpr = new AttachedSprite();
 		selectSpr.makeGraphic(250, 78, FlxColor.WHITE);
 		selectSpr.copyAlpha = false;
 		selectSpr.alpha = 0.75;
 		add(selectSpr);
-		grpBinds = new FlxTypedGroup<Alphabet>();
-		add(grpBinds);
+		add(grpBinds = new FlxTypedGroup<Alphabet>());
 
 		var text:Alphabet = new Alphabet(50, 600, 'SHIFT + < or > to\nChange Key Number');
 		text.alignment = LEFT;
@@ -173,8 +169,8 @@ class ControlsSubState extends MusicBeatSubstate {
 					text.ID = myID;
 					lastID = myID;
 
-					if(isCentered) addCenteredText(text, option, myID);
-					else addKeyText(text, option, myID);
+					if(isCentered) addCenteredText(text);
+					else addKeyText(text, option);
 
 					text.snapToPosition();
 					text.y += FlxG.height * 2;
@@ -185,11 +181,11 @@ class ControlsSubState extends MusicBeatSubstate {
 		updateText();
 	}
 
-	function addCenteredText(text:Alphabet, option:Array<Dynamic>, id:Int) {
+	function addCenteredText(text:Alphabet) {
 		text.screenCenter(X).y -= 55;
 		text.startPosition.y -= 55;
 	}
-	function addKeyText(text:Alphabet, option:Array<Dynamic>, id:Int) {
+	function addKeyText(text:Alphabet, option:Array<Dynamic>) {
 		for (n in 0...2) {
 			var textX:Float = 350 + n * 300;
 

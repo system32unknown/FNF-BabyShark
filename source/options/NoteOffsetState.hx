@@ -17,7 +17,7 @@ class NoteOffsetState extends MusicBeatState {
 	var camHUD:FlxCamera;
 	var camGame:FlxCamera;
 	var camOther:FlxCamera;
-	public var defaultCamZoom:Float = 1;
+	var defaultCamZoom:Float = 1;
 
 	var boyfriendGroup:FlxSpriteGroup;
 	var gfGroup:FlxSpriteGroup;

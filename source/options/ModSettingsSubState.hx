@@ -57,7 +57,6 @@ class ModSettingsSubState extends BaseOptionsMenu {
 
 					default:
 						if(option.value != null) newOption.defaultValue = option.value;
-
 						@:privateAccess {
 							newOption.getValue = () -> return save.get(newOption.variable);
 							newOption.setValue = (value:Dynamic) -> save.set(newOption.variable, value);

@@ -47,7 +47,6 @@ class Paths {
 				currentTrackedSounds.remove(key);
 			}
 		}
-
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
 		openfl.Assets.cache.clear("songs");
@@ -93,8 +92,6 @@ class Paths {
 	inline public static function getSharedPath(file:String = '')
 		return 'assets/shared/$file';
 
-	public static inline function ndll(key:String, ?folder:String)
-		return getPath('data/ndlls/$key.ndll', folder);
 	inline static public function txt(key:String, ?folder:String)
 		return getPath('data/$key.txt', TEXT, folder);
 	inline static public function json(key:String, ?folder:String)
@@ -294,8 +291,6 @@ class Paths {
 		return modFolders('data/$key.json');
 	inline static public function modsVideo(key:String)
 		return modFolders('videos/$key.$VIDEO_EXT');
-	inline static public function modsSounds(path:String, key:String)
-		return modFolders('$path/$key.$SOUND_EXT');
 	inline static public function modsImages(key:String)
 		return modFolders('images/$key.png');
 	inline static public function modsXml(key:String)
@@ -304,8 +299,6 @@ class Paths {
 		return modFolders('images/$key.txt');
 	inline static public function modsImagesJson(key:String)
 		return modFolders('images/$key.json');
-	inline static public function modsNdll(key:String)
-		return modFolders('data/ndlls/$key.ndll');
 
 	static public function modFolders(key:String) {
 		if(Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0) {

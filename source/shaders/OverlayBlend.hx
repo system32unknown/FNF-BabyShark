@@ -13,11 +13,9 @@ class OverlayBlend extends flixel.system.FlxAssets.FlxShader {
 
         void main() {
             vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
+			vec4 gf = flixel_texture2D(funnyShit, openfl_TextureCoordv.xy + vec2(.1, .2));
 
-			vec4 gf = flixel_texture2D(funnyShit, openfl_TextureCoordv.xy + vec2(0.1, 0.2));
-			vec4 mixedCol = blendOverlay(color, gf);
-
-            gl_FragColor = mixedCol;
+            gl_FragColor = blendOverlay(color, gf);
         }
 
     ')
