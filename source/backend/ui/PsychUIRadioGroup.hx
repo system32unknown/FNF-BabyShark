@@ -240,7 +240,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 	public var broadcastRadioGroupEvent:Bool = true;
 	function _addNewRadio() {
 		var radio:PsychUIRadioItem = cast recycle(PsychUIRadioItem);
-		radio.onClick = function() {
+		radio.onClick = () -> {
 			checkedRadio = radio;
 			if(onClick != null) onClick();
 			if(broadcastRadioGroupEvent) PsychUIEventHandler.event(CLICK_EVENT, this);
@@ -252,15 +252,12 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 	}
 }
 
-class PsychUIRadioItem extends PsychUICheckBox
-{
-	public function new(x:Float, y:Float, label:String, textWid:Int = 100)
-	{
+class PsychUIRadioItem extends PsychUICheckBox {
+	public function new(x:Float, y:Float, label:String, textWid:Int = 100){
 		super(x, y, label, textWid);
 		broadcastCheckBoxEvent = false;
 	}
-	override function boxGraphic()
-	{
+	override function boxGraphic() {
 		box.loadGraphic(Paths.image('psych-ui/radio', 'embed'), true, 16, 16);
 		box.animation.add('false', [0]);
 		box.animation.add('true', [1]);

@@ -1564,7 +1564,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				}
 			}
 
-			var style = currentType;
+			var style:Int = currentType;
 			if (FlxG.keys.pressed.SHIFT) style = 3;
 
 			var conductorTime = Conductor.songPosition;

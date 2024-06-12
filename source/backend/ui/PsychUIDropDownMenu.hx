@@ -209,7 +209,7 @@ class PsychUIDropDownItem extends FlxSpriteGroup {
 		if(FlxG.mouse.justMoved || FlxG.mouse.justPressed || forceNextUpdate) {
 			var overlapped:Bool = (FlxG.mouse.overlaps(bg, camera));
 
-			var style = overlapped ? hoverStyle : normalStyle;
+			var style:UIStyleData = overlapped ? hoverStyle : normalStyle;
 			bg.color = style.bgColor;
 			text.color = style.textColor;
 			bg.alpha = style.bgAlpha;

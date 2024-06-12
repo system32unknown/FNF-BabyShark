@@ -1,7 +1,6 @@
 package backend.ui;
 
 import flixel.input.keyboard.FlxKey;
-import flixel.util.FlxDestroyUtil;
 import openfl.events.KeyboardEvent;
 import lime.system.Clipboard;
 
@@ -596,18 +595,12 @@ class PsychUIInputText extends FlxSpriteGroup {
 		if (filterMode != NO_FILTER) {
 			var pattern:EReg;
 			switch (filterMode) {
-				case ONLY_ALPHA:
-					pattern = ~/[^a-zA-Z]*/g;
-				case ONLY_NUMERIC:
-					pattern = ~/[^0-9]*/g;
-				case ONLY_ALPHANUMERIC:
-					pattern = ~/[^a-zA-Z0-9]*/g;
-				case ONLY_HEXADECIMAL:
-					pattern = ~/[^a-fA-F0-9]*/g;
-				case CUSTOM_FILTER:
-					pattern = customFilterPattern;
-				default:
-					throw new openfl.errors.Error("FlxInputText: Unknown filterMode (" + filterMode + ")");
+				case ONLY_ALPHA: pattern = ~/[^a-zA-Z]*/g;
+				case ONLY_NUMERIC: pattern = ~/[^0-9]*/g;
+				case ONLY_ALPHANUMERIC: pattern = ~/[^a-zA-Z0-9]*/g;
+				case ONLY_HEXADECIMAL: pattern = ~/[^a-fA-F0-9]*/g;
+				case CUSTOM_FILTER: pattern = customFilterPattern;
+				default: throw new openfl.errors.Error("FlxInputText: Unknown filterMode (" + filterMode + ")");
 			}
 			text = pattern.replace(text, "");
 		}
