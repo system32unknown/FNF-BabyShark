@@ -72,7 +72,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 			}
 		}
 
-		y = FlxMath.lerp(y, _intendedY, FlxMath.bound(elapsed * 24, 0, 1));
+		y = FlxMath.lerp(_intendedY, y, Math.exp(-elapsed * 24));
 	}
 
     override function show(up:Bool = false):Void {

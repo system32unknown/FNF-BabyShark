@@ -1293,7 +1293,7 @@ class PlayState extends MusicBeatState {
 			Conductor.songPosition += elapsed * 1000 * playbackRate;
 			if (Conductor.songPosition >= 0) {
 				var timeDiff:Float = Math.abs(FlxG.sound.music.time - Conductor.songPosition - Conductor.offset);
-				Conductor.songPosition = FlxMath.lerp(Conductor.songPosition, FlxG.sound.music.time, FlxMath.bound(elapsed * 2.5, 0, 1));
+				Conductor.songPosition = FlxMath.lerp(FlxG.sound.music.time, Conductor.songPosition, Math.exp(-elapsed * 2.5));
 				if (timeDiff > 1000 * playbackRate) Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
 			}
 		}
@@ -2288,7 +2288,7 @@ class PlayState extends MusicBeatState {
 	var lastBeatHit:Int = -1;
 	override function beatHit() {
 		if(lastBeatHit >= curBeat) return;
-		if(generatedMusic) notes.sort(FlxSort.byY, ClientPrefs.data.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
+		if(generatedMusic) notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		
 		switch (ClientPrefs.data.iconBounceType) {
 			case "Old":
