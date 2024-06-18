@@ -1,6 +1,5 @@
 package objects;
 
-
 import haxe.Json;
 import openfl.utils.Assets;
 import flixel.util.FlxDestroyUtil;
@@ -222,7 +221,7 @@ class AlphaCharacter extends FlxSprite {
 
 		allLetters = new Map<String, Null<Letter>>();
 		try {
-			var data:Dynamic = Json.parse( #if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
+			var data:Dynamic = Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
 			if(data.allowed != null && data.allowed.length > 0) {
 				for (i in 0...data.allowed.length) {
 					var char:String = data.allowed.charAt(i);
@@ -302,8 +301,8 @@ class AlphaCharacter extends FlxSprite {
 		updateHitbox();
 	}
 
-	public static function isTypeAlphabet(c:String) { // thanks kade
-		var ascii = c.fastCodeAt(0);
+	public static function isTypeAlphabet(c:String):Bool { // thanks kade
+		var ascii:Int = c.fastCodeAt(0);
 		return (ascii >= 65 && ascii <= 90) || (ascii >= 97 && ascii <= 122) || (ascii >= 192 && ascii <= 214) || (ascii >= 216 && ascii <= 246) || (ascii >= 248 && ascii <= 255);
 	}
 

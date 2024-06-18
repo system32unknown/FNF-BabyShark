@@ -17,9 +17,8 @@ class FlixelInfo extends FramerateCategory {
 			_text += '\nSubstate: ${Type.getClassName(Type.getClass(FlxG.state.subState))}';
 		_text += '\nObject Count: ${FlxG.state.members.length}';
 		_text += '\nCamera Count: ${FlxG.cameras.list.length}';
-		_text += '\nBitmaps Count: ${c}';
-		_text += '\nSounds Count: ${FlxG.sound.list.length}';
-		_text += '\nFlxG.game Childs Count: ${FlxG.game.numChildren}';
+		_text += '\nBitmap Count: $c';
+		_text += '\nSound Count: ${FlxG.sound.list.length}';
 		#if FLX_POINT_POOL
 		@:privateAccess {
 			var points = flixel.math.FlxPoint.FlxBasePoint.pool;

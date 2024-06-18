@@ -30,7 +30,7 @@ class Main {
 					case "haxelib":
 						Sys.println('Installing "${lib.name}"...');   
 						var vers:String = lib.version != null ? lib.version : "";          
-						if (isHMM) Sys.command('hmm haxelib ${lib.name} ${vers}');
+						if (isHMM) Sys.command('hmm haxelib ${lib.name} $vers');
 						else {
 							Sys.command('haxelib install ${lib.name} ${vers} --quiet');
 							if (lib.version != null) File.saveContent('${lib.name}/.current', vers);
@@ -42,10 +42,10 @@ class Main {
 						Sys.println('Installing "${lib.name}" from git url "${lib.url}" ${lib.ref != null ? '(with branch: ${lib.ref})' : ''}');
 
 						if (FileSystem.exists('${lib.dir}/git')) {
-							Sys.setCwd('${mainCwd}/${lib.dir}/git');
+							Sys.setCwd('$mainCwd/${lib.dir}/git');
 							Sys.command('git pull');
 						} else {
-							Sys.setCwd('${mainCwd}/${lib.dir}');
+							Sys.setCwd('$mainCwd/${lib.dir}');
 							Sys.command('git clone --recurse-submodules ${lib.url} git ${lib.ref != null ? '--branch' : ''} ${lib.ref}');
 							
 							if (!isHMM) File.saveContent('.current', 'git');

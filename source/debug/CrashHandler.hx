@@ -68,6 +68,6 @@ class CrashHandler {
 			  	case FlxRenderMethod.BLITTING: 'BLITTING';
 			  	default: 'UNKNOWN';
 			}
-	  	} catch (e) return 'ERROR ON QUERY RENDER METHOD: ${e}';
+	  	} catch (e) return 'ERROR ON QUERY RENDER METHOD: $e';
 	}
 }

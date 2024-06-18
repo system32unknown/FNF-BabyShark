@@ -2,7 +2,7 @@ package psychlua;
 
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
-import openfl.utils.Assets;
+#if !MODS_ALLOWED import openfl.utils.Assets; #end
 
 //
 // Things to trivialize some dumb stuff like splitting strings on older Lua
@@ -122,7 +122,7 @@ class ExtraFunctions {
 			return FileSystem.exists(Paths.getPath(filename));
 			#else
 			if(absolute) return Assets.exists(filename, TEXT);
-			return Assets.exists(Paths.getPath(filename, TEXT));
+			return Assets.exists(Paths.getPath(filename));
 			#end
 		});
 		funk.set("saveFile", function(path:String, content:String, ?absolute:Bool = false) {

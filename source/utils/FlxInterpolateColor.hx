@@ -20,7 +20,7 @@ class FlxInterpolateColor {
 		return c;
 	}
 
-	public inline function toString() return '[FlxInterpolateColor - (R:${red} | G:${green} | B:${blue} | A:${alpha})]';
+	public inline function toString() return '[FlxInterpolateColor - (R:$red | G:$green | B:$blue | A:$alpha)]';
 	public function new(color:FlxColor) this.color = color;
 
 	public function lerpTo(color:FlxColor, ratio:Float) {

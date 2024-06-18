@@ -394,7 +394,7 @@ class PlayState extends MusicBeatState {
 		timeTxt.alpha = 0;
 		timeTxt.visible = updateTime = showTime;
 		if(downScroll) timeTxt.y = FlxG.height - 35;
-		if(timeType == 'Song Name') timeTxt.text = SONG.song + ' - ${storyDifficultyText}' + (playbackRate != 1 ? ' (${playbackRate}x)' : '');
+		if(timeType == 'Song Name') timeTxt.text = SONG.song + ' - $storyDifficultyText' + (playbackRate != 1 ? ' (${playbackRate}x)' : '');
 
 		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', () -> return songPercent, 0, 1);
 		timeBar.scrollFactor.set();
@@ -769,7 +769,7 @@ class PlayState extends MusicBeatState {
 	public var campoint:FlxPoint = FlxPoint.get();
 	public var camlockpoint:FlxPoint = FlxPoint.get();
 	public var camlock:Bool = false;
-	public var bfturn:Bool = false;
+	public var isDad:Bool = false;
 
 	function cacheCountdown() {
 		for (asset in switch(stageUI) {
@@ -908,7 +908,7 @@ class PlayState extends MusicBeatState {
 		var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
 		if(ret == LuaUtils.Function_Stop) return;
 
-		judgementCounter.text = 'Max Combo: ${maxCombo}';
+		judgementCounter.text = 'Max Combo: $maxCombo';
 		for (rating in ratingsData) judgementCounter.text += '\n${CoolUtil.capitalize(rating.name)}: ${rating.hits}';
 		judgementCounter.screenCenter(Y);
 		if (updateScoreText) scoreTxt.text = getScoreText();
@@ -1309,7 +1309,7 @@ class PlayState extends MusicBeatState {
 			if(timeType == 'Time Elapsed' || timeType == 'Time Position' || timeType == 'Name Elapsed' || timeType == 'Name Time Position') songCalc = curTime;
 
 			var formattedsec:String = CoolUtil.formatTime(Math.floor(Math.max(0, (songCalc / playbackRate) / 1000)));
-			var formattedtxt:String = '${SONG.song} • ${storyDifficultyText} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}';
+			var formattedtxt:String = '${SONG.song} • $storyDifficultyText ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}';
 			var timePos:String = '$formattedsec / ${CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000))}';
 			if (timeType != 'Song Name') timeTxt.text = switch(timeType) {
 				case 'Time Left' | 'Time Elapsed': formattedsec;
@@ -1694,16 +1694,15 @@ class PlayState extends MusicBeatState {
 			return;
 		}
 
-		var camCharacter:String = (!section.mustHitSection ? 'dad' : 'boyfriend');
-		bfturn = (camCharacter == 'boyfriend');
-		moveCamera(camCharacter);
+		isDad = (section.mustHitSection != true);
+		moveCamera(isDad);
 		if(ClientPrefs.data.camMovement) {
 			campoint.set(camFollow.x, camFollow.y);
 			camlock = false;
 		}
-		if (bfturn && lastCharFocus != 'boyfriend') callOnScripts('onMoveCamera', ['boyfriend']);
-		else if (lastCharFocus != 'dad') callOnScripts('onMoveCamera', ['dad']);
-		lastCharFocus = bfturn ? 'boyfriend' : 'dad';
+		if (isDad && lastCharFocus != 'dad') callOnScripts('onMoveCamera', ['dad']);
+		else if (lastCharFocus != 'boyfriend') callOnScripts('onMoveCamera', ['boyfriend']);
+		lastCharFocus = isDad ? 'dad' : 'boyfriend';
 	}
 
 	var cameraTwn:FlxTween;
@@ -2124,7 +2123,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		strumPlayAnim(true, leData, Conductor.stepCrochet * 1.25 / 1000);
-		if (ClientPrefs.data.camMovement && !bfturn) moveCamOnNote(animToPlay);
+		if (ClientPrefs.data.camMovement && isDad) moveCamOnNote(animToPlay);
 		note.hitByOpponent = true;
 
 		var result:Dynamic = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
@@ -2163,7 +2162,7 @@ class PlayState extends MusicBeatState {
 		if (ClientPrefs.data.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound(note.hitsound), ClientPrefs.data.hitsoundVolume);
 
 		var animToPlay:String = singAnimations[EK.gfxHud[mania][leData]];
-		if (ClientPrefs.data.camMovement && bfturn) moveCamOnNote(animToPlay);
+		if (ClientPrefs.data.camMovement && !isDad) moveCamOnNote(animToPlay);
 
 		if(note.hitCausesMiss) {
 			if(!note.noMissAnimation && leType == 'Hurt Note' && boyfriend.animOffsets.exists('hurt')) {

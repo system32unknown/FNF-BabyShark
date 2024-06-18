@@ -29,8 +29,7 @@ class DepthSprite extends FlxSprite {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		var cam:FlxCamera = cameras[0];
-		var toScale:Float = 1 / ((cam.zoom - 1) * (1 - this.depth) + 1);
+		var toScale:Float = 1 / ((cameras[0].zoom - 1) * (1 - this.depth) + 1);
 		toScale = toScale * this.defaultScale;
 		scale.set(toScale, toScale);
 	}

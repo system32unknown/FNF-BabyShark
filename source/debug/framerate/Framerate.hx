@@ -32,7 +32,7 @@ class Framerate extends openfl.display.Sprite {
 		if (instance != null) throw "Cannot create another instance";
 		instance = this;
 		fontName = openfl.utils.Assets.getFont("assets/fonts/Proggy.ttf").fontName;
-		textFormat = new TextFormat(fontName, 12, -1);
+		textFormat = new TextFormat(fontName, 16, -1);
 
 		x = 0;
 		y = 0;

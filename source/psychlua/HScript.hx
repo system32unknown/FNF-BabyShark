@@ -363,6 +363,7 @@ class HScript {
 		interp.declared = [];
 		interp.importBlocklist = [];
 		interp.locals.clear();
+		interp.variables.clear();
 		interp.resetVariables();
 	}
 }
