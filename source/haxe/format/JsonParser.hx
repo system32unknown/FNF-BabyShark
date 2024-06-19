@@ -54,72 +54,57 @@ class JsonParser {
 	}
 
 	function doParse():Dynamic {
-		var result = parseRec();
+		var result:Dynamic = parseRec();
 		var c;
 		while (!StringTools.isEof(c = nextChar())) {
-			if (checkComments(c)) {
-				continue;
-			}
+			if (checkComments(c)) continue;
 			switch (c) {
 				case ' '.code, '\r'.code, '\n'.code, '\t'.code:
 				// allow trailing whitespace
-				default:
-					invalidChar();
+				default: invalidChar();
 			}
 		}
 		return result;
 	}
 
-	var inComment = false;
-	var blockComment = false;
+	var inComment:Bool = false;
+	var blockComment:Bool = false;
 
-	inline function checkComments(c:Int) {
-		var ret = false;
+	inline function checkComments(c:Int):Bool {
+		var ret:Bool = false;
 		if (!inComment) { // Starting Comment
 			if (c == '/'.code) {
-				var d = nextChar();
-				if (d == '/'.code || (blockComment = (d == '*'.code))) {
+				var d:Int = nextChar();
+				if (d == '/'.code || (blockComment = (d == '*'.code)))
 					inComment = true;
-				} else {
-					pos--;
-				}
+				else pos--;
 			}
 		} else { // In Comment
 			if (blockComment) { // Block Comment
 				if (c == '*'.code) {
-					var d = nextChar();
+					var d:Int = nextChar();
 					if (d == '/'.code) {
 						inComment = blockComment = false;
 						ret = true;
-					} else {
-						pos--;
-					}
+					} else pos--;
 				}
-			} else { // Line Comment
-				if (c == '\n'.code) {
-					inComment = false;
-				}
-			}
+			} else if (c == '\n'.code) inComment = false;
 		}
 		return ret || inComment;
 	}
 
 	function parseRec():Dynamic {
 		while (true) {
-			var c = nextChar();
-			if (checkComments(c)) {
-				continue;
-			}
+			var c:Int = nextChar();
+			if (checkComments(c)) continue;
 			switch (c) {
 				case ' '.code, '\r'.code, '\n'.code, '\t'.code:
 				// loop
 				case '{'.code:
 					var obj = {}, field = null, comma:Null<Bool> = null;
 					while (true) {
-						var c = nextChar();
-						if (checkComments(c)) {
-							continue;
-						}
+						var c:Int = nextChar();
+						if (checkComments(c)) continue;
 						switch (c) {
 							case ' '.code, '\r'.code, '\n'.code, '\t'.code:
 							// loop
@@ -138,8 +123,7 @@ class JsonParser {
 							case '"'.code:
 								if (field != null || comma) invalidChar();
 								field = parseString();
-							default:
-								invalidChar();
+							default: invalidChar();
 						}
 					}
 				case '['.code:
@@ -207,18 +191,14 @@ class JsonParser {
 		}
 		#end
 		while (true) {
-			var c = nextChar();
-			if (c == '"'.code)
-				break;
+			var c:Int = nextChar();
+			if (c == '"'.code) break;
 			if (c == '\\'.code) {
-				if (buf == null) {
-					buf = new StringBuf();
-				}
+				if (buf == null) buf = new StringBuf();
 				buf.addSub(str, start, pos - start - 1);
 				c = nextChar();
 				#if target.unicode
-				if (c != "u".code && prev != -1)
-					cancelSurrogate();
+				if (c != "u".code && prev != -1) cancelSurrogate();
 				#end
 				switch (c) {
 					case "r".code:
@@ -254,19 +234,15 @@ class JsonParser {
 						}
 						#else
 						if (prev != -1) {
-							if (uc < 0xDC00 || uc > 0xDFFF)
-								cancelSurrogate();
+							if (uc < 0xDC00 || uc > 0xDFFF) cancelSurrogate();
 							else {
 								buf.addChar(((prev - 0xD800) << 10) + (uc - 0xDC00) + 0x10000);
 								prev = -1;
 							}
-						} else if (uc >= 0xD800 && uc <= 0xDBFF)
-							prev = uc;
-						else
-							buf.addChar(uc);
+						} else if (uc >= 0xD800 && uc <= 0xDBFF) prev = uc;
+						else buf.addChar(uc);
 						#end
-					default:
-						throw "Invalid escape sequence \\" + String.fromCharCode(c) + " at position " + (pos - 1);
+					default: throw "Invalid escape sequence \\" + String.fromCharCode(c) + " at position " + (pos - 1);
 				}
 				start = pos;
 			}
@@ -284,16 +260,13 @@ class JsonParser {
 					pos++;
 			}
 			#end
-		else if (StringTools.isEof(c))
-			throw "Unclosed string";
+			else if (StringTools.isEof(c)) throw "Unclosed string";
 		}
 		#if target.unicode
-		if (prev != -1)
-			cancelSurrogate();
+		if (prev != -1) cancelSurrogate();
 		#end
-		if (buf == null) {
-			return str.substr(start, pos - start - 1);
-		} else {
+		if (buf == null) return str.substr(start, pos - start - 1);
+		else {
 			buf.addSub(str, start, pos - start - 1);
 			return buf.toString();
 		}
@@ -342,8 +315,7 @@ class JsonParser {
 					pos--;
 					end = true;
 			}
-			if (end)
-				break;
+			if (end) break;
 		}
 
 		var f = Std.parseFloat(str.substr(start, pos - start));
@@ -368,10 +340,7 @@ class JsonParser {
 			if (c == '\n'.code) {
 				col = 1;
 				line++;
-			}
-			else {
-				col++;
-			}
+			} else col++;
 		}
 		throw "Invalid char " + StringTools.fastCodeAt(str, pos) + " ('" + str.charAt(pos) + "')" + " at line " + line + " col " + col;
 	}
@@ -384,10 +353,7 @@ class JsonParser {
 			if (c == '\n'.code) {
 				col = 1;
 				line++;
-			}
-			else {
-				col++;
-			}
+			} else col++;
 		}
 		throw "Invalid number at line " + line + " col " + col + ": " + str.substr(start, pos - start);
 	}

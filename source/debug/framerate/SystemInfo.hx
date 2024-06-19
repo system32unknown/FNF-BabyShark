@@ -1,15 +1,12 @@
 package debug.framerate;
 
-import flixel.util.FlxStringUtil;
 import openfl.display3D.Context3D;
 import lime.system.System;
-import haxe.macro.Compiler;
 
 class SystemInfo extends FramerateCategory {
 	public static var osInfo:String = "Unknown";
 	public static var gpuName:String = "Unknown";
 	public static var vRAM:String = "Unknown";
-	public static var cpuName:String = "Unknown";
 	public static var totalMem:String = "Unknown";
 
 	static var __formattedSysText:String = "";
@@ -25,9 +22,8 @@ class SystemInfo extends FramerateCategory {
 
 				if(Context3D.__glMemoryTotalAvailable != -1) {
 					var vRAMBytes:UInt = cast(FlxG.stage.context3D.gl.getParameter(Context3D.__glMemoryTotalAvailable), UInt);
-					if (vRAMBytes == 1000 || vRAMBytes == 1 || vRAMBytes <= 0)
-						Logs.trace('Unable to grab GPU VRAM', ERROR, RED);
-					else vRAM = FlxStringUtil.formatBytes(vRAMBytes);
+					if (vRAMBytes == 1000 || vRAMBytes == 1 || vRAMBytes <= 0) Logs.trace('Unable to grab GPU VRAM', ERROR, RED);
+					else vRAM = flixel.util.FlxStringUtil.formatBytes(vRAMBytes);
 				}
 			} else Logs.trace('Unable to grab GPU Info', ERROR, RED);
 		}
@@ -42,21 +38,20 @@ class SystemInfo extends FramerateCategory {
 
 	static function getGLInfo(info:GLInfo):String {
 		@:privateAccess
-		var gl:Dynamic = FlxG.stage.context3D.gl;
+		var gl:lime.graphics.WebGLRenderContext = FlxG.stage.context3D.gl;
 
-		switch (info) {
-			case RENDERER: return Std.string(gl.getParameter(gl.RENDERER));
-			case SHADING_LANGUAGE_VERSION: return Std.string(gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
+		return switch (info) {
+			case RENDERER: Std.string(gl.getParameter(gl.RENDERER));
+			case SHADING_LANGUAGE_VERSION: Std.string(gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
+			default: '';
 		}
-		return '';
 	}
 
 	static function formatSysInfo() {
 		__formattedSysText = "";
 		if (osInfo != "Unknown") __formattedSysText += 'System: $osInfo';
-		if (cpuName != "Unknown") __formattedSysText += '\nCPU: $cpuName ${openfl.system.Capabilities.cpuArchitecture} ${(openfl.system.Capabilities.supports64BitProcesses ? '64-Bit' : '32-Bit')}';
-		if (gpuName != cpuName || vRAM != "Unknown") {
-			var gpuNameKnown:Bool = gpuName != "Unknown" && gpuName != cpuName;
+		if (vRAM != "Unknown") {
+			var gpuNameKnown:Bool = gpuName != "Unknown";
 			var vramKnown:Bool = vRAM != "Unknown";
 
 			if(gpuNameKnown || vramKnown) __formattedSysText += "\n";

@@ -9,7 +9,7 @@ class MusicBeatInfo extends FramerateCategory {
 
 	public override function __enterFrame(t:Int) {
 		if (alpha <= 0.05) return;
-		_text = 'curSongPos: ${Math.floor(Conductor.songPosition * 1000) / 1000}';
+		_text = 'songPos: ${Math.floor(Conductor.songPosition * 1000) / 1000}';
 		_text += '\ncurBPM: ${Conductor.bpm}';
 		if (MusicBeatState.getState() != null) @:privateAccess {
 			_text += '\n - ${MusicBeatState.getState().curBeat} beats';

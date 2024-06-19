@@ -192,7 +192,7 @@ class ClientPrefs {
 		
 		if(Main.fpsVar != null) {
 			Main.fpsVar.visible = data.showFPS;
-			Main.fpsVar.fpsCounter.memCounterType = data.memCounterType;
+			Main.fpsVar.fpsCounter.memType = data.memCounterType;
 		}
 
 		FlxG.autoPause = data.autoPause;

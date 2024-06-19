@@ -21,7 +21,6 @@ class Framerate extends openfl.display.Sprite {
 	public var categories:Array<FramerateCategory> = [];
 
 	@:isVar public static var __bitmap(get, null):BitmapData = null;
-
 	static function get___bitmap():BitmapData {
 		if (__bitmap == null) __bitmap = new BitmapData(1, 1, 0xFF000000);
 		return __bitmap;

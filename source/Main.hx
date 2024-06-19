@@ -38,7 +38,7 @@ class Main extends Sprite {
 		debug.framerate.SystemInfo.init();
 		if(fpsVar != null) {
 			fpsVar.visible = ClientPrefs.data.showFPS;
-			fpsVar.fpsCounter.memCounterType = ClientPrefs.data.memCounterType;
+			fpsVar.fpsCounter.memType = ClientPrefs.data.memCounterType;
 		}
 
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end

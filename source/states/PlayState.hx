@@ -232,7 +232,6 @@ class PlayState extends MusicBeatState {
 		endCallback = endSong;
 
 		instance = this;
-
 		PauseSubState.songName = null; //Reset to default
 
 		if(FlxG.sound.music != null) FlxG.sound.music.stop();
@@ -595,7 +594,7 @@ class PlayState extends MusicBeatState {
 					boyfriendMap.set(newCharacter, newBoyfriend);
 					boyfriendGroup.add(newBoyfriend);
 					startCharacterPos(newBoyfriend);
-					newBoyfriend.visible = false;
+					newBoyfriend.alpha = .00001;
 					startCharacterScripts(newBoyfriend.curCharacter);
 					HealthIcon.returnGraphic(newBoyfriend.healthIcon);
 				}
@@ -606,7 +605,7 @@ class PlayState extends MusicBeatState {
 					dadMap.set(newCharacter, newDad);
 					dadGroup.add(newDad);
 					startCharacterPos(newDad, true);
-					newDad.visible = false;
+					newDad.alpha = .00001;
 					startCharacterScripts(newDad.curCharacter);
 					HealthIcon.returnGraphic(newDad.healthIcon);
 				}
@@ -618,7 +617,7 @@ class PlayState extends MusicBeatState {
 					gfMap.set(newCharacter, newGf);
 					gfGroup.add(newGf);
 					startCharacterPos(newGf);
-					newGf.visible = false;
+					newGf.alpha = .00001;
 					startCharacterScripts(newGf.curCharacter);
 					HealthIcon.returnGraphic(newGf.healthIcon);
 				}
@@ -769,7 +768,7 @@ class PlayState extends MusicBeatState {
 	public var campoint:FlxPoint = FlxPoint.get();
 	public var camlockpoint:FlxPoint = FlxPoint.get();
 	public var camlock:Bool = false;
-	public var isDad:Bool = false;
+	public var bfturn:Bool = false;
 
 	function cacheCountdown() {
 		for (asset in switch(stageUI) {
@@ -1608,10 +1607,10 @@ class PlayState extends MusicBeatState {
 						if(boyfriend.curCharacter != value2) {
 							if(!boyfriendMap.exists(value2)) addCharacterToList(value2, charType);
 
-							var lastVisible:Bool = boyfriend.visible;
-							boyfriend.visible = false;
+							var lastAlpha:Float = boyfriend.alpha;
+							boyfriend.alpha = .00001;
 							boyfriend = boyfriendMap.get(value2);
-							boyfriend.visible = lastVisible;
+							boyfriend.alpha = lastAlpha;
 							iconP1.changeIcon(boyfriend.healthIcon);
 						}
 						setOnScripts('boyfriendName', boyfriend.curCharacter);
@@ -1621,11 +1620,11 @@ class PlayState extends MusicBeatState {
 							if(!dadMap.exists(value2)) addCharacterToList(value2, charType);
 
 							var wasGf:Bool = dad.curCharacter.startsWith('gf-') || dad.curCharacter == 'gf';
-							var lastVisible:Bool = dad.visible;
-							dad.visible = false;
+							var lastAlpha:Float = dad.alpha;
+							dad.alpha = .00001;
 							dad = dadMap.get(value2);
 							if(gf != null) gf.visible = !wasGf;
-							dad.visible = lastVisible;
+							dad.alpha = lastAlpha;
 							iconP2.changeIcon(dad.healthIcon);
 						}
 						setOnScripts('dadName', dad.curCharacter);
@@ -1635,10 +1634,10 @@ class PlayState extends MusicBeatState {
 							if(gf.curCharacter != value2) {
 								if(!gfMap.exists(value2)) addCharacterToList(value2, charType);
 
-								var lastVisible:Bool = gf.visible;
-								gf.visible = false;
+								var lastAlpha:Float = gf.alpha;
+								gf.alpha = .00001;
 								gf = gfMap.get(value2);
-								gf.visible = lastVisible;
+								gf.alpha = lastAlpha;
 							}
 							setOnScripts('gfName', gf.curCharacter);
 						}
@@ -1680,29 +1679,24 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
 	}
 
-	var lastCharFocus:String;
 	public function moveCameraSection():Void {
 		var section:backend.Section.SwagSection = SONG.notes[curSection];
 		if (section == null) return;
 
 		if (gf != null && section.gfSection) {
 			moveCamera('gf');
-			if (lastCharFocus != 'gf') {
-				callOnScripts('onMoveCamera', ['gf']);
-				lastCharFocus = 'gf';
-			}
+			callOnScripts('onMoveCamera', ['gf']);
 			return;
 		}
 
-		isDad = (section.mustHitSection != true);
-		moveCamera(isDad);
+		var camCharacter:String = (!section.mustHitSection ? 'dad' : 'boyfriend');
+		bfturn = (camCharacter == 'boyfriend');
+		moveCamera(camCharacter);
 		if(ClientPrefs.data.camMovement) {
 			campoint.set(camFollow.x, camFollow.y);
 			camlock = false;
 		}
-		if (isDad && lastCharFocus != 'dad') callOnScripts('onMoveCamera', ['dad']);
-		else if (lastCharFocus != 'boyfriend') callOnScripts('onMoveCamera', ['boyfriend']);
-		lastCharFocus = isDad ? 'dad' : 'boyfriend';
+		callOnScripts('onMoveCamera', [camCharacter]);
 	}
 
 	var cameraTwn:FlxTween;
@@ -2123,7 +2117,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		strumPlayAnim(true, leData, Conductor.stepCrochet * 1.25 / 1000);
-		if (ClientPrefs.data.camMovement && isDad) moveCamOnNote(animToPlay);
+		if (ClientPrefs.data.camMovement && !bfturn) moveCamOnNote(animToPlay);
 		note.hitByOpponent = true;
 
 		var result:Dynamic = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
@@ -2162,7 +2156,7 @@ class PlayState extends MusicBeatState {
 		if (ClientPrefs.data.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound(note.hitsound), ClientPrefs.data.hitsoundVolume);
 
 		var animToPlay:String = singAnimations[EK.gfxHud[mania][leData]];
-		if (ClientPrefs.data.camMovement && !isDad) moveCamOnNote(animToPlay);
+		if (ClientPrefs.data.camMovement && bfturn) moveCamOnNote(animToPlay);
 
 		if(note.hitCausesMiss) {
 			if(!note.noMissAnimation && leType == 'Hurt Note' && boyfriend.animOffsets.exists('hurt')) {

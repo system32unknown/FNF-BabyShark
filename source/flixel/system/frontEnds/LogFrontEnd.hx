@@ -6,8 +6,7 @@ import haxe.PosInfos;
 /**
  * Accessed via `FlxG.log`.
  */
-class LogFrontEnd
-{
+class LogFrontEnd {
 	public static var onLogs:Dynamic->LogStyle->Bool->Void;
 	/**
 	 * Whether everything you trace() is being redirected into the log window.

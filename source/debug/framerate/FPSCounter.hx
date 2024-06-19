@@ -7,7 +7,7 @@ import flixel.util.FlxStringUtil;
 class FPSCounter extends openfl.display.Sprite {
 	public var fpsTxt:TextField;
 	@:noCompletion @:noPrivateAccess var timeColor:Int = 0;
-	public var memCounterType:String = "";
+	public var memType:String = "";
 
     public var fpsManager:FPSUtil;
     public var memory(get, never):Float;
@@ -39,8 +39,8 @@ class FPSCounter extends openfl.display.Sprite {
 		else fpsTxt.textColor = FlxColor.WHITE;
 
 		fpsTxt.text = '${fpsManager.curFPS}FPS [${Std.int((1 / fpsManager.curFPS) * 1000)}ms]\n';
-		if (memCounterType == "MEM" || memCounterType == "MEM/PEAK")
-			fpsTxt.text += '${FlxStringUtil.formatBytes(memory)}' + (memCounterType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
+		if (memType == "MEM" || memType == "MEM/PEAK")
+			fpsTxt.text += '${FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
 	}
 
 	var deltaTimeout:Float = .0;
