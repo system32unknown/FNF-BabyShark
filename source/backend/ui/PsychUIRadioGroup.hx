@@ -219,7 +219,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 		
 		for (num => radio in radios) {
 			radio.visible = radio.active = (num < labels.length || labels.length > maxItems);
-			radio.label = labels[num + curScroll] != null ? labels[num + curScroll] : '';
+			radio.label = labels[num + curScroll] ?? '';
 			if(!stackHorizontal) radio.setPosition(x, y + num * space);
 			else radio.setPosition(x + num * (textWidth + space), y);
 		}

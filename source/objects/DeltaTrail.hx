@@ -38,8 +38,7 @@ class DeltaTrail extends flixel.addons.effects.FlxTrail {
 			_recentPositions.unshift(spritePosition);
 
 			// Also do the same thing for the Sprites angle if rotationsEnabled
-			if (rotationsEnabled)
-				cacheValue(_recentAngles, target.angle);
+			if (rotationsEnabled) cacheValue(_recentAngles, target.angle);
 
 			// Again the same thing for Sprites scales if scalesEnabled
 			if (scalesEnabled) {

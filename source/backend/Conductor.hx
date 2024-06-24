@@ -35,9 +35,9 @@ class Conductor {
 			bpm: bpm,
 			stepCrochet: stepCrochet
 		}
-		for (i in 0...Conductor.bpmChangeMap.length) {
-			if (time >= Conductor.bpmChangeMap[i].songTime)
-				lastChange = Conductor.bpmChangeMap[i];
+		for (i in 0...bpmChangeMap.length) {
+			if (time >= bpmChangeMap[i].songTime)
+				lastChange = bpmChangeMap[i];
 		}
 
 		return lastChange;
@@ -50,9 +50,9 @@ class Conductor {
 			bpm: bpm,
 			stepCrochet: stepCrochet
 		}
-		for (i in 0...Conductor.bpmChangeMap.length) {
-			if (Conductor.bpmChangeMap[i].stepTime <= step)
-				lastChange = Conductor.bpmChangeMap[i];
+		for (i in 0...bpmChangeMap.length) {
+			if (bpmChangeMap[i].stepTime <= step)
+				lastChange = bpmChangeMap[i];
 		}
 
 		return lastChange;
@@ -101,7 +101,7 @@ class Conductor {
 	static function getSectionBeats(song:SwagSong, section:Int) {
 		var val:Null<Float> = null;
 		if(song.notes[section] != null) val = song.notes[section].sectionBeats;
-		return val != null ? val : 4;
+		return val ?? 4;
 	}
 
 	inline public static function calculateCrochet(bpm:Float):Float {

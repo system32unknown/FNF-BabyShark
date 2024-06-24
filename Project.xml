@@ -88,6 +88,7 @@
 	</section>
 
 	<!-- _________________________________Custom_______________________________ -->
+	<log warn="Haxe 4.2.5 is not supported. Use Haxe 4.3.0 and above." if="{haxe &lt;= 4.2.4}"/>
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<icon path="art/icons/icon16.png" size="16"/>

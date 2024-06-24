@@ -3,7 +3,7 @@ package backend.subtitles;
 class Subtitle extends flixel.addons.text.FlxTypeText {
     public var manager:SubtitleManager;
     public var onSubComplete:Void->Void;
-    public function new(text:String, ?typeSpeed, showTime:Float, properties:SubtitleProperties, onComplete:Void->Void) {
+    public function new(text:String, ?typeSpeed:Float, showTime:Float, properties:SubtitleProperties, onComplete:Void->Void) {
         properties = init(properties);
 
         super(properties.x, properties.y, FlxG.width, text, 36);

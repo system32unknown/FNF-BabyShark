@@ -23,7 +23,7 @@ class CallbackHandler {
 				return 1;
 			}
 		} catch(e:Dynamic) {
-			if(Lua_helper.sendErrorsToLua) {LuaL.error(l, 'CALLBACK ERROR! ${e.message != null ? e.message : e}'); return 0;}
+			if(Lua_helper.sendErrorsToLua) {LuaL.error(l, 'CALLBACK ERROR! ${e.message ?? e}'); return 0;}
 			Logs.trace(e, ERROR);
 			throw(e);
 		}

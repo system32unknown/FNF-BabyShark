@@ -119,7 +119,7 @@ class PlayState extends MusicBeatState {
 		// update health bar
 		health = value;
 		var newPercent:Null<Float> = FlxMath.remapToRange(healthBar.bounded, healthBar.bounds.min, healthBar.bounds.max, 0, 100);
-		healthBar.percent = (newPercent != null ? newPercent : 0);
+		healthBar.percent = (newPercent ?? 0);
 
 		if (healthBar.percent < 20) {iconP1.setState(1); iconP2.setState(2);}
 		else if (healthBar.percent > 80) {iconP1.setState(2); iconP2.setState(1);}
@@ -1129,7 +1129,7 @@ class PlayState extends MusicBeatState {
 		};
 		eventNotes.push(subEvent);
 		eventPushed(subEvent);
-		callOnScripts('onEventPushed', [subEvent.event, subEvent.value1 != null ? subEvent.value1 : '', subEvent.value2 != null ? subEvent.value2 : '', subEvent.strumTime]);
+		callOnScripts('onEventPushed', [subEvent.event, subEvent.value1 ?? '', subEvent.value2 ?? '', subEvent.strumTime]);
 	}
 
 	public var skipArrowStartTween:Bool = false; //for lua
@@ -1469,9 +1469,7 @@ class PlayState extends MusicBeatState {
 			var leStrumTime:Float = eventNotes[0].strumTime;
 			if(Conductor.songPosition < leStrumTime) return;
 
-			var value1:String = eventNotes[0].value1 != null ? eventNotes[0].value1 : '';
-			var value2:String = eventNotes[0].value2 != null ? eventNotes[0].value2 : '';
-			triggerEvent(eventNotes[0].event, value1, value2, leStrumTime);
+			triggerEvent(eventNotes[0].event, eventNotes[0].value1 ?? '', eventNotes[0].value2 ?? '', leStrumTime);
 			eventNotes.shift();
 		}
 	}
@@ -1664,8 +1662,8 @@ class PlayState extends MusicBeatState {
 					}
 	
 					killMe = killMe[0].split('.');
-					if (killMe.length > 1) LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe, true, true), killMe[killMe.length - 1], trueVal != null ? trueVal : value2);
-					else LuaUtils.setVarInArray(this, value1, trueVal != null ? trueVal : value2);	
+					if (killMe.length > 1) LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe, true, true), killMe[killMe.length - 1], trueVal ?? value2);
+					else LuaUtils.setVarInArray(this, value1, trueVal ?? value2);	
 				} catch(e:Dynamic) {
 					var len:Int = e.message.indexOf('\n') + 1;
 					if(len <= 0) len = e.message.length;

@@ -29,9 +29,9 @@ typedef DialogueEvent = {
 }
 
 class DialogueBoxPsych extends FlxSpriteGroup {
-	public static var DEFAULT_TEXT_X = 175;
-	public static var DEFAULT_TEXT_Y = 460;
-	public static var LONG_TEXT_ADD = 24;
+	public static var DEFAULT_TEXT_X:Int = 175;
+	public static var DEFAULT_TEXT_Y:Int = 460;
+	public static var LONG_TEXT_ADD:Int = 24;
 
 	var scrollSpeed:Int = 4000;
 

@@ -281,8 +281,8 @@ final class DUser {
 }
 
 enum abstract NitroType(Int) to Int from Int {
-	var NONE = 0;
-	var NITRO_CLASSIC = 1;
-	var NITRO = 2;
-	var NITRO_BASIC = 3;
+	var NONE:Int = 0;
+	var NITRO_CLASSIC:Int = 1;
+	var NITRO:Int = 2;
+	var NITRO_BASIC:Int = 3;
 }

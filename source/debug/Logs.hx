@@ -79,11 +79,11 @@ class Logs {
 }
 
 enum abstract Level(Int) {
-	var INFO = 0;
-	var WARNING = 1;
-	var ERROR = 2;
-	var TRACE = 3;
-	var VERBOSE = 4;
+	var INFO:Level = 0;
+	var WARNING:Level = 1;
+	var ERROR:Level = 2;
+	var TRACE:Level = 3;
+	var VERBOSE:Level = 4;
 }
 typedef LogText = {
 	var text:String;

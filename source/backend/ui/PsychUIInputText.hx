@@ -5,11 +5,11 @@ import openfl.events.KeyboardEvent;
 import lime.system.Clipboard;
 
 enum abstract AccentCode(Int) from Int from UInt to Int to UInt {
-	var NONE = -1;
-	var GRAVE = 0;
-	var ACUTE = 1;
-	var CIRCUMFLEX = 2;
-	var TILDE = 3;
+	var NONE:Int = -1;
+	var GRAVE:Int = 0;
+	var ACUTE:Int = 1;
+	var CIRCUMFLEX:Int = 2;
+	var TILDE:Int = 3;
 }
 
 enum abstract FilterMode(Int) from Int from UInt to Int to UInt {

@@ -406,20 +406,20 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		tempArray = [];
 
 		var player1DropDown = new PsychUIDropDownMenu(10, stepperSpeed.y + 45, characters, function(id:Int, character:String) {
-			_song.player1 = characters[Std.parseInt(character)];
+			_song.player1 = character;
 			updateJsonData();
 			updateHeads();
 		});
 		player1DropDown.selectedLabel = _song.player1;
 
 		var gfVersionDropDown = new PsychUIDropDownMenu(player1DropDown.x, player1DropDown.y + 40, characters, function(id:Int, character:String) {
-			_song.gfVersion = characters[Std.parseInt(character)];
+			_song.gfVersion = character;
 			updateJsonData();
 			updateHeads();
 		});
 		gfVersionDropDown.selectedLabel = _song.gfVersion;
 		var player2DropDown = new PsychUIDropDownMenu(player1DropDown.x, gfVersionDropDown.y + 40, characters, function(id:Int, character:String) {
-			_song.player2 = characters[Std.parseInt(character)];
+			_song.player2 = character;
 			updateJsonData();
 			updateHeads();
 		});
@@ -1168,10 +1168,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		if(skin[0] == null || skin[0].length < 1) skin[0] = 'NOTE_assets';
 		if(skin[1] == null || skin[1].length < 1) skin[1] = 'noteSplashes';
 
-		gameOverCharacterInputText = new PsychUIInputText(10, 25, 150, _song.gameOverChar != null ? _song.gameOverChar : '', 8);
-		gameOverSoundInputText = new PsychUIInputText(10, gameOverCharacterInputText.y + 35, 150, _song.gameOverSound != null ? _song.gameOverSound : '', 8);
-		gameOverLoopInputText = new PsychUIInputText(10, gameOverSoundInputText.y + 35, 150, _song.gameOverLoop != null ? _song.gameOverLoop : '', 8);
-		gameOverEndInputText = new PsychUIInputText(10, gameOverLoopInputText.y + 35, 150, _song.gameOverEnd != null ? _song.gameOverEnd : '', 8);
+		gameOverCharacterInputText = new PsychUIInputText(10, 25, 150, _song.gameOverChar ?? '', 8);
+		gameOverSoundInputText = new PsychUIInputText(10, gameOverCharacterInputText.y + 35, 150, _song.gameOverSound ?? '', 8);
+		gameOverLoopInputText = new PsychUIInputText(10, gameOverSoundInputText.y + 35, 150, _song.gameOverLoop ?? '', 8);
+		gameOverEndInputText = new PsychUIInputText(10, gameOverLoopInputText.y + 35, 150, _song.gameOverEnd ?? '', 8);
 
 		var check_disableNoteRGB:PsychUICheckBox = new PsychUICheckBox(10, 170, "Disable Note RGB", 100);
 		check_disableNoteRGB.checked = (_song.disableNoteRGB == true);
@@ -2560,6 +2560,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var val:Null<Float> = null;
 		
 		if(_song.notes[section] != null) val = _song.notes[section].sectionBeats;
-		return val != null ? val : 4;
+		return val ?? 4;
 	}
 }

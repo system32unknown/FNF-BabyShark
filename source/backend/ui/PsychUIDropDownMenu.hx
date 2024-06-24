@@ -77,10 +77,8 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 		if(FlxG.mouse.justPressed) {
 			if(FlxG.mouse.overlaps(button, camera)) {
 				button.animation.play('pressed', true);
-				if(lastFocus != this)
-					PsychUIInputText.focusOn = this;
-				else if(PsychUIInputText.focusOn == this)
-					PsychUIInputText.focusOn = null;
+				if(lastFocus != this) PsychUIInputText.focusOn = this;
+				else if(PsychUIInputText.focusOn == this) PsychUIInputText.focusOn = null;
 			}
 		} else if(FlxG.mouse.released && button.animation.curAnim != null && button.animation.curAnim.name != 'normal') button.animation.play('normal', true);
 
@@ -133,7 +131,6 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 			bg.updateHitbox();
 		} else {
 			for (item in _items) item.active = item.visible = false;
-
 			bg.scale.y = 20;
 			bg.updateHitbox();
 		}

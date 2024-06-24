@@ -97,7 +97,7 @@ class CoolUtil {
 
 		var colorNum:Null<FlxColor> = FlxColor.fromString(color);
 		if(colorNum == null) colorNum = FlxColor.fromString('#$color');
-		return colorNum != null ? colorNum : FlxColor.WHITE;
+		return colorNum ?? FlxColor.WHITE;
 	}
 
 	inline public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {

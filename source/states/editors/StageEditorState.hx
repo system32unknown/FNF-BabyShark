@@ -464,7 +464,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	}
 
 	function updateSpriteListRadio() {
-		var _sel:String = (spriteListRadioGroup.checkedRadio != null ? spriteListRadioGroup.checkedRadio.label : null);
+		var _sel:String = spriteListRadioGroup.checkedRadio?.label;
 		var nameList:Array<String> = [];
 		for (spr in stageSprites) {
 			if(spr == null) continue;
@@ -547,7 +547,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		objY += 50;
 		tab_group.add(new FlxText(objX, objY - 18, 100, 'UI Style:'));
-		uiInputText = new PsychUIInputText(objX, objY, 100, stageJson.stageUI != null ? stageJson.stageUI : '', 8);
+		uiInputText = new PsychUIInputText(objX, objY, 100, stageJson.stageUI ?? '', 8);
 		uiInputText.onChange = (old:String, cur:String) -> stageJson.stageUI = uiInputText.text;
 
 		objY += 30;
@@ -628,7 +628,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		};
 
 		tab_group.add(new FlxText(objX + 80, objY - 18, 100, 'Speed:'));
-		cameraSpeedStepper = new PsychUINumericStepper(objX + 80, objY, 0.1, stageJson.camera_speed != null ? stageJson.camera_speed : 1, 0, 10, 2);
+		cameraSpeedStepper = new PsychUINumericStepper(objX + 80, objY, 0.1, stageJson.camera_speed ?? 1, 0, 10, 2);
 		cameraSpeedStepper.onValueChange = () -> {
 			stageJson.camera_speed = cameraSpeedStepper.value;
 			FlxG.camera.followLerp = 0.04 * stageJson.camera_speed;
@@ -957,7 +957,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 	function updateStageDataUI() {
 		//input texts
-		uiInputText.text = (stageJson.stageUI != null ? stageJson.stageUI : '');
+		uiInputText.text = (stageJson.stageUI ?? '');
 		//checkboxes
 		hideGirlfriendCheckbox.checked = (stageJson.hide_girlfriend);
 		gf.visible = !hideGirlfriendCheckbox.checked;
@@ -1522,8 +1522,8 @@ class StageEditorMetaSprite {
 
 	public var scroll:Array<Float> = [1, 1];
 	public function setScrollFactor(scrX:Null<Float> = null, scrY:Null<Float> = null) {
-		scroll[0] = (scrX != null ? scrX : scroll[0]);
-		scroll[1] = (scrY != null ? scrY : scroll[1]);
+		scroll[0] = (scrX ?? scroll[0]);
+		scroll[1] = (scrY ?? scroll[1]);
 		sprite.scrollFactor.set(scroll[0], scroll[1]);
 	}
 
@@ -1535,8 +1535,8 @@ class StageEditorMetaSprite {
 	}
 
 	public function setScale(wid:Null<Float> = null, hei:Null<Float> = null) {
-		scale[0] = (wid != null ? wid : scale[0]);
-		scale[1] = (hei != null ? hei : scale[1]);
+		scale[0] = (wid ?? scale[0]);
+		scale[1] = (hei ?? scale[1]);
 		sprite.scale.set(scale[0], scale[1]);
 		sprite.updateHitbox();
 	}

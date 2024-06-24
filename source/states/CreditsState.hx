@@ -447,7 +447,7 @@ class CreditSectionState extends MusicBeatState {
 
 	#if MODS_ALLOWED
 	function initializeModList(?folder:String = null) {
-		var creditsFile:String = Paths.mods((folder != null ? folder + '/' : '') + 'data/credits.txt');
+		var creditsFile:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits.txt');
 		if (!FileSystem.exists(creditsFile)) return switchToDefaultSection();
 
 		for (i in File.getContent(creditsFile).split('\n')) {

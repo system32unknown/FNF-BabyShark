@@ -63,7 +63,7 @@ class ShaderFunctions {
 			}
 
             var arr:Array<String> = funk.runtimeShaders.get(shader);
-            var camera = getCam(cam);
+            var camera:Dynamic = getCam(cam);
             if (camera.filters == null) camera.filters = [];
 			
             var filter:ShaderFilter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
@@ -79,7 +79,7 @@ class ShaderFunctions {
 
         funk.addLocalCallback("removeCamShader", function(cam:String, shader:String) {
             #if (!flash && MODS_ALLOWED && sys)
-            var camera = getCam(cam);
+            var camera:Dynamic = getCam(cam);
             if (!storedFilters.exists(shader)) {
                 FunkinLua.luaTrace('removeCamShader: $shader does not exist!', false, false, FlxColor.YELLOW);
                 return false;
@@ -104,7 +104,7 @@ class ShaderFunctions {
 		funk.set("getShaderBool", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getBool(prop) : null;
+			return shader?.getBool(prop);
 			#else
 			FunkinLua.luaTrace("getShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			return null;
@@ -113,7 +113,7 @@ class ShaderFunctions {
 		funk.set("getShaderBoolArray", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getBoolArray(prop) : null;
+			return shader?.getBoolArray(prop);
 			#else
 			FunkinLua.luaTrace("getShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			return null;
@@ -122,7 +122,7 @@ class ShaderFunctions {
 		funk.set("getShaderInt", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getInt(prop) : null;
+			return shader?.getInt(prop);
 			#else
 			FunkinLua.luaTrace("Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			return null;
@@ -131,7 +131,7 @@ class ShaderFunctions {
 		funk.set("getShaderIntArray", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getIntArray(prop) : null;
+			return shader?.getIntArray(prop);
 			#else
 			FunkinLua.luaTrace("getShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			return null;
@@ -140,7 +140,7 @@ class ShaderFunctions {
 		funk.set("getShaderFloat", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getFloat(prop) : null;
+			return shader?.getFloat(prop);
 			#else
 			FunkinLua.luaTrace("getShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			return null;
@@ -149,7 +149,7 @@ class ShaderFunctions {
 		funk.set("getShaderFloatArray", function(obj:String, prop:String) {
 			#if (!flash && MODS_ALLOWED && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
-			return shader != null ? shader.getFloatArray(prop) : null;
+			return shader?.getFloatArray(prop);
 			#else
 			FunkinLua.luaTrace("getShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			return null;

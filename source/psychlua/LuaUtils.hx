@@ -104,7 +104,7 @@ class LuaUtils {
 						var sub:Dynamic = parsedJson[i];
 						if(sub != null && sub.save != null && !settings.exists(sub.save)) {
 							if(sub.type != 'keybind' && sub.type != 'key' && sub.value != null) settings.set(sub.save, sub.value);
-							else settings.set(sub.save, {keyboard: (sub.keyboard != null ? sub.keyboard : 'NONE')});
+							else settings.set(sub.save, {keyboard: (sub.keyboard ?? 'NONE')});
 						}
 					}
 					FlxG.save.data.modSettings.set(modName, settings);

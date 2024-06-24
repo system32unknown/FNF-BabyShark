@@ -45,7 +45,7 @@ class ModsMenuState extends MusicBeatState {
 		persistentUpdate = false;
 
 		modsList = Mods.parseList();
-		Mods.currentModDirectory = modsList.all[0] != null ? modsList.all[0] : '';
+		Mods.currentModDirectory = modsList.all[0] ?? '';
 
 		#if desktop DiscordClient.changePresence("In the Mod Menus"); #end
 
@@ -606,7 +606,7 @@ class ModsMenuState extends MusicBeatState {
 		FlxTransitionableState.skipNextTransIn = true;
 		FlxTransitionableState.skipNextTransOut = true;
 		var curMod:ModItem = modsGroup.members[curSelectedMod];
-		FlxG.switchState(() -> new ModsMenuState(curMod != null ? curMod.folder : null));
+		FlxG.switchState(() -> new ModsMenuState(curMod?.folder));
 	}
 	
 	function saveTxt() {
@@ -704,7 +704,7 @@ class ModItem extends FlxSpriteGroup {
 			if(pack.name != null) this.name = pack.name;
 			if(pack.description != null) this.desc = pack.description;
 			if(pack.iconFramerate != null) this.iconFps = pack.iconFramerate;
-			if(pack.color != null) this.bgColor = FlxColor.fromRGB(pack.color[0] != null ? pack.color[0] : 170, pack.color[1] != null ? pack.color[1] : 0, pack.color[2] != null ? pack.color[2] : 255);
+			if(pack.color != null) this.bgColor = FlxColor.fromRGB(pack.color[0] ?? 170, pack.color[1] ?? 0, pack.color[2] ?? 255);
 			this.mustRestart = (pack.restart == true);
 		}
 		text.text = this.name;

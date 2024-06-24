@@ -655,7 +655,7 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 
 		iconInputText.text = weekFile.songs[curSelected][1];
 
-		var colors = weekFile.songs[curSelected][2];
+		var colors:haxe.extern.EitherType<String, Array<Int>> = weekFile.songs[curSelected][2];
 		bgColorStepperR.value = Math.round(colors[0]);
 		bgColorStepperG.value = Math.round(colors[1]);
 		bgColorStepperB.value = Math.round(colors[2]);

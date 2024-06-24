@@ -337,7 +337,7 @@ class ControlsSubState extends MusicBeatSubstate {
 					for (n in 0...2) {
 						var key:String = null;
 						var savKey:Array<Null<FlxKey>> = ClientPrefs.keyBinds.get(option);
-						key = InputFormatter.getKeyName(savKey[n] != null ? savKey[n] : NONE);
+						key = InputFormatter.getKeyName(savKey[n] ?? NONE);
 						updateBind(Math.floor(curSelected * 2) + n, key);
 					}
 					FlxG.sound.play(Paths.sound('confirmMenu'));

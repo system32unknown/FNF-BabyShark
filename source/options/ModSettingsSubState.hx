@@ -21,8 +21,8 @@ class ModSettingsSubState extends BaseOptionsMenu {
 		try {
 			for (option in options) {
 				var newOption:Option = new Option(
-					option.name != null ? option.name : option.save,
-					option.description != null ? option.description : 'No description provided.',
+					option.name ?? option.save,
+					option.description ?? 'No description provided.',
 					option.save,
 					convertType(option.type),
 					option.options

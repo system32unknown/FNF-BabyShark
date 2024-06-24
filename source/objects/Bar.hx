@@ -53,7 +53,7 @@ class Bar extends FlxSpriteGroup {
 			bounded = FlxMath.bound(valueFunction(), bounds.min, bounds.max);
 			value = FlxMath.remapToRange(bounded, bounds.min, bounds.max, 0, 100);
 		}
-		percent = (value != null ? value : 0);
+		percent = value ?? 0;
 		super.update(elapsed);
 	}
 

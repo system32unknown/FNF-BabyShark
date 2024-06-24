@@ -29,7 +29,7 @@ class Main {
 				switch(lib.type) {
 					case "haxelib":
 						Sys.println('Installing "${lib.name}"...');   
-						var vers:String = lib.version != null ? lib.version : "";          
+						var vers:String = lib.version ?? "";          
 						if (isHMM) Sys.command('hmm haxelib ${lib.name} $vers');
 						else {
 							Sys.command('haxelib install ${lib.name} ${vers} --quiet');
