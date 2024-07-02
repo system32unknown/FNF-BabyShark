@@ -20,8 +20,7 @@ class BGScrollingText extends FlxSpriteGroup {
 		this.widthShit = widthShit;
 		if (size != null) this.size = size;
 
-		grpTexts = new FlxTypedSpriteGroup<FlxText>();
-		add(grpTexts);
+		add(grpTexts = new FlxTypedSpriteGroup<FlxText>());
 
 		var testText:FlxText = new FlxText(0, 0, 0, text, this.size);
 		testText.font = font;

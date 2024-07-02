@@ -234,7 +234,7 @@ class PlayState extends MusicBeatState {
 		instance = this;
 		PauseSubState.songName = null; //Reset to default
 
-		if(FlxG.sound.music != null) FlxG.sound.music.stop();
+		FlxG.sound.music?.stop();
 
 		// Gameplay settings
 		healthGain = ClientPrefs.getGameplaySetting('healthgain');
@@ -272,16 +272,14 @@ class PlayState extends MusicBeatState {
 
 		GameOverSubstate.resetVariables();
 		songName = Paths.formatToSongPath(SONG.song);
-		if(SONG.stage == null || SONG.stage.length < 1)
-			SONG.stage = StageData.vanillaSongStage(songName);
+		if(SONG.stage == null || SONG.stage.length < 1) SONG.stage = StageData.vanillaSongStage(songName);
 		curStage = SONG.stage;
 
 		var stageData:data.StageData.StageFile = StageData.getStageFile(curStage);
 		defaultCamZoom = stageData.defaultZoom;
 
 		stageUI = "normal";
-		if (stageData.stageUI != null && stageData.stageUI.trim().length > 0)
-			stageUI = stageData.stageUI;
+		if (stageData.stageUI != null && stageData.stageUI.trim().length > 0) stageUI = stageData.stageUI;
 		else if (stageData.isPixelStage == true) stageUI = "pixel";
 
 		BF_X = stageData.boyfriend[0]; BF_Y = stageData.boyfriend[1];
@@ -1432,7 +1430,7 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.followLerp = 0;
 		persistentUpdate = false;
 		paused = true;
-		if (FlxG.sound.music != null) FlxG.sound.music.stop();
+		FlxG.sound.music?.stop();
 		#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 		FlxG.switchState(() -> new CharacterEditorState(SONG.player2));
 	}
@@ -1732,7 +1730,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public var transitioning = false;
-	public function endSong() {
+	public function endSong():Bool {
 		if(!startingSong) { //Should kill you if you tried to cheat
 			notes.forEach((daNote:Note) -> if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= .05 * healthLoss);
 			for (daNote in unspawnNotes) if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= .05 * healthLoss;
@@ -2268,7 +2266,6 @@ class PlayState extends MusicBeatState {
 	var lastStepHit:Int = -1;
 	override function stepHit() {
 		super.stepHit();
-
 		if(curStep == lastStepHit) return;
 
 		lastStepHit = curStep;

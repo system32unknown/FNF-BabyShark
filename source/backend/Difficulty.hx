@@ -45,7 +45,7 @@ class Difficulty {
 	}
 
 	inline public static function getString(?num:Null<Int> = null, ?canTranslate:Bool = true):String {
-		var diffName:String = list[num == null ? PlayState.storyDifficulty : num];
+		var diffName:String = list[num ?? PlayState.storyDifficulty];
 		return canTranslate ? Language.getPhrase('difficulty_$diffName', diffName) : diffName;
 	}
 

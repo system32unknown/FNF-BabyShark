@@ -71,7 +71,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 			bgFade.alpha += .5 * elapsed;
 			if (bgFade.alpha > .5) bgFade.alpha = .5;
 
-			var ret:Dynamic = PlayState.instance.callOnScripts('onDialogueConfirm', null, false);
+			var ret:Dynamic = PlayState.instance.callOnScripts('onDialogueConfirm');
 			if ((confirmDialogue || Controls.instance.ACCEPT) && ret != LuaUtils.Function_Stop) {
 				if (!typedText.finishedText) {
 					typedText.finishText();
@@ -264,7 +264,8 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 				speed: 0.05,
 				portrait: "bf",
 				events: []
-			}], bubble: 'speech_bubble'
+			}],
+			bubble: 'speech_bubble'
 		};
 	}
 
@@ -411,19 +412,14 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 	function updateDialogueCharacter(char:Null<DialogueCharacter>, dialogue:DialogueLine):Void {
 		if (char == null) return;
 
-		// Play animation depending on the expression
-		char.playAnim(dialogue.expression, typedText.finishedText);
-
-		// If no animation is played
-		if (char.animation.curAnim == null) return;
-
+		char.playAnim(dialogue.expression, typedText.finishedText); // Play animation depending on the expression
+		if (char.animation.curAnim == null) return; // If no animation is played
 		char.animation.curAnim.frameRate = FlxMath.bound(((dialogue.speed - .05) / 5) * 480, 12, 48); // [12; 48]
 	}
 
 	function onCharacterAnimationCheck():Void {
 		var char:DialogueCharacter = dialogueCharacters[lastCharacter];
-		if (char == null || char.animation.curAnim == null || !char.animation.finished)
-			return;
+		if (char == null || char.animation.curAnim == null || !char.animation.finished) return;
 
 		if (char.animationIsLoop() && typedText.finishedText)
 			char.playAnim(char.animation.curAnim.name, true);
@@ -448,7 +444,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		currentCharAlpha = char.alpha;
 
 		// Call Update
-		var ret:Dynamic = PlayState.instance.callOnScripts('onCharacterMove', [tag, char.curCharacter, char.startingPos, offsetPos, elapsed], false);
+		var ret:Dynamic = PlayState.instance.callOnScripts('onCharacterMove', [tag, char.curCharacter, char.startingPos, offsetPos, elapsed]);
 		if (ret != LuaUtils.Function_Stop) defaultMovement(char, elapsed);
 
 		// Set positions
@@ -509,7 +505,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 		// Box
 		box = new FlxSprite();
-		box.frames = Paths.getSparrowAtlas(dialogueList.bubble == null ? 'speech_bubble' : dialogueList.bubble);
+		box.frames = Paths.getSparrowAtlas(dialogueList.bubble ?? 'speech_bubble');
 		box.animation.addByPrefix('normal', 'speech bubble normal', 24);
 		box.animation.addByPrefix('normalOpen', 'Speech Bubble Normal Open', 24, false);
 		box.animation.addByPrefix('angry', 'AHH speech bubble', 24);
@@ -529,7 +525,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		add(box);
 
 		// Text
-		typedText = new TypedAlphabet(DEFAULT_TEXT_X, DEFAULT_TEXT_Y, '');
+		typedText = new TypedAlphabet(DEFAULT_TEXT_X, DEFAULT_TEXT_Y);
 		typedText.setScale(.7);
 		typedText.onUpdate = (text:String) -> PlayState.instance.callOnScripts('onDialogueTextUpdate', [text]);
 		add(typedText);

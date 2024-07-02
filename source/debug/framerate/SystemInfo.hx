@@ -9,6 +9,7 @@ class SystemInfo extends FramerateCategory {
 	public static var vRAM:String = "Unknown";
 	public static var totalMem:String = "Unknown";
 
+	static var __gpuInfo:Array<String> = [];
 	static var __formattedSysText:String = "";
 
 	public static inline function init() {
@@ -18,12 +19,13 @@ class SystemInfo extends FramerateCategory {
 
 		@:privateAccess {
 			if (FlxG.stage.context3D != null && FlxG.stage.context3D.gl != null) {
-				gpuName = Std.string(FlxG.stage.context3D.gl.getParameter(FlxG.stage.context3D.gl.RENDERER)).split("/")[0].trim();
+				__gpuInfo = getGLInfo(RENDERER).split("/");
+				gpuName = __gpuInfo[0].trim();
 
 				if(Context3D.__glMemoryTotalAvailable != -1) {
 					var vRAMBytes:UInt = cast(FlxG.stage.context3D.gl.getParameter(Context3D.__glMemoryTotalAvailable), UInt);
 					if (vRAMBytes == 1000 || vRAMBytes == 1 || vRAMBytes <= 0) Logs.trace('Unable to grab GPU VRAM', ERROR, RED);
-					else vRAM = flixel.util.FlxStringUtil.formatBytes(vRAMBytes);
+					else vRAM = flixel.util.FlxStringUtil.formatBytes(vRAMBytes * 1000);
 				}
 			} else Logs.trace('Unable to grab GPU Info', ERROR, RED);
 		}
@@ -61,8 +63,7 @@ class SystemInfo extends FramerateCategory {
 			if(vramKnown) __formattedSysText += 'VRAM: $vRAM'; // 1000 bytes of vram (apus)
 		}
 		if (totalMem != "Unknown") __formattedSysText += '\nTotal MEM: $totalMem';
-		__formattedSysText += "\nGL Render: " + getGLInfo(RENDERER);
-		__formattedSysText += "\nGL Shading version: " + getGLInfo(SHADING_LANGUAGE_VERSION);
+		__formattedSysText += "\nGL Version: " + getGLInfo(SHADING_LANGUAGE_VERSION) + " " + __gpuInfo[1].trim();
 	}
 
 	public function new() {

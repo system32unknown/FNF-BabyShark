@@ -166,7 +166,7 @@ class LuaUtils {
 		else Reflect.setProperty(leArray, variable, value);
 		return value;
 	}
-	public static function getGroupStuff(leArray:Dynamic, variable:String, ?allowMaps:Bool = false) {
+	public static function getGroupStuff(leArray:Dynamic, variable:String, ?allowMaps:Bool = false):Dynamic {
 		var split:Array<String> = variable.split('.');
 		if(split.length > 1) {
 			var obj:Dynamic = Reflect.getProperty(leArray, split[0]);
@@ -203,7 +203,6 @@ class LuaUtils {
 	}
 
 	static final _lePoint:FlxPoint = FlxPoint.get();
-
 	inline public static function getMousePoint(camera:String, axis:String):Float {
 		FlxG.mouse.getScreenPosition(cameraFromString(camera), _lePoint);
 		return (axis == 'y' ? _lePoint.y : _lePoint.x);

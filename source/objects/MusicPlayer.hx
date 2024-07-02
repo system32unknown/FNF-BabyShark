@@ -277,8 +277,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 
 	function setPlaybackRate() {
 		FlxG.sound.music.pitch = playbackRate;
-		if (FreeplayState.vocals != null)
-			FreeplayState.vocals.pitch = playbackRate;
+		if (FreeplayState.vocals != null) FreeplayState.vocals.pitch = playbackRate;
 	}
 
 	function get_playing():Bool return FlxG.sound.music.playing;

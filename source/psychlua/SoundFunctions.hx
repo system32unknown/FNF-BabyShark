@@ -8,8 +8,8 @@ class SoundFunctions {
 			if(tag != null && tag.length > 0) {
 				var originalTag:String = tag;
 				tag = LuaUtils.formatVariable('sound_$tag');
-				var variables = MusicBeatState.getVariables();
-				var oldSnd = variables.get(tag);
+				var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
+				var oldSnd:FlxSound = variables.get(tag);
 				if(oldSnd != null) {
 					oldSnd.stop();
 					oldSnd.destroy();
@@ -27,7 +27,7 @@ class SoundFunctions {
 			if((tag == null || tag.length < 1) && FlxG.sound.music != null) FlxG.sound.music.stop();
 			else {
 				tag = LuaUtils.formatVariable('sound_$tag');
-				var variables = MusicBeatState.getVariables();
+				var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 				var snd:FlxSound = variables.get(tag);
 				if(snd != null) {
 					snd.stop();

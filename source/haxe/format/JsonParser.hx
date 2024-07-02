@@ -109,12 +109,10 @@ class JsonParser {
 							case ' '.code, '\r'.code, '\n'.code, '\t'.code:
 							// loop
 							case '}'.code:
-								if (field != null || comma == false)
-									invalidChar();
+								if (field != null || comma == false) invalidChar();
 								return obj;
 							case ':'.code:
-								if (field == null)
-									invalidChar();
+								if (field == null) invalidChar();
 								Reflect.setField(obj, field, parseRec());
 								field = null;
 								comma = true;
@@ -130,9 +128,7 @@ class JsonParser {
 					var arr = [], comma:Null<Bool> = null;
 					while (true) {
 						var c = nextChar();
-						if (checkComments(c)) {
-							continue;
-						}
+						if (checkComments(c)) continue;
 						switch (c) {
 							case ' '.code, '\r'.code, '\n'.code, '\t'.code:
 							// loop
@@ -149,21 +145,21 @@ class JsonParser {
 						}
 					}
 				case 't'.code:
-					var save = pos;
+					var save:Int = pos;
 					if (nextChar() != 'r'.code || nextChar() != 'u'.code || nextChar() != 'e'.code) {
 						pos = save;
 						invalidChar();
 					}
 					return true;
 				case 'f'.code:
-					var save = pos;
+					var save:Int = pos;
 					if (nextChar() != 'a'.code || nextChar() != 'l'.code || nextChar() != 's'.code || nextChar() != 'e'.code) {
 						pos = save;
 						invalidChar();
 					}
 					return false;
 				case 'n'.code:
-					var save = pos;
+					var save:Int = pos;
 					if (nextChar() != 'u'.code || nextChar() != 'l'.code || nextChar() != 'l'.code) {
 						pos = save;
 						invalidChar();
@@ -179,11 +175,11 @@ class JsonParser {
 		}
 	}
 
-	function parseString() {
-		var start = pos;
+	function parseString():String {
+		var start:Int = pos;
 		var buf:StringBuf = null;
 		#if target.unicode
-		var prev = -1;
+		var prev:Int = -1;
 		inline function cancelSurrogate() {
 			// invalid high surrogate (not followed by low surrogate)
 			buf.addChar(0xFFFD);
@@ -250,14 +246,10 @@ class JsonParser {
 			// ensure utf8 chars are not cut
 			else if (c >= 0x80) {
 				pos++;
-				if (c >= 0xFC)
-					pos += 4;
-				else if (c >= 0xF8)
-					pos += 3;
-				else if (c >= 0xF0)
-					pos += 2;
-				else if (c >= 0xE0)
-					pos++;
+				if (c >= 0xFC) pos += 4;
+				else if (c >= 0xF8) pos += 3;
+				else if (c >= 0xF0) pos += 2;
+				else if (c >= 0xE0) pos++;
 			}
 			#end
 			else if (StringTools.isEof(c)) throw "Unclosed string";
@@ -273,68 +265,60 @@ class JsonParser {
 	}
 
 	inline function parseNumber(c:Int):Dynamic {
-		var start = pos - 1;
-		var minus = c == '-'.code, digit = !minus, zero = c == '0'.code;
-		var point = false, e = false, pm = false, end = false;
+		var start:Int = pos - 1;
+		var minus:Bool = c == '-'.code, digit:Bool = !minus, zero:Bool = c == '0'.code;
+		var point:Bool = false, e:Bool = false, pm:Bool = false, end:Bool = false;
 		while (true) {
 			c = nextChar();
 			switch (c) {
 				case '0'.code:
-					if (zero && !point)
-						invalidNumber(start);
+					if (zero && !point) invalidNumber(start);
 					if (minus) {
 						minus = false;
 						zero = true;
 					}
 					digit = true;
 				case '1'.code, '2'.code, '3'.code, '4'.code, '5'.code, '6'.code, '7'.code, '8'.code, '9'.code:
-					if (zero && !point)
-						invalidNumber(start);
-					if (minus)
-						minus = false;
+					if (zero && !point) invalidNumber(start);
+					if (minus) minus = false;
 					digit = true;
 					zero = false;
 				case '.'.code:
-					if (minus || point || e)
-						invalidNumber(start);
+					if (minus || point || e) invalidNumber(start);
 					digit = false;
 					point = true;
 				case 'e'.code, 'E'.code:
-					if (minus || zero || e)
-						invalidNumber(start);
+					if (minus || zero || e) invalidNumber(start);
 					digit = false;
 					e = true;
 				case '+'.code, '-'.code:
-					if (!e || pm)
-						invalidNumber(start);
+					if (!e || pm) invalidNumber(start);
 					digit = false;
 					pm = true;
 				default:
-					if (!digit)
-						invalidNumber(start);
+					if (!digit) invalidNumber(start);
 					pos--;
 					end = true;
 			}
 			if (end) break;
 		}
 
-		var f = Std.parseFloat(str.substr(start, pos - start));
-		if (point) {
-			return f;
-		} else {
-			var i = Std.int(f);
+		var f:Float = Std.parseFloat(str.substr(start, pos - start));
+		if (point) return f;
+		else {
+			var i:Int = Std.int(f);
 			return if (i == f) i else f;
 		}
 	}
 
-	inline function nextChar() {
+	inline function nextChar():Int {
 		return StringTools.fastCodeAt(str, pos++);
 	}
 
 	function invalidChar() {
 		pos--; // rewind
-		var col = 1;
-		var line = 1;
+		var col:Int = 1;
+		var line:Int = 1;
 		for (i in 0...pos) {
 			var c = StringTools.fastCodeAt(str, i);
 			if (c == '\n'.code) {
@@ -346,10 +330,10 @@ class JsonParser {
 	}
 
 	function invalidNumber(start:Int) {
-		var col = 1;
-		var line = 1;
+		var col:Int = 1;
+		var line:Int = 1;
 		for (i in 0...start) {
-			var c = StringTools.fastCodeAt(str, i);
+			var c:Int = StringTools.fastCodeAt(str, i);
 			if (c == '\n'.code) {
 				col = 1;
 				line++;

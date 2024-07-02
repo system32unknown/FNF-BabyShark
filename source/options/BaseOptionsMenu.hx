@@ -272,7 +272,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 		}
 	}
 
-	final MAX_KEYBIND_WIDTH = 320;
+	final MAX_KEYBIND_WIDTH:Int = 320;
 	function updateBind(?text:String = null, ?option:Option = null) {
 		if(option == null) option = curOption;
 		if(text == null) {

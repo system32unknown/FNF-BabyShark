@@ -86,18 +86,18 @@ class Paths {
 		return getSharedPath(file);
 	}
 
-	inline static public function getFolderPath(file:String, folder = "shared")
+	inline static public function getFolderPath(file:String, folder = "shared"):String
 		return 'assets/$folder/$file';
 
-	inline public static function getSharedPath(file:String = '')
+	inline public static function getSharedPath(file:String = ''):String
 		return 'assets/shared/$file';
 
-	inline static public function txt(key:String, ?folder:String)
+	inline static public function txt(key:String, ?folder:String):String
 		return getPath('data/$key.txt', TEXT, folder);
-	inline static public function json(key:String, ?folder:String)
+	inline static public function json(key:String, ?folder:String):String
 		return getPath('data/$key.json', TEXT, folder);
 
-	static public function video(key:String) {
+	static public function video(key:String):String {
 		#if MODS_ALLOWED
 		var file:String = modsVideo(key);
 		if(FileSystem.exists(file)) return file;
@@ -283,24 +283,24 @@ class Paths {
 	}
 
 	#if MODS_ALLOWED
-	inline static public function mods(key:String = '')
+	inline static public function mods(key:String = ''):String
 		return 'mods/$key';
-	inline static public function modsFont(key:String)
+	inline static public function modsFont(key:String):String
 		return modFolders('fonts/$key');
-	inline static public function modsJson(key:String)
+	inline static public function modsJson(key:String):String
 		return modFolders('data/$key.json');
-	inline static public function modsVideo(key:String)
+	inline static public function modsVideo(key:String):String
 		return modFolders('videos/$key.$VIDEO_EXT');
-	inline static public function modsImages(key:String)
+	inline static public function modsImages(key:String):String
 		return modFolders('images/$key.png');
-	inline static public function modsXml(key:String)
+	inline static public function modsXml(key:String):String
 		return modFolders('images/$key.xml');
-	inline static public function modsTxt(key:String)
+	inline static public function modsTxt(key:String):String
 		return modFolders('images/$key.txt');
-	inline static public function modsImagesJson(key:String)
+	inline static public function modsImagesJson(key:String):String
 		return modFolders('images/$key.json');
 
-	static public function modFolders(key:String) {
+	static public function modFolders(key:String):String {
 		if(Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0) {
 			var file:String = mods('${Mods.currentModDirectory}/$key');
 			if(FileSystem.exists(file)) return file;

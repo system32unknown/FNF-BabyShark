@@ -26,6 +26,7 @@ class FramerateCategory extends openfl.display.Sprite {
 			label.autoSize = LEFT;
 			label.x = 0;
 			label.y = 0;
+			label.selectable = label.mouseEnabled = false;
 			label.defaultTextFormat = new openfl.text.TextFormat(Framerate.fontName, label == this.title ? 16 : 15, -1);
 			addChild(label);
 		}

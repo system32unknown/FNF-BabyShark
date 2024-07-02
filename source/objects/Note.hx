@@ -275,7 +275,7 @@ class Note extends FlxSprite {
 
 		var skin:String = texture + postfix;
 		if(texture.length < 1) {
-			skin = PlayState.SONG != null ? PlayState.SONG.arrowSkin : null;
+			skin = PlayState.SONG?.arrowSkin;
 			if(skin == null || skin.length < 1) skin = defaultNoteSkin + postfix;
 		}
 
@@ -401,13 +401,12 @@ class Note extends FlxSprite {
 		distance = (.45 * (Conductor.songPosition - strumTime) * songSpeed * multSpeed);
 		if(!myStrum.downScroll) distance *= -1;
 
-		var angleDir:Float = strumDirection * Math.PI / 180;
 		if(copyAngle) angle = strumDirection - 90 + strumAngle + offsetAngle;
 
 		if(copyAlpha) alpha = strumAlpha * multAlpha;
-		if(copyX) x = strumX + offsetX + Math.cos(angleDir) * distance;
+		if(copyX) @:privateAccess x = strumX + offsetX + myStrum._dirCos * distance;
 		if(copyY) {
-			y = strumY + offsetY + correctionOffset + Math.sin(angleDir) * distance;
+			@:privateAccess y = strumY + offsetY + correctionOffset + myStrum._dirSin * distance;
 			if(myStrum.downScroll && isSustainNote) {
 				if(PlayState.isPixelStage) y -= PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania] * 9.5;
 				y -= (frameHeight * scale.y) - (EK.swidths[PlayState.mania] / 2);
@@ -418,8 +417,7 @@ class Note extends FlxSprite {
 	public function clipToStrumNote(myStrum:StrumNote) {
 		final center:Float = myStrum.y + offsetY + EK.swidths[PlayState.mania] / 2;
 		if(isSustainNote && (mustPress || !ignoreNote) && (!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !canBeHit)))) {
-			final swagRect:FlxRect = (clipRect == null ? FlxRect.get(0, 0, frameWidth, frameHeight) : clipRect);
-	
+			final swagRect:FlxRect = clipRect ?? FlxRect.get(0, 0, frameWidth, frameHeight);
 			if (myStrum.downScroll) {
 				if(y - offset.y * scale.y + height >= center) {
 					swagRect.width = frameWidth;

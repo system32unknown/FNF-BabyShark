@@ -15,23 +15,19 @@ class LogFrontEnd {
 
 	var _standardTraceFunction:(Dynamic, ?PosInfos)->Void;
 
-	public inline function add(data:Dynamic):Void
-	{
+	public inline function add(data:Dynamic):Void {
 		advanced(data, LogStyle.NORMAL);
 	}
 
-	public inline function warn(data:Dynamic):Void
-	{
+	public inline function warn(data:Dynamic):Void {
 		advanced(data, LogStyle.WARNING, true);
 	}
 
-	public inline function error(data:Dynamic):Void
-	{
+	public inline function error(data:Dynamic):Void {
 		advanced(data, LogStyle.ERROR, true);
 	}
 
-	public inline function notice(data:Dynamic):Void
-	{
+	public inline function notice(data:Dynamic):Void {
 		advanced(data, LogStyle.NOTICE);
 	}
 
@@ -42,8 +38,7 @@ class LogFrontEnd {
 	 * @param   style     The LogStyle to use, for example LogStyle.WARNING. You can also create your own by importing the LogStyle class.
 	 * @param   fireOnce  Whether you only want to log the Data in case it hasn't been added already
 	 */
-	public function advanced(data:Dynamic, ?style:LogStyle, fireOnce = false):Void
-	{
+	public function advanced(data:Dynamic, ?style:LogStyle, fireOnce = false):Void {
 		if (style == null) style = LogStyle.NORMAL;
 		if (!(data is Array)) data = [data];
 		
@@ -76,13 +71,11 @@ class LogFrontEnd {
 	}
 
 	@:allow(flixel.FlxG)
-	function new()
-	{
+	function new() {
 		_standardTraceFunction = haxe.Log.trace;
 	}
 
-	inline function set_redirectTraces(redirect:Bool):Bool
-	{
+	inline function set_redirectTraces(redirect:Bool):Bool {
 		haxe.Log.trace = (redirect) ? processTraceData : _standardTraceFunction;
 		return redirectTraces = redirect;
 	}
@@ -93,14 +86,11 @@ class LogFrontEnd {
 	 * @param   data  The data that has been traced
 	 * @param   info  Information about the position at which trace() was called
 	 */
-	function processTraceData(data:Dynamic, ?info:PosInfos):Void
-	{
+	function processTraceData(data:Dynamic, ?info:PosInfos):Void {
 		var paramArray:Array<Dynamic> = [data];
 
-		if (info.customParams != null)
-		{
-			for (i in info.customParams)
-			{
+		if (info.customParams != null) {
+			for (i in info.customParams) {
 				paramArray.push(i);
 			}
 		}

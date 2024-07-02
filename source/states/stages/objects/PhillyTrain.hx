@@ -63,7 +63,7 @@ class PhillyTrain extends BGSprite
 	}
 
 	public function restart():Void {
-		if(PlayState.instance.gf != null) {
+		if (PlayState.instance.gf != null) {
 			PlayState.instance.gf.danced = false; //Makes she bop her head to the correct side once the animation ends
 			PlayState.instance.gf.playAnim('hairFall');
 			PlayState.instance.gf.specialAnim = true;

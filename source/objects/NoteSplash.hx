@@ -1,6 +1,5 @@
 package objects;
 
-import shaders.RGBPalette;
 import shaders.PixelSplashShader.PixelSplashShaderRef;
 
 typedef NoteSplashConfig = {
@@ -34,7 +33,7 @@ class NoteSplash extends FlxSprite {
 		this.moves = false;
 		_configLoaded = skin;
 		scrollFactor.set();
-		setupNoteSplash(x, y, 0);
+		setupNoteSplash(x, y);
 	}
 
 	override function destroy() {
@@ -57,7 +56,7 @@ class NoteSplash extends FlxSprite {
 		if(_textureLoaded != texture) config = loadAnims(texture);
 		else config = precacheConfig(_configLoaded);
 
-		var tempShader:RGBPalette = null;
+		var tempShader:shaders.RGBPalette = null;
 		if((note == null || note.noteSplashData.useRGBShader) && (PlayState.SONG == null || !PlayState.SONG.disableNoteRGB)) {
 			// If Note RGB is enabled:
 			if(note != null && !note.noteSplashData.useGlobalShader) {
@@ -153,7 +152,7 @@ class NoteSplash extends FlxSprite {
 	}
 
 	function addAnimAndCheck(name:String, anim:String, ?framerate:Int = 24, ?loop:Bool = false):Bool {
-		var animFrames = [];
+		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
 		@:privateAccess
 		animation.findByPrefix(animFrames, anim); // adds valid frames to animFrames
 

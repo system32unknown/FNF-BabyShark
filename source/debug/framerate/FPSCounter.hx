@@ -3,6 +3,7 @@ package debug.framerate;
 import openfl.text.TextField;
 import utils.system.FPSUtil;
 import flixel.util.FlxStringUtil;
+#if cpp import cpp.vm.Gc; #end
 
 class FPSCounter extends openfl.display.Sprite {
 	public var fpsTxt:TextField;
@@ -12,7 +13,13 @@ class FPSCounter extends openfl.display.Sprite {
     public var fpsManager:FPSUtil;
     public var memory(get, never):Float;
 	inline function get_memory():Float {
-		return #if sys cast(openfl.system.System.totalMemory, UInt) #else 0 #end;
+		#if cpp
+		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
+		#elseif sys
+		return cast(openfl.system.System.totalMemory, UInt);
+		#else
+		return 0;
+		#end
 	}
 	var mempeak:Float = 0;
 

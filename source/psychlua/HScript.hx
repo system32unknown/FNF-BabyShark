@@ -83,10 +83,10 @@ class HScript {
 			"PsychCamera"		=> backend.PsychCamera,
             "FlxTween"          => FlxTween,
             "FlxEase"           => FlxEase,
-            "FlxPoint"          => flixel.math.FlxPoint.FlxPoint_HSC,
-            "FlxAxes"           => flixel.util.FlxAxes.FlxAxes_HSC,
-            "FlxColor"          => flixel.util.FlxColor.FlxColor_HSC,
-            "FlxKey"            => flixel.input.keyboard.FlxKey.FlxKey_HSC,
+            "FlxPoint"          => getClassHSC('flixel.math.FlxPoint'),
+            "FlxAxes"           => getClassHSC('flixel.util.FlxAxes'),
+            "FlxColor"          => getClassHSC('flixel.util.FlxColor'),
+            "FlxKey"            => getClassHSC('flixel.input.keyboard.FlxKey'),
             "FlxSound"          => FlxSound,
             "FlxAssets"         => flixel.system.FlxAssets,
             "FlxMath"           => FlxMath,
@@ -350,6 +350,10 @@ class HScript {
 			}
 		});
 		#end
+	}
+
+	inline function getClassHSC(className:String) {
+		return Type.resolveClass('${className}_HSC');
 	}
 
 	public function destroy() @:privateAccess {

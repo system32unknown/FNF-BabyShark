@@ -27,7 +27,6 @@ class MemoryUtil {
 	public static function getMEM():Int return 0;
 
 	@:functionCode("
-		// simple but effective code
 		unsigned long long allocatedRAM = 0;
 		GetPhysicallyInstalledSystemMemory(&allocatedRAM);
 		return (allocatedRAM / 1024);

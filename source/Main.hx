@@ -7,7 +7,7 @@ import utils.GameVersion;
 import debug.framerate.Framerate;
 
 class Main extends Sprite {
-	public static var engineVer:GameVersion = new GameVersion(0, 1, 5, "a");
+	public static var engineVer:GameVersion = new GameVersion(0, 1, 5);
 
 	public static var game = {
 		width: 1280, // WINDOW width

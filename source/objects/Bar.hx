@@ -91,8 +91,8 @@ class Bar extends FlxSpriteGroup {
 	public function regenerateClips() {
 		if (leftBar == null && rightBar == null) return;
 
-		final width = Std.int(bg.width);
-		final height = Std.int(bg.height);
+		final width:Int = Std.int(bg.width);
+		final height:Int = Std.int(bg.height);
 		if (leftBar != null) {
 			leftBar.setGraphicSize(width, height);
 			leftBar.updateHitbox();

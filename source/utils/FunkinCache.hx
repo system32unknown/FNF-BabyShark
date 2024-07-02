@@ -53,11 +53,10 @@ class FunkinCache extends openfl.utils.AssetCache {
 		@param	id	The ID of the cached BitmapData
 		@return	The cached BitmapData instance
 	**/
-	public override function getBitmapData(id:String):BitmapData
-	{
-		var s = bitmapData.get(id);
+	public override function getBitmapData(id:String):BitmapData {
+		var s:BitmapData = bitmapData.get(id);
 		if (s != null) return s;
-		var s2 = bitmapData2.get(id);
+		var s2:BitmapData = bitmapData2.get(id);
 		if (s2 != null) {
 			bitmapData2.remove(id);
 			bitmapData.set(id, s2);
@@ -71,11 +70,10 @@ class FunkinCache extends openfl.utils.AssetCache {
 		@param	id	The ID of the cached Font
 		@return	The cached Font instance
 	**/
-	public override function getFont(id:String):Font
-	{
-		var s = font.get(id);
+	public override function getFont(id:String):Font {
+		var s:Font = font.get(id);
 		if (s != null) return s;
-		var s2 = font2.get(id);
+		var s2:Font = font2.get(id);
 		if (s2 != null) {
 			font2.remove(id);
 			font.set(id, s2);
@@ -91,9 +89,9 @@ class FunkinCache extends openfl.utils.AssetCache {
 	**/
 	public override function getSound(id:String):Sound
 	{
-		var s = sound.get(id);
+		var s:Sound = sound.get(id);
 		if (s != null) return s;
-		var s2 = sound2.get(id);
+		var s2:Sound = sound2.get(id);
 		if (s2 != null) {
 			sound2.remove(id);
 			sound.set(id, s2);

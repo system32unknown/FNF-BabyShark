@@ -16,7 +16,7 @@ class MenuItem extends FlxSprite {
 	public function set_isFlashing(value:Bool = true):Bool {
 		isFlashing = value;
 		_flashingElapsed = 0;
-		color = (isFlashing) ? _flashColor : FlxColor.WHITE;
+		color = isFlashing ? _flashColor : FlxColor.WHITE;
 		return isFlashing;
 	}
 

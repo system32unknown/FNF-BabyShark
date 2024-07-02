@@ -24,7 +24,7 @@ class FPSUtil {
 		totalFPS = Math.round(curFPS + curCount / 8);
     }
 
-	public static function getFPSAdjust(type:String, fps:Float) {
+	public static function getFPSAdjust(type:String, fps:Float):Float {
 		return switch (type.toLowerCase()) {
 			case 'andromeda': FlxG.elapsed / (1 / 60) * fps;
 			case 'psychold': Math.exp(-fps * 30);

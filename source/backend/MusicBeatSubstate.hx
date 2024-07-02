@@ -82,6 +82,6 @@ class MusicBeatSubstate extends flixel.FlxSubState {
 	function getBeatsOnSection():Float {
 		var val:Null<Float> = 4;
 		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null) val = PlayState.SONG.notes[curSection].sectionBeats;
-		return val == null ? 4 : val;
+		return val ?? 4;
 	}
 }

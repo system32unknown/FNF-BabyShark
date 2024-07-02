@@ -15,10 +15,8 @@ class CrashHandler {
 
 	static function onCrash(e:UncaughtErrorEvent):Void {
 		var message:String = "";
-		if (Std.isOfType(e.error, Error))
-			message = cast(e.error, Error).message;
-		else if (Std.isOfType(e.error, ErrorEvent))
-			message = cast(e.error, ErrorEvent).text;
+		if (Std.isOfType(e.error, Error)) message = cast(e.error, Error).message;
+		else if (Std.isOfType(e.error, ErrorEvent)) message = cast(e.error, ErrorEvent).text;
 		else message = Std.string(e.error);
 
 		final path:String = './crash/${FlxG.stage.application.meta.get('file')}_${Date.now().toString().replace(" ", "_").replace(":", "'")}.log';

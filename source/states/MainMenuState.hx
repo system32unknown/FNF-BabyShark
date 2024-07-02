@@ -59,20 +59,6 @@ class MainMenuState extends MusicBeatState {
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 
-		var menuCover:FlxSprite = new FlxSprite().makeGraphic(FlxG.width - 500, Std.int(FlxG.height));
-		menuCover.alpha = .5;
-		menuCover.color = FlxColor.WHITE;
-		menuCover.scrollFactor.set();
-		menuCover.screenCenter(X);
-		add(menuCover);
-
-		var menuCoverAlt:FlxSprite = new FlxSprite().makeGraphic(Std.int(menuCover.width - 20), Std.int(menuCover.height));
-		menuCoverAlt.setPosition(menuCover.x + 10, menuCover.y);
-		menuCoverAlt.alpha = .7;
-		menuCoverAlt.color = FlxColor.BLACK;
-		menuCoverAlt.scrollFactor.set();
-		add(menuCoverAlt);
-
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
 		for (num => option in optionShit) {

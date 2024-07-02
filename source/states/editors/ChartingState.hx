@@ -755,8 +755,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		});
 		var randomizeNotes:PsychUIButton = new PsychUIButton(mirrorButton.x + 100, duetButton.y, "Randomize Notes", () -> {
 			for (note in _song.notes[curSec].sectionNotes) {
-				if(currentSectionSelected == 1 && note[1] >= EK.keys(_song.mania)) continue;
-				if(currentSectionSelected == 2 && note[1] <= _song.mania) continue;
+				if((currentSectionSelected == 1 && note[1] >= EK.keys(_song.mania)) || (currentSectionSelected == 2 && note[1] <= _song.mania)) continue;
 
 				var boob:Float = note[1] % EK.keys(_song.mania);
 				boob = FlxG.random.int(0, EK.strums(_song.mania) - 1);
@@ -1209,7 +1208,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	}
 
 	function loadSong():Void {
-		if (FlxG.sound.music != null) FlxG.sound.music.stop();
+		FlxG.sound.music?.stop();
 
 		if(vocals != null) {
 			vocals.stop();
@@ -1388,6 +1387,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			strumLineNotes.members[i].y = strumLine.y;
 		}
 
+		FlxG.mouse.visible = true;
 		camPos.y = strumLine.y;
 		if (!disableAutoScrolling.checked) {
 			if (Math.ceil(strumLine.y) >= gridBG.height) {
@@ -1443,7 +1443,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		if(PsychUIInputText.focusOn == null) {
 			ClientPrefs.toggleVolumeKeys(true);
 			if (FlxG.keys.justPressed.ESCAPE && !helpBg.visible) {
-				if(FlxG.sound.music != null) FlxG.sound.music.stop();
+				FlxG.sound.music?.stop();
 	
 				if(vocals != null) {
 					vocals.pause();

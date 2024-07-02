@@ -206,7 +206,7 @@ class PsychUIBox extends FlxSpriteGroup {
 		return v;
 	}
 
-	public function getTab(name:String) {
+	public function getTab(name:String):PsychUITab {
 		for (tab in tabs) if(tab.name == name) return tab;
 		return null;
 	}

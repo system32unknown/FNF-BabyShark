@@ -492,7 +492,7 @@ class NotesSubState extends MusicBeatSubstate {
 
 	function updateColors(specific:Null<FlxColor> = null) {
 		var color:FlxColor = getShaderColor();
-		var wheelColor:FlxColor = specific == null ? getShaderColor() : specific;
+		var wheelColor:FlxColor = specific ?? getShaderColor();
 		alphabetR.text = Std.string(color.red);
 		alphabetG.text = Std.string(color.green);
 		alphabetB.text = Std.string(color.blue);

@@ -34,7 +34,7 @@ class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 		socket.setFastSend(true);
 	}
 
-	public function hostAndWait(h:Host, port:Int) {
+	public function hostAndWait(h:Host, port:Int):Socket {
 		host(h, port);
 		return acceptConnection();
 	}

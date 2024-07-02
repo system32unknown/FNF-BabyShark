@@ -65,7 +65,7 @@ class Log {
 		level = VERBOSE;
 		#else
 		#if sys
-		var args = Sys.args();
+		var args:Array<String> = Sys.args();
 		if (args.indexOf("-v") > -1 || args.indexOf("-verbose") > -1) {
 			level = VERBOSE;
 		} else

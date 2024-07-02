@@ -110,9 +110,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 	}
 
 	function closeFreeplaysection(func:FlxTween->Void) {
-		FlxTween.tween(bg, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(grid, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(sectionTxt, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
+		for (obj in [bg, grid, sectionTxt]) FlxTween.tween(obj, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y + 200}, .5, {ease: FlxEase.expoInOut, onComplete: func});
 	}
 
