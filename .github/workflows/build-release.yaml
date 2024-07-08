@@ -53,9 +53,9 @@ jobs:
           haxe compile.hxml
           cd ../../../
 
-      - name: Install haxelibs
-        run: haxe -cp ./setup -D analyzer-optimize -main Main --interp
-        shell: cmd
+      - name: Installing/Updating libraries
+        run: |
+          haxe -cp commandline -D analyzer-optimize --run Main setup
 
       - name: Compile
         run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
