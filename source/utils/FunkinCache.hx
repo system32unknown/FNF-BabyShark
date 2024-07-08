@@ -87,8 +87,7 @@ class FunkinCache extends openfl.utils.AssetCache {
 		@param	id	The ID of the cached Sound
 		@return	The cached Sound instance
 	**/
-	public override function getSound(id:String):Sound
-	{
+	public override function getSound(id:String):Sound {
 		var s:Sound = sound.get(id);
 		if (s != null) return s;
 		var s2:Sound = sound2.get(id);

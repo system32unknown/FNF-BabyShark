@@ -22,7 +22,6 @@ class CreditsState extends MusicBeatState {
 		[''],
 		['Former Engine Members'],
 		['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbsub3',				'3E813A'],
-		['shubs', 				'', 				'Ex-Programmer of Psych Engine\nI don\'t support them.', 		'', 										'A1A1A1'],
 		['Keoiki',				'keoiki',			'Ex-Artist and Note Splash Animations and Latin Alphabet', 		'https://twitter.com/Keoiki_',				'D2D2D2'],
 		[''],
 		['Engine Contributors'],

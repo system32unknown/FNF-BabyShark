@@ -13,7 +13,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 		boyfriend.setGraphicSize(Std.int(boyfriend.width * .75));
 		boyfriend.updateHitbox();
 		boyfriend.dance();
-		boyfriend.animation.finishCallback = (name:String) -> boyfriend.dance();
+		boyfriend.animation.finishedCallback.add((name:String) -> boyfriend.dance());
 		boyfriend.visible = false;
 
 		addOption(new Option('Low Quality', 'If checked, disables some background details,\ndecreases loading times and improves performance.', 'lowQuality', BOOL));

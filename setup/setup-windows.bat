@@ -6,7 +6,7 @@ haxelib install lime
 haxelib install openfl
 haxelib install hxvlc
 haxelib install tjson
-haxelib git flixel https://github.com/HaxeFlixel/flixel
+haxelib git flixel https://github.com/system32unknown/flixel-alter
 haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons
 haxelib git hscript-improved https://www.github.com/FNF-CNE-Devs/hscript-improved
 haxelib git flxanimate https://github.com/ShadowMario/flxanimate dev

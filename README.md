@@ -32,7 +32,6 @@ Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor code
 
 ### Special Thanks:
 * bbpanzu - Ex-Programmer
-* Yoshubs - Ex-Programmer, New Input System
 * SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
 * KadeDev - Fixed some cool stuff on Chart Editor and other PRs, Programmer of Kade Engine
 * iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds

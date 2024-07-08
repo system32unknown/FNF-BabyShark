@@ -19,12 +19,6 @@ class FlixelInfo extends FramerateCategory {
 		_text += '\nCamera Count: ${FlxG.cameras.list.length}';
 		_text += '\nBitmap Count: $c';
 		_text += '\nSound Count: ${FlxG.sound.list.length}';
-		#if FLX_POINT_POOL
-		@:privateAccess {
-			var points = flixel.math.FlxPoint.FlxBasePoint.pool;
-			_text += '\nPoint Count: ${points._count}';
-		}
-		#end
 
 		this.text.text = _text;
 		super.__enterFrame(t);

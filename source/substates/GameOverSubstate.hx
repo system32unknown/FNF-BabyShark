@@ -70,14 +70,13 @@ class GameOverSubstate extends MusicBeatSubstate {
 		FlxG.camera.target = null;
 
 		boyfriend.playAnim('firstDeath');
-		boyfriend.animation.finishCallback = (name:String) -> {
+		boyfriend.animation.finishedCallback.add((name:String) -> {
 			if(name == 'firstDeath') {
 				boyfriend.playAnim('deathLoop');
 				FlxG.sound.playMusic(Paths.music(loopSoundName));
 			}
-			boyfriend.animation.finishCallback = null;
-		}
-
+			boyfriend.animation.finishedCallback.removeAll();
+		});
 		camFollow = new FlxObject(0, 0, 1, 1);
 		final mid:FlxPoint = boyfriend.getGraphicMidpoint();
 		camFollow.setPosition(mid.x + boyfriend.cameraPosition[0], mid.y + boyfriend.cameraPosition[1]);

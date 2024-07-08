@@ -72,15 +72,11 @@ class LoadingState extends MusicBeatState {
 		loadingText.screenCenter(X);
 		add(loadingText);
 
-		var bg:FlxSprite = new FlxSprite(0, 660).makeGraphic(1, 1, FlxColor.BLACK);
-		bg.scale.set(FlxG.width - 300, 25);
-		bg.updateHitbox();
+		var bg:FlxSprite = new FlxSprite(0, 660).makeSolid(FlxG.width - 300, 25, FlxColor.BLACK);
 		bg.screenCenter(X);
 		add(bg);
-
-		bar = new FlxSprite(bg.x + 5, bg.y + 5).makeGraphic(1, 1, FlxColor.WHITE);
-		bar.scale.set(0, 15);
-		bar.updateHitbox();
+		
+		bar = new FlxSprite(bg.x + 5, bg.y + 5).makeSolid(0, 15, FlxColor.WHITE);
 		add(bar);
 		barWidth = Std.int(bg.width - 10);
 

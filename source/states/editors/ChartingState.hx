@@ -2558,7 +2558,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	function getSectionBeats(?section:Null<Int> = null) {
 		if (section == null) section = curSec;
 		var val:Null<Float> = null;
-		
 		if(_song.notes[section] != null) val = _song.notes[section].sectionBeats;
 		return val ?? 4;
 	}

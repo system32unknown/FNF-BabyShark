@@ -9,7 +9,7 @@ class NoteTypesConfig {
 	static var noteTypesData:Map<String, Array<NoteTypeProperty>> = new Map<String, Array<NoteTypeProperty>>();
 	public static function clearNoteTypesData() noteTypesData.clear();
 
-	public static function loadNoteTypeData(name:String) {
+	public static function loadNoteTypeData(name:String):Array<NoteTypeProperty> {
 		if(noteTypesData.exists(name)) return noteTypesData.get(name);
 
 		var str:String = Paths.getTextFromFile('custom_notetypes/$name.txt');

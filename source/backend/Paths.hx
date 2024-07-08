@@ -11,7 +11,7 @@ import utils.system.MemoryUtil;
 
 @:access(openfl.display.BitmapData)
 class Paths {
-	inline public static final CHART_PATH = "charts";
+	inline public static var CHART_PATH = "charts";
 	inline public static var SOUND_EXT = "ogg";
 	inline public static var VIDEO_EXT = "mp4";
 
@@ -43,13 +43,14 @@ class Paths {
 
 		for (key => asset in currentTrackedSounds) {
 			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && asset != null) {
+				asset.close();
 				Assets.cache.clear(key);
 				currentTrackedSounds.remove(key);
 			}
 		}
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
-		openfl.Assets.cache.clear("songs");
+		OpenFlAssets.cache.clear("songs");
 		MemoryUtil.clearMajor();
 		clearUnusedMemory();
 	}
@@ -137,8 +138,7 @@ class Paths {
 			var file:String = getPath(key, IMAGE, parentFolder);
 			#if MODS_ALLOWED
 			if (FileSystem.exists(file)) bitmap = BitmapData.fromFile(file);
-			else #end if (OpenFlAssets.exists(file, IMAGE))
-				bitmap = OpenFlAssets.getBitmapData(file);
+			else #end if (OpenFlAssets.exists(file, IMAGE)) bitmap = OpenFlAssets.getBitmapData(file);
 
 			if(bitmap == null) {
 				FlxG.log.warn('Could not find image with key: "$key"' + (parentFolder == null ? "" : 'in parent folder: "$parentFolder"'));
@@ -174,7 +174,7 @@ class Paths {
 			if (OpenFlAssets.exists(key, TEXT)) return Assets.getText(key);
 			return null;
 		}
-		var path:String = getPath(key, TEXT, true);
+		var path:String = getPath(key);
 		return (#if sys FileSystem.exists(path)) ? File.getContent(path) #else OpenFlAssets.exists(path, TEXT)) ? Assets.getText(path) #end : null;
 	}
 

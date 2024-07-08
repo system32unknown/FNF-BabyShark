@@ -14,7 +14,7 @@ class HttpUtil {
 		h.onData = (d:String) -> if (r == null) r = d;
 		h.onError = (e:String) -> throw e;
 
-		h.request(false);
+		h.request();
 		return r;
 	}
 
@@ -27,7 +27,7 @@ class HttpUtil {
 		h.onBytes = (d:Bytes) -> if (r == null) r = d;
 		h.onError = (e:String) -> throw e;
 
-		h.request(false);
+		h.request();
 		return r;
 	}
 

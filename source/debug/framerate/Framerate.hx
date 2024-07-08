@@ -54,6 +54,7 @@ class Framerate extends openfl.display.Sprite {
 		categories.push(category);
 		__addToList(category);
 	}
+
 	var __lastAddedSprite:DisplayObject = null;
 	function __addToList(spr:DisplayObject) {
 		spr.x = 0;

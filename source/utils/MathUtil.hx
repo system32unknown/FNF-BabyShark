@@ -24,18 +24,6 @@ class MathUtil {
 		return [Math.min(v1, v2), Math.max(v1, v2)];
 	}
 
-    public static function fastInverseSquareRoot(x:Float):Float {
-        var i:Int = cast(x);
-        var y:Float = x;
-        var x2:Float = x * .5;
-
-        i = 0x5f3759df - (i >> 1); // what the fuck?
-        y = cast(i);
-
-        y *= (1.5 - (x2 * y * y));
-        return y;
-    }
-
     /**
     * Perform a framerate-independent linear interpolation between the base value and the target.
     * @param current The current value.

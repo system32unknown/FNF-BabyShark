@@ -1306,7 +1306,7 @@ class PlayState extends MusicBeatState {
 			if(timeType == 'Time Elapsed' || timeType == 'Time Position' || timeType == 'Name Elapsed' || timeType == 'Name Time Position') songCalc = curTime;
 
 			var formattedsec:String = CoolUtil.formatTime(Math.floor(Math.max(0, (songCalc / playbackRate) / 1000)));
-			var formattedtxt:String = '${SONG.song} • $storyDifficultyText ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}';
+			var formattedtxt:String = '${SONG.song} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}';
 			var timePos:String = '$formattedsec / ${CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000))}';
 			if (timeType != 'Song Name') timeTxt.text = switch(timeType) {
 				case 'Time Left' | 'Time Elapsed': formattedsec;
@@ -1986,7 +1986,7 @@ class PlayState extends MusicBeatState {
 		plrInputNotes.sort((a:Note, b:Note) -> Std.int(a.strumTime - b.strumTime));
 
 		if (plrInputNotes.length != 0) goodNoteHit(plrInputNotes[0]); // nicer on the GPU usage than doing `> 0` lol
-		else if(!ClientPrefs.data.ghostTapping) {
+		else {
 			callOnScripts('onGhostTap', [key]);
 			noteMissPress(key);
 		}
@@ -2343,7 +2343,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	#if LUA_ALLOWED
-	public function startLuasNamed(luaFile:String) {
+	public function startLuasNamed(luaFile:String):Bool {
 		#if MODS_ALLOWED
 		var luaToLoad:String = Paths.modFolders(luaFile);
 		if(!FileSystem.exists(luaToLoad)) luaToLoad = Paths.getSharedPath(luaFile);
@@ -2363,7 +2363,7 @@ class PlayState extends MusicBeatState {
 	#end
 	
 	#if HSCRIPT_ALLOWED
-	public function startHScriptsNamed(scriptFile:String) {
+	public function startHScriptsNamed(scriptFile:String):Bool {
 		var scriptToLoad:String = Paths.modFolders(scriptFile);
 		if(!FileSystem.exists(scriptToLoad)) scriptToLoad = Paths.getSharedPath(scriptFile);
 		
