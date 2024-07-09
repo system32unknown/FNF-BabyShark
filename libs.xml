@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <libraries>
 	<!-- OpenFL & Lime (Required for Flixel) -->
-	<lib name="openfl"/>
+	<git name="openfl" url="https://github.com/system32unknown/openfl"/>
 	<lib name="lime"/>
 
 	<!-- Flixel -->
 	<git name="flixel" url="https://github.com/system32unknown/flixel-alter"/>
-	<git name="flixel-addons" url="https://github.com/HaxeFlixel/flixel-addons" ref="dev"/>
+	<git name="flixel-addons" url="https://github.com/system32unknown/flixel-addons"/>
 
 	<!-- Other Libraries -->
 	<git name="hscript-improved" url="https://github.com/FNF-CNE-Devs/hscript-improved" ref="custom-classes"/>

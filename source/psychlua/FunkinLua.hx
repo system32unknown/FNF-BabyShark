@@ -1138,7 +1138,7 @@ class FunkinLua {
 	}
 
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
-	public function initLuaShader(name:String) {
+	public function initLuaShader(name:String, ?glslVersion:Int = 120) {
 		if(!ClientPrefs.data.shaders) return false;
 
 		#if (MODS_ALLOWED && !flash && sys)
@@ -1173,7 +1173,7 @@ class FunkinLua {
 				} else vert = null;
 
 				if(found) {
-					runtimeShaders.set(name, [frag, vert]);
+					runtimeShaders.set(name, [frag, vert, Std.string(glslVersion)]);
 					return true;
 				}
 			}

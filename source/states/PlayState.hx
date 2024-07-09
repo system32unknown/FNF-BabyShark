@@ -2577,14 +2577,14 @@ class PlayState extends MusicBeatState {
 		}
 
 		var arr:Array<String> = runtimeShaders.get(name);
-		return new FlxRuntimeShader(arr[0], arr[1]);
+		return new FlxRuntimeShader(arr[0], arr[1], arr[2]);
 		#else
 		FlxG.log.warn("Platform unsupported for Runtime Shaders!");
 		return null;
 		#end
 	}
 
-	public function initLuaShader(name:String) {
+	public function initLuaShader(name:String, ?glslVersion:Int = 120) {
 		if(!ClientPrefs.data.shaders) return false;
 
 		#if (MODS_ALLOWED && !flash && sys)
@@ -2608,7 +2608,7 @@ class PlayState extends MusicBeatState {
 			} else vert = null;
 
 			if(found) {
-				runtimeShaders.set(name, [frag, vert]);
+				runtimeShaders.set(name, [frag, vert, Std.string(glslVersion)]);
 				return true;
 			}
 		}
