@@ -15,17 +15,11 @@ class Compiler {
 	}
 
 	private static function __build(args:Array<String>, arg:Array<String>) {
-		for(a in args)
-			arg.push(a);
+		for(a in args) arg.push(a);
 		Sys.command("lime", arg);
 	}
 
-	public static function getBuildTarget() {
-		return switch(Sys.systemName()) {
-			case "Windows":
-				"windows";
-			case def:
-				def.toLowerCase();
-		}
+	public static function getBuildTarget():String {
+		return "windows";
 	}
 }

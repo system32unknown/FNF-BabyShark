@@ -11,8 +11,7 @@ class Update {
 		prettyPrint("Preparing installation...");
 
 		// to prevent messing with currently installed libs
-		if (!FileSystem.exists('.haxelib'))
-			FileSystem.createDirectory('.haxelib');
+		if (!FileSystem.exists('.haxelib')) FileSystem.createDirectory('.haxelib');
 
 		var libs:Array<Library> = [];
 		var libsXML:Access = new Access(Xml.parse(File.getContent('./libs.xml')).firstElement());
@@ -63,12 +62,12 @@ class Update {
 	}
 
 	public static function prettyPrint(text:String) {
-		var lines = text.split("\n");
-		var length = -1;
+		var lines:Array<String> = text.split("\n");
+		var length:Int = -1;
 		for(line in lines)
 			if(line.length > length)
 				length = line.length;
-		var header = "══════";
+		var header:String = "══════";
 		for(i in 0...length)
 			header += "═";
 		Sys.println("");
@@ -80,14 +79,14 @@ class Update {
 	}
 
 	public static function centerText(text:String, width:Int):String {
-		var centerOffset = (width - text.length) / 2;
-		var left = repeat(' ', Math.floor(centerOffset));
-		var right = repeat(' ', Math.ceil(centerOffset));
+		var centerOffset:Float = (width - text.length) / 2;
+		var left:String = repeat(' ', Math.floor(centerOffset));
+		var right:String = repeat(' ', Math.ceil(centerOffset));
 		return left + text + right;
 	}
 
-	public static inline function repeat(ch:String, amt:Int) {
-		var str = "";
+	public static inline function repeat(ch:String, amt:Int):String {
+		var str:String = "";
 		for(i in 0...amt)
 			str += ch;
 		return str;

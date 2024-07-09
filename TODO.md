@@ -1,6 +1,6 @@
 # Baby Shark's Big Funkin TODO list
 
-### `v1.1.5a`
+### `v1.1.5`
 - [ ] Bug Fix / Tweaks
     - [x] Fix Freeplay No Vocals on Musicplayer
     - [x] Fix Psych Input, Notes hite while holding input

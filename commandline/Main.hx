@@ -12,14 +12,12 @@ class Main {
 				doc: "Setups (or updates) all libraries required for the engine.",
 				func: Update.main,
 				dDoc: "This command runs through all libraries in libs.xml, and install them.\nIf they're already installed, they will be updated."
-			},
-			{
+			}, {
 				names: ["help", null],
 				doc: "Shows help. Pass a command name to get additional help.",
 				func: help,
 				dDoc: "Usage: help <cmd>\n\nFor example, use \"cne help test\" to get additional help on the test command."
-			},
-			{
+			}, {
 				names: ["test"],
 				doc: "Creates a non final test build, then runs it.",
 				func: Compiler.test,
@@ -30,8 +28,7 @@ class Main {
 				"\n- This build will also use the mods folder from the source directory." +
 				"\n\nIf you want a full build which contains all assets, run \"cne release\" or \"cne test-release\"" +
 				"\nAdditional arguments will be sent to the lime compiler."
-			},
-			{
+			}, {
 				names: ["build"],
 				doc: "Creates a non final test build, without running it.",
 				func: Compiler.build,
@@ -42,15 +39,13 @@ class Main {
 				"\n- This build will also use the mods folder from the source directory." +
 				"\n\nIf you want a full build which contains all assets, run \"cne release\" or \"cne test-release\"" +
 				"\nAdditional arguments will be sent to the lime compiler."
-			},
-			{
+			}, {
 				names: ["release"],
 				doc: "Creates a final non debug build, containing all assets.",
 				func: Compiler.release,
 				dDoc: "Usage: release <optional arguments>\n" +
 				"\nThis will create a final ready-for-release build, which means this build will be able to be release on websites such as GameBanana without worrying about source-dependant stuff."
-			},
-			{
+			}, {
 				names: ["test-release"],
 				doc: "Creates a final non debug build, containing all assets.",
 				func: Compiler.testRelease,
@@ -62,8 +57,8 @@ class Main {
 
 	public static function main() {
 		initCommands();
-		var args = Sys.args();
-		var commandName = args.shift();
+		var args:Array<String> = Sys.args();
+		var commandName:Null<String> = args.shift();
 		if (commandName != null)
 			commandName = commandName.toLowerCase();
 		for(c in commands) {
@@ -75,7 +70,7 @@ class Main {
 	}
 
 	public static function help(args:Array<String>) {
-		var cmdName = args.shift();
+		var cmdName:Null<String> = args.shift();
 		if (cmdName != null) {
 			cmdName = cmdName.toLowerCase();
 

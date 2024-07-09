@@ -8,7 +8,6 @@ import backend.Highscore;
 import backend.Song;
 import objects.HealthIcon;
 import objects.MusicPlayer;
-import objects.BGScrollingText;
 import substates.FreeplaySectionSubstate;
 
 class FreeplayState extends MusicBeatState {
@@ -66,7 +65,7 @@ class FreeplayState extends MusicBeatState {
 			return;
 		}
 
-		var foundSection = false;
+		var foundSection:Bool = false;
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 

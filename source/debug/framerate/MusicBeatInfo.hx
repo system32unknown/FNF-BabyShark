@@ -13,7 +13,6 @@ class MusicBeatInfo extends FramerateCategory {
 		if (MusicBeatState.getState() != null) @:privateAccess {
 			_text += '\n- ${MusicBeatState.getState().curBeat} beats';
 			_text += '\n- ${MusicBeatState.getState().curStep} steps';
-			_text += '\n- ${MusicBeatState.getState().curSection} sections';
 		}
 		_text += '\nCrochet: ${MathUtil.truncateFloat(Conductor.crochet, 2)}ms/${MathUtil.truncateFloat(Conductor.stepCrochet, 2)}ms';
 
