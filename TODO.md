@@ -1,9 +1,8 @@
 # Baby Shark's Big Funkin TODO list
 
-### `v1.1.5`
-- [ ] Bug Fix / Tweaks
-    - [x] Fix Freeplay No Vocals on Musicplayer
-    - [x] Fix Psych Input, Notes hite while holding input
+### `v0.1.7`
+- [ ] Modcharting Tools
+- [ ] Psych v1.0 Port
 
 ### Future versions
 - [ ] Remake Character / New Characters
@@ -11,13 +10,11 @@
 - [ ] Some Songs / Charts
 - [ ] Get Character Vocals
 - [ ] New Credit Menu (Social Links)
-- [x] Language System
 
 ### Characters List
 - [ ] Stariana
 - [ ] Rayna
-- [ ] Sharki L, Offshark, Kulture Shark, Wavey Shark
+- [ ] Sharki L
 - [ ] ENHYPEN
 - [ ] Ersky Shark, Miku Shark, Kassie Shark
 - [ ] Pinkfong and Hogi
-- [ ] Bandu (VDAB: Golden Apple Edition)

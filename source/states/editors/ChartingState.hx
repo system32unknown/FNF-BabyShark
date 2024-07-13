@@ -308,6 +308,36 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		super.create();
 	}
 
+	function loadFileList(mainFolder:String, ?optionalList:String = null, ?fileTypes:Array<String> = null) {
+		if(fileTypes == null) fileTypes = ['.json'];
+
+		var fileList:Array<String> = [];
+		if(optionalList != null) {
+			for (file in Mods.mergeAllTextsNamed(optionalList)) {
+				file = file.trim();
+				if(file.length > 0 && !fileList.contains(file)) fileList.push(file);
+			}
+		}
+
+		#if MODS_ALLOWED
+		for (directory in Mods.directoriesWithFile(Paths.getSharedPath(), mainFolder)) {
+			for (file in FileSystem.readDirectory(directory)) {
+				var path:String = haxe.io.Path.join([directory, file.trim()]);
+				if (!FileSystem.isDirectory(path) && !file.startsWith('readme.')) {
+					for (fileType in fileTypes) {
+						var fileToCheck:String = file.substr(0, file.length - fileType.length);
+						if(fileToCheck.length > 0 && path.endsWith(fileType) && !fileList.contains(fileToCheck)) {
+							fileList.push(fileToCheck);
+							break;
+						}
+					}
+				}
+			}
+		}
+		#end
+		return fileList;
+	}
+
 	var check_mute_inst:PsychUICheckBox = null;
 	var check_mute_vocals:PsychUICheckBox = null;
 	var check_vortex:PsychUICheckBox = null;
@@ -378,49 +408,23 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		stepperSpeed.value = _song.speed;
 		stepperSpeed.name = 'song_speed';
 
-		#if MODS_ALLOWED
-		var directories:Array<String> = [Paths.mods('characters/'), Paths.mods(Mods.currentModDirectory + '/characters/'), Paths.getSharedPath('characters/')];
-		for(mod in Mods.getGlobalMods()) directories.push(Paths.mods('$mod/characters/'));
-		#else
-		var directories:Array<String> = [Paths.getSharedPath('characters/')];
-		#end
+		var gameOverCharacters:Array<String> = loadFileList('characters/', 'data/characterList.txt');
+		var characterList:Array<String> = gameOverCharacters.filter((name:String) -> (!name.endsWith('-dead') && !name.endsWith('-death')));
 
-		var tempArray:Array<String> = [];
-		var characters:Array<String> = Mods.mergeAllTextsNamed('data/characterList.txt');
-		for (character in characters) if(character.trim().length > 0) tempArray.push(character);
-
-		#if MODS_ALLOWED
-		for (i in 0...directories.length) {
-			var directory:String = directories[i];
-			if(FileSystem.exists(directory)) {
-				for (file in FileSystem.readDirectory(directory)) {
-					if (!FileSystem.isDirectory(Path.join([directory, file])) && file.endsWith('.json')) {
-						var charToCheck:String = file.substr(0, file.length - 5);
-						if(charToCheck.trim().length > 0 && !charToCheck.endsWith('-dead') && !tempArray.contains(charToCheck)) {
-							tempArray.push(charToCheck);
-							characters.push(charToCheck);
-						}
-					}
-				}
-			}
-		}
-		#end
-		tempArray = [];
-
-		var player1DropDown = new PsychUIDropDownMenu(10, stepperSpeed.y + 45, characters, function(id:Int, character:String) {
+		var player1DropDown = new PsychUIDropDownMenu(10, stepperSpeed.y + 45, characterList, function(id:Int, character:String) {
 			_song.player1 = character;
 			updateJsonData();
 			updateHeads();
 		});
 		player1DropDown.selectedLabel = _song.player1;
 
-		var gfVersionDropDown = new PsychUIDropDownMenu(player1DropDown.x, player1DropDown.y + 40, characters, function(id:Int, character:String) {
+		var gfVersionDropDown = new PsychUIDropDownMenu(player1DropDown.x, player1DropDown.y + 40, characterList, function(id:Int, character:String) {
 			_song.gfVersion = character;
 			updateJsonData();
 			updateHeads();
 		});
 		gfVersionDropDown.selectedLabel = _song.gfVersion;
-		var player2DropDown = new PsychUIDropDownMenu(player1DropDown.x, gfVersionDropDown.y + 40, characters, function(id:Int, character:String) {
+		var player2DropDown = new PsychUIDropDownMenu(player1DropDown.x, gfVersionDropDown.y + 40, characterList, function(id:Int, character:String) {
 			_song.player2 = character;
 			updateJsonData();
 			updateHeads();
@@ -434,32 +438,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var directories:Array<String> = [Paths.getSharedPath('stages/')];
 		#end
 
-		var stages:Array<String> = [];
-		for (stage in Mods.mergeAllTextsNamed('data/stageList.txt')) {
-			if(stage.trim().length > 0) stages.push(stage);
-			tempArray.push(stage);
-		}
-		#if MODS_ALLOWED
-		for (i in 0...directories.length) {
-			var directory:String = directories[i];
-			if(FileSystem.exists(directory)) {
-				for (file in FileSystem.readDirectory(directory)) {
-					if (!FileSystem.isDirectory(Path.join([directory, file])) && file.endsWith('.json')) {
-						var stageToCheck:String = file.substr(0, file.length - 5);
-						if(stageToCheck.trim().length > 0 && !tempArray.contains(stageToCheck)) {
-							tempArray.push(stageToCheck);
-							stages.push(stageToCheck);
-						}
-					}
-				}
-			}
-		}
-		#end
-		tempArray = [];
-		
-		if(stages.length < 1) stages.push('stage');
-
-		stageDropDown = new PsychUIDropDownMenu(player1DropDown.x + 140, player1DropDown.y, stages, (id:Int, stage:String) -> _song.stage = stage);
+		stageDropDown = new PsychUIDropDownMenu(player1DropDown.x + 140, player1DropDown.y, loadFileList('stages/', 'data/stageList.txt'), (id:Int, stage:String) -> _song.stage = stage);
 		stageDropDown.selectedLabel = _song.stage;
 
 		var availableDifficulties:Array<Int> = [];

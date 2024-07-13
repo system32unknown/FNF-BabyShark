@@ -45,7 +45,7 @@ class FPSCounter extends openfl.display.Sprite {
 
 	var deltaTimeout:Float = .0;
 	public override function __enterFrame(dt:Float) {
-		if (alpha <= 0.05) return;
+		if (alpha <= .05) return;
 		if (deltaTimeout > 1000) {
 			deltaTimeout = .0;
 			return;
