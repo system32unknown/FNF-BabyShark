@@ -152,10 +152,11 @@ class PauseSubState extends MusicBeatSubstate {
 
 		if (controls.ACCEPT && cantUnpause <= 0) {
 			if (menuItems == difficultyChoices) {
+				var songLowercase:String = Paths.formatToSongPath(PlayState.SONG.song);
+				var poop:String = backend.Highscore.formatSong(songLowercase, curSelected);
 				try {
 					if(menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected)) {
-						var name:String = PlayState.SONG.song;
-						PlayState.SONG = backend.Song.loadFromJson(backend.Highscore.formatSong(name, curSelected), name);
+						backend.Song.loadFromJson(poop, songLowercase);
 						PlayState.storyDifficulty = curSelected;
 						FlxG.resetState();
 						FlxG.sound.music.volume = 0;
@@ -163,9 +164,10 @@ class PauseSubState extends MusicBeatSubstate {
 						PlayState.chartingMode = false;
 						return;
 					}
-				} catch(e:Dynamic) {
-					var errorStr:String = e.toString();
-					if(errorStr.startsWith('[file_contents,assets/data/${Paths.CHART_PATH}')) errorStr = 'Missing file: ' + errorStr.substring(27, errorStr.length - 1); //Missing chart
+				} catch(e:haxe.Exception) {
+					var errorStr:String = e.message;
+					if(errorStr.startsWith('[lime.utils.Assets] ERROR:')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1); //Missing chart
+					else errorStr += '\n\n' + e.stack;
 					missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
 					missingText.screenCenter(Y);
 					missingText.visible = missingTextBG.visible = true;

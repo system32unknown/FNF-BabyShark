@@ -31,7 +31,7 @@ class HealthIcon extends FlxSprite {
 		return Paths.image(path, allowGPU);
 	}
 
-	public function new(?char:String = 'bf', isPlayer:Bool = false, ?allowGPU:Bool = true) {
+	public function new(?char:String = 'face', isPlayer:Bool = false, ?allowGPU:Bool = true) {
 		super();
 		this.isPlayer = isPlayer;
 		changeIcon(char, allowGPU);

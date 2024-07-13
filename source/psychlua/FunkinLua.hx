@@ -57,6 +57,9 @@ class FunkinLua {
 		set('songLength', FlxG.sound.music.length);
 		set('songName', PlayState.SONG.song);
 		set('songPath', Paths.formatToSongPath(PlayState.SONG.song));
+		set('loadedSongName', Song.loadedSongName);
+		set('loadedSongPath', Paths.formatToSongPath(Song.loadedSongName));
+		set('chartPath', Song.chartPath);
 		set('startedCountdown', false);
 		set('curStage', PlayState.SONG.stage);
 
@@ -314,10 +317,10 @@ class FunkinLua {
 
 		set("loadSong", function(?name:String = null, ?difficultyNum:Int = -1, ?difficultyArray:Array<String> = null) {
 			if (difficultyArray != null) Difficulty.list = difficultyArray;
-			if(name == null || name.length <= 0) name = PlayState.SONG.song;
+			if(name == null || name.length <= 0) name = Song.loadedSongName;
 			if (difficultyNum == -1) difficultyNum = PlayState.storyDifficulty;
 
-			PlayState.SONG = Song.loadFromJson(Highscore.formatSong(name, difficultyNum), name);
+			Song.loadFromJson(Highscore.formatSong(name, difficultyNum), name);
 			PlayState.storyDifficulty = difficultyNum;
 			FlxG.state.persistentUpdate = false;
 			LoadingState.loadAndSwitchState(() -> new PlayState());
@@ -858,15 +861,14 @@ class FunkinLua {
 
 		set("startDialogue", function(dialogueFile:String, music:String = null) {
 			var path:String;
-			var songPath:String = Paths.formatToSongPath(PlayState.SONG.song);
+			var songPath:String = Paths.formatToSongPath(Song.loadedSongName);
 			#if TRANSLATIONS_ALLOWED
 			path = Paths.getPath('data/${Paths.CHART_PATH}/$songPath/${dialogueFile}_${ClientPrefs.data.language}.json');
 			if(!#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end)
 			#end
 				path = Paths.getPath('data/${Paths.CHART_PATH}/$songPath/$dialogueFile.json');
 
-			luaTrace('startDialogue: Trying to load dialogue: ' + path);
-
+			luaTrace('startDialogue: Trying to load dialogue: $path');
 			
 			if(#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end) {
 				var shit:DialogueFile = DialogueBoxPsych.parseDialogue(path);

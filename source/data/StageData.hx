@@ -2,6 +2,7 @@ package data;
 
 #if !MODS_ALLOWED import openfl.utils.Assets; #end
 import psychlua.ModchartSprite;
+import backend.Song;
 
 typedef StageFile = {
 	var directory:String;
@@ -58,10 +59,10 @@ class StageData {
 	}
 
 	public static var forceNextDirectory:String = null;
-	public static function loadDirectory(SONG:backend.Song.SwagSong) {
+	public static function loadDirectory(SONG:SwagSong) {
 		var stage:String = '';
 		if(SONG.stage != null) stage = SONG.stage;
-		else if(SONG.song != null) stage = vanillaSongStage(Paths.formatToSongPath(SONG.song));
+		else if(Song.loadedSongName != null) stage = vanillaSongStage(Paths.formatToSongPath(SONG.song));
 		else stage = 'stage';
 
 		var stageFile:StageFile = getStageFile(stage);

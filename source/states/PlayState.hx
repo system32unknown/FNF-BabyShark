@@ -5,7 +5,7 @@ import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSort;
 import openfl.events.KeyboardEvent;
-#if !MODS_ALLOWED import openfl.utils.Assets; #end
+import openfl.utils.Assets as OpenFlAssets;
 #if !flash import flixel.addons.display.FlxRuntimeShader; #end
 import backend.Highscore;
 import backend.Song;
@@ -255,7 +255,6 @@ class PlayState extends MusicBeatState {
 		persistentUpdate = true;
 		persistentDraw = true;
 
-		if (SONG == null) SONG = Song.loadFromJson('tutorial');
 		Conductor.mapBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
 
@@ -272,7 +271,7 @@ class PlayState extends MusicBeatState {
 
 		GameOverSubstate.resetVariables();
 		songName = Paths.formatToSongPath(SONG.song);
-		if(SONG.stage == null || SONG.stage.length < 1) SONG.stage = StageData.vanillaSongStage(songName);
+		if(SONG.stage == null || SONG.stage.length < 1) SONG.stage = StageData.vanillaSongStage(Paths.formatToSongPath(Song.loadedSongName));
 		curStage = SONG.stage;
 
 		var stageData:data.StageData.StageFile = StageData.getStageFile(curStage);
@@ -413,7 +412,7 @@ class PlayState extends MusicBeatState {
 		opponentStrums = new FlxTypedGroup<StrumNote>();
 		playerStrums = new FlxTypedGroup<StrumNote>();
 
-		generateSong(SONG.song);
+		generateSong();
 		noteGroup.add(grpNoteSplashes);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
@@ -467,7 +466,7 @@ class PlayState extends MusicBeatState {
 		judgementCounter.updateHitbox(); judgementCounter.screenCenter(Y);
 		updateScore();
 
-		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, Language.getPhrase("Botplay", "[BOTPLAY]"), 32);
+		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, Language.getPhrase("Botplay", "BOTPLAY"), 32);
 		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
 		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		botplayTxt.screenCenter(X);
@@ -960,7 +959,7 @@ class PlayState extends MusicBeatState {
 
 	var noteTypes:Array<String> = [];
 	var eventsPushed:Array<String> = [];
-	function generateSong(dataPath:String):Void {
+	function generateSong():Void {
 		songSpeed = SONG.speed;
 		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype');
 
@@ -973,19 +972,20 @@ class PlayState extends MusicBeatState {
 		Conductor.bpm = songData.bpm;
 
 		vocals = new FlxSound();
-		try {if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));}
+		try {if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
 		vocals.pitch = playbackRate;
 		FlxG.sound.list.add(vocals);
 
 		inst = new FlxSound();
-		try {inst.loadEmbedded(Paths.inst(songData.song));}
+		try {inst.loadEmbedded(Paths.inst(songData.song));} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
 		FlxG.sound.list.add(inst);
 
 		noteGroup.add(notes = new NoteGroup());
 
-		var file:String = Paths.json('${Paths.CHART_PATH}/$songName/events');
-		if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson('${Paths.CHART_PATH}/$songName/events')) || FileSystem.exists(file) #else Assets.exists(file) #end)
-			for (event in Song.loadFromJson('events', songName).events) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
+		try {
+			var eventsChart:SwagSong = Song.getChart('events', songName);
+			if(eventsChart != null) for (event in eventsChart.events)  for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
+		} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
 
 		var noteDatas:Array<ChartNoteData> = [];
 		for (section in songData.notes) {
@@ -993,18 +993,15 @@ class PlayState extends MusicBeatState {
 				final songNotes:Array<Dynamic> = section.sectionNotes[i];
 				if (songNotes[1] == -1) continue;
 
-				var gottaHitNote:Bool = section.mustHitSection;
-				if (songNotes[1] > mania) gottaHitNote = !section.mustHitSection;
-
 				final leNoteData:ChartNoteData = {
 					time: songNotes[0],
 					id: Std.int(songNotes[1] % EK.keys(mania)),
 					sLen: songNotes[2],
-					strumLine: gottaHitNote ? 1 : 0,
+					strumLine: songNotes[1] < EK.keys(mania) ? 1 : 0,
 					isGfNote: (section.gfSection && (songNotes[1] < EK.keys(mania))),
-					type: songNotes[3]
+					type: songNotes[3],
+					animSuffix: (section.altAnim && !section.gfSection) ? '-alt' : ''
 				};
-				if(!Std.isOfType(songNotes[3], String)) leNoteData.type = ChartingState.noteTypeList[songNotes[3]]; //Backward compatibility + compatibility with Week 7 charts
 
 				if (i != 0) { // CLEAR ANY POSSIBLE JACKS
 					for (evilNoteData in noteDatas) {
@@ -1027,6 +1024,7 @@ class PlayState extends MusicBeatState {
 			swagNote.sustainLength = noteDatas[i].sLen;
 			swagNote.strumLine = noteDatas[i].strumLine;
 			swagNote.gfNote = noteDatas[i].isGfNote;
+			if (!swagNote.mustPress) swagNote.animSuffix = noteDatas[i].animSuffix;
 			swagNote.noteType = noteDatas[i].type;
 			swagNote.scrollFactor.set();
 			unspawnNotes.push(swagNote);
@@ -1037,6 +1035,7 @@ class PlayState extends MusicBeatState {
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
 					var sustainNote:Note = new Note(noteDatas[i].time + (Conductor.stepCrochet * susNote), noteDatas[i].id, oldNote, true);
+					sustainNote.animSuffix = swagNote.animSuffix;
 					sustainNote.mustPress = swagNote.mustPress;
 					sustainNote.gfNote = swagNote.gfNote;
 					sustainNote.strumLine = swagNote.strumLine;
@@ -1072,6 +1071,7 @@ class PlayState extends MusicBeatState {
 				if(noteDatas[i].id > EK.midArray[mania]) swagNote.x += FlxG.width / 2 + 25;
 			}
 			if(!noteTypes.contains(swagNote.noteType)) noteTypes.push(swagNote.noteType);
+			oldNote = swagNote;
 		}
 
 		for (event in songData.events) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
@@ -1169,11 +1169,12 @@ class PlayState extends MusicBeatState {
 		super.openSubState(SubState);
 	}
 
+	public var canResync:Bool = true;
 	override function closeSubState() {
 		super.closeSubState();
 		stagesFunc(stage -> stage.closeSubState());
 		if (paused) {
-			if (FlxG.sound.music != null && !startingSong) resyncVocals();
+			if (FlxG.sound.music != null && !startingSong && canResync) resyncVocals();
 
 			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = true);
 			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
@@ -1413,11 +1414,13 @@ class PlayState extends MusicBeatState {
 	}
 
 	function openChartEditor() {
+		canResync = false;
 		FlxG.camera.followLerp = 0;
 		persistentUpdate = false;
-		paused = true;
-		if(FlxG.sound.music != null) FlxG.sound.music.stop();
 		chartingMode = true;
+		paused = true;
+		FlxG.sound.music?.stop();
+		vocals?.pause();
 
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence("Chart Editor", null, true);
@@ -1427,10 +1430,13 @@ class PlayState extends MusicBeatState {
 	}
 
 	function openCharacterEditor() {
+		canResync = false;
 		FlxG.camera.followLerp = 0;
 		persistentUpdate = false;
 		paused = true;
 		FlxG.sound.music?.stop();
+		vocals?.pause();
+
 		#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 		FlxG.switchState(() -> new CharacterEditorState(SONG.player2));
 	}
@@ -1752,8 +1758,8 @@ class PlayState extends MusicBeatState {
 			var percent:Float = ratingPercent;
 			if(Math.isNaN(percent)) percent = 0;
 			if(!practiceMode && !cpuControlled) {
-				Highscore.saveScore(SONG.song, songScore, storyDifficulty, percent);
-				Highscore.saveCombo(SONG.song, '$ratingFC, $ratingName', storyDifficulty);
+				Highscore.saveScore(Song.loadedSongName, songScore, storyDifficulty, percent);
+				Highscore.saveCombo(Song.loadedSongName, '$ratingFC, $ratingName', storyDifficulty);
 			}
 			playbackRate = 1;
 
@@ -1768,6 +1774,7 @@ class PlayState extends MusicBeatState {
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
+					canResync = false;
 					FlxG.switchState(() -> new StoryMenuState());
 
 					if(!practiceMode && !cpuControlled) {
@@ -1784,9 +1791,10 @@ class PlayState extends MusicBeatState {
 					FlxTransitionableState.skipNextTransOut = true;
 					prevCamFollow = camFollow;
 
-					SONG = Song.loadFromJson(storyPlaylist[0] + difficulty, storyPlaylist[0]);
+					Song.loadFromJson(storyPlaylist[0] + difficulty, storyPlaylist[0]);
 					FlxG.sound.music.stop();
 
+					canResync = false;
 					LoadingState.prepareToSong();
 					LoadingState.loadAndSwitchState(() -> new PlayState());
 				}
@@ -2097,17 +2105,13 @@ class PlayState extends MusicBeatState {
 			dad.specialAnim = true;
 			dad.heyTimer = .6;
 		} else if (!note.noAnimation) {
-			var altAnim:String = note.animSuffix;
-			if (SONG.notes[curSection] != null && SONG.notes[curSection].altAnim && !SONG.notes[curSection].gfSection)
-				altAnim = '-alt';
-
 			var char:Character = note.gfNote ? gf : dad;
 			if(char != null) {
 				if(isSus) {
-					var holdAnim:String = animToPlay + altAnim + '-hold';
+					var holdAnim:String = animToPlay + '-hold';
 					if(char.animation.exists(holdAnim)) animToPlay = holdAnim;
 				}
-				char.playAnim(animToPlay + altAnim, true);
+				char.playAnim(animToPlay + note.animSuffix, true);
 				char.holdTimer = 0;
 			}
 		}
@@ -2351,7 +2355,7 @@ class PlayState extends MusicBeatState {
 		if(FileSystem.exists(luaToLoad))
 		#elseif sys
 		var luaToLoad:String = Paths.getSharedPath(luaFile);
-		if(Assets.exists(luaToLoad))
+		if(OpenFlAssets.exists(luaToLoad))
 		#end
 		{
 			for (script in luaArray) if(script.scriptName == luaToLoad) return false;

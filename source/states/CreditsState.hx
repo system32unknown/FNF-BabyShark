@@ -22,10 +22,10 @@ class CreditsState extends MusicBeatState {
 		[''],
 		['Former Engine Members'],
 		['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbsub3',				'3E813A'],
-		['Keoiki',				'keoiki',			'Ex-Artist and Note Splash Animations and Latin Alphabet', 		'https://twitter.com/Keoiki_',				'D2D2D2'],
 		[''],
 		['Engine Contributors'],
 		['CrowPlexus', 			'crowplexus', 		'Major Help and Other PRs', 									'https://twitter.com/crowplexus', 			'A1A1A1'],
+		['Keoiki',				'keoiki',			'Ex-Artist and Note Splash Animations and Latin Alphabet', 		'https://twitter.com/Keoiki_',				'D2D2D2'],
 		['iFlicky',				'flicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',		'https://twitter.com/flicky_i',				'9E29CF'],
 		['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',	'https://twitter.com/gedehari',				'E1843A'],
 		['EliteMasterEric',		'mastereric',		'Runtime Shaders support',										'https://twitter.com/EliteMasterEric',		'FFBD40'],
@@ -36,7 +36,7 @@ class CreditsState extends MusicBeatState {
 		['Raltyro',				'raltyro',			'Bunch of lua fixes, Psike Engine Dev',							'https://twitter.com/raltyro',				'F3F3F3'],
 		['UncertainProd',		'prod',				'Sampler2D in Runtime Shaders',									'https://github.com/UncertainProd',			'D2D2D2'],
 		['ACrazyTown',			'acrazytown',		'Optimized PNGs',												'https://twitter.com/acrazytown',			'A03E3D'],
-		['CheemsAndFriends', 	'face', 			'Creator of FlxAnimate\n(Icon will be added later)', 			'https://twitter.com/CheemsnFriendos', 		'A1A1A1'],
+		['CheemsAndFriends', 	'face', 			'Creator of FlxAnimate', 										'https://twitter.com/CheemsnFriendos', 		'A1A1A1'],
 		[''],
 		['Extra Keys Team'],
 		['Magman03k7', 			'',					'Main Programmer of Psych Engine EK', 							'https://github.com/Magman03k7', 			'B9AF27'],
@@ -414,13 +414,16 @@ class CreditSectionState extends MusicBeatState {
 		}
 
 		descText.text = creditsStuff[curSelected][2];
-		descText.y = FlxG.height - descText.height + offsetThing - 60;
+		if(descText.text.trim().length > 0) {
+			descText.visible = descBox.visible = true;
+			descText.y = FlxG.height - descText.height + offsetThing - 60;
 
-		if(moveTween != null) moveTween.cancel();
-		moveTween = FlxTween.tween(descText, {y : descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
+			if(moveTween != null) moveTween.cancel();
+			moveTween = FlxTween.tween(descText, {y : descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
 
-		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
-		descBox.updateHitbox();
+			descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
+			descBox.updateHitbox();
+		} else descText.visible = descBox.visible = false;
 	}
 
 	function initializeList() {

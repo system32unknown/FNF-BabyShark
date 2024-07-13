@@ -22,6 +22,7 @@ class LuaUtils {
 	public static var Function_StopAll:Dynamic = "##PSYCHLUA_FUNCTIONSTOPALL";
 
 	public static function getLuaTween(options:Dynamic):LuaTweenOptions {
+		if (options == null) options = {}
 		return {
 			type: getTweenTypeByString(options.type),
 			startDelay: options.startDelay,

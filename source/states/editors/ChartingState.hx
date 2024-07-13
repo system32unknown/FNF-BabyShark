@@ -143,7 +143,9 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				player2: 'gf',
 				gfVersion: 'gf',
 				speed: 1,
+				offset: 0,
 				stage: 'stage',
+				format: 'psych_v1',
 				mania: EK.defaultMania
 			};
 			addSection();
@@ -332,10 +334,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			updateWaveform();
 		});
 
-		var reloadSongJson:PsychUIButton = new PsychUIButton(reloadSong.x, saveButton.y + 30, "Reload JSON", () -> openSubState(new Prompt('This action will clear current progress.\n\nProceed?', () -> loadJson(_song.song.toLowerCase()), null, ignoreWarnings)));
+		var reloadSongJson:PsychUIButton = new PsychUIButton(reloadSong.x, saveButton.y + 30, "Reload JSON", () -> openSubState(new Prompt('This action will clear current progress.\n\nProceed?', () -> loadJson(_song.song.toLowerCase()))));
 
 		var loadAutosaveBtn:PsychUIButton = new PsychUIButton(reloadSongJson.x, reloadSongJson.y + 30, 'Load Autosave', () -> {
-			PlayState.SONG = Song.parseJSONshit(FlxG.save.data.autosave);
+			PlayState.SONG = Song.parseJSON(FlxG.save.data.autosave);
 			FlxG.resetState();
 		});
 
@@ -357,14 +359,14 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		});
 
 		var saveEvents:PsychUIButton = new PsychUIButton(110, reloadSongJson.y, 'Save Events', () -> saveEvents());
-		var clear_events:PsychUIButton = new PsychUIButton(320, 310, 'Clear events', () -> openSubState(new Prompt('This action will clear current progress.\n\nProceed?', clearEvents, null, ignoreWarnings)));
+		var clear_events:PsychUIButton = new PsychUIButton(320, 310, 'Clear events', () -> openSubState(new Prompt('This action will clear current progress.\n\nProceed?', clearEvents)));
 		clear_events.normalStyle.bgColor = FlxColor.RED;
 		clear_events.normalStyle.textColor = FlxColor.WHITE;
 
 		var clear_notes:PsychUIButton = new PsychUIButton(320, clear_events.y + 30, 'Clear notes', () -> openSubState(new Prompt('This action will clear current progress.\n\nProceed?', () -> {
 			for (sec in 0..._song.notes.length) _song.notes[sec].sectionNotes = [];
 			updateGrid();
-		}, null, ignoreWarnings)));
+		})));
 		clear_notes.normalStyle.bgColor = FlxColor.RED;
 		clear_notes.normalStyle.textColor = FlxColor.WHITE;
 
@@ -487,7 +489,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				PlayState.storyDifficulty = id;
 				PlayState.changedDifficulty = true;
 				loadJson(currentSongName.toLowerCase());
-			}, null, ignoreWarnings));
+			}));
 		});
 
 		var stepperMania:PsychUINumericStepper = new PsychUINumericStepper(100, stepperSpeed.y, 1, 3, EK.minMania, EK.maxMania, 1);

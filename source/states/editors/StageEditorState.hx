@@ -1515,7 +1515,7 @@ class StageEditorMetaSprite {
 				case 'sprite': sprite.loadGraphic(Paths.image(v));
 				case 'animatedSprite': sprite.frames = Paths.getAtlas(v);
 			}
-		}
+		} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
 		sprite.updateHitbox();
 		return (image = v);
 	}

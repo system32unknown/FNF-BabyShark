@@ -288,7 +288,7 @@ class FreeplayState extends MusicBeatState {
 
 				if (songLowercase == "enter terminal") return;
 
-				PlayState.SONG = Song.loadFromJson(poop, songLowercase);
+				Song.loadFromJson(poop, songLowercase);
 				if (PlayState.SONG.needsVoices) {
 					Conductor.bpm = PlayState.SONG.bpm;
 					vocals = new FlxSound();
@@ -326,12 +326,13 @@ class FreeplayState extends MusicBeatState {
 			}
 
 			try {
-				PlayState.SONG = Song.loadFromJson(songLowercase, songFolder);
+				Song.loadFromJson(songLowercase, songFolder);
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
-			} catch(e:Dynamic) {
-				var errorStr:String = e.toString();
+			} catch(e:haxe.Exception) {
+				var errorStr:String = e.message;
 				if(errorStr.startsWith('[lime.utils.Assets] ERROR:')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1); //Missing chart
+				else errorStr += '\n\n' + e.stack;
 
 				missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
 				missingText.screenCenter(Y);

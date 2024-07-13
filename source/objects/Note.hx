@@ -25,6 +25,17 @@ typedef NoteSplashData = {
 }
 
 class Note extends FlxSprite {
+	//This is needed for the hardcoded note types to appear on the Chart Editor,
+	//It's also used for backwards compatibility with 0.1 - 0.3.2 charts.
+	public static final defaultNoteTypes:Array<String> = [
+		'', //Always leave this one empty pls
+		'Alt Animation',
+		'Hey!',
+		'Hurt Note',
+		'GF Sing',
+		'No Animation'
+	];
+
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	public var strumTime:Float = 0;
@@ -130,10 +141,14 @@ class Note extends FlxSprite {
 		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGBExtra[EK.gfxIndex[PlayState.mania][noteData]];
 		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixelExtra[EK.gfxIndex[PlayState.mania][noteData]];
 
-		if (noteData > -1 && noteData <= PlayState.mania) {
+		if (arr != null && noteData > -1 && noteData <= arr.length) {
 			rgbShader.r = arr[0];
 			rgbShader.g = arr[1];
 			rgbShader.b = arr[2];
+		} else {
+			rgbShader.r = FlxColor.RED;
+			rgbShader.g = FlxColor.LIME;
+			rgbShader.b = FlxColor.BLUE;
 		}
 	}
 
@@ -197,9 +212,9 @@ class Note extends FlxSprite {
 		this.noteData = noteData;
 
 		if(noteData > -1) {
-			texture = '';
 			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
 			if(PlayState.SONG != null && PlayState.SONG.disableNoteRGB) rgbShader.enabled = false;
+			texture = '';
 
 			if (PlayState.mania != 0) x += EK.swidths[PlayState.mania] * (noteData % EK.keys(PlayState.mania));
 			if(!isSustainNote && noteData < EK.keys(PlayState.mania))
@@ -256,10 +271,14 @@ class Note extends FlxSprite {
 			globalRgbShaders[dataNum] = newRGB;
 
 			var arr:Array<FlxColor> = (!PlayState.isPixelStage ? ClientPrefs.data.arrowRGBExtra : ClientPrefs.data.arrowRGBPixelExtra)[dataNum];
-			if (noteData > -1 && noteData <= PlayState.mania) {
+			if (arr != null && noteData > -1 && noteData <= PlayState.mania) {
 				newRGB.r = arr[0];
 				newRGB.g = arr[1];
 				newRGB.b = arr[2];
+			} else {
+				newRGB.r = FlxColor.RED;
+				newRGB.g = FlxColor.LIME;
+				newRGB.b = FlxColor.BLUE;
 			}
 		}
 		return globalRgbShaders[dataNum];
@@ -275,9 +294,11 @@ class Note extends FlxSprite {
 
 		var skin:String = texture + postfix;
 		if(texture.length < 1) {
-			skin = PlayState.SONG?.arrowSkin;
-			if(skin == null || skin.length < 1) skin = defaultNoteSkin + postfix;
-		}
+			if(texture.length < 1) {
+				skin = PlayState.SONG?.arrowSkin;
+				if(skin == null || skin.length < 1) skin = defaultNoteSkin + postfix;
+			}
+		} else rgbShader.enabled = false;
 
 		var animName:String = null;
 		if(animation.curAnim != null) animName = animation.curAnim.name;

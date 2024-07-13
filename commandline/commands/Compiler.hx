@@ -14,7 +14,7 @@ class Compiler {
 		__build(args, ["test", getBuildTarget()]);
 	}
 
-	private static function __build(args:Array<String>, arg:Array<String>) {
+	static function __build(args:Array<String>, arg:Array<String>) {
 		for(a in args) arg.push(a);
 		Sys.command("lime", arg);
 	}

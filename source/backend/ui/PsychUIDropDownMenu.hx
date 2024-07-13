@@ -31,7 +31,7 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 
 		onChange = (old:String, cur:String) -> {
 			if(old != cur) {
-				_curFilter = list.filter((str:String) -> return str.startsWith(cur));
+				_curFilter = this.list.filter((str:String) -> return str.startsWith(cur));
 				showDropDown(true, 0, _curFilter);
 			}
 		}
