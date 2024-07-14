@@ -785,8 +785,8 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			}
 		} else holdingArrowsTime = 0;
 
-		if(FlxG.mouse.pressedRight && (FlxG.mouse.deltaScreenX != 0 || FlxG.mouse.deltaScreenY != 0)) {
-			character.offset.subtract(FlxG.mouse.deltaScreenX, FlxG.mouse.deltaScreenY);
+		if(FlxG.mouse.pressedRight && (FlxG.mouse.deltaViewX != 0 || FlxG.mouse.deltaViewY != 0)) {
+			character.offset.subtract(FlxG.mouse.deltaViewX, FlxG.mouse.deltaViewY);
 			changedOffset = true;
 		}
 

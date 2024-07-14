@@ -68,7 +68,7 @@ class Limo extends BaseStage
 			add(grpLimoParticles);
 
 			//PRECACHE BLOOD
-			var particle:BGSprite = new BGSprite('gore/stupidBlood', -400, -400, 0.4, 0.4, ['blood'], false);
+			var particle:BGSprite = new BGSprite('gore/stupidBlood', -400, -400, 0.4, 0.4, ['blood']);
 			particle.alpha = 0.01;
 			grpLimoParticles.add(particle);
 			resetLimoKill();
@@ -90,8 +90,8 @@ class Limo extends BaseStage
 	var limoSpeed:Float = 0;
 	override function update(elapsed:Float) {
 		if(!lowQuality) {
-			grpLimoParticles.forEach(function(spr:BGSprite) {
-				spr.animation.finishedCallback.add((name:String) -> {
+			grpLimoParticles.forEach((spr:BGSprite) -> {
+				spr.animation.onFinish.add((name:String) -> {
 					spr.kill();
 					grpLimoParticles.remove(spr, true);
 					spr.destroy();
@@ -113,14 +113,14 @@ class Limo extends BaseStage
 									if(i == 0) FlxG.sound.play(Paths.sound('dancerdeath'), 0.5);
 
 									var diffStr:String = i == 3 ? ' 2 ' : ' ';
-									var particle:BGSprite = new BGSprite('gore/noooooo', dancers[i].x + 200, dancers[i].y, 0.4, 0.4, ['hench leg spin' + diffStr], false);
+									var particle:BGSprite = new BGSprite('gore/noooooo', dancers[i].x + 200, dancers[i].y, 0.4, 0.4, ['hench leg spin' + diffStr]);
 									grpLimoParticles.add(particle);
-									var particle:BGSprite = new BGSprite('gore/noooooo', dancers[i].x + 160, dancers[i].y + 200, 0.4, 0.4, ['hench arm spin' + diffStr], false);
+									var particle:BGSprite = new BGSprite('gore/noooooo', dancers[i].x + 160, dancers[i].y + 200, 0.4, 0.4, ['hench arm spin' + diffStr]);
 									grpLimoParticles.add(particle);
-									var particle:BGSprite = new BGSprite('gore/noooooo', dancers[i].x, dancers[i].y + 50, 0.4, 0.4, ['hench head spin' + diffStr], false);
+									var particle:BGSprite = new BGSprite('gore/noooooo', dancers[i].x, dancers[i].y + 50, 0.4, 0.4, ['hench head spin' + diffStr]);
 									grpLimoParticles.add(particle);
 
-									var particle:BGSprite = new BGSprite('gore/stupidBlood', dancers[i].x - 110, dancers[i].y + 20, 0.4, 0.4, ['blood'], false);
+									var particle:BGSprite = new BGSprite('gore/stupidBlood', dancers[i].x - 110, dancers[i].y + 20, 0.4, 0.4, ['blood']);
 									particle.flipX = true;
 									particle.angle = -57.5;
 									grpLimoParticles.add(particle);

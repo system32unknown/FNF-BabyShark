@@ -205,7 +205,7 @@ class LuaUtils {
 
 	static final _lePoint:FlxPoint = FlxPoint.get();
 	inline public static function getMousePoint(camera:String, axis:String):Float {
-		FlxG.mouse.getScreenPosition(cameraFromString(camera), _lePoint);
+		FlxG.mouse.getViewPosition(cameraFromString(camera), _lePoint);
 		return (axis == 'y' ? _lePoint.y : _lePoint.x);
 	}
 

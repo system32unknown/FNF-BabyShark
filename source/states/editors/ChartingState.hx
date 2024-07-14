@@ -55,7 +55,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	];
 
 	var _file:FileReference;
-	var UI_box:PsychUIBox;
 
 	/**
 	 * Array of notes showing when each section STARTS in STEPS
@@ -66,7 +65,12 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 	public var zoomFactorTxt:String = "1 / 1";
 
-	var bpmTxt:FlxText;
+	var mainBox:PsychUIBox;
+	var mainBoxPosition:FlxPoint = FlxPoint.get(920, 40);
+	var infoBox:PsychUIBox;
+	var infoBoxPosition:FlxPoint = FlxPoint.get(1020, 360);
+	var upperBox:PsychUIBox;
+
 	var camPos:FlxObject;
 	var strumLine:FlxSprite;
 	var quant:AttachedSprite;
@@ -100,6 +104,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var lastNoteStrum:Float;
 
 	var vocals:FlxSound = null;
+
+	var infoText:FlxText;
 
 	var leftIcon:HealthIcon;
 	var rightIcon:HealthIcon;
@@ -158,6 +164,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		vortex = FlxG.save.data.chart_vortex;
 		ignoreWarnings = FlxG.save.data.ignoreWarnings;
+
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.scrollFactor.set();
@@ -205,9 +212,13 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		Conductor.mapBPMChanges(_song);
 		if(curSec >= _song.notes.length) curSec = _song.notes.length - 1;
 
-		bpmTxt = new FlxText(1060, 50, 0, "", 16);
-		bpmTxt.scrollFactor.set();
-		add(bpmTxt);
+		var tipText:FlxText = new FlxText(FlxG.width - 200, FlxG.height - 32, 200, "Press F1 for Help", 16);
+		tipText.setFormat(null, 16, FlxColor.WHITE, RIGHT);
+		tipText.borderColor = FlxColor.BLACK;
+		tipText.scrollFactor.set();
+		tipText.borderSize = 1;
+		tipText.active = false;
+		add(tipText);
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		for (i in 0...EK.strums(_song.mania)) {
@@ -227,17 +238,25 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		dummyArrow.antialiasing = ClientPrefs.data.antialiasing;
 		add(dummyArrow);
 
-		UI_box = new PsychUIBox(640 + GRID_SIZE * 3, 25, 300, 400, ['Charting', 'Data', 'Events', 'Note', 'Section', 'Song']);
-		UI_box.selectedName = 'Song';
-		UI_box.scrollFactor.set();
+		infoBox = new PsychUIBox(infoBoxPosition.x, infoBoxPosition.y, 200, 220, ['Information']);
+		infoBox.scrollFactor.set();
+		infoText = new FlxText(15, 15, 230, '', 16);
+		infoText.scrollFactor.set();
+		infoBox.getTab('Information').menu.add(infoText);
+		add(infoBox);
 
-		var tipText:FlxText = new FlxText(FlxG.width - 200, FlxG.height - 32, 200, "Press F1 for Help", 16);
-		tipText.setFormat(null, 16, FlxColor.WHITE);
-		tipText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
-		tipText.scrollFactor.set();
-		tipText.active = false;
-		add(tipText);
-		add(UI_box);
+		mainBox = new PsychUIBox(mainBoxPosition.x, mainBoxPosition.y, 300, 400, ['Charting', 'Data', 'Events', 'Note', 'Section', 'Song']);
+		mainBox.selectedName = 'Song';
+		mainBox.scrollFactor.set();
+		add(mainBox);
+
+		upperBox = new PsychUIBox(40, 40, 330, 300, ['File', 'Edit', 'View']);
+		upperBox.scrollFactor.set();
+		upperBox.isMinimized = true;
+		upperBox.minimizeOnFocusLost = true;
+		upperBox.canMove = false;
+		upperBox.bg.visible = false;
+		add(upperBox);
 
 		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		helpBg.scrollFactor.set();
@@ -290,6 +309,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		addEventsUI();
 		addChartingUI();
 		addDataUI();
+
 		updateHeads();
 		updateWaveform();
 
@@ -475,7 +495,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		stepperMania.value = _song.mania;
 		stepperMania.name = 'song_mania';
 
-		var tab_group_song:FlxSpriteGroup = UI_box.getTab('Song').menu;
+		var tab_group_song:FlxSpriteGroup = mainBox.getTab('Song').menu;
 		tab_group_song.add(UI_songTitle);
 		tab_group_song.add(check_voices);
 		tab_group_song.add(clear_events);
@@ -519,7 +539,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var notesCopied:Array<Dynamic>;
 
 	function addSectionUI():Void {
-		var tab_group_section:FlxSpriteGroup = UI_box.getTab('Section').menu;
+		var tab_group_section:FlxSpriteGroup = mainBox.getTab('Section').menu;
 
 		check_mustHitSection = new PsychUICheckBox(10, 15, "Must hit section", 100, () -> {
 			_song.notes[curSec].mustHitSection = check_mustHitSection.checked;
@@ -779,7 +799,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var stepperStackSideOffset:PsychUINumericStepper;
 
 	function addNoteUI():Void {
-		var tab_group_note:FlxSpriteGroup = UI_box.getTab('Note').menu;
+		var tab_group_note:FlxSpriteGroup = mainBox.getTab('Note').menu;
 
 		stepperSusLength = new PsychUINumericStepper(10, 25, Conductor.stepCrochet / 2, 0, 0, Conductor.stepCrochet * 64);
 		stepperSusLength.value = 0;
@@ -885,7 +905,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var descText:FlxText;
 	var selectedEventText:FlxText;
 	function addEventsUI():Void {
-		var tab_group_event:FlxSpriteGroup = UI_box.getTab('Events').menu;
+		var tab_group_event:FlxSpriteGroup = mainBox.getTab('Events').menu;
 
 		#if LUA_ALLOWED
 		var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
@@ -1010,7 +1030,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var instVolume:PsychUINumericStepper;
 	var voicesVolume:PsychUINumericStepper;
 	function addChartingUI() {
-		var tab_group_chart:FlxSpriteGroup = UI_box.getTab('Charting').menu;
+		var tab_group_chart:FlxSpriteGroup = mainBox.getTab('Charting').menu;
 
 		#if desktop
 		if (FlxG.save.data.chart_waveformInst == null) FlxG.save.data.chart_waveformInst = false;
@@ -1142,7 +1162,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var noteSkinInputText:PsychUIInputText;
 	var noteSplashesInputText:PsychUIInputText;
 	function addDataUI() {
-		var tab_group_data:FlxSpriteGroup = UI_box.getTab('Data').menu;
+		var tab_group_data:FlxSpriteGroup = mainBox.getTab('Data').menu;
 
 		var skin:Array<Null<String>> = [PlayState.SONG.arrowSkin, PlayState.SONG.splashSkin];
 		if(skin[0] == null || skin[0].length < 1) skin[0] = 'NOTE_assets';
@@ -1423,20 +1443,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		if(PsychUIInputText.focusOn == null) {
 			ClientPrefs.toggleVolumeKeys(true);
-			if (FlxG.keys.justPressed.ESCAPE && !helpBg.visible) {
-				FlxG.sound.music?.stop();
-	
-				if(vocals != null) {
-					vocals.pause();
-					vocals.volume = 0;
-				}
-	
-				autosaveSong();
-				playtesting = true;
-				playtestingTime = Conductor.songPosition;
-				playtestingOnComplete = FlxG.sound.music.onComplete;
-				openSubState(new EditorPlayState(playbackSpeed));
-			} else if(FlxG.keys.justPressed.F1 || (helpBg.visible && FlxG.keys.justPressed.ESCAPE)) {
+			if(FlxG.keys.justPressed.F1 || (helpBg.visible && FlxG.keys.justPressed.ESCAPE)) {
 				helpBg.visible = !helpBg.visible;
 				helpTexts.visible = helpBg.visible;
 			} else if (FlxG.keys.justPressed.ENTER) {
@@ -1475,13 +1482,13 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 			if (FlxG.keys.justPressed.TAB) {
 				if (FlxG.keys.pressed.SHIFT) {
-					var id:Int = UI_box.selectedIndex - 1;
-					if (id < 0) id = UI_box.tabs.length - 1;
-					UI_box.selectedIndex = id;
+					var id:Int = mainBox.selectedIndex - 1;
+					if (id < 0) id = mainBox.tabs.length - 1;
+					mainBox.selectedIndex = id;
 				} else {
-					var id:Int = UI_box.selectedIndex + 1;
-					if (id >= UI_box.tabs.length) id = 0;
-					UI_box.selectedIndex = id;
+					var id:Int = mainBox.selectedIndex + 1;
+					if (id >= mainBox.tabs.length) id = 0;
+					mainBox.selectedIndex = id;
 				}
 			}
 
@@ -1656,15 +1663,19 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		vocals.pitch = playbackSpeed;
 		sliderRate.value = playbackSpeed;
 
-		bpmTxt.text =
-		'$currentSongName [${Difficulty.getString()}]' +
+		var str:String = '$currentSongName [${Difficulty.getString()}]' +
 		'\n${CoolUtil.formatTime(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))} / ${CoolUtil.formatTime(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))}' +
 		'\n\nSection: $curSec' +
-		'\nBeat: ${Std.string(curDecBeat).substring(0, 4)}' +
+		'\nBeat: $curBeat' +
 		'\nStep: $curStep' +
 		'\nZoom: $zoomFactorTxt' +
 		if ((quantization - 2) % 10 == 0 && quantization != 12) '\n\nBeat Snap ${quantization}nd';
 		else '\n\nBeat Snap: ${quantization}th';
+
+		if(str != infoText.text) {
+			infoText.text = str;
+			if(infoText.autoSize) infoText.autoSize = false;
+		}
 
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
 		curRenderedNotes.forEachAlive(function(note:Note) {

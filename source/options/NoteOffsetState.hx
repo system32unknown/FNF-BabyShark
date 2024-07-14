@@ -294,7 +294,7 @@ class NoteOffsetState extends MusicBeatState {
 		var left:Bool = controls.UI_LEFT, right:Bool = controls.UI_RIGHT;
 		var down:Bool = controls.UI_DOWN, up:Bool = controls.UI_UP;
 
-		FlxG.mouse.getScreenPosition(camOther, mousePointer);
+		FlxG.mouse.getViewPosition(camOther, mousePointer);
 
 		if (onComboMenu) {
 			mouse.x += (left ? -1 : right ? 1 : 0) * addNum * (byPixel ? 1 : elapsed * 300);

@@ -109,7 +109,7 @@ class MainMenuState extends MusicBeatState {
 		if (!selectedSomethin) {
 			if (controls.UI_UP_P || controls.UI_DOWN_P) changeItem(controls.UI_UP_P ? -1 : 1);
 
-			if (allowMouse && FlxG.mouse.deltaScreenX != 0 && FlxG.mouse.deltaScreenY != 0) { //more accurate than FlxG.mouse.justMoved
+			if (allowMouse && FlxG.mouse.deltaViewX != 0 && FlxG.mouse.deltaViewY != 0) { //more accurate than FlxG.mouse.justMoved
 				FlxG.mouse.visible = true;
 				timeNotMoving = 0;
 	
@@ -130,7 +130,7 @@ class MainMenuState extends MusicBeatState {
 					for (i in 0...optionShit.length) {
 						var memb:FlxSprite = menuItems.members[i];
 						if(FlxG.mouse.overlaps(memb)) {
-							var distance:Float = Math.sqrt(Math.pow(memb.getGraphicMidpoint().x - FlxG.mouse.screenX, 2) + Math.pow(memb.getGraphicMidpoint().y - FlxG.mouse.screenY, 2));
+							var distance:Float = Math.sqrt(Math.pow(memb.getGraphicMidpoint().x - FlxG.mouse.viewX, 2) + Math.pow(memb.getGraphicMidpoint().y - FlxG.mouse.screenY, 2));
 							if (dist < 0 || distance < dist) {
 								dist = distance;
 								distItem = i;
