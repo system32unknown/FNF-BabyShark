@@ -28,9 +28,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		transGradient.screenCenter(Y);
 		add(transGradient);
 
-		transBlack = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		transBlack.scale.set(width + 400, height);
-		transBlack.updateHitbox();
+		transBlack = new FlxSprite().makeSolid(width + 400, height, FlxColor.BLACK);
 		transBlack.scrollFactor.set();
 		transBlack.screenCenter(Y);
 		add(transBlack);

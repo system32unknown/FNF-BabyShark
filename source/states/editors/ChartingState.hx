@@ -1663,8 +1663,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		vocals.pitch = playbackSpeed;
 		sliderRate.value = playbackSpeed;
 
-		var str:String = '$currentSongName [${Difficulty.getString()}]' +
-		'\n${CoolUtil.formatTime(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))} / ${CoolUtil.formatTime(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))}' +
+		var str:String = '${FlxMath.roundDecimal(Conductor.songPosition / 1000, 2)} / ${FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2)}' +
 		'\n\nSection: $curSec' +
 		'\nBeat: $curBeat' +
 		'\nStep: $curStep' +

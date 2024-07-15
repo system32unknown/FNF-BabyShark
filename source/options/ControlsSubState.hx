@@ -123,7 +123,6 @@ class ControlsSubState extends MusicBeatSubstate {
 		add(grpBinds = new FlxTypedGroup<Alphabet>());
 
 		var text:Alphabet = new Alphabet(50, 600, 'SHIFT + < or > to\nChange Key Number');
-		text.alignment = LEFT;
 		text.setScale(.4);
 		add(text);
 
@@ -263,11 +262,9 @@ class ControlsSubState extends MusicBeatSubstate {
 
 			if(FlxG.keys.justPressed.ENTER) {
 				if(options[curOptions[curSelected]][1] != defaultKey) {
-					bindingBlack = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
-					bindingBlack.scale.set(FlxG.width, FlxG.height);
-					bindingBlack.updateHitbox();
+					bindingBlack = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.WHITE);
 					bindingBlack.alpha = 0;
-					FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35, {ease: FlxEase.linear});
+					FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35);
 					add(bindingBlack);
 
 					bindingText = new Alphabet(FlxG.width / 2, 160, Language.getPhrase('controls_rebinding', 'Rebinding {1}', [options[curOptions[curSelected]][3]]), false);

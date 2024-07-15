@@ -1687,7 +1687,6 @@ class PlayState extends MusicBeatState {
 
 		if (gf != null && section.gfSection) {
 			moveCamera('gf');
-			callOnScripts('onMoveCamera', ['gf']);
 			return;
 		}
 
@@ -1698,7 +1697,14 @@ class PlayState extends MusicBeatState {
 			campoint.set(camFollow.x, camFollow.y);
 			camlock = false;
 		}
-		callOnScripts('onMoveCamera', [camCharacter]);
+	}
+
+	public var lastCameraTarget(default, null):String = '';
+	public function moveCameraScriptCall(char:String):Void {
+		if (lastCameraTarget != char) {
+			callOnScripts('onMoveCamera', [char]);
+			lastCameraTarget = char;
+		}
 	}
 
 	var cameraTwn:FlxTween;
@@ -1707,23 +1713,22 @@ class PlayState extends MusicBeatState {
 			camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
 			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
 			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
-			if(canTweenCamZoom) tweenCamZoom(canTweenCamZoomDad);
+			if(canTweenCamZoom) tweenCamZoom(canTweenCamZoomDad); moveCameraScriptCall('dad');
 		} else if((moveCameraTo == 'boyfriend' || moveCameraTo == 'bf') || !moveCameraTo) {
 			camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
 			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
-			if(canTweenCamZoom) tweenCamZoom(canTweenCamZoomBoyfriend);
+			if(canTweenCamZoom) tweenCamZoom(canTweenCamZoomBoyfriend); moveCameraScriptCall('boyfriend');
 		} else {
 			camFollow.setPosition(gf.getMidpoint().x, gf.getMidpoint().y);
 			camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
 			camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
-			if(canTweenCamZoom) tweenCamZoom(canTweenCamZoomGf);
+			if(canTweenCamZoom) tweenCamZoom(canTweenCamZoomGf); moveCameraScriptCall('gf');
 		}
 	}
 
 	public function tweenCamZoom(zoom:Float = 1) {
-		if (cameraTwn == null && camGame.zoom != zoom)
-			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (Conductor.stepCrochet * 4 / 1000) * playbackRate, {ease: FlxEase.elasticInOut, onComplete: (_) -> cameraTwn = null});
+		if (cameraTwn == null && camGame.zoom != zoom) cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (Conductor.stepCrochet * 4 / 1000) * playbackRate, {ease: FlxEase.elasticInOut, onComplete: (_) -> cameraTwn = null});
 	}
 
 	public function finishSong(?ignoreNoteOffset:Bool = false):Void {
@@ -1844,7 +1849,7 @@ class PlayState extends MusicBeatState {
 	function getScoreText():String {
 		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps, maxNPS])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
 		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('break_text', '| Breaks:{1} ', [songMisses]); 
-		if (!cpuControlled) tempText += Language.getPhrase('| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' N/A');
+		if (!cpuControlled) tempText += Language.getPhrase('| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
 		return tempText;
 	}
 
