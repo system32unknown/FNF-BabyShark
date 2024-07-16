@@ -74,8 +74,7 @@ class SystemInfo extends FramerateCategory {
 		if (alpha <= 0.05) return;
 
 		_text = __formattedSysText;
-
-		this.text.text = _text;
+		if (this.text.text != _text) this.text.text = _text;
 		super.__enterFrame(t);
 	}
 }

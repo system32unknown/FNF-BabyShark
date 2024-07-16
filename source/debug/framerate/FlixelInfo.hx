@@ -20,7 +20,7 @@ class FlixelInfo extends FramerateCategory {
 		_text += '\nBitmap Count: $c';
 		_text += '\nSound Count: ${FlxG.sound.list.length}';
 
-		this.text.text = _text;
+		if (this.text.text != _text) this.text.text = _text;
 		super.__enterFrame(t);
 	}
 }

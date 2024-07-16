@@ -16,7 +16,7 @@ class MusicBeatInfo extends FramerateCategory {
 		}
 		_text += '\nCrochet: ${MathUtil.truncateFloat(Conductor.crochet, 2)}ms/${MathUtil.truncateFloat(Conductor.stepCrochet, 2)}ms';
 
-		this.text.text = _text;
+		if (this.text.text != _text) this.text.text = _text;
 		super.__enterFrame(t);
 	}
 }

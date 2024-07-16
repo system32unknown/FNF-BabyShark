@@ -224,12 +224,9 @@ class FunkinLua {
 				for (luaInstance in game.luaArray)
 					if(luaInstance.scriptName == foundScript) {
 						Lua.getglobal(luaInstance.lua, global);
-						if(Lua.isnumber(luaInstance.lua, -1))
-							Lua.pushnumber(lua, Lua.tonumber(luaInstance.lua, -1));
-						else if(Lua.isstring(luaInstance.lua, -1))
-							Lua.pushstring(lua, Lua.tostring(luaInstance.lua, -1));
-						else if(Lua.isboolean(luaInstance.lua, -1))
-							Lua.pushboolean(lua, Lua.toboolean(luaInstance.lua, -1));
+						if(Lua.isnumber(luaInstance.lua, -1)) Lua.pushnumber(lua, Lua.tonumber(luaInstance.lua, -1));
+						else if(Lua.isstring(luaInstance.lua, -1)) Lua.pushstring(lua, Lua.tostring(luaInstance.lua, -1));
+						else if(Lua.isboolean(luaInstance.lua, -1)) Lua.pushboolean(lua, Lua.toboolean(luaInstance.lua, -1));
 						else Lua.pushnil(lua);
 
 						Lua.pop(luaInstance.lua, 1); // remove the global
@@ -238,7 +235,7 @@ class FunkinLua {
 		});
 
 		set("isRunning", (file:String, ?checkForHaxe:Bool = false) -> {
-			var foundScript:String = findScript(file, (checkForHaxe ? '.hx' : 'lua'));
+			var foundScript:String = findScript(file, (checkForHaxe ? '.hx' : '.lua'));
 			if (foundScript != null) {
 				if (checkForHaxe) for (hscriptInstance in game.hscriptArray)if (hscriptInstance.origin == foundScript) return true;
 				else for (luaInstance in game.luaArray) if (luaInstance.scriptName == foundScript) return true;
