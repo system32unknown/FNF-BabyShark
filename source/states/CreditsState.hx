@@ -24,7 +24,7 @@ class CreditsState extends MusicBeatState {
 		['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbsub3',				'3E813A'],
 		[''],
 		['Engine Contributors'],
-		['CrowPlexus', 			'crowplexus', 		'Major Help and Other PRs', 									'https://twitter.com/crowplexus', 			'A1A1A1'],
+		['crowplexus', 			'crowplexus', 		'Major Help and Other PRs', 									'https://twitter.com/crowplexus', 			'A1A1A1'],
 		['Keoiki',				'keoiki',			'Ex-Artist and Note Splash Animations and Latin Alphabet', 		'https://twitter.com/Keoiki_',				'D2D2D2'],
 		['iFlicky',				'flicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',		'https://twitter.com/flicky_i',				'9E29CF'],
 		['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',	'https://twitter.com/gedehari',				'E1843A'],

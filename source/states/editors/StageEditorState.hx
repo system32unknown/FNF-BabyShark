@@ -14,6 +14,8 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import psychlua.ModchartSprite;
 
+import states.editors.content.Prompt;
+
 class StageEditorState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent {
 	final minZoom:Float = 0.1;
 	final maxZoom:Int = 2;
@@ -1117,7 +1119,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			if(!unsavedProgress) {
 				FlxG.switchState(() -> new MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-			} else openSubState(new ConfirmationPopupSubstate());
+			} else openSubState(new ExitConfirmationPrompt());
 			return;
 		}
 

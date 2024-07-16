@@ -1,19 +1,34 @@
-package substates;
+package states.editors.content;
 
-import flixel.util.FlxDestroyUtil;
+class ExitConfirmationPrompt extends Prompt {
+	public function new(?finishCallback:Void->Void) {
+		super('There\'s unsaved progress,\nare you sure you want to exit?', () -> {
+			FlxG.mouse.visible = false;
+			FlxG.switchState(new states.editors.MasterEditorMenu());
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			if(finishCallback != null) finishCallback();
+		}, 'Exit');
+	}
+}
 
 // A Simple Prompt with "OK" and "Cancel" that covers most case usages
 class Prompt extends BasePrompt {
 	var yesFunction:Void->Void;
+	var noFunction:Void->Void;
+	var _yesTxt:String = 'OK';
+	var _noTxt:String = 'Cancel';
 
-	public function new(title:String, yesFunction:Void->Void) {
+	public function new(title:String, yesFunction:Void->Void, ?noFunction:Void->Void, ?_yesTxt:String, ?_noTxt:String) {
+		if(_yesTxt != null) this._yesTxt = _yesTxt;
+		if(_noTxt != null) this._noTxt = _noTxt;
 		this.yesFunction = yesFunction;
+		this.noFunction = noFunction;
 		super(title, promptCreate);
 	}
 
 	function promptCreate(_) {
 		var btnY:Int = 390;
-		var btn:PsychUIButton = new PsychUIButton(0, btnY, 'OK', () -> {
+		var btn:PsychUIButton = new PsychUIButton(0, btnY, _yesTxt, function() {
 			yesFunction();
 			close();
 		});
@@ -24,11 +39,16 @@ class Prompt extends BasePrompt {
 		btn.cameras = cameras;
 		add(btn);
 
-		var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', close);
+		var btn:PsychUIButton = new PsychUIButton(0, btnY, _noTxt, close);
 		btn.screenCenter(X);
 		btn.x += 100;
 		btn.cameras = cameras;
 		add(btn);
+	}
+
+	override function close() {
+		if(noFunction != null) noFunction();
+		super.close();
 	}
 }
 
@@ -86,7 +106,7 @@ class BasePrompt extends MusicBeatSubstate {
 	}
 
 	override function destroy() {
-		for (member in members) FlxDestroyUtil.destroy(member);
+		for (member in members) flixel.util.FlxDestroyUtil.destroy(member);
 		super.destroy();
 	}
 }

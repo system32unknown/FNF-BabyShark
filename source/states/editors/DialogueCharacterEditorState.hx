@@ -8,6 +8,8 @@ import cutscenes.DialogueBoxPsych;
 import cutscenes.DialogueCharacter;
 import objects.TypedAlphabet;
 
+import states.editors.content.Prompt;
+
 class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent {
 	var box:FlxSprite;
 	var daText:TypedAlphabet = null;
@@ -537,7 +539,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 					FlxG.switchState(() -> new MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					transitioning = true;
-				} else openSubState(new ConfirmationPopupSubstate(() -> transitioning = true));
+				} else openSubState(new ExitConfirmationPrompt(() -> transitioning = true));
 			}
 
 			ghostLoop.setPosition(character.x, character.y);

@@ -1,4 +1,4 @@
-package states.editors;
+package states.editors.content;
 
 import backend.Song;
 import backend.Rating;
@@ -299,9 +299,9 @@ class EditorPlayState extends MusicBeatSubstate {
 			swagNote.scrollFactor.set();
 			unspawnNotes.push(swagNote);
 
-			var floorSus:Int = Math.floor(swagNote.sustainLength / Conductor.stepCrochet);
-			if(floorSus > 0) {
-				for (susNote in 0...floorSus + 1) {
+			var roundSus:Int = Math.floor(swagNote.sustainLength / Conductor.stepCrochet);
+			if(roundSus > 0) {
+				for (susNote in 0...roundSus + 1) {
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
 					var sustainNote:Note = new Note(swagNote.strumTime + (Conductor.stepCrochet * susNote), note.noteData, oldNote, true, this);

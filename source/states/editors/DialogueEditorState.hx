@@ -7,6 +7,7 @@ import haxe.Json;
 import objects.TypedAlphabet;
 import cutscenes.DialogueBoxPsych;
 import cutscenes.DialogueCharacter;
+import states.editors.content.Prompt;
 
 class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent {
 	var character:DialogueCharacter;
@@ -280,7 +281,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 					FlxG.switchState(() -> new MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					transitioning = true;
-				} else openSubState(new ConfirmationPopupSubstate(() -> transitioning = true));
+				} else openSubState(new ExitConfirmationPrompt(() -> transitioning = true));
 				return;
 			}
 			var negaMult:Array<Int> = [1, -1];

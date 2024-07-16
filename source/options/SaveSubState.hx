@@ -1,6 +1,6 @@
 package options;
 
-import substates.Prompt;
+import states.editors.content.Prompt;
 import backend.Highscore;
 
 class SaveSubState extends BaseOptionsMenu {
@@ -29,7 +29,7 @@ class SaveSubState extends BaseOptionsMenu {
             FlxG.save.data.weekScores = Highscore.weekScores;
             FlxG.save.flush();
 			FlxG.mouse.visible = false;
-		}));
+		}, () -> FlxG.mouse.visible = false));
 	}
 
 	function resetWeek() {
@@ -38,6 +38,6 @@ class SaveSubState extends BaseOptionsMenu {
 			FlxG.save.data.weekScores = null;
 			for (key in Highscore.weekScores.keys()) Highscore.weekScores[key] = 0;
 			FlxG.mouse.visible = false;
-		}));
+		}, () -> FlxG.mouse.visible = false));
 	}
 }

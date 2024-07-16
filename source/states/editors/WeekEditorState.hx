@@ -10,6 +10,7 @@ import data.WeekData;
 import objects.HealthIcon;
 import objects.MenuCharacter;
 import objects.MenuItem;
+import states.editors.content.Prompt;
 
 class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent {
 	var txtWeekTitle:FlxText;
@@ -367,7 +368,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 				if(!unsavedProgress) {
 					FlxG.switchState(() -> new MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
-				} else openSubState(new ConfirmationPopupSubstate(() -> unsavedProgress = false));
+				} else openSubState(new ExitConfirmationPrompt(() -> unsavedProgress = false));
 			}
 		} else ClientPrefs.toggleVolumeKeys(false);
 
@@ -679,7 +680,7 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 				if(!WeekEditorState.unsavedProgress) {
 					FlxG.switchState(() -> new MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
-				} else openSubState(new ConfirmationPopupSubstate());
+				} else openSubState(new ExitConfirmationPrompt());
 			}
 
 			if(controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);

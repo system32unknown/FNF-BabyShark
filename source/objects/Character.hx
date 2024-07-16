@@ -330,7 +330,7 @@ class Character extends FlxSprite {
 	public override function draw() {
 		var lastAlpha:Float = alpha;
 		var lastColor:FlxColor = color;
-		if(missingCharacter) {
+		if(missingCharacter && visible) {
 			alpha *= 0.6;
 			color = FlxColor.BLACK;
 		}
@@ -347,7 +347,7 @@ class Character extends FlxSprite {
 			}
 		}
 		super.draw();
-		if(missingCharacter) {
+		if(missingCharacter && visible) {
 			alpha = lastAlpha;
 			color = lastColor;
 			missingText.setPosition(getMidpoint().x - 150, getMidpoint().y - 10);

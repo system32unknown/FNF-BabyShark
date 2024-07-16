@@ -8,7 +8,7 @@ import objects.AttachedSprite;
 import objects.AttachedFlxText;
 import backend.Song;
 import utils.MathUtil;
-import substates.Prompt;
+import states.editors.content.Prompt;
 
 import flixel.FlxObject;
 import flixel.addons.display.FlxGridOverlay;
@@ -69,7 +69,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var mainBoxPosition:FlxPoint = FlxPoint.get(920, 40);
 	var infoBox:PsychUIBox;
 	var infoBoxPosition:FlxPoint = FlxPoint.get(1020, 360);
-	var upperBox:PsychUIBox;
 
 	var camPos:FlxObject;
 	var strumLine:FlxSprite;
@@ -177,7 +176,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		waveformSprite.antialiasing = false;
 		add(waveformSprite);
 
-		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90, Paths.image('eventArrow'));
+		var eventIcon:FlxSprite = new FlxSprite(-GRID_SIZE - 5, -90, Paths.image('editors/eventIcon'));
 		leftIcon = new HealthIcon('bf');
 		rightIcon = new HealthIcon('dad');
 
@@ -249,14 +248,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		mainBox.selectedName = 'Song';
 		mainBox.scrollFactor.set();
 		add(mainBox);
-
-		upperBox = new PsychUIBox(40, 40, 330, 300, ['File', 'Edit', 'View']);
-		upperBox.scrollFactor.set();
-		upperBox.isMinimized = true;
-		upperBox.minimizeOnFocusLost = true;
-		upperBox.canMove = false;
-		upperBox.bg.visible = false;
-		add(upperBox);
 
 		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		helpBg.scrollFactor.set();

@@ -8,6 +8,9 @@ import objects.Character;
 import objects.HealthIcon;
 import objects.Bar;
 
+import states.editors.content.Prompt;
+import states.editors.content.PsychJsonPrinter;
+
 #if (FLX_DEBUG || flixel < version("5.7.0"))
 typedef PointerGraphic = flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
 #else
@@ -871,7 +874,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 				if(!unsavedProgress) {
 					FlxG.switchState(() -> new states.editors.MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
-				} else openSubState(new ConfirmationPopupSubstate());
+				} else openSubState(new ExitConfirmationPrompt());
 			} else FlxG.switchState(() -> new PlayState());
 			return;
 		}
@@ -1043,7 +1046,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	function saveCharacter() {
 		if(_file != null) return;
 
-		var data:String = haxe.Json.stringify({
+		var data:String = PsychJsonPrinter.print({
 			"animations": character.animationsArray,
 			"image": character.imageFile,
 			"scale": character.jsonScale,
@@ -1057,7 +1060,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			"no_antialiasing": character.noAntialiasing,
 			"healthbar_colors": character.healthColorArray,
 			"_editor_isPlayer": character.isPlayer
-		}, "\t");
+		}, ['offsets', 'position', 'healthbar_colors', 'camera_position', 'indices']);
 
 		if (data.length > 0) {
 			_file = new FileReference();

@@ -1029,9 +1029,9 @@ class PlayState extends MusicBeatState {
 			swagNote.scrollFactor.set();
 			unspawnNotes.push(swagNote);
 
-			final floorSus:Int = Math.floor(swagNote.sustainLength / Conductor.stepCrochet);
-			if(floorSus != 0) {
-				for (susNote in 0...floorSus + 1) {
+			final roundSus:Int = Math.round(swagNote.sustainLength / Conductor.stepCrochet);
+			if(roundSus != 0) {
+				for (susNote in 0...roundSus + 1) {
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
 					var sustainNote:Note = new Note(noteDatas[i].time + (Conductor.stepCrochet * susNote), noteDatas[i].id, oldNote, true);
