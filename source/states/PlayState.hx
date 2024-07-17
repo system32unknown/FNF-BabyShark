@@ -1455,9 +1455,9 @@ class PlayState extends MusicBeatState {
 				vocals.stop();
 				FlxG.sound.music.stop();
 
-				persistentUpdate = false;
-				persistentDraw = false;
+				persistentUpdate = false; persistentDraw = false;
 				FlxTimer.globalManager.clear(); FlxTween.globalManager.clear();
+				FlxG.camera.setFilters([]);
 
 				openSubState(new GameOverSubstate());
 
@@ -2261,12 +2261,14 @@ class PlayState extends MusicBeatState {
 			hscript.executeFunction('onDestroy');
 			hscript.destroy();
 		}
+		stagesFunc((stage:BaseStage) -> stage.destroy());
 		for (point in [campoint, camlockpoint, ratingAcc, ratingVel]) point = flixel.util.FlxDestroyUtil.put(point);
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-		FlxG.animationTimeScale = 1;
+		FlxG.camera.setFilters([]);
 		#if FLX_PITCH FlxG.sound.music.pitch = 1; #end
+		FlxG.animationTimeScale = 1;
 		Note.globalRgbShaders = [];
 		backend.NoteTypesConfig.clearNoteTypesData();
 		instance = null;

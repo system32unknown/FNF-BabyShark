@@ -332,7 +332,7 @@ class VSlice {
 
 		var scrollSpeed:Map<String, Float> = [];
 		var notesMap:Map<String, Array<VSliceNote>> = [];
-		if(difficultyName == null)  { //Fill all difficulties to attempt to prevent the song from not showing up on Base Game
+		if(difficultyName == null) { //Fill all difficulties to attempt to prevent the song from not showing up on Base Game
 			var diffs:Array<String> = Difficulty.list.copy();
 			for (num => diff in diffs)
 			{
