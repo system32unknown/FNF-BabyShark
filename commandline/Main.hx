@@ -59,8 +59,7 @@ class Main {
 		initCommands();
 		var args:Array<String> = Sys.args();
 		var commandName:Null<String> = args.shift();
-		if (commandName != null)
-			commandName = commandName.toLowerCase();
+		if (commandName != null) commandName = commandName.toLowerCase();
 		for(c in commands) {
 			if (c.names.contains(commandName)) {
 				c.func(args);

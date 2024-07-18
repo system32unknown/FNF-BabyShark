@@ -366,6 +366,7 @@ class Paths {
 	}
 	#end
 
-	inline static public function exists(key:String):Bool
-		return FileSystem.exists(modFolders(key)) || FileSystem.exists(getSharedPath(key));
+	public static function exists(file:String, ?type:AssetType = TEXT, ?parentFolder:String, ?modsAllowed:Bool = true):Bool {
+		return #if MODS_ALLOWED FileSystem #else Assets #end.exists(getPath(file, type, parentFolder, modsAllowed));
+	}
 }

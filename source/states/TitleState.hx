@@ -177,7 +177,7 @@ class TitleState extends MusicBeatState {
 	
 					FlxTimer.wait(1.5, () -> {
 						FlxTransitionableState.skipNextTransIn = false;
-						if (mustUpdate) FlxG.switchState(() -> new OutdatedState());
+						if (mustUpdate) openSubState(new substates.OutdatedSubState());
 						else FlxG.switchState(() -> new MainMenuState());
 					});
 				}
