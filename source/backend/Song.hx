@@ -80,6 +80,7 @@ class Song {
 		var sectionsData:Array<SwagSection> = songJson.notes;
 		if(sectionsData == null) return;
 
+		var maniaKey:Int = EK.keys(PlayState.mania);
 		for (section in sectionsData) {
 			var beats:Null<Float> = cast section.sectionBeats;
 			if (beats == null || Math.isNaN(beats)) {
@@ -88,8 +89,8 @@ class Song {
 			}
 
 			for (note in section.sectionNotes) {
-				var gottaHitNote:Bool = (note[1] < EK.keys(PlayState.mania)) ? section.mustHitSection : !section.mustHitSection;
-				note[1] = (note[1] % EK.keys(PlayState.mania)) + (gottaHitNote ? 0 : EK.keys(PlayState.mania));
+				var gottaHitNote:Bool = (note[1] < maniaKey) ? section.mustHitSection : !section.mustHitSection;
+				note[1] = (note[1] % maniaKey) + (gottaHitNote ? 0 : maniaKey);
 
 				if(note[3] != null && !Std.isOfType(note[3], String))
 					note[3] = Note.defaultNoteTypes[note[3]]; //compatibility with Week 7 and 0.1-0.3 psych charts

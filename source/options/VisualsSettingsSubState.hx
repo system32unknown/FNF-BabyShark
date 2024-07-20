@@ -65,6 +65,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Icon Bounce:', "What should the Icon Bounces?", 'iconBounceType', STRING, ['Old', 'Psych', 'Dave', 'GoldenApple', 'Custom']));
 		addOption(new Option('Health Bar Type:', "What should the Health Bar Types?", 'healthTypes', STRING, ['Vanilla', 'Psych']));
 		addOption(new Option('Smooth Health', '', 'smoothHealth', BOOL));
+		addOption(new Option('Light Strums', '', 'lightStrum', BOOL));
 		var option:Option = new Option('Health Bar Opacity', 'How much opacity should the health bar and icons be.', 'healthBarAlpha', PERCENT);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
@@ -74,7 +75,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(option);
 		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms', BOOL));
 		addOption(new Option('Show Combo Counter', 'If checked, the combo counter will be shown.', 'showComboCounter', BOOL));
-		addOption(new Option('Combo Stacking', "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read", 'comboStacking', BOOL));
 		addOption(new Option('Show ms Timing', 'If checked, the ms timing will be shown.', 'showMsTiming', BOOL));
 		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'showNPS', BOOL));
 		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'showJudgement', BOOL));
@@ -89,6 +89,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		};
 		#if CHECK_FOR_UPDATES addOption(new Option('Check for Updates', 'On Release builds, turn this on to check for updates when you start the game.', 'checkForUpdates', BOOL)); #end
 		#if desktop addOption(new Option('Discord Rich Presence', "Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord", 'discordRPC', BOOL)); #end
+		addOption(new Option('Combo Stacking', "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read", 'comboStacking', BOOL));
 
 		super();
 		add(notes);

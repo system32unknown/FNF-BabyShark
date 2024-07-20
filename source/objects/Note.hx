@@ -141,7 +141,7 @@ class Note extends FlxSprite {
 		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGBExtra[EK.gfxIndex[PlayState.mania][noteData]];
 		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixelExtra[EK.gfxIndex[PlayState.mania][noteData]];
 
-		if (arr != null && noteData > -1 && noteData <= arr.length) {
+		if (arr != null && noteData > -1) {
 			rgbShader.r = arr[0];
 			rgbShader.g = arr[1];
 			rgbShader.b = arr[2];
@@ -217,8 +217,7 @@ class Note extends FlxSprite {
 			texture = '';
 
 			if (PlayState.mania != 0) x += EK.swidths[PlayState.mania] * (noteData % EK.keys(PlayState.mania));
-			if(!isSustainNote && noteData < EK.keys(PlayState.mania))
-				animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
+			if(!isSustainNote) animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
 		}
 
 		if(prevNote != null) prevNote.nextNote = this;
@@ -268,10 +267,9 @@ class Note extends FlxSprite {
 		var dataNum:Int = EK.gfxIndex[PlayState.mania][noteData];
 		if(globalRgbShaders[dataNum] == null) {
 			var newRGB:RGBPalette = new RGBPalette();
-			globalRgbShaders[dataNum] = newRGB;
 
 			var arr:Array<FlxColor> = (!PlayState.isPixelStage ? ClientPrefs.data.arrowRGBExtra : ClientPrefs.data.arrowRGBPixelExtra)[dataNum];
-			if (arr != null && noteData > -1 && noteData <= PlayState.mania) {
+			if (arr != null && noteData > -1) {
 				newRGB.r = arr[0];
 				newRGB.g = arr[1];
 				newRGB.b = arr[2];
@@ -280,6 +278,7 @@ class Note extends FlxSprite {
 				newRGB.g = FlxColor.LIME;
 				newRGB.b = FlxColor.BLUE;
 			}
+			globalRgbShaders[dataNum] = newRGB;
 		}
 		return globalRgbShaders[dataNum];
 	}

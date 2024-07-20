@@ -5,6 +5,8 @@ import flixel.addons.display.FlxPieDial;
 
 class VideoSprite extends FlxSpriteGroup {
 	#if VIDEOS_ALLOWED
+	public static var _videos:Array<VideoSprite> = [];
+
 	public var finishCallback:Void->Void = null;
 	public var onSkip:Void->Void = null;
 
@@ -16,9 +18,12 @@ class VideoSprite extends FlxSpriteGroup {
 	public var canSkip(default, set):Bool = false;
 
 	var videoName:String;
-	public var waiting:Bool = false;
 
-	public function new(videoName:String, isWaiting:Bool, canSkip:Bool = false, shouldLoop:Dynamic = false) {
+	public var waiting:Bool = false;
+	public var isPlaying:Bool = false;
+	public var isPaused:Bool = false;
+
+	public function new(videoName:String, isWaiting:Bool, canSkip:Bool = false, shouldLoop:Dynamic = false, adjustSize:Bool = true) {
 		super();
 
 		this.videoName = videoName;
@@ -38,7 +43,7 @@ class VideoSprite extends FlxSpriteGroup {
 		videoSprite = new FlxVideoSprite();
 		videoSprite.antialiasing = ClientPrefs.data.antialiasing;
 		add(videoSprite);
-		if(canSkip) this.canSkip = true;
+		this.canSkip = canSkip;
 
 		// callbacks
 		if(!shouldLoop) {
@@ -51,13 +56,13 @@ class VideoSprite extends FlxSpriteGroup {
 					cover.destroy();
 				}
 
-				PlayState.instance.remove(this);
+				psychlua.LuaUtils.getInstance().remove(this);
 				destroy();
 				alreadyDestroyed = true;
 			});
 		}
 
-		videoSprite.bitmap.onFormatSetup.add(() -> {
+		if(adjustSize) videoSprite.bitmap.onFormatSetup.add(() -> {
 			videoSprite.setGraphicSize(FlxG.width);
 			videoSprite.updateHitbox();
 			videoSprite.screenCenter();
@@ -65,6 +70,7 @@ class VideoSprite extends FlxSpriteGroup {
 
 		// start video and adjust resolution to screen size
 		videoSprite.load(this.videoName, shouldLoop ? ['input-repeat=65545'] : null);
+		_videos.push(this);
 	}
 
 	var alreadyDestroyed:Bool = false;
@@ -83,7 +89,7 @@ class VideoSprite extends FlxSpriteGroup {
 		if(finishCallback != null) finishCallback();
 		onSkip = null;
 
-		PlayState.instance.remove(this);
+		psychlua.LuaUtils.getInstance().remove(this);
 		super.destroy();
 	}
 
@@ -97,7 +103,7 @@ class VideoSprite extends FlxSpriteGroup {
 				if(onSkip != null) onSkip();
 				finishCallback = null;
 				videoSprite.bitmap.onEndReached.dispatch();
-				PlayState.instance.remove(this);
+				psychlua.LuaUtils.getInstance().remove(this);
 				trace('Skipped video');
 				return;
 			}
@@ -130,7 +136,17 @@ class VideoSprite extends FlxSpriteGroup {
 		skipSprite.alpha = FlxMath.remapToRange(skipSprite.amount, .025, 1, 0, 1);
 	}
 
-	public function resume() if (videoSprite != null) videoSprite.resume();
-	public function pause() if (videoSprite != null) videoSprite.pause();
+	public function play() {
+		isPlaying = true;
+		videoSprite?.play();
+	}
+	public function resume() {
+		isPaused = false;
+		videoSprite?.resume();
+	}
+	public function pause() {
+		isPaused = true;
+		videoSprite?.pause();
+	}
 	#end
 }

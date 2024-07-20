@@ -688,7 +688,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public var videoCutscene:VideoSprite = null;
-	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, playOnLoad:Bool = true) {
+	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, autoAdjust:Bool = true, playOnLoad:Bool = true) {
 		#if VIDEOS_ALLOWED
 		inCutscene = true;
 
@@ -698,7 +698,7 @@ class PlayState extends MusicBeatState {
 		if (#if sys FileSystem #else Assets #end.exists(fileName)) foundFile = true;
 
 		if (foundFile) {
-			var cutscene:VideoSprite = new VideoSprite(fileName, forMidSong, canSkip, loop);
+			var cutscene:VideoSprite = new VideoSprite(fileName, forMidSong, canSkip, loop, autoAdjust);
 			if (!forMidSong) {
 				cutscene.finishCallback = () -> {
 					if (generatedMusic && SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos) {
@@ -710,7 +710,7 @@ class PlayState extends MusicBeatState {
 				cutscene.onSkip = () -> startAndEnd();
 			}
 			add(cutscene);
-			if (playOnLoad) cutscene.videoSprite.play();
+			if (playOnLoad) cutscene.play();
 			return cutscene;
 		}
 		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
@@ -972,20 +972,20 @@ class PlayState extends MusicBeatState {
 		Conductor.bpm = songData.bpm;
 
 		vocals = new FlxSound();
-		try {if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
+		try {if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));} catch (e:Dynamic) {}
 		vocals.pitch = playbackRate;
 		FlxG.sound.list.add(vocals);
 
 		inst = new FlxSound();
-		try {inst.loadEmbedded(Paths.inst(songData.song));} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
+		try {inst.loadEmbedded(Paths.inst(songData.song));} catch (e:Dynamic) {}
 		FlxG.sound.list.add(inst);
 
 		noteGroup.add(notes = new NoteGroup());
 
 		try {
 			var eventsChart:SwagSong = Song.getChart('events', songName);
-			if(eventsChart != null) for (event in eventsChart.events)  for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
-		} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
+			if(eventsChart != null) for (event in eventsChart.events) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
+		} catch (e:Dynamic) {}
 
 		var noteDatas:Array<ChartNoteData> = [];
 		for (section in songData.notes) {
@@ -1178,6 +1178,7 @@ class PlayState extends MusicBeatState {
 
 			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = true);
 			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
+			#if VIDEOS_ALLOWED for(vid in VideoSprite._videos) if(vid.isPlaying) vid.resume(); #end
 
 			paused = false;
 			callOnScripts('onResume');
@@ -1399,8 +1400,8 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.followLerp = 0;
 		FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = false);
 		FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = false);
-		persistentUpdate = false;
-		persistentDraw = true;
+		#if VIDEOS_ALLOWED for(vid in VideoSprite._videos) if(vid.isPlaying) vid.pause(); #end
+		persistentUpdate = false; persistentDraw = true;
 		paused = true;
 
 		if(FlxG.sound.music != null) {FlxG.sound.music.pause(); vocals.pause();}
@@ -1458,6 +1459,7 @@ class PlayState extends MusicBeatState {
 				persistentUpdate = false; persistentDraw = false;
 				FlxTimer.globalManager.clear(); FlxTween.globalManager.clear();
 				FlxG.camera.setFilters([]);
+				#if VIDEOS_ALLOWED for(vid in VideoSprite._videos) vid.destroy(); VideoSprite._videos = []; #end
 
 				openSubState(new GameOverSubstate());
 
@@ -1829,7 +1831,6 @@ class PlayState extends MusicBeatState {
 	public var totalPlayed:Int = 0;
 	public var totalNotesHit:Float = 0;
 
-	public var showCombo:Bool = true;
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
 
@@ -1843,7 +1844,6 @@ class PlayState extends MusicBeatState {
 
 		for (rating in ratingsData) Paths.image(uiPrefix + 'ratings/${rating.image}' + uiPostfix);
 		for (i in 0...10) Paths.image(uiPrefix + 'number/num$i' + uiPostfix);
-		Paths.image(uiPrefix + 'ratings/combo' + uiPostfix);
 	}
 
 	function getScoreText():String {
@@ -1878,7 +1878,7 @@ class PlayState extends MusicBeatState {
 			RecalculateRating();
 		}
 
-		if (!ClientPrefs.data.showComboCounter || (!showRating && !showCombo && !showComboNum)) return;
+		if (!ClientPrefs.data.showComboCounter || (!showRating && !showComboNum)) return;
 		if (!ClientPrefs.data.comboStacking) comboGroup.forEachAlive((spr:FlxSprite) -> FlxTween.globalManager.completeTweensOf(spr));
 
 		final placement:Float = FlxG.width * .35;
@@ -1912,31 +1912,12 @@ class PlayState extends MusicBeatState {
 			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 
-		var comboSpr:FlxSprite = null;
-		if (showCombo && combo >= 10) {
-			comboSpr = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/combo' + uiPostfix));
-			comboSpr.screenCenter(Y).y -= comboOffset[2][1];
-			comboSpr.x = placement + comboOffset[2][0];
-	
-			comboSpr.velocity.set(FlxG.random.int(1, 10) * playbackRate + ratingVel.x, -FlxG.random.int(140, 160) * playbackRate + ratingVel.y);
-			comboSpr.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate + ratingAcc.y);
-			comboSpr.antialiasing = antialias;
-			comboSpr.setGraphicSize(comboSpr.width * mult);
-			comboSpr.updateHitbox();
-			comboSpr.ID = comboGroup.ID++;
-
-			comboGroup.add(comboSpr);
-			FlxTween.tween(comboSpr, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {comboSpr.kill(); comboSpr.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
-		}
-
 		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
 			mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
 			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 			mstimingTxt.text = '${MathUtil.truncateFloat(noteDiff / playbackRate)}ms';
 			mstimingTxt.color = SpriteUtil.dominantColor(rating);
-
-			var comboShowSpr:FlxSprite = (showCombo && combo >= 10 ? comboSpr : rating);
-			mstimingTxt.setPosition(comboShowSpr.x + 100, comboShowSpr.y + (showCombo && combo >= 10 ? 80 : 100));
+			mstimingTxt.setPosition(rating.x + 100, rating.y + 100);
 			mstimingTxt.updateHitbox();
 			mstimingTxt.ID = comboGroup.ID++;
 			comboGroup.add(mstimingTxt);
@@ -2525,7 +2506,7 @@ class PlayState extends MusicBeatState {
 
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {
 		var spr:StrumNote = (isDad ? opponentStrums : playerStrums).members[id];
-		if(spr != null) {
+		if(spr != null && ClientPrefs.data.lightStrum) {
 			spr.playAnim('confirm', true);
 			spr.resetAnim = time / playbackRate;
 		}

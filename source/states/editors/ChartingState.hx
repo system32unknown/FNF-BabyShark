@@ -1634,11 +1634,11 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			strumLineNotes.members[i].alpha = FlxG.sound.music.playing ? 1 : 0.35;
 		}
 
-		var holdingShift = FlxG.keys.pressed.SHIFT;
-		var holdingLB = FlxG.keys.pressed.LBRACKET;
-		var holdingRB = FlxG.keys.pressed.RBRACKET;
-		var pressedLB = FlxG.keys.justPressed.LBRACKET;
-		var pressedRB = FlxG.keys.justPressed.RBRACKET;
+		var holdingShift:Bool = FlxG.keys.pressed.SHIFT;
+		var holdingLB:Bool = FlxG.keys.pressed.LBRACKET;
+		var holdingRB:Bool = FlxG.keys.pressed.RBRACKET;
+		var pressedLB:Bool = FlxG.keys.justPressed.LBRACKET;
+		var pressedRB:Bool = FlxG.keys.justPressed.RBRACKET;
 
 		if (!holdingShift && pressedLB || holdingShift && holdingLB)
 			playbackSpeed -= .01;

@@ -25,7 +25,6 @@ class NoteOffsetState extends MusicBeatState {
 	var boyfriend:Character;
 	var gf:Character;
 
-	var combo:FlxSprite;
 	var rating:FlxSprite;
 	var comboNums:FlxSpriteGroup;
 
@@ -99,12 +98,6 @@ class NoteOffsetState extends MusicBeatState {
 		comboNums = new FlxSpriteGroup();
 		comboNums.camera = camHUD;
 		add(comboNums);
-
-		combo = new FlxSprite(Paths.image('ratings/combo'));
-		combo.camera = camHUD;
-		combo.setGraphicSize(Std.int(combo.width * .7));
-		combo.updateHitbox();
-		add(combo);
 
 		var daLoop:Int = 0;
 		for (i in [for (_ in 0...FlxG.random.int(3, 4)) FlxG.random.int(0, 9)]) {
@@ -225,9 +218,6 @@ class NoteOffsetState extends MusicBeatState {
 		comboNums.screenCenter(Y).y += 80 - comboOffset[1][1];
 		comboNums.x = placement - 90 + comboOffset[1][0];
 
-		combo.screenCenter(Y).y -= comboOffset[2][1];
-		combo.x = placement + comboOffset[2][0];
-
 		reloadTexts();
 	}
 
@@ -244,7 +234,7 @@ class NoteOffsetState extends MusicBeatState {
 
 	function reloadTexts() {
 		var num:Int = 0;
-		for (i in ['Rating', 'Number', 'Combo']) {
+		for (i in ['Rating', 'Number']) {
 			if (onComboMenu) setDumbText(num, '$i Offset:', '[${comboOffset[num][0]}, ${comboOffset[num][1]}]');
 			else setDumbText(num, '', '');
 			num++;
@@ -266,7 +256,7 @@ class NoteOffsetState extends MusicBeatState {
 
 	var pussy:Bool = false;
 	function updateMode() {
-		for (i in 0...3) setObjectAlpha(i, onComboMenu ? 1 : .5);
+		for (i in 0...2) setObjectAlpha(i, onComboMenu ? 1 : .5);
 
 		var str2:String = '(Hold Accept to Switch)';
 		var str:String = onComboMenu ? 'Rating Pop-up Position' : 'Timing Offset';
@@ -307,7 +297,7 @@ class NoteOffsetState extends MusicBeatState {
 			if (holdingObject != -1 && (justpressed = (controls.RESET || (nativeHoldingObject ? FlxG.mouse.justReleased : controls.ACCEPT)))) {
 				if (nativeHoldingObject) mouse.setPosition(mousePointer.x, mousePointer.y);
 				modeConfigText.alpha = 1;
-				for (i in 0...3) {
+				for (i in 0...2) {
 					setDumbTextAlpha(i, 1);
 					setObjectAlpha(i, 1);
 				}
@@ -323,7 +313,7 @@ class NoteOffsetState extends MusicBeatState {
 				if (overlappedObj != -1) {
 					holdingObject = overlappedObj;
 					modeConfigText.alpha = .5;
-					for (i in 0...3) {
+					for (i in 0...2) {
 						setDumbTextAlpha(i, i == holdingObject ? 1 : .35);
 						setObjectAlpha(i, i == holdingObject ? 1 : .5);
 					}
@@ -354,7 +344,7 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	function setObjectAlpha(i:Int, alpha:Float) {
-		var obj:Null<FlxSprite> = i == 0 ? rating : (i == 2 ? combo : null);
+		var obj:Null<FlxSprite> = i == 0 ? rating : null;
 		if (obj != null) obj.alpha = alpha;
 		if (i == 1 && comboNums != null) for (v in comboNums) v.alpha = alpha;
 	}
@@ -362,7 +352,6 @@ class NoteOffsetState extends MusicBeatState {
 	function getOverlappedObject(pos:flixel.FlxObject):Int {
 		if (rating != null && rating.overlaps(pos)) return 0;
 		if (comboNums != null) for (v in comboNums) if (v.overlaps(pos)) return 1;
-		if (combo != null && combo.overlaps(pos)) return 2;
 		return -1;
 	}
 

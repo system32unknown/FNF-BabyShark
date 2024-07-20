@@ -843,6 +843,23 @@ class FunkinLua {
 		set("setHealthBarColors", (left:String, right:String) -> LuaUtils.setBarColors(game.healthBar, left, right));
 		set("setTimeBarColors", (left:String, right:String) -> LuaUtils.setBarColors(game.timeBar, left, right));
 
+		set("setPosition", (obj:String, ?x:Float = null, ?y:Float = null) -> {
+			var real:FlxSprite = game.getLuaObject(obj);
+			if(real != null) {
+				if(x != null) real.x = x;
+				if(y != null) real.y = y;
+				return true;
+			}
+
+			var object:FlxSprite = LuaUtils.getVarInstance(obj);
+			if(object != null) {
+				if(x != null) object.x = x;
+				if(y != null) object.y = y;
+				return true;
+			}
+			luaTrace("setPosition: Couldnt find object " + obj, false, false, FlxColor.RED);
+			return false;
+		});
 		set("setObjectCamera", function(obj:String, camera:String = '') {
 			var spr:FlxBasic = LuaUtils.getVarInstance(obj);
 			if (spr != null) {
@@ -938,6 +955,7 @@ class FunkinLua {
 
 		#if DISCORD_ALLOWED DiscordClient.addLuaCallbacks(this); #end
 		#if HSCRIPT_ALLOWED HScript.implement(this); #end
+		#if VIDEOS_ALLOWED VideoFunctions.implement(this); #end
 		#if TRANSLATIONS_ALLOWED Language.addLuaCallbacks(this); #end
 		#if flxanimate FlxAnimateFunctions.implement(this); #end
 		ReflectionFunctions.implement(this);

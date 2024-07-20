@@ -67,6 +67,7 @@ import flixel.input.keyboard.FlxKey;
 	public var altDiscordImg:Bool = false;
 	public var altDiscordImgCount:Int = 0;
 	public var autoPausePlayState:Bool = true;
+	public var lightStrum:Bool = true;
 	public var hitsoundTypes:String = 'Tick';
 	public var checkForUpdates:Bool = true;
 	public var unlockedCharacters:Array<String> = ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'];
@@ -82,7 +83,7 @@ import flixel.input.keyboard.FlxKey;
 		'botplay' => false,
 	];
 
-	public var comboOffset:Array<Array<Int>> = [[0, 0], [0, 0], [0, 0]];
+	public var comboOffset:Array<Array<Int>> = [[0, 0], [0, 0]];
 	public var ratingOffset:Int = 0;
 
 	public var epicWindow:Int = 15;

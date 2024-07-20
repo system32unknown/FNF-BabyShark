@@ -41,7 +41,6 @@ class EditorPlayState extends MusicBeatSubstate {
 	var songLength:Float = 0;
 	var songSpeed:Float = 1;
 	
-	var showCombo:Bool = true;
 	var showComboNum:Bool = true;
 	var showRating:Bool = true;
 
@@ -389,7 +388,6 @@ class EditorPlayState extends MusicBeatSubstate {
 	function cachePopUpScore() {
 		for (rating in ratingsData) Paths.image('ratings/${rating.image}');
 		for (i in 0...10) Paths.image('number/num$i');
-		Paths.image('ratings/combo');
 	}
 
 	function popUpScore(note:Note = null):Void {
@@ -407,7 +405,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			updateScore();
 		}
 
-		if (!ClientPrefs.data.showComboCounter || (!showRating && !showCombo && !showComboNum)) return;
+		if (!ClientPrefs.data.showComboCounter || (!showRating && !showComboNum)) return;
 		if (!ClientPrefs.data.comboStacking) comboGroup.forEachAlive((spr:FlxSprite) -> FlxTween.globalManager.completeTweensOf(spr));
 
 		final placement:Float = FlxG.width * .35;
@@ -432,31 +430,12 @@ class EditorPlayState extends MusicBeatSubstate {
 			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 
-		var comboSpr:FlxSprite = null;
-		if (showCombo && combo >= 10) {
-			comboSpr = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image('ratings/combo'));
-			comboSpr.screenCenter(Y).y -= comboOffset[2][1];
-			comboSpr.x = placement + comboOffset[2][0];
-	
-			comboSpr.velocity.set(FlxG.random.int(1, 10) * playbackRate, -FlxG.random.int(140, 160) * playbackRate);
-			comboSpr.acceleration.set(playbackRate * playbackRate, FlxG.random.int(200, 300) * playbackRate * playbackRate);
-			comboSpr.antialiasing = antialias;
-			comboSpr.setGraphicSize(comboSpr.width * mult);
-			comboSpr.updateHitbox();
-			comboSpr.ID = comboGroup.ID++;
-
-			comboGroup.add(comboSpr);
-			FlxTween.tween(comboSpr, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {comboSpr.kill(); comboSpr.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
-		}
-
 		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
 			mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
 			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 			mstimingTxt.text = '${MathUtil.truncateFloat(noteDiff / playbackRate)}ms';
 			mstimingTxt.color = SpriteUtil.dominantColor(rating);
-
-			var comboShowSpr:FlxSprite = (showCombo && combo >= 10 ? comboSpr : rating);
-			mstimingTxt.setPosition(comboShowSpr.x + 100, comboShowSpr.y + (showCombo && combo >= 10 ? 80 : 100));
+			mstimingTxt.setPosition(rating.x + 100, rating.y + 100);
 			mstimingTxt.updateHitbox();
 			mstimingTxt.ID = comboGroup.ID++;
 			comboGroup.add(mstimingTxt);
