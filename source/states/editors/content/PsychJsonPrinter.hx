@@ -1,6 +1,5 @@
 package states.editors.content;
 
-import haxe.format.JsonPrinter;
 import haxe.ds.StringMap;
 
 /**
@@ -8,7 +7,7 @@ import haxe.ds.StringMap;
  *  This helps with readability in my opinion
  *      -Shadow Mario
  */
-class PsychJsonPrinter extends JsonPrinter {
+class PsychJsonPrinter extends haxe.format.JsonPrinter {
 	var _ignoreTab:Array<String> = [];
 	public static function print(o:Dynamic, ?ignoreTab:Array<String>):String {
 		var printer:PsychJsonPrinter = new PsychJsonPrinter(null, '\t');
@@ -44,8 +43,7 @@ class PsychJsonPrinter extends JsonPrinter {
 		for (i in 0...len) {
 			var f:String = fields[i];
 			var value = Reflect.field(v, f);
-			if (Reflect.isFunction(value))
-				continue;
+			if (Reflect.isFunction(value)) continue;
 			if (first) {
 				nind++;
 				first = false;

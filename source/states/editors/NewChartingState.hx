@@ -349,10 +349,10 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 	function openNewChart()
 	{
 		var song:SwagSong = {
-			song: 'Tutorial',
+			song: 'Test',
 			notes: [],
 			events: [],
-			bpm: 100,
+			bpm: 150,
 			needsVoices: true,
 			speed: 1,
 			offset: 0,
@@ -368,8 +368,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		loadChart(song);
 	}
 
-	function prepareReload()
-	{
+	function prepareReload() {
 		updateJsonData();
 		updateHeads(true);
 		loadMusic();
@@ -383,8 +382,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		forceDataUpdate = true;
 	}
 
-	function onChartLoaded()
-	{
+	function onChartLoaded() {
 		if(PlayState.SONG == null) return;
 
 		// SONG TAB
@@ -1640,9 +1638,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 					}
 					if(noteTextureInputText.text.trim().length > 0) showOutput('Reloaded notes to: "$textureLoad"');
 					else showOutput('Reloaded notes to default texture');
-					
-				}
-				else showOutput('ERROR: "$textureLoad" not found.', true);
+				} else showOutput('ERROR: "$textureLoad" not found.', true);
 			}
 		};
 
@@ -2238,12 +2234,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 					
 					if(!ignoreProgressCheckBox.checked) openSubState(new Prompt('Warning: Any unsaved progress\nwill be lost.', func));
 					else func();
-				}
-				catch(e:Exception)
-				{
-					showOutput('Error: ${e.message}');
-					trace(e.stack);
-				}
+				} catch(e:Exception) showOutput('Error: ${e.message}', true);
 			});
 		}, btnWid);
 		btn.text.alignment = LEFT;
@@ -2302,8 +2293,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 							});
 							btn.normalStyle.bgColor = FlxColor.RED;
 							btn.normalStyle.textColor = FlxColor.WHITE;
-							btn.screenCenter(X);
-							btn.x -= 125;
+							btn.screenCenter(X).x -= 125;
 							btn.cameras = state.cameras;
 							state.add(btn);
 							
@@ -2321,18 +2311,12 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 							state.add(btn);
 					
 							var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', state.close);
-							btn.screenCenter(X);
-							btn.x += 125;
+							btn.screenCenter(X).x += 125;
 							btn.cameras = state.cameras;
 							state.add(btn);
 						}
 					));
-				}
-				catch(e:Exception)
-				{
-					showOutput('Error: ${e.message}');
-					trace(e.stack);
-				}
+				} catch(e:Exception) showOutput('Error: ${e.message}', true);
 			});
 		}, btnWid);
 		btn.text.alignment = LEFT;
@@ -2389,10 +2373,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 						loadChart(reloadedChart);
 						prepareReload();
 						showOutput('Chart reloaded successfully!');
-					} catch(e:Exception) {
-						showOutput('Error: ${e.message}');
-						trace(e.stack);
-					}
+					} catch(e:Exception) showOutput('Error: ${e.message}', true);
 				} else showOutput('You must save/load a Chart first to Reload it!', true);
 			}
 
@@ -2469,12 +2450,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 							state.add(charterInput);
 						}
 					));
-				}
-				catch(e:Exception)
-				{
-					showOutput('Error: ${e.message}', true);
-					trace(e.stack);
-				}
+				} catch(e:Exception) showOutput('Error: ${e.message}', true);
 			});
 		}, btnWid);
 		btn.text.alignment = LEFT;
@@ -2570,11 +2546,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 										});
 									});
 								} else showOutput('Error: You need atleast one difficulty to export.', true);
-							}
-							catch(e:Exception) {
-								showOutput('Error: ${e.message}', true);
-								trace(e.stack);
-							}
+							} catch(e:Exception) showOutput('Error: ${e.message}', true);
 							state.close();
 						});
 						btn.normalStyle.bgColor = FlxColor.GREEN;
@@ -2648,8 +2620,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 				fileDialog.open('metadata.json', 'Open a V-Slice Metadata file', function()
 				{
 					var metadata:VSliceMetadata = cast Json.parse(fileDialog.data);
-					if(metadata == null || metadata.version == null || metadata.playData == null || metadata.songName == null ||
-						metadata.playData.difficulties == null || metadata.timeChanges == null || metadata.timeChanges.length < 1)
+					if(metadata == null || metadata.version == null || metadata.playData == null || metadata.songName == null || metadata.playData.difficulties == null || metadata.timeChanges == null || metadata.timeChanges.length < 1)
 					{
 						showOutput('Error: File loaded is not a valid FNF V-Slice metadata.', true);
 						return;
@@ -2684,27 +2655,18 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 	
 									if(pack.events != null)
 									{
-										overwriteCheck(path + 'events.json', 'events.json', PsychJsonPrinter.print(pack.events, ['events']), function()
-										{
+										overwriteCheck(path + 'events.json', 'events.json', PsychJsonPrinter.print(pack.events, ['events']), function() {
 											if(overwriteSavedSomething)
 												showOutput('Files saved successfully to: ${fileDialog.path}!');
 										}, true);
-									}
-									else if(overwriteSavedSomething)
-										showOutput('Files saved successfully to: ${fileDialog.path}!');
+									} else if(overwriteSavedSomething) showOutput('Files saved successfully to: ${fileDialog.path}!');
 								}
 								
 								overwriteSavedSomething = false;
 								nextChart();
 							});
-						}
-						else showOutput('Error: No difficulties found.', true);
-					}
-					catch(e:Exception)
-					{
-						showOutput('Error: ${e.message}');
-						trace(e.stack);
-					}
+						} else showOutput('Error: No difficulties found.', true);
+					} catch(e:Exception) showOutput('Error: ${e.message}', true);
 				});
 			});
 		}, btnWid);
@@ -2743,14 +2705,8 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 						Song.convert(loadedChart);
 						File.saveContent(fileDialog.path, PsychJsonPrinter.print(loadedChart, ['sectionNotes', 'events']));
 						showOutput('Updated "$filePath" from format "$fmt" to "psych_v1" successfully!');
-					}
-					else showOutput('Chart is already up-to-date! Format: "$fmt"');
-				}
-				catch(e:Exception)
-				{
-					showOutput('Error: ${e.message}');
-					trace(e.stack);
-				}
+					} else showOutput('Chart is already up-to-date! Format: "$fmt"');
+				} catch(e:Exception) showOutput('Error: ${e.message}', true);
 			});
 		}, btnWid);
 		btn.text.alignment = LEFT;
@@ -2970,8 +2926,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 				var btnY = 390;
 				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Light', changeTheme.bind(LIGHT));
-				btn.screenCenter(X);
-				btn.x -= 125;
+				btn.screenCenter(X).x -= 125;
 				btn.cameras = state.cameras;
 				state.add(btn);
 				
@@ -2981,8 +2936,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 				state.add(btn);
 			
 				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Dark', changeTheme.bind(DARK));
-				btn.screenCenter(X);
-				btn.x += 125;
+				btn.screenCenter(X).x += 125;
 				btn.cameras = state.cameras;
 				state.add(btn);
 			}));
@@ -3051,7 +3005,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 				var newPath:String = fileDialog.path;
 				Song.chartPath = newPath.replace('/', '\\');
 				showOutput('Chart saved successfully to: $newPath');
-			}, null, () -> showOutput('Error on saving chart!'));
+			}, null, () -> showOutput('Error on saving chart!', true));
 		}
 	}
 	

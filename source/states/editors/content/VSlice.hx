@@ -2,7 +2,6 @@ package states.editors.content;
 
 import backend.Song;
 import backend.Section;
-import backend.Difficulty;
 
 import flixel.util.FlxSort;
 
@@ -197,7 +196,6 @@ class VSlice {
 			}
 
 			var noteSec:Int = 0;
-			var time:Float = 0;
 			for (note in notes) {
 				while(noteSec + 1 < sectionTimes.length && sectionTimes[noteSec + 1] <= note.t)
 					noteSec++;
@@ -334,8 +332,7 @@ class VSlice {
 		var notesMap:Map<String, Array<VSliceNote>> = [];
 		if(difficultyName == null) { //Fill all difficulties to attempt to prevent the song from not showing up on Base Game
 			var diffs:Array<String> = Difficulty.list.copy();
-			for (num => diff in diffs)
-			{
+			for (num => diff in diffs) {
 				diffs[num] = diff = Paths.formatToSongPath(diff);
 				scrollSpeed.set(diff, songData.speed);
 				notesMap.set(diff, notes);

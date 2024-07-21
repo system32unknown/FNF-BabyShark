@@ -11,8 +11,6 @@ class MetaNote extends Note {
 	public var sustainSprite:FlxSprite;
 	public var chartY:Float = 0;
 
-	//public var __estimatedStep:Float; //Only used during some calculations
-
 	public function new(time:Float, data:Int, songData:Array<Dynamic>) {
 		super(time, data, null, false, true);
 		this.songData = songData;
@@ -66,7 +64,7 @@ class MetaNote extends Note {
 	}
 
 	var _noteTypeText:FlxText;
-	public function findNoteTypeText(num:Int) {
+	public function findNoteTypeText(num:Int):FlxText {
 		var txt:FlxText = null;
 		if(num != 0) {
 			if(!noteTypeTexts.exists(num)) {
@@ -78,24 +76,21 @@ class MetaNote extends Note {
 				txt.borderColor = FlxColor.BLACK;
 				txt.scrollFactor.x = 0;
 				noteTypeTexts.set(num, txt);
-			}
-			else txt = noteTypeTexts.get(num);
+			} else txt = noteTypeTexts.get(num);
 		}
 		return (_noteTypeText = txt);
 	}
 
 	override function draw() {
 		if(sustainSprite != null && sustainSprite.exists && sustainSprite.visible && sustainLength > 0) {
-			sustainSprite.x = this.x + this.width / 2 - sustainSprite.width / 2;
-			sustainSprite.y = this.y + this.height / 2;
+			sustainSprite.setPosition(this.x + this.width / 2 - sustainSprite.width / 2, this.y + this.height / 2);
 			sustainSprite.alpha = this.alpha;
 			sustainSprite.draw();
 		}
 		super.draw();
 
 		if(_noteTypeText != null && _noteTypeText.exists && _noteTypeText.visible) {
-			_noteTypeText.x = this.x + this.width / 2 - _noteTypeText.width / 2;
-			_noteTypeText.y = this.y + this.height / 2 - _noteTypeText.height / 2;
+			_noteTypeText.setPosition(this.x + this.width / 2 - _noteTypeText.width / 2, this.y + this.height / 2 - _noteTypeText.height / 2);
 			_noteTypeText.alpha = this.alpha;
 			_noteTypeText.draw();
 		}

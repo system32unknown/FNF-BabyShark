@@ -34,14 +34,12 @@ class Prompt extends BasePrompt {
 		});
 		btn.normalStyle.bgColor = FlxColor.RED;
 		btn.normalStyle.textColor = FlxColor.WHITE;
-		btn.screenCenter(X);
-		btn.x -= 100;
+		btn.screenCenter(X).x -= 100;
 		btn.cameras = cameras;
 		add(btn);
 
 		var btn:PsychUIButton = new PsychUIButton(0, btnY, _noTxt, close);
-		btn.screenCenter(X);
-		btn.x += 100;
+		btn.screenCenter(X).x += 100;
 		btn.cameras = cameras;
 		add(btn);
 	}

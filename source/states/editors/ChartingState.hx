@@ -139,10 +139,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			Difficulty.resetList();
 
 			_song = {
-				song: 'Tutorial',
+				song: 'Test',
 				notes: [],
 				events: [],
-				bpm: 100.,
+				bpm: 150,
 				needsVoices: true,
 				player1: 'bf',
 				player2: 'gf',
