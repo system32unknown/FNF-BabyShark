@@ -373,7 +373,33 @@ class LoadingState extends MusicBeatState {
 	inline static function preloadCharacter(char:String) {
 		try {
 			var character:Dynamic = Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(Paths.getPath('characters/$char.json')));
-			imagesToPrepare.push(character.image);
+
+			var isAnimateAtlas:Bool = false;
+			var img:String = character.image;
+			img = img.trim();
+			#if flxanimate
+			var animToFind:String = Paths.getPath('images/$img/Animation.json');
+			if (#if MODS_ALLOWED FileSystem.exists(animToFind) || #end Assets.exists(animToFind))
+				isAnimateAtlas = true;
+			#end
+
+			if(!isAnimateAtlas) {
+				var split:Array<String> = img.split(',');
+				for (file in split) imagesToPrepare.push(file.trim());
+			}
+			#if flxanimate
+			else {
+				for (i in 0...10) {
+					var st:String = '$i';
+					if(i == 0) st = '';
+
+					if(Paths.fileExists('images/$img/spritemap$st.png', IMAGE)) {
+						imagesToPrepare.push('$img/spritemap$st');
+						break;
+					}
+				}
+			}
+			#end
 		} catch(e:Dynamic) Logs.trace("ERROR PRELOADING CHARACTER: " + e, ERROR);
 	}
 }
