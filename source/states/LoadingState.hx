@@ -1,6 +1,7 @@
 package states;
 
 import haxe.Json;
+import lime.utils.Assets;
 import openfl.display.BitmapData;
 import openfl.utils.Assets as OpenFlAssets;
 import flixel.util.typeLimit.NextState;
