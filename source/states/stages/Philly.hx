@@ -64,18 +64,7 @@ class Philly extends BaseStage
 
 	override function update(elapsed:Float) {
 		phillyWindow.alpha -= (Conductor.crochet / 1000) * elapsed * 1.5;
-		if(phillyGlowParticles != null) {
-			var i:Int = phillyGlowParticles.members.length - 1;
-			while (i > 0) {
-				var particle = phillyGlowParticles.members[i];
-				if(particle.alpha <= 0) {
-					particle.kill();
-					phillyGlowParticles.remove(particle, true);
-					particle.destroy();
-				}
-				--i;
-			}
-		}
+		if(phillyGlowParticles != null) phillyGlowParticles.forEachAlive((particle:PhillyGlowParticle) -> if(particle.alpha <= 0) particle.kill());
 	}
 
 	override function beatHit() {
@@ -154,7 +143,9 @@ class Philly extends BaseStage
 							var color:FlxColor = phillyLightsColors[curLightEvent];
 							for (j in 0...3) {
 								for (i in 0...particlesNum) {
-									var particle:PhillyGlowParticle = new PhillyGlowParticle(-400 + width * i + FlxG.random.float(-width / 5, width / 5), phillyGlowGradient.originalY + 200 + (FlxG.random.float(0, 125) + j * 40), color);
+									var particle:PhillyGlowParticle = phillyGlowParticles.recycle(PhillyGlowParticle);
+									particle.setPosition(-400 + width * i + FlxG.random.float(-width / 5, width / 5), phillyGlowGradient.originalY + 200 + (FlxG.random.float(0, 125) + j * 40));
+									particle.color = color;
 									phillyGlowParticles.add(particle);
 								}
 							}

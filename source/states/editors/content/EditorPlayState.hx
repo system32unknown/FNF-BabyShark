@@ -589,7 +589,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {
 		var spr:StrumNote = (isDad ? opponentStrums : playerStrums).members[id];
-		if(spr != null) {
+		if(spr != null && ClientPrefs.data.lightStrum) {
 			spr.playAnim('confirm', true);
 			spr.resetAnim = time / playbackRate;
 		}

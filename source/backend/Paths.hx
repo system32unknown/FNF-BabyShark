@@ -43,7 +43,6 @@ class Paths {
 
 		for (key => asset in currentTrackedSounds) {
 			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && asset != null) {
-				asset.close();
 				Assets.cache.clear(key);
 				currentTrackedSounds.remove(key);
 			}
@@ -52,7 +51,6 @@ class Paths {
 		localTrackedAssets = [];
 		OpenFlAssets.cache.clear("songs");
 		MemoryUtil.clearMajor();
-		clearUnusedMemory();
 	}
 
 	inline static function destroyGraphic(graphic:FlxGraphic) {

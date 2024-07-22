@@ -355,7 +355,6 @@ class FunkinLua {
 
 		set("getObjectOrder", function(obj:String, ?group:String = null) {
 			var obj:FlxBasic = LuaUtils.getVarInstance(obj);
-
 			if(obj != null) {
 				var groupObj:Dynamic = LuaUtils.getObjectDirectly(group);
 				if (groupObj == null) groupObj = LuaUtils.getInstance();
@@ -366,7 +365,6 @@ class FunkinLua {
 		});
 		set("setObjectOrder", function(obj:String, position:Int, ?group:String = null) {
 			var obj:FlxBasic = LuaUtils.getVarInstance(obj);
-
 			if (obj != null) {
 				var groupObj:Dynamic = LuaUtils.getObjectDirectly(group);
 				if (groupObj == null) groupObj = LuaUtils.getInstance();

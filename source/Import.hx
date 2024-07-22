@@ -36,7 +36,10 @@ import sys.*;
 import sys.io.*;
 #end
 
-#if flxanimate import flxanimate.*; #end
+#if flxanimate 
+import flxanimate.*;
+import flxanimate.PsychFlxAnimate as FlxAnimate;
+#end
 
 import flixel.FlxG;
 import flixel.FlxSprite;

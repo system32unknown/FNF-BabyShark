@@ -338,28 +338,17 @@ class LoadingState extends MusicBeatState {
 					#if TRANSLATIONS_ALLOWED requestKey = Language.getFileTranslation(requestKey); #end
 					if(requestKey.lastIndexOf('.') < 0) requestKey += '.png';
 
-					var bitmap:BitmapData;
-					var file:String = Paths.getPath(requestKey, IMAGE);
-					if (Paths.currentTrackedAssets.exists(file)) {
-						mutex.release();
-						loaded++;
-						return;
-					} else if (!OpenFlAssets.exists(file, IMAGE)) {
-						Logs.trace('no such image $image exists', WARNING);
-						mutex.release();
-						loaded++;
-						return;
-					} else bitmap = OpenFlAssets.getBitmapData(file);
-					mutex.release();
-
-					if (bitmap != null) {
-						requestedBitmaps.set(file, bitmap);
-						originalBitmapKeys.set(file, requestKey);
-					} else Logs.trace('oh no the image is null NOOOO ($image)', WARNING);
-				} catch(e:Dynamic) {
-					mutex.release();
-					Logs.trace('ERROR! fail on preloading image $image', ERROR);
-				}
+					if (!Paths.currentTrackedAssets.exists(requestKey)) {
+						var bitmap:BitmapData = null;
+						var file:String = Paths.getPath(requestKey, IMAGE);
+						if (#if sys FileSystem.exists(file) || #end OpenFlAssets.exists(file, IMAGE)){
+							bitmap = #if sys BitmapData.fromFile #else OpenFlAssets.getBitmapData #end(file);
+							requestedBitmaps.set(file, bitmap);
+							originalBitmapKeys.set(file, requestKey);
+						} else Logs.trace('no such image $image exists', WARNING);
+					}
+				} catch(e:haxe.Exception) Logs.trace('fail on preloading image $image', ERROR);
+				mutex.release();
 				loaded++;
 			});
 	}
