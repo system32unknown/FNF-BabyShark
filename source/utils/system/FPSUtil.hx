@@ -4,12 +4,11 @@ class FPSUtil {
     @:noCompletion var times:Array<Float>;
 	@:noCompletion var curCount(default, null):Int;
 
-    public var totalFPS(default, null):Float;
 	public var curFPS(default, null):Float;
 	public var fpsInterval:Float;
 
     public function new(fpsInterval:Float = 1000) {
-		totalFPS = curFPS = curCount = 0;
+		curFPS = curCount = 0;
 		this.fpsInterval = fpsInterval;
 		times = [];
 	}
@@ -21,7 +20,6 @@ class FPSUtil {
 
 		curCount = times.length;
 		curFPS = Math.min(FlxG.drawFramerate, curCount);
-		totalFPS = Math.round(curFPS + curCount / 8);
     }
 
 	public static function getFPSAdjust(type:String, fps:Float):Float {
