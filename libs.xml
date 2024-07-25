@@ -17,6 +17,6 @@
 	<lib name="tjson"/>
 
 	<!-- Audio Visualizers -->
-	<lib name="funkin.vis" url="https://github.com/FunkinCrew/funkVis"/>
-	<lib name="grig.audio" url="https://gitlab.com/haxe-grig/grig.audio.git"/>
+	<git name="funkin.vis" url="https://github.com/FunkinCrew/funkVis"/>
+	<git name="grig.audio" url="https://gitlab.com/haxe-grig/grig.audio.git"/>
 </libraries>
