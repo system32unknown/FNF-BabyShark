@@ -15,4 +15,8 @@
 	<git name="linc_luajit" url="https://github.com/superpowers04/linc_luajit"/>
 	<lib name="hxvlc"/>
 	<lib name="tjson"/>
+
+	<!-- Audio Visualizers -->
+	<lib name="funkin.vis" url="https://github.com/FunkinCrew/funkVis"/>
+	<lib name="grig.audio" url="https://gitlab.com/haxe-grig/grig.audio.git"/>
 </libraries>

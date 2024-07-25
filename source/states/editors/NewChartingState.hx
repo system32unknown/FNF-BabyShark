@@ -11,6 +11,7 @@ import states.editors.content.Prompt;
 import states.editors.content.*;
 
 import backend.Song;
+import backend.NoteTypesConfig;
 import data.StageData;
 
 import objects.Character;
@@ -129,7 +130,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		bg.scrollFactor.set();
 		add(bg);
 		
-		changeTheme(chartEditorSave.data.theme != null ? chartEditorSave.data.theme : DEFAULT, false);
+		changeTheme(chartEditorSave.data.theme ?? DEFAULT, false);
 
 		var tipText:FlxText = new FlxText(FlxG.width - 210, FlxG.height - 30, 200, 'Press F1 for Help', 20);
 		tipText.cameras = [camUI];
@@ -1469,11 +1470,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		var objY:Int = 25;
 
 		eventsList = [];
-		var eventFiles:Array<String> = loadFileList('custom_events/', ['.txt']);
-		for (file in eventFiles) {
-			var desc:String = Paths.getTextFromFile('custom_events/$file.txt');
-			eventsList.push([file, desc]);
-		}
+		for (file in loadFileList('custom_events/', ['.txt'])) eventsList.push([file, Paths.getTextFromFile('custom_events/$file.txt')]);
 
 		for (id => event in defaultEvents) if(!eventsList.contains(event)) eventsList.insert(id, event);
 		
@@ -1530,7 +1527,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 				}
 			});
 		}, 20);
-		var addButton:PsychUIButton = new PsychUIButton(objX2 + 30, objY, '+', function() {
+		var addButton:PsychUIButton = new PsychUIButton(objX2 + 30, objY, '+', () -> {
 			genericEventButton((event:EventMetaNote) -> {
 				event.events.push([eventsList[Std.int(Math.max(eventDropDown.selectedIndex, 0))][0], value1InputText.text, value2InputText.text]);
 				event.updateEventText();
@@ -1718,11 +1715,9 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		};
 
 		beatsPerSecStepper = new PsychUINumericStepper(objX + 150, objY, 1, 4, 1, 7, 2);
-		beatsPerSecStepper.onValueChange = function()
-		{
+		beatsPerSecStepper.onValueChange = () -> {
 			var sec = getCurChartSection();
-			if(sec != null)
-			{
+			if(sec != null) {
 				var oldTimes:Array<Float> = cachedSectionTimes.copy();
 				sec.sectionBeats = beatsPerSecStepper.value;
 				adaptNotesToNewTimes(oldTimes);
@@ -1732,22 +1727,17 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		objY += 40;
 		var copyButton:PsychUIButton = new PsychUIButton(objX, objY, 'Copy Section', () -> showOutput('Feature not implemented yet!', true)); //TO DO: Add functionality
 		var pasteButton:PsychUIButton = new PsychUIButton(objX + 100, objY, 'Paste Section', () -> showOutput('Feature not implemented yet!', true)); //TO DO: Add functionality
-		var clearButton:PsychUIButton = new PsychUIButton(objX + 200, objY, 'Clear', function()
-		{
-			if(affectNotes.checked)
-			{
-				for (note in curRenderedNotes)
-				{
+		var clearButton:PsychUIButton = new PsychUIButton(objX + 200, objY, 'Clear', () -> {
+			if(affectNotes.checked) {
+				for (note in curRenderedNotes) {
 					if(note == null || note.isEvent) continue;
 
 					selectedNotes.remove(note);
 					notes.remove(note);
 				}
 			}
-			if(affectEvents.checked)
-			{
-				for (event in curRenderedNotes)
-				{
+			if(affectEvents.checked) {
+				for (event in curRenderedNotes) {
 					if(event == null || !event.isEvent) continue;
 
 					selectedNotes.remove(event);
@@ -1829,17 +1819,15 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 	var opponentDropDown:PsychUIDropDownMenu;
 	var girlfriendDropDown:PsychUIDropDownMenu;
 	
-	function addSongTab()
-	{
+	function addSongTab() {
 		var tab_group:FlxSpriteGroup = mainBox.getTab('Song').menu;
-		var objX = 10;
-		var objY = 25;
+		var objX:Int = 10;
+		var objY:Int = 25;
 
 		songNameInputText = new PsychUIInputText(objX, objY, 100, 'None', 8);
-		songNameInputText.onChange = function(old:String, cur:String) PlayState.SONG.song = cur;
+		songNameInputText.onChange = (old:String, cur:String) -> PlayState.SONG.song = cur;
 
-		allowVocalsCheckBox = new PsychUICheckBox(objX, objY + 20, 'Allow Vocals', 80, function()
-		{
+		allowVocalsCheckBox = new PsychUICheckBox(objX, objY + 20, 'Allow Vocals', 80, () -> {
 			PlayState.SONG.needsVoices = allowVocalsCheckBox.checked;
 			loadMusic();
 		});
@@ -1847,8 +1835,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		objY += 65;
 		bpmStepper = new PsychUINumericStepper(objX, objY, 1, 1, 1, 400, 3);
-		bpmStepper.onValueChange = function()
-		{
+		bpmStepper.onValueChange = () -> {
 			var oldTimes:Array<Float> = cachedSectionTimes.copy();
 			PlayState.SONG.bpm = bpmStepper.value;
 			adaptNotesToNewTimes(oldTimes);
@@ -1858,8 +1845,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		scrollSpeedStepper.onValueChange = () -> PlayState.SONG.speed = scrollSpeedStepper.value;
 
 		audioOffsetStepper = new PsychUINumericStepper(objX + 180, objY, 1, 0, -500, 500, 0);
-		audioOffsetStepper.onValueChange = () -> //TO DO: Implement in-game functionality
-		{
+		audioOffsetStepper.onValueChange = () -> { //TO DO: Implement in-game functionality
 			PlayState.SONG.offset = audioOffsetStepper.value;
 			Conductor.offset = audioOffsetStepper.value;
 		};
@@ -1870,26 +1856,22 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		tab_group.add(reloadAudioButton);
 		
 		objY += 40;
-		playerDropDown = new PsychUIDropDownMenu(objX, objY, [''], function(id:Int, character:String)
-		{
+		playerDropDown = new PsychUIDropDownMenu(objX, objY, [''], (id:Int, character:String) -> {
 			PlayState.SONG.player1 = character;
 			trace('selected $character');
 		});
-		stageDropDown = new PsychUIDropDownMenu(objX + 140, objY, [''], function(id:Int, stage:String)
-		{
+		stageDropDown = new PsychUIDropDownMenu(objX + 140, objY, [''], (id:Int, stage:String) -> {
 			PlayState.SONG.stage = stage;
 			StageData.loadDirectory(PlayState.SONG);
 			trace('selected $stage');
 		});
 		
-		opponentDropDown = new PsychUIDropDownMenu(objX, objY + 40, [''], function(id:Int, character:String)
-		{
+		opponentDropDown = new PsychUIDropDownMenu(objX, objY + 40, [''], (id:Int, character:String) -> {
 			PlayState.SONG.player2 = character;
 			trace('selected $character');
 		});
 		
-		girlfriendDropDown = new PsychUIDropDownMenu(objX, objY + 80, [''], function(id:Int, character:String)
-		{
+		girlfriendDropDown = new PsychUIDropDownMenu(objX, objY + 80, [''], (id:Int, character:String) -> {
 			PlayState.SONG.gfVersion = character;
 			trace('selected $character');
 		});
@@ -1912,13 +1894,12 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		tab_group.add(playerDropDown);
 	}
 
-	function addFileTab()
-	{
-		var tab = upperBox.getTab('File');
+	function addFileTab() {
+		var tab:PsychUITab = upperBox.getTab('File');
 		var tab_group:FlxSpriteGroup = tab.menu;
-		var btnX = tab.x - upperBox.x;
-		var btnY = 1;
-		var btnWid = Std.int(tab.width);
+		var btnX:Float = tab.x - upperBox.x;
+		var btnY:Int = 1;
+		var btnWid:Int = Std.int(tab.width);
 
 		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  New', () -> {
 			var func:Void->Void = () -> {
@@ -1939,12 +1920,11 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 			upperBox.isMinimized = true;
 			upperBox.bg.visible = false;
 	
-			fileDialog.open(function() {
+			fileDialog.open(() -> {
 				try {
 					var filePath:String = fileDialog.path.replace('/', '\\');
 					var loadedChart:SwagSong = Song.parseJSON(fileDialog.data, filePath.substr(filePath.lastIndexOf('\\')));
-					if(loadedChart == null || !Reflect.hasField(loadedChart, 'song')) //Check if chart is ACTUALLY a chart and valid
-					{
+					if(loadedChart == null || !Reflect.hasField(loadedChart, 'song')) { //Check if chart is ACTUALLY a chart and valid
 						showOutput('Error: File loaded is not a Psych Engine/FNF 0.2.x.x chart.', true);
 						return;
 					}
@@ -1975,71 +1955,60 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 			upperBox.isMinimized = true;
 			upperBox.bg.visible = false;
 
-			fileDialog.open(function() {
+			fileDialog.open(() -> {
 				try {
 					var filePath:String = fileDialog.path.replace('/', '\\');
 					var eventsFile:SwagSong = Song.parseJSON(fileDialog.data, filePath.substr(filePath.lastIndexOf('\\')));
-					if(eventsFile == null || Reflect.hasField(eventsFile, 'scrollSpeed') || eventsFile.events == null)
-					{
+					if(eventsFile == null || Reflect.hasField(eventsFile, 'scrollSpeed') || eventsFile.events == null) {
 						showOutput('Error: File loaded is not a Psych Engine chart/events file.', true);
 						return;
 					}
 
 					var loadedEvents:Array<Dynamic> = eventsFile.events;
-					if(loadedEvents.length < 1)
-					{
-						showOutput('Events file loaded is empty.');
+					if(loadedEvents.length < 1) {
+						showOutput('Events file loaded is empty.', true);
 						return;
 					}
 
-					openSubState(new BasePrompt('Events Found! Choose an action.',
-						function(state:BasePrompt)
-						{
-							var btnY = 390;
-							var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Replace All', function()
-							{
-								for (event in events)
-								{
-									if(event != null)
-									{
-										event.destroy();
-										selectedNotes.remove(event);
-									}
+					openSubState(new BasePrompt('Events Found! Choose an action.', (state:BasePrompt) -> {
+						var btnY:Int = 390;
+						var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Replace All', () -> {
+							for (event in events) {
+								if(event != null) {
+									event.destroy();
+									selectedNotes.remove(event);
 								}
-								events = [];
+							}
+							events = [];
 
-								for (event in loadedEvents)
-									events.push(createEvent(event));
+							for (event in loadedEvents) events.push(createEvent(event));
 
-								softReloadNotes();
-								state.close();
-								showOutput('Events loaded successfully!');
-							});
-							btn.normalStyle.bgColor = FlxColor.RED;
-							btn.normalStyle.textColor = FlxColor.WHITE;
-							btn.screenCenter(X).x -= 125;
-							btn.cameras = state.cameras;
-							state.add(btn);
-							
-							var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Add', function()
-							{
-								for (event in loadedEvents)
-									events.push(createEvent(event));
+							softReloadNotes();
+							state.close();
+							showOutput('Events loaded successfully!');
+						});
+						btn.normalStyle.bgColor = FlxColor.RED;
+						btn.normalStyle.textColor = FlxColor.WHITE;
+						btn.screenCenter(X).x -= 125;
+						btn.cameras = state.cameras;
+						state.add(btn);
+						
+						var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Add', () -> {
+							for (event in loadedEvents) events.push(createEvent(event));
 
-								softReloadNotes();
-								state.close();
-								showOutput('Events added successfully!');
-							});
-							btn.screenCenter(X);
-							btn.cameras = state.cameras;
-							state.add(btn);
+							softReloadNotes();
+							state.close();
+							showOutput('Events added successfully!');
+						});
+						btn.screenCenter(X);
+						btn.cameras = state.cameras;
+						state.add(btn);
 					
-							var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', state.close);
-							btn.screenCenter(X).x += 125;
-							btn.cameras = state.cameras;
-							state.add(btn);
-						}
-					));
+						var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', state.close);
+						btn.screenCenter(X).x += 125;
+						btn.cameras = state.cameras;
+						state.add(btn);
+					}));
 				} catch(e:Exception) showOutput('Error: ${e.message}', true);
 			});
 		}, btnWid);
@@ -2048,8 +2017,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		btnY++;
 		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Save', function()
-		{
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Save', () -> {
 			if(!fileDialog.completed) return;
 			upperBox.isMinimized = true;
 			upperBox.bg.visible = false;
@@ -2060,8 +2028,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		tab_group.add(btn);
 
 		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Save as...', function()
-		{
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Save as...', () -> {
 			if(!fileDialog.completed) return;
 			upperBox.isMinimized = true;
 			upperBox.bg.visible = false;
@@ -2109,14 +2076,12 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		
 		btnY++;
 		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Save (V-Slice)...', function()
-		{
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Save (V-Slice)...', () -> {
 			if(!fileDialog.completed) return;
 			upperBox.isMinimized = true;
 			upperBox.bg.visible = false;
 
-			fileDialog.openDirectory('Save V-Slice Chart/Metadata JSONs', function()
-			{
+			fileDialog.openDirectory('Save V-Slice Chart/Metadata JSONs', () -> {
 				try {
 					var path:String = fileDialog.path.replace('/', '\\');
 
@@ -2129,146 +2094,14 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 					updateChartData();
 					var pack:VSlicePackage = VSlice.export(PlayState.SONG);
 
-					openSubState(new BasePrompt('Metadata',
-						function(state:BasePrompt)
-						{
-							var btnX = 640;
-							var btnY = 400;
-							var btn:PsychUIButton = new PsychUIButton(btnX, btnY, 'Save', () -> {
-								overwriteSavedSomething = false;
-								overwriteCheck(chartFile, '$chartName-chart.json', PsychJsonPrinter.print(pack.chart, ['events', 'notes', 'scrollSpeed']), () -> {
-									overwriteCheck(metadataFile, '$chartName-metadata.json', PsychJsonPrinter.print(pack.metadata, ['characters', 'difficulties', 'timeChanges']), () -> {
-										if(overwriteSavedSomething)
-											showOutput('Files saved successfully to: $path!');
-									});
-								});
-								state.close();
+					openSubState(new BasePrompt('Metadata', (state:BasePrompt) -> {
+						var btnX:Int = 640;
+						var btnY:Int = 400;
+						var btn:PsychUIButton = new PsychUIButton(btnX, btnY, 'Save', () -> {
+							overwriteSavedSomething = false;
+							overwriteCheck(chartFile, '$chartName-chart.json', PsychJsonPrinter.print(pack.chart, ['events', 'notes', 'scrollSpeed']), () -> {
+								overwriteCheck(metadataFile, '$chartName-metadata.json', PsychJsonPrinter.print(pack.metadata, ['characters', 'difficulties', 'timeChanges']), () -> if(overwriteSavedSomething) showOutput('Files saved successfully to: $path!'));
 							});
-							btn.normalStyle.bgColor = FlxColor.GREEN;
-							btn.normalStyle.textColor = FlxColor.WHITE;
-							btn.cameras = state.cameras;
-							state.add(btn);
-							
-							var btn:PsychUIButton = new PsychUIButton(btnX + 100, btnY, 'Cancel', state.close);
-							btn.cameras = state.cameras;
-							state.add(btn);
-							
-							var textX = FlxG.width / 2 - 155;
-							var textY = 360;
-							var artistInput:PsychUIInputText = new PsychUIInputText(textX, textY, 120, pack.metadata.artist, 8);
-							artistInput.cameras = state.cameras;
-							artistInput.onChange = function(old:String, cur:String) pack.metadata.artist = cur;
-
-							var charterInput:PsychUIInputText = new PsychUIInputText(textX + 190, textY, 120, pack.metadata.charter, 8);
-							charterInput.cameras = state.cameras;
-							charterInput.onChange = function(old:String, cur:String) pack.metadata.charter = cur;
-							
-							var artistTxt:FlxText = new FlxText(artistInput.x, artistInput.y - 15, 100, 'Artist/Composer:');
-							artistTxt.cameras = state.cameras;
-							var charterTxt:FlxText = new FlxText(charterInput.x, charterInput.y - 15, 100, 'Charter:');
-							charterTxt.cameras = state.cameras;
-							state.add(artistTxt);
-							state.add(charterTxt);
-							state.add(artistInput);
-							state.add(charterInput);
-						}
-					));
-				} catch(e:Exception) showOutput('Error: ${e.message}', true);
-			});
-		}, btnWid);
-		btn.text.alignment = LEFT;
-		tab_group.add(btn);
-
-		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Psych to V-Slice...', function()
-		{
-			if(!fileDialog.completed) return;
-			upperBox.isMinimized = true;
-			upperBox.bg.visible = false;
-
-			fileDialog.open('song.json', 'Open a Psych Engine Chart JSON', function()
-			{
-				var filePath:String = fileDialog.path.replace('/', '\\');
-				var loadedChart:SwagSong = Song.parseJSON(fileDialog.data, filePath.substr(filePath.lastIndexOf('\\')));
-				if(loadedChart == null || !Reflect.hasField(loadedChart, 'song')) //Check if chart is ACTUALLY a chart and valid
-				{
-					showOutput('Error: File loaded is not a Psych Engine 0.x.x/FNF 0.2.x.x chart.', true);
-					return;
-				}
-
-				var pack:VSlicePackage = VSlice.export(loadedChart);
-				if(pack.chart == null || pack.metadata == null)
-				{
-					showOutput('Error: Chart loaded is invalid.', true);
-					return;
-				}
-
-				openSubState(new BasePrompt('Metadata',
-					function(state:BasePrompt)
-					{
-						var songName:String = Paths.formatToSongPath(pack.metadata.songName);
-						var parentFolder:String = filePath.substring(0, filePath.lastIndexOf('\\') + 1);
-						var artistInput, charterInput, difficultiesInput:PsychUIInputText = null;
-
-						var btnX = 640;
-						var btnY = 400;
-						var btn:PsychUIButton = new PsychUIButton(btnX, btnY, 'Save', function()
-						{
-							try
-							{
-								var diffs:Array<String> = pack.metadata.playData.difficulties;
-								if(diffs != null && diffs.length > 0)
-								{
-									var diffsFound:Array<String> = [];
-									var defaultDiff:String = Paths.formatToSongPath(Difficulty.getDefault());
-									for (diff in diffs)
-									{
-										var diffPostfix:String = (diff != defaultDiff) ? '-$diff' : '';
-										var chartToFind:String = parentFolder + songName + diffPostfix + '.json';
-										if(FileSystem.exists(chartToFind))
-										{
-											var diffChart:SwagSong = Song.parseJSON(File.getContent(chartToFind), songName + diffPostfix);
-											if(diffChart != null)
-											{
-												var subpack:VSlicePackage = VSlice.export(diffChart);
-												var	diffSpeed:Null<Float> = subpack.chart.scrollSpeed.get(diff);
-												var diffNotes:Array<VSliceNote> = subpack.chart.notes.get(diff);
-												if(diffSpeed != null && diffNotes != null)
-												{
-													pack.chart.scrollSpeed.set(diff, diffSpeed);
-													pack.chart.notes.set(diff, diffNotes);
-												}
-											}
-										} else trace('File not found: $chartToFind');
-									}
-									
-									var chartToFind:String = parentFolder + 'events.json';
-									if(FileSystem.exists(chartToFind)) {
-										var eventsChart:SwagSong = Song.parseJSON(File.getContent(chartToFind), 'events');
-										if(eventsChart != null) {
-											var subpack:VSlicePackage = VSlice.export(eventsChart);
-											if(subpack.chart.events != null && subpack.chart.events.length > 0) {
-												for (event in subpack.chart.events) {
-													if(event == null) continue;
-													pack.chart.events.push(event);
-												}
-											}
-											@:privateAccess pack.chart.events.sort(VSlice.sortByTime);
-										}
-									}
-
-									fileDialog.openDirectory('Save V-Slice Chart/Metadata JSONs', () -> {
-										overwriteSavedSomething = false;
-										var path:String = fileDialog.path.replace('/', '\\');
-										if(path.endsWith('\\')) path = path.substr(0, path.length - 1);
-										overwriteCheck('$path/$songName-chart.json', '$songName-chart.json', PsychJsonPrinter.print(pack.chart, ['events', 'notes', 'scrollSpeed']), () -> {
-											overwriteCheck('$path/$songName-metadata.json', '$songName-metadata.json', PsychJsonPrinter.print(pack.metadata, ['characters', 'difficulties', 'timeChanges']), () -> {
-												if(overwriteSavedSomething) showOutput('Files saved successfully to: $path!');
-											});
-										});
-									});
-								} else showOutput('Error: You need atleast one difficulty to export.', true);
-							} catch(e:Exception) showOutput('Error: ${e.message}', true);
 							state.close();
 						});
 						btn.normalStyle.bgColor = FlxColor.GREEN;
@@ -2280,90 +2113,190 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 						btn.cameras = state.cameras;
 						state.add(btn);
 						
-						var textX = FlxG.width / 2 - 180;
-						var textY = 360;
-						artistInput = new PsychUIInputText(textX, textY, 120, pack.metadata.artist, 8);
+						var textX:Float = FlxG.width / 2 - 155;
+						var textY:Int = 360;
+						var artistInput:PsychUIInputText = new PsychUIInputText(textX, textY, 120, pack.metadata.artist, 8);
 						artistInput.cameras = state.cameras;
 						artistInput.onChange = (old:String, cur:String) -> pack.metadata.artist = cur;
-	
-						charterInput = new PsychUIInputText(textX + 150, textY, 120, pack.metadata.charter, 8);
+
+						var charterInput:PsychUIInputText = new PsychUIInputText(textX + 190, textY, 120, pack.metadata.charter, 8);
 						charterInput.cameras = state.cameras;
 						charterInput.onChange = (old:String, cur:String) -> pack.metadata.charter = cur;
-
-						var diffs:Array<String> = pack.metadata.playData.difficulties;
-						if(diffs == null || diffs.length < 0) pack.metadata.playData.difficulties = diffs = ['easy', 'normal', 'hard'];
-						difficultiesInput = new PsychUIInputText(textX, textY + 42, 160, diffs.join(', '), 8);
-						difficultiesInput.cameras = state.cameras;
-						difficultiesInput.forceCase = LOWER_CASE;
-						difficultiesInput.onChange = (old:String, cur:String) -> {
-							pack.metadata.playData.difficulties = cur.split(',');
-
-							var diffs:Array<String> = pack.metadata.playData.difficulties;
-							for (num => diff in diffs) diffs[num] = Paths.formatToSongPath(diff);
-
-							while(diffs.contains('')) diffs.remove(''); //Clear invalids cuz people might be stupid
-						}
 						
 						var artistTxt:FlxText = new FlxText(artistInput.x, artistInput.y - 15, 100, 'Artist/Composer:');
 						artistTxt.cameras = state.cameras;
 						var charterTxt:FlxText = new FlxText(charterInput.x, charterInput.y - 15, 100, 'Charter:');
 						charterTxt.cameras = state.cameras;
-						var difficultiesTxt:FlxText = new FlxText(difficultiesInput.x, difficultiesInput.y - 15, 100, 'Difficulties:');
-						difficultiesTxt.cameras = state.cameras;
 						state.add(artistTxt);
 						state.add(charterTxt);
-						state.add(difficultiesTxt);
 						state.add(artistInput);
 						state.add(charterInput);
-						state.add(difficultiesInput);
-					}
-				));
+					}));
+				} catch(e:Exception) showOutput('Error: ${e.message}', true);
 			});
 		}, btnWid);
 		btn.text.alignment = LEFT;
 		tab_group.add(btn);
 
 		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  V-Slice to Psych...', function()
-		{
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Psych to V-Slice...', () -> {
 			if(!fileDialog.completed) return;
 			upperBox.isMinimized = true;
 			upperBox.bg.visible = false;
 
-			fileDialog.open('chart.json', 'Open a V-Slice Chart file', function()
-			{
+			fileDialog.open('song.json', 'Open a Psych Engine Chart JSON', () -> {
+				var filePath:String = fileDialog.path.replace('/', '\\');
+				var loadedChart:SwagSong = Song.parseJSON(fileDialog.data, filePath.substr(filePath.lastIndexOf('\\')));
+				if(loadedChart == null || !Reflect.hasField(loadedChart, 'song')) { //Check if chart is ACTUALLY a chart and valid
+					showOutput('Error: File loaded is not a Psych Engine 0.x.x/FNF 0.2.x.x chart.', true);
+					return;
+				}
+
+				var pack:VSlicePackage = VSlice.export(loadedChart);
+				if(pack.chart == null || pack.metadata == null) {
+					showOutput('Error: Chart loaded is invalid.', true);
+					return;
+				}
+
+				openSubState(new BasePrompt('Metadata', (state:BasePrompt) -> {
+					var songName:String = Paths.formatToSongPath(pack.metadata.songName);
+					var parentFolder:String = filePath.substring(0, filePath.lastIndexOf('\\') + 1);
+					var artistInput, charterInput, difficultiesInput:PsychUIInputText = null;
+
+					var btnX:Int = 640;
+					var btnY:Int = 400;
+					var btn:PsychUIButton = new PsychUIButton(btnX, btnY, 'Save', () -> {
+						try {
+							var diffs:Array<String> = pack.metadata.playData.difficulties;
+							if(diffs != null && diffs.length > 0) {
+								var diffsFound:Array<String> = [];
+								var defaultDiff:String = Paths.formatToSongPath(Difficulty.getDefault());
+								for (diff in diffs) {
+									var diffPostfix:String = (diff != defaultDiff) ? '-$diff' : '';
+									var chartToFind:String = parentFolder + songName + diffPostfix + '.json';
+									if(FileSystem.exists(chartToFind)) {
+										var diffChart:SwagSong = Song.parseJSON(File.getContent(chartToFind), songName + diffPostfix);
+										if(diffChart != null) {
+											var subpack:VSlicePackage = VSlice.export(diffChart);
+											var	diffSpeed:Null<Float> = subpack.chart.scrollSpeed.get(diff);
+											var diffNotes:Array<VSliceNote> = subpack.chart.notes.get(diff);
+											if(diffSpeed != null && diffNotes != null) {
+												pack.chart.scrollSpeed.set(diff, diffSpeed);
+												pack.chart.notes.set(diff, diffNotes);
+											}
+										}
+									} else Logs.trace('File not found: $chartToFind', WARNING);
+								}
+								
+								var chartToFind:String = parentFolder + 'events.json';
+								if(FileSystem.exists(chartToFind)) {
+									var eventsChart:SwagSong = Song.parseJSON(File.getContent(chartToFind), 'events');
+									if(eventsChart != null) {
+										var subpack:VSlicePackage = VSlice.export(eventsChart);
+										if(subpack.chart.events != null && subpack.chart.events.length > 0) {
+											for (event in subpack.chart.events) {
+												if(event == null) continue;
+												pack.chart.events.push(event);
+											}
+										}
+										@:privateAccess pack.chart.events.sort(VSlice.sortByTime);
+									}
+								}
+
+								fileDialog.openDirectory('Save V-Slice Chart/Metadata JSONs', () -> {
+									overwriteSavedSomething = false;
+									var path:String = fileDialog.path.replace('/', '\\');
+									if(path.endsWith('\\')) path = path.substr(0, path.length - 1);
+									overwriteCheck('$path/$songName-chart.json', '$songName-chart.json', PsychJsonPrinter.print(pack.chart, ['events', 'notes', 'scrollSpeed']), () -> {
+										overwriteCheck('$path/$songName-metadata.json', '$songName-metadata.json', PsychJsonPrinter.print(pack.metadata, ['characters', 'difficulties', 'timeChanges']), () -> if(overwriteSavedSomething) showOutput('Files saved successfully to: $path!'));
+									});
+								});
+							} else showOutput('Error: You need atleast one difficulty to export.', true);
+						} catch(e:Exception) showOutput('Error: ${e.message}', true);
+						state.close();
+					});
+					btn.normalStyle.bgColor = FlxColor.GREEN;
+					btn.normalStyle.textColor = FlxColor.WHITE;
+					btn.cameras = state.cameras;
+					state.add(btn);
+					
+					var btn:PsychUIButton = new PsychUIButton(btnX + 100, btnY, 'Cancel', state.close);
+					btn.cameras = state.cameras;
+					state.add(btn);
+					
+					var textX:Float = FlxG.width / 2 - 180;
+					var textY:Int = 360;
+					artistInput = new PsychUIInputText(textX, textY, 120, pack.metadata.artist, 8);
+					artistInput.cameras = state.cameras;
+					artistInput.onChange = (old:String, cur:String) -> pack.metadata.artist = cur;
+	
+					charterInput = new PsychUIInputText(textX + 150, textY, 120, pack.metadata.charter, 8);
+					charterInput.cameras = state.cameras;
+					charterInput.onChange = (old:String, cur:String) -> pack.metadata.charter = cur;
+
+					var diffs:Array<String> = pack.metadata.playData.difficulties;
+					if(diffs == null || diffs.length < 0) pack.metadata.playData.difficulties = diffs = ['easy', 'normal', 'hard'];
+					difficultiesInput = new PsychUIInputText(textX, textY + 42, 160, diffs.join(', '), 8);
+					difficultiesInput.cameras = state.cameras;
+					difficultiesInput.forceCase = LOWER_CASE;
+					difficultiesInput.onChange = (old:String, cur:String) -> {
+						pack.metadata.playData.difficulties = cur.split(',');
+
+						var diffs:Array<String> = pack.metadata.playData.difficulties;
+						for (num => diff in diffs) diffs[num] = Paths.formatToSongPath(diff);
+
+						while(diffs.contains('')) diffs.remove(''); //Clear invalids cuz people might be stupid
+					}
+					
+					var artistTxt:FlxText = new FlxText(artistInput.x, artistInput.y - 15, 100, 'Artist/Composer:');
+					artistTxt.cameras = state.cameras;
+					var charterTxt:FlxText = new FlxText(charterInput.x, charterInput.y - 15, 100, 'Charter:');
+					charterTxt.cameras = state.cameras;
+					var difficultiesTxt:FlxText = new FlxText(difficultiesInput.x, difficultiesInput.y - 15, 100, 'Difficulties:');
+					difficultiesTxt.cameras = state.cameras;
+					state.add(artistTxt);
+					state.add(charterTxt);
+					state.add(difficultiesTxt);
+					state.add(artistInput);
+					state.add(charterInput);
+					state.add(difficultiesInput);
+				}));
+			});
+		}, btnWid);
+		btn.text.alignment = LEFT;
+		tab_group.add(btn);
+
+		btnY += 20;
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  V-Slice to Psych...', () -> {
+			if(!fileDialog.completed) return;
+			upperBox.isMinimized = true;
+			upperBox.bg.visible = false;
+
+			fileDialog.open('chart.json', 'Open a V-Slice Chart file', () -> {
 				var chart:VSliceChart = cast Json.parse(fileDialog.data);
-				if(chart == null || chart.version == null || chart.notes == null || chart.scrollSpeed == null)
-				{
+				if(chart == null || chart.version == null || chart.notes == null || chart.scrollSpeed == null) {
 					showOutput('Error: File loaded is not a valid FNF V-Slice chart.', true);
 					return;
 				}
 
-				fileDialog.open('metadata.json', 'Open a V-Slice Metadata file', function()
-				{
+				fileDialog.open('metadata.json', 'Open a V-Slice Metadata file', () -> {
 					var metadata:VSliceMetadata = cast Json.parse(fileDialog.data);
-					if(metadata == null || metadata.version == null || metadata.playData == null || metadata.songName == null || metadata.playData.difficulties == null || metadata.timeChanges == null || metadata.timeChanges.length < 1)
-					{
+					if(metadata == null || metadata.version == null || metadata.playData == null || metadata.songName == null || metadata.playData.difficulties == null || metadata.timeChanges == null || metadata.timeChanges.length < 1) {
 						showOutput('Error: File loaded is not a valid FNF V-Slice metadata.', true);
 						return;
 					}
 
-					try
-					{
+					try {
 						var pack:PsychPackage = VSlice.convertToPsych(chart, metadata);
-						if(pack.difficulties != null)
-						{
-							fileDialog.openDirectory('Save Converted Psych JSONs', function()
-							{
+						if(pack.difficulties != null) {
+							fileDialog.openDirectory('Save Converted Psych JSONs', () -> {
 								var path:String = fileDialog.path.replace('/', '\\');
 								if(!path.endsWith('\\')) path += '\\';
 
 								var diffs:Array<String> = metadata.playData.difficulties.copy();
 								var defaultDiff:String = Paths.formatToSongPath(Difficulty.getDefault());
-								function nextChart()
-								{
-									while(diffs.length > 0)
-									{
+								function nextChart() {
+									while(diffs.length > 0) {
 										var diffName:String = diffs[0];
 										diffs.remove(diffName);
 										if(!pack.difficulties.exists(diffName)) continue;
@@ -2375,13 +2308,8 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 										return;
 									}
 	
-									if(pack.events != null)
-									{
-										overwriteCheck(path + 'events.json', 'events.json', PsychJsonPrinter.print(pack.events, ['events']), function() {
-											if(overwriteSavedSomething)
-												showOutput('Files saved successfully to: ${fileDialog.path}!');
-										}, true);
-									} else if(overwriteSavedSomething) showOutput('Files saved successfully to: ${fileDialog.path}!');
+									if(pack.events != null) overwriteCheck(path + 'events.json', 'events.json', PsychJsonPrinter.print(pack.events, ['events']), () -> if(overwriteSavedSomething) showOutput('Files saved successfully to: ${fileDialog.path}!'), true);
+									else if(overwriteSavedSomething) showOutput('Files saved successfully to: ${fileDialog.path}!');
 								}
 								
 								overwriteSavedSomething = false;
@@ -2396,33 +2324,27 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		tab_group.add(btn);
 		
 		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Update (Legacy)...', function()
-		{
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Update (Legacy)...', () -> {
 			if(!fileDialog.completed) return;
 			upperBox.isMinimized = true;
 			upperBox.bg.visible = false;
 
-			fileDialog.open(function()
-			{
+			fileDialog.open(() -> {
 				var oldSong = PlayState.SONG;
-				try
-				{
+				try {
 					var filePath:String = fileDialog.path.replace('/', '\\');
 					filePath = filePath.substring(filePath.lastIndexOf('\\') + 1, filePath.lastIndexOf('.'));
 
 					var loadedChart:SwagSong = Song.parseJSON(fileDialog.data, filePath, '');
-					if(loadedChart == null || !Reflect.hasField(loadedChart, 'song')) //Check if chart is ACTUALLY a chart and valid
-					{
+					if(loadedChart == null || !Reflect.hasField(loadedChart, 'song')) { //Check if chart is ACTUALLY a chart and valid
 						showOutput('Error: File loaded is not a Psych Engine 0.x.x/FNF 0.2.x.x chart.', true);
 						return;
 					}
 
 					var fmt:String = loadedChart.format;
-					if(fmt == null || fmt.length < 1)
-						fmt = loadedChart.format = 'unknown';
+					if(fmt == null || fmt.length < 1) fmt = loadedChart.format = 'unknown';
 
-					if(!fmt.startsWith('psych_v1'))
-					{
+					if(!fmt.startsWith('psych_v1')) {
 						loadedChart.format = 'psych_v1_convert';
 						Song.convert(loadedChart);
 						File.saveContent(fileDialog.path, PsychJsonPrinter.print(loadedChart, ['sectionNotes', 'events']));
@@ -2447,10 +2369,9 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		btnY++;
 		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Exit', function()
-		{
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Exit', () -> {
 			PlayState.chartingMode = false;
-			FlxG.switchState(new states.editors.MasterEditorMenu());
+			FlxG.switchState(new MasterEditorMenu());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			FlxG.mouse.visible = false;
 		}, btnWid);
@@ -2459,13 +2380,12 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 	}
 
 	var lockedEvents:Bool = false;
-	function addEditTab()
-	{
-		var tab = upperBox.getTab('Edit');
+	function addEditTab() {
+		var tab:PsychUITab = upperBox.getTab('Edit');
 		var tab_group:FlxSpriteGroup = tab.menu;
-		var btnX = tab.x - upperBox.x;
-		var btnY = 1;
-		var btnWid = Std.int(tab.width);
+		var btnX:Float = tab.x - upperBox.x;
+		var btnY:Int = 1;
+		var btnWid:Int = Std.int(tab.width);
 
 		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Undo', () -> showOutput('Feature not implemented yet!', true), btnWid); //TO DO: Add functionality
 		btn.text.alignment = LEFT;
@@ -2478,8 +2398,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		btnY++;
 		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Select All', function()
-		{
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Select All', () -> {
 			selectedNotes = curRenderedNotes.members.copy();
 			onSelectNote();
 			trace('Notes selected: ' + selectedNotes.length);
@@ -2490,16 +2409,14 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		btnY++;
 		btnY += 20;
 		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Lock Events', btnWid);
-		btn.onClick = function()
-		{
+		btn.onClick = () -> {
 			lockedEvents = !lockedEvents;
 			if(lockedEvents) btn.text.text = '  Unlock Events';
 			else btn.text.text = '  Lock Events';
 			eventLockOverlay.visible = lockedEvents;
 
-			if(selectedNotes.length >= 1)
-			{
-				var onlyNotes = selectedNotes.filter((note:MetaNote) -> !note.isEvent);
+			if(selectedNotes.length >= 1) {
+				var onlyNotes:Array<MetaNote> = selectedNotes.filter((note:MetaNote) -> !note.isEvent);
 				resetSelectedNotes();
 				selectedNotes = onlyNotes;
 				if(selectedNotes.length == 1) onSelectNote();
@@ -2511,14 +2428,10 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		btnY++;
 		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Clear All Notes', function()
-		{
-			var func:Void->Void = function()
-			{
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Clear All Notes', () -> {
+			var func:Void->Void = () -> {
 				resetSelectedNotes();
-				for (note in notes)
-					if(note != null)
-						note.destroy();
+				for (note in notes) if(note != null) note.destroy();
 	
 				notes = [];
 				loadSection();
@@ -2533,14 +2446,10 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		tab_group.add(btn);
 
 		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Clear All Events', function()
-		{
-			var func:Void->Void = function()
-			{
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Clear All Events', () -> {
+			var func:Void->Void = () -> {
 				resetSelectedNotes();
-				for (event in events)
-					if(event != null)
-						event.destroy();
+				for (event in events) if(event != null) event.destroy();
 
 				events = [];
 				loadSection();
@@ -2560,16 +2469,14 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 	var noteTypeLabelsButton:PsychUIButton;
 	var vortexEditorButton:PsychUIButton;
 	var vortexEnabled:Bool = false;
-	function addViewTab()
-	{
-		var tab = upperBox.getTab('View');
+	function addViewTab() {
+		var tab:PsychUITab = upperBox.getTab('View');
 		var tab_group:FlxSpriteGroup = tab.menu;
-		var btnX = tab.x - upperBox.x;
-		var btnY = 1;
-		var btnWid = Std.int(tab.width);
+		var btnX:Float = tab.x - upperBox.x;
+		var btnY:Int = 1;
+		var btnWid:Int = Std.int(tab.width);
 
-		showLastGridButton = new PsychUIButton(btnX, btnY, '', function()
-		{
+		showLastGridButton = new PsychUIButton(btnX, btnY, '', () -> {
 			showPreviousSection = !showPreviousSection;
 			updateGridVisibility();
 		}, btnWid);
@@ -2577,8 +2484,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		tab_group.add(showLastGridButton);
 
 		btnY += 20;
-		showNextGridButton = new PsychUIButton(btnX, btnY, '', function()
-		{
+		showNextGridButton = new PsychUIButton(btnX, btnY, '', () -> {
 			showNextSection = !showNextSection;
 			updateGridVisibility();
 		}, btnWid);
@@ -2587,8 +2493,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		btnY++;
 		btnY += 20;
-		noteTypeLabelsButton = new PsychUIButton(btnX, btnY, '', function()
-		{
+		noteTypeLabelsButton = new PsychUIButton(btnX, btnY, '', () -> {
 			showNoteTypeLabels = !showNoteTypeLabels;
 			updateGridVisibility();
 		}, btnWid);
@@ -2597,11 +2502,10 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		btnY++;
 		btnY += 20;
-		vortexEditorButton = new PsychUIButton(btnX, btnY, vortexEnabled ? '  Vortex Editor ON' : '  Vortex Editor OFF', () -> //TO DO: Add functionality
-		{
+		vortexEditorButton = new PsychUIButton(btnX, btnY, vortexEnabled ? '  Vortex Editor ON' : '  Vortex Editor OFF', () -> { //TO DO: Add functionality
 			vortexEnabled = !vortexEnabled;
 			vortexEditorButton.text.text = vortexEnabled ? '  Vortex Editor ON' : '  Vortex Editor OFF';
-			showOutput('Feature not implemented yet!');
+			showOutput('Feature not implemented yet!', true);
 		}, btnWid);
 		vortexEditorButton.text.alignment = LEFT;
 		tab_group.add(vortexEditorButton);
@@ -2646,7 +2550,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 				btn.cameras = state.cameras;
 				state.add(btn);
 
-				var btnY = 390;
+				var btnY:Int = 390;
 				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Light', changeTheme.bind(LIGHT));
 				btn.screenCenter(X).x -= 125;
 				btn.cameras = state.cameras;
@@ -2678,7 +2582,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 	override function destroy() {
 		Note.globalRgbShaders = [];
-		backend.NoteTypesConfig.clearNoteTypesData();
+		NoteTypesConfig.clearNoteTypesData();
 
 		for (num => text in MetaNote.noteTypeTexts) text.destroy();
 
@@ -2743,7 +2647,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 			note.rgbShader.enabled = !noRGBCheckBox.checked;
 			if(note.rgbShader.enabled) {
-				var data = backend.NoteTypesConfig.loadNoteTypeData(note.noteType);
+				var data:Array<backend.NoteTypesConfig.NoteTypeProperty> = NoteTypesConfig.loadNoteTypeData(note.noteType);
 				if(data == null || data.length < 1) continue;
 
 				for (line in data) {
@@ -2781,16 +2685,14 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		for (num => note in notes) {
 			if(note == null || note.strumTime <= 0) continue;
 
-			while(noteSec + 2 < oldTimes.length && oldTimes[noteSec + 1] <= note.strumTime)
-			{
+			while(noteSec + 2 < oldTimes.length && oldTimes[noteSec + 1] <= note.strumTime) {
 				noteSec++;
 				oldNextSectionTime = oldTimes[noteSec + 1];
 				oldCurSectionTime = oldTimes[noteSec];
 				nextSectionTime = cachedSectionTimes[noteSec + 1];
 				curSectionTime = cachedSectionTimes[noteSec];
 
-				if(noteSec + 1 >= cachedSectionTimes.length)
-				{
+				if(noteSec + 1 >= cachedSectionTimes.length) {
 					Logs.trace('failsafe, cancel early and delete notes after this', ERROR);
 					var changedSelected:Bool = false;
 					for(i in num...notes.length) {
@@ -2868,7 +2770,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 	function updateUpperBoxBg() {
 		if(upperBox.selectedTab != null) {
 			var menu:FlxSpriteGroup = upperBox.selectedTab.menu;
-			upperBox.bg.x = upperBox.x + upperBox.selectedIndex * (upperBox.width/upperBox.tabs.length);
+			upperBox.bg.x = upperBox.x + upperBox.selectedIndex * (upperBox.width / upperBox.tabs.length);
 			upperBox.bg.setGraphicSize(menu.width, menu.height + 21);
 			upperBox.bg.updateHitbox();
 		}

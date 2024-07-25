@@ -1,8 +1,8 @@
 package states.editors.content;
 
 import openfl.net.FileReference;
+import openfl.net.FileFilter;
 import openfl.events.Event;
-import flash.net.FileFilter;
 
 import haxe.Exception;
 import sys.io.File;

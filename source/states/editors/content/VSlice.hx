@@ -200,7 +200,7 @@ class VSlice {
 				while(noteSec + 1 < sectionTimes.length && sectionTimes[noteSec + 1] <= note.t)
 					noteSec++;
 
-				var psychNote:Array<Dynamic> = [note.t, note.d, (note.l != null ? note.l : 0)];
+				var psychNote:Array<Dynamic> = [note.t, note.d, note.l ?? 0];
 				if(note.k != null && note.k.length > 0 && note.k != 'normal') psychNote.push(note.k);
 
 				if(sectionData[noteSec] != null) sectionData[noteSec].sectionNotes.push(psychNote);
@@ -213,6 +213,7 @@ class VSlice {
 				bpm: songBpm,
 				needsVoices: true, //There's no value on V-Slice to identify if there are vocals as it checks automatically
 				speed: scrollSpeed,
+				mania: 3,
 				offset: 0,
 
 				player1: metadata.playData.characters.player,
@@ -372,7 +373,7 @@ class VSlice {
 				difficulties: diffs,
 				characters: {
 					player: songData.player1,
-					girlfriend: songData.gfVersion != null ? songData.gfVersion : 'gf',
+					girlfriend: songData.gfVersion ?? 'gf',
 					opponent: songData.player2
 				},
 				noteStyle: !PlayState.isPixelStage ? 'funkin' : 'pixel',

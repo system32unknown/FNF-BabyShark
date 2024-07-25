@@ -53,6 +53,8 @@
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="hxvlc" if="VIDEOS_ALLOWED"/>
 	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
+	<haxelib name="grig.audio"/>
+	<haxelib name="funkin.vis"/>
 
 	<section if="HSCRIPT_ALLOWED">
 		<haxeflag name="-dce no"/>
