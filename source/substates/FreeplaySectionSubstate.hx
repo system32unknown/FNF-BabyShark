@@ -77,7 +77,6 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 		FlxTween.tween(grid, {alpha: 1}, 1, {ease: FlxEase.expoOut});
 		FlxTween.tween(sectionSpr, {alpha: 1}, 1, {ease: FlxEase.expoOut});
 		FlxTween.tween(sectionTxt, {alpha: 1}, 1, {ease: FlxEase.expoOut, onComplete: (_:FlxTween) -> transitioning = false});
-		#if DISCORD_ALLOWED DiscordClient.changePresence("Selecting a Freeplay Section", '${sectionArray.length} Sections'); #end
 	}
 
 	override function update(elapsed:Float) {

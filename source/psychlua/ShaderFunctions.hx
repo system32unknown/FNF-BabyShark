@@ -64,7 +64,7 @@ class ShaderFunctions {
 
             var arr:Array<String> = funk.runtimeShaders.get(shader);
             var camera:Dynamic = getCam(cam);
-            if (camera.filters == null) camera.filters = [];
+            camera.filters ??= [];
 			
             var filter:ShaderFilter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1], arr[2]));
             storedFilters.set(index, filter);

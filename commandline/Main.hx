@@ -80,7 +80,7 @@ class Main {
 			}
 
 			if (matchingCommand == null) {
-				Sys.println('help - Command named ${cmdName} not found.');
+				Sys.println('help - Command named $cmdName not found.');
 				return;
 			}
 
@@ -93,9 +93,7 @@ class Main {
 		// shows help
 		Sys.println("Alter Engine Command Line utility");
 		Sys.println('Available commands (${commands.length}):\n');
-		for(line in commands) {
-			Sys.println('${line.names.join(", ")} - ${line.doc}');
-		}
+		for(line in commands) Sys.println('${line.names.join(", ")} - ${line.doc}');
 	}
 }
 

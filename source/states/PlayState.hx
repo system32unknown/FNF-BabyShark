@@ -292,13 +292,13 @@ class PlayState extends MusicBeatState {
 		if(stageData.camera_speed != null) cameraSpeed = stageData.camera_speed;
 
 		boyfriendCameraOffset = stageData.camera_boyfriend;
-		if(boyfriendCameraOffset == null) boyfriendCameraOffset = [0, 0];
+		boyfriendCameraOffset ??= [0, 0];
 
 		opponentCameraOffset = stageData.camera_opponent;
-		if(opponentCameraOffset == null) opponentCameraOffset = [0, 0];
+		opponentCameraOffset ??= [0, 0];
 
 		girlfriendCameraOffset = stageData.camera_girlfriend;
-		if(girlfriendCameraOffset == null) girlfriendCameraOffset = [0, 0];
+		girlfriendCameraOffset ??= [0, 0];
 
 		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
@@ -712,12 +712,7 @@ class PlayState extends MusicBeatState {
 			add(cutscene);
 			if (playOnLoad) cutscene.play();
 			return cutscene;
-		}
-		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-		else addTextToDebug("Video not found: " + fileName, FlxColor.RED);
-		#else
-		else FlxG.log.error("Video not found: " + fileName);
-		#end
+		} else #if (LUA_ALLOWED || HSCRIPT_ALLOWED) addTextToDebug('Video not found: $fileName', FlxColor.RED) #else FlxG.log.error('Video not found: $fileName') #end;
 		#else
 		FlxG.log.warn('Platform not supported!');
 		startAndEnd();
@@ -1833,7 +1828,6 @@ class PlayState extends MusicBeatState {
 
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
-
 	function cachePopUpScore() {
 		var uiPrefix:String = '';
 		var uiPostfix:String = '';
@@ -2228,8 +2222,7 @@ class PlayState extends MusicBeatState {
 		for (char in [gf, boyfriend, dad]) {
 			if (char == null) continue;
 			var speed:Int = (gf != null && char == gf) ? gfSpeed : 1;
-			if ((char.isAnimationNull() || !char.getAnimationName().startsWith('sing')) && !char.stunned && beat % Math.round(speed * char.danceEveryNumBeats) == 0)
-				char.dance(force);
+			if ((char.isAnimationNull() || !char.getAnimationName().startsWith('sing')) && !char.stunned && beat % Math.round(speed * char.danceEveryNumBeats) == 0) char.dance(force);
 		}
 	}
 
@@ -2313,8 +2306,7 @@ class PlayState extends MusicBeatState {
 
 	public function playerDance():Void {
 		var anim:String = boyfriend.getAnimationName();
-		if(boyfriend.holdTimer > Conductor.stepCrochet * (.0011 #if FLX_PITCH / FlxG.sound.music.pitch #end) * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss'))
-			boyfriend.dance();
+		if(boyfriend.holdTimer > Conductor.stepCrochet * (.0011 #if FLX_PITCH / FlxG.sound.music.pitch #end) * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss')) boyfriend.dance();
 	}
 
 	override function sectionHit() {
@@ -2417,9 +2409,9 @@ class PlayState extends MusicBeatState {
 	#end
 
 	public function callOnScripts(funcToCall:String, ?args:Array<Dynamic>, ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
-		if(args == null) args = [];
-		if(exclusions == null) exclusions = [];
-		if(excludeValues == null) excludeValues = [LuaUtils.Function_Continue];
+		args ??= [];
+		exclusions ??= [];
+		excludeValues ??= [LuaUtils.Function_Continue];
 
 		var result:Dynamic = callOnLuas(funcToCall, args, ignoreStops, exclusions, excludeValues);
 		if(result == null || excludeValues.contains(result)) result = callOnHScript(funcToCall, args, ignoreStops, exclusions, excludeValues);
@@ -2429,9 +2421,9 @@ class PlayState extends MusicBeatState {
 	public function callOnLuas(event:String, ?args:Array<Any>, ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
 		var returnVal:Dynamic = LuaUtils.Function_Continue;
 		#if LUA_ALLOWED
-		if(args == null) args = [];
-		if(exclusions == null) exclusions = [];
-		if(excludeValues == null) excludeValues = [LuaUtils.Function_Continue];
+		args ??= [];
+		exclusions ??= [];
+		excludeValues ??= [LuaUtils.Function_Continue];
 
 		var arr:Array<FunkinLua> = [];
 		for (script in luaArray) {

@@ -264,7 +264,7 @@ class LoadingState extends MusicBeatState {
 			var player2:String = song.player2;
 			var gfVersion:String = song.gfVersion;
 			var prefixVocals:String = song.needsVoices ? '$folder/Voices' : null;
-			if (gfVersion == null) gfVersion = 'gf';
+			gfVersion ??= 'gf';
 
 			preloadCharacter(player1);
 			if(Paths.fileExists('$prefixVocals.${Paths.SOUND_EXT}', SOUND, false, 'songs')) songsToPrepare.push(prefixVocals);

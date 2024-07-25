@@ -96,7 +96,7 @@ class CoolUtil {
 		if(color.startsWith('0x')) color = color.substring(color.length - 6);
 
 		var colorNum:Null<FlxColor> = FlxColor.fromString(color);
-		if(colorNum == null) colorNum = FlxColor.fromString('#$color');
+		colorNum ??= FlxColor.fromString('#$color');
 		return colorNum ?? FlxColor.WHITE;
 	}
 

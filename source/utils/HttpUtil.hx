@@ -24,7 +24,7 @@ class HttpUtil {
 		h.setHeader("User-Agent", userAgent);
 
 		h.onStatus = (s:Int) -> if (isRedirect(s)) r = requestBytes(h.responseHeaders.get("Location"));
-		h.onBytes = (d:Bytes) -> if (r == null) r = d;
+		h.onBytes = (d:Bytes) -> r ??= d;
 		h.onError = (e:String) -> throw e;
 
 		h.request();

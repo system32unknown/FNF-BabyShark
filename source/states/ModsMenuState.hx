@@ -566,7 +566,7 @@ class ModsMenuState extends MusicBeatState {
 
 	var waitingToRestart:Bool = false;
 	function moveModToPosition(?mod:String = null, position:Int = 0) {
-		if(mod == null) mod = modsList.all[curSelectedMod];
+		mod ??= modsList.all[curSelectedMod];
 		if(position >= modsList.all.length) position = 0;
 		else if(position < 0) position = modsList.all.length - 1;
 
