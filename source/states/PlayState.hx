@@ -690,7 +690,7 @@ class PlayState extends MusicBeatState {
 	public var videoCutscene:VideoSprite = null;
 	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, autoAdjust:Bool = true, playOnLoad:Bool = true) {
 		#if VIDEOS_ALLOWED
-		inCutscene = true;
+		inCutscene = true; canPause = false;
 
 		var foundFile:Bool = false;
 		var fileName:String = Paths.video(name);
@@ -698,20 +698,23 @@ class PlayState extends MusicBeatState {
 		if (#if sys FileSystem #else Assets #end.exists(fileName)) foundFile = true;
 
 		if (foundFile) {
-			var cutscene:VideoSprite = new VideoSprite(fileName, forMidSong, canSkip, loop, autoAdjust);
+			videoCutscene = new VideoSprite(fileName, forMidSong, canSkip, loop, autoAdjust);
 			if (!forMidSong) {
-				cutscene.finishCallback = () -> {
+				function onVideoEnd() {
 					if (generatedMusic && SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos) {
 						moveCameraSection();
 						FlxG.camera.snapToTarget();
 					}
+					videoCutscene = null;
+					canPause = false; inCutscene = false;
 					startAndEnd();
-				};
-				cutscene.onSkip = () -> startAndEnd();
+				}
+				videoCutscene.finishCallback = onVideoEnd;
+				videoCutscene.onSkip = onVideoEnd;
 			}
-			add(cutscene);
-			if (playOnLoad) cutscene.play();
-			return cutscene;
+			add(videoCutscene);
+			if (playOnLoad) videoCutscene.play();
+			return videoCutscene;
 		} else #if (LUA_ALLOWED || HSCRIPT_ALLOWED) addTextToDebug('Video not found: $fileName', FlxColor.RED) #else FlxG.log.error('Video not found: $fileName') #end;
 		#else
 		FlxG.log.warn('Platform not supported!');
@@ -1679,7 +1682,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function moveCameraSection():Void {
-		var section:backend.Section.SwagSection = SONG.notes[curSection];
+		var section:SwagSection = SONG.notes[curSection];
 		if (section == null) return;
 
 		if (gf != null && section.gfSection) {

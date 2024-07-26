@@ -1,7 +1,6 @@
 package backend;
 
 import objects.Note;
-import backend.Section.SwagSection;
 
 typedef SwagSong = {
 	var song:String;
@@ -29,6 +28,16 @@ typedef SwagSong = {
 	
 	@:optional var arrowSkin:String;
 	@:optional var splashSkin:String;
+}
+
+typedef SwagSection = {
+	var sectionNotes:Array<Dynamic>;
+	var sectionBeats:Float;
+	var mustHitSection:Bool;
+	@:optional var altAnim:Bool;
+	@:optional var gfSection:Bool;
+	@:optional var bpm:Float;
+	@:optional var changeBPM:Bool;
 }
 
 @:structInit class ChartNoteData {

@@ -256,10 +256,10 @@ class Paths {
 	}
 
 	inline static public function formatToSongPath(path:String):String {
-		var invalidChars:EReg = ~/[~&\\;:<>#]+/g;
-		var hideChars:EReg = ~/[.,'"%?!]+/g;
+		final invalidChars:EReg = ~/[~&;:<>#\s]/g;
+		final hideChars:EReg = ~/[.,'"%?!]/g;
 
-		return hideChars.split(invalidChars.split(path.replace(' ', '-')).join("-")).join("").toLowerCase();
+		return hideChars.replace(invalidChars.replace(path, '-'), '').trim().toLowerCase();
 	}
 
 	public static var currentTrackedSounds:Map<String, Sound> = [];

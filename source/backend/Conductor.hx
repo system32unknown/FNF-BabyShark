@@ -81,7 +81,7 @@ class Conductor {
 		var totalPos:Float = 0, totalSteps:Int = 0;
 
 		for (i in 0...song.notes.length) {
-			var v:backend.Section.SwagSection = song.notes[i];
+			var v:SwagSection = song.notes[i];
 			if(v.changeBPM && v.bpm != curBPM) {
 				curBPM = v.bpm;
 				bpmChangeMap.push({

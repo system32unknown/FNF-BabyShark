@@ -2073,7 +2073,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	}
 
 	function updateSectionUI():Void {
-		var sec:backend.Section.SwagSection = _song.notes[curSec];
+		var sec:SwagSection = _song.notes[curSec];
 
 		stepperBeats.value = getSectionBeats();
 		check_mustHitSection.checked = sec.mustHitSection;

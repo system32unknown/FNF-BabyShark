@@ -68,12 +68,8 @@ class Language {
 	
 	#if TRANSLATIONS_ALLOWED
 	inline static function formatKey(key:String):String {
-		var invalidChars:EReg = ~/[~&\\;:<>#]/;
-		var hideChars:EReg = ~/[.,'"%?!]/;
-
-		var key:String = invalidChars.split(key.replace(' ', '_')).join('');
-		key = hideChars.split(key).join("").toLowerCase().trim().replace(':', '');
-		return key;
+		final hideChars:EReg = ~/[~&\\\/;:<>#.,'"%?!]/g;
+		return hideChars.replace(key.replace(' ', '_'), '').toLowerCase().trim();
 	}
 	#end
 

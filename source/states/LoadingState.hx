@@ -52,7 +52,7 @@ class LoadingState extends MusicBeatState {
 				onLoad();
 				return;
 			}
-			#if !SHOW_LOADING_SCREEN Sys.sleep(.01); #end
+			#if !SHOW_LOADING_SCREEN Sys.sleep(.001); #end
 		}
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, 0xFFCAFF4D);
@@ -154,7 +154,7 @@ class LoadingState extends MusicBeatState {
 		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		while(true) {
-			if(!checkLoaded()) Sys.sleep(.01);
+			if(!checkLoaded()) Sys.sleep(.001);
 			else break;
 		}
 		return target;
@@ -358,15 +358,10 @@ class LoadingState extends MusicBeatState {
 		Thread.create(() -> {
 			mutex.acquire();
 			try {
-				var ret:Dynamic = func();
-				mutex.release();
-
-				if (ret != null) trace('finished preloading $traceData');
+				if (func() != null) trace('finished preloading $traceData');
 				else Logs.trace('ERROR! fail on preloading $traceData', ERROR);
-			} catch(e:Dynamic) {
-				mutex.release();
-				Logs.trace('ERROR! fail on preloading $traceData', ERROR);
-			}
+			} catch(e:Dynamic) Logs.trace('ERROR! fail on preloading $traceData', ERROR);
+			mutex.release();
 			loaded++;
 		});
 	}
