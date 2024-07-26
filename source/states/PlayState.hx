@@ -945,7 +945,7 @@ class PlayState extends MusicBeatState {
 
 		if(paused) {FlxG.sound.music.pause(); vocals.pause();}
 
-		stagesFunc(function(stage:BaseStage) stage.startSong());
+		stagesFunc((stage:BaseStage) -> stage.startSong());
 		songLength = FlxG.sound.music.length; // Song duration in a float, useful for the time left feature
 		FlxTween.tween(timeBar, {alpha: 1}, .5 * playbackRate, {ease: FlxEase.circOut});
 		FlxTween.tween(timeTxt, {alpha: 1}, .5 * playbackRate, {ease: FlxEase.circOut});
@@ -2108,7 +2108,7 @@ class PlayState extends MusicBeatState {
 		if (ClientPrefs.data.camMovement && !bfturn) moveCamOnNote(animToPlay);
 		note.hitByOpponent = true;
 
-		var result:Dynamic = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
+		var result:Dynamic = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHit', [note]);
 		if(!isSus) invalidateNote(note);
 	}
@@ -2194,7 +2194,7 @@ class PlayState extends MusicBeatState {
 			if(!note.noteSplashData.disabled && !isSus) spawnNoteSplashOnNote(note);
 		}
 
-		stagesFunc(function(stage:BaseStage) stage.goodNoteHit(note));
+		stagesFunc((stage:BaseStage) -> stage.goodNoteHit(note));
 		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHit', [note]);
 		if(!isSus) invalidateNote(note);

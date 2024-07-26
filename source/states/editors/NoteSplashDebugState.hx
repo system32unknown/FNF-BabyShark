@@ -48,7 +48,7 @@ class NoteSplashDebugState extends MusicBeatState implements PsychUIEventHandler
 		add(new FlxText(txtx, txty - 120, 'Image Name:', 16));
 
 		imageInputText = new PsychUIInputText(txtx, txty - 100, 360, defaultTexture, 16);
-		imageInputText.onPressEnter = function(e) {
+		imageInputText.onPressEnter = (_) -> {
 			textureName = imageInputText.text;
 			try {
 				loadFrames();

@@ -19,7 +19,7 @@ class VideoFunctions {
 			var obj:VideoSprite = MusicBeatState.getVariables().get(tag);
 			if(obj != null) {
 				if(!obj.isPlaying) {
-					obj.videoSprite.bitmap.onFormatSetup.add(function() {
+					obj.videoSprite.bitmap.onFormatSetup.add(() -> {
 						obj.videoSprite.setGraphicSize(x, y);
 						if(updateHitbox) obj.videoSprite.updateHitbox();
 					});

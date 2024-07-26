@@ -2765,9 +2765,6 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 				nextSectionTime = cachedSectionTimes[noteSec + 1];
 				curSectionTime = cachedSectionTimes[noteSec];
 			}
-
-			var arr:Array<Dynamic> = PlayState.SONG.notes[noteSec].sectionNotes;
-			arr.push(note.songData);
 		}
 
 		events.sort(PlayState.sortByTime);
