@@ -18,28 +18,6 @@ class Main {
 				func: help,
 				dDoc: "Usage: help <cmd>\n\nFor example, use \"cne help test\" to get additional help on the test command."
 			}, {
-				names: ["test"],
-				doc: "Creates a non final test build, then runs it.",
-				func: Compiler.test,
-				dDoc: "Usage: test <optional args>\n" +
-				"\nThis will create a quick debug build binded to the source then run it, which means:" +
-				"\n- The assets WON'T be copied over - Assets will be read from the game's source." +
-				"\n- This build WON'T be ready for release - Running anywhere else than in the bin folder will result in a crash from missing assets" +
-				"\n- This build will also use the mods folder from the source directory." +
-				"\n\nIf you want a full build which contains all assets, run \"cne release\" or \"cne test-release\"" +
-				"\nAdditional arguments will be sent to the lime compiler."
-			}, {
-				names: ["build"],
-				doc: "Creates a non final test build, without running it.",
-				func: Compiler.build,
-				dDoc: "Usage: build <optional arguments>\n" +
-				"\nThis will create a quick debug build binded to the source then run it, which means:" +
-				"\n- The assets WON'T be copied over - Assets will be read from the game's source." +
-				"\n- This build WON'T be ready for release - Running anywhere else than in the bin folder will result in a crash from missing assets" +
-				"\n- This build will also use the mods folder from the source directory." +
-				"\n\nIf you want a full build which contains all assets, run \"cne release\" or \"cne test-release\"" +
-				"\nAdditional arguments will be sent to the lime compiler."
-			}, {
 				names: ["release"],
 				doc: "Creates a final non debug build, containing all assets.",
 				func: Compiler.release,
