@@ -23,8 +23,7 @@ class Update {
 			};
 			if (libNode.has.global) lib.global = libNode.att.global;
 			switch (lib.type) {
-				case "lib":
-					if (libNode.has.version) lib.version = libNode.att.version;
+				case "lib": if (libNode.has.version) lib.version = libNode.att.version;
 				case "git":
 					if (libNode.has.url) lib.url = libNode.att.url;
 					if (libNode.has.ref) lib.ref = libNode.att.ref;
@@ -41,8 +40,7 @@ class Update {
 				case "git":
 					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}" from git url "${lib.url}"');
 					Sys.command('haxelib git ${lib.name} ${lib.url}${lib.ref != null ? ' ${lib.ref}' : ''}${globalism != null ? ' $globalism' : ''} --always');
-				default:
-					prettyPrint('Cannot resolve library of type "${lib.type}"');
+				default: prettyPrint('Cannot resolve library of type "${lib.type}"');
 			}
 		}
 
@@ -64,18 +62,9 @@ class Update {
 	public static function prettyPrint(text:String) {
 		var lines:Array<String> = text.split("\n");
 		var length:Int = -1;
-		for(line in lines)
-			if(line.length > length)
-				length = line.length;
-		var header:String = "══════";
-		for(i in 0...length)
-			header += "═";
+		for(line in lines) if(line.length > length) length = line.length;
 		Sys.println("");
-		Sys.println('╔$header╗');
-		for(line in lines) {
-			Sys.println('║   ${centerText(line, length)}   ║');
-		}
-		Sys.println('╚$header╝');
+		for(line in lines) Sys.println('< ${centerText(line, length)} >');
 	}
 
 	public static function centerText(text:String, width:Int):String {
@@ -87,8 +76,7 @@ class Update {
 
 	public static inline function repeat(ch:String, amt:Int):String {
 		var str:String = "";
-		for(i in 0...amt)
-			str += ch;
+		for(i in 0...amt) str += ch;
 		return str;
 	}
 }
