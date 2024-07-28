@@ -63,8 +63,13 @@ class Update {
 		var lines:Array<String> = text.split("\n");
 		var length:Int = -1;
 		for(line in lines) if(line.length > length) length = line.length;
+		var header:String = "══════";
+		for(i in 0...length) header += "═";
+
 		Sys.println("");
-		for(line in lines) Sys.println('< ${centerText(line, length)} >');
+		Sys.println('╔$header╗');
+		for(line in lines) Sys.println('║   ${centerText(line, length)}   ║');
+		Sys.println('╚$header╝');
 	}
 
 	public static function centerText(text:String, width:Int):String {

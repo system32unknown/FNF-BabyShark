@@ -31,13 +31,7 @@ class FPSCounter extends openfl.display.Sprite {
 		fpsManager = new FPSUtil();
 	}
 
-	public dynamic function updateText(dt:Float):Void {
-		if (ClientPrefs.data.rainbowFps) {
-			timeColor = (timeColor % 360) + 1;
-			fpsTxt.textColor = FlxColor.fromHSB(timeColor, 1, 1);
-		} else if (fpsManager.checkFPSLag()) fpsTxt.textColor = FlxColor.RED;
-		else fpsTxt.textColor = FlxColor.WHITE;
-
+	public dynamic function updateText():Void {
 		fpsTxt.text = '${fpsManager.curFPS}FPS [${Std.int((1 / fpsManager.curFPS) * 1000)}ms]\n';
 		if (memType == "MEM" || memType == "MEM/PEAK")
 			fpsTxt.text += '${FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
@@ -54,7 +48,13 @@ class FPSCounter extends openfl.display.Sprite {
 		fpsManager.update();
 		if (memory > mempeak) mempeak = memory;
 
-		updateText(dt);
+		if (ClientPrefs.data.rainbowFps) {
+			timeColor = (timeColor % 360) + 1;
+			fpsTxt.textColor = FlxColor.fromHSB(timeColor, 1, 1);
+		} else if (fpsManager.checkFPSLag()) fpsTxt.textColor = FlxColor.RED;
+		else fpsTxt.textColor = FlxColor.WHITE;
+
+		updateText();
 		deltaTimeout += dt;
 		
 		super.__enterFrame(Std.int(dt));
