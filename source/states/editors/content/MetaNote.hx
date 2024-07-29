@@ -19,7 +19,7 @@ class MetaNote extends Note {
 
 	public function changeNoteData(v:Int) {
 		this.songData[1] = v;
-		this.noteData = v % NewChartingState.GRID_COLUMNS_PER_PLAYER;
+		this.noteData = v % ChartingState.GRID_COLUMNS_PER_PLAYER;
 
 		if(!PlayState.isPixelStage) loadNoteAnims();
 		else loadPixelNoteAnims();

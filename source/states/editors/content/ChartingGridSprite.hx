@@ -43,7 +43,7 @@ class ChartingGridSprite extends FlxSprite {
 
 		var initialY:Float = y;
 		for (i in 1...rows) {
-			y += NewChartingState.GRID_SIZE + spacing;
+			y += ChartingState.GRID_SIZE + spacing;
 			animation.play((i % 2 == 1) ? 'odd' : 'even', true);
 			super.draw();
 		}
@@ -56,7 +56,7 @@ class ChartingGridSprite extends FlxSprite {
 	function _drawStripes() {
 		for (i => column in stripes) {
 			if(column == 0) stripe.x = this.x;
-			else stripe.x = this.x + NewChartingState.GRID_SIZE * column - stripe.width / 2;
+			else stripe.x = this.x + ChartingState.GRID_SIZE * column - stripe.width / 2;
 			stripe.draw();
 		}
 	}
@@ -81,7 +81,7 @@ class ChartingGridSprite extends FlxSprite {
 	}
 
 	function recalcHeight() {
-		height = ((NewChartingState.GRID_SIZE + spacing) * rows) - spacing;
+		height = ((ChartingState.GRID_SIZE + spacing) * rows) - spacing;
 		updateStripes();
 	}
 }
