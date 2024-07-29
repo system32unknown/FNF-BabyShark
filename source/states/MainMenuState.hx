@@ -109,7 +109,9 @@ class MainMenuState extends MusicBeatState {
 		if (!selectedSomethin) {
 			if (controls.UI_UP_P || controls.UI_DOWN_P) changeItem(controls.UI_UP_P ? -1 : 1);
 
-			if (allowMouse && FlxG.mouse.deltaViewX != 0 && FlxG.mouse.deltaViewY != 0) { //more accurate than FlxG.mouse.justMoved
+			var allowMouse:Bool = allowMouse;
+			if (allowMouse && ((FlxG.mouse.deltaViewX != 0 && FlxG.mouse.deltaViewY != 0) || FlxG.mouse.justPressed)) { //more accurate than FlxG.mouse.justMoved
+				allowMouse = false;
 				FlxG.mouse.visible = true;
 				timeNotMoving = 0;
 	
@@ -120,6 +122,7 @@ class MainMenuState extends MusicBeatState {
 				}
 	
 				if(rightItem != null && FlxG.mouse.overlaps(rightItem)) {
+					allowMouse = true;
 					if(selectedItem != rightItem) {
 						curColumn = RIGHT;
 						changeItem();
@@ -134,6 +137,7 @@ class MainMenuState extends MusicBeatState {
 							if (dist < 0 || distance < dist) {
 								dist = distance;
 								distItem = i;
+								allowMouse = true;
 							}
 						}
 					}
@@ -146,7 +150,7 @@ class MainMenuState extends MusicBeatState {
 				}
 			} else {
 				timeNotMoving += elapsed;
-				if(timeNotMoving > 1) FlxG.mouse.visible = false;
+				if(timeNotMoving > 2) FlxG.mouse.visible = false;
 			}
 
 			switch(curColumn) {

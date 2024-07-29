@@ -380,7 +380,7 @@ class PlayState extends MusicBeatState {
 		comboGroup.ID = 0;
 		noteGroup = new FlxTypedGroup<FlxBasic>();
 
-		Conductor.songPosition = -5000 / Conductor.songPosition;
+		Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
 		var showTime:Bool = timeType != 'Disabled';
 		timeTxt = new FlxText(0, 19, 400, "", 16);
 		timeTxt.screenCenter(X);
@@ -794,7 +794,7 @@ class PlayState extends MusicBeatState {
 			setOnScripts('mania', SONG.mania);
 
 			startedCountdown = true;
-			Conductor.songPosition = -Conductor.crochet * 5;
+			Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
 			setOnScripts('startedCountdown', true);
 			callOnScripts('onCountdownStarted');
 
@@ -911,20 +911,18 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function setSongTime(time:Float) {
-		if(time < 0) time = 0;
-
 		FlxG.sound.music.pause();
 		vocals.pause();
 
-		FlxG.sound.music.time = time;
+		FlxG.sound.music.time = time - Conductor.offset;
 		#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
 		FlxG.sound.music.play();
 
-		if (Conductor.songPosition <= vocals.length) {
-			vocals.time = time;
-			vocals.pitch = playbackRate;
-		}
-		vocals.play();
+		if (Conductor.songPosition < vocals.length) {
+			vocals.time = time - Conductor.offset;
+			#if FLX_PITCH vocals.pitch = playbackRate; #end
+			vocals.play();
+		} else vocals.pause();
 		Conductor.songPosition = time;
 	}
 
@@ -940,7 +938,7 @@ class PlayState extends MusicBeatState {
 		FlxG.sound.music.onComplete = finishSong.bind();
 		vocals.play();
 
-		setSongTime(Math.max(0, startOnTime - 500));
+		setSongTime(Math.max(0, startOnTime - 500) + Conductor.offset);
 		startOnTime = 0;
 
 		if(paused) {FlxG.sound.music.pause(); vocals.pause();}
@@ -1220,13 +1218,13 @@ class PlayState extends MusicBeatState {
 		if(finishTimer != null || (transitioning && endingSong)) return;
 		FlxG.sound.music.play();
 		#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
-		Conductor.songPosition = FlxG.sound.music.time;
+		Conductor.songPosition = FlxG.sound.music.time + Conductor.offset;
 
-		if (Conductor.songPosition <= vocals.length) {
-			vocals.time = Conductor.songPosition;
+		if (FlxG.sound.music.time < vocals.length) {
+			vocals.time = FlxG.sound.music.time;
 			#if FLX_PITCH vocals.pitch = playbackRate; #end
 			vocals.play();
-		}
+		} else vocals.pause();
 	}
 
 	public var paused:Bool = false;
@@ -1288,16 +1286,16 @@ class PlayState extends MusicBeatState {
 
 		if (startedCountdown && !paused) {
 			Conductor.songPosition += elapsed * 1000 * playbackRate;
-			if (Conductor.songPosition >= 0) {
-				var timeDiff:Float = Math.abs(FlxG.sound.music.time - Conductor.songPosition - Conductor.offset);
-				Conductor.songPosition = FlxMath.lerp(FlxG.sound.music.time, Conductor.songPosition, Math.exp(-elapsed * 2.5));
+			if (Conductor.songPosition >= Conductor.offset) {
+				var timeDiff:Float = Math.abs((FlxG.sound.music.time + Conductor.offset) - Conductor.songPosition);
+				Conductor.songPosition = FlxMath.lerp(FlxG.sound.music.time + Conductor.offset, Conductor.songPosition, Math.exp(-elapsed * 2.5));
 				if (timeDiff > 1000 * playbackRate) Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
 			}
 		}
 
 		if (startingSong) {
-			if (startedCountdown && Conductor.songPosition >= 0) startSong();
-			else if(!startedCountdown) Conductor.songPosition = -Conductor.crochet * 5;
+			if (startedCountdown && Conductor.songPosition >= Conductor.offset) startSong();
+			else if(!startedCountdown) Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
 		} else if (!paused && updateTime) {
 			var curTime:Float = Math.max(0, Conductor.songPosition - ClientPrefs.data.noteOffset);
 			songPercent = curTime / songLength;
@@ -1968,7 +1966,7 @@ class PlayState extends MusicBeatState {
 		if(ret == LuaUtils.Function_Stop) return;
 
 		var lastTime:Float = Conductor.songPosition; // more accurate hit time for the ratings?
-		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time;
+		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time + Conductor.offset;
 
 		// obtain notes that the player can hit
 		final plrInputNotes:Array<Note> = notes.members.filter(function(n:Note):Bool {

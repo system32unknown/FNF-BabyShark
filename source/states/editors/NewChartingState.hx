@@ -89,6 +89,9 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 	var movingNotes:FlxTypedGroup<MetaNote> = new FlxTypedGroup<MetaNote>();
 	var eventLockOverlay:FlxSprite;
 	var dummyArrow:FlxSprite;
+	var isMovingNotes:Bool = false;
+	var movingNotesLastData:Int = 0;
+	var movingNotesLastY:Float = 0;
 	
 	var vocals:FlxSound = new FlxSound();
 
@@ -382,7 +385,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		bpmStepper.value = PlayState.SONG.bpm;
 		scrollSpeedStepper.value = PlayState.SONG.speed;
-		audioOffsetStepper.value = PlayState.SONG.offset;
+		audioOffsetStepper.value = Reflect.hasField(PlayState.SONG, 'offset') ? PlayState.SONG.offset : 0;
 		Conductor.offset = audioOffsetStepper.value;
 
 		playerDropDown.selectedLabel = PlayState.SONG.player1;
@@ -401,11 +404,10 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 	var songFinished:Bool = false;
 
 	var fileDialog:FileDialogHandler = new FileDialogHandler();
+	var lastFocus:PsychUIInputText;
 	override function update(elapsed:Float) {
-		if(!fileDialog.completed) return;
-
-		if(FlxG.keys.justPressed.ENTER) {
-			goToPlayState();
+		if(!fileDialog.completed) {
+			lastFocus = PsychUIInputText.focusOn;
 			return;
 		}
 
@@ -419,6 +421,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 				if(FlxG.keys.justPressed.F12) {
 					super.update(elapsed);
 					openEditorPlayState();
+					lastFocus = PsychUIInputText.focusOn;
 					return;
 				}
 
@@ -478,8 +481,11 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 			else if(curSec < cachedSectionTimes.length - 1 && Conductor.songPosition >= cachedSectionTimes[curSec + 1]) loadSection(curSec + 1);
 		}
 
-		if(PsychUIInputText.focusOn == null) {
-			if(holdingAlt && (FlxG.keys.justPressed.A || FlxG.keys.justPressed.S)) {
+		if(PsychUIInputText.focusOn == null && lastFocus == null) {
+			if(FlxG.keys.justPressed.ENTER) {
+				goToPlayState();
+				return;
+			} else if(FlxG.keys.pressed.CONTROL && !isMovingNotes && (FlxG.keys.justPressed.A || FlxG.keys.justPressed.S)) {
 				if(FlxG.keys.justPressed.A) { // Select All
 					selectedNotes = curRenderedNotes.members.copy();
 					onSelectNote();
@@ -498,6 +504,8 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 					curRenderedNotes.remove(note, true);
 					note.destroy();
 				}
+				movingNotes.clear();
+				isMovingNotes = false;
 				selectedNotes = [];
 				onSelectNote();
 				softReloadNotes(true);
@@ -577,6 +585,14 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		var minX:Float = gridBg.x;
 		if(SHOW_EVENT_COLUMN && lockedEvents) minX += GRID_SIZE;
 
+		if(isMovingNotes && FlxG.mouse.released) {
+			movingNotes.forEachAlive((note:MetaNote) -> notes.push(note));
+			notes.sort(PlayState.sortByTime);
+			movingNotes.clear();
+			isMovingNotes = false;
+			softReloadNotes();
+		}
+
 		if(FlxG.mouse.x >= minX && FlxG.mouse.x < gridBg.x + gridBg.width) {
 			var diffX:Float = FlxG.mouse.x - gridBg.x;
 			var diffY:Float = FlxG.mouse.y - gridBg.y;
@@ -600,9 +616,71 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 				dummyArrow.y = gridBg.y + t;
 			}
 
-			if(FlxG.mouse.justPressed && !ignoreClickForThisFrame) {
-				if(FlxG.keys.pressed.CONTROL && FlxG.mouse.justPressed) { // TO DO: Move notes
-					showOutput('This keybind is not implemented yet: Moving notes', true);
+			if(isMovingNotes) {
+				// Move note data
+				var nData:Int = Std.int(Math.max(0, noteData));
+				if(movingNotesLastData != nData) {
+					var isFirst:Bool = true;
+					var movingNotesMinData:Int = 0;
+					var movingNotesMaxData:Int = 0;
+					for (note in selectedNotes) { //Find boundaries first
+						if(note == null || note.isEvent) continue;
+	
+						var data:Int = note.songData[1];
+						if(isFirst || data < movingNotesMinData) movingNotesMinData = data;
+						if(data > movingNotesMaxData) movingNotesMaxData = data;
+						isFirst = false;
+					}
+	
+					var diff:Int = nData - movingNotesLastData;
+					var maxn:Int = (GRID_PLAYERS * GRID_COLUMNS_PER_PLAYER) - 1;
+					movingNotesMinData += diff;
+					movingNotesMaxData += diff;
+					if(movingNotesMinData < 0) diff -= movingNotesMinData;
+					else if(movingNotesMaxData > maxn) diff -= movingNotesMaxData - maxn;
+	
+					for (note in movingNotes) {
+						if(note == null) continue;
+	
+						if(!note.isEvent) { //Events shouldn't change note data as they don't have one
+							note.changeNoteData(note.songData[1] + diff);
+							positionNoteXByData(note);
+						}
+					}
+				}
+				movingNotesLastData = nData;
+	
+				// Move note strum time
+				if(dummyArrow.y != movingNotesLastY) {
+					var diff:Float = dummyArrow.y - movingNotesLastY;
+					var curSecRow:Int = 0;
+					for (note in movingNotes)  { //Try to figure out new strum time for the notes, INACCURATE WITH BPM CHANGING
+						if(note == null) continue;
+	
+						note.chartY += diff;
+						var row:Float = (note.chartY / GRID_SIZE) * curZoom;
+						while(curSecRow + 1 < cachedSectionRow.length && cachedSectionRow[curSecRow] <= row) curSecRow++;
+	
+						note.strumTime = Math.max(-5000, note.strumTime + (diff * cachedSectionCrochets[curSecRow] / 4) / GRID_SIZE * curZoom);
+						positionNoteYOnTime(note, curSecRow);
+					}
+					movingNotesLastY = dummyArrow.y;
+				}
+			} else if(FlxG.mouse.justPressed && !ignoreClickForThisFrame) {
+				if(FlxG.keys.pressed.CONTROL && FlxG.mouse.justPressed) {
+					if(selectedNotes.length > 0) {
+						for (note in selectedNotes) {
+							if(note == null) continue;
+	
+							notes.remove(note);
+							movingNotes.add(note);
+						}
+						isMovingNotes = true;
+						movingNotesLastData = noteData;
+						movingNotesLastY = dummyArrow.y;
+						softReloadNotes();
+						movingNotes.sort(cast PlayState.sortByTime);
+					} else showOutput('You must select notes to move them!', true);
 				} else if(FlxG.mouse.x >= gridBg.x && FlxG.mouse.y >= gridBg.y && FlxG.mouse.x < gridBg.x + gridBg.width && FlxG.mouse.y < gridBg.y + gridBg.height) {
 					var closeNotes:Array<MetaNote> = curRenderedNotes.members.filter((note:MetaNote) -> {
 						var chartY:Float = FlxG.mouse.y - note.chartY;
@@ -616,8 +694,8 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 							if(!selectedNotes.contains(closest)) selectedNotes.push(closest);
 							else if(!FlxG.keys.pressed.CONTROL) {
 								var selectedOld:Array<MetaNote> = selectedNotes;
-								selectedOld.remove(closest);
 								resetSelectedNotes();
+								selectedOld.remove(closest);
 								selectedNotes = selectedOld;
 							}
 
@@ -725,7 +803,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		if(selectedNotes.length > 0) {
 			noteSelectionSine += elapsed;
-			var sineValue:Float = .75 + Math.cos(Math.PI * noteSelectionSine * 2) / 4;
+			var sineValue:Float = .75 + Math.cos(Math.PI * noteSelectionSine * (isMovingNotes ? 8 : 2)) / 4;
 
 			var qPress:Bool = FlxG.keys.justPressed.Q;
 			var ePress:Bool = FlxG.keys.justPressed.E;
@@ -751,6 +829,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		outputTxt.alpha = outputAlpha;
 		outputTxt.visible = (outputAlpha > 0);
 		FlxG.camera.scroll.y = scrollY;
+		lastFocus = PsychUIInputText.focusOn;
 	}
 
 	function updateScrollY() {
@@ -808,6 +887,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 	function onSelectNote() {
 		if(selectedNotes.length == 1) { //Only one note selected
 			var note:MetaNote = selectedNotes[0];
+			strumTimeStepper.value = note.strumTime;
 			if(!note.isEvent) { //Normal note
 				strumTimeLastVal = strumTimeStepper.value = note.strumTime;
 				if(!note.isEvent) {
@@ -821,7 +901,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		} else if(selectedNotes.length > 1) {
 			susLengthStepper.min = -susLengthStepper.max;
 			susLengthLastVal = susLengthStepper.value = 0;
-			strumTimeLastVal = strumTimeStepper.value = 0;
+			strumTimeStepper.value = selectedNotes[0].strumTime;
 			noteTypeDropDown.selectedLabel = '';
 			eventDropDown.selectedLabel = '';
 			value1InputText.text = '';
@@ -1021,8 +1101,8 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		var txt:FlxText = swagNote.findNoteTypeText(swagNote.noteType != null ? noteTypes.indexOf(swagNote.noteType) : 0);
 		if(txt != null) txt.visible = showNoteTypeLabels;
 
-		if(swagNote.width > swagNote.height)
-			swagNote.setGraphicSize(GRID_SIZE);
+		swagNote.updateHitbox();
+		if(swagNote.width > swagNote.height) swagNote.setGraphicSize(GRID_SIZE);
 		else swagNote.setGraphicSize(0, GRID_SIZE);
 
 		swagNote.updateHitbox();
@@ -1635,6 +1715,18 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		objY += 40;
 		strumTimeStepper = new PsychUINumericStepper(objX, objY, Conductor.stepCrochet, 0, -5000, Math.POSITIVE_INFINITY, 3, 120);
+		strumTimeStepper.onValueChange = function() {
+			if(selectedNotes.length < 1) return;
+	
+			var firstTime:Float = selectedNotes[0].strumTime;
+			for (note in selectedNotes) {
+				if(note == null) continue;
+	
+				note.strumTime = Math.max(-5000, strumTimeStepper.value + (note.strumTime - firstTime));
+				positionNoteYOnTime(note, curSec);
+			}
+			softReloadNotes();
+		};
 		
 		var exts:Array<String> = ['.txt'];
 		#if LUA_ALLOWED exts.push('.lua'); #end
@@ -2006,7 +2098,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 		scrollSpeedStepper.onValueChange = () -> PlayState.SONG.speed = scrollSpeedStepper.value;
 
 		audioOffsetStepper = new PsychUINumericStepper(objX + 180, objY, 1, 0, -500, 500, 0);
-		audioOffsetStepper.onValueChange = () -> { //TO DO: Implement in-game functionality
+		audioOffsetStepper.onValueChange = () -> {
 			PlayState.SONG.offset = audioOffsetStepper.value;
 			Conductor.offset = audioOffsetStepper.value;
 		};
@@ -2950,6 +3042,7 @@ class NewChartingState extends MusicBeatState implements PsychUIEventHandler.Psy
 	}
 
 	function goToPlayState() {
+		persistentUpdate = false;
 		FlxG.mouse.visible = false;
 		chartEditorSave.flush();
 

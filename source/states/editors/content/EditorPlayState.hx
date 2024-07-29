@@ -75,7 +75,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		this.vocals = vocal;
 		this._noteList = noteList;
 		this.startPos = Conductor.songPosition;
-		Conductor.songPosition = startPos - timerToStart;
+		Conductor.songPosition = startPos;
 
 		playbackRate = FlxG.sound.music.pitch;
 	}
@@ -183,8 +183,8 @@ class EditorPlayState extends MusicBeatSubstate {
 		} else {
 			Conductor.songPosition += elapsed * 1000 * playbackRate;
 			if (Conductor.songPosition >= 0) {
-				var timeDiff:Float = Math.abs(FlxG.sound.music.time - Conductor.songPosition - Conductor.offset);
-				Conductor.songPosition = FlxMath.lerp(Conductor.songPosition, FlxG.sound.music.time, FlxMath.bound(elapsed * 2.5, 0, 1));
+				var timeDiff:Float = Math.abs((FlxG.sound.music.time + Conductor.offset) - Conductor.songPosition);
+				Conductor.songPosition = FlxMath.lerp(FlxG.sound.music.time + Conductor.offset, Conductor.songPosition, Math.exp(-elapsed * 2.5));
 				if (timeDiff > 1000 * playbackRate) Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
 			}
 		}
@@ -266,7 +266,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 		FlxG.sound.music.play();
 		vocals.play();
-		FlxG.sound.music.time = vocals.time = startPos;
+		FlxG.sound.music.time = vocals.time = startPos - Conductor.offset;
 
 		songLength = FlxG.sound.music.length; // Song duration in a float, useful for the time left feature
 	}
@@ -381,7 +381,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		FlxG.sound.music.pause();
 		vocals.pause();
 		if(finishTimer != null) finishTimer.destroy();
-		Conductor.songPosition = FlxG.sound.music.time = vocals.time = startPos;
+		Conductor.songPosition = FlxG.sound.music.time = vocals.time = startPos - Conductor.offset;
 		close();
 	}
 
@@ -477,7 +477,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		if(cpuControlled || key < 0 || key > playerStrums.length) return;
 
 		var lastTime:Float = Conductor.songPosition; // more accurate hit time for the ratings?
-		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time;
+		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time + Conductor.offset;
 
 		// obtain notes that the player can hit
 		final plrInputNotes:Array<Note> = notes.members.filter(function(n:Note):Bool {
