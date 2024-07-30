@@ -2,24 +2,17 @@ package utils.system;
 
 class FPSUtil {
     @:noCompletion var times:Array<Float>;
-	@:noCompletion var curCount(default, null):Int;
-
 	public var curFPS(default, null):Float;
-	public var fpsInterval:Float;
-
-    public function new(fpsInterval:Float = 1000) {
-		curFPS = curCount = 0;
-		this.fpsInterval = fpsInterval;
+    public function new() {
+		curFPS = 0;
 		times = [];
 	}
 
     public function update() {
-		final now:Float = haxe.Timer.stamp() * fpsInterval;
+		final now:Float = haxe.Timer.stamp() * 1000;
 		times.push(now);
-		while (times[0] < now - fpsInterval) times.shift();
-
-		curCount = times.length;
-		curFPS = Math.min(FlxG.drawFramerate, curCount);
+		while (times[0] < now - 1000) times.shift();
+		curFPS = Math.min(FlxG.drawFramerate, times.length);
     }
 
 	public static function getFPSAdjust(type:String, fps:Float):Float {

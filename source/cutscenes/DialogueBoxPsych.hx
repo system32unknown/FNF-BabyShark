@@ -35,6 +35,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 	var scrollSpeed:Int = 4000;
 
 	var offsetPos:Float = -600;
+	var skipText:FlxText;
 
 	var ignoreThisFrame:Bool = true; // First frame is reserved for loading dialogue images
 
@@ -71,11 +72,12 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 			if (bgFade.alpha > .5) bgFade.alpha = .5;
 
 			var ret:Dynamic = PlayState.instance.callOnScripts('onDialogueConfirm');
-			if ((confirmDialogue || Controls.instance.ACCEPT) && ret != LuaUtils.Function_Stop) {
-				if (!typedText.finishedText) {
+			var back:Bool = Controls.instance.BACK;
+			if ((confirmDialogue || (Controls.instance.ACCEPT || back)) && ret != LuaUtils.Function_Stop) {
+				if (!typedText.finishedText || !back) {
 					typedText.finishText();
 					if (skipDialogueThing != null) skipDialogueThing();
-				} else this.startNextDialog();
+				} else this.startNextDialog(back);
 
 				FlxG.sound.play(Paths.sound(closeSound), closeVolume);
 			} else this.onCharacterAnimationCheck();
@@ -97,8 +99,8 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 	public var nextDialogueThing:Void->Void = null;
 	public var skipDialogueThing:Void->Void = null;
 
-	function startNextDialog():Void {
-		if (currentDialogueIndex >= dialogueLines.length) {
+	function startNextDialog(back:Bool = false):Void {
+		if (back || currentDialogueIndex >= dialogueLines.length) {
 			this.onLastDialogueConsummed();
 			return;
 		}
@@ -246,6 +248,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		this.killAll(texts); // Kill all texts
 		this.killAll(sprites); // Kill all sprites
 
+		skipText.visible = false;
 		if (shouldBoxRecenter) updateBoxOffsets(box);
 		FlxG.sound.music.fadeOut(1, 0, (_) -> FlxG.sound.music.stop());
 	}
@@ -528,6 +531,11 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		typedText.setScale(.7);
 		typedText.onUpdate = (text:String) -> PlayState.instance.callOnScripts('onDialogueTextUpdate', [text]);
 		add(typedText);
+
+		skipText = new FlxText(FlxG.width - 320, FlxG.height - 30, 300, Language.getPhrase('dialogue_skip', 'Press BACK to Skip'), 16);
+		skipText.setFormat(null, 16, FlxColor.WHITE, RIGHT, OUTLINE_FAST, FlxColor.BLACK);
+		skipText.borderSize = 2;
+		add(skipText);
 	}
 
 	public function addText(tag:String):Void {

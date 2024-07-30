@@ -171,8 +171,8 @@ class FileReferenceCustom extends FileReference {
 		openFileDialog.onSelect.add(openFileDialog_onSelect);
 		openFileDialog.browse(browseType, filter, defaultName, title);
 		return true;
-		#end
-
+		#else
 		return false;
+		#end
 	}
 }

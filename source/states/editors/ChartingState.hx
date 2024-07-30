@@ -21,6 +21,8 @@ import objects.Note;
 import haxe.Json;
 import haxe.Exception;
 
+using DateTools;
+
 enum abstract ChartingTheme(String) {
 	var LIGHT:ChartingTheme = 'light';
 	var DEFAULT:ChartingTheme = 'default';
@@ -52,6 +54,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	public static var GRID_COLUMNS_PER_PLAYER = 4;
 	public static var GRID_PLAYERS = 2;
 	public static var GRID_SIZE = 40;
+	final BACKUP_EXTENSION = '.bkp';
 
 	public var quantizations:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 96, 192];
 	var curQuant:Int = 16;
@@ -98,6 +101,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var timeLine:FlxSprite;
 	var infoText:FlxText;
 
+	var autoSaveIcon:FlxSprite;
 	var outputTxt:FlxText;
 
 	var selectionStart:FlxPoint = FlxPoint.get();
@@ -137,6 +141,9 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.scrollFactor.set();
 		add(bg);
+
+		if(chartEditorSave.data.autoSave != null) autoSaveCap = chartEditorSave.data.autoSave;
+		if(chartEditorSave.data.backupLimit != null) backupLimit = chartEditorSave.data.backupLimit;
 		
 		changeTheme(chartEditorSave.data.theme ?? DEFAULT, false);
 
@@ -241,6 +248,14 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		mainBox.scrollFactor.set();
 		mainBox.cameras = [camUI];
 		add(mainBox);
+
+		autoSaveIcon = new FlxSprite(50, Paths.image('editors/autosave'));
+		autoSaveIcon.screenCenter(Y);
+		autoSaveIcon.scale.set(0.6, 0.6);
+		autoSaveIcon.antialiasing = ClientPrefs.data.antialiasing;
+		autoSaveIcon.scrollFactor.set();
+		autoSaveIcon.alpha = 0;
+		add(autoSaveIcon);
 
 		// save data positions for the UI boxes
 		if(chartEditorSave.data.mainBoxPosition != null && chartEditorSave.data.mainBoxPosition.length > 1)
@@ -406,10 +421,69 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 	var fileDialog:FileDialogHandler = new FileDialogHandler();
 	var lastFocus:PsychUIInputText;
+
+	var autoSaveTime:Float = 0;
+	var autoSaveCap:Int = 2; //in minutes
+	var backupLimit:Int = 10;
 	override function update(elapsed:Float) {
 		if(!fileDialog.completed) {
 			lastFocus = PsychUIInputText.focusOn;
 			return;
+		}
+
+		if(autoSaveCap > 0) {
+			autoSaveTime += elapsed / 60.0;
+			if(autoSaveTime >= autoSaveCap #if debug || FlxG.keys.justPressed.NUMPADMULTIPLY #end) {
+				FlxTween.cancelTweensOf(autoSaveIcon);
+				autoSaveTime = 0;
+				autoSaveIcon.alpha = 0;
+				updateChartData();
+				var chartName:String = 'unknown';
+				if(Song.chartPath != null) {
+					chartName = Song.chartPath.replace('/', '\\');
+					chartName = chartName.substring(chartName.lastIndexOf('\\')+1, chartName.lastIndexOf('.'));
+				}
+				chartName += DateTools.format(Date.now(), '_%Y-%m-%d_%H-%M-%S');
+				var songCopy:SwagSong = Reflect.copy(PlayState.SONG);
+				Reflect.setField(songCopy, '__original_path', Song.chartPath);
+				var dataToSave:String = haxe.Json.stringify(songCopy);
+				if(!FileSystem.isDirectory('backups')) FileSystem.createDirectory('backups');
+				File.saveContent('backups/$chartName' + BACKUP_EXTENSION, dataToSave);
+
+				if(backupLimit > 0) {
+					var files:Array<String> = FileSystem.readDirectory('backups/').filter((file:String) -> file.endsWith(BACKUP_EXTENSION));
+					if(files.length > backupLimit) {
+						var incorrect:Array<String> = [];
+						var map:Map<String, Float> = [];
+						for(file in files) {
+							var split:Array<String> = file.split('_');
+							if(split.length > 2) { //is properly formatted
+								try {
+									var timeStr:String = split[split.length-1].replace('-', ':');
+									timeStr = timeStr.substr(0, timeStr.indexOf('.'));
+
+									var fileJoin:String = split[split.length-2] + ' ' + timeStr;
+									var date:Date = Date.fromString(fileJoin);
+									map.set(file, date.getTime());
+								}
+								catch(e:Exception) incorrect.push(file);
+							} else incorrect.push(file);
+						}
+
+						if(incorrect.length > 0) files = files.filter((file:String) -> !incorrect.contains(file));
+						files.sort((a:String, b:String) -> return map.get(a) > map.get(b) ? 1 : -1);
+
+						while(files.length > backupLimit) {
+							var file:Null<String> = files.shift();
+							try {
+								FileSystem.deleteFile('backups/$file');
+							} catch(e:Exception) {}
+						}
+					}
+				}
+
+				FlxTween.tween(autoSaveIcon, {alpha: 1}, 0.5, {onComplete: (_) -> FlxTween.tween(autoSaveIcon, {alpha: 0}, 0.5, {startDelay: 2})});
+			}
 		}
 
 		ClientPrefs.toggleVolumeKeys(PsychUIInputText.focusOn == null);
@@ -662,7 +736,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						var row:Float = (note.chartY / GRID_SIZE) * curZoom;
 						while(curSecRow + 1 < cachedSectionRow.length && cachedSectionRow[curSecRow] <= row) curSecRow++;
 	
-						note.strumTime = Math.max(-5000, note.strumTime + (diff * cachedSectionCrochets[curSecRow] / 4) / GRID_SIZE * curZoom);
+						note.setStrumTime(Math.max(-5000, note.strumTime + (diff * cachedSectionCrochets[curSecRow] / 4) / GRID_SIZE * curZoom));
 						positionNoteYOnTime(note, curSecRow);
 					}
 					movingNotesLastY = dummyArrow.y;
@@ -1002,7 +1076,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			FlxG.sound.music.pause();
 			FlxG.sound.music.time = time;
 			FlxG.sound.music.onComplete = (() -> songFinished = true);
-		} catch(e:Dynamic) {
+		} catch(e:Exception) {
 			FlxG.log.error('Error loading song: $e');
 			return;
 		}
@@ -1721,12 +1795,12 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			for (note in selectedNotes) {
 				if(note == null) continue;
 	
-				note.strumTime = Math.max(-5000, strumTimeStepper.value + (note.strumTime - firstTime));
+				note.setStrumTime(Math.max(-5000, strumTimeStepper.value + (note.strumTime - firstTime)));
 				positionNoteYOnTime(note, curSec);
 			}
 			softReloadNotes();
 		};
-		
+		showOutput('Opened chart "${Song.chartPath}" successfully!');
 		var exts:Array<String> = ['.txt'];
 		#if LUA_ALLOWED exts.push('.lua'); #end
 		#if HSCRIPT_ALLOWED exts.push('.hx'); #end
@@ -2202,7 +2276,67 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		tab_group.add(btn);
 
 		btnY += 20;
-		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Open Autosave...', () -> showOutput('Feature not implemented yet!', true), btnWid); //TO DO: Add functionality
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Open Autosave...', () -> {
+			if(!FileSystem.exists('backups/')) {
+				showOutput('The "backups" folder does not exist.', true);
+				return;
+			}
+
+			var fileList:Array<String> = FileSystem.readDirectory('backups/').filter((file:String) -> file.endsWith(BACKUP_EXTENSION));
+			if(fileList.length < 1) {
+				showOutput('No autosave files found.', true);
+				return;
+			}
+
+			fileList.sort((a:String, b:String) -> (a.toUpperCase() < b.toUpperCase()) ? 1 : -1); //Sort alphabetically descending
+			var maxItems:Int = Std.int(Math.min(5, fileList.length));
+			var radioGrp:PsychUIRadioGroup = new PsychUIRadioGroup(0, 0, fileList, 25, maxItems, false, 240);
+			radioGrp.checked = 0;
+
+			var hei:Float = radioGrp.height + 160;
+			openSubState(new BasePrompt(420, hei, 'Choose an Autosave', (state:BasePrompt) -> {
+				var btn:PsychUIButton = new PsychUIButton(state.bg.x + state.bg.width - 40, state.bg.y, 'X', state.close, 40);
+				btn.cameras = state.cameras;
+				state.add(btn);
+
+				radioGrp.screenCenter(X).y = state.bg.y + 80;
+				radioGrp.cameras = state.cameras;
+				state.add(radioGrp);
+
+				var btn:PsychUIButton = new PsychUIButton(0, radioGrp.y + radioGrp.height + 20, 'Load', () -> {
+					var autosaveName:String = fileList[radioGrp.checked];
+					var path:String = 'backups/$autosaveName';
+					state.close();
+
+					if(FileSystem.exists(path)) {
+						try {
+							var loadedChart:SwagSong = Song.parseJSON(File.getContent(path), autosaveName, null);
+							if(loadedChart == null || !Reflect.hasField(loadedChart, '__original_path')) {
+								showOutput('Error: File loaded is not a valid Psych Engine autosave.', true);
+								return;
+							}
+
+							var originalPath:String = Reflect.field(loadedChart, '__original_path');
+							Reflect.deleteField(loadedChart, '__original_path');
+							Song.chartPath = FileSystem.exists(originalPath) ? originalPath : null;
+
+							var func:Void->Void = () -> {
+								loadChart(loadedChart);
+								prepareReload();
+
+								showOutput('Opened autosave "$autosaveName" successfully!');
+							}
+
+							if(!ignoreProgressCheckBox.checked) openSubState(new Prompt('Warning: Any unsaved progress\nwill be lost.', func));
+							else func();
+						} catch(e:Exception) showOutput('Error on loading autosave: ${e.message}', true);
+					} else showOutput('Error! Autosave file selected could not be found, huh??', true);
+				});
+				btn.cameras = state.cameras;
+				btn.screenCenter(X);
+				state.add(btn);
+			}));
+		}, btnWid);
 		btn.text.alignment = LEFT;
 		tab_group.add(btn);
 
@@ -2679,6 +2813,56 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				if(selectedNotes.length == 1) onSelectNote();
 			}
 			softReloadNotes(true);
+		};
+		btn.text.alignment = LEFT;
+		tab_group.add(btn);
+
+		btnY++;
+		btnY += 20;
+		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Autosave Settings...', btnWid);
+		btn.onClick = () -> {
+			openSubState(new BasePrompt(400, 160, 'Autosave Settings', (state:BasePrompt) -> {
+				var btn:PsychUIButton = new PsychUIButton(state.bg.x + state.bg.width - 40, state.bg.y, 'X', state.close, 40);
+				btn.cameras = state.cameras;
+				state.add(btn);
+
+				var checkbox:PsychUICheckBox = null;
+				var timeStepper:PsychUINumericStepper = null;
+
+				timeStepper = new PsychUINumericStepper(state.bg.x + 50, state.bg.y + 90, 1, autoSaveCap, 1, 30, 0);
+				timeStepper.onValueChange = () -> {
+					autoSaveTime = 0;
+					checkbox.checked = true;
+					autoSaveCap = chartEditorSave.data.autoSave = Std.int(timeStepper.value);
+				};
+				timeStepper.cameras = state.cameras;
+
+				checkbox = new PsychUICheckBox(timeStepper.x + 80, timeStepper.y, 'Enabled', 60, () -> {
+					autoSaveTime = 0;
+					autoSaveCap = chartEditorSave.data.autoSave = checkbox.checked ? Std.int(timeStepper.value) : 0;
+				});
+				checkbox.checked = (autoSaveCap > 0);
+				checkbox.cameras = state.cameras;
+
+				var maxFileStepper:PsychUINumericStepper = new PsychUINumericStepper(checkbox.x + 140, checkbox.y, 1, backupLimit, 0, 50, 0);
+				maxFileStepper.onValueChange = () -> {
+					autoSaveTime = 0;
+					checkbox.checked = true;
+					chartEditorSave.data.backupLimit = backupLimit = Std.int(maxFileStepper.value);
+				};
+				maxFileStepper.cameras = state.cameras;
+
+				var txt1:FlxText = new FlxText(timeStepper.x, timeStepper.y - 15, 100, 'Time (in minutes):');
+				txt1.cameras = state.cameras;
+				var txt2:FlxText = new FlxText(maxFileStepper.x, maxFileStepper.y - 15, 100, 'File Limit:');
+				txt2.cameras = state.cameras;
+
+				state.add(txt1);
+				state.add(txt2);
+				state.add(checkbox);
+				state.add(timeStepper);
+				state.add(maxFileStepper);
+			}));
 		};
 		btn.text.alignment = LEFT;
 		tab_group.add(btn);
