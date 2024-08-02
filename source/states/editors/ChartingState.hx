@@ -713,7 +713,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					if(FlxG.sound.music.playing) setSongPlaying(false);
 
 					if(mouseSnapCheckBox.checked && FlxG.mouse.wheel != 0) {
-						var snap:Float = Conductor.stepCrochet / (curQuant/16) / curZoom;
+						var snap:Float = Conductor.stepCrochet / (curQuant / 16) / curZoom;
 						var timeAdd:Float = (FlxG.keys.pressed.SHIFT ? 4 : 1) / (holdingAlt ? 4 : 1) * -FlxG.mouse.wheel * snap;
 						var time:Float = Math.round((FlxG.sound.music.time + timeAdd) / snap) * snap;
 						if(time > 0) time += .000001; //goes at the start of a section more properly
@@ -943,7 +943,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 			if(FlxG.keys.pressed.SHIFT || FlxG.mouse.y >= gridBg.y || !prevGridBg.visible) dummyArrow.y = gridBg.y + diffY;
 			else {
-				var t:Float = (diffY - (GRID_SIZE / (curQuant/16)));
+				var t:Float = (diffY - (GRID_SIZE / (curQuant / 16)));
 				if(FlxG.mouse.y >= gridBg.y) t *= curZoom;
 				dummyArrow.y = gridBg.y + t;
 			}
@@ -2917,7 +2917,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				openSubState(new BasePrompt('Metadata', (state:BasePrompt) -> {
 					var songName:String = Paths.formatToSongPath(pack.metadata.songName);
 					var parentFolder:String = filePath.substring(0, filePath.lastIndexOf('\\') + 1);
-					var artistInput, charterInput, difficultiesInput:PsychUIInputText = null;
+					var artistInput:PsychUIInputText, charterInput:PsychUIInputText, difficultiesInput:PsychUIInputText = null;
 
 					var btnX:Int = 640;
 					var btnY:Int = 400;

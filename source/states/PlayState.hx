@@ -300,9 +300,9 @@ class PlayState extends MusicBeatState {
 		girlfriendCameraOffset = stageData.camera_girlfriend;
 		girlfriendCameraOffset ??= [0, 0];
 
-		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
-		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
-		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
+		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y); boyfriendGroup.zIndex = 300;
+		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y); dadGroup.zIndex = 200;
+		gfGroup = new FlxSpriteGroup(GF_X, GF_Y); gfGroup.zIndex = 100;
 
 		switch (curStage) {
 			case 'stage': new states.stages.StageWeek1(); //Week 1
@@ -401,8 +401,8 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(timeTxt);
 
 		add(comboGroup);
-		add(uiGroup);
 		add(noteGroup);
+		add(uiGroup);
 		noteGroup.add(strumLineNotes);
 
 		opponentStrums = new FlxTypedGroup<StrumNote>();
@@ -2141,7 +2141,7 @@ class PlayState extends MusicBeatState {
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHitPre', [note]);
 
 		note.wasGoodHit = true;
-		if (ClientPrefs.data.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound(note.hitsound), ClientPrefs.data.hitsoundVolume);
+		if (note.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound(note.hitsound), note.hitsoundVolume);
 
 		var animToPlay:String = singAnimations[EK.gfxHud[mania][leData]];
 		if (ClientPrefs.data.camMovement && bfturn) moveCamOnNote(animToPlay);
