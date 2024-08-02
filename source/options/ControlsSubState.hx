@@ -185,12 +185,13 @@ class ControlsSubState extends MusicBeatSubstate {
 		text.startPosition.y -= 55;
 	}
 	function addKeyText(text:Alphabet, option:Array<Dynamic>) {
+		var keys:Array<Null<FlxKey>> = ClientPrefs.keyBinds.get(option[2]);
+		if(keys == null) keys = ClientPrefs.defaultKeys.get(option[2]).copy();
+
 		for (n in 0...2) {
 			var textX:Float = 350 + n * 300;
 
-			var key:String = null;
-			var savKey:Array<Null<FlxKey>> = ClientPrefs.keyBinds.get(option[2]);
-			key = InputFormatter.getKeyName((savKey[n] != null) ? savKey[n] : NONE);
+			var key = InputFormatter.getKeyName((keys[n] != null) ? keys[n] : NONE);
 
 			var attach:Alphabet = new Alphabet(textX + 210, 248, key, false);
 			attach.isMenuItem = true;

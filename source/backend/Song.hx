@@ -40,27 +40,6 @@ typedef SwagSection = {
 	@:optional var changeBPM:Bool;
 }
 
-@:structInit class ChartNoteData {
-	public var time:Null<Float> = null;
-	public var id:Null<Int> = null;
-	public var type:Null<String> = null;
-	public var strumLine:Null<Int> = null;
-	public var isGfNote:Null<Bool> = null;
-	public var sLen:Null<Float> = null;
-	public var animSuffix:Null<String> = null;
-
-	public function dispose() {
-		// will be cleared by the GC later
-		time = null;
-		id = null;
-		type = null;
-		strumLine = null;
-		isGfNote = null;
-		sLen = null;
-		animSuffix = null;
-	}
-}
-
 class Song {
 	public static function convert(songJson:Dynamic) { // Convert old charts to psych_v1 format
 		if(songJson.gfVersion == null) {

@@ -25,7 +25,8 @@ class ModSettingsSubState extends BaseOptionsMenu {
 					option.description ?? 'No description provided.',
 					option.save,
 					convertType(option.type),
-					option.options
+					option.options,
+					option.translation_key
 				);
 
 				switch(newOption.type) {

@@ -237,15 +237,18 @@ class CreditsState extends MusicBeatState {
 	var modCredits:Array<Array<String>> = [];
 	function pushModCredits(?folder:String = null):Void {
 		var creditsFile:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits.txt');
-		if (!FileSystem.exists(creditsFile)) return;
+		#if TRANSLATIONS_ALLOWED
+		var translatedCredits:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits-${ClientPrefs.data.language}.txt');
+		#end
+		if (#if TRANSLATIONS_ALLOWED (FileSystem.exists(translatedCredits) && (creditsFile = translatedCredits) == translatedCredits) || #end FileSystem.exists(creditsFile)) {
+			var arr:Array<String> = File.getContent(creditsFile).split('\n');
+			if (arr.length > 0) {
+				var metadata:ModsMenuState.ModItem = new ModsMenuState.ModItem(folder);
+				var name:String = metadata.name;
+				var color:FlxColor = metadata.color;
 
-		var arr:Array<String> = File.getContent(creditsFile).split('\n');
-		if (arr.length > 0) {
-			var metadata:ModsMenuState.ModItem = new ModsMenuState.ModItem(folder);
-			var name:String = metadata.name;
-			var color:FlxColor = metadata.color;
-
-			modCredits.push([name, folder, modDescription.replace('%s', name), color.toHexString(false, false)]);
+				modCredits.push([name, folder, modDescription.replace('%s', name), color.toHexString(false, false)]);
+			}
 		}
 	}
 	#end
@@ -285,9 +288,9 @@ class CreditSectionState extends MusicBeatState {
 
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
-		for (i in 0...creditsStuff.length) {
+		for (i => credit in creditsStuff) {
 			var isSelectable:Bool = !unselectableCheck(i);
-			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 300, creditsStuff[i][0], !isSelectable);
+			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 300, credit[0], !isSelectable);
 			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			optionText.changeX = false;
@@ -295,11 +298,11 @@ class CreditSectionState extends MusicBeatState {
 			grpOptions.add(optionText);
 
 			if(isSelectable) {
-				if(creditsStuff[i][5] != null) Mods.currentModDirectory = creditsStuff[i][5];
+				if(credit[5] != null) Mods.currentModDirectory = credit[5];
 
 				var str:String = 'credits/missing_icon';
-				if(creditsStuff[i][1] != null && creditsStuff[i][1].length > 0) {
-					var fileName:String = 'credits/${creditsStuff[i][1]}';
+				if(credit[1] != null && credit[1].length > 0) {
+					var fileName = 'credits/' + credit[1];
 					if (Paths.fileExists('images/$fileName.png', IMAGE)) str = fileName;
 					else if (Paths.fileExists('images/$fileName-pixel.png', IMAGE)) str = fileName + '-pixel';
 				}
@@ -450,13 +453,17 @@ class CreditSectionState extends MusicBeatState {
 	#if MODS_ALLOWED
 	function initializeModList(?folder:String = null) {
 		var creditsFile:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits.txt');
-		if (!FileSystem.exists(creditsFile)) return switchToDefaultSection();
+		#if TRANSLATIONS_ALLOWED
+		var translatedCredits:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits-${ClientPrefs.data.language}.txt');
+		#end
 
-		for (i in File.getContent(creditsFile).split('\n')) {
-			var arr:Array<String> = i.replace('\\n', '\n').split("::");
-			if(arr.length >= 5) arr.push(folder);
-			creditsStuff.push(arr);
-		}
+		if (#if TRANSLATIONS_ALLOWED (FileSystem.exists(translatedCredits) && (creditsFile = translatedCredits) == translatedCredits) || #end FileSystem.exists(creditsFile)) {
+			for (i in File.getContent(creditsFile).split('\n')) {
+				var arr:Array<String> = i.replace('\\n', '\n').split("::");
+				if(arr.length >= 5) arr.push(folder);
+				creditsStuff.push(arr);
+			}
+		} else return switchToDefaultSection();
 		if (creditsStuff.length <= 0) return switchToDefaultSection();
 	}
 	#end

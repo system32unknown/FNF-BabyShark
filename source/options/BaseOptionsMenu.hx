@@ -57,7 +57,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 		add(descText);
 
 		for (i in 0...optionsArray.length) {
-			var optionText:Alphabet = new Alphabet(290, 260, optionsArray[i].name, optionsArray[i].type == FUNC);
+			var optionText:Alphabet = new Alphabet(220, 260, optionsArray[i].name, optionsArray[i].type == FUNC);
 			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			grpOptions.add(optionText);

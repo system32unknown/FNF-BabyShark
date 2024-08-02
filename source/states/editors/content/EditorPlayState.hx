@@ -88,7 +88,6 @@ class EditorPlayState extends MusicBeatSubstate {
 		timerToStart = startOffset;
 		
 		/* borrowed from PlayState */
-		cachePopUpScore();
 		if(ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}');
 
 		/* setting up Editor PlayState stuff */
@@ -164,6 +163,8 @@ class EditorPlayState extends MusicBeatSubstate {
 		DiscordClient.changePresence('Playtesting on Chart Editor', PlayState.SONG.song, true, songLength);
 		#end
 		updateScore();
+		cachePopUpScore();
+
 		super.create();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
@@ -290,6 +291,18 @@ class EditorPlayState extends MusicBeatSubstate {
 		for (note in _noteList) {
 			if(note == null || note.strumTime < startPos) continue;
 
+			var idx: Int = _noteList.indexOf(note);
+			if (idx != 0) {
+				// CLEAR ANY POSSIBLE GHOST NOTES
+				for (evilNote in unspawnNotes) {
+					var matches:Bool = note.noteData == evilNote.noteData && note.mustPress == evilNote.mustPress;
+					if (matches && Math.abs(note.strumTime - evilNote.strumTime) == 0.0) {
+						evilNote.destroy();
+						unspawnNotes.remove(evilNote);
+					}
+				}
+			}
+
 			var swagNote:Note = new Note(note.strumTime, note.noteData, oldNote, false, this);
 			swagNote.mustPress = note.mustPress;
 			swagNote.sustainLength = note.sustainLength;
@@ -400,10 +413,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		if(!note.ratingDisabled) daRating.hits++;
 		if(daRating.noteSplash && !note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
 
-		if(!note.ratingDisabled) {
-			songHits++;
-			updateScore();
-		}
+		if(!note.ratingDisabled) songHits++;
 
 		if (!ClientPrefs.data.showComboCounter || (!showRating && !showComboNum)) return;
 		if (!ClientPrefs.data.comboStacking) comboGroup.forEachAlive((spr:FlxSprite) -> FlxTween.globalManager.completeTweensOf(spr));
