@@ -16,8 +16,6 @@ class FlxBasicMacro {
         // The fields of the FlxClass.
         var fields:Array<Field> = Context.getBuildFields();
 
-        // haxe.macro.Context.info('[INFO] ${cls.name}: Adding zIndex attribute...', pos);
-
         // Here, we add the zIndex attribute to all FlxBasic objects.
         // This has no functional code tied to it, but it can be used as a target value
         // for the FlxTypedGroup.sort method, to rearrange the objects in the scene.

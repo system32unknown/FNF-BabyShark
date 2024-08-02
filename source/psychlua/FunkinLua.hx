@@ -353,24 +353,17 @@ class FunkinLua {
 			return true;
 		});
 
-		set("getObjectOrder", function(obj:String, ?group:String = null) {
+		set("getObjectOrder", function(obj:String) {
 			var obj:FlxBasic = LuaUtils.getVarInstance(obj);
-			if(obj != null) {
-				var groupObj:Dynamic = LuaUtils.getObjectDirectly(group);
-				if (groupObj == null) groupObj = LuaUtils.getInstance();
-				return groupObj.members.indexOf(obj);
-			}
+			if(obj != null) return obj.zIndex;
 			luaTrace('getObjectOrder: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
 			return -1;
 		});
-		set("setObjectOrder", function(obj:String, position:Int, ?group:String = null) {
+		set("setObjectOrder", function(obj:String, position:Int) {
 			var obj:FlxBasic = LuaUtils.getVarInstance(obj);
 			if (obj != null) {
-				var groupObj:Dynamic = LuaUtils.getObjectDirectly(group);
-				if (groupObj == null) groupObj = LuaUtils.getInstance();
-
-				groupObj.remove(obj, true);
-				groupObj.insert(position, obj);
+				obj.zIndex = position;
+				//LuaUtils.getInstance().refresh();
 				return true;
 			}
 			luaTrace('setObjectOrder: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
