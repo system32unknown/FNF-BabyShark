@@ -59,12 +59,12 @@
 	<section if="HSCRIPT_ALLOWED">
 		<haxeflag name="-dce no"/>
 		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
+		<haxedef name="hscriptPos"/>
 	</section>
 
 	<!-- ______________________________Haxedefines_____________________________ -->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="cpp"/>
-	<haxedef name="hscriptPos"/>
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc"/>
 
 	<section unless="debug">

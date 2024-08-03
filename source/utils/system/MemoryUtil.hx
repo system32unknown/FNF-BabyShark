@@ -2,6 +2,8 @@ package utils.system;
 
 #if cpp
 import cpp.vm.Gc;
+#elseif hl
+import hl.Gc;
 #end
 
 @:cppFileCode("
@@ -18,13 +20,18 @@ class MemoryUtil {
 		#end
 	}
 
-	@:functionCode("
-		PROCESS_MEMORY_COUNTERS_EX pmc;
-		if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc)))
-			return static_cast<int>(pmc.WorkingSetSize);
-		else return 0;
-	")
-	public static function getMEM():Int return 0;
+    inline public static function getMEM():Float {
+        #if cpp
+		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
+        #elseif hl
+        return Gc.stats().currentMemory;
+		#elseif sys
+		return cast(openfl.system.System.totalMemory, UInt);
+		#else
+		return 0;
+		#end
+    }
+
 
 	@:functionCode("
 		unsigned long long allocatedRAM = 0;

@@ -98,6 +98,16 @@ class PlatformUtil {
 	')
 	public static function clearScreen() {}
 
+	@:functionCode('
+		int enabled = enable ? 1 : 0;
+
+		HWND window = FindWindowA(NULL, title.c_str());
+		// Look for child windows if top level aint found
+		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
+		if (window != NULL) DwmSetWindowAttribute(window, type, &enabled, sizeof(enabled));
+	')
+	public static function setDarkMode(title:String, type:Int, enable:Bool) {}
+
     @:functionCode('
         int darkMode = enable ? 1 : 0;
         return DwmSetWindowAttribute(GetActiveWindow(), type, &darkMode, sizeof(darkMode));

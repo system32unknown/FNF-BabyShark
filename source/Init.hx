@@ -8,9 +8,7 @@ class Init extends flixel.FlxState {
 	override function create():Void {
 		FlxTransitionableState.skipNextTransOut = true;
 		Paths.clearStoredMemory();
-
 		utils.FunkinCache.init();
-		#if VIDEOS_ALLOWED hxvlc.util.Handle.init(); #end
 
 		#if LUA_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();

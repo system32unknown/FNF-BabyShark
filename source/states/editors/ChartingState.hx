@@ -2435,7 +2435,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		tab_group.add(mirrorNotesButton);
 	}
 
-	function pasteCopiedNotesToSection(?canCopyNotes:Bool = true, ?canCopyEvents:Bool = true, ?showMessage:Bool = true)  { //Used on "Paste Section" and "Copy Last Section" buttons
+	function pasteCopiedNotesToSection(?canCopyNotes:Bool = true, ?canCopyEvents:Bool = true, ?showMessage:Bool = true) { //Used on "Paste Section" and "Copy Last Section" buttons
 		var curSectionTime:Null<Float> = cachedSectionTimes[curSec];
 		if(curSectionTime == null) {
 			showOutput('ERROR: Unknown section??', true);
