@@ -363,7 +363,7 @@ class FunkinLua {
 			var obj:FlxBasic = LuaUtils.getVarInstance(obj);
 			if (obj != null) {
 				obj.zIndex = position;
-				cast(LuaUtils.getTargetInstance(), MusicBeatState).refresh();
+				cast(LuaUtils.getInstance(), MusicBeatState).refresh();
 				return true;
 			}
 			luaTrace('setObjectOrder: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
@@ -727,7 +727,7 @@ class FunkinLua {
 			var mySprite:FlxSprite = MusicBeatState.getVariables().get(tag);
 			if(mySprite == null) return false;
 
-			var instance = LuaUtils.getInstance();
+			var instance:flixel.FlxState = LuaUtils.getInstance();
 			if(front) instance.add(mySprite);
 			else {
 				if(PlayState.instance == null || !PlayState.instance.isDead)
