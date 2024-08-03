@@ -169,7 +169,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 		if (previewMode) {
 			for (i in 0...controlSet.length) {
-				if (controlSet[i] && !pressedTheFunny && char.animOffsets.exists(singAnimations[i]))
+				if (controlSet[i] && !pressedTheFunny && char.hasAnimation(singAnimations[i]))
 					char.playAnim(singAnimations[i], true);
 			}
 		}
@@ -185,10 +185,10 @@ class CharacterSelectionState extends MusicBeatState {
 			else pressedTheFunny = true;
 
 			selectedCharacter = true;
-			if (char.animOffsets.exists('hey') && char.animation.getByName('hey') != null)
+			if (char.hasAnimation('hey') && char.animation.getByName('hey') != null)
 				char.playAnim('hey', true);
 			else char.playAnim('singUP', true);
-			if (gf.animOffsets.exists('cheer') && gf.animation.getByName('cheer') != null)
+			if (gf.hasAnimation('cheer') && gf.animation.getByName('cheer') != null)
 				gf.playAnim('cheer', true);
 
 			FlxG.sound.playMusic(Paths.music('gameOverEnd'));

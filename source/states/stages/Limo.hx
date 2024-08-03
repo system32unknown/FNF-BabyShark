@@ -91,11 +91,11 @@ class Limo extends BaseStage
 	override function update(elapsed:Float) {
 		if(!lowQuality) {
 			grpLimoParticles.forEach((spr:BGSprite) -> {
-				spr.animation.onFinish.add((name:String) -> {
+				if(spr.animation.curAnim.finished) {
 					spr.kill();
 					grpLimoParticles.remove(spr, true);
 					spr.destroy();
-				});
+				}
 			});
 
 			switch(limoKillingState) {

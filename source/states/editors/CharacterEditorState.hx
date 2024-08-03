@@ -461,7 +461,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			for (anim in character.animationsArray)
 				if(animationInputText.text == anim.anim) {
 					lastOffsets = anim.offsets;
-					if(character.animOffsets.exists(animationInputText.text)) {
+					if(character.hasAnimation(animationInputText.text)) {
 						if(!character.isAnimateAtlas) character.animation.remove(animationInputText.text);
 						else @:privateAccess character.atlas.anim.animsMap.remove(animationInputText.text);
 					}
@@ -485,7 +485,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 				if(animationInputText.text == anim.anim) {
 					var resetAnim:Bool = false;
 					if(anim.anim == character.getAnimationName()) resetAnim = true;
-					if(character.animOffsets.exists(anim.anim)) {
+					if(character.hasAnimation(anim.anim)) {
 						if(!character.isAnimateAtlas) character.animation.remove(anim.anim);
 						else @:privateAccess character.atlas.anim.animsMap.remove(anim.anim);
 						character.animOffsets.remove(anim.anim);
@@ -998,7 +998,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			else character.atlas.anim.addBySymbol(anim, name, fps, loop);
 		}
 
-		if(!character.animOffsets.exists(anim)) character.addOffset(anim);
+		if(!character.hasAnimation(anim)) character.addOffset(anim);
 	}
 
 	inline function newAnim(anim:String, name:String):AnimArray {

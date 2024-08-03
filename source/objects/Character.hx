@@ -230,7 +230,7 @@ class Character extends FlxSprite {
 		}
 
 		var name:String = getAnimationName();
-		if(isAnimationFinished() && animOffsets.exists('$name-loop'))
+		if(isAnimationFinished() && hasAnimation('$name-loop'))
 			playAnim('$name-loop');
 
 		super.update(elapsed);
@@ -255,6 +255,10 @@ class Character extends FlxSprite {
 
 		if(!isAnimateAtlas) animation.curAnim.finish();
 		else atlas.anim.curFrame = atlas.anim.length - 1;
+	}
+
+	public function hasAnimation(anim:String):Bool {
+		return animOffsets.exists(anim);
 	}
 
 	public var animPaused(get, set):Bool;
@@ -285,8 +289,7 @@ class Character extends FlxSprite {
 			danced = !danced;
 			anim = danced ? 'danceRight' : 'danceLeft';
 		}
-		if(animOffsets.exists(anim + idleSuffix))
-			playAnim(anim + idleSuffix, force, reversed, frame);
+		if(hasAnimation(anim + idleSuffix)) playAnim(anim + idleSuffix, force, reversed, frame);
 	}
 
 	public function playAnim(animName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void {
@@ -297,7 +300,7 @@ class Character extends FlxSprite {
 		else atlas.anim.play(animName, Force, Reversed, Frame);
 		_lastPlayedAnimation = animName;
 
-		if (animOffsets.exists(animName)) {
+		if (hasAnimation(animName)) {
 			final daOffset:Array<Float> = animOffsets.get(animName);
 			offset.set(daOffset[0], daOffset[1]);
 		}
@@ -314,7 +317,7 @@ class Character extends FlxSprite {
 	var settingCharacterUp:Bool = true;
 	public function recalculateDanceIdle() {
 		final lastDanceIdle:Bool = danceIdle;
-		danceIdle = (animOffsets.exists('danceLeft' + idleSuffix) && animOffsets.exists('danceRight' + idleSuffix));
+		danceIdle = (hasAnimation('danceLeft' + idleSuffix) && hasAnimation('danceRight' + idleSuffix));
 
 		if(settingCharacterUp) danceEveryNumBeats = danceIdle ? 1 : 2;
 		else if(lastDanceIdle != danceIdle) {

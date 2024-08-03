@@ -5,17 +5,16 @@ import objects.Character;
 
 class GameOverSubstate extends MusicBeatSubstate {
 	public var boyfriend:Character;
+	var camFollow:FlxObject;
 
 	public var camOther:FlxCamera;
 	public var camHUD:FlxCamera;
-
-	var camFollow:FlxObject;
-	var moveCamera:Bool = false;
 
 	public static var characterName:String = 'bf-dead';
 	public static var deathSoundName:String = 'fnf_loss_sfx';
 	public static var loopSoundName:String = 'gameOver';
 	public static var endSoundName:String = 'gameOverEnd';
+	public static var deathDelay:Float = 0;
 
 	public static var instance:GameOverSubstate;
 
@@ -24,6 +23,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		deathSoundName = 'fnf_loss_sfx';
 		loopSoundName = 'gameOver';
 		endSoundName = 'gameOverEnd';
+		deathDelay = 0;
 
 		var _song:backend.Song.SwagSong = PlayState.SONG;
 		if(_song != null) {
@@ -51,6 +51,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 		boyfriend = getBoyfriend();
 		boyfriend.x += boyfriend.positionArray[0];
 		boyfriend.y += boyfriend.positionArray[1];
+		boyfriend.skipDance = true;
 		add(boyfriend);
 
 		var anim:flixel.animation.FlxAnimation = boyfriend.animation.getByName('firstDeath');
@@ -82,10 +83,12 @@ class GameOverSubstate extends MusicBeatSubstate {
 		camFollow.setPosition(mid.x + boyfriend.cameraPosition[0], mid.y + boyfriend.cameraPosition[1]);
 		mid.put();
 		FlxG.camera.focusOn(FlxPoint.get(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2)));
+		FlxG.camera.follow(camFollow, LOCKON, 0.01);
 		add(camFollow);
 
 		PlayState.instance.setOnScripts('inGameOver', true);
 		PlayState.instance.callOnScripts('onGameOverStart');
+		FlxG.sound.music.loadEmbedded(Paths.music(loopSoundName));
 
 		super.create();
 	}
@@ -95,28 +98,32 @@ class GameOverSubstate extends MusicBeatSubstate {
 
 		PlayState.instance.callOnScripts('onUpdate', [elapsed]);
 
-		if (controls.ACCEPT) endBullshit();
-
-		if (controls.BACK) {
-			#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
-			FlxG.sound.music.stop();
-			PlayState.deathCounter = 0;
-			PlayState.seenCutscene = false;
-			PlayState.chartingMode = false;
-
-			Mods.loadTopMod();
-			FlxG.switchState(() -> PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
-
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
-			PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
+		var justPlayedLoop:Bool = false;
+		if (!boyfriend.isAnimationNull() && boyfriend.getAnimationName() == 'firstDeath' && boyfriend.isAnimationFinished()) {
+			boyfriend.playAnim('deathLoop');
+			justPlayedLoop = true;
 		}
 
-		if (!boyfriend.isAnimationNull() && boyfriend.getAnimationName() == 'firstDeath' && (!boyfriend.isAnimateAtlas && boyfriend.animation.curAnim.curFrame >= 12 || boyfriend.isAnimateAtlas && boyfriend.atlas.anim.curFrame >= 12) && !moveCamera) {
-			FlxG.camera.follow(camFollow, LOCKON, .01);
-			moveCamera = true;
+		if(!isEnding) {
+			if (controls.ACCEPT) endBullshit();
+			else if (controls.BACK) {
+				#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
+				FlxG.camera.visible = false;
+				FlxG.sound.music.stop();
+				PlayState.deathCounter = 0;
+				PlayState.seenCutscene = false;
+				PlayState.chartingMode = false;
+	
+				Mods.loadTopMod();
+				FlxG.switchState(() -> PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
+	
+				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
+			}
+	
+			if (FlxG.sound.music.playing) Conductor.songPosition = FlxG.sound.music.time;
 		}
 
-		if (FlxG.sound.music.playing) Conductor.songPosition = FlxG.sound.music.time;
 		PlayState.instance.callOnScripts('onUpdatePost', [elapsed]);
 	}
 
@@ -130,7 +137,8 @@ class GameOverSubstate extends MusicBeatSubstate {
 		if (isEnding) return;
 
 		isEnding = true;
-		boyfriend.playAnim('deathConfirm', true);
+		if(boyfriend.hasAnimation('deathConfirm')) boyfriend.playAnim('deathConfirm', true);
+		else if(boyfriend.hasAnimation('deathLoop')) boyfriend.playAnim('deathLoop', true);
 		FlxG.sound.music.stop();
 		
 		var snd:FlxSound = FlxG.sound.play(Paths.music(endSoundName));

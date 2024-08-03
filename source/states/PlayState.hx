@@ -113,6 +113,7 @@ class PlayState extends MusicBeatState {
 
 	var iconsAnimations:Bool = true;
 	function set_health(value:Float):Float {
+		value = FlxMath.roundDecimal(value, 5); //Fix Float imprecision
 		if(!iconsAnimations || healthBar == null || !healthBar.enabled || healthBar.valueFunction == null)
 			{health = value; return health;}
 
@@ -1441,8 +1442,9 @@ class PlayState extends MusicBeatState {
 	}
 
 	public var isDead:Bool = false; //Don't mess with this on Lua!!!
+	public var gameOverTimer:FlxTimer;
 	function doDeathCheck(?skipHealthCheck:Bool = false) {
-		if (((skipHealthCheck && instakillOnMiss) || health <= (healthBar.bounds != null ? healthBar.bounds.min : 0)) && !practiceMode && !isDead) {
+		if (((skipHealthCheck && instakillOnMiss) || health <= (healthBar.bounds != null ? healthBar.bounds.min : 0)) && !practiceMode && !isDead && gameOverTimer == null) {
 			var ret:Dynamic = callOnScripts('onGameOver', null, true);
 			if(ret != LuaUtils.Function_Stop) {
 				FlxG.animationTimeScale = 1;
@@ -1450,16 +1452,26 @@ class PlayState extends MusicBeatState {
 				deathCounter++;
 
 				paused = true;
-
-				vocals.stop();
-				FlxG.sound.music.stop();
+				canResync = false;
+				canPause = false;
 
 				persistentUpdate = false; persistentDraw = false;
 				FlxTimer.globalManager.clear(); FlxTween.globalManager.clear();
 				FlxG.camera.setFilters([]);
 				#if VIDEOS_ALLOWED for(vid in VideoSprite._videos) vid.destroy(); VideoSprite._videos = []; #end
 
-				openSubState(new GameOverSubstate());
+				if(GameOverSubstate.deathDelay > 0) {
+					gameOverTimer = FlxTimer.wait(GameOverSubstate.deathDelay, () -> {
+						vocals.stop();
+						FlxG.sound.music.stop();
+						openSubState(new GameOverSubstate());
+						gameOverTimer = null;
+					});
+				} else {
+					vocals.stop();
+					FlxG.sound.music.stop();
+					openSubState(new GameOverSubstate());
+				}
 
 				#if DISCORD_ALLOWED if(autoUpdateRPC) DiscordClient.changePresence('Game Over - $detailsText', '${SONG.song} ($storyDifficultyText)'); #end
 				return isDead = true;
@@ -1743,8 +1755,8 @@ class PlayState extends MusicBeatState {
 	public var transitioning = false;
 	public function endSong():Bool {
 		if(!startingSong) { //Should kill you if you tried to cheat
-			notes.forEach((daNote:Note) -> if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= .05 * healthLoss);
-			for (daNote in unspawnNotes) if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= .05 * healthLoss;
+			notes.forEachAlive((daNote:Note) -> if(daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= .05 * healthLoss);
+			for (daNote in unspawnNotes) if(daNote != null && daNote.strumTime < songLength - Conductor.safeZoneOffset) health -= .05 * healthLoss;
 			if(doDeathCheck()) return false;
 		}
 
@@ -2065,7 +2077,7 @@ class PlayState extends MusicBeatState {
 			var postfix:String = '';
 			if(note != null) postfix = note.animSuffix;
 			char.playAnim(singAnimations[EK.gfxHud[mania][Std.int(Math.abs(direction))]] + 'miss$postfix', true);
-			if(char != gf && combo > 5 && gf != null && gf.animOffsets.exists('sad')) {
+			if(char != gf && combo > 5 && gf != null && gf.hasAnimation('sad')) {
 				gf.playAnim('sad');
 				gf.specialAnim = true;
 			}
@@ -2086,7 +2098,7 @@ class PlayState extends MusicBeatState {
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHitPre', [note]);
 
 		var animToPlay:String = singAnimations[EK.gfxHud[mania][leData]];
-		if(leType == 'Hey!' && dad.animOffsets.exists('hey')) {
+		if(leType == 'Hey!' && dad.hasAnimation('hey')) {
 			dad.playAnim('hey', true);
 			dad.specialAnim = true;
 			dad.heyTimer = .6;
@@ -2167,7 +2179,7 @@ class PlayState extends MusicBeatState {
 					if(canPlay) char.playAnim(animToPlay + note.animSuffix, true);
 					char.holdTimer = 0;
 
-					if(leType == 'Hey!' && char.animOffsets.exists(animCheck)) {
+					if(leType == 'Hey!' && char.hasAnimation(animCheck)) {
 						char.playAnim(animCheck, true);
 						char.specialAnim = true;
 						char.heyTimer = .6;
@@ -2185,7 +2197,7 @@ class PlayState extends MusicBeatState {
 			}
 			health += note.hitHealth * healthGain;
 		} else { //Notes that count as a miss if you hit them (Hurt notes for example)
-			if(!note.noMissAnimation && leType == 'Hurt Note' && boyfriend.animOffsets.exists('hurt')) {
+			if(!note.noMissAnimation && leType == 'Hurt Note' && boyfriend.hasAnimation('hurt')) {
 				boyfriend.playAnim('hurt', true);
 				boyfriend.specialAnim = true;
 			}

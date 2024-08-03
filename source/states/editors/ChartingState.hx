@@ -470,9 +470,21 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		}
 
 		if(theme != oldTheme) {
-			if(gridBg != null) gridBg.loadGrid(gridColors[0], gridColors[1]);
-			if(prevGridBg != null) prevGridBg.loadGrid(gridColorsOther[0], gridColorsOther[1]);
-			if(nextGridBg != null) nextGridBg.loadGrid(gridColorsOther[0], gridColorsOther[1]);
+			if(gridBg != null) {
+				gridBg.loadGrid(gridColors[0], gridColors[1]);
+				gridBg.vortexLineEnabled = vortexEnabled;
+				gridBg.vortexLineSpace = GRID_SIZE * 4 * curZoom;
+			}
+			if(prevGridBg != null) {
+				prevGridBg.loadGrid(gridColorsOther[0], gridColorsOther[1]);
+				prevGridBg.vortexLineEnabled = vortexEnabled;
+				prevGridBg.vortexLineSpace = GRID_SIZE * 4 * curZoom;
+			}
+			if(nextGridBg != null) {
+				nextGridBg.loadGrid(gridColorsOther[0], gridColorsOther[1]);
+				nextGridBg.vortexLineEnabled = vortexEnabled;
+				nextGridBg.vortexLineSpace = GRID_SIZE * 4 * curZoom;
+			}
 		}
 	}
 
@@ -1532,8 +1544,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		swagEvent.active = false;
 
 		var secNum:Int = 0;
-		for (time in cachedSectionTimes) {
-			if(time > daStrumTime) break;
+		for (i in 1...cachedSectionTimes.length) {
+			if(cachedSectionTimes[i] > daStrumTime) break;
 			secNum++;
 		}
 		positionNoteYOnTime(swagEvent, secNum);
@@ -1686,6 +1698,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			if(selectedNotes.length > 1) susLengthStepper.min = -susLengthStepper.max;
 			else susLengthStepper.min = 0;
 		}
+		prevGridBg.vortexLineEnabled = gridBg.vortexLineEnabled = nextGridBg.vortexLineEnabled = vortexEnabled;
+		prevGridBg.vortexLineSpace = gridBg.vortexLineSpace = nextGridBg.vortexLineSpace = GRID_SIZE * 4 * curZoom;
 	}
 
 	function softReloadNotes(onlyCurrent:Bool = false) {
@@ -3328,6 +3342,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				note.playAnim('static');
 				note.resetAnim = 0;
 			}
+			prevGridBg.vortexLineEnabled = gridBg.vortexLineEnabled = nextGridBg.vortexLineEnabled = vortexEnabled;
 		}, btnWid);
 		vortexEditorButton.text.alignment = LEFT;
 		tab_group.add(vortexEditorButton);
