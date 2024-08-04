@@ -1670,16 +1670,14 @@ class PlayState extends MusicBeatState {
 
 			case 'Set Property':
 				try {
-					var trueVal:Dynamic = null;
-					var killMe:Array<String> = value1.split(',');
-					if (killMe.length > 1 && killMe[1].toLowerCase().replace(" ", "") == "bool") {
-						if (value2 == "true") trueVal = true;
-						else if (value2 == "false") trueVal = false;
-					}
+					var trueValue:Dynamic = value2.trim();
+					if (trueValue == 'true' || trueValue == 'false') trueValue = trueValue == 'true';
+					else if (flValue2 != null) trueValue = flValue2;
+					else trueValue = value2;
 	
-					killMe = killMe[0].split('.');
-					if (killMe.length > 1) LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(killMe, true, true), killMe[killMe.length - 1], trueVal ?? value2);
-					else LuaUtils.setVarInArray(this, value1, trueVal ?? value2);	
+					var split:Array<String> = value1.split('.');
+					if(split.length > 1) LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split), split[split.length - 1], trueValue);
+					else LuaUtils.setVarInArray(this, value1, trueValue);
 				} catch(e:Dynamic) {
 					var len:Int = e.message.indexOf('\n') + 1;
 					if(len <= 0) len = e.message.length;

@@ -13,10 +13,12 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 	public var selectedLabel(default, set):String = null;
 
 	var _curFilter:Array<String>;
-	public function new(x:Float, y:Float, list:Array<String>, callback:Int->String->Void) {
+	var _itemWidth:Float = 0;
+	public function new(x:Float, y:Float, list:Array<String>, callback:Int->String->Void, ?width:Float = 100) {
 		super(x, y);
 		if(list == null) list = [];
 
+		_itemWidth = width - 2;
 		setGraphicSize(width, 20);
 		updateHitbox();
 		textObj.y += 2;
@@ -123,7 +125,7 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 			var txtY:Float = behindText.y + behindText.height + 1;
 			for (num => item in _items) {
 				if(!item.visible) continue;
-				item.y = txtY;
+				item.setPosition(behindText.x, txtY);
 				txtY += item.height;
 				item.forceNextUpdate = true;
 			}
@@ -147,8 +149,8 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 	function addOption(option:String) {
 		@:bypassAccessor list.push(option);
 		var curID:Int = list.length - 1;
-		var item:PsychUIDropDownItem = cast recycle(PsychUIDropDownItem);
-		item.setPosition(1, 1);
+		var item:PsychUIDropDownItem = cast recycle(PsychUIDropDownItem, () -> new PsychUIDropDownItem(1, 1, this._itemWidth), true);
+		item.cameras = cameras;
 		item.label = option;
 		item.visible = item.active = false;
 		item.onClick = function() clickedOn(curID, option);
@@ -186,7 +188,7 @@ class PsychUIDropDownItem extends FlxSpriteGroup {
 
 	public var bg:FlxSprite;
 	public var text:FlxText;
-	public function new(x:Float = 0, y:Float = 0, width:Int = 100) {
+	public function new(x:Float = 0, y:Float = 0, width:Float = 100) {
 		super(x, y);
 
 		bg = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);

@@ -352,10 +352,12 @@ class PsychUIInputText extends FlxSpriteGroup {
 				focusOn = this;
 				caretIndex = 0;
 				var lastBound:Float = 0;
-				var txtX:Float = textObj.x - textObj.textField.scrollH;
+				var textObjX:Float = textObj.getScreenPosition(camera).x;
+				var mousePosX:Float = FlxG.mouse.getViewPosition(camera).x;
+				var txtX:Float = textObjX - textObj.textField.scrollH;
 
 				for (i => bound in _boundaries) {
-					if(FlxG.mouse.viewX >= txtX + (bound - lastBound) / 2) {
+					if(mousePosX >= txtX + (bound - lastBound) / 2) {
 						caretIndex = i + 1;
 						txtX += bound - lastBound;
 						lastBound = bound;

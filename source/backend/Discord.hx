@@ -4,7 +4,9 @@ import sys.thread.Thread;
 import hxdiscord_rpc.Discord;
 import hxdiscord_rpc.Types;
 import flixel.util.FlxStringUtil;
+
 import cpp.ConstCharStar;
+import cpp.RawConstPointer;
 
 class DiscordClient {
 	public static var isInitialized:Bool = false;
@@ -36,7 +38,7 @@ class DiscordClient {
 		Discord.Respond(fixString(userId), reply);
 	}
 
-	static function onReady(request:cpp.RawConstPointer<DiscordUser>):Void {
+	static function onReady(request:RawConstPointer<DiscordUser>):Void {
 		user = DUser.initRaw(request);
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
@@ -72,7 +74,7 @@ class DiscordClient {
 		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone started spectating your game", YELLOW)], INFO);
 	}
 
-	static function onJoinReq(request:cpp.RawConstPointer<DiscordUser>):Void {
+	static function onJoinReq(request:RawConstPointer<DiscordUser>):Void {
 		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone has just requested to join", YELLOW)], WARNING);
 	}
 
@@ -119,7 +121,7 @@ class DiscordClient {
 	}
 	
 	public static function updatePresence()
-		Discord.UpdatePresence(cpp.RawConstPointer.addressOf(presence.__presence));
+		Discord.UpdatePresence(RawConstPointer.addressOf(presence.__presence));
 
 	public static function resetClientID()
 		clientID = _defaultID;
@@ -252,7 +254,7 @@ final class DUser {
 
 	function new() {}
 
-	public static function initRaw(req:cpp.RawConstPointer<DiscordUser>) {
+	public static function initRaw(req:RawConstPointer<DiscordUser>) {
 		return init(cpp.ConstPointer.fromRaw(req).ptr);
 	}
 
@@ -267,8 +269,7 @@ final class DUser {
 		d.flags = userData.flags;
 		d.premiumType = userData.premiumType;
 
-		if (d.discriminator != 0)
-			d.handle = '${d.username}#${d.discriminator}';
+		if (d.discriminator != 0) d.handle = '${d.username}#${d.discriminator}';
 		else d.handle = d.username;
 		return d;
 	}

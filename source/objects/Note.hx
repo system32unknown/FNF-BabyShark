@@ -362,6 +362,7 @@ class Note extends FlxSprite {
 	}
 
 	function loadNoteAnims() {
+		if (EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] == null) return;
 		var playAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
 		var playAnimAlt:String = EK.colArrayAlt[EK.gfxIndex[PlayState.mania][noteData]];
 		if (isSustainNote) {
@@ -382,6 +383,7 @@ class Note extends FlxSprite {
 	}
 
 	function loadPixelNoteAnims() {
+		if (EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] == null) return;
 		var playAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
 		var noteIndex:Int = EK.gfxIndex[PlayState.mania][noteData];
 		if(isSustainNote) {

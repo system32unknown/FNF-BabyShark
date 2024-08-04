@@ -17,11 +17,19 @@ class PixelSplashShaderRef {
 		} else shader.mult.value[0] = 0.0;
 	}
 
-	public function new() {
+	public function set(enabled:Bool = true) {
+		shader.mult.value = [enabled ? 1 : 0];
+	}
+
+	public function reset() {
 		shader.r.value = [0, 0, 0];
 		shader.g.value = [0, 0, 0];
 		shader.b.value = [0, 0, 0];
-		shader.mult.value = [1];
+	}
+
+	public function new() {
+		reset();
+		set();
 
 		var pixel:Float = 1;
 		if(PlayState.isPixelStage) pixel = PlayState.daPixelZoom;

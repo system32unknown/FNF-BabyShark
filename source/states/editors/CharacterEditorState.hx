@@ -224,6 +224,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			if(check_player != null) check_player.checked = character.isPlayer;
 		}
 		character.debugMode = true;
+		character.missingCharacter = false;
 
 		if(pos > -1) insert(pos, character);
 		else add(character);
@@ -370,6 +371,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 				camera_position: [0, 0],
 				position: [0, 0]
 			});
+			character.missingCharacter = false;
 			character.color = FlxColor.WHITE;
 			character.alpha = 1;
 			reloadAnimList();
@@ -433,7 +435,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			animationIndicesInputText.text = indicesStr.substr(1, indicesStr.length - 2);
 		});
 
-		var addUpdateButton:PsychUIButton = new PsychUIButton(70, animationIndicesInputText.y + 60, "Add/Update", () -> {
+		var addUpdateButton:PsychUIButton = new PsychUIButton(70, animationIndicesInputText.y + 30, "Add/Update", () -> {
 			var indicesText:String = animationIndicesInputText.text.trim();
 			var indices:Array<Int> = [];
 			if(indicesText.length > 0) {
@@ -578,7 +580,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		};
 
 		positionXStepper = new PsychUINumericStepper(flipXCheckBox.x + 110, flipXCheckBox.y, 10, character.positionArray[0], -9000, 9000, 0);
-		positionYStepper = new PsychUINumericStepper(positionXStepper.x + 60, positionXStepper.y, 10, character.positionArray[1], -9000, 9000, 0);
+		positionYStepper = new PsychUINumericStepper(positionXStepper.x + 70, positionXStepper.y, 10, character.positionArray[1], -9000, 9000, 0);
 
 		positionCameraXStepper = new PsychUINumericStepper(positionXStepper.x, positionXStepper.y + 40, 10, character.cameraPosition[0], -9000, 9000, 0);
 		positionCameraYStepper = new PsychUINumericStepper(positionYStepper.x, positionYStepper.y + 40, 10, character.cameraPosition[1], -9000, 9000, 0);
@@ -894,13 +896,16 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			helpBg.visible = !helpBg.visible;
 			helpTexts.visible = helpBg.visible;
 		} else if(FlxG.keys.justPressed.ESCAPE) {
-			FlxG.mouse.visible = false;
 			if(!_goToPlayState) {
 				if(!unsavedProgress) {
+					FlxG.mouse.visible = false;
 					FlxG.switchState(() -> new states.editors.MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				} else openSubState(new ExitConfirmationPrompt());
-			} else FlxG.switchState(() -> new PlayState());
+			} else {
+				FlxG.mouse.visible = false;
+				FlxG.switchState(() -> new PlayState());
+			}
 			return;
 		}
 	}
@@ -918,6 +923,8 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	}
 
 	inline function updatePointerPos(?snap:Bool = true) {
+		if(character == null || cameraFollowPointer == null) return;
+
 		var offX:Float = 0;
 		var offY:Float = 0;
 		final mid:FlxPoint = character.getMidpoint();
@@ -981,6 +988,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 
 		character.x += character.positionArray[0];
 		character.y += character.positionArray[1];
+		updatePointerPos(false);
 	}
 
 	inline function predictCharacterIsNotPlayer(name:String) {

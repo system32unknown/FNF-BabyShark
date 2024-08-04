@@ -360,10 +360,9 @@ class Character extends FlxSprite {
 			if(atlas.anim.curInstance != null) {
 				copyAtlasValues();
 				atlas.draw();
+				alpha = lastAlpha;
+				color = lastColor;
 				if(missingCharacter && visible) {
-					alpha = lastAlpha;
-					color = lastColor;
-
 					missingText.setPosition(getMidpoint().x - 150, getMidpoint().y - 10);
 					missingText.draw();
 				}
