@@ -1,6 +1,7 @@
 package utils;
 
 import flixel.FlxBasic;
+import flixel.util.FlxSort;
 import flixel.addons.display.FlxBackdrop;
 
 class CoolUtil {
@@ -50,7 +51,14 @@ class CoolUtil {
         return temp_str;
     }
 
-	inline public static function sortByID(i:Int, basic1:FlxBasic, basic2:FlxBasic):Int {
+	/**
+	 * Utility functions related to sorting.
+	*/
+	public static inline function byZIndex(order:Int, a:FlxBasic, b:FlxBasic):Int {
+		if (a == null || b == null) return 0;
+		return FlxSort.byValues(order, a.zIndex, b.zIndex);
+	}
+	public static inline function sortByID(i:Int, basic1:FlxBasic, basic2:FlxBasic):Int {
 		return basic1.ID > basic2.ID ? -i : basic2.ID > basic1.ID ? i : 0;
 	}
 

@@ -1,7 +1,5 @@
 package backend;
 
-import flixel.FlxBasic;
-import flixel.util.FlxSort;
 class MusicBeatState extends flixel.FlxState {
 	var curSection:Int = 0;
 	var stepsToDo:Int = 0;
@@ -151,10 +149,7 @@ class MusicBeatState extends flixel.FlxState {
 	 * It does this based on the `zIndex` of each prop.
 	 */
 	public function refresh() {
-		sort((order:Int, a:FlxBasic, b:FlxBasic) -> {
-			if (a == null || b == null) return 0;
-			return FlxSort.byValues(order, a.zIndex, b.zIndex);
-		}, FlxSort.ASCENDING);
+		sort(CoolUtil.byZIndex, flixel.util.FlxSort.ASCENDING);
 	}
 
 	function stagesFunc(func:BaseStage -> Void) {

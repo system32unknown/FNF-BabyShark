@@ -4,10 +4,15 @@ class Spooky extends BaseStage {
 	var halloweenBG:BGSprite;
 	var halloweenWhite:BGSprite;
 	override function create() {
-		if(!lowQuality)
-			halloweenBG = new BGSprite('halloween_bg', -200, -100, ['halloweem bg0', 'halloweem bg lightning strike']);
+		if(!lowQuality) halloweenBG = new BGSprite('halloween_bg', -200, -100, ['halloweem bg0', 'halloweem bg lightning strike']);
 		else halloweenBG = new BGSprite('halloween_bg_low', -200, -100);
 		add(halloweenBG);
+
+		halloweenWhite = new BGSprite(null, -800, -400, 0, 0);
+		halloweenWhite.makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.WHITE);
+		halloweenWhite.alpha = 0;
+		halloweenWhite.blend = ADD;
+		add(halloweenWhite);
 
 		//PRECACHE SOUNDS
 		Paths.sound('thunder_1');
@@ -16,13 +21,6 @@ class Spooky extends BaseStage {
 		//Monster cutscene
 		if (isStoryMode && !seenCutscene && songName == 'monster')
 			setStartCallback(monsterCutscene);
-	}
-	override function createPost() {
-		halloweenWhite = new BGSprite(null, -800, -400, 0, 0);
-		halloweenWhite.makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.WHITE);
-		halloweenWhite.alpha = 0;
-		halloweenWhite.blend = ADD;
-		add(halloweenWhite);
 	}
 
 	var lightningStrikeBeat:Int = 0;
@@ -75,6 +73,7 @@ class Spooky extends BaseStage {
 		var whiteScreen:FlxSprite = new FlxSprite().makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.WHITE);
 		whiteScreen.scrollFactor.set();
 		whiteScreen.blend = ADD;
+		whiteScreen.zIndex = 1000;
 		add(whiteScreen);
 		FlxTween.tween(whiteScreen, {alpha: 0}, 1, {
 			startDelay: 0.1,
