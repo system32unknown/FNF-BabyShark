@@ -198,11 +198,6 @@ class LuaUtils {
 		}
 	}
 	
-	public static function isOfTypes(value:Any, types:Array<Dynamic>):Bool {
-		for (type in types) if(Std.isOfType(value, type)) return true;
-		return false;
-	}
-
 	public static inline function getInstance():flixel.FlxState {
 		if(PlayState.instance != null) return PlayState.instance.isDead ? substates.GameOverSubstate.instance : PlayState.instance;
 		return MusicBeatState.getState();
