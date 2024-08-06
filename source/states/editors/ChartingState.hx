@@ -517,6 +517,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		reloadNotes();
 		onChartLoaded();
 
+		autoSaveTime = 0;
 		Conductor.songPosition = 0;
 		if(FlxG.sound.music != null) FlxG.sound.music.time = 0;
 		curSec = 0;
@@ -1446,6 +1447,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				vocals.time = time;
 			} catch (e:Dynamic) {}
 		}
+
+		#if DISCORD_ALLOWED
+		DiscordClient.changePresence('Chart Editor', 'Song: ' + PlayState.SONG.song);
+		#end
 
 		updateAudioVolume();
 		setPitch();

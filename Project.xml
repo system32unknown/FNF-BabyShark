@@ -47,7 +47,7 @@
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-addons"/>
 	<haxelib name="flxanimate"/>
-	<haxelib name="hscript-improved"/>
+	<haxelib name="SScript" if="HSCRIPT_ALLOWED"/>
 	<haxelib name="tjson"/>
 
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
@@ -55,12 +55,6 @@
 	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
 	<haxelib name="grig.audio"/>
 	<haxelib name="funkin.vis"/>
-
-	<section if="HSCRIPT_ALLOWED">
-		<haxeflag name="-dce no"/>
-		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
-		<haxedef name="hscriptPos"/>
-	</section>
 
 	<!-- ______________________________Haxedefines_____________________________ -->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>

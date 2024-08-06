@@ -18,6 +18,7 @@ import objects.*;
 import utils.*;
 import data.*;
 import psychlua.*;
+#if SScript import tea.SScript; #end
 import cutscenes.DialogueBoxPsych;
 
 class PlayState extends MusicBeatState {
@@ -208,6 +209,7 @@ class PlayState extends MusicBeatState {
 	public static var instance:PlayState;
 	public var luaArray:Array<FunkinLua> = [];
 	public var hscriptArray:Array<HScript> = [];
+	public var instancesExclude:Array<String> = [];
 	var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
 	public var introSoundsSuffix:String = '';
 
@@ -667,10 +669,7 @@ class PlayState extends MusicBeatState {
 		}
 		
 		if(doPush) {
-			for (hx in hscriptArray) if (hx.origin == scriptFile) {
-				doPush = false;
-				break;
-			}
+			if(SScript.global.exists(scriptFile)) doPush = false;
 			if(doPush) initHScript(scriptFile);
 		}
 		#end
@@ -2240,21 +2239,17 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function destroy() {
-		var luaScript:FunkinLua = null;
-		while (luaArray.length > 0) {
-			luaScript = luaArray.pop();
-			if (luaScript == null) continue;
-			luaScript.call('onDestroy', []);
-			luaScript.stop();
+		for (lua in luaArray) {
+			lua.call('onDestroy', []);
+			lua.stop();
 		}
+		luaArray = null;
 		FunkinLua.customFunctions.clear();
-		var hscript:HScript = null;
-		while (hscriptArray.length > 0) {
-			hscript = hscriptArray.pop();
-			if (hscript == null) continue;
-			hscript.executeFunction('onDestroy');
-			hscript.destroy();
-		}
+		for (script in hscriptArray)
+			if(script != null) {
+				script.call('onDestroy');
+				script.destroy();
+			}
 		stagesFunc((stage:BaseStage) -> stage.destroy());
 		for (point in [campoint, camlockpoint, ratingAcc, ratingVel]) point = flixel.util.FlxDestroyUtil.put(point);
 
@@ -2373,7 +2368,7 @@ class PlayState extends MusicBeatState {
 		if(!FileSystem.exists(scriptToLoad)) scriptToLoad = Paths.getSharedPath(scriptFile);
 		
 		if(FileSystem.exists(scriptToLoad)) {
-			for (hx in hscriptArray) if (hx.origin == scriptToLoad) return false;
+			if (SScript.global.exists(scriptToLoad)) return false;
 			initHScript(scriptToLoad);
 			return true;
 		}
@@ -2381,42 +2376,40 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function initHScript(file:String) {
-		function makeError(newScript:HScript) {
-			newScript.destroy();
-			newScript = null;
-			hscriptArray.remove(newScript);
-			Logs.trace('failed to initialize hscript interp!!! ($file)', ERROR);
-		}
 		try {
-			var times:Float = Date.now().getTime();
 			var newScript:HScript = new HScript(null, file);
-			hscriptArray.push(newScript);
-
-			if (newScript.exception != null) {
-				var len:Int = newScript.exception.message.indexOf('\n') + 1;
-				if(len <= 0) len = newScript.exception.message.length;
-				Logs.trace(newScript.exception.toString(), ERROR);
-				addTextToDebug('ERROR ON LOADING - ${newScript.exception.message.substr(0, len)}', FlxColor.RED);
-				makeError(newScript);
+			if(newScript.parsingException != null) {
+				addTextToDebug('ERROR ON LOADING: ${newScript.parsingException.message}', FlxColor.RED);
+				newScript.destroy();
 				return;
 			}
-
-			if (newScript.interp.variables.exists('onCreate')) {
-				newScript.executeFunction('onCreate');
-				if (newScript.exception != null) {
-					var len:Int = newScript.exception.message.indexOf('\n') + 1;
-					if(len <= 0) len = newScript.exception.message.length;
-					addTextToDebug('ERROR (onCreate) - ${newScript.exception.message.substr(0, len)}', FlxColor.RED);
-					makeError(newScript);
-					return;
-				}
+	
+			hscriptArray.push(newScript);
+			if(newScript.exists('onCreate')) {
+				var callValue:Tea = newScript.call('onCreate');
+				if(!callValue.succeeded) {
+					for (e in callValue.exceptions) {
+						if (e != null){
+							var len:Int = e.message.indexOf('\n') + 1;
+							if(len <= 0) len = e.message.length;
+							addTextToDebug('ERROR ($file: onCreate) - ${e.message.substr(0, len)}', FlxColor.RED);
+						}
+					}
+	
+					newScript.destroy();
+					hscriptArray.remove(newScript);
+					trace('failed to initialize tea interp!!! ($file)');
+				} else trace('initialized tea interp successfully: $file');
 			}
-			trace('initialized hscript interp successfully: $file (${Std.int(Date.now().getTime() - times)}ms)');
 		} catch(e) {
 			var len:Int = e.message.indexOf('\n') + 1;
 			if(len <= 0) len = e.message.length;
-			addTextToDebug('ERROR - ${e.message.substr(0, len)}', FlxColor.RED);
-			if (hscriptArray.length > 0) makeError(hscriptArray[hscriptArray.length - 1]);
+			addTextToDebug('ERROR - ' + e.message.substr(0, len), FlxColor.RED);
+			var newScript:HScript = cast (SScript.global.get(file), HScript);
+			if(newScript != null) {
+				newScript.destroy();
+				hscriptArray.remove(newScript);
+			}
 		}
 	}
 	#end
@@ -2467,23 +2460,38 @@ class PlayState extends MusicBeatState {
 
 		#if HSCRIPT_ALLOWED
 		if(exclusions == null) exclusions = [];
-		if(excludeValues == null) excludeValues = [LuaUtils.Function_Continue];
+		if(excludeValues == null) excludeValues = [];
+		excludeValues.push(LuaUtils.Function_Continue);
 
 		var len:Int = hscriptArray.length;
 		if (len < 1) return returnVal;
 		for(i in 0...len) {
 			var script:HScript = hscriptArray[i];
-			if(script == null || !script.active || !script.interp.variables.exists(funcToCall) || exclusions.contains(script.origin)) continue;
+			if(script == null || !script.exists(funcToCall) || exclusions.contains(script.origin)) continue;
 
+			var myValue:Dynamic = null;
 			try {
-				returnVal = script.executeFunction(funcToCall, args);
-				final stopHscript:Bool = (returnVal == LuaUtils.Function_StopHScript);
-				final stopAll:Bool = (returnVal == LuaUtils.Function_StopAll);
-				if (script.exception != null) {
-					script.active = false;
-					FunkinLua.luaTrace('ERROR ($funcToCall) - ${script.exception}', true, false, FlxColor.RED);
-				} else if((stopHscript || stopAll) && !excludeValues.contains(returnVal) && !ignoreStops) break;
-			}
+				var callValue:Tea = script.call(funcToCall, args);
+				if(!callValue.succeeded) {
+					var e = callValue.exceptions[0];
+					if(e != null) {
+						var len:Int = e.message.indexOf('\n') + 1;
+						if(len <= 0) len = e.message.length;
+						addTextToDebug('ERROR (${callValue.calledFunction}) - ' + e.message.substr(0, len), FlxColor.RED);
+					}
+				} else {
+					myValue = callValue.returnValue;
+
+					final stopHscript:Bool = myValue == LuaUtils.Function_StopHScript;
+					final stopAll:Bool = myValue == LuaUtils.Function_StopAll;
+					if((stopHscript || stopAll) && !excludeValues.contains(myValue) && !ignoreStops) {
+						returnVal = myValue;
+						break;
+					}
+
+					if(myValue != null && !excludeValues.contains(myValue)) returnVal = myValue;
+				}
+			} catch (e:Dynamic) {}
 		}
 		#end
 
@@ -2511,7 +2519,8 @@ class PlayState extends MusicBeatState {
 		if(exclusions == null) exclusions = [];
 		for (script in hscriptArray) {
 			if(exclusions.contains(script.origin)) continue;
-			script.interp.setVar(variable, arg);
+			if(!instancesExclude.contains(variable)) instancesExclude.push(variable);
+			script.set(variable, arg);
 		}
 		#end
 	}

@@ -23,8 +23,7 @@ class CutsceneHandler extends flixel.FlxBasic {
 	public var skipSprite:FlxPieDial;
 	public var finishCallback:Void->Void = null;
 	
-	public function new(canSkip:Bool = true)
-	{
+	public function new(canSkip:Bool = true) {
 		super();
 
 		timer(0, function() {

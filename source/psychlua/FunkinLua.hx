@@ -20,7 +20,6 @@ class FunkinLua {
 	public static var customFunctions:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public function new(script:String) {
 		#if LUA_ALLOWED
-		var times:Float = Date.now().getTime();
 		lua = LuaL.newstate();
 		LuaL.openlibs(lua);
 
@@ -980,7 +979,7 @@ class FunkinLua {
 			return;
 		}
 		call('onCreate');
-		trace('lua file loaded succesfully: $scriptName (${Std.int(Date.now().getTime() - times)}ms)');
+		trace('lua file loaded succesfully: $scriptName');
 		#end
 	}
 
