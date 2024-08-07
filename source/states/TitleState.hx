@@ -36,27 +36,10 @@ class TitleState extends MusicBeatState {
 		Paths.clearStoredMemory();
 		FlxTransitionableState.skipNextTransOut = false;
 		FlxG.mouse.visible = false;
-		persistentUpdate = true;
-
+		persistentUpdate = persistentDraw = true;
 		super.create();
 
-		#if CHECK_FOR_UPDATES
-		if(ClientPrefs.data.checkForUpdates && !skippedIntro) {
-			trace('checking for update');
-			var http = new haxe.Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/gitVersion.txt");
-			http.onData = (data:String) -> {
-				updateVersion = data.split('\n')[0].trim();
-				final curVersion:String = Main.engineVer.version.trim();
-				trace('version online: $updateVersion, your version: $curVersion');
-				if(updateVersion != curVersion) {
-					trace('versions arent matching!');
-					mustUpdate = true;
-				}
-			}
-			http.onError = (error:String) -> Logs.trace('error: $error', ERROR);
-			http.request();
-		}
-		#end
+		#if CHECK_FOR_UPDATES checkUpdate(); #end
 
 		final balls:Dynamic = tjson.TJSON.parse(Paths.getTextFromFile('data/titleData.json'));
 		titleJson = {
@@ -117,6 +100,7 @@ class TitleState extends MusicBeatState {
 			newTitle = true;
 			titleText.animation.addByPrefix('idle', "ENTER IDLE", 24);
 			titleText.animation.addByPrefix('press', ClientPrefs.data.flashing ? "ENTER PRESSED" : "ENTER FREEZE", 24);
+			FlxTween.num(0, 1, 2, {type: PINGPONG, ease: FlxEase.quadInOut}, num -> titleTextTimer = num);
 		} else {
 			newTitle = false;
 			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
@@ -185,15 +169,8 @@ class TitleState extends MusicBeatState {
 		}
 
 		if (newTitle && !pressedEnter) {
-			titleTextTimer += FlxMath.bound(elapsed, 0, 1);
-			if (titleTextTimer > 2) titleTextTimer -= 2;
-
-			var timer:Float = titleTextTimer;
-			if (timer >= 1) timer = (-timer) + 2;
-			timer = FlxEase.quadInOut(timer);
-			
-			titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], timer);
-			titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
+			titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], titleTextTimer);
+			titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], titleTextTimer);
 		}
 	}
 
@@ -269,4 +246,24 @@ class TitleState extends MusicBeatState {
 
 		deleteText();
 	}
+
+	#if CHECK_FOR_UPDATES
+	function checkUpdate():Void {
+		if(ClientPrefs.data.checkForUpdates && !skippedIntro) {
+			trace('checking for update');
+			var http = new haxe.Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/gitVersion.txt");
+			http.onData = (data:String) -> {
+				updateVersion = data.split('\n')[0].trim();
+				final curVersion:String = Main.engineVer.version.trim();
+				trace('version online: $updateVersion, your version: $curVersion');
+				if(updateVersion != curVersion) {
+					trace('versions arent matching!');
+					mustUpdate = true;
+				}
+			}
+			http.onError = (error:String) -> Logs.trace('error: $error', ERROR);
+			http.request();
+		}
+	}
+	#end
 }
