@@ -60,7 +60,10 @@
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="cpp"/>
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc"/>
-	<haxedef name="hscriptPos" if="HSCRIPT_ALLOWED"/>
+	<section if="HSCRIPT_ALLOWED">
+		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
+		<haxedef name="hscriptPos"/>
+	</section>
 
 	<section unless="debug">
 		<haxedef name="no-deprecation-warnings"/> <!-- No deprecation warnings. -->
