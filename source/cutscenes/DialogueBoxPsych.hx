@@ -73,16 +73,14 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 			var ret:Dynamic = PlayState.instance.callOnScripts('onDialogueConfirm');
 			var back:Bool = Controls.instance.BACK;
-			if (Controls.instance.ACCEPT || back) {
-				if (confirmDialogue && ret != LuaUtils.Function_Stop) {
-					if (!typedText.finishedText && !back) {
-						typedText.finishText();
-						if (skipDialogueThing != null) skipDialogueThing();
-					} else this.startNextDialog(back);
+			if (confirmDialogue || (Controls.instance.ACCEPT || back) && ret != LuaUtils.Function_Stop) {
+				if (!typedText.finishedText && !back) {
+					typedText.finishText();
+					if (skipDialogueThing != null) skipDialogueThing();
+				} else this.startNextDialog(back);
 	
-					FlxG.sound.play(Paths.sound(closeSound), closeVolume);
-				} else this.onCharacterAnimationCheck();
-			}
+				FlxG.sound.play(Paths.sound(closeSound), closeVolume);
+			} else this.onCharacterAnimationCheck();
 
 			if (box.animation.curAnim != null && box.animation.curAnim.finished) this.onBoxAnimationFinished();
 			if (lastCharacter != -1) this.onCharacterUpdate(elapsed);
