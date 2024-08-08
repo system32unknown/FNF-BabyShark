@@ -1054,21 +1054,13 @@ class PlayState extends MusicBeatState {
 						}
 					}
 				}
-				if (swagNote.mustPress)
-				{
-					swagNote.x += FlxG.width / 2; // general offset
-				}
-				else if(ClientPrefs.data.middleScroll)
-				{
+				if (swagNote.mustPress) swagNote.x += FlxG.width / 2;
+				else if(middleScroll) {
 					swagNote.x += 310;
-					if(noteColumn > 1) //Up and Right
-					{
-						swagNote.x += FlxG.width / 2 + 25;
-					}
+					if(noteColumn > EK.midArray[mania]) swagNote.x += FlxG.width / 2 + 25;
 				}
-				if(!noteTypes.contains(swagNote.noteType))
-					noteTypes.push(swagNote.noteType);
-	
+				if(!noteTypes.contains(swagNote.noteType)) noteTypes.push(swagNote.noteType);
+
 				oldNote = swagNote;
 			}
 		}

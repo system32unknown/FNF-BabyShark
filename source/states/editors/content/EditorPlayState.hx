@@ -291,7 +291,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		for (note in _noteList) {
 			if(note == null || note.strumTime < startPos) continue;
 
-			var idx: Int = _noteList.indexOf(note);
+			var idx:Int = _noteList.indexOf(note);
 			if (idx != 0) {
 				// CLEAR ANY POSSIBLE GHOST NOTES
 				for (evilNote in unspawnNotes) {
