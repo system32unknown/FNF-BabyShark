@@ -18,7 +18,7 @@
 
 	<!-- Audio Visualizers -->
 	<git name="funkin.vis" url="https://github.com/FunkinCrew/funkVis"/>
-	<git name="grig.audio" url="https://gitlab.com/haxe-grig/grig.audio.git"/>
+	<git name="grig.audio" url="https://gitlab.com/haxe-grig/grig.audio"/>
 
 	<!-- OpenFL (sets git version) -->
 	<git name="openfl" url="https://github.com/system32unknown/openfl"/>
