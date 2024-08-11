@@ -268,7 +268,7 @@ class HScript {
 	}
 
 	function getDefaultPreprocessors():Map<String, Dynamic> {
-		var defines = macros.DefinesMacro.defines;
+		var defines:Map<String, Dynamic> = macros.DefinesMacro.defines;
 		defines.set("ALTER_ENGINE", true);
 		defines.set("ALTER_VER", Main.engineVer.version.trim());
 		defines.set("ALTER_APP_VER", lime.app.Application.current.meta.get('version'));

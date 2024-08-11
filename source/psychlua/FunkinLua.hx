@@ -526,7 +526,7 @@ class FunkinLua {
 		set("getSavedCombo", Highscore.getCombo);
 		set("getWeekScore", Highscore.getWeekScore);
 
-		set("setHealth", (value:Float = 0) -> return game.health = value);
+		set("setHealth", (value:Float = 1) -> return game.health = value);
 		set("addHealth", (value:Float = 0) -> game.health += value);
 		set("getHealth", () -> return game.health);
 
@@ -620,14 +620,14 @@ class FunkinLua {
 		set("setRatingName", (value:String) -> return game.ratingName = value);
 		set("setRatingFC", (value:String) -> return game.ratingFC = value);
 
-		set("getMouseX", (camera:String) -> return LuaUtils.getMousePoint(camera, 'x'));
-		set("getMouseY", (camera:String) -> return LuaUtils.getMousePoint(camera, 'y'));
+		set("getMouseX", (camera:String = 'game') -> return LuaUtils.getMousePoint(camera, 'x'));
+		set("getMouseY", (camera:String = 'game') -> return LuaUtils.getMousePoint(camera, 'y'));
 		set("getMidpointX", (variable:String) -> return LuaUtils.getPoint(variable, 'midpoint', 'x'));
 		set("getMidpointY", (variable:String) -> return LuaUtils.getPoint(variable, 'midpoint', 'y'));
 		set("getGraphicMidpointX", (variable:String) -> return LuaUtils.getPoint(variable, 'graphic', 'x'));
 		set("getGraphicMidpointY", (variable:String) -> return LuaUtils.getPoint(variable, 'graphic', 'y'));
-		set("getScreenPositionX", (variable:String, ?camera:String) -> return LuaUtils.getPoint(variable, 'screen', 'x', camera));
-		set("getScreenPositionY", (variable:String, ?camera:String) -> return LuaUtils.getPoint(variable, 'screen', 'y', camera));
+		set("getScreenPositionX", (variable:String, ?camera:String = 'game') -> return LuaUtils.getPoint(variable, 'screen', 'x', camera));
+		set("getScreenPositionY", (variable:String, ?camera:String = 'game') -> return LuaUtils.getPoint(variable, 'screen', 'y', camera));
 
 		set("characterDance", function(character:String, force:Bool = false) {
 			switch(character.toLowerCase()) {
@@ -851,7 +851,7 @@ class FunkinLua {
 			luaTrace("setPosition: Couldnt find object " + obj, false, false, FlxColor.RED);
 			return false;
 		});
-		set("setObjectCamera", function(obj:String, camera:String = '') {
+		set("setObjectCamera", function(obj:String, camera:String = 'game') {
 			var spr:FlxBasic = LuaUtils.getVarInstance(obj);
 			if (spr != null) {
 				spr.camera = LuaUtils.cameraFromString(camera);

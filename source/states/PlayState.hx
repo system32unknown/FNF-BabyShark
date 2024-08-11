@@ -1981,8 +1981,8 @@ class PlayState extends MusicBeatState {
 
 		if (plrInputNotes.length != 0) goodNoteHit(plrInputNotes[0]); // nicer on the GPU usage than doing `> 0` lol
 		else {
-			callOnScripts('onGhostTap', [key]);
-			noteMissPress(key);
+			if (ClientPrefs.data.ghostTapping) callOnScripts('onGhostTap', [key]);
+			else noteMissPress(key);
 		}
 		Conductor.songPosition = lastTime;
 

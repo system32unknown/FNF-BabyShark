@@ -36,7 +36,7 @@ class CreditsState extends MusicBeatState {
 		['Raltyro',				'raltyro',			'Bunch of lua fixes, Psike Engine Dev',							'https://twitter.com/raltyro',				'F3F3F3'],
 		['UncertainProd',		'prod',				'Sampler2D in Runtime Shaders',									'https://github.com/UncertainProd',			'D2D2D2'],
 		['ACrazyTown',			'acrazytown',		'Optimized PNGs',												'https://twitter.com/acrazytown',			'A03E3D'],
-		['CheemsAndFriends', 	'face', 			'Creator of FlxAnimate', 										'https://twitter.com/CheemsnFriendos', 		'A1A1A1'],
+		['CheemsAndFriends', 	'cheems', 			'Creator of FlxAnimate', 										'https://twitter.com/CheemsnFriendos', 		'E1E1E1'],
 		[''],
 		['Extra Keys Team'],
 		['Magman03k7', 			'',					'Main Programmer of Psych Engine EK', 							'https://github.com/Magman03k7', 			'B9AF27'],
