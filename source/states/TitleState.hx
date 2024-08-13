@@ -4,7 +4,9 @@ package states;
 	public var titlex:Float = 0;
 	public var titley:Float = 1500;
 	public var titlesize:Float = 1.5;
-	public var starty:Float = 50;
+	public var titlestarty:Float = 50;
+	public var startx:Float = 125;
+	public var starty:Float = 576;
 	public var gfx:Float = 512;
 	public var gfy:Float = 40;
 	public var backgroundSprite:String = '';
@@ -46,6 +48,8 @@ class TitleState extends MusicBeatState {
 			titlex: balls.titlex,
 			titley: balls.titley,
 			titlesize: balls.titlesize,
+			titlestarty: balls.titlestarty,
+			startx: balls.startx,
 			starty: balls.starty,
 			gfx: balls.gfx,
 			gfy: balls.gfy,
@@ -87,7 +91,7 @@ class TitleState extends MusicBeatState {
 		logo.angle = -4;
 		add(logo);
 
-		titleText = new FlxSprite(125, 576);
+		titleText = new FlxSprite(titleJson.startx, titleJson.starty);
 		titleText.visible = false;
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
 		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
@@ -139,7 +143,6 @@ class TitleState extends MusicBeatState {
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
 		titletimer++;
@@ -156,7 +159,7 @@ class TitleState extends MusicBeatState {
 					titleText.color = FlxColor.WHITE;
 					titleText.alpha = 1;
 
-					FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 1);
+					FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF);
 					FlxG.sound.play(Paths.sound('confirmMenu'), .7);
 	
 					FlxTimer.wait(1.5, () -> {
@@ -242,7 +245,7 @@ class TitleState extends MusicBeatState {
 		logo.alpha = 1;
 		titleText.visible = true;
 
-		FlxTween.tween(logo, {y: titleJson.starty}, 1.4, {ease: FlxEase.expoInOut});
+		FlxTween.tween(logo, {y: titleJson.titlestarty}, 1.4, {ease: FlxEase.expoInOut});
 
 		deleteText();
 	}

@@ -2,10 +2,12 @@
 	"titlex":0,
 	"titley":1500,
 	"titlesize":1.5,
-	"starty":50,
+	"titlestarty":50,
+
+	"startx":125,
+	"starty":576,
 	"gfx":512,
 	"gfy":40,
 	"backgroundSprite":"",
-	"bpm":148,
-	"gradients": ["0x553D0468", "0xC4FFE600"]
+	"bpm":148
 }

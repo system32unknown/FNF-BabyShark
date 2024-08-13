@@ -1291,12 +1291,12 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		super.draw();
 	}
 
-	function focusOnTarget(target:String) {
+	function focusOnTarget(target:String):FlxPoint {
 		var focusPoint:FlxPoint = FlxPoint.weak();
 		switch(target) {
 			case 'boyfriend':
 				focusPoint.add(boyfriend.getMidpoint().x - boyfriend.cameraPosition[0] - 100, boyfriend.getMidpoint().y + boyfriend.cameraPosition[1] - 100);
-				if(stageJson.camera_boyfriend != null && stageJson.camera_boyfriend.length > 1) focusPoint.add(stageJson.camera_boyfriend[0], stageJson.camera_boyfriend[1]);      
+				if(stageJson.camera_boyfriend != null && stageJson.camera_boyfriend.length > 1) focusPoint.add(stageJson.camera_boyfriend[0], stageJson.camera_boyfriend[1]);
 			case 'dad':
 				focusPoint.add(dad.getMidpoint().x + dad.cameraPosition[0] + 150, dad.getMidpoint().y + dad.cameraPosition[1] - 100);
 				if(stageJson.camera_opponent != null && stageJson.camera_opponent.length > 1) focusPoint.add(stageJson.camera_opponent[0], stageJson.camera_opponent[1]);
