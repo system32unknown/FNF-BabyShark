@@ -553,7 +553,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 
 		var letter:String = String.fromCharCode(charCode);
 		letter = filter(letter);
-		if(letter.length > 0 && (maxLength == 0 || (text.length + letter.length) < maxLength)) {
+		if(letter.length > 0 && (maxLength == 0 || (text.length + letter.length) <= maxLength)) {
 			var lastText:String = text;
 			if(!inInsertMode)
 				text = text.substring(0, caretIndex) + letter + text.substring(caretIndex);
