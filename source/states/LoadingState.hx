@@ -298,12 +298,17 @@ class LoadingState extends MusicBeatState {
 	}
 
 	static function clearInvalidFrom(arr:Array<String>, prefix:String, ext:String, type:openfl.utils.AssetType, ?parentFolder:String = null) {
-		for (i in 0...arr.length) {
-			var folder:String = arr[i];
-			if(folder.trim().endsWith('/')) {
-				for (subfolder in Mods.directoriesWithFile(Paths.getSharedPath(), '$prefix/$folder'))
-					for (file in FileSystem.readDirectory(subfolder))
-						if(file.endsWith(ext)) arr.push(folder + file.substr(0, file.length - ext.length));
+		for (folder in arr.copy()) {
+			var nam:String = folder.trim();
+			if(nam.endsWith('/')) {
+				for (subfolder in Mods.directoriesWithFile(Paths.getSharedPath(), '$prefix/$nam')) {
+					for (file in FileSystem.readDirectory(subfolder)) {
+						if(file.endsWith(ext)) {
+							var toAdd:String = nam + haxe.io.Path.withoutExtension(file);
+							if(!arr.contains(toAdd)) arr.push(toAdd);
+						}
+					}
+				}
 			}
 		}
 
