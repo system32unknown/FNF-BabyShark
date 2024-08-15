@@ -4077,7 +4077,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var channels:Int = buffer.channels;
 
 		var index:Int = Std.int(time * khz);
-
 		var samples:Float = ((endTime - time) * khz);
 
 		if (steps == null) steps = 1280;
