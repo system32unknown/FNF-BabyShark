@@ -37,6 +37,7 @@ class StoryMenuState extends MusicBeatState {
 	override function create() {
 		if (PlayState.SONG == null) Paths.clearUnusedMemory();
 
+		persistentUpdate = persistentDraw = true;
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
 		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Story Menu"); #end
@@ -52,7 +53,6 @@ class StoryMenuState extends MusicBeatState {
 		}
 
 		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
-		persistentUpdate = persistentDraw = true;
 
 		scoreText = new FlxText(10, 10, 0, Language.getPhrase('week_score', 'WEEK SCORE: {1}', [lerpScore]), 32);
 		scoreText.setFormat(Paths.font("babyshark.ttf"), 32);
@@ -61,7 +61,7 @@ class StoryMenuState extends MusicBeatState {
 		txtWeekTitle.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, RIGHT);
 		txtWeekTitle.alpha = .7;
 
-		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+		var ui_tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('campaign_menu_UI_assets');
 		var bgYellow:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 386, 0xFFF9CF51);
 		bgSprite = new FlxSprite(0, 56);
 
@@ -162,7 +162,7 @@ class StoryMenuState extends MusicBeatState {
 			if (controls.BACK && !movedBack && !selectedWeek) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				movedBack = true;
-				FlxG.switchState(new MainMenuState());
+				FlxG.switchState(() -> new MainMenuState());
 			}
 			super.update(elapsed);
 			return;
@@ -189,12 +189,10 @@ class StoryMenuState extends MusicBeatState {
 				changeDifficulty();
 			}
 
-			if (controls.UI_RIGHT)
-				rightArrow.animation.play('press')
+			if (controls.UI_RIGHT) rightArrow.animation.play('press')
 			else rightArrow.animation.play('idle');
 
-			if (controls.UI_LEFT)
-				leftArrow.animation.play('press');
+			if (controls.UI_LEFT) leftArrow.animation.play('press');
 			else leftArrow.animation.play('idle');
 
 			if (controls.UI_RIGHT_P) changeDifficulty(1);
@@ -219,8 +217,8 @@ class StoryMenuState extends MusicBeatState {
 		super.update(elapsed);
 
 		var offY:Float = grpWeekText.members[curWeek].targetY;
-		for (num => item in grpWeekText.members) item.y = FlxMath.lerp(item.targetY - offY + 480, item.y, Math.exp(-elapsed * 10.2));
-		for (num => lock in grpLocks.members) lock.y = grpWeekText.members[lock.ID].y + grpWeekText.members[lock.ID].height/2 - lock.height/2;
+		for (_ => item in grpWeekText.members) item.y = FlxMath.lerp(item.targetY - offY + 480, item.y, Math.exp(-elapsed * 10.2));
+		for (_ => lock in grpLocks.members) lock.y = grpWeekText.members[lock.ID].y + grpWeekText.members[lock.ID].height/2 - lock.height/2;
 	}
 
 	var movedBack:Bool = false;
