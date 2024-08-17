@@ -60,7 +60,6 @@ import flixel.input.keyboard.FlxKey;
 	public var showJudgement:Bool = true;
 	public var iconBounceType:String = 'Psych';
 	public var ratingDisplay:String = 'World';
-	public var rainbowFps:Bool = false;
 	public var cacheOnGPU:Bool = false;
 	public var healthTypes:String = 'Vanilla';
 	public var timeBarType:String = 'Name Time Position';

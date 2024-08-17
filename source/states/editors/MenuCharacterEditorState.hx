@@ -7,7 +7,6 @@ import haxe.Json;
 import objects.MenuCharacter;
 
 import states.editors.content.Prompt;
-import states.editors.content.PsychJsonPrinter;
 
 class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent {
 	var grpWeekCharacters:FlxTypedGroup<MenuCharacter>;
@@ -295,7 +294,7 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 	}
 
 	function saveCharacter() {
-		var data:String = PsychJsonPrinter.print(characterFile, ['position']);
+		var data:String = states.editors.content.PsychJsonPrinter.print(characterFile, ['position']);
 		if (data.length > 0) {
 			var splittedImage:Array<String> = imageInputText.text.trim().split('_');
 			var characterName:String = splittedImage[splittedImage.length - 1].toLowerCase().replace(' ', '');

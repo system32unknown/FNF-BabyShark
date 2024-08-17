@@ -11,7 +11,6 @@ import objects.HealthIcon;
 import objects.Bar;
 
 import states.editors.content.Prompt;
-import states.editors.content.PsychJsonPrinter;
 
 #if (FLX_DEBUG || flixel < version("5.7.0"))
 typedef PointerGraphic = flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
@@ -942,6 +941,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			FlxG.camera.scroll.set(midcam.x - FlxG.width / 2, midcam.y - FlxG.height / 2);
 			midcam.put();
 		}
+		mid.put();
 	}
 
 	inline function updateHealthBar() {
@@ -1079,7 +1079,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	function saveCharacter() {
 		if(_file != null) return;
 
-		var data:String = PsychJsonPrinter.print({
+		var data:String = states.editors.content.PsychJsonPrinter.print({
 			"animations": character.animationsArray,
 			"image": character.imageFile,
 			"scale": character.jsonScale,

@@ -1426,7 +1426,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		if(fullPath != null) {
 			fullPath = fullPath.replace('\\', '/');
 			var exePath:String = Sys.getCwd().replace('\\', '/');
-			if(fullPath.startsWith(exePath + 'assets/images/') #if MODS_ALLOWED || (fullPath.startsWith(exePath + 'mods/') && fullPath.contains('/images/')) #end) {
+			if((fullPath.startsWith(exePath + 'assets/') #if MODS_ALLOWED || fullPath.startsWith(exePath + 'mods/') #end) && fullPath.contains('/images/')) {
 				var imageToLoad:String = fullPath.substring(fullPath.indexOf('/images/') + '/images/'.length, fullPath.indexOf('.'));
 				if(_makeNewSprite != null) {
 					if(_makeNewSprite == 'animatedSprite' && !Paths.fileExists('images/$imageToLoad.xml', TEXT) && !Paths.fileExists('images/$imageToLoad.json', TEXT) && !Paths.fileExists('images/$imageToLoad.txt', TEXT)) {

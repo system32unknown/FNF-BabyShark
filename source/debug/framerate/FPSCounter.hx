@@ -6,7 +6,7 @@ import flixel.util.FlxStringUtil;
 
 class FPSCounter extends openfl.display.Sprite {
 	public var fpsTxt:TextField;
-	@:noCompletion @:noPrivateAccess var timeColor:Int = 0;
+	public var checkLag:Bool = true;
 	public var memType:String = "";
 
     public var fpsManager:FPSUtil;
@@ -48,11 +48,10 @@ class FPSCounter extends openfl.display.Sprite {
 		fpsManager.update();
 		if (memory > mempeak) mempeak = memory;
 
-		if (ClientPrefs.data.rainbowFps) {
-			timeColor = (timeColor % 360) + 1;
-			fpsTxt.textColor = FlxColor.fromHSB(timeColor, 1, 1);
-		} else if (fpsManager.checkFPSLag()) fpsTxt.textColor = FlxColor.RED;
-		else fpsTxt.textColor = FlxColor.WHITE;
+		if (checkLag) {
+			if (fpsManager.checkFPSLag()) fpsTxt.textColor = FlxColor.RED;
+			else fpsTxt.textColor = FlxColor.WHITE;
+		}
 
 		updateText();
 		deltaTimeout += dt;

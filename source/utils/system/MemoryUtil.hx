@@ -32,7 +32,6 @@ class MemoryUtil {
 		#end
     }
 
-
 	@:functionCode("
 		unsigned long long allocatedRAM = 0;
 		GetPhysicallyInstalledSystemMemory(&allocatedRAM);

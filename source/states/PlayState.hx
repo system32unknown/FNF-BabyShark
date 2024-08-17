@@ -693,7 +693,7 @@ class PlayState extends MusicBeatState {
 		var foundFile:Bool = false;
 		var fileName:String = Paths.video(name);
 
-		if (#if sys FileSystem #else Assets #end.exists(fileName)) foundFile = true;
+		if (#if sys FileSystem #else OpenFlAssets #end.exists(fileName)) foundFile = true;
 
 		if (foundFile) {
 			videoCutscene = new VideoSprite(fileName, forMidSong, canSkip, loop, autoAdjust);
@@ -1968,8 +1968,8 @@ class PlayState extends MusicBeatState {
 
 		// obtain notes that the player can hit
 		final plrInputNotes:Array<Note> = notes.members.filter(function(n:Note):Bool {
-			final noteIsHittable:Bool = strumsBlocked[n.noteData] == false && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit;
-			return n != null && noteIsHittable && !n.isSustainNote && n.noteData == key;
+			final noteIsHittable:Bool = n != null && strumsBlocked[n.noteData] == false && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit;
+			return noteIsHittable && !n.isSustainNote && n.noteData == key;
 		});
 		plrInputNotes.sort((a:Note, b:Note) -> Std.int(a.strumTime - b.strumTime));
 
