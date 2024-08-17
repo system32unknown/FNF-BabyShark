@@ -86,10 +86,10 @@ class PlayState extends MusicBeatState {
 	public var camFollow:FlxObject;
 	static var prevCamFollow:FlxObject;
 
-	public var strumLineNotes:FlxTypedGroup<StrumNote>;
-	public var opponentStrums:FlxTypedGroup<StrumNote>;
-	public var playerStrums:FlxTypedGroup<StrumNote>;
-	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
+	public var strumLineNotes:FlxTypedGroup<StrumNote> = new FlxTypedGroup<StrumNote>();
+	public var opponentStrums:FlxTypedGroup<StrumNote> = new FlxTypedGroup<StrumNote>();
+	public var playerStrums:FlxTypedGroup<StrumNote> = new FlxTypedGroup<StrumNote>();
+	public var grpNoteSplashes:FlxTypedGroup<NoteSplash> = new FlxTypedGroup<NoteSplash>();
 
 	public var canTweenCamZoom:Bool = false;
 	public var canTweenCamZoomBoyfriend:Float = 1;
@@ -287,7 +287,6 @@ class PlayState extends MusicBeatState {
 		GF_X = stageData.girlfriend[0]; GF_Y = stageData.girlfriend[1];
 		DAD_X = stageData.opponent[0]; DAD_Y = stageData.opponent[1];
 
-		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 		grpNoteSplashes.ID = 0;
 
 		if(stageData.camera_speed != null) cameraSpeed = stageData.camera_speed;
@@ -376,7 +375,6 @@ class PlayState extends MusicBeatState {
 		startCharacterScripts(boyfriend.curCharacter);
 
 		uiGroup = new FlxSpriteGroup();
-		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		comboGroup = new FlxSpriteGroup();
 		comboGroup.ID = 0;
 		noteGroup = new FlxTypedGroup<FlxBasic>();
@@ -405,9 +403,6 @@ class PlayState extends MusicBeatState {
 		add(noteGroup);
 		add(uiGroup);
 		noteGroup.add(strumLineNotes);
-
-		opponentStrums = new FlxTypedGroup<StrumNote>();
-		playerStrums = new FlxTypedGroup<StrumNote>();
 
 		generateSong();
 		noteGroup.add(grpNoteSplashes);
@@ -1927,8 +1922,7 @@ class PlayState extends MusicBeatState {
 			var daLoop:Int = 0;
 			for (i in [for (i in 0...comboSplit.length) Std.parseInt(comboSplit[i])]) {
 				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiPostfix));
-				numScore.screenCenter(Y).y += 80 - comboOffset[1][1];
-				numScore.x = placement + (43 * daLoop++) - 90 + comboOffset[1][0];
+				numScore.setPosition(rating.x + (43 * daLoop++) - 50 + comboOffset[1][0], rating.y + 100 - comboOffset[1][1]);
 			
 				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate + ratingVel.x, -FlxG.random.int(130, 150) * playbackRate + ratingVel.y);
 				numScore.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(250, 300) * playbackRate * playbackRate + ratingAcc.y);

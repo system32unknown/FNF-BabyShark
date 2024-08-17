@@ -164,7 +164,7 @@ class TitleState extends MusicBeatState {
 	
 					FlxTimer.wait(1.5, () -> {
 						FlxTransitionableState.skipNextTransIn = false;
-						if (mustUpdate) openSubState(new substates.OutdatedSubState());
+						if (mustUpdate) FlxG.switchState(() -> new OutdatedState());
 						else FlxG.switchState(() -> new MainMenuState());
 					});
 				}
@@ -254,13 +254,21 @@ class TitleState extends MusicBeatState {
 	function checkUpdate():Void {
 		if(ClientPrefs.data.checkForUpdates && !skippedIntro) {
 			trace('checking for update');
-			var http = new haxe.Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/gitVersion.txt");
+			var http = new haxe.Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/CHANGELOG.md");
+			var returnedData:Array<String> = [];
+
 			http.onData = (data:String) -> {
-				updateVersion = data.split('\n')[0].trim();
+    			var versionEndIndex:Int = data.indexOf(';');
+    			returnedData[0] = data.substring(0, versionEndIndex);
+
+    			// Extract the changelog after the version number
+    			returnedData[1] = data.substring(versionEndIndex + 1, data.length);
+				updateVersion = returnedData[0];
 				final curVersion:String = Main.engineVer.version.trim();
-				trace('version online: $updateVersion, your version: $curVersion');
+				trace('version online: ' + updateVersion + ', your version: ' + curVersion);
 				if(updateVersion != curVersion) {
 					trace('versions arent matching!');
+					OutdatedState.curChanges = returnedData[1];
 					mustUpdate = true;
 				}
 			}

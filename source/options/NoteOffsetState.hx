@@ -101,8 +101,7 @@ class NoteOffsetState extends MusicBeatState {
 
 		var daLoop:Int = 0;
 		for (i in [for (_ in 0...FlxG.random.int(3, 4)) FlxG.random.int(0, 9)]) {
-			var numScore:FlxSprite = new FlxSprite(43 * daLoop++, Paths.image('number/num$i'));
-			numScore.camera = camHUD;
+			var numScore:FlxSprite = new FlxSprite(rating.x + (43 * daLoop++), Paths.image('number/num$i'));
 			numScore.setGraphicSize(numScore.width * .5);
 			numScore.updateHitbox();
 			comboNums.add(numScore);
@@ -215,8 +214,8 @@ class NoteOffsetState extends MusicBeatState {
 		rating.screenCenter(Y).y -= 60 + comboOffset[0][1];
 		rating.x = placement - 40 + comboOffset[0][0];
 
-		comboNums.screenCenter(Y).y += 80 - comboOffset[1][1];
-		comboNums.x = placement - 90 + comboOffset[1][0];
+		comboNums.x = placement - 50 + comboOffset[1][0];
+		comboNums.y = rating.y + 100 - comboOffset[1][1];
 
 		reloadTexts();
 	}

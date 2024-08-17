@@ -47,6 +47,7 @@ class FunkinLua {
 			hash: Main.engineVer.COMMIT_HASH.trim(),
 			buildTarget: LuaUtils.getBuildTarget()
 		});
+		set('modFolder', this.modFolder);
 
 		// Song/Week shit
 		set('curBpm', Conductor.bpm);
@@ -406,7 +407,7 @@ class FunkinLua {
 					var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 					variables.set(tag, FlxTween.angle(penisExam, value[0], value[1], duration * game.playbackRate, {ease: LuaUtils.getTweenEaseByString(ease),
 						onComplete: (twn:FlxTween) -> {
-							game.callOnLuas('onTweenCompleted', [tag]);
+							game.callOnLuas('onTweenCompleted', [originalTag, tag]);
 							variables.remove(tag);
 						}
 					}));

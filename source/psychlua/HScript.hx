@@ -330,9 +330,9 @@ class HScript {
 			var retVal:Dynamic = funk.hscript.executeFunction(funcToRun, funcArgs);
 			if (funk.hscript.exception != null) {
 				funk.hscript.active = false;
-				FunkinLua.luaTrace('ERROR (${funk.lastCalledFunction}) - ${funk.hscript.exception}', false, false, FlxColor.RED);
-			}
-			return retVal;
+				FunkinLua.luaTrace('ERROR (${funk.lastCalledFunction}) - ${funk.hscript.exception.details()}', false, false, FlxColor.RED);
+				return null;
+			} else return retVal;
 		});
 		// This function is unnecessary because import already exists in SScript as a native feature
 		funk.addLocalCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
