@@ -1,7 +1,6 @@
 package cutscenes;
 
 import flixel.util.FlxSort;
-import flixel.util.FlxDestroyUtil;
 import flixel.addons.display.FlxPieDial;
 
 typedef CutsceneEvent = {
@@ -81,7 +80,7 @@ class CutsceneHandler extends flixel.FlxBasic {
 				spr.destroy();
 			}
 	
-			skipSprite = FlxDestroyUtil.destroy(skipSprite);
+			skipSprite = flixel.util.FlxDestroyUtil.destroy(skipSprite);
 			destroy();
 			PlayState.instance.remove(this);
 		}

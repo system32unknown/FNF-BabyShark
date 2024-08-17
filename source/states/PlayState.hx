@@ -1908,7 +1908,6 @@ class PlayState extends MusicBeatState {
 
 		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
 			mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
-			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 			mstimingTxt.text = '${MathUtil.truncateFloat(noteDiff / playbackRate)}ms';
 			mstimingTxt.color = SpriteUtil.dominantColor(rating);
 			mstimingTxt.setPosition(rating.x + 100, rating.y + 100);

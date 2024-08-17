@@ -1,7 +1,7 @@
 package objects;
 
 import haxe.Json;
-import openfl.utils.Assets;
+#if !MODS_ALLOWED import openfl.utils.Assets; #end
 import flixel.util.FlxDestroyUtil;
 
 enum Alignment {

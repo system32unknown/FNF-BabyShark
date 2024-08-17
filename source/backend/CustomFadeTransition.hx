@@ -1,8 +1,5 @@
 package backend;
 
-import flixel.util.FlxAxes;
-import flixel.util.FlxGradient;
-
 class CustomFadeTransition extends MusicBeatSubstate {
 	public static var finishCallback:Void->Void;
 	var isTransIn:Bool = false;
@@ -21,7 +18,7 @@ class CustomFadeTransition extends MusicBeatSubstate {
 		var width:Int = Std.int(FlxG.width / Math.max(camera.zoom, .001));
 		var height:Int = Std.int(FlxG.height / Math.max(camera.zoom, .001));
 
-		transGradient = FlxGradient.createGradientFlxSprite(width, 1, (isTransIn ? [0x0, FlxColor.BLACK] : [FlxColor.BLACK, 0x0]), 1, 0);
+		transGradient = flixel.util.FlxGradient.createGradientFlxSprite(width, 1, (isTransIn ? [0x0, FlxColor.BLACK] : [FlxColor.BLACK, 0x0]), 1, 0);
 		transGradient.scale.y = height;
 		transGradient.updateHitbox();
 		transGradient.scrollFactor.set();
