@@ -23,7 +23,7 @@ class AlterHscript {
 	public var parser:Parser;
 
     public function new(scriptStr:String, ?rules:InitRules) {
-		if (rules == null) rules = {name: "iris", autoRun: true, preset: true};
+		if (rules == null) rules = {name: "alter", autoRun: true, preset: true};
 
 		this.scriptStr = scriptStr;
 		this.ruleSet = rules;
@@ -81,6 +81,13 @@ class AlterHscript {
 
 	public function exists(field:String):Bool {
 		return interp != null ? interp.variables.exists(field) : false;
+	}
+
+	public static function errorHandler(error:hscript.Expr.Error):String {
+		var fn:String = '${error.origin}:${error.line}: ';
+		var err:String = error.toString();
+		if (err.startsWith(fn)) err = err.substr(fn.length);
+		return err;
 	}
 
 	public function destroy() @:privateAccess {
