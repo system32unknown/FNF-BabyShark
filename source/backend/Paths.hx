@@ -166,12 +166,7 @@ class Paths {
 		return graph;
 	}
 
-	inline static public function getTextFromFile(key:String, ?absolute:Bool = false):String {
-		if (absolute) {
-			#if sys if (FileSystem.exists(key)) return File.getContent(key); #end
-			if (OpenFlAssets.exists(key, TEXT)) return Assets.getText(key);
-			return null;
-		}
+	inline static public function getTextFromFile(key:String):String {
 		var path:String = getPath(key);
 		return (#if sys FileSystem.exists(path)) ? File.getContent(path) #else OpenFlAssets.exists(path, TEXT)) ? Assets.getText(path) #end : null;
 	}

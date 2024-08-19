@@ -130,7 +130,7 @@ class ExtraFunctions {
 				if(!absolute) File.saveContent(Paths.mods(path), content);
 				else File.saveContent(path, content);
 				return true;
-			} catch (e:Dynamic) FunkinLua.luaTrace("saveFile: Error trying to save " + path + ": " + e, false, false, FlxColor.RED);
+			} catch (e:Dynamic) FunkinLua.luaTrace('saveFile: Error trying to save $path: $e', false, false, FlxColor.RED);
 			return false;
 		});
 		funk.set("deleteFile", function(path:String, ?ignoreModFolders:Bool = false, ?absolute:Bool = false) {
@@ -141,7 +141,7 @@ class ExtraFunctions {
 					FileSystem.deleteFile(lePath);
 					return true;
 				}
-			} catch (e:Dynamic) FunkinLua.luaTrace("deleteFile: Error trying to delete " + path + ": " + e, false, false, FlxColor.RED);
+			} catch (e:Dynamic) FunkinLua.luaTrace('deleteFile: Error trying to delete $path: $e', false, false, FlxColor.RED);
 			return false;
 		});
 		funk.set("getTextFromFile", Paths.getTextFromFile);

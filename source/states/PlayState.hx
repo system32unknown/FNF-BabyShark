@@ -18,6 +18,7 @@ import objects.*;
 import utils.*;
 import data.*;
 import psychlua.*;
+#if HSCRIPT_ALLOWED import hscript.AlterHscript; #end
 import cutscenes.DialogueBoxPsych;
 
 class PlayState extends MusicBeatState {
@@ -103,7 +104,7 @@ class PlayState extends MusicBeatState {
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
-	var displayedHealth(default, null):Float = 1;
+	var healthLerp(default, null):Float = 1;
 
 	public dynamic function updateIconsPosition() {
 		final iconOffset:Int = 26;
@@ -422,7 +423,7 @@ class PlayState extends MusicBeatState {
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 		moveCameraSection();
 
-		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return displayedHealth, 0, 2);
+		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return healthLerp, 0, 2);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
@@ -458,13 +459,14 @@ class PlayState extends MusicBeatState {
 		judgementCounter.updateHitbox(); judgementCounter.screenCenter(Y);
 		updateScore();
 
-		botplayTxt = new FlxText(FlxG.width / 2, healthBar.bg.y + (downScroll ? 100 : -100), FlxG.width - 800, Language.getPhrase("Botplay", "BOTPLAY"), 32);
+		botplayTxt = new FlxText(FlxG.width / 2, healthBar.y - 90, FlxG.width - 800, Language.getPhrase("Botplay", "BOTPLAY"), 32);
 		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
 		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		botplayTxt.screenCenter(X);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.visible = cpuControlled;
 		uiGroup.add(botplayTxt);
+		if(ClientPrefs.data.downScroll) botplayTxt.y = healthBar.y + 70;
 
 		uiGroup.cameras = [camHUD]; noteGroup.cameras = [camHUD];
 		comboGroup.cameras = (ClientPrefs.data.ratingDisplay == "Hud" ? [camHUD] : [camGame]);
@@ -662,10 +664,7 @@ class PlayState extends MusicBeatState {
 		}
 		
 		if(doPush) {
-			for (hx in hscriptArray) if (hx.origin == scriptFile) {
-				doPush = false;
-				break;
-			}
+			if(AlterHscript.instances.exists(scriptFile)) doPush = false;
 			if(doPush) initHScript(scriptFile);
 		}
 		#end
@@ -1244,7 +1243,7 @@ class PlayState extends MusicBeatState {
 			if (updateScoreText) scoreTxt.text = getScoreText();
 		}
 
-		displayedHealth = ClientPrefs.data.smoothHealth ? FlxMath.lerp(displayedHealth, health, ((health / displayedHealth) * (elapsed * 8)) * playbackRate) : health;
+		healthLerp = ClientPrefs.data.smoothHealth ? FlxMath.lerp(healthLerp, health, ((health / healthLerp) * (elapsed * 8)) * playbackRate) : health;
 
 		setOnScripts('curDecStep', curDecStep);
 		setOnScripts('curDecBeat', curDecBeat);
@@ -2226,21 +2225,11 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function destroy() {
-		var luaScript:FunkinLua = null;
-		while (luaArray.length > 0) {
-			luaScript = luaArray.pop();
-			if (luaScript == null) continue;
-			luaScript.call('onDestroy', []);
-			luaScript.stop();
-		}
+		for (lua in luaArray) {lua.call('onDestroy'); lua.stop();}
+		luaArray = null;
 		FunkinLua.customFunctions.clear();
-		var hscript:HScript = null;
-		while (hscriptArray.length > 0) {
-			hscript = hscriptArray.pop();
-			if (hscript == null) continue;
-			hscript.executeFunction('onDestroy');
-			hscript.destroy();
-		}
+		for (script in hscriptArray) if(script != null) {script.call('onDestroy'); script.destroy();}
+		hscriptArray = null;
 		stagesFunc((stage:BaseStage) -> stage.destroy());
 		for (point in [campoint, camlockpoint, ratingAcc, ratingVel]) point = flixel.util.FlxDestroyUtil.put(point);
 
@@ -2359,7 +2348,7 @@ class PlayState extends MusicBeatState {
 		if(!FileSystem.exists(scriptToLoad)) scriptToLoad = Paths.getSharedPath(scriptFile);
 		
 		if(FileSystem.exists(scriptToLoad)) {
-			for (hx in hscriptArray) if (hx.origin == scriptToLoad) return false;
+			if (AlterHscript.instances.exists(scriptToLoad)) return false;
 			initHScript(scriptToLoad);
 			return true;
 		}
@@ -2367,42 +2356,16 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function initHScript(file:String) {
-		function makeError(newScript:HScript) {
-			newScript.destroy();
-			newScript = null;
-			hscriptArray.remove(newScript);
-			Logs.trace('failed to initialize hscript interp!!! ($file)', ERROR);
-		}
+		var newScript:HScript = null;
 		try {
-			var times:Float = Date.now().getTime();
-			var newScript:HScript = new HScript(null, file);
+			newScript = new HScript(null, file);
+			newScript.call('onCreate');
+			trace('initialized hscript interp successfully: $file');
 			hscriptArray.push(newScript);
-
-			if (newScript.exception != null) {
-				var len:Int = newScript.exception.message.indexOf('\n') + 1;
-				if(len <= 0) len = newScript.exception.message.length;
-				Logs.trace(newScript.exception.toString(), ERROR);
-				addTextToDebug('ERROR ON LOADING - ${newScript.exception.message.substr(0, len)}', FlxColor.RED);
-				makeError(newScript);
-				return;
-			}
-
-			if (newScript.interp.variables.exists('onCreate')) {
-				newScript.executeFunction('onCreate');
-				if (newScript.exception != null) {
-					var len:Int = newScript.exception.message.indexOf('\n') + 1;
-					if(len <= 0) len = newScript.exception.message.length;
-					addTextToDebug('ERROR (onCreate) - ${newScript.exception.message.substr(0, len)}', FlxColor.RED);
-					makeError(newScript);
-					return;
-				}
-			}
-			trace('initialized hscript interp successfully: $file (${Std.int(Date.now().getTime() - times)}ms)');
-		} catch(e) {
-			var len:Int = e.message.indexOf('\n') + 1;
-			if(len <= 0) len = e.message.length;
-			addTextToDebug('ERROR - ${e.message.substr(0, len)}', FlxColor.RED);
-			if (hscriptArray.length > 0) makeError(hscriptArray[hscriptArray.length - 1]);
+		} catch(e:Dynamic) {
+			addTextToDebug('ERROR ON LOADING ($file) - $e', FlxColor.RED);
+			var newScript:HScript = cast (AlterHscript.instances.get(file), HScript);
+			if(newScript != null) newScript.destroy();
 		}
 	}
 	#end
@@ -2450,26 +2413,29 @@ class PlayState extends MusicBeatState {
 
 	public function callOnHScript(funcToCall:String, ?args:Array<Dynamic>, ?ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
 		var returnVal:Dynamic = LuaUtils.Function_Continue;
-
 		#if HSCRIPT_ALLOWED
 		if(exclusions == null) exclusions = [];
 		if(excludeValues == null) excludeValues = [LuaUtils.Function_Continue];
-
 		var len:Int = hscriptArray.length;
 		if (len < 1) return returnVal;
-		for(i in 0...len) {
-			var script:HScript = hscriptArray[i];
-			if(script == null || !script.active || !script.interp.variables.exists(funcToCall) || exclusions.contains(script.origin)) continue;
+
+		for(script in hscriptArray) {
+			@:privateAccess
+			if(script == null || !script.exists(funcToCall) || exclusions.contains(script.origin)) continue;
 
 			try {
-				returnVal = script.executeFunction(funcToCall, args);
-				final stopHscript:Bool = (returnVal == LuaUtils.Function_StopHScript);
-				final stopAll:Bool = (returnVal == LuaUtils.Function_StopAll);
-				if (script.exception != null) {
-					script.active = false;
-					FunkinLua.luaTrace('ERROR ($funcToCall) - ${script.exception}', true, false, FlxColor.RED);
-				} else if((stopHscript || stopAll) && !excludeValues.contains(returnVal) && !ignoreStops) break;
-			}
+				var callValue = script.call(funcToCall, args);
+				var myValue:Dynamic = callValue.methodVal;
+
+				final stopHscript:Bool = (myValue == LuaUtils.Function_StopHScript);
+				final stopAll:Bool = (myValue == LuaUtils.Function_StopAll);
+				if((stopHscript || stopAll) && !excludeValues.contains(myValue) && !ignoreStops) {
+					returnVal = myValue;
+					break;
+				}
+
+				if(myValue != null && !excludeValues.contains(myValue)) returnVal = myValue;
+			} catch(e:Dynamic) addTextToDebug('ERROR (${script.origin}: $funcToCall) - $e', FlxColor.RED);
 		}
 		#end
 

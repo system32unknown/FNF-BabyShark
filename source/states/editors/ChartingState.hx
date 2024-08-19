@@ -9,10 +9,10 @@ import flixel.math.FlxRect;
 
 import openfl.geom.Rectangle;
 import lime.utils.Assets;
+import lime.media.AudioBuffer;
 
 import haxe.Json;
 import haxe.Exception;
-import haxe.io.Bytes;
 
 import states.editors.content.MetaNote;
 import states.editors.content.VSlice;
@@ -62,6 +62,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		['Philly Glow', "Exclusive to Week 3\nValue 1: 0/1 / 2 = OFF/ON/Reset Gradient\n \nNo, i won't add it to other weeks."],
 		['Kill Henchmen', "For Mom's songs, don't use this please, i love them :("],
 		['Add Camera Zoom', "Used on MILF on that one \"hard\" part\nValue 1: Camera zoom add (Default: 0.015)\nValue 2: UI zoom add (Default: 0.03)\nLeave the values blank if you want to use Default."],
+		['Set Camera Zoom', "Used to set the default camera zoom to a constant value\nValue 1: Camera zoom set (Default: 1.05)\nValue 2: UI zoom set (Default: 1)\nLeave the values blank if you want to use Default."],
 		['Play Animation', "Plays an animation on a Character,\nonce the animation is completed,\nthe animation changes to Idle\n\nValue 1: Animation to play.\nValue 2: Character (Dad, BF, GF)"],
 		['Camera Follow Pos', "Value 1: X\nValue 2: Y\n\nThe camera won't change the follow point\nafter using this, for getting it back\nto normal, leave both values blank."],
 		['Alt Idle Animation', "Sets a specified postfix after the idle animation name.\nYou can use this to trigger 'idle-alt' if you set\nValue 2 to -alt\n\nValue 1: Character to set (Dad, BF or GF)\nValue 2: New postfix (Leave it blank to disable)"],
@@ -443,6 +444,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			"Shift + Click - Select/Unselect Note(s)",
 			"Right Click - Selection Box",
 			"",
+			"R - Reset Section",
 			"Z/X - Zoom in/out",
 			"Left/Right - Change Snap",
 			#if FLX_PITCH
@@ -755,6 +757,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							Conductor.songPosition = FlxG.sound.music.time = cachedSectionTimes[curSec] + 0.000001;
 						}
 					}
+				} else if(FlxG.keys.justPressed.R) {
+					Conductor.songPosition = FlxG.sound.music.time = cachedSectionTimes[curSec] + (curSec > 0 ? 0.000001 : 0);
 				} else if(FlxG.keys.pressed.W != FlxG.keys.pressed.S || FlxG.mouse.wheel != 0) {
 					if(FlxG.sound.music.playing) setSongPlaying(false);
 
@@ -3609,7 +3613,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				curSectionTime = cachedSectionTimes[noteSec];
 			}
 			var arr:Array<Dynamic> = PlayState.SONG.notes[noteSec].sectionNotes;
-			//trace('Added note with time ${note.songData[0]} at section $noteSec');
 			arr.push(note.songData);
 		}
 
@@ -4040,8 +4043,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		@:privateAccess
 		if (sound != null && sound._sound != null && sound._sound.__buffer != null) {
-			var bytes:Bytes = sound._sound.__buffer.data.toBytes();
-			wavData = waveformData(sound._sound.__buffer, bytes, cachedSectionTimes[curSec] - Conductor.offset, cachedSectionTimes[curSec + 1] - Conductor.offset, 1, wavData, height);
+			var buffer:AudioBuffer = sound._sound.__buffer;
+			wavData = waveformData(buffer, buffer.data.toBytes(), cachedSectionTimes[curSec] - Conductor.offset, cachedSectionTimes[curSec + 1] - Conductor.offset, 1, wavData, height);
 		}
 
 		// Draws
@@ -4068,7 +4071,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		#end
 	}
 
-	function waveformData(buffer:lime.media.AudioBuffer, bytes:Bytes, time:Float, endTime:Float, multiply:Float = 1, ?array:Array<Array<Array<Float>>>, ?steps:Float):Array<Array<Array<Float>>> {
+	function waveformData(buffer:AudioBuffer, bytes:haxe.io.Bytes, time:Float, endTime:Float, multiply:Float = 1, ?array:Array<Array<Array<Float>>>, ?steps:Float):Array<Array<Array<Float>>> {
 		#if (lime_cffi && !macro)
 		if (buffer == null || buffer.data == null) return [[[0], [0]], [[0], [0]]];
 
