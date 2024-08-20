@@ -44,6 +44,7 @@ import flixel.input.keyboard.FlxKey;
 
 	public var showFPS:Bool = false;
 	public var memCounterType:String = "MEM/PEAK";
+	public var rainbowFps:Bool = false;
 	public var camMovement:Bool = true;
 	public var ghostTapping:Bool = true;
 	public var noReset:Bool = false;

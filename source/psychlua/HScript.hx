@@ -33,7 +33,7 @@ class HScript extends AlterHscript {
 	public override function new(?parent:Dynamic, ?file:String, ?varsToBring:Any = null) {
 		if (file == null) file = '';
 
-		super(null, {name: "hscript-alter", autoRun: false, preset: false});
+		super(null);
 
 		parentLua = parent;
 		if (parent != null) {
@@ -146,7 +146,7 @@ class HScript extends AlterHscript {
         ];
     }
 
-	override function preset() {
+	function preset() {
 		parser.preprocesorValues = getDefaultPreprocessors();
         for (key => type in getDefaultVariables()) set(key, type);
 
@@ -310,8 +310,7 @@ class HScript extends AlterHscript {
 		}
 
 		try {
-			final callValue:ACall = call(funcToRun, funcArgs);
-			return callValue.methodVal;
+			return (call(funcToRun, funcArgs):ACall).methodVal;
 		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: $e', ERROR);
 		return null;
 	}

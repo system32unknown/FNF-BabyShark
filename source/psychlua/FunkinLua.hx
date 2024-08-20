@@ -867,7 +867,7 @@ class FunkinLua {
 			return true;
 		});
 		set("screenCenter", function(obj:String, pos:String = 'xy') {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
+			var spr:flixel.FlxObject = LuaUtils.getVarInstance(obj);
 			if (spr == null) return false;
 			spr.screenCenter(LuaUtils.axesFromString(pos));
 			return true;

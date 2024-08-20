@@ -6,57 +6,40 @@ import hscript.Interp;
 import haxe.ds.StringMap;
 import haxe.Exception;
 
-typedef InitRules = {
-	var name:String;
-	var autoRun:Bool;
-	var preset:Bool;
-}
-
 class AlterHscript {
 	public static var instances:StringMap<AlterHscript> = new StringMap<AlterHscript>();
     public var active:Bool = false;
 
-	public var ruleSet:InitRules = null;
+	public var hscriptName:String = "";
 	var scriptStr:String = "";
 
 	public var interp:Interp;
 	public var parser:Parser;
 
-    public function new(scriptStr:String, ?rules:InitRules) {
-		if (rules == null) rules = {name: "alter", autoRun: true, preset: true};
-
+    public function new(scriptStr:String, name:String = "hscript-alter") {
 		this.scriptStr = scriptStr;
-		this.ruleSet = rules;
+		hscriptName = name;
 
 		parser = new Parser();
 		interp = new Interp();
 
 		interp.allowStaticVariables = interp.allowPublicVariables = true;
 		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
-
-		if (rules.autoRun) execute();
     }
 
 	public function execute():Void {
 		if (active || interp == null) return;
 
-		if (ruleSet.preset) preset();
-
-		instances.set(ruleSet.name, this);
+		instances.set(hscriptName, this);
 		interp.execute(parser.parseString(scriptStr));
 		active = true;
-	}
-
-	public function preset():Void {
-		set("Math", Math);
-		set("StringTools", StringTools);
 	}
 
 	public function get(field:String):Dynamic {
 		return interp != null ? interp.variables.get(field) : false;
 	}
 
-	public function set(name:String, value:Dynamic, allowOverride:Bool = false):Void {
+	public function set(name:String, value:Dynamic, allowOverride:Bool = true):Void {
 		if (interp == null) return;
 
 		try {
@@ -105,7 +88,6 @@ class AlterHscript {
 		active = false;
 		interp = null;
 		parser = null;
-		ruleSet = null;
 	}
 
 	public static function destroyAll():Void {

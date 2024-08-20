@@ -459,10 +459,9 @@ class PlayState extends MusicBeatState {
 		judgementCounter.updateHitbox(); judgementCounter.screenCenter(Y);
 		updateScore();
 
-		botplayTxt = new FlxText(FlxG.width / 2, healthBar.y - 90, FlxG.width - 800, Language.getPhrase("Botplay", "BOTPLAY"), 32);
+		botplayTxt = new FlxText(400, healthBar.y - 90, FlxG.width - 800, Language.getPhrase("Botplay", "BOTPLAY"), 32);
 		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
 		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
-		botplayTxt.screenCenter(X);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.visible = cpuControlled;
 		uiGroup.add(botplayTxt);
@@ -670,7 +669,7 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
-	public function getLuaObject(tag:String):FlxSprite {
+	public function getLuaObject(tag:String):Dynamic {
 		return variables.get(tag);
 	}
 
