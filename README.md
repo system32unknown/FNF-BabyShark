@@ -1,8 +1,6 @@
 # Baby Shark's Big Funkin!
 ![Baby Shark's Big Funkin Logo](assets/shared/images/logobumpin.png)
 
-Old Logo Art, Will be replaced with new logo art.
-
 Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor codes), and Base Engine.
 
 ![Repo size](https://img.shields.io/github/repo-size/system32unknown/FNF-BabyShark)
