@@ -1,8 +1,5 @@
 package hscript;
 
-import hscript.Parser;
-import hscript.Interp;
-
 import haxe.ds.StringMap;
 import haxe.Exception;
 
@@ -11,28 +8,47 @@ class AlterHscript {
     public var active:Bool = false;
 
 	public var hscriptName:String = "";
-	var scriptStr:String = "";
+	var scriptCode:String = "";
 
 	public var interp:Interp;
 	public var parser:Parser;
+	var expr:Expr;
 
-    public function new(scriptStr:String, name:String = "hscript-alter") {
-		this.scriptStr = scriptStr;
+    public function new(scriptCode:String, name:String = "hscript-alter") {
+		this.scriptCode = scriptCode;
 		hscriptName = name;
 
 		parser = new Parser();
 		interp = new Interp();
+		fixScriptName(hscriptName);
 
 		interp.allowStaticVariables = interp.allowPublicVariables = true;
 		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
     }
 
-	public function execute():Void {
-		if (active || interp == null) return;
+	function fixScriptName(defaultName:String):Void {
+		// make sure to never have an indentically named instance.
+		var copyID:Int = 1;
+		while (instances.exists(hscriptName)) {
+			hscriptName = '${defaultName}_$copyID';
+			copyID++;
+		}
+	}
+
+	public function execute():AlterHscript {
+		if (active || interp == null) return this;
 
 		instances.set(hscriptName, this);
-		interp.execute(parser.parseString(scriptStr));
-		active = true;
+		if (expr == null) expr = parse();
+		interp.execute(expr);
+		active = instances.exists(hscriptName);
+
+		return this;
+	}
+
+	public function parse():Expr {
+		if (active || expr != null) return expr;
+		return expr = parser.parseString(scriptCode);
 	}
 
 	public function get(field:String):Dynamic {
@@ -83,6 +99,9 @@ class AlterHscript {
 		interp.locals.clear();
 		interp.variables.clear();
 		interp.resetVariables();
+
+		if (instances.exists(hscriptName))
+			instances.remove(hscriptName);
 
 		//Then, stops this script.
 		active = false;

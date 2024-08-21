@@ -23,7 +23,7 @@ class HScript extends AlterHscript {
 		} else {
 			hs.varsToBring = varsToBring;
 			try {
-				hs.scriptStr = code;
+				hs.scriptCode = code;
 				hs.execute();
 			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
 		}
@@ -56,7 +56,7 @@ class HScript extends AlterHscript {
 			var f:String = file.replace('\\', '/');
 			if(f.contains('/') && !f.contains('\n')) scriptThing = File.getContent(f);
 		}
-		this.scriptStr = scriptThing;
+		this.scriptCode = scriptThing;
 
 		preset();
 		execute();

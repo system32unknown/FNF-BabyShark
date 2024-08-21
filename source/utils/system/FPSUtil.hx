@@ -30,5 +30,5 @@ class FPSUtil {
 
 	inline public static function fpsLerp(a:Float, b:Float, ratio:Float):Float
 		return FlxMath.lerp(b, a, getFPSAdjust('codename', ratio));
-	public function checkFPSLag():Bool return curFPS < FlxG.drawFramerate * .5;
+	public function lagged():Bool return curFPS < FlxG.drawFramerate * .5;
 }

@@ -53,7 +53,7 @@ class FPSCounter extends openfl.display.Sprite {
 			timeColor = (timeColor % 360) + 1;
 			fpsTxt.textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else if (checkLag) {
-			if (fpsManager.checkFPSLag()) fpsTxt.textColor = FlxColor.RED;
+			if (fpsManager.lagged()) fpsTxt.textColor = FlxColor.RED;
 			else fpsTxt.textColor = FlxColor.WHITE;
 		}
 

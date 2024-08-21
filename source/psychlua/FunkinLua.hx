@@ -1101,7 +1101,7 @@ class FunkinLua {
 		#if LUA_ALLOWED
 		if (lua == null) return;
 
-		if (Type.typeof(data) == TFunction) {
+		if (Reflect.isFunction(data)) {
 			Lua_helper.add_callback(lua, variable, data);
 			return;
 		}
