@@ -3,7 +3,9 @@ package psychlua;
 #if HSCRIPT_ALLOWED
 import hscript.AlterHscript;
 import flixel.FlxBasic;
+
 import flixel.FlxState;
+import flixel.FlxSubState;
 
 typedef ACall = {
 	var methodName:String;
@@ -266,7 +268,7 @@ class HScript extends AlterHscript {
             }
         });
         set("openSubState", (name:String, args:Array<Dynamic>) -> {
-            if(FileSystem.exists('assets/scripts/substates/$name.hx')) FlxG.state.openSubState(new HscriptSubstate(name, args));
+            if(FileSystem.exists('assets/scripts/substates/$name.hx')) FlxG.state.openSubState(new substates.HscriptSubstate(name, args));
             else {
                 try {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
