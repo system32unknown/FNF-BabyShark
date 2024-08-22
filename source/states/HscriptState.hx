@@ -13,13 +13,14 @@ class HscriptState extends MusicBeatState {
     }
 
     override function create() {
-        hscriptRef.call("onCreate", []);
+        hscriptRef.call("onCreate");
         super.create();
-        hscriptRef.call("postCreate", []);
+        hscriptRef.call("postCreate");
     }
 
     override function update(elapsed:Float) {
+        hscriptRef.call("onUpdate", [elapsed]);
         super.update(elapsed);
-        hscriptRef.call("update", [elapsed]);
+        hscriptRef.call("onUpdatePost", [elapsed]);
     }
 }

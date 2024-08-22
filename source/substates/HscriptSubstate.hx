@@ -16,7 +16,8 @@ class HscriptSubstate extends MusicBeatSubstate {
     }
 
     override function update(elapsed:Float) {
+        hscriptRef.call("onUpdate", [elapsed]);
         super.update(elapsed);
-        hscriptRef.call("update", [elapsed]);
+        hscriptRef.call("onUpdatePost", [elapsed]);
     }
 }
