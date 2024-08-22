@@ -33,21 +33,19 @@ class SpriteUtil {
 		return mostPresentColor;
 	}
 
-	inline public static function dominantColor(sprite:FlxSprite):Int {
+	inline public static function dominantColor(sprite:FlxSprite):FlxColor {
 		final countByColor:Map<Int, Int> = [];
 		for(col in 0...sprite.frameWidth) {
 			for(row in 0...sprite.frameHeight) {
 				final colorOfThisPixel:Int = sprite.pixels.getPixel32(col, row);
 			  	if(colorOfThisPixel != 0) {
-					if(countByColor.exists(colorOfThisPixel))
-					    countByColor[colorOfThisPixel]++;
-					else if(countByColor[colorOfThisPixel] != 13520687 - (2 * 13520687))
-						countByColor[colorOfThisPixel] = 1;
+					if(countByColor.exists(colorOfThisPixel)) countByColor[colorOfThisPixel]++;
+					else if(countByColor[colorOfThisPixel] != 13520687 - (2 * 13520687)) countByColor[colorOfThisPixel] = 1;
 			  	}
 			}
 		}
 		var maxCount:Int = 0;
-		var maxKey:Int = 0; //after the loop this will store the max color
+		var maxKey:FlxColor = 0; //after the loop this will store the max color
 		countByColor[FlxColor.BLACK] = 0;
 		for (key in countByColor.keys()) {
 			if (countByColor[key] >= maxCount) {

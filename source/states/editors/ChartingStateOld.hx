@@ -333,7 +333,7 @@ class ChartingStateOld extends MusicBeatState implements PsychUIEventHandler.Psy
 		#if MODS_ALLOWED
 		for (directory in Mods.directoriesWithFile(Paths.getSharedPath(), mainFolder)) {
 			for (file in FileSystem.readDirectory(directory)) {
-				var path:String = haxe.io.Path.join([directory, file.trim()]);
+				var path:String = Path.join([directory, file.trim()]);
 				if (!FileSystem.isDirectory(path) && !file.startsWith('readme.')) {
 					for (fileType in fileTypes) {
 						var fileToCheck:String = file.substr(0, file.length - fileType.length);

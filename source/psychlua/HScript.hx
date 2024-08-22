@@ -3,6 +3,7 @@ package psychlua;
 #if HSCRIPT_ALLOWED
 import hscript.AlterHscript;
 import flixel.FlxBasic;
+import flixel.FlxState;
 
 typedef ACall = {
 	var methodName:String;
@@ -25,7 +26,7 @@ class HScript extends AlterHscript {
 			try {
 				hs.scriptCode = code;
 				hs.execute();
-			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
+			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${hs.origin}) - ${AlterHscript.errorHandler(e)}', false, false, FlxColor.RED);
 		}
 	}
 
@@ -251,6 +252,35 @@ class HScript extends AlterHscript {
 			}
 		});
 
+		set("openState", (name:String) -> {
+            if(FileSystem.exists('assets/scripts/states/$name.hx')) FlxG.switchState(new states.HscriptState(name));
+            else {
+                try {
+                    final rawClass:Class<Dynamic> = Type.resolveClass(name);
+                    if(rawClass == null) return; 
+                    FlxG.switchState(cast(Type.createInstance(rawClass, []), FlxState));
+                } catch(e:Dynamic) {
+                    Logs.trace('${AlterHscript.errorHandler(e)}: Unspecified result for opening state "$name", could not switch states!', ERROR);
+                    return;
+                }
+            }
+        });
+        set("openSubState", (name:String, args:Array<Dynamic>) -> {
+            if(FileSystem.exists('assets/scripts/substates/$name.hx')) FlxG.state.openSubState(new HscriptSubstate(name, args));
+            else {
+                try {
+                    final rawClass:Class<Dynamic> = Type.resolveClass(name);
+                    if(rawClass == null) return;
+                    //Did a lil oopsie, now it should work fine!!
+                    var substate:FlxSubState = cast(Type.createInstance(rawClass, args), FlxSubState);
+                    FlxG.state.openSubState(substate);
+                } catch(e:Dynamic) {
+                    Logs.trace('${AlterHscript.errorHandler(e)}: Unspecified result for opening substate "$name", could not be opened!', ERROR);
+                    return;
+                }
+            }
+        });
+
 		set('close', destroy);
 
 		set('parentLua', parentLua);
@@ -311,7 +341,7 @@ class HScript extends AlterHscript {
 
 		try {
 			return (call(funcToRun, funcArgs):ACall).methodVal;
-		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: $e', ERROR);
+		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: ${AlterHscript.errorHandler(e)}', ERROR);
 		return null;
 	}
 
@@ -328,7 +358,7 @@ class HScript extends AlterHscript {
 			try {
 				final retVal:ACall = funk.hscript.executeCode(funcToRun, funcArgs);
 				if (retVal != null) return (retVal.methodVal == null || LuaUtils.isOfTypes(retVal.methodVal, [Bool, Int, Float, String, Array])) ? retVal.methodVal : null;
-			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
+			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - ${AlterHscript.errorHandler(e)}', false, false, FlxColor.RED);
 			#else
 			FunkinLua.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
 			#end
@@ -340,7 +370,7 @@ class HScript extends AlterHscript {
 			try {
 				final retVal:ACall = funk.hscript.executeFunction(funcToRun, funcArgs);
 				if (retVal != null) return (retVal.methodVal == null || LuaUtils.isOfTypes(retVal.methodVal, [Bool, Int, Float, String, Array])) ? retVal.methodVal : null;
-			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
+			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - ${AlterHscript.errorHandler(e)}', false, false, FlxColor.RED);
 			return null;
 			#else
 			FunkinLua.luaTrace("runHaxeFunction: HScript isn't supported on this platform!", false, false, FlxColor.RED);
@@ -367,7 +397,7 @@ class HScript extends AlterHscript {
 		#end
 	}
 
-	inline function getClassHSC(className:String) {
+	inline function getClassHSC(className:String):Class<Dynamic> {
 		return Type.resolveClass('${className}_HSC');
 	}
 

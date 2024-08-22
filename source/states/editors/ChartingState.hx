@@ -604,7 +604,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				chartName += DateTools.format(Date.now(), '_%Y-%m-%d_%H-%M-%S');
 				var songCopy:SwagSong = Reflect.copy(PlayState.SONG);
 				Reflect.setField(songCopy, '__original_path', Song.chartPath);
-				var dataToSave:String = haxe.Json.stringify(songCopy);
+				var dataToSave:String = Json.stringify(songCopy);
 				if(!FileSystem.isDirectory('backups')) FileSystem.createDirectory('backups');
 				File.saveContent('backups/$chartName.$BACKUP_EXT', dataToSave);
 

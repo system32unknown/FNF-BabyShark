@@ -30,7 +30,6 @@ class Paths {
 				currentTrackedAssets.remove(key); // and remove the key from local cache map
 			}
 		}
-
 		MemoryUtil.clearMajor();
 	}
 
