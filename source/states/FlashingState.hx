@@ -43,7 +43,7 @@ class FlashingState extends MusicBeatState {
 				FlxTween.tween(pressText, {alpha: 0}, 1);
 			}
 
-			if(pressText != null) {
+			if(pressText != null && !leftState) {
 				preeSine += 180 * elapsed;
 				pressText.alpha = 1 - Math.sin((Math.PI * preeSine) / 180);
 			}

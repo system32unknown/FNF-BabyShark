@@ -56,9 +56,7 @@ class LoadingState extends MusicBeatState {
 			#if !SHOW_LOADING_SCREEN Sys.sleep(.001); #end
 		}
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, 0xFFCAFF4D);
-		bg.scale.set(FlxG.width, FlxG.height);
-		bg.updateHitbox();
+		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, 0xFFCAFF4D);
 		bg.screenCenter();
 		add(bg);
 

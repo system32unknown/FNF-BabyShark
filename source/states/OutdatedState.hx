@@ -16,7 +16,7 @@ class OutdatedState extends MusicBeatState {
 			+ "\n& more changes and bugfixes in the full changelog"
 			+ "\n\nPress ENTER to view the full changelog and update\nor ESCAPE to ignore this",
 			32);
-		txt.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
+		txt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		txt.screenCenter(Y);
 		add(txt);
 	}
@@ -30,7 +30,7 @@ class OutdatedState extends MusicBeatState {
 
 			if(leftState) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
-				FlxG.switchState(() -> new states.MainMenuState());
+				FlxG.switchState(() -> new MainMenuState());
 			}
 		}
 		super.update(elapsed);

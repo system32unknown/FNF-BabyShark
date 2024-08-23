@@ -5,7 +5,7 @@ import psychlua.HScript;
 class HscriptState extends MusicBeatState {
     public var hscriptRef:HScript;
     public static var instance:HscriptState = null;
-    public function new(className:String) {
+    public function new(className:String, test:Bool = false) {
         super();
         instance = this;
         hscriptRef = new HScript(null, 'assets/scripts/states/$className.hx'); //skip init create call to avoid errors
