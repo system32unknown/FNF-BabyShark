@@ -5,12 +5,11 @@ import psychlua.HScript;
 class HscriptSubstate extends MusicBeatSubstate {
     public var hscriptRef:HScript;
     public static var instance:HscriptSubstate = null;
-    public function new(name:String, args:Array<Dynamic>) {
+    public function new(file:String, args:Array<Dynamic>) {
         super();
         instance = this;
 
-        hscriptRef = new HScript(null, 'assets/scripts/substates/$name.hx');
-
+        hscriptRef = new HScript(null, file);
         hscriptRef.set("instance", instance);
         hscriptRef.call("new", args);
     }
