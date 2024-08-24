@@ -4,7 +4,7 @@ import openfl.display.Sprite;
 import flixel.input.keyboard.FlxKey;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
-import debug.framerate.Framerate;
+import debug.FPSCounter;
 
 class Main extends Sprite {
 	public static var engineVer:GameVersion = new GameVersion(0, 1, 5);
@@ -18,7 +18,7 @@ class Main extends Sprite {
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
 
-	public static var fpsVar:Framerate;
+	public static var fpsVar:FPSCounter;
 
 	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
@@ -35,11 +35,10 @@ class Main extends Sprite {
 		debug.Logs.init();
 
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
-		addChild(fpsVar = new Framerate());
-		debug.framerate.SystemInfo.init();
+		addChild(fpsVar = new FPSCounter());
 		if(fpsVar != null) {
 			fpsVar.visible = ClientPrefs.data.showFPS;
-			fpsVar.fpsCounter.memType = ClientPrefs.data.memCounterType;
+			fpsVar.memType = ClientPrefs.data.memCounterType;
 		}
 
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
