@@ -19,4 +19,9 @@ class HscriptSubstate extends MusicBeatSubstate {
         super.update(elapsed);
         hscriptRef.call("onUpdatePost", [elapsed]);
     }
+
+    override function destroy() {
+        hscriptRef.call("onDestroy");
+        super.destroy();
+    }
 }
