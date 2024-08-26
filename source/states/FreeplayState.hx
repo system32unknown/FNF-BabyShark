@@ -60,7 +60,10 @@ class FreeplayState extends MusicBeatState {
 			persistentUpdate = false;
 			FlxG.switchState(() -> new ErrorState("NO WEEKS ADDED FOR FREEPLAY\n\nPress ACCEPT to go to the Week Editor Menu.\nPress BACK to return to Main Menu.",
 				() -> FlxG.switchState(() -> new states.editors.WeekEditorState()),
-				() -> FlxG.switchState(() -> new MainMenuState()))
+				() -> {
+					FlxG.sound.play(Paths.sound('cancelMenu'));
+					FlxG.switchState(() -> new MainMenuState());
+				})
 			);
 			return;
 		}
@@ -195,7 +198,10 @@ class FreeplayState extends MusicBeatState {
 	var holdTime:Float = 0;
 	var stopMusicPlay:Bool = false;
 	override function update(elapsed:Float) {
-		if(WeekData.weeksList.length < 1) return;
+		if(WeekData.weeksList.length < 1) {
+			super.update(elapsed);
+			return;
+		}
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 		if (FlxG.sound.music.volume < .7) FlxG.sound.music.volume += .5 * elapsed;
 

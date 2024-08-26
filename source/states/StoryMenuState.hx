@@ -47,7 +47,11 @@ class StoryMenuState extends MusicBeatState {
 			persistentUpdate = false;
 			FlxG.switchState(() -> new ErrorState("NO WEEKS ADDED FOR STORY MODE\n\nPress ACCEPT to go to the Week Editor Menu.\nPress BACK to return to Main Menu.",
 				() -> FlxG.switchState(() -> new states.editors.WeekEditorState()),
-				() -> FlxG.switchState(() -> new MainMenuState()))
+				() -> {
+					FlxG.sound.play(Paths.sound('cancelMenu'));
+					movedBack = true;
+					FlxG.switchState(new MainMenuState());
+				})
 			);
 			return;
 		}
@@ -158,12 +162,7 @@ class StoryMenuState extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float) {
-		if(grpWeekText.length < 1) {
-			if (controls.BACK && !movedBack && !selectedWeek) {
-				FlxG.sound.play(Paths.sound('cancelMenu'));
-				movedBack = true;
-				FlxG.switchState(() -> new MainMenuState());
-			}
+		if(WeekData.weeksList.length < 1) {
 			super.update(elapsed);
 			return;
 		}
@@ -242,7 +241,11 @@ class StoryMenuState extends MusicBeatState {
 				PlayState.storyDifficulty = curDifficulty;
 				Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
 				PlayState.campaignScore = 0;
-			} catch(e:Dynamic) return;
+			} catch(e:Dynamic) {
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				selectedWeek = false;
+				return;
+			}
 
 			if (!stopspamming) {
 				FlxG.sound.play(Paths.sound('confirmMenu'));

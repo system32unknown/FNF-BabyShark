@@ -474,6 +474,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		chartEditorSave.data.theme = changeTo;
 		if(doSave) chartEditorSave.flush();
 
+		var gridBgWidth:Null<Null<Float>> = gridBg == null ? null : gridBg.width;
+		var prevGridBgWidth:Null<Null<Float>> = prevGridBg == null ? null : prevGridBg.width;
+		var nextGridBgWidth:Null<Null<Float>> = nextGridBg == null ? null : nextGridBg.width;
+
 		switch(theme) {
 			case LIGHT:
 				bg.color = 0xFFA0A0A0;
@@ -494,16 +498,19 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				gridBg.loadGrid(gridColors[0], gridColors[1]);
 				gridBg.vortexLineEnabled = vortexEnabled;
 				gridBg.vortexLineSpace = GRID_SIZE * 4 * curZoom;
+				if (gridBgWidth != null) gridBg.width = gridBgWidth;
 			}
 			if(prevGridBg != null) {
 				prevGridBg.loadGrid(gridColorsOther[0], gridColorsOther[1]);
 				prevGridBg.vortexLineEnabled = vortexEnabled;
 				prevGridBg.vortexLineSpace = GRID_SIZE * 4 * curZoom;
+				if (prevGridBgWidth != null) prevGridBg.width = prevGridBgWidth;
 			}
 			if(nextGridBg != null) {
 				nextGridBg.loadGrid(gridColorsOther[0], gridColorsOther[1]);
 				nextGridBg.vortexLineEnabled = vortexEnabled;
 				nextGridBg.vortexLineSpace = GRID_SIZE * 4 * curZoom;
+				if (nextGridBgWidth != null) prevGridBg.width = nextGridBgWidth;
 			}
 		}
 	}
@@ -531,10 +538,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 	function prepareReload() {
 		updateJsonData();
-		updateHeads(true);
 		loadMusic();
 		reloadNotes();
 		onChartLoaded();
+		updateHeads(true);
 
 		autoSaveTime = 0;
 		Conductor.songPosition = 0;

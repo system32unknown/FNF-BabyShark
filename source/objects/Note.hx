@@ -277,7 +277,6 @@ class Note extends FlxSprite {
 		var dataNum:Int = EK.gfxIndex[PlayState.mania][noteData];
 		if(globalRgbShaders[dataNum] == null) {
 			var newRGB:RGBPalette = new RGBPalette();
-
 			var arr:Array<FlxColor> = (!PlayState.isPixelStage ? ClientPrefs.data.arrowRGBExtra : ClientPrefs.data.arrowRGBPixelExtra)[dataNum];
 			if (arr != null && noteData > -1) {
 				newRGB.r = arr[0];
