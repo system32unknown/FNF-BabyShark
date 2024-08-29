@@ -979,8 +979,8 @@ class FunkinLua {
 			Logs.trace(e, ERROR);
 			return;
 		}
-		call('onCreate');
 		trace('lua file loaded succesfully: $scriptName');
+		call('onCreate');
 		#end
 	}
 
@@ -1001,7 +1001,7 @@ class FunkinLua {
 	}
 
 	#if LUA_ALLOWED
-	public static function getBool(variable:String) {
+	public static function getBool(variable:String):Bool {
 		if(lastCalledScript == null) return false;
 
 		var lua:State = lastCalledScript.lua;
@@ -1016,7 +1016,7 @@ class FunkinLua {
 	}
 	#end
 
-	function findScript(scriptFile:String, ext:String = '.lua') {
+	function findScript(scriptFile:String, ext:String = '.lua'):String {
 		if(!scriptFile.endsWith(ext)) scriptFile += ext;
 		var preloadPath:String = Paths.getSharedPath(scriptFile);
 		#if MODS_ALLOWED
@@ -1119,7 +1119,6 @@ class FunkinLua {
 		Lua.close(lua);
 		lua = null;
 		if(hscript != null) {
-			hscript.active = false;
 			hscript.destroy();
 			hscript = null;
 		}

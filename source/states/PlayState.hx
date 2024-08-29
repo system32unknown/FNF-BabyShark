@@ -211,6 +211,7 @@ class PlayState extends MusicBeatState {
 	public var hscriptArray:Array<HScript> = [];
 	var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
 	public var introSoundsSuffix:String = '';
+	public var introSoundNames:Array<String> = [];
 
 	var keysArray:Array<String>;
 
@@ -300,6 +301,13 @@ class PlayState extends MusicBeatState {
 
 		girlfriendCameraOffset = stageData.camera_girlfriend;
 		girlfriendCameraOffset ??= [0, 0];
+
+		introSoundNames = stageData.introSounds;
+		if(introSoundNames == null || introSoundNames.length < 4) introSoundNames = ["countdown/intro3", "countdown/intro2", "countdown/intro1", "countdown/introGo"];
+		for(sndName in introSoundNames) {
+			if(sndName == null) continue;
+			introSoundNames[introSoundNames.indexOf(sndName)] = sndName.trim(); // trim trailing spaces in the sound, just in case, JUST in case.
+		}
 
 		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y); boyfriendGroup.zIndex = 300;
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y); dadGroup.zIndex = 200;
@@ -750,6 +758,7 @@ class PlayState extends MusicBeatState {
 	var finishTimer:FlxTimer = null;
 
 	// For being able to mess with the sprites on Lua
+	public var countdownPrepare:FlxSprite; // new additional sprite, for "three" sound during countdown
 	public var countdownReady:FlxSprite;
 	public var countdownSet:FlxSprite;
 	public var countdownGo:FlxSprite;
@@ -762,12 +771,18 @@ class PlayState extends MusicBeatState {
 	public var bfturn:Bool = false;
 
 	function cacheCountdown() {
-		for (asset in switch(stageUI) {
-			case "pixel": ['${stageUI}UI/countdown/ready-pixel', '${stageUI}UI/countdown/set-pixel', '${stageUI}UI/countdown/date-pixel'];
-			case "normal": ["countdown/ready", "countdown/set", "countdown/go"];
-			default: ['${stageUI}UI/countdown/ready', '${stageUI}UI/countdown/set', '${stageUI}UI/countdown/go'];
-		}) Paths.image(asset);
-		for (count in ['3', '2', '1', 'Go']) Paths.sound('countdown/intro$count' + introSoundsSuffix);
+		var introSprites:Array<String> = getCountdownSpriteNames(stageUI);
+		for (asset in introSprites) Paths.image(asset);
+		for (sound in introSoundNames) Paths.sound(sound + introSoundsSuffix, true, false); // this should cover backwards compat
+	}
+
+	function getCountdownSpriteNames(?givenUI: Null<String>):Array<String> {
+		if(givenUI == null) givenUI = stageUI;
+		return switch(givenUI) {
+			case "pixel": ['${givenUI}UI/countdown/prepare-pixel', '${givenUI}UI/countdown/ready-pixel', '${givenUI}UI/countdown/set-pixel', '${givenUI}UI/countdown/date-pixel'];
+			case "normal": ["countdown/prepare", "countdown/ready", "countdown/set" ,"countdown/go"];
+			default: ['${givenUI}UI/countdown/prepare', '${givenUI}UI/countdown/ready', '${givenUI}UI/countdown/set', '${givenUI}UI/countdown/go'];
+		};
 	}
 
 	public function startCountdown() {
@@ -805,29 +820,26 @@ class PlayState extends MusicBeatState {
 			}
 			moveCameraSection();
 
-			final introAlts:Array<String> = switch(stageUI) {
-				case "pixel": ['${stageUI}UI/countdown/ready-pixel', '${stageUI}UI/countdown/set-pixel', '${stageUI}UI/countdown/date-pixel'];
-				case "normal": ["countdown/ready", "countdown/set", "countdown/go"];
-				default: ['${stageUI}UI/countdown/ready', '${stageUI}UI/countdown/set', '${stageUI}UI/countdown/go'];
-			};
+			var introSprites:Array<String> = getCountdownSpriteNames(stageUI);
 			var tick:Countdown = THREE;
 			startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, (tmr:FlxTimer) -> {
 				charactersDance(tmr.loopsLeft);
 				switch(swagCounter) {
 					case 0:
-						FlxG.sound.play(Paths.sound('countdown/intro3' + introSoundsSuffix), .6);
+						countdownPrepare = createCountdownSprite(introSprites[0]);
+						CoolUtil.playSoundSafe(Paths.sound(introSoundNames[0] + introSoundsSuffix, true, false), 0.6);
 						tick = THREE;
 					case 1:
-						countdownReady = createCountdownSprite(introAlts[0]);
-						FlxG.sound.play(Paths.sound('countdown/intro2' + introSoundsSuffix), .6);
+						countdownReady = createCountdownSprite(introSprites[1]);
+						CoolUtil.playSoundSafe(Paths.sound(introSoundNames[1] + introSoundsSuffix, true, false), 0.6);
 						tick = TWO;
 					case 2:
-						countdownSet = createCountdownSprite(introAlts[1]);
-						FlxG.sound.play(Paths.sound('countdown/intro1' + introSoundsSuffix), .6);
+						countdownSet = createCountdownSprite(introSprites[2]);
+						CoolUtil.playSoundSafe(Paths.sound(introSoundNames[2] + introSoundsSuffix, true, false), 0.6);
 						tick = ONE;
 					case 3:
-						countdownGo = createCountdownSprite(introAlts[2]);
-						FlxG.sound.play(Paths.sound('countdown/introGo' + introSoundsSuffix), .6);
+						countdownGo = createCountdownSprite(introSprites[3]);
+						CoolUtil.playSoundSafe(Paths.sound(introSoundNames[3] + introSoundsSuffix, true, false), 0.6);
 						tick = GO;
 					case 4: tick = START;
 				}
@@ -850,6 +862,13 @@ class PlayState extends MusicBeatState {
 	}
 
 	inline function createCountdownSprite(image:String):FlxSprite {
+		var countdownGraphic = Paths.image(image);
+		if (countdownGraphic == null) {
+			var dum:FlxSprite = new FlxSprite();
+			FlxTimer.wait(Conductor.crochet / 1000, () -> dum.destroy());
+			return dum; // return an empty sprite if the image doesn't exist
+		}
+
 		final spr:FlxSprite = new FlxSprite(Paths.image(image));
 		spr.cameras = [camHUD];
 		spr.scrollFactor.set();
@@ -1166,13 +1185,13 @@ class PlayState extends MusicBeatState {
 
 			paused = false;
 			callOnScripts('onResume');
-			#if DISCORD_ALLOWED resetRPC(startTimer != null && startTimer.finished); #end
+			resetRPC(startTimer != null && startTimer.finished);
 		}
 	}
 
 	override public function onFocus():Void {
 		callOnScripts('onFocus');
-		#if DISCORD_ALLOWED if (health > 0 && !paused) resetRPC(Conductor.songPosition > 0.); #end
+		if (health > 0 && !paused) resetRPC(Conductor.songPosition > 0.);
 		super.onFocus();
 		callOnScripts('onFocusPost');
 	}
@@ -1225,8 +1244,7 @@ class PlayState extends MusicBeatState {
 	override function update(elapsed:Float) {
 		if(ClientPrefs.data.camMovement && camlock) camFollow.setPosition(camlockpoint.x, camlockpoint.y);
 		
-		if(!inCutscene && !paused && !freezeCamera)
-			FlxG.camera.followLerp = .04 * cameraSpeed * playbackRate;
+		if(!inCutscene && !paused && !freezeCamera) FlxG.camera.followLerp = .04 * cameraSpeed * playbackRate;
 		else FlxG.camera.followLerp = 0;
 		callOnScripts('onUpdate', [elapsed]);
 
@@ -1337,7 +1355,7 @@ class PlayState extends MusicBeatState {
 				if(!cpuControlled) keysCheck();
 				else playerDance();
 
-				if(notes.length != 0) {
+				if(notes.length > 0) {
 					if(startedCountdown)
 						notes.forEachAlive((daNote:Note) -> {
 							var strum:StrumNote = (daNote.mustPress ? playerStrums : opponentStrums).members[daNote.noteData];
@@ -1428,7 +1446,7 @@ class PlayState extends MusicBeatState {
 
 	public var isDead:Bool = false; //Don't mess with this on Lua!!!
 	public var gameOverTimer:FlxTimer;
-	function doDeathCheck(?skipHealthCheck:Bool = false) {
+	function doDeathCheck(?skipHealthCheck:Bool = false):Bool {
 		if (((skipHealthCheck && instakillOnMiss) || health <= (healthBar.bounds != null ? healthBar.bounds.min : 0)) && !practiceMode && !isDead && gameOverTimer == null) {
 			var ret:Dynamic = callOnScripts('onGameOver', null, true);
 			if(ret != LuaUtils.Function_Stop) {
@@ -2013,10 +2031,8 @@ class PlayState extends MusicBeatState {
 	function keysCheck():Void {
 		var holdArray:Array<Bool> = [for (key in keysArray) controls.pressed(key)];
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
-			if (notes.length != 0) {
-				for (sustainNote in notes.members.filter((n:Note) -> return !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit)) {
-					if (sustainNote.isSustainNote && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
-				}
+			if (notes.length > 0) for (sustainNote in notes.members.filter((n:Note) -> return !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit)) {
+				if (sustainNote.isSustainNote && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
 			}
 			if (!holdArray.contains(true) || endingSong) playerDance();
 		}
@@ -2025,7 +2041,7 @@ class PlayState extends MusicBeatState {
 	function noteMiss(daNote:Note, opponent:Bool = false):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		if (daNote.animation.curAnim.name.endsWith("end")) return;
 		if (!opponent) noteMissCommon(daNote.noteData, daNote);
-		stagesFunc((stage:BaseStage) -> stage.noteMiss(daNote));
+		if (!opponent) stagesFunc((stage:BaseStage) -> stage.noteMiss(daNote));
 		var result:Dynamic = callOnLuas('${opponent ? 'opponent' : ''}noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('${opponent ? 'opponent' : ''}noteMiss', [daNote]);
 	}
@@ -2215,14 +2231,6 @@ class PlayState extends MusicBeatState {
 		grpNoteSplashes.sort(CoolUtil.sortByID);
 	}
 
-	public function charactersDance(beat:Int, force:Bool = false):Void {
-		for (char in [gf, boyfriend, dad]) {
-			if (char == null) continue;
-			var speed:Int = (gf != null && char == gf) ? gfSpeed : 1;
-			if ((char.isAnimationNull() || !char.getAnimationName().startsWith('sing')) && !char.stunned && beat % Math.round(speed * char.danceEveryNumBeats) == 0) char.dance(force);
-		}
-	}
-
 	override function destroy() {
 		for (lua in luaArray) {lua.call('onDestroy'); lua.stop();}
 		luaArray = null;
@@ -2291,6 +2299,13 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onBeatHit');
 	}
 
+	public function charactersDance(beat:Int, force:Bool = false):Void {
+		for (char in [gf, boyfriend, dad]) {
+			if (char == null) continue;
+			var speed:Int = (gf != null && char == gf) ? gfSpeed : 1;
+			if ((char.isAnimationNull() || !char.getAnimationName().startsWith('sing')) && !char.stunned && beat % Math.round(speed * char.danceEveryNumBeats) == 0) char.dance(force);
+		}
+	}
 	public function playerDance():Void {
 		var anim:String = boyfriend.getAnimationName();
 		if(boyfriend.holdTimer > Conductor.stepCrochet * (.0011 #if FLX_PITCH / FlxG.sound.music.pitch #end) * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss')) boyfriend.dance();
@@ -2343,9 +2358,13 @@ class PlayState extends MusicBeatState {
 	
 	#if HSCRIPT_ALLOWED
 	public function startHScriptsNamed(scriptFile:String):Bool {
+		#if MODS_ALLOWED
 		var scriptToLoad:String = Paths.modFolders(scriptFile);
 		if(!FileSystem.exists(scriptToLoad)) scriptToLoad = Paths.getSharedPath(scriptFile);
-		
+		#else
+		var scriptToLoad:String = Paths.getSharedPath(scriptFile);
+		#end
+
 		if(FileSystem.exists(scriptToLoad)) {
 			if (AlterHscript.instances.exists(scriptToLoad)) return false;
 			initHScript(scriptToLoad);

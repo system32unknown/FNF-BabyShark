@@ -9,6 +9,8 @@ typedef StageFile = {
 	var defaultZoom:Float;
 	@:optional var isPixelStage:Null<Bool>;
 	var stageUI:String;
+	@default(["intro3", "intro2", "intro1", "introGo"])
+	var introSounds:Array<String>;
 
 	var boyfriend:Array<Dynamic>;
 	var girlfriend:Array<Dynamic>;
@@ -39,6 +41,7 @@ class StageData {
 			defaultZoom: .9,
 			isPixelStage: false,
 			stageUI: "normal",
+			introSounds: ["intro3", "intro2", "intro1", "introGo"],
 
 			boyfriend: [770, 100],
 			girlfriend: [400, 130],

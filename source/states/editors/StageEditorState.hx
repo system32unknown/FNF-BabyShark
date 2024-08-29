@@ -1429,7 +1429,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			if((fullPath.startsWith(exePath + 'assets/') #if MODS_ALLOWED || fullPath.startsWith(exePath + 'mods/') #end) && fullPath.contains('/images/')) {
 				var imageToLoad:String = fullPath.substring(fullPath.indexOf('/images/') + '/images/'.length, fullPath.indexOf('.'));
 				if(_makeNewSprite != null) {
-					if(_makeNewSprite == 'animatedSprite' && !Paths.fileExists('images/$imageToLoad.xml', TEXT) && !Paths.fileExists('images/$imageToLoad.json', TEXT) && !Paths.fileExists('images/$imageToLoad.txt', TEXT)) {
+					if(_makeNewSprite == 'animatedSprite' && !Paths.fileExists('images/$imageToLoad.xml') && !Paths.fileExists('images/$imageToLoad.json') && !Paths.fileExists('images/$imageToLoad.txt')) {
 						showOutput('No Animation file found with the same name of the image!', true);
 						_makeNewSprite = null;
 						_file = null;

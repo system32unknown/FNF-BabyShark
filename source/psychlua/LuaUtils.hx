@@ -112,9 +112,7 @@ class LuaUtils {
 				} catch(e:Dynamic) {
 					var errorTitle:String = 'Mod name: ' + Mods.currentModDirectory;
 					var errorMsg:String = 'An error occurred: $e';
-					#if windows
-					lime.app.Application.current.window.alert(errorMsg, errorTitle);
-					#end
+					utils.system.NativeUtil.showMessageBox(errorMsg, errorTitle);
 					Logs.trace('$errorTitle - $errorMsg', ERROR);
 				}
 			}

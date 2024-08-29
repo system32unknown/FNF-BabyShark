@@ -681,7 +681,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		character.color = FlxColor.WHITE;
 		character.alpha = 1;
 
-		if(Paths.fileExists('images/${character.imageFile}/Animation.json', TEXT)) {
+		if(Paths.fileExists('images/${character.imageFile}/Animation.json')) {
 			character.atlas = new FlxAnimate();
 			character.atlas.showPivot = false;
 			try {

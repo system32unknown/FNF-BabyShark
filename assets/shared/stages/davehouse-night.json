@@ -2,6 +2,7 @@
 	"directory": "weekdave",
 	"defaultZoom": 0.9,
 	"stageUI": "",
+	"introSounds": ["intro3", "intro2", "intro1", "introGo"],
 
 	"boyfriend": [843, 270],
 	"girlfriend": [300, -60],

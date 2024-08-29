@@ -103,11 +103,11 @@ class Paths {
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
 
-	inline static public function sound(key:String, ?modsAllowed:Bool = true):Sound
-		return returnSound('sounds/$key', modsAllowed);
+	inline static public function sound(key:String, ?modsAllowed:Bool = true, ?playBeep: Bool = true):Sound
+		return returnSound('sounds/$key', null, modsAllowed, playBeep);
 
-	inline static public function music(key:String, ?modsAllowed:Bool = true):Sound
-		return returnSound('music/$key', modsAllowed);
+	inline static public function music(key:String, ?modsAllowed:Bool = true, ?playBeep: Bool = true):Sound
+		return returnSound('music/$key', null, modsAllowed, playBeep);
 
 	inline static public function inst(song:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('${formatToSongPath(song)}/Inst', 'songs', modsAllowed);
@@ -178,7 +178,7 @@ class Paths {
 		return 'assets/fonts/$key';
 	}
 
-	public static function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?parentFolder:String = null):Bool {
+	public static function fileExists(key:String, ?type:AssetType = TEXT, ?ignoreMods:Bool = false, ?parentFolder:String = null):Bool {
 		#if MODS_ALLOWED
 		if(!ignoreMods) {
 			var modKey:String = key;
