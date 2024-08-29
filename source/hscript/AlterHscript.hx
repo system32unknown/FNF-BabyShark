@@ -40,7 +40,8 @@ class AlterHscript {
 
 		instances.set(hscriptName, this);
 		if (expr == null) expr = parse();
-		interp.execute(expr);
+		@:privateAccess interp.execute(parser.mk(EBlock([]), 0, 0));
+		if (expr != null) interp.execute(expr);
 		active = instances.exists(hscriptName);
 
 		return this;
@@ -82,6 +83,7 @@ class AlterHscript {
 		return interp != null ? interp.variables.exists(field) : false;
 	}
 
+	//stolen from codename due to hscript exception format (ex: hscript:1: hscript:1: -> hscript:1:)
 	public static function errorHandler(error:hscript.Expr.Error):String {
 		var fn:String = '${error.origin}:${error.line}: ';
 		var err:String = error.toString();
