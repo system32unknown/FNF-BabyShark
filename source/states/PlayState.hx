@@ -248,16 +248,13 @@ class PlayState extends MusicBeatState {
 		cpuControlled = ClientPrefs.getGameplaySetting('botplay');
 		playbackRate = ClientPrefs.getGameplaySetting('songspeed');
 
-		camGame = initPsychCamera();
-		camHUD = new FlxCamera();
-		camOther = new FlxCamera();
+		camGame = initPsychCamera(); camHUD = new FlxCamera(); camOther = new FlxCamera();
 		camHUD.bgColor.alpha = camOther.bgColor.alpha = 0;
 
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOther, false);
 
-		persistentUpdate = true;
-		persistentDraw = true;
+		persistentUpdate = true; persistentDraw = true;
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
@@ -873,9 +870,7 @@ class PlayState extends MusicBeatState {
 		spr.cameras = [camHUD];
 		spr.scrollFactor.set();
 		spr.updateHitbox();
-
 		if (isPixelStage) spr.setGraphicSize(spr.width * daPixelZoom);
-
 		spr.screenCenter();
 		spr.antialiasing = (ClientPrefs.data.antialiasing && !isPixelStage);
 		insert(members.indexOf(noteGroup), spr);
@@ -1422,8 +1417,7 @@ class PlayState extends MusicBeatState {
 		persistentUpdate = false;
 		chartingMode = true;
 		paused = true;
-		FlxG.sound.music?.stop();
-		vocals?.pause();
+		FlxG.sound.music?.stop(); vocals?.pause();
 
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence("Chart Editor", null, true);
@@ -1835,8 +1829,7 @@ class PlayState extends MusicBeatState {
 			daNote.active = daNote.visible = false;
 			invalidateNote(daNote);
 		}
-		unspawnNotes = [];
-		eventNotes = [];
+		unspawnNotes = []; eventNotes = [];
 	}
 
 	public var totalPlayed:Int = 0;
@@ -2040,8 +2033,10 @@ class PlayState extends MusicBeatState {
 
 	function noteMiss(daNote:Note, opponent:Bool = false):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		if (daNote.animation.curAnim.name.endsWith("end")) return;
-		if (!opponent) noteMissCommon(daNote.noteData, daNote);
-		if (!opponent) stagesFunc((stage:BaseStage) -> stage.noteMiss(daNote));
+		if (!opponent) {
+			noteMissCommon(daNote.noteData, daNote);
+			stagesFunc((stage:BaseStage) -> stage.noteMiss(daNote));
+		}
 		var result:Dynamic = callOnLuas('${opponent ? 'opponent' : ''}noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('${opponent ? 'opponent' : ''}noteMiss', [daNote]);
 	}
@@ -2288,8 +2283,7 @@ class PlayState extends MusicBeatState {
 				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 / playbackRate * gfSpeed, {ease: FlxEase.quadOut});
 				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 / playbackRate * gfSpeed, {ease: FlxEase.quadOut});
 		}
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
+		iconP1.updateHitbox(); iconP2.updateHitbox();
 
 		charactersDance(curBeat);
 		super.beatHit();
