@@ -80,17 +80,22 @@ class Conductor {
 		var curBPM:Float = song.bpm;
 		var totalPos:Float = 0, totalSteps:Int = 0;
 
+		inline function pushChange(newBPM:Float) {
+			curBPM = newBPM;
+			bpmChangeMap.push({
+				stepTime: totalSteps,
+				songTime: totalPos,
+				bpm: newBPM,
+				stepCrochet: calculateCrochet(newBPM) / 4
+			});
+		}
+
+		var firstSec:SwagSection = song.notes[0];
+		if (firstSec == null || !firstSec.changeBPM) pushChange(song.bpm);
+
 		for (i in 0...song.notes.length) {
-			var v:SwagSection = song.notes[i];
-			if(v.changeBPM && v.bpm != curBPM) {
-				curBPM = v.bpm;
-				bpmChangeMap.push({
-					stepTime: totalSteps,
-					songTime: totalPos,
-					bpm: curBPM,
-					stepCrochet: calculateCrochet(curBPM) / 4
-				});
-			}
+			var section:SwagSection = song.notes[i];
+			if(section.changeBPM && section.bpm != curBPM) pushChange(section.bpm);
 
 			var deltaSteps:Int = Math.round(getSectionBeats(song, i) * 4);
 			totalSteps += deltaSteps;

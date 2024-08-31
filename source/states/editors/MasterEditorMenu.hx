@@ -75,7 +75,6 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Dialogue Editor': LoadingState.loadAndSwitchState(() -> new DialogueEditorState());
 				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(() -> new DialogueCharacterEditorState());
 				case 'Note Splash Debug': FlxG.switchState(() -> new NoteSplashDebugState());
-				case 'Chart Editor (Old)': LoadingState.loadAndSwitchState(() -> new ChartingStateOld());
 			}
 			FlxG.sound.music.volume = 0;
 			states.FreeplayState.destroyFreeplayVocals();

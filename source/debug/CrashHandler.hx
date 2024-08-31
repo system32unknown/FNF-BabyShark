@@ -19,7 +19,7 @@ class CrashHandler {
 		else if (Std.isOfType(e.error, ErrorEvent)) message = cast(e.error, ErrorEvent).text;
 		else message = Std.string(e.error);
 
-		final path:String = './crash/${FlxG.stage.application.meta.get('file')}_${Date.now().toString().replace(" ", "_").replace(":", "'")}.log';
+		final path:String = './crash/${FlxG.stage.application.meta.get('file')}_${Date.now().toString().replace(" ", "_").replace(":", "'")}.txt';
 
 		var errMsg:String = "";
 		for (stackItem in haxe.CallStack.exceptionStack(true)) {

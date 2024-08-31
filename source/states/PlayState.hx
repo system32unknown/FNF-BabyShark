@@ -484,8 +484,7 @@ class PlayState extends MusicBeatState {
 			#if LUA_ALLOWED startLuasNamed('custom_events/$event.lua'); #end
 			#if HSCRIPT_ALLOWED startHScriptsNamed('custom_events/$event.hx'); #end
 		}
-		noteTypes = null;
-		eventsPushed = null;
+		noteTypes = null; eventsPushed = null;
 
 		if(eventNotes.length > 1) {
 			for (event in eventNotes) event.strumTime -= eventEarlyTrigger(event);
@@ -689,7 +688,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public var videoCutscene:VideoSprite = null;
-	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, autoAdjust:Bool = true, playOnLoad:Bool = true) {
+	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, autoAdjust:Bool = true, playOnLoad:Bool = true):VideoSprite {
 		#if VIDEOS_ALLOWED
 		inCutscene = true; canPause = false;
 
@@ -768,8 +767,7 @@ class PlayState extends MusicBeatState {
 	public var bfturn:Bool = false;
 
 	function cacheCountdown() {
-		var introSprites:Array<String> = getCountdownSpriteNames(stageUI);
-		for (asset in introSprites) Paths.image(asset);
+		for (asset in getCountdownSpriteNames(stageUI)) Paths.image(asset);
 		for (sound in introSoundNames) Paths.sound(sound + introSoundsSuffix, true, false); // this should cover backwards compat
 	}
 
@@ -782,7 +780,7 @@ class PlayState extends MusicBeatState {
 		};
 	}
 
-	public function startCountdown() {
+	public function startCountdown():Bool {
 		if (startedCountdown) {
 			callOnScripts('onStartCountdown');
 			return false;
@@ -1407,7 +1405,6 @@ class PlayState extends MusicBeatState {
 			note.resetAnim = 0;
 		}
 		openSubState(new PauseSubState());
-
 		#if DISCORD_ALLOWED if(autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)'); #end
 	}
 
@@ -2450,7 +2447,6 @@ class PlayState extends MusicBeatState {
 			} catch(e:Dynamic) addTextToDebug('ERROR (${script.origin}: $funcToCall) - ${AlterHscript.errorHandler(e)}', FlxColor.RED);
 		}
 		#end
-
 		return returnVal;
 	}
 
@@ -2553,7 +2549,7 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
-	public function initLuaShader(name:String, ?glslVersion:Int = 120) {
+	public function initLuaShader(name:String, ?glslVersion:Int = 120):Bool {
 		if(!ClientPrefs.data.shaders) return false;
 
 		#if (MODS_ALLOWED && !flash && sys)
