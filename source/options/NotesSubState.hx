@@ -5,7 +5,7 @@ import lime.system.Clipboard;
 import objects.StrumNote;
 import objects.Note;
 
-import shaders.RGBPalette.RGBShaderReference;
+import shaders.RGBPalette;
 
 class NotesSubState extends MusicBeatSubstate {
 	var onModeColumn:Bool = true;
@@ -348,7 +348,7 @@ class NotesSubState extends MusicBeatSubstate {
 		}
 	}
 
-	function pointerOverlaps(obj:Dynamic) return FlxG.mouse.overlaps(obj);
+	function pointerOverlaps(obj:Dynamic):Bool return FlxG.mouse.overlaps(obj);
 	function pointerX():Float return FlxG.mouse.x;
 	function pointerY():Float return FlxG.mouse.y;
 	function pointerFlxPoint():FlxPoint return FlxG.mouse.getViewPosition();
@@ -532,6 +532,6 @@ class NotesSubState extends MusicBeatSubstate {
 	}
 
 	function setShaderColor(value:FlxColor) dataArray[curSelectedNote][curSelectedMode] = value;
-	function getShaderColor() return dataArray[curSelectedNote][curSelectedMode];
-	function getShader() return Note.globalRgbShaders[curSelectedNote];
+	function getShaderColor():FlxColor return dataArray[curSelectedNote][curSelectedMode];
+	function getShader():RGBPalette return Note.globalRgbShaders[curSelectedNote];
 }

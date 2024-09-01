@@ -197,9 +197,7 @@ class LuaUtils {
 	}
 	
 	public static function isOfTypes(value:Any, types:Array<Dynamic>):Bool {
-		for (type in types) {
-			if(Std.isOfType(value, type)) return true;
-		}
+		for (type in types) if(Std.isOfType(value, type)) return true;
 		return false;
 	}
 

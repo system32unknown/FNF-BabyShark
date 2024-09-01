@@ -7,19 +7,19 @@ class RGBPalette {
 	public var b(default, set):FlxColor;
 	public var mult(default, set):Float;
 
-	function set_r(color:FlxColor) {
+	function set_r(color:FlxColor):FlxColor {
 		r = color;
 		shader.r.value = [color.redFloat, color.greenFloat, color.blueFloat];
 		return color;
 	}
 
-	function set_g(color:FlxColor) {
+	function set_g(color:FlxColor):FlxColor {
 		g = color;
 		shader.g.value = [color.redFloat, color.greenFloat, color.blueFloat];
 		return color;
 	}
 
-	function set_b(color:FlxColor) {
+	function set_b(color:FlxColor):FlxColor {
 		b = color;
 		shader.b.value = [color.redFloat, color.greenFloat, color.blueFloat];
 		return color;
@@ -64,15 +64,15 @@ class RGBShaderReference {
 		}
 	}
 	
-	function set_r(value:FlxColor) {
+	function set_r(value:FlxColor):FlxColor {
 		if(allowNew && value != _original.r) cloneOriginal();
 		return (r = parent.r = value);
 	}
-	function set_g(value:FlxColor) {
+	function set_g(value:FlxColor):FlxColor {
 		if(allowNew && value != _original.g) cloneOriginal();
 		return (g = parent.g = value);
 	}
-	function set_b(value:FlxColor) {
+	function set_b(value:FlxColor):FlxColor {
 		if(allowNew && value != _original.b) cloneOriginal();
 		return (b = parent.b = value);
 	}

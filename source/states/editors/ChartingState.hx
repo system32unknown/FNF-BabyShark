@@ -2517,7 +2517,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		}
 	}
 
-	function pasteCopiedNotesToSection(?canCopyNotes:Bool = true, ?canCopyEvents:Bool = true, ?showMessage:Bool = true) { //Used on "Paste Section" and "Copy Last Section" buttons
+	function pasteCopiedNotesToSection(?canCopyNotes:Bool = true, ?canCopyEvents:Bool = true, ?showMessage:Bool = true):Array<MetaNote> { //Used on "Paste Section" and "Copy Last Section" buttons
 		var curSectionTime:Null<Float> = cachedSectionTimes[curSec];
 		if(curSectionTime == null) {
 			showOutput('ERROR: Unknown section??', true);
@@ -2560,7 +2560,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		if(showMessage) {
 			if(nts.length == 0 && evs.length == 0) {
 				showOutput('Nothing to paste!', true);
-				return [];
+				[];
 			}
 	
 			var str:String = '';
@@ -4015,7 +4015,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			}
 		}
 	}
-
 
 	// Ported from the old chart editor
 	var wavData:Array<Array<Array<Float>>> = [[[0], [0]], [[0], [0]]];

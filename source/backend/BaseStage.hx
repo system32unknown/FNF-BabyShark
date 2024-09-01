@@ -119,8 +119,8 @@ class BaseStage extends FlxBasic {
 	}
 
 	// overrides
-	function startCountdown() if(onPlayState) return PlayState.instance.startCountdown(); else return false;
-	function endSong() if(onPlayState) return PlayState.instance.endSong(); else return false;
+	function startCountdown():Bool if(onPlayState) return PlayState.instance.startCountdown(); else return false;
+	function endSong():Bool if(onPlayState) return PlayState.instance.endSong(); else return false;
 	function moveCameraSection() if(onPlayState) PlayState.instance.moveCameraSection();
 	function moveCamera(isDad:Bool) if(onPlayState) PlayState.instance.moveCamera(isDad);
 	inline function get_paused() return game.paused;

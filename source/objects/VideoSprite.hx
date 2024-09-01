@@ -111,7 +111,7 @@ class VideoSprite extends FlxSpriteGroup {
 		super.update(elapsed);
 	}
 
-	function set_canSkip(newValue:Bool) {
+	function set_canSkip(newValue:Bool):Bool {
 		canSkip = newValue;
 		if(canSkip) {
 			if(skipSprite == null) {

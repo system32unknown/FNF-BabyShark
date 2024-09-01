@@ -207,7 +207,7 @@ class Note extends FlxSprite {
 		antialiasing = ClientPrefs.data.antialiasing;
 		if(createdFrom == null) createdFrom = PlayState.instance;
 
-		if (prevNote == null) prevNote = this;
+		if(prevNote == null) prevNote = this;
 
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
@@ -273,7 +273,7 @@ class Note extends FlxSprite {
 		x += offsetX;
 	}
 
-	public static function initializeGlobalRGBShader(noteData:Int) {
+	public static function initializeGlobalRGBShader(noteData:Int):RGBPalette {
 		var dataNum:Int = EK.gfxIndex[PlayState.mania][noteData];
 		if(globalRgbShaders[dataNum] == null) {
 			var newRGB:RGBPalette = new RGBPalette();
@@ -353,7 +353,7 @@ class Note extends FlxSprite {
 		if(animName != null) animation.play(animName, true);
 	}
 
-	public static function getNoteSkinPostfix() {
+	public static function getNoteSkinPostfix():String {
 		var skin:String = '';
 		if(ClientPrefs.data.noteSkin != ClientPrefs.defaultData.noteSkin)
 			skin = '-' + ClientPrefs.data.noteSkin.trim().toLowerCase().replace(' ', '_');

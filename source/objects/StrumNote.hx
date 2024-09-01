@@ -51,7 +51,6 @@ class StrumNote extends FlxSprite {
 
 		noteData = leData;
 		this.player = player;
-		this.noteData = leData;
 		super(x, y);
 
 		var skin:String = null;

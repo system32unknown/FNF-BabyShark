@@ -63,7 +63,7 @@ class NoteTypesConfig {
 		}
 	}
 
-	static function _propCheckArray(obj:Dynamic, slice:String, setProp:Bool = false, valueToSet:Dynamic = null) {
+	static function _propCheckArray(obj:Dynamic, slice:String, setProp:Bool = false, valueToSet:Dynamic = null):Dynamic {
 		var propArray:Array<String> = slice.split('[');
 		if(propArray.length > 1) {
 			for (i in 0...propArray.length) {

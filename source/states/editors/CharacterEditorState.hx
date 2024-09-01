@@ -991,7 +991,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		updatePointerPos(false);
 	}
 
-	inline function predictCharacterIsNotPlayer(name:String) {
+	inline function predictCharacterIsNotPlayer(name:String):Bool {
 		return (name != 'bf' && !name.startsWith('bf-') && !name.endsWith('-player') && !name.endsWith('-playable') && !name.endsWith('-dead')) || name.endsWith('-opponent') || name.startsWith('gf-') || name.endsWith('-gf') || name == 'gf';
 	}
 

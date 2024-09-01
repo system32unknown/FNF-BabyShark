@@ -681,7 +681,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	var lowQualityCheckbox:PsychUICheckBox;
 	var highQualityCheckbox:PsychUICheckBox;
 
-	function getSelected(blockReserved:Bool = true) {
+	function getSelected(blockReserved:Bool = true):StageEditorMetaSprite {
 		var selected:Int = spriteListRadioGroup.checked;
 		if(selected >= 0) {
 			var spr = stageSprites[spriteListRadioGroup.labels.length - selected - 1];

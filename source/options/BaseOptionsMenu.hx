@@ -84,7 +84,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 		reloadCheckboxes();
 	}
 
-	public function addOption(option:Option) {
+	public function addOption(option:Option):Option {
 		if(optionsArray == null || optionsArray.length < 1) optionsArray = [];
 		optionsArray.push(option);
 		return option;

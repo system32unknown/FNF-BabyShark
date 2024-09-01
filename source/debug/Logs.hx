@@ -34,7 +34,7 @@ class Logs {
 		};
 	}
 
-	public static function prepareColoredTrace(text:Array<LogText>, level:Level = INFO) {
+	public static function prepareColoredTrace(text:Array<LogText>, level:Level = INFO):Array<LogText> {
 		var superCoolText:Array<LogText> = [
 			logText('['),
 			switch(level) {

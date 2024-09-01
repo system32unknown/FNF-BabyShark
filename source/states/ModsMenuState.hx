@@ -448,7 +448,7 @@ class ModsMenuState extends MusicBeatState {
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 	}
 
-	function getButton() {
+	function getButton():MenuButton {
 		switch(curSelectedButton) {
 			case -2: return buttonReload;
 			case -1: return buttonEnableAll.enabled ? buttonEnableAll : buttonDisableAll;

@@ -6,19 +6,19 @@ class ColorSwap {
 	public var saturation(default, set):Float = 0;
 	public var brightness(default, set):Float = 0;
 
-	function set_hue(value:Float) {
+	function set_hue(value:Float):Float {
 		hue = value;
 		shader.uTime.value[0] = hue;
 		return hue;
 	}
 
-	function set_saturation(value:Float) {
+	function set_saturation(value:Float):Float {
 		saturation = value;
 		shader.uTime.value[1] = saturation;
 		return saturation;
 	}
 
-	function set_brightness(value:Float) {
+	function set_brightness(value:Float):Float {
 		brightness = value;
 		shader.uTime.value[2] = brightness;
 		return brightness;

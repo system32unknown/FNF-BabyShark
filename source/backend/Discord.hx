@@ -4,6 +4,7 @@ import sys.thread.Thread;
 import hxdiscord_rpc.Discord;
 import hxdiscord_rpc.Types;
 import flixel.util.FlxStringUtil;
+import openfl.display.BitmapData;
 
 import cpp.ConstCharStar;
 import cpp.RawConstPointer;
@@ -254,7 +255,7 @@ final class DUser {
 
 	function new() {}
 
-	public static function initRaw(req:RawConstPointer<DiscordUser>) {
+	public static function initRaw(req:RawConstPointer<DiscordUser>):DUser {
 		return init(cpp.ConstPointer.fromRaw(req).ptr);
 	}
 
@@ -277,8 +278,8 @@ final class DUser {
 	/**
 	 * Calling this function gets the BitmapData of the user
 	**/
-	public function getAvatar(size:Int = 256):openfl.display.BitmapData
-		return openfl.display.BitmapData.fromBytes(utils.HttpUtil.requestBytes('https://cdn.discordapp.com/avatars/$userId/$avatar.png?size=$size'));
+	public function getAvatar(size:Int = 256):BitmapData
+		return BitmapData.fromBytes(utils.HttpUtil.requestBytes('https://cdn.discordapp.com/avatars/$userId/$avatar.png?size=$size'));
 }
 
 enum abstract NitroType(Int) to Int from Int {

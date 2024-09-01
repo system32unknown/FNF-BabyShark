@@ -2,6 +2,7 @@ package options;
 
 import objects.Bar;
 import objects.Character;
+import flixel.util.FlxDestroyUtil;
 
 class NoteOffsetState extends MusicBeatState {
 	var delayMin:Int = -500;
@@ -355,8 +356,8 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	override function destroy() {
-		holdingObjectOffset = flixel.util.FlxDestroyUtil.put(holdingObjectOffset);
-		mousePointer = flixel.util.FlxDestroyUtil.put(mousePointer);
+		holdingObjectOffset = FlxDestroyUtil.put(holdingObjectOffset);
+		mousePointer = FlxDestroyUtil.put(mousePointer);
 		super.destroy();
 	}
 }

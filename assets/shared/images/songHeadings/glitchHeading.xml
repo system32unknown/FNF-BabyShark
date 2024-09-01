@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TextureAtlas imagePath="glitchHeading.png">
-	<!-- Created with Adobe Animate version 21.0.6.41649 -->
-	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="glitchHeading0000" x="0" y="0" width="400" height="50"/>
-	<SubTexture name="glitchHeading0001" x="0" y="55" width="400" height="50"/>
-	<SubTexture name="glitchHeading0002" x="0" y="110" width="400" height="50"/>
-	<SubTexture name="glitchHeading0003" x="0" y="165" width="400" height="50"/>
+	<!-- Created using the Spritesheet and XML generator -->
+	<!-- https://uncertainprod.github.io/FNF-Spritesheet-XML-generator-Web -->
+	<SubTexture name="glitchHeading0000" x="0" y="162" width="404" height="54" frameX="2" frameY="2" frameWidth="400" frameHeight="50"/>
+	<SubTexture name="glitchHeading0001" x="0" y="0" width="404" height="54" frameX="2" frameY="2" frameWidth="400" frameHeight="50"/>
+	<SubTexture name="glitchHeading0002" x="0" y="54" width="404" height="54" frameX="2" frameY="2" frameWidth="400" frameHeight="50"/>
+	<SubTexture name="glitchHeading0003" x="0" y="108" width="404" height="54" frameX="2" frameY="2" frameWidth="400" frameHeight="50"/>
 </TextureAtlas>

@@ -300,7 +300,7 @@ class PlayState extends MusicBeatState {
 		girlfriendCameraOffset ??= [0, 0];
 
 		introSoundNames = stageData.introSounds;
-		if(introSoundNames == null || introSoundNames.length < 4) introSoundNames = ["countdown/intro3", "countdown/intro2", "countdown/intro1", "countdown/introGo"];
+		if(introSoundNames == null || introSoundNames.length < 4) introSoundNames = ["intro3", "intro2", "intro1", "introGo"];
 		for(sndName in introSoundNames) {
 			if(sndName == null) continue;
 			introSoundNames[introSoundNames.indexOf(sndName)] = sndName.trim(); // trim trailing spaces in the sound, just in case, JUST in case.
@@ -768,7 +768,7 @@ class PlayState extends MusicBeatState {
 
 	function cacheCountdown() {
 		for (asset in getCountdownSpriteNames(stageUI)) Paths.image(asset);
-		for (sound in introSoundNames) Paths.sound(sound + introSoundsSuffix, true, false); // this should cover backwards compat
+		for (sound in introSoundNames) Paths.sound("countdown/" + sound + introSoundsSuffix, true, false); // this should cover backwards compat
 	}
 
 	function getCountdownSpriteNames(?givenUI: Null<String>):Array<String> {
@@ -822,19 +822,19 @@ class PlayState extends MusicBeatState {
 				switch(swagCounter) {
 					case 0:
 						countdownPrepare = createCountdownSprite(introSprites[0]);
-						CoolUtil.playSoundSafe(Paths.sound(introSoundNames[0] + introSoundsSuffix, true, false), 0.6);
+						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[0] + introSoundsSuffix, true, false), 0.6);
 						tick = THREE;
 					case 1:
 						countdownReady = createCountdownSprite(introSprites[1]);
-						CoolUtil.playSoundSafe(Paths.sound(introSoundNames[1] + introSoundsSuffix, true, false), 0.6);
+						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[1] + introSoundsSuffix, true, false), 0.6);
 						tick = TWO;
 					case 2:
 						countdownSet = createCountdownSprite(introSprites[2]);
-						CoolUtil.playSoundSafe(Paths.sound(introSoundNames[2] + introSoundsSuffix, true, false), 0.6);
+						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[2] + introSoundsSuffix, true, false), 0.6);
 						tick = ONE;
 					case 3:
 						countdownGo = createCountdownSprite(introSprites[3]);
-						CoolUtil.playSoundSafe(Paths.sound(introSoundNames[3] + introSoundsSuffix, true, false), 0.6);
+						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[3] + introSoundsSuffix, true, false), 0.6);
 						tick = GO;
 					case 4: tick = START;
 				}
