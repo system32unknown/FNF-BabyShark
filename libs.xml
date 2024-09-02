@@ -15,6 +15,7 @@
 	<git name="linc_luajit" url="https://github.com/superpowers04/linc_luajit"/>
 	<lib name="hxvlc"/>
 	<lib name="tjson"/>
+	<lib name="markdown"/>
 
 	<!-- Audio Visualizers -->
 	<git name="funkin.vis" url="https://github.com/FunkinCrew/funkVis"/>
