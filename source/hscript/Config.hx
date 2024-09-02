@@ -2,17 +2,10 @@ package hscript;
 
 class Config {
 	// Runs support for custom classes in these
-	public static final ALLOWED_CUSTOM_CLASSES = [
-		"flixel",
-	];
+	public static final ALLOWED_CUSTOM_CLASSES = ["flixel"];
 
 	// Runs support for abstract support in these
-	public static final ALLOWED_ABSTRACT_AND_ENUM = [
-		"flixel",
-		"openfl",
-		"haxe.xml",
-		"haxe.CallStack"
-	];
+	public static final ALLOWED_ABSTRACT_AND_ENUM = ["flixel", "openfl", "haxe.xml", "haxe.CallStack"];
 
 	// Incase any of your files fail
 	// These are the module names

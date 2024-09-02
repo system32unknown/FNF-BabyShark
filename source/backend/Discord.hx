@@ -244,11 +244,6 @@ final class DUser {
 	public var bot:Bool;
 
 	/**
-	 * Idk check discord docs
-	**/
-	public var flags:Int;
-
-	/**
 	 * If the user has nitro
 	**/
 	public var premiumType:NitroType;
@@ -267,8 +262,7 @@ final class DUser {
 		d.avatar = userData.avatar;
 		d.globalName = userData.globalName;
 		d.bot = userData.bot;
-		d.flags = userData.flags;
-		d.premiumType = userData.premiumType;
+		d.premiumType = cast(userData.premiumType.toInt(), NitroType);
 
 		if (d.discriminator != 0) d.handle = '${d.username}#${d.discriminator}';
 		else d.handle = d.username;

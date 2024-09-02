@@ -151,7 +151,7 @@ class ReflectionFunctions {
 		});
 	}
 
-	static function parseInstances(args:Array<Dynamic>) {
+	static function parseInstances(args:Array<Dynamic>):Array<Dynamic> {
 		if (args == null) args = [];
 
 		for (i in 0...args.length) {
