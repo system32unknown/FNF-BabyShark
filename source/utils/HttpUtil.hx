@@ -18,6 +18,19 @@ class HttpUtil {
 		return r;
 	}
 
+	public static function postParameters(url:String, param:Map<String, String>):Bool {
+		var h:Http = new Http(url);
+		try {
+			for (k => v in param) h.addParameter(k, v);
+			h.onError = (e:String) -> throw e;
+			h.request(true);
+			return true;
+		} catch (e:Dynamic) {
+			Logs.trace("postParameters Error: " + e, ERROR);
+			return false;
+		}
+	}
+
 	public static function requestBytes(url:String):Bytes {
 		var r:Bytes = null;
 		var h:Http = new Http(url);

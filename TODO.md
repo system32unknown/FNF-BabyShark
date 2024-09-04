@@ -9,6 +9,16 @@
 - [ ] New Main Menu / Freeplay Menu / Options Menu
 - [ ] Some Songs / Charts
 - [ ] Get Character Vocals
+    - [] Baby Shark Ollie (5 Various)
+    - [x] Daddy Shark
+    - [x] Mommy Shark
+    - [] William
+    - [] Hank
+    - [] Vola (Lala)
+    - [] Goldie
+    - [] Chucks
+    - [] Shadow
+    - [] Chichi
 - [ ] New Credit Menu (Social Links)
 
 ### Characters List
