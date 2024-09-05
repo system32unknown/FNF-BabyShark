@@ -26,7 +26,7 @@ class PlatformUtil {
         if (alpha) return SetLayeredWindowAttributes(hWnd, RGB(r, g, b), 0, LWA_COLORKEY);
         else return FALSE;
     ')
-	static public function setWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0):Bool return false;
+	public static function setWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0):Bool return false;
 
     @:functionCode('
         NOTIFYICONDATA m_NID;
@@ -58,7 +58,7 @@ class PlatformUtil {
 
         return Shell_NotifyIcon(NIM_MODIFY, &m_NID);
     ')
-    static public function sendWindowsNotification(title:String = "", desc:String = ""):Bool return false;
+    public static function sendWindowsNotification(title:String = "", desc:String = ""):Bool return false;
     
     @:functionCode('
         HWND window = GetActiveWindow();
@@ -67,17 +67,23 @@ class PlatformUtil {
         SendMessage(window, WM_SETICON, ICON_SMALL, (LPARAM)smallIcon);
         SendMessage(window, WM_SETICON, ICON_BIG, (LPARAM)icon);
     ')
-    static public function setWindowIcon(path:String) {}
+    public static function setWindowIcon(path:String) {}
+	@:functionCode('
+	    HWND window = GetActiveWindow();
+        SetWindowLongPtr(window, GWL_STYLE, GetWindowLongPtr(window, GWL_STYLE) & ~WS_SYSMENU); // Remove the WS_SYSMENU style
+        SetWindowPos(window, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER); // Force the window to redraw
+	')
+	public static function removeWindowIcon() {}
 
     //Thanks leer lol
     @:functionCode('
         POINT mousePos;
         if (!GetCursorPos(&mousePos)) return 0;
     ')
-    static public function getMousePos():Array<Float> return [untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y")];
+    public static function getMousePos():Array<Float> return [untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y")];
 
     @:functionCode('return MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);')
-    static public function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING):Int return 0;
+    public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING):Int return 0;
 
 	@:functionCode('
 	    if (!AllocConsole()) return;
@@ -101,7 +107,7 @@ class PlatformUtil {
 		int enabled = enable ? 1 : 0;
 
 		HWND window = FindWindowA(NULL, title.c_str());
-		// Look for child windows if top level aint found
+		// Look for child windows if top level arent found
 		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
 		if (window != NULL) DwmSetWindowAttribute(window, type, &enabled, sizeof(enabled));
 	')
@@ -111,10 +117,24 @@ class PlatformUtil {
         int darkMode = enable ? 1 : 0;
         return DwmSetWindowAttribute(GetActiveWindow(), type, &darkMode, sizeof(darkMode));
     ')
-    static public function setWindowAtt(type:Int, enable:Bool):Int return 0;
+    public static function setWindowAtt(type:Int, enable:Bool):Int return 0;
 
-    @:functionCode('return FindWindowA(className, windowName) != NULL;')
+    @:functionCode('return FindWindowA(className.c_str(), windowName.c_str()) != NULL;')
     public static function findWindow(className:String = null, windowName:String = '') return false;
+
+    @:functionCode('
+        HWND win = FindWindowA(NULL, winName.c_str());
+        if (win == NULL) return FALSE;
+
+        LONG winExStyle = GetWindowLong(win, GWL_EXSTYLE);
+        if (winExStyle == 0) return FALSE;
+
+        if (SetWindowLong(win, GWL_EXSTYLE, winExStyle ^ WS_EX_LAYERED) == 0) return FALSE;
+        if (SetLayeredWindowAttributes(win, color, 0, LWA_COLORKEY) == 0) return FALSE;
+
+        return TRUE;
+    ')
+    public static function setTransparency(winName:String, color:Int):Bool return false;
 }
 #end
 
