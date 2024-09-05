@@ -4,9 +4,6 @@ package psychlua;
 import hscript.AlterHscript;
 import flixel.FlxBasic;
 
-import flixel.FlxState;
-import flixel.FlxSubState;
-
 typedef ACall = {
 	var methodName:String;
 	var methodReturn:Dynamic;
@@ -261,9 +258,9 @@ class HScript extends AlterHscript {
                 try {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
                     if(rawClass == null) return; 
-                    FlxG.switchState(cast(Type.createInstance(rawClass, []), FlxState));
+                    FlxG.switchState(cast(Type.createInstance(rawClass, []), flixel.FlxState));
                 } catch(e:Dynamic) {
-                    Logs.trace('$e: Unspecified result for opening state "$name", could not switch states!', ERROR);
+                    Logs.trace('$e: Unspecified result for switching state "$name", could not switch states!', ERROR);
                     return;
                 }
             }
@@ -274,10 +271,8 @@ class HScript extends AlterHscript {
             else {
                 try {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
-                    if(rawClass == null) return;
-                    //Did a lil oopsie, now it should work fine!!
-                    var substate:FlxSubState = cast(Type.createInstance(rawClass, args), FlxSubState);
-                    FlxG.state.openSubState(substate);
+					if(rawClass == null) return;
+                    FlxG.state.openSubState(cast(Type.createInstance(rawClass, args), flixel.FlxSubState));
                 } catch(e:Dynamic) {
                     Logs.trace('$e: Unspecified result for opening substate "$name", could not be opened!', ERROR);
                     return;
