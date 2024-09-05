@@ -15,6 +15,8 @@ class MemoryUtil {
 		#if cpp
 		Gc.run(!minor);
 		if (!minor) Gc.compact();
+		#elseif hl
+		Gc.major();
 		#else
 		openfl.system.System.gc();
 		#end

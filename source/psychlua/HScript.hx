@@ -28,7 +28,7 @@ class HScript extends AlterHscript {
 			try {
 				hs.scriptCode = code;
 				hs.execute();
-			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${hs.origin}) - ${AlterHscript.errorHandler(e)}', false, false, FlxColor.RED);
+			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
 		}
 	}
 
@@ -263,7 +263,7 @@ class HScript extends AlterHscript {
                     if(rawClass == null) return; 
                     FlxG.switchState(cast(Type.createInstance(rawClass, []), FlxState));
                 } catch(e:Dynamic) {
-                    Logs.trace('${AlterHscript.errorHandler(e)}: Unspecified result for opening state "$name", could not switch states!', ERROR);
+                    Logs.trace('$e: Unspecified result for opening state "$name", could not switch states!', ERROR);
                     return;
                 }
             }
@@ -279,7 +279,7 @@ class HScript extends AlterHscript {
                     var substate:FlxSubState = cast(Type.createInstance(rawClass, args), FlxSubState);
                     FlxG.state.openSubState(substate);
                 } catch(e:Dynamic) {
-                    Logs.trace('${AlterHscript.errorHandler(e)}: Unspecified result for opening substate "$name", could not be opened!', ERROR);
+                    Logs.trace('$e: Unspecified result for opening substate "$name", could not be opened!', ERROR);
                     return;
                 }
             }
@@ -345,7 +345,7 @@ class HScript extends AlterHscript {
 
 		try {
 			return (call(funcToRun, funcArgs):ACall).methodVal;
-		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: ${AlterHscript.errorHandler(e)}', ERROR);
+		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: $e', ERROR);
 		return null;
 	}
 
@@ -362,7 +362,7 @@ class HScript extends AlterHscript {
 			try {
 				final retVal:ACall = funk.hscript.executeCode(funcToRun, funcArgs);
 				if (retVal != null) return (retVal.methodVal == null || LuaUtils.isOfTypes(retVal.methodVal, [Bool, Int, Float, String, Array])) ? retVal.methodVal : null;
-			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - ${AlterHscript.errorHandler(e)}', false, false, FlxColor.RED);
+			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
 			#else
 			FunkinLua.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
 			#end
@@ -374,7 +374,7 @@ class HScript extends AlterHscript {
 			try {
 				final retVal:ACall = funk.hscript.executeFunction(funcToRun, funcArgs);
 				if (retVal != null) return (retVal.methodVal == null || LuaUtils.isOfTypes(retVal.methodVal, [Bool, Int, Float, String, Array])) ? retVal.methodVal : null;
-			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - ${AlterHscript.errorHandler(e)}', false, false, FlxColor.RED);
+			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
 			return null;
 			#else
 			FunkinLua.luaTrace("runHaxeFunction: HScript isn't supported on this platform!", false, false, FlxColor.RED);

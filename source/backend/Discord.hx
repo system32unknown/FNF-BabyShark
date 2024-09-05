@@ -8,6 +8,7 @@ import openfl.display.BitmapData;
 
 import cpp.ConstCharStar;
 import cpp.RawConstPointer;
+import cpp.Function as CppFunction;
 
 class DiscordClient {
 	public static var isInitialized:Bool = false;
@@ -34,10 +35,6 @@ class DiscordClient {
 		isInitialized = false;
 		Discord.Shutdown();
 	}
-	
-	public static function respond(userId:String, reply:Int) {
-		Discord.Respond(fixString(userId), reply);
-	}
 
 	static function onReady(request:RawConstPointer<DiscordUser>):Void {
 		user = DUser.initRaw(request);
@@ -54,39 +51,22 @@ class DiscordClient {
 	static function onError(errorCode:Int, message:ConstCharStar):Void {
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
-			Logs.logText('Error ($errorCode: ${cast(message, String)})', RED)
+			Logs.logText('Error ($errorCode:$message)', RED)
 		], ERROR);
 	}
 
 	static function onDisconnected(errorCode:Int, message:ConstCharStar):Void {
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
-			Logs.logText("Disconnected ("),
-			Logs.logText('$errorCode: ${cast(message, String)}', RED),
-			Logs.logText(")")
+			Logs.logText('Disconnected ($errorCode:$message)', RED)
 		], INFO);
-	}
-
-	static function onJoin(joinSecret:ConstCharStar):Void {
-		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone has just joined", GREEN)], INFO);
-	}
-
-	static function onSpectate(spectateSecret:ConstCharStar):Void {
-		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone started spectating your game", YELLOW)], INFO);
-	}
-
-	static function onJoinReq(request:RawConstPointer<DiscordUser>):Void {
-		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone has just requested to join", YELLOW)], WARNING);
 	}
 
 	public static function initialize() {
 		var handlers:DiscordEventHandlers = DiscordEventHandlers.create();
-		handlers.ready = cpp.Function.fromStaticFunction(onReady);
-		handlers.disconnected = cpp.Function.fromStaticFunction(onDisconnected);
-		handlers.errored = cpp.Function.fromStaticFunction(onError);
-		handlers.joinGame = cpp.Function.fromStaticFunction(onJoin);
-		handlers.joinRequest = cpp.Function.fromStaticFunction(onJoinReq);
-		handlers.spectateGame = cpp.Function.fromStaticFunction(onSpectate);
+		handlers.ready = CppFunction.fromStaticFunction(onReady);
+		handlers.disconnected = CppFunction.fromStaticFunction(onDisconnected);
+		handlers.errored = CppFunction.fromStaticFunction(onError);
 		Discord.Initialize(clientID, cpp.RawPointer.addressOf(handlers), 1, null);
 
 		if(!isInitialized) trace("Discord Client initialized");
@@ -156,10 +136,6 @@ class DiscordClient {
 		});
 	}
 	#end
-
-	@:noCompletion public static function fixString(str:String):ConstCharStar {
-		return new ConstCharStar(cast(str, String));
-	}
 }
 
 @:allow(backend.DiscordClient)

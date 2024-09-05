@@ -23,10 +23,10 @@ class PlatformUtil {
 	@:functionCode('
         HWND hWnd = GetActiveWindow();
         alpha = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
-        if (alpha) return SetLayeredWindowAttributes(hWnd, RGB(r, g, b), 0, LWA_COLORKEY);
+        if (alpha) return SetLayeredWindowAttributes(hWnd, color, 0, LWA_COLORKEY);
         else return FALSE;
     ')
-	public static function setWindowsTransparent(r:Int = 0, g:Int = 0, b:Int = 0, alpha:Int = 0):Bool return false;
+	public static function setWindowsTransparent(color:Int = 0, alpha:Int = 0):Bool return false;
 
     @:functionCode('
         NOTIFYICONDATA m_NID;
@@ -50,11 +50,8 @@ class PlatformUtil {
         LPCTSTR lTitle = title.c_str();
         LPCTSTR lDesc = desc.c_str();
 
-        if (StringCchCopy(m_NID.szInfoTitle, sizeof(m_NID.szInfoTitle), lTitle) != S_OK)
-            return FALSE;
-
-        if (StringCchCopy(m_NID.szInfo, sizeof(m_NID.szInfo), lDesc) != S_OK)
-            return FALSE;
+        if (StringCchCopy(m_NID.szInfoTitle, sizeof(m_NID.szInfoTitle), lTitle) != S_OK) return FALSE;
+        if (StringCchCopy(m_NID.szInfo, sizeof(m_NID.szInfo), lDesc) != S_OK) return FALSE;
 
         return Shell_NotifyIcon(NIM_MODIFY, &m_NID);
     ')

@@ -754,7 +754,6 @@ class PlayState extends MusicBeatState {
 	var finishTimer:FlxTimer = null;
 
 	// For being able to mess with the sprites on Lua
-	public var countdownPrepare:FlxSprite; // new additional sprite, for "three" sound during countdown
 	public var countdownReady:FlxSprite;
 	public var countdownSet:FlxSprite;
 	public var countdownGo:FlxSprite;
@@ -774,9 +773,9 @@ class PlayState extends MusicBeatState {
 	function getCountdownSpriteNames(?givenUI: Null<String>):Array<String> {
 		if(givenUI == null) givenUI = stageUI;
 		return switch(givenUI) {
-			case "pixel": ['${givenUI}UI/countdown/prepare-pixel', '${givenUI}UI/countdown/ready-pixel', '${givenUI}UI/countdown/set-pixel', '${givenUI}UI/countdown/date-pixel'];
-			case "normal": ["countdown/prepare", "countdown/ready", "countdown/set" ,"countdown/go"];
-			default: ['${givenUI}UI/countdown/prepare', '${givenUI}UI/countdown/ready', '${givenUI}UI/countdown/set', '${givenUI}UI/countdown/go'];
+			case "pixel": ['${givenUI}UI/countdown/ready-pixel', '${givenUI}UI/countdown/set-pixel', '${givenUI}UI/countdown/date-pixel'];
+			case "normal": ["countdown/ready", "countdown/set" ,"countdown/go"];
+			default: ['${givenUI}UI/countdown/ready', '${givenUI}UI/countdown/set', '${givenUI}UI/countdown/go'];
 		};
 	}
 
@@ -821,7 +820,6 @@ class PlayState extends MusicBeatState {
 				charactersDance(tmr.loopsLeft);
 				switch(swagCounter) {
 					case 0:
-						countdownPrepare = createCountdownSprite(introSprites[0]);
 						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[0] + introSoundsSuffix, true, false), 0.6);
 						tick = THREE;
 					case 1:
@@ -2372,7 +2370,7 @@ class PlayState extends MusicBeatState {
 			trace('initialized hscript interp successfully: $file');
 			hscriptArray.push(newScript);
 		} catch(e:Dynamic) {
-			addTextToDebug('ERROR ON LOADING ($file) - ${AlterHscript.errorHandler(e)}', FlxColor.RED);
+			addTextToDebug('ERROR ON LOADING ($file) - $e', FlxColor.RED);
 			var newScript:HScript = cast (AlterHscript.instances.get(file), HScript);
 			if(newScript != null) newScript.destroy();
 		}
@@ -2444,7 +2442,7 @@ class PlayState extends MusicBeatState {
 				}
 
 				if(myValue != null && !excludeValues.contains(myValue)) returnVal = myValue;
-			} catch(e:Dynamic) addTextToDebug('ERROR (${script.origin}: $funcToCall) - ${AlterHscript.errorHandler(e)}', FlxColor.RED);
+			} catch(e:Dynamic) addTextToDebug('ERROR (${script.origin}: $funcToCall) - $e', FlxColor.RED);
 		}
 		#end
 		return returnVal;
