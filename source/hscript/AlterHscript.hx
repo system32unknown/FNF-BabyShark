@@ -89,7 +89,6 @@ class AlterHscript {
 		@:privateAccess interp.execute(parser.mk(EBlock([]), 0, 0));
 		instances.set(this.name, this);
 		return interp.execute(expr);
-
 	}
 
 	public function parse(force:Bool = false):Expr {

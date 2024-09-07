@@ -334,7 +334,7 @@ class HScript extends AlterHscript {
 		}
 
 		try {
-			return (call(funcToRun, funcArgs):IrisCall).returnValue;
+			return call(funcToRun, funcArgs).returnValue;
 		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: $e', ERROR);
 		return null;
 	}
