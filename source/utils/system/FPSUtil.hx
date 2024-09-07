@@ -2,6 +2,10 @@ package utils.system;
 
 class FPSUtil {
     @:noCompletion var times:Array<Float>;
+
+	/**
+		The current frame rate, expressed using frames-per-second
+	**/
 	public var curFPS(default, null):Float;
     public function new() {
 		curFPS = 0;

@@ -440,17 +440,6 @@ class EditorPlayState extends MusicBeatSubstate {
 			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 
-		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
-			mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
-			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
-			mstimingTxt.text = '${MathUtil.truncateFloat(noteDiff / playbackRate)}ms';
-			mstimingTxt.color = SpriteUtil.dominantColor(rating);
-			mstimingTxt.setPosition(rating.x + 100, rating.y + 100);
-			mstimingTxt.updateHitbox();
-			mstimingTxt.ID = comboGroup.ID++;
-			comboGroup.add(mstimingTxt);
-		}
-
 		if (showComboNum) {
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
 			var daLoop:Int = 0;
@@ -468,11 +457,6 @@ class EditorPlayState extends MusicBeatSubstate {
 				comboGroup.add(numScore);
 				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 			}
-		}
-
-		if (ClientPrefs.data.showMsTiming) {
-			if (msTimingTween != null) {mstimingTxt.alpha = 1; msTimingTween.cancel();}
-			msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 		comboGroup.sort(CoolUtil.sortByID);
 	}

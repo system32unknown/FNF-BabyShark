@@ -1,55 +1,100 @@
 package hscript;
 
 import haxe.ds.StringMap;
-import haxe.Exception;
+import hscript.IrisConfig;
 
+@:structInit
+class IrisCall {
+	/**
+	 * an HScript Function Name.
+	**/
+	public var funName:String;
+
+	/**
+	 * an HScript Function's signature.
+	**/
+	public var signature:Dynamic;
+
+	/**
+	 * an HScript Method's return value.
+	**/
+	public var returnValue:Dynamic;
+}
+
+/**
+ * This basic object helps with the creation of scripts,
+ * along with having neat helper functions to initialize and stop scripts
+ *
+ * It is highly recommended that you override this class to add custom defualt variables and such.
+ * (inspired of Hscript-Iris)
+**/
 class AlterHscript {
-	public static var instances:StringMap<AlterHscript> = new StringMap<AlterHscript>();
-    public var active:Bool = false;
+	static function getDefaultPos(name:String = "hscript-alter"):haxe.PosInfos {
+		return {
+			fileName: name,
+			lineNumber: -1,
+			className: "UnknownClass",
+			methodName: "unknownFunction",
+			customParams: null
+		}
+	}
 
-	public var hscriptName:String = "";
+	public static var instances:StringMap<AlterHscript> = new StringMap<AlterHscript>();
+
+	public var config:IrisConfig = null;
+
+	/**
+	 * Current script name, from `config.name`.
+	**/
+	public var name(get, never):String;
+	inline function get_name():String return config.name;
+
 	var scriptCode:String = "";
 
 	public var interp:Interp;
 	public var parser:Parser;
 	var expr:Expr;
 
-    public function new(scriptCode:String, name:String = "hscript-alter") {
+    public function new(scriptCode:String, ?config:AutoIrisConfig):Void {
+		if (config == null) config = new IrisConfig("hscript-alter", false, []);
 		this.scriptCode = scriptCode;
-		hscriptName = name;
+		this.config = IrisConfig.from(config);
+		this.config.name = fixScriptName(this.name);
 
 		parser = new Parser();
 		interp = new Interp();
-		fixScriptName(hscriptName);
+
+		// run the script.
+		if (this.config.autoRun) execute();
 
 		interp.allowStaticVariables = interp.allowPublicVariables = true;
 		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
     }
 
-	function fixScriptName(defaultName:String):Void {
+	static function fixScriptName(toFix:String):String {
 		// make sure to never have an indentically named instance.
-		var copyID:Int = 1;
-		while (instances.exists(hscriptName)) {
-			hscriptName = '${defaultName}_$copyID';
-			copyID++;
+		var _name:String = toFix;
+		var copyID: Int = 1;
+		while (instances.exists(_name)) {
+			_name = '${toFix}_${copyID}';
+			copyID += 1;
 		}
+		return _name;
 	}
 
-	public function execute():AlterHscript {
-		if (active || interp == null) return this;
+	public function execute():Dynamic {
+		if (interp == null) throw "Attempt to run script failed, script is probably destroyed.";
 
-		instances.set(hscriptName, this);
 		if (expr == null) expr = parse();
 		@:privateAccess interp.execute(parser.mk(EBlock([]), 0, 0));
-		if (expr != null) interp.execute(expr);
-		active = instances.exists(hscriptName);
+		instances.set(this.name, this);
+		return interp.execute(expr);
 
-		return this;
 	}
 
-	public function parse():Expr {
-		if (active || expr != null) return expr;
-		return expr = parser.parseString(scriptCode);
+	public function parse(force:Bool = false):Expr {
+		if (force || expr == null) return expr = parser.parseString(scriptCode);
+		return expr;
 	}
 
 	public function get(field:String):Dynamic {
@@ -57,38 +102,32 @@ class AlterHscript {
 	}
 
 	public function set(name:String, value:Dynamic, allowOverride:Bool = true):Void {
-		if (interp == null) return;
-
-		try {
-			if (allowOverride || !interp.variables.exists(name)) interp.setVar(name, value);
-		} catch (e:Exception) Logs.trace("HSCRIPT ERROR: " + e, ERROR);
+		if (interp == null || interp.variables == null) return;
+		if (allowOverride || !interp.variables.exists(name)) interp.setVar(name, value);
 	}
 
-	public function call(func:String, ?args:Array<Dynamic>):Dynamic {
-		if (interp == null) return 0;
-
+	public function call(fun:String, ?args:Array<Dynamic>):IrisCall {
+		if (interp == null) return null;
 		args ??= [];
 
-		var ny:Dynamic = interp.variables.get(func);
-		if (ny != null && Reflect.isFunction(ny)) {
-			try {
-				final ret:Dynamic = Reflect.callMethod(null, ny, args);
-				return {methodName: func, methodReturn: ny, methodVal: ret}
-			} catch (e:Exception) Logs.trace("HSCRIPT ERROR: " + e, ERROR);
+		var ny:Dynamic = interp.variables.get(fun);
+		var isFunction:Bool = false;
+		try {
+			isFunction = ny != null && Reflect.isFunction(ny);
+			if (!isFunction) throw 'Tried to call a non-function, for "$fun"';
+
+			final ret:Dynamic = Reflect.callMethod(null, ny, args);
+			return {funName: fun, signature: ny, returnValue: ret};
 		}
-		return 0;
+		#if hscriptPos
+		catch (e:Expr.Error) {Logs.trace("HSCRIPT ERROR: " + Printer.errorToString(e) + " [" + this.interp.posInfos() + "]", ERROR);}
+		#end
+		catch (e:haxe.Exception) {Logs.trace("HSCRIPT ERROR: " + e + " [" + (isFunction ? this.interp.posInfos() : getDefaultPos(this.name)) + "]", ERROR);}
+		return null;
 	}
 
 	public function exists(field:String):Bool {
 		return interp != null ? interp.variables.exists(field) : false;
-	}
-
-	//stolen from codename due to hscript exception format (ex: hscript:1: hscript:1: -> hscript:1:)
-	public static function errorHandler(error:hscript.Expr.Error):String {
-		var fn:String = '${error.origin}:${error.line}: ';
-		var err:String = error.toString();
-		if (err.startsWith(fn)) err = err.substr(fn.length);
-		return err;
 	}
 
 	public function destroy() @:privateAccess {
@@ -102,11 +141,9 @@ class AlterHscript {
 		interp.variables.clear();
 		interp.resetVariables();
 
-		if (instances.exists(hscriptName))
-			instances.remove(hscriptName);
+		if (instances.exists(this.name)) instances.remove(this.name);
 
 		//Then, stops this script.
-		active = false;
 		interp = null;
 		parser = null;
 	}

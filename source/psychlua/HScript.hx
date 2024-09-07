@@ -2,13 +2,8 @@ package psychlua;
 
 #if HSCRIPT_ALLOWED
 import hscript.AlterHscript;
+import hscript.AlterHscript.IrisCall;
 import flixel.FlxBasic;
-
-typedef ACall = {
-	var methodName:String;
-	var methodReturn:Dynamic;
-	var methodVal:Dynamic;
-};
 
 class HScript extends AlterHscript {
 	public var parentLua:FunkinLua;
@@ -58,9 +53,9 @@ class HScript extends AlterHscript {
 		}
 		this.scriptCode = scriptThing;
 
+		this.varsToBring = varsToBring;
 		preset();
 		execute();
-		this.varsToBring = varsToBring;
 	}
 
 	var varsToBring(default, set):Any = null;
@@ -326,7 +321,7 @@ class HScript extends AlterHscript {
 		return c;
 	}
 
-	public function executeCode(?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):ACall {
+	public function executeCode(?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
 		if (funcToRun == null) return null;
 
 		if(!exists(funcToRun)) {
@@ -339,12 +334,12 @@ class HScript extends AlterHscript {
 		}
 
 		try {
-			return (call(funcToRun, funcArgs):ACall).methodVal;
+			return (call(funcToRun, funcArgs):IrisCall).returnValue;
 		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: $e', ERROR);
 		return null;
 	}
 
-	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic>):ACall {
+	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic>):IrisCall {
 		if (funcToRun == null || !exists(funcToRun)) return null;
 		return call(funcToRun, funcArgs);
 	}
@@ -355,8 +350,8 @@ class HScript extends AlterHscript {
 			#if HSCRIPT_ALLOWED
 			initHaxeModuleCode(funk, codeToRun, varsToBring);
 			try {
-				final retVal:ACall = funk.hscript.executeCode(funcToRun, funcArgs);
-				if (retVal != null) return (retVal.methodVal == null || LuaUtils.isOfTypes(retVal.methodVal, [Bool, Int, Float, String, Array])) ? retVal.methodVal : null;
+				final retVal:IrisCall = funk.hscript.executeCode(funcToRun, funcArgs);
+				if (retVal != null) return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
 			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
 			#else
 			FunkinLua.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
@@ -367,8 +362,8 @@ class HScript extends AlterHscript {
 		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
 			#if HSCRIPT_ALLOWED
 			try {
-				final retVal:ACall = funk.hscript.executeFunction(funcToRun, funcArgs);
-				if (retVal != null) return (retVal.methodVal == null || LuaUtils.isOfTypes(retVal.methodVal, [Bool, Int, Float, String, Array])) ? retVal.methodVal : null;
+				final retVal:IrisCall = funk.hscript.executeFunction(funcToRun, funcArgs);
+				if (retVal != null) return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
 			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
 			return null;
 			#else

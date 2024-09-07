@@ -177,9 +177,6 @@ class PlayState extends MusicBeatState {
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
 
-	var msTimingTween:FlxTween;
-	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
-
 	public static var campaignScore:Int = 0;
 	public static var seenCutscene:Bool = false;
 	public static var deathCounter:Int = 0;
@@ -389,8 +386,7 @@ class PlayState extends MusicBeatState {
 		var showTime:Bool = timeType != 'Disabled';
 		timeTxt = new FlxText(0, 19, 400, "", 16);
 		timeTxt.screenCenter(X);
-		timeTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
-		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		timeTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
 		timeTxt.visible = updateTime = showTime;
@@ -448,16 +444,14 @@ class PlayState extends MusicBeatState {
 		}
 
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 35), FlxG.width);
-		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER);
-		scoreTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		scoreTxt.visible = !hideHud;
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
 		uiGroup.add(scoreTxt);
 
 		judgementCounter = new FlxText(2, 0, 0, "Max Combo: 0\nEpic: 0\nSick: 0\nGood: 0\nOk: 0\nBad: 0", 16);
-		judgementCounter.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE);
-		judgementCounter.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		judgementCounter.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, OUTLINE, FlxColor.BLACK);
 		judgementCounter.scrollFactor.set();
 		judgementCounter.visible = ClientPrefs.data.showJudgement && !hideHud;
 		uiGroup.add(judgementCounter);
@@ -465,8 +459,7 @@ class PlayState extends MusicBeatState {
 		updateScore();
 
 		botplayTxt = new FlxText(400, healthBar.y - 90, FlxG.width - 800, Language.getPhrase("Botplay", "BOTPLAY"), 32);
-		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
-		botplayTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
+		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.visible = cpuControlled;
 		uiGroup.add(botplayTxt);
@@ -1101,8 +1094,9 @@ class PlayState extends MusicBeatState {
 	}
 
 	function eventEarlyTrigger(event:EventNote):Float {
-		var returnedValue:Null<Float> = callOnScripts('eventEarlyTrigger', [event.event, event.value1, event.value2, event.strumTime], true, [], [0]);
-		if(returnedValue != null && returnedValue != 0 && returnedValue != LuaUtils.Function_Continue) return returnedValue;
+		var returnedValue:Dynamic = callOnScripts('eventEarlyTrigger', [event.event, event.value1, event.value2, event.strumTime], true, [], [0]);
+		returnedValue = Std.parseFloat(returnedValue);
+		if(!Math.isNaN(returnedValue) && returnedValue != 0) return returnedValue;
 
 		return switch(event.event) {
 			case 'Kill Henchmen': 280;
@@ -1910,17 +1904,6 @@ class PlayState extends MusicBeatState {
 			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 
-		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
-			mstimingTxt.setFormat(null, 20, FlxColor.WHITE, CENTER);
-			mstimingTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
-			mstimingTxt.text = '${MathUtil.truncateFloat(noteDiff / playbackRate)}ms';
-			mstimingTxt.color = SpriteUtil.dominantColor(rating);
-			mstimingTxt.setPosition(rating.x + 100, rating.y + 100);
-			mstimingTxt.updateHitbox();
-			mstimingTxt.ID = comboGroup.ID++;
-			comboGroup.add(mstimingTxt);
-		}
-
 		if (showComboNum) {
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
 			var daLoop:Int = 0;
@@ -1938,11 +1921,6 @@ class PlayState extends MusicBeatState {
 				comboGroup.add(numScore);
 				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 			}
-		}
-
-		if (ClientPrefs.data.showMsTiming) {
-			if (msTimingTween != null) {mstimingTxt.alpha = 1; msTimingTween.cancel();}
-			msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 		comboGroup.sort(CoolUtil.sortByID);
 	}
@@ -2388,7 +2366,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function callOnLuas(event:String, ?args:Array<Any>, ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
-		var returnVal:Dynamic = LuaUtils.Function_Continue;
+		var returnVal:String = LuaUtils.Function_Continue;
 		#if LUA_ALLOWED
 		args ??= [];
 		exclusions ??= [];
@@ -2419,7 +2397,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function callOnHScript(funcToCall:String, ?args:Array<Dynamic>, ?ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
-		var returnVal:Dynamic = LuaUtils.Function_Continue;
+		var returnVal:String = LuaUtils.Function_Continue;
 		#if HSCRIPT_ALLOWED
 		if(exclusions == null) exclusions = [];
 		if(excludeValues == null) excludeValues = [LuaUtils.Function_Continue];
@@ -2432,11 +2410,8 @@ class PlayState extends MusicBeatState {
 
 			try {
 				var callValue = script.call(funcToCall, args);
-				var myValue:Dynamic = callValue.methodVal;
-
-				final stopHscript:Bool = (myValue == LuaUtils.Function_StopHScript);
-				final stopAll:Bool = (myValue == LuaUtils.Function_StopAll);
-				if((stopHscript || stopAll) && !excludeValues.contains(myValue) && !ignoreStops) {
+				var myValue:Dynamic = callValue.returnValue;
+				if((myValue == LuaUtils.Function_StopHScript || myValue == LuaUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops) {
 					returnVal = myValue;
 					break;
 				}
@@ -2510,11 +2485,11 @@ class PlayState extends MusicBeatState {
 			}
 			fullComboFunction();
 		}
-		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce
 		setOnScripts('rating', ratingPercent);
 		setOnScripts('ratingAccuracy', ratingAccuracy);
 		setOnScripts('ratingName', ratingName);
 		setOnScripts('ratingFC', ratingFC);
+		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce
 	}
 
 	public dynamic function fullComboFunction() {
