@@ -17,7 +17,7 @@ class Logs {
 			__showInConsole(prepareColoredTrace(data, TRACE));
 		};
 
-		flixel.system.frontEnds.LogFrontEnd.onLogs = (Data, Style, FireOnce) -> {
+		flixel.system.frontEnds.LogFrontEnd.onLogs = (Data:Dynamic, Style:LogStyle, FireOnce:Bool) -> {
 			var prefix:String = "[FLIXEL]";
 			var color:ConsoleColor = LIGHTGRAY;
 			var level:Level = INFO;

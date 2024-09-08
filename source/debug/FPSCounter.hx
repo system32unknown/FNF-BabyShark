@@ -41,7 +41,8 @@ class FPSCounter extends openfl.text.TextField {
 	public dynamic function updateText():Void {
 		text = '${fpsManager.curFPS}FPS [${Std.int((1 / fpsManager.curFPS) * 1000)}ms]\n';
 		if (memType == "MEM" || memType == "MEM/PEAK") text += '${FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
-
+	}
+	public dynamic function preUpdateText():Void {
 		if (ClientPrefs.data.rainbowFps) {
 			timeColor = (timeColor % 360) + 1;
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
@@ -53,15 +54,15 @@ class FPSCounter extends openfl.text.TextField {
 
 	var deltaTimeout:Float = .0;
 	override function __enterFrame(dt:Float) {
-		if (deltaTimeout > 1000) {
-			deltaTimeout = .0;
-			return;
-		}
-
 		fpsManager.update();
+		preUpdateText();
 		if (memory > mempeak) mempeak = memory;
 
+		if (deltaTimeout < 1000) {
+			deltaTimeout += dt;
+			return;
+		}
 		updateText();
-		deltaTimeout += dt;
+		deltaTimeout = .0;
 	}
 }
