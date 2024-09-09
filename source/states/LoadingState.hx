@@ -205,7 +205,7 @@ class LoadingState extends MusicBeatState {
 			else noteSplash += NoteSplash.getSplashSkinPostfix();
 			imagesToPrepare.push(noteSplash);
 
-			try{
+			try {
 				var path:String = Paths.json('${Paths.CHART_PATH}/$folder/preload');
 				var json:Dynamic = null;
 
@@ -219,7 +219,7 @@ class LoadingState extends MusicBeatState {
 					var imgs:Array<String> = [];
 					var snds:Array<String> = [];
 					var mscs:Array<String> = [];
-					for (asset in Reflect.fields(json)){
+					for (asset in Reflect.fields(json)) {
 						var filters:Int = Reflect.field(json, asset);
 						var asset:String = asset.trim();
 	

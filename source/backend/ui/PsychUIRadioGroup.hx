@@ -256,7 +256,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 }
 
 class PsychUIRadioItem extends PsychUICheckBox {
-	public function new(x:Float, y:Float, label:String, textWid:Int = 100){
+	public function new(x:Float, y:Float, label:String, textWid:Int = 100) {
 		super(x, y, label, textWid);
 		broadcastCheckBoxEvent = false;
 	}

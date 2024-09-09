@@ -15,7 +15,7 @@ class HealthIcon extends FlxSprite {
 	var char:String = '';
 	
 	public var iconType:String = 'vanilla';
-	var availableStates:Int = 1;
+	var iSize:Int = 1;
 	var state:Int = 0;
 	var _scale:FlxPoint;
 	final animatediconstates:Array<String> = ['normal', 'lose', 'win'];
@@ -66,7 +66,7 @@ class HealthIcon extends FlxSprite {
 
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing, allowGPU);
 		else {
-			availableStates = 1;
+			iSize = 1;
 			this.char = char;
 			state = 0;
 
@@ -80,16 +80,16 @@ class HealthIcon extends FlxSprite {
 		}
 
 		if (graph == null) return false;
-		availableStates = Math.round(graph.width / graph.height);
+		iSize = Math.floor(graph.width / graph.height);
 		this.char = char;
 		state = 0;
 
 		if (!animated) {
-			loadGraphic(graph, true, Math.floor(graph.width / availableStates), graph.height);
+			loadGraphic(graph, true, Math.floor(graph.width / iSize), Math.floor(graphic.height));
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
-			animation.add(char, [for (i in 0...availableStates) i], 0, false, isPlayer);
-			iconOffsets = [(width - 150) / availableStates, (height - 150) / availableStates];
+			animation.add(char, [for(i in 0...frames.frames.length) i], 0, false, isPlayer);
+			iconOffsets = [(width - 150) / iSize, (height - 150) / iSize];
 			animation.play(char);
 		} else {
 			frames = Paths.getSparrowAtlas(name);
@@ -121,7 +121,7 @@ class HealthIcon extends FlxSprite {
 		return char.endsWith('-pixel');
 
 	public function setStateIndex(state:Int) {
-		if (state >= availableStates) state = 0;
+		if (state >= iSize) state = 0;
 		if (this.state == state || animation.curAnim == null) return;
 		animation.curAnim.curFrame = this.state = state;
 	}
