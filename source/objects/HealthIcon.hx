@@ -85,7 +85,7 @@ class HealthIcon extends FlxSprite {
 		state = 0;
 
 		if (!animated) {
-			loadGraphic(graph, true, Math.floor(graph.width / iSize), Math.floor(graphic.height));
+			loadGraphic(graph, true, Math.floor(graph.width / iSize), Math.floor(graph.height));
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
 			animation.add(char, [for(i in 0...frames.frames.length) i], 0, false, isPlayer);
