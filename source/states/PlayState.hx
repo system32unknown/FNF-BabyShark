@@ -2348,7 +2348,7 @@ class PlayState extends MusicBeatState {
 			trace('initialized hscript interp successfully: $file');
 			hscriptArray.push(newScript);
 		} catch(e:Dynamic) {
-			addTextToDebug('ERROR ON LOADING ($file) - $e', FlxColor.RED);
+			addTextToDebug('ERROR ON LOADING ($file) - ' + AlterHscript.errorHandler(e), FlxColor.RED);
 			var newScript:HScript = cast (AlterHscript.instances.get(file), HScript);
 			if(newScript != null) newScript.destroy();
 		}

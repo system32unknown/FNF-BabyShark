@@ -129,6 +129,14 @@ class AlterHscript {
 		return interp != null ? interp.variables.exists(field) : false;
 	}
 
+	//stolen from codename due to hscript exception format (ex: hscript:1: hscript:1: -> hscript:1:)
+	public static function errorHandler(error:hscript.Expr.Error):String {
+		var fn:String = '${error.origin}:${error.line}: ';
+		var err:String = error.toString();
+		if (err.startsWith(fn)) err = err.substr(fn.length);
+		return err;
+	}
+
 	public function destroy() @:privateAccess {
 		//First, Stopping Hscript-improved variables
 		interp.__instanceFields = [];

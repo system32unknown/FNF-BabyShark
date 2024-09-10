@@ -86,7 +86,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 		visible = true;
 		active = true;
 
-		var globalVolume:Int = FlxG.sound.muted ? 0 : Math.round(FlxG.sound.volume * 10);
+		var globalVolume:Int = FlxG.sound.muted ? 0 : Math.round(FlxG.sound.logToLinear(FlxG.sound.volume) * 10);
 		text.text = FlxG.sound.muted ? 'Muted' : 'Volume:${globalVolume * 10}%';
 
 		for (i in 0..._bars.length) _bars[i].alpha = i < globalVolume ? 1 : .5;
