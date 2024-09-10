@@ -18,7 +18,7 @@ class CoolUtil {
 	 * @param sound					The sound stream (i.e: String, openfl.media.Sound, etc)
 	 * @param volume				Sound's volume
 	**/
-	public static function playSoundSafe(sound:flixel.system.FlxAssets.FlxSoundAsset, ?beepOnError: Bool = true, volume: Float = 1.0) {
+	public static function playSoundSafe(sound:flixel.system.FlxAssets.FlxSoundAsset, ?beepOnError:Bool = true, volume:Float = 1.0) {
 		if(sound != null) FlxG.sound.play(sound, volume);
 	}
 
@@ -37,7 +37,7 @@ class CoolUtil {
 		return [for(i in 0...daList.length) daList[i].trim()];
 	}
 
-	public static function browserLoad(site:String) {
+	public static function browserLoad(site:String):Void {
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site, "&"]);
 		#else
@@ -45,7 +45,7 @@ class CoolUtil {
 		#end
 	}
 
-	inline public static function openFolder(folder:String, absolute:Bool = false) {
+	inline public static function openFolder(folder:String, absolute:Bool = false):Void {
 		#if sys
 		if(!absolute) folder = Sys.getCwd() + '$folder';
 

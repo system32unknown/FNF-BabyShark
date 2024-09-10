@@ -204,7 +204,7 @@ class Character extends FlxSprite {
 		}
 
 		if (heyTimer > 0) {
-			heyTimer -= elapsed * (PlayState.instance != null ? PlayState.instance.playbackRate : 1.0);
+			heyTimer -= elapsed * (PlayState.instance != null ? PlayState.instance.playbackRate : 1.);
 			if (heyTimer <= 0) {
 				var anim:String = getAnimationName();
 				if(specialAnim && (anim == 'hey' || anim == 'cheer')) {
@@ -230,8 +230,7 @@ class Character extends FlxSprite {
 		}
 
 		var name:String = getAnimationName();
-		if(isAnimationFinished() && hasAnimation('$name-loop'))
-			playAnim('$name-loop');
+		if(isAnimationFinished() && hasAnimation('$name-loop')) playAnim('$name-loop');
 
 		super.update(elapsed);
 	}

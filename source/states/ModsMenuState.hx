@@ -169,8 +169,8 @@ class ModsMenuState extends MusicBeatState {
 		bgButtons.alpha = 0.2;
 		add(bgButtons);
 
-		var buttonsX = bgButtons.x + 320;
-		var buttonsY = bgButtons.y + 10;
+		var buttonsX:Float = bgButtons.x + 320;
+		var buttonsY:Float = bgButtons.y + 10;
 
 		var button:MenuButton = new MenuButton(buttonsX, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> moveModToPosition(0), 54, 54); //Move to the top
 		button.icon.animation.add('icon', [0]);

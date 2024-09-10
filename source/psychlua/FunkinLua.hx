@@ -1055,7 +1055,7 @@ class FunkinLua {
 
 	public var lastCalledFunction:String = '';
 	public static var lastCalledScript:FunkinLua = null;
-	public function call(func:String, ?args:Array<Dynamic>):Dynamic {
+	public function call(func:String, ?args:Array<Dynamic>):String {
 		#if LUA_ALLOWED
 		if (closed) return LuaUtils.Function_Continue;
 
