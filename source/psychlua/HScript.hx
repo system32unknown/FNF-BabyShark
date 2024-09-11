@@ -301,7 +301,7 @@ class HScript extends AlterHscript {
 			set('addBehindGF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.gfGroup) - order, obj));
 			set('addBehindDad', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.dadGroup) - order, obj));
 			set('addBehindBF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.boyfriendGroup) - order, obj));
-			interp.scriptObject = psInstance; // allow use vars from playstate without "game" thing
+			setParent(psInstance); // allow use vars from playstate without "game" thing
 		}
 	}
 

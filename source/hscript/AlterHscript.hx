@@ -161,4 +161,8 @@ class AlterHscript {
 			instances.get(key).destroy();
 		}
 	}
+
+	public function setParent(parent:Dynamic) {
+		interp.scriptObject = parent;
+	}
 }

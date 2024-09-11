@@ -2,8 +2,6 @@ package utils.system;
 
 #if cpp
 import cpp.vm.Gc;
-#elseif hl
-import hl.Gc;
 #end
 
 @:cppFileCode("
@@ -25,8 +23,6 @@ class MemoryUtil {
     inline public static function getMEM():Float {
         #if cpp
 		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
-        #elseif hl
-        return Gc.stats().currentMemory;
 		#elseif sys
 		return cast(openfl.system.System.totalMemory, UInt);
 		#else

@@ -11,6 +11,7 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		var opt:Option = new Option('Memory Counter:', '', 'memCounterType', STRING, ['MEM', 'MEM/PEAK', 'NONE']);
 		addOption(opt);
 		opt.onChange = onChangeFPSCounter;
+
 		addOption(new Option('Rainbow FPS', '', 'rainbowFps', BOOL));
 
 		addOption(new Option('Alternate Discord Large Image', '', 'altDiscordImg', BOOL));
@@ -24,9 +25,9 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 	}
 }
 
-	function onChangeFPSCounter() {
-		if(Main.fpsVar != null) {
-			Main.fpsVar.visible = ClientPrefs.data.showFPS;
-			Main.fpsVar.memType = ClientPrefs.data.memCounterType;
-		}
+function onChangeFPSCounter() {
+	if(Main.fpsVar != null) {
+		Main.fpsVar.visible = ClientPrefs.data.showFPS;
+		Main.fpsVar.memType = ClientPrefs.data.memCounterType;
 	}
+}

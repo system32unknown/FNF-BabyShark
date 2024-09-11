@@ -549,7 +549,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		});
 
 		var decideIconColor:PsychUIButton = new PsychUIButton(reloadImage.x, reloadImage.y + 30, "Get Icon Color", () -> {
-			var coolColor:FlxColor = FlxColor.fromInt(SpriteUtil.dominantColor(healthIcon));
+			var coolColor:FlxColor = SpriteUtil.dominantColor(healthIcon);
 			character.healthColorArray[0] = coolColor.red;
 			character.healthColorArray[1] = coolColor.green;
 			character.healthColorArray[2] = coolColor.blue;

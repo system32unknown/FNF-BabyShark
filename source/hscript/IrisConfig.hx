@@ -20,7 +20,6 @@ class IrisConfig {
 	 *
 	 * @param name			The obvious!
 	 * @param autoRun					Makes the script run automatically upon being created.
-	 * @param autoPreset			Makes the script automatically set imports to itself upon creation.
 	 * @param localBlocklist	List of classes or enums that cannot be used within this particular script
 	**/
 	public function new(name:String, autoRun:Bool = true, ?localBlocklist:Array<String>) {

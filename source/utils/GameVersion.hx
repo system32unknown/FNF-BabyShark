@@ -11,8 +11,6 @@ class GameVersion {
 	function get_COMMIT_HASH():String return GitCommitMacro.commitHash;
 	public var COMMIT_NUM(get, never):Int;
 	function get_COMMIT_NUM():Int return GitCommitMacro.commitNumber;
-	public var COMMIT_BRANCH(get, never):String;
-	function get_COMMIT_BRANCH():String return GitCommitMacro.commitBranch;
 
 	public function new(release:Int, major:Int, minor:Int, ?patch:String = '') {
 		this.release = release;

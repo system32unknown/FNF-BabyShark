@@ -536,7 +536,7 @@ class FunkinLua {
 		set("getColorFromHex", (color:String) -> return FlxColor.fromString('#$color'));
 		set("getColorFromRgb", (rgb:Array<Int>) -> return FlxColor.fromRGB(rgb[0], rgb[1], rgb[2]));
 		set("getDominantColor", function(tag:String) {
-			if (tag == null) return 0;
+			if (tag == null) return FlxColor.BLACK;
 			return SpriteUtil.dominantColor(LuaUtils.getObjectDirectly(tag));
 		});
 

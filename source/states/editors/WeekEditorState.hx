@@ -602,7 +602,7 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 			}
 		});
 		var decideIconColor:PsychUIButton = new PsychUIButton(pasteColor.x, pasteColor.y + 20, "Get BG Color", () -> {
-			var coolColor:FlxColor = FlxColor.fromInt(SpriteUtil.dominantColor(iconArray[curSelected]));
+			var coolColor:FlxColor = SpriteUtil.dominantColor(iconArray[curSelected]);
 			bgColorStepperR.value = coolColor.red;
 			bgColorStepperG.value = coolColor.green;
 			bgColorStepperB.value = coolColor.blue;

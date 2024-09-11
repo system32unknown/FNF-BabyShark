@@ -30,7 +30,7 @@ class SpriteUtil {
 				mostPresentColor = c;
 			}
 		}
-		return mostPresentColor;
+		return FlxColor.fromInt(mostPresentColor);
 	}
 
 	inline public static function dominantColor(sprite:FlxSprite):FlxColor {
@@ -54,6 +54,6 @@ class SpriteUtil {
 			}
 		}
 		countByColor.clear();
-		return maxKey;
+		return FlxColor.fromInt(maxKey);
 	}
 }
