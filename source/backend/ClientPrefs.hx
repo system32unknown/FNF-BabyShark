@@ -85,7 +85,7 @@ import flixel.input.keyboard.FlxKey;
 	public var comboOffset:Array<Array<Int>> = [[0, 0], [0, 0]];
 	public var ratingOffset:Int = 0;
 
-	public var epicWindow:Int = 15;
+	public var epicWindow:Int = 22;
 	public var sickWindow:Int = 45;
 	public var goodWindow:Int = 90;
 	public var okWindow:Int = 135;
