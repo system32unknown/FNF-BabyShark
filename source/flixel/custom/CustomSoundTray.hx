@@ -7,7 +7,9 @@ import openfl.text.TextField;
 
 class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 	var text:TextField = new TextField();
-	var _intendedY:Float;
+
+	var lerpYPos:Float = 0;
+	var alphaTarget:Float = 0;
 	public function new() {
         super();
         removeChildren();
@@ -47,20 +49,24 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 
 		y = -height;
 		visible = false;
-		_intendedY = y;
+		lerpYPos = y;
     }
 
 	override function update(MS:Float):Void {
 		var elapsed:Float = MS / 1000;
-		// Animate sound tray thing
-		if (_timer > 0) _timer -= elapsed;
-		else if (_intendedY > -height) {
-			_intendedY -= elapsed * height * 4;
 
-			if (_intendedY <= -height) {
+		// Animate sound tray thing
+		if (_timer > 0) {
+		    _timer -= elapsed;
+		    alphaTarget = 1;
+		} else if (lerpYPos > -height) {
+		    lerpYPos -= elapsed * height * 4;
+		    alphaTarget = 0;
+
+			if (lerpYPos <= -height) {
 				visible = false;
 				active = false;
-
+	
 				// Save sound preferences
 				#if FLX_SAVE
 				if (FlxG.save.isBound) {
@@ -72,19 +78,25 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 			}
 		}
 
-		y = FlxMath.lerp(_intendedY, y, Math.exp(-elapsed * 24));
+		y = FlxMath.lerp(lerpYPos, y, Math.exp(-elapsed * 24));
+		alpha = FlxMath.lerp(alphaTarget, alpha, Math.exp(-elapsed * 30));
 	}
 
+    /**
+     * Makes the little volume tray slide out.
+     *
+     * @param	up Whether the volume is increasing.
+     */
     override function show(up:Bool = false):Void {
+		_timer = 1;
+		lerpYPos = 0;
+		visible = true;
+		active = true;
+
 		if (!silent) {
 			var sound = flixel.system.FlxAssets.getSound(up ? volumeUpSound : volumeDownSound);
 			if (sound != null) FlxG.sound.load(sound).play();
 		}
-
-		_timer = 1;
-		_intendedY = 0;
-		visible = true;
-		active = true;
 
 		var globalVolume:Int = FlxG.sound.muted ? 0 : Math.round(FlxG.sound.logToLinear(FlxG.sound.volume) * 10);
 		text.text = FlxG.sound.muted ? 'Muted' : 'Volume:${globalVolume * 10}%';
