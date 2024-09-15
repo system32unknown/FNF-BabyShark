@@ -6,7 +6,7 @@ import flixel.addons.display.FlxRuntimeShader;
 #end
 
 class ShaderFunctions {
-	#if (!flash && MODS_ALLOWED && sys)
+	#if (!flash && sys)
 	static var storedFilters:Map<String, ShaderFilter> = [];
 	#end
 
@@ -14,7 +14,7 @@ class ShaderFunctions {
 		funk.addLocalCallback("initLuaShader", function(name:String) {
 			if(!ClientPrefs.data.shaders) return false;
 
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			return funk.initLuaShader(name, glslVersion);
 			#else
 			FunkinLua.luaTrace("initLuaShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
@@ -25,7 +25,7 @@ class ShaderFunctions {
 		funk.addLocalCallback("setSpriteShader", function(obj:String, shader:String) {
 			if(!ClientPrefs.data.shaders) return false;
 
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			if(!funk.runtimeShaders.exists(shader) && !funk.initLuaShader(shader)) {
 				FunkinLua.luaTrace('setSpriteShader: Shader $shader is missing!', false, false, FlxColor.RED);
 				return false;
@@ -56,7 +56,7 @@ class ShaderFunctions {
 
 			if (index == null || index.length < 1) index = shader;
 
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			if (!funk.runtimeShaders.exists(shader) && !funk.initLuaShader(shader)) {
 			    FunkinLua.luaTrace('addShaderToCam: Shader $shader is missing!', false, false, FlxColor.RED);
 			    return false;
@@ -78,7 +78,7 @@ class ShaderFunctions {
 		});
 
         funk.addLocalCallback("removeCamShader", function(cam:String, shader:String) {
-            #if (!flash && MODS_ALLOWED && sys)
+            #if (!flash && sys)
             var camera:Dynamic = getCam(cam);
             if (!storedFilters.exists(shader)) {
                 FunkinLua.luaTrace('removeCamShader: $shader does not exist!', false, false, FlxColor.YELLOW);
@@ -102,7 +102,7 @@ class ShaderFunctions {
         funk.addLocalCallback("clearCamShaders", (cam:String) -> getCam(cam).filters = []);
 
 		funk.set("getShaderBool", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			return shader?.getBool(prop);
 			#else
@@ -111,7 +111,7 @@ class ShaderFunctions {
 			#end
 		});
 		funk.set("getShaderBoolArray", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			return shader?.getBoolArray(prop);
 			#else
@@ -120,7 +120,7 @@ class ShaderFunctions {
 			#end
 		});
 		funk.set("getShaderInt", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			return shader?.getInt(prop);
 			#else
@@ -129,7 +129,7 @@ class ShaderFunctions {
 			#end
 		});
 		funk.set("getShaderIntArray", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			return shader?.getIntArray(prop);
 			#else
@@ -138,7 +138,7 @@ class ShaderFunctions {
 			#end
 		});
 		funk.set("getShaderFloat", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			return shader?.getFloat(prop);
 			#else
@@ -147,7 +147,7 @@ class ShaderFunctions {
 			#end
 		});
 		funk.set("getShaderFloatArray", function(obj:String, prop:String) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			return shader?.getFloatArray(prop);
 			#else
@@ -157,7 +157,7 @@ class ShaderFunctions {
 		});
 
 		funk.set("setShaderBool", function(obj:String, prop:String, value:Bool) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader != null) {
 				shader.setBool(prop, value);
@@ -169,7 +169,7 @@ class ShaderFunctions {
 			return false;
 		});
 		funk.set("setShaderBoolArray", function(obj:String, prop:String, values:Dynamic) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader != null) {
 				shader.setBoolArray(prop, values);
@@ -181,7 +181,7 @@ class ShaderFunctions {
 			return false;
 		});
 		funk.set("setShaderInt", function(obj:String, prop:String, value:Int) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader != null) {
 				shader.setInt(prop, value);
@@ -193,7 +193,7 @@ class ShaderFunctions {
 			return false;
 		});
 		funk.set("setShaderIntArray", function(obj:String, prop:String, values:Dynamic) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader != null) {
 				shader.setIntArray(prop, values);
@@ -205,7 +205,7 @@ class ShaderFunctions {
 			return false;
 		});
 		funk.set("setShaderFloat", function(obj:String, prop:String, value:Float) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader != null) {
 				shader.setFloat(prop, value);
@@ -217,7 +217,7 @@ class ShaderFunctions {
 			return false;
 		});
 		funk.set("setShaderFloatArray", function(obj:String, prop:String, values:Dynamic) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader != null) {
 				shader.setFloatArray(prop, values);
@@ -230,7 +230,7 @@ class ShaderFunctions {
 		});
 
 		funk.set("setShaderBitmapData", function(obj:String, prop:String, bitmapdataPath:String) {
-			#if (!flash && MODS_ALLOWED && sys)
+			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader != null) {
 				var value:flixel.graphics.FlxGraphic = Paths.image(bitmapdataPath);

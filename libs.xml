@@ -11,8 +11,8 @@
 	<git name="hxcpp" url="https://github.com/HaxeFoundation/hxcpp"/>
 	<git name="hscript-improved" url="https://github.com/FNF-CNE-Devs/hscript-improved" ref="custom-classes"/>
 	<git name="flxanimate" url="https://github.com/Dot-Stuff/flxanimate" ref="dev"/>
-	<git name="hxdiscord_rpc" url="https://github.com/MAJigsaw77/hxdiscord_rpc"/>
 	<git name="linc_luajit" url="https://github.com/superpowers04/linc_luajit"/>
+	<lib name="hxdiscord_rpc"/>
 	<lib name="hxvlc"/>
 	<lib name="tjson"/>
 	<lib name="markdown"/>

@@ -334,12 +334,12 @@ class HScript extends AlterHscript {
 		}
 
 		try {
-			return call(funcToRun, funcArgs).returnValue;
+			return call(funcToRun, funcArgs).signature;
 		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: $e', ERROR);
 		return null;
 	}
 
-	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic>):IrisCall {
+	public function executeFunction(funcToRun:String = null, funcArgs:Array<Dynamic> = null):IrisCall {
 		if (funcToRun == null || !exists(funcToRun)) return null;
 		return call(funcToRun, funcArgs);
 	}
@@ -351,7 +351,7 @@ class HScript extends AlterHscript {
 			initHaxeModuleCode(funk, codeToRun, varsToBring);
 			try {
 				final retVal:IrisCall = funk.hscript.executeCode(funcToRun, funcArgs);
-				if (retVal != null) return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
+				if (retVal != null) return (retVal.signature == null || LuaUtils.isOfTypes(retVal.signature, [Bool, Int, Float, String, Array])) ? retVal.signature : null;
 			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
 			#else
 			FunkinLua.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
@@ -363,7 +363,7 @@ class HScript extends AlterHscript {
 			#if HSCRIPT_ALLOWED
 			try {
 				final retVal:IrisCall = funk.hscript.executeFunction(funcToRun, funcArgs);
-				if (retVal != null) return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
+				if (retVal != null) return (retVal.signature == null || LuaUtils.isOfTypes(retVal.signature, [Bool, Int, Float, String, Array])) ? retVal.signature : null;
 			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
 			return null;
 			#else

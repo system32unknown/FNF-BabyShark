@@ -2204,7 +2204,7 @@ class PlayState extends MusicBeatState {
 		for (lua in luaArray) {lua.call('onDestroy'); lua.stop();}
 		luaArray = null;
 		FunkinLua.customFunctions.clear();
-		for (script in hscriptArray) if(script != null) {script.call('onDestroy'); script.destroy();}
+		for (script in hscriptArray) if(script != null) {script.executeFunction('onDestroy'); script.destroy();}
 		hscriptArray = null;
 		stagesFunc((stage:BaseStage) -> stage.destroy());
 		for (point in [campoint, camlockpoint, ratingAcc, ratingVel]) point = flixel.util.FlxDestroyUtil.put(point);
@@ -2345,7 +2345,7 @@ class PlayState extends MusicBeatState {
 		var newScript:HScript = null;
 		try {
 			newScript = new HScript(null, file);
-			newScript.call('onCreate');
+			newScript.executeFunction('onCreate');
 			trace('initialized hscript interp successfully: $file');
 			hscriptArray.push(newScript);
 		} catch(e:Dynamic) {
@@ -2411,7 +2411,7 @@ class PlayState extends MusicBeatState {
 
 			try {
 				var callValue = script.call(funcToCall, args);
-				var myValue:Dynamic = callValue.returnValue;
+				var myValue:Dynamic = callValue.signature;
 				if((myValue == LuaUtils.Function_StopHScript || myValue == LuaUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops) {
 					returnVal = myValue;
 					break;
@@ -2509,7 +2509,7 @@ class PlayState extends MusicBeatState {
 	public function createRuntimeShader(name:String):FlxRuntimeShader {
 		if(!ClientPrefs.data.shaders) return new FlxRuntimeShader();
 
-		#if (!flash && MODS_ALLOWED && sys)
+		#if (!flash && sys)
 		if(!runtimeShaders.exists(name) && !initLuaShader(name)) {
 			FlxG.log.warn('Shader $name is missing!');
 			return new FlxRuntimeShader();
