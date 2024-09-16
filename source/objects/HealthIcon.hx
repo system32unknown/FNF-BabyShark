@@ -80,7 +80,7 @@ class HealthIcon extends FlxSprite {
 		}
 
 		if (graph == null) return false;
-		iSize = Math.floor(graph.width / graph.height);
+		iSize = Math.round(graph.width / graph.height);
 		this.char = char;
 		state = 0;
 

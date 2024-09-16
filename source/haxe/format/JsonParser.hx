@@ -165,12 +165,9 @@ class JsonParser {
 						invalidChar();
 					}
 					return null;
-				case '"'.code:
-					return parseString();
-				case '0'.code, '1'.code, '2'.code, '3'.code, '4'.code, '5'.code, '6'.code, '7'.code, '8'.code, '9'.code, '-'.code:
-					return parseNumber(c);
-				default:
-					invalidChar();
+				case '"'.code: return parseString();
+				case '0'.code, '1'.code, '2'.code, '3'.code, '4'.code, '5'.code, '6'.code, '7'.code, '8'.code, '9'.code, '-'.code: return parseNumber(c);
+				default: invalidChar();
 			}
 		}
 	}
@@ -197,24 +194,17 @@ class JsonParser {
 				if (c != "u".code && prev != -1) cancelSurrogate();
 				#end
 				switch (c) {
-					case "r".code:
-						buf.addChar("\r".code);
-					case "n".code:
-						buf.addChar("\n".code);
-					case "t".code:
-						buf.addChar("\t".code);
-					case "b".code:
-						buf.addChar(8);
-					case "f".code:
-						buf.addChar(12);
-					case "/".code, '\\'.code, '"'.code:
-						buf.addChar(c);
+					case "r".code: buf.addChar("\r".code);
+					case "n".code: buf.addChar("\n".code);
+					case "t".code: buf.addChar("\t".code);
+					case "b".code: buf.addChar(8);
+					case "f".code: buf.addChar(12);
+					case "/".code, '\\'.code, '"'.code: buf.addChar(c);
 					case 'u'.code:
 						var uc:Int = Std.parseInt("0x" + str.substr(pos, 4));
 						pos += 4;
 						#if !target.unicode
-						if (uc <= 0x7F)
-							buf.addChar(uc);
+						if (uc <= 0x7F) buf.addChar(uc);
 						else if (uc <= 0x7FF) {
 							buf.addChar(0xC0 | (uc >> 6));
 							buf.addChar(0x80 | (uc & 63));

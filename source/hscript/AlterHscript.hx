@@ -74,7 +74,7 @@ class AlterHscript {
 	static function fixScriptName(toFix:String):String {
 		// make sure to never have an indentically named instance.
 		var _name:String = toFix;
-		var copyID: Int = 1;
+		var copyID:Int = 1;
 		while (instances.exists(_name)) {
 			_name = '${toFix}_${copyID}';
 			copyID += 1;

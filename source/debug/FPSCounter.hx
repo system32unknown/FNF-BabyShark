@@ -12,6 +12,7 @@ class FPSCounter extends openfl.text.TextField {
 
 	var timeColor:Int = 0;
 	public var checkLag:Bool = true;
+	public var delayDelta:Int = 1000;
 	public var memType:String = "";
 
     public var fpsManager:FPSUtil;
@@ -58,7 +59,7 @@ class FPSCounter extends openfl.text.TextField {
 		preUpdateText();
 		if (memory > mempeak) mempeak = memory;
 
-		if (deltaTimeout < 1000) {
+		if (deltaTimeout < delayDelta) {
 			deltaTimeout += dt;
 			return;
 		}
