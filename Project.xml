@@ -42,6 +42,7 @@
 	<assets path="assets/translations" rename="assets" if="TRANSLATIONS_ALLOWED"/>
 
 	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED" type='template'/>
+	<assets path='alsoft.ini'/>
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>

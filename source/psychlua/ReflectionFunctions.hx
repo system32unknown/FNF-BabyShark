@@ -171,7 +171,7 @@ class ReflectionFunctions {
 		return args;
 	}
 
-	static function callMethodFromObject(classObj:Dynamic, funcStr:String, args:Array<Dynamic> = null) {
+	static function callMethodFromObject(classObj:Dynamic, funcStr:String, args:Array<Dynamic> = null):Dynamic {
 		if(args == null) args = [];
 
 		var split:Array<String> = funcStr.split('.');

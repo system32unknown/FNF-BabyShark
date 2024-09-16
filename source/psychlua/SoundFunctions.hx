@@ -24,8 +24,9 @@ class SoundFunctions {
 			FlxG.sound.play(Paths.sound(sound), volume);
 		});
 		funk.set("stopSound", function(tag:String) {
-			if((tag == null || tag.length < 1) && FlxG.sound.music != null) FlxG.sound.music.stop();
-			else {
+			if(tag == null || tag.length < 1) {
+				if (FlxG.sound.music != null) FlxG.sound.music.stop();
+			} else {
 				tag = LuaUtils.formatVariable('sound_$tag');
 				var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 				var snd:FlxSound = variables.get(tag);
@@ -36,34 +37,36 @@ class SoundFunctions {
 			}
 		});
 		funk.set("pauseSound", (tag:String) -> {
-			if((tag == null || tag.length < 1) && FlxG.sound.music != null) FlxG.sound.music.pause();
-			else {
+			if(tag == null || tag.length < 1) {
+				if (FlxG.sound.music != null) FlxG.sound.music.stop();
+			} else {
 				tag = LuaUtils.formatVariable('sound_$tag');
 				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
 				if(snd != null) snd.pause();
 			}
 		});
 		funk.set("resumeSound", (tag:String) -> {
-			if((tag == null || tag.length < 1) && FlxG.sound.music != null) FlxG.sound.music.play();
-			else {
+			if(tag == null || tag.length < 1) {
+				if (FlxG.sound.music != null) FlxG.sound.music.stop();
+			} else {
 				tag = LuaUtils.formatVariable('sound_$tag');
 				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
 				if(snd != null) snd.play();
 			}
 		});
 		funk.set("soundFadeIn", function(tag:String, duration:Float, fromValue:Float = 0, toValue:Float = 1) {
-			if((tag == null || tag.length < 1) && FlxG.sound.music != null)
-				FlxG.sound.music.fadeIn(duration, fromValue, toValue);
-			else {
+			if(tag == null || tag.length < 1) {
+				if (FlxG.sound.music != null) FlxG.sound.music.fadeIn(duration, fromValue, toValue);
+			} else {
 				tag = LuaUtils.formatVariable('sound_$tag');
 				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
 				if(snd != null) snd.fadeIn(duration, fromValue, toValue);
 			}
 		});
 		funk.set("soundFadeOut", function(tag:String, duration:Float, toValue:Float = 0) {
-			if((tag == null || tag.length < 1) && FlxG.sound.music != null)
-				FlxG.sound.music.fadeOut(duration, toValue);
-			else {
+			if(tag == null || tag.length < 1) {
+				if (FlxG.sound.music != null) FlxG.sound.music.fadeIn(duration, toValue);
+			} else {
 				tag = LuaUtils.formatVariable('sound_$tag');
 				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
 				if(snd != null) snd.fadeOut(duration, toValue);
@@ -79,8 +82,9 @@ class SoundFunctions {
 			}
 		});
 		funk.set("getSoundVolume", function(tag:String) {
-			if((tag == null || tag.length < 1) && FlxG.sound.music != null) return FlxG.sound.music.volume;
-			else {
+			if(tag == null || tag.length < 1) {
+				if(FlxG.sound.music != null) return FlxG.sound.music.volume;
+			} else {
 				tag = LuaUtils.formatVariable('sound_$tag');
 				var snd:FlxSound = MusicBeatState.getVariables().get(tag);
 				if(snd != null) return snd.volume;
