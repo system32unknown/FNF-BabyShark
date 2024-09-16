@@ -816,15 +816,15 @@ class PlayState extends MusicBeatState {
 						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[0] + introSoundsSuffix, true, false), 0.6);
 						tick = THREE;
 					case 1:
-						countdownReady = createCountdownSprite(introSprites[1]);
+						countdownReady = createCountdownSprite(introSprites[0]);
 						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[1] + introSoundsSuffix, true, false), 0.6);
 						tick = TWO;
 					case 2:
-						countdownSet = createCountdownSprite(introSprites[2]);
+						countdownSet = createCountdownSprite(introSprites[1]);
 						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[2] + introSoundsSuffix, true, false), 0.6);
 						tick = ONE;
 					case 3:
-						countdownGo = createCountdownSprite(introSprites[3]);
+						countdownGo = createCountdownSprite(introSprites[2]);
 						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[3] + introSoundsSuffix, true, false), 0.6);
 						tick = GO;
 					case 4: tick = START;

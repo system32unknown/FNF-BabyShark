@@ -400,12 +400,31 @@ class LoadingState extends MusicBeatState {
 		var file:String = Paths.getPath(Language.getFileTranslation(key) + '.${Paths.SOUND_EXT}', SOUND, path, modsAllowed);
 
 		if(!Paths.currentTrackedSounds.exists(file)) {
-			if (#if sys FileSystem.exists(file) || #end OpenFlAssets.exists(file, SOUND)) {
-				var sound:Sound = OpenFlAssets.getSound(file, false);
+			#if sys
+			if(FileSystem.exists(file)) {
+				var sound:Sound = Sound.fromFile(file);
 				mutex.acquire();
 				Paths.currentTrackedSounds.set(file, sound);
 				mutex.release();
-			} else if (beepOnNull) {
+			}
+			#else
+			if(OpenFlAssets.exists(file, SOUND)) {
+				var sound:Sound = null;
+
+				// useCache is set to false because of thread safety
+				if (OpenFlAssets.cache.enabled && OpenFlAssets.cache.hasSound(file))  {
+					sound = OpenFlAssets.cache.getSound(file);
+					if (!OpenFlAssets.isValidSound(sound)) sound = null;
+				}
+
+				if (sound == null) sound = OpenFlAssets.getSound(file, false);
+				mutex.acquire();
+				if (OpenFlAssets.cache.enabled) OpenFlAssets.cache.setSound(file, sound);
+				Paths.currentTrackedSounds.set(file, sound);
+				mutex.release();
+			}
+			#end
+			else if (beepOnNull) {
 				FlxG.log.error('SOUND NOT FOUND: $key, PATH: $path');
 				return flixel.system.FlxAssets.getSound('flixel/sounds/beep');
 			}
@@ -425,10 +444,22 @@ class LoadingState extends MusicBeatState {
 			if(requestKey.lastIndexOf('.') < 0) requestKey += '.png';
 
 			if (!Paths.currentTrackedAssets.exists(requestKey)) {
+				var bitmap:BitmapData = null;
 				var file:String = Paths.getPath(requestKey, IMAGE);
 				if (#if sys FileSystem.exists(file) || #end OpenFlAssets.exists(file, IMAGE)) {
-					var bitmap:BitmapData = #if sys BitmapData.fromFile(file) #else OpenFlAssets.getBitmapData(file, false) #end;
+					#if sys 
+					bitmap = BitmapData.fromFile(file);
+					#else
+					if (OpenFlAssets.cache.enabled && OpenFlAssets.cache.hasBitmapData(file)) {
+						bitmap = OpenFlAssets.cache.getBitmapData(file);
+						if (!OpenFlAssets.isValidBitmapData(bitmap)) bitmap = null;
+					}
+					if (bitmap == null) bitmap = OpenFlAssets.getBitmapData(file, false);
+					#end
 					mutex.acquire();
+					#if !sys 
+					if (OpenFlAssets.cache.enabled) OpenFlAssets.cache.setBitmapData(file, bitmap);
+					#end
 					requestedBitmaps.set(file, bitmap);
 					originalBitmapKeys.set(file, requestKey);
 					mutex.release();
