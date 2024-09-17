@@ -2,6 +2,8 @@ package utils.system;
 
 #if cpp
 import cpp.vm.Gc;
+#elseif sys
+import openfl.system.System;
 #end
 
 @:cppFileCode("
@@ -9,22 +11,20 @@ import cpp.vm.Gc;
 #include <psapi.h>
 ")
 class MemoryUtil {
-	inline public static function clearMajor(?minor:Bool = false) {
+	public static function clearMajor(?minor:Bool = false) {
 		#if cpp
 		Gc.run(!minor);
 		if (!minor) Gc.compact();
-		#elseif hl
-		Gc.major();
 		#else
-		openfl.system.System.gc();
+		System.gc();
 		#end
 	}
 
-    inline public static function getMEM():Float {
+    public static function getMEM():Float {
         #if cpp
 		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
 		#elseif sys
-		return cast(openfl.system.System.totalMemory, UInt);
+		return cast(System.totalMemory, UInt);
 		#else
 		return 0;
 		#end

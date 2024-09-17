@@ -108,13 +108,7 @@ class PlatformUtil {
 		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
 		if (window != NULL) DwmSetWindowAttribute(window, type, &enabled, sizeof(enabled));
 	')
-	public static function setDarkMode(title:String, type:Int, enable:Bool) {}
-
-    @:functionCode('
-        int darkMode = enable ? 1 : 0;
-        return DwmSetWindowAttribute(GetActiveWindow(), type, &darkMode, sizeof(darkMode));
-    ')
-    public static function setWindowAtt(type:Int, enable:Bool):Int return 0;
+	public static function setWindowAtt(title:String, type:Int, enable:Bool) {}
 
     @:functionCode('return FindWindowA(className.c_str(), windowName.c_str()) != NULL;')
     public static function findWindow(className:String = null, windowName:String = '') return false;

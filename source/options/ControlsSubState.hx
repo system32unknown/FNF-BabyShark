@@ -190,7 +190,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		for (n in 0...2) {
 			var textX:Float = 350 + n * 300;
 
-			var key = InputFormatter.getKeyName((keys[n] != null) ? keys[n] : NONE);
+			var key:String = InputFormatter.getKeyName((keys[n] != null) ? keys[n] : NONE);
 
 			var attach:Alphabet = new Alphabet(textX + 210, 248, key, false);
 			attach.isMenuItem = true;

@@ -147,7 +147,7 @@ class ModsMenuState extends MusicBeatState {
 		add(icon);
 
 		modNameInitialY = icon.y + 80;
-		modName = new Alphabet(icon.x + 165, modNameInitialY, "");
+		modName = new Alphabet(icon.x + 165, modNameInitialY);
 		modName.scaleY = 0.8;
 		add(modName);
 
@@ -732,7 +732,7 @@ class MenuButton extends FlxSpriteGroup {
 		add(bg);
 
 		if(text != null) {
-			textOn = new Alphabet(0, 0, "");
+			textOn = new Alphabet(0, 0);
 			textOn.setScale(.6);
 			textOn.text = text;
 			textOn.alpha = 0.6;
@@ -741,7 +741,7 @@ class MenuButton extends FlxSpriteGroup {
 			textOn.y -= 30;
 			add(textOn);
 			
-			textOff = new Alphabet(0, 0, "");
+			textOff = new Alphabet(0, 0);
 			textOff.setScale(0.52);
 			textOff.text = text;
 			textOff.alpha = 0.6;

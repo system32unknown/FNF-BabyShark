@@ -386,7 +386,7 @@ class NotesSubState extends MusicBeatSubstate {
 
 	// alphabets
 	function makeColorAlphabet(x:Float = 0, y:Float = 0):Alphabet {
-		var text:Alphabet = new Alphabet(x, y, '');
+		var text:Alphabet = new Alphabet(x, y);
 		text.alignment = CENTERED;
 		text.setScale(.6);
 		add(text);

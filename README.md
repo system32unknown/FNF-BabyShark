@@ -3,6 +3,8 @@
 
 Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor codes), and Base Engine.
 
+This Engine is windows exclusive. (Apple and Linux Support Soon.)
+
 ![Repo size](https://img.shields.io/github/repo-size/system32unknown/FNF-BabyShark)
 ![Last commit](https://img.shields.io/github/last-commit/system32unknown/FNF-BabyShark)
 ![License](https://img.shields.io/github/license/system32unknown/FNF-BabyShark)

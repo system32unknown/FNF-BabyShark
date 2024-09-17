@@ -30,7 +30,7 @@ class NativeUtil {
 	 * Sets the console colors
 	 */
 	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
-		#if (windows && !hl)
+		#if windows
 		if(foregroundColor == NONE) foregroundColor = LIGHTGRAY;
 		if(backgroundColor == NONE) backgroundColor = BLACK;
 		PlatformUtil.setConsoleColors((cast(backgroundColor, Int) * 16) + cast(foregroundColor, Int));
