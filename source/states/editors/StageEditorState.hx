@@ -985,7 +985,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		stageDropDown = new PsychUIDropDownMenu(10, 30, [''], (sel:Int, selected:String) -> {
 			var path:String = Paths.getPath('stages/$selected.json');
-			if (#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
+			if (#if MODS_ALLOWED FileSystem #else openfl.utils.Assets #end.exists(path)) {
 				stageJson = StageData.getStageFile(selected);
 				lastLoadedStage = selected;
 				#if DISCORD_ALLOWED

@@ -1,16 +1,23 @@
 package states;
 
-@:structInit class TitleData {
-	public var titlex:Float = 0;
-	public var titley:Float = 1500;
-	public var titlesize:Float = 1.5;
-	public var titlestarty:Float = 50;
-	public var startx:Float = 125;
-	public var starty:Float = 576;
-	public var gfx:Float = 512;
-	public var gfy:Float = 40;
-	public var backgroundSprite:String = '';
-	public var bpm:Float = 148;
+import haxe.Http;
+
+typedef TitleData = {
+	var titlex:Float;
+	var titley:Float;
+	var titlesize:Float;
+	var titlestarty:Float;
+	var startx:Float;
+	var starty:Float;
+	var gfx:Float;
+	var gfy:Float;
+	var backgroundSprite:String;
+	var bpm:Float;
+
+	@:optional var animation:String;
+	@:optional var dance_left:Array<Int>;
+	@:optional var dance_right:Array<Int>;
+	@:optional var idle:Bool;
 }
 
 class TitleState extends MusicBeatState {
@@ -22,13 +29,12 @@ class TitleState extends MusicBeatState {
 	var logo:FlxSprite;
 	var titleText:FlxSprite;
 
-	var textGroup:FlxTypedGroup<FlxText>;
+	var textGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
 
 	final titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	final titleTextAlphas:Array<Float> = [1, .64];
 
 	var randomPhrase:Array<String> = [];
-	var titleJson:TitleData;
 	var titletimer:Float = 0;
 
 	public static var updateVersion:String;
@@ -36,50 +42,35 @@ class TitleState extends MusicBeatState {
 
 	override function create():Void {
 		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		FlxTransitionableState.skipNextTransOut = false;
 		FlxG.mouse.visible = false;
 		persistentUpdate = persistentDraw = true;
 		super.create();
 
 		#if CHECK_FOR_UPDATES checkUpdate(); #end
+		loadJsonData();
+		Conductor.bpm = musicBPM;
 
-		final balls:Dynamic = tjson.TJSON.parse(Paths.getTextFromFile('data/titleData.json'));
-		titleJson = {
-			titlex: balls.titlex,
-			titley: balls.titley,
-			titlesize: balls.titlesize,
-			titlestarty: balls.titlestarty,
-			startx: balls.startx,
-			starty: balls.starty,
-			gfx: balls.gfx,
-			gfy: balls.gfy,
-			backgroundSprite: balls.backgroundSprite,
-			bpm: balls.bpm
-		}
-
-		Conductor.bpm = titleJson.bpm;
-
-		if (titleJson.backgroundSprite != null && titleJson.backgroundSprite.length > 0 && titleJson.backgroundSprite != "none") {
-			final bg:FlxSprite = new FlxSprite(Paths.image(titleJson.backgroundSprite));
-			bg.antialiasing = ClientPrefs.data.antialiasing;
-			bg.active = false;
-			add(bg);
-		}
-
-		gf = new FlxSprite(titleJson.gfx, titleJson.gfy);
+		gf = new FlxSprite(gfPosition.x, gfPosition.y);
 		gf.antialiasing = ClientPrefs.data.antialiasing;
-		gf.frames = Paths.getSparrowAtlas('gfDanceTitle');
-		gf.animation.addByIndices('left', 'gfDance', [30].concat([for (i in 0...15) i]), "", 24, false);
-		gf.animation.addByIndices('right', 'gfDance', [for (i in 15...30) i], "", 24, false);
-		gf.animation.play('right');
+		gf.frames = Paths.getSparrowAtlas(characterImage);
+		if(!useIdle) {
+			gf.animation.addByIndices('left', animationName, danceRightFrames, "", 24, false);
+			gf.animation.addByIndices('right', animationName, danceLeftFrames, "", 24, false);
+			gf.animation.play('right');
+		} else {
+			gf.animation.addByPrefix('idle', animationName, 24, false);
+			gf.animation.play('idle');
+		}
 		gf.alpha = .0001;
 		add(gf);
 
-		logo = new FlxSprite(titleJson.titlex, titleJson.titley);
+		logo = new FlxSprite(logoPosition.x, logoPosition.y);
 		logo.antialiasing = ClientPrefs.data.antialiasing;
 		if(!FileSystem.exists(Paths.modsXml('logobumpin'))) {
 			logo.loadGraphic(Paths.image('logobumpin'));
-			logo.setGraphicSize(Std.int(logo.width * titleJson.titlesize));
+			logo.setGraphicSize(Std.int(logo.width * titleSize));
 		} else {
 			foundXml = true;
 			logo.frames = Paths.getSparrowAtlas('logobumpin');
@@ -91,7 +82,7 @@ class TitleState extends MusicBeatState {
 		logo.angle = -4;
 		add(logo);
 
-		titleText = new FlxSprite(titleJson.startx, titleJson.starty);
+		titleText = new FlxSprite(enterPosition.x, enterPosition.y);
 		titleText.visible = false;
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
 		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
@@ -99,14 +90,11 @@ class TitleState extends MusicBeatState {
 			titleText.animation.findByPrefix(animFrames, "ENTER IDLE");
 			titleText.animation.findByPrefix(animFrames, "ENTER FREEZE");
 		}
-		
-		if (animFrames.length > 0) {
-			newTitle = true;
+		if (newTitle = animFrames.length > 0) {
 			titleText.animation.addByPrefix('idle', "ENTER IDLE", 24);
 			titleText.animation.addByPrefix('press', ClientPrefs.data.flashing ? "ENTER PRESSED" : "ENTER FREEZE", 24);
 			FlxTween.num(0, 1, 2, {type: PINGPONG, ease: FlxEase.quadInOut}, num -> titleTextTimer = num);
 		} else {
-			newTitle = false;
 			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
 			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
 		}
@@ -114,8 +102,7 @@ class TitleState extends MusicBeatState {
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
 		add(titleText);
-
-		add(textGroup = new FlxTypedGroup<FlxText>());
+		add(textGroup);
 
 		randomPhrase = getIntroTextShit();
 
@@ -123,8 +110,49 @@ class TitleState extends MusicBeatState {
 			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		} else skipIntro();
+	}
 
-		Paths.clearUnusedMemory();
+	// JSON data
+	var characterImage:String = 'gfDanceTitle';
+	var animationName:String = 'gfDance';
+
+	var titleStartY:Float = 50;
+	var titleSize:Float = 1.1;
+	var gfPosition:FlxPoint = FlxPoint.get(512, 40);
+	var logoPosition:FlxPoint = FlxPoint.get(0, 1500);
+	var enterPosition:FlxPoint = FlxPoint.get(125, 576);
+
+	var useIdle:Bool = false;
+	var musicBPM:Float = 148;
+	var danceLeftFrames:Array<Int> = [for (i in 15...30) i];
+	var danceRightFrames:Array<Int> = [30].concat([for (i in 0...15) i]);
+
+	function loadJsonData() {
+		if(Paths.fileExists('data/titleData.json')) {
+			var titleRaw:String = Paths.getTextFromFile('data/titleData.json');
+			if(titleRaw != null && titleRaw.length > 0) {
+				try {
+					var titleJSON:TitleData = tjson.TJSON.parse(titleRaw);
+					gfPosition.set(titleJSON.gfx, titleJSON.gfy);
+					logoPosition.set(titleJSON.titlex, titleJSON.titley);
+					enterPosition.set(titleJSON.startx, titleJSON.starty);
+					titleSize = titleJSON.titlesize;
+					titleStartY = titleJSON.titlestarty;
+					musicBPM = titleJSON.bpm;
+
+					if(titleJSON.dance_left != null && titleJSON.dance_left.length > 0) danceLeftFrames = titleJSON.dance_left;
+					if(titleJSON.dance_right != null && titleJSON.dance_right.length > 0) danceRightFrames = titleJSON.dance_right;
+					useIdle = (titleJSON.idle == true);
+
+					if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.trim().length > 0) {
+						var bg:FlxSprite = new FlxSprite(Paths.image(titleJSON.backgroundSprite));
+						bg.antialiasing = ClientPrefs.data.antialiasing;
+						bg.active = false;
+						add(bg);
+					}
+				} catch(e:haxe.Exception) Logs.trace('[WARN] Title JSON might broken, ignoring issue...\n${e.details()}', WARNING);
+			} else Logs.trace('No Title JSON detected, using default values.', WARNING);
+		}
 	}
 
 	function getIntroTextShit():Array<String> {
@@ -195,7 +223,9 @@ class TitleState extends MusicBeatState {
 	override function beatHit() {
 		super.beatHit();
 		
-		gf.animation.play(curBeat % 2 == 0 ? 'left' : 'right', true);
+		if(!useIdle) {
+			gf.animation.play(curBeat % 2 == 0 ? 'left' : 'right', true);
+		} else if(curBeat % 2 == 0) gf.animation.play('idle', true);
 		if(foundXml) logo.animation.play('bump', true);
 
 		if(!skippedIntro) {
@@ -244,8 +274,7 @@ class TitleState extends MusicBeatState {
 		gf.alpha = 1;
 		logo.alpha = 1;
 		titleText.visible = true;
-
-		FlxTween.tween(logo, {y: titleJson.titlestarty}, 1.4, {ease: FlxEase.expoInOut});
+		FlxTween.tween(logo, {y: titleStartY}, 1.4, {ease: FlxEase.expoInOut});
 
 		deleteText();
 	}
@@ -254,7 +283,7 @@ class TitleState extends MusicBeatState {
 	function checkUpdate():Void {
 		if(ClientPrefs.data.checkForUpdates && !skippedIntro) {
 			trace('checking for update');
-			var http = new haxe.Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/CHANGELOG.md");
+			var http:Http = new Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/CHANGELOG.md");
 			var returnedData:Array<String> = [];
 
 			http.onData = (data:String) -> {
@@ -264,7 +293,7 @@ class TitleState extends MusicBeatState {
     			// Extract the changelog after the version number
     			returnedData[1] = data.substring(versionEndIndex + 1, data.length);
 				updateVersion = returnedData[0];
-				final curVersion:String = Main.engineVer.version.trim();
+				final curVersion:String = Main.engineVer.version;
 				trace('version online: ' + updateVersion + ', your version: ' + curVersion);
 				if(updateVersion != curVersion) {
 					trace('versions arent matching!');
@@ -272,7 +301,7 @@ class TitleState extends MusicBeatState {
 					mustUpdate = true;
 				}
 			}
-			http.onError = (error:String) -> Logs.trace('error: $error', ERROR);
+			http.onError = (error:String) -> Logs.trace('Checking Update Error: $error', ERROR);
 			http.request();
 		}
 	}

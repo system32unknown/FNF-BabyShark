@@ -3873,7 +3873,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	function loadCharacterFile(char:String):CharacterFile {
 		if(char != null) {
 			try {
-				return cast Json.parse(#if MODS_ALLOWED File.getContent #else OpenFlAssets.getText #end(Paths.getPath('characters/$char.json')));
+				return cast Json.parse(#if MODS_ALLOWED File.getContent #else openfl.utils.Assets.getText #end(Paths.getPath('characters/$char.json')));
 			} catch (e:Dynamic) {}
 		}
 		return null;

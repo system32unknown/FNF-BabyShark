@@ -31,7 +31,7 @@ class MathUtil {
     * @param elapsed The time elapsed since the last frame.
     * @param duration The total duration of the interpolation. Nominal duration until remaining distance is less than `precision`.
     * @param precision The target precision of the interpolation. Defaults to 1% of distance remaining.
-    * @see https://twitter.com/FreyaHolmer/status/1757918211679650262
+    * @see https://x.com/FreyaHolmer/status/1757918211679650262
     *
     * @return A value between the current value and the target value.
     */
