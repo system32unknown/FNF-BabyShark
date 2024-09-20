@@ -75,6 +75,9 @@ class TerminalState extends MusicBeatState {
 			}
 			updateText('\nNot Implemented.');
 		}));
+		cmdList.push(new TerminalCommand("survey", "???", (args:Array<String>) -> {
+			updateText('\nNot Implemented.');
+		}));
 		cmdList.push(new TerminalCommand("open", "Searches for a text file with the specified ID, and if it exists, display it.", (args:Array<String>) -> {
 			updatePreviousText(false); // resets the text
 			updateText('\n' + switch(args[0].toLowerCase()) {
@@ -85,7 +88,6 @@ class TerminalState extends MusicBeatState {
 				case "expunged": "[FILE DELETED]\n[FUCK YOU!]";
 				case "deleted": "The unnamable never was a god and never will be. Just an accident.";
 				case "exbungo": "[EXBUNGOS FILE ARE THE ONLY ONES I HAVE ACCESS TO UNFORTUNATELY.]\n[I HATE IT. BECAUSE HE'S UGLY AND FAT.]";
-				case "recurser": "A being of chaos that wants to spread ORDER.\nDespite this, his sanity is at the border.";
 				case "ollie" | "babyshark": "[I HATE HIM. BECAUSE HE KEEPS FOLLOWING ME, AND WANTS FRIENDS. BUT I LIKE HIM.]";
 				case "t5" | "t5mpler": "What the fuck are you doing in here?";
 				case "redacted": "[THE OTHER ME. BUT HE'S POWERFUL. CAN DESTROY BOYFRIEND.]";
