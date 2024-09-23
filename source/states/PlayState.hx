@@ -2213,6 +2213,12 @@ class PlayState extends MusicBeatState {
 		stagesFunc((stage:BaseStage) -> stage.destroy());
 		for (point in [campoint, camlockpoint, ratingAcc, ratingVel]) point = flixel.util.FlxDestroyUtil.put(point);
 
+		if (CustomSubstate.instance != null) {
+			closeSubState();
+			CustomSubstate.instance.destroy();
+			subState = null;
+		}
+
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		FlxG.camera.setFilters([]);
