@@ -206,6 +206,20 @@ class Paths {
 		return getPackerAtlas(key, parentFolder);
 	}
 
+	static public function getMultiAtlas(keys:Array<String>, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
+		var parentFrames:FlxAtlasFrames = getAtlas(keys[0].trim());
+		if(keys.length > 1) {
+			var original:FlxAtlasFrames = parentFrames;
+			parentFrames = new FlxAtlasFrames(parentFrames.parent);
+			parentFrames.addAtlas(original, true);
+			for (i in 1...keys.length) {
+				var extraFrames:FlxAtlasFrames = getAtlas(keys[i].trim(), parentFolder, allowGPU);
+				if(extraFrames != null) parentFrames.addAtlas(extraFrames, true);
+			}
+		}
+		return parentFrames;
+	}
+
 	inline static public function getSparrowAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
 		var imageLoaded:FlxGraphic = image(key, parentFolder, allowGPU);
 		#if MODS_ALLOWED

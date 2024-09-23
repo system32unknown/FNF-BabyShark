@@ -1,7 +1,5 @@
 package states.editors;
 
-import flixel.graphics.frames.FlxAtlasFrames;
-
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
@@ -63,7 +61,8 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	}
 
 	override function create() {
-		if(ClientPrefs.data.cacheOnGPU) Paths.clearStoredMemory();
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 
 		FlxG.sound.music.stop();
 		camEditor = initPsychCamera();
@@ -688,21 +687,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 				Paths.loadAnimateAtlas(character.atlas, character.imageFile);
 			} catch(e:Dynamic) FlxG.log.warn('Could not load atlas ${character.imageFile}: $e');
 			character.isAnimateAtlas = true;
-		} else {
-			var split:Array<String> = character.imageFile.split(',');
-			var charFrames:FlxAtlasFrames = Paths.getAtlas(split[0].trim());
-
-			if(split.length > 1) {
-				var original:FlxAtlasFrames = charFrames;
-				charFrames = new FlxAtlasFrames(charFrames.parent);
-				charFrames.addAtlas(original, true);
-				for (i in 1...split.length) {
-					var extraFrames:FlxAtlasFrames = Paths.getAtlas(split[i].trim());
-					if(extraFrames != null) charFrames.addAtlas(extraFrames, true);
-				}
-			}
-			character.frames = charFrames;
-		}
+		} else character.frames = Paths.getMultiAtlas(character.imageFile.split(','));
 
 		for (anim in anims) {
 			var animAnim:String = '' + anim.anim;
@@ -897,8 +882,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		} else if(FlxG.keys.justPressed.ESCAPE) {
 			if(!_goToPlayState) {
 				if(!unsavedProgress) {
-					FlxG.mouse.visible = false;
-					FlxG.switchState(() -> new states.editors.MasterEditorMenu());
+					FlxG.switchState(() -> new MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				} else openSubState(new ExitConfirmationPrompt());
 			} else {
