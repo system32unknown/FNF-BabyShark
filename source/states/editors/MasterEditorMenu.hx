@@ -9,8 +9,7 @@ class MasterEditorMenu extends MusicBeatState {
 		'Menu Character Editor',
 		'Dialogue Editor',
 		'Dialogue Portrait Editor',
-		'Note Splash Debug',
-		'Chart Editor (Old)'
+		'Note Splash Debug'
 	];
 	var grpTexts:FlxTypedGroup<Alphabet>;
 	var directories:Array<String> = [null];
