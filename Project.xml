@@ -92,10 +92,8 @@
 	<haxeflag name="--macro" value="addMetadata('@:build(macros.FlxBasicMacro.buildFlxBasic())', 'flixel.FlxBasic')"/>
 
 	<!--hxVLC Defines-->
-	<section if="VIDEOS_ALLOWED">
-		<haxedef name="HXC_LIBVLC_LOGGING" if="debug"/>
-		<haxedef name="HXVLC_NO_SHARE_DIRECTORY"/>
-	</secttion>
+	<haxedef name="HXC_LIBVLC_LOGGING" if="VIDEOS_ALLOWED debug"/>
+	<haxedef name="HXVLC_NO_SHARE_DIRECTORY" if="VIDEOS_ALLOWED"/>
 
 	<!-- _________________________________Custom_______________________________ -->
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
