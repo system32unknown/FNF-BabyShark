@@ -7,6 +7,7 @@ import states.*;
 import backend.Highscore;
 import backend.Song;
 import objects.StrumNote;
+import flixel_5_3_1.ParallaxSprite; // flixel 5 render pipeline
 
 class FunkinLua {
 	#if LUA_ALLOWED public var lua:State = null; #end
@@ -658,6 +659,18 @@ class FunkinLua {
 			MusicBeatState.getVariables().set(tag, leSprite);
 		});
 
+		set("makeParallaxSprite", function(tag:String, ?image:String = null, ?x:Float = 0, ?y:Float = 0) {
+			tag = tag.replace('.', '');
+			LuaUtils.destroyObject(tag);
+			var leSprite:ParallaxSprite = new ParallaxSprite(x, y, Paths.image(image));
+			MusicBeatState.getVariables().set(tag, leSprite);
+			leSprite.active = true;
+		});
+		set("fixateParallaxSprite", function(obj:String, anchorX:Int = 0, anchorY:Int = 0, scrollOneX:Float = 1, scrollOneY:Float = 1, scrollTwoX:Float = 1.1, scrollTwoY:Float = 1.1, direct:String = 'horizontal') {
+			var spr:ParallaxSprite = LuaUtils.getObjectDirectly(obj, false);
+			if(spr != null) spr.fixate(anchorX, anchorY, scrollOneX, scrollOneY, scrollTwoX, scrollTwoY, direct);
+		});
+
 		set("makeGraphic", function(obj:String, width:Int = 256, height:Int = 256, color:String = 'FFFFFF') {
 			var spr:FlxSprite = LuaUtils.getVarInstance(obj, true);
 
@@ -737,6 +750,16 @@ class FunkinLua {
 				else GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), mySprite);
 			}
 			return true;
+		});
+		set("addParallaxSprite", function(tag:String, front:Bool = false) {
+			var spr:ParallaxSprite = MusicBeatState.getVariables().get(tag);
+			var instance:flixel.FlxState = LuaUtils.getInstance();
+			if(front) instance.add(spr);
+			else {
+				if(PlayState.instance == null || !PlayState.instance.isDead)
+					instance.insert(instance.members.indexOf(LuaUtils.getLowestCharacterGroup()), spr);
+				else GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), spr);
+			}
 		});
 		set("setGraphicSize", function(obj:String, x:Int, y:Int = 0, updateHitbox:Bool = true) {
 			var poop:FlxSprite = LuaUtils.getVarInstance(obj);

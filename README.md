@@ -40,3 +40,4 @@ This Engine is windows exclusive. (Apple and Linux Support Soon.)
 * Keoiki - Note Splash Animations
 * superpowers04 - LUA JIT Fork and some Lua reworks
 * Raltyro - Maintainer of Psike Engine
+* It'z_Miles - Linear GFX Transformations Library (ParallaxLT)

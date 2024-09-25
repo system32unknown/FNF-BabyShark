@@ -440,6 +440,15 @@ class EditorPlayState extends MusicBeatSubstate {
 			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 
+		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
+			mstimingTxt.setFormat(Paths.font("vcr.ttf"), 20, SpriteUtil.dominantColor(rating), CENTER, OUTLINE, FlxColor.BLACK);
+			mstimingTxt.text = '${MathUtil.truncateFloat(noteDiff / playbackRate)}ms';
+			mstimingTxt.setPosition(rating.x + 100, rating.y + 100);
+			mstimingTxt.updateHitbox();
+			mstimingTxt.ID = comboGroup.ID++;
+			comboGroup.add(mstimingTxt);
+		}
+
 		if (showComboNum) {
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
 			var daLoop:Int = 0;
@@ -458,6 +467,11 @@ class EditorPlayState extends MusicBeatSubstate {
 				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 			}
 		}
+
+		if (ClientPrefs.data.showMsTiming) {
+			if (msTimingTween != null) {mstimingTxt.alpha = 1; msTimingTween.cancel();}
+			msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {startDelay: Conductor.crochet * .001 / playbackRate});
+		}
 		comboGroup.sort(CoolUtil.sortByID);
 	}
 
@@ -473,13 +487,23 @@ class EditorPlayState extends MusicBeatSubstate {
 		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time + Conductor.offset;
 
 		// obtain notes that the player can hit
-		final plrInputNotes:Array<Note> = notes.members.filter(function(n:Note):Bool {
-			final noteIsHittable:Bool = n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit;
-			return n != null && noteIsHittable && !n.isSustainNote && n.noteData == key;
-		});
+
+		var plrInputNotes:Array<Note> = notes.members.filter((n:Note) -> return n != null && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit && !n.isSustainNote && n.noteData == key);
 		plrInputNotes.sort((a:Note, b:Note) -> Std.int(a.strumTime - b.strumTime));
 
-		if (plrInputNotes.length != 0) goodNoteHit(plrInputNotes[0]); // nicer on the GPU usage than doing `> 0` lol
+		if (plrInputNotes.length != 0) { // slightly faster than doing `> 0` lol
+			var funnyNote:Note = plrInputNotes[0]; // front note
+			if (plrInputNotes.length > 1) {
+				var doubleNote:Note = plrInputNotes[1];
+
+				if (doubleNote.noteData == funnyNote.noteData) {
+					if (Math.abs(doubleNote.strumTime - funnyNote.strumTime) < 1.) invalidateNote(doubleNote);
+					else if (doubleNote.strumTime < funnyNote.strumTime) funnyNote = doubleNote;
+				}
+			}
+
+			goodNoteHit(funnyNote);
+		}
 		Conductor.songPosition = lastTime;
 
 		final spr:StrumNote = playerStrums.members[key];
@@ -507,11 +531,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	// Hold notes
 	function keysCheck():Void {
 		var holdArray:Array<Bool> = [for (key in keysArray) controls.pressed(key)];
-		if (notes.length != 0) {
-			for (sustainNote in notes.members.filter((n:Note) -> return n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit)) {
-				if (sustainNote.isSustainNote && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
-			}
-		}
+		if (notes.length > 0) for (n in notes) if ((n != null && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit) && n.isSustainNote && holdArray[n.noteData]) goodNoteHit(n);
 	}
 
 	function opponentNoteHit(note:Note):Void {

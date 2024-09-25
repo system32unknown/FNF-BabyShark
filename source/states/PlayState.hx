@@ -177,6 +177,9 @@ class PlayState extends MusicBeatState {
 	var timeTxt:FlxText;
 	var judgementCounter:FlxText;
 
+	var msTimingTween:FlxTween;
+	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
+
 	public static var campaignScore:Int = 0;
 	public static var seenCutscene:Bool = false;
 	public static var deathCounter:Int = 0;
@@ -999,13 +1002,11 @@ class PlayState extends MusicBeatState {
 	
 				var gottaHitNote:Bool = (songNotes[1] < EK.keys(mania));
 	
-				if (i != 0) { // CLEAR ANY POSSIBLE GHOST NOTES
-					for (evilNote in unspawnNotes) {
-						var matches:Bool = (noteColumn == evilNote.noteData && gottaHitNote == evilNote.mustPress && evilNote.noteType == noteType);
-						if (matches && Math.abs(spawnTime - evilNote.strumTime) == 0.0) {
-							evilNote.destroy();
-							unspawnNotes.remove(evilNote);
-						}
+				if (i != 0) for (evilNote in unspawnNotes) { // CLEAR ANY POSSIBLE GHOST NOTES
+					var matches:Bool = (noteColumn == evilNote.noteData && gottaHitNote == evilNote.mustPress && evilNote.noteType == noteType);
+					if (matches && Math.abs(spawnTime - evilNote.strumTime) == 0.0) {
+						evilNote.destroy();
+						unspawnNotes.remove(evilNote);
 					}
 				}
 	
@@ -1844,8 +1845,8 @@ class PlayState extends MusicBeatState {
 
 	function getScoreText():String {
 		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps, maxNPS])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
-		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('break_text', '| Breaks:{1} ', [songMisses]); 
-		if (!cpuControlled) tempText += Language.getPhrase('| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
+		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('miss_text', '| Misses:{1} ', [songMisses]); 
+		if (!cpuControlled) tempText += Language.getPhrase('acc_text', '| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
 		return tempText;
 	}
 
@@ -1908,6 +1909,15 @@ class PlayState extends MusicBeatState {
 			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 
+		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
+			mstimingTxt.setFormat(Paths.font("vcr.ttf"), 20, SpriteUtil.dominantColor(rating), CENTER, OUTLINE, FlxColor.BLACK);
+			mstimingTxt.text = '${MathUtil.truncateFloat(noteDiff / playbackRate)}ms';
+			mstimingTxt.setPosition(rating.x + 100, rating.y + 100);
+			mstimingTxt.updateHitbox();
+			mstimingTxt.ID = comboGroup.ID++;
+			comboGroup.add(mstimingTxt);
+		}
+
 		if (showComboNum) {
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
 			var daLoop:Int = 0;
@@ -1925,6 +1935,11 @@ class PlayState extends MusicBeatState {
 				comboGroup.add(numScore);
 				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 			}
+		}
+
+		if (ClientPrefs.data.showMsTiming) {
+			if (msTimingTween != null) {mstimingTxt.alpha = 1; msTimingTween.cancel();}
+			msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 		comboGroup.sort(CoolUtil.sortByID);
 	}
@@ -1953,14 +1968,24 @@ class PlayState extends MusicBeatState {
 		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time + Conductor.offset;
 
 		// obtain notes that the player can hit
-		final plrInputNotes:Array<Note> = notes.members.filter(function(n:Note):Bool {
-			final noteIsHittable:Bool = n != null && strumsBlocked[n.noteData] == false && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit;
-			return noteIsHittable && !n.isSustainNote && n.noteData == key;
+		var plrInputNotes:Array<Note> = notes.members.filter(function(n:Note):Bool {
+			var canHit:Bool = n != null && !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit;
+			return canHit && !n.isSustainNote && n.noteData == key;
 		});
 		plrInputNotes.sort((a:Note, b:Note) -> Std.int(a.strumTime - b.strumTime));
 
-		if (plrInputNotes.length != 0) goodNoteHit(plrInputNotes[0]); // nicer on the GPU usage than doing `> 0` lol
-		else {
+		if (plrInputNotes.length != 0) { // slightly faster than doing `> 0` lol
+			var funnyNote:Note = plrInputNotes[0]; // front note
+
+			if (plrInputNotes.length > 1) {
+				var doubleNote:Note = plrInputNotes[1];
+				if (doubleNote.noteData == funnyNote.noteData) {
+					if (Math.abs(doubleNote.strumTime - funnyNote.strumTime) < 1.) invalidateNote(doubleNote);
+					else if (doubleNote.strumTime < funnyNote.strumTime) funnyNote = doubleNote;
+				}
+			}
+			goodNoteHit(funnyNote);
+		} else {
 			if (ClientPrefs.data.ghostTapping) callOnScripts('onGhostTap', [key]);
 			else noteMissPress(key);
 		}
@@ -2001,8 +2026,10 @@ class PlayState extends MusicBeatState {
 	function keysCheck():Void {
 		var holdArray:Array<Bool> = [for (key in keysArray) controls.pressed(key)];
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
-			if (notes.length > 0) for (sustainNote in notes.members.filter((n:Note) -> return !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.blockHit)) {
-				if (sustainNote.isSustainNote && holdArray[sustainNote.noteData]) goodNoteHit(sustainNote);
+			if (notes.length > 0) for (n in notes) { // I can't do a filter here, that's kinda awesome
+				if ((n != null && !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit) && n.isSustainNote) {
+					if (holdArray[n.noteData]) goodNoteHit(n);
+				}
 			}
 			if (!holdArray.contains(true) || endingSong) playerDance();
 		}
@@ -2205,6 +2232,11 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function destroy() {
+		if (CustomSubstate.instance != null) {
+			closeSubState();
+			resetSubState();
+		}
+
 		for (lua in luaArray) {lua.call('onDestroy'); lua.stop();}
 		luaArray = null;
 		FunkinLua.customFunctions.clear();
@@ -2212,12 +2244,6 @@ class PlayState extends MusicBeatState {
 		hscriptArray = null;
 		stagesFunc((stage:BaseStage) -> stage.destroy());
 		for (point in [campoint, camlockpoint, ratingAcc, ratingVel]) point = flixel.util.FlxDestroyUtil.put(point);
-
-		if (CustomSubstate.instance != null) {
-			closeSubState();
-			CustomSubstate.instance.destroy();
-			subState = null;
-		}
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);

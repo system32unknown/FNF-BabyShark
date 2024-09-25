@@ -75,6 +75,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(option);
 		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms', BOOL));
 		addOption(new Option('Show Combo Counter', 'If checked, the combo counter will be shown.', 'showComboCounter', BOOL));
+		addOption(new Option('Show ms Timing', 'If checked, the ms timing will be shown.', 'showMsTiming', BOOL));
 		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'showNPS', BOOL));
 		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'showJudgement', BOOL));
 		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'ratingDisplay', STRING, ['Hud', 'World']));

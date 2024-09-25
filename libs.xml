@@ -16,6 +16,7 @@
 	<lib name="hxvlc"/>
 	<lib name="tjson"/>
 	<lib name="markdown"/>
+	<lib name="parallaxlt"/>
 
 	<!-- Audio Visualizers -->
 	<git name="funkin.vis" url="https://github.com/FunkinCrew/funkVis"/>

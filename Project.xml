@@ -57,6 +57,7 @@
 	<haxelib name="grig.audio"/>
 	<haxelib name="funkin.vis"/>
 	<haxelib name="markdown"/>
+	<haxelib name="parallaxlt"/>
 
 	<!-- ______________________________Haxedefines_____________________________ -->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>

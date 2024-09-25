@@ -52,6 +52,7 @@ import flixel.input.keyboard.FlxKey;
 	public var hitsoundVolume:Float = 0;
 	public var pauseMusic:String = 'Tea Time';
 	public var comboStacking:Bool = false;
+	public var showMsTiming:Bool = false;
 	public var showComboCounter:Bool = false;
 	public var showNPS:Bool = false;
 	public var smoothHealth:Bool = false;
