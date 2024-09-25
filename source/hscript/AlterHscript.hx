@@ -26,7 +26,7 @@ class IrisCall {
  * along with having neat helper functions to initialize and stop scripts
  *
  * It is highly recommended that you override this class to add custom defualt variables and such.
- * (inspired of Hscript-Iris)
+ * Hscript-Iris but I modified it.
 **/
 class AlterHscript {
 	static function getDefaultPos(name:String = "hscript-alter"):haxe.PosInfos {

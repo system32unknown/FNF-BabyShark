@@ -7,7 +7,7 @@ import objects.Note;
 
 import shaders.RGBPalette;
 
-class NotesSubState extends MusicBeatSubstate {
+class NotesColorSubState extends MusicBeatSubstate {
 	var onModeColumn:Bool = true;
 	var curSelectedMode:Int = 0;
 	var curSelectedNote:Int = 0;
@@ -43,6 +43,7 @@ class NotesSubState extends MusicBeatSubstate {
 		
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Note Colors Menu"); #end
 		
+		onPixel = PlayState.isPixelStage;
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFEA71FD;
 		bg.screenCenter();

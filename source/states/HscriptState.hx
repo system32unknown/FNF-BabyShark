@@ -11,7 +11,6 @@ class HscriptState extends MusicBeatState {
 
         hscriptRef = new HScript(null, file); //skip init create call to avoid errors
         hscriptRef.set('instance', instance);
-        hscriptRef.setParent(instance);
     }
 
     override function create() {

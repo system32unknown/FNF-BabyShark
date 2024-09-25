@@ -12,7 +12,6 @@ class HscriptSubstate extends MusicBeatSubstate {
         hscriptRef = new HScript(null, file);
         hscriptRef.set("instance", instance);
         hscriptRef.call("new", args);
-        hscriptRef.setParent(instance);
     }
 
     override function update(elapsed:Float) {

@@ -100,6 +100,8 @@ class FunkinLua {
 			set('ratingAccuracy', 0);
 			set('ratingName', '');
 			set('ratingFC', '');
+			set('totalPlayed', 0);
+			set('totalNotesHit', 0.0);
 	
 			set('inGameOver', false);
 			set('mustHitSection', false);

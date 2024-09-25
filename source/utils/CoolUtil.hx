@@ -155,4 +155,25 @@ class CoolUtil {
 		}
 		return formattedtime;
 	}
+
+	public static function recursivelyReadFolders(path:String, ?erasePath:Bool = true) {
+		var ret:Array<String> = [];
+		for (i in FileSystem.readDirectory(path)) returnFileName(i, ret, path);
+		if (erasePath) {
+			path += '/';
+			for (i in 0...ret.length) {
+				ret[i] = ret[i].replace(path, '');
+			}
+		}
+		return ret;
+	}
+
+	static function returnFileName(path:String, toAdd:Array<String>, full:String) {
+		var fullPath:String = full + '/' + path;
+		if (FileSystem.isDirectory(fullPath)) {
+			for (i in FileSystem.readDirectory(fullPath)) {
+				returnFileName(i, toAdd, fullPath);
+			}
+		} else toAdd.push(fullPath.replace('.json', ''));
+	}
 }
