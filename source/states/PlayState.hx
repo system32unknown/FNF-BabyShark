@@ -233,7 +233,10 @@ class PlayState extends MusicBeatState {
 	public static var nextReloadAll:Bool = false;
 	override public function create() {
 		Paths.clearStoredMemory();
-		if(nextReloadAll) Paths.clearUnusedMemory();
+		if(nextReloadAll) {
+			Paths.clearUnusedMemory();
+			Language.reloadPhrases();
+		}
 		nextReloadAll = false;
 		
 		startCallback = startCountdown;

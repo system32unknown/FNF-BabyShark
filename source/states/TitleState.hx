@@ -42,11 +42,11 @@ class TitleState extends MusicBeatState {
 
 	override function create():Void {
 		Paths.clearStoredMemory();
+		super.create();
 		Paths.clearUnusedMemory();
 		FlxTransitionableState.skipNextTransOut = false;
 		FlxG.mouse.visible = false;
 		persistentUpdate = persistentDraw = true;
-		super.create();
 
 		#if CHECK_FOR_UPDATES checkUpdate(); #end
 		loadJsonData();
@@ -140,6 +140,7 @@ class TitleState extends MusicBeatState {
 					titleStartY = titleJSON.titlestarty;
 					musicBPM = titleJSON.bpm;
 
+					if(titleJSON.animation != null && titleJSON.animation.length > 0) animationName = titleJSON.animation;
 					if(titleJSON.dance_left != null && titleJSON.dance_left.length > 0) danceLeftFrames = titleJSON.dance_left;
 					if(titleJSON.dance_right != null && titleJSON.dance_right.length > 0) danceRightFrames = titleJSON.dance_right;
 					useIdle = (titleJSON.idle == true);

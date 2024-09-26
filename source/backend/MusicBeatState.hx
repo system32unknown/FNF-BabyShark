@@ -26,7 +26,7 @@ class MusicBeatState extends flixel.FlxState {
 
 		super.create();
 
-		if (!skip) openSubState(new CustomFadeTransition(.6, true));
+		if (!skip) openSubState(new CustomFadeTransition(.5, true));
 		FlxTransitionableState.skipNextTransOut = false;
 	}
 
@@ -105,7 +105,7 @@ class MusicBeatState extends flixel.FlxState {
 
 	override function startOutro(onOutroComplete:()->Void):Void {
 		if (!FlxTransitionableState.skipNextTransIn) {
-			FlxG.state.openSubState(new CustomFadeTransition(.6, false));
+			FlxG.state.openSubState(new CustomFadeTransition(.5, false));
 			CustomFadeTransition.finishCallback = onOutroComplete;
 			return;
 		}
