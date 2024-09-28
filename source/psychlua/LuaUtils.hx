@@ -98,9 +98,8 @@ class LuaUtils {
 		if(FileSystem.exists(path)) {
 			if(settings == null || !settings.exists(saveTag)) {
 				if(settings == null) settings = new Map<String, Dynamic>();
-				var data:String = File.getContent(path);
 				try {
-					var parsedJson:Dynamic = tjson.TJSON.parse(data);
+					var parsedJson:Dynamic = tjson.TJSON.parse(File.getContent(path));
 					for (i in 0...parsedJson.length) {
 						var sub:Dynamic = parsedJson[i];
 						if(sub != null && sub.save != null && !settings.exists(sub.save)) {
