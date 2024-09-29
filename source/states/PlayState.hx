@@ -1373,9 +1373,6 @@ class PlayState extends MusicBeatState {
 			}
 			checkEventNote();
 		}
-
-		setOnScripts('cameraX', camFollow.x);
-		setOnScripts('cameraY', camFollow.y);
 		setOnScripts('botPlay', cpuControlled);
 		callOnScripts('onUpdatePost', [elapsed]);
 	}

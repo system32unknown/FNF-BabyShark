@@ -75,10 +75,6 @@ class FunkinLua {
 		set('seenCutscene', PlayState.seenCutscene);
 		set('hasVocals', PlayState.SONG.needsVoices);
 
-		// Camera pos
-		set('cameraX', 0);
-		set('cameraY', 0);
-
 		// Screen stuff
 		set('screenWidth', FlxG.width);
 		set('screenHeight', FlxG.height);
@@ -94,6 +90,7 @@ class FunkinLua {
 			set('misses', 0);
 			set('hits', 0);
 			set('combo', 0);
+			set('deaths', PlayState.deathCounter);
 	
 			set('mania', PlayState.SONG.mania);
 	
@@ -615,9 +612,21 @@ class FunkinLua {
 			}
 			return target;
 		});
+
+		set("setCameraScroll", function(x:Float, y:Float) FlxG.camera.scroll.set(x - FlxG.width / 2, y - FlxG.height / 2));
+		set("setCameraFollowPoint", function(x:Float, y:Float) game.camFollow.setPosition(x, y));
+		set("addCameraScroll", function(?x:Float = 0, ?y:Float = 0) FlxG.camera.scroll.add(x, y));
+		set("addCameraFollowPoint", function(?x:Float = 0, ?y:Float = 0) {
+			game.camFollow.x += x;
+			game.camFollow.y += y;
+		});
+		set("getCameraScrollX", () -> FlxG.camera.scroll.x + FlxG.width / 2);
+		set("getCameraScrollY", () -> FlxG.camera.scroll.y + FlxG.height / 2);
+		set("getCameraFollowX", () -> game.camFollow.x);
+		set("getCameraFollowY", () -> game.camFollow.y);
 		set("cameraShake", (camera:String, intensity:Float, duration:Float, axes:String = 'xy') -> LuaUtils.cameraFromString(camera).shake(intensity, duration * game.playbackRate, true, LuaUtils.axesFromString(axes)));
 		set("cameraFlash", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).flash(CoolUtil.colorFromString(color), duration * game.playbackRate, null, forced));
-		set("cameraFade", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).fade(CoolUtil.colorFromString(color), duration * game.playbackRate, false, null, forced));
+		set("cameraFade", (camera:String, color:String, duration:Float, forced:Bool, ?fadeOut:Bool = false) -> LuaUtils.cameraFromString(camera).fade(CoolUtil.colorFromString(color), duration * game.playbackRate, fadeOut, null, forced));
 
 		set("setRatingPercent", (value:Float) -> return game.ratingPercent = value);
 		set("setRatingName", (value:String) -> return game.ratingName = value);
@@ -842,15 +851,15 @@ class FunkinLua {
 			return true;
 		});
 
-		Lua_helper.add_callback(lua, "luaSpriteExists", function(tag:String) {
+		set("luaSpriteExists", function(tag:String) {
 			var obj:FlxSprite = MusicBeatState.getVariables().get(tag);
 			return (obj != null && Std.isOfType(obj, FlxSprite));
 		});
-		Lua_helper.add_callback(lua, "luaTextExists", function(tag:String) {
+		set("luaTextExists", function(tag:String) {
 			var obj:FlxText = MusicBeatState.getVariables().get(tag);
 			return (obj != null && Std.isOfType(obj, FlxText));
 		});
-		Lua_helper.add_callback(lua, "luaSoundExists", function(tag:String) {
+		set("luaSoundExists", function(tag:String) {
 			tag = LuaUtils.formatVariable('sound_$tag');
 			var obj:FlxSound = MusicBeatState.getVariables().get(tag);
 			return (obj != null && Std.isOfType(obj, FlxSound));
