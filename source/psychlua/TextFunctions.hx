@@ -2,7 +2,7 @@ package psychlua;
 
 class TextFunctions {
     public static function implement(funk:FunkinLua) {
-		funk.set("makeLuaText", function(tag:String, text:String, width:Int, x:Float, y:Float) {
+		funk.set("makeLuaText", function(tag:String, ?text:String = '', ?width:Int = 0, ?x:Float = 0, ?y:Float = 0) {
 			tag = tag.replace('.', '');
 			LuaUtils.destroyObject(tag);
 			var leText:FlxText = new FlxText(x, y, width, text, 16);

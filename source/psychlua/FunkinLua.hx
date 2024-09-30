@@ -201,45 +201,16 @@ class FunkinLua {
 		set("callScript", function(luaFile:String, funcName:String, args:Array<Dynamic>) {
 			if(args == null) args = [];
 
-			var foundScript:String = findScript(luaFile);
-			if(foundScript != null)
-				for (luaInstance in game.luaArray)
-					if(luaInstance.scriptName == foundScript) {
-						luaInstance.call(funcName, args);
-						return;
-					}
+			for (luaInstance in game.luaArray)
+				if(luaInstance.scriptName == luaFile)
+					return luaInstance.call(funcName, args);
+			return null;
 		});
 
-		set("setGlobalFromScript", function(luaFile:String, global:String, val:Dynamic) { // sets the global from a script
-			var foundScript:String = findScript(luaFile);
-			if(foundScript != null)
-				for (luaInstance in game.luaArray)
-					if(luaInstance.scriptName == foundScript)
-						luaInstance.set(global, val);
-		});
+		set("isRunning", (scriptFile:String) -> {
+			for (luaInstance in game.luaArray) if(luaInstance.scriptName == scriptFile) return true;
+			for (hscriptInstance in game.hscriptArray) if(hscriptInstance.origin == scriptFile) return true;
 
-		set("getGlobalFromScript", function(luaFile:String, global:String) { // returns the global from a script
-			var foundScript:String = findScript(luaFile);
-			if(foundScript != null)
-				for (luaInstance in game.luaArray)
-					if(luaInstance.scriptName == foundScript) {
-						Lua.getglobal(luaInstance.lua, global);
-						if(Lua.isnumber(luaInstance.lua, -1)) Lua.pushnumber(lua, Lua.tonumber(luaInstance.lua, -1));
-						else if(Lua.isstring(luaInstance.lua, -1)) Lua.pushstring(lua, Lua.tostring(luaInstance.lua, -1));
-						else if(Lua.isboolean(luaInstance.lua, -1)) Lua.pushboolean(lua, Lua.toboolean(luaInstance.lua, -1));
-						else Lua.pushnil(lua);
-
-						Lua.pop(luaInstance.lua, 1); // remove the global
-						return;
-					}
-		});
-
-		set("isRunning", (file:String, ?checkForHaxe:Bool = false) -> {
-			var foundScript:String = findScript(file, (checkForHaxe ? '.hx' : '.lua'));
-			if (foundScript != null) {
-				if (checkForHaxe) for (hscriptInstance in game.hscriptArray)if (hscriptInstance.origin == foundScript) return true;
-				else for (luaInstance in game.luaArray) if (luaInstance.scriptName == foundScript) return true;
-			}
 			return false;
 		});
 
@@ -250,32 +221,31 @@ class FunkinLua {
 		set("getVar", MusicBeatState.getVariables().get);
 		set("removeVar", MusicBeatState.getVariables().remove);
 
-		set("addLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false) { //would be dope asf.
-			var foundScript:String = findScript(luaFile);
-			if(foundScript != null) {
+		set("addLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false) {
+			if(#if sys FileSystem.exists(luaFile) #else Assets.exists(luaFile, TEXT)#end) {
 				if(!ignoreAlreadyRunning)
 					for (luaInstance in game.luaArray)
-						if(luaInstance.scriptName == foundScript) {
-							luaTrace('addLuaScript: The script "$foundScript" is already running!');
+						if(luaInstance.scriptName == luaFile) {
+							luaTrace('addLuaScript: The script "' + luaFile + '" is already running!');
 							return;
 						}
 
-				new FunkinLua(foundScript);
+				new FunkinLua(luaFile);
 				return;
 			}
 			luaTrace("addLuaScript: Script doesn't exist!", false, false, FlxColor.RED);
 		});
-		set("addHScript", function(hscriptFile:String, ?ignoreAlreadyRunning:Bool = false) {
+		set("addHScript", function(scriptFile:String, ?ignoreAlreadyRunning:Bool = false) {
 			#if HSCRIPT_ALLOWED
-			var foundScript:String = findScript(hscriptFile, '.hx');
-			if(foundScript != null) {
+			if(#if sys FileSystem.exists(scriptFile) #else Assets.exists(scriptFile, TEXT)#end) {
 				if(!ignoreAlreadyRunning)
 					for (script in game.hscriptArray)
-						if(script.origin == foundScript) {
-							luaTrace('addHScript: The script "$foundScript" is already running!');
+						if(script.origin == scriptFile) {
+							luaTrace('addHScript: The script "' + scriptFile + '" is already running!');
 							return;
 						}
-				PlayState.instance.initHScript(foundScript);
+
+				PlayState.instance.initHScript(scriptFile);
 				return;
 			}
 			luaTrace("addHScript: Script doesn't exist!", false, false, FlxColor.RED);
@@ -283,40 +253,35 @@ class FunkinLua {
 			luaTrace("addHScript: HScript is not supported on this platform!", false, false, FlxColor.RED);
 			#end
 		});
-		set("removeLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false):Bool {
-			var foundScript:String = findScript(luaFile);
-			if(foundScript != null) {
-				if(!ignoreAlreadyRunning)
-					for (luaInstance in game.luaArray)
-						if(luaInstance.scriptName == foundScript) {
-							luaInstance.stop();
-							trace('Closing script: ' + luaInstance.scriptName);
-							return true;
-						}
+		set("removeLuaScript", function(luaFile:String) {
+			var foundAny:Bool = false;
+			for (luaInstance in game.luaArray) {
+				if(luaInstance.scriptName == luaFile) {
+					trace('Closing lua script $luaFile');
+					luaInstance.stop();
+					foundAny = true;
+				}
 			}
+			if(foundAny) return true;
 			luaTrace('removeLuaScript: Script $luaFile isn\'t running!', false, false, FlxColor.RED);
 			return false;
 		});
-		set("removeHScript", function(hscriptFile:String, ?ignoreAlreadyRunning:Bool = false) {
+		set("removeHScript", function(scriptFile:String) {
 			#if HSCRIPT_ALLOWED
-			var foundScript:String = findScript(hscriptFile, '.hx');
-			if (foundScript != null) {
-				if (!ignoreAlreadyRunning)
-					for (script in game.hscriptArray)
-						if (script.origin == foundScript) {
-							trace('Closing script: ' + script.origin);
-							game.hscriptArray.remove(script);
-							script.destroy();
-							return true;
-						}
+			var foundAny:Bool = false;
+			for (script in game.hscriptArray) {
+				if(script.origin == scriptFile) {
+					trace('Closing hscript $scriptFile');
+					script.destroy();
+					foundAny = true;
+				}
 			}
-	
-			luaTrace('removeHScript: Script $hscriptFile isn\'t running!', false, false, FlxColor.RED);
-			#else
-			luaTrace('removeHScript: HScript is not supported on this platform!', false, false, FlxColor.RED);
-			#end
-	
+			if(foundAny) return true;
+			luaTrace('removeHScript: Script $scriptFile isn\'t running!', false, false, FlxColor.RED);
 			return false;
+			#else
+			luaTrace("removeHScript: HScript is not supported on this platform!", false, false, FlxColor.RED);
+			#end
 		});
 
 		set("loadSong", function(?name:String = null, ?difficultyNum:Int = -1, ?difficultyArray:Array<String> = null) {
@@ -451,21 +416,21 @@ class FunkinLua {
 				}));
 			} else FlxTween.tween(strumNote, fieldsNValues, duration, {ease: LuaUtils.getTweenEaseByString(ease)});
 		});
-		set("mouseClicked", function(button:String) {
+		set("mouseClicked", function(button:String = 'left') {
 			return switch(button.trim().toLowerCase()) {
 				case 'middle': FlxG.mouse.justPressedMiddle;
 				case 'right': FlxG.mouse.justPressedRight;
 				default: FlxG.mouse.justPressed;
 			}
 		});
-		set("mousePressed", function(button:String) {
+		set("mousePressed", function(button:String = 'left') {
 			return switch(button.trim().toLowerCase()) {
 				case 'middle': FlxG.mouse.pressedMiddle;
 				case 'right': FlxG.mouse.pressedRight;
 				default: FlxG.mouse.pressed;
 			}
 		});
-		set("mouseReleased", function(button:String) {
+		set("mouseReleased", function(button:String = 'left') {
 			return switch(button.trim().toLowerCase()) {
 				case 'middle': FlxG.mouse.justReleasedMiddle;
 				case 'right': FlxG.mouse.justReleased;
@@ -632,8 +597,8 @@ class FunkinLua {
 		set("setRatingName", (value:String) -> return game.ratingName = value);
 		set("setRatingFC", (value:String) -> return game.ratingFC = value);
 
-		set("getMouseX", (camera:String = 'game') -> return LuaUtils.getMousePoint(camera, 'x'));
-		set("getMouseY", (camera:String = 'game') -> return LuaUtils.getMousePoint(camera, 'y'));
+		set("getMouseX", (?camera:String = 'game') -> return LuaUtils.getMousePoint(camera, 'x'));
+		set("getMouseY", (?camera:String = 'game') -> return LuaUtils.getMousePoint(camera, 'y'));
 		set("getMidpointX", (variable:String) -> return LuaUtils.getPoint(variable, 'midpoint', 'x'));
 		set("getMidpointY", (variable:String) -> return LuaUtils.getPoint(variable, 'midpoint', 'y'));
 		set("getGraphicMidpointX", (variable:String) -> return LuaUtils.getPoint(variable, 'graphic', 'x'));
@@ -1049,22 +1014,6 @@ class FunkinLua {
 		return (result == 'true');
 	}
 	#end
-
-	function findScript(scriptFile:String, ext:String = '.lua'):String {
-		if(!scriptFile.endsWith(ext)) scriptFile += ext;
-		var preloadPath:String = Paths.getSharedPath(scriptFile);
-		#if MODS_ALLOWED
-		var path:String = Paths.modFolders(scriptFile);
-		if(FileSystem.exists(scriptFile)) return scriptFile;
-		else if(FileSystem.exists(path)) return path;
-	
-		if(FileSystem.exists(preloadPath))
-		#else
-		if(Assets.exists(preloadPath))
-		#end
-			return preloadPath;
-		return null;
-	}
 
 	function getErrorMessage(status:Int = 0):String {
 		#if LUA_ALLOWED
