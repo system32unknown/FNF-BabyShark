@@ -19,9 +19,10 @@ class SoundFunctions {
 					if(!loop) variables.remove(tag);
 					if(game != null) game.callOnLuas('onSoundFinished', [originalTag]);
 				}));
-				return;
+				return tag;
 			}
 			FlxG.sound.play(Paths.sound(sound), volume);
+			return null;
 		});
 		funk.set("stopSound", function(tag:String) {
 			if(tag == null || tag.length < 1) {
@@ -123,11 +124,17 @@ class SoundFunctions {
 			}
 		});
 		funk.set("getSoundPitch", function(tag:String) {
+			#if FLX_PITCH
 			tag = LuaUtils.formatVariable('sound_$tag');
 			var snd:FlxSound = MusicBeatState.getVariables().get(tag);
 			return snd != null ? snd.pitch : 0;
+			#else
+			luaTrace("getSoundPitch: Sound Pitch is not supported on this platform!", false, false, FlxColor.RED);
+			return 1;
+			#end
 		});
 		funk.set("setSoundPitch", function(tag:String, value:Float, doPause:Bool = false) {
+			#if FLX_PITCH
 			tag = LuaUtils.formatVariable('sound_$tag');
 			var snd:FlxSound = MusicBeatState.getVariables().get(tag);
 			if(snd != null) {
@@ -154,6 +161,9 @@ class SoundFunctions {
 					if (doPause && wasResumed) snd.play();
 				}
 			}
+			#else
+			luaTrace("setSoundPitch: Sound Pitch is not supported on this platform!", false, false, FlxColor.RED);
+			#end
 		});
     }
 }

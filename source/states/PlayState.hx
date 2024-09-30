@@ -906,17 +906,20 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	var updateScoreText:Bool = true;
 	public dynamic function updateScore(miss:Bool = false) {
 		var ret:String = callOnScripts('preUpdateScore', [miss], true);
 		if(ret == LuaUtils.Function_Stop) return;
 
 		judgementCounter.text = 'Max Combo: $maxCombo';
 		for (rating in ratingsData) judgementCounter.text += '\n${CoolUtil.capitalize(rating.name)}: ${rating.hits}';
-		judgementCounter.screenCenter(Y);
-		if (updateScoreText) scoreTxt.text = getScoreText();
-
+		updateScoreText();
 		callOnScripts('onUpdateScore', [miss]);
+	}
+	public dynamic function updateScoreText() {
+		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps, maxNPS])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
+		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('miss_text', '| Misses:{1} ', [songMisses]); 
+		if (!cpuControlled) tempText += Language.getPhrase('acc_text', '| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
+		scoreTxt.text = tempText;
 	}
 
 	public function setSongTime(time:Float) {
@@ -1250,7 +1253,7 @@ class PlayState extends MusicBeatState {
 			}
 			nps = Math.floor(notesHitArray.length);
 			if (nps > maxNPS) maxNPS = nps;
-			if (updateScoreText) scoreTxt.text = getScoreText();
+			updateScoreText();
 		}
 
 		healthLerp = ClientPrefs.data.smoothHealth ? FlxMath.lerp(healthLerp, health, ((health / healthLerp) * (elapsed * 8)) * playbackRate) : health;
@@ -1841,13 +1844,6 @@ class PlayState extends MusicBeatState {
 
 		for (rating in ratingsData) Paths.image(uiPrefix + 'ratings/${rating.image}' + uiPostfix);
 		for (i in 0...10) Paths.image(uiPrefix + 'number/num$i' + uiPostfix);
-	}
-
-	function getScoreText():String {
-		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps, maxNPS])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
-		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('miss_text', '| Misses:{1} ', [songMisses]); 
-		if (!cpuControlled) tempText += Language.getPhrase('acc_text', '| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
-		return tempText;
 	}
 
 	public var ratingAcc:FlxPoint = FlxPoint.get();

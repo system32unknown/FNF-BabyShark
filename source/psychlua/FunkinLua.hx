@@ -79,32 +79,33 @@ class FunkinLua {
 		set('screenWidth', FlxG.width);
 		set('screenHeight', FlxG.height);
 
-		if(game != null) {
-			set('curSection', 0);
-			set('curBeat', 0);
-			set('curStep', 0);
-			set('curDecBeat', 0);
-			set('curDecStep', 0);
-	
-			set('score', 0);
-			set('misses', 0);
-			set('hits', 0);
-			set('combo', 0);
+		if(game != null) @:privateAccess {
+			var curSection:SwagSection = PlayState.SONG.notes[game.curSection];
+			set('curSection', game.curSection);
+			set('curBeat', game.curBeat);
+			set('curStep', game.curStep);
+			set('curDecBeat', game.curDecBeat);
+			set('curDecStep', game.curDecStep);
+
+			set('score', game.songScore);
+			set('misses', game.songMisses);
+			set('hits', game.songHits);
+			set('combo', game.combo);
 			set('deaths', PlayState.deathCounter);
 	
 			set('mania', PlayState.SONG.mania);
-	
-			set('rating', 0);
-			set('ratingAccuracy', 0);
-			set('ratingName', '');
-			set('ratingFC', '');
-			set('totalPlayed', 0);
-			set('totalNotesHit', 0.0);
-	
-			set('inGameOver', false);
-			set('mustHitSection', false);
-			set('altAnim', false);
-			set('gfSection', false);
+
+			set('rating', game.ratingPercent);
+			set('ratingAccuracy', game.ratingAccuracy);
+			set('ratingName', game.ratingName);
+			set('ratingFC', game.ratingFC);
+			set('totalPlayed', game.totalPlayed);
+			set('totalNotesHit', game.totalNotesHit);
+
+			set('inGameOver', GameOverSubstate.instance != null);
+			set('mustHitSection', curSection != null ? (curSection.mustHitSection == true) : false);
+			set('altAnim', curSection != null ? (curSection.altAnim == true) : false);
+			set('gfSection', curSection != null ? (curSection.gfSection == true) : false);
 	
 			set('healthGainMult', game.healthGain);
 			set('healthLossMult', game.healthLoss);
@@ -128,9 +129,9 @@ class FunkinLua {
 			set('defaultGirlfriendX', game.GF_X);
 			set('defaultGirlfriendY', game.GF_Y);
 	
-			set('boyfriendName', PlayState.SONG.player1);
-			set('dadName', PlayState.SONG.player2);
-			set('gfName', PlayState.SONG.gfVersion);
+			set('boyfriendName', game.boyfriend != null ? game.boyfriend.curCharacter : PlayState.SONG.player1);
+			set('dadName', game.dad != null ? game.dad.curCharacter : PlayState.SONG.player2);
+			set('gfName', game.gf != null ? game.gf.curCharacter : PlayState.SONG.gfVersion);
 		}
 
 		// Other settings
@@ -179,37 +180,39 @@ class FunkinLua {
 			game.setOnLuas(varName, arg, exclusions);
 		});
 
-		set("callOnScripts", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
+		set("callOnScripts", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops = false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
 			if(excludeScripts == null) excludeScripts = [];
 			if(ignoreSelf && !excludeScripts.contains(scriptName)) excludeScripts.push(scriptName);
-			game.callOnScripts(funcName, args, ignoreStops, excludeScripts, excludeValues);
-			return true;
+			return game.callOnScripts(funcName, args, ignoreStops, excludeScripts, excludeValues);
 		});
-		set("callOnLuas", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
+		set("callOnLuas", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops = false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
 			if(excludeScripts == null) excludeScripts = [];
 			if(ignoreSelf && !excludeScripts.contains(scriptName)) excludeScripts.push(scriptName);
-			game.callOnLuas(funcName, args, ignoreStops, excludeScripts, excludeValues);
-			return true;
+			return game.callOnLuas(funcName, args, ignoreStops, excludeScripts, excludeValues);
 		});
-		set("callOnHScript", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops=false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
+		set("callOnHScript", function(funcName:String, ?args:Array<Dynamic> = null, ?ignoreStops = false, ?ignoreSelf:Bool = true, ?excludeScripts:Array<String> = null, ?excludeValues:Array<Dynamic> = null) {
 			if(excludeScripts == null) excludeScripts = [];
 			if(ignoreSelf && !excludeScripts.contains(scriptName)) excludeScripts.push(scriptName);
-			game.callOnHScript(funcName, args, ignoreStops, excludeScripts, excludeValues);
-			return true;
+			return game.callOnHScript(funcName, args, ignoreStops, excludeScripts, excludeValues);
 		});
 
 		set("callScript", function(luaFile:String, funcName:String, args:Array<Dynamic>) {
 			if(args == null) args = [];
 
-			for (luaInstance in game.luaArray)
-				if(luaInstance.scriptName == luaFile)
-					return luaInstance.call(funcName, args);
+			var luaPath:String = findScript(luaFile);
+			if(luaPath != null)
+				for (luaInstance in game.luaArray)
+					if(luaInstance.scriptName == luaPath)
+						return luaInstance.call(funcName, args);
 			return null;
 		});
 
 		set("isRunning", (scriptFile:String) -> {
-			for (luaInstance in game.luaArray) if(luaInstance.scriptName == scriptFile) return true;
-			for (hscriptInstance in game.hscriptArray) if(hscriptInstance.origin == scriptFile) return true;
+			var luaPath:String = findScript(scriptFile);
+			if(luaPath != null) for (luaInstance in game.luaArray) if(luaInstance.scriptName == luaPath) return true;
+
+			var hscriptPath:String = findScript(scriptFile, '.hx');
+			if(hscriptPath != null) for (hscriptInstance in game.hscriptArray) if(hscriptInstance.origin == hscriptPath) return true;
 
 			return false;
 		});
@@ -222,30 +225,32 @@ class FunkinLua {
 		set("removeVar", MusicBeatState.getVariables().remove);
 
 		set("addLuaScript", function(luaFile:String, ?ignoreAlreadyRunning:Bool = false) {
-			if(#if sys FileSystem.exists(luaFile) #else Assets.exists(luaFile, TEXT)#end) {
+			var luaPath:String = findScript(luaFile);
+			if(luaPath != null) {
 				if(!ignoreAlreadyRunning)
 					for (luaInstance in game.luaArray)
-						if(luaInstance.scriptName == luaFile) {
-							luaTrace('addLuaScript: The script "' + luaFile + '" is already running!');
+						if(luaInstance.scriptName == luaPath) {
+							luaTrace('addLuaScript: The script "' + luaPath + '" is already running!');
 							return;
 						}
 
-				new FunkinLua(luaFile);
+				new FunkinLua(luaPath);
 				return;
 			}
 			luaTrace("addLuaScript: Script doesn't exist!", false, false, FlxColor.RED);
 		});
 		set("addHScript", function(scriptFile:String, ?ignoreAlreadyRunning:Bool = false) {
 			#if HSCRIPT_ALLOWED
-			if(#if sys FileSystem.exists(scriptFile) #else Assets.exists(scriptFile, TEXT)#end) {
+			var scriptPath:String = findScript(scriptFile, '.hx');
+			if(scriptPath != null) {
 				if(!ignoreAlreadyRunning)
 					for (script in game.hscriptArray)
-						if(script.origin == scriptFile) {
-							luaTrace('addHScript: The script "' + scriptFile + '" is already running!');
+						if(script.origin == scriptPath) {
+							luaTrace('addHScript: The script "' + scriptPath + '" is already running!');
 							return;
 						}
 
-				PlayState.instance.initHScript(scriptFile);
+				PlayState.instance.initHScript(scriptPath);
 				return;
 			}
 			luaTrace("addHScript: Script doesn't exist!", false, false, FlxColor.RED);
@@ -254,29 +259,35 @@ class FunkinLua {
 			#end
 		});
 		set("removeLuaScript", function(luaFile:String) {
-			var foundAny:Bool = false;
-			for (luaInstance in game.luaArray) {
-				if(luaInstance.scriptName == luaFile) {
-					trace('Closing lua script $luaFile');
-					luaInstance.stop();
-					foundAny = true;
+			var luaPath:String = findScript(luaFile);
+			if(luaPath != null) {
+				var foundAny:Bool = false;
+				for (luaInstance in game.luaArray) {
+					if(luaInstance.scriptName == luaPath) {
+						trace('Closing lua script $luaPath');
+						luaInstance.stop();
+						foundAny = true;
+					}
 				}
+				if(foundAny) return true;
 			}
-			if(foundAny) return true;
 			luaTrace('removeLuaScript: Script $luaFile isn\'t running!', false, false, FlxColor.RED);
 			return false;
 		});
 		set("removeHScript", function(scriptFile:String) {
 			#if HSCRIPT_ALLOWED
-			var foundAny:Bool = false;
-			for (script in game.hscriptArray) {
-				if(script.origin == scriptFile) {
-					trace('Closing hscript $scriptFile');
-					script.destroy();
-					foundAny = true;
+			var scriptPath:String = findScript(scriptFile, '.hx');
+			if(scriptPath != null) {
+				var foundAny:Bool = false;
+				for (script in game.hscriptArray) {
+					if(script.origin == scriptPath) {
+						trace('Closing hscript $scriptPath');
+						script.destroy();
+						foundAny = true;
+					}
 				}
+				if(foundAny) return true;
 			}
-			if(foundAny) return true;
 			luaTrace('removeHScript: Script $scriptFile isn\'t running!', false, false, FlxColor.RED);
 			return false;
 			#else
@@ -481,10 +492,6 @@ class FunkinLua {
 			game.RecalculateRating();
 			return value;
 		});
-		set("getScore", () -> return game.songScore);
-		set("getMisses", () -> return game.songMisses);
-		set("getAccuracy", () -> return game.ratingAccuracy);
-		set("getHits", () -> return game.songHits);
 
 		set("getHighscore", Highscore.getScore);
 		set("getSavedRating", Highscore.getRating);
@@ -593,9 +600,27 @@ class FunkinLua {
 		set("cameraFlash", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).flash(CoolUtil.colorFromString(color), duration * game.playbackRate, null, forced));
 		set("cameraFade", (camera:String, color:String, duration:Float, forced:Bool, ?fadeOut:Bool = false) -> LuaUtils.cameraFromString(camera).fade(CoolUtil.colorFromString(color), duration * game.playbackRate, fadeOut, null, forced));
 
-		set("setRatingPercent", (value:Float) -> return game.ratingPercent = value);
-		set("setRatingName", (value:String) -> return game.ratingName = value);
-		set("setRatingFC", (value:String) -> return game.ratingFC = value);
+		set("setRatingPercent", function(value:Float) {
+			game.ratingPercent = value;
+			game.setOnScripts('rating', game.ratingPercent);
+			return game.ratingPercent;
+		});
+		set("setRatingAccuracy", function(value:Float) {
+			game.ratingAccuracy = value;
+			game.setOnScripts('ratingAccuracy', game.ratingAccuracy);
+			return game.ratingAccuracy;
+		});
+		set("setRatingName", function(value:String) {
+			game.ratingName = value;
+			game.setOnScripts('ratingName', game.ratingName);
+			return game.ratingName;
+		});
+		set("setRatingFC", function(value:String) {
+			game.ratingFC = value;
+			game.setOnScripts('ratingFC', game.ratingFC);
+			return game.ratingFC;
+		});
+		set("updateScoreText", game.updateScoreText);
 
 		set("getMouseX", (?camera:String = 'game') -> return LuaUtils.getMousePoint(camera, 'x'));
 		set("getMouseY", (?camera:String = 'game') -> return LuaUtils.getMousePoint(camera, 'y'));
@@ -929,14 +954,18 @@ class FunkinLua {
 		set("debugPrint", (text:Dynamic = '', color:String = 'WHITE') -> PlayState.instance.addTextToDebug(text, CoolUtil.colorFromString(color)));
 		// mod settings
 		addLocalCallback("getModSetting", function(saveTag:String, ?modName:String = null) {
+			#if MODS_ALLOWED
 			if(modName == null) {
 				if(this.modFolder == null) {
 					luaTrace('getModSetting: Argument #2 is null and script is not inside a packed Mod folder!', false, false, FlxColor.RED);
 					return null;
-				} 
+				}
 				modName = this.modFolder;
 			}
 			return LuaUtils.getModSetting(saveTag, modName);
+			#else
+			luaTrace("getModSetting: Mods are disabled in this build!", false, false, FlxColor.RED);
+			#end
 		});
 		set("close", () -> {
 			trace('Closing script: $scriptName');
@@ -1014,6 +1043,15 @@ class FunkinLua {
 		return (result == 'true');
 	}
 	#end
+
+	function findScript(scriptFile:String, ext:String = '.lua'):String  {
+		if(!scriptFile.endsWith(ext)) scriptFile += ext;
+		var path:String = Paths.getPath(scriptFile, TEXT);
+		
+		if(#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end) return path;
+		if(#if MODS_ALLOWED FileSystem.exists(scriptFile) #else Assets.exists(scriptFile, TEXT) #end) return scriptFile;
+		return null;
+	}
 
 	function getErrorMessage(status:Int = 0):String {
 		#if LUA_ALLOWED
