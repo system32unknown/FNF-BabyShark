@@ -6,10 +6,6 @@ import cpp.vm.Gc;
 import openfl.system.System;
 #end
 
-@:cppFileCode("
-#include <windows.h>
-#include <psapi.h>
-")
 class MemoryUtil {
 	public static function clearMajor(?minor:Bool = false) {
 		#if cpp
@@ -29,11 +25,4 @@ class MemoryUtil {
 		return 0;
 		#end
     }
-
-	@:functionCode("
-		unsigned long long allocatedRAM = 0;
-		GetPhysicallyInstalledSystemMemory(&allocatedRAM);
-		return (allocatedRAM / 1024);
-	")
-	public static function getTotalRam():Float return 0;
 }

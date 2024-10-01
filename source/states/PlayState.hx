@@ -1906,7 +1906,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
-			mstimingTxt.setFormat(Paths.font("vcr.ttf"), 20, SpriteUtil.dominantColor(rating), CENTER, OUTLINE, FlxColor.BLACK);
+			mstimingTxt.setFormat(null, 20, SpriteUtil.dominantColor(rating), CENTER, OUTLINE, FlxColor.BLACK);
 			mstimingTxt.text = '${MathUtil.truncateFloat(noteDiff / playbackRate)}ms';
 			mstimingTxt.setPosition(rating.x + 100, rating.y + 100);
 			mstimingTxt.updateHitbox();
@@ -1972,7 +1972,6 @@ class PlayState extends MusicBeatState {
 
 		if (plrInputNotes.length != 0) { // slightly faster than doing `> 0` lol
 			var funnyNote:Note = plrInputNotes[0]; // front note
-
 			if (plrInputNotes.length > 1) {
 				var doubleNote:Note = plrInputNotes[1];
 				if (doubleNote.noteData == funnyNote.noteData) {

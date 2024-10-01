@@ -20,7 +20,7 @@ class MarkdownUtil {
 			new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFFFFFF, false, true, 0xFF888888), "{bold-italic}"),
 		];
 
-		text.applyMarkup( parseWarnings(text.textField.text), changes);
+		text.applyMarkup(parseWarnings(text.textField.text), changes);
 		@:privateAccess {
 			// hacky fix for the text cutting when bigger text formats are used
 			text._regen = true;

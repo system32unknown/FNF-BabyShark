@@ -1,10 +1,6 @@
 package utils;
 
 class MathUtil {
-	inline public static function quantize(f:Float, snap:Float):Float {
-		return Math.fround(f * snap) / snap;
-	}
-
 	public static function truncateFloat(number:Float, ?precision:Int = 3):Float {
         var num:Float = number;
         num *= Math.pow(10, precision);
