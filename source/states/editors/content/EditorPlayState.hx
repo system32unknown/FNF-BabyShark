@@ -377,7 +377,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 			(player == 1 ? playerStrums : opponentStrums).add(babyArrow);
 			strumLineNotes.add(babyArrow);
-			babyArrow.postAddedToGroup();
+			babyArrow.playerPosition();
 		}
         strumLine.put();
 	}

@@ -22,10 +22,12 @@ class CallbackHandler {
 				Convert.toLua(l, ret);
 				return 1;
 			}
-		} catch(e:Dynamic) {
-			if(Lua_helper.sendErrorsToLua) {LuaL.error(l, 'CALLBACK ERROR! ${e.message ?? e}'); return 0;}
-			Logs.trace(e, ERROR);
-			throw(e);
+		} catch(e:haxe.Exception) {
+			if(Lua_helper.sendErrorsToLua) {
+				LuaL.error(l, 'CALLBACK ERROR! ${e.details()}');
+				return 0;
+			}
+			throw e;
 		}
 		return 0;
 	}

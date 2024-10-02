@@ -6,8 +6,8 @@ class StrumNote extends FlxSprite {
 	public var rgbShader:RGBShaderReference;
 	public var resetAnim:Float = 0;
 	var noteData:Int = 0;
-	public var direction(default, set):Float;//plan on doing scroll directions soon -bb
-	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
+	public var direction(default, set):Float;
+	public var downScroll:Bool = false;
 	public var sustainReduce:Bool = true;
 	public var player:Int;
 	
@@ -49,8 +49,9 @@ class StrumNote extends FlxSprite {
 			}
 		}
 
-		noteData = leData;
 		this.player = player;
+		noteData = leData;
+		this.ID = noteData;
 		super(x, y);
 
 		var skin:String = null;
@@ -62,6 +63,7 @@ class StrumNote extends FlxSprite {
 
 		texture = skin; //Load texture and anims
 		scrollFactor.set();
+		playAnim('static');
 	}
 
 	public function reloadNote() {
@@ -119,13 +121,11 @@ class StrumNote extends FlxSprite {
 		if(lastAnim != null) playAnim(lastAnim, true);
 	}
 
-	public function postAddedToGroup() {
-		playAnim('static');
+	public function playerPosition() {
 		x += EK.swidths[PlayState.mania] * noteData;
 		x += 50;
 		x += ((FlxG.width / 2) * player);
 		x -= EK.posRest[PlayState.mania];
-		ID = noteData;
 	}
 
 	override function update(elapsed:Float) {

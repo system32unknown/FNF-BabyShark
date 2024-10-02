@@ -248,13 +248,14 @@ class LuaUtils {
 		return group;
 	}
 
-	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Int = 24, loop:Bool = false):Bool {
+	public static function addAnimByIndices(obj:String, name:String, prefix:String, indices:Any = null, framerate:Float = 24, loop:Bool = false):Bool {
 		var obj:FlxSprite = cast getObjectDirectly(obj, false);
 		if(obj != null && obj.animation != null) {
 			if(indices == null) indices = [0];
 			else if(Std.isOfType(indices, String)) indices = flixel.util.FlxStringUtil.toIntArray(cast indices);
 
-			obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
+			if(prefix != null) obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
+			else obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
 			if(obj.animation.curAnim == null) {
 				var dyn:Dynamic = cast obj;
 				if(dyn.playAnim != null) dyn.playAnim(name, true);
@@ -265,10 +266,11 @@ class LuaUtils {
 		return false;
 	}
 	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
-		spr.frames = switch(spriteType.toLowerCase().trim()) {
-			case 'aseprite' | 'jsoni8': Paths.getAsepriteAtlas(image);
-			case "packer" | "packeratlas" | "pac": Paths.getPackerAtlas(image);
-			default: Paths.getSparrowAtlas(image);
+		spr.frames = switch(spriteType.toLowerCase().replace(' ', '')) {
+			case 'aseprite', 'ase', 'json', 'jsoni8': Paths.getAsepriteAtlas(image);
+			case "packer", 'packeratlas', 'pac': Paths.getPackerAtlas(image);
+			case 'sparrow', 'sparrowatlas', 'sparrowv2': Paths.getSparrowAtlas(image);
+			default: Paths.getAtlas(image);
 		}
 	}
 

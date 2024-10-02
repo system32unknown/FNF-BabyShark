@@ -1155,7 +1155,7 @@ class PlayState extends MusicBeatState {
 
 			(player == 1 ? playerStrums : opponentStrums).add(babyArrow);
 			strumLineNotes.add(babyArrow);
-			babyArrow.postAddedToGroup();
+			babyArrow.playerPosition();
 			callOnLuas('onSpawnStrum', [strumLineNotes.members.indexOf(babyArrow), babyArrow.player, babyArrow.ID]);
 			callOnHScript('onSpawnStrum', [babyArrow]);
 		}
@@ -2442,7 +2442,7 @@ class PlayState extends MusicBeatState {
 
 			try {
 				var callValue = script.call(funcToCall, args);
-				var myValue:Dynamic = callValue.signature;
+				var myValue:Dynamic = callValue.returnValue;
 				if((myValue == LuaUtils.Function_StopHScript || myValue == LuaUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops) {
 					returnVal = myValue;
 					break;

@@ -3,8 +3,8 @@ package psychlua;
 class SoundFunctions {
     public static function implement(funk:FunkinLua) {
         var game:PlayState = PlayState.instance;
-		funk.set("playMusic", (sound:String, volume:Float = 1, loop:Bool = false) -> FlxG.sound.playMusic(Paths.music(sound), volume, loop));
-		funk.set("playSound", function(sound:String, volume:Float = 1, ?tag:String = null, ?loop:Bool = false) {
+		funk.set("playMusic", (sound:String, ?volume:Float = 1, ?loop:Bool = false) -> FlxG.sound.playMusic(Paths.music(sound), volume, loop));
+		funk.set("playSound", function(sound:String, ?volume:Float = 1, ?tag:String = null, ?loop:Bool = false) {
 			if(tag != null && tag.length > 0) {
 				var originalTag:String = tag;
 				tag = LuaUtils.formatVariable('sound_$tag');
@@ -127,13 +127,13 @@ class SoundFunctions {
 			#if FLX_PITCH
 			tag = LuaUtils.formatVariable('sound_$tag');
 			var snd:FlxSound = MusicBeatState.getVariables().get(tag);
-			return snd != null ? snd.pitch : 0;
+			return snd != null ? snd.pitch : 1;
 			#else
 			luaTrace("getSoundPitch: Sound Pitch is not supported on this platform!", false, false, FlxColor.RED);
 			return 1;
 			#end
 		});
-		funk.set("setSoundPitch", function(tag:String, value:Float, doPause:Bool = false) {
+		funk.set("setSoundPitch", function(tag:String, value:Float, ?doPause:Bool = false) {
 			#if FLX_PITCH
 			tag = LuaUtils.formatVariable('sound_$tag');
 			var snd:FlxSound = MusicBeatState.getVariables().get(tag);

@@ -127,16 +127,25 @@ class DeprecatedFunctions {
 			FlxG.sound.music.fadeOut(duration, toValue);
 		});
 
-		funk.set("doTweenX", (tag:String, vars:String, value:Dynamic, duration:Float, ease:String) -> funk.oldTweenFunction(tag, vars, {x: value}, duration, ease, 'doTweenX'));
-		funk.set("doTweenY", (tag:String, vars:String, value:Dynamic, duration:Float, ease:String) -> funk.oldTweenFunction(tag, vars, {y: value}, duration, ease, 'doTweenY'));
-		funk.set("doTweenAngle", (tag:String, vars:String, value:Dynamic, duration:Float, ease:String) -> funk.oldTweenFunction(tag, vars, {angle: value}, duration, ease, 'doTweenAngle'));
-		funk.set("doTweenAlpha", (tag:String, vars:String, value:Dynamic, duration:Float, ease:String) -> funk.oldTweenFunction(tag, vars, {alpha: value}, duration, ease, 'doTweenAlpha'));
-		funk.set("doTweenZoom", (tag:String, vars:String, value:Dynamic, duration:Float, ease:String) -> funk.oldTweenFunction(tag, vars, {zoom: value}, duration, ease, 'doTweenZoom'));
+		funk.set("updateHitboxFromGroup", function(group:String, index:Int) {
+			if(Std.isOfType(Reflect.getProperty(LuaUtils.getInstance(), group), FlxTypedGroup)) {
+				Reflect.getProperty(LuaUtils.getInstance(), group).members[index].updateHitbox();
+				return;
+			}
+			Reflect.getProperty(LuaUtils.getInstance(), group)[index].updateHitbox();
+			FunkinLua.luaTrace('updateHitboxFromGroup is deprecated! Use updateHitbox instead.', false, true);
+		});
 
-		funk.set("noteTweenX", (tag:String, note:Int, value:Dynamic, duration:Float, ease:String) -> funk.noteTweenFunction(tag, note, {x: value}, duration, ease));
-		funk.set("noteTweenY", (tag:String, note:Int, value:Dynamic, duration:Float, ease:String) -> funk.noteTweenFunction(tag, note, {y: value}, duration, ease));
-		funk.set("noteTweenAngle", (tag:String, note:Int, value:Dynamic, duration:Float, ease:String) -> funk.noteTweenFunction(tag, note, {angle: value}, duration, ease));
-		funk.set("noteTweenDirection", (tag:String, note:Int, value:Dynamic, duration:Float, ease:String) -> funk.noteTweenFunction(tag, note, {direction: value}, duration, ease));
-		funk.set("noteTweenAlpha", (tag:String, note:Int, value:Dynamic, duration:Float, ease:String) -> funk.noteTweenFunction(tag, note, {alpha: value}, duration, ease));
+		funk.set("doTweenX", (tag:String, vars:String, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return funk.oldTweenFunction(tag, vars, {x: value}, duration, ease, 'doTweenX'));
+		funk.set("doTweenY", (tag:String, vars:String, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return funk.oldTweenFunction(tag, vars, {y: value}, duration, ease, 'doTweenY'));
+		funk.set("doTweenAngle", (tag:String, vars:String, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return funk.oldTweenFunction(tag, vars, {angle: value}, duration, ease, 'doTweenAngle'));
+		funk.set("doTweenAlpha", (tag:String, vars:String, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return funk.oldTweenFunction(tag, vars, {alpha: value}, duration, ease, 'doTweenAlpha'));
+		funk.set("doTweenZoom", (tag:String, vars:String, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return funk.oldTweenFunction(tag, vars, {zoom: value}, duration, ease, 'doTweenZoom'));
+
+		funk.set("noteTweenX", (tag:String, note:Int, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return funk.noteTweenFunction(tag, note, {x: value}, duration, ease));
+		funk.set("noteTweenY", (tag:String, note:Int, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return funk.noteTweenFunction(tag, note, {y: value}, duration, ease));
+		funk.set("noteTweenAngle", (tag:String, note:Int, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return funk.noteTweenFunction(tag, note, {angle: value}, duration, ease));
+		funk.set("noteTweenDirection", (tag:String, note:Int, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return funk.noteTweenFunction(tag, note, {direction: value}, duration, ease));
+		funk.set("noteTweenAlpha", (tag:String, note:Int, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return funk.noteTweenFunction(tag, note, {alpha: value}, duration, ease));
 	}
 }
