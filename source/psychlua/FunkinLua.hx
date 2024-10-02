@@ -69,7 +69,7 @@ class FunkinLua {
 		set('difficulty', PlayState.storyDifficulty);
 
 		set('difficultyName', Difficulty.getString(false));
-		set('difficultyPath', Paths.formatToSongPath(Difficulty.getString(false)));
+		set('difficultyPath', Difficulty.getFilePath());
 		set('difficultyNameTranslation', Difficulty.getString(true));
 		set('weekRaw', PlayState.storyWeek);
 		set('week', data.WeekData.weeksList[PlayState.storyWeek]);
