@@ -9,19 +9,29 @@ class HScript extends AlterHscript {
 	public var parentLua:FunkinLua;
 	public var filePath:String;
 	public var modFolder:String;
+	public var returnValue:Dynamic = null;
 	
-	public static function initHaxeModuleCode(parent:FunkinLua, code:String, ?varsToBring:Any = null):Void {
+	public static function initHaxeModuleCode(parent:FunkinLua, code:String, ?varsToBring:Any = null):Dynamic {
 		var hs:HScript = try parent.hscript catch (e) null;
 		if(hs == null) {
 			trace('initializing haxe interp for: ${parent.scriptName}');
 			parent.hscript = new HScript(parent, code, varsToBring);
+			return parent.hscript.returnValue;
 		} else {
 			hs.varsToBring = varsToBring;
 			try {
-				hs.scriptCode = code;
-				hs.execute();
-			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
+				if (hs.scriptCode != code) {
+					hs.scriptCode = code;
+					hs.parse(true);
+				}
+				hs.returnValue = hs.execute();
+				return hs.returnValue;
+			} catch(e:Dynamic) {
+				FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
+				hs.returnValue = null;
+			}
 		}
+		return null;
 	}
 
 	public var origin:String;
@@ -51,11 +61,19 @@ class HScript extends AlterHscript {
 			var f:String = file.replace('\\', '/');
 			if(f.contains('/') && !f.contains('\n')) scriptThing = File.getContent(f);
 		}
-		this.scriptCode = scriptThing;
-
-		this.varsToBring = varsToBring;
 		preset();
-		execute();
+		this.scriptCode = scriptThing;
+		this.varsToBring = varsToBring;
+		try {
+			this.returnValue = execute();
+		} catch (e:Dynamic) {
+			#if LUA_ALLOWED
+			FunkinLua.luaTrace('ERROR (${this.origin}) - $e', false, false, FlxColor.RED);
+			#else
+			PlayState.instance.addTextToDebug('ERROR (${this.origin}) - $e', FlxColor.RED);
+			#end
+			this.returnValue = null;
+		}
 	}
 
 	var varsToBring(default, set):Any = null;
@@ -324,8 +342,7 @@ class HScript extends AlterHscript {
 
 	public function executeCode(?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
 		if (funcToRun == null) return null;
-
-		if(!exists(funcToRun)) {
+		if (!exists(funcToRun)) {
 			#if LUA_ALLOWED
 			FunkinLua.luaTrace('$origin - No function named: $funcToRun', false, false, FlxColor.RED);
 			#else
@@ -335,7 +352,7 @@ class HScript extends AlterHscript {
 		}
 
 		try {
-			return call(funcToRun, funcArgs).returnValue;
+			return call(funcToRun, funcArgs);
 		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: $e', ERROR);
 		return null;
 	}
@@ -349,10 +366,12 @@ class HScript extends AlterHscript {
 		#if LUA_ALLOWED
 		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any, ?funcToRun:String, ?funcArgs:Array<Dynamic>):Dynamic {
 			#if HSCRIPT_ALLOWED
-			initHaxeModuleCode(funk, codeToRun, varsToBring);
+			final retVal:Dynamic = initHaxeModuleCode(funk, codeToRun, varsToBring);
+			if (funcToRun == null) return (LuaUtils.typeSupported(retVal)) ? retVal : null;
+
 			try {
-				final retVal:IrisCall = funk.hscript.executeCode(funcToRun, funcArgs);
-				if (retVal != null) return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
+				final retCall:IrisCall = funk.hscript.executeCode(funcToRun, funcArgs);
+				if (retCall != null) return (LuaUtils.typeSupported(retCall.returnValue)) ? retCall.returnValue : null;
 			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
 			#else
 			FunkinLua.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
@@ -364,7 +383,7 @@ class HScript extends AlterHscript {
 			#if HSCRIPT_ALLOWED
 			try {
 				final retVal:IrisCall = funk.hscript.executeFunction(funcToRun, funcArgs);
-				if (retVal != null) return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
+				if (retVal != null) return (LuaUtils.typeSupported(retVal.returnValue)) ? retVal.returnValue : null;
 			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
 			return null;
 			#else

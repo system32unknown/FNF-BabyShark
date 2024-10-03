@@ -75,7 +75,6 @@ class ReflectionFunctions {
 							return result;
 						}
 						FunkinLua.luaTrace('getPropertyFromGroup: Object #$index from group: $group doesn\'t exist!', false, false, FlxColor.RED);
-
 					default: return LuaUtils.getGroupStuff(realObject.members[index], variable, allowMaps); //Is Group
 				}
 			}
@@ -99,7 +98,6 @@ class ReflectionFunctions {
 							}
 							LuaUtils.setGroupStuff(leArray, variable, value, allowMaps);
 						}
-
 					default: LuaUtils.setGroupStuff(realObject.members[index], variable, value, allowMaps); //Is Group
 				}
 			} else FunkinLua.luaTrace('setPropertyFromGroup: Group/Array $group doesn\'t exist!', false, false, FlxColor.RED);
@@ -121,8 +119,7 @@ class ReflectionFunctions {
 					case TClass(Array): groupOrArray.push(obj); //Is Array
 					default: groupOrArray.add(obj); //Is Group
 				}
-			}
-			else groupOrArray.insert(index, obj);
+			} else groupOrArray.insert(index, obj);
 		});
 		funk.set("removeFromGroup", function(group:String, ?index:Int = -1, ?tag:String = null, ?destroy:Bool = true) {
 			var obj:FlxSprite = null;
@@ -147,8 +144,7 @@ class ReflectionFunctions {
 					if(obj != null){
 						groupOrArray.remove(obj);
 						if(destroy) obj.destroy();
-					}
-					else groupOrArray.remove(groupOrArray[index]);
+					} else groupOrArray.remove(groupOrArray[index]);
 			}
 		});
 

@@ -96,6 +96,7 @@ class Character extends FlxSprite {
 			loadCharacterFile(Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path)));
 		} catch(e) Logs.trace('Error loading character file of "$curCharacter": $e', ERROR);
 
+		skipDance = false;
 		for (name => _ in animOffsets)
 			if (name.startsWith('sing') && name.contains('miss')) { // includes alt miss animations now
 				hasMissAnimations = true;
@@ -140,9 +141,11 @@ class Character extends FlxSprite {
 			updateHitbox();
 		}
 
+		// positioning
 		positionArray = json.position;
 		cameraPosition = json.camera_position;
 
+		// data
 		healthIcon = json.healthicon;
 		singDuration = json.sing_duration;
 		flipX = (json.flip_x != isPlayer);
@@ -155,7 +158,7 @@ class Character extends FlxSprite {
 		antialiasing = ClientPrefs.data.antialiasing ? !noAntialiasing : false;
 
 		animationsArray = json.animations;
-		if (animationsArray != null && animationsArray.length > 0) {
+		if(animationsArray != null && animationsArray.length > 0) {
 			for (anim in animationsArray) {
 				var animAnim:String = '' + anim.anim;
 				var animName:String = '' + anim.name;
@@ -212,7 +215,7 @@ class Character extends FlxSprite {
 		if (getAnimationName().startsWith('sing')) holdTimer += elapsed;
 		else if(isPlayer) holdTimer = 0;
 
-		if (!isPlayer && holdTimer >= Conductor.stepCrochet * (.0011 / (FlxG.sound.music != null ? FlxG.sound.music.pitch : 1)) * singDuration) {
+		if (!isPlayer && holdTimer >= Conductor.stepCrochet * (.0011 #if FLX_PITCH / (FlxG.sound.music != null ? FlxG.sound.music.pitch : 1) #end) * singDuration) {
 			dance();
 			holdTimer = 0;
 		}
@@ -284,7 +287,10 @@ class Character extends FlxSprite {
 		specialAnim = false;
 
 		if(!isAnimateAtlas) animation.play(animName, Force, Reversed, Frame);
-		else atlas.anim.play(animName, Force, Reversed, Frame);
+		else {
+			atlas.anim.play(animName, Force, Reversed, Frame);
+			atlas.update(0);
+		}
 		_lastPlayedAnimation = animName;
 
 		if (hasAnimation(animName)) {

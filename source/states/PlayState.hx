@@ -2387,7 +2387,7 @@ class PlayState extends MusicBeatState {
 	}
 	#end
 
-	public function callOnScripts(funcToCall:String, ?args:Array<Dynamic>, ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):String {
+	public function callOnScripts(funcToCall:String, ?args:Array<Dynamic>, ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
 		args ??= [];
 		exclusions ??= [];
 		excludeValues ??= [LuaUtils.Function_Continue];
@@ -2397,8 +2397,8 @@ class PlayState extends MusicBeatState {
 		return result;
 	}
 
-	public function callOnLuas(event:String, ?args:Array<Any>, ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):String {
-		var returnVal:String = LuaUtils.Function_Continue;
+	public function callOnLuas(event:String, ?args:Array<Any>, ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
+		var returnVal:Dynamic = LuaUtils.Function_Continue;
 		#if LUA_ALLOWED
 		args ??= [];
 		exclusions ??= [];
@@ -2428,8 +2428,8 @@ class PlayState extends MusicBeatState {
 		return returnVal;
 	}
 
-	public function callOnHScript(funcToCall:String, ?args:Array<Dynamic>, ?ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):String {
-		var returnVal:String = LuaUtils.Function_Continue;
+	public function callOnHScript(funcToCall:String, ?args:Array<Dynamic>, ?ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
+		var returnVal:Dynamic = LuaUtils.Function_Continue;
 		#if HSCRIPT_ALLOWED
 		if(exclusions == null) exclusions = [];
 		if(excludeValues == null) excludeValues = [LuaUtils.Function_Continue];
