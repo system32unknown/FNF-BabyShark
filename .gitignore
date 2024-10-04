@@ -4,6 +4,7 @@ dump/
 ### VS Code
 export/*
 .haxelib/
+.github/
 .vscode/*
 *.code-workspace
 vs_Community.exe

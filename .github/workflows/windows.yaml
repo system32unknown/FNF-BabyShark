@@ -1,4 +1,4 @@
-name: Build Release
+name: Windows Build (Release)
 on:
   push:
     branches: [ main ]
@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         compile: [windows]
-        build: [release, 32bit]
+        build: [release]
 
         include:
           - compile: windows
@@ -53,18 +53,13 @@ jobs:
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s
 
-      - name: Compile (x86)
-        if: ${{ matrix.build == '32bit' }}
-        run: haxelib run openfl build ${{ matrix.compile }} -${{ matrix.build }} -D HXCPP_M32
-
-      - name: Compile (x64)
-        if: ${{ matrix.build != '32bit' }}
+      - name: Compile
         run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
-          name: ${{ matrix.compile }}-${{ matrix.build }}
+          name: Alter Engine
           path: export/${{ matrix.build }}/${{ matrix.folder }}/bin
           if-no-files-found: error
 
