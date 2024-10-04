@@ -10,11 +10,11 @@ jobs:
       fail-fast: false
       matrix:
         compile: [linux, mac, windows]
-        build: [release, 32bit]
+        build: [release, x86]
 
         exclude:
           - compile: linux
-            build: 32bit
+            build: x86
 
         include:
           - compile: linux
@@ -70,12 +70,12 @@ jobs:
           haxe -cp commandline -D analyzer-optimize --run Main setup
 
       - name: Compile (x86)
-        if: ${{ matrix.build == '32bit' }}
-        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }} -D HXCPP_M32 -32
+        if: ${{ matrix.build == 'x86' }}
+        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }} -D HXCPP_M32
 
       - name: Compile (x64)
-        if: ${{ matrix.build != '32bit' }}
-        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }} -64
+        if: ${{ matrix.build != 'x86' }}
+        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
