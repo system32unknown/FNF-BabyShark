@@ -15,7 +15,6 @@
 	<lib name="hxdiscord_rpc"/>
 	<lib name="hxvlc" skipDeps="true"/>
 	<lib name="tjson"/>
-	<lib name="markdown"/>
 	<lib name="parallaxlt"/>
 
 	<!-- Audio Visualizers -->

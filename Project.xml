@@ -62,7 +62,6 @@
 	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
 	<haxelib name="grig.audio"/>
 	<haxelib name="funkin.vis"/>
-	<haxelib name="markdown"/>
 	<haxelib name="parallaxlt"/>
 
 	<!-- ______________________________Haxedefines_____________________________ -->

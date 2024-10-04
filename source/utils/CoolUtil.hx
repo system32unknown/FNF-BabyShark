@@ -39,7 +39,7 @@ class CoolUtil {
 
 	public static function browserLoad(site:String):Void {
 		#if linux
-		Sys.command('/usr/bin/xdg-open', [site, "&"]);
+		Sys.command('/usr/bin/xdg-open', [site]);
 		#else
 		FlxG.openURL(site);
 		#end
