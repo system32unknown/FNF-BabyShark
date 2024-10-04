@@ -22,7 +22,7 @@ jobs:
             folder: linux
 
           - compile: mac
-            os: macOS-latest
+            os: macOS-12
             folder: macos
 
           - compile: windows
