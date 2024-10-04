@@ -1,4 +1,4 @@
-name: MacOS Build (Release)
+name: Build (Release)
 on:
   push:
     branches: [ main ]
@@ -9,13 +9,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compile: [mac]
+        compile: [linux, mac, windows]
         build: [release]
 
         include:
+          - compile: linux
+            os: ubuntu-latest
+            folder: linux
+
           - compile: mac
-            os: macos-13
+            os: macOS-latest
             folder: macos
+
+          - compile: windows
+            os: windows-latest
+            folder: windows
 
     name: ${{ matrix.compile }}-${{ matrix.build }}
     permissions: write-all
@@ -41,6 +49,11 @@ jobs:
           restore-keys: |
             cache-${{ matrix.compile }}-${{ matrix.build }}
         
+      - name: Installing LibVLC (Linux Only)
+        if: ${{ matrix.compile == 'linux' }}
+        run: |
+          sudo apt-get install libvlc-dev libvlccore-dev
+
       - name: Install Hxcpp
         run: |
           git clone https://github.com/HaxeFoundation/hxcpp.git --depth=1;
@@ -56,14 +69,11 @@ jobs:
       - name: Compile
         run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
 
-      - name: Tar files
-        run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
-
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
           name: Alter Engine
-          path: AlterEngine.tar.gz
+          path: export/${{ matrix.build }}/${{ matrix.folder }}/bin
           if-no-files-found: error
 
       - name: Clearing already existing cache
