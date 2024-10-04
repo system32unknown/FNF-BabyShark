@@ -9,7 +9,7 @@ class MasterEditorMenu extends MusicBeatState {
 		'Menu Character Editor',
 		'Dialogue Editor',
 		'Dialogue Portrait Editor',
-		'Note Splash Debug'
+		'Note Splash Editor'
 	];
 	var grpTexts:FlxTypedGroup<Alphabet>;
 	var directories:Array<String> = [null];
@@ -73,7 +73,7 @@ class MasterEditorMenu extends MusicBeatState {
 				case 'Menu Character Editor': FlxG.switchState(() -> new MenuCharacterEditorState());
 				case 'Dialogue Editor': LoadingState.loadAndSwitchState(() -> new DialogueEditorState());
 				case 'Dialogue Portrait Editor': LoadingState.loadAndSwitchState(() -> new DialogueCharacterEditorState());
-				case 'Note Splash Debug': FlxG.switchState(() -> new NoteSplashDebugState());
+				case 'Note Splash Editor': FlxG.switchState(() -> new NoteSplashEditorState());
 			}
 			FlxG.sound.music.volume = 0;
 			states.FreeplayState.destroyFreeplayVocals();

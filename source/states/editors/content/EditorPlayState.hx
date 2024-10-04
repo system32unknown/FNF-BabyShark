@@ -17,7 +17,6 @@ class EditorPlayState extends MusicBeatSubstate {
 	var spawnTime:Float = 2000;
 	var startingSong:Bool = true;
 
-    var mania:Int = 0;
 	var playbackRate:Float = 1;
 	var vocals:FlxSound;
 	
@@ -31,7 +30,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 	
 	var combo:Int = 0;
-	var keysArray:Array<String> = [];
+	var keysArray:Array<String> =  ['note_left', 'note_down', 'note_up', 'note_right'];
 	
 	var comboGroup:FlxSpriteGroup;
 	var noteGroup:FlxTypedGroup<FlxBasic>;
@@ -81,7 +80,6 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	override function create() {
-		mania = PlayState.mania;
 		Conductor.safeZoneOffset = (ClientPrefs.data.safeFrames / 60) * 1000 * playbackRate;
 		Conductor.songPosition -= startOffset;
 		startOffset = Conductor.crochet;
@@ -121,7 +119,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		add(noteGroup);
 		noteGroup.add(strumLineNotes);
 
-		var splash:NoteSplash = new NoteSplash(100, 100);
+		var splash:NoteSplash = new NoteSplash();
 		grpNoteSplashes.add(splash);
 		splash.alpha = .000001; //cant make it invisible or it won't allow precaching
         noteGroup.add(grpNoteSplashes);
@@ -153,7 +151,6 @@ class EditorPlayState extends MusicBeatSubstate {
 		FlxG.mouse.visible = false;
 
 		generateSong();
-        keysArray = EK.fillKeys()[mania];
 		_noteList = null;
 
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
@@ -257,6 +254,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		FlxG.mouse.visible = true;
+		NoteSplash.configs.clear();
 		super.destroy();
 	}
 	
@@ -359,7 +357,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	
 	function generateStaticArrows(player:Int):Void {
         var strumLine:FlxPoint = FlxPoint.get(middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, downScroll ? (FlxG.height - 150) : 50);
-		for (i in 0...EK.keys(mania)) {
+		for (i in 0...4) {
 			var targetAlpha:Float = 1;
 			if (player < 1) {
 				if(!ClientPrefs.data.opponentStrums) targetAlpha = 0;
@@ -372,7 +370,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 			if (player < 1 && middleScroll) {
 				babyArrow.x += 310;
-				if(i > EK.midArray[mania]) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
+				if(i > 1) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
 			}
 
 			(player == 1 ? playerStrums : opponentStrums).add(babyArrow);
@@ -562,7 +560,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			popUpScore(note);
 		}
 
-		strumPlayAnim(false, note.noteData % EK.keys(mania), cpuControlled ? Conductor.stepCrochet * 1.25 / 1000 : 0);
+		strumPlayAnim(false, note.noteData % 4, cpuControlled ? Conductor.stepCrochet * 1.25 / 1000 : 0);
 		vocals.volume = 1;
 
 		if (!note.isSustainNote) invalidateNote(note);
@@ -586,13 +584,14 @@ class EditorPlayState extends MusicBeatSubstate {
 	function spawnNoteSplashOnNote(note:Note) {
 		if(note != null) {
 			var strum:StrumNote = playerStrums.members[note.noteData];
-			if(strum != null) spawnNoteSplash(strum.x + EK.swidths[mania] / 2 - Note.swagWidth / 2, strum.y + EK.swidths[mania] / 2 - Note.swagWidth / 2, note.noteData, note);
+			if(strum != null) spawnNoteSplash(note, strum);
 		}
 	}
 
-	function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
-		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash(x, y, data, note);
+	function spawnNoteSplash(note:Note, strum:StrumNote) {
+		var splash:NoteSplash = new NoteSplash();
+		splash.babyArrow = strum;
+		splash.spawnSplashNote(note);
 		grpNoteSplashes.add(splash);
 	}
 

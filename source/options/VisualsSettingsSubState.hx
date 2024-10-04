@@ -15,9 +15,8 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 
 		// for note skins
 		notes = new FlxTypedGroup<StrumNote>();
-		for (i in 0...EK.colArray.length) {
-			var note:StrumNote = new StrumNote(45 + 140 * i, -200, i, 0);
-			note.setGraphicSize(112);
+		for (i in 0...Note.colArray.length) {
+			var note:StrumNote = new StrumNote(370 + (560 / Note.colArray.length) * i, -200, i, 0);
 			note.centerOffsets();
 			note.centerOrigin();
 			note.playAnim('static');
@@ -100,7 +99,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		
 		if(noteOptionID < 0) return;
 
-		for (i in 0...EK.colArray.length) {
+		for (i in 0...Note.colArray.length) {
 			var note:StrumNote = notes.members[i];
 			if(notesTween[i] != null) notesTween[i].cancel();
 			if(curSelected == noteOptionID)

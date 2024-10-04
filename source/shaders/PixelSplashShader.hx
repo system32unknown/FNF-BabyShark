@@ -2,23 +2,30 @@ package shaders;
 
 class PixelSplashShaderRef {
 	public var shader:PixelSplashShader = new PixelSplashShader();
+	public var enabled(default, set):Bool = true;
+	public var pixelAmount(default, set):Float = 1;
 
 	public function copyValues(tempShader:RGBPalette) {
-		var enabled:Bool = false;
-		if(tempShader != null) enabled = true;
-
-		if(enabled) {
+		if(tempShader != null) {
 			for (i in 0...3) {
 				shader.r.value[i] = tempShader.shader.r.value[i];
 				shader.g.value[i] = tempShader.shader.g.value[i];
 				shader.b.value[i] = tempShader.shader.b.value[i];
 			}
 			shader.mult.value[0] = tempShader.shader.mult.value[0];
-		} else shader.mult.value[0] = 0.0;
+		} else enabled = false;
 	}
 
-	public function set(enabled:Bool = true) {
-		shader.mult.value = [enabled ? 1 : 0];
+	public function set_enabled(value:Bool) {
+		enabled = value;
+		shader.mult.value = [value ? 1 : 0];
+		return value;
+	}
+
+	public function set_pixelAmount(value:Float) {
+		pixelAmount = value;
+		shader.uBlocksize.value = [value, value];
+		return value;
 	}
 
 	public function reset() {
@@ -29,11 +36,10 @@ class PixelSplashShaderRef {
 
 	public function new() {
 		reset();
-		set();
+		enabled = true;
 
-		var pixel:Float = 1;
-		if(PlayState.isPixelStage) pixel = PlayState.daPixelZoom;
-		shader.uBlocksize.value = [pixel, pixel];
+		if(!PlayState.isPixelStage) pixelAmount = 1;
+		else pixelAmount = PlayState.daPixelZoom;
 	}
 }
 

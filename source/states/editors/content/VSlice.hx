@@ -211,7 +211,6 @@ class VSlice {
 				bpm: songBpm,
 				needsVoices: true, //There's no value on V-Slice to identify if there are vocals as it checks automatically
 				speed: scrollSpeed,
-				mania: 3,
 				offset: 0,
 
 				player1: metadata.playData.characters.player,

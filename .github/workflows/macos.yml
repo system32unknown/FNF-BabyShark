@@ -67,7 +67,7 @@ jobs:
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
-          name: Codename Engine
+          name: Alter Engine (${{ matrix.build }})
           path: AlterEngine.tar.gz
           if-no-files-found: error
 

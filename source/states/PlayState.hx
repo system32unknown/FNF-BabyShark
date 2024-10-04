@@ -136,7 +136,6 @@ class PlayState extends MusicBeatState {
 	var songPercent:Float = 0;
 
 	public var ratingsData:Array<Rating> = Rating.loadDefault();
-	public static var mania:Int = 3;
 
 	var generatedMusic:Bool = false;
 	public var endingSong:Bool = false;
@@ -189,7 +188,7 @@ class PlayState extends MusicBeatState {
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
-	var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT', 'singUP'];
+	var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 
 	public var inCutscene:Bool = false;
 	public var skipCountdown:Bool = false;
@@ -213,7 +212,7 @@ class PlayState extends MusicBeatState {
 	public var introSoundsSuffix:String = '';
 	public var introSoundNames:Array<String> = [];
 
-	var keysArray:Array<String>;
+	var keysArray:Array<String> = ['note_left', 'note_down', 'note_up', 'note_right'];
 
 	public var comboGroup:FlxSpriteGroup;
 	public var uiGroup:FlxSpriteGroup;
@@ -265,10 +264,6 @@ class PlayState extends MusicBeatState {
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
-
-		if (SONG.mania == null || SONG.mania < EK.minMania || SONG.mania > EK.maxMania) SONG.mania = EK.defaultMania;
-		mania = SONG.mania;
-		keysArray = EK.fillKeys()[mania];
 
 		storyDifficultyText = Difficulty.getString();
 		#if DISCORD_ALLOWED
@@ -525,7 +520,6 @@ class PlayState extends MusicBeatState {
 		stagesFunc(stage -> stage.createPost()); callOnScripts('onCreatePost');
 
 		var splash:NoteSplash = new NoteSplash();
-		splash.setupNoteSplash(100, 100);
 		grpNoteSplashes.add(splash);
 		splash.alpha = 0.000001; //cant make it invisible or it won't allow precaching
 
@@ -799,8 +793,6 @@ class PlayState extends MusicBeatState {
 			for (i in 0...playerStrums.length) {setOnScripts('defaultPlayerStrumX$i', playerStrums.members[i].x); setOnScripts('defaultPlayerStrumY$i', playerStrums.members[i].y);}
 			for (i in 0...opponentStrums.length) {setOnScripts('defaultOpponentStrumX$i', opponentStrums.members[i].x); setOnScripts('defaultOpponentStrumY$i', opponentStrums.members[i].y);}
 
-			setOnScripts('mania', SONG.mania);
-
 			startedCountdown = true;
 			Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
 			setOnScripts('startedCountdown', true);
@@ -1003,12 +995,12 @@ class PlayState extends MusicBeatState {
 			for (i in 0...section.sectionNotes.length) {
 				final songNotes:Array<Dynamic> = section.sectionNotes[i];
 				var spawnTime:Float = songNotes[0];
-				var noteColumn:Int = Std.int(songNotes[1] % EK.keys(mania));
+				var noteColumn:Int = Std.int(songNotes[1] % 4);
 				var holdLength:Float = songNotes[2];
 				var noteType:String = songNotes[3];
 				if (Math.isNaN(holdLength)) holdLength = 0.0;
 	
-				var gottaHitNote:Bool = (songNotes[1] < EK.keys(mania));
+				var gottaHitNote:Bool = (songNotes[1] < 4);
 	
 				if (i != 0) for (evilNote in unspawnNotes) { // CLEAR ANY POSSIBLE GHOST NOTES
 					var matches:Bool = (noteColumn == evilNote.noteData && gottaHitNote == evilNote.mustPress && evilNote.noteType == noteType);
@@ -1060,14 +1052,14 @@ class PlayState extends MusicBeatState {
 						if (sustainNote.mustPress) sustainNote.x += FlxG.width / 2; // general offset
 						else if(middleScroll) {
 							sustainNote.x += 310;
-							if(noteColumn > EK.midArray[mania]) sustainNote.x += FlxG.width / 2 + 25; //Up and Right
+							if(noteColumn > 1) sustainNote.x += FlxG.width / 2 + 25; //Up and Right
 						}
 					}
 				}
 				if (swagNote.mustPress) swagNote.x += FlxG.width / 2;
 				else if(middleScroll) {
 					swagNote.x += 310;
-					if(noteColumn > EK.midArray[mania]) swagNote.x += FlxG.width / 2 + 25;
+					if(noteColumn > 1) swagNote.x += FlxG.width / 2 + 25;
 				}
 				if(!noteTypes.contains(swagNote.noteType)) noteTypes.push(swagNote.noteType);
 
@@ -1135,9 +1127,7 @@ class PlayState extends MusicBeatState {
 	public var skipArrowStartTween:Bool = false; //for lua
 	public function generateStaticArrows(player:Int):Void {
 		var strumLine:FlxPoint = FlxPoint.get(middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, downScroll ? (FlxG.height - 150) : 50);
-		for (i in 0...EK.keys(mania)) {
-			var tempMania:Int = mania;
-			if (tempMania == 0) tempMania = 1;
+		for (i in 0...4) {
 			var targetAlpha:Float = 1;
 			if (player < 1) {
 				if (!ClientPrefs.data.opponentStrums) targetAlpha = 0;
@@ -1146,14 +1136,14 @@ class PlayState extends MusicBeatState {
 
 			var babyArrow:StrumNote = new StrumNote(strumLine.x, strumLine.y, i, player);
 			babyArrow.downScroll = downScroll;
-			if (((!isStoryMode || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
+			if ((!isStoryMode || deathCounter > 0) && !skipArrowStartTween) {
 				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {alpha: targetAlpha}, (4 / tempMania) * playbackRate, {ease: FlxEase.circOut, startDelay: .5 + ((.8 / tempMania) * i) * playbackRate});
+				FlxTween.tween(babyArrow, {alpha: targetAlpha}, playbackRate, {ease: FlxEase.circOut, startDelay: 0.5 + (.2 * i) * playbackRate});
 			} else babyArrow.alpha = targetAlpha;
 
 			if (player < 1 && middleScroll) {
 				babyArrow.x += 310;
-				if(i > EK.midArray[mania]) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
+				if(i > 1) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
 			}
 
 			(player == 1 ? playerStrums : opponentStrums).add(babyArrow);
@@ -2071,7 +2061,7 @@ class PlayState extends MusicBeatState {
 		if(char != null && (note == null || !note.noMissAnimation) && char.hasMissAnimations) {
 			var postfix:String = '';
 			if(note != null) postfix = note.animSuffix;
-			char.playAnim(singAnimations[EK.gfxHud[mania][Std.int(Math.abs(direction))]] + 'miss$postfix', true);
+			char.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss$postfix', true);
 			if(char != gf && combo > 5 && gf != null && gf.hasAnimation('sad')) {
 				gf.playAnim('sad');
 				gf.specialAnim = true;
@@ -2092,7 +2082,7 @@ class PlayState extends MusicBeatState {
 		var result:String = callOnLuas('opponentNoteHitPre', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHitPre', [note]);
 
-		var animToPlay:String = singAnimations[EK.gfxHud[mania][leData]];
+		var animToPlay:String = singAnimations[leData];
 		if(leType == 'Hey!' && dad.hasAnimation('hey')) {
 			dad.playAnim('hey', true);
 			dad.specialAnim = true;
@@ -2151,7 +2141,7 @@ class PlayState extends MusicBeatState {
 		note.wasGoodHit = true;
 		if (note.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound(note.hitsound), note.hitsoundVolume);
 
-		var animToPlay:String = singAnimations[EK.gfxHud[mania][leData]];
+		var animToPlay:String = singAnimations[leData];
 		if (ClientPrefs.data.camMovement && bfturn) moveCamOnNote(animToPlay);
 
 		if(!dontZoomCam) camZooming = true;
@@ -2183,7 +2173,7 @@ class PlayState extends MusicBeatState {
 				}
 			}
 
-			strumPlayAnim(false, leData % EK.keys(mania), cpuControlled ? Conductor.stepCrochet * 1.25 / 1000 : 0);
+			strumPlayAnim(false, leData % 4, cpuControlled ? Conductor.stepCrochet * 1.25 / 1000 : 0);
 			vocals.volume = 1;
 
 			if(!isSus) {
@@ -2217,14 +2207,15 @@ class PlayState extends MusicBeatState {
 	public function spawnNoteSplashOnNote(note:Note) {
 		if(ClientPrefs.data.splashAlpha > 0 && note != null) {
 			var strum:StrumNote = playerStrums.members[note.noteData];
-			if(strum != null) spawnNoteSplash(strum.x + EK.swidths[mania] / 2 - Note.swagWidth / 2, strum.y + EK.swidths[mania] / 2 - Note.swagWidth / 2, note.noteData, note);
+			if(strum != null) spawnNoteSplash(note, strum);
 		}
 	}
 
-	public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
-		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash(x, y, data, note);
+	public function spawnNoteSplash(note:Note, strum:StrumNote) {
+		var splash:NoteSplash = new NoteSplash();
+		splash.babyArrow = strum;
 		splash.ID = grpNoteSplashes.ID++;
+		splash.spawnSplashNote(note);
 		grpNoteSplashes.add(splash);
 		grpNoteSplashes.sort(CoolUtil.sortByID);
 	}
@@ -2248,8 +2239,10 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.setFilters([]);
 		#if FLX_PITCH FlxG.sound.music.pitch = 1; #end
 		FlxG.animationTimeScale = 1;
+		
 		Note.globalRgbShaders = [];
 		backend.NoteTypesConfig.clearNoteTypesData();
+		NoteSplash.configs.clear();
 		instance = null;
 		super.destroy();
 	}
