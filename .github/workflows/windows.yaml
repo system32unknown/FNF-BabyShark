@@ -9,22 +9,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compile: [linux, mac, windows]
-        build: [release, x86]
-
-        exclude:
-          - compile: linux
-            build: x86
+        compile: [windows]
+        build: [release, 32bit]
 
         include:
-          - compile: linux
-            os: ubuntu-latest
-            folder: linux
-
-          - compile: mac
-            os: macos-13
-            folder: macos
-
           - compile: windows
             os: windows-latest
             folder: windows
@@ -47,15 +35,11 @@ jobs:
         with:
           key: cache-${{ matrix.compile }}-${{ matrix.build }}
           path: |
+            .haxelib/
             export/${{ matrix.build }}/${{ matrix.folder }}/haxe/
             export/${{ matrix.build }}/${{ matrix.folder }}/obj/
-            .haxelib/
           restore-keys: |
             cache-${{ matrix.compile }}-${{ matrix.build }}
-
-      - name: Setup Haxelib
-        run: |
-          haxelib setup .haxelib/
         
       - name: Install Hxcpp
         run: |
@@ -70,11 +54,11 @@ jobs:
           haxe -cp commandline -D analyzer-optimize --run Main setup -s
 
       - name: Compile (x86)
-        if: ${{ matrix.build == 'x86' }}
-        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }} -D HXCPP_M32
+        if: ${{ matrix.build == '32bit' }}
+        run: haxelib run openfl build ${{ matrix.compile }} -${{ matrix.build }} -D HXCPP_M32
 
       - name: Compile (x64)
-        if: ${{ matrix.build != 'x86' }}
+        if: ${{ matrix.build != '32bit' }}
         run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
 
       - name: Uploading artifact
@@ -109,8 +93,8 @@ jobs:
         with:
           key: cache-${{ matrix.compile }}-${{ matrix.build }}
           path: |
+            .haxelib/
             export/${{ matrix.build }}/${{ matrix.folder }}/haxe/
             export/${{ matrix.build }}/${{ matrix.folder }}/obj/
-            .haxelib/
           restore-keys: |
             cache-${{ matrix.compile }}-${{ matrix.build }}

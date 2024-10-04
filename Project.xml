@@ -82,8 +82,6 @@
 		<haxedef name="FLX_NO_DEBUG"/> <!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	</section>
 
-	<setenv name="HAXEPATH" value="./"/>
-
 	<!--Used for Izzy Engine's crash handler-->
 	<section if="CRASH_HANDLER">
 		<haxedef name="HXCPP_CHECK_POINTER"/>
