@@ -38,7 +38,7 @@ class Main extends Sprite {
 		super();
 		#if windows @:functionCode('#include <windows.h> SetProcessDPIAware();') #end
 		setupGame();
-		hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0") ['--no-lua'] #end);
+		#if VIDEOS_ALLOWED hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0") ['--no-lua'] #end); #end
 	}
 
 	function setupGame():Void {

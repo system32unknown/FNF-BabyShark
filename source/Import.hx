@@ -1,5 +1,13 @@
 #if !macro
 #if DISCORD_ALLOWED import backend.Discord; #end
+
+import debug.Logs;
+
+#if sys
+import sys.*;
+import sys.io.*;
+#end
+
 import backend.Paths;
 import backend.Controls;
 import backend.MusicBeatState;
@@ -9,13 +17,11 @@ import backend.ClientPrefs;
 import backend.Conductor;
 import backend.BaseStage;
 import backend.Difficulty;
+import backend.Mods;
+import backend.EK;
 import backend.Language;
 
 import backend.ui.*; //Psych-UI
-
-import debug.Logs;
-#if MODS_ALLOWED import backend.Mods; #end
-import backend.EK;
 
 import utils.CoolUtil;
 import utils.SpriteUtil;
@@ -29,11 +35,6 @@ import states.LoadingState;
 #if VIDEOS_ALLOWED
 import hxvlc.flixel.*;
 import hxvlc.openfl.*;
-#end
-
-#if sys
-import sys.*;
-import sys.io.*;
 #end
 
 #if flxanimate 
