@@ -49,7 +49,7 @@ class VideoFunctions {
 			var myVideo:VideoSprite = MusicBeatState.getVariables().get(tag);
 			if(myVideo == null) return false;
 
-			var instance:FlxState = LuaUtils.getInstance();
+			var instance:FlxState = LuaUtils.getTargetInstance();
 			if(front) instance.add(myVideo);
 			else {
 				if(PlayState.instance == null || !PlayState.instance.isDead)
@@ -63,7 +63,7 @@ class VideoFunctions {
 			if(obj == null || obj.destroy == null) return;
 
 			var groupObj:Dynamic = null;
-			if(group == null) groupObj = LuaUtils.getInstance();
+			if(group == null) groupObj = LuaUtils.getTargetInstance();
 			else groupObj = LuaUtils.getObjectDirectly(group);
 
 			groupObj.remove(obj, true);

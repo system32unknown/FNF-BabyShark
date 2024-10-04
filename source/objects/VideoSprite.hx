@@ -2,6 +2,7 @@ package objects;
 
 import flixel.addons.display.FlxPieDial;
 #if hxvlc import hxvlc.flixel.FlxVideoSprite; #end
+import psychlua.LuaUtils;
 
 class VideoSprite extends FlxSpriteGroup {
 	#if VIDEOS_ALLOWED
@@ -56,7 +57,7 @@ class VideoSprite extends FlxSpriteGroup {
 					cover.destroy();
 				}
 
-				psychlua.LuaUtils.getInstance().remove(this);
+				LuaUtils.getTargetInstance().remove(this);
 				destroy();
 				alreadyDestroyed = true;
 			});
@@ -89,7 +90,7 @@ class VideoSprite extends FlxSpriteGroup {
 		if(finishCallback != null) finishCallback();
 		onSkip = null;
 
-		psychlua.LuaUtils.getInstance().remove(this);
+		LuaUtils.getTargetInstance().remove(this);
 		super.destroy();
 	}
 
@@ -103,7 +104,7 @@ class VideoSprite extends FlxSpriteGroup {
 				if(onSkip != null) onSkip();
 				finishCallback = null;
 				videoSprite.bitmap.onEndReached.dispatch();
-				psychlua.LuaUtils.getInstance().remove(this);
+				LuaUtils.getTargetInstance().remove(this);
 				trace('Skipped video');
 				return;
 			}

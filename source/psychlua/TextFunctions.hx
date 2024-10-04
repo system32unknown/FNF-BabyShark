@@ -137,14 +137,14 @@ class TextFunctions {
 
 		funk.set("addLuaText", (tag:String) -> {
 			var text:FlxText = MusicBeatState.getVariables().get(tag);
-			if(text != null) LuaUtils.getInstance().add(text);
+			if(text != null) LuaUtils.getTargetInstance().add(text);
 		});
 		funk.set("removeLuaText", function(tag:String, destroy:Bool = true) {
 			var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 			var text:FlxText = variables.get(tag);
 			if(text == null) return;
 
-			LuaUtils.getInstance().remove(text, true);
+			LuaUtils.getTargetInstance().remove(text, true);
 			if(destroy) {
 				text.destroy();
 				variables.remove(tag);

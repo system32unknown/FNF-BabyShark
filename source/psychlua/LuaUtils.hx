@@ -203,7 +203,7 @@ class LuaUtils {
 		return false;
 	}
 
-	public static inline function getInstance():flixel.FlxState {
+	public static inline function getTargetInstance():flixel.FlxState {
 		if(PlayState.instance != null) return PlayState.instance.isDead ? substates.GameOverSubstate.instance : PlayState.instance;
 		return MusicBeatState.getState();
 	}
@@ -282,7 +282,7 @@ class LuaUtils {
 		var obj:FlxSprite = variables.get(tag);
 		if(obj == null || obj.destroy == null) return;
 
-		getInstance().remove(obj, true);
+		getTargetInstance().remove(obj, true);
 		obj.destroy();
 		variables.remove(tag);
 	}

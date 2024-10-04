@@ -19,7 +19,7 @@ class DeprecatedFunctions {
 				return true;
 			}
 
-			var spr:FlxSprite = Reflect.getProperty(LuaUtils.getInstance(), obj);
+			var spr:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
 			if(spr != null) {
 				spr.animation.play(name, forced, false, startFrame);
 				return true;
@@ -128,11 +128,11 @@ class DeprecatedFunctions {
 		});
 
 		funk.set("updateHitboxFromGroup", function(group:String, index:Int) {
-			if(Std.isOfType(Reflect.getProperty(LuaUtils.getInstance(), group), FlxTypedGroup)) {
-				Reflect.getProperty(LuaUtils.getInstance(), group).members[index].updateHitbox();
+			if(Std.isOfType(Reflect.getProperty(LuaUtils.getTargetInstance(), group), FlxTypedGroup)) {
+				Reflect.getProperty(LuaUtils.getTargetInstance(), group).members[index].updateHitbox();
 				return;
 			}
-			Reflect.getProperty(LuaUtils.getInstance(), group)[index].updateHitbox();
+			Reflect.getProperty(LuaUtils.getTargetInstance(), group)[index].updateHitbox();
 			FunkinLua.luaTrace('updateHitboxFromGroup is deprecated! Use updateHitbox instead.', false, true);
 		});
 

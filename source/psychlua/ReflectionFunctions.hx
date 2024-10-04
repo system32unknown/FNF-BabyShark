@@ -13,7 +13,7 @@ class ReflectionFunctions {
 		funk.set("getProperty", function(variable:String, ?allowMaps:Bool = false) {
 			var split:Array<String> = variable.split('.');
 			if(split.length > 1) return LuaUtils.getVarInArray(LuaUtils.getPropertyLoop(split, true, allowMaps), split[split.length - 1], allowMaps);
-			return LuaUtils.getVarInArray(LuaUtils.getInstance(), variable, allowMaps);
+			return LuaUtils.getVarInArray(LuaUtils.getTargetInstance(), variable, allowMaps);
 		});
 		funk.set("setProperty", function(variable:String, value:Dynamic, ?allowMaps:Bool = false, ?allowInstances:Bool = false) {
 			var split:Array<String> = variable.split('.');
@@ -21,7 +21,7 @@ class ReflectionFunctions {
 				LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split, true, allowMaps), split[split.length - 1], allowInstances ? parseSingleInstance(value) : value, allowMaps);
 				return value;
 			}
-			LuaUtils.setVarInArray(LuaUtils.getInstance(), variable, allowInstances ? parseSingleInstance(value) : value, allowMaps);
+			LuaUtils.setVarInArray(LuaUtils.getTargetInstance(), variable, allowInstances ? parseSingleInstance(value) : value, allowMaps);
 			return value;
 		});
 		funk.set("getPropertyFromClass", function(classVar:String, variable:String, ?allowMaps:Bool = false) {
@@ -61,9 +61,9 @@ class ReflectionFunctions {
 			var split:Array<String> = group.split('.');
 			var realObject:Dynamic = null;
 			if(split.length > 1) realObject = LuaUtils.getPropertyLoop(split, false, allowMaps);
-			else realObject = Reflect.getProperty(LuaUtils.getInstance(), group);
+			else realObject = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 
-			var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getInstance(), group);
+			var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 			if(groupOrArray != null) {
 				switch(Type.typeof(groupOrArray)) {
 					case TClass(Array): //Is Array
@@ -85,7 +85,7 @@ class ReflectionFunctions {
 			var split:Array<String> = group.split('.');
 			var realObject:Dynamic = null;
 			if(split.length > 1) realObject = LuaUtils.getPropertyLoop(split, false, allowMaps);
-			else realObject = Reflect.getProperty(LuaUtils.getInstance(), group);
+			else realObject = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 
 			if(realObject != null) {
 				switch(Type.typeof(realObject)) {
@@ -109,7 +109,7 @@ class ReflectionFunctions {
 				FunkinLua.luaTrace('addToGroup: Object $tag is not valid!', false, false, FlxColor.RED);
 				return;
 			}
-			var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getInstance(), group);
+			var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 			if(groupOrArray == null) {
 				FunkinLua.luaTrace('addToGroup: Group/Array $group is not valid!', false, false, FlxColor.RED);
 				return;
@@ -130,7 +130,7 @@ class ReflectionFunctions {
 					return;
 				}
 			}
-			var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getInstance(), group);
+			var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 			if(groupOrArray == null) {
 				FunkinLua.luaTrace('removeFromGroup: Group/Array $group is not valid!', false, false, FlxColor.RED);
 				return;
@@ -187,7 +187,7 @@ class ReflectionFunctions {
 			var savedObj:Dynamic = MusicBeatState.getVariables().get(objectName);
 			if(savedObj != null) {
 				var obj:Dynamic = savedObj;
-				if (inFront) LuaUtils.getInstance().add(obj);
+				if (inFront) LuaUtils.getTargetInstance().add(obj);
 				else {
 					if(!PlayState.instance.isDead) PlayState.instance.insert(PlayState.instance.members.indexOf(LuaUtils.getLowestCharacterGroup()), obj);
 					else GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), obj);

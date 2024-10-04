@@ -41,12 +41,11 @@ class FunkinLua {
 		set('Function_Continue', LuaUtils.Function_Continue);
 		set('luaDebugMode', false);
 		set('luaDeprecatedWarnings', true);
+		set('version', Main.engineVer.version.trim());
 		set('engine', {
-			version: Main.engineVer.version.trim(),
 			app_version: lime.app.Application.current.meta.get('version'),
 			commit: Main.engineVer.COMMIT_NUM,
-			hash: Main.engineVer.COMMIT_HASH.trim(),
-			buildTarget: LuaUtils.getBuildTarget()
+			hash: Main.engineVer.COMMIT_HASH.trim()
 		});
 		set('modFolder', this.modFolder);
 
@@ -157,6 +156,8 @@ class FunkinLua {
 		set('splashSkin', ClientPrefs.data.splashSkin);
 		set('splashSkinPostfix', objects.NoteSplash.getSplashSkinPostfix());
 		set('splashAlpha', ClientPrefs.data.splashAlpha);
+
+		set('buildTarget', LuaUtils.getBuildTarget());
 
 		set("getRunningScripts", () -> {
 			var runningScripts:Array<String> = [];
@@ -334,7 +335,7 @@ class FunkinLua {
 			var leObj:FlxSprite = LuaUtils.getObjectDirectly(obj);
 			if(leObj != null) {
 				if(group != null) {
-					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getInstance(), group);
+					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 					if(groupOrArray != null) {
 						switch(Type.typeof(groupOrArray)) {
 							case TClass(Array): return groupOrArray.indexOf(leObj); //Is Array
@@ -354,7 +355,7 @@ class FunkinLua {
 			var leObj:FlxSprite = LuaUtils.getObjectDirectly(obj);
 			if(leObj != null){
 				if(group != null) {
-					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getInstance(), group);
+					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 					if(groupOrArray != null) {
 						switch(Type.typeof(groupOrArray)) {
 							case TClass(Array): //Is Array
@@ -368,7 +369,7 @@ class FunkinLua {
 					else luaTrace('setObjectOrder: Group $group doesn\'t exist!', false, false, FlxColor.RED);
 				} else {
 					leObj.zIndex = position;
-					cast(LuaUtils.getInstance(), MusicBeatState).refresh();
+					cast(LuaUtils.getTargetInstance(), MusicBeatState).refresh();
 				}
 				return;
 			}
@@ -767,7 +768,7 @@ class FunkinLua {
 			var mySprite:FlxSprite = MusicBeatState.getVariables().get(tag);
 			if(mySprite == null) return;
 
-			var instance:flixel.FlxState = LuaUtils.getInstance();
+			var instance:flixel.FlxState = LuaUtils.getTargetInstance();
 			if(inFront) instance.add(mySprite);
 			else {
 				if(PlayState.instance == null || !PlayState.instance.isDead)
@@ -777,7 +778,7 @@ class FunkinLua {
 		});
 		set("addParallaxSprite", function(tag:String, front:Bool = false) {
 			var spr:ParallaxSprite = MusicBeatState.getVariables().get(tag);
-			var instance:flixel.FlxState = LuaUtils.getInstance();
+			var instance:flixel.FlxState = LuaUtils.getTargetInstance();
 			if(front) instance.add(spr);
 			else {
 				if(PlayState.instance == null || !PlayState.instance.isDead)
@@ -807,7 +808,7 @@ class FunkinLua {
 				return;
 			}
 
-			var poop:FlxSprite = Reflect.getProperty(LuaUtils.getInstance(), obj);
+			var poop:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
 			if(poop != null) {
 				poop.updateHitbox();
 				return;
@@ -821,7 +822,7 @@ class FunkinLua {
 				return;
 			}
 
-			var poop:FlxSprite = Reflect.getProperty(LuaUtils.getInstance(), obj);
+			var poop:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
 			if(poop != null) {
 				poop.centerOffsets();
 				return;
@@ -829,11 +830,11 @@ class FunkinLua {
 			luaTrace('centerOffsets: Couldnt find object: ' + obj, false, false, FlxColor.RED);
 		});
 		set("centerOffsetsFromGroup", function(group:String, index:Int) {
-			if(Std.isOfType(Reflect.getProperty(LuaUtils.getInstance(), group), FlxTypedGroup)) {
-				Reflect.getProperty(LuaUtils.getInstance(), group).members[index].centerOffsets();
+			if(Std.isOfType(Reflect.getProperty(LuaUtils.getTargetInstance(), group), FlxTypedGroup)) {
+				Reflect.getProperty(LuaUtils.getTargetInstance(), group).members[index].centerOffsets();
 				return;
 			}
-			Reflect.getProperty(LuaUtils.getInstance(), group)[index].centerOffsets();
+			Reflect.getProperty(LuaUtils.getTargetInstance(), group)[index].centerOffsets();
 		});
 
 		set("removeLuaSprite", function(tag:String, destroy:Bool = true, ?group:String = null) {
@@ -841,7 +842,7 @@ class FunkinLua {
 			if(obj == null || obj.destroy == null) return false;
 
 			var groupObj:Dynamic = null;
-			if(group == null) groupObj = LuaUtils.getInstance();
+			if(group == null) groupObj = LuaUtils.getTargetInstance();
 			else groupObj = LuaUtils.getObjectDirectly(group);
 
 			groupObj.remove(obj, true);

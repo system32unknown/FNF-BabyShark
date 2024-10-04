@@ -149,8 +149,8 @@ class HScript extends AlterHscript {
 			#end
 			'ShaderFilter'		=> openfl.filters.ShaderFilter,
 
+			"version" 			=> Main.engineVer.version.trim(),
             "engine" => {
-				version: Main.engineVer.version.trim(),
 				app_version: lime.app.Application.current.meta.get('version'),
                 commit: macros.GitCommitMacro.commitNumber,
                 hash: macros.GitCommitMacro.commitHash.trim(),
@@ -296,7 +296,7 @@ class HScript extends AlterHscript {
 
 		set('close', destroy);
 
-		set('parentLua', parentLua);
+		set('parentLua', #if LUA_ALLOWED parentLua #else null #end);
 		set('this', this);
 		set('game', FlxG.state);
 		set('controls', Controls.instance);
