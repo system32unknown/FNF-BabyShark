@@ -29,18 +29,18 @@ jobs:
             export/release/windows/obj/
           restore-keys: |
             cache-build-windows
-        
-      - name: Install Hxcpp
-        run: |
-          git clone https://github.com/HaxeFoundation/hxcpp.git --depth=1;
-          haxelib dev hxcpp hxcpp
-          cd hxcpp/tools/hxcpp
-          haxe compile.hxml
-          cd ../../../
 
       - name: Installing/Updating libraries
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s
+      - name: Compile hxcpp
+        run: |
+          cd haxelib/hxcpp/git/tools/run
+          haxe compile.hxml
+          cd ..
+          cd ./hxcpp
+          haxe compile.hxml
+          cd ../..
 
       - name: Compile
         run: haxelib run openfl build windows
