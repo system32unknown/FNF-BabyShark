@@ -67,8 +67,8 @@ jobs:
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
-          name: ${{ matrix.compile }}-${{ matrix.build }}
-          path: export/${{ matrix.build }}/${{ matrix.folder }}/bin
+          name: Codename Engine
+          path: AlterEngine.tar.gz
           if-no-files-found: error
 
       - name: Clearing already existing cache

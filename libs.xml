@@ -13,7 +13,7 @@
 	<git name="flxanimate" url="https://github.com/Dot-Stuff/flxanimate" ref="dev"/>
 	<git name="linc_luajit" url="https://github.com/superpowers04/linc_luajit"/>
 	<lib name="hxdiscord_rpc"/>
-	<lib name="hxvlc"/>
+	<lib name="hxvlc" skipDeps="true"/>
 	<lib name="tjson"/>
 	<lib name="markdown"/>
 	<lib name="parallaxlt"/>

@@ -6,20 +6,9 @@ on:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        compile: [linux]
-        build: [release]
-
-        include:
-          - compile: linux
-            os: ubuntu-latest
-            folder: linux
-
-    name: ${{ matrix.compile }}-${{ matrix.build }}
+    name: Linux Build
     permissions: write-all
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -33,13 +22,13 @@ jobs:
       - name: Restore action cache
         uses: actions/cache@main
         with:
-          key: cache-${{ matrix.compile }}-${{ matrix.build }}
+          key: cache-build-linux
           path: |
             .haxelib/
-            export/${{ matrix.build }}/${{ matrix.folder }}/haxe/
-            export/${{ matrix.build }}/${{ matrix.folder }}/obj/
+            export/release/linux/haxe/
+            export/release/linux/obj/
           restore-keys: |
-            cache-${{ matrix.compile }}-${{ matrix.build }}
+            cache-build-linux
 
       - name: Installing LibVLC
         run: |
@@ -58,13 +47,16 @@ jobs:
           haxe -cp commandline -D analyzer-optimize --run Main setup -s
 
       - name: Compile
-        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
+        run: haxelib run lime build linux
+
+      - name: Tar files
+        run: tar -zcvf AlterEngine.tar.gz -C export/release/linux/bin .
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
-          name: ${{ matrix.compile }}-${{ matrix.build }}
-          path: export/${{ matrix.build }}/${{ matrix.folder }}/bin
+          name: Alter Engine
+          path: AlterEngine.tar.gz
           if-no-files-found: error
 
       - name: Clearing already existing cache
@@ -76,7 +68,7 @@ jobs:
               repo: context.repo.repo,
             })
             for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-${{ matrix.compile }}-${{ matrix.build }}") {
+              if (cache.key == "cache-build-linux") {
                 console.log('Clearing ' + cache.key + '...')
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
@@ -90,10 +82,10 @@ jobs:
       - name: Uploading new cache
         uses: actions/cache@main
         with:
-          key: cache-${{ matrix.compile }}-${{ matrix.build }}
+          key: cache-build-linux
           path: |
             .haxelib/
-            export/${{ matrix.build }}/${{ matrix.folder }}/haxe/
-            export/${{ matrix.build }}/${{ matrix.folder }}/obj/
+            export/release/linux/haxe/
+            export/release/linux/obj/
           restore-keys: |
-            cache-${{ matrix.compile }}-${{ matrix.build }}
+            cache-build-linux

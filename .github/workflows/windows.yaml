@@ -1,4 +1,4 @@
-name: Build Release
+name: Windows Build (Release)
 on:
   push:
     branches: [ main ]
@@ -6,20 +6,9 @@ on:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        compile: [windows]
-        build: [release, 32bit]
-
-        include:
-          - compile: windows
-            os: windows-latest
-            folder: windows
-
-    name: ${{ matrix.compile }}-${{ matrix.build }}
+    name: Windows Build
     permissions: write-all
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
 
     steps:
       - name: Checkout
@@ -33,13 +22,13 @@ jobs:
       - name: Restore action cache
         uses: actions/cache@main
         with:
-          key: cache-${{ matrix.compile }}-${{ matrix.build }}
+          key: cache-build-windows
           path: |
             .haxelib/
-            export/${{ matrix.build }}/${{ matrix.folder }}/haxe/
-            export/${{ matrix.build }}/${{ matrix.folder }}/obj/
+            export/release/windows/haxe/
+            export/release/windows/obj/
           restore-keys: |
-            cache-${{ matrix.compile }}-${{ matrix.build }}
+            cache-build-windows
         
       - name: Install Hxcpp
         run: |
@@ -53,19 +42,14 @@ jobs:
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s
 
-      - name: Compile (x86)
-        if: ${{ matrix.build == '32bit' }}
-        run: haxelib run openfl build ${{ matrix.compile }} -${{ matrix.build }} -D HXCPP_M32
-
-      - name: Compile (x64)
-        if: ${{ matrix.build != '32bit' }}
-        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
+      - name: Compile
+        run: haxelib run openfl build windows
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
-          name: ${{ matrix.compile }}-${{ matrix.build }}
-          path: export/${{ matrix.build }}/${{ matrix.folder }}/bin
+          name: Alter Engine
+          path: export/release/windows/bin
           if-no-files-found: error
 
       - name: Clearing already existing cache
@@ -77,7 +61,7 @@ jobs:
               repo: context.repo.repo,
             })
             for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-${{ matrix.compile }}-${{ matrix.build }}") {
+              if (cache.key == "cache-build-windows") {
                 console.log('Clearing ' + cache.key + '...')
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
@@ -91,10 +75,10 @@ jobs:
       - name: Uploading new cache
         uses: actions/cache@main
         with:
-          key: cache-${{ matrix.compile }}-${{ matrix.build }}
+          key: cache-build-windows
           path: |
             .haxelib/
-            export/${{ matrix.build }}/${{ matrix.folder }}/haxe/
-            export/${{ matrix.build }}/${{ matrix.folder }}/obj/
+            export/release/windows/haxe/
+            export/release/windows/obj/
           restore-keys: |
-            cache-${{ matrix.compile }}-${{ matrix.build }}
+            cache-build-windows
