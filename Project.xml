@@ -42,7 +42,12 @@
 	<assets path="assets/translations" rename="assets" if="TRANSLATIONS_ALLOWED"/>
 
 	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED" type='template'/>
-	<assets path='alsoft.ini'/>
+
+	<!-- OpenAL config -->
+	<section if="desktop">
+		<assets path="alsoft.txt" rename="plugins/alsoft.ini" type="text" if="windows"/>
+		<assets path="alsoft.txt" rename="plugins/alsoft.conf" type="text" unless="windows"/>
+	</section>
 
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>

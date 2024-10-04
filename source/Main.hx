@@ -6,6 +6,10 @@ import utils.system.MemoryUtil;
 import utils.GameVersion;
 import debug.FPSCounter;
 
+#if desktop
+import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since it's not directly referenced anywhere else.
+#end
+
 class Main extends Sprite {
 	public static var engineVer:GameVersion = new GameVersion(0, 1, 5);
 
