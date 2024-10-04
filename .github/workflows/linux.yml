@@ -47,7 +47,7 @@ jobs:
           cd ../..
 
       - name: Compile
-        run: haxelib run lime build linux
+        run: haxelib run lime build Project.xml linux
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/linux/bin .
