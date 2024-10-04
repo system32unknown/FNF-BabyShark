@@ -9,10 +9,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compile: [windows]
-        build: [release]
+        compile: [linux, mac, windows]
+        build: [release, 32bit]
+
+        exclude:
+          - compile: linux
+            build: 32bit
 
         include:
+          - compile: linux
+            os: ubuntu-latest
+            folder: linux
+
+          - compile: mac
+            os: macOS-latest
+            folder: macos
+
           - compile: windows
             os: windows-latest
             folder: windows
@@ -57,8 +69,13 @@ jobs:
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup
 
-      - name: Compile
-        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
+      - name: Compile (x86)
+        if: ${{ matrix.build == '32bit' }}
+        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }} -D HXCPP_M32 -32
+
+      - name: Compile (x64)
+        if: ${{ matrix.build != '32bit' }}
+        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }} -64
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
@@ -66,12 +83,6 @@ jobs:
           name: ${{ matrix.compile }}-${{ matrix.build }}
           path: export/${{ matrix.build }}/${{ matrix.folder }}/bin
           if-no-files-found: error
-
-      - name: Uploading artifact (executable windows)
-        uses: actions/upload-artifact@main
-        with:
-          name: executableOnly-${{ matrix.compile }}-${{ matrix.build }}
-          path: export/${{ matrix.build }}/${{ matrix.folder }}/bin/AlterEngine.exe
 
       - name: Clearing already existing cache
         uses: actions/github-script@main

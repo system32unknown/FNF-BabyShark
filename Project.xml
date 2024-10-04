@@ -67,7 +67,11 @@
 	<!-- ______________________________Haxedefines_____________________________ -->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="cpp"/>
+
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc"/>
+	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux"/>
+	<define name="x86_BUILD" if="32bits"/>
+
 	<section if="HSCRIPT_ALLOWED">
 		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
 		<haxedef name="hscriptPos"/>
@@ -103,6 +107,8 @@
 
 	<!-- _________________________________Custom_______________________________ -->
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+	<assets path='art/iconOG.png' rename='icon.png' if="linux"/>
+
 	<icon path="art/icons/icon16.png" size="16"/>
 	<icon path="art/icons/icon24.png" size="24"/>
 	<icon path="art/icons/icon32.png" size="32"/>

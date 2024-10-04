@@ -10,6 +10,12 @@ import debug.FPSCounter;
 import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since it's not directly referenced anywhere else.
 #end
 
+#if linux
+@:cppInclude('./external/gamemode_client.h')
+@:cppFileCode('
+	#define GAMEMODE_AUTO
+')
+#end
 class Main extends Sprite {
 	public static var engineVer:GameVersion = new GameVersion(0, 1, 5);
 
@@ -45,6 +51,7 @@ class Main extends Sprite {
 			fpsVar.memType = ClientPrefs.data.memCounterType;
 		}
 
+		#if linux Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 
