@@ -11,17 +11,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compile: [mac]
         build: [release, 32bit]
 
-        include:
-          - compile: mac
-            os: macos-13
-            folder: macos
-
-    name: ${{ matrix.compile }}-${{ matrix.build }}
+    name: MacOS Build (${{ matrix.build }})
     permissions: write-all
-    runs-on: ${{ matrix.os }}
+    runs-on: macOS-13
 
     steps:
       - uses: actions/checkout@main
@@ -32,13 +26,13 @@ jobs:
       - name: Restore action cache
         uses: actions/cache@main
         with:
-          key: cache-${{ matrix.compile }}-${{ matrix.build }}
+          key: cache-mac-${{ matrix.build }}
           path: |
             .haxelib/
-            export/${{ matrix.build }}/${{ matrix.folder }}/haxe/
-            export/${{ matrix.build }}/${{ matrix.folder }}/obj/
+            export/${{ matrix.build }}/macos/haxe/
+            export/${{ matrix.build }}/macos/obj/
           restore-keys: |
-            cache-${{ matrix.compile }}-${{ matrix.build }}
+            cache-mac-${{ matrix.build }}
 
       - name: Installing/Updating libraries
         run: |
@@ -53,11 +47,11 @@ jobs:
 
       - name: Compile (x86)
         if: ${{ matrix.build == '32bit' }}
-        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }} -D HXCPP_M32
+        run: haxelib run lime build mac -${{ matrix.build }} -D HXCPP_M32 -32
 
       - name: Compile (x64)
         if: ${{ matrix.build != '32bit' }}
-        run: haxelib run lime build ${{ matrix.compile }} -${{ matrix.build }}
+        run: haxelib run lime build mac -${{ matrix.build }}
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
@@ -78,7 +72,7 @@ jobs:
               repo: context.repo.repo,
             })
             for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-${{ matrix.compile }}-${{ matrix.build }}") {
+              if (cache.key == "cache-mac-${{ matrix.build }}") {
                 console.log('Clearing ' + cache.key + '...')
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
@@ -92,10 +86,10 @@ jobs:
       - name: Uploading new cache
         uses: actions/cache@main
         with:
-          key: cache-${{ matrix.compile }}-${{ matrix.build }}
+          key: cache-mac-${{ matrix.build }}
           path: |
             .haxelib/
-            export/${{ matrix.build }}/${{ matrix.folder }}/haxe/
-            export/${{ matrix.build }}/${{ matrix.folder }}/obj/
+            export/${{ matrix.build }}/macos/haxe/
+            export/${{ matrix.build }}/macos/obj/
           restore-keys: |
-            cache-${{ matrix.compile }}-${{ matrix.build }}
+            cache-mac-${{ matrix.build }}

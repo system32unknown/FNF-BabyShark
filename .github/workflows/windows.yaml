@@ -1,4 +1,4 @@
-name: Windows Build (Release)
+name: Windows Build
 on:
   push:
     branches: [ main ]
@@ -8,7 +8,12 @@ on:
 
 jobs:
   build:
-    name: Windows Build
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [release, 32bit]
+
+    name: Windows Build (${{ matrix.build }})
     permissions: write-all
     runs-on: windows-latest
 
@@ -40,14 +45,18 @@ jobs:
            haxe compile.hxml
            cd ../../../../..
 
-      - name: Compile
-        run: |
-          haxelib run lime build windows
+      - name: Compile (x86)
+        if: ${{ matrix.build == '32bit' }}
+        run: haxelib run lime build windows -${{ matrix.build }} -D HXCPP_M32 -32
+
+      - name: Compile (x64)
+        if: ${{ matrix.build != '32bit' }}
+        run: haxelib run lime build windows -${{ matrix.build }}
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
-          name: Alter Engine
+          name: Alter Engine (${{ matrix.build }})
           path: export/release/windows/bin
           if-no-files-found: error
 
