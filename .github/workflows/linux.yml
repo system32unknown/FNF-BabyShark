@@ -42,15 +42,6 @@ jobs:
           sh ./setup/unix.sh
         shell: bash
 
-      - name: Compiling Hxcpp
-        run: |
-          cd .haxelib/hxcpp/git/tools/run
-          haxe compile.hxml
-          cd ../hxcpp
-          haxe compile.hxml
-          cd ../../../../..
-        shell: bash
-
       - name: Build Lime
         run: |
           haxelib run lime rebuild cpp -release
