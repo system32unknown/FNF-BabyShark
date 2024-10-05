@@ -32,6 +32,7 @@ jobs:
       - name: Installing Linux Libraries
         run: |
           sudo apt install libgl1-mesa-dev libglu1-mesa-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev libpulse-dev libvlc-dev libvlccore-dev
+        shell: bash
 
       - name: Install Haxelib
         run: |
@@ -39,6 +40,8 @@ jobs:
           haxelib install hxcpp > /dev/null --quiet
           chmod +x ./setup/unix.sh
           sh ./setup/unix.sh
+        shell: bash
+
       - name: Compiling Hxcpp
         run: |
           cd .haxelib/hxcpp/git/tools/run
@@ -46,6 +49,7 @@ jobs:
           cd ../hxcpp
           haxe compile.hxml
           cd ../../../../..
+        shell: bash
 
       - name: Build Lime
         run: |
