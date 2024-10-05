@@ -32,17 +32,16 @@ jobs:
           restore-keys: |
             cache-build-linux
 
-      - name: Install Haxelib
+      - name: Installing LibVLC
         run: |
-          sudo apt-get install libvlc-dev
-          sudo apt-get install libvlccore-dev
-          haxelib setup ~/haxelib
-          haxelib install hxcpp > /dev/null --quiet
-          chmod +x ./commandline/unix.sh
-          sh ./commandline/unix.sh
+          sudo apt-get install libvlc-dev libvlccore-dev
+
+      - name: Installing/Updating libraries
+        run: |
+          haxe -cp commandline -D analyzer-optimize --run Main setup -s
       - name: Compile hxcpp
         run: |
-          cd ~/haxelib/hxcpp/git/tools/run
+          cd .haxelib/hxcpp/git/tools/run
           haxe compile.hxml
           cd ..
           cd ./hxcpp

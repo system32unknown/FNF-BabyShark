@@ -6,7 +6,10 @@ Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor code
 ![Repo size](https://img.shields.io/github/repo-size/system32unknown/FNF-BabyShark)
 ![Last commit](https://img.shields.io/github/last-commit/system32unknown/FNF-BabyShark)
 ![License](https://img.shields.io/github/license/system32unknown/FNF-BabyShark)
-[![Build Release (Windows)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/build-release.yaml/badge.svg)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/build-release.yaml)
+[![Build Release (Windows)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/windows.yaml/badge.svg)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/windows.yaml)
+
+# For Linux Users:
+Due to issue for compiling in github action, you have to build it manually.
 
 # Credits:
 
