@@ -24,11 +24,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@main
-
-      - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+      - uses: actions/checkout@main
+      - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.6
 
@@ -50,10 +47,9 @@ jobs:
         run: |
           cd .haxelib/hxcpp/git/tools/run
           haxe compile.hxml
-          cd ..
-          cd ./hxcpp
+          cd ../hxcpp
           haxe compile.hxml
-          cd ../..
+          cd ../../../../..
 
       - name: Compile (x86)
         if: ${{ matrix.build == '32bit' }}
