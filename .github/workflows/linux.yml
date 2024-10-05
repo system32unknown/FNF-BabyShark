@@ -41,7 +41,8 @@ jobs:
           haxe -cp commandline -D analyzer-optimize --run Main setup -s
 
       - name: Compile
-        run: haxelib run lime build linux
+        run: |
+          haxelib run lime build linux
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/linux/bin .

@@ -45,7 +45,8 @@ jobs:
           cd ../..
 
       - name: Compile
-        run: haxelib run openfl build windows
+        run: |
+          haxelib run openfl build windows
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
