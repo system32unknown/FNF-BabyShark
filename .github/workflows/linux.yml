@@ -31,8 +31,7 @@ jobs:
 
       - name: Installing Linux Libraries
         run: |
-          sudo apt install libgl1-mesa-dev libglu1-mesa-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev libpulse-dev libvlc-dev libvlccore-dev
-        shell: bash
+          sudo apt install libvlc-dev libvlccore-dev g++ g++-multilib gcc-multilib
 
       - name: Installing/Updating libraries
         run: |
@@ -45,14 +44,9 @@ jobs:
            haxe compile.hxml
            cd ../../../../..
 
-      - name: Build Lime
-        run: |
-          haxelib run lime rebuild cpp -release
-        shell: bash
       - name: Compile
         run: |
-          haxelib run lime build cpp
-        shell: bash
+          haxelib run lime build linux
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/linux/bin .
