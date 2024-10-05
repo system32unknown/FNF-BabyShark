@@ -18,7 +18,7 @@
 	<set name="BUILD_DIR" value="export/release" unless="debug"/>
 	<set name="BUILD_DIR" value="export/32bit" if="32bits"/>
 
-	<classpath path="source"/>
+	<source path="source"/>
 	
 	<!-- ______________________PSYCH ENGINE CUSTOMIZATION______________________ -->
 	<section if="desktop">
@@ -70,7 +70,6 @@
 
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc"/>
 	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux"/>
-	<define name="x86_BUILD" if="32bits"/>
 
 	<section if="HSCRIPT_ALLOWED">
 		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
@@ -81,8 +80,6 @@
 		<haxedef name="no-deprecation-warnings"/> <!-- No deprecation warnings. -->
 		<haxedef name="FLX_NO_DEBUG"/> <!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	</section>
-
-	<setenv name="HAXEPATH" value="./"/>
 
 	<!--Used for Izzy Engine's crash handler-->
 	<section if="CRASH_HANDLER">
@@ -104,8 +101,10 @@
 	<haxeflag name="--macro" value="addMetadata('@:build(macros.FlxBasicMacro.buildFlxBasic())', 'flixel.FlxBasic')"/>
 
 	<!--hxVLC Defines-->
+	<haxelib name="hxcpp-debug-server" if="debug"/>
 	<haxedef name="HXC_LIBVLC_LOGGING" if="VIDEOS_ALLOWED debug"/>
 	<haxedef name="HXVLC_NO_SHARE_DIRECTORY" if="VIDEOS_ALLOWED"/>
+	<define name="x86_BUILD" if="32bits"/>
 
 	<!-- _________________________________Custom_______________________________ -->
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
