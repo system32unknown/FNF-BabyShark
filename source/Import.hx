@@ -1,6 +1,10 @@
 #if !macro
 #if DISCORD_ALLOWED import backend.Discord; #end
 
+#if LUA_ALLOWED
+import llua.*;
+import llua.Lua;
+#end
 import debug.Logs;
 
 #if sys
@@ -30,11 +34,6 @@ import objects.BGSprite;
 
 import states.PlayState;
 import states.LoadingState;
-
-#if VIDEOS_ALLOWED
-import hxvlc.flixel.*;
-import hxvlc.openfl.*;
-#end
 
 #if flxanimate 
 import flxanimate.*;
