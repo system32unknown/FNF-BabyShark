@@ -8,8 +8,8 @@ Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor code
 ![License](https://img.shields.io/github/license/system32unknown/FNF-BabyShark)
 
 [![Build Release (Windows)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/windows.yaml/badge.svg)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/windows.yaml)
-[![Build Release (MacOS)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/macos.yaml/badge.svg)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/macos.yaml)
-[![Build Release (Windows)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/linux.yaml/badge.svg)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/linux.yaml)
+[![Build Release (MacOS)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/macos.yml/badge.svg)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/macos.yml)
+[![Build Release (Windows)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/linux.yml/badge.svg)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/linux.yml)
 
 # Credits:
 
