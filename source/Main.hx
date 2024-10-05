@@ -51,7 +51,7 @@ class Main extends Sprite {
 			fpsVar.memType = ClientPrefs.data.memCounterType;
 		}
 
-		#if linux Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
+		#if linux openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 
