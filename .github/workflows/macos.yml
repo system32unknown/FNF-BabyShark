@@ -42,7 +42,7 @@ jobs:
 
       - name: Installing/Updating libraries
         run: |
-          haxe -cp setup -D analyzer-optimize --run Main setup -s
+          haxe -cp commandline -D analyzer-optimize --run Main setup -s
       - name: Compile hxcpp
         run: |
           cd .haxelib/hxcpp/git/tools/run
