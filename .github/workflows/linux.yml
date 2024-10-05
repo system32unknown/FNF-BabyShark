@@ -1,4 +1,4 @@
-name: Windows Build (Release)
+name: Linux Build (Release)
 on:
   push:
     branches: [ main ]
@@ -8,9 +8,9 @@ on:
 
 jobs:
   build:
-    name: Windows Build
+    name: Linux Build
     permissions: write-all
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@main
@@ -21,34 +21,49 @@ jobs:
       - name: Restore action cache
         uses: actions/cache@main
         with:
-          key: cache-build-windows
+          key: cache-build-linux
           path: |
             .haxelib/
-            export/release/windows/haxe/
-            export/release/windows/obj/
+            export/release/linux/haxe/
+            export/release/linux/obj/
           restore-keys: |
-            cache-build-windows
+            cache-build-linux
 
-      - name: Installing/Updating libraries
+      - name: Installing Linux Libraries
         run: |
-          haxe -cp setup -D analyzer-optimize --run Main setup -s
-      - name: Compile hxcpp
-        run: |
-           cd .haxelib/hxcpp/git/tools/run
-           haxe compile.hxml
-           cd ../hxcpp
-           haxe compile.hxml
-           cd ../../../../..
+          sudo apt install libgl1-mesa-dev libglu1-mesa-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev libpulse-dev libvlc-dev libvlccore-dev
 
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null --quiet
+          chmod +x ./setup/unix.sh
+          sh ./setup/unix.sh
+      - name: Compiling Hxcpp
+        run: |
+            cd ~/haxelib/hxcpp/git/tools/run
+            haxe compile.hxml
+            cd ../hxcpp
+            haxe compile.hxml
+            cd ../../../../..
+
+      - name: Build Lime
+        run: |
+            haxelib run lime rebuild cpp -release
+        shell: bash
       - name: Compile
         run: |
-          haxelib run lime build windows
+            haxelib run lime build cpp
+        shell: bash
+
+      - name: Tar files
+        run: tar -zcvf AlterEngine.tar.gz -C export/release/linux/bin .
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
-          name: Alter Engine
-          path: export/release/windows/bin
+          name: Alter Engine (Linux)
+          path: AlterEngine.tar.gz
           if-no-files-found: error
 
       - name: Clearing already existing cache
@@ -60,7 +75,7 @@ jobs:
               repo: context.repo.repo,
             })
             for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-build-windows") {
+              if (cache.key == "cache-build-linux") {
                 console.log('Clearing ' + cache.key + '...')
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
@@ -74,10 +89,10 @@ jobs:
       - name: Uploading new cache
         uses: actions/cache@main
         with:
-          key: cache-build-windows
+          key: cache-build-linux
           path: |
             .haxelib/
-            export/release/windows/haxe/
-            export/release/windows/obj/
+            export/release/linux/haxe/
+            export/release/linux/obj/
           restore-keys: |
-            cache-build-windows
+            cache-build-linux
