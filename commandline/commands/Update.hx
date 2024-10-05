@@ -9,8 +9,6 @@ using StringTools;
 
 class Update {
 	public static function main(args:Array<String>) {
-		prettyPrint("Preparing installation...");
-
 		// to prevent messing with currently installed libs
 		if (!FileSystem.exists('.haxelib'))
 			FileSystem.createDirectory('.haxelib');

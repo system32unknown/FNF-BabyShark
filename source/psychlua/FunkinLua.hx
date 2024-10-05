@@ -806,7 +806,7 @@ class FunkinLua {
 				return;
 			}
 
-			var poop:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
+			var poop:FlxSprite = LuaUtils.getVarInstance(obj);
 			if(poop != null) {
 				poop.updateHitbox();
 				return;
