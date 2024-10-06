@@ -45,12 +45,7 @@ jobs:
           haxe compile.hxml
           cd ../../../../..
 
-      - name: Compile (x86)
-        if: ${{ matrix.build == '32bit' }}
-        run: haxelib run lime build mac -${{ matrix.build }} -D HXCPP_M32
-
-      - name: Compile (x64)
-        if: ${{ matrix.build != '32bit' }}
+      - name: Compile
         run: haxelib run lime build mac -${{ matrix.build }}
 
       - name: Uploading artifact
