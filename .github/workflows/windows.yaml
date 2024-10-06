@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: Alter Engine (${{ matrix.build }})
-          path: export/${{ matrix.build }}/windows/bin
+          path: export/release/windows/bin
           if-no-files-found: error
 
       - name: Clearing already existing cache

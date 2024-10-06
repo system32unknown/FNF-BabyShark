@@ -10,7 +10,7 @@ import flixel.util.FlxStringUtil;
 class FPSCounter extends openfl.text.TextField {
     public var fontName:String = openfl.utils.Assets.getFont("assets/fonts/Proggy.ttf").fontName;
 
-	var timeColor:Int = 0;
+	var timeColor:Float = 0;
 	public var checkLag:Bool = true;
 	public var delayDelta:Int = 1000;
 	public var memType:String = "";
@@ -45,7 +45,7 @@ class FPSCounter extends openfl.text.TextField {
 	}
 	public dynamic function preUpdateText():Void {
 		if (ClientPrefs.data.rainbowFps) {
-			timeColor = (timeColor % 360) + 1;
+			timeColor = (timeColor % 360.) + (1. / (ClientPrefs.data.framerate / 120));
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else if (checkLag) {
 			if (fpsManager.lagged()) textColor = FlxColor.RED;

@@ -48,6 +48,9 @@ jobs:
       - name: Compile
         run: haxelib run lime build mac -${{ matrix.build }}
 
+      - name: Tar files
+        run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
+
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
