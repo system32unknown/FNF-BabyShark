@@ -26,13 +26,13 @@ jobs:
       - name: Restore action cache
         uses: actions/cache@main
         with:
-          key: cache-build-windows
+          key: cache-windows-${{ matrix.build }}
           path: |
             .haxelib/
-            export/release/windows/haxe/
-            export/release/windows/obj/
+            export/${{ matrix.build }}/windows/haxe/
+            export/${{ matrix.build }}/windows/obj/
           restore-keys: |
-            cache-build-windows
+            cache-windows-${{ matrix.build }}
 
       - name: Installing/Updating libraries
         run: |
@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: Alter Engine (${{ matrix.build }})
-          path: export/release/windows/bin
+          path: export/${{ matrix.build }}/windows/bin
           if-no-files-found: error
 
       - name: Clearing already existing cache
@@ -69,7 +69,7 @@ jobs:
               repo: context.repo.repo,
             })
             for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-build-windows") {
+              if (cache.key == "cache-windows-${{ matrix.build }}") {
                 console.log('Clearing ' + cache.key + '...')
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
@@ -83,10 +83,10 @@ jobs:
       - name: Uploading new cache
         uses: actions/cache@main
         with:
-          key: cache-build-windows
+          key: cache-windows-${{ matrix.build }}
           path: |
             .haxelib/
-            export/release/windows/haxe/
-            export/release/windows/obj/
+            export/${{ matrix.build }}/windows/haxe/
+            export/${{ matrix.build }}/windows/obj/
           restore-keys: |
-            cache-build-windows
+            cache-windows-${{ matrix.build }}
