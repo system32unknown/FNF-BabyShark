@@ -8,13 +8,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        build: [release, 32bit]
-
-    name: MacOS Build (${{ matrix.build }})
-    permissions: write-all
+    name: MacOS Build
     runs-on: macOS-13
 
     steps:
@@ -26,13 +20,13 @@ jobs:
       - name: Restore action cache
         uses: actions/cache@main
         with:
-          key: cache-mac-${{ matrix.build }}
+          key: cache-build-mac
           path: |
             .haxelib/
-            export/${{ matrix.build }}/macos/haxe/
-            export/${{ matrix.build }}/macos/obj/
+            export/release/macos/haxe/
+            export/release/macos/obj/
           restore-keys: |
-            cache-mac-${{ matrix.build }}
+            cache-build-mac
 
       - name: Installing/Updating libraries
         run: |
@@ -46,7 +40,7 @@ jobs:
           cd ../../../../..
 
       - name: Compile
-        run: haxelib run lime build mac -${{ matrix.build }}
+        run: haxelib run lime build mac
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
@@ -54,7 +48,7 @@ jobs:
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
-          name: Alter Engine (${{ matrix.build }})
+          name: Alter Engine
           path: AlterEngine.tar.gz
           if-no-files-found: error
 
@@ -67,7 +61,7 @@ jobs:
               repo: context.repo.repo,
             })
             for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-mac-${{ matrix.build }}") {
+              if (cache.key == "cache-build-mac") {
                 console.log('Clearing ' + cache.key + '...')
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
@@ -81,10 +75,10 @@ jobs:
       - name: Uploading new cache
         uses: actions/cache@main
         with:
-          key: cache-mac-${{ matrix.build }}
+          key: cache-build-mac
           path: |
             .haxelib/
-            export/${{ matrix.build }}/macos/haxe/
-            export/${{ matrix.build }}/macos/obj/
+            export/release/macos/haxe/
+            export/release/macos/obj/
           restore-keys: |
-            cache-mac-${{ matrix.build }}
+            cache-build-mac

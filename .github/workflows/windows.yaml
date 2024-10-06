@@ -8,15 +8,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        build: [release, 32bit]
-
-    name: Windows Build (${{ matrix.build }})
-    permissions: write-all
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
@@ -26,13 +18,13 @@ jobs:
       - name: Restore action cache
         uses: actions/cache@main
         with:
-          key: cache-windows-${{ matrix.build }}
+          key: cache-build-windows
           path: |
             .haxelib/
-            export/${{ matrix.build }}/windows/haxe/
-            export/${{ matrix.build }}/windows/obj/
+            export/release/windows/haxe/
+            export/release/windows/obj/
           restore-keys: |
-            cache-windows-${{ matrix.build }}
+            cache-build-windows
 
       - name: Installing/Updating libraries
         run: |
@@ -46,12 +38,12 @@ jobs:
            cd ../../../../..
 
       - name: Compile
-        run: haxelib run lime build windows -${{ matrix.build }}
+        run: haxelib run lime build windows
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
-          name: Alter Engine (${{ matrix.build }})
+          name: Alter Engine
           path: export/release/windows/bin
           if-no-files-found: error
 
@@ -64,7 +56,7 @@ jobs:
               repo: context.repo.repo,
             })
             for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-windows-${{ matrix.build }}") {
+              if (cache.key == "cache-build-windows") {
                 console.log('Clearing ' + cache.key + '...')
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
@@ -78,10 +70,10 @@ jobs:
       - name: Uploading new cache
         uses: actions/cache@main
         with:
-          key: cache-windows-${{ matrix.build }}
+          key: cache-build-windows
           path: |
             .haxelib/
             export/${{ matrix.build }}/windows/haxe/
             export/${{ matrix.build }}/windows/obj/
           restore-keys: |
-            cache-windows-${{ matrix.build }}
+            cache-build-windows
