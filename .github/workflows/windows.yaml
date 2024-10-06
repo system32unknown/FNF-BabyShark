@@ -47,7 +47,7 @@ jobs:
 
       - name: Compile (x86)
         if: ${{ matrix.build == '32bit' }}
-        run: haxelib run lime build windows -${{ matrix.build }} -D HXCPP_M32
+        run: haxelib run lime build windows -${{ matrix.build }} -D HXCPP_M32 -32
 
       - name: Compile (x64)
         if: ${{ matrix.build != '32bit' }}
