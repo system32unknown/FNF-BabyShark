@@ -3,6 +3,7 @@ package psychlua;
 #if HSCRIPT_ALLOWED
 import hscript.AlterHscript;
 import hscript.AlterHscript.IrisCall;
+import hscript.Expr.Error as ImprError;
 import flixel.FlxBasic;
 
 class HScript extends AlterHscript {
@@ -10,7 +11,16 @@ class HScript extends AlterHscript {
 	public var filePath:String;
 	public var modFolder:String;
 	public var returnValue:Dynamic = null;
-	
+
+	public function errorCaught(e:ImprError, ?funcName:String) {
+		var header:String = (funcName != null ? '$origin: $funcName' : origin);
+		#if LUA_ALLOWED
+		FunkinLua.luaTrace('ERROR ($header) - ${e.toString()}', false, false, FlxColor.RED);
+		#else
+		PlayState.instance.addTextToDebug('ERROR ($header) - ${e.toString()}', FlxColor.RED);
+		#end
+	}
+
 	public static function initHaxeModuleCode(parent:FunkinLua, code:String, ?varsToBring:Any = null):Dynamic {
 		var hs:HScript = try parent.hscript catch (e) null;
 		if(hs == null) {
@@ -19,6 +29,7 @@ class HScript extends AlterHscript {
 			return parent.hscript.returnValue;
 		} else {
 			hs.varsToBring = varsToBring;
+			var prevCode:String = hs.scriptCode;
 			try {
 				if (hs.scriptCode != code) {
 					hs.scriptCode = code;
@@ -26,9 +37,11 @@ class HScript extends AlterHscript {
 				}
 				hs.returnValue = hs.execute();
 				return hs.returnValue;
-			} catch(e:Dynamic) {
-				FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
+			} catch(e:ImprError) {
+				hs.errorCaught(e);
 				hs.returnValue = null;
+				hs.scriptCode = prevCode;
+				return e;
 			}
 		}
 		return null;
@@ -47,7 +60,7 @@ class HScript extends AlterHscript {
 		}
 
 		filePath = file;
-		if (filePath != null && filePath.length > 0) {
+		if (filePath != null && filePath.length > 0 && parent == null) {
 			this.origin = filePath;
 			#if MODS_ALLOWED
 			var myFolder:Array<String> = filePath.split('/');
@@ -66,13 +79,9 @@ class HScript extends AlterHscript {
 		this.varsToBring = varsToBring;
 		try {
 			this.returnValue = execute();
-		} catch (e:Dynamic) {
-			#if LUA_ALLOWED
-			FunkinLua.luaTrace('ERROR (${this.origin}) - $e', false, false, FlxColor.RED);
-			#else
-			PlayState.instance.addTextToDebug('ERROR (${this.origin}) - $e', FlxColor.RED);
-			#end
-			this.returnValue = null;
+		} catch (e:ImprError) {
+			this.errorCaught(e);
+			this.returnValue = e;
 		}
 	}
 
@@ -353,7 +362,7 @@ class HScript extends AlterHscript {
 
 		try {
 			return call(funcToRun, funcArgs);
-		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: $e', ERROR);
+		} catch(e:ImprError) errorCaught(e, funcToRun);
 		return null;
 	}
 
@@ -367,12 +376,13 @@ class HScript extends AlterHscript {
 		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any, ?funcToRun:String, ?funcArgs:Array<Dynamic>):Dynamic {
 			#if HSCRIPT_ALLOWED
 			final retVal:Dynamic = initHaxeModuleCode(funk, codeToRun, varsToBring);
+			if (Std.isOfType(retVal, ImprError)) return null;
 			if (funcToRun == null) return (LuaUtils.typeSupported(retVal)) ? retVal : null;
 
 			try {
 				final retCall:IrisCall = funk.hscript.executeCode(funcToRun, funcArgs);
 				if (retCall != null) return (LuaUtils.typeSupported(retCall.returnValue)) ? retCall.returnValue : null;
-			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
+			} catch(e:ImprError) funk.hscript.errorCaught(e, funcToRun);
 			#else
 			FunkinLua.luaTrace("runHaxeCode: HScript isn't supported on this platform!", false, false, FlxColor.RED);
 			#end
@@ -384,7 +394,7 @@ class HScript extends AlterHscript {
 			try {
 				final retVal:IrisCall = funk.hscript.executeFunction(funcToRun, funcArgs);
 				if (retVal != null) return (LuaUtils.typeSupported(retVal.returnValue)) ? retVal.returnValue : null;
-			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
+			} catch(e:ImprError) funk.hscript.errorCaught(e, funcToRun);
 			return null;
 			#else
 			FunkinLua.luaTrace("runHaxeFunction: HScript isn't supported on this platform!", false, false, FlxColor.RED);
@@ -402,7 +412,7 @@ class HScript extends AlterHscript {
 			if (funk.hscript != null) {
 				try {
 					if (c != null) funk.hscript.set(libName, c);
-				} catch (e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}:${funk.lastCalledFunction}) - $e', false, false, FlxColor.RED);
+				} catch (e:ImprError) funk.hscript.errorCaught(e, funcToRun);
 			}
 			FunkinLua.luaTrace("addHaxeLibrary is deprecated! Import classes through \"import\" in HScript!", false, true);
 			#else

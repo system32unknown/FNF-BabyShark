@@ -93,6 +93,8 @@ class FunkinLua {
 			set('combo', game.combo);
 			set('deaths', PlayState.deathCounter);
 
+			set('mania', PlayState.SONG.mania);
+
 			set('rating', game.ratingPercent);
 			set('ratingAccuracy', game.ratingAccuracy);
 			set('ratingName', game.ratingName);
@@ -112,7 +114,7 @@ class FunkinLua {
 			set('botPlay', game.cpuControlled);
 			set('practice', game.practiceMode);
 	
-			for (i in 0...4) {
+			for (i in 0...EK.keys(PlayState.mania)) {
 				set('defaultPlayerStrumX' + i, 0);
 				set('defaultPlayerStrumY' + i, 0);
 				set('defaultOpponentStrumX' + i, 0);
