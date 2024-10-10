@@ -102,6 +102,7 @@ class TextFunctions {
 				obj.alignment = switch(alignment.trim().toLowerCase()) {
 					case 'right': RIGHT;
 					case 'center': CENTER;
+					case 'justify': JUSTIFY;
 					default: LEFT;
 				}
 				return true;

@@ -10,12 +10,12 @@ class ShaderFunctions {
 	static var storedFilters:Map<String, ShaderFilter> = [];
 	#end
 
-	public static function implement(funk:FunkinLua, ?glslVersion:Int = 120) {
+	public static function implement(funk:FunkinLua) {
 		funk.addLocalCallback("initLuaShader", function(name:String) {
 			if(!ClientPrefs.data.shaders) return false;
 
 			#if (!flash && sys)
-			return funk.initLuaShader(name, glslVersion);
+			return funk.initLuaShader(name);
 			#else
 			FunkinLua.luaTrace("initLuaShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
@@ -34,7 +34,7 @@ class ShaderFunctions {
 			var leObj:FlxSprite = LuaUtils.getVarInstance(obj, true);
 			if(leObj != null) {
 				var arr:Array<String> = funk.runtimeShaders.get(shader);
-				leObj.shader = new FlxRuntimeShader(arr[0], arr[1], arr[2]);
+				leObj.shader = new FlxRuntimeShader(arr[0], arr[1]);
 				return true;
 			}
 			#else
@@ -66,7 +66,7 @@ class ShaderFunctions {
             var camera:Dynamic = getCam(cam);
             camera.filters ??= [];
 			
-            var filter:ShaderFilter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1], arr[2]));
+            var filter:ShaderFilter = new ShaderFilter(new FlxRuntimeShader(arr[0], arr[1]));
             storedFilters.set(index, filter);
 			trace("Stored Shaders:" + Std.string(storedFilters));
             camera.filters.push(filter);
@@ -229,18 +229,18 @@ class ShaderFunctions {
 			return false;
 		});
 
-		funk.set("setShaderBitmapData", function(obj:String, prop:String, bitmapdataPath:String) {
+		funk.set("setShaderSampler2D", function(obj:String, prop:String, bitmapdataPath:String) {
 			#if (!flash && sys)
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader != null) {
 				var value:flixel.graphics.FlxGraphic = Paths.image(bitmapdataPath);
 				if (value == null || value.bitmap == null) return false;
 
-				shader.setBitmapData(prop, value.bitmap);
+				shader.setSampler2D(prop, value.bitmap);
 				return true;
 			}
 			#else
-			FunkinLua.luaTrace("setShaderBitmapData: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			FunkinLua.luaTrace("setShaderSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
 			return false;
 		});

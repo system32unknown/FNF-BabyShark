@@ -81,7 +81,7 @@ class ReflectionFunctions {
 			FunkinLua.luaTrace('getPropertyFromGroup: Group/Array $group doesn\'t exist!', false, false, FlxColor.RED);
 			return null;
 		});
-		funk.set("setPropertyFromGroup", function(group:String, index:Int, variable:Dynamic, value:Dynamic, ?allowMaps:Bool = false) {
+		funk.set("setPropertyFromGroup", function(group:String, index:Int, variable:Dynamic, value:Dynamic, ?allowMaps:Bool = false, ?allowInstances:Bool = false) {
 			var split:Array<String> = group.split('.');
 			var realObject:Dynamic = null;
 			if(split.length > 1) realObject = LuaUtils.getPropertyLoop(split, false, allowMaps);
@@ -93,12 +93,12 @@ class ReflectionFunctions {
 						var leArray:Dynamic = realObject[index];
 						if(leArray != null) {
 							if(Type.typeof(variable) == ValueType.TInt) {
-								leArray[variable] = value;
+								leArray[variable] = allowInstances ? parseSingleInstance(value) : value;
 								return value;
 							}
-							LuaUtils.setGroupStuff(leArray, variable, value, allowMaps);
+							LuaUtils.setGroupStuff(leArray, variable, allowInstances ? parseSingleInstance(value) : value, allowMaps);
 						}
-					default: LuaUtils.setGroupStuff(realObject.members[index], variable, value, allowMaps); //Is Group
+					default: LuaUtils.setGroupStuff(realObject.members[index], variable, allowInstances ? parseSingleInstance(value) : value, allowMaps); //Is Group
 				}
 			} else FunkinLua.luaTrace('setPropertyFromGroup: Group/Array $group doesn\'t exist!', false, false, FlxColor.RED);
 			return value;
@@ -215,8 +215,8 @@ class ReflectionFunctions {
 				argStr = argStr.substring(index + 2);
 				var lastIndex:Int = argStr.lastIndexOf('::');
 
-				var split:Array<String> = argStr.split('.');
-				arg = (lastIndex > -1) ? Type.resolveClass(arg.substring(0, lastIndex)) : PlayState.instance;
+				var split:Array<String> = (lastIndex > -1) ? argStr.substring(0, lastIndex).split('.') : argStr.split('.');
+				arg = (lastIndex > -1) ? Type.resolveClass(argStr.substring(lastIndex + 2)) : PlayState.instance;
 				for (j in 0...split.length) arg = LuaUtils.getVarInArray(arg, split[j].trim());
 			}
 		}

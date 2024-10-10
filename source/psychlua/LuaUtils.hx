@@ -22,8 +22,7 @@ class LuaUtils {
 	public static var Function_StopAll:String = "##PSYCHLUA_FUNCTIONSTOPALL";
 
 	public static function getLuaTween(options:Dynamic):LuaTweenOptions {
-		if (options == null) options = {}
-		return {
+		return (options != null) ? {
 			type: getTweenTypeByString(options.type),
 			startDelay: options.startDelay,
 			onUpdate: options.onUpdate,
@@ -31,7 +30,7 @@ class LuaUtils {
 			onComplete: options.onComplete,
 			loopDelay: options.loopDelay,
 			ease: getTweenEaseByString(options.ease)
-		};
+		} : null;
 	}
 
 	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic, allowMaps:Bool = false):Any {

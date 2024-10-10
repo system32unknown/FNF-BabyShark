@@ -382,9 +382,8 @@ class FunkinLua {
 					var myOptions:LuaUtils.LuaTweenOptions = LuaUtils.getLuaTween(options);
 					if(tag != null) {
 						var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
-						var originalTag:String = tag;
-						tag = LuaUtils.formatVariable('tween_$tag');
-						variables.set(tag, FlxTween.tween(penisExam, values, duration, {
+						var originalTag:String = 'tween_' + LuaUtils.formatVariable(tag);
+						variables.set(tag, FlxTween.tween(penisExam, values, duration, myOptions != null ? {
 							type: myOptions.type,
 							ease: myOptions.ease,
 							startDelay: myOptions.startDelay,
@@ -396,9 +395,18 @@ class FunkinLua {
 								if(myOptions.onComplete != null) game.callOnLuas(myOptions.onComplete, [originalTag, vars]);
 								if(twn.type == FlxTweenType.ONESHOT || twn.type == FlxTweenType.BACKWARD) variables.remove(tag);
 							}
-						}));
+						} : null));
 						return tag;
-					} else FlxTween.tween(penisExam, values, duration, {type: myOptions.type, ease: myOptions.ease, startDelay: myOptions.startDelay, loopDelay: myOptions.loopDelay});
+					} else FlxTween.tween(penisExam, values, duration, myOptions != null ? {
+						type: myOptions.type,
+						ease: myOptions.ease,
+						startDelay: myOptions.startDelay,
+						loopDelay: myOptions.loopDelay,
+
+						onUpdate: (twn:FlxTween) -> if(myOptions.onUpdate != null) game.callOnLuas(myOptions.onUpdate, [null, vars]),
+						onStart: (twn:FlxTween) -> if(myOptions.onStart != null) game.callOnLuas(myOptions.onStart, [null, vars]),
+						onComplete: (twn:FlxTween) -> if(myOptions.onComplete != null) game.callOnLuas(myOptions.onComplete, [null, vars]),
+					} : null);
 				} else luaTrace('startTween: No values on 2nd argument!', false, false, FlxColor.RED);
 			} else luaTrace('startTween: Couldnt find object: ' + vars, false, false, FlxColor.RED);
 			return null;
@@ -784,7 +792,7 @@ class FunkinLua {
 				else GameOverSubstate.instance.insert(GameOverSubstate.instance.members.indexOf(GameOverSubstate.instance.boyfriend), spr);
 			}
 		});
-		set("setGraphicSize", function(obj:String, x:Int, y:Int = 0, updateHitbox:Bool = true) {
+		set("setGraphicSize", function(obj:String, x:Float, y:Float = 0, updateHitbox:Bool = true) {
 			var poop:FlxSprite = LuaUtils.getVarInstance(obj);
 			if (poop == null) return false;
 
@@ -1206,7 +1214,7 @@ class FunkinLua {
 	}
 
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
-	public function initLuaShader(name:String, ?glslVersion:Int = 120):Bool {
+	public function initLuaShader(name:String):Bool {
 		if(!ClientPrefs.data.shaders) return false;
 
 		#if (MODS_ALLOWED && !flash && sys)
@@ -1241,7 +1249,7 @@ class FunkinLua {
 				} else vert = null;
 
 				if(found) {
-					runtimeShaders.set(name, [frag, vert, Std.string(glslVersion)]);
+					runtimeShaders.set(name, [frag, vert]);
 					return true;
 				}
 			}

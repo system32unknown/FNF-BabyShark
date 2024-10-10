@@ -164,8 +164,8 @@ class Paths {
 		return graph;
 	}
 
-	inline static public function getTextFromFile(key:String):String {
-		var path:String = getPath(key);
+	inline static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String {
+		var path:String = getPath(key, TEXT, !ignoreMods);
 		return (#if sys FileSystem.exists(path)) ? File.getContent(path) #else OpenFlAssets.exists(path, TEXT)) ? Assets.getText(path) #end : null;
 	}
 
