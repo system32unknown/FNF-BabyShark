@@ -922,6 +922,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							curSectionTime = cachedSectionTimes[noteSec];
 						}
 						positionNoteYOnTime(note, noteSec);
+						note.updateSustainToZoom(cachedSectionCrochets[noteSec] / 4, curZoom);
 					}
 
 					for (event in events) {
@@ -1213,12 +1214,15 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 			if(qPress != ePress && selectedNotes.length != 1) susLengthStepper.value += addSus;
 
+			var noteSec:Int = 0;
 			for (note in selectedNotes) {
-				if(note == null) continue;
+				if(note == null || !note.exists) continue;
 
 				if(!note.isEvent) {
 					if(qPress != ePress) {
-						note.setSustainLength(note.sustainLength + addSus, Conductor.stepCrochet, curZoom);
+						while(cachedSectionTimes.length > noteSec + 1 && cachedSectionTimes[noteSec + 1] <= note.strumTime) noteSec++;
+
+						note.setSustainLength(note.sustainLength + addSus, cachedSectionCrochets[noteSec] / 4, curZoom);
 						if(selectedNotes.length == 1) susLengthStepper.value = note.sustainLength;
 					}
 					note.animation.update(elapsed); //let selected notes be animated for better visibility

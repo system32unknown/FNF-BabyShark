@@ -1461,6 +1461,8 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 					return;
 				}
 			}
+
+			createPopup.visible = createPopup.active = false;
 			var modFolder:String = (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0) ? Paths.mods('${Mods.currentModDirectory}/images/') : Paths.mods('images/');
 			openSubState(new BasePrompt(480, 160, 'This file is not inside Psych Engine.', (state:BasePrompt) -> {
 				var txt:FlxText = new FlxText(0, state.bg.y + 60, 460, 'Copy to: "$modFolder"?', 11);
