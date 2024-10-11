@@ -33,7 +33,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 
 		#if desktop addOption(new Option('GPU Caching', 'If checked, allows the GPU to be used for caching textures, decreasing RAM usage.\nDon\'t turn this on if you have a shitty Graphics Card.', 'cacheOnGPU', BOOL)); #end
 
-		var option:Option = new Option('Framerate', "Pretty self explanatory, isn't it?\n(The Default Value is 60 FPS)", 'framerate', INT);
+		var option:Option = new Option('Framerate', "Pretty self explanatory, isn't it?", 'framerate', INT);
 		addOption(option);
 		option.minValue = 60;
 		option.maxValue = 240;

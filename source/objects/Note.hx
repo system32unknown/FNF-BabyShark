@@ -19,9 +19,6 @@ typedef NoteSplashData = {
 	useGlobalShader:Bool, //breaks r/g/b/a but makes it copy default colors for your custom note
 	useRGBShader:Bool,
 	antialiasing:Bool,
-	r:FlxColor,
-	g:FlxColor,
-	b:FlxColor,
 	a:Float
 }
 
@@ -86,9 +83,6 @@ class Note extends FlxSprite {
 		antialiasing: !PlayState.isPixelStage,
 		useGlobalShader: false,
 		useRGBShader: (PlayState.SONG != null) ? !(PlayState.SONG.disableNoteRGB == true) : true,
-		r: -1,
-		g: -1,
-		b: -1,
 		a: ClientPrefs.data.splashAlpha
 	};
 
@@ -177,9 +171,7 @@ class Note extends FlxSprite {
 					rgbShader.b = 0xFF990022;
 
 					// splash data and colors
-					noteSplashData.r = FlxColor.RED;
-					noteSplashData.g = 0xFF101010;
-					noteSplashData.texture = 'noteSplashes/noteSplashes-electric';
+					noteSplashData.texture = 'noteSplashes-electric';
 
 					missHealth = isSustainNote ? .25 : .1;
 					hitCausesMiss = true;

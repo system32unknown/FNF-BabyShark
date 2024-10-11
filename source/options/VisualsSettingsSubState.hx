@@ -1,26 +1,42 @@
 package options;
 
 import objects.Note;
+import objects.NoteSplash;
+import objects.NoteSplash.NoteSplashAnim;
 import objects.StrumNote;
 
 class VisualsSettingsSubState extends BaseOptionsMenu {
 	var noteOptionID:Int = -1;
 	var notes:FlxTypedGroup<StrumNote>;
-	var notesTween:Array<FlxTween> = [];
+	var splashes:FlxTypedGroup<NoteSplash>;
 	var noteY:Float = 90;
 	var changedMusic:Bool = false;
 	public function new() {
 		title = Language.getPhrase('visuals_menu', 'Visuals Settings');
 		rpcTitle = 'Visuals Settings Menu'; //for Discord Rich Presence
 
-		// for note skins
+		// for note skins and splash skins
 		notes = new FlxTypedGroup<StrumNote>();
-		for (i in 0...Note.colArray.length) {
-			var note:StrumNote = new StrumNote(370 + (560 / Note.colArray.length) * i, -200, i, 0);
+		splashes = new FlxTypedGroup<NoteSplash>();
+		for (i in 0...EK.colArray.length) {
+			var note:StrumNote = new StrumNote(45 + 140 * i, -200, i, 0);
+			note.setGraphicSize(112);
 			note.centerOffsets();
 			note.centerOrigin();
 			note.playAnim('static');
 			notes.add(note);
+
+			var splash:NoteSplash = new NoteSplash();
+			splash.noteData = i;
+			splash.setPosition(note.x, noteY);
+			splash.loadSplash();
+			splash.visible = false;
+			splash.alpha = ClientPrefs.data.splashAlpha;
+			splash.animation.onFinish.add((name:String) -> splash.visible = false);
+			splashes.add(splash);
+			
+			Note.initializeGlobalRGBShader(i % EK.colArray.length);
+			splash.rgbShader.copyValues(Note.globalRgbShaders[i % EK.colArray.length]);
 		}
 
 		// options
@@ -47,7 +63,9 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 				ClientPrefs.data.splashSkin = ClientPrefs.defaultData.splashSkin; //Reset to default if saved splashskin couldnt be found
 
 			noteSplashes.insert(0, ClientPrefs.defaultData.splashSkin); //Default skin always comes first
-			addOption(new Option('Note Splashes:', "Select your prefered Note Splash variation or turn it off.", 'splashSkin', STRING, noteSplashes));
+			var option:Option = new Option('Note Splashes:', "Select your prefered Note Splash variation or turn it off.", 'splashSkin', STRING, noteSplashes);
+			addOption(option);
+			option.onChange = onChangeSplashSkin;
 		}
 
 		var option:Option = new Option('Note Splashes', "Set the alpha for the Note Splashes, usually shown when hitting \"Epic!\" or \"Sick!\" notes.", 'splashAlpha', PERCENT);
@@ -57,6 +75,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		option.changeValue = 0.1;
 		option.decimals = 1;
 		addOption(option);
+		option.onChange = playNoteSplashes;
 
 		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud', BOOL));
 		addOption(new Option('Time Bar:', "What should the Time Bar display?", 'timeBarType', STRING, ['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Disabled']));
@@ -92,19 +111,31 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 
 		super();
 		add(notes);
+		add(splashes);
 	}
 
+	var notesShown:Bool = false;
 	override function changeSelection(change:Int = 0) {
 		super.changeSelection(change);
 		
-		if(noteOptionID < 0) return;
-
-		for (i in 0...Note.colArray.length) {
-			var note:StrumNote = notes.members[i];
-			if(notesTween[i] != null) notesTween[i].cancel();
-			if(curSelected == noteOptionID)
-				notesTween[i] = FlxTween.tween(note, {y: noteY}, Math.abs(note.y / (200 + noteY)) / 3, {ease: FlxEase.quadInOut});
-			else notesTween[i] = FlxTween.tween(note, {y: -200}, Math.abs(note.y / (200 + noteY)) / 3, {ease: FlxEase.quadInOut});
+		switch(curOption.variable) {
+			case 'noteSkin', 'splashSkin', 'splashAlpha':
+				if(!notesShown) {
+					for (note in notes.members) {
+						FlxTween.cancelTweensOf(note);
+						FlxTween.tween(note, {y: noteY}, Math.abs(note.y / (200 + noteY)) / 3, {ease: FlxEase.quadInOut});
+					}
+				}
+				notesShown = true;
+				if(curOption.variable.startsWith('splash') && Math.abs(notes.members[0].y - noteY) < 25) playNoteSplashes();
+			default:
+				if(notesShown)  {
+					for (note in notes.members) {
+						FlxTween.cancelTweensOf(note);
+						FlxTween.tween(note, {y: -200}, Math.abs(note.y / (200 + noteY)) / 3, {ease: FlxEase.quadInOut});
+					}
+				}
+				notesShown = false;
 		}
 	}
 
@@ -116,6 +147,26 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		note.texture = skin; //Load texture and anims
 		note.reloadNote();
 		note.playAnim('static');
+	}
+
+	function onChangeSplashSkin() {
+		for (splash in splashes) splash.loadSplash();
+		playNoteSplashes();
+	}
+	function playNoteSplashes() {
+		for (splash in splashes) {
+			var anim:String = splash.playDefaultAnim();
+			splash.visible = true;
+			splash.alpha = ClientPrefs.data.splashAlpha;
+			
+			var conf:NoteSplashAnim = splash.config.animations.get(anim);
+			var offsets:Array<Float> = [0, 0];
+			if (conf != null) offsets = conf.offsets;
+			if (offsets != null) {
+				splash.centerOffsets();
+				splash.offset.set(offsets[0], offsets[1]);
+			}
+		}
 	}
 
 	override function destroy() {

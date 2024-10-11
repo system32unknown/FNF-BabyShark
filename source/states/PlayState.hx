@@ -525,7 +525,6 @@ class PlayState extends MusicBeatState {
 		stagesFunc(stage -> stage.createPost()); callOnScripts('onCreatePost');
 
 		var splash:NoteSplash = new NoteSplash();
-		splash.setupNoteSplash(100, 100);
 		grpNoteSplashes.add(splash);
 		splash.alpha = 0.000001; //cant make it invisible or it won't allow precaching
 
@@ -2217,14 +2216,15 @@ class PlayState extends MusicBeatState {
 	public function spawnNoteSplashOnNote(note:Note) {
 		if(ClientPrefs.data.splashAlpha > 0 && note != null) {
 			var strum:StrumNote = playerStrums.members[note.noteData];
-			if(strum != null) spawnNoteSplash(strum.x + EK.swidths[mania] / 2 - Note.swagWidth / 2, strum.y + EK.swidths[mania] / 2 - Note.swagWidth / 2, note.noteData, note);
+			if(strum != null) spawnNoteSplash(note, strum);
 		}
 	}
 
-	public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
-		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash(x, y, data, note);
+	public function spawnNoteSplash(note:Note, strum:StrumNote) {
+		var splash:NoteSplash = new NoteSplash();
+		splash.babyArrow = strum;
 		splash.ID = grpNoteSplashes.ID++;
+		splash.spawnSplashNote(note);
 		grpNoteSplashes.add(splash);
 		grpNoteSplashes.sort(CoolUtil.sortByID);
 	}
@@ -2250,6 +2250,7 @@ class PlayState extends MusicBeatState {
 		FlxG.animationTimeScale = 1;
 		Note.globalRgbShaders = [];
 		backend.NoteTypesConfig.clearNoteTypesData();
+		NoteSplash.configs.clear();
 		instance = null;
 		super.destroy();
 	}
@@ -2552,7 +2553,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		var arr:Array<String> = runtimeShaders.get(name);
-		return new FlxRuntimeShader(arr[0], arr[1];
+		return new FlxRuntimeShader(arr[0], arr[1]);
 		#else
 		FlxG.log.warn("Platform unsupported for Runtime Shaders!");
 		return null;

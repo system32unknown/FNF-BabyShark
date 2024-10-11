@@ -1,7 +1,5 @@
 package backend;
 
-package backend;
-
 class EK {
 	public static var defaultMania:Int = 3;
 	public static var minMania:Int = 0;

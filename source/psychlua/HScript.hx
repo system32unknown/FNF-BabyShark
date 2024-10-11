@@ -412,7 +412,7 @@ class HScript extends AlterHscript {
 			if (funk.hscript != null) {
 				try {
 					if (c != null) funk.hscript.set(libName, c);
-				} catch (e:ImprError) funk.hscript.errorCaught(e, funcToRun);
+				} catch (e:ImprError) FunkinLua.luaTrace(funk.hscript.origin + ":" + funk.lastCalledFunction + " - " + e, false, false, FlxColor.RED);
 			}
 			FunkinLua.luaTrace("addHaxeLibrary is deprecated! Import classes through \"import\" in HScript!", false, true);
 			#else

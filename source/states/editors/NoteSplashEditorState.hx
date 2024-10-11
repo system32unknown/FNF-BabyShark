@@ -820,19 +820,19 @@ class NoteSplashEditorState extends MusicBeatState {
 			}
 		}
 
-		for (i in 0...Note.colArray.length) {
+		for (i in 0...EK.colArray.length) {
 			var offset:Array<Float> = offsets[hasOneOffset ? 0 : i];
 			if (i + 1 > configs.length && !hasOneOffset) break;
 
-			config = NoteSplash.addAnimationToConfig(config, 1, Note.colArray[i], '$animation ${Note.colArray[i]} 10', fps, offset, [], i);
+			config = NoteSplash.addAnimationToConfig(config, 1, EK.colArray[i], '$animation ${EK.colArray[i]} 10', fps, offset, [], i);
 		}
 
 		if (offsets.length > 4) {
-			for (i in 0...Note.colArray.length) {
+			for (i in 0...EK.colArray.length) {
 				var offset:Array<Float> = offsets[i + 4];
 				if (i + 1 > offsets.length) break;
 
-				config = NoteSplash.addAnimationToConfig(config, 1, Note.colArray[i] + "2", '$animation ${Note.colArray[i]} 20', fps, offset, [], i + 4);
+				config = NoteSplash.addAnimationToConfig(config, 1, EK.colArray[i] + "2", '$animation ${EK.colArray[i]} 20', fps, offset, [], i + 4);
 			}
 		}
 
@@ -863,8 +863,7 @@ class NoteSplashEditorHelpSubState extends MusicBeatSubstate {
 
 		var helpTexts:FlxSpriteGroup = new FlxSpriteGroup();
 		for (i => txt in str) {
-			if (txt.length < 1)
-				continue;
+			if (txt.length < 1) continue;
 
 			var helpText:FlxText = new FlxText(0, 0, 0, txt, 32);
 			helpText.setFormat(null, 32, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);
