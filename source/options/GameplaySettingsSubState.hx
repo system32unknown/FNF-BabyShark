@@ -5,22 +5,22 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		title = Language.getPhrase('gameplay_menu', 'Gameplay Settings');
 		rpcTitle = 'Gameplay Settings Menu'; //for Discord Rich Presence
 
-		addOption(new Option('Downscroll', 'If checked, notes go Down instead of Up, simple enough.', 'downScroll', BOOL));
-		addOption(new Option('Middlescroll', 'If checked, your notes get centered.', 'middleScroll', BOOL));
+		addOption(new Option('Downscroll', 'If checked, notes go Down instead of Up, simple enough.', 'downScroll'));
+		addOption(new Option('Middlescroll', 'If checked, your notes get centered.', 'middleScroll'));
 
 		addOption(new Option('Note Diff Type:', '', 'noteDiffTypes', STRING, ['Psych', 'Simple']));
 		addOption(new Option('Accuracy Type:', "The way accuracy is calculated. \nNote = Depending on if a note is hit or not.\nJudgement = Depending on Judgement.\nMillisecond = Depending on milliseconds.", 'accuracyType', STRING, ['Note', 'Judgement', 'Millisecond']));
 
-		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums', BOOL));
-		addOption(new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping', BOOL));
+		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums'));
+		addOption(new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping'));
 
-		var option:Option = new Option('Auto Pause', "If checked, the game automatically pauses if the screen isn't on focus.", 'autoPause', BOOL);
+		var option:Option = new Option('Auto Pause', "If checked, the game automatically pauses if the screen isn't on focus.", 'autoPause');
 		addOption(option);
 		option.onChange = () -> FlxG.autoPause = ClientPrefs.data.autoPause;
-		addOption(new Option('Auto Pause Playstate', "If checked, in playstate, gameplay and notes will pause if it's unfocused.", 'autoPausePlayState', BOOL));
+		addOption(new Option('Auto Pause Playstate', "If checked, in playstate, gameplay and notes will pause if it's unfocused.", 'autoPausePlayState'));
 
-		addOption(new Option('Disable Reset Button', "If checked, pressing Reset won't do anything.", 'noReset', BOOL));
-		addOption(new Option('Dynamic Camera Movement', "If unchecked, \nthe camera won't move in the direction in which the characters sing.", 'camMovement', BOOL));
+		addOption(new Option('Disable Reset Button', "If checked, pressing Reset won't do anything.", 'noReset'));
+		addOption(new Option('Dynamic Camera Movement', "If unchecked, \nthe camera won't move in the direction in which the characters sing.", 'camMovement'));
 
 		var option:Option = new Option('Hitsound Type:', "What should the hitsounds like?", 'hitsoundTypes', STRING, ['Tick', 'Snap', 'Dave']);
 		addOption(option);
@@ -34,6 +34,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.changeValue = .1;
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
+
+		addOption(new Option('Use Epic Ratings', 'If checked, adds Epic Ratings as a bonus judgement above sick (does not affect accuracy, only your score).', 'useEpics'));
 
 		var option:Option = new Option('Rating Offset', 'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.', 'ratingOffset', INT);
 		option.displayFormat = '%vms';

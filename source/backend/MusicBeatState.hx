@@ -1,6 +1,6 @@
 package backend;
 
-class MusicBeatState extends flixel.FlxState {
+class MusicBeatState extends modcharting.ModchartMusicBeatState {
 	var curSection:Int = 0;
 	var stepsToDo:Int = 0;
 

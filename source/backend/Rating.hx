@@ -19,7 +19,7 @@ class Rating {
 	}
 
 	public static function loadDefault():Array<Rating> {
-		var ratingsData:Array<Rating> = [new Rating('epic')];
+		var ratingsData:Array<Rating> = (ClientPrefs.data.useEpics ? [new Rating('epic')] : []);
 
 		var rating:Rating = new Rating('sick');
 		rating.ratingMod = 1;
