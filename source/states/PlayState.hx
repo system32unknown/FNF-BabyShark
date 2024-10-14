@@ -20,6 +20,9 @@ import data.*;
 import psychlua.*;
 #if HSCRIPT_ALLOWED import hscript.AlterHscript; #end
 import cutscenes.DialogueBoxPsych;
+import modcharting.ModchartFuncs;
+import modcharting.NoteMovement;
+import modcharting.PlayfieldRenderer;
 
 class PlayState extends MusicBeatState {
 	public static var STRUM_X = 48.5;
@@ -231,6 +234,7 @@ class PlayState extends MusicBeatState {
 	public var endCallback:Void->Void = null;
 
 	public static var nextReloadAll:Bool = false;
+	var backupGpu:Bool;
 	override public function create() {
 		Paths.clearStoredMemory();
 		if(nextReloadAll) {
@@ -417,7 +421,6 @@ class PlayState extends MusicBeatState {
 		noteGroup.add(strumLineNotes);
 
 		generateSong();
-		noteGroup.add(grpNoteSplashes);
 
 		camFollow = new FlxObject();
 		camFollow.setPosition(camPos.x, camPos.y);
@@ -475,7 +478,7 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(botplayTxt);
 		if(ClientPrefs.data.downScroll) botplayTxt.y = healthBar.y + 70;
 
-		uiGroup.cameras = [camHUD]; noteGroup.cameras = [camHUD];
+		uiGroup.cameras = noteGroup.cameras = [camHUD];
 		comboGroup.cameras = (ClientPrefs.data.ratingDisplay == "Hud" ? [camHUD] : [camGame]);
 		startingSong = true;
 
@@ -522,6 +525,11 @@ class PlayState extends MusicBeatState {
 		else if(Paths.formatToSongPath(ClientPrefs.data.pauseMusic) != 'none') Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic));
 		resetRPC();
 	
+		backupGpu = ClientPrefs.data.cacheOnGPU;
+		ClientPrefs.data.cacheOnGPU = false;
+		playfieldRenderer = new PlayfieldRenderer(strumLineNotes, notes, this);
+		noteGroup.add(playfieldRenderer);
+		noteGroup.add(grpNoteSplashes);
 		stagesFunc(stage -> stage.createPost()); callOnScripts('onCreatePost');
 
 		var splash:NoteSplash = new NoteSplash();
@@ -795,6 +803,7 @@ class PlayState extends MusicBeatState {
 
 			canPause = true;
 			generateStaticArrows(0); generateStaticArrows(1);
+			NoteMovement.getDefaultStrumPos(this);
 			for (i in 0...playerStrums.length) {setOnScripts('defaultPlayerStrumX$i', playerStrums.members[i].x); setOnScripts('defaultPlayerStrumY$i', playerStrums.members[i].y);}
 			for (i in 0...opponentStrums.length) {setOnScripts('defaultOpponentStrumX$i', opponentStrums.members[i].x); setOnScripts('defaultOpponentStrumY$i', opponentStrums.members[i].y);}
 
@@ -2230,6 +2239,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function destroy() {
+		ClientPrefs.data.cacheOnGPU = backupGpu;
 		if (CustomSubstate.instance != null) {
 			closeSubState();
 			resetSubState();

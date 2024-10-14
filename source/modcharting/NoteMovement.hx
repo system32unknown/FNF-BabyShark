@@ -1,9 +1,5 @@
 package modcharting;
 
-import objects.Note;
-import objects.StrumNote;
-import openfl.geom.Vector3D;
-
 class NoteMovement {
     public static var keyCount:Int = 4;
     public static var playerKeyCount:Int = 4;
@@ -28,7 +24,7 @@ class NoteMovement {
         playerKeyCount = game.playerStrums.length;
 
         for (i in 0...game.strumLineNotes.members.length) {
-            var strum:StrumNote = game.strumLineNotes.members[i];
+            var strum:objects.StrumNote = game.strumLineNotes.members[i];
             defaultSkewX.push(strum.skew.x);
             defaultSkewY.push(strum.skew.y);
             defaultStrumX.push(strum.x);
@@ -41,12 +37,12 @@ class NoteMovement {
         totalKeyCount = keyCount + playerKeyCount;
     }
 
-    public static function setNotePath(daNote:Note, lane:Int, scrollSpeed:Float, curPos:Float, noteDist:Float, incomingAngleX:Float, incomingAngleY:Float) {
+    public static function setNotePath(daNote:objects.Note, lane:Int, scrollSpeed:Float, curPos:Float, noteDist:Float, incomingAngleX:Float, incomingAngleY:Float) {
         daNote.x = defaultStrumX[lane];
         daNote.y = defaultStrumY[lane];
         daNote.z = 0;
 
-        var pos = ModchartUtil.getCartesianCoords3D(incomingAngleX,incomingAngleY, curPos * noteDist);
+        var pos:openfl.geom.Vector3D = ModchartUtil.getCartesianCoords3D(incomingAngleX,incomingAngleY, curPos * noteDist);
         daNote.y += pos.y;
         daNote.x += pos.x;
         daNote.z += pos.z;

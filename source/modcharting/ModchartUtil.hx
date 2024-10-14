@@ -1,36 +1,24 @@
 package modcharting;
 
-import flixel.math.FlxAngle;
 import openfl.geom.Vector3D;
 import objects.Note;
 
 class ModchartUtil {
-	public static function getDownscroll(instance:ModchartMusicBeatState) {
-		return ClientPrefs.data.downScroll;
-	}
 
-	public static function getMiddlescroll(instance:ModchartMusicBeatState) {
-		return ClientPrefs.data.middleScroll;
-	}
-
-	public static function getScrollSpeed(instance:PlayState) {
+	public static function getScrollSpeed(?instance:PlayState = null):Float {
 		if (instance == null) return PlayState.SONG.speed;
 		return instance.songSpeed;
 	}
 
-	public static function getIsPixelStage(instance:ModchartMusicBeatState) {
+	public static function getIsPixelStage(?instance:ModchartMusicBeatState = null):Bool {
 		if (instance == null) return false;
 		return PlayState.isPixelStage;
-	}
-
-	public static function getNoteOffsetX(daNote:Note, instance:ModchartMusicBeatState) {
-		return daNote.offsetX;
 	}
 
 	static var currentFakeCrochet:Float = -1;
 	static var lastBpm:Float = -1;
 
-	public static function getFakeCrochet() {
+	public static function getFakeCrochet():Float {
 		if (PlayState.SONG.bpm != lastBpm) {
 			currentFakeCrochet = (60 / PlayState.SONG.bpm) * 1000; // only need to calculate once
 			lastBpm = PlayState.SONG.bpm;
@@ -81,14 +69,13 @@ class ModchartUtil {
 	**/
 	public static function getCartesianCoords3D(theta:Float, phi:Float, radius:Float):Vector3D {
 		var pos:Vector3D = new Vector3D();
-		var rad:Float = FlxAngle.TO_RAD;
+		var rad:Float = flixel.math.FlxAngle.TO_RAD;
 		pos.x = FlxMath.fastCos(theta * rad) * FlxMath.fastSin(phi * rad);
 		pos.y = FlxMath.fastCos(phi * rad);
 		pos.z = FlxMath.fastSin(theta * rad) * FlxMath.fastSin(phi * rad);
 		pos.x *= radius;
 		pos.y *= radius;
 		pos.z *= radius;
-
 		return pos;
 	}
 

@@ -14,12 +14,12 @@ class SimpleQuaternion {
 	// no more gimbal lock fuck you
 	public static function fromEuler(roll:Float, pitch:Float, yaw:Float):Quaternion {
 		// https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-		var cr = FlxMath.fastCos(roll * FlxAngle.TO_RAD);
-		var sr = FlxMath.fastSin(roll * FlxAngle.TO_RAD);
-		var cp = FlxMath.fastCos(pitch * FlxAngle.TO_RAD);
-		var sp = FlxMath.fastSin(pitch * FlxAngle.TO_RAD);
-		var cy = FlxMath.fastCos(yaw * FlxAngle.TO_RAD);
-		var sy = FlxMath.fastSin(yaw * FlxAngle.TO_RAD);
+		var cr:Float = FlxMath.fastCos(roll * FlxAngle.TO_RAD);
+		var sr:Float = FlxMath.fastSin(roll * FlxAngle.TO_RAD);
+		var cp:Float = FlxMath.fastCos(pitch * FlxAngle.TO_RAD);
+		var sp:Float = FlxMath.fastSin(pitch * FlxAngle.TO_RAD);
+		var cy:Float = FlxMath.fastCos(yaw * FlxAngle.TO_RAD);
+		var sy:Float = FlxMath.fastSin(yaw * FlxAngle.TO_RAD);
 
 		var q:Quaternion = {x: 0, y: 0, z: 0, w: 0};
 		q.w = cr * cp * cy + sr * sp * sy;

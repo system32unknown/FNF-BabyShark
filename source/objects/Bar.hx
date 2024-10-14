@@ -7,6 +7,7 @@ class Bar extends FlxSpriteGroup {
 	public var leftBar:FlxSprite;
 	public var rightBar:FlxSprite;
 	public var bg:FlxSprite;
+	public var bgOffset(default, set):FlxPoint = FlxPoint.get();
 	public var valueFunction:Void->Float;
 	public var percent(default, set):Float = 0;
 	public var bounded(default, null):Float = 0;
@@ -19,6 +20,12 @@ class Bar extends FlxSpriteGroup {
 	public var barHeight(default, set):Int = 1;
 	public var barOffset:FlxPoint = FlxPoint.get(3, 3);
 
+	function set_bgOffset(value:FlxPoint) {
+		bgOffset = value;
+		bg.setPosition(bg.x + bgOffset.x, bg.y + bgOffset.y);
+		return value;
+	}
+
 	public function new(x:Float, y:Float, image:String = 'healthBar', ?valueFunction:Void->Float, boundX:Float = 0, boundY:Float = 1) {
 		super(x, y);
 
@@ -26,6 +33,7 @@ class Bar extends FlxSpriteGroup {
 		setBounds(boundX, boundY);
 
 		bg = new FlxSprite(Paths.image(image));
+		bg.setPosition(bg.x + bgOffset.x, bg.y + bgOffset.y);
 		barWidth = Std.int(bg.width - 6);
 		barHeight = Std.int(bg.height - 6);
 
@@ -75,8 +83,8 @@ class Bar extends FlxSpriteGroup {
 	public function updateBar() {
 		if(leftBar == null || rightBar == null) return;
 
-		leftBar.setPosition(bg.x, bg.y);
-		rightBar.setPosition(bg.x, bg.y);
+		leftBar.setPosition(bg.x - bgOffset.x, bg.y - bgOffset.y);
+		rightBar.setPosition(bg.x - bgOffset.x, bg.y - bgOffset.y);
 
 		final leftSize:Float = FlxMath.lerp(0, barWidth, (leftToRight ? percent / 100 : 1 - percent / 100));
 

@@ -3,14 +3,9 @@ package modcharting;
 import modcharting.Modifier.ModifierType;
 import modcharting.Modifier.EaseCurveModifier;
 
-#if LUA_ALLOWED
-import psychlua.FunkinLua;
-import psychlua.HScript as FunkinHScript;
-#end
-
 // for lua and hscript
 class ModchartFuncs {
-	public static function loadLuaFunctions(funkin:FunkinLua) {
+	public static function loadLuaFunctions(funkin:psychlua.FunkinLua) {
 		#if LUA_ALLOWED
 		funkin.set('startMod', function(name:String, modClass:String, type:String = '', pf:Int = -1) {
 			startMod(name, modClass, type, pf);
@@ -50,23 +45,6 @@ class ModchartFuncs {
 		funkin.set('ease', function(beat:Float, time:Float, easeStr:String, argsAsString:String, ?tag:String = null) {
 			ease(beat, time, easeStr, argsAsString, null, tag);
 		});
-
-		loadHaxeFunctions(funkin);
-		#end
-	}
-
-	public static function loadHaxeFunctions(funkin:FunkinLua) {
-		#if HSCRIPT_ALLOWED
-		FunkinHScript.initHaxeModule(funkin);
-
-		if (funkin.hscript != null) {
-			funkin.hscript.interp.setVar('PlayfieldRenderer', PlayfieldRenderer);
-			funkin.hscript.interp.setVar('ModchartUtil', ModchartUtil);
-			funkin.hscript.interp.setVar('Modifier', Modifier);
-			funkin.hscript.interp.setVar('NoteMovement', NoteMovement);
-			funkin.hscript.interp.setVar('NotePositionData', NotePositionData);
-			funkin.hscript.interp.setVar('ModchartFile', ModchartFile);
-		}
 		#end
 	}
 
@@ -135,27 +113,22 @@ class ModchartFuncs {
 				return;
 			}
 
-		var mod = Type.resolveClass('modcharting.' + modClass);
-		if (mod == null) {
-			mod = Type.resolveClass('modcharting.' + modClass + "Modifier");
-		} // dont need to add "Modifier" to the end of every mod
+		var mod:Class<Dynamic> = Type.resolveClass('modcharting.' + modClass);
+		if (mod == null) mod = Type.resolveClass('modcharting.' + modClass + "Modifier"); // dont need to add "Modifier" to the end of every mod
 
 		if (mod != null) {
-			var modType = getModTypeFromString(type);
+			var modType:ModifierType = getModTypeFromString(type);
 			var modifier = Type.createInstance(mod, [name, modType, pf]);
 			instance.playfieldRenderer.modifierTable.add(modifier);
 		}
 	}
 
 	public static function getModTypeFromString(type:String):ModifierType {
-		var modType = ModifierType.ALL;
+		var modType:ModifierType = ModifierType.ALL;
 		switch (type.toLowerCase()) {
-			case 'player':
-				modType = ModifierType.PLAYERONLY;
-			case 'opponent':
-				modType = ModifierType.OPPONENTONLY;
-			case 'lane' | 'lanespecific':
-				modType = ModifierType.LANESPECIFIC;
+			case 'player': modType = ModifierType.PLAYERONLY;
+			case 'opponent': modType = ModifierType.OPPONENTONLY;
+			case 'lane' | 'lanespecific': modType = ModifierType.LANESPECIFIC;
 		}
 		return modType;
 	}
@@ -218,8 +191,7 @@ class ModchartFuncs {
 	}
 
 	public static function setModEaseFunc(name:String, ease:String, ?instance:ModchartMusicBeatState = null) {
-		if (instance == null)
-			instance = PlayState.instance;
+		if (instance == null) instance = PlayState.instance;
 		if (instance.playfieldRenderer.modifierTable.modifiers.exists(name)) {
 			var mod = instance.playfieldRenderer.modifierTable.modifiers.get(name);
 			if (Std.isOfType(mod, EaseCurveModifier)) {
@@ -238,7 +210,7 @@ class ModchartFuncs {
 					instance.playfieldRenderer.modchart.data.events.push(["set", [beat, argsAsString]]);
 				}
 		}
-		var args = argsAsString.trim().replace(' ', '').split(',');
+		var args:Array<String> = argsAsString.trim().replace(' ', '').split(',');
 
 		instance.playfieldRenderer.eventManager.addEvent(beat, function(arguments:Array<String>) {
 			for (i in 0...Math.floor(arguments.length / 2)) {
@@ -270,10 +242,9 @@ class ModchartFuncs {
 				}
 		}
 
-		if (Math.isNaN(time))
-			time = 1;
+		if (Math.isNaN(time)) time = 1;
 
-		var args = argsAsString.trim().replace(' ', '').split(',');
+		var args:Array<String> = argsAsString.trim().replace(' ', '').split(',');
 
 		var func = function(arguments:Array<String>) {
 			for (i in 0...Math.floor(arguments.length / 2)) {
@@ -285,10 +256,8 @@ class ModchartFuncs {
 				if (subModCheck.length > 1) {
 					var modName = subModCheck[0];
 					var subModName = subModCheck[1];
-					instance.playfieldRenderer.modifierTable.tweenModifierSubValue(modName, subModName, value, time * Conductor.crochet * 0.001, ease, beat,
-						tag);
-				} else
-					instance.playfieldRenderer.modifierTable.tweenModifier(name, value, time * Conductor.crochet * 0.001, ease, beat, tag);
+					instance.playfieldRenderer.modifierTable.tweenModifierSubValue(modName, subModName, value, time * Conductor.crochet * 0.001, ease, beat, tag);
+				} else instance.playfieldRenderer.modifierTable.tweenModifier(name, value, time * Conductor.crochet * 0.001, ease, beat, tag);
 			}
 		};
 		instance.playfieldRenderer.eventManager.addEvent(beat, func, args);

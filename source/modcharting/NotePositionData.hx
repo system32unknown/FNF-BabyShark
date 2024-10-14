@@ -1,9 +1,8 @@
 package modcharting;
 
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxPool;
 
-class NotePositionData implements IFlxDestroyable {
+class NotePositionData implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
     static var pool:FlxPool<NotePositionData> = new FlxPool(NotePositionData);
 
     public var x:Float;

@@ -80,7 +80,7 @@ class Conductor {
 		var curBPM:Float = song.bpm;
 		var totalPos:Float = 0, totalSteps:Int = 0;
 
-		inline function pushChange(newBPM:Float) {
+		inline function pushChange(newBPM:Float):Void {
 			curBPM = newBPM;
 			bpmChangeMap.push({
 				stepTime: totalSteps,

@@ -5,8 +5,7 @@ import flixel.tweens.FlxTween;
 /**
  * Tweens a numeric value. See FlxTween.num()
  */
-class BezierPathNumTween extends FlxTween
-{
+class BezierPathNumTween extends FlxTween {
 	/**
 	 * The current value.
 	 */
@@ -19,8 +18,7 @@ class BezierPathNumTween extends FlxTween
 	/**
 	 * Clean up references
 	 */
-	override public function destroy():Void
-	{
+	override public function destroy():Void {
 		super.destroy();
 		_tweenFunction = null;
 	}
@@ -33,8 +31,7 @@ class BezierPathNumTween extends FlxTween
 	 * @param	duration		Duration of the tween.
 	 * @param	tweenFunction	Optional tween function. See FlxTween.num()
 	 */
-	public function tween(points:Array<Float>, duration:Float, ?tweenFunction:Float->Void):BezierPathNumTween
-	{
+	public function tween(points:Array<Float>, duration:Float, ?tweenFunction:Float->Void):BezierPathNumTween {
 		_tweenFunction = tweenFunction;
         _points = points;
 		value = points[0];
@@ -43,8 +40,7 @@ class BezierPathNumTween extends FlxTween
 		return this;
 	}
 
-	override function update(elapsed:Float):Void
-	{
+	override function update(elapsed:Float):Void {
 		super.update(elapsed);
 		value = bezierPath(scale,_points);
 
@@ -58,10 +54,7 @@ class BezierPathNumTween extends FlxTween
 
         for (i in 0...points.length) {
             var coeff:Float = 1;
-            for (j in 0...i) {
-                coeff = coeff * (n - j) / (j + 1);
-            }
-
+            for (j in 0...i) coeff = coeff * (n - j) / (j + 1);
             curve += coeff * Math.pow(1 - t, n - i) * Math.pow(t, i) * points[i];
         }
 

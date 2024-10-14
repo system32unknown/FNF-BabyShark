@@ -22,7 +22,10 @@ typedef NoteSplashData = {
 	a:Float
 }
 
-class Note extends FlxSprite {
+class Note extends flixel.addons.effects.FlxSkewedSprite {
+	public var mesh:modcharting.SustainStrip = null;
+	public var z:Float = 0;
+
 	//This is needed for the hardcoded note types to appear on the Chart Editor,
 	//It's also used for backwards compatibility with 0.1 - 0.3.2 charts.
 	public static final defaultNoteTypes:Array<String> = [

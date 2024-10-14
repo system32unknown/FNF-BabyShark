@@ -1,11 +1,8 @@
 package modcharting;
 
-import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
-import openfl.geom.Vector3D;
 import objects.Note;
-import flixel.FlxStrip;
 
-class SustainStrip extends FlxStrip {
+class SustainStrip extends flixel.FlxStrip {
 	static final noteUV:Array<Float> = [
 		0, 0, // top left
 		1, 0, // top right
@@ -31,7 +28,7 @@ class SustainStrip extends FlxStrip {
 		for (ind in noteIndices) indices.push(ind);
 	}
 
-	public function constructVertices(noteData:NotePositionData, thisNotePos:Vector3D, nextHalfNotePos:NotePositionData, nextNotePos:NotePositionData, flipGraphic:Bool, reverseClip:Bool) {
+	public function constructVertices(noteData:NotePositionData, thisNotePos:openfl.geom.Vector3D, nextHalfNotePos:NotePositionData, nextNotePos:NotePositionData, flipGraphic:Bool, reverseClip:Bool) {
 		var yOffset:Int = -1; // fix small gaps
 		if (reverseClip) yOffset *= -1;
 
@@ -67,6 +64,6 @@ class SustainStrip extends FlxStrip {
 			verts.push(nextNotePos.x + (daNote.frameWidth * (1 / -nextNotePos.z) * nextNotePos.scaleX));
 			verts.push(nextNotePos.y);
 		}
-		vertices = new DrawData(12, true, verts);
+		vertices = new flixel.graphics.tile.FlxDrawTrianglesItem.DrawData(12, true, verts);
 	}
 }

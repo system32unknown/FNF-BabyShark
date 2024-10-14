@@ -72,8 +72,7 @@ class ModTable {
 		table = [];
 
 		for (pf in 0...renderer.playfields.length) {
-			if (table[pf] == null)
-				table[pf] = [];
+			if (table[pf] == null) table[pf] = [];
 
 			for (lane in 0...NoteMovement.totalKeyCount) {
 				table[pf].push([]);

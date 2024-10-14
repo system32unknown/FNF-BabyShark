@@ -1,6 +1,5 @@
 package modcharting;
 
-import haxe.Exception;
 import haxe.Json;
 import lime.utils.Assets;
 
@@ -37,6 +36,9 @@ class ModchartFile {
 	var renderer:PlayfieldRenderer;
 
 	public var scriptListen:Bool = false;
+    #if hscript
+    public var customModifiers:Map<String, Dynamic> = new Map<String, Dynamic>();
+    #end
 	public var hasDifficultyModchart:Bool = false; // so it loads false as default!
 
 	public function new(renderer:PlayfieldRenderer) {
@@ -166,6 +168,20 @@ class ModchartFile {
 		if (rawJson != null) {
 			for (i in 0...difficulty.length) json = cast Json.parse(rawJson);
 			trace('loaded json: ' + folderShit);
+
+            #if (hscript && sys)
+            if (FileSystem.isDirectory(folderShit)) {
+                for (file in FileSystem.readDirectory(folderShit)) {
+                    if(file.endsWith('.hx')) { //custom mods!!!!
+                        var scriptStr:String = File.getContent(folderShit + file);
+                        var scriptInit:Dynamic = null;
+                        scriptInit = new psychlua.HScript(null, scriptStr);
+                        customModifiers.set(file.replace(".hx", ""), scriptInit);
+                        trace('loaded custom mod: ' + file);
+                    }
+                }
+            }
+            #end
 		} else json = {modifiers: [], events: [], playfields: 1};
 		return json;
 	}

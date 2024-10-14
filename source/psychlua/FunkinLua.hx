@@ -1015,6 +1015,7 @@ class FunkinLua {
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
 		SoundFunctions.implement(this);
+		modcharting.ModchartFuncs.loadLuaFunctions(this);
 
 		for (name => func in customFunctions) if(func != null) set(name, func);
 
