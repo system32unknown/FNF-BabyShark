@@ -15,14 +15,4 @@ class MemoryUtil {
 		System.gc();
 		#end
 	}
-
-    public static function getMEM():Float {
-        #if cpp
-		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
-		#elseif sys
-		return cast(System.totalMemory, UInt);
-		#else
-		return 0;
-		#end
-    }
 }

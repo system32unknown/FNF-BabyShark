@@ -136,12 +136,12 @@ class ReflectionFunctions {
 				return;
 			}
 			switch(Type.typeof(groupOrArray)) {
-				case TClass(Array): //Is Array
+				default: //Is Array
 					if(obj == null) obj = groupOrArray.members[index];
 					groupOrArray.remove(obj, true);
 					if(destroy) obj.destroy();
-				default: //Is Group
-					if(obj != null){
+				case TClass(Array): //Is Group
+					if(obj != null) {
 						groupOrArray.remove(obj);
 						if(destroy) obj.destroy();
 					} else groupOrArray.remove(groupOrArray[index]);
@@ -180,7 +180,7 @@ class ReflectionFunctions {
 				else FunkinLua.luaTrace('createInstance: Failed to create $variableToSave, arguments are possibly wrong.', false, false, FlxColor.RED);
 
 				return (obj != null);
-			} else FunkinLua.luaTrace('createInstance: Variable $variableToSave is already being used and cannot be replaced!', false, false, FlxColor.RED);
+			} else FunkinLua.luaTrace('createInstance: Class $className not found', false, false, FlxColor.RED);
 			return false;
 		});
 		funk.set("addInstance", function(objectName:String, ?inFront:Bool = false) {

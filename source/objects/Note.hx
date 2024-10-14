@@ -22,10 +22,7 @@ typedef NoteSplashData = {
 	a:Float
 }
 
-class Note extends flixel.addons.effects.FlxSkewedSprite {
-	public var mesh:modcharting.SustainStrip = null;
-	public var z:Float = 0;
-
+class Note extends FlxSprite {
 	//This is needed for the hardcoded note types to appear on the Chart Editor,
 	//It's also used for backwards compatibility with 0.1 - 0.3.2 charts.
 	public static final defaultNoteTypes:Array<String> = [
@@ -405,8 +402,8 @@ class Note extends flixel.addons.effects.FlxSkewedSprite {
 		} else {
 			canBeHit = false;
 
-			if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult)) {
-				if((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition) wasGoodHit = true;
+			if (!wasGoodHit && strumTime <= Conductor.songPosition) {
+				if(!isSustainNote || (prevNote.wasGoodHit && !ignoreNote)) wasGoodHit = true;
 			}
 		}
 
@@ -443,7 +440,7 @@ class Note extends flixel.addons.effects.FlxSkewedSprite {
 
 	public function clipToStrumNote(myStrum:StrumNote) {
 		final center:Float = myStrum.y + offsetY + EK.swidths[PlayState.mania] / 2;
-		if(isSustainNote && (mustPress || !ignoreNote) && (!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !canBeHit)))) {
+		if((mustPress || !ignoreNote) && (wasGoodHit || (prevNote.wasGoodHit && !canBeHit))) {
 			final swagRect:FlxRect = clipRect ?? FlxRect.get(0, 0, frameWidth, frameHeight);
 			if (myStrum.downScroll) {
 				if(y - offset.y * scale.y + height >= center) {

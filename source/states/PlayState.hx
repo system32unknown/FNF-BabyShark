@@ -20,9 +20,6 @@ import data.*;
 import psychlua.*;
 #if HSCRIPT_ALLOWED import hscript.AlterHscript; #end
 import cutscenes.DialogueBoxPsych;
-import modcharting.ModchartFuncs;
-import modcharting.NoteMovement;
-import modcharting.PlayfieldRenderer;
 
 class PlayState extends MusicBeatState {
 	public static var STRUM_X = 48.5;
@@ -234,7 +231,6 @@ class PlayState extends MusicBeatState {
 	public var endCallback:Void->Void = null;
 
 	public static var nextReloadAll:Bool = false;
-	var backupGpu:Bool;
 	override public function create() {
 		Paths.clearStoredMemory();
 		if(nextReloadAll) {
@@ -421,6 +417,7 @@ class PlayState extends MusicBeatState {
 		noteGroup.add(strumLineNotes);
 
 		generateSong();
+		noteGroup.add(grpNoteSplashes);
 
 		camFollow = new FlxObject();
 		camFollow.setPosition(camPos.x, camPos.y);
@@ -525,11 +522,6 @@ class PlayState extends MusicBeatState {
 		else if(Paths.formatToSongPath(ClientPrefs.data.pauseMusic) != 'none') Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic));
 		resetRPC();
 	
-		backupGpu = ClientPrefs.data.cacheOnGPU;
-		ClientPrefs.data.cacheOnGPU = false;
-		playfieldRenderer = new PlayfieldRenderer(strumLineNotes, notes, this);
-		noteGroup.add(playfieldRenderer);
-		noteGroup.add(grpNoteSplashes);
 		stagesFunc(stage -> stage.createPost()); callOnScripts('onCreatePost');
 
 		var splash:NoteSplash = new NoteSplash();
@@ -803,7 +795,6 @@ class PlayState extends MusicBeatState {
 
 			canPause = true;
 			generateStaticArrows(0); generateStaticArrows(1);
-			NoteMovement.getDefaultStrumPos(this);
 			for (i in 0...playerStrums.length) {setOnScripts('defaultPlayerStrumX$i', playerStrums.members[i].x); setOnScripts('defaultPlayerStrumY$i', playerStrums.members[i].y);}
 			for (i in 0...opponentStrums.length) {setOnScripts('defaultOpponentStrumX$i', opponentStrums.members[i].x); setOnScripts('defaultOpponentStrumY$i', opponentStrums.members[i].y);}
 
@@ -1036,10 +1027,10 @@ class PlayState extends MusicBeatState {
 				swagNote.scrollFactor.set();
 				unspawnNotes.push(swagNote);
 	
-				var curStepCrochet:Float = 60 / daBpm * 1000 * .25;
-				var roundSus:Int = Math.round((swagNote.sustainLength - curStepCrochet * .25) / curStepCrochet);
+				var curStepCrochet:Float = 60 / daBpm * 1000 / 4.0;
+				final roundSus:Int = Math.round(swagNote.sustainLength / curStepCrochet);
 				if(roundSus > 0) {
-					for (susNote in 0...roundSus + 1) {
+					for (susNote in 0...roundSus) {
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
 						var sustainNote:Note = new Note(spawnTime + (curStepCrochet * susNote), noteColumn, oldNote, true);
@@ -2030,7 +2021,12 @@ class PlayState extends MusicBeatState {
 	}
 
 	function keysCheck():Void {
-		var holdArray:Array<Bool> = [for (key in keysArray) controls.pressed(key)];
+		var holdArray:Array<Bool> = [];
+		var releaseArray:Array<Bool> = [];
+		for (key in keysArray) {
+			holdArray.push(controls.pressed(key));
+			releaseArray.push(controls.justReleased(key));
+		}
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
 			if (notes.length > 0) for (n in notes) { // I can't do a filter here, that's kinda awesome
 				if ((n != null && !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit) && n.isSustainNote) {
@@ -2039,6 +2035,9 @@ class PlayState extends MusicBeatState {
 			}
 			if (!holdArray.contains(true) || endingSong) playerDance();
 		}
+
+		if(strumsBlocked.contains(true) && releaseArray.contains(true))
+			for (i in 0...releaseArray.length) if(releaseArray[i] || strumsBlocked[i]) keyReleased(i);
 	}
 
 	function noteMiss(daNote:Note, opponent:Bool = false):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
@@ -2047,7 +2046,7 @@ class PlayState extends MusicBeatState {
 			noteMissCommon(daNote.noteData, daNote);
 			stagesFunc((stage:BaseStage) -> stage.noteMiss(daNote));
 		}
-		var result:String = callOnLuas('${opponent ? 'opponent' : ''}noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
+		var result:Dynamic = callOnLuas('${opponent ? 'opponent' : ''}noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('${opponent ? 'opponent' : ''}noteMiss', [daNote]);
 	}
 
@@ -2097,8 +2096,9 @@ class PlayState extends MusicBeatState {
 		var leData:Int = Math.floor(Math.abs(note.noteData));
 		var leType:String = note.noteType;
 
-		var result:String = callOnLuas('opponentNoteHitPre', [notes.members.indexOf(note), leData, leType, isSus]);
-		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHitPre', [note]);
+		var result:Dynamic = callOnLuas('opponentNoteHitPre', [notes.members.indexOf(note), leData, leType, isSus]);
+		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) result = callOnHScript('opponentNoteHitPre', [note]);
+		if(result == LuaUtils.Function_Stop) return;
 
 		var animToPlay:String = singAnimations[EK.gfxHud[mania][leData]];
 		if(leType == 'Hey!' && dad.hasAnimation('hey')) {
@@ -2112,7 +2112,7 @@ class PlayState extends MusicBeatState {
 				if(isSus) {
 					var holdAnim:String = animToPlay + '-hold';
 					if(char.animation.exists(holdAnim)) animToPlay = holdAnim;
-					if(char.getAnimationName() == holdAnim) canPlay = false;
+					if(char.getAnimationName() == holdAnim || char.getAnimationName() == holdAnim + '-loop') canPlay = false;
 				}
 				if(canPlay) char.playAnim(animToPlay + note.animSuffix, true);
 				char.holdTimer = 0;
@@ -2124,7 +2124,7 @@ class PlayState extends MusicBeatState {
 		note.hitByOpponent = true;
 
 		stagesFunc((stage:BaseStage) -> stage.opponentNoteHit(note));
-		var result:String = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
+		var result:Dynamic = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHit', [note]);
 		if(!isSus) invalidateNote(note);
 	}
@@ -2153,8 +2153,9 @@ class PlayState extends MusicBeatState {
 		var leData:Int = Math.floor(Math.abs(note.noteData));
 		var leType:String = note.noteType;
 
-		var result:String = callOnLuas('goodNoteHitPre', [notes.members.indexOf(note), leData, leType, isSus]);
-		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHitPre', [note]);
+		var result:Dynamic = callOnLuas('goodNoteHitPre', [notes.members.indexOf(note), leData, leType, isSus]);
+		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) result = callOnHScript('goodNoteHitPre', [note]);
+		if(result == LuaUtils.Function_Stop) return;
 
 		note.wasGoodHit = true;
 		if (note.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound(note.hitsound), note.hitsoundVolume);
@@ -2177,7 +2178,7 @@ class PlayState extends MusicBeatState {
 					if(isSus) {
 						var holdAnim:String = animToPlay + note.animSuffix + '-hold';
 						if(char.animation.exists(holdAnim)) animToPlay = holdAnim;
-						if(char.getAnimationName() == holdAnim) canPlay = false;
+						if(char.getAnimationName() == holdAnim || char.getAnimationName() == holdAnim + '-loop') canPlay = false;
 					}
 
 					if(canPlay) char.playAnim(animToPlay + note.animSuffix, true);
@@ -2211,7 +2212,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		stagesFunc((stage:BaseStage) -> stage.goodNoteHit(note));
-		var result:String = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
+		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHit', [note]);
 		if(!isSus) invalidateNote(note);
 	}
@@ -2239,7 +2240,6 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function destroy() {
-		ClientPrefs.data.cacheOnGPU = backupGpu;
 		if (CustomSubstate.instance != null) {
 			closeSubState();
 			resetSubState();
@@ -2406,7 +2406,7 @@ class PlayState extends MusicBeatState {
 		exclusions ??= [];
 		excludeValues ??= [LuaUtils.Function_Continue];
 
-		var result:String = callOnLuas(funcToCall, args, ignoreStops, exclusions, excludeValues);
+		var result:Dynamic = callOnLuas(funcToCall, args, ignoreStops, exclusions, excludeValues);
 		if(result == null || excludeValues.contains(result)) result = callOnHScript(funcToCall, args, ignoreStops, exclusions, excludeValues);
 		return result;
 	}

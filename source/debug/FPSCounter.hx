@@ -22,7 +22,7 @@ class FPSCounter extends openfl.text.TextField {
 	**/
     public var memory(get, never):Float;
 	inline function get_memory():Float {
-		return utils.system.MemoryUtil.getMEM();
+		return openfl.system.System.totalMemoryNumber;
 	}
 	var mempeak:Float = 0;
 

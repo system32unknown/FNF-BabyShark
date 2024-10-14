@@ -14,31 +14,36 @@ Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor code
 # Credits:
 
 ### Psych Engine:
-* Shadow Mario - Programmer
-* RiverOaken - Artist
+* Shadow Mario - Head Developer, Programmer.
+* Riveren - Main Artist.
 
 ### Dave Engine:
-* Vs. Dave and Bambi Teams
+* Vs. Dave and Bambi Teams.
 
 ### Base Engine:
-* Funkin' Crew
+* Funkin' Crew.
 
 ### Codename Engine:
-* WizardMantis441 - Programmer
-* YoshiCrafter29 - Ex-Programmer
+* WizardMantis441 - Programmer.
+* YoshiCrafter29 - Ex-Programmer.
 
 ### Denpa Engine:
-* BlueVapor1234 - Main Programmer & Creator
-* Toadette8394 - Co Programmer
-* YanniZ06 - Co Programmer
+* BlueVapor1234 - Main Programmer & Creator.
+* Toadette8394 - Co Programmer.
+* YanniZ06 - Co Programmer.
 
 ### Special Thanks:
-* bbpanzu - Ex-Programmer
-* SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
-* KadeDev - Fixed some cool stuff on Chart Editor and other PRs, Programmer of Kade Engine
-* iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds
-* MAJigsaw77 - .MP4 Video Loader Library (hxvlc) and hxdiscord_rpc
-* Keoiki - Note Splash Animations
-* superpowers04 - LUA JIT Fork and some Lua reworks
-* Raltyro - Maintainer of Psike Engine
-* It'z_Miles - Linear GFX Transformations Library (ParallaxLT)
+* bbpanzu - Ex-Team Member (Programmer).
+* crowplexus - HScript Iris, Input System v3, and Other PRs.
+* Keoiki - Note Splash Animations and Latin Alphabet.
+* SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform.
+* EliteMasterEric - Runtime Shaders support and Other PRs.
+* MAJigsaw77 - .MP4 Video Loader Library (hxvlc) and hxdiscord_rpc.
+* Tahir Toprak Karabekiroglu - Note Splash Editor and Other PRs.
+* iFlicky - Composer of Psync, Tea Time and some sound effects.
+* KadeDev - Fixed some issues on Chart Editor and Other PRs, Programmer of Kade Engine.
+* superpowers04 - LUA JIT Fork.
+* CheemsAndFriends - Creator of FlxAnimate.
+* Raltyro - Maintainer of Psike Engine.
+* It'z_Miles - Linear GFX Transformations Library (ParallaxLT).
+* MaliciousBunny - Video for the Final Update.

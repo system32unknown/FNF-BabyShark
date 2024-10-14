@@ -2,7 +2,7 @@ package objects;
 
 import shaders.RGBPalette.RGBShaderReference;
 
-class StrumNote extends flixel.addons.effects.FlxSkewedSprite {
+class StrumNote extends FlxSprite {
 	public var rgbShader:RGBShaderReference;
 	public var resetAnim:Float = 0;
 	var noteData:Int = 0;

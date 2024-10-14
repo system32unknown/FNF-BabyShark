@@ -45,7 +45,7 @@ class ModsMenuState extends MusicBeatState {
 		persistentUpdate = false;
 
 		modsList = Mods.parseList();
-		Mods.currentModDirectory = modsList.all[0] ?? '';
+		Mods.loadTopMod();
 
 		#if desktop DiscordClient.changePresence("In the Mod Menus"); #end
 
@@ -621,6 +621,8 @@ class ModsMenuState extends MusicBeatState {
 			fileStr += '$mod|$on';
 		}
 		File.saveContent('modsList.txt', fileStr);
+		Mods.parseList();
+		Mods.loadTopMod();
 	}
 
 	override function destroy() {

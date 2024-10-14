@@ -28,13 +28,13 @@ class HScript extends AlterHscript {
 			parent.hscript = new HScript(parent, code, varsToBring);
 			return parent.hscript.returnValue;
 		} else {
-			hs.varsToBring = varsToBring;
 			var prevCode:String = hs.scriptCode;
 			try {
 				if (hs.scriptCode != code) {
 					hs.scriptCode = code;
 					hs.parse(true);
 				}
+				hs.varsToBring = varsToBring;
 				hs.returnValue = hs.execute();
 				return hs.returnValue;
 			} catch(e:ImprError) {

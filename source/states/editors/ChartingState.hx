@@ -1850,7 +1850,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var noteY:Float = (time / cachedSectionCrochets[section]) * GRID_SIZE * 4 * curZoom;
 		noteY += cachedSectionRow[section] * GRID_SIZE * curZoom;
 		noteY = Math.max(noteY, -150);
-		note.y = noteY + (GRID_SIZE / 2 - note.height / 2) * curZoom;
+		note.y = noteY + (GRID_SIZE / 2 - note.height / 2);
 		note.chartY = noteY;
 	}
 
@@ -3870,7 +3870,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	function loadCharacterFile(char:String):CharacterFile {
 		if(char != null) {
 			try {
-				return cast Json.parse(#if MODS_ALLOWED File.getContent #else openfl.utils.Assets.getText #end(Paths.getPath('characters/$char.json')));
+				return cast Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(Paths.getPath('characters/$char.json')));
 			} catch (e:Dynamic) {}
 		}
 		return null;
