@@ -148,6 +148,7 @@ class FunkinLua {
 		set('healthBarAlpha', ClientPrefs.data.healthBarAlpha);
 		set('noResetButton', ClientPrefs.data.noReset);
 		set('lowQuality', ClientPrefs.data.lowQuality);
+		set('antialiasing', ClientPrefs.data.antialiasing);
 		set('shadersEnabled', ClientPrefs.data.shaders);
 		set('scriptName', scriptName);
 		set('currentModDirectory', Mods.currentModDirectory);
@@ -318,20 +319,18 @@ class FunkinLua {
 		});
 
 		set("loadGraphic", function(variable:String, image:String, ?gridX:Int = 0, ?gridY:Int = 0) {
-			var spr:FlxSprite = LuaUtils.getVarInstance(variable);
-
+			var spr:FlxSprite = LuaUtils.getObjectLoop(variable);
 			if(spr != null && image != null && image.length > 0)
 				spr.loadGraphic(Paths.image(image), (gridX != 0 || gridY != 0), gridX, gridY);
 		});
 		set("loadFrames", function(variable:String, image:String, spriteType:String = "auto") {
-			var spr:FlxSprite = LuaUtils.getVarInstance(variable);
-
+			var spr:FlxSprite = LuaUtils.getObjectLoop(variable);
 			if(spr != null && image != null && image.length > 0)
 				LuaUtils.loadFrames(spr, image, spriteType);
 		});
 
 		Lua_helper.add_callback(lua, "getObjectOrder", function(obj:String, ?group:String = null) {
-			var leObj:FlxSprite = LuaUtils.getObjectDirectly(obj);
+			var leObj:FlxBasic = LuaUtils.getObjectLoop(obj);
 			if(leObj != null) {
 				if(group != null) {
 					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
@@ -351,7 +350,7 @@ class FunkinLua {
 			return -1;
 		});
 		Lua_helper.add_callback(lua, "setObjectOrder", function(obj:String, position:Int, ?group:String = null) {
-			var leObj:FlxSprite = LuaUtils.getObjectDirectly(obj);
+			var leObj:FlxBasic = LuaUtils.getObjectLoop(obj);
 			if(leObj != null){
 				if(group != null) {
 					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
@@ -364,8 +363,7 @@ class FunkinLua {
 								groupOrArray.remove(leObj, true);
 								groupOrArray.insert(position, leObj);
 						}
-					}
-					else luaTrace('setObjectOrder: Group $group doesn\'t exist!', false, false, FlxColor.RED);
+					} else luaTrace('setObjectOrder: Group $group doesn\'t exist!', false, false, FlxColor.RED);
 				} else {
 					leObj.zIndex = position;
 					cast(LuaUtils.getTargetInstance(), MusicBeatState).refresh();
@@ -383,7 +381,8 @@ class FunkinLua {
 					var myOptions:LuaUtils.LuaTweenOptions = LuaUtils.getLuaTween(options);
 					if(tag != null) {
 						var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
-						var originalTag:String = 'tween_' + LuaUtils.formatVariable(tag);
+						var originalTag:String = tag;
+						tag = LuaUtils.formatVariable('tween_$tag');
 						variables.set(tag, FlxTween.tween(penisExam, values, duration, myOptions != null ? {
 							type: myOptions.type,
 							ease: myOptions.ease,
@@ -435,12 +434,14 @@ class FunkinLua {
 			if(penisExam != null) {
 				var curColor:FlxColor = penisExam.color;
 				curColor.alphaFloat = penisExam.alpha;
+				var newColor:FlxColor = CoolUtil.colorFromString(targetColor);
+				if(targetColor.length == 6) newColor.alphaFloat = penisExam.alpha;
 
 				if(tag != null) {
 					var originalTag:String = tag;
 					tag = LuaUtils.formatVariable('tween_$tag');
 					var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
-					variables.set(tag, FlxTween.color(penisExam, duration, curColor, CoolUtil.colorFromString(targetColor), {ease: LuaUtils.getTweenEaseByString(ease),
+					variables.set(tag, FlxTween.color(penisExam, duration, curColor, newColor, {ease: LuaUtils.getTweenEaseByString(ease),
 						onComplete: function(twn:FlxTween) {
 							variables.remove(tag);
 							if (game != null) game.callOnLuas('onTweenCompleted', [originalTag, vars]);
@@ -718,7 +719,7 @@ class FunkinLua {
 		});
 
 		set("makeGraphic", function(obj:String, width:Int = 256, height:Int = 256, color:String = 'FFFFFF') {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj, true);
+			var spr:FlxSprite = LuaUtils.getObjectLoop(obj);
 			if(spr != null) spr.makeGraphic(width, height, CoolUtil.colorFromString(color));
 		});
 		set("addAnimationByPrefix", function(obj:String, name:String, prefix:String, framerate:Float = 24, loop:Bool = true) {
@@ -761,12 +762,7 @@ class FunkinLua {
 		});
 
 		set("setScrollFactor", function(obj:String, scrollX:Float, scrollY:Float) {
-			if(game.getLuaObject(obj) != null) {
-				game.getLuaObject(obj).scrollFactor.set(scrollX, scrollY);
-				return;
-			}
-
-			var object:FlxObject = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
+			var object:FlxObject = LuaUtils.getObjectLoop(obj);
 			if(object != null) object.scrollFactor.set(scrollX, scrollY);
 		});
 
@@ -793,7 +789,7 @@ class FunkinLua {
 			}
 		});
 		set("setGraphicSize", function(obj:String, x:Float, y:Float = 0, updateHitbox:Bool = true) {
-			var poop:FlxSprite = LuaUtils.getVarInstance(obj);
+			var poop:FlxSprite = LuaUtils.getObjectLoop(obj);
 			if(poop != null) {
 				poop.setGraphicSize(x, y);
 				if (updateHitbox) poop.updateHitbox();
@@ -802,7 +798,7 @@ class FunkinLua {
 			luaTrace('setGraphicSize: Couldnt find object: ' + obj, false, false, FlxColor.RED);
 		});
 		set("scaleObject", function(obj:String, x:Float, y:Float, updateHitbox:Bool = true) {
-			var poop:FlxSprite = LuaUtils.getVarInstance(obj);
+			var poop:FlxSprite = LuaUtils.getObjectLoop(obj);
 			if(poop != null) {
 				poop.scale.set(x, y);
 				if(updateHitbox) poop.updateHitbox();
@@ -811,12 +807,7 @@ class FunkinLua {
 			luaTrace('scaleObject: Couldnt find object: ' + obj, false, false, FlxColor.RED);
 		});
 		set("updateHitbox", function(obj:String) {
-			if(game.getLuaObject(obj) != null) {
-				game.getLuaObject(obj).updateHitbox();
-				return;
-			}
-
-			var poop:FlxSprite = LuaUtils.getVarInstance(obj);
+			var poop:FlxSprite = LuaUtils.getObjectLoop(obj);
 			if(poop != null) {
 				poop.updateHitbox();
 				return;
@@ -879,14 +870,7 @@ class FunkinLua {
 		set("setTimeBarColors", (left:String, right:String) -> LuaUtils.setBarColors(game.timeBar, left, right));
 
 		set("setPosition", (obj:String, ?x:Float = null, ?y:Float = null) -> {
-			var real:FlxSprite = game.getLuaObject(obj);
-			if(real != null) {
-				if(x != null) real.x = x;
-				if(y != null) real.y = y;
-				return true;
-			}
-
-			var object:FlxSprite = LuaUtils.getVarInstance(obj);
+			var object:FlxSprite = LuaUtils.getObjectLoop(obj);
 			if(object != null) {
 				if(x != null) object.x = x;
 				if(y != null) object.y = y;
@@ -896,16 +880,16 @@ class FunkinLua {
 			return false;
 		});
 		set("setObjectCamera", function(obj:String, camera:String = 'game') {
-			var spr:FlxBasic = LuaUtils.getVarInstance(obj);
-			if (spr != null) {
-				spr.camera = LuaUtils.cameraFromString(camera);
+			var object:FlxBasic = LuaUtils.getObjectLoop(obj);
+			if (object != null) {
+				object.camera = LuaUtils.cameraFromString(camera);
 				return true;
 			} 
 			luaTrace('setObjectCamera: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
 			return false;
 		});
 		set("setBlendMode", function(obj:String, blend:String = '') {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
+			var spr:FlxSprite = LuaUtils.getObjectLoop(obj);
 			if(spr != null) {
 				spr.blend = LuaUtils.blendModeFromString(blend);
 				return;
@@ -913,7 +897,7 @@ class FunkinLua {
 			luaTrace("setBlendMode: Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
 		});
 		set("screenCenter", function(obj:String, pos:String = 'xy') {
-			var spr:FlxObject = LuaUtils.getVarInstance(obj);
+			var spr:FlxObject = LuaUtils.getObjectLoop(obj);
 			if(spr != null) {
 				spr.screenCenter(LuaUtils.axesFromString(pos));
 				return;
@@ -933,7 +917,7 @@ class FunkinLua {
 			return false;
 		});
 		set("getPixelColor", function(obj:String, x:Int, y:Int) {
-			var spr:FlxSprite = LuaUtils.getVarInstance(obj);
+			var spr:FlxSprite = LuaUtils.getObjectLoop(obj);
 			if(spr != null) return spr.pixels.getPixel32(x, y);
 			return FlxColor.BLACK;
 		});

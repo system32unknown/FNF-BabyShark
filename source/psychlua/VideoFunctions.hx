@@ -30,7 +30,7 @@ class VideoFunctions {
 				return;
 			}
 
-			var poop:VideoSprite = LuaUtils.getVarInstance(tag);
+			var poop:VideoSprite = LuaUtils.getObjectLoop(tag);
 			if(poop != null) {
 				if(!poop.isPlaying) {
 					poop.videoSprite.bitmap.onFormatSetup.add(() -> {
@@ -80,7 +80,7 @@ class VideoFunctions {
 				return;
 			}
 
-			var poop:VideoSprite = LuaUtils.getVarInstance(tag);
+			var poop:VideoSprite = LuaUtils.getObjectLoop(tag);
 			if(poop != null) {
 				if(!poop.isPlaying) poop.play();
 				return;
@@ -94,7 +94,7 @@ class VideoFunctions {
 				return;
 			}
 
-			var poop:VideoSprite = LuaUtils.getVarInstance(tag);
+			var poop:VideoSprite = LuaUtils.getObjectLoop(tag);
 			if(poop != null) {
 				if(poop.isPlaying && poop.isPaused) poop.resume();
 				return;
@@ -108,7 +108,7 @@ class VideoFunctions {
 				return;
 			}
 
-			var poop:VideoSprite = LuaUtils.getVarInstance(tag);
+			var poop:VideoSprite = LuaUtils.getObjectLoop(tag);
 			if(poop != null) {
 				if(poop.isPlaying && !poop.isPaused) poop.pause();
 				return;

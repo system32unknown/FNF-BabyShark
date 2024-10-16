@@ -137,9 +137,9 @@ class ReflectionFunctions {
 			}
 			switch(Type.typeof(groupOrArray)) {
 				default: //Is Array
-					if(obj == null) obj = groupOrArray.members[index];
-					groupOrArray.remove(obj, true);
-					if(destroy) obj.destroy();
+					if(obj == null) obj = Reflect.getProperty(groupOrArray, 'members')[index]; // Reflect here because of FlxTypedSpriteGroup
+						groupOrArray.remove(obj, true);
+						if(destroy) obj.destroy();
 				case TClass(Array): //Is Group
 					if(obj != null) {
 						groupOrArray.remove(obj);

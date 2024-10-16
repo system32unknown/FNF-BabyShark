@@ -138,18 +138,6 @@ class LuaUtils {
 		return (variable.exists != null && variable.keyValueIterator != null);
 	}
 
-	public static function getVarInstance(variable:String, checkLuaFirst:Bool = true):Dynamic {
-		var ind:Int = variable.indexOf('.');
-		if (ind == -1) {
-			if (MusicBeatState.getVariables().exists(variable)) return MusicBeatState.getVariables().get(variable);
-			return checkLuaFirst ? getObjectDirectly(variable) : getVarInArray(MusicBeatState.getState(), variable);
-		}
-
-		var obj:Dynamic = getObjectDirectly(variable.substr(0, ind));
-		while (ind != -1) obj = getVarInArray(obj, variable.substring(ind + 1, (ind = variable.indexOf('.', ind + 1)) == -1 ? variable.length : ind));
-		return obj;
-	}
-
 	public static function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic, ?allowMaps:Bool = false) {
 		var split:Array<String> = variable.split('.');
 		if(split.length > 1) {
@@ -177,6 +165,10 @@ class LuaUtils {
 		return Reflect.getProperty(leArray, variable);
 	}
 
+	public static function getObjectLoop(objectName:String, ?allowMaps:Bool = false):Dynamic {
+		var split:Array<String> = objectName.split('.');
+		return split.length > 1 ? getVarInArray(getPropertyLoop(split, true, allowMaps), split[split.length - 1], allowMaps) : getObjectDirectly(objectName);
+	}
 	public static function getPropertyLoop(split:Array<String>, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic {
 		var obj:Dynamic = getObjectDirectly(split[0]);
 		for (i in 1...(getProperty ? split.length - 1 : split.length)) obj = getVarInArray(obj, split[i], allowMaps);
@@ -214,7 +206,7 @@ class LuaUtils {
 	}
 
 	inline public static function getPoint(leVar:String, type:String, axis:String, ?camera:String):Float {
-		var obj:FlxSprite = getVarInstance(leVar);
+		var obj:FlxSprite = LuaUtils.getObjectLoop(leVar);
 		if (obj != null) {
 			switch(type) {
 				case 'graphic': obj.getGraphicMidpoint(_lePoint);
@@ -300,12 +292,9 @@ class LuaUtils {
 	public static function formatVariable(tag:String):String
 		return tag.trim().replace(' ', '_').replace('.', '');
 
-	public static function tweenPrepare(tag:String, vars:String) {
+	public static function tweenPrepare(tag:String, vars:String):Dynamic {
 		if(tag != null) cancelTween(tag);
-		final variables:Array<String> = vars.split('.');
-		return if (variables.length > 1)
-			getVarInArray(getPropertyLoop(variables), variables[variables.length - 1]);
-		else getObjectDirectly(variables[0]);
+		return getObjectLoop(vars);
 	}
 
 	public static function cancelTimer(tag:String) {

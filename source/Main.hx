@@ -51,6 +51,14 @@ class Main extends Sprite {
 			fpsVar.memType = ClientPrefs.data.memCounterType;
 		}
 
+		#if !MODS_ALLOWED
+		final path:String = 'mods';
+		if (FileSystem.exists(path) && FileSystem.isDirectory(path)){
+		  	for (entry in FileSystem.readDirectory(path)) FileSystem.deleteFile('$path/$entry');
+			FileSystem.deleteDirectory(path);
+		}
+		#end
+
 		#if linux openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
