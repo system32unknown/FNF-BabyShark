@@ -105,9 +105,9 @@ class TitleState extends MusicBeatState {
 		randomPhrase = getIntroTextShit();
 
 		FlxG.mouse.visible = false;
-		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
-			FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
-			FlxG.switchState(() -> new FlashingState());
+		if (!skippedIntro) {
+			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		} else skipIntro();
 	}
 
@@ -230,9 +230,6 @@ class TitleState extends MusicBeatState {
 
 		if(!skippedIntro) {
 			switch (curBeat) {
-				case 1:
-					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-					FlxG.sound.music.fadeIn(4, 0, 0.7);
 				case 2: createText(['Vs Dave and Bambi by:']);
 				case 3:
 					addMoreText('MoldyGH, MTM101, Stats45');

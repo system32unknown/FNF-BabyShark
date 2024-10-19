@@ -44,7 +44,6 @@ class Note extends FlxSprite {
 	public var tooLate:Bool = false;
 
 	public var wasGoodHit:Bool = false;
-	public var missed:Bool = false;
 
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;
@@ -59,11 +58,6 @@ class Note extends FlxSprite {
 	public var isSustainNote:Bool = false;
 	public var noteType(default, set):String = null;
 
-	public var eventName:String = '';
-	public var eventLength:Int = 0;
-	public var eventVal1:String = '';
-	public var eventVal2:String = '';
-
 	public var rgbShader:RGBShaderReference;
 	public static var globalRgbShaders:Array<RGBPalette> = [];
 	public var inEditor:Bool = false;
@@ -74,7 +68,6 @@ class Note extends FlxSprite {
 	public var lateHitMult:Float = 1;
 
 	public static var SUSTAIN_SIZE:Int = 44;
-	public static var swagWidth:Float = 160 * .7;
 	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
 
 	public var noteSplashData:NoteSplashData = {

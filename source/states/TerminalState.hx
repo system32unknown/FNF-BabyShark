@@ -6,7 +6,7 @@ class TerminalState extends MusicBeatState {
 	// dont just yoink this code and use it in your own mod. this includes you, psych engine porters.
 	// if you ingore this message and use it anyway, atleast give credit.
 	var curCmd:String = "";
-	var previousText:String = Language.getPhrase('term_introduction', 'Vs Dave Developer Console\nAll Rights Reserved.\n>');
+	var previousText:String = Language.getPhrase('term_introduction', 'Vs Dave Developer Console\nAll Rights Reserved.\n> ');
 	var displayText:FlxText;
 	var adminUnlocked:Bool = false;
 
@@ -28,7 +28,6 @@ class TerminalState extends MusicBeatState {
 
 		displayText = new FlxText(0, 0, FlxG.width, previousText, 16);
 		displayText.setFormat(Paths.font("CascadiaCode.ttf"), 16);
-		displayText.size *= 2;
 		displayText.antialiasing = false;
 		typeSound = FlxG.sound.load(Paths.sound('terminal_space'), .6);
 		FlxG.sound.playMusic(Paths.music('TheAmbience'), .7);

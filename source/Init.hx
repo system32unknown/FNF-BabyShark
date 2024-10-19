@@ -1,5 +1,6 @@
 package;
 
+import states.FlashingState;
 class Init extends flixel.FlxState {
 	override function create():Void {
 		FlxTransitionableState.skipNextTransOut = true;
@@ -30,7 +31,12 @@ class Init extends flixel.FlxState {
 			if(FlxG.save.data.fullscreen != null) FlxG.fullscreen = FlxG.save.data.fullscreen;
 			if(FlxG.save.data.weekCompleted != null) states.StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
+
+		super.create();
 		
-		FlxG.switchState(Type.createInstance(Main.game.initialState, []));
+		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
+			FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
+			FlxG.switchState(() -> new FlashingState());
+		} else FlxG.switchState(Type.createInstance(Main.game.initialState, []));
 	}
 }
