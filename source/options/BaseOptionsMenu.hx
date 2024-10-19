@@ -57,7 +57,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 		add(descText);
 
 		for (i in 0...optionsArray.length) {
-			var optionText:Alphabet = new Alphabet(220, 260, optionsArray[i].name, optionsArray[i].type == FUNC);
+			var optionText:Alphabet = new Alphabet(220, 260, optionsArray[i].name, optionsArray[i].type == FUNC ? BOLD : NORMAL);
 			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			grpOptions.add(optionText);
@@ -133,12 +133,12 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 						FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35, {ease: FlxEase.linear});
 						add(bindingBlack);
 
-						bindingText = new Alphabet(FlxG.width / 2, 160, Language.getPhrase('controls_rebinding', 'Rebinding {1}', [curOption.name]), false);
-						bindingText.alignment = CENTERED;
+						bindingText = new Alphabet(FlxG.width / 2, 160, Language.getPhrase('controls_rebinding', 'Rebinding {1}', [curOption.name]), NORMAL);
+						bindingText.alignment = CENTER;
 						add(bindingText);
 
 						bindingText2 = new Alphabet(FlxG.width / 2, 340, Language.getPhrase('controls_rebinding2', 'Hold ESC to Cancel\nHold Backspace to Delete'));
-						bindingText2.alignment = CENTERED;
+						bindingText2.alignment = CENTER;
 						add(bindingText2);
 
 						bindingKey = true;

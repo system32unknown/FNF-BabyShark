@@ -49,7 +49,6 @@ class Paths {
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
 		OpenFlAssets.cache.clear("songs");
-		MemoryUtil.clearMajor();
 	}
 
 	inline static function destroyGraphic(graphic:FlxGraphic) {

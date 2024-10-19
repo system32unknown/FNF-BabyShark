@@ -37,8 +37,7 @@ class CrashHandler {
 			if (!FileSystem.exists("./crash/")) FileSystem.createDirectory("./crash/");
 			File.saveContent(path, errMsg);
 
-			Sys.println(errMsg);
-			Sys.println('Crash dump saved in ${haxe.io.Path.normalize(path)}');
+			Sys.println("\n" + errMsg);
 		} catch (e:Dynamic) Sys.println('Error!\nCouldn\'t save the crash dump because:\n$e');
 
 		NativeUtil.showMessageBox("Alter Engine: Error!", errMsg, MSG_ERROR);

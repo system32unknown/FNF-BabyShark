@@ -76,8 +76,8 @@ class NotesColorSubState extends MusicBeatSubstate {
 		bg.alpha = .25;
 		add(bg);
 		
-		var text:Alphabet = new Alphabet(50, 86, 'CTRL', false);
-		text.alignment = CENTERED;
+		var text:Alphabet = new Alphabet(50, 86, 'CTRL', NORMAL);
+		text.alignment = CENTER;
 		text.setScale(0.4);
 		add(text);
 
@@ -296,8 +296,8 @@ class NotesColorSubState extends MusicBeatSubstate {
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 			} else if(pointerY() >= hexTypeLine.y && pointerY() < hexTypeLine.y + hexTypeLine.height && Math.abs(pointerX() - 1000) <= 84) {
 				hexTypeNum = 0;
-				for (letter in alphabetHex.letters) {
-					if(letter.x - letter.offset.x + letter.width <= pointerX()) hexTypeNum++;
+				for (member in alphabetHex.members) {
+					if(member.x - member.offset.x + member.width <= pointerX()) hexTypeNum++;
 					else break;
 				}
 				if(hexTypeNum > 5) hexTypeNum = 5;
@@ -356,10 +356,10 @@ class NotesColorSubState extends MusicBeatSubstate {
 
 	function centerHexTypeLine() {
 		if(hexTypeNum > 0) {
-			var letter = alphabetHex.letters[hexTypeNum - 1];
+			var letter:AlphaCharacter = alphabetHex.members[hexTypeNum - 1];
 			hexTypeLine.x = letter.x - letter.offset.x + letter.width;
 		} else {
-			var letter = alphabetHex.letters[0];
+			var letter:AlphaCharacter = alphabetHex.members[0];
 			hexTypeLine.x = letter.x - letter.offset.x;
 		}
 		hexTypeLine.x += hexTypeLine.width;
@@ -388,7 +388,7 @@ class NotesColorSubState extends MusicBeatSubstate {
 	// alphabets
 	function makeColorAlphabet(x:Float = 0, y:Float = 0):Alphabet {
 		var text:Alphabet = new Alphabet(x, y);
-		text.alignment = CENTERED;
+		text.alignment = CENTER;
 		text.setScale(.6);
 		add(text);
 		return text;
@@ -498,7 +498,7 @@ class NotesColorSubState extends MusicBeatSubstate {
 		alphabetG.text = Std.string(color.green);
 		alphabetB.text = Std.string(color.blue);
 		alphabetHex.text = color.toHexString(false, false);
-		for (letter in alphabetHex.letters) letter.color = color;
+		alphabetHex.color = color;
 
 		colorWheel.color = FlxColor.fromHSB(0, 0, color.brightness);
 		colorWheelSelector.setPosition(colorWheel.x + colorWheel.width / 2, colorWheel.y + colorWheel.height / 2);

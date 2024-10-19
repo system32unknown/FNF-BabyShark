@@ -84,8 +84,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 		
 		getOptions();
 
-		for (i in 0...optionsArray.length) {
-			var optionText:Alphabet = new Alphabet(150, 360, optionsArray[i].name);
+		for (i => option in optionsArray) {
+			var optionText:Alphabet = new Alphabet(150, 360, option.name);
 			optionText.isMenuItem = true;
 			optionText.setScale(.8);
 			optionText.targetY = i;
@@ -103,14 +103,14 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 				checkboxGroup.add(checkbox);
 			} else {
 				optionText.snapToPosition();
-				var valueText:AttachedText = new AttachedText(Std.string(optionsArray[i].getValue()), optionText.width + 40, 0, true, 0.8);
+				var valueText:AttachedText = new AttachedText(Std.string(option.getValue()), optionText.width + 40, 0, BOLD, 0.8);
 				valueText.sprTracker = optionText;
 				valueText.copyAlpha = true;
 				valueText.ID = i;
 				grpTexts.add(valueText);
 				optionsArray[i].setChild(valueText);
 			}
-			updateTextFrom(optionsArray[i]);
+			updateTextFrom(option);
 		}
 
 		changeSelection();
@@ -123,7 +123,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 	var holdTime:Float = 0;
 	var holdValue:Float = 0;
 	override function update(elapsed:Float) {
-		if (controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);
+		final justPressedDown:Bool = controls.UI_DOWN_P;
+		if (justPressedDown || controls.UI_UP_P) changeSelection(justPressedDown ? 1 : -1);
 
 		if (controls.BACK) {
 			close();
@@ -169,7 +170,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 
 								case STRING:
 									var num:Int = curOption.curOption; //lol
-									if(controls.UI_LEFT_P) --num;
+									if(controls.UI_LEFT_P) num--;
 									else num++;
 
 									if(num < 0) num = curOption.options.length - 1;

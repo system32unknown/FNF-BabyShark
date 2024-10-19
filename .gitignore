@@ -17,3 +17,5 @@ vs_Community.exe
 !.vscode/tasks.json
 !.vscode/extensions.json
 !.vscode/settings.json
+# macOS annoying file
+*.DS_Store

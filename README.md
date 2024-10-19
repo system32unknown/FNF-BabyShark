@@ -29,10 +29,11 @@ Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor code
 
 ### Denpa Engine:
 * BlueVapor1234 - Main Programmer & Creator.
-* Toadette8394 - Co Programmer.
-* YanniZ06 - Co Programmer.
+* Toadette8394 - Co-Programmer.
+* YanniZ06 - Co-Programmer.
 
 ### Special Thanks:
+* Rudyrue - Programmer of Custom-Psych.
 * bbpanzu - Ex-Team Member (Programmer).
 * crowplexus - HScript Iris, Input System v3, and Other PRs.
 * Keoiki - Note Splash Animations and Latin Alphabet.

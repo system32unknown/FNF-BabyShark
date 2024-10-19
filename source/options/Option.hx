@@ -19,7 +19,7 @@ enum OptionType {
 class Option {
 	public var child:Alphabet;
 	public var text(get, set):String;
-	public var onChange:Void->Void = null; //Pressed enter (on Bool type options) or pressed/held left/right (on other types)
+	public dynamic function onChange() {} //Pressed enter (on Bool type options) or pressed/held left/right (on other types)
 	public var type:OptionType = BOOL;
 
 	public var scrollSpeed:Float = 50; //Only works on int/float, defines how fast it scrolls per second while holding left/right
@@ -87,7 +87,7 @@ class Option {
 	}
 
 	public function change() {
-		if(onChange != null) onChange();
+		onChange();
 	}
 
 	dynamic public function getValue():Dynamic {
@@ -100,9 +100,9 @@ class Option {
 		if(type == KEYBIND) {
 			var keys:Dynamic = Reflect.getProperty(ClientPrefs.data, variable);
 			keys.keyboard = value;
-			return value;
+			return;
 		}
-		return Reflect.setProperty(ClientPrefs.data, variable, value);
+		Reflect.setProperty(ClientPrefs.data, variable, value);
 	}
 
 	var _name:String = null;

@@ -432,7 +432,11 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.zoom = defaultCamZoom;
 		FlxG.camera.snapToTarget();
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
-		moveCameraSection();
+		if (SONG.notes[curSection] != null) {
+			var leSec:SwagSection = SONG.notes[curSection];
+			if (gf != null && leSec.gfSection) moveCamera('gf');
+			else moveCamera(!leSec.mustHitSection);
+		}
 
 		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return healthLerp, 0, 2);
 		healthBar.screenCenter(X);

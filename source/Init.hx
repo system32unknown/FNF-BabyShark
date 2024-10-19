@@ -1,9 +1,5 @@
 package;
 
-import states.FlashingState;
-
-// THIS IS FOR INITIALIZING STUFF BECAUSE FLIXEL HATES INITIALIZING STUFF IN MAIN
-// GO TO MAIN FOR GLOBAL PROJECT/OPENFL STUFF
 class Init extends flixel.FlxState {
 	override function create():Void {
 		FlxTransitionableState.skipNextTransOut = true;
@@ -22,6 +18,7 @@ class Init extends flixel.FlxState {
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.keys.preventDefaultKeys = [TAB];
 
+		FlxG.cameras.useBufferLocking = true;
 		FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
 
 		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
@@ -33,12 +30,7 @@ class Init extends flixel.FlxState {
 			if(FlxG.save.data.fullscreen != null) FlxG.fullscreen = FlxG.save.data.fullscreen;
 			if(FlxG.save.data.weekCompleted != null) states.StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
-
-		super.create();
 		
-		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
-			FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
-			FlxG.switchState(() -> new FlashingState());
-		} else FlxG.switchState(Type.createInstance(Main.game.initialState, []));
+		FlxG.switchState(Type.createInstance(Main.game.initialState, []));
 	}
 }

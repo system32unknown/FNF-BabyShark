@@ -129,7 +129,7 @@ class CreditsState extends MusicBeatState {
 			optionText.isMenuItem = true;
 			optionText.changeX = false;
 			optionText.targetY = i;
-			optionText.alignment = CENTERED;
+			optionText.alignment = CENTER;
 
 			optionText.distancePerItem.y /= 1.2;
 
@@ -160,8 +160,6 @@ class CreditsState extends MusicBeatState {
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music.volume < .7) FlxG.sound.music.volume = FlxMath.bound(FlxG.sound.music.volume + (.5 * elapsed), 0, .7);
-
 		if(!quitting) {
 			if(sections.length > 1) {
 				var shiftMult:Int = 1;
@@ -291,7 +289,7 @@ class CreditSectionState extends MusicBeatState {
 
 		for (i => credit in creditsStuff) {
 			var isSelectable:Bool = !unselectableCheck(i);
-			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 300, credit[0], !isSelectable);
+			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 300, credit[0], isSelectable ? NORMAL : BOLD);
 			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			optionText.changeX = false;
@@ -318,7 +316,7 @@ class CreditSectionState extends MusicBeatState {
 				Mods.currentModDirectory = cSectionisMod ? curCSection : '';
 
 				if(curSelected == -1) curSelected = i;
-			} else optionText.alignment = CENTERED;
+			} else optionText.alignment = CENTER;
 		}
 
 		descBox = new AttachedSprite();
@@ -342,8 +340,6 @@ class CreditSectionState extends MusicBeatState {
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float) {
-		if (FlxG.sound.music.volume < .7) FlxG.sound.music.volume = .5 * elapsed;
-
 		if(!quitting) {
 			if(creditsStuff.length > 1) {
 				var shiftMult:Int = 1;
@@ -386,13 +382,12 @@ class CreditSectionState extends MusicBeatState {
 		}
 
 		for (item in grpOptions.members) {
-			if(!item.bold) {
-				var lerpVal:Float = Math.exp(-elapsed * 12);
-				if(item.targetY == 0) {
-					var lastX:Float = item.x;
-					item.screenCenter(X).x = FlxMath.lerp(item.x - 70, lastX, lerpVal);
-				} else item.x = FlxMath.lerp(200 + -40 * Math.abs(item.targetY), item.x, lerpVal);
-			}
+			if (item.type == BOLD) continue;
+			var lerpVal:Float = Math.exp(-elapsed * 12);
+			if (item.targetY == 0) {
+				var lastX:Float = item.x;
+				item.screenCenter(X).x = FlxMath.lerp(item.x - 70, lastX, lerpVal);
+			} else item.x = FlxMath.lerp(200 + -40 * Math.abs(item.targetY), item.x, lerpVal);
 		}
 		super.update(elapsed);
 	}

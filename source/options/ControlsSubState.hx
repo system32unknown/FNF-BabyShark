@@ -152,7 +152,7 @@ class ControlsSubState extends MusicBeatSubstate {
 					var str:String = option[1];
 					var keyStr:String = option[2];
 					if(isDefaultKey) str = Language.getPhrase(str);
-					var text:Alphabet = new Alphabet(475, 300, !isDisplayKey ? Language.getPhrase('key_$keyStr', str) : Language.getPhrase('keygroup_$str', str), !isDisplayKey);
+					var text:Alphabet = new Alphabet(475, 300, !isDisplayKey ? Language.getPhrase('key_$keyStr', str) : Language.getPhrase('keygroup_$str', str), isDisplayKey ? NORMAL : BOLD);
 					text.isMenuItem = true;
 					text.changeX = false;
 					text.distancePerItem.y = 60;
@@ -191,7 +191,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		for (n in 0...2) {
 			var key:String = InputFormatter.getKeyName((keys[n] != null) ? keys[n] : NONE);
 
-			var attach:Alphabet = new Alphabet(560 + n * 300, 248, key, false);
+			var attach:Alphabet = new Alphabet(560 + n * 300, 248, key, NORMAL);
 			attach.isMenuItem = true;
 			attach.changeX = false;
 			attach.distancePerItem.y = 60;
@@ -215,7 +215,7 @@ class ControlsSubState extends MusicBeatSubstate {
 
 	function updateBind(num:Int, text:String) {
 		var bind:Alphabet = grpBinds.members[num];
-		var attach:Alphabet = new Alphabet(350 + (num % 2) * 300, 248, text, false);
+		var attach:Alphabet = new Alphabet(350 + (num % 2) * 300, 248, text, NORMAL);
 		attach.isMenuItem = true;
 		attach.changeX = false;
 		attach.distancePerItem.y = 60;
@@ -266,12 +266,12 @@ class ControlsSubState extends MusicBeatSubstate {
 					FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35);
 					add(bindingBlack);
 
-					bindingText = new Alphabet(FlxG.width / 2, 160, Language.getPhrase('controls_rebinding', 'Rebinding {1}', [options[curOptions[curSelected]][3]]), false);
-					bindingText.alignment = CENTERED;
+					bindingText = new Alphabet(FlxG.width / 2, 160, Language.getPhrase('controls_rebinding', 'Rebinding {1}', [options[curOptions[curSelected]][3]]), NORMAL);
+					bindingText.alignment = CENTER;
 					add(bindingText);
 					
 					bindingText2 = new Alphabet(FlxG.width / 2, 340, Language.getPhrase('controls_rebinding2', 'Hold ESC to Cancel\nHold Backspace to Delete'));
-					bindingText2.alignment = CENTERED;
+					bindingText2.alignment = CENTER;
 					add(bindingText2);
 
 					binding = true;

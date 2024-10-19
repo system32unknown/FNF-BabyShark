@@ -733,7 +733,7 @@ class MenuButton extends FlxSpriteGroup {
 		add(bg);
 
 		if(text != null) {
-			textOn = new Alphabet(0, 0);
+			textOn = new Alphabet(0, 0, "", NORMAL);
 			textOn.setScale(.6);
 			textOn.text = text;
 			textOn.alpha = 0.6;

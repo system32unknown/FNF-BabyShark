@@ -161,6 +161,7 @@ class StageData {
 					}
 					spr.scrollFactor.set(data.scroll[0], data.scroll[1]);
 					spr.color = CoolUtil.colorFromString(data.color);
+					spr.blend = psychlua.LuaUtils.blendModeFromString(data.blend);
 
 					for (varName in ['alpha', 'angle']) {
 						var dat:Dynamic = Reflect.getProperty(data, varName);
