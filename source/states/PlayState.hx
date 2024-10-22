@@ -2228,10 +2228,9 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function spawnNoteSplashOnNote(note:Note) {
-		if(ClientPrefs.data.splashAlpha > 0 && note != null) {
-			var strum:StrumNote = playerStrums.members[note.noteData];
-			if(strum != null) spawnNoteSplash(note, strum);
-		}
+		if (note == null) return;
+		var strum:StrumNote = playerStrums.members[note.noteData];
+		if (strum != null && ClientPrefs.data.splashAlpha > 0) spawnNoteSplash(note, strum);
 	}
 
 	public function spawnNoteSplash(note:Note, strum:StrumNote) {

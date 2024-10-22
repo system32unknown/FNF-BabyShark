@@ -73,8 +73,8 @@ typedef PsychPackage = {
 }
 
 class VSlice {
-	public static final metadataVersion = '2.2.3';
-	public static final chartVersion = '2.0.0';
+	public static final metadataVersion:String = '2.2.3';
+	public static final chartVersion:String = '2.0.0';
 	public static function convertToPsych(chart:VSliceChart, metadata:VSliceMetadata):PsychPackage {
 		var songDifficulties:Map<String, SwagSong> = [];
 		var timeChanges:Array<VSliceTimeChange> = cast metadata.timeChanges;

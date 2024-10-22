@@ -4147,7 +4147,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				var sample:Float = (byte / 65535);
 
 				if (sample > 0 && sample > lmax) lmax = sample;
-				else if (sample < 0 && sample < lmin) lmin = sample;
+				else if (sample < lmin) lmin = sample;
 
 				if (channels >= 2) {
 					byte = bytes.getUInt16((index * channels * 2) + 2);
@@ -4157,7 +4157,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					sample = (byte / 65535);
 
 					if (sample > 0 && sample > rmax) rmax = sample;
-					else if (sample < 0 && sample < rmin) rmin = sample;
+					else if (sample < rmin) rmin = sample;
 				}
 			}
 
