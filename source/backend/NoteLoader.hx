@@ -2,7 +2,7 @@ package backend;
 
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.animation.FlxAnimationController;
-import object.Note;
+import objects.Note;
 
 class NoteLoader {
 	public static var defaultNoteSprite:FlxSprite;
