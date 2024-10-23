@@ -31,7 +31,7 @@ class NoteLoader {
 		noteSkinAnimsMap.set(noteSkin, spr.animation);
 	}
 
-	function checkAnimPrefix(anim:FlxAnimationController, name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
+	static function checkAnimPrefix(anim:FlxAnimationController, name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
 		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
 		@:privateAccess
 		anim.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
