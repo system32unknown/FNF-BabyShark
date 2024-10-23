@@ -777,7 +777,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function getCountdownSpriteNames(?givenUI: Null<String>):Array<String> {
-		if(givenUI == null) givenUI = stageUI;
+		givenUI ??= stageUI;
 		return switch(givenUI) {
 			case "pixel": ['${givenUI}UI/countdown/ready-pixel', '${givenUI}UI/countdown/set-pixel', '${givenUI}UI/countdown/date-pixel'];
 			case "normal": ["countdown/ready", "countdown/set" ,"countdown/go"];
@@ -1495,7 +1495,7 @@ class PlayState extends MusicBeatState {
 		var flValue2:Null<Float> = Std.parseFloat(value2);
 		if(Math.isNaN(flValue1)) flValue1 = null;
 		if(Math.isNaN(flValue2)) flValue2 = null;
-		if(strumTime == null) strumTime = Conductor.songPosition;
+		strumTime ??= Conductor.songPosition;
 
 		switch(eventName) {
 			case 'Hey!':
@@ -1530,16 +1530,16 @@ class PlayState extends MusicBeatState {
 
 			case 'Add Camera Zoom':
 				if(ClientPrefs.data.camZooms && FlxG.camera.zoom < 1.35) {
-					if(flValue1 == null) flValue1 = .015;
-					if(flValue2 == null) flValue2 = .03;
+					flValue1 ??= .015;
+					flValue2 ??= .03;
 
 					FlxG.camera.zoom += flValue1;
 					camHUD.zoom += flValue2;
 				}
 
 			case 'Set Camera Zoom':
-				if(flValue1 == null) flValue1 = defaultCamZoom;
-				if(flValue2 == null) flValue2 = 1;
+				flValue1 ??= defaultCamZoom;
+				flValue2 ??= 1;
 				defaultCamZoom = flValue1;
 				defaultHudCamZoom = flValue2;
 
@@ -1779,7 +1779,6 @@ class PlayState extends MusicBeatState {
 			playbackRate = 1;
 
 			if (chartingMode) {openChartEditor(); return false;}
-
 			if (isStoryMode) {
 				campaignScore += songScore;
 				storyPlaylist.remove(storyPlaylist[0]);

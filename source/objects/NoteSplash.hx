@@ -33,10 +33,10 @@ class NoteSplash extends FlxSprite {
 	public var config(default, set):NoteSplashConfig;
 
 	public static var DEFAULT_SKIN:String = "noteSplashes/noteSplashes";
-	public static var configs:Map<String, NoteSplashConfig> = new Map();
+	public static var configs:Map<String, NoteSplashConfig> = new Map<String, NoteSplashConfig>();
 
 	public var babyArrow:StrumNote;
-	var noteDataMap:Map<Int, String> = new Map();
+	var noteDataMap:Map<Int, String> = new Map<Int, String>();
 
 	public function new(?splash:String) {
 		super();
@@ -73,7 +73,7 @@ class NoteSplash extends FlxSprite {
 			var config:Dynamic = haxe.Json.parse(Paths.getTextFromFile(path));
 			if (config != null) {
 				var tempConfig:NoteSplashConfig = {
-					animations: new Map(),
+					animations: new Map<String, NoteSplashAnim>(),
 					scale: config.scale,
 					allowRGB: config.allowRGB,
 					allowPixel: config.allowPixel,
@@ -223,7 +223,7 @@ class NoteSplash extends FlxSprite {
 
 	public static function createConfig():NoteSplashConfig {
 		return {
-			animations: new Map(),
+			animations: new Map<String, NoteSplashAnim>(),
 			scale: 1,
 			allowRGB: true,
 			allowPixel: true,
@@ -232,16 +232,14 @@ class NoteSplash extends FlxSprite {
 	}
 
 	public static function addAnimationToConfig(config:NoteSplashConfig, scale:Float, name:String, prefix:String, fps:Array<Int>, offsets:Array<Float>, indices:Array<Int>, noteData:Int):NoteSplashConfig {
-		if (config == null) config = createConfig();
-
+		config ??= createConfig();
 		config.animations.set(name, {name: name, noteData: noteData, prefix: prefix, indices: indices, offsets: offsets, fps: fps});
 		config.scale = scale;
 		return config;
 	}
 
 	function set_config(value:NoteSplashConfig):NoteSplashConfig  {
-		if (value == null) value = createConfig();
-
+		value ??= createConfig();
 		noteDataMap.clear();
 
 		for (i in value.animations) {

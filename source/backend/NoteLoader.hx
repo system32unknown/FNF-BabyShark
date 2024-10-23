@@ -2,13 +2,12 @@ package backend;
 
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.animation.FlxAnimationController;
-import objects.Note;
 
 class NoteLoader {
 	public static var defaultNoteSprite:FlxSprite;
 
-	public static var noteSkinFramesMap:Map<String, FlxFramesCollection> = new Map();
-	public static var noteSkinAnimsMap:Map<String, FlxAnimationController> = new Map();
+	public static var noteSkinFramesMap:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
+	public static var noteSkinAnimsMap:Map<String, FlxAnimationController> = new Map<String, FlxAnimationController>();
 
 	public static function initNote(keys:Int = 4, noteSkin:String) {
 		var spr:FlxSprite = new FlxSprite();
