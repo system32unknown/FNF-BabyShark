@@ -72,8 +72,8 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 			if (bgFade.alpha > .5) bgFade.alpha = .5;
 
 			var ret:Dynamic = PlayState.instance.callOnScripts('onDialogueConfirm');
-			var back:Bool = Controls.instance.BACK;
-			if (confirmDialogue || (Controls.instance.ACCEPT || back) && ret != LuaUtils.Function_Stop) {
+			var back:Bool = Controls.justPressed('back');
+			if (confirmDialogue || (Controls.justPressed('accept') || back) && ret != LuaUtils.Function_Stop) {
 				if (!typedText.finishedText && !back) {
 					typedText.finishText();
 					if (skipDialogueThing != null) skipDialogueThing();

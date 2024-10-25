@@ -4,7 +4,7 @@ class ExitConfirmationPrompt extends Prompt {
 	public function new(?finishCallback:Void->Void) {
 		super('There\'s unsaved progress,\nare you sure you want to exit?', () -> {
 			FlxG.mouse.visible = false;
-			FlxG.switchState(new states.editors.MasterEditorMenu());
+			FlxG.switchState(() -> new states.editors.MasterEditorMenu());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			if(finishCallback != null) finishCallback();
 		}, 'Exit');
@@ -50,7 +50,7 @@ class Prompt extends BasePrompt {
 	}
 }
 
-class BasePrompt extends MusicBeatSubstate {
+class BasePrompt extends FlxSubState {
 	var _sizeX:Float = 0;
 	var _sizeY:Float = 0;
 	var _title:String;

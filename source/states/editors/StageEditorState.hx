@@ -1716,7 +1716,7 @@ class StageEditorMetaSprite {
 	}
 }
 
-class StageEditorAnimationSubstate extends MusicBeatSubstate {
+class StageEditorAnimationSubstate extends FlxSubState {
 	var bg:FlxSprite;
 	var originalZoom:Float;
 	var originalCamPoint:FlxPoint;

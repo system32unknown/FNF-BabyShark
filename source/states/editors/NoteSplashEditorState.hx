@@ -531,7 +531,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		}
 
 		if (!blockInput) {
-			if (controls.BACK) FlxG.switchState(() -> new MasterEditorMenu());
+			if (Controls.justPressed('back')) FlxG.switchState(() -> new MasterEditorMenu());
 			if (FlxG.keys.justPressed.F1) openSubState(new NoteSplashEditorHelpSubState());
 		}
 
@@ -840,7 +840,7 @@ class NoteSplashEditorState extends MusicBeatState {
 	}
 }
 
-class NoteSplashEditorHelpSubState extends MusicBeatSubstate {
+class NoteSplashEditorHelpSubState extends FlxSubState {
 	public function new() {
 		super();
 
@@ -889,6 +889,6 @@ class NoteSplashEditorHelpSubState extends MusicBeatSubstate {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (controls.BACK || FlxG.keys.justPressed.F1) close();
+		if (Controls.justPressed('back') || FlxG.keys.justPressed.F1) close();
 	}
 }

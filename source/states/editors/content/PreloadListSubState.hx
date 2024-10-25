@@ -9,7 +9,7 @@ import backend.ui.PsychUIRadioGroup;
 import backend.ui.PsychUICheckBox;
 import backend.ui.PsychUIEventHandler;
 
-class PreloadListSubState extends MusicBeatSubstate implements PsychUIEvent {
+class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 	var lockedList:Array<String>;
 	var preloadList:Map<String, LoadFilters>;
 	var preloadListKeys:Array<String> = [];
@@ -186,7 +186,7 @@ class PreloadListSubState extends MusicBeatSubstate implements PsychUIEvent {
 		outputTxt.alpha = outputTime;
 		if(!fileDialog.completed) return;
 			
-		if(controls.BACK) close();
+		if(Controls.justPressed('back')) close();
 		
 		var checked:PsychUIRadioItem = radioGrp.checkedRadio;
 		if(checked != null) removeButton.y = checked.y - 1;

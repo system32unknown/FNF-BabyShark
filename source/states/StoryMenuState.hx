@@ -50,7 +50,7 @@ class StoryMenuState extends MusicBeatState {
 				() -> {
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					movedBack = true;
-					FlxG.switchState(new MainMenuState());
+					FlxG.switchState(() -> new MainMenuState());
 				})
 			);
 			return;
@@ -176,9 +176,10 @@ class StoryMenuState extends MusicBeatState {
 
 		if (!movedBack && !selectedWeek) {
 			var changeDiff:Bool = false;
-			if (controls.UI_UP_P || controls.UI_DOWN_P) {
-				changeWeek(controls.UI_UP_P ? -1 : 1);
-				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
+			final downJustPressed:Bool = Controls.justPressed('ui_down');
+			if (downJustPressed || Controls.justPressed('ui_up')) {
+				changeWeek(downJustPressed ? 1 : -1);
+				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeDiff = true;
 			}
 
@@ -188,26 +189,23 @@ class StoryMenuState extends MusicBeatState {
 				changeDifficulty();
 			}
 
-			if (controls.UI_RIGHT) rightArrow.animation.play('press')
-			else rightArrow.animation.play('idle');
+			final rightjustPressed:Bool = Controls.justPressed('ui_right');
+			final leftjustPressed:Bool = Controls.justPressed('ui_left');
+			rightArrow.animation.play(rightjustPressed ? 'press' : 'idle');
+			leftArrow.animation.play(leftjustPressed ? 'press' : 'idle');
 
-			if (controls.UI_LEFT) leftArrow.animation.play('press');
-			else leftArrow.animation.play('idle');
-
-			if (controls.UI_RIGHT_P) changeDifficulty(1);
-			else if (controls.UI_LEFT_P) changeDifficulty(-1);
+			if (rightjustPressed || leftjustPressed) changeDifficulty(rightjustPressed ? 1 : -1);
 			else if (changeDiff) changeDifficulty();
-
-			if(FlxG.keys.justPressed.CONTROL) {
+			if (FlxG.keys.justPressed.CONTROL) {
 				persistentUpdate = false;
 				openSubState(new options.GameplayChangersSubstate());
-			} else if(controls.RESET) {
+			} else if (Controls.justPressed('reset')) {
 				persistentUpdate = false;
 				openSubState(new substates.ResetScoreSubState('', curDifficulty, '', curWeek));
-			} else if (controls.ACCEPT) selectWeek();
+			} else if (Controls.justPressed('accept')) selectWeek();
 		}
 
-		if (controls.BACK && !movedBack && !selectedWeek) {
+		if (Controls.justPressed('back') && !movedBack && !selectedWeek) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
 			FlxG.switchState(() -> new MainMenuState());

@@ -167,7 +167,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	override function update(elapsed:Float) {
-		if(controls.BACK || FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.F12) {
+		if(Controls.justPressed('back') || FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.F12) {
 			endSong();
 			super.update(elapsed);
 			return;
@@ -554,7 +554,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	
 	// Hold notes
 	function keysCheck():Void {
-		var holdArray:Array<Bool> = [for (key in keysArray) controls.pressed(key)];
+		var holdArray:Array<Bool> = [for (key in keysArray) Controls.pressed(key)];
 		if (notes.length > 0) for (n in notes) if ((n != null && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit) && n.isSustainNote && holdArray[n.noteData]) goodNoteHit(n);
 	}
 

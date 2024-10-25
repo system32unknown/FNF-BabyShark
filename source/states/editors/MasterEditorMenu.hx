@@ -59,12 +59,16 @@ class MasterEditorMenu extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float) {
-		if (controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);
-		#if MODS_ALLOWED if (controls.UI_LEFT_P || controls.UI_RIGHT_P) changeDirectory(controls.UI_LEFT_P ? -1 : 1); #end
+		final upPressed:Bool = Controls.justPressed('ui_up');
+		if (upPressed || Controls.justPressed('ui_down')) changeSelection(upPressed ? -1 : 1);
+		#if MODS_ALLOWED
+		final leftPressed:Bool = Controls.justPressed('ui_left');
+		if (leftPressed || Controls.justPressed('ui_right')) changeDirectory(leftPressed ? -1 : 1);
+		#end
 
-		if (controls.BACK) FlxG.switchState(() -> new states.MainMenuState());
+		if (Controls.justPressed('back')) FlxG.switchState(() -> new states.MainMenuState());
 
-		if (controls.ACCEPT) {
+		if (Controls.justPressed('accept')) {
 			switch(options[curSelected]) {
 				case 'Chart Editor': LoadingState.loadAndSwitchState(() -> new ChartingState());
 				case 'Character Editor': LoadingState.loadAndSwitchState(() -> new CharacterEditorState(objects.Character.DEFAULT_CHARACTER, false));

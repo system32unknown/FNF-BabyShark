@@ -4,7 +4,7 @@ import objects.CheckboxThingie;
 import objects.AttachedText;
 import options.Option.OptionType;
 
-class GameplayChangersSubstate extends MusicBeatSubstate {
+class GameplayChangersSubstate extends FlxSubState {
 	var curSelected:Int = 0;
 	var optionsArray:Array<Dynamic> = [];
 
@@ -16,14 +16,15 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 	function get_curOption() return optionsArray[curSelected]; //shorter lol
 
 	function getOptions() {
-		optionsArray.push(new GameplayOption('Scroll Type', 'scrolltype', STRING, 'multiplicative', ["multiplicative", "constant"]));
+		var goption:GameplayOption = new GameplayOption('Scroll Type', 'scrolltype', STRING, 'multiplicative', ["multiplicative", "constant"]);
+		optionsArray.push(goption);
 
 		var option:GameplayOption = new GameplayOption('Scroll Speed', 'scrollspeed', FLOAT, 1);
-		option.scrollSpeed = 2.;
-		option.minValue = .35;
-		option.changeValue = .05;
+		option.scrollSpeed = 2.0;
+		option.minValue = 0.35;
+		option.changeValue = 0.05;
 		option.decimals = 2;
-		if (option.getValue() != "constant") {
+		if (goption.getValue() != "constant") {
 			option.displayFormat = '%vX';
 			option.maxValue = 3;
 		} else {
@@ -32,6 +33,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 		}
 		optionsArray.push(option);
 
+		#if FLX_PITCH
 		var option:GameplayOption = new GameplayOption('Playback Rate', 'songspeed', FLOAT, 1);
 		option.scrollSpeed = 1;
 		option.minValue = 0.5;
@@ -40,6 +42,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 		option.displayFormat = '%vX';
 		option.decimals = 2;
 		optionsArray.push(option);
+		#end
 
 		var option:GameplayOption = new GameplayOption('Health Gain Multiplier', 'healthgain', FLOAT, 1);
 		option.scrollSpeed = 2.5;
@@ -91,7 +94,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
-			if(optionsArray[i].type == BOOL) {
+			if (option.type == BOOL) {
 				optionText.x += 60;
 				optionText.startPosition.x += 60;
 				optionText.snapToPosition();
@@ -123,33 +126,34 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 	var holdTime:Float = 0;
 	var holdValue:Float = 0;
 	override function update(elapsed:Float) {
-		final justPressedDown:Bool = controls.UI_DOWN_P;
-		if (justPressedDown || controls.UI_UP_P) changeSelection(justPressedDown ? 1 : -1);
+		final justPressedDown:Bool = Controls.justPressed('ui_down');
+		if (justPressedDown || Controls.justPressed('ui_up')) changeSelection(justPressedDown ? 1 : -1);
 
-		if (controls.BACK) {
+		if (Controls.justPressed('back')) {
 			close();
 			ClientPrefs.save();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
 		if(nextAccept <= 0) {
-			var usesCheckbox:Bool = (curOption.type == BOOL);
-
+			var usesCheckbox:Bool = curOption.type == BOOL;
 			if(usesCheckbox) {
-				if(controls.ACCEPT) {
+				if(Controls.justPressed('accept')) {
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					curOption.setValue((curOption.getValue() == true) ? false : true);
 					curOption.change();
 					reloadCheckboxes();
 				}
 			} else {
-				if(controls.UI_LEFT || controls.UI_RIGHT) {
-					var pressed:Bool = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
-					if(holdTime > 0.5 || pressed) {
-						if(pressed) {
+				final leftJustPressed:Bool = Controls.justPressed('ui_left');
+				if (leftJustPressed || Controls.justPressed('ui_right')) {
+					final leftPressed:Bool = Controls.pressed('ui_left');
+					var pressed:Bool = leftPressed || Controls.pressed('ui_right');
+					if (holdTime > 0.5 || pressed) {
+						if (pressed) {
 							var add:Dynamic = null;
 							if(curOption.type != STRING)
-								add = controls.UI_LEFT ? -curOption.changeValue : curOption.changeValue;
+								add = leftJustPressed ? -curOption.changeValue : curOption.changeValue;
 
 							switch(curOption.type) {
 								case INT, FLOAT, PERCENT:
@@ -170,7 +174,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 
 								case STRING:
 									var num:Int = curOption.curOption; //lol
-									if(controls.UI_LEFT_P) num--;
+									if (leftPressed) num--;
 									else num++;
 
 									if(num < 0) num = curOption.options.length - 1;
@@ -199,7 +203,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 							curOption.change();
 							FlxG.sound.play(Paths.sound('scrollMenu'));
 						} else if (curOption.type != STRING) {
-							holdValue = FlxMath.bound(holdValue + curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1), curOption.minValue, curOption.maxValue);
+							holdValue = Math.max(curOption.minValue, Math.min(curOption.maxValue, holdValue + curOption.scrollSpeed * elapsed * (leftJustPressed ? -1 : 1)));
 							switch(curOption.type) {
 								case INT: curOption.setValue(Math.round(holdValue));	
 								case FLOAT, PERCENT: curOption.setValue(FlxMath.roundDecimal(FlxMath.bound(holdValue + curOption.changeValue - (holdValue % curOption.changeValue), curOption.minValue, curOption.maxValue), curOption.decimals));
@@ -211,10 +215,10 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 					}
 
 					if (curOption.type != STRING) holdTime += elapsed;
-				} else if (controls.UI_LEFT_R || controls.UI_RIGHT_R) clearHold();
+				} else if (Controls.released('ui_left') || Controls.released('ui_right')) clearHold();
 			}
 
-			if(controls.RESET) {
+			if (Controls.justPressed('reset')) {
 				for (i in 0...optionsArray.length) {
 					var leOption:GameplayOption = optionsArray[i];
 					leOption.setValue(leOption.defaultValue);
@@ -273,8 +277,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate {
 	}
 }
 
-class GameplayOption
-{
+class GameplayOption {
 	var child:Alphabet;
 	public var text(get, set):String;
 	public var onChange:Void->Void = null; //Pressed enter (on Bool type options) or pressed/held left/right (on other types)
@@ -305,16 +308,12 @@ class GameplayOption
 
 		if(defaultValue == 'null variable value') {
 			switch(type) {
-				case BOOL:
-					defaultValue = false;
-				case INT, FLOAT:
-					defaultValue = 0;
-				case PERCENT:
-					defaultValue = 1;
+				case BOOL: defaultValue = false;
+				case INT, FLOAT: defaultValue = 0;
+				case PERCENT: defaultValue = 1;
 				case STRING:
 					defaultValue = '';
-					if(options.length > 0)
-						defaultValue = options[0];
+					if(options.length > 0) defaultValue = options[0];
 
 				default:
 			}

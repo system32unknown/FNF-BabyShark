@@ -152,7 +152,7 @@ class NotesColorSubState extends FlxSubState {
 		NUMPADSEVEN => '7', NUMPADEIGHT => '8', NUMPADNINE => '9', A => 'A', B => 'B', C => 'C', D => 'D', E => 'E', F => 'F'];
 
 	override function update(elapsed:Float) {
-		if (controls.BACK) {
+		if (Controls.justPressed('back')) {
 			FlxG.mouse.visible = false;
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			close();
@@ -207,10 +207,10 @@ class NotesColorSubState extends FlxSubState {
 			if(!end) hexTypeLine.visible = Math.floor(hexTypeVisibleTimer * 2) % 2 == 0;
 		} else {
 			var add:Int = 0;
-			if(controls.UI_LEFT_P) add = -1;
-			else if(controls.UI_RIGHT_P) add = 1;
+			if(Controls.justPressed('ui_left')) add = -1;
+			else if(Controls.justPressed('ui_right')) add = 1;
 
-			if(controls.UI_UP_P || controls.UI_DOWN_P) {
+			if(Controls.justPressed('ui_up') || Controls.justPressed('ui_down')) {
 				onModeColumn = !onModeColumn;
 				modeBG.visible = onModeColumn;
 				notesBG.visible = !onModeColumn;
@@ -330,7 +330,7 @@ class NotesColorSubState extends FlxSubState {
 					updateColors();
 				}
 			} 
-		} else if(controls.RESET && hexTypeNum < 0) {
+		} else if(Controls.justPressed('reset') && hexTypeNum < 0) {
 			if(FlxG.keys.pressed.SHIFT) {
 				for (i in 0...3) {
 					var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;

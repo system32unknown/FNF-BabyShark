@@ -165,8 +165,11 @@ class CreditsState extends MusicBeatState {
 				var shiftMult:Int = 1;
 				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
-				if (controls.UI_UP_P || controls.UI_DOWN_P) {
-					changeSelection(controls.UI_UP_P ? -shiftMult : shiftMult);
+				var upPressed:Bool = Controls.pressed('ui_up');
+				var downJustPressed:Bool = Controls.justPressed('ui_down');
+				var upJustPressed:Bool = Controls.justPressed('ui_up');
+				if (upJustPressed || downJustPressed) {
+					changeSelection(upJustPressed ? -shiftMult : shiftMult);
 					holdTime = 0;
 				}
 
@@ -175,20 +178,20 @@ class CreditsState extends MusicBeatState {
 					changeSelection(-FlxG.mouse.wheel);
 				}
 
-				if(controls.UI_DOWN || controls.UI_UP) {
+				if (Controls.pressed('ui_down') || upPressed) {
 					var checkLastHold:Int = Math.floor((holdTime - .5) * 10);
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - .5) * 10);
 
-					if(holdTime > .5 && checkNewHold - checkLastHold > 0)
-						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
+					if (holdTime > .5 && checkNewHold - checkLastHold > 0)
+						changeSelection((checkNewHold - checkLastHold) * (upPressed ? -shiftMult : shiftMult));
 				}
 			}
 
 			interpColor.fpsLerpTo(CoolUtil.colorFromString(sections[curSelected][3]), .0625);
 			bg.color = interpColor.color;
 
-			if(controls.ACCEPT && sections[curSelected][1] != null) {
+			if(Controls.justPressed('accept') && sections[curSelected][1] != null) {
 				CreditSectionState.curCSection = sections[curSelected][1];
 				CreditSectionState.cSectionisMod = #if MODS_ALLOWED modSectionsBound > 0 && curSelected >= modSectionsBound #else false #end;
 
@@ -197,7 +200,7 @@ class CreditsState extends MusicBeatState {
 				quitting = true;
 			}
 
-			if (controls.BACK) {
+			if (Controls.justPressed('back')) {
 				FlxG.sound.play(Paths.sound('cancelMenu'), .7);
 				FlxG.switchState(() -> new MainMenuState());
 				quitting = true;
@@ -345,8 +348,11 @@ class CreditSectionState extends MusicBeatState {
 				var shiftMult:Int = 1;
 				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
-				if (controls.UI_UP_P || controls.UI_DOWN_P) {
-					changeSelection(controls.UI_UP_P ? -shiftMult : shiftMult);
+				var upPressed:Bool = Controls.pressed('ui_up');
+				var downJustPressed:Bool = Controls.justPressed('ui_down');
+				var upJustPressed:Bool = Controls.justPressed('ui_up');
+				if (upJustPressed || downJustPressed) {
+					changeSelection(upJustPressed ? -shiftMult : shiftMult);
 					holdTime = 0;
 				}
 
@@ -355,23 +361,23 @@ class CreditSectionState extends MusicBeatState {
 					changeSelection(-shiftMult * FlxG.mouse.wheel);
 				}
 
-				if(controls.UI_DOWN || controls.UI_UP) {
+				if (Controls.pressed('ui_down') || upPressed) {
 					var checkLastHold:Int = Math.floor((holdTime - .5) * 10);
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - .5) * 10);
 
 					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
-						changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
+						changeSelection((checkNewHold - checkLastHold) * (upPressed ? -shiftMult : shiftMult));
 				}
 			}
 
 			interpColor.fpsLerpTo(CoolUtil.colorFromString(creditsStuff[curSelected][4]), .0625);
 			bg.color = interpColor.color;
 
-			if(controls.ACCEPT && (creditsStuff[curSelected][3] == null || creditsStuff[curSelected][3].length > 4))
+			if(Controls.justPressed('accept') && (creditsStuff[curSelected][3] == null || creditsStuff[curSelected][3].length > 4))
 				CoolUtil.browserLoad(creditsStuff[curSelected][3]);
 
-			if(controls.BACK) {
+			if(Controls.justPressed('back')) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				
 				var state:CreditsState = new CreditsState();

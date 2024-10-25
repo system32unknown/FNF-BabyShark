@@ -173,7 +173,6 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter> {
 			var spaceChar:Bool = (character == " " || (type == BOLD && character == "_"));
 			if (spaceChar) consecutiveSpaces++;
 
-			var isAlphabet:Bool = AlphaCharacter.isTypeAlphabet(character.toLowerCase());
 			if (AlphaCharacter.allLetters.exists(character.toLowerCase()) && (type == NORMAL || !spaceChar)) {
 				if (consecutiveSpaces > 0) {
 					xPos += 28 * consecutiveSpaces * scaleX;
@@ -273,8 +272,7 @@ class AlphaCharacter extends FlxSprite {
 
 		if (parent != null) {
 			if (type == null) type = parent.type;
-			this.scale.x = parent.scaleX;
-			this.scale.y = parent.scaleY;
+			this.scale.set(parent.scaleX, parent.scaleY);
 		}
 		
 		if (character != null) {
@@ -323,8 +321,7 @@ class AlphaCharacter extends FlxSprite {
 
 		var lastAnim:String = null;
 		if (animation != null) lastAnim = animation.name;
-		image = name;
-		frames = Paths.getSparrowAtlas(name);
+		frames = Paths.getSparrowAtlas(image = name);
 		this.scale.set(parent.scaleX, parent.scaleY);
 		alignOffset = 0;
 		

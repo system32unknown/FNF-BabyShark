@@ -39,11 +39,13 @@ class Main extends Sprite {
 		#if windows @:functionCode('#include <windows.h> SetProcessDPIAware();') #end
 
 		debug.Logs.init();
-		ClientPrefs.load();
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(fpsVar = new FPSCounter());
 		fpsVar.visible = ClientPrefs.data.showFPS;
 		fpsVar.memType = ClientPrefs.data.memCounterType;
+
+		FlxG.save.bind('funkin', CoolUtil.getSavePath());
+		ClientPrefs.load();
 
 		#if !MODS_ALLOWED
 		final path:String = 'mods';

@@ -169,7 +169,7 @@ class NoteOffsetState extends MusicBeatState {
 
 		camGame.zoom = FlxMath.lerp(defaultCamZoom, camGame.zoom, Math.exp(-elapsed * 3.125));
 
-		if (controls.ACCEPT_P && holdingObject == -1) acceptTime += elapsed;
+		if (Controls.pressed("accept") && holdingObject == -1) acceptTime += elapsed;
 		else acceptTime = 0;
 
 		if (acceptTime > .5) {
@@ -180,7 +180,7 @@ class NoteOffsetState extends MusicBeatState {
 
 		updateInput(elapsed);
 
-		if (controls.BACK) {
+		if (Controls.justPressed('back')) {
 			persistentUpdate = false;
 			FlxG.switchState(() -> new options.OptionsState());
 			if(OptionsState.onPlayState) {
@@ -280,21 +280,22 @@ class NoteOffsetState extends MusicBeatState {
 	var holdTime:Float = 0;
 	function updateInput(elapsed:Float) {
 		var byPixel:Bool = FlxG.keys.justPressed.CONTROL;
-		var addNum:Float = (FlxG.keys.pressed.SHIFT || controls.PAUSE_P) ? 2.5 : (FlxG.keys.pressed.CONTROL && !byPixel) ? 0 : 1;
-		var left:Bool = controls.UI_LEFT, right:Bool = controls.UI_RIGHT;
-		var down:Bool = controls.UI_DOWN, up:Bool = controls.UI_UP;
+		var addNum:Float = (FlxG.keys.pressed.SHIFT || Controls.pressed("pause")) ? 2.5 : (FlxG.keys.pressed.CONTROL && !byPixel) ? 0 : 1;
+		var left:Bool = Controls.justPressed('ui_left'), right:Bool = Controls.justPressed('ui_right');
+		var down:Bool = Controls.justPressed('ui_down'), up:Bool = Controls.justPressed('ui_up');
 
 		FlxG.mouse.getViewPosition(camOther, mousePointer);
 
 		if (onComboMenu) {
 			mouse.x += (left ? -1 : right ? 1 : 0) * addNum * (byPixel ? 1 : elapsed * 300);
 			mouse.y += (down ? 1 : up ? -1 : 0) * addNum * (byPixel ? 1 : elapsed * 300);
-			mouse.alpha = controls.ACCEPT_P ? .8 : .5;
+			mouse.alpha = Controls.pressed("accept") ? .8 : .5;
 			if (left || right || down || up) mouse.visible = true;
 			else if (FlxG.mouse.justPressed) mouse.visible = false;
 
 			var justpressed:Bool = false;
-			if (holdingObject != -1 && (justpressed = (controls.RESET || (nativeHoldingObject ? FlxG.mouse.justReleased : controls.ACCEPT)))) {
+			final lastaccepted:Bool = Controls.justPressed('accept');
+			if (holdingObject != -1 && (justpressed = (Controls.justPressed('reset') || (nativeHoldingObject ? FlxG.mouse.justReleased : lastaccepted)))) {
 				if (nativeHoldingObject) mouse.setPosition(mousePointer.x, mousePointer.y);
 				modeConfigText.alpha = 1;
 				for (i in 0...2) {
@@ -305,8 +306,8 @@ class NoteOffsetState extends MusicBeatState {
 				holdingObject = -1;
 			}
 
-			if (!justpressed && (FlxG.mouse.justPressed || controls.ACCEPT)) {
-				nativeHoldingObject = !controls.ACCEPT;
+			if (!justpressed && (FlxG.mouse.justPressed || lastaccepted)) {
+				nativeHoldingObject = !lastaccepted;
 				if (nativeHoldingObject) mouse.setPosition(mousePointer.x, mousePointer.y);
 
 				var overlappedObj:Int = getOverlappedObject(mouse);
@@ -329,16 +330,16 @@ class NoteOffsetState extends MusicBeatState {
 				comboOffset[v][1] = -Math.floor((nativeHoldingObject ? mousePointer.y : mouse.y) + holdingObjectOffset.y);
 			}
 
-			if (controls.RESET) for (i in 0...comboOffset.length) for (j in 0...comboOffset[i].length) comboOffset[i][j] = 0;
+			if (Controls.justPressed('reset')) for (i in 0...comboOffset.length) for (j in 0...comboOffset[i].length) comboOffset[i][j] = 0;
 		} else {
-			var pix:Bool = controls.UI_LEFT_P || controls.UI_RIGHT_P;
+			var pix:Bool = Controls.pressed('ui_left') || Controls.pressed('ui_right');
 			mouse.visible = false;
 
 			if (left || right) holdTime += elapsed;
 			else holdTime = 0;
 
 			barPercent += (holdTime > .27 || pix) ? (left ? -1 : right ? 1 : 0) * addNum * (pix ? 1 : 100 * elapsed) : 0;
-			if (controls.RESET) barPercent = holdTime = 0;
+			if (Controls.justPressed('reset')) barPercent = holdTime = 0;
 			updateNoteDelay();
 		}
 	}

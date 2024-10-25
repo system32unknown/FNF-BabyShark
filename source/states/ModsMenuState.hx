@@ -250,12 +250,18 @@ class ModsMenuState extends MusicBeatState {
 	var holdTime:Float = 0;
 
 	override function update(elapsed:Float) {
-		if(controls.BACK && hoveringOnMods) {
+		final backJustPressed:Bool = Controls.justPressed('back');
+		final acceptJustPressed:Bool = Controls.justPressed('accept');
+		final upJustPressed:Bool = Controls.justPressed('ui_up');
+		final downJustPressed:Bool = Controls.justPressed('ui_down');
+		final rightJustPressed:Bool = Controls.justPressed('ui_right');
+
+		if (backJustPressed && hoveringOnMods) {
 			saveTxt();
 
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			if(waitingToRestart) {
-				TitleState.skippedIntro = false;
+				TitleState.seenIntro = false;
 				FlxG.sound.music.fadeOut(.3);
 				if(FreeplayState.vocals != null) {
 					FreeplayState.vocals.fadeOut(.3);
@@ -270,15 +276,18 @@ class ModsMenuState extends MusicBeatState {
 			return;
 		}
 
-		if(!FlxG.mouse.visible && (Math.abs(FlxG.mouse.deltaX) > 10 || Math.abs(FlxG.mouse.deltaY) > 10)) FlxG.mouse.visible = true;
-		if(controls.UI_DOWN_R || controls.UI_UP_R) holdTime = 0;
+		if(Math.abs(FlxG.mouse.deltaX) > 10 || Math.abs(FlxG.mouse.deltaY) > 10) {
+			if (!FlxG.mouse.visible) FlxG.mouse.visible = true;
+		}
+
+		if (Controls.released('ui_down') || Controls.released('ui_up')) holdTime = 0;
 
 		if(modsList.all.length > 0) {
 			var lastMode:Bool = hoveringOnMods;
 			if(modsList.all.length > 1) {
 				if(FlxG.mouse.justPressed) {
 					for (i in centerMod - 2...centerMod + 3) {
-						var mod = modsGroup.members[i];
+						var mod:ModItem = modsGroup.members[i];
 						if(mod != null && mod.visible && FlxG.mouse.overlaps(mod)) {
 							hoveringOnMods = true;
 							var button:MenuButton = getButton();
@@ -297,28 +306,26 @@ class ModsMenuState extends MusicBeatState {
 
 				if(hoveringOnMods) {
 					var shiftMult:Int = (FlxG.keys.pressed.SHIFT) ? 4 : 1;
-					if(controls.UI_DOWN_P) changeSelectedMod(shiftMult);
-					else if(controls.UI_UP_P) changeSelectedMod(-shiftMult);
-					else if(FlxG.mouse.wheel != 0)
-						changeSelectedMod(-FlxG.mouse.wheel * shiftMult, true);
+					if(downJustPressed || upJustPressed) changeSelectedMod(downJustPressed ? shiftMult : -shiftMult);
+					else if(FlxG.mouse.wheel != 0) changeSelectedMod(-FlxG.mouse.wheel * shiftMult, true);
 					else if(FlxG.keys.justPressed.HOME || FlxG.keys.justPressed.END) {
 						if(FlxG.keys.justPressed.END) curSelectedMod = modsList.all.length - 1;
 						else curSelectedMod = 0;
 						changeSelectedMod();
-					} else if(controls.UI_UP || controls.UI_DOWN) {
+					} else if(upJustPressed || Controls.justPressed('ui_down')) {
 						var lastHoldTime:Float = holdTime;
 						holdTime += elapsed;
-						if(holdTime > 0.5 && Math.floor(lastHoldTime * 8) != Math.floor(holdTime * 8)) changeSelectedMod(shiftMult * (controls.UI_UP ? -1 : 1));
+						if(holdTime > 0.5 && Math.floor(lastHoldTime * 8) != Math.floor(holdTime * 8)) changeSelectedMod(shiftMult * (upJustPressed ? -1 : 1));
 					} else if(FlxG.mouse.pressed && !gottaClickAgain) {
 						var curMod:ModItem = modsGroup.members[curSelectedMod];
-						if(curMod != null) {
-							if(!holdingMod && FlxG.mouse.justMoved && FlxG.mouse.overlaps(curMod)) holdingMod = true;
+						if (curMod != null) {
+							if (!holdingMod && FlxG.mouse.justMoved && FlxG.mouse.overlaps(curMod)) holdingMod = true;
 
-							if(holdingMod) {
+							if (holdingMod) {
 								var moved:Bool = false;
 								for (i in centerMod - 2...centerMod + 3) {
-									var mod:ModItem = modsGroup.members[i];
-									if(mod != null && mod.visible && FlxG.mouse.overlaps(mod) && curSelectedMod != i) {
+									var mod = modsGroup.members[i];
+									if (mod != null && mod.visible && FlxG.mouse.overlaps(mod) && curSelectedMod != i) {
 										moveModToPosition(i);
 										moved = true;
 										break;
@@ -327,8 +334,8 @@ class ModsMenuState extends MusicBeatState {
 								
 								if(!moved) {
 									var factor:Float = -1;
-									if(FlxG.mouse.y < bgList.y) factor = Math.abs(FlxMath.bound(.5 - (bgList.y - FlxG.mouse.y) / 100, .2, .5));
-									else if(FlxG.mouse.y > bgList.y + bgList.height) factor = Math.abs(FlxMath.bound(.5 - (FlxG.mouse.y - bgList.y - bgList.height) / 100, .2, .5));
+									if(FlxG.mouse.y < bgList.y) factor = Math.abs(Math.max(0.2, Math.min(0.5, 0.5 - (bgList.y - FlxG.mouse.y) / 100)));
+									else if(FlxG.mouse.y > bgList.y + bgList.height) factor = Math.abs(Math.max(0.2, Math.min(0.5, 0.5 - (FlxG.mouse.y - bgList.y - bgList.height) / 100)));
 		
 									if(factor >= 0) {
 										holdingElapsed += elapsed;
@@ -337,8 +344,7 @@ class ModsMenuState extends MusicBeatState {
 											var newPos:Int = curSelectedMod;
 											if(FlxG.mouse.y < bgList.y) newPos--;
 											else newPos++;
-											
-											moveModToPosition(Std.int(FlxMath.bound(newPos, 0, modsGroup.length - 1)));
+											moveModToPosition(Std.int(Math.max(0, Math.min(modsGroup.length - 1, newPos))));
 										}
 									}
 								}
@@ -355,7 +361,7 @@ class ModsMenuState extends MusicBeatState {
 
 			if(lastMode == hoveringOnMods) {
 				if(hoveringOnMods) {
-					if(controls.UI_RIGHT_P) {
+					if(rightJustPressed) {
 						hoveringOnMods = false;
 						var button:MenuButton = getButton();
 						button.ignoreCheck = button.onFocus = false;
@@ -363,16 +369,14 @@ class ModsMenuState extends MusicBeatState {
 						changeSelectedButton();
 					}
 				} else {
-					if(controls.BACK) {
+					if(backJustPressed) {
 						hoveringOnMods = true;
 						var button:MenuButton = getButton();
 						button.ignoreCheck = button.onFocus = false;
 						changeSelectedMod();
-					} else if(controls.ACCEPT) {
-						var button:MenuButton = getButton();
-						if(button.onClick != null) button.onClick();
-					} else if(curSelectedButton < 0) {
-						if(controls.UI_UP_P) {
+					} else if(acceptJustPressed) getButton().onClick();
+					else if(curSelectedButton < 0) {
+						if(upJustPressed) {
 							switch(curSelectedButton) {
 								case -2:
 									curSelectedMod = 0;
@@ -382,7 +386,7 @@ class ModsMenuState extends MusicBeatState {
 									changeSelectedMod();
 								case -1: changeSelectedButton(-1);
 							}
-						} else if(controls.UI_DOWN_P) {
+						} else if(downJustPressed) {
 							switch(curSelectedButton) {
 								case -2: changeSelectedButton(1);
 								case -1:
@@ -392,14 +396,15 @@ class ModsMenuState extends MusicBeatState {
 									button.ignoreCheck = button.onFocus = false;
 									changeSelectedMod();
 							}
-						} else if(controls.UI_RIGHT_P) {
+						} else if(rightJustPressed) {
 							var button:MenuButton = getButton();
 							button.ignoreCheck = button.onFocus = false;
 							curSelectedButton = 0;
 							changeSelectedButton();
 						}
-					} else if(controls.UI_LEFT_P) changeSelectedButton(-1);
-					else if(controls.UI_RIGHT_P) changeSelectedButton(1);
+					} else if(Controls.justPressed('ui_left') || rightJustPressed) {
+						changeSelectedButton(rightJustPressed ? 1 : -1);
+					}
 				}
 			}
 		} else {
@@ -413,7 +418,7 @@ class ModsMenuState extends MusicBeatState {
 				@:privateAccess
 				Mods.updateModList();
 				modsList = Mods.parseList();
-				if(modsList.all.length > 0) {
+				if (modsList.all.length > 0) {
 					trace('${modsList.all.length} mod(s) found! reloading');
 					reload();
 				}
@@ -423,7 +428,7 @@ class ModsMenuState extends MusicBeatState {
 	}
 
 	function changeSelectedButton(add:Int = 0) {
-		var max = buttons.length - 1;
+		var max:Int = buttons.length - 1;
 		
 		var button:MenuButton = getButton();
 		button.ignoreCheck = button.onFocus = false;
@@ -459,7 +464,7 @@ class ModsMenuState extends MusicBeatState {
 	}
 
 	function changeSelectedMod(add:Int = 0, isMouseWheel:Bool = false) {
-		var max = modsList.all.length - 1;
+		var max:Int = modsList.all.length - 1;
 		if(max < 0) return;
 
 		if(hoveringOnMods) {

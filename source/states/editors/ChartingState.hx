@@ -3240,7 +3240,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		btnY += 20;
 		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Exit', () -> {
 			PlayState.chartingMode = false;
-			FlxG.switchState(new MasterEditorMenu());
+			FlxG.switchState(() -> new MasterEditorMenu());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			FlxG.mouse.visible = false;
 		}, btnWid);
@@ -3823,7 +3823,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		setSongPlaying(false);
 		updateChartData();
 		StageData.loadDirectory(PlayState.SONG);
-		LoadingState.loadAndSwitchState(new PlayState());
+		LoadingState.loadAndSwitchState(() -> new PlayState());
 		Controls.toggleVolumeKeys();
 	}
 	

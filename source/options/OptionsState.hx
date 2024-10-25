@@ -72,10 +72,12 @@ class OptionsState extends MusicBeatState {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if(controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);
-		if(controls.UI_LEFT_P || controls.UI_RIGHT_P) changePage(controls.UI_LEFT_P ? -1 : 1);
+		final upJustPressed:Bool = Controls.justPressed('ui_up');
+		if (upJustPressed || Controls.justPressed('ui_down')) changeSelection(upJustPressed ? -1 : 1);
+		final leftJustPressed:Bool = Controls.justPressed('ui_left');
+		if (leftJustPressed || Controls.justPressed('ui_right')) changePage(leftJustPressed ? -1 : 1);
 
-		if (controls.BACK) {
+		if (Controls.justPressed('back')) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			if(onPlayState) {
 				data.StageData.loadDirectory(PlayState.SONG);
@@ -84,7 +86,7 @@ class OptionsState extends MusicBeatState {
 			} else FlxG.switchState(() -> new states.MainMenuState());
 		}
 
-		if (controls.ACCEPT) openSelectedSubstate(options[curPage][curSelected]);
+		if (Controls.justPressed('accept')) openSelectedSubstate(options[curPage][curSelected]);
 	}
 	
 	function changeSelection(change:Int = 0) {

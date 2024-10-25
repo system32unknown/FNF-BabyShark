@@ -85,7 +85,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		else songTxt.text = Language.getPhrase('musicplayer_paused', 'PLAYING: {1} (PAUSED)', [songName]);
 		positionSong();
 
-		if (Controls.pressed('ui_left')) {
+		if (Controls.justPressed('ui_left')) {
 			if (playing) wasPlaying = true;
 
 			pauseOrResume();
@@ -98,7 +98,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 			FlxG.sound.music.time = curTime;
 			setVocalsTime(curTime);
 		}
-		if (Controls.pressed('ui_right')) {
+		if (Controls.justPressed('ui_right')) {
 			if (playing) wasPlaying = true;
 
 			pauseOrResume();
@@ -113,10 +113,10 @@ class MusicPlayer extends flixel.group.FlxGroup {
 			setVocalsTime(curTime);
 		}
 
-		final leftJustPressed:Bool = Controls.justPressed('ui_left');
-		if(leftJustPressed || Controls.justPressed('ui_right')) {
+		final leftPressed:Bool = Controls.pressed('ui_left');
+		if(leftPressed || Controls.pressed('ui_right')) {
 			instance.holdTime += elapsed;
-			if(instance.holdTime > .5) curTime += 40000 * elapsed * (leftJustPressed ? -1 : 1);
+			if(instance.holdTime > .5) curTime += 40000 * elapsed * (leftPressed ? -1 : 1);
 
 			var difference:Float = Math.abs(curTime - FlxG.sound.music.time);
 			if(curTime + difference > FlxG.sound.music.length) curTime = FlxG.sound.music.length;
@@ -138,15 +138,15 @@ class MusicPlayer extends flixel.group.FlxGroup {
 
 		final upPressed:Bool = Controls.pressed('ui_up');
 		final upJustPressed:Bool = Controls.justPressed('ui_up');
-		if (upPressed || Controls.pressed('ui_down')) {
+		if (upJustPressed || Controls.justPressed('ui_down')) {
 			holdPitchTime = 0;
 			upPressed ? playbackRate += 0.05 : playbackRate -= 0.05;
 			setPlaybackRate();
 		}
-		if (Controls.justPressed('ui_down') || upJustPressed) {
+		if (Controls.pressed('ui_down') || upPressed) {
 			holdPitchTime += elapsed;
 			if (holdPitchTime > 0.6) {
-				playbackRate += 0.05 * (upJustPressed ? 1 : -1);
+				playbackRate += 0.05 * (upPressed ? 1 : -1);
 				setPlaybackRate();
 			}
 		}

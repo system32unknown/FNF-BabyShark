@@ -4,7 +4,7 @@ import flixel.graphics.FlxGraphic;
 import data.WeekData;
 import states.StoryMenuState;
 
-class FreeplaySectionSubstate extends MusicBeatSubstate {
+class FreeplaySectionSubstate extends FlxSubState {
 	public static var daSection:String = 'Vanilla';
 	var counter:Int = 0;
 
@@ -82,9 +82,10 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 	override function update(elapsed:Float) {
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
-		if ((controls.UI_LEFT_P || controls.UI_RIGHT_P) && !transitioning) changeSection(controls.UI_LEFT_P ? -1 : 1);
+		final leftjustPressed:Bool = Controls.justPressed('ui_left');
+		if (leftjustPressed || Controls.justPressed('ui_right')) changeSection(leftjustPressed ? -1 : 1);
 		
-		if (controls.BACK && !transitioning) {
+		if (Controls.justPressed('back') && !transitioning) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			transitioning = true;
 			closeFreeplaysection((_:FlxTween) -> {
@@ -93,7 +94,7 @@ class FreeplaySectionSubstate extends MusicBeatSubstate {
 			});
 		}
 
-		if (controls.ACCEPT && !transitioning) {
+		if (Controls.justPressed('accept') && !transitioning) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
 			closeFreeplaysection((_:FlxTween) -> {

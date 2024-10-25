@@ -162,19 +162,19 @@ class CharacterSelectionState extends MusicBeatState {
 
 	override function update(elapsed) {
 		Conductor.songPosition = FlxG.sound.music.time;
-		var controlSet:Array<Bool> = [controls.NOTE_LEFT_P, controls.NOTE_DOWN_P, controls.NOTE_UP_P, controls.NOTE_RIGHT_P];
+		var controlSet:Array<String> = ["note_up", "note_down", "note_left", "note_right"];
 		super.update(elapsed);
 
 		camGame.zoom = FlxMath.lerp(.7, camGame.zoom, Math.exp(-elapsed * 3.125));
 
 		if (previewMode) {
-			for (i in 0...controlSet.length) {
-				if (controlSet[i] && !pressedTheFunny && char.hasAnimation(singAnimations[i]))
+			for (i => key in controlSet) {
+				if (Controls.pressed(key) && !pressedTheFunny && char.hasAnimation(singAnimations[i]))
 					char.playAnim(singAnimations[i], true);
 			}
 		}
 
-		if (controls.ACCEPT) {
+		if (Controls.justPressed('accept')) {
 			if (isLocked(characters[current].forms[curForm].name)) {
 				FlxG.camera.shake(.05, .1);
 				FlxG.sound.play(Paths.sound('missnote1'), .9);
@@ -219,25 +219,27 @@ class CharacterSelectionState extends MusicBeatState {
 			}
 		}
 
+		var leftJustPressed:Bool = Controls.justPressed('ui_left');
+		var downJustPressed:Bool = Controls.justPressed('ui_down');
 		if (!selectedCharacter && !previewMode) {
-			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
+			if (leftJustPressed || Controls.justPressed('ui_right')) {
 				curForm = 0;
-				current = FlxMath.wrap(current += (controls.UI_LEFT_P ? -1 : 1), 0, characters.length - 1);
+				current = FlxMath.wrap(current += (leftJustPressed ? -1 : 1), 0, characters.length - 1);
 				UpdateBF();
 			}
 
-			if (controls.UI_DOWN_P || controls.UI_UP_P) {
-				curForm = FlxMath.wrap(curForm += (controls.UI_DOWN_P ? -1 : 1), 0, characters[current].forms.length - 1);
+			if (downJustPressed || Controls.justPressed('ui_up')) {
+				curForm = FlxMath.wrap(curForm += (downJustPressed ? -1 : 1), 0, characters[current].forms.length - 1);
 				UpdateBF();
 			}
 	
-			if (controls.RESET) {
+			if (Controls.justPressed('reset')) {
 				reset();
 				FlxG.resetState();
 			}
 		}
 
-		if (controls.BACK) {
+		if (Controls.justPressed('back')) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			FlxG.switchState(() -> new FreeplayState());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));

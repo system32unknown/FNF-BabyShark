@@ -33,33 +33,33 @@ class ExtraFunctions {
 		funk.set("keyJustPressed", (name:String = '') -> {
 			name = name.toLowerCase().trim();
 			return switch(name) {
-				case 'left': PlayState.instance.controls.NOTE_LEFT_P;
-				case 'down': PlayState.instance.controls.NOTE_DOWN_P;
-				case 'up': PlayState.instance.controls.NOTE_UP_P;
-				case 'right': PlayState.instance.controls.NOTE_RIGHT_P;
-				default: PlayState.instance.controls.justPressed(name);
+				case 'left': Controls.justPressed('note_left');
+				case 'down': Controls.justPressed('note_down');
+				case 'up': Controls.justPressed('note_up');
+				case 'right': Controls.justPressed('note_right');
+				default: Controls.justPressed(name);
 			}
 			return false;
 		});
 		funk.set("keyPressed", (name:String = '') -> {
 			name = name.toLowerCase().trim();
 			return switch(name) {
-				case 'left': PlayState.instance.controls.NOTE_LEFT;
-				case 'down': PlayState.instance.controls.NOTE_DOWN;
-				case 'up': PlayState.instance.controls.NOTE_UP;
-				case 'right': PlayState.instance.controls.NOTE_RIGHT;
-				default: PlayState.instance.controls.pressed(name);
+				case 'left': Controls.pressed('note_left');
+				case 'down': Controls.pressed('note_down');
+				case 'up': Controls.pressed('note_up');
+				case 'right': Controls.pressed('note_right');
+				default: Controls.pressed(name);
 			}
 			return false;
 		});
 		funk.set("keyReleased", (name:String = '') -> {
 			name = name.toLowerCase().trim();
 			return switch(name) {
-				case 'left': PlayState.instance.controls.NOTE_LEFT_R;
-				case 'down': PlayState.instance.controls.NOTE_DOWN_R;
-				case 'up': PlayState.instance.controls.NOTE_UP_R;
-				case 'right': PlayState.instance.controls.NOTE_RIGHT_R;
-				default: PlayState.instance.controls.justReleased(name);
+				case 'left': Controls.released('note_left');
+				case 'down': Controls.released('note_down');
+				case 'up': Controls.released('note_up');
+				case 'right': Controls.released('note_right');
+				default: Controls.released(name);
 			}
 			return false;
 		});

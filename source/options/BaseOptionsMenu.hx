@@ -107,9 +107,10 @@ class BaseOptionsMenu extends FlxSubState {
 			return;
 		}
 
-		if (controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);
+		final downJustPressed:Bool = Controls.justPressed('ui_down');
+		if (downJustPressed || Controls.justPressed('ui_up')) changeSelection(downJustPressed ? 1 : -1);
 
-		if (controls.BACK) {
+		if (Controls.justPressed('back')) {
 			close();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
@@ -117,7 +118,7 @@ class BaseOptionsMenu extends FlxSubState {
 		if(nextAccept <= 0) {
 			switch(curOption.type) {
 				case BOOL, FUNC:
-					if(controls.ACCEPT) {
+					if(Controls.justPressed('accept')) {
 						FlxG.sound.play(Paths.sound((curOption.type == FUNC ? 'confirmMenu' : 'scrollMenu')));
 						if(curOption.type == BOOL) curOption.setValue((curOption.getValue() == true) ? false : true);
 						curOption.change();
@@ -125,7 +126,7 @@ class BaseOptionsMenu extends FlxSubState {
 					}
 
 				case KEYBIND:
-					if(controls.ACCEPT) {
+					if(Controls.justPressed('accept')) {
 						bindingBlack = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
 						bindingBlack.scale.set(FlxG.width, FlxG.height);
 						bindingBlack.updateHitbox();
@@ -148,13 +149,15 @@ class BaseOptionsMenu extends FlxSubState {
 					}
 
 				default:
-					if(controls.UI_LEFT || controls.UI_RIGHT) {
-						var pressed:Bool = (controls.UI_LEFT_P || controls.UI_RIGHT_P);
+					final leftJustPressed:Bool = Controls.justPressed('ui_left');
+					final leftPressed:Bool = Controls.pressed('ui_left');
+					if (leftJustPressed || Controls.justPressed('ui_right')) {
+						var pressed:Bool = (leftPressed || Controls.pressed('ui_right'));
 						if(holdTime > .5 || pressed) {
 							if(pressed) {
 								var add:Dynamic = null;
 								if(curOption.type != STRING)
-									add = controls.UI_LEFT ? -curOption.changeValue : curOption.changeValue;
+									add = leftJustPressed ? -curOption.changeValue : curOption.changeValue;
 
 								switch(curOption.type) {
 									case INT, FLOAT, PERCENT:
@@ -172,7 +175,7 @@ class BaseOptionsMenu extends FlxSubState {
 
 									case STRING:
 										var num:Int = curOption.curOption; //lol
-										if(controls.UI_LEFT_P) --num;
+										if(leftPressed) --num;
 										else num++;
 
 										if (num < 0) num = curOption.options.length - 1;
@@ -187,7 +190,7 @@ class BaseOptionsMenu extends FlxSubState {
 								curOption.change();
 								FlxG.sound.play(Paths.sound('scrollMenu'));
 							} else if(curOption.type != STRING) {
-								holdValue += curOption.scrollSpeed * elapsed * (controls.UI_LEFT ? -1 : 1);
+								holdValue += curOption.scrollSpeed * elapsed * (leftJustPressed ? -1 : 1);
 								if(holdValue < curOption.minValue) holdValue = curOption.minValue;
 								else if (holdValue > curOption.maxValue) holdValue = curOption.maxValue;
 
@@ -202,13 +205,13 @@ class BaseOptionsMenu extends FlxSubState {
 						}
 
 						if(curOption.type != STRING) holdTime += elapsed;
-					} else if(controls.UI_LEFT_R || controls.UI_RIGHT_R) {
+					} else if (Controls.released('ui_left') || Controls.released('ui_right')) {
 						if(holdTime > .5) FlxG.sound.play(Paths.sound('scrollMenu'));
 						holdTime = 0;
 					}
 			}
 
-			if(controls.RESET) {
+			if(Controls.justPressed('reset')) {
 				var leOption:Option = optionsArray[curSelected];
 				if(leOption.type != KEYBIND) {
 					leOption.setValue(leOption.defaultValue);

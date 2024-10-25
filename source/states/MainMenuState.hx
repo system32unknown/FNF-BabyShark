@@ -106,119 +106,116 @@ class MainMenuState extends MusicBeatState {
 			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += .5 * elapsed;
 		}
 		
-		if (!selectedSomethin) {
-			if (controls.UI_UP_P || controls.UI_DOWN_P) changeItem(controls.UI_UP_P ? -1 : 1);
+		if (selectedSomethin) {
+			super.update(elapsed);
+			return;
+		}
 
-			var allowMouse:Bool = allowMouse;
-			if (allowMouse && ((FlxG.mouse.deltaViewX != 0 && FlxG.mouse.deltaViewY != 0) || FlxG.mouse.justPressed)) { //more accurate than FlxG.mouse.justMoved
-				allowMouse = false;
-				FlxG.mouse.visible = true;
-				timeNotMoving = 0;
+		final downJustPressed:Bool = Controls.justPressed('ui_down');
+		if (downJustPressed || Controls.justPressed('ui_up')) changeItem(downJustPressed ? 1 : -1);
+
+		var allowMouse:Bool = allowMouse;
+		if (allowMouse && ((FlxG.mouse.deltaViewX != 0 && FlxG.mouse.deltaViewY != 0) || FlxG.mouse.justPressed)) { //more accurate than FlxG.mouse.justMoved
+			allowMouse = false;
+			FlxG.mouse.visible = true;
+			timeNotMoving = 0;
 	
-				var selectedItem:FlxSprite;
-				switch(curColumn) {
-					case CENTER: selectedItem = menuItems.members[curSelected];
-					case RIGHT: selectedItem = rightItem;
-				}
+			var selectedItem:FlxSprite;
+			switch(curColumn) {
+				case CENTER: selectedItem = menuItems.members[curSelected];
+				case RIGHT: selectedItem = rightItem;
+			}
 	
-				if(rightItem != null && FlxG.mouse.overlaps(rightItem)) {
-					allowMouse = true;
-					if(selectedItem != rightItem) {
-						curColumn = RIGHT;
-						changeItem();
-					}
-				} else {
-					var dist:Float = -1;
-					var distItem:Int = -1;
-					for (i in 0...optionShit.length) {
-						var memb:FlxSprite = menuItems.members[i];
-						if(FlxG.mouse.overlaps(memb)) {
-							var distance:Float = Math.sqrt(Math.pow(memb.getGraphicMidpoint().x - FlxG.mouse.viewX, 2) + Math.pow(memb.getGraphicMidpoint().y - FlxG.mouse.screenY, 2));
-							if (dist < 0 || distance < dist) {
-								dist = distance;
-								distItem = i;
-								allowMouse = true;
-							}
-						}
-					}
-	
-					if(distItem != -1 && selectedItem != menuItems.members[distItem]) {
-						curColumn = CENTER;
-						curSelected = distItem;
-						changeItem();
-					}
+			if(rightItem != null && FlxG.mouse.overlaps(rightItem)) {
+				allowMouse = true;
+				if(selectedItem != rightItem) {
+					curColumn = RIGHT;
+					changeItem();
 				}
 			} else {
-				timeNotMoving += elapsed;
-				if(timeNotMoving > 2) FlxG.mouse.visible = false;
+				var dist:Float = -1;
+				var distItem:Int = -1;
+				for (i in 0...optionShit.length) {
+					var memb:FlxSprite = menuItems.members[i];
+					if(FlxG.mouse.overlaps(memb)) {
+						var distance:Float = Math.sqrt(Math.pow(memb.getGraphicMidpoint().x - FlxG.mouse.viewX, 2) + Math.pow(memb.getGraphicMidpoint().y - FlxG.mouse.screenY, 2));
+						if (dist < 0 || distance < dist) {
+							dist = distance;
+							distItem = i;
+							allowMouse = true;
+						}
+					}
+				}
+	
+				if(distItem != -1 && selectedItem != menuItems.members[distItem]) {
+					curColumn = CENTER;
+					curSelected = distItem;
+					changeItem();
+				}
 			}
+		} else {
+			timeNotMoving += elapsed;
+			if(timeNotMoving > 2) FlxG.mouse.visible = false;
+		}
 
+		switch(curColumn) {
+			case CENTER:
+				if(Controls.pressed('ui_right') && rightOption != null) {
+					curColumn = RIGHT;
+					changeItem();
+				}
+
+			case RIGHT:
+				if(Controls.pressed('ui_left')) {
+					curColumn = CENTER;
+					changeItem();
+				}
+		}
+
+		if (Controls.pressed('accept') || (FlxG.mouse.justPressed && allowMouse)) {
+			FlxG.sound.play(Paths.sound('confirmMenu'));
+			selectedSomethin = true;
+			FlxG.mouse.visible = false;
+
+			if(ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, .15, false);
+
+			var item:FlxSprite;
+			var option:String;
 			switch(curColumn) {
 				case CENTER:
-					if(controls.UI_RIGHT_P && rightOption != null) {
-						curColumn = RIGHT;
-						changeItem();
-					}
-
+					option = optionShit[curSelected];
+					item = menuItems.members[curSelected];
 				case RIGHT:
-					if(controls.UI_LEFT_P) {
-						curColumn = CENTER;
-						changeItem();
-					}
+					option = rightOption;
+					item = rightItem;
 			}
 
-			if (controls.BACK) {
-				selectedSomethin = true;
-				FlxG.mouse.visible = false;
-				FlxG.sound.play(Paths.sound('cancelMenu'), .7);
-				FlxG.switchState(() -> new TitleState());
-			}
-
-			if (controls.ACCEPT || (FlxG.mouse.justPressed && allowMouse)) {
-				FlxG.sound.play(Paths.sound('confirmMenu'));
-				selectedSomethin = true;
-				FlxG.mouse.visible = false;
-
-				if(ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, .15, false);
-
-				var item:FlxSprite;
-				var option:String;
-				switch(curColumn) {
-					case CENTER:
-						option = optionShit[curSelected];
-						item = menuItems.members[curSelected];
-					case RIGHT:
-						option = rightOption;
-						item = rightItem;
+			FlxFlicker.flicker(item, 1, .06, false, false, (flicker:FlxFlicker) -> {
+				switch (option) {
+					case 'story_mode': FlxG.switchState(() -> new StoryMenuState());
+					case 'freeplay': FlxG.switchState(() -> new FreeplayState());
+					#if MODS_ALLOWED case 'mods': FlxG.switchState(() -> new ModsMenuState()); #end
+					case 'credits': FlxG.switchState(() -> new CreditsState());
+					case 'options':
+						FlxG.switchState(() -> new OptionsState());
+						OptionsState.onPlayState = false;
+						if (PlayState.SONG != null) {
+							PlayState.SONG.arrowSkin = null;
+							PlayState.SONG.splashSkin = null;
+							PlayState.stageUI = 'normal';
+						}
 				}
+			});
 
-				FlxFlicker.flicker(item, 1, .06, false, false, (flicker:FlxFlicker) -> {
-					switch (option) {
-						case 'story_mode': FlxG.switchState(() -> new StoryMenuState());
-						case 'freeplay': FlxG.switchState(() -> new FreeplayState());
-						#if MODS_ALLOWED case 'mods': FlxG.switchState(() -> new ModsMenuState()); #end
-						case 'credits': FlxG.switchState(() -> new CreditsState());
-						case 'options':
-							FlxG.switchState(() -> new OptionsState());
-							OptionsState.onPlayState = false;
-							if (PlayState.SONG != null) {
-								PlayState.SONG.arrowSkin = null;
-								PlayState.SONG.splashSkin = null;
-								PlayState.stageUI = 'normal';
-							}
-					}
-				});
-
-				for (memb in menuItems) {
-					if(memb == item) continue;
-					FlxTween.tween(memb, {alpha: 0}, .4, {ease: FlxEase.quadOut});
-				}
+			for (memb in menuItems) {
+				if(memb == item) continue;
+				FlxTween.tween(memb, {alpha: 0}, .4, {ease: FlxEase.quadOut});
 			}
-			if (controls.justPressed('debug_1')) {
-				selectedSomethin = true;
-				FlxG.mouse.visible = false;
-				FlxG.switchState(() -> new states.editors.MasterEditorMenu());
-			}
+		}
+		if (Controls.justPressed('debug_1')) {
+			selectedSomethin = true;
+			FlxG.mouse.visible = false;
+			FlxG.switchState(() -> new states.editors.MasterEditorMenu());
 		}
 
 		super.update(elapsed);

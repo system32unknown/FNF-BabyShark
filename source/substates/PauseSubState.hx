@@ -114,7 +114,7 @@ class PauseSubState extends MusicBeatSubstate {
 
 		super.update(elapsed);
 		
-		if(controls.BACK) {
+		if(Controls.justPressed('back')) {
 			close();
 			return;
 		}
@@ -127,29 +127,26 @@ class PauseSubState extends MusicBeatSubstate {
 		}
 		
 		updateSkipTextStuff();
-		if (controls.UI_UP_P || controls.UI_DOWN_P) changeSelection(controls.UI_UP_P ? -1 : 1);
+		final upJustPressed:Bool = Controls.justPressed('ui_up');
+		if (upJustPressed || Controls.justPressed('ui_down')) changeSelection(upJustPressed ? -1 : 1);
 
 		var daSelected:String = menuItems[curSelected];
 		switch (daSelected) {
 			case 'Skip Time':
-				if (controls.UI_LEFT_P) {
-					FlxG.sound.play(Paths.sound('scrollMenu'), .4);
+				if (Controls.justPressed('ui_left')) {
+					FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 					curTime -= 1000;
 					holdTime = 0;
-				}
-				if (controls.UI_RIGHT_P) {
-					FlxG.sound.play(Paths.sound('scrollMenu'), .4);
+				} else if (Controls.justPressed('ui_right')) {
+					FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 					curTime += 1000;
 					holdTime = 0;
 				}
 
-				if(controls.UI_LEFT || controls.UI_RIGHT) {
+				final leftPressed:Bool = Controls.pressed('ui_left');
+				if (leftPressed || Controls.pressed('ui_right')) {
 					holdTime += elapsed;
-					if(holdTime > .5) {
-						curTime += 45000 * elapsed * (controls.UI_LEFT ? -1 : 1);
-						if(FlxG.sound.music.length >= 600000) curTime += 150000 * elapsed * (controls.UI_LEFT ? -1 : 1);
-						if(FlxG.sound.music.length >= 3600000) curTime += 450000 * elapsed * (controls.UI_LEFT ? -1 : 1);
-					}
+					if(holdTime > 0.5) curTime += 45000 * elapsed * (leftPressed ? -1 : 1);
 
 					if(curTime >= FlxG.sound.music.length) curTime -= FlxG.sound.music.length;
 					else if(curTime < 0) curTime += FlxG.sound.music.length;
@@ -157,7 +154,7 @@ class PauseSubState extends MusicBeatSubstate {
 				}
 		}
 
-		if (controls.ACCEPT && cantUnpause <= 0) {
+		if (Controls.justPressed('accept') && cantUnpause <= 0) {
 			if (menuItems == difficultyChoices) {
 				var songLowercase:String = Paths.formatToSongPath(PlayState.SONG.song);
 				var poop:String = backend.Highscore.formatSong(songLowercase, curSelected);

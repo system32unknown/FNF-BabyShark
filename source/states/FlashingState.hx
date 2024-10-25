@@ -4,7 +4,7 @@ import flixel.effects.FlxFlicker;
 
 class FlashingState extends flixel.FlxState {
 	var warnText:FlxText;
-	var pressedKey:Bool = false;
+	public static var pressedKey:Bool = false;
 	override function create() {
 		super.create();
 
@@ -28,13 +28,13 @@ class FlashingState extends flixel.FlxState {
 			pressedKey = true;
 			if (backJustPressed) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
-				FlxTween.tween(warnText, {alpha: 0}, 1, {onComplete: (_) -> FlxG.switchState(new TitleState())});
+				FlxTween.tween(warnText, {alpha: 0}, 1, {onComplete: (_:FlxTween) -> FlxG.switchState(() -> new TitleState())});
 				return;
 			}
 			ClientPrefs.data.flashing = false;
 			ClientPrefs.save();
 			FlxG.sound.play(Paths.sound('confirmMenu'));
-			FlxFlicker.flicker(warnText, 1, 0.1, false, true, (_) -> FlxG.switchState(() -> new TitleState()));	
+			FlxFlicker.flicker(warnText, 1, 0.1, false, true, (_:FlxFlicker) -> FlxG.switchState(() -> new TitleState()));	
 		}
 	}
 }

@@ -24,25 +24,21 @@ class TitleState extends MusicBeatState {
 	public static var updateVersion:String;
 	var mustUpdate:Bool = false;
 	override function create():Void {
-		MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 		Paths.clearStoredMemory();
 		super.create();
 		persistentUpdate = true;
 
 		#if CHECK_FOR_UPDATES checkUpdate(); #end
 		FlxG.mouse.visible = false;
-		skipIntro();
+		startIntro();
 	}
 
 	var logo:FlxSprite;
 	var foundXml:Bool = false;
 	var gf:FlxSprite;
-	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
 
-	var alphabet:Alphabet;
 	var introGroup:FlxSpriteGroup;
-	var ngSpr:FlxSprite;
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	var titleTextAlphas:Array<Float> = [1, .64];
 	var curWacky:Array<String> = [];
@@ -72,9 +68,9 @@ class TitleState extends MusicBeatState {
 		gf.antialiasing = ClientPrefs.data.antialiasing;
 		gf.frames = Paths.getSparrowAtlas(characterImage);
 		if (!useIdle) 	{
-			gf.animation.addByIndices('danceLeft', animationName, danceLeftFrames, '', 24, false);
-			gf.animation.addByIndices('danceRight', animationName, danceRightFrames, '', 24, false);
-			gf.animation.play('danceRight');
+			gf.animation.addByIndices('left', animationName, danceLeftFrames, '', 24, false);
+			gf.animation.addByIndices('right', animationName, danceRightFrames, '', 24, false);
+			gf.animation.play('right');
 		} else {
 			gf.animation.addByPrefix('idle', animationName, 24, false);
 			gf.animation.play('idle');
@@ -90,6 +86,7 @@ class TitleState extends MusicBeatState {
 		if (newTitle = animFrames.length > 0) {
 			titleText.animation.addByPrefix('idle', "ENTER IDLE", 24);
 			titleText.animation.addByPrefix('press', ClientPrefs.data.flashing ? "ENTER PRESSED" : "ENTER FREEZE", 24);
+			FlxTween.num(0, 1, 2, {type: PINGPONG, ease: FlxEase.quadInOut}, num -> titleTextTimer = num);
 		} else {
 			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
 			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
@@ -125,12 +122,13 @@ class TitleState extends MusicBeatState {
 	var danceRightFrames:Array<Int> = [30].concat([for (i in 0...15) i]);
 
 	function loadJsonData() {
-		if (!Paths.fileExists('images/gfDanceTitle.json', TEXT)) {
-			trace('[WARN] No Title JSON detected, using default values.');
+		final titlefile:String = 'data/titleData.json';
+		if (!Paths.fileExists(titlefile)) {
+			Logs.trace('No Title JSON detected, using default values.', WARNING);
 			return;
 		}
 
-		var titleRaw:String = Paths.getTextFromFile('data/titleData.json');
+		var titleRaw:String = Paths.getTextFromFile(titlefile);
 		if (titleRaw == null || titleRaw.length == 0) return;
 		try {
 			var titleJSON:TitleData = tjson.TJSON.parse(titleRaw);
@@ -152,7 +150,7 @@ class TitleState extends MusicBeatState {
 				bg.active = false;
 				add(bg);
 			}
-		} catch(e:haxe.Exception) Logs.trace('[WARN] Title JSON might broken, ignoring issue...\n${e.details()}', WARNING);
+		} catch(e:haxe.Exception) Logs.trace('Title JSON might broken, ignoring issue...\n${e.details()}', WARNING);
 	}
 
 	function getIntroTextShit():Array<String> {
@@ -165,28 +163,22 @@ class TitleState extends MusicBeatState {
 	}
 
 	var newTitle:Bool = false;
+	var titleTextTimer:Float = 0;
 	var titleTimer:Float = 0;
-	var pressedEnter:Bool = false;
 	function updateTitleText(elapsed:Float) {
 		if (!newTitle || !seenIntro || skipped) return;
 
-		titleTimer += FlxMath.bound(elapsed, 0, 1);
-		if (titleTimer > 2) titleTimer -= 2;
-
+		titleTimer++;
 		logo.angle = Math.sin(titleTimer / 270) * 5;
 
-		var timer:Float = titleTimer;
-		if (timer >= 1) timer = -timer + 2;
-
-		timer = FlxEase.quadInOut(timer);
-
-		titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], timer);
-		titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
+		titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], titleTextTimer);
+		titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], titleTextTimer);
 	}
 
 	var skipped:Bool = false;
 	var transitionTmr:FlxTimer;
 	override function update(elapsed:Float) {
+		updateTitleText(elapsed);
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
 		if (Controls.justPressed('accept') || FlxG.mouse.justPressed) {
@@ -284,7 +276,6 @@ class TitleState extends MusicBeatState {
 	function skipIntro() {
 		if (seenIntro) return;
 
-		remove(alphabet);
 		introGroup.visible = true;
 		FlxG.camera.flash(FlxColor.WHITE, 2);
 		seenIntro = true;
