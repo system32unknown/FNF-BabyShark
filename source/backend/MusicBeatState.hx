@@ -10,28 +10,25 @@ class MusicBeatState extends flixel.FlxState {
 	var curDecStep:Float = 0;
 	var curDecBeat:Float = 0;
 
-	public var controls(get, never):Controls;
-	function get_controls():Controls return Controls.instance;
-
 	var _psychCameraInitialized:Bool = false;
+
+	public static var skipNextTransIn:Bool = false;
+	public static var skipNextTransOut:Bool = false;
 
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public static function getVariables() return getState().variables;
 	
 	override function create() {
-		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		#if MODS_ALLOWED Mods.updatedOnState = false; #end
 
 		if(!_psychCameraInitialized) initPsychCamera();
-
 		super.create();
 
-		if (!skip) openSubState(new CustomFadeTransition(.5, true));
-		FlxTransitionableState.skipNextTransOut = false;
+		if (!skipNextTransOut) openSubState(new CustomFadeTransition(.5, true));
+		skipNextTransOut = false;
 	}
 
 	override function destroy() {
-		persistentUpdate = false;
 		utils.system.MemoryUtil.clearMajor();
 		super.destroy();
 	}
@@ -58,8 +55,6 @@ class MusicBeatState extends flixel.FlxState {
 				else rollbackSection();
 			}
 		}
-
-		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
 		stagesFunc((stage:BaseStage) -> stage.update(elapsed));
 		super.update(elapsed);
 	}
@@ -104,13 +99,13 @@ class MusicBeatState extends flixel.FlxState {
 	}
 
 	override function startOutro(onOutroComplete:()->Void):Void {
-		if (!FlxTransitionableState.skipNextTransIn) {
+		if (!skipNextTransIn) {
 			FlxG.state.openSubState(new CustomFadeTransition(.5, false));
 			CustomFadeTransition.finishCallback = onOutroComplete;
 			return;
 		}
 
-		FlxTransitionableState.skipNextTransIn = false;
+		skipNextTransIn = false;
 		onOutroComplete();
 	}
 
@@ -153,7 +148,10 @@ class MusicBeatState extends flixel.FlxState {
 	}
 
 	function stagesFunc(func:BaseStage -> Void) {
-		for (stage in stages) if(stage != null && stage.exists && stage.active) func(stage);
+		for (stage in stages) {
+			if (stage == null || !stage.exists || !stage.active) continue;
+			func(stage);
+		}
 	}
 
 	function getBeatsOnSection():Float {

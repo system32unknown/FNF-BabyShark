@@ -56,7 +56,7 @@ class FreeplayState extends MusicBeatState {
 		if (section == null || section == '') section = 'Vanilla';
 
 		if(WeekData.weeksList.length < 1) {
-			FlxTransitionableState.skipNextTransIn = true;
+			MusicBeatState.skipNextTransIn = true;
 			persistentUpdate = false;
 			FlxG.switchState(() -> new ErrorState("NO WEEKS ADDED FOR FREEPLAY\n\nPress ACCEPT to go to the Week Editor Menu.\nPress BACK to return to Main Menu.",
 				() -> FlxG.switchState(() -> new states.editors.WeekEditorState()),

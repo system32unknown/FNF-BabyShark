@@ -10,7 +10,6 @@ import states.FreeplayState;
 @:access(states.FreeplayState)
 class MusicPlayer extends flixel.group.FlxGroup {
 	public var instance:FreeplayState;
-	public var controls:Controls;
 
 	public var playing(get, never):Bool;
 	public var paused(get, never):Bool;
@@ -35,7 +34,6 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		super();
 
 		this.instance = instance;
-		this.controls = instance.controls;
 
 		var xPos:Float = FlxG.width * .7;
 
@@ -87,7 +85,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		else songTxt.text = Language.getPhrase('musicplayer_paused', 'PLAYING: {1} (PAUSED)', [songName]);
 		positionSong();
 
-		if (controls.UI_LEFT_P) {
+		if (Controls.pressed('ui_left')) {
 			if (playing) wasPlaying = true;
 
 			pauseOrResume();
@@ -100,7 +98,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 			FlxG.sound.music.time = curTime;
 			setVocalsTime(curTime);
 		}
-		if (controls.UI_RIGHT_P) {
+		if (Controls.pressed('ui_right')) {
 			if (playing) wasPlaying = true;
 
 			pauseOrResume();
@@ -115,10 +113,10 @@ class MusicPlayer extends flixel.group.FlxGroup {
 			setVocalsTime(curTime);
 		}
 
-		if(controls.UI_LEFT || controls.UI_RIGHT) {
+		final leftJustPressed:Bool = Controls.justPressed('ui_left');
+		if(leftJustPressed || Controls.justPressed('ui_right')) {
 			instance.holdTime += elapsed;
-			if(instance.holdTime > .5)
-				curTime += 40000 * elapsed * (controls.UI_LEFT ? -1 : 1);
+			if(instance.holdTime > .5) curTime += 40000 * elapsed * (leftJustPressed ? -1 : 1);
 
 			var difference:Float = Math.abs(curTime - FlxG.sound.music.time);
 			if(curTime + difference > FlxG.sound.music.length) curTime = FlxG.sound.music.length;
@@ -128,7 +126,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 			setVocalsTime(curTime);
 		}
 
-		if(controls.UI_LEFT_R || controls.UI_RIGHT_R) {
+		if(Controls.released('ui_left') || Controls.released('ui_right')) {
 			FlxG.sound.music.time = curTime;
 			setVocalsTime(curTime);
 
@@ -137,24 +135,23 @@ class MusicPlayer extends flixel.group.FlxGroup {
 				wasPlaying = false;
 			}
 		}
-		if (controls.UI_UP_P) {
+
+		final upPressed:Bool = Controls.pressed('ui_up');
+		final upJustPressed:Bool = Controls.justPressed('ui_up');
+		if (upPressed || Controls.pressed('ui_down')) {
 			holdPitchTime = 0;
-			playbackRate += .05;
-			setPlaybackRate();
-		} else if (controls.UI_DOWN_P) {
-			holdPitchTime = 0;
-			playbackRate -= .05;
+			upPressed ? playbackRate += 0.05 : playbackRate -= 0.05;
 			setPlaybackRate();
 		}
-		if (controls.UI_DOWN || controls.UI_UP) {
+		if (Controls.justPressed('ui_down') || upJustPressed) {
 			holdPitchTime += elapsed;
 			if (holdPitchTime > 0.6) {
-				playbackRate += 0.05 * (controls.UI_UP ? 1 : -1);
+				playbackRate += 0.05 * (upJustPressed ? 1 : -1);
 				setPlaybackRate();
 			}
 		}
 	
-		if (controls.RESET) {
+		if (Controls.justPressed('reset')) {
 			playbackRate = 1;
 			setPlaybackRate();
 

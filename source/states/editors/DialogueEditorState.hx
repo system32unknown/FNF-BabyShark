@@ -274,7 +274,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 		}
 
 		if(PsychUIInputText.focusOn == null) {
-			ClientPrefs.toggleVolumeKeys();
+			Controls.toggleVolumeKeys();
 			if(FlxG.keys.justPressed.SPACE) reloadText(false);
 			if(FlxG.keys.justPressed.ESCAPE) {
 				if(!unsavedProgress) {
@@ -312,7 +312,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 				dialogueFile.dialogue.insert(curSelected + 1, copyDefaultLine());
 				changeText(1);
 			}
-		} else ClientPrefs.toggleVolumeKeys(false);
+		} else Controls.toggleVolumeKeys(false);
 		super.update(elapsed);
 	}
 

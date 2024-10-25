@@ -21,48 +21,38 @@ typedef TitleData = {
 }
 
 class TitleState extends MusicBeatState {
-	public static var skippedIntro:Bool = false;
-	
-	var gf:FlxSprite;
-	var foundXml:Bool = false;
-	
-	var logo:FlxSprite;
-	var titleText:FlxSprite;
-
-	var textGroup:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
-
-	final titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
-	final titleTextAlphas:Array<Float> = [1, .64];
-
-	var randomPhrase:Array<String> = [];
-	var titletimer:Float = 0;
-
 	public static var updateVersion:String;
 	var mustUpdate:Bool = false;
-
 	override function create():Void {
+		MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 		Paths.clearStoredMemory();
 		super.create();
-		Paths.clearUnusedMemory();
 		persistentUpdate = true;
 
 		#if CHECK_FOR_UPDATES checkUpdate(); #end
-		loadJsonData();
-		Conductor.bpm = musicBPM;
+		FlxG.mouse.visible = false;
+		skipIntro();
+	}
 
-		gf = new FlxSprite(gfPosition.x, gfPosition.y);
-		gf.antialiasing = ClientPrefs.data.antialiasing;
-		gf.frames = Paths.getSparrowAtlas(characterImage);
-		if(!useIdle) {
-			gf.animation.addByIndices('left', animationName, danceRightFrames, "", 24, false);
-			gf.animation.addByIndices('right', animationName, danceLeftFrames, "", 24, false);
-			gf.animation.play('right');
-		} else {
-			gf.animation.addByPrefix('idle', animationName, 24, false);
-			gf.animation.play('idle');
-		}
-		gf.alpha = .0001;
-		add(gf);
+	var logo:FlxSprite;
+	var foundXml:Bool = false;
+	var gf:FlxSprite;
+	var danceLeft:Bool = false;
+	var titleText:FlxSprite;
+
+	var alphabet:Alphabet;
+	var introGroup:FlxSpriteGroup;
+	var ngSpr:FlxSprite;
+	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
+	var titleTextAlphas:Array<Float> = [1, .64];
+	var curWacky:Array<String> = [];
+	public static var seenIntro:Bool = false;
+	var textGroup:FlxTypedGroup<FlxText>;
+	function startIntro() {
+		loadJsonData();
+		curWacky = getIntroTextShit();
+		add(introGroup = new FlxSpriteGroup());
+		introGroup.visible = false;
 
 		logo = new FlxSprite(logoPosition.x, logoPosition.y);
 		logo.antialiasing = ClientPrefs.data.antialiasing;
@@ -76,14 +66,23 @@ class TitleState extends MusicBeatState {
 			logo.animation.play('bump');
 		}
 		logo.updateHitbox();
-		logo.alpha = 0.0001;
 		logo.angle = -4;
-		add(logo);
 
-		titleText = new FlxSprite(enterPosition.x, enterPosition.y);
-		titleText.visible = false;
-		titleText.frames = Paths.getSparrowAtlas('titleEnter');
+		gf = new FlxSprite(gfPosition.x, gfPosition.y);
+		gf.antialiasing = ClientPrefs.data.antialiasing;
+		gf.frames = Paths.getSparrowAtlas(characterImage);
+		if (!useIdle) 	{
+			gf.animation.addByIndices('danceLeft', animationName, danceLeftFrames, '', 24, false);
+			gf.animation.addByIndices('danceRight', animationName, danceRightFrames, '', 24, false);
+			gf.animation.play('danceRight');
+		} else {
+			gf.animation.addByPrefix('idle', animationName, 24, false);
+			gf.animation.play('idle');
+		}
+
 		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
+		titleText = new FlxSprite(enterPosition.x, enterPosition.y);
+		titleText.frames = Paths.getSparrowAtlas('titleEnter');
 		@:privateAccess {
 			titleText.animation.findByPrefix(animFrames, "ENTER IDLE");
 			titleText.animation.findByPrefix(animFrames, "ENTER FREEZE");
@@ -91,24 +90,23 @@ class TitleState extends MusicBeatState {
 		if (newTitle = animFrames.length > 0) {
 			titleText.animation.addByPrefix('idle', "ENTER IDLE", 24);
 			titleText.animation.addByPrefix('press', ClientPrefs.data.flashing ? "ENTER PRESSED" : "ENTER FREEZE", 24);
-			FlxTween.num(0, 1, 2, {type: PINGPONG, ease: FlxEase.quadInOut}, num -> titleTextTimer = num);
 		} else {
 			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
 			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
 		}
-		titleText.active = false;
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
-		add(titleText);
-		add(textGroup);
 
-		randomPhrase = getIntroTextShit();
+		add(textGroup = new FlxTypedGroup<FlxText>());
+		introGroup.add(gf);
+		introGroup.add(logo); //FNF Logo
+		introGroup.add(titleText); //"Press Enter to Begin" text
 
-		FlxG.mouse.visible = false;
-		if (!skippedIntro) {
-			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-			FlxG.sound.music.fadeIn(4, 0, 0.7);
-		} else skipIntro();
+		Conductor.bpm = musicBPM;
+		if (seenIntro) return;
+
+		FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+		FlxG.sound.music.fadeIn(4, 0, 0.7);
 	}
 
 	// JSON data
@@ -127,88 +125,101 @@ class TitleState extends MusicBeatState {
 	var danceRightFrames:Array<Int> = [30].concat([for (i in 0...15) i]);
 
 	function loadJsonData() {
-		if(Paths.fileExists('data/titleData.json')) {
-			var titleRaw:String = Paths.getTextFromFile('data/titleData.json');
-			if(titleRaw != null && titleRaw.length > 0) {
-				try {
-					var titleJSON:TitleData = tjson.TJSON.parse(titleRaw);
-					gfPosition.set(titleJSON.gfx, titleJSON.gfy);
-					logoPosition.set(titleJSON.titlex, titleJSON.titley);
-					enterPosition.set(titleJSON.startx, titleJSON.starty);
-					titleSize = titleJSON.titlesize;
-					titleStartY = titleJSON.titlestarty;
-					musicBPM = titleJSON.bpm;
-
-					if(titleJSON.animation != null && titleJSON.animation.length > 0) animationName = titleJSON.animation;
-					if(titleJSON.dance_left != null && titleJSON.dance_left.length > 0) danceLeftFrames = titleJSON.dance_left;
-					if(titleJSON.dance_right != null && titleJSON.dance_right.length > 0) danceRightFrames = titleJSON.dance_right;
-					useIdle = (titleJSON.idle == true);
-
-					if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.trim().length > 0) {
-						var bg:FlxSprite = new FlxSprite(Paths.image(titleJSON.backgroundSprite));
-						bg.antialiasing = ClientPrefs.data.antialiasing;
-						bg.active = false;
-						add(bg);
-					}
-				} catch(e:haxe.Exception) Logs.trace('[WARN] Title JSON might broken, ignoring issue...\n${e.details()}', WARNING);
-			} else Logs.trace('No Title JSON detected, using default values.', WARNING);
+		if (!Paths.fileExists('images/gfDanceTitle.json', TEXT)) {
+			trace('[WARN] No Title JSON detected, using default values.');
+			return;
 		}
+
+		var titleRaw:String = Paths.getTextFromFile('data/titleData.json');
+		if (titleRaw == null || titleRaw.length == 0) return;
+		try {
+			var titleJSON:TitleData = tjson.TJSON.parse(titleRaw);
+			gfPosition.set(titleJSON.gfx, titleJSON.gfy);
+			logoPosition.set(titleJSON.titlex, titleJSON.titley);
+			enterPosition.set(titleJSON.startx, titleJSON.starty);
+			titleSize = titleJSON.titlesize;
+			titleStartY = titleJSON.titlestarty;
+			musicBPM = titleJSON.bpm;
+
+			if(titleJSON.animation != null && titleJSON.animation.length > 0) animationName = titleJSON.animation;
+			if(titleJSON.dance_left != null && titleJSON.dance_left.length > 0) danceLeftFrames = titleJSON.dance_left;
+			if(titleJSON.dance_right != null && titleJSON.dance_right.length > 0) danceRightFrames = titleJSON.dance_right;
+			useIdle = (titleJSON.idle == true);
+
+			if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.trim().length > 0) {
+				var bg:FlxSprite = new FlxSprite(Paths.image(titleJSON.backgroundSprite));
+				bg.antialiasing = ClientPrefs.data.antialiasing;
+				bg.active = false;
+				add(bg);
+			}
+		} catch(e:haxe.Exception) Logs.trace('[WARN] Title JSON might broken, ignoring issue...\n${e.details()}', WARNING);
 	}
 
 	function getIntroTextShit():Array<String> {
 		#if MODS_ALLOWED
 		var firstArray:Array<String> = Mods.mergeAllTextsNamed('data/introText.txt');
 		#else
-		var fullText:String = Assets.getText(Paths.txt('introText'));
-		var firstArray:Array<String> = fullText.split('\n');
+		var firstArray:Array<String> = File.getContent(Paths.txt('introText')).split('\n');
 		#end
 		return FlxG.random.getObject([for (i in firstArray) i.split('--')]);
 	}
 
 	var newTitle:Bool = false;
-	var titleTextTimer:Float = 0;
+	var titleTimer:Float = 0;
 	var pressedEnter:Bool = false;
+	function updateTitleText(elapsed:Float) {
+		if (!newTitle || !seenIntro || skipped) return;
 
+		titleTimer += FlxMath.bound(elapsed, 0, 1);
+		if (titleTimer > 2) titleTimer -= 2;
+
+		logo.angle = Math.sin(titleTimer / 270) * 5;
+
+		var timer:Float = titleTimer;
+		if (timer >= 1) timer = -timer + 2;
+
+		timer = FlxEase.quadInOut(timer);
+
+		titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], timer);
+		titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
+	}
+
+	var skipped:Bool = false;
+	var transitionTmr:FlxTimer;
 	override function update(elapsed:Float) {
-		super.update(elapsed);
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
-		titletimer++;
-		if (skippedIntro) logo.angle = Math.sin(titletimer / 270) * 5;
-
-		if (controls.ACCEPT) {
-			if (skippedIntro) {
-				if (!pressedEnter) {
-					pressedEnter = true;
-					FlxTween.tween(logo, {y: -700}, 1, {ease: FlxEase.backIn});
-	
-					if (ClientPrefs.data.flashing) titleText.active = true;
-					titleText.animation.play('press');
-					titleText.color = FlxColor.WHITE;
-					titleText.alpha = 1;
-
-					FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF);
-					FlxG.sound.play(Paths.sound('confirmMenu'), .7);
-	
-					FlxTimer.wait(1.5, () -> {
-						FlxTransitionableState.skipNextTransIn = false;
-						if (mustUpdate) FlxG.switchState(() -> new OutdatedState());
-						else FlxG.switchState(() -> new MainMenuState());
-					});
+		if (Controls.justPressed('accept') || FlxG.mouse.justPressed) {
+			if (!seenIntro) skipIntro();
+			else if (skipped) {
+				if (transitionTmr != null) {
+					transitionTmr.cancel();
+					transitionTmr = null;
 				}
-			} else skipIntro();
+				FlxG.switchState(() -> new MainMenuState());
+			} else {
+				FlxTween.tween(logo, {y: -700}, 1, {ease: FlxEase.backIn});
+				if (ClientPrefs.data.flashing) titleText.active = true;
+				titleText.animation.play('press');
+				titleText.color = FlxColor.WHITE;
+				titleText.alpha = 1;
+
+				FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF);
+				FlxG.sound.play(Paths.sound('confirmMenu'), .7);
+				skipped = true;
+				transitionTmr = FlxTimer.wait(1.5, () -> {
+					if (mustUpdate) FlxG.switchState(() -> new OutdatedState());
+					else FlxG.switchState(() -> new MainMenuState());
+				});
+			}
 		}
 
-		if (newTitle && !pressedEnter) {
-			titleText.color = FlxColor.interpolate(titleTextColors[0], titleTextColors[1], titleTextTimer);
-			titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], titleTextTimer);
-		}
+		super.update(elapsed);
 	}
 
 	function createText(textArray:Array<String>, offset:Float = 0) {
 		for (i in 0...textArray.length) addMoreText(textArray[i], offset, i);
 	}
-
 	function addMoreText(text:String, offset:Float = 0, i:Int = -1) {
 		if (textGroup != null) {
 			final txt:FlxText = new FlxText(0, ((i == -1 ? textGroup.length : i) * 60) + 200 + offset, FlxG.width, text, 48);
@@ -217,9 +228,11 @@ class TitleState extends MusicBeatState {
 			textGroup.add(txt);
 		}
 	}
+	inline function deleteText() {
+		while (textGroup.members.length > 0) textGroup.remove(textGroup.members[0], true);
+	}
 
-	inline function deleteText() while (textGroup.members.length > 0) textGroup.remove(textGroup.members[0], true);
-
+	var sickBeats:Int = 0; // Basically curBeat but won't be skipped if you hold the tab or resize the screen
 	override function beatHit() {
 		super.beatHit();
 		
@@ -228,60 +241,60 @@ class TitleState extends MusicBeatState {
 		} else if(curBeat % 2 == 0) gf.animation.play('idle', true);
 		if(foundXml) logo.animation.play('bump', true);
 
-		if(!skippedIntro) {
-			switch (curBeat) {
-				case 2: createText(['Vs Dave and Bambi by:']);
-				case 3:
-					addMoreText('MoldyGH, MTM101, Stats45');
-					addMoreText('Rapparep lol, TheBuilderXD, Edival');
-					addMoreText('T5mpler, Erizur, Billy Bobbo');
-				case 4:
-					deleteText();
-					createText(['Baby Shark\'s Big Show by:']);
-				case 5:
-					addMoreText('Pinkfong');
-					addMoreText('Nickelodeon');
-					addMoreText('SmartStudy');
-				case 6:
-					deleteText();
-					createText(['Psych Engine by:']);
-				case 7:
-					addMoreText('Shadow Mario');
-					addMoreText('Riveren');
-					addMoreText('And Psych Engine Contributors!');
-				case 8:
-					deleteText();
-					createText(['Altertoriel']);
-				case 9:
-					addMoreText('Presents!');
-				case 10:
-					deleteText();
-					createText([randomPhrase[0]]);
-				case 11: addMoreText(randomPhrase[1]);
-				case 12: deleteText();
-				case 13: addMoreText('Baby');
-				case 14: addMoreText('Shark\'s');
-				case 15: addMoreText('Big Funkin!');
-				case 16: skipIntro();
-			}
+		if (seenIntro) return;
+
+		sickBeats++;
+		switch (sickBeats) {
+			case 1: createText(['Vs Dave and Bambi by:']);
+			case 2:
+				addMoreText('MoldyGH, MTM101, Stats45');
+				addMoreText('Rapparep lol, TheBuilderXD, Edival');
+				addMoreText('T5mpler, Erizur, Billy Bobbo');
+			case 3:
+				deleteText();
+				createText(['Baby Shark\'s Big Show by:']);
+			case 4:
+				addMoreText('Pinkfong');
+				addMoreText('Nickelodeon');
+				addMoreText('SmartStudy');
+			case 5:
+				deleteText();
+				createText(['Psych Engine by:']);
+			case 6:
+				addMoreText('Shadow Mario');
+				addMoreText('Riveren');
+				addMoreText('And Psych Engine Contributors!');
+			case 7:
+				deleteText();
+				createText(['Altertoriel']);
+			case 8:
+				addMoreText('Presents!');
+			case 9:
+				deleteText();
+				createText([curWacky[0]]);
+			case 10: addMoreText(curWacky[1]);
+			case 11: deleteText();
+			case 12: addMoreText('Baby');
+			case 13: addMoreText('Shark\'s');
+			case 14: addMoreText('Big Funkin!');
+			case 15: skipIntro();
 		}
 	}
 
 	function skipIntro() {
+		if (seenIntro) return;
+
+		remove(alphabet);
+		introGroup.visible = true;
 		FlxG.camera.flash(FlxColor.WHITE, 2);
-		skippedIntro = true;
-
-		gf.alpha = 1;
-		logo.alpha = 1;
-		titleText.visible = true;
+		seenIntro = true;
 		FlxTween.tween(logo, {y: titleStartY}, 1.4, {ease: FlxEase.expoInOut});
-
 		deleteText();
 	}
 
 	#if CHECK_FOR_UPDATES
 	function checkUpdate():Void {
-		if(ClientPrefs.data.checkForUpdates && !skippedIntro) {
+		if(ClientPrefs.data.checkForUpdates && !seenIntro) {
 			trace('checking for update');
 			var http:Http = new Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/CHANGELOG.md");
 			var returnedData:Array<String> = [];

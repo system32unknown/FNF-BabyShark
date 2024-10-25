@@ -409,7 +409,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		}
 
 		if(PsychUIInputText.focusOn == null) {
-			ClientPrefs.toggleVolumeKeys();
+			Controls.toggleVolumeKeys();
 			if(FlxG.keys.justPressed.SPACE && UI_mainbox.selectedName == 'Character') {
 				character.playAnim(character.jsonFile.animations[curAnim].anim);
 				daText.resetDialogue();

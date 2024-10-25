@@ -180,7 +180,7 @@ class Limo extends BaseStage
 		if(paused && carTimer != null) carTimer.active = true;
 	}
 
-	override function openSubState(SubState:flixel.FlxSubState) {
+	override function openSubState(SubState:FlxSubState) {
 		if(paused && carTimer != null) carTimer.active = false;
 	}
 

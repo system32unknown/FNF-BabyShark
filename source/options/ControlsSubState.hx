@@ -5,7 +5,7 @@ import objects.AttachedSprite;
 
 import flixel.input.keyboard.FlxKey;
 
-class ControlsSubState extends MusicBeatSubstate {
+class ControlsSubState extends FlxSubState {
 	var curSelected:Int = 0;
 	var curAlt:Bool = false;
 
@@ -185,8 +185,8 @@ class ControlsSubState extends MusicBeatSubstate {
 		text.startPosition.y -= 55;
 	}
 	function addKeyText(text:Alphabet, option:Array<Dynamic>) {
-		var keys:Array<Null<FlxKey>> = ClientPrefs.keyBinds.get(option[2]);
-		if(keys == null) keys = ClientPrefs.defaultKeys.get(option[2]).copy();
+		var keys:Array<Null<FlxKey>> = Controls.keyBinds.get(option[2]);
+		if(keys == null) keys = Controls.default_keyBinds.get(option[2]).copy();
 
 		for (n in 0...2) {
 			var key:String = InputFormatter.getKeyName((keys[n] != null) ? keys[n] : NONE);
@@ -276,12 +276,12 @@ class ControlsSubState extends MusicBeatSubstate {
 
 					binding = true;
 					holdingEsc = 0;
-					ClientPrefs.toggleVolumeKeys(false);
+					Controls.toggleVolumeKeys(false);
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 				} else {
 					// Reset to Default
-					ClientPrefs.resetKeys();
-					ClientPrefs.reloadVolumeKeys();
+					Controls.reset();
+					Controls.reloadVolumeKeys();
 					var lastSel:Int = curSelected;
 					createTexts();
 					curSelected = lastSel;
@@ -301,8 +301,7 @@ class ControlsSubState extends MusicBeatSubstate {
 			} else if (FlxG.keys.pressed.BACKSPACE) {
 				holdingEsc += elapsed;
 				if(holdingEsc > .5) {
-					ClientPrefs.keyBinds.get(curOption[2])[altNum] = NONE;
-					ClientPrefs.clearInvalidKeys(curOption[2]);
+					Controls.keyBinds.get(curOption[2])[altNum] = NONE;
 					updateBind(Math.floor(curSelected * 2) + altNum, InputFormatter.getKeyName(NONE));
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					closeBinding();
@@ -310,7 +309,7 @@ class ControlsSubState extends MusicBeatSubstate {
 			} else {
 				holdingEsc = 0;
 				var changed:Bool = false;
-				var curKeys:Array<FlxKey> = ClientPrefs.keyBinds.get(curOption[2]);
+				var curKeys:Array<FlxKey> = Controls.keyBinds.get(curOption[2]);
 
 				if(FlxG.keys.justPressed.ANY || FlxG.keys.justReleased.ANY) {
 					var keyPressed:Int = FlxG.keys.firstJustPressed();
@@ -329,10 +328,9 @@ class ControlsSubState extends MusicBeatSubstate {
 						curKeys[1 - altNum] = FlxKey.NONE;
 
 					var option:String = options[curOptions[curSelected]][2];
-					ClientPrefs.clearInvalidKeys(option);
 					for (n in 0...2) {
 						var key:String = null;
-						var savKey:Array<Null<FlxKey>> = ClientPrefs.keyBinds.get(option);
+						var savKey:Array<Null<FlxKey>> = Controls.keyBinds.get(option);
 						key = InputFormatter.getKeyName(savKey[n] ?? NONE);
 						updateBind(Math.floor(curSelected * 2) + n, key);
 					}
@@ -354,7 +352,7 @@ class ControlsSubState extends MusicBeatSubstate {
 
 		bindingText2.destroy();
 		remove(bindingText2);
-		ClientPrefs.reloadVolumeKeys();
+		Controls.reloadVolumeKeys();
 	}
 
 	function updateText(?change:Int = 0) {

@@ -50,7 +50,7 @@ class OptionsState extends MusicBeatState {
 		add(selectorRight = new Alphabet(0, 0, '<'));
 
 		changeSelection();
-		ClientPrefs.saveSettings();
+		ClientPrefs.save();
 
 		super.create();
 	}
@@ -66,7 +66,7 @@ class OptionsState extends MusicBeatState {
 
 	override function closeSubState() {
 		super.closeSubState();
-		ClientPrefs.saveSettings();
+		ClientPrefs.save();
 	}
 
 	override function update(elapsed:Float) {
@@ -122,7 +122,7 @@ class OptionsState extends MusicBeatState {
 
 	override function destroy() {
 		PlayState.mania = lastMania;
-		ClientPrefs.loadPrefs();
+		ClientPrefs.load();
 		super.destroy();
 	}
 }

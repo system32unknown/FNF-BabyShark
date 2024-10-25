@@ -4,8 +4,6 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.animation.FlxAnimationController;
 
 class NoteLoader {
-	public static var defaultNoteSprite:FlxSprite;
-
 	public static var noteSkinFramesMap:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
 	public static var noteSkinAnimsMap:Map<String, FlxAnimationController> = new Map<String, FlxAnimationController>();
 

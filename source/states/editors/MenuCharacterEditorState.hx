@@ -182,7 +182,7 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 
 	override function update(elapsed:Float) {
 		if(PsychUIInputText.focusOn == null) {
-			ClientPrefs.toggleVolumeKeys();
+			Controls.toggleVolumeKeys();
 
 			if(FlxG.keys.justPressed.ESCAPE) {
 				if(!unsavedProgress) {

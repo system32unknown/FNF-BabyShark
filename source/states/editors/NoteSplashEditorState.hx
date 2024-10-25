@@ -34,7 +34,7 @@ class NoteSplashEditorState extends MusicBeatState {
 
 		FlxG.mouse.visible = true;
 
-        ClientPrefs.toggleVolumeKeys(false);
+        Controls.toggleVolumeKeys(false);
 
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence('Note Splash Editor');
@@ -763,7 +763,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		super.destroy();
 
 		FlxG.sound.music.volume = 1;
-        ClientPrefs.toggleVolumeKeys();
+        Controls.toggleVolumeKeys();
 	}
 
 	public static function parseTxt(content:String):NoteSplashConfig {

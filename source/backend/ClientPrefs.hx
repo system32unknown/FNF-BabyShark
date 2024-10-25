@@ -1,8 +1,5 @@
 package backend;
 
-import flixel.util.FlxSave;
-import flixel.input.keyboard.FlxKey;
-
 @:structInit class SaveVariables {
 	public var downScroll:Bool = false;
 	public var middleScroll:Bool = false;
@@ -84,6 +81,8 @@ import flixel.input.keyboard.FlxKey;
 		'botplay' => false,
 	];
 
+	public var fullscreen:Bool = false;
+
 	public var comboOffset:Array<Array<Int>> = [[0, 0], [0, 0]];
 	public var ratingOffset:Int = 0;
 
@@ -97,97 +96,16 @@ import flixel.input.keyboard.FlxKey;
 }
 
 class ClientPrefs {
-	public static var data:SaveVariables = {};
 	public static var defaultData:SaveVariables = {};
+	public static var data:SaveVariables = defaultData;
 
-	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
-	public static var keyBinds:Map<String, Array<FlxKey>> = [
-		//Key Bind, Name for ControlsSubState
-		'note_1' 		=> [SPACE],
-		'note_3a'		=> [SPACE],
-		'note_5a'		=> [SPACE],
-
-		'note_left'		=> [A, LEFT],
-		'note_down'		=> [S, DOWN],
-		'note_up'		=> [W, UP],
-		'note_right'	=> [D, RIGHT],
-
-		'note_6a'		=> [S],
-		'note_6b'		=> [D],
-		'note_6c'		=> [F],
-		'note_6d'		=> [J],
-		'note_6e'		=> [K],
-		'note_6f'		=> [L],
-		
-		'note_7a'		=> [S],
-		'note_7b'		=> [D],
-		'note_7c'		=> [F],
-		'note_7d'		=> [SPACE],
-		'note_7e'		=> [J],
-		'note_7f'		=> [K],
-		'note_7g'		=> [L],
-		
-		'note_8a'		=> [A],
-		'note_8b'		=> [S],
-		'note_8c'		=> [D],
-		'note_8d'		=> [F],
-		'note_8e'		=> [H],
-		'note_8f'		=> [J],
-		'note_8g'		=> [K],
-		'note_8h'		=> [L],
-		
-		'note_9a'		=> [A],
-		'note_9b'		=> [S],
-		'note_9c'		=> [D],
-		'note_9d'		=> [F],
-		'note_9e'		=> [SPACE],
-		'note_9f'		=> [H],
-		'note_9g'		=> [J],
-		'note_9h'		=> [K],
-		'note_9i'		=> [L],
-		
-		'ui_left'		=> [A, LEFT],
-		'ui_down'		=> [S, DOWN],
-		'ui_up'			=> [W, UP],
-		'ui_right'		=> [D, RIGHT],
-		
-		'accept'		=> [SPACE, ENTER],
-		'back'			=> [BACKSPACE, ESCAPE],
-		'pause'			=> [ENTER, ESCAPE],
-		'reset'			=> [R],
-		
-		'volume_mute'	=> [ZERO],
-		'volume_up'		=> [NUMPADPLUS, PLUS],
-		'volume_down'	=> [NUMPADMINUS, MINUS],
-		
-		'debug_1'		=> [SEVEN],
-		'debug_2'		=> [EIGHT]
-	];
-	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
-	
-	public static function resetKeys() {
-		for (key in keyBinds.keys()) if(defaultKeys.exists(key)) keyBinds.set(key, defaultKeys.get(key).copy());
-	}
-	
-	public static function clearInvalidKeys(key:String) {
-		var keyBind:Array<FlxKey> = keyBinds.get(key);
-		while(keyBind != null && keyBind.contains(NONE)) keyBind.remove(NONE);
-	}
-	
-	public static function loadDefaultKeys() defaultKeys = keyBinds.copy();
-	public static function saveSettings() {
-		for (key in Reflect.fields(data)) Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
+	public static function save() {
+		for (key in Reflect.fields(data))
+			Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
 		FlxG.save.flush();
-
-		//Placing this in a separate save so that it can be manually deleted without removing your Score and stuff
-		var save:FlxSave = new FlxSave();
-		save.bind('controls', CoolUtil.getSavePath());
-		save.data.keyboard = keyBinds;
-		save.flush();
-		FlxG.log.add("Settings saved!");
 	}
 
-	public static function loadPrefs() {
+	public static function load() {
 		for (key in Reflect.fields(data))
 			if (key != 'gameplaySettings' && Reflect.hasField(FlxG.save.data, key))
 				Reflect.setField(data, key, Reflect.field(FlxG.save.data, key));
@@ -196,17 +114,10 @@ class ClientPrefs {
 			Main.fpsVar.visible = data.showFPS;
 			Main.fpsVar.memType = data.memCounterType;
 		}
-
 		FlxG.autoPause = data.autoPause;
 
-		if(FlxG.save.data.framerate == null) data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate, 60, 240));
-		if(data.framerate > FlxG.drawFramerate) {
-			FlxG.updateFramerate = data.framerate;
-			FlxG.drawFramerate = data.framerate;
-		} else {
-			FlxG.drawFramerate = data.framerate;
-			FlxG.updateFramerate = data.framerate;
-		}
+		if(FlxG.save.data.framerate == null)
+			data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate, 60, 240));
 
 		if(FlxG.save.data.gameplaySettings != null) {
 			var savedMap:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
@@ -218,33 +129,14 @@ class ClientPrefs {
 		if(FlxG.save.data.mute != null) FlxG.sound.muted = FlxG.save.data.mute;
 
 		#if DISCORD_ALLOWED DiscordClient.check(); #end
+	}
 
-		var save:FlxSave = new FlxSave(); // controls on a separate save file
-		save.bind('controls', CoolUtil.getSavePath());
-		if(save != null) {
-			if(save.data.keyboard != null) {
-				var loadedControls:Map<String, Array<FlxKey>> = save.data.keyboard;
-				for (control => keys in loadedControls) if(keyBinds.exists(control)) keyBinds.set(control, keys);
-			}
-			reloadVolumeKeys();
-		}
+	public static inline function reset() {
+		data = defaultData;
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
 		if(!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
 		return (data.gameplaySettings.exists(name) ? data.gameplaySettings.get(name) : defaultValue);
-	}
-
-	public static function reloadVolumeKeys() {
-		Main.muteKeys = keyBinds.get('volume_mute').copy();
-		Main.volumeDownKeys = keyBinds.get('volume_down').copy();
-		Main.volumeUpKeys = keyBinds.get('volume_up').copy();
-		toggleVolumeKeys();
-	}
-	public static function toggleVolumeKeys(turnOn:Bool = true) {
-		final emptyArray:Array<FlxKey> = [];
-		FlxG.sound.muteKeys = turnOn ? Main.muteKeys : emptyArray;
-		FlxG.sound.volumeDownKeys = turnOn ? Main.volumeDownKeys : emptyArray;
-		FlxG.sound.volumeUpKeys = turnOn ? Main.volumeUpKeys : emptyArray;
 	}
 }

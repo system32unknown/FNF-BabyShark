@@ -7,7 +7,7 @@ import objects.Note;
 
 import shaders.RGBPalette;
 
-class NotesColorSubState extends MusicBeatSubstate {
+class NotesColorSubState extends FlxSubState {
 	var onModeColumn:Bool = true;
 	var curSelectedMode:Int = 0;
 	var curSelectedNote:Int = 0;

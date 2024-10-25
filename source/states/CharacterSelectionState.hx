@@ -247,7 +247,7 @@ class CharacterSelectionState extends MusicBeatState {
 	public static function unlockCharacter(character:String, save:Bool = false) {
 		if (!unlockedChrs.contains(character)) unlockedChrs.push(character);
 		ClientPrefs.data.unlockedCharacters = unlockedChrs;
-		if (save) ClientPrefs.saveSettings();
+		if (save) ClientPrefs.save();
 	}
 
 	public static function isLocked(character:String):Bool {
@@ -256,7 +256,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 	public static function reset() {
 		ClientPrefs.data.unlockedCharacters = ClientPrefs.defaultData.unlockedCharacters;
-		ClientPrefs.saveSettings();
+		ClientPrefs.save();
 	}
 
 	function UpdateBF() {

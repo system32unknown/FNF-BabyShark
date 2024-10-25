@@ -550,7 +550,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		directoryDropDown = new PsychUIDropDownMenu(objX, objY, folderList, function(sel:Int, selected:String) {
 			stageJson.directory = selected;
 			saveObjectsToJson();
-			FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
+			MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 			FlxG.switchState(() -> new StageEditorState(lastLoadedStage, stageJson));
 		});
 		directoryDropDown.selectedLabel = stageJson.directory;
@@ -1464,6 +1464,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			}
 			_makeNewSprite = null;
 		}
+		_file = null;
 
 		if(fullPath != null) {
 			fullPath = fullPath.replace('\\', '/');

@@ -75,7 +75,7 @@ class Template extends BaseStage
 		}
 	}
 
-	override function openSubState(SubState:flixel.FlxSubState)
+	override function openSubState(SubState:FlxSubState)
 	{
 		if(paused)
 		{

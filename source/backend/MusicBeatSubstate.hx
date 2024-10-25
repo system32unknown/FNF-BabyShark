@@ -1,6 +1,6 @@
 package backend;
 
-class MusicBeatSubstate extends flixel.FlxSubState {
+class MusicBeatSubstate extends FlxSubState {
 	public function new() {super();}
 
 	var curSection:Int = 0;
@@ -11,9 +11,6 @@ class MusicBeatSubstate extends flixel.FlxSubState {
 
 	var curDecStep:Float = 0;
 	var curDecBeat:Float = 0;
-
-	var controls(get, never):Controls;
-	inline function get_controls():Controls return Controls.instance;
 
 	override function update(elapsed:Float) {
 		var oldStep:Int = curStep;

@@ -603,8 +603,8 @@ class ModsMenuState extends MusicBeatState {
 	function reload() {
 		saveTxt();
 		FlxG.autoPause = ClientPrefs.data.autoPause;
-		FlxTransitionableState.skipNextTransIn = true;
-		FlxTransitionableState.skipNextTransOut = true;
+		MusicBeatState.skipNextTransIn = true;
+		MusicBeatState.skipNextTransOut = true;
 		var curMod:ModItem = modsGroup.members[curSelectedMod];
 		FlxG.switchState(() -> new ModsMenuState(curMod?.folder));
 	}

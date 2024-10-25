@@ -1,6 +1,6 @@
 package options;
 
-class LanguageSubState extends MusicBeatSubstate {
+class LanguageSubState extends FlxSubState {
 	#if TRANSLATIONS_ALLOWED
 	var grpLanguages:FlxTypedGroup<Alphabet> = new FlxTypedGroup<Alphabet>();
 	var languages:Array<String> = [];
@@ -78,22 +78,22 @@ class LanguageSubState extends MusicBeatSubstate {
 		super.update(elapsed);
 
 		var mult:Int = (FlxG.keys.pressed.SHIFT) ? 4 : 1;
-		if(controls.UI_DOWN_P || controls.UI_UP_P) changeSelected((controls.UI_DOWN_P ? 1 : -1) * mult);
-		if(FlxG.mouse.wheel != 0) changeSelected(FlxG.mouse.wheel * mult);
+		final upJustPressed:Bool = Controls.justPressed('ui_up');
+		if (upJustPressed || Controls.justPressed('ui_down')) changeSelected((upJustPressed ? -1 : 1) * mult);
+		else if (FlxG.mouse.wheel != 0) changeSelected(FlxG.mouse.wheel * mult);
 
-		if(controls.BACK) {
-			if(changedLanguage) {
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
+		if (Controls.justPressed('back')) {
+			if (changedLanguage) {
+				MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 				FlxG.resetState();
 			} else close();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
-		if(controls.ACCEPT) {
+		if (Controls.justPressed('accept')) {
 			FlxG.sound.play(Paths.sound('confirmMenu'), .6);
 			ClientPrefs.data.language = languages[curSelected];
-			ClientPrefs.saveSettings();
+			ClientPrefs.save();
 			Language.reloadPhrases();
 			changedLanguage = true;
 		}

@@ -210,31 +210,31 @@ class HScript extends AlterHscript {
 		set('keyJustPressed', function(name:String = '') {
 			name = name.toLowerCase();
 			return switch(name) {
-				case 'left': Controls.instance.NOTE_LEFT_P;
-				case 'down': Controls.instance.NOTE_DOWN_P;
-				case 'up': Controls.instance.NOTE_UP_P;
-				case 'right': Controls.instance.NOTE_RIGHT_P;
-				default: Controls.instance.justPressed(name);
+				case 'left': Controls.justPressed('note_left');
+				case 'down': Controls.justPressed('note_down');
+				case 'up': Controls.justPressed('note_up');
+				case 'right': Controls.justPressed('note_right');
+				default: Controls.justPressed(name);
 			}
 		});
 		set('keyPressed', function(name:String = '') {
 			name = name.toLowerCase();
 			return switch(name) {
-				case 'left': Controls.instance.NOTE_LEFT;
-				case 'down': Controls.instance.NOTE_DOWN;
-				case 'up': Controls.instance.NOTE_UP;
-				case 'right': Controls.instance.NOTE_RIGHT;
-				default: Controls.instance.pressed(name);
+				case 'left': Controls.pressed('note_left');
+				case 'down': Controls.pressed('note_down');
+				case 'up': Controls.pressed('note_up');
+				case 'right': Controls.pressed('note_right');
+				default: Controls.pressed(name);
 			}
 		});
 		set('keyReleased', function(name:String = '') {
 			name = name.toLowerCase();
 			return switch(name) {
-				case 'left': Controls.instance.NOTE_LEFT_R;
-				case 'down': Controls.instance.NOTE_DOWN_R;
-				case 'up': Controls.instance.NOTE_UP_R;
-				case 'right': Controls.instance.NOTE_RIGHT_R;
-				default: Controls.instance.justReleased(name);
+				case 'left': Controls.released('note_left');
+				case 'down': Controls.released('note_down');
+				case 'up': Controls.released('note_up');
+				case 'right': Controls.released('note_right');
+				default: Controls.released(name);
 			}
 		});
 
@@ -295,7 +295,7 @@ class HScript extends AlterHscript {
                 try {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
 					if(rawClass == null) return;
-                    FlxG.state.openSubState(cast(Type.createInstance(rawClass, args), flixel.FlxSubState));
+                    FlxG.state.openSubState(cast(Type.createInstance(rawClass, args), FlxSubState));
                 } catch(e:Dynamic) {
                     Logs.trace('$e: Unspecified result for opening substate "$name", could not be opened!', ERROR);
                     return;
@@ -308,7 +308,7 @@ class HScript extends AlterHscript {
 		set('parentLua', #if LUA_ALLOWED parentLua #else null #end);
 		set('this', this);
 		set('game', FlxG.state);
-		set('controls', Controls.instance);
+		set('controls', Controls);
 
 		set('buildTarget', LuaUtils.getBuildTarget());
 		set('customSubstate', CustomSubstate.instance);

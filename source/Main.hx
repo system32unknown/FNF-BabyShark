@@ -37,19 +37,13 @@ class Main extends Sprite {
 	public function new() {
 		super();
 		#if windows @:functionCode('#include <windows.h> SetProcessDPIAware();') #end
-		setupGame();
-		#if VIDEOS_ALLOWED hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0") ['--no-lua'] #end); #end
-	}
 
-	function setupGame():Void {
 		debug.Logs.init();
-
+		ClientPrefs.load();
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(fpsVar = new FPSCounter());
-		if(fpsVar != null) {
-			fpsVar.visible = ClientPrefs.data.showFPS;
-			fpsVar.memType = ClientPrefs.data.memCounterType;
-		}
+		fpsVar.visible = ClientPrefs.data.showFPS;
+		fpsVar.memType = ClientPrefs.data.memCounterType;
 
 		#if !MODS_ALLOWED
 		final path:String = 'mods';
@@ -61,7 +55,6 @@ class Main extends Sprite {
 
 		#if linux openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
-		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 
 		FlxG.signals.preStateSwitch.add(() -> Paths.clearStoredMemory());
 		FlxG.signals.postStateSwitch.add(() -> {
@@ -77,6 +70,7 @@ class Main extends Sprite {
 			if (FlxG.game != null) resetSpriteCache(FlxG.game);
 			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
 		});
+		#if VIDEOS_ALLOWED hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0") ['--no-lua'] #end); #end
 	}
 
 	static function resetSpriteCache(sprite:Sprite):Void {

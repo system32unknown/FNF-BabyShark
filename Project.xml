@@ -46,6 +46,7 @@
 		<assets path='example_mods' rename='mods' embed='false' type='template' unless="mac"/>
 		<assets path='example_mods' rename='mods' embed='false' if="mac"/> <!-- Template type won't work with macOS -->
 	</section>
+	<assets path='list.txt' rename='modsList.txt' />
 
 	<!-- OpenAL config -->
 	<section if="desktop">

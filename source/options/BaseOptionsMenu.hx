@@ -6,7 +6,7 @@ import objects.AttachedText;
 import objects.CheckboxThingie;
 import backend.InputFormatter;
 
-class BaseOptionsMenu extends MusicBeatSubstate {
+class BaseOptionsMenu extends FlxSubState {
 	var curOption:Option = null;
 	var curSelected:Int = 0;
 	var optionsArray:Array<Option>;
@@ -143,7 +143,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 
 						bindingKey = true;
 						holdingEsc = 0;
-						ClientPrefs.toggleVolumeKeys(false);
+						Controls.toggleVolumeKeys(false);
 						FlxG.sound.play(Paths.sound('scrollMenu'));
 					}
 
@@ -305,7 +305,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 
 		bindingText2.destroy();
 		remove(bindingText2);
-		ClientPrefs.toggleVolumeKeys();
+		Controls.toggleVolumeKeys();
 	}
 
 	function updateTextFrom(option:Option) {

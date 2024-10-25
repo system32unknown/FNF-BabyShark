@@ -1168,7 +1168,7 @@ class PlayState extends MusicBeatState {
 		strumLine.put();
 	}
 
-	override function openSubState(SubState:flixel.FlxSubState) {
+	override function openSubState(SubState:FlxSubState) {
 		stagesFunc(stage -> stage.openSubState(SubState));
 		if (paused && FlxG.sound.music != null) {FlxG.sound.music.pause(); vocals.pause();}
 		super.openSubState(SubState);
@@ -1272,10 +1272,10 @@ class PlayState extends MusicBeatState {
 			botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
 		}
 
-		if (controls.PAUSE) tryPause();
+		if (Controls.justPressed('pause')) tryPause();
 		if (!endingSong && !inCutscene && allowDebugKeys) {
-			if (controls.justPressed('debug_1')) openChartEditor();
-			else if (controls.justPressed('debug_2')) openCharacterEditor();
+			if (Controls.justPressed('debug_1')) openChartEditor();
+			else if (Controls.justPressed('debug_2')) openCharacterEditor();
 		}
 
 		if (healthBar.bounds != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
@@ -1333,7 +1333,7 @@ class PlayState extends MusicBeatState {
 		FlxG.watch.addQuick("stepShit", curStep);
 		#end
 
-		if (!ClientPrefs.data.noReset && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong && !practiceMode) health = 0;
+		if (!ClientPrefs.data.noReset && Controls.justPressed('reset') && canReset && !inCutscene && startedCountdown && !endingSong && !practiceMode) health = 0;
 		doDeathCheck();
 
 		if (unspawnNotes[0] != null) {
@@ -1801,8 +1801,8 @@ class PlayState extends MusicBeatState {
 					changedDifficulty = false;
 				} else {
 					var difficulty:String = Difficulty.getFilePath();
-					FlxTransitionableState.skipNextTransIn = true;
-					FlxTransitionableState.skipNextTransOut = true;
+					MusicBeatState.skipNextTransIn = true;
+					MusicBeatState.skipNextTransOut = true;
 					prevCamFollow = camFollow;
 
 					Song.loadFromJson(storyPlaylist[0] + difficulty, storyPlaylist[0]);
@@ -2019,7 +2019,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public static function getKeyFromEvent(arr:Array<String>, key:FlxKey):Int {
-		if(key != NONE) for (i in 0...arr.length) for (noteKey in Controls.instance.keyboardBinds[arr[i]]) if(key == noteKey) return i;
+		if(key != NONE) for (i in 0...arr.length) for (noteKey in Controls.keyBinds[arr[i]]) if(key == noteKey) return i;
 		return -1;
 	}
 
@@ -2027,8 +2027,8 @@ class PlayState extends MusicBeatState {
 		var holdArray:Array<Bool> = [];
 		var releaseArray:Array<Bool> = [];
 		for (key in keysArray) {
-			holdArray.push(controls.pressed(key));
-			releaseArray.push(controls.justReleased(key));
+			holdArray.push(Controls.pressed(key));
+			releaseArray.push(Controls.released(key));
 		}
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
 			if (notes.length > 0) for (n in notes) { // I can't do a filter here, that's kinda awesome

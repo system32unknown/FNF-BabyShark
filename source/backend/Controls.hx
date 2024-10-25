@@ -1,81 +1,154 @@
 package backend;
 
-//Keeping same use cases on stuff for it to be easier to understand/use
+import flixel.input.keyboard.FlxKey;
+import flixel.util.FlxSave;
+
 class Controls {
-	public var UI_UP_P(get, never):Bool;
-	public var UI_LEFT_P(get, never):Bool;
-	public var UI_RIGHT_P(get, never):Bool;
-	public var UI_DOWN_P(get, never):Bool;
-	public var NOTE_UP_P(get, never):Bool;
-	public var NOTE_LEFT_P(get, never):Bool;
-	public var NOTE_RIGHT_P(get, never):Bool;
-	public var NOTE_DOWN_P(get, never):Bool;
-	function get_UI_UP_P() return justPressed('ui_up');
-	function get_UI_DOWN_P() return justPressed('ui_down');
-	function get_UI_LEFT_P() return justPressed('ui_left');
-	function get_UI_RIGHT_P() return justPressed('ui_right');
-	function get_NOTE_UP_P() return justPressed('note_up');
-	function get_NOTE_DOWN_P() return justPressed('note_down');
-	function get_NOTE_LEFT_P() return justPressed('note_left');
-	function get_NOTE_RIGHT_P() return justPressed('note_right');
+	// Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx
+	public static final default_keyBinds:Map<String, Array<FlxKey>> = [
+		'note_1' 		=> [SPACE],
+		'note_3a'		=> [SPACE],
+		'note_5a'		=> [SPACE],
 
-	// Held buttons (directions)
-	public var UI_UP(get, never):Bool;
-	public var UI_DOWN(get, never):Bool;
-	public var UI_LEFT(get, never):Bool;
-	public var UI_RIGHT(get, never):Bool;
-	public var NOTE_UP(get, never):Bool;
-	public var NOTE_DOWN(get, never):Bool;
-	public var NOTE_LEFT(get, never):Bool;
-	public var NOTE_RIGHT(get, never):Bool;
-	function get_UI_UP() return pressed('ui_up');
-	function get_UI_DOWN() return pressed('ui_down');
-	function get_UI_LEFT() return pressed('ui_left');
-	function get_UI_RIGHT() return pressed('ui_right');
-	function get_NOTE_UP() return pressed('note_up');
-	function get_NOTE_DOWN() return pressed('note_down');
-	function get_NOTE_LEFT() return pressed('note_left');
-	function get_NOTE_RIGHT() return pressed('note_right');
+		'note_left'		=> [A, LEFT],
+		'note_down'		=> [S, DOWN],
+		'note_up'		=> [W, UP],
+		'note_right'	=> [D, RIGHT],
 
-	public var UI_UP_R(get, never):Bool;
-	public var UI_DOWN_R(get, never):Bool;
-	public var UI_LEFT_R(get, never):Bool;
-	public var UI_RIGHT_R(get, never):Bool;
-	public var NOTE_UP_R(get, never):Bool;
-	public var NOTE_DOWN_R(get, never):Bool;
-	public var NOTE_LEFT_R(get, never):Bool;
-	public var NOTE_RIGHT_R(get, never):Bool;
-	function get_UI_UP_R() return justReleased('ui_up');
-	function get_UI_DOWN_R() return justReleased('ui_down');
-	function get_UI_LEFT_R() return justReleased('ui_left');
-	function get_UI_RIGHT_R() return justReleased('ui_right');
-	function get_NOTE_UP_R() return justReleased('note_up');
-	function get_NOTE_DOWN_R() return justReleased('note_down');
-	function get_NOTE_LEFT_R() return justReleased('note_left');
-	function get_NOTE_RIGHT_R() return justReleased('note_right');
+		'note_6a'		=> [S],
+		'note_6b'		=> [D],
+		'note_6c'		=> [F],
+		'note_6d'		=> [J],
+		'note_6e'		=> [K],
+		'note_6f'		=> [L],
+		
+		'note_7a'		=> [S],
+		'note_7b'		=> [D],
+		'note_7c'		=> [F],
+		'note_7d'		=> [SPACE],
+		'note_7e'		=> [J],
+		'note_7f'		=> [K],
+		'note_7g'		=> [L],
+		
+		'note_8a'		=> [A],
+		'note_8b'		=> [S],
+		'note_8c'		=> [D],
+		'note_8d'		=> [F],
+		'note_8e'		=> [H],
+		'note_8f'		=> [J],
+		'note_8g'		=> [K],
+		'note_8h'		=> [L],
+		
+		'note_9a'		=> [A],
+		'note_9b'		=> [S],
+		'note_9c'		=> [D],
+		'note_9d'		=> [F],
+		'note_9e'		=> [SPACE],
+		'note_9f'		=> [H],
+		'note_9g'		=> [J],
+		'note_9h'		=> [K],
+		'note_9i'		=> [L],
+		
+		'ui_left'		=> [A, LEFT],
+		'ui_down'		=> [S, DOWN],
+		'ui_up'			=> [W, UP],
+		'ui_right'		=> [D, RIGHT],
+		
+		'accept'		=> [SPACE, ENTER],
+		'back'			=> [BACKSPACE, ESCAPE],
+		'pause'			=> [ENTER, ESCAPE],
+		'reset'			=> [R],
+		
+		'volume_mute'	=> [ZERO],
+		'volume_up'		=> [NUMPADPLUS, PLUS],
+		'volume_down'	=> [NUMPADMINUS, MINUS],
+		
+		'debug_1'		=> [SEVEN],
+		'debug_2'		=> [EIGHT]
+	];
 
-	public var ACCEPT(get, never):Bool;
-	public var BACK(get, never):Bool;
-	public var PAUSE(get, never):Bool;
-	public var RESET(get, never):Bool;
-	function get_ACCEPT() return justPressed('accept');
-	function get_BACK() return justPressed('back');
-	function get_PAUSE() return justPressed('pause');
-	function get_RESET() return justPressed('reset');
+	public static var keyBinds:Map<String, Array<Int>> = default_keyBinds;
 
-	public var ACCEPT_P(get, never):Bool;
-	function get_ACCEPT_P() return pressed('accept');
-	public var RESET_P(get, never):Bool;
-	function get_RESET_P() return pressed('reset');
-	public var PAUSE_P(get, never):Bool;
-	function get_PAUSE_P() return pressed('pause');
+	static var _save:FlxSave;
 
-	public var keyboardBinds:Map<String, Array<flixel.input.keyboard.FlxKey>>;
-	
-	public function justPressed(key:String) return FlxG.keys.anyJustPressed(keyboardBinds[key]);
-	public function pressed(key:String) return FlxG.keys.anyPressed(keyboardBinds[key]);
-	public function justReleased(key:String) return FlxG.keys.anyJustReleased(keyboardBinds[key]);
+	// general use
+	public static function justPressed(name:String):Bool {
+		return keyJustPressed(name);
+	}
+	public static function pressed(name:String):Bool {
+		return keyPressed(name);
+	}
+	public static function released(name:String):Bool {
+		return keyReleased(name);
+	}
 
-	public static var instance:Controls;
-	public function new() keyboardBinds = ClientPrefs.keyBinds;
+	// keyboard specific
+	public static function keyJustPressed(name:String) {
+		return _getKeyStatus(name, JUST_PRESSED);
+	}
+	public static function keyPressed(name:String) {
+		return _getKeyStatus(name, PRESSED);
+	}
+	public static function keyReleased(name:String) {
+		return _getKeyStatus(name, JUST_RELEASED);
+	}
+
+	// backend functions to reduce repetitive code
+	static function _getKeyStatus(name:String, state:flixel.input.FlxInput.FlxInputState):Bool {
+		var binds:Array<FlxKey> = keyBinds[name];
+		if (binds == null) {
+			trace('Keybind "$name" doesn\'t exist.');
+			return false;
+		}
+
+		var keyHasState:Bool = false;
+		for (key in binds) {
+			@:privateAccess
+			if (FlxG.keys.getKey(key).hasState(state)) {
+				keyHasState = true;
+				break;
+			}
+		}
+		return keyHasState;
+	}
+
+	public static function save() {
+		_save.data.keyboard = keyBinds;
+		_save.flush();
+	}
+
+	public static function load() {
+		if (_save == null) {
+			_save = new FlxSave();
+			_save.bind('controls', CoolUtil.getSavePath());
+		}
+
+		if (_save.data.keyboard != null) {
+			var loadedKeys:Map<String, Array<FlxKey>> = _save.data.keyboard;
+			for (control => keys in loadedKeys)
+				if (keyBinds.exists(control)) keyBinds.set(control, keys);
+		}
+		reloadVolumeKeys();
+	}
+
+	public static function reset() {
+		for (key in keyBinds.keys()) {
+			if (!default_keyBinds.exists(key)) continue;
+			keyBinds.set(key, default_keyBinds.get(key).copy());
+		}
+	}
+
+	public static function reloadVolumeKeys() {
+		Main.muteKeys = keyBinds.get('volume_mute').copy();
+		Main.volumeDownKeys = keyBinds.get('volume_down').copy();
+		Main.volumeUpKeys = keyBinds.get('volume_up').copy();
+		toggleVolumeKeys();
+	}
+
+	public static function toggleVolumeKeys(turnOn:Bool = true) {
+		final emptyArray:Array<FlxKey> = [];
+		FlxG.sound.muteKeys = turnOn ? Main.muteKeys : emptyArray;
+		FlxG.sound.volumeDownKeys = turnOn ? Main.volumeDownKeys : emptyArray;
+		FlxG.sound.volumeUpKeys = turnOn ? Main.volumeUpKeys : emptyArray;
+	}
 }

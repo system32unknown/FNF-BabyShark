@@ -120,8 +120,8 @@ class PauseSubState extends MusicBeatSubstate {
 		}
 
 		if(FlxG.keys.justPressed.F5) {
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
+			MusicBeatState.skipNextTransIn = true;
+			MusicBeatState.skipNextTransOut = true;
 			PlayState.nextReloadAll = true;
 			FlxG.resetState();
 		}
@@ -267,8 +267,8 @@ class PauseSubState extends MusicBeatSubstate {
 		PlayState.instance.vocals.volume = 0;
 
 		if(noTrans) {
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
+			MusicBeatState.skipNextTransIn = true;
+			MusicBeatState.skipNextTransOut = true;
 		}
 		FlxG.resetState();
 	}

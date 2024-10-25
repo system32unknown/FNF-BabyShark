@@ -446,6 +446,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			"Right Click - Selection Box",
 			"",
 			"R - Reset Section",
+			"Shift + R - Go Back to the Start of the Song",
 			"Z/X - Zoom in/out",
 			"Left/Right - Change Snap",
 			#if FLX_PITCH
@@ -656,7 +657,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			}
 		}
 
-		ClientPrefs.toggleVolumeKeys(PsychUIInputText.focusOn == null);
+		Controls.toggleVolumeKeys(PsychUIInputText.focusOn == null);
 
 		var lastTime:Float = Conductor.songPosition;
 		outputAlpha = Math.max(0, outputAlpha - elapsed);
@@ -770,7 +771,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						}
 					}
 				} else if(FlxG.keys.justPressed.R) {
-					Conductor.songPosition = FlxG.sound.music.time = cachedSectionTimes[curSec] + (curSec > 0 ? 0.000001 : 0);
+					var timeToGoBack:Float = 0;
+					if(!FlxG.keys.pressed.SHIFT) timeToGoBack = cachedSectionTimes[curSec] + (curSec > 0 ? 0.000001 : 0);
+					else loadSection(0);
+					Conductor.songPosition = FlxG.sound.music.time = vocals.time = timeToGoBack;
 				} else if(FlxG.keys.pressed.W != FlxG.keys.pressed.S || FlxG.mouse.wheel != 0) {
 					if(FlxG.sound.music.playing) setSongPlaying(false);
 
@@ -1918,7 +1922,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		tab_group.add(txt);
 
 		objY += 25;
-		playbackSlider = new PsychUISlider(50, objY, function(v:Float) setPitch(playbackRate = v), 1, 0.5, 3, 200);
+		playbackSlider = new PsychUISlider(50, objY, (v:Float) -> setPitch(playbackRate = v), 1, 0.25, 3, 200);
 		playbackSlider.label = 'Playback Rate';
 		
 		objY += 60;
@@ -2958,7 +2962,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					updateChartData();
 					var pack:VSlicePackage = VSlice.export(PlayState.SONG);
 
-					ClientPrefs.toggleVolumeKeys(false);
+					Controls.toggleVolumeKeys(false);
 					openSubState(new BasePrompt('Metadata', (state:BasePrompt) -> {
 						var btnX:Int = 640;
 						var btnY:Int = 400;
@@ -3023,7 +3027,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					return;
 				}
 
-				ClientPrefs.toggleVolumeKeys(false);
+				Controls.toggleVolumeKeys(false);
 				openSubState(new BasePrompt('Metadata', (state:BasePrompt) -> {
 					var songName:String = Paths.formatToSongPath(pack.metadata.songName);
 					var parentFolder:String = filePath.substring(0, filePath.lastIndexOf('/') + 1);
@@ -3448,7 +3452,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		btnY++;
 		btnY += 20;
 		var btn:PsychUIButton = new PsychUIButton(btnX, btnY, '  Waveform...', () -> {
-			ClientPrefs.toggleVolumeKeys(false);
+			Controls.toggleVolumeKeys(false);
 			openSubState(new BasePrompt(320, 200, 'Waveform Settings', (state:BasePrompt) -> {
 				upperBox.isMinimized = true;
 				upperBox.bg.visible = false;
@@ -3820,16 +3824,16 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		updateChartData();
 		StageData.loadDirectory(PlayState.SONG);
 		LoadingState.loadAndSwitchState(new PlayState());
-		ClientPrefs.toggleVolumeKeys();
+		Controls.toggleVolumeKeys();
 	}
 	
-	override function openSubState(SubState:flixel.FlxSubState) {
+	override function openSubState(SubState:FlxSubState) {
 		if(!persistentUpdate) setSongPlaying(false);
 		super.openSubState(SubState);
 	}
 
 	override function closeSubState() {
-		ClientPrefs.toggleVolumeKeys(true);
+		Controls.toggleVolumeKeys(true);
 		super.closeSubState();
 		upperBox.isMinimized = true;
 		upperBox.visible = mainBox.visible = infoBox.visible = true;

@@ -731,10 +731,10 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		super.update(elapsed);
 
 		if(PsychUIInputText.focusOn != null) {
-			ClientPrefs.toggleVolumeKeys(false);
+			Controls.toggleVolumeKeys(false);
 			return;
 		}
-		ClientPrefs.toggleVolumeKeys();
+		Controls.toggleVolumeKeys();
 
 		var shiftMult:Float = 1;
 		var ctrlMult:Float = 1;

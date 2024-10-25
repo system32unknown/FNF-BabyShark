@@ -588,8 +588,8 @@ class FunkinLua {
 		});
 		set("exitSong", function(?skipTransition:Bool = false) {
 			if(skipTransition) {
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
+				MusicBeatState.skipNextTransIn = true;
+				MusicBeatState.skipNextTransOut = true;
 			}
 
 			FlxG.switchState(() -> PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
@@ -915,8 +915,7 @@ class FunkinLua {
 				else objectsArray.push(Reflect.getProperty(LuaUtils.getTargetInstance(), namesArray[i]));
 			}
 
-			if(!objectsArray.contains(null) && FlxG.overlap(objectsArray[0], objectsArray[1])) return true;
-			return false;
+			return (!objectsArray.contains(null) && FlxG.overlap(objectsArray[0], objectsArray[1]));
 		});
 		set("getPixelColor", function(obj:String, x:Int, y:Int) {
 			var spr:FlxSprite = LuaUtils.getObjectLoop(obj);
