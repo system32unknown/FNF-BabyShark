@@ -25,19 +25,19 @@ class PsychUISlider extends FlxSpriteGroup {
 		bar.color = mainColor;
 		add(bar);
 
-		minText = new FlxText(0, 0, 80, '', 8);
+		minText = new FlxText(0, 0, 80);
 		minText.alignment = CENTER;
 		minText.color = mainColor;
 		add(minText);
-		maxText = new FlxText(0, 0, 80, '', 8);
+		maxText = new FlxText(0, 0, 80);
 		maxText.alignment = CENTER;
 		maxText.color = mainColor;
 		add(maxText);
-		valueText = new FlxText(0, 0, 80, '', 8);
+		valueText = new FlxText(0, 0, 80);
 		valueText.alignment = CENTER;
 		valueText.color = handleColor;
 		add(valueText);
-		labelText = new FlxText(0, 0, wid, '', 8);
+		labelText = new FlxText(0, 0, wid);
 		labelText.alignment = CENTER;
 		add(labelText);
 
@@ -66,7 +66,6 @@ class PsychUISlider extends FlxSpriteGroup {
 				movingHandle = true;
 			
 			if(movingHandle) {
-				var point:FlxPoint = getScreenPosition(null, camera);
 				var lastValue:Float = FlxMath.roundDecimal(value, decimals);
 				value = Math.max(min, Math.min(max, FlxMath.remapToRange(FlxG.mouse.getViewPosition(camera).x, bar.x, bar.x + bar.width, min, max)));
 				if(this.onChange != null && lastValue != value) {
@@ -96,7 +95,7 @@ class PsychUISlider extends FlxSpriteGroup {
 	function _updateHandleX()
 		handle.x = bar.x - handle.width / 2 + FlxMath.remapToRange(FlxMath.roundDecimal(value, decimals), min, max, 0, bar.width);
 
-	function set_decimals(v:Int) {
+	function set_decimals(v:Int):Int {
 		decimals = v;
 		minText.text = Std.string(FlxMath.roundDecimal(min, decimals));
 		maxText.text = Std.string(FlxMath.roundDecimal(max, decimals));
@@ -114,7 +113,7 @@ class PsychUISlider extends FlxSpriteGroup {
 		return min;
 	}
 
-	function set_max(v:Float) {
+	function set_max(v:Float):Float {
 		if(v < min) min = v;
 		max = v;
 		maxText.text = Std.string(FlxMath.roundDecimal(max, decimals));
@@ -122,18 +121,18 @@ class PsychUISlider extends FlxSpriteGroup {
 		return max;
 	}
 
-	function set_value(v:Float) {
+	function set_value(v:Float):Float {
 		value = Math.max(min, Math.min(max, v));
 		valueText.text = Std.string(FlxMath.roundDecimal(value, decimals));
 		_updateHandleX();
 		return value;
 	}
 
-	function set_label(v:String) {
+	function set_label(v:String):String {
 		labelText.text = v;
 		_updatePositions();
 		return labelText.text;
 	}
-	function get_label()
+	function get_label():String
 		return labelText.text;
 }

@@ -423,8 +423,11 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function cachePopUpScore() {
-		for (rating in ratingsData) Paths.image('ratings/${rating.image}');
-		for (i in 0...10) Paths.image('number/num$i');
+		var uiFolder:String = "";
+		if (PlayState.stageUI != "normal") uiFolder = PlayState.uiPrefix + "UI/";
+
+		for (rating in ratingsData) Paths.image(uiFolder + 'ratings/${rating.image}'+ PlayState.uiPostfix);
+		for (i in 0...10) Paths.image(uiFolder + 'number/num$i' + PlayState.uiPostfix);
 	}
 
 	function popUpScore(note:Note = null):Void {
@@ -443,13 +446,15 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (!ClientPrefs.data.comboStacking) comboGroup.forEachAlive((spr:FlxSprite) -> FlxTween.globalManager.completeTweensOf(spr));
 
 		final placement:Float = FlxG.width * .35;
+
+		var uiFolder:String = "";
 		var antialias:Bool = ClientPrefs.data.antialiasing;
         final mult:Float = .7;
 
 		var comboOffset:Array<Array<Int>> = ClientPrefs.data.comboOffset;
 		var rating:FlxSprite = null;
 		if (showRating) {
-			rating = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image('ratings/${daRating.image}'));
+			rating = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiFolder + 'ratings/${daRating.image}' + PlayState.uiPostfix));
 			rating.screenCenter(Y).y -= 60 + comboOffset[0][1];
 			rating.x = placement - 40 + comboOffset[0][0];
 	
@@ -477,7 +482,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
 			var daLoop:Int = 0;
 			for (i in [for (i in 0...comboSplit.length) Std.parseInt(comboSplit[i])]) {
-				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image('number/num$i'));
+				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiFolder + 'number/num$i' + PlayState.uiPostfix));
 				numScore.setPosition(rating.x + (43 * daLoop++) - 50 + comboOffset[1][0], rating.y + 100 - comboOffset[1][1]);
 			
 				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate, -FlxG.random.int(130, 150) * playbackRate);

@@ -146,12 +146,12 @@ class PsychUIBox extends FlxSpriteGroup {
 		}
 	}
 
-	override function set_cameras(v:Array<FlxCamera>) {
+	override function set_cameras(v:Array<FlxCamera>):Array<FlxCamera> {
 		for (tab in tabs) tab.cameras = v;
 		return super.set_cameras(v);
 	}
 
-	override function set_camera(v:FlxCamera) {
+	override function set_camera(v:FlxCamera):FlxCamera {
 		for (tab in tabs) tab.camera = v;
 		return super.set_camera(v);
 	}
@@ -194,7 +194,7 @@ class PsychUIBox extends FlxSpriteGroup {
 		updateTabs();
 	}
 
-	function set_selectedTab(v:PsychUITab) {
+	function set_selectedTab(v:PsychUITab):PsychUITab {
 		if(v != null) {
 			@:bypassAccessor selectedName = v.name;
 			@:bypassAccessor selectedIndex = tabs.indexOf(v);
@@ -205,7 +205,7 @@ class PsychUIBox extends FlxSpriteGroup {
 		return (selectedTab = v);
 	}
 
-	function set_selectedName(v:String) {
+	function set_selectedName(v:String):String {
 		if(v == null || v.trim().length < 1) selectedTab = null;
 
 		for (tab in tabs) {
@@ -217,7 +217,7 @@ class PsychUIBox extends FlxSpriteGroup {
 		return null;
 	}
 
-	function set_selectedIndex(v:Int) {
+	function set_selectedIndex(v:Int):Int {
 		v = Std.int(Math.max(Math.min(v, tabs.length - 1), -1));
 		if(v > -1) selectedTab = tabs[v];
 		else selectedTab = null;
@@ -229,12 +229,12 @@ class PsychUIBox extends FlxSpriteGroup {
 		return null;
 	}
 
-	function set_canMinimize(v:Bool) {
+	function set_canMinimize(v:Bool):Bool {
 		isMinimized = false;
 		return (canMinimize = v);
 	}
 
-	function set_isMinimized(v:Bool) {
+	function set_isMinimized(v:Bool):Bool {
 		if(!v) {
 			bg.scale.y = _originalHeight;
 			bg.updateHitbox();

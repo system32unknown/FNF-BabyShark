@@ -286,7 +286,7 @@ class NotesColorSubState extends FlxSubState {
 				_storedColor = getShaderColor();
 				holdingOnObj = colorGradient;
 			} else if (pointerOverlaps(colorPalette)) {
-				setShaderColor(colorPalette.pixels.getPixel32(Std.int((pointerX() - colorPalette.x) / colorPalette.scale.x),  Std.int((pointerY() - colorPalette.y) / colorPalette.scale.y)));
+				setShaderColor(colorPalette.pixels.getPixel32(Std.int((pointerX() - colorPalette.x) / colorPalette.scale.x), Std.int((pointerY() - colorPalette.y) / colorPalette.scale.y)));
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 				updateColors();
 			} else if (pointerOverlaps(skinNote)) {
@@ -296,8 +296,8 @@ class NotesColorSubState extends FlxSubState {
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 			} else if(pointerY() >= hexTypeLine.y && pointerY() < hexTypeLine.y + hexTypeLine.height && Math.abs(pointerX() - 1000) <= 84) {
 				hexTypeNum = 0;
-				for (member in alphabetHex.letters) {
-					if(member.x - member.offset.x + member.width <= pointerX()) hexTypeNum++;
+				for (letter in alphabetHex.members[0].members) {
+					if(letter.x - letter.offset.x + letter.width <= pointerX()) hexTypeNum++;
 					else break;
 				}
 				if(hexTypeNum > 5) hexTypeNum = 5;
@@ -331,10 +331,11 @@ class NotesColorSubState extends FlxSubState {
 				}
 			} 
 		} else if(Controls.justPressed('reset') && hexTypeNum < 0) {
+			var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? ClientPrefs.defaultData.arrowRGBExtra : ClientPrefs.defaultData.arrowRGBPixelExtra);
 			if(FlxG.keys.pressed.SHIFT) {
 				for (i in 0...3) {
 					var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
-					var color:FlxColor = (!onPixel ? ClientPrefs.defaultData.arrowRGBExtra : ClientPrefs.defaultData.arrowRGBPixelExtra)[curSelectedNote][i];
+					var color:FlxColor = chosenRGB[curSelectedNote][i];
 					switch(i) {
 						case 0: getShader().r = strumRGB.r = color;
 						case 1: getShader().g = strumRGB.g = color;
@@ -343,7 +344,7 @@ class NotesColorSubState extends FlxSubState {
 					dataArray[curSelectedNote][i] = color;
 				}
 			}
-			setShaderColor((!onPixel ? ClientPrefs.defaultData.arrowRGBExtra : ClientPrefs.defaultData.arrowRGBPixelExtra)[curSelectedNote][curSelectedMode]);
+			setShaderColor(chosenRGB[curSelectedNote][curSelectedMode]);
 			FlxG.sound.play(Paths.sound('cancelMenu'), .6);
 			updateColors();
 		}
@@ -356,10 +357,10 @@ class NotesColorSubState extends FlxSubState {
 
 	function centerHexTypeLine() {
 		if(hexTypeNum > 0) {
-			var letter:AlphabetGlyph = alphabetHex.letters[hexTypeNum - 1];
+			var letter:AlphabetGlyph = alphabetHex.members[0].members[hexTypeNum - 1];
 			hexTypeLine.x = letter.x - letter.offset.x + letter.width;
 		} else {
-			var letter:AlphabetGlyph = alphabetHex.letters[0];
+			var letter:AlphabetGlyph = alphabetHex.members[0].members[0];
 			hexTypeLine.x = letter.x - letter.offset.x;
 		}
 		hexTypeLine.x += hexTypeLine.width;
@@ -367,7 +368,9 @@ class NotesColorSubState extends FlxSubState {
 	}
 
 	function changeSelectionMode(change:Int = 0) {
-		curSelectedMode = FlxMath.wrap(curSelectedMode + change, 0, 3);
+		curSelectedMode += change;
+		if (curSelectedMode < 0) curSelectedMode = 2;
+		if (curSelectedMode >= 3) curSelectedMode = 0;
 
 		modeBG.visible = true;
 		notesBG.visible = false;
@@ -375,7 +378,9 @@ class NotesColorSubState extends FlxSubState {
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 	function changeSelectionNote(change:Int = 0) {
-		curSelectedNote = FlxMath.wrap(curSelectedNote + change, 0, dataArray.length - 1);
+		curSelectedNote += change;
+		if (curSelectedNote < 0) curSelectedNote = dataArray.length - 1;
+		if (curSelectedNote >= dataArray.length) curSelectedNote = 0;
 		
 		modeBG.visible = false;
 		notesBG.visible = true;
@@ -518,9 +523,10 @@ class NotesColorSubState extends FlxSubState {
 	}
 
 	function fixColors() {
+		var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? ClientPrefs.defaultData.arrowRGBExtra : ClientPrefs.defaultData.arrowRGBPixelExtra);
 		for (i in 0...3) {
 			var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
-			var color:FlxColor = !onPixel ? ClientPrefs.defaultData.arrowRGBExtra[curSelectedNote][i] : ClientPrefs.defaultData.arrowRGBPixelExtra[curSelectedNote][i];
+			var color:FlxColor = chosenRGB[curSelectedNote][i];
 			switch(i) {
 				case 0: getShader().r = strumRGB.r = color;
 				case 1: getShader().g = strumRGB.g = color;
@@ -528,7 +534,7 @@ class NotesColorSubState extends FlxSubState {
 			}
 			dataArray[curSelectedNote][i] = color;
 		}
-		setShaderColor(!onPixel ? ClientPrefs.data.arrowRGBExtra[curSelectedNote][curSelectedMode] : ClientPrefs.data.arrowRGBPixelExtra[curSelectedNote][curSelectedMode]);
+		setShaderColor(chosenRGB[curSelectedNote][curSelectedMode]);
 		updateColors();
 	}
 

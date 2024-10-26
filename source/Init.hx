@@ -11,9 +11,12 @@ class Init extends flixel.FlxState {
 		#if LUA_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();
 
+		FlxG.save.bind('funkin', CoolUtil.getSavePath());
+		ClientPrefs.load();
+		Language.reloadPhrases();
+
 		Controls.load();
 		backend.Highscore.load();
-		Language.reloadPhrases();
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 
 		FlxG.fixedTimestep = false;

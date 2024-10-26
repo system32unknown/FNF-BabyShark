@@ -22,7 +22,7 @@ class CharacterForm {
 
 /**
     This is not from the D&B source code, it's completely made by LatestRelic825,
-	Modified by Altertoriel. (Ported to PE 1.0b)
+	Modified by Altertoriel. (Ported to PE 1.0)
 **/
 class CharacterSelectionState extends MusicBeatState {
 	var characters:Array<CharacterInSelect> = [
@@ -70,7 +70,6 @@ class CharacterSelectionState extends MusicBeatState {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Selecting Character'); #end
 		unlockedChrs = ClientPrefs.data.unlockedCharacters;
 
-		FlxG.fixedTimestep = false;
 		persistentUpdate = true;
 
 		camGame = initPsychCamera();
@@ -162,7 +161,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 	override function update(elapsed) {
 		Conductor.songPosition = FlxG.sound.music.time;
-		var controlSet:Array<String> = ["note_up", "note_down", "note_left", "note_right"];
+		var controlSet:Array<String> = ["note_left", "note_down", "note_up", "note_right"];
 		super.update(elapsed);
 
 		camGame.zoom = FlxMath.lerp(.7, camGame.zoom, Math.exp(-elapsed * 3.125));

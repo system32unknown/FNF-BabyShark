@@ -18,7 +18,7 @@ class NoteOffsetState extends MusicBeatState {
 	var camHUD:FlxCamera;
 	var camGame:FlxCamera;
 	var camOther:FlxCamera;
-	var defaultCamZoom:Float = 1;
+	var defaultCamZoom:Float = .7;
 
 	var boyfriendGroup:FlxSpriteGroup;
 	var gfGroup:FlxSpriteGroup;
@@ -46,7 +46,6 @@ class NoteOffsetState extends MusicBeatState {
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Adjusting Offsets and Combos'); #end
 
-		FlxG.fixedTimestep = false;
 		persistentUpdate = true;
 
 		FlxG.sound.destroy(true);
@@ -68,7 +67,6 @@ class NoteOffsetState extends MusicBeatState {
 		Paths.setCurrentLevel('week1');
 		new states.stages.StageWeek1();
 		camGame.scroll.set(120, 130);
-		defaultCamZoom = .7;
 
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);

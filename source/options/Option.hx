@@ -108,9 +108,9 @@ class Option {
 	var _name:String = null;
 	var _text:String = null;
 	var _translationKey:String = null;
-	function get_text() return _text;
+	function get_text():String return _text;
 
-	function set_text(newValue:String = '') {
+	function set_text(newValue:String = ''):String {
 		if(child != null) {
 			_text = newValue;
 			child.text = Language.getPhrase('setting_$_translationKey-${getValue()}', _text);

@@ -62,10 +62,23 @@ class PlayState extends MusicBeatState {
 	public var dadGroup:FlxSpriteGroup;
 	public var gfGroup:FlxSpriteGroup;
 	public static var curStage:String = '';
-	public static var stageUI:String = "normal";
+	public static var stageUI(default, set):String = "normal";
+	public static var uiPrefix:String = "";
+	public static var uiPostfix:String = "";
 	public static var isPixelStage(get, never):Bool;
 	@:noCompletion static function get_isPixelStage():Bool
 		return stageUI == "pixel" || stageUI.endsWith("-pixel");
+
+	@:noCompletion
+	static function set_stageUI(value:String):String {
+		uiPrefix = uiPostfix = "";
+		if (value != "normal") {
+			uiPrefix = value.split("-pixel")[0].trim();
+			if (value == "pixel" || value.endsWith("-pixel")) uiPostfix = "-pixel";
+		}
+		return stageUI = value;
+	}
+
 	public static var SONG:SwagSong = null;
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
@@ -779,9 +792,9 @@ class PlayState extends MusicBeatState {
 	function getCountdownSpriteNames(?givenUI: Null<String>):Array<String> {
 		givenUI ??= stageUI;
 		return switch(givenUI) {
-			case "pixel": ['${givenUI}UI/countdown/ready-pixel', '${givenUI}UI/countdown/set-pixel', '${givenUI}UI/countdown/date-pixel'];
+			case "pixel": ['pixelUI/ready-pixel', 'pixelUI/set-pixel', 'pixelUI/date-pixel'];
 			case "normal": ["countdown/ready", "countdown/set" ,"countdown/go"];
-			default: ['${givenUI}UI/countdown/ready', '${givenUI}UI/countdown/set', '${givenUI}UI/countdown/go'];
+			default: ['${uiPrefix}UI/ready${uiPostfix}', '${uiPrefix}UI/set${uiPostfix}', '${uiPrefix}UI/go${uiPostfix}'];
 		};
 	}
 
@@ -1840,15 +1853,11 @@ class PlayState extends MusicBeatState {
 	public var showComboNum:Bool = true;
 	public var showRating:Bool = true;
 	function cachePopUpScore() {
-		var uiPrefix:String = '';
-		var uiPostfix:String = '';
-		if (stageUI != "normal") {
-			uiPrefix = stageUI + 'UI/';
-			if (isPixelStage) uiPostfix = '-pixel';
-		}
+		var uiFolder:String = "";
+		if (stageUI != "normal") uiFolder = uiPrefix + "UI/";
 
-		for (rating in ratingsData) Paths.image(uiPrefix + 'ratings/${rating.image}' + uiPostfix);
-		for (i in 0...10) Paths.image(uiPrefix + 'number/num$i' + uiPostfix);
+		for (rating in ratingsData) Paths.image(uiFolder + 'ratings/${rating.image}' + uiPostfix);
+		for (i in 0...10) Paths.image(uiFolder + 'number/num$i' + uiPostfix);
 	}
 
 	public var ratingAcc:FlxPoint = FlxPoint.get();
@@ -1881,21 +1890,19 @@ class PlayState extends MusicBeatState {
 
 		final placement:Float = FlxG.width * .35;
 
-		var uiPrefix:String = '';
-		var uiPostfix:String = '';
+		var uiFolder:String = "";
 		var antialias:Bool = ClientPrefs.data.antialiasing;
 		final mult:Float = (isPixelStage ? daPixelZoom * .85 : .7);
 
 		if (stageUI != "normal") {
-			uiPrefix = 'pixelUI/';
-			if (isPixelStage) uiPostfix = '-pixel';
+			uiFolder = uiPrefix + "UI/";
 			antialias = !isPixelStage;
 		}
 
 		var comboOffset:Array<Array<Int>> = ClientPrefs.data.comboOffset;
 		var rating:FlxSprite = null;
 		if (showRating) {
-			rating = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'ratings/${daRating.image}' + uiPostfix));
+			rating = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiFolder + 'ratings/${daRating.image}' + uiPostfix));
 			rating.screenCenter(Y).y -= 60 + comboOffset[0][1];
 			rating.x = placement - 40 + comboOffset[0][0];
 	
@@ -1923,7 +1930,7 @@ class PlayState extends MusicBeatState {
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
 			var daLoop:Int = 0;
 			for (i in [for (i in 0...comboSplit.length) Std.parseInt(comboSplit[i])]) {
-				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiPostfix));
+				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiFolder + 'number/num$i' + uiPostfix));
 				numScore.setPosition(rating.x + (43 * daLoop++) - 50 + comboOffset[1][0], rating.y + 100 - comboOffset[1][1]);
 			
 				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate + ratingVel.x, -FlxG.random.int(130, 150) * playbackRate + ratingVel.y);

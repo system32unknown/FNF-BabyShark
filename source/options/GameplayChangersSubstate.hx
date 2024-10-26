@@ -350,8 +350,8 @@ class GameplayOption {
 
 	var _name:String = null;
 	var _text:String = null;
-	function get_text() return _text;
-	function set_text(newValue:String = '') {
+	function get_text():String return _text;
+	function set_text(newValue:String = ''):String {
 		if(child != null) {
 			_text = newValue;
 			child.text = Language.getPhrase('setting_$_name-$_text', _text);

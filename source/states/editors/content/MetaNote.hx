@@ -61,7 +61,7 @@ class MetaNote extends Note {
 	}
 
 	public var hasSustain(get, never):Bool;
-	function get_hasSustain() return (!isEvent && sustainLength > 0);
+	function get_hasSustain():Bool return (!isEvent && sustainLength > 0);
 
 	public function updateSustainToZoom(stepCrochet:Float, zoom:Float = 1) {
 		if(_lastZoom == zoom) return;

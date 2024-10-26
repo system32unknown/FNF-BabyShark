@@ -107,7 +107,7 @@ class DiscordClient {
 	public static function resetClientID()
 		clientID = _defaultID;
 
-	static function set_clientID(newID:String) {
+	static function set_clientID(newID:String):String {
 		var change:Bool = (clientID != newID);
 		clientID = newID;
 

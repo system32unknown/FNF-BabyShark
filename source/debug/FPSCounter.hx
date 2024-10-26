@@ -8,7 +8,7 @@ import flixel.util.FlxStringUtil;
 	the current framerate of an OpenFL project
 **/
 class FPSCounter extends openfl.text.TextField {
-    public var fontName:String = openfl.utils.Assets.getFont("assets/fonts/Proggy.ttf").fontName;
+    public var fontName:String = Paths.font("Proggy.ttf");
 
 	var timeColor:Float = 0;
 	public var checkLag:Bool = true;
@@ -34,13 +34,13 @@ class FPSCounter extends openfl.text.TextField {
 
 		autoSize = LEFT;
 		selectable = mouseEnabled = false;
-		text = "0 FPS";
+		text = "0FPS";
 		defaultTextFormat = new openfl.text.TextFormat(fontName, 16, -1);
 		fpsManager = new FPSUtil();
 	}
 
 	public dynamic function updateText():Void {
-		text = '${fpsManager.curFPS}FPS [${Std.int((1 / fpsManager.curFPS) * 1000)}ms]\n';
+		text = '${fpsManager.curFPS}FPS\n';
 		if (memType == "MEM" || memType == "MEM/PEAK") text += '${FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
 	}
 	public dynamic function preUpdateText():Void {

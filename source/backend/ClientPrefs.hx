@@ -96,8 +96,8 @@ package backend;
 }
 
 class ClientPrefs {
+	public static var data:SaveVariables = {};
 	public static var defaultData:SaveVariables = {};
-	public static var data:SaveVariables = defaultData;
 
 	public static function save() {
 		for (key in Reflect.fields(data))
@@ -106,7 +106,6 @@ class ClientPrefs {
 	}
 
 	public static function load() {
-		FlxG.save.bind('funkin', CoolUtil.getSavePath());
 		for (key in Reflect.fields(data))
 			if (key != 'gameplaySettings' && Reflect.hasField(FlxG.save.data, key))
 				Reflect.setField(data, key, Reflect.field(FlxG.save.data, key));

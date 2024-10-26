@@ -11,7 +11,7 @@ class FlxInterpolateColor {
 	public var alpha:Float = 0;
 
 	public var color(get, set):FlxColor;
-	inline function get_color() return FlxColor.fromRGBFloat(red, green, blue, alpha);
+	inline function get_color():FlxColor return FlxColor.fromRGBFloat(red, green, blue, alpha);
 	inline function set_color(c:FlxColor):FlxColor {
 		red = c.redFloat;
 		green = c.greenFloat;

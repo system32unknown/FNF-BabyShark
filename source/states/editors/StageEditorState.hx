@@ -1574,8 +1574,8 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 class StageEditorMetaSprite {
 	public var sprite:FlxSprite;
 	public var visible(get, set):Bool;
-	function get_visible() return sprite.visible;
-	function set_visible(v:Bool) return (sprite.visible = v);
+	function get_visible():Bool return sprite.visible;
+	function set_visible(v:Bool):Bool return (sprite.visible = v);
 
 	// basic variables for all types
 	public var type:String;
@@ -1587,10 +1587,10 @@ class StageEditorMetaSprite {
 	public var y(get, set):Float;
 	public var alpha(get, set):Float;
 	public var angle(get, set):Float;
-	function get_x() return sprite.x;
-	function set_x(v:Float) return (sprite.x = v);
-	function get_y() return sprite.y;
-	function set_y(v:Float) return (sprite.y = v);
+	function get_x():Float return sprite.x;
+	function set_x(v:Float):Float return (sprite.x = v);
+	function get_y():Float return sprite.y;
+	function set_y(v:Float):Float return (sprite.y = v);
 
 	public function setPosition(x:Float, y:Float) {
 		this.x = x;
@@ -1648,10 +1648,10 @@ class StageEditorMetaSprite {
 
 	public var flipX(get, set):Bool;
 	public var flipY(get, set):Bool;
-	function get_flipX() return sprite.flipX;
-	function set_flipX(v:Bool) return (sprite.flipX = (v && type != 'square'));
-	function get_flipY() return sprite.flipY;
-	function set_flipY(v:Bool) return (sprite.flipY = (v && type != 'square'));
+	function get_flipX():Bool return sprite.flipX;
+	function set_flipX(v:Bool):Bool return (sprite.flipX = (v && type != 'square'));
+	function get_flipY():Bool return sprite.flipY;
+	function set_flipY(v:Bool):Bool return (sprite.flipY = (v && type != 'square'));
 
 	// "animatedSprite" only variables
 	public var firstAnimation:String;
