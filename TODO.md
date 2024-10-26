@@ -1,8 +1,5 @@
 # Baby Shark's Big Funkin TODO list
 
-### `v0.1.7`
-- [x] Psych v1.0 Port
-
 ### Future versions
 - [ ] Remake Character / New Characters
 - [ ] New Main Menu / Freeplay Menu / Options Menu

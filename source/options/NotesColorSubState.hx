@@ -296,7 +296,7 @@ class NotesColorSubState extends FlxSubState {
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.6);
 			} else if(pointerY() >= hexTypeLine.y && pointerY() < hexTypeLine.y + hexTypeLine.height && Math.abs(pointerX() - 1000) <= 84) {
 				hexTypeNum = 0;
-				for (member in alphabetHex.members) {
+				for (member in alphabetHex.letters) {
 					if(member.x - member.offset.x + member.width <= pointerX()) hexTypeNum++;
 					else break;
 				}
@@ -356,10 +356,10 @@ class NotesColorSubState extends FlxSubState {
 
 	function centerHexTypeLine() {
 		if(hexTypeNum > 0) {
-			var letter:AlphabetRow = alphabetHex.members[hexTypeNum - 1];
+			var letter:AlphabetGlyph = alphabetHex.letters[hexTypeNum - 1];
 			hexTypeLine.x = letter.x - letter.offset.x + letter.width;
 		} else {
-			var letter:AlphabetRow = alphabetHex.members[0];
+			var letter:AlphabetGlyph = alphabetHex.letters[0];
 			hexTypeLine.x = letter.x - letter.offset.x;
 		}
 		hexTypeLine.x += hexTypeLine.width;

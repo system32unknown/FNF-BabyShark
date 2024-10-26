@@ -28,16 +28,16 @@ class MainMenuState extends MusicBeatState {
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
-
 	override function create() {
+		super.create();
 		#if MODS_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();
 
 		#if DISCORD_ALLOWED DiscordClient.changePresence(); #end
 		persistentUpdate = persistentDraw = true;
 
-		var yScroll:Float = .25;
-		var bg:FlxSprite = new FlxSprite(-80, Paths.image('menuDesat'));
+		var yScroll:Float = Math.max(0.25 - (.05 * (optionShit.length - 4)), .1);
+		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
@@ -46,30 +46,35 @@ class MainMenuState extends MusicBeatState {
 		bg.color = 0xFFFDE871;
 		add(bg);
 		
-		add(camFollow = new FlxObject(0, 0, 1, 1));
+		add(camFollow = new FlxObject(FlxG.width / 2, 0, 1, 1));
 
-		magenta = new FlxSprite(-80, bg.graphic);
+		magenta = new FlxSprite(bg.graphic);
 		magenta.antialiasing = ClientPrefs.data.antialiasing;
 		magenta.scrollFactor.set(0, yScroll);
-		magenta.active = false;
 		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
 		magenta.updateHitbox();
 		magenta.screenCenter();
 		magenta.visible = false;
+		magenta.active = false;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
 		for (num => option in optionShit) {
-			var item:FlxSprite = createMenuItem(option, 0, (num * 140) + 90);
-			item.y += (4 - optionShit.length) * 70; // Offsets for when you have anything other than 4 items
+			var item:FlxSprite = createItem(option, 0, (num * 140) + (108 - (Math.max(optionShit.length, 4) - 4) * 80));
+			menuItems.add(item);
+
+			item.scrollFactor.set(0, optionShit.length < 6 ? 0 : (optionShit.length - 4) * 0.135);
+			item.updateHitbox();
 			item.screenCenter(X);
 		}
 
 		if (rightOption != null) {
-			rightItem = createMenuItem(rightOption, FlxG.width - 60, 490, true);
+			rightItem = createItem(rightOption, FlxG.width - 60, 490, true);
+			rightItem.updateHitbox();
 			rightItem.x -= rightItem.width;
+			menuItems.add(rightItem);
 		}
 
 		var version:FlxText = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH}, ${Main.engineVer.COMMIT_NUM})\nBaby Shark\'s Big Funkin! v${FlxG.stage.application.meta.get('version')}', 16);
@@ -80,22 +85,18 @@ class MainMenuState extends MusicBeatState {
 		add(version);
 		changeItem();
 
-		super.create();
 		FlxG.camera.follow(camFollow, null, .15);
 	}
 
-	function createMenuItem(name:String, x:Float, y:Float, looping:Bool = false):FlxSprite {
-		var menuItem:FlxSprite = new FlxSprite(x, y);
-		menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_$name');
-		menuItem.animation.addByPrefix('idle', '$name idle', 24, true);
-		menuItem.animation.addByPrefix('selected', '$name selected', 24, !looping);
-		menuItem.animation.play('idle');
-		menuItem.updateHitbox();
-		
-		menuItem.antialiasing = ClientPrefs.data.antialiasing;
-		menuItem.scrollFactor.set();
-		menuItems.add(menuItem);
-		return menuItem;
+	function createItem(name:String, x:Float, y:Float, looping:Bool = false):FlxSprite {
+		final item:FlxSprite = new FlxSprite(x, y);
+		item.antialiasing = ClientPrefs.data.antialiasing;
+		item.scrollFactor.set();
+		item.frames = Paths.getSparrowAtlas('mainmenu/menu_$name');
+		item.animation.addByPrefix('idle', '$name idle', 24, true);
+		item.animation.addByPrefix('selected', '$name selected', 24, !looping);
+		item.animation.play('idle');
+		return item;
 	}
 
 	var selectedSomethin:Bool = false;
@@ -245,6 +246,6 @@ class MainMenuState extends MusicBeatState {
 		}
 		selectedItem.animation.play('selected');
 		selectedItem.centerOffsets();
-		camFollow.y = selectedItem.getGraphicMidpoint().y;
+		camFollow.y = selectedItem.getGraphicMidpoint().y - (menuItems.length > 4 ? menuItems.length * 8 : 0);
 	}
 }

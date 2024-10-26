@@ -216,7 +216,7 @@ class NoteOffsetState extends MusicBeatState {
 		rating.x = placement - 40 + comboOffset[0][0];
 
 		comboNums.x = placement - 50 + comboOffset[1][0];
-		comboNums.y = rating.y + rating.scale.y - comboOffset[1][1];
+		comboNums.y = rating.y + 100 - comboOffset[1][1];
 
 		reloadTexts();
 	}

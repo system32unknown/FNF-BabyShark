@@ -398,4 +398,9 @@ class ControlsSubState extends FlxSubState {
 		selectSpr.sprTracker = grpBlacks.members[Math.floor(curSelected * 2) + (curAlt ? 1 : 0)];
 		selectSpr.visible = (selectSpr.sprTracker != null);
 	}
+
+	override function destroy() {
+		Controls.save();
+		super.destroy();
+	}
 }

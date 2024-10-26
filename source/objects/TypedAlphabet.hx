@@ -58,7 +58,8 @@ class TypedAlphabet extends Alphabet {
 		if (start < 0) start = 0;
 
 		for (i in start...(upTo + 1)) {
-			if (members[i] != null) members[i].visible = true;
+			if (members[i] == null) continue;
+			members[i].visible = true;
 		}
 		onUpdate(text.substr(0, _trueCurLetter + 1));
 	}
