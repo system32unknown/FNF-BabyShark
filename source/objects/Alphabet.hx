@@ -24,7 +24,7 @@ enum abstract AlphabetGlyphType(String) from String to String {
 	var NORMAL:AlphabetGlyphType = 'normal';
 }
 
-class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter> {
+class Alphabet extends FlxTypedSpriteGroup<AlphabetRow> {
 	public var text(default, set):String;
 
 	public var type:AlphabetGlyphType;
@@ -37,7 +37,8 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter> {
 	public var alignment(default, set):AlphabetAlignment = LEFT;
 	public var scaleX(default, set):Float = 1;
 	public var scaleY(default, set):Float = 1;
-	public var rows:Int = 0;
+
+	public var letters(get, never):Array<AlphabetGlyph>;
 
 	public var distancePerItem:FlxPoint = FlxPoint.get(20, 120);
 	public var startPosition:FlxPoint = FlxPoint.get(); //for the calculations
@@ -51,82 +52,100 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter> {
 		this.text = text;
 	}
 
-	function set_alignment(align:AlphabetAlignment) {
+	function set_alignment(align:AlphabetAlignment):AlphabetAlignment {
 		alignment = align;
-		updateAlignment();
+		updateAlignment(align);
 		return align;
 	}
 
-	function updateAlignment() {
-		for (letter in members) {
-			var newOffset:Float = switch (alignment) {
-				case CENTER: letter.rowWidth * .5;
-				case RIGHT: letter.rowWidth;
-				default: 0;
+	function get_letters():Array<AlphabetGlyph> {
+		var retValue:Array<AlphabetGlyph> = [];
+		for (i in 0...members.length) retValue.concat(members[i].members);
+		return retValue;
+	}
+
+	public static function loadAlphabetData(?request:String = 'alphabet') {
+		var path:String = Paths.getPath('images/$request.json');
+		if (!FileSystem.exists(path)) path = Paths.getPath('images/alphabet.json');
+
+		AlphabetGlyph.allGlyphs = new Map<String, Glyph>();
+		try {
+			var data:Dynamic = Json.parse(File.getContent(path));
+			if (data.allowed != null && data.allowed.length > 0) {
+				for (i in 0...data.allowed.length) {
+					var glyph:String = data.allowed.charAt(i);
+					if (glyph == ' ') continue;
+					
+					// default values for the letters that don't have offsets
+					AlphabetGlyph.allGlyphs.set(glyph.toLowerCase(), {anim: glyph.toLowerCase(), offsets: [0.0, 0.0], offsetsBold: [0.0, 0.0]});
+				}
 			}
-	
-			letter.offset.x -= letter.alignOffset;
-			letter.alignOffset = newOffset * scale.x;
-			letter.offset.x += letter.alignOffset;
+
+			if (data.characters != null) {
+				for (char in Reflect.fields(data.characters)) {
+					var glyphData = Reflect.field(data.characters, char);
+					var glyph:String = char.toLowerCase().substr(0, 1);
+
+					if (AlphabetGlyph.allGlyphs.exists(glyph)) {
+						AlphabetGlyph.allGlyphs.set(glyph, {anim: glyphData.animation ?? glyph, offsets: glyphData.normal ?? [0.0, 0.0], offsetsBold: glyphData.bold ?? [0.0, 0.0]});
+					}
+				}
+			}
+			trace('Reloaded members successfully ($path)!');
+		} catch(e:Dynamic) FlxG.log.error('Error on loading alphabet data: $e');
+
+		if (!AlphabetGlyph.allGlyphs.exists('?')) AlphabetGlyph.allGlyphs.set('?', {anim: 'question', offsets: [0.0, 0.0], offsetsBold: [0.0, 0.0]});
+	}
+
+	function updateAlignment(align:AlphabetAlignment) {
+		final totalWidth:Float = width;
+
+		for (row in members) {
+			row.x = switch (align) {
+                case LEFT: x;
+                case CENTER: x + ((totalWidth - row.width) / 2);
+                case RIGHT: x + (totalWidth - row.width);
+			}
 		}
 	}
 
-	function set_text(newText:String):String {
+	function set_text(newText:String) {
 		newText = newText.replace('\\n', '\n');
-		clearLetters();
-		createLetters(newText);
-		updateAlignment();
+		updateText(newText);
+		updateAlignment(alignment);
 		return text = newText;
 	}
 
 	public function clearLetters() {
-		var i:Int = members.length;
-		while (i > 0) {
-			--i;
-			var letter:AlphaCharacter = members[i];
-			if (letter != null) {
-				letter.kill();
-				remove(letter);
-			}
-		}
+		for (row in members) row.destroy();
 		clear();
-		rows = 0;
 	}
 
 	public function setScale(newX:Float, ?newY:Float = 0.0) {
-		var lastX:Float = scale.x;
-		var lastY:Float = scale.y;
 		if (newY == 0.0) newY = newX;
+		scale.set(newX, newY);
 		@:bypassAccessor scaleX = newX;
 		@:bypassAccessor scaleY = newY;
 
-		scale.set(newX, newY);
-		softReloadLetters(newX / lastX, newY / lastY);
+		for (row in members) {
+            for (glyph in row) {
+                glyph.scale.set(newX, newY);
+                glyph.updateHitbox();
+                glyph.setPosition(row.x + (glyph.spawnPos.x * newX), row.y + (glyph.spawnPos.y * newY));
+            }
+        }
+
+        updateAlignment(alignment);
 	}
 
-	function set_scaleX(value:Float) {
-		if (value == scaleX) return value;
-
-		var ratio:Float = value / scale.x;
-		scale.x = value;
-		scaleX = value;
-		softReloadLetters(ratio, 1);
-		return value;
+	function set_scaleX(value:Float):Float {
+		setScale(value, scaleY);
+		return scaleX = value;
 	}
 
-	function set_scaleY(value:Float) {
-		if (value == scaleY) return value;
-
-		var ratio:Float = value / scale.y;
-		scale.y = value;
-		scaleY = value;
-		softReloadLetters(1, ratio);
-		return value;
-	}
-
-	public function softReloadLetters(ratioX:Float = 1, ratioY:Float = 0.0) {
-		if (ratioY == 0.0) ratioY = ratioX;
-		for (letter in members) if (letter != null) letter.setupAlphaCharacter((letter.x - x) * ratioX + x, (letter.y - y) * ratioY + y);
+	function set_scaleY(value:Float):Float {
+		setScale(scaleX, value);
+		return scaleY = value;
 	}
 
 	override function update(elapsed:Float) {
@@ -154,121 +173,92 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter> {
 		if (changeY) y = (targetY * 1.3 * distancePerItem.y) + startPosition.y;
 	}
 
-	static var Y_PER_ROW:Float = 85;
+	static var Y_PER_ROW:Float = 60;
 
-	function createLetters(newText:String) {
-		var consecutiveSpaces:Int = 0;
+	function updateText(newText:String) {
+		if (newText == null || text == newText) return;
 
-		var xPos:Float = 0;
-		var rowData:Array<Float> = [];
-		rows = 0;
+        clearLetters();
+
+		final glyphPos:FlxPoint = FlxPoint.get();
+		var row:AlphabetRow = new AlphabetRow();
+		var rows:Int = 0;
+
 		for (i in 0...newText.length) {
-			var character:String = newText.charAt(i);
-			if (character == '\n') {
-				xPos = 0;
-				rows++;
-				continue;
+			final char:String = newText.charAt(i);
+
+			if (char == '\n') {
+				glyphPos.set(0, ++rows * Y_PER_ROW);
+                add(row);
+                row = new AlphabetRow();
+                continue;
 			}
-			
-			var spaceChar:Bool = (character == " " || (type == BOLD && character == "_"));
-			if (spaceChar) consecutiveSpaces++;
 
-			if (AlphaCharacter.allLetters.exists(character.toLowerCase()) && (type == NORMAL || !spaceChar)) {
-				if (consecutiveSpaces > 0) {
-					xPos += 28 * consecutiveSpaces * scaleX;
-					rowData[rows] = xPos;
-					if (type == NORMAL && xPos >= FlxG.width * 0.65) {
-						xPos = 0;
-						rows++;
-					}
-				}
-				consecutiveSpaces = 0;
+            if (char == ' ') {
+                glyphPos.x += 28;
+                continue;
+            }
 
-				var letter:AlphaCharacter = cast recycle(AlphaCharacter, true);
-				letter.scale.set(scaleX, scaleY);
-				letter.rowWidth = 0;
+            if (!AlphabetGlyph.allGlyphs.exists(char.toLowerCase())) continue;
 
-				letter.setupAlphaCharacter(xPos, rows * Y_PER_ROW * scale.y, character, type);
-				@:privateAccess letter.parent = this;
+            final glyph:AlphabetGlyph = new AlphabetGlyph().setup(glyphPos.x, glyphPos.y, char, type);
+            glyph.row = rows;
+            glyph.color = color;
+            glyph.spawnPos.copyFrom(glyphPos);
+            row.add(glyph);
 
-				letter.row = rows;
-				var off:Float = 0;
-				if (type == NORMAL) off = 2;
-				xPos += letter.width + (letter.letterOffset[0] + off) * scale.x;
-				rowData[rows] = xPos;
-
-				add(letter);
-			}
+            glyphPos.x += glyph.width;
 		}
 
-		for (letter in members) letter.rowWidth = rowData[letter.row] / scale.x;
-		if (members.length > 0) rows++;
+        if (members.indexOf(row) == -1) add(row);
+
+		glyphPos.put();
 	}
+
+    @:noCompletion
+    override function set_color(value:Int):Int {
+        for (row in members) row.color = value;
+        return super.set_color(value);
+    }
 }
 
+class AlphabetRow extends FlxTypedSpriteGroup<AlphabetGlyph> {
+    @:noCompletion
+    override function set_color(value:Int):Int {
+        for (letter in members) letter.color = value;
+        return super.set_color(value);
+    }
+}
 
 ///////////////////////////////////////////
 // ALPHABET LETTERS, SYMBOLS AND NUMBERS //
 ///////////////////////////////////////////
 
-typedef Letter = {
-	?anim:Null<String>,
-	?offsets:Array<Float>,
-	?offsetsBold:Array<Float>
+typedef Glyph = {
+	var anim:Null<String>;
+	var offsets:Array<Float>;
+	var offsetsBold:Array<Float>;
 }
 
-class AlphaCharacter extends FlxSprite {
+class AlphabetGlyph extends FlxSprite {
 	public var image(default, set):String;
-	public static var allLetters:Map<String, Null<Letter>>;
-
-	public static function loadAlphabetData(request:String = 'alphabet') {
-		var path:String = Paths.getPath('images/$request.json');
-		if(!#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT)#end)
-			path = Paths.getPath('images/alphabet.json');
-
-		allLetters = new Map<String, Null<Letter>>();
-		try {
-			var data:Dynamic = Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
-			if (data.allowed != null && data.allowed.length > 0) {
-				for (i in 0...data.allowed.length) {
-					var char:String = data.allowed.charAt(i);
-					if (char == ' ') continue;
-
-					allLetters.set(char.toLowerCase(), null); //Allows character to be used in Alphabet
-				}
-			}
-
-			if (data.characters != null) {
-				for (char in Reflect.fields(data.characters)) {
-					var letterData = Reflect.field(data.characters, char);
-					var character:String = char.toLowerCase().substr(0, 1);
-					if ((letterData.animation != null || letterData.normal != null) && allLetters.exists(character))
-						allLetters.set(character, {anim: letterData.animation, offsets: letterData.normal, offsetsBold: letterData.type});
-				}
-			}
-			trace('Reloaded members successfully ($path)!');
-		} catch(e:Dynamic) FlxG.log.error('Error on loading alphabet data: $e');
-
-		if (!allLetters.exists('?')) allLetters.set('?', {anim: 'question'});
-	}
+	public static var allGlyphs:Map<String, Glyph>;
 
 	var parent:Alphabet;
-	public var alignOffset:Float = 0; //Don't change this
+	public var spawnPos:FlxPoint = FlxPoint.get();
 	public var letterOffset:Array<Float> = [0, 0];
 
 	public var row:Int = 0;
-	public var rowWidth:Float = 0;
 	public var character:String = '?';
 	public function new() {
 		super(x, y);
 		image = 'alphabet';
 		antialiasing = ClientPrefs.data.antialiasing;
 	}
-
-	public var curLetter:Letter = null;
-	public function setupAlphaCharacter(x:Float, y:Float, ?character:String = null, ?type:AlphabetGlyphType) {
-		this.x = x;
-		this.y = y;
+	
+	public var curGlyph:Glyph = null;
+	public function setup(x:Float, y:Float, ?character:String, ?type:AlphabetGlyphType):AlphabetGlyph {
+		setPosition(x, y);
 
 		if (parent != null) {
 			if (type == null) type = parent.type;
@@ -277,34 +267,24 @@ class AlphaCharacter extends FlxSprite {
 		
 		if (character != null) {
 			this.character = character;
-			curLetter = null;
-			var lowercase:String = this.character.toLowerCase();
-			if (allLetters.exists(lowercase)) curLetter = allLetters.get(lowercase);
-			else curLetter = allLetters.get('?');
 
-			var postfix:String = '';
+			var converted:String = character.toLowerCase();
+			final isLowerCase:Bool = converted == character;
+			var suffix:String = ' ';
+
+			curGlyph = allGlyphs.get(allGlyphs.exists(converted) ? converted : '?');
+
 			if (type == NORMAL) {
-				if (isTypeAlphabet(lowercase)) {
-					if (lowercase != this.character)
-						postfix = ' uppercase';
-					else postfix = ' lowercase';
-				} else postfix = ' normal';
-			} else postfix = ' bold';
+				if (isTypeAlphabet(converted)) suffix += isLowerCase ? 'lowercase' : 'uppercase';
+				else suffix += 'normal';
+			} else suffix += 'bold';
 
-			var alphaAnim:String = lowercase;
-			if (curLetter != null && curLetter.anim != null) alphaAnim = curLetter.anim;
-
-			var anim:String = alphaAnim + postfix;
-			animation.addByPrefix(anim, anim, 24);
-			animation.play(anim, true);
-			if (animation.curAnim == null) {
-				if (postfix != ' bold') postfix = ' normal';
-				anim = 'question' + postfix;
-				animation.addByPrefix(anim, anim, 24);
-				animation.play(anim, true);
-			}
+			converted = '${curGlyph.anim}$suffix';
+			animation.addByPrefix(converted, converted, 24);
+			animation.play(converted);
 		}
 		updateHitbox();
+		return this;
 	}
 
 	public static function isTypeAlphabet(c:String):Bool { // thanks kade
@@ -323,7 +303,6 @@ class AlphaCharacter extends FlxSprite {
 		if (animation != null) lastAnim = animation.name;
 		frames = Paths.getSparrowAtlas(image = name);
 		this.scale.set(parent.scaleX, parent.scaleY);
-		alignOffset = 0;
 		
 		if (lastAnim != null) {
 			animation.addByPrefix(lastAnim, lastAnim, 24);
@@ -338,19 +317,15 @@ class AlphaCharacter extends FlxSprite {
 
 		var add:Float = 110;
 		if (animation.curAnim.name.endsWith('bold')) {
-			if (curLetter != null && curLetter.offsetsBold != null) {
-				letterOffset[0] = curLetter.offsetsBold[0];
-				letterOffset[1] = curLetter.offsetsBold[1];
-			}
+			if (curGlyph.offsetsBold != null) letterOffset = curGlyph.offsetsBold;
 			add = 70;
-		} else {
-			if (curLetter != null && curLetter.offsets != null) {
-				letterOffset[0] = curLetter.offsets[0];
-				letterOffset[1] = curLetter.offsets[1];
-			}
+		} else if (curGlyph.offsets != null) {
+			letterOffset = curGlyph.offsets;
 		}
+
 		add *= scale.y;
-		offset.add(letterOffset[0] * scale.x, letterOffset[1] * scale.y - (add - height));
+		offset.x += letterOffset[0] * scale.x;
+		offset.y += letterOffset[1] * scale.y - (add - height);
 	}
 
 	override public function updateHitbox() {

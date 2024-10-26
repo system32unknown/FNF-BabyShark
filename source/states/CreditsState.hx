@@ -8,9 +8,9 @@ class CreditsState extends MusicBeatState {
 	static var titles(default, never):Array<Array<String>> = [
 		['Credits Sections'],
 		['Psych Engine',				'psych',			'Developers of Psych Engine',						'D662EB'],
-		["Funkin' Crew Inc",			'funkin',			'The only cool kickers of Friday Night Funkin\'',	'FD40AB'],
+		["Funkin' Crew",			'funkin',				'The only cool kickers of Friday Night Funkin\'',	'FD40AB'],
 		["Vs Dave and Bambi Team",		'daveandbambi',		'Developers of Dave and Bambi',						'216AFF'],
-		["Baby Shark\'s Big Funkin Team",	'babyshark',	'Developers of Baby Shark\'s Big Funkin',			'F8CB23'],
+		["Baby Shark's Big Funkin Team",	'babyshark',	'Developers of Baby Shark\'s Big Funkin',			'F8CB23'],
 		['']
 	];
 
@@ -49,7 +49,7 @@ class CreditsState extends MusicBeatState {
 	];
 
 	static var funkin(default, never):Array<Array<String>> = [
-		["Funkin' Crew Inc"],
+		["Funkin' Crew"],
 		['ninjamuffin99', 		'ninjamuffin99', 	"Programmer of Friday Night Funkin'", 							'https://x.com/ninja_muffin99', 	'F73838'],
 		['PhantomArcade',		'phantomarcade',	"Animator of Friday Night Funkin'",								'https://x.com/PhantomArcade3K',	'FFBB1B'],
 		['evilsk8r',			'evilsk8r',			"Artist of Friday Night Funkin'",								'https://x.com/evilsk8r',			'53E52C'],
@@ -366,7 +366,7 @@ class CreditSectionState extends MusicBeatState {
 					holdTime += elapsed;
 					var checkNewHold:Int = Math.floor((holdTime - .5) * 10);
 
-					if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
+					if (holdTime > .5 && checkNewHold - checkLastHold > 0)
 						changeSelection((checkNewHold - checkLastHold) * (upPressed ? -shiftMult : shiftMult));
 				}
 			}
@@ -465,6 +465,7 @@ class CreditSectionState extends MusicBeatState {
 				if(arr.length >= 5) arr.push(folder);
 				creditsStuff.push(arr);
 			}
+			creditsStuff.push(['']);
 		} else return switchToDefaultSection();
 		if (creditsStuff.length <= 0) return switchToDefaultSection();
 	}

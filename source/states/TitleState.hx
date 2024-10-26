@@ -26,11 +26,20 @@ class TitleState extends MusicBeatState {
 	override function create():Void {
 		Paths.clearStoredMemory();
 		super.create();
+		Paths.clearUnusedMemory();
+		FlxG.mouse.visible = false;
 		persistentUpdate = true;
 
 		#if CHECK_FOR_UPDATES checkUpdate(); #end
-		FlxG.mouse.visible = false;
-		startIntro();
+		prepareIntro();
+		loadJsonData();
+		Conductor.bpm = musicBPM;
+
+		curWacky = getIntroTextShit();
+		if (!seenIntro) {
+			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+			FlxG.sound.music.fadeIn(4, 0, 0.7);
+		} else skipIntro();
 	}
 
 	var logo:FlxSprite;
@@ -44,9 +53,7 @@ class TitleState extends MusicBeatState {
 	var curWacky:Array<String> = [];
 	public static var seenIntro:Bool = false;
 	var textGroup:FlxTypedGroup<FlxText>;
-	function startIntro() {
-		loadJsonData();
-		curWacky = getIntroTextShit();
+	function prepareIntro() {
 		add(introGroup = new FlxSpriteGroup());
 		introGroup.visible = false;
 
@@ -98,12 +105,6 @@ class TitleState extends MusicBeatState {
 		introGroup.add(gf);
 		introGroup.add(logo); //FNF Logo
 		introGroup.add(titleText); //"Press Enter to Begin" text
-
-		Conductor.bpm = musicBPM;
-		if (seenIntro) return;
-
-		FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-		FlxG.sound.music.fadeIn(4, 0, 0.7);
 	}
 
 	// JSON data
@@ -191,7 +192,6 @@ class TitleState extends MusicBeatState {
 				FlxG.switchState(() -> new MainMenuState());
 			} else {
 				FlxTween.tween(logo, {y: -700}, 1, {ease: FlxEase.backIn});
-				if (ClientPrefs.data.flashing) titleText.active = true;
 				titleText.animation.play('press');
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
@@ -209,10 +209,10 @@ class TitleState extends MusicBeatState {
 		super.update(elapsed);
 	}
 
-	function createText(textArray:Array<String>, offset:Float = 0) {
+	function createText(textArray:Array<String>, offset:Float = 0):Void {
 		for (i in 0...textArray.length) addMoreText(textArray[i], offset, i);
 	}
-	function addMoreText(text:String, offset:Float = 0, i:Int = -1) {
+	function addMoreText(text:String, offset:Float = 0, i:Int = -1):Void {
 		if (textGroup != null) {
 			final txt:FlxText = new FlxText(0, ((i == -1 ? textGroup.length : i) * 60) + 200 + offset, FlxG.width, text, 48);
 			txt.setFormat(Paths.font("babyshark.ttf"), 48, FlxColor.WHITE, CENTER);
@@ -220,7 +220,7 @@ class TitleState extends MusicBeatState {
 			textGroup.add(txt);
 		}
 	}
-	inline function deleteText() {
+	inline function deleteText():Void {
 		while (textGroup.members.length > 0) textGroup.remove(textGroup.members[0], true);
 	}
 
@@ -274,8 +274,6 @@ class TitleState extends MusicBeatState {
 	}
 
 	function skipIntro() {
-		if (seenIntro) return;
-
 		introGroup.visible = true;
 		FlxG.camera.flash(FlxColor.WHITE, 2);
 		seenIntro = true;

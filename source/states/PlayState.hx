@@ -1924,7 +1924,7 @@ class PlayState extends MusicBeatState {
 			var daLoop:Int = 0;
 			for (i in [for (i in 0...comboSplit.length) Std.parseInt(comboSplit[i])]) {
 				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiPrefix + 'number/num$i' + uiPostfix));
-				numScore.setPosition(rating.x + (43 * daLoop++) - 50 + comboOffset[1][0], rating.y + 100 - comboOffset[1][1]);
+				numScore.setPosition(rating.x + (43 * daLoop++) - 50 + comboOffset[1][0], rating.y + rating.scale.y - comboOffset[1][1]);
 			
 				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate + ratingVel.x, -FlxG.random.int(130, 150) * playbackRate + ratingVel.y);
 				numScore.acceleration.set(ratingAcc.x * playbackRate * playbackRate, FlxG.random.int(250, 300) * playbackRate * playbackRate + ratingAcc.y);

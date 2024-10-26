@@ -145,15 +145,15 @@ class GameplayChangersSubstate extends FlxSubState {
 					reloadCheckboxes();
 				}
 			} else {
-				final leftJustPressed:Bool = Controls.justPressed('ui_left');
-				if (leftJustPressed || Controls.justPressed('ui_right')) {
-					final leftPressed:Bool = Controls.pressed('ui_left');
-					var pressed:Bool = leftPressed || Controls.pressed('ui_right');
+				final leftPressed:Bool = Controls.pressed('ui_left');
+				if (leftPressed || Controls.pressed('ui_right')) {
+					final leftJustPressed:Bool = Controls.justPressed('ui_left');
+					var pressed:Bool = leftJustPressed || Controls.justPressed('ui_right');
 					if (holdTime > 0.5 || pressed) {
 						if (pressed) {
 							var add:Dynamic = null;
 							if(curOption.type != STRING)
-								add = leftJustPressed ? -curOption.changeValue : curOption.changeValue;
+								add = leftPressed ? -curOption.changeValue : curOption.changeValue;
 
 							switch(curOption.type) {
 								case INT, FLOAT, PERCENT:
@@ -174,7 +174,7 @@ class GameplayChangersSubstate extends FlxSubState {
 
 								case STRING:
 									var num:Int = curOption.curOption; //lol
-									if (leftPressed) num--;
+									if (leftJustPressed) num--;
 									else num++;
 
 									if(num < 0) num = curOption.options.length - 1;
@@ -203,7 +203,7 @@ class GameplayChangersSubstate extends FlxSubState {
 							curOption.change();
 							FlxG.sound.play(Paths.sound('scrollMenu'));
 						} else if (curOption.type != STRING) {
-							holdValue = Math.max(curOption.minValue, Math.min(curOption.maxValue, holdValue + curOption.scrollSpeed * elapsed * (leftJustPressed ? -1 : 1)));
+							holdValue = Math.max(curOption.minValue, Math.min(curOption.maxValue, holdValue + curOption.scrollSpeed * elapsed * (leftPressed ? -1 : 1)));
 							switch(curOption.type) {
 								case INT: curOption.setValue(Math.round(holdValue));	
 								case FLOAT, PERCENT: curOption.setValue(FlxMath.roundDecimal(FlxMath.bound(holdValue + curOption.changeValue - (holdValue % curOption.changeValue), curOption.minValue, curOption.maxValue), curOption.decimals));

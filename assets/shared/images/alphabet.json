@@ -1,8 +1,7 @@
 {
 	"allowed": "abcdefghijklmnopqrstuvwxyz0123456789áéíóúàèìòùâêîôûãëïõüäöåøæñçšžýÿß&()[]*+-<>'\"!?.❝❞_#$%:;@^,\\/|~¡¿{}•",
 	
-	"characters":
-	{
+	"characters": {
 		"ç": {
 			"bold": [0, -11]
 		},

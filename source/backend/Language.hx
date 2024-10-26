@@ -40,9 +40,9 @@ class Language {
 		if(alphaPath.startsWith('images/')) alphaPath = alphaPath.substr('images/'.length);
 		var pngPos:Int = alphaPath.indexOf('.png');
 		if(pngPos > -1) alphaPath = alphaPath.substring(0, pngPos);
-		AlphaCharacter.loadAlphabetData(alphaPath);
+		Alphabet.loadAlphabetData(alphaPath);
 		#else
-		AlphaCharacter.loadAlphabetData();
+		Alphabet.loadAlphabetData();
 		#end
 	}
 

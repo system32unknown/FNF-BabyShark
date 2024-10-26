@@ -140,13 +140,13 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		final upJustPressed:Bool = Controls.justPressed('ui_up');
 		if (upJustPressed || Controls.justPressed('ui_down')) {
 			holdPitchTime = 0;
-			upPressed ? playbackRate += 0.05 : playbackRate -= 0.05;
+			upJustPressed ? playbackRate += .05 : playbackRate -= .05;
 			setPlaybackRate();
 		}
 		if (Controls.pressed('ui_down') || upPressed) {
 			holdPitchTime += elapsed;
 			if (holdPitchTime > 0.6) {
-				playbackRate += 0.05 * (upPressed ? 1 : -1);
+				playbackRate += .05 * (upPressed ? 1 : -1);
 				setPlaybackRate();
 			}
 		}

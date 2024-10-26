@@ -772,7 +772,7 @@ class FunkinLua {
 			var mySprite:FlxSprite = MusicBeatState.getVariables().get(tag);
 			if(mySprite == null) return;
 
-			var instance:flixel.FlxState = LuaUtils.getTargetInstance();
+			var instance:FlxState = LuaUtils.getTargetInstance();
 			if(inFront) instance.add(mySprite);
 			else {
 				if(PlayState.instance == null || !PlayState.instance.isDead)
@@ -782,7 +782,7 @@ class FunkinLua {
 		});
 		set("addParallaxSprite", function(tag:String, front:Bool = false) {
 			var spr:ParallaxSprite = MusicBeatState.getVariables().get(tag);
-			var instance:flixel.FlxState = LuaUtils.getTargetInstance();
+			var instance:FlxState = LuaUtils.getTargetInstance();
 			if(front) instance.add(spr);
 			else {
 				if(PlayState.instance == null || !PlayState.instance.isDead)

@@ -87,7 +87,7 @@ class FreeplayState extends MusicBeatState {
 			for (song in leWeek.songs) {
 				var colors:Array<Int> = song[2];
 				if(colors == null || colors.length < 3) colors = [146, 113, 253];
-				addSong(song[0], i, song[1], CoolUtil.getColor(colors));
+				addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
 			}
 		}
 		Mods.loadTopMod();
@@ -228,7 +228,7 @@ class FreeplayState extends MusicBeatState {
 					changeSelection();
 					holdTime = 0;
 				}
-	
+
 				final upPressed:Bool = Controls.pressed('ui_up');
 				final upJustPressed:Bool = Controls.justPressed('ui_up');
 				if (Controls.justPressed('ui_down') || upJustPressed) {
@@ -244,7 +244,7 @@ class FreeplayState extends MusicBeatState {
 					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) 
 						changeSelection((checkNewHold - checkLastHold) * (upPressed ? -shiftMult : shiftMult));
 				}
-	
+
 				if (FlxG.mouse.wheel != 0) {
 					FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
 					changeSelection(-shiftMult * FlxG.mouse.wheel, false);
@@ -296,7 +296,6 @@ class FreeplayState extends MusicBeatState {
 
 				Song.loadFromJson(poop, songLowercase);
 				if (PlayState.SONG.needsVoices) {
-					Conductor.bpm = PlayState.SONG.bpm;
 					vocals = new FlxSound();
 					try {
 						var loadedVocals = Paths.voices(PlayState.SONG.song);
@@ -311,7 +310,7 @@ class FreeplayState extends MusicBeatState {
 					} catch(e:Dynamic) vocals = FlxDestroyUtil.destroy(vocals);
 				}
 
-				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song, true), .8);
+				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), .8);
 				FlxG.sound.music.pause();
 				instPlaying = curSelected;
 
@@ -337,7 +336,7 @@ class FreeplayState extends MusicBeatState {
 				PlayState.storyDifficulty = curDifficulty;
 			} catch(e:haxe.Exception) {
 				var errorStr:String = e.message;
-				if(errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1); //Missing chart
+				if(errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ${errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1)}'; //Missing chart
 				else errorStr += '\n\n' + e.stack;
 
 				missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
@@ -416,7 +415,6 @@ class FreeplayState extends MusicBeatState {
 		
 		Mods.currentModDirectory = songs[curSelected].folder;
 		PlayState.storyWeek = songs[curSelected].week;
-
 		Difficulty.loadFromWeek();
 		
 		var savedDiff:String = songs[curSelected].lastDifficulty;
@@ -429,7 +427,6 @@ class FreeplayState extends MusicBeatState {
 		else curDifficulty = 0;
 
 		changeDiff();
-
 		_updateSongLastDifficulty();
 	}
 
@@ -457,8 +454,8 @@ class FreeplayState extends MusicBeatState {
 		}
 		_lastVisibles = [];
 
-		var min:Int = Math.round(FlxMath.bound(lerpSelected - _drawDistance, 0, songs.length));
-		var max:Int = Math.round(FlxMath.bound(lerpSelected + _drawDistance, 0, songs.length));
+		var min:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected - _drawDistance)));
+		var max:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected + _drawDistance)));
 		for (i in min...max) {
 			var item:Alphabet = grpSongs.members[i];
 			item.visible = item.active = true;

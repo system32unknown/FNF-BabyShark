@@ -40,12 +40,10 @@ class Main extends Sprite {
 
 		debug.Logs.init();
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
+		ClientPrefs.load();
 		addChild(fpsVar = new FPSCounter());
 		fpsVar.visible = ClientPrefs.data.showFPS;
 		fpsVar.memType = ClientPrefs.data.memCounterType;
-
-		FlxG.save.bind('funkin', CoolUtil.getSavePath());
-		ClientPrefs.load();
 
 		#if !MODS_ALLOWED
 		final path:String = 'mods';

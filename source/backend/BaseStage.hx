@@ -2,7 +2,6 @@ package backend;
 
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.group.FlxGroup;
 
 import objects.Note;
 import objects.Character;
@@ -90,13 +89,13 @@ class BaseStage extends FlxBasic {
 	public function noteMissPress(direction:Int) {}
 
 	// Things to replace FlxGroup stuff and inject sprites directly into the state
-	function add(object:FlxBasic) return FlxG.state.add(object);
-	function remove(object:FlxBasic, splice:Bool = false) return FlxG.state.remove(object, splice);
-	function insert(position:Int, object:FlxBasic) return FlxG.state.insert(position, object);
+	function add(object:FlxBasic):FlxBasic return FlxG.state.add(object);
+	function remove(object:FlxBasic, splice:Bool = false):FlxBasic return FlxG.state.remove(object, splice);
+	function insert(position:Int, object:FlxBasic):FlxBasic return FlxG.state.insert(position, object);
 
-	public function addBehindGF(obj:FlxBasic) return insert(members.indexOf(game.gfGroup), obj);
-	public function addBehindBF(obj:FlxBasic) return insert(members.indexOf(game.boyfriendGroup), obj);
-	public function addBehindDad(obj:FlxBasic) return insert(members.indexOf(game.dadGroup), obj);
+	public function addBehindGF(obj:FlxBasic):FlxBasic return insert(members.indexOf(game.gfGroup), obj);
+	public function addBehindBF(obj:FlxBasic):FlxBasic return insert(members.indexOf(game.boyfriendGroup), obj);
+	public function addBehindDad(obj:FlxBasic):FlxBasic return insert(members.indexOf(game.dadGroup), obj);
 	public function setDefaultGF(name:String) { //Fix for the Chart Editor on Base Game stages
 		var gfVersion:String = PlayState.SONG.gfVersion;
 		if(gfVersion == null || gfVersion.length < 1) {
@@ -105,7 +104,7 @@ class BaseStage extends FlxBasic {
 		}
 	}
 
-	public function getStageObject(name:String) //Objects can only be accessed *after* create(), use createPost() if you want to mess with them on init
+	public function getStageObject(name:String):Dynamic //Objects can only be accessed *after* create(), use createPost() if you want to mess with them on init
 		return game.variables.get(name);
 
 	//start/end callback functions
@@ -123,18 +122,18 @@ class BaseStage extends FlxBasic {
 	function endSong():Bool if(onPlayState) return PlayState.instance.endSong(); else return false;
 	function moveCameraSection() if(onPlayState) PlayState.instance.moveCameraSection();
 	function moveCamera(isDad:Bool) if(onPlayState) PlayState.instance.moveCamera(isDad);
-	inline function get_paused() return game.paused;
-	inline function get_songName() return game.songName;
-	inline function get_isStoryMode() return PlayState.isStoryMode;
-	inline function get_seenCutscene() return PlayState.seenCutscene;
-	inline function get_inCutscene() return game.inCutscene;
-	inline function set_inCutscene(value:Bool) return game.inCutscene = value;
-	inline function get_canPause() return game.canPause;
-	inline function set_canPause(value:Bool) return game.canPause = value;
-	inline function get_members() return game.members;
+	inline function get_paused():Bool return game.paused;
+	inline function get_songName():String return game.songName;
+	inline function get_isStoryMode():Bool return PlayState.isStoryMode;
+	inline function get_seenCutscene():Bool return PlayState.seenCutscene;
+	inline function get_inCutscene():Bool return game.inCutscene;
+	inline function set_inCutscene(value:Bool):Bool return game.inCutscene = value;
+	inline function get_canPause():Bool return game.canPause;
+	inline function set_canPause(value:Bool):Bool return game.canPause = value;
+	inline function get_members():Array<FlxBasic> return game.members;
 
-	inline function get_game() return cast FlxG.state;
-	inline function get_onPlayState() return (Std.isOfType(FlxG.state, states.PlayState));
+	inline function get_game():Dynamic return cast FlxG.state;
+	inline function get_onPlayState():Bool return (Std.isOfType(FlxG.state, states.PlayState));
 
 	inline function get_boyfriend():Character return game.boyfriend;
 	inline function get_dad():Character return game.dad;

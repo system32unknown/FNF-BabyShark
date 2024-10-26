@@ -138,7 +138,7 @@ class MainMenuState extends MusicBeatState {
 				for (i in 0...optionShit.length) {
 					var memb:FlxSprite = menuItems.members[i];
 					if(FlxG.mouse.overlaps(memb)) {
-						var distance:Float = Math.sqrt(Math.pow(memb.getGraphicMidpoint().x - FlxG.mouse.viewX, 2) + Math.pow(memb.getGraphicMidpoint().y - FlxG.mouse.screenY, 2));
+						var distance:Float = Math.sqrt(Math.pow(memb.getGraphicMidpoint().x - FlxG.mouse.viewX, 2) + Math.pow(memb.getGraphicMidpoint().y - FlxG.mouse.viewY, 2));
 						if (dist < 0 || distance < dist) {
 							dist = distance;
 							distItem = i;
@@ -160,19 +160,26 @@ class MainMenuState extends MusicBeatState {
 
 		switch(curColumn) {
 			case CENTER:
-				if(Controls.pressed('ui_right') && rightOption != null) {
+				if(Controls.justPressed('ui_right') && rightOption != null) {
 					curColumn = RIGHT;
 					changeItem();
 				}
 
 			case RIGHT:
-				if(Controls.pressed('ui_left')) {
+				if(Controls.justPressed('ui_left')) {
 					curColumn = CENTER;
 					changeItem();
 				}
 		}
 
-		if (Controls.pressed('accept') || (FlxG.mouse.justPressed && allowMouse)) {
+		if (Controls.justPressed('back')) {
+			selectedSomethin = true;
+			FlxG.mouse.visible = false;
+			FlxG.sound.play(Paths.sound('cancelMenu'));
+			FlxG.switchState(() -> new TitleState());
+		}
+
+		if (Controls.justPressed('accept') || (FlxG.mouse.justPressed && allowMouse)) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			selectedSomethin = true;
 			FlxG.mouse.visible = false;

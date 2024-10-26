@@ -151,13 +151,13 @@ class BaseOptionsMenu extends FlxSubState {
 				default:
 					final leftJustPressed:Bool = Controls.justPressed('ui_left');
 					final leftPressed:Bool = Controls.pressed('ui_left');
-					if (leftJustPressed || Controls.justPressed('ui_right')) {
-						var pressed:Bool = (leftPressed || Controls.pressed('ui_right'));
+					if (leftPressed || Controls.pressed('ui_right')) {
+						var pressed:Bool = (leftJustPressed || Controls.justPressed('ui_right'));
 						if(holdTime > .5 || pressed) {
 							if(pressed) {
 								var add:Dynamic = null;
 								if(curOption.type != STRING)
-									add = leftJustPressed ? -curOption.changeValue : curOption.changeValue;
+									add = leftPressed ? -curOption.changeValue : curOption.changeValue;
 
 								switch(curOption.type) {
 									case INT, FLOAT, PERCENT:
@@ -175,7 +175,7 @@ class BaseOptionsMenu extends FlxSubState {
 
 									case STRING:
 										var num:Int = curOption.curOption; //lol
-										if(leftPressed) --num;
+										if(leftJustPressed) --num;
 										else num++;
 
 										if (num < 0) num = curOption.options.length - 1;
@@ -190,7 +190,7 @@ class BaseOptionsMenu extends FlxSubState {
 								curOption.change();
 								FlxG.sound.play(Paths.sound('scrollMenu'));
 							} else if(curOption.type != STRING) {
-								holdValue += curOption.scrollSpeed * elapsed * (leftJustPressed ? -1 : 1);
+								holdValue += curOption.scrollSpeed * elapsed * (leftPressed ? -1 : 1);
 								if(holdValue < curOption.minValue) holdValue = curOption.minValue;
 								else if (holdValue > curOption.maxValue) holdValue = curOption.maxValue;
 

@@ -22,8 +22,7 @@ class LanguageSubState extends FlxSubState {
 			for (file in FileSystem.readDirectory(directory)) {
 				if(file.toLowerCase().endsWith('.lang')) {
 					var langFile:String = file.substring(0, file.length - '.lang'.length).trim();
-					if(!languages.contains(langFile))
-						languages.push(langFile);
+					if(!languages.contains(langFile)) languages.push(langFile);
 
 					if(!displayLanguages.exists(langFile)) {
 						var path:String = '$directory/$file';

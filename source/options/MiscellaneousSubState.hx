@@ -26,8 +26,7 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 }
 
 function onChangeFPSCounter() {
-	if(Main.fpsVar != null) {
-		Main.fpsVar.visible = ClientPrefs.data.showFPS;
-		Main.fpsVar.memType = ClientPrefs.data.memCounterType;
-	}
+	if (Main.fpsVar == null) return;
+	Main.fpsVar.visible = ClientPrefs.data.showFPS;
+	Main.fpsVar.memType = ClientPrefs.data.memCounterType;
 }

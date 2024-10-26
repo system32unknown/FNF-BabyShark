@@ -83,13 +83,13 @@ class Controls {
 	}
 
 	// keyboard specific
-	public static function keyJustPressed(name:String) {
+	public static function keyJustPressed(name:String):Bool {
 		return _getKeyStatus(name, JUST_PRESSED);
 	}
-	public static function keyPressed(name:String) {
+	public static function keyPressed(name:String):Bool {
 		return _getKeyStatus(name, PRESSED);
 	}
-	public static function keyReleased(name:String) {
+	public static function keyReleased(name:String):Bool {
 		return _getKeyStatus(name, JUST_RELEASED);
 	}
 
@@ -97,7 +97,7 @@ class Controls {
 	static function _getKeyStatus(name:String, state:flixel.input.FlxInput.FlxInputState):Bool {
 		var binds:Array<FlxKey> = keyBinds[name];
 		if (binds == null) {
-			trace('Keybind "$name" doesn\'t exist.');
+			Logs.trace('Keybind "$name" doesn\'t exist.', WARNING);
 			return false;
 		}
 

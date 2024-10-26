@@ -145,7 +145,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 			typedText.sound = 'dialogue';
 
 		typedText.y = DEFAULT_TEXT_Y;
-		if (typedText.rows > 2) typedText.y -= LONG_TEXT_ADD;
+		if (typedText.length > 2) typedText.y -= LONG_TEXT_ADD;
 	}
 
 	function fetchNextDialog():DialogueLine {

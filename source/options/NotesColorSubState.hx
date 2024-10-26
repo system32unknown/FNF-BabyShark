@@ -356,10 +356,10 @@ class NotesColorSubState extends FlxSubState {
 
 	function centerHexTypeLine() {
 		if(hexTypeNum > 0) {
-			var letter:AlphaCharacter = alphabetHex.members[hexTypeNum - 1];
+			var letter:AlphabetRow = alphabetHex.members[hexTypeNum - 1];
 			hexTypeLine.x = letter.x - letter.offset.x + letter.width;
 		} else {
-			var letter:AlphaCharacter = alphabetHex.members[0];
+			var letter:AlphabetRow = alphabetHex.members[0];
 			hexTypeLine.x = letter.x - letter.offset.x;
 		}
 		hexTypeLine.x += hexTypeLine.width;
