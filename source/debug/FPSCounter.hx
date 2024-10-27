@@ -12,7 +12,7 @@ class FPSCounter extends openfl.text.TextField {
 
 	var timeColor:Float = 0;
 	public var checkLag:Bool = true;
-	public var delayDelta:Int = 50;
+	public var updateRate:Int = 50;
 	public var memType:String = "";
 
     public var fpsManager:FPSUtil;
@@ -39,10 +39,6 @@ class FPSCounter extends openfl.text.TextField {
 		fpsManager = new FPSUtil();
 	}
 
-	public dynamic function updateText():Void {
-		text = '${fpsManager.curFPS}FPS\n';
-		if (memType == "MEM" || memType == "MEM/PEAK") text += '${FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
-	}
 	public dynamic function preUpdateText():Void {
 		if (ClientPrefs.data.rainbowFps) {
 			timeColor = (timeColor % 360.) + (1. / (ClientPrefs.data.framerate / 120));
@@ -59,11 +55,16 @@ class FPSCounter extends openfl.text.TextField {
 		preUpdateText();
 		if (memory > mempeak) mempeak = memory;
 
-		if (deltaTimeout < delayDelta) {
+		if (deltaTimeout < updateRate) {
 			deltaTimeout += dt;
 			return;
 		}
 		updateText();
 		deltaTimeout = .0;
+	}
+	public dynamic function updateText():Void {
+		text = '${fpsManager.curFPS}FPS\n';
+		if (memType == "MEM" || memType == "MEM/PEAK") text += '${FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? ' / ${FlxStringUtil.formatBytes(mempeak)}' : '');
+		@:privateAccess fpsManager.cacheCount = fpsManager.times.length;
 	}
 }

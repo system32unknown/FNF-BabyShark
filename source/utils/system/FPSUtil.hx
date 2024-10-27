@@ -1,6 +1,7 @@
 package utils.system;
 
 class FPSUtil {
+	@:noCompletion var cacheCount:Float;
     @:noCompletion var times:Array<Float>;
 
 	/**
@@ -13,10 +14,10 @@ class FPSUtil {
 	}
 
     public function update() {
-		final now:Float = haxe.Timer.stamp() * 1000;
+		final now:Float = haxe.Timer.stamp();
 		times.push(now);
-		while (times[0] < now - 1000) times.shift();
-		curFPS = Math.min(FlxG.drawFramerate, times.length);
+		while (times[0] < now - 1) times.shift();
+		curFPS = Math.round((times.length + cacheCount) / 2) - 1;
     }
 
 	public static function getFPSAdjust(type:String, fps:Float):Float {

@@ -38,6 +38,7 @@ class Note extends FlxSprite {
 
 	public var strumTime:Float = 0;
 	public var noteData:Int = 0;
+	public var strum:StrumNote = null;
 
 	public var mustPress:Bool = false;
 	public var canBeHit:Bool = false;
@@ -49,6 +50,8 @@ class Note extends FlxSprite {
 	public var hitByOpponent:Bool = false;
 	public var prevNote:Note;
 	public var nextNote:Note;
+
+	public var spawned:Bool = false;
 
 	public var tail:Array<Note> = []; // for sustains
 	public var parent:Note;
@@ -408,34 +411,34 @@ class Note extends FlxSprite {
 		_lastValidChecked = '';
 	}
 
-	public function followStrumNote(myStrum:StrumNote, songSpeed:Float = 1) {
-		var strumX:Float = myStrum.x;
-		var strumY:Float = myStrum.y;
-		var strumAngle:Float = myStrum.angle;
-		var strumAlpha:Float = myStrum.alpha;
-		var strumDirection:Float = myStrum.direction;
+	public function followStrumNote(songSpeed:Float = 1) {
+		var strumX:Float = strum.x;
+		var strumY:Float = strum.y;
+		var strumAngle:Float = strum.angle;
+		var strumAlpha:Float = strum.alpha;
+		var strumDirection:Float = strum.direction;
 
 		distance = (.45 * (Conductor.songPosition - strumTime) * songSpeed * multSpeed);
-		if(!myStrum.downScroll) distance *= -1;
+		if(!strum.downScroll) distance *= -1;
 
 		if(copyAngle) angle = strumDirection - 90 + strumAngle + offsetAngle;
 
 		if(copyAlpha) alpha = strumAlpha * multAlpha;
-		if(copyX) @:privateAccess x = strumX + offsetX + myStrum._dirCos * distance;
+		if(copyX) @:privateAccess x = strumX + offsetX + strum._dirCos * distance;
 		if(copyY) {
-			@:privateAccess y = strumY + offsetY + correctionOffset + myStrum._dirSin * distance;
-			if(myStrum.downScroll && isSustainNote) {
+			@:privateAccess y = strumY + offsetY + correctionOffset + strum._dirSin * distance;
+			if(strum.downScroll && isSustainNote) {
 				if(PlayState.isPixelStage) y -= PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania] * 9.5;
 				y -= (frameHeight * scale.y) - (EK.swidths[PlayState.mania] / 2);
 			}
 		}
 	}
 
-	public function clipToStrumNote(myStrum:StrumNote) {
-		final center:Float = myStrum.y + offsetY + EK.swidths[PlayState.mania] / 2;
-		if((mustPress || !ignoreNote) && (wasGoodHit || (prevNote.wasGoodHit && !canBeHit))) {
+	public function clipToStrumNote() {
+		final center:Float = strum.y + offsetY + EK.swidths[PlayState.mania] / 2;
+		if((mustPress || !ignoreNote) && (wasGoodHit || hitByOpponent || (prevNote.wasGoodHit && !canBeHit))) {
 			final swagRect:FlxRect = clipRect ?? FlxRect.get(0, 0, frameWidth, frameHeight);
-			if (myStrum.downScroll) {
+			if (strum.downScroll) {
 				if(y - offset.y * scale.y + height >= center) {
 					swagRect.width = frameWidth;
 					swagRect.height = (center - y) / scale.y;

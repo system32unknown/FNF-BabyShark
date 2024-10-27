@@ -72,6 +72,10 @@ class Character extends FlxSprite {
 	public var hotflipX(default, set):Bool = false;
 	public var hotflipY(default, set):Bool = false;
 
+	public var prevCrochet:Float;
+	public var charaCrochet:Float;
+	final targetCrochet:Float = .075;
+
 	public function new(x:Float, y:Float, ?character:String = DEFAULT_CHARACTER, ?isPlayer:Bool = false, ?library:String) {
 		super(x, y);
 
@@ -80,6 +84,9 @@ class Character extends FlxSprite {
 		animOffsets = new Map<String, Array<Dynamic>>();
 		this.isPlayer = isPlayer;
 		changeCharacter(character);
+
+		prevCrochet = Conductor.stepCrochet;
+		charaCrochet = prevCrochet / 1000.;
 	}
 
 	inline function set_hotflipX(value:Bool):Bool {
@@ -293,7 +300,16 @@ class Character extends FlxSprite {
 		if (getAnimationName().startsWith('sing')) holdTimer += elapsed;
 		else if(isPlayer) holdTimer = 0;
 
-		if (!isPlayer && holdTimer >= Conductor.stepCrochet * (.0011 #if FLX_PITCH / (FlxG.sound.music != null ? FlxG.sound.music.pitch : 1) #end) * singDuration) {
+		if (prevCrochet != Conductor.stepCrochet) {
+			prevCrochet = Conductor.stepCrochet;
+			charaCrochet = prevCrochet / 1000.;
+		}
+
+		do {
+			if (charaCrochet < targetCrochet) charaCrochet *= 2.;
+			else break;
+		} while (true);
+		if (!isPlayer && holdTimer >= charaCrochet * singDuration) {
 			dance();
 			holdTimer = 0;
 		}
