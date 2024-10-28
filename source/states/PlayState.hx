@@ -54,6 +54,7 @@ class PlayState extends MusicBeatState {
 	public var songSpeed(default, set):Float = 1;
 	public var songSpeedType:String = "multiplicative";
 	public var noteKillOffset:Float = 350;
+	public final noteKillTime:Float = 350;
 	public var spawnTime:Float = 1500;
 
 	public var playbackRate(default, set):Float = 1;
@@ -118,7 +119,7 @@ class PlayState extends MusicBeatState {
 
 	public var gfSpeed:Int = 1;
 	public var health(default, set):Float = 1;
-	var healthLerp(default, null):Float = 1;
+	var healthLerp:Float = 1;
 
 	public dynamic function updateIconsPosition() {
 		final iconOffset:Int = 26;
@@ -128,7 +129,7 @@ class PlayState extends MusicBeatState {
 
 	inline public function noteSpawn() {
 		if (unspawnNotes.length > totalCnt) {
-			var targetNote:Note =  unspawnNotes[totalCnt];
+			var targetNote:Note = unspawnNotes[totalCnt];
 			var shownTime:Float = ClientPrefs.data.showNotes ? spawnTime / songSpeed : 0;
 			while (targetNote.strumTime - Conductor.songPosition < shownTime) {
 				var dunceNote:Note = targetNote;
@@ -141,8 +142,8 @@ class PlayState extends MusicBeatState {
 				callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
 				callOnHScript('onSpawnNote', [dunceNote]);
 				
-				var canBeHit:Bool = Conductor.songPosition > dunceNote.strumTime;
-				var tooLate:Bool = Conductor.songPosition > dunceNote.strumTime + noteKillOffset;
+				canBeHit = Conductor.songPosition > dunceNote.strumTime;
+				tooLate = Conductor.songPosition > dunceNote.strumTime + noteKillOffset;
 
 				var noteJudge:Bool = cpuControlled || !dunceNote.isSustainNote ? !canBeHit : tooLate;
 
@@ -178,8 +179,8 @@ class PlayState extends MusicBeatState {
 				if (notes.length > 0) {
 					if (startedCountdown) {
 						notes.forEachAlive((daNote:Note) -> {
-							var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
-							var tooLate:Bool = Conductor.songPosition - daNote.strumTime > Math.max(noteKillOffset, Conductor.stepCrochet);
+							canBeHit = Conductor.songPosition - daNote.strumTime > 0;
+							tooLate = Conductor.songPosition - daNote.strumTime > Math.max(noteKillOffset, Conductor.stepCrochet);
 
 							if (canBeHit && !tooLate) {
 								if (daNote.mustPress) {
@@ -325,6 +326,7 @@ class PlayState extends MusicBeatState {
 			Language.reloadPhrases();
 		}
 		nextReloadAll = false;
+		noteKillOffset = noteKillTime;
 		
 		startCallback = startCountdown;
 		endCallback = endSong;
@@ -473,7 +475,7 @@ class PlayState extends MusicBeatState {
 		startCharacterScripts(boyfriend.curCharacter);
 
 		add(noteGroup = new FlxTypedGroup<FlxBasic>());
-		showPopups = !ClientPrefs.data.showComboCounter && (showRating || showComboNum);
+		showPopups = ClientPrefs.data.showComboCounter && (showRating || showComboNum);
 		if (showPopups) add(popUpGroup = new FlxTypedSpriteGroup<Popup>());
 		add(uiGroup = new FlxSpriteGroup());
 
@@ -520,7 +522,10 @@ class PlayState extends MusicBeatState {
 			else moveCamera(!leSec.mustHitSection);
 		}
 
-		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return healthLerp, 0, 2);
+		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> {
+			if (ClientPrefs.data.smoothHealth) return healthLerp = FlxMath.lerp(healthLerp, health, .15);
+			return health;
+		}, 0, 2);
 		healthBar.screenCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
@@ -627,13 +632,10 @@ class PlayState extends MusicBeatState {
 	function set_songSpeed(value:Float):Float {
 		if (generatedMusic) {
 			final ratio:Float = value / songSpeed; //funny word huh
-			if (ratio != 1) {
-				for (note in notes.members) note.resizeByRatio(ratio);
-				for (note in unspawnNotes) note.resizeByRatio(ratio);
-			}
+			if (ratio != 1) for (note in notes.members) note.resizeByRatio(ratio);
 		}
 		songSpeed = value;
-		noteKillOffset = Math.max(Conductor.stepCrochet, 350 / songSpeed * playbackRate);
+		noteKillOffset = Math.max(Conductor.stepCrochet, noteKillTime / songSpeed * playbackRate);
 		return value;
 	}
 
@@ -1312,9 +1314,12 @@ class PlayState extends MusicBeatState {
 	var freezeCamera:Bool = false;
 	var allowDebugKeys:Bool = true;
 
-	var totalCnt:Int = 0;
+	var canBeHit:Bool = false;
+	var tooLate:Bool = false;
+
 	var hit:Int = 0;
 	var popUpHitNote:Note = null;
+	var totalCnt:Int = 0;
 	override function update(elapsed:Float) {
 		popUpHitNote = null; hit = 0;
 		if(ClientPrefs.data.camMovement && camlock) camFollow.setPosition(camlockpoint.x, camlockpoint.y);
@@ -1334,8 +1339,6 @@ class PlayState extends MusicBeatState {
 			if (nps > maxNPS) maxNPS = nps;
 			updateScoreText();
 		}
-
-		healthLerp = ClientPrefs.data.smoothHealth ? FlxMath.lerp(healthLerp, health, ((health / healthLerp) * (elapsed * 8)) * playbackRate) : health;
 
 		setOnScripts('curDecStep', curDecStep);
 		setOnScripts('curDecBeat', curDecBeat);
@@ -1900,7 +1903,9 @@ class PlayState extends MusicBeatState {
 	public var ratingAcc:FlxPoint = FlxPoint.get();
 	public var ratingVel:FlxPoint = FlxPoint.get();
 	function popUpScore(note:Note = null):Void {
-		if (showPopups) return;
+		var daloop:Int = 0;
+
+		if (!showPopups) return;
 		if (!ClientPrefs.data.comboStacking && popUpGroup.members.length > 0) {
 			for (spr in popUpGroup) {
 				spr.kill();
@@ -1926,13 +1931,12 @@ class PlayState extends MusicBeatState {
 
 		if (showComboNum) {
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
-			var daLoop:Int = 0;
 			for (i in [for (i in 0...comboSplit.length) Std.parseInt(comboSplit[i])]) {
 				var numScore:Popup = popUpGroup.recycle(Popup);
-				numScore.setupNumberData(uiFolder + 'number/num$i' + uiPostfix, daLoop);
+				numScore.setupNumberData(uiFolder + 'number/num$i' + uiPostfix, daloop);
 				popUpGroup.add(numScore);
 				numScore.numberOtherStuff();
-				++daLoop;
+				++daloop;
 			}
 		}
 		popUpGroup.sort((order:Int, p1:Popup, p2:Popup) -> return FlxSort.byValues(FlxSort.ASCENDING, p1.popUpTime, p2.popUpTime));
@@ -1978,6 +1982,7 @@ class PlayState extends MusicBeatState {
 				}
 			}
 			goodNoteHit(funnyNote);
+			popUpScore(funnyNote);
 		} else {
 			if (ClientPrefs.data.ghostTapping) callOnScripts('onGhostTap', [key]);
 			else noteMissPress(key);
@@ -2192,8 +2197,8 @@ class PlayState extends MusicBeatState {
 			vocals.volume = 1;
 
 			if(!isSus) {
+				++combo;
 				notesHitArray.push(Date.now());
-				combo++;
 				popUpHitNote = note;
 				addScore(note);
 			}
