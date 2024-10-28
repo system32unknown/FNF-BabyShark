@@ -20,14 +20,14 @@
 		{
 			"type": "lime",
 			"command": "test",
-			"targetConfiguration": "Windows",
+			"targetConfiguration": "cpp",
 			"problemMatcher": [
 				"$haxe-absolute",
 				"$haxe",
 				"$haxe-error",
 				"$haxe-trace"
 			],
-			"label": "lime: test windows",
+			"label": "lime: test cpp",
 			"group": {
 				"kind": "test",
 				"isDefault": true

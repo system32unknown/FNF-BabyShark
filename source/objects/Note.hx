@@ -462,4 +462,9 @@ class Note extends FlxSprite {
 		if (frames != null) frame = frames.frames[animation.frameIndex];
 		return rect;
 	}
+
+	override function kill() {
+		active = visible = false;
+		super.kill();
+	}
 }

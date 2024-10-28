@@ -54,7 +54,7 @@ class PlayState extends MusicBeatState {
 	public var songSpeed(default, set):Float = 1;
 	public var songSpeedType:String = "multiplicative";
 	public var noteKillOffset:Float = 350;
-	public var spawnTime:Float = 2000;
+	public var spawnTime:Float = 1500;
 
 	public var playbackRate(default, set):Float = 1;
 
@@ -967,8 +967,6 @@ class PlayState extends MusicBeatState {
 		while (i >= 0) {
 			var daNote:Note = unspawnNotes[i];
 			if(daNote.strumTime - 350 < time) {
-				daNote.active = false;
-				daNote.visible = false;
 				daNote.ignoreNote = true;
 
 				daNote.kill();
@@ -982,8 +980,6 @@ class PlayState extends MusicBeatState {
 		while (i >= 0) {
 			var daNote:Note = notes.members[i];
 			if(daNote.strumTime - 350 < time) {
-				daNote.active = false;
-				daNote.visible = false;
 				daNote.ignoreNote = true;
 				invalidateNote(daNote);
 			}
@@ -1861,11 +1857,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function KillNotes() {
-		while(notes.length > 0) {
-			var daNote:Note = notes.members[0];
-			daNote.active = daNote.visible = false;
-			invalidateNote(daNote);
-		}
+		while(notes.length > 0) invalidateNote(notes.members[0]);
 		unspawnNotes = []; eventNotes = [];
 	}
 

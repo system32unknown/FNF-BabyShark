@@ -204,7 +204,7 @@ class LoadingState extends MusicBeatState {
 			var noteSplash:String = NoteSplash.DEFAULT_SKIN;
 			if(song.splashSkin != null && song.splashSkin.length > 0) noteSplash = song.arrowSkin;
 			else noteSplash += NoteSplash.getSplashSkinPostfix();
-			imagesToPrepare.push("noteSplashes/" + noteSplash);
+			imagesToPrepare.push(noteSplash);
 
 			try {
 				var path:String = Paths.json('${Paths.CHART_PATH}/$folder/preload');
