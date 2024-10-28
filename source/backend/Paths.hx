@@ -1,6 +1,7 @@
 package backend;
 
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.FlxGraphic;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
@@ -14,6 +15,8 @@ class Paths {
 	inline public static var CHART_PATH = "charts";
 	inline public static var SOUND_EXT = "ogg";
 	inline public static var VIDEO_EXT = "mp4";
+
+	public static var popUpFramesMap:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
 
 	public static function excludeAsset(key:String) {
 		if (!dumpExclusions.contains(key)) dumpExclusions.push(key);

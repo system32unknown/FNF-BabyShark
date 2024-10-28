@@ -83,7 +83,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Icon Bounce:', "What should the Icon Bounces?", 'iconBounceType', STRING, ['Old', 'Psych', 'Dave', 'GoldenApple', 'Custom']));
 		addOption(new Option('Health Bar Type:', "What should the Health Bar Types?", 'healthTypes', STRING, ['Vanilla', 'Psych']));
 		addOption(new Option('Smooth Health', '', 'smoothHealth'));
-		addOption(new Option('Light Strums', '', 'lightStrum'));
 		var option:Option = new Option('Health Bar Opacity', 'How much opacity should the health bar and icons be.', 'healthBarAlpha', PERCENT);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
@@ -92,8 +91,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		option.decimals = 1;
 		addOption(option);
 		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms'));
-		addOption(new Option('Show Combo Counter', 'If checked, the combo counter will be shown.', 'showComboCounter'));
-		addOption(new Option('Show ms Timing', 'If checked, the ms timing will be shown.', 'showMsTiming'));
 		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'showNPS'));
 		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'showJudgement'));
 		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'ratingDisplay', STRING, ['Hud', 'World']));

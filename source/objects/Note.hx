@@ -43,6 +43,7 @@ class Note extends FlxSprite {
 	public var mustPress:Bool = false;
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
+	public var followed:Bool = false;
 
 	public var wasGoodHit:Bool = false;
 
@@ -391,6 +392,7 @@ class Note extends FlxSprite {
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
+		followed = false;
 
 		if (mustPress) {
 			canBeHit = (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult) && strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult));
@@ -412,6 +414,7 @@ class Note extends FlxSprite {
 	}
 
 	public function followStrumNote(songSpeed:Float = 1) {
+		if (followed) return;
 		var strumX:Float = strum.x;
 		var strumY:Float = strum.y;
 		var strumAngle:Float = strum.angle;
@@ -432,6 +435,7 @@ class Note extends FlxSprite {
 				y -= (frameHeight * scale.y) - (EK.swidths[PlayState.mania] / 2);
 			}
 		}
+		followed = true;
 	}
 
 	public function clipToStrumNote() {

@@ -51,9 +51,6 @@ class EditorPlayState extends MusicBeatSubstate {
 	var scoreTxt:FlxText;
 	var dataTxt:FlxText;
 
-	var msTimingTween:FlxTween;
-	var mstimingTxt:FlxText = new FlxText(0, 0, 0, "0ms");
-
 	var downScroll:Bool = ClientPrefs.data.downScroll;
 	var middleScroll:Bool = ClientPrefs.data.middleScroll;
 
@@ -99,11 +96,9 @@ class EditorPlayState extends MusicBeatSubstate {
 		
 		/**** NOTES ****/
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
-		grpNoteSplashes.ID = 0;
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		comboGroup = new FlxSpriteGroup();
-		comboGroup.ID = 0;
 		noteGroup = new FlxTypedGroup<FlxBasic>();
 		
 		timeTxt = new FlxText(0, 19, 400, "", 32);
@@ -466,19 +461,9 @@ class EditorPlayState extends MusicBeatSubstate {
 			rating.antialiasing = antialias;
 			rating.setGraphicSize(rating.width * mult);
 			rating.updateHitbox();
-			rating.ID = comboGroup.ID++;
 	
 			comboGroup.add(rating);
 			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
-		}
-
-		if (ClientPrefs.data.showMsTiming && mstimingTxt != null) {
-			mstimingTxt.setFormat(Paths.font("vcr.ttf"), 20, SpriteUtil.dominantColor(rating), CENTER, OUTLINE, FlxColor.BLACK);
-			mstimingTxt.text = '${MathUtil.truncateFloat(noteDiff / playbackRate)}ms';
-			mstimingTxt.setPosition(rating.x + 100, rating.y + 100);
-			mstimingTxt.updateHitbox();
-			mstimingTxt.ID = comboGroup.ID++;
-			comboGroup.add(mstimingTxt);
 		}
 
 		if (showComboNum) {
@@ -493,18 +478,11 @@ class EditorPlayState extends MusicBeatSubstate {
 				numScore.antialiasing = antialias;
 				numScore.setGraphicSize(numScore.width * .5);
 				numScore.updateHitbox();
-				numScore.ID = comboGroup.ID++;
 
 				comboGroup.add(numScore);
 				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 			}
 		}
-
-		if (ClientPrefs.data.showMsTiming) {
-			if (msTimingTween != null) {mstimingTxt.alpha = 1; msTimingTween.cancel();}
-			msTimingTween = FlxTween.tween(mstimingTxt, {alpha: 0}, .2 / playbackRate, {startDelay: Conductor.crochet * .001 / playbackRate});
-		}
-		comboGroup.sort(CoolUtil.sortByID);
 	}
 
 	function onKeyPress(event:KeyboardEvent):Void {

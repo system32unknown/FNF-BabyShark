@@ -71,9 +71,6 @@ class CoolUtil {
 		if (a == null || b == null) return 0;
 		return FlxSort.byValues(order, a.zIndex, b.zIndex);
 	}
-	public static inline function sortByID(i:Int, basic1:FlxBasic, basic2:FlxBasic):Int {
-		return basic1.ID > basic2.ID ? -i : basic2.ID > basic1.ID ? i : 0;
-	}
 
 	@:access(flixel.util.FlxSave.validate)
 	inline public static function getSavePath():String {

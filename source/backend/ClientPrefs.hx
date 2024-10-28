@@ -49,7 +49,6 @@ package backend;
 	public var hitsoundVolume:Float = 0;
 	public var pauseMusic:String = 'Tea Time';
 	public var comboStacking:Bool = false;
-	public var showMsTiming:Bool = false;
 	public var showComboCounter:Bool = false;
 	public var showNPS:Bool = false;
 	public var smoothHealth:Bool = false;
@@ -81,10 +80,12 @@ package backend;
 		'botplay' => false,
 	];
 
-	public var fullscreen:Bool = false;
-
 	public var comboOffset:Array<Array<Int>> = [[0, 0], [0, 0]];
 	public var ratingOffset:Int = 0;
+
+	// Optimizer
+	public var processFirst:Bool = false;
+	public var showNotes:Bool = true;
 
 	public var epicWindow:Int = 22;
 	public var sickWindow:Int = 45;
