@@ -7,7 +7,7 @@ class SpriteUtil {
 	 * @param saturated Bool
 	 * @return Int Color that is the most present.
 	 */
-	inline public static function getMostPresentColor(sprite:FlxSprite, saturated:Bool):FlxColor {
+	public static function getMostPresentColor(sprite:FlxSprite, saturated:Bool):FlxColor {
 		var colorMap:Map<FlxColor, Float> = [];
 		var color:FlxColor = 0;
 		var fixedColor:FlxColor = 0;
@@ -33,27 +33,26 @@ class SpriteUtil {
 		return FlxColor.fromInt(mostPresentColor);
 	}
 
-	inline public static function dominantColor(sprite:FlxSprite):FlxColor {
-		final countByColor:Map<Int, Int> = [];
-		for(col in 0...sprite.frameWidth) {
-			for(row in 0...sprite.frameHeight) {
+	public static function dominantColor(sprite:flixel.FlxSprite):FlxColor {
+		var countByColor:Map<Int, Int> = [];
+		for (col in 0...sprite.frameWidth) {
+			for (row in 0...sprite.frameHeight) {
 				var colorOfThisPixel:FlxColor = sprite.pixels.getPixel32(col, row);
-				if(colorOfThisPixel.alphaFloat > .05) {
-					colorOfThisPixel = FlxColor.fromRGB(colorOfThisPixel.red, colorOfThisPixel.green, colorOfThisPixel.blue, 255);
-					var count:Int = countByColor.exists(colorOfThisPixel) ? countByColor[colorOfThisPixel] : 0;
-					countByColor[colorOfThisPixel] = count + 1;
-				}
+				if (colorOfThisPixel.alphaFloat < .05) continue;
+	
+				colorOfThisPixel = FlxColor.fromRGB(colorOfThisPixel.red, colorOfThisPixel.green, colorOfThisPixel.blue, 255);
+				var count:Int = countByColor.exists(colorOfThisPixel) ? countByColor[colorOfThisPixel] : 0;
+				countByColor[colorOfThisPixel] = count + 1;
 			}
 		}
 
 		var maxCount:Int = 0;
-		var maxKey:FlxColor = 0; //after the loop this will store the max color
+		var maxKey:FlxColor = 0; // after the loop this will store the max color
 		countByColor[FlxColor.BLACK] = 0;
-		for(key => count in countByColor) {
-			if(count >= maxCount) {
-				maxCount = count;
-				maxKey = key;
-			}
+		for (key => count in countByColor) {
+			if (count <= maxCount) continue;
+			maxCount = count;
+			maxKey = key;
 		}
 		countByColor.clear();
 		return FlxColor.fromInt(maxKey);

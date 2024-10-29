@@ -1,10 +1,13 @@
 package backend;
 
+import flixel.util.FlxSave;
 class Highscore {
 	public static var weekScores:Map<String, Int> = new Map<String, Int>();
 	public static var songScores:Map<String, Int> = new Map<String, Int>();
 	public static var songRating:Map<String, Float> = new Map<String, Float>();
 	public static var songCombos:Map<String, String> = new Map<String, String>();
+
+	static var _save:FlxSave;
 
 	public static function resetSong(song:String, diff:Int = 0):Void {
 		var daSong:String = formatSong(song, diff);
@@ -106,11 +109,21 @@ class Highscore {
 		if (!weekScores.exists(daWeek)) setWeekScore(daWeek, 0);
 		return weekScores.get(daWeek);
 	}
+
 	public static function load():Void {
-		if (FlxG.save.data.weekScores != null) weekScores = FlxG.save.data.weekScores;
-		if (FlxG.save.data.songScores != null) songScores = FlxG.save.data.songScores;
-		if (FlxG.save.data.songRating != null) songRating = FlxG.save.data.songRating;
-		if (FlxG.save.data.songCombos != null) songCombos = FlxG.save.data.songCombos;
+		_save = new FlxSave();
+		_save.bind('scores', CoolUtil.getSavePath());
+		if (_save.data.weekScores != null) weekScores = _save.data.weekScores;
+		if (_save.data.songScores != null) songScores = _save.data.songScores;
+		if (_save.data.songRating != null) songRating = _save.data.songRating;
+		if (_save.data.songCombos != null) songCombos = _save.data.songCombos;
+	}
+
+	public static function save():Void {
+		_save.data.weekScores = weekScores;
+		_save.data.songScores = songScores;
+		_save.data.songRating = songRating;
+		_save.flush();
 	}
 
 	inline static function checkIfEmpty(s:String):Bool {

@@ -1,5 +1,6 @@
 package utils;
 
+import openfl.utils.Assets;
 import flixel.FlxBasic;
 import flixel.util.FlxSort;
 import flixel.addons.display.FlxBackdrop;
@@ -18,21 +19,21 @@ class CoolUtil {
 	 * @param sound					The sound stream (i.e: String, openfl.media.Sound, etc)
 	 * @param volume				Sound's volume
 	**/
-	public static function playSoundSafe(sound:flixel.system.FlxAssets.FlxSoundAsset, ?beepOnError:Bool = true, volume:Float = 1.0) {
+	public static function playSoundSafe(sound:flixel.system.FlxAssets.FlxSoundAsset, volume:Float = 1.0) {
 		if(sound != null) FlxG.sound.play(sound, volume);
 	}
 
-	inline public static function coolTextFile(path:String):Array<String> {
+	public static function coolTextFile(path:String):Array<String> {
 		var daList:String = null;
 		#if (sys && MODS_ALLOWED)
 		if(FileSystem.exists(path)) daList = File.getContent(path);
 		#else
-		if(openfl.utils.Assets.exists(path)) daList = openfl.utils.Assets.getText(path);
+		if(Assets.exists(path)) daList = Assets.getText(path);
 		#end
 		return daList == null ? [] : listFromString(daList);
 	}
 	
-	inline public static function listFromString(string:String):Array<String> {
+	public static function listFromString(string:String):Array<String> {
 		final daList:Array<String> = string.trim().split('\n');
 		return [for(i in 0...daList.length) daList[i].trim()];
 	}
@@ -111,14 +112,13 @@ class CoolUtil {
 	inline public static function colorFromString(color:String):FlxColor {
 		var hideChars:EReg = ~/[\t\n\r]/;
 		var color:String = hideChars.split(color).join('').trim();
-		if(color.startsWith('0x')) color = color.substring(color.length - (color.length >= 10 ? 8 : 6));
+		if (color.startsWith('0x')) color = color.substring(color.length - 6);
 
-		var colorNum:Null<FlxColor> = FlxColor.fromString(color);
-		colorNum ??= FlxColor.fromString('#$color');
+		var colorNum:Null<FlxColor> = FlxColor.fromString(color) ?? FlxColor.fromString('#$color');
 		return colorNum ?? FlxColor.WHITE;
 	}
 
-	inline public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
+	public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
 		return new FlxBackdrop(flixel.addons.display.FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
 	}
 
