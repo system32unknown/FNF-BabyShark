@@ -173,4 +173,25 @@ class CoolUtil {
 			}
 		} else toAdd.push(fullPath.replace('.json', ''));
 	}
+
+	/**
+		* Fill numbers with a specified number of digits and right-align with the number.
+		* @param value Floating-point number
+		* @param digits Integer
+		* @param code Integer (use fastCodeAt)
+	*/
+	inline public static function fillNumber(value:Float, digits:Int, code:Int):String {
+		var length:Int = Std.string(value).length;
+		var str:String = null;
+		var format:StringBuf = new StringBuf();
+ 
+		if(length < digits) {
+			for (i in 0...(digits - length))
+				format.addChar(code);
+			format.add(Std.string(value));
+		} else format.add(Std.string(value));
+ 
+		str = format.toString(); format = null;
+		return str;
+	}
 }

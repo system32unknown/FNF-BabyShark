@@ -77,6 +77,14 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(option);
 		option.onChange = playNoteSplashes;
 
+		var option:Option = new Option('Note Splash Count:', 'How much the Note Splashes should spawn every arrow?\n0 means no limits for appears splash.', 'splashCount', INT);
+		option.scrollSpeed = 30;
+		option.minValue = 0;
+		option.maxValue = 15;
+		option.changeValue = 1;
+		addOption(option);
+		addOption(new Option('Opponent Note Splash', 'If checked, Note Splash appears in Opponent Strum.', 'splashOpponent'));
+
 		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud'));
 		addOption(new Option('Time Bar:', "What should the Time Bar display?", 'timeBarType', STRING, ['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Disabled']));
 		addOption(new Option('Flashing Lights', "Uncheck this if you're sensitive to flashing lights!", 'flashing'));
@@ -94,7 +102,8 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'showNPS'));
 		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'showJudgement'));
 		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'ratingDisplay', STRING, ['Hud', 'World']));
-		
+		addOption(new Option('Botplay Text:', 'Alter Engine is changed the Botplay Text Place,\nSo you can make Location be like original Psych Engine.', 'botPlayPlace', STRING, ["Near the Time Bar", "Near the Health Bar"]));
+
 		var option:Option = new Option('Pause Music:', "What song do you prefer for the Pause Screen?", 'pauseMusic', STRING, ['None', 'Breakfast', 'Tea Time', 'Breakfast (Dave)', 'Breakfast (Pico)']);
 		addOption(option);
 		option.onChange = () -> {
@@ -104,8 +113,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		};
 		#if CHECK_FOR_UPDATES addOption(new Option('Check for Updates', 'On Release builds, turn this on to check for updates when you start the game.', 'checkForUpdates')); #end
 		#if desktop addOption(new Option('Discord Rich Presence', "Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord", 'discordRPC')); #end
-		addOption(new Option('Combo Stacking', "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read", 'comboStacking'));
-
 		super();
 		add(notes);
 		add(splashes);

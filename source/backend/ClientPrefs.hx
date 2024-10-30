@@ -10,6 +10,8 @@ package backend;
 	public var noteSkin:String = 'Default';
 	public var splashSkin:String = 'Psych';
 	public var splashAlpha:Float = .6;
+	public var splashCount:Int = 2;
+	public var splashOpponent:Bool = false;
 	public var lowQuality:Bool = false;
 	public var shaders:Bool = true;
 	public var framerate:Int = 60;
@@ -86,6 +88,8 @@ package backend;
 	// Optimizer
 	public var processFirst:Bool = false;
 	public var showNotes:Bool = true;
+
+	public var botPlayPlace:String = "Near the Health Bar";
 
 	public var epicWindow:Int = 22;
 	public var sickWindow:Int = 45;

@@ -45,8 +45,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 	public function new(dialogueList:DialogueFile, ?song:String = null) {
 		super();
 
-		// precache sounds
-		Paths.sound('dialogue');
+		Paths.sound('dialogue'); // precache sounds
 		Paths.sound('dialogueClose');
 
 		if (song != null && song != '') {
@@ -154,7 +153,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 			curDialogue = dialogueLines[currentDialogueIndex];
 		} while (curDialogue == null);
 
-			// Set empty text
+		// Set empty text
 		if (curDialogue.text == null)
 			curDialogue.text = '';
 
@@ -195,7 +194,6 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		}
 
 		var shouldKillCharacters:Bool = box == null && bgFade == null;
-
 		for (i in 0...dialogueCharacters.length) {
 			var currentCharacter:DialogueCharacter = dialogueCharacters[i];
 			if (currentCharacter == null) continue;
@@ -430,7 +428,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 	function onCharacterUpdate(elapsed:Float):Void {
 		for (i in 0...dialogueCharacters.length) {
-			var char = dialogueCharacters[i];
+			var char:DialogueCharacter = dialogueCharacters[i];
 			if (char == null) continue;
 
 			if (i == lastCharacter)
