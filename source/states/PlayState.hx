@@ -1419,7 +1419,7 @@ class PlayState extends MusicBeatState {
 									else if (!daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
 								} else {
 									if (!daNote.hitByOpponent) opponentNoteHit(daNote);
-									else if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
+									if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
 								}
 								if (daNote != null) invalidateNote(daNote);
 							}
@@ -2062,7 +2062,11 @@ class PlayState extends MusicBeatState {
 	}
 
 	function noteMiss(daNote:Note, opponent:Bool = false):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
-		if (daNote.animation.curAnim.name.endsWith("end")) return;
+		notes.forEachAlive(function(note:Note) {
+			if (daNote != note && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1)
+				invalidateNote(note);
+		});
+
 		if (!opponent) {
 			noteMissCommon(daNote.noteData, daNote);
 			stagesFunc((stage:BaseStage) -> stage.noteMiss(daNote));
