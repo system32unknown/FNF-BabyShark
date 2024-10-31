@@ -1,6 +1,7 @@
 package substates;
 
 import options.OptionsState;
+import utils.StringUtil;
 
 class PauseSubState extends MusicBeatSubstate {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
@@ -331,6 +332,6 @@ class PauseSubState extends MusicBeatSubstate {
 	}
 
 	function updateSkipTimeText() {
-		skipTimeText.text = '${CoolUtil.formatTime(Math.floor(curTime / 1000))} / ${CoolUtil.formatTime(Math.floor(FlxG.sound.music.length / 1000))}';
+		skipTimeText.text = '${StringUtil.formatTime(Math.floor(curTime / 1000))} / ${StringUtil.formatTime(Math.floor(FlxG.sound.music.length / 1000))}';
 	}
 }

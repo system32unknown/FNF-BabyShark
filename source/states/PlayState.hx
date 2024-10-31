@@ -365,7 +365,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		#if (LUA_ALLOWED && HSCRIPT_ALLOWED) // "SCRIPTS FOLDER" SCRIPTS
-		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'scripts/')) for (file in #if linux CoolUtil.sortAlphabetically(FileSystem.readDirectory(folder)) #else FileSystem.readDirectory(folder) #end) {
+		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'scripts/')) for (file in FileSystem.readDirectory(folder)) {
 			if (file.toLowerCase().endsWith('.lua')) new FunkinLua(folder + file);
 			if (file.toLowerCase().endsWith('.hx')) initHScript(folder + file);
 		}
@@ -476,11 +476,8 @@ class PlayState extends MusicBeatState {
 		judgementCounter.updateHitbox(); judgementCounter.screenCenter(Y);
 		updateScore();
 
-		var botplayTxtY:Float =0.0;
-		switch (ClientPrefs.data.botPlayPlace) {
-			case "Near the Health Bar": botplayTxtY = healthBar.y + (downScroll ? -90 : 70);
-			case "Near the Time Bar": botplayTxtY = timeBar.y + (downScroll ? -90 : 60);
-		}
+		var botplayTxtY:Float = timeBar.y + (downScroll ? -90 : 60);
+		if (ClientPrefs.data.botPlayPlace == "Near the Health Bar") botplayTxtY = healthBar.y + (downScroll ? 70 : -90);
 		botplayTxt = new FlxText(400, botplayTxtY, FlxG.width - 800, Language.getPhrase("Botplay", "BOTPLAY"), 32);
 		botplayTxt.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
@@ -515,7 +512,7 @@ class PlayState extends MusicBeatState {
 			canTweenCamZoomGf = 1.3;
 		}
 		// SONG SPECIFIC SCRIPTS
-		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'data/${Paths.CHART_PATH}/$songName/')) for (file in #if linux CoolUtil.sortAlphabetically(FileSystem.readDirectory(folder)) #else FileSystem.readDirectory(folder) #end) {
+		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'data/${Paths.CHART_PATH}/$songName/')) for (file in FileSystem.readDirectory(folder)) {
 			if(file.toLowerCase().endsWith('.lua')) new FunkinLua(folder + file);
 			if(file.toLowerCase().endsWith('.hx')) initHScript(folder + file);
 		}
@@ -920,19 +917,17 @@ class PlayState extends MusicBeatState {
 		if (ret == LuaUtils.Function_Stop) return;
 
 		judgementCounter.text = 'Max Combo: $maxCombo';
-		for (rating in ratingsData) judgementCounter.text += '\n${CoolUtil.capitalize(rating.name)}: ${rating.hits}';
+		for (rating in ratingsData) judgementCounter.text += '\n${StringUtil.capitalize(rating.name)}: ${rating.hits}';
 		updateScoreText();
 		callOnScripts('onUpdateScore', [miss]);
 	}
 	public dynamic function updateScoreText() {
 		var nps:Array<Float> = [Math.fround(bfNpsVal), Math.fround(bfNpsMax)];
-		var bfNpsStr:String = CoolUtil.fillNumber(nps[0], Std.string(nps[1]).length, ' '.fastCodeAt(0));
-
-		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [bfNpsStr, nps[1]])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
+		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps[0], nps[1]])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
 		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('miss_text', '| Misses:{1} ', [songMisses]); 
 		if (!cpuControlled) tempText += Language.getPhrase('acc_text', '| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
 		scoreTxt.text = tempText;
-		nps = null; bfNpsStr = null;
+		nps = null;
 	}
 
 	public dynamic function fullComboFunction() {
@@ -1329,9 +1324,9 @@ class PlayState extends MusicBeatState {
 			var songCalc:Float = songLength - curTime;
 			if(timeType == 'Time Elapsed' || timeType == 'Time Position' || timeType == 'Name Elapsed' || timeType == 'Name Time Position') songCalc = curTime;
 
-			var formattedsec:String = CoolUtil.formatTime(Math.floor(Math.max(0, (songCalc / playbackRate) / 1000)));
+			var formattedsec:String = StringUtil.formatTime(Math.floor(Math.max(0, (songCalc / playbackRate) / 1000)));
 			var formattedtxt:String = '${SONG.song} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}';
-			var timePos:String = '$formattedsec / ${CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000))}';
+			var timePos:String = '$formattedsec / ${StringUtil.formatTime(Math.floor((songLength / playbackRate) / 1000))}';
 			if (timeType != 'Song Name') timeTxt.text = switch(timeType) {
 				case 'Time Left' | 'Time Elapsed': formattedsec;
 				case 'Time Position': timePos;

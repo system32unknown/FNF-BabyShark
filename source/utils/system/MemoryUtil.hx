@@ -2,8 +2,6 @@ package utils.system;
 
 #if cpp
 import cpp.vm.Gc;
-#elseif sys
-import openfl.system.System;
 #end
 
 class MemoryUtil {
@@ -12,7 +10,11 @@ class MemoryUtil {
 		Gc.run(!minor);
 		if (!minor) Gc.compact();
 		#else
-		System.gc();
+		if (!gc_Enabled) openfl.system.System.gc();
 		#end
+	}
+	static var gc_Enabled:Bool = false;
+	public static function gcEnable(enabled:Bool = false) {
+		Gc.enable(gc_Enabled = enabled);
 	}
 }

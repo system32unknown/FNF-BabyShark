@@ -5,6 +5,7 @@ import backend.Rating;
 
 import objects.*;
 import utils.MathUtil;
+import utils.StringUtil;
 
 import flixel.FlxBasic;
 import flixel.util.FlxSort;
@@ -183,7 +184,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			}
 		}
 
-		if (showTime) timeTxt.text = CoolUtil.formatTime(Math.floor(Math.max(0, (Math.max(0, Conductor.songPosition - ClientPrefs.data.noteOffset) / playbackRate) / 1000))) + " / " + CoolUtil.formatTime(Math.floor((songLength / playbackRate) / 1000));	
+		if (showTime) timeTxt.text = StringUtil.formatTime(Math.floor(Math.max(0, (Math.max(0, Conductor.songPosition - ClientPrefs.data.noteOffset) / playbackRate) / 1000))) + " / " + StringUtil.formatTime(Math.floor((songLength / playbackRate) / 1000));	
 
 		if (unspawnNotes.length > totalCnt) {
 			var targetNote:Note = unspawnNotes[totalCnt];
