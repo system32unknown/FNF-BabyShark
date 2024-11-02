@@ -135,7 +135,6 @@ class PlayState extends MusicBeatState {
 	var healthLerp:Float = 1;
 
 	public var combo:Int = 0;
-	public var maxCombo:Int = 0;
 
 	public var healthBar:Bar;
 	public var timeBar:Bar;
@@ -177,7 +176,6 @@ class PlayState extends MusicBeatState {
 	public var scoreTxt:FlxText;
 
 	var timeTxt:FlxText;
-	var judgementCounter:FlxText;
 
 	public static var campaignScore:Int = 0;
 	public static var seenCutscene:Bool = false;
@@ -466,13 +464,6 @@ class PlayState extends MusicBeatState {
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
 		uiGroup.add(scoreTxt);
-
-		judgementCounter = new FlxText(2, 0, 0, "Max Combo: 0\nEpic: 0\nSick: 0\nGood: 0\nOk: 0\nBad: 0", 16);
-		judgementCounter.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, OUTLINE, FlxColor.BLACK);
-		judgementCounter.scrollFactor.set();
-		judgementCounter.visible = ClientPrefs.data.showJudgement && !hideHud;
-		uiGroup.add(judgementCounter);
-		judgementCounter.updateHitbox(); judgementCounter.screenCenter(Y);
 		updateScore();
 
 		var botplayTxtY:Float = timeBar.y + (downScroll ? -90 : 60);
@@ -914,17 +905,16 @@ class PlayState extends MusicBeatState {
 	public dynamic function updateScore(miss:Bool = false) {
 		var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
 		if (ret == LuaUtils.Function_Stop) return;
-
-		judgementCounter.text = 'Max Combo: $maxCombo';
-		for (rating in ratingsData) judgementCounter.text += '\n${StringUtil.capitalize(rating.name)}: ${rating.hits}';
 		updateScoreText();
 		callOnScripts('onUpdateScore', [miss]);
 	}
 	public dynamic function updateScoreText() {
 		var nps:Array<Float> = [Math.fround(bfNpsVal), Math.fround(bfNpsMax)];
 		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps[0], nps[1]])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
-		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('miss_text', '| Misses:{1} ', [songMisses]); 
-		if (!cpuControlled) tempText += Language.getPhrase('acc_text', '| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
+		if (!cpuControlled) {
+			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses:{1} ', [songMisses]); 
+			tempText += Language.getPhrase('acc_text', '| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
+		} else tempText += Language.getPhrase('hit_text', '| Hits:{1} ', [combo]);
 		scoreTxt.text = tempText;
 		nps = null;
 	}
@@ -2188,9 +2178,7 @@ class PlayState extends MusicBeatState {
 	function noteMissCommon(direction:Int, note:Note = null) {
 		var subtract:Float = pressMissDamage;
 		if(note != null) subtract = note.missHealth;
-
 		if(instakillOnMiss) doDeathCheck(true);
-		if(combo > maxCombo) maxCombo = combo;
 
 		health -= subtract * healthLoss;
 		songScore -= 10;

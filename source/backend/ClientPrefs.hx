@@ -56,7 +56,6 @@ package backend;
 	public var smoothHealth:Bool = false;
 	public var noteDiffTypes:String = "Simple";
 	public var accuracyType:String = 'Judgement';
-	public var showJudgement:Bool = true;
 	public var iconBounceType:String = 'Psych';
 	public var ratingDisplay:String = 'World';
 	public var useEpics:Bool = true;
