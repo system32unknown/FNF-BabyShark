@@ -12,7 +12,7 @@ class FPSCounter extends openfl.text.TextField {
 
 	var timeColor:Float = 0;
 	public var checkLag:Bool = true;
-	public var updateRate:Int = 50;
+	public var updateRate:Float = 50;
 	public var memType:String = "";
 
     public var fpsManager:FPSUtil;
