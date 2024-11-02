@@ -40,4 +40,9 @@ class MathUtil {
         if (Math.abs(result - target) < (precision * target)) result = target;
         return result;
     }
+
+    inline public static function interpolate(a:Float, b:Float, m:Float, e:Float = 1) {
+		m = FlxMath.bound(m, 0, 1);
+		return FlxMath.lerp(a, b, Math.pow(m, e));
+	}
 }

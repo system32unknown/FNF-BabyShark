@@ -1,8 +1,6 @@
 package backend;
 
 class MusicBeatSubstate extends FlxSubState {
-	public function new() {super();}
-
 	var curSection:Int = 0;
 	var stepsToDo:Int = 0;
 

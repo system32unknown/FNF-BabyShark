@@ -69,6 +69,7 @@ package backend;
 	public var lightStrum:Bool = true;
 	public var hitsoundTypes:String = 'Tick';
 	public var checkForUpdates:Bool = true;
+	public var skipGhostNotes:Bool = false;
 	public var unlockedCharacters:Array<String> = ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'];
 	public var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.,

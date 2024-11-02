@@ -83,6 +83,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		option.maxValue = 15;
 		option.changeValue = 1;
 		addOption(option);
+		option.onChange = playNoteSplashes;
 		addOption(new Option('Opponent Note Splash', 'If checked, Note Splash appears in Opponent Strum.', 'splashOpponent'));
 
 		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud'));
@@ -123,7 +124,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		super.changeSelection(change);
 		
 		switch(curOption.variable) {
-			case 'noteSkin', 'splashSkin', 'splashAlpha':
+			case 'noteSkin', 'splashSkin', 'splashAlpha', 'splashCount':
 				if(!notesShown) {
 					for (note in notes.members) {
 						FlxTween.cancelTweensOf(note);

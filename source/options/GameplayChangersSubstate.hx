@@ -3,6 +3,7 @@ package options;
 import objects.CheckboxThingie;
 import objects.AttachedText;
 import options.Option.OptionType;
+import utils.MathUtil;
 
 class GameplayChangersSubstate extends FlxSubState {
 	var curSelected:Int = 0;
@@ -12,6 +13,9 @@ class GameplayChangersSubstate extends FlxSubState {
 	var checkboxGroup:FlxTypedGroup<CheckboxThingie>;
 	var grpTexts:FlxTypedGroup<AttachedText>;
 
+	var scrollOption:GameplayOption;
+	var playbackOption:GameplayOption;
+
 	var curOption(get, never):GameplayOption;
 	function get_curOption() return optionsArray[curSelected]; //shorter lol
 
@@ -20,43 +24,45 @@ class GameplayChangersSubstate extends FlxSubState {
 		optionsArray.push(goption);
 
 		var option:GameplayOption = new GameplayOption('Scroll Speed', 'scrollspeed', FLOAT, 1);
-		option.scrollSpeed = 2.0;
-		option.minValue = 0.35;
-		option.changeValue = 0.05;
+		option.scrollSpeed = 1.0;
+		option.minValue = 0.01;
+		option.changeValue = 0.01;
 		option.decimals = 2;
 		if (goption.getValue() != "constant") {
 			option.displayFormat = '%vX';
-			option.maxValue = 3;
+			option.maxValue = 128;
 		} else {
 			option.displayFormat = "%v";
-			option.maxValue = 6;
+			option.maxValue = 1024;
 		}
 		optionsArray.push(option);
+		scrollOption = option;
 
 		#if FLX_PITCH
 		var option:GameplayOption = new GameplayOption('Playback Rate', 'songspeed', FLOAT, 1);
 		option.scrollSpeed = 1;
-		option.minValue = 0.5;
-		option.maxValue = 3.0;
-		option.changeValue = 0.05;
+		option.minValue = 0.01;
+		option.maxValue = 128;
+		option.changeValue = 0.01;
 		option.displayFormat = '%vX';
-		option.decimals = 2;
+		option.decimals = 3;
 		optionsArray.push(option);
+		playbackOption = option;
 		#end
 
 		var option:GameplayOption = new GameplayOption('Health Gain Multiplier', 'healthgain', FLOAT, 1);
-		option.scrollSpeed = 2.5;
+		option.scrollSpeed = 5;
 		option.minValue = 0;
-		option.maxValue = 5;
-		option.changeValue = 0.1;
+		option.maxValue = 10;
+		option.changeValue = 0.01;
 		option.displayFormat = '%vX';
 		optionsArray.push(option);
 
 		var option:GameplayOption = new GameplayOption('Health Loss Multiplier', 'healthloss', FLOAT, 1);
-		option.scrollSpeed = 2.5;
-		option.minValue = 0.5;
-		option.maxValue = 5;
-		option.changeValue = 0.1;
+		option.scrollSpeed = 5;
+		option.minValue = 0;
+		option.maxValue = 10;
+		option.changeValue = 0.01;
 		option.displayFormat = '%vX';
 		optionsArray.push(option);
 
@@ -150,6 +156,8 @@ class GameplayChangersSubstate extends FlxSubState {
 					final leftJustPressed:Bool = Controls.justPressed('ui_left');
 					var pressed:Bool = leftJustPressed || Controls.justPressed('ui_right');
 					if (holdTime > 0.5 || pressed) {
+						scrollOption.scrollSpeed = MathUtil.interpolate(1.5, 100, (holdTime - .5) / 5, 3);
+						playbackOption.scrollSpeed = MathUtil.interpolate(1, 100, (holdTime - .5) / 5, 3);
 						if (pressed) {
 							var add:Dynamic = null;
 							if(curOption.type != STRING)
@@ -253,7 +261,11 @@ class GameplayChangersSubstate extends FlxSubState {
 	}
 
 	function clearHold() {
-		if(holdTime > .5) FlxG.sound.play(Paths.sound('scrollMenu'));
+		if(holdTime > .5) {
+			FlxG.sound.play(Paths.sound('scrollMenu'));
+			scrollOption.setValue(MathUtil.floorDecimal(scrollOption.getValue(), scrollOption.decimals));
+			playbackOption.setValue(MathUtil.floorDecimal(playbackOption.getValue(), playbackOption.decimals));
+		}
 		holdTime = 0;
 	}
 	

@@ -2,11 +2,10 @@ package backend;
 
 import haxe.io.Bytes;
 import haxe.io.BytesOutput;
-import openfl.utils.ByteArray;
 import openfl.media.Sound;
 
 class BeatByte {
-    public static function make(secs:Int, byteBeat:(i:Int)->Int):Bytes {
+    public static function make(secs:Int, byteBeat:(i:Int) -> Int):Bytes {
         var output:BytesOutput = new BytesOutput();
 
         // Write RIFF header
@@ -46,12 +45,9 @@ class BeatByte {
         return bytes;
     }
 
-    public static function getSound(b:Bytes):FlxSound {
-        var bArray:ByteArray = ByteArray.fromBytes(b);
+    public static function getSound(b:Null<Bytes>):FlxSound {
         var tmpSound:Sound = new Sound();
-        tmpSound.loadCompressedDataFromByteArray(bArray, bArray.length);
-        var tmpFlxSnd:FlxSound = new FlxSound();
-        tmpFlxSnd.loadEmbedded(tmpSound);
-        return tmpFlxSnd;
+        tmpSound.loadCompressedDataFromByteArray(openfl.utils.ByteArray.fromBytes(b), b.length);
+        return new FlxSound().loadEmbedded(tmpSound);
     }
 }

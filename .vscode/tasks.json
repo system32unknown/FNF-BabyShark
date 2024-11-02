@@ -8,8 +8,7 @@
 			"problemMatcher": [
 				"$haxe-absolute",
 				"$haxe",
-				"$haxe-error",
-				"$haxe-trace"
+				"$haxe-error"
 			],
 			"label": "lime: build windows",
 			"group": {
@@ -24,8 +23,7 @@
 			"problemMatcher": [
 				"$haxe-absolute",
 				"$haxe",
-				"$haxe-error",
-				"$haxe-trace"
+				"$haxe-error"
 			],
 			"label": "lime: test cpp",
 			"group": {

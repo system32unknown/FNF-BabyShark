@@ -8,8 +8,8 @@ class OptimizeSubState extends BaseOptionsMenu {
 		addOption(new Option('Show Notes', "If unchecked, appearTime sets to 0. All notes will process by skipped notes.\nalso It forces to turn on botplay.", 'showNotes'));
 		addOption(new Option('Do Note Process before Spawning Notes', "Well, It's literally, yes.\nIt boosts game perfomance vastly, It works anytime yeah.\nIf you don't get it, enable this.", 'processFirst'));
         addOption(new Option('Light Strums', '', 'lightStrum'));
-        addOption(new Option('Show Combo Counter', 'If unchecked, the combo counter wont be shown.', 'showComboCounter'));
-		addOption(new Option('Combo Stacking', "If unchecked, Ratings and Combo won't stack, saving on System Memory and making them easier to read", 'comboStacking'));
+        addOption(new Option('Show Popup Counter', 'If unchecked, the popup counter wont be shown.', 'showComboCounter'));
+		addOption(new Option('Popup Stacking', "If unchecked, The popup won't stack. but it's using recycling system,\nso it doesn't have effects so much.", 'comboStacking'));
         super();
     }
 }

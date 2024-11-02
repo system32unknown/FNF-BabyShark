@@ -13,6 +13,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 
 		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums'));
 		addOption(new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping'));
+		addOption(new Option('Remove Overlapped Notes', "If checked, Remove notes which hidden behind other.\n(Except one which can see by multiplied scroll speed)", 'skipGhostNotes'));
 
 		var option:Option = new Option('Auto Pause', "If checked, the game automatically pauses if the screen isn't on focus.", 'autoPause');
 		addOption(option);

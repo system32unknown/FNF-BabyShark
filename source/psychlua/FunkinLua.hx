@@ -514,29 +514,29 @@ class FunkinLua {
 		//stupid bietch ass functions
 		set("addScore", function(value:Int = 0) {
 			game.songScore += value;
-			game.RecalculateRating();
+			game.recalculateRating();
 		});
 		set("addMisses", function(value:Int = 0) {
 			game.songMisses += value;
-			game.RecalculateRating();
+			game.recalculateRating();
 		});
 		set("addHits", function(value:Int = 0) {
 			game.songHits += value;
-			game.RecalculateRating();
+			game.recalculateRating();
 		});
 		set("setScore", function(value:Int = 0) {
 			game.songScore = value;
-			game.RecalculateRating();
+			game.recalculateRating();
 			return value;
 		});
 		set("setMisses", function(value:Int = 0) {
 			game.songMisses = value;
-			game.RecalculateRating();
+			game.recalculateRating();
 			return value;
 		});
 		set("setHits", function(value:Int = 0) {
 			game.songHits = value;
-			game.RecalculateRating();
+			game.recalculateRating();
 			return value;
 		});
 

@@ -156,7 +156,7 @@ class Note extends FlxSprite {
 
 	function set_noteType(value:String):String {
 		noteSplashData.texture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
-		defaultRGB();
+		if (rgbShader != null && rgbShader.enabled) defaultRGB();
 
 		if(noteData > -1 && noteType != value) {
 			switch(value) {
