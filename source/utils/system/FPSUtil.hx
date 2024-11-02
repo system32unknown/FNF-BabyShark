@@ -2,7 +2,7 @@ package utils.system;
 
 class FPSUtil {
 	@:noCompletion var cacheCount:Float;
-    @:noCompletion var times:Array<Float>;
+    @:noCompletion var times:Array<Int>;
 
 	/**
 		The current frame rate, expressed using frames-per-second
@@ -14,9 +14,9 @@ class FPSUtil {
 	}
 
     public function update() {
-		final now:Float = haxe.Timer.stamp();
+		final now:Int = Std.int(haxe.Timer.stamp() * 1000);
 		times.push(now);
-		while (times[0] < now - 1) times.shift();
+		while (times[0] < now - 1000) times.shift();
 		curFPS = Math.round((times.length + cacheCount) / 2) - 1;
     }
 
