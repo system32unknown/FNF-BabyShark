@@ -55,7 +55,7 @@ class FPSCounter extends openfl.text.TextField {
 		preUpdateText();
 		if (memory > mempeak) mempeak = memory;
 
-		deltaTimeout += deltaTime;
+		deltaTimeout += dt;
 		if (deltaTimeout < 1 / updateRate) return;
 		updateText();
 		deltaTimeout = .0;
