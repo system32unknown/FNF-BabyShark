@@ -915,16 +915,21 @@ class PlayState extends MusicBeatState {
 		var ret:Dynamic = callOnScripts('preUpdateScore', [miss], true);
 		if (ret == LuaUtils.Function_Stop) return;
 
-		judgementCounter.text = 'Max Combo: $maxCombo';
-		for (rating in ratingsData) judgementCounter.text += '\n${StringUtil.capitalize(rating.name)}: ${rating.hits}';
+		if (cpuControlled) judgementCounter.text = 'Hits: $combo';
+		else {
+			judgementCounter.text = 'Max Combo: $maxCombo';
+			for (rating in ratingsData) judgementCounter.text += '\n${StringUtil.capitalize(rating.name)}: ${rating.hits}';
+		}
 		updateScoreText();
 		callOnScripts('onUpdateScore', [miss]);
 	}
 	public dynamic function updateScoreText() {
 		var nps:Array<Float> = [Math.fround(bfNpsVal), Math.fround(bfNpsMax)];
 		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps[0], nps[1]])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
-		if (!(cpuControlled || instakillOnMiss)) tempText += Language.getPhrase('miss_text', '| Misses:{1} ', [songMisses]); 
-		if (!cpuControlled) tempText += Language.getPhrase('acc_text', '| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
+		if (!cpuControlled) {
+			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses:{1} ', [songMisses]); 
+			tempText += Language.getPhrase('acc_text', '| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
+		}
 		scoreTxt.text = tempText;
 		nps = null;
 	}

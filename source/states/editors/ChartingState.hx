@@ -127,6 +127,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var zoomList:Array<Float> = [.25, .5, 1, 2, 3, 4, 6, 8, 12, 16, 24];
 	var curZoom:Float = 1;
 
+	var blockPressWhileTypingOnStepper:Array<PsychUINumericStepper> = [];
+
 	var mustHitIndicator:FlxSprite;
 	var eventIcon:FlxSprite;
 	var icons:Array<HealthIcon> = [];
@@ -2185,6 +2187,11 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var objX:Int = 10;
 		var objY:Int = 25;
 
+		var stepperSpamCloseness:PsychUINumericStepper;
+		var stepperSpamLength:PsychUINumericStepper;
+		var spamLength:Float = 5;
+		var spamCloseness:Float = 2;
+
 		susLengthStepper = new PsychUINumericStepper(objX, objY, Conductor.stepCrochet / 2, 0, 0, Conductor.stepCrochet * 128, 1, 80);
 		susLengthStepper.onValueChange = () -> {
 			var halfStep:Float = Conductor.stepCrochet / 2;
@@ -2241,12 +2248,60 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			softReloadNotes();
 		}, 150);
 		
+		var spamButton:PsychUIButton = new PsychUIButton(noteTypeDropDown.x, noteTypeDropDown.y + 40, "Add Notes", function() {
+			var forAddNotes:Array<Dynamic> = [];
+			var undoArray:Array<MetaNote> = [];
+			var targetNote:MetaNote = selectedNotes[0];
+			
+			if(!FlxG.keys.pressed.ALT) resetSelectedNotes();
+			if (targetNote != null) {
+				for(i in 0...Std.int(spamLength)) {
+					if (i == 0) continue;
+					forAddNotes = [targetNote.strumTime + (15000 * i / Conductor.bpm) / spamCloseness, targetNote.noteData, targetNote.sustainLength, false];
+					
+					var newSpamNote:MetaNote = createNote(forAddNotes);
+					var didAdd:Bool = false;
+					for (num in sectionFirstNoteID...notes.length) {
+						var aNote:MetaNote = notes[num];
+						if(aNote.strumTime >= forAddNotes[0]) {
+							notes.insert(num, newSpamNote);
+							didAdd = true;
+							break;
+						}
+					}
+					if(!didAdd) notes.push(newSpamNote);
+					selectedNotes.push(newSpamNote);
+					undoArray.push(newSpamNote);
+					
+					onSelectNote();
+					softReloadNotes();
+				}
+				updateGridVisibility();
+				updateNotesRGB();
+				addUndoAction(ADD_NOTE, {notes: undoArray});
+				forAddNotes.resize(0); // for collect gc
+			}
+		});
+		stepperSpamCloseness = new PsychUINumericStepper(spamButton.x + 90, spamButton.y + 5, 2, 2, 2, 524288);
+		stepperSpamCloseness.value = spamCloseness;
+		stepperSpamCloseness.name = 'note_spamthing';
+		blockPressWhileTypingOnStepper.push(stepperSpamCloseness);
+		stepperSpamLength = new PsychUINumericStepper(stepperSpamCloseness.x + 90, stepperSpamCloseness.y, 5, 5, 1, 8388607);
+		stepperSpamLength.value = spamLength;
+		stepperSpamLength.name = 'note_spamamount';
+		blockPressWhileTypingOnStepper.push(stepperSpamLength);
+
 		tab_group.add(new FlxText(susLengthStepper.x, susLengthStepper.y - 15, 80, 'Sustain length:'));
 		tab_group.add(new FlxText(strumTimeStepper.x, strumTimeStepper.y - 15, 100, 'Note Hit time (ms):'));
 		tab_group.add(new FlxText(noteTypeDropDown.x, noteTypeDropDown.y - 15, 80, 'Note Type:'));
+		tab_group.add(new FlxText(stepperSpamCloseness.x, stepperSpamCloseness.y - 15, 0, 'Note Density:'));
+		tab_group.add(new FlxText(stepperSpamLength.x, stepperSpamLength.y - 15, 0, 'Note Amount:'));
 		tab_group.add(susLengthStepper);
 		tab_group.add(strumTimeStepper);
 		tab_group.add(noteTypeDropDown);
+		tab_group.add(stepperSpamCloseness);
+		tab_group.add(stepperSpamLength);
+		tab_group.add(spamButton);
 	}
 
 	var mustHitCheckBox:PsychUICheckBox;
