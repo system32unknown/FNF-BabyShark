@@ -13,7 +13,6 @@ import openfl.events.IOErrorEvent;
 import psychlua.ModchartSprite;
 
 import states.editors.content.Prompt;
-import states.editors.content.PreloadListSubState;
 
 class StageEditorState extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent {
 	final minZoom:Float = 0.1;
@@ -24,7 +23,6 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	var boyfriend:Character;
 	var stageJson:StageFile;
 
-	var camGame:FlxCamera;
 	public var camHUD:FlxCamera;
 
 	var UI_stagebox:PsychUIBox;
@@ -53,7 +51,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
-		camGame = initPsychCamera();
+		initPsychCamera();
 
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
@@ -918,9 +916,9 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			}
 
 			destroySubStates = true;
-			openSubState(new PreloadListSubState((newSave:Map<String, LoadFilters>) -> {
+			openSubState(new states.editors.content.PreloadListSubState((newSave:Map<String, LoadFilters>) -> {
 				var len:Int = 0;
-				for (name in newSave.keys()) len++;
+				for (_ in newSave.keys()) len++;
 
 				stageJson.preload = {};
 				for (key => value in newSave) Reflect.setField(stageJson.preload, key, value);

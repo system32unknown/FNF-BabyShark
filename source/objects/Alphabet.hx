@@ -109,7 +109,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetRow> {
 		}
 	}
 
-	function set_text(newText:String) {
+	function set_text(newText:String):String {
 		newText = newText.replace('\\n', '\n');
 		updateText(newText);
 		updateAlignment(alignment);
@@ -292,7 +292,7 @@ class AlphabetGlyph extends FlxSprite {
 		return (ascii >= 65 && ascii <= 90) || (ascii >= 97 && ascii <= 122) || (ascii >= 192 && ascii <= 214) || (ascii >= 216 && ascii <= 246) || (ascii >= 248 && ascii <= 255);
 	}
 
-	function set_image(name:String) {
+	function set_image(name:String):String {
 		if (frames == null) {
 			image = name;
 			frames = Paths.getSparrowAtlas(name);

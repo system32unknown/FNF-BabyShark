@@ -334,7 +334,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 		focusOn = null;
 
 	public var unfocus:Void->Void;
-	public static function set_focusOn(v:PsychUIInputText) {
+	public static function set_focusOn(v:PsychUIInputText):PsychUIInputText {
 		if(focusOn != null && focusOn != v && focusOn.exists) {
 			if(focusOn.unfocus != null) focusOn.unfocus();
 			focusOn.resetCaret();
@@ -361,8 +361,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 						caretIndex = i + 1;
 						txtX += bound - lastBound;
 						lastBound = bound;
-					}
-					else break;
+					} else break;
 				}
 				updateCaret();
 			} else if(focusOn == this) focusOn = null;
@@ -380,7 +379,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 				}
 	
 				if(caret != null && caret.exists) {
-					if(!drewSelection && _caretTime < 0.5 && caret.x >= textObj.x) {
+					if(!drewSelection && _caretTime < .5 && caret.x >= textObj.x) {
 						caret.visible = true;
 						caret.color = textObj.color;
 					} else caret.visible = false;
@@ -460,7 +459,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 		super.destroy();
 	}
 
-	function set_caretIndex(v:Int) {
+	function set_caretIndex(v:Int):Int {
 		caretIndex = v;
 		updateCaret();
 		return v;
@@ -476,8 +475,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 		}
 	}
 	
-	override public function updateHitbox()
-	{
+	override public function updateHitbox() {
 		super.updateHitbox();
 		bg.updateHitbox();
 		behindText.updateHitbox();
@@ -487,7 +485,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 		}
 	}
 
-	function set_fieldWidth(v:Int) {
+	function set_fieldWidth(v:Int):Int {
 		textObj.fieldWidth = Math.max(1, v - 2);
 		textObj.textField.selectable = false;
 		textObj.textField.wordWrap = false;
@@ -495,7 +493,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 		return (fieldWidth = v);
 	}
 
-	function set_maxLength(v:Int) {
+	function set_maxLength(v:Int):Int {
 		var lastText:String = text;
 		v = Std.int(Math.max(0, v));
 		if(v > 0 && text.length > v) text = text.substr(0, v);
@@ -504,14 +502,14 @@ class PsychUIInputText extends FlxSpriteGroup {
 		return (maxLength = v);
 	}
 
-	function set_passwordMask(v:Bool) {
+	function set_passwordMask(v:Bool):Bool {
 		passwordMask = v;
 		text = text;
 		return passwordMask;
 	}
 
 	var _boundaries:Array<Float> = [];
-	function set_text(v:String) {
+	function set_text(v:String):String {
 		for (i in 0..._boundaries.length) _boundaries.pop();
 		v = filter(v);
 
@@ -567,19 +565,19 @@ class PsychUIInputText extends FlxSpriteGroup {
 	}
 
 	// from FlxInputText
-	function set_forceCase(v:CaseMode) {
+	function set_forceCase(v:CaseMode):CaseMode {
 		forceCase = v;
 		text = filter(text);
 		return forceCase;
 	}
 
-	function set_filterMode(v:FilterMode) {
+	function set_filterMode(v:FilterMode):FilterMode {
 		filterMode = v;
 		text = filter(text);
 		return filterMode;
 	}
 
-	function set_customFilterPattern(cfp:EReg) {
+	function set_customFilterPattern(cfp:EReg):EReg {
 		customFilterPattern = cfp;
 		filterMode = CUSTOM_FILTER;
 		return customFilterPattern;

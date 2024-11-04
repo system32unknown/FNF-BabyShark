@@ -53,18 +53,18 @@ class PsychUITab extends FlxSprite {
 		text.fieldWidth = width;
 	}
 
-	function set_name(v:String) {
+	function set_name(v:String):String {
 		text.text = v;
 		return (name = v);
 	}
 
-	override function set_cameras(v:Array<FlxCamera>) {
+	override function set_cameras(v:Array<FlxCamera>):Array<FlxCamera> {
 		text.cameras = v;
 		menu.cameras = v;
 		return super.set_cameras(v);
 	}
 
-	override function set_camera(v:FlxCamera) {
+	override function set_camera(v:FlxCamera):FlxCamera {
 		text.camera = v;
 		menu.camera = v;
 		return super.set_camera(v);

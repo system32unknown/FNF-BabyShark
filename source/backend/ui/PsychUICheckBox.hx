@@ -3,7 +3,6 @@ package backend.ui;
 class PsychUICheckBox extends FlxSpriteGroup {
 	public static final CLICK_EVENT = 'checkbox_click';
 
-	public var name:String;
 	public var box:FlxSprite;
 	public var text:FlxText;
 	public var label(get, set):String;
@@ -47,7 +46,7 @@ class PsychUICheckBox extends FlxSpriteGroup {
 		}
 	}
 
-	function set_checked(v:Any) {
+	function set_checked(v:Any):Bool {
 		var v:Bool = (v != null && v != false);
 		box.animation.play(Std.string(v));
 		return (checked = v);

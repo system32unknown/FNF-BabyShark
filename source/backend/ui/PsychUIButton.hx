@@ -64,7 +64,7 @@ class PsychUIButton extends FlxSpriteGroup {
 		}
 
 		if(forceCheckNext || FlxG.mouse.justMoved || FlxG.mouse.justPressed) {
-			var overlapped:Bool = (FlxG.mouse.overlaps(bg, camera));
+			var overlapped:Bool = FlxG.mouse.overlaps(bg, camera);
 			forceCheckNext = false;
 
 			if(!isClicked) {
@@ -92,7 +92,7 @@ class PsychUIButton extends FlxSpriteGroup {
 		text.setPosition(bg.x, bg.y + height / 2 - text.height / 2);
 	}
 
-	function set_label(v:String) {
+	function set_label(v:String):String {
 		if(text != null && text.exists) text.text = v;
 		return (label = v);
 	}

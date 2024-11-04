@@ -69,8 +69,7 @@ class StageWeek1 extends BaseStage {
 						}
 
 						var who:objects.Character = dad;
-						if(val > 2) who = boyfriend;
-						//2 only targets dad
+						if(val > 2) who = boyfriend; //2 only targets dad
 						dadbattleLight.alpha = 0;
 						FlxTimer.wait(.12, () -> dadbattleLight.alpha = .375);
 						dadbattleLight.setPosition(who.getGraphicMidpoint().x - dadbattleLight.width / 2, who.y + who.height - dadbattleLight.height + 50);
@@ -79,7 +78,7 @@ class StageWeek1 extends BaseStage {
 					default:
 						dadbattleBlack.visible = false;
 						dadbattleLight.visible = false;
-						defaultCamZoom -= 0.12;
+						defaultCamZoom -= .12;
 						FlxTween.tween(dadbattleFog, {alpha: 0}, .7, {onComplete: (twn:FlxTween) -> dadbattleFog.visible = false});
 				}
 		}

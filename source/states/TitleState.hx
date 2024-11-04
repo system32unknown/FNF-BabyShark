@@ -196,8 +196,10 @@ class TitleState extends MusicBeatState {
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
 
-				MainMenuState.firstStart = true;
-				MainMenuState.finishedFunnyMove = false;
+				if (!seenIntro) {
+					MainMenuState.firstStart = true;
+					MainMenuState.finishedFunnyMove = false;
+				}
 
 				FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF);
 				FlxG.sound.play(Paths.sound('confirmMenu'), .7);

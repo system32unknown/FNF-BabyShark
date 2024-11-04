@@ -104,7 +104,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 	}
 
 	public var curScroll(default, set):Int = 0;
-	function set_curScroll(v:Int) {
+	function set_curScroll(v:Int):Int {
 		var lastScroll:Int = curScroll;
 		if(maxItems > 0 && labels.length > maxItems) {
 			curScroll = Std.int(FlxMath.bound(v, 0, labels.length - maxItems));
@@ -140,7 +140,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 		return stackHorizontal;
 	}
 
-	function set_checked(v:Int) {
+	function set_checked(v:Int):Int {
 		checked = Std.int(FlxMath.bound(v, -1, Math.min(labels.length - 1, radios.length - 1)));
 		@:bypassAccessor checkedRadio = null;
 		for (num => radio in radios) {
@@ -150,7 +150,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 		return checked;
 	}
 
-	function set_labels(v:Array<String>) {
+	function set_labels(v:Array<String>):Array<String> {
 		labels = v;
 		updateRadioItems();
 		set_checked(checked);
@@ -158,7 +158,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 		return labels;
 	}
 
-	function set_checkedRadio(v:PsychUIRadioItem) {
+	function set_checkedRadio(v:PsychUIRadioItem):PsychUIRadioItem {
 		checkedRadio = null;
 		@:bypassAccessor checked = -1;
 		for (num => radio in radios) {
@@ -171,26 +171,25 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 		return checkedRadio;
 	}
 
-	function set_space(v:Float) {
+	function set_space(v:Float):Float {
 		space = v;
 		for (num => radio in radios) {
-			if(!stackHorizontal)
-				radio.y = y + num * space;
+			if(!stackHorizontal) radio.y = y + num * space;
 			else radio.x = x + num * (textWidth + space);
 		}
 
 		return space;
 	}
 
-	function set_textWidth(v:Int) {
+	function set_textWidth(v:Int):Int {
 		textWidth = v;
-		for (num => radio in radios)
+		for (_ => radio in radios)
 			radio.text.fieldWidth = textWidth;
 
 		return textWidth;
 	}
 
-	function set_maxItems(v:Int) {
+	function set_maxItems(v:Int):Int {
 		maxItems = v;
 		set_curScroll(curScroll);
 
@@ -204,20 +203,15 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 
 			radios = [];
 			for (i in 0...maxItems) {
-				var rad = _addNewRadio();
-				if(i >= labels.length)
-					rad.visible = rad.active = false;
+				var rad:FlxSprite = _addNewRadio();
+				if(i >= labels.length) rad.visible = rad.active = false;
 			}
 		} else {
 			while(radios.length > labels.length) {
-				//kill extra radios
-				radios[radios.length - 1].kill();
+				radios[radios.length - 1].kill(); //kill extra radios
 				radios.pop();
 			}
-			while(radios.length < labels.length) {
-				//recycle radios to fit number
-				_addNewRadio();
-			}
+			while(radios.length < labels.length) _addNewRadio(); //recycle radios to fit number
 		}
 		
 		for (num => radio in radios) {
@@ -228,20 +222,20 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 		}
 	}
 
-	override function set_cameras(v:Array<FlxCamera>) {
+	override function set_cameras(v:Array<FlxCamera>):Array<FlxCamera> {
 		if(arrowUp != null && arrowUp.exists) arrowUp.cameras = v;
 		if(arrowDown != null && arrowDown.exists) arrowDown.cameras = v;
 		return super.set_cameras(v);
 	}
 
-	override function set_camera(v:FlxCamera) {
+	override function set_camera(v:FlxCamera):FlxCamera {
 		if(arrowUp != null && arrowUp.exists) arrowUp.camera = v;
 		if(arrowDown != null && arrowDown.exists) arrowDown.camera = v;
 		return super.set_camera(v);
 	}
 
 	public var broadcastRadioGroupEvent:Bool = true;
-	function _addNewRadio() {
+	function _addNewRadio():FlxSprite {
 		var radio:PsychUIRadioItem = cast recycle(PsychUIRadioItem);
 		radio.onClick = () -> {
 			checkedRadio = radio;

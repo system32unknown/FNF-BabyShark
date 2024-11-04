@@ -63,14 +63,14 @@ class PsychUINumericStepper extends PsychUIInputText {
 		}
 	}
 
-	function set_value(v:Float) {
+	function set_value(v:Float):Float {
 		value = Math.max(min, Math.min(max, v));
 		text = Std.string(isPercent ? (value * 100) : value);
 		_updateValue();
 		return value;
 	}
 
-	function set_min(v:Float) {
+	function set_min(v:Float):Float {
 		min = v;
 		@:bypassAccessor if(min > max) max = min;
 		_updateFilter();
@@ -78,7 +78,7 @@ class PsychUINumericStepper extends PsychUIInputText {
 		return min;
 	}
 
-	function set_max(v:Float) {
+	function set_max(v:Float):Float {
 		max = v;
 		@:bypassAccessor if(max < min) min = max;
 		_updateFilter();
@@ -86,12 +86,12 @@ class PsychUINumericStepper extends PsychUIInputText {
 		return max;
 	}
 
-	function set_decimals(v:Int) {
+	function set_decimals(v:Int):Int {
 		decimals = v;
 		_updateFilter();
 		return decimals;
 	}
-	function set_isPercent(v:Bool) {
+	function set_isPercent(v:Bool):Bool {
 		var changed:Bool = (isPercent != v);
 		isPercent = v;
 		_updateFilter();

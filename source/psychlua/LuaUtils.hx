@@ -364,9 +364,10 @@ class LuaUtils {
 	inline public static function blendModeFromString(blend:String):BlendMode
 		return cast(blend.toLowerCase().trim():BlendMode);
 
-	inline public static function axesFromString(axe:String):flixel.util.FlxAxes {
-		try {return FlxAxes.fromString(axe);}
-		catch(e) {
+	inline public static function axesFromString(axe:String):FlxAxes {
+		try {
+			return FlxAxes.fromString(axe);
+		} catch(e) {
 			Logs.trace('axesFromString: invalid axes: $axe!', ERROR);
 			return FlxAxes.XY;
 		}

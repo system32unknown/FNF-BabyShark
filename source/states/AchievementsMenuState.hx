@@ -38,12 +38,12 @@ class AchievementsMenuState extends MusicBeatState {
 		add(camFollow = new FlxObject(0, 0, 1, 1));
 
 		var menuBG:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
-        menuBG.color = 0xFF9271FD;
 		menuBG.antialiasing = ClientPrefs.data.antialiasing;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
 		menuBG.scrollFactor.set();
+        menuBG.color = 0xFF9271FD;
 		add(menuBG);
 
 		grpOptions = new FlxSpriteGroup();

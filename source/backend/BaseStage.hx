@@ -108,11 +108,11 @@ class BaseStage extends FlxBasic {
 		return game.variables.get(name);
 
 	//start/end callback functions
-	public function setStartCallback(myfn:Void->Void) {
+	public function setStartCallback(myfn:Void->Void):Void {
 		if(!onPlayState) return;
 		PlayState.instance.startCallback = myfn;
 	}
-	public function setEndCallback(myfn:Void->Void) {
+	public function setEndCallback(myfn:Void->Void):Void {
 		if(!onPlayState) return;
 		PlayState.instance.endCallback = myfn;
 	}
@@ -120,8 +120,8 @@ class BaseStage extends FlxBasic {
 	// overrides
 	function startCountdown():Bool if(onPlayState) return PlayState.instance.startCountdown(); else return false;
 	function endSong():Bool if(onPlayState) return PlayState.instance.endSong(); else return false;
-	function moveCameraSection() if(onPlayState) PlayState.instance.moveCameraSection();
-	function moveCamera(isDad:Bool) if(onPlayState) PlayState.instance.moveCamera(isDad);
+	function moveCameraSection():Void if(onPlayState) PlayState.instance.moveCameraSection();
+	function moveCamera(isDad:Bool):Void if(onPlayState) PlayState.instance.moveCamera(isDad);
 	inline function get_paused():Bool return game.paused;
 	inline function get_songName():String return game.songName;
 	inline function get_isStoryMode():Bool return PlayState.isStoryMode;

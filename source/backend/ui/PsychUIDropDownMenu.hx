@@ -48,7 +48,7 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 		showDropDown(false);
 	}
 
-	function set_selectedIndex(v:Int) {
+	function set_selectedIndex(v:Int):Int {
 		selectedIndex = v;
 		if(selectedIndex < 0 || selectedIndex >= list.length) selectedIndex = -1;
 
@@ -57,7 +57,7 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 		return selectedIndex;
 	}
 
-	function set_selectedLabel(v:String) {
+	function set_selectedLabel(v:String):String {
 		var id:Int = list.indexOf(v);
 		if(id >= 0) {
 			@:bypassAccessor selectedIndex = id;
@@ -74,7 +74,7 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 	var _items:Array<PsychUIDropDownItem> = [];
 	public var curScroll:Int = 0;
 	override function update(elapsed:Float) {
-		var lastFocus = PsychUIInputText.focusOn;
+		var lastFocus:PsychUIInputText = PsychUIInputText.focusOn;
 		super.update(elapsed);
 		if(FlxG.mouse.justPressed) {
 			if(FlxG.mouse.overlaps(button, camera)) {
@@ -159,7 +159,7 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 		insert(1, item);
 	}
 
-	function set_list(v:Array<String>) {
+	function set_list(v:Array<String>):Array<String> {
 		var selected:String = selectedLabel;
 		showDropDown(false);
 
@@ -221,7 +221,7 @@ class PsychUIDropDownItem extends FlxSpriteGroup {
 	}
 
 	public var label(default, set):String;
-	function set_label(v:String) {
+	function set_label(v:String):String {
 		label = v;
 		text.text = v;
 		bg.scale.y = text.height + 6;

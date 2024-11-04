@@ -67,19 +67,20 @@ class MainMenuState extends MusicBeatState {
 
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
+		var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
 		for (i => option in optionShit) {
-			var item:FlxSprite = createItem(option, 0, (i * 140) + (108 - (Math.max(optionShit.length, 4) - 4) * 80));
+			var item:FlxSprite = createItem(option, 0, FlxG.height * 1.6);
 			menuItems.add(item);
 
 			item.scrollFactor.set(0, optionShit.length < 6 ? 0 : (optionShit.length - 4) * .135);
 			item.updateHitbox();
 			item.screenCenter(X);
 			if (firstStart)
-				FlxTween.tween(item, {y: 60 + (i * 160)}, 1 + (i * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> {
+				FlxTween.tween(item, {y: (i * 140) + offset}, 1 + (i * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> {
 					finishedFunnyMove = true; 
 					changeItem();
 				}});
-			else item.y = 60 + (i * 160);
+			else item.y = (i * 140) + offset;
 		}
 		firstStart = false;
 
