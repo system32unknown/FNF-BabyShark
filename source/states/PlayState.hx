@@ -1835,8 +1835,10 @@ class PlayState extends MusicBeatState {
 				FlxG.sound.play(Paths.sound(value1), flValue2);
 
 			case 'Set Camera Bop': // P-slice event notes
-				camZoomingMult = (flValue2 != null) ? flValue2 : 1;
-				camZoomingFrequency = (flValue1 != null) ? flValue1 : 4;
+				if (flValue2 == null) flValue2 = 1;
+				if (flValue1 == null) flValue1 = 4;
+				camZoomingMult = flValue2;
+				camZoomingFrequency = flValue1;
 		}
 		stagesFunc(stage -> stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
@@ -2012,7 +2014,7 @@ class PlayState extends MusicBeatState {
 		if(!note.ratingDisabled) {
 			songHits++;
 			totalPlayed++;
-			if (!cpuControlled) recalculateRating();
+			recalculateRating();
 		}
 	}
 
@@ -2435,6 +2437,11 @@ class PlayState extends MusicBeatState {
 	override function beatHit() {
 		if(lastBeatHit >= curBeat) return;
 		
+		if (ClientPrefs.data.camZooms && camZooming && FlxG.camera.zoom < 1.35 && (curBeat % camZoomingFrequency) == 0) {
+			FlxG.camera.zoom += .015 * camZoomingMult;
+			camHUD.zoom += .03 * camZoomingMult;
+		}
+
 		switch (ClientPrefs.data.iconBounceType) {
 			case "Old":
 				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
@@ -2482,11 +2489,6 @@ class PlayState extends MusicBeatState {
 	override function sectionHit() {
 		if (SONG.notes[curSection] != null) {
 			if (generatedMusic && !endingSong && !isCameraOnForcedPos) moveCameraSection();
-
-			if (ClientPrefs.data.camZooms && camZooming && FlxG.camera.zoom < 1.35 && (curBeat % camZoomingFrequency) == 0) {
-				FlxG.camera.zoom += .015 * camZoomingMult;
-				camHUD.zoom += .03 * camZoomingMult;
-			}
 
 			if (SONG.notes[curSection].changeBPM) {
 				Conductor.bpm = SONG.notes[curSection].bpm;

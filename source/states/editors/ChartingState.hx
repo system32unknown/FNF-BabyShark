@@ -127,8 +127,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var zoomList:Array<Float> = [.25, .5, 1, 2, 3, 4, 6, 8, 12, 16, 24];
 	var curZoom:Float = 1;
 
-	var blockPressWhileTypingOnStepper:Array<PsychUINumericStepper> = [];
-
 	var mustHitIndicator:FlxSprite;
 	var eventIcon:FlxSprite;
 	var icons:Array<HealthIcon> = [];
@@ -2285,23 +2283,21 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		stepperSpamCloseness = new PsychUINumericStepper(spamButton.x + 90, spamButton.y + 5, 2, 2, 2, 524288);
 		stepperSpamCloseness.value = spamCloseness;
 		stepperSpamCloseness.name = 'note_spamthing';
-		blockPressWhileTypingOnStepper.push(stepperSpamCloseness);
 		stepperSpamLength = new PsychUINumericStepper(stepperSpamCloseness.x + 90, stepperSpamCloseness.y, 5, 5, 1, 8388607);
 		stepperSpamLength.value = spamLength;
 		stepperSpamLength.name = 'note_spamamount';
-		blockPressWhileTypingOnStepper.push(stepperSpamLength);
 
 		tab_group.add(new FlxText(susLengthStepper.x, susLengthStepper.y - 15, 80, 'Sustain length:'));
 		tab_group.add(new FlxText(strumTimeStepper.x, strumTimeStepper.y - 15, 100, 'Note Hit time (ms):'));
-		tab_group.add(new FlxText(noteTypeDropDown.x, noteTypeDropDown.y - 15, 80, 'Note Type:'));
 		tab_group.add(new FlxText(stepperSpamCloseness.x, stepperSpamCloseness.y - 15, 0, 'Note Density:'));
 		tab_group.add(new FlxText(stepperSpamLength.x, stepperSpamLength.y - 15, 0, 'Note Amount:'));
+		tab_group.add(new FlxText(noteTypeDropDown.x, noteTypeDropDown.y - 15, 80, 'Note Type:'));
 		tab_group.add(susLengthStepper);
 		tab_group.add(strumTimeStepper);
-		tab_group.add(noteTypeDropDown);
 		tab_group.add(stepperSpamCloseness);
 		tab_group.add(stepperSpamLength);
 		tab_group.add(spamButton);
+		tab_group.add(noteTypeDropDown);
 	}
 
 	var mustHitCheckBox:PsychUICheckBox;
