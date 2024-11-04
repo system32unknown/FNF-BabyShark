@@ -15,6 +15,7 @@ class Init extends flixel.FlxState {
 		ClientPrefs.load();
 		Language.reloadPhrases();
 
+		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
 		Controls.load();
 		backend.Highscore.load();
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end

@@ -179,6 +179,7 @@ class PlayState extends MusicBeatState {
 	var timeTxt:FlxText;
 
 	public static var campaignScore:Int = 0;
+	public static var campaignMisses:Int = 0;
 	public static var seenCutscene:Bool = false;
 	public static var deathCounter:Int = 0;
 
@@ -1894,12 +1895,12 @@ class PlayState extends MusicBeatState {
 		timeBar.visible = timeTxt.visible = false;
 		canPause = false;
 		endingSong = true;
-		camZooming = false;
-		inCutscene = false;
-		updateTime = false;
+		camZooming = inCutscene = updateTime = false;
 
 		deathCounter = 0;
 		seenCutscene = false;
+
+		#if ACHIEVEMENTS_ALLOWED checkForAchievement([WeekData.getWeekFileName() + '_nomiss', 'ur_bad', 'ur_good', 'toastie']); #end
 
 		var ret:Dynamic = callOnScripts('onEndSong', null, true);
 		if(ret != LuaUtils.Function_Stop && !transitioning) {
@@ -1914,6 +1915,7 @@ class PlayState extends MusicBeatState {
 			if (chartingMode) {openChartEditor(); return false;}
 			if (isStoryMode) {
 				campaignScore += songScore;
+				campaignMisses += songMisses;
 				storyPlaylist.remove(storyPlaylist[0]);
 
 				if (storyPlaylist.length <= 0) {
@@ -2697,6 +2699,28 @@ class PlayState extends MusicBeatState {
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce
 	}
 
+	#if ACHIEVEMENTS_ALLOWED
+	function checkForAchievement(achievesToCheck:Array<String> = null) {
+		if(chartingMode) return;
+
+		var usedPractice:Bool = (practiceMode || cpuControlled);
+		if(cpuControlled) return;
+
+		for (name in achievesToCheck) {
+			if(!Achievements.exists(name)) continue;
+
+			var unlock:Bool = false;
+			if (name != WeekData.getWeekFileName() + '_nomiss') { // common achievements
+				switch(name) {
+					case 'ur_bad': unlock = (ratingPercent < .2 && !practiceMode);
+					case 'ur_good': unlock = (ratingPercent >= 1 && !usedPractice);
+					case 'toastie': unlock = (!ClientPrefs.data.cacheOnGPU && !ClientPrefs.data.shaders && ClientPrefs.data.lowQuality && !ClientPrefs.data.antialiasing);
+				}
+			} else if(isStoryMode && campaignMisses + songMisses < 1 && Difficulty.getString().toUpperCase() == 'HARD' && storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice) unlock = true; // any FC achievements, name should be "weekFileName_nomiss", e.g: "week3_nomiss";
+			if(unlock) Achievements.unlock(name);
+		}
+	}
+	#end
 
 	#if (!flash && sys)
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();

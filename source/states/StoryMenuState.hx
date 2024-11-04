@@ -238,7 +238,7 @@ class StoryMenuState extends MusicBeatState {
 	
 				PlayState.storyDifficulty = curDifficulty;
 				Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
-				PlayState.campaignScore = 0;
+				PlayState.campaignScore = PlayState.campaignMisses = 0;
 			} catch(e:Dynamic) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				selectedWeek = false;

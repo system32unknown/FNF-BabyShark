@@ -149,6 +149,9 @@ class HScript extends AlterHscript {
             "Conductor"         => Conductor,
             "Alphabet"          => Alphabet,
 			"DeltaTrail" 		=> objects.DeltaTrail,
+			#if ACHIEVEMENTS_ALLOWED
+			'Achievements' 		=> Achievements,
+			#end
 
             "CoolUtil"          => CoolUtil,
             "ClientPrefs"       => ClientPrefs,

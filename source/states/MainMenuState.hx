@@ -5,6 +5,7 @@ import flixel.effects.FlxFlicker;
 import options.OptionsState;
 
 enum MainMenuColumn {
+	LEFT;
 	CENTER;
 	RIGHT;
 }
@@ -15,7 +16,11 @@ class MainMenuState extends MusicBeatState {
 	var allowMouse:Bool = true;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
+	var leftItem:FlxSprite;
 	var rightItem:FlxSprite;
+
+	public static var firstStart:Bool = true;
+	public static var finishedFunnyMove:Bool = false;
 
 	var optionShit:Array<String> = [
 		'story_mode',
@@ -24,6 +29,7 @@ class MainMenuState extends MusicBeatState {
 		'credits'
 	];
 
+	var leftOption:String = #if ACHIEVEMENTS_ALLOWED 'achievements' #else null #end;
 	var rightOption:String = 'options';
 
 	var magenta:FlxSprite;
@@ -61,15 +67,27 @@ class MainMenuState extends MusicBeatState {
 
 		add(menuItems = new FlxTypedGroup<FlxSprite>());
 
-		for (num => option in optionShit) {
-			var item:FlxSprite = createItem(option, 0, (num * 140) + (108 - (Math.max(optionShit.length, 4) - 4) * 80));
+		for (i => option in optionShit) {
+			var item:FlxSprite = createItem(option, 0, (i * 140) + (108 - (Math.max(optionShit.length, 4) - 4) * 80));
 			menuItems.add(item);
 
-			item.scrollFactor.set(0, optionShit.length < 6 ? 0 : (optionShit.length - 4) * 0.135);
+			item.scrollFactor.set(0, optionShit.length < 6 ? 0 : (optionShit.length - 4) * .135);
 			item.updateHitbox();
 			item.screenCenter(X);
+			if (firstStart)
+				FlxTween.tween(item, {y: 60 + (i * 160)}, 1 + (i * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> {
+					finishedFunnyMove = true; 
+					changeItem();
+				}});
+			else item.y = 60 + (i * 160);
 		}
+		firstStart = false;
 
+		if (leftOption != null) {
+			leftItem = createItem(leftOption, 60, 490, true);
+			leftItem.updateHitbox();
+			menuItems.add(leftItem);
+		}
 		if (rightOption != null) {
 			rightItem = createItem(rightOption, FlxG.width - 60, 490, true);
 			rightItem.updateHitbox();
@@ -84,6 +102,15 @@ class MainMenuState extends MusicBeatState {
 		version.setPosition(FlxG.width - version.width, FlxG.height - version.height);
 		add(version);
 		changeItem();
+
+		#if ACHIEVEMENTS_ALLOWED
+		// Unlocks "Freaky on a Friday Night" achievement if it's a Friday and between 18:00 PM and 23:59 PM
+		var leDate:Date = Date.now();
+		if (leDate.getDay() == 5 && leDate.getHours() >= 18)
+			Achievements.unlock('friday_night_play');
+
+		#if MODS_ALLOWED Achievements.reloadList(); #end
+		#end
 
 		FlxG.camera.follow(camFollow, null, .15);
 	}
@@ -124,10 +151,17 @@ class MainMenuState extends MusicBeatState {
 			var selectedItem:FlxSprite;
 			switch(curColumn) {
 				case CENTER: selectedItem = menuItems.members[curSelected];
+				case LEFT: selectedItem = leftItem;
 				case RIGHT: selectedItem = rightItem;
 			}
 	
-			if(rightItem != null && FlxG.mouse.overlaps(rightItem)) {
+			if(leftItem != null && FlxG.mouse.overlaps(leftItem)) {
+				allowMouse = true;
+				if(selectedItem != leftItem) {
+					curColumn = LEFT;
+					changeItem();
+				}
+			} else if(rightItem != null && FlxG.mouse.overlaps(rightItem)) {
 				allowMouse = true;
 				if(selectedItem != rightItem) {
 					curColumn = RIGHT;
@@ -159,15 +193,25 @@ class MainMenuState extends MusicBeatState {
 			if(timeNotMoving > 2) FlxG.mouse.visible = false;
 		}
 
+		var leftJustpressed:Bool = Controls.justPressed('ui_left');
+		var rightJustpressed:Bool = Controls.justPressed('ui_right');
 		switch(curColumn) {
 			case CENTER:
-				if(Controls.justPressed('ui_right') && rightOption != null) {
+				if(leftJustpressed && leftOption != null) {
+					curColumn = LEFT;
+					changeItem();
+				} else if(rightJustpressed && rightOption != null) {
 					curColumn = RIGHT;
 					changeItem();
 				}
 
+			case LEFT:
+				if(rightJustpressed) {
+					curColumn = CENTER;
+					changeItem();
+				}
 			case RIGHT:
-				if(Controls.justPressed('ui_left')) {
+				if(leftJustpressed) {
 					curColumn = CENTER;
 					changeItem();
 				}
@@ -193,6 +237,10 @@ class MainMenuState extends MusicBeatState {
 				case CENTER:
 					option = optionShit[curSelected];
 					item = menuItems.members[curSelected];
+
+				case LEFT:
+					option = leftOption;
+					item = leftItem;
 				case RIGHT:
 					option = rightOption;
 					item = rightItem;
@@ -203,6 +251,7 @@ class MainMenuState extends MusicBeatState {
 					case 'story_mode': FlxG.switchState(() -> new StoryMenuState());
 					case 'freeplay': FlxG.switchState(() -> new FreeplayState());
 					#if MODS_ALLOWED case 'mods': FlxG.switchState(() -> new ModsMenuState()); #end
+					#if ACHIEVEMENTS_ALLOWED case 'achievements': FlxG.switchState(() -> new AchievementsMenuState()); #end
 					case 'credits': FlxG.switchState(() -> new CreditsState());
 					case 'options':
 						FlxG.switchState(() -> new OptionsState());
@@ -230,22 +279,27 @@ class MainMenuState extends MusicBeatState {
 	}
 
 	function changeItem(change:Int = 0) {
-		if(change != 0) curColumn = CENTER;
-		curSelected = FlxMath.wrap(curSelected + change, 0, optionShit.length - 1);
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		if (finishedFunnyMove) {
+			if(change != 0) curColumn = CENTER;
+			curSelected = FlxMath.wrap(curSelected + change, 0, optionShit.length - 1);
+			FlxG.sound.play(Paths.sound('scrollMenu'));
+		}
 
 		for (item in menuItems) {
 			item.animation.play('idle');
 			item.centerOffsets();
 		}
 
-		var selectedItem:FlxSprite;
-		switch(curColumn) {
-			case CENTER: selectedItem = menuItems.members[curSelected];
-			case RIGHT: selectedItem = rightItem;
+		if (finishedFunnyMove) {
+			var selectedItem:FlxSprite;
+			switch(curColumn) {
+				case CENTER: selectedItem = menuItems.members[curSelected];
+				case LEFT: selectedItem = leftItem;
+				case RIGHT: selectedItem = rightItem;
+			}
+			selectedItem.animation.play('selected');
+			selectedItem.centerOffsets();
+			camFollow.y = selectedItem.getGraphicMidpoint().y - (menuItems.length > 4 ? menuItems.length * 8 : 0);
 		}
-		selectedItem.animation.play('selected');
-		selectedItem.centerOffsets();
-		camFollow.y = selectedItem.getGraphicMidpoint().y - (menuItems.length > 4 ? menuItems.length * 8 : 0);
 	}
 }

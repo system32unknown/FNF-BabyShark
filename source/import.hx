@@ -1,11 +1,17 @@
 #if !macro
-#if DISCORD_ALLOWED import backend.Discord; #end
+#if DISCORD_ALLOWED
+import backend.Discord;
+#end
 
 #if LUA_ALLOWED
 import llua.*;
 import llua.Lua;
 #end
 import debug.Logs;
+
+#if ACHIEVEMENTS_ALLOWED
+import backend.Achievements;
+#end
 
 #if sys
 import sys.*;

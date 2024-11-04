@@ -11,8 +11,7 @@ enum HenchmenKillState {
 	STOPPING;
 }
 
-class Limo extends BaseStage
-{
+class Limo extends BaseStage {
 	var grpLimoDancers:FlxTypedGroup<BackgroundDancer>;
 	var fastCar:BGSprite;
 	var fastCarCanDrive:Bool = true;
@@ -40,20 +39,12 @@ class Limo extends BaseStage
 		}
 
 		if(!lowQuality) {
-			limoMetalPole = new BGSprite('gore/metalPole', -500, 220, 0.4, 0.4);
-			add(limoMetalPole);
+			add(limoMetalPole = new BGSprite('gore/metalPole', -500, 220, 0.4, 0.4));
+			add(bgLimo = new BGSprite('limo/bgLimo', -150, 480, 0.4, 0.4, ['background limo pink'], true));
+			add(limoCorpse = new BGSprite('gore/noooooo', -500, limoMetalPole.y - 130, 0.4, 0.4, ['Henchmen on rail'], true));
+			add(limoCorpseTwo = new BGSprite('gore/noooooo', -500, limoMetalPole.y, 0.4, 0.4, ['henchmen death'], true));
 
-			bgLimo = new BGSprite('limo/bgLimo', -150, 480, 0.4, 0.4, ['background limo pink'], true);
-			add(bgLimo);
-
-			limoCorpse = new BGSprite('gore/noooooo', -500, limoMetalPole.y - 130, 0.4, 0.4, ['Henchmen on rail'], true);
-			add(limoCorpse);
-
-			limoCorpseTwo = new BGSprite('gore/noooooo', -500, limoMetalPole.y, 0.4, 0.4, ['henchmen death'], true);
-			add(limoCorpseTwo);
-
-			grpLimoDancers = new FlxTypedGroup<BackgroundDancer>();
-			add(grpLimoDancers);
+			add(grpLimoDancers = new FlxTypedGroup<BackgroundDancer>());
 
 			for (i in 0...5) {
 				var dancer:BackgroundDancer = new BackgroundDancer((370 * i) + dancersDiff + bgLimo.x, bgLimo.y - 400);
@@ -61,11 +52,8 @@ class Limo extends BaseStage
 				grpLimoDancers.add(dancer);
 			}
 
-			limoLight = new BGSprite('gore/coldHeartKiller', limoMetalPole.x - 180, limoMetalPole.y - 80, 0.4, 0.4);
-			add(limoLight);
-
-			grpLimoParticles = new FlxTypedGroup<BGSprite>();
-			add(grpLimoParticles);
+			add(limoLight = new BGSprite('gore/coldHeartKiller', limoMetalPole.x - 180, limoMetalPole.y - 80, 0.4, 0.4));
+			add(grpLimoParticles = new FlxTypedGroup<BGSprite>());
 
 			//PRECACHE BLOOD
 			var particle:BGSprite = new BGSprite('gore/stupidBlood', -400, -400, 0.4, 0.4, ['blood']);
@@ -233,6 +221,7 @@ class Limo extends BaseStage
 				limoCorpse.visible = false;
 				limoCorpseTwo.visible = false;
 				limoKillingState = KILLING;
+				Achievements.addScore("roadkill_enthusiast");
 			}
 		}
 	}
