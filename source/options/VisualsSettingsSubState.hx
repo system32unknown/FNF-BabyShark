@@ -101,7 +101,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(option);
 		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms'));
 		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'showNPS'));
-		addOption(new Option('Show Judgements Counter', 'If checked, the Judgements counter will be shown.', 'showJudgement'));
 		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'ratingDisplay', STRING, ['Hud', 'World']));
 		addOption(new Option('Botplay Text:', 'Alter Engine is changed the Botplay Text Place,\nSo you can make Location be like original Psych Engine.', 'botPlayPlace', STRING, ["Near the Time Bar", "Near the Health Bar"]));
 
