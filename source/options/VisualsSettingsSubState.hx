@@ -86,6 +86,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		option.onChange = playNoteSplashes;
 		addOption(new Option('Opponent Note Splash', 'If checked, Note Splash appears in Opponent Strum.', 'splashOpponent'));
 
+		addOption(new Option('Play Animation on Sustain Hit', "If unchecked, ignores hit animaiton when hits sustain notes.", 'holdAnim'));
 		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud'));
 		addOption(new Option('Time Bar:', "What should the Time Bar display?", 'timeBarType', STRING, ['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Disabled']));
 		addOption(new Option('Flashing Lights', "Uncheck this if you're sensitive to flashing lights!", 'flashing'));

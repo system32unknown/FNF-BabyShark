@@ -66,6 +66,7 @@ package backend;
 	public var altDiscordImgCount:Int = 0;
 	public var autoPausePlayState:Bool = true;
 	public var lightStrum:Bool = true;
+	public var holdAnim:Bool = true;
 	public var hitsoundTypes:String = 'Tick';
 	public var checkForUpdates:Bool = true;
 	public var skipGhostNotes:Bool = false;
@@ -88,6 +89,13 @@ package backend;
 	// Optimizer
 	public var processFirst:Bool = false;
 	public var showNotes:Bool = true;
+	public var separateHitProcess:Bool = true;
+	public var optimizeSpawnNote:Bool = true;
+	public var noteHitPreEvent:Bool = true;
+	public var noteHitEvent:Bool = true;
+	public var skipNoteScript:Bool = true;
+	public var spawnNoteScript:Bool = true;
+	public var skipSpawnNote:Bool = true;
 
 	public var botPlayPlace:String = "Near the Health Bar";
 
