@@ -34,7 +34,7 @@ class Character extends FlxSprite {
 	**/
 	inline public static final DEFAULT_CHARACTER:String = 'bf';
 
-	public var animOffsets:Map<String, Array<Dynamic>>;
+	public var animOffsets:Map<String, Array<Float>>;
 	public var debugMode:Bool = false;
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
@@ -81,7 +81,7 @@ class Character extends FlxSprite {
 
 		animation = new backend.animation.PsychAnimationController(this);
 
-		animOffsets = new Map<String, Array<Dynamic>>();
+		animOffsets = new Map<String, Array<Float>>();
 		this.isPlayer = isPlayer;
 		changeCharacter(character);
 
@@ -145,7 +145,7 @@ class Character extends FlxSprite {
 
 			var swapped:Bool = false;
 			var animObj:flixel.animation.FlxAnimation = animation._animations.get(animName);
-			var offset:Array<Dynamic> = animOffsets.get(animName);
+			var offset:Array<Float> = animOffsets.get(animName);
 
 			if (animation._animations.exists(newAnimName)) {
 				animation._animations.set(animName, animation._animations.get(newAnimName));
@@ -273,7 +273,6 @@ class Character extends FlxSprite {
 
 	override function update(elapsed:Float) {
 		if(isAnimateAtlas) atlas.update(elapsed);
-
 		if(debugMode || (!isAnimateAtlas && animation.curAnim == null) || (isAnimateAtlas && (atlas.anim.curInstance == null || atlas.anim.curSymbol == null))) {
 			super.update(elapsed);
 			return;
@@ -388,7 +387,7 @@ class Character extends FlxSprite {
 		_lastPlayedAnimation = animName;
 
 		if (hasAnimation(animName)) {
-			final daOffset:Array<Dynamic> = animOffsets.get(animName);
+			final daOffset:Array<Float> = animOffsets.get(animName);
 			offset.set(daOffset[0], daOffset[1]);
 		}
 

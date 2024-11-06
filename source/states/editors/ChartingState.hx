@@ -418,10 +418,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		tipText.active = false;
 		add(tipText);
 
-		tipBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		tipBg = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
 		tipBg.cameras = [camUI];
-		tipBg.scale.set(FlxG.width, FlxG.height);
-		tipBg.updateHitbox();
 		tipBg.scrollFactor.set();
 		tipBg.visible = tipBg.active = false;
 		tipBg.alpha = 0.6;

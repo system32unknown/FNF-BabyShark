@@ -104,7 +104,7 @@ class StageData {
 			switch(data.type) {
 				case 'gf', 'gfGroup':
 					if(gf != null) {
-						gf.ID = num; 
+						gf.ID = num;
 						if (group != null) group.add(gf);
 						addedObjects.set('gf', gf);
 					}

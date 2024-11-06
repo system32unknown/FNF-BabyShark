@@ -1380,7 +1380,6 @@ class PlayState extends MusicBeatState {
 		updateIconsPosition();
 
 		if (showPopups && popUpHitNote != null) popUpScore(popUpHitNote);
-
 		if (ClientPrefs.data.showNPS) {
 			npsTime = Math.round(Conductor.songPosition);
 			if (bfSideHit > 0) nps.set(npsTime, bfSideHit);
@@ -1521,17 +1520,11 @@ class PlayState extends MusicBeatState {
 		var skipCnt:Int = skipBf;
 		if (ClientPrefs.data.skipNoteScript && skipCnt > 0) {
 			var skipArray:Array<Dynamic> = [0, Math.abs(skipNotes.noteData), skipNotes.noteType, skipNotes.isSustainNote];
-			for (i in 0...skipBf) {
+			for (_ in 0...skipBf) {
 				var skipResult:Dynamic = callOnLuas('goodNoteHitPre', skipArray);
-				if (skipResult != LuaUtils.Function_Stop) {
-					if(skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll)
-						skipResult = callOnHScript('opponentNoteHitPre', [skipNotes]);
-				}
+				if(skipResult != LuaUtils.Function_Stop && skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll) skipResult = callOnHScript('opponentNoteHitPre', [skipNotes]);
 				var skipResult:Dynamic = callOnLuas('goodNoteHit', skipArray);
-				if (skipResult != LuaUtils.Function_Stop) {
-					if(skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll)
-						skipResult = callOnHScript('opponentNoteHitPre', [skipNotes]);
-				}
+				if(skipResult != LuaUtils.Function_Stop && skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll) skipResult = callOnHScript('opponentNoteHitPre', [skipNotes]);
 			}
 		}
 		notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
@@ -1606,8 +1599,7 @@ class PlayState extends MusicBeatState {
 				deathCounter++;
 
 				paused = true;
-				canResync = false;
-				canPause = false;
+				canResync = canPause = false;
 
 				persistentUpdate = persistentDraw = false;
 				FlxTimer.globalManager.clear(); FlxTween.globalManager.clear();
@@ -1962,8 +1954,7 @@ class PlayState extends MusicBeatState {
 					changedDifficulty = false;
 				} else {
 					var difficulty:String = Difficulty.getFilePath();
-					MusicBeatState.skipNextTransIn = true;
-					MusicBeatState.skipNextTransOut = true;
+					MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 					prevCamFollow = camFollow;
 
 					Song.loadFromJson(storyPlaylist[0] + difficulty, storyPlaylist[0]);
@@ -2092,9 +2083,7 @@ class PlayState extends MusicBeatState {
 	var strumsBlocked:Array<Bool> = [];
 	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:FlxKey = event.keyCode;
-		#if debug
-		@:privateAccess if (!FlxG.keys._keyListMap.exists(eventKey)) return;
-		#end
+		#if debug @:privateAccess if (!FlxG.keys._keyListMap.exists(eventKey)) return; #end
 		if (FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(getKeyFromEvent(keysArray, eventKey));
 	}
 
@@ -2123,8 +2112,7 @@ class PlayState extends MusicBeatState {
 					else if (doubleNote.strumTime < funnyNote.strumTime) funnyNote = doubleNote;
 				}
 			}
-			goodNoteHit(funnyNote);
-			popUpScore(funnyNote);
+			goodNoteHit(funnyNote); popUpScore(funnyNote);
 		} else {
 			if (ClientPrefs.data.ghostTapping) callOnScripts('onGhostTap', [key]);
 			else noteMissPress(key);
@@ -2376,9 +2364,9 @@ class PlayState extends MusicBeatState {
 	}
 
 	var frames:Int = -1;
-	var targetSplash:NoteSplash = null;
 	public function spawnNoteSplashOnNote(note:Note) {
 		if (!note.mustPress && !splashOpponent) return;
+		var targetSplash:NoteSplash = null;
 		var splashNoteData:Int = note.noteData + (note.mustPress ? EK.keys(mania) : 0);
 		if (splashMoment[splashNoteData] < splashCount) {
 			var frameId:Int = frames = -1;
@@ -2409,10 +2397,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	override function destroy() {
-		if (CustomSubstate.instance != null) {
-			closeSubState();
-			resetSubState();
-		}
+		if (CustomSubstate.instance != null) {closeSubState(); resetSubState();}
 
 		for (lua in luaArray) {lua.call('onDestroy'); lua.stop();}
 		luaArray = null;

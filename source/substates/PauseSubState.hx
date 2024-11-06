@@ -52,9 +52,8 @@ class PauseSubState extends MusicBeatSubstate {
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 		FlxG.sound.list.add(pauseMusic);
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		bg.scale.set(FlxG.width, FlxG.height);
-		bg.updateHitbox();
+		
+		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
 		bg.scrollFactor.set();
 		add(bg);
@@ -80,9 +79,7 @@ class PauseSubState extends MusicBeatSubstate {
 
 		add(grpMenuShit = new FlxTypedGroup<Alphabet>());
 
-		missingTextBG = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		missingTextBG.scale.set(FlxG.width, FlxG.height);
-		missingTextBG.updateHitbox();
+		missingTextBG = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
 		missingTextBG.alpha = .6;
 		missingTextBG.visible = false;
 		add(missingTextBG);
@@ -121,8 +118,7 @@ class PauseSubState extends MusicBeatSubstate {
 		}
 
 		if(FlxG.keys.justPressed.F5) {
-			MusicBeatState.skipNextTransIn = true;
-			MusicBeatState.skipNextTransOut = true;
+			MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 			PlayState.nextReloadAll = true;
 			FlxG.resetState();
 		}
@@ -264,10 +260,7 @@ class PauseSubState extends MusicBeatSubstate {
 		FlxG.sound.music.volume = 0;
 		PlayState.instance.vocals.volume = 0;
 
-		if(noTrans) {
-			MusicBeatState.skipNextTransIn = true;
-			MusicBeatState.skipNextTransOut = true;
-		}
+		if(noTrans) MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 		FlxG.resetState();
 	}
 

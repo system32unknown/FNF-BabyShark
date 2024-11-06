@@ -69,7 +69,7 @@ class MainMenuState extends MusicBeatState {
 
 		var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
 		for (i => option in optionShit) {
-			var item:FlxSprite = createItem(option, 0, FlxG.height * 1.6);
+			var item:FlxSprite = createItem(option, 0, 0);
 			menuItems.add(item);
 
 			item.scrollFactor.set(0, optionShit.length < 6 ? 0 : (optionShit.length - 4) * .135);
@@ -105,11 +105,13 @@ class MainMenuState extends MusicBeatState {
 		changeItem();
 
 		#if ACHIEVEMENTS_ALLOWED
-		// Unlocks "Freaky on a Friday Night" achievement if it's a Friday and between 18:00 PM and 23:59 PM
-		var leDate:Date = Date.now();
-		if (leDate.getDay() == 5 && leDate.getHours() >= 18)
-			Achievements.unlock('friday_night_play');
-
+		var leDate:Date = Date.now(); // Unlocks "Freaky on a Friday Night" achievement if it's a Friday and between 18:00 PM and 23:59 PM
+		var leDay:Int = leDate.getDay();
+		if (leDay == 5 && leDate.getHours() >= 18) Achievements.unlock('friday_night_play');
+		switch (leDate.getMonth()) {
+            case 0: if (leDay == 1) Achievements.unlock('happy_new_year'); // January
+            case 3: if (leDay == 1) Achievements.unlock('april_fools'); // April
+        }
 		#if MODS_ALLOWED Achievements.reloadList(); #end
 		#end
 
@@ -280,11 +282,10 @@ class MainMenuState extends MusicBeatState {
 	}
 
 	function changeItem(change:Int = 0) {
-		if (finishedFunnyMove) {
-			if(change != 0) curColumn = CENTER;
-			curSelected = FlxMath.wrap(curSelected + change, 0, optionShit.length - 1);
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-		}
+		if (!finishedFunnyMove) return;
+		if(change != 0) curColumn = CENTER;
+		curSelected = FlxMath.wrap(curSelected + change, 0, optionShit.length - 1);
+		FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		for (item in menuItems) {
 			item.animation.play('idle');

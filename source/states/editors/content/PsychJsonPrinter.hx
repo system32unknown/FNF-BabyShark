@@ -3,9 +3,9 @@ package states.editors.content;
 import haxe.ds.StringMap;
 
 /**
- *  Used to print V-Slice charts and other things with a bit less characters
- *  This helps with readability in my opinion
- *      -Shadow Mario
+ * Used to print V-Slice charts and other things with a bit less characters.
+ * This helps with readability in my opinion.
+ * @author Shadow Mario
  */
 class PsychJsonPrinter extends haxe.format.JsonPrinter {
 	var _ignoreTab:Array<String> = [];

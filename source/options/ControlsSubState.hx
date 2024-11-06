@@ -189,7 +189,7 @@ class ControlsSubState extends FlxSubState {
 		if(keys == null) keys = Controls.default_keyBinds.get(option[2]).copy();
 
 		for (n in 0...2) {
-			var key:String = InputFormatter.getKeyName((keys[n] != null) ? keys[n] : NONE);
+			var key:String = InputFormatter.getKeyName(keys[n] ?? NONE);
 
 			var attach:Alphabet = new Alphabet(560 + n * 300, 248, key, NORMAL);
 			attach.isMenuItem = true;
@@ -261,7 +261,7 @@ class ControlsSubState extends FlxSubState {
 
 			if(FlxG.keys.justPressed.ENTER) {
 				if(options[curOptions[curSelected]][1] != defaultKey) {
-					bindingBlack = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.WHITE);
+					bindingBlack = new FlxSprite().makeSolid(FlxG.width, FlxG.height);
 					bindingBlack.alpha = 0;
 					FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35);
 					add(bindingBlack);

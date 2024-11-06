@@ -127,9 +127,7 @@ class BaseOptionsMenu extends FlxSubState {
 
 				case KEYBIND:
 					if(Controls.justPressed('accept')) {
-						bindingBlack = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
-						bindingBlack.scale.set(FlxG.width, FlxG.height);
-						bindingBlack.updateHitbox();
+						bindingBlack = new FlxSprite().makeSolid(FlxG.width, FlxG.height);
 						bindingBlack.alpha = 0;
 						FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35, {ease: FlxEase.linear});
 						add(bindingBlack);

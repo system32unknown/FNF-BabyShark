@@ -8,7 +8,7 @@ class FunkinGame extends flixel.FlxGame {
     var skipNextTickUpdate:Bool = false;
     public override function switchState() {
         super.switchState();
-        draw(); 
+        draw();
 		_total = ticks = getTicks();
         skipNextTickUpdate = true;
     }

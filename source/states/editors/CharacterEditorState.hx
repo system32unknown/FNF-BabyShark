@@ -179,9 +179,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		"Hold Shift - Move Offsets 10x faster and Camera 4x faster",
 		"Hold Control - Move camera 4x slower"];
 
-		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		helpBg.scale.set(FlxG.width, FlxG.height);
-		helpBg.updateHitbox();
+		helpBg = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
 		helpBg.alpha = 0.6;
 		helpBg.cameras = [camHUD];
 		helpBg.active = helpBg.visible = false;

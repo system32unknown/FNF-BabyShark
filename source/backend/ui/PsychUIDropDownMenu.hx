@@ -53,7 +53,7 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 		if(selectedIndex < 0 || selectedIndex >= list.length) selectedIndex = -1;
 
 		@:bypassAccessor selectedLabel = list[selectedIndex];
-		text = (selectedLabel != null) ? selectedLabel : '';
+		text = selectedLabel ?? '';
 		return selectedIndex;
 	}
 
@@ -123,7 +123,7 @@ class PsychUIDropDownMenu extends PsychUIInputText {
 			}
 
 			var txtY:Float = behindText.y + behindText.height + 1;
-			for (num => item in _items) {
+			for (_ => item in _items) {
 				if(!item.visible) continue;
 				item.setPosition(behindText.x, txtY);
 				txtY += item.height;

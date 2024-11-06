@@ -76,8 +76,7 @@ class LoadingState extends MusicBeatState {
 		bg.screenCenter(X);
 		add(bg);
 		
-		bar = new FlxSprite(bg.x + 5, bg.y + 5).makeSolid(0, 15, FlxColor.WHITE);
-		add(bar);
+		add(bar = new FlxSprite(bg.x + 5, bg.y + 5).makeSolid(0, 15, FlxColor.WHITE));
 		barWidth = Std.int(bg.width - 10);
 
 		persistentUpdate = true;

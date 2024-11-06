@@ -87,9 +87,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		if(ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}');
 
 		/* setting up Editor PlayState stuff */
-		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, 0xFF101010);
-		bg.scale.set(FlxG.width, FlxG.height);
-		bg.updateHitbox();
+		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, 0xFF101010);
 		bg.scrollFactor.set();
 		bg.alpha = .9;
 		bg.active = false;

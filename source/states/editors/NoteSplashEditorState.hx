@@ -408,7 +408,6 @@ class NoteSplashEditorState extends MusicBeatState {
 				case "Green": greenEnabled = !defaultButton.checked;
 				case "Blue": blueEnabled = !defaultButton.checked;
 			}
-
 			setConfigRGB();
 		}
 
@@ -442,10 +441,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		changeShader.onSelect(0, "Red");
 	}
 
-	dynamic function reloadImage() // Dynamic because needs to be changed later
-	{
-		//
-	}
+	dynamic function reloadImage() {} // Dynamic because needs to be changed later
 
 	var holdingArrowsTime:Float = 0;
 	var holdingArrowsElapsed:Float = 0;
@@ -501,19 +497,14 @@ class NoteSplashEditorState extends MusicBeatState {
 
 			var multiplier:Int = (FlxG.keys.pressed.SHIFT || FlxG.gamepads.anyPressed(LEFT_SHOULDER)) ? 10 : 1;
 
-			var moveKeysP = [
-				FlxG.keys.justPressed.LEFT,
-				FlxG.keys.justPressed.RIGHT,
-				FlxG.keys.justPressed.UP,
-				FlxG.keys.justPressed.DOWN
-			];
+			var moveKeysP:Array<Bool> = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.DOWN];
 			if (moveKeysP.contains(true)) {
 				config.animations[curAnim].offsets[0] += ((moveKeysP[0] ? 1 : 0) - (moveKeysP[1] ? 1 : 0)) * multiplier;
 				config.animations[curAnim].offsets[1] += ((moveKeysP[2] ? 1 : 0) - (moveKeysP[3] ? 1 : 0)) * multiplier;
 				changedOffset = true;
 			}
 
-			var moveKeys = [FlxG.keys.pressed.LEFT, FlxG.keys.pressed.RIGHT, FlxG.keys.pressed.UP, FlxG.keys.pressed.DOWN];
+			var moveKeys:Array<Bool> = [FlxG.keys.pressed.LEFT, FlxG.keys.pressed.RIGHT, FlxG.keys.pressed.UP, FlxG.keys.pressed.DOWN];
 			if (moveKeys.contains(true)) {
 				holdingArrowsTime += elapsed;
 				if (holdingArrowsTime > 0.6) {

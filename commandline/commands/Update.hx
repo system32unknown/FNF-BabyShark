@@ -56,7 +56,7 @@ class Update {
 			}
 		}
 
-		// vswhere.exe its used to find any visual studio related installations on the system, including full visual studio ide installations, visual studio build tools installations, and other related components  - Nex
+		// vswhere.exe its used to find any visual studio related installations on the system, including full visual studio ide installations, visual studio build tools installations, and other related components - Nex
 		if (Compiler.getBuildTarget().toLowerCase() == "windows" && new Process('"C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -property catalog_productDisplayVersion').exitCode() == 1) {
 			prettyPrint("Installing Microsoft Visual Studio Community (Dependency)");
 

@@ -279,11 +279,11 @@ class TitleState extends MusicBeatState {
 	}
 
 	function skipIntro() {
+		FlxTween.tween(logo, {y: titleStartY}, 1.4, {ease: FlxEase.expoInOut});
+		deleteText();
 		introGroup.visible = true;
 		FlxG.camera.flash(FlxColor.WHITE, 2);
 		seenIntro = true;
-		FlxTween.tween(logo, {y: titleStartY}, 1.4, {ease: FlxEase.expoInOut});
-		deleteText();
 	}
 
 	#if CHECK_FOR_UPDATES

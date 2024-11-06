@@ -122,9 +122,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		\nHold Shift - Move Objects and Camera 4x faster
 		\nHold Control - Move Objects pixel-by-pixel and Camera 4x slower';
 
-		helpBg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		helpBg.scale.set(FlxG.width, FlxG.height);
-		helpBg.updateHitbox();
+		helpBg = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
 		helpBg.alpha = 0.6;
 		helpBg.cameras = [camHUD];
 		helpBg.active = helpBg.visible = false;
@@ -1353,7 +1351,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 				case 0: sel.setGraphicSize(sprWidth, lineSize); //Top
 				case 1: //Bottom
 					sel.setGraphicSize(sprWidth, lineSize);
-					sel.y += sprHeight  - lineSize;
+					sel.y += sprHeight - lineSize;
 				case 2: sel.setGraphicSize(lineSize, sprHeight); //Left
 				case 3: //Right
 					sel.setGraphicSize(lineSize, sprHeight);
@@ -1875,8 +1873,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 					target.animations.remove(anim);
 					targetSprite.animation.remove(anim.anim);
 
-					if(resetAnim && target.animations.length > 0)
-					{
+					if(resetAnim && target.animations.length > 0) {
 						curAnim = FlxMath.wrap(curAnim, 0, target.animations.length - 1);
 						playAnim(target.animations[curAnim].anim, true);
 						updateTextColors();

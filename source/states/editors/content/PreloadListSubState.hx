@@ -17,9 +17,9 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 	public function new(saveCallback:Map<String, LoadFilters>->Void, locked:Array<String> = null, list:Map<String, LoadFilters> = null) {
 		this.saveCallback = saveCallback;
 		lockedList = (lockedList != null) ? locked : [];
-		preloadList = (list != null) ? list : [];
+		preloadList = list ?? [];
 		
-		for (k => v in preloadList)
+		for (k => _ in preloadList)
 			preloadListKeys.push(k);
 
 		super();
@@ -130,8 +130,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 						showOutput('File must be inside images/music/songs subfolder!', true);
 					default: showOutput('File must be inside assets/mods folder!', true);
 				}
-			}
-			else showOutput('File is not inside Psych Engine\'s folder!', true);
+			} else showOutput('File is not inside Psych Engine\'s folder!', true);
 		}
 
 		var loadFileBtn:PsychUIButton = new PsychUIButton(0, bg.y + bg.height - 40, 'Load File', () -> {

@@ -666,8 +666,7 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 	override function update(elapsed:Float) {
 		if(WeekEditorState.loadedWeek != null) {
 			super.update(elapsed);
-			MusicBeatState.skipNextTransIn = true;
-			MusicBeatState.skipNextTransOut = true;
+			MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 			FlxG.switchState(() -> new WeekEditorFreeplayState(WeekEditorState.loadedWeek));
 			WeekEditorState.loadedWeek = null;
 			return;

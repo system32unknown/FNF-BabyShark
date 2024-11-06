@@ -25,7 +25,7 @@ class RGBPalette {
 		return color;
 	}
 	
-	function set_mult(value:Float) {
+	function set_mult(value:Float):Float {
 		mult = FlxMath.bound(value, 0, 1);
 		shader.mult.value = [mult];
 		return value;
@@ -76,11 +76,11 @@ class RGBShaderReference {
 		if(allowNew && value != _original.b) cloneOriginal();
 		return (b = parent.b = value);
 	}
-	function set_mult(value:Float) {
+	function set_mult(value:Float):Float {
 		if(allowNew && value != _original.mult) cloneOriginal();
 		return (mult = parent.mult = value);
 	}
-	function set_enabled(value:Bool) {
+	function set_enabled(value:Bool):Bool {
 		_owner.shader = value ? parent.shader : null;
 		return (enabled = value);
 	}
