@@ -7,96 +7,57 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
-import lime.utils.Assets as LimeAssets;
+import lime.utils.Assets;
 import utils.system.MemoryUtil;
-
-
-// credits to Chris Speciale (lead openfl maintainer) and Rudyrue.
-abstract CachedAsset(Dynamic) {
-    // cast from FlxGraphic to CachedAsset
-    @:from static inline function fromFlxGraphic(graphic:FlxGraphic):CachedAsset {
-        return cast graphic;
-    }
-    // cast from Sound to CachedAsset
-    @:from static inline function fromSound(sound:Sound):CachedAsset {
-        return cast sound;
-    }
-    // cast from CachedAsset to FlxGraphic
-    @:to inline function toFlxGraphic():FlxGraphic {
-        return cast this;
-    }
-    // cast from CachedAsset to Sound
-    @:to inline function toSound():Sound {
-        return cast this;
-    }
-}
 
 @:access(openfl.display.BitmapData)
 class Paths {
-	public static final CHART_PATH = "charts";
-	public static final SOUND_EXT = "ogg";
-	public static final VIDEO_EXT = "mp4";
-
-	public static var dumpExclusions:Array<String> = ['assets/shared/music/freakyMenu.$SOUND_EXT',];
-	public static var localTrackedAssets:Array<String> = [];
+	inline public static var CHART_PATH = "charts";
+	inline public static var SOUND_EXT = "ogg";
+	inline public static var VIDEO_EXT = "mp4";
 
 	public static var popUpFramesMap:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
-	// the tracked assets for the current state
-	// not meant to be iterated through for all assets loaded
-	public static var cachedAssets:Map<String, CachedAsset> = [];
 
-	inline public static function excludeAsset(key:String) {
+	public static function excludeAsset(key:String) {
 		if (!dumpExclusions.contains(key)) dumpExclusions.push(key);
 	}
 
-	public static function destroyAsset(key:String, ?asset:CachedAsset) {
-		if (asset == null) {
-			asset = cachedAssets[key];
-			if (asset == null) return;
-		}
-
-		switch (Type.typeof(asset)) {
-			// destroying method for graphics
-			case TClass(FlxGraphic):
-				var graphic:FlxGraphic = asset;
-
-				@:privateAccess
-				if (graphic.bitmap != null && graphic.bitmap.__texture != null)
-					graphic.bitmap.__texture.dispose();
-				FlxG.bitmap.remove(graphic);
-
-				graphic = null;
-			// destroying method for sounds
-			case TClass(Sound):
-				(asset:Sound).close();
-				LimeAssets.cache.clear(key);
-			// if grabbed asset doesn't exist then we stop the function
-			default:
-				Logs.trace('Failed Asset: "$key"', WARNING);
-				return;
-		}
-		cachedAssets.remove(key);
-	}
+	public static var dumpExclusions:Array<String> = ['assets/shared/music/freakyMenu.$SOUND_EXT',];
 
 	// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
-		for (key => asset in cachedAssets) {
+		for (key => asset in currentTrackedAssets) {
 			if (localTrackedAssets.contains(key) || dumpExclusions.contains(key)) continue;	
-			destroyAsset(key, asset);
+			destroyGraphic(asset); // get rid of the graphic
+			currentTrackedAssets.remove(key); // and remove the key from local cache map
 		}
 		MemoryUtil.clearMajor();
 	}
 
-	// clear all assets from memory
+	public static var localTrackedAssets:Array<String> = [];
+
+	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
 	public static function clearStoredMemory() {
-		for (key => asset in cachedAssets) {
-			if (dumpExclusions.contains(key)) continue;
-			destroyAsset(key, asset);
+		for (key in FlxG.bitmap._cache.keys()) if (!currentTrackedAssets.exists(key)) destroyGraphic(FlxG.bitmap.get(key));
+
+		for (key => asset in currentTrackedSounds) {
+			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && asset != null) {
+				asset.close();
+				Assets.cache.clear(key);
+				currentTrackedSounds.remove(key);
+			}
 		}
 
 		localTrackedAssets = [];
 		OpenFlAssets.cache.clear("songs");
 		MemoryUtil.clearMajor();
+	}
+
+	inline static function destroyGraphic(graphic:FlxGraphic) {
+		// free some gpu memory
+		if (graphic != null && graphic.bitmap != null && graphic.bitmap.__texture != null)
+			graphic.bitmap.__texture.dispose();
+		FlxG.bitmap.remove(graphic);
 	}
 
 	static public var currentLevel:String;
@@ -157,14 +118,16 @@ class Paths {
 	inline static public function soundRandom(key:String, min:Int, max:Int, ?modsAllowed:Bool = true):Sound
 		return sound(key + FlxG.random.int(min, max), modsAllowed);
 
+	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	public static function image(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxGraphic {
 		allowGPU = ClientPrefs.data.cacheOnGPU ? allowGPU : false;
-		
 		key = Language.getFileTranslation('images/$key') + '.png';
-		var bitmap:BitmapData = null;
-		if (cachedAssets.exists(key)) return cachedAssets.get(key);
-		if (!localTrackedAssets.contains(key)) localTrackedAssets.push(key);
 
+		var bitmap:BitmapData = null;
+		if (currentTrackedAssets.exists(key)) {
+			localTrackedAssets.push(key);
+			return currentTrackedAssets.get(key);
+		}
 		return cacheBitmap(key, parentFolder, bitmap, allowGPU);
 	}
 
@@ -181,13 +144,13 @@ class Paths {
 			}
 		}
 
-		if (allowGPU && bitmap.image != null) {
+		if (allowGPU && ClientPrefs.data.cacheOnGPU && bitmap.image != null) {
 			@:privateAccess
 			if (bitmap.__texture == null) {
 				bitmap.image.premultiplied = true;
 				bitmap.getTexture(FlxG.stage.context3D);
 			}
-	
+
 			bitmap.getSurface();
 			bitmap.disposeImage();
 			bitmap.image.data = null;
@@ -201,13 +164,14 @@ class Paths {
 		graph.persist = true;
 		graph.destroyOnNoUse = false;
 
-		cachedAssets.set(key, graph);
+		currentTrackedAssets.set(key, graph);
+		localTrackedAssets.push(key);
 		return graph;
 	}
 
 	inline static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String {
 		var path:String = getPath(key, TEXT, !ignoreMods);
-		return (#if sys FileSystem.exists(path)) ? File.getContent(path) #else OpenFlAssets.exists(path, TEXT)) ? LimeAssets.getText(path) #end : null;
+		return (#if sys FileSystem.exists(path)) ? File.getContent(path) #else OpenFlAssets.exists(path, TEXT)) ? Assets.getText(path) #end : null;
 	}
 
 	inline static public function font(key:String):String {
@@ -312,20 +276,22 @@ class Paths {
 		return hideChars.replace(invalidChars.replace(path, '-'), '').trim().toLowerCase();
 	}
 
+	public static var currentTrackedSounds:Map<String, Sound> = [];
 	public static function returnSound(key:String, ?path:String, ?modsAllowed:Bool = true, ?beepOnNull:Bool = true):Sound {
 		var file:String = getPath(Language.getFileTranslation(key) + '.$SOUND_EXT', SOUND, path, modsAllowed);
-		var snd:Sound = null;
-
-		if (cachedAssets.exists(file)) return cachedAssets.get(file);
-		if (#if sys !FileSystem.exists(file) #else OpenFlAssets.exists(file, SOUND) #end) {
-			FlxG.log.error('SOUND NOT FOUND: $key, PATH: $path');
-			return beepOnNull ? flixel.system.FlxAssets.getSound('flixel/sounds/beep') : null;
+		if(!currentTrackedSounds.exists(file)) {
+			#if sys
+			if(FileSystem.exists(file)) currentTrackedSounds.set(file, Sound.fromFile(file));
+			#else
+			if(OpenFlAssets.exists(file, SOUND)) currentTrackedSounds.set(file, OpenFlAssets.getSound(file));
+			#end
+			else if(beepOnNull) {
+				FlxG.log.error('SOUND NOT FOUND: $key, PATH: $path');
+				return flixel.system.FlxAssets.getSound('flixel/sounds/beep');
+			}
 		}
-		if (!localTrackedAssets.contains(file)) localTrackedAssets.push(file);
-
-		snd = #if sys Sound.fromFile #else OpenFlAssets.getSound #end(file);
-		cachedAssets.set(file, snd);
-		return snd;
+		localTrackedAssets.push(file);
+		return currentTrackedSounds.get(file);
 	}
 
 	#if MODS_ALLOWED
