@@ -64,8 +64,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 		    alphaTarget = 0;
 
 			if (lerpYPos <= -height) {
-				visible = false;
-				active = false;
+				visible = active = false;
 	
 				// Save sound preferences
 				#if FLX_SAVE
@@ -90,8 +89,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
     override function show(up:Bool = false):Void {
 		_timer = 1;
 		lerpYPos = 0;
-		visible = true;
-		active = true;
+		visible = active = true;
 
 		if (!silent) {
 			var sound:openfl.media.Sound = flixel.system.FlxAssets.getSound(up ? volumeUpSound : volumeDownSound);

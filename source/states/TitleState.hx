@@ -36,10 +36,12 @@ class TitleState extends MusicBeatState {
 		Conductor.bpm = musicBPM;
 
 		curWacky = getIntroTextShit();
-		if (!seenIntro) {
-			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-			FlxG.sound.music.fadeIn(4, 0, 0.7);
-		} else skipIntro();
+		if (seenIntro) {
+			skipIntro();
+			return;
+		}
+		FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+		FlxG.sound.music.fadeIn(4, 0, .7);
 	}
 
 	var logo:FlxSprite;

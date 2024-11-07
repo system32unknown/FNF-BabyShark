@@ -18,23 +18,27 @@ class Difficulty {
 		return Paths.formatToSongPath(filePostfix);
 	}
 	
-	inline public static function loadFromWeek(week:WeekData = null) {
+	public static function loadFromWeek(week:WeekData = null):Array<String> {
 		week ??= WeekData.getCurrentWeek();
 
 		var diffStr:String = week.difficulties;
-		if(diffStr != null && diffStr.length > 0) {
-			var diffs:Array<String> = diffStr.trim().split(',');
-			var i:Int = diffs.length - 1;
-			while (i > 0) {
-				if(diffs[i] != null) {
-					diffs[i] = diffs[i].trim();
-					if(diffs[i].length < 1) diffs.remove(diffs[i]);
-				}
+		if (diffStr == null || diffStr.length == 0) return defaultList;
+		var diffs:Array<String> = diffStr.trim().split(',');
+		var i:Int = diffs.length - 1;
+		while (i > 0) {
+			var diff:String = diffs[i];
+			if (diff == null) {
 				--i;
+				continue;
 			}
 
-			if(diffs.length > 0 && diffs[0].length > 0) list = diffs;
-		} else resetList();
+			diff = diff.trim();
+			if (diff.length < 1) diffs.remove(diff);
+			--i;
+		}
+
+		if (diffs.length > 0 && diffs[0].length > 0) return diffs;
+		return defaultList;
 	}
 	inline public static function resetList() {
 		list = defaultList.copy();
