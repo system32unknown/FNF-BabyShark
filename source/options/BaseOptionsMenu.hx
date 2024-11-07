@@ -46,7 +46,7 @@ class BaseOptionsMenu extends FlxSubState {
 		add(descBox);
 
 		var titleText:Alphabet = new Alphabet(75, 45, title);
-		titleText.setScale(0.6);
+		titleText.updateScale(.6, .6);
 		titleText.alpha = 0.4;
 		add(titleText);
 
@@ -69,7 +69,7 @@ class BaseOptionsMenu extends FlxSubState {
 				checkboxGroup.add(checkbox);
 			} else if (optionsArray[i].type != FUNC) {
 				optionText.x -= 80;
-				optionText.startPosition.x -= 80;
+				optionText.spawnPos.x -= 80;
 				var valueText:AttachedText = new AttachedText('' + optionsArray[i].getValue(), optionText.width + 60);
 				valueText.sprTracker = optionText;
 				valueText.copyAlpha = true;

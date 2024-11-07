@@ -122,7 +122,7 @@ class ControlsSubState extends FlxSubState {
 		add(grpBinds = new FlxTypedGroup<Alphabet>());
 
 		var text:Alphabet = new Alphabet(50, 600, 'SHIFT + < or > to\nChange Key Number');
-		text.setScale(.4);
+		text.updateScale(.4, .4);
 		add(text);
 
 		createTexts();
@@ -162,6 +162,7 @@ class ControlsSubState extends FlxSubState {
 					lastID = myID;
 					if(!isDisplayKey) {
 						text.alignment = RIGHT;
+						text.x -= 200;
 						grpOptions.add(text);
 						curOptions.push(i);
 						curOptionsValid.push(myID);
@@ -182,7 +183,7 @@ class ControlsSubState extends FlxSubState {
 	function addCenteredText(text:Alphabet) {
 		text.alignment = LEFT;
 		text.screenCenter(X).y -= 55;
-		text.startPosition.y -= 55;
+		text.spawnPos.y -= 55;
 	}
 	function addKeyText(text:Alphabet, option:Array<Dynamic>) {
 		var keys:Array<Null<FlxKey>> = Controls.keyBinds.get(option[2]);

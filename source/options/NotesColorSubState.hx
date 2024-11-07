@@ -78,7 +78,7 @@ class NotesColorSubState extends FlxSubState {
 		
 		var text:Alphabet = new Alphabet(50, 86, 'CTRL', NORMAL);
 		text.alignment = CENTER;
-		text.setScale(0.4);
+		text.updateScale(.4, .4);
 		add(text);
 
 		copyButton = new FlxSprite(760, 50, Paths.image('noteColorMenu/copy'));
@@ -394,7 +394,7 @@ class NotesColorSubState extends FlxSubState {
 	function makeColorAlphabet(x:Float = 0, y:Float = 0):Alphabet {
 		var text:Alphabet = new Alphabet(x, y);
 		text.alignment = CENTER;
-		text.setScale(.6);
+		text.updateScale(.6, .6);
 		add(text);
 		return text;
 	}

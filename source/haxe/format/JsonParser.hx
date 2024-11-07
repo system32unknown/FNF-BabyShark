@@ -41,7 +41,7 @@ class JsonParser {
 
 		If `str` is null, the result is unspecified.
 	**/
-	static public inline function parse(str:String):Dynamic {
+	public static inline function parse(str:String):Dynamic {
 		return new JsonParser(str).doParse();
 	}
 

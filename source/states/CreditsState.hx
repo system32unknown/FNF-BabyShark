@@ -134,7 +134,7 @@ class CreditsState extends MusicBeatState {
 
 			optionText.distancePerItem.y /= 1.2;
 
-			if (!isSelectable) optionText.startPosition.y -= 47;
+			if (!isSelectable) optionText.spawnPos.y -= 47;
 
 			optionText.snapToPosition();
 			grpOptions.add(optionText);

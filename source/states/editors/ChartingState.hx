@@ -2183,8 +2183,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var objX:Int = 10;
 		var objY:Int = 25;
 
-		var stepperSpamCloseness:PsychUINumericStepper;
-		var stepperSpamLength:PsychUINumericStepper;
+		var stepperSpamCloseness:PsychUINumericStepper = null;
+		var stepperSpamLength:PsychUINumericStepper = null;
 		var spamLength:Float = 5;
 		var spamCloseness:Float = 2;
 
@@ -2249,11 +2249,14 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			var undoArray:Array<MetaNote> = [];
 			var targetNote:MetaNote = selectedNotes[0];
 			
-			if(!FlxG.keys.pressed.ALT) resetSelectedNotes();
+			spamLength = stepperSpamLength.value;
+			spamCloseness = stepperSpamCloseness.value;
+
+			resetSelectedNotes();
 			if (targetNote != null) {
 				for(i in 0...Std.int(spamLength)) {
 					if (i == 0) continue;
-					forAddNotes = [targetNote.strumTime + (15000 * i / Conductor.bpm) / spamCloseness, targetNote.noteData, targetNote.sustainLength, false];
+					forAddNotes = [targetNote.strumTime + (15000 * i / Conductor.bpm) / spamCloseness, targetNote.noteData, targetNote.sustainLength, targetNote.noteType];
 					
 					var newSpamNote:MetaNote = createNote(forAddNotes);
 					var didAdd:Bool = false;
@@ -2271,17 +2274,17 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					
 					onSelectNote();
 					softReloadNotes();
+					updateGridVisibility();
+					updateNotesRGB();
 				}
-				updateGridVisibility();
-				updateNotesRGB();
 				addUndoAction(ADD_NOTE, {notes: undoArray});
 				forAddNotes.resize(0); // for collect gc
 			}
 		});
-		stepperSpamCloseness = new PsychUINumericStepper(spamButton.x + 90, spamButton.y + 5, 2, 2, 2, 524288);
+		stepperSpamCloseness = new PsychUINumericStepper(spamButton.x + 90, spamButton.y + 5, 2, spamCloseness, 2, 524288);
 		stepperSpamCloseness.value = spamCloseness;
 		stepperSpamCloseness.name = 'note_spamthing';
-		stepperSpamLength = new PsychUINumericStepper(stepperSpamCloseness.x + 90, stepperSpamCloseness.y, 5, 5, 1, 8388607);
+		stepperSpamLength = new PsychUINumericStepper(stepperSpamCloseness.x + 90, stepperSpamCloseness.y, 5, spamLength, 1, 8388607);
 		stepperSpamLength.value = spamLength;
 		stepperSpamLength.name = 'note_spamamount';
 

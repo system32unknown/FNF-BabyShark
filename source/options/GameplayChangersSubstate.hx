@@ -96,13 +96,13 @@ class GameplayChangersSubstate extends FlxSubState {
 		for (i => option in optionsArray) {
 			var optionText:Alphabet = new Alphabet(150, 360, option.name);
 			optionText.isMenuItem = true;
-			optionText.setScale(.8);
+			optionText.updateScale(.8, .8);
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
 			if (option.type == BOOL) {
 				optionText.x += 60;
-				optionText.startPosition.x += 60;
+				optionText.spawnPos.x += 60;
 				optionText.snapToPosition();
 				var checkbox:CheckboxThingie = new CheckboxThingie(optionText.x - 105, optionText.y, optionsArray[i].getValue() == true);
 				checkbox.sprTracker = optionText;

@@ -526,7 +526,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 		// Text
 		typedText = new TypedAlphabet(DEFAULT_TEXT_X, DEFAULT_TEXT_Y);
-		typedText.setScale(.7);
+		typedText.updateScale(.7, .7);
 		typedText.onUpdate = (text:String) -> PlayState.instance.callOnScripts('onDialogueTextUpdate', [text]);
 		add(typedText);
 

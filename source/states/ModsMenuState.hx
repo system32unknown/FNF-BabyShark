@@ -537,10 +537,10 @@ class ModsMenuState extends MusicBeatState {
 			icon.animation.curAnim.curFrame = curMod.icon.animation.curAnim.curFrame;
 		}
 
-		if(modName.scaleX != 0.8) modName.setScale(0.8);
+		if(modName.scaleX != 0.8) modName.updateScale(.8, .8);
 		modName.text = curMod.name;
-		var newScale = Math.min(620 / (modName.width / 0.8), 0.8);
-		modName.setScale(newScale, Math.min(newScale * 1.35, 0.8));
+		var newScale = Math.min(620 / (modName.width / .8), .8);
+		modName.updateScale(newScale, Math.min(newScale * 1.35, .8));
 		modName.y = modNameInitialY - (modName.height / 2);
 		modRestartText.visible = curMod.mustRestart;
 		modDesc.text = curMod.desc;
@@ -738,7 +738,7 @@ class MenuButton extends FlxSpriteGroup {
 
 		if(text != null) {
 			textOn = new Alphabet(0, 0, "", NORMAL);
-			textOn.setScale(.6);
+			textOn.updateScale(.6, .6);
 			textOn.text = text;
 			textOn.alpha = 0.6;
 			textOn.visible = false;
@@ -746,8 +746,8 @@ class MenuButton extends FlxSpriteGroup {
 			textOn.y -= 30;
 			add(textOn);
 			
-			textOff = new Alphabet(0, 0);
-			textOff.setScale(0.52);
+			textOff = new Alphabet();
+			textOff.updateScale(.52, .52);
 			textOff.text = text;
 			textOff.alpha = 0.6;
 			centerOnBg(textOff);

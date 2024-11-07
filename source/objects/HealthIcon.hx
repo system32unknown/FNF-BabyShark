@@ -19,7 +19,7 @@ class HealthIcon extends FlxSprite {
 	var state:Int = 0;
 	var _scale:FlxPoint;
 	final animatediconstates:Array<String> = ['normal', 'lose', 'win'];
-	var iconOffsets:Array<Float> = [0, 0];
+	var iconOffsets:Array<Float> = [0.0, 0.0];
 
 	public static function returnGraphic(char:String, defaultIfMissing:Bool = false, ?allowGPU:Bool = true):FlxGraphic {
 		var path:String = prefix + char;
@@ -103,7 +103,7 @@ class HealthIcon extends FlxSprite {
 		return true;
 	}
 
-	public var autoAdjustOffset:Bool = false;
+	public var autoOffset:Bool = false;
 	override function updateHitbox() {
 		if (iconType.toLowerCase() == 'center') centerOrigin();
 		else if (iconType.toLowerCase() == 'psych') {
@@ -112,7 +112,7 @@ class HealthIcon extends FlxSprite {
 			height *= iconZoom;
 			offset.set(-.5 * (frameWidth * iconZoom - frameWidth), -.5 * (frameHeight * iconZoom - frameHeight));
 		} else super.updateHitbox();
-		if(autoAdjustOffset) offset.set(iconOffsets[0], iconOffsets[1]);
+		if(autoOffset) offset.set(iconOffsets[0], iconOffsets[1]);
 	}
 
 	public function getCharacter():String return char;

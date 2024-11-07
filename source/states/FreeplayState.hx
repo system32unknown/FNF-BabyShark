@@ -109,7 +109,7 @@ class FreeplayState extends MusicBeatState {
 			Mods.currentModDirectory = songs[i].folder;
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.iconType = 'psych';
-			icon.autoAdjustOffset = true;
+			icon.autoOffset = true;
 			icon.sprTracker = songText;
 
 			// too laggy with a lot of songs, so i had to recode the logic for it
@@ -459,8 +459,8 @@ class FreeplayState extends MusicBeatState {
 		for (i in min...max) {
 			var item:Alphabet = grpSongs.members[i];
 			item.visible = item.active = true;
-			item.x = ((item.targetY - lerpSelected) * item.distancePerItem.x) + item.startPosition.x;
-			item.y = ((item.targetY - lerpSelected) * 1.3 * item.distancePerItem.y) + item.startPosition.y;
+			item.x = ((item.targetY - lerpSelected) * item.distancePerItem.x) + item.spawnPos.x;
+			item.y = ((item.targetY - lerpSelected) * 1.3 * item.distancePerItem.y) + item.spawnPos.y;
 
 			var icon:HealthIcon = iconArray[i];
 			icon.visible = icon.active = true;
