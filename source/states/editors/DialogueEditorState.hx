@@ -98,7 +98,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 	function addDialogueLineUI() {
 		var tab_group:FlxSpriteGroup = UI_box.getTab('Dialogue Line').menu;
 
-		characterInputText = new PsychUIInputText(10, 20, 80, DialogueCharacter.DEFAULT_CHARACTER, 8);
+		characterInputText = new PsychUIInputText(10, 20, 80, DialogueCharacter.DEFAULT_CHARACTER);
 		speedStepper = new PsychUINumericStepper(10, characterInputText.y + 40, 0.005, 0.05, 0, 0.5, 3);
 
 		angryCheckbox = new PsychUICheckBox(speedStepper.x + 120, speedStepper.y, "Angry Textbox", 200);
@@ -107,9 +107,9 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 			dialogueFile.dialogue[curSelected].boxState = (angryCheckbox.checked ? 'angry' : 'normal');
 		};
 
-		soundInputText = new PsychUIInputText(10, speedStepper.y + 40, 150, '', 8);
-		lineInputText = new PsychUIInputText(10, soundInputText.y + 35, 200, DEFAULT_TEXT, 8);
-		lineInputText.onPressEnter = (e) -> {
+		soundInputText = new PsychUIInputText(10, speedStepper.y + 40, 150);
+		lineInputText = new PsychUIInputText(10, soundInputText.y + 35, 200, DEFAULT_TEXT);
+		lineInputText.onPressEnter = (e:openfl.events.KeyboardEvent) -> {
 			if(e.shiftKey) {
 				lineInputText.text += '\n';
 				lineInputText.caretIndex++;
@@ -186,7 +186,6 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 	static var DEFAULT_TEXT:String = "coolswag";
 	static var DEFAULT_BUBBLETYPE:String = "normal";
 	function reloadText(skipDialogue:Bool) {
-
 		var textToType:String = lineInputText.text;
 		if(textToType == null || textToType.length < 1) textToType = ' ';
 		
@@ -204,8 +203,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 		if(daText.length > 2) daText.y -= DialogueBoxPsych.LONG_TEXT_ADD;
 
 		#if DISCORD_ALLOWED
-		// Updating Discord Rich Presence
-		var rpcText:String = lineInputText.text;
+		var rpcText:String = lineInputText.text; // Updating Discord Rich Presence
 		if(rpcText == null || rpcText.length < 1) rpcText = '(Empty)';
 		if(rpcText.length < 3) rpcText += '   '; //Fixes a bug on RPC that triggers an error when the text is too short
 		DiscordClient.changePresence("Dialogue Editor", rpcText);

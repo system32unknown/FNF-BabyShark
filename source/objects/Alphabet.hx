@@ -15,8 +15,8 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 	public var changeX:Bool = true;
 	public var changeY:Bool = true;
 
-	public var scaleX(default, set):Float = 1;
-	public var scaleY(default, set):Float = 1;
+	public var scaleX(default, set):Float = 1.0;
+	public var scaleY(default, set):Float = 1.0;
 
 	public var letters(get, never):Array<AlphabetGlyph>;
 	function get_letters():Array<AlphabetGlyph> {

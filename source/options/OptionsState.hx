@@ -37,10 +37,10 @@ class OptionsState extends MusicBeatState {
 		PlayState.mania = 8;
 
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
+		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.color = 0xFFea71fd;
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 
 		add(grpOptions = new FlxTypedGroup<Alphabet>());

@@ -93,7 +93,7 @@ class NotesColorSubState extends FlxSubState {
 		colorGradient.setPosition(780, 200);
 		add(colorGradient);
 
-		colorGradientSelector = new FlxSprite(770, 200).makeGraphic(80, 10, FlxColor.WHITE);
+		colorGradientSelector = new FlxSprite(770, 200).makeGraphic(80, 10);
 		colorGradientSelector.offset.y = 5;
 		add(colorGradientSelector);
 
@@ -120,7 +120,7 @@ class NotesColorSubState extends FlxSubState {
 		add(alphabetG = makeColorAlphabet(txtX, txtY));
 		add(alphabetB = makeColorAlphabet(txtX + 100, txtY));
 		add(alphabetHex = makeColorAlphabet(txtX, txtY - 55));
-		hexTypeLine = new FlxSprite(0, 20).makeGraphic(5, 62, FlxColor.WHITE);
+		hexTypeLine = new FlxSprite(0, 20).makeGraphic(5, 62);
 		hexTypeLine.visible = false;
 		add(hexTypeLine);
 

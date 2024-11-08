@@ -52,7 +52,7 @@ class MetaNote extends Note {
 
 		if(sustainLength > 0) {
 			if(sustainSprite == null) {
-				sustainSprite = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+				sustainSprite = new FlxSprite().makeGraphic(1, 1);
 				sustainSprite.scrollFactor.x = 0;
 			}
 			sustainSprite.setGraphicSize(8, Math.max(ChartingState.GRID_SIZE / 4, (Math.round((v * ChartingState.GRID_SIZE + ChartingState.GRID_SIZE) / stepCrochet) * zoom) - ChartingState.GRID_SIZE / 2));

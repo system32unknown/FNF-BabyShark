@@ -20,7 +20,7 @@ class Bar extends FlxSpriteGroup {
 	public var barHeight(default, set):Int = 1;
 	public var barOffset:FlxPoint = FlxPoint.get(3, 3);
 
-	function set_bgOffset(value:FlxPoint) {
+	function set_bgOffset(value:FlxPoint):FlxPoint {
 		bgOffset = value;
 		bg.setPosition(bg.x + bgOffset.x, bg.y + bgOffset.y);
 		return value;

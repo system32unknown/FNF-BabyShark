@@ -10,7 +10,6 @@ class AttachedText extends Alphabet {
 		super(0, 0, text, type);
 
 		this.updateScale(scale, scale);
-		this.isMenuItem = false;
 		this.textoffset.set(offsetX, offsetY);
 	}
 

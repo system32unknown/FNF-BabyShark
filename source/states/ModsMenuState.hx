@@ -669,7 +669,7 @@ class ModItem extends FlxSpriteGroup {
 			}
 		}
 
-		selectBg = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+		selectBg = new FlxSprite().makeGraphic(1, 1);
 		selectBg.alpha = 0.8;
 		selectBg.visible = false;
 		add(selectBg);
@@ -732,7 +732,7 @@ class MenuButton extends FlxSpriteGroup {
 	public function new(x:Float, y:Float, width:Int, height:Int, ?text:String = null, ?img:flixel.graphics.FlxGraphic = null, onClick:Void->Void = null, animWidth:Int = 0, animHeight:Int = 0) {
 		super(x, y);
 		
-		bg = FlxSpriteUtil.drawRoundRect(new FlxSprite().makeGraphic(width, height, FlxColor.TRANSPARENT), 0, 0, width, height, 15, 15, FlxColor.WHITE);
+		bg = FlxSpriteUtil.drawRoundRect(new FlxSprite().makeGraphic(width, height, FlxColor.TRANSPARENT), 0, 0, width, height, 15, 15);
 		bg.color = FlxColor.BLACK;
 		add(bg);
 

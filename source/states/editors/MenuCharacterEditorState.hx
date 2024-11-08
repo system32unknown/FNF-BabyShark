@@ -100,13 +100,13 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 		idleInputText = new PsychUIInputText(10, imageInputText.y + 35, 100, characterFile.idle_anim, 8);
 		confirmInputText = new PsychUIInputText(10, idleInputText.y + 35, 100, characterFile.confirm_anim, 8);
 
-		flipXCheckbox = new PsychUICheckBox(10, confirmInputText.y + 30, "Flip X", 100);
+		flipXCheckbox = new PsychUICheckBox(10, confirmInputText.y + 30, "Flip X");
 		flipXCheckbox.onClick = () -> {
 			grpWeekCharacters.members[characterTypeRadio.checked].flipX = flipXCheckbox.checked;
 			characterFile.flipX = flipXCheckbox.checked;
 		};
 
-		antialiasingCheckbox = new PsychUICheckBox(10, flipXCheckbox.y + 30, "Antialiasing", 100);
+		antialiasingCheckbox = new PsychUICheckBox(10, flipXCheckbox.y + 30, "Antialiasing");
 		antialiasingCheckbox.checked = grpWeekCharacters.members[characterTypeRadio.checked].antialiasing;
 		antialiasingCheckbox.onClick = () -> {
 			grpWeekCharacters.members[characterTypeRadio.checked].antialiasing = antialiasingCheckbox.checked;

@@ -150,12 +150,12 @@ class Achievements {
 	public static function get_showingPopups():Bool
 		return _popups.length > 0;
 
-	public static function startPopup(achieve:String, endFunc:Void->Void = null) {
+	public static function startPopup(achieve:String) {
 		for (popup in _popups) {
 			if (popup == null) continue;
 			popup.intendedY += 150;
 		}
-		_popups.push(new AchievementPopup(achieve, endFunc));
+		_popups.push(new AchievementPopup(achieve));
 	}
 
 	// Map sorting cuz haxe is physically incapable of doing that by itself

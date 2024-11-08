@@ -43,7 +43,7 @@ class PsychUIBox extends FlxSpriteGroup {
 	public function new(x:Float, y:Float, width:Int, height:Int, tabs:Array<String> = null) {
 		super(x, y);
 		
-		bg = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+		bg = new FlxSprite().makeGraphic(1, 1);
 		bg.color = FlxColor.BLACK;
 		bg.alpha = 0.6;
 		add(bg);

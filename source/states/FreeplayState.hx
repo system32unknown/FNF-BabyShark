@@ -28,11 +28,11 @@ class FreeplayState extends MusicBeatState {
 	var intendedRating:Float = 0;
 	var intendedcombo:String = '';
 
-	var grpSongs:FlxTypedGroup<Alphabet>;
-	var iconArray:Array<HealthIcon> = [];
-	var interpColor:FlxInterpolateColor;
+	var grpSongs:FlxTypedSpriteGroup<Alphabet>;
+	var grpIcons:FlxTypedSpriteGroup<HealthIcon>;
 
 	var bg:FlxSprite;
+	var interpColor:FlxInterpolateColor;
 
 	var missingTextBG:FlxSprite;
 	var missingText:FlxText;
@@ -45,7 +45,7 @@ class FreeplayState extends MusicBeatState {
 
 	public static var section:String = '';
 
-	override function create() {		
+	override function create() {
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
 		WeekData.reloadWeekFiles();
@@ -92,54 +92,44 @@ class FreeplayState extends MusicBeatState {
 		}
 		Mods.loadTopMod();
 
-		bg = new FlxSprite(Paths.image('menuDesat'));
+		add(bg = new FlxSprite(Paths.image('menuDesat')));
 		bg.antialiasing = ClientPrefs.data.antialiasing;
-		add(bg);
 		bg.screenCenter();
 
-		add(grpSongs = new FlxTypedGroup<Alphabet>());
-		for (i in 0...songs.length) {
-			var songText:Alphabet = new Alphabet(90, 320, songs[i].songName);
-			songText.targetY = i;
-			grpSongs.add(songText);
-
+		add(grpSongs = new FlxTypedSpriteGroup<Alphabet>());
+		add(grpIcons = new FlxTypedSpriteGroup<HealthIcon>());
+		for (index => song in songs) {
+			var songText:Alphabet = grpSongs.add(new Alphabet(90, 320, song.songName));
+			songText.targetY = index;
 			songText.scaleX = Math.min(1, 980 / songText.width);
 			songText.snapToPosition();
 
-			Mods.currentModDirectory = songs[i].folder;
-			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
+			Mods.currentModDirectory = song.folder;
+			var icon:HealthIcon = new HealthIcon(song.songCharacter);
 			icon.iconType = 'psych';
 			icon.autoOffset = true;
 			icon.sprTracker = songText;
 
-			// too laggy with a lot of songs, so i had to recode the logic for it
-			songText.visible = songText.active = songText.isMenuItem = false;
+			songText.visible = songText.active = false;
 			icon.visible = icon.active = false;
-
-			// using a FlxGroup is too much fuss!
-			iconArray.push(icon);
-			add(icon);
+			grpIcons.add(icon);
 		}
 		WeekData.setDirectoryFromWeek();
 
-		scoreText = new FlxText(FlxG.width * .7, 5, 0, "", 32);
-		scoreText.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, RIGHT);
+		scoreText = new FlxText(FlxG.width * .7, 5, 0, '', 32);
+		scoreText.font = Paths.font('babyshark.ttf');
+		scoreText.alignment = 'right';
 
-		scoreBG = new FlxSprite(scoreText.x - 6).makeGraphic(1, 90, FlxColor.BLACK);
+		add(scoreBG = new FlxSprite(scoreText.x - 6).makeGraphic(1, 90, FlxColor.BLACK));
 		scoreBG.alpha = 0.6;
-		add(scoreBG);
 
-		diffText = new FlxText(scoreText.x, 0, 0, "", 24);
+		add(scoreText);
+
+		add(diffText = new FlxText(scoreText.x, 0, 0, '', 24));
 		diffText.y = scoreBG.height - diffText.height + 10;
 		diffText.font = scoreText.font;
-
-		comboText = new FlxText(scoreText.x, 0, 0, "", 24);
-		comboText.y = scoreBG.height / 2 - 6;
+		add(comboText = new FlxText(scoreText.x, scoreBG.height / 2 - 6, 0, "", 24));
 		comboText.font = diffText.font;
-
-		add(diffText);
-		add(scoreText);
-		add(comboText);
 
 		missingTextBG = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		missingTextBG.alpha = .6;
@@ -161,7 +151,8 @@ class FreeplayState extends MusicBeatState {
 		var leText:String = Language.getPhrase("freeplay_tip", '[SPACE] Listen to the Song • [CTRL] Gameplay Changers Menu • [HOLD TAB] Character Selection\n[COMMA] Change Sections • [RESET] Reset Score and Accuracy');
 		bottomString = leText;
 		bottomText = new FlxText(0, 0, FlxG.width, leText, 18);
-		bottomText.setFormat(Paths.font("babyshark.ttf"), 18, FlxColor.WHITE, CENTER);
+		bottomText.font = Paths.font("babyshark.ttf");
+		bottomText.alignment = 'center';
 		bottomText.scrollFactor.set();
 		bottomText.y = FlxG.height - bottomText.height;
 		add(bottomText);
@@ -388,8 +379,7 @@ class FreeplayState extends MusicBeatState {
 
 		lastDifficultyName = Difficulty.getString(curDifficulty, false);
 		var displayDiff:String = Difficulty.getString(curDifficulty);
-		if (Difficulty.list.length > 1)
-			diffText.text = '< ${displayDiff.toUpperCase()} >';
+		if (Difficulty.list.length > 1) diffText.text = '< ${displayDiff.toUpperCase()} >';
 		else diffText.text = displayDiff.toUpperCase();
 
 		positionHighscore();
@@ -401,16 +391,12 @@ class FreeplayState extends MusicBeatState {
 
 		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length - 1);
 		_updateSongLastDifficulty();
-		if(playSound) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		if(playSound) FlxG.sound.play(Paths.sound('scrollMenu'), .4);
 
 		for (num => item in grpSongs.members) {
-			var icon:HealthIcon = iconArray[num];
-			item.alpha = .6;
-			icon.alpha = .6;
-			if (item.targetY == curSelected) {
-				item.alpha = 1;
-				icon.alpha = 1;
-			}
+			var selectAlpha:Float = (num == curSelected ? 1 : .6);
+			item.alpha = selectAlpha;
+			grpIcons.members[num].alpha = selectAlpha;
 		}
 		
 		Mods.currentModDirectory = songs[curSelected].folder;
@@ -449,20 +435,21 @@ class FreeplayState extends MusicBeatState {
 	public function updateTexts(elapsed:Float = 0.0) {
 		lerpSelected = FlxMath.lerp(curSelected, lerpSelected, Math.exp(-elapsed * 9.6));
 		for (i in _lastVisibles) {
-			grpSongs.members[i].visible = grpSongs.members[i].active = false;
-			iconArray[i].visible = iconArray[i].active = false;
+			var text:Alphabet = grpSongs.members[i];
+			text.visible = text.active = false;
+			grpIcons.members[i].visible = grpIcons.members[i].active = false;
 		}
-		_lastVisibles = [];
+		_lastVisibles.resize(0);
 
-		var min:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected - _drawDistance)));
-		var max:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected + _drawDistance)));
+		var min:Int = Math.round(FlxMath.bound(lerpSelected - _drawDistance, 0, songs.length));
+		var max:Int = Math.round(FlxMath.bound(lerpSelected + _drawDistance, 0, songs.length));
 		for (i in min...max) {
 			var item:Alphabet = grpSongs.members[i];
 			item.visible = item.active = true;
 			item.x = ((item.targetY - lerpSelected) * item.distancePerItem.x) + item.spawnPos.x;
 			item.y = ((item.targetY - lerpSelected) * 1.3 * item.distancePerItem.y) + item.spawnPos.y;
 
-			var icon:HealthIcon = iconArray[i];
+			var icon:HealthIcon = grpIcons.members[i];
 			icon.visible = icon.active = true;
 			_lastVisibles.push(i);
 		}

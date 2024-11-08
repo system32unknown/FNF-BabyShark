@@ -151,7 +151,7 @@ class StageData {
 						}
 						if(!ClientPrefs.data.antialiasing) spr.antialiasing = false;
 					} else {
-						spr.makeGraphic(1, 1, FlxColor.WHITE);
+						spr.makeGraphic(1, 1);
 						spr.antialiasing = false;
 					}
 

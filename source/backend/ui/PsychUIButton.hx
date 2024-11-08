@@ -29,7 +29,7 @@ class PsychUIButton extends FlxSpriteGroup {
 
 	public function new(x:Float = 0, y:Float = 0, label:String = '', ?onClick:Void->Void = null, ?wid:Int = 80, ?hei:Int = 20) {
 		super(x, y);
-		bg = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+		bg = new FlxSprite().makeGraphic(1, 1);
 		add(bg);
 		bg.color = 0xFFAAAAAA;
 		bg.alpha = 0.6;

@@ -7,10 +7,9 @@ import openfl.Lib;
 import flash.display.BitmapData;
 
 class AchievementPopup extends openfl.display.Sprite {
-	public var onFinish:Void->Void = null;
 	var lastScale:Float = 1;
 
-	public function new(achieve:String, onFinish:Void->Void) {
+	public function new(achieve:String) {
 		super();
 
 		graphics.beginFill(FlxColor.BLACK); // bg
@@ -61,7 +60,7 @@ class AchievementPopup extends openfl.display.Sprite {
 		var textY:Int = imgY + 20;
 
 		var text:FlxText = new FlxText(0, 0, 270, 'TEST!!!', 16);
-		text.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
+		text.setFormat(Paths.font("vcr.ttf"), 16);
 		drawTextAt(text, name, textX, textY);
 		drawTextAt(text, desc, textX, textY + 30);
 		graphics.endFill();
@@ -86,7 +85,6 @@ class AchievementPopup extends openfl.display.Sprite {
 	}
 
 	var bitmaps:Array<BitmapData> = [];
-
 	function drawTextAt(text:FlxText, str:String, textX:Float, textY:Float) {
 		text.text = str;
 		text.updateHitbox();

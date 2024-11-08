@@ -12,9 +12,7 @@ import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since
 
 #if linux
 @:cppInclude('./external/gamemode_client.h')
-@:cppFileCode('
-	#define GAMEMODE_AUTO
-')
+@:cppFileCode('#define GAMEMODE_AUTO')
 #end
 class Main extends Sprite {
 	public static var engineVer:GameVersion = new GameVersion(0, 1, 5);

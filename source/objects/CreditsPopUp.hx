@@ -14,7 +14,7 @@ class CreditsPopUp extends FlxSpriteGroup {
 
 	public function new(x:Float, y:Float, text:String, songHead:SongHeading, font:String = 'Comic Sans MS Bold') {
 		super(x, y);
-		add(bg = new FlxSprite().makeGraphic(400, 50, FlxColor.WHITE));
+		add(bg = new FlxSprite().makeGraphic(400, 50));
 		txtFont = font;
 		
 		var headingPath:SongHeading = songHead;
@@ -37,10 +37,9 @@ class CreditsPopUp extends FlxSpriteGroup {
 
 	public function switchHeading(newHeading:SongHeading) {
 		if (bg != null) remove(bg);
-		bg = new FlxSprite().makeGraphic(400, 50, FlxColor.WHITE);
+		bg = new FlxSprite().makeGraphic(400, 50);
 		if (newHeading != null) {
-			if (newHeading.animation == null)
-				bg.loadGraphic(Paths.image(newHeading.path));
+			if (newHeading.animation == null) bg.loadGraphic(Paths.image(newHeading.path));
 			else {
 				var info:Animation = newHeading.animation;
 				bg.frames = Paths.getSparrowAtlas(newHeading.path);
@@ -62,7 +61,7 @@ class CreditsPopUp extends FlxSpriteGroup {
 	function createHeadingText(text:String) {
 		if (funnyText != null) remove(funnyText);
 		funnyText = new FlxText(1, 0, 650, text, 30);
-		funnyText.setFormat(txtFont, 30, FlxColor.WHITE);
+		funnyText.setFormat(txtFont, 30);
         funnyText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		funnyText.antialiasing = true;
 		add(funnyText);

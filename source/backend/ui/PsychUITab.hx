@@ -9,7 +9,7 @@ class PsychUITab extends FlxSprite {
 
 	public function new(name:String) {
 		super();
-		makeGraphic(1, 1, FlxColor.WHITE);
+		makeGraphic(1, 1);
 		color = FlxColor.BLACK;
 		alpha = 0.6;
 

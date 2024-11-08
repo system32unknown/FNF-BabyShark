@@ -68,7 +68,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		add(progressBar);
 
 		playbackTxt = new FlxText(FlxG.width * 0.6, 20, 0, "", 32);
-		playbackTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE);
+		playbackTxt.setFormat(Paths.font("vcr.ttf"), 32);
 		add(playbackTxt);
 
 		switchPlayMusic();

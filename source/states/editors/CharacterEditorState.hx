@@ -95,7 +95,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		add(ghost);
 
 		animsTxt = new FlxText(10, 32, 400, '');
-		animsTxt.setFormat(null, 16, FlxColor.WHITE);
+		animsTxt.setFormat(null, 16);
 		animsTxt.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 		animsTxt.scrollFactor.set();
 		animsTxt.cameras = [camHUD];
@@ -302,7 +302,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			}
 		});
 
-		var highlightGhost:PsychUICheckBox = new PsychUICheckBox(20 + makeGhostButton.x + makeGhostButton.width, makeGhostButton.y, "Highlight Ghost", 100);
+		var highlightGhost:PsychUICheckBox = new PsychUICheckBox(20 + makeGhostButton.x + makeGhostButton.width, makeGhostButton.y, "Highlight Ghost");
 		highlightGhost.onClick = () -> {
 			var value:Int = highlightGhost.checked ? 125 : 0;
 			ghost.colorTransform.redOffset = value;
@@ -332,7 +332,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	function addSettingsUI() {
 		var tab_group:FlxSpriteGroup = UI_box.getTab('Settings').menu;
 
-		check_player = new PsychUICheckBox(10, 60, "Playable Character", 100);
+		check_player = new PsychUICheckBox(10, 60, "Playable Character");
 		check_player.checked = character.isPlayer;
 		check_player.onClick = () -> {
 			character.isPlayer = !character.isPlayer;
@@ -414,11 +414,11 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	function addAnimationsUI() {
 		var tab_group:FlxSpriteGroup = UI_characterbox.getTab('Animations').menu;
 
-		animationInputText = new PsychUIInputText(15, 85, 80, '', 8);
-		animationNameInputText = new PsychUIInputText(animationInputText.x, animationInputText.y + 35, 150, '', 8);
-		animationIndicesInputText = new PsychUIInputText(animationNameInputText.x, animationNameInputText.y + 40, 250, '', 8);
-		animationFramerate = new PsychUINumericStepper(animationInputText.x + 170, animationInputText.y, 1, 24, 0, 240, 0);
-		animationLoopCheckBox = new PsychUICheckBox(animationNameInputText.x + 170, animationNameInputText.y - 1, "Should it Loop?", 100);
+		animationInputText = new PsychUIInputText(15, 85, 80);
+		animationNameInputText = new PsychUIInputText(animationInputText.x, animationInputText.y + 35, 150);
+		animationIndicesInputText = new PsychUIInputText(animationNameInputText.x, animationNameInputText.y + 40, 250);
+		animationFramerate = new PsychUINumericStepper(animationInputText.x + 170, animationInputText.y, 1, 24, 0, 240);
+		animationLoopCheckBox = new PsychUICheckBox(animationNameInputText.x + 170, animationNameInputText.y - 1, "Should it Loop?");
 
 		animationDropDown = new PsychUIDropDownMenu(15, animationInputText.y - 55, [''], function(selectedAnimation:Int, pressed:String) {
 			var anim:AnimArray = character.animationsArray[selectedAnimation];
@@ -537,7 +537,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	function addCharacterUI() {
 		var tab_group:FlxSpriteGroup = UI_characterbox.getTab('Character').menu;
 
-		imageInputText = new PsychUIInputText(15, 30, 200, character.imageFile, 8);
+		imageInputText = new PsychUIInputText(15, 30, 200, character.imageFile);
 		var reloadImage:PsychUIButton = new PsychUIButton(imageInputText.x + 210, imageInputText.y - 3, "Reload Image", () -> {
 			var lastAnim = character.getAnimationName();
 			character.imageFile = imageInputText.text;
@@ -553,7 +553,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			updateHealthBar();
 		});
 
-		healthIconInputText = new PsychUIInputText(15, imageInputText.y + 35, 75, healthIcon.getCharacter(), 8);
+		healthIconInputText = new PsychUIInputText(15, imageInputText.y + 35, 75, healthIcon.getCharacter());
 
 		singDurationStepper = new PsychUINumericStepper(15, healthIconInputText.y + 45, 0.1, 4, 0, 999, 1);
 		scaleStepper = new PsychUINumericStepper(15, singDurationStepper.y + 40, 0.1, 1, 0.05, 10, 2);
@@ -575,17 +575,17 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			character.noAntialiasing = noAntialiasingCheckBox.checked;
 		};
 
-		positionXStepper = new PsychUINumericStepper(flipXCheckBox.x + 110, flipXCheckBox.y, 10, character.positionArray[0], -9000, 9000, 0);
-		positionYStepper = new PsychUINumericStepper(positionXStepper.x + 70, positionXStepper.y, 10, character.positionArray[1], -9000, 9000, 0);
+		positionXStepper = new PsychUINumericStepper(flipXCheckBox.x + 110, flipXCheckBox.y, 10, character.positionArray[0], -9000, 9000);
+		positionYStepper = new PsychUINumericStepper(positionXStepper.x + 70, positionXStepper.y, 10, character.positionArray[1], -9000, 9000);
 
-		positionCameraXStepper = new PsychUINumericStepper(positionXStepper.x, positionXStepper.y + 40, 10, character.cameraPosition[0], -9000, 9000, 0);
-		positionCameraYStepper = new PsychUINumericStepper(positionYStepper.x, positionYStepper.y + 40, 10, character.cameraPosition[1], -9000, 9000, 0);
+		positionCameraXStepper = new PsychUINumericStepper(positionXStepper.x, positionXStepper.y + 40, 10, character.cameraPosition[0], -9000, 9000);
+		positionCameraYStepper = new PsychUINumericStepper(positionYStepper.x, positionYStepper.y + 40, 10, character.cameraPosition[1], -9000, 9000);
 
 		var saveCharacterButton:PsychUIButton = new PsychUIButton(reloadImage.x, noAntialiasingCheckBox.y + 40, "Save Character", () -> saveCharacter());
 
-		healthColorStepperR = new PsychUINumericStepper(singDurationStepper.x, saveCharacterButton.y, 20, character.healthColorArray[0], 0, 255, 0);
-		healthColorStepperG = new PsychUINumericStepper(singDurationStepper.x + 65, saveCharacterButton.y, 20, character.healthColorArray[1], 0, 255, 0);
-		healthColorStepperB = new PsychUINumericStepper(singDurationStepper.x + 130, saveCharacterButton.y, 20, character.healthColorArray[2], 0, 255, 0);
+		healthColorStepperR = new PsychUINumericStepper(singDurationStepper.x, saveCharacterButton.y, 20, character.healthColorArray[0], 0, 255);
+		healthColorStepperG = new PsychUINumericStepper(singDurationStepper.x + 65, saveCharacterButton.y, 20, character.healthColorArray[1], 0, 255);
+		healthColorStepperB = new PsychUINumericStepper(singDurationStepper.x + 130, saveCharacterButton.y, 20, character.healthColorArray[2], 0, 255);
 
 		tab_group.add(new FlxText(15, imageInputText.y - 18, 100, 'Image file name:'));
 		tab_group.add(new FlxText(15, healthIconInputText.y - 18, 100, 'Health icon name:'));
@@ -617,7 +617,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 
 		if(id == PsychUIInputText.CHANGE_EVENT) {
 			if(sender == healthIconInputText) {
-				var lastIcon = healthIcon.getCharacter();
+				var lastIcon:String = healthIcon.getCharacter();
 				healthIcon.changeIcon(healthIconInputText.text, false);
 				character.healthIcon = healthIconInputText.text;
 				if(lastIcon != healthIcon.getCharacter()) updatePresence();

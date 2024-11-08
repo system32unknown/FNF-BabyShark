@@ -191,12 +191,12 @@ class PsychUIDropDownItem extends FlxSpriteGroup {
 	public function new(x:Float = 0, y:Float = 0, width:Float = 100) {
 		super(x, y);
 
-		bg = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+		bg = new FlxSprite().makeGraphic(1, 1);
 		bg.setGraphicSize(width, 20);
 		bg.updateHitbox();
 		add(bg);
 
-		text = new FlxText(0, 0, width, 8);
+		text = new FlxText(0, 0, width);
 		text.color = FlxColor.BLACK;
 		add(text);
 	}

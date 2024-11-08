@@ -23,13 +23,13 @@ class ChartingGridSprite extends FlxSprite {
 		updateHitbox();
 		recalcHeight();
 
-		vortexLine = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+		vortexLine = new FlxSprite().makeGraphic(1, 1);
 		vortexLine.scale.x = this.width;
 		vortexLine.scrollFactor.x = 0;
 		vortexLine.color = 0xFF660000;
 		vortexLine.updateHitbox();
 
-		stripe = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+		stripe = new FlxSprite().makeGraphic(1, 1);
 		stripe.scrollFactor.x = 0;
 		stripe.color = FlxColor.BLACK;
 		updateStripes();

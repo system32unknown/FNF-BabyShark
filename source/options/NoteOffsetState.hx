@@ -142,7 +142,7 @@ class NoteOffsetState extends MusicBeatState {
 		add(modeConfigText);
 
 		// mouse
-		mouse = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+		mouse = new FlxSprite().makeGraphic(1, 1);
 		mouse.setGraphicSize(18);
 		mouse.updateHitbox();
 		mouse.screenCenter();
@@ -221,7 +221,7 @@ class NoteOffsetState extends MusicBeatState {
 
 	function createTexts(i:Int) {
 		var text:FlxText = new FlxText(10, 48 + (i * 30), 0, '', 24);
-		text.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE);
+		text.setFormat(Paths.font("vcr.ttf"), 24);
 		text.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		text.scrollFactor.set();
 		text.camera = camHUD;

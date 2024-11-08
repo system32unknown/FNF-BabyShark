@@ -214,7 +214,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		waveformSprite.visible = false;
 		add(waveformSprite);
 
-		dummyArrow = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
+		dummyArrow = new FlxSprite().makeGraphic(1, 1);
 		dummyArrow.setGraphicSize(GRID_SIZE, GRID_SIZE);
 		dummyArrow.updateHitbox();
 		dummyArrow.scrollFactor.x = 0;
@@ -233,7 +233,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		add(curRenderedNotes);
 		add(movingNotes);
 
-		eventLockOverlay = new FlxSprite(gridBg.x, 0).makeGraphic(1, 1, FlxColor.BLACK);
+		eventLockOverlay = new FlxSprite(gridBg.x).makeGraphic(1, 1, FlxColor.BLACK);
 		eventLockOverlay.alpha = 0.6;
 		eventLockOverlay.visible = false;
 		eventLockOverlay.scrollFactor.x = 0;
@@ -241,7 +241,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		eventLockOverlay.updateHitbox();
 		add(eventLockOverlay);
 
-		timeLine = new FlxSprite(gridBg.x, 0).makeGraphic(1, 1, FlxColor.WHITE);
+		timeLine = new FlxSprite(gridBg.x).makeGraphic(1, 1);
 		timeLine.setGraphicSize(Std.int(gridBg.width), 4);
 		timeLine.updateHitbox();
 		timeLine.screenCenter(Y);
@@ -1921,7 +1921,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		tab_group.add(txt);
 
 		objY += 25;
-		playbackSlider = new PsychUISlider(50, objY, (v:Float) -> setPitch(playbackRate = v), 1, 0.25, 3, 200);
+		playbackSlider = new PsychUISlider(50, objY, (v:Float) -> setPitch(playbackRate = v), 1, 0.25, 3);
 		playbackSlider.label = 'Playback Rate';
 		
 		objY += 60;
@@ -1983,19 +1983,19 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		});
 
 		objY += 40;
-		gameOverSndInputText = new PsychUIInputText(objX, objY, 120, '', 8);
+		gameOverSndInputText = new PsychUIInputText(objX, objY, 120);
 		gameOverSndInputText.onChange = (old:String, cur:String) -> {
 			PlayState.SONG.gameOverSound = cur;
 			if(cur.trim().length < 1) Reflect.deleteField(PlayState.SONG, 'gameOverSound');
 		}
 		objY += 40;
-		gameOverLoopInputText = new PsychUIInputText(objX, objY, 120, '', 8);
+		gameOverLoopInputText = new PsychUIInputText(objX, objY, 120);
 		gameOverLoopInputText.onChange = (old:String, cur:String) -> {
 			PlayState.SONG.gameOverLoop = cur;
 			if(cur.trim().length < 1) Reflect.deleteField(PlayState.SONG, 'gameOverLoop');
 		}
 		objY += 40;
-		gameOverRetryInputText = new PsychUIInputText(objX, objY, 120, '', 8);
+		gameOverRetryInputText = new PsychUIInputText(objX, objY, 120);
 		gameOverRetryInputText.onChange = (old:String, cur:String) -> {
 			PlayState.SONG.gameOverEnd = cur;
 			if(cur.trim().length < 1) Reflect.deleteField(PlayState.SONG, 'gameOverEnd');
@@ -2030,7 +2030,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			}
 		};
 
-		noteSplashesInputText = new PsychUIInputText(objX + 140, objY, 120, '');
+		noteSplashesInputText = new PsychUIInputText(objX + 140, objY, 120);
 		noteSplashesInputText.onChange = (old:String, cur:String) -> {
 			PlayState.SONG.splashSkin = cur;
 			if(cur.trim().length < 1) PlayState.SONG.splashSkin = null;
@@ -2128,7 +2128,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		addButton.normalStyle.bgColor = FlxColor.GREEN;
 		addButton.normalStyle.textColor = FlxColor.WHITE;
 
-		selectedEventText = new FlxText(150, objY + 30, 150, '');
+		selectedEventText = new FlxText(150, objY + 30, 150);
 		selectedEventText.visible = false;
 
 		function changeEventsValue(str:String, n:Int) {
@@ -2148,9 +2148,9 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		}
 
 		objY += 70;
-		value1InputText = new PsychUIInputText(objX, objY, 120, '', 8);
+		value1InputText = new PsychUIInputText(objX, objY, 120);
 		value1InputText.onChange = (old:String, cur:String) -> changeEventsValue(cur, 1);
-		value2InputText = new PsychUIInputText(objX + 150, objY, 120, '', 8);
+		value2InputText = new PsychUIInputText(objX + 150, objY, 120);
 		value2InputText.onChange = (old:String, cur:String) -> changeEventsValue(cur, 2);
 
 		objY += 40;
@@ -2182,11 +2182,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var tab_group:FlxSpriteGroup = mainBox.getTab('Note').menu;
 		var objX:Int = 10;
 		var objY:Int = 25;
-
-		var stepperSpamCloseness:PsychUINumericStepper = null;
-		var stepperSpamLength:PsychUINumericStepper = null;
-		var spamLength:Float = 5;
-		var spamCloseness:Float = 2;
 
 		susLengthStepper = new PsychUINumericStepper(objX, objY, Conductor.stepCrochet / 2, 0, 0, Conductor.stepCrochet * 128, 1, 80);
 		susLengthStepper.onValueChange = () -> {
@@ -2243,61 +2238,12 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			selectedNotes = newSelected;
 			softReloadNotes();
 		}, 150);
-		
-		var spamButton:PsychUIButton = new PsychUIButton(noteTypeDropDown.x, noteTypeDropDown.y + 40, "Add Notes", function() {
-			var forAddNotes:Array<Dynamic> = [];
-			var undoArray:Array<MetaNote> = [];
-			var targetNote:MetaNote = selectedNotes[0];
-			
-			spamLength = stepperSpamLength.value;
-			spamCloseness = stepperSpamCloseness.value;
-
-			resetSelectedNotes();
-			if (targetNote != null) {
-				for(i in 0...Std.int(spamLength)) {
-					if (i == 0) continue;
-					forAddNotes = [targetNote.strumTime + (15000 * i / Conductor.bpm) / spamCloseness, targetNote.noteData, targetNote.sustainLength, targetNote.noteType];
-					
-					var newSpamNote:MetaNote = createNote(forAddNotes);
-					var didAdd:Bool = false;
-					for (num in sectionFirstNoteID...notes.length) {
-						var aNote:MetaNote = notes[num];
-						if(aNote.strumTime >= forAddNotes[0]) {
-							notes.insert(num, newSpamNote);
-							didAdd = true;
-							break;
-						}
-					}
-					if(!didAdd) notes.push(newSpamNote);
-					selectedNotes.push(newSpamNote);
-					undoArray.push(newSpamNote);
-					
-					onSelectNote();
-					softReloadNotes();
-					updateGridVisibility();
-					updateNotesRGB();
-				}
-				addUndoAction(ADD_NOTE, {notes: undoArray});
-				forAddNotes.resize(0); // for collect gc
-			}
-		});
-		stepperSpamCloseness = new PsychUINumericStepper(spamButton.x + 90, spamButton.y + 5, 2, spamCloseness, 2, 524288);
-		stepperSpamCloseness.value = spamCloseness;
-		stepperSpamCloseness.name = 'note_spamthing';
-		stepperSpamLength = new PsychUINumericStepper(stepperSpamCloseness.x + 90, stepperSpamCloseness.y, 5, spamLength, 1, 8388607);
-		stepperSpamLength.value = spamLength;
-		stepperSpamLength.name = 'note_spamamount';
 
 		tab_group.add(new FlxText(susLengthStepper.x, susLengthStepper.y - 15, 80, 'Sustain length:'));
 		tab_group.add(new FlxText(strumTimeStepper.x, strumTimeStepper.y - 15, 100, 'Note Hit time (ms):'));
-		tab_group.add(new FlxText(stepperSpamCloseness.x, stepperSpamCloseness.y - 15, 0, 'Note Density:'));
-		tab_group.add(new FlxText(stepperSpamLength.x, stepperSpamLength.y - 15, 0, 'Note Amount:'));
 		tab_group.add(new FlxText(noteTypeDropDown.x, noteTypeDropDown.y - 15, 80, 'Note Type:'));
 		tab_group.add(susLengthStepper);
 		tab_group.add(strumTimeStepper);
-		tab_group.add(stepperSpamCloseness);
-		tab_group.add(stepperSpamLength);
-		tab_group.add(spamButton);
 		tab_group.add(noteTypeDropDown);
 	}
 
@@ -2446,7 +2392,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			copiedEvents = lastCopiedEvents;
 		});
 		copyLastSecButton.resize(80, 26);
-		copyLastSecStepper = new PsychUINumericStepper(objX + 110, objY + 2, 1, 1, -999, 999, 0);
+		copyLastSecStepper = new PsychUINumericStepper(objX + 110, objY + 2, 1, 1);
 		
 		objY += 40;
 		var swapSectionButton:PsychUIButton = new PsychUIButton(objX, objY, 'Swap Section', () -> {
@@ -2677,7 +2623,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		scrollSpeedStepper = new PsychUINumericStepper(objX + 90, objY, 0.1, 1, 0.1, 10, 2);
 		scrollSpeedStepper.onValueChange = () -> PlayState.SONG.speed = scrollSpeedStepper.value;
 
-		audioOffsetStepper = new PsychUINumericStepper(objX + 180, objY, 1, 0, -500, 500, 0);
+		audioOffsetStepper = new PsychUINumericStepper(objX + 180, objY, 1, 0, -500, 500);
 		audioOffsetStepper.onValueChange = () -> {
 			PlayState.SONG.offset = audioOffsetStepper.value;
 			Conductor.offset = audioOffsetStepper.value;
@@ -2893,8 +2839,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 								undoActions = [];
 								events = [];
 	
-								for (event in loadedEvents)
-									events.push(createEvent(event));
+								for (event in loadedEvents) events.push(createEvent(event));
 	
 								softReloadNotes();
 								state.close();
@@ -2907,8 +2852,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							state.add(btn);
 							
 							var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Add', () -> {
-								for (event in loadedEvents)
-									events.push(createEvent(event));
+								for (event in loadedEvents) events.push(createEvent(event));
 	
 								softReloadNotes();
 								state.close();
@@ -3372,7 +3316,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				var checkbox:PsychUICheckBox = null;
 				var timeStepper:PsychUINumericStepper = null;
 
-				timeStepper = new PsychUINumericStepper(state.bg.x + 50, state.bg.y + 90, 1, autoSaveCap, 1, 30, 0);
+				timeStepper = new PsychUINumericStepper(state.bg.x + 50, state.bg.y + 90, 1, autoSaveCap, 1, 30);
 				timeStepper.onValueChange = () -> {
 					autoSaveTime = 0;
 					checkbox.checked = true;
@@ -3387,7 +3331,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				checkbox.checked = (autoSaveCap > 0);
 				checkbox.cameras = state.cameras;
 
-				var maxFileStepper:PsychUINumericStepper = new PsychUINumericStepper(checkbox.x + 140, checkbox.y, 1, backupLimit, 0, 50, 0);
+				var maxFileStepper:PsychUINumericStepper = new PsychUINumericStepper(checkbox.x + 140, checkbox.y, 1, backupLimit, 0, 50);
 				maxFileStepper.onValueChange = () -> {
 					autoSaveTime = 0;
 					checkbox.checked = true;
@@ -3564,9 +3508,9 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				var curTime:Float = Conductor.songPosition;
 				var currentSec:Int = curSec;
 	
-				var timeStepper:PsychUINumericStepper = new PsychUINumericStepper(state.bg.x + 100, state.bg.y + 90, 1, Math.floor(curTime)/1000, 0, FlxG.sound.music.length/1000 - 0.01, 2, 80);
+				var timeStepper:PsychUINumericStepper = new PsychUINumericStepper(state.bg.x + 100, state.bg.y + 90, 1, Math.floor(curTime) / 1000, 0, FlxG.sound.music.length / 1000 - 0.01, 2, 80);
 				timeStepper.cameras = state.cameras;
-				var sectionStepper:PsychUINumericStepper = new PsychUINumericStepper(timeStepper.x + 160, timeStepper.y, 1, currentSec, 0, PlayState.SONG.notes.length - 1, 0);
+				var sectionStepper:PsychUINumericStepper = new PsychUINumericStepper(timeStepper.x + 160, timeStepper.y, 1, currentSec, 0, PlayState.SONG.notes.length - 1);
 				sectionStepper.cameras = state.cameras;
 	
 				var txt1:FlxText = new FlxText(timeStepper.x, timeStepper.y - 15, 100, 'Time (in seconds):');

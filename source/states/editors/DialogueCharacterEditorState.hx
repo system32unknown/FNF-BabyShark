@@ -95,7 +95,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		box.updateHitbox();
 		hudGroup.add(box);
 
-		tipText = new FlxText(10, 10, FlxG.width - 20, TIP_TEXT_MAIN, 16);
+		tipText = new FlxText(10, 10, FlxG.width - 20, TIP_TEXT_MAIN);
 		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, OUTLINE, FlxColor.BLACK);
 		tipText.cameras = [camHUD];
 		tipText.scrollFactor.set();
@@ -123,6 +123,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 
 		reloadCharacter();
 		updateTextBox();
+
 		daText = new TypedAlphabet(DialogueBoxPsych.DEFAULT_TEXT_X, DialogueBoxPsych.DEFAULT_TEXT_Y, NORMAL);
 		daText.updateScale(.7, .7);
 		daText.text = DEFAULT_TEXT;
@@ -196,9 +197,9 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 			}
 		});
 		
-		animationInputText = new PsychUIInputText(15, 85, 80, '', 8);
-		loopInputText = new PsychUIInputText(animationInputText.x, animationInputText.y + 35, 150, '', 8);
-		idleInputText = new PsychUIInputText(loopInputText.x, loopInputText.y + 40, 150, '', 8);
+		animationInputText = new PsychUIInputText(15, 85, 80);
+		loopInputText = new PsychUIInputText(animationInputText.x, animationInputText.y + 35, 150);
+		idleInputText = new PsychUIInputText(loopInputText.x, loopInputText.y + 40, 150);
 		
 		var addUpdateButton:PsychUIButton = new PsychUIButton(10, idleInputText.y + 30, "Add/Update", () -> {
 			var theAnim:String = animationInputText.text.trim();
@@ -287,12 +288,12 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 	function addCharacterUI() {
 		var tab_group:FlxSpriteGroup = UI_mainbox.getTab('Character').menu;
 
-		imageInputText = new PsychUIInputText(10, 30, 80, character.jsonFile.image, 8);
-		xStepper = new PsychUINumericStepper(imageInputText.x, imageInputText.y + 50, 10, character.jsonFile.position[0], -2000, 2000, 0);
-		yStepper = new PsychUINumericStepper(imageInputText.x + 80, xStepper.y, 10, character.jsonFile.position[1], -2000, 2000, 0);
+		imageInputText = new PsychUIInputText(10, 30, 80, character.jsonFile.image);
+		xStepper = new PsychUINumericStepper(imageInputText.x, imageInputText.y + 50, 10, character.jsonFile.position[0], -2000, 2000);
+		yStepper = new PsychUINumericStepper(imageInputText.x + 80, xStepper.y, 10, character.jsonFile.position[1], -2000, 2000);
 		scaleStepper = new PsychUINumericStepper(imageInputText.x, xStepper.y + 50, 0.05, character.jsonFile.scale, 0.1, 10, 2);
 
-		var noAntialiasingCheckbox:PsychUICheckBox = new PsychUICheckBox(scaleStepper.x + 80, scaleStepper.y, "No Antialiasing", 100);
+		var noAntialiasingCheckbox:PsychUICheckBox = new PsychUICheckBox(scaleStepper.x + 80, scaleStepper.y, "No Antialiasing");
 		noAntialiasingCheckbox.checked = (character.jsonFile.no_antialiasing == true);
 		noAntialiasingCheckbox.onClick = () -> {
 			character.jsonFile.no_antialiasing = noAntialiasingCheckbox.checked;

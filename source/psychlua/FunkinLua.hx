@@ -9,6 +9,7 @@ import states.*;
 import backend.Highscore;
 import backend.Song;
 import objects.StrumNote;
+import openfl.utils.Assets;
 import flixel_5_3_1.ParallaxSprite; // flixel 5 render pipeline
 
 class FunkinLua {
@@ -1063,7 +1064,7 @@ class FunkinLua {
 
 	function findScript(scriptFile:String, ext:String = '.lua'):String  {
 		if(!scriptFile.endsWith(ext)) scriptFile += ext;
-		var path:String = Paths.getPath(scriptFile, TEXT);
+		var path:String = Paths.getPath(scriptFile);
 		
 		if(#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end) return path;
 		if(#if MODS_ALLOWED FileSystem.exists(scriptFile) #else Assets.exists(scriptFile, TEXT) #end) return scriptFile;

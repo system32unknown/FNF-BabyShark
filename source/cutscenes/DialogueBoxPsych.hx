@@ -494,7 +494,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 	function createDialogueUI(dialogueList:DialogueFile):Void {
 		// Background fade
-		bgFade = new FlxSprite(-500, -500).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.WHITE);
+		bgFade = new FlxSprite(-500, -500).makeGraphic(FlxG.width * 2, FlxG.height * 2);
 		bgFade.scrollFactor.set();
 		bgFade.visible = true;
 		bgFade.alpha = 0;

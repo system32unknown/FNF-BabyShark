@@ -7,11 +7,6 @@ package objects;
 class DeltaTrail extends flixel.addons.effects.FlxTrail {
 	var _timer:Float = 0;
 	var timerMax:Float;
-	
-	/**
-	 * An offset applied to the target position whenever a new frame is saved.
-	 */
-	public final frameOffset:FlxPoint = FlxPoint.get();
 
 	/**
 	 * Creates a new DeltaTrail effect for a specific FlxSprite.
@@ -30,12 +25,7 @@ class DeltaTrail extends flixel.addons.effects.FlxTrail {
 	}
 
 	override public function update(elapsed:Float):Void {
-		final oldX:Float = target.offset.x;
-		final oldY:Float = target.offset.y;
-		target.offset.copyFrom(frameOffset);
-
-		// Count the frames
-		_timer += elapsed;
+		_timer += elapsed; // Count the frames
 
 		// Update the trail in case the intervall and there actually is one.
 		if (_timer >= timerMax && _trailLength >= 1) {
@@ -43,11 +33,5 @@ class DeltaTrail extends flixel.addons.effects.FlxTrail {
 			addTrailFrame();
 			redrawTrailSprites(); // Now we need to update the all the Trailsprites' values
 		}
-		target.offset.set(oldX, oldY);
-	}
-
-	override function destroy() {
-		super.destroy();
-		frameOffset.put();
 	}
 }

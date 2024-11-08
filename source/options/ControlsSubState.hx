@@ -115,7 +115,7 @@ class ControlsSubState extends FlxSubState {
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
 		add(grpBlacks = new FlxTypedGroup<AttachedSprite>());
 		selectSpr = new AttachedSprite();
-		selectSpr.makeGraphic(250, 78, FlxColor.WHITE);
+		selectSpr.makeGraphic(250, 78);
 		selectSpr.copyAlpha = false;
 		selectSpr.alpha = 0.75;
 		add(selectSpr);
