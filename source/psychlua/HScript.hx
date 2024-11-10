@@ -313,7 +313,7 @@ class HScript extends AlterHscript {
 		set('game', FlxG.state);
 		set('controls', Controls);
 
-		set('buildTarget', LuaUtils.getBuildTarget());
+		set('buildTarget', LuaUtils.getTargetOS());
 		set('customSubstate', CustomSubstate.instance);
 		set('customSubstateName', CustomSubstate.name);
 

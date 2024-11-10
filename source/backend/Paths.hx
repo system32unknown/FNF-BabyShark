@@ -121,7 +121,6 @@ class Paths {
 		return sound(key + FlxG.random.int(min, max), modsAllowed);
 
 	public static function image(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxGraphic {
-		allowGPU = ClientPrefs.data.cacheOnGPU ? allowGPU : false;
 		key = Language.getFileTranslation('images/$key') + '.png';
 
 		var bitmap:BitmapData = null;

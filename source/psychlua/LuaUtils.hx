@@ -408,7 +408,7 @@ class LuaUtils {
 		}
 	}
 
-	public static function getBuildTarget():String {
+	public static function getTargetOS():String {
 		#if windows
 		#if x86_BUILD
 		return 'windows_x86';
@@ -417,10 +417,21 @@ class LuaUtils {
 		#end
 		#elseif linux
 		return 'linux';
-		#elseif mac
+		#elseif (mac || macos)
 		return 'mac';
 		#else
 		return 'unknown';
+		#end
+	}
+	public static function getTarget():String {
+		#if cpp
+		return 'C++';
+		#elseif hl
+		return 'Hashlink';
+		#elseif neko
+		return 'Neko';
+		#else
+		return 'Unknown';
 		#end
 	}
 }

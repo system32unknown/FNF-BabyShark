@@ -462,7 +462,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			rating.updateHitbox();
 	
 			comboGroup.add(rating);
-			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
+			FlxTween.tween(rating, {alpha: 0}, .2 / playbackRate, {onComplete: (_:FlxTween) -> {rating.kill(); rating.alpha = 1;}, startDelay: Conductor.crochet * .001 / playbackRate});
 		}
 
 		if (showComboNum) {
@@ -479,7 +479,7 @@ class EditorPlayState extends MusicBeatSubstate {
 				numScore.updateHitbox();
 
 				comboGroup.add(numScore);
-				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
+				FlxTween.tween(numScore, {alpha: 0}, .2 / playbackRate, {onComplete: (_:FlxTween) -> {numScore.kill(); numScore.alpha = 1;}, startDelay: Conductor.crochet * .002 / playbackRate});
 			}
 		}
 	}

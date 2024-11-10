@@ -160,7 +160,7 @@ class FunkinLua {
 		set('splashSkinPostfix', objects.NoteSplash.getSplashSkinPostfix());
 		set('splashAlpha', ClientPrefs.data.splashAlpha);
 
-		set('buildTarget', LuaUtils.getBuildTarget());
+		set('buildTarget', LuaUtils.getTargetOS());
 
 		set("getRunningScripts", () -> {
 			var runningScripts:Array<String> = [];

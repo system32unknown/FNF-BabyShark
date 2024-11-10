@@ -48,9 +48,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 
 	function onChangeFramerate() {
 		fpsOption.scrollSpeed = utils.MathUtil.interpolate(30, 1000, (holdTime - 0.5) / 5, 3);
-		if (ClientPrefs.data.framerate > FlxG.drawFramerate)
-			FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
-		else FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
+		FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
 	}
 
 	override function changeSelection(change:Int = 0) {

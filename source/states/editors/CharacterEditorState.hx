@@ -749,7 +749,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		if (FlxG.keys.pressed.L) FlxG.camera.scroll.x += elapsed * 500 * shiftMult * ctrlMult;
 		if (FlxG.keys.pressed.I) FlxG.camera.scroll.y -= elapsed * 500 * shiftMult * ctrlMult;
 
-		var lastZoom = FlxG.camera.zoom;
+		var lastZoom:Float = FlxG.camera.zoom;
 		if(FlxG.keys.justPressed.R && !FlxG.keys.pressed.CONTROL) FlxG.camera.zoom = 1;
 		else if (FlxG.keys.pressed.E && FlxG.camera.zoom < 3) {
 			FlxG.camera.zoom += elapsed * FlxG.camera.zoom * shiftMult * ctrlMult;
@@ -819,7 +819,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			}
 		}
 
-		var anim = anims[curAnim];
+		var anim:AnimArray = anims[curAnim];
 		if(changedOffset && anim != null && anim.offsets != null) {
 			anim.offsets[0] = Std.int(character.offset.x);
 			anim.offsets[1] = Std.int(character.offset.y);

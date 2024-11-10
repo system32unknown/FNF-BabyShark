@@ -21,9 +21,7 @@ class FPSCounter extends openfl.text.TextField {
 		The current memory usage (WARNING: this is NOT your total program memory usage, rather it shows the garbage collector memory)
 	**/
     public var memory(get, never):Float;
-	inline function get_memory():Float {
-		return openfl.system.System.totalMemoryNumber;
-	}
+	inline function get_memory():Float return openfl.system.System.totalMemoryNumber;
 	var mempeak:Float = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
@@ -35,7 +33,7 @@ class FPSCounter extends openfl.text.TextField {
 		autoSize = LEFT;
 		selectable = mouseEnabled = false;
 		text = "0FPS";
-		defaultTextFormat = new openfl.text.TextFormat(fontName, 16, -1);
+		defaultTextFormat = new openfl.text.TextFormat(fontName, 16, -1, JUSTIFY);
 		fpsManager = new FPSUtil();
 	}
 

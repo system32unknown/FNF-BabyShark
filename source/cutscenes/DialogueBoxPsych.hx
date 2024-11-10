@@ -248,7 +248,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 		skipText.visible = false;
 		if (shouldBoxRecenter) updateBoxOffsets(box);
-		FlxG.sound.music.fadeOut(1, 0, (_) -> FlxG.sound.music.stop());
+		FlxG.sound.music.fadeOut(1, 0, (_:FlxTween) -> FlxG.sound.music.stop());
 	}
 
 	inline public static function parseDialogue(path:String):DialogueFile {

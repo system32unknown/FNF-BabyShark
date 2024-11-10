@@ -26,11 +26,13 @@ class CrashHandler {
 
 	static function onError(message:String):Void {
 		final path:String = './crash/${FlxG.stage.application.meta.get('file')}_${Date.now().toString().replace(" ", "_").replace(":", "'")}.txt';
+		final defines:Map<String, Dynamic> = macros.DefinesMacro.defines;
 		
 		var errMsg:String = getError();
-		errMsg += '\nPlatform: ${System.platformLabel} ${System.platformVersion}';
+		errMsg += '\nPlatform: ${System.platformLabel} ${System.platformVersion} [Target: ${psychlua.LuaUtils.getTarget()}]';
 		errMsg += '\nFlixel Current State: ${Type.getClassName(Type.getClass(FlxG.state))}';
 		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/system32unknown/FNF-BabyShark\n\nCustom Crash Handler written by: sqirra-rng and Codename Engine Team and Altertoriel';
+		errMsg += '\nHaxe: ${defines['haxe']} / Flixel: ${defines['flixel']}\nOpenFL: ${defines['openfl']} / Lime: ${defines['lime']}';
 
 		try {
 			if (!FileSystem.exists("./crash/")) FileSystem.createDirectory("./crash/");
