@@ -18,10 +18,29 @@ class FunkinLua {
 	public var modFolder:String = null;
 	public var closed:Bool = false;
 
-	public var hscript:HScript = null;
-
 	public var callbacks:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public static var customFunctions:Map<String, Dynamic> = new Map<String, Dynamic>();
+	#if LUA_ALLOWED public var parentLua:FunkinLua; #end
+
+	#if HSCRIPT_ALLOWED
+	public var hscript:HScript = null;
+	public function initHaxeModule(code:String = '', ?varsToBring:Dynamic) {
+		@:privateAccess {
+			if (hscript == null) {
+				trace('initializing haxe interp for: $scriptName');
+				hscript = new HScript(this);
+			}
+			try {
+				if (hscript.scriptCode != code) {
+					hscript.scriptCode = code;
+					hscript.parse(true);
+				}
+			} catch (e:Dynamic) throw e;
+			hscript.varsToBring = varsToBring;
+		}
+	}
+	#end
+
 	public function new(script:String) {
 		#if LUA_ALLOWED
 		lua = LuaL.newstate();
@@ -989,10 +1008,10 @@ class FunkinLua {
 			return closed = true;
 		});
 
+		HScript.implement(this);
 		#if DISCORD_ALLOWED DiscordClient.addLuaCallbacks(this); #end
 		#if ACHIEVEMENTS_ALLOWED Achievements.addLuaCallbacks(this); #end
 		#if TRANSLATIONS_ALLOWED Language.addLuaCallbacks(this); #end
-		#if HSCRIPT_ALLOWED HScript.implement(this); #end
 		#if VIDEOS_ALLOWED VideoFunctions.implement(this); #end
 		#if flxanimate FlxAnimateFunctions.implement(this); #end
 		ReflectionFunctions.implement(this);
@@ -1011,12 +1030,7 @@ class FunkinLua {
 
 			final resultStr:String = Lua.tostring(lua, result);
 			if(resultStr != null && result != 0) {
-				Logs.trace(resultStr, ERROR);
-				#if windows
-				utils.system.NativeUtil.showMessageBox('Error on lua script!', resultStr);
-				#else
-				luaTrace('$scriptName\n$resultStr', true, false, FlxColor.RED);
-				#end
+				luaTrace('ERROR ON LOADING ($scriptName): $resultStr', true, false, 0xffb30000);
 				lua = null;
 				return;
 			}
