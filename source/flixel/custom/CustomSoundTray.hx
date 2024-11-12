@@ -92,7 +92,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 		visible = active = true;
 
 		if (!silent) {
-			var sound:openfl.media.Sound = flixel.system.FlxAssets.getSound(up ? volumeUpSound : volumeDownSound);
+			var sound:openfl.media.Sound = flixel.system.FlxAssets.getSoundAddExtension(up ? volumeUpSound : volumeDownSound);
 			if (sound != null) FlxG.sound.load(sound).play();
 		}
 
