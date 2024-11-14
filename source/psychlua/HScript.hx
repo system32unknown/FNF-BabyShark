@@ -406,9 +406,11 @@ class HScript extends AlterHscript {
 		funk.addLocalCallback("addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
 			if (funk.hscript == null) funk.initHaxeModule();
 
-			var cls:Dynamic = funk.hscript.resolveClassOrEnum('$libPackage.$libName');
+			libName = libName ?? '';
+			var str:String = libPackage.length > 0 ? '$libPackage.$libName' : libName;
+			var cls:Dynamic = funk.hscript.resolveClassOrEnum(str);
 			if (cls == null) {
-				FunkinLua.luaTrace('addHaxeLibrary: Class "$libPackage.$libName" wasn\'t found!', false, false, FlxColor.RED);
+				FunkinLua.luaTrace('addHaxeLibrary: Class "$str" wasn\'t found!', false, false, FlxColor.RED);
 				return false;
 			} else {
 				funk.hscript.set(libName, cls);
@@ -421,9 +423,6 @@ class HScript extends AlterHscript {
 	inline function getClassHSC(className:String):Class<Dynamic> {
 		return Type.resolveClass('${className}_HSC');
 	}
-
-	override public function set(name:String, value:Dynamic, allowOverride:Bool = true):Void
-		super.set(name, value, allowOverride);
 
 	public override function destroy() {
 		origin = null;

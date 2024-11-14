@@ -32,8 +32,7 @@ class LanguageSubState extends FlxSubState {
 						if(id > 0) { //language display name shouldnt be an empty string or null
 							var name:String = txt.substr(0, id).trim();
 							if(!name.contains(':')) displayLanguages.set(langFile, name);
-						}
-						else if(txt.trim().length > 0 && !txt.contains(':')) displayLanguages.set(langFile, txt.trim());
+						} else if(txt.trim().length > 0 && !txt.contains(':')) displayLanguages.set(langFile, txt.trim());
 					}
 				}
 			}

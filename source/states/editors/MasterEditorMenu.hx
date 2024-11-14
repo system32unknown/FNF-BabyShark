@@ -70,7 +70,9 @@ class MasterEditorMenu extends MusicBeatState {
 
 		if (Controls.justPressed('accept')) {
 			switch(options[curSelected]) {
-				case 'Chart Editor': LoadingState.loadAndSwitchState(() -> new ChartingState());
+				case 'Chart Editor':
+					PlayState.chartingMode = true;
+					LoadingState.loadAndSwitchState(() -> new ChartingState());
 				case 'Character Editor': LoadingState.loadAndSwitchState(() -> new CharacterEditorState(objects.Character.DEFAULT_CHARACTER, false));
 				case 'Stage Editor': LoadingState.loadAndSwitchState(() -> new StageEditorState());
 				case 'Week Editor': FlxG.switchState(() -> new WeekEditorState());
