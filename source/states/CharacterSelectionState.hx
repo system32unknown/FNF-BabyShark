@@ -55,9 +55,8 @@ class CharacterSelectionState extends MusicBeatState {
 	var curIcon:HealthIcon;
 	var controlsText:FlxText;
 
-	final noGFtext:String = '\nNo GF Skin: {1} [TAB]';
+	final noGFtext:String = 'No GF Skin: {1} [TAB]';
 
-	var previewMode:Bool = false;
 	var noGFSkin:Bool = false;
 	var selectedCharacter:Bool = false;
 	var pressedTheFunny:Bool = false;
@@ -122,7 +121,7 @@ class CharacterSelectionState extends MusicBeatState {
 		characterText.screenCenter(X);
 		add(characterText);
 
-		controlsText = new FlxText(-125, 125, 0, Language.getPhrase('before_previewmode', 'Press P to enter preview mode.$noGFtext', [noGFSkin]), 20);
+		controlsText = new FlxText(-125, 125, 0, Language.getPhrase('nogf_mode', noGFtext, [noGFSkin]), 20);
 		controlsText.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		controlsText.scrollFactor.set();
 		controlsText.camera = camHUD;
@@ -144,14 +143,6 @@ class CharacterSelectionState extends MusicBeatState {
 		super.create();
 	}
 
-	function checkPreview() {
-		if (previewMode) controlsText.text = Language.getPhrase('after_previewmode', 'PREVIEW MODE\nPress your controls to play an animation.\n(Press P to exit.)$noGFtext', [noGFSkin]);
-		else {
-			controlsText.text = Language.getPhrase('before_previewmode', 'Press P to enter preview mode.\n$noGFtext', [noGFSkin]);
-			char.playAnim('idle', true);
-		}
-	}
-
 	override public function beatHit() {
 		super.beatHit();
 		if (!selectedCharacter) {
@@ -163,17 +154,9 @@ class CharacterSelectionState extends MusicBeatState {
 
 	override function update(elapsed) {
 		Conductor.songPosition = FlxG.sound.music.time;
-		var controlSet:Array<String> = ["note_left", "note_down", "note_up", "note_right"];
 		super.update(elapsed);
 
 		camGame.zoom = FlxMath.lerp(.7, camGame.zoom, Math.exp(-elapsed * 3.125));
-
-		if (previewMode) {
-			for (i => key in controlSet) {
-				if (Controls.pressed(key) && !pressedTheFunny && char.hasAnimation(singAnimations[i]))
-					char.playAnim(singAnimations[i], true);
-			}
-		}
 
 		if (Controls.justPressed('accept')) {
 			if (isLocked(characters[current].forms[curForm].name)) {
@@ -212,17 +195,13 @@ class CharacterSelectionState extends MusicBeatState {
 		if (!selectedCharacter) {
 			if (FlxG.keys.justPressed.TAB) {
 				noGFSkin = !noGFSkin;
-				checkPreview();
-			}
-			if (FlxG.keys.justPressed.P) {
-				previewMode = !previewMode;
-				checkPreview();
+				controlsText.text = Language.getPhrase('nogf_mode', noGFtext, [noGFSkin]);
 			}
 		}
 
 		var leftJustPressed:Bool = Controls.justPressed('ui_left');
 		var downJustPressed:Bool = Controls.justPressed('ui_down');
-		if (!selectedCharacter && !previewMode) {
+		if (!selectedCharacter) {
 			if (leftJustPressed || Controls.justPressed('ui_right')) {
 				curForm = 0;
 				current = FlxMath.wrap(current += (leftJustPressed ? -1 : 1), 0, characters.length - 1);
