@@ -55,6 +55,8 @@ class CharacterSelectionState extends MusicBeatState {
 	var curIcon:HealthIcon;
 	var controlsText:FlxText;
 
+	final noGFtext:String = '\nNo GF Skin: {1} [TAB]';
+
 	var previewMode:Bool = false;
 	var noGFSkin:Bool = false;
 	var selectedCharacter:Bool = false;
@@ -120,7 +122,7 @@ class CharacterSelectionState extends MusicBeatState {
 		characterText.screenCenter(X);
 		add(characterText);
 
-		controlsText = new FlxText(-125, 125, 0, Language.getPhrase('before_previewmode', 'Press P to enter preview mode.\nNo GF Skin: {1}', [noGFSkin]), 20);
+		controlsText = new FlxText(-125, 125, 0, Language.getPhrase('before_previewmode', 'Press P to enter preview mode.$noGFtext', [noGFSkin]), 20);
 		controlsText.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		controlsText.scrollFactor.set();
 		controlsText.camera = camHUD;
@@ -143,9 +145,9 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	function checkPreview() {
-		if (previewMode) controlsText.text = Language.getPhrase('after_previewmode', 'PREVIEW MODE\nPress your controls to play an animation.\n(Press P to exit.)\nNo GF Skin: {1}', [noGFSkin]);
+		if (previewMode) controlsText.text = Language.getPhrase('after_previewmode', 'PREVIEW MODE\nPress your controls to play an animation.\n(Press P to exit.)$noGFtext', [noGFSkin]);
 		else {
-			controlsText.text = Language.getPhrase('before_previewmode', 'Press P to enter preview mode.\nNo GF Skin: {1}', [noGFSkin]);
+			controlsText.text = Language.getPhrase('before_previewmode', 'Press P to enter preview mode.\n$noGFtext', [noGFSkin]);
 			char.playAnim('idle', true);
 		}
 	}

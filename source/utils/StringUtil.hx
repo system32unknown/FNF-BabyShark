@@ -7,7 +7,7 @@ class StringUtil {
 		* @param digits Integer
 		* @param code Integer (use fastCodeAt)
 	*/
-	inline public static function fillNumber(value:Float, digits:Int, code:Int):String {
+	public static function fillNumber(value:Float, digits:Int, code:Int):String {
 		var length:Int = Std.string(value).length;
 		var str:String = null;
 		var format:StringBuf = new StringBuf();

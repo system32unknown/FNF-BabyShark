@@ -16,13 +16,13 @@ class PixelSplashShaderRef {
 		} else enabled = false;
 	}
 
-	public function set_enabled(value:Bool) {
+	public function set_enabled(value:Bool):Bool {
 		enabled = value;
 		shader.mult.value = [value ? 1 : 0];
 		return value;
 	}
 
-	public function set_pixelAmount(value:Float) {
+	public function set_pixelAmount(value:Float):Float {
 		pixelAmount = value;
 		shader.uBlocksize.value = [value, value];
 		return value;

@@ -142,8 +142,7 @@ class ColorSwapShader extends flixel.system.FlxAssets.FlxShader {
 			return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 		}
 
-		void main()
-		{
+		void main() {
 			vec4 color = texture2D(bitmap, openfl_TextureCoordv);
 			vec4 swagColor = vec4(rgb2hsv(vec3(color[0], color[1], color[2])), color[3]);
 
@@ -151,14 +150,8 @@ class ColorSwapShader extends flixel.system.FlxAssets.FlxShader {
 			swagColor[1] = swagColor[1] * (1.0 + uTime[1]);
 			swagColor[2] = swagColor[2] * (1.0 + uTime[2]);
 			
-			if(swagColor[1] < 0.0)
-			{
-				swagColor[1] = 0.0;
-			}
-			else if(swagColor[1] > 1.0)
-			{
-				swagColor[1] = 1.0;
-			}
+			if(swagColor[1] < 0.0) swagColor[1] = 0.0;
+			else if(swagColor[1] > 1.0) swagColor[1] = 1.0;
 
 			color = vec4(hsv2rgb(vec3(swagColor[0], swagColor[1], swagColor[2])), swagColor[3]);
 
