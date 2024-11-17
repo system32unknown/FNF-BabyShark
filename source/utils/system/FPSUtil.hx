@@ -1,23 +1,31 @@
 package utils.system;
 
 class FPSUtil {
-	@:noCompletion var cacheCount:Float;
     @:noCompletion var times:Array<Int>;
+	@:noCompletion var sum:Int;
+	@:noCompletion var sliceCnt:Int;
 
 	/**
 		The current frame rate, expressed using frames-per-second
 	**/
 	public var curFPS(default, null):Float;
     public function new() {
-		curFPS = 0;
+		curFPS = sum = sliceCnt = 0;
 		times = [];
 	}
 
-    public function update() {
-		final now:Int = Std.int(haxe.Timer.stamp() * 1000);
-		times.push(now);
-		while (times[0] < now - 1000) times.shift();
-		curFPS = Math.round((times.length + cacheCount) / 2) - 1;
+    public function update(dt:Float):Void {
+		var delta:Int = Math.round(dt);
+		times.push(delta);
+		sum += delta;
+
+		while (sum > 1000) {
+			sum -= times[sliceCnt];
+			++sliceCnt;
+		}
+		if (sliceCnt > 0) times.splice(0, sliceCnt);
+
+		curFPS = times.length > 0 ? 1000 / (sum / times.length) : 0.0;
     }
 
 	public static function getFPSAdjust(type:String, fps:Float):Float {

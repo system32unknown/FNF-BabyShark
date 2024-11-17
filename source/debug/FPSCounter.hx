@@ -49,7 +49,7 @@ class FPSCounter extends openfl.text.TextField {
 
 	var deltaTimeout:Float = .0;
 	override function __enterFrame(dt:Float) {
-		fpsManager.update();
+		fpsManager.update(dt);
 		preUpdateText();
 		if (memory > mempeak) mempeak = memory;
 
@@ -61,6 +61,5 @@ class FPSCounter extends openfl.text.TextField {
 	public dynamic function updateText():Void {
 		text = '${fpsManager.curFPS}FPS\n';
 		if (memType == "MEM" || memType == "MEM/PEAK") text += '${FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? '/${FlxStringUtil.formatBytes(mempeak)}' : '');
-		@:privateAccess fpsManager.cacheCount = fpsManager.times.length;
 	}
 }

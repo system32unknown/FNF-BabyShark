@@ -11,7 +11,6 @@ package backend;
 	public var splashSkin:String = 'Psych';
 	public var splashAlpha:Float = .6;
 	public var splashCount:Int = 2;
-	public var splashOpponent:Bool = false;
 	public var lowQuality:Bool = false;
 	public var shaders:Bool = true;
 	public var framerate:Int = 60;
@@ -132,15 +131,8 @@ class ClientPrefs {
 		}
 		FlxG.autoPause = data.autoPause;
 
-		if(FlxG.save.data.framerate == null)
-			data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate, 60, 240));
-		if(data.framerate > FlxG.drawFramerate) {
-			FlxG.updateFramerate = data.framerate;
-			FlxG.drawFramerate = data.framerate;
-		} else {
-			FlxG.drawFramerate = data.framerate;
-			FlxG.updateFramerate = data.framerate;
-		}
+		if(FlxG.save.data.framerate == null) data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate, 60, 240));
+		FlxG.updateFramerate = FlxG.drawFramerate = data.framerate;
 
 		if(FlxG.save.data.gameplaySettings != null) {
 			var savedMap:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;

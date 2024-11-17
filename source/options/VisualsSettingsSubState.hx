@@ -84,7 +84,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		option.changeValue = 1;
 		addOption(option);
 		option.onChange = playNoteSplashes;
-		addOption(new Option('Opponent Note Splash', 'If checked, Note Splash appears in Opponent Strum.', 'splashOpponent'));
 
 		addOption(new Option('Play Animation on Sustain Hit', "If unchecked, ignores hit animaiton when hits sustain notes.", 'holdAnim'));
 		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud'));

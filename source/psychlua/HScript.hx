@@ -16,8 +16,14 @@ class HScript extends AlterHscript {
 	#end
 
 	public function errorCaught(e:ImprError, ?funcName:String) {
-		#if LUA_ALLOWED if (parentLua != null && FunkinLua.getBool('luaDebugMode')) #end
-		PlayState.instance.addTextToDebug(errorToString(e, funcName, this), executed ? FlxColor.RED : 0xffb30000);
+		var message:String = errorToString(e, funcName, this);
+		var color:FlxColor = (executed ? FlxColor.RED : 0xffb30000);
+		#if LUA_ALLOWED
+		if (parentLua == null) PlayState.instance.addTextToDebug(message, color);
+		else FunkinLua.luaTrace(message, false, false, color);
+		#else
+		PlayState.instance.addTextToDebug(message, color);
+		#end
 	}
 	public static function errorToString(e:ImprError, ?funcName:String, ?instance:HScript) {
 		var message:String = switch (#if hscriptPos e.e #else e #end) {
@@ -33,14 +39,14 @@ class HScript extends AlterHscript {
 			case ECustom(msg): msg;
 			default: "Unknown Error";
 		};
-		var mainHeader:String = 'ERROR';
-		if (instance != null && !instance.executed) mainHeader = 'ERROR ON LOADING';
-		var scriptHeader:String = #if hscriptPos e.origin #else (instance != null ? instance.origin : 'HScript') #end;
+		var errorHeader:String = 'ERROR';
+		if (instance != null && !instance.executed) errorHeader = 'ERROR ON LOADING';
+		var scriptHeader:String = (instance != null ? instance.origin : 'HScript');
 		if (funcName != null) scriptHeader += ':$funcName';
 		var lineHeader:String = #if hscriptPos ':${e.line}' #else '' #end;
 		if (instance == null #if LUA_ALLOWED || instance.parentLua == null #end)
-			return '$mainHeader ($scriptHeader$lineHeader) - $message';
-		else return '$mainHeader ($scriptHeader) - HScript$lineHeader: $message';
+			return '$errorHeader ($scriptHeader$lineHeader) - $message';
+		else return '$errorHeader ($scriptHeader) - HScript$lineHeader: $message';
 	}
 
 	public var origin:String;
@@ -340,14 +346,28 @@ class HScript extends AlterHscript {
 	}
 
 	public override function execute():Dynamic {
+		#if LUA_ALLOWED
+		var prevLua:FunkinLua = FunkinLua.lastCalledScript;
+		FunkinLua.lastCalledScript = parentLua;
+		#end
 		var result:Dynamic = super.execute();
 		executed = true;
+		#if LUA_ALLOWED FunkinLua.lastCalledScript = prevLua; #end
 		return result;
 	}
 	public override function parse(force:Bool = false) {
 		executed = false;
 		return super.parse(force);
 	}
+	#if LUA_ALLOWED
+	public override function call(fun:String, ?args:Array<Dynamic>):IrisCall {
+		var prevLua:FunkinLua = FunkinLua.lastCalledScript;
+		FunkinLua.lastCalledScript = parentLua;
+		final call:IrisCall = super.call(fun, args);
+		FunkinLua.lastCalledScript = prevLua;
+		return call;
+	}
+	#end
 
 	#if LUA_ALLOWED
 	public static function initHaxeModuleCode(funk:FunkinLua, codeToRun:String, ?varsToBring:Any) funk.initHaxeModule(codeToRun, varsToBring);

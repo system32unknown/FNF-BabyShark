@@ -116,7 +116,6 @@ class PlayState extends MusicBeatState {
 	public static var splashMoment:Vector<Int>;
 
 	var splashCount:Int = ClientPrefs.data.splashCount != 0 ? ClientPrefs.data.splashCount : 2147483647;
-	var splashOpponent:Bool = ClientPrefs.data.splashOpponent;
 	var enableSplash:Bool = ClientPrefs.data.splashAlpha != 0;
 
 	public var canTweenCamZoom:Bool = false;
@@ -1425,8 +1424,8 @@ class PlayState extends MusicBeatState {
 		if (unspawnNotes.length > totalCnt) {
 			var targetNote:Note = unspawnNotes[totalCnt];
 			var shownTime:Float = ClientPrefs.data.showNotes ? spawnTime / songSpeed : 0;
-			shownTime * .001;
-			while (targetNote.strumTime - Conductor.songPosition < shownTime) {
+			var isDisplay:Bool = targetNote.strumTime - Conductor.songPosition < shownTime;
+			while (isDisplay) {
 				var canBeHit:Bool = Conductor.songPosition > targetNote.strumTime;
 				var tooLate:Bool = Conductor.songPosition > targetNote.strumTime + noteKillOffset;
 				var noteSpawnJudge = !ClientPrefs.data.skipSpawnNote || cpuControlled || !targetNote.isSustainNote ? !canBeHit : !tooLate;
@@ -1436,6 +1435,7 @@ class PlayState extends MusicBeatState {
 
 					var strumGroup:FlxTypedGroup<StrumNote> = !dunceNote.mustPress ? opponentStrums : playerStrums;
 					dunceNote.strum = strumGroup.members[dunceNote.noteData];
+					if (dunceNote.isSustainNote) dunceNote.resizeByRatio(songSpeedRate);
 					notes.add(dunceNote);
 
 					callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
@@ -1463,10 +1463,9 @@ class PlayState extends MusicBeatState {
 					skipNote = targetNote;
 				}
 
-				unspawnNotes[totalCnt] = null;
-				++totalCnt;
-				if (unspawnNotes.length > totalCnt) targetNote = unspawnNotes[totalCnt];
-				else break;
+				unspawnNotes[totalCnt] = null; ++totalCnt;
+				if (unspawnNotes.length > totalCnt) targetNote = unspawnNotes[totalCnt]; else break;
+				isDisplay = targetNote.strumTime - Conductor.songPosition < shownTime;
 			}
 		}
 	}
@@ -1515,16 +1514,16 @@ class PlayState extends MusicBeatState {
 	}
 
 	inline public function noteFinalize() {
-		var skipNotes:Note = skipNote;
+		var skipDaNote:Note = skipNote;
 		combo += skipBf;
 		var skipCnt:Int = skipBf;
 		if (ClientPrefs.data.skipNoteScript && skipCnt > 0) {
 			var skipArray:Array<Dynamic> = [0, Math.abs(skipNotes.noteData), skipNotes.noteType, skipNotes.isSustainNote];
 			for (_ in 0...skipBf) {
 				var skipResult:Dynamic = callOnLuas('goodNoteHitPre', skipArray);
-				if(skipResult != LuaUtils.Function_Stop && skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll) skipResult = callOnHScript('opponentNoteHitPre', [skipNotes]);
+				if(skipResult != LuaUtils.Function_Stop && skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll) skipResult = callOnHScript('opponentNoteHitPre', [skipDaNote]);
 				var skipResult:Dynamic = callOnLuas('goodNoteHit', skipArray);
-				if(skipResult != LuaUtils.Function_Stop && skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll) skipResult = callOnHScript('opponentNoteHitPre', [skipNotes]);
+				if(skipResult != LuaUtils.Function_Stop && skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll) skipResult = callOnHScript('opponentNoteHitPre', [skipDaNote]);
 			}
 		}
 		notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
@@ -1830,7 +1829,7 @@ class PlayState extends MusicBeatState {
 					var len:Int = e.message.indexOf('\n') + 1;
 					if (len <= 0) len = e.message.length;
 					#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-					addTextToDebug('ERROR ("Set Property" Event) - ' + e.message.substr(0, len), FlxColor.RED);
+					addTextToDebug('ERROR ("Set Property" Event) - ' + e.message.substr(0, len), FlxColor.YELLOW);
 					#else
 					FlxG.log.warn('ERROR ("Set Property" Event) - ' + e.message.substr(0, len));
 					#end
@@ -2067,9 +2066,12 @@ class PlayState extends MusicBeatState {
 				++daloop;
 			}
 		}
-		popUpGroup.sort((order:Int, p1:Popup, p2:Popup) -> return FlxSort.byValues(FlxSort.ASCENDING, p1.popUpTime, p2.popUpTime));
+		popUpGroup.sort((_:Int, p1:Popup, p2:Popup) -> {
+			if (p1 != null && p2 != null) return FlxSort.byValues(FlxSort.ASCENDING, p1.popUpTime, p2.popUpTime);
+			else return 0;
+		});
 		for (i in seperatedScore) i = null;
-		daloop = null; tempCombo = null;
+		daloop = tempCombo = null;
 	}
 
 	public static function getNoteDiff(note:Note = null):Float {
@@ -2261,11 +2263,8 @@ class PlayState extends MusicBeatState {
 
 		stagesFunc((stage:BaseStage) -> stage.opponentNoteHit(note));
 		var result:Dynamic = callOnLuas('opponentNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
-		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHit', [note]);
-		if (!note.isSustainNote) {
-			if (splashOpponent && enableSplash && !note.noteSplashData.disabled && !note.isSustainNote) spawnNoteSplashOnNote(note);
-			invalidateNote(note);
-		}
+		if (result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHit', [note]);
+		if (!isSus) invalidateNote(note);
 	}
 
 	function moveCamOnNote(singArrows:String) {
@@ -2293,8 +2292,8 @@ class PlayState extends MusicBeatState {
 		var leType:String = note.noteType;
 
 		var result:Dynamic = callOnLuas('goodNoteHitPre', [notes.members.indexOf(note), leData, leType, isSus]);
-		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) result = callOnHScript('goodNoteHitPre', [note]);
-		if(result == LuaUtils.Function_Stop) return;
+		if (result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) result = callOnHScript('goodNoteHitPre', [note]);
+		if (result == LuaUtils.Function_Stop) return;
 
 		note.wasGoodHit = true;
 		if (note.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound(note.hitsound), note.hitsoundVolume);
@@ -2365,7 +2364,7 @@ class PlayState extends MusicBeatState {
 
 	var frames:Int = -1;
 	public function spawnNoteSplashOnNote(note:Note) {
-		if (!note.mustPress && !splashOpponent) return;
+		if (!note.mustPress) return;
 		var targetSplash:NoteSplash = null;
 		var splashNoteData:Int = note.noteData + (note.mustPress ? EK.keys(mania) : 0);
 		if (splashMoment[splashNoteData] < splashCount) {
@@ -2775,7 +2774,7 @@ class PlayState extends MusicBeatState {
 			}
 		}
 		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-		addTextToDebug('Missing shader $name .frag AND .vert files!', FlxColor.RED);
+		addTextToDebug('Missing shader $name .frag AND .vert files!', FlxColor.YELLOW);
 		#else
 		FlxG.log.warn('Missing shader $name .frag AND .vert files!');
 		#end
