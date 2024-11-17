@@ -55,7 +55,7 @@ class NoteSplash extends FlxSprite {
 		skin = null;
 
 		var skin:String = splash;
-		if (skin == null || skin.length < 1) skin = PlayState.SONG.?splashSkin;
+		if (skin == null || skin.length < 1) skin = PlayState.SONG?.splashSkin;
 		if (skin == null || skin.length == 0) {
 			skin = DEFAULT_SKIN + getSplashSkinPostfix();
 		} else if (skin.indexOf("/") < 0) skin = 'noteSplashes/$skin';

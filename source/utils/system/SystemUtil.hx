@@ -24,7 +24,7 @@ class SystemUtil {
 	}
 
 	// elem 0: charging (0 if no, 1 if yes)
-	// elem 1: percentage (-1 if no battery, 0-100 if battery);
+	// elem 1: percentage (-1 if no battery, 0-100 if battery)
 	public static function getBattery():Array<Int> {
 		final wmic_battery:String = "wmic path win32_battery";
 		var charging:Process = new Process(wmic_battery + " Get BatteryStatus");

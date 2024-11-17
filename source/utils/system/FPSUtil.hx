@@ -9,12 +9,15 @@ class FPSUtil {
 		The current frame rate, expressed using frames-per-second
 	**/
 	public var curFPS(default, null):Float;
+	public var curAvgFPS(default, null):Float;
     public function new() {
-		curFPS = sum = sliceCnt = 0;
+		curFPS = curAvgFPS = 0;
+		sum = sliceCnt = 0;
 		times = [];
 	}
 
     public function update(dt:Float):Void {
+		sliceCnt = 0;
 		var delta:Int = Math.round(dt);
 		times.push(delta);
 		sum += delta;
@@ -24,8 +27,9 @@ class FPSUtil {
 			++sliceCnt;
 		}
 		if (sliceCnt > 0) times.splice(0, sliceCnt);
-
-		curFPS = times.length > 0 ? 1000 / (sum / times.length) : 0.0;
+		
+		curAvgFPS = times.length > 0 ? 1000 / (sum / times.length) : 0.0;
+		curFPS = Math.round(curAvgFPS);
     }
 
 	public static function getFPSAdjust(type:String, fps:Float):Float {

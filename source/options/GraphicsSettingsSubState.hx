@@ -47,7 +47,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 	}
 
 	function onChangeFramerate() {
-		fpsOption.scrollSpeed = utils.MathUtil.interpolate(30, 1000, (holdTime - 0.5) / 5, 3);
+		fpsOption.scrollSpeed = utils.MathUtil.interpolate(30, 1000, (holdTime - .5) / 5, 3);
 		FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
 	}
 

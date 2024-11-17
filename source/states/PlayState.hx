@@ -54,6 +54,7 @@ class PlayState extends MusicBeatState {
 
 	public var songSpeedTween:FlxTween;
 	public var songSpeed(default, set):Float = 1;
+	public var songSpeedRate:Float = 1;
 	public var songSpeedType:String = "multiplicative";
 
 	public final noteKillTime:Float = 350;
@@ -1518,7 +1519,7 @@ class PlayState extends MusicBeatState {
 		combo += skipBf;
 		var skipCnt:Int = skipBf;
 		if (ClientPrefs.data.skipNoteScript && skipCnt > 0) {
-			var skipArray:Array<Dynamic> = [0, Math.abs(skipNotes.noteData), skipNotes.noteType, skipNotes.isSustainNote];
+			var skipArray:Array<Dynamic> = [0, Math.abs(skipDaNote.noteData), skipDaNote.noteType, skipDaNote.isSustainNote];
 			for (_ in 0...skipBf) {
 				var skipResult:Dynamic = callOnLuas('goodNoteHitPre', skipArray);
 				if(skipResult != LuaUtils.Function_Stop && skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll) skipResult = callOnHScript('opponentNoteHitPre', [skipDaNote]);
@@ -1811,8 +1812,8 @@ class PlayState extends MusicBeatState {
 					if(flValue2 == null) flValue2 = 0;
 
 					final newValue:Float = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed') * flValue1;
-					if(flValue2 <= 0) songSpeed = newValue;
-					else songSpeedTween = FlxTween.num(songSpeed, newValue, flValue2 / playbackRate, {ease: FlxEase.linear, onComplete: (_) -> songSpeedTween = null}, set_songSpeed);
+					if(flValue2 <= 0) {songSpeed = newValue; songSpeedRate = flValue1;}
+					else songSpeedTween = FlxTween.tween(this, {songSpeed: newValue, songSpeedRate: flValue1}, flValue2 / playbackRate, {ease: FlxEase.linear, onComplete: (twn:FlxTween) -> songSpeedTween = null});
 				}
 
 			case 'Set Property':
