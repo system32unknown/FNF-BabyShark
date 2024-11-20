@@ -4,7 +4,6 @@ import backend.Song;
 import backend.Rating;
 
 import objects.*;
-import utils.MathUtil;
 import utils.StringUtil;
 
 import flixel.FlxBasic;
@@ -293,8 +292,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		if(PlayState.SONG != null) {
 			var tempBpm:Float = daBpm;
 			for (secNum => section in PlayState.SONG.notes) {
-				if(PlayState.SONG.notes[noteSec].changeBPM == true)
-					tempBpm = PlayState.SONG.notes[noteSec].bpm;
+				if(PlayState.SONG.notes[noteSec].changeBPM == true) tempBpm = PlayState.SONG.notes[noteSec].bpm;
 				secTime += Conductor.calculateCrochet(tempBpm) * (Math.round(4 * section.sectionBeats) / 4);
 				cachedSectionTimes.push(secTime);
 			}
@@ -607,7 +605,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function updateScore() {
-		scoreTxt.text = '${!ClientPrefs.data.showNPS ? '' : 'NPS:$nps/$maxNPS | '}' + 'Hits:$songHits | Breaks:$songMisses';
+		scoreTxt.text = '${!ClientPrefs.data.showNPS ? '' : 'NPS:$nps/$maxNPS | '}' + 'Hits:$songHits | Misses:$songMisses';
 	}
 	
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {

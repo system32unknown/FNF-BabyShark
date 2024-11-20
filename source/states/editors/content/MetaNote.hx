@@ -98,7 +98,7 @@ class MetaNote extends Note {
 			sustainSprite.setColorTransform(colorTransform.redMultiplier, sustainSprite.colorTransform.blueMultiplier, colorTransform.redMultiplier);
 			sustainSprite.scale.copyFrom(this.scale);
 			sustainSprite.updateHitbox();
-			sustainSprite.setPosition(this.x + (this.width / 2 - sustainSprite.width) / 2, this.y + this.height / 2);
+			sustainSprite.setPosition(this.x + this.width / 2 - sustainSprite.width / 2, this.y + this.height / 2);
 			sustainSprite.alpha = this.alpha;
 			sustainSprite.draw();
 		}
