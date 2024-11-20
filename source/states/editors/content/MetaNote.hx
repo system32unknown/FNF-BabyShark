@@ -8,7 +8,7 @@ class MetaNote extends Note {
 	public static var noteTypeTexts:Map<Int, FlxText> = [];
 	public var isEvent:Bool = false;
 	public var songData:Array<Dynamic>;
-	public var sustainSprite:FlxSprite;
+	public var sustainSprite:EditorSustain;
 	public var chartY:Float = 0;
 	public var chartNoteData:Int = 0;
 
@@ -17,6 +17,11 @@ class MetaNote extends Note {
 		this.songData = songData;
 		this.strumTime = time;
 		this.chartNoteData = data;
+	}
+
+	public override function reloadNote(tex:String = '', postfix:String = '') {
+		super.reloadNote(tex, postfix);
+		if (sustainSprite != null) sustainSprite.reloadNote(tex, postfix);
 	}
 
 	public function changeNoteData(v:Int) {
@@ -37,6 +42,7 @@ class MetaNote extends Note {
 		else setGraphicSize(0, ChartingState.GRID_SIZE);
 
 		updateHitbox();
+		if (sustainSprite != null) sustainSprite.changeNoteData(this.noteData);
 	}
 
 	public function setStrumTime(v:Float) {
@@ -52,10 +58,10 @@ class MetaNote extends Note {
 
 		if(sustainLength > 0) {
 			if(sustainSprite == null) {
-				sustainSprite = new FlxSprite().makeGraphic(1, 1);
+				sustainSprite = new EditorSustain(noteData); //new
 				sustainSprite.scrollFactor.x = 0;
 			}
-			sustainSprite.setGraphicSize(8, Math.max(ChartingState.GRID_SIZE / 4, (Math.round((v * ChartingState.GRID_SIZE + ChartingState.GRID_SIZE) / stepCrochet) * zoom) - ChartingState.GRID_SIZE / 2));
+			sustainSprite.sustainHeight = Math.max(ChartingState.GRID_SIZE / 4, (Math.round((v * ChartingState.GRID_SIZE + ChartingState.GRID_SIZE) / stepCrochet) * zoom) - ChartingState.GRID_SIZE / 2);
 			sustainSprite.updateHitbox();
 		}
 	}
@@ -88,7 +94,10 @@ class MetaNote extends Note {
 
 	override function draw() {
 		if(sustainSprite != null && sustainSprite.exists && sustainSprite.visible && sustainLength > 0) {
-			sustainSprite.setPosition(this.x + this.width / 2 - sustainSprite.width / 2, this.y + this.height / 2);
+			sustainSprite.setColorTransform(colorTransform.redMultiplier, sustainSprite.colorTransform.blueMultiplier, colorTransform.redMultiplier);
+			sustainSprite.scale.copyFrom(this.scale);
+			sustainSprite.updateHitbox();
+			sustainSprite.setPosition(this.x + (this.width / 2 - sustainSprite.width) / 2, this.y + this.height / 2);
 			sustainSprite.alpha = this.alpha;
 			sustainSprite.draw();
 		}
@@ -104,6 +113,66 @@ class MetaNote extends Note {
 	override function destroy() {
 		sustainSprite = FlxDestroyUtil.destroy(sustainSprite);
 		super.destroy();
+	}
+}
+
+class EditorSustain extends Note {
+	var sustainTile:FlxSprite;
+	public var sustainHeight:Float = 0;
+
+	public function new(data:Int) {
+		sustainTile = new FlxSprite();
+		sustainTile.scrollFactor.x = 0;
+
+		super(0, data, null, true, true);
+
+		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend');
+		scale.set(scale.x, scale.x);
+		updateHitbox();
+		flipY = false;
+	}
+	override function update(elapsed:Float) {
+		sustainTile.update(elapsed);
+		super.update(elapsed);
+	}
+	override function draw() {
+		if (!visible) return;
+
+		sustainTile.setColorTransform(colorTransform.redMultiplier, colorTransform.blueMultiplier, colorTransform.redMultiplier);
+		sustainTile.scale.set(this.scale.x, sustainHeight);
+		sustainTile.updateHitbox();
+		sustainTile.alpha = this.alpha;
+		sustainTile.setPosition(this.x, this.y - sustainHeight);
+		sustainTile.draw();
+
+		y += sustainHeight;
+		super.draw();
+		y -= sustainHeight;
+	}
+
+	public function reloadSustainTile() {
+		sustainTile.frames = frames;
+		sustainTile.shader = shader;
+		sustainTile.antialiasing = antialiasing;
+		sustainTile.animation.copyFrom(animation);
+		sustainTile.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'hold');
+		sustainTile.clipRect = new flixel.math.FlxRect(0, 1, sustainTile.frameWidth, 1);
+	}
+	public function changeNoteData(v:Int) {
+		this.noteData = v;
+
+		if (!PlayState.isPixelStage) loadNoteAnims();
+		else loadPixelNoteAnims();
+
+		if(Note.globalRgbShaders.contains(rgbShader.parent)) //Is using a default shader
+			rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(noteData));
+
+		reloadSustainTile();
+		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend');
+	}
+	public override function reloadNote(tex:String = '', postfix:String = '') {
+		super.reloadNote(tex, postfix);
+		reloadSustainTile();
 	}
 }
 
