@@ -6,6 +6,7 @@ import flixel.util.FlxDestroyUtil;
 
 class MetaNote extends Note {
 	public static var noteTypeTexts:Map<Int, FlxText> = [];
+
 	public var isEvent:Bool = false;
 	public var songData:Array<Dynamic>;
 	public var sustainSprite:EditorSustain;
@@ -25,20 +26,20 @@ class MetaNote extends Note {
 	}
 
 	public function changeNoteData(v:Int) {
-		this.chartNoteData = v; //despite being so arbitrary its sadly needed to fix a bug on moving notes
+		this.chartNoteData = v; // despite being so arbitrary its sadly needed to fix a bug on moving notes
 		this.songData[1] = v;
 		this.noteData = v % ChartingState.GRID_COLUMNS_PER_PLAYER;
 		this.mustPress = (v < ChartingState.GRID_COLUMNS_PER_PLAYER);
 
-		if(!PlayState.isPixelStage) loadNoteAnims();
+		if (!PlayState.isPixelStage) loadNoteAnims();
 		else loadPixelNoteAnims();
 
-		if(Note.globalRgbShaders.contains(rgbShader.parent)) //Is using a default shader
+		if (Note.globalRgbShaders.contains(rgbShader.parent)) // Is using a default shader
 			rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(noteData));
 
 		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'Scroll');
 		updateHitbox();
-		if(width > height) setGraphicSize(ChartingState.GRID_SIZE);
+		if (width > height) setGraphicSize(ChartingState.GRID_SIZE);
 		else setGraphicSize(0, ChartingState.GRID_SIZE);
 
 		updateHitbox();
@@ -56,9 +57,9 @@ class MetaNote extends Note {
 		v = Math.round(v / (stepCrochet / 2)) * (stepCrochet / 2);
 		songData[2] = sustainLength = Math.max(Math.min(v, stepCrochet * 128), 0);
 
-		if(sustainLength > 0) {
-			if(sustainSprite == null) {
-				sustainSprite = new EditorSustain(noteData); //new
+		if (sustainLength > 0) {
+			if (sustainSprite == null) {
+				sustainSprite = new EditorSustain(noteData);
 				sustainSprite.scrollFactor.x = 0;
 			}
 			sustainSprite.sustainHeight = Math.max(ChartingState.GRID_SIZE / 4, (Math.round((v * ChartingState.GRID_SIZE + ChartingState.GRID_SIZE) / stepCrochet) * zoom) - ChartingState.GRID_SIZE / 2);
@@ -70,15 +71,15 @@ class MetaNote extends Note {
 	function get_hasSustain():Bool return (!isEvent && sustainLength > 0);
 
 	public function updateSustainToZoom(stepCrochet:Float, zoom:Float = 1) {
-		if(_lastZoom == zoom) return;
+		if (_lastZoom == zoom) return;
 		setSustainLength(sustainLength, stepCrochet, zoom);
 	}
 
 	var _noteTypeText:FlxText;
-	public function findNoteTypeText(num:Int):FlxText {
+	public function findNoteTypeText(num:Int) {
 		var txt:FlxText = null;
-		if(num != 0) {
-			if(!noteTypeTexts.exists(num)) {
+		if (num != 0) {
+			if (!noteTypeTexts.exists(num)) {
 				txt = new FlxText(0, 0, ChartingState.GRID_SIZE, (num > 0) ? Std.string(num) : '?', 16);
 				txt.autoSize = false;
 				txt.alignment = CENTER;
@@ -93,7 +94,7 @@ class MetaNote extends Note {
 	}
 
 	override function draw() {
-		if(sustainSprite != null && sustainSprite.exists && sustainSprite.visible && sustainLength > 0) {
+		if (sustainSprite != null && sustainSprite.exists && sustainSprite.visible && sustainLength > 0) {
 			sustainSprite.setColorTransform(colorTransform.redMultiplier, sustainSprite.colorTransform.blueMultiplier, colorTransform.redMultiplier);
 			sustainSprite.scale.copyFrom(this.scale);
 			sustainSprite.updateHitbox();
@@ -103,7 +104,7 @@ class MetaNote extends Note {
 		}
 		super.draw();
 
-		if(_noteTypeText != null && _noteTypeText.exists && _noteTypeText.visible) {
+		if (_noteTypeText != null && _noteTypeText.exists && _noteTypeText.visible) {
 			_noteTypeText.setPosition(this.x + this.width / 2 - _noteTypeText.width / 2, this.y + this.height / 2 - _noteTypeText.height / 2);
 			_noteTypeText.alpha = this.alpha;
 			_noteTypeText.draw();
@@ -118,6 +119,7 @@ class MetaNote extends Note {
 
 class EditorSustain extends Note {
 	var sustainTile:FlxSprite;
+
 	public var sustainHeight:Float = 0;
 
 	public function new(data:Int) {
@@ -131,10 +133,12 @@ class EditorSustain extends Note {
 		updateHitbox();
 		flipY = false;
 	}
+
 	override function update(elapsed:Float) {
 		sustainTile.update(elapsed);
 		super.update(elapsed);
 	}
+
 	override function draw() {
 		if (!visible) return;
 
@@ -158,18 +162,20 @@ class EditorSustain extends Note {
 		sustainTile.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'hold');
 		sustainTile.clipRect = new flixel.math.FlxRect(0, 1, sustainTile.frameWidth, 1);
 	}
+
 	public function changeNoteData(v:Int) {
 		this.noteData = v;
 
 		if (!PlayState.isPixelStage) loadNoteAnims();
 		else loadPixelNoteAnims();
 
-		if(Note.globalRgbShaders.contains(rgbShader.parent)) //Is using a default shader
+		if (Note.globalRgbShaders.contains(rgbShader.parent)) //Is using a default shader
 			rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(noteData));
 
 		reloadSustainTile();
 		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend');
 	}
+
 	public override function reloadNote(tex:String = '', postfix:String = '') {
 		super.reloadNote(tex, postfix);
 		reloadSustainTile();
@@ -194,7 +200,7 @@ class EventMetaNote extends MetaNote {
 	}
 
 	override function draw() {
-		if(eventText != null && eventText.exists && eventText.visible) {
+		if (eventText != null && eventText.exists && eventText.visible) {
 			eventText.y = this.y + this.height / 2 - eventText.height / 2;
 			eventText.alpha = this.alpha;
 			eventText.draw();
@@ -205,12 +211,13 @@ class EventMetaNote extends MetaNote {
 	override function setSustainLength(v:Float, stepCrochet:Float, zoom:Float = 1) {}
 
 	public var events:Array<Array<String>>;
+
 	public function updateEventText() {
 		var myTime:Float = Math.floor(this.strumTime);
-		if(events.length == 1) {
+		if (events.length == 1) {
 			var event:Array<String> = events[0];
 			eventText.text = 'Event: ${event[0]} ($myTime ms)\nValue 1: ${event[1]}\nValue 2: ${event[2]}';
-		} else if(events.length > 1) {
+		} else if (events.length > 1) {
 			var eventNames:Array<String> = [for (event in events) event[0]];
 			eventText.text = '${events.length} Events ($myTime ms):\n${eventNames.join(', ')}';
 		} else eventText.text = 'ERROR FAILSAFE';
