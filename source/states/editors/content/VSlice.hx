@@ -231,7 +231,7 @@ class VSlice {
 		var fileEvents:Array<Dynamic> = [];
 		var remainingEvents:Array<Dynamic> = allEvents.filter((event:Dynamic) -> !focusCameraEvents.contains(event));
 		if(remainingEvents.length > 0) {
-			for (num => event in remainingEvents) {
+			for (_ => event in remainingEvents) {
 				var fields:Array<Dynamic> = [];
 				if(event.v != null) {
 					switch(Type.typeof(event.v)) {

@@ -6,7 +6,7 @@ class TerminalState extends MusicBeatState {
 	// dont just yoink this code and use it in your own mod. this includes you, psych engine porters.
 	// if you ingore this message and use it anyway, atleast give credit.
 	var curCmd:String = "";
-	var previousText:String = Language.getPhrase('term_introduction', 'Vs Dave Developer Console\nAll Rights Reserved.\n> ');
+	var previousText:String = Language.getPhrase('term_introduction', 'Vs Dave Developer Console\nAll Rights Reserved.\nTerminal Being reworked in future.\n> ');
 	var displayText:FlxText;
 	var adminUnlocked:Bool = false;
 

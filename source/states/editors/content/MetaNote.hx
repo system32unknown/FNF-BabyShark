@@ -76,7 +76,7 @@ class MetaNote extends Note {
 	}
 
 	var _noteTypeText:FlxText;
-	public function findNoteTypeText(num:Int) {
+	public function findNoteTypeText(num:Int):FlxText {
 		var txt:FlxText = null;
 		if (num != 0) {
 			if (!noteTypeTexts.exists(num)) {
@@ -119,7 +119,6 @@ class MetaNote extends Note {
 
 class EditorSustain extends Note {
 	var sustainTile:FlxSprite;
-
 	public var sustainHeight:Float = 0;
 
 	public function new(data:Int) {

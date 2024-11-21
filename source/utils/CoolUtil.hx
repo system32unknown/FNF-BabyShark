@@ -122,11 +122,9 @@ class CoolUtil {
 	}
 
 	static function returnFileName(path:String, toAdd:Array<String>, full:String) {
-		var fullPath:String = full + '/' + path;
+		var fullPath:String = '$full/$path';
 		if (FileSystem.isDirectory(fullPath)) {
-			for (i in FileSystem.readDirectory(fullPath)) {
-				returnFileName(i, toAdd, fullPath);
-			}
+			for (i in FileSystem.readDirectory(fullPath)) returnFileName(i, toAdd, fullPath);
 		} else toAdd.push(fullPath.replace('.json', ''));
 	}
 }

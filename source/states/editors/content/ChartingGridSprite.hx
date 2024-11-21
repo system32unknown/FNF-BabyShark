@@ -76,7 +76,7 @@ class ChartingGridSprite extends FlxSprite {
 	}
 
 	function _drawStripes() {
-		for (i => column in stripes) {
+		for (_ => column in stripes) {
 			if(column == 0) stripe.x = this.x;
 			else stripe.x = this.x + ChartingState.GRID_SIZE * column - stripe.width / 2;
 			stripe.draw();
@@ -90,13 +90,13 @@ class ChartingGridSprite extends FlxSprite {
 		stripe.updateHitbox();
 	}
 
-	function set_rows(v:Int) {
+	function set_rows(v:Int):Int {
 		rows = v;
 		recalcHeight();
 		return rows;
 	}
 
-	function set_spacing(v:Int) {
+	function set_spacing(v:Int):Int {
 		rows = v;
 		recalcHeight();
 		return rows;

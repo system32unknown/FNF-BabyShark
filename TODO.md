@@ -16,6 +16,7 @@
     - [ ] Shadow
     - [ ] Chichi
 - [ ] New Credit Menu (Social Links)
+- [ ] Terminal and Character Selection Rework
 
 ### Characters List
 - [ ] Stariana
