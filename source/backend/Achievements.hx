@@ -3,6 +3,7 @@ package backend;
 #if ACHIEVEMENTS_ALLOWED
 import objects.AchievementPopup;
 import haxe.Exception;
+import flixel.util.FlxSave;
 #if LUA_ALLOWED
 import psychlua.FunkinLua;
 #end
@@ -41,62 +42,67 @@ class Achievements {
 		_originalLength = _sortID + 1; // dont delete this thing below
 	}
 
-	public static var achievements:Map<String, Achievement> = new Map<String, Achievement>();
+	public static function get(name:String):Achievement return list[name];
+	public static function exists(name:String):Bool return list.exists(name);
+
+	public static var list:Map<String, Achievement> = new Map<String, Achievement>();
 	public static var variables:Map<String, Float> = [];
-	public static var achievementsUnlocked:Array<String> = [];
+	public static var unlocked:Array<String> = [];
+
 	static var _firstLoad:Bool = true;
-
-	public static function get(name:String):Achievement
-		return achievements.get(name);
-
-	public static function exists(name:String):Bool
-		return achievements.exists(name);
+	static var _save:FlxSave;
 
 	public static function load():Void {
 		if (!_firstLoad) return;
 		if (_originalLength < 0) init();
 
-		if (FlxG.save.data != null) {
-			if (FlxG.save.data.achievementsUnlocked != null)
-				achievementsUnlocked = FlxG.save.data.achievementsUnlocked;
+		_save = new FlxSave();
+		_save.bind('achievements', CoolUtil.getSavePath());
 
-			var savedMap:Map<String, Float> = cast FlxG.save.data.achievementsVariables;
-			if (savedMap != null) {
-				for (key => value in savedMap) {
-					variables.set(key, value);
-				}
+		if (_save.data == null) return;
+
+		if (_save.data.unlocked != null)
+			unlocked = _save.data.unlocked;
+
+		var savedMap:Map<String, Float> = _save.data.variables;
+		if (savedMap != null) {
+			for (key => value in savedMap) {
+				variables.set(key, value);
 			}
-			_firstLoad = false;
 		}
+		_firstLoad = false;
 	}
 
 	public static function save():Void {
-		FlxG.save.data.achievementsUnlocked = achievementsUnlocked;
-		FlxG.save.data.achievementsVariables = variables;
+		_save.data.unlocked = unlocked;
+		_save.data.variables = variables;
 	}
 
 	public static function getScore(name:String):Float
 		return _scoreFunc(name, GET);
 
-	public static function setScore(name:String, value:Float, saveIfNotUnlocked:Bool = true):Float
+	public static function setScore(name:String, value:Float, ?saveIfNotUnlocked:Bool = true):Float
 		return _scoreFunc(name, SET, value, saveIfNotUnlocked);
 
-	public static function addScore(name:String, value:Float = 1, saveIfNotUnlocked:Bool = true):Float
+	public static function addScore(name:String, ?value:Float = 1, ?saveIfNotUnlocked:Bool = true):Float
 		return _scoreFunc(name, ADD, value, saveIfNotUnlocked);
 
-	static function _scoreFunc(name:String, mode:AchievementOp, addOrSet:Float = 1, saveIfNotUnlocked:Bool = true):Float {
+	static function _scoreFunc(name:String, mode:AchievementOp, ?addOrSet:Float = 1, ?saveIfNotUnlocked:Bool = true):Float {
 		if (!variables.exists(name)) variables.set(name, 0);
 
-		if (achievements.exists(name)) {
-			var achievement:Achievement = achievements.get(name);
-			if (achievement.maxScore < 1) throw new Exception('Achievement has score disabled or is incorrectly configured: $name');
+		if (list.exists(name)) {
+			var achievement:Achievement = list[name];
+			if (achievement.maxScore < 1) {
+				throw new Exception('Achievement has score disabled or is incorrectly configured: $name');
+				return 0.0;
+			}
 
-			if (achievementsUnlocked.contains(name)) return achievement.maxScore;
+			if (unlocked.contains(name)) return achievement.maxScore;
 
 			var val:Float = addOrSet;
 			switch (mode) {
-				case GET: return variables.get(name); // get
-				case ADD: val += variables.get(name); // add
+				case GET: return variables[name]; // get
+				case ADD: val += variables[name]; // add
 				default:
 			}
 
@@ -106,9 +112,8 @@ class Achievements {
 			}
 			variables.set(name, val);
 
-			Achievements.save();
-			if (saveIfNotUnlocked || val >= achievement.maxScore)
-				FlxG.save.flush();
+			save();
+			if (saveIfNotUnlocked || val >= achievement.maxScore) _save.flush();
 			return val;
 		}
 		return -1;
@@ -116,15 +121,15 @@ class Achievements {
 
 	static var _lastUnlock:Int = -999;
 	public static function unlock(name:String, autoStartPopup:Bool = true):String {
-		if (!achievements.exists(name)) {
+		if (!list.exists(name)) {
 			FlxG.log.error('Achievement "$name" does not exists!');
 			throw new Exception('Achievement "$name" does not exists!');
 			return null;
 		}
 
-		if (Achievements.isUnlocked(name)) return null;
+		if (isUnlocked(name)) return null;
 		trace('Completed achievement "$name"');
-		achievementsUnlocked.push(name);
+		unlocked.push(name);
 
 		// earrape prevention
 		var time:Int = openfl.Lib.getTimer();
@@ -133,20 +138,19 @@ class Achievements {
 			_lastUnlock = time;
 		}
 
-		Achievements.save();
-		FlxG.save.flush();
+		save();
+		_save.flush();
 
 		if (autoStartPopup) startPopup(name);
 		return name;
 	}
 
-	inline public static function isUnlocked(name:String)
-		return achievementsUnlocked.contains(name);
+	inline public static function isUnlocked(name:String):Bool
+		return unlocked.contains(name);
 
 	@:allow(objects.AchievementPopup)
 	private static var _popups:Array<AchievementPopup> = [];
 	public static var showingPopups(get, never):Bool;
-
 	public static function get_showingPopups():Bool
 		return _popups.length > 0;
 
@@ -161,11 +165,10 @@ class Achievements {
 	// Map sorting cuz haxe is physically incapable of doing that by itself
 	static var _sortID = 0;
 	static var _originalLength = -1;
-
 	public static function createAchievement(name:String, data:Achievement, ?mod:String = null) {
 		data.ID = _sortID;
 		data.mod = mod;
-		achievements.set(name, data);
+		list.set(name, data);
 		_sortID++;
 	}
 
@@ -173,8 +176,8 @@ class Achievements {
 	public static function reloadList() {
 		// remove modded achievements
 		if ((_sortID + 1) > _originalLength)
-			for (key => value in achievements)
-				if (value.mod != null) achievements.remove(key);
+			for (key => value in list)
+				if (value.mod != null) list.remove(key);
 
 		_sortID = _originalLength - 1;
 
@@ -214,7 +217,7 @@ class Achievements {
 							continue;
 						}
 						key = key.trim();
-						if (achievements.exists(key)) continue;
+						if (list.exists(key)) continue;
 						createAchievement(key, achieve, Mods.currentModDirectory);
 					}
 				}
@@ -227,41 +230,41 @@ class Achievements {
 	#if LUA_ALLOWED
 	public static function addLuaCallbacks(lua:FunkinLua) {
 		lua.set("getAchievementScore", function(name:String):Float {
-			if (!achievements.exists(name)) {
+			if (!list.exists(name)) {
 				FunkinLua.luaTrace('getAchievementScore: Couldnt find achievement: $name', false, false, FlxColor.RED);
 				return -1;
 			}
 			return getScore(name);
 		});
 		lua.set("setAchievementScore", function(name:String, ?value:Float = 0, ?saveIfNotUnlocked:Bool = true):Float {
-			if (!achievements.exists(name)) {
+			if (!list.exists(name)) {
 				FunkinLua.luaTrace('setAchievementScore: Couldnt find achievement: $name', false, false, FlxColor.RED);
 				return -1;
 			}
 			return setScore(name, value, saveIfNotUnlocked);
 		});
 		lua.set("addAchievementScore", function(name:String, ?value:Float = 1, ?saveIfNotUnlocked:Bool = true):Float {
-			if (!achievements.exists(name)) {
+			if (!list.exists(name)) {
 				FunkinLua.luaTrace('addAchievementScore: Couldnt find achievement: $name', false, false, FlxColor.RED);
 				return -1;
 			}
 			return addScore(name, value, saveIfNotUnlocked);
 		});
 		lua.set("unlockAchievement", function(name:String):Dynamic {
-			if (!achievements.exists(name)) {
+			if (!list.exists(name)) {
 				FunkinLua.luaTrace('unlockAchievement: Couldnt find achievement: $name', false, false, FlxColor.RED);
 				return null;
 			}
 			return unlock(name);
 		});
 		lua.set("isAchievementUnlocked", function(name:String):Dynamic {
-			if (!achievements.exists(name)) {
+			if (!list.exists(name)) {
 				FunkinLua.luaTrace('isAchievementUnlocked: Couldnt find achievement: $name', false, false, FlxColor.RED);
 				return null;
 			}
 			return isUnlocked(name);
 		});
-		lua.set("achievementExists", (name:String) -> return achievements.exists(name));
+		lua.set("achievementExists", (name:String) -> return list.exists(name));
 	}
 	#end
 }

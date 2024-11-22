@@ -131,6 +131,16 @@ class Controls {
 		reloadVolumeKeys();
 	}
 
+	public static function convertStrumKey(arr:Array<String>, key:FlxKey):Int {
+		if (key == NONE) return -1;
+		for (i in 0...arr.length) {
+			for (possibleKey in keyBinds[arr[i]]) {
+				if (key == possibleKey) return i;
+			}
+		}
+		return -1;
+	}
+
 	public static function reset() {
 		for (key in keyBinds.keys()) {
 			if (!default_keyBinds.exists(key)) continue;

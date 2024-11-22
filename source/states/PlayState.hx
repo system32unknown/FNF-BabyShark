@@ -4,7 +4,6 @@ import haxe.ds.IntMap;
 import haxe.ds.Vector;
 import flixel.FlxBasic;
 import flixel.FlxObject;
-import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSort;
 import openfl.events.KeyboardEvent;
 import openfl.utils.Assets as OpenFlAssets;
@@ -937,8 +936,7 @@ class PlayState extends MusicBeatState {
 
 	public function setSongTime(time:Float) {
 		if (!inStarting) {
-			FlxG.sound.music.pause();
-			vocals.pause();
+			FlxG.sound.music.pause(); vocals.pause();
 
 			FlxG.sound.music.time = time - Conductor.offset;
 			#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
@@ -988,10 +986,10 @@ class PlayState extends MusicBeatState {
 	function generateSong():Void {
 		songSpeed = SONG.speed;
 		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype');
-
-		switch(songSpeedType) {
-			case "multiplicative": songSpeed = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
-			case "constant": songSpeed = ClientPrefs.getGameplaySetting('scrollspeed');
+		songSpeed = switch(songSpeedType) {
+			case "constant": ClientPrefs.getGameplaySetting('scrollspeed');
+			case "multiplicative": SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
+			default: SONG.speed;
 		}
 
 		var songData:SwagSong = SONG;
@@ -1497,7 +1495,7 @@ class PlayState extends MusicBeatState {
 							if (tooLate) {
 								if (daNote.mustPress) {
 									if (cpuControlled) goodNoteHit(daNote);
-									else if (!daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
+									else if (!daNote.ignoreNote && !endingSong && daNote.tooLate || !daNote.wasGoodHit) noteMiss(daNote);
 								} else {
 									if (!daNote.hitByOpponent) opponentNoteHit(daNote);
 									if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
@@ -2085,9 +2083,9 @@ class PlayState extends MusicBeatState {
 
 	var strumsBlocked:Array<Bool> = [];
 	function onKeyPress(event:KeyboardEvent):Void {
-		var eventKey:FlxKey = event.keyCode;
+		var eventKey:flixel.input.keyboard.FlxKey = event.keyCode;
 		#if debug @:privateAccess if (!FlxG.keys._keyListMap.exists(eventKey)) return; #end
-		if (FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(getKeyFromEvent(keysArray, eventKey));
+		if (FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(Controls.convertStrumKey(keysArray, eventKey));
 	}
 
 	function keyPressed(key:Int) {
@@ -2131,7 +2129,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function onKeyRelease(event:KeyboardEvent):Void {
-		var key:Int = getKeyFromEvent(keysArray, event.keyCode);
+		var key:Int = Controls.convertStrumKey(keysArray, event.keyCode);
 		if(key > -1) keyReleased(key);
 	}
 
@@ -2147,11 +2145,6 @@ class PlayState extends MusicBeatState {
 			spr.resetAnim = 0;
 		}
 		callOnScripts('onKeyRelease', [key]);
-	}
-
-	public static function getKeyFromEvent(arr:Array<String>, key:FlxKey):Int {
-		if(key != NONE) for (i in 0...arr.length) for (noteKey in Controls.keyBinds[arr[i]]) if(key == noteKey) return i;
-		return -1;
 	}
 
 	function keysCheck():Void {
@@ -2335,8 +2328,7 @@ class PlayState extends MusicBeatState {
 			vocals.volume = 1;
 
 			if(!isSus) {
-				++combo;
-				++bfSideHit;
+				++combo; ++bfSideHit;
 				if (showPopups) popUpHitNote = note;
 				addScore(note);
 			}

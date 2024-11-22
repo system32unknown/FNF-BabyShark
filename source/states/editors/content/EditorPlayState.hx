@@ -484,7 +484,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:flixel.input.keyboard.FlxKey = event.keyCode;
-		if(FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(PlayState.getKeyFromEvent(keysArray, eventKey));
+		if(FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(Controls.convertStrumKey(keysArray, eventKey));
 	}
 
 	function keyPressed(key:Int) {
@@ -521,7 +521,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function onKeyRelease(event:KeyboardEvent):Void {
-		var key:Int = PlayState.getKeyFromEvent(keysArray, event.keyCode);
+		var key:Int = Controls.convertStrumKey(keysArray, event.keyCode);
 		if(key > -1) keyReleased(key);
 	}
 

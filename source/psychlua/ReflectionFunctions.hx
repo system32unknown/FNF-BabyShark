@@ -75,7 +75,7 @@ class ReflectionFunctions {
 							return result;
 						}
 						FunkinLua.luaTrace('getPropertyFromGroup: Object #$index from group: $group doesn\'t exist!', false, false, FlxColor.RED);
-					default: return LuaUtils.getGroupStuff(realObject.members[index], variable, allowMaps); //Is Group
+					default: return LuaUtils.getGroupStuff(Reflect.getProperty(realObject, 'members')[index], variable, allowMaps); //Is Group
 				}
 			}
 			FunkinLua.luaTrace('getPropertyFromGroup: Group/Array $group doesn\'t exist!', false, false, FlxColor.RED);
@@ -98,7 +98,7 @@ class ReflectionFunctions {
 							}
 							LuaUtils.setGroupStuff(leArray, variable, allowInstances ? parseInstances(value) : value, allowMaps);
 						}
-					default: LuaUtils.setGroupStuff(realObject.members[index], variable, allowInstances ? parseInstances(value) : value, allowMaps); //Is Group
+					default: LuaUtils.setGroupStuff(Reflect.getProperty(realObject, 'members')[index], variable, allowInstances ? parseInstances(value) : value, allowMaps); //Is Group
 				}
 			} else FunkinLua.luaTrace('setPropertyFromGroup: Group/Array $group doesn\'t exist!', false, false, FlxColor.RED);
 			return value;

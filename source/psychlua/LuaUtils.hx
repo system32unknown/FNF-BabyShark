@@ -180,8 +180,8 @@ class LuaUtils {
 			case 'this' | 'instance' | 'game': return PlayState.instance;
 			
 			default:
-				var obj:Dynamic = PlayState.instance.getLuaObject(objectName);
-				if(obj == null) obj = getVarInArray(MusicBeatState.getState(), objectName, allowMaps);
+				var obj:Dynamic = MusicBeatState.getVariables().get(objectName);
+				if(obj == null) obj = getVarInArray(getTargetInstance(), objectName, allowMaps);
 				return obj;
 		}
 	}
