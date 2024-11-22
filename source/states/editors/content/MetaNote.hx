@@ -95,6 +95,7 @@ class MetaNote extends Note {
 
 	override function draw() {
 		if (sustainSprite != null && sustainSprite.exists && sustainSprite.visible && sustainLength > 0) {
+			if (sustainSprite.shader != shader) sustainSprite.shader = shader;
 			sustainSprite.setColorTransform(colorTransform.redMultiplier, sustainSprite.colorTransform.blueMultiplier, colorTransform.redMultiplier);
 			sustainSprite.scale.copyFrom(this.scale);
 			sustainSprite.updateHitbox();
@@ -141,6 +142,7 @@ class EditorSustain extends Note {
 	override function draw() {
 		if (!visible) return;
 
+		if (sustainTile.shader != shader) sustainTile.shader = shader;
 		sustainTile.setColorTransform(colorTransform.redMultiplier, colorTransform.blueMultiplier, colorTransform.redMultiplier);
 		sustainTile.scale.set(this.scale.x, sustainHeight);
 		sustainTile.updateHitbox();
@@ -155,7 +157,6 @@ class EditorSustain extends Note {
 
 	public function reloadSustainTile() {
 		sustainTile.frames = frames;
-		sustainTile.shader = shader;
 		sustainTile.antialiasing = antialiasing;
 		sustainTile.animation.copyFrom(animation);
 		sustainTile.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'hold');
@@ -167,9 +168,6 @@ class EditorSustain extends Note {
 
 		if (!PlayState.isPixelStage) loadNoteAnims();
 		else loadPixelNoteAnims();
-
-		if (Note.globalRgbShaders.contains(rgbShader.parent)) //Is using a default shader
-			rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(noteData));
 
 		reloadSustainTile();
 		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend');
