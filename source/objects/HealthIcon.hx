@@ -70,7 +70,7 @@ class HealthIcon extends FlxSprite {
 			this.char = char;
 			state = 0;
 
-			iconOffsets[1] = iconOffsets[0] = 0;
+			iconOffsets = [.0, .0];
 			loadGraphic(graph, true, graph.width, graph.height);
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 

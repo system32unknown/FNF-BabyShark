@@ -37,7 +37,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	/**
 	 * Gets the correct order of notes
 	 **/
-	public function get(id:Int) {
+	public function get(id:Int):Note {
 		return members[length - 1 - id];
 	}
 

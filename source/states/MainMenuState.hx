@@ -60,8 +60,7 @@ class MainMenuState extends MusicBeatState {
 		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
 		magenta.updateHitbox();
 		magenta.screenCenter();
-		magenta.visible = false;
-		magenta.active = false;
+		magenta.visible = magenta.active = false;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 

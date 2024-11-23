@@ -20,9 +20,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 
 	public var letters(get, never):Array<AlphabetGlyph>;
 	function get_letters():Array<AlphabetGlyph> {
-		return [for (line in members) {
-			for (glyph in line) glyph;
-		}];
+		return [for (line in members) for (glyph in line) glyph];
 	}
 
     public var targetY:Int = 0;

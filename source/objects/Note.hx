@@ -128,10 +128,10 @@ class Note extends FlxSprite {
 	}
 
 	inline public function resizeByRatio(ratio:Float) { //haha funny twitter shit
-		if(isSustainNote && animation.curAnim != null && !animation.curAnim.name.endsWith('end')) {
-			scale.y *= ratio;
-			updateHitbox();
-		}
+		if (!isSustainNote || animation.curAnim == null || animation.curAnim.name.endsWith('end')) return;
+
+		scale.y *= ratio;
+		updateHitbox();
 	}
 
 	function set_texture(value:String):String {
@@ -193,11 +193,10 @@ class Note extends FlxSprite {
 		super();
 
 		animation = new backend.animation.PsychAnimationController(this);
-
 		antialiasing = ClientPrefs.data.antialiasing;
 		if(createdFrom == null) createdFrom = PlayState.instance;
 
-		if(prevNote == null) prevNote = this;
+		prevNote ??= this;
 
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
@@ -425,8 +424,8 @@ class Note extends FlxSprite {
 		if(!strum.downScroll) distance *= -1;
 
 		if(copyAngle) angle = strumDirection - 90 + strumAngle + offsetAngle;
-
 		if(copyAlpha) alpha = strumAlpha * multAlpha;
+
 		if(copyX) @:privateAccess x = strumX + offsetX + strum._dirCos * distance;
 		if(copyY) {
 			@:privateAccess y = strumY + offsetY + correctionOffset + strum._dirSin * distance;
