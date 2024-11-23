@@ -29,7 +29,7 @@ class AchievementsMenuState extends MusicBeatState {
 		#end
 
 		// prepare achievement list
-		for (achievement => data in Achievements.achievements) {
+		for (achievement => data in Achievements.list) {
 			var unlocked:Bool = Achievements.isUnlocked(achievement);
 			if(data.hidden != true || unlocked)
 				options.push(makeAchievement(achievement, data, unlocked, data.mod));
@@ -279,7 +279,7 @@ class ResetAchievementSubstate extends MusicBeatSubstate {
 				var option:Dynamic = state.options[state.curSelected];
 
 				Achievements.variables.remove(option.name);
-				Achievements.achievementsUnlocked.remove(option.name);
+				Achievements.unlocked.remove(option.name);
 				option.unlocked = false;
 				option.curProgress = 0;
 				option.name = state.nameText.text = '???';
