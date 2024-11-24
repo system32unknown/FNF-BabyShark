@@ -29,7 +29,7 @@ class MusicBeatState extends flixel.FlxState {
 	}
 
 	override function destroy() {
-		utils.system.MemoryUtil.clearMajor();
+		if (!ClientPrefs.data.disableGC) utils.system.MemoryUtil.clearMajor();
 		super.destroy();
 	}
 

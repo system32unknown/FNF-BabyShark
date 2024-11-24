@@ -41,6 +41,16 @@ class NativeUtil {
 		#end
 	}
 
+	/**
+	 * Switch the window's color mode to dark or light mode.
+	 */
+	public static function setDarkMode(title:String, enable:Bool) {
+		#if windows
+		if(title == null) title = lime.app.Application.current.window.title;
+		PlatformUtil.setDarkMode(title, enable);
+		#end
+	}
+
 	public static function consoleColorToANSI(color:ConsoleColor):Int {
 		return switch(color) {
 			case BLACK:			30;

@@ -34,7 +34,11 @@ class Paths {
 			destroyGraphic(asset); // get rid of the graphic
 			currentTrackedAssets.remove(key); // and remove the key from local cache map
 		}
-		MemoryUtil.clearMajor();
+		if (ClientPrefs.data.disableGC) {
+			MemoryUtil.enable();
+			MemoryUtil.collect(true);
+			if ((cast FlxG.state) is PlayState) MemoryUtil.enable(false);
+		} else MemoryUtil.clearMajor();
 	}
 
 	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
@@ -52,7 +56,7 @@ class Paths {
 
 		localTrackedAssets = [];
 		OpenFlAssets.cache.clear("songs");
-		MemoryUtil.clearMajor();
+		if (!ClientPrefs.data.disableGC) MemoryUtil.clearMajor();
 	}
 
 	inline static function destroyGraphic(graphic:FlxGraphic) {

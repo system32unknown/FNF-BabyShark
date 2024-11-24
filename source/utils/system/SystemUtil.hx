@@ -23,19 +23,21 @@ class SystemUtil {
 		#end
 	}
 
-	// elem 0: charging (0 if no, 1 if yes)
-	// elem 1: percentage (-1 if no battery, 0-100 if battery)
+	/**
+	 * Gets Current Battery (Laptop Only).
+	 * @return Array of Battery [0: Charging, 1: Remaining Battery].
+	**/
 	public static function getBattery():Array<Int> {
-		final wmic_battery:String = "wmic path win32_battery";
-		var charging:Process = new Process(wmic_battery + " Get BatteryStatus");
-		var ret = [0, -1];
+		final wmic_battery:String = "wmic path win32_battery Get";
+		var charging:Process = new Process(wmic_battery + " BatteryStatus");
+		var ret:Array<Int> = [0, -1];
 
 		if (charging.stderr.readAll().toString().split("\n")[0] != "") return ret;
 		var val:Int = Std.parseInt(charging.stdout.readAll().toString().split("\n")[1]);
 		if (val == 1 || (val >= 3 && val <= 5) || val == 10) ret[0] = 0;
 		else ret[0] = 1;
 
-		var battery:Int = Std.parseInt(new Process(wmic_battery + " Get EstimatedChargeRemaining").stdout.readAll().toString().split("\n")[1]);
+		var battery:Int = Std.parseInt(new Process(wmic_battery + " EstimatedChargeRemaining").stdout.readAll().toString().split("\n")[1]);
 		ret[1] = battery;
 		return ret;
 	}

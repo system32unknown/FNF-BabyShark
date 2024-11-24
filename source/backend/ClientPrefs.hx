@@ -61,6 +61,7 @@ package backend;
 	public var cacheOnGPU:Bool = false;
 	public var healthTypes:String = 'Vanilla';
 	public var timeBarType:String = 'Name Time Position';
+	public var botPlayPlace:String = "Near the Health Bar";
 	public var altDiscordImg:Bool = false;
 	public var altDiscordImgCount:Int = 0;
 	public var autoPausePlayState:Bool = true;
@@ -95,8 +96,7 @@ package backend;
 	public var skipNoteScript:Bool = true;
 	public var spawnNoteScript:Bool = true;
 	public var skipSpawnNote:Bool = true;
-
-	public var botPlayPlace:String = "Near the Health Bar";
+	public var disableGC:Bool = false;
 
 	public var epicWindow:Int = 22;
 	public var sickWindow:Int = 45;

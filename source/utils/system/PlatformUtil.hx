@@ -20,14 +20,6 @@ package utils.system;
 #include <string>
 ')
 class PlatformUtil {
-	@:functionCode('
-        HWND hWnd = GetActiveWindow();
-        alpha = SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) ^ WS_EX_LAYERED);
-        if (alpha) return SetLayeredWindowAttributes(hWnd, color, 0, LWA_COLORKEY);
-        else return FALSE;
-    ')
-	public static function setWindowsTransparent(color:Int = 0, alpha:Int = 0):Bool return false;
-
     @:functionCode('
         NOTIFYICONDATA m_NID;
 
@@ -38,9 +30,7 @@ class PlatformUtil {
 
         m_NID.uVersion = NOTIFYICON_VERSION_4;
 
-        if (!Shell_NotifyIcon(NIM_ADD, &m_NID))
-            return FALSE;
-    
+        if (!Shell_NotifyIcon(NIM_ADD, &m_NID)) return FALSE;
         Shell_NotifyIcon(NIM_SETVERSION, &m_NID);
 
         m_NID.uFlags |= NIF_INFO;
@@ -101,31 +91,38 @@ class PlatformUtil {
 	public static function clearScreen() {}
 
 	@:functionCode('
-		int enabled = enable ? 1 : 0;
-
+		int darkMode = enable ? 1 : 0;
 		HWND window = FindWindowA(NULL, title.c_str());
-		// Look for child windows if top level arent found
-		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
-		if (window != NULL) DwmSetWindowAttribute(window, type, &enabled, sizeof(enabled));
+
+		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str()); // Look for child windows if top level aint found
+		if (window == NULL) window = GetActiveWindow(); // If still not found, try to get the active window
+
+		if (window != NULL) {
+			if (S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
+				DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
+			}
+			UpdateWindow(window);
+		}
 	')
-	public static function setWindowAtt(title:String, type:Int, enable:Bool) {}
+	public static function setDarkMode(title:String, enable:Bool) {}
 
     @:functionCode('return FindWindowA(className.c_str(), windowName.c_str()) != NULL;')
-    public static function findWindow(className:String = null, windowName:String = '') return false;
+    public static function findWindow(className:String = null, windowName:String = ''):Bool return false;
 
     @:functionCode('
         HWND win = FindWindowA(NULL, winName.c_str());
-        if (win == NULL) return FALSE;
+        if (win == NULL) win = GetActiveWindow();
 
         LONG winExStyle = GetWindowLong(win, GWL_EXSTYLE);
         if (winExStyle == 0) return FALSE;
 
-        if (SetWindowLong(win, GWL_EXSTYLE, winExStyle ^ WS_EX_LAYERED) == 0) return FALSE;
+        alpha = SetWindowLong(win, GWL_EXSTYLE, winExStyle ^ WS_EX_LAYERED);
+        if (alpha == 0) return FALSE;
         if (SetLayeredWindowAttributes(win, color, 0, LWA_COLORKEY) == 0) return FALSE;
 
         return TRUE;
     ')
-    public static function setTransparency(winName:String, color:Int):Bool return false;
+    public static function setTransparency(winName:String, alpha:Int, color:Int):Bool return false;
 }
 #end
 

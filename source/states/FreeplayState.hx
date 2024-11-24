@@ -1,9 +1,11 @@
 package states;
 
 import flixel.util.FlxDestroyUtil;
+import haxe.Exception;
 
 import data.WeekData;
 import utils.FlxInterpolateColor;
+import utils.system.MemoryUtil;
 import backend.Highscore;
 import backend.Song;
 import objects.HealthIcon;
@@ -285,7 +287,32 @@ class FreeplayState extends MusicBeatState {
 
 				if (songLowercase == "enter terminal") return;
 
-				Song.loadFromJson(poop, songLowercase);
+				try {
+					if (ClientPrefs.data.disableGC) {
+						MemoryUtil.enable();
+						MemoryUtil.collect(true);
+						MemoryUtil.enable(false);
+					}
+					Song.loadFromJson(poop, songLowercase);
+				} catch(e:Exception) {
+					if (ClientPrefs.data.disableGC) {
+						MemoryUtil.enable();
+						MemoryUtil.collect(true);
+					}
+	
+					var errorStr:String = e.message;
+					if(errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1); //Missing chart
+					else errorStr += '\n\n' + e.stack;
+	
+					missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
+					missingText.screenCenter(Y);
+					missingText.visible = missingTextBG.visible = true;
+					FlxG.sound.play(Paths.sound('cancelMenu'));
+
+					updateTexts(elapsed);
+					super.update(elapsed);
+					return;
+				}
 				if (PlayState.SONG.needsVoices) {
 					vocals = new FlxSound();
 					try {
@@ -322,10 +349,15 @@ class FreeplayState extends MusicBeatState {
 			}
 
 			try {
+				if (ClientPrefs.data.disableGC) {
+					MemoryUtil.enable();
+					MemoryUtil.collect(true);
+					MemoryUtil.enable(false);
+				}
 				Song.loadFromJson(songLowercase, songFolder);
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
-			} catch(e:haxe.Exception) {
+			} catch(e:Exception) {
 				var errorStr:String = e.message;
 				if(errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ${errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1)}'; //Missing chart
 				else errorStr += '\n\n' + e.stack;

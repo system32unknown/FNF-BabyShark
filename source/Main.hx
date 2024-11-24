@@ -56,9 +56,11 @@ class Main extends Sprite {
 		FlxG.signals.preStateSwitch.add(() -> Paths.clearStoredMemory());
 		FlxG.signals.postStateSwitch.add(() -> {
 			Paths.clearUnusedMemory();
-			MemoryUtil.clearMajor();
-			MemoryUtil.clearMajor(true);
-			MemoryUtil.clearMajor();
+			if (!ClientPrefs.data.disableGC) {
+				MemoryUtil.clearMajor();
+				MemoryUtil.clearMajor(true);
+				MemoryUtil.clearMajor();
+			}
 		});
 		FlxG.signals.gameResized.add((w:Int, h:Int) -> {
 			if (FlxG.cameras != null) for (cam in FlxG.cameras.list) {

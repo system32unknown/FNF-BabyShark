@@ -13,6 +13,7 @@ class OptimizeSubState extends BaseOptionsMenu {
         addOption(new Option('Light Strums', '', 'lightStrum'));
         addOption(new Option('Show Popup Counter', 'If unchecked, the popup counter wont be shown.', 'showComboCounter'));
 		addOption(new Option('Popup Stacking', "If unchecked, The popup won't stack. but it's using recycling system,\nso it doesn't have effects so much.", 'comboStacking'));
+		addOption(new Option('Disable Garbage Collector', "If checked, You can play the main game without GC lag.\nIt's only works while load & playing chart.", 'disableGC'));
         super();
     }
 }

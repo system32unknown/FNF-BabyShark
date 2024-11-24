@@ -1,10 +1,10 @@
 package psychlua;
 
+import flixel.FlxBasic;
 #if HSCRIPT_ALLOWED
 import hscript.AlterHscript;
 import hscript.AlterHscript.IrisCall;
 import hscript.Expr.Error as ImprError;
-import flixel.FlxBasic;
 
 class HScript extends AlterHscript {
 	public var filePath:String;
@@ -51,11 +51,13 @@ class HScript extends AlterHscript {
 
 	public var origin:String;
 	public override function new(?parent:Dynamic, file:String = '', ?varsToBring:Any = null) {
+		#if LUA_ALLOWED
 		parentLua = parent;
 		if (parent != null) {
 			this.origin = parent.scriptName;
 			this.modFolder = parent.modFolder;
 		}
+		#end
 
 		filePath = file;
 		if (filePath != null && filePath.length > 0 && parent == null) {
@@ -66,7 +68,7 @@ class HScript extends AlterHscript {
 				this.modFolder = myFolder[1];
 			#end
 		}
-		super(null, {name: origin, autoRun: false});
+		super(null, {name: origin, autoRun: false, autoPreset: false});
 
 		var scriptThing:String = file;
 		if(parent == null && file != null) {
@@ -81,16 +83,13 @@ class HScript extends AlterHscript {
 	var varsToBring(default, set):Any = null;
     function getDefaultVariables():Map<String, Dynamic> {
         return [
+			"Type"				=> Type,
 			"Date"				=> Date,
 			"DateTools"			=> DateTools,
-			"Math"				=> Math,
 			"Reflect"			=> Reflect,
-			"Std"				=> Std,
 			"HScript"			=> HScript,
-			"Type"				=> Type,
             "Xml"               => Xml,
 			"EReg"				=> EReg,
-			"StringTools"		=> StringTools,
 			"Lambda"			=> Lambda,
 
 			#if flxanimate
@@ -132,8 +131,10 @@ class HScript extends AlterHscript {
             "FlxTimer"          => FlxTimer,
 
             // Engine related stuff
+			"Countdown"			=> backend.BaseStage.Countdown,
             "PlayState"         => PlayState,
             "Note"              => objects.Note,
+			"CustomSubstate"	=> CustomSubstate,
             "NoteSplash"        => objects.NoteSplash,
             "HealthIcon"        => objects.HealthIcon,
             "StrumLine"         => objects.StrumNote,
@@ -164,7 +165,8 @@ class HScript extends AlterHscript {
         ];
     }
 
-	function preset() {
+	override function preset() {
+		super.preset();
 		parser.preprocesorValues = getDefaultPreprocessors();
         for (key => type in getDefaultVariables()) set(key, type);
 
@@ -174,8 +176,7 @@ class HScript extends AlterHscript {
 			return value;
 		});
 		set('getVar', (name:String) -> {
-			if(MusicBeatState.getVariables().exists(name))
-				return MusicBeatState.getVariables().get(name);
+			if(MusicBeatState.getVariables().exists(name)) return MusicBeatState.getVariables().get(name);
 			return null;
 		});
 		set('removeVar', (name:String) -> {
@@ -235,12 +236,12 @@ class HScript extends AlterHscript {
 		});
 
 		// For adding your own callbacks
+		#if LUA_ALLOWED
 		set('createGlobalCallback', function(name:String, func:haxe.Constraints.Function) {
-			#if LUA_ALLOWED
+			
 			for (script in PlayState.instance.luaArray)
 				if(script != null && script.lua != null && !script.closed)
 					script.set(name, func);
-			#end
 			FunkinLua.customFunctions.set(name, func);
 		});
 
@@ -249,12 +250,13 @@ class HScript extends AlterHscript {
 			if(funk != null) funk.addLocalCallback(name, func);
 			else FunkinLua.luaTrace('createCallback ($name): 3rd argument is null', false, false, FlxColor.RED);
 		});
+		#end
 
 		set('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
 			try {
 				var str:String = '';
 				if(libPackage.length > 0) str = '$libPackage.';
-				set(libName, resolveClassOrEnum(str + libName));
+				set(libName, Type.resolveClass(str + libName));
 			} catch (e:Dynamic) {
 				var msg:String = e.message.substr(0, e.message.indexOf('\n'));
 				#if LUA_ALLOWED
@@ -268,7 +270,7 @@ class HScript extends AlterHscript {
 				else Logs.trace('$origin - $msg', ERROR);
 			}
 		});
-
+		set('parentLua', #if LUA_ALLOWED parentLua #else null #end);
 		set("openState", (name:String) -> {
 			FlxG.sound.music?.stop();
 			var hxFile:String = Paths.getPath('scripts/states/$name.hx');
@@ -300,8 +302,6 @@ class HScript extends AlterHscript {
         });
 
 		set('close', destroy);
-
-		set('parentLua', #if LUA_ALLOWED parentLua #else null #end);
 		set('this', this);
 		set('game', FlxG.state);
 		set('controls', Controls);
@@ -451,7 +451,10 @@ class HScript extends AlterHscript {
 	}
 
 	function set_varsToBring(values:Any) {
-		if (varsToBring != null) for (key in Reflect.fields(varsToBring)) if(exists(key.trim())) interp.variables.remove(key.trim());
+		if (varsToBring != null)
+			for (key in Reflect.fields(varsToBring))
+				if(exists(key.trim()))
+					interp.variables.remove(key.trim());
 		if (values != null) {
 			for (key in Reflect.fields(values)) {
 				key = key.trim();

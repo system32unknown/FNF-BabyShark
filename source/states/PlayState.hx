@@ -17,6 +17,7 @@ import substates.PauseSubState;
 import objects.Note.EventNote;
 import objects.*;
 import utils.*;
+import utils.system.MemoryUtil;
 import data.*;
 import psychlua.*;
 #if HSCRIPT_ALLOWED import hscript.AlterHscript; #end
@@ -537,6 +538,12 @@ class PlayState extends MusicBeatState {
 		GameOverSubstate.cache();
 
 		if(eventNotes.length < 1) checkEventNote();
+
+		if (ClientPrefs.data.disableGC) {
+			MemoryUtil.enable();
+			MemoryUtil.collect(true);
+			MemoryUtil.enable(false);
+		}
 	}
 
 	function set_songSpeed(value:Float):Float {
@@ -2397,7 +2404,6 @@ class PlayState extends MusicBeatState {
 		for (script in hscriptArray) if(script != null) {script.run('onDestroy'); script.destroy();}
 		hscriptArray = null;
 		stagesFunc((stage:BaseStage) -> stage.destroy());
-		for (point in [campoint, camlockpoint, ratingAcc, ratingVel]) point = flixel.util.FlxDestroyUtil.put(point);
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
@@ -2408,10 +2414,10 @@ class PlayState extends MusicBeatState {
 		backend.NoteTypesConfig.clearNoteTypesData();
 		NoteSplash.configs.clear();
 		instance = null;
-
 		Paths.popUpFramesMap.clear();
 
 		super.destroy();
+		if (ClientPrefs.data.disableGC) MemoryUtil.enable();
 	}
 
 	var lastStepHit:Int = -1;
