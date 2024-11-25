@@ -20,7 +20,7 @@ import utils.*;
 import utils.system.MemoryUtil;
 import data.*;
 import psychlua.*;
-#if HSCRIPT_ALLOWED import hscript.AlterHscript; #end
+#if HSCRIPT_ALLOWED import alterhscript.AlterHscript; #end
 import cutscenes.DialogueBoxPsych;
 
 class PlayState extends MusicBeatState {

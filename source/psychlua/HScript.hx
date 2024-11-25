@@ -2,8 +2,8 @@ package psychlua;
 
 import flixel.FlxBasic;
 #if HSCRIPT_ALLOWED
-import hscript.AlterHscript;
-import hscript.AlterHscript.IrisCall;
+import alterhscript.AlterHscript;
+import alterhscript.ErrorSeverity;
 import hscript.Expr.Error as ImprError;
 
 class HScript extends AlterHscript {
@@ -23,6 +23,34 @@ class HScript extends AlterHscript {
 		else FunkinLua.luaTrace(message, false, false, color);
 		#else
 		PlayState.instance.addTextToDebug(message, color);
+		#end
+	}
+	public static function hscriptLog(severity:ErrorSeverity, x:Dynamic, ?pos:haxe.PosInfos) {
+		var message:String = Std.string(x);
+		var origin:String = pos?.fileName ?? 'hscript';
+		#if hscriptPos
+		if (pos.lineNumber != -1) origin += ':' + pos.lineNumber;
+		#end
+		var fullTrace:String = '($origin) - $message';
+		var color:FlxColor;
+		switch (severity) {
+			case FATAL:
+				color = 0xffb30000;
+				fullTrace = 'FATAL ' + fullTrace;
+			case ERROR:
+				color = FlxColor.RED;
+				fullTrace = 'ERROR ' + fullTrace;
+			case WARN:
+				color = FlxColor.YELLOW;
+				fullTrace = 'WARNING ' + fullTrace;
+			default: color = FlxColor.CYAN;
+		}
+		#if LUA_ALLOWED
+		if (FunkinLua.lastCalledScript == null || severity == FATAL)
+			PlayState.instance.addTextToDebug(fullTrace, color);
+		else FunkinLua.luaTrace(fullTrace, false, false, color);
+		#else
+		PlayState.instance.addTextToDebug(fullTrace, color);
 		#end
 	}
 	public static function errorToString(e:ImprError, ?funcName:String, ?instance:HScript) {
@@ -76,6 +104,7 @@ class HScript extends AlterHscript {
 			if(f.contains('/') && !f.contains('\n')) scriptThing = File.getContent(f);
 		}
 		preset();
+		AlterHscript.logLevel = hscriptLog;
 		this.scriptCode = scriptThing;
 		this.varsToBring = varsToBring;
 	}
@@ -360,10 +389,10 @@ class HScript extends AlterHscript {
 		return super.parse(force);
 	}
 	#if LUA_ALLOWED
-	public override function call(fun:String, ?args:Array<Dynamic>):IrisCall {
+	public override function call(fun:String, ?args:Array<Dynamic>):AlterCall {
 		var prevLua:FunkinLua = FunkinLua.lastCalledScript;
 		FunkinLua.lastCalledScript = parentLua;
-		final call:IrisCall = super.call(fun, args);
+		final call:AlterCall = super.call(fun, args);
 		FunkinLua.lastCalledScript = prevLua;
 		return call;
 	}
@@ -374,7 +403,7 @@ class HScript extends AlterHscript {
 	public static function initHaxeModule(funk:FunkinLua) funk.initHaxeModule();
 	#end
 	public function executeCode(?funcToRun:String, ?args:Array<Dynamic>):Dynamic return run(funcToRun, args);
-	public function executeFunction(?funcToRun:String, ?args:Array<Dynamic>):IrisCall {
+	public function executeFunction(?funcToRun:String, ?args:Array<Dynamic>):AlterCall {
 		if (funcToRun == null || !exists(funcToRun)) return null;
 		return call(funcToRun, args);
 	}
@@ -395,7 +424,7 @@ class HScript extends AlterHscript {
 					}
 					return null;
 				}
-				var result:IrisCall = call(func, args);
+				var result:AlterCall = call(func, args);
 				return result?.returnValue ?? null;
 			} else return execute();
 		} catch (e:ImprError) {
@@ -450,7 +479,7 @@ class HScript extends AlterHscript {
 		super.destroy();
 	}
 
-	function set_varsToBring(values:Any) {
+	function set_varsToBring(values:Any):Any {
 		if (varsToBring != null)
 			for (key in Reflect.fields(varsToBring))
 				if(exists(key.trim()))
