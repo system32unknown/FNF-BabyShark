@@ -14,6 +14,7 @@ import cpp.vm.Gc;
 @:cppFileCode('
 #include <unistd.h>
 #include <sys/resource.h>
+#include <mach/mach.h>
 ')
 #end
 #end
