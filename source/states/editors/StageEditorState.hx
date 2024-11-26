@@ -633,9 +633,9 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		cameraSpeedStepper = new PsychUINumericStepper(objX + 80, objY, 0.1, stageJson.camera_speed ?? 1, 0, 10, 2);
 		cameraSpeedStepper.onValueChange = () -> {
 			stageJson.camera_speed = cameraSpeedStepper.value;
-			FlxG.camera.followLerp = 0.04 * stageJson.camera_speed;
+			FlxG.camera.followLerp = .04 * stageJson.camera_speed;
 		};
-		FlxG.camera.followLerp = 0.04 * cameraSpeedStepper.value;
+		FlxG.camera.followLerp = .04 * cameraSpeedStepper.value;
 
 		tab_group.add(hideGirlfriendCheckbox);
 		tab_group.add(camDadStepperX);

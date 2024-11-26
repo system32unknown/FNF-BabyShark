@@ -63,8 +63,4 @@ class PsychCamera extends FlxCamera {
 		var mult:Float = 1 - Math.exp(-elapsed * followLerp / (1 / 60));
 		scroll.add((_scrollTarget.x - scroll.x) * mult, (_scrollTarget.y - scroll.y) * mult);
 	}
-
-	override function set_followLerp(value:Float):Float {
-		return followLerp = value;
-	}
 }

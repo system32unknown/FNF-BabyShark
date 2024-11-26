@@ -115,9 +115,7 @@ class PlayState extends MusicBeatState {
 
 	public static var splashUsing:Array<Array<NoteSplash>>;
 	public static var splashMoment:Vector<Int>;
-
 	var splashCount:Int = ClientPrefs.data.splashCount != 0 ? ClientPrefs.data.splashCount : 2147483647;
-	var enableSplash:Bool = ClientPrefs.data.splashAlpha != 0;
 
 	public var canTweenCamZoom:Bool = false;
 	public var canTweenCamZoomBoyfriend:Float = 1;
@@ -563,9 +561,8 @@ class PlayState extends MusicBeatState {
 			FlxG.sound.music.pitch = value;
 
 			final ratio:Float = playbackRate / value; //funny word huh
-			if(ratio != 1) for (note in notes.members) note.resizeByRatio(ratio);
+			if (ratio != 1) for (note in notes.members) note.resizeByRatio(ratio);
 		}
-		
 		playbackRate = value;
 		FlxG.animationTimeScale = value;
 		Conductor.safeZoneOffset = (ClientPrefs.data.safeFrames / 60) * 1000 * value;
@@ -698,7 +695,8 @@ class PlayState extends MusicBeatState {
 	public var videoCutscene:VideoSprite = null;
 	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, autoAdjust:Bool = true, playOnLoad:Bool = true):VideoSprite {
 		#if VIDEOS_ALLOWED
-		inCutscene = canPause = false;
+		inCutscene = true;
+		canPause = false;
 
 		var foundFile:Bool = false;
 		var fileName:String = Paths.video(name);
@@ -714,7 +712,7 @@ class PlayState extends MusicBeatState {
 						FlxG.camera.snapToTarget();
 					}
 					videoCutscene = null;
-					canPause = false; inCutscene = false;
+					canPause = inCutscene = false;
 					startAndEnd();
 				}
 				videoCutscene.finishCallback = onVideoEnd;
@@ -808,7 +806,6 @@ class PlayState extends MusicBeatState {
 			setOnScripts('mania', SONG.mania);
 
 			startedCountdown = true;
-			Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
 			botplaySine = Conductor.songPosition * .18;
 			setOnScripts('startedCountdown', true);
 			callOnScripts('onCountdownStarted');
@@ -1089,13 +1086,11 @@ class PlayState extends MusicBeatState {
 		if (ClientPrefs.data.skipGhostNotes) {
 			unspawnNotes.sort(sortByTime);
 			var prev:Note;
-			var tmpNotes:Array<Note>;
-			var tmpSusNotes:Array<Note>;
 			for (i in 0...EK.keys(mania)) {
 				for (j in 0...2) {
 					prev = unspawnNotes[unspawnNotes.length - 1];
-					tmpNotes = unspawnNotes.filter((n:Note) -> n.noteData == i && n.mustPress == (j >= 1));
-					tmpSusNotes = unspawnSustainNotes.filter((n:Note) -> n.noteData == i && n.mustPress == (j >= 1));
+					var tmpNotes:Array<Note> = unspawnNotes.filter((n:Note) -> n.noteData == i && n.mustPress == (j >= 1));
+					var tmpSusNotes:Array<Note> = unspawnSustainNotes.filter((n:Note) -> n.noteData == i && n.mustPress == (j >= 1));
 					for (evil in tmpNotes) {
 						if (prev.strumTime == evil.strumTime) {
 							if (prev.noteType == evil.noteType) {
@@ -1162,7 +1157,7 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	public static function sortByTime(Obj1:Dynamic, Obj2:Dynamic):Int return FlxSort.byValues(-1, Obj1.strumTime, Obj2.strumTime);
+	public static function sortByTime(Obj1:Dynamic, Obj2:Dynamic):Int return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 
 	function makeEvent(event:Array<Dynamic>, i:Int) {
 		var subEvent:EventNote = {
@@ -1258,7 +1253,7 @@ class PlayState extends MusicBeatState {
 	public var autoUpdateRPC:Bool = true; //performance setting for custom RPC things
 	function resetRPC(?showTime:Bool = false) {
 		#if DISCORD_ALLOWED
-		if(!autoUpdateRPC) return;
+		if (!autoUpdateRPC) return;
 		if (showTime) DiscordClient.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)', true, (songLength - Conductor.songPosition - ClientPrefs.data.noteOffset) / playbackRate);
 		else DiscordClient.changePresence(detailsText, '${SONG.song} ($storyDifficultyText)');
 		#end
@@ -1608,7 +1603,7 @@ class PlayState extends MusicBeatState {
 
 				persistentUpdate = persistentDraw = false;
 				FlxTimer.globalManager.clear(); FlxTween.globalManager.clear();
-				FlxG.camera.setFilters([]);
+				FlxG.camera.filters = [];
 				#if VIDEOS_ALLOWED for(vid in VideoSprite._videos) vid.destroy(); VideoSprite._videos = []; #end
 
 				if(GameOverSubstate.deathDelay > 0) {
@@ -2345,37 +2340,37 @@ class PlayState extends MusicBeatState {
 				boyfriend.playAnim('hurt', true);
 				boyfriend.specialAnim = true;
 			}
-
 			noteMiss(note);
 		}
-		if (enableSplash && !note.noteSplashData.disabled && !note.isSustainNote) spawnNoteSplashOnNote(note);
+		if (ClientPrefs.data.splashAlpha != 0 && !note.noteSplashData.disabled && !note.isSustainNote) spawnNoteSplashOnNote(note);
 		stagesFunc((stage:BaseStage) -> stage.goodNoteHit(note));
 
 		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
-		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHit', [note]);
-		if(!isSus) invalidateNote(note);
+		if (result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHit', [note]);
+		if (!isSus) invalidateNote(note);
 	}
 
 	public function invalidateNote(note:Note):Void {
+		if (note == null) return;
 		note.kill();
 		notes.remove(note, true);
 		note.destroy();
 	}
 
-	var frames:Int = -1;
+	var noteSplashframes:Int = -1;
 	public function spawnNoteSplashOnNote(note:Note) {
 		if (!note.mustPress) return;
 		var targetSplash:NoteSplash = null;
 		var splashNoteData:Int = note.noteData + (note.mustPress ? EK.keys(mania) : 0);
 		if (splashMoment[splashNoteData] < splashCount) {
-			var frameId:Int = frames = -1;
+			var frameId:Int = noteSplashframes = -1;
 			var splashStrum:StrumNote = (note.mustPress ? playerStrums : opponentStrums).members[note.noteData];
 			if (note.strum != splashStrum) note.strum = splashStrum;
 			
 			if (splashUsing[splashNoteData].length >= splashCount) {
 				for (index => splash in splashUsing[splashNoteData]) {
-					if (splash.alive && frames < splash.animation.curAnim.curFrame) {
-						frames = splash.animation.curAnim.curFrame;
+					if (splash.alive && noteSplashframes < splash.animation.curAnim.curFrame) {
+						noteSplashframes = splash.animation.curAnim.curFrame;
 						frameId = index;
 						targetSplash = splash;
 					}
@@ -2407,7 +2402,7 @@ class PlayState extends MusicBeatState {
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-		FlxG.camera.setFilters([]);
+		FlxG.camera.filters = [];
 		#if FLX_PITCH FlxG.sound.music.pitch = 1; #end
 		FlxG.animationTimeScale = 1;
 		Note.globalRgbShaders = [];
