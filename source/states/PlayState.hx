@@ -1,5 +1,6 @@
 package states;
 
+import haxe.Timer;
 import haxe.ds.IntMap;
 import haxe.ds.Vector;
 import flixel.FlxBasic;
@@ -226,6 +227,8 @@ class PlayState extends MusicBeatState {
 	// Callbacks for stages
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
+
+	var skipSpawnNote:Bool = ClientPrefs.data.skipSpawnNote;
 
 	public static var nextReloadAll:Bool = false;
 	override public function create() {
@@ -1422,15 +1425,14 @@ class PlayState extends MusicBeatState {
 
 	var skipNote:Note = new Note(0, 0);
 	public function noteSpawn() {
+		var timeout:Float = Timer.stamp();
 		if (unspawnNotes.length > totalCnt) {
 			var targetNote:Note = unspawnNotes[totalCnt];
-			var shownTime:Float = ClientPrefs.data.showNotes ? spawnTime / songSpeed : 0;
+			var shownTime:Float = ClientPrefs.data.showNotes ? targetNote.isSustainNote ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed : 0;
 			var isDisplay:Bool = targetNote.strumTime - Conductor.songPosition < shownTime;
 			while (isDisplay) {
 				var canBeHit:Bool = Conductor.songPosition > targetNote.strumTime;
-				var tooLate:Bool = Conductor.songPosition > targetNote.strumTime + noteKillOffset;
-				var noteSpawnJudge = !ClientPrefs.data.skipSpawnNote || cpuControlled || !targetNote.isSustainNote ? !canBeHit : !tooLate;
-				if (noteSpawnJudge) {
+				if (!skipSpawnNote || Timer.stamp() - timeout < (shownTime * .001)) {
 					var dunceNote:Note = targetNote;
 					dunceNote.spawned = true;
 
@@ -1444,19 +1446,12 @@ class PlayState extends MusicBeatState {
 
 					if (ClientPrefs.data.optimizeSpawnNote) {
 						if (!canBeHit && dunceNote.strum != null) dunceNote.followStrumNote(songSpeed / playbackRate);
-						else if (noteSpawnJudge) {
+						else {
 							if (dunceNote.mustPress) {
-								if (cpuControlled && !dunceNote.blockHit && dunceNote.canBeHit || dunceNote.isSustainNote) goodNoteHit(dunceNote);
-							} else if (!dunceNote.hitByOpponent && !dunceNote.ignoreNote) opponentNoteHit(dunceNote);
-	
-							if (dunceNote.isSustainNote && dunceNote.strum.sustainReduce) dunceNote.clipToStrumNote();
-							invalidateNote(dunceNote);
-						} else {
-							if (dunceNote.mustPress) {
-								if (cpuControlled) goodNoteHit(dunceNote);
+								if (cpuControlled && (!dunceNote.blockHit || dunceNote.isSustainNote)) goodNoteHit(dunceNote);
 							} else if (!dunceNote.hitByOpponent) opponentNoteHit(dunceNote);
-	
-							invalidateNote(dunceNote);
+		
+							if (dunceNote.isSustainNote && dunceNote.strum.sustainReduce) dunceNote.clipToStrumNote();
 						}
 					}
 				} else {
@@ -1483,6 +1478,11 @@ class PlayState extends MusicBeatState {
 						var daNote:Note;
 						while(index >= 0) {
 							daNote = notes.members[index];
+							if (daNote == null) {
+								invalidateNote(daNote);
+								--index;
+								continue;
+							}
 							var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
 							var tooLate:Bool = Conductor.songPosition - daNote.strumTime > noteKillOffset;
 
@@ -1502,7 +1502,7 @@ class PlayState extends MusicBeatState {
 									if (!daNote.hitByOpponent) opponentNoteHit(daNote);
 									if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
 								}
-								invalidateNote(daNote);
+								if (daNote != null) invalidateNote(daNote);
 							}
 							--index;
 						}
