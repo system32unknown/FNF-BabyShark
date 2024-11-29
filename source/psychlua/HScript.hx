@@ -1,6 +1,7 @@
 package psychlua;
 
 import flixel.FlxBasic;
+import lime.app.Application;
 #if HSCRIPT_ALLOWED
 import alterhscript.AlterHscript;
 import alterhscript.ErrorSeverity;
@@ -53,17 +54,20 @@ class HScript extends AlterHscript {
 		PlayState.instance.addTextToDebug(fullTrace, color);
 		#end
 	}
-	public static function errorToString(e:ImprError, ?funcName:String, ?instance:HScript) {
+	public static function errorToString(e:ImprError, ?funcName:String, ?instance:HScript):String {
 		var message:String = switch (#if hscriptPos e.e #else e #end) {
 			case EInvalidChar(c): "Invalid character: '" + (StringTools.isEof(c) ? "EOF" : String.fromCharCode(c)) + "' (" + c + ")";
 			case EUnexpected(s): "Unexpected token: \"" + s + "\"";
 			case EUnterminatedString: "Unterminated string";
 			case EUnterminatedComment: "Unterminated comment";
+			case EEmptyExpression: "Expression cannot be empty";
 			case EInvalidPreprocessor(str): "Invalid preprocessor (" + str + ")";
 			case EUnknownVariable(v): "Unknown variable: " + v;
 			case EInvalidIterator(v): "Invalid iterator: " + v;
 			case EInvalidOp(op): "Invalid operator: " + op;
 			case EInvalidAccess(f): "Invalid access to field " + f;
+			case EInvalidClass(cla): "Invalid class: " + cla + " was not found.";
+			case EAlreadyExistingClass(cla): 'Custom Class named $cla already exists.';
 			case ECustom(msg): msg;
 			default: "Unknown Error";
 		};
@@ -134,8 +138,8 @@ class HScript extends AlterHscript {
 			"Assets"			=> openfl.Assets,
 
             // OpenFL & Lime related stuff
-            "Application"       => lime.app.Application,
-            "window"            => lime.app.Application.current.window,
+            "Application"       => Application,
+            "window"            => Application.current.window,
 
             // Flixel related stuff
             "FlxG"              => FlxG,
@@ -186,7 +190,7 @@ class HScript extends AlterHscript {
 
 			"version" 			=> Main.engineVer.version.trim(),
             "engine" => {
-				app_version: lime.app.Application.current.meta.get('version'),
+				app_version: Application.current.meta.get('version'),
                 commit: macros.GitCommitMacro.commitNumber,
                 hash: macros.GitCommitMacro.commitHash.trim(),
                 name: "Alter Engine"
@@ -267,7 +271,6 @@ class HScript extends AlterHscript {
 		// For adding your own callbacks
 		#if LUA_ALLOWED
 		set('createGlobalCallback', function(name:String, func:haxe.Constraints.Function) {
-			
 			for (script in PlayState.instance.luaArray)
 				if(script != null && script.lua != null && !script.closed)
 					script.set(name, func);
@@ -362,7 +365,7 @@ class HScript extends AlterHscript {
 		var defines:Map<String, Dynamic> = macros.DefinesMacro.defines;
 		defines.set("ALTER_ENGINE", true);
 		defines.set("ALTER_VER", Main.engineVer.version.trim());
-		defines.set("ALTER_APP_VER", lime.app.Application.current.meta.get('version'));
+		defines.set("ALTER_APP_VER", Application.current.meta.get('version'));
 		defines.set("ALTER_COMMIT", macros.GitCommitMacro.commitNumber);
 		defines.set("ALTER_HASH", macros.GitCommitMacro.commitHash);
 		return defines;

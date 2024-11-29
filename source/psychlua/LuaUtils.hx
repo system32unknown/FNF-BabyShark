@@ -88,7 +88,7 @@ class LuaUtils {
 		return Reflect.getProperty(instance, variable);
 	}
 
-	public static function getModSetting(saveTag:String, ?modName:String = null) {
+	public static function getModSetting(saveTag:String, ?modName:String = null):Dynamic {
 		#if MODS_ALLOWED
 		if(FlxG.save.data.modSettings == null) FlxG.save.data.modSettings = new Map<String, Dynamic>();
 
@@ -138,7 +138,7 @@ class LuaUtils {
 		return (variable.exists != null && variable.keyValueIterator != null);
 	}
 
-	public static function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic, ?allowMaps:Bool = false) {
+	public static function setGroupStuff(leArray:Dynamic, variable:String, value:Dynamic, ?allowMaps:Bool = false):Dynamic {
 		var split:Array<String> = variable.split('.');
 		if(split.length > 1) {
 			var obj:Dynamic = Reflect.getProperty(leArray, split[0]);
@@ -259,7 +259,7 @@ class LuaUtils {
 		}
 		return false;
 	}
-	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String) {
+	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String):Void {
 		spr.frames = switch(spriteType.toLowerCase().replace(' ', '')) {
 			case 'aseprite', 'ase', 'json', 'jsoni8': Paths.getAsepriteAtlas(image);
 			case "packer", 'packeratlas', 'pac': Paths.getPackerAtlas(image);
@@ -268,7 +268,7 @@ class LuaUtils {
 		}
 	}
 
-	public static function destroyObject(tag:String) {
+	public static function destroyObject(tag:String):Void {
 		var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 		var obj:FlxSprite = variables.get(tag);
 		if(obj == null || obj.destroy == null) return;
@@ -278,7 +278,7 @@ class LuaUtils {
 		variables.remove(tag);
 	}
 
-	public static function cancelTween(tag:String) {
+	public static function cancelTween(tag:String):Void {
 		if(!tag.startsWith('tween_')) tag = 'tween_' + formatVariable(tag);
 		var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 		var twn:FlxTween = variables.get(tag);
@@ -297,7 +297,7 @@ class LuaUtils {
 		return getObjectLoop(vars);
 	}
 
-	public static function cancelTimer(tag:String) {
+	public static function cancelTimer(tag:String):Void {
 		if(!tag.startsWith('timer_')) tag = 'timer_' + formatVariable(tag);
 		var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 		var tmr:FlxTimer = variables.get(tag);

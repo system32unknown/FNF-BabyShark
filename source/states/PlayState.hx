@@ -1895,7 +1895,7 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	public function tweenCamZoom(zoom:Float = 1) {
+	public function tweenCamZoom(zoom:Float = 1):Void {
 		if (cameraTwn == null && FlxG.camera.zoom != zoom) cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (Conductor.stepCrochet * 4 / 1000) * playbackRate, {ease: FlxEase.elasticInOut, onComplete: (_) -> cameraTwn = null});
 	}
 
@@ -1994,7 +1994,7 @@ class PlayState extends MusicBeatState {
 	public var showRating:Bool = true;
 
 	var uiFolder:String = "";
-	function cachePopUpScore() {
+	function cachePopUpScore():Void {
 		if (stageUI != "normal") uiFolder = uiPrefix + "UI/";
 		for (rating in ratingsData) Paths.image(uiFolder + 'ratings/${rating.image}' + uiPostfix);
 		for (i in 0...10) Paths.image(uiFolder + 'number/num$i' + uiPostfix);

@@ -51,6 +51,16 @@ class NativeUtil {
 		#end
 	}
 
+	/**
+	 * Forces the window header to redraw, causes a small visual jitter so use it sparingly.
+	 */
+	public static function redrawWindowHeader():Void {
+		#if windows
+		FlxG.stage.window.borderless = true;
+		FlxG.stage.window.borderless = false;
+		#end
+	}
+
 	public static function consoleColorToANSI(color:ConsoleColor):Int {
 		return switch(color) {
 			case BLACK:			30;

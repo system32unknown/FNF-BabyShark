@@ -91,7 +91,6 @@ class VideoSprite extends FlxSpriteGroup {
 		onSkip = null;
 
 		LuaUtils.getTargetInstance().remove(this);
-		super.destroy();
 	}
 
 	override function update(elapsed:Float) {
@@ -106,6 +105,7 @@ class VideoSprite extends FlxSpriteGroup {
 				videoSprite.bitmap.onEndReached.dispatch();
 				LuaUtils.getTargetInstance().remove(this);
 				trace('Skipped video');
+				super.destroy();
 				return;
 			}
 		}
