@@ -1375,9 +1375,10 @@ class PlayState extends MusicBeatState {
 		if (!ClientPrefs.data.noReset && Controls.justPressed('reset') && canReset && !inCutscene && startedCountdown && !endingSong && !practiceMode) health = 0;
 		doDeathCheck();
 
-		if (!ClientPrefs.data.processFirst) {noteSpawn();noteUpdate();}
+		if (!ClientPrefs.data.processFirst) {noteSpawn(); noteUpdate();}
 		else {noteUpdate(); noteSpawn();}
-		noteFinalize();
+		combo += skipBf;
+		notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 
 		if (healthBar.bounds != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
 		updateIconsPosition();
@@ -1512,22 +1513,6 @@ class PlayState extends MusicBeatState {
 			}
 			checkEventNote();
 		}
-	}
-
-	inline public function noteFinalize() {
-		var skipDaNote:Note = skipNote;
-		combo += skipBf;
-		var skipCnt:Int = skipBf;
-		if (ClientPrefs.data.skipNoteScript && skipCnt > 0) {
-			var skipArray:Array<Dynamic> = [0, Math.abs(skipDaNote.noteData), skipDaNote.noteType, skipDaNote.isSustainNote];
-			for (_ in 0...skipBf) {
-				var skipResult:Dynamic = callOnLuas('goodNoteHitPre', skipArray);
-				if(skipResult != LuaUtils.Function_Stop && skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll) skipResult = callOnHScript('opponentNoteHitPre', [skipDaNote]);
-				var skipResult:Dynamic = callOnLuas('goodNoteHit', skipArray);
-				if(skipResult != LuaUtils.Function_Stop && skipResult != LuaUtils.Function_StopHScript && skipResult != LuaUtils.Function_StopAll) skipResult = callOnHScript('opponentNoteHitPre', [skipDaNote]);
-			}
-		}
-		notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 	}
 
 	var iconsAnimations:Bool = true;

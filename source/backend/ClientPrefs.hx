@@ -91,10 +91,6 @@ package backend;
 	public var showNotes:Bool = true;
 	public var separateHitProcess:Bool = true;
 	public var optimizeSpawnNote:Bool = true;
-	public var noteHitPreEvent:Bool = true;
-	public var noteHitEvent:Bool = true;
-	public var skipNoteScript:Bool = true;
-	public var spawnNoteScript:Bool = true;
 	public var skipSpawnNote:Bool = true;
 	public var disableGC:Bool = false;
 
