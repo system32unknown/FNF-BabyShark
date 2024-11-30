@@ -73,7 +73,7 @@ jobs:
           key: cache-build-windows
           path: |
             .haxelib/
-            export/${{ matrix.build }}/windows/haxe/
-            export/${{ matrix.build }}/windows/obj/
+            export/release/windows/haxe/
+            export/release/windows/obj/
           restore-keys: |
             cache-build-windows

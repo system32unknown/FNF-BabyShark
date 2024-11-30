@@ -433,11 +433,6 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.zoom = defaultCamZoom;
 		FlxG.camera.snapToTarget();
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
-		if (SONG.notes[curSection] != null) {
-			var leSec:SwagSection = SONG.notes[curSection];
-			if (gf != null && leSec.gfSection) moveCamera('gf');
-			else moveCamera(!leSec.mustHitSection);
-		}
 
 		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> {
 			if (ClientPrefs.data.smoothHealth) return healthLerp = FlxMath.lerp(healthLerp, health, .15);
@@ -814,6 +809,7 @@ class PlayState extends MusicBeatState {
 			callOnScripts('onCountdownStarted');
 
 			var swagCounter:Int = 0;
+			moveCameraSection();
 			if (startOnTime > 0) {
 				clearNotesBefore(startOnTime);
 				setSongTime(startOnTime - 350);
@@ -822,7 +818,6 @@ class PlayState extends MusicBeatState {
 				setSongTime(0);
 				return true;
 			}
-			moveCameraSection();
 
 			var introSprites:Array<String> = getCountdownSpriteNames(stageUI);
 			var tick:Countdown = THREE;
@@ -1116,7 +1111,6 @@ class PlayState extends MusicBeatState {
 			}
 		}
 
-		for (event in songData.events) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
 		for (susNote in unspawnSustainNotes) unspawnNotes.push(susNote);
 		unspawnSustainNotes.resize(0);
 		unspawnNotes.sort(sortByTime);
@@ -1367,7 +1361,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		#if debug
-		FlxG.watch.addQuick("secShit", curSection);
+		FlxG.watch.addQuick("sectionShit", curSection);
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
 		#end

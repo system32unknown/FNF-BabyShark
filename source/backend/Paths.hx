@@ -56,7 +56,6 @@ class Paths {
 
 		localTrackedAssets = [];
 		OpenFlAssets.cache.clear("songs");
-		if (!ClientPrefs.data.disableGC) MemoryUtil.clearMajor();
 	}
 
 	inline static function destroyGraphic(graphic:FlxGraphic) {

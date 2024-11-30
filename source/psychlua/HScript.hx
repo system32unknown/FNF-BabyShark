@@ -422,7 +422,7 @@ class HScript extends AlterHscript {
 							FunkinLua.luaTrace('$origin - No function in HScript named "$func"!', false, false, FlxColor.RED);
 						else PlayState.instance.addTextToDebug('$origin - No function named "$func"!', FlxColor.RED);
 						#else
-						PlayState.instance.addTextToDebug('$origin - No function named "func"!', FlxColor.RED);
+						PlayState.instance.addTextToDebug('$origin - No function named "$func"!', FlxColor.RED);
 						#end
 					}
 					return null;
