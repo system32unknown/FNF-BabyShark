@@ -437,19 +437,17 @@ class Note extends FlxSprite {
 	}
 
 	public function clipToStrumNote() {
-		final center:Float = strum.y + offsetY + EK.swidths[PlayState.mania] / 2;
 		if((mustPress || !ignoreNote) && (wasGoodHit || hitByOpponent || (prevNote.wasGoodHit && !canBeHit))) {
+			final center:Float = strum.getMidpoint().y;
 			final swagRect:FlxRect = clipRect ?? FlxRect.get(0, 0, frameWidth, frameHeight);
 			if (strum.downScroll) {
-				if(y - offset.y * scale.y + height >= center) {
-					swagRect.width = frameWidth;
-					swagRect.height = (center - y) / scale.y;
+				if (y + height >= center) {
 					swagRect.y = frameHeight - swagRect.height;
+					swagRect.height = (center - y) / scale.y;
 				}
-			} else if (y + offset.y * scale.y <= center) {
+			} else if (y <= center) {
 				swagRect.y = (center - y) / scale.y;
-				swagRect.width = width / scale.x;
-				swagRect.height = (height / scale.y) - swagRect.y;
+				swagRect.height = frameHeight - swagRect.y;
 			}
 			clipRect = swagRect;
 		}

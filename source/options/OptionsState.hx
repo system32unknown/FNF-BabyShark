@@ -44,8 +44,8 @@ class OptionsState extends MusicBeatState {
 		add(bg);
 
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
-
 		reload();
+
 		add(selectorLeft = new Alphabet(0, 0, '>'));
 		add(selectorRight = new Alphabet(0, 0, '<'));
 

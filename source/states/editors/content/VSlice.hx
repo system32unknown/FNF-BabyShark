@@ -101,7 +101,7 @@ class VSlice {
 
 			notesMap.set(diff, notes);
 
-			var lastNote:Dynamic = notes[notes.length - 1];
+			var lastNote:VSliceNote = notes[notes.length - 1];
 			if(notes.length > 0 && lastNote.t > lastNoteTime)
 				lastNoteTime = lastNote.t;
 		}
@@ -195,8 +195,7 @@ class VSlice {
 
 			var noteSec:Int = 0;
 			for (note in notes) {
-				while(noteSec + 1 < sectionTimes.length && sectionTimes[noteSec + 1] <= note.t)
-					noteSec++;
+				while(noteSec + 1 < sectionTimes.length && sectionTimes[noteSec + 1] <= note.t) noteSec++;
 
 				var psychNote:Array<Dynamic> = [note.t, note.d, note.l ?? 0];
 				if(note.k != null && note.k.length > 0 && note.k != 'normal') psychNote.push(note.k);

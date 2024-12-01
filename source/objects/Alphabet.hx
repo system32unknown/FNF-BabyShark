@@ -144,7 +144,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
         for (line in members) {
             line.x = switch (align) {
                 case LEFT: x;
-                case CENTER: x + ((x - totalWidth) * .5);
+                case CENTER: x + ((x - totalWidth) / 2);
                 case RIGHT: x + (x - totalWidth);
             }
         }
@@ -204,7 +204,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
     }
 
     @:noCompletion
-    override function set_color(value:Int) {
+    override function set_color(value:Int):Int {
         for(line in members) line.color = value;
         return super.set_color(value);
     }

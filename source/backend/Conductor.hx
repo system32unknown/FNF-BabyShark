@@ -58,45 +58,22 @@ class Conductor {
 		return lastChange;
 	}
 
-	public static function beatToSeconds(beat:Float):Float {
-		var step:Float = beat * 4;
-		var lastChange:BPMChangeEvent = getBPMFromStep(step);
-		return lastChange.songTime + ((step - lastChange.stepTime) / (lastChange.bpm / 60) / 4) * 1000; // TODO: make less shit and take BPM into account PROPERLY
-	}
-
-	public static function getStep(time:Float):Float {
-		var lastChange:BPMChangeEvent = getBPMFromSeconds(time);
-		return lastChange.stepTime + (time - lastChange.songTime) / lastChange.stepCrochet;
-	}
-
-	public static function getStepRounded(time:Float):Float {
-		var lastChange:BPMChangeEvent = getBPMFromSeconds(time);
-		return lastChange.stepTime + Math.floor(time - lastChange.songTime) / lastChange.stepCrochet;
-	}
-
 	public static function mapBPMChanges(song:SwagSong) {
 		bpmChangeMap = [];
 
 		var curBPM:Float = song.bpm;
 		var totalPos:Float = 0, totalSteps:Int = 0;
 
-		inline function pushChange(newBPM:Float):Void {
-			curBPM = newBPM;
-			bpmChangeMap.push({
-				stepTime: totalSteps,
-				songTime: totalPos,
-				bpm: newBPM,
-				stepCrochet: calculateCrochet(newBPM) / 4
-			});
-		}
-
-		var firstSec:SwagSection = song.notes[0];
-		if (firstSec == null || !firstSec.changeBPM) pushChange(song.bpm);
-
 		for (i in 0...song.notes.length) {
-			var section:SwagSection = song.notes[i];
-			if(section.changeBPM && section.bpm != curBPM) pushChange(section.bpm);
-
+			if(song.notes[i].changeBPM && song.notes[i].bpm != curBPM) {
+				curBPM = song.notes[i].bpm;
+				bpmChangeMap.push({
+					stepTime: totalSteps,
+					songTime: totalPos,
+					bpm: curBPM,
+					stepCrochet: calculateCrochet(curBPM) / 4
+				});
+			}
 			var deltaSteps:Int = Math.round(getSectionBeats(song, i) * 4);
 			totalSteps += deltaSteps;
 			totalPos += (calculateCrochet(curBPM) / 4) * deltaSteps;
