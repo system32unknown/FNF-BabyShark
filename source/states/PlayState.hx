@@ -271,8 +271,8 @@ class PlayState extends MusicBeatState {
 		if (SONG.mania == null || SONG.mania < EK.minMania || SONG.mania > EK.maxMania) SONG.mania = EK.defaultMania;
 		mania = SONG.mania;
 		keysArray = EK.fillKeys()[mania];
-		splashUsing = [for (_ in 0...EK.strums(mania)) []];
-		splashMoment = new Vector(EK.strums(mania), 0);
+		splashUsing = [for (_ in 0...EK.keys(mania)) []];
+		splashMoment = new Vector(EK.keys(mania), 0);
 
 		storyDifficultyText = Difficulty.getString();
 		#if DISCORD_ALLOWED
@@ -1239,12 +1239,6 @@ class PlayState extends MusicBeatState {
 		#end
 		super.onFocusLost();
 		callOnScripts('onFocusLostPost');
-	}
-
-	override public function onResize(width:Int, height:Int):Void {
-		callOnScripts('onResize', [width, height]);
-		super.onResize(width, height);
-		callOnScripts('onResizePost', [width, height]);
 	}
 
 	public var autoUpdateRPC:Bool = true; //performance setting for custom RPC things

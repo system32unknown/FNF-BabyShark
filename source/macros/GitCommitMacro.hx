@@ -37,7 +37,7 @@ class GitCommitMacro {
 		var pos:Position = Context.currentPos();
 		try {
 			var proc:Process = new Process('git', ['rev-list', 'HEAD', '--count']);
-			if (proc.exitCode() != 0) Context.warning('[WARN] Could not determine current git commit; is this a proper Git repository?', pos);
+			if (proc.exitCode() != 0) Context.warning('Could not determine current git commit; is this a proper Git repository?', pos);
 			return macro $v{Std.parseInt(proc.stdout.readLine())};
 		} catch(e) Context.error(e.toString(), pos);
 		#end
