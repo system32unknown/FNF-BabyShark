@@ -19,9 +19,6 @@ class MainMenuState extends MusicBeatState {
 	var leftItem:FlxSprite;
 	var rightItem:FlxSprite;
 
-	public static var firstStart:Bool = true;
-	public static var finishedFunnyMove:Bool = false;
-
 	var optionShit:Array<String> = [
 		'story_mode',
 		'freeplay',
@@ -68,20 +65,13 @@ class MainMenuState extends MusicBeatState {
 
 		var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
 		for (i => option in optionShit) {
-			var item:FlxSprite = createItem(option, 0, 0);
+			var item:FlxSprite = createItem(option, 0, (i * 140) + offset);
 			menuItems.add(item);
 
 			item.scrollFactor.set(0, optionShit.length < 6 ? 0 : (optionShit.length - 4) * .135);
 			item.updateHitbox();
 			item.screenCenter(X);
-			if (firstStart)
-				FlxTween.tween(item, {y: (i * 140) + offset}, 1 + (i * .25), {ease: FlxEase.expoInOut, onComplete: (flxTween:FlxTween) -> {
-					finishedFunnyMove = true; 
-					changeItem();
-				}});
-			else item.y = (i * 140) + offset;
 		}
-		firstStart = false;
 
 		if (leftOption != null) {
 			leftItem = createItem(leftOption, 60, 490, true);
@@ -259,8 +249,7 @@ class MainMenuState extends MusicBeatState {
 						FlxG.switchState(() -> new OptionsState());
 						OptionsState.onPlayState = false;
 						if (PlayState.SONG != null) {
-							PlayState.SONG.arrowSkin = null;
-							PlayState.SONG.splashSkin = null;
+							PlayState.SONG.arrowSkin = PlayState.SONG.splashSkin = null;
 							PlayState.stageUI = 'normal';
 						}
 				}
@@ -281,26 +270,24 @@ class MainMenuState extends MusicBeatState {
 	}
 
 	function changeItem(change:Int = 0) {
-		if (!finishedFunnyMove) return;
 		if(change != 0) curColumn = CENTER;
 		curSelected = FlxMath.wrap(curSelected + change, 0, optionShit.length - 1);
-		FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		for (item in menuItems) {
 			item.animation.play('idle');
 			item.centerOffsets();
 		}
 
-		if (finishedFunnyMove) {
-			var selectedItem:FlxSprite;
-			switch(curColumn) {
-				case CENTER: selectedItem = menuItems.members[curSelected];
-				case LEFT: selectedItem = leftItem;
-				case RIGHT: selectedItem = rightItem;
-			}
-			selectedItem.animation.play('selected');
-			selectedItem.centerOffsets();
-			camFollow.y = selectedItem.getGraphicMidpoint().y - (menuItems.length > 4 ? menuItems.length * 8 : 0);
+		var selectedItem:FlxSprite;
+		switch(curColumn) {
+			case CENTER: selectedItem = menuItems.members[curSelected];
+			case LEFT: selectedItem = leftItem;
+			case RIGHT: selectedItem = rightItem;
 		}
+		selectedItem.animation.play('selected');
+		selectedItem.centerOffsets();
+
+		FlxG.sound.play(Paths.sound('scrollMenu'));
+		camFollow.y = selectedItem.getGraphicMidpoint().y - (menuItems.length > 4 ? menuItems.length * 8 : 0);
 	}
 }

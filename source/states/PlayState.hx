@@ -2334,10 +2334,10 @@ class PlayState extends MusicBeatState {
 	public function spawnNoteSplashOnNote(note:Note) {
 		if (!note.mustPress) return;
 		var targetSplash:NoteSplash = null;
-		var splashNoteData:Int = note.noteData + (note.mustPress ? EK.keys(mania) : 0);
+		var splashNoteData:Int = note.noteData;
 		if (splashMoment[splashNoteData] < splashCount) {
 			var frameId:Int = noteSplashframes = -1;
-			var splashStrum:StrumNote = (note.mustPress ? playerStrums : opponentStrums).members[note.noteData];
+			var splashStrum:StrumNote = playerStrums.members[note.noteData];
 			if (note.strum != splashStrum) note.strum = splashStrum;
 			
 			if (splashUsing[splashNoteData].length >= splashCount) {
