@@ -23,7 +23,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 		option.onChange = () -> {
 			for (sprite in members) {
 				var sprite:FlxSprite = cast sprite;
-				if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText))
+				if(sprite != null && (sprite is FlxSprite))
 					sprite.antialiasing = ClientPrefs.data.antialiasing;
 			}
 		}; //Changing onChange is only needed if you want to make a special interaction after it changes the value
@@ -48,7 +48,9 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 
 	function onChangeFramerate() {
 		fpsOption.scrollSpeed = utils.MathUtil.interpolate(30, 1000, (holdTime - .5) / 5, 3);
-		FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
+		if(ClientPrefs.data.framerate > FlxG.drawFramerate)
+			FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
+		else FlxG.drawFramerate = FlxG.updateFramerate = ClientPrefs.data.framerate;
 	}
 
 	override function changeSelection(change:Int = 0) {

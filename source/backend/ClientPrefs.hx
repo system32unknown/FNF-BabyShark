@@ -128,7 +128,9 @@ class ClientPrefs {
 		FlxG.autoPause = data.autoPause;
 
 		if(FlxG.save.data.framerate == null) data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate, 60, 240));
-		FlxG.updateFramerate = FlxG.drawFramerate = data.framerate;
+		if(data.framerate > FlxG.drawFramerate)
+			FlxG.updateFramerate = FlxG.drawFramerate = data.framerate;
+		else FlxG.drawFramerate = FlxG.updateFramerate = data.framerate;
 
 		if(FlxG.save.data.gameplaySettings != null) {
 			var savedMap:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
