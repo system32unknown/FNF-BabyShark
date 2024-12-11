@@ -18,7 +18,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 		scaleX = scaleY = _defaultScale;
 		
 		var tmp:Bitmap = new Bitmap(new BitmapData(_width, 30, true, 0x7F000000));
-		gameCenter();
+		screenCenter();
 		addChild(tmp);
 
 		text.width = tmp.width;
