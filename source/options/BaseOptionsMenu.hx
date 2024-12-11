@@ -32,7 +32,7 @@ class BaseOptionsMenu extends FlxSubState {
 		
 		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
-		bg.screenCenter();
+		bg.gameCenter();
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 
@@ -330,7 +330,7 @@ class BaseOptionsMenu extends FlxSubState {
 		if (checkIfEmpty) descString = optionsArray[curSelected].description;
 		descBox.visible = checkIfEmpty;
 		descText.text = descString;
-		descText.screenCenter(Y).y += 270;
+		descText.gameCenter(Y).y += 270;
 
 		for (num => item in grpOptions.members) {
 			item.targetY = num - curSelected;

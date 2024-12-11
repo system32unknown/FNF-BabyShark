@@ -132,7 +132,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		cameraZoomText.setFormat(null, 16, FlxColor.WHITE, CENTER);
 		cameraZoomText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 		cameraZoomText.scrollFactor.set();
-		cameraZoomText.screenCenter(X);
+		cameraZoomText.gameCenter(X);
 		cameraZoomText.cameras = [camHUD];
 		add(cameraZoomText);
 
@@ -140,7 +140,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		frameAdvanceText.setFormat(null, 16, FlxColor.WHITE, CENTER);
 		frameAdvanceText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 		frameAdvanceText.scrollFactor.set();
-		frameAdvanceText.screenCenter(X);
+		frameAdvanceText.gameCenter(X);
 		frameAdvanceText.cameras = [camHUD];
 		add(frameAdvanceText);
 
@@ -194,7 +194,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER);
 			helpText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 			helpText.scrollFactor.set();
-			helpText.screenCenter();
+			helpText.gameCenter();
 			add(helpText);
 			helpText.y += ((i - str.length / 2) * 32) + 16;
 			helpText.active = false;

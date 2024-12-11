@@ -34,12 +34,12 @@ class Prompt extends BasePrompt {
 		});
 		btn.normalStyle.bgColor = FlxColor.RED;
 		btn.normalStyle.textColor = FlxColor.WHITE;
-		btn.screenCenter(X).x -= 100;
+		btn.gameCenter(X).x -= 100;
 		btn.cameras = cameras;
 		add(btn);
 
 		var btn:PsychUIButton = new PsychUIButton(0, btnY, _noTxt, close);
-		btn.screenCenter(X).x += 100;
+		btn.gameCenter(X).x += 100;
 		btn.cameras = cameras;
 		add(btn);
 	}
@@ -76,12 +76,12 @@ class BasePrompt extends FlxSubState {
 		bg.alpha = 0.8;
 		bg.scale.set(_sizeX, _sizeY);
 		bg.updateHitbox();
-		bg.screenCenter();
+		bg.gameCenter();
 		bg.cameras = cameras;
 		add(bg);
 
 		titleText = new FlxText(0, bg.y + 30, 400, _title, 16);
-		titleText.screenCenter(X);
+		titleText.gameCenter(X);
 		titleText.alignment = CENTER;
 		titleText.cameras = cameras;
 		add(titleText);

@@ -39,12 +39,12 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 		bg.alpha = 0.8;
 		bg.scale.set(520, 520);
 		bg.updateHitbox();
-		bg.screenCenter();
+		bg.gameCenter();
 		bg.cameras = cameras;
 		add(bg);
 
 		var titleText:FlxText = new FlxText(0, bg.y + 30, 400, 'Preload List', 24);
-		titleText.screenCenter(X);
+		titleText.gameCenter(X);
 		titleText.alignment = CENTER;
 		titleText.cameras = cameras;
 		add(titleText);
@@ -148,7 +148,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 				}
 			});
 		});
-		loadFileBtn.screenCenter(X);
+		loadFileBtn.gameCenter(X);
 		loadFileBtn.cameras = cameras;
 		loadFileBtn.x -= 120;
 		add(loadFileBtn);
@@ -157,7 +157,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 			if(!fileDialog.completed) return;
 			fileDialog.openDirectory('Load a folder...', () -> addToList(new Path(fileDialog.path.replace('\\', '/')), true));
 		});
-		loadFolderBtn.screenCenter(X);
+		loadFolderBtn.gameCenter(X);
 		loadFolderBtn.cameras = cameras;
 		add(loadFolderBtn);
 
@@ -167,7 +167,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 			if(saveCallback != null) saveCallback(preloadList);
 			close();
 		});
-		saveBtn.screenCenter(X);
+		saveBtn.gameCenter(X);
 		saveBtn.cameras = cameras;
 		saveBtn.x += 120;
 		saveBtn.normalStyle.bgColor = FlxColor.GREEN;

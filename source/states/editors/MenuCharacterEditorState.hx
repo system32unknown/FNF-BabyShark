@@ -69,11 +69,11 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 		add(UI_mainbox);
 
 		var loadButton:PsychUIButton = new PsychUIButton(0, 480, "Load Character", () -> loadCharacter());
-		loadButton.screenCenter(X).x -= 60;
+		loadButton.gameCenter(X).x -= 60;
 		add(loadButton);
 	
 		var saveButton:PsychUIButton = new PsychUIButton(0, 480, "Save Character", () -> saveCharacter());
-		saveButton.screenCenter(X).x += 60;
+		saveButton.gameCenter(X).x += 60;
 		add(saveButton);
 	}
 

@@ -252,7 +252,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		timeLine = new FlxSprite(gridBg.x).makeGraphic(1, 1);
 		timeLine.setGraphicSize(Std.int(gridBg.width), 4);
 		timeLine.updateHitbox();
-		timeLine.screenCenter(Y);
+		timeLine.gameCenter(Y);
 		timeLine.scrollFactor.set();
 		add(timeLine);
 
@@ -342,7 +342,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		add(mainBox);
 
 		autoSaveIcon = new FlxSprite(50, Paths.image('editors/autosave'));
-		autoSaveIcon.screenCenter(Y);
+		autoSaveIcon.gameCenter(Y);
 		autoSaveIcon.scale.set(0.6, 0.6);
 		autoSaveIcon.antialiasing = ClientPrefs.data.antialiasing;
 		autoSaveIcon.scrollFactor.set();
@@ -470,7 +470,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			"Ctrl + A - Select all in current Section",
 			"Ctrl + S - Quicksave",
 		].join('\n');
-		fullTipText.screenCenter();
+		fullTipText.gameCenter();
 		add(fullTipText);
 
 		super.create();
@@ -1393,7 +1393,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		var columnCount:Int = (GRID_COLUMNS_PER_PLAYER * GRID_PLAYERS) + (SHOW_EVENT_COLUMN ? 1 : 0);
 		gridBg = new ChartingGridSprite(columnCount, gridColors[0], gridColors[1]);
-		gridBg.screenCenter(X);
+		gridBg.gameCenter(X);
 
 		prevGridBg = new ChartingGridSprite(columnCount, gridColorsOther[0], gridColorsOther[1]);
 		nextGridBg = new ChartingGridSprite(columnCount, gridColorsOther[0], gridColorsOther[1]);
@@ -2748,7 +2748,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				btn.cameras = state.cameras;
 				state.add(btn);
 
-				radioGrp.screenCenter(X).y = state.bg.y + 80;
+				radioGrp.gameCenter(X).y = state.bg.y + 80;
 				radioGrp.cameras = state.cameras;
 				state.add(radioGrp);
 
@@ -2784,7 +2784,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					} else showOutput('Error! Autosave file selected could not be found, huh??', true);
 				});
 				btn.cameras = state.cameras;
-				btn.screenCenter(X);
+				btn.gameCenter(X);
 				state.add(btn);
 			}));
 		}, btnWid);
@@ -2833,7 +2833,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							});
 							btn.normalStyle.bgColor = FlxColor.RED;
 							btn.normalStyle.textColor = FlxColor.WHITE;
-							btn.screenCenter(X).x -= 125;
+							btn.gameCenter(X).x -= 125;
 							btn.cameras = state.cameras;
 							state.add(btn);
 							
@@ -2844,12 +2844,12 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 								state.close();
 								showOutput('Events added successfully!');
 							});
-							btn.screenCenter(X);
+							btn.gameCenter(X);
 							btn.cameras = state.cameras;
 							state.add(btn);
 	
 							var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', state.close);
-							btn.screenCenter(X).x += 125;
+							btn.gameCenter(X).x += 125;
 							btn.cameras = state.cameras;
 							state.add(btn);
 						}));
@@ -3522,7 +3522,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	
 				var timeTxt:FlxText = new FlxText(15, state.bg.y + state.bg.height - 75, 230, '', 16);
 				timeTxt.alignment = CENTER;
-				timeTxt.screenCenter(X);
+				timeTxt.gameCenter(X);
 				timeTxt.cameras = state.cameras;
 				state.add(timeTxt);
 				function updateTime() {
@@ -3553,12 +3553,12 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					state.close();
 				});
 				btn.cameras = state.cameras;
-				btn.screenCenter(X).x -= 60;
+				btn.gameCenter(X).x -= 60;
 				state.add(btn);
 	
 				var btn:PsychUIButton = new PsychUIButton(0, btn.y, 'Cancel', state.close);
 				btn.cameras = state.cameras;
-				btn.screenCenter(X).x += 60;
+				btn.gameCenter(X).x += 60;
 				state.add(btn);
 			}));
 		}, btnWid);
@@ -3579,23 +3579,23 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 				var btnY:Int = 390;
 				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Light', changeTheme.bind(LIGHT));
-				btn.screenCenter(X).x -= 180;
+				btn.gameCenter(X).x -= 180;
 				btn.cameras = state.cameras;
 				state.add(btn);
 		
 				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Dark', changeTheme.bind(DARK));
-				btn.screenCenter(X).x -= 60;
+				btn.gameCenter(X).x -= 60;
 				btn.cameras = state.cameras;
 				state.add(btn);
 
 				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Default', changeTheme.bind(DEFAULT));
-				btn.screenCenter(X);
+				btn.gameCenter(X);
 				btn.cameras = state.cameras;
 				btn.x += 60;
 				state.add(btn);
 
 				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'V-Slice', changeTheme.bind(VSLICE));
-				btn.screenCenter(X).x += 180;
+				btn.gameCenter(X).x += 180;
 				btn.cameras = state.cameras;
 				state.add(btn);
 			}));

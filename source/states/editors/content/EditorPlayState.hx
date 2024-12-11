@@ -103,7 +103,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
-		timeTxt.screenCenter(X);
+		timeTxt.gameCenter(X);
 		timeTxt.visible = showTime;
 		if(downScroll) timeTxt.y = FlxG.height - 44;
 		add(timeTxt);
@@ -450,7 +450,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		var rating:FlxSprite = null;
 		if (showRating) {
 			rating = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiFolder + 'ratings/${daRating.image}' + PlayState.uiPostfix));
-			rating.screenCenter(Y).y -= 60 + comboOffset[0][1];
+			rating.gameCenter(Y).y -= 60 + comboOffset[0][1];
 			rating.x = placement - 40 + comboOffset[0][0];
 	
 			rating.velocity.set(-FlxG.random.int(0, 10) * playbackRate, -FlxG.random.int(140, 175) * playbackRate);

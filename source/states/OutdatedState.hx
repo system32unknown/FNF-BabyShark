@@ -17,7 +17,7 @@ class OutdatedState extends MusicBeatState {
 			+ "\n\nPress ENTER to view the full changelog and update\nor ESCAPE to ignore this",
 			32);
 		txt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
-		txt.screenCenter(Y);
+		txt.gameCenter(Y);
 		add(txt);
 	}
 

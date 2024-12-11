@@ -20,13 +20,13 @@ class ErrorState extends MusicBeatState {
 		bg.color = FlxColor.GRAY;
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
-		bg.screenCenter();
+		bg.gameCenter();
 
 		errorText = new FlxText(0, 0, FlxG.width - 300, errorMsg, 32);
 		errorText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
         errorText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		errorText.scrollFactor.set();
-		errorText.screenCenter();
+		errorText.gameCenter();
 		add(errorText);
 		super.create();
 	}

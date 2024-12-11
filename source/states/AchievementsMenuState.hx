@@ -41,7 +41,7 @@ class AchievementsMenuState extends MusicBeatState {
 		menuBG.antialiasing = ClientPrefs.data.antialiasing;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();
-		menuBG.screenCenter();
+		menuBG.gameCenter();
 		menuBG.scrollFactor.set();
         menuBG.color = 0xFF9271FD;
 		add(menuBG);
@@ -66,7 +66,7 @@ class AchievementsMenuState extends MusicBeatState {
 
 			var spr:FlxSprite = new FlxSprite(0, Math.floor(grpOptions.members.length / MAX_PER_ROW) * 180, graphic);
 			spr.scrollFactor.x = 0;
-			spr.screenCenter(X).x += 180 * ((grpOptions.members.length % MAX_PER_ROW) - MAX_PER_ROW / 2) + spr.width / 2 + 15;
+			spr.gameCenter(X).x += 180 * ((grpOptions.members.length % MAX_PER_ROW) - MAX_PER_ROW / 2) + spr.width / 2 + 15;
 			spr.ID = grpOptions.members.length;
 			spr.antialiasing = hasAntialias;
 			grpOptions.add(spr);
@@ -78,7 +78,7 @@ class AchievementsMenuState extends MusicBeatState {
 		box.updateHitbox();
 		box.alpha = 0.6;
 		box.scrollFactor.x = 0;
-		box.screenCenter(X);
+		box.gameCenter(X);
 		add(box);
 		add(grpOptions);
 
@@ -98,7 +98,7 @@ class AchievementsMenuState extends MusicBeatState {
 		descText.scrollFactor.set();
 
 		progressBar = new Bar(0, descText.y + 52);
-		progressBar.screenCenter(X);
+		progressBar.gameCenter(X);
 		progressBar.scrollFactor.set();
 		progressBar.enabled = false;
 		
@@ -235,7 +235,7 @@ class ResetAchievementSubstate extends MusicBeatSubstate {
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 
 		var text:Alphabet = new Alphabet(0, 180, Language.getPhrase('reset_achievement', 'Reset Achievement:'));
-		text.screenCenter(X);
+		text.gameCenter(X);
 		text.scrollFactor.set();
 		add(text);
 		
@@ -247,13 +247,13 @@ class ResetAchievementSubstate extends MusicBeatSubstate {
 		add(text);
 		
 		yesText = new Alphabet(0, text.y + 120, Language.getPhrase('yes'));
-		yesText.screenCenter(X).x -= 200;
+		yesText.gameCenter(X).x -= 200;
 		yesText.scrollFactor.set();
 		yesText.color = FlxColor.RED;
 		add(yesText);
 
 		noText = new Alphabet(0, text.y + 120, Language.getPhrase('no'));
-		noText.screenCenter(X).x += 200;
+		noText.gameCenter(X).x += 200;
 		noText.scrollFactor.set();
 		add(noText);
 		updateOptions();

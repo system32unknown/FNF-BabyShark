@@ -105,15 +105,15 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		add(UI_box);
 
 		var loadWeekButton:PsychUIButton = new PsychUIButton(0, 650, "Load Week", () -> loadWeek());
-		loadWeekButton.screenCenter(X).x -= 120;
+		loadWeekButton.gameCenter(X).x -= 120;
 		add(loadWeekButton);
 
 		var freeplayButton:PsychUIButton = new PsychUIButton(0, 650, "Freeplay", () -> FlxG.switchState(() -> new WeekEditorFreeplayState(weekFile)));
-		freeplayButton.screenCenter(X);
+		freeplayButton.gameCenter(X);
 		add(freeplayButton);
 
 		var saveWeekButton:PsychUIButton = new PsychUIButton(0, 650, "Save Week", () -> saveWeek(weekFile));
-		saveWeekButton.screenCenter(X).x += 120;
+		saveWeekButton.gameCenter(X).x += 120;
 		add(saveWeekButton);
 	}
 
@@ -254,7 +254,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		for (i in 0...stringThing.length) txtTracklist.text += stringThing[i] + '\n';
 
 		txtTracklist.text = txtTracklist.text.toUpperCase();
-		txtTracklist.screenCenter(X).x -= FlxG.width * .35;
+		txtTracklist.gameCenter(X).x -= FlxG.width * .35;
 		
 		txtWeekTitle.text = weekFile.storyName.toUpperCase();
 		txtWeekTitle.x = FlxG.width - (txtWeekTitle.width + 10);
@@ -379,7 +379,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	}
 
 	function recalculateStuffPosition() {
-		weekThing.screenCenter(X);
+		weekThing.gameCenter(X);
 		lock.x = weekThing.width + 10 + weekThing.x;
 	}
 
@@ -545,15 +545,15 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 		add(blackBlack);
 
 		var loadWeekButton:PsychUIButton = new PsychUIButton(0, 685, "Load Week", () -> WeekEditorState.loadWeek());
-		loadWeekButton.screenCenter(X).x -= 120;
+		loadWeekButton.gameCenter(X).x -= 120;
 		add(loadWeekButton);
 		
 		var storyModeButton:PsychUIButton = new PsychUIButton(0, 685, "Story Mode", () -> FlxG.switchState(() -> new WeekEditorState(weekFile)));
-		storyModeButton.screenCenter(X);
+		storyModeButton.gameCenter(X);
 		add(storyModeButton);
 	
 		var saveWeekButton:PsychUIButton = new PsychUIButton(0, 685, "Save Week", () -> WeekEditorState.saveWeek(weekFile));
-		saveWeekButton.screenCenter(X).x += 120;
+		saveWeekButton.gameCenter(X).x += 120;
 		add(saveWeekButton);
 	}
 	

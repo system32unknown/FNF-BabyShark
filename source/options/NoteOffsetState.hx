@@ -113,7 +113,7 @@ class NoteOffsetState extends MusicBeatState {
 
 		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 3), 'healthBar', () -> return barPercent, delayMin, delayMax);
 		timeBar.scrollFactor.set();
-		timeBar.screenCenter(X);
+		timeBar.gameCenter(X);
 		timeBar.leftBar.color = FlxColor.LIME;
 
 		barPercent = ClientPrefs.data.noteOffset;
@@ -145,7 +145,7 @@ class NoteOffsetState extends MusicBeatState {
 		mouse = new FlxSprite().makeGraphic(1, 1);
 		mouse.setGraphicSize(18);
 		mouse.updateHitbox();
-		mouse.screenCenter();
+		mouse.gameCenter();
 		mouse.camera = camHUD;
 		add(mouse);
 
@@ -210,7 +210,7 @@ class NoteOffsetState extends MusicBeatState {
 	function repositionCombo() {
 		var placement:Float = FlxG.width * .35;
 
-		rating.screenCenter(Y).y -= 60 + comboOffset[0][1];
+		rating.gameCenter(Y).y -= 60 + comboOffset[0][1];
 		rating.x = placement - 40 + comboOffset[0][0];
 
 		comboNums.x = placement - 50 + comboOffset[1][0];

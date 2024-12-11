@@ -218,7 +218,7 @@ class TitleState extends MusicBeatState {
 		if (textGroup != null) {
 			final txt:FlxText = new FlxText(0, ((i == -1 ? textGroup.length : i) * 60) + 200 + offset, FlxG.width, text, 48);
 			txt.setFormat(Paths.font("babyshark.ttf"), 48, FlxColor.WHITE, CENTER);
-			txt.screenCenter(X);
+			txt.gameCenter(X);
 			textGroup.add(txt);
 		}
 	}

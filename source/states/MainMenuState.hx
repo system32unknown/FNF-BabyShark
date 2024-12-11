@@ -45,7 +45,7 @@ class MainMenuState extends MusicBeatState {
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
-		bg.screenCenter();
+		bg.gameCenter();
 		bg.color = 0xFFFDE871;
 		add(bg);
 		
@@ -56,7 +56,7 @@ class MainMenuState extends MusicBeatState {
 		magenta.scrollFactor.set(0, yScroll);
 		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
 		magenta.updateHitbox();
-		magenta.screenCenter();
+		magenta.gameCenter();
 		magenta.visible = magenta.active = false;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
@@ -70,7 +70,7 @@ class MainMenuState extends MusicBeatState {
 
 			item.scrollFactor.set(0, optionShit.length < 6 ? 0 : (optionShit.length - 4) * .135);
 			item.updateHitbox();
-			item.screenCenter(X);
+			item.gameCenter(X);
 		}
 
 		if (leftOption != null) {

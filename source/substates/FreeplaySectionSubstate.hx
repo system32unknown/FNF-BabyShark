@@ -50,7 +50,7 @@ class FreeplaySectionSubstate extends FlxSubState {
 		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.updateHitbox();
-		bg.screenCenter();
+		bg.gameCenter();
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.alpha = 0;
 		add(bg);
@@ -63,12 +63,12 @@ class FreeplaySectionSubstate extends FlxSubState {
 		sectionSpr = new FlxSprite(sectionImageMap.get(daSection.toLowerCase()));
 		sectionSpr.antialiasing = ClientPrefs.data.antialiasing;
 		sectionSpr.scrollFactor.set();
-		sectionSpr.screenCenter();
+		sectionSpr.gameCenter();
 		sectionSpr.alpha = 0;
 		add(sectionSpr);
 
 		sectionTxt = new Alphabet(0, 0, daSection.toUpperCase());
-		sectionTxt.screenCenter(X).y = sectionSpr.y;
+		sectionTxt.gameCenter(X).y = sectionSpr.y;
 		sectionTxt.alpha = 0;
 		add(sectionTxt);
 
@@ -104,7 +104,7 @@ class FreeplaySectionSubstate extends FlxSubState {
 		}
 
 		sectionTxt.text = daSection.toUpperCase();
-		sectionTxt.screenCenter(X).y = sectionSpr.y;
+		sectionTxt.gameCenter(X).y = sectionSpr.y;
 		
 		super.update(elapsed);
 	}
@@ -120,7 +120,7 @@ class FreeplaySectionSubstate extends FlxSubState {
 
 		daSection = sectionArray[counter];
 		sectionSpr.loadGraphic(sectionImageMap.get(daSection.toLowerCase()));
-		sectionSpr.screenCenter();
+		sectionSpr.gameCenter();
 		sectionSpr.updateHitbox();
 	}
 

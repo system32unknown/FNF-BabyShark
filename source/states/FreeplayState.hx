@@ -96,7 +96,7 @@ class FreeplayState extends MusicBeatState {
 
 		add(bg = new FlxSprite(Paths.image('menuDesat')));
 		bg.antialiasing = ClientPrefs.data.antialiasing;
-		bg.screenCenter();
+		bg.gameCenter();
 
 		add(grpSongs = new FlxTypedSpriteGroup<Alphabet>());
 		add(grpIcons = new FlxTypedSpriteGroup<HealthIcon>());
@@ -305,7 +305,7 @@ class FreeplayState extends MusicBeatState {
 					else errorStr += '\n\n' + e.stack;
 	
 					missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
-					missingText.screenCenter(Y);
+					missingText.gameCenter(Y);
 					missingText.visible = missingTextBG.visible = true;
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 
@@ -363,7 +363,7 @@ class FreeplayState extends MusicBeatState {
 				else errorStr += '\n\n' + e.stack;
 
 				missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
-				missingText.screenCenter(Y);
+				missingText.gameCenter(Y);
 				missingText.visible = missingTextBG.visible = true;
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 

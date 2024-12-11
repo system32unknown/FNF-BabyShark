@@ -75,7 +75,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		for (i in 0...4) {
 			var babyArrow:StrumNote = new StrumNote(-273, 50, i % 4, 1);
 			babyArrow.playerPosition();
-			babyArrow.screenCenter(Y);
+			babyArrow.gameCenter(Y);
 			babyArrow.ID = i;
 			strums.add(babyArrow);
 		}
@@ -856,7 +856,7 @@ class NoteSplashEditorHelpSubState extends FlxSubState {
 			helpText.borderColor = FlxColor.BLACK;
 			helpText.scrollFactor.set();
 			helpText.borderSize = 1;
-			helpText.screenCenter();
+			helpText.gameCenter();
 			add(helpText);
 			helpText.y += ((i - str.length / 2) * 32) + 16;
 			helpTexts.add(helpText);

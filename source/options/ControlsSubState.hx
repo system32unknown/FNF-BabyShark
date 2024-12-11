@@ -102,7 +102,7 @@ class ControlsSubState extends FlxSubState {
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xff7192fd;
 		bg.antialiasing = ClientPrefs.data.antialiasing;
-		bg.screenCenter();
+		bg.gameCenter();
 		add(bg);
 
 		var grid:flixel.addons.display.FlxBackdrop = CoolUtil.createBackDrop(80, 80, 160, 160, true, 0x33FFFFFF, 0x0);
@@ -182,7 +182,7 @@ class ControlsSubState extends FlxSubState {
 
 	function addCenteredText(text:Alphabet) {
 		text.alignment = LEFT;
-		text.screenCenter(X).y -= 55;
+		text.gameCenter(X).y -= 55;
 		text.spawnPos.y -= 55;
 	}
 	function addKeyText(text:Alphabet, option:Array<Dynamic>) {

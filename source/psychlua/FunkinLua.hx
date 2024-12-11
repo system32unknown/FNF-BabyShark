@@ -921,7 +921,7 @@ class FunkinLua {
 		set("screenCenter", function(obj:String, pos:String = 'xy') {
 			var spr:FlxObject = LuaUtils.getObjectLoop(obj);
 			if(spr != null) {
-				spr.screenCenter(LuaUtils.axesFromString(pos));
+				spr.gameCenter(LuaUtils.axesFromString(pos));
 				return;
 			}
 			luaTrace("screenCenter: Object " + obj + " doesn't exist!", false, false, FlxColor.RED);

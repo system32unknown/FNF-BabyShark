@@ -53,7 +53,7 @@ class ModsMenuState extends MusicBeatState {
 		bg.color = 0xFF665AFF;
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
-		bg.screenCenter();
+		bg.gameCenter();
 
 		bgList = FlxSpriteUtil.drawRoundRect(new FlxSprite(40, 40).makeGraphic(340, 440, FlxColor.TRANSPARENT), 0, 0, 340, 440, 15, 15, FlxColor.BLACK);
 		bgList.alpha = .6;
@@ -128,7 +128,7 @@ class ModsMenuState extends MusicBeatState {
 			noModsTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 			noModsTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 			add(noModsTxt);
-			noModsTxt.screenCenter(Y);
+			noModsTxt.gameCenter(Y);
 
 			var txt:FlxText = new FlxText(bgList.x + 15, bgList.y + 15, bgList.width - 30, Language.getPhrase('no_mods_found', "No Mods found."), 16);
 			txt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE);

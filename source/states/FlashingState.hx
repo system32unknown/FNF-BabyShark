@@ -16,7 +16,7 @@ class FlashingState extends flixel.FlxState {
 			You've been warned!",
 			32);
 		warnText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
-		warnText.screenCenter(Y);
+		warnText.gameCenter(Y);
 		add(warnText);
 	}
 

@@ -170,7 +170,7 @@ class PauseSubState extends MusicBeatSubstate {
 					if(errorStr.startsWith('[lime.utils.Assets] ERROR:')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1); //Missing chart
 					else errorStr += '\n\n' + e.stack;
 					missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
-					missingText.screenCenter(Y);
+					missingText.gameCenter(Y);
 					missingText.visible = missingTextBG.visible = true;
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 

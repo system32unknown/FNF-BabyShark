@@ -46,7 +46,7 @@ class NotesColorSubState extends FlxSubState {
 		onPixel = PlayState.isPixelStage;
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFEA71FD;
-		bg.screenCenter();
+		bg.gameCenter();
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 

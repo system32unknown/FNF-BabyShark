@@ -138,7 +138,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER);
             helpText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 			helpText.scrollFactor.set();
-			helpText.screenCenter();
+			helpText.gameCenter();
 			add(helpText);
 			helpText.y += ((i - arr.length / 2) * 16);
 			helpText.active = false;
@@ -194,7 +194,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		tipText.alignment = CENTER;
 		tipText.cameras = [camHUD];
 		tipText.scrollFactor.set();
-		tipText.screenCenter(X);
+		tipText.gameCenter(X);
 		tipText.active = false;
 		add(tipText);
 
@@ -237,7 +237,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		posTxt.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		posTxt.borderSize = 2;
 		posTxt.cameras = [camHUD];
-		posTxt.screenCenter(X);
+		posTxt.gameCenter(X);
 		posTxt.visible = false;
 		add(posTxt);
 
@@ -245,7 +245,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		outputTxt.setFormat(null, 24, FlxColor.WHITE, CENTER);
 		outputTxt.setBorderStyle(OUTLINE_FAST);
 		outputTxt.cameras = [camHUD];
-		outputTxt.screenCenter();
+		outputTxt.gameCenter();
 		outputTxt.alpha = 0;
 		add(outputTxt);
 	}
@@ -434,32 +434,32 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		var bg:FlxSprite = new FlxSprite().makeSolid(300, 240);
 		bg.alpha = 0.6;
-		bg.screenCenter();
+		bg.gameCenter();
 		createPopup.add(bg);
 
 		var txt:FlxText = new FlxText(0, bg.y + 10, 180, 'New Sprite', 24);
-		txt.screenCenter(X);
+		txt.gameCenter(X);
 		txt.alignment = CENTER;
 		createPopup.add(txt);
 
 		var btnY:Int = 320;
 		var btn:PsychUIButton = new PsychUIButton(0, btnY, 'No Animation', () -> loadImage('sprite'));
-		btn.screenCenter(X);
+		btn.gameCenter(X);
 		createPopup.add(btn);
 
 		btnY += 50;
 		var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Animated', () -> loadImage('animatedSprite'));
-		btn.screenCenter(X);
+		btn.gameCenter(X);
 		createPopup.add(btn);
 
 		btnY += 50;
 		var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Solid Color', () -> {
 			var meta:StageEditorMetaSprite = new StageEditorMetaSprite({type: 'square', scale: [200, 200], name: findUnoccupiedName()}, new ModchartSprite());
 			meta.sprite.makeSolid(200, 200);
-			meta.sprite.screenCenter();
+			meta.sprite.gameCenter();
 			insertMeta(meta);
 		});
-		btn.screenCenter(X);
+		btn.gameCenter(X);
 		createPopup.add(btn);
 		add(createPopup);
 		createPopup.visible = createPopup.active = false;
@@ -1469,7 +1469,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			openSubState(new BasePrompt(480, 160, 'This file is not inside Psych Engine.', (state:BasePrompt) -> {
 				var txt:FlxText = new FlxText(0, state.bg.y + 60, 460, 'Copy to: "$modFolder"?', 11);
 				txt.alignment = CENTER;
-				txt.screenCenter(X);
+				txt.gameCenter(X);
 				txt.cameras = state.cameras;
 				state.add(txt);
 				
@@ -1492,14 +1492,14 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 				});
 				btn.normalStyle.bgColor = FlxColor.GREEN;
 				btn.normalStyle.textColor = FlxColor.WHITE;
-				btn.screenCenter(X).x -= 100;
+				btn.gameCenter(X).x -= 100;
 				btn.cameras = state.cameras;
 				state.add(btn);
 				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', function() {
 					_makeNewSprite = null;
 					state.close();
 				});
-				btn.screenCenter(X).x += 100;
+				btn.gameCenter(X).x += 100;
 				btn.cameras = state.cameras;
 				state.add(btn);
 			}));
@@ -1743,7 +1743,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 			FlxG.camera.scroll.set();
 
 			target.alpha = 1;
-			target.sprite.screenCenter();
+			target.sprite.gameCenter();
 			add(target.sprite);
 			reloadAnimList();
 			trace('Opened substate');

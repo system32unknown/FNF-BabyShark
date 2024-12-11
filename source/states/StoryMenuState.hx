@@ -89,7 +89,7 @@ class StoryMenuState extends MusicBeatState {
 				itemTargetY += Math.max(weekThing.height, 110) + 10;
 				grpWeekText.add(weekThing);
 
-				weekThing.screenCenter(X);
+				weekThing.gameCenter(X);
 
 				// Needs an offset thingie
 				if (isLocked) {
@@ -344,7 +344,7 @@ class StoryMenuState extends MusicBeatState {
 		}
 
 		txtTracklist.text = txtTracklist.text.toUpperCase();
-		txtTracklist.screenCenter(X).x -= FlxG.width * .35;
+		txtTracklist.gameCenter(X).x -= FlxG.width * .35;
 
 		intendedScore = Highscore.getWeekScore(loadedWeeks[curWeek].fileName, curDifficulty);
 	}

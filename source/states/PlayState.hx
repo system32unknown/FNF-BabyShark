@@ -399,7 +399,7 @@ class PlayState extends MusicBeatState {
 		Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
 		var showTime:Bool = timeType != 'Disabled';
 		timeTxt = new FlxText(0, 19, 400, "", 16);
-		timeTxt.screenCenter(X);
+		timeTxt.gameCenter(X);
 		timeTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.alpha = 0;
@@ -409,7 +409,7 @@ class PlayState extends MusicBeatState {
 
 		timeBar = new Bar(0, timeTxt.y + (timeTxt.height / 4), 'timeBar', () -> return songPercent, 0, 1);
 		timeBar.scrollFactor.set();
-		timeBar.screenCenter(X);
+		timeBar.gameCenter(X);
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
 		uiGroup.add(timeBar);
@@ -438,7 +438,7 @@ class PlayState extends MusicBeatState {
 			if (ClientPrefs.data.smoothHealth) return healthLerp = FlxMath.lerp(healthLerp, health, .15);
 			return health;
 		}, 0, 2);
-		healthBar.screenCenter(X);
+		healthBar.gameCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
 		healthBar.visible = !hideHud;
@@ -460,7 +460,7 @@ class PlayState extends MusicBeatState {
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		scoreTxt.visible = !hideHud;
 		scoreTxt.scrollFactor.set();
-		scoreTxt.screenCenter(X);
+		scoreTxt.gameCenter(X);
 		uiGroup.add(scoreTxt);
 		updateScore();
 
@@ -872,7 +872,7 @@ class PlayState extends MusicBeatState {
 		spr.scrollFactor.set();
 		spr.updateHitbox();
 		if (isPixelStage) spr.setGraphicSize(Std.int(spr.width * daPixelZoom));
-		spr.screenCenter();
+		spr.gameCenter();
 		spr.antialiasing = popupAntialias;
 		insert(members.indexOf(noteGroup), spr);
 		FlxTween.tween(spr, {alpha: 0}, Conductor.crochet / 1000, {ease: FlxEase.cubeInOut, onComplete: (twn:FlxTween) -> {remove(spr, true); spr.destroy();}});
@@ -2019,7 +2019,7 @@ class PlayState extends MusicBeatState {
 		if (showRating && note.mustPress) {
 			ratingPop = popUpGroup.recycle(Popup);
 			ratingPop.setupRatingData(uiFolder + 'ratings/${daRating.image}' + uiPostfix);
-			ratingPop.screenCenter(Y).y -= 60 + comboOffset[0][1];
+			ratingPop.gameCenter(Y).y -= 60 + comboOffset[0][1];
 			ratingPop.x = placement - 40 + comboOffset[0][0];
 			ratingPop.ratingOtherStuff();
 			popUpGroup.add(ratingPop);

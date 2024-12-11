@@ -35,7 +35,7 @@ class VideoSprite extends FlxSpriteGroup {
 		if(!waiting) {
 			cover = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 			cover.scale.set(FlxG.width + 100, FlxG.height + 100);
-			cover.screenCenter();
+			cover.gameCenter();
 			cover.scrollFactor.set();
 			add(cover);
 		}
@@ -66,7 +66,7 @@ class VideoSprite extends FlxSpriteGroup {
 		if(adjustSize) videoSprite.bitmap.onFormatSetup.add(() -> {
 			videoSprite.setGraphicSize(FlxG.width);
 			videoSprite.updateHitbox();
-			videoSprite.screenCenter();
+			videoSprite.gameCenter();
 		});
 
 		// start video and adjust resolution to screen size

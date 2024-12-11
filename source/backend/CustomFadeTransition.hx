@@ -22,12 +22,12 @@ class CustomFadeTransition extends FlxSubState {
 		transGradient.scale.y = height;
 		transGradient.updateHitbox();
 		transGradient.scrollFactor.set();
-		transGradient.screenCenter(Y);
+		transGradient.gameCenter(Y);
 		add(transGradient);
 
 		transBlack = new FlxSprite().makeSolid(width + 400, height, FlxColor.BLACK);
 		transBlack.scrollFactor.set();
-		transBlack.screenCenter(Y);
+		transBlack.gameCenter(Y);
 		add(transBlack);
 
 		if(isTransIn) transGradient.x = transBlack.x - transBlack.width;

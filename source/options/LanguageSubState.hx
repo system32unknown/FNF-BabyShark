@@ -12,7 +12,7 @@ class LanguageSubState extends FlxSubState {
 		var bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.antialiasing = ClientPrefs.data.antialiasing;
-		bg.screenCenter();
+		bg.gameCenter();
 		add(bg);
 		add(grpLanguages);
 
@@ -63,9 +63,9 @@ class LanguageSubState extends FlxSubState {
 			text.distancePerItem.y = 100;
 			if(languages.length < 7) {
 				text.changeY = false;
-				text.screenCenter(Y).y += (100 * (num - (languages.length / 2))) + 45;
+				text.gameCenter(Y).y += (100 * (num - (languages.length / 2))) + 45;
 			}
-			text.screenCenter(X);
+			text.gameCenter(X);
 			grpLanguages.add(text);
 		}
 		changeSelected();

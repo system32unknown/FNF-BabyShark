@@ -118,7 +118,7 @@ class CharacterSelectionState extends MusicBeatState {
 		characterText.setBorderStyle(OUTLINE, FlxColor.BLACK, 5);
 		characterText.camera = camHUD;
 		characterText.scrollFactor.set();
-		characterText.screenCenter(X);
+		characterText.gameCenter(X);
 		add(characterText);
 
 		controlsText = new FlxText(-125, 125, 0, Language.getPhrase('nogf_mode', noGFtext, [noGFSkin]), 20);
@@ -129,7 +129,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 		curIcon = new HealthIcon(char.healthIcon, true);
 		curIcon.scrollFactor.set();
-		curIcon.screenCenter(X);
+		curIcon.gameCenter(X);
 		curIcon.camera = camHUD;
 		updateIconPosition();
 		add(curIcon);
@@ -263,7 +263,7 @@ class CharacterSelectionState extends MusicBeatState {
 			curIcon.color = FlxColor.BLACK;
 			characterText.text = '???';
 		}
-		characterText.screenCenter(X);
+		characterText.gameCenter(X);
 		updateIconPosition();
 	}
 
