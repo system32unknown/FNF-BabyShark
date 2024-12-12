@@ -54,7 +54,6 @@ jobs:
       - name: Tar files
         run: |
           tar -zcvf AlterEngine.tar.gz -C export/release/linux/bin
-        shell: bash .
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
