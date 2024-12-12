@@ -73,8 +73,10 @@ class HScript extends AlterHscript {
 		};
 		var errorHeader:String = 'ERROR';
 		if (instance != null && !instance.executed) errorHeader = 'ERROR ON LOADING';
+
 		var scriptHeader:String = (instance != null ? instance.origin : 'HScript');
 		if (funcName != null) scriptHeader += ':$funcName';
+
 		var lineHeader:String = #if hscriptPos ':${e.line}' #else '' #end;
 		if (instance == null #if LUA_ALLOWED || instance.parentLua == null #end)
 			return '$errorHeader ($scriptHeader$lineHeader) - $message';

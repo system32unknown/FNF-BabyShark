@@ -48,8 +48,7 @@ jobs:
           haxelib run lime build linux
 
       - name: Tar files
-        run: |
-          tar -zcvf AlterEngine.tar.gz -C export/release/linux/bin
+        run: tar -zcvf AlterEngine.tar.gz -C export/release/linux/bin .
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
