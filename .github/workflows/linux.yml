@@ -38,10 +38,9 @@ jobs:
           haxe -cp commandline -D analyzer-optimize --run Main setup -s
       - name: Compile hxcpp
         run: |
-          cd ~/haxelib/hxcpp/git/tools/run
+          cd ./haxelib/hxcpp/git/tools/run
           haxe compile.hxml
-          cd ..
-          cd ./hxcpp
+          cd ../hxcpp
           haxe compile.hxml
           cd ../..
 
