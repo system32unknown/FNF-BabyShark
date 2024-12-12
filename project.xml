@@ -71,6 +71,7 @@
 
 	<!-- ______________________________Haxedefines_____________________________ -->
 	<haxedef name="FLX_NO_HEALTH"/>
+	<haxedef name="FLX_NO_TOUCH" if="desktop"/>
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="cpp"/>
 
@@ -103,8 +104,7 @@
 	<haxeflag name="--macro" value="allowPackage('flash')"/>
 	<haxeflag name="--macro" value="include('my.pack')"/>
 	
-	<!-- zIndex field -->
-	<haxeflag name="--macro" value="addMetadata('@:build(macros.FlxBasicMacro.buildFlxBasic())', 'flixel.FlxBasic')"/>
+	<haxeflag name="--macro" value="addMetadata('@:build(macros.FlxModMacro.buildFlxBasic())', 'flixel.FlxBasic')"/>
 
 	<!--hxVLC Defines-->
 	<haxedef name="HXC_LIBVLC_LOGGING" if="VIDEOS_ALLOWED debug"/>

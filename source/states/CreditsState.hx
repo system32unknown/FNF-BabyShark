@@ -45,7 +45,7 @@ class CreditsState extends MusicBeatState {
 		[''],
 		['Special Thanks'],
 		['Denpa Engine',		'denpa',			'The Freeplay Section used for this engine',	'https://github.com/UmbratheUmbreon/PublicDenpaEngine',	    'FF9300'],
-		['Codename Engine',		'codename',			'Some stuffs used for this engine',				'https://github.com/FNF-CNE-Devs/CodenameEngine',			'FF9300'],
+		['Codename Engine',		'codename',			'Some stuffs used for this engine',				'https://github.com/CodenameCrew/CodenameEngine',			'FF9300'],
 		['HRK-EXEX',			'hrk',				'Some stuffs used for this engine',				'https://github.com/HRK-EXEX',								'FF9300'],
 	];
 

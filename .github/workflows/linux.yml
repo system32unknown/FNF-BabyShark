@@ -31,12 +31,10 @@ jobs:
       - name: Installing Linux Libraries
         run: |
           sudo apt install libvlc-dev libvlccore-dev g++ g++-multilib gcc-multilib
-        shell: bash
 
       - name: Installing/Updating libraries
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s
-        shell: bash
       - name: Compile hxcpp
         run: |
           cd .haxelib/hxcpp/git/tools/run
@@ -44,12 +42,10 @@ jobs:
           cd ../hxcpp
           haxe compile.hxml
           cd ../../../../..
-        shell: bash
 
       - name: Compile
         run: |
           haxelib run lime build linux
-        shell: bash
 
       - name: Tar files
         run: |
