@@ -87,7 +87,6 @@ package backend;
 
 	// Optimizer
 	public var processFirst:Bool = false;
-	public var showNotes:Bool = true;
 	public var separateHitProcess:Bool = true;
 	public var optimizeSpawnNote:Bool = true;
 	public var skipSpawnNote:Bool = true;

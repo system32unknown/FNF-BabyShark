@@ -83,7 +83,6 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 		var lerpVal:Float = Math.exp(-elapsed * 9.6);
 		if (changeX) x = FlxMath.lerp((targetY * distancePerItem.x) + spawnPos.x, x, lerpVal);
 		if (changeY) y = FlxMath.lerp((targetY * 1.3 * distancePerItem.y) + spawnPos.y, y, lerpVal);
-		super.update(elapsed);
     }
 
 	public function snapToPosition() {
@@ -144,8 +143,8 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
         for (line in members) {
             line.x = switch (align) {
                 case LEFT: x;
-                case CENTER: x + ((x - totalWidth) / 2);
-                case RIGHT: x + (x - totalWidth);
+                case CENTER: getMidpoint().x - (line.width * .5);
+                case RIGHT: x + (totalWidth - line.width);
             }
         }
     }

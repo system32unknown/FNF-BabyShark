@@ -35,7 +35,7 @@ class Popup extends FlxSprite {
     public function setupRatingData(rateImg:String) {
         type = RATING;
         reloadTexture(rateImg);
-        setGraphicSize(Std.int(width * (PlayState.isPixelStage ? 0.85 * PlayState.daPixelZoom : 0.7)));
+        setGraphicSize(Std.int(width * (PlayState.isPixelStage ? .85 * PlayState.daPixelZoom : .7)));
         updateHitbox();
 
         acceleration.set(i.ratingAcc.x * i.playbackRate * i.playbackRate, 550 * i.playbackRate * i.playbackRate + i.ratingAcc.y);
@@ -53,7 +53,7 @@ class Popup extends FlxSprite {
     public function setupNumberData(numberImg:String) {
         type = NUMBER;
         reloadTexture(numberImg);
-        setGraphicSize(Std.int(width * (PlayState.isPixelStage ? PlayState.daPixelZoom : 0.5)));
+        setGraphicSize(Std.int(width * (PlayState.isPixelStage ? PlayState.daPixelZoom : .5)));
         updateHitbox();
 
 		velocity.set(FlxG.random.float(-5, 5) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(130, 150) * i.playbackRate + i.ratingVel.y);

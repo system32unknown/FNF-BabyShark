@@ -393,7 +393,8 @@ class CreditSectionState extends MusicBeatState {
 			var lerpVal:Float = Math.exp(-elapsed * 12);
 			if (item.targetY == 0) {
 				var lastX:Float = item.x;
-				item.gameCenter(X).x = FlxMath.lerp(item.x - 70, lastX, lerpVal);
+				item.gameCenter(X);
+				item.x = FlxMath.lerp(item.x - 70, lastX, lerpVal);
 			} else item.x = FlxMath.lerp(200 + -40 * Math.abs(item.targetY), item.x, lerpVal);
 		}
 		super.update(elapsed);
