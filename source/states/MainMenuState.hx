@@ -278,16 +278,17 @@ class MainMenuState extends MusicBeatState {
 			item.centerOffsets();
 		}
 
-		var selectedItem:FlxSprite;
+		var curItem:FlxSprite;
 		switch(curColumn) {
-			case CENTER: selectedItem = menuItems.members[curSelected];
-			case LEFT: selectedItem = leftItem;
-			case RIGHT: selectedItem = rightItem;
+			case CENTER: curItem = menuItems.members[curSelected];
+			case LEFT: curItem = leftItem;
+			case RIGHT: curItem = rightItem;
 		}
-		selectedItem.animation.play('selected');
-		selectedItem.centerOffsets();
+		curItem.animation.play('selected');
+		curItem.centerOffsets();
+		if (curColumn == CENTER) curItem.gameCenter(X);
 
 		FlxG.sound.play(Paths.sound('scrollMenu'));
-		camFollow.y = selectedItem.getGraphicMidpoint().y - (menuItems.length > 4 ? menuItems.length * 8 : 0);
+		camFollow.y = curItem.getGraphicMidpoint().y - (menuItems.length > 4 ? menuItems.length * 8 : 0);
 	}
 }
