@@ -1,5 +1,6 @@
 package utils.system;
 
+import haxe.exceptions.NotImplementedException;
 #if cpp
 import cpp.vm.Gc;
 
@@ -32,7 +33,7 @@ class MemoryUtil {
 		Gc.enable(on);
 		cpp.NativeGc.enable(on);
 		#else
-		throw 'Not implemented!';
+		throw new NotImplementedException();
 		#end
 	}
 	/**
@@ -44,7 +45,7 @@ class MemoryUtil {
 		#if cpp
 		Gc.run(major);
 		#else
-		throw 'Not implemented!';
+		throw new NotImplementedException();
 		#end
 	}
 

@@ -51,7 +51,7 @@ class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 	}
 
 	public function destroy() {
-		if (socket != null) socket.close();
+		socket?.close();
 	}
 }
 #end

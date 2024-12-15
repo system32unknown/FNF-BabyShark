@@ -35,8 +35,9 @@ class CoolUtil {
 	}
 
 	public static function browserLoad(site:String):Void {
-		#if linux
-		Sys.command('/usr/bin/xdg-open', [site]);
+		#if linux 
+		var cmd:Int = Sys.command("xdg-open", [url]); // generally `xdg-open` should work in every distro
+		if (cmd != 0) Sys.command("/usr/bin/xdg-open", [url]); // run old command JUST IN CASE it fails, which it shouldn't
 		#else
 		FlxG.openURL(site);
 		#end

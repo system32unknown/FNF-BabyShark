@@ -20,7 +20,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	var playbackRate:Float = 1;
 	var vocals:FlxSound;
 	
-	var notes:NoteGroup;
+	var notes:FlxTypedGroup<Note>;
 	var unspawnNotes:Array<Note> = [];
 	var ratingsData:Array<Rating> = Rating.loadDefault();
 	
@@ -279,7 +279,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		Conductor.bpm = songData.bpm;
 		FlxG.sound.music.volume = vocals.volume = 0;
 
-		noteGroup.add(notes = new NoteGroup());
+		noteGroup.add(notes = new FlxTypedGroup<Note>());
 
 		var daBpm:Float = (PlayState.SONG.notes[0].changeBPM == true) ? PlayState.SONG.notes[0].bpm : PlayState.SONG.bpm;
 		var oldNote:Note = null;

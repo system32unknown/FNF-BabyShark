@@ -116,7 +116,7 @@ class Bar extends FlxSpriteGroup {
 		updateBar();
 	}
 
-	function set_percent(value:Float) {
+	function set_percent(value:Float):Float {
 		final doUpdate:Bool = (value != percent);
 		percent = value;
 
@@ -124,19 +124,19 @@ class Bar extends FlxSpriteGroup {
 		return value;
 	}
 
-	function set_leftToRight(value:Bool) {
+	function set_leftToRight(value:Bool):Bool {
 		leftToRight = value;
 		updateBar();
 		return value;
 	}
 
-	function set_barWidth(value:Int) {
+	function set_barWidth(value:Int):Int {
 		barWidth = value;
 		regenerateClips();
 		return value;
 	}
 
-	function set_barHeight(value:Int) {
+	function set_barHeight(value:Int):Int {
 		barHeight = value;
 		regenerateClips();
 		return value;

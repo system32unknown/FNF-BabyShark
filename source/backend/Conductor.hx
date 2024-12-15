@@ -39,7 +39,6 @@ class Conductor {
 			if (time >= bpmChangeMap[i].songTime)
 				lastChange = bpmChangeMap[i];
 		}
-
 		return lastChange;
 	}
 
@@ -54,7 +53,6 @@ class Conductor {
 			if (bpmChangeMap[i].stepTime <= step)
 				lastChange = bpmChangeMap[i];
 		}
-
 		return lastChange;
 	}
 

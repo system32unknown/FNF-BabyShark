@@ -148,11 +148,11 @@ class ModsMenuState extends MusicBeatState {
 
 		modNameInitialY = icon.y + 80;
 		modName = new Alphabet(icon.x + 165, modNameInitialY);
-		modName.scaleY = 0.8;
+		modName.scaleY = .8;
 		add(modName);
 
 		bgDescription = FlxSpriteUtil.drawRoundRectComplex(new FlxSprite(bgTitle.x, bgTitle.y + 200).makeGraphic(840, 450, FlxColor.TRANSPARENT), 0, 0, 840, 450, 0, 0, 15, 15, FlxColor.BLACK);
-		bgDescription.alpha = 0.6;
+		bgDescription.alpha = .6;
 		add(bgDescription);
 		
 		modDesc = new FlxText(bgDescription.x + 15, bgDescription.y + 15, bgDescription.width - 30, "", 24);
@@ -324,7 +324,7 @@ class ModsMenuState extends MusicBeatState {
 							if (holdingMod) {
 								var moved:Bool = false;
 								for (i in centerMod - 2...centerMod + 3) {
-									var mod = modsGroup.members[i];
+									var mod:ModItem = modsGroup.members[i];
 									if (mod != null && mod.visible && FlxG.mouse.overlaps(mod) && curSelectedMod != i) {
 										moveModToPosition(i);
 										moved = true;
@@ -560,8 +560,7 @@ class ModsMenuState extends MusicBeatState {
 			}
 
 			mod.visible = (i >= minVisible && i <= maxVisible);
-			mod.x = bgList.x + 5;
-			mod.y = bgList.y + (86 * (i - centerMod + 2)) + 5;
+			mod.setPosition(bgList.x + 5, bgList.y + (86 * (i - centerMod + 2)) + 5);
 			
 			mod.alpha = .6;
 			if(i == curSelectedMod) mod.alpha = 1;
@@ -617,7 +616,6 @@ class ModsMenuState extends MusicBeatState {
 		var fileStr:String = '';
 		for (mod in modsList.all) {
 			if(mod.trim().length < 1) continue;
-
 			if(fileStr.length > 0) fileStr += '\n';
 
 			var on:String = '1';

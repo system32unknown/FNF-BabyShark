@@ -101,7 +101,7 @@ class PlayState extends MusicBeatState {
 	public var boyfriend:Character = null;
 	public var gameOverChar:Character = null;
 
-	public var notes:NoteGroup;
+	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
 	public var unspawnSustainNotes:Array<Note> = [];
 	public var eventNotes:Array<EventNote> = [];
@@ -1002,7 +1002,7 @@ class PlayState extends MusicBeatState {
 		try {inst.loadEmbedded(Paths.inst(songData.song));} catch (e:Dynamic) {}
 		FlxG.sound.list.add(inst);
 
-		noteGroup.add(notes = new NoteGroup());
+		noteGroup.add(notes = new FlxTypedGroup<Note>());
 
 		try {
 			var eventsChart:SwagSong = Song.getChart('events', songName);

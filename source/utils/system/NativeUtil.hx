@@ -1,5 +1,7 @@
 package utils.system;
 
+import lime.app.Application;
+
 /**
  * Class for Windows-only functions, such as transparent windows, message boxes, and more.
  * Does not have any effect on other platforms.
@@ -16,38 +18,62 @@ class NativeUtil {
 	}
 
 	/**
-	 * Shows a message box
-	 */
-	public static function showMessageBox(caption:String, message:String, icon:utils.system.PlatformUtil.MessageBoxIcon = MSG_WARNING) {
-		#if windows
-		PlatformUtil.showMessageBox(caption, message, icon);
-		#else
-		lime.app.Application.current.window.alert(message, caption);
-		#end
-	}
-
-	/**
-	 * Sets the console colors
-	 */
-	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
-		#if windows
-		if(foregroundColor == NONE) foregroundColor = LIGHTGRAY;
-		if(backgroundColor == NONE) backgroundColor = BLACK;
-		PlatformUtil.setConsoleColors((cast(backgroundColor, Int) * 16) + cast(foregroundColor, Int));
-		#elseif sys
-		Sys.print("\x1b[0m");
-		if(foregroundColor != NONE) Sys.print("\x1b[" + Std.int(consoleColorToANSI(foregroundColor)) + "m");
-		if(backgroundColor != NONE) Sys.print("\x1b[" + Std.int(consoleColorToANSI(backgroundColor) + 10) + "m");
-		#end
-	}
-
-	/**
 	 * Switch the window's color mode to dark or light mode.
 	 */
 	public static function setDarkMode(title:String, enable:Bool) {
 		#if windows
-		if(title == null) title = lime.app.Application.current.window.title;
+		if(title == null) title = Application.current.window.title;
 		PlatformUtil.setDarkMode(title, enable);
+		#end
+	}
+
+	/**
+	 * Switch the window's color to any color.
+	 *
+	 * WARNING: This is exclusive to windows 11 users, unfortunately.
+	 *
+	 * NOTE: Setting the color to 0x00000000 (FlxColor.TRANSPARENT) will set the border (must have setBorder on) invisible.
+	 */
+	public static function setWindowBorderColor(title:String, color:FlxColor, setHeader:Bool = true, setBorder:Bool = true) {
+		#if windows
+		if(title == null) title = Application.current.window.title;
+		PlatformUtil.setWindowBorderColor(title, [color.red, color.green, color.blue, color.alpha], setHeader, setBorder);
+		#end
+	}
+
+	/**
+	 * Resets the window's border color to the default one.
+	 *
+	 * WARNING: This is exclusive to windows 11 users, unfortunately.
+	**/
+	public static function resetWindowBorderColor(title:String, setHeader:Bool = true, setBorder:Bool = true) {
+		#if windows
+		if(title == null) title = Application.current.window.title;
+		PlatformUtil.setWindowBorderColor(title, [-1, -1, -1, -1], setHeader, setBorder);
+		#end
+	}
+
+	/**
+	 * Switch the window's title text to any color.
+	 *
+	 * WARNING: This is exclusive to windows 11 users, unfortunately.
+	 */
+	public static function setWindowTitleColor(title:String, color:FlxColor) {
+		#if windows
+		if(title == null) title = Application.current.window.title;
+		PlatformUtil.setWindowTitleColor(title, [color.red, color.green, color.blue, color.alpha]);
+		#end
+	}
+
+	/**
+	 * Resets the window's title color to the default one.
+	 *
+	 * WARNING: This is exclusive to windows 11 users, unfortunately.
+	**/
+	public static function resetWindowTitleColor(title:String) {
+		#if windows
+		if(title == null) title = Application.current.window.title;
+		PlatformUtil.setWindowTitleColor(title, [-1, -1, -1, -1]);
 		#end
 	}
 
@@ -58,6 +84,38 @@ class NativeUtil {
 		#if windows
 		FlxG.stage.window.borderless = true;
 		FlxG.stage.window.borderless = false;
+		#end
+	}
+
+	/**
+	 * Can be used to check if your using a specific version of an OS (or if your using a certain OS).
+	 */
+	public static function hasVersion(ver:String)
+		return lime.system.System.platformLabel.toLowerCase().indexOf(ver.toLowerCase()) != -1;
+
+	/**
+	 * Shows a message box
+	 */
+	public static function showMessageBox(caption:String, message:String, icon:utils.system.PlatformUtil.MessageBoxIcon = MSG_WARNING) {
+		#if windows
+		PlatformUtil.showMessageBox(caption, message, icon);
+		#else
+		Application.current.window.alert(message, caption);
+		#end
+	}
+
+	/**
+	 * Sets the console colors
+	 */
+	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
+		#if (windows && !hl)
+		if(foregroundColor == NONE) foregroundColor = LIGHTGRAY;
+		if(backgroundColor == NONE) backgroundColor = BLACK;
+		PlatformUtil.setConsoleColors((cast(backgroundColor, Int) * 16) + cast(foregroundColor, Int));
+		#elseif sys
+		Sys.print("\x1b[0m");
+		if(foregroundColor != NONE) Sys.print("\x1b[" + Std.int(consoleColorToANSI(foregroundColor)) + "m");
+		if(backgroundColor != NONE) Sys.print("\x1b[" + Std.int(consoleColorToANSI(backgroundColor) + 10) + "m");
 		#end
 	}
 

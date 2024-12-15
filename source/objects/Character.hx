@@ -68,9 +68,6 @@ class Character extends FlxSprite {
 	public var noAntialiasing:Bool = false;
 	public var originalFlipX:Bool = false;
 	public var editorIsPlayer:Null<Bool> = null;
-	
-	public var hotflipX(default, set):Bool = false;
-	public var hotflipY(default, set):Bool = false;
 
 	public var prevCrochet:Float;
 	public var charaCrochet:Float;
@@ -87,81 +84,6 @@ class Character extends FlxSprite {
 
 		prevCrochet = Conductor.stepCrochet;
 		charaCrochet = prevCrochet / 1000.;
-	}
-
-	inline function set_hotflipX(value:Bool):Bool {
-		var ew:Bool = flipX == value;
-		flipX = value;
-		hotflipX = value;
-		if (ew) return value;
-
-		adjustOffsets(0, value);
-		swapAnimations('LEFT', 'RIGHT');
-		return value;
-	}
-
-	inline function set_hotflipY(value:Bool):Bool {
-		var ew:Bool = flipY == value;
-		flipY = value;
-		hotflipY = value;
-		if (ew) return value;
-
-		adjustOffsets(1, value);
-		swapAnimations('DOWN', 'UP');
-		return value;
-	}
-
-	function adjustOffsets(axis:Int, flipped:Bool) {
-		var currentAnimation:String = getAnimationName();
-		var wasReversed:Bool = isAnimateAtlas ? atlas.anim.reversed : animation.curAnim.reversed;
-		var currentFrame:Int = isAnimateAtlas ? atlas.anim.curFrame : animation.curAnim.curFrame;
-
-		for (animName in animOffsets.keys()) {
-			playAnim(animName, true);
-			var curOffset:Dynamic = animOffsets.get(animName)[axis];
-			curOffset *= -1;
-			curOffset += (axis == 0 ? frameWidth - height : frameHeight - height) * jsonScale;
-		}
-		playAnim(currentAnimation, true, wasReversed, currentFrame);
-
-		var difference:Float = (axis == 0 ? frameWidth - height : frameHeight - height) * jsonScale;
-		if (!flipped) difference *= -1;
-		cameraPosition[axis] -= difference;
-		if (axis == 0) x += difference; else y += difference;
-	}
-
-	public function swapAnimations(animation1:String, animation2:String) {
-		if (animation1 == animation2) return; //dude
-
-		var trackedKeys:Array<String> = [];
-		@:privateAccess
-		for (animName in animation._animations.keys()) {
-			if (trackedKeys.contains(animName)) continue;
-
-			var newAnimName:String;
-			if (animName.contains(animation1)) newAnimName = animName.replace(animation1, animation2);
-			else if (animName.contains(animation2)) newAnimName = animName.replace(animation2, animation1);
-			else continue;
-
-			var swapped:Bool = false;
-			var animObj:flixel.animation.FlxAnimation = animation._animations.get(animName);
-			var offset:Array<Float> = animOffsets.get(animName);
-
-			if (animation._animations.exists(newAnimName)) {
-				animation._animations.set(animName, animation._animations.get(newAnimName));
-				animOffsets.set(animName, animOffsets.get(newAnimName));
-				swapped = true;
-				trackedKeys.push(animName);
-			}
-
-			animation._animations.set(newAnimName, animObj);
-			animOffsets.set(newAnimName, offset);
-			trackedKeys.push(newAnimName);
-			if (!swapped) {
-				animation._animations.remove(animName);
-				animOffsets.remove(animName);
-			}
-		}
 	}
 
 	public function changeCharacter(character:String) {
@@ -212,10 +134,7 @@ class Character extends FlxSprite {
 			atlas.showPivot = false;
 			try {
 				Paths.loadAnimateAtlas(atlas, json.image);
-			} catch(e:haxe.Exception) {
-				FlxG.log.warn('Could not load atlas ${json.image}: $e');
-				trace(e.stack);
-			}
+			} catch(e:haxe.Exception) FlxG.log.warn('Could not load atlas ${json.image}: $e');
 		}
 		#end
 

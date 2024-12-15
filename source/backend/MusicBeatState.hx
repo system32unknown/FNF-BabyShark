@@ -16,7 +16,7 @@ class MusicBeatState extends flixel.FlxState {
 	public static var skipNextTransOut:Bool = false;
 
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
-	public static function getVariables() return getState().variables;
+	public static function getVariables():Map<String, Dynamic> return getState().variables;
 	
 	override function create() {
 		#if MODS_ALLOWED Mods.updatedOnState = false; #end
