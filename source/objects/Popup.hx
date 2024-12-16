@@ -29,40 +29,26 @@ class Popup extends FlxSprite {
         }
     }
 
-    // ╔═════════════════════╗
-    // ║ RATING SPRITE STUFF ║
-    // ╚═════════════════════╝
-    public function setupRatingData(rateImg:String) {
-        type = RATING;
-        reloadTexture(rateImg);
-        setGraphicSize(Std.int(width * (PlayState.isPixelStage ? .85 * PlayState.daPixelZoom : .7)));
+    public function setupPopupData(popUptype:PopupType = NONE, img:String) {
+        type = popUptype;
+        reloadTexture(img);
+        if (popUptype == RATING) setGraphicSize(Std.int(width * (PlayState.isPixelStage ? .85 * PlayState.daPixelZoom : .7)));
+        else setGraphicSize(Std.int(width * (PlayState.isPixelStage ? PlayState.daPixelZoom : .5)));
         updateHitbox();
 
-        acceleration.set(i.ratingAcc.x * i.playbackRate * i.playbackRate, 550 * i.playbackRate * i.playbackRate + i.ratingAcc.y);
-        velocity.set(-FlxG.random.int(0, 10) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(140, 175) * i.playbackRate + i.ratingVel.y);
-        visible = (!ClientPrefs.data.hideHud && i.showRating);
-        antialiasing = i.popupAntialias;
-    }
-    public function ratingOtherStuff() {
-        FlxTween.tween(this, {alpha: 0}, .2 / i.playbackRate, {onComplete: (tween:FlxTween) -> kill(), startDelay: Conductor.crochet * .001 / i.playbackRate});
-    }
-
-    // ╔═════════════════════╗
-    // ║ NUMBER SPRITE STUFF ║
-    // ╚═════════════════════╝
-    public function setupNumberData(numberImg:String) {
-        type = NUMBER;
-        reloadTexture(numberImg);
-        setGraphicSize(Std.int(width * (PlayState.isPixelStage ? PlayState.daPixelZoom : .5)));
-        updateHitbox();
-
-		velocity.set(FlxG.random.float(-5, 5) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(130, 150) * i.playbackRate + i.ratingVel.y);
-		acceleration.set(i.ratingAcc.x * i.playbackRate * i.playbackRate, FlxG.random.int(250, 300) * i.playbackRate * i.playbackRate + i.ratingAcc.y);
+        var baseAccX:Float = i.ratingAcc.x * i.playbackRate * i.playbackRate;
+        if (popUptype == RATING) {
+            velocity.set(-FlxG.random.int(0, 10) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(140, 175) * i.playbackRate + i.ratingVel.y);
+            acceleration.set(baseAccX, 550 * i.playbackRate * i.playbackRate + i.ratingAcc.y);
+        } else {
+            velocity.set(FlxG.random.float(-5, 5) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(130, 150) * i.playbackRate + i.ratingVel.y);
+            acceleration.set(baseAccX, FlxG.random.int(250, 300) * i.playbackRate * i.playbackRate + i.ratingAcc.y);
+        }
         visible = !ClientPrefs.data.hideHud;
         antialiasing = i.popupAntialias;
     }
-    public function numberOtherStuff() {
-        FlxTween.tween(this, {alpha: 0}, .2 / i.playbackRate, {onComplete: (tween:FlxTween) -> kill(), startDelay: Conductor.crochet * .002 / i.playbackRate});
+    public function otherStuff(speed:Float = .001) {
+        FlxTween.tween(this, {alpha: 0}, .2 / i.playbackRate, {onComplete: (tween:FlxTween) -> kill(), startDelay: Conductor.crochet * speed / i.playbackRate});
     }
 
     override public function kill() {
@@ -72,7 +58,11 @@ class Popup extends FlxSprite {
     override public function revive() {
         super.revive();
         initVars();
-        acceleration.x = acceleration.y = velocity.x = velocity.y = x = y = 0;
+
+        acceleration.set();
+        velocity.set();
+        setPosition();
+
         alpha = 1;
         visible = true;
     }

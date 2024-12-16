@@ -2008,10 +2008,10 @@ class PlayState extends MusicBeatState {
 		var ratingPop:Popup = null;
 		if (showRating && note.mustPress) {
 			ratingPop = popUpGroup.recycle(Popup);
-			ratingPop.setupRatingData(uiFolder + 'ratings/${daRating.image}' + uiPostfix);
+			ratingPop.setupPopupData(RATING, uiFolder + 'ratings/${daRating.image}' + uiPostfix);
 			ratingPop.gameCenter(Y).y -= 60 + comboOffset[0][1];
 			ratingPop.x = placement - 40 + comboOffset[0][0];
-			ratingPop.ratingOtherStuff();
+			ratingPop.otherStuff();
 			popUpGroup.add(ratingPop);
 		}
 
@@ -2023,9 +2023,9 @@ class PlayState extends MusicBeatState {
 			seperatedScore.push(tempNotes % 10);
 			for (i in seperatedScore) {
 				var numScore:Popup = popUpGroup.recycle(Popup);
-				numScore.setupNumberData(uiFolder + 'number/num$i' + uiPostfix);
+				numScore.setupPopupData(NUMBER, uiFolder + 'number/num$i' + uiPostfix);
 				numScore.setPosition(ratingPop.x + (43 * daloop) - 50 + comboOffset[1][0] - 43 / 2 * (Std.string(tempNotes).length - 1), ratingPop.y + 100 - comboOffset[1][1]);
-				numScore.numberOtherStuff();
+				numScore.otherStuff(.002);
 				popUpGroup.add(numScore);
 				++daloop;
 			}
