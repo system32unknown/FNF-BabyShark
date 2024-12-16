@@ -65,7 +65,6 @@ class CharacterSelectionState extends MusicBeatState {
 	var camHUD:FlxCamera;
 
 	var currentSelectedCharacter:CharacterInSelect;
-	final singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Selecting Character'); #end
@@ -86,8 +85,7 @@ class CharacterSelectionState extends MusicBeatState {
 		new states.stages.StageWeek1();
 		camGame.scroll.set(120, 130);
 
-		camGame.zoom = .75;
-		camHUD.zoom = .75;
+		camGame.zoom = camHUD.zoom = .75;
 
 		gfGroup = new FlxSpriteGroup(GF_POS[0], GF_POS[1]);
 		boyfriendGroup = new FlxSpriteGroup(BF_POS[0], BF_POS[1]);

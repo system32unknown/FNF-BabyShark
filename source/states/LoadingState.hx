@@ -152,7 +152,7 @@ class LoadingState extends MusicBeatState {
 		if(intrusive) return new LoadingState(target, stopMusic);
 		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
 
-		while(true) {
+		while (true) {
 			if(!checkLoaded()) Sys.sleep(.001);
 			else break;
 		}

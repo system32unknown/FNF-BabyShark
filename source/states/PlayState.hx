@@ -134,7 +134,6 @@ class PlayState extends MusicBeatState {
 	var healthLerp:Float = 1;
 
 	public var combo:Int = 0;
-	public var maxCombo:Int = 0;
 
 	public var healthBar:Bar;
 	public var timeBar:Bar;
@@ -2161,7 +2160,6 @@ class PlayState extends MusicBeatState {
 		if(note != null) subtract = note.missHealth;
 
 		if(instakillOnMiss) doDeathCheck(true);
-		if(combo > maxCombo) maxCombo = combo;
 
 		health -= subtract * healthLoss;
 		songScore -= 10;

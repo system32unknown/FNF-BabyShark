@@ -31,8 +31,7 @@ class AchievementsMenuState extends MusicBeatState {
 		// prepare achievement list
 		for (achievement => data in Achievements.list) {
 			var unlocked:Bool = Achievements.isUnlocked(achievement);
-			if(data.hidden != true || unlocked)
-				options.push(makeAchievement(achievement, data, unlocked, data.mod));
+			if(data.hidden != true || unlocked) options.push(makeAchievement(achievement, data, unlocked, data.mod));
 		}
 
 		add(camFollow = new FlxObject(0, 0, 1, 1));
@@ -204,8 +203,8 @@ class AchievementsMenuState extends MusicBeatState {
 			progressTxt.text = MathUtil.floorDecimal(val1, options[curSelected].decProgress) + ' / ' + MathUtil.floorDecimal(val2, options[curSelected].decProgress);
 
 			barTween = FlxTween.tween(progressBar, {percent: (val1 / val2) * 100}, 0.5, {ease: FlxEase.quadOut,
-				onComplete: function(twn:FlxTween) progressBar.updateBar(),
-				onUpdate: function(twn:FlxTween) progressBar.updateBar()
+				onComplete: (twn:FlxTween) -> progressBar.updateBar(),
+				onUpdate: (twn:FlxTween) -> progressBar.updateBar()
 			});
 		} else progressBar.percent = 0;
 
@@ -214,7 +213,7 @@ class AchievementsMenuState extends MusicBeatState {
 		else camFollow.setPosition(0, grpOptions.members[curSelected].getGraphicMidpoint().y - 100);
 
 		grpOptions.forEach((spr:FlxSprite) -> {
-			spr.alpha = 0.6;
+			spr.alpha = .6;
 			if(spr.ID == curSelected) spr.alpha = 1;
 		});
 	}
