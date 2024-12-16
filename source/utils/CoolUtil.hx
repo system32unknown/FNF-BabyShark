@@ -34,12 +34,14 @@ class CoolUtil {
 		return [for(i in 0...daList.length) daList[i].trim()];
 	}
 
-	public static function browserLoad(site:String):Void {
+	public static function browserLoad(site:String):Int {
 		#if linux 
 		var cmd:Int = Sys.command("xdg-open", [url]); // generally `xdg-open` should work in every distro
-		if (cmd != 0) Sys.command("/usr/bin/xdg-open", [url]); // run old command JUST IN CASE it fails, which it shouldn't
+		if (cmd != 0) cmd = Sys.command("/usr/bin/xdg-open", [url]); // run old command JUST IN CASE it fails, which it shouldn't
+		return cmd;
 		#else
 		FlxG.openURL(site);
+		return 1;
 		#end
 	}
 
