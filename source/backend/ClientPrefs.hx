@@ -1,23 +1,25 @@
 package backend;
 
-@:structInit class SaveVariables {
-	public var downScroll:Bool = false;
-	public var middleScroll:Bool = false;
-	public var opponentStrums:Bool = true;
-	public var flashing:Bool = true;
-	public var autoPause:Bool = true;
-	public var antialiasing:Bool = true;
-	public var noteSkin:String = 'Default';
-	public var splashSkin:String = 'Psych';
-	public var splashAlpha:Float = .6;
-	public var splashCount:Int = 2;
-	public var lowQuality:Bool = false;
-	public var shaders:Bool = true;
-	public var framerate:Int = 60;
-	public var camZooms:Bool = true;
-	public var hideHud:Bool = false;
-	public var noteOffset:Int = 0;
-	public var arrowRGBExtra:Array<Array<FlxColor>> = [
+@:structInit
+@:publicFields
+class SaveVariables {
+	var downScroll:Bool = false;
+	var middleScroll:Bool = false;
+	var opponentStrums:Bool = true;
+	var flashing:Bool = true;
+	var autoPause:Bool = true;
+	var antialiasing:Bool = true;
+	var noteSkin:String = 'Default';
+	var splashSkin:String = 'Psych';
+	var splashAlpha:Float = .6;
+	var splashCount:Int = 2;
+	var lowQuality:Bool = false;
+	var shaders:Bool = true;
+	var framerate:Int = 60;
+	var camZooms:Bool = true;
+	var hideHud:Bool = false;
+	var noteOffset:Int = 0;
+	var arrowRGBExtra:Array<Array<FlxColor>> = [
 		[0xFFC24B99, 0xFFFFFFFF, 0xFF3C1F56],
 		[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
 		[0xFF12FA05, 0xFFFFFFFF, 0xFF0A4447],
@@ -28,7 +30,7 @@ package backend;
 		[0xFFFF0000, 0xFFFFFFFF, 0xFF660000],
 		[0xFF0033ff, 0xFFFFFFFF, 0xFF000066]
 	];
-	public var arrowRGBPixelExtra:Array<Array<FlxColor>> = [
+	var arrowRGBPixelExtra:Array<Array<FlxColor>> = [
 		[0xFFE276FF, 0xFFFFF9FF, 0xFF60008D],
 		[0xFF3DCAFF, 0xFFF4FFFF, 0xFF003060],
 		[0xFF71E300, 0xFFF6FFE6, 0xFF003100],
@@ -40,37 +42,37 @@ package backend;
 		[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D]
 	];
 
-	public var showFPS:Bool = false;
-	public var memCounterType:String = "MEM/PEAK";
-	public var rainbowFps:Bool = false;
-	public var camMovement:Bool = true;
-	public var ghostTapping:Bool = true;
-	public var noReset:Bool = false;
-	public var healthBarAlpha:Float = 1;
-	public var hitsoundVolume:Float = 0;
-	public var pauseMusic:String = 'Tea Time';
-	public var comboStacking:Bool = false;
-	public var showComboCounter:Bool = false;
-	public var showNPS:Bool = false;
-	public var smoothHealth:Bool = false;
-	public var noteDiffTypes:String = "Simple";
-	public var accuracyType:String = 'Judgement';
-	public var iconBounceType:String = 'Psych';
-	public var ratingDisplay:String = 'World';
-	public var useEpics:Bool = true;
-	public var cacheOnGPU:Bool = false;
-	public var healthTypes:String = 'Vanilla';
-	public var timeBarType:String = 'Name Time Position';
-	public var altDiscordImg:Bool = false;
-	public var altDiscordImgCount:Int = 0;
-	public var autoPausePlayState:Bool = true;
-	public var lightStrum:Bool = true;
-	public var holdAnim:Bool = true;
-	public var hitsoundTypes:String = 'Tick';
-	public var checkForUpdates:Bool = true;
-	public var skipGhostNotes:Bool = false;
-	public var unlockedCharacters:Array<String> = ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'];
-	public var gameplaySettings:Map<String, Dynamic> = [
+	var showFPS:Bool = false;
+	var memCounterType:String = "MEM/PEAK";
+	var rainbowFps:Bool = false;
+	var camMovement:Bool = true;
+	var ghostTapping:Bool = true;
+	var noReset:Bool = false;
+	var healthBarAlpha:Float = 1;
+	var hitsoundVolume:Float = 0;
+	var pauseMusic:String = 'Tea Time';
+	var comboStacking:Bool = false;
+	var showComboCounter:Bool = false;
+	var showNPS:Bool = false;
+	var smoothHealth:Bool = false;
+	var noteDiffTypes:String = "Simple";
+	var accuracyType:String = 'Judgement';
+	var iconBounceType:String = 'Psych';
+	var ratingDisplay:String = 'World';
+	var useEpics:Bool = true;
+	var cacheOnGPU:Bool = false;
+	var healthTypes:String = 'Vanilla';
+	var timeBarType:String = 'Name Time Position';
+	var altDiscordImg:Bool = false;
+	var altDiscordImgCount:Int = 0;
+	var autoPausePlayState:Bool = true;
+	var lightStrum:Bool = true;
+	var holdAnim:Bool = true;
+	var hitsoundTypes:String = 'Tick';
+	var checkForUpdates:Bool = true;
+	var skipGhostNotes:Bool = false;
+	var unlockedCharacters:Array<String> = ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'];
+	var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.,
 		'scrolltype' => 'multiplicative',
 
@@ -82,23 +84,23 @@ package backend;
 		'botplay' => false,
 	];
 
-	public var comboOffset:Array<Array<Int>> = [[0, 0], [0, 0]];
-	public var ratingOffset:Int = 0;
+	var comboOffset:Array<Array<Int>> = [[0, 0], [0, 0]];
+	var ratingOffset:Int = 0;
 
 	// Optimizer
-	public var processFirst:Bool = false;
-	public var separateHitProcess:Bool = true;
-	public var optimizeSpawnNote:Bool = true;
-	public var skipSpawnNote:Bool = true;
-	public var disableGC:Bool = false;
+	var processFirst:Bool = false;
+	var separateHitProcess:Bool = true;
+	var optimizeSpawnNote:Bool = true;
+	var skipSpawnNote:Bool = true;
+	var disableGC:Bool = false;
 
-	public var epicWindow:Int = 22;
-	public var sickWindow:Int = 45;
-	public var goodWindow:Int = 90;
-	public var okWindow:Int = 135;
-	public var safeFrames:Float = 10;
-	public var discordRPC:Bool = false;
-	public var language:String = 'en-US';
+	var epicWindow:Int = 22;
+	var sickWindow:Int = 45;
+	var goodWindow:Int = 90;
+	var okWindow:Int = 135;
+	var safeFrames:Float = 10;
+	var discordRPC:Bool = false;
+	var language:String = 'en-US';
 }
 
 class ClientPrefs {

@@ -25,8 +25,8 @@ class BaseOptionsMenu extends FlxSubState {
 	public function new() {
 		super();
 
-		if(title == null) title = 'Options';
-		if(rpcTitle == null) rpcTitle = 'Options Menu';
+		title ??= 'Options';
+		rpcTitle ??= 'Options Menu';
 		
 		#if DISCORD_ALLOWED DiscordClient.changePresence(rpcTitle); #end
 		
@@ -85,7 +85,7 @@ class BaseOptionsMenu extends FlxSubState {
 	}
 
 	public function addOption(option:Option):Option {
-		if(optionsArray == null || optionsArray.length < 1) optionsArray = [];
+		optionsArray ??= [];
 		optionsArray.push(option);
 		return option;
 	}
