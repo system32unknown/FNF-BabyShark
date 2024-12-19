@@ -280,8 +280,8 @@ class HScript extends AlterHscript {
 		});
 
 		set('createCallback', function(name:String, func:Dynamic, ?funk:FunkinLua = null) {
-			if(funk == null) funk = parentLua;
-			if(funk != null) funk.addLocalCallback(name, func);
+			if (funk == null) funk = parentLua;
+			if (funk != null) funk.addLocalCallback(name, func);
 			else FunkinLua.luaTrace('createCallback ($name): 3rd argument is null', false, false, FlxColor.RED);
 		});
 		#end
@@ -300,7 +300,7 @@ class HScript extends AlterHscript {
 					return;
 				}
 				#end
-				if(PlayState.instance != null) PlayState.instance.addTextToDebug('$origin - $msg', FlxColor.RED);
+				if (PlayState.instance != null) PlayState.instance.addTextToDebug('$origin - $msg', FlxColor.RED);
 				else Logs.trace('$origin - $msg', ERROR);
 			}
 		});
@@ -312,7 +312,7 @@ class HScript extends AlterHscript {
             else {
                 try {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
-                    if(rawClass == null) return; 
+                    if (rawClass == null) return; 
                     FlxG.switchState(cast(Type.createInstance(rawClass, []), flixel.FlxState));
                 } catch(e:Dynamic) {
                     Logs.trace('$e: Unspecified result for switching state "$name", could not switch states!', ERROR);
@@ -326,7 +326,7 @@ class HScript extends AlterHscript {
             else {
                 try {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
-					if(rawClass == null) return;
+					if (rawClass == null) return;
                     FlxG.state.openSubState(cast(Type.createInstance(rawClass, args), FlxSubState));
                 } catch(e:Dynamic) {
                     Logs.trace('$e: Unspecified result for opening substate "$name", could not be opened!', ERROR);

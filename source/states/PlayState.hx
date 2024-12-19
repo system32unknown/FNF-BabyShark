@@ -1454,39 +1454,27 @@ class PlayState extends MusicBeatState {
 
 			if (notes.length > 0) {
 				if (startedCountdown) {
-					var index:Int = notes.length - 1;
-					var daNote:Note;
-					while(index >= 0) {
-						daNote = notes.members[index];
-						if (daNote == null) {
-							invalidateNote(daNote);
-							--index;
-							continue;
-						}
-						var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
-						var tooLate:Bool = Conductor.songPosition - daNote.strumTime > noteKillOffset;
-
-						if (ClientPrefs.data.separateHitProcess || !tooLate) daNote.followStrumNote(songSpeed);
-
-						if (canBeHit && !tooLate) {
-							if (daNote.mustPress) {
-								if(cpuControlled && !daNote.blockHit && daNote.canBeHit || daNote.isSustainNote) goodNoteHit(daNote);
-							} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
-							if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
-						}
-						if (tooLate) {
-							if (daNote.mustPress) {
-								if (cpuControlled) goodNoteHit(daNote);
-								else if (!daNote.ignoreNote && !endingSong && daNote.tooLate || !daNote.wasGoodHit) noteMiss(daNote);
-							} else {
-								if (!daNote.hitByOpponent) opponentNoteHit(daNote);
-								if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
+					notes.forEach((daNote:Note) -> {
+						if (daNote.exists && daNote.strum != null) {
+							daNote.followStrumNote(songSpeed);
+							if (Conductor.songPosition - daNote.strumTime > 0) {
+								if (daNote.mustPress) {
+									if (cpuControlled && !daNote.blockHit && daNote.canBeHit || daNote.isSustainNote) goodNoteHit(daNote);
+								} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
+								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 							}
-							if (daNote != null) invalidateNote(daNote);
-						}
-						--index;
-					}
-					daNote = null;
+							if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
+								if (daNote.mustPress) {
+									if (cpuControlled) goodNoteHit(daNote);
+									else if (!daNote.ignoreNote && !endingSong && daNote.tooLate || !daNote.wasGoodHit) noteMiss(daNote);
+								} else {
+									if (!daNote.hitByOpponent) opponentNoteHit(daNote);
+									if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
+								}
+								invalidateNote(daNote);
+							}
+						} else if (daNote == null) invalidateNote(daNote);
+					});
 				} else notes.forEachAlive((daNote:Note) -> daNote.canBeHit = daNote.wasGoodHit = false);
 			}
 		}

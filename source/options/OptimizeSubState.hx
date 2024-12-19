@@ -6,7 +6,6 @@ class OptimizeSubState extends BaseOptionsMenu {
 		rpcTitle = 'Optimize Settings Menu'; //for Discord Rich Presence
 
 		addOption(new Option('Do Note Process before Spawning Notes', "Well, It's literally, yes.\nIt boosts game perfomance vastly, It works anytime yeah.\nIf you don't get it, enable this.", 'processFirst'));
-		addOption(new Option('Separate Process for Too Slow Note', "If checked, Separate note hit processes for too slow one and not.\nIt boosts game perfomance vastly, but it effects at limited scene.\nIf you don't get it, enable this.", 'separateHitProcess'));
 		addOption(new Option('Skip Process for Spawned Note', "If checked, enables Skip Note Function.\nIt boosts game perfomance vastly, but it effects at limited scene.\nIf you don't get it, enable this.", 'skipSpawnNote'));
 		addOption(new Option('Optimize Process for Spawned Note', "If checked, It judges whether or not to do hit process\nimmediately when a note spawned. If you don't get it, enable this.", 'optimizeSpawnNote'));
 		addOption(new Option('Show Popup Counter', 'If unchecked, the popup counter wont be shown.', 'showComboCounter'));
