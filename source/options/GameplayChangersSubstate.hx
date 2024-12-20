@@ -19,6 +19,8 @@ class GameplayChangersSubstate extends FlxSubState {
 	var curOption(get, never):GameplayOption;
 	function get_curOption():GameplayOption return optionsArray[curSelected]; //shorter lol
 
+	final constMax:Float = 1024;
+	final multiMax:Float = 128;
 	function getOptions() {
 		var goption:GameplayOption = new GameplayOption('Scroll Type', 'scrolltype', STRING, 'multiplicative', ["multiplicative", "constant"]);
 		optionsArray.push(goption);
@@ -30,10 +32,10 @@ class GameplayChangersSubstate extends FlxSubState {
 		option.decimals = 2;
 		if (goption.getValue() != "constant") {
 			option.displayFormat = '%vX';
-			option.maxValue = 128;
+			option.maxValue = multiMax;
 		} else {
 			option.displayFormat = "%v";
-			option.maxValue = 1024;
+			option.maxValue = constMax;
 		}
 		optionsArray.push(option);
 		scrollOption = option;
@@ -156,8 +158,8 @@ class GameplayChangersSubstate extends FlxSubState {
 					final leftJustPressed:Bool = Controls.justPressed('ui_left');
 					var pressed:Bool = leftJustPressed || Controls.justPressed('ui_right');
 					if (holdTime > 0.5 || pressed) {
-						scrollOption.scrollSpeed = MathUtil.interpolate(1.5, 100, (holdTime - .5) / 5, 3);
-						playbackOption.scrollSpeed = MathUtil.interpolate(1, 100, (holdTime - .5) / 5, 3);
+						scrollOption.scrollSpeed = MathUtil.interpolate(1.5, 1000, (holdTime - .5) / 8, 3);
+						playbackOption.scrollSpeed = MathUtil.interpolate(1, 1000, (holdTime - .5) / 8, 3);
 						if (pressed) {
 							var add:Dynamic = null;
 							if(curOption.type != STRING)
@@ -196,11 +198,12 @@ class GameplayChangersSubstate extends FlxSubState {
 										if (oOption != null) {
 											if (curOption.getValue() == "constant") {
 												oOption.displayFormat = "%v";
-												oOption.maxValue = 6;
+												oOption.maxValue = constMax;
+												oOption.setValue(Math.max(oOption.getValue(), constMax));
 											} else {
 												oOption.displayFormat = "%vX";
-												oOption.maxValue = 3;
-												if(oOption.getValue() > 3) oOption.setValue(3);
+												oOption.maxValue = multiMax;
+												oOption.setValue(Math.max(oOption.getValue(), multiMax));
 											}
 											updateTextFrom(oOption);
 										}

@@ -972,7 +972,6 @@ class PlayState extends MusicBeatState {
 	var noteTypes:Array<String> = [];
 	var eventsPushed:Array<String> = [];
 	function generateSong():Void {
-		songSpeed = SONG.speed;
 		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype');
 		songSpeed = switch(songSpeedType) {
 			case "constant": ClientPrefs.getGameplaySetting('scrollspeed');
@@ -1000,7 +999,6 @@ class PlayState extends MusicBeatState {
 		} catch (e:Dynamic) {}
 
 		var daBpm:Float = Conductor.bpm;
-
 		var strumTimeVector:Vector<Float> = new Vector(EK.strums(mania), 0.0);
 
 		for (section in PlayState.SONG.notes) {
@@ -1016,7 +1014,6 @@ class PlayState extends MusicBeatState {
 					else strumTimeVector[chartNoteData] = strumTime;
 				}
 				var holdLength:Float = songNotes[2];
-				var noteType:String = songNotes[3];
 
 				var swagNote:CastNote = cast {strumTime: songNotes[0], noteData: noteColumn, noteType: Math.isNaN(songNotes[3]) ? songNotes[3] : 0, holdLength: holdLength, noteSkin: SONG.arrowSkin ?? ""};
 				swagNote.noteData |= gottaHitNote ? 1 << 8 : 0; // mustHit
@@ -1041,7 +1038,7 @@ class PlayState extends MusicBeatState {
 			}
 		}
 
-		for (susNote in unspawnSustainNotes) unspawnNotes.push(susNote);
+		for (usn in unspawnSustainNotes) unspawnNotes.push(usn);
 		unspawnSustainNotes.resize(0);
 		unspawnNotes.sort(sortByTime);
 		generatedMusic = true;

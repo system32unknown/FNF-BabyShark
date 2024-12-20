@@ -407,9 +407,9 @@ class Note extends FlxSprite {
 
 		if (isSustainNote) {
 			flipY = ClientPrefs.data.downScroll;
-			scale.set(.7, animation != null && animation.curAnim != null && animation.curAnim.name.endsWith('end') ? 1 : Conductor.stepCrochet * 0.0105 * (songSpeed * multSpeed) * sustainScale);
+			scale.y = (animation != null && animation.curAnim != null && animation.curAnim.name.endsWith('end') ? 1 : Conductor.stepCrochet * .0105 * (songSpeed * multSpeed) * sustainScale);
 			if (PlayState.isPixelStage) {
-				scale.x = PlayState.daPixelZoom;
+				scale.x = PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania];
 				scale.y *= PlayState.daPixelZoom * 1.19;
 			}
 			updateHitbox();
@@ -460,7 +460,7 @@ class Note extends FlxSprite {
 		super.kill();
 	}
 
-	var initSkin:String = Note.defaultNoteSkin + getNoteSkinPostfix();
+	var initSkin:String = defaultNoteSkin + getNoteSkinPostfix();
 	public function recycleNote(target:CastNote, ?oldNote:Note, ?parent:Note):Note {
 		var ekScale:Float = EK.scales[PlayState.mania];
 		var ekScalePixel:Float = EK.scalesPixel[PlayState.mania];
@@ -511,9 +511,9 @@ class Note extends FlxSprite {
 			
 			scale.y *= Conductor.stepCrochet * .0105;
 			if (PlayState.isPixelStage) {
-				offsetX += 35;
+				offsetX += 30 * EK.scalesPixel[PlayState.mania];
 				if(!isSustainEnds) scale.y *= 1.05 * (6 / height); //Auto adjust note size
-			} else sustainScale = Note.SUSTAIN_SIZE / frameHeight;
+			} else sustainScale = SUSTAIN_SIZE / frameHeight;
 			updateHitbox();
 		} else {
 			alpha = multAlpha = sustainScale = 1;

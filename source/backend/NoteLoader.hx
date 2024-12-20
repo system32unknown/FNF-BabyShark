@@ -10,12 +10,12 @@ class NoteLoader {
 	public static var noteSkinAnimsMap:Map<String, FlxAnimationController> = new Map<String, FlxAnimationController>();
 
 	//Function that initializes the first note. This way, we can recycle the notes
-	public static function initDefaultSkin(?noteSkin:String, ?inEditor:Bool = false) {
+	public static function initDefaultSkin(?noteSkin:String) {
         if (noteSkin.length > 0) defaultSkin = noteSkin;
         else if (ClientPrefs.data.noteSkin != 'Default') defaultSkin = 'noteSkins/NOTE_assets' + Note.getNoteSkinPostfix();
     }
 
-    public static function initNote(noteSkin:String = "", mania:Int = 3) {
+    public static function initNote(noteSkin:String = "") {
         var spr:FlxSprite = new FlxSprite();
         
         // Do this to be able to just copy over the note animations and not reallocate it
