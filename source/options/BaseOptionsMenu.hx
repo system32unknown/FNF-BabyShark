@@ -194,7 +194,7 @@ class BaseOptionsMenu extends FlxSubState {
 
 								switch(curOption.type) {
 									case INT: curOption.setValue(Math.round(holdValue));
-									case PERCENT: curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
+									case FLOAT, PERCENT: curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
 									default:
 								}
 								updateTextFrom(curOption);

@@ -86,7 +86,7 @@ class PlatformUtil {
 
 	@:functionCode('
 		system("CLS");
-		std::cout<< "" <<std::flush;
+		std::cout << "" << std::flush;
 	')
 	public static function clearScreen() {}
 

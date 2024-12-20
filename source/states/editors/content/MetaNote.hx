@@ -14,7 +14,10 @@ class MetaNote extends Note {
 	public var chartNoteData:Int = 0;
 
 	public function new(time:Float, data:Int, songData:Array<Dynamic>) {
-		super(time, data, null, false, true);
+		super();
+		recycleNote(Note.DEFAULT_CAST);
+		inEditor = true;
+
 		this.songData = songData;
 		this.strumTime = time;
 		this.chartNoteData = data;
@@ -126,7 +129,7 @@ class EditorSustain extends Note {
 		sustainTile = new FlxSprite();
 		sustainTile.scrollFactor.x = 0;
 
-		super(0, data, null, true, true);
+		super();
 
 		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend');
 		scale.set(scale.x, scale.x);

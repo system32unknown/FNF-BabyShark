@@ -467,8 +467,10 @@ class Note extends FlxSprite {
 
 		wasGoodHit = hitByOpponent = tooLate = canBeHit = spawned = followed = false; // Don't make an update call of this for the note group
 		exists = true;
+
 		strumTime = target.strumTime;
 		if (!inEditor) strumTime += ClientPrefs.data.noteOffset;
+
 		mustPress = CoolUtil.toBool(target.noteData & (1 << 8));						 // mustHit
 		isSustainNote = hitsoundDisabled = CoolUtil.toBool(target.noteData & (1 << 9));  // isHold
 		isSustainEnds = CoolUtil.toBool(target.noteData & (1 << 10));					 // isHoldEnd
@@ -477,7 +479,7 @@ class Note extends FlxSprite {
 		noAnimation = CoolUtil.toBool(target.noteData & (1 << 13));						 // noAnim
 		noMissAnimation = CoolUtil.toBool(target.noteData & (1 << 14));					 // noMissAnim
 		blockHit = CoolUtil.toBool(target.noteData & (1 << 15));				 		 // blockHit
-		noteData = target.noteData & 3;
+		noteData = target.noteData & PlayState.mania;
 		noteType = target.noteType;
 
 		// Absoluty should be here, or messing pixel texture glitches...

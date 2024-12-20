@@ -47,7 +47,7 @@ class Popup extends FlxSprite {
         visible = !ClientPrefs.data.hideHud;
         antialiasing = i.popupAntialias;
     }
-    public function otherStuff(speed:Float = .001) {
+    public function doTween(speed:Float = .001) {
         FlxTween.tween(this, {alpha: 0}, .2 / i.playbackRate, {onComplete: (tween:FlxTween) -> kill(), startDelay: Conductor.crochet * speed / i.playbackRate});
     }
 

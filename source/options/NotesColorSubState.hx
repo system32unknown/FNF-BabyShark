@@ -464,7 +464,8 @@ class NotesColorSubState extends FlxSubState {
 			myNotes.add(newNote);
 		}
 
-		bigNote = new Note(0, 0, false, true);
+		bigNote = new Note().recycleNote(Note.DEFAULT_CAST);
+		bigNote.inEditor = true;
 		bigNote.setPosition(250, 325);
 		bigNote.setGraphicSize(250);
 		bigNote.updateHitbox();
@@ -541,4 +542,9 @@ class NotesColorSubState extends FlxSubState {
 	function setShaderColor(value:FlxColor) dataArray[curSelectedNote][curSelectedMode] = value;
 	function getShaderColor():FlxColor return dataArray[curSelectedNote][curSelectedMode];
 	function getShader():RGBPalette return Note.globalRgbShaders[curSelectedNote];
+
+	override function destroy() {
+		backend.NoteLoader.dispose();
+		super.destroy();
+	}
 }
