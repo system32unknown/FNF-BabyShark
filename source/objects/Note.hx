@@ -6,6 +6,8 @@ import flixel.graphics.FlxGraphic;
 import shaders.RGBPalette;
 import shaders.RGBPalette.RGBShaderReference;
 
+import backend.NoteLoader;
+
 typedef EventNote = {
 	strumTime:Float,
 	event:String,
@@ -22,6 +24,24 @@ typedef NoteSplashData = {
 	a:Float
 }
 
+typedef CastNote = {
+	strumTime:Float,
+	// noteData and flags
+	// 1st-8th bits are for noteData (256keys)
+	// 9th bit is for mustHit
+	// 10th bit is for isHold
+	// 11th bit is for isHoldEnd
+	// 12th bit is for gfNote
+	// 13th bit is for altAnim
+	// 14th bit is for noAnim
+	// 15th bit is for noMissAnim
+	// 16th bit is for blockHit
+	noteData:Int,
+	noteType:String,
+	holdLength:Null<Float>,
+	noteSkin:String
+}
+
 class Note extends FlxSprite {
 	//This is needed for the hardcoded note types to appear on the Chart Editor,
 	//It's also used for backwards compatibility with 0.1 - 0.3.2 charts.
@@ -33,6 +53,14 @@ class Note extends FlxSprite {
 		'GF Sing',
 		'No Animation'
 	];
+
+	public static final DEFAULT_CAST:CastNote = {
+		strumTime: 0,
+		noteData: 0,
+		noteType: "",
+		holdLength: 0,
+		noteSkin: ""
+	};
 
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
@@ -59,7 +87,9 @@ class Note extends FlxSprite {
 	public var blockHit:Bool = false; // only works for player
 
 	public var sustainLength:Float = 0;
+	public var sustainScale:Float = 1.0;
 	public var isSustainNote:Bool = false;
+	public var isSustainEnds:Bool = false;
 	public var noteType(default, set):String = null;
 
 	public var rgbShader:RGBShaderReference;
@@ -72,6 +102,8 @@ class Note extends FlxSprite {
 	public var lateHitMult:Float = 1;
 
 	public static var SUSTAIN_SIZE:Int = 44;
+	public static var originalWidth:Float = 160 * 0.7;
+	public static var originalHeight:Float = 160 * 0.7;
 	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
 
 	public var noteSplashData:NoteSplashData = {
@@ -128,15 +160,28 @@ class Note extends FlxSprite {
 	}
 
 	inline public function resizeByRatio(ratio:Float) { //haha funny twitter shit
-		if(isSustainNote && animation.curAnim != null && !animation.curAnim.name.endsWith('end')) {
+		if(isSustainNote && animation != null && animation.curAnim != null && !animation.curAnim.name.endsWith('end')) {
 			scale.y *= ratio;
 			updateHitbox();
 		}
 	}
 
 	function set_texture(value:String):String {
-		if(texture != value) reloadNote(value);
-		return texture = value;
+		if (value == null || value.length == 0) value = defaultNoteSkin + getNoteSkinPostfix();
+		if (!PlayState.isPixelStage) {
+			if(texture != value) {
+				if (!NoteLoader.noteSkinFramesMap.exists(value)) inline NoteLoader.initNote(value);
+				frames = NoteLoader.noteSkinFramesMap.get(value);
+				animation.copyFrom(NoteLoader.noteSkinAnimsMap.get(value));
+				antialiasing = ClientPrefs.data.antialiasing;
+				setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
+				updateHitbox();
+				originalWidth = width;
+				originalHeight = height;
+			} else return value;
+		} else reloadNote(value);
+		texture = value;
+		return value;
 	}
 
 	public function defaultRGB() {
@@ -189,76 +234,17 @@ class Note extends FlxSprite {
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?createdFrom:Dynamic = null) {
+	public function new() {
 		super();
 
 		animation = new backend.animation.PsychAnimationController(this);
 		antialiasing = ClientPrefs.data.antialiasing;
-		if(createdFrom == null) createdFrom = PlayState.instance;
-
-		prevNote ??= this;
-
-		this.prevNote = prevNote;
-		isSustainNote = sustainNote;
-		this.inEditor = inEditor;
-		this.moves = false;
 
 		x += (ClientPrefs.data.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50 - EK.posRest[PlayState.mania];
 		y -= 2000;
-		this.strumTime = strumTime;
-		if(!inEditor) this.strumTime += ClientPrefs.data.noteOffset;
 
-		this.noteData = noteData;
-
-		if(noteData > -1) {
-			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
-			if(PlayState.SONG != null && PlayState.SONG.disableNoteRGB) rgbShader.enabled = false;
-			texture = '';
-
-			if (PlayState.mania != 0) x += EK.swidths[PlayState.mania] * (noteData % EK.keys(PlayState.mania));
-			if(!isSustainNote) animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
-		}
-
-		if(prevNote != null) prevNote.nextNote = this;
-
-		if (isSustainNote && prevNote != null) {
-			alpha = multAlpha = .6;
-			hitsoundDisabled = true;
-			if(ClientPrefs.data.downScroll) flipY = true;
-
-			offsetX += width / 2;
-			copyAngle = false;
-
-			animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'holdend');
-			updateHitbox();
-
-			offsetX -= width / 2;
-
-			if (PlayState.isPixelStage) offsetX += 30 * EK.scalesPixel[PlayState.mania];
-
-			if (prevNote.isSustainNote) {
-				prevNote.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][prevNote.noteData]] + 'hold');
-
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
-				if(createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
-
-				if(PlayState.isPixelStage) {
-					prevNote.scale.y *= 1.19;
-					prevNote.scale.y *= (6 / height); //Auto adjust note size
-				}
-				prevNote.updateHitbox();
-			}
-
-			if(PlayState.isPixelStage) {
-				scale.y *= PlayState.daPixelZoom;
-				updateHitbox();
-			}
-			earlyHitMult = 0;
-		} else if(!isSustainNote) {
-			centerOffsets();
-			centerOrigin();
-		}
-		x += offsetX;
+		rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
+		if(PlayState.SONG != null && PlayState.SONG.disableNoteRGB) rgbShader.enabled = false;
 	}
 
 	public static function initializeGlobalRGBShader(noteData:Int):RGBPalette {
@@ -282,11 +268,11 @@ class Note extends FlxSprite {
 
 	var _lastNoteOffX:Float = 0;
 	static var _lastValidChecked:String; //optimization
-	public var originalHeight:Float = 6;
+	public var pixelHeight:Float = 6;
 	public var correctionOffset:Float = 0;
 	public function reloadNote(texture:String = '', postfix:String = '') {
-		if(texture == null) texture = '';
-		if(postfix == null) postfix = '';
+		if (texture == null) texture = '';
+		if (postfix == null) postfix = '';
 
 		var skin:String = texture + postfix;
 		if(texture.length < 1) {
@@ -299,23 +285,23 @@ class Note extends FlxSprite {
 		var animName:String = null;
 		if(animation.curAnim != null) animName = animation.curAnim.name;
 
-		var skinPixel:String = skin;
+		var path = PlayState.isPixelStage ? 'pixelUI/' : '';
+		var skinPixel = path + skin;
 		var lastScaleY:Float = scale.y;
 		var skinPostfix:String = getNoteSkinPostfix();
 		var customSkin:String = skin + skinPostfix;
-		var path:String = PlayState.isPixelStage ? 'pixelUI/' : '';
-		if(customSkin == _lastValidChecked || Paths.fileExists('images/' + path + customSkin + '.png', IMAGE)) {
+		if (customSkin == _lastValidChecked || Paths.fileExists('images/' + path + customSkin + '.png', IMAGE)) {
 			skin = customSkin;
 			_lastValidChecked = customSkin;
 		} else skinPostfix = '';
 
 		if(PlayState.isPixelStage) {
 			if(isSustainNote) {
-				var graphic:FlxGraphic = Paths.image('pixelUI/' + skinPixel + 'ENDS' + skinPostfix);
+				var graphic:FlxGraphic = Paths.image(skinPixel + 'ENDS' + skinPostfix);
 				loadGraphic(graphic, true, Math.floor(graphic.width / 9), Math.floor(graphic.height / 2));
-				originalHeight = graphic.height / 2;
+				pixelHeight = graphic.height / 2;
 			} else {
-				var graphic:FlxGraphic = Paths.image('pixelUI/' + skinPixel + skinPostfix);
+				var graphic:FlxGraphic = Paths.image(skinPixel + skinPostfix);
 				loadGraphic(graphic, true, Math.floor(graphic.width / 9), Math.floor(graphic.height / 5));
 			}
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]));
@@ -419,6 +405,16 @@ class Note extends FlxSprite {
 		var strumAlpha:Float = strum.alpha;
 		var strumDirection:Float = strum.direction;
 
+		if (isSustainNote) {
+			flipY = ClientPrefs.data.downScroll;
+			scale.set(.7, animation != null && animation.curAnim != null && animation.curAnim.name.endsWith('end') ? 1 : Conductor.stepCrochet * 0.0105 * (songSpeed * multSpeed) * sustainScale);
+			if (PlayState.isPixelStage) {
+				scale.x = PlayState.daPixelZoom;
+				scale.y *= PlayState.daPixelZoom * 1.19;
+			}
+			updateHitbox();
+		}
+
 		distance = (.45 * (Conductor.songPosition - strumTime) * songSpeed * multSpeed);
 		if (!strum.downScroll) distance *= -1;
 
@@ -462,5 +458,75 @@ class Note extends FlxSprite {
 	override function kill() {
 		active = visible = false;
 		super.kill();
+	}
+
+	var initSkin:String = Note.defaultNoteSkin + getNoteSkinPostfix();
+	public function recycleNote(target:CastNote, ?oldNote:Note, ?parent:Note):Note {
+		var ekScale:Float = EK.scales[PlayState.mania];
+		var ekScalePixel:Float = EK.scalesPixel[PlayState.mania];
+
+		wasGoodHit = hitByOpponent = tooLate = canBeHit = spawned = followed = false; // Don't make an update call of this for the note group
+		exists = true;
+		strumTime = target.strumTime;
+		if (!inEditor) strumTime += ClientPrefs.data.noteOffset;
+		mustPress = CoolUtil.toBool(target.noteData & (1 << 8));						 // mustHit
+		isSustainNote = hitsoundDisabled = CoolUtil.toBool(target.noteData & (1 << 9));  // isHold
+		isSustainEnds = CoolUtil.toBool(target.noteData & (1 << 10));					 // isHoldEnd
+		gfNote = CoolUtil.toBool(target.noteData & (1 << 11));							 // gfNote
+		animSuffix = CoolUtil.toBool(target.noteData & (1 << 12)) ? "-alt" : "";		 // altAnim
+		noAnimation = CoolUtil.toBool(target.noteData & (1 << 13));						 // noAnim
+		noMissAnimation = CoolUtil.toBool(target.noteData & (1 << 14));					 // noMissAnim
+		blockHit = CoolUtil.toBool(target.noteData & (1 << 15));				 		 // blockHit
+		noteData = target.noteData & 3;
+		noteType = target.noteType;
+
+		// Absoluty should be here, or messing pixel texture glitches...
+		if (target.noteSkin.length > 0 && target.noteSkin != texture) texture = target.noteSkin;
+		else if (target.noteSkin.length == 0 && texture != initSkin) texture = initSkin;
+		else if (PlayState.isPixelStage) reloadNote(texture);
+		var colorRef:RGBPalette = inline initializeGlobalRGBShader(noteData);
+		rgbShader.r = colorRef.r;
+		rgbShader.g = colorRef.g;
+		rgbShader.b = colorRef.b;
+
+		if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB) rgbShader.enabled = false;
+		sustainLength = target.holdLength ?? 0;
+		prevNote = oldNote ?? this;
+		this.parent = parent;
+
+		copyAngle = !isSustainNote;
+		flipY = ClientPrefs.data.downScroll && isSustainNote;
+		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
+		correctionOffset = isSustainNote ? (flipY ? -originalHeight * 0.5 : originalHeight * 0.5) : 0;
+
+		if (PlayState.isPixelStage) offsetX = -5;
+		if (isSustainNote) {
+			alpha = multAlpha = .6;
+			offsetX += width / 2;
+			animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + (isSustainEnds ? 'holdend' : 'hold'));
+			updateHitbox();
+			offsetX -= width / 2;
+			
+			scale.y *= Conductor.stepCrochet * .0105;
+			if (PlayState.isPixelStage) {
+				offsetX += 35;
+				if(!isSustainEnds) scale.y *= 1.05 * (6 / height); //Auto adjust note size
+			} else sustainScale = Note.SUSTAIN_SIZE / frameHeight;
+			updateHitbox();
+		} else {
+			alpha = multAlpha = sustainScale = 1;
+			if (!PlayState.isPixelStage)  {
+				offsetX = 0; // Juuuust in case we recycle a sustain note to a regular note
+				scale.set(ekScale, ekScale);
+			} else scale.set(PlayState.daPixelZoom * ekScalePixel, PlayState.daPixelZoom * ekScalePixel);
+			width = originalWidth;
+			height = originalHeight;
+			centerOffsets(true);
+			centerOrigin();
+		}
+		if (isSustainNote && sustainScale != 1 && !isSustainEnds) resizeByRatio(sustainScale);
+		clipRect = null;
+		x += offsetX;
+		return this;
 	}
 }

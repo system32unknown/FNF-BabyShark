@@ -6,6 +6,11 @@ import flixel.util.FlxSort;
 import flixel.addons.display.FlxBackdrop;
 
 class CoolUtil {
+	inline public static function toBool(value:Dynamic):Null<Bool> {
+		if (value is Int || value is Float) return (value >= 1);
+		return null;
+	}
+
 	/**
 	 * Plays a sound safely by checking if it exists or not.
 	 *

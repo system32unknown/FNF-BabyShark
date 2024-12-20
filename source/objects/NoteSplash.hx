@@ -127,7 +127,7 @@ class NoteSplash extends FlxSprite {
 
 		var tempShader:RGBPalette = null;
 		if (config.allowRGB) {
-			if (note == null) note = new Note(0, noteData);
+			if (note == null) note = new Note().recycleNote(Note.DEFAULT_CAST);
 
 			Note.initializeGlobalRGBShader(noteData % EK.colArray.length);
 			function useDefault() {

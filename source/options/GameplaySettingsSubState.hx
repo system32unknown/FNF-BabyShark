@@ -1,6 +1,7 @@
 package options;
 
 class GameplaySettingsSubState extends BaseOptionsMenu {
+	var ghostRate:Option;
 	public function new() {
 		title = Language.getPhrase('gameplay_menu', 'Gameplay Settings');
 		rpcTitle = 'Gameplay Settings Menu'; //for Discord Rich Presence
@@ -14,6 +15,23 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums'));
 		addOption(new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping'));
 		addOption(new Option('Remove Overlapped Notes', "If checked, Remove notes which hidden behind other.\n(Except one which can see by multiplied scroll speed)", 'skipGhostNotes'));
+
+		var option:Option = new Option(' - Threshold',
+			"Threshold of the option above.\nYou can set it in millisecond.",
+			'ghostRange',
+			FLOAT);
+		option.defaultValue = 0.01;
+		option.displayFormat = '%v ms';
+		option.scrollSpeed = 1;
+		option.minValue = .001;
+		option.maxValue = 1000;
+		option.changeValue = .001;
+		option.decimals = 3;
+		addOption(option);
+		option.onChange = () -> {
+			ghostRate.scrollSpeed = utils.MathUtil.interpolate(1, 1000, (holdTime - 0.5) / 5, 6);
+		};
+		ghostRate = option;
 
 		var option:Option = new Option('Auto Pause', "If checked, the game automatically pauses if the screen isn't on focus.", 'autoPause');
 		addOption(option);

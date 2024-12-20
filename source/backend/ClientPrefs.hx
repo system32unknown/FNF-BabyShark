@@ -71,6 +71,7 @@ class SaveVariables {
 	var hitsoundTypes:String = 'Tick';
 	var checkForUpdates:Bool = true;
 	var skipGhostNotes:Bool = false;
+	var ghostRange:Float = .01;
 	var unlockedCharacters:Array<String> = ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'];
 	var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.,
