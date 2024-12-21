@@ -9,7 +9,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
         pool.push(n);
     }
 
-    public function spawnNote(castNote:CastNote, ?oldNote:Note) {
+    public function spawnNote(castNote:CastNote, ?oldNote:Note):Note {
         if (pool.length > 0) {
             _ecyc_e = pool.pop();
             _ecyc_e.exists = true;

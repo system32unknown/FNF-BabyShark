@@ -1,5 +1,6 @@
 package options;
 
+import utils.system.MemoryUtil;
 class OptionsState extends MusicBeatState {
 	var options:Array<Array<String>> = [
 		['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals', 'Gameplay'],
@@ -125,6 +126,11 @@ class OptionsState extends MusicBeatState {
 	override function destroy() {
 		PlayState.mania = lastMania;
 		ClientPrefs.load();
+		if (!ClientPrefs.data.disableGC && !MemoryUtil.isGcOn) {
+			MemoryUtil.enable();
+			MemoryUtil.collect(true);
+			MemoryUtil.compact();
+		}
 		super.destroy();
 	}
 }

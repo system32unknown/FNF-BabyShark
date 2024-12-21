@@ -235,6 +235,7 @@ class PlayState extends MusicBeatState {
 
 	public static var nextReloadAll:Bool = false;
 	override public function create() {
+		Paths.clearUnusedMemory();
 		Paths.clearStoredMemory();
 		if(nextReloadAll) {
 			Paths.clearUnusedMemory();
@@ -964,6 +965,7 @@ class PlayState extends MusicBeatState {
 	public function skipDialogue() callOnScripts('onSkipDialogue', [dialogueCount]);
 
 	var inStarting:Bool = false;
+	var started:Bool = false;
 	function startSong():Void {
 		startingSong = false;
 		inStarting = true; // prevent play inst double times
@@ -988,6 +990,7 @@ class PlayState extends MusicBeatState {
 		setOnScripts('songLength', songLength);
 		callOnScripts('onSongStart');
 		inStarting = false;
+		started = true;
 	}
 
 	var noteTypes:Array<String> = [];
@@ -1197,6 +1200,15 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
+	var thresholdTime:Float = 20;
+	function checkSync() {
+		var desyncTime:Float = Math.abs(FlxG.sound.music.time - Conductor.songPosition);
+		if (desyncTime > thresholdTime)	resyncVocals();
+
+		var vocalTime:Float = Math.abs(vocals.time - Conductor.songPosition);
+		if (vocalTime > thresholdTime) resyncVocals();
+	}
+
 	function resyncVocals():Void {
 		if(finishTimer != null || (transitioning && endingSong)) return;
 		FlxG.sound.music.play();
@@ -1227,13 +1239,21 @@ class PlayState extends MusicBeatState {
 	var bfNpsMax:Float = 0;
 	var bfSideHit:Float = 0;
 
+	var refBpm:Float = 0;
+	var tweenBpm:Float = 1;
 	override function update(elapsed:Float) {
 		if (popUpHitNote != null) popUpHitNote = null;
 		hit = skipBf = 0;
+
+		if (refBpm != Conductor.bpm) {
+			tweenBpm = Math.pow(Conductor.bpm / 120, .5);
+			refBpm = Conductor.bpm;
+		}
+
 		splashMoment.fill(0);
 		if(ClientPrefs.data.camMovement && camlock) camFollow.setPosition(camlockpoint.x, camlockpoint.y);
 
-		if(!inCutscene && !paused && !freezeCamera) FlxG.camera.followLerp = .04 * cameraSpeed * playbackRate;
+		if(!inCutscene && !paused && !freezeCamera) FlxG.camera.followLerp = .04 * cameraSpeed * playbackRate * tweenBpm;
 		else FlxG.camera.followLerp = 0;
 		callOnScripts('onUpdate', [elapsed]);
 
@@ -1295,7 +1315,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (camZooming) {
-			var ratio:Float = Math.exp(-elapsed * 3.125 * camZoomingDecay * playbackRate);
+			var ratio:Float = Math.exp(-elapsed * 3.125 * camZoomingDecay * playbackRate * tweenBpm);
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, ratio);
 			camHUD.zoom = FlxMath.lerp(defaultHudCamZoom, camHUD.zoom, ratio);
 		}
@@ -1309,6 +1329,7 @@ class PlayState extends MusicBeatState {
 		if (!ClientPrefs.data.noReset && Controls.justPressed('reset') && canReset && !inCutscene && startedCountdown && !endingSong && !practiceMode) health = 0;
 		doDeathCheck();
 
+		if (started && !paused && canResync) checkSync();
 		if (cacheNotes > 0) {
 			notes.forEach((n:Note) -> {
 				n.dirty = false;
@@ -1409,7 +1430,6 @@ class PlayState extends MusicBeatState {
 							if (betterRecycle) dunceNote = notes.spawnNote(targetNote, oldNote);
 							else dunceNote = notes.recycle(Note).recycleNote(targetNote, oldNote);
 							dunceNote.spawned = true;
-			
 							dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
 							if (!betterRecycle) notes.add(dunceNote);
 							
@@ -1430,13 +1450,11 @@ class PlayState extends MusicBeatState {
 							}
 						}
 					}
-				} else ++skipBf;
+				} else if (cpuControlled && castMust) ++skipBf;
 				
 				oldNote = dunceNote;
-				unspawnNotes[totalCnt] = null;
-				++totalCnt;
-				if (unspawnNotes.length > totalCnt) targetNote = unspawnNotes[totalCnt];
-				else break;
+				unspawnNotes[totalCnt] = null; ++totalCnt;
+				if (unspawnNotes.length > totalCnt) targetNote = unspawnNotes[totalCnt]; else break;
 				
 				castHold = CoolUtil.toBool(targetNote.noteData & (1 << 9));
 				castMust = CoolUtil.toBool(targetNote.noteData & (1 << 8));
@@ -1511,7 +1529,7 @@ class PlayState extends MusicBeatState {
 			note.resetAnim = 0;
 		}
 		openSubState(new PauseSubState());
-		#if DISCORD_ALLOWED if(autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)'); #end
+		#if DISCORD_ALLOWED if (autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)'); #end
 	}
 
 	function openChartEditor() {
@@ -1780,12 +1798,13 @@ class PlayState extends MusicBeatState {
 					if(split.length > 1) LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split), split[split.length - 1], trueValue);
 					else LuaUtils.setVarInArray(this, value1, trueValue);
 				} catch (e:Dynamic) {
-					var len:Int = e.message.indexOf('\n') + 1;
-					if (len <= 0) len = e.message.length;
+					var errorMsg:String = Type.getClassName(Type.getClass(e)) == 'String' ? e : e.message;
+					var len:Int = errorMsg.indexOf('\n') + 1;
+					if (len <= 0) len = errorMsg.length;
 					#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-					addTextToDebug('ERROR ("Set Property" Event) - ' + e.message.substr(0, len), FlxColor.RED);
+					addTextToDebug('ERROR ("Set Property" Event) - ' + errorMsg.substr(0, len), FlxColor.RED);
 					#else
-					FlxG.log.warn('ERROR ("Set Property" Event) - ' + e.message.substr(0, len));
+					FlxG.log.warn('ERROR ("Set Property" Event) - ' + errorMsg.substr(0, len));
 					#end
 				}
 			case 'Play Sound':
@@ -1849,7 +1868,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function tweenCamZoom(zoom:Float = 1):Void {
-		if (cameraTwn == null && FlxG.camera.zoom != zoom) cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (Conductor.stepCrochet * 4 / 1000) * playbackRate, {ease: FlxEase.elasticInOut, onComplete: (_) -> cameraTwn = null});
+		if (cameraTwn == null && FlxG.camera.zoom != zoom) cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (60 / Conductor.bpm) * playbackRate, {ease: FlxEase.elasticInOut, onComplete: (_) -> cameraTwn = null});
 	}
 
 	public function finishSong(?ignoreNoteOffset:Bool = false):Void {
@@ -2015,8 +2034,8 @@ class PlayState extends MusicBeatState {
 				var numScore:Popup = popUpGroup.recycle(Popup);
 				numScore.setupPopupData(NUMBER, uiFolder + 'number/num$i' + uiPostfix);
 				numScore.setPosition(ratingPop.x + (43 * daloop) - 50 + comboOffset[1][0] - 43 / 2 * (Std.string(tempNotes).length - 1), ratingPop.y + 100 - comboOffset[1][1]);
-				numScore.doTween(.002);
 				popUpGroup.add(numScore);
+				numScore.doTween(.002);
 				++daloop;
 			}
 		}
@@ -2282,8 +2301,7 @@ class PlayState extends MusicBeatState {
 			vocals.volume = 1;
 
 			if(!isSus) {
-				++combo;
-				++bfSideHit;
+				++combo; ++bfSideHit;
 				if (showPopups) popUpHitNote = note;
 				addScore(note);
 			}

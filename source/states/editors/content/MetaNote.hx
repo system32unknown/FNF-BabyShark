@@ -130,6 +130,8 @@ class EditorSustain extends Note {
 		sustainTile.scrollFactor.x = 0;
 
 		super();
+		recycleNote(Note.DEFAULT_CAST);
+		inEditor = true;
 
 		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend');
 		scale.set(scale.x, scale.x);

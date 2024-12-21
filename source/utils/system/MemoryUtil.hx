@@ -1,6 +1,5 @@
 package utils.system;
 
-import haxe.exceptions.NotImplementedException;
 #if cpp
 import cpp.vm.Gc;
 
@@ -18,8 +17,23 @@ import cpp.vm.Gc;
 #include <mach/mach.h>
 ')
 #end
+#else
+import haxe.exceptions.NotImplementedException;
 #end
+
+/**
+ * Utilities for working with the garbage collector.
+ *
+ * HXCPP is built on Immix.
+ * HTML5 builds use the browser's built-in mark-and-sweep and JS has no APIs to interact with it.
+ * @see https://www.cs.cornell.edu/courses/cs6120/2019fa/blog/immix/
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_management
+ * @see https://betterprogramming.pub/deep-dive-into-garbage-collection-in-javascript-6881610239a
+ * @see https://github.com/HaxeFoundation/hxcpp/blob/master/docs/build_xml/Defines.md
+ * @see cpp.vm.Gc
+ */
 class MemoryUtil {
+	public static var isGcOn:Bool = true;
 	public static function clearMajor(?minor:Bool = false):Void {
 		#if cpp
 		Gc.run(!minor);
@@ -28,14 +42,20 @@ class MemoryUtil {
 		openfl.system.System.gc();
 		#end
 	}
+
+	/**
+	 * Enable or disable garbage collection.
+	 */
 	public static function enable(on:Bool = true):Void {
 		#if cpp
-		Gc.enable(on);
-		cpp.NativeGc.enable(on);
+		isGcOn = on;
+		Gc.enable(isGcOn);
+		cpp.NativeGc.enable(isGcOn);
 		#else
 		throw new NotImplementedException();
 		#end
 	}
+
 	/**
 	 * Manually perform garbage collection once.
 	 * Should only be called from the main thread.
@@ -44,6 +64,20 @@ class MemoryUtil {
 	public static function collect(major:Bool = false):Void {
 		#if cpp
 		Gc.run(major);
+		#else
+		throw new NotImplementedException();
+		#end
+	}
+
+	/**
+	 * Perform major garbage collection repeatedly until less than 16kb of memory is freed in one operation.
+	 * Should only be called from the main thread.
+	 *
+	 * NOTE: This is DIFFERENT from actual compaction,
+	 */
+	public static function compact():Void {
+		#if cpp
+		Gc.compact();
 		#else
 		throw new NotImplementedException();
 		#end

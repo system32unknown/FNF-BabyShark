@@ -72,7 +72,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
 		option.maxValue = 1;
-		option.changeValue = 0.1;
+		option.changeValue = .01;
 		option.decimals = 1;
 		addOption(option);
 		option.onChange = playNoteSplashes;
@@ -97,8 +97,8 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
 		option.maxValue = 1;
-		option.changeValue = 0.1;
-		option.decimals = 1;
+		option.changeValue = .01;
+		option.decimals = 2;
 		addOption(option);
 		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms'));
 		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'showNPS'));

@@ -1,5 +1,6 @@
 package states.editors;
 
+import utils.system.MemoryUtil;
 class MasterEditorMenu extends MusicBeatState {
 	var options:Array<String> = [
 		'Chart Editor',
@@ -21,6 +22,12 @@ class MasterEditorMenu extends MusicBeatState {
 	override function create() {
 		FlxG.camera.bgColor = FlxColor.BLACK;
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Editors Main Menu"); #end
+
+		if (!ClientPrefs.data.disableGC && !MemoryUtil.isGcOn) {
+			MemoryUtil.enable();
+			MemoryUtil.collect(true);
+			MemoryUtil.compact();
+		}
 
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.scrollFactor.set();

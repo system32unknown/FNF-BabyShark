@@ -169,6 +169,11 @@ class FreeplayState extends MusicBeatState {
 		changeSelection();
 		updateTexts();
 		super.create();
+
+		if (ClientPrefs.data.disableGC && !MemoryUtil.isGcOn) {
+			MemoryUtil.enable();
+			MemoryUtil.collect(true);
+		}
 	}
 
 	override function closeSubState() {
