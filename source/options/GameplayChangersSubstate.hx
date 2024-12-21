@@ -199,11 +199,11 @@ class GameplayChangersSubstate extends FlxSubState {
 											if (curOption.getValue() == "constant") {
 												oOption.displayFormat = "%v";
 												oOption.maxValue = constMax;
-												oOption.setValue(Math.max(oOption.getValue(), constMax));
+												oOption.setValue(Math.min(oOption.getValue(), constMax));
 											} else {
 												oOption.displayFormat = "%vX";
 												oOption.maxValue = multiMax;
-												oOption.setValue(Math.max(oOption.getValue(), multiMax));
+												oOption.setValue(Math.min(oOption.getValue(), multiMax));
 											}
 											updateTextFrom(oOption);
 										}

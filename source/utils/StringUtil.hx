@@ -22,8 +22,7 @@ class StringUtil {
 		return str;
 	}
 
-    // formatTime but epic
-	public static function formatTime(time:Float, precision:Int = 0):String {
+	public static function formatTime(time:Float, precision:Int = 0, timePre:Int = 0):String {
 		var secs:String = '' + Math.floor(time) % 60;
 		var mins:String = '' + Math.floor(time / 60) % 60;
 		var hour:String = '' + Math.floor(time / 3600) % 24;
@@ -38,18 +37,16 @@ class StringUtil {
 			formattedtime = '$hour:$mins:$secs';
 		}
 
-		if (days != '0' && weeks == '0') formattedtime = days + 'd ' + hour + 'h ' + mins + "m " + secs + 's';
-		if (weeks != '0') formattedtime = weeks + 'w ' + days + 'd ' + hour + 'h ' + mins + "m " + secs + 's';
+		
+		if (days != '0' && weeks == '0') formattedtime = '${days}d ${hour}h ${mins}m ${secs}s';
+		if (weeks != '0') formattedtime = '${weeks}w ${days}d ${hour}h ${mins}m ${secs}s';
 
 		if (precision > 0) {
 			var secondsForMS:Float = time % 60;
-			var seconds:Int = Std.int((secondsForMS - Std.int(secondsForMS)) * Math.pow(10, precision));
+
 			formattedtime += ".";
-			if (precision > 1 && Std.string(seconds).length < precision) {
-				for (_ in 0...precision - Std.string(seconds).length)
-                    formattedtime += '0';
-			}
-			formattedtime += seconds;
+			var seconds:Int = Std.int((secondsForMS - Std.int(secondsForMS)) * Math.pow(10, precision));
+			formattedtime += fillNumber(seconds, timePre, '0'.charCodeAt(0));
 		}
 		return formattedtime;
 	}

@@ -2,18 +2,23 @@ package objects;
 
 import objects.Note.CastNote;
 class NoteGroup extends FlxTypedGroup<Note> {
-    public var pool:Array<Note> = [];
-    public function spawnNote(castNote:CastNote, ?oldNote:Note):Note {
-        var index:Int = pool.lastIndexOf(null);
-        var _ecyc_e:Note = new Note();
-        if (index >= 0) {
-            _ecyc_e = pool[index];
-            pool[index] = null;
+    var pool:Array<Note> = [];
+    var _ecyc_e:Note;
+
+    public function push(n:Note) {
+        pool.push(n);
+    }
+
+    public function spawnNote(castNote:CastNote, ?oldNote:Note) {
+        if (pool.length > 0) {
+            _ecyc_e = pool.pop();
+            _ecyc_e.exists = true;
         } else {
-            _ecyc_e.exists = false;
-            _ecyc_e.recycleNote(castNote, oldNote);
-            add(_ecyc_e);
+            _ecyc_e = null;
+            _ecyc_e = new Note();
+            members.push(_ecyc_e);
+            ++length;
         }
-        return _ecyc_e;
+        return _ecyc_e.recycleNote(castNote, oldNote);
     }
 }

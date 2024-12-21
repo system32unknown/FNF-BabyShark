@@ -1,6 +1,7 @@
 package options;
 
 class OptimizeSubState extends BaseOptionsMenu {
+	var cacheCount:Option;
 	public function new() {
 		title = Language.getPhrase('optimize_menu', 'Optimize Settings');
 		rpcTitle = 'Optimize Settings Menu'; //for Discord Rich Presence
@@ -17,9 +18,12 @@ class OptimizeSubState extends BaseOptionsMenu {
 		option.minValue = 0;
 		option.maxValue = 99999;
 		option.decimals = 0;
-		option.onChange = onChangeCount;
+		option.onChange = () -> {
+			cacheCount.scrollSpeed = utils.MathUtil.interpolate(30, 50000, (holdTime - .5) / 10, 3);
+		};
 		cacheCount = option;
 		addOption(option);
+
 		addOption(new Option('Disable Garbage Collector', "If checked, You can play the main game without GC lag.\nIt's only works while load & playing chart.", 'disableGC'));
         super();
     }

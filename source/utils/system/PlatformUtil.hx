@@ -8,16 +8,17 @@ package utils.system;
 </target>
 ')
 @:cppFileCode('
-#include <direct.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <windows.h>
-#include <winuser.h>
-#include <dwmapi.h> // DwmSetWindowAttribute
-#include <strsafe.h> // StringCchCopy
-#include <shellapi.h> // Shell_NotifyIcon
-#include <iostream>
-#include <string>
+    #include <direct.h>
+    #include <stdlib.h>
+    #include <stdio.h>
+    #include <windows.h>
+    #include <winuser.h>
+    #include <dwmapi.h> // DwmSetWindowAttribute
+    #include <strsafe.h> // StringCchCopy
+    #include <shellapi.h> // Shell_NotifyIcon
+    #include <chrono>
+    #include <iostream>
+    #include <string>
 ')
 class PlatformUtil {
     @:functionCode('
@@ -158,6 +159,23 @@ class PlatformUtil {
         return TRUE;
     ')
     public static function setTransparency(winName:String, alpha:Int, color:Int):Bool return false;
+
+    #if cpp
+	@:functionCode('		
+		// Get the current time
+		auto now = std::chrono::high_resolution_clock::now();
+		
+		// Time elapsed since the epoch is obtained as DURATION (converted to seconds)
+		auto duration = now.time_since_epoch();
+		auto seconds = std::chrono::duration_cast<std::chrono::duration<double>>(duration);
+		
+		// Returns the second as double
+		return seconds.count();
+	')
+    #end
+    public function getNanoTime():#if cpp cpp.Float64 #else Float #end {
+        return -1;
+    }
 }
 #end
 

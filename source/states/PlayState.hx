@@ -12,6 +12,7 @@ import openfl.utils.Assets as OpenFlAssets;
 import backend.Highscore;
 import backend.Song;
 import backend.Rating;
+import backend.NoteLoader;
 import states.editors.*;
 import substates.GameOverSubstate;
 import substates.PauseSubState;
@@ -242,7 +243,7 @@ class PlayState extends MusicBeatState {
 		nextReloadAll = false;
 		noteKillOffset = noteKillTime;
 		
-		startCallback = startCountdown;
+		if (cacheNotes == 0) startCallback = startCountdown;
 		endCallback = endSong;
 
 		instance = this;
@@ -436,10 +437,7 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.snapToTarget();
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
-		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> {
-			if (ClientPrefs.data.smoothHealth) return healthLerp = FlxMath.lerp(healthLerp, health, .15);
-			return health;
-		}, 0, 2);
+		healthBar = new Bar(0, downScroll ? 50 : FlxG.height * .9, 'healthBar', () -> return healthLerp, 0, 2);
 		healthBar.gameCenter(X);
 		healthBar.leftToRight = false;
 		healthBar.scrollFactor.set();
@@ -547,7 +545,7 @@ class PlayState extends MusicBeatState {
 			
 			notes.forEach(note -> {
 				note.spawned = true;
-				note.setPosition(300 + FlxG.random.int(50, 50), 300 + FlxG.random.int(50, 50));
+				note.setPosition(FlxG.random.int(0, FlxG.width), 300 + FlxG.random.int(0, FlxG.height));
 				note.dirty = true;
 				note.draw();
 				note.drawFrame(true);
@@ -1059,6 +1057,7 @@ class PlayState extends MusicBeatState {
 			}
 		}
 
+		for (event in songData.events) for (i in 0...event[1].length) makeEvent(event, i);
 		for (usn in unspawnSustainNotes) unspawnNotes.push(usn);
 		unspawnSustainNotes.resize(0);
 		unspawnNotes.sort(sortByTime);
@@ -1310,12 +1309,30 @@ class PlayState extends MusicBeatState {
 		if (!ClientPrefs.data.noReset && Controls.justPressed('reset') && canReset && !inCutscene && startedCountdown && !endingSong && !practiceMode) health = 0;
 		doDeathCheck();
 
-		if (!ClientPrefs.data.processFirst) {noteSpawn(); noteUpdate();}
-		else {noteUpdate(); noteSpawn();}
-		combo += skipBf;
+		if (cacheNotes > 0) {
+			notes.forEach((n:Note) -> {
+				n.dirty = false;
+				invalidateNote(n);
+			}); // Killing instances
+
+			cacheNotes = 0;
+			startCallback = startCountdown;
+			startCallback();
+			doneCache = true;
+		} else if (cacheNotes == 0 && doneCache) {
+			if (!ClientPrefs.data.processFirst) {
+				noteSpawn();
+				noteUpdate();
+			} else {
+				noteUpdate();
+				noteSpawn();
+			}
+			combo += skipBf;
+		}
 		notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 
 		if (healthBar.bounds != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
+		healthLerp = ClientPrefs.data.smoothHealth ? FlxMath.lerp(healthLerp, health, .25) : health;
 		updateIconsPosition();
 
 		if (showPopups && popUpHitNote != null) popUpScore(popUpHitNote);
@@ -1380,22 +1397,21 @@ class PlayState extends MusicBeatState {
 
 				if (Timer.stamp() - timeout < shownRealTime) {
 					if (!ClientPrefs.data.optimizeSpawnNote) {
-						if (betterRecycle) dunceNote = notes.spawnNote(targetNote, oldNote)
+						if (betterRecycle) dunceNote = notes.spawnNote(targetNote, oldNote);
 						else dunceNote = notes.recycle(Note).recycleNote(targetNote, oldNote);
 						dunceNote.spawned = true;
-		
 						dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
-						// if (!betterRecycle) notes.add(dunceNote);
 						
 						callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
 						callOnHScript('onSpawnNote', [dunceNote]);
 					} else {
 						if (!(castHold ? tooLate : canBeHit)) {
-							dunceNote = notes.recycle(Note).recycleNote(targetNote, oldNote);
+							if (betterRecycle) dunceNote = notes.spawnNote(targetNote, oldNote);
+							else dunceNote = notes.recycle(Note).recycleNote(targetNote, oldNote);
 							dunceNote.spawned = true;
 			
 							dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
-							notes.add(dunceNote);
+							if (!betterRecycle) notes.add(dunceNote);
 							
 							callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
 							callOnHScript('onSpawnNote', [dunceNote]);
@@ -2290,7 +2306,7 @@ class PlayState extends MusicBeatState {
 	public function invalidateNote(note:Note):Void {
 		if (!note.exists) return;
 		note.exists = false;
-		if (betterRecycle) notes.pool.push(note);
+		if (betterRecycle) notes.push(note);
 	}
 
 	var noteSplashframes:Int = -1;
@@ -2345,7 +2361,7 @@ class PlayState extends MusicBeatState {
 		backend.NoteTypesConfig.clearNoteTypesData();
 		NoteSplash.configs.clear();
 		instance = null;
-		backend.NoteLoader.dispose();
+		NoteLoader.dispose();
 		Paths.popUpFramesMap.clear();
 
 		super.destroy();

@@ -325,7 +325,8 @@ class EditorPlayState extends MusicBeatSubstate {
 				for (susNote in 0...roundSus) {
 					swagNote.noteData |= 1 << 9; // isHold
 					swagNote.noteData |= susNote == roundSus ? 1 << 10 : 0; // isHoldEnd
-					unspawnSustainNotes.push(cast ({strumTime: swagNote.noteData + Conductor.stepCrochet * susNote, noteData: swagNote.noteData, noteType: swagNote.noteType, holdLength: 0, noteSkin: swagNote.noteSkin}, CastNote));
+					var sustainNote:CastNote = cast {strumTime: swagNote.noteData + Conductor.stepCrochet * susNote, noteData: swagNote.noteData, noteType: swagNote.noteType, holdLength: 0, noteSkin: swagNote.noteSkin};
+					unspawnSustainNotes.push(sustainNote);
 				}
 			}
 		}

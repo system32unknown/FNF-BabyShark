@@ -190,6 +190,7 @@ class FreeplayState extends MusicBeatState {
 	public static var vocals:FlxSound = null;
 	var holdTime:Float = 0;
 	var stopMusicPlay:Bool = false;
+	var spamTime:Float = 0;
 	override function update(elapsed:Float) {
 		if(WeekData.weeksList.length < 1) {
 			super.update(elapsed);
@@ -230,12 +231,16 @@ class FreeplayState extends MusicBeatState {
 				}
 
 				if (Controls.pressed('ui_down') || upPressed) {
-					var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
 					holdTime += elapsed;
-					var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+					if (holdTime > 0.5) {
+						spamTime += elapsed;
+						var timeLimit:Float = 1 / utils.MathUtil.interpolate(10, 30, (holdTime - .5) / 5, 2);
 
-					if (holdTime > 0.5 && checkNewHold - checkLastHold > 0) 
-						changeSelection((checkNewHold - checkLastHold) * (upPressed ? -shiftMult : shiftMult));
+						if (spamTime > timeLimit) {
+							changeSelection(upPressed ? -shiftMult : shiftMult);
+							spamTime -= timeLimit;
+						}
+					}
 				}
 
 				if (FlxG.mouse.wheel != 0) {
