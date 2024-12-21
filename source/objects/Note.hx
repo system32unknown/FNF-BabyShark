@@ -335,19 +335,20 @@ class Note extends FlxSprite {
 	}
 
 	function loadNoteAnims() {
-		if (EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] == null) return;
-		var playAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
-		var playAnimAlt:String = EK.colArrayAlt[EK.gfxIndex[PlayState.mania][noteData]];
+		var gfx:Int = EK.gfxIndex[PlayState.mania][noteData];
+		if (EK.colArray[gfx] == null) return;
+		var playAnim:String = EK.colArray[gfx];
+		var playAnimAlt:String = EK.colArrayAlt[gfx];
 		if (isSustainNote) {
-			attemptToAddAnimationByPrefix('Aholdend', 'pruple end hold', 24, true);
-			attemptToAddAnimationByPrefix(playAnim + 'holdend', playAnim + ' tail0', 24, true);
-			attemptToAddAnimationByPrefix(playAnim + 'hold', playAnim + ' hold0', 24, true);
-			attemptToAddAnimationByPrefix(playAnim + 'holdend', playAnimAlt + ' hold end', 24, true);
-			attemptToAddAnimationByPrefix(playAnim + 'hold', playAnimAlt + ' hold piece', 24, true);
-			animation.addByPrefix(playAnim + 'holdend', playAnim + ' hold end', 24, true);
-			animation.addByPrefix(playAnim + 'hold', playAnim + ' hold piece', 24, true);
+			addByPrefixCheck('Aholdend', 'pruple end hold');
+			addByPrefixCheck(playAnim + 'holdend', playAnim + ' tail0');
+			addByPrefixCheck(playAnim + 'hold', playAnim + ' hold0');
+			addByPrefixCheck(playAnim + 'holdend', playAnimAlt + ' hold end');
+			addByPrefixCheck(playAnim + 'hold', playAnimAlt + ' hold piece');
+			animation.addByPrefix(playAnim + 'holdend', playAnim + ' hold end');
+			animation.addByPrefix(playAnim + 'hold', playAnim + ' hold piece');
 		} else {
-			attemptToAddAnimationByPrefix(playAnim + 'Scroll', playAnimAlt + '0');
+			addByPrefixCheck(playAnim + 'Scroll', playAnimAlt + '0');
 			animation.addByPrefix(playAnim + 'Scroll', playAnim + '0');
 		}
 
@@ -356,21 +357,20 @@ class Note extends FlxSprite {
 	}
 
 	function loadPixelNoteAnims() {
-		if (EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] == null) return;
-		var playAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
-		var noteIndex:Int = EK.gfxIndex[PlayState.mania][noteData];
+		var gfx:Int = EK.gfxIndex[PlayState.mania][noteData];
+		if (EK.colArray[gfx] == null) return;
+		var playAnim:String = EK.colArray[gfx];
 		if(isSustainNote) {
 			animation.add(playAnim + 'holdend', [noteIndex + 9], 12, true);
 			animation.add(playAnim + 'hold', [noteIndex], 12, true);
 		} else animation.add(playAnim + 'Scroll', [noteIndex + 9], 12, true);
 	}
 
-	function attemptToAddAnimationByPrefix(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
+	function addByPrefixCheck(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
 		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
 		@:privateAccess
 		animation.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
 		if(animFrames.length < 1) return;
-
 		animation.addByPrefix(name, prefix, framerate, doLoop);
 	}
 
@@ -461,7 +461,7 @@ class Note extends FlxSprite {
 	}
 
 	var initSkin:String = defaultNoteSkin + getNoteSkinPostfix();
-	public function recycleNote(target:CastNote, ?oldNote:Note, ?parent:Note):Note {
+	public function recycleNote(target:CastNote, ?oldNote:Note):Note {
 		var ekScale:Float = EK.scales[PlayState.mania];
 		var ekScalePixel:Float = EK.scalesPixel[PlayState.mania];
 
@@ -494,7 +494,6 @@ class Note extends FlxSprite {
 		if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB) rgbShader.enabled = false;
 		sustainLength = target.holdLength ?? 0;
 		prevNote = oldNote ?? this;
-		this.parent = parent;
 
 		copyAngle = !isSustainNote;
 		flipY = ClientPrefs.data.downScroll && isSustainNote;

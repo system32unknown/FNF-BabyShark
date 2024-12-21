@@ -10,6 +10,16 @@ class OptimizeSubState extends BaseOptionsMenu {
 		addOption(new Option('Optimize Process for Spawned Note', "If checked, It judges whether or not to do hit process\nimmediately when a note spawned. If you don't get it, enable this.", 'optimizeSpawnNote'));
 		addOption(new Option('Show Popup Counter', 'If unchecked, the popup counter wont be shown.', 'showComboCounter'));
 		addOption(new Option('Popup Stacking', "If unchecked, The popup won't stack. but it's using recycling system,\nso it doesn't have effects so much.", 'comboStacking'));
+		addOption(new Option('Better Recycling', "If checked, It uses NoteGroup's recycle system.\nIt boosts game perfomance vastly, It works anytime yeah.", 'betterRecycle'));
+
+		var option:Option = new Option('Cache Notes:', "Enables recycling of a specified number of items before playing.\nIt cuts time of newing instances. 0 is for disabled.\nIt needs RAM depending this value.", 'cacheNotes', INT);
+		option.scrollSpeed = 30;
+		option.minValue = 0;
+		option.maxValue = 99999;
+		option.decimals = 0;
+		option.onChange = onChangeCount;
+		cacheCount = option;
+		addOption(option);
 		addOption(new Option('Disable Garbage Collector', "If checked, You can play the main game without GC lag.\nIt's only works while load & playing chart.", 'disableGC'));
         super();
     }

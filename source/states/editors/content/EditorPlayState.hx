@@ -187,13 +187,12 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (showTime) timeTxt.text = StringUtil.formatTime(Math.floor(Math.max(0, (Math.max(0, Conductor.songPosition - ClientPrefs.data.noteOffset) / playbackRate) / 1000))) + " / " + StringUtil.formatTime(Math.floor((songLength / playbackRate) / 1000));	
 
 		if (unspawnNotes.length > totalCnt) {
-			var targetNote:CastNote  = unspawnNotes[totalCnt];
+			var targetNote:CastNote = unspawnNotes[totalCnt];
 			while (targetNote.strumTime - Conductor.songPosition < spawnTime) {
 				var dunceNote:Note = notes.recycle(Note).recycleNote(targetNote);
 				dunceNote.spawned = true;
 	
-				var strumGroup:FlxTypedGroup<StrumNote> = !dunceNote.mustPress ? opponentStrums : playerStrums;
-				dunceNote.strum = strumGroup.members[dunceNote.noteData];
+				dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
 				notes.insert(0, dunceNote);
 				++totalCnt;
 				if (unspawnNotes.length > totalCnt) targetNote = unspawnNotes[totalCnt];
@@ -326,8 +325,7 @@ class EditorPlayState extends MusicBeatSubstate {
 				for (susNote in 0...roundSus) {
 					swagNote.noteData |= 1 << 9; // isHold
 					swagNote.noteData |= susNote == roundSus ? 1 << 10 : 0; // isHoldEnd
-					var sustainNote:CastNote = cast {strumTime: swagNote.noteData + Conductor.stepCrochet * susNote, noteData: swagNote.noteData, noteType: swagNote.noteType, holdLength: 0, noteSkin: swagNote.noteSkin};
-					unspawnSustainNotes.push(sustainNote);
+					unspawnSustainNotes.push(cast ({strumTime: swagNote.noteData + Conductor.stepCrochet * susNote, noteData: swagNote.noteData, noteType: swagNote.noteType, holdLength: 0, noteSkin: swagNote.noteSkin}, CastNote));
 				}
 			}
 		}

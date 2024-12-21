@@ -47,7 +47,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.minValue = .0;
 		option.maxValue = 1;
 		option.changeValue = .1;
-		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
 		addOption(new Option('Use Epic Ratings', 'If checked, adds Epic Ratings as a bonus judgement above sick (does not affect accuracy, only your score).', 'useEpics'));
