@@ -965,7 +965,6 @@ class PlayState extends MusicBeatState {
 	public function skipDialogue() callOnScripts('onSkipDialogue', [dialogueCount]);
 
 	var inStarting:Bool = false;
-	var started:Bool = false;
 	function startSong():Void {
 		startingSong = false;
 		inStarting = true; // prevent play inst double times
@@ -990,7 +989,6 @@ class PlayState extends MusicBeatState {
 		setOnScripts('songLength', songLength);
 		callOnScripts('onSongStart');
 		inStarting = false;
-		started = true;
 	}
 
 	var noteTypes:Array<String> = [];
@@ -1200,15 +1198,6 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
-	var thresholdTime:Float = 20;
-	function checkSync() {
-		var desyncTime:Float = Math.abs(FlxG.sound.music.time - Conductor.songPosition);
-		if (desyncTime > thresholdTime)	resyncVocals();
-
-		var vocalTime:Float = Math.abs(vocals.time - Conductor.songPosition);
-		if (vocalTime > thresholdTime) resyncVocals();
-	}
-
 	function resyncVocals():Void {
 		if(finishTimer != null || (transitioning && endingSong)) return;
 		FlxG.sound.music.play();
@@ -1329,7 +1318,6 @@ class PlayState extends MusicBeatState {
 		if (!ClientPrefs.data.noReset && Controls.justPressed('reset') && canReset && !inCutscene && startedCountdown && !endingSong && !practiceMode) health = 0;
 		doDeathCheck();
 
-		if (started && !paused && canResync) checkSync();
 		if (cacheNotes > 0) {
 			notes.forEach((n:Note) -> {
 				n.dirty = false;
