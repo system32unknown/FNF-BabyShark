@@ -361,9 +361,9 @@ class Note extends FlxSprite {
 		if (EK.colArray[gfx] == null) return;
 		var playAnim:String = EK.colArray[gfx];
 		if(isSustainNote) {
-			animation.add(playAnim + 'holdend', [noteIndex + 9], 12, true);
-			animation.add(playAnim + 'hold', [noteIndex], 12, true);
-		} else animation.add(playAnim + 'Scroll', [noteIndex + 9], 12, true);
+			animation.add(playAnim + 'holdend', [gfx + 9], 12, true);
+			animation.add(playAnim + 'hold', [gfx], 12, true);
+		} else animation.add(playAnim + 'Scroll', [gfx + 9], 12, true);
 	}
 
 	function addByPrefixCheck(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
