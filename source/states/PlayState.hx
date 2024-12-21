@@ -1329,13 +1329,8 @@ class PlayState extends MusicBeatState {
 			startCallback();
 			doneCache = true;
 		} else if (cacheNotes == 0 && doneCache) {
-			if (!ClientPrefs.data.processFirst) {
-				noteSpawn();
-				noteUpdate();
-			} else {
-				noteUpdate();
-				noteSpawn();
-			}
+			if (!ClientPrefs.data.processFirst) {noteSpawn(); noteUpdate();}
+			else {noteUpdate(); noteSpawn();}
 			combo += skipBf;
 		}
 		notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
