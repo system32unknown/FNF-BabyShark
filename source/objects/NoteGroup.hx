@@ -1,6 +1,6 @@
 package objects;
 
-import Note.CastNote;
+import objects.Note.CastNote;
 class NoteGroup extends FlxTypedGroup<Note> {
     public var pool:Array<Note> = [];
     public function spawnNote(castNote:CastNote, ?oldNote:Note):Note {
