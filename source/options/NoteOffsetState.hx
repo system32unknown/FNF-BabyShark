@@ -30,7 +30,9 @@ class NoteOffsetState extends MusicBeatState {
 	var comboNums:FlxSpriteGroup;
 
 	var dumbTexts:FlxTypedGroup<FlxText>;
+
 	var modeConfigText:FlxText;
+	var holdTimeText:FlxText;
 
 	var barPercent:Float = 0;
 	var timeTxt:FlxText;
@@ -135,11 +137,19 @@ class NoteOffsetState extends MusicBeatState {
 		bar.camera = camHUD;
 		add(bar);
 
-		modeConfigText = new FlxText(0, 4, FlxG.width, "", 32).setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
+		modeConfigText = new FlxText(0, 4, FlxG.width, "", 32);
+		modeConfigText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		modeConfigText.antialiasing = ClientPrefs.data.antialiasing;
 		modeConfigText.scrollFactor.set();
 		modeConfigText.camera = camHUD;
 		add(modeConfigText);
+
+		holdTimeText = new FlxText(0, 500, FlxG.width, "", 32);
+		holdTimeText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		holdTimeText.scrollFactor.set();
+		holdTimeText.cameras = [camHUD];
+		holdTimeText.antialiasing = ClientPrefs.data.antialiasing;
+		add(holdTimeText);
 
 		// mouse
 		mouse = new FlxSprite().makeGraphic(1, 1);
@@ -190,6 +200,7 @@ class NoteOffsetState extends MusicBeatState {
 			FlxG.mouse.visible = false;
 		}
 
+		holdTimeText.text = Std.string(holdTime);
 		repositionCombo();
 		reloadTexts();
 	}

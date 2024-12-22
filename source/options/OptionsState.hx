@@ -4,7 +4,7 @@ import utils.system.MemoryUtil;
 class OptionsState extends MusicBeatState {
 	var options:Array<Array<String>> = [
 		['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals', 'Gameplay'],
-		['Saves', 'Miscellaneous', #if TRANSLATIONS_ALLOWED 'Language', #end 'Optimize'],
+		['Saves', 'Miscellaneous', #if TRANSLATIONS_ALLOWED 'Language', #end 'Optimizations'],
 	];
 	var grpOptions:FlxTypedGroup<Alphabet>;
 	static var curSelected:Int = 0;
@@ -21,7 +21,7 @@ class OptionsState extends MusicBeatState {
 			case 'Saves': openSubState(new SaveSubState());
 			case 'Adjust Delay and Combo': FlxG.switchState(() -> new NoteOffsetState());
 			case 'Language': openSubState(new LanguageSubState());
-			case 'Optimize': openSubState(new OptimizeSubState());
+			case 'Optimizations': openSubState(new OptimizeSubState());
 		}
 	}
 

@@ -68,7 +68,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 			option.onChange = onChangeSplashSkin;
 		}
 
-		var option:Option = new Option('Note Splashes', "Set the alpha for the Note Splashes, usually shown when hitting \"Epic!\" or \"Sick!\" notes.", 'splashAlpha', PERCENT);
+		var option:Option = new Option('Note Splashes', 'How transparent should the Note Splashes be?', 'splashAlpha', PERCENT);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
 		option.maxValue = 1;
@@ -77,7 +77,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(option);
 		option.onChange = playNoteSplashes;
 
-		var option:Option = new Option('Note Splash Count:', 'How much the Note Splashes should spawn every arrow?\n0 means no limits for appears splash.', 'splashCount', INT);
+		var option:Option = new Option('Note Splash Count:', 'How many Note Splashes should spawn every note hit?\n0 = No Limit.', 'splashCount', INT);
 		option.scrollSpeed = 30;
 		option.minValue = 0;
 		option.maxValue = 15;
@@ -85,15 +85,15 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(option);
 		option.onChange = playNoteSplashes;
 
-		addOption(new Option('Light Strums', 'If checked, Play animation of strum arrows every note hits.', 'lightStrum'));
-		addOption(new Option('Play Animation on Sustain Hit', "If unchecked, ignores hit animation when hits sustain notes.", 'holdAnim'));
+		addOption(new Option('Light Strums', 'If checked, the light-up animation of strum will play every time a note is hit.', 'lightStrum'));
+		addOption(new Option('Play Animation on Sustain Hit', "If unchecked, the animaiton when sustain notes are hit will not play.", 'holdAnim'));
 		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud'));
 		addOption(new Option('Time Bar:', "What should the Time Bar display?", 'timeBarType', STRING, ['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Disabled']));
 		addOption(new Option('Flashing Lights', "Uncheck this if you're sensitive to flashing lights!", 'flashing'));
 		addOption(new Option('Icon Bounce:', "What should the Icon Bounces?", 'iconBounceType', STRING, ['Old', 'Psych', 'Dave', 'GoldenApple', 'Custom']));
 		addOption(new Option('Health Bar Type:', "What should the Health Bar Types?", 'healthTypes', STRING, ['Vanilla', 'Psych']));
 		addOption(new Option('Smooth Health', '', 'smoothHealth'));
-		var option:Option = new Option('Health Bar Opacity', 'How much opacity should the health bar and icons be.', 'healthBarAlpha', PERCENT);
+		var option:Option = new Option('Health Bar Opacity', 'How transparent should the Health Bar and icons be?', 'healthBarAlpha', PERCENT);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
 		option.maxValue = 1;

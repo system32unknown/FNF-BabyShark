@@ -1044,7 +1044,7 @@ class PlayState extends MusicBeatState {
 				swagNote.noteData |= (songNotes[3] == 'Hurt Note' || songNotes[3] == 3) ? 1 << 15 : 0;
 				unspawnNotes.push(swagNote);
 
-				var curStepCrochet:Float = 15000 / daBpm;
+				var curStepCrochet:Float = 60 / daBpm * 250;
 				var roundSus:Int = Math.round(swagNote.holdLength / curStepCrochet);
 				if (roundSus > 0) {
 					for (susNote in 0...roundSus + 1) {
@@ -1229,20 +1229,14 @@ class PlayState extends MusicBeatState {
 	var bfSideHit:Float = 0;
 
 	var refBpm:Float = 0;
-	var tweenBpm:Float = 1;
 	override function update(elapsed:Float) {
 		if (popUpHitNote != null) popUpHitNote = null;
 		hit = skipBf = 0;
 
-		if (refBpm != Conductor.bpm) {
-			tweenBpm = Math.pow(Conductor.bpm / 120, .5);
-			refBpm = Conductor.bpm;
-		}
-
 		splashMoment.fill(0);
 		if(ClientPrefs.data.camMovement && camlock) camFollow.setPosition(camlockpoint.x, camlockpoint.y);
 
-		if(!inCutscene && !paused && !freezeCamera) FlxG.camera.followLerp = .04 * cameraSpeed * playbackRate * tweenBpm;
+		if(!inCutscene && !paused && !freezeCamera) FlxG.camera.followLerp = .04 * cameraSpeed * playbackRate;
 		else FlxG.camera.followLerp = 0;
 		callOnScripts('onUpdate', [elapsed]);
 
@@ -1304,7 +1298,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		if (camZooming) {
-			var ratio:Float = Math.exp(-elapsed * 3.125 * camZoomingDecay * playbackRate * tweenBpm);
+			var ratio:Float = Math.exp(-elapsed * 3.125 * camZoomingDecay * playbackRate);
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, ratio);
 			camHUD.zoom = FlxMath.lerp(defaultHudCamZoom, camHUD.zoom, ratio);
 		}
@@ -1393,7 +1387,7 @@ class PlayState extends MusicBeatState {
 			
 			var shownTime:Float = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
 			var shownRealTime:Float = shownTime * .001;
-			var isDisplay:Bool = targetNote.strumTime - Conductor.songPosition < shownTime;
+			var isDisplay:Bool = targetNote.strumTime - Conductor.songPosition + ClientPrefs.data.noteOffset < shownTime;
 
 			while (isDisplay) {
 				var canBeHit:Bool = Conductor.songPosition > targetNote.strumTime; // false is before, true is after
@@ -1444,7 +1438,7 @@ class PlayState extends MusicBeatState {
 
 				shownTime = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
 				shownRealTime = shownTime * .001;
-				isDisplay = targetNote.strumTime - Conductor.songPosition < shownTime;
+				isDisplay = targetNote.strumTime - Conductor.songPosition + ClientPrefs.data.noteOffset < shownTime;
 			}
 		}
 	}

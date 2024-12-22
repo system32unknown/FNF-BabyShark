@@ -14,7 +14,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 
 		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums'));
 		addOption(new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping'));
-		addOption(new Option('Remove Overlapped Notes', "If checked, Remove notes which hidden behind other.\n(Except one which can see by multiplied scroll speed)", 'skipGhostNotes'));
+		addOption(new Option('Remove Overlapped Notes', "If checked, the game will remove notes which are hidden behind the others.\nRange is controlled by the option below.", 'skipGhostNotes'));
 
 		var option:Option = new Option(' - Threshold', "Threshold of the option above.\nYou can set it in millisecond.", 'ghostRange', FLOAT);
 		option.displayFormat = '%v ms';
@@ -41,7 +41,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		addOption(option);
 		option.onChange = onChangeHitsoundVolume;
 
-		var option:Option = new Option('Hitsound Volume', 'Funny notes does \"Tick!\" when you hit them.', 'hitsoundVolume', PERCENT);
+		var option:Option = new Option('Hitsound Volume', 'Funny notes do a \"Tick!\" when you hit them.', 'hitsoundVolume', PERCENT);
 		addOption(option);
 		option.scrollSpeed = 1.6;
 		option.minValue = .0;
