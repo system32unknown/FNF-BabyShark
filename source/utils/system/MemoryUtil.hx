@@ -21,17 +21,6 @@ import cpp.vm.Gc;
 import haxe.exceptions.NotImplementedException;
 #end
 
-/**
- * Utilities for working with the garbage collector.
- *
- * HXCPP is built on Immix.
- * HTML5 builds use the browser's built-in mark-and-sweep and JS has no APIs to interact with it.
- * @see https://www.cs.cornell.edu/courses/cs6120/2019fa/blog/immix/
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_management
- * @see https://betterprogramming.pub/deep-dive-into-garbage-collection-in-javascript-6881610239a
- * @see https://github.com/HaxeFoundation/hxcpp/blob/master/docs/build_xml/Defines.md
- * @see cpp.vm.Gc
- */
 class MemoryUtil {
 	public static var isGcOn:Bool = true;
 	public static function clearMajor(?minor:Bool = false):Void {
