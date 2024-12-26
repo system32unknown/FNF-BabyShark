@@ -15,7 +15,13 @@ class MetaNote extends Note {
 
 	public function new(time:Float, data:Int, songData:Array<Dynamic>) {
 		super();
-		recycleNote(Note.DEFAULT_CAST);
+		recycleNote({
+			strumTime: time,
+			noteData: data,
+			noteType: "",
+			holdLength: 0,
+			noteSkin: "" 
+		});
 		inEditor = true;
 
 		this.songData = songData;
@@ -130,7 +136,13 @@ class EditorSustain extends Note {
 		sustainTile.scrollFactor.x = 0;
 
 		super();
-		recycleNote(Note.DEFAULT_CAST);
+		recycleNote({
+			strumTime: 0,
+			noteData: data,
+			noteType: "",
+			holdLength: 0,
+			noteSkin: "" 
+		});
 		inEditor = true;
 
 		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend');
@@ -181,6 +193,12 @@ class EditorSustain extends Note {
 	public override function reloadNote(tex:String = '', postfix:String = '') {
 		super.reloadNote(tex, postfix);
 		reloadSustainTile();
+	}
+
+	public override function recycleNote(target:CastNote, ?oldNote:Note):Note {
+		var n:Note = super.recycleNote(target, oldNote);
+		reloadSustainTile();
+		return n;
 	}
 }
 

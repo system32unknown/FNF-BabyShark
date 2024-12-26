@@ -9,11 +9,13 @@ class Popup extends FlxSprite {
     public var type:PopupType;
     public var popUpTime:Float = 0;
     var i:PlayState;
+    var baseAccX:Float = 0.0;
 
     public function new() {
         super();
         type = NONE;
         i = PlayState.instance;
+        baseAccX = i.ratingAcc.x * i.playbackRate * i.playbackRate;
     }
     
     var texture:Popup;
@@ -48,6 +50,7 @@ class Popup extends FlxSprite {
         antialiasing = i.popupAntialias;
     }
     public function doTween(speed:Float = .001) {
+        FlxTween.cancelTweensOf(this);
         FlxTween.tween(this, {alpha: 0}, .2 / i.playbackRate, {onComplete: (tween:FlxTween) -> kill(), startDelay: Conductor.crochet * speed / i.playbackRate});
     }
 

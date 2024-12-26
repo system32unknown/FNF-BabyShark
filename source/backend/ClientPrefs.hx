@@ -59,7 +59,6 @@ class SaveVariables {
 	var accuracyType:String = 'Judgement';
 	var iconBounceType:String = 'Psych';
 	var ratingDisplay:String = 'World';
-	var useEpics:Bool = true;
 	var cacheOnGPU:Bool = false;
 	var healthTypes:String = 'Vanilla';
 	var timeBarType:String = 'Name Time Position';

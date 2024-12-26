@@ -483,9 +483,10 @@ class Note extends FlxSprite {
 		noteType = target.noteType;
 
 		// Absoluty should be here, or messing pixel texture glitches...
-		if (target.noteSkin.length > 0 && target.noteSkin != texture) texture = target.noteSkin;
-		else if (target.noteSkin.length == 0 && texture != initSkin) texture = initSkin;
-		else if (PlayState.isPixelStage) reloadNote(texture);
+		if (!PlayState.isPixelStage) {
+			if (target.noteSkin == null || target.noteSkin.length == 0 && texture != initSkin) texture = initSkin;
+			else if (target.noteSkin.length > 0 && target.noteSkin != texture) texture = target.noteSkin;
+		} else reloadNote(texture);
 		var colorRef:RGBPalette = inline initializeGlobalRGBShader(noteData);
 		rgbShader.r = colorRef.r;
 		rgbShader.g = colorRef.g;

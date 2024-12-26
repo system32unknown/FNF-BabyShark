@@ -90,9 +90,9 @@ class NoteOffsetState extends MusicBeatState {
 		add(boyfriendGroup);
 
 		// Combo stuff
-		rating = new FlxSprite(Paths.image('ratings/sick'));
+		rating = new FlxSprite(Paths.image('judgements/sick'));
 		rating.camera = camHUD;
-		rating.setGraphicSize(rating.width * 0.7);
+		rating.setGraphicSize(rating.width * .7);
 		rating.updateHitbox();
 		add(rating);
 

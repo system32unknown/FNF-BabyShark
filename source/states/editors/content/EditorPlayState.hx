@@ -2,7 +2,7 @@ package states.editors.content;
 
 import haxe.Timer;
 import backend.Song;
-import backend.Rating;
+import backend.Judgement;
 
 import objects.*;
 import objects.Note.CastNote;
@@ -25,7 +25,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	var notes:FlxTypedGroup<Note>;
 	var unspawnNotes:Array<CastNote> = [];
 	var unspawnSustainNotes:Array<CastNote> = [];
-	var ratingsData:Array<Rating> = Rating.loadDefault();
+	var judgeData:Array<Judgement> = Judgement.list;
 	
 	var strumLineNotes:FlxTypedGroup<StrumNote>;
 	var opponentStrums:FlxTypedGroup<StrumNote>;
@@ -378,13 +378,13 @@ class EditorPlayState extends MusicBeatSubstate {
 		var uiFolder:String = "";
 		if (PlayState.stageUI != "normal") uiFolder = PlayState.uiPrefix + "UI/";
 
-		for (rating in ratingsData) Paths.image(uiFolder + 'ratings/${rating.image}'+ PlayState.uiPostfix);
-		for (i in 0...10) Paths.image(uiFolder + 'number/num$i' + PlayState.uiPostfix);
+		for (rating in judgeData) Paths.image(uiFolder + 'judgements/${rating.image}'+ PlayState.uiPostfix);
+		for (i in 0...10) Paths.image(uiFolder + 'judgements/number/num$i' + PlayState.uiPostfix);
 	}
 
 	function popUpScore(note:Note = null):Void {
 		var noteDiff:Float = PlayState.getNoteDiff(note) / playbackRate;
-		var daRating:Rating = Conductor.judgeNote(ratingsData, noteDiff, cpuControlled);
+		var daRating:Judgement = Judgement.getTiming(judgeData, noteDiff, cpuControlled);
 
 		note.ratingMod = daRating.ratingMod;
 		note.rating = daRating.name;
@@ -406,7 +406,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		var comboOffset:Array<Array<Int>> = ClientPrefs.data.comboOffset;
 		var rating:FlxSprite = null;
 		if (showRating) {
-			rating = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiFolder + 'ratings/${daRating.image}' + PlayState.uiPostfix));
+			rating = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiFolder + 'judgements/${daRating.image}' + PlayState.uiPostfix));
 			rating.gameCenter(Y).y -= 60 + comboOffset[0][1];
 			rating.x = placement - 40 + comboOffset[0][0];
 	

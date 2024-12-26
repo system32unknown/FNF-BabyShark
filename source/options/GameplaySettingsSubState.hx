@@ -18,14 +18,14 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 
 		var option:Option = new Option(' - Threshold', "Threshold of the option above.\nYou can set it in millisecond.", 'ghostRange', FLOAT);
 		option.displayFormat = '%v ms';
-		option.scrollSpeed = 1.0;
+		option.scrollSpeed = .1;
 		option.minValue = .001;
 		option.maxValue = 1000;
 		option.changeValue = .001;
 		option.decimals = 3;
 		addOption(option);
 		option.onChange = () -> {
-			ghostRate.scrollSpeed = utils.MathUtil.interpolate(1, 1000, (holdTime - 0.5) / 5, 6);
+			ghostRate.scrollSpeed = utils.MathUtil.interpolate(.1, 1000., (holdTime - .5) / 8., 5.);
 		};
 		ghostRate = option;
 
@@ -48,8 +48,6 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.maxValue = 1;
 		option.changeValue = .1;
 		option.onChange = onChangeHitsoundVolume;
-
-		addOption(new Option('Use Epic Ratings', 'If checked, adds Epic Ratings as a bonus judgement above sick (does not affect accuracy, only your score).', 'useEpics'));
 
 		var option:Option = new Option('Rating Offset', 'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.', 'ratingOffset', INT);
 		option.displayFormat = '%vms';

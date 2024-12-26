@@ -48,6 +48,11 @@ class FreeplayState extends MusicBeatState {
 	public static var section:String = '';
 
 	override function create() {
+		if (ClientPrefs.data.disableGC) {
+			MemoryUtil.compact();
+			MemoryUtil.enable(false);
+		}
+
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
 		WeekData.reloadWeekFiles();

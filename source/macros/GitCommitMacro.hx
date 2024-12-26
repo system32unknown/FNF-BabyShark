@@ -30,7 +30,7 @@ class GitCommitMacro {
 			return macro $v{proc.stdout.readLine()};
 		} catch(e) Context.error(e.toString(), pos);
 		#end
-		return macro $v{"-"}
+		return macro $v{"-"};
 	}
 	static macro function __getCommitNumber() {
 		#if !display
@@ -41,6 +41,6 @@ class GitCommitMacro {
 			return macro $v{Std.parseInt(proc.stdout.readLine())};
 		} catch(e) Context.error(e.toString(), pos);
 		#end
-		return macro $v{0}
+		return macro $v{0};
 	}
 }

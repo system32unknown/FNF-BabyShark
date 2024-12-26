@@ -1,12 +1,11 @@
 package utils;
 
-import lime.utils.Bytes;
 import lime.ui.FileDialog;
 import openfl.net.FileFilter;
 import openfl.net.FileReference;
 
 class FileUtil {
-	public static function saveFile(data:Bytes, ?typeFilter:Array<FileFilter>, ?onSave:String->Void, ?onCancel:Void->Void, ?defaultFileName:String, ?dialogTitle:String):Bool {
+	public static function saveFile(data:lime.utils.Bytes, ?typeFilter:Array<FileFilter>, ?onSave:String->Void, ?onCancel:Void->Void, ?defaultFileName:String, ?dialogTitle:String):Bool {
 		#if desktop
 		var fileDialog:FileDialog = new FileDialog();
 		if (onSave != null) fileDialog.onSave.add(onSave);
