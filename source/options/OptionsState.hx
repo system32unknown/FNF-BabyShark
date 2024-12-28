@@ -86,9 +86,7 @@ class OptionsState extends MusicBeatState {
 				LoadingState.loadAndSwitchState(() -> new PlayState());
 				FlxG.sound.music.volume = 0;
 			} else FlxG.switchState(() -> new states.MainMenuState());
-		}
-
-		if (Controls.justPressed('accept')) openSelectedSubstate(options[curPage][curSelected]);
+		} else if (Controls.justPressed('accept')) openSelectedSubstate(options[curPage][curSelected]);
 	}
 	
 	function changeSelection(change:Int = 0) {
@@ -125,7 +123,8 @@ class OptionsState extends MusicBeatState {
 
 	override function destroy() {
 		PlayState.mania = lastMania;
-		ClientPrefs.load();
+		Controls.save();
+		ClientPrefs.save();
 		if (!ClientPrefs.data.disableGC && !MemoryUtil.isGcOn) {
 			MemoryUtil.enable();
 			MemoryUtil.collect(true);

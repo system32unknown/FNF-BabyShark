@@ -84,7 +84,7 @@ class ReflectionFunctions {
 		funk.set("setPropertyFromGroup", function(group:String, index:Int, variable:Dynamic, value:Dynamic, ?allowMaps:Bool = false, ?allowInstances:Bool = false) {
 			var split:Array<String> = group.split('.');
 			var realObject:Dynamic = null;
-			if(split.length > 1) realObject = LuaUtils.getPropertyLoop(split, false, allowMaps);
+			if (split.length > 1) realObject = LuaUtils.getPropertyLoop(split, false, allowMaps);
 			else realObject = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 
 			if(realObject != null) {

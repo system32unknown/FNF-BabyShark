@@ -6,7 +6,7 @@ class OptimizeSubState extends BaseOptionsMenu {
 		title = Language.getPhrase('optimize_menu', 'Optimizations Settings');
 		rpcTitle = 'Optimizations Settings Menu'; //for Discord Rich Presence
 
-		addOption(new Option('Process Notes before Spawning', "If checked, it process notes before they spawn.\nIt boosts game performance vastly.\n It is recommended to enable this option.", 'processFirst'));
+		addOption(new Option('Process Notes before Spawning', "If checked, it process notes before they spawn.\nIt boosts game performance vastly.\nIt is recommended to enable this option.", 'processFirst'));
 		addOption(new Option('Skip Process for Spawned Note', "If checked, enables Skip Note Function.\nIt boosts game performance vastly, but it only works in specific situations.\nIf you don't understand, enable this.", 'skipSpawnNote'));
 		addOption(new Option('Optimize Process for Spawned Note', "If checked, it judges whether or not to do hit process\nimmediately when a note spawned. If you don't understand, enable this.", 'optimizeSpawnNote'));
 		addOption(new Option('Show Pop-Up Counter', 'If unchecked, the popup counter wont be shown.', 'showComboCounter'));

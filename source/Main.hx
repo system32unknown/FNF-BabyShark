@@ -34,10 +34,13 @@ class Main extends Sprite {
 
 	public function new() {
 		super();
-		#if windows @:functionCode('#include <windows.h> SetProcessDPIAware();') #end
-
+		utils.system.NativeUtil.setDPIAware();
+		#if linux openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
+		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		debug.Logs.init();
+
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
+		ClientPrefs.load();
 		addChild(fpsVar = new FPSCounter());
 		fpsVar.visible = ClientPrefs.data.showFPS;
 		fpsVar.memType = ClientPrefs.data.memCounterType;
@@ -45,13 +48,10 @@ class Main extends Sprite {
 		#if !MODS_ALLOWED
 		final path:String = 'mods';
 		if (FileSystem.exists(path) && FileSystem.isDirectory(path)){
-		  	for (entry in FileSystem.readDirectory(path)) FileSystem.deleteFile('$path/$entry');
+			for (entry in FileSystem.readDirectory(path)) FileSystem.deleteFile('$path/$entry');
 			FileSystem.deleteDirectory(path);
 		}
 		#end
-
-		#if linux openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
-		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 
 		FlxG.signals.preStateSwitch.add(() -> Paths.clearStoredMemory());
 		FlxG.signals.postStateSwitch.add(() -> {

@@ -222,8 +222,8 @@ class FreeplayState extends MusicBeatState {
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 		if (!player.playingMusic) {
-			comboText.text = Language.getPhrase('personal_combo', 'RATING: {1}', [intendedcombo]);
-			scoreText.text = Language.getPhrase('personal_best', 'PERSONAL BEST: {1} ({2}%)', [lerpScore, ratingSplit.join('.')]);
+			comboText.text = Language.getPhrase('high_combo', 'RATING: {1}', [intendedcombo]);
+			scoreText.text = Language.getPhrase('high_score', 'HIGHSCORE: {1} ({2}%)', [lerpScore, ratingSplit.join('.')]);
 			positionHighscore();
 
 			if(songs.length > 1) {
@@ -316,7 +316,7 @@ class FreeplayState extends MusicBeatState {
 					}
 	
 					var errorStr:String = e.message;
-					if(errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1); //Missing chart
+					if(errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ${errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1)}'; //Missing chart
 					else errorStr += '\n\n' + e.stack;
 	
 					missingText.text = 'ERROR WHILE LOADING SONG:\n$errorStr';

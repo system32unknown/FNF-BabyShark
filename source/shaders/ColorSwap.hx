@@ -68,15 +68,8 @@ class ColorSwap {
 		return brightness;
 	}
 
-	public function new() {
-		shader.uTime.value = [0, 0, 0];
-		shader.flashColor.value = [1, 1, 1, 1];
-		shader.daAlpha.value = [1];
-		shader.flash.value = [0];
-	}
-
 	inline public function setHSB(h:Float = 0, s:Float = 0, b:Float = 0) {
-		hue = h; saturation = b; brightness = b;
+		hue = h; saturation = s; brightness = b;
 	}
 	
 	inline public function setHSBInt(h:Int = 0, s:Int = 0, b:Int = 0) {
@@ -94,31 +87,26 @@ class ColorSwap {
 	inline public function copyFrom(colorSwap:ColorSwap) {
 		setHSB(colorSwap.hue, colorSwap.saturation, colorSwap.brightness);
 	}
+
+	public function new() {
+		shader.uTime.value = [0, 0, 0];
+		shader.flashColor.value = [1, 1, 1, 1];
+		shader.daAlpha.value = [1];
+		shader.flash.value = [0];
+	}
 }
 
 class ColorSwapShader extends flixel.system.FlxAssets.FlxShader {
-	@:glFragmentSource('
-		#pragma header
+	@:glFragmentHeader('
 
-		uniform vec3 uTime;
-		uniform float daAlpha;
-		uniform float flash;
-		uniform vec4 flashColor;
-
-        vec4 colorMult(vec4 color) {
+		vec4 colorMult(vec4 color) {
 			if (!hasTransform) return color;
 			if (color.a == 0.0) return vec4(0.0, 0.0, 0.0, 0.0);
 			if (!hasColorTransform) return color * openfl_Alphav;
 
 			color = vec4(color.rgb / color.a, color.a);
 
-			mat4 colorMultiplier = mat4(0);
-			colorMultiplier[0][0] = openfl_ColorMultiplierv.x;
-			colorMultiplier[1][1] = openfl_ColorMultiplierv.y;
-			colorMultiplier[2][2] = openfl_ColorMultiplierv.z;
-			colorMultiplier[3][3] = openfl_ColorMultiplierv.w;
-
-			color = clamp(openfl_ColorOffsetv + (color * colorMultiplier), 0.0, 1.0);
+			color = clamp(openfl_ColorOffsetv + (color * openfl_ColorMultiplierv), 0.0, 1.0);
 
 			if (color.a > 0.0) {
 				return vec4(color.rgb * color.a * openfl_Alphav, color.a * openfl_Alphav);
@@ -141,21 +129,26 @@ class ColorSwapShader extends flixel.system.FlxAssets.FlxShader {
 			vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
 			return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 		}
+	')
+	@:glFragmentSource('
+		#pragma header
+
+		uniform vec3 uTime;
+		uniform float daAlpha;
+		uniform float flash;
+		uniform vec4 flashColor;
 
 		void main() {
 			vec4 color = texture2D(bitmap, openfl_TextureCoordv);
-			vec4 swagColor = vec4(rgb2hsv(vec3(color[0], color[1], color[2])), color[3]);
+			vec3 swagColor = rgb2hsv(color.rgb);
 
 			swagColor[0] = swagColor[0] + uTime[0];
-			swagColor[1] = swagColor[1] * (1.0 + uTime[1]);
+			swagColor[1] = clamp(swagColor[1] * (1. + uTime[1]), 0.0, 1.);
 			swagColor[2] = swagColor[2] * (1.0 + uTime[2]);
-			
-			if(swagColor[1] < 0.0) swagColor[1] = 0.0;
-			else if(swagColor[1] > 1.0) swagColor[1] = 1.0;
 
-			color = vec4(hsv2rgb(vec3(swagColor[0], swagColor[1], swagColor[2])), swagColor[3]);
+			color.rgb = hsv2rgb(swagColor);
 
-			if(flash != 0.0) color = mix(color, flashColor, flash) * color.a;
+			if (flash != 0.0) color = mix(color, flashColor, flash) * color.a;
 			color *= daAlpha;
 			gl_FragColor = colorMult(color);
 		}')

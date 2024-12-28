@@ -1,7 +1,6 @@
 package states.stages;
 
 import states.stages.objects.*;
-import shaders.OverlayBlend;
 
 enum HenchmenKillState {
 	WAIT;
@@ -29,14 +28,6 @@ class Limo extends BaseStage {
 	override function create() {
 		var limoSunset:BGSprite;
 		add(limoSunset = new BGSprite('limo/limoSunset', -120, -50, .1, .1));
-		if (ClientPrefs.data.shaders) {
-			var skyOverlay:OverlayBlend = new OverlayBlend();
-			var sunOverlay:BGSprite = new BGSprite('limo/limoOverlay');
-			sunOverlay.setGraphicSize(Std.int(sunOverlay.width * 2));
-			sunOverlay.updateHitbox();
-			skyOverlay.funnyShit.input = sunOverlay.pixels;
-			limoSunset.shader = skyOverlay;
-		}
 
 		if(!lowQuality) {
 			add(limoMetalPole = new BGSprite('gore/metalPole', -500, 220, 0.4, 0.4));

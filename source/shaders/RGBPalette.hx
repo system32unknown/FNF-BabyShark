@@ -85,19 +85,30 @@ class RGBShaderReference {
 		return (enabled = value);
 	}
 
+	inline public function setRGB(r:FlxColor, g:FlxColor, b:FlxColor) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+	}
+	inline public function copyFrom(ref:RGBShaderReference) {
+		setRGB(ref.r, ref.g, ref.b);
+	}
+	inline public function copyFromPalette(palette:RGBPalette) {
+		setRGB(palette.r, palette.g, palette.b);
+	}
+
 	public var allowNew = true;
 	function cloneOriginal() {
-		if(allowNew) {
-			allowNew = false;
-			if(_original != parent) return;
+		if (!allowNew) return;
+		allowNew = false;
+		if(_original != parent) return;
 
-			parent = new RGBPalette();
-			parent.r = _original.r;
-			parent.g = _original.g;
-			parent.b = _original.b;
-			parent.mult = _original.mult;
-			_owner.shader = parent.shader;
-		}
+		parent = new RGBPalette();
+		parent.r = _original.r;
+		parent.g = _original.g;
+		parent.b = _original.b;
+		parent.mult = _original.mult;
+		_owner.shader = parent.shader;
 	}
 }
 
@@ -122,9 +133,7 @@ class RGBPaletteShader extends flixel.system.FlxAssets.FlxShader {
 			
 			color = mix(color, newColor, mult);
 			
-			if(color.a > 0.0) {
-				return vec4(color.rgb, color.a);
-			}
+			if(color.a > 0.0) return vec4(color.rgb, color.a);
 			return vec4(0.0, 0.0, 0.0, 0.0);
 		}')
 	@:glFragmentSource('

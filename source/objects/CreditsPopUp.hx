@@ -11,7 +11,6 @@ class CreditsPopUp extends FlxSpriteGroup {
 	public var funnyText:FlxText;
 
 	var txtFont:String;
-
 	public function new(x:Float, y:Float, text:String, songHead:SongHeading, font:String = 'Comic Sans MS Bold') {
 		super(x, y);
 		add(bg = new FlxSprite().makeGraphic(400, 50));

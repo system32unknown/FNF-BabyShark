@@ -7,6 +7,14 @@ import lime.app.Application;
  * Does not have any effect on other platforms.
  */
 class NativeUtil {
+	public static function setDPIAware():Void {
+		#if (cpp && windows)
+		if (!PlatformUtil.setDPIAware()) Logs.trace('Failed to set DPI Awareness', WARNING);
+		#else
+		Logs.trace('setDPIAware is not supported on this platform', WARNING);
+		#end
+	}
+
 	/**
 	 * Allocates a new console. The console will automatically be opened
 	 */

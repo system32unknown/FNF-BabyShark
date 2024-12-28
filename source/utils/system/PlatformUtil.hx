@@ -160,7 +160,6 @@ class PlatformUtil {
     ')
     public static function setTransparency(winName:String, alpha:Int, color:Int):Bool return false;
 
-    #if cpp
 	@:functionCode('		
 		// Get the current time
 		auto now = std::chrono::high_resolution_clock::now();
@@ -172,10 +171,10 @@ class PlatformUtil {
 		// Returns the second as double
 		return seconds.count();
 	')
-    #end
-    public function getNanoTime():#if cpp cpp.Float64 #else Float #end {
-        return -1;
-    }
+    public static function getNanoTime():#if cpp cpp.Float64 #else Float #end return -1;
+
+    @:functionCode('return SetProcessDPIAware();')
+    public static function setDPIAware():Bool return false;
 }
 #end
 

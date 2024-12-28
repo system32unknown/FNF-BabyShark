@@ -117,18 +117,20 @@ class ClientPrefs {
 	}
 
 	public static function load() {
-		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
-		for (key in Reflect.fields(data))
-			if (key != 'gameplaySettings' && Reflect.hasField(FlxG.save.data, key))
-				Reflect.setField(data, key, Reflect.field(FlxG.save.data, key));
-		
+		FlxG.save.bind('funkin', CoolUtil.getSavePath());
+		final fields:Array<String> = Type.getInstanceFields(SaveVariables);
+		for (i in Reflect.fields(FlxG.save.data)) {
+			if (i == 'gameplaySettings' || !fields.contains(i)) continue;
+			Reflect.setField(data, i, Reflect.field(FlxG.save.data, i));
+		}
+
 		if(Main.fpsVar != null) {
 			Main.fpsVar.visible = data.showFPS;
 			Main.fpsVar.memType = data.memCounterType;
 		}
 		FlxG.autoPause = data.autoPause;
 
-		if(FlxG.save.data.framerate == null) data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate, 60, 240));
+		if (FlxG.save.data.framerate == null) data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate * 2, 60, 240));
 		if(data.framerate > FlxG.drawFramerate)
 			FlxG.updateFramerate = FlxG.drawFramerate = data.framerate;
 		else FlxG.drawFramerate = FlxG.updateFramerate = data.framerate;

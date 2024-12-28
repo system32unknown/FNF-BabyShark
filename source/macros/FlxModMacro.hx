@@ -12,8 +12,6 @@ class FlxModMacro {
     */
     public static macro function buildFlxBasic():Array<Field> {
         #if macro
-        // The FlxBasic class. We can add new properties to this class.
-        // The fields of the FlxClass.
         var fields:Array<Field> = Context.getBuildFields();
 
         // Here, we add the zIndex attribute to all FlxBasic objects.

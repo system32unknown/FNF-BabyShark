@@ -2,18 +2,11 @@ package backend;
 
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.animation.FlxAnimationController;
-import objects.Note;
 class NoteLoader {
 	public static var defaultSkin:String = 'noteSkins/NOTE_assets';
 
     public static var noteSkinFramesMap:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
 	public static var noteSkinAnimsMap:Map<String, FlxAnimationController> = new Map<String, FlxAnimationController>();
-
-	//Function that initializes the first note. This way, we can recycle the notes
-	public static function initDefaultSkin(?noteSkin:String) {
-        if (noteSkin.length > 0) defaultSkin = noteSkin;
-        else if (ClientPrefs.data.noteSkin != 'Default') defaultSkin = 'noteSkins/NOTE_assets' + Note.getNoteSkinPostfix();
-    }
 
     public static function initNote(noteSkin:String = "") {
         var spr:FlxSprite = new FlxSprite();
@@ -40,7 +33,6 @@ class NoteLoader {
             addByPrefixCheck(spr, playAnim + 'Scroll', playAnimAlt + '0');
             spr.animation.addByPrefix(playAnim + 'Scroll', playAnim + '0');
         }
-
         noteSkinFramesMap.set(noteSkin, spr.frames);
         noteSkinAnimsMap.set(noteSkin, spr.animation);
     }

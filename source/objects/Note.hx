@@ -188,15 +188,8 @@ class Note extends FlxSprite {
 		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGBExtra[EK.gfxIndex[PlayState.mania][noteData]];
 		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixelExtra[EK.gfxIndex[PlayState.mania][noteData]];
 
-		if (arr != null && noteData > -1) {
-			rgbShader.r = arr[0];
-			rgbShader.g = arr[1];
-			rgbShader.b = arr[2];
-		} else {
-			rgbShader.r = FlxColor.RED;
-			rgbShader.g = FlxColor.LIME;
-			rgbShader.b = FlxColor.BLUE;
-		}
+		if (arr != null && noteData > -1) rgbShader.setRGB(arr[0], arr[1], arr[2]);
+		else rgbShader.setRGB(FlxColor.RED, FlxColor.LIME, FlxColor.BLUE);
 	}
 
 	function set_noteType(value:String):String {
@@ -208,24 +201,14 @@ class Note extends FlxSprite {
 				case 'Hurt Note':
 					ignoreNote = true;
 
-					rgbShader.r = 0xFF101010;
-					rgbShader.g = FlxColor.RED;
-					rgbShader.b = 0xFF990022;
-
 					// splash data and colors
+					rgbShader.setRGB(0xFF101010, FlxColor.RED, 0xFF990022);
 					noteSplashData.texture = 'noteSplashes-electric';
 
 					missHealth = isSustainNote ? .25 : .1;
 					hitCausesMiss = true;
 					hitsound = 'cancelMenu';
 					hitsoundChartEditor = false;
-				case 'Alt Animation':
-					animSuffix = '-alt';
-				case 'No Animation':
-					noAnimation = true;
-					noMissAnimation = true;
-				case 'GF Sing':
-					gfNote = true;
 			}
 			if (value != null && value.length > 1) backend.NoteTypesConfig.applyNoteTypeData(this, value);
 			if (hitsound != 'hitsound' && hitsoundVolume > 0) Paths.sound(hitsound); //precache new sound for being idiot-proof
@@ -269,17 +252,15 @@ class Note extends FlxSprite {
 	var _lastNoteOffX:Float = 0;
 	static var _lastValidChecked:String; //optimization
 	public var pixelHeight:Float = 6;
-	public var correctionOffset:Float = 0;
+	public var correctionOffset:Float = 0; //dont mess with this
 	public function reloadNote(texture:String = '', postfix:String = '') {
 		if (texture == null) texture = '';
 		if (postfix == null) postfix = '';
 
 		var skin:String = texture + postfix;
 		if(texture.length < 1) {
-			if(texture.length < 1) {
-				skin = PlayState.SONG?.arrowSkin;
-				if(skin == null || skin.length < 1) skin = defaultNoteSkin + postfix;
-			}
+			skin = PlayState.SONG?.arrowSkin;
+			if(skin == null || skin.length < 1) skin = defaultNoteSkin + postfix;
 		} else rgbShader.enabled = false;
 
 		var animName:String = null;
@@ -316,7 +297,7 @@ class Note extends FlxSprite {
 		} else {
 			frames = Paths.getSparrowAtlas(skin);
 			loadNoteAnims();
-			if(!isSustainNote) {
+			if (!isSustainNote) {
 				centerOffsets();
 				centerOrigin();
 			}
@@ -337,6 +318,7 @@ class Note extends FlxSprite {
 	function loadNoteAnims() {
 		var gfx:Int = EK.gfxIndex[PlayState.mania][noteData];
 		if (EK.colArray[gfx] == null) return;
+
 		var playAnim:String = EK.colArray[gfx];
 		var playAnimAlt:String = EK.colArrayAlt[gfx];
 		if (isSustainNote) {
@@ -359,6 +341,7 @@ class Note extends FlxSprite {
 	function loadPixelNoteAnims() {
 		var gfx:Int = EK.gfxIndex[PlayState.mania][noteData];
 		if (EK.colArray[gfx] == null) return;
+
 		var playAnim:String = EK.colArray[gfx];
 		if(isSustainNote) {
 			animation.add(playAnim + 'holdend', [gfx + 9], 12, true);
@@ -392,7 +375,7 @@ class Note extends FlxSprite {
 		if (tooLate && !inEditor && alpha > .3) alpha = .3;
 	}
 
-	override function destroy() {
+	override public function destroy() {
 		super.destroy();
 		_lastValidChecked = '';
 	}
@@ -468,6 +451,7 @@ class Note extends FlxSprite {
 		wasGoodHit = hitByOpponent = tooLate = canBeHit = spawned = followed = false; // Don't make an update call of this for the note group
 		exists = true;
 
+		multSpeed = 1;
 		strumTime = target.strumTime;
 		if (!inEditor) strumTime += ClientPrefs.data.noteOffset;
 
@@ -476,21 +460,21 @@ class Note extends FlxSprite {
 		isSustainEnds = CoolUtil.toBool(target.noteData & (1 << 10));					 // isHoldEnd
 		gfNote = CoolUtil.toBool(target.noteData & (1 << 11));							 // gfNote
 		animSuffix = CoolUtil.toBool(target.noteData & (1 << 12)) ? "-alt" : "";		 // altAnim
-		noAnimation = CoolUtil.toBool(target.noteData & (1 << 13));						 // noAnim
-		noMissAnimation = CoolUtil.toBool(target.noteData & (1 << 14));					 // noMissAnim
+		noAnimation = noMissAnimation = CoolUtil.toBool(target.noteData & (1 << 13));	 // noAnim
 		blockHit = CoolUtil.toBool(target.noteData & (1 << 15));				 		 // blockHit
 		noteData = target.noteData & PlayState.mania;
-		noteType = target.noteType;
 
 		// Absoluty should be here, or messing pixel texture glitches...
 		if (!PlayState.isPixelStage) {
 			if (target.noteSkin == null || target.noteSkin.length == 0 && texture != initSkin) texture = initSkin;
 			else if (target.noteSkin.length > 0 && target.noteSkin != texture) texture = target.noteSkin;
 		} else reloadNote(texture);
+
 		var colorRef:RGBPalette = inline initializeGlobalRGBShader(noteData);
-		rgbShader.r = colorRef.r;
-		rgbShader.g = colorRef.g;
-		rgbShader.b = colorRef.b;
+		rgbShader.copyFromPalette(colorRef);
+
+		if (Std.isOfType(target.noteType, String)) noteType = target.noteType; // applying note color on damage notes
+		else noteType = defaultNoteTypes[Std.parseInt(target.noteType)];
 
 		if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB) rgbShader.enabled = false;
 		sustainLength = target.holdLength ?? 0;
@@ -498,7 +482,7 @@ class Note extends FlxSprite {
 
 		copyAngle = !isSustainNote;
 		flipY = ClientPrefs.data.downScroll && isSustainNote;
-		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
+		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll', true);
 		correctionOffset = isSustainNote ? (flipY ? -originalHeight * 0.5 : originalHeight * 0.5) : 0;
 
 		if (PlayState.isPixelStage) offsetX = -5;

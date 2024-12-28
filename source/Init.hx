@@ -4,6 +4,10 @@ import flixel.addons.transition.FlxTransitionableState;
 import states.FlashingState;
 class Init extends flixel.FlxState {
 	override function create():Void {
+		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
+		Controls.load();
+		backend.Highscore.load();
+
 		FlxTransitionableState.skipNextTransOut = true;
 		Paths.clearStoredMemory();
 		utils.FunkinCache.init();
@@ -11,13 +15,7 @@ class Init extends flixel.FlxState {
 		#if LUA_ALLOWED Mods.pushGlobalMods(); #end
 		Mods.loadTopMod();
 
-		FlxG.save.bind('funkin', CoolUtil.getSavePath());
-		ClientPrefs.load();
 		Language.reloadPhrases();
-
-		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
-		Controls.load();
-		backend.Highscore.load();
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 
 		FlxG.fixedTimestep = false;
@@ -29,8 +27,8 @@ class Init extends flixel.FlxState {
 		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 
 		if(FlxG.save.data != null) {
-			if(FlxG.save.data.fullscreen != null) FlxG.fullscreen = FlxG.save.data.fullscreen;
-			if(FlxG.save.data.weekCompleted != null) states.StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
+			if (FlxG.save.data.fullscreen != null) FlxG.fullscreen = FlxG.save.data.fullscreen;
+			if (FlxG.save.data.weekCompleted != null) states.StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
 
 		super.create();
