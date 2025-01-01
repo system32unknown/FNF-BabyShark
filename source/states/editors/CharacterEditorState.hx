@@ -891,16 +891,10 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		}
 	}
 
-	final assetFolder = 'week1'; //load from assets/week1/
 	inline function loadBG() {
-		var lastLoaded:String = Paths.currentLevel;
-		Paths.currentLevel = assetFolder;
-
 		camEditor.bgColor = 0xFF666666;
 		dadPosition.set(100, 100);
 		bfPosition.set(770, 100);
-
-		Paths.currentLevel = lastLoaded;
 	}
 
 	inline function updatePointerPos(?snap:Bool = true) {

@@ -21,6 +21,9 @@ typedef NoteSplashData = {
 	useGlobalShader:Bool, //breaks r/g/b/a but makes it copy default colors for your custom note
 	useRGBShader:Bool,
 	antialiasing:Bool,
+	r:FlxColor,
+	g:FlxColor,
+	b:FlxColor,
 	a:Float
 }
 
@@ -102,8 +105,8 @@ class Note extends FlxSprite {
 	public var lateHitMult:Float = 1;
 
 	public static var SUSTAIN_SIZE:Int = 44;
-	public static var originalWidth:Float = 160 * 0.7;
-	public static var originalHeight:Float = 160 * 0.7;
+	public static var originalWidth:Float = 160 * .7;
+	public static var originalHeight:Float = 160 * .7;
 	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
 
 	public var noteSplashData:NoteSplashData = {
@@ -112,6 +115,9 @@ class Note extends FlxSprite {
 		antialiasing: !PlayState.isPixelStage,
 		useGlobalShader: false,
 		useRGBShader: (PlayState.SONG != null) ? !(PlayState.SONG.disableNoteRGB == true) : true,
+		r: -1,
+		g: -1,
+		b: -1,
 		a: ClientPrefs.data.splashAlpha
 	};
 
@@ -193,7 +199,7 @@ class Note extends FlxSprite {
 	}
 
 	function set_noteType(value:String):String {
-		noteSplashData.texture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
+		noteSplashData.texture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes/noteSplashes';
 		if (rgbShader != null && rgbShader.enabled) defaultRGB();
 
 		if(noteData > -1 && noteType != value) {
@@ -203,7 +209,10 @@ class Note extends FlxSprite {
 
 					// splash data and colors
 					rgbShader.setRGB(0xFF101010, FlxColor.RED, 0xFF990022);
-					noteSplashData.texture = 'noteSplashes-electric';
+
+					noteSplashData.r = 0xFFFF0000;
+					noteSplashData.g = 0xFF101010;
+					noteSplashData.texture = 'noteSplashes/noteSplashes-electric';
 
 					missHealth = isSustainNote ? .25 : .1;
 					hitCausesMiss = true;

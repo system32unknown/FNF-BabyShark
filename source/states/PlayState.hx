@@ -2321,15 +2321,15 @@ class PlayState extends MusicBeatState {
 				}
 				if (frameId != -1) targetSplash.killLimit(frameId);
 			}
-			spawnNoteSplash(note, splashNoteData);
+			if (splashStrum != null) spawnNoteSplash(splashStrum.x, splashStrum.y, splashNoteData, note);
 			++splashMoment[splashNoteData];
 		}
 	}
 
-	public function spawnNoteSplash(note:Note = null, splashNoteData:Int = -1) {
+	public function spawnNoteSplash(x:Float = 0, y:Float = 0, splashNoteData:Int = -1, note:Note = null) {
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
 		splash.babyArrow = note.strum;
-		splash.spawnSplashNote(note, splashNoteData);
+		splash.spawnSplashNote(x, y, splashNoteData, note);
 		if (splashNoteData >= 0) splashUsing[splashNoteData].push(splash);
 		grpNoteSplashes.add(splash);
 	}

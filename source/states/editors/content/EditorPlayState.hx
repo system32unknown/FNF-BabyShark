@@ -33,7 +33,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 	
 	var combo:Int = 0;
-	var keysArray:Array<String> =  ['note_left', 'note_down', 'note_up', 'note_right'];
+	var keysArray:Array<String> = ['note_left', 'note_down', 'note_up', 'note_right'];
 	
 	var comboGroup:FlxSpriteGroup;
 	var noteGroup:FlxTypedGroup<FlxBasic>;
@@ -270,10 +270,10 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	// Borrowed from PlayState
 	function generateSong() {
-		songSpeed = PlayState.SONG.speed;
-		switch(ClientPrefs.getGameplaySetting('scrolltype')) {
-			case "multiplicative": songSpeed = PlayState.SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
+		songSpeed = switch(ClientPrefs.getGameplaySetting('scrolltype')) {
+			case "multiplicative":  PlayState.SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
 			case "constant": songSpeed = ClientPrefs.getGameplaySetting('scrollspeed');
+			default: PlayState.SONG.speed;
 		}
 		
 		var songData:SwagSong = PlayState.SONG;
@@ -339,7 +339,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			var targetAlpha:Float = 1;
 			if (player < 1) {
 				if(!ClientPrefs.data.opponentStrums) targetAlpha = 0;
-				else if(middleScroll) targetAlpha = 0.35;
+				else if(middleScroll) targetAlpha = .35;
 			}
 
 			var babyArrow:StrumNote = new StrumNote(strumLine.x, strumLine.y, i, player);

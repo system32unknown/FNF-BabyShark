@@ -254,7 +254,10 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		var tab_group:FlxSpriteGroup = spriteList_box.getTab('Sprite List').menu;
 		spriteListRadioGroup = new PsychUIRadioGroup(10, 10, [], 25, 18, false, 200);
 		spriteListRadioGroup.cameras = [camHUD];
-		spriteListRadioGroup.onClick = () -> updateSelectedUI();
+		spriteListRadioGroup.onClick = () -> {
+			trace('Selected sprite: ${spriteListRadioGroup.checkedRadio.label}');
+			updateSelectedUI();
+		}
 		tab_group.add(spriteListRadioGroup);
 		
 		var buttonX:Float = spriteList_box.x + spriteList_box.width - 10;
@@ -432,7 +435,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		createPopup = new FlxSpriteGroup();
 		createPopup.cameras = [camHUD];
 
-		var bg:FlxSprite = new FlxSprite().makeSolid(300, 240);
+		var bg:FlxSprite = new FlxSprite().makeSolid(300, 240, FlxColor.BLACK);
 		bg.alpha = 0.6;
 		bg.gameCenter();
 		createPopup.add(bg);
@@ -1465,6 +1468,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			}
 
 			createPopup.visible = createPopup.active = false;
+			#if MODS_ALLOWED
 			var modFolder:String = (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0) ? Paths.mods('${Mods.currentModDirectory}/images/') : Paths.mods('images/');
 			openSubState(new BasePrompt(480, 160, 'This file is not inside Psych Engine.', (state:BasePrompt) -> {
 				var txt:FlxText = new FlxText(0, state.bg.y + 60, 460, 'Copy to: "$modFolder"?', 11);
@@ -1503,6 +1507,9 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 				btn.cameras = state.cameras;
 				state.add(btn);
 			}));
+			#else
+			showOutput('ERROR! File cannot be used, move it to "assets" and recompile.', true);
+			#end
 		}
 		_file = null;
 		#else
@@ -1771,7 +1778,6 @@ class StageEditorAnimationSubstate extends FlxSubState {
 	var animationIndicesInputText:PsychUIInputText;
 	var animationFramerate:PsychUINumericStepper;
 	var animationLoopCheckBox:PsychUICheckBox;
-	var focusCheck:Array<Dynamic> = [];
 	var mainAnimTxt:FlxText;
 	function addAnimationsUI() {
 		var tab_group:FlxSpriteGroup = UI_animationbox.getTab('Animations').menu;

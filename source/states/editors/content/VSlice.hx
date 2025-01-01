@@ -26,7 +26,7 @@ typedef VSliceEvent = {
 }
 
 // Metadata
-typedef VSliceMetadata =  {
+typedef VSliceMetadata = {
 	var songName:String;
 	var artist:String;
 	var charter:String;

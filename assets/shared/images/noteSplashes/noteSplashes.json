@@ -1,113 +1,65 @@
 {
 	"animations": {
 		"purple": {
-			"prefix": "note splash A 10",
-			"fps": [
-				22,
-				26
-			],
-			"offsets": [
-				60,
-				60
-			],
+			"prefix": "note splash A 1",
+			"fps": [22, 26],
+			"offsets": [-58, -55],
 			"indices": [],
 			"name": "purple",
 			"noteData": 0
 		},
-		"purple2": {
-			"prefix": "note splash A 20",
-			"fps": [
-				22,
-				26
-			],
-			"offsets": [
-				76,
-				80
-			],
-			"indices": [],
-			"name": "purple2",
-			"noteData": 4
-		},
 		"blue": {
-			"prefix": "note splash B 10",
-			"fps": [
-				22,
-				26
-			],
-			"offsets": [
-				55,
-				60
-			],
+			"prefix": "note splash B 1",
+			"fps": [22, 26],
+			"offsets": [-58, -55],
 			"indices": [],
 			"name": "blue",
 			"noteData": 1
 		},
-		"blue2": {
-			"prefix": "note splash B 20",
-			"fps": [
-				22,
-				26
-			],
-			"offsets": [
-				70,
-				76
-			],
-			"indices": [],
-			"name": "blue2",
-			"noteData": 5
-		},
 		"green": {
-			"prefix": "note splash C 10",
-			"fps": [
-				22,
-				26
-			],
-			"offsets": [
-				57,
-				61
-			],
+			"prefix": "note splash C 1",
+			"fps": [22, 26],
+			"offsets": [-58, -55],
 			"indices": [],
 			"name": "green",
 			"noteData": 2
 		},
-		"green2": {
-			"prefix": "note splash C 20",
-			"fps": [
-				22,
-				26
-			],
-			"offsets": [
-				70,
-				80
-			],
-			"indices": [],
-			"name": "green2",
-			"noteData": 6
-		},
 		"red": {
-			"prefix": "note splash D 10",
-			"fps": [
-				22,
-				26
-			],
-			"offsets": [
-				57,
-				58
-			],
+			"prefix": "note splash D 1",
+			"fps": [22, 26],
+			"offsets": [-58, -55],
 			"indices": [],
 			"name": "red",
 			"noteData": 3
 		},
+		"purple2": {
+			"prefix": "note splash A 2",
+			"fps": [22, 26],
+			"offsets": [-52, -48],
+			"indices": [],
+			"name": "purple2",
+			"noteData": 4
+		},
+		"blue2": {
+			"prefix": "note splash B 2",
+			"fps": [22, 26],
+			"offsets": [-52, -48],
+			"indices": [],
+			"name": "blue2",
+			"noteData": 5
+		},
+		"green2": {
+			"prefix": "note splash C 2",
+			"fps": [22, 26],
+			"offsets": [-52, -48],
+			"indices": [],
+			"name": "green2",
+			"noteData": 6
+		},
 		"red2": {
-			"prefix": "note splash D 20",
-			"fps": [
-				22,
-				26
-			],
-			"offsets": [
-				66,
-				80
-			],
+			"prefix": "note splash D 2",
+			"fps": [22, 26],
+			"offsets": [-52, -48],
 			"indices": [],
 			"name": "red2",
 			"noteData": 7

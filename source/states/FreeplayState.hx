@@ -222,8 +222,8 @@ class FreeplayState extends MusicBeatState {
 		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 		if (!player.playingMusic) {
-			comboText.text = Language.getPhrase('high_combo', 'RATING: {1}', [intendedcombo]);
 			scoreText.text = Language.getPhrase('high_score', 'HIGHSCORE: {1} ({2}%)', [lerpScore, ratingSplit.join('.')]);
+			comboText.text = Language.getPhrase('high_combo', 'RATING: {1}', [intendedcombo]);
 			positionHighscore();
 
 			if(songs.length > 1) {
