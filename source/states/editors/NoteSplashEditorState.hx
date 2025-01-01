@@ -88,8 +88,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		splash.alpha = .0;
 		splashes.add(splash);
 
-		if (splash.config != null)
-			config = splash.config;
+		if (splash.config != null) config = splash.config;
 
 		parseRGB();
 
