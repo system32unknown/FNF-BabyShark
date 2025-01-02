@@ -6,7 +6,6 @@ import objects.NoteSplash.NoteSplashAnim;
 import objects.StrumNote;
 
 class VisualsSettingsSubState extends BaseOptionsMenu {
-	var noteOptionID:Int = -1;
 	var notes:FlxTypedGroup<StrumNote>;
 	var splashes:FlxTypedGroup<NoteSplash>;
 	var noteY:Float = 90;
@@ -47,7 +46,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 				note.centerOffsets();
 				note.centerOrigin();
 			});
-			noteOptionID = optionsArray.length - 1;
 		}
 		
 		var noteSplashes:Array<String> = Mods.mergeAllTextsNamed('images/noteSplashes/list.txt');
@@ -182,7 +180,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 
 	override function destroy() {
 		if(changedMusic && !OptionsState.onPlayState) FlxG.sound.playMusic(Paths.music('freakyMenu'));
-		backend.NoteLoader.dispose();
 		Note.globalRgbShaders = [];
 		super.destroy();
 	}

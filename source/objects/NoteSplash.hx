@@ -60,14 +60,13 @@ class NoteSplash extends FlxSprite {
 		maxAnims = 0;
 
 		texture = splash;
+		if (texture == null || texture.length < 1) texture = defaultNoteSplash;
+		if (texture == defaultNoteSplash) texture += getSplashSkinPostfix();
+
 		frames = Paths.getSparrowAtlas(texture);
 		if (frames == null) {
-			texture = defaultNoteSplash + getSplashSkinPostfix();
+			texture = defaultNoteSplash;
 			frames = Paths.getSparrowAtlas(texture);
-			if (frames == null) {
-				texture = defaultNoteSplash;
-				frames = Paths.getSparrowAtlas(texture);
-			}
 		}
 
 		var path:String = 'images/$texture';
@@ -135,9 +134,7 @@ class NoteSplash extends FlxSprite {
 		var failedToFind:Bool = false;
 		while (true) {
 			for (v in EK.colArray) {
-				var chkanim:String = '$anim $v ${maxAnims + 1}';
-				if (!checkForAnim(chkanim)) {
-					Logs.trace("failed to find: " + chkanim, ERROR);
+				if (!checkForAnim('$anim $v ${maxAnims + 1}')) {
 					failedToFind = true;
 					break;
 				}
@@ -184,7 +181,7 @@ class NoteSplash extends FlxSprite {
 
 		var tempShader:RGBPalette = null;
 		if (config.allowRGB) {
-			if (note == null) note = new Note().recycleNote(Note.DEFAULT_CAST);
+			if (note == null && Std.isOfType(FlxG.state, PlayState)) note = new Note().recycleNote(Note.DEFAULT_CAST);
 			Note.initializeGlobalRGBShader(noteData % EK.colArray.length);
 			if (inEditor || (note == null || note.noteSplashData.useRGBShader) && (PlayState.SONG == null || !PlayState.SONG.disableNoteRGB)) {
 				tempShader = new RGBPalette();
@@ -274,7 +271,6 @@ class NoteSplash extends FlxSprite {
 
 	public function playDefaultAnim():String {
 		var anim:String = noteDataMap.get(noteData);
-		trace(anim);
 		if (anim != null && animation.exists(anim)) animation.play(anim, true);
 		return anim;
 	}

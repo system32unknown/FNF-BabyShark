@@ -40,7 +40,7 @@ class CreditsState extends MusicBeatState {
 		["Itz_Miles", 			'miles', 			'Linear GFX Transformations Library (ParallaxLT)', 				'https://x.com/Itz_MilesDev', 		'7AAAFE'],
 		[''],
 		['Extra Keys Team'],
-		['Magman03k7', 			'',					'Main Programmer of Psych Engine EK', 							'https://github.com/Magman03k7', 	'B9AF27'],
+		['Magman03k7', 			'magman',			'Main Programmer of Psych Engine EK', 							'https://github.com/Magman03k7', 	'B9AF27'],
 		['SrPerez', 			'perez', 			'1-9 keys art', 												'https://x.com/newsrperez',			'FF9E00'],
 		[''],
 		['Special Thanks'],

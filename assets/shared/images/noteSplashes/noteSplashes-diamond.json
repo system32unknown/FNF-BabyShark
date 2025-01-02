@@ -4,7 +4,7 @@
 			"noteData": 0,
 			"offsets": [-28, -52],
 			"fps": [22, 26],
-			"prefix": "note splash diamond purple 1",
+			"prefix": "note splash diamond A 1",
 			"name": "purple",
 			"indices": []
 		},
@@ -12,7 +12,7 @@
 			"noteData": 1,
 			"offsets": [-28, -52],
 			"fps": [22, 26],
-			"prefix": "note splash diamond blue 1",
+			"prefix": "note splash diamond B 1",
 			"name": "blue",
 			"indices": []
 		},
@@ -20,7 +20,7 @@
 			"noteData": 2,
 			"offsets": [-28, -52],
 			"fps": [22, 26],
-			"prefix": "note splash diamond green 1",
+			"prefix": "note splash diamond C 1",
 			"name": "green",
 			"indices": []
 		},
@@ -28,7 +28,7 @@
 			"noteData": 3,
 			"offsets": [-28, -52],
 			"fps": [22, 26],
-			"prefix": "note splash diamond red 1",
+			"prefix": "note splash diamond D 1",
 			"name": "red",
 			"indices": []
 		},
@@ -36,7 +36,7 @@
 			"noteData": 4,
 			"offsets": [-16, -55],
 			"fps": [22, 26],
-			"prefix": "note splash diamond purple 2",
+			"prefix": "note splash diamond A 2",
 			"name": "purple2",
 			"indices": []
 		},
@@ -44,7 +44,7 @@
 			"noteData": 5,
 			"offsets": [-16, -55],
 			"fps": [22, 26],
-			"prefix": "note splash diamond blue 2",
+			"prefix": "note splash diamond B 2",
 			"name": "blue2",
 			"indices": []
 		},
@@ -52,7 +52,7 @@
 			"noteData": 6,
 			"offsets": [-16, -55],
 			"fps": [22, 26],
-			"prefix": "note splash diamond green 2",
+			"prefix": "note splash diamond C 2",
 			"name": "green2",
 			"indices": []
 		},
@@ -60,7 +60,7 @@
 			"noteData": 7,
 			"offsets": [106, 60],
 			"fps": [22, 26],
-			"prefix": "note splash diamond red 2",
+			"prefix": "note splash diamond D 2",
 			"name": "red2",
 			"indices": []
 		}

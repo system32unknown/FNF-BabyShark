@@ -1,11 +1,9 @@
 package states.editors;
 
-import objects.Note;
 import objects.NoteSplash;
 import objects.StrumNote;
 import openfl.net.FileFilter;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
-import flixel.input.keyboard.FlxKey;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
@@ -17,7 +15,6 @@ class NoteSplashEditorState extends MusicBeatState {
 	var splashes:FlxTypedSpriteGroup<NoteSplash> = new FlxTypedSpriteGroup();
 	var config = NoteSplash.createConfig();
 
-	var tipText:FlxText;
 	var errorText:FlxText;
 	var curText:FlxText;
 
@@ -33,7 +30,6 @@ class NoteSplashEditorState extends MusicBeatState {
 		if (imageSkin == null) imageSkin = NoteSplash.defaultNoteSplash + NoteSplash.getSplashSkinPostfix();
 
 		FlxG.mouse.visible = true;
-
 		Controls.toggleVolumeKeys(false);
 
 		#if DISCORD_ALLOWED
@@ -361,7 +357,7 @@ class NoteSplashEditorState extends MusicBeatState {
 
 		var red:PsychUINumericStepper = new PsychUINumericStepper(60, 30, 1, redShader[0], 0, 255, 0);
 		red.onValueChange = () -> {
-			var shader = switch (changeShader.selectedLabel) {
+			switch (changeShader.selectedLabel) {
 				case "Red": redShader[0] = Std.int(red.value);
 				case "Green": greenShader[0] = Std.int(red.value);
 				case _: blueShader[0] = Std.int(red.value);
@@ -476,12 +472,12 @@ class NoteSplashEditorState extends MusicBeatState {
 				if (FlxG.keys.justPressed.C) {
 					copiedOffset = config.animations.get(curAnim).offsets.copy();
 				} else if (FlxG.keys.justPressed.V) {
-					var conf = config.animations.get(curAnim);
+					var conf:NoteSplashAnim = config.animations.get(curAnim);
 					conf.offsets = copiedOffset.copy();
 					config.animations.set(curAnim, conf);
 					changedOffset = true;
 				} else if (FlxG.keys.justPressed.R) {
-					var conf = config.animations.get(curAnim);
+					var conf:NoteSplashAnim = config.animations.get(curAnim);
 					conf.offsets = [0, 0];
 					config.animations.set(curAnim, conf);
 					changedOffset = true;
@@ -520,7 +516,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		}
 
 		if (FlxG.mouse.overlaps(strums)) {
-			strums.forEach(function(strum:StrumNote) {
+			strums.forEach((strum:StrumNote) -> {
 				if (FlxG.mouse.overlaps(strum)) {
 					if (!FlxG.mouse.justPressed) {
 						if (strum.animation.curAnim.name != 'pressed' && strum.animation.curAnim.name != 'confirm') strum.playAnim('pressed');
@@ -531,7 +527,7 @@ class NoteSplashEditorState extends MusicBeatState {
 						splash.inEditor = true;
 						splash.config = config;
 						splash.babyArrow = strum;
-						splash.spawnSplashNote(0, 0, strum.ID % EK.keys(PlayState.mania));
+						splash.spawnSplashNote(0, 0, strum.ID % 4);
 						splashes.add(splash);
 					}
 				} else strum.playAnim('static');
@@ -546,7 +542,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		if (noteData < 0) noteData = 0;
 
 		if (name != null && splash.animation.exists(name)) {
-			splash.babyArrow = strums.members[noteData % EK.keys(PlayState.mania)];
+			splash.babyArrow = strums.members[noteData % 4];
 			splash.spawnSplashNote(0, 0, noteData, null, false);
 			splash.alpha = 1;
 			splashes.add(splash);
@@ -560,9 +556,7 @@ class NoteSplashEditorState extends MusicBeatState {
 	}
 
 	function resetRGB() {
-		redShader = [0, 0, 0];
-		greenShader = [0, 0, 0];
-		blueShader = [0, 0, 0];
+		redShader = greenShader = blueShader = [0, 0, 0];
 	}
 
 	function parseRGB() {

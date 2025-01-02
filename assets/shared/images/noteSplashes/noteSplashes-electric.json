@@ -4,7 +4,7 @@
 			"offsets": [-44, -54],
 			"noteData": 0,
 			"fps": [22, 26],
-			"prefix": "splash electro purple 1",
+			"prefix": "splash electro A 1",
 			"indices": [],
 			"name": "purple"
 		},
@@ -12,7 +12,7 @@
 			"offsets": [-44, -54],
 			"noteData": 1,
 			"fps": [22, 26],
-			"prefix": "splash electro blue 1",
+			"prefix": "splash electro B 1",
 			"indices": [],
 			"name": "blue"
 		},
@@ -20,7 +20,7 @@
 			"offsets": [-44, -54],
 			"noteData": 3,
 			"fps": [22, 26],
-			"prefix": "splash electro red 1",
+			"prefix": "splash electro D 1",
 			"indices": [],
 			"name": "red"
 		},
@@ -28,7 +28,7 @@
 			"offsets": [-44, -54],
 			"noteData": 2,
 			"fps": [22, 26],
-			"prefix": "splash electro green 1",
+			"prefix": "splash electro C 1",
 			"indices": [],
 			"name": "green"
 		}
