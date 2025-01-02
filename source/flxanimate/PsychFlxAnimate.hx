@@ -9,11 +9,11 @@ import flxanimate.FlxAnimate as OriginalFlxAnimate;
 class PsychFlxAnimate extends OriginalFlxAnimate {
 	public function loadAtlasEx(img:flixel.system.FlxAssets.FlxGraphicAsset, pathOrStr:String = null, myJson:Dynamic = null) {
 		var animJson:AnimAtlas = null;
-		if(myJson is String) {
+		if (myJson is String) {
 			var trimmed:String = pathOrStr.trim();
 			trimmed = trimmed.substr(trimmed.length - 5).toLowerCase();
 
-			if(trimmed == '.json') myJson = File.getContent(myJson); //is a path
+			if (trimmed == '.json') myJson = File.getContent(myJson); //is a path
 			animJson = cast haxe.Json.parse(_removeBOM(myJson));
 		} else animJson = cast myJson;
 
@@ -23,7 +23,7 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 		var trimmed:String = pathOrStr.trim();
 		trimmed = trimmed.substr(trimmed.length - 5).toLowerCase();
 
-		if(trimmed == '.json') { //Path is json
+		if (trimmed == '.json') { //Path is json
 			myData = File.getContent(pathOrStr);
 			isXml = false;
 		} else if (trimmed.substr(1) == '.xml') { //Path is xml
@@ -47,13 +47,13 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 		}
 
 		anim._loadAtlas(animJson);
-		if(!isXml) frames = FlxAnimateFrames.fromSpriteMap(cast myData, img);
+		if (!isXml) frames = FlxAnimateFrames.fromSpriteMap(cast myData, img);
 		else frames = FlxAnimateFrames.fromSparrow(cast myData, img);
 		origin = anim.curInstance.symbol.transformationPoint;
 	}
 
 	override function draw() {
-		if(anim.curInstance == null || anim.curSymbol == null) return;
+		if (anim.curInstance == null || anim.curSymbol == null) return;
 		super.draw();
 	}
 
@@ -74,11 +74,11 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 	}
 
 	public function pauseAnimation() {
-		if(anim.curInstance == null || anim.curSymbol == null) return;
+		if (anim.curInstance == null || anim.curSymbol == null) return;
 		anim.pause();
 	}
 	public function resumeAnimation() {
-		if(anim.curInstance == null || anim.curSymbol == null) return;
+		if (anim.curInstance == null || anim.curSymbol == null) return;
 		anim.play();
 	}
 }

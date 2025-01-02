@@ -61,7 +61,7 @@ class TitleState extends MusicBeatState {
 
 		logo = new FlxSprite(logoPosition.x, logoPosition.y);
 		logo.antialiasing = ClientPrefs.data.antialiasing;
-		if(!FileSystem.exists(Paths.modsXml('logobumpin'))) {
+		if (!FileSystem.exists(Paths.modsXml('logobumpin'))) {
 			logo.loadGraphic(Paths.image('logobumpin'));
 			logo.setGraphicSize(Std.int(logo.width * titleSize));
 		} else {
@@ -142,9 +142,9 @@ class TitleState extends MusicBeatState {
 			titleStartY = titleJSON.titlestarty;
 			musicBPM = titleJSON.bpm;
 
-			if(titleJSON.animation != null && titleJSON.animation.length > 0) animationName = titleJSON.animation;
-			if(titleJSON.dance_left != null && titleJSON.dance_left.length > 0) danceLeftFrames = titleJSON.dance_left;
-			if(titleJSON.dance_right != null && titleJSON.dance_right.length > 0) danceRightFrames = titleJSON.dance_right;
+			if (titleJSON.animation != null && titleJSON.animation.length > 0) animationName = titleJSON.animation;
+			if (titleJSON.dance_left != null && titleJSON.dance_left.length > 0) danceLeftFrames = titleJSON.dance_left;
+			if (titleJSON.dance_right != null && titleJSON.dance_right.length > 0) danceRightFrames = titleJSON.dance_right;
 			useIdle = (titleJSON.idle == true);
 
 			if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.trim().length > 0) {
@@ -230,10 +230,10 @@ class TitleState extends MusicBeatState {
 	override function beatHit() {
 		super.beatHit();
 		
-		if(!useIdle) {
+		if (!useIdle) {
 			gf.animation.play(curBeat % 2 == 0 ? 'left' : 'right', true);
-		} else if(curBeat % 2 == 0) gf.animation.play('idle', true);
-		if(foundXml) logo.animation.play('bump', true);
+		} else if (curBeat % 2 == 0) gf.animation.play('idle', true);
+		if (foundXml) logo.animation.play('bump', true);
 
 		if (seenIntro) return;
 
@@ -285,7 +285,7 @@ class TitleState extends MusicBeatState {
 
 	#if CHECK_FOR_UPDATES
 	function checkUpdate():Void {
-		if(ClientPrefs.data.checkForUpdates && !seenIntro) {
+		if (ClientPrefs.data.checkForUpdates && !seenIntro) {
 			trace('checking for update');
 			var http:Http = new Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/CHANGELOG.md");
 			var returnedData:Array<String> = [];
@@ -299,7 +299,7 @@ class TitleState extends MusicBeatState {
 				updateVersion = returnedData[0];
 				final curVersion:String = Main.engineVer.version;
 				trace('version online: ' + updateVersion + ', your version: ' + curVersion);
-				if(updateVersion != curVersion) {
+				if (updateVersion != curVersion) {
 					trace('versions arent matching!');
 					OutdatedState.curChanges = returnedData[1];
 					mustUpdate = true;

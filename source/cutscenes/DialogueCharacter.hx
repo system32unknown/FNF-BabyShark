@@ -32,7 +32,7 @@ class DialogueCharacter extends FlxSprite {
 	public function new(x:Float = 0, y:Float = 0, character:String = null) {
 		super(x, y);
 
-		if(character == null) character = DEFAULT_CHARACTER;
+		if (character == null) character = DEFAULT_CHARACTER;
 		this.curCharacter = character;
 
 		reloadCharacterJson(character);
@@ -40,7 +40,7 @@ class DialogueCharacter extends FlxSprite {
 		reloadAnimations();
 
 		antialiasing = ClientPrefs.data.antialiasing;
-		if(jsonFile.no_antialiasing == true) antialiasing = false;
+		if (jsonFile.no_antialiasing == true) antialiasing = false;
 	}
 
 	public function reloadCharacterJson(character:String) {
@@ -49,8 +49,8 @@ class DialogueCharacter extends FlxSprite {
 
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);
-		if(!FileSystem.exists(path)) path = Paths.getSharedPath(characterPath);
-		if(!FileSystem.exists(path)) path = Paths.getSharedPath('images/dialogue/$DEFAULT_CHARACTER.json');
+		if (!FileSystem.exists(path)) path = Paths.getSharedPath(characterPath);
+		if (!FileSystem.exists(path)) path = Paths.getSharedPath('images/dialogue/$DEFAULT_CHARACTER.json');
 		rawJson = File.getContent(path);
 		#else
 		rawJson = openfl.utils.Assets.getText(Paths.getSharedPath(characterPath));
@@ -61,7 +61,7 @@ class DialogueCharacter extends FlxSprite {
 
 	public function reloadAnimations() {
 		dialogueAnimations.clear();
-		if(jsonFile.animations != null && jsonFile.animations.length > 0) {
+		if (jsonFile.animations != null && jsonFile.animations.length > 0) {
 			for (anim in jsonFile.animations) {
 				animation.addByPrefix(anim.anim, anim.loop_name, 24, isGhost);
 				animation.addByPrefix(anim.anim + IDLE_POSTFIX, anim.idle_name, 24, true);
@@ -72,18 +72,18 @@ class DialogueCharacter extends FlxSprite {
 
 	public function playAnim(animName:String = null, playIdle:Bool = false) {
 		var leAnim:String = animName;
-		if(animName == null || !dialogueAnimations.exists(animName)) { //Anim is null, get a random animation
+		if (animName == null || !dialogueAnimations.exists(animName)) { //Anim is null, get a random animation
 			var arrayAnims:Array<String> = [for (anim in dialogueAnimations) anim.anim];
-			if(arrayAnims.length > 0) leAnim = arrayAnims[FlxG.random.int(0, arrayAnims.length - 1)];
+			if (arrayAnims.length > 0) leAnim = arrayAnims[FlxG.random.int(0, arrayAnims.length - 1)];
 		}
 
-		if(dialogueAnimations.exists(leAnim) && (dialogueAnimations.get(leAnim).loop_name == null || dialogueAnimations.get(leAnim).loop_name.length < 1 || dialogueAnimations.get(leAnim).loop_name == dialogueAnimations.get(leAnim).idle_name))
+		if (dialogueAnimations.exists(leAnim) && (dialogueAnimations.get(leAnim).loop_name == null || dialogueAnimations.get(leAnim).loop_name.length < 1 || dialogueAnimations.get(leAnim).loop_name == dialogueAnimations.get(leAnim).idle_name))
 			playIdle = true;
 		animation.play(playIdle ? leAnim + IDLE_POSTFIX : leAnim, false);
 
-		if(dialogueAnimations.exists(leAnim)) {
+		if (dialogueAnimations.exists(leAnim)) {
 			var anim:DialogueAnimArray = dialogueAnimations.get(leAnim);
-			if(playIdle) offset.set(anim.idle_offsets[0] * scale.x, anim.idle_offsets[1] * scale.y);
+			if (playIdle) offset.set(anim.idle_offsets[0] * scale.x, anim.idle_offsets[1] * scale.y);
 			else offset.set(anim.loop_offsets[0] * scale.x, anim.loop_offsets[1] * scale.y);
 		} else {
 			offset.set();
@@ -92,7 +92,7 @@ class DialogueCharacter extends FlxSprite {
 	}
 
 	public function animationIsLoop():Bool {
-		if(animation.curAnim == null) return false;
+		if (animation.curAnim == null) return false;
 		return !animation.curAnim.name.endsWith(IDLE_POSTFIX);
 	}
 }

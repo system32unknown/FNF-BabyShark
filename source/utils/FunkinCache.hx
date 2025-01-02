@@ -35,12 +35,12 @@ class FunkinCache extends openfl.utils.AssetCache {
 	}
 
 	public function clearSecondLayer() {
-		for(k in bitmapData2.keys()) {
+		for (k in bitmapData2.keys()) {
 			FlxG.bitmap.removeByKey(k);
 			LimeAssets.cache.image.remove(k);
 		}
-		for(k in font2.keys()) LimeAssets.cache.font.remove(k);
-		for(k in sound2.keys()) LimeAssets.cache.audio.remove(k);
+		for (k in font2.keys()) LimeAssets.cache.font.remove(k);
+		for (k in sound2.keys()) LimeAssets.cache.audio.remove(k);
 
 		bitmapData2 = [];
 		font2 = [];

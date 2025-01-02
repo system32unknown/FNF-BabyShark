@@ -42,7 +42,7 @@ package backend;
 		var value:Judgement = max;
 		if (bot) value = min
 		else {
-			for(i in 0...data.length - 1) {
+			for (i in 0...data.length - 1) {
 				if (diff <= data[i].timing) {
 					value = data[i]; //skips last window (Shit)
 					break;

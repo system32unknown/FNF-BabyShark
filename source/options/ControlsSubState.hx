@@ -143,24 +143,24 @@ class ControlsSubState extends FlxSubState {
 
 		var myID:Int = 0;
 		for (i => option in options) {
-			if(option[0] && (option.length > 4 && option[4] == curNoteKeys || option.length <= 4)) {
-				if(option.length > 1) {
+			if (option[0] && (option.length > 4 && option[4] == curNoteKeys || option.length <= 4)) {
+				if (option.length > 1) {
 					var isCentered:Bool = (option.length < 3);
 					var isDefaultKey:Bool = (option[1] == defaultKey);
 					var isDisplayKey:Bool = (isCentered && !isDefaultKey);
 
 					var str:String = option[1];
 					var keyStr:String = option[2];
-					if(isDefaultKey) str = Language.getPhrase(str);
+					if (isDefaultKey) str = Language.getPhrase(str);
 					var text:Alphabet = new Alphabet(475, 300, !isDisplayKey ? Language.getPhrase('key_$keyStr', str) : Language.getPhrase('keygroup_$str', str), isDisplayKey ? NORMAL : BOLD);
 					text.isMenuItem = true;
 					text.changeX = false;
 					text.distancePerItem.y = 60;
 					text.targetY = myID;
-					if(text.text.endsWith('KEY')) text.text = '$curNoteKeys KEY';
+					if (text.text.endsWith('KEY')) text.text = '$curNoteKeys KEY';
 					text.ID = myID;
 					lastID = myID;
-					if(!isDisplayKey) {
+					if (!isDisplayKey) {
 						text.alignment = RIGHT;
 						text.x -= 200;
 						grpOptions.add(text);
@@ -168,7 +168,7 @@ class ControlsSubState extends FlxSubState {
 						curOptionsValid.push(myID);
 					} else grpDisplay.add(text);
 
-					if(isCentered) addCenteredText(text);
+					if (isCentered) addCenteredText(text);
 					else addKeyText(text, option);
 
 					text.snapToPosition();
@@ -187,7 +187,7 @@ class ControlsSubState extends FlxSubState {
 	}
 	function addKeyText(text:Alphabet, option:Array<Dynamic>) {
 		var keys:Array<Null<FlxKey>> = Controls.keyBinds.get(option[2]);
-		if(keys == null) keys = Controls.default_keyBinds.get(option[2]).copy();
+		if (keys == null) keys = Controls.default_keyBinds.get(option[2]).copy();
 
 		for (n in 0...2) {
 			var key:String = InputFormatter.getKeyName(keys[n] ?? NONE);
@@ -240,28 +240,28 @@ class ControlsSubState extends FlxSubState {
 
 	var timeForMoving:Float = 0.1;
 	override function update(elapsed:Float) {
-		if(timeForMoving > 0) { //Fix controller bug
+		if (timeForMoving > 0) { //Fix controller bug
 			timeForMoving = Math.max(0, timeForMoving - elapsed);
 			super.update(elapsed);
 			return;
 		}
 
-		if(!binding) {
-			if(FlxG.keys.justPressed.ESCAPE) {
+		if (!binding) {
+			if (FlxG.keys.justPressed.ESCAPE) {
 				close();
 				return;
 			}
 
-			if(FlxG.keys.pressed.SHIFT) {
-				if(FlxG.keys.justPressed.LEFT) keyChange(-1);
-				if(FlxG.keys.justPressed.RIGHT) keyChange(1);
-			} else if(FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.RIGHT) updateAlt(true);
+			if (FlxG.keys.pressed.SHIFT) {
+				if (FlxG.keys.justPressed.LEFT) keyChange(-1);
+				if (FlxG.keys.justPressed.RIGHT) keyChange(1);
+			} else if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.RIGHT) updateAlt(true);
 
-			if(FlxG.keys.justPressed.UP) updateText(-1);
-			else if(FlxG.keys.justPressed.DOWN) updateText(1);
+			if (FlxG.keys.justPressed.UP) updateText(-1);
+			else if (FlxG.keys.justPressed.DOWN) updateText(1);
 
-			if(FlxG.keys.justPressed.ENTER) {
-				if(options[curOptions[curSelected]][1] != defaultKey) {
+			if (FlxG.keys.justPressed.ENTER) {
+				if (options[curOptions[curSelected]][1] != defaultKey) {
 					bindingBlack = new FlxSprite().makeSolid(FlxG.width, FlxG.height);
 					bindingBlack.alpha = 0;
 					FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35);
@@ -293,15 +293,15 @@ class ControlsSubState extends FlxSubState {
 		} else {
 			var altNum:Int = curAlt ? 1 : 0;
 			var curOption:Array<Dynamic> = options[curOptions[curSelected]];
-			if(FlxG.keys.pressed.ESCAPE) {
+			if (FlxG.keys.pressed.ESCAPE) {
 				holdingEsc += elapsed;
-				if(holdingEsc > .5) {
+				if (holdingEsc > .5) {
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					closeBinding();
 				}
 			} else if (FlxG.keys.pressed.BACKSPACE) {
 				holdingEsc += elapsed;
-				if(holdingEsc > .5) {
+				if (holdingEsc > .5) {
 					Controls.keyBinds.get(curOption[2])[altNum] = NONE;
 					updateBind(Math.floor(curSelected * 2) + altNum, InputFormatter.getKeyName(NONE));
 					FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -312,7 +312,7 @@ class ControlsSubState extends FlxSubState {
 				var changed:Bool = false;
 				var curKeys:Array<FlxKey> = Controls.keyBinds.get(curOption[2]);
 
-				if(FlxG.keys.justPressed.ANY || FlxG.keys.justReleased.ANY) {
+				if (FlxG.keys.justPressed.ANY || FlxG.keys.justReleased.ANY) {
 					var keyPressed:Int = FlxG.keys.firstJustPressed();
 					var keyReleased:Int = FlxG.keys.firstJustReleased();
 					if (keyPressed > -1 && keyPressed != FlxKey.ESCAPE && keyPressed != FlxKey.BACKSPACE) {
@@ -324,8 +324,8 @@ class ControlsSubState extends FlxSubState {
 					}
 				}
 
-				if(changed) {
-					if(curKeys[altNum] == curKeys[1 - altNum])
+				if (changed) {
+					if (curKeys[altNum] == curKeys[1 - altNum])
 						curKeys[1 - altNum] = FlxKey.NONE;
 
 					var option:String = options[curOptions[curSelected]][2];
@@ -361,8 +361,8 @@ class ControlsSubState extends FlxSubState {
 
 		var num:Int = curOptionsValid[curSelected];
 		var addNum:Int = 0;
-		if(num < 3) addNum = 3 - num;
-		else if(num > lastID - 4) addNum = (lastID - 4) - num;
+		if (num < 3) addNum = 3 - num;
+		else if (num > lastID - 4) addNum = (lastID - 4) - num;
 
 		grpDisplay.forEachAlive((item:Alphabet) -> item.targetY = item.ID - num - addNum);
 
@@ -383,8 +383,8 @@ class ControlsSubState extends FlxSubState {
 	function keyChange(?move:Int = 0) {
 		curNoteKeys += move;
 
-		if(curNoteKeys > 9) curNoteKeys = 1;
-		if(curNoteKeys < 1) curNoteKeys = 9;
+		if (curNoteKeys > 9) curNoteKeys = 1;
+		if (curNoteKeys < 1) curNoteKeys = 9;
 
 		curSelected = 0;
 		curAlt = false;
@@ -392,7 +392,7 @@ class ControlsSubState extends FlxSubState {
 	}
 	
 	function updateAlt(?doSwap:Bool = false) {
-		if(doSwap) {
+		if (doSwap) {
 			curAlt = !curAlt;
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}

@@ -51,13 +51,13 @@ class Bar extends FlxSpriteGroup {
 
 	public var enabled:Bool = true;
 	override function update(elapsed:Float) {
-		if(!enabled) {
+		if (!enabled) {
 			super.update(elapsed);
 			return;
 		}
 
 		var value:Null<Float> = null;
-		if(valueFunction != null) {
+		if (valueFunction != null) {
 			bounded = FlxMath.bound(valueFunction(), bounds.min, bounds.max);
 			value = FlxMath.remapToRange(bounded, bounds.min, bounds.max, 0, 100);
 		}
@@ -81,7 +81,7 @@ class Bar extends FlxSpriteGroup {
 	}
 
 	public function updateBar() {
-		if(leftBar == null || rightBar == null) return;
+		if (leftBar == null || rightBar == null) return;
 
 		leftBar.setPosition(bg.x - bgOffset.x, bg.y - bgOffset.y);
 		rightBar.setPosition(bg.x - bgOffset.x, bg.y - bgOffset.y);
@@ -120,7 +120,7 @@ class Bar extends FlxSpriteGroup {
 		final doUpdate:Bool = (value != percent);
 		percent = value;
 
-		if(doUpdate) updateBar();
+		if (doUpdate) updateBar();
 		return value;
 	}
 

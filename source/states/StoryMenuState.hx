@@ -42,7 +42,7 @@ class StoryMenuState extends MusicBeatState {
 		WeekData.reloadWeekFiles(true);
 		#if DISCORD_ALLOWED DiscordClient.changePresence("In the Story Menu"); #end
 
-		if(WeekData.weeksList.length < 1) {
+		if (WeekData.weeksList.length < 1) {
 			MusicBeatState.skipNextTransIn = true;
 			persistentUpdate = false;
 			FlxG.switchState(() -> new ErrorState("NO WEEKS ADDED FOR STORY MODE\n\nPress ACCEPT to go to the Week Editor Menu.\nPress BACK to return to Main Menu.",
@@ -56,7 +56,7 @@ class StoryMenuState extends MusicBeatState {
 			return;
 		}
 
-		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
+		if (curWeek >= WeekData.weeksList.length) curWeek = 0;
 
 		scoreText = new FlxText(10, 10, 0, Language.getPhrase('week_score', 'WEEK SCORE: {1}', [lerpScore]), 32);
 		scoreText.setFormat(Paths.font("babyshark.ttf"), 32);
@@ -79,7 +79,7 @@ class StoryMenuState extends MusicBeatState {
 		for (i in 0...WeekData.weeksList.length) {
 			var weekFile:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
 			var isLocked:Bool = weekIsLocked(WeekData.weeksList[i]);
-			if(!isLocked || !weekFile.hiddenUntilUnlocked) {
+			if (!isLocked || !weekFile.hiddenUntilUnlocked) {
 				loadedWeeks.push(weekFile);
 				WeekData.setDirectoryFromWeek(weekFile);
 				var weekThing:MenuItem = new MenuItem(0, bgSprite.y + 396, WeekData.weeksList[i]);
@@ -121,7 +121,7 @@ class StoryMenuState extends MusicBeatState {
 		difficultySelectors.add(leftArrow);
 
 		Difficulty.resetList();
-		if(lastDifficultyName == '') lastDifficultyName = Difficulty.getDefault();
+		if (lastDifficultyName == '') lastDifficultyName = Difficulty.getDefault();
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
 		
 		sprDifficulty = new FlxSprite(0, leftArrow.y);
@@ -162,14 +162,14 @@ class StoryMenuState extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float) {
-		if(WeekData.weeksList.length < 1) {
+		if (WeekData.weeksList.length < 1) {
 			super.update(elapsed);
 			return;
 		}
 
-		if(intendedScore != lerpScore) {
+		if (intendedScore != lerpScore) {
 			lerpScore = Math.floor(FlxMath.lerp(intendedScore, lerpScore, Math.exp(-elapsed * 30)));
-			if(Math.abs(intendedScore - lerpScore) < 10) lerpScore = intendedScore;
+			if (Math.abs(intendedScore - lerpScore) < 10) lerpScore = intendedScore;
 
 			scoreText.text = Language.getPhrase('week_score', 'WEEK SCORE: {1}', [lerpScore]);
 		}
@@ -183,7 +183,7 @@ class StoryMenuState extends MusicBeatState {
 				changeDiff = true;
 			}
 
-			if(FlxG.mouse.wheel != 0) {
+			if (FlxG.mouse.wheel != 0) {
 				FlxG.sound.play(Paths.sound('scrollMenu'), .7);
 				changeWeek(-FlxG.mouse.wheel);
 				changeDifficulty();
@@ -234,7 +234,7 @@ class StoryMenuState extends MusicBeatState {
 				selectedWeek = true;
 	
 				var diffic:String = Difficulty.getFilePath(curDifficulty);
-				if(diffic == null) diffic = '';
+				if (diffic == null) diffic = '';
 	
 				PlayState.storyDifficulty = curDifficulty;
 				Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
@@ -277,7 +277,7 @@ class StoryMenuState extends MusicBeatState {
 		var diff:String = Difficulty.getString(curDifficulty, false);
 		var newImage:flixel.graphics.FlxGraphic = Paths.image('menudifficulties/${Paths.formatToSongPath(diff)}');
 
-		if(sprDifficulty.graphic != newImage) {
+		if (sprDifficulty.graphic != newImage) {
 			sprDifficulty.loadGraphic(newImage);
 			sprDifficulty.x = leftArrow.x + 60;
 			sprDifficulty.x += (308 - sprDifficulty.width) / 3;
@@ -311,19 +311,19 @@ class StoryMenuState extends MusicBeatState {
 
 		bgSprite.visible = true;
 		var assetName:String = leWeek.weekBackground;
-		if(assetName == null || assetName.length < 1) bgSprite.visible = false;
+		if (assetName == null || assetName.length < 1) bgSprite.visible = false;
 		else bgSprite.loadGraphic(Paths.image('menubackgrounds/menu_$assetName'));
 		PlayState.storyWeek = curWeek;
 
 		Difficulty.loadFromWeek();
 		difficultySelectors.visible = unlocked;
 		
-		if(Difficulty.list.contains(Difficulty.getDefault()))
+		if (Difficulty.list.contains(Difficulty.getDefault()))
 			curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(Difficulty.getDefault())));
 		else curDifficulty = 0;
 
 		var newPos:Int = Difficulty.list.indexOf(lastDifficultyName);
-		if(newPos > -1) curDifficulty = newPos;
+		if (newPos > -1) curDifficulty = newPos;
 		updateText();
 	}
 

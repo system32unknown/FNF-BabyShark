@@ -114,19 +114,19 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		}
 
 		final leftPressed:Bool = Controls.pressed('ui_left');
-		if(leftPressed || Controls.pressed('ui_right')) {
+		if (leftPressed || Controls.pressed('ui_right')) {
 			instance.holdTime += elapsed;
-			if(instance.holdTime > .5) curTime += 40000 * elapsed * (leftPressed ? -1 : 1);
+			if (instance.holdTime > .5) curTime += 40000 * elapsed * (leftPressed ? -1 : 1);
 
 			var difference:Float = Math.abs(curTime - FlxG.sound.music.time);
-			if(curTime + difference > FlxG.sound.music.length) curTime = FlxG.sound.music.length;
-			else if(curTime - difference < 0) curTime = 0;
+			if (curTime + difference > FlxG.sound.music.length) curTime = FlxG.sound.music.length;
+			else if (curTime - difference < 0) curTime = 0;
 
 			FlxG.sound.music.time = curTime;
 			setVocalsTime(curTime);
 		}
 
-		if(Controls.released('ui_left') || Controls.released('ui_right')) {
+		if (Controls.released('ui_left') || Controls.released('ui_right')) {
 			FlxG.sound.music.time = curTime;
 			setVocalsTime(curTime);
 
@@ -160,8 +160,8 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		}
 
 		if (playing) {
-			if(FreeplayState.vocals != null) FreeplayState.vocals.volume = (FreeplayState.vocals.length > FlxG.sound.music.time) ? .8 : 0;
-			if((FreeplayState.vocals != null && FreeplayState.vocals.length > FlxG.sound.music.time && Math.abs(FlxG.sound.music.time - FreeplayState.vocals.time) >= 25)) {
+			if (FreeplayState.vocals != null) FreeplayState.vocals.volume = (FreeplayState.vocals.length > FlxG.sound.music.time) ? .8 : 0;
+			if ((FreeplayState.vocals != null && FreeplayState.vocals.length > FlxG.sound.music.time && Math.abs(FlxG.sound.music.time - FreeplayState.vocals.time) >= 25)) {
 				pauseOrResume();
 				setVocalsTime(FlxG.sound.music.time);
 				pauseOrResume(true);

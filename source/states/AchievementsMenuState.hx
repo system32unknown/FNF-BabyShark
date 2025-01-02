@@ -31,7 +31,7 @@ class AchievementsMenuState extends MusicBeatState {
 		// prepare achievement list
 		for (achievement => data in Achievements.list) {
 			var unlocked:Bool = Achievements.isUnlocked(achievement);
-			if(data.hidden != true || unlocked) options.push(makeAchievement(achievement, data, unlocked, data.mod));
+			if (data.hidden != true || unlocked) options.push(makeAchievement(achievement, data, unlocked, data.mod));
 		}
 
 		add(camFollow = new FlxObject(0, 0, 1, 1));
@@ -52,15 +52,15 @@ class AchievementsMenuState extends MusicBeatState {
 		for (option in options) {
 			var hasAntialias:Bool = ClientPrefs.data.antialiasing;
 			var graphic:flixel.graphics.FlxGraphic = null;
-			if(option.unlocked) {
+			if (option.unlocked) {
 				#if MODS_ALLOWED Mods.currentModDirectory = option.mod; #end
 				var image:String = 'achievements/' + option.name;
-				if(Paths.fileExists('images/$image-pixel.png', IMAGE)) {
+				if (Paths.fileExists('images/$image-pixel.png', IMAGE)) {
 					graphic = Paths.image('$image-pixel');
 					hasAntialias = false;
 				} else graphic = Paths.image(image);
 
-				if(graphic == null) graphic = Paths.image('unknownMod');
+				if (graphic == null) graphic = Paths.image('unknownMod');
 			} else graphic = Paths.image('achievements/lockedachievement');
 
 			var spr:FlxSprite = new FlxSprite(0, Math.floor(grpOptions.members.length / MAX_PER_ROW) * 180, graphic);
@@ -137,45 +137,45 @@ class AchievementsMenuState extends MusicBeatState {
 
 	var goingBack:Bool = false;
 	override function update(elapsed:Float) {
-		if(!goingBack && options.length > 1) {
+		if (!goingBack && options.length > 1) {
 			var add:Int = 0;
 			if (Controls.justPressed('ui_left')) add = -1;
 			else if (Controls.justPressed('ui_right')) add = 1;
 
-			if(add != 0) {
+			if (add != 0) {
 				var oldRow:Int = Math.floor(curSelected / MAX_PER_ROW);
 				var rowSize:Int = Std.int(Math.min(MAX_PER_ROW, options.length - oldRow * MAX_PER_ROW));
 				
 				curSelected += add;
 				var curRow:Int = Math.floor(curSelected / MAX_PER_ROW);
-				if(curSelected >= options.length) curRow++;
+				if (curSelected >= options.length) curRow++;
 
-				if(curRow != oldRow) {
-					if(curRow < oldRow) curSelected += rowSize;
+				if (curRow != oldRow) {
+					if (curRow < oldRow) curSelected += rowSize;
 					else curSelected = curSelected -= rowSize;
 				}
 				_changeSelection();
 			}
 
-			if(options.length > MAX_PER_ROW) {
+			if (options.length > MAX_PER_ROW) {
 				var add:Int = 0;
 				if (Controls.justPressed('ui_up')) add = -1;
 				else if (Controls.justPressed('ui_down')) add = 1;
 
-				if(add != 0) {
+				if (add != 0) {
 					var diff:Int = curSelected - (Math.floor(curSelected / MAX_PER_ROW) * MAX_PER_ROW);
 					curSelected += add * MAX_PER_ROW;
-					if(curSelected < 0) {
+					if (curSelected < 0) {
 						curSelected += Math.ceil(options.length / MAX_PER_ROW) * MAX_PER_ROW;
-						if(curSelected >= options.length) curSelected -= MAX_PER_ROW;
+						if (curSelected >= options.length) curSelected -= MAX_PER_ROW;
 					}
-					if(curSelected >= options.length) curSelected = diff;
+					if (curSelected >= options.length) curSelected = diff;
 
 					_changeSelection();
 				}
 			}
 			
-			if(Controls.justPressed('reset') && (options[curSelected].unlocked || options[curSelected].curProgress > 0))
+			if (Controls.justPressed('reset') && (options[curSelected].unlocked || options[curSelected].curProgress > 0))
                 openSubState(new ResetAchievementSubstate());
 		}
 
@@ -195,9 +195,9 @@ class AchievementsMenuState extends MusicBeatState {
 		descText.text = options[curSelected].description;
 		progressTxt.visible = progressBar.visible = hasProgress;
 
-		if(barTween != null) barTween.cancel();
+		if (barTween != null) barTween.cancel();
 
-		if(hasProgress) {
+		if (hasProgress) {
 			var val1:Float = options[curSelected].curProgress;
 			var val2:Float = options[curSelected].maxProgress;
 			progressTxt.text = MathUtil.floorDecimal(val1, options[curSelected].decProgress) + ' / ' + MathUtil.floorDecimal(val2, options[curSelected].decProgress);
@@ -209,12 +209,12 @@ class AchievementsMenuState extends MusicBeatState {
 		} else progressBar.percent = 0;
 
 		var maxRows = Math.floor(grpOptions.members.length / MAX_PER_ROW);
-		if(maxRows > 0) camFollow.setPosition(0, FlxG.height / 2 + (Math.floor(curSelected / MAX_PER_ROW) / maxRows) * Math.max(0, grpOptions.height - FlxG.height / 2 - 50) - 100);
+		if (maxRows > 0) camFollow.setPosition(0, FlxG.height / 2 + (Math.floor(curSelected / MAX_PER_ROW) / maxRows) * Math.max(0, grpOptions.height - FlxG.height / 2 - 50) - 100);
 		else camFollow.setPosition(0, grpOptions.members[curSelected].getGraphicMidpoint().y - 100);
 
 		grpOptions.forEach((spr:FlxSprite) -> {
 			spr.alpha = .6;
-			if(spr.ID == curSelected) spr.alpha = 1;
+			if (spr.ID == curSelected) spr.alpha = 1;
 		});
 	}
 }
@@ -259,7 +259,7 @@ class ResetAchievementSubstate extends MusicBeatSubstate {
 	}
 
 	override function update(elapsed:Float) {
-		if(Controls.justPressed('back')) {
+		if (Controls.justPressed('back')) {
 			close();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			return;
@@ -267,13 +267,13 @@ class ResetAchievementSubstate extends MusicBeatSubstate {
 
 		super.update(elapsed);
 
-		if(Controls.justPressed('ui_left') || Controls.justPressed('ui_right')) {
+		if (Controls.justPressed('ui_left') || Controls.justPressed('ui_right')) {
 			onYes = !onYes;
 			updateOptions();
 		}
 
-		if(Controls.justPressed('accept')) {
-			if(onYes) {
+		if (Controls.justPressed('accept')) {
+			if (onYes) {
 				var state:AchievementsMenuState = cast FlxG.state;
 				var option:Dynamic = state.options[state.curSelected];
 
@@ -282,12 +282,12 @@ class ResetAchievementSubstate extends MusicBeatSubstate {
 				option.unlocked = false;
 				option.curProgress = 0;
 				option.name = state.nameText.text = '???';
-				if(option.maxProgress > 0) state.progressTxt.text = '0 / ' + option.maxProgress;
+				if (option.maxProgress > 0) state.progressTxt.text = '0 / ' + option.maxProgress;
 				state.grpOptions.members[state.curSelected].loadGraphic(Paths.image('achievements/lockedachievement'));
 				state.grpOptions.members[state.curSelected].antialiasing = ClientPrefs.data.antialiasing;
 
-				if(state.progressBar.visible) {
-					if(state.barTween != null) state.barTween.cancel();
+				if (state.progressBar.visible) {
+					if (state.barTween != null) state.barTween.cancel();
 					state.barTween = FlxTween.tween(state.progressBar, {percent: 0}, .5, {ease: FlxEase.quadOut, onComplete: (twn:FlxTween) -> state.progressBar.updateBar(), onUpdate: (twn:FlxTween) -> state.progressBar.updateBar()});
 				}
 				Achievements.save();

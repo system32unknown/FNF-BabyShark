@@ -76,19 +76,19 @@ class RGBShaderReference {
 	}
 	
 	function set_r(value:FlxColor):FlxColor {
-		if(allowNew && value != _original.r) cloneOriginal();
+		if (allowNew && value != _original.r) cloneOriginal();
 		return (r = parent.r = value);
 	}
 	function set_g(value:FlxColor):FlxColor {
-		if(allowNew && value != _original.g) cloneOriginal();
+		if (allowNew && value != _original.g) cloneOriginal();
 		return (g = parent.g = value);
 	}
 	function set_b(value:FlxColor):FlxColor {
-		if(allowNew && value != _original.b) cloneOriginal();
+		if (allowNew && value != _original.b) cloneOriginal();
 		return (b = parent.b = value);
 	}
 	function set_mult(value:Float):Float {
-		if(allowNew && value != _original.mult) cloneOriginal();
+		if (allowNew && value != _original.mult) cloneOriginal();
 		return (mult = parent.mult = value);
 	}
 	function set_enabled(value:Bool):Bool {
@@ -112,7 +112,7 @@ class RGBShaderReference {
 	function cloneOriginal() {
 		if (!allowNew) return;
 		allowNew = false;
-		if(_original != parent) return;
+		if (_original != parent) return;
 
 		parent = new RGBPalette();
 		parent.r = _original.r;
@@ -144,7 +144,7 @@ class RGBPaletteShader extends flixel.system.FlxAssets.FlxShader {
 			
 			color = mix(color, newColor, mult);
 			
-			if(color.a > 0.0) return vec4(color.rgb, color.a);
+			if (color.a > 0.0) return vec4(color.rgb, color.a);
 			return vec4(0.0, 0.0, 0.0, 0.0);
 		}')
 	@:glFragmentSource('

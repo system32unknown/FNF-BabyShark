@@ -56,7 +56,7 @@ class MasterEditorMenu extends MusicBeatState {
 		
 		for (folder in Mods.getModDirectories()) directories.push(folder);
 		var found:Int = directories.indexOf(Mods.currentModDirectory);
-		if(found > -1) curDirectory = found;
+		if (found > -1) curDirectory = found;
 		changeDirectory();
 		#end
 		changeSelection();
@@ -112,7 +112,7 @@ class MasterEditorMenu extends MusicBeatState {
 		curDirectory = FlxMath.wrap(curDirectory + change, 0, directories.length - 1);
 	
 		data.WeekData.setDirectoryFromWeek();
-		if(directories[curDirectory] == null || directories[curDirectory].length < 1)
+		if (directories[curDirectory] == null || directories[curDirectory].length < 1)
 			directoryTxt.text = '< No Mod Directory Loaded >';
 		else {
 			Mods.currentModDirectory = directories[curDirectory];

@@ -69,7 +69,7 @@ class Template extends BaseStage
 	// Substates for pausing/resuming tweens and timers
 	override function closeSubState()
 	{
-		if(paused)
+		if (paused)
 		{
 			//timer.active = true;
 			//tween.active = true;
@@ -78,7 +78,7 @@ class Template extends BaseStage
 
 	override function openSubState(SubState:FlxSubState)
 	{
-		if(paused)
+		if (paused)
 		{
 			//timer.active = false;
 			//tween.active = false;

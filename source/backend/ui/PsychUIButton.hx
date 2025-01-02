@@ -51,36 +51,36 @@ class PsychUIButton extends FlxSpriteGroup {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 		
-		if(_firstFrame) {
+		if (_firstFrame) {
 			bg.color = normalStyle.bgColor;
 			bg.alpha = normalStyle.bgAlpha;
 			text.color = normalStyle.textColor;
 			_firstFrame = false;
 		}
 
-		if(isClicked && FlxG.mouse.released) {
+		if (isClicked && FlxG.mouse.released) {
 			forceCheckNext = true;
 			isClicked = false;
 		}
 
-		if(forceCheckNext || FlxG.mouse.justMoved || FlxG.mouse.justPressed) {
+		if (forceCheckNext || FlxG.mouse.justMoved || FlxG.mouse.justPressed) {
 			var overlapped:Bool = FlxG.mouse.overlaps(bg, camera);
 			forceCheckNext = false;
 
-			if(!isClicked) {
+			if (!isClicked) {
 				var style:UIStyleData = (overlapped) ? hoverStyle : normalStyle;
 				bg.color = style.bgColor;
 				bg.alpha = style.bgAlpha;
 				text.color = style.textColor;
 			}
 
-			if(overlapped && FlxG.mouse.justPressed) {
+			if (overlapped && FlxG.mouse.justPressed) {
 				isClicked = true;
 				bg.color = clickStyle.bgColor;
 				bg.alpha = clickStyle.bgAlpha;
 				text.color = clickStyle.textColor;
-				if(onClick != null) onClick();
-				if(broadcastButtonEvent) PsychUIEventHandler.event(CLICK_EVENT, this);
+				if (onClick != null) onClick();
+				if (broadcastButtonEvent) PsychUIEventHandler.event(CLICK_EVENT, this);
 			}
 		}
 	}
@@ -93,7 +93,7 @@ class PsychUIButton extends FlxSpriteGroup {
 	}
 
 	function set_label(v:String):String {
-		if(text != null && text.exists) text.text = v;
+		if (text != null && text.exists) text.text = v;
 		return (label = v);
 	}
 }

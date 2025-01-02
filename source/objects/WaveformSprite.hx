@@ -50,12 +50,12 @@ class WaveformSprite extends FlxSprite {
         pixels.fillRect(new Rectangle(0, 0, pixels.width, pixels.height), 0); 
         var diff:Int = endPos - startPos;
         var diffRange:Int = Math.floor(diff / pixels.height);
-        for(y in 0...pixels.height) {
+        for (y in 0...pixels.height) {
             var d:Int = Math.floor(diff * (y / pixels.height));
             d -= d % buffer.bitsPerSample;
             var pos:Int = startPos + d;
             var max:Int = 0;
-            for(i in 0...Math.floor(diffRange / buffer.bitsPerSample)) {
+            for (i in 0...Math.floor(diffRange / buffer.bitsPerSample)) {
                 var thing = buffer.data.buffer.get(pos + (i * buffer.bitsPerSample)) | (buffer.data.buffer.get(pos + (i * buffer.bitsPerSample) + 1) << 8);
                 if (thing > 256 * 128) thing -= 256 * 256;
                 if (max < thing) max = thing;

@@ -45,20 +45,20 @@ class PsychUINumericStepper extends PsychUIInputText {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if(FlxG.mouse.justPressed) {
-			if(buttonPlus != null && buttonPlus.exists && FlxG.mouse.overlaps(buttonPlus, camera)) {
+		if (FlxG.mouse.justPressed) {
+			if (buttonPlus != null && buttonPlus.exists && FlxG.mouse.overlaps(buttonPlus, camera)) {
 				buttonPlus.animation.play('pressed');
 				value += step;
 				_internalOnChange();
-			} else if(buttonMinus != null && buttonMinus.exists && FlxG.mouse.overlaps(buttonMinus, camera)) {
+			} else if (buttonMinus != null && buttonMinus.exists && FlxG.mouse.overlaps(buttonMinus, camera)) {
 				buttonMinus.animation.play('pressed');
 				value -= step;
 				_internalOnChange();
 			}
-		} else if(FlxG.mouse.released) {
-			if(buttonPlus != null && buttonPlus.exists && buttonPlus.animation.curAnim != null && buttonPlus.animation.curAnim.name != 'normal')
+		} else if (FlxG.mouse.released) {
+			if (buttonPlus != null && buttonPlus.exists && buttonPlus.animation.curAnim != null && buttonPlus.animation.curAnim.name != 'normal')
 				buttonPlus.animation.play('normal');
-			if(buttonMinus != null && buttonMinus.exists && buttonMinus.animation.curAnim != null && buttonMinus.animation.curAnim.name != 'normal')
+			if (buttonMinus != null && buttonMinus.exists && buttonMinus.animation.curAnim != null && buttonMinus.animation.curAnim.name != 'normal')
 				buttonMinus.animation.play('normal');
 		}
 	}
@@ -72,7 +72,7 @@ class PsychUINumericStepper extends PsychUIInputText {
 
 	function set_min(v:Float):Float {
 		min = v;
-		@:bypassAccessor if(min > max) max = min;
+		@:bypassAccessor if (min > max) max = min;
 		_updateFilter();
 		_updateValue();
 		return min;
@@ -80,7 +80,7 @@ class PsychUINumericStepper extends PsychUIInputText {
 
 	function set_max(v:Float):Float {
 		max = v;
-		@:bypassAccessor if(max < min) min = max;
+		@:bypassAccessor if (max < min) min = max;
 		_updateFilter();
 		_updateValue();
 		return max;
@@ -96,7 +96,7 @@ class PsychUINumericStepper extends PsychUIInputText {
 		isPercent = v;
 		_updateFilter();
 
-		if(changed) {
+		if (changed) {
 			text = Std.string(value * 100);
 			_updateValue();
 		}
@@ -105,7 +105,7 @@ class PsychUINumericStepper extends PsychUIInputText {
 
 	function _updateValue() {
 		var txt:String = text.replace('%', '');
-		if(txt.indexOf('-') > 0) txt.replace('-', '');
+		if (txt.indexOf('-') > 0) txt.replace('-', '');
 
 		while(txt.indexOf('.') > -1 && txt.indexOf('.') != txt.lastIndexOf('.')) {
 			var lastId:Int = txt.lastIndexOf('.');
@@ -113,39 +113,39 @@ class PsychUINumericStepper extends PsychUIInputText {
 		}
 
 		var val:Float = Std.parseFloat(txt);
-		if(Math.isNaN(val)) val = 0;
+		if (Math.isNaN(val)) val = 0;
 
-		if(isPercent) val /= 100;
+		if (isPercent) val /= 100;
 
-		if(val < min) val = min;
-		else if(val > max) val = max;
+		if (val < min) val = min;
+		else if (val > max) val = max;
 		val = FlxMath.roundDecimal(val, decimals);
 		@:bypassAccessor value = val;
 
-		if(isPercent) {
+		if (isPercent) {
 			text = Std.string(val * 100);
 			text += '%';
 		} else text = Std.string(val);
 
-		if(caretIndex > text.length) caretIndex = text.length;
-		if(selectIndex > text.length) selectIndex = text.length;
+		if (caretIndex > text.length) caretIndex = text.length;
+		if (selectIndex > text.length) selectIndex = text.length;
 	}
 	
 	function _updateFilter() {
-		if(min < 0) {
-			if(decimals > 0) {
-				if(isPercent) customFilterPattern = ~/[^0-9.%\-]*/g;
+		if (min < 0) {
+			if (decimals > 0) {
+				if (isPercent) customFilterPattern = ~/[^0-9.%\-]*/g;
 				else customFilterPattern = ~/[^0-9.\-]*/g;
 			} else {
-				if(isPercent) customFilterPattern = ~/[^0-9%\-]*/g;
+				if (isPercent) customFilterPattern = ~/[^0-9%\-]*/g;
 				else customFilterPattern = ~/[^0-9\-]*/g;
 			}
 		} else {
-			if(decimals > 0) {
-				if(isPercent) customFilterPattern = ~/[^0-9.%]*/g;
+			if (decimals > 0) {
+				if (isPercent) customFilterPattern = ~/[^0-9.%]*/g;
 				else customFilterPattern = ~/[^0-9.]*/g;
 			} else {
-				if(isPercent) customFilterPattern = ~/[^0-9%]*/g;
+				if (isPercent) customFilterPattern = ~/[^0-9%]*/g;
 				else customFilterPattern = ~/[^0-9]*/g;
 			}
 		}
@@ -153,8 +153,8 @@ class PsychUINumericStepper extends PsychUIInputText {
 
 	public var broadcastStepperEvent:Bool = true;
 	function _internalOnChange() {
-		if(onValueChange != null) onValueChange();
-		if(broadcastStepperEvent) PsychUIEventHandler.event(CHANGE_EVENT, this);
+		if (onValueChange != null) onValueChange();
+		if (broadcastStepperEvent) PsychUIEventHandler.event(CHANGE_EVENT, this);
 	}
 
 	override function setGraphicSize(width:Float = 0, height:Float = 0) {

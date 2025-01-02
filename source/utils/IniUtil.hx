@@ -9,12 +9,12 @@ class IniUtil {
 
 	public static function parseString(data:String, ?defaultVariables:Map<String, String>):Map<String, String> {
 		var trimmed:String;
-		var splitContent:Array<String> = [for(e in data.split("\n")) if ((trimmed = e.trim()) != "") trimmed];
+		var splitContent:Array<String> = [for (e in data.split("\n")) if ((trimmed = e.trim()) != "") trimmed];
 
 		var finalMap:Map<String, String> = [];
-		if (defaultVariables != null) for(k => e in defaultVariables) finalMap[k] = e;
+		if (defaultVariables != null) for (k => e in defaultVariables) finalMap[k] = e;
 
-		for(line in splitContent) {
+		for (line in splitContent) {
 			// comment
 			if (line.startsWith(";")) continue;
 			// categories; not supported yet

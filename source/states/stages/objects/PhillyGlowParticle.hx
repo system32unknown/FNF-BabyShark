@@ -12,7 +12,7 @@ class PhillyGlowParticle extends FlxSprite {
 		antialiasing = antialiasing;
 		lifeTime = FlxG.random.float(0.6, 0.9);
 		decay = FlxG.random.float(0.8, 1);
-		if(!ClientPrefs.data.flashing) {
+		if (!ClientPrefs.data.flashing) {
 			decay *= .5;
 			alpha = .5;
 		}
@@ -27,10 +27,10 @@ class PhillyGlowParticle extends FlxSprite {
 
 	override function update(elapsed:Float) {
 		lifeTime -= elapsed;
-		if(lifeTime < 0) {
+		if (lifeTime < 0) {
 			lifeTime = 0;
 			alpha -= decay * elapsed;
-			if(alpha > 0) scale.set(originalScale * alpha, originalScale * alpha);
+			if (alpha > 0) scale.set(originalScale * alpha, originalScale * alpha);
 		}
 		super.update(elapsed);
 	}

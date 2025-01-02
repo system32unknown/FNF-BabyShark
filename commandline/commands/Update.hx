@@ -15,11 +15,11 @@ class Update {
 
 		var filename:String = "./libs.xml";
 		var isSilent:Bool = false;
-		for(arg in args) {
+		for (arg in args) {
 			if (arg.startsWith("--lib=")) filename = arg.substr("--lib=".length);
 			if (arg == "--silent" || arg == "-s") isSilent = true;
 		}
-		if(!FileSystem.exists(filename)) {
+		if (!FileSystem.exists(filename)) {
 			prettyPrint('Cannot find libs.xml file at "$filename"');
 			return;
 		}
@@ -43,7 +43,7 @@ class Update {
 			libs.push(lib);
 		}
 
-		for(lib in libs) {
+		for (lib in libs) {
 			var globalism:Null<String> = lib.global == "true" ? "--global" : null;
 			switch(lib.type) {
 				case "lib":
@@ -67,20 +67,20 @@ class Update {
 			FileSystem.deleteFile("vs_Community.exe");
 			prettyPrint('If it didn\'t say it before: Because of this component if you want to compile you have to restart the device.');
 			Sys.print("Do you wish to do it now [y/n]? ");
-			if(Sys.stdin().readLine().toLowerCase() == "y") Sys.command("shutdown /r /t 0 /f");
+			if (Sys.stdin().readLine().toLowerCase() == "y") Sys.command("shutdown /r /t 0 /f");
 		}
 	}
 
 	public static function prettyPrint(text:String) {
 		var lines:Array<String> = text.split("\n");
 		var length:Int = -1;
-		for(line in lines) if(line.length > length) length = line.length;
+		for (line in lines) if (line.length > length) length = line.length;
 		var header:String = "══════";
-		for(i in 0...length) header += "═";
+		for (i in 0...length) header += "═";
 
 		Sys.println("");
 		Sys.println('╔$header╗');
-		for(line in lines) Sys.println('║   ${centerText(line, length)}   ║');
+		for (line in lines) Sys.println('║   ${centerText(line, length)}   ║');
 		Sys.println('╚$header╝');
 	}
 
@@ -93,7 +93,7 @@ class Update {
 
 	public static inline function repeat(ch:String, amt:Int):String {
 		var str:String = "";
-		for(i in 0...amt) str += ch;
+		for (i in 0...amt) str += ch;
 		return str;
 	}
 }

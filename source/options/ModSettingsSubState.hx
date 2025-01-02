@@ -12,7 +12,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 		title = '';
 		rpcTitle = 'Mod Settings ($name)'; //for Discord Rich Presence
 
-		if(FlxG.save.data.modSettings == null) FlxG.save.data.modSettings = new Map<String, Dynamic>();
+		if (FlxG.save.data.modSettings == null) FlxG.save.data.modSettings = new Map<String, Dynamic>();
 		else {
 			var saveMap:Map<String, Dynamic> = FlxG.save.data.modSettings;
 			save = saveMap[folder] != null ? saveMap[folder] : [];
@@ -33,10 +33,10 @@ class ModSettingsSubState extends BaseOptionsMenu {
 					case KEYBIND:
 						//Defaulting and error checking
 						var keyboardStr:String = option.keyboard;
-						if(keyboardStr == null) keyboardStr = 'NONE';
+						if (keyboardStr == null) keyboardStr = 'NONE';
 
 						newOption.defaultKeys.keyboard = keyboardStr;
-						if(save.get(option.save) == null) {
+						if (save.get(option.save) == null) {
 							newOption.keys.keyboard = newOption.defaultKeys.keyboard;
 							save.set(option.save, newOption.keys);
 						}
@@ -45,48 +45,48 @@ class ModSettingsSubState extends BaseOptionsMenu {
 						@:privateAccess {
 							newOption.getValue = () -> {
 								var data:Dynamic = save.get(newOption.variable);
-								if(data == null) return 'NONE';
+								if (data == null) return 'NONE';
 								return data.keyboard;
 							};
 							newOption.setValue = (value:Dynamic) -> {
 								var data:Dynamic = save.get(newOption.variable);
-								if(data == null) data = {keyboard: 'NONE'};
+								if (data == null) data = {keyboard: 'NONE'};
 								data.keyboard = value;
 								save.set(newOption.variable, data);
 							};
 						}
 
 					default:
-						if(option.value != null) newOption.defaultValue = option.value;
+						if (option.value != null) newOption.defaultValue = option.value;
 						@:privateAccess {
 							newOption.getValue = () -> return save.get(newOption.variable);
 							newOption.setValue = (value:Dynamic) -> save.set(newOption.variable, value);
 						}
 				}
 
-				if(option.type != KEYBIND) {
-					if(option.format != null) newOption.displayFormat = option.format;
-					if(option.min != null) newOption.minValue = option.min;
-					if(option.max != null) newOption.maxValue = option.max;
-					if(option.step != null) newOption.changeValue = option.step;
+				if (option.type != KEYBIND) {
+					if (option.format != null) newOption.displayFormat = option.format;
+					if (option.min != null) newOption.minValue = option.min;
+					if (option.max != null) newOption.maxValue = option.max;
+					if (option.step != null) newOption.changeValue = option.step;
 	
-					if(option.scroll != null) newOption.scrollSpeed = option.scroll;
-					if(option.decimals != null) newOption.decimals = option.decimals;
+					if (option.scroll != null) newOption.scrollSpeed = option.scroll;
+					if (option.decimals != null) newOption.decimals = option.decimals;
 	
 					var myValue:Dynamic = null;
-					if(save.get(option.save) != null) {
+					if (save.get(option.save) != null) {
 						myValue = save.get(option.save);
-						if(newOption.type != KEYBIND) newOption.setValue(myValue);
+						if (newOption.type != KEYBIND) newOption.setValue(myValue);
 						else newOption.setValue(myValue.keyboard);
 					} else {
 						myValue = newOption.getValue();
-						if(myValue == null) myValue = newOption.defaultValue;
+						if (myValue == null) myValue = newOption.defaultValue;
 					}
 	
 					switch(newOption.type) {
 						case STRING:
 							var num:Int = newOption.options.indexOf(myValue);
-							if(num > -1) newOption.curOption = num;
+							if (num > -1) newOption.curOption = num;
 						default:
 					}
 	
@@ -127,7 +127,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 	}
 
 	override public function update(elapsed:Float) {
-		if(_crashed) {
+		if (_crashed) {
 			close();
 			return;
 		}

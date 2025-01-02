@@ -98,16 +98,16 @@ class HScript extends AlterHscript {
 			this.origin = filePath;
 			#if MODS_ALLOWED
 			var myFolder:Array<String> = filePath.split('/');
-			if('${myFolder[0]}/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
+			if ('${myFolder[0]}/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
 				this.modFolder = myFolder[1];
 			#end
 		}
 		super(null, {name: origin, autoRun: false, autoPreset: false});
 
 		var scriptThing:String = file;
-		if(parent == null && file != null) {
+		if (parent == null && file != null) {
 			var f:String = file.replace('\\', '/');
-			if(f.contains('/') && !f.contains('\n')) scriptThing = File.getContent(f);
+			if (f.contains('/') && !f.contains('\n')) scriptThing = File.getContent(f);
 		}
 		preset();
 		AlterHscript.logLevel = hscriptLog;
@@ -211,11 +211,11 @@ class HScript extends AlterHscript {
 			return value;
 		});
 		set('getVar', (name:String) -> {
-			if(MusicBeatState.getVariables().exists(name)) return MusicBeatState.getVariables().get(name);
+			if (MusicBeatState.getVariables().exists(name)) return MusicBeatState.getVariables().get(name);
 			return null;
 		});
 		set('removeVar', (name:String) -> {
-			if(MusicBeatState.getVariables().exists(name)) {
+			if (MusicBeatState.getVariables().exists(name)) {
 				MusicBeatState.getVariables().remove(name);
 				return true;
 			}
@@ -224,8 +224,8 @@ class HScript extends AlterHscript {
 		set('debugPrint', (text:String, ?color:FlxColor = FlxColor.WHITE) -> PlayState.instance.addTextToDebug(text, color));
 
 		set('getModSetting', function(saveTag:String, ?modName:String = null) {
-			if(modName == null) {
-				if(this.modFolder == null) {
+			if (modName == null) {
+				if (this.modFolder == null) {
 					PlayState.instance.addTextToDebug('getModSetting: Argument #2 is null and script is not inside a packed Mod folder!', FlxColor.RED);
 					return null;
 				}
@@ -274,7 +274,7 @@ class HScript extends AlterHscript {
 		#if LUA_ALLOWED
 		set('createGlobalCallback', function(name:String, func:haxe.Constraints.Function) {
 			for (script in PlayState.instance.luaArray)
-				if(script != null && script.lua != null && !script.closed)
+				if (script != null && script.lua != null && !script.closed)
 					script.set(name, func);
 			FunkinLua.customFunctions.set(name, func);
 		});
@@ -289,12 +289,12 @@ class HScript extends AlterHscript {
 		set('addHaxeLibrary', function(libName:String, ?libPackage:String = '') {
 			try {
 				var str:String = '';
-				if(libPackage.length > 0) str = '$libPackage.';
+				if (libPackage.length > 0) str = '$libPackage.';
 				set(libName, Type.resolveClass(str + libName));
 			} catch (e:Dynamic) {
 				var msg:String = e.message.substr(0, e.message.indexOf('\n'));
 				#if LUA_ALLOWED
-				if(parentLua != null) {
+				if (parentLua != null) {
 					FunkinLua.lastCalledScript = parentLua;
 					FunkinLua.luaTrace('$origin: ${parentLua.lastCalledFunction} - $msg', false, false, FlxColor.RED);
 					return;
@@ -308,7 +308,7 @@ class HScript extends AlterHscript {
 		set("openState", (name:String) -> {
 			FlxG.sound.music?.stop();
 			var hxFile:String = Paths.getPath('scripts/states/$name.hx');
-            if(FileSystem.exists(hxFile)) FlxG.switchState(() -> new states.HscriptState(hxFile));
+            if (FileSystem.exists(hxFile)) FlxG.switchState(() -> new states.HscriptState(hxFile));
             else {
                 try {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
@@ -322,7 +322,7 @@ class HScript extends AlterHscript {
         });
         set("openSubState", (name:String, args:Array<Dynamic>) -> {
 			var hxFile:String = Paths.getPath('scripts/substates/$name.hx');
-            if(FileSystem.exists(hxFile)) FlxG.state.openSubState(new substates.HscriptSubstate(hxFile, args));
+            if (FileSystem.exists(hxFile)) FlxG.state.openSubState(new substates.HscriptSubstate(hxFile, args));
             else {
                 try {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
@@ -354,7 +354,7 @@ class HScript extends AlterHscript {
 		set('insert', FlxG.state.insert);
 		set('remove', FlxG.state.remove);
 
-		if(PlayState.instance == FlxG.state) {
+		if (PlayState.instance == FlxG.state) {
 			var psInstance:PlayState = PlayState.instance;
 			set('addBehindGF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.gfGroup) - order, obj));
 			set('addBehindDad', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.dadGroup) - order, obj));
@@ -487,7 +487,7 @@ class HScript extends AlterHscript {
 	function set_varsToBring(values:Any):Any {
 		if (varsToBring != null)
 			for (key in Reflect.fields(varsToBring))
-				if(exists(key.trim()))
+				if (exists(key.trim()))
 					interp.variables.remove(key.trim());
 		if (values != null) {
 			for (key in Reflect.fields(values)) {

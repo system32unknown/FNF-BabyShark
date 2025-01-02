@@ -49,14 +49,14 @@ class Option {
 		this.type = type;
 		this.options = options;
 
-		if(this.type != KEYBIND) this.defaultValue = Reflect.getProperty(ClientPrefs.defaultData, variable);
+		if (this.type != KEYBIND) this.defaultValue = Reflect.getProperty(ClientPrefs.defaultData, variable);
 		switch(type) {
 			case BOOL:
-				if(defaultValue == null) defaultValue = false;
+				if (defaultValue == null) defaultValue = false;
 			case INT, FLOAT:
-				if(defaultValue == null) defaultValue = 0;
+				if (defaultValue == null) defaultValue = 0;
 			case PERCENT:
-				if(defaultValue == null) defaultValue = 1;
+				if (defaultValue == null) defaultValue = 1;
 				displayFormat = '%v%';
 				changeValue = .01;
 				minValue = 0;
@@ -64,9 +64,9 @@ class Option {
 				scrollSpeed = .5;
 				decimals = 2;
 			case STRING:
-				if(options.length > 0) defaultValue = options[0];
-				if(defaultValue == null) defaultValue = '';
-			case FUNC: if(defaultValue == null) defaultValue = '';
+				if (options.length > 0) defaultValue = options[0];
+				if (defaultValue == null) defaultValue = '';
+			case FUNC: if (defaultValue == null) defaultValue = '';
 
 			case KEYBIND:
 				defaultValue = '';
@@ -75,12 +75,12 @@ class Option {
 		}
 
 		try {
-			if(getValue() == null) setValue(defaultValue);
+			if (getValue() == null) setValue(defaultValue);
 
 			switch(type) {
 				case STRING:
 					var num:Int = options.indexOf(getValue());
-					if(num > -1) curOption = num;
+					if (num > -1) curOption = num;
 				default:
 			}
 		} catch(e) {}
@@ -92,12 +92,12 @@ class Option {
 
 	dynamic public function getValue():Dynamic {
 		var value:Dynamic = Reflect.getProperty(ClientPrefs.data, variable);
-		if(type == KEYBIND) return value.keyboard;
+		if (type == KEYBIND) return value.keyboard;
 		return value;
 	}
 
 	dynamic public function setValue(value:Dynamic) {
-		if(type == KEYBIND) {
+		if (type == KEYBIND) {
 			var keys:Dynamic = Reflect.getProperty(ClientPrefs.data, variable);
 			keys.keyboard = value;
 			return;
@@ -111,7 +111,7 @@ class Option {
 	function get_text():String return _text;
 
 	function set_text(newValue:String = ''):String {
-		if(child != null) {
+		if (child != null) {
 			_text = newValue;
 			child.text = Language.getPhrase('setting_$_translationKey-${getValue()}', _text);
 			return _text;

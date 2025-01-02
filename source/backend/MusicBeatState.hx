@@ -21,7 +21,7 @@ class MusicBeatState extends flixel.FlxState {
 	override function create() {
 		#if MODS_ALLOWED Mods.updatedOnState = false; #end
 
-		if(!_psychCameraInitialized) initPsychCamera();
+		if (!_psychCameraInitialized) initPsychCamera();
 		super.create();
 
 		if (!skipNextTransOut) openSubState(new CustomFadeTransition(.5, true));
@@ -48,9 +48,9 @@ class MusicBeatState extends flixel.FlxState {
 		updateBeat();
 
 		if (oldStep != curStep) {
-			if(curStep > 0) stepHit();
+			if (curStep > 0) stepHit();
 
-			if(PlayState.SONG != null) {
+			if (PlayState.SONG != null) {
 				if (oldStep < curStep) updateSection();
 				else rollbackSection();
 			}
@@ -60,7 +60,7 @@ class MusicBeatState extends flixel.FlxState {
 	}
 
 	function updateSection():Void {
-		if(stepsToDo < 1) stepsToDo = Math.round(getBeatsOnSection() * 4);
+		if (stepsToDo < 1) stepsToDo = Math.round(getBeatsOnSection() * 4);
 		while(curStep >= stepsToDo) {
 			curSection++;
 			stepsToDo += Math.round(getBeatsOnSection() * 4);
@@ -69,7 +69,7 @@ class MusicBeatState extends flixel.FlxState {
 	}
 
 	function rollbackSection():Void {
-		if(curStep < 0) return;
+		if (curStep < 0) return;
 
 		var lastSection:Int = curSection;
 		curSection = 0;
@@ -77,12 +77,12 @@ class MusicBeatState extends flixel.FlxState {
 		for (i in 0...PlayState.SONG.notes.length) {
 			if (PlayState.SONG.notes[i] != null) {
 				stepsToDo += Math.round(getBeatsOnSection() * 4);
-				if(stepsToDo > curStep) break;
+				if (stepsToDo > curStep) break;
 				curSection++;
 			}
 		}
 
-		if(curSection > lastSection) sectionHit();
+		if (curSection > lastSection) sectionHit();
 	}
 
 	function updateBeat():Void {
@@ -156,7 +156,7 @@ class MusicBeatState extends flixel.FlxState {
 
 	function getBeatsOnSection():Float {
 		var val:Null<Float> = 4;
-		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null)
+		if (PlayState.SONG != null && PlayState.SONG.notes[curSection] != null)
 			val = PlayState.SONG.notes[curSection].sectionBeats;
 		return val ?? 4;
 	}

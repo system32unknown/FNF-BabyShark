@@ -81,7 +81,7 @@ class OptionsState extends MusicBeatState {
 
 		if (Controls.justPressed('back')) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			if(onPlayState) {
+			if (onPlayState) {
 				data.StageData.loadDirectory(PlayState.SONG);
 				LoadingState.loadAndSwitchState(() -> new PlayState());
 				FlxG.sound.music.volume = 0;

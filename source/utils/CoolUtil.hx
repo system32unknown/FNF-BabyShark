@@ -21,22 +21,22 @@ class CoolUtil {
 	 * @param volume				Sound's volume
 	**/
 	public static function playSoundSafe(sound:flixel.system.FlxAssets.FlxSoundAsset, volume:Float = 1.0) {
-		if(sound != null) FlxG.sound.play(sound, volume);
+		if (sound != null) FlxG.sound.play(sound, volume);
 	}
 
 	public static function coolTextFile(path:String):Array<String> {
 		var daList:String = null;
 		#if (sys && MODS_ALLOWED)
-		if(FileSystem.exists(path)) daList = File.getContent(path);
+		if (FileSystem.exists(path)) daList = File.getContent(path);
 		#else
-		if(Assets.exists(path)) daList = Assets.getText(path);
+		if (Assets.exists(path)) daList = Assets.getText(path);
 		#end
 		return daList == null ? [] : listFromString(daList);
 	}
 	
 	public static function listFromString(string:String):Array<String> {
 		final daList:Array<String> = string.trim().split('\n');
-		return [for(i in 0...daList.length) daList[i].trim()];
+		return [for (i in 0...daList.length) daList[i].trim()];
 	}
 
 	public static function browserLoad(site:String):Int {
@@ -52,10 +52,10 @@ class CoolUtil {
 
 	inline public static function openFolder(folder:String, absolute:Bool = false):Void {
 		#if sys
-		if(!absolute) folder = Sys.getCwd() + '$folder';
+		if (!absolute) folder = Sys.getCwd() + '$folder';
 
 		folder = folder.replace('/', '\\');
-		if(folder.endsWith('/')) folder.substr(0, folder.length - 1);
+		if (folder.endsWith('/')) folder.substr(0, folder.length - 1);
 		Sys.command(#if windows 'explorer.exe' #else '/usr/bin/xdg-open' #end, [folder]);
 		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
 	}

@@ -13,12 +13,12 @@ class CustomSubstate extends MusicBeatSubstate {
 	}
 
 	public static function openCustomSubstate(name:String, ?pauseGame:Bool = false) {
-		if(pauseGame) {
+		if (pauseGame) {
 			FlxG.camera.followLerp = 0;
 			PlayState.instance.persistentUpdate = false;
 			PlayState.instance.persistentDraw = true;
 			PlayState.instance.paused = true;
-			if(FlxG.sound.music != null) {
+			if (FlxG.sound.music != null) {
 				FlxG.sound.music.pause();
 				PlayState.instance.vocals.pause();
 			}
@@ -27,7 +27,7 @@ class CustomSubstate extends MusicBeatSubstate {
 	}
 
 	public static function closeCustomSubstate():Bool {
-		if(instance != null) {
+		if (instance != null) {
 			PlayState.instance.closeSubState();
 			return true;
 		}
@@ -35,10 +35,10 @@ class CustomSubstate extends MusicBeatSubstate {
 	}
 
 	public static function insertToCustomSubstate(tag:String, ?pos:Int = -1):Bool {
-		if(instance != null) {
+		if (instance != null) {
 			var tagObject:FlxObject = cast (MusicBeatState.getVariables().get(tag), FlxObject);
-			if(tagObject != null) {
-				if(pos < 0) instance.add(tagObject);
+			if (tagObject != null) {
+				if (pos < 0) instance.add(tagObject);
 				else instance.insert(pos, tagObject);
 				return true;
 			}

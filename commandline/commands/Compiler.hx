@@ -9,7 +9,7 @@ class Compiler {
 	}
 
 	static function __build(args:Array<String>, arg:Array<String>) {
-		for(a in args) arg.push(a);
+		for (a in args) arg.push(a);
 		Sys.command("lime", arg);
 	}
 

@@ -29,7 +29,7 @@ class Limo extends BaseStage {
 		var limoSunset:BGSprite;
 		add(limoSunset = new BGSprite('limo/limoSunset', -120, -50, .1, .1));
 
-		if(!lowQuality) {
+		if (!lowQuality) {
 			add(limoMetalPole = new BGSprite('gore/metalPole', -500, 220, 0.4, 0.4));
 			add(bgLimo = new BGSprite('limo/bgLimo', -150, 480, 0.4, 0.4, ['background limo pink'], true));
 			add(limoCorpse = new BGSprite('gore/noooooo', -500, limoMetalPole.y - 130, 0.4, 0.4, ['Henchmen on rail'], true));
@@ -68,9 +68,9 @@ class Limo extends BaseStage {
 
 	var limoSpeed:Float = 0;
 	override function update(elapsed:Float) {
-		if(!lowQuality) {
+		if (!lowQuality) {
 			grpLimoParticles.forEach((spr:BGSprite) -> {
-				if(spr.animation.curAnim.finished) {
+				if (spr.animation.curAnim.finished) {
 					spr.kill();
 					grpLimoParticles.remove(spr, true);
 					spr.destroy();
@@ -86,10 +86,10 @@ class Limo extends BaseStage {
 
 					var dancers:Array<BackgroundDancer> = grpLimoDancers.members;
 					for (i in 0...dancers.length) {
-						if(dancers[i].x < FlxG.width * 1.5 && limoLight.x > (370 * i) + 170) {
+						if (dancers[i].x < FlxG.width * 1.5 && limoLight.x > (370 * i) + 170) {
 							switch(i) {
 								case 0 | 3:
-									if(i == 0) FlxG.sound.play(Paths.sound('dancerdeath'), 0.5);
+									if (i == 0) FlxG.sound.play(Paths.sound('dancerdeath'), 0.5);
 
 									var diffStr:String = i == 3 ? ' 2 ' : ' ';
 									var particle:BGSprite = new BGSprite('gore/noooooo', dancers[i].x + 200, dancers[i].y, 0.4, 0.4, ['hench leg spin' + diffStr]);
@@ -110,7 +110,7 @@ class Limo extends BaseStage {
 						}
 					}
 
-					if(limoMetalPole.x > FlxG.width * 2) {
+					if (limoMetalPole.x > FlxG.width * 2) {
 						resetLimoKill();
 						limoSpeed = 800;
 						limoKillingState = SPEEDING_OFFSCREEN;
@@ -119,17 +119,17 @@ class Limo extends BaseStage {
 				case SPEEDING_OFFSCREEN:
 					limoSpeed -= 4000 * elapsed;
 					bgLimo.x -= limoSpeed * elapsed;
-					if(bgLimo.x > FlxG.width * 1.5) {
+					if (bgLimo.x > FlxG.width * 1.5) {
 						limoSpeed = 3000;
 						limoKillingState = SPEEDING;
 					}
 
 				case SPEEDING:
 					limoSpeed -= 2000 * elapsed;
-					if(limoSpeed < 1000) limoSpeed = 1000;
+					if (limoSpeed < 1000) limoSpeed = 1000;
 
 					bgLimo.x -= limoSpeed * elapsed;
-					if(bgLimo.x < -275) {
+					if (bgLimo.x < -275) {
 						limoKillingState = STOPPING;
 						limoSpeed = 800;
 					}
@@ -137,7 +137,7 @@ class Limo extends BaseStage {
 
 				case STOPPING:
 					bgLimo.x = FlxMath.lerp(-150, bgLimo.x, Math.exp(-elapsed * 9));
-					if(Math.round(bgLimo.x) == -150) {
+					if (Math.round(bgLimo.x) == -150) {
 						bgLimo.x = -150;
 						limoKillingState = WAIT;
 					}
@@ -149,18 +149,18 @@ class Limo extends BaseStage {
 	}
 
 	override function beatHit() {
-		if(!lowQuality) grpLimoDancers.forEach((dancer:BackgroundDancer) -> dancer.dance());
+		if (!lowQuality) grpLimoDancers.forEach((dancer:BackgroundDancer) -> dancer.dance());
 
 		if (FlxG.random.bool(10) && fastCarCanDrive) fastCarDrive();
 	}
 
 	// Substates for pausing/resuming tweens and timers
 	override function closeSubState() {
-		if(paused && carTimer != null) carTimer.active = true;
+		if (paused && carTimer != null) carTimer.active = true;
 	}
 
 	override function openSubState(SubState:FlxSubState) {
-		if(paused && carTimer != null) carTimer.active = false;
+		if (paused && carTimer != null) carTimer.active = false;
 	}
 
 	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {
@@ -204,8 +204,8 @@ class Limo extends BaseStage {
 	}
 
 	function killHenchmen():Void {
-		if(!lowQuality) {
-			if(limoKillingState == WAIT) {
+		if (!lowQuality) {
+			if (limoKillingState == WAIT) {
 				limoMetalPole.x = -400;
 				limoMetalPole.visible = true;
 				limoLight.visible = true;

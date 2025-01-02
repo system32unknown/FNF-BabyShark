@@ -69,7 +69,7 @@ class ExtraFunctions {
 		// Save data management
 		funk.set("initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
 			var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
-			if(variables.exists('save_$name')) {
+			if (variables.exists('save_$name')) {
 				FunkinLua.luaTrace('initSaveData: Save file already initialized: ' + name);
 				return false;
 			}
@@ -80,7 +80,7 @@ class ExtraFunctions {
 		});
 		funk.set("flushSaveData", function(name:String) {
 			var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
-			if(variables.exists('save_$name')) {
+			if (variables.exists('save_$name')) {
 				variables.get('save_$name').flush();
 				return true;
 			}
@@ -89,9 +89,9 @@ class ExtraFunctions {
 		});
 		funk.set("getDataFromSave", function(name:String, field:String, ?defaultValue:Dynamic = null) {
 			var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
-			if(variables.exists('save_$name')) {
+			if (variables.exists('save_$name')) {
 				var saveData:Dynamic = variables.get('save_$name').data;
-				if(Reflect.hasField(saveData, field)) return Reflect.field(saveData, field);
+				if (Reflect.hasField(saveData, field)) return Reflect.field(saveData, field);
 				else return defaultValue;
 			}
 			FunkinLua.luaTrace('getDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
@@ -99,7 +99,7 @@ class ExtraFunctions {
 		});
 		funk.set("setDataFromSave", function(name:String, field:String, value:Dynamic) {
 			var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
-			if(!variables.exists('save_$name')) {
+			if (!variables.exists('save_$name')) {
 				FunkinLua.luaTrace('setDataFromSave: Save file not initialized: ' + name, false, false, FlxColor.RED);
 				return false;
 			}
@@ -118,16 +118,16 @@ class ExtraFunctions {
 		// File management
 		funk.set("checkFileExists", function(filename:String, ?absolute:Bool = false) {
 			#if MODS_ALLOWED
-			if(absolute) return FileSystem.exists(filename);
+			if (absolute) return FileSystem.exists(filename);
 			return FileSystem.exists(Paths.getPath(filename));
 			#else
-			if(absolute) return Assets.exists(filename, TEXT);
+			if (absolute) return Assets.exists(filename, TEXT);
 			return Assets.exists(Paths.getPath(filename));
 			#end
 		});
 		funk.set("saveFile", function(path:String, content:String, ?absolute:Bool = false) {
 			try {
-				if(!absolute) File.saveContent(Paths.mods(path), content);
+				if (!absolute) File.saveContent(Paths.mods(path), content);
 				else File.saveContent(path, content);
 				return true;
 			} catch (e:Dynamic) FunkinLua.luaTrace('saveFile: Error trying to save $path: $e', false, false, FlxColor.RED);
@@ -136,8 +136,8 @@ class ExtraFunctions {
 		funk.set("deleteFile", function(path:String, ?ignoreModFolders:Bool = false, ?absolute:Bool = false) {
 			try {
 				var lePath:String = path;
-				if(!absolute) lePath = Paths.getPath(path, TEXT, !ignoreModFolders);
-				if(FileSystem.exists(lePath)) {
+				if (!absolute) lePath = Paths.getPath(path, TEXT, !ignoreModFolders);
+				if (FileSystem.exists(lePath)) {
 					FileSystem.deleteFile(lePath);
 					return true;
 				}
@@ -148,7 +148,7 @@ class ExtraFunctions {
 		funk.set("directoryFileList", function(folder:String) {
 			var list:Array<String> = [];
 			#if sys
-			if(FileSystem.exists(folder)) {
+			if (FileSystem.exists(folder)) {
 				for (folder in FileSystem.readDirectory(folder)) {
 					if (!list.contains(folder)) list.push(folder);
 				}

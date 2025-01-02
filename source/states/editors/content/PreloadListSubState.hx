@@ -61,10 +61,10 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 		add(outputTxt);
 
 		removeButton = new PsychUIButton(0, 0, 'X', () -> {
-			if(radioGrp.checked < 0) return;
+			if (radioGrp.checked < 0) return;
 
 			var name:String = getCurCheckedName();
-			if(!preloadList.exists(name)) return;
+			if (!preloadList.exists(name)) return;
 
 			preloadList.remove(name);
 			preloadListKeys.remove(name);
@@ -78,12 +78,12 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 
 		function updateFilters() {
 			var name:String = getCurCheckedName();
-			if(!preloadList.exists(name)) return;
+			if (!preloadList.exists(name)) return;
 
 			var filters:LoadFilters = 0;
-			if(lqCheckBox.checked) filters |= LOW_QUALITY;
-			if(hqCheckBox.checked) filters |= HIGH_QUALITY;
-			if(smCheckBox.checked) filters |= STORY_MODE;
+			if (lqCheckBox.checked) filters |= LOW_QUALITY;
+			if (hqCheckBox.checked) filters |= HIGH_QUALITY;
+			if (smCheckBox.checked) filters |= STORY_MODE;
 			preloadList.set(name, filters);
 		}
 		lqCheckBox = new PsychUICheckBox(bg.x + bg.width - 100, bg.y + bg.height - 130, 'Low Qual.', 0, updateFilters);
@@ -104,7 +104,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 
 		function addToList(path:Path, isFolder:Bool) {
 			var exePath:String = Sys.getCwd().replace('\\', '/');
-			if(path.dir.startsWith(exePath)) {
+			if (path.dir.startsWith(exePath)) {
 				var pathStr:String = path.dir.substr(exePath.length);
 				var split:Array<String> = pathStr.split('/');
 				switch(split[0]) {
@@ -113,12 +113,12 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 							switch(split[i]) {
 								case 'sounds', 'music', 'songs', 'images':
 									split.shift();
-									if(i == 2) split.shift();
+									if (i == 2) split.shift();
 
 									pathStr = split.join('/') + '/' + path.file;
-									if(isFolder && !pathStr.endsWith('/')) pathStr += '/';
+									if (isFolder && !pathStr.endsWith('/')) pathStr += '/';
 
-									if(!lockedList.contains(pathStr)) {
+									if (!lockedList.contains(pathStr)) {
 										preloadList.set(pathStr, LOW_QUALITY | HIGH_QUALITY);
 										preloadListKeys.push(pathStr);
 										radioGrp.labels = preloadListKeys;
@@ -134,13 +134,13 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 		}
 
 		var loadFileBtn:PsychUIButton = new PsychUIButton(0, bg.y + bg.height - 40, 'Load File', () -> {
-			if(!fileDialog.completed) return;
+			if (!fileDialog.completed) return;
 			
 			fileDialog.open(null, 'Load a .PNG/.OGG File...', [new openfl.net.FileFilter('Image/Audio', '*.png;*.ogg')], () -> {
 				var path:Path = new Path(fileDialog.path.replace('\\', '/'));
 	
 				var ext:String = path.ext;
-				if(ext != null) ext = ext.toLowerCase();
+				if (ext != null) ext = ext.toLowerCase();
 	
 				switch(ext) {
 					case 'png', 'ogg': addToList(path, false);
@@ -154,7 +154,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 		add(loadFileBtn);
 
 		var loadFolderBtn:PsychUIButton = new PsychUIButton(0, bg.y + bg.height - 40, 'Load Folder', () -> {
-			if(!fileDialog.completed) return;
+			if (!fileDialog.completed) return;
 			fileDialog.openDirectory('Load a folder...', () -> addToList(new Path(fileDialog.path.replace('\\', '/')), true));
 		});
 		loadFolderBtn.gameCenter(X);
@@ -162,9 +162,9 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 		add(loadFolderBtn);
 
 		var saveBtn:PsychUIButton = new PsychUIButton(0, bg.y + bg.height - 40, 'Save', () -> {
-			if(!fileDialog.completed) return;
+			if (!fileDialog.completed) return;
 
-			if(saveCallback != null) saveCallback(preloadList);
+			if (saveCallback != null) saveCallback(preloadList);
 			close();
 		});
 		saveBtn.gameCenter(X);
@@ -183,12 +183,12 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 
 		outputTime = Math.max(0, outputTime - elapsed);
 		outputTxt.alpha = outputTime;
-		if(!fileDialog.completed) return;
+		if (!fileDialog.completed) return;
 			
-		if(Controls.justPressed('back')) close();
+		if (Controls.justPressed('back')) close();
 		
 		var checked:PsychUIRadioItem = radioGrp.checkedRadio;
-		if(checked != null) removeButton.y = checked.y - 1;
+		if (checked != null) removeButton.y = checked.y - 1;
 	}
 
 	public function UIEvent(id:String, sender:Dynamic) {
@@ -199,7 +199,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 
 	function updateButtons() {
 		var checked:PsychUIRadioItem = radioGrp.checkedRadio;
-		if(checked != null) {
+		if (checked != null) {
 			var filters:LoadFilters = getCurLoadFilters();
 			lqCheckBox.checked = (filters & LOW_QUALITY == LOW_QUALITY);
 			hqCheckBox.checked = (filters & HIGH_QUALITY == HIGH_QUALITY);

@@ -47,7 +47,7 @@ class BaseStage extends FlxBasic {
 	public var camFollow(get, never):FlxObject;
 
 	public function new() {
-		if(game == null) {
+		if (game == null) {
 			FlxG.log.error('Invalid state for the stage added!');
 			destroy();
 		} else {
@@ -98,7 +98,7 @@ class BaseStage extends FlxBasic {
 	public function addBehindDad(obj:FlxBasic):FlxBasic return insert(members.indexOf(game.dadGroup), obj);
 	public function setDefaultGF(name:String) { //Fix for the Chart Editor on Base Game stages
 		var gfVersion:String = PlayState.SONG.gfVersion;
-		if(gfVersion == null || gfVersion.length < 1) {
+		if (gfVersion == null || gfVersion.length < 1) {
 			gfVersion = name;
 			PlayState.SONG.gfVersion = gfVersion;
 		}
@@ -109,19 +109,19 @@ class BaseStage extends FlxBasic {
 
 	//start/end callback functions
 	public function setStartCallback(myfn:Void->Void):Void {
-		if(!onPlayState) return;
+		if (!onPlayState) return;
 		PlayState.instance.startCallback = myfn;
 	}
 	public function setEndCallback(myfn:Void->Void):Void {
-		if(!onPlayState) return;
+		if (!onPlayState) return;
 		PlayState.instance.endCallback = myfn;
 	}
 
 	// overrides
-	function startCountdown():Bool if(onPlayState) return PlayState.instance.startCountdown(); else return false;
-	function endSong():Bool if(onPlayState) return PlayState.instance.endSong(); else return false;
-	function moveCameraSection():Void if(onPlayState) PlayState.instance.moveCameraSection();
-	function moveCamera(isDad:Bool):Void if(onPlayState) PlayState.instance.moveCamera(isDad);
+	function startCountdown():Bool if (onPlayState) return PlayState.instance.startCountdown(); else return false;
+	function endSong():Bool if (onPlayState) return PlayState.instance.endSong(); else return false;
+	function moveCameraSection():Void if (onPlayState) PlayState.instance.moveCameraSection();
+	function moveCamera(isDad:Bool):Void if (onPlayState) PlayState.instance.moveCamera(isDad);
 	inline function get_paused():Bool return game.paused;
 	inline function get_songName():String return game.songName;
 	inline function get_isStoryMode():Bool return PlayState.isStoryMode;

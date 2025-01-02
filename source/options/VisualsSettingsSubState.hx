@@ -33,8 +33,8 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 
 		// options
 		var noteSkins:Array<String> = Mods.mergeAllTextsNamed('images/noteSkins/list.txt');
-		if(noteSkins.length > 0) {
-			if(!noteSkins.contains(ClientPrefs.data.noteSkin))
+		if (noteSkins.length > 0) {
+			if (!noteSkins.contains(ClientPrefs.data.noteSkin))
 				ClientPrefs.data.noteSkin = ClientPrefs.defaultData.noteSkin; //Reset to default if saved noteskin couldnt be found
 
 			noteSkins.insert(0, ClientPrefs.defaultData.noteSkin); //Default skin always comes first
@@ -49,8 +49,8 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		}
 		
 		var noteSplashes:Array<String> = Mods.mergeAllTextsNamed('images/noteSplashes/list.txt');
-		if(noteSplashes.length > 0) {
-			if(!noteSplashes.contains(ClientPrefs.data.splashSkin))
+		if (noteSplashes.length > 0) {
+			if (!noteSplashes.contains(ClientPrefs.data.splashSkin))
 				ClientPrefs.data.splashSkin = ClientPrefs.defaultData.splashSkin; //Reset to default if saved splashskin couldnt be found
 
 			noteSplashes.insert(0, ClientPrefs.defaultData.splashSkin); //Default skin always comes first
@@ -98,7 +98,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		var option:Option = new Option('Pause Music:', "What song do you prefer for the Pause Screen?", 'pauseMusic', STRING, ['None', 'Breakfast', 'Tea Time', 'Breakfast (Dave)', 'Breakfast (Pico)']);
 		addOption(option);
 		option.onChange = () -> {
-			if(ClientPrefs.data.pauseMusic == 'None') FlxG.sound.music.volume = 0;
+			if (ClientPrefs.data.pauseMusic == 'None') FlxG.sound.music.volume = 0;
 			else FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
 			changedMusic = true;
 		};
@@ -115,16 +115,16 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		
 		switch(curOption.variable) {
 			case 'noteSkin', 'splashSkin', 'splashAlpha', 'splashCount':
-				if(!notesShown) {
+				if (!notesShown) {
 					for (note in notes.members) {
 						FlxTween.cancelTweensOf(note);
 						FlxTween.tween(note, {y: noteY}, Math.abs(note.y / (200 + noteY)) / 3, {ease: FlxEase.quadInOut});
 					}
 				}
 				notesShown = true;
-				if(curOption.variable.startsWith('splash') && Math.abs(notes.members[0].y - noteY) < 25) playNoteSplashes();
+				if (curOption.variable.startsWith('splash') && Math.abs(notes.members[0].y - noteY) < 25) playNoteSplashes();
 			default:
-				if(notesShown)  {
+				if (notesShown)  {
 					for (note in notes.members) {
 						FlxTween.cancelTweensOf(note);
 						FlxTween.tween(note, {y: -200}, Math.abs(note.y / (200 + noteY)) / 3, {ease: FlxEase.quadInOut});
@@ -137,7 +137,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 	function changeNoteSkin(note:StrumNote) {
 		var skin:String = Note.defaultNoteSkin;
 		var customSkin:String = skin + Note.getNoteSkinPostfix();
-		if(Paths.fileExists('images/$customSkin.png', IMAGE)) skin = customSkin;
+		if (Paths.fileExists('images/$customSkin.png', IMAGE)) skin = customSkin;
 
 		note.texture = skin; //Load texture and anims
 		note.reloadNote();
@@ -179,7 +179,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 	}
 
 	override function destroy() {
-		if(changedMusic && !OptionsState.onPlayState) FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		if (changedMusic && !OptionsState.onPlayState) FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		Note.globalRgbShaders = [];
 		super.destroy();
 	}

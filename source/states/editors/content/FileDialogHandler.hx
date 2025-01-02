@@ -28,7 +28,7 @@ class FileDialogHandler extends flixel.FlxBasic {
 	var _currentEvent:Event->Void;
 
 	public function save(?fileName:String = '', ?dataToSave:String = '', ?onComplete:Void->Void, ?onCancel:Void->Void, ?onError:Void->Void) {
-		if(!completed) throw new Exception('You must finish previous operation before starting a new one.');
+		if (!completed) throw new Exception('You must finish previous operation before starting a new one.');
 
 		this._dialogMode = SAVE;
 		_startUp(onComplete, onCancel, onError);
@@ -40,11 +40,11 @@ class FileDialogHandler extends flixel.FlxBasic {
 	}
 
 	public function open(?defaultName:String = null, ?title:String = null, ?filter:Array<FileFilter> = null, ?onComplete:Void->Void, ?onCancel:Void->Void, ?onError:Void->Void) {
-		if(!completed) throw new Exception('You must finish previous operation before starting a new one.');
+		if (!completed) throw new Exception('You must finish previous operation before starting a new one.');
 
 		this._dialogMode = OPEN;
 		_startUp(onComplete, onCancel, onError);
-		if(filter == null) filter = [new FileFilter('JSON', 'json')];
+		if (filter == null) filter = [new FileFilter('JSON', 'json')];
 
 		removeEvents();
 		_currentEvent = onLoadComplete;
@@ -53,7 +53,7 @@ class FileDialogHandler extends flixel.FlxBasic {
 	}
 
 	public function openDirectory(?title:String = null, ?onComplete:Void->Void, ?onCancel:Void->Void, ?onError:Void->Void) {
-		if(!completed) throw new Exception('You must finish previous operation before starting a new one.');
+		if (!completed) throw new Exception('You must finish previous operation before starting a new one.');
 
 		this._dialogMode = OPEN_DIRECTORY;
 		_startUp(onComplete, onCancel, onError);
@@ -75,7 +75,7 @@ class FileDialogHandler extends flixel.FlxBasic {
 
 		removeEvents();
 		this.completed = true;
-		if(onComplete != null) onComplete();
+		if (onComplete != null) onComplete();
 	}
 
 	function onLoadComplete(_) {
@@ -87,7 +87,7 @@ class FileDialogHandler extends flixel.FlxBasic {
 
 		removeEvents();
 		this.completed = true;
-		if(onComplete != null) onComplete();
+		if (onComplete != null) onComplete();
 	}
 
 	function onLoadDirectoryComplete(_) {
@@ -98,19 +98,19 @@ class FileDialogHandler extends flixel.FlxBasic {
 
 		removeEvents();
 		this.completed = true;
-		if(onComplete != null) onComplete();
+		if (onComplete != null) onComplete();
 	}
 
 	function onCancelFn(_) {
 		removeEvents();
 		this.completed = true;
-		if(onCancel != null) onError();
+		if (onCancel != null) onError();
 	}
 
 	function onErrorFn(_) {
 		removeEvents();
 		this.completed = true;
-		if(onError != null) onError();
+		if (onError != null) onError();
 	}
 
 	function _startUp(onComplete:Void->Void, onCancel:Void->Void, onError:Void->Void) {
@@ -124,7 +124,7 @@ class FileDialogHandler extends flixel.FlxBasic {
 	}
 
 	function removeEvents() {
-		if(_currentEvent == null) return;
+		if (_currentEvent == null) return;
 		
 		_fileRef.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, _currentEvent);
 		_currentEvent = null;

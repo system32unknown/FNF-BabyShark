@@ -124,25 +124,25 @@ class ClientPrefs {
 			Reflect.setField(data, i, Reflect.field(FlxG.save.data, i));
 		}
 
-		if(Main.fpsVar != null) {
+		if (Main.fpsVar != null) {
 			Main.fpsVar.visible = data.showFPS;
 			Main.fpsVar.memType = data.memCounterType;
 		}
 		FlxG.autoPause = data.autoPause;
 
 		if (FlxG.save.data.framerate == null) data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate * 2, 60, 240));
-		if(data.framerate > FlxG.drawFramerate)
+		if (data.framerate > FlxG.drawFramerate)
 			FlxG.updateFramerate = FlxG.drawFramerate = data.framerate;
 		else FlxG.drawFramerate = FlxG.updateFramerate = data.framerate;
 
-		if(FlxG.save.data.gameplaySettings != null) {
+		if (FlxG.save.data.gameplaySettings != null) {
 			var savedMap:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
 			for (name => value in savedMap) data.gameplaySettings.set(name, value);
 		}
 
 		// flixel automatically saves your volume!
-		if(FlxG.save.data.volume != null) FlxG.sound.volume = FlxG.save.data.volume;
-		if(FlxG.save.data.mute != null) FlxG.sound.muted = FlxG.save.data.mute;
+		if (FlxG.save.data.volume != null) FlxG.sound.volume = FlxG.save.data.volume;
+		if (FlxG.save.data.mute != null) FlxG.sound.muted = FlxG.save.data.mute;
 
 		#if DISCORD_ALLOWED DiscordClient.check(); #end
 	}
@@ -152,7 +152,7 @@ class ClientPrefs {
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
-		if(!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
+		if (!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
 		return (data.gameplaySettings.exists(name) ? data.gameplaySettings.get(name) : defaultValue);
 	}
 }

@@ -21,7 +21,7 @@ class PsychUITab extends FlxSprite {
 	override function draw() {
 		super.draw();
 
-		if(visible && text != null && text.exists && text.visible) {
+		if (visible && text != null && text.exists && text.visible) {
 			text.setPosition(x, y + height / 2 - text.height / 2);
 			text.draw();
 		}
@@ -34,14 +34,14 @@ class PsychUITab extends FlxSprite {
 	}
 	
 	public function updateMenu(parent:PsychUIBox, elapsed:Float) {
-		if(menu != null && menu.exists && menu.active) {
+		if (menu != null && menu.exists && menu.active) {
 			menu.scrollFactor.set(parent.scrollFactor.x, parent.scrollFactor.y);
 			menu.update(elapsed);
 		}
 	}
 
 	public function drawMenu(parent:PsychUIBox) {
-		if(menu != null && menu.exists && menu.visible) {
+		if (menu != null && menu.exists && menu.visible) {
 			menu.setPosition(parent.x, parent.y + parent.tabHeight);
 			menu.draw();
 		}

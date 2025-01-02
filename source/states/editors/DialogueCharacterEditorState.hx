@@ -182,7 +182,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		var tab_group:FlxSpriteGroup = UI_mainbox.getTab('Animations').menu;
 
 		animationDropDown = new PsychUIDropDownMenu(10, 30, [''], function(id:Int, animation:String) {
-			if(character.dialogueAnimations.exists(animation)) {
+			if (character.dialogueAnimations.exists(animation)) {
 				ghostLoop.playAnim(animation);
 				ghostIdle.playAnim(animation, true);
 
@@ -203,10 +203,10 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		
 		var addUpdateButton:PsychUIButton = new PsychUIButton(10, idleInputText.y + 30, "Add/Update", () -> {
 			var theAnim:String = animationInputText.text.trim();
-			if(character.dialogueAnimations.exists(theAnim)) { //Update
+			if (character.dialogueAnimations.exists(theAnim)) { //Update
 				for (i in 0...character.jsonFile.animations.length) {
 					var animArray:DialogueAnimArray = character.jsonFile.animations[i];
-					if(animArray.anim.trim() == theAnim) {
+					if (animArray.anim.trim() == theAnim) {
 						animArray.loop_name = loopInputText.text;
 						animArray.idle_name = idleInputText.text;
 						break;
@@ -216,7 +216,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 				character.reloadAnimations();
 				ghostLoop.reloadAnimations();
 				ghostIdle.reloadAnimations();
-				if(curSelectedAnim == theAnim) {
+				if (curSelectedAnim == theAnim) {
 					ghostLoop.playAnim(theAnim);
 					ghostIdle.playAnim(theAnim, true);
 				}
@@ -241,14 +241,14 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		var removeUpdateButton:PsychUIButton = new PsychUIButton(100, addUpdateButton.y, "Remove", () -> {
 			for (i in 0...character.jsonFile.animations.length) {
 				var animArray:DialogueAnimArray = character.jsonFile.animations[i];
-				if(animArray != null && animArray.anim.trim() == animationInputText.text.trim()) {
+				if (animArray != null && animArray.anim.trim() == animationInputText.text.trim()) {
 					var lastSelected:String = animationDropDown.selectedLabel;
 					character.jsonFile.animations.remove(animArray);
 					character.reloadAnimations();
 					ghostLoop.reloadAnimations();
 					ghostIdle.reloadAnimations();
 					reloadAnimationsDropDown();
-					if(character.jsonFile.animations.length > 0 && lastSelected == animArray.anim.trim()) {
+					if (character.jsonFile.animations.length > 0 && lastSelected == animArray.anim.trim()) {
 						var animToPlay:String = character.jsonFile.animations[0].anim;
 						ghostLoop.playAnim(animToPlay);
 						ghostIdle.playAnim(animToPlay, true);
@@ -277,7 +277,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 
 	function reloadAnimationsDropDown() {
 		animationArray = [for (anim in character.jsonFile.animations) anim.anim];
-		if(animationArray.length < 1) animationArray = [''];
+		if (animationArray.length < 1) animationArray = [''];
 		animationDropDown.list = animationArray;
 	}
 
@@ -348,7 +348,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		character.x += character.jsonFile.position[0] + mainGroup.x;
 		character.y += character.jsonFile.position[1] + mainGroup.y;
 		character.playAnim(character.jsonFile.animations[0].anim);
-		if(character.jsonFile.animations.length > 0) {
+		if (character.jsonFile.animations.length > 0) {
 			curSelectedAnim = character.jsonFile.animations[0].anim;
 			var animShit:DialogueAnimArray = character.dialogueAnimations.get(curSelectedAnim);
 			ghostLoop.playAnim(animShit.anim);
@@ -375,18 +375,18 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 	}
 
 	public function UIEvent(id:String, sender:Dynamic) {
-		if(id == PsychUICheckBox.CLICK_EVENT) unsavedProgress = true;
-		if(id == PsychUIInputText.CHANGE_EVENT && sender == imageInputText) {
+		if (id == PsychUICheckBox.CLICK_EVENT) unsavedProgress = true;
+		if (id == PsychUIInputText.CHANGE_EVENT && sender == imageInputText) {
 			character.jsonFile.image = imageInputText.text;
 			unsavedProgress = true;
-		} else if(id == PsychUINumericStepper.CHANGE_EVENT && (sender is PsychUINumericStepper)) {
-			if(sender == scaleStepper) {
+		} else if (id == PsychUINumericStepper.CHANGE_EVENT && (sender is PsychUINumericStepper)) {
+			if (sender == scaleStepper) {
 				character.jsonFile.scale = scaleStepper.value;
 				reloadCharacter();
-			} else if(sender == xStepper) {
+			} else if (sender == xStepper) {
 				character.jsonFile.position[0] = xStepper.value;
 				reloadCharacter();
-			} else if(sender == yStepper) {
+			} else if (sender == yStepper) {
 				character.jsonFile.position[1] = yStepper.value;
 				reloadCharacter();
 			}
@@ -399,19 +399,19 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 	var transitioning:Bool = false;
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		if(transitioning) return;
+		if (transitioning) return;
 
-		if(character.animation.curAnim != null) {
-			if(daText.finishedText) {
-				if(character.animationIsLoop()) character.playAnim(character.animation.curAnim.name, true);
-			} else if(character.animation.curAnim.finished) {
+		if (character.animation.curAnim != null) {
+			if (daText.finishedText) {
+				if (character.animationIsLoop()) character.playAnim(character.animation.curAnim.name, true);
+			} else if (character.animation.curAnim.finished) {
 				character.animation.curAnim.restart();
 			}
 		}
 
-		if(PsychUIInputText.focusOn == null) {
+		if (PsychUIInputText.focusOn == null) {
 			Controls.toggleVolumeKeys();
-			if(FlxG.keys.justPressed.SPACE && UI_mainbox.selectedName == 'Character') {
+			if (FlxG.keys.justPressed.SPACE && UI_mainbox.selectedName == 'Character') {
 				character.playAnim(character.jsonFile.animations[curAnim].anim);
 				daText.resetDialogue();
 				updateTextBox();
@@ -420,7 +420,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 			//lots of Ifs lol get trolled
 			var offsetAdd:Int = 1;
 			var speed:Float = 300;
-			if(FlxG.keys.pressed.SHIFT) {
+			if (FlxG.keys.pressed.SHIFT) {
 				speed = 1200;
 				offsetAdd = 10;
 			}
@@ -428,33 +428,33 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 			var negaMult:Array<Int> = [1, 1, -1, -1];
 			var controlArray:Array<Bool> = [FlxG.keys.pressed.J, FlxG.keys.pressed.I, FlxG.keys.pressed.L, FlxG.keys.pressed.K];
 			for (i in 0...controlArray.length) {
-				if(controlArray[i]) {
-					if(i % 2 == 1) mainGroup.y += speed * elapsed * negaMult[i];
+				if (controlArray[i]) {
+					if (i % 2 == 1) mainGroup.y += speed * elapsed * negaMult[i];
 					else mainGroup.x += speed * elapsed * negaMult[i];
 				}
 			}
 
-			if(UI_mainbox.selectedName == 'Animations' && curSelectedAnim != null && character.dialogueAnimations.exists(curSelectedAnim)) {
+			if (UI_mainbox.selectedName == 'Animations' && curSelectedAnim != null && character.dialogueAnimations.exists(curSelectedAnim)) {
 				var moved:Bool = false;
 				var animShit:DialogueAnimArray = character.dialogueAnimations.get(curSelectedAnim);
 				var controlArrayLoop:Array<Bool> = [FlxG.keys.justPressed.A, FlxG.keys.justPressed.W, FlxG.keys.justPressed.D, FlxG.keys.justPressed.S];
 				var controlArrayIdle:Array<Bool> = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.DOWN];
 				for (i in 0...controlArrayLoop.length) {
-					if(controlArrayLoop[i]) {
-						if(i % 2 == 1) animShit.loop_offsets[1] += offsetAdd * negaMult[i];
+					if (controlArrayLoop[i]) {
+						if (i % 2 == 1) animShit.loop_offsets[1] += offsetAdd * negaMult[i];
 						else animShit.loop_offsets[0] += offsetAdd * negaMult[i];
 						moved = true;
 					}
 				}
 				for (i in 0...controlArrayIdle.length) {
-					if(controlArrayIdle[i]) {
-						if(i % 2 == 1) animShit.idle_offsets[1] += offsetAdd * negaMult[i];
+					if (controlArrayIdle[i]) {
+						if (i % 2 == 1) animShit.idle_offsets[1] += offsetAdd * negaMult[i];
 						else animShit.idle_offsets[0] += offsetAdd * negaMult[i];
 						moved = true;
 					}
 				}
 
-				if(moved) {
+				if (moved) {
 					offsetLoopText.text = 'Loop: ' + animShit.loop_offsets;
 					offsetIdleText.text = 'Idle: ' + animShit.idle_offsets;
 					ghostLoop.offset.set(animShit.loop_offsets[0], animShit.loop_offsets[1]);
@@ -465,10 +465,10 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 			if (FlxG.keys.pressed.Q && camGame.zoom > .1) camGame.zoom = Math.max(camGame.zoom - elapsed * camGame.zoom, .1);
 			if (FlxG.keys.pressed.E && camGame.zoom < 1) camGame.zoom = Math.min(camGame.zoom + elapsed * camGame.zoom, 1);
 
-			if(FlxG.keys.justPressed.H) {
-				if(UI_mainbox.selectedName == 'Animations') {
+			if (FlxG.keys.justPressed.H) {
+				if (UI_mainbox.selectedName == 'Animations') {
 					currentGhosts++;
-					if(currentGhosts > 2) currentGhosts = 0;
+					if (currentGhosts > 2) currentGhosts = 0;
 
 					ghostLoop.visible = (currentGhosts != 1);
 					ghostIdle.visible = (currentGhosts != 2);
@@ -476,14 +476,14 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 					ghostIdle.alpha = (currentGhosts == 1 ? 1 : .6);
 				} else hudGroup.visible = !hudGroup.visible;
 			}
-			if(FlxG.keys.justPressed.R) {
+			if (FlxG.keys.justPressed.R) {
 				camGame.zoom = 1;
 				mainGroup.setPosition();
 				hudGroup.visible = true;
 			}
 
-			if(UI_mainbox.selectedName != lastTab) {
-				if(UI_mainbox.selectedName == 'Animations') {
+			if (UI_mainbox.selectedName != lastTab) {
+				if (UI_mainbox.selectedName == 'Animations') {
 					hudGroup.alpha = 0;
 					mainGroup.alpha = 0;
 					ghostLoop.alpha = .6;
@@ -505,8 +505,8 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 					updateTextBox();
 					daText.resetDialogue();
 					
-					if(curAnim < 0) curAnim = character.jsonFile.animations.length - 1;
-					else if(curAnim >= character.jsonFile.animations.length) curAnim = 0;
+					if (curAnim < 0) curAnim = character.jsonFile.animations.length - 1;
+					else if (curAnim >= character.jsonFile.animations.length) curAnim = 0;
 					
 					character.playAnim(character.jsonFile.animations[curAnim].anim);
 					animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
@@ -515,19 +515,19 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 				currentGhosts = 0;
 			}
 			
-			if(UI_mainbox.selectedName == 'Character') {
+			if (UI_mainbox.selectedName == 'Character') {
 				var negaMult:Array<Int> = [1, -1];
 				var controlAnim:Array<Bool> = [FlxG.keys.justPressed.W, FlxG.keys.justPressed.S];
 
-				if(controlAnim.contains(true)) {
+				if (controlAnim.contains(true)) {
 					for (i in 0...controlAnim.length) {
-						if(controlAnim[i] && character.jsonFile.animations.length > 0) {
+						if (controlAnim[i] && character.jsonFile.animations.length > 0) {
 							curAnim -= negaMult[i];
-							if(curAnim < 0) curAnim = character.jsonFile.animations.length - 1;
-							else if(curAnim >= character.jsonFile.animations.length) curAnim = 0;
+							if (curAnim < 0) curAnim = character.jsonFile.animations.length - 1;
+							else if (curAnim >= character.jsonFile.animations.length) curAnim = 0;
 
 							var animToPlay:String = character.jsonFile.animations[curAnim].anim;
-							if(character.dialogueAnimations.exists(animToPlay))
+							if (character.dialogueAnimations.exists(animToPlay))
 								character.playAnim(animToPlay, daText.finishedText);
 						}
 					}
@@ -535,8 +535,8 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 				}
 			}
 
-			if(FlxG.keys.justPressed.ESCAPE) {
-				if(!unsavedProgress) {
+			if (FlxG.keys.justPressed.ESCAPE) {
+				if (!unsavedProgress) {
 					FlxG.switchState(() -> new MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 					transitioning = true;
@@ -567,13 +567,13 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		#if sys
 		var fullPath:String = null;
 		@:privateAccess
-		if(_file.__path != null) fullPath = _file.__path;
+		if (_file.__path != null) fullPath = _file.__path;
 
-		if(fullPath != null) {
+		if (fullPath != null) {
 			var rawJson:String = File.getContent(fullPath);
-			if(rawJson != null) {
+			if (rawJson != null) {
 				var loadedChar:DialogueCharacterFile = cast Json.parse(rawJson);
-				if(loadedChar.dialogue_pos != null) { //Make sure it's really a dialogue character
+				if (loadedChar.dialogue_pos != null) { //Make sure it's really a dialogue character
 					trace('Successfully loaded file: ${_file.name.substr(0, _file.name.length - 5)}');
 					character.jsonFile = loadedChar;
 					reloadCharacter();

@@ -6,7 +6,7 @@ class PixelSplashShaderRef {
 	public var pixelAmount(default, set):Float = 1;
 
 	public function copyValues(tempShader:RGBPalette) {
-		if(tempShader != null) {
+		if (tempShader != null) {
 			for (i in 0...3) {
 				shader.r.value[i] = tempShader.shader.r.value[i];
 				shader.g.value[i] = tempShader.shader.g.value[i];
@@ -38,7 +38,7 @@ class PixelSplashShaderRef {
 		reset();
 		enabled = true;
 
-		if(!PlayState.isPixelStage) pixelAmount = 1;
+		if (!PlayState.isPixelStage) pixelAmount = 1;
 		else pixelAmount = PlayState.daPixelZoom;
 	}
 }
@@ -58,7 +58,7 @@ class PixelSplashShader extends flixel.system.FlxAssets.FlxShader {
 			vec4 color = flixel_texture2D(bitmap, floor(coord * blocks) / blocks);
 			if (!hasTransform) return color;
 
-			if(color.a == 0.0 || mult == 0.0) {
+			if (color.a == 0.0 || mult == 0.0) {
 				return color * openfl_Alphav;
 			}
 
@@ -68,7 +68,7 @@ class PixelSplashShader extends flixel.system.FlxAssets.FlxShader {
 			
 			color = mix(color, newColor, mult);
 			
-			if(color.a > 0.0) {
+			if (color.a > 0.0) {
 				return vec4(color.rgb, color.a);
 			}
 			return vec4(0.0, 0.0, 0.0, 0.0);

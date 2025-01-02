@@ -13,33 +13,33 @@ class Language {
 		var hasPhrases:Bool = false;
 		for (num => phrase in loadedText) {
 			phrase = phrase.trim();
-			if(num < 1 && !phrase.contains(':')) {
+			if (num < 1 && !phrase.contains(':')) {
 				//First line ignores formatting and shit if the line doesn't have ":" because its language_name
 				phrases.set('language_name', phrase.trim());
 				continue;
 			}
 
-			if(phrase.length < 4 || phrase.startsWith('//')) continue; 
+			if (phrase.length < 4 || phrase.startsWith('//')) continue; 
 
 			var n:Int = phrase.indexOf(':');
-			if(n < 0) continue;
+			if (n < 0) continue;
 
 			var key:String = phrase.substr(0, n).trim().toLowerCase();
 
 			var value:String = phrase.substr(n);
 			n = value.indexOf('"');
-			if(n < 0) continue;
+			if (n < 0) continue;
 
 			phrases.set(key, value.substring(n + 1, value.lastIndexOf('"')).replace('\\n', '\n'));
 			hasPhrases = true;
 		}
 
-		if(!hasPhrases) ClientPrefs.data.language = ClientPrefs.defaultData.language;
+		if (!hasPhrases) ClientPrefs.data.language = ClientPrefs.defaultData.language;
 
 		var alphaPath:String = getFileTranslation('images/alphabet');
-		if(alphaPath.startsWith('images/')) alphaPath = alphaPath.substr('images/'.length);
+		if (alphaPath.startsWith('images/')) alphaPath = alphaPath.substr('images/'.length);
 		var pngPos:Int = alphaPath.indexOf('.png');
-		if(pngPos > -1) alphaPath = alphaPath.substring(0, pngPos);
+		if (pngPos > -1) alphaPath = alphaPath.substring(0, pngPos);
 		Alphabet.loadData(alphaPath);
 		#else
 		Alphabet.loadData();
@@ -53,8 +53,8 @@ class Language {
 		var str:String = defaultPhrase;
 		#end
 
-		if(str == null) str = key;
-		if(values != null) for (num => value in values) str = str.replace('{${num + 1}}', value);
+		if (str == null) str = key;
+		if (values != null) for (num => value in values) str = str.replace('{${num + 1}}', value);
 		return str;
 	}
 
@@ -62,7 +62,7 @@ class Language {
 	inline public static function getFileTranslation(key:String):String {
 		#if TRANSLATIONS_ALLOWED
 		var str:String = phrases.get(key.trim().toLowerCase());
-		if(str != null) key = str;
+		if (str != null) key = str;
 		#end
 		return key;
 	}

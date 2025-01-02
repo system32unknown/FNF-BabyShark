@@ -112,7 +112,7 @@ class MainMenuState extends MusicBeatState {
 	override function update(elapsed:Float) {
 		if (FlxG.sound.music.volume < .8) {
 			FlxG.sound.music.volume = Math.min(FlxG.sound.music.volume + .5 * elapsed, .8);
-			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += .5 * elapsed;
+			if (FreeplayState.vocals != null) FreeplayState.vocals.volume += .5 * elapsed;
 		}
 		
 		if (selectedSomethin) {
@@ -136,15 +136,15 @@ class MainMenuState extends MusicBeatState {
 				case RIGHT: selectedItem = rightItem;
 			}
 	
-			if(leftItem != null && FlxG.mouse.overlaps(leftItem)) {
+			if (leftItem != null && FlxG.mouse.overlaps(leftItem)) {
 				allowMouse = true;
-				if(selectedItem != leftItem) {
+				if (selectedItem != leftItem) {
 					curColumn = LEFT;
 					changeItem();
 				}
-			} else if(rightItem != null && FlxG.mouse.overlaps(rightItem)) {
+			} else if (rightItem != null && FlxG.mouse.overlaps(rightItem)) {
 				allowMouse = true;
-				if(selectedItem != rightItem) {
+				if (selectedItem != rightItem) {
 					curColumn = RIGHT;
 					changeItem();
 				}
@@ -153,7 +153,7 @@ class MainMenuState extends MusicBeatState {
 				var distItem:Int = -1;
 				for (i in 0...optionShit.length) {
 					var memb:FlxSprite = menuItems.members[i];
-					if(FlxG.mouse.overlaps(memb)) {
+					if (FlxG.mouse.overlaps(memb)) {
 						var distance:Float = Math.sqrt(Math.pow(memb.getGraphicMidpoint().x - FlxG.mouse.viewX, 2) + Math.pow(memb.getGraphicMidpoint().y - FlxG.mouse.viewY, 2));
 						if (dist < 0 || distance < dist) {
 							dist = distance;
@@ -163,7 +163,7 @@ class MainMenuState extends MusicBeatState {
 					}
 				}
 	
-				if(distItem != -1 && selectedItem != menuItems.members[distItem]) {
+				if (distItem != -1 && selectedItem != menuItems.members[distItem]) {
 					curColumn = CENTER;
 					curSelected = distItem;
 					changeItem();
@@ -171,28 +171,28 @@ class MainMenuState extends MusicBeatState {
 			}
 		} else {
 			timeNotMoving += elapsed;
-			if(timeNotMoving > 2) FlxG.mouse.visible = false;
+			if (timeNotMoving > 2) FlxG.mouse.visible = false;
 		}
 
 		var leftJustpressed:Bool = Controls.justPressed('ui_left');
 		var rightJustpressed:Bool = Controls.justPressed('ui_right');
 		switch(curColumn) {
 			case CENTER:
-				if(leftJustpressed && leftOption != null) {
+				if (leftJustpressed && leftOption != null) {
 					curColumn = LEFT;
 					changeItem();
-				} else if(rightJustpressed && rightOption != null) {
+				} else if (rightJustpressed && rightOption != null) {
 					curColumn = RIGHT;
 					changeItem();
 				}
 
 			case LEFT:
-				if(rightJustpressed) {
+				if (rightJustpressed) {
 					curColumn = CENTER;
 					changeItem();
 				}
 			case RIGHT:
-				if(leftJustpressed) {
+				if (leftJustpressed) {
 					curColumn = CENTER;
 					changeItem();
 				}
@@ -210,7 +210,7 @@ class MainMenuState extends MusicBeatState {
 			selectedSomethin = true;
 			FlxG.mouse.visible = false;
 
-			if(ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, .15, false);
+			if (ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, .15, false);
 
 			var item:FlxSprite;
 			var option:String;
@@ -245,7 +245,7 @@ class MainMenuState extends MusicBeatState {
 			});
 
 			for (memb in menuItems) {
-				if(memb == item) continue;
+				if (memb == item) continue;
 				FlxTween.tween(memb, {alpha: 0}, .4, {ease: FlxEase.quadOut});
 			}
 		}
@@ -259,7 +259,7 @@ class MainMenuState extends MusicBeatState {
 	}
 
 	function changeItem(change:Int = 0) {
-		if(change != 0) curColumn = CENTER;
+		if (change != 0) curColumn = CENTER;
 		curSelected = FlxMath.wrap(curSelected + change, 0, optionShit.length - 1);
 
 		for (item in menuItems) {

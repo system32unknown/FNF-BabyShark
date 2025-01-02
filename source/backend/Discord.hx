@@ -22,13 +22,13 @@ class DiscordClient {
 	public static var user:DUser = null;
 
 	public static function check() {
-		if(ClientPrefs.data.discordRPC) initialize();
-		else if(isInitialized) shutdown();
+		if (ClientPrefs.data.discordRPC) initialize();
+		else if (isInitialized) shutdown();
 	}
 
 	public static function prepare() {
 		if (!isInitialized && ClientPrefs.data.discordRPC) initialize();
-		lime.app.Application.current.window.onClose.add(() -> if(isInitialized) shutdown());
+		lime.app.Application.current.window.onClose.add(() -> if (isInitialized) shutdown());
 	}
 
 	public dynamic static function shutdown() {
@@ -69,7 +69,7 @@ class DiscordClient {
 		handlers.errored = CppFunction.fromStaticFunction(onError);
 		Discord.Initialize(clientID, cpp.RawPointer.addressOf(handlers), true, null);
 
-		if(!isInitialized) trace("Discord Client initialized");
+		if (!isInitialized) trace("Discord Client initialized");
 
 		if (__thread == null) {
 			__thread = Thread.create(() -> {
@@ -111,7 +111,7 @@ class DiscordClient {
 		var change:Bool = (clientID != newID);
 		clientID = newID;
 
-		if(change && isInitialized) {
+		if (change && isInitialized) {
 			shutdown();
 			initialize();
 			updatePresence();
@@ -122,7 +122,7 @@ class DiscordClient {
 	#if MODS_ALLOWED
 	public static function loadModRPC() {
 		var pack:Dynamic = Mods.getPack();
-		if(pack != null && pack.discordRPC != null && pack.discordRPC != clientID)
+		if (pack != null && pack.discordRPC != null && pack.discordRPC != clientID)
 			clientID = pack.discordRPC;
 	}
 	#end
@@ -131,7 +131,7 @@ class DiscordClient {
 	public static function addLuaCallbacks(lua:psychlua.FunkinLua) {
 		lua.set("changeDiscordPresence", changePresence);
 		lua.set("changeDiscordClientID", (?newID:String) -> {
-			if(newID == null) newID = _defaultID;
+			if (newID == null) newID = _defaultID;
 			clientID = newID;
 		});
 	}

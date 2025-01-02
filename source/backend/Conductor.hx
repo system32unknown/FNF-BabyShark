@@ -55,7 +55,7 @@ class Conductor {
 		var totalPos:Float = 0, totalSteps:Int = 0;
 
 		for (i in 0...song.notes.length) {
-			if(song.notes[i].changeBPM && song.notes[i].bpm != curBPM) {
+			if (song.notes[i].changeBPM && song.notes[i].bpm != curBPM) {
 				curBPM = song.notes[i].bpm;
 				bpmChangeMap.push({
 					stepTime: totalSteps,
@@ -72,7 +72,7 @@ class Conductor {
 
 	static function getSectionBeats(song:SwagSong, section:Int):Float {
 		var val:Null<Float> = null;
-		if(song.notes[section] != null) val = song.notes[section].sectionBeats;
+		if (song.notes[section] != null) val = song.notes[section].sectionBeats;
 		return val ?? 4;
 	}
 

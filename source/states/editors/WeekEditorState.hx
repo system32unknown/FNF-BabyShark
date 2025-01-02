@@ -27,7 +27,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	public function new(weekFile:WeekFile = null) {
 		super();
 		this.weekFile = WeekData.createWeekFile();
-		if(weekFile != null) this.weekFile = weekFile;
+		if (weekFile != null) this.weekFile = weekFile;
 		else weekFileName = 'week1';
 	}
 
@@ -229,7 +229,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		weekBeforeInputText.text = weekFile.weekBefore;
 
 		difficultiesInputText.text = '';
-		if(weekFile.difficulties != null) difficultiesInputText.text = weekFile.difficulties;
+		if (weekFile.difficulties != null) difficultiesInputText.text = weekFile.difficulties;
 
 		sectionInputText.text = weekFile.section;
 
@@ -265,14 +265,14 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		var assetName:String = weekFile.weekBackground;
 
 		var isMissing:Bool = true;
-		if(assetName != null && assetName.length > 0) {
-			if(#if MODS_ALLOWED FileSystem.exists(Paths.modsImages('menubackgrounds/menu_$assetName')) || #end Assets.exists(Paths.getPath('images/menubackgrounds/menu_$assetName.png', IMAGE), IMAGE)) {
+		if (assetName != null && assetName.length > 0) {
+			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsImages('menubackgrounds/menu_$assetName')) || #end Assets.exists(Paths.getPath('images/menubackgrounds/menu_$assetName.png', IMAGE), IMAGE)) {
 				bgSprite.loadGraphic(Paths.image('menubackgrounds/menu_$assetName'));
 				isMissing = false;
 			}
 		}
 
-		if(isMissing) bgSprite.visible = false;
+		if (isMissing) bgSprite.visible = false;
 	}
 
 	function reloadWeekThing() {
@@ -281,14 +281,14 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		var assetName:String = weekFileInputText.text.trim();
 		
 		var isMissing:Bool = true;
-		if(assetName != null && assetName.length > 0) {
-			if(#if MODS_ALLOWED FileSystem.exists(Paths.modsImages('storymenu/$assetName')) || #end Assets.exists(Paths.getPath('images/storymenu/$assetName.png', IMAGE), IMAGE)) {
+		if (assetName != null && assetName.length > 0) {
+			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsImages('storymenu/$assetName')) || #end Assets.exists(Paths.getPath('images/storymenu/$assetName.png', IMAGE), IMAGE)) {
 				weekThing.loadGraphic(Paths.image('storymenu/$assetName'));
 				isMissing = false;
 			}
 		}
 
-		if(isMissing) {
+		if (isMissing) {
 			weekThing.visible = false;
 			missingFileText.visible = true;
 			missingFileText.text = 'MISSING FILE: images/storymenu/$assetName.png';
@@ -301,40 +301,40 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	}
 	
 	public function UIEvent(id:String, sender:Dynamic) {
-		if(id == PsychUICheckBox.CLICK_EVENT) unsavedProgress = true;
-		if(id == PsychUIInputText.CHANGE_EVENT && (sender is PsychUIInputText)) {
-			if(sender == opponentInputText || sender == boyfriendInputText || sender == girlfriendInputText) {
+		if (id == PsychUICheckBox.CLICK_EVENT) unsavedProgress = true;
+		if (id == PsychUIInputText.CHANGE_EVENT && (sender is PsychUIInputText)) {
+			if (sender == opponentInputText || sender == boyfriendInputText || sender == girlfriendInputText) {
 				weekFile.weekCharacters[0] = opponentInputText.text.trim();
 				weekFile.weekCharacters[1] = boyfriendInputText.text.trim();
 				weekFile.weekCharacters[2] = girlfriendInputText.text.trim();
 				unsavedProgress = true;
 				updateText();
-			} else if(sender == weekFileInputText) {
+			} else if (sender == weekFileInputText) {
 				weekFileName = weekFileInputText.text.trim();
 				unsavedProgress = true;
 				reloadWeekThing();
-			} else if(sender == backgroundInputText) {
+			} else if (sender == backgroundInputText) {
 				weekFile.weekBackground = backgroundInputText.text.trim();
 				unsavedProgress = true;
 				reloadBG();
-			} else if(sender == displayNameInputText) {
+			} else if (sender == displayNameInputText) {
 				weekFile.storyName = displayNameInputText.text.trim();
 				unsavedProgress = true;
 				updateText();
-			} else if(sender == weekNameInputText) {
+			} else if (sender == weekNameInputText) {
 				weekFile.weekName = weekNameInputText.text.trim();
 				unsavedProgress = true;
-			} else if(sender == songsInputText) {
+			} else if (sender == songsInputText) {
 				final splittedText:Array<String> = songsInputText.text.trim().split(',');
 				for (i in 0...splittedText.length) splittedText[i] = splittedText[i].trim();
 				while(splittedText.length < weekFile.songs.length) weekFile.songs.pop();
 
 				for (i in 0...splittedText.length) {
-					if(i >= weekFile.songs.length) //Add new song
+					if (i >= weekFile.songs.length) //Add new song
 						weekFile.songs.push([splittedText[i], 'face', [146, 113, 253]]);
 					else { //Edit song
 						weekFile.songs[i][0] = splittedText[i];
-						if(weekFile.songs[i][1] == null) {
+						if (weekFile.songs[i][1] == null) {
 							weekFile.songs[i][1] = 'face';
 							weekFile.songs[i][2] = [146, 113, 253];
 						}
@@ -342,13 +342,13 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 				}
 				updateText();
 				unsavedProgress = true;
-			} else if(sender == weekBeforeInputText) {
+			} else if (sender == weekBeforeInputText) {
 				weekFile.weekBefore = weekBeforeInputText.text.trim();
 				unsavedProgress = true;
-			} else if(sender == difficultiesInputText) {
+			} else if (sender == difficultiesInputText) {
 				weekFile.difficulties = difficultiesInputText.text.trim();
 				unsavedProgress = true;
-			} else if(sender == sectionInputText) {
+			} else if (sender == sectionInputText) {
 				weekFile.section = sectionInputText.text.trim();
 				unsavedProgress = true;
 			}
@@ -356,16 +356,16 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	}
 	
 	override function update(elapsed:Float) {
-		if(loadedWeek != null) {
+		if (loadedWeek != null) {
 			weekFile = loadedWeek;
 			loadedWeek = null;
 			reloadAllShit();
 		}
 
-		if(PsychUIInputText.focusOn == null) {
+		if (PsychUIInputText.focusOn == null) {
 			Controls.toggleVolumeKeys();
-			if(FlxG.keys.justPressed.ESCAPE) {
-				if(!unsavedProgress) {
+			if (FlxG.keys.justPressed.ESCAPE) {
+				if (!unsavedProgress) {
 					FlxG.switchState(() -> new MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				} else openSubState(new ExitConfirmationPrompt(() -> unsavedProgress = false));
@@ -401,13 +401,13 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		#if sys
 		var fullPath:String = null;
 		@:privateAccess
-		if(_file.__path != null) fullPath = _file.__path;
+		if (_file.__path != null) fullPath = _file.__path;
 
-		if(fullPath != null) {
+		if (fullPath != null) {
 			var rawJson:String = File.getContent(fullPath);
-			if(rawJson != null) {
+			if (rawJson != null) {
 				loadedWeek = cast Json.parse(rawJson);
-				if(loadedWeek.weekCharacters != null && loadedWeek.weekName != null) { //Make sure it's really a week
+				if (loadedWeek.weekCharacters != null && loadedWeek.weekName != null) { //Make sure it's really a week
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
 					trace("Successfully loaded file: " + cutName);
 
@@ -494,7 +494,7 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 	public function new(weekFile:WeekFile = null) {
 		super();
 		this.weekFile = WeekData.createWeekFile();
-		if(weekFile != null) this.weekFile = weekFile;
+		if (weekFile != null) this.weekFile = weekFile;
 	}
 
 	var bg:FlxSprite;
@@ -558,12 +558,12 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 	}
 	
 	public function UIEvent(id:String, sender:Dynamic) {
-		if(id == PsychUICheckBox.CLICK_EVENT) WeekEditorState.unsavedProgress = true;
-		if(id == PsychUIInputText.CHANGE_EVENT && (sender is PsychUIInputText)) {
+		if (id == PsychUICheckBox.CLICK_EVENT) WeekEditorState.unsavedProgress = true;
+		if (id == PsychUIInputText.CHANGE_EVENT && (sender is PsychUIInputText)) {
 			weekFile.songs[curSelected][1] = iconInputText.text;
 			iconArray[curSelected].changeIcon(iconInputText.text);
-		} else if(id == PsychUINumericStepper.CHANGE_EVENT && (sender is PsychUINumericStepper)) {
-			if(sender == bgColorStepperR || sender == bgColorStepperG || sender == bgColorStepperB)
+		} else if (id == PsychUINumericStepper.CHANGE_EVENT && (sender is PsychUINumericStepper)) {
+			if (sender == bgColorStepperR || sender == bgColorStepperG || sender == bgColorStepperB)
 				updateBG();
 		}
 	}
@@ -581,19 +581,19 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 
 		var copyColor:PsychUIButton = new PsychUIButton(10, bgColorStepperR.y + 25, "Copy Color", () -> Clipboard.text = bg.color.red + ',' + bg.color.green + ',' + bg.color.blue);
 		var pasteColor:PsychUIButton = new PsychUIButton(140, copyColor.y, "Paste Color", () -> {
-			if(Clipboard.text != null) {
+			if (Clipboard.text != null) {
 				var leColor:Array<Int> = [];
 				var splitted:Array<String> = Clipboard.text.trim().split(',');
 				for (i in 0...splitted.length) {
 					var toPush:Int = Std.parseInt(splitted[i]);
-					if(!Math.isNaN(toPush)) {
-						if(toPush > 255) toPush = 255;
-						else if(toPush < 0) toPush *= -1;
+					if (!Math.isNaN(toPush)) {
+						if (toPush > 255) toPush = 255;
+						else if (toPush < 0) toPush *= -1;
 						leColor.push(toPush);
 					}
 				}
 
-				if(leColor.length > 2) {
+				if (leColor.length > 2) {
 					bgColorStepperR.value = leColor[0];
 					bgColorStepperG.value = leColor[1];
 					bgColorStepperB.value = leColor[2];
@@ -664,7 +664,7 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 	}
 
 	override function update(elapsed:Float) {
-		if(WeekEditorState.loadedWeek != null) {
+		if (WeekEditorState.loadedWeek != null) {
 			super.update(elapsed);
 			MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 			FlxG.switchState(() -> new WeekEditorFreeplayState(WeekEditorState.loadedWeek));
@@ -672,11 +672,11 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 			return;
 		}
 		
-		if(PsychUIInputText.focusOn != null) Controls.toggleVolumeKeys(false);
+		if (PsychUIInputText.focusOn != null) Controls.toggleVolumeKeys(false);
 		else {
 			Controls.toggleVolumeKeys();
-			if(FlxG.keys.justPressed.ESCAPE) {
-				if(!WeekEditorState.unsavedProgress) {
+			if (FlxG.keys.justPressed.ESCAPE) {
+				if (!WeekEditorState.unsavedProgress) {
 					FlxG.switchState(() -> new MasterEditorMenu());
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				} else openSubState(new ExitConfirmationPrompt());

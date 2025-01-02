@@ -86,7 +86,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		timerToStart = startOffset;
 		
 		/* borrowed from PlayState */
-		if(ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}');
+		if (ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}');
 
 		/* setting up Editor PlayState stuff */
 		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, 0xFF101010);
@@ -108,7 +108,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		timeTxt.scrollFactor.set();
 		timeTxt.gameCenter(X);
 		timeTxt.visible = showTime;
-		if(downScroll) timeTxt.y = FlxG.height - 44;
+		if (downScroll) timeTxt.y = FlxG.height - 44;
 		add(timeTxt);
 
 		add(comboGroup);
@@ -164,7 +164,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	var totalCnt:Int = 0;
 	override function update(elapsed:Float) {
-		if(Controls.justPressed('back') || FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.F12) {
+		if (Controls.justPressed('back') || FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.F12) {
 			endSong();
 			super.update(elapsed);
 			return;
@@ -174,7 +174,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (startingSong) {
 			timerToStart -= elapsed * 1000;
 			Conductor.songPosition = startPos - timerToStart;
-			if(timerToStart < 0) startSong();
+			if (timerToStart < 0) startSong();
 		} else {
 			Conductor.songPosition += elapsed * 1000 * playbackRate;
 			if (Conductor.songPosition >= 0) {
@@ -201,14 +201,14 @@ class EditorPlayState extends MusicBeatSubstate {
 		}
 
 		if (!cpuControlled) keysCheck();
-		if(notes.length > 0) {
+		if (notes.length > 0) {
 			notes.forEachAlive((daNote:Note) -> {
 				daNote.followStrumNote(songSpeed / playbackRate);
 
-				if(daNote.mustPress) {
-					if(cpuControlled && !daNote.blockHit && daNote.canBeHit && ((daNote.isSustainNote && daNote.prevNote.wasGoodHit) || daNote.strumTime <= Conductor.songPosition)) goodNoteHit(daNote);
-				} else if(!daNote.mustPress && !daNote.hitByOpponent && !daNote.ignoreNote && daNote.strumTime <= Conductor.songPosition) opponentNoteHit(daNote);
-				if(daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
+				if (daNote.mustPress) {
+					if (cpuControlled && !daNote.blockHit && daNote.canBeHit && ((daNote.isSustainNote && daNote.prevNote.wasGoodHit) || daNote.strumTime <= Conductor.songPosition)) goodNoteHit(daNote);
+				} else if (!daNote.mustPress && !daNote.hitByOpponent && !daNote.ignoreNote && daNote.strumTime <= Conductor.songPosition) opponentNoteHit(daNote);
+				if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 
 				// Kill extremely late notes and cause misses
 				if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
@@ -220,7 +220,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		}
 		
 		if (ClientPrefs.data.showNPS) {
-			for(i in 0...notesHitArray.length) {
+			for (i in 0...notesHitArray.length) {
 				var curNPS:Date = notesHitArray[i];
 				if (curNPS != null && curNPS.getTime() + (1000 / playbackRate) < Date.now().getTime()) notesHitArray.remove(curNPS);
 			}
@@ -235,7 +235,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	var lastBeatHit:Int = -1;
 	override function beatHit() {
-		if(lastBeatHit >= curBeat) return;
+		if (lastBeatHit >= curBeat) return;
 		notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 
 		super.beatHit();
@@ -290,10 +290,10 @@ class EditorPlayState extends MusicBeatSubstate {
 		var secTime:Float = 0;
 		var cachedSectionTimes:Array<Float> = [];
 		var cachedSectionCrochets:Array<Float> = [];
-		if(PlayState.SONG != null) {
+		if (PlayState.SONG != null) {
 			var tempBpm:Float = daBpm;
 			for (_ => section in PlayState.SONG.notes) {
-				if(PlayState.SONG.notes[noteSec].changeBPM == true) tempBpm = PlayState.SONG.notes[noteSec].bpm;
+				if (PlayState.SONG.notes[noteSec].changeBPM == true) tempBpm = PlayState.SONG.notes[noteSec].bpm;
 				secTime += Conductor.calculateCrochet(tempBpm) * (Math.round(4 * section.sectionBeats) / 4);
 				cachedSectionTimes.push(secTime);
 			}
@@ -302,11 +302,11 @@ class EditorPlayState extends MusicBeatSubstate {
 		// Load Notes
 		var section:SwagSection = songData.notes[0];
 		for (note in _noteList) {
-			if(note == null || note.strumTime < startPos) continue;
+			if (note == null || note.strumTime < startPos) continue;
 
 			while(cachedSectionTimes.length > noteSec + 1 && cachedSectionTimes[noteSec + 1] <= note.strumTime) {
 				section = songData.notes[++noteSec];
-				if(PlayState.SONG.notes[noteSec].changeBPM == true)
+				if (PlayState.SONG.notes[noteSec].changeBPM == true)
 					daBpm = PlayState.SONG.notes[noteSec].bpm;
 			}
 
@@ -321,7 +321,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			unspawnNotes.push(swagNote);
 
 			final roundSus:Int = Math.round(swagNote.holdLength / Conductor.stepCrochet);
-			if(roundSus > 0) {
+			if (roundSus > 0) {
 				for (susNote in 0...roundSus) {
 					swagNote.noteData |= 1 << 9; // isHold
 					swagNote.noteData |= susNote == roundSus ? 1 << 10 : 0; // isHoldEnd
@@ -338,8 +338,8 @@ class EditorPlayState extends MusicBeatSubstate {
 		for (i in 0...4) {
 			var targetAlpha:Float = 1;
 			if (player < 1) {
-				if(!ClientPrefs.data.opponentStrums) targetAlpha = 0;
-				else if(middleScroll) targetAlpha = .35;
+				if (!ClientPrefs.data.opponentStrums) targetAlpha = 0;
+				else if (middleScroll) targetAlpha = .35;
 			}
 
 			var babyArrow:StrumNote = new StrumNote(strumLine.x, strumLine.y, i, player);
@@ -348,7 +348,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 			if (player < 1 && middleScroll) {
 				babyArrow.x += 310;
-				if(i > 1) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
+				if (i > 1) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
 			}
 
 			(player == 1 ? playerStrums : opponentStrums).add(babyArrow);
@@ -359,7 +359,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	public function finishSong():Void {
-		if(ClientPrefs.data.noteOffset <= 0) endSong();
+		if (ClientPrefs.data.noteOffset <= 0) endSong();
 		else finishTimer = FlxTimer.wait(ClientPrefs.data.noteOffset / 1000, () -> endSong());
 	}
 
@@ -369,7 +369,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 		FlxG.sound.music.pause();
 		vocals.pause();
-		if(finishTimer != null) finishTimer.destroy();
+		if (finishTimer != null) finishTimer.destroy();
 		Conductor.songPosition = FlxG.sound.music.time = vocals.time = startPos - Conductor.offset;
 		close();
 	}
@@ -389,10 +389,10 @@ class EditorPlayState extends MusicBeatSubstate {
 		note.ratingMod = daRating.ratingMod;
 		note.rating = daRating.name;
 
-		if(!note.ratingDisabled) daRating.hits++;
-		if(daRating.noteSplash && !note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
+		if (!note.ratingDisabled) daRating.hits++;
+		if (daRating.noteSplash && !note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
 
-		if(!note.ratingDisabled) songHits++;
+		if (!note.ratingDisabled) songHits++;
 
 		if (!ClientPrefs.data.showComboCounter || (!showRating && !showComboNum)) return;
 		if (!ClientPrefs.data.comboStacking) comboGroup.forEachAlive((spr:FlxSprite) -> FlxTween.globalManager.completeTweensOf(spr));
@@ -441,14 +441,14 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	function onKeyPress(event:KeyboardEvent):Void {
 		var eventKey:flixel.input.keyboard.FlxKey = event.keyCode;
-		if(FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(Controls.convertStrumKey(keysArray, eventKey));
+		if (FlxG.keys.checkStatus(eventKey, JUST_PRESSED)) keyPressed(Controls.convertStrumKey(keysArray, eventKey));
 	}
 
 	function keyPressed(key:Int) {
-		if(cpuControlled || key < 0 || key > playerStrums.length) return;
+		if (cpuControlled || key < 0 || key > playerStrums.length) return;
 
 		var lastTime:Float = Conductor.songPosition; // more accurate hit time for the ratings?
-		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time + Conductor.offset;
+		if (Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time + Conductor.offset;
 
 		// obtain notes that the player can hit
 
@@ -471,7 +471,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		Conductor.songPosition = lastTime;
 
 		final spr:StrumNote = playerStrums.members[key];
-		if(spr != null && spr.animation.curAnim.name != 'confirm') {
+		if (spr != null && spr.animation.curAnim.name != 'confirm') {
 			spr.playAnim('pressed');
 			spr.resetAnim = 0;
 		}
@@ -479,14 +479,14 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	function onKeyRelease(event:KeyboardEvent):Void {
 		var key:Int = Controls.convertStrumKey(keysArray, event.keyCode);
-		if(key > -1) keyReleased(key);
+		if (key > -1) keyReleased(key);
 	}
 
 	function keyReleased(key:Int) {
-		if(cpuControlled || key < 0 || key > playerStrums.length) return;
+		if (cpuControlled || key < 0 || key > playerStrums.length) return;
 
 		var spr:StrumNote = playerStrums.members[key];
-		if(spr != null) {
+		if (spr != null) {
 			spr.playAnim('static');
 			spr.resetAnim = 0;
 		}
@@ -511,10 +511,10 @@ class EditorPlayState extends MusicBeatSubstate {
 		note.wasGoodHit = true;
 		if (note.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound('${note.hitsound}'), note.hitsoundVolume);
 
-		if(note.hitCausesMiss) {
+		if (note.hitCausesMiss) {
 			noteMiss(note);
-			if(!note.isSustainNote) {
-                if(!note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
+			if (!note.isSustainNote) {
+                if (!note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
                 invalidateNote(note);
             } 
 			return;
@@ -548,9 +548,9 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function spawnNoteSplashOnNote(note:Note) {
-		if(note != null) {
+		if (note != null) {
 			var strum:StrumNote = playerStrums.members[note.noteData];
-			if(strum != null) spawnNoteSplash(note, strum);
+			if (strum != null) spawnNoteSplash(note, strum);
 		}
 	}
 
@@ -567,7 +567,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {
 		var spr:StrumNote = (isDad ? opponentStrums : playerStrums).members[id];
-		if(spr != null && ClientPrefs.data.lightStrum) {
+		if (spr != null && ClientPrefs.data.lightStrum) {
 			spr.playAnim('confirm', true);
 			spr.resetAnim = time / playbackRate;
 		}

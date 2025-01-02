@@ -38,7 +38,7 @@ class Main {
 		var args:Array<String> = Sys.args();
 		var commandName:Null<String> = args.shift();
 		if (commandName != null) commandName = commandName.toLowerCase();
-		for(c in commands) {
+		for (c in commands) {
 			if (c.names.contains(commandName)) {
 				c.func(args);
 				return;
@@ -52,7 +52,7 @@ class Main {
 			cmdName = cmdName.toLowerCase();
 
 			var matchingCommand = null;
-			for(c in commands) if (c.names.contains(cmdName)) {
+			for (c in commands) if (c.names.contains(cmdName)) {
 				matchingCommand = c;
 				break;
 			}
@@ -71,7 +71,7 @@ class Main {
 		// shows help
 		Sys.println("Alter Engine Command Line utility");
 		Sys.println('Available commands (${commands.length}):\n');
-		for(line in commands) Sys.println('${line.names.join(", ")} - ${line.doc}');
+		for (line in commands) Sys.println('${line.names.join(", ")} - ${line.doc}');
 	}
 }
 

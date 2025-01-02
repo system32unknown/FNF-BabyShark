@@ -32,7 +32,7 @@ class VideoSprite extends FlxSpriteGroup {
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		waiting = isWaiting;
-		if(!waiting) {
+		if (!waiting) {
 			cover = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 			cover.scale.set(FlxG.width + 100, FlxG.height + 100);
 			cover.gameCenter();
@@ -47,12 +47,12 @@ class VideoSprite extends FlxSpriteGroup {
 		this.canSkip = canSkip;
 
 		// callbacks
-		if(!shouldLoop) {
+		if (!shouldLoop) {
 			videoSprite.bitmap.onEndReached.add(() -> {
-				if(alreadyDestroyed) return;
+				if (alreadyDestroyed) return;
 
 				trace('Video destroyed');
-				if(cover != null) {
+				if (cover != null) {
 					remove(cover);
 					cover.destroy();
 				}
@@ -63,7 +63,7 @@ class VideoSprite extends FlxSpriteGroup {
 			});
 		}
 
-		if(adjustSize) videoSprite.bitmap.onFormatSetup.add(() -> {
+		if (adjustSize) videoSprite.bitmap.onFormatSetup.add(() -> {
 			videoSprite.setGraphicSize(FlxG.width);
 			videoSprite.updateHitbox();
 			videoSprite.gameCenter();
@@ -76,31 +76,31 @@ class VideoSprite extends FlxSpriteGroup {
 
 	var alreadyDestroyed:Bool = false;
 	override function destroy() {
-		if(alreadyDestroyed) {
+		if (alreadyDestroyed) {
 			super.destroy();
 			return;
 		}
 
 		trace('Video destroyed');
-		if(cover != null) {
+		if (cover != null) {
 			remove(cover);
 			cover.destroy();
 		}
 
-		if(finishCallback != null) finishCallback();
+		if (finishCallback != null) finishCallback();
 		onSkip = null;
 
 		LuaUtils.getTargetInstance().remove(this);
 	}
 
 	override function update(elapsed:Float) {
-		if(canSkip) {
-			if(Controls.pressed('accept')) holdingTime = FlxMath.bound(holdingTime + elapsed, 0, _timeToSkip);
+		if (canSkip) {
+			if (Controls.pressed('accept')) holdingTime = FlxMath.bound(holdingTime + elapsed, 0, _timeToSkip);
 			else if (holdingTime > 0) holdingTime = Math.max(0, FlxMath.lerp(holdingTime, -.1, FlxMath.bound(elapsed * 3, 0, 1)));
 			updateSkipAlpha();
 
-			if(holdingTime >= _timeToSkip) {
-				if(onSkip != null) onSkip();
+			if (holdingTime >= _timeToSkip) {
+				if (onSkip != null) onSkip();
 				finishCallback = null;
 				videoSprite.bitmap.onEndReached.dispatch();
 				LuaUtils.getTargetInstance().remove(this);
@@ -114,15 +114,15 @@ class VideoSprite extends FlxSpriteGroup {
 
 	function set_canSkip(newValue:Bool):Bool {
 		canSkip = newValue;
-		if(canSkip) {
-			if(skipSprite == null) {
+		if (canSkip) {
+			if (skipSprite == null) {
 				skipSprite = new FlxPieDial(0, 0, 40, FlxColor.WHITE, 40, true, 24);
 				skipSprite.replaceColor(FlxColor.BLACK, FlxColor.TRANSPARENT);
                 skipSprite.setPosition(FlxG.width - (skipSprite.width + 80), FlxG.height - (skipSprite.height + 72));
 				skipSprite.amount = 0;
 				add(skipSprite);
 			}
-		} else if(skipSprite != null) {
+		} else if (skipSprite != null) {
 			remove(skipSprite);
 			skipSprite.destroy();
 			skipSprite = null;
@@ -131,7 +131,7 @@ class VideoSprite extends FlxSpriteGroup {
 	}
 
 	function updateSkipAlpha() {
-		if(skipSprite == null) return;
+		if (skipSprite == null) return;
 
 		skipSprite.amount = Math.min(1, Math.max(0, (holdingTime / _timeToSkip) * 1.025));
 		skipSprite.alpha = FlxMath.remapToRange(skipSprite.amount, .025, 1, 0, 1);

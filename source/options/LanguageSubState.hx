@@ -20,19 +20,19 @@ class LanguageSubState extends FlxSubState {
 		displayLanguages.set(ClientPrefs.defaultData.language, Language.defaultLangName);
 		for (directory in Mods.directoriesWithFile(Paths.getSharedPath(), 'data/')) {
 			for (file in FileSystem.readDirectory(directory)) {
-				if(file.toLowerCase().endsWith('.lang')) {
+				if (file.toLowerCase().endsWith('.lang')) {
 					var langFile:String = file.substring(0, file.length - '.lang'.length).trim();
-					if(!languages.contains(langFile)) languages.push(langFile);
+					if (!languages.contains(langFile)) languages.push(langFile);
 
-					if(!displayLanguages.exists(langFile)) {
+					if (!displayLanguages.exists(langFile)) {
 						var path:String = '$directory/$file';
 						var txt:String = #if MODS_ALLOWED File.getContent #else openfl.utils.Assets.getText #end(path);
 
 						var id:Int = txt.indexOf('\n');
-						if(id > 0) { //language display name shouldnt be an empty string or null
+						if (id > 0) { //language display name shouldnt be an empty string or null
 							var name:String = txt.substr(0, id).trim();
-							if(!name.contains(':')) displayLanguages.set(langFile, name);
-						} else if(txt.trim().length > 0 && !txt.contains(':')) displayLanguages.set(langFile, txt.trim());
+							if (!name.contains(':')) displayLanguages.set(langFile, name);
+						} else if (txt.trim().length > 0 && !txt.contains(':')) displayLanguages.set(langFile, txt.trim());
 					}
 				}
 			}
@@ -47,21 +47,21 @@ class LanguageSubState extends FlxSubState {
 		});
 
 		curSelected = languages.indexOf(ClientPrefs.data.language);
-		if(curSelected < 0) {
+		if (curSelected < 0) {
 			ClientPrefs.data.language = ClientPrefs.defaultData.language;
 			curSelected = Std.int(Math.max(0, languages.indexOf(ClientPrefs.data.language)));
 		}
 
 		for (num => lang in languages) {
 			var name:String = displayLanguages.get(lang);
-			if(name == null) name = lang;
+			if (name == null) name = lang;
 
 			var text:Alphabet = new Alphabet(0, 300, name);
 			text.isMenuItem = true;
 			text.targetY = num;
 			text.changeX = false;
 			text.distancePerItem.y = 100;
-			if(languages.length < 7) {
+			if (languages.length < 7) {
 				text.changeY = false;
 				text.gameCenter(Y).y += (100 * (num - (languages.length / 2))) + 45;
 			}
@@ -102,7 +102,7 @@ class LanguageSubState extends FlxSubState {
 		for (num => lang in grpLanguages) {
 			lang.targetY = num - curSelected;
 			lang.alpha = .6;
-			if(num == curSelected) lang.alpha = 1;
+			if (num == curSelected) lang.alpha = 1;
 		}
 		FlxG.sound.play(Paths.sound('scrollMenu'), .6);
 	}

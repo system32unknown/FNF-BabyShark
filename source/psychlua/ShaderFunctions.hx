@@ -12,7 +12,7 @@ class ShaderFunctions {
 
 	public static function implement(funk:FunkinLua) {
 		funk.addLocalCallback("initLuaShader", function(name:String) {
-			if(!ClientPrefs.data.shaders) return false;
+			if (!ClientPrefs.data.shaders) return false;
 
 			#if (!flash && sys)
 			return funk.initLuaShader(name);
@@ -23,16 +23,16 @@ class ShaderFunctions {
 		});
 		
 		funk.addLocalCallback("setSpriteShader", function(obj:String, shader:String) {
-			if(!ClientPrefs.data.shaders) return false;
+			if (!ClientPrefs.data.shaders) return false;
 
 			#if (!flash && sys)
-			if(!funk.runtimeShaders.exists(shader) && !funk.initLuaShader(shader)) {
+			if (!funk.runtimeShaders.exists(shader) && !funk.initLuaShader(shader)) {
 				FunkinLua.luaTrace('setSpriteShader: Shader $shader is missing!', false, false, FlxColor.RED);
 				return false;
 			}
 
 			var leObj:FlxSprite = LuaUtils.getObjectLoop(obj);
-			if(leObj != null) {
+			if (leObj != null) {
 				var arr:Array<String> = funk.runtimeShaders.get(shader);
 				leObj.shader = new FlxRuntimeShader(arr[0], arr[1]);
 				return true;

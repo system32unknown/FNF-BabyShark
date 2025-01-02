@@ -23,7 +23,7 @@ class StrumNote extends FlxSprite {
 
 	public var texture(default, set):String = null;
 	function set_texture(value:String):String {
-		if(texture != value) {
+		if (texture != value) {
 			texture = value;
 			reloadNote();
 		}
@@ -37,12 +37,12 @@ class StrumNote extends FlxSprite {
 		
 		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(leData));
 		rgbShader.enabled = false;
-		if(PlayState.SONG != null && PlayState.SONG.disableNoteRGB) useRGBShader = false;
+		if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB) useRGBShader = false;
 
 		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGBExtra[EK.gfxIndex[PlayState.mania][leData]];
-		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixelExtra[EK.gfxIndex[PlayState.mania][leData]];
+		if (PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixelExtra[EK.gfxIndex[PlayState.mania][leData]];
 		
-		if(leData <= PlayState.mania) {
+		if (leData <= PlayState.mania) {
 			@:bypassAccessor {
 				rgbShader.r = arr[0];
 				rgbShader.g = arr[1];
@@ -56,11 +56,11 @@ class StrumNote extends FlxSprite {
 		super(x, y);
 
 		var skin:String = null;
-		if(PlayState.SONG != null && PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
+		if (PlayState.SONG != null && PlayState.SONG.arrowSkin != null && PlayState.SONG.arrowSkin.length > 1) skin = PlayState.SONG.arrowSkin;
 		else skin = Note.defaultNoteSkin;
 
 		var customSkin:String = skin + Note.getNoteSkinPostfix();
-		if(Paths.fileExists('images/$customSkin.png', IMAGE)) skin = customSkin;
+		if (Paths.fileExists('images/$customSkin.png', IMAGE)) skin = customSkin;
 
 		texture = skin; //Load texture and anims
 		scrollFactor.set();
@@ -69,9 +69,9 @@ class StrumNote extends FlxSprite {
 
 	public function reloadNote() {
 		var lastAnim:String = null;
-		if(animation.curAnim != null) lastAnim = animation.curAnim.name;
+		if (animation.curAnim != null) lastAnim = animation.curAnim.name;
 
-		if(PlayState.isPixelStage) {
+		if (PlayState.isPixelStage) {
 			final graphic:FlxGraphic = Paths.image('pixelUI/$texture');
 			loadGraphic(Paths.image('pixelUI/$texture'), true, Math.floor(graphic.width / 9), Math.floor(graphic.height / 5));
 
@@ -117,7 +117,7 @@ class StrumNote extends FlxSprite {
 		}
 		updateHitbox();
 
-		if(lastAnim != null) playAnim(lastAnim, true);
+		if (lastAnim != null) playAnim(lastAnim, true);
 	}
 
 	public function playerPosition() {
@@ -128,9 +128,9 @@ class StrumNote extends FlxSprite {
 	}
 
 	override function update(elapsed:Float) {
-		if(resetAnim > 0) {
+		if (resetAnim > 0) {
 			resetAnim -= elapsed;
-			if(resetAnim <= 0) {
+			if (resetAnim <= 0) {
 				playAnim('static');
 				resetAnim = 0;
 			}
@@ -140,18 +140,18 @@ class StrumNote extends FlxSprite {
 
 	public function playAnim(anim:String, ?force:Bool = false) {
 		animation.play(anim, force);
-		if(animation.curAnim != null) {
+		if (animation.curAnim != null) {
 			centerOffsets();
 			centerOrigin();
 		}
-		if(useRGBShader) rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
+		if (useRGBShader) rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
 	}
 
 	function attemptToAddAnimationByPrefix(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
 		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
 		@:privateAccess
 		animation.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
-		if(animFrames.length < 1) return;
+		if (animFrames.length < 1) return;
 
 		animation.addByPrefix(name, prefix, framerate, doLoop);
 	}

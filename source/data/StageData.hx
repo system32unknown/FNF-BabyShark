@@ -64,8 +64,8 @@ class StageData {
 	public static var forceNextDirectory:String = null;
 	public static function loadDirectory(SONG:SwagSong) {
 		var stage:String = '';
-		if(SONG.stage != null) stage = SONG.stage;
-		else if(Song.loadedSongName != null) stage = vanillaSongStage(Paths.formatToSongPath(SONG.song));
+		if (SONG.stage != null) stage = SONG.stage;
+		else if (Song.loadedSongName != null) stage = vanillaSongStage(Paths.formatToSongPath(SONG.song));
 		else stage = 'stage';
 
 		var stageFile:StageFile = getStageFile(stage);
@@ -76,9 +76,9 @@ class StageData {
 		try {
 			var path:String = Paths.getPath('stages/$stage.json');
 			#if MODS_ALLOWED
-			if(FileSystem.exists(path)) return cast tjson.TJSON.parse(File.getContent(path));
+			if (FileSystem.exists(path)) return cast tjson.TJSON.parse(File.getContent(path));
 			#else
-			if(Assets.exists(path)) return cast tjson.TJSON.parse(Assets.getText(path));
+			if (Assets.exists(path)) return cast tjson.TJSON.parse(Assets.getText(path));
 			#end
 		}
 		return dummy();
@@ -103,59 +103,59 @@ class StageData {
 
 			switch(data.type) {
 				case 'gf', 'gfGroup':
-					if(gf != null) {
+					if (gf != null) {
 						gf.ID = num;
 						if (group != null) group.add(gf);
 						addedObjects.set('gf', gf);
 					}
 				case 'dad', 'dadGroup':
-					if(dad != null) {
+					if (dad != null) {
 						dad.ID = num;
 						if (group != null) group.add(dad);
 						addedObjects.set('dad', dad);
 					}
 				case 'boyfriend', 'boyfriendGroup':
-					if(boyfriend != null) {
+					if (boyfriend != null) {
 						boyfriend.ID = num;
 						if (group != null) group.add(boyfriend);
 						addedObjects.set('boyfriend', boyfriend);
 					}
 
 				case 'square', 'sprite', 'animatedSprite':
-					if(!ignoreFilters && !validateVisibility(data.filters)) continue;
+					if (!ignoreFilters && !validateVisibility(data.filters)) continue;
 
 					var spr:ModchartSprite = new ModchartSprite(data.x, data.y);
 					spr.ID = num;
-					if(data.type != 'square') {
-						if(data.type == 'sprite')
+					if (data.type != 'square') {
+						if (data.type == 'sprite')
 							spr.loadGraphic(Paths.image(data.image));
 						else spr.frames = Paths.getAtlas(data.image);
 
-						if(data.type == 'animatedSprite' && data.animations != null) {
+						if (data.type == 'animatedSprite' && data.animations != null) {
 							var anims:Array<objects.Character.AnimArray> = cast data.animations;
 							for (key => anim in anims) {
-								if(anim.indices == null || anim.indices.length < 1)
+								if (anim.indices == null || anim.indices.length < 1)
 									spr.animation.addByPrefix(anim.anim, anim.name, anim.fps, anim.loop);
 								else spr.animation.addByIndices(anim.anim, anim.name, anim.indices, '', anim.fps, anim.loop);
 
-								if(anim.offsets != null)
+								if (anim.offsets != null)
 									spr.addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
 
-								if(spr.animation.curAnim == null || data.firstAnimation == anim.anim)
+								if (spr.animation.curAnim == null || data.firstAnimation == anim.anim)
 									spr.playAnim(anim.anim, true);
 							}
 						}
 						for (varName in ['antialiasing', 'flipX', 'flipY']) {
 							var dat:Dynamic = Reflect.getProperty(data, varName);
-							if(dat != null) Reflect.setProperty(spr, varName, dat);
+							if (dat != null) Reflect.setProperty(spr, varName, dat);
 						}
-						if(!ClientPrefs.data.antialiasing) spr.antialiasing = false;
+						if (!ClientPrefs.data.antialiasing) spr.antialiasing = false;
 					} else {
 						spr.makeGraphic(1, 1);
 						spr.antialiasing = false;
 					}
 
-					if(data.scale != null && (data.scale[0] != 1. || data.scale[1] != 1.)) {
+					if (data.scale != null && (data.scale[0] != 1. || data.scale[1] != 1.)) {
 						spr.scale.set(data.scale[0], data.scale[1]);
 						spr.updateHitbox();
 					}
@@ -165,7 +165,7 @@ class StageData {
 
 					for (varName in ['alpha', 'angle']) {
 						var dat:Dynamic = Reflect.getProperty(data, varName);
-						if(dat != null) Reflect.setProperty(spr, varName, dat);
+						if (dat != null) Reflect.setProperty(spr, varName, dat);
 					}
 
 					if (group != null) group.add(spr);
@@ -178,8 +178,8 @@ class StageData {
 	}
 
 	public static function validateVisibility(filters:LoadFilters):Bool {
-		if((filters & STORY_MODE) == STORY_MODE) if(!PlayState.isStoryMode) return false;
-		else if((filters & FREEPLAY) == FREEPLAY) if(PlayState.isStoryMode) return false;
+		if ((filters & STORY_MODE) == STORY_MODE) if (!PlayState.isStoryMode) return false;
+		else if ((filters & FREEPLAY) == FREEPLAY) if (PlayState.isStoryMode) return false;
 
 		return ((ClientPrefs.data.lowQuality && (filters & LOW_QUALITY) == LOW_QUALITY) || (!ClientPrefs.data.lowQuality && (filters & HIGH_QUALITY) == HIGH_QUALITY));
 	}

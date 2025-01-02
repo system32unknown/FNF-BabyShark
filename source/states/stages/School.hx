@@ -5,10 +5,10 @@ import substates.GameOverSubstate;
 class School extends BaseStage {
 	override function create() {
 		var _song:backend.Song.SwagSong = PlayState.SONG;
-		if(_song.gameOverSound == null || _song.gameOverSound.trim().length < 1) GameOverSubstate.deathSoundName = 'fnf_loss_sfx-pixel';
-		if(_song.gameOverLoop == null || _song.gameOverLoop.trim().length < 1) GameOverSubstate.loopSoundName = 'gameOver-pixel';
-		if(_song.gameOverEnd == null || _song.gameOverEnd.trim().length < 1) GameOverSubstate.endSoundName = 'gameOverEnd-pixel';
-		if(_song.gameOverChar == null || _song.gameOverChar.trim().length < 1) GameOverSubstate.characterName = 'bf-pixel-dead';
+		if (_song.gameOverSound == null || _song.gameOverSound.trim().length < 1) GameOverSubstate.deathSoundName = 'fnf_loss_sfx-pixel';
+		if (_song.gameOverLoop == null || _song.gameOverLoop.trim().length < 1) GameOverSubstate.loopSoundName = 'gameOver-pixel';
+		if (_song.gameOverEnd == null || _song.gameOverEnd.trim().length < 1) GameOverSubstate.endSoundName = 'gameOverEnd-pixel';
+		if (_song.gameOverChar == null || _song.gameOverChar.trim().length < 1) GameOverSubstate.characterName = 'bf-pixel-dead';
 
 		var bgSky:BGSprite = new BGSprite('weeb/weebSky', 0, 0, 0.1, 0.1);
 		bgSky.zIndex = 10;
@@ -28,7 +28,7 @@ class School extends BaseStage {
 		bgStreet.antialiasing = false;
 
 		var widShit = Std.int(bgSky.width * PlayState.daPixelZoom);
-		if(!lowQuality) {
+		if (!lowQuality) {
 			var fgTrees:BGSprite = new BGSprite('weeb/weebTreesBack', repositionShit + 170, 130, 0.9, 0.9);
 			fgTrees.setGraphicSize(Std.int(widShit * 0.8));
 			fgTrees.updateHitbox();
@@ -46,7 +46,7 @@ class School extends BaseStage {
 		add(bgTrees);
 		bgTrees.antialiasing = false;
 
-		if(!lowQuality) {
+		if (!lowQuality) {
 			var treeLeaves:BGSprite = new BGSprite('weeb/petals', repositionShit, -40, 0.85, 0.85, ['PETALS ALL'], true);
 			treeLeaves.setGraphicSize(widShit);
 			treeLeaves.updateHitbox();

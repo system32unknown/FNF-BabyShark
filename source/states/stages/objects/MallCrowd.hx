@@ -10,9 +10,9 @@ class MallCrowd extends BGSprite {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if(heyTimer > 0) {
+		if (heyTimer > 0) {
 			heyTimer -= elapsed;
-			if(heyTimer <= 0) {
+			if (heyTimer <= 0) {
 				dance(true);
 				heyTimer = 0;
 			}
@@ -20,7 +20,7 @@ class MallCrowd extends BGSprite {
 	}
 
 	override function dance(?forceplay:Bool = false) {
-		if(heyTimer > 0) return;
+		if (heyTimer > 0) return;
 		super.dance(forceplay);
 	}
 }

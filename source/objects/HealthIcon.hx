@@ -88,12 +88,12 @@ class HealthIcon extends FlxSprite {
 			loadGraphic(graph, true, Math.floor(graph.width / iSize), Math.floor(graph.height));
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
-			animation.add(char, [for(i in 0...frames.frames.length) i], 0, false, isPlayer);
+			animation.add(char, [for (i in 0...frames.frames.length) i], 0, false, isPlayer);
 			iconOffsets = [(width - 150) / iSize, (height - 150) / iSize];
 			animation.play(char);
 		} else {
 			frames = Paths.getSparrowAtlas(name);
-			for (animstate in animatediconstates) if(getIconAnims(name).contains(animstate))
+			for (animstate in animatediconstates) if (getIconAnims(name).contains(animstate))
 				animation.addByPrefix(animstate, animstate, 24, true, isPlayer, false);
 			animation.play(animatediconstates[0]);
 		}
@@ -112,7 +112,7 @@ class HealthIcon extends FlxSprite {
 			height *= iconZoom;
 			offset.set(-.5 * (frameWidth * iconZoom - frameWidth), -.5 * (frameHeight * iconZoom - frameHeight));
 		} else super.updateHitbox();
-		if(autoOffset) offset.set(iconOffsets[0], iconOffsets[1]);
+		if (autoOffset) offset.set(iconOffsets[0], iconOffsets[1]);
 	}
 
 	public function getCharacter():String return char;

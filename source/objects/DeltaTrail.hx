@@ -19,7 +19,7 @@ class DeltaTrail extends flixel.addons.effects.FlxTrail {
 	 * @param	Diff		The amount subtracted from the trailsprite's alpha every update. If null, it will be auto calculated to end at 0 based on Length.
 	 */
 	public function new(target:FlxSprite, ?graphic:flixel.system.FlxAssets.FlxGraphicAsset, length:Int = 10, delay:Float = 3 / 60, alpha:Float = .5, diff:Float = null):Void {
-		if(diff == null) diff = alpha / length;
+		if (diff == null) diff = alpha / length;
 		super(target, graphic, length, 0, alpha, diff);
 		timerMax = delay;
 	}

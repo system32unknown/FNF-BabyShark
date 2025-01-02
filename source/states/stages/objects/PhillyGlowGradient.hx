@@ -18,7 +18,7 @@ class PhillyGlowGradient extends FlxSprite
 
 	override function update(elapsed:Float) {
 		var newHeight:Int = Math.round(height - 1000 * elapsed);
-		if(newHeight > 0) {
+		if (newHeight > 0) {
 			alpha = intendedAlpha;
 			setGraphicSize(2000, newHeight);
 			updateHitbox();

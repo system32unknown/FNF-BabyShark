@@ -139,7 +139,7 @@ class CreditsState extends MusicBeatState {
 			optionText.snapToPosition();
 			grpOptions.add(optionText);
 
-			if(isSelectable && curSelected == -1) curSelected = i;
+			if (isSelectable && curSelected == -1) curSelected = i;
 		}
 
 		descBox = new AttachedSprite();
@@ -161,10 +161,10 @@ class CreditsState extends MusicBeatState {
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float) {
-		if(!quitting) {
-			if(sections.length > 1) {
+		if (!quitting) {
+			if (sections.length > 1) {
 				var shiftMult:Int = 1;
-				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
+				if (FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 				var upPressed:Bool = Controls.pressed('ui_up');
 				var downJustPressed:Bool = Controls.justPressed('ui_down');
@@ -174,7 +174,7 @@ class CreditsState extends MusicBeatState {
 					holdTime = 0;
 				}
 
-				if(FlxG.mouse.wheel != 0) {
+				if (FlxG.mouse.wheel != 0) {
 					FlxG.sound.play(Paths.sound('scrollMenu'), .2);
 					changeSelection(-FlxG.mouse.wheel);
 				}
@@ -192,7 +192,7 @@ class CreditsState extends MusicBeatState {
 			interpColor.fpsLerpTo(CoolUtil.colorFromString(sections[curSelected][3]), .0625);
 			bg.color = interpColor.color;
 
-			if(Controls.justPressed('accept') && sections[curSelected][1] != null) {
+			if (Controls.justPressed('accept') && sections[curSelected][1] != null) {
 				CreditSectionState.curCSection = sections[curSelected][1];
 				CreditSectionState.cSectionisMod = #if MODS_ALLOWED modSectionsBound > 0 && curSelected >= modSectionsBound #else false #end;
 
@@ -220,13 +220,13 @@ class CreditsState extends MusicBeatState {
 
 		for (num => item in grpOptions.members) {
 			item.targetY = num - curSelected;
-			if(!unselectableCheck(num)) item.alpha = (item.targetY == 0 ? 1 : .6);
+			if (!unselectableCheck(num)) item.alpha = (item.targetY == 0 ? 1 : .6);
 		}
 
 		descText.text = sections[curSelected][2];
 		descText.y = FlxG.height - descText.height + offsetThing - 60;
 
-		if(moveTween != null) moveTween.cancel();
+		if (moveTween != null) moveTween.cancel();
 		moveTween = FlxTween.tween(descText, {y : descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
 
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
@@ -300,18 +300,18 @@ class CreditSectionState extends MusicBeatState {
 			optionText.snapToPosition();
 			grpOptions.add(optionText);
 
-			if(isSelectable) {
-				if(credit[5] != null) Mods.currentModDirectory = credit[5];
+			if (isSelectable) {
+				if (credit[5] != null) Mods.currentModDirectory = credit[5];
 
 				var str:String = 'credits/missing_icon';
-				if(credit[1] != null && credit[1].length > 0) {
+				if (credit[1] != null && credit[1].length > 0) {
 					var fileName = 'credits/' + credit[1];
 					if (Paths.fileExists('images/$fileName.png', IMAGE)) str = fileName;
 					else if (Paths.fileExists('images/$fileName-pixel.png', IMAGE)) str = fileName + '-pixel';
 				}
 
 				var icon:AttachedSprite = new AttachedSprite(str);
-				if(str.endsWith('-pixel')) icon.antialiasing = false;
+				if (str.endsWith('-pixel')) icon.antialiasing = false;
 				icon.addPoint.x = optionText.width + 10;
 				icon.sprTracker = optionText;
 
@@ -319,7 +319,7 @@ class CreditSectionState extends MusicBeatState {
 				add(icon);
 				Mods.currentModDirectory = cSectionisMod ? curCSection : '';
 
-				if(curSelected == -1) curSelected = i;
+				if (curSelected == -1) curSelected = i;
 			} else optionText.alignment = CENTER;
 		}
 
@@ -344,10 +344,10 @@ class CreditSectionState extends MusicBeatState {
 	var quitting:Bool = false;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float) {
-		if(!quitting) {
-			if(creditsStuff.length > 1) {
+		if (!quitting) {
+			if (creditsStuff.length > 1) {
 				var shiftMult:Int = 1;
-				if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
+				if (FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 				var upPressed:Bool = Controls.pressed('ui_up');
 				var downJustPressed:Bool = Controls.justPressed('ui_down');
@@ -357,7 +357,7 @@ class CreditSectionState extends MusicBeatState {
 					holdTime = 0;
 				}
 
-				if(FlxG.mouse.wheel != 0) {
+				if (FlxG.mouse.wheel != 0) {
 					FlxG.sound.play(Paths.sound('scrollMenu'), .2);
 					changeSelection(-shiftMult * FlxG.mouse.wheel);
 				}
@@ -375,10 +375,10 @@ class CreditSectionState extends MusicBeatState {
 			interpColor.fpsLerpTo(CoolUtil.colorFromString(creditsStuff[curSelected][4]), .0625);
 			bg.color = interpColor.color;
 
-			if(Controls.justPressed('accept') && (creditsStuff[curSelected][3] == null || creditsStuff[curSelected][3].length > 4))
+			if (Controls.justPressed('accept') && (creditsStuff[curSelected][3] == null || creditsStuff[curSelected][3].length > 4))
 				CoolUtil.browserLoad(creditsStuff[curSelected][3]);
 
-			if(Controls.justPressed('back')) {
+			if (Controls.justPressed('back')) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				
 				var state:CreditsState = new CreditsState();
@@ -414,18 +414,18 @@ class CreditSectionState extends MusicBeatState {
 
 		for (num => item in grpOptions.members) {
 			item.targetY = num - curSelected;
-			if(!unselectableCheck(num)) {
+			if (!unselectableCheck(num)) {
 				item.alpha = 0.6;
 				if (item.targetY == 0) item.alpha = 1;
 			}
 		}
 
 		descText.text = creditsStuff[curSelected][2];
-		if(descText.text.trim().length > 0) {
+		if (descText.text.trim().length > 0) {
 			descText.visible = descBox.visible = true;
 			descText.y = FlxG.height - descText.height + offsetThing - 60;
 
-			if(moveTween != null) moveTween.cancel();
+			if (moveTween != null) moveTween.cancel();
 			moveTween = FlxTween.tween(descText, {y : descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
 
 			descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
@@ -464,7 +464,7 @@ class CreditSectionState extends MusicBeatState {
 		if (#if TRANSLATIONS_ALLOWED (FileSystem.exists(translatedCredits) && (creditsFile = translatedCredits) == translatedCredits) || #end FileSystem.exists(creditsFile)) {
 			for (i in File.getContent(creditsFile).split('\n')) {
 				var arr:Array<String> = i.replace('\\n', '\n').split("::");
-				if(arr.length >= 5) arr.push(folder);
+				if (arr.length >= 5) arr.push(folder);
 				creditsStuff.push(arr);
 			}
 			creditsStuff.push(['']);

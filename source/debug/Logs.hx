@@ -46,7 +46,7 @@ class Logs {
 			var d:Dynamic = Data;
 			if (!(d is Array)) d = [d];
 			var a:Array<Dynamic> = d;
-			for(e in [for (e in a) Std.string(e)]) Logs.trace('$prefix $e', level, color);
+			for (e in [for (e in a) Std.string(e)]) Logs.trace('$prefix $e', level, color);
 		};
 	}
 
@@ -61,7 +61,7 @@ class Logs {
 				default: logText('INFORMATION', CYAN);
 			}, logText('] ')
 		];
-		for(k => e in superCoolText) text.insert(k, e);
+		for (k => e in superCoolText) text.insert(k, e);
 		return text;
 	}
 
@@ -73,7 +73,7 @@ class Logs {
 		#if sys
 		while(__showing) Sys.sleep(.05);
 		__showing = true;
-		for(t in text) {
+		for (t in text) {
 			NativeUtil.setConsoleColors(t.color);
 			Sys.print(t.text);
 		}
@@ -82,7 +82,7 @@ class Logs {
 		__showing = false;
 		#else
 		@:privateAccess
-		nativeTrace([for(t in text) t.text].join(""));
+		nativeTrace([for (t in text) t.text].join(""));
 		#end
 	}
 

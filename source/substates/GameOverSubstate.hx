@@ -26,11 +26,11 @@ class GameOverSubstate extends MusicBeatSubstate {
 		deathDelay = 0;
 
 		var _song:backend.Song.SwagSong = PlayState.SONG;
-		if(_song != null) {
-			if(_song.gameOverChar != null && _song.gameOverChar.trim().length > 0) characterName = _song.gameOverChar;
-			if(_song.gameOverSound != null && _song.gameOverSound.trim().length > 0) deathSoundName = _song.gameOverSound;
-			if(_song.gameOverLoop != null && _song.gameOverLoop.trim().length > 0) loopSoundName = _song.gameOverLoop;
-			if(_song.gameOverEnd != null && _song.gameOverEnd.trim().length > 0) endSoundName = _song.gameOverEnd;
+		if (_song != null) {
+			if (_song.gameOverChar != null && _song.gameOverChar.trim().length > 0) characterName = _song.gameOverChar;
+			if (_song.gameOverSound != null && _song.gameOverSound.trim().length > 0) deathSoundName = _song.gameOverSound;
+			if (_song.gameOverLoop != null && _song.gameOverLoop.trim().length > 0) loopSoundName = _song.gameOverLoop;
+			if (_song.gameOverEnd != null && _song.gameOverEnd.trim().length > 0) endSoundName = _song.gameOverEnd;
 		}
 	}
 
@@ -72,7 +72,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 
 		boyfriend.playAnim('firstDeath');
 		boyfriend.animation.onFinish.add((name:String) -> {
-			if(name == 'firstDeath') {
+			if (name == 'firstDeath') {
 				boyfriend.playAnim('deathLoop');
 				FlxG.sound.playMusic(Paths.music(loopSoundName));
 			}
@@ -104,7 +104,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 			justPlayedLoop = true;
 		}
 
-		if(!isEnding) {
+		if (!isEnding) {
 			if (Controls.justPressed('accept')) endBullshit();
 			else if (Controls.justPressed('back')) {
 				#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
@@ -137,8 +137,8 @@ class GameOverSubstate extends MusicBeatSubstate {
 		if (isEnding) return;
 
 		isEnding = true;
-		if(boyfriend.hasAnimation('deathConfirm')) boyfriend.playAnim('deathConfirm', true);
-		else if(boyfriend.hasAnimation('deathLoop')) boyfriend.playAnim('deathLoop', true);
+		if (boyfriend.hasAnimation('deathConfirm')) boyfriend.playAnim('deathConfirm', true);
+		else if (boyfriend.hasAnimation('deathLoop')) boyfriend.playAnim('deathLoop', true);
 		FlxG.sound.music.stop();
 		
 		var snd:FlxSound = FlxG.sound.play(Paths.music(endSoundName));

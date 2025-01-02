@@ -191,8 +191,8 @@ class NoteOffsetState extends MusicBeatState {
 		if (Controls.justPressed('back')) {
 			persistentUpdate = false;
 			FlxG.switchState(() -> new options.OptionsState());
-			if(OptionsState.onPlayState) {
-				if(ClientPrefs.data.pauseMusic != 'None')
+			if (OptionsState.onPlayState) {
+				if (ClientPrefs.data.pauseMusic != 'None')
 					FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
 				else FlxG.sound.music.volume = 0;
 			}
@@ -208,7 +208,7 @@ class NoteOffsetState extends MusicBeatState {
 	override function beatHit() {
 		super.beatHit();
 
-		if(curBeat % 2 == 0) boyfriend.dance();
+		if (curBeat % 2 == 0) boyfriend.dance();
 		gf.dance();
 		if (!onComboMenu && camGame.zoom < 1.35) camGame.zoom += .0075;
 	}

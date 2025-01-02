@@ -47,7 +47,7 @@ class InputFormatter {
 			case NONE: return '---';
 			default:
 				var label:String = Std.string(key);
-				if(label.toLowerCase() == 'null') return '---';
+				if (label.toLowerCase() == 'null') return '---';
 
 				var arr:Array<String> = label.split('_');
 				for (i in 0...arr.length) arr[i] = utils.StringUtil.capitalize(arr[i]);

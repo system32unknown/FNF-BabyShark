@@ -23,10 +23,10 @@ class FreeplaySectionSubstate extends FlxSubState {
 		WeekData.reloadWeekFiles();
 
 		for (i in 0...WeekData.weeksList.length) {
-			if(weekIsLocked(WeekData.weeksList[i])) continue;
+			if (weekIsLocked(WeekData.weeksList[i])) continue;
 
 			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
-			if(leWeek.hideFreeplay || leWeek.section == null) continue;
+			if (leWeek.hideFreeplay || leWeek.section == null) continue;
 			WeekData.setDirectoryFromWeek(leWeek);
 			if (leWeek.section != null) {
 				var curSection:String = leWeek.section;

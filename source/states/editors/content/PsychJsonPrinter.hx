@@ -11,7 +11,7 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 	var _ignoreTab:Array<String> = [];
 	public static function print(o:Dynamic, ?ignoreTab:Array<String>):String {
 		var printer:PsychJsonPrinter = new PsychJsonPrinter(null, '\t');
-		if(ignoreTab != null) printer._ignoreTab = ignoreTab;
+		if (ignoreTab != null) printer._ignoreTab = ignoreTab;
 		printer.write("", o);
 		return printer.buf.toString();
 	}
@@ -27,7 +27,7 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 		var last:Int = len - 1;
 
 		var hasArrayInsideIt:Bool = false;
-		if(_singleLineCheckNext) {
+		if (_singleLineCheckNext) {
 			for (subv in Reflect.fields(v)) {
 				switch(Type.typeof(subv)) {
 					case TObject, TClass(Array):
@@ -49,18 +49,18 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 				first = false;
 			} else {
 				addChar(','.code);
-				if(_singleLineCheckNext && !hasArrayInsideIt) addChar(' '.code);
+				if (_singleLineCheckNext && !hasArrayInsideIt) addChar(' '.code);
 			}
 
 			var _mapCheck:Null<Bool> = mapCheck;
-			if(_mapCheck) {
+			if (_mapCheck) {
 				switch(Type.typeof(value)) {
 					case TObject, TClass(Array), TClass(StringMap): usedMapCheck = true;
 					default: _mapCheck = false;
 				}
 			}
 
-			if(!_singleLineCheckNext || hasArrayInsideIt || _mapCheck || usedMapCheck) {
+			if (!_singleLineCheckNext || hasArrayInsideIt || _mapCheck || usedMapCheck) {
 				newl();
 				ipad();
 			}
@@ -69,19 +69,19 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 			if (pretty) addChar(' '.code);
 
 			var doContain:Bool = _ignoreTab.contains(f);
-			if(doContain) _singleLineCheckNext = true;
+			if (doContain) _singleLineCheckNext = true;
 			write(f, value);
-			if(doContain) _singleLineCheckNext = false;
+			if (doContain) _singleLineCheckNext = false;
 
 			if (i == last) {
 				nind--;
-				if(!_singleLineCheckNext) {
+				if (!_singleLineCheckNext) {
 					newl();
 					ipad();
 				}
 			}
 		}
-		if(hasArrayInsideIt || usedMapCheck) {
+		if (hasArrayInsideIt || usedMapCheck) {
 			newl();
 			ipad();
 		}
@@ -106,7 +106,7 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 					var last:Int = len - 1;
 
 					var hasArrayInsideIt:Bool = false;
-					if(_singleLineCheckNext) {
+					if (_singleLineCheckNext) {
 						for (subv in v) {
 							switch(Type.typeof(subv)) {
 								case TObject, TClass(Array):
@@ -120,10 +120,10 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 					for (i in 0...len) {
 						if (i > 0) {
 							addChar(','.code);
-							if(_singleLineCheckNext && !hasArrayInsideIt) addChar(' '.code);
+							if (_singleLineCheckNext && !hasArrayInsideIt) addChar(' '.code);
 						} else nind++;
 
-						if(!_singleLineCheckNext || hasArrayInsideIt) {
+						if (!_singleLineCheckNext || hasArrayInsideIt) {
 							newl();
 							ipad();
 						}
@@ -131,13 +131,13 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 						write(i, v[i]);
 						if (i == last) {
 							nind--;
-							if(!_singleLineCheckNext) {
+							if (!_singleLineCheckNext) {
 								newl();
 								ipad();
 							}
 						}
 					}
-					if(hasArrayInsideIt) {
+					if (hasArrayInsideIt) {
 						newl();
 						ipad();
 					}

@@ -102,7 +102,7 @@ class BaseOptionsMenu extends FlxSubState {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if(bindingKey) {
+		if (bindingKey) {
 			bindingKeyUpdate(elapsed);
 			return;
 		}
@@ -115,18 +115,18 @@ class BaseOptionsMenu extends FlxSubState {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
-		if(nextAccept <= 0) {
+		if (nextAccept <= 0) {
 			switch(curOption.type) {
 				case BOOL, FUNC:
-					if(Controls.justPressed('accept')) {
+					if (Controls.justPressed('accept')) {
 						FlxG.sound.play(Paths.sound((curOption.type == FUNC ? 'confirmMenu' : 'scrollMenu')));
-						if(curOption.type == BOOL) curOption.setValue((curOption.getValue() == true) ? false : true);
+						if (curOption.type == BOOL) curOption.setValue((curOption.getValue() == true) ? false : true);
 						curOption.change();
 						reloadCheckboxes();
 					}
 
 				case KEYBIND:
-					if(Controls.justPressed('accept')) {
+					if (Controls.justPressed('accept')) {
 						bindingBlack = new FlxSprite().makeSolid(FlxG.width, FlxG.height);
 						bindingBlack.alpha = 0;
 						FlxTween.tween(bindingBlack, {alpha: 0.6}, 0.35, {ease: FlxEase.linear});
@@ -151,19 +151,19 @@ class BaseOptionsMenu extends FlxSubState {
 					final leftPressed:Bool = Controls.pressed('ui_left');
 					if (leftPressed || Controls.pressed('ui_right')) {
 						var pressed:Bool = (leftJustPressed || Controls.justPressed('ui_right'));
-						if(holdTime > .5 || pressed) {
-							if(pressed) {
+						if (holdTime > .5 || pressed) {
+							if (pressed) {
 								var add:Dynamic = null;
-								if(curOption.type != STRING)
+								if (curOption.type != STRING)
 									add = leftPressed ? -curOption.changeValue : curOption.changeValue;
 
 								switch(curOption.type) {
 									case INT, FLOAT, PERCENT:
 										holdValue = curOption.getValue() + add;
-										if(holdValue < curOption.minValue) holdValue = curOption.minValue;
+										if (holdValue < curOption.minValue) holdValue = curOption.minValue;
 										else if (holdValue > curOption.maxValue) holdValue = curOption.maxValue;
 
-										if(curOption.type == INT) {
+										if (curOption.type == INT) {
 											holdValue = Math.round(holdValue);
 											curOption.setValue(holdValue);
 										} else {
@@ -173,7 +173,7 @@ class BaseOptionsMenu extends FlxSubState {
 
 									case STRING:
 										var num:Int = curOption.curOption; //lol
-										if(leftJustPressed) --num;
+										if (leftJustPressed) --num;
 										else num++;
 
 										if (num < 0) num = curOption.options.length - 1;
@@ -187,9 +187,9 @@ class BaseOptionsMenu extends FlxSubState {
 								updateTextFrom(curOption);
 								curOption.change();
 								FlxG.sound.play(Paths.sound('scrollMenu'));
-							} else if(curOption.type != STRING) {
+							} else if (curOption.type != STRING) {
 								holdValue += curOption.scrollSpeed * elapsed * (leftPressed ? -1 : 1);
-								if(holdValue < curOption.minValue) holdValue = curOption.minValue;
+								if (holdValue < curOption.minValue) holdValue = curOption.minValue;
 								else if (holdValue > curOption.maxValue) holdValue = curOption.maxValue;
 
 								switch(curOption.type) {
@@ -202,19 +202,19 @@ class BaseOptionsMenu extends FlxSubState {
 							}
 						}
 
-						if(curOption.type != STRING) holdTime += elapsed;
+						if (curOption.type != STRING) holdTime += elapsed;
 					} else if (Controls.released('ui_left') || Controls.released('ui_right')) {
-						if(holdTime > .5) FlxG.sound.play(Paths.sound('scrollMenu'));
+						if (holdTime > .5) FlxG.sound.play(Paths.sound('scrollMenu'));
 						holdTime = 0;
 					}
 			}
 
-			if(Controls.justPressed('reset')) {
+			if (Controls.justPressed('reset')) {
 				var leOption:Option = optionsArray[curSelected];
-				if(leOption.type != KEYBIND) {
+				if (leOption.type != KEYBIND) {
 					leOption.setValue(leOption.defaultValue);
-					if(leOption.type != BOOL) {
-						if(leOption.type == STRING) leOption.curOption = leOption.options.indexOf(leOption.getValue());
+					if (leOption.type != BOOL) {
+						if (leOption.type == STRING) leOption.curOption = leOption.options.indexOf(leOption.getValue());
 						updateTextFrom(leOption);
 					}
 				} else {
@@ -231,15 +231,15 @@ class BaseOptionsMenu extends FlxSubState {
 	}
 
 	function bindingKeyUpdate(elapsed:Float) {
-		if(FlxG.keys.pressed.ESCAPE) {
+		if (FlxG.keys.pressed.ESCAPE) {
 			holdingEsc += elapsed;
-			if(holdingEsc > .5) {
+			if (holdingEsc > .5) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				closeBinding();
 			}
 		} else if (FlxG.keys.pressed.BACKSPACE) {
 			holdingEsc += elapsed;
-			if(holdingEsc > .5) {
+			if (holdingEsc > .5) {
 				curOption.keys.keyboard = NONE;
 				updateBind(InputFormatter.getKeyName(NONE));
 				FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -248,22 +248,22 @@ class BaseOptionsMenu extends FlxSubState {
 		} else {
 			holdingEsc = 0;
 			var changed:Bool = false;
-			if(FlxG.keys.justPressed.ANY || FlxG.keys.justReleased.ANY) {
+			if (FlxG.keys.justPressed.ANY || FlxG.keys.justReleased.ANY) {
 				var keyPressed:FlxKey = cast (FlxG.keys.firstJustPressed(), FlxKey);
 				var keyReleased:FlxKey = cast (FlxG.keys.firstJustReleased(), FlxKey);
 
-				if(keyPressed != NONE && keyPressed != ESCAPE && keyPressed != BACKSPACE) {
+				if (keyPressed != NONE && keyPressed != ESCAPE && keyPressed != BACKSPACE) {
 					changed = true;
 					curOption.keys.keyboard = keyPressed;
-				} else if(keyReleased != NONE && (keyReleased == ESCAPE || keyReleased == BACKSPACE)) {
+				} else if (keyReleased != NONE && (keyReleased == ESCAPE || keyReleased == BACKSPACE)) {
 					changed = true;
 					curOption.keys.keyboard = keyReleased;
 				}
 			}
 
-			if(changed) {
+			if (changed) {
 				var key:String = null;
-				if(curOption.keys.keyboard == null) curOption.keys.keyboard = 'NONE';
+				if (curOption.keys.keyboard == null) curOption.keys.keyboard = 'NONE';
 				curOption.setValue(curOption.keys.keyboard);
 				key = InputFormatter.getKeyName(FlxKey.fromString(curOption.keys.keyboard));
 				updateBind(key);
@@ -275,10 +275,10 @@ class BaseOptionsMenu extends FlxSubState {
 
 	final MAX_KEYBIND_WIDTH:Int = 320;
 	function updateBind(?text:String = null, ?option:Option = null) {
-		if(option == null) option = curOption;
-		if(text == null) {
+		if (option == null) option = curOption;
+		if (text == null) {
 			text = option.getValue();
-			if(text == null) text = 'NONE';
+			if (text == null) text = 'NONE';
 			text = InputFormatter.getKeyName(FlxKey.fromString(text));
 		}
 
@@ -310,14 +310,14 @@ class BaseOptionsMenu extends FlxSubState {
 	}
 
 	function updateTextFrom(option:Option) {
-		if(option.type == KEYBIND) {
+		if (option.type == KEYBIND) {
 			updateBind(option);
 			return;
 		}
 
 		var text:String = option.displayFormat;
 		var val:Dynamic = option.getValue();
-		if(option.type == PERCENT) val *= 100;
+		if (option.type == PERCENT) val *= 100;
 		var def:Dynamic = option.defaultValue;
 		option.text = text.replace('%v', Std.string(val)).replace('%d', Std.string(def));
 	}
@@ -340,7 +340,7 @@ class BaseOptionsMenu extends FlxSubState {
 		}
 		for (text in grpTexts) {
 			text.alpha = 0.6;
-			if(text.ID == curSelected) text.alpha = 1;
+			if (text.ID == curSelected) text.alpha = 1;
 		}
 
 		descBox.setPosition(descText.x - 10, descText.y - 10);

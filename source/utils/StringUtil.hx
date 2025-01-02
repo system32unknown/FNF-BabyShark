@@ -12,7 +12,7 @@ class StringUtil {
 		var str:String = null;
 		var format:StringBuf = new StringBuf();
  
-		if(length < digits) {
+		if (length < digits) {
 			for (_ in 0...(digits - length)) format.addChar(code);
 			format.add(Std.string(value));
 		} else format.add(Std.string(value));

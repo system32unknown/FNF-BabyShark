@@ -26,16 +26,16 @@ class CutsceneHandler extends flixel.FlxBasic {
 		super();
 
 		timer(0, function() {
-			if(music != null) {
+			if (music != null) {
 				FlxG.sound.playMusic(Paths.music(music), 0, false);
 				FlxG.sound.music.fadeIn();
 			}
-			if(onStart != null) onStart();
+			if (onStart != null) onStart();
 		});
 		FlxG.state.add(this);
 
 		this._canSkip = canSkip;
-		if(canSkip) {
+		if (canSkip) {
 			skipSprite = new FlxPieDial(0, 0, 40, FlxColor.WHITE, 40, true, 24);
 			skipSprite.replaceColor(FlxColor.BLACK, FlxColor.TRANSPARENT);
 			skipSprite.setPosition(FlxG.width - (skipSprite.width + 80), FlxG.height - (skipSprite.height + 72));
@@ -61,17 +61,17 @@ class CutsceneHandler extends flixel.FlxBasic {
 			timedEvents.shift();
 		}
 
-		if(_canSkip && cutsceneTime > 0.1) {
-			if(Controls.pressed('accept')) holdingTime = Math.max(0, Math.min(_timeToSkip, holdingTime + elapsed));
+		if (_canSkip && cutsceneTime > 0.1) {
+			if (Controls.pressed('accept')) holdingTime = Math.max(0, Math.min(_timeToSkip, holdingTime + elapsed));
 			else if (holdingTime > 0) holdingTime = Math.max(0, FlxMath.lerp(holdingTime, -0.1, FlxMath.bound(elapsed * 3, 0, 1)));
 	
 			updateSkipAlpha();
 		}
 
-		if(endTime <= cutsceneTime || holdingTime >= _timeToSkip) {
-			if(holdingTime >= _timeToSkip) {
+		if (endTime <= cutsceneTime || holdingTime >= _timeToSkip) {
+			if (holdingTime >= _timeToSkip) {
 				trace('skipped cutscene');
-				if(skipCallback != null) skipCallback();
+				if (skipCallback != null) skipCallback();
 			} else finishCallback();
 	
 			for (spr in objects) {
@@ -87,7 +87,7 @@ class CutsceneHandler extends flixel.FlxBasic {
 	}
 
 	function updateSkipAlpha() {
-		if(skipSprite == null) return;
+		if (skipSprite == null) return;
 
 		skipSprite.amount = Math.min(1, Math.max(0, (holdingTime / _timeToSkip) * 1.025));
 		skipSprite.alpha = FlxMath.remapToRange(skipSprite.amount, 0.025, 1, 0, 1);

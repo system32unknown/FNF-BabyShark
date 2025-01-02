@@ -113,14 +113,14 @@ class PlatformUtil {
         if (window == NULL) return;
 
         COLORREF finalColor;
-        if(color[0] == -1 && color[1] == -1 && color[2] == -1 && color[3] == -1) { // bad fix, I know :sob:
+        if (color[0] == -1 && color[1] == -1 && color[2] == -1 && color[3] == -1) { // bad fix, I know :sob:
             finalColor = 0xFFFFFFFF; // Default border
-        } else if(color[3] == 0)
+        } else if (color[3] == 0)
             finalColor = 0xFFFFFFFE; // No border (must have setBorder as true)
         else finalColor = RGB(color[0], color[1], color[2]); // Use your custom color
 
-        if(setHeader) DwmSetWindowAttribute(window, 35, &finalColor, sizeof(COLORREF));
-        if(setBorder) DwmSetWindowAttribute(window, 34, &finalColor, sizeof(COLORREF));
+        if (setHeader) DwmSetWindowAttribute(window, 35, &finalColor, sizeof(COLORREF));
+        if (setBorder) DwmSetWindowAttribute(window, 34, &finalColor, sizeof(COLORREF));
 
         UpdateWindow(window);
 	')
@@ -133,7 +133,7 @@ class PlatformUtil {
         if (window == NULL) return;
 
         COLORREF finalColor;
-        if(color[0] == -1 && color[1] == -1 && color[2] == -1 && color[3] == -1) { // bad fix, I know :sob:
+        if (color[0] == -1 && color[1] == -1 && color[2] == -1 && color[3] == -1) { // bad fix, I know :sob:
             finalColor = 0xFFFFFFFF; // Default border
         } else finalColor = RGB(color[0], color[1], color[2]); // Use your custom color
 

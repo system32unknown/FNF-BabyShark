@@ -41,7 +41,7 @@ class NoteLoader {
 		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
 		@:privateAccess
 		spr.animation.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
-		if(animFrames.length < 1) return;
+		if (animFrames.length < 1) return;
 
 		spr.animation.addByPrefix(name, prefix, framerate, doLoop);
 	}

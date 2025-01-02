@@ -48,7 +48,7 @@ class PsychUIBox extends FlxSpriteGroup {
 		bg.alpha = 0.6;
 		add(bg);
 
-		if(tabs != null) {
+		if (tabs != null) {
 			for (tab in tabs) {
 				var createdTab:PsychUITab = new PsychUITab(tab);
 				this.tabs.push(createdTab);
@@ -74,7 +74,7 @@ class PsychUIBox extends FlxSpriteGroup {
 		super.update(elapsed);
 
 		_lastClick += elapsed;
-		if(!FlxG.mouse.released && _draggingBox && canMove) {
+		if (!FlxG.mouse.released && _draggingBox && canMove) {
 			var newPoint:FlxPoint = FlxG.mouse.getViewPosition(camera);
 			setPosition(_draggingPos.x - (_draggingPoint.x - newPoint.x), _draggingPos.y - (_draggingPoint.y - newPoint.y));
 		} else {
@@ -82,11 +82,11 @@ class PsychUIBox extends FlxSpriteGroup {
 			_draggingPos = null;
 			_draggingPoint = null;
 			_draggingBox = false;
-			if(FlxG.mouse.released) {
-				if(_pressedBox) forceCheckNext = true;
+			if (FlxG.mouse.released) {
+				if (_pressedBox) forceCheckNext = true;
 				_pressedBox = false;
 			}
-			if(wasDragging && broadcastBoxEvents) PsychUIEventHandler.event(DROP_EVENT, this);
+			if (wasDragging && broadcastBoxEvents) PsychUIEventHandler.event(DROP_EVENT, this);
 		}
 
 		for (tab in tabs) {
@@ -95,39 +95,39 @@ class PsychUIBox extends FlxSpriteGroup {
 		}
 
 		var _ignoreTabUpdate:Bool = false;
-		if(forceCheckNext || FlxG.mouse.justMoved || FlxG.mouse.justPressed || FlxG.mouse.justReleased) {
+		if (forceCheckNext || FlxG.mouse.justMoved || FlxG.mouse.justPressed || FlxG.mouse.justReleased) {
 			forceCheckNext = false;
 			for (tab in tabs) {
-				if(FlxG.mouse.overlaps(tab, camera)) {
+				if (FlxG.mouse.overlaps(tab, camera)) {
 					tab.color = hoverStyle.bgColor;
 					tab.alpha = hoverStyle.bgAlpha;
 					tab.text.color = hoverStyle.textColor;
 	
-					if(FlxG.mouse.justPressed) _pressedBox = true;
+					if (FlxG.mouse.justPressed) _pressedBox = true;
 
-					if(!_draggingBox && canMove && _pressedBox && FlxG.mouse.pressed && (Math.abs(FlxG.mouse.deltaViewX) > 1 || Math.abs(FlxG.mouse.deltaViewY) > 1)) {
+					if (!_draggingBox && canMove && _pressedBox && FlxG.mouse.pressed && (Math.abs(FlxG.mouse.deltaViewX) > 1 || Math.abs(FlxG.mouse.deltaViewY) > 1)) {
 						_draggingPos = FlxPoint.weak(x, y);
 						_draggingPoint = FlxG.mouse.getViewPosition(camera);
 						_draggingBox = true;
-						if(broadcastBoxEvents) PsychUIEventHandler.event(DRAG_EVENT, this);
+						if (broadcastBoxEvents) PsychUIEventHandler.event(DRAG_EVENT, this);
 					}
 					
-					if(FlxG.mouse.justReleased && canMinimize && _lastClick < .15 && selectedTab == tab && _lastTab == selectedTab) {
+					if (FlxG.mouse.justReleased && canMinimize && _lastClick < .15 && selectedTab == tab && _lastTab == selectedTab) {
 						_ignoreTabUpdate = true;
 						isMinimized = !isMinimized;
 						_lastClick = 0;
 					}
 					
-					if(FlxG.mouse.justPressed) {
-						if(selectedTab != tab) {
+					if (FlxG.mouse.justPressed) {
+						if (selectedTab != tab) {
 							isMinimized = false;
 							_ignoreTabUpdate = true;
 						}
 						_lastTab = selectedTab;
 						selectedTab = tab;
 						_lastClick = 0;
-						if(broadcastBoxEvents) PsychUIEventHandler.event(CLICK_EVENT, this);
-					} else if(selectedTab != tab) continue;
+						if (broadcastBoxEvents) PsychUIEventHandler.event(CLICK_EVENT, this);
+					} else if (selectedTab != tab) continue;
 				}
 				
 				var style:UIStyleData = (selectedTab == tab) ? selectedStyle : unselectedStyle;
@@ -137,12 +137,12 @@ class PsychUIBox extends FlxSpriteGroup {
 			}
 		}
 
-		if(_ignoreTabUpdate && broadcastBoxEvents) PsychUIEventHandler.event(MINIMIZE_EVENT, this);
-		else if(selectedTab != null && !isMinimized) selectedTab.updateMenu(this, elapsed);
+		if (_ignoreTabUpdate && broadcastBoxEvents) PsychUIEventHandler.event(MINIMIZE_EVENT, this);
+		else if (selectedTab != null && !isMinimized) selectedTab.updateMenu(this, elapsed);
 	
-		if(minimizeOnFocusLost && FlxG.mouse.justPressed && !isMinimized && !FlxG.mouse.overlaps(bg, camera)) {
+		if (minimizeOnFocusLost && FlxG.mouse.justPressed && !isMinimized && !FlxG.mouse.overlaps(bg, camera)) {
 			isMinimized = true;
-			if(broadcastBoxEvents) PsychUIEventHandler.event(MINIMIZE_EVENT, this);
+			if (broadcastBoxEvents) PsychUIEventHandler.event(MINIMIZE_EVENT, this);
 		}
 	}
 
@@ -158,7 +158,7 @@ class PsychUIBox extends FlxSpriteGroup {
 			
 	override function draw() {
 		super.draw();
-		if(selectedTab != null && !isMinimized) selectedTab.drawMenu(this);
+		if (selectedTab != null && !isMinimized) selectedTab.drawMenu(this);
 	}
 
 	override function destroy() {
@@ -173,7 +173,7 @@ class PsychUIBox extends FlxSpriteGroup {
 		add(createdTab);
 		updateTabs();
 
-		if(selectedTab == null) selectedTab = createdTab;
+		if (selectedTab == null) selectedTab = createdTab;
 	}
 
 	public var tabHeight:Int = 20;
@@ -195,7 +195,7 @@ class PsychUIBox extends FlxSpriteGroup {
 	}
 
 	function set_selectedTab(v:PsychUITab):PsychUITab {
-		if(v != null) {
+		if (v != null) {
 			@:bypassAccessor selectedName = v.name;
 			@:bypassAccessor selectedIndex = tabs.indexOf(v);
 		} else {
@@ -206,10 +206,10 @@ class PsychUIBox extends FlxSpriteGroup {
 	}
 
 	function set_selectedName(v:String):String {
-		if(v == null || v.trim().length < 1) selectedTab = null;
+		if (v == null || v.trim().length < 1) selectedTab = null;
 
 		for (tab in tabs) {
-			if(tab.name == v) {
+			if (tab.name == v) {
 				selectedTab = tab;
 				return v;
 			}
@@ -219,13 +219,13 @@ class PsychUIBox extends FlxSpriteGroup {
 
 	function set_selectedIndex(v:Int):Int {
 		v = Std.int(Math.max(Math.min(v, tabs.length - 1), -1));
-		if(v > -1) selectedTab = tabs[v];
+		if (v > -1) selectedTab = tabs[v];
 		else selectedTab = null;
 		return v;
 	}
 
 	public function getTab(name:String):PsychUITab {
-		for (tab in tabs) if(tab.name == name) return tab;
+		for (tab in tabs) if (tab.name == name) return tab;
 		return null;
 	}
 
@@ -235,7 +235,7 @@ class PsychUIBox extends FlxSpriteGroup {
 	}
 
 	function set_isMinimized(v:Bool):Bool {
-		if(!v) {
+		if (!v) {
 			bg.scale.y = _originalHeight;
 			bg.updateHitbox();
 		} else {

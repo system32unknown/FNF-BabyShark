@@ -22,7 +22,7 @@ class OutdatedState extends MusicBeatState {
 	}
 
 	override function update(elapsed:Float) {
-		if(leftState) {
+		if (leftState) {
 			super.update(elapsed);
 			return;
 		}
@@ -30,9 +30,9 @@ class OutdatedState extends MusicBeatState {
 		if (Controls.justPressed('accept')) {
 			leftState = true;
 			CoolUtil.browserLoad("https://github.com/system32unknown/FNF-BabyShark/releases");
-		} else if(Controls.justPressed('back')) leftState = true;
+		} else if (Controls.justPressed('back')) leftState = true;
 
-		if(leftState) {
+		if (leftState) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			FlxG.switchState(() -> new MainMenuState());
 		}

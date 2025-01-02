@@ -6,7 +6,7 @@ class ExitConfirmationPrompt extends Prompt {
 			FlxG.mouse.visible = false;
 			FlxG.switchState(() -> new states.editors.MasterEditorMenu());
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
-			if(finishCallback != null) finishCallback();
+			if (finishCallback != null) finishCallback();
 		}, 'Exit');
 	}
 }
@@ -19,8 +19,8 @@ class Prompt extends BasePrompt {
 	var _noTxt:String = 'Cancel';
 
 	public function new(title:String, yesFunction:Void->Void, ?noFunction:Void->Void, ?_yesTxt:String, ?_noTxt:String) {
-		if(_yesTxt != null) this._yesTxt = _yesTxt;
-		if(_noTxt != null) this._noTxt = _noTxt;
+		if (_yesTxt != null) this._yesTxt = _yesTxt;
+		if (_noTxt != null) this._noTxt = _noTxt;
 		this.yesFunction = yesFunction;
 		this.noFunction = noFunction;
 		super(title, promptCreate);
@@ -45,7 +45,7 @@ class Prompt extends BasePrompt {
 	}
 
 	override function close() {
-		if(noFunction != null) noFunction();
+		if (noFunction != null) noFunction();
 		super.close();
 	}
 }

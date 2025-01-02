@@ -18,7 +18,7 @@ class Philly extends BaseStage
 	var curLightEvent:Int = -1;
 
 	override function create() {
-		if(!lowQuality) add(new BGSprite('philly/sky', -100, 0, 0.1, 0.1));
+		if (!lowQuality) add(new BGSprite('philly/sky', -100, 0, 0.1, 0.1));
 
 		var city:BGSprite = new BGSprite('philly/city', -10, 0, 0.3, 0.3);
 		city.setGraphicSize(Std.int(city.width * 0.85));
@@ -32,7 +32,7 @@ class Philly extends BaseStage
 		add(phillyWindow);
 		phillyWindow.alpha = 0;
 
-		if(!lowQuality) add(new BGSprite('philly/behindTrain', -40, 50));
+		if (!lowQuality) add(new BGSprite('philly/behindTrain', -40, 50));
 
 		add(phillyTrain = new PhillyTrain(2000, 360));
 		add(phillyStreet = new BGSprite('philly/street', -40, 50));
@@ -53,7 +53,7 @@ class Philly extends BaseStage
 				phillyGlowGradient = new PhillyGlowGradient(-400, 225); //This shit was refusing to properly load FlxGradient so fuck it
 				phillyGlowGradient.visible = false;
 				insert(members.indexOf(blammedLightsBlack) + 1, phillyGlowGradient);
-				if(!ClientPrefs.data.flashing) phillyGlowGradient.intendedAlpha = 0.7;
+				if (!ClientPrefs.data.flashing) phillyGlowGradient.intendedAlpha = 0.7;
 
 				Paths.image('philly/particle'); //precache philly glow particle image
 				phillyGlowParticles = new FlxTypedGroup<PhillyGlowParticle>();
@@ -64,7 +64,7 @@ class Philly extends BaseStage
 
 	override function update(elapsed:Float) {
 		phillyWindow.alpha -= (Conductor.crochet / 1000) * elapsed * 1.5;
-		if(phillyGlowParticles != null) phillyGlowParticles.forEachAlive((particle:PhillyGlowParticle) -> if(particle.alpha <= 0) particle.kill());
+		if (phillyGlowParticles != null) phillyGlowParticles.forEachAlive((particle:PhillyGlowParticle) -> if (particle.alpha <= 0) particle.kill());
 	}
 
 	override function beatHit() {
@@ -79,15 +79,15 @@ class Philly extends BaseStage
 	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {
 		switch(eventName) {
 			case "Philly Glow":
-				if(flValue1 == null || flValue1 <= 0) flValue1 = 0;
+				if (flValue1 == null || flValue1 <= 0) flValue1 = 0;
 				var lightId:Int = Math.round(flValue1);
 
 				var chars:Array<objects.Character> = [boyfriend, gf, dad];
 				switch(lightId) {
 					case 0:
-						if(phillyGlowGradient.visible) {
+						if (phillyGlowGradient.visible) {
 							doFlash();
-							if(ClientPrefs.data.camZooms) {
+							if (ClientPrefs.data.camZooms) {
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
 							}
@@ -106,9 +106,9 @@ class Philly extends BaseStage
 						curLightEvent = FlxG.random.int(0, phillyLightsColors.length - 1, [curLightEvent]);
 						var color:FlxColor = phillyLightsColors[curLightEvent];
 
-						if(!phillyGlowGradient.visible) {
+						if (!phillyGlowGradient.visible) {
 							doFlash();
-							if(ClientPrefs.data.camZooms) {
+							if (ClientPrefs.data.camZooms) {
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
 							}
@@ -118,14 +118,14 @@ class Philly extends BaseStage
 							phillyWindowEvent.visible = true;
 							phillyGlowGradient.visible = true;
 							phillyGlowParticles.visible = true;
-						} else if(ClientPrefs.data.flashing) {
+						} else if (ClientPrefs.data.flashing) {
 							var colorButLower:FlxColor = color;
 							colorButLower.alphaFloat = 0.25;
 							FlxG.camera.flash(colorButLower, 0.5, null, true);
 						}
 
 						var charColor:FlxColor = color;
-						if(!ClientPrefs.data.flashing) charColor.saturation *= 0.5;
+						if (!ClientPrefs.data.flashing) charColor.saturation *= 0.5;
 						else charColor.saturation *= 0.75;
 
 						for (who in chars) who.color = charColor;
@@ -137,7 +137,7 @@ class Philly extends BaseStage
 						phillyStreet.color = color;
 
 					case 2: // spawn particles
-						if(!lowQuality) {
+						if (!lowQuality) {
 							var particlesNum:Int = FlxG.random.int(8, 12);
 							var width:Float = (2000 / particlesNum);
 							var color:FlxColor = phillyLightsColors[curLightEvent];
@@ -157,7 +157,7 @@ class Philly extends BaseStage
 
 	function doFlash() {
 		var color:FlxColor = FlxColor.WHITE;
-		if(!ClientPrefs.data.flashing) color.alphaFloat = 0.5;
+		if (!ClientPrefs.data.flashing) color.alphaFloat = 0.5;
 		FlxG.camera.flash(color, 0.15, null, true);
 	}
 }

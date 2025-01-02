@@ -33,7 +33,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 	public static function loadData(?request:String = 'alphabet') {
 		var path:String = Paths.getPath('images/$request.json');
 		
-		if(!#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end)
+		if (!#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end)
 			path = Paths.getPath('images/alphabet.json');
 
 		AlphabetGlyph.allGlyphs = new Map<String, Glyph>();
@@ -204,7 +204,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 
     @:noCompletion
     override function set_color(value:Int):Int {
-        for(line in members) line.color = value;
+        for (line in members) line.color = value;
         return super.set_color(value);
     }
 

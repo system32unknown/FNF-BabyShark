@@ -12,8 +12,8 @@ class SpriteUtil {
 		var color:FlxColor = 0;
 		var fixedColor:FlxColor = 0;
 
-		for(col in 0...sprite.frameWidth) {
-			for(row in 0...sprite.frameHeight) {
+		for (col in 0...sprite.frameWidth) {
+			for (row in 0...sprite.frameHeight) {
 			  	color = sprite.pixels.getPixel32(col, row);
                 fixedColor = FlxColor.BLACK + (color % 0x1000000);
                 if (colorMap[fixedColor] == null) colorMap[fixedColor] = 0;
@@ -24,7 +24,7 @@ class SpriteUtil {
 		}
 		var mostPresentColor:FlxColor = 0;
 		var mostPresentColorCount:Float = -1;
-		for(c => n in colorMap) {
+		for (c => n in colorMap) {
 			if (n > mostPresentColorCount) {
 				mostPresentColorCount = n;
 				mostPresentColor = c;
