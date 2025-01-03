@@ -60,14 +60,6 @@ class CoolUtil {
 		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
 	}
 
-	/**
-	 * Utility functions related to sorting.
-	*/
-	public static inline function byZIndex(order:Int, a:FlxBasic, b:FlxBasic):Int {
-		if (a == null || b == null) return 0;
-		return FlxSort.byValues(order, a.zIndex, b.zIndex);
-	}
-
 	@:access(flixel.util.FlxSave.validate)
 	inline public static function getSavePath():String {
 		return '${FlxG.stage.application.meta.get('company')}/${flixel.util.FlxSave.validate(FlxG.stage.application.meta.get('file'))}';

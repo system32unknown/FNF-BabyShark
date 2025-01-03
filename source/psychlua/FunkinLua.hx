@@ -350,7 +350,7 @@ class FunkinLua {
 		});
 
 		Lua_helper.add_callback(lua, "getObjectOrder", function(obj:String, ?group:String = null) {
-			var leObj:FlxBasic = LuaUtils.getObjectLoop(obj);
+			var leObj:FlxBasic = LuaUtils.getObjectDirectly(obj);
 			if (leObj != null) {
 				if (group != null) {
 					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
@@ -364,13 +364,14 @@ class FunkinLua {
 						return -1;
 					}
 				}
-				return leObj.zIndex;
+				var groupOrArray:Dynamic = CustomSubstate.instance ?? LuaUtils.getTargetInstance();
+				return groupOrArray.members.indexOf(leObj);
 			}
 			luaTrace('getObjectOrder: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
 			return -1;
 		});
 		Lua_helper.add_callback(lua, "setObjectOrder", function(obj:String, position:Int, ?group:String = null) {
-			var leObj:FlxBasic = LuaUtils.getObjectLoop(obj);
+			var leObj:FlxBasic = LuaUtils.getObjectDirectly(obj);
 			if (leObj != null){
 				if (group != null) {
 					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
@@ -385,8 +386,9 @@ class FunkinLua {
 						}
 					} else luaTrace('setObjectOrder: Group $group doesn\'t exist!', false, false, FlxColor.RED);
 				} else {
-					leObj.zIndex = position;
-					cast(LuaUtils.getTargetInstance(), MusicBeatState).refresh();
+					var groupOrArray:Dynamic = CustomSubstate.instance ?? LuaUtils.getTargetInstance();
+					groupOrArray.remove(leObj, true);
+					groupOrArray.insert(position, leObj);
 				}
 				return;
 			}

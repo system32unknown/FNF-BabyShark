@@ -73,14 +73,6 @@ class MusicBeatSubstate extends FlxSubState {
 	public function beatHit():Void {}
 	
 	public function sectionHit():Void {}
-	
-	/**
-	 * Refreshes the stage, by redoing the render order of all props.
-	 * It does this based on the `zIndex` of each prop.
-	 */
-	public function refresh() {
-		sort(CoolUtil.byZIndex, flixel.util.FlxSort.ASCENDING);
-	}
 
 	function getBeatsOnSection():Float {
 		var val:Null<Float> = 4;

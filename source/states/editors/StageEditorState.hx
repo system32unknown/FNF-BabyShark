@@ -1014,12 +1014,12 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	}
 
 	function updateStageDataUI() {
-		//input texts
+		// input texts
 		uiInputText.text = (stageJson.stageUI ?? '');
-		//checkboxes
+		// checkboxes
 		hideGirlfriendCheckbox.checked = (stageJson.hide_girlfriend);
 		gf.visible = !hideGirlfriendCheckbox.checked;
-		//steppers
+		// steppers
 		zoomStepper.value = FlxG.camera.zoom = stageJson.defaultZoom;
 
 		if (stageJson.camera_speed != null) cameraSpeedStepper.value = stageJson.camera_speed;

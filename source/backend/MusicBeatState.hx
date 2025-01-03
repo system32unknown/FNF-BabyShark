@@ -139,14 +139,6 @@ class MusicBeatState extends flixel.FlxState {
 		});
 	}
 
-	/**
-	 * Refreshes the stage, by redoing the render order of all props.
-	 * It does this based on the `zIndex` of each prop.
-	 */
-	public function refresh() {
-		sort(CoolUtil.byZIndex, flixel.util.FlxSort.ASCENDING);
-	}
-
 	function stagesFunc(func:BaseStage -> Void) {
 		for (stage in stages) {
 			if (stage == null || !stage.exists || !stage.active) continue;

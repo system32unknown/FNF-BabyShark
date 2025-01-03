@@ -11,19 +11,16 @@ class School extends BaseStage {
 		if (_song.gameOverChar == null || _song.gameOverChar.trim().length < 1) GameOverSubstate.characterName = 'bf-pixel-dead';
 
 		var bgSky:BGSprite = new BGSprite('weeb/weebSky', 0, 0, 0.1, 0.1);
-		bgSky.zIndex = 10;
 		add(bgSky);
 		bgSky.antialiasing = false;
 
 		var repositionShit:Int = -200;
 
 		var bgSchool:BGSprite = new BGSprite('weeb/weebSchool', repositionShit, 0, 0.6, 0.90);
-		bgSchool.zIndex = 20;
 		add(bgSchool);
 		bgSchool.antialiasing = false;
 
 		var bgStreet:BGSprite = new BGSprite('weeb/weebStreet', repositionShit, 0, 0.95, 0.95);
-		bgStreet.zIndex = 30;
 		add(bgStreet);
 		bgStreet.antialiasing = false;
 
@@ -32,7 +29,6 @@ class School extends BaseStage {
 			var fgTrees:BGSprite = new BGSprite('weeb/weebTreesBack', repositionShit + 170, 130, 0.9, 0.9);
 			fgTrees.setGraphicSize(Std.int(widShit * 0.8));
 			fgTrees.updateHitbox();
-			fgTrees.zIndex = 40;
 			add(fgTrees);
 			fgTrees.antialiasing = false;
 		}
@@ -42,7 +38,6 @@ class School extends BaseStage {
 		bgTrees.animation.add('treeLoop', [for (i in 0...18) i], 12);
 		bgTrees.animation.play('treeLoop');
 		bgTrees.scrollFactor.set(.85, .85);
-		bgTrees.zIndex = 60;
 		add(bgTrees);
 		bgTrees.antialiasing = false;
 
@@ -50,7 +45,6 @@ class School extends BaseStage {
 			var treeLeaves:BGSprite = new BGSprite('weeb/petals', repositionShit, -40, 0.85, 0.85, ['PETALS ALL'], true);
 			treeLeaves.setGraphicSize(widShit);
 			treeLeaves.updateHitbox();
-			treeLeaves.zIndex = 70;
 			add(treeLeaves);
 			treeLeaves.antialiasing = false;
 		}

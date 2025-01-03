@@ -321,9 +321,9 @@ class PlayState extends MusicBeatState {
 			introSoundNames[introSoundNames.indexOf(sndName)] = sndName.trim(); // trim trailing spaces in the sound, just in case, JUST in case.
 		}
 
-		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y); boyfriendGroup.zIndex = 300;
-		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y); dadGroup.zIndex = 200;
-		gfGroup = new FlxSpriteGroup(GF_X, GF_Y); gfGroup.zIndex = 100;
+		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
+		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
+		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
 		switch (curStage) {
 			case 'stage': new states.stages.StageWeek1(); //Week 1
@@ -920,11 +920,11 @@ class PlayState extends MusicBeatState {
 	}
 	public dynamic function updateScoreText() {
 		var nps:Array<Float> = [Math.fround(bfNpsVal), Math.fround(bfNpsMax)];
-		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS:{1}/{2} | ', [nps[0], nps[1]])}' + Language.getPhrase('score_text', 'Score:{1} ', [songScore]);
+		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [nps[0], nps[1]])}' + Language.getPhrase('score_text', 'Score: {1} ', [songScore]);
 		if (!cpuControlled) {
 			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses:{1} ', [songMisses]); 
-			tempText += Language.getPhrase('acc_text', '| Acc:{1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
-		} else tempText += Language.getPhrase('hits_text', '| Hits:{1}', [combo]);
+			tempText += Language.getPhrase('acc_text', '| Acc: {1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
+		} else tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
 		scoreTxt.text = tempText;
 		nps = null;
 	}
@@ -1401,17 +1401,17 @@ class PlayState extends MusicBeatState {
 						
 						callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
 						callOnHScript('onSpawnNote', [dunceNote]);
+						if (ClientPrefs.data.processFirst && dunceNote.strum != null) dunceNote.followStrumNote(songSpeed / playbackRate);
 					} else {
 						if (!(castHold ? tooLate : canBeHit)) {
 							if (betterRecycle) dunceNote = notes.spawnNote(targetNote, oldNote);
 							else dunceNote = notes.recycle(Note).recycleNote(targetNote, oldNote);
 							dunceNote.spawned = true;
 							dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
-							if (!betterRecycle) notes.add(dunceNote);
 							
 							callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
 							callOnHScript('onSpawnNote', [dunceNote]);
-							if (dunceNote.strum != null) dunceNote.followStrumNote(songSpeed / playbackRate);
+							if (ClientPrefs.data.processFirst && dunceNote.strum != null) dunceNote.followStrumNote(songSpeed / playbackRate);
 						} else {
 							if (cpuControlled) {
 								if (!castHold && castMust) ++skipBf;

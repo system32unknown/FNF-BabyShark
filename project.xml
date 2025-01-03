@@ -104,8 +104,6 @@
 	<!--Macro fixes-->
 	<haxeflag name="--macro" value="allowPackage('flash')"/>
 	<haxeflag name="--macro" value="include('my.pack')"/>
-	
-	<haxeflag name="--macro" value="addMetadata('@:build(macros.FlxModMacro.buildFlxBasic())', 'flixel.FlxBasic')"/>
 
 	<!--hxVLC Defines-->
 	<haxedef name="HXC_LIBVLC_LOGGING" if="VIDEOS_ALLOWED debug"/>
