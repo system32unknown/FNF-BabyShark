@@ -839,7 +839,7 @@ class PlayState extends MusicBeatState {
 			var introSprites:Array<String> = getCountdownSpriteNames(stageUI);
 			var tick:Countdown = THREE;
 			startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, (tmr:FlxTimer) -> {
-				charactersDance(tmr.loopsLeft);
+				if (swagCounter < 4) charactersDance(tmr.loopsLeft);
 				switch(swagCounter) {
 					case 0:
 						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[0] + introSoundsSuffix, true, false), 0.6);

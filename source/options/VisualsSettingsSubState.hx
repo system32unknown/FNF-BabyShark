@@ -59,7 +59,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 			option.onChange = onChangeSplashSkin;
 		}
 
-		var option:Option = new Option('Note Splashes', 'How transparent should the Note Splashes be?', 'splashAlpha', PERCENT);
+		var option:Option = new Option('Note Splash Opacity:', 'How transparent should the Note Splashes be?', 'splashAlpha', PERCENT);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
 		option.maxValue = 1;
