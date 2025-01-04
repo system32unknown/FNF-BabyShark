@@ -202,7 +202,7 @@ class HScript extends AlterHscript {
 
 	override function preset() {
 		super.preset();
-		parser.preprocesorValues = getDefaultPreprocessors();
+		parser.preprocessorValues = getDefaultPreprocessors();
         for (key => type in getDefaultVariables()) set(key, type);
 
 		// Functions & Variables
