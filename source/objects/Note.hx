@@ -18,7 +18,7 @@ typedef EventNote = {
 typedef NoteSplashData = {
 	disabled:Bool,
 	texture:String,
-	useGlobalShader:Bool, //breaks r/g/b/a but makes it copy default colors for your custom note
+	useGlobalShader:Bool, // breaks r/g/b/a but makes it copy default colors for your custom note
 	useRGBShader:Bool,
 	useNoteRGB:Bool,
 	antialiasing:Bool,
@@ -46,11 +46,16 @@ typedef CastNote = {
 	noteSkin:String
 }
 
+/**
+ * The note object used as a data structure to spawn and manage notes during gameplay.
+ * 
+ * If you want to make a custom note type, you should search for: "function set_noteType"
+**/
 class Note extends FlxSprite {
-	//This is needed for the hardcoded note types to appear on the Chart Editor,
-	//It's also used for backwards compatibility with 0.1 - 0.3.2 charts.
+	// This is needed for the hardcoded note types to appear on the Chart Editor,
+	// It's also used for backwards compatibility with 0.1 - 0.3.2 charts.
 	public static final defaultNoteTypes:Array<String> = [
-		'', //Always leave this one empty pls
+		'', // Always leave this one empty pls
 		'Alt Animation',
 		'Hey!',
 		'Hurt Note',
@@ -137,7 +142,7 @@ class Note extends FlxSprite {
 	public var hitHealth:Float = .02;
 	public var missHealth:Float = .1;
 	public var rating:String = 'unknown';
-	public var ratingMod:Float = 0; //9 = unknown, 0.25 = shit, 0.5 = bad, 0.75 = good, 1 = sick
+	public var ratingMod:Float = 0; // 9 = unknown, 0.25 = shit, 0.5 = bad, 0.75 = good, 1 = sick
 	public var ratingDisabled:Bool = false;
 
 	public var texture(default, set):String = null;
@@ -472,7 +477,7 @@ class Note extends FlxSprite {
 		gfNote = CoolUtil.toBool(target.noteData & (1 << 11));							 // gfNote
 		animSuffix = CoolUtil.toBool(target.noteData & (1 << 12)) ? "-alt" : "";		 // altAnim
 		noAnimation = noMissAnimation = CoolUtil.toBool(target.noteData & (1 << 13));	 // noAnim
-		blockHit = CoolUtil.toBool(target.noteData & (1 << 15));				 		 // blockHit
+		blockHit = CoolUtil.toBool(target.noteData & (1 << 14));				 		 // blockHit
 		noteData = target.noteData & PlayState.mania;
 
 		// Absoluty should be here, or messing pixel texture glitches...

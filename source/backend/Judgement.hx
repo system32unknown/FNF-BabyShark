@@ -38,16 +38,25 @@ package backend;
 	public static var minHitWindow(get, never):Float;
 	static function get_minHitWindow():Float return min.timing;
 
-	public static function getTiming(data:Array<Judgement>, diff:Float = 0, bot:Bool = false):Judgement {
+	public static function getTiming(diff:Float = 0, bot:Bool = false):Judgement {
 		var value:Judgement = max;
 		if (bot) value = min
 		else {
-			for (i in 0...data.length - 1) {
-				if (diff <= data[i].timing) {
-					value = data[i]; //skips last window (Shit)
+			for (i in 0...list.length - 1) {
+				if (diff <= list[i].timing) {
+					value = list[i]; //skips last window (Shit)
 					break;
 				}
 			}
+		}
+		return value;
+	}
+	public static function getIDFromTiming(noteDev:Float):Int {
+		var value:Int = list.length - 1;
+		for (i in 0...list.length) {
+			if (Math.abs(noteDev) >= list[i].timing) continue;
+			value = i;
+			break;
 		}
 		return value;
 	}

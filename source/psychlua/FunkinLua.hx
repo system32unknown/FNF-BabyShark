@@ -746,6 +746,10 @@ class FunkinLua {
 			var spr:FlxSprite = LuaUtils.getObjectLoop(obj);
 			if (spr != null) spr.makeGraphic(width, height, CoolUtil.colorFromString(color));
 		});
+		set("makeSolid", function(obj:String, width:Int = 256, height:Int = 256, color:String = 'FFFFFF') {
+			var spr:FlxSprite = LuaUtils.getObjectLoop(obj);
+			if (spr != null) spr.makeSolid(width, height, CoolUtil.colorFromString(color));
+		});
 		set("addAnimationByPrefix", function(obj:String, name:String, prefix:String, framerate:Float = 24, loop:Bool = true) {
 			var obj:FlxSprite = cast LuaUtils.getObjectDirectly(obj, false);
 			if (obj != null && obj.animation != null) {

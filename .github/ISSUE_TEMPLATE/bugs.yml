@@ -35,7 +35,6 @@ body:
         - "Windows"
         - "Linux"
         - "Mac"
-        - "Flash/Air-based target"
         - "Neko, HashLink, or other build system"
     validations:
       required: true

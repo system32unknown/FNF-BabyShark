@@ -310,22 +310,20 @@ class EditorPlayState extends MusicBeatSubstate {
 					daBpm = PlayState.SONG.notes[noteSec].bpm;
 			}
 
-			var swagNote:CastNote = cast { strumTime: songNotes[0], noteData: songNotes[1], noteType: Math.isNaN(songNotes[3]) ? songNotes[3] : 0, holdLength: songNotes[2], noteSkin: songData.arrowSkin ?? ""};
-			
+			var swagNote:CastNote = {strumTime: songNotes[0], noteData: songNotes[1], noteType: songNotes[3], holdLength: songNotes[2], noteSkin: songData.arrowSkin ?? ""};
 			swagNote.noteData |= section.mustHitSection ? 1 << 8 : 0; // mustHit
 			swagNote.noteData |= (section.gfSection && (songNotes[1] < 4) || songNotes[3] == 'GF Sing' || songNotes[3] == 4) ? 1 << 11 : 0; // gfNote
 			swagNote.noteData |= (section.altAnim || (songNotes[3] == 'Alt Animation' || songNotes[3] == 1)) ? 1 << 12 : 0; // altAnim
 			swagNote.noteData |= (songNotes[3] == 'No Animation' || songNotes[3] == 5) ? 3 << 13 : 0; // noAnimation & noMissAnimaiton
-			swagNote.noteData |= (songNotes[3] == 'Hurt Note' || songNotes[3] == 3) ? 1 << 15 : 0;
 			if (songNotes[1] > 3) swagNote.noteData ^= 1 << 8;
 			unspawnNotes.push(swagNote);
 
 			final roundSus:Int = Math.round(swagNote.holdLength / Conductor.stepCrochet);
 			if (roundSus > 0) {
 				for (susNote in 0...roundSus) {
-					swagNote.noteData |= 1 << 9; // isHold
-					swagNote.noteData |= susNote == roundSus ? 1 << 10 : 0; // isHoldEnd
-					var sustainNote:CastNote = cast {strumTime: swagNote.noteData + Conductor.stepCrochet * susNote, noteData: swagNote.noteData, noteType: swagNote.noteType, holdLength: 0, noteSkin: swagNote.noteSkin};
+					var sustainNote:CastNote = {strumTime: swagNote.noteData + Conductor.stepCrochet * susNote, noteData: swagNote.noteData, noteType: swagNote.noteType, holdLength: 0, noteSkin: swagNote.noteSkin};
+					sustainNote.noteData |= 1 << 9; // isHold
+					sustainNote.noteData |= susNote == roundSus ? 1 << 10 : 0; // isHoldEnd
 					unspawnSustainNotes.push(sustainNote);
 				}
 			}
@@ -384,7 +382,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	function popUpScore(note:Note = null):Void {
 		var noteDiff:Float = PlayState.getNoteDiff(note) / playbackRate;
-		var daRating:Judgement = Judgement.getTiming(judgeData, noteDiff, cpuControlled);
+		var daRating:Judgement = Judgement.getTiming(noteDiff, cpuControlled);
 
 		note.ratingMod = daRating.ratingMod;
 		note.rating = daRating.name;
@@ -562,7 +560,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function updateScore() {
-		scoreTxt.text = '${!ClientPrefs.data.showNPS ? '' : 'NPS:$nps/$maxNPS | '}' + 'Hits:$songHits | Misses:$songMisses';
+		scoreTxt.text = '${!ClientPrefs.data.showNPS ? '' : 'NPS:$nps/$maxNPS | '}' + 'Hits:$songHits | Misses: $songMisses';
 	}
 	
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {

@@ -484,12 +484,9 @@ class PlayState extends MusicBeatState {
 		noteTypes = null; eventsPushed = null;
 
 		if (songName == 'tutorial') {
-			canTweenCamZoom = true;
-			dontZoomCam = true;
-	
+			canTweenCamZoom = dontZoomCam = true;
 			canTweenCamZoomBoyfriend = 1;
-			canTweenCamZoomDad = 1.3;
-			canTweenCamZoomGf = 1.3;
+			canTweenCamZoomDad = canTweenCamZoomGf = 1.3;
 		}
 		// SONG SPECIFIC SCRIPTS
 		for (folder in Mods.directoriesWithFile(Paths.getSharedPath(), 'data/${Paths.CHART_PATH}/$songName/')) for (file in FileSystem.readDirectory(folder)) {
@@ -922,7 +919,7 @@ class PlayState extends MusicBeatState {
 		var nps:Array<Float> = [Math.fround(bfNpsVal), Math.fround(bfNpsMax)];
 		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [nps[0], nps[1]])}' + Language.getPhrase('score_text', 'Score: {1} ', [songScore]);
 		if (!cpuControlled) {
-			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses:{1} ', [songMisses]); 
+			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses: {1} ', [songMisses]); 
 			tempText += Language.getPhrase('acc_text', '| Acc: {1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
 		} else tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
 		scoreTxt.text = tempText;
@@ -1392,7 +1389,7 @@ class PlayState extends MusicBeatState {
 				var canBeHit:Bool = Conductor.songPosition > targetNote.strumTime; // false is before, true is after
 				var tooLate:Bool = Conductor.songPosition > targetNote.strumTime + noteKillOffset;
 
-				if (Timer.stamp() - noteSpawnTimout < shownRealTime) {
+				if (!ClientPrefs.data.skipSpawnNote || (Timer.stamp() - noteSpawnTimout < shownRealTime)) {
 					if (!ClientPrefs.data.optimizeSpawnNote) {
 						if (betterRecycle) dunceNote = notes.spawnNote(targetNote, oldNote);
 						else dunceNote = notes.recycle(Note).recycleNote(targetNote, oldNote);
@@ -1458,7 +1455,7 @@ class PlayState extends MusicBeatState {
 							if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
 								if (daNote.mustPress) {
 									if (cpuControlled) goodNoteHit(daNote);
-									else if (!daNote.ignoreNote && !endingSong && daNote.tooLate || !daNote.wasGoodHit) noteMiss(daNote);
+									else if (!daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
 								} else {
 									if (!daNote.hitByOpponent) opponentNoteHit(daNote);
 									if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
@@ -1947,7 +1944,7 @@ class PlayState extends MusicBeatState {
 	var daRating:Judgement;
 	inline function addScore(note:Note = null):Void {
 		var noteDiff:Float = getNoteDiff(note) / playbackRate;
-		daRating = Judgement.getTiming(judgeData, noteDiff, cpuControlled);
+		daRating = Judgement.getTiming(noteDiff, cpuControlled);
 
 		totalNotesHit += switch (ClientPrefs.data.accuracyType) {
 			case 'Note': 1;
@@ -2007,7 +2004,7 @@ class PlayState extends MusicBeatState {
 				numScore.setupPopupData(NUMBER, uiFolder + 'judgements/number/num$i' + uiPostfix);
 				numScore.setPosition(ratingPop.x + (43 * daloop) - 50 + comboOffset[1][0] - 43 / 2 * (Std.string(tempNotes).length - 1), ratingPop.y + 100 - comboOffset[1][1]);
 				popUpGroup.add(numScore);
-				numScore.doTween();
+				numScore.doTween(.002);
 				++daloop;
 			}
 		}

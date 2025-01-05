@@ -1,10 +1,10 @@
 package objects;
 
 #if ACHIEVEMENTS_ALLOWED
+import openfl.display.BitmapData;
 import openfl.events.Event;
 import openfl.geom.Matrix;
 import openfl.Lib;
-import flash.display.BitmapData;
 
 class AchievementPopup extends openfl.display.Sprite {
 	var lastScale:Float = 1;
