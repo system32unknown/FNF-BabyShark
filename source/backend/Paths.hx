@@ -142,7 +142,7 @@ class Paths {
 			else #end if (OpenFlAssets.exists(file, IMAGE)) bitmap = OpenFlAssets.getBitmapData(file);
 
 			if (bitmap == null) {
-				FlxG.log.warn('Could not find image with key: "$key"' + (parentFolder == null ? "" : 'in parent folder: "$parentFolder"'));
+				FlxG.log.warn('Could not find image with key: "$key" ' + (parentFolder == null ? 'in file: "$file"' : 'in parent folder: "$parentFolder"'));
 				return null;
 			}
 		}

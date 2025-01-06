@@ -1,6 +1,7 @@
 package backend;
 
 import objects.Note;
+import haxe.ds.Vector;
 
 typedef SwagSong = {
 	var song:String;
@@ -18,6 +19,7 @@ typedef SwagSong = {
 	var format:String;
 	
 	@:optional var mania:Int;
+	@:optional var isOldVersion:Bool;
 
 	@:optional var gameOverChar:String;
 	@:optional var gameOverSound:String;
@@ -116,15 +118,21 @@ class Song {
 	}
 
 	public static function parseJSON(rawData:String, ?nameForError:String = null, ?convertTo:String = 'psych_v1'):SwagSong {
+		var isOldVer:Vector<Bool> = new Vector<Bool>(2);
 		var songJson:SwagSong = cast haxe.Json.parse(rawData);
 		if (Reflect.hasField(songJson, 'song')) {
+			isOldVer[0] = true;
 			var subSong:SwagSong = Reflect.field(songJson, 'song');
 			if (subSong != null && Type.typeof(subSong) == TObject) songJson = subSong;
-		}
+		} else isOldVer[0] = false;
 
 		if (convertTo != null && convertTo.length > 0) {
 			var fmt:String = songJson.format;
-			if (fmt == null) fmt = songJson.format = 'unknown';
+			if(fmt == null) {
+				fmt = songJson.format = 'unknown';
+				isOldVer[1] = true;
+				if (isOldVer[0] && isOldVer[1]) songJson.isOldVersion = true;
+			}
 
 			switch(convertTo) {
 				case 'psych_v1':

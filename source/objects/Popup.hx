@@ -64,6 +64,8 @@ class Popup extends FlxSprite {
 
         acceleration.set();
         velocity.set();
+
+        scale.set();
         setPosition();
 
         alpha = 1;

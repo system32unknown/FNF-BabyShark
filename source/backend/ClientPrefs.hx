@@ -91,8 +91,6 @@ class SaveVariables {
 	var processFirst:Bool = false;
 	var optimizeSpawnNote:Bool = true;
 	var skipSpawnNote:Bool = true;
-	var betterRecycle:Bool = true;
-	var cacheNotes:Int = 0;
 	var disableGC:Bool = false;
 
 	var epicWindow:Int = 22;

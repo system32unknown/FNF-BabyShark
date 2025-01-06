@@ -60,15 +60,10 @@ class Achievements {
 
 		if (_save.data == null) return;
 
-		if (_save.data.unlocked != null)
-			unlocked = _save.data.unlocked;
+		if (_save.data.unlocked != null) unlocked = _save.data.unlocked;
 
 		var savedMap:Map<String, Float> = _save.data.variables;
-		if (savedMap != null) {
-			for (key => value in savedMap) {
-				variables.set(key, value);
-			}
-		}
+		if (savedMap != null) for (key => value in savedMap) variables.set(key, value);
 		_firstLoad = false;
 	}
 
@@ -183,7 +178,7 @@ class Achievements {
 		var modLoaded:String = Mods.currentModDirectory;
 		Mods.currentModDirectory = null;
 		loadAchievementJson(Paths.mods('data/achievements.json'));
-		for (i => mod in Mods.parseList().enabled) {
+		for (_ => mod in Mods.parseList().enabled) {
 			Mods.currentModDirectory = mod;
 			loadAchievementJson(Paths.mods('$mod/data/achievements.json'));
 		}

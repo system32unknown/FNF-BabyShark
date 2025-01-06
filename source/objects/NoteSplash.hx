@@ -59,14 +59,20 @@ class NoteSplash extends FlxSprite {
 		config = null;
 		maxAnims = 0;
 
-		texture = splash;
-		if (texture == null || texture.length < 1) texture = defaultNoteSplash;
-		if (texture == defaultNoteSplash) texture += getSplashSkinPostfix();
+		if(splash == null) {
+			splash = defaultNoteSplash + getSplashSkinPostfix();
+			if (PlayState.SONG != null && PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) splash = PlayState.SONG.splashSkin;
+		}
 
+		texture = splash;
 		frames = Paths.getSparrowAtlas(texture);
 		if (frames == null) {
-			texture = defaultNoteSplash;
+			texture = defaultNoteSplash + getSplashSkinPostfix();
 			frames = Paths.getSparrowAtlas(texture);
+			if (frames == null) {
+				texture = defaultNoteSplash;
+				frames = Paths.getSparrowAtlas(texture);
+			}
 		}
 
 		var path:String = 'images/$texture';
@@ -181,7 +187,7 @@ class NoteSplash extends FlxSprite {
 
 		var tempShader:RGBPalette = null;
 		if (config.allowRGB) {
-			if (note == null && Std.isOfType(FlxG.state, PlayState)) note = new Note().recycleNote(Note.DEFAULT_CAST);
+			if (note == null && Std.isOfType(FlxG.state, PlayState)) note = new Note(0, noteData);
 			Note.initializeGlobalRGBShader(noteData % EK.colArray.length);
 			if (inEditor || (note == null || note.noteSplashData.useRGBShader) && (PlayState.SONG == null || !PlayState.SONG.disableNoteRGB)) {
 				tempShader = new RGBPalette();

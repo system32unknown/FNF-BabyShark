@@ -145,7 +145,7 @@ class ExtraFunctions {
 			return false;
 		});
 		funk.set("getTextFromFile", Paths.getTextFromFile);
-		funk.set("directoryFileList", function(folder:String) {
+		funk.set("directoryFileList", (folder:String) -> {
 			var list:Array<String> = [];
 			#if sys
 			if (FileSystem.exists(folder)) {
