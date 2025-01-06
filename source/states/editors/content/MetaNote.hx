@@ -165,7 +165,7 @@ class EditorSustain extends Note {
 		sustainTile.antialiasing = antialiasing;
 		sustainTile.animation.copyFrom(animation);
 		sustainTile.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'hold');
-		sustainTile.clipRect = new flixel.math.FlxRect(0, 1, sustainTile.frameWidth, 1);
+		sustainTile.clipRect = flixel.math.FlxRect.get(0, 1, sustainTile.frameWidth, 1);
 	}
 
 	public function changeNoteData(v:Int) {

@@ -3863,7 +3863,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		MetaNote.noteTypeTexts = [];
 		fileDialog.destroy();
-		backend.NoteLoader.dispose();
 		super.destroy();
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown);

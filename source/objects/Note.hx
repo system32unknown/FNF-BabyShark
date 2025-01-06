@@ -70,9 +70,7 @@ class Note extends FlxSprite {
 	public var blockHit:Bool = false; // only works for player
 
 	public var sustainLength:Float = 0;
-	public var sustainScale:Float = 1.0;
 	public var isSustainNote:Bool = false;
-	public var isSustainEnds:Bool = false;
 	public var noteType(default, set):String = null;
 
 	public var rgbShader:RGBShaderReference;
@@ -147,7 +145,7 @@ class Note extends FlxSprite {
 	}
 
 	inline public function resizeByRatio(ratio:Float) { //haha funny twitter shit
-		if (isSustainNote && animation != null && animation.curAnim != null && !animation.curAnim.name.endsWith('end')) {
+		if (isSustainNote && animation.curAnim != null && !animation.curAnim.name.endsWith('end')) {
 			scale.y *= ratio;
 			updateHitbox();
 		}
@@ -199,6 +197,13 @@ class Note extends FlxSprite {
 					hitCausesMiss = true;
 					hitsound = 'cancelMenu';
 					hitsoundChartEditor = false;
+				case 'Alt Animation':
+					animSuffix = '-alt';
+				case 'No Animation':
+					noAnimation = true;
+					noMissAnimation = true;
+				case 'GF Sing':
+					gfNote = true;
 			}
 			if (value != null && value.length > 1) backend.NoteTypesConfig.applyNoteTypeData(this, value);
 			if (hitsound != 'hitsound' && hitsoundVolume > 0) Paths.sound(hitsound); //precache new sound for being idiot-proof
@@ -306,8 +311,8 @@ class Note extends FlxSprite {
 		var animName:String = null;
 		if (animation.curAnim != null) animName = animation.curAnim.name;
 
-		var path = PlayState.isPixelStage ? 'pixelUI/' : '';
-		var skinPixel = path + skin;
+		var path:String = PlayState.isPixelStage ? 'pixelUI/' : '';
+		var skinPixel:String = path + skin;
 		var lastScaleY:Float = scale.y;
 		var skinPostfix:String = getNoteSkinPostfix();
 		var customSkin:String = skin + skinPostfix;

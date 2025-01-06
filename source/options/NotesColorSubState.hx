@@ -543,7 +543,6 @@ class NotesColorSubState extends FlxSubState {
 	function getShader():RGBPalette return Note.globalRgbShaders[curSelectedNote];
 
 	override function destroy() {
-		backend.NoteLoader.dispose();
 		Note.globalRgbShaders = [];
 		super.destroy();
 	}

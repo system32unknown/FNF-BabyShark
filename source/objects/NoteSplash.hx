@@ -187,7 +187,6 @@ class NoteSplash extends FlxSprite {
 
 		var tempShader:RGBPalette = null;
 		if (config.allowRGB) {
-			if (note == null && Std.isOfType(FlxG.state, PlayState)) note = new Note(0, noteData);
 			Note.initializeGlobalRGBShader(noteData % EK.colArray.length);
 			if (inEditor || (note == null || note.noteSplashData.useRGBShader) && (PlayState.SONG == null || !PlayState.SONG.disableNoteRGB)) {
 				tempShader = new RGBPalette();
