@@ -464,8 +464,7 @@ class NotesColorSubState extends FlxSubState {
 			myNotes.add(newNote);
 		}
 
-		bigNote = new Note().recycleNote(Note.DEFAULT_CAST);
-		bigNote.inEditor = true;
+		bigNote = new Note(0, 0, false, true);
 		bigNote.setPosition(250, 325);
 		bigNote.setGraphicSize(250);
 		bigNote.updateHitbox();
