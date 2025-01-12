@@ -2,10 +2,10 @@ package states.editors;
 
 import objects.NoteSplash;
 import objects.StrumNote;
-import openfl.net.FileFilter;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
+import openfl.net.FileFilter;
 import openfl.net.FileReference;
 import haxe.Json;
 

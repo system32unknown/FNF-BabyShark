@@ -892,7 +892,7 @@ class PlayState extends MusicBeatState {
 		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [nps[0], nps[1]])}' + Language.getPhrase('score_text', 'Score: {1} ', [songScore]);
 		if (!cpuControlled) {
 			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses: {1} ', [songMisses]); 
-			tempText += Language.getPhrase('acc_text', '| Acc: {1}% •', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
+			tempText += Language.getPhrase('accuracy_text', '| Accuracy: {1}% |', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
 		} else tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
 		scoreTxt.text = tempText;
 		nps = null;
@@ -999,9 +999,8 @@ class PlayState extends MusicBeatState {
 			for (songNotes in section.sectionNotes) {
 				var strumTime:Float = songNotes[0];
 				var noteColumn:Int = Std.int(songNotes[1] % EK.keys(mania));
-				var holdLength:Float = songNotes[2];
+				var holdLength:Float = songNotes[2]; if (Math.isNaN(holdLength)) holdLength = 0.0;
 				var noteType:String = songNotes[3];
-				if (Math.isNaN(holdLength)) holdLength = 0.0;
 				var gottaHitNote:Bool = (songNotes[1] < EK.keys(mania));
 
 				if (ClientPrefs.data.skipGhostNotes && sectionNoteCnt != 0) {
@@ -1009,7 +1008,7 @@ class PlayState extends MusicBeatState {
 					else strumTimeVector[noteColumn] = strumTime;
 				}
 
-				var swagNote = new Note(strumTime, noteColumn, oldNote);
+				var swagNote:Note = new Note(strumTime, noteColumn, oldNote);
 				swagNote.gfNote = (section.gfSection && (!songData.isOldVersion ? gottaHitNote : !gottaHitNote) == section.mustHitSection);
 				swagNote.animSuffix = section.altAnim && !gottaHitNote ? "-alt" : "";
 				swagNote.mustPress = gottaHitNote;
@@ -1023,27 +1022,26 @@ class PlayState extends MusicBeatState {
 				var roundSus:Int = Math.round(swagNote.sustainLength / curStepCrochet);
 				if(roundSus > 0) {
 					for (susNote in 0...roundSus + 1) {
-						var sustainNote = new Note(strumTime + (curStepCrochet * susNote), noteColumn, oldNote, true);
+						var sustainNote:Note = new Note(strumTime + (curStepCrochet * susNote), noteColumn, oldNote, true);
 						sustainNote.animSuffix = swagNote.animSuffix;
 						sustainNote.mustPress = swagNote.mustPress;
 						sustainNote.gfNote = swagNote.gfNote;
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
 						sustainNote.parent = swagNote;
-						unspawnSustainNotes.push(sustainNote);
-						swagNote.tail.push(sustainNote);
-						sustainNote.correctionOffset = swagNote.height / 2;
+						unspawnSustainNotes.push(sustainNote); swagNote.tail.push(sustainNote);
+						sustainNote.correctionOffset = Note.originalHeight / 2;
 
 						if(!isPixelStage) {
 							if (oldNote.isSustainNote) {
-								oldNote.scale.y *= Note.SUSTAIN_SIZE / oldNote.frameHeight;
-								oldNote.scale.y /= playbackRate;
-								oldNote.resizeByRatio(curStepCrochet / Conductor.stepCrochet);
+								oldNote.sustainScale = Note.SUSTAIN_SIZE / oldNote.frameHeight;
+								oldNote.sustainScale /= playbackRate;
+								if (oldNote.sustainScale != 1) oldNote.resizeByRatio(curStepCrochet / Conductor.stepCrochet);
 							}
 							if (downScroll) sustainNote.correctionOffset = 0;
 						} else if (oldNote.isSustainNote) {
-							oldNote.scale.y /= playbackRate;
-							oldNote.resizeByRatio(curStepCrochet / Conductor.stepCrochet);
+							oldNote.sustainScale /= playbackRate;
+							if (oldNote.sustainScale != 1) oldNote.resizeByRatio(curStepCrochet / Conductor.stepCrochet);
 						}
 	
 						if (sustainNote.mustPress) sustainNote.x += FlxG.width / 2; // general offset
@@ -1380,7 +1378,7 @@ class PlayState extends MusicBeatState {
 				var canBeHit:Bool = Conductor.songPosition > targetNote.strumTime; // false is before, true is after
 				var tooLate:Bool = Conductor.songPosition > targetNote.strumTime + noteKillOffset;
 				if (!ClientPrefs.data.skipSpawnNote || Timer.stamp() - noteSpawnTimout < shownRealTime) {
-					if (!ClientPrefs.data.optimizeSpawnNote) {
+					if (!(castHold ? tooLate : canBeHit)) {
 						var dunceNote:Note = targetNote;
 						dunceNote.spawned = true;
 						dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
@@ -1390,20 +1388,9 @@ class PlayState extends MusicBeatState {
 						callOnHScript('onSpawnNote', [dunceNote]);
 						if (ClientPrefs.data.processFirst && dunceNote.strum != null) dunceNote.followStrumNote(songSpeed / playbackRate);
 					} else {
-						if (!(castHold ? tooLate : canBeHit)) {
-							var dunceNote:Note = targetNote;
-							dunceNote.spawned = true;
-							dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
-							notes.add(dunceNote);
-							
-							callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
-							callOnHScript('onSpawnNote', [dunceNote]);
-							if (ClientPrefs.data.processFirst && dunceNote.strum != null) dunceNote.followStrumNote(songSpeed / playbackRate);
-						} else {
-							if (cpuControlled) {
-								if (!castHold && castMust) ++skipBf;
-							} else if (castMust) noteMissCommon(targetNote.noteData);
-						}
+						if (cpuControlled) {
+							if (!castHold && castMust) ++skipBf;
+						} else if (castMust) noteMissCommon(targetNote.noteData);
 					}
 				} else {
 					if (cpuControlled) {
@@ -2323,7 +2310,11 @@ class PlayState extends MusicBeatState {
 		for (lua in luaArray) {lua.call('onDestroy'); lua.stop();}
 		luaArray = null;
 		FunkinLua.customFunctions.clear();
-		for (script in hscriptArray) if (script != null) {script.run('onDestroy'); script.destroy();}
+		for (script in hscriptArray) if (script != null) {
+			var ny:Dynamic = script.get('onDestroy');
+			if (ny != null && Reflect.isFunction(ny)) ny();
+			script.destroy();
+		}
 		hscriptArray = null;
 		stagesFunc((stage:BaseStage) -> stage.destroy());
 
@@ -2336,7 +2327,7 @@ class PlayState extends MusicBeatState {
 		backend.NoteTypesConfig.clearNoteTypesData();
 		NoteSplash.configs.clear();
 		instance = null;
-		Paths.popUpFramesMap.clear();
+		backend.NoteLoader.dispose(); Paths.popUpFramesMap.clear();
 
 		super.destroy();
 	}
@@ -2461,15 +2452,16 @@ class PlayState extends MusicBeatState {
 		return false;
 	}
 	public function initHScript(file:String) {
-		var newScript:HScript = new HScript(null, file);
+		var newScript:HScript = null;
 		try {
-			newScript.parse(true);
-			newScript.run('onCreate');
-			hscriptArray.push(newScript);
+			newScript = new HScript(null, file);
+			newScript.call('onCreate');
 			trace('initialized hscript interp successfully: $file');
-		} catch (e:hscript.Expr.Error) {
-			newScript.errorCaught(e);
-			newScript.destroy();
+			hscriptArray.push(newScript);
+		} catch(e:Dynamic) {
+			addTextToDebug('ERROR ON LOADING ($file) - $e', FlxColor.RED);
+			var newScript:HScript = cast (AlterHscript.instances.get(file), HScript);
+			if (newScript != null) newScript.destroy();
 		}
 	}
 	#end
@@ -2527,12 +2519,16 @@ class PlayState extends MusicBeatState {
 			@:privateAccess
 			if (script == null || !script.exists(funcToCall) || exclusions.contains(script.origin)) continue;
 
-			var callValue:Dynamic = script.run(funcToCall, args);
-			if (callValue == null) continue;
-			if (!excludeValues.contains(callValue)) {
-				if ((callValue == LuaUtils.Function_StopHScript || callValue == LuaUtils.Function_StopAll) && !ignoreStops) return callValue;
-				if (callValue != null && !excludeValues.contains(callValue)) returnVal = callValue;
-			}
+			try {
+				var callValue:AlterCall = script.call(funcToCall, args);
+				var myValue:Dynamic = callValue.returnValue;
+	
+				if((myValue == LuaUtils.Function_StopHScript || myValue == LuaUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops) {
+					returnVal = myValue;
+					break;
+				}
+				if(myValue != null && !excludeValues.contains(myValue)) returnVal = myValue;
+			} catch (e:Dynamic) addTextToDebug('ERROR (${script.origin}: $funcToCall) - $e', FlxColor.RED);
 		}
 		#end
 		return returnVal;

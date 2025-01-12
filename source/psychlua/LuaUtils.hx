@@ -249,7 +249,7 @@ class LuaUtils {
 			else if (Std.isOfType(indices, String)) indices = flixel.util.FlxStringUtil.toIntArray(cast indices);
 
 			if (prefix != null) obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
-			else obj.animation.addByIndices(name, prefix, indices, '', framerate, loop);
+			else obj.animation.add(name, indices, framerate, loop);
 			if (obj.animation.curAnim == null) {
 				var dyn:Dynamic = cast obj;
 				if (dyn.playAnim != null) dyn.playAnim(name, true);

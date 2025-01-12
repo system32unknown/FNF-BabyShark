@@ -1136,7 +1136,7 @@ class FunkinLua {
 			var nargs:Int = 0;
 			if (args != null) for (arg in args) {
 				if (Convert.toLua(lua, arg)) nargs++;
-				else luaTrace('WARNING ($func)): attempt to insert ${Type.typeof(arg)} (unsupported value type) as a argument', false, false, FlxColor.ORANGE);
+				else luaTrace('WARNING ($func): attempt to insert ${Type.typeof(arg)} (unsupported value type) as a argument', false, false, FlxColor.ORANGE);
 			}
 			var status:Int = Lua.pcall(lua, nargs, 1, 0);
 

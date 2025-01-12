@@ -10,8 +10,7 @@ using StringTools;
 class Update {
 	public static function main(args:Array<String>) {
 		// to prevent messing with currently installed libs
-		if (!FileSystem.exists('.haxelib'))
-			FileSystem.createDirectory('.haxelib');
+		if (!FileSystem.exists('.haxelib')) FileSystem.createDirectory('.haxelib');
 
 		var filename:String = "./libs.xml";
 		var isSilent:Bool = false;

@@ -4,9 +4,7 @@ import flixel.FlxBasic;
 import lime.app.Application;
 #if HSCRIPT_ALLOWED
 import alterhscript.AlterHscript;
-import alterhscript.ErrorSeverity;
-import hscript.Expr.Error as ImprError;
-
+import haxe.PosInfos;
 class HScript extends AlterHscript {
 	public var filePath:String;
 	public var modFolder:String;
@@ -14,85 +12,31 @@ class HScript extends AlterHscript {
 
 	#if LUA_ALLOWED
 	public var parentLua:FunkinLua;
+	public static function initHaxeModule(parent:FunkinLua) {
+		if(parent.hscript == null) {
+			trace('initializing haxe interp for: ${parent.scriptName}');
+			parent.hscript = new HScript(parent);
+		}
+	}
+
+	public static function initHaxeModuleCode(parent:FunkinLua, code:String, ?varsToBring:Any = null) {
+		var hs:HScript = try parent.hscript catch (e) null;
+		if(hs == null) {
+			trace('initializing haxe interp for: ${parent.scriptName}');
+			parent.hscript = new HScript(parent, code, varsToBring);
+		} else {
+			try {
+				hs.scriptCode = code;
+				hs.varsToBring = varsToBring;
+				hs.parse(true);
+				hs.execute();
+			} catch(e:Dynamic) FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
+		}
+	}
 	#end
 
-	public function errorCaught(e:ImprError, ?funcName:String) {
-		var message:String = errorToString(e, funcName, this);
-		var color:FlxColor = (executed ? FlxColor.RED : 0xffb30000);
-		#if LUA_ALLOWED
-		if (parentLua == null) PlayState.instance.addTextToDebug(message, color);
-		else FunkinLua.luaTrace(message, false, false, color);
-		#else
-		PlayState.instance.addTextToDebug(message, color);
-		#end
-	}
-	public static function hscriptLog(severity:ErrorSeverity, x:Dynamic, ?pos:haxe.PosInfos) {
-		var message:String = Std.string(x);
-		var origin:String = pos?.fileName ?? 'hscript';
-		#if hscriptPos
-		if (pos.lineNumber != -1) origin += ':' + pos.lineNumber;
-		#end
-		var fullTrace:String = '($origin) - $message';
-		var color:FlxColor;
-		switch (severity) {
-			case FATAL:
-				color = 0xffb30000;
-				fullTrace = 'FATAL ' + fullTrace;
-			case ERROR:
-				color = FlxColor.RED;
-				fullTrace = 'ERROR ' + fullTrace;
-			case WARN:
-				color = FlxColor.YELLOW;
-				fullTrace = 'WARNING ' + fullTrace;
-			default: color = FlxColor.CYAN;
-		}
-		#if LUA_ALLOWED
-		if (FunkinLua.lastCalledScript == null || severity == FATAL)
-			PlayState.instance.addTextToDebug(fullTrace, color);
-		else FunkinLua.luaTrace(fullTrace, false, false, color);
-		#else
-		PlayState.instance.addTextToDebug(fullTrace, color);
-		#end
-	}
-	public static function errorToString(e:ImprError, ?funcName:String, ?instance:HScript):String {
-		var message:String = switch (#if hscriptPos e.e #else e #end) {
-			case EInvalidChar(c): "Invalid character: '" + (StringTools.isEof(c) ? "EOF" : String.fromCharCode(c)) + "' (" + c + ")";
-			case EUnexpected(s): "Unexpected token: \"" + s + "\"";
-			case EUnterminatedString: "Unterminated string";
-			case EUnterminatedComment: "Unterminated comment";
-			case EEmptyExpression: "Expression cannot be empty";
-			case EInvalidPreprocessor(str): "Invalid preprocessor (" + str + ")";
-			case EUnknownVariable(v): "Unknown variable: " + v;
-			case EInvalidIterator(v): "Invalid iterator: " + v;
-			case EInvalidOp(op): "Invalid operator: " + op;
-			case EInvalidAccess(f): "Invalid access to field " + f;
-			case EInvalidClass(cla): "Invalid class: " + cla + " was not found.";
-			case EAlreadyExistingClass(cla): 'Custom Class named $cla already exists.';
-			case ECustom(msg): msg;
-			default: "Unknown Error";
-		};
-		var errorHeader:String = 'ERROR';
-		if (instance != null && !instance.executed) errorHeader = 'ERROR ON LOADING';
-
-		var scriptHeader:String = (instance != null ? instance.origin : 'HScript');
-		if (funcName != null) scriptHeader += ':$funcName';
-
-		var lineHeader:String = #if hscriptPos ':${e.line}' #else '' #end;
-		if (instance == null #if LUA_ALLOWED || instance.parentLua == null #end)
-			return '$errorHeader ($scriptHeader$lineHeader) - $message';
-		else return '$errorHeader ($scriptHeader) - HScript$lineHeader: $message';
-	}
-
 	public var origin:String;
-	public override function new(?parent:Dynamic, file:String = '', ?varsToBring:Any = null) {
-		#if LUA_ALLOWED
-		parentLua = parent;
-		if (parent != null) {
-			this.origin = parent.scriptName;
-			this.modFolder = parent.modFolder;
-		}
-		#end
-
+	public override function new(?parent:Dynamic, file:String = '', ?varsToBring:Any = null, ?manualRun:Bool = false) {
 		filePath = file;
 		if (filePath != null && filePath.length > 0 && parent == null) {
 			this.origin = filePath;
@@ -102,23 +46,61 @@ class HScript extends AlterHscript {
 				this.modFolder = myFolder[1];
 			#end
 		}
-		super(null, {name: origin, autoRun: false, autoPreset: false});
-
 		var scriptThing:String = file;
+		var scriptName:String = null;
 		if (parent == null && file != null) {
 			var f:String = file.replace('\\', '/');
-			if (f.contains('/') && !f.contains('\n')) scriptThing = File.getContent(f);
+			if (f.contains('/') && !f.contains('\n')) {
+				scriptThing = File.getContent(f);
+				scriptName = f;
+			}
 		}
-		preset();
-		AlterHscript.logLevel = hscriptLog;
-		this.scriptCode = scriptThing;
+		#if LUA_ALLOWED
+		if (scriptName == null && parent != null) scriptName = parent.scriptName;
+		#end
 		this.varsToBring = varsToBring;
+		super(scriptThing, new alterhscript.AlterConfig(scriptName, false, false));
+		#if LUA_ALLOWED
+		parentLua = parent;
+		if (parent != null) {
+			this.origin = parent.scriptName;
+			this.modFolder = parent.modFolder;
+		}
+		#end
+		if (!manualRun && !tryRunning()) return;
+
+		AlterHscript.warn = function(x, ?pos:PosInfos) {
+			if (PlayState.instance != null) PlayState.instance.addTextToDebug('[$origin]: $x', FlxColor.YELLOW);
+			AlterHscript.logLevel(WARN, x, pos);
+		}
+		AlterHscript.error = function(x, ?pos:PosInfos) {
+			if (PlayState.instance != null) PlayState.instance.addTextToDebug('[$origin]: $x', FlxColor.ORANGE);
+			AlterHscript.logLevel(ERROR, x, pos);
+		}
+		AlterHscript.fatal = function(x, ?pos:PosInfos) {
+			if (PlayState.instance != null) PlayState.instance.addTextToDebug('[$origin]: $x', FlxColor.RED);
+			AlterHscript.logLevel(FATAL, x, pos);
+		}
+	}
+
+	function tryRunning():Bool {
+		try {
+			preset();
+			execute();
+			return true;
+		} catch(e:haxe.Exception) {
+			this.destroy();
+			throw e;
+			return false;
+		}
+		return false;
 	}
 
 	var varsToBring(default, set):Any = null;
     function getDefaultVariables():Map<String, Dynamic> {
         return [
 			"Type"				=> Type,
+			"Sys"				=> Sys,
 			"Date"				=> Date,
 			"DateTools"			=> DateTools,
 			"Reflect"			=> Reflect,
@@ -135,7 +117,6 @@ class HScript extends AlterHscript {
 			#if sys
 			"File"				=> File,
 			"FileSystem"		=> FileSystem,
-			"Sys"				=> Sys,
 			#end
 			"Assets"			=> openfl.Assets,
 
@@ -350,16 +331,12 @@ class HScript extends AlterHscript {
 		set('Function_StopHScript', LuaUtils.Function_StopHScript);
 		set('Function_StopAll', LuaUtils.Function_StopAll);
 
-		set('add', FlxG.state.add);
-		set('insert', FlxG.state.insert);
-		set('remove', FlxG.state.remove);
-
+		setParent(FlxG.state);
 		if (PlayState.instance == FlxG.state) {
 			var psInstance:PlayState = PlayState.instance;
 			set('addBehindGF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.gfGroup) - order, obj));
 			set('addBehindDad', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.dadGroup) - order, obj));
 			set('addBehindBF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.boyfriendGroup) - order, obj));
-			setParent(psInstance); // allow use vars from playstate without "game" thing
 		}
 	}
 
@@ -403,39 +380,22 @@ class HScript extends AlterHscript {
 	}
 	#end
 
-	#if LUA_ALLOWED
-	public static function initHaxeModuleCode(funk:FunkinLua, codeToRun:String, ?varsToBring:Any) funk.initHaxeModule(codeToRun, varsToBring);
-	public static function initHaxeModule(funk:FunkinLua) funk.initHaxeModule();
-	#end
-	public function executeCode(?funcToRun:String, ?args:Array<Dynamic>):Dynamic return run(funcToRun, args);
-	public function executeFunction(?funcToRun:String, ?args:Array<Dynamic>):AlterCall {
-		if (funcToRun == null || !exists(funcToRun)) return null;
-		return call(funcToRun, args);
-	}
+	public function executeCode(?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):AlterCall {
+		if (funcToRun == null) return null;
 
-	public function run(?func:String, ?args:Array<Dynamic>, safe:Bool = true):Dynamic { // its the objectively better one
-		try {
-			if (func != null) {
-				if (!executed) execute();
-				if (!exists(func)) {
-					if (!safe) {
-						#if LUA_ALLOWED
-						if (parentLua != null)
-							FunkinLua.luaTrace('$origin - No function in HScript named "$func"!', false, false, FlxColor.RED);
-						else PlayState.instance.addTextToDebug('$origin - No function named "$func"!', FlxColor.RED);
-						#else
-						PlayState.instance.addTextToDebug('$origin - No function named "$func"!', FlxColor.RED);
-						#end
-					}
-					return null;
-				}
-				var result:AlterCall = call(func, args);
-				return result?.returnValue ?? null;
-			} else return execute();
-		} catch (e:ImprError) {
-			errorCaught(e);
+		if(!exists(funcToRun)) {
+			#if LUA_ALLOWED
+			FunkinLua.luaTrace(origin + ' - No function named: $funcToRun', false, false, FlxColor.RED);
+			#else
+			PlayState.instance.addTextToDebug(origin + ' - No function named: $funcToRun', FlxColor.RED);
+			#end
 			return null;
 		}
+
+		try {
+			return (call(funcToRun, funcArgs):AlterCall).returnValue;
+		} catch(e:Dynamic) Logs.trace('ERROR $funcToRun: $e', ERROR);
+		return null;
 	}
 
 	#if LUA_ALLOWED
@@ -443,15 +403,15 @@ class HScript extends AlterHscript {
 		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
 			try {
 				initHaxeModuleCode(funk, codeToRun, varsToBring);
-				var result:Dynamic = funk.hscript.run(funcToRun, funcArgs, false);
+				final result:AlterCall = funk.hscript.executeCode(funcToRun, funcArgs);
 				if (LuaUtils.typeSupported(result)) return result;
-			} catch (e:ImprError) funk.hscript.errorCaught(e);
+			} catch (e:Dynamic) FunkinLua.luaTrace('ERROR (${funk.hscript.origin}: $funcToRun) - $e', false, false, FlxColor.RED);
 			return null;
 		});
 
 		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
 			if (funk.hscript != null) {
-				var result:Dynamic = funk.hscript.run(funcToRun, funcArgs, false);
+				var result:Dynamic = funk.hscript.executeCode(funcToRun, funcArgs);
 				if (LuaUtils.typeSupported(result)) return result;
 			}
 			return null;
@@ -498,6 +458,7 @@ class HScript extends AlterHscript {
 		return varsToBring = values;
 	}
 }
+
 #elseif LUA_ALLOWED
 class HScript {
 	public static function implement(funk:FunkinLua) {

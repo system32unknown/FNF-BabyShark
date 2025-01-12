@@ -42,7 +42,7 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 		var first:Bool = true;
 		for (i in 0...len) {
 			var f:String = fields[i];
-			var value = Reflect.field(v, f);
+			var value:Dynamic = Reflect.field(v, f);
 			if (Reflect.isFunction(value)) continue;
 			if (first) {
 				nind++;

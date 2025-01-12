@@ -88,8 +88,7 @@ class ModsMenuState extends MusicBeatState {
 				if (modsList.disabled.contains(mod.folder)) {
 					modsList.disabled.remove(mod.folder);
 					modsList.enabled.push(mod.folder);
-					mod.icon.color = FlxColor.WHITE;
-					mod.text.color = FlxColor.WHITE;
+					mod.icon.color = mod.text.color = FlxColor.WHITE;
 				}
 			}
 			updateModDisplayData();

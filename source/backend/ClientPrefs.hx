@@ -89,7 +89,6 @@ class SaveVariables {
 
 	// Optimizer
 	var processFirst:Bool = false;
-	var optimizeSpawnNote:Bool = true;
 	var skipSpawnNote:Bool = true;
 	var disableGC:Bool = false;
 

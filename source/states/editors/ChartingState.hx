@@ -1552,7 +1552,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		loadSection();
 	}
 
-	function createNote(note:Dynamic, ?secNum:Null<Int> = null) {
+	function createNote(note:Dynamic, ?secNum:Null<Int> = null):MetaNote {
 		if (secNum == null) secNum = curSec;
 		var section = PlayState.SONG.notes[secNum];
 
@@ -1580,7 +1580,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		return swagNote;
 	}
 
-	function createEvent(event:Dynamic) {
+	function createEvent(event:Dynamic):EventMetaNote {
 		var daStrumTime:Float = event[0];
 		var swagEvent:EventMetaNote = new EventMetaNote(daStrumTime, event);
 		swagEvent.x = gridBg.x;
@@ -1754,7 +1754,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		var minTime:Float = getMinNoteTime(curSec);
 		var maxTime:Float = getMaxNoteTime(curSec);
-		function curSecFilter(note:MetaNote) {
+		function curSecFilter(note:MetaNote):Bool {
 			return (note.strumTime >= minTime && note.strumTime < maxTime);
 		}
 
@@ -1788,7 +1788,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				var prevMaxTime:Float = getMaxNoteTime(curSec - 1);
 				var nextMinTime:Float = getMinNoteTime(curSec + 1);
 				var nextMaxTime:Float = getMaxNoteTime(curSec + 1);
-				function otherSecFilter(note:MetaNote) {
+				function otherSecFilter(note:MetaNote):Bool {
 					return (prevGridBg.visible && (note.strumTime >= prevMinTime && note.strumTime < prevMaxTime)) || (nextGridBg.visible && (note.strumTime >= nextMinTime && note.strumTime < nextMaxTime));
 				}
 	
@@ -2418,7 +2418,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 					var songDataCopy:Array<Dynamic> = note.songData.copy();
 					songDataCopy[1] = note.noteData + i * GRID_COLUMNS_PER_PLAYER;
-					var newNote = createNote(songDataCopy);
+					var newNote:MetaNote = createNote(songDataCopy);
 					notes.push(newNote);
 					pushedNotes.push(newNote);
 				}
@@ -2532,7 +2532,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				var dataCopy:Array<Dynamic> = makeNoteDataCopy(note, false);
 				dataCopy[0] += curSectionTime;
 
-				var createdNote = createNote(dataCopy, curSec);
+				var createdNote:MetaNote = createNote(dataCopy, curSec);
 				notes.push(createdNote);
 				pushedNotes.push(createdNote);
 				nts.push(createdNote);
@@ -2546,7 +2546,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				var dataCopy:Array<Dynamic> = makeNoteDataCopy(event, true);
 				dataCopy[0] += curSectionTime;
 
-				var createdEvent = createEvent(dataCopy);
+				var createdEvent:EventMetaNote = createEvent(dataCopy);
 				events.push(createdEvent);
 				pushedNotes.push(createdEvent);
 				evs.push(createdEvent);
@@ -2600,6 +2600,35 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		});
 		var reloadAudioButton:PsychUIButton = new PsychUIButton(objX + 120, objY, 'Reload Audio', () -> loadMusic(true), 80);
 
+		#if mac
+		var reloadJsonButton:PsychUIButton = new PsychUIButton(objX + 205, objY, 'Reload JSON', () -> {
+			var cur:String = Paths.formatToSongPath(songNameInputText.text);
+			var curdiff:String = Highscore.formatSong(cur, PlayState.storyDifficulty);
+			var diff:Bool = false;
+			var loadedChart:SwagSong = try {
+				diff = true;
+				Song.getChart(curdiff, cur);
+			} catch (e) {
+				diff = false;
+				Song.getChart(cur, cur);
+			}
+			if(loadedChart == null || !Reflect.hasField(loadedChart, 'song')) { // Check if chart is ACTUALLY a chart and valid
+				showOutput('Error: File loaded is not a Psych Engine/FNF 0.2.x.x chart.', true);
+				return;
+			}
+			var func:Void->Void = function() {
+				loadChart(loadedChart);
+				Song.chartPath = diff ? curdiff : cur;
+				reloadNotesDropdowns();
+				prepareReload();
+				showOutput('Opened chart "${diff ? curdiff : cur}" successfully!');
+			}
+					
+			if (!ignoreProgressCheckBox.checked) openSubState(new Prompt('Warning: Any unsaved progress\nwill be lost.', func));
+			else func();
+		}, 80);
+		#end
+
 		objY += 65;
 		bpmStepper = new PsychUINumericStepper(objX, objY, 1, 1, 1, 400, 3);
 		bpmStepper.onValueChange = () -> {
@@ -2622,6 +2651,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		tab_group.add(songNameInputText);
 		tab_group.add(allowVocalsCheckBox);
 		tab_group.add(reloadAudioButton);
+		#if mac tab_group.add(reloadJsonButton); #end
 		
 		objY += 40;
 		playerDropDown = new PsychUIDropDownMenu(objX, objY, [''], (id:Int, character:String) -> {
@@ -3863,6 +3893,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		MetaNote.noteTypeTexts = [];
 		fileDialog.destroy();
+		backend.NoteLoader.dispose();
 		super.destroy();
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown);

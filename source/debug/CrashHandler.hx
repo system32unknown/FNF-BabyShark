@@ -18,8 +18,8 @@ class CrashHandler {
 		else if (Std.isOfType(e.error, ErrorEvent)) message = cast(e.error, ErrorEvent).text;
 		else message = Std.string(e.error);
 
-		e.stopImmediatePropagation();
 		e.preventDefault();
+		e.stopImmediatePropagation();
 
 		onError(message);
 	}

@@ -24,7 +24,7 @@ class VideoSprite extends FlxSpriteGroup {
 	public var isPlaying:Bool = false;
 	public var isPaused:Bool = false;
 
-	public function new(videoName:String, isWaiting:Bool, canSkip:Bool = false, shouldLoop:Dynamic = false, adjustSize:Bool = true) {
+	public function new(videoName:String, isWaiting:Bool, canSkip:Bool = false, shouldLoop:Dynamic = false, autoPause = true, adjustSize:Bool = true) {
 		super();
 
 		this.videoName = videoName;
@@ -43,25 +43,12 @@ class VideoSprite extends FlxSpriteGroup {
 		// initialize sprites
 		videoSprite = new FlxVideoSprite();
 		videoSprite.antialiasing = ClientPrefs.data.antialiasing;
+		videoSprite.autoPause = autoPause;
 		add(videoSprite);
 		this.canSkip = canSkip;
 
 		// callbacks
-		if (!shouldLoop) {
-			videoSprite.bitmap.onEndReached.add(() -> {
-				if (alreadyDestroyed) return;
-
-				trace('Video destroyed');
-				if (cover != null) {
-					remove(cover);
-					cover.destroy();
-				}
-
-				LuaUtils.getTargetInstance().remove(this);
-				destroy();
-				alreadyDestroyed = true;
-			});
-		}
+		if (!shouldLoop) videoSprite.bitmap.onEndReached.add(destroy);
 
 		if (adjustSize) videoSprite.bitmap.onFormatSetup.add(() -> {
 			videoSprite.setGraphicSize(FlxG.width);
@@ -90,7 +77,12 @@ class VideoSprite extends FlxSpriteGroup {
 		if (finishCallback != null) finishCallback();
 		onSkip = null;
 
-		LuaUtils.getTargetInstance().remove(this);
+		if (FlxG.state != null) {
+			if (FlxG.state.members.contains(this)) FlxG.state.remove(this);
+			if (FlxG.state.subState != null && FlxG.state.subState.members.contains(this)) FlxG.state.subState.remove(this);
+		}
+		super.destroy();
+		alreadyDestroyed = true;
 	}
 
 	override function update(elapsed:Float) {
@@ -103,9 +95,7 @@ class VideoSprite extends FlxSpriteGroup {
 				if (onSkip != null) onSkip();
 				finishCallback = null;
 				videoSprite.bitmap.onEndReached.dispatch();
-				LuaUtils.getTargetInstance().remove(this);
 				trace('Skipped video');
-				super.destroy();
 				return;
 			}
 		}

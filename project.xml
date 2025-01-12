@@ -9,7 +9,7 @@
 
 	<!-- Desktop-specific -->
 	<window hardware="true" fps="60" background="" orientation="landscape" />
-	<window if="desktop" width="1280" height="720" fullscreen="false" resizable="true" vsync="false" />
+	<window if="desktop" width="1280" height="720" fullscreen="false" resizable="true" vsync="false" allow-high-dpi="true"/>
 
 	<!-- _____________________________Path Settings____________________________ -->
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
