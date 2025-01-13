@@ -2603,7 +2603,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		#if mac
 		var reloadJsonButton:PsychUIButton = new PsychUIButton(objX + 205, objY, 'Reload JSON', () -> {
 			var cur:String = Paths.formatToSongPath(songNameInputText.text);
-			var curdiff:String = Highscore.formatSong(cur, PlayState.storyDifficulty);
+			var curdiff:String = backend.Highscore.formatSong(cur, PlayState.storyDifficulty);
 			var diff:Bool = false;
 			var loadedChart:SwagSong = try {
 				diff = true;
