@@ -5,7 +5,7 @@ class PsychUIEventHandler {
 		var state:Dynamic = cast FlxG.state;
 		if (state == null) return;
 
-		while(state.subState != null) state = cast state.subState;
+		while (state.subState != null) state = cast state.subState;
 		if (state != null && state.UIEvent != null) state.UIEvent(id, sender);
 	}
 }

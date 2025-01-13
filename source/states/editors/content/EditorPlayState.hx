@@ -303,7 +303,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		for (note in _noteList) {
 			if (note == null || note.strumTime < startPos) continue;
 
-			while(cachedSectionTimes.length > noteSec + 1 && cachedSectionTimes[noteSec + 1] <= note.strumTime) {
+			while (cachedSectionTimes.length > noteSec + 1 && cachedSectionTimes[noteSec + 1] <= note.strumTime) {
 				section = songData.notes[++noteSec];
 				if (PlayState.SONG.notes[noteSec].changeBPM == true)
 					daBpm = PlayState.SONG.notes[noteSec].bpm;

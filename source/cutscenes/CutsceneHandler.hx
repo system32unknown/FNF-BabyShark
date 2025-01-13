@@ -56,7 +56,7 @@ class CutsceneHandler extends flixel.FlxBasic {
 		}
 
 		cutsceneTime += elapsed;
-		while(timedEvents.length > 0 && timedEvents[0].time <= cutsceneTime) {
+		while (timedEvents.length > 0 && timedEvents[0].time <= cutsceneTime) {
 			timedEvents[0].func();
 			timedEvents.shift();
 		}

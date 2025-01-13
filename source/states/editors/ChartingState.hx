@@ -663,7 +663,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						if (incorrect.length > 0) files = files.filter((file:String) -> !incorrect.contains(file));
 						files.sort((a:String, b:String) -> return map.get(a) > map.get(b) ? 1 : -1);
 
-						while(files.length > backupLimit) {
+						while (files.length > backupLimit) {
 							var file:Null<String> = files.shift();
 							try {
 								FileSystem.deleteFile('backups/$file');
@@ -854,7 +854,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				if (selectedNotes.length > 0) {
 					var removedNotes:Array<MetaNote> = [];
 					var removedEvents:Array<EventMetaNote> = [];
-					while(selectedNotes.length > 0) {
+					while (selectedNotes.length > 0) {
 						var note:MetaNote = selectedNotes[0];
 						selectedNotes.shift();
 						if (note == null) continue;
@@ -894,7 +894,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					for (num => note in notes) {
 						if (note == null) continue;
 
-						while(cachedSectionTimes[noteSec + 1] <= note.strumTime) {
+						while (cachedSectionTimes[noteSec + 1] <= note.strumTime) {
 							noteSec++;
 							nextSectionTime = cachedSectionTimes[noteSec + 1];
 							curSectionTime = cachedSectionTimes[noteSec];
@@ -1028,7 +1028,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	
 						note.chartY += diff;
 						var row:Float = (note.chartY / GRID_SIZE) * curZoom;
-						while(curSecRow + 1 < cachedSectionRow.length && cachedSectionRow[curSecRow] <= row) curSecRow++;
+						while (curSecRow + 1 < cachedSectionRow.length && cachedSectionRow[curSecRow] <= row) curSecRow++;
 	
 						note.setStrumTime(Math.max(-5000, note.strumTime + (diff * cachedSectionCrochets[curSecRow] / 4) / GRID_SIZE * curZoom));
 						positionNoteYOnTime(note, curSecRow);
@@ -1179,7 +1179,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 				if (!note.isEvent) {
 					if (charterFocus && qPress != ePress) {
-						while(cachedSectionTimes.length > noteSec + 1 && cachedSectionTimes[noteSec + 1] <= note.strumTime) noteSec++;
+						while (cachedSectionTimes.length > noteSec + 1 && cachedSectionTimes[noteSec + 1] <= note.strumTime) noteSec++;
 
 						note.setSustainLength(note.sustainLength + addSus, cachedSectionCrochets[noteSec] / 4, curZoom);
 						if (selectedNotes.length == 1) susLengthStepper.value = note.sustainLength;
@@ -1640,7 +1640,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			if (FlxG.sound.music != null && time >= FlxG.sound.music.length) {
 				var lastSectionNum:Int = PlayState.SONG.notes.length - 1;
 				if (secNum < lastSectionNum) { //Delete extra sections
-					while(PlayState.SONG.notes.length - 1 > secNum) PlayState.SONG.notes.pop();
+					while (PlayState.SONG.notes.length - 1 > secNum) PlayState.SONG.notes.pop();
 	
 					trace('breaking at section $secNum');
 					reachedLimit = true;
@@ -1663,7 +1663,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			var altAnimSec:Bool = lastSection != null ? lastSection.altAnim : false;
 			var gfSec:Bool = lastSection != null ? lastSection.gfSection : false;
 
-			while(!reachedLimit) {
+			while (!reachedLimit) {
 				PlayState.SONG.notes.push({
 					sectionNotes: [],
 					sectionBeats: sectionBeats,
@@ -3142,7 +3142,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						var diffs:Array<String> = pack.metadata.playData.difficulties;
 						for (num => diff in diffs) diffs[num] = Paths.formatToSongPath(diff);
 
-						while(diffs.contains('')) diffs.remove(''); //Clear invalids cuz people might be stupid
+						while (diffs.contains('')) diffs.remove(''); //Clear invalids cuz people might be stupid
 					}
 					
 					var artistTxt:FlxText = new FlxText(artistInput.x, artistInput.y - 15, 100, 'Artist/Composer:');
@@ -3193,7 +3193,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 								var diffs:Array<String> = metadata.playData.difficulties.copy();
 								var defaultDiff:String = Paths.formatToSongPath(Difficulty.getDefault());
 								function nextChart() {
-									while(diffs.length > 0) {
+									while (diffs.length > 0) {
 										var diffName:String = diffs[0];
 										diffs.remove(diffName);
 										if (!pack.difficulties.exists(diffName)) continue;
@@ -3672,7 +3672,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		for (num => note in notes) {
 			if (note == null) continue;
 
-			while(cachedSectionTimes[noteSec + 1] <= note.strumTime) {
+			while (cachedSectionTimes[noteSec + 1] <= note.strumTime) {
 				noteSec++;
 				nextSectionTime = cachedSectionTimes[noteSec + 1];
 				curSectionTime = cachedSectionTimes[noteSec];
@@ -3757,7 +3757,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		for (num => note in notes) {
 			if (note == null || note.strumTime <= 0) continue;
 
-			while(noteSec + 2 < oldTimes.length && oldTimes[noteSec + 1] <= note.strumTime) {
+			while (noteSec + 2 < oldTimes.length && oldTimes[noteSec + 1] <= note.strumTime) {
 				noteSec++;
 				oldNextSectionTime = oldTimes[noteSec + 1];
 				oldCurSectionTime = oldTimes[noteSec];
@@ -4123,7 +4123,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		if (currentUndo > 0) undoActions = undoActions.slice(currentUndo);
 		currentUndo = 0;
 		undoActions.insert(0, {action: action, data: data});
-		while(undoActions.length > 15) {
+		while (undoActions.length > 15) {
 			var lastAction:UndoStruct = undoActions.pop();
 			if (lastAction != null) {
 				switch(lastAction.action) {

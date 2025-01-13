@@ -118,7 +118,7 @@ class VSlice {
 			if (focusCameraEvents.length > 0) {
 				var focusEventNum:Int = 0;
 				var lastMustHit:Bool = false;
-				while(time < focusCameraEvents[focusCameraEvents.length - 1].t) {
+				while (time < focusCameraEvents[focusCameraEvents.length - 1].t) {
 					var bpm:Float = songBpm;
 					var sectionTime:Float = 0;
 					if (timeChanges.length > 0) {
@@ -195,7 +195,7 @@ class VSlice {
 
 			var noteSec:Int = 0;
 			for (note in notes) {
-				while(noteSec + 1 < sectionTimes.length && sectionTimes[noteSec + 1] <= note.t) noteSec++;
+				while (noteSec + 1 < sectionTimes.length && sectionTimes[noteSec + 1] <= note.t) noteSec++;
 
 				var psychNote:Array<Dynamic> = [note.t, note.d, note.l ?? 0];
 				if (note.k != null && note.k.length > 0 && note.k != 'normal') psychNote.push(note.k);
@@ -251,7 +251,7 @@ class VSlice {
 						default: fields.push(Std.string(event.v));
 					}
 				}
-				while(fields.length < 2) fields.push('');
+				while (fields.length < 2) fields.push('');
 
 				fields.insert(0, event.e);
 				fileEvents.push([event.t, [fields]]);

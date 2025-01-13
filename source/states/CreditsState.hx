@@ -24,12 +24,13 @@ class CreditsState extends MusicBeatState {
 		['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://x.com/bbsub3',				'3E813A'],
 		[''],
 		['Engine Contributors'],
-		['crowplexus', 			'crowplexus', 		'Input System v3 and Other PRs', 								'https://github.com/crowplexus', 	'CFCFCF'],
+		['crowplexus', 			'crowplexus', 		'Linux Support, Input System v3 and Other PRs', 				'https://x.com/IamMorwen', 			'CFCFCF'],
 		['Keoiki',				'keoiki',			'Note Splash Animations and Latin Alphabet', 					'https://x.com/Keoiki_',			'D2D2D2'],
 		['iFlicky',				'flicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',		'https://x.com/flicky_i',			'9E29CF'],
 		['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',	'https://x.com/gedehari',			'E1843A'],
 		['EliteMasterEric',		'mastereric',		'Runtime Shaders support',										'https://x.com/EliteMasterEric',	'FFBD40'],
 		['Gabriela',			'gabriela',			'Playback Rate Modifier\nand other PRs',						'https://x.com/BeastlyGabi',		'5E99DF'],
+		["Tahir Toprak Karabekiroglu",	"tahir",	"Mac Support, Note Splash Editor\nand Other PRs",				"https://x.com/TahirKarabekir",		"A04397"],
 		['MAJigsaw77', 			'jigsaw', 			'.MP4 Video Loader Library (hxvlc)', 							'https://x.com/MAJigsaw77', 		'5F5F5F'],
 		['KadeDev',				'kade',				'Fixed Chart Editor\nand other PRs, Kade Engine Dev',			'https://x.com/kade0912',			'64A250'],
 		['superpowers04', 		'superpowers04', 	'LUA JIT Forks', 												'https://github.com/superpowers04',	'B957ED'],
@@ -72,8 +73,7 @@ class CreditsState extends MusicBeatState {
 		[''],
 		['Golden Apple'],
 		['Sky!',           		'Sky',				'Creator, Charter, Composer, Artist, Programmer',               'https://x.com/SkyFactorial',		'5C89BF'],
-		['Lancey',           	'lancey',			'Artist',               										'https://x.com/Lancey170',			'00FF5E'],
-		['Ruby',           		'Ruby',				'Composer, Artist',               								'https://x.com/RubysArt_',			'5A00BD'],
+		['Lancey',           	'lancey',			'Artist',               										'https://x.com/Lancey170',			'00FF5E']
 	];
 
 	static var babyshark(default, never):Array<Array<String>> = [
@@ -216,7 +216,7 @@ class CreditsState extends MusicBeatState {
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		do {
 			curSelected = FlxMath.wrap(curSelected + change, 0, sections.length - 1);
-		} while(unselectableCheck(curSelected));
+		} while (unselectableCheck(curSelected));
 
 		for (num => item in grpOptions.members) {
 			item.targetY = num - curSelected;
@@ -305,7 +305,7 @@ class CreditSectionState extends MusicBeatState {
 
 				var str:String = 'credits/missing_icon';
 				if (credit[1] != null && credit[1].length > 0) {
-					var fileName = 'credits/' + credit[1];
+					var fileName:String = 'credits/icons/' + credit[1];
 					if (Paths.fileExists('images/$fileName.png', IMAGE)) str = fileName;
 					else if (Paths.fileExists('images/$fileName-pixel.png', IMAGE)) str = fileName + '-pixel';
 				}
@@ -410,7 +410,7 @@ class CreditSectionState extends MusicBeatState {
 		FlxG.sound.play(Paths.sound('scrollMenu'), .4);
 		do {
 			curSelected = FlxMath.wrap(curSelected + change, 0, creditsStuff.length - 1);
-		} while(unselectableCheck(curSelected));
+		} while (unselectableCheck(curSelected));
 
 		for (num => item in grpOptions.members) {
 			item.targetY = num - curSelected;

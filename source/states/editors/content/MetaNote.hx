@@ -136,6 +136,7 @@ class EditorSustain extends Note {
 		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend');
 		scale.set(scale.x, scale.x);
 		updateHitbox();
+		reloadSustainTile(); // fixes sustaintile scale problem
 		flipY = false;
 	}
 

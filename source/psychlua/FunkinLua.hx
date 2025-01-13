@@ -973,14 +973,14 @@ class FunkinLua {
 			}
 			return false;
 		});
-		set("startVideo", (videoFile:String, ?canSkip:Bool = true) -> {
+		set("startVideo", (videoFile:String, ?canSkip:Bool = true, ?forMidSong:Bool = false, ?shouldLoop:Bool = false, ?playOnLoad:Bool = true) -> {
 			#if VIDEOS_ALLOWED
 			if (FileSystem.exists(Paths.video(videoFile))) {
 				if (game.videoCutscene != null) {
 					game.remove(game.videoCutscene);
 					game.videoCutscene.destroy();
 				}
-				game.videoCutscene = game.startVideo(videoFile, false, canSkip);
+				game.videoCutscene = game.startVideo(videoFile, forMidSong, canSkip, shouldLoop, true, playOnLoad);
 				return true;
 			} else luaTrace('startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
 			return false;

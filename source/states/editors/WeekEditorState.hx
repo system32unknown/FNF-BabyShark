@@ -327,7 +327,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 			} else if (sender == songsInputText) {
 				final splittedText:Array<String> = songsInputText.text.trim().split(',');
 				for (i in 0...splittedText.length) splittedText[i] = splittedText[i].trim();
-				while(splittedText.length < weekFile.songs.length) weekFile.songs.pop();
+				while (splittedText.length < weekFile.songs.length) weekFile.songs.pop();
 
 				for (i in 0...splittedText.length) {
 					if (i >= weekFile.songs.length) //Add new song

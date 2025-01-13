@@ -2,7 +2,6 @@ package objects;
 
 import flixel.addons.display.FlxPieDial;
 #if hxvlc import hxvlc.flixel.FlxVideoSprite; #end
-import psychlua.LuaUtils;
 
 class VideoSprite extends FlxSpriteGroup {
 	#if VIDEOS_ALLOWED

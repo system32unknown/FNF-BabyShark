@@ -787,7 +787,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			holdingArrowsTime += elapsed;
 			if (holdingArrowsTime > .6) {
 				holdingArrowsElapsed += elapsed;
-				while(holdingArrowsElapsed > (1 / 60)) {
+				while (holdingArrowsElapsed > (1 / 60)) {
 					character.offset.add(((moveKeys[0] ? 1 : 0) - (moveKeys[1] ? 1 : 0)) * shiftMultBig, ((moveKeys[2] ? 1 : 0) - (moveKeys[3] ? 1 : 0)) * shiftMultBig);
 					holdingArrowsElapsed -= (1 / 60);
 					changedOffset = true;

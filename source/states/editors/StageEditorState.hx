@@ -401,7 +401,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	function findUnoccupiedName(prefix:String = 'sprite'):String {
 		var num:Int = 1;
 		var name:String = 'unnamed';
-		while(true) {
+		while (true) {
 			var cantUseName:Bool = false;
 
 			name = prefix + num;
@@ -2006,7 +2006,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 				holdingArrowsTime += elapsed;
 				if (holdingArrowsTime > .6) {
 					holdingArrowsElapsed += elapsed;
-					while(holdingArrowsElapsed > (1 / 60)) {
+					while (holdingArrowsElapsed > (1 / 60)) {
 						if (spr.animOffsets.get(anim) != null)
 							spr.offset.add(((moveKeys[0] ? 1 : 0) - (moveKeys[1] ? 1 : 0)) * shiftMultBig, ((moveKeys[2] ? 1 : 0) - (moveKeys[3] ? 1 : 0)) * shiftMultBig);
 						else spr.offset.set();

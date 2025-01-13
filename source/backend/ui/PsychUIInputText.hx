@@ -151,7 +151,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 						var deletedText:String = text.substring(caretIndex);
 						var spc:Int = 0;
 						var space:Int = deletedText.indexOf(' ');
-						while(deletedText.substr(spc, 1) == ' ') {
+						while (deletedText.substr(spc, 1) == ' ') {
 							spc++;
 							space = deletedText.substr(spc).indexOf(' ');
 						}
@@ -170,7 +170,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 							var a:String = text.substr(caretIndex-1, 1);
 							var b:String = text.substr(caretIndex, 1);
 							if (a == ' ' && b != ' ') break;
-						} while(caretIndex > 0);
+						} while (caretIndex > 0);
 					}
 
 				case RIGHT:
@@ -180,7 +180,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 							var a:String = text.substr(caretIndex-1, 1);
 							var b:String = text.substr(caretIndex, 1);
 							if (a != ' ' && b == ' ') break;
-						} while(caretIndex < text.length);
+						} while (caretIndex < text.length);
 					}
 
 				default:

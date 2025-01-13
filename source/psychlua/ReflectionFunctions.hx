@@ -116,8 +116,8 @@ class ReflectionFunctions {
 			}
 			if (index < 0) {
 				switch(Type.typeof(groupOrArray)) {
-					case TClass(Array): groupOrArray.push(obj); //Is Array
-					default: groupOrArray.add(obj); //Is Group
+					case TClass(Array): groupOrArray.push(obj); // Is Array
+					default: groupOrArray.add(obj); // Is Group
 				}
 			} else groupOrArray.insert(index, obj);
 		});
@@ -148,11 +148,10 @@ class ReflectionFunctions {
 			}
 		});
 
-		funk.set("callMethod", function(funcToRun:String, ?args:Array<Dynamic> = null) {
+		funk.set("callMethod", function(funcToRun:String, ?args:Array<Dynamic>) {
 			var parent:Dynamic = PlayState.instance;
 			var split:Array<String> = funcToRun.split('.');
 			var varParent:Dynamic = MusicBeatState.getVariables().get(split[0].trim());
-			if (!Std.isOfType(args, Array)) args = [];
 			if (varParent != null) {
 				split.shift();
 				funcToRun = split.join('.').trim();
@@ -162,12 +161,11 @@ class ReflectionFunctions {
 			if (funcToRun.length > 0) return callMethodFromObject(parent, funcToRun, parseInstances(args));
 			return Reflect.callMethod(null, parent, parseInstances(args));
 		});
-		funk.set("callMethodFromClass", (className:String, funcToRun:String, ?args:Array<Dynamic> = null) -> {
-			if (!Std.isOfType(args, Array)) args = [];
+		funk.set("callMethodFromClass", (className:String, funcToRun:String, ?args:Array<Dynamic>) -> {
 			return callMethodFromObject(Type.resolveClass(className), funcToRun, parseInstances(args));
 		});
 
-		funk.set("createInstance", function(variableToSave:String, className:String, ?args:Array<Dynamic> = null) {
+		funk.set("createInstance", function(variableToSave:String, className:String, ?args:Array<Dynamic>) {
 			if (!Std.isOfType(args, Array)) args = [];
 			variableToSave = variableToSave.trim().replace('.', '');
 			if (MusicBeatState.getVariables().get(variableToSave) == null) {
@@ -211,6 +209,7 @@ class ReflectionFunctions {
 		return newArray;
 	}
 	public static function parseInstances(arg:Dynamic):Dynamic {
+		if (arg == null) return null;
 		if (Std.isOfType(arg, Array)) return parseInstanceArray(arg);
 		else return parseSingleInstance(arg);
 	}

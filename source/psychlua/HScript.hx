@@ -69,15 +69,15 @@ class HScript extends AlterHscript {
 		#end
 		if (!manualRun && !tryRunning()) return;
 
-		AlterHscript.warn = function(x, ?pos:PosInfos) {
+		AlterHscript.warn = (x:String, ?pos:PosInfos) -> {
 			if (PlayState.instance != null) PlayState.instance.addTextToDebug('[$origin]: $x', FlxColor.YELLOW);
 			AlterHscript.logLevel(WARN, x, pos);
 		}
-		AlterHscript.error = function(x, ?pos:PosInfos) {
+		AlterHscript.error = (x:String, ?pos:PosInfos) -> {
 			if (PlayState.instance != null) PlayState.instance.addTextToDebug('[$origin]: $x', FlxColor.ORANGE);
 			AlterHscript.logLevel(ERROR, x, pos);
 		}
-		AlterHscript.fatal = function(x, ?pos:PosInfos) {
+		AlterHscript.fatal = (x:String, ?pos:PosInfos) -> {
 			if (PlayState.instance != null) PlayState.instance.addTextToDebug('[$origin]: $x', FlxColor.RED);
 			AlterHscript.logLevel(FATAL, x, pos);
 		}

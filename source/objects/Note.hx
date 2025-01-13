@@ -120,6 +120,8 @@ class Note extends FlxSprite {
 	public var ratingDisabled:Bool = false;
 
 	public var texture(default, set):String = null;
+	public var downScr:Bool = false;
+	public var prevDownScr:Bool = false;
 
 	public var noAnimation:Bool = false;
 	public var noMissAnimation:Bool = false;
@@ -434,7 +436,13 @@ class Note extends FlxSprite {
 		var strumDirection:Float = strum.direction;
 
 		if (isSustainNote) {
-			flipY = ClientPrefs.data.downScroll;
+			downScr = ClientPrefs.data.downScroll;
+			flipY = downScr;
+			if (prevDownScr != downScr) {
+				correctionOffset = isSustainNote && !downScr ? originalHeight * .5 : 0;
+				prevDownScr = downScr;
+			}
+
 			scale.y = (animation != null && animation.curAnim != null && animation.curAnim.name.endsWith('end') ? 1 : Conductor.stepCrochet * .0105 * (songSpeed * multSpeed) * sustainScale);
 			if (PlayState.isPixelStage) {
 				scale.x = PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania];

@@ -71,7 +71,7 @@ class Logs {
 
 	public static function __showInConsole(text:Array<LogText>) {
 		#if sys
-		while(__showing) Sys.sleep(.05);
+		while (__showing) Sys.sleep(.05);
 		__showing = true;
 		for (t in text) {
 			NativeUtil.setConsoleColors(t.color);

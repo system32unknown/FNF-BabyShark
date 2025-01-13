@@ -282,8 +282,7 @@ class PauseSubState extends MusicBeatSubstate {
 				}
 			}
 		}
-		missingText.visible = false;
-		missingTextBG.visible = false;
+		missingText.visible = missingTextBG.visible = false;
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 	}
 

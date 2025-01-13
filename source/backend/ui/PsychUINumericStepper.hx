@@ -107,7 +107,7 @@ class PsychUINumericStepper extends PsychUIInputText {
 		var txt:String = text.replace('%', '');
 		if (txt.indexOf('-') > 0) txt.replace('-', '');
 
-		while(txt.indexOf('.') > -1 && txt.indexOf('.') != txt.lastIndexOf('.')) {
+		while (txt.indexOf('.') > -1 && txt.indexOf('.') != txt.lastIndexOf('.')) {
 			var lastId:Int = txt.lastIndexOf('.');
 			txt = txt.substr(0, lastId) + txt.substring(lastId + 1);
 		}

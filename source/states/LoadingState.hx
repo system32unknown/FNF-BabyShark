@@ -46,7 +46,7 @@ class LoadingState extends MusicBeatState {
 	var loadingText:FlxText;
 
 	override function create() {
-		#if !SHOW_LOADING_SCREEN while(true) #end {
+		#if !SHOW_LOADING_SCREEN while (true) #end {
 			if (checkLoaded()) {
 				dontUpdate = true;
 				super.create();
@@ -322,7 +322,7 @@ class LoadingState extends MusicBeatState {
 		}
 
 		var i:Int = 0;
-		while(i < arr.length) {
+		while (i < arr.length) {
 			var member:String = arr[i];
 			var myKey:String = '$prefix/$member$ext';
 			if (parentFolder == 'songs') myKey = '$member$ext';

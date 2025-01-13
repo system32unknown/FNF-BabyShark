@@ -549,6 +549,7 @@ class PlayState extends MusicBeatState {
 		}
 		playbackRate = value;
 		FlxG.animationTimeScale = value;
+		if (videoCutscene != null) videoCutscene.videoSprite.bitmap.rate = value;
 		Conductor.safeZoneOffset = (ClientPrefs.data.safeFrames / 60) * 1000 * value;
 		setOnScripts('playbackRate', playbackRate);
 		#else
@@ -679,8 +680,8 @@ class PlayState extends MusicBeatState {
 	public var videoCutscene:VideoSprite = null;
 	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, autoAdjust:Bool = true, playOnLoad:Bool = true):VideoSprite {
 		#if VIDEOS_ALLOWED
-		inCutscene = true;
-		canPause = false;
+		inCutscene = !forMidSong;
+		canPause = forMidSong;
 
 		var foundFile:Bool = false;
 		var fileName:String = Paths.video(name);
@@ -688,21 +689,23 @@ class PlayState extends MusicBeatState {
 		if (#if sys FileSystem #else OpenFlAssets #end.exists(fileName)) foundFile = true;
 
 		if (foundFile) {
-			videoCutscene = new VideoSprite(fileName, forMidSong, canSkip, loop, autoAdjust);
+			videoCutscene = new VideoSprite(fileName, forMidSong, canSkip, loop, false, autoAdjust);
+			videoCutscene.videoSprite.bitmap.rate = playbackRate;
 			if (!forMidSong) {
-				function onVideoEnd() {
-					if (generatedMusic && SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos) {
+				function onVideoEnd():Void {
+					if (!isDead && generatedMusic && SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos) {
 						moveCameraSection();
 						FlxG.camera.snapToTarget();
 					}
 					videoCutscene = null;
-					canPause = inCutscene = false;
+					canPause = true; inCutscene = false;
 					startAndEnd();
 				}
 				videoCutscene.finishCallback = onVideoEnd;
 				videoCutscene.onSkip = onVideoEnd;
 			}
-			add(videoCutscene);
+			if (GameOverSubstate.instance != null && isDead) GameOverSubstate.instance.add(videoCutscene);
+			else add(videoCutscene);
 			if (playOnLoad) videoCutscene.play();
 			return videoCutscene;
 		} else #if (LUA_ALLOWED || HSCRIPT_ALLOWED) addTextToDebug('Video not found: $fileName', FlxColor.RED) #else FlxG.log.error('Video not found: $fileName') #end;
@@ -807,7 +810,7 @@ class PlayState extends MusicBeatState {
 			var introSprites:Array<String> = getCountdownSpriteNames(stageUI);
 			var tick:Countdown = THREE;
 			startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, (tmr:FlxTimer) -> {
-				if (swagCounter < 4) charactersDance(tmr.loopsLeft);
+				charactersDance(tmr.loopsLeft);
 				switch(swagCounter) {
 					case 0:
 						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[0] + introSoundsSuffix, true, false), 0.6);
@@ -1166,7 +1169,7 @@ class PlayState extends MusicBeatState {
 
 			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = true);
 			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
-			#if VIDEOS_ALLOWED for (vid in VideoSprite._videos) if (vid.isPlaying) vid.resume(); #end
+			for (vid in VideoSprite._videos) if (vid.isPlaying) vid.resume();
 
 			paused = false;
 			callOnScripts('onResume');
@@ -1176,17 +1179,20 @@ class PlayState extends MusicBeatState {
 
 	override public function onFocus():Void {
 		callOnScripts('onFocus');
-		if (health > 0 && !paused) resetRPC(Conductor.songPosition > 0.);
+		if (!paused) {
+			if (health > 0) resetRPC(Conductor.songPosition > 0.0);
+			for (vid in VideoSprite._videos) if (vid.isPlaying) vid.resume();
+		}
 		super.onFocus();
 		callOnScripts('onFocusPost');
 	}
 
 	override public function onFocusLost():Void {
 		callOnScripts('onFocusLost');
-		#if DISCORD_ALLOWED
-		if (health > 0 && !paused && autoUpdateRPC && ClientPrefs.data.autoPausePlayState && !tryPause())
-			DiscordClient.changePresence(detailsPausedText, '${SONG.song} ($storyDifficultyText)');
-		#end
+		if (!paused && ClientPrefs.data.autoPausePlayState && !tryPause()) {
+			#if DISCORD_ALLOWED if (health > 0 && autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter()); #end
+			for (vid in VideoSprite._videos) if (vid.isPlaying) vid.pause();
+		}
 		super.onFocusLost();
 		callOnScripts('onFocusLostPost');
 	}
@@ -1420,13 +1426,8 @@ class PlayState extends MusicBeatState {
 				if (startedCountdown) {
 					notes.forEach((daNote:Note) -> {
 						if (daNote.strum != null) {
+							var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
 							daNote.followStrumNote(songSpeed);
-							if (Conductor.songPosition - daNote.strumTime > 0) {
-								if (daNote.mustPress) {
-									if (cpuControlled && !daNote.blockHit && daNote.canBeHit || daNote.isSustainNote) goodNoteHit(daNote);
-								} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
-								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
-							}
 							if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
 								if (daNote.mustPress) {
 									if (cpuControlled) goodNoteHit(daNote);
@@ -1436,6 +1437,13 @@ class PlayState extends MusicBeatState {
 									if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
 								}
 								invalidateNote(daNote);
+								canBeHit = false;
+							}
+							if (canBeHit) {
+								if (daNote.mustPress) {
+									if (cpuControlled && !daNote.blockHit && daNote.canBeHit || daNote.isSustainNote) goodNoteHit(daNote);
+								} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
+								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 							}
 						} else if (daNote == null) invalidateNote(daNote);
 					});
@@ -1463,7 +1471,7 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.followLerp = 0;
 		FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = false);
 		FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = false);
-		#if VIDEOS_ALLOWED for (vid in VideoSprite._videos) if (vid.isPlaying) vid.pause(); #end
+		for (vid in VideoSprite._videos) if (vid.isPlaying) vid.pause();
 		persistentUpdate = false; persistentDraw = true;
 		paused = true;
 
@@ -1515,6 +1523,7 @@ class PlayState extends MusicBeatState {
 
 				paused = true;
 				canResync = canPause = false;
+				if (videoCutscene != null) {videoCutscene.destroy(); videoCutscene = null;}
 
 				persistentUpdate = persistentDraw = false;
 				FlxTimer.globalManager.clear(); FlxTween.globalManager.clear();
@@ -2317,6 +2326,7 @@ class PlayState extends MusicBeatState {
 		}
 		hscriptArray = null;
 		stagesFunc((stage:BaseStage) -> stage.destroy());
+		if (videoCutscene != null) {videoCutscene.destroy(); videoCutscene = null;}
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
@@ -2375,7 +2385,7 @@ class PlayState extends MusicBeatState {
 		}
 		iconP1.updateHitbox(); iconP2.updateHitbox();
 
-		charactersDance(curBeat);
+		if (curBeat > 0) charactersDance(curBeat);
 		super.beatHit();
 		lastBeatHit = curBeat;
 
