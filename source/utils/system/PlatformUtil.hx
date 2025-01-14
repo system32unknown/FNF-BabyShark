@@ -28,6 +28,7 @@ package utils.system;
     #include <string>
 ')
 #end
+
 class PlatformUtil {
     #if windows
     @:functionCode('
@@ -93,7 +94,7 @@ class PlatformUtil {
         if (!GetCursorPos(&mousePos)) return 0;
     ')
     #end
-    public static function getMousePos():Array<Float> return [untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y")];
+    public static function getMousePos():Array<Float> return #if windows [untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y")] #else [0, 0] #end;
 
     #if windows
     @:functionCode('return MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);')
