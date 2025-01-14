@@ -902,7 +902,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public dynamic function fullComboFunction() {
-		var fullhits:Array<Int> = [for (i in 0...judgeData.length) judgeData[i].hits];
+		var fullhits:Array<Int> = [for (judge in judgeData) judge.hits];
 		ratingFC = "";
 		if (songMisses == 0) {
 			if (fullhits[3] > 0 || fullhits[4] > 0) ratingFC = 'FC';
@@ -1931,7 +1931,7 @@ class PlayState extends MusicBeatState {
 
 		totalNotesHit += switch (ClientPrefs.data.accuracyType) {
 			case 'Note': 1;
-			case 'Millisecond': (daRating.name == 'epic' ? 1 : judgeData[0].timing / (noteDiff / playbackRate)); // Much like Kade's "Complex" but less broken
+			case 'Millisecond': (daRating.name == 'epic' ? 1 : Judgement.minHitWindow / (noteDiff / playbackRate)); // Much like Kade's "Complex" but less broken
 			default: daRating.ratingMod;
 		}
 		note.ratingMod = daRating.ratingMod;

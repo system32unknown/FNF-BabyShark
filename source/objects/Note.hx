@@ -72,7 +72,6 @@ class Note extends FlxSprite {
 	public var sustainLength:Float = 0;
 	public var sustainScale:Float = 1.0;
 	public var isSustainNote:Bool = false;
-	public var isSustainEnds:Bool = false;
 	public var noteType(default, set):String = null;
 
 	public var rgbShader:RGBShaderReference;
@@ -211,6 +210,16 @@ class Note extends FlxSprite {
 		}
 		return value;
 	}
+
+	public var inHitRange(get, never):Bool;
+	function get_inHitRange():Bool {
+		final early:Bool = strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult);
+		final late:Bool = strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult);
+		return early && late;
+	}
+
+	public var hitTime(get, never):Float;
+	function get_hitTime():Float return strumTime - Conductor.songPosition;
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?createdFrom:Dynamic = null) {
 		super();
@@ -409,7 +418,7 @@ class Note extends FlxSprite {
 		followed = false;
 
 		if (mustPress) {
-			canBeHit = (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult) && strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult));
+			canBeHit = inHitRange;
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit) tooLate = true;
 		} else {
 			canBeHit = false;
