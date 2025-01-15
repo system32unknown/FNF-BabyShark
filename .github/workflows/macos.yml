@@ -37,7 +37,7 @@ jobs:
           haxe compile.hxml
           cd ../hxcpp
           haxe compile.hxml
-          cd ../../../../..
+          cd ../..
 
       - name: Compile
         run: haxelib run lime build mac
