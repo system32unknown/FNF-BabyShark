@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: MacOS Build
-    runs-on: macOS-15
+    runs-on: macos-15
 
     steps:
       - uses: actions/checkout@main

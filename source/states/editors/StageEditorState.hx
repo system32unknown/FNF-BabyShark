@@ -111,16 +111,16 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	function addHelpScreen() {
 		var btn:String = #if FLX_DEBUG 'F3' #else 'F2' #end;
 
-		var str:String = '
-		E/Q - Camera Zoom In/Out
-		\nJ/K/L/I - Move Camera
-		\nR - Reset Camera Zoom
-		\nArrow Keys/Mouse & Right Click - Move Object
-		\n
-		\n $btn - Toggle HUD
-		\nF12 - Toggle Selection Rectangle
-		\nHold Shift - Move Objects and Camera 4x faster
-		\nHold Control - Move Objects pixel-by-pixel and Camera 4x slower';
+		var str:Array<String> = ["E/Q - Camera Zoom In/Out",
+			"J/K/L/I - Move Camera",
+			"R - Reset Camera Zoom",
+			"Arrow Keys/Mouse & Right Click - Move Object",
+			"",
+			'$btn - Toggle HUD',
+			"F12 - Toggle Selection Rectangle",
+			"Hold Shift - Move Objects and Camera 4x faster",
+			"Hold Control - Move Objects pixel-by-pixel and Camera 4x slower"
+		];
 
 		helpBg = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
 		helpBg.alpha = 0.6;
@@ -128,19 +128,18 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		helpBg.active = helpBg.visible = false;
 		add(helpBg);
 
-		var arr:Array<String> = str.split('\n');
 		helpTexts = new FlxSpriteGroup();
 		helpTexts.cameras = [camHUD];
-		for (i in 0...arr.length) {
-			if (arr[i].length < 2) continue;
+		for (i => txt in str) {
+			if(txt.length < 1) continue;
 
-			var helpText:FlxText = new FlxText(0, 0, 640, arr[i], 16);
+			var helpText:FlxText = new FlxText(0, 0, 680, txt, 16);
 			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER);
             helpText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 			helpText.scrollFactor.set();
 			helpText.gameCenter();
 			add(helpText);
-			helpText.y += ((i - arr.length / 2) * 16);
+			helpText.y += ((i - str.length / 2) * 32) + 16;
 			helpText.active = false;
 			helpTexts.add(helpText);
 		}
@@ -743,6 +742,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 				return;
 			}
 
+			destroySubStates = false;
 			persistentDraw = false;
 			animationEditor.target = selected;
 			unsavedProgress = true;
@@ -823,7 +823,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			'layer', 'lighten', 'multiply', 'overlay', 'screen', 'shader', 'subtract'
 		];
 		tab_group.add(new FlxText(objX + 90, objY - 18, 80, 'Blend Mode:'));
-		blendDropDown = new PsychUIDropDownMenu(objX + 90, objY, blendList, function(sel:Int, value:String) {
+		blendDropDown = new PsychUIDropDownMenu(objX + 90, objY, blendList, (sel:Int, value:String) -> {
 			var selected:StageEditorMetaSprite = getSelected(); // blend mode
 			if (selected != null) selected.blend = value;
 		});
@@ -1419,7 +1419,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
-		_file.browse([new FileFilter('PNG (Image)', '*.png'), new FileFilter('XML (Sparrow)', '*.xml'), new FileFilter('JSON (Aseprite)', '*.json'), new FileFilter('TXT (Packer)', '*.txt')]);
+		_file.browse(#if !mac [new FileFilter('PNG (Image)', '*.png'), new FileFilter('XML (Sparrow)', '*.xml'), new FileFilter('JSON (Aseprite)', '*.json'), new FileFilter('TXT (Packer)', '*.txt')] #else [] #end);
 	}
 
 	function onLoadComplete(_):Void {
@@ -1576,7 +1576,7 @@ class StageEditorMetaSprite {
 
 	// variables for all types that aren't Character
 	public var name:String;
-	public var filters:LoadFilters = (LOW_QUALITY)|(HIGH_QUALITY);
+	public var filters:LoadFilters = (LOW_QUALITY) | (HIGH_QUALITY);
 	public var x(get, set):Float;
 	public var y(get, set):Float;
 	public var alpha(get, set):Float;

@@ -2301,7 +2301,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			}
 		}
 
-		mustHitCheckBox = new PsychUICheckBox(objX, objY, 'Player Focus', 80, () -> {
+		mustHitCheckBox = new PsychUICheckBox(objX, objY, 'Must Hit Sec.', 80, () -> {
 			var sec = getCurChartSection();
 			if (sec != null) sec.mustHitSection = mustHitCheckBox.checked;
 			updateHeads(true);
@@ -2328,7 +2328,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		});
 
 		objY += 25;
-		changeBpmStepper = new PsychUINumericStepper(objX, objY, 1, 0, 1, 400, 3);
+		changeBpmStepper = new PsychUINumericStepper(objX, objY, 1, 0, 1, 999999, 3);
 		changeBpmStepper.onValueChange = () -> {
 			var sec = getCurChartSection();
 			if (sec != null) {
@@ -2630,14 +2630,14 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		#end
 
 		objY += 65;
-		bpmStepper = new PsychUINumericStepper(objX, objY, 1, 1, 1, 400, 3);
+		bpmStepper = new PsychUINumericStepper(objX, objY, 1, 1, 1, 999999, 3);
 		bpmStepper.onValueChange = () -> {
 			var oldTimes:Array<Float> = cachedSectionTimes.copy();
 			PlayState.SONG.bpm = bpmStepper.value;
 			adaptNotesToNewTimes(oldTimes);
 		};
 
-		scrollSpeedStepper = new PsychUINumericStepper(objX + 90, objY, 0.1, 1, 0.1, 10, 2);
+		scrollSpeedStepper = new PsychUINumericStepper(objX + 90, objY, 0.1, 1, 0.1, 100, 2);
 		scrollSpeedStepper.onValueChange = () -> PlayState.SONG.speed = scrollSpeedStepper.value;
 
 		audioOffsetStepper = new PsychUINumericStepper(objX + 180, objY, 1, 0, -500, 500);
