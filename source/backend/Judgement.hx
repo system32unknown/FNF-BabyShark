@@ -44,7 +44,7 @@ package backend;
 		else {
 			for (i in 0...list.length - 1) {
 				if (diff <= list[i].timing) {
-					value = list[i]; //skips last window (Shit)
+					value = list[i]; // skips last window (Shit)
 					break;
 				}
 			}

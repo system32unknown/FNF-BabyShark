@@ -1,7 +1,7 @@
 package backend;
 
 class Language {
-	public static var defaultLangName:String = 'English (US)'; //en-US
+	public static var defaultLangName:String = 'English (US)'; // en-US
 	#if TRANSLATIONS_ALLOWED static var phrases:Map<String, String> = []; #end
 
 	public static function reloadPhrases() {
@@ -14,7 +14,7 @@ class Language {
 		for (num => phrase in loadedText) {
 			phrase = phrase.trim();
 			if (num < 1 && !phrase.contains(':')) {
-				//First line ignores formatting and shit if the line doesn't have ":" because its language_name
+				// First line ignores formatting and shit if the line doesn't have ":" because its language_name
 				phrases.set('language_name', phrase.trim());
 				continue;
 			}

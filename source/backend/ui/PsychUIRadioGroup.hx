@@ -208,10 +208,10 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 			}
 		} else {
 			while (radios.length > labels.length) {
-				radios[radios.length - 1].kill(); //kill extra radios
+				radios[radios.length - 1].kill();  kill extra radios
 				radios.pop();
 			}
-			while (radios.length < labels.length) _addNewRadio(); //recycle radios to fit number
+			while (radios.length < labels.length) _addNewRadio(); // recycle radios to fit number
 		}
 		
 		for (num => radio in radios) {

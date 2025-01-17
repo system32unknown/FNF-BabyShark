@@ -79,7 +79,7 @@ class CreditsState extends MusicBeatState {
 	static var babyshark(default, never):Array<Array<String>> = [
 		['Baby Shark\'s Big Funkin Team'],
 		['Altertoriel', 		'altertoriel',		'Main Developer', 													'https://x.com/Altertoriel2', 	'B9AF27'],
-		['Pinkfong', 			'pinkfong', 		'Creator of Baby Shark', 											'https://pinkfong.com',			'F93FA2'],
+		['Pinkfong', 			'pinkfong', 		'Creator of Baby Shark', 											'https:// pinkfong.com',			'F93FA2'],
 		['Nickelodeon', 		'nickelodeon', 		'Creator of Baby Shark\'s Big Show / Baby Shark Ollie and William', 'https://www.nick.com',			'F57C13'],
 	];
 

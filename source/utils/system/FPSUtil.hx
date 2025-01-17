@@ -45,7 +45,15 @@ class FPSUtil {
 		};
 	}
 
+	/**
+	 * Alternative linear interpolation function for each frame use, without worrying about framerate changes.
+	 * @param a Begin value
+	 * @param b End value
+	 * @param ratio Ratio
+	 * @return Float Final value
+	 */
 	inline public static function fpsLerp(a:Float, b:Float, ratio:Float):Float
 		return FlxMath.lerp(b, a, getFPSAdjust('codename', ratio));
+
 	public function lagged():Bool return curFPS < FlxG.drawFramerate * .5;
 }

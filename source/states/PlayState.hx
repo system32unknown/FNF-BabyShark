@@ -663,9 +663,7 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
-	public function getLuaObject(tag:String):Dynamic {
-		return variables.get(tag);
-	}
+	public function getLuaObject(tag:String):Dynamic return variables.get(tag);
 
 	function startCharacterPos(char:Character, ?gfCheck:Bool = false) {
 		if (gfCheck && char.curCharacter.startsWith('gf')) { // IF DAD IS GIRLFRIEND, HE GOES TO HER POSITION
@@ -1197,7 +1195,7 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onFocusLostPost');
 	}
 
-	public var autoUpdateRPC:Bool = true; //performance setting for custom RPC things
+	public var autoUpdateRPC:Bool = true; // performance setting for custom RPC things
 	function resetRPC(?showTime:Bool = false) {
 		#if DISCORD_ALLOWED
 		if (!autoUpdateRPC) return;

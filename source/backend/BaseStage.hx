@@ -57,7 +57,7 @@ class BaseStage extends FlxBasic {
 		}
 	}
 
-	//main callbacks
+	// main callbacks
 	public function create() {}
 	public function createPost() {}
 	public function countdownTick(count:Countdown, num:Int) {}
@@ -96,7 +96,7 @@ class BaseStage extends FlxBasic {
 	public function addBehindGF(obj:FlxBasic):FlxBasic return insert(members.indexOf(game.gfGroup), obj);
 	public function addBehindBF(obj:FlxBasic):FlxBasic return insert(members.indexOf(game.boyfriendGroup), obj);
 	public function addBehindDad(obj:FlxBasic):FlxBasic return insert(members.indexOf(game.dadGroup), obj);
-	public function setDefaultGF(name:String) { //Fix for the Chart Editor on Base Game stages
+	public function setDefaultGF(name:String) { // Fix for the Chart Editor on Base Game stages
 		var gfVersion:String = PlayState.SONG.gfVersion;
 		if (gfVersion == null || gfVersion.length < 1) {
 			gfVersion = name;
@@ -104,10 +104,10 @@ class BaseStage extends FlxBasic {
 		}
 	}
 
-	public function getStageObject(name:String):Dynamic //Objects can only be accessed *after* create(), use createPost() if you want to mess with them on init
+	public function getStageObject(name:String):Dynamic // Objects can only be accessed *after* create(), use createPost() if you want to mess with them on init
 		return game.variables.get(name);
 
-	//start/end callback functions
+	// start/end callback functions
 	public function setStartCallback(myfn:Void->Void):Void {
 		if (!onPlayState) return;
 		PlayState.instance.startCallback = myfn;

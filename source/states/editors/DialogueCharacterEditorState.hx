@@ -203,7 +203,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		
 		var addUpdateButton:PsychUIButton = new PsychUIButton(10, idleInputText.y + 30, "Add/Update", () -> {
 			var theAnim:String = animationInputText.text.trim();
-			if (character.dialogueAnimations.exists(theAnim)) { //Update
+			if (character.dialogueAnimations.exists(theAnim)) { // Update
 				for (i in 0...character.jsonFile.animations.length) {
 					var animArray:DialogueAnimArray = character.jsonFile.animations[i];
 					if (animArray.anim.trim() == theAnim) {
@@ -220,7 +220,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 					ghostLoop.playAnim(theAnim);
 					ghostIdle.playAnim(theAnim, true);
 				}
-			} else { //Add
+			} else { // Add
 				character.jsonFile.animations.push({
 					anim: theAnim,
 					loop_name: loopInputText.text,
@@ -417,7 +417,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 				updateTextBox();
 			}
 
-			//lots of Ifs lol get trolled
+			// lots of Ifs lol get trolled
 			var offsetAdd:Int = 1;
 			var speed:Float = 300;
 			if (FlxG.keys.pressed.SHIFT) {
@@ -573,7 +573,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 			var rawJson:String = File.getContent(fullPath);
 			if (rawJson != null) {
 				var loadedChar:DialogueCharacterFile = cast Json.parse(rawJson);
-				if (loadedChar.dialogue_pos != null) { //Make sure it's really a dialogue character
+				if (loadedChar.dialogue_pos != null) { // Make sure it's really a dialogue character
 					trace('Successfully loaded file: ${_file.name.substr(0, _file.name.length - 5)}');
 					character.jsonFile = loadedChar;
 					reloadCharacter();

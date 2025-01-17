@@ -205,7 +205,7 @@ class Note extends FlxSprite {
 				case 'GF Sing': gfNote = true;
 			}
 			if (value != null && value.length > 1) backend.NoteTypesConfig.applyNoteTypeData(this, value);
-			if (hitsound != 'hitsound' && hitsoundVolume > 0) Paths.sound(hitsound); //precache new sound for being idiot-proof
+			if (hitsound != 'hitsound' && hitsoundVolume > 0) Paths.sound(hitsound); // precache new sound for being idiot-proof
 			noteType = value;
 		}
 		return value;

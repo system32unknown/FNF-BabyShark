@@ -55,7 +55,7 @@ class Philly extends BaseStage
 				insert(members.indexOf(blammedLightsBlack) + 1, phillyGlowGradient);
 				if (!ClientPrefs.data.flashing) phillyGlowGradient.intendedAlpha = 0.7;
 
-				Paths.image('philly/particle'); //precache philly glow particle image
+				Paths.image('philly/particle'); // precache philly glow particle image
 				phillyGlowParticles = new FlxTypedGroup<PhillyGlowParticle>();
 				phillyGlowParticles.visible = false;
 				insert(members.indexOf(phillyGlowGradient) + 1, phillyGlowParticles);
@@ -102,7 +102,7 @@ class Philly extends BaseStage
 							phillyStreet.color = FlxColor.WHITE;
 						}
 
-					case 1: //turn on
+					case 1: // turn on
 						curLightEvent = FlxG.random.int(0, phillyLightsColors.length - 1, [curLightEvent]);
 						var color:FlxColor = phillyLightsColors[curLightEvent];
 

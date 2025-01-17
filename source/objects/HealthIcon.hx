@@ -24,7 +24,7 @@ class HealthIcon extends FlxSprite {
 	public static function returnGraphic(char:String, defaultIfMissing:Bool = false, ?allowGPU:Bool = true):FlxGraphic {
 		var path:String = prefix + char;
 		if (!Paths.fileExists('images/$path.png', IMAGE)) path = prefix + 'icon-$char'; //Older versions of psych engine's support
-		if (!Paths.fileExists('images/$path.png', IMAGE)) { //Prevents crash from missing icon
+		if (!Paths.fileExists('images/$path.png', IMAGE)) { // Prevents crash from missing icon
 			if (!defaultIfMissing) return null;
 			path = prefix + defaultIcon;
 			if (!Paths.fileExists('images/$path.png', IMAGE)) path = prefix + defaultIcon;

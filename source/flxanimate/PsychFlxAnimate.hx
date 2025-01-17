@@ -23,10 +23,10 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 		var trimmed:String = pathOrStr.trim();
 		trimmed = trimmed.substr(trimmed.length - 5).toLowerCase();
 
-		if (trimmed == '.json') { //Path is json
+		if (trimmed == '.json') { // Path is json
 			myData = File.getContent(pathOrStr);
 			isXml = false;
-		} else if (trimmed.substr(1) == '.xml') { //Path is xml
+		} else if (trimmed.substr(1) == '.xml') { // Path is xml
 			myData = File.getContent(pathOrStr);
 			isXml = true;
 		}

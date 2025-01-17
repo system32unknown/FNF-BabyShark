@@ -9,7 +9,7 @@ class ControlsSubState extends FlxSubState {
 	var curSelected:Int = 0;
 	var curAlt:Bool = false;
 
-	//Show on gamepad - Display name - Save file key - Rebind display name
+	// Show on gamepad - Display name - Save file key - Rebind display name
 	var curNoteKeys:Int = 4;
 	var options:Array<Dynamic> = [
 		[true, 'NOTES'],

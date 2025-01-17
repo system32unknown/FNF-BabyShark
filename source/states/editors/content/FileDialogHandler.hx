@@ -8,7 +8,7 @@ import haxe.Exception;
 import sys.io.File;
 import lime.ui.*;
 
-//Currently only supports OPEN and SAVE, might change that in the future, who knows
+// Currently only supports OPEN and SAVE, might change that in the future, who knows
 class FileDialogHandler extends flixel.FlxBasic {
 	var _fileRef:FileReferenceCustom;
 	var _dialogMode:FileDialogType = OPEN;
@@ -144,7 +144,7 @@ class FileDialogHandler extends flixel.FlxBasic {
 	}
 }
 
-//Only way I could find to keep the path after saving a file
+// Only way I could find to keep the path after saving a file
 class FileReferenceCustom extends FileReference {
 	@:allow(states.editors.content.FileDialogHandler)
 	var _trackSavedPath:String;

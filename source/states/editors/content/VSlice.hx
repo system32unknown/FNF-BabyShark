@@ -20,9 +20,9 @@ typedef VSliceNote = {
 }
 
 typedef VSliceEvent = {
-	var t:Float;	//Strum time
-	var e:String;	//Event name
-	var v:Dynamic;	//Values
+	var t:Float;	// Strum time
+	var e:String;	// Event name
+	var v:Dynamic;	// Values
 }
 
 // Metadata
@@ -84,7 +84,7 @@ class VSlice {
 		timeChanges.shift();
 
 		var stage:String = metadata.playData.stage;
-		switch(stage) { //Psych and VSlice use different names for some stages
+		switch(stage) { // Psych and VSlice use different names for some stages
 			case 'mainStage': stage = 'stage';
 			case 'spookyMansion': stage = 'spooky';
 			case 'phillyTrain': stage = 'philly';
@@ -183,7 +183,7 @@ class VSlice {
 			var notes:Array<VSliceNote> = notesMap.get(diff);
 
 			var sectionData:Array<SwagSection> = [];
-			for (section in baseSections) { //clone sections
+			for (section in baseSections) { // clone sections
 				var sec:SwagSection = emptySection();
 				sec.mustHitSection = section.mustHitSection;
 				if (Reflect.hasField(section, 'changeBPM')) {
@@ -208,7 +208,7 @@ class VSlice {
 				notes: sectionData,
 				events: [],
 				bpm: songBpm,
-				needsVoices: true, //There's no value on V-Slice to identify if there are vocals as it checks automatically
+				needsVoices: true, // There's no value on V-Slice to identify if there are vocals as it checks automatically
 				speed: scrollSpeed,
 				mania: 3,
 				offset: 0,
@@ -264,7 +264,7 @@ class VSlice {
 
 	public static function export(songData:SwagSong, ?difficultyName:String = null):VSlicePackage {
 		var events:Array<VSliceEvent> = [];
-		if (songData.events != null && songData.events.length > 0) { //Add events
+		if (songData.events != null && songData.events.length > 0) { // Add events
 			for (event in songData.events) {
 				var subEvents:Array<Array<Dynamic>> = cast event[1];
 				if (subEvents != null && subEvents.length > 0)
@@ -279,7 +279,7 @@ class VSlice {
 
 		var time:Float = 0;
 		var bpm:Float = songData.bpm;
-		timeChanges.push({t: 0, bpm: bpm}); //so there was first bpm issue (if the song has multiplier bpm) 
+		timeChanges.push({t: 0, bpm: bpm}); // so there was first bpm issue (if the song has multiplier bpm) 
 
 		var lastMustHit:Bool = false;
 		if (songData.notes != null) {
@@ -314,7 +314,7 @@ class VSlice {
 		events.sort(sortByTime);
 		notes.sort(sortByTime);
 
-		//try to find composer despite it not being a value on psych charts
+		// try to find composer despite it not being a value on psych charts
 		var composer:String = 'Unknown';
 		if (Reflect.hasField(songData, 'artist')) composer = Reflect.field(songData, 'artist');
 		else if (Reflect.hasField(songData, 'composer')) composer = Reflect.field(songData, 'composer');
@@ -327,7 +327,7 @@ class VSlice {
 
 		var scrollSpeed:Map<String, Float> = [];
 		var notesMap:Map<String, Array<VSliceNote>> = [];
-		if (difficultyName == null) { //Fill all difficulties to attempt to prevent the song from not showing up on Base Game
+		if (difficultyName == null) { // Fill all difficulties to attempt to prevent the song from not showing up on Base Game
 			var diffs:Array<String> = Difficulty.list.copy();
 			for (num => diff in diffs) {
 				diffs[num] = diff = Paths.formatToSongPath(diff);
@@ -353,7 +353,7 @@ class VSlice {
 		};
 
 		var stage:String = songData.stage;
-		switch(stage) { //Psych and VSlice use different names for some stages
+		switch(stage) { // Psych and VSlice use different names for some stages
 			case 'stage': stage = 'mainStage';
 			case 'spooky': stage = 'spookyMansion';
 			case 'philly': stage = 'phillyTrain';

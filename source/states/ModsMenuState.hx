@@ -191,7 +191,7 @@ class ModsMenuState extends MusicBeatState {
 		
 		if (modsList.all.length < 2) for (button in buttons) button.enabled = false;
 
-		settingsButton = new MenuButton(buttonsX + 300, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> { //Settings
+		settingsButton = new MenuButton(buttonsX + 300, buttonsY, 80, 80, Paths.image('modsMenuButtons'), () -> { // Settings
 			var curMod:ModItem = modsGroup.members[curSelectedMod];
 			if (curMod != null && curMod.settings != null && curMod.settings.length > 0)
 				openSubState(new options.ModSettingsSubState(curMod.settings, curMod.folder, curMod.name));
@@ -458,7 +458,7 @@ class ModsMenuState extends MusicBeatState {
 			case -1: return buttonEnableAll.enabled ? buttonEnableAll : buttonDisableAll;
 		}
 
-		if (modsList.all.length < 1) return buttonReload; //prevent possible crash from my irresponsibility
+		if (modsList.all.length < 1) return buttonReload; // prevent possible crash from my irresponsibility
 		return buttons[Std.int(Math.max(0, Math.min(buttons.length - 1, curSelectedButton)))];
 	}
 

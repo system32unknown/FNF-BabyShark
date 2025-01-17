@@ -209,7 +209,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		tab_group.add(lockedCheckbox);
 	}
 
-	//Used on onCreate and when you load a week
+	// Used on onCreate and when you load a week
 	function reloadAllShit() {
 		var weekString:String = weekFile.songs[0][0];
 		for (i in 1...weekFile.songs.length) {
@@ -330,9 +330,9 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 				while (splittedText.length < weekFile.songs.length) weekFile.songs.pop();
 
 				for (i in 0...splittedText.length) {
-					if (i >= weekFile.songs.length) //Add new song
+					if (i >= weekFile.songs.length) // Add new song
 						weekFile.songs.push([splittedText[i], 'face', [146, 113, 253]]);
-					else { //Edit song
+					else { // Edit song
 						weekFile.songs[i][0] = splittedText[i];
 						if (weekFile.songs[i][1] == null) {
 							weekFile.songs[i][1] = 'face';
@@ -407,7 +407,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 			var rawJson:String = File.getContent(fullPath);
 			if (rawJson != null) {
 				loadedWeek = cast Json.parse(rawJson);
-				if (loadedWeek.weekCharacters != null && loadedWeek.weekName != null) { //Make sure it's really a week
+				if (loadedWeek.weekCharacters != null && loadedWeek.weekName != null) { // Make sure it's really a week
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
 					trace("Successfully loaded file: " + cutName);
 

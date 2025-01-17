@@ -251,7 +251,7 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 			var rawJson:String = File.getContent(fullPath);
 			if (rawJson != null) {
 				var loadedChar:MenuCharacterFile = Json.parse(rawJson);
-				if (loadedChar.idle_anim != null && loadedChar.confirm_anim != null) { //Make sure it's really a character
+				if (loadedChar.idle_anim != null && loadedChar.confirm_anim != null) { // Make sure it's really a character
 					trace('Successfully loaded file: ${_file.name.substr(0, _file.name.length - 5)}');
 					characterFile = loadedChar;
 					reloadSelectedCharacter();

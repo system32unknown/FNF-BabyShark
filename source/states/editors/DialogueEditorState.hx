@@ -175,7 +175,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 		}
 		character.x += character.jsonFile.position[0];
 		character.y += character.jsonFile.position[1];
-		character.playAnim(); //Plays random animation
+		character.playAnim(); // Plays random animation
 		characterAnimSpeed();
 
 		if (character.animation.curAnim != null && character.jsonFile.animations != null)
@@ -205,7 +205,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 		#if DISCORD_ALLOWED
 		var rpcText:String = lineInputText.text; // Updating Discord Rich Presence
 		if (rpcText == null || rpcText.length < 1) rpcText = '(Empty)';
-		if (rpcText.length < 3) rpcText += '   '; //Fixes a bug on RPC that triggers an error when the text is too short
+		if (rpcText.length < 3) rpcText += '   '; // Fixes a bug on RPC that triggers an error when the text is too short
 		DiscordClient.changePresence("Dialogue Editor", rpcText);
 		#end
 	}
@@ -386,7 +386,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 			var rawJson:String = File.getContent(fullPath);
 			if (rawJson != null) {
 				var loadedDialog:DialogueFile = cast Json.parse(rawJson);
-				if (loadedDialog.dialogue != null && loadedDialog.dialogue.length > 0) { //Make sure it's really a dialogue file
+				if (loadedDialog.dialogue != null && loadedDialog.dialogue.length > 0) { // Make sure it's really a dialogue file
 					trace('Successfully loaded file: ${_file.name.substr(0, _file.name.length - 5)}');
 					dialogueFile = loadedDialog;
 					changeText();

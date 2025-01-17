@@ -312,7 +312,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			var copiedSpr = new ModchartSprite();
 			var copiedMeta:StageEditorMetaSprite = new StageEditorMetaSprite(null, copiedSpr);
 			for (field in Reflect.fields(spr)) {
-				if (field == 'sprite') continue; //do NOT copy sprite or it might get messy
+				if (field == 'sprite') continue; // do NOT copy sprite or it might get messy
 
 				try {
 					var fld:Dynamic = Reflect.getProperty(spr, field);
@@ -830,7 +830,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		blendDropDown.selectedLabel = blendList[0];
 
 		function updateFlip() {
-			//flip X and flip Y
+			// flip X and flip Y
 			var selected:StageEditorMetaSprite = getSelected();
 			if (selected != null) {
 				if (selected.type != 'square') {
@@ -886,7 +886,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 					if (!characterList.contains(charToCheck)) characterList.push(charToCheck);
 				}
 
-		if (characterList.length < 1) characterList.push(''); //Prevents crash
+		if (characterList.length < 1) characterList.push(''); // Prevents crash
 
 		var objX:Int = 10;
 		var objY:Int = 20;
@@ -1342,12 +1342,12 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		for (num => sel in selectionSprites.members) {
 			sel.setPosition(sprX, sprY);
 			switch(num) {
-				case 0: sel.setGraphicSize(sprWidth, lineSize); //Top
-				case 1: //Bottom
+				case 0: sel.setGraphicSize(sprWidth, lineSize); // Top
+				case 1: // Bottom
 					sel.setGraphicSize(sprWidth, lineSize);
 					sel.y += sprHeight - lineSize;
-				case 2: sel.setGraphicSize(lineSize, sprHeight); //Left
-				case 3: //Right
+				case 2: sel.setGraphicSize(lineSize, sprHeight); // Left
+				case 3: // Right
 					sel.setGraphicSize(lineSize, sprHeight);
 					sel.x += sprWidth - lineSize;
 			}
@@ -1938,7 +1938,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 	function reloadAnimationDropDown() {
 		var animList:Array<String> = [];
 		for (anim in target.animations) animList.push(anim.anim);
-		if (animList.length < 1) animList.push('NO ANIMATIONS'); //Prevents crash
+		if (animList.length < 1) animList.push('NO ANIMATIONS'); // Prevents crash
 
 		animationDropDown.list = animList;
 	}

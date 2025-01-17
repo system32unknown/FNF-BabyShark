@@ -1,6 +1,7 @@
 package utils.system;
 
 import lime.app.Application;
+import lime.system.System;
 
 /**
  * Class for Windows-only functions, such as transparent windows, message boxes, and more.
@@ -44,6 +45,7 @@ class NativeUtil {
 	 */
 	public static function setWindowBorderColor(title:String, color:FlxColor, setHeader:Bool = true, setBorder:Bool = true) {
 		#if windows
+		if (getWindowsVersion() != 11) return;
 		if (title == null) title = Application.current.window.title;
 		PlatformUtil.setWindowBorderColor(title, [color.red, color.green, color.blue, color.alpha], setHeader, setBorder);
 		#end
@@ -56,6 +58,7 @@ class NativeUtil {
 	**/
 	public static function resetWindowBorderColor(title:String, setHeader:Bool = true, setBorder:Bool = true) {
 		#if windows
+		if (getWindowsVersion() != 11) return;
 		if (title == null) title = Application.current.window.title;
 		PlatformUtil.setWindowBorderColor(title, [-1, -1, -1, -1], setHeader, setBorder);
 		#end
@@ -68,6 +71,7 @@ class NativeUtil {
 	 */
 	public static function setWindowTitleColor(title:String, color:FlxColor) {
 		#if windows
+		if (getWindowsVersion() != 11) return;
 		if (title == null) title = Application.current.window.title;
 		PlatformUtil.setWindowTitleColor(title, [color.red, color.green, color.blue, color.alpha]);
 		#end
@@ -80,6 +84,7 @@ class NativeUtil {
 	**/
 	public static function resetWindowTitleColor(title:String) {
 		#if windows
+		if (getWindowsVersion() != 11) return;
 		if (title == null) title = Application.current.window.title;
 		PlatformUtil.setWindowTitleColor(title, [-1, -1, -1, -1]);
 		#end
@@ -98,8 +103,31 @@ class NativeUtil {
 	/**
 	 * Can be used to check if your using a specific version of an OS (or if your using a certain OS).
 	 */
-	public static function hasVersion(ver:String)
-		return lime.system.System.platformLabel.toLowerCase().indexOf(ver.toLowerCase()) != -1;
+	public static function hasVersion(ver:String):Bool
+		return System.platformLabel.toLowerCase().indexOf(ver.toLowerCase()) != -1;
+
+	public static function getWindowsVersion():Int {
+		#if windows
+		var windowsVersions:Map<String, Int> = [
+			"Windows 11" => 11,
+			"Windows 10" => 10,
+			"Windows 8.1" => 8,
+			"Windows 8" => 8,
+			"Windows 7" => 7,
+		];
+
+		var platformLabel:String = System.platformLabel;
+		var words:Array<String> = platformLabel.split(" ");
+		var windowsIndex:Int = words.indexOf("Windows");
+		var result:String = "";
+		if (windowsIndex != -1 && windowsIndex < words.length - 1) {
+			result = words[windowsIndex] + " " + words[windowsIndex + 1];
+		}
+
+		if (windowsVersions.exists(result)) return windowsVersions.get(result);
+		#end
+		return 0;
+	}
 
 	/**
 	 * Shows a message box

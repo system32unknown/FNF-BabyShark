@@ -2,10 +2,10 @@ package utils.system;
 
 #if windows
 @:buildXml('
-<target id="haxe">
-    <lib name="dwmapi.lib" if="windows"/>
-    <lib name="shell32.lib" if="windows"/>
-</target>
+    <target id="haxe">
+        <lib name="dwmapi.lib" if="windows"/>
+        <lib name="shell32.lib" if="windows"/>
+    </target>
 ')
 @:cppFileCode('
     #include <direct.h>
@@ -87,7 +87,7 @@ class PlatformUtil {
     #end
 	public static function removeWindowIcon() {}
 
-    //Thanks leer lol
+    // Thanks leer lol
     #if windows
     @:functionCode('
         POINT mousePos;

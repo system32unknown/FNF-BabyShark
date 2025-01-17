@@ -17,7 +17,7 @@ class GameplayChangersSubstate extends FlxSubState {
 	var playbackOption:GameplayOption;
 
 	var curOption(get, never):GameplayOption;
-	function get_curOption():GameplayOption return optionsArray[curSelected]; //shorter lol
+	function get_curOption():GameplayOption return optionsArray[curSelected]; // shorter lol
 
 	final constMax:Float = 1024;
 	final multiMax:Float = 128;
@@ -295,7 +295,7 @@ class GameplayChangersSubstate extends FlxSubState {
 class GameplayOption {
 	var child:Alphabet;
 	public var text(get, set):String;
-	public var onChange:Void->Void = null; //Pressed enter (on Bool type options) or pressed/held left/right (on other types)
+	public var onChange:Void->Void = null; // Pressed enter (on Bool type options) or pressed/held left/right (on other types)
 	public var type:OptionType = BOOL;
 
 	public var scrollSpeed:Float = 50; //Only works on int/float, defines how fast it scrolls per second while holding left/right

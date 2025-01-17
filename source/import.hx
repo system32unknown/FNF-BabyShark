@@ -31,7 +31,7 @@ import backend.Mods;
 import backend.Language;
 import backend.EK;
 
-import backend.ui.*; //Psych-UI
+import backend.ui.*; // Psych-UI
 
 import utils.CoolUtil;
 import utils.SpriteUtil;

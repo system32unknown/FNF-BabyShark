@@ -25,8 +25,8 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	var cameraFollowPointer:FlxSprite;
 
 	var silhouettes:FlxSpriteGroup;
-	var dadPosition = FlxPoint.weak();
-	var bfPosition = FlxPoint.weak();
+	var dadPosition:FlxPoint = FlxPoint.weak();
+	var bfPosition:FlxPoint = FlxPoint.weak();
 
 	var helpBg:FlxSprite;
 	var helpTexts:FlxSpriteGroup;
@@ -123,7 +123,6 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		tipText.cameras = [camHUD];
 		tipText.setFormat(null, 16, FlxColor.WHITE, RIGHT);
 		tipText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
-		tipText.borderColor = FlxColor.BLACK;
 		tipText.scrollFactor.set();
 		tipText.active = false;
 		add(tipText);
@@ -255,15 +254,15 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 
 		var makeGhostButton:PsychUIButton = new PsychUIButton(25, 15, "Make Ghost", () -> {
 			if (!character.isAnimationNull()) {
-				var myAnim = anims[curAnim];
+				var myAnim:AnimArray = anims[curAnim];
 				if (!character.isAnimateAtlas) {
 					ghost.loadGraphic(character.graphic);
 					ghost.frames.frames = character.frames.frames;
 					ghost.animation.copyFrom(character.animation);
 					ghost.animation.play(character.animation.curAnim.name, true, false, character.animation.curAnim.curFrame);
 					ghost.animation.pause();
-				} else if (myAnim != null) { //This is VERY unoptimized and bad, I hope to find a better replacement that loads only a specific frame as bitmap in the future.
-					if (animateGhost == null) { //If I created the animateGhost on create() and you didn't load an atlas, it would crash the game on destroy, so we create it here
+				} else if (myAnim != null) { // This is VERY unoptimized and bad, I hope to find a better replacement that loads only a specific frame as bitmap in the future.
+					if (animateGhost == null) { // If I created the animateGhost on create() and you didn't load an atlas, it would crash the game on destroy, so we create it here
 						animateGhost = new FlxAnimate(ghost.x, ghost.y);
 						animateGhost.showPivot = false;
 						insert(members.indexOf(ghost), animateGhost);
@@ -691,7 +690,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			var animAnim:String = '' + anim.anim;
 			var animName:String = '' + anim.name;
 			var animFps:Int = anim.fps;
-			var animLoop:Bool = !!anim.loop; //Bruh
+			var animLoop:Bool = !!anim.loop; // Bruh
 			var animIndices:Array<Int> = anim.indices;
 			addAnimation(animAnim, animName, animFps, animLoop, animIndices);
 		}
@@ -1014,7 +1013,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	function reloadAnimationDropDown() {
 		var animList:Array<String> = [];
 		for (anim in anims) animList.push(anim.anim);
-		if (animList.length < 1) animList.push('NO ANIMATIONS'); //Prevents crash
+		if (animList.length < 1) animList.push('NO ANIMATIONS'); // Prevents crash
 		animationDropDown.list = animList;
 	}
 

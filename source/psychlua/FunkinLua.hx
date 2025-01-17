@@ -533,7 +533,7 @@ class FunkinLua {
 		});
 		set("cancelTimer", LuaUtils.cancelTimer);
 
-		//stupid bietch ass functions
+		// stupid bietch ass functions
 		set("addScore", function(value:Int = 0) {
 			game.songScore += value;
 			game.recalculateRating();

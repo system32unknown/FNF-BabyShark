@@ -69,8 +69,8 @@ class NoteTypesConfig {
 			for (i in 0...propArray.length) {
 				var str:Dynamic = propArray[i];
 				var id:Int = Std.parseInt(str.substr(0, str.length - 1).trim());
-				if (i < propArray.length - 1) obj = obj[id]; //middles
-				else if (setProp) return obj[id] = valueToSet; //last
+				if (i < propArray.length - 1) obj = obj[id]; // middles
+				else if (setProp) return obj[id] = valueToSet; // last
 			}
 			return obj;
 		} else if (setProp) {
@@ -82,7 +82,7 @@ class NoteTypesConfig {
 
 	static function _interpretValue(value:String):Any {
 		if (value.charAt(0) == "'" || value.charAt(0) == '"')
-			return value.substring(1, value.length - 1); //is a string
+			return value.substring(1, value.length - 1); // is a string
 		
 		switch(value) {
 			case "true": return true;

@@ -316,7 +316,7 @@ class NotesColorSubState extends FlxSubState {
 				if (holdingOnObj == colorGradient) {
 					var newBrightness:Float = 1 - FlxMath.bound((pointerY() - colorGradient.y) / colorGradient.height, 0, 1);
 					_storedColor.alpha = 1;
-					if (_storedColor.brightness == 0) //prevent bug
+					if (_storedColor.brightness == 0) // prevent bug
 						setShaderColor(FlxColor.fromRGBFloat(newBrightness, newBrightness, newBrightness));
 					else setShaderColor(FlxColor.fromHSB(_storedColor.hue, _storedColor.saturation, newBrightness));
 					updateColors(_storedColor);

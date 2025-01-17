@@ -1,11 +1,10 @@
 package states.stages.objects;
 
-class PhillyTrain extends BGSprite
-{
+class PhillyTrain extends BGSprite {
 	public var sound:FlxSound;
 	public function new(x:Float = 0, y:Float = 0, image:String = 'philly/train', sound:String = 'train_passes') {
 		super(image, x, y);
-		active = true; //Allow update
+		active = true; // Allow update
 
 		this.sound = new FlxSound().loadEmbedded(Paths.sound(sound));
 		FlxG.sound.list.add(this.sound);
@@ -14,7 +13,7 @@ class PhillyTrain extends BGSprite
 	public var moving:Bool = false;
 	public var finishing:Bool = false;
 	public var startedMoving:Bool = false;
-	public var frameTiming:Float = 0; //Simulates 24fps cap
+	public var frameTiming:Float = 0; // Simulates 24fps cap
 
 	public var cars:Int = 8;
 	public var cooldown:Int = 0;
@@ -64,7 +63,7 @@ class PhillyTrain extends BGSprite
 
 	public function restart():Void {
 		if (PlayState.instance.gf != null) {
-			PlayState.instance.gf.danced = false; //Makes she bop her head to the correct side once the animation ends
+			PlayState.instance.gf.danced = false; // Makes she bop her head to the correct side once the animation ends
 			PlayState.instance.gf.playAnim('hairFall');
 			PlayState.instance.gf.specialAnim = true;
 		}

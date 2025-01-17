@@ -8,7 +8,7 @@ typedef UIStyleData = {
 
 class PsychUIBox extends FlxSpriteGroup {
 	public static final CLICK_EVENT = "uibox_click";
-	public static final MINIMIZE_EVENT = "uibox_minimize"; //called on both minimizing and maximizing
+	public static final MINIMIZE_EVENT = "uibox_minimize"; // called on both minimizing and maximizing
 	public static final DRAG_EVENT = "uibox_drag";
 	public static final DROP_EVENT = "uibox_drop";
 	public var tabs(default, null):Array<PsychUITab> = [];

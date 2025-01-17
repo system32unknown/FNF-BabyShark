@@ -33,7 +33,7 @@ class ResetScoreSubState extends FlxSubState {
 		bg.scrollFactor.set();
 		add(bg);
 
-		var tooLong:Float = (name.length > 18) ? .8 : 1; //Fucking Winter Horrorland
+		var tooLong:Float = (name.length > 18) ? .8 : 1; // Fucking Winter Horrorland
 		var text:Alphabet = new Alphabet(0, 180, Language.getPhrase('reset_score', 'Reset the score of'));
 		text.gameCenter(X);
 		alphabetArray.push(text);

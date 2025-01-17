@@ -57,8 +57,8 @@ class StageWeek1 extends BaseStage {
 				var val:Int = Math.round(flValue1);
 
 				switch(val) {
-					case 1, 2, 3: //enable and target dad
-						if (val == 1) { //enable
+					case 1, 2, 3: // enable and target dad
+						if (val == 1) { // enable
 							dadbattleBlack.visible = true;
 							dadbattleLight.visible = true;
 							dadbattleFog.visible = true;
@@ -66,7 +66,7 @@ class StageWeek1 extends BaseStage {
 						}
 
 						var who:objects.Character = dad;
-						if (val > 2) who = boyfriend; //2 only targets dad
+						if (val > 2) who = boyfriend; // 2 only targets dad
 						dadbattleLight.alpha = 0;
 						FlxTimer.wait(.12, () -> dadbattleLight.alpha = .375);
 						dadbattleLight.setPosition(who.getGraphicMidpoint().x - dadbattleLight.width / 2, who.y + who.height - dadbattleLight.height + 50);

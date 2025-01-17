@@ -26,8 +26,8 @@ class DialogueCharacter extends FlxSprite {
 	public var jsonFile:DialogueCharacterFile = null;
 	public var dialogueAnimations:Map<String, DialogueAnimArray> = new Map<String, DialogueAnimArray>();
 
-	public var startingPos:Float = 0; //For center characters, it works as the starting Y, for everything else it works as starting X
-	public var isGhost:Bool = false; //For the editor
+	public var startingPos:Float = 0; // For center characters, it works as the starting Y, for everything else it works as starting X
+	public var isGhost:Bool = false; // For the editor
 	public var curCharacter:String = 'bf';
 	public function new(x:Float = 0, y:Float = 0, character:String = null) {
 		super(x, y);
@@ -72,7 +72,7 @@ class DialogueCharacter extends FlxSprite {
 
 	public function playAnim(animName:String = null, playIdle:Bool = false) {
 		var leAnim:String = animName;
-		if (animName == null || !dialogueAnimations.exists(animName)) { //Anim is null, get a random animation
+		if (animName == null || !dialogueAnimations.exists(animName)) { // Anim is null, get a random animation
 			var arrayAnims:Array<String> = [for (anim in dialogueAnimations) anim.anim];
 			if (arrayAnims.length > 0) leAnim = arrayAnims[FlxG.random.int(0, arrayAnims.length - 1)];
 		}

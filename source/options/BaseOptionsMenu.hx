@@ -347,7 +347,7 @@ class BaseOptionsMenu extends FlxSubState {
 		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 		descBox.updateHitbox();
 
-		curOption = optionsArray[curSelected]; //shorter lol
+		curOption = optionsArray[curSelected]; // shorter lol
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 

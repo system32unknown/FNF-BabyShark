@@ -115,7 +115,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 		var splash:NoteSplash = new NoteSplash();
 		grpNoteSplashes.add(splash);
-		splash.alpha = .000001; //cant make it invisible or it won't allow precaching
+		splash.alpha = .000001; // cant make it invisible or it won't allow precaching
         noteGroup.add(grpNoteSplashes);
 
 		opponentStrums = new FlxTypedGroup<StrumNote>();
@@ -352,7 +352,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			if (swagNote.mustPress) swagNote.x += FlxG.width / 2; // general offset
 			else if (middleScroll) {
 				swagNote.x += 310;
-				if (swagNote.noteData > 1) swagNote.x += FlxG.width / 2 + 25; //Up and Right
+				if (swagNote.noteData > 1) swagNote.x += FlxG.width / 2 + 25; // Up and Right
 			}
 			oldNote = swagNote;
 		}
@@ -374,7 +374,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 			if (player < 1 && middleScroll) {
 				babyArrow.x += 310;
-				if (i > 1) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
+				if (i > 1) babyArrow.x += FlxG.width / 2 + 25; // Up and Right
 			}
 
 			(player == 1 ? playerStrums : opponentStrums).add(babyArrow);
@@ -558,7 +558,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (!note.isSustainNote) invalidateNote(note);
 	}
 	
-	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
+	function noteMiss(daNote:Note):Void { // You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		if (daNote.animation.curAnim.name.endsWith("end")) return;
 
 		songMisses++; // score and data

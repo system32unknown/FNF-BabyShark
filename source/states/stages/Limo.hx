@@ -46,13 +46,13 @@ class Limo extends BaseStage {
 			add(limoLight = new BGSprite('gore/coldHeartKiller', limoMetalPole.x - 180, limoMetalPole.y - 80, 0.4, 0.4));
 			add(grpLimoParticles = new FlxTypedGroup<BGSprite>());
 
-			//PRECACHE BLOOD
+			// PRECACHE BLOOD
 			var particle:BGSprite = new BGSprite('gore/stupidBlood', -400, -400, 0.4, 0.4, ['blood']);
 			particle.alpha = 0.01;
 			grpLimoParticles.add(particle);
 			resetLimoKill();
 
-			//PRECACHE SOUND
+			// PRECACHE SOUND
 			Paths.sound('dancerdeath');
 			setDefaultGF('gf-car');
 		}
@@ -63,7 +63,7 @@ class Limo extends BaseStage {
 	override function createPost() {
 		resetFastCar();
 		addBehindGF(fastCar);
-		addBehindGF(new BGSprite('limo/limoDrive', -120, 550, 1, 1, ['Limo stage'], true)); //Shitty layering but whatev it works LOL
+		addBehindGF(new BGSprite('limo/limoDrive', -120, 550, 1, 1, ['Limo stage'], true)); // Shitty layering but whatev it works LOL
 	}
 
 	var limoSpeed:Float = 0;

@@ -39,6 +39,11 @@ class CoolUtil {
 		return [for (i in 0...daList.length) daList[i].trim()];
 	}
 
+	/**
+	 * Opens an URL in the browser.
+	 * @param url
+	 * @return Results URL status
+	 */
 	public static function browserLoad(site:String):Int {
 		#if linux 
 		var cmd:Int = Sys.command("xdg-open", [site]); // generally `xdg-open` should work in every distro

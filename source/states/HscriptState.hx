@@ -9,7 +9,7 @@ class HscriptState extends MusicBeatState {
         super();
         instance = this;
 
-        hscriptRef = new HScript(null, file); //skip init create call to avoid errors
+        hscriptRef = new HScript(null, file); // skip init create call to avoid errors
         hscriptRef.set('instance', instance);
     }
 

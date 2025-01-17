@@ -136,7 +136,7 @@ class Song {
 
 			switch(convertTo) {
 				case 'psych_v1':
-					if (!fmt.startsWith('psych_v1')) { //Convert to Psych 1.0 format
+					if (!fmt.startsWith('psych_v1')) { // Convert to Psych 1.0 format
 						trace('converting chart $nameForError with format $fmt to psych_v1 format...');
 						songJson.format = 'psych_v1_convert';
 						convert(songJson);
