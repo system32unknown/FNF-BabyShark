@@ -227,6 +227,8 @@ class PlayState extends MusicBeatState {
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
 
+	var optimizeSpawnNote:Bool = ClientPrefs.data.optimizeSpawnNote;
+
 	public static var nextReloadAll:Bool = false;
 	override public function create() {
 		Paths.clearUnusedMemory();
@@ -790,6 +792,7 @@ class PlayState extends MusicBeatState {
 			setOnScripts('mania', SONG.mania);
 
 			startedCountdown = true;
+			Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
 			botplaySine = Conductor.songPosition * .18;
 			setOnScripts('startedCountdown', true);
 			callOnScripts('onCountdownStarted');
@@ -1227,7 +1230,9 @@ class PlayState extends MusicBeatState {
 	var hit:Int = 0;
 	var popUpHitNote:Note = null;
 	var totalCnt:Int = 0;
+
 	var skipBf:Int = 0;
+	var skipCnt:Int = 0;
 
 	var nps:IntMap<Float> = new IntMap<Float>();
 	var bfNpsVal:Float = 0;
@@ -1319,7 +1324,8 @@ class PlayState extends MusicBeatState {
 
 		if (!ClientPrefs.data.processFirst) {noteSpawn(); noteUpdate();}
 		else {noteUpdate(); noteSpawn();}
-		combo += skipBf;
+		skipCnt = skipBf;
+		if (skipCnt > 0) combo += skipBf;
 		notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 
 		if (healthBar.bounds != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
@@ -1371,32 +1377,33 @@ class PlayState extends MusicBeatState {
 		var noteSpawnTimout:Float = Timer.stamp();
 		if (unspawnNotes.length > totalCnt) {
 			var targetNote:Note = unspawnNotes[totalCnt];
+			var fixedPosition:Float = Conductor.songPosition - ClientPrefs.data.noteOffset;
 
 			var castHold:Bool = targetNote.isSustainNote;
 			var castMust:Bool = targetNote.mustPress;
 
 			var shownTime:Float = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
 			var shownRealTime:Float = shownTime * .001;
-			var isDisplay:Bool = targetNote.strumTime - Conductor.songPosition + ClientPrefs.data.noteOffset < shownTime;
+			var isDisplay:Bool = targetNote.strumTime - fixedPosition < shownTime;
 			while (isDisplay) {
-				var canBeHit:Bool = Conductor.songPosition > targetNote.strumTime; // false is before, true is after
-				var tooLate:Bool = Conductor.songPosition > targetNote.strumTime + noteKillOffset;
-				if (!ClientPrefs.data.skipSpawnNote || Timer.stamp() - noteSpawnTimout < shownRealTime) {
-					if (!(castHold ? tooLate : canBeHit)) {
-						var dunceNote:Note = targetNote;
-						dunceNote.spawned = true;
-						dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
-						notes.add(dunceNote);
-						
-						callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
-						callOnHScript('onSpawnNote', [dunceNote]);
-						if (ClientPrefs.data.processFirst && dunceNote.strum != null) dunceNote.followStrumNote(songSpeed / playbackRate);
-					} else {
-						if (cpuControlled) {
-							if (!castHold && castMust) ++skipBf;
-						} else if (castMust) noteMissCommon(targetNote.noteData);
+				var canBeHit:Bool = fixedPosition > targetNote.strumTime; // false is before, true is after
+				var tooLate:Bool = fixedPosition > targetNote.strumTime + noteKillOffset;
+				var noteJudge:Bool = castHold ? tooLate : canBeHit;
+
+				var isCanPass:Bool = !ClientPrefs.data.skipSpawnNote || Timer.stamp() - noteSpawnTimout < shownRealTime;
+				if (isCanPass && (!optimizeSpawnNote || optimizeSpawnNote && !noteJudge)) {
+					var dunceNote:Note = targetNote;
+					dunceNote.spawned = true;
+					dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
+					notes.add(dunceNote);
+					
+					callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
+					callOnHScript('onSpawnNote', [dunceNote]);
+					if (ClientPrefs.data.processFirst && dunceNote.strum != null) {
+						dunceNote.followStrumNote(songSpeed);
+						if (canBeHit && dunceNote.isSustainNote && dunceNote.strum.sustainReduce) dunceNote.clipToStrumNote();
 					}
-				} else {
+				} else if (!isCanPass || optimizeSpawnNote && noteJudge) {
 					if (cpuControlled) {
 						if (!castHold && castMust) ++skipBf;
 					} else if (castMust) noteMissCommon(targetNote.noteData);
@@ -1409,7 +1416,7 @@ class PlayState extends MusicBeatState {
 
 				shownTime = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
 				shownRealTime = shownTime * .001;
-				isDisplay = targetNote.strumTime - Conductor.songPosition + ClientPrefs.data.noteOffset < shownTime;
+				isDisplay = targetNote.strumTime - fixedPosition < shownTime;
 			}
 		}
 	}

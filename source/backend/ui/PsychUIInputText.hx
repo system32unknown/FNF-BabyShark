@@ -204,7 +204,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 		}
 
 		switch(flxKey) {
-			case LEFT:  move caret to left
+			case LEFT: // move caret to left
 				if (!FlxG.keys.pressed.SHIFT) selectIndex = -1;
 				else if (selectIndex == -1) selectIndex = caretIndex;
 				caretIndex = Std.int(Math.max(0, caretIndex - 1));
