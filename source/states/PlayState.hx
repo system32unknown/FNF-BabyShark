@@ -1430,7 +1430,7 @@ class PlayState extends MusicBeatState {
 			if (notes.length > 0) {
 				if (startedCountdown) {
 					notes.forEach((daNote:Note) -> {
-						if (daNote.strum != null) {
+						if (daNote.exists && daNote.strum != null) {
 							var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
 							daNote.followStrumNote(songSpeed);
 							if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
@@ -1446,7 +1446,7 @@ class PlayState extends MusicBeatState {
 							}
 							if (canBeHit) {
 								if (daNote.mustPress) {
-									if (cpuControlled && !daNote.blockHit && daNote.canBeHit || daNote.isSustainNote) goodNoteHit(daNote);
+									if (cpuControlled && (!daNote.blockHit && daNote.canBeHit || daNote.isSustainNote)) goodNoteHit(daNote);
 								} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
 								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 							}
@@ -1824,7 +1824,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function tweenCamZoom(zoom:Float = 1):Void {
-		if (cameraTwn == null && FlxG.camera.zoom != zoom) cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (60 / Conductor.bpm) * playbackRate, {ease: FlxEase.elasticInOut, onComplete: (_) -> cameraTwn = null});
+		if (cameraTwn == null && FlxG.camera.zoom != zoom) cameraTwn = FlxTween.tween(FlxG.camera, {zoom: zoom}, (Conductor.stepCrochet * 4 / 1000) * playbackRate, {ease: FlxEase.elasticInOut, onComplete: (_) -> cameraTwn = null});
 	}
 
 	public function finishSong(?ignoreNoteOffset:Bool = false):Void {
@@ -1839,8 +1839,7 @@ class PlayState extends MusicBeatState {
 	public var transitioning = false;
 	public function endSong():Bool {
 		timeBar.visible = timeTxt.visible = false;
-		canPause = false;
-		endingSong = true;
+		canPause = false; endingSong = true;
 		camZooming = inCutscene = updateTime = false;
 
 		deathCounter = 0;
@@ -1906,10 +1905,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function KillNotes() {
-		while (notes.length > 0) {
-			var daNote:Note = notes.members[0];
-			invalidateNote(daNote);
-		}
+		while (notes.length > 0) invalidateNote(notes.members[0]);
 		unspawnNotes = []; eventNotes = [];
 	}
 
@@ -1946,8 +1942,7 @@ class PlayState extends MusicBeatState {
 
 		if (daRating.noteSplash && !note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
 		if (!note.ratingDisabled) {
-			songHits++;
-			totalPlayed++;
+			songHits++; totalPlayed++;
 			recalculateRating();
 		}
 	}
