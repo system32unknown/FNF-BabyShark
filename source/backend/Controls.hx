@@ -5,7 +5,7 @@ import flixel.util.FlxSave;
 
 class Controls {
 	// Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx
-	public static final default_keyBinds:Map<String, Array<FlxKey>> = [
+	public static final default_binds:Map<String, Array<FlxKey>> = [
 		'note_1' 		=> [SPACE],
 		'note_3a'		=> [SPACE],
 		'note_5a'		=> [SPACE],
@@ -67,35 +67,17 @@ class Controls {
 		'debug_2'		=> [EIGHT]
 	];
 
-	public static var keyBinds:Map<String, Array<Int>> = default_keyBinds;
+	public static var binds:Map<String, Array<Int>> = default_binds;
 
 	static var _save:FlxSave;
 
-	// general use
-	public static function justPressed(name:String):Bool {
-		return keyJustPressed(name);
-	}
-	public static function pressed(name:String):Bool {
-		return keyPressed(name);
-	}
-	public static function released(name:String):Bool {
-		return keyReleased(name);
-	}
-
-	// keyboard specific
-	public static function keyJustPressed(name:String):Bool {
-		return _getKeyStatus(name, JUST_PRESSED);
-	}
-	public static function keyPressed(name:String):Bool {
-		return _getKeyStatus(name, PRESSED);
-	}
-	public static function keyReleased(name:String):Bool {
-		return _getKeyStatus(name, JUST_RELEASED);
-	}
+	public static function justPressed(name:String):Bool return _getKeyStatus(name, JUST_PRESSED);
+	public static function pressed(name:String):Bool return _getKeyStatus(name, PRESSED);
+	public static function released(name:String):Bool return _getKeyStatus(name, JUST_RELEASED);
 
 	// backend functions to reduce repetitive code
 	static function _getKeyStatus(name:String, state:flixel.input.FlxInput.FlxInputState):Bool {
-		var binds:Array<FlxKey> = keyBinds[name];
+		var binds:Array<FlxKey> = binds[name];
 		if (binds == null) {
 			Logs.trace('Keybind "$name" doesn\'t exist.', WARNING);
 			return false;
@@ -113,7 +95,7 @@ class Controls {
 	}
 
 	public static function save() {
-		_save.data.keyboard = keyBinds;
+		_save.data.binds = binds;
 		_save.flush();
 	}
 
@@ -123,10 +105,12 @@ class Controls {
 			_save.bind('controls', CoolUtil.getSavePath());
 		}
 
-		if (_save.data.keyboard != null) {
-			var loadedKeys:Map<String, Array<FlxKey>> = _save.data.keyboard;
-			for (control => keys in loadedKeys)
-				if (keyBinds.exists(control)) keyBinds.set(control, keys);
+		if (_save.data.binds != null) {
+			var loadedKeys:Map<String, Array<FlxKey>> = _save.data.binds;
+			for (control => keys in loadedKeys) {
+				if (!binds.exists(control)) continue;
+				binds.set(control, keys);
+			}
 		}
 		reloadVolumeKeys();
 	}
@@ -134,7 +118,7 @@ class Controls {
 	public static function convertStrumKey(arr:Array<String>, key:FlxKey):Int {
 		if (key == NONE) return -1;
 		for (i in 0...arr.length) {
-			for (possibleKey in keyBinds[arr[i]]) {
+			for (possibleKey in binds[arr[i]]) {
 				if (key == possibleKey) return i;
 			}
 		}
@@ -142,16 +126,16 @@ class Controls {
 	}
 
 	public static function reset() {
-		for (key in keyBinds.keys()) {
-			if (!default_keyBinds.exists(key)) continue;
-			keyBinds.set(key, default_keyBinds.get(key).copy());
+		for (key in binds.keys()) {
+			if (!default_binds.exists(key)) continue;
+			binds.set(key, default_binds.get(key).copy());
 		}
 	}
 
 	public static function reloadVolumeKeys() {
-		Main.muteKeys = keyBinds.get('volume_mute').copy();
-		Main.volumeDownKeys = keyBinds.get('volume_down').copy();
-		Main.volumeUpKeys = keyBinds.get('volume_up').copy();
+		Main.muteKeys = binds.get('volume_mute').copy();
+		Main.volumeDownKeys = binds.get('volume_down').copy();
+		Main.volumeUpKeys = binds.get('volume_up').copy();
 		toggleVolumeKeys();
 	}
 

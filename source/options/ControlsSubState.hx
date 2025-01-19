@@ -186,8 +186,8 @@ class ControlsSubState extends FlxSubState {
 		text.spawnPos.y -= 55;
 	}
 	function addKeyText(text:Alphabet, option:Array<Dynamic>) {
-		var keys:Array<Null<FlxKey>> = Controls.keyBinds.get(option[2]);
-		if (keys == null) keys = Controls.default_keyBinds.get(option[2]).copy();
+		var keys:Array<Null<FlxKey>> = Controls.binds.get(option[2]);
+		if (keys == null) keys = Controls.default_binds.get(option[2]).copy();
 
 		for (n in 0...2) {
 			var key:String = InputFormatter.getKeyName(keys[n] ?? NONE);
@@ -302,7 +302,7 @@ class ControlsSubState extends FlxSubState {
 			} else if (FlxG.keys.pressed.BACKSPACE) {
 				holdingEsc += elapsed;
 				if (holdingEsc > .5) {
-					Controls.keyBinds.get(curOption[2])[altNum] = NONE;
+					Controls.binds.get(curOption[2])[altNum] = NONE;
 					updateBind(Math.floor(curSelected * 2) + altNum, InputFormatter.getKeyName(NONE));
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					closeBinding();
@@ -310,7 +310,7 @@ class ControlsSubState extends FlxSubState {
 			} else {
 				holdingEsc = 0;
 				var changed:Bool = false;
-				var curKeys:Array<FlxKey> = Controls.keyBinds.get(curOption[2]);
+				var curKeys:Array<FlxKey> = Controls.binds.get(curOption[2]);
 
 				if (FlxG.keys.justPressed.ANY || FlxG.keys.justReleased.ANY) {
 					var keyPressed:Int = FlxG.keys.firstJustPressed();
@@ -331,7 +331,7 @@ class ControlsSubState extends FlxSubState {
 					var option:String = options[curOptions[curSelected]][2];
 					for (n in 0...2) {
 						var key:String = null;
-						var savKey:Array<Null<FlxKey>> = Controls.keyBinds.get(option);
+						var savKey:Array<Null<FlxKey>> = Controls.binds.get(option);
 						key = InputFormatter.getKeyName(savKey[n] ?? NONE);
 						updateBind(Math.floor(curSelected * 2) + n, key);
 					}

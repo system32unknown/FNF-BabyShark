@@ -187,7 +187,7 @@ class Note extends FlxSprite {
 		if (noteData > -1 && noteType != value) {
 			switch(value) {
 				case 'Hurt Note':
-					ignoreNote = true;
+					ignoreNote = mustPress;
 
 					// splash data and colors
 					rgbShader.setRGB(0xFF101010, FlxColor.RED, 0xFF990022);
