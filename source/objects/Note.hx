@@ -415,6 +415,7 @@ class Note extends FlxSprite {
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
+		if (!exists) return;
 		followed = false;
 
 		if (mustPress) {
