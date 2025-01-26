@@ -186,7 +186,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 		if (unspawnNotes.length > totalCnt) {
 			var targetNote:Note = unspawnNotes[totalCnt];
-			while (targetNote.strumTime - Conductor.songPosition < spawnTime) {
+			while (targetNote.hitTime < spawnTime) {
 				var dunceNote:Note = targetNote;
 				dunceNote.spawned = true;
 	
@@ -408,8 +408,8 @@ class EditorPlayState extends MusicBeatSubstate {
 		for (i in 0...10) Paths.image(uiFolder + 'judgements/number/num$i' + PlayState.uiPostfix);
 	}
 
-	function popUpScore(note:Note = null):Void {
-		var noteDiff:Float = PlayState.getNoteDiff(note) / playbackRate;
+	function popUpScore(note:Note = null):Void { 
+		var noteDiff:Float = Math.abs(note.hitTime + ClientPrefs.data.ratingOffset) / playbackRate;
 		var daRating:Judgement = Judgement.getTiming(noteDiff, cpuControlled);
 
 		note.ratingMod = daRating.ratingMod;

@@ -54,9 +54,9 @@ class Conductor {
 		var curBPM:Float = song.bpm;
 		var totalPos:Float = 0, totalSteps:Int = 0;
 
-		for (i in 0...song.notes.length) {
-			if (song.notes[i].changeBPM && song.notes[i].bpm != curBPM) {
-				curBPM = song.notes[i].bpm;
+		for (i => section in song.notes) {
+			if (section.changeBPM && section.bpm != curBPM) {
+				curBPM = section.bpm;
 				bpmChangeMap.push({
 					stepTime: totalSteps,
 					songTime: totalPos,

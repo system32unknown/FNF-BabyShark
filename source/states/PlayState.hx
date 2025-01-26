@@ -893,11 +893,11 @@ class PlayState extends MusicBeatState {
 	}
 	public dynamic function updateScoreText() {
 		var nps:Array<Float> = [Math.fround(bfNpsVal), Math.fround(bfNpsMax)];
-		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [nps[0], nps[1]])}' + Language.getPhrase('score_text', 'Score: {1} ', [songScore]);
+		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [nps[0], nps[1]])}' + Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
 		if (!cpuControlled) {
 			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses: {1} ', [songMisses]); 
 			tempText += Language.getPhrase('accuracy_text', '| Accuracy: {1}% |', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
-		} else tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
+		} else if (!showPopups) tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
 		scoreTxt.text = tempText;
 		nps = null;
 	}
@@ -967,7 +967,7 @@ class PlayState extends MusicBeatState {
 	var eventsPushed:Array<String> = [];
 	function generateSong():Void {
 		songSpeedType = ClientPrefs.getGameplaySetting('scrolltype');
-		songSpeed = switch(songSpeedType) {
+		songSpeed = switch (songSpeedType) {
 			case "constant": ClientPrefs.getGameplaySetting('scrollspeed');
 			case "multiplicative": SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
 			default: SONG.speed;
@@ -1927,7 +1927,7 @@ class PlayState extends MusicBeatState {
 
 	var daRating:Judgement;
 	inline function addScore(note:Note = null):Void {
-		var noteDiff:Float = getNoteDiff(note) / playbackRate;
+		var noteDiff:Float = Math.abs(note.hitTime + ClientPrefs.data.ratingOffset) / playbackRate;
 		daRating = Judgement.getTiming(noteDiff, cpuControlled);
 
 		totalNotesHit += switch (ClientPrefs.data.accuracyType) {
@@ -1996,14 +1996,6 @@ class PlayState extends MusicBeatState {
 		});
 		for (i in seperatedScore) i = null;
 		daloop = tempCombo = null;
-	}
-
-	public static function getNoteDiff(note:Note = null):Float {
-		var noteDiffTime:Float = note.strumTime - Conductor.songPosition;
-		return switch(ClientPrefs.data.noteDiffTypes) {
-			case 'Psych': Math.abs(noteDiffTime + ClientPrefs.data.ratingOffset);
-			case 'Simple' | _: noteDiffTime;
-		}
 	}
 
 	public var strumsBlocked:Array<Bool> = [];
@@ -2465,7 +2457,7 @@ class PlayState extends MusicBeatState {
 		var newScript:HScript = null;
 		try {
 			newScript = new HScript(null, file);
-			newScript.call('onCreate');
+			if (newScript.exists('onCreate')) newScript.call('onCreate');
 			trace('initialized hscript interp successfully: $file');
 			hscriptArray.push(newScript);
 		} catch(e:Dynamic) {

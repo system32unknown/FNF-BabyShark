@@ -55,7 +55,6 @@ class SaveVariables {
 	var showComboCounter:Bool = false;
 	var showNPS:Bool = false;
 	var smoothHealth:Bool = false;
-	var noteDiffTypes:String = "Simple";
 	var accuracyType:String = 'Judgement';
 	var iconBounceType:String = 'Psych';
 	var ratingDisplay:String = 'World';
