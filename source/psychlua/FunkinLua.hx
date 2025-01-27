@@ -348,6 +348,11 @@ class FunkinLua {
 			if (spr != null && image != null && image.length > 0)
 				LuaUtils.loadFrames(spr, image, spriteType);
 		});
+		set("loadMultipleFrames", function(variable:String, images:Array<String>) {
+			var spr:FlxSprite = LuaUtils.getObjectLoop(variable);
+			if(spr != null && images != null && images.length > 0)
+				spr.frames = Paths.getMultiAtlas(images);
+		});
 
 		Lua_helper.add_callback(lua, "getObjectOrder", function(obj:String, ?group:String = null) {
 			var leObj:FlxBasic = LuaUtils.getObjectDirectly(obj);

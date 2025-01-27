@@ -897,7 +897,7 @@ class PlayState extends MusicBeatState {
 		if (!cpuControlled) {
 			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses: {1} ', [songMisses]); 
 			tempText += Language.getPhrase('accuracy_text', '| Accuracy: {1}% |', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
-		} else if (!showPopups) tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
+		} else tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
 		scoreTxt.text = tempText;
 		nps = null;
 	}

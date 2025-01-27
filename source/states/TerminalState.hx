@@ -86,7 +86,7 @@ class TerminalState extends MusicBeatState {
 				case "tristan": "The key to defeating the one whose name shall not be stated.\nA heart of gold that will never become faded.";
 				case "expunged": "[FILE DELETED]\n[FUCK YOU!]";
 				case "deleted": "The unnamable never was a god and never will be. Just an accident.";
-				case "exbungo": "[EXBUNGOS FILE ARE THE ONLY ONES I HAVE ACCESS TO UNFORTUNATELY.]\n[I HATE IT. BECAUSE HE'S UGLY AND FAT.]";
+				case "exbungo": "[EXBUNGOS FILE ARE THE ONLY ONES I HAVE ACCESS TO UNFORTUNATELY.]\n[I HATE HIM. HE'S UGLY AND FAT.]";
 				case "ollie" | "babyshark": "[I HATE HIM. BECAUSE HE KEEPS FOLLOWING ME, AND WANTS FRIENDS. BUT I LIKE HIM.]";
 				case "t5" | "t5mpler": "What the fuck are you doing in here?";
 				case "redacted": "[THE OTHER ME. BUT HE'S POWERFUL. CAN DESTROY BOYFRIEND.]";
