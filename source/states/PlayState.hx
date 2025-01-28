@@ -211,6 +211,7 @@ class PlayState extends MusicBeatState {
 	public var introSoundNames:Array<String> = [];
 
 	var keysArray:Array<String>;
+	public var pressHit:Int = 0;
 
 	public var popUpGroup:FlxTypedSpriteGroup<Popup>;
 	public var uiGroup:FlxSpriteGroup;
@@ -892,14 +893,12 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onUpdateScore', [miss]);
 	}
 	public dynamic function updateScoreText() {
-		var nps:Array<Float> = [Math.fround(bfNpsVal), Math.fround(bfNpsMax)];
-		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [nps[0], nps[1]])}' + Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
+		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [bfNpsVal, bfNpsMax])}' + Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
 		if (!cpuControlled) {
 			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses: {1} ', [songMisses]); 
 			tempText += Language.getPhrase('accuracy_text', '| Accuracy: {1}% |', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
 		} else tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
 		scoreTxt.text = tempText;
-		nps = null;
 	}
 
 	public dynamic function fullComboFunction() {
@@ -1446,7 +1445,10 @@ class PlayState extends MusicBeatState {
 							}
 							if (canBeHit) {
 								if (daNote.mustPress) {
-									if (cpuControlled && (!daNote.blockHit && daNote.canBeHit || daNote.isSustainNote)) goodNoteHit(daNote);
+									if (!daNote.blockHit || daNote.isSustainNote) {
+										if (cpuControlled) goodNoteHit(daNote);
+										else if (!CoolUtil.toBool(pressHit & 1 << daNote.noteData) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet) noteMiss(daNote);
+									}
 								} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
 								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 							}
@@ -2068,9 +2070,11 @@ class PlayState extends MusicBeatState {
 	function keysCheck():Void {
 		var holdArray:Array<Bool> = [];
 		var releaseArray:Array<Bool> = [];
-		for (key in keysArray) {
+		pressHit = 0;
+		for (index => key in keysArray) {
 			holdArray.push(Controls.pressed(key));
 			releaseArray.push(Controls.released(key));
+			pressHit |= holdArray[index] ? 1 << index : 0;
 		}
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
 			if (notes.length > 0) for (n in notes) { // I can't do a filter here, that's kinda awesome
