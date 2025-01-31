@@ -131,7 +131,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		helpTexts = new FlxSpriteGroup();
 		helpTexts.cameras = [camHUD];
 		for (i => txt in str) {
-			if(txt.length < 1) continue;
+			if (txt.length < 1) continue;
 
 			var helpText:FlxText = new FlxText(0, 0, 680, txt, 16);
 			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER);

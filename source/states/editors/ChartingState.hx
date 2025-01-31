@@ -1147,7 +1147,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							  '\nBeat: $curBeat' +
 							  '\nStep: $curStep' +
 							  '\n\nBeat Snap: ${curQuant} / 16' +
-							  '\nSelected: ${selectedNotes.length}';
+							  '\nSelected: ${selectedNotes.length}' +
+							  '\n\nRendered Notes: ' + FlxStringUtil.formatMoney(Math.abs(curRenderedNotes.length + behindRenderedNotes.length), false);
 
 			if (str != infoText.text) {
 				infoText.text = str;
@@ -2621,7 +2622,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				diff = false;
 				Song.getChart(cur, cur);
 			}
-			if(loadedChart == null || !Reflect.hasField(loadedChart, 'song')) { // Check if chart is ACTUALLY a chart and valid
+			if (loadedChart == null || !Reflect.hasField(loadedChart, 'song')) { // Check if chart is ACTUALLY a chart and valid
 				showOutput('Error: File loaded is not a Psych Engine/FNF 0.2.x.x chart.', true);
 				return;
 			}
@@ -3662,18 +3663,18 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				state.add(btn);
 
 				var customBgC:String = '303030';
-				if(chartEditorSave.data.customBgColor != null) customBgC = chartEditorSave.data.customBgColor;
+				if (chartEditorSave.data.customBgColor != null) customBgC = chartEditorSave.data.customBgColor;
 
 				var input:PsychUIInputText = new PsychUIInputText(0, btnY, 80, customBgC, 10);
-				input.onChange = (old:String, cur:String) -> {
-					chartEditorSave.data.customBgColor = cur;
-					changeTheme(CUSTOM);
-				}
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;
 				input.forceCase = UPPER_CASE;
 				input.screenCenter(X).x -= 60;
 				input.cameras = state.cameras;
+				input.onChange = (old:String, cur:String) -> {
+					chartEditorSave.data.customBgColor = cur;
+					changeTheme(CUSTOM);
+				}
 
 				var txt:FlxText = new FlxText(input.x, input.y - 15, 120, 'BG Color:');
 				txt.cameras = state.cameras;
@@ -3681,19 +3682,19 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				state.add(input);
 
 				var customGridC:Array<String> = ['DFDFDF', 'BFBFBF'];
-				if(chartEditorSave.data.customGridColors != null && chartEditorSave.data.customGridColors.length > 1)
+				if (chartEditorSave.data.customGridColors != null && chartEditorSave.data.customGridColors.length > 1)
 					customGridC = chartEditorSave.data.customGridColors;
 
 				var input:PsychUIInputText = new PsychUIInputText(0, btnY, 80, customGridC[0], 10);
-				input.onChange = (old:String, cur:String) -> {
-					chartEditorSave.data.customGridColors[0] = cur;
-					changeTheme(CUSTOM);
-				}
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;
 				input.forceCase = UPPER_CASE;
 				input.screenCenter(X).x += 60;
 				input.cameras = state.cameras;
+				input.onChange = (old:String, cur:String) -> {
+					chartEditorSave.data.customGridColors[0] = cur;
+					changeTheme(CUSTOM);
+				}
 
 				var txt:FlxText = new FlxText(input.x, input.y - 15, 120, 'Grid Colors:');
 				txt.cameras = state.cameras;
@@ -3701,31 +3702,31 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				state.add(input);
 
 				var input:PsychUIInputText = new PsychUIInputText(0, btnY + 30, 80, customGridC[1], 10);
-				input.onChange = (old:String, cur:String) -> {
-					chartEditorSave.data.customGridColors[1] = cur;
-					changeTheme(CUSTOM);
-				}
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;
 				input.forceCase = UPPER_CASE;
 				input.screenCenter(X).x += 60;
 				input.cameras = state.cameras;
+				input.onChange = (old:String, cur:String) -> {
+					chartEditorSave.data.customGridColors[1] = cur;
+					changeTheme(CUSTOM);
+				}
 				state.add(input);
 
 				var customGridOtherC:Array<String> = ['5F5F5F', '4A4A4A'];
-				if(chartEditorSave.data.customNextGridColors != null && chartEditorSave.data.customNextGridColors.length > 1)
+				if (chartEditorSave.data.customNextGridColors != null && chartEditorSave.data.customNextGridColors.length > 1)
 					customGridOtherC = chartEditorSave.data.customNextGridColors;
 
 				var input:PsychUIInputText = new PsychUIInputText(0, btnY, 80, customGridOtherC[0], 10);
-				input.onChange = (old:String, cur:String) -> {
-					chartEditorSave.data.customNextGridColors[0] = cur;
-					changeTheme(CUSTOM);
-				}
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;
 				input.forceCase = UPPER_CASE;
 				input.screenCenter(X).x += 180;
 				input.cameras = state.cameras;
+				input.onChange = (old:String, cur:String) -> {
+					chartEditorSave.data.customNextGridColors[0] = cur;
+					changeTheme(CUSTOM);
+				}
 
 				var txt:FlxText = new FlxText(input.x, input.y - 15, 120, 'Next Grid Colors:');
 				txt.cameras = state.cameras;
@@ -3733,15 +3734,15 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				state.add(input);
 
 				var input:PsychUIInputText = new PsychUIInputText(0, btnY + 30, 80, customGridOtherC[1], 10);
-				input.onChange = (old:String, cur:String) -> {
-					chartEditorSave.data.customNextGridColors[1] = cur;
-					changeTheme(CUSTOM);
-				}
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;
 				input.forceCase = UPPER_CASE;
 				input.screenCenter(X).x += 180;
 				input.cameras = state.cameras;
+				input.onChange = (old:String, cur:String) -> {
+					chartEditorSave.data.customNextGridColors[1] = cur;
+					changeTheme(CUSTOM);
+				}
 				state.add(input);
 			}));
 		}, btnWid);

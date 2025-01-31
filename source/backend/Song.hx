@@ -128,7 +128,7 @@ class Song {
 
 		if (convertTo != null && convertTo.length > 0) {
 			var fmt:String = songJson.format;
-			if(fmt == null) {
+			if (fmt == null) {
 				fmt = songJson.format = 'unknown';
 				isOldVer[1] = true;
 				if (isOldVer[0] && isOldVer[1]) songJson.isOldVersion = true;

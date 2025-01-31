@@ -21,8 +21,13 @@ import utils.*;
 import utils.system.MemoryUtil;
 import data.*;
 import psychlua.*;
-#if HSCRIPT_ALLOWED import alterhscript.AlterHscript; #end
 import cutscenes.DialogueBoxPsych;
+#if HSCRIPT_ALLOWED
+import psychlua.HScript.HScriptInfos;
+import alterhscript.AlterHscript;
+import hscript.Expr.Error as AlterError;
+import hscript.Printer;
+#end
 
 class PlayState extends MusicBeatState {
 	public static var STRUM_X = 48.5;
@@ -230,9 +235,10 @@ class PlayState extends MusicBeatState {
 
 	var optimizeSpawnNote:Bool = ClientPrefs.data.optimizeSpawnNote;
 
+	static var _lastLoadedModDirectory:String = '';
 	public static var nextReloadAll:Bool = false;
 	override public function create() {
-		Paths.clearUnusedMemory();
+		_lastLoadedModDirectory = Mods.currentModDirectory;
 		Paths.clearStoredMemory();
 		if (nextReloadAll) {
 			Paths.clearUnusedMemory();
@@ -553,6 +559,7 @@ class PlayState extends MusicBeatState {
 		playbackRate = value;
 		FlxG.animationTimeScale = value;
 		if (videoCutscene != null) videoCutscene.videoSprite.bitmap.rate = value;
+		Conductor.offset = Reflect.hasField(PlayState.SONG, 'offset') ? (PlayState.SONG.offset / value) : 0;
 		Conductor.safeZoneOffset = (ClientPrefs.data.safeFrames / 60) * 1000 * value;
 		setOnScripts('playbackRate', playbackRate);
 		#else
@@ -1023,7 +1030,7 @@ class PlayState extends MusicBeatState {
 
 				var curStepCrochet:Float = 60 / daBpm * 250;
 				var roundSus:Int = Math.round(swagNote.sustainLength / curStepCrochet);
-				if(roundSus > 0) {
+				if (roundSus > 0) {
 					for (susNote in 0...roundSus + 1) {
 						var sustainNote:Note = new Note(strumTime + (curStepCrochet * susNote), noteColumn, oldNote, true);
 						sustainNote.animSuffix = swagNote.animSuffix;
@@ -1035,7 +1042,7 @@ class PlayState extends MusicBeatState {
 						unspawnSustainNotes.push(sustainNote); swagNote.tail.push(sustainNote);
 						sustainNote.correctionOffset = Note.originalHeight / 2;
 
-						if(!isPixelStage) {
+						if (!isPixelStage) {
 							if (oldNote.isSustainNote) {
 								oldNote.sustainScale = Note.SUSTAIN_SIZE / oldNote.frameHeight;
 								oldNote.sustainScale /= playbackRate;
@@ -1048,9 +1055,9 @@ class PlayState extends MusicBeatState {
 						}
 	
 						if (sustainNote.mustPress) sustainNote.x += FlxG.width / 2; // general offset
-						else if(middleScroll) {
+						else if (middleScroll) {
 							sustainNote.x += 310;
-							if(noteColumn > EK.midArray[mania]) sustainNote.x += FlxG.width / 2 + 25; //Up and Right
+							if (noteColumn > EK.midArray[mania]) sustainNote.x += FlxG.width / 2 + 25; //Up and Right
 						}
 						oldNote = sustainNote;
 					}
@@ -2316,8 +2323,7 @@ class PlayState extends MusicBeatState {
 		luaArray = null;
 		FunkinLua.customFunctions.clear();
 		for (script in hscriptArray) if (script != null) {
-			var ny:Dynamic = script.get('onDestroy');
-			if (ny != null && Reflect.isFunction(ny)) ny();
+			if(script.exists('onDestroy')) script.executeFunction('onDestroy');
 			script.destroy();
 		}
 		hscriptArray = null;
@@ -2461,11 +2467,12 @@ class PlayState extends MusicBeatState {
 		var newScript:HScript = null;
 		try {
 			newScript = new HScript(null, file);
-			if (newScript.exists('onCreate')) newScript.call('onCreate');
+			if (newScript.exists('onCreate')) newScript.executeFunction('onCreate');
 			trace('initialized hscript interp successfully: $file');
 			hscriptArray.push(newScript);
-		} catch(e:Dynamic) {
-			addTextToDebug('ERROR ON LOADING ($file) - $e', FlxColor.RED);
+		} catch(e:AlterError) {
+			var pos:HScriptInfos = cast {fileName: file, showLine: false};
+			AlterHscript.error(Printer.errorToString(e, false), pos);
 			var newScript:HScript = cast (AlterHscript.instances.get(file), HScript);
 			if (newScript != null) newScript.destroy();
 		}
@@ -2525,16 +2532,15 @@ class PlayState extends MusicBeatState {
 			@:privateAccess
 			if (script == null || !script.exists(funcToCall) || exclusions.contains(script.origin)) continue;
 
-			try {
-				var callValue:AlterCall = script.call(funcToCall, args);
+			var callValue:AlterCall = script.executeFunction(funcToCall, args);
+			if (callValue != null) {
 				var myValue:Dynamic = callValue.returnValue;
-	
-				if((myValue == LuaUtils.Function_StopHScript || myValue == LuaUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops) {
+				if ((myValue == LuaUtils.Function_StopHScript || myValue == LuaUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops) {
 					returnVal = myValue;
 					break;
 				}
-				if(myValue != null && !excludeValues.contains(myValue)) returnVal = myValue;
-			} catch (e:Dynamic) addTextToDebug('ERROR (${script.origin}: $funcToCall) - $e', FlxColor.RED);
+				if (myValue != null && !excludeValues.contains(myValue)) returnVal = myValue;
+			}
 		}
 		#end
 		return returnVal;

@@ -146,6 +146,7 @@ class Philly extends BaseStage
 									var particle:PhillyGlowParticle = phillyGlowParticles.recycle(PhillyGlowParticle);
 									particle.setPosition(-400 + width * i + FlxG.random.float(-width / 5, width / 5), phillyGlowGradient.originalY + 200 + (FlxG.random.float(0, 125) + j * 40));
 									particle.color = color;
+									particle.start();
 									phillyGlowParticles.add(particle);
 								}
 							}

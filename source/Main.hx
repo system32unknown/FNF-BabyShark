@@ -6,6 +6,12 @@ import utils.system.MemoryUtil;
 import utils.GameVersion;
 import debug.FPSCounter;
 
+#if HSCRIPT_ALLOWED
+import alterhscript.AlterHscript;
+import psychlua.HScript.HScriptInfos;
+import haxe.PosInfos;
+#end
+
 #if desktop
 import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since it's not directly referenced anywhere else.
 #end
@@ -38,6 +44,54 @@ class Main extends Sprite {
 		#if linux openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		debug.Logs.init();
+
+		#if HSCRIPT_ALLOWED
+		AlterHscript.warn = function(x, ?pos:PosInfos) {
+			AlterHscript.logLevel(WARN, x, pos);
+			var newPos:HScriptInfos = cast pos;
+			if (newPos.showLine == null) newPos.showLine = true;
+			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '')  + '${newPos.fileName}:';
+			#if LUA_ALLOWED
+			if (newPos.isLua == true) {
+				msgInfo += 'HScript:';
+				newPos.showLine = false;
+			}
+			#end
+			if (newPos.showLine == true) msgInfo += '${newPos.lineNumber}:';
+			msgInfo += ' $x';
+			if (PlayState.instance != null) PlayState.instance.addTextToDebug('WARNING: $msgInfo', FlxColor.YELLOW);
+		}
+		AlterHscript.error = function(x, ?pos:PosInfos) {
+			AlterHscript.logLevel(ERROR, x, pos);
+			var newPos:HScriptInfos = cast pos;
+			if (newPos.showLine == null) newPos.showLine = true;
+			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '')  + '${newPos.fileName}:';
+			#if LUA_ALLOWED
+			if (newPos.isLua == true) {
+				msgInfo += 'HScript:';
+				newPos.showLine = false;
+			}
+			#end
+			if (newPos.showLine == true) msgInfo += '${newPos.lineNumber}:';
+			msgInfo += ' $x';
+			if (PlayState.instance != null) PlayState.instance.addTextToDebug('ERROR: $msgInfo', FlxColor.RED);
+		}
+		AlterHscript.fatal = function(x, ?pos:PosInfos) {
+			AlterHscript.logLevel(FATAL, x, pos);
+			var newPos:HScriptInfos = cast pos;
+			if (newPos.showLine == null) newPos.showLine = true;
+			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '')  + '${newPos.fileName}:';
+			#if LUA_ALLOWED
+			if (newPos.isLua == true) {
+				msgInfo += 'HScript:';
+				newPos.showLine = false;
+			}
+			#end
+			if (newPos.showLine == true) msgInfo += '${newPos.lineNumber}:';
+			msgInfo += ' $x';
+			if (PlayState.instance != null) PlayState.instance.addTextToDebug('FATAL: $msgInfo', 0xFFBB0000);
+		}
+		#end
 
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		ClientPrefs.load();

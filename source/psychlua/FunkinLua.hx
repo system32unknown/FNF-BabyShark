@@ -350,7 +350,7 @@ class FunkinLua {
 		});
 		set("loadMultipleFrames", function(variable:String, images:Array<String>) {
 			var spr:FlxSprite = LuaUtils.getObjectLoop(variable);
-			if(spr != null && images != null && images.length > 0)
+			if (spr != null && images != null && images.length > 0)
 				spr.frames = Paths.getMultiAtlas(images);
 		});
 
@@ -1019,11 +1019,11 @@ class FunkinLua {
 			return closed = true;
 		});
 
-		HScript.implement(this);
 		#if DISCORD_ALLOWED DiscordClient.addLuaCallbacks(this); #end
 		#if ACHIEVEMENTS_ALLOWED Achievements.addLuaCallbacks(this); #end
 		#if TRANSLATIONS_ALLOWED Language.addLuaCallbacks(this); #end
 		#if VIDEOS_ALLOWED VideoFunctions.implement(this); #end
+		HScript.implement(this);
 		#if flxanimate FlxAnimateFunctions.implement(this); #end
 		ReflectionFunctions.implement(this);
 		TextFunctions.implement(this);

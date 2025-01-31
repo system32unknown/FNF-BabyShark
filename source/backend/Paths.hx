@@ -58,6 +58,39 @@ class Paths {
 		OpenFlAssets.cache.clear("songs");
 	}
 
+	public static function freeGraphicsFromMemory() {
+		var protectedGfx:Array<FlxGraphic> = [];
+		function checkForGraphics(spr:Dynamic) {
+			try {
+				var grp:Array<Dynamic> = Reflect.getProperty(spr, 'members');
+				if (grp != null) { 
+					for (member in grp) checkForGraphics(member);
+					return;
+				}
+			}
+
+			try {
+				var gfx:FlxGraphic = Reflect.getProperty(spr, 'graphic');
+				if (gfx != null) protectedGfx.push(gfx);
+			}
+		}
+		for (member in FlxG.state.members)
+			checkForGraphics(member);
+		if (FlxG.state.subState != null)
+			for (member in FlxG.state.subState.members)
+				checkForGraphics(member);
+		for (key in currentTrackedAssets.keys()) {
+			// if it is not currently contained within the used local assets
+			if (!dumpExclusions.contains(key)) {
+				var graphic:FlxGraphic = currentTrackedAssets.get(key);
+				if (!protectedGfx.contains(graphic)) {
+					destroyGraphic(graphic); // get rid of the graphic
+					currentTrackedAssets.remove(key); // and remove the key from local cache map
+				}
+			}
+		}
+	}
+
 	inline static function destroyGraphic(graphic:FlxGraphic) {
 		// free some gpu memory
 		if (graphic != null && graphic.bitmap != null && graphic.bitmap.__texture != null)

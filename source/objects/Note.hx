@@ -227,7 +227,7 @@ class Note extends FlxSprite {
 		animation = new backend.animation.PsychAnimationController(this);
 		antialiasing = ClientPrefs.data.antialiasing;
 
-		if(createdFrom == null) createdFrom = PlayState.instance;
+		if (createdFrom == null) createdFrom = PlayState.instance;
 		prevNote ??= this;
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
@@ -262,7 +262,7 @@ class Note extends FlxSprite {
 			if (prevNote.isSustainNote) {
 				prevNote.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][prevNote.noteData]] + 'hold');
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
-				if(createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
+				if (createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
 
 				if (PlayState.isPixelStage) {
 					prevNote.scale.y *= 1.19;
@@ -270,12 +270,12 @@ class Note extends FlxSprite {
 				}
 				prevNote.updateHitbox();
 			}
-			if(PlayState.isPixelStage) {
+			if (PlayState.isPixelStage) {
 				scale.y *= PlayState.daPixelZoom;
 				updateHitbox();
 			}
 			earlyHitMult = 0;
-		} else if(!isSustainNote) {
+		} else if (!isSustainNote) {
 			centerOffsets(true);
 			centerOrigin();
 		}

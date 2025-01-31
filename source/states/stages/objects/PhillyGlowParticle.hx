@@ -9,13 +9,17 @@ class PhillyGlowParticle extends FlxSprite {
 		this.color = color;
 
 		loadGraphic(Paths.image('philly/particle'));
-		antialiasing = antialiasing;
+		antialiasing = ClientPrefs.data.antialiasing;
+		start();
+	}
+
+	public function start() {
 		lifeTime = FlxG.random.float(0.6, 0.9);
 		decay = FlxG.random.float(0.8, 1);
 		if (!ClientPrefs.data.flashing) {
 			decay *= .5;
 			alpha = .5;
-		}
+		} else alpha = 1;
 
 		originalScale = FlxG.random.float(0.75, 1);
 		scale.set(originalScale, originalScale);
