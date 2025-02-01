@@ -74,24 +74,24 @@ class Highscore {
 	 */
 	static function setScore(song:String, score:Int):Void {
 		songScores.set(song, score);
-		FlxG.save.data.songScores = songScores;
-		FlxG.save.flush();
+		_save.data.songScores = songScores;
+		_save.flush();
 	}
 	static function setCombo(song:String, combo:String):Void {
 		songCombos.set(song, checkIfEmpty(combo) ? "Unclear, N/A" : combo);
-		FlxG.save.data.songCombos = songCombos;
-		FlxG.save.flush();
+		_save.data.songCombos = songCombos;
+		_save.flush();
 	}
 	static function setWeekScore(week:String, score:Int):Void {
 		weekScores.set(week, score);
-		FlxG.save.data.weekScores = weekScores;
-		FlxG.save.flush();
+		_save.data.weekScores = weekScores;
+		_save.flush();
 	}
 
 	static function setRating(song:String, rating:Float):Void {
 		songRating.set(song, rating);
-		FlxG.save.data.songRating = songRating;
-		FlxG.save.flush();
+		_save.data.songRating = songRating;
+		_save.flush();
 	}
 
 	public static function formatSong(song:String, diff:Int):String {
@@ -139,6 +139,7 @@ class Highscore {
 		_save.data.weekScores = weekScores;
 		_save.data.songScores = songScores;
 		_save.data.songRating = songRating;
+		_save.data.songCombos = songCombos;
 		_save.flush();
 	}
 
