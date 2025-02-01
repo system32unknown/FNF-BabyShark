@@ -63,7 +63,7 @@ class Paths {
 		function checkForGraphics(spr:Dynamic) {
 			try {
 				var grp:Array<Dynamic> = Reflect.getProperty(spr, 'members');
-				if (grp != null) { 
+				if (grp != null) {
 					for (member in grp) checkForGraphics(member);
 					return;
 				}

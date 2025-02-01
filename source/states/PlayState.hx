@@ -1936,7 +1936,7 @@ class PlayState extends MusicBeatState {
 
 	var daRating:Judgement;
 	inline function addScore(note:Note = null):Void {
-		var noteDiff:Float = Math.abs(note.hitTime + ClientPrefs.data.ratingOffset) / playbackRate;
+		var noteDiff:Float = getNoteDiff(note) / playbackRate;
 		daRating = Judgement.getTiming(noteDiff, cpuControlled);
 
 		totalNotesHit += switch (ClientPrefs.data.accuracyType) {
@@ -2005,6 +2005,13 @@ class PlayState extends MusicBeatState {
 		});
 		for (i in seperatedScore) i = null;
 		daloop = tempCombo = null;
+	}
+
+	public static function getNoteDiff(note:Note = null):Float {
+		return switch(ClientPrefs.data.noteDiffTypes) {
+			case 'Psych': Math.abs(note.hitTime + ClientPrefs.data.ratingOffset);
+			case 'Simple' | _: note.hitTime;
+		}
 	}
 
 	public var strumsBlocked:Array<Bool> = [];
@@ -2261,7 +2268,7 @@ class PlayState extends MusicBeatState {
 				addScore(note);
 			}
 			health += note.hitHealth * healthGain;
-		} else { //Notes that count as a miss if you hit them (Hurt notes for example)
+		} else { // Notes that count as a miss if you hit them (Hurt notes for example)
 			if (!note.noMissAnimation && leType == 'Hurt Note' && boyfriend.hasAnimation('hurt')) {
 				boyfriend.playAnim('hurt', true);
 				boyfriend.specialAnim = true;

@@ -409,7 +409,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function popUpScore(note:Note = null):Void { 
-		var noteDiff:Float = Math.abs(note.hitTime + ClientPrefs.data.ratingOffset) / playbackRate;
+		var noteDiff:Float = PlayState.getNoteDiff(note) / playbackRate;
 		var daRating:Judgement = Judgement.getTiming(noteDiff, cpuControlled);
 
 		note.ratingMod = daRating.ratingMod;

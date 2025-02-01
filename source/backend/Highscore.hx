@@ -1,6 +1,22 @@
 package backend;
 
 import flixel.util.FlxSave;
+
+@:structInit
+class PlayData {
+	// song data
+	public var songID:String;
+	public var difficulty:String;
+
+	// play data
+	public var score:Int;
+	public var accuracy:Float;
+	public var rating:String;
+
+	// modifiers
+	public var playbackRate:Float;
+}
+
 class Highscore {
 	public static var weekScores:Map<String, Int> = new Map<String, Int>();
 	public static var songScores:Map<String, Int> = new Map<String, Int>();
