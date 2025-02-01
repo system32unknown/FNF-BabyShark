@@ -83,7 +83,7 @@ class Option {
 					if (num > -1) curOption = num;
 				default:
 			}
-		} catch(e) {}
+		} catch (e) {}
 	}
 
 	public function change() {

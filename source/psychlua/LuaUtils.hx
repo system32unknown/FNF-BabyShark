@@ -107,7 +107,7 @@ class LuaUtils {
 						}
 					}
 					FlxG.save.data.modSettings.set(modName, settings);
-				} catch(e:Dynamic) {
+				} catch (e:Dynamic) {
 					var errorTitle:String = 'Mod name: ' + Mods.currentModDirectory;
 					var errorMsg:String = 'An error occurred: $e';
 					utils.system.NativeUtil.showMessageBox(errorMsg, errorTitle);
@@ -364,7 +364,7 @@ class LuaUtils {
 	inline public static function axesFromString(axe:String):FlxAxes {
 		try {
 			return FlxAxes.fromString(axe);
-		} catch(e) {
+		} catch (e) {
 			Logs.trace('axesFromString: invalid axes: $axe!', ERROR);
 			return FlxAxes.XY;
 		}

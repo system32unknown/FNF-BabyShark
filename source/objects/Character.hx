@@ -101,7 +101,7 @@ class Character extends FlxSprite {
 
 		try {
 			loadCharacterFile(Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path)));
-		} catch(e) Logs.trace('Error loading character file of "$curCharacter": $e', ERROR);
+		} catch (e) Logs.trace('Error loading character file of "$curCharacter": $e', ERROR);
 
 		skipDance = false;
 		for (name => _ in animOffsets)
@@ -134,7 +134,7 @@ class Character extends FlxSprite {
 			atlas.showPivot = false;
 			try {
 				Paths.loadAnimateAtlas(atlas, json.image);
-			} catch(e:haxe.Exception) FlxG.log.warn('Could not load atlas ${json.image}: $e');
+			} catch (e:haxe.Exception) FlxG.log.warn('Could not load atlas ${json.image}: $e');
 		}
 		#end
 

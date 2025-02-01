@@ -1046,7 +1046,7 @@ class FunkinLua {
 				return;
 			}
 			if (isString) scriptName = 'unknown';
-		} catch(e:Dynamic) {
+		} catch (e:Dynamic) {
 			Logs.trace(e, ERROR);
 			return;
 		}

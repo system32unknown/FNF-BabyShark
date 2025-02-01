@@ -16,7 +16,7 @@ class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 	public function read():String {
 		try {
 			return this.socket.input.readUntil(('\n').charCodeAt(0)).replace("\\n", "\n");
-		} catch(e) Logs.trace('ERROR SOCKET ON READ - $e', ERROR);
+		} catch (e) Logs.trace('ERROR SOCKET ON READ - $e', ERROR);
 		return null;
 	}
 
@@ -24,7 +24,7 @@ class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 		try {
 			this.socket.output.writeString(str.replace("\n", "\\n"));
 			return true;
-		} catch(e) Logs.trace('ERROR SOCKET ON WRITE - $e', ERROR);
+		} catch (e) Logs.trace('ERROR SOCKET ON WRITE - $e', ERROR);
 		return false;
 	}
 

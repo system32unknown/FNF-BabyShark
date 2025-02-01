@@ -665,7 +665,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 									var fileJoin:String = split[split.length - 2] + ' ' + timeStr;
 									var date:Date = Date.fromString(fileJoin);
 									map.set(file, date.getTime());
-								} catch(e:Exception) incorrect.push(file);
+								} catch (e:Exception) incorrect.push(file);
 							} else incorrect.push(file);
 						}
 
@@ -676,7 +676,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							var file:Null<String> = files.shift();
 							try {
 								FileSystem.deleteFile('backups/$file');
-							} catch(e:Exception) {}
+							} catch (e:Exception) {}
 						}
 					}
 				}
@@ -1466,7 +1466,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			FlxG.sound.music.pause();
 			FlxG.sound.music.time = time;
 			FlxG.sound.music.onComplete = (() -> songFinished = true);
-		} catch(e:Exception) {
+		} catch (e:Exception) {
 			FlxG.log.error('Error loading song: $e');
 			return;
 		}
@@ -2754,7 +2754,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					
 					if (!ignoreProgressCheckBox.checked) openSubState(new Prompt('Warning: Any unsaved progress\nwill be lost.', func));
 					else func();
-				} catch(e:Exception) {
+				} catch (e:Exception) {
 					showOutput('Error: ${e.message}', true);
 					Logs.trace(e.stack.toString(), ERROR);
 				}
@@ -2825,7 +2825,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 							if (!ignoreProgressCheckBox.checked) openSubState(new Prompt('Warning: Any unsaved progress\nwill be lost.', func));
 							else func();
-						} catch(e:Exception) showOutput('Error on loading autosave: ${e.message}', true);
+						} catch (e:Exception) showOutput('Error on loading autosave: ${e.message}', true);
 					} else showOutput('Error! Autosave file selected could not be found, huh??', true);
 				});
 				btn.cameras = state.cameras;
@@ -2898,7 +2898,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							btn.cameras = state.cameras;
 							state.add(btn);
 						}));
-					} catch(e:Exception) {
+					} catch (e:Exception) {
 						showOutput('Error: ${e.message}', true);
 						Logs.trace(e.stack.toString(), ERROR);
 					}
@@ -2960,7 +2960,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						reloadNotesDropdowns();
 						prepareReload();
 						showOutput('Chart reloaded successfully!');
-					} catch(e:Exception) {
+					} catch (e:Exception) {
 						showOutput('Error: ${e.message}', true);
 						Logs.trace(e.stack.toString(), ERROR);
 					}
@@ -3032,7 +3032,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						state.add(artistInput);
 						state.add(charterInput);
 					}));
-				} catch(e:Exception) {
+				} catch (e:Exception) {
 					showOutput('Error: ${e.message}', true);
 					Logs.trace(e.stack.toString(), ERROR);
 				}
@@ -3116,7 +3116,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 									});
 								});
 							} else showOutput('Error: You need atleast one difficulty to export.', true);
-						} catch(e:Exception) {
+						} catch (e:Exception) {
 							showOutput('Error: ${e.message}', true);
 							Logs.trace(e.stack.toString(), ERROR);
 						}
@@ -3223,7 +3223,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 								nextChart();
 							});
 						} else showOutput('Error: No difficulties found.', true);
-					} catch(e:Exception) {
+					} catch (e:Exception) {
 						showOutput('Error: ${e.message}', true);
 						Logs.trace(e.stack.toString(), ERROR);
 					}
@@ -3259,7 +3259,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						File.saveContent(fileDialog.path, PsychJsonPrinter.print(loadedChart, ['sectionNotes', 'events']));
 						showOutput('Updated "$filePath" from format "$fmt" to "psych_v1" successfully!');
 					} else showOutput('Chart is already up-to-date! Format: "$fmt"', true);
-				} catch(e:Exception) {
+				} catch (e:Exception) {
 					showOutput('Error: ${e.message}', true);
 					Logs.trace(e.stack.toString(), ERROR);
 				}

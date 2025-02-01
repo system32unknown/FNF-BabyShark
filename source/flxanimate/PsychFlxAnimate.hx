@@ -40,7 +40,7 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 				try {
 					myData = Json.parse(myData);
 					isXml = false;
-				} catch(e) {
+				} catch (e) {
 					myData = Xml.parse(myData);
 					isXml = true;
 				}
@@ -60,7 +60,7 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 	override function destroy() {
 		try {
 			super.destroy();
-		} catch(e:haxe.Exception) {
+		} catch (e:haxe.Exception) {
 			anim.curInstance = FlxDestroyUtil.destroy(anim.curInstance);
 			anim.stageInstance = FlxDestroyUtil.destroy(anim.stageInstance);
 			anim.metadata.destroy();

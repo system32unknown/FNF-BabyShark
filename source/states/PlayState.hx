@@ -558,7 +558,7 @@ class PlayState extends MusicBeatState {
 		}
 		playbackRate = value;
 		FlxG.animationTimeScale = value;
-		if (videoCutscene != null) videoCutscene.videoSprite.bitmap.rate = value;
+		#if VIDEOS_ALLOWED if (videoCutscene != null) videoCutscene.videoSprite.bitmap.rate = value; #end
 		Conductor.offset = Reflect.hasField(PlayState.SONG, 'offset') ? (PlayState.SONG.offset / value) : 0;
 		Conductor.safeZoneOffset = (ClientPrefs.data.safeFrames / 60) * 1000 * value;
 		setOnScripts('playbackRate', playbackRate);
@@ -1176,7 +1176,7 @@ class PlayState extends MusicBeatState {
 
 			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = true);
 			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
-			for (vid in VideoSprite._videos) if (vid.isPlaying) vid.resume();
+			#if VIDEOS_ALLOWED for (vid in VideoSprite._videos) if (vid.isPlaying) vid.resume(); #end
 
 			paused = false;
 			callOnScripts('onResume');
@@ -1188,7 +1188,7 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onFocus');
 		if (!paused) {
 			if (health > 0) resetRPC(Conductor.songPosition > 0.0);
-			for (vid in VideoSprite._videos) if (vid.isPlaying) vid.resume();
+			#if VIDEOS_ALLOWED for (vid in VideoSprite._videos) if (vid.isPlaying) vid.resume(); #end
 		}
 		super.onFocus();
 		callOnScripts('onFocusPost');
@@ -1198,7 +1198,7 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onFocusLost');
 		if (!paused && ClientPrefs.data.autoPausePlayState && !tryPause()) {
 			#if DISCORD_ALLOWED if (health > 0 && autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter()); #end
-			for (vid in VideoSprite._videos) if (vid.isPlaying) vid.pause();
+			#if VIDEOS_ALLOWED for (vid in VideoSprite._videos) if (vid.isPlaying) vid.pause(); #end
 		}
 		super.onFocusLost();
 		callOnScripts('onFocusLostPost');
@@ -1485,7 +1485,7 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.followLerp = 0;
 		FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = false);
 		FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = false);
-		for (vid in VideoSprite._videos) if (vid.isPlaying) vid.pause();
+		#if VIDEOS_ALLOWED for (vid in VideoSprite._videos) if (vid.isPlaying) vid.pause(); #end
 		persistentUpdate = false; persistentDraw = true;
 		paused = true;
 
@@ -1537,7 +1537,7 @@ class PlayState extends MusicBeatState {
 
 				paused = true;
 				canResync = canPause = false;
-				if (videoCutscene != null) {videoCutscene.destroy(); videoCutscene = null;}
+				#if VIDEOS_ALLOWED if (videoCutscene != null) {videoCutscene.destroy(); videoCutscene = null;} #end
 
 				persistentUpdate = persistentDraw = false;
 				FlxTimer.globalManager.clear(); FlxTween.globalManager.clear();
@@ -2323,12 +2323,12 @@ class PlayState extends MusicBeatState {
 		luaArray = null;
 		FunkinLua.customFunctions.clear();
 		for (script in hscriptArray) if (script != null) {
-			if(script.exists('onDestroy')) script.executeFunction('onDestroy');
+			if (script.exists('onDestroy')) script.call('onDestroy');
 			script.destroy();
 		}
 		hscriptArray = null;
 		stagesFunc((stage:BaseStage) -> stage.destroy());
-		if (videoCutscene != null) {videoCutscene.destroy(); videoCutscene = null;}
+		#if VIDEOS_ALLOWED if (videoCutscene != null) {videoCutscene.destroy(); videoCutscene = null;} #end
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
@@ -2467,10 +2467,10 @@ class PlayState extends MusicBeatState {
 		var newScript:HScript = null;
 		try {
 			newScript = new HScript(null, file);
-			if (newScript.exists('onCreate')) newScript.executeFunction('onCreate');
+			if (newScript.exists('onCreate')) newScript.call('onCreate');
 			trace('initialized hscript interp successfully: $file');
 			hscriptArray.push(newScript);
-		} catch(e:AlterError) {
+		} catch (e:AlterError) {
 			var pos:HScriptInfos = cast {fileName: file, showLine: false};
 			AlterHscript.error(Printer.errorToString(e, false), pos);
 			var newScript:HScript = cast (AlterHscript.instances.get(file), HScript);
@@ -2532,7 +2532,7 @@ class PlayState extends MusicBeatState {
 			@:privateAccess
 			if (script == null || !script.exists(funcToCall) || exclusions.contains(script.origin)) continue;
 
-			var callValue:AlterCall = script.executeFunction(funcToCall, args);
+			var callValue:AlterCall = script.call(funcToCall, args);
 			if (callValue != null) {
 				var myValue:Dynamic = callValue.returnValue;
 				if ((myValue == LuaUtils.Function_StopHScript || myValue == LuaUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops) {

@@ -22,7 +22,7 @@ class CallbackHandler {
 				Convert.toLua(l, ret);
 				return 1;
 			}
-		} catch(e:haxe.Exception) {
+		} catch (e:haxe.Exception) {
 			if (Lua_helper.sendErrorsToLua) {
 				LuaL.error(l, 'CALLBACK ERROR! ${e.details()}');
 				return 0;

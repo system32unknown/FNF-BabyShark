@@ -309,7 +309,7 @@ class FreeplayState extends MusicBeatState {
 						MemoryUtil.enable(false);
 					}
 					Song.loadFromJson(poop, songLowercase);
-				} catch(e:Exception) {
+				} catch (e:Exception) {
 					if (ClientPrefs.data.disableGC) {
 						MemoryUtil.enable();
 						MemoryUtil.collect(true);
@@ -340,7 +340,7 @@ class FreeplayState extends MusicBeatState {
 							vocals.play();
 							vocals.pause();
 						} else vocals = FlxDestroyUtil.destroy(vocals);
-					} catch(e:Dynamic) vocals = FlxDestroyUtil.destroy(vocals);
+					} catch (e:Dynamic) vocals = FlxDestroyUtil.destroy(vocals);
 				}
 
 				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), .8);
@@ -372,7 +372,7 @@ class FreeplayState extends MusicBeatState {
 				Song.loadFromJson(songLowercase, songFolder);
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
-			} catch(e:Exception) {
+			} catch (e:Exception) {
 				var errorStr:String = e.message;
 				if (errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ${errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1)}'; //Missing chart
 				else errorStr += '\n\n' + e.stack;

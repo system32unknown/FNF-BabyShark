@@ -153,15 +153,11 @@ class TitleState extends MusicBeatState {
 				bg.active = false;
 				add(bg);
 			}
-		} catch(e:haxe.Exception) Logs.trace('Title JSON might broken, ignoring issue...\n${e.details()}', WARNING);
+		} catch (e:haxe.Exception) Logs.trace('Title JSON might broken, ignoring issue...\n${e.details()}', WARNING);
 	}
 
 	function getIntroTextShit():Array<String> {
-		#if MODS_ALLOWED
-		var firstArray:Array<String> = Mods.mergeAllTextsNamed('data/introText.txt');
-		#else
-		var firstArray:Array<String> = File.getContent(Paths.txt('introText')).split('\n');
-		#end
+		var firstArray:Array<String> = #if MODS_ALLOWED Mods.mergeAllTextsNamed('data/introText.txt') #else File.getContent(Paths.txt('introText')).split('\n') #end;
 		return FlxG.random.getObject([for (i in firstArray) i.split('--')]);
 	}
 

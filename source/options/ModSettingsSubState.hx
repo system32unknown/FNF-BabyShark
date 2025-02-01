@@ -94,7 +94,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 				}
 				addOption(newOption);
 			}
-		} catch(e:Dynamic) {
+		} catch (e:Dynamic) {
 			var errorTitle:String = 'Mod name: $folder';
 			var errorMsg:String = 'An error occurred: $e';
 			utils.system.NativeUtil.showMessageBox(errorMsg, errorTitle);

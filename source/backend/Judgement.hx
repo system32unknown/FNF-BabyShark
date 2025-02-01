@@ -14,7 +14,7 @@ package backend;
 		this.name = image = name;
 		try {
 			timing = Reflect.field(ClientPrefs.data, name + 'Window');
-		} catch(e) FlxG.log.error(e);
+		} catch (e) FlxG.log.error(e);
 		this.ratingMod = ratingMod;
 		this.score = score;
 		this.noteSplash = noteSplash;

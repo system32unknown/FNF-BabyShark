@@ -658,7 +658,7 @@ class ModItem extends FlxSpriteGroup {
 		if (FileSystem.exists(path)) {
 			try {
 				settings = tjson.TJSON.parse(File.getContent(path));
-			} catch(e:Dynamic) {
+			} catch (e:Dynamic) {
 				var errorTitle:String = 'Mod name: ' + Mods.currentModDirectory;
 				var errorMsg:String = 'An error occurred: $e';
 				utils.system.NativeUtil.showMessageBox(errorMsg, errorTitle);

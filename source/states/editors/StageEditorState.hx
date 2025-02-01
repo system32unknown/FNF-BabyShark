@@ -341,7 +341,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 					}
 
 					Reflect.setProperty(copiedMeta, field, fld);
-				} catch(e:Dynamic) Logs.trace(e, ERROR);
+				} catch (e:Dynamic) Logs.trace(e, ERROR);
 			}
 
 			if (copiedMeta.animations != null) {

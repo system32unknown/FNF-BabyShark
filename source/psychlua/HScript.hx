@@ -34,7 +34,14 @@ class HScript extends AlterHscript {
 		var hs:HScript = try parent.hscript catch (e) null;
 		if (hs == null) {
 			trace('initializing haxe interp for: ${parent.scriptName}');
-			parent.hscript = new HScript(parent, code, varsToBring);
+			try {
+				parent.hscript = new HScript(parent, code, varsToBring);
+			} catch (e:AlterError) {
+				var pos:HScriptInfos = cast {fileName: parent.scriptName, isLua: true};
+				if (parent.lastCalledFunction != '') pos.funcName = parent.lastCalledFunction;
+				AlterHscript.error(Printer.errorToString(e, false), pos);
+				parent.hscript = null;
+			}
 		} else {
 			try {
 				hs.scriptCode = code;
@@ -42,9 +49,10 @@ class HScript extends AlterHscript {
 				hs.parse(true);
 				var ret:Dynamic = hs.execute();
 				hs.returnValue = ret;
-			} catch(e:AlterError) {
+			} catch (e:AlterError) {
 				var pos:HScriptInfos = cast hs.interp.posInfos();
 				pos.isLua = true;
+				if (parent.lastCalledFunction != '') pos.funcName = parent.lastCalledFunction;
 				AlterHscript.error(Printer.errorToString(e, false), pos);
 				hs.returnValue = null;
 			}
@@ -89,7 +97,7 @@ class HScript extends AlterHscript {
 			try {
 				var ret:Dynamic = execute();
 				returnValue = ret;
-			} catch(e:AlterError) {
+			} catch (e:AlterError) {
 				returnValue = null;
 				this.destroy();
 				throw e;
@@ -285,7 +293,7 @@ class HScript extends AlterHscript {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
                     if (rawClass == null) return; 
                     FlxG.switchState(cast(Type.createInstance(rawClass, []), flixel.FlxState));
-                } catch(e:AlterError) {
+                } catch (e:AlterError) {
                     Logs.trace('$e: Unspecified result for switching state "$name", could not switch states!', ERROR);
                     return;
                 }
@@ -299,7 +307,7 @@ class HScript extends AlterHscript {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
 					if (rawClass == null) return;
                     FlxG.state.openSubState(cast(Type.createInstance(rawClass, args), FlxSubState));
-                } catch(e:Dynamic) {
+                } catch (e:Dynamic) {
                     Logs.trace('$e: Unspecified result for opening substate "$name", could not be opened!', ERROR);
                     return;
                 }
@@ -358,40 +366,13 @@ class HScript extends AlterHscript {
 	public override function parse(force:Bool = false) {
 		return super.parse(force);
 	}
-	#if LUA_ALLOWED
-	public override function call(fun:String, ?args:Array<Dynamic>):AlterCall {
-		var prevLua:FunkinLua = FunkinLua.lastCalledScript;
-		FunkinLua.lastCalledScript = parentLua;
-		final call:AlterCall = super.call(fun, args);
-		FunkinLua.lastCalledScript = prevLua;
-		return call;
-	}
-	#end
-
-	public function executeFunction(?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):AlterCall {
-		if (funcToRun == null) return null;
-
-		if (!exists(funcToRun)) {
-			AlterHscript.error('No function named: $funcToRun', this.interp.posInfos());
-			return null;
-		}
-
-		try {
-			return (call(funcToRun, funcArgs):AlterCall).returnValue;
-		} catch(e:AlterError) {
-			var pos:HScriptInfos = cast this.interp.posInfos();
-			pos.funcName = funcToRun;
-			AlterHscript.error(Printer.errorToString(e, false), pos);
-		}
-		return null;
-	}
 
 	#if LUA_ALLOWED
 	public static function implement(funk:FunkinLua) {
 		funk.addLocalCallback("runHaxeCode", function(codeToRun:String, ?varsToBring:Any = null, ?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):Dynamic {
 			initHaxeModuleCode(funk, codeToRun, varsToBring);
 			if (funk.hscript != null) {
-				final retVal:AlterCall = funk.hscript.executeFunction(funcToRun, funcArgs);
+				final retVal:AlterCall = funk.hscript.call(funcToRun, funcArgs);
 				if (retVal != null) {
 					return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
 				} else if (funk.hscript.returnValue != null) return funk.hscript.returnValue;
@@ -401,10 +382,11 @@ class HScript extends AlterHscript {
 
 		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
 			if (funk.hscript != null) {
-				final retVal:AlterCall = funk.hscript.executeFunction(funcToRun, funcArgs);
+				final retVal:AlterCall = funk.hscript.call(funcToRun, funcArgs);
 				if (retVal != null) return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
 			} else {
 				var pos:HScriptInfos = cast {fileName: funk.scriptName, showLine: false};
+				if (funk.lastCalledFunction != '') pos.funcName = funk.lastCalledFunction;
 				AlterHscript.error("runHaxeFunction: HScript has not been initialized yet! Use \"runHaxeCode\" to initialize it", pos);
 			}
 			return null;
@@ -435,6 +417,28 @@ class HScript extends AlterHscript {
 
 	inline function getClassHSC(className:String):Class<Dynamic> {
 		return Type.resolveClass('${className}_HSC');
+	}
+
+	override function call(funcToRun:String, ?args:Array<Dynamic>):AlterCall {
+		if (funcToRun == null || interp == null) return null;
+		if (!exists(funcToRun)) {
+			AlterHscript.error('No function named: $funcToRun', this.interp.posInfos());
+			return null;
+		}
+		try {
+			var func:Dynamic = interp.variables.get(funcToRun); // function signature
+			final ret = Reflect.callMethod(null, func, args ?? []);
+			return {funName: funcToRun, signature: func, returnValue: ret};
+		} catch (e:AlterError) {
+			var pos:HScriptInfos = cast this.interp.posInfos();
+			pos.funcName = funcToRun;
+			if (parentLua != null) {
+				pos.isLua = true;
+				if (parentLua.lastCalledFunction != '') pos.funcName = parentLua.lastCalledFunction;
+			}
+			AlterHscript.error(Printer.errorToString(e, false), pos);
+		}
+		return null;
 	}
 
 	public override function destroy() {

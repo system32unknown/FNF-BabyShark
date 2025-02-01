@@ -234,7 +234,7 @@ class LoadingState extends MusicBeatState {
 					}
 					prepare(imgs, snds, mscs);
 				}
-			} catch(e:Dynamic) Logs.trace("ERROR PREPARING SONG: " + e, ERROR);
+			} catch (e:Dynamic) Logs.trace("ERROR PREPARING SONG: " + e, ERROR);
 			completedThread();
 		});
 
@@ -357,7 +357,7 @@ class LoadingState extends MusicBeatState {
 			try {
 				if (func() != null) trace('finished preloading $traceData');
 				else Logs.trace('ERROR! fail on preloading $traceData', ERROR);
-			} catch(e:Dynamic) Logs.trace('ERROR! fail on preloading $traceData', ERROR);
+			} catch (e:Dynamic) Logs.trace('ERROR! fail on preloading $traceData', ERROR);
 			mutex.tryAcquire();
 			loaded++;
 			mutex.release();
