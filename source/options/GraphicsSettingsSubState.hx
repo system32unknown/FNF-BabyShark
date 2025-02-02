@@ -33,6 +33,12 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Shaders', 'If unchecked, disables shaders.\nIt\'s used for some visual effects, and also CPU intensive for weaker PCs.', 'shaders'));
 		#if desktop addOption(new Option('GPU Caching', 'If checked, allows the GPU to be used for caching textures, decreasing RAM usage.\nDon\'t turn this on if you have a shitty Graphics Card.', 'cacheOnGPU')); #end
 
+		#if sys
+		var option:Option = new Option('VSync', 'If checked, it enables VSync, fixing any screen tearing\nat the cost of capping the FPS to screen refresh rate.\n(Restart required)', 'vsync');
+		option.onChange = onChangeVSync;
+		addOption(option);
+		#end
+
 		var option:Option = new Option('Framerate', "Pretty self explanatory, isn't it?", 'framerate', INT);
 		addOption(option);
 		option.minValue = 10;
@@ -52,6 +58,14 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 			FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
 		else FlxG.drawFramerate = FlxG.updateFramerate = ClientPrefs.data.framerate;
 	}
+
+	#if sys
+	function onChangeVSync() {
+		var file:String = lime.system.System.applicationStorageDirectory + "vsync.txt";
+		if (FileSystem.exists(file)) FileSystem.deleteFile(file);
+		File.saveContent(file, Std.string(ClientPrefs.data.vsync));
+	}
+	#end
 
 	override function changeSelection(change:Int = 0) {
 		super.changeSelection(change); 
