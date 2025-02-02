@@ -11,6 +11,17 @@ Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor code
 [![Build Release (MacOS)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/macos.yml/badge.svg)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/macos.yml)
 [![Build Release (Windows)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/linux.yml/badge.svg)](https://github.com/system32unknown/FNF-BabyShark/actions/workflows/linux.yml)
 
+# Installation:
+
+Refer to [the Build Instructions](/docs/BUILDING.md)
+
+# Customization:
+
+if you wish to disable things like *Lua Scripts* or *Video Cutscenes*, you can read over to `Project.xml`
+inside `Project.xml`, you will find several variables to customize Psych Engine to your liking
+to start you off, disabling Videos should be simple, simply Delete the line `"VIDEOS_ALLOWED"` or comment it out by wrapping the line in XML-like comments, like this `<!-- YOUR_LINE_HERE -->`
+same goes for *Lua Scripts*, comment out or delete the line with `LUA_ALLOWED`, this and other customization options are all available within the `Project.xml` file
+
 # Credits:
 
 ### Psych Engine:
@@ -47,4 +58,3 @@ Heavily Modified of Psych Engine. combined with Kade, Dave, Codename (minor code
 * CheemsAndFriends - Creator of FlxAnimate.
 * Raltyro - Maintainer of Psike Engine.
 * It'z_Miles - Linear GFX Transformations Library (ParallaxLT).
-* MaliciousBunny - Video for the Final Update.

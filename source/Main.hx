@@ -22,6 +22,7 @@ import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since
 #end
 class Main extends Sprite {
 	public static var engineVer:GameVersion = new GameVersion(0, 1, 5);
+	public static var fnfVer:GameVersion = new GameVersion(0, 5, 3);
 
 	public static var game = {
 		width: 1280, // WINDOW width

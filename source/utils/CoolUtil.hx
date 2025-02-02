@@ -1,11 +1,39 @@
 package utils;
 
+import haxe.Http;
 import openfl.utils.Assets;
-import flixel.FlxBasic;
-import flixel.util.FlxSort;
 import flixel.addons.display.FlxBackdrop;
 
 class CoolUtil {
+	public static function checkForUpdates(url:String = null):Array<String> {
+		if (url == null || url.length == 0)
+			url = "https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/CHANGELOG.md";
+
+		var returnedData:Array<String> = [];
+		var version:String = Main.engineVer.version;
+		if (ClientPrefs.data.checkForUpdates) {
+			trace('checking for updates...');
+			var http:Http = new Http(url);
+
+			http.onData = (data:String) -> {
+    			var versionEndIndex:Int = data.indexOf(';');
+    			returnedData[0] = data.substring(0, versionEndIndex);
+    			returnedData[1] = data.substring(versionEndIndex + 1, data.length); // Extract the changelog after the version number
+
+				var updateVersion:String = returnedData[0];
+				trace('version online: $updateVersion, your version: $version');
+				if (updateVersion != version) {
+					trace('versions arent matching! please update.');
+					http.onData = http.onError = null;
+					http = null;
+				}
+			}
+			http.onError = (error:String) -> Logs.trace('Checking Update Error: $error', ERROR);
+			http.request();
+		}
+		return returnedData;
+	}
+
 	inline public static function toBool(value:Dynamic):Null<Bool> {
 		if (value is Int || value is Float) return (value >= 1);
 		return null;

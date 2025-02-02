@@ -1,7 +1,5 @@
 package states;
 
-import haxe.Http;
-
 typedef TitleData = {
 	var titlex:Float;
 	var titley:Float;
@@ -21,8 +19,6 @@ typedef TitleData = {
 }
 
 class TitleState extends MusicBeatState {
-	public static var updateVersion:String;
-	var mustUpdate:Bool = false;
 	override function create():Void {
 		Paths.clearStoredMemory();
 		super.create();
@@ -30,7 +26,6 @@ class TitleState extends MusicBeatState {
 		FlxG.mouse.visible = false;
 		persistentUpdate = true;
 
-		#if CHECK_FOR_UPDATES checkUpdate(); #end
 		prepareIntro();
 		loadJsonData();
 		Conductor.bpm = musicBPM;
@@ -197,10 +192,7 @@ class TitleState extends MusicBeatState {
 				FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF);
 				FlxG.sound.play(Paths.sound('confirmMenu'), .7);
 				skipped = true;
-				transitionTmr = FlxTimer.wait(1.5, () -> {
-					if (mustUpdate) FlxG.switchState(() -> new OutdatedState());
-					else FlxG.switchState(() -> new MainMenuState());
-				});
+				transitionTmr = FlxTimer.wait(1.5, () -> FlxG.switchState(() -> new MainMenuState()));
 			}
 		}
 
@@ -278,32 +270,4 @@ class TitleState extends MusicBeatState {
 		FlxG.camera.flash(FlxColor.WHITE, 2);
 		seenIntro = true;
 	}
-
-	#if CHECK_FOR_UPDATES
-	function checkUpdate():Void {
-		if (ClientPrefs.data.checkForUpdates && !seenIntro) {
-			trace('checking for update');
-			var http:Http = new Http("https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/CHANGELOG.md");
-			var returnedData:Array<String> = [];
-
-			http.onData = (data:String) -> {
-    			var versionEndIndex:Int = data.indexOf(';');
-    			returnedData[0] = data.substring(0, versionEndIndex);
-
-    			// Extract the changelog after the version number
-    			returnedData[1] = data.substring(versionEndIndex + 1, data.length);
-				updateVersion = returnedData[0];
-				final curVersion:String = Main.engineVer.version;
-				trace('version online: ' + updateVersion + ', your version: ' + curVersion);
-				if (updateVersion != curVersion) {
-					trace('versions arent matching!');
-					OutdatedState.curChanges = returnedData[1];
-					mustUpdate = true;
-				}
-			}
-			http.onError = (error:String) -> Logs.trace('Checking Update Error: $error', ERROR);
-			http.request();
-		}
-	}
-	#end
 }

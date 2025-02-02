@@ -11,6 +11,7 @@ import flixel.util.typeLimit.NextState;
 import backend.Song;
 import data.StageData;
 
+import sys.thread.FixedThreadPool;
 import sys.thread.Thread;
 import sys.thread.Mutex;
 
@@ -24,6 +25,7 @@ class LoadingState extends MusicBeatState {
 	static var originalBitmapKeys:Map<String, String> = [];
 	static var requestedBitmaps:Map<String, BitmapData> = [];
 	static var mutex:Mutex;
+	static var threadPool:FixedThreadPool;
 
 	function new(target:NextState, stopMusic:Bool) {
 		this.target = target;
@@ -126,13 +128,13 @@ class LoadingState extends MusicBeatState {
 		MusicBeatState.skipNextTransIn = true;
 		FlxG.switchState(target);
 		transitioning = finishedLoading = true;
+		threadPool.shutdown(); // kill all workers safely
 		mutex = null;
 	}
 
 	public static function checkLoaded():Bool {
 		for (key => bitmap in requestedBitmaps) {
-			if (bitmap != null && Paths.cacheBitmap(originalBitmapKeys.get(key), bitmap) != null) trace('finished preloading image $key');
-			else Logs.trace('failed to cache image $key', ERROR);
+			if (bitmap == null && Paths.cacheBitmap(originalBitmapKeys.get(key), bitmap) == null) Logs.trace('failed to cache image $key', ERROR);
 		}
 		requestedBitmaps.clear();
 		originalBitmapKeys.clear();
@@ -239,62 +241,68 @@ class LoadingState extends MusicBeatState {
 		});
 
 		Thread.create(() -> {
-			if (song.stage == null || song.stage.length < 1)
-				song.stage = StageData.vanillaSongStage(folder);
-
-			var stageData:StageFile = StageData.getStageFile(song.stage);
-			if (stageData != null) {
-				var imgs:Array<String> = [];
-				var snds:Array<String> = [];
-				var mscs:Array<String> = [];
-				if (stageData.preload != null) {
-					for (asset in Reflect.fields(stageData.preload)) {
-						var filters:Int = Reflect.field(stageData.preload, asset);
-						var asset:String = asset.trim();
+			try {
+				if (song.stage == null || song.stage.length < 1)
+					song.stage = StageData.vanillaSongStage(folder);
 	
-						if (filters < 0 || StageData.validateVisibility(filters)) {
-							if (asset.startsWith('images/')) imgs.push(asset.substr('images/'.length));
-							else if (asset.startsWith('sounds/')) snds.push(asset.substr('sounds/'.length));
-							else if (asset.startsWith('music/')) mscs.push(asset.substr('music/'.length));
+				var stageData:StageFile = StageData.getStageFile(song.stage);
+				if (stageData != null) {
+					var imgs:Array<String> = [];
+					var snds:Array<String> = [];
+					var mscs:Array<String> = [];
+					if (stageData.preload != null) {
+						for (asset in Reflect.fields(stageData.preload)) {
+							var filters:Int = Reflect.field(stageData.preload, asset);
+							var asset:String = asset.trim();
+		
+							if (filters < 0 || StageData.validateVisibility(filters)) {
+								if (asset.startsWith('images/')) imgs.push(asset.substr('images/'.length));
+								else if (asset.startsWith('sounds/')) snds.push(asset.substr('sounds/'.length));
+								else if (asset.startsWith('music/')) mscs.push(asset.substr('music/'.length));
+							}
 						}
 					}
+		
+					if (stageData.objects != null) {
+						for (sprite in stageData.objects) {
+							if (sprite.type == 'sprite' || sprite.type == 'animatedSprite')
+								if ((sprite.filters < 0 || StageData.validateVisibility(sprite.filters)) && !imgs.contains(sprite.image))
+									imgs.push(sprite.image);
+						}
+					}
+					prepare(imgs, snds, mscs);
 				}
 	
-				if (stageData.objects != null) {
-					for (sprite in stageData.objects) {
-						if (sprite.type == 'sprite' || sprite.type == 'animatedSprite')
-							if ((sprite.filters < 0 || StageData.validateVisibility(sprite.filters)) && !imgs.contains(sprite.image))
-								imgs.push(sprite.image);
-					}
+				songsToPrepare.push('$folder/Inst');
+	
+				var player1:String = song.player1;
+				var player2:String = song.player2;
+				var gfVersion:String = song.gfVersion;
+				var prefixVocals:String = song.needsVoices ? '$folder/Voices' : null;
+				gfVersion ??= 'gf';
+	
+				preloadCharacter(player1);
+				if (Paths.fileExists('$prefixVocals.${Paths.SOUND_EXT}', SOUND, false, 'songs')) songsToPrepare.push(prefixVocals);
+	
+				if (player2 != player1) {
+					threadsMax++;
+					Thread.create(() -> {
+						try {
+							preloadCharacter(player2);
+						} catch (e:Dynamic) Logs.trace('Error preloading player2: ' + e.details(), ERROR);
+						completedThread();
+					});
 				}
-				prepare(imgs, snds, mscs);
-			}
-
-			songsToPrepare.push('$folder/Inst');
-
-			var player1:String = song.player1;
-			var player2:String = song.player2;
-			var gfVersion:String = song.gfVersion;
-			var prefixVocals:String = song.needsVoices ? '$folder/Voices' : null;
-			gfVersion ??= 'gf';
-
-			preloadCharacter(player1);
-			if (Paths.fileExists('$prefixVocals.${Paths.SOUND_EXT}', SOUND, false, 'songs')) songsToPrepare.push(prefixVocals);
-
-			if (player2 != player1) {
-				threadsMax++;
-				Thread.create(() -> {
-					preloadCharacter(player2);
-					completedThread();
-				});
-			}
-			if (!stageData.hide_girlfriend && gfVersion != player2 && gfVersion != player1) {
-				threadsMax++;
-				Thread.create(() -> {
-					preloadCharacter(gfVersion);
-					completedThread();
-				});
-			}
+				if (!stageData.hide_girlfriend && gfVersion != player2 && gfVersion != player1) {
+					threadsMax++;
+					Thread.create(() -> {
+						try {
+							preloadCharacter(gfVersion);
+						} catch (e:Dynamic) Logs.trace('Error preloading gf: ' + e.details(), ERROR);
+						completedThread();
+					});
+				}
+			} catch (e:Exception) Logs.trace('Error Creating thread: ' + e.details(), ERROR);
 			completedThread();
 		});
 	}
@@ -340,10 +348,13 @@ class LoadingState extends MusicBeatState {
 
 	public static function startThreads() {
 		mutex = new Mutex();
+		threadPool = new FixedThreadPool(#if MULTITHREADED_LOADING 10 #else 1 #end); // 10 threads are enough
 		loadMax = imagesToPrepare.length + soundsToPrepare.length + musicToPrepare.length + songsToPrepare.length;
 		loaded = 0;
 
-		//then start threads
+		_threadFunc(); // then start threads
+	}
+	static function _threadFunc() {
 		for (sound in soundsToPrepare) initThread(() -> preloadSound('sounds/$sound'), 'sound $sound');
 		for (music in musicToPrepare) initThread(() -> preloadSound('music/$music'), 'music $music');
 		for (song in songsToPrepare) initThread(() -> preloadSound(song, 'songs', true, false), 'song $song');
@@ -353,14 +364,15 @@ class LoadingState extends MusicBeatState {
 	}
 
 	static function initThread(func:Void->Dynamic, traceData:String) {
-		Thread.create(() -> {
+		threadPool.run(() -> {			
+			var threadStart:Float = Sys.time();
 			try {
-				if (func() != null) trace('finished preloading $traceData');
-				else Logs.trace('ERROR! fail on preloading $traceData', ERROR);
+				if (func() != null) {
+					var diff:Float = Sys.time() - threadStart;
+					trace('finished preloading $traceData in ${Math.round(diff)}s');
+				} else Logs.trace('ERROR! fail on preloading $traceData', ERROR);
 			} catch (e:Dynamic) Logs.trace('ERROR! fail on preloading $traceData', ERROR);
-			mutex.tryAcquire();
 			loaded++;
-			mutex.release();
 		});
 	}
 
@@ -404,7 +416,7 @@ class LoadingState extends MusicBeatState {
 		if (!Paths.currentTrackedSounds.exists(file)) {
 			if (#if sys FileSystem.exists(file) || #end OpenFlAssets.exists(file, SOUND)) {
 				var sound:Sound = #if sys Sound.fromFile(file) #else OpenFlAssets.getSound(file, false) #end;
-				mutex.tryAcquire();
+				mutex.acquire();
 				Paths.currentTrackedSounds.set(file, sound);
 				mutex.release();
 			} else if (beepOnNull) {
@@ -412,7 +424,7 @@ class LoadingState extends MusicBeatState {
 				return flixel.system.FlxAssets.getSound('flixel/sounds/beep');
 			}
 		}
-		mutex.tryAcquire();
+		mutex.acquire();
 		Paths.localTrackedAssets.push(file);
 		mutex.release();
 
@@ -430,7 +442,7 @@ class LoadingState extends MusicBeatState {
 				var file:String = Paths.getPath(requestKey, IMAGE);
 				if (#if sys FileSystem.exists(file) || #end OpenFlAssets.exists(file, IMAGE)) {
 					var bitmap:BitmapData = #if sys BitmapData.fromFile(file) #else OpenFlAssets.getBitmapData(file, false) #end;
-					mutex.tryAcquire();
+					mutex.acquire();
 					requestedBitmaps.set(file, bitmap);
 					originalBitmapKeys.set(file, requestKey);
 					mutex.release();

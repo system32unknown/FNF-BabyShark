@@ -3,6 +3,7 @@ package states;
 import flixel.FlxObject;
 import flixel.effects.FlxFlicker;
 import options.OptionsState;
+import substates.OutdatedSubState;
 
 enum MainMenuColumn {
 	LEFT;
@@ -85,13 +86,22 @@ class MainMenuState extends MusicBeatState {
 			menuItems.add(rightItem);
 		}
 
-		var version:FlxText = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH}, ${Main.engineVer.COMMIT_NUM})\nBaby Shark\'s Big Funkin! v${FlxG.stage.application.meta.get('version')}', 16);
+		var version:FlxText = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH}, ${Main.engineVer.COMMIT_NUM})\nBaby Shark\'s Big Funkin! v${FlxG.stage.application.meta.get('version')}\nFriday Night Funkin\' v${Main.fnfVer.version}', 16);
 		version.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, RIGHT);
 		version.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		version.scrollFactor.set();
 		version.setPosition(FlxG.width - version.width, FlxG.height - version.height);
 		add(version);
 		changeItem();
+
+		#if (ACHIEVEMENTS_ALLOWED && MODS_ALLOWED) Achievements.reloadList(); #end
+
+		#if CHECK_FOR_UPDATES
+		if (OutdatedSubState.updateVersion[0] != Main.engineVer.version) {
+			persistentUpdate = false;
+			openSubState(new OutdatedSubState());
+		}
+		#end
 
 		FlxG.camera.follow(camFollow, null, .15);
 	}
