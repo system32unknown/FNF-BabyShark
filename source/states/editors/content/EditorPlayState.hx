@@ -19,6 +19,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	var startingSong:Bool = true;
 
 	var playbackRate:Float = 1;
+	var inst:FlxSound = new FlxSound();
 	var vocals:FlxSound;
 	
 	var notes:FlxTypedGroup<Note>;
@@ -74,7 +75,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		this.startPos = Conductor.songPosition;
 		Conductor.songPosition = startPos;
 
-		playbackRate = FlxG.sound.music.pitch;
+		#if FLX_PITCH playbackRate = FlxG.sound.music.pitch; #end
 	}
 
 	override function create() {
@@ -176,8 +177,8 @@ class EditorPlayState extends MusicBeatSubstate {
 		} else {
 			Conductor.songPosition += elapsed * 1000 * playbackRate;
 			if (Conductor.songPosition >= 0) {
-				var timeDiff:Float = Math.abs((FlxG.sound.music.time + Conductor.offset) - Conductor.songPosition);
-				Conductor.songPosition = FlxMath.lerp(FlxG.sound.music.time + Conductor.offset, Conductor.songPosition, Math.exp(-elapsed * 2.5));
+				var timeDiff:Float = Math.abs((inst.time + Conductor.offset) - Conductor.songPosition);
+				Conductor.songPosition = FlxMath.lerp(inst.time + Conductor.offset, Conductor.songPosition, Math.exp(-elapsed * 2.5));
 				if (timeDiff > 1000 * playbackRate) Conductor.songPosition = Conductor.songPosition + 1000 * FlxMath.signOf(timeDiff);
 			}
 		}
@@ -251,19 +252,24 @@ class EditorPlayState extends MusicBeatSubstate {
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		FlxG.mouse.visible = true;
 		NoteSplash.configs.clear();
+		FlxG.sound.list.remove(inst);
+		flixel.util.FlxDestroyUtil.destroy(inst);
 		super.destroy();
 	}
 	
 	function startSong():Void {
 		startingSong = false;
-		FlxG.sound.music.onComplete = finishSong;
-		FlxG.sound.music.volume = vocals.volume = 1;
+		@:privateAccess inst.loadEmbedded(FlxG.sound.music._sound);
+		inst.looped = false;
+		inst.onComplete = finishSong;
+		inst.volume = vocals.volume = 1;
+		FlxG.sound.list.add(inst);
 
-		FlxG.sound.music.play();
-		vocals.play();
-		FlxG.sound.music.time = vocals.time = startPos - Conductor.offset;
+		FlxG.sound.music.pause();
+		inst.play(); vocals.play();
+		inst.time = vocals.time = startPos - Conductor.offset;
 
-		songLength = FlxG.sound.music.length; // Song duration in a float, useful for the time left feature
+		songLength = inst.length; // Song duration in a float, useful for the time left feature
 	}
 
 	// Borrowed from PlayState
@@ -276,7 +282,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		
 		var songData:SwagSong = PlayState.SONG;
 		Conductor.bpm = songData.bpm;
-		FlxG.sound.music.volume = vocals.volume = 0;
+		inst.volume = vocals.volume = 0;
 
 		noteGroup.add(notes = new FlxTypedGroup<Note>());
 
@@ -391,12 +397,13 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	public function endSong() {
 		notes.forEachAlive((note:Note) -> invalidateNote(note));
+		for (note in unspawnNotes) if (note != null) invalidateNote(note);
 		unspawnNotes.resize(0);
 
-		FlxG.sound.music.pause();
+		inst.pause();
 		vocals.pause();
 		if (finishTimer != null) finishTimer.destroy();
-		Conductor.songPosition = FlxG.sound.music.time = vocals.time = startPos - Conductor.offset;
+		Conductor.songPosition = inst.time = vocals.time = startPos - Conductor.offset;
 		close();
 	}
 
@@ -474,7 +481,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (cpuControlled || key < 0 || key > playerStrums.length) return;
 
 		var lastTime:Float = Conductor.songPosition; // more accurate hit time for the ratings?
-		if (Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time + Conductor.offset;
+		if (Conductor.songPosition >= 0) Conductor.songPosition = inst.time + Conductor.offset;
 
 		// obtain notes that the player can hit
 

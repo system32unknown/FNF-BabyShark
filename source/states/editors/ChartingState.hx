@@ -735,17 +735,19 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							Conductor.songPosition = FlxG.sound.music.time = cachedSectionTimes[curSec] - Conductor.offset + .000001;
 						}
 					}
+				} else if(FlxG.keys.justPressed.HOME) {
+					setSongPlaying(false);
+					Conductor.songPosition = FlxG.sound.music.time = 0;
+					loadSection(0);
+				} else if(FlxG.keys.justPressed.END) {
+					setSongPlaying(false);
+					Conductor.songPosition = FlxG.sound.music.time = FlxG.sound.music.length - 1;
+					loadSection(PlayState.SONG.notes.length - 1);
 				} else if (FlxG.keys.justPressed.R) {
 					var timeToGoBack:Float = 0;
 					if (!FlxG.keys.pressed.SHIFT) timeToGoBack = cachedSectionTimes[curSec] + (curSec > 0 ? 0.000001 : 0);
 					else loadSection(0);
 					Conductor.songPosition = FlxG.sound.music.time = vocals.time = timeToGoBack;
-				} else if (FlxG.keys.justPressed.HOME) {
-					loadSection(0);
-					Conductor.songPosition = FlxG.sound.music.time = vocals.time = 0;
-				} else if (FlxG.keys.justPressed.END) {
-					loadSection(cachedSectionTimes.length - 1);
-					Conductor.songPosition = FlxG.sound.music.time = vocals.time = FlxG.sound.music.length;
 				} else if (FlxG.keys.pressed.W != FlxG.keys.pressed.S || FlxG.mouse.wheel != 0) {
 					if (FlxG.sound.music.playing) setSongPlaying(false);
 
@@ -780,8 +782,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		} else if (FlxG.sound.music != null) {
 			if (FlxG.sound.music.time >= vocals.length) vocals.pause();
 
-			if (curSec > 0 && Conductor.songPosition < cachedSectionTimes[curSec]) loadSection(curSec - 1);
-			else if (curSec < cachedSectionTimes.length - 1 && Conductor.songPosition >= cachedSectionTimes[curSec + 1]) loadSection(curSec + 1);
+			while (curSec > 0 && Conductor.songPosition < cachedSectionTimes[curSec]) loadSection(curSec - 1);
+			while (curSec < cachedSectionTimes.length - 1 && Conductor.songPosition >= cachedSectionTimes[curSec + 1]) loadSection(curSec + 1);
 		}
 
 		if (charterFocus) {
@@ -1523,7 +1525,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		if (doPlay) {
 			FlxG.sound.music.play();
-			vocals.play();
+			if (FlxG.sound.music.time < vocals.length) vocals.play(true, FlxG.sound.music.time);
+			updateAudioVolume();
 		} else {
 			FlxG.sound.music.pause();
 			vocals.pause();
@@ -3950,6 +3953,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	}
 
 	function openEditorPlayState() {
+		if (FlxG.sound.music == null) {
+			showOutput('Load a valid song to preview!', true);
+			return;
+		}
 		setSongPlaying(false);
 		chartEditorSave.flush(); // just in case a random crash happens before loading
 

@@ -32,6 +32,8 @@ class MainMenuState extends MusicBeatState {
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
+
+	static var showOutdatedWarning:Bool = true;
 	override function create() {
 		super.create();
 		#if MODS_ALLOWED Mods.pushGlobalMods(); #end
@@ -97,8 +99,8 @@ class MainMenuState extends MusicBeatState {
 		#if (ACHIEVEMENTS_ALLOWED && MODS_ALLOWED) Achievements.reloadList(); #end
 
 		#if CHECK_FOR_UPDATES
-		if (OutdatedSubState.updateVersion[0] != Main.engineVer.version) {
-			persistentUpdate = false;
+		if (showOutdatedWarning && ClientPrefs.data.checkForUpdates && OutdatedSubState.updateVersion[0] != Main.engineVer.version) {
+			persistentUpdate = showOutdatedWarning = false;
 			openSubState(new OutdatedSubState());
 		}
 		#end

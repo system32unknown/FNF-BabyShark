@@ -26,8 +26,7 @@ class HscriptState extends MusicBeatState {
     }
 
     override function destroy() {
-        var ny:Dynamic = hscriptRef.get('onDestroy');
-        if (ny != null && Reflect.isFunction(ny)) ny();
+        if (hscriptRef.exists('onDestroy')) hscriptRef.call('onDestroy');
         super.destroy();
     }
 }

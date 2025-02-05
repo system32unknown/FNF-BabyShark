@@ -11,7 +11,8 @@ class HscriptSubstate extends MusicBeatSubstate {
 
         hscriptRef = new HScript(null, file);
         hscriptRef.set("instance", instance);
-        hscriptRef.call("new", args);
+        if (hscriptRef.exists('onCreate')) hscriptRef.call('onCreate');
+        if (hscriptRef.exists('new')) hscriptRef.call("new", args);
     }
 
     override function update(elapsed:Float) {
@@ -21,8 +22,7 @@ class HscriptSubstate extends MusicBeatSubstate {
     }
 
     override function destroy() {
-        var ny:Dynamic = hscriptRef.get('onDestroy');
-        if (ny != null && Reflect.isFunction(ny)) ny();
+        if (hscriptRef.exists('onDestroy')) hscriptRef.call('onDestroy');
         super.destroy();
     }
 }

@@ -61,6 +61,7 @@ class SaveVariables {
 	var ratingDisplay:String = 'World';
 	var cacheOnGPU:Bool = false;
 	var vsync:Bool = false;
+	var autoCleanAssets:Bool = false;
 	var healthTypes:String = 'Vanilla';
 	var timeBarType:String = 'Name Time Position';
 	var altDiscordImg:Bool = false;

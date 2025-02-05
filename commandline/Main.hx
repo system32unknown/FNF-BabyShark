@@ -51,7 +51,7 @@ class Main {
 		if (cmdName != null) {
 			cmdName = cmdName.toLowerCase();
 
-			var matchingCommand = null;
+			var matchingCommand:Command = null;
 			for (c in commands) if (c.names.contains(cmdName)) {
 				matchingCommand = c;
 				break;

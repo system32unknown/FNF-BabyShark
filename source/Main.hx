@@ -108,9 +108,9 @@ class Main extends Sprite {
 		}
 		#end
 
-		FlxG.signals.preStateSwitch.add(() -> Paths.clearStoredMemory());
+		FlxG.signals.preStateSwitch.add(() -> if (ClientPrefs.data.autoCleanAssets) Paths.clearStoredMemory());
 		FlxG.signals.postStateSwitch.add(() -> {
-			Paths.clearUnusedMemory();
+			if (ClientPrefs.data.autoCleanAssets) Paths.clearUnusedMemory();
 			if (!ClientPrefs.data.disableGC) {
 				MemoryUtil.clearMajor();
 				MemoryUtil.clearMajor(true);
