@@ -39,7 +39,7 @@ class FlashingState extends flixel.FlxState {
 	}
 
 	override function update(elapsed:Float) {
-		if(leftState) {
+		if (leftState) {
 			super.update(elapsed);
 			return;
 		}

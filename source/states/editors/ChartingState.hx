@@ -735,11 +735,11 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							Conductor.songPosition = FlxG.sound.music.time = cachedSectionTimes[curSec] - Conductor.offset + .000001;
 						}
 					}
-				} else if(FlxG.keys.justPressed.HOME) {
+				} else if (FlxG.keys.justPressed.HOME) {
 					setSongPlaying(false);
 					Conductor.songPosition = FlxG.sound.music.time = 0;
 					loadSection(0);
-				} else if(FlxG.keys.justPressed.END) {
+				} else if (FlxG.keys.justPressed.END) {
 					setSongPlaying(false);
 					Conductor.songPosition = FlxG.sound.music.time = FlxG.sound.music.length - 1;
 					loadSection(PlayState.SONG.notes.length - 1);

@@ -26,7 +26,7 @@ class LoadingState extends MusicBeatState {
 	static var originalBitmapKeys:Map<String, String> = [];
 	static var requestedBitmaps:Map<String, BitmapData> = [];
 	static var mutex:Mutex;
-	static var threadPool:FixedThreadPool;
+	static var threadPool:FixedThreadPool = null;
 
 	function new(target:NextState, stopMusic:Bool) {
 		this.target = target;
@@ -121,15 +121,22 @@ class LoadingState extends MusicBeatState {
 
 	var finishedLoading:Bool = false;
 	function onLoad() {
-		loaded = loadMax = 0;
-		initialThreadCompleted = true;
+		_loaded();
 		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		FlxG.camera.visible = false;
-		MusicBeatState.skipNextTransIn = true;
 		FlxG.switchState(target);
 		transitioning = finishedLoading = true;
+	}
+
+	static function _loaded():Void {
+		loaded = loadMax = 0;
+		initialThreadCompleted = true;
+		isIntrusive = false;
+
+		MusicBeatState.skipNextTransIn = true;
 		if (threadPool != null) threadPool.shutdown(); // kill all workers safely
+		threadPool = null;
 		mutex = null;
 	}
 
@@ -154,14 +161,19 @@ class LoadingState extends MusicBeatState {
 		trace('Setting asset folder to ' + directory);
 	}
 
+	static var isIntrusive:Bool = false;
 	static function getNextState(target:NextState, stopMusic = false, intrusive:Bool = true):NextState {
+		isIntrusive = intrusive;
 		loadNextDirectory();
+
 		if (intrusive) return new LoadingState(target, stopMusic);
 		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		while (true) {
-			if (!checkLoaded()) Sys.sleep(.001);
-			else break;
+			if (checkLoaded()) {
+				_loaded();
+				break;
+			} else Sys.sleep(.001);
 		}
 		return target;
 	}
@@ -177,9 +189,12 @@ class LoadingState extends MusicBeatState {
 	}
 
 	static var initialThreadCompleted:Bool = true;
-	public static function prepareToSong() {
-		threadPool = new FixedThreadPool(#if MULTITHREADED_LOADING 8 #else 1 #end); // 8 threads are enough
+	static function _startPool() {
+		threadPool = new FixedThreadPool(#if MULTITHREADED_LOADING #if cpp utils.system.PlatformUtil.getCPUThreadsCount() #else 8 #end #else 1 #end);
+	}
 
+	public static function prepareToSong() {
+		_startPool();
 		imagesToPrepare = [];
 		soundsToPrepare = [];
 		musicToPrepare = [];
@@ -242,7 +257,7 @@ class LoadingState extends MusicBeatState {
 				}
 			} catch (e:Dynamic) Logs.trace("ERROR PREPARING SONG: " + e, ERROR);
 			return true;
-		}, true).then((_) -> new Future<Bool>(() -> {
+		}, isIntrusive).then((_) -> new Future<Bool>(() -> {
 			if (song.stage == null || song.stage.length < 1)
 				song.stage = StageData.vanillaSongStage(folder);
 
@@ -303,8 +318,14 @@ class LoadingState extends MusicBeatState {
 					completedThread();
 				});
 			}
+
+			if (threadsCompleted == threadsMax) {
+				clearInvalids();
+				startThreads();
+				initialThreadCompleted = true;
+			}
 			return true;
-		}, true)).onError((err:Dynamic) -> Logs.trace('ERROR! while preparing song: $err', ERROR));
+		}, isIntrusive)).onError((err:Dynamic) -> Logs.trace('ERROR! while preparing song: $err', ERROR));
 	}
 
 	public static function clearInvalids() {
@@ -355,6 +376,7 @@ class LoadingState extends MusicBeatState {
 		_threadFunc();
 	}
 	static function _threadFunc() {
+		_startPool();
 		for (sound in soundsToPrepare) initThread(() -> preloadSound('sounds/$sound'), 'sound $sound');
 		for (music in musicToPrepare) initThread(() -> preloadSound('music/$music'), 'music $music');
 		for (song in songsToPrepare) initThread(() -> preloadSound(song, 'songs', true, false), 'song $song');

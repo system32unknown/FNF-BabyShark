@@ -18,6 +18,7 @@ package utils.system;
     #include <shellapi.h> // Shell_NotifyIcon
     #include <chrono>
     #include <iostream>
+    #include <thread>
     #include <string>
 ')
 #elseif linux
@@ -25,6 +26,7 @@ package utils.system;
     #include <stdlib.h>
     #include <stdio.h>
     #include <iostream>
+    #include <thread>
     #include <string>
 ')
 #end
@@ -218,6 +220,9 @@ class PlatformUtil {
 	')
     #end
     public static function getNanoTime():#if cpp cpp.Float64 #else Float #end return -1;
+
+	@:functionCode('return std::thread::hardware_concurrency();')
+    public static function getCPUThreadsCount():Int return -1;
 
     #if windows
     @:functionCode('return SetProcessDPIAware();')
