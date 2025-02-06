@@ -29,11 +29,16 @@ package utils.system;
     #include <thread>
     #include <string>
 ')
+#elseif mac
+@:cppFileCode('
+    #include <iostream>
+    #include <thread>
+')
 #end
 
 class PlatformUtil {
-    #if windows
-    @:functionCode('
+	#if windows
+	@:functionCode('
         NOTIFYICONDATA m_NID;
 
         memset(&m_NID, 0, sizeof(m_NID));
@@ -58,7 +63,7 @@ class PlatformUtil {
 
         return Shell_NotifyIcon(NIM_MODIFY, &m_NID);
     ')
-    #elseif linux
+	#elseif linux
 	@:functionCode('
         std::string cmd = "notify-send -u normal \'";
         cmd += title.c_str();
@@ -68,42 +73,42 @@ class PlatformUtil {
         system(cmd.c_str());
     ')
 	#end
-    public static function sendWindowsNotification(title:String = "", desc:String = ""):Bool return false;
-    
-    #if windows
-    @:functionCode('
+	public static function sendWindowsNotification(title:String = "", desc:String = ""):Bool return false;
+
+	#if windows
+	@:functionCode('
         HWND window = GetActiveWindow();
         HICON smallIcon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
         HICON icon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
         SendMessage(window, WM_SETICON, ICON_SMALL, (LPARAM)smallIcon);
         SendMessage(window, WM_SETICON, ICON_BIG, (LPARAM)icon);
     ')
-    #end
-    public static function setWindowIcon(path:String) {}
-    #if windows
+	#end
+	public static function setWindowIcon(path:String) {}
+	#if windows
 	@:functionCode('
-	    HWND window = GetActiveWindow();
+        HWND window = GetActiveWindow();
         SetWindowLongPtr(window, GWL_STYLE, GetWindowLongPtr(window, GWL_STYLE) & ~WS_SYSMENU); // Remove the WS_SYSMENU style
         SetWindowPos(window, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER); // Force the window to redraw
 	')
-    #end
+	#end
 	public static function removeWindowIcon() {}
 
-    // Thanks leer lol
-    #if windows
-    @:functionCode('
+	// Thanks leer lol
+	#if windows
+	@:functionCode('
         POINT mousePos;
         if (!GetCursorPos(&mousePos)) return 0;
     ')
-    #end
-    public static function getMousePos():Array<Float> return #if windows [untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y")] #else [0, 0] #end;
+	#end
+	public static function getMousePos():Array<Float> return #if windows [untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y")] #else [0, 0] #end;
 
-    #if windows
-    @:functionCode('return MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);')
-    #end
-    public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING):Int return 0;
+	#if windows
+	@:functionCode('return MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);')
+	#end
+	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING):Int return 0;
 
-    #if windows
+	#if windows
 	@:functionCode('
 	    if (!AllocConsole()) return;
 
@@ -111,23 +116,23 @@ class PlatformUtil {
 	    freopen("CONOUT$", "w", stdout);
 	    freopen("CONOUT$", "w", stderr);
 	')
-    #end
+	#end
 	public static function allocConsole() {}
 
-    #if windows
+	#if windows
 	@:functionCode('return SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);')
-    #end
+	#end
 	public static function setConsoleColors(color:Int):Bool return false;
 
-    #if windows
+	#if windows
 	@:functionCode('
 		system("CLS");
 		std::cout << "" << std::flush;
 	')
-    #end
+	#end
 	public static function clearScreen() {}
 
-    #if windows
+	#if windows
 	@:functionCode('
 		int darkMode = enable ? 1 : 0;
 		HWND window = FindWindowA(NULL, title.c_str());
@@ -141,10 +146,10 @@ class PlatformUtil {
 		}
 		UpdateWindow(window);
 	')
-    #end
+	#end
 	public static function setDarkMode(title:String, enable:Bool) {}
 
-    #if windows
+	#if windows
 	@:functionCode('
         HWND window = FindWindowA(NULL, title.c_str());
         if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
@@ -163,10 +168,10 @@ class PlatformUtil {
 
         UpdateWindow(window);
 	')
-    #end
+	#end
 	public static function setWindowBorderColor(title:String, color:Array<Int>, setHeader:Bool = true, setBorder:Bool = true) {}
 
-    #if windows
+	#if windows
 	@:functionCode('
         HWND window = FindWindowA(NULL, title.c_str());
         if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
@@ -181,16 +186,16 @@ class PlatformUtil {
         DwmSetWindowAttribute(window, 36, &finalColor, sizeof(COLORREF));
         UpdateWindow(window);
 	')
-    #end
+	#end
 	public static function setWindowTitleColor(title:String, color:Array<Int>) {}
 
-    #if windows
-    @:functionCode('return FindWindowA(className.c_str(), windowName.c_str()) != NULL;')
-    #end
-    public static function findWindow(className:String = null, windowName:String = ''):Bool return false;
+	#if windows
+	@:functionCode('return FindWindowA(className.c_str(), windowName.c_str()) != NULL;')
+	#end
+	public static function findWindow(className:String = null, windowName:String = ''):Bool return false;
 
-    #if windows
-    @:functionCode('
+	#if windows
+	@:functionCode('
         HWND win = FindWindowA(NULL, winName.c_str());
         if (win == NULL) win = GetActiveWindow();
 
@@ -203,10 +208,10 @@ class PlatformUtil {
 
         return TRUE;
     ')
-    #end
-    public static function setTransparency(winName:String, alpha:Int, color:Int):Bool return false;
+	#end
+	public static function setTransparency(winName:String, alpha:Int, color:Int):Bool return false;
 
-    #if windows
+	#if windows
 	@:functionCode('		
 		// Get the current time
 		auto now = std::chrono::high_resolution_clock::now();
@@ -218,21 +223,21 @@ class PlatformUtil {
 		// Returns the second as double
 		return seconds.count();
 	')
-    #end
-    public static function getNanoTime():#if cpp cpp.Float64 #else Float #end return -1;
+	#end
+	public static function getNanoTime():#if cpp cpp.Float64 #else Float #end return -1;
 
 	@:functionCode('return std::thread::hardware_concurrency();')
-    public static function getCPUThreadsCount():Int return -1;
+	public static function getCPUThreadsCount():Int return -1;
 
-    #if windows
-    @:functionCode('return SetProcessDPIAware();')
-    #end
-    public static function setDPIAware():Bool return false;
+	#if windows
+	@:functionCode('return SetProcessDPIAware();')
+	#end
+	public static function setDPIAware():Bool return false;
 }
 
 enum abstract MessageBoxIcon(Int) {
-    var MSG_ERROR:MessageBoxIcon = 0x00000010;
-    var MSG_QUESTION:MessageBoxIcon = 0x00000020;
-    var MSG_WARNING:MessageBoxIcon = 0x00000030;
-    var MSG_INFORMATION:MessageBoxIcon = 0x00000040;
+	var MSG_ERROR:MessageBoxIcon = 0x00000010;
+	var MSG_QUESTION:MessageBoxIcon = 0x00000020;
+	var MSG_WARNING:MessageBoxIcon = 0x00000030;
+	var MSG_INFORMATION:MessageBoxIcon = 0x00000040;
 }

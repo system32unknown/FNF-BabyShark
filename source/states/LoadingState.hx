@@ -13,7 +13,6 @@ import backend.Song;
 import data.StageData;
 
 import sys.thread.FixedThreadPool;
-import sys.thread.Thread;
 import sys.thread.Mutex;
 
 import objects.Note;
