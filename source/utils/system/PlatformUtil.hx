@@ -9,32 +9,25 @@ package utils.system;
 ')
 @:cppFileCode('
     #include <direct.h>
-    #include <stdlib.h>
-    #include <stdio.h>
     #include <windows.h>
     #include <winuser.h>
     #include <dwmapi.h> // DwmSetWindowAttribute
     #include <strsafe.h> // StringCchCopy
     #include <shellapi.h> // Shell_NotifyIcon
     #include <chrono>
-    #include <iostream>
-    #include <thread>
-    #include <string>
 ')
-#elseif linux
+#end
+#if (windows || linux)
 @:cppFileCode('
     #include <stdlib.h>
     #include <stdio.h>
-    #include <iostream>
-    #include <thread>
     #include <string>
 ')
-#elseif mac
+#end
 @:cppFileCode('
     #include <iostream>
     #include <thread>
 ')
-#end
 
 class PlatformUtil {
 	#if windows
