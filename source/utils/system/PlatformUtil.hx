@@ -8,26 +8,32 @@ package utils.system;
     </target>
 ')
 @:cppFileCode('
-    #include <direct.h>
+    #include <stdlib.h>
+    #include <stdio.h>
     #include <windows.h>
-    #include <winuser.h>
+    #include <winuser.h> // SendMessage
     #include <dwmapi.h> // DwmSetWindowAttribute
     #include <strsafe.h> // StringCchCopy
     #include <shellapi.h> // Shell_NotifyIcon
-    #include <chrono>
+    #include <chrono> // Chrono Counting
+    #include <iostream>
+    #include <thread>
+    #include <string>
 ')
-#end
-#if (windows || linux)
+#elseif linux
 @:cppFileCode('
     #include <stdlib.h>
     #include <stdio.h>
+    #include <iostream>
+    #include <thread>
     #include <string>
 ')
-#end
+#elseif mac
 @:cppFileCode('
     #include <iostream>
     #include <thread>
 ')
+#end
 
 class PlatformUtil {
 	#if windows
