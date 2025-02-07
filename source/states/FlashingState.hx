@@ -23,7 +23,7 @@ class FlashingState extends flixel.FlxState {
 			This Mod contains some flashing lights!\n
 			Do you wish to disable them?");
 		warnText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
-		warnText.screenCenter(Y);
+		warnText.gameCenter(Y);
 		texts.add(warnText);
 
 		final keys:Array<String> = ["Yes", "No"];

@@ -949,7 +949,7 @@ class PlayState extends MusicBeatState {
 		@:privateAccess
 		FlxG.sound.playMusic(inst._sound, 1, false);
 		#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
-		FlxG.sound.music.onComplete = finishSong.bind();
+		FlxG.sound.music.onFinish.add(() -> finishSong());
 		vocals.play();
 
 		setSongTime(Math.max(0, startOnTime - 500) + Conductor.offset);
@@ -1396,19 +1396,21 @@ class PlayState extends MusicBeatState {
 				var noteJudge:Bool = castHold ? tooLate : canBeHit;
 
 				var isCanPass:Bool = !ClientPrefs.data.skipSpawnNote || Timer.stamp() - noteSpawnTimout < shownRealTime;
-				if (isCanPass && (!optimizeSpawnNote || optimizeSpawnNote && !noteJudge)) {
-					var dunceNote:Note = targetNote;
-					dunceNote.spawned = true;
-					dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
-					notes.add(dunceNote);
-					
-					callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
-					callOnHScript('onSpawnNote', [dunceNote]);
-					if (ClientPrefs.data.processFirst && dunceNote.strum != null) {
-						dunceNote.followStrumNote(songSpeed);
-						if (canBeHit && dunceNote.isSustainNote && dunceNote.strum.sustainReduce) dunceNote.clipToStrumNote();
+				if (!noteJudge) {
+					if (isCanPass || !optimizeSpawnNote) {
+						var dunceNote:Note = targetNote;
+						dunceNote.spawned = true;
+						dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
+						notes.add(dunceNote);
+						
+						callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
+						callOnHScript('onSpawnNote', [dunceNote]);
+						if (ClientPrefs.data.processFirst && dunceNote.strum != null) {
+							dunceNote.followStrumNote(songSpeed);
+							if (canBeHit && dunceNote.isSustainNote && dunceNote.strum.sustainReduce) dunceNote.clipToStrumNote();
+						}
 					}
-				} else if (!isCanPass || optimizeSpawnNote && noteJudge) {
+				} else if (optimizeSpawnNote) {
 					if (cpuControlled) {
 						if (!castHold && castMust) ++skipBf;
 					} else if (castMust) noteMissCommon(targetNote.noteData);

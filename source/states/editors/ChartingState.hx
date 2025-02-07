@@ -1467,7 +1467,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0);
 			FlxG.sound.music.pause();
 			FlxG.sound.music.time = time;
-			FlxG.sound.music.onComplete = (() -> songFinished = true);
+			FlxG.sound.music.onFinish.add(() -> songFinished = true);
 		} catch (e:Exception) {
 			FlxG.log.error('Error loading song: $e');
 			return;
@@ -3661,7 +3661,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 				btnY += 60;
 				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Custom', changeTheme.bind(CUSTOM));
-				btn.screenCenter(X).x -= 180;
+				btn.gameCenter(X).x -= 180;
 				btn.cameras = state.cameras;
 				state.add(btn);
 
@@ -3672,7 +3672,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;
 				input.forceCase = UPPER_CASE;
-				input.screenCenter(X).x -= 60;
+				input.gameCenter(X).x -= 60;
 				input.cameras = state.cameras;
 				input.onChange = (old:String, cur:String) -> {
 					chartEditorSave.data.customBgColor = cur;
@@ -3692,7 +3692,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;
 				input.forceCase = UPPER_CASE;
-				input.screenCenter(X).x += 60;
+				input.gameCenter(X).x += 60;
 				input.cameras = state.cameras;
 				input.onChange = (old:String, cur:String) -> {
 					chartEditorSave.data.customGridColors[0] = cur;
@@ -3708,7 +3708,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;
 				input.forceCase = UPPER_CASE;
-				input.screenCenter(X).x += 60;
+				input.gameCenter(X).x += 60;
 				input.cameras = state.cameras;
 				input.onChange = (old:String, cur:String) -> {
 					chartEditorSave.data.customGridColors[1] = cur;
@@ -3724,7 +3724,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;
 				input.forceCase = UPPER_CASE;
-				input.screenCenter(X).x += 180;
+				input.gameCenter(X).x += 180;
 				input.cameras = state.cameras;
 				input.onChange = (old:String, cur:String) -> {
 					chartEditorSave.data.customNextGridColors[0] = cur;
@@ -3740,7 +3740,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;
 				input.forceCase = UPPER_CASE;
-				input.screenCenter(X).x += 180;
+				input.gameCenter(X).x += 180;
 				input.cameras = state.cameras;
 				input.onChange = (old:String, cur:String) -> {
 					chartEditorSave.data.customNextGridColors[1] = cur;
