@@ -292,7 +292,7 @@ class HScript extends AlterHscript {
                 try {
                     final rawClass:Class<Dynamic> = Type.resolveClass(name);
                     if (rawClass == null) return; 
-                    FlxG.switchState(cast(Type.createInstance(rawClass, []), flixel.FlxState));
+                    FlxG.switchState(() -> cast(Type.createInstance(rawClass, []), flixel.FlxState));
                 } catch (e:AlterError) {
                     Logs.trace('$e: Unspecified result for switching state "$name", could not switch states!', ERROR);
                     return;

@@ -32,8 +32,8 @@ class OutdatedSubState extends MusicBeatSubstate {
 		txt.alpha = 0.0;
 		add(txt);
 
-		FlxTween.tween(bg, {alpha: 0.8}, 0.6, {ease: FlxEase.sineIn});
-		FlxTween.tween(warnText, {alpha: 1.0}, 0.6, {ease: FlxEase.sineIn});
+		FlxTween.tween(bg, {alpha: .8}, 0.6, {ease: FlxEase.sineIn});
+		FlxTween.tween(warnText, {alpha: 1.}, 0.6, {ease: FlxEase.sineIn});
 	}
 
 	override function update(elapsed:Float) {

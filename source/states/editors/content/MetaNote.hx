@@ -88,9 +88,7 @@ class MetaNote extends Note {
 				txt = new FlxText(0, 0, ChartingState.GRID_SIZE, (num > 0) ? Std.string(num) : '?', 16);
 				txt.autoSize = false;
 				txt.alignment = CENTER;
-				txt.borderStyle = SHADOW;
-				txt.shadowOffset.set(2, 2);
-				txt.borderColor = FlxColor.BLACK;
+				txt.setBorderStyle(SHADOW_XY(2, 2), FlxColor.BLACK);
 				txt.scrollFactor.x = 0;
 				noteTypeTexts.set(num, txt);
 			} else txt = noteTypeTexts.get(num);

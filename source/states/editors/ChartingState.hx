@@ -379,7 +379,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		if (PlayState.SONG == null) openNewChart(); // Atleast try to avoid crashes
 		updateJsonData();
-		
+
 		// TABS
 		////// for main box
 		addChartingTab();
@@ -388,7 +388,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		addNoteTab();
 		addSectionTab();
 		addSongTab();
-		
+
 		////// for upper box
 		addFileTab();
 		addEditTab();
@@ -607,7 +607,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		noteTextureInputText.text = PlayState.SONG.arrowSkin;
 		noteSplashesInputText.text = PlayState.SONG.splashSkin;
 	}
-	
+
 	var noteSelectionSine:Float = 0;
 	var selectedNotes:Array<MetaNote> = [];
 	var ignoreClickForThisFrame:Bool = false;
@@ -3837,7 +3837,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		prevGridBg.visible = (curSec > 0 && showPreviousSection);
 		nextGridBg.visible = (curSec < PlayState.SONG.notes.length - 1 && showNextSection);
-		
+
 		noteTypeLabelsButton.text.text = showNoteTypeLabels ? '  Hide Note Labels' : '  Show Note Labels';
 		for (num => text in MetaNote.noteTypeTexts) text.visible = showNoteTypeLabels;
 		softReloadNotes();
@@ -3896,7 +3896,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			positionNoteYOnTime(note, noteSec);
 			note.updateSustainToStepCrochet(cachedSectionCrochets[noteSec] / 4);
 		}
-		
+
 		for (event in events) {
 			var secNum:Int = 0;
 			for (time in cachedSectionTimes) {
@@ -3905,13 +3905,13 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			}
 			positionNoteYOnTime(event, secNum);
 		}
-		
+
 		var time:Float = FlxMath.remapToRange(gridLerp, 0, 1, cachedSectionTimes[curSec], cachedSectionTimes[curSec + 1]);
 		if (Math.isNaN(time)) {
 			time = 0;
 			curSec = 0;
 		}
-		
+
 		if (FlxG.sound.music != null && time >= FlxG.sound.music.length) {
 			time = FlxG.sound.music.length - 1;
 			curSec = PlayState.SONG.notes.length - 1;
@@ -4193,7 +4193,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		#end
 		return fileList;
 	}
-	
+
 	function loadCharacterFile(char:String):CharacterFile {
 		if (char != null) {
 			try {
@@ -4202,7 +4202,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		}
 		return null;
 	}
-	
+
 	var overwriteSavedSomething:Bool = false;
 	function overwriteCheck(savePath:String, overwriteName:String, saveData:String, continueFunc:Void->Void = null, ?continueOnCancel:Bool = false) {
 		if (FileSystem.exists(savePath)) {

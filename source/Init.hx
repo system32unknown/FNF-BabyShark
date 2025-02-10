@@ -38,6 +38,8 @@ class Init extends flixel.FlxState {
 			FlxG.switchState(() -> new FlashingState());
 			return;
 		}
-		FlxG.switchState(Type.createInstance(Main.game.initialState, []));
+		
+		
+		FlxG.switchState(flixel.util.typeLimit.NextState.fromType(Main.game.initialState));
 	}
 }

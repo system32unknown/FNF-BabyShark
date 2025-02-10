@@ -16,9 +16,9 @@ class CoolUtil {
 			var http:Http = new Http(url);
 
 			http.onData = (data:String) -> {
-    			var versionEndIndex:Int = data.indexOf(';');
-    			returnedData[0] = data.substring(0, versionEndIndex);
-    			returnedData[1] = data.substring(versionEndIndex + 1, data.length); // Extract the changelog after the version number
+    			var verEndIdx:Int = data.indexOf(';');
+    			returnedData[0] = data.substring(0, verEndIdx);
+    			returnedData[1] = data.substring(verEndIdx + 1, data.length); // Extract the changelog after the version number
 
 				var updateVersion:String = returnedData[0];
 				trace('version online: $updateVersion, your version: $version');
@@ -28,7 +28,7 @@ class CoolUtil {
 					http = null;
 				}
 			}
-			http.onError = (error:String) -> Logs.trace('Checking Update Error: $error', ERROR);
+			http.onError = (error:String) -> Logs.trace('HTTP Error: $error', ERROR);
 			http.request();
 		}
 		return returnedData;

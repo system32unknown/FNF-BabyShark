@@ -321,7 +321,7 @@ class Paths {
 			if (#if sys FileSystem.exists(file) #else OpenFlAssets.exists(file, SOUND) #end) currentTrackedSounds.set(file, snd);
 			else if (beepOnNull) {
 				FlxG.log.error('SOUND NOT FOUND: $key, PATH: $path');
-				return flixel.system.FlxAssets.getSound('flixel/sounds/beep');
+				return flixel.system.FlxAssets.getSoundAddExtension('flixel/sounds/beep');
 			}
 		}
 		localTrackedAssets.push(file);

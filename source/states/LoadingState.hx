@@ -165,7 +165,7 @@ class LoadingState extends MusicBeatState {
 		isIntrusive = intrusive;
 		loadNextDirectory();
 
-		if (intrusive) return new LoadingState(target, stopMusic);
+		if (intrusive) return () -> new LoadingState(target, stopMusic);
 		if (stopMusic && FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		while (true) {
@@ -449,7 +449,7 @@ class LoadingState extends MusicBeatState {
 				mutex.release();
 			} else if (beepOnNull) {
 				FlxG.log.error('SOUND NOT FOUND: $key, PATH: $path');
-				return flixel.system.FlxAssets.getSound('flixel/sounds/beep');
+				return flixel.system.FlxAssets.getSoundAddExtension('flixel/sounds/beep');
 			}
 		}
 		mutex.acquire();
