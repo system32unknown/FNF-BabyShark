@@ -67,7 +67,7 @@ class DiscordClient {
 		handlers.ready = CppFunction.fromStaticFunction(onReady);
 		handlers.disconnected = CppFunction.fromStaticFunction(onDisconnected);
 		handlers.errored = CppFunction.fromStaticFunction(onError);
-		Discord.Initialize(clientID, cpp.RawPointer.addressOf(handlers), true, null);
+		Discord.Initialize(clientID, cpp.RawPointer.addressOf(handlers), false, null);
 
 		if (!isInitialized) trace("Discord Client initialized");
 

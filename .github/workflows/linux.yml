@@ -28,9 +28,10 @@ jobs:
           restore-keys: |
             cache-build-linux
 
-      - name: Installing Linux Libraries
+      - name: Installing LibVLC
         run: |
-          sudo apt install libvlc-dev libvlccore-dev g++ g++-multilib gcc-multilib
+          sudo apt-get install libvlc-dev
+          sudo apt-get install libvlccore-dev
 
       - name: Installing/Updating libraries
         run: |
