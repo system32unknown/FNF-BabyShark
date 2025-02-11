@@ -25,7 +25,7 @@ class OFLSprite extends FlxSprite {
 		}
 	}
 
-	public function updateDisplay() {
+	public function updateDisplay():Void {
 		pixels.draw(flSprite);
 	}
 }

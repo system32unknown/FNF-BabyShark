@@ -557,7 +557,7 @@ class PlayState extends MusicBeatState {
 		}
 		playbackRate = value;
 		FlxG.animationTimeScale = value;
-		#if VIDEOS_ALLOWED if (videoCutscene != null) videoCutscene.videoSprite.bitmap.rate = value; #end
+		#if VIDEOS_ALLOWED if (videoCutscene != null && videoCutscene.videoSprite != null)  videoCutscene.videoSprite.bitmap.rate = value; #end
 		Conductor.offset = Reflect.hasField(PlayState.SONG, 'offset') ? (PlayState.SONG.offset / value) : 0;
 		Conductor.safeZoneOffset = (ClientPrefs.data.safeFrames / 60) * 1000 * value;
 		setOnScripts('playbackRate', playbackRate);
@@ -696,8 +696,8 @@ class PlayState extends MusicBeatState {
 		if (#if sys FileSystem #else OpenFlAssets #end.exists(fileName)) foundFile = true;
 
 		if (foundFile) {
-			videoCutscene = new VideoSprite(fileName, forMidSong, canSkip, loop, false, autoAdjust);
-			videoCutscene.videoSprite.bitmap.rate = playbackRate;
+			videoCutscene = new VideoSprite(fileName, forMidSong, canSkip, loop, autoAdjust);
+			if (forMidSong) videoCutscene.videoSprite.bitmap.rate = playbackRate;
 			if (!forMidSong) {
 				function onVideoEnd():Void {
 					if (!isDead && generatedMusic && SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos) {
@@ -1043,8 +1043,7 @@ class PlayState extends MusicBeatState {
 
 						if (!isPixelStage) {
 							if (oldNote.isSustainNote) {
-								oldNote.sustainScale = Note.SUSTAIN_SIZE / oldNote.frameHeight;
-								oldNote.sustainScale /= playbackRate;
+								oldNote.sustainScale = (Note.SUSTAIN_SIZE / oldNote.frameHeight) / playbackRate;
 								if (oldNote.sustainScale != 1) oldNote.resizeByRatio(curStepCrochet / Conductor.stepCrochet);
 							}
 							if (downScroll) sustainNote.correctionOffset = 0;
@@ -1175,7 +1174,6 @@ class PlayState extends MusicBeatState {
 
 			FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = true);
 			FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = true);
-			#if VIDEOS_ALLOWED for (vid in VideoSprite._videos) if (vid.isPlaying) vid.resume(); #end
 
 			paused = false;
 			callOnScripts('onResume');
@@ -1185,10 +1183,7 @@ class PlayState extends MusicBeatState {
 
 	override public function onFocus():Void {
 		callOnScripts('onFocus');
-		if (!paused) {
-			if (health > 0) resetRPC(Conductor.songPosition > 0.0);
-			#if VIDEOS_ALLOWED for (vid in VideoSprite._videos) if (vid.isPlaying) vid.resume(); #end
-		}
+		#if DISCORD_ALLOWED if (!paused && health > 0) resetRPC(Conductor.songPosition > 0.0); #end
 		super.onFocus();
 		callOnScripts('onFocusPost');
 	}
@@ -1196,8 +1191,7 @@ class PlayState extends MusicBeatState {
 	override public function onFocusLost():Void {
 		callOnScripts('onFocusLost');
 		if (!paused && ClientPrefs.data.autoPausePlayState && !tryPause()) {
-			#if DISCORD_ALLOWED if (health > 0 && autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter()); #end
-			#if VIDEOS_ALLOWED for (vid in VideoSprite._videos) if (vid.isPlaying) vid.pause(); #end
+			#if DISCORD_ALLOWED if (health > 0 && autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")"); #end
 		}
 		super.onFocusLost();
 		callOnScripts('onFocusLostPost');
@@ -1486,7 +1480,6 @@ class PlayState extends MusicBeatState {
 		FlxG.camera.followLerp = 0;
 		FlxTimer.globalManager.forEach((tmr:FlxTimer) -> if (!tmr.finished) tmr.active = false);
 		FlxTween.globalManager.forEach((twn:FlxTween) -> if (!twn.finished) twn.active = false);
-		#if VIDEOS_ALLOWED for (vid in VideoSprite._videos) if (vid.isPlaying) vid.pause(); #end
 		persistentUpdate = false; persistentDraw = true;
 		paused = true;
 
@@ -2105,9 +2098,8 @@ class PlayState extends MusicBeatState {
 	}
 
 	function noteMiss(daNote:Note, opponent:Bool = false):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
-		notes.forEachAlive(function(note:Note) {
-			if (daNote != note && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1)
-				invalidateNote(note);
+		notes.forEachAlive((note:Note) -> {
+			if (daNote != note && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) invalidateNote(note);
 		});
 
 		if (!opponent) {

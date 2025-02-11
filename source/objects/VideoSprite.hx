@@ -23,7 +23,7 @@ class VideoSprite extends FlxSpriteGroup {
 	public var isPlaying:Bool = false;
 	public var isPaused:Bool = false;
 
-	public function new(videoName:String, isWaiting:Bool, canSkip:Bool = false, shouldLoop:Dynamic = false, autoPause = true, adjustSize:Bool = true) {
+	public function new(videoName:String, isWaiting:Bool, canSkip:Bool = false, shouldLoop:Dynamic = false, adjustSize:Bool = true) {
 		super();
 
 		this.videoName = videoName;

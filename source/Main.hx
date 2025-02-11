@@ -96,6 +96,7 @@ class Main extends Sprite {
 
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		ClientPrefs.load();
+		FlxG.mouse.useSystemCursor = true;
 		addChild(fpsVar = new FPSCounter());
 		fpsVar.visible = ClientPrefs.data.showFPS;
 		fpsVar.memType = ClientPrefs.data.memCounterType;

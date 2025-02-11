@@ -81,9 +81,7 @@ class AchievementsMenuState extends MusicBeatState {
 		add(box);
 		add(grpOptions);
 
-		var box:FlxSprite = new FlxSprite(0, 570).makeGraphic(1, 1, FlxColor.BLACK);
-		box.scale.set(FlxG.width, FlxG.height - box.y);
-		box.updateHitbox();
+		var box:FlxSprite = new FlxSprite(0, 570).makeSolid(FlxG.width, Std.int(FlxG.height - box.y), FlxColor.BLACK);
 		box.alpha = 0.6;
 		box.scrollFactor.set();
 		add(box);
