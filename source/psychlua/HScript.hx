@@ -285,6 +285,9 @@ class HScript extends AlterHscript {
 		});
 		set('parentLua', #if LUA_ALLOWED parentLua #else null #end);
 		set("openState", (name:String) -> {
+			final blacklistStates:Array<String> = ['loadingstate'];
+			if (blacklistStates.contains(name.toLowerCase())) return;
+
 			FlxG.sound.music?.stop();
 			var hxFile:String = Paths.getPath('scripts/states/$name.hx');
             if (FileSystem.exists(hxFile)) FlxG.switchState(() -> new states.HscriptState(hxFile));

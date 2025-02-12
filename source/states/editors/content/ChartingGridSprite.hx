@@ -2,7 +2,7 @@ package states.editors.content;
 
 // Laggier than a single sprite for the grid, but this is to avoid having to re-create the sprite constantly
 class ChartingGridSprite extends FlxSprite {
-	public var rows(default, set):Int = 16;
+	public var rows(default, set):Float = 16;
 	public var columns(default, null):Int = 0;
 	public var spacing(default, set):Int = 0;
 	public var stripe:FlxSprite;
@@ -45,18 +45,24 @@ class ChartingGridSprite extends FlxSprite {
     }
 
 	override function draw() {
-		if (rows < 1) return;
+		if(!visible || alpha == 0 || y - camera.scroll.y >= FlxG.height) return;
+		scale.y = ChartingState.GRID_SIZE * Math.min(1, rows);
+		offset.y = -.5 * (scale.y - 1);
 
 		super.draw();
-		if (rows == 1) {
+		if (rows <= 1) {
 			_drawStripes();
 			return;
 		}
 
 		var initialY:Float = y;
-		for (i in 1...rows) {
+		for (i in 1...Math.ceil(rows)) {
 			y += ChartingState.GRID_SIZE + spacing;
+			if(y - camera.scroll.y >= FlxG.height) break;
+
 			animation.play((i % 2 == 1) ? 'odd' : 'even', true);
+			scale.y = ChartingState.GRID_SIZE * Math.min(1, rows - i);
+			offset.y = -.5 * (scale.y - 1);
 			super.draw();
 		}
 		animation.play('even', true);
@@ -90,16 +96,16 @@ class ChartingGridSprite extends FlxSprite {
 		stripe.updateHitbox();
 	}
 
-	function set_rows(v:Int):Int {
+	function set_rows(v:Float):Float {
 		rows = v;
 		recalcHeight();
 		return rows;
 	}
 
 	function set_spacing(v:Int):Int {
-		rows = v;
+		spacing  = v;
 		recalcHeight();
-		return rows;
+		return spacing ;
 	}
 
 	function recalcHeight() {

@@ -25,7 +25,6 @@ import cutscenes.DialogueBoxPsych;
 #if HSCRIPT_ALLOWED
 import psychlua.HScript.HScriptInfos;
 import alterhscript.AlterHscript;
-import hscript.Expr.Error as AlterError;
 import hscript.Printer;
 #end
 
@@ -1183,17 +1182,17 @@ class PlayState extends MusicBeatState {
 
 	override public function onFocus():Void {
 		callOnScripts('onFocus');
-		#if DISCORD_ALLOWED if (!paused && health > 0) resetRPC(Conductor.songPosition > 0.0); #end
 		super.onFocus();
+		#if DISCORD_ALLOWED if (!paused && health > 0) resetRPC(Conductor.songPosition > 0.0); #end
 		callOnScripts('onFocusPost');
 	}
 
 	override public function onFocusLost():Void {
 		callOnScripts('onFocusLost');
+		super.onFocusLost();
 		if (!paused && ClientPrefs.data.autoPausePlayState && !tryPause()) {
 			#if DISCORD_ALLOWED if (health > 0 && autoUpdateRPC) DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")"); #end
 		}
-		super.onFocusLost();
 		callOnScripts('onFocusLostPost');
 	}
 
@@ -2470,7 +2469,7 @@ class PlayState extends MusicBeatState {
 			if (newScript.exists('onCreate')) newScript.call('onCreate');
 			trace('initialized hscript interp successfully: $file');
 			hscriptArray.push(newScript);
-		} catch (e:AlterError) {
+		} catch (e:hscript.Expr.Error) {
 			var pos:HScriptInfos = cast {fileName: file, showLine: false};
 			AlterHscript.error(Printer.errorToString(e, false), pos);
 			var newScript:HScript = cast (AlterHscript.instances.get(file), HScript);

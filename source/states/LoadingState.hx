@@ -18,6 +18,12 @@ import sys.thread.Mutex;
 import objects.Note;
 import objects.NoteSplash;
 
+#if HSCRIPT_ALLOWED
+import psychlua.HScript;
+import alterhscript.AlterHscript;
+import hscript.Printer;
+#end
+
 class LoadingState extends MusicBeatState {
 	public static var loaded:Int = 0;
 	public static var loadMax:Int = 0;
@@ -40,50 +46,84 @@ class LoadingState extends MusicBeatState {
 	var stopMusic:Bool = false;
 	var dontUpdate:Bool = false;
 
+	var barGroup:FlxSpriteGroup;
 	var bar:FlxSprite;
 	var barWidth:Int = 0;
 	var intendedPercent:Float = 0;
 	var curPercent:Float = 0;
+	var stateChangeDelay:Float = 0;
 
 	var timePassed:Float;
 	var loadingText:FlxText;
 
+	#if HSCRIPT_ALLOWED
+	var hscript:HScript;
+	#end
 	override function create() {
-		#if !SHOW_LOADING_SCREEN while (true) #end {
-			if (checkLoaded()) {
-				dontUpdate = true;
-				super.create();
-				onLoad();
-				return;
+		persistentUpdate = true;
+		barGroup = new FlxSpriteGroup();
+		add(barGroup);
+
+		var barBack:FlxSprite = new FlxSprite(0, 660).makeSolid(FlxG.width - 300, 25, FlxColor.BLACK);
+		barBack.gameCenter(X);
+		barGroup.add(barBack);
+
+		bar = new FlxSprite(barBack.x + 5, barBack.y + 5).makeSolid(0, 15);
+		barGroup.add(bar);
+		barWidth = Std.int(barBack.width - 10);
+
+		#if HSCRIPT_ALLOWED
+		if (Mods.currentModDirectory != null && Mods.currentModDirectory.trim().length > 0) {
+			var scriptPath:String = 'mods/${Mods.currentModDirectory}/scripts/states/LoadingState.hx'; //mods/My-Mod/scripts/states/LoadingState.hx
+			if (FileSystem.exists(scriptPath)) {
+				try {
+					hscript = new HScript(null, scriptPath);
+					hscript.set('getLoaded', () -> return loaded);
+					hscript.set('getLoadMax', () -> return loadMax);
+					hscript.set('barBack', barBack);
+					hscript.set('bar', bar);
+	
+					if(hscript.exists('onCreate')) {
+						hscript.call('onCreate');
+						trace('initialized hscript interp successfully: $scriptPath');
+						return super.create();
+					} else Logs.trace('"$scriptPath" contains no \"onCreate" function, stopping script.', ERROR);
+				} catch(e:hscript.Expr.Error) {
+					var pos:HScriptInfos = cast {fileName: scriptPath, showLine: false};
+					AlterHscript.error(Printer.errorToString(e, false), pos);
+					hscript = cast (AlterHscript.instances.get(scriptPath), HScript);
+				}
+				if (hscript != null) hscript.destroy();
+				hscript = null;
 			}
-			#if !SHOW_LOADING_SCREEN Sys.sleep(.001); #end
 		}
+		#end
+
+		loadingText = new FlxText(520, 600, 450, Language.getPhrase('now_loading', 'Now Loading', ['...']), 32);
+		loadingText.setFormat(Paths.font("vcr.ttf"), loadingText.size, FlxColor.WHITE, CENTER);
+		loadingText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK, 2);
+		loadingText.gameCenter(X);
+		addBehindBar(loadingText);
 
 		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, 0xFFCAFF4D);
 		bg.gameCenter();
-		add(bg);
+		addBehindBar(bg);
 
 		var funkay:FlxSprite = new FlxSprite(Paths.image('funkay'));
 		funkay.antialiasing = ClientPrefs.data.antialiasing;
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
-		add(funkay);
-
-		loadingText = new FlxText(520, 600, 450, Language.getPhrase('now_loading', 'Now Loading', ['...']), 32);
-		loadingText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
-		loadingText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK, 2);
-		loadingText.gameCenter(X);
-		add(loadingText);
-
-		var bg:FlxSprite = new FlxSprite(0, 660).makeSolid(FlxG.width - 300, 25, FlxColor.BLACK);
-		bg.gameCenter(X);
-		add(bg);
-		
-		add(bar = new FlxSprite(bg.x + 5, bg.y + 5).makeSolid(0, 15, FlxColor.WHITE));
-		barWidth = Std.int(bg.width - 10);
-
-		persistentUpdate = true;
+		addBehindBar(funkay);
 		super.create();
+
+		if (stateChangeDelay <= 0 && checkLoaded()) {
+			dontUpdate = true;
+			onLoad();
+		}
+	}
+
+	function addBehindBar(obj:flixel.FlxBasic) {
+		insert(members.indexOf(barGroup), obj);
 	}
 
 	var transitioning:Bool = false;
@@ -93,9 +133,11 @@ class LoadingState extends MusicBeatState {
 
 		if (!transitioning) {
 			if (!finishedLoading && checkLoaded()) {
-				transitioning = true;
-				onLoad();
-				return;
+				if (stateChangeDelay <= 0) {
+					transitioning = true;
+					onLoad();
+					return;
+				} else stateChangeDelay = Math.max(0, stateChangeDelay - elapsed);
 			}
 			intendedPercent = loaded / loadMax;
 		}
@@ -108,6 +150,13 @@ class LoadingState extends MusicBeatState {
 			bar.updateHitbox();
 		}
 
+		#if HSCRIPT_ALLOWED
+		if(hscript != null) {
+			if (hscript.exists('onUpdate')) hscript.call('onUpdate', [elapsed]);
+			return;
+		}
+		#end
+
 		timePassed += elapsed;
 		var dots:String = '';
 		switch(Math.floor(timePassed % 1 * 3)) {
@@ -117,6 +166,17 @@ class LoadingState extends MusicBeatState {
 		}
 		loadingText.text = Language.getPhrase('now_loading', '({1}%) Now Loading{2}', [utils.MathUtil.floorDecimal(curPercent * 100, 2), dots]);
 	}
+
+	#if HSCRIPT_ALLOWED
+	override function destroy() {
+		if (hscript != null) {
+			if(hscript.exists('onDestroy')) hscript.call('onDestroy');
+			hscript.destroy();
+		}
+		hscript = null;
+		super.destroy();
+	}
+	#end
 
 	var finishedLoading:Bool = false;
 	function onLoad() {
@@ -162,6 +222,7 @@ class LoadingState extends MusicBeatState {
 
 	static var isIntrusive:Bool = false;
 	static function getNextState(target:NextState, stopMusic = false, intrusive:Bool = true):NextState {
+		#if !SHOW_LOADING_SCREEN intrusive = false; #end
 		isIntrusive = intrusive;
 		loadNextDirectory();
 
@@ -193,6 +254,16 @@ class LoadingState extends MusicBeatState {
 	}
 
 	public static function prepareToSong() {
+		if (PlayState.SONG == null) {
+			imagesToPrepare = [];
+			soundsToPrepare = musicToPrepare = songsToPrepare = [];
+
+			loaded = loadMax = 0;
+			initialThreadCompleted = true;
+			isIntrusive = false;
+			return;
+		}
+
 		_startPool();
 		imagesToPrepare = [];
 		soundsToPrepare = [];
