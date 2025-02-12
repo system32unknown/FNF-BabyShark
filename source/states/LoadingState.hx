@@ -83,12 +83,12 @@ class LoadingState extends MusicBeatState {
 					hscript.set('barBack', barBack);
 					hscript.set('bar', bar);
 	
-					if(hscript.exists('onCreate')) {
+					if (hscript.exists('onCreate')) {
 						hscript.call('onCreate');
 						trace('initialized hscript interp successfully: $scriptPath');
 						return super.create();
 					} else Logs.trace('"$scriptPath" contains no \"onCreate" function, stopping script.', ERROR);
-				} catch(e:hscript.Expr.Error) {
+				} catch (e:hscript.Expr.Error) {
 					var pos:HScriptInfos = cast {fileName: scriptPath, showLine: false};
 					AlterHscript.error(Printer.errorToString(e, false), pos);
 					hscript = cast (AlterHscript.instances.get(scriptPath), HScript);
@@ -151,7 +151,7 @@ class LoadingState extends MusicBeatState {
 		}
 
 		#if HSCRIPT_ALLOWED
-		if(hscript != null) {
+		if (hscript != null) {
 			if (hscript.exists('onUpdate')) hscript.call('onUpdate', [elapsed]);
 			return;
 		}
@@ -170,7 +170,7 @@ class LoadingState extends MusicBeatState {
 	#if HSCRIPT_ALLOWED
 	override function destroy() {
 		if (hscript != null) {
-			if(hscript.exists('onDestroy')) hscript.call('onDestroy');
+			if (hscript.exists('onDestroy')) hscript.call('onDestroy');
 			hscript.destroy();
 		}
 		hscript = null;
@@ -470,7 +470,7 @@ class LoadingState extends MusicBeatState {
 					trace('finished preloading $traceData in ${diff}s');
 					#end
 				} else Logs.trace('ERROR! fail on preloading $traceData', ERROR);
-			} catch(e:Dynamic) Logs.trace('ERROR! fail on preloading $traceData', ERROR);
+			} catch (e:Dynamic) Logs.trace('ERROR! fail on preloading $traceData', ERROR);
 			loaded++;
 		});
 	}

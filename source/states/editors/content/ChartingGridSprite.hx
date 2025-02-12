@@ -45,7 +45,7 @@ class ChartingGridSprite extends FlxSprite {
     }
 
 	override function draw() {
-		if(!visible || alpha == 0 || y - camera.scroll.y >= FlxG.height) return;
+		if (!visible || alpha == 0 || y - camera.scroll.y >= FlxG.height) return;
 		scale.y = ChartingState.GRID_SIZE * Math.min(1, rows);
 		offset.y = -.5 * (scale.y - 1);
 
@@ -58,7 +58,7 @@ class ChartingGridSprite extends FlxSprite {
 		var initialY:Float = y;
 		for (i in 1...Math.ceil(rows)) {
 			y += ChartingState.GRID_SIZE + spacing;
-			if(y - camera.scroll.y >= FlxG.height) break;
+			if (y - camera.scroll.y >= FlxG.height) break;
 
 			animation.play((i % 2 == 1) ? 'odd' : 'even', true);
 			scale.y = ChartingState.GRID_SIZE * Math.min(1, rows - i);
