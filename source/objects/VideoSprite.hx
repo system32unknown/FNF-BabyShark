@@ -46,7 +46,12 @@ class VideoSprite extends FlxSpriteGroup {
 		this.canSkip = canSkip;
 
 		// callbacks
-		if (!shouldLoop) videoSprite.bitmap.onEndReached.add(destroy);
+		if (!shouldLoop) videoSprite.bitmap.onEndReached.add(() -> {
+			if (!alreadyDestroyed) {
+				if (finishCallback != null) finishCallback();
+				super.destroy();
+			}
+		});
 
 		if (adjustSize) videoSprite.bitmap.onFormatSetup.add(() -> {
 			videoSprite.setGraphicSize(FlxG.width);
@@ -72,7 +77,7 @@ class VideoSprite extends FlxSpriteGroup {
 			cover.destroy();
 		}
 
-		if (finishCallback != null) finishCallback();
+		finishCallback = null;
 		onSkip = null;
 
 		if (FlxG.state != null) {

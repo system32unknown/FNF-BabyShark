@@ -41,11 +41,7 @@ class PsychUISlider extends FlxSpriteGroup {
 		labelText.alignment = CENTER;
 		add(labelText);
 
-		handle = new FlxSprite().makeGraphic(1, 1);
-		handle.scale.set(5, 15);
-		handle.updateHitbox();
-		handle.color = handleColor;
-		add(handle);
+		add(handle = new FlxSprite().makeSolid(5, 15, handleColor));
 
 		this.min = min;
 		this.max = max;
@@ -105,7 +101,7 @@ class PsychUISlider extends FlxSpriteGroup {
 		return decimals;
 	}
 
-	function set_min(v:Float) {
+	function set_min(v:Float):Float {
 		if (v > max) max = v;
 		min = v;
 		minText.text = Std.string(FlxMath.roundDecimal(min, decimals));

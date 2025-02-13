@@ -5,8 +5,20 @@ import haxe.io.BytesOutput;
 import openfl.media.Sound;
 
 class BeatByte {
-    public static function make(secs:Int, byteBeat:(i:Int) -> Int):Bytes {
-        var output:BytesOutput = new BytesOutput();
+    public var channels:Int;
+    public var sampleRate:Int;
+    public var bitsPerSample:Int;
+
+    var output:BytesOutput;
+
+    public function new(?channels:Int = 1, ?sampleRate:Int = 8000, ?bitsPerSample:Int = 8) {
+        this.channels = channels;
+        this.sampleRate = sampleRate;
+        this.bitsPerSample = bitsPerSample;
+    }
+
+    public function make(secs:Int, byteBeat:(i:Int) -> Int):Bytes {
+        output = new BytesOutput();
 
         // Write RIFF header
         output.writeString("RIFF");
@@ -17,10 +29,6 @@ class BeatByte {
         output.writeString("fmt ");
         output.writeInt32(16); // Chunk size
         output.writeInt16(1); // Audio format (PCM)
-
-        var channels:Int = 1;
-        var sampleRate:Int = 8000;
-        var bitsPerSample:Int = 8;
 
         output.writeInt16(channels);
         output.writeInt32(sampleRate);
@@ -45,9 +53,18 @@ class BeatByte {
         return bytes;
     }
 
-    public static function getSound(b:Null<Bytes>):FlxSound {
+    public function getSound(b:Null<Bytes>):FlxSound {
         var tmpSound:Sound = new Sound();
         tmpSound.loadCompressedDataFromByteArray(openfl.utils.ByteArray.fromBytes(b), b.length);
         return new FlxSound().loadEmbedded(tmpSound);
+    }
+
+    public function toString():String {
+        return '(Channels: $channels | SampleRate: $sampleRate | BitsPerSample: $bitsPerSample)';
+    }
+
+    public function dispose():Void {
+        output.close();
+        output = null;
     }
 }

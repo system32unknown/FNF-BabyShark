@@ -26,7 +26,7 @@ function onStepHit() {
 }
 
 function onUpdate(elapsed:Float) {
-	// Start of "update", some va riables weren't updated yet
+	// Start of "update", some variables weren't updated yet
 	// Also gets called while in the game over screen
 }
 

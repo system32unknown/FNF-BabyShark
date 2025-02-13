@@ -169,7 +169,7 @@ class HScript extends AlterHscript {
             "Alphabet"          => Alphabet,
 			"DeltaTrail" 		=> objects.DeltaTrail,
 			#if ACHIEVEMENTS_ALLOWED
-			'Achievements' 		=> Achievements,
+			"Achievements" 		=> Achievements,
 			#end
 
             "CoolUtil"          => CoolUtil,
@@ -177,6 +177,7 @@ class HScript extends AlterHscript {
 
 			#if (!flash && sys)
 			"FlxRuntimeShader"  => flixel.addons.display.FlxRuntimeShader,
+			"ErrorHandledRuntimeShader" => shaders.ErrorHandledShader.ErrorHandledRuntimeShader,
 			#end
 			'ShaderFilter'		=> openfl.filters.ShaderFilter,
 
