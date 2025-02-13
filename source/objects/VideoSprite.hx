@@ -49,7 +49,7 @@ class VideoSprite extends FlxSpriteGroup {
 		if (!shouldLoop) videoSprite.bitmap.onEndReached.add(() -> {
 			if (!alreadyDestroyed) {
 				if (finishCallback != null) finishCallback();
-				super.destroy();
+				destroy();
 			}
 		});
 

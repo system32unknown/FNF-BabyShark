@@ -378,7 +378,7 @@ class HScript extends AlterHscript {
 			if (funk.hscript != null) {
 				final retVal:AlterCall = funk.hscript.call(funcToRun, funcArgs);
 				if (retVal != null) {
-					return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
+					return (LuaUtils.isLuaSupported(retVal.returnValue)) ? retVal.returnValue : null;
 				} else if (funk.hscript.returnValue != null) return funk.hscript.returnValue;
 			}
 			return null;
@@ -387,7 +387,7 @@ class HScript extends AlterHscript {
 		funk.addLocalCallback("runHaxeFunction", function(funcToRun:String, ?funcArgs:Array<Dynamic> = null) {
 			if (funk.hscript != null) {
 				final retVal:AlterCall = funk.hscript.call(funcToRun, funcArgs);
-				if (retVal != null) return (retVal.returnValue == null || LuaUtils.isOfTypes(retVal.returnValue, [Bool, Int, Float, String, Array])) ? retVal.returnValue : null;
+				if (retVal != null) return (LuaUtils.isLuaSupported(retVal.returnValue)) ? retVal.returnValue : null;
 			} else {
 				var pos:HScriptInfos = cast {fileName: funk.scriptName, showLine: false};
 				if (funk.lastCalledFunction != '') pos.funcName = funk.lastCalledFunction;
