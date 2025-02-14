@@ -471,7 +471,7 @@ class Note extends FlxSprite {
 			@:privateAccess y = strumY + offsetY + correctionOffset + strum._dirSin * distance;
 			if (strum.downScroll && isSustainNote) {
 				if (PlayState.isPixelStage) y -= PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania] * 9.5;
-				y -= (frameHeight * scale.y) - (EK.swidths[PlayState.mania] / 2);
+				y -= (frameHeight * scale.y) - (EK.swidths[PlayState.mania] * .5);
 			}
 		}
 		followed = true;
