@@ -2,6 +2,7 @@ package states;
 
 import flixel.FlxObject;
 import flixel.effects.FlxFlicker;
+import openfl.ui.Mouse;
 import options.OptionsState;
 import substates.OutdatedSubState;
 
@@ -15,6 +16,7 @@ class MainMenuState extends MusicBeatState {
 	public static var curSelected:Int = 0;
 	public static var curColumn:MainMenuColumn = CENTER;
 	var allowMouse:Bool = true;
+	var mouseHovering:Bool = false;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	var leftItem:FlxSprite;
@@ -137,7 +139,7 @@ class MainMenuState extends MusicBeatState {
 
 		var allowMouse:Bool = allowMouse;
 		if (allowMouse && ((FlxG.mouse.deltaViewX != 0 && FlxG.mouse.deltaViewY != 0) || FlxG.mouse.justPressed)) { //more accurate than FlxG.mouse.justMoved
-			allowMouse = false;
+			allowMouse = mouseHovering = false;
 			FlxG.mouse.visible = true;
 			timeNotMoving = 0;
 	
@@ -149,13 +151,13 @@ class MainMenuState extends MusicBeatState {
 			}
 	
 			if (leftItem != null && FlxG.mouse.overlaps(leftItem)) {
-				allowMouse = true;
+				allowMouse = mouseHovering = true;
 				if (selectedItem != leftItem) {
 					curColumn = LEFT;
 					changeItem();
 				}
 			} else if (rightItem != null && FlxG.mouse.overlaps(rightItem)) {
-				allowMouse = true;
+				allowMouse = mouseHovering = true;
 				if (selectedItem != rightItem) {
 					curColumn = RIGHT;
 					changeItem();
@@ -170,7 +172,7 @@ class MainMenuState extends MusicBeatState {
 						if (dist < 0 || distance < dist) {
 							dist = distance;
 							distItem = i;
-							allowMouse = true;
+							allowMouse = mouseHovering = true;
 						}
 					}
 				}
@@ -185,6 +187,7 @@ class MainMenuState extends MusicBeatState {
 			timeNotMoving += elapsed;
 			if (timeNotMoving > 2) FlxG.mouse.visible = false;
 		}
+		Mouse.cursor = mouseHovering ? BUTTON : ARROW;
 
 		var leftJustpressed:Bool = Controls.justPressed('ui_left');
 		var rightJustpressed:Bool = Controls.justPressed('ui_right');
@@ -220,7 +223,7 @@ class MainMenuState extends MusicBeatState {
 		if (Controls.justPressed('accept') || (FlxG.mouse.justPressed && allowMouse)) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			selectedSomethin = true;
-			FlxG.mouse.visible = false;
+			FlxG.mouse.visible = mouseHovering = false;
 
 			if (ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, .15, false);
 

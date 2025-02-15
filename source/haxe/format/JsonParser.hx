@@ -125,9 +125,10 @@ class JsonParser {
 						}
 					}
 				case '['.code:
-					var arr = [], comma:Null<Bool> = null;
+					var arr:Array<Dynamic> = [];
+					var comma:Null<Bool> = null;
 					while (true) {
-						var c = nextChar();
+						var c:Int = nextChar();
 						if (checkComments(c)) continue;
 						switch (c) {
 							case ' '.code, '\r'.code, '\n'.code, '\t'.code:

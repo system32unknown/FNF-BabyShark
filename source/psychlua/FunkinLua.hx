@@ -9,7 +9,7 @@ import states.*;
 import backend.Highscore;
 import backend.Song;
 import objects.StrumNote;
-import openfl.utils.Assets;
+#if !MODS_ALLOWED import openfl.utils.Assets; #end
 import flixel_5_3_1.ParallaxSprite; // flixel 5 render pipeline
 
 class FunkinLua {

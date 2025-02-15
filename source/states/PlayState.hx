@@ -215,7 +215,6 @@ class PlayState extends MusicBeatState {
 	public var introSoundNames:Array<String> = [];
 
 	var keysArray:Array<String>;
-	public var pressHit:Int = 0;
 
 	public var popUpGroup:FlxTypedSpriteGroup<Popup>;
 	public var uiGroup:FlxSpriteGroup;
@@ -1026,10 +1025,10 @@ class PlayState extends MusicBeatState {
 				unspawnNotes.push(swagNote);
 				oldNote = swagNote;
 
-				var curStepCrochet:Float = 60 / daBpm * 250;
+				var curStepCrochet:Float = 60 / daBpm * 1000 / 4.;
 				var roundSus:Int = Math.round(swagNote.sustainLength / curStepCrochet);
 				if (roundSus > 0) {
-					for (susNote in 0...roundSus + 1) {
+					for (susNote in 0...roundSus) {
 						var sustainNote:Note = new Note(strumTime + (curStepCrochet * susNote), noteColumn, oldNote, true);
 						sustainNote.animSuffix = swagNote.animSuffix;
 						sustainNote.mustPress = swagNote.mustPress;
@@ -1446,10 +1445,7 @@ class PlayState extends MusicBeatState {
 							}
 							if (canBeHit) {
 								if (daNote.mustPress) {
-									if (!daNote.blockHit || daNote.isSustainNote) {
-										if (cpuControlled) goodNoteHit(daNote);
-										else if (!CoolUtil.toBool(pressHit & 1 << daNote.noteData) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet) noteMiss(daNote);
-									}
+									if (cpuControlled && (!daNote.blockHit && daNote.canBeHit || daNote.isSustainNote)) goodNoteHit(daNote);
 								} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
 								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 							}
@@ -2077,11 +2073,9 @@ class PlayState extends MusicBeatState {
 	function keysCheck():Void {
 		var holdArray:Array<Bool> = [];
 		var releaseArray:Array<Bool> = [];
-		pressHit = 0;
 		for (index => key in keysArray) {
 			holdArray.push(Controls.pressed(key));
 			releaseArray.push(Controls.released(key));
-			pressHit |= holdArray[index] ? 1 << index : 0;
 		}
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
 			if (notes.length > 0) for (n in notes) { // I can't do a filter here, that's kinda awesome

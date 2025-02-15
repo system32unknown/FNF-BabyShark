@@ -90,7 +90,16 @@ class CoolUtil {
 		folder = folder.replace('/', '\\');
 		if (folder.endsWith('/')) folder.substr(0, folder.length - 1);
 
-		Sys.command(#if windows 'explorer.exe' #else '/usr/bin/xdg-open' #end, [folder]);
+		var commandOpen:String = 'explorer.exe';
+		#if windows
+		// Ignore
+		#elseif mac
+		commandOpen = 'open';
+		#else
+		commandOpen = '/usr/bin/xdg-open';
+		#end
+
+		Sys.command(commandOpen, [folder]);
 		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
 	}
 
