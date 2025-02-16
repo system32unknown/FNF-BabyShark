@@ -79,8 +79,7 @@ class PlayState extends MusicBeatState {
 		return stageUI == "pixel" || stageUI.endsWith("-pixel");
 	public var popupAntialias:Bool = true;
 
-	@:noCompletion
-	static function set_stageUI(value:String):String {
+	@:noCompletion static function set_stageUI(value:String):String {
 		uiPrefix = uiPostfix = "";
 		if (value != "normal") {
 			uiPrefix = value.split("-pixel")[0].trim();
@@ -1827,8 +1826,7 @@ class PlayState extends MusicBeatState {
 
 	public function finishSong(?ignoreNoteOffset:Bool = false):Void {
 		updateTime = false;
-		FlxG.sound.music.volume = 0;
-		vocals.volume = 0;
+		FlxG.sound.music.volume = vocals.volume = 0;
 		vocals.pause();
 		if (ClientPrefs.data.noteOffset <= 0 || ignoreNoteOffset) endCallback();
 		else finishTimer = FlxTimer.wait(ClientPrefs.data.noteOffset / 1000, () -> endCallback());

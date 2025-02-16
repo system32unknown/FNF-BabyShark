@@ -68,9 +68,9 @@ class CoolUtil {
 	}
 
 	/**
-	 * Opens an URL in the browser.
-	 * @param url
-	 * @return Results URL status
+	 * Runs platform-specific code to open a URL in a web browser.
+	 * @param site The URL to open.
+	 * @return Results URL status.
 	 */
 	public static function browserLoad(site:String):Int {
 		#if linux 
@@ -83,6 +83,11 @@ class CoolUtil {
 		#end
 	}
 
+	/**
+	 * Opens a specified folder in the system's default file explorer.
+	 * @param folder The path to the folder to open.
+	 * @param absolute If true, uses the provided absolute path; otherwise, resolves the folder relative to the current working directory.
+	 */
 	inline public static function openFolder(folder:String, absolute:Bool = false):Void {
 		#if sys
 		if (!absolute) folder = Sys.getCwd() + '$folder';
@@ -90,9 +95,9 @@ class CoolUtil {
 		folder = folder.replace('/', '\\');
 		if (folder.endsWith('/')) folder.substr(0, folder.length - 1);
 
-		var commandOpen:String = 'explorer.exe';
+		var commandOpen:String = '';
 		#if windows
-		// Ignore
+		commandOpen = 'explorer.exe';
 		#elseif mac
 		commandOpen = 'open';
 		#else
@@ -101,6 +106,21 @@ class CoolUtil {
 
 		Sys.command(commandOpen, [folder]);
 		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
+	}
+
+	/**
+	 * Runs platform-specific code to open a file explorer and select a specific file.
+	 * @param targetPath The path of the file to select.
+	 */
+	public static function openSelectFile(targetPath:String):Void {
+		#if windows
+		Sys.command('explorer', ['/select,' + targetPath.replace('/', '\\')]);
+		#elseif mac
+		Sys.command('open', ['-R', targetPath]);
+		#elseif linux
+		// TODO: unsure of the linux equivalent to opening a folder and then "selecting" a file.
+		Sys.command('open', [targetPath]);
+		#end
 	}
 
 	@:access(flixel.util.FlxSave.validate)
@@ -148,7 +168,7 @@ class CoolUtil {
 		return colorNum ?? FlxColor.WHITE;
 	}
 
-	public static function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
+	public static inline function createBackDrop(cellW:Int, cellH:Int, w:Int, h:Int, alt:Bool, color1:FlxColor, color2:FlxColor):FlxBackdrop {
 		return new FlxBackdrop(flixel.addons.display.FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
 	}
 

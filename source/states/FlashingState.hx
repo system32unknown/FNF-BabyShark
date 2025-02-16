@@ -35,7 +35,7 @@ class FlashingState extends flixel.FlxState {
 			texts.add(button);
 		}
 
-		FlxTween.tween(texts, {alpha: 1.0}, 0.5, {onComplete: (_) -> updateItems()});
+		FlxTween.tween(texts, {alpha: 1.0}, .5, {onComplete: (_) -> updateItems()});
 	}
 
 	override function update(elapsed:Float) {

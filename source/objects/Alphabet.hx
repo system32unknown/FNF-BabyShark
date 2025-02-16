@@ -98,8 +98,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 
 	static final Y_PER_ROW:Float = 60;
 
-    @:noCompletion
-    function updateText(newText:String, ?force:Bool = false) {
+    @:noCompletion function updateText(newText:String, ?force:Bool = false) {
         if (text == newText && !force) return; // what's the point of regenerating
 
 		for (glyph in members) glyph.destroy();
@@ -149,14 +148,12 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
         }
     }
 
-	@:noCompletion
-	function set_scaleX(value:Float):Float {
+	@:noCompletion function set_scaleX(value:Float):Float {
 		updateScale(value, scaleY);
 		return value;
 	}
 
-	@:noCompletion
-	function set_scaleY(value:Float):Float {
+	@:noCompletion function set_scaleY(value:Float):Float {
 		updateScale(scaleX, value);
 		return value;
 	}
@@ -179,31 +176,27 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
         updateAlignment(alignment);
     }
 
-    @:noCompletion
-    inline function set_type(newType:AlphabetGlyphType):AlphabetGlyphType {
+    @:noCompletion inline function set_type(newType:AlphabetGlyphType):AlphabetGlyphType {
         type = newType;
         updateText(text, true);
         updateScale(scaleX, scaleY);
         return newType;
     }
 
-    @:noCompletion
-    function set_text(newText:String):String {
+    @:noCompletion function set_text(newText:String):String {
         newText = newText.replace('\\n', '\n');
         updateText(newText);
         updateScale(scaleX, scaleY);
         return text = newText;
     }
 
-    @:noCompletion
-    inline function set_alignment(newAlign:AlphabetAlignment):AlphabetAlignment {
+    @:noCompletion inline function set_alignment(newAlign:AlphabetAlignment):AlphabetAlignment {
         alignment = newAlign;
         updateScale(scaleX, scaleY);
         return newAlign;
     }
 
-    @:noCompletion
-    override function set_color(value:Int):Int {
+    @:noCompletion override function set_color(value:Int):Int {
         for (line in members) line.color = value;
         return super.set_color(value);
     }
@@ -215,8 +208,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 }
 
 class AlphabetLine extends FlxTypedSpriteGroup<AlphabetGlyph> {
-    @:noCompletion
-    override function set_color(value:Int):Int {
+    @:noCompletion override function set_color(value:Int):Int {
         for (letter in members) letter.color = value;
         return super.set_color(value);
     }
@@ -256,14 +248,12 @@ class AlphabetGlyph extends FlxSprite {
 		antialiasing = ClientPrefs.data.antialiasing;
 	}
 
-	@:noCompletion
-	inline function set_type(newType:String):String {
+	@:noCompletion inline function set_type(newType:String):String {
 		set_char(char);
 		return type = newType;
 	}
 
-	@:noCompletion
-	function set_image(value:String):String {
+	@:noCompletion function set_image(value:String):String {
 		if (frames == null) {
 			frames = Paths.getSparrowAtlas(image = value);
 			return value;
@@ -288,8 +278,7 @@ class AlphabetGlyph extends FlxSprite {
 		return (ascii >= 65 && ascii <= 90) || (ascii >= 97 && ascii <= 122) || (ascii >= 192 && ascii <= 214) || (ascii >= 216 && ascii <= 246) || (ascii >= 248 && ascii <= 255);
 	}
 
-	@:noCompletion
-	inline function set_char(newChar:String):String {
+	@:noCompletion inline function set_char(newChar:String):String {
 		frames = Paths.getSparrowAtlas(image);
 
 		var converted:String = newChar.toLowerCase();

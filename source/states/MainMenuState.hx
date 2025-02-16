@@ -185,7 +185,7 @@ class MainMenuState extends MusicBeatState {
 			}
 		} else {
 			timeNotMoving += elapsed;
-			if (timeNotMoving > 2) FlxG.mouse.visible = false;
+			if (timeNotMoving > 2) FlxG.mouse.visible = mouseHovering = false;
 		}
 		Mouse.cursor = mouseHovering ? BUTTON : ARROW;
 
@@ -215,7 +215,7 @@ class MainMenuState extends MusicBeatState {
 
 		if (Controls.justPressed('back')) {
 			selectedSomethin = true;
-			FlxG.mouse.visible = false;
+			FlxG.mouse.visible = mouseHovering = false;
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			FlxG.switchState(() -> new TitleState());
 		}
@@ -266,7 +266,7 @@ class MainMenuState extends MusicBeatState {
 		}
 		if (Controls.justPressed('debug_1')) {
 			selectedSomethin = true;
-			FlxG.mouse.visible = false;
+			FlxG.mouse.visible = mouseHovering = false;
 			FlxG.switchState(() -> new states.editors.MasterEditorMenu());
 		}
 

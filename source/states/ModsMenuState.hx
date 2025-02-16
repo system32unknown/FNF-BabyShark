@@ -773,7 +773,7 @@ class MenuButton extends FlxSpriteGroup {
 			return;
 		}
 
-		if (!ignoreCheck && FlxG.mouse.justMoved && FlxG.mouse.visible)
+		if (!ignoreCheck && (FlxG.mouse.justPressed || FlxG.mouse.justMoved) && FlxG.mouse.visible)
 			onFocus = FlxG.mouse.overlaps(this);
 
 		if (onFocus && onClick != null && FlxG.mouse.justPressed)

@@ -98,13 +98,16 @@ class ByteBeat {
     }
 
     /**
-     * Converts raw byte data into a Flixel sound object (`FlxSound`).
+     * Convert byte data into a playable sound.
+     *
+     * @param input The byte data.
+     * @return The playable sound, or `null` if loading failed.
      */
-    public function toSound(b:Bytes):FlxSound {
-        if (b == null) return null;
+    public function buildSoundFromBytes(input:Null<Bytes>):Null<FlxSound> {
+        if (input == null) return null;
 
         var tmpSound:Sound = new Sound();
-        tmpSound.loadCompressedDataFromByteArray(openfl.utils.ByteArray.fromBytes(b), b.length);
+        tmpSound.loadCompressedDataFromByteArray(openfl.utils.ByteArray.fromBytes(input), input.length);
         return new FlxSound().loadEmbedded(tmpSound);
     }
 

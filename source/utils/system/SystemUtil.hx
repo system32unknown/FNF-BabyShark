@@ -24,21 +24,62 @@ class SystemUtil {
 	}
 
 	/**
-	 * Gets Current Battery (Laptop Only).
-	 * @return Array of Battery [0: Charging, 1: Remaining Battery].
-	**/
+	 * Gets laptop battery status and charge level.
+	 * @return [charging, percentage]:
+	 */
 	public static function getBattery():Array<Int> {
-		final wmic_battery:String = "wmic path win32_battery Get";
-		var charging:Process = new Process(wmic_battery + " BatteryStatus");
 		var ret:Array<Int> = [0, -1];
-
-		if (charging.stderr.readAll().toString().split("\n")[0] != "") return ret;
-		var val:Int = Std.parseInt(charging.stdout.readAll().toString().split("\n")[1]);
-		if (val == 1 || (val >= 3 && val <= 5) || val == 10) ret[0] = 0;
-		else ret[0] = 1;
-
-		var battery:Int = Std.parseInt(new Process(wmic_battery + " EstimatedChargeRemaining").stdout.readAll().toString().split("\n")[1]);
-		ret[1] = battery;
-		return ret;
+        
+        #if windows
+		final wmic_battery:String = "wmic path win32_battery Get";
+        try {
+            var chargingProc:Process = new Process(wmic_battery + " BatteryStatus");
+            var chargingOutput:Array<String> = chargingProc.stdout.readAll().toString().split("\n");
+            chargingProc.close();
+            
+            if (chargingOutput.length > 1) {
+                var val:Int = Std.parseInt(StringTools.trim(chargingOutput[1]));
+				if (val == 1 || (val >= 3 && val <= 5) || val == 10) ret[0] = 0;
+				else ret[0] = 1;
+            }
+            
+            var batteryProc:Process = new Process(wmic_battery + " EstimatedChargeRemaining");
+            var batteryOutput:Array<String> = batteryProc.stdout.readAll().toString().split("\n");
+            batteryProc.close();
+            
+            if (batteryOutput.length > 1) ret[1] = Std.parseInt(StringTools.trim(batteryOutput[1]));
+        } catch (e:Dynamic) return ret;
+        #elseif linux
+		final battery_path:String = '/sys/class/power_supply/BAT0/';
+        try {
+            var chargingProc:Process = new Process("cat", [linux + "status"]);
+            var chargingOutput:String = chargingProc.stdout.readAll().toString().trim();
+            chargingProc.close();
+            
+            ret[0] = chargingOutput == "Charging" ? 1 else 0;
+            
+            var batteryProc:Process = new Process("cat", [linux + "capacity"]);
+            var batteryOutput:String = batteryProc.stdout.readAll().toString().trim();
+            batteryProc.close();
+            
+            ret[1] = Std.parseInt(batteryOutput);
+        } catch (e:Dynamic) return ret;
+        #elseif mac
+        try {
+            var process:Process = new Process("pmset", ["-g", "batt"]);
+            var output:Array<String> = process.stdout.readAll().toString().split("\n");
+            process.close();
+            
+            for (line in output) {
+                if (line.indexOf("InternalBattery") != -1) {
+                    var parts:Array<String> = line.split(";");
+                    ret[0] = parts[1].indexOf("charging") != -1 ? 1 : 0;
+                    ret[1] = Std.parseInt(parts[0].split("%")[0].split(" ").pop());
+                    break;
+                }
+            }
+        } catch (e:Dynamic) return ret;
+        #end
+        return ret;
 	}
 }
