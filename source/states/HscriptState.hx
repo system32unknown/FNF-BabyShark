@@ -3,30 +3,30 @@ package states;
 import psychlua.HScript;
 
 class HscriptState extends MusicBeatState {
-    public var hscriptRef:HScript;
-    public static var instance:HscriptState = null;
+    public var hscript:HScript;
+    public static var instance:HscriptState;
     public function new(file:String) {
         super();
         instance = this;
 
-        hscriptRef = new HScript(null, file); // skip init create call to avoid errors
-        hscriptRef.set('instance', instance);
+        hscript = new HScript(null, file); // skip init create call to avoid errors
+        hscript.set('instance', instance);
     }
 
     override function create() {
-        hscriptRef.call("onCreate");
+        if (hscript.exists('onCreate')) hscript.call("onCreate");
         super.create();
-        hscriptRef.call("onCreatePost");
+        hscript.call("onCreatePost");
     }
 
     override function update(elapsed:Float) {
-        hscriptRef.call("onUpdate", [elapsed]);
+        hscript.call("onUpdate", [elapsed]);
         super.update(elapsed);
-        hscriptRef.call("onUpdatePost", [elapsed]);
+        hscript.call("onUpdatePost", [elapsed]);
     }
 
     override function destroy() {
-        if (hscriptRef.exists('onDestroy')) hscriptRef.call('onDestroy');
+        if (hscript.exists('onDestroy')) hscript.call('onDestroy');
         super.destroy();
     }
 }

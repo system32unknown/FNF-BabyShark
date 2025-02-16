@@ -6,16 +6,25 @@ class FPSUtil {
 	@:noCompletion var sliceCnt:Int;
 
 	/**
-		The current frame rate, expressed using frames-per-second
-	**/
+	 * The current frame rate, expressed using frames-per-second.
+	 */
 	public var curFPS(default, null):Float;
+
+    /**
+	 * The averaged frame rate over a short period.
+     */
 	public var curAvgFPS(default, null):Float;
+
+
     public function new() {
 		curFPS = curAvgFPS = 0;
 		sum = sliceCnt = 0;
 		times = [];
 	}
 
+    /**
+     * Updates the FPS calculations based on the given delta time.
+     */
     public function update(dt:Float):Void {
 		sliceCnt = 0;
 		var delta:Int = Math.round(dt);
@@ -32,6 +41,12 @@ class FPSUtil {
 		curFPS = Math.round(curAvgFPS);
     }
 
+    /**
+     * Adjusts FPS calculations based on different engine types.
+     * @param type The engine type (e.g., 'andromeda', 'psychold', etc.)
+     * @param fps The current FPS value to adjust
+     * @return The adjusted FPS value based on the selected method
+     */
 	public static function getFPSAdjust(type:String, fps:Float):Float {
 		return switch (type.toLowerCase()) {
 			case 'andromeda': FlxG.elapsed / (1 / 60) * fps;

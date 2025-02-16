@@ -3,26 +3,26 @@ package substates;
 import psychlua.HScript;
 
 class HscriptSubstate extends MusicBeatSubstate {
-    public var hscriptRef:HScript;
+    public var hscript:HScript;
     public static var instance:HscriptSubstate = null;
     public function new(file:String, args:Array<Dynamic>) {
         super();
         instance = this;
 
-        hscriptRef = new HScript(null, file);
-        hscriptRef.set("instance", instance);
-        if (hscriptRef.exists('onCreate')) hscriptRef.call('onCreate');
-        if (hscriptRef.exists('new')) hscriptRef.call("new", args);
+        hscript = new HScript(null, file);
+        hscript.set("instance", instance);
+        if (hscript.exists('onCreate')) hscript.call('onCreate');
+        if (hscript.exists('new')) hscript.call("new", args);
     }
 
     override function update(elapsed:Float) {
-        hscriptRef.call("onUpdate", [elapsed]);
+        hscript.call("onUpdate", [elapsed]);
         super.update(elapsed);
-        hscriptRef.call("onUpdatePost", [elapsed]);
+        hscript.call("onUpdatePost", [elapsed]);
     }
 
     override function destroy() {
-        if (hscriptRef.exists('onDestroy')) hscriptRef.call('onDestroy');
+        if (hscript.exists('onDestroy')) hscript.call('onDestroy');
         super.destroy();
     }
 }

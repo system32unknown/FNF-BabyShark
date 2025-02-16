@@ -27,6 +27,7 @@ class SystemUtil {
 	 * Gets laptop battery status and charge level.
 	 * @return [charging, percentage]:
 	 */
+    // this is coded horribly. i'm fucking so sorry.
 	public static function getBattery():Array<Int> {
 		var ret:Array<Int> = [0, -1];
         
