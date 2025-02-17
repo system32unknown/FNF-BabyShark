@@ -7,6 +7,8 @@ import alterhscript.AlterHscript;
 import hscript.Expr.Error as AlterError;
 import hscript.Printer;
 
+import haxe.ValueException;
+
 typedef HScriptInfos = {
 	> haxe.PosInfos,
 	var ?funcName:String;
@@ -441,7 +443,7 @@ class HScript extends AlterHscript {
 				if (parentLua.lastCalledFunction != '') pos.funcName = parentLua.lastCalledFunction;
 			}
 			AlterHscript.error(Printer.errorToString(e, false), pos);
-		}
+		} catch (e:ValueException) AlterHscript.error('$funcToRun: $e'); // this is thrown for invalid field access and stuff
 		return null;
 	}
 

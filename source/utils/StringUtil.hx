@@ -77,7 +77,6 @@ class StringUtil {
 		}
 		return returnVal.substr(0, returnVal.length - 1);
 	}
-
 	public static function dec2bin(int:Int, digits:Int):String {
 		var str:String = "";
 		digits = FlxMath.minInt(digits, 32);
