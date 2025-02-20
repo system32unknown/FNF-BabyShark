@@ -269,7 +269,7 @@ class PlayState extends MusicBeatState {
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 		persistentUpdate = persistentDraw = true;
 
-		Conductor.mapBPMChanges(SONG);
+		Conductor.setBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
 
 		if (SONG.mania == null || SONG.mania < EK.minMania || SONG.mania > EK.maxMania) SONG.mania = EK.defaultMania;
@@ -1387,7 +1387,7 @@ class PlayState extends MusicBeatState {
 				var noteJudge:Bool = castHold ? tooLate : canBeHit;
 
 				var isCanPass:Bool = !ClientPrefs.data.skipSpawnNote || Timer.stamp() - noteSpawnTimout < shownRealTime;
-				if (!noteJudge && (isCanPass || !optimizeSpawnNote)) {
+				if (!noteJudge && isCanPass || !optimizeSpawnNote) {
 					var dunceNote:Note = targetNote;
 					dunceNote.spawned = true;
 					dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];

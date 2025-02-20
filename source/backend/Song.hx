@@ -34,7 +34,7 @@ typedef SwagSong = {
 
 typedef SwagSection = {
 	var sectionNotes:Array<Dynamic>;
-	var sectionBeats:Float;
+	var sectionBeats:Int;
 	var mustHitSection:Bool;
 	@:optional var altAnim:Bool;
 	@:optional var gfSection:Bool;
@@ -72,7 +72,7 @@ class Song {
 
 		var maniaKey:Int = EK.keys(PlayState.mania);
 		for (section in sectionsData) {
-			var beats:Null<Float> = cast section.sectionBeats;
+			var beats:Null<Int> = cast section.sectionBeats;
 			if (beats == null || Math.isNaN(beats)) {
 				section.sectionBeats = 4;
 				if (Reflect.hasField(section, 'lengthInSteps')) Reflect.deleteField(section, 'lengthInSteps');

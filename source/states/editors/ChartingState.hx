@@ -1668,7 +1668,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		if (FlxG.sound.music != null && !reachedLimit) { // Created sections to fill blank space
 			var lastSection = PlayState.SONG.notes[PlayState.SONG.notes.length - 1];
 			var beat:Float = Conductor.calculateCrochet(bpm);
-			var sectionBeats:Float = lastSection != null ? lastSection.sectionBeats : 4;
+			var sectionBeats:Int = lastSection != null ? lastSection.sectionBeats : 4;
 			var rowRound:Int = Math.round(4 * sectionBeats);
 			var timeAdd:Float = beat * (rowRound / 4);
 			var mustHitSec:Bool = lastSection != null ? lastSection.mustHitSection : true;
@@ -2359,7 +2359,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			var sec = getCurChartSection();
 			if (sec != null) {
 				var oldTimes:Array<Float> = cachedSectionTimes.copy();
-				sec.sectionBeats = beatsPerSecStepper.value;
+				sec.sectionBeats = Math.floor(beatsPerSecStepper.value);
 				adaptNotesToNewTimes(oldTimes);
 			}
 		};

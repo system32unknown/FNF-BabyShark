@@ -43,9 +43,9 @@ class FPSUtil {
 
     /**
      * Adjusts FPS calculations based on different engine types.
-     * @param type The engine type (e.g., 'andromeda', 'psychold', etc.)
-     * @param fps The current FPS value to adjust
-     * @return The adjusted FPS value based on the selected method
+     * @param type The engine type (e.g., 'andromeda', 'psychold', etc.).
+     * @param fps The current FPS value to adjust.
+     * @return The adjusted FPS value based on the selected method.
      */
 	public static function getFPSAdjust(type:String, fps:Float):Float {
 		return switch (type.toLowerCase()) {
@@ -62,10 +62,10 @@ class FPSUtil {
 
 	/**
 	 * Alternative linear interpolation function for each frame use, without worrying about framerate changes.
-	 * @param a Begin value
-	 * @param b End value
-	 * @param ratio Ratio
-	 * @return Float Final value
+	 * @param a Begin value.
+	 * @param b End value.
+	 * @param ratio Ratio.
+	 * @return Float Final value.
 	 */
 	inline public static function fpsLerp(a:Float, b:Float, ratio:Float):Float
 		return FlxMath.lerp(b, a, getFPSAdjust('codename', ratio));

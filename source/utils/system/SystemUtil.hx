@@ -25,7 +25,7 @@ class SystemUtil {
 
 	/**
 	 * Gets laptop battery status and charge level.
-	 * @return [charging, percentage]:
+	 * @return [charging, percentage]
 	 */
     // this is coded horribly. i'm fucking so sorry.
 	public static function getBattery():Array<Int> {
@@ -57,7 +57,7 @@ class SystemUtil {
             var chargingOutput:String = chargingProc.stdout.readAll().toString().trim();
             chargingProc.close();
             
-            ret[0] = chargingOutput == "Charging" ? 1 : 0;
+            ret[0] = (chargingOutput == "Charging" ? 1 : 0);
             
             var batteryProc:Process = new Process("cat", [linux + "capacity"]);
             var batteryOutput:String = batteryProc.stdout.readAll().toString().trim();

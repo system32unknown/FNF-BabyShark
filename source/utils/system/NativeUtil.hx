@@ -31,7 +31,7 @@ class NativeUtil {
 	 */
 	public static function setDarkMode(title:String, enable:Bool) {
 		#if windows
-		if (title == null) title = Application.current.window.title;
+		title ??= Application.current.window.title;
 		PlatformUtil.setDarkMode(title, enable);
 		#end
 	}
@@ -46,7 +46,7 @@ class NativeUtil {
 	public static function setWindowBorderColor(title:String, color:FlxColor, setHeader:Bool = true, setBorder:Bool = true) {
 		#if windows
 		if (getWindowsVersion() != 11) return;
-		if (title == null) title = Application.current.window.title;
+		title ??= Application.current.window.title;
 		PlatformUtil.setWindowBorderColor(title, [color.red, color.green, color.blue, color.alpha], setHeader, setBorder);
 		#end
 	}
@@ -59,7 +59,7 @@ class NativeUtil {
 	public static function resetWindowBorderColor(title:String, setHeader:Bool = true, setBorder:Bool = true) {
 		#if windows
 		if (getWindowsVersion() != 11) return;
-		if (title == null) title = Application.current.window.title;
+		title ??= Application.current.window.title;
 		PlatformUtil.setWindowBorderColor(title, [-1, -1, -1, -1], setHeader, setBorder);
 		#end
 	}
@@ -72,7 +72,7 @@ class NativeUtil {
 	public static function setWindowTitleColor(title:String, color:FlxColor) {
 		#if windows
 		if (getWindowsVersion() != 11) return;
-		if (title == null) title = Application.current.window.title;
+		title ??= Application.current.window.title;
 		PlatformUtil.setWindowTitleColor(title, [color.red, color.green, color.blue, color.alpha]);
 		#end
 	}
@@ -85,7 +85,7 @@ class NativeUtil {
 	public static function resetWindowTitleColor(title:String) {
 		#if windows
 		if (getWindowsVersion() != 11) return;
-		if (title == null) title = Application.current.window.title;
+		title ??= Application.current.window.title;
 		PlatformUtil.setWindowTitleColor(title, [-1, -1, -1, -1]);
 		#end
 	}
