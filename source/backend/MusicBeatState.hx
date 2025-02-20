@@ -91,7 +91,7 @@ class MusicBeatState extends flixel.FlxState {
 	}
 
 	function updateCurStep():Void {
-		var lastChange:Conductor.BPMChangeEvent = Conductor.getBPMFromSeconds(Conductor.songPosition);
+		var lastChange:Conductor.BPMChangeEvent = Conductor.getBPMChangeFromMS(Conductor.songPosition);
 
 		var shit:Float = ((Conductor.songPosition - ClientPrefs.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
 		curDecStep = lastChange.stepTime + shit;
@@ -113,6 +113,7 @@ class MusicBeatState extends flixel.FlxState {
 		return cast (FlxG.state, MusicBeatState);
 	}
 	
+	public var stages:Array<BaseStage> = [];
 	public function stepHit():Void {
 		stagesFunc((stage:BaseStage) -> {
 			stage.curStep = curStep;
@@ -122,8 +123,6 @@ class MusicBeatState extends flixel.FlxState {
 
 		if (curStep % 4 == 0) beatHit();
 	}
-
-	public var stages:Array<BaseStage> = [];
 	public function beatHit():Void {
 		stagesFunc((stage:BaseStage) -> {
 			stage.curBeat = curBeat;
@@ -131,7 +130,6 @@ class MusicBeatState extends flixel.FlxState {
 			stage.beatHit();
 		});
 	}
-
 	public function sectionHit():Void {
 		stagesFunc((stage:BaseStage) -> {
 			stage.curSection = curSection;
@@ -146,8 +144,8 @@ class MusicBeatState extends flixel.FlxState {
 		}
 	}
 
-	function getBeatsOnSection():Float {
-		var val:Null<Float> = 4;
+	function getBeatsOnSection():Int {
+		var val:Null<Int> = 4;
 		if (PlayState.SONG != null && PlayState.SONG.notes[curSection] != null)
 			val = PlayState.SONG.notes[curSection].sectionBeats;
 		return val ?? 4;

@@ -30,7 +30,7 @@ class Conductor {
 		return (60 / bpm) * 1000;
 	}
 
-	public static function getBPMFromSeconds(time:Float):BPMChangeEvent {
+	public static function getBPMChangeFromMS(time:Float):BPMChangeEvent {
 		var lastChange:BPMChangeEvent = {
 			stepTime: 0,
 			songTime: 0,

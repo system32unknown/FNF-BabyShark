@@ -443,7 +443,17 @@ class HScript extends AlterHscript {
 				if (parentLua.lastCalledFunction != '') pos.funcName = parentLua.lastCalledFunction;
 			}
 			AlterHscript.error(Printer.errorToString(e, false), pos);
-		} catch (e:ValueException) AlterHscript.error('$funcToRun: $e'); // this is thrown for invalid field access and stuff
+		} catch (e:ValueException) {
+			var pos:HScriptInfos = cast this.interp.posInfos();
+			pos.funcName = funcToRun;
+			#if LUA_ALLOWED
+			if (parentLua != null) {
+				pos.isLua = true;
+				if (parentLua.lastCalledFunction != '') pos.funcName = parentLua.lastCalledFunction;
+			}
+			#end
+			AlterHscript.error('$funcToRun: $e', pos);
+		}
 		return null;
 	}
 
