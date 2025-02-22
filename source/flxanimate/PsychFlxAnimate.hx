@@ -13,7 +13,7 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 			var trimmed:String = pathOrStr.trim();
 			trimmed = trimmed.substr(trimmed.length - 5).toLowerCase();
 
-			if (trimmed == '.json') myJson = File.getContent(myJson); //is a path
+			if (trimmed == '.json') myJson = File.getContent(myJson); // is a path
 			animJson = cast haxe.Json.parse(_removeBOM(myJson));
 		} else animJson = cast myJson;
 
@@ -61,7 +61,6 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 		try {
 			super.destroy();
 		} catch (e:haxe.Exception) {
-			anim.curInstance = FlxDestroyUtil.destroy(anim.curInstance);
 			anim.stageInstance = FlxDestroyUtil.destroy(anim.stageInstance);
 			anim.metadata.destroy();
 			anim.symbolDictionary = null;

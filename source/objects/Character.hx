@@ -93,7 +93,7 @@ class Character extends FlxSprite {
 
 		var path:String = Paths.getPath('characters/$curCharacter.json');
 		if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
-			path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+			path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); // If a character couldn't be found, change him to BF just to prevent a crash
 			missingCharacter = true;
 			missingText = new FlxText(0, 0, 300, 'ERROR:\n$character.json', 16);
 			missingText.alignment = CENTER;
@@ -295,7 +295,7 @@ class Character extends FlxSprite {
 	}
 
 	public function playAnim(animName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void {
-		if (animation.getByName(animName) == null) return;
+		if (animation.getByName(animName) == null && !isAnimateAtlas) return;
 		specialAnim = false;
 
 		if (!isAnimateAtlas) animation.play(animName, Force, Reversed, Frame);

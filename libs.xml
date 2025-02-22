@@ -10,7 +10,7 @@
 	<!-- Other Libraries -->
 	<git name="hxcpp" url="https://github.com/HaxeFoundation/hxcpp"/>
 	<git name="hscript-improved" url="https://github.com/system32unknown/AlterHscript" ref="custom-classes"/>
-	<git name="flxanimate" url="https://github.com/Dot-Stuff/flxanimate" ref="768740a56b26aa0c072720e0d1236b94afe68e3e"/>
+	<git name="flxanimate" url="https://github.com/Dot-Stuff/flxanimate" ref="dev"/>
 	<git name="linc_luajit" url="https://github.com/superpowers04/linc_luajit"/>
 	<git name="hxdiscord_rpc" url="https://github.com/MAJigsaw77/hxdiscord_rpc" skipDeps="true"/>
 	<lib name="hxvlc" url="https://github.com/MAJigsaw77/hxvlc" skipDeps="true"/>
