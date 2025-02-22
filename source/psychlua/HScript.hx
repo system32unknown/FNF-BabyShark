@@ -433,7 +433,7 @@ class HScript extends AlterHscript {
 		}
 		try {
 			var func:Dynamic = interp.variables.get(funcToRun); // function signature
-			final ret = Reflect.callMethod(null, func, args ?? []);
+			final ret:Dynamic = Reflect.callMethod(null, func, args ?? []);
 			return {funName: funcToRun, signature: func, returnValue: ret};
 		} catch (e:AlterError) {
 			var pos:HScriptInfos = cast this.interp.posInfos();
@@ -452,7 +452,7 @@ class HScript extends AlterHscript {
 				if (parentLua.lastCalledFunction != '') pos.funcName = parentLua.lastCalledFunction;
 			}
 			#end
-			AlterHscript.error('$funcToRun: $e', pos);
+			AlterHscript.error('$e', pos);
 		}
 		return null;
 	}

@@ -53,13 +53,13 @@ class SystemUtil {
         #elseif linux
 		final battery_path:String = '/sys/class/power_supply/BAT0/';
         try {
-            var chargingProc:Process = new Process("cat", [linux + "status"]);
+            var chargingProc:Process = new Process("cat", [battery_path + "status"]);
             var chargingOutput:String = chargingProc.stdout.readAll().toString().trim();
             chargingProc.close();
             
             ret[0] = (chargingOutput == "Charging" ? 1 : 0);
             
-            var batteryProc:Process = new Process("cat", [linux + "capacity"]);
+            var batteryProc:Process = new Process("cat", [battery_path + "capacity"]);
             var batteryOutput:String = batteryProc.stdout.readAll().toString().trim();
             batteryProc.close();
             

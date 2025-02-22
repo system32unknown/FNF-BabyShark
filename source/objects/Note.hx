@@ -57,6 +57,7 @@ class Note extends FlxSprite {
 	public var followed:Bool = false;
 
 	public var wasGoodHit:Bool = false;
+	public var missed:Bool = false;
 
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;

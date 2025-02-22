@@ -214,6 +214,7 @@ class PlayState extends MusicBeatState {
 	public var introSoundNames:Array<String> = [];
 
 	var keysArray:Array<String>;
+	public var pressHit:Int = 0;
 
 	public var popUpGroup:FlxTypedSpriteGroup<Popup>;
 	public var uiGroup:FlxSpriteGroup;
@@ -1442,7 +1443,10 @@ class PlayState extends MusicBeatState {
 							}
 							if (canBeHit) {
 								if (daNote.mustPress) {
-									if (cpuControlled && (!daNote.blockHit && daNote.canBeHit || daNote.isSustainNote)) goodNoteHit(daNote);
+									if (!daNote.blockHit || daNote.isSustainNote) {
+										if (cpuControlled) goodNoteHit(daNote);
+										else if (!CoolUtil.toBool(pressHit & 1 << daNote.noteData) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet) noteMiss(daNote);
+									}
 								} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
 								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 							}
@@ -2069,9 +2073,11 @@ class PlayState extends MusicBeatState {
 	function keysCheck():Void {
 		var holdArray:Array<Bool> = [];
 		var releaseArray:Array<Bool> = [];
+		pressHit = 0;
 		for (index => key in keysArray) {
 			holdArray.push(Controls.pressed(key));
 			releaseArray.push(Controls.released(key));
+			pressHit |= holdArray[index] ? 1 << index : 0;
 		}
 		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
 			if (notes.length > 0) for (n in notes) { // I can't do a filter here, that's kinda awesome
@@ -2087,6 +2093,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	function noteMiss(daNote:Note, opponent:Bool = false):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
+		if (daNote.missed) return;
 		notes.forEachAlive((note:Note) -> {
 			if (daNote != note && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) invalidateNote(note);
 		});
@@ -2134,6 +2141,7 @@ class PlayState extends MusicBeatState {
 		}
 		combo = 0;
 		vocals.volume = 0;
+		if (note != null) note.missed = true;
 	}
 
 	function opponentNoteHit(note:Note):Void {

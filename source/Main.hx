@@ -43,6 +43,7 @@ class Main extends Sprite {
 		super();
 		utils.system.NativeUtil.setDPIAware();
 		#if linux openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
+
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		debug.Logs.init();
 
@@ -96,7 +97,6 @@ class Main extends Sprite {
 
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 		ClientPrefs.load();
-		FlxG.mouse.useSystemCursor = true;
 		addChild(fpsVar = new FPSCounter());
 		fpsVar.visible = ClientPrefs.data.showFPS;
 		fpsVar.memType = ClientPrefs.data.memCounterType;

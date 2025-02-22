@@ -2,7 +2,6 @@ package states;
 
 import flixel.FlxObject;
 import flixel.effects.FlxFlicker;
-import openfl.ui.Mouse;
 import options.OptionsState;
 import substates.OutdatedSubState;
 
@@ -16,7 +15,6 @@ class MainMenuState extends MusicBeatState {
 	public static var curSelected:Int = 0;
 	public static var curColumn:MainMenuColumn = CENTER;
 	var allowMouse:Bool = true;
-	var mouseHovering:Bool = false;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	var leftItem:FlxSprite;
@@ -139,7 +137,7 @@ class MainMenuState extends MusicBeatState {
 
 		var allowMouse:Bool = allowMouse;
 		if (allowMouse && ((FlxG.mouse.deltaViewX != 0 && FlxG.mouse.deltaViewY != 0) || FlxG.mouse.justPressed)) { //more accurate than FlxG.mouse.justMoved
-			allowMouse = mouseHovering = false;
+			allowMouse = false;
 			FlxG.mouse.visible = true;
 			timeNotMoving = 0;
 	
@@ -151,13 +149,13 @@ class MainMenuState extends MusicBeatState {
 			}
 	
 			if (leftItem != null && FlxG.mouse.overlaps(leftItem)) {
-				allowMouse = mouseHovering = true;
+				allowMouse = true;
 				if (selectedItem != leftItem) {
 					curColumn = LEFT;
 					changeItem();
 				}
 			} else if (rightItem != null && FlxG.mouse.overlaps(rightItem)) {
-				allowMouse = mouseHovering = true;
+				allowMouse = true;
 				if (selectedItem != rightItem) {
 					curColumn = RIGHT;
 					changeItem();
@@ -172,7 +170,7 @@ class MainMenuState extends MusicBeatState {
 						if (dist < 0 || distance < dist) {
 							dist = distance;
 							distItem = i;
-							allowMouse = mouseHovering = true;
+							allowMouse = true;
 						}
 					}
 				}
@@ -185,9 +183,8 @@ class MainMenuState extends MusicBeatState {
 			}
 		} else {
 			timeNotMoving += elapsed;
-			if (timeNotMoving > 2) FlxG.mouse.visible = mouseHovering = false;
+			if (timeNotMoving > 2) FlxG.mouse.visible = false;
 		}
-		Mouse.cursor = mouseHovering ? BUTTON : ARROW;
 
 		var leftJustpressed:Bool = Controls.justPressed('ui_left');
 		var rightJustpressed:Bool = Controls.justPressed('ui_right');
@@ -215,7 +212,7 @@ class MainMenuState extends MusicBeatState {
 
 		if (Controls.justPressed('back')) {
 			selectedSomethin = true;
-			FlxG.mouse.visible = mouseHovering = false;
+			FlxG.mouse.visible = false;
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			FlxG.switchState(() -> new TitleState());
 		}
@@ -223,7 +220,7 @@ class MainMenuState extends MusicBeatState {
 		if (Controls.justPressed('accept') || (FlxG.mouse.justPressed && allowMouse)) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			selectedSomethin = true;
-			FlxG.mouse.visible = mouseHovering = false;
+			FlxG.mouse.visible = false;
 
 			if (ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, .15, false);
 
@@ -242,7 +239,7 @@ class MainMenuState extends MusicBeatState {
 					item = rightItem;
 			}
 
-			FlxFlicker.flicker(item, 1, .06, false, false, (flicker:FlxFlicker) -> {
+			FlxFlicker.flicker(item, 1, .06, false, false, (_:FlxFlicker) -> {
 				switch (option) {
 					case 'story_mode': FlxG.switchState(() -> new StoryMenuState());
 					case 'freeplay': FlxG.switchState(() -> new FreeplayState());
@@ -266,7 +263,7 @@ class MainMenuState extends MusicBeatState {
 		}
 		if (Controls.justPressed('debug_1')) {
 			selectedSomethin = true;
-			FlxG.mouse.visible = mouseHovering = false;
+			FlxG.mouse.visible = false;
 			FlxG.switchState(() -> new states.editors.MasterEditorMenu());
 		}
 

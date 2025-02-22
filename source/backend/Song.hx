@@ -43,6 +43,25 @@ typedef SwagSection = {
 }
 
 class Song {
+	public static function createDummyFile():SwagSong {
+		return {
+			song: 'Test',
+			notes: [],
+			events: [],
+			bpm: 150,
+			needsVoices: true,
+			speed: 1,
+			offset: 0,
+			mania: 3,
+
+			player1: 'bf',
+			player2: 'dad',
+			gfVersion: 'gf',
+			stage: 'stage',
+			format: 'psych_v1'
+		}
+	}
+
 	public static function convert(songJson:Dynamic) { // Convert old charts to psych_v1 format
 		if (songJson.gfVersion == null) {
 			songJson.gfVersion = songJson.player3;

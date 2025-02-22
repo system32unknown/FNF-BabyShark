@@ -543,24 +543,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	}
 
 	function openNewChart() {
-		var song:SwagSong = {
-			song: 'Test',
-			notes: [],
-			events: [],
-			bpm: 150,
-			needsVoices: true,
-			speed: 1,
-			offset: 0,
-			mania: 3,
-
-			player1: 'bf',
-			player2: 'dad',
-			gfVersion: 'gf',
-			stage: 'stage',
-			format: 'psych_v1'
-		};
 		Song.chartPath = null;
-		loadChart(song);
+		loadChart(Song.createDummyFile());
 	}
 
 	function prepareReload() {

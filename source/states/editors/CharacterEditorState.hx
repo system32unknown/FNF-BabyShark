@@ -43,10 +43,10 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	var anims = null;
 	var animsTxt:FlxText;
 	var curAnim = 0;
-	
+
 	var camEditor:FlxCamera;
 	var camHUD:FlxCamera;
-	
+
 	var UI_box:PsychUIBox;
 	var UI_characterbox:PsychUIBox;
 
@@ -111,9 +111,9 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		healthBar.cameras = [camHUD];
 
 		healthIcon = new HealthIcon(character.healthIcon, false, false);
-		healthIcon.y = healthBar.y - (healthIcon.height / 2);
+		healthIcon.y = healthBar.y - (healthIcon.frameHeight / 2);
 		healthIcon.cameras = [camHUD];
-		
+
 		add(cameraFollowPointer);
 		add(healthBar);
 		add(healthIcon);
@@ -158,25 +158,27 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	}
 
 	function addHelpScreen() {
-		var str:Array<String> = ["CAMERA",
-		"E/Q - Camera Zoom In/Out",
-		"J/K/L/I - Move Camera",
-		"R - Reset Camera Zoom",
-		"",
-		"CHARACTER",
-		"Ctrl + R - Reset Current Offset",
-		"Ctrl + C - Copy Current Offset",
-		"Ctrl + V - Paste Copied Offset on Current Animation",
-		"Ctrl + Z - Undo Last Paste or Reset",
-		"W/S - Previous/Next Animation",
-		"Space - Replay Animation",
-		"Arrow Keys/Mouse & Right Click - Move Offset",
-		"A/D - Frame Advance (Back/Forward)",
-		"",
-		"OTHER",
-		"F12 - Toggle Silhouettes",
-		"Hold Shift - Move Offsets 10x faster and Camera 4x faster",
-		"Hold Control - Move camera 4x slower"];
+		var str:Array<String> = [
+			"CAMERA",
+			"E/Q - Camera Zoom In/Out",
+			"J/K/L/I - Move Camera",
+			"R - Reset Camera Zoom",
+			"",
+			"CHARACTER",
+			"Ctrl + R - Reset Current Offset",
+			"Ctrl + C - Copy Current Offset",
+			"Ctrl + V - Paste Copied Offset on Current Animation",
+			"Ctrl + Z - Undo Last Paste or Reset",
+			"W/S - Previous/Next Animation",
+			"Space - Replay Animation",
+			"Arrow Keys/Mouse & Right Click - Move Offset",
+			"A/D - Frame Advance (Back/Forward)",
+			"",
+			"OTHER",
+			"F12 - Toggle Silhouettes",
+			"Hold Shift - Move Offsets 10x faster and Camera 4x faster",
+			"Hold Control - Move camera 4x slower"
+		];
 
 		helpBg = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
 		helpBg.alpha = 0.6;
@@ -1029,8 +1031,8 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	}
 
 	/**
-		Called when the save file dialog is cancelled.
-	**/
+	 * Called when the save file dialog is cancelled.
+	 */
 	function onSaveCancel(_):Void {
 		if (_file == null) return;
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -1040,8 +1042,8 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	}
 
 	/**
-		Called if there is an error while saving the gameplay recording.
-	**/
+	 * Called if there is an error while saving the gameplay recording.
+	 */
 	function onSaveError(_):Void {
 		if (_file == null) return;
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -1061,7 +1063,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			"sing_duration": character.singDuration,
 			"healthicon": character.healthIcon,
 
-			"position":	character.positionArray,
+			"position": character.positionArray,
 			"camera_position": character.cameraPosition,
 
 			"flip_x": character.originalFlipX,

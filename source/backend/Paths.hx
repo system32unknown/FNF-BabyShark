@@ -43,17 +43,19 @@ class Paths {
 
 	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
 	public static function clearStoredMemory() {
+		// clear anything not in the tracked assets list
 		for (key in FlxG.bitmap._cache.keys())
 			if (!currentTrackedAssets.exists(key))
 				destroyGraphic(FlxG.bitmap.get(key));
 
+		// clear all sounds that are cached
 		for (key => asset in currentTrackedSounds) {
 			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && asset != null) {
 				Assets.cache.clear(key);
 				currentTrackedSounds.remove(key);
 			}
 		}
-
+		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
 		OpenFlAssets.cache.clear("songs");
 	}
@@ -134,6 +136,14 @@ class Paths {
 	inline public static function json(key:String, ?folder:String):String
 		return getPath('data/$key.json', TEXT, folder);
 
+	inline public static function shaderFragment(key:String, ?folder:String):String
+		return getPath('shaders/$key.frag', TEXT, folder, true);
+	inline public static function shaderVertex(key:String, ?folder:String):String
+		return getPath('shaders/$key.vert', TEXT, folder, true);
+
+	inline public static function lua(key:String, ?folder:String):String
+		return getPath('$key.lua', TEXT, folder, true);
+
 	public static function video(key:String):String {
 		#if MODS_ALLOWED
 		var file:String = modsVideo(key);
@@ -144,21 +154,19 @@ class Paths {
 
 	inline public static function sound(key:String, ?modsAllowed:Bool = true, ?playBeep: Bool = true):Sound
 		return returnSound('sounds/$key', null, modsAllowed, playBeep);
-
 	inline public static function music(key:String, ?modsAllowed:Bool = true, ?playBeep: Bool = true):Sound
 		return returnSound('music/$key', null, modsAllowed, playBeep);
 
 	inline public static function inst(song:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('${formatToSongPath(song)}/Inst', 'songs', modsAllowed);
-
 	inline public static function voices(song:String, ?modsAllowed:Bool = true):Sound
 		return returnSound('${formatToSongPath(song)}/Voices', 'songs', modsAllowed, false);
+
 	inline public static function soundRandom(key:String, min:Int, max:Int, ?modsAllowed:Bool = true):Sound
 		return sound(key + FlxG.random.int(min, max), modsAllowed);
 
 	public static function image(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxGraphic {
 		key = Language.getFileTranslation('images/$key') + '.png';
-
 		var bitmap:BitmapData = null;
 		if (currentTrackedAssets.exists(key)) {
 			localTrackedAssets.push(key);
@@ -181,22 +189,19 @@ class Paths {
 		}
 
 		if (allowGPU && ClientPrefs.data.cacheOnGPU && bitmap.image != null) {
-			@:privateAccess
+			bitmap.lock();
 			if (bitmap.__texture == null) {
 				bitmap.image.premultiplied = true;
 				bitmap.getTexture(FlxG.stage.context3D);
 			}
-
 			bitmap.getSurface();
 			bitmap.disposeImage();
 			bitmap.image.data = null;
-			@:privateAccess {
-				bitmap.image = null;
-				bitmap.readable = true;
-			}
+			bitmap.image = null;
+			bitmap.readable = true;
 		}
 
-		final graph:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, key);
+		var graph:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, key);
 		graph.persist = true;
 		graph.destroyOnNoUse = false;
 
@@ -249,17 +254,16 @@ class Paths {
 	}
 
 	public static function getMultiAtlas(keys:Array<String>, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
-		var parentFrames:FlxAtlasFrames = cast getAtlas(keys[0].trim());
-		if (keys.length < 1) return parentFrames;
-
-		var original:FlxAtlasFrames = parentFrames;
-		parentFrames = new FlxAtlasFrames(parentFrames.parent);
-		parentFrames.addAtlas(original, true);
-		for (i in 1...keys.length) {
-			var extraFrames:FlxAtlasFrames = cast getAtlas(keys[i].trim(), parentFolder, allowGPU);
-			if (extraFrames != null) parentFrames.addAtlas(extraFrames, true);
+		var parentFrames:FlxAtlasFrames = getAtlas(keys[0].trim());
+		if (keys.length > 1) {
+			var original:FlxAtlasFrames = parentFrames;
+			parentFrames = new FlxAtlasFrames(parentFrames.parent);
+			parentFrames.addAtlas(original, true);
+			for (i in 1...keys.length) {
+				var extraFrames:FlxAtlasFrames = getAtlas(keys[i].trim(), parentFolder, allowGPU);
+				if (extraFrames != null) parentFrames.addAtlas(extraFrames, true);
+			}
 		}
-
 		return parentFrames;
 	}
 
@@ -335,6 +339,10 @@ class Paths {
 		return modFolders('data/$key.json');
 	inline public static function modsVideo(key:String):String
 		return modFolders('videos/$key.$VIDEO_EXT');
+
+	inline public static function modsSounds(path:String, key:String):String
+		return modFolders('$path/$key.$SOUND_EXT');
+
 	inline public static function modsImages(key:String):String
 		return modFolders('images/$key.png');
 	inline public static function modsXml(key:String):String
