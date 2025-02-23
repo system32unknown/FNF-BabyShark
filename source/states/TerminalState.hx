@@ -79,7 +79,7 @@ class TerminalState extends MusicBeatState {
 		}));
 		cmdList.push(new TerminalCommand("open", "Searches for a text file with the specified ID, and if it exists, display it.", (args:Array<String>) -> {
 			updatePreviousText(false); // resets the text
-			updateText('\n' + switch(args[0].toLowerCase()) {
+			updateText('\n' + switch (args[0].toLowerCase()) {
 				case "dave": "Forever lost and adrift.\nTrying to change his destiny.\nDespite this, it pulls him by a lead.\nIt doesn't matter to him though.\nHe has a child to feed.";
 				case "bambi": "A forgotten GOD.\nThe truth will never be known.\nThe extent of his POWERs won't ever unfold.";
 				case "god" | "artifact1": "Artifact 1:\nA stone with symbols and writing carved into it.\nDescription:Its a figure that has hundreds of EYEs all across its body.\nNotes: Why does it look so much like Bambi?";

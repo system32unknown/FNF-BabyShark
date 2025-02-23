@@ -376,7 +376,7 @@ class ModsMenuState extends MusicBeatState {
 					} else if (acceptJustPressed) getButton().onClick();
 					else if (curSelectedButton < 0) {
 						if (upJustPressed) {
-							switch(curSelectedButton) {
+							switch (curSelectedButton) {
 								case -2:
 									curSelectedMod = 0;
 									hoveringOnMods = true;
@@ -386,7 +386,7 @@ class ModsMenuState extends MusicBeatState {
 								case -1: changeSelectedButton(-1);
 							}
 						} else if (downJustPressed) {
-							switch(curSelectedButton) {
+							switch (curSelectedButton) {
 								case -2: changeSelectedButton(1);
 								case -1:
 									curSelectedMod = 0;
@@ -453,7 +453,7 @@ class ModsMenuState extends MusicBeatState {
 	}
 
 	function getButton():MenuButton {
-		switch(curSelectedButton) {
+		switch (curSelectedButton) {
 			case -2: return buttonReload;
 			case -1: return buttonEnableAll.enabled ? buttonEnableAll : buttonDisableAll;
 		}

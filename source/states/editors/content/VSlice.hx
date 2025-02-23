@@ -84,7 +84,7 @@ class VSlice {
 		timeChanges.shift();
 
 		var stage:String = metadata.playData.stage;
-		switch(stage) { // Psych and VSlice use different names for some stages
+		switch (stage) { // Psych and VSlice use different names for some stages
 			case 'mainStage': stage = 'stage';
 			case 'spookyMansion': stage = 'spooky';
 			case 'phillyTrain': stage = 'philly';
@@ -233,7 +233,7 @@ class VSlice {
 			for (_ => event in remainingEvents) {
 				var fields:Array<Dynamic> = [];
 				if (event.v != null) {
-					switch(Type.typeof(event.v)) {
+					switch (Type.typeof(event.v)) {
 						case TObject:
 							for (field in Reflect.fields(event.v)) {
 								fields.push(Std.string(Reflect.field(event.v, field)));
@@ -353,7 +353,7 @@ class VSlice {
 		};
 
 		var stage:String = songData.stage;
-		switch(stage) { // Psych and VSlice use different names for some stages
+		switch (stage) { // Psych and VSlice use different names for some stages
 			case 'stage': stage = 'mainStage';
 			case 'spooky': stage = 'spookyMansion';
 			case 'philly': stage = 'phillyTrain';

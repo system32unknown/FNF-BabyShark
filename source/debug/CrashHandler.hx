@@ -33,6 +33,7 @@ class CrashHandler {
 		errMsg += '\nFlixel Current State: ${Type.getClassName(Type.getClass(FlxG.state))}';
 		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/system32unknown/FNF-BabyShark\n\nCustom Crash Handler written by: sqirra-rng and Codename Engine Team and Altertoriel';
 		errMsg += '\nHaxe: ${defines['haxe']} / Flixel: ${defines['flixel']}\nOpenFL: ${defines['openfl']} / Lime: ${defines['lime']}';
+		errMsg += '\nCurrent Active Mod: ${Mods.currentModDirectory == '' ? 'None' : Mods.currentModDirectory}';
 
 		try {
 			if (!FileSystem.exists("./crash/")) FileSystem.createDirectory("./crash/");
@@ -52,7 +53,7 @@ class CrashHandler {
 		for (stackItem in haxe.CallStack.exceptionStack(true)) {
 			switch (stackItem) {
 				case FilePos(p, file, line, column):
-					switch(p) {
+					switch (p) {
 						case Method(cla, func): error += '[$file] ${cla.split(".")[cla.split(".").length - 1]}.$func() - (line $line)';
 						case _: error += '$file (line $line)';
 					}

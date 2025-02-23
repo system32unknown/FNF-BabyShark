@@ -95,14 +95,14 @@ class PsychUIInputText extends FlxSpriteGroup {
 		var flxKey:FlxKey = cast keyCode;
 
 		// Fix missing cedilla
-		switch(keyCode) {
+		switch (keyCode) {
 			case 231: //ç and Ç
 				charCode = e.shiftKey ? 0xC7 : 0xE7;
 		}
 
 		// Control key actions
 		if (e.controlKey) {
-			switch(flxKey) {
+			switch (flxKey) {
 				case A: // select all text
 					selectIndex = Std.int(Math.min(0, text.length - 1));
 					caretIndex = text.length;
@@ -193,7 +193,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 		if (ignored.contains(flxKey)) return;
 
 		var lastAccent:AccentCode = _nextAccent;
-		switch(keyCode) {
+		switch (keyCode) {
 			case KEY_TILDE:
 				_nextAccent = !e.shiftKey ? TILDE : CIRCUMFLEX;
 				if (lastAccent == NONE) return;
@@ -203,7 +203,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 			default: lastAccent = NONE;
 		}
 
-		switch(flxKey) {
+		switch (flxKey) {
 			case LEFT: // move caret to left
 				if (!FlxG.keys.pressed.SHIFT) selectIndex = -1;
 				else if (selectIndex == -1) selectIndex = caretIndex;
@@ -266,7 +266,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 			case A, O: // these support all accents
 				var grave:Int = 0x0;
 				var capital:Int = 0x0;
-				switch(flxKey) {
+				switch (flxKey) {
 					case A:
 						grave = 0xC0;
 						capital = 0x41;
@@ -283,7 +283,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 			case E, I, U: // these support grave, acute and circumflex
 				var grave:Int = 0x0;
 				var capital:Int = 0x0;
-				switch(flxKey) {
+				switch (flxKey) {
 					case E:
 						grave = 0xC8;
 						capital = 0x45;
@@ -533,7 +533,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 	}
 
 	public static function getAccentCharCode(accent:AccentCode):Int {
-		return switch(accent) {
+		return switch (accent) {
 			case TILDE: 0x7E;
 			case CIRCUMFLEX: 0x5E;
 			case ACUTE: 0xB4;
@@ -584,7 +584,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 	}
 	
 	function filter(text:String):String {
-		switch(forceCase) {
+		switch (forceCase) {
 			case UPPER_CASE: text = text.toUpperCase();
 			case LOWER_CASE: text = text.toLowerCase();
 			default:

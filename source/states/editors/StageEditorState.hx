@@ -473,7 +473,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		for (spr in stageSprites) {
 			if (spr == null) continue;
 
-			switch(spr.type) {
+			switch (spr.type) {
 				case 'gf': nameList.push('- Girlfriend -');
 				case 'boyfriend': nameList.push('- Boyfriend -');
 				case 'dad': nameList.push('- Opponent -');
@@ -897,7 +897,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			for (spr in stageSprites) {
 				if (spr == null || StageData.reservedNames.contains(spr.type)) continue;
 
-				switch(spr.type) {
+				switch (spr.type) {
 					case 'sprite', 'animatedSprite':
 						if (spr.image != null && spr.image.length > 0 && !lockedList.contains(spr.image))
 							lockedList.push(spr.image);
@@ -1148,7 +1148,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	}
 
 	public function UIEvent(id:String, sender:Dynamic) {
-		switch(id) {
+		switch (id) {
 			case PsychUIRadioGroup.CLICK_EVENT, PsychUIBox.CLICK_EVENT:
 				if (sender == spriteListRadioGroup || sender == UI_box)
 					checkUIOnObject();
@@ -1267,7 +1267,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 				spr.x = displayX = Math.round(spr.x + moveX);
 				spr.y = displayY = Math.round(spr.y + moveY);
 				var char:Character = cast spr.sprite;
-				switch(spr.type) {
+				switch (spr.type) {
 					case 'boyfriend':
 						stageJson.boyfriend[0] = displayX = spr.x - char.positionArray[0];
 						stageJson.boyfriend[1] = displayY = spr.y - char.positionArray[1];
@@ -1300,7 +1300,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 	function focusOnTarget(target:String):FlxPoint {
 		var focusPoint:FlxPoint = FlxPoint.weak();
-		switch(target) {
+		switch (target) {
 			case 'boyfriend':
 				focusPoint.add(boyfriend.getMidpoint().x - boyfriend.cameraPosition[0] - 100, boyfriend.getMidpoint().y + boyfriend.cameraPosition[1] - 100);
 				if (stageJson.camera_boyfriend != null && stageJson.camera_boyfriend.length > 1) focusPoint.add(stageJson.camera_boyfriend[0], stageJson.camera_boyfriend[1]);
@@ -1341,7 +1341,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		var sprHeight:Int = Std.int(spr.frameHeight * spr.scale.y);
 		for (num => sel in selectionSprites.members) {
 			sel.setPosition(sprX, sprY);
-			switch(num) {
+			switch (num) {
 				case 0: sel.setGraphicSize(sprWidth, lineSize); // Top
 				case 1: // Bottom
 					sel.setGraphicSize(sprWidth, lineSize);
@@ -1610,7 +1610,7 @@ class StageEditorMetaSprite {
 	public var image(default, set):String = 'unknown';
 	function set_image(v:String) {
 		try {
-			switch(type) {
+			switch (type) {
 				case 'sprite': sprite.loadGraphic(Paths.image(v));
 				case 'animatedSprite': sprite.frames = Paths.getAtlas(v);
 			}
@@ -1656,7 +1656,7 @@ class StageEditorMetaSprite {
 		if (data == null) return;
 
 		this.type = data.type;
-		switch(this.type) {
+		switch (this.type) {
 			case 'sprite', 'square', 'animatedSprite':
 				for (v in ['name', 'image', 'scale', 'scroll', 'color', 'blend', 'filters', 'antialiasing']) {
 					var dat:Dynamic = Reflect.field(data, v);
@@ -1672,7 +1672,7 @@ class StageEditorMetaSprite {
 
 	public function formatToJson() {
 		var obj:Dynamic = {type: type};
-		switch(type) {
+		switch (type) {
 			case 'square', 'sprite', 'animatedSprite':
 				obj.name = name;
 				obj.x = x;

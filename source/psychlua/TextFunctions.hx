@@ -99,7 +99,7 @@ class TextFunctions {
 		funk.set("setTextAlignment", function(tag:String, alignment:String = 'left') {
 			var obj:FlxText = LuaUtils.getObjectLoop(tag);
 			if (obj != null) {
-				obj.alignment = switch(alignment.trim().toLowerCase()) {
+				obj.alignment = switch (alignment.trim().toLowerCase()) {
 					case 'right': RIGHT;
 					case 'center': CENTER;
 					case 'justify': JUSTIFY;

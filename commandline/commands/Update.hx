@@ -44,7 +44,7 @@ class Update {
 
 		for (lib in libs) {
 			var globalism:Null<String> = lib.global == "true" ? "--global" : null;
-			switch(lib.type) {
+			switch (lib.type) {
 				case "lib":
 					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}"...');
 					Sys.command('haxelib install ${lib.name} ${lib.version != null ? " " + lib.version : " "}${globalism != null ? ' $globalism' : ''}${lib.skipDeps ? " --skip-dependencies" : ""} --always${isSilent ? " --quiet" : ""}');

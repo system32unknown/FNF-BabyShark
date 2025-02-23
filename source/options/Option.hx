@@ -50,7 +50,7 @@ class Option {
 		this.options = options;
 
 		if (this.type != KEYBIND) this.defaultValue = Reflect.getProperty(ClientPrefs.defaultData, variable);
-		switch(type) {
+		switch (type) {
 			case BOOL:
 				if (defaultValue == null) defaultValue = false;
 			case INT, FLOAT:
@@ -77,7 +77,7 @@ class Option {
 		try {
 			if (getValue() == null) setValue(defaultValue);
 
-			switch(type) {
+			switch (type) {
 				case STRING:
 					var num:Int = options.indexOf(getValue());
 					if (num > -1) curOption = num;

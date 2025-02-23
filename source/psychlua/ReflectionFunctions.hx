@@ -65,7 +65,7 @@ class ReflectionFunctions {
 
 			var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 			if (groupOrArray != null) {
-				switch(Type.typeof(groupOrArray)) {
+				switch (Type.typeof(groupOrArray)) {
 					case TClass(Array): //Is Array
 						var leArray:Dynamic = realObject[index];
 						if (leArray != null) {
@@ -88,7 +88,7 @@ class ReflectionFunctions {
 			else realObject = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 
 			if (realObject != null) {
-				switch(Type.typeof(realObject)) {
+				switch (Type.typeof(realObject)) {
 					case TClass(Array): //Is Array
 						var leArray:Dynamic = realObject[index];
 						if (leArray != null) {
@@ -115,7 +115,7 @@ class ReflectionFunctions {
 				return;
 			}
 			if (index < 0) {
-				switch(Type.typeof(groupOrArray)) {
+				switch (Type.typeof(groupOrArray)) {
 					case TClass(Array): groupOrArray.push(obj); // Is Array
 					default: groupOrArray.add(obj); // Is Group
 				}
@@ -135,7 +135,7 @@ class ReflectionFunctions {
 				FunkinLua.luaTrace('removeFromGroup: Group/Array $group is not valid!', false, false, FlxColor.RED);
 				return;
 			}
-			switch(Type.typeof(groupOrArray)) {
+			switch (Type.typeof(groupOrArray)) {
 				default: //Is Array
 					if (obj == null) obj = Reflect.getProperty(groupOrArray, 'members')[index]; // Reflect here because of FlxTypedSpriteGroup
 						groupOrArray.remove(obj, true);

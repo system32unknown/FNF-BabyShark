@@ -103,7 +103,7 @@ class Main extends Sprite {
 
 		#if !MODS_ALLOWED
 		final path:String = 'mods';
-		if (FileSystem.exists(path) && FileSystem.isDirectory(path)){
+		if (FileSystem.exists(path) && FileSystem.isDirectory(path)) {
 			for (entry in FileSystem.readDirectory(path)) FileSystem.deleteFile('$path/$entry');
 			FileSystem.deleteDirectory(path);
 		}

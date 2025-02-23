@@ -30,7 +30,7 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 		var hasArrayInsideIt:Bool = false;
 		if (_singleLineCheckNext) {
 			for (subv in Reflect.fields(v)) {
-				switch(Type.typeof(subv)) {
+				switch (Type.typeof(subv)) {
 					case TObject, TClass(Array):
 						hasArrayInsideIt = true;
 						break;
@@ -55,7 +55,7 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 
 			var _mapCheck:Null<Bool> = mapCheck;
 			if (_mapCheck) {
-				switch(Type.typeof(value)) {
+				switch (Type.typeof(value)) {
 					case TObject, TClass(Array), TClass(StringMap): usedMapCheck = true;
 					default: _mapCheck = false;
 				}
@@ -109,7 +109,7 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 					var hasArrayInsideIt:Bool = false;
 					if (_singleLineCheckNext) {
 						for (subv in v) {
-							switch(Type.typeof(subv)) {
+							switch (Type.typeof(subv)) {
 								case TObject, TClass(Array):
 									hasArrayInsideIt = true;
 									break;

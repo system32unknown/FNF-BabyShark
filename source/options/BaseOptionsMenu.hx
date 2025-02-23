@@ -116,7 +116,7 @@ class BaseOptionsMenu extends FlxSubState {
 		}
 
 		if (nextAccept <= 0) {
-			switch(curOption.type) {
+			switch (curOption.type) {
 				case BOOL, FUNC:
 					if (Controls.justPressed('accept')) {
 						FlxG.sound.play(Paths.sound((curOption.type == FUNC ? 'confirmMenu' : 'scrollMenu')));
@@ -157,7 +157,7 @@ class BaseOptionsMenu extends FlxSubState {
 								if (curOption.type != STRING)
 									add = leftPressed ? -curOption.changeValue : curOption.changeValue;
 
-								switch(curOption.type) {
+								switch (curOption.type) {
 									case INT, FLOAT, PERCENT:
 										holdValue = curOption.getValue() + add;
 										if (holdValue < curOption.minValue) holdValue = curOption.minValue;
@@ -192,7 +192,7 @@ class BaseOptionsMenu extends FlxSubState {
 								if (holdValue < curOption.minValue) holdValue = curOption.minValue;
 								else if (holdValue > curOption.maxValue) holdValue = curOption.maxValue;
 
-								switch(curOption.type) {
+								switch (curOption.type) {
 									case INT: curOption.setValue(Math.round(holdValue));
 									case FLOAT, PERCENT: curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
 									default:

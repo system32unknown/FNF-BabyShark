@@ -274,7 +274,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	// Borrowed from PlayState
 	function generateSong() {
-		songSpeed = switch(ClientPrefs.getGameplaySetting('scrolltype')) {
+		songSpeed = switch (ClientPrefs.getGameplaySetting('scrolltype')) {
 			case "multiplicative":  PlayState.SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
 			case "constant": songSpeed = ClientPrefs.getGameplaySetting('scrollspeed');
 			default: PlayState.SONG.speed;

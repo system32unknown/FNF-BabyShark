@@ -29,7 +29,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 					option.translation_key
 				);
 
-				switch(newOption.type) {
+				switch (newOption.type) {
 					case KEYBIND:
 						//Defaulting and error checking
 						var keyboardStr:String = option.keyboard;
@@ -83,7 +83,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 						if (myValue == null) myValue = newOption.defaultValue;
 					}
 	
-					switch(newOption.type) {
+					switch (newOption.type) {
 						case STRING:
 							var num:Int = newOption.options.indexOf(myValue);
 							if (num > -1) newOption.curOption = num;
@@ -112,7 +112,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 	}
 
 	function convertType(str:String):OptionType {
-		return switch(str.toLowerCase().trim()) {
+		return switch (str.toLowerCase().trim()) {
 			case 'bool': BOOL;
 			case 'int', 'integer': INT;
 			case 'float', 'fl': FLOAT;

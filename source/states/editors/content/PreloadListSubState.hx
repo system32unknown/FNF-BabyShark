@@ -107,10 +107,10 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 			if (path.dir.startsWith(exePath)) {
 				var pathStr:String = path.dir.substr(exePath.length);
 				var split:Array<String> = pathStr.split('/');
-				switch(split[0]) {
+				switch (split[0]) {
 					case 'assets', 'mods':
 						for (i in 1...3) {
-							switch(split[i]) {
+							switch (split[i]) {
 								case 'sounds', 'music', 'songs', 'images':
 									split.shift();
 									if (i == 2) split.shift();
@@ -142,7 +142,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 				var ext:String = path.ext;
 				if (ext != null) ext = ext.toLowerCase();
 	
-				switch(ext) {
+				switch (ext) {
 					case 'png', 'ogg': addToList(path, false);
 					default: showOutput('Unsupported Extension: $ext', true);
 				}
@@ -192,7 +192,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 	}
 
 	public function UIEvent(id:String, sender:Dynamic) {
-		switch(id) {
+		switch (id) {
 			case PsychUIRadioGroup.CLICK_EVENT: updateButtons();
 		}
 	}

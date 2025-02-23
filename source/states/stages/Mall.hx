@@ -38,9 +38,9 @@ class Mall extends BaseStage {
 	override function beatHit() everyoneDance();
 
 	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {
-		switch(eventName) {
+		switch (eventName) {
 			case "Hey!":
-				switch(value1.toLowerCase().trim()) {
+				switch (value1.toLowerCase().trim()) {
 					case 'bf' | 'boyfriend' | '0': return;
 				}
 				bottomBoppers.animation.play('hey', true);

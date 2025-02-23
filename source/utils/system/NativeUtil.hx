@@ -164,7 +164,7 @@ class NativeUtil {
 	}
 
 	public static function consoleColorToANSI(color:ConsoleColor):Int {
-		return switch(color) {
+		return switch (color) {
 			case BLACK:			30;
 			case DARKBLUE:		34;
 			case DARKGREEN:		32;
@@ -184,7 +184,7 @@ class NativeUtil {
 		}
 	}
 	public static function consoleColorToOpenFL(color:ConsoleColor):FlxColor {
-		return switch(color) {
+		return switch (color) {
 			case BLACK:		 0xFF000000;
 			case DARKBLUE:	 0xFF000088;
 			case DARKGREEN:	 0xFF008800;

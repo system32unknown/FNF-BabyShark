@@ -153,7 +153,7 @@ class Song {
 				if (isOldVer[0] && isOldVer[1]) songJson.isOldVersion = true;
 			}
 
-			switch(convertTo) {
+			switch (convertTo) {
 				case 'psych_v1':
 					if (!fmt.startsWith('psych_v1')) { // Convert to Psych 1.0 format
 						trace('converting chart $nameForError with format $fmt to psych_v1 format...');

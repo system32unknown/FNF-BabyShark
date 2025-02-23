@@ -14,7 +14,7 @@ class Compiler {
 	}
 
 	public static function getBuildTarget():String {
-		return switch(Sys.systemName()) {
+		return switch (Sys.systemName()) {
 			case "Windows": "windows";
 			case "Mac": "macos";
 			case "Linux": "linux";

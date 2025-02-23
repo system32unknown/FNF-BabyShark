@@ -28,7 +28,7 @@ class DeprecatedFunctions {
 		});
 		funk.set("characterPlayAnim", function(character:String, anim:String, ?forced:Bool = false) {
 			FunkinLua.luaTrace("characterPlayAnim is deprecated! Use playAnim instead", false, true);
-			switch(character.toLowerCase()) {
+			switch (character.toLowerCase()) {
 				case 'dad': if (PlayState.instance.dad.hasAnimation(anim)) PlayState.instance.dad.playAnim(anim, forced);
 				case 'gf' | 'girlfriend': if (PlayState.instance.gf != null && PlayState.instance.gf.hasAnimation(anim)) PlayState.instance.gf.playAnim(anim, forced);
 				default: if (PlayState.instance.boyfriend.hasAnimation(anim)) PlayState.instance.boyfriend.playAnim(anim, forced);

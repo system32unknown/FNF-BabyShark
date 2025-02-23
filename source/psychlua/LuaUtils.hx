@@ -176,7 +176,7 @@ class LuaUtils {
 	}
 
 	public static function getObjectDirectly(objectName:String, ?allowMaps:Bool = false):Dynamic {
-		switch(objectName) {
+		switch (objectName) {
 			case 'this' | 'instance' | 'game': return PlayState.instance;
 			
 			default:
@@ -208,7 +208,7 @@ class LuaUtils {
 	inline public static function getPoint(leVar:String, type:String, axis:String, ?camera:String):Float {
 		var obj:FlxSprite = LuaUtils.getObjectLoop(leVar);
 		if (obj != null) {
-			switch(type) {
+			switch (type) {
 				case 'graphic': obj.getGraphicMidpoint(_lePoint);
 				case 'screen': obj.getScreenPosition(_lePoint, cameraFromString(camera));
 				default: obj.getMidpoint(_lePoint);
@@ -260,7 +260,7 @@ class LuaUtils {
 		return false;
 	}
 	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String):Void {
-		spr.frames = switch(spriteType.toLowerCase().replace(' ', '')) {
+		spr.frames = switch (spriteType.toLowerCase().replace(' ', '')) {
 			case 'aseprite', 'ase', 'json', 'jsoni8': Paths.getAsepriteAtlas(image);
 			case "packer", 'packeratlas', 'pac': Paths.getPackerAtlas(image);
 			case 'sparrow', 'sparrowatlas', 'sparrowv2': Paths.getSparrowAtlas(image);
@@ -310,7 +310,7 @@ class LuaUtils {
 
 	//buncho string stuffs
 	inline public static function getTweenTypeByString(?type:String = ''):FlxTweenType {
-		return switch(type.toLowerCase().trim()) {
+		return switch (type.toLowerCase().trim()) {
 			case 'backward': FlxTweenType.BACKWARD;
 			case 'looping' | 'loop': FlxTweenType.LOOPING;
 			case 'persist': FlxTweenType.PERSIST;
@@ -320,7 +320,7 @@ class LuaUtils {
 	}
 
 	inline public static function getTweenEaseByString(?ease:String = '') {
-		return switch(ease.toLowerCase().trim()) {
+		return switch (ease.toLowerCase().trim()) {
 			case 'backin': FlxEase.backIn;
 			case 'backinout': FlxEase.backInOut;
 			case 'backout': FlxEase.backOut;
@@ -375,7 +375,7 @@ class LuaUtils {
 
 	inline public static function typeToString(type:Int):String {
 		#if LUA_ALLOWED
-		return switch(type) {
+		return switch (type) {
 			case Lua.LUA_TBOOLEAN: "boolean";
 			case Lua.LUA_TNUMBER: "number";
 			case Lua.LUA_TSTRING: "string";
@@ -389,7 +389,7 @@ class LuaUtils {
 	}
 
 	public static function cameraFromString(cam:String):FlxCamera {
-		switch(cam.toLowerCase()) {
+		switch (cam.toLowerCase()) {
 			case 'camgame' | 'game': return PlayState.instance.camGame;
 			case 'camhud' | 'hud': return PlayState.instance.camHUD;
 			case 'camother' | 'other': return PlayState.instance.camOther;
@@ -400,7 +400,7 @@ class LuaUtils {
 	}
 
 	public static function setTextBorderFromString(text:FlxText, border:String) {
-		text.borderStyle = switch(border.toLowerCase().trim()) {
+		text.borderStyle = switch (border.toLowerCase().trim()) {
 			case 'shadow': SHADOW;
 			case 'outline': OUTLINE;
 			case 'outline_fast', 'outlinefast': OUTLINE_FAST;

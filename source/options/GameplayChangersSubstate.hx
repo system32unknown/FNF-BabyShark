@@ -165,13 +165,13 @@ class GameplayChangersSubstate extends FlxSubState {
 							if (curOption.type != STRING)
 								add = leftPressed ? -curOption.changeValue : curOption.changeValue;
 
-							switch(curOption.type) {
+							switch (curOption.type) {
 								case INT, FLOAT, PERCENT:
 									holdValue = curOption.getValue() + add;
 									if (holdValue < curOption.minValue) holdValue = curOption.minValue;
 									else if (holdValue > curOption.maxValue) holdValue = curOption.maxValue;
 
-									switch(curOption.type) {
+									switch (curOption.type) {
 										case INT:
 											holdValue = Math.round(holdValue);
 											curOption.setValue(holdValue);
@@ -215,7 +215,7 @@ class GameplayChangersSubstate extends FlxSubState {
 							FlxG.sound.play(Paths.sound('scrollMenu'));
 						} else if (curOption.type != STRING) {
 							holdValue = Math.max(curOption.minValue, Math.min(curOption.maxValue, holdValue + curOption.scrollSpeed * elapsed * (leftPressed ? -1 : 1)));
-							switch(curOption.type) {
+							switch (curOption.type) {
 								case INT: curOption.setValue(Math.round(holdValue));	
 								case FLOAT, PERCENT: curOption.setValue(FlxMath.roundDecimal(FlxMath.bound(holdValue + curOption.changeValue - (holdValue % curOption.changeValue), curOption.minValue, curOption.maxValue), curOption.decimals));
 								default:
@@ -322,7 +322,7 @@ class GameplayOption {
 		this.options = options;
 
 		if (defaultValue == 'null variable value') {
-			switch(type) {
+			switch (type) {
 				case BOOL: defaultValue = false;
 				case INT, FLOAT: defaultValue = 0;
 				case PERCENT: defaultValue = 1;
@@ -336,7 +336,7 @@ class GameplayOption {
 
 		if (getValue() == null) setValue(defaultValue);
 
-		switch(type) {
+		switch (type) {
 			case STRING:
 				var num:Int = options.indexOf(getValue());
 				if (num > -1) curOption = num;

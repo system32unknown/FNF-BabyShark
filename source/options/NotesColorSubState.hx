@@ -336,7 +336,7 @@ class NotesColorSubState extends FlxSubState {
 				for (i in 0...3) {
 					var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
 					var color:FlxColor = chosenRGB[curSelectedNote][i];
-					switch(i) {
+					switch (i) {
 						case 0: getShader().r = strumRGB.r = color;
 						case 1: getShader().g = strumRGB.g = color;
 						case 2: getShader().b = strumRGB.b = color;
@@ -515,7 +515,7 @@ class NotesColorSubState extends FlxSubState {
 		colorGradientSelector.y = colorGradient.y + colorGradient.height * (1 - color.brightness);
 
 		var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
-		switch(curSelectedMode) {
+		switch (curSelectedMode) {
 			case 0: getShader().r = strumRGB.r = color;
 			case 1: getShader().g = strumRGB.g = color;
 			case 2: getShader().b = strumRGB.b = color;
@@ -527,7 +527,7 @@ class NotesColorSubState extends FlxSubState {
 		for (i in 0...3) {
 			var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
 			var color:FlxColor = chosenRGB[curSelectedNote][i];
-			switch(i) {
+			switch (i) {
 				case 0: getShader().r = strumRGB.r = color;
 				case 1: getShader().g = strumRGB.g = color;
 				case 2: getShader().b = strumRGB.b = color;

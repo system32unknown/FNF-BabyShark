@@ -30,7 +30,7 @@ class StageWeek1 extends BaseStage {
 		add(stageCurtains);
 	}
 	override function eventPushed(event:objects.Note.EventNote) {
-		switch(event.event) {
+		switch (event.event) {
 			case "Dadbattle Spotlight":
 				dadbattleBlack = new BGSprite(null, -800, -400, 0, 0);
 				dadbattleBlack.makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
@@ -51,12 +51,12 @@ class StageWeek1 extends BaseStage {
 	}
 
 	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {
-		switch(eventName) {
+		switch (eventName) {
 			case "Dadbattle Spotlight":
 				if (flValue1 == null) flValue1 = 0;
 				var val:Int = Math.round(flValue1);
 
-				switch(val) {
+				switch (val) {
 					case 1, 2, 3: // enable and target dad
 						if (val == 1) { // enable
 							dadbattleBlack.visible = true;

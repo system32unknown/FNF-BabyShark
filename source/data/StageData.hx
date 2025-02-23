@@ -101,7 +101,7 @@ class StageData {
 		for (num => data in objectList) {
 			if (addedObjects.exists(data)) continue;
 
-			switch(data.type) {
+			switch (data.type) {
 				case 'gf', 'gfGroup':
 					if (gf != null) {
 						gf.ID = num;

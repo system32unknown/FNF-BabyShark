@@ -76,7 +76,7 @@ class MasterEditorMenu extends MusicBeatState {
 		if (Controls.justPressed('back')) FlxG.switchState(() -> new states.MainMenuState());
 
 		if (Controls.justPressed('accept')) {
-			switch(options[curSelected]) {
+			switch (options[curSelected]) {
 				case 'Chart Editor':
 					PlayState.chartingMode = true;
 					LoadingState.loadAndSwitchState(() -> new ChartingState());

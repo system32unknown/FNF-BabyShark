@@ -497,7 +497,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var prevGridBgWidth:Null<Null<Float>> = prevGridBg == null ? null : prevGridBg.width;
 		var nextGridBgWidth:Null<Null<Float>> = nextGridBg == null ? null : nextGridBg.width;
 
-		switch(theme) {
+		switch (theme) {
 			case LIGHT:
 				bg.color = 0xFFA0A0A0;
 				gridColors = [0xFFDFDFDF, 0xFFBFBFBF];
@@ -3908,7 +3908,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	}
 
 	public function UIEvent(id:String, sender:Dynamic) {
-		switch(id) {
+		switch (id) {
 			case PsychUIButton.CLICK_EVENT, PsychUIDropDownMenu.CLICK_EVENT:
 				ignoreClickForThisFrame = true;
 
@@ -4217,7 +4217,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		while (undoActions.length > 15) {
 			var lastAction:UndoStruct = undoActions.pop();
 			if (lastAction != null) {
-				switch(lastAction.action) {
+				switch (lastAction.action) {
 					case DELETE_NOTE:
 						destroyFromArr(lastAction.data.notes);
 						destroyFromArr(lastAction.data.events);
@@ -4237,7 +4237,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		}
 
 		var action:UndoStruct = undoActions[currentUndo];
-		switch(action.action) {
+		switch (action.action) {
 			case ADD_NOTE: actionRemoveNotes(action.data.notes, action.data.events);
 			case DELETE_NOTE: actionPushNotes(action.data.notes, action.data.events);
 
@@ -4264,7 +4264,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		currentUndo--;
 		var action:UndoStruct = undoActions[currentUndo];
-		switch(action.action) {
+		switch (action.action) {
 			case ADD_NOTE: actionPushNotes(action.data.notes, action.data.events);
 			case DELETE_NOTE: actionRemoveNotes(action.data.notes, action.data.events);
 
@@ -4368,7 +4368,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		}
 		waveformSprite.pixels.fillRect(new Rectangle(0, 0, width, height), 0x00FFFFFF);
 
-		drawOnWaveform(switch(waveformTarget) {
+		drawOnWaveform(switch (waveformTarget) {
 			case INST: FlxG.sound.music;
 			case PLAYER: vocals;
 			default: null;

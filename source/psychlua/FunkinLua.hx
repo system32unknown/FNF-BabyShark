@@ -360,7 +360,7 @@ class FunkinLua {
 				if (group != null) {
 					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 					if (groupOrArray != null) {
-						switch(Type.typeof(groupOrArray)) {
+						switch (Type.typeof(groupOrArray)) {
 							case TClass(Array): return groupOrArray.indexOf(leObj); //Is Array
 							default: return Reflect.getProperty(groupOrArray, 'members').indexOf(leObj); //Has to use a Reflect here because of FlxTypedSpriteGroup
 						}
@@ -377,11 +377,11 @@ class FunkinLua {
 		});
 		Lua_helper.add_callback(lua, "setObjectOrder", function(obj:String, position:Int, ?group:String = null) {
 			var leObj:FlxBasic = LuaUtils.getObjectDirectly(obj);
-			if (leObj != null){
+			if (leObj != null) {
 				if (group != null) {
 					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 					if (groupOrArray != null) {
-						switch(Type.typeof(groupOrArray)) {
+						switch (Type.typeof(groupOrArray)) {
 							case TClass(Array): //Is Array
 								groupOrArray.remove(leObj);
 								groupOrArray.insert(position, leObj);
@@ -501,21 +501,21 @@ class FunkinLua {
 			} else FlxTween.tween(strumNote, fieldsNValues, duration, {ease: LuaUtils.getTweenEaseByString(ease)});
 		});
 		set("mouseClicked", function(button:String = 'left') {
-			return switch(button.trim().toLowerCase()) {
+			return switch (button.trim().toLowerCase()) {
 				case 'middle': FlxG.mouse.justPressedMiddle;
 				case 'right': FlxG.mouse.justPressedRight;
 				default: FlxG.mouse.justPressed;
 			}
 		});
 		set("mousePressed", function(button:String = 'left') {
-			return switch(button.trim().toLowerCase()) {
+			return switch (button.trim().toLowerCase()) {
 				case 'middle': FlxG.mouse.pressedMiddle;
 				case 'right': FlxG.mouse.pressedRight;
 				default: FlxG.mouse.pressed;
 			}
 		});
 		set("mouseReleased", function(button:String = 'left') {
-			return switch(button.trim().toLowerCase()) {
+			return switch (button.trim().toLowerCase()) {
 				case 'middle': FlxG.mouse.justReleasedMiddle;
 				case 'right': FlxG.mouse.justReleased;
 				default: FlxG.mouse.justReleased;
@@ -587,7 +587,7 @@ class FunkinLua {
 		});
 
 		set("addCharacterToList", function(name:String, type:String) {
-			game.addCharacterToList(name, switch(type.toLowerCase()) {
+			game.addCharacterToList(name, switch (type.toLowerCase()) {
 				case 'dad' | 'opponent': 1;
 				case 'gf' | 'girlfriend': 2;
 				default: 0;
@@ -632,29 +632,29 @@ class FunkinLua {
 		});
 		set("getSongPosition", () -> return Conductor.songPosition);
 
-		set("getCharacterX", (type:String) -> return switch(type.toLowerCase()) {
+		set("getCharacterX", (type:String) -> return switch (type.toLowerCase()) {
 			case 'dad' | 'opponent': game.dadGroup.x;
 			case 'gf' | 'girlfriend': game.gfGroup.x;
 			default: game.boyfriendGroup.x;
 		});
-		set("setCharacterX", (type:String, value:Float) -> return switch(type.toLowerCase()) {
+		set("setCharacterX", (type:String, value:Float) -> return switch (type.toLowerCase()) {
 			case 'dad' | 'opponent': game.dadGroup.x = value;
 			case 'gf' | 'girlfriend': game.gfGroup.x = value;
 			default: game.boyfriendGroup.x = value;
 		});
-		set("getCharacterY", (type:String) -> return switch(type.toLowerCase()) {
+		set("getCharacterY", (type:String) -> return switch (type.toLowerCase()) {
 			case 'dad' | 'opponent': game.dadGroup.y;
 			case 'gf' | 'girlfriend': game.gfGroup.y;
 			default: game.boyfriendGroup.y;
 		});
-		set("setCharacterY", (type:String, value:Float) -> return switch(type.toLowerCase()) {
+		set("setCharacterY", (type:String, value:Float) -> return switch (type.toLowerCase()) {
 			case 'dad' | 'opponent': game.dadGroup.y = value;
 			case 'gf' | 'girlfriend': game.gfGroup.y = value;
 			default: game.boyfriendGroup.y = value;
 		});
 
 		set("cameraSetTarget", function(target:String) {
-			switch(target.toLowerCase()) { //we do some copy and pasteing.
+			switch (target.toLowerCase()) { //we do some copy and pasteing.
 				case 'dad' | 'opponent': game.moveCamera('dad');
 				case 'gf' | 'girlfriend': game.moveCamera('gf');
 				default: game.moveCamera('bf');
@@ -709,7 +709,7 @@ class FunkinLua {
 		set("getScreenPositionY", (variable:String, ?camera:String = 'game') -> return LuaUtils.getPoint(variable, 'screen', 'y', camera));
 
 		set("characterDance", function(character:String, force:Bool = false) {
-			switch(character.toLowerCase()) {
+			switch (character.toLowerCase()) {
 				case 'dad' | 'opponent': game.dad.dance(force);
 				case 'gf' | 'girlfriend': if (game.gf != null) game.gf.dance(force);
 				default: game.boyfriend.dance(force);
@@ -1103,7 +1103,7 @@ class FunkinLua {
 
 		if (v != null) v = v.trim();
 		if (v == null || v == "") {
-			return switch(status) {
+			return switch (status) {
 				case Lua.LUA_ERRSYNTAX: "Syntax Error";
 				case Lua.LUA_ERRRUN: "Runtime Error";
 				case Lua.LUA_ERRMEM: "Memory Allocation Error";

@@ -113,7 +113,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 	override function changeSelection(change:Int = 0) {
 		super.changeSelection(change);
 		
-		switch(curOption.variable) {
+		switch (curOption.variable) {
 			case 'noteSkin', 'splashSkin', 'splashAlpha', 'splashCount':
 				if (!notesShown) {
 					for (note in notes.members) {

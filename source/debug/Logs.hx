@@ -53,7 +53,7 @@ class Logs {
 	public static function prepareColoredTrace(text:Array<LogText>, level:Level = INFO):Array<LogText> {
 		var superCoolText:Array<LogText> = [
 			logText('['),
-			switch(level) {
+			switch (level) {
 				case WARNING: logText('WARNING', DARKYELLOW);
 				case ERROR: logText('ERROR', DARKRED);
 				case TRACE: logText('TRACE', GRAY);

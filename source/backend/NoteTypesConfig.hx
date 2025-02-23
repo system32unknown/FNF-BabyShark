@@ -49,7 +49,7 @@ class NoteTypesConfig {
 					continue;
 				}
 
-				switch(split[0]) { // special cases
+				switch (split[0]) { // special cases
 					case 'extraData': 
 						note.extraData.set(split[1], line.value);
 						continue;
@@ -84,7 +84,7 @@ class NoteTypesConfig {
 		if (value.charAt(0) == "'" || value.charAt(0) == '"')
 			return value.substring(1, value.length - 1); // is a string
 		
-		switch(value) {
+		switch (value) {
 			case "true": return true;
 			case "false": return false;
 			case "null": return null;

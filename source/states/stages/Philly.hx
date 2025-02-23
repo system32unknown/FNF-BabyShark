@@ -38,7 +38,7 @@ class Philly extends BaseStage
 		add(phillyStreet = new BGSprite('philly/street', -40, 50));
 	}
 	override function eventPushed(event:objects.Note.EventNote) {
-		switch(event.event) {
+		switch (event.event) {
 			case "Philly Glow":
 				blammedLightsBlack = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5).makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
 				blammedLightsBlack.visible = false;
@@ -77,13 +77,13 @@ class Philly extends BaseStage
 	}
 
 	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {
-		switch(eventName) {
+		switch (eventName) {
 			case "Philly Glow":
 				if (flValue1 == null || flValue1 <= 0) flValue1 = 0;
 				var lightId:Int = Math.round(flValue1);
 
 				var chars:Array<objects.Character> = [boyfriend, gf, dad];
-				switch(lightId) {
+				switch (lightId) {
 					case 0:
 						if (phillyGlowGradient.visible) {
 							doFlash();

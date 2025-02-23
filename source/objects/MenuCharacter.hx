@@ -34,7 +34,7 @@ class MenuCharacter extends FlxSprite {
 		alpha = 1;
 
 		hasConfirmAnimation = false;
-		switch(character) {
+		switch (character) {
 			case '': visible = false;
 			default:
 				var path:String = Paths.getPath('images/menucharacters/$character.json');

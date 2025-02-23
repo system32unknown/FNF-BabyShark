@@ -77,7 +77,7 @@ class Limo extends BaseStage {
 				}
 			});
 
-			switch(limoKillingState) {
+			switch (limoKillingState) {
 				case KILLING:
 					limoMetalPole.x += 5000 * elapsed;
 					limoLight.x = limoMetalPole.x - 180;
@@ -87,7 +87,7 @@ class Limo extends BaseStage {
 					var dancers:Array<BackgroundDancer> = grpLimoDancers.members;
 					for (i in 0...dancers.length) {
 						if (dancers[i].x < FlxG.width * 1.5 && limoLight.x > (370 * i) + 170) {
-							switch(i) {
+							switch (i) {
 								case 0 | 3:
 									if (i == 0) FlxG.sound.play(Paths.sound('dancerdeath'), 0.5);
 
@@ -164,7 +164,7 @@ class Limo extends BaseStage {
 	}
 
 	override function eventCalled(eventName:String, value1:String, value2:String, flValue1:Null<Float>, flValue2:Null<Float>, strumTime:Float) {
-		switch(eventName) {
+		switch (eventName) {
 			case "Kill Henchmen": killHenchmen();
 		}
 	}

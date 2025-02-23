@@ -162,7 +162,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		characterTypeRadio = new PsychUIRadioGroup(10, 20, ['Left', 'Center', 'Right'], 40);
 		characterTypeRadio.checked = 0;
 		characterTypeRadio.onClick = () -> {
-			switch(characterTypeRadio.checked) {
+			switch (characterTypeRadio.checked) {
 				case 0: character.jsonFile.dialogue_pos = 'left';
 				case 1: character.jsonFile.dialogue_pos = 'center';
 				case 2: character.jsonFile.dialogue_pos = 'right';
@@ -318,7 +318,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 	}
 	
 	function updateCharTypeBox() {
-		switch(character.jsonFile.dialogue_pos) {
+		switch (character.jsonFile.dialogue_pos) {
 			case 'left': characterTypeRadio.checked = 0;
 			case 'center': characterTypeRadio.checked = 1;
 			default: characterTypeRadio.checked = 2;
@@ -339,7 +339,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		}
 		character.setPosition(DialogueBoxPsych.LEFT_CHAR_X, DialogueBoxPsych.DEFAULT_CHAR_Y);
 
-		switch(character.jsonFile.dialogue_pos) {
+		switch (character.jsonFile.dialogue_pos) {
 			case 'right': character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;
 			case 'center':
 				character.x = FlxG.width / 2;
@@ -366,7 +366,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 	function updateTextBox() {
 		box.flipX = false;
 		var anim:String = 'normal';
-		switch(character.jsonFile.dialogue_pos) {
+		switch (character.jsonFile.dialogue_pos) {
 			case 'left': box.flipX = true;
 			case 'center': anim = 'center';
 		}

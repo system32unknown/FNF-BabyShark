@@ -159,7 +159,7 @@ class LoadingState extends MusicBeatState {
 
 		timePassed += elapsed;
 		var dots:String = '';
-		switch(Math.floor(timePassed % 1 * 3)) {
+		switch (Math.floor(timePassed % 1 * 3)) {
 			case 0: dots = '.';
 			case 1: dots = '..';
 			case 2: dots = '...';

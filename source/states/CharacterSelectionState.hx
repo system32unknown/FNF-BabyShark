@@ -176,7 +176,7 @@ class CharacterSelectionState extends MusicBeatState {
 			FlxG.sound.playMusic(Paths.music('gameOverEnd'));
 
 			FlxTimer.wait(1.9, () -> {
-				if (!noGFSkin) PlayState.SONG.gfVersion = switch(characterFile) {
+				if (!noGFSkin) PlayState.SONG.gfVersion = switch (characterFile) {
 					case 'bf-pixel': 'gf-pixel';
 					case 'bf-christmas': 'gf-christmas';
 					case 'bs' | 'pico-player' | 'nate-player': 'gfbf';

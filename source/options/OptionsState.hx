@@ -11,7 +11,7 @@ class OptionsState extends MusicBeatState {
 	public static var onPlayState:Bool = false;
 
 	function openSelectedSubstate(label:String) {
-		switch(label) {
+		switch (label) {
 			case 'Note Colors': openSubState(new NotesColorSubState());
 			case 'Controls': openSubState(new ControlsSubState());
 			case 'Graphics': openSubState(new GraphicsSettingsSubState());

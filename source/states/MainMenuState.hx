@@ -142,7 +142,7 @@ class MainMenuState extends MusicBeatState {
 			timeNotMoving = 0;
 	
 			var selectedItem:FlxSprite;
-			switch(curColumn) {
+			switch (curColumn) {
 				case CENTER: selectedItem = menuItems.members[curSelected];
 				case LEFT: selectedItem = leftItem;
 				case RIGHT: selectedItem = rightItem;
@@ -188,7 +188,7 @@ class MainMenuState extends MusicBeatState {
 
 		var leftJustpressed:Bool = Controls.justPressed('ui_left');
 		var rightJustpressed:Bool = Controls.justPressed('ui_right');
-		switch(curColumn) {
+		switch (curColumn) {
 			case CENTER:
 				if (leftJustpressed && leftOption != null) {
 					curColumn = LEFT;
@@ -226,7 +226,7 @@ class MainMenuState extends MusicBeatState {
 
 			var item:FlxSprite;
 			var option:String;
-			switch(curColumn) {
+			switch (curColumn) {
 				case CENTER:
 					option = optionShit[curSelected];
 					item = menuItems.members[curSelected];
@@ -280,7 +280,7 @@ class MainMenuState extends MusicBeatState {
 		}
 
 		var curItem:FlxSprite;
-		switch(curColumn) {
+		switch (curColumn) {
 			case CENTER: curItem = menuItems.members[curSelected];
 			case LEFT: curItem = leftItem;
 			case RIGHT: curItem = rightItem;

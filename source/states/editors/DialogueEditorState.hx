@@ -149,7 +149,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 		var isAngry:Bool = angryCheckbox.checked;
 		var anim:String = isAngry ? 'angry' : 'normal';
 
-		switch(character.jsonFile.dialogue_pos) {
+		switch (character.jsonFile.dialogue_pos) {
 			case 'left': box.flipX = true;
 			case 'center':
 				if (isAngry) anim = 'center-angry';
@@ -167,7 +167,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 		character.updateHitbox();
 		character.setPosition(DialogueBoxPsych.LEFT_CHAR_X, DialogueBoxPsych.DEFAULT_CHAR_Y);
 
-		switch(character.jsonFile.dialogue_pos) {
+		switch (character.jsonFile.dialogue_pos) {
 			case 'right': character.x = FlxG.width - character.width + DialogueBoxPsych.RIGHT_CHAR_X;
 			case 'center':
 				character.x = FlxG.width / 2;

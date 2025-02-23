@@ -33,7 +33,7 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 		myData = _removeBOM(myData);
 
 		// Automatic if everything else fails
-		switch(isXml) {
+		switch (isXml) {
 			case true: myData = Xml.parse(myData);
 			case false: myData = Json.parse(myData);
 			case null:

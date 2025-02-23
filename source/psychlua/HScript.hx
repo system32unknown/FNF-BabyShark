@@ -234,7 +234,7 @@ class HScript extends AlterHscript {
 
 		set('keyJustPressed', function(name:String = '') {
 			name = name.toLowerCase();
-			return switch(name) {
+			return switch (name) {
 				case 'left': Controls.justPressed('note_left');
 				case 'down': Controls.justPressed('note_down');
 				case 'up': Controls.justPressed('note_up');
@@ -244,7 +244,7 @@ class HScript extends AlterHscript {
 		});
 		set('keyPressed', function(name:String = '') {
 			name = name.toLowerCase();
-			return switch(name) {
+			return switch (name) {
 				case 'left': Controls.pressed('note_left');
 				case 'down': Controls.pressed('note_down');
 				case 'up': Controls.pressed('note_up');
@@ -254,7 +254,7 @@ class HScript extends AlterHscript {
 		});
 		set('keyReleased', function(name:String = '') {
 			name = name.toLowerCase();
-			return switch(name) {
+			return switch (name) {
 				case 'left': Controls.released('note_left');
 				case 'down': Controls.released('note_down');
 				case 'up': Controls.released('note_up');

@@ -584,7 +584,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function addCharacterToList(newCharacter:String, type:Int) {
-		switch(type) {
+		switch (type) {
 			case 0:
 				if (!boyfriendMap.exists(newCharacter)) {
 					var newBoyfriend:Character = new Character(0, 0, newCharacter, true);
@@ -771,7 +771,7 @@ class PlayState extends MusicBeatState {
 
 	function getCountdownSpriteNames(?givenUI:Null<String>):Array<String> {
 		givenUI ??= stageUI;
-		return switch(givenUI) {
+		return switch (givenUI) {
 			case "pixel": ['pixelUI/ready-pixel', 'pixelUI/set-pixel', 'pixelUI/date-pixel'];
 			case "normal": ["countdown/ready", "countdown/set" ,"countdown/go"];
 			default: ['${uiPrefix}UI/ready${uiPostfix}', '${uiPrefix}UI/set${uiPostfix}', '${uiPrefix}UI/go${uiPostfix}'];
@@ -817,7 +817,7 @@ class PlayState extends MusicBeatState {
 			var tick:Countdown = THREE;
 			startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, (tmr:FlxTimer) -> {
 				charactersDance(tmr.loopsLeft);
-				switch(swagCounter) {
+				switch (swagCounter) {
 					case 0:
 						CoolUtil.playSoundSafe(Paths.sound("countdown/" + introSoundNames[0] + introSoundsSuffix, true, false), 0.6);
 						tick = THREE;
@@ -897,7 +897,7 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onUpdateScore', [miss]);
 	}
 	public dynamic function updateScoreText() {
-		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [bfNpsVal, bfNpsMax])}' + Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
+		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1} / {2} | ', [bfNpsVal, bfNpsMax])}' + Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
 		if (!cpuControlled) {
 			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses: {1} ', [songMisses]); 
 			tempText += Language.getPhrase('accuracy_text', '| Accuracy: {1}% |', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
@@ -1083,10 +1083,10 @@ class PlayState extends MusicBeatState {
 	}
 
 	function eventPushedUnique(event:EventNote) {
-		switch(event.event) {
+		switch (event.event) {
 			case 'Change Character':
 				var charType:Int = 0;
-				switch(event.value1.toLowerCase()) {
+				switch (event.value1.toLowerCase()) {
 					case 'gf' | 'girlfriend': charType = 2;
 					case 'dad' | 'opponent': charType = 1;
 					default:
@@ -1104,7 +1104,7 @@ class PlayState extends MusicBeatState {
 		var returnedValue:Null<Float> = callOnScripts('eventEarlyTrigger', [event.event, event.value1, event.value2, event.strumTime], true);
 		if (returnedValue != null && returnedValue != 0) return returnedValue;
 
-		return switch(event.event) {
+		return switch (event.event) {
 			case 'Kill Henchmen': 280;
 			default: 0;
 		}
@@ -1264,7 +1264,7 @@ class PlayState extends MusicBeatState {
 		}
 
 		for (icon in [iconP1, iconP2]) {
-			switch(ClientPrefs.data.iconBounceType) {
+			switch (ClientPrefs.data.iconBounceType) {
 				case "Old": icon.setGraphicSize(Std.int(FlxMath.lerp(150, icon.width, .5)));
 				case "Psych":
 					var mult:Float = FlxMath.lerp(1, icon.scale.x, Math.exp(-elapsed * 9 * playbackRate));
@@ -1296,7 +1296,7 @@ class PlayState extends MusicBeatState {
 			var formattedsec:String = StringUtil.formatTime(Math.floor(Math.max(0, (songCalc / playbackRate) / 1000)));
 			var formattedtxt:String = '${SONG.song} ${(playbackRate != 1 ? '(${playbackRate}x) ' : '')}';
 			var timePos:String = '$formattedsec / ${StringUtil.formatTime(Math.floor((songLength / playbackRate) / 1000))}';
-			if (timeType != 'Song Name') timeTxt.text = switch(timeType) {
+			if (timeType != 'Song Name') timeTxt.text = switch (timeType) {
 				case 'Time Left' | 'Time Elapsed': formattedsec;
 				case 'Time Position': timePos;
 				case 'Name Left' | 'Name Elapsed': '$formattedtxt($formattedsec)';
@@ -1569,9 +1569,9 @@ class PlayState extends MusicBeatState {
 		if (Math.isNaN(flValue2)) flValue2 = null;
 		strumTime ??= Conductor.songPosition;
 
-		switch(eventName) {
+		switch (eventName) {
 			case 'Hey!':
-				var value:Int = switch(value1.toLowerCase().trim()) {
+				var value:Int = switch (value1.toLowerCase().trim()) {
 					case 'bf' | 'boyfriend' | '0': 0;
 					case 'gf' | 'girlfriend' | '1': 1;
 					default: 2;
@@ -1617,12 +1617,12 @@ class PlayState extends MusicBeatState {
 
 			case 'Play Animation':
 				var char:Character = dad;
-				switch(value2.toLowerCase().trim()) {
+				switch (value2.toLowerCase().trim()) {
 					case 'bf' | 'boyfriend': char = boyfriend;
 					case 'gf' | 'girlfriend': char = gf;
 					default:
 						if (flValue2 == null) flValue2 = 0;
-						switch(Math.round(flValue2)) {
+						switch (Math.round(flValue2)) {
 							case 1: char = boyfriend;
 							case 2: char = gf;
 						}
@@ -1646,7 +1646,7 @@ class PlayState extends MusicBeatState {
 
 			case 'Alt Idle Animation':
 				var char:Character = dad;
-				switch(value1.toLowerCase().trim()) {
+				switch (value1.toLowerCase().trim()) {
 					case 'gf' | 'girlfriend': char = gf;
 					case 'boyfriend' | 'bf': char = boyfriend;
 					default:
@@ -1680,7 +1680,7 @@ class PlayState extends MusicBeatState {
 
 			case 'Change Character':
 				var charType:Int = 0;
-				switch(value1.toLowerCase().trim()) {
+				switch (value1.toLowerCase().trim()) {
 					case 'gf' | 'girlfriend': charType = 2;
 					case 'dad' | 'opponent': charType = 1;
 					default:
@@ -1688,7 +1688,7 @@ class PlayState extends MusicBeatState {
 						if (Math.isNaN(charType)) charType = 0;
 				}
 
-				switch(charType) {
+				switch (charType) {
 					case 0:
 						if (boyfriend.curCharacter != value2) {
 							if (!boyfriendMap.exists(value2)) addCharacterToList(value2, charType);
@@ -1997,7 +1997,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public static function getNoteDiff(note:Note = null):Float {
-		return switch(ClientPrefs.data.noteDiffTypes) {
+		return switch (ClientPrefs.data.noteDiffTypes) {
 			case 'Psych': Math.abs(note.hitTime + ClientPrefs.data.ratingOffset);
 			case 'Simple' | _: note.hitTime;
 		}
@@ -2640,7 +2640,7 @@ class PlayState extends MusicBeatState {
 
 			var unlock:Bool = false;
 			if (name != WeekData.getWeekFileName() + '_nomiss') { // common achievements
-				switch(name) {
+				switch (name) {
 					case 'ur_bad': unlock = (ratingPercent < .2 && !practiceMode);
 					case 'ur_good': unlock = (ratingPercent >= 1 && !usedPractice);
 					case 'toastie': unlock = (!ClientPrefs.data.cacheOnGPU && !ClientPrefs.data.shaders && ClientPrefs.data.lowQuality && !ClientPrefs.data.antialiasing);

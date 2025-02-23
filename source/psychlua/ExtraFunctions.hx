@@ -32,7 +32,7 @@ class ExtraFunctions {
 
 		funk.set("keyJustPressed", (name:String = '') -> {
 			name = name.toLowerCase().trim();
-			return switch(name) {
+			return switch (name) {
 				case 'left': Controls.justPressed('note_left');
 				case 'down': Controls.justPressed('note_down');
 				case 'up': Controls.justPressed('note_up');
@@ -43,7 +43,7 @@ class ExtraFunctions {
 		});
 		funk.set("keyPressed", (name:String = '') -> {
 			name = name.toLowerCase().trim();
-			return switch(name) {
+			return switch (name) {
 				case 'left': Controls.pressed('note_left');
 				case 'down': Controls.pressed('note_down');
 				case 'up': Controls.pressed('note_up');
@@ -54,7 +54,7 @@ class ExtraFunctions {
 		});
 		funk.set("keyReleased", (name:String = '') -> {
 			name = name.toLowerCase().trim();
-			return switch(name) {
+			return switch (name) {
 				case 'left': Controls.released('note_left');
 				case 'down': Controls.released('note_down');
 				case 'up': Controls.released('note_up');
