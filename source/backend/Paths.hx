@@ -131,9 +131,11 @@ class Paths {
 	inline public static function getSharedPath(file:String = ''):String
 		return 'assets/shared/$file';
 
-	inline public static function txt(key:String, ?folder:String):String
+	public static inline function ndll(key:String):String
+		return getPath('data/ndlls/$key.ndll');
+	public static inline function txt(key:String, ?folder:String):String
 		return getPath('data/$key.txt', TEXT, folder);
-	inline public static function json(key:String, ?folder:String):String
+	public static inline function json(key:String, ?folder:String):String
 		return getPath('data/$key.json', TEXT, folder);
 
 	inline public static function shaderFragment(key:String, ?folder:String):String
@@ -351,6 +353,9 @@ class Paths {
 		return modFolders('images/$key.txt');
 	inline public static function modsImagesJson(key:String):String
 		return modFolders('images/$key.json');
+
+	inline static public function modsNdll(key:String)
+		return modFolders('data/ndlls/$key.ndll');
 
 	public static function modFolders(key:String):String {
 		if (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0) {

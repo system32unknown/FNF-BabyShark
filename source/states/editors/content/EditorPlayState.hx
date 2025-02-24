@@ -1,6 +1,5 @@
 package states.editors.content;
 
-import haxe.Timer;
 import backend.Song;
 import backend.Judgement;
 
@@ -24,7 +23,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	
 	var notes:FlxTypedGroup<Note>;
 	var unspawnNotes:Array<Note> = [];
-	var unspawnSustainNotes:Array<Note> = [];
+	var judgeData:Array<Judgement> = Judgement.loadDefault();
 	
 	var strumLineNotes:FlxTypedGroup<StrumNote>;
 	var opponentStrums:FlxTypedGroup<StrumNote>;
@@ -411,7 +410,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		var uiFolder:String = "";
 		if (PlayState.stageUI != "normal") uiFolder = PlayState.uiPrefix + "UI/";
 
-		for (rating in Judgement.list) Paths.image(uiFolder + 'judgements/${rating.image}'+ PlayState.uiPostfix);
+		for (judge in judgeData) Paths.image(uiFolder + 'judgements/${judge.image}'+ PlayState.uiPostfix);
 		for (i in 0...10) Paths.image(uiFolder + 'judgements/number/num$i' + PlayState.uiPostfix);
 	}
 

@@ -142,7 +142,7 @@ class PlayState extends MusicBeatState {
 	public var timeBar:Bar;
 	var songPercent:Float = 0;
 
-	public var judgeData:Array<Judgement> = Judgement.list;
+	public var judgeData:Array<Judgement> = Judgement.loadDefault();
 	public static var mania:Int = 3;
 
 	var generatedMusic:Bool = false;
@@ -897,7 +897,7 @@ class PlayState extends MusicBeatState {
 		callOnScripts('onUpdateScore', [miss]);
 	}
 	public dynamic function updateScoreText() {
-		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1} / {2} | ', [bfNpsVal, bfNpsMax])}' + Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
+		var tempText:String = '${!ClientPrefs.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [bfNpsVal, bfNpsMax])}' + Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
 		if (!cpuControlled) {
 			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses: {1} ', [songMisses]); 
 			tempText += Language.getPhrase('accuracy_text', '| Accuracy: {1}% |', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');

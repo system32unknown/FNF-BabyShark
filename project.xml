@@ -96,6 +96,8 @@
 		<haxedef name="HXCPP_CATCH_SEGV" />
 	</section>
 
+	<haxedef name="NDLLS_ALLOWED" if="cpp" />
+
 	<!-- Haxe 4.3.0+: Enable pretty syntax errors and stuff. -->
 	<!-- pretty (haxeflixel default), indent, classic (haxe compiler default) -->
 	<haxedef name="message.reporting" value="pretty" />

@@ -20,13 +20,18 @@ package backend;
 		this.noteSplash = noteSplash;
 	}
 
-	public static var list:Array<Judgement> = [
-		new Judgement('epic'),
-		new Judgement('sick', 1, 350, true),
-		new Judgement('good', .7, 200, false),
-		new Judgement('ok', .4, 100, false),
-		new Judgement('bad', 0, 50, false),
-	];
+	public static var list:Array<Judgement> = [];
+	public static function loadDefault():Array<Judgement> {
+		var init_array:Array<Judgement> = [
+			new Judgement('epic'),
+			new Judgement('sick', 1, 350, true),
+			new Judgement('good', .7, 200, false),
+			new Judgement('ok', .4, 100, false),
+			new Judgement('bad', 0, 50, false),
+		];
+		list = init_array;
+		return init_array;
+	}
 
 	public static var max(get, never):Judgement;
 	static function get_max():Judgement return list[list.length - 1];
