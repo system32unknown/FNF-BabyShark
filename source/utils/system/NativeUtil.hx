@@ -21,6 +21,9 @@ class NativeUtil {
 			var dpiScale:Float = display.dpi / 96;
 			Application.current.window.width = Std.int(Main.game.width * dpiScale);
 			Application.current.window.height = Std.int(Main.game.height * dpiScale);
+
+			Application.current.window.x = Std.int((Application.current.window.display.bounds.width - Application.current.window.width) / 2);
+			Application.current.window.y = Std.int((Application.current.window.display.bounds.height - Application.current.window.height) / 2);
 		}
 	}
 

@@ -15,7 +15,6 @@ class FPSUtil {
      */
 	public var curAvgFPS(default, null):Float;
 
-
     public function new() {
 		curFPS = curAvgFPS = 0;
 		sum = sliceCnt = 0;

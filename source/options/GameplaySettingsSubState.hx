@@ -1,18 +1,32 @@
 package options;
 
+import utils.MathUtil;
 class GameplaySettingsSubState extends BaseOptionsMenu {
+	var stepRate:Option;
 	var ghostRate:Option;
+	public static final defaultBPM:Float = 15;
 	public function new() {
 		title = Language.getPhrase('gameplay_menu', 'Gameplay Settings');
 		rpcTitle = 'Gameplay Settings Menu'; //for Discord Rich Presence
 
 		addOption(new Option('Downscroll', 'If checked, notes go Down instead of Up, simple enough.', 'downScroll'));
 		addOption(new Option('Middlescroll', 'If checked, your notes get centered.', 'middleScroll'));
+		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums'));
 
 		addOption(new Option('Note Diff Type:', '', 'noteDiffTypes', STRING, ['Psych', 'Simple']));
 		addOption(new Option('Accuracy Type:', "The way accuracy is calculated. \nNote = Depending on if a note is hit or not.\nJudgement = Depending on Judgement.\nMillisecond = Depending on milliseconds.", 'accuracyType', STRING, ['Note', 'Judgement', 'Millisecond']));
 
-		addOption(new Option('Opponent Notes', 'If unchecked, opponent notes get hidden.', 'opponentStrums'));
+		var option:Option = new Option('Update Count of stepHit:', 'In this setting, you can set the stepHit to be accurate up to ${ClientPrefs.data.updateStepLimit != 0 ? Std.string(ClientPrefs.data.updateStepLimit * defaultBPM * ClientPrefs.data.framerate) : "Infinite"} BPM.', 'updateStepLimit', INT);
+		option.scrollSpeed = 20;
+		option.minValue = 0;
+		option.maxValue = 1000;
+		option.decimals = 0;
+		option.onChange = () -> {
+			stepRate.scrollSpeed = MathUtil.interpolate(20., 1000., (holdTime - .5) / 3., 3.);
+			descText.text = stepRate.description = 'In this settings, you can set the stepHit to be accurate up to ${stepRate.getValue() != 0 ? Std.string(stepRate.getValue() * defaultBPM * ClientPrefs.data.framerate) : "Infinite"} BPM.';
+		}
+		addOption(option);
+		stepRate = option;
 		addOption(new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping'));
 		addOption(new Option('Remove Overlapped Notes', "If checked, the game will remove notes which are hidden behind the others.\nRange is controlled by the option below.", 'skipGhostNotes'));
 
@@ -25,7 +39,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.decimals = 3;
 		addOption(option);
 		option.onChange = () -> {
-			ghostRate.scrollSpeed = utils.MathUtil.interpolate(.1, 1000., (holdTime - .5) / 8., 5.);
+			ghostRate.scrollSpeed = MathUtil.interpolate(.1, 1000., (holdTime - .5) / 8., 5.);
 		};
 		ghostRate = option;
 

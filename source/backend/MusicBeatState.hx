@@ -1,11 +1,17 @@
 package backend;
 
+import options.GameplaySettingsSubState;
 class MusicBeatState extends flixel.FlxState {
+	static var currentState:MusicBeatState;
 	var curSection:Int = 0;
 	var stepsToDo:Int = 0;
 
+	var oldStep:Int = -1;
 	var curStep:Int = 0;
 	var curBeat:Int = 0;
+
+	var curStepLimit:Int = 0;
+	var updateCount:Int = 0;
 
 	var curDecStep:Float = 0;
 	var curDecBeat:Float = 0;
@@ -18,11 +24,17 @@ class MusicBeatState extends flixel.FlxState {
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public static function getVariables():Map<String, Dynamic> return getState().variables;
 	
+	var maxBPM:Float = 0;
 	override function create() {
+		currentState = this;
 		#if MODS_ALLOWED Mods.updatedOnState = false; #end
 
 		if (!_psychCameraInitialized) initPsychCamera();
 		super.create();
+
+		curStepLimit = ClientPrefs.data.updateStepLimit;
+		if (curStepLimit > 0) maxBPM = curStepLimit * GameplaySettingsSubState.defaultBPM * ClientPrefs.data.framerate;
+		else maxBPM = Math.POSITIVE_INFINITY;
 
 		if (!skipNextTransOut) openSubState(new CustomFadeTransition(.5, true));
 		skipNextTransOut = false;
@@ -41,19 +53,17 @@ class MusicBeatState extends flixel.FlxState {
 		return camera;
 	}
 
+	var countJudge:Bool = false;
 	override function update(elapsed:Float) {
-		var oldStep:Int = curStep;
+		updateCount = 0;
 
 		updateCurStep();
 		updateBeat();
 
-		if (oldStep != curStep) {
-			if (curStep > 0) stepHit();
-
-			if (PlayState.SONG != null) {
-				if (oldStep < curStep) updateSection();
-				else rollbackSection();
-			}
+		if (curStep > 0) stepHit();
+		if (PlayState.SONG != null) {
+			if (oldStep < curStep) updateSection();
+			else rollbackSection();
 		}
 		stagesFunc((stage:BaseStage) -> stage.update(elapsed));
 		super.update(elapsed);
@@ -93,9 +103,10 @@ class MusicBeatState extends flixel.FlxState {
 	function updateCurStep():Void {
 		var lastChange:Conductor.BPMChangeEvent = Conductor.getBPMChangeFromMS(Conductor.songPosition);
 
-		var shit:Float = ((Conductor.songPosition - ClientPrefs.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
-		curDecStep = lastChange.stepTime + shit;
-		curStep = lastChange.stepTime + Math.floor(shit);
+		var delayToFix:Float = ((Conductor.songPosition - ClientPrefs.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
+		curDecStep = lastChange.stepTime + delayToFix;
+		curStep = lastChange.stepTime + Math.floor(delayToFix);
+		if (oldStep - 1 > curDecStep) oldStep = curStep; // for looping music
 	}
 
 	override function startOutro(onOutroComplete:()->Void):Void {
@@ -110,18 +121,43 @@ class MusicBeatState extends flixel.FlxState {
 	}
 
 	public static function getState():MusicBeatState {
-		return cast (FlxG.state, MusicBeatState);
+		if (Std.isOfType(FlxG.state, MusicBeatState)) return cast(FlxG.state, MusicBeatState);
+		else return currentState;
 	}
 	
 	public var stages:Array<BaseStage> = [];
-	public function stepHit():Void {
-		stagesFunc((stage:BaseStage) -> {
-			stage.curStep = curStep;
-			stage.curDecStep = curDecStep;
-			stage.stepHit();
-		});
 
-		if (curStep % 4 == 0) beatHit();
+	public function stepHit():Void {
+		var nextStep:Float = curStep + 1;
+		if (curStepLimit > 0) maxBPM = curStepLimit * GameplaySettingsSubState.defaultBPM * ClientPrefs.data.framerate;
+		else maxBPM = Math.POSITIVE_INFINITY;
+
+		if (Conductor.bpm <= maxBPM) {
+			if (curStepLimit != 0) countJudge = oldStep < nextStep && updateCount < curStepLimit;
+			else countJudge = oldStep < nextStep;
+
+			while (countJudge) {
+				stagesFunc((stage:BaseStage) -> {
+					stage.curStep = oldStep;
+					stage.curDecStep = curDecStep;
+					stage.stepHit();
+				});
+
+				if (oldStep % 4 == 0) beatHit();
+				++oldStep; ++updateCount;
+				countJudge = (curStepLimit != 0 ? oldStep < nextStep && updateCount < curStepLimit : oldStep < nextStep);
+			}
+		} else {				
+			stagesFunc((stage:BaseStage) -> {
+				stage.curStep = curStep;
+				stage.curDecStep = curDecStep;
+				stage.stepHit();
+			});
+
+			if (curStep % 4 == 0) beatHit();
+			updateCount = curStepLimit;
+			oldStep = curStep;
+		}
 	}
 	public function beatHit():Void {
 		stagesFunc((stage:BaseStage) -> {

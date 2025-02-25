@@ -71,8 +71,8 @@ class NdllUtil {
 		return func;
 		#else
 		Logs.trace('NDLLs are not supported on this platform.', WARNING);
-		#end
 		return noop;
+		#end
 	}
 
 	@:noCompletion static function noop() {}
