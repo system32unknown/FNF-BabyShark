@@ -64,6 +64,7 @@ class SaveVariables {
 	var vsync:Bool = false;
 	var autoCleanAssets:Bool = false;
 	var healthTypes:String = 'Vanilla';
+	var updateSpawnNote:Bool = false;
 	var timeBarType:String = 'Name Time Position';
 	var altDiscordImg:Bool = false;
 	var altDiscordImgCount:Int = 0;

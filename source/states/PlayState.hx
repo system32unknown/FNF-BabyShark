@@ -1049,19 +1049,8 @@ class PlayState extends MusicBeatState {
 							oldNote.sustainScale /= playbackRate;
 							if (oldNote.sustainScale != 1) oldNote.resizeByRatio(curStepCrochet / Conductor.stepCrochet);
 						}
-	
-						if (sustainNote.mustPress) sustainNote.x += FlxG.width / 2; // general offset
-						else if (middleScroll) {
-							sustainNote.x += 310;
-							if (noteColumn > EK.midArray[mania]) sustainNote.x += FlxG.width / 2 + 25; //Up and Right
-						}
 						oldNote = sustainNote;
 					}
-				}
-				if (swagNote.mustPress) swagNote.x += FlxG.width / 2;
-				else if (middleScroll) {
-					swagNote.x += 310;
-					if (noteColumn > EK.midArray[mania]) swagNote.x += FlxG.width / 2 + 25;
 				}
 				if (!noteTypes.contains(swagNote.noteType)) noteTypes.push(swagNote.noteType);
 			}
@@ -1429,6 +1418,7 @@ class PlayState extends MusicBeatState {
 					notes.forEach((daNote:Note) -> {
 						if (daNote.exists && daNote.strum != null) {
 							var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
+							if (ClientPrefs.data.updateSpawnNote) daNote.strum = (!daNote.mustPress ? opponentStrums : playerStrums).members[daNote.noteData];
 							daNote.followStrumNote(songSpeed);
 							if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
 								if (daNote.mustPress) {

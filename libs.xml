@@ -8,7 +8,7 @@
 	<git name="flixel-addons" url="https://github.com/system32unknown/flixel-addons"/>
 
 	<!-- Other Libraries -->
-	<git name="hxcpp" url="https://github.com/HaxeFoundation/hxcpp"/>
+	<git name="hxcpp" url="https://github.com/system32unknown/hxcpp"/>
 	<git name="hscript-improved" url="https://github.com/system32unknown/AlterHscript" ref="custom-classes"/>
 	<git name="flxanimate" url="https://github.com/Dot-Stuff/flxanimate" ref="dev"/>
 	<git name="linc_luajit" url="https://github.com/superpowers04/linc_luajit"/>
