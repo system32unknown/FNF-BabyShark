@@ -26,13 +26,13 @@ class WaveformSprite extends FlxSprite {
         super(x, y);
         this.buffer = null;
         if (Std.isOfType(buffer, FlxSound)) {
-            this.sound = cast(buffer, FlxSound)._sound;
+            this.sound = cast (buffer, FlxSound)._sound;
             this.buffer = this.sound.__buffer;
         } else if (Std.isOfType(buffer, Sound)) {
-            this.sound = cast(buffer, Sound);
+            this.sound = cast (buffer, Sound);
             this.buffer = this.sound.__buffer;
         } else if (Std.isOfType(buffer, AudioBuffer)) {
-            this.buffer = cast(buffer, AudioBuffer);
+            this.buffer = cast (buffer, AudioBuffer);
         } else {
             valid = false;
             return;

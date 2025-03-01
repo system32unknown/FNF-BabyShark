@@ -3,9 +3,9 @@ package utils;
 class SpriteUtil {
 	/**
 	 * Returns the most present color in a FlxSprite.
-	 * @param sprite The sprite to analyze.
-	 * @param saturated Whether to consider saturation when determining the dominant color.
-	 * @return The most present color in the sprite.
+	 * @param sprite The sprite to analyze
+	 * @param saturated Whether to consider saturation when determining the dominant color
+	 * @return The most present color in the sprite
 	 */
 	public static function getMostPresentColor(sprite:FlxSprite, saturated:Bool):FlxColor {
 		var colorMap:Map<FlxColor, Float> = [];
@@ -35,8 +35,8 @@ class SpriteUtil {
 
     /**
      * Determines the dominant color in a sprite by counting occurrences.
-     * @param sprite The sprite to analyze.
-     * @return The most frequent color with full opacity.
+     * @param sprite The sprite to analyze
+     * @return The most frequent color with full opacity
      */
 	public static function dominantColor(sprite:flixel.FlxSprite):FlxColor {
 		var countByColor:Map<Int, Int> = [];

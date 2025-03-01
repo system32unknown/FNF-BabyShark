@@ -2,6 +2,7 @@ package shaders;
 
 import lime.graphics.opengl.GLProgram;
 import utils.system.NativeUtil;
+import haxe.Exception;
 
 class ErrorHandledShader extends flixel.system.FlxAssets.FlxShader implements IErrorHandler {
 	public var shaderName:String = '';
@@ -17,7 +18,7 @@ class ErrorHandledShader extends flixel.system.FlxAssets.FlxShader implements IE
 		try {
 			final res:GLProgram = super.__createGLProgram(vertexSource, fragmentSource);
 			return res;
-		} catch (error) {
+		} catch (error:Exception) {
 			ErrorHandledShader.crashSave(this.shaderName, error, onError);
 			return null;
 		}
@@ -55,7 +56,7 @@ class ErrorHandledRuntimeShader extends flixel.addons.display.FlxRuntimeShader i
 		try {
 			final res:GLProgram = super.__createGLProgram(vertexSource, fragmentSource);
 			return res;
-		} catch (error) {
+		} catch (error:Exception) {
 			ErrorHandledShader.crashSave(this.shaderName, error, onError);
 			return null;
 		}

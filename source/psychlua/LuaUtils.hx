@@ -362,7 +362,7 @@ class LuaUtils {
 	}
 
 	inline public static function blendModeFromString(blend:String):BlendMode
-		return cast(blend.toLowerCase().trim():BlendMode);
+		return cast (blend.toLowerCase().trim():BlendMode);
 
 	inline public static function axesFromString(axe:String):FlxAxes {
 		try {

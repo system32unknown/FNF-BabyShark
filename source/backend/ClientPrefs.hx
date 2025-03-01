@@ -16,7 +16,6 @@ class SaveVariables {
 	var lowQuality:Bool = false;
 	var shaders:Bool = true;
 	var framerate:Int = 60;
-	var updateStepLimit:Int = 1;
 	var camZooms:Bool = true;
 	var hideHud:Bool = false;
 	var noteOffset:Int = 0;

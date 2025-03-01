@@ -1377,7 +1377,7 @@ class PlayState extends MusicBeatState {
 				var noteJudge:Bool = castHold ? tooLate : canBeHit;
 
 				var isCanPass:Bool = !ClientPrefs.data.skipSpawnNote || Timer.stamp() - noteSpawnTimout < shownRealTime;
-				if (!noteJudge && isCanPass || !optimizeSpawnNote) {
+				if ((!noteJudge || !optimizeSpawnNote) && isCanPass) {
 					var dunceNote:Note = targetNote;
 					dunceNote.spawned = true;
 					dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
@@ -1389,7 +1389,8 @@ class PlayState extends MusicBeatState {
 						dunceNote.followStrumNote(songSpeed);
 						if (canBeHit && dunceNote.isSustainNote && dunceNote.strum.sustainReduce) dunceNote.clipToStrumNote();
 					}
-				} else if (optimizeSpawnNote) {
+				} else {
+					strumHitId = targetNote.noteData + (castMust ? EK.keys(mania) : 0) & 255;
 					if (cpuControlled) {
 						if (!castHold && castMust) ++skipBf;
 					} else if (castMust) noteMissCommon(targetNote.noteData);
@@ -2559,11 +2560,12 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
+	var strumHitId:Int = -1;
 	function strumPlayAnim(isDad:Bool, id:Int) {
 		if (!ClientPrefs.data.lightStrum) return;
 		var strumSpr:StrumNote = null;
 		var strumART:Float = 0;
-		var strumHitId:Int = id + (isDad ? 0 : EK.keys(mania));
+		strumHitId = id + (isDad ? 0 : EK.keys(mania));
 		if (!CoolUtil.toBool(hit & 1 << strumHitId)) {
 			if (isDad) {
 				strumART = dad.charaCrochet;

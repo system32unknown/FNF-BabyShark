@@ -248,7 +248,7 @@ class ShaderFunctions {
     }
 
 	public static function getShader(obj:String):FlxRuntimeShader {
-		if (storedFilters.exists(obj)) return cast(storedFilters[obj].shader, FlxRuntimeShader);
+		if (storedFilters.exists(obj)) return cast (storedFilters[obj].shader, FlxRuntimeShader);
 
 		var target:FlxSprite = LuaUtils.getObjectLoop(obj);
 		if (target == null) {

@@ -11,7 +11,7 @@ class ReflectMacro {
 		totalArgs++;
 
 		var funcCalls:Array<Expr> = [];
-		for(i in 0...totalArgs) {
+		for (i in 0...totalArgs) {
 			var args:Array<Expr> = [for (d in 0...i) macro $i{argsName}[$v{d}]];
 			funcCalls.push(macro $i{funcName}($a{args}));
 		}

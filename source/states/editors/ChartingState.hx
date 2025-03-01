@@ -1262,8 +1262,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				notes.push(note);
 				pushedNotes.push(note);
 			} else {
-				events.push(cast(note, EventMetaNote));
-				pushedEvents.push(cast(note, EventMetaNote));
+				events.push(cast (note, EventMetaNote));
+				pushedEvents.push(cast (note, EventMetaNote));
 			}
 		});
 		notes.sort(PlayState.sortByTime);

@@ -1,19 +1,9 @@
 package utils;
 
 class MathUtil {
-	public static function truncateFloat(number:Float, ?precision:Int = 3):Float {
-        var num:Float = number;
-        num *= Math.pow(10, precision);
-        num = Math.round(num) / Math.pow(10, precision);
-        return num;
-    }
-
 	public static function floorDecimal(value:Float, decimals:Int):Float {
 		if (decimals < 1) return Math.floor(value);
-
-		var tempMult:Float = 1;
-		for (_ in 0...decimals) tempMult *= 10;
-		return Math.floor(value * tempMult) / tempMult;
+		return Math.floor(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
 	}
 
 	inline public static function getMinAndMax(v1:Float, v2:Float):Array<Float> {

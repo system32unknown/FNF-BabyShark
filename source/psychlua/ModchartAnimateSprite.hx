@@ -10,7 +10,7 @@ class ModchartAnimateSprite extends FlxAnimate {
 
 	public function playAnim(name:String, forced:Bool = false, ?reverse:Bool = false, ?startFrame:Int = 0) {
 		anim.play(name, forced, reverse, startFrame);
-		final daOffset = animOffsets.get(name);
+		final daOffset:Array<Float> = animOffsets.get(name);
 		if (animOffsets.exists(name)) offset.set(daOffset[0] * scale.x, daOffset[1] * scale.y);
 	}
 

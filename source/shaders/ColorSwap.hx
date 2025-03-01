@@ -50,7 +50,7 @@ class ColorSwap {
 		return flash;
 	}
 
-	function set_hue(value:Float) {
+	function set_hue(value:Float):Float {
 		hue = value;
 		shader.uTime.value[0] = hue;
 		return hue;
@@ -69,11 +69,15 @@ class ColorSwap {
 	}
 
 	inline public function setHSB(h:Float = 0, s:Float = 0, b:Float = 0) {
-		hue = h; saturation = s; brightness = b;
+		hue = h;
+		saturation = s;
+		brightness = b;
 	}
 	
 	inline public function setHSBInt(h:Int = 0, s:Int = 0, b:Int = 0) {
-		hue = h / 360; saturation = s / 100; brightness = b / 100;
+		hue = h / 360;
+		saturation = s / 100;
+		brightness = b / 100;
 	}
 
 	inline public function setHSBArray(ray:Array<Float>) {

@@ -1723,7 +1723,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 	var animsTxtGroup:FlxTypedGroup<FlxText>;
 
 	var UI_animationbox:PsychUIBox;
-	var camHUD:FlxCamera = cast(FlxG.state, StageEditorState).camHUD;
+	var camHUD:FlxCamera = cast (FlxG.state, StageEditorState).camHUD;
 	public function new() {
 		super();
 

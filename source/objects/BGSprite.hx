@@ -23,7 +23,7 @@ class BGSprite extends FlxSprite {
 		antialiasing = ClientPrefs.data.antialiasing;
 	}
 
-	public function dance(?forceplay:Bool = false) {
+	public function dance(?forceplay:Bool = false):Void {
 		if (idleAnim != null) animation.play(idleAnim, forceplay);
 	}
 }

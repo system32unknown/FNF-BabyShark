@@ -125,7 +125,7 @@ class TerminalState extends MusicBeatState {
 	override function update(elapsed:Float):Void {
 		super.update(elapsed);
 
-		var keyJustPressed:FlxKey = cast(FlxG.keys.firstJustPressed(), FlxKey);
+		var keyJustPressed:FlxKey = cast (FlxG.keys.firstJustPressed(), FlxKey);
 		if (keyJustPressed == FlxKey.ENTER) {
 			var calledFunc:Bool = false;
 			var args:Array<String> = curCmd.split(" ");
