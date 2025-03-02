@@ -59,7 +59,6 @@ class Achievements {
 		_save.bind('achievements', CoolUtil.getSavePath());
 
 		if (_save.data == null) return;
-
 		if (_save.data.unlocked != null) unlocked = _save.data.unlocked;
 
 		var savedMap:Map<String, Float> = _save.data.variables;

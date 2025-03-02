@@ -39,7 +39,7 @@ class SystemUtil {
             chargingProc.close();
             
             if (chargingOutput.length > 1) {
-                var val:Int = Std.parseInt(StringTools.trim(chargingOutput[1]));
+                var val:Int = Std.parseInt(chargingOutput[1].trim());
 				if (val == 1 || (val >= 3 && val <= 5) || val == 10) ret[0] = 0;
 				else ret[0] = 1;
             }
@@ -48,7 +48,7 @@ class SystemUtil {
             var batteryOutput:Array<String> = batteryProc.stdout.readAll().toString().split("\n");
             batteryProc.close();
             
-            if (batteryOutput.length > 1) ret[1] = Std.parseInt(StringTools.trim(batteryOutput[1]));
+            if (batteryOutput.length > 1) ret[1] = Std.parseInt(batteryOutput[1].trim());
         } catch (e:Dynamic) return ret;
         #elseif linux
 		final battery_path:String = '/sys/class/power_supply/BAT0/';
