@@ -48,6 +48,24 @@ class Conductor {
 
 		return lastChange;
 	}
+	public static function getBPMFromStep(step:Float):BPMChangeEvent {
+		var lastChange:BPMChangeEvent = {
+			stepTime: 0,
+			songTime: 0,
+			bpm: bpm,
+			stepCrochet: stepCrochet
+		}
+
+		if (bpmChanges.length == 0) return lastChange;
+
+		for (i in 0...bpmChanges.length) {
+			final change:BPMChangeEvent = bpmChanges[i];
+			if (change.songTime <= step) lastChange = change;
+			else break;
+		}
+
+		return lastChange;
+	}
 
 	public static function setBPMChanges(song:SwagSong) {
 		bpmChanges = [];
@@ -72,5 +90,27 @@ class Conductor {
 		}
 	}
 
+	public static function beatToSeconds(beat:Float):Float {
+		var step:Float = beat * 4;
+		var lastChange:BPMChangeEvent = getBPMFromStep(step);
+		return lastChange.songTime + ((step - lastChange.stepTime) / (lastChange.bpm / 60) / 4) * 1000; // TODO: make less shit and take BPM into account PROPERLY
+	}
+
+	public static function getStep(time:Float):Float {
+		var lastChange:BPMChangeEvent = getBPMChangeFromMS(time);
+		return lastChange.stepTime + (time - lastChange.songTime) / lastChange.stepCrochet;
+	}
+	public static function getStepRounded(time:Float):Float {
+		var lastChange:BPMChangeEvent = getBPMChangeFromMS(time);
+		return lastChange.stepTime + Math.floor(time - lastChange.songTime) / lastChange.stepCrochet;
+	}
+
+	public static function getBeat(time:Float):Float {
+		return getStep(time) / 4;
+	}
+	public static function getBeatRounded(time:Float):Int {
+		return Math.floor(getStepRounded(time) / 4);
+	}
+	
 	inline static function getSectionBeats(section:SwagSection):Int return section?.sectionBeats ?? 4;
 }

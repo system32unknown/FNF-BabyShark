@@ -11,12 +11,12 @@ class FPSUtil {
 	public var curFPS(default, null):Float;
 
     /**
-	 * The averaged frame rate over a short period.
+	 * The raw frame rate over a short period.
      */
-	public var curAvgFPS(default, null):Float;
+	public var curRawFPS(default, null):Float;
 
     public function new() {
-		curFPS = curAvgFPS = 0;
+		curFPS = curRawFPS = 0;
 		sum = sliceCnt = 0;
 		times = [];
 	}
@@ -36,8 +36,8 @@ class FPSUtil {
 		}
 		if (sliceCnt > 0) times.splice(0, sliceCnt);
 		
-		curAvgFPS = times.length > 0 ? 1000 / (sum / times.length) : 0.0;
-		curFPS = Math.round(curAvgFPS);
+		curRawFPS = times.length > 0 ? 1000 / (sum / times.length) : 0.0;
+		curFPS = Math.round(curRawFPS);
     }
 
     /**

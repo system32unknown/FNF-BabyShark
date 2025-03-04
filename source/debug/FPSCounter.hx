@@ -12,7 +12,7 @@ class FPSCounter extends openfl.text.TextField {
 
 	var timeColor:Float = 0;
 	public var checkLag:Bool = true;
-	public var updateRate:Float = 50;
+	public var updateRate:Float = 60;
 	public var memType:String = "";
 
     public var fpsManager:FPSUtil;
@@ -49,15 +49,19 @@ class FPSCounter extends openfl.text.TextField {
 
 	var deltaTimeout:Float = .0;
 	override function __enterFrame(dt:Float) {
+		if (!ClientPrefs.data.showFPS || !visible || FlxG.autoPause && !stage.nativeWindow.active) return;
 		fpsManager.update(dt);
 		preUpdateText();
 		if (memory > mempeak) mempeak = memory;
 
 		deltaTimeout += dt;
-		if (deltaTimeout < 1 / updateRate) return;
+		if (deltaTimeout < 1000 / updateRate) return;
+
 		updateText();
 		deltaTimeout = .0;
 	}
+
+	// so people can override it in hscript
 	public dynamic function updateText():Void {
 		text = '${fpsManager.curFPS}FPS\n';
 		if (memType == "MEM" || memType == "MEM/PEAK") text += '${FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? '/${FlxStringUtil.formatBytes(mempeak)}' : '');

@@ -22,7 +22,7 @@ package backend;
 
 	public static var list:Array<Judgement> = [];
 	public static function loadDefault():Array<Judgement> {
-		var init_array:Array<Judgement> = [
+		final init_array:Array<Judgement> = [
 			new Judgement('epic'),
 			new Judgement('sick', 1, 350, true),
 			new Judgement('good', .7, 200, false),
