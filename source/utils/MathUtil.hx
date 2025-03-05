@@ -35,4 +35,33 @@ class MathUtil {
 		m = FlxMath.bound(m, 0, 1);
 		return FlxMath.lerp(a, b, Math.pow(m, e));
 	}
+
+    public static function rotate(x:Float, y:Float, radians:Float, ?point:FlxPoint):FlxPoint {
+		var s:Float = Math.sin(radians);
+		var c:Float = Math.cos(radians);
+
+		if (Math.abs(s) < .001) s = 0;
+		if (Math.abs(c) < .001) c = 0;
+
+		var p:FlxPoint = point ?? FlxPoint.weak();
+		p.set((x * c) - (y * s), (x * s) + (y * c));
+		return p;
+	}
+
+    inline public static function square(angle:Float):Float {
+		var fAngle:Float = angle % (Math.PI * 2);
+		return fAngle >= Math.PI ? -1. : 1.;
+	}
+
+	inline public static function triangle(angle:Float):Float {
+		var fAngle:Float = angle % (Math.PI * 2.);
+		if (fAngle < 0.0) fAngle += Math.PI * 2.;
+		
+		var result:Float = fAngle / Math.PI;
+		if (result < .5) {
+			return 2. * result;
+		} else if (result < 1.5) {
+			return -2. * result + 2.;
+		} else return 2. * result - 4.;
+	}
 }

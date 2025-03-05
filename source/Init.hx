@@ -39,7 +39,6 @@ class Init extends flixel.FlxState {
 			return;
 		}
 		
-		
 		FlxG.switchState(flixel.util.typeLimit.NextState.fromType(Main.game.initialState));
 	}
 }

@@ -8,23 +8,26 @@ import lime.system.System;
  * Does not have any effect on other platforms.
  */
 class NativeUtil {
-	public static function setDPIAware(autoSize:Bool = true):Void {
+	static var registeredDPIAware:Bool = false;
+	public static function registerDPIAware(width:Int = 1280, height:Int = 720):Void {
+		if (registeredDPIAware) return;
 		#if (cpp && windows)
 		if (!PlatformUtil.setDPIAware()) Logs.trace('Failed to set DPI Awareness', WARNING);
 		#else
 		Logs.trace('setDPIAware is not supported on this platform', WARNING);
 		#end
-		if (!autoSize) return;
 
-		var display:lime.system.Display = System.getDisplay(0);
+		final display:Null<lime.system.Display> = System.getDisplay(0);
 		if (display != null) {
-			var dpiScale:Float = display.dpi / 96;
-			Application.current.window.width = Std.int(Main.game.width * dpiScale);
-			Application.current.window.height = Std.int(Main.game.height * dpiScale);
+			final dpiScale:Float = display.dpi / 96;
+			Application.current.window.width = Std.int(width * dpiScale);
+			Application.current.window.height = Std.int(height * dpiScale);
 
 			Application.current.window.x = Std.int((Application.current.window.display.bounds.width - Application.current.window.width) / 2);
 			Application.current.window.y = Std.int((Application.current.window.display.bounds.height - Application.current.window.height) / 2);
 		}
+
+		registeredDPIAware = true;
 	}
 
 	/**

@@ -41,7 +41,7 @@ class Main extends Sprite {
 
 	public function new() {
 		super();
-		utils.system.NativeUtil.setDPIAware();
+		utils.system.NativeUtil.registerDPIAware(game.width, game.height);
 		#if linux openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
