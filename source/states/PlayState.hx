@@ -1021,14 +1021,14 @@ class PlayState extends MusicBeatState {
 				swagNote.mustPress = gottaHitNote;
 				swagNote.sustainLength = holdLength;
 				swagNote.noteType = noteType;
-				swagNote.scrollFactor.set();
+				swagNote.scrollFactor.set(); swagNote.updateSkin(SONG.arrowSkin ?? null);
 				unspawnNotes.push(swagNote);
 				oldNote = swagNote;
 
 				var curStepCrochet:Float = 60 / daBpm * 1000 / 4.;
 				var roundSus:Int = Math.round(swagNote.sustainLength / curStepCrochet);
 				if (roundSus > 0) {
-					for (susNote in 0...roundSus) {
+					for (susNote in 0...roundSus + 1) {
 						var sustainNote:Note = new Note(strumTime + (curStepCrochet * susNote), noteColumn, oldNote, true);
 						sustainNote.animSuffix = swagNote.animSuffix;
 						sustainNote.mustPress = swagNote.mustPress;
@@ -1036,7 +1036,10 @@ class PlayState extends MusicBeatState {
 						sustainNote.noteType = swagNote.noteType;
 						sustainNote.scrollFactor.set();
 						sustainNote.parent = swagNote;
-						unspawnSustainNotes.push(sustainNote); swagNote.tail.push(sustainNote);
+						sustainNote.isSustainEnds = (susNote == roundSus);
+						unspawnSustainNotes.push(sustainNote);
+						swagNote.tail.push(sustainNote);
+						sustainNote.updateSkin(SONG.arrowSkin ?? null);
 						sustainNote.correctionOffset = Note.originalHeight / 2;
 
 						if (!isPixelStage) {

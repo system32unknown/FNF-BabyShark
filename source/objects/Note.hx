@@ -73,6 +73,7 @@ class Note extends FlxSprite {
 	public var sustainLength:Float = 0;
 	public var sustainScale:Float = 1.0;
 	public var isSustainNote:Bool = false;
+	public var isSustainEnds:Bool = false;
 	public var noteType(default, set):String = null;
 
 	public var rgbShader:RGBShaderReference;
@@ -120,6 +121,8 @@ class Note extends FlxSprite {
 	public var ratingDisabled:Bool = false;
 
 	public var texture(default, set):String = null;
+	var initSkin:String = defaultNoteSkin + getNoteSkinPostfix();
+
 	public var downScr:Bool = false;
 	public var prevDownScr:Bool = false;
 
@@ -152,6 +155,53 @@ class Note extends FlxSprite {
 		if (isSustainNote && animation != null && animation.curAnim != null && !animation.curAnim.name.endsWith('end')) {
 			scale.y *= ratio;
 			updateHitbox();
+		}
+	}
+
+	public function updateSkin(tex:String):Void {
+		if (!PlayState.isPixelStage) {
+			if (tex == null || tex.length == 0 && texture != initSkin) texture = initSkin;
+			else if (tex.length > 0 && tex != texture) texture = tex;
+		} else reloadNote(texture);
+
+		if (rgbShader.enabled) {
+			var colorRef:RGBPalette = inline initializeGlobalRGBShader(noteData);
+			rgbShader.copyFromPalette(colorRef);
+		}
+
+		var noteGFX:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
+		animation.play(noteGFX + 'Scroll', true);
+
+		if (isSustainNote) {
+			if (isSustainNote && prevNote != null) {
+				alpha = multAlpha = 0.6;
+
+				offsetX += width * .5;
+				animation.play(noteGFX + (isSustainEnds ? 'holdend' : 'hold'));  // isHoldEnd
+				updateHitbox();
+				offsetX -= width * .5;
+				
+				scale.y *= Conductor.stepCrochet * 0.0105;
+
+				if (PlayState.isPixelStage) {
+					offsetX += 30 * EK.scalesPixel[PlayState.mania];
+					if (!isSustainEnds) scale.y *= 1.05 * (6 / height); //Auto adjust note size
+				} else sustainScale = Note.SUSTAIN_SIZE / frameHeight;
+				updateHitbox();
+			} else {
+				alpha = multAlpha = sustainScale = 1;
+
+				if (!PlayState.isPixelStage) {
+					offsetX = 0;
+					scale.set(.7, .7);
+				} else scale.set(PlayState.daPixelZoom, PlayState.daPixelZoom);
+
+				width = originalWidth;
+				height = originalHeight;
+
+				centerOffsets(true);
+				centerOrigin();
+			}
 		}
 	}
 

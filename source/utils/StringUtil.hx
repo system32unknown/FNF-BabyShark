@@ -70,9 +70,7 @@ class StringUtil {
 		for (i in 0...str.length) {
 			hex = Std.parseInt("0x" + str.charAt(i));
 			tmpStr = "";
-			for (j in 0...4) {
-				tmpStr = ((hex & 1 << j) == 1 << j ? "1" : "0") + tmpStr;
-			}
+			for (j in 0...4) tmpStr = ((hex & 1 << j) == 1 << j ? "1" : "0") + tmpStr;
 			returnVal += tmpStr + " ";
 		}
 		return returnVal.substr(0, returnVal.length - 1);
