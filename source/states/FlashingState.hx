@@ -28,7 +28,7 @@ class FlashingState extends flixel.FlxState {
 
 		final keys:Array<String> = ["Yes", "No"];
 		for (i in 0...keys.length) {
-			final button:FlxText = new FlxText(0, 0, FlxG.width, keys[i]);
+			final button:FlxText = new FlxText(0, 0, FlxG.width, keys[i], 32);
 			button.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 			button.y = (warnText.y + warnText.height) + 24;
 			button.x += (128 * i) - 80;

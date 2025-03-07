@@ -456,7 +456,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			var comboSplit:Array<String> = Std.string(Math.abs(combo)).split('');
 			var daLoop:Int = 0;
 			for (i in [for (i in 0...comboSplit.length) Std.parseInt(comboSplit[i])]) {
-				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiFolder + 'number/num$i' + PlayState.uiPostfix));
+				var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadGraphic(Paths.image(uiFolder + 'judgements/number/num$i' + PlayState.uiPostfix));
 				numScore.setPosition(rating.x + (43 * daLoop++) - 50 + comboOffset[1][0], rating.y + 100 - comboOffset[1][1]);
 			
 				numScore.velocity.set(FlxG.random.float(-5, 5) * playbackRate, -FlxG.random.int(130, 150) * playbackRate);

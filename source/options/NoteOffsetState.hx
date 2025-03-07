@@ -102,7 +102,7 @@ class NoteOffsetState extends MusicBeatState {
 
 		var daLoop:Int = 0;
 		for (i in [for (_ in 0...FlxG.random.int(3, 4)) FlxG.random.int(0, 9)]) {
-			var numScore:FlxSprite = new FlxSprite(rating.x + (43 * daLoop++), Paths.image('number/num$i'));
+			var numScore:FlxSprite = new FlxSprite(rating.x + (43 * daLoop++), Paths.image('judgements/number/num$i'));
 			numScore.setGraphicSize(numScore.width * .5);
 			numScore.updateHitbox();
 			comboNums.add(numScore);

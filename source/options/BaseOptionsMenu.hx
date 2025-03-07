@@ -91,6 +91,7 @@ class BaseOptionsMenu extends FlxSubState {
 	}
 
 	var nextAccept:Int = 5;
+	var selectHoldTime:Float = 0;
 	var holdTime:Float = 0;
 	var holdValue:Float = 0;
 
@@ -108,7 +109,19 @@ class BaseOptionsMenu extends FlxSubState {
 		}
 
 		final downJustPressed:Bool = Controls.justPressed('ui_down');
-		if (downJustPressed || Controls.justPressed('ui_up')) changeSelection(downJustPressed ? 1 : -1);
+		if (downJustPressed || Controls.justPressed('ui_up')) {
+			changeSelection(downJustPressed ? 1 : -1);
+			selectHoldTime = 0;
+		}
+		final upPressed:Bool = Controls.pressed('ui_up');
+		if (Controls.pressed('ui_down') || upPressed) {
+			var checkLastHold:Int = Std.int((selectHoldTime - .5) * 10);
+			selectHoldTime += elapsed;
+			var checkNewHold:Int = Std.int((selectHoldTime - .5) * 10);
+	
+			if(selectHoldTime > 0.5 && checkNewHold - checkLastHold >= 1)
+				changeSelection((checkNewHold - checkLastHold) * (upPressed ? -1 : 1));
+		}
 
 		if (Controls.justPressed('back')) {
 			close();

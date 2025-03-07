@@ -181,20 +181,20 @@ class Note extends FlxSprite {
 				updateHitbox();
 				offsetX -= width * .5;
 				
-				scale.y *= Conductor.stepCrochet * 0.0105;
+				scale.y *= Conductor.stepCrochet * .0105;
 
 				if (PlayState.isPixelStage) {
 					offsetX += 30 * EK.scalesPixel[PlayState.mania];
-					if (!isSustainEnds) scale.y *= 1.05 * (6 / height); //Auto adjust note size
-				} else sustainScale = Note.SUSTAIN_SIZE / frameHeight;
+					if (!isSustainEnds) scale.y *= 1.05 * (6 / height); // Auto adjust note size
+				} else sustainScale = SUSTAIN_SIZE / frameHeight;
 				updateHitbox();
 			} else {
 				alpha = multAlpha = sustainScale = 1;
 
 				if (!PlayState.isPixelStage) {
 					offsetX = 0;
-					scale.set(.7, .7);
-				} else scale.set(PlayState.daPixelZoom, PlayState.daPixelZoom);
+					scale.set(EK.scales[PlayState.mania], EK.scales[PlayState.mania]);
+				} else scale.set(PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania], PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]);
 
 				width = originalWidth;
 				height = originalHeight;
@@ -203,6 +203,11 @@ class Note extends FlxSprite {
 				centerOrigin();
 			}
 		}
+
+		if (isSustainNote && sustainScale != 1 && !isSustainEnds)
+			resizeByRatio(sustainScale);
+		clipRect = null;
+		x += offsetX;
 	}
 
 	function set_texture(value:String):String {
@@ -304,21 +309,20 @@ class Note extends FlxSprite {
 			alpha = multAlpha = .6;
 			hitsoundDisabled = true;
 			if (ClientPrefs.data.downScroll) flipY = true;
-			offsetX += width / 2;
+
+			offsetX += width * .5;
 			copyAngle = false;
 			animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'holdend');
 			updateHitbox();
-			offsetX -= width / 2;
+			offsetX -= width * .5;
+
 			if (PlayState.isPixelStage) offsetX += 30 * EK.scalesPixel[PlayState.mania];
 			if (prevNote.isSustainNote) {
 				prevNote.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][prevNote.noteData]] + 'hold');
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
+				prevNote.scale.y *= Conductor.stepCrochet * .0105;
 				if (createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
 
-				if (PlayState.isPixelStage) {
-					prevNote.scale.y *= 1.19;
-					prevNote.scale.y *= (6 / height); //Auto adjust note size
-				}
+				if (PlayState.isPixelStage) prevNote.scale.y *= 1.05 * (6 / height);
 				prevNote.updateHitbox();
 			}
 			if (PlayState.isPixelStage) {
