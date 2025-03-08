@@ -32,7 +32,6 @@ class NoteOffsetState extends MusicBeatState {
 	var dumbTexts:FlxTypedGroup<FlxText>;
 
 	var modeConfigText:FlxText;
-	var holdTimeText:FlxText;
 
 	var barPercent:Float = 0;
 	var timeTxt:FlxText;
@@ -144,13 +143,6 @@ class NoteOffsetState extends MusicBeatState {
 		modeConfigText.camera = camHUD;
 		add(modeConfigText);
 
-		holdTimeText = new FlxText(0, 500, FlxG.width, "", 32);
-		holdTimeText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		holdTimeText.scrollFactor.set();
-		holdTimeText.cameras = [camHUD];
-		holdTimeText.antialiasing = ClientPrefs.data.antialiasing;
-		add(holdTimeText);
-
 		// mouse
 		mouse = new FlxSprite().makeGraphic(1, 1);
 		mouse.setGraphicSize(18);
@@ -195,12 +187,9 @@ class NoteOffsetState extends MusicBeatState {
 				if (ClientPrefs.data.pauseMusic != 'None')
 					FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
 				else FlxG.sound.music.volume = 0;
-			}
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			} else FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			FlxG.mouse.visible = false;
 		}
-
-		holdTimeText.text = Std.string(holdTime);
 		repositionCombo();
 		reloadTexts();
 	}
@@ -341,15 +330,30 @@ class NoteOffsetState extends MusicBeatState {
 
 			if (Controls.justPressed('reset')) for (i in 0...comboOffset.length) for (j in 0...comboOffset[i].length) comboOffset[i][j] = 0;
 		} else {
-			var pix:Bool = Controls.pressed('ui_left') || Controls.pressed('ui_right');
 			mouse.visible = false;
+			if (left || right) {
+				holdTime = 0;
+				barPercent = Math.max(delayMin, Math.min(ClientPrefs.data.noteOffset - (Controls.pressed('ui_right') ? -1 : 1), delayMax));
+				updateNoteDelay();
+			}
 
-			if (left || right) holdTime += elapsed;
-			else holdTime = 0;
+			var leftPressed:Bool = Controls.pressed('ui_left');
+			var mult:Int = 1;
+			if (leftPressed || Controls.pressed('ui_right')) {
+				holdTime += elapsed;
+				if (leftPressed) mult = -1;
 
-			barPercent += (holdTime > .27 || pix) ? (left ? -1 : right ? 1 : 0) * addNum * (pix ? 1 : 100 * elapsed) : 0;
-			if (Controls.justPressed('reset')) barPercent = holdTime = 0;
-			updateNoteDelay();
+				if (holdTime > .5) {
+					barPercent += 100 * addNum * elapsed * mult;
+					barPercent = Math.max(delayMin, Math.min(barPercent, delayMax));
+					updateNoteDelay();
+				}
+			}
+
+			if (Controls.justPressed('reset')) {
+				barPercent = holdTime = 0;
+				updateNoteDelay();
+			}
 		}
 	}
 

@@ -6,7 +6,7 @@ class SaveVariables {
 	var downScroll:Bool = false;
 	var middleScroll:Bool = false;
 	var opponentStrums:Bool = true;
-	var flashing:Bool = true;
+	var flashing:Null<Bool> = true;
 	var autoPause:Bool = true;
 	var antialiasing:Bool = true;
 	var noteSkin:String = 'Default';

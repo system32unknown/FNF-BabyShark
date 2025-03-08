@@ -15,7 +15,8 @@ class HealthIcon extends FlxSprite {
 	var char:String = '';
 	
 	public var iconType:String = 'vanilla';
-	var iSize:Int = 1;
+	public var iSize:Int = 1;
+
 	var state:Int = 0;
 	var _scale:FlxPoint;
 	final animatediconstates:Array<String> = ['normal', 'lose', 'win'];
