@@ -127,6 +127,7 @@ class FunkinCache extends openfl.utils.AssetCache {
 	public override function hasSound(id:String):Bool {
 		return sound.exists(id) || sound2.exists(id);
 	}
+
 	/**
 		Removes a BitmapData from the cache.
 

@@ -1,22 +1,22 @@
 package utils;
 
 class StringUtil {
-    /**
-		* Fill numbers with a specified number of digits and right-align with the number.
-		* @param value Floating-point number
-		* @param digits Integer
-		* @param code Integer (use fastCodeAt)
-	*/
+	/**
+	 * Fill numbers with a specified number of digits and right-align with the number.
+	 * @param value Floating-point number
+	 * @param digits Integer
+	 * @param code Integer (use fastCodeAt)
+	 */
 	public static function fillNumber(value:Float, digits:Int, code:Int):String {
 		var length:Int = Std.string(value).length;
 		var str:String = null;
 		var format:StringBuf = new StringBuf();
- 
+
 		if (length < digits) {
 			for (_ in 0...(digits - length)) format.addChar(code);
 			format.add(Std.string(value));
 		} else format.add(Std.string(value));
- 
+
 		str = format.toString();
 		format = null;
 		return str;
@@ -36,7 +36,7 @@ class StringUtil {
 			if (mins.length < 2) mins = '0$mins';
 			formattedtime = '$hour:$mins:$secs';
 		}
-		
+
 		if (days != '0' && weeks == '0') formattedtime = '${days}d ${hour}h ${mins}m ${secs}s';
 		if (weeks != '0') formattedtime = '${weeks}w ${days}d ${hour}h ${mins}m ${secs}s';
 
@@ -50,16 +50,16 @@ class StringUtil {
 		return formattedtime;
 	}
 
-    public static function getRNGTxt(max:Int, ?includespace:Bool, ?chance:Int = 50):String {
-        var temp_str:String = "";
-        for (_ in 0...max) {
-            temp_str += String.fromCharCode(FlxG.random.int(65, 122));
+	public static function getRNGTxt(max:Int, ?includespace:Bool, ?chance:Int = 50):String {
+		var temp_str:String = "";
+		for (_ in 0...max) {
+			temp_str += String.fromCharCode(FlxG.random.int(65, 122));
 			if (includespace && FlxG.random.bool(chance)) temp_str += "\n";
 		}
-        return temp_str;
-    }
+		return temp_str;
+	}
 
-    inline public static function capitalize(text:String):String {
+	inline public static function capitalize(text:String):String {
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
 	}
 
@@ -100,6 +100,7 @@ class StringUtil {
 		}
 		return cnt;
 	}
+
 	public static function reverseString(str:String):String {
 		var reversed:String = "";
 		for (i in 0...str.length) reversed = str.charAt(i) + reversed;

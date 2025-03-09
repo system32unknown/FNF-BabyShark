@@ -3,14 +3,14 @@ package objects;
 import flixel.FlxObject;
 
 // its kinda like marqeee html lol!
-class BGScrollingText extends FlxSpriteGroup {
+class ScrollingText extends FlxSpriteGroup {
 	var grpTexts:FlxTypedSpriteGroup<FlxText>;
 
 	public var widthShit:Float = FlxG.width;
 	public var placementOffset:Float = 20;
 	public var speed:Float = 1;
 	public var size(default, set):Int = 48;
-    public var font:String = Paths.font("vcr.ttf");
+	public var font:String = Paths.font("vcr.ttf");
 
 	public var funnyColor(default, set):Int = 0xFFFFFFFF;
 

@@ -16,8 +16,8 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
 	 */
 	public function new() {
-        super();
-        removeChildren();
+		super();
+		removeChildren();
 
 		visible = false;
 		scaleX = scaleY = _defaultScale;
@@ -61,11 +61,11 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 
 		// Animate sound tray thing
 		if (_timer > 0) {
-		    _timer -= elapsed;
-		    alphaTarget = 1;
+			_timer -= elapsed;
+			alphaTarget = 1;
 		} else if (lerpYPos > -height) {
-		    lerpYPos -= elapsed * height * 4;
-		    alphaTarget = 0;
+			lerpYPos -= elapsed * height * 4;
+			alphaTarget = 0;
 
 			if (lerpYPos <= -height) {
 				visible = active = false;

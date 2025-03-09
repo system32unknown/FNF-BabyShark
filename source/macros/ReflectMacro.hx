@@ -1,6 +1,6 @@
 package macros;
 
-#if macro 
+#if macro
 import haxe.macro.Context;
 import haxe.macro.Expr;
 #end
@@ -18,16 +18,13 @@ class ReflectMacro {
 
 		return {
 			pos: Context.currentPos(),
-			expr: ESwitch(
-				macro ($i{argsName}.length), [
-					for (i in 0...totalArgs) {
-						values: [macro $v{i}],
-						expr: funcCalls[i],
-						guard: null,
-					}
-				],
-				macro throw "Too many arguments"
-			)
+			expr: ESwitch(macro($i{argsName}.length), [
+				for (i in 0...totalArgs) {
+					values: [macro $v{i}],
+					expr: funcCalls[i],
+					guard: null,
+				}
+			], macro throw "Too many arguments")
 		};
 		#end
 	}

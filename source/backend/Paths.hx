@@ -12,9 +12,9 @@ import utils.system.MemoryUtil;
 
 @:access(openfl.display.BitmapData)
 class Paths {
-	inline public static final CHART_PATH = "charts";
-	inline public static final SOUND_EXT = "ogg";
-	inline public static final VIDEO_EXT = "mp4";
+	inline public static final CHART_PATH :String= "charts";
+	inline public static final SOUND_EXT:String = "ogg";
+	inline public static final VIDEO_EXT:String = "mp4";
 
 	public static var popUpFramesMap:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
 

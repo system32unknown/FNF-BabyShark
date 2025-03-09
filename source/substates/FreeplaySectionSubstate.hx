@@ -6,6 +6,7 @@ import states.StoryMenuState;
 
 class FreeplaySectionSubstate extends FlxSubState {
 	public static var daSection:String = 'Vanilla';
+
 	var counter:Int = 0;
 
 	var sectionArray:Array<String> = [];
@@ -39,12 +40,12 @@ class FreeplaySectionSubstate extends FlxSubState {
 		sectionArray = CoolUtil.removeDupString(sectionArray);
 		Mods.loadTopMod();
 
-        for (i in 0...sectionArray.length) {
-            if (sectionArray[i] == daSection) {
-                counter = i;
-                break;
-            }
-        }
+		for (i in 0...sectionArray.length) {
+			if (sectionArray[i] == daSection) {
+				counter = i;
+				break;
+			}
+		}
 		daSection = sectionArray[counter];
 
 		bg = new FlxSprite(Paths.image('menuDesat'));
@@ -84,7 +85,7 @@ class FreeplaySectionSubstate extends FlxSubState {
 
 		final leftjustPressed:Bool = Controls.justPressed('ui_left');
 		if (leftjustPressed || Controls.justPressed('ui_right')) changeSection(leftjustPressed ? -1 : 1);
-		
+
 		if (Controls.justPressed('back') && !transitioning) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			transitioning = true;
@@ -105,7 +106,7 @@ class FreeplaySectionSubstate extends FlxSubState {
 
 		sectionTxt.text = daSection.toUpperCase();
 		sectionTxt.gameCenter(X).y = sectionSpr.y;
-		
+
 		super.update(elapsed);
 	}
 

@@ -34,9 +34,9 @@ class ErrorHandledShader extends flixel.system.FlxAssets.FlxShader implements IE
 		if (!FileSystem.exists('./crash/')) FileSystem.createDirectory('./crash/');
 		var crashLogPath:String = './crash/shader_${shaderName}_${dateNow}.txt';
 		File.saveContent(crashLogPath, error);
-        NativeUtil.showMessageBox('Error log saved at: $crashLogPath', alertTitle, MSG_ERROR);
+		NativeUtil.showMessageBox('Error log saved at: $crashLogPath', alertTitle, MSG_ERROR);
 		#else
-        NativeUtil.showMessageBox('Error logs aren\'t created on debug builds, check the trace log instead.', alertTitle, MSG_ERROR);
+		NativeUtil.showMessageBox('Error logs aren\'t created on debug builds, check the trace log instead.', alertTitle, MSG_ERROR);
 		#end
 		onError(error);
 	}

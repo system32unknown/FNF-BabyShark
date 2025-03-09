@@ -2,6 +2,7 @@ package;
 
 import flixel.addons.transition.FlxTransitionableState;
 import states.FlashingState;
+
 class Init extends flixel.FlxState {
 	override function create():Void {
 		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
@@ -36,7 +37,7 @@ class Init extends flixel.FlxState {
 			FlxG.switchState(() -> new FlashingState());
 			return;
 		}
-		
+
 		FlxG.switchState(flixel.util.typeLimit.NextState.fromType(Main.game.initialState));
 	}
 }

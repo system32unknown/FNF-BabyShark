@@ -20,9 +20,9 @@ import lime.utils.Assets;
  */
 class NdllUtil {
 	#if NDLLS_ALLOWED
-		#if windows   public static final os:String = "windows";   #end
-		#if linux     public static final os:String = "linux";     #end
-		#if macos     public static final os:String = "mac";       #end
+	#if windows public static final os:String = "windows"; #end
+	#if linux public static final os:String = "linux"; #end
+	#if macos public static final os:String = "mac"; #end
 	#end
 
 	/**

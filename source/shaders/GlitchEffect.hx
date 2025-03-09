@@ -60,6 +60,7 @@ class GlitchShader extends flixel.system.FlxAssets.FlxShader {
      * How much the pixels are going to stretch over the waves
     */
     uniform float uWaveAmplitude;
+
     /*
      * Distort BG?
     */

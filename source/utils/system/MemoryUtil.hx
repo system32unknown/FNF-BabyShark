@@ -32,6 +32,7 @@ import cpp.vm.Gc;
  */
 class MemoryUtil {
 	public static var isGcOn:Bool = true;
+
 	public static function clearMajor(?minor:Bool = false):Void {
 		#if cpp
 		Gc.run(!minor);

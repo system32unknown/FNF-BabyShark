@@ -16,9 +16,9 @@ class CoolUtil {
 			var http:Http = new Http(url);
 
 			http.onData = (data:String) -> {
-    			var verEndIdx:Int = data.indexOf(';');
-    			returnedData[0] = data.substring(0, verEndIdx);
-    			returnedData[1] = data.substring(verEndIdx + 1, data.length); // Extract the changelog after the version number
+				var verEndIdx:Int = data.indexOf(';');
+				returnedData[0] = data.substring(0, verEndIdx);
+				returnedData[1] = data.substring(verEndIdx + 1, data.length); // Extract the changelog after the version number
 
 				var updateVersion:String = returnedData[0];
 				trace('version online: $updateVersion, your version: $version');
@@ -61,7 +61,7 @@ class CoolUtil {
 		#end
 		return daList == null ? [] : listFromString(daList);
 	}
-	
+
 	public static function listFromString(string:String):Array<String> {
 		final daList:Array<String> = string.trim().split('\n');
 		return [for (i in 0...daList.length) daList[i].trim()];
@@ -73,7 +73,7 @@ class CoolUtil {
 	 * @return Results URL status.
 	 */
 	public static function browserLoad(site:String):Int {
-		#if linux 
+		#if linux
 		var cmd:Int = Sys.command("xdg-open", [site]); // generally `xdg-open` should work in every distro
 		if (cmd != 0) cmd = Sys.command("/usr/bin/xdg-open", [site]); // run old command JUST IN CASE it fails, which it shouldn't
 		return cmd;
@@ -91,7 +91,6 @@ class CoolUtil {
 	inline public static function openFolder(folder:String, absolute:Bool = false):Void {
 		#if sys
 		if (!absolute) folder = Sys.getCwd() + '$folder';
-
 		folder = folder.replace('/', '\\');
 		if (folder.endsWith('/')) folder.substr(0, folder.length - 1);
 
@@ -105,7 +104,9 @@ class CoolUtil {
 		#end
 
 		Sys.command(commandOpen, [folder]);
-		#else FlxG.error("Platform is not supported for CoolUtil.openFolder"); #end
+		#else
+		FlxG.error("Platform is not supported for CoolUtil.openFolder");
+		#end
 	}
 
 	/**
@@ -133,19 +134,19 @@ class CoolUtil {
 		var lastSeen:String = '';
 		string.sort((a:String, b:String) -> return (a == b) ? 0 : (a > b) ? 1 : -1);
 		for (str in string) {
-		  	if (str != lastSeen) tempArray.push(str);
-		  	lastSeen = str;
+			if (str != lastSeen) tempArray.push(str);
+			lastSeen = str;
 		}
 		return tempArray;
 	}
 
-    public static function getColor(value:Dynamic, ?defValue:Array<Int>):FlxColor {
-        if (value == null) return FlxColor.WHITE;
-        if (value is Int) return value;
-        if (value is String) return colorFromString(value);
-        if (value is Array) return colorFromArray(value, defValue);
-        return FlxColor.WHITE;
-    }
+	public static function getColor(value:Dynamic, ?defValue:Array<Int>):FlxColor {
+		if (value == null) return FlxColor.WHITE;
+		if (value is Int) return value;
+		if (value is String) return colorFromString(value);
+		if (value is Array) return colorFromArray(value, defValue);
+		return FlxColor.WHITE;
+	}
 
 	inline public static function colorFromArray(colors:Array<Int>, ?defColors:Array<Int>):FlxColor {
 		colors = fixRGBColorArray(colors, defColors);

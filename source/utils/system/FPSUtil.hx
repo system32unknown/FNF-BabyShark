@@ -1,7 +1,7 @@
 package utils.system;
 
 class FPSUtil {
-    @:noCompletion var times:Array<Int>;
+	@:noCompletion var times:Array<Int>;
 	@:noCompletion var sum:Int;
 	@:noCompletion var sliceCnt:Int;
 
@@ -10,21 +10,21 @@ class FPSUtil {
 	 */
 	public var curFPS(default, null):Float;
 
-    /**
+	/**
 	 * The raw frame rate over a short period.
-     */
+	 */
 	public var curRawFPS(default, null):Float;
 
-    public function new() {
+	public function new() {
 		curFPS = curRawFPS = 0;
 		sum = sliceCnt = 0;
 		times = [];
 	}
 
-    /**
-     * Updates the FPS calculations based on the given delta time.
-     */
-    public function update(dt:Float):Void {
+	/**
+	 * Updates the FPS calculations based on the given delta time.
+	 */
+	public function update(dt:Float):Void {
 		sliceCnt = 0;
 		var delta:Int = Math.round(dt);
 		times.push(delta);
@@ -35,17 +35,17 @@ class FPSUtil {
 			++sliceCnt;
 		}
 		if (sliceCnt > 0) times.splice(0, sliceCnt);
-		
+
 		curRawFPS = times.length > 0 ? 1000 / (sum / times.length) : 0.0;
 		curFPS = Math.round(curRawFPS);
-    }
+	}
 
-    /**
-     * Adjusts FPS calculations based on different engine types.
-     * @param type The engine type (e.g., 'andromeda', 'psychold', etc.).
-     * @param fps The current FPS value to adjust.
-     * @return The adjusted FPS value based on the selected method.
-     */
+	/**
+	 * Adjusts FPS calculations based on different engine types.
+	 * @param type The engine type (e.g., 'andromeda', 'psychold', etc.).
+	 * @param fps The current FPS value to adjust.
+	 * @return The adjusted FPS value based on the selected method.
+	 */
 	public static function getFPSAdjust(type:String, fps:Float):Float {
 		return switch (type.toLowerCase()) {
 			case 'andromeda': FlxG.elapsed / (1 / 60) * fps;

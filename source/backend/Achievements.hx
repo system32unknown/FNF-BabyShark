@@ -28,16 +28,21 @@ enum abstract AchievementOp(String) {
 
 class Achievements {
 	public static function init() {
-		createAchievement('week1_nomiss',			{name: "She Calls Me Daddy Too", description: "Beat Week 1 on Hard with no Misses."});
-		createAchievement('week2_nomiss',			{name: "No More Tricks", description: "Beat Week 2 on Hard with no Misses."});
-		createAchievement('week3_nomiss',			{name: "Call Me The Hitman", description: "Beat Week 3 on Hard with no Misses."});
-		createAchievement('week4_nomiss',			{name: "Lady Killer", description: "Beat Week 4 on Hard with no Misses."});
-		createAchievement('week5_nomiss',			{name: "Missless Christmas", description: "Beat Week 5 on Hard with no Misses."});
-		createAchievement('week6_nomiss',			{name: "Highscore!!", description: "Beat Week 6 on Hard with no Misses."});
-		createAchievement('roadkill_enthusiast',	{name: "Roadkill Enthusiast", description: "Watch the Henchmen die 50 times.", maxScore: 50, maxDecimals: 0});
-		createAchievement('ur_bad',					{name: "What a Funkin' Disaster!", description: "Complete a Song with a rating lower than 20%."});
-		createAchievement('ur_good',				{name: "Perfectionist", description: "Complete a Song with a rating of 100%."});
-		createAchievement('toastie',				{name: "Toaster Gamer", description: "Have you tried to run the game on a toaster?"});
+		createAchievement('week1_nomiss', {name: "She Calls Me Daddy Too", description: "Beat Week 1 on Hard with no Misses."});
+		createAchievement('week2_nomiss', {name: "No More Tricks", description: "Beat Week 2 on Hard with no Misses."});
+		createAchievement('week3_nomiss', {name: "Call Me The Hitman", description: "Beat Week 3 on Hard with no Misses."});
+		createAchievement('week4_nomiss', {name: "Lady Killer", description: "Beat Week 4 on Hard with no Misses."});
+		createAchievement('week5_nomiss', {name: "Missless Christmas", description: "Beat Week 5 on Hard with no Misses."});
+		createAchievement('week6_nomiss', {name: "Highscore!!", description: "Beat Week 6 on Hard with no Misses."});
+		createAchievement('roadkill_enthusiast', {
+			name: "Roadkill Enthusiast",
+			description: "Watch the Henchmen die 50 times.",
+			maxScore: 50,
+			maxDecimals: 0
+		});
+		createAchievement('ur_bad', {name: "What a Funkin' Disaster!", description: "Complete a Song with a rating lower than 20%."});
+		createAchievement('ur_good', {name: "Perfectionist", description: "Complete a Song with a rating of 100%."});
+		createAchievement('toastie', {name: "Toaster Gamer", description: "Have you tried to run the game on a toaster?"});
 		_originalLength = _sortID + 1; // dont delete this thing below
 	}
 
@@ -113,6 +118,7 @@ class Achievements {
 	}
 
 	static var _lastUnlock:Int = -999;
+
 	public static function unlock(name:String, autoStartPopup:Bool = true):String {
 		if (!list.exists(name)) {
 			FlxG.log.error('Achievement "$name" does not exists!');
@@ -144,6 +150,7 @@ class Achievements {
 	@:allow(objects.AchievementPopup)
 	private static var _popups:Array<AchievementPopup> = [];
 	public static var showingPopups(get, never):Bool;
+
 	public static function get_showingPopups():Bool
 		return _popups.length > 0;
 
@@ -158,6 +165,7 @@ class Achievements {
 	// Map sorting cuz haxe is physically incapable of doing that by itself
 	static var _sortID = 0;
 	static var _originalLength = -1;
+
 	public static function createAchievement(name:String, data:Achievement, ?mod:String = null) {
 		data.ID = _sortID;
 		data.mod = mod;
@@ -186,10 +194,10 @@ class Achievements {
 
 	inline static function loadAchievementJson(path:String, addMods:Bool = true):Array<Dynamic> {
 		var retVal:Array<Dynamic> = null;
-        inline function errorMessage(title:String, message:String):Void {
-            utils.system.NativeUtil.showMessageBox(message, title);
+		inline function errorMessage(title:String, message:String):Void {
+			utils.system.NativeUtil.showMessageBox(message, title);
 			Logs.trace('$title - $message', ERROR);
-        }
+		}
 		if (FileSystem.exists(path)) {
 			try {
 				var rawJson:String = File.getContent(path).trim();
@@ -206,7 +214,7 @@ class Achievements {
 
 						var key:String = achieve.save;
 						if (key == null || key.trim().length < 1) {
-                            errorMessage('Error on Achievement: ' + (achieve.name ?? achieve.save), 'Missing valid "save" value.');
+							errorMessage('Error on Achievement: ' + (achieve.name ?? achieve.save), 'Missing valid "save" value.');
 							continue;
 						}
 						key = key.trim();

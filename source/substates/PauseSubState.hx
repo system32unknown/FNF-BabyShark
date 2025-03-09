@@ -23,11 +23,11 @@ class PauseSubState extends MusicBeatSubstate {
 	public static var songName:String = null;
 
 	override function create() {
-		if (Difficulty.list.length < 2) menuItemsOG.remove('Change Difficulty'); //No need to change difficulty if there is only one!
+		if (Difficulty.list.length < 2) menuItemsOG.remove('Change Difficulty'); // No need to change difficulty if there is only one!
 
 		if (PlayState.chartingMode) {
 			menuItemsOG.insert(2, 'Leave Charting Mode');
-			
+
 			var num:Int = 0;
 			if (!PlayState.instance.startingSong) {
 				num = 1;
@@ -53,7 +53,6 @@ class PauseSubState extends MusicBeatSubstate {
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 		FlxG.sound.list.add(pauseMusic);
 
-		
 		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
 		bg.scrollFactor.set();
@@ -84,7 +83,7 @@ class PauseSubState extends MusicBeatSubstate {
 		missingTextBG.alpha = .6;
 		missingTextBG.visible = false;
 		add(missingTextBG);
-		
+
 		missingText = new FlxText(50, 0, FlxG.width - 100, '', 24);
 		missingText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		missingText.scrollFactor.set();
@@ -106,13 +105,14 @@ class PauseSubState extends MusicBeatSubstate {
 	}
 
 	var holdTime:Float = 0;
-	var cantUnpause:Float = 0.1;
+	var cantUnpause:Float = .1;
+
 	override function update(elapsed:Float) {
 		cantUnpause -= elapsed;
 		if (pauseMusic.volume < .5) pauseMusic.volume += .01 * elapsed;
 
 		super.update(elapsed);
-		
+
 		if (Controls.justPressed('back')) {
 			close();
 			return;
@@ -123,7 +123,7 @@ class PauseSubState extends MusicBeatSubstate {
 			PlayState.nextReloadAll = true;
 			FlxG.resetState();
 		}
-		
+
 		updateSkipTextStuff();
 		final upJustPressed:Bool = Controls.justPressed('ui_up');
 		if (upJustPressed || Controls.justPressed('ui_down')) changeSelection(upJustPressed ? -1 : 1);
@@ -144,10 +144,13 @@ class PauseSubState extends MusicBeatSubstate {
 				final leftPressed:Bool = Controls.pressed('ui_left');
 				if (leftPressed || Controls.pressed('ui_right')) {
 					holdTime += elapsed;
-					if (holdTime > 0.5) curTime += 45000 * elapsed * (leftPressed ? -1 : 1);
+					if (holdTime > 0.5)
+						curTime += 45000 * elapsed * (leftPressed ? -1 : 1);
 
-					if (curTime >= FlxG.sound.music.length) curTime -= FlxG.sound.music.length;
-					else if (curTime < 0) curTime += FlxG.sound.music.length;
+					if (curTime >= FlxG.sound.music.length)
+						curTime -= FlxG.sound.music.length;
+					else if (curTime < 0)
+						curTime += FlxG.sound.music.length;
 					updateSkipTimeText();
 				}
 		}
@@ -168,7 +171,7 @@ class PauseSubState extends MusicBeatSubstate {
 					}
 				} catch (e:haxe.Exception) {
 					var errorStr:String = e.message;
-					if (errorStr.startsWith('[lime.utils.Assets] ERROR:')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1); //Missing chart
+					if (errorStr.startsWith('[lime.utils.Assets] ERROR:')) errorStr = 'Missing file: ' + errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1); // Missing chart
 					else errorStr += '\n\n' + e.stack;
 					missingText.text = 'ERROR WHILE LOADING CHART:\n$errorStr';
 					missingText.gameCenter(Y);
@@ -316,7 +319,7 @@ class PauseSubState extends MusicBeatSubstate {
 		curSelected = 0;
 		changeSelection();
 	}
-	
+
 	function updateSkipTextStuff() {
 		if (skipTimeText == null || skipTimeTracker == null) return;
 

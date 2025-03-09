@@ -5,24 +5,24 @@ import flixel.util.FlxSort;
 
 // Chart
 typedef VSliceChart = {
-	var scrollSpeed:Dynamic;	// Map<String, Float>
+	var scrollSpeed:Dynamic; // Map<String, Float>
 	var events:Array<VSliceEvent>;
-	var notes:Dynamic;			// Map<String, Array<VSliceNote>>
+	var notes:Dynamic; // Map<String, Array<VSliceNote>>
 	var generatedBy:String;
 	var version:String;
 }
 
 typedef VSliceNote = {
-	var t:Float;					// Strum time
-	var d:Int;						// Note data
-	@:optional var l:Null<Float>;	// Sustain Length
-	@:optional var k:String;		// Note type
+	var t:Float; // Strum time
+	var d:Int; // Note data
+	@:optional var l:Null<Float>; // Sustain Length
+	@:optional var k:String; // Note type
 }
 
 typedef VSliceEvent = {
-	var t:Float;	// Strum time
-	var e:String;	// Event name
-	var v:Dynamic;	// Values
+	var t:Float; // Strum time
+	var e:String; // Event name
+	var v:Dynamic; // Values
 }
 
 // Metadata
@@ -75,6 +75,7 @@ typedef PsychPackage = {
 class VSlice {
 	public static final metadataVersion:String = '2.2.3';
 	public static final chartVersion:String = '2.0.0';
+
 	public static function convertToPsych(chart:VSliceChart, metadata:VSliceMetadata):PsychPackage {
 		var songDifficulties:Map<String, SwagSong> = [];
 		var timeChanges:Array<VSliceTimeChange> = cast metadata.timeChanges;
@@ -279,7 +280,7 @@ class VSlice {
 
 		var time:Float = 0;
 		var bpm:Float = songData.bpm;
-		timeChanges.push({t: 0, bpm: bpm}); // so there was first bpm issue (if the song has multiplier bpm) 
+		timeChanges.push({t: 0, bpm: bpm}); // so there was first bpm issue (if the song has multiplier bpm)
 
 		var lastMustHit:Bool = false;
 		if (songData.notes != null) {
@@ -349,17 +350,23 @@ class VSlice {
 			events: events,
 			notes: notesMap,
 			generatedBy: generatedBy,
-			version: chartVersion //idk what "version" does on V-Slice, but it seems to break without it
+			version: chartVersion // idk what "version" does on V-Slice, but it seems to break without it
 		};
 
 		var stage:String = songData.stage;
 		switch (stage) { // Psych and VSlice use different names for some stages
-			case 'stage': stage = 'mainStage';
-			case 'spooky': stage = 'spookyMansion';
-			case 'philly': stage = 'phillyTrain';
-			case 'limo': stage = 'limoRide';
-			case 'mall': stage = 'mallXmas';
-			case 'tank': stage = 'tankmanBattlefield';
+			case 'stage':
+				stage = 'mainStage';
+			case 'spooky':
+				stage = 'spookyMansion';
+			case 'philly':
+				stage = 'phillyTrain';
+			case 'limo':
+				stage = 'limoRide';
+			case 'mall':
+				stage = 'mallXmas';
+			case 'tank':
+				stage = 'tankmanBattlefield';
 		}
 		var metadata:VSliceMetadata = {
 			songName: songData.song,
@@ -369,7 +376,7 @@ class VSlice {
 				difficulties: diffs,
 				characters: {
 					player: songData.player1,
-					girlfriend: songData.gfVersion ?? '', //there is no problem if gf don't exist with it 
+					girlfriend: songData.gfVersion ?? '', // there is no problem if gf don't exist with it
 					opponent: songData.player2
 				},
 				noteStyle: !PlayState.isPixelStage ? 'funkin' : 'pixel',
@@ -378,7 +385,7 @@ class VSlice {
 			timeFormat: 'ms',
 			timeChanges: timeChanges,
 			generatedBy: generatedBy,
-			version: metadataVersion //idk what "version" does on V-Slice, but it seems to break without it
+			version: metadataVersion // idk what "version" does on V-Slice, but it seems to break without it
 		};
 		return {chart: chart, metadata: metadata};
 	}

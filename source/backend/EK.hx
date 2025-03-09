@@ -41,63 +41,16 @@ class EK {
 	];
 	public static var gfxDir:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT', 'SPACE'];
 
-    public static function fillKeys():Array<Array<String>> {
+	public static function fillKeys():Array<Array<String>> {
 		return [
-			[
-				'note_1'
-			], [
-				'note_left',
-				'note_right'
-			], [
-				'note_left',
-				'note_3a',
-				'note_right'
-			], [
-				'note_left',
-				'note_down',
-				'note_up',
-				'note_right'
-			], [
-				'note_left',
-				'note_down',
-				'note_5a',
-				'note_up',
-				'note_right'
-			], [
-				'note_6a',
-				'note_6b',
-				'note_6c',
-				'note_6d',
-				'note_6e',
-				'note_6f'
-			], [
-				'note_7a',
-				'note_7b',
-				'note_7c',
-				'note_7d',
-				'note_7e',
-				'note_7f',
-				'note_7g'
-			], [
-				'note_8a',
-				'note_8b',
-				'note_8c',
-				'note_8d',
-				'note_8e',
-				'note_8f',
-				'note_8g',
-				'note_8h'
-			], [
-				'note_9a',
-				'note_9b',
-				'note_9c',
-				'note_9d',
-				'note_9e',
-				'note_9f',
-				'note_9g',
-				'note_9h',
-				'note_9i'
-			]
+			['note_1'],
+			['note_left', 'note_right'],
+			['note_left', 'note_3a', 'note_right'],
+			['note_left', 'note_down', 'note_up', 'note_right'],
+			['note_left', 'note_down', 'note_5a', 'note_up', 'note_right'],
+			['note_6a', 'note_6b', 'note_6c', 'note_6d', 'note_6e', 'note_6f'],
+			['note_7a', 'note_7b', 'note_7c', 'note_7d', 'note_7e', 'note_7f', 'note_7g'],
+			['note_8a', 'note_8b', 'note_8c', 'note_8d', 'note_8e', 'note_8f', 'note_8g', 'note_8h'], ['note_9a', 'note_9b', 'note_9c', 'note_9d', 'note_9e', 'note_9f', 'note_9g', 'note_9h', 'note_9i']
 		];
 	}
 }

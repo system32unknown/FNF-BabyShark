@@ -17,7 +17,7 @@ class ChartingGridSprite extends FlxSprite {
 		this.columns = columns;
 		scrollFactor.x = 0;
 		active = false;
-        
+
 		scale.set(ChartingState.GRID_SIZE, ChartingState.GRID_SIZE);
 		loadGrid(color1, color2);
 		updateHitbox();
@@ -36,13 +36,13 @@ class ChartingGridSprite extends FlxSprite {
 	}
 
 	public function loadGrid(color1:FlxColor, color2:FlxColor) {
-        loadGraphic(flixel.addons.display.FlxGridOverlay.createGrid(1, 1, columns, 2, true, color1, color2), true, columns, 1);
-        animation.add('odd', [0], false);
-        animation.add('even', [1], false);
-        animation.play('even', true);
+		loadGraphic(flixel.addons.display.FlxGridOverlay.createGrid(1, 1, columns, 2, true, color1, color2), true, columns, 1);
+		animation.add('odd', [0], false);
+		animation.add('even', [1], false);
+		animation.play('even', true);
 		updateHitbox();
 		recalcHeight();
-    }
+	}
 
 	override function draw() {
 		if (!visible || alpha == 0 || y - camera.scroll.y >= FlxG.height) return;
@@ -75,7 +75,7 @@ class ChartingGridSprite extends FlxSprite {
 			while (true) {
 				vortexLine.y += vortexLineSpace;
 				if (vortexLine.y >= this.y + this.height) break;
-	
+
 				vortexLine.draw();
 			}
 		}
@@ -103,9 +103,9 @@ class ChartingGridSprite extends FlxSprite {
 	}
 
 	function set_spacing(v:Int):Int {
-		spacing  = v;
+		spacing = v;
 		recalcHeight();
-		return spacing ;
+		return spacing;
 	}
 
 	function recalcHeight() {

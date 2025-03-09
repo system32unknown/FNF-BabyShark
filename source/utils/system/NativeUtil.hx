@@ -1,6 +1,5 @@
 package utils.system;
 
-import lime.app.Application;
 import lime.system.System;
 
 /**
@@ -8,28 +7,6 @@ import lime.system.System;
  * Does not have any effect on other platforms.
  */
 class NativeUtil {
-	static var registeredDPIAware:Bool = false;
-	public static function registerDPIAware(width:Int = 1280, height:Int = 720):Void {
-		if (registeredDPIAware) return;
-		#if (cpp && windows)
-		if (!PlatformUtil.setDPIAware()) Logs.trace('Failed to set DPI Awareness', WARNING);
-		#else
-		Logs.trace('setDPIAware is not supported on this platform', WARNING);
-		#end
-
-		final display:Null<lime.system.Display> = System.getDisplay(0);
-		if (display != null) {
-			final dpiScale:Float = display.dpi / 96;
-			Application.current.window.width = Std.int(width * dpiScale);
-			Application.current.window.height = Std.int(height * dpiScale);
-
-			Application.current.window.x = Std.int((Application.current.window.display.bounds.width - Application.current.window.width) / 2);
-			Application.current.window.y = Std.int((Application.current.window.display.bounds.height - Application.current.window.height) / 2);
-		}
-
-		registeredDPIAware = true;
-	}
-
 	/**
 	 * Allocates a new console. The console will automatically be opened
 	 */
@@ -37,80 +14,6 @@ class NativeUtil {
 		#if windows
 		PlatformUtil.allocConsole();
 		PlatformUtil.clearScreen();
-		#end
-	}
-
-	/**
-	 * Switch the window's color mode to dark or light mode.
-	 */
-	public static function setDarkMode(title:String, enable:Bool) {
-		#if windows
-		title ??= Application.current.window.title;
-		PlatformUtil.setDarkMode(title, enable);
-		#end
-	}
-
-	/**
-	 * Switch the window's color to any color.
-	 *
-	 * WARNING: This is exclusive to windows 11 users, unfortunately.
-	 *
-	 * NOTE: Setting the color to 0x00000000 (FlxColor.TRANSPARENT) will set the border (must have setBorder on) invisible.
-	 */
-	public static function setWindowBorderColor(title:String, color:FlxColor, setHeader:Bool = true, setBorder:Bool = true) {
-		#if windows
-		if (getWindowsVersion() != 11) return;
-		title ??= Application.current.window.title;
-		PlatformUtil.setWindowBorderColor(title, [color.red, color.green, color.blue, color.alpha], setHeader, setBorder);
-		#end
-	}
-
-	/**
-	 * Resets the window's border color to the default one.
-	 *
-	 * WARNING: This is exclusive to windows 11 users, unfortunately.
-	**/
-	public static function resetWindowBorderColor(title:String, setHeader:Bool = true, setBorder:Bool = true) {
-		#if windows
-		if (getWindowsVersion() != 11) return;
-		title ??= Application.current.window.title;
-		PlatformUtil.setWindowBorderColor(title, [-1, -1, -1, -1], setHeader, setBorder);
-		#end
-	}
-
-	/**
-	 * Switch the window's title text to any color.
-	 *
-	 * WARNING: This is exclusive to windows 11 users, unfortunately.
-	 */
-	public static function setWindowTitleColor(title:String, color:FlxColor) {
-		#if windows
-		if (getWindowsVersion() != 11) return;
-		title ??= Application.current.window.title;
-		PlatformUtil.setWindowTitleColor(title, [color.red, color.green, color.blue, color.alpha]);
-		#end
-	}
-
-	/**
-	 * Resets the window's title color to the default one.
-	 *
-	 * WARNING: This is exclusive to windows 11 users, unfortunately.
-	**/
-	public static function resetWindowTitleColor(title:String) {
-		#if windows
-		if (getWindowsVersion() != 11) return;
-		title ??= Application.current.window.title;
-		PlatformUtil.setWindowTitleColor(title, [-1, -1, -1, -1]);
-		#end
-	}
-
-	/**
-	 * Forces the window header to redraw, causes a small visual jitter so use it sparingly.
-	 */
-	public static function redrawWindowHeader():Void {
-		#if windows
-		FlxG.stage.window.borderless = true;
-		FlxG.stage.window.borderless = false;
 		#end
 	}
 

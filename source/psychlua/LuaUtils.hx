@@ -44,8 +44,8 @@ class LuaUtils {
 
 			for (i in 1...splitProps.length) {
 				var j:Dynamic = splitProps[i].substr(0, splitProps[i].length - 1);
-				if (i >= splitProps.length - 1) target[j] = value; //Last array
-				else target = target[j]; //Anything else
+				if (i >= splitProps.length - 1) target[j] = value; // Last array
+				else target = target[j]; // Anything else
 			}
 			return target;
 		}
@@ -78,7 +78,7 @@ class LuaUtils {
 			}
 			return target;
 		}
-		
+
 		if (allowMaps && isMap(instance)) return instance.get(variable);
 
 		if (instance is MusicBeatState && MusicBeatState.getVariables().exists(variable)) {
@@ -151,6 +151,7 @@ class LuaUtils {
 		else Reflect.setProperty(leArray, variable, value);
 		return value;
 	}
+
 	public static function getGroupStuff(leArray:Dynamic, variable:String, ?allowMaps:Bool = false):Dynamic {
 		var split:Array<String> = variable.split('.');
 		if (split.length > 1) {
@@ -169,6 +170,7 @@ class LuaUtils {
 		var split:Array<String> = objectName.split('.');
 		return split.length > 1 ? getVarInArray(getPropertyLoop(split, true, allowMaps), split[split.length - 1], allowMaps) : getObjectDirectly(objectName);
 	}
+
 	public static function getPropertyLoop(split:Array<String>, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic {
 		var obj:Dynamic = getObjectDirectly(split[0]);
 		for (i in 1...(getProperty ? split.length - 1 : split.length)) obj = getVarInArray(obj, split[i], allowMaps);
@@ -178,7 +180,7 @@ class LuaUtils {
 	public static function getObjectDirectly(objectName:String, ?allowMaps:Bool = false):Dynamic {
 		switch (objectName) {
 			case 'this' | 'instance' | 'game': return PlayState.instance;
-			
+
 			default:
 				var obj:Dynamic = MusicBeatState.getVariables().get(objectName);
 				if (obj == null) obj = getVarInArray(getTargetInstance(), objectName, allowMaps);
@@ -190,6 +192,7 @@ class LuaUtils {
 		for (type in types) if (Std.isOfType(value, type)) return true;
 		return false;
 	}
+
 	public static function isLuaSupported(value:Any):Bool {
 		return (value == null || isOfTypes(value, [Bool, Int, Float, String, Array]) || Type.typeof(value) == Type.ValueType.TObject);
 	}
@@ -200,6 +203,7 @@ class LuaUtils {
 	}
 
 	static final _lePoint:FlxPoint = FlxPoint.get();
+
 	inline public static function getMousePoint(camera:String, axis:String):Float {
 		FlxG.mouse.getViewPosition(cameraFromString(camera), _lePoint);
 		return (axis == 'y' ? _lePoint.y : _lePoint.x);
@@ -233,7 +237,7 @@ class LuaUtils {
 			group = PlayState.instance.boyfriendGroup;
 			pos = newPos;
 		}
-		
+
 		newPos = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
 		if (newPos < pos) {
 			group = PlayState.instance.dadGroup;
@@ -259,6 +263,7 @@ class LuaUtils {
 		}
 		return false;
 	}
+
 	public static function loadFrames(spr:FlxSprite, image:String, spriteType:String):Void {
 		spr.frames = switch (spriteType.toLowerCase().replace(' ', '')) {
 			case 'aseprite', 'ase', 'json', 'jsoni8': Paths.getAsepriteAtlas(image);
@@ -308,7 +313,7 @@ class LuaUtils {
 		}
 	}
 
-	//buncho string stuffs
+	// buncho string stuffs
 	inline public static function getTweenTypeByString(?type:String = ''):FlxTweenType {
 		return switch (type.toLowerCase().trim()) {
 			case 'backward': FlxTweenType.BACKWARD;
@@ -362,7 +367,7 @@ class LuaUtils {
 	}
 
 	inline public static function blendModeFromString(blend:String):BlendMode
-		return cast (blend.toLowerCase().trim():BlendMode);
+		return cast(blend.toLowerCase().trim() : BlendMode);
 
 	inline public static function axesFromString(axe:String):FlxAxes {
 		try {
@@ -423,6 +428,7 @@ class LuaUtils {
 		return 'unknown';
 		#end
 	}
+
 	public static function getTarget():String {
 		#if cpp
 		return 'C++';

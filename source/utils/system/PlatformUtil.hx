@@ -1,10 +1,14 @@
 package utils.system;
 
+import lime.app.Application;
+import lime.system.System;
+
 #if windows
 @:buildXml('
     <target id="haxe">
         <lib name="dwmapi.lib" if="windows"/>
         <lib name="shell32.lib" if="windows"/>
+		<lib name="gdi32.lib" if="windows"/>
     </target>
 ')
 @:cppFileCode('
@@ -12,6 +16,7 @@ package utils.system;
     #include <stdio.h>
     #include <windows.h>
     #include <winuser.h> // SendMessage
+	#include <wingdi.h>
     #include <dwmapi.h> // DwmSetWindowAttribute
     #include <strsafe.h> // StringCchCopy
     #include <shellapi.h> // Shell_NotifyIcon
@@ -19,6 +24,37 @@ package utils.system;
     #include <iostream>
     #include <thread>
     #include <string>
+
+	const DWMWINDOWATTRIBUTE darkModeAttribute = (DWMWINDOWATTRIBUTE)20;
+	const DWMWINDOWATTRIBUTE darkModeAttributeFallback = (DWMWINDOWATTRIBUTE)19; // Pre-20H1
+
+	struct HandleData {
+		DWORD pid = 0;
+		HWND handle = 0;
+	};
+
+	BOOL CALLBACK findByPID(HWND handle, LPARAM lParam) {
+		DWORD targetPID = ((HandleData*)lParam)->pid;
+		DWORD curPID = 0;
+
+		GetWindowThreadProcessId(handle, &curPID);
+		if (targetPID != curPID || GetWindow(handle, GW_OWNER) != (HWND)0 || !IsWindowVisible(handle)) {
+			return TRUE;
+		}
+
+		((HandleData*)lParam)->handle = handle;
+		return FALSE;
+	}
+
+	HWND curHandle = 0;
+	void getHandle() {
+		if (curHandle == (HWND)0) {
+			HandleData data;
+			data.pid = GetCurrentProcessId();
+			EnumWindows(findByPID, (LPARAM)&data);
+			curHandle = data.handle;
+		}
+	}
 ')
 #elseif linux
 @:cppFileCode('
@@ -36,6 +72,10 @@ package utils.system;
 #end
 
 class PlatformUtil {
+	public static function __init__():Void {
+		registerDPIAware();
+	}
+
 	#if windows
 	@:functionCode('
         NOTIFYICONDATA m_NID;
@@ -131,62 +171,98 @@ class PlatformUtil {
 	#end
 	public static function clearScreen() {}
 
-	#if windows
-	@:functionCode('
-		int darkMode = enable ? 1 : 0;
-		HWND window = FindWindowA(NULL, title.c_str());
+	/**
+	 * Enables or disables dark mode support for the title bar.
+	 * Only works on Windows.
+	 * 
+	 * @param enable Whether to enable or disable dark mode support.
+	 * @param instant Whether to skip the transition tween.
+	 */
+	public static function setWindowDarkMode(enable:Bool = true, instant:Bool = false):Void {
+		#if (cpp && windows)
+		var success:Bool = false;
+		untyped __cpp__('
+			getHandle();
+			if (curHandle != (HWND)0) {
+				const BOOL darkMode = enable ? TRUE : FALSE;
+				if (S_OK == DwmSetWindowAttribute(curHandle, darkModeAttribute, (LPCVOID)&darkMode, (DWORD)sizeof(darkMode)) || S_OK == DwmSetWindowAttribute(curHandle, darkModeAttributeFallback, (LPCVOID)&darkMode, (DWORD)sizeof(darkMode))) {
+					success = true;
+				}
 
-		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str()); // Look for child windows if top level aint found
-		if (window == NULL) window = GetActiveWindow(); // If still not found, try to get the active window
-		if (window == NULL) return;
+				UpdateWindow(curHandle);
+			}
+		');
 
-		if (S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
-			DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
+		if (instant && success) {
+			final curBarColor:Null<FlxColor> = windowBarColor;
+			windowBarColor = FlxColor.BLACK;
+			windowBarColor = curBarColor;
 		}
-		UpdateWindow(window);
-	')
-	#end
-	public static function setDarkMode(title:String, enable:Bool) {}
+		#end
+	}
 
-	#if windows
-	@:functionCode('
-        HWND window = FindWindowA(NULL, title.c_str());
-        if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
-        if (window == NULL) window = GetActiveWindow();
-        if (window == NULL) return;
+	/**
+	 * The color of the window title bar. If `null`, the default is used.
+	 * Only works on Windows.
+	 */
+	public static var windowBarColor(default, set):Null<FlxColor> = null;  
+	public static function set_windowBarColor(value:Null<FlxColor>):Null<FlxColor> {
+		#if (cpp && windows)
+		final intColor:Int = Std.isOfType(value, Int) ? cast FlxColor.fromRGB(value.blue, value.green, value.red, 0) : 0xffffffff;
+		untyped __cpp__('
+			getHandle();
+			if (curHandle != (HWND)0) {
+				const COLORREF targetColor = (COLORREF)intColor;
+				DwmSetWindowAttribute(curHandle, DWMWINDOWATTRIBUTE::DWMWA_CAPTION_COLOR, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				UpdateWindow(curHandle);
+			}
+		');
+		#end
 
-        COLORREF finalColor;
-        if (color[0] == -1 && color[1] == -1 && color[2] == -1 && color[3] == -1) { // bad fix, I know :sob:
-            finalColor = 0xFFFFFFFF; // Default border
-        } else if (color[3] == 0)
-            finalColor = 0xFFFFFFFE; // No border (must have setBorder as true)
-        else finalColor = RGB(color[0], color[1], color[2]); // Use your custom color
+		return windowBarColor = value;
+	}
 
-        if (setHeader) DwmSetWindowAttribute(window, 35, &finalColor, sizeof(COLORREF));
-        if (setBorder) DwmSetWindowAttribute(window, 34, &finalColor, sizeof(COLORREF));
+	/**
+	 * The color of the window title bar text. If `null`, the default is used.
+	 * Only works on Windows.
+	 */
+	public static var windowTextColor(default, set):Null<FlxColor> = null;
+	public static function set_windowTextColor(value:Null<FlxColor>):Null<FlxColor> {
+		#if (cpp && windows)
+		final intColor:Int = Std.isOfType(value, Int) ? cast FlxColor.fromRGB(value.blue, value.green, value.red, 0) : 0xffffffff;
+		untyped __cpp__('
+			getHandle();
+			if (curHandle != (HWND)0) {
+				const COLORREF targetColor = (COLORREF)intColor;
+				DwmSetWindowAttribute(curHandle, DWMWINDOWATTRIBUTE::DWMWA_TEXT_COLOR, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				UpdateWindow(curHandle);
+			}
+		');
+		#end
 
-        UpdateWindow(window);
-	')
-	#end
-	public static function setWindowBorderColor(title:String, color:Array<Int>, setHeader:Bool = true, setBorder:Bool = true) {}
+		return windowTextColor = value;
+	}
 
-	#if windows
-	@:functionCode('
-        HWND window = FindWindowA(NULL, title.c_str());
-        if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
-        if (window == NULL) window = GetActiveWindow();
-        if (window == NULL) return;
+	/**
+	 * The color of the window border. If `null`, the default is used.
+	 * Only works on Windows.
+	 */
+	public static var windowBorderColor(default, set):Null<FlxColor> = null;
+	public static function set_windowBorderColor(value:Null<FlxColor>):Null<FlxColor> {
+		#if (cpp && windows)
+		final intColor:Int = Std.isOfType(value, Int) ? cast FlxColor.fromRGB(value.blue, value.green, value.red, 0) : 0xffffffff;
+		untyped __cpp__('
+			getHandle();
+			if (curHandle != (HWND)0) {
+				const COLORREF targetColor = (COLORREF)intColor;
+				DwmSetWindowAttribute(curHandle, DWMWINDOWATTRIBUTE::DWMWA_BORDER_COLOR, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				UpdateWindow(curHandle);
+			}
+		');
+		#end
 
-        COLORREF finalColor;
-        if (color[0] == -1 && color[1] == -1 && color[2] == -1 && color[3] == -1) { // bad fix, I know :sob:
-            finalColor = 0xFFFFFFFF; // Default border
-        } else finalColor = RGB(color[0], color[1], color[2]); // Use your custom color
-
-        DwmSetWindowAttribute(window, 36, &finalColor, sizeof(COLORREF));
-        UpdateWindow(window);
-	')
-	#end
-	public static function setWindowTitleColor(title:String, color:Array<Int>) {}
+		return windowBorderColor = value;
+	}
 
 	#if windows
 	@:functionCode('return FindWindowA(className.c_str(), windowName.c_str()) != NULL;')
@@ -228,10 +304,48 @@ class PlatformUtil {
 	@:functionCode('return std::thread::hardware_concurrency();')
 	public static function getCPUThreadsCount():Int return -1;
 
-	#if windows
-	@:functionCode('return SetProcessDPIAware();')
-	#end
-	public static function setDPIAware():Bool return false;
+	public static function registerDPIAware():Void {
+		#if (cpp && windows)
+		// DPI Scaling fix for windows 
+		// this shouldn't be needed for other systems
+		// Credit to YoshiCrafter29 for finding this function
+		untyped __cpp__('
+			BOOL success = SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+			if (!success) success = SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE);
+			if (!success) success = SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_SYSTEM_AWARE);
+			if (!success) SetProcessDPIAware();
+		');
+		#end
+	}
+
+	static var fixedScaling:Bool = false;
+	public static function fixScaling():Void {
+		if (fixedScaling) return;
+		fixedScaling = true;
+
+		#if (cpp && windows)
+		final display:Null<lime.system.Display> = System.getDisplay(0);
+		if (display != null) {
+			final dpiScale:Float = display.dpi / 96;
+			@:privateAccess Application.current.window.width = Std.int(Main.game.width * dpiScale);
+			@:privateAccess Application.current.window.height = Std.int(Main.game.height * dpiScale);
+
+			Application.current.window.x = Std.int((Application.current.window.display.bounds.width - Application.current.window.width) / 2);
+			Application.current.window.y = Std.int((Application.current.window.display.bounds.height - Application.current.window.height) / 2);
+		}
+
+		untyped __cpp__('
+			getHandle();
+			if (curHandle != (HWND)0) {
+				HDC curHDC = GetDC(curHandle);
+				RECT curRect;
+				GetClientRect(curHandle, &curRect);
+				FillRect(curHDC, &curRect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+				ReleaseDC(curHandle, curHDC);
+			}
+		');
+		#end
+	}
 }
 
 enum abstract MessageBoxIcon(Int) {

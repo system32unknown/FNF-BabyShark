@@ -6,7 +6,6 @@ import lime.app.Application;
 import alterhscript.AlterHscript;
 import hscript.Expr.Error as AlterError;
 import hscript.Printer;
-
 import haxe.ValueException;
 
 typedef HScriptInfos = {
@@ -69,7 +68,7 @@ class HScript extends AlterHscript {
 			this.origin = filePath;
 			#if MODS_ALLOWED
 			var myFolder:Array<String> = filePath.split('/');
-			if ('${myFolder[0]}/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) //is inside mods folder
+			if ('${myFolder[0]}/' == Paths.mods() && (Mods.currentModDirectory == myFolder[1] || Mods.getGlobalMods().contains(myFolder[1]))) // is inside mods folder
 				this.modFolder = myFolder[1];
 			#end
 		}
@@ -108,95 +107,94 @@ class HScript extends AlterHscript {
 	}
 
 	var varsToBring(default, set):Any = null;
-    function getDefaultVariables():Map<String, Dynamic> {
-        return [
-			"Type"				=> Type,
-			"Sys"				=> Sys,
-			"Date"				=> Date,
-			"DateTools"			=> DateTools,
-			"Reflect"			=> Reflect,
-			"HScript"			=> HScript,
-            "Xml"               => Xml,
-			"EReg"				=> EReg,
-			"Lambda"			=> Lambda,
+
+	function getDefaultVariables():Map<String, Dynamic> {
+		return [
+			"Type" => Type,
+			"Sys" => Sys,
+			"Date" => Date,
+			"DateTools" => DateTools,
+			"Reflect" => Reflect,
+			"HScript" => HScript,
+			"Xml" => Xml,
+			"EReg" => EReg,
+			"Lambda" => Lambda,
 
 			#if flxanimate
-			"FlxAnimate"		=> FlxAnimate,
+			"FlxAnimate" => FlxAnimate,
 			#end
 
 			// Sys related stuff
 			#if sys
-			"File"				=> File,
-			"FileSystem"		=> FileSystem,
+			"File" => File, "FileSystem" => FileSystem,
 			#end
-			"Assets"			=> openfl.Assets,
+			"Assets" => openfl.Assets,
 
-            // OpenFL & Lime related stuff
-            "Application"       => Application,
-            "window"            => Application.current.window,
+			// OpenFL & Lime related stuff
+			"Application" => Application,
+			"window" => Application.current.window,
 
-            // Flixel related stuff
-            "FlxG"              => FlxG,
-            "FlxSprite"         => FlxSprite,
-            "FlxBasic"          => FlxBasic,
-            "FlxCamera"         => FlxCamera,
-			"PsychCamera"		=> backend.PsychCamera,
-            "FlxTween"          => FlxTween,
-            "FlxEase"           => FlxEase,
-            "FlxPoint"          => getClassHSC('flixel.math.FlxPoint'),
-            "FlxAxes"           => getClassHSC('flixel.util.FlxAxes'),
-            "FlxColor"          => getClassHSC('flixel.util.FlxColor'),
-            "FlxKey"            => getClassHSC('flixel.input.keyboard.FlxKey'),
-            "FlxSound"          => FlxSound,
-            "FlxAssets"         => flixel.system.FlxAssets,
-            "FlxMath"           => FlxMath,
-            "FlxGroup"          => flixel.group.FlxGroup,
-            "FlxTypedGroup"     => FlxTypedGroup,
-            "FlxSpriteGroup"    => FlxSpriteGroup,
-            "FlxTypeText"       => flixel.addons.text.FlxTypeText,
-            "FlxText"           => FlxText,
-            "FlxTimer"          => FlxTimer,
+			// Flixel related stuff
+			"FlxG" => FlxG,
+			"FlxSprite" => FlxSprite,
+			"FlxBasic" => FlxBasic,
+			"FlxCamera" => FlxCamera,
+			"PsychCamera" => backend.PsychCamera,
+			"FlxTween" => FlxTween,
+			"FlxEase" => FlxEase,
+			"FlxPoint" => getClassHSC('flixel.math.FlxPoint'),
+			"FlxAxes" => getClassHSC('flixel.util.FlxAxes'),
+			"FlxColor" => getClassHSC('flixel.util.FlxColor'),
+			"FlxKey" => getClassHSC('flixel.input.keyboard.FlxKey'),
+			"FlxSound" => FlxSound,
+			"FlxAssets" => flixel.system.FlxAssets,
+			"FlxMath" => FlxMath,
+			"FlxGroup" => flixel.group.FlxGroup,
+			"FlxTypedGroup" => FlxTypedGroup,
+			"FlxSpriteGroup" => FlxSpriteGroup,
+			"FlxTypeText" => flixel.addons.text.FlxTypeText,
+			"FlxText" => FlxText,
+			"FlxTimer" => FlxTimer,
 
-            // Engine related stuff
-			"Countdown"			=> backend.BaseStage.Countdown,
-            "PlayState"         => PlayState,
-            "Note"              => objects.Note,
-			"CustomSubstate"	=> CustomSubstate,
-            "NoteSplash"        => objects.NoteSplash,
-            "HealthIcon"        => objects.HealthIcon,
-            "StrumLine"         => objects.StrumNote,
-            "Character"         => objects.Character,
-            "Paths"             => Paths,
-            "Conductor"         => Conductor,
-            "Alphabet"          => Alphabet,
-			"DeltaTrail" 		=> objects.DeltaTrail,
+			// Engine related stuff
+			"Countdown" => backend.BaseStage.Countdown,
+			"PlayState" => PlayState,
+			"Note" => objects.Note,
+			"CustomSubstate" => CustomSubstate,
+			"NoteSplash" => objects.NoteSplash,
+			"HealthIcon" => objects.HealthIcon,
+			"StrumLine" => objects.StrumNote,
+			"Character" => objects.Character,
+			"Paths" => Paths,
+			"Conductor" => Conductor,
+			"Alphabet" => Alphabet,
+			"DeltaTrail" => objects.DeltaTrail,
 			#if ACHIEVEMENTS_ALLOWED
-			"Achievements" 		=> Achievements,
+			"Achievements" => Achievements,
 			#end
 
-            "CoolUtil"          => CoolUtil,
-            "ClientPrefs"       => ClientPrefs,
+			"CoolUtil" => CoolUtil,
+			"ClientPrefs" => ClientPrefs,
 
 			#if (!flash && sys)
-			"FlxRuntimeShader"  => flixel.addons.display.FlxRuntimeShader,
-			"ErrorHandledRuntimeShader" => shaders.ErrorHandledShader.ErrorHandledRuntimeShader,
+			"FlxRuntimeShader" => flixel.addons.display.FlxRuntimeShader, "ErrorHandledRuntimeShader" => shaders.ErrorHandledShader.ErrorHandledRuntimeShader,
 			#end
-			'ShaderFilter'		=> openfl.filters.ShaderFilter,
+			'ShaderFilter' => openfl.filters.ShaderFilter,
 
-			"version" 			=> Main.engineVer.version.trim(),
-            "engine" => {
+			"version" => Main.engineVer.version.trim(),
+			"engine" => {
 				app_version: Application.current.meta.get('version'),
-                commit: macros.GitCommitMacro.commitNumber,
-                hash: macros.GitCommitMacro.commitHash.trim(),
-                name: "Alter Engine"
-            }
-        ];
-    }
+				commit: macros.GitCommitMacro.commitNumber,
+				hash: macros.GitCommitMacro.commitHash.trim(),
+				name: "Alter Engine"
+			}
+		];
+	}
 
 	override function preset() {
 		super.preset();
 		parser.preprocessorValues = getDefaultPreprocessors();
-        for (key => type in getDefaultVariables()) set(key, type);
+		for (key => type in getDefaultVariables()) set(key, type);
 
 		// Functions & Variables
 		set('setVar', (name:String, value:Dynamic) -> {
@@ -293,32 +291,32 @@ class HScript extends AlterHscript {
 
 			FlxG.sound.music?.stop();
 			var hxFile:String = Paths.getPath('scripts/states/$name.hx');
-            if (FileSystem.exists(hxFile)) FlxG.switchState(() -> new states.HscriptState(hxFile));
-            else {
-                try {
-                    final rawClass:Class<Dynamic> = Type.resolveClass(name);
-                    if (rawClass == null) return; 
-                    FlxG.switchState(() -> cast (Type.createInstance(rawClass, []), flixel.FlxState));
-                } catch (e:AlterError) {
-                    Logs.trace('$e: Unspecified result for switching state "$name", could not switch states!', ERROR);
-                    return;
-                }
-            }
-        });
-        set("openSubState", (name:String, args:Array<Dynamic>) -> {
-			var hxFile:String = Paths.getPath('scripts/substates/$name.hx');
-            if (FileSystem.exists(hxFile)) FlxG.state.openSubState(new substates.HscriptSubstate(hxFile, args));
-            else {
-                try {
-                    final rawClass:Class<Dynamic> = Type.resolveClass(name);
+			if (FileSystem.exists(hxFile)) FlxG.switchState(() -> new states.HscriptState(hxFile));
+			else {
+				try {
+					final rawClass:Class<Dynamic> = Type.resolveClass(name);
 					if (rawClass == null) return;
-                    FlxG.state.openSubState(cast (Type.createInstance(rawClass, args), FlxSubState));
-                } catch (e:Dynamic) {
-                    Logs.trace('$e: Unspecified result for opening substate "$name", could not be opened!', ERROR);
-                    return;
-                }
-            }
-        });
+					FlxG.switchState(() -> cast(Type.createInstance(rawClass, []), flixel.FlxState));
+				} catch (e:AlterError) {
+					Logs.trace('$e: Unspecified result for switching state "$name", could not switch states!', ERROR);
+					return;
+				}
+			}
+		});
+		set("openSubState", (name:String, args:Array<Dynamic>) -> {
+			var hxFile:String = Paths.getPath('scripts/substates/$name.hx');
+			if (FileSystem.exists(hxFile)) FlxG.state.openSubState(new substates.HscriptSubstate(hxFile, args));
+			else {
+				try {
+					final rawClass:Class<Dynamic> = Type.resolveClass(name);
+					if (rawClass == null) return;
+					FlxG.state.openSubState(cast(Type.createInstance(rawClass, args), FlxSubState));
+				} catch (e:Dynamic) {
+					Logs.trace('$e: Unspecified result for opening substate "$name", could not be opened!', ERROR);
+					return;
+				}
+			}
+		});
 
 		set('close', destroy);
 		set('this', this);
@@ -331,7 +329,7 @@ class HScript extends AlterHscript {
 
 		set('Function_Stop', LuaUtils.Function_Stop);
 		set('Function_Continue', LuaUtils.Function_Continue);
-		set('Function_StopLua', LuaUtils.Function_StopLua); //doesnt do much cuz HScript has a lower priority than Lua
+		set('Function_StopLua', LuaUtils.Function_StopLua); // doesnt do much cuz HScript has a lower priority than Lua
 		set('Function_StopHScript', LuaUtils.Function_StopHScript);
 		set('Function_StopAll', LuaUtils.Function_StopAll);
 
@@ -369,6 +367,7 @@ class HScript extends AlterHscript {
 		#if LUA_ALLOWED FunkinLua.lastCalledScript = prevLua; #end
 		return result;
 	}
+
 	public override function parse(force:Bool = false) {
 		return super.parse(force);
 	}

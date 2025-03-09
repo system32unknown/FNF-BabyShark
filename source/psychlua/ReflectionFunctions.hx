@@ -203,7 +203,7 @@ class ReflectionFunctions {
 		});
 	}
 
-	static function parseInstanceArray(arg:Array<Dynamic>) {
+	static function parseInstanceArray(arg:Array<Dynamic>):Array<Dynamic> {
 		var newArray:Array<Dynamic> = [];
 		for (val in arg) newArray.push(parseInstances(val));
 		return newArray;

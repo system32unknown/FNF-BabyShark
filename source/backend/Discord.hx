@@ -238,7 +238,7 @@ final class DUser {
 		d.avatar = userData.avatar;
 		d.globalName = userData.globalName;
 		d.bot = userData.bot;
-		d.premiumType = cast (userData.premiumType.toInt(), NitroType);
+		d.premiumType = cast(userData.premiumType.toInt(), NitroType);
 
 		if (d.discriminator != 0) d.handle = '${d.username}#${d.discriminator}';
 		else d.handle = d.username;

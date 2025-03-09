@@ -27,7 +27,7 @@ class CrashHandler {
 	static function onError(message:String):Void {
 		final path:String = './crash/${FlxG.stage.application.meta.get('file')}_${Date.now().toString().replace(" ", "_").replace(":", "'")}.txt';
 		final defines:Map<String, Dynamic> = macros.DefinesMacro.defines;
-		
+
 		var errMsg:String = getError();
 		errMsg += '\nPlatform: ${System.platformLabel} ${System.platformVersion} [Target: ${psychlua.LuaUtils.getTarget()}]';
 		errMsg += '\nFlixel Current State: ${Type.getClassName(Type.getClass(FlxG.state))}';

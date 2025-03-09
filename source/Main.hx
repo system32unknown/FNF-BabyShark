@@ -5,13 +5,11 @@ import flixel.input.keyboard.FlxKey;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
 import debug.FPSCounter;
-
 #if HSCRIPT_ALLOWED
 import alterhscript.AlterHscript;
 import psychlua.HScript.HScriptInfos;
 import haxe.PosInfos;
 #end
-
 #if desktop
 import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since it's not directly referenced anywhere else.
 #end
@@ -24,7 +22,7 @@ class Main extends Sprite {
 	public static var engineVer:GameVersion = new GameVersion(0, 1, 5);
 	public static var fnfVer:GameVersion = new GameVersion(0, 5, 3);
 
-	public static var game = {
+	public static final game = {
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height
 		initialState: states.TitleState, // initial game state
@@ -41,7 +39,7 @@ class Main extends Sprite {
 
 	public function new() {
 		super();
-		utils.system.NativeUtil.registerDPIAware(game.width, game.height);
+		utils.system.PlatformUtil.fixScaling();
 		#if linux openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
@@ -52,7 +50,7 @@ class Main extends Sprite {
 			AlterHscript.logLevel(WARN, x, pos);
 			var newPos:HScriptInfos = cast pos;
 			if (newPos.showLine == null) newPos.showLine = true;
-			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '')  + '${newPos.fileName}:';
+			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '') + '${newPos.fileName}:';
 			#if LUA_ALLOWED
 			if (newPos.isLua == true) {
 				msgInfo += 'HScript:';
@@ -67,7 +65,7 @@ class Main extends Sprite {
 			AlterHscript.logLevel(ERROR, x, pos);
 			var newPos:HScriptInfos = cast pos;
 			if (newPos.showLine == null) newPos.showLine = true;
-			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '')  + '${newPos.fileName}:';
+			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '') + '${newPos.fileName}:';
 			#if LUA_ALLOWED
 			if (newPos.isLua == true) {
 				msgInfo += 'HScript:';
@@ -82,7 +80,7 @@ class Main extends Sprite {
 			AlterHscript.logLevel(FATAL, x, pos);
 			var newPos:HScriptInfos = cast pos;
 			if (newPos.showLine == null) newPos.showLine = true;
-			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '')  + '${newPos.fileName}:';
+			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '') + '${newPos.fileName}:';
 			#if LUA_ALLOWED
 			if (newPos.isLua == true) {
 				msgInfo += 'HScript:';
@@ -119,10 +117,13 @@ class Main extends Sprite {
 			}
 		});
 		FlxG.signals.gameResized.add((w:Int, h:Int) -> {
-			if (FlxG.cameras != null) for (cam in FlxG.cameras.list) {
-				if (cam != null && cam.filters != null) resetSpriteCache(cam.flashSprite);
-			}
-			if (FlxG.game != null) resetSpriteCache(FlxG.game);
+			if (FlxG.cameras != null)
+				for (cam in FlxG.cameras.list) {
+					if (cam != null && cam.filters != null)
+						resetSpriteCache(cam.flashSprite);
+				}
+			if (FlxG.game != null)
+				resetSpriteCache(FlxG.game);
 			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
 		});
 		#if VIDEOS_ALLOWED hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0") ['--no-lua'] #end); #end

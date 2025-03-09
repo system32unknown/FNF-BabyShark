@@ -98,7 +98,7 @@ class PsychUIBox extends FlxSpriteGroup {
 		if (forceCheckNext || FlxG.mouse.justMoved || FlxG.mouse.justPressed || FlxG.mouse.justReleased) {
 			forceCheckNext = false;
 			for (tab in tabs) {
-				if (FlxG.mouse.overlaps(tab, camera)) {
+				if (FlxG.mouse.overlaps(tab, camera) && PsychUIInputText.focusOn == null) {
 					tab.color = hoverStyle.bgColor;
 					tab.alpha = hoverStyle.bgAlpha;
 					tab.text.color = hoverStyle.textColor;

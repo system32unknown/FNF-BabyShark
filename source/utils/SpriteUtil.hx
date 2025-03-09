@@ -14,11 +14,12 @@ class SpriteUtil {
 
 		for (col in 0...sprite.frameWidth) {
 			for (row in 0...sprite.frameHeight) {
-			  	color = sprite.pixels.getPixel32(col, row);
-                fixedColor = FlxColor.BLACK + (color % 0x1000000);
-                if (colorMap[fixedColor] == null) colorMap[fixedColor] = 0;
+				color = sprite.pixels.getPixel32(col, row);
+				fixedColor = FlxColor.BLACK + (color % 0x1000000);
+				if (colorMap[fixedColor] == null) colorMap[fixedColor] = 0;
 
-				if (saturated) colorMap[fixedColor] += color.alphaFloat * .33 + (.67 * (color.saturation * (2 * (color.lightness > .5 ? .5 - color.lightness : color.lightness))));
+				if (saturated)
+					colorMap[fixedColor] += color.alphaFloat * .33 + (.67 * (color.saturation * (2 * (color.lightness > .5 ? .5 - color.lightness : color.lightness))));
 				else colorMap[fixedColor] += color.alphaFloat;
 			}
 		}
@@ -33,18 +34,18 @@ class SpriteUtil {
 		return FlxColor.fromInt(mostPresentColor);
 	}
 
-    /**
-     * Determines the dominant color in a sprite by counting occurrences.
-     * @param sprite The sprite to analyze
-     * @return The most frequent color with full opacity
-     */
+	/**
+	 * Determines the dominant color in a sprite by counting occurrences.
+	 * @param sprite The sprite to analyze
+	 * @return The most frequent color with full opacity
+	 */
 	public static function dominantColor(sprite:flixel.FlxSprite):FlxColor {
 		var countByColor:Map<Int, Int> = [];
 		for (col in 0...sprite.frameWidth) {
 			for (row in 0...sprite.frameHeight) {
 				var colorOfThisPixel:FlxColor = sprite.pixels.getPixel32(col, row);
 				if (colorOfThisPixel.alphaFloat < .05) continue;
-	
+
 				colorOfThisPixel = FlxColor.fromRGB(colorOfThisPixel.red, colorOfThisPixel.green, colorOfThisPixel.blue, 255);
 				var count:Int = countByColor.exists(colorOfThisPixel) ? countByColor[colorOfThisPixel] : 0;
 				countByColor[colorOfThisPixel] = count + 1;

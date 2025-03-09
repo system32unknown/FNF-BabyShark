@@ -45,9 +45,9 @@ class Character extends FlxSprite {
 	public var heyTimer:Float = 0;
 	public var specialAnim:Bool = false;
 	public var stunned:Bool = false;
-	public var singDuration:Float = 4; //Multiplier of how long a character holds the sing pose
+	public var singDuration:Float = 4; // Multiplier of how long a character holds the sing pose
 	public var idleSuffix(default, set):String = '';
-	public var danceIdle:Bool = false; //Character use "danceLeft" and "danceRight" instead of "idle"
+	public var danceIdle:Bool = false; // Character use "danceLeft" and "danceRight" instead of "idle"
 	public var skipDance:Bool = false;
 
 	public var healthIcon:String = 'face';
@@ -62,7 +62,7 @@ class Character extends FlxSprite {
 
 	public var hasMissAnimations:Bool = false;
 
-	//Used on Character Editor
+	// Used on Character Editor
 	public var imageFile:String = '';
 	public var jsonScale:Float = 1;
 	public var noAntialiasing:Bool = false;
@@ -71,6 +71,7 @@ class Character extends FlxSprite {
 
 	public var prevCrochet:Float;
 	public var charaCrochet:Float;
+
 	final targetCrochet:Float = .075;
 
 	public function new(x:Float, y:Float, ?character:String = DEFAULT_CHARACTER, ?isPlayer:Bool = false, ?library:String) {
@@ -191,7 +192,7 @@ class Character extends FlxSprite {
 
 			if (json.flipX != null) flipX = (json.flipX != isPlayer);
 
-			//place holder icon to grab the color.
+			// place holder icon to grab the color.
 			var icon:HealthIcon = new HealthIcon(healthIcon, false, false);
 			var coolColor:FlxColor = FlxColor.fromInt(utils.SpriteUtil.dominantColor(icon));
 			icon.destroy();
@@ -207,9 +208,9 @@ class Character extends FlxSprite {
 			antialiasing = ClientPrefs.data.antialiasing ? !noAntialiasing : false;
 
 			// animations
-			var base_animationsArray:Array<Dynamic> = []; 
+			var base_animationsArray:Array<Dynamic> = [];
 			base_animationsArray = json.animations;
-			if(base_animationsArray != null && base_animationsArray.length > 0) {
+			if (base_animationsArray != null && base_animationsArray.length > 0) {
 				for (anim in base_animationsArray) {
 					animationsArray.push({
 						anim: anim.name,
@@ -227,7 +228,7 @@ class Character extends FlxSprite {
 				var animAnim:String = '' + anim.anim;
 				var animName:String = '' + anim.name;
 				var animFps:Int = anim.fps;
-				var animLoop:Bool = !!anim.loop; //Bruh
+				var animLoop:Bool = !!anim.loop; // Bruh
 				var animIndices:Array<Int> = anim.indices;
 
 				if (!isAnimateAtlas) {
@@ -242,7 +243,7 @@ class Character extends FlxSprite {
 					else atlas.anim.addBySymbol(animAnim, animName, animFps, animLoop);
 				}
 				#end
-	
+
 				if (anim.offsets != null && anim.offsets.length > 1) addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
 				else addOffset(anim.anim);
 			}
@@ -284,7 +285,7 @@ class Character extends FlxSprite {
 			dance();
 			finishAnimation();
 		}
-		
+
 		if (getAnimationName().startsWith('sing')) holdTimer += elapsed;
 		else if (isPlayer) holdTimer = 0;
 
@@ -338,13 +339,14 @@ class Character extends FlxSprite {
 		if (isAnimationNull()) return false;
 		return !isAnimateAtlas ? animation.curAnim.paused : atlas.anim.isPlaying;
 	}
+
 	function set_animPaused(value:Bool):Bool {
 		if (isAnimationNull()) return value;
 		if (!isAnimateAtlas) animation.curAnim.paused = value;
 		else {
 			if (value) atlas.pauseAnimation();
 			else atlas.resumeAnimation();
-		} 
+		}
 
 		return value;
 	}
@@ -353,6 +355,7 @@ class Character extends FlxSprite {
 		*FOR GF DANCING SHIT
 	**/
 	public var danced:Bool = false;
+
 	public function dance(force:Bool = false, reversed:Bool = false, frame:Int = 0) {
 		if (debugMode || skipDance || specialAnim) return;
 
@@ -385,11 +388,12 @@ class Character extends FlxSprite {
 				danced = !danced;
 			else if (animName.startsWith('sing'))
 				danced = animName == 'singLEFT';
-		}		
+		}
 	}
 
 	public var danceEveryNumBeats:Int = 2;
 	var settingCharacterUp:Bool = true;
+
 	public function recalculateDanceIdle() {
 		final lastDanceIdle:Bool = danceIdle;
 		danceIdle = (hasAnimation('danceLeft' + idleSuffix) && hasAnimation('danceRight' + idleSuffix));
@@ -423,6 +427,7 @@ class Character extends FlxSprite {
 	public var isAnimateAtlas(default, null):Bool = false;
 	#if flxanimate
 	public var atlas:FlxAnimate;
+
 	public override function draw() {
 		var lastAlpha:Float = alpha;
 		var lastColor:FlxColor = color;
