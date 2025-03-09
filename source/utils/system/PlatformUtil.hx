@@ -212,10 +212,10 @@ class PlatformUtil {
 			getHandle();
 			if (curHandle != (HWND)0) {
 				const COLORREF targetColor = (COLORREF)intColor;
-				DwmSetWindowAttribute(curHandle, DWMWINDOWATTRIBUTE::DWMWA_CAPTION_COLOR, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				DwmSetWindowAttribute(curHandle, 35, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
 				UpdateWindow(curHandle);
 			}
-		');
+		'); // DWMWA_TEXT_COLOR is 35 because it's windows 10 and 11. if they fail then that is OK.
 		#end
 
 		return windowBarColor = value;
@@ -233,10 +233,10 @@ class PlatformUtil {
 			getHandle();
 			if (curHandle != (HWND)0) {
 				const COLORREF targetColor = (COLORREF)intColor;
-				DwmSetWindowAttribute(curHandle, DWMWINDOWATTRIBUTE::DWMWA_TEXT_COLOR, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				DwmSetWindowAttribute(curHandle, 36, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
 				UpdateWindow(curHandle);
 			}
-		');
+		'); // DWMWA_TEXT_COLOR is 36 because it's windows 10 and 11. if they fail then that is OK.
 		#end
 
 		return windowTextColor = value;
@@ -254,10 +254,10 @@ class PlatformUtil {
 			getHandle();
 			if (curHandle != (HWND)0) {
 				const COLORREF targetColor = (COLORREF)intColor;
-				DwmSetWindowAttribute(curHandle, DWMWINDOWATTRIBUTE::DWMWA_BORDER_COLOR, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				DwmSetWindowAttribute(curHandle, 34, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
 				UpdateWindow(curHandle);
 			}
-		');
+		'); // DWMWA_BORDER_COLOR is 34 because it's windows 10 and 11. if they fail then that is OK.
 		#end
 
 		return windowBorderColor = value;
