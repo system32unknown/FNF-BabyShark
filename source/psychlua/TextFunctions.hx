@@ -1,7 +1,7 @@
 package psychlua;
 
 class TextFunctions {
-    public static function implement(funk:FunkinLua) {
+	public static function implement(funk:FunkinLua) {
 		funk.set("makeLuaText", function(tag:String, ?text:String = '', ?width:Int = 0, ?x:Float = 0, ?y:Float = 0) {
 			tag = tag.replace('.', '');
 			LuaUtils.destroyObject(tag);
@@ -152,5 +152,5 @@ class TextFunctions {
 				variables.remove(tag);
 			}
 		});
-    }
+	}
 }

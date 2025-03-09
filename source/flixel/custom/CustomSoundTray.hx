@@ -87,10 +87,10 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 
 	/**
 	 * Shows the volume animation for the desired settings
-	 * @param   volume    The volume, 1.0 is full volume
-	 * @param   sound     The sound to play, if any
-	 * @param   duration  How long the tray will show
-	 * @param   label     The test label to display
+	 * @param volume The volume, 1.0 is full volume
+	 * @param sound The sound to play, if any
+	 * @param duration How long the tray will show
+	 * @param label The test label to display
 	 */
 	public override function showAnim(volume:Float, ?sound:FlxSoundAsset, duration = 1.0, ?label:String):Void {
 		if (sound != null) FlxG.sound.play(FlxG.assets.getSoundAddExt(sound));

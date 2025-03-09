@@ -249,11 +249,10 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		playbackBG.scale.x = playbackTxt.width + 30;
 		playbackBG.x = songBG.x - (songBG.scale.x / 2);
 		playbackBG.x -= playbackBG.scale.x;
-
-        playbackTxt.setPosition(playbackBG.x - playbackTxt.width / 2, playbackTxt.height);
+		playbackTxt.setPosition(playbackBG.x - playbackTxt.width / 2, playbackTxt.height);
 
 		progressBar.setGraphicSize(Std.int(songTxt.width), 5);
-        progressBar.setPosition(songTxt.x + songTxt.width / 2 - 15, songTxt.y + songTxt.height + 10);
+		progressBar.setPosition(songTxt.x + songTxt.width / 2 - 15, songTxt.y + songTxt.height + 10);
 		if (shortName) {
 			progressBar.scale.x += length / 2;
 			progressBar.x -= length - 10;
@@ -261,7 +260,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 
 		for (i in 0...2) {
 			var text:FlxText = playbackSymbols[i];
-            text.setPosition(playbackTxt.x + playbackTxt.width / 2 - 10, playbackTxt.y);
+			text.setPosition(playbackTxt.x + playbackTxt.width / 2 - 10, playbackTxt.y);
 
 			if (i == 0) text.y -= playbackTxt.height;
 			else text.y += playbackTxt.height;

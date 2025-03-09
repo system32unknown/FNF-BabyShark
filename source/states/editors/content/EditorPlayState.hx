@@ -116,7 +116,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		var splash:NoteSplash = new NoteSplash();
 		grpNoteSplashes.add(splash);
 		splash.alpha = .000001; // cant make it invisible or it won't allow precaching
-        noteGroup.add(grpNoteSplashes);
+		noteGroup.add(grpNoteSplashes);
 
 		opponentStrums = new FlxTypedGroup<StrumNote>();
 		playerStrums = new FlxTypedGroup<StrumNote>();
@@ -274,7 +274,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	// Borrowed from PlayState
 	function generateSong() {
 		songSpeed = switch (ClientPrefs.getGameplaySetting('scrolltype')) {
-			case "multiplicative":  PlayState.SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
+			case "multiplicative": PlayState.SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed');
 			case "constant": songSpeed = ClientPrefs.getGameplaySetting('scrollspeed');
 			default: PlayState.SONG.speed;
 		}
@@ -350,7 +350,7 @@ class EditorPlayState extends MusicBeatSubstate {
 					if (sustainNote.mustPress) sustainNote.x += FlxG.width / 2; // general offset
 					else if (middleScroll) {
 						sustainNote.x += 310;
-						if (sustainNote.noteData > 1) sustainNote.x += FlxG.width / 2 + 25;  // Up and Right
+						if (sustainNote.noteData > 1) sustainNote.x += FlxG.width / 2 + 25; // Up and Right
 					}
 				}
 			}
@@ -365,7 +365,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 	
 	function generateStaticArrows(player:Int):Void {
-        var strumLine:FlxPoint = FlxPoint.get(middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, downScroll ? (FlxG.height - 150) : 50);
+		var strumLine:FlxPoint = FlxPoint.get(middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X, downScroll ? (FlxG.height - 150) : 50);
 		for (i in 0...4) {
 			var targetAlpha:Float = 1;
 			if (player < 1) {
@@ -386,7 +386,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			strumLineNotes.add(babyArrow);
 			babyArrow.playerPosition();
 		}
-        strumLine.put();
+		strumLine.put();
 	}
 
 	public function finishSong():Void {
@@ -433,7 +433,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 		var uiFolder:String = "";
 		var antialias:Bool = ClientPrefs.data.antialiasing;
-        final mult:Float = .7;
+		final mult:Float = .7;
 
 		var comboOffset:Array<Array<Int>> = ClientPrefs.data.comboOffset;
 		var rating:FlxSprite = null;
@@ -532,7 +532,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	function opponentNoteHit(note:Note):Void {
 		if (PlayState.SONG.needsVoices) vocals.volume = 1;
-        strumPlayAnim(true, Std.int(Math.abs(note.noteData)), Conductor.stepCrochet * 1.25 / 1000);
+		strumPlayAnim(true, Std.int(Math.abs(note.noteData)), Conductor.stepCrochet * 1.25 / 1000);
 		note.hitByOpponent = true;
 		if (!note.isSustainNote) invalidateNote(note);
 	}
@@ -546,9 +546,9 @@ class EditorPlayState extends MusicBeatSubstate {
 		if (note.hitCausesMiss) {
 			noteMiss(note);
 			if (!note.isSustainNote) {
-                if (!note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
-                invalidateNote(note);
-            } 
+				if (!note.noteSplashData.disabled) spawnNoteSplashOnNote(note);
+				invalidateNote(note);
+			} 
 			return;
 		}
 

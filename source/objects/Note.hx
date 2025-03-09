@@ -177,7 +177,7 @@ class Note extends FlxSprite {
 				alpha = multAlpha = 0.6;
 
 				offsetX += width * .5;
-				animation.play(noteGFX + (isSustainEnds ? 'holdend' : 'hold'));  // isHoldEnd
+				animation.play(noteGFX + (isSustainEnds ? 'holdend' : 'hold')); // isHoldEnd
 				updateHitbox();
 				offsetX -= width * .5;
 				

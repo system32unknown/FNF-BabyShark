@@ -45,8 +45,7 @@ class NoteSplash extends FlxSprite {
 
 	public function new(?x:Float = 0, ?y:Float = 0, ?splash:String) {
 		super(x, y);
-
-        animation = new backend.animation.PsychAnimationController(this);
+		animation = new backend.animation.PsychAnimationController(this);
 
 		rgbShader = new PixelSplashShaderRef();
 		shader = rgbShader.shader;
@@ -110,7 +109,7 @@ class NoteSplash extends FlxSprite {
 		var anim:String = 'note splash';
 		var fps:Array<Null<Int>> = [22, 26];
 		var offsets:Array<Array<Float>> = [[0, 0]];
-		if (Paths.fileExists('$path.txt')) {  // Backwards compatibility with 0.7 splash txts
+		if (Paths.fileExists('$path.txt')) { // Backwards compatibility with 0.7 splash txts
 			var configFile:Array<String> = CoolUtil.listFromString(Paths.getTextFromFile('$path.txt'));
 			if (configFile.length > 0) {
 				anim = configFile[0];
@@ -223,7 +222,7 @@ class NoteSplash extends FlxSprite {
 						}
 					} else {
 						tempShader.copyValues(Note.globalRgbShaders[noteData % EK.colArray.length]);
-           				if (note != null && note.noteSplashData.useNoteRGB) tempShader = note.rgbShader.parent;
+						if (note != null && note.noteSplashData.useNoteRGB) tempShader = note.rgbShader.parent;
 					}
 
 					if (note != null) {
@@ -305,7 +304,7 @@ class NoteSplash extends FlxSprite {
 		super.update(elapsed);
 	}
 
-    public static function getSplashSkinPostfix():String {
+	public static function getSplashSkinPostfix():String {
 		var skin:String = '';
 		if (ClientPrefs.data.splashSkin != ClientPrefs.defaultData.splashSkin)
 			skin = '-' + ClientPrefs.data.splashSkin.trim().toLowerCase().replace(' ', '-');
@@ -329,7 +328,7 @@ class NoteSplash extends FlxSprite {
 		return config;
 	}
 
-	function set_config(value:NoteSplashConfig):NoteSplashConfig  {
+	function set_config(value:NoteSplashConfig):NoteSplashConfig {
 		value ??= createConfig();
 
 		@:privateAccess

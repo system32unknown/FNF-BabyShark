@@ -73,7 +73,7 @@ class ColorSwap {
 		saturation = s;
 		brightness = b;
 	}
-	
+
 	inline public function setHSBInt(h:Int = 0, s:Int = 0, b:Int = 0) {
 		hue = h / 360;
 		saturation = s / 100;
@@ -83,7 +83,7 @@ class ColorSwap {
 	inline public function setHSBArray(ray:Array<Float>) {
 		ray == null ? setHSB() : setHSB(ray[0], ray[1], ray[2]);
 	}
-	
+
 	inline public function setHSBIntArray(ray:Array<Int>) {
 		ray == null ? setHSB() : setHSBInt(ray[0], ray[1], ray[2]);
 	}
@@ -102,7 +102,6 @@ class ColorSwap {
 
 class ColorSwapShader extends flixel.system.FlxAssets.FlxShader {
 	@:glFragmentHeader('
-
 		vec4 colorMult(vec4 color) {
 			if (!hasTransform) return color;
 			if (color.a == 0.0) return vec4(0.0, 0.0, 0.0, 0.0);

@@ -5,25 +5,25 @@ import lime.system.System;
 
 #if windows
 @:buildXml('
-    <target id="haxe">
-        <lib name="dwmapi.lib" if="windows"/>
-        <lib name="shell32.lib" if="windows"/>
+	<target id="haxe">
+		<lib name="dwmapi.lib" if="windows"/>
+		<lib name="shell32.lib" if="windows"/>
 		<lib name="gdi32.lib" if="windows"/>
-    </target>
+	</target>
 ')
 @:cppFileCode('
-    #include <stdlib.h>
-    #include <stdio.h>
-    #include <windows.h>
-    #include <winuser.h> // SendMessage
+	#include <stdlib.h>
+	#include <stdio.h>
+	#include <windows.h>
+	#include <winuser.h> // SendMessage
 	#include <wingdi.h>
-    #include <dwmapi.h> // DwmSetWindowAttribute
-    #include <strsafe.h> // StringCchCopy
-    #include <shellapi.h> // Shell_NotifyIcon
-    #include <chrono> // Chrono Counting
-    #include <iostream>
-    #include <thread>
-    #include <string>
+	#include <dwmapi.h> // DwmSetWindowAttribute
+	#include <strsafe.h> // StringCchCopy
+	#include <shellapi.h> // Shell_NotifyIcon
+	#include <chrono> // Chrono Counting
+	#include <iostream>
+	#include <thread>
+	#include <string>
 
 	const DWMWINDOWATTRIBUTE darkModeAttribute = (DWMWINDOWATTRIBUTE)20;
 	const DWMWINDOWATTRIBUTE darkModeAttributeFallback = (DWMWINDOWATTRIBUTE)19; // Pre-20H1
@@ -58,19 +58,18 @@ import lime.system.System;
 ')
 #elseif linux
 @:cppFileCode('
-    #include <stdlib.h>
-    #include <stdio.h>
-    #include <iostream>
-    #include <thread>
-    #include <string>
+	#include <stdlib.h>
+	#include <stdio.h>
+	#include <iostream>
+	#include <thread>
+	#include <string>
 ')
 #elseif mac
 @:cppFileCode('
-    #include <iostream>
-    #include <thread>
+	#include <iostream>
+	#include <thread>
 ')
 #end
-
 class PlatformUtil {
 	public static function __init__():Void {
 		registerDPIAware();
@@ -78,57 +77,57 @@ class PlatformUtil {
 
 	#if windows
 	@:functionCode('
-        NOTIFYICONDATA m_NID;
+		NOTIFYICONDATA m_NID;
 
-        memset(&m_NID, 0, sizeof(m_NID));
-        m_NID.cbSize = sizeof(m_NID);
-        m_NID.hWnd = GetForegroundWindow();
-        m_NID.uFlags = NIF_MESSAGE | NIIF_WARNING | NIS_HIDDEN;
+		memset(&m_NID, 0, sizeof(m_NID));
+		m_NID.cbSize = sizeof(m_NID);
+		m_NID.hWnd = GetForegroundWindow();
+		m_NID.uFlags = NIF_MESSAGE | NIIF_WARNING | NIS_HIDDEN;
 
-        m_NID.uVersion = NOTIFYICON_VERSION_4;
+		m_NID.uVersion = NOTIFYICON_VERSION_4;
 
-        if (!Shell_NotifyIcon(NIM_ADD, &m_NID)) return FALSE;
-        Shell_NotifyIcon(NIM_SETVERSION, &m_NID);
+		if (!Shell_NotifyIcon(NIM_ADD, &m_NID)) return FALSE;
+		Shell_NotifyIcon(NIM_SETVERSION, &m_NID);
 
-        m_NID.uFlags |= NIF_INFO;
-        m_NID.uTimeout = 1000;
-        m_NID.dwInfoFlags = NULL;
+		m_NID.uFlags |= NIF_INFO;
+		m_NID.uTimeout = 1000;
+		m_NID.dwInfoFlags = NULL;
 
-        LPCTSTR lTitle = title.c_str();
-        LPCTSTR lDesc = desc.c_str();
+		LPCTSTR lTitle = title.c_str();
+		LPCTSTR lDesc = desc.c_str();
 
-        if (StringCchCopy(m_NID.szInfoTitle, sizeof(m_NID.szInfoTitle), lTitle) != S_OK) return FALSE;
-        if (StringCchCopy(m_NID.szInfo, sizeof(m_NID.szInfo), lDesc) != S_OK) return FALSE;
+		if (StringCchCopy(m_NID.szInfoTitle, sizeof(m_NID.szInfoTitle), lTitle) != S_OK) return FALSE;
+		if (StringCchCopy(m_NID.szInfo, sizeof(m_NID.szInfo), lDesc) != S_OK) return FALSE;
 
-        return Shell_NotifyIcon(NIM_MODIFY, &m_NID);
-    ')
+		return Shell_NotifyIcon(NIM_MODIFY, &m_NID);
+	')
 	#elseif linux
 	@:functionCode('
-        std::string cmd = "notify-send -u normal \'";
-        cmd += title.c_str();
-        cmd += "\' \'";
-        cmd += desc.c_str();
-        cmd += "\'";
-        system(cmd.c_str());
-    ')
+		std::string cmd = "notify-send -u normal \'";
+		cmd += title.c_str();
+		cmd += "\' \'";
+		cmd += desc.c_str();
+		cmd += "\'";
+		system(cmd.c_str());
+	')
 	#end
 	public static function sendWindowsNotification(title:String = "", desc:String = ""):Bool return false;
 
 	#if windows
 	@:functionCode('
-        HWND window = GetActiveWindow();
-        HICON smallIcon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
-        HICON icon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
-        SendMessage(window, WM_SETICON, ICON_SMALL, (LPARAM)smallIcon);
-        SendMessage(window, WM_SETICON, ICON_BIG, (LPARAM)icon);
-    ')
+		HWND window = GetActiveWindow();
+		HICON smallIcon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
+		HICON icon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+		SendMessage(window, WM_SETICON, ICON_SMALL, (LPARAM)smallIcon);
+		SendMessage(window, WM_SETICON, ICON_BIG, (LPARAM)icon);
+	')
 	#end
 	public static function setWindowIcon(path:String) {}
 	#if windows
 	@:functionCode('
-        HWND window = GetActiveWindow();
-        SetWindowLongPtr(window, GWL_STYLE, GetWindowLongPtr(window, GWL_STYLE) & ~WS_SYSMENU); // Remove the WS_SYSMENU style
-        SetWindowPos(window, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER); // Force the window to redraw
+ 		HWND window = GetActiveWindow();
+ 		SetWindowLongPtr(window, GWL_STYLE, GetWindowLongPtr(window, GWL_STYLE) & ~WS_SYSMENU); // Remove the WS_SYSMENU style
+ 		SetWindowPos(window, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER); // Force the window to redraw
 	')
 	#end
 	public static function removeWindowIcon() {}
@@ -136,9 +135,9 @@ class PlatformUtil {
 	// Thanks leer lol
 	#if windows
 	@:functionCode('
-        POINT mousePos;
-        if (!GetCursorPos(&mousePos)) return 0;
-    ')
+		POINT mousePos;
+		if (!GetCursorPos(&mousePos)) return 0;
+	')
 	#end
 	public static function getMousePos():Array<Float> return #if windows [untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y")] #else [0, 0] #end;
 
@@ -149,11 +148,11 @@ class PlatformUtil {
 
 	#if windows
 	@:functionCode('
-	    if (!AllocConsole()) return;
+		if (!AllocConsole()) return;
 
-	    freopen("CONIN$", "r", stdin);
-	    freopen("CONOUT$", "w", stdout);
-	    freopen("CONOUT$", "w", stderr);
+		freopen("CONIN$", "r", stdin);
+		freopen("CONOUT$", "w", stdout);
+		freopen("CONOUT$", "w", stderr);
 	')
 	#end
 	public static function allocConsole() {}
@@ -205,7 +204,7 @@ class PlatformUtil {
 	 * The color of the window title bar. If `null`, the default is used.
 	 * Only works on Windows.
 	 */
-	public static var windowBarColor(default, set):Null<FlxColor> = null;  
+	public static var windowBarColor(default, set):Null<FlxColor> = null;
 	public static function set_windowBarColor(value:Null<FlxColor>):Null<FlxColor> {
 		#if (cpp && windows)
 		final intColor:Int = Std.isOfType(value, Int) ? cast FlxColor.fromRGB(value.blue, value.green, value.red, 0) : 0xffffffff;
@@ -271,18 +270,18 @@ class PlatformUtil {
 
 	#if windows
 	@:functionCode('
-        HWND win = FindWindowA(NULL, winName.c_str());
-        if (win == NULL) win = GetActiveWindow();
+		HWND win = FindWindowA(NULL, winName.c_str());
+		if (win == NULL) win = GetActiveWindow();
 
-        LONG winExStyle = GetWindowLong(win, GWL_EXSTYLE);
-        if (winExStyle == 0) return FALSE;
+		LONG winExStyle = GetWindowLong(win, GWL_EXSTYLE);
+		if (winExStyle == 0) return FALSE;
 
-        alpha = SetWindowLong(win, GWL_EXSTYLE, winExStyle ^ WS_EX_LAYERED);
-        if (alpha == 0) return FALSE;
-        if (SetLayeredWindowAttributes(win, color, 0, LWA_COLORKEY) == 0) return FALSE;
+		alpha = SetWindowLong(win, GWL_EXSTYLE, winExStyle ^ WS_EX_LAYERED);
+		if (alpha == 0) return FALSE;
+		if (SetLayeredWindowAttributes(win, color, 0, LWA_COLORKEY) == 0) return FALSE;
 
-        return TRUE;
-    ')
+		return TRUE;
+	')
 	#end
 	public static function setTransparency(winName:String, alpha:Int, color:Int):Bool return false;
 
@@ -306,7 +305,7 @@ class PlatformUtil {
 
 	public static function registerDPIAware():Void {
 		#if (cpp && windows)
-		// DPI Scaling fix for windows 
+		// DPI Scaling fix for windows
 		// this shouldn't be needed for other systems
 		// Credit to YoshiCrafter29 for finding this function
 		untyped __cpp__('

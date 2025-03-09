@@ -42,7 +42,7 @@ class AchievementsMenuState extends MusicBeatState {
 		menuBG.updateHitbox();
 		menuBG.gameCenter();
 		menuBG.scrollFactor.set();
-        menuBG.color = 0xFF9271FD;
+		menuBG.color = 0xFF9271FD;
 		add(menuBG);
 
 		grpOptions = new FlxSpriteGroup();
@@ -174,7 +174,7 @@ class AchievementsMenuState extends MusicBeatState {
 			}
 			
 			if (Controls.justPressed('reset') && (options[curSelected].unlocked || options[curSelected].curProgress > 0))
-                openSubState(new ResetAchievementSubstate());
+				openSubState(new ResetAchievementSubstate());
 		}
 
 		if (Controls.justPressed('back')) {

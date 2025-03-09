@@ -48,9 +48,9 @@ class WeekData {
 	public static function createWeekFile():WeekFile {
 		return {
 			songs: [
-				["Bopeebo",    "daddyshark", [146, 113, 253]],
-				["Fresh",      "daddyshark", [146, 113, 253]],
-				["Tooth", 	   "daddyshark", [146, 113, 253]]
+				["Bopeebo", "daddyshark", [146, 113, 253]],
+				["Fresh", "daddyshark", [146, 113, 253]],
+				["Tooth", "daddyshark", [146, 113, 253]]
 			],
 			weekCharacters: ['', 'bf', 'gf'],
 			weekBackground: 'stage',

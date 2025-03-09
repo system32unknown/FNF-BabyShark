@@ -111,7 +111,7 @@ class VideoSprite extends FlxSpriteGroup {
 			if (skipSprite == null) {
 				skipSprite = new FlxPieDial(0, 0, 40, FlxColor.WHITE, 40, true, 24);
 				skipSprite.replaceColor(FlxColor.BLACK, FlxColor.TRANSPARENT);
-                skipSprite.setPosition(FlxG.width - (skipSprite.width + 80), FlxG.height - (skipSprite.height + 72));
+				skipSprite.setPosition(FlxG.width - (skipSprite.width + 80), FlxG.height - (skipSprite.height + 72));
 				skipSprite.amount = 0;
 				add(skipSprite);
 			}

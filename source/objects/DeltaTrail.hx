@@ -12,7 +12,7 @@ class DeltaTrail extends flixel.addons.effects.FlxTrail {
 	 * Creates a new DeltaTrail effect for a specific FlxSprite.
 	 *
 	 * @param	Target		The FlxSprite the trail is attached to.
-	 * @param  	Graphic		The image to use for the trailsprites. Optional, uses the sprite's graphic if null.
+	 * @param	Graphic		The image to use for the trailsprites. Optional, uses the sprite's graphic if null.
 	 * @param	Length		The maximum amount of trailsprites to create.
 	 * @param	Delay		Amount of time in between each trail update 
 	 * @param	Alpha		The alpha value for the very first trailsprite.

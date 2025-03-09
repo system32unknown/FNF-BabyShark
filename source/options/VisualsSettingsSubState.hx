@@ -124,7 +124,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 				notesShown = true;
 				if (curOption.variable.startsWith('splash') && Math.abs(notes.members[0].y - noteY) < 25) playNoteSplashes();
 			default:
-				if (notesShown)  {
+				if (notesShown) {
 					for (note in notes.members) {
 						FlxTween.cancelTweensOf(note);
 						FlxTween.tween(note, {y: -200}, Math.abs(note.y / (200 + noteY)) / 3, {ease: FlxEase.quadInOut});

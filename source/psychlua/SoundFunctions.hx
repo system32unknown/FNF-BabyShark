@@ -1,8 +1,8 @@
 package psychlua;
 
 class SoundFunctions {
-    public static function implement(funk:FunkinLua) {
-        var game:PlayState = PlayState.instance;
+	public static function implement(funk:FunkinLua) {
+		var game:PlayState = PlayState.instance;
 		funk.set("playMusic", (sound:String, ?volume:Float = 1, ?loop:Bool = false) -> FlxG.sound.playMusic(Paths.music(sound), volume, loop));
 		funk.set("playSound", function(sound:String, ?volume:Float = 1, ?tag:String = null, ?loop:Bool = false) {
 			if (tag != null && tag.length > 0) {
@@ -165,5 +165,5 @@ class SoundFunctions {
 			luaTrace("setSoundPitch: Sound Pitch is not supported on this platform!", false, false, FlxColor.RED);
 			#end
 		});
-    }
+	}
 }

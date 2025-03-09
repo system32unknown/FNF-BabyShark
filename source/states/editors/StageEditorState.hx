@@ -135,7 +135,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 			var helpText:FlxText = new FlxText(0, 0, 680, txt, 16);
 			helpText.setFormat(null, 16, FlxColor.WHITE, CENTER);
-            helpText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
+			helpText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK);
 			helpText.scrollFactor.set();
 			helpText.gameCenter();
 			add(helpText);
@@ -2017,7 +2017,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 			} else holdingArrowsTime = 0;
 
 			if (FlxG.mouse.pressedRight && (FlxG.mouse.deltaViewX != 0 || FlxG.mouse.deltaViewY != 0)) {
-                spr.offset.subtract(FlxG.mouse.deltaViewX, FlxG.mouse.deltaViewY);
+				spr.offset.subtract(FlxG.mouse.deltaViewX, FlxG.mouse.deltaViewY);
 				changedOffset = true;
 			}
 

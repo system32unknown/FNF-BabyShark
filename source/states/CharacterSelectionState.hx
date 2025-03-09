@@ -133,7 +133,7 @@ class CharacterSelectionState extends MusicBeatState {
 		add(curIcon);
 
 		if (unlockedChrs == null) currentSelectedCharacter = characters[current];
-        Paths.currentLevel = lastLoaded;
+		Paths.currentLevel = lastLoaded;
 
 		Conductor.bpm = 128;
 		FlxG.sound.playMusic(Paths.music('offsetSong'));

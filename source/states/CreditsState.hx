@@ -45,7 +45,7 @@ class CreditsState extends MusicBeatState {
 		['SrPerez', 			'perez', 			'1-9 keys art', 												'https://x.com/newsrperez',			'FF9E00'],
 		[''],
 		['Special Thanks'],
-		['Denpa Engine',		'denpa',			'The Freeplay Section used for this engine',	'https://github.com/UmbratheUmbreon/PublicDenpaEngine',	    'FF9300'],
+		['Denpa Engine',		'denpa',			'The Freeplay Section used for this engine',	'https://github.com/UmbratheUmbreon/PublicDenpaEngine',		'FF9300'],
 		['Codename Engine',		'codename',			'Some stuffs used for this engine',				'https://github.com/CodenameCrew/CodenameEngine',			'FF9300'],
 		['HRK-EXEX',			'hrk',				'Some stuffs used for this engine',				'https://github.com/HRK-EXEX',								'FF9300'],
 	];
@@ -60,20 +60,20 @@ class CreditsState extends MusicBeatState {
 
 	static var daveandbambi(default, never):Array<Array<String>> = [
 		['Vs Dave and Bambi Team'],
-		['MoldyGH',				'MoldyGH',			'Creator / Main Dev',				                        	'https://x.com/moldy_gh',		    'FF2626'],
-		['MTM101',				'MTM10',			'Secondary Dev',				                        		'https://x.com/OfficialMTM101',		'FF00FF'],
-		['rapparep lol',      	'rapparep',			'Main Artist',				                            		'https://x.com/rappareplol',		'FF0000'],
-		['TheBuilderXD',      	'TheBuilderXD',		'Page Manager, Tristan Sprite Creator, and more',       		'https://x.com/TheBuilderXD',		'CC6600'],
-		['Erizur',            	'Erizur',			'Programmer, Week Icon Artist',                       			'https://x.com/am_erizur',			'FFFFFF'],
-		['Pointy',           	'pointy',			'Artist & Charter',                           					'https://x.com/PointyyESM',			'0700FE'], 
-		['Zmac',           		'Zmac',				'3D Backgrounds, Intro text help',                           	'https://www.youtube.com/@ZmacRavioli',		'FFFFFF'], 
-		['Billy Bobbo',         'billy',			'Moral Support & Idea Suggesting',                     			'https://x.com/BillyBobboLOL',		'FF0000'],
-		['Steph45',           	'Steph45',			'Minor programming, Moral support',                     		'https://x.com/Stats451',			'FFF729'],
-		['T5mpler',           	'T5mpler',			'Programmer & Supporter',                           			'https://x.com/RealT5mpler',		'363B59'],
+		['MoldyGH',				'MoldyGH',			'Creator / Main Dev',											'https://x.com/moldy_gh',			'FF2626'],
+		['MTM101',				'MTM10',			'Secondary Dev',												'https://x.com/OfficialMTM101',		'FF00FF'],
+		['rapparep lol',		'rapparep',			'Main Artist',													'https://x.com/rappareplol',		'FF0000'],
+		['TheBuilderXD',		'TheBuilderXD',		'Page Manager, Tristan Sprite Creator, and more',				'https://x.com/TheBuilderXD',		'CC6600'],
+		['Erizur',				'Erizur',			'Programmer, Week Icon Artist',									'https://x.com/am_erizur',			'FFFFFF'],
+		['Pointy',				'pointy',			'Artist & Charter',												'https://x.com/PointyyESM',			'0700FE'], 
+		['Zmac',				'Zmac',				'3D Backgrounds, Intro text help',							 'https://www.youtube.com/@ZmacRavioli','FFFFFF'], 
+		['Billy Bobbo',			'billy',			'Moral Support & Idea Suggesting',								'https://x.com/BillyBobboLOL',		'FF0000'],
+		['Steph45',				'Steph45',			'Minor programming, Moral support',								'https://x.com/Stats451',			'FFF729'],
+		['T5mpler',				'T5mpler',			'Programmer & Supporter',										'https://x.com/RealT5mpler',		'363B59'],
 		[''],
 		['Golden Apple'],
-		['Sky!',           		'Sky',				'Creator, Charter, Composer, Artist, Programmer',               'https://x.com/SkyFactorial',		'5C89BF'],
-		['Lancey',           	'lancey',			'Artist',               										'https://x.com/Lancey170',			'00FF5E']
+		['Sky!',				'Sky',				'Creator, Charter, Composer, Artist, Programmer',				'https://x.com/SkyFactorial',		'5C89BF'],
+		['Lancey',				'lancey',			'Artist',														'https://x.com/Lancey170',			'00FF5E']
 	];
 
 	static var babyshark(default, never):Array<Array<String>> = [

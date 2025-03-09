@@ -35,7 +35,7 @@ class RGBPalette {
 		shader.b.value = [color.redFloat, color.greenFloat, color.blueFloat];
 		return color;
 	}
-	
+
 	function set_mult(value:Float):Float {
 		mult = FlxMath.bound(value, 0, 1);
 		shader.mult.value = [mult];
@@ -74,7 +74,7 @@ class RGBShaderReference {
 			mult = parent.mult;
 		}
 	}
-	
+
 	function set_r(value:FlxColor):FlxColor {
 		if (allowNew && value != _original.r) cloneOriginal();
 		return (r = parent.r = value);
@@ -87,10 +87,12 @@ class RGBShaderReference {
 		if (allowNew && value != _original.b) cloneOriginal();
 		return (b = parent.b = value);
 	}
+
 	function set_mult(value:Float):Float {
 		if (allowNew && value != _original.mult) cloneOriginal();
 		return (mult = parent.mult = value);
 	}
+
 	function set_enabled(value:Bool):Bool {
 		_owner.shader = value ? parent.shader : null;
 		return (enabled = value);
@@ -101,6 +103,7 @@ class RGBShaderReference {
 		this.g = g;
 		this.b = b;
 	}
+
 	inline public function copyFrom(ref:RGBShaderReference) {
 		setRGB(ref.r, ref.g, ref.b);
 	}
@@ -153,6 +156,5 @@ class RGBPaletteShader extends flixel.system.FlxAssets.FlxShader {
 		void main() {
 			gl_FragColor = flixel_texture2DCustom(bitmap, openfl_TextureCoordv);
 		}')
-
 	public function new() {super();}
 }

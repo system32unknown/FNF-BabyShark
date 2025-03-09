@@ -88,8 +88,8 @@ class Bar extends FlxSpriteGroup {
 
 		final leftSize:Float = FlxMath.lerp(0, barWidth, (leftToRight ? percent / 100 : 1 - percent / 100));
 
-        leftBar.clipRect.set(barOffset.x, barOffset.y, leftSize, barHeight);
-        rightBar.clipRect.set(barOffset.x + leftSize, barOffset.y, barWidth - leftSize, barHeight);
+		leftBar.clipRect.set(barOffset.x, barOffset.y, leftSize, barHeight);
+		rightBar.clipRect.set(barOffset.x + leftSize, barOffset.y, barWidth - leftSize, barHeight);
 		barCenter = leftBar.x + leftSize + barOffset.x;
 
 		leftBar.clipRect = leftBar.clipRect;

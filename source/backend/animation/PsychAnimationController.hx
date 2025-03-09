@@ -1,9 +1,9 @@
 package backend.animation;
 
 class PsychAnimationController extends flixel.animation.FlxAnimationController {
-    public var followGlobalSpeed:Bool = true;
+	public var followGlobalSpeed:Bool = true;
 
-    public override function update(elapsed:Float):Void {
+	public override function update(elapsed:Float):Void {
 		if (_curAnim != null) {
 			var speed:Float = timeScale;
 			if (followGlobalSpeed) speed *= FlxG.animationTimeScale;

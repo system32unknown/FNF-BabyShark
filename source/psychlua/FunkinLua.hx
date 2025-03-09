@@ -1087,7 +1087,7 @@ class FunkinLua {
 	}
 	#end
 
-	function findScript(scriptFile:String, ext:String = '.lua'):String  {
+	function findScript(scriptFile:String, ext:String = '.lua'):String {
 		if (!scriptFile.endsWith(ext)) scriptFile += ext;
 		var path:String = Paths.getPath(scriptFile);
 		

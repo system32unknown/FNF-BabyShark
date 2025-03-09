@@ -53,7 +53,7 @@ class NativeUtil {
 		#if windows
 		PlatformUtil.showMessageBox(caption, message, icon);
 		#else
-		Application.current.window.alert(message, caption);
+		lime.app.Application.current.window.alert(message, caption);
 		#end
 	}
 

@@ -1,80 +1,81 @@
 package shaders;
 
 class GlitchEffect {
-    public var shader(default, null):GlitchShader = new GlitchShader();
+	public var shader(default, null):GlitchShader = new GlitchShader();
 
-    public var waveSpeed(default, set):Float = 0;
+	public var waveSpeed(default, set):Float = 0;
 	public var waveFrequency(default, set):Float = 0;
 	public var waveAmplitude(default, set):Float = 0;
-    public var isBG(default, set):Bool = false;
+	public var isBG(default, set):Bool = false;
 
-	public function new() {shader.uTime.value = [0];}
+	public function new() {
+		shader.uTime.value = [0];
+	}
 
-    public function update(elapsed:Float):Void {
-        shader.uTime.value[0] += elapsed;
-    }
+	public function update(elapsed:Float):Void {
+		shader.uTime.value[0] += elapsed;
+	}
 
-    function set_waveSpeed(v:Float):Float {
-        waveSpeed = v;
-        shader.uSpeed.value = [waveSpeed];
-        return v;
-    }
-    
-    function set_waveFrequency(v:Float):Float {
-        waveFrequency = v;
-        shader.uFrequency.value = [waveFrequency];
-        return v;
-    }
-    
-    function set_waveAmplitude(v:Float):Float {
-        waveAmplitude = v;
-        shader.uWaveAmplitude.value = [waveAmplitude];
-        return v;
-    }
+	function set_waveSpeed(v:Float):Float {
+		waveSpeed = v;
+		shader.uSpeed.value = [waveSpeed];
+		return v;
+	}
 
-    function set_isBG(v:Bool):Bool {
-        isBG = v;
-        shader.uDistortBG.value = [isBG];
-        return v;
-    }
+	function set_waveFrequency(v:Float):Float {
+		waveFrequency = v;
+		shader.uFrequency.value = [waveFrequency];
+		return v;
+	}
+
+	function set_waveAmplitude(v:Float):Float {
+		waveAmplitude = v;
+		shader.uWaveAmplitude.value = [waveAmplitude];
+		return v;
+	}
+
+	function set_isBG(v:Bool):Bool {
+		isBG = v;
+		shader.uDistortBG.value = [isBG];
+		return v;
+	}
 }
- 
+
 class GlitchShader extends flixel.system.FlxAssets.FlxShader {
-    @:glFragmentSource('
-    #pragma header 
+	@:glFragmentSource('
+		#pragma header 
 
-    //modified version of the wave shader to create weird garbled corruption like messes
-    uniform float uTime;
-    
-    /*
-     * How fast the waves move over time
-    */
-    uniform float uSpeed;
-    
-    /*
-     * Number of waves over time
-    */
-    uniform float uFrequency;
-    
-    /*
-     * How much the pixels are going to stretch over the waves
-    */
-    uniform float uWaveAmplitude;
+		//modified version of the wave shader to create weird garbled corruption like messes
+		uniform float uTime;
 
-    /*
-     * Distort BG?
-    */
-    uniform bool uDistortBG;
-    
-    vec2 sineWave(vec2 pt) {
-        pt.x += sin(pt.y * uFrequency + uTime * uSpeed) * (uWaveAmplitude / pt.x * pt.y);
-        pt.y += sin(pt.x * uFrequency - uTime * uSpeed) * (uDistortBG ? (uWaveAmplitude / pt.y * pt.x) : uWaveAmplitude);
-        return vec2(pt.x, pt.y);
-    }
-    
-    void main() {
-        gl_FragColor = texture2D(bitmap, sineWave(openfl_TextureCoordv));
-    }')
+		/*
+		 * How fast the waves move over time
+		 */
+		uniform float uSpeed;
 
-    public function new() {super();}
+		/*
+		 * Number of waves over time
+		 */
+		uniform float uFrequency;
+				
+		/*
+		 * How much the pixels are going to stretch over the waves
+		 */
+		uniform float uWaveAmplitude;
+
+		/*
+		 * Distort BG?
+		 */
+		uniform bool uDistortBG;
+
+		vec2 sineWave(vec2 pt) {
+			pt.x += sin(pt.y * uFrequency + uTime * uSpeed) * (uWaveAmplitude / pt.x * pt.y);
+			pt.y += sin(pt.x * uFrequency - uTime * uSpeed) * (uDistortBG ? (uWaveAmplitude / pt.y * pt.x) : uWaveAmplitude);
+			return vec2(pt.x, pt.y);
+		}
+
+		void main() {
+			gl_FragColor = texture2D(bitmap, sineWave(openfl_TextureCoordv));
+		}')
+	public function new() {super();}
 }

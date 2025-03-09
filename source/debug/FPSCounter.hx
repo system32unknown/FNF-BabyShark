@@ -8,19 +8,19 @@ import flixel.util.FlxStringUtil;
 	the current framerate of an OpenFL project
 **/
 class FPSCounter extends openfl.text.TextField {
-    public var fontName:String = Paths.font("Proggy.ttf");
+	public var fontName:String = Paths.font("Proggy.ttf");
 
 	var timeColor:Float = 0;
 	public var checkLag:Bool = true;
 	public var updateRate:Float = 60;
 	public var memType:String = "";
 
-    public var fpsManager:FPSUtil;
+	public var fpsManager:FPSUtil;
 
 	/**
 		The current memory usage (WARNING: this is NOT your total program memory usage, rather it shows the garbage collector memory)
 	**/
-    public var memory(get, never):Float;
+	public var memory(get, never):Float;
 	inline function get_memory():Float return openfl.system.System.totalMemoryNumber;
 	var mempeak:Float = 0;
 
