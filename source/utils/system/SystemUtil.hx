@@ -28,7 +28,7 @@ class SystemUtil {
 	public static function get_isConsoleOn():Bool {
 		var available:Bool = false;
 		try {
-			Sys.stdout().writeString("Console Available!\n");
+			Sys.stdout().writeString('');
 			available = true;
 		} catch (e:Dynamic) available = false;
 		return available;

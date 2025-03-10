@@ -1,12 +1,12 @@
+package objects;
+
 import flixel.system.FlxAssets.FlxShader;
-import flixel.graphics.frames.FlxFrame.FlxFrameType;
-import flixel.math.FlxPoint;
 import flixel.math.FlxAngle;
-import math.Vector3;
+import utils.math.Vector3;
 import openfl.Vector;
 import openfl.geom.ColorTransform;
 
-using math.VectorHelpers;
+using utils.math.VectorHelpers;
 
 class FlxSprite3D extends FlxSprite {
 	public var z:Float = 0;
@@ -14,25 +14,25 @@ class FlxSprite3D extends FlxSprite {
 	public var yaw:Float = 0;
 	public var pitch:Float = 0;
 	public var roll(get, set):Float;
-	function get_roll() return angle;
-	function set_roll(val:Float) return angle = val;
+	function get_roll():Float return angle;
+	function set_roll(val:Float):Float return angle = val;
 
 	////
-	private var _camPos = new Vector3();
-	private var _camOrigin = new Vector3(); // vertex origin
-	private var _sprPos = new Vector3();
-	private var quad0 = new Vector3();
-	private var quad1 = new Vector3();
-	private var quad2 = new Vector3();
-	private var quad3 = new Vector3();
-	private var _vertices = new Vector<Float>(12, false);
-	private var _indices = new Vector<Int>(12, false, [for (i in 0...12) i]);
-	private var _uvData = new Vector<Float>(12, false);
+	var _camPos:Vector3 = new Vector3();
+	var _camOrigin:Vector3 = new Vector3(); // vertex origin
+	var _sprPos:Vector3 = new Vector3();
+	var quad0:Vector3 = new Vector3();
+	var quad1:Vector3 = new Vector3();
+	var quad2:Vector3 = new Vector3();
+	var quad3:Vector3 = new Vector3();
+	var _vertices:Vector<Float> = new Vector<Float>(12);
+	var _indices:Vector<Int> = new Vector<Int>(12, false, [for (i in 0...12) i]);
+	var _uvData:Vector<Float> = new Vector<Float>(12);
 	
-	private var _triangleColorTransforms:Array<ColorTransform>;
-	private var _3DColor = new ColorTransform();
+	var _triangleColorTransforms:Array<ColorTransform>;
+	var _3DColor:ColorTransform = new ColorTransform();
 
-	public function new(x, y, z, g) {
+	public function new(x:Float, y:Float, z:Float, g) {
 		super(x, y, g);
 		this.z = z;
 
@@ -48,41 +48,36 @@ class FlxSprite3D extends FlxSprite {
 	override public function draw():Void {
 		checkEmptyFrame();
 
-		if (alpha == 0 || _frame.type == FlxFrameType.EMPTY) return;
+		if (alpha == 0 || _frame.type == flixel.graphics.frames.FlxFrame.FlxFrameType.EMPTY) return;
 
 		if (dirty) calcFrame(useFramePixels); // rarely
-		if (this.shader == null) this.shader =  new FlxShader();
+		if (this.shader == null) this.shader = new FlxShader();
 
 		shader.bitmap.input = graphic.bitmap;
 		shader.bitmap.filter = antialiasing ? LINEAR : NEAREST;
 
 		// TODO: take origin into consideration properly
-		var wid = frameWidth;
-		var hei = frameHeight;
+		var wid:Int = frameWidth;
+		var hei:Int = frameHeight;
 
-		var halfW = wid * 0.5;
-		var halfH = hei * 0.5;
+		var halfW:Float = wid * .5;
+		var halfH:Float = hei * .5;
 
-		var radPitch = FlxAngle.TO_RAD * pitch;
-		var radYaw = FlxAngle.TO_RAD * yaw;
-		var radRoll = FlxAngle.TO_RAD * roll;
+		var radPitch:Float = FlxAngle.TO_RAD * pitch;
+		var radYaw:Float = FlxAngle.TO_RAD * yaw;
+		var radRoll:Float = FlxAngle.TO_RAD * roll;
 
 		var spriteOrigin = FlxPoint.weak();
 		spriteOrigin.set(origin.x - halfW, origin.y - halfH);
 
 		for (camera in cameras) {
-			if (!camera.visible || !camera.exists || camera.canvas == null || camera.canvas.graphics == null)
-				continue;
+			if (!camera.visible || !camera.exists || camera.canvas == null || camera.canvas.graphics == null) continue;
 
 			_sprPos.setTo(this.x - this.offset.x, this.y - this.offset.y, this.z - camera.scrollZ);
 			_point.set(_sprPos.x, _sprPos.y);
 
-			var cameraMaxSize = Math.max(camera.width, camera.height);
-			_camPos.setTo( // scrollfactor in 3D is kinda dumb
-				camera.scroll.x * this.scrollFactor.x, 
-				camera.scroll.y * this.scrollFactor.y, 
-				cameraMaxSize
-			);
+			var cameraMaxSize:Float = Math.max(camera.width, camera.height);
+			_camPos.setTo(camera.scroll.x * this.scrollFactor.x, camera.scroll.y * this.scrollFactor.y, cameraMaxSize); // scrollfactor in 3D is kinda dumb
 			_camOrigin.setTo(camera.width / 2, camera.height / 2, 0);
 			
 			quad0.setTo(-halfW, -halfH, 0); // LT
@@ -91,7 +86,7 @@ class FlxSprite3D extends FlxSprite {
 			quad3.setTo(halfW, halfH, 0); // RB
 
 			for (i in 0...4) {
-				var vert = switch(i) {
+				var vert:Null<Vector3> = switch(i) {
 					case 0: quad0;
 					case 1: quad1;
 					case 2: quad2;
@@ -140,13 +135,13 @@ class FlxSprite3D extends FlxSprite {
 			_vertices[8] = quad2.x;		_vertices[9] = quad2.y; // LB
 			_vertices[10] = quad3.x;	_vertices[11] = quad3.y; // RB
 
-			var sourceBitmap = graphic.bitmap;
-			var frameRect = frame.frame;
+			var sourceBitmap:openfl.display.BitmapData = graphic.bitmap;
+			var frameRect:flixel.math.FlxRect = frame.frame;
 
-			var leftUV = frameRect.left / sourceBitmap.width;
-			var rightUV = frameRect.right / sourceBitmap.width;
-			var topUV = frameRect.top / sourceBitmap.height;
-			var bottomUV = frameRect.bottom / sourceBitmap.height;
+			var leftUV:Float = frameRect.left / sourceBitmap.width;
+			var rightUV:Float = frameRect.right / sourceBitmap.width;
+			var topUV:Float = frameRect.top / sourceBitmap.height;
+			var bottomUV:Float = frameRect.bottom / sourceBitmap.height;
 
 			_uvData[0] = leftUV;	_uvData[1] = topUV;
 			_uvData[2] = rightUV;	_uvData[3] = topUV;
@@ -165,7 +160,7 @@ class FlxSprite3D extends FlxSprite {
 			_3DColor.alphaOffset = colorTransform.alphaOffset;
 			_3DColor.alphaMultiplier = colorTransform.alphaMultiplier * camera.alpha;
 
-			var drawItem = camera.startTrianglesBatch(graphic, antialiasing, true, blend, true, shader);
+			var drawItem:flixel.graphics.tile.FlxDrawTrianglesItem = camera.startTrianglesBatch(graphic, antialiasing, true, blend, true, shader);
 			@:privateAccess drawItem.addTrianglesColorArray(_vertices, _indices, _uvData, null, _point, camera._bounds, _triangleColorTransforms);
 
 			#if FLX_DEBUG
@@ -175,8 +170,7 @@ class FlxSprite3D extends FlxSprite {
 		spriteOrigin.putWeak();
 
 		#if FLX_DEBUG
-		if (FlxG.debugger.drawDebug)
-			drawDebug();
+		if (FlxG.debugger.drawDebug) drawDebug();
 		#end
 	}
 }

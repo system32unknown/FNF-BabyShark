@@ -25,8 +25,12 @@ import lime.system.System;
 	#include <thread>
 	#include <string>
 
-	const DWMWINDOWATTRIBUTE darkModeAttribute = (DWMWINDOWATTRIBUTE)20;
-	const DWMWINDOWATTRIBUTE darkModeAttributeFallback = (DWMWINDOWATTRIBUTE)19; // Pre-20H1
+	#define attributeDarkMode 20
+	#define attributeDarkModeFallback 19
+
+	#define attributeCaptionColor 34
+	#define attributeTextColor 35
+	#define attributeBorderColor 36
 
 	struct HandleData {
 		DWORD pid = 0;
@@ -184,7 +188,7 @@ class PlatformUtil {
 			getHandle();
 			if (curHandle != (HWND)0) {
 				const BOOL darkMode = enable ? TRUE : FALSE;
-				if (S_OK == DwmSetWindowAttribute(curHandle, darkModeAttribute, (LPCVOID)&darkMode, (DWORD)sizeof(darkMode)) || S_OK == DwmSetWindowAttribute(curHandle, darkModeAttributeFallback, (LPCVOID)&darkMode, (DWORD)sizeof(darkMode))) {
+				if (S_OK == DwmSetWindowAttribute(curHandle, attributeDarkMode, (LPCVOID)&darkMode, (DWORD)sizeof(darkMode)) || S_OK == DwmSetWindowAttribute(curHandle, attributeDarkModeFallback, (LPCVOID)&darkMode, (DWORD)sizeof(darkMode))) {
 					success = true;
 				}
 
@@ -207,15 +211,15 @@ class PlatformUtil {
 	public static var windowBarColor(default, set):Null<FlxColor> = null;
 	public static function set_windowBarColor(value:Null<FlxColor>):Null<FlxColor> {
 		#if (cpp && windows)
-		final intColor:Int = Std.isOfType(value, Int) ? cast FlxColor.fromRGB(value.blue, value.green, value.red, 0) : 0xffffffff;
+		final intColor:Int = Std.isOfType(value, Int) ? cast FlxColor.fromRGB(value.blue, value.green, value.red, value.alpha) : 0xffffffff;
 		untyped __cpp__('
 			getHandle();
 			if (curHandle != (HWND)0) {
 				const COLORREF targetColor = (COLORREF)intColor;
-				DwmSetWindowAttribute(curHandle, 35, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				DwmSetWindowAttribute(curHandle, attributeCaptionColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
 				UpdateWindow(curHandle);
 			}
-		'); // DWMWA_TEXT_COLOR is 35 because it's windows 10 and 11. if they fail then that is OK.
+		');
 		#end
 
 		return windowBarColor = value;
@@ -228,15 +232,15 @@ class PlatformUtil {
 	public static var windowTextColor(default, set):Null<FlxColor> = null;
 	public static function set_windowTextColor(value:Null<FlxColor>):Null<FlxColor> {
 		#if (cpp && windows)
-		final intColor:Int = Std.isOfType(value, Int) ? cast FlxColor.fromRGB(value.blue, value.green, value.red, 0) : 0xffffffff;
+		final intColor:Int = Std.isOfType(value, Int) ? cast FlxColor.fromRGB(value.blue, value.green, value.red, value.alpha) : 0xffffffff;
 		untyped __cpp__('
 			getHandle();
 			if (curHandle != (HWND)0) {
 				const COLORREF targetColor = (COLORREF)intColor;
-				DwmSetWindowAttribute(curHandle, 36, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				DwmSetWindowAttribute(curHandle, attributeTextColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
 				UpdateWindow(curHandle);
 			}
-		'); // DWMWA_TEXT_COLOR is 36 because it's windows 10 and 11. if they fail then that is OK.
+		');
 		#end
 
 		return windowTextColor = value;
@@ -249,15 +253,15 @@ class PlatformUtil {
 	public static var windowBorderColor(default, set):Null<FlxColor> = null;
 	public static function set_windowBorderColor(value:Null<FlxColor>):Null<FlxColor> {
 		#if (cpp && windows)
-		final intColor:Int = Std.isOfType(value, Int) ? cast FlxColor.fromRGB(value.blue, value.green, value.red, 0) : 0xffffffff;
+		final intColor:Int = Std.isOfType(value, Int) ? cast FlxColor.fromRGB(value.blue, value.green, value.red, value.alpha) : 0xffffffff;
 		untyped __cpp__('
 			getHandle();
 			if (curHandle != (HWND)0) {
 				const COLORREF targetColor = (COLORREF)intColor;
-				DwmSetWindowAttribute(curHandle, 34, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				DwmSetWindowAttribute(curHandle, attributeBorderColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
 				UpdateWindow(curHandle);
 			}
-		'); // DWMWA_BORDER_COLOR is 34 because it's windows 10 and 11. if they fail then that is OK.
+		');
 		#end
 
 		return windowBorderColor = value;
@@ -309,10 +313,16 @@ class PlatformUtil {
 		// this shouldn't be needed for other systems
 		// Credit to YoshiCrafter29 for finding this function
 		untyped __cpp__('
-			BOOL success = SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-			if (!success) success = SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE);
-			if (!success) success = SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_SYSTEM_AWARE);
-			if (!success) SetProcessDPIAware();
+			SetProcessDPIAware();	
+			#ifdef DPI_AWARENESS_CONTEXT
+			SetProcessDpiAwarenessContext(
+				#ifdef DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
+				DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
+				#else
+				DPI_AWARENESS_CONTEXT_SYSTEM_AWARE
+				#endif
+			);
+			#endif
 		');
 		#end
 	}
