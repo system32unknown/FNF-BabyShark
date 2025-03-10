@@ -31,7 +31,11 @@ class LoadingText extends FlxText {
 	 */
 	public function cacheSize():Void {
 		var currentText:String = text;
-		_setText(_baseText + "..");
+
+		var cacheTxt:String = _baseText;
+		for (i in 0...maxDots) cacheTxt += ".";
+		_setText(cacheTxt + "..");
+
 		fieldWidth = textField.width;
 		fieldHeight = textField.height;
 		_setText(currentText);
