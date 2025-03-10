@@ -17,6 +17,11 @@ class LoadingText extends FlxText {
 	var _dots:Int = 1;
 
 	/**
+	 * Number of maxed dots.
+	 */
+	public var maxDots:Int = 3;
+
+	/**
 	 * Elapsed time since the last dot change.
 	 */
 	var _elapsedTime:Float;
@@ -38,12 +43,12 @@ class LoadingText extends FlxText {
 
 		_dots++;
 
-		if (_dots > 3) {
+		if (_dots > maxDots) {
 			_setText(_baseText);
 			_dots = 1;
 		} else {
 			var text:String = _baseText;
-			for (_ in 0..._dots - 1) text += ".";
+			for (i in 0..._dots - 1) text += ".";
 			_setText(text);
 		}
 

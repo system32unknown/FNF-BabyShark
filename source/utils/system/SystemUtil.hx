@@ -24,6 +24,16 @@ class SystemUtil {
 		#end
 	}
 
+	public static var isConsoleOn(get, never):Bool;
+	public static function get_isConsoleOn():Bool {
+		var available:Bool = false;
+		try {
+			Sys.stdout().writeString("Console Available!\n");
+			available = true;
+		} catch (e:Dynamic) available = false;
+		return available;
+	}
+
 	/**
 	 * Gets laptop battery status and charge level.
 	 * @return [charging, percentage]
