@@ -92,7 +92,7 @@ class FreeplaySectionSubstate extends FlxSubState {
 			closeFreeplaysection((_:FlxTween) -> {
 				daSection = states.FreeplayState.section;
 				close();
-			});
+			}, true);
 		}
 
 		if (Controls.justPressed('accept') && !transitioning) {
@@ -110,9 +110,9 @@ class FreeplaySectionSubstate extends FlxSubState {
 		super.update(elapsed);
 	}
 
-	function closeFreeplaysection(func:FlxTween->Void) {
+	function closeFreeplaysection(func:FlxTween->Void, onlyFade:Bool = false) {
 		for (obj in [bg, grid, sectionTxt]) FlxTween.tween(obj, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(sectionSpr, {alpha: 0, y: sectionSpr.y + 200}, .5, {ease: FlxEase.expoInOut, onComplete: func});
+		FlxTween.tween(sectionSpr, onlyFade ? {alpha: 0} : {alpha: 0, y: sectionSpr.y + 200}, .5, {ease: FlxEase.expoInOut, onComplete: func});
 	}
 
 	function changeSection(change:Int = 0) {

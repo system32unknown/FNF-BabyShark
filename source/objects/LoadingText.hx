@@ -33,7 +33,7 @@ class LoadingText extends FlxText {
 		var currentText:String = text;
 
 		var cacheTxt:String = _baseText;
-		for (i in 0...maxDots) cacheTxt += ".";
+		for (_ in 0...maxDots) cacheTxt += ".";
 		_setText(cacheTxt);
 
 		fieldWidth = textField.width;
@@ -52,7 +52,7 @@ class LoadingText extends FlxText {
 			_dots = 1;
 		} else {
 			var text:String = _baseText;
-			for (i in 0..._dots - 1) text += ".";
+			for (_ in 0..._dots - 1) text += ".";
 			_setText(text);
 		}
 

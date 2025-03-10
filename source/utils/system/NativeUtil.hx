@@ -18,6 +18,16 @@ class NativeUtil {
 	}
 
 	/**
+	 * Forces the window header to redraw, causes a small visual jitter so use it sparingly.
+	 */
+	public static function redrawWindowHeader():Void {
+		#if windows
+		FlxG.stage.window.borderless = true;
+		FlxG.stage.window.borderless = false;
+		#end
+	}
+
+	/**
 	 * Can be used to check if your using a specific version of an OS (or if your using a certain OS).
 	 */
 	public static function hasVersion(ver:String):Bool
