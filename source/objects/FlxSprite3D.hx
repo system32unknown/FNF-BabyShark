@@ -32,7 +32,7 @@ class FlxSprite3D extends FlxSprite {
 	var _triangleColorTransforms:Array<ColorTransform>;
 	var _3DColor:ColorTransform = new ColorTransform();
 
-	public function new(x:Float, y:Float, z:Float, g) {
+	public function new(x:Float, y:Float, z:Float, g:flixel.system.FlxAssets.FlxGraphicAsset) {
 		super(x, y, g);
 		this.z = z;
 
