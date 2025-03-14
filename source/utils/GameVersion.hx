@@ -21,4 +21,8 @@ class GameVersion {
 
 	public var version(get, never):String;
 	function get_version():String return '$release.$major.$minor$patch';
+
+	@:op(A==B)
+	static function eq(A:GameVersion, B:GameVersion):Bool
+		return A.release == B.release && A.major == B.major && A.minor == B.minor;
 }
