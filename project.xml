@@ -117,7 +117,7 @@
 
 	<!-- _________________________________Custom_______________________________ -->
 	<!-- Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	<assets path='art/icons/iconOG.png' rename='icon.png' if="linux" />
+	<assets path='art/icons/iconOG.png' rename='icon.png' if="linux || mac" />
 
 	<icon path="art/icons/icon16.png" size="16" />
 	<icon path="art/icons/icon24.png" size="24" />
