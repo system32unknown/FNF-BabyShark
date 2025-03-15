@@ -22,6 +22,13 @@ class StringUtil {
 		return str;
 	}
 
+	/**
+	 * Formats a given time in seconds into a human-readable string (weeks, days, hours, minutes, seconds).
+	 * @param time Floating-point number representing total seconds.
+	 * @param precision Integer specifying decimal precision.
+	 * @param timePre Integer for additional time formatting.
+	 * @return Formatted time string.
+	 */
 	public static function formatTime(time:Float, precision:Int = 0, timePre:Int = 0):String {
 		var secs:String = '' + Math.floor(time) % 60;
 		var mins:String = '' + Math.floor(time / 60) % 60;
@@ -50,6 +57,13 @@ class StringUtil {
 		return formattedtime;
 	}
 
+	/**
+	 * Generates a random string of a specified length.
+	 * @param max The length of the random string.
+	 * @param includespace Whether to include spaces or newlines.
+	 * @param chance The probability of inserting a space or newline.
+	 * @return A randomly generated string.
+	 */
 	public static function getRNGTxt(max:Int, ?includespace:Bool, ?chance:Int = 50):String {
 		var temp_str:String = "";
 		for (_ in 0...max) {
@@ -59,10 +73,20 @@ class StringUtil {
 		return temp_str;
 	}
 
+	/**
+	 * Capitalizes the first letter of a string.
+	 * @param text The input string.
+	 * @return The capitalized string.
+	 */
 	inline public static function capitalize(text:String):String {
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
 	}
 
+	/**
+	 * Converts a hexadecimal string to a binary string.
+	 * @param str The hexadecimal input.
+	 * @return The binary representation of the input string.
+	 */
 	public static function hex2bin(str:String):String {
 		var returnVal:String = "";
 		var tmpStr:String = "";
@@ -75,6 +99,13 @@ class StringUtil {
 		}
 		return returnVal.substr(0, returnVal.length - 1);
 	}
+
+	/**
+	 * Converts a decimal number to a binary string with a specified number of digits.
+	 * @param int The decimal number.
+	 * @param digits The number of binary digits to return.
+	 * @return The binary representation of the input number.
+	 */
 	public static function dec2bin(int:Int, digits:Int):String {
 		var str:String = "";
 		digits = FlxMath.minInt(digits, 32);
@@ -86,6 +117,12 @@ class StringUtil {
 		return str;
 	}
 
+	/**
+	 * Counts the number of occurrences of a character or substring in a string.
+	 * @param str The input string.
+	 * @param target The character or substring to count.
+	 * @return The number of occurrences.
+	 */
 	public static function charAppearanceCnt(str:String, target:String):Int {
 		var cnt:Int = 0;
 		if (target == null || target.length == 0) return 0;
@@ -101,6 +138,11 @@ class StringUtil {
 		return cnt;
 	}
 
+	/**
+	 * Reverses a given string.
+	 * @param str The input string.
+	 * @return The reversed string.
+	 */
 	public static function reverseString(str:String):String {
 		var reversed:String = "";
 		for (i in 0...str.length) reversed = str.charAt(i) + reversed;
