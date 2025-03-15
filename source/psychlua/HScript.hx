@@ -181,7 +181,7 @@ class HScript extends AlterHscript {
 			#end
 			'ShaderFilter' => openfl.filters.ShaderFilter,
 
-			"version" => Main.engineVer.version.trim(),
+			"version" => Main.engineVer,
 			"engine" => {
 				app_version: Application.current.meta.get('version'),
 				commit: macros.GitCommitMacro.commitNumber,
@@ -342,7 +342,7 @@ class HScript extends AlterHscript {
 	function getDefaultPreprocessors():Map<String, Dynamic> {
 		var defines:Map<String, Dynamic> = macros.DefinesMacro.defines;
 		defines.set("ALTER_ENGINE", true);
-		defines.set("ALTER_VER", Main.engineVer.version.trim());
+		defines.set("ALTER_VER", Main.engineVer);
 		defines.set("ALTER_APP_VER", Application.current.meta.get('version'));
 		defines.set("ALTER_COMMIT", macros.GitCommitMacro.commitNumber);
 		defines.set("ALTER_HASH", macros.GitCommitMacro.commitHash);

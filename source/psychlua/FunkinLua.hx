@@ -62,7 +62,7 @@ class FunkinLua {
 		set('Function_Continue', LuaUtils.Function_Continue);
 		set('luaDebugMode', false);
 		set('luaDeprecatedWarnings', true);
-		set('version', Main.engineVer.version.trim());
+		set('version', Main.engineVer);
 		set('engine', {
 			app_version: lime.app.Application.current.meta.get('version'),
 			commit: Main.engineVer.COMMIT_NUM,

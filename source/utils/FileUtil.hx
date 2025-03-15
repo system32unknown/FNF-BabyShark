@@ -131,24 +131,6 @@ class FileUtil {
 	}
 
 	/**
-	 * Takes an array of file entries and forcibly writes a ZIP to the given path.
-	 * Only works on desktop.
-	 * Use `saveFilesAsZIP` instead.
-	 * @param force Whether to force overwrite an existing file.
-	 */
-	public static function saveFilesAsZIPToPath(resources:Array<Entry>, path:String, mode:FileWriteMode = Skip):Bool {
-		#if desktop
-		// Create a ZIP file.
-		var zipBytes:Bytes = createZIPFromEntries(resources);
-		// Write the ZIP.
-		writeBytesToPath(path, zipBytes, mode);
-		return true;
-		#else
-		return false;
-		#end
-	}
-
-	/**
 	 * Read bytes file contents directly from a given path.
 	 * Only works on desktop.
 	 *
@@ -298,68 +280,6 @@ class FileUtil {
 		#else
 		return null;
 		#end
-	}
-
-	/**
-	 * Create a Bytes object containing a ZIP file, containing the provided entries.
-	 *
-	 * @param entries The entries to add to the ZIP file.
-	 * @return The ZIP file as a Bytes object.
-	 */
-	public static function createZIPFromEntries(entries:Array<Entry>):Bytes {
-		var o:haxe.io.BytesOutput = new haxe.io.BytesOutput();
-		var zipWriter:haxe.zip.Writer = new haxe.zip.Writer(o);
-		zipWriter.write(Lambda.list(entries));
-		return o.getBytes();
-	}
-
-	public static function readZIPFromBytes(input:Bytes):Array<Entry> {
-		var bytesInput = new haxe.io.BytesInput(input);
-		var zippedEntries = haxe.zip.Reader.readZip(bytesInput);
-		var results:Array<Entry> = [];
-		for (entry in zippedEntries) {
-			if (entry.compressed) entry.data = haxe.zip.Reader.unzip(entry);
-			results.push(entry);
-		}
-		return results;
-	}
-
-	public static function mapZIPEntriesByName(input:Array<Entry>):Map<String, Entry> {
-		var results:Map<String, Entry> = [];
-		for (entry in input) results.set(entry.fileName, entry);
-		return results;
-	}
-
-	/**
-	 * Create a ZIP file entry from a file name and its string contents.
-	 *
-	 * @param name The name of the file. You can use slashes to create subdirectories.
-	 * @param content The string contents of the file.
-	 * @return The resulting entry.
-	 */
-	public static function makeZIPEntry(name:String, content:String):Entry {
-		var data:Bytes = haxe.io.Bytes.ofString(content, UTF8);
-		return makeZIPEntryFromBytes(name, data);
-	}
-
-	/**
-	 * Create a ZIP file entry from a file name and its string contents.
-	 *
-	 * @param name The name of the file. You can use slashes to create subdirectories.
-	 * @param data The byte data of the file.
-	 * @return The resulting entry.
-	 */
-	public static function makeZIPEntryFromBytes(name:String, data:haxe.io.Bytes):Entry {
-		return {
-			fileName: name,
-			fileSize: data.length,
-			data: data,
-			dataSize: data.length,
-			compressed: false,
-			fileTime: Date.now(),
-			crc32: null,
-			extraFields: null,
-		};
 	}
 
 	static function convertTypeFilter(typeFilter:Array<FileFilter>):String {

@@ -88,7 +88,7 @@ class MainMenuState extends MusicBeatState {
 			menuItems.add(rightItem);
 		}
 
-		var version:FlxText = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer.version} (${Main.engineVer.COMMIT_HASH}, ${Main.engineVer.COMMIT_NUM})\nBaby Shark\'s Big Funkin! v${FlxG.stage.application.meta.get('version')}\nFriday Night Funkin\' v${Main.fnfVer.version}', 16);
+		var version:FlxText = new FlxText(0, 0, 0, 'Alter Engine v${Main.engineVer} (${Main.engineVer.COMMIT_HASH}, ${Main.engineVer.COMMIT_NUM})\nBaby Shark\'s Big Funkin! v${FlxG.stage.application.meta.get('version')}\nFriday Night Funkin\' v${Main.fnfVer}', 16);
 		version.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, RIGHT);
 		version.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		version.scrollFactor.set();
@@ -99,7 +99,7 @@ class MainMenuState extends MusicBeatState {
 		#if (ACHIEVEMENTS_ALLOWED && MODS_ALLOWED) Achievements.reloadList(); #end
 
 		#if CHECK_FOR_UPDATES
-		if (showOutdatedWarning && ClientPrefs.data.checkForUpdates && OutdatedSubState.updateVersion[0] != Main.engineVer.version) {
+		if (showOutdatedWarning && ClientPrefs.data.checkForUpdates && OutdatedSubState.updateVersion[0] != Main.engineVer) {
 			persistentUpdate = showOutdatedWarning = false;
 			openSubState(new OutdatedSubState());
 		}

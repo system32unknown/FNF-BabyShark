@@ -10,7 +10,7 @@ class CoolUtil {
 			url = "https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/CHANGELOG.md";
 
 		var returnedData:Array<String> = [];
-		var version:String = Main.engineVer.version;
+		var version:String = Main.engineVer;
 		if (ClientPrefs.data.checkForUpdates) {
 			trace('checking for updates...');
 			var http:Http = new Http(url);
@@ -20,7 +20,7 @@ class CoolUtil {
 				returnedData[0] = data.substring(0, verEndIdx);
 				returnedData[1] = data.substring(verEndIdx + 1, data.length); // Extract the changelog after the version number
 
-				var updateVersion:String = returnedData[0];
+				var updateVersion:utils.GameVersion = returnedData[0];
 				trace('version online: $updateVersion, your version: $version');
 				if (updateVersion != version) {
 					trace('versions arent matching! please update.');

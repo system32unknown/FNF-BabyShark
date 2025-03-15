@@ -19,8 +19,8 @@ import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since
 @:cppFileCode('#define GAMEMODE_AUTO')
 #end
 class Main extends Sprite {
-	public static var engineVer:GameVersion = new GameVersion(0, 1, 5);
-	public static var fnfVer:GameVersion = new GameVersion(0, 5, 3);
+	public static var engineVer:GameVersion = '0.1.5';
+	public static var fnfVer:GameVersion = '0.5.3';
 
 	public static final game = {
 		width: 1280, // WINDOW width
@@ -122,8 +122,7 @@ class Main extends Sprite {
 					if (cam != null && cam.filters != null)
 						resetSpriteCache(cam.flashSprite);
 				}
-			if (FlxG.game != null)
-				resetSpriteCache(FlxG.game);
+			if (FlxG.game != null) resetSpriteCache(FlxG.game);
 			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
 		});
 		#if VIDEOS_ALLOWED hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0") ['--no-lua'] #end); #end

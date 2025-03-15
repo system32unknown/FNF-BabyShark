@@ -16,7 +16,7 @@ class OutdatedSubState extends MusicBeatSubstate {
 		add(bg);
 
 		var txt:FlxText = new FlxText(0, 0, FlxG.width,
-			'Sup bro, looks like you\'re running an outdated version of Alter Engine (${Main.engineVer.version}),\n
+			'Sup bro, looks like you\'re running an outdated version of Alter Engine (${Main.engineVer}),\n
 			-----------------------------------------------\n
 			What\'s new:\n
 			${updateVersion[1]}\n
