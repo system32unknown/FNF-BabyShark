@@ -155,7 +155,7 @@ class Paths {
 	}
 
 	inline public static function sound(key:String, ?modsAllowed:Bool = true, ?playBeep:Bool = true):Sound
-		return returnSound('sounds/$key', null, modsAllowed, playBeep)
+		return returnSound('sounds/$key', null, modsAllowed, playBeep);
 	inline public static function music(key:String, ?modsAllowed:Bool = true, ?playBeep:Bool = true):Sound
 		return returnSound('music/$key', null, modsAllowed, playBeep);
 
