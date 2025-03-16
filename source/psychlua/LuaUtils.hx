@@ -3,7 +3,7 @@ package psychlua;
 import objects.Bar;
 import flixel.util.FlxAxes;
 import openfl.display.BlendMode;
-import backend.StageData;
+import data.StageData;
 
 typedef LuaTweenOptions = {
 	type:FlxTweenType,
