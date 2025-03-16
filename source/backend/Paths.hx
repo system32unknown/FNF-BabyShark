@@ -12,7 +12,7 @@ import utils.system.MemoryUtil;
 
 @:access(openfl.display.BitmapData)
 class Paths {
-	inline public static final CHART_PATH :String= "charts";
+	inline public static final CHART_PATH :String = "charts";
 	inline public static final SOUND_EXT:String = "ogg";
 	inline public static final VIDEO_EXT:String = "mp4";
 
@@ -154,9 +154,9 @@ class Paths {
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
 
-	inline public static function sound(key:String, ?modsAllowed:Bool = true, ?playBeep: Bool = true):Sound
-		return returnSound('sounds/$key', null, modsAllowed, playBeep);
-	inline public static function music(key:String, ?modsAllowed:Bool = true, ?playBeep: Bool = true):Sound
+	inline public static function sound(key:String, ?modsAllowed:Bool = true, ?playBeep:Bool = true):Sound
+		return returnSound('sounds/$key', null, modsAllowed, playBeep)
+	inline public static function music(key:String, ?modsAllowed:Bool = true, ?playBeep:Bool = true):Sound
 		return returnSound('music/$key', null, modsAllowed, playBeep);
 
 	inline public static function inst(song:String, ?modsAllowed:Bool = true):Sound

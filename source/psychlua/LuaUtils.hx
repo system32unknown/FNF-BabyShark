@@ -3,6 +3,7 @@ package psychlua;
 import objects.Bar;
 import flixel.util.FlxAxes;
 import openfl.display.BlendMode;
+import backend.StageData;
 
 typedef LuaTweenOptions = {
 	type:FlxTweenType,
@@ -229,7 +230,8 @@ class LuaUtils {
 	}
 
 	public static inline function getLowestCharacterGroup():FlxSpriteGroup {
-		var group:FlxSpriteGroup = PlayState.instance.gfGroup;
+		var stageData:StageFile = StageData.getStageFile(PlayState.SONG.stage);
+		var group:FlxSpriteGroup = (stageData.hide_girlfriend ? PlayState.instance.boyfriendGroup : PlayState.instance.gfGroup);
 		var pos:Int = PlayState.instance.members.indexOf(group);
 
 		var newPos:Int = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);

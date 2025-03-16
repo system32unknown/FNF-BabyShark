@@ -3817,8 +3817,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	}
 
 	function updateGridVisibility() {
-		showLastGridButton.text.text = showPreviousSection	? '  Hide Last Section' :  '  Show Last Section';
-		showNextGridButton.text.text = showNextSection		? '  Hide Next Section' :  '  Show Next Section';
+		showLastGridButton.text.text = showPreviousSection	? '  Hide Last Section' : '  Show Last Section';
+		showNextGridButton.text.text = showNextSection		? '  Hide Next Section' : '  Show Next Section';
 
 		prevGridBg.visible = (curSec > 0 && showPreviousSection);
 		nextGridBg.visible = (curSec < PlayState.SONG.notes.length - 1 && showNextSection);

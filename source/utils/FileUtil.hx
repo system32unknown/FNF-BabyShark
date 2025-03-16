@@ -1,6 +1,5 @@
 package utils;
 
-import haxe.zip.Entry;
 import haxe.io.Path;
 import lime.utils.Bytes;
 import lime.ui.FileDialog;
@@ -32,10 +31,11 @@ class FileUtil {
 		#end
 	}
 
-	public static function saveFileRef(content:String, format:String, filedefault:String, save:Bool = true) {
+	public static function saveFileRef(content:String, format:String, filedefault:String, save:Bool = true):FileReference {
 		var fileRef:FileReference = new FileReference();
 		if (save) fileRef.save(content, '$filedefault.$format');
 		else fileRef.load();
+		return fileRef;
 	}
 
 	/**
@@ -101,16 +101,16 @@ class FileUtil {
 	 * @param typeFilter TODO What does this do?
 	 * @return Whether the file dialog was opened successfully.
 	 */
-	public static function saveMultipleFiles(resources:Array<Entry>, ?onSaveAll:Array<String>->Void, ?onCancel:Void->Void, ?defaultPath:String, force:Bool = false):Bool {
+	public static function saveMultipleFiles(resources:Array<haxe.zip.Entry>, ?onSaveAll:Array<String>->Void, ?onCancel:Void->Void, ?defaultPath:String, force:Bool = false):Bool {
 		#if desktop
 		// Prompt the user for a directory, then write all of the files to there.
 		var onSelectDir:String->Void = (targetPath:String) -> {
 			var paths:Array<String> = [];
 			for (resource in resources) {
-				var filePath = haxe.io.Path.join([targetPath, resource.fileName]);
+				var filePath:String = Path.join([targetPath, resource.fileName]);
 				try {
 					if (resource.data == null) {
-						trace('WARNING: File $filePath has no data or content. Skipping.');
+						Logs.trace('File $filePath has no data or content. Skipping.', WARNING);
 						continue;
 					} else writeBytesToPath(filePath, resource.data, force ? Force : Skip);
 				} catch (_) throw 'Failed to write file (probably already exists): $filePath';
@@ -154,10 +154,10 @@ class FileUtil {
 	 */
 	public static function browseFileReference(callback:FileReference->Void) {
 		var file:FileReference = new FileReference();
-		file.addEventListener(Event.SELECT, function(e) {
+		file.addEventListener(Event.SELECT, (e:Event) -> {
 			var selectedFileRef:FileReference = e.target;
 			trace('Selected file: ' + selectedFileRef.name);
-			selectedFileRef.addEventListener(Event.COMPLETE, function(e) {
+			selectedFileRef.addEventListener(Event.COMPLETE, (e:Event) -> {
 				var loadedFileRef:FileReference = e.target;
 				trace('Loaded file: ' + loadedFileRef.name);
 				callback(loadedFileRef);
@@ -261,8 +261,7 @@ class FileUtil {
 	 * @return The path to the temporary directory.
 	 */
 	public static function getTempDir():String {
-		if (tempDir != null)
-			return tempDir;
+		if (tempDir != null) return tempDir;
 		#if sys
 		#if windows
 		var path:String = null;

@@ -2570,17 +2570,11 @@ class PlayState extends MusicBeatState {
 		var strumART:Float = 0;
 		strumHitId = id + (isDad ? 0 : EK.keys(mania));
 		if (!CoolUtil.toBool(hit & 1 << strumHitId)) {
-			if (isDad) {
-				strumART = dad.charaCrochet;
-				strumSpr = opponentStrums.members[id];
-			} else {
-				strumART = boyfriend.charaCrochet;
-				strumSpr = playerStrums.members[id];
-			}
-
+			strumSpr = (isDad ? opponentStrums : playerStrums).members[id];
 			if (strumSpr != null) {
 				strumSpr.playAnim('confirm', true);
-				strumSpr.resetAnim = strumART;
+				var strumCurAnim:flixel.animation.FlxAnimation = strumSpr.animation.curAnim;
+				strumSpr.resetAnim = (1 / strumCurAnim.frameRate) * strumCurAnim.numFrames;
 			}
 			hit |= 1 << strumHitId;
 		}
