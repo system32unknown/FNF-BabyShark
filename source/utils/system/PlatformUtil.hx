@@ -24,7 +24,6 @@ import lime.system.System;
 	#include <iostream>
 	#include <thread>
 	#include <string>
-	#include <codecvt>
 
 	#define attributeDarkMode 20
 	#define attributeDarkModeFallback 19
@@ -59,12 +58,6 @@ import lime.system.System;
 			EnumWindows(findByPID, (LPARAM)&data);
 			curHandle = data.handle;
 		}
-	}
-
-	BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam) {
-		LPWSTR newText = (LPWSTR)lParam;
-		SendMessageTimeoutW(hwnd, WM_SETTEXT, NULL, (LPARAM)newText, SMTO_ABORTIFHUNG, 0, NULL);
-		return TRUE;
 	}
 ')
 #elseif linux
@@ -405,20 +398,6 @@ class PlatformUtil {
 	')
 	#end
 	public static function detectWine():Bool {
-		return false;
-	}
-
-	#if (cpp && windows)
-	@:functionCode('
-        std::string s = text;
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-        std::wstring wide = converter.from_bytes(s);
-
-        LPCWSTR result = wide.c_str();
-        return EnumChildWindows(GetDesktopWindow(), EnumChildProc, (LPARAM)result);
-    ')
-	#end
-	public static function setCustomTitleTextToWindows(text:String = "..."):Bool {
 		return false;
 	}
 }
