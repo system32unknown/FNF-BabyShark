@@ -24,6 +24,7 @@ import lime.system.System;
 	#include <iostream>
 	#include <thread>
 	#include <string>
+	#include <codecvt>
 
 	#define attributeDarkMode 20
 	#define attributeDarkModeFallback 19
@@ -58,6 +59,12 @@ import lime.system.System;
 			EnumWindows(findByPID, (LPARAM)&data);
 			curHandle = data.handle;
 		}
+	}
+
+	BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam) {
+		LPWSTR newText = (LPWSTR)lParam;
+		SendMessageTimeoutW(hwnd, WM_SETTEXT, NULL, (LPARAM)newText, SMTO_ABORTIFHUNG, 0, NULL);
+		return TRUE;
 	}
 ')
 #elseif linux
@@ -216,7 +223,9 @@ class PlatformUtil {
 			getHandle();
 			if (curHandle != (HWND)0) {
 				const COLORREF targetColor = (COLORREF)intColor;
-				DwmSetWindowAttribute(curHandle, attributeCaptionColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				if (S_OK != DwmSetWindowAttribute(curHandle, attributeCaptionColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor))) {
+					DwmSetWindowAttribute(curHandle, attributeCaptionColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				}
 				UpdateWindow(curHandle);
 			}
 		');
@@ -237,7 +246,9 @@ class PlatformUtil {
 			getHandle();
 			if (curHandle != (HWND)0) {
 				const COLORREF targetColor = (COLORREF)intColor;
-				DwmSetWindowAttribute(curHandle, attributeTextColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				if (S_OK != DwmSetWindowAttribute(curHandle, attributeTextColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor))) {
+					DwmSetWindowAttribute(curHandle, attributeTextColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				}
 				UpdateWindow(curHandle);
 			}
 		');
@@ -258,7 +269,9 @@ class PlatformUtil {
 			getHandle();
 			if (curHandle != (HWND)0) {
 				const COLORREF targetColor = (COLORREF)intColor;
-				DwmSetWindowAttribute(curHandle, attributeBorderColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				if (S_OK != DwmSetWindowAttribute(curHandle, attributeBorderColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor))) {
+					DwmSetWindowAttribute(curHandle, attributeBorderColor, (LPCVOID)&targetColor, (DWORD)sizeof(targetColor));
+				}
 				UpdateWindow(curHandle);
 			}
 		');
@@ -271,6 +284,13 @@ class PlatformUtil {
 	@:functionCode('return FindWindowA(className.c_str(), windowName.c_str()) != NULL;')
 	#end
 	public static function findWindow(className:String = null, windowName:String = ''):Bool return false;
+
+	#if windows
+	@:functionCode('return Beep(freq, duration);')
+	#end
+	public static function beep(freq:Int, duration:Int):Bool {
+		return false;
+	}
 
 	#if windows
 	@:functionCode('
@@ -354,6 +374,52 @@ class PlatformUtil {
 			}
 		');
 		#end
+	}
+
+	#if (cpp && windows)
+	@:functionCode('
+		BOOL isAdmin = FALSE;
+		SID_IDENTIFIER_AUTHORITY ntAuthority = SECURITY_NT_AUTHORITY;
+		PSID adminGroup = nullptr;
+
+		if (AllocateAndInitializeSid(&ntAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &adminGroup)) {
+			if (!CheckTokenMembership(nullptr, adminGroup, &isAdmin)) isAdmin = FALSE;
+			FreeSid(adminGroup);
+		}
+
+		return isAdmin == TRUE;
+	')
+	#end
+	public static function isRunningAsAdmin():Bool {
+		return false;
+	}
+
+	#if (cpp && windows)
+	@:functionCode('
+		HMODULE ntdll = GetModuleHandleA("ntdll.dll");
+		if (ntdll) {
+			void* wine_get_version = GetProcAddress(ntdll, "wine_get_version");
+			if (wine_get_version) return true;
+		}
+		return false;
+	')
+	#end
+	public static function detectWine():Bool {
+		return false;
+	}
+
+	#if (cpp && windows)
+	@:functionCode('
+        std::string s = text;
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        std::wstring wide = converter.from_bytes(s);
+
+        LPCWSTR result = wide.c_str();
+        return EnumChildWindows(GetDesktopWindow(), EnumChildProc, (LPARAM)result);
+    ')
+	#end
+	public static function setCustomTitleTextToWindows(text:String = "..."):Bool {
+		return false;
 	}
 }
 

@@ -1,5 +1,6 @@
 package utils.system;
 
+import haxe.io.Path as HxPath;
 import sys.io.Process;
 
 class SystemUtil {
@@ -9,6 +10,10 @@ class SystemUtil {
 			case "userpath": #if windows "USERPROFILE" #else "HOME" #end;
 			case "temppath" | _: #if windows "TEMP" #else "HOME" #end;
 		});
+	}
+
+	public static function getProgramPath():String {
+		return HxPath.directory(Sys.programPath()).replace("\\", "/");
 	}
 
 	public static function executableFileName():String {

@@ -2,6 +2,7 @@ package utils.system;
 
 #if cpp
 import cpp.vm.Gc;
+import flixel.util.FlxDestroyUtil;
 
 #if windows
 @:cppFileCode('
@@ -109,4 +110,19 @@ class MemoryUtil {
 	#end
 	#end
 	public static function getProcessMEM():Float return 0;
+
+	public static function getFlxZombies(destroy:Bool = false):Array<Dynamic> {
+		var _zombie:Dynamic = null;
+		var cotainedZombies:Array<Dynamic> = [];
+		#if cpp
+		while ((_zombie = Gc.getNextZombie()) != null) {
+			if (_zombie is IFlxDestroyable) {
+				cotainedZombies.push(_zombie);
+				if (destroy) FlxDestroyUtil.destroy(cast(_zombie, IFlxDestroyable));
+			}
+		}
+		#end
+		_zombie = null;
+		return cotainedZombies;
+	}
 }
