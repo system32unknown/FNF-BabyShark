@@ -17,7 +17,7 @@ class HealthIcon extends FlxSprite {
 	public var sprTracker:FlxSprite;
 	public var isPixelIcon(get, null):Bool;
 	public var animated:Bool;
-	public var enableUpdHitbox:Bool = false;
+	public var enableUpdHitbox:Bool = true;
 
 	var isPlayer:Bool = false;
 	var char:String = '';
@@ -152,11 +152,11 @@ class HealthIcon extends FlxSprite {
 
 	public function bopUpdate(e:Float, rate:Float):Void {
 		switch (curBopType.toLowerCase()) {
-			case "Old": setGraphicSize(Std.int(FlxMath.lerp(150, width, .5)));
-			case "Psych":
+			case "old": setGraphicSize(Std.int(FlxMath.lerp(150, width, .5)));
+			case "psych":
 				var mult:Float = FlxMath.lerp(1, scale.x, Math.exp(-e * 9 * rate));
 				scale.set(mult, mult);
-			case "Dave": setGraphicSize(Std.int(FlxMath.lerp(150, width, .88)), Std.int(FlxMath.lerp(150, height, .88)));
+			case "dave": setGraphicSize(Std.int(FlxMath.lerp(150, width, .88)), Std.int(FlxMath.lerp(150, height, .88)));
 		}
 		if (enableUpdHitbox) updateHitbox();
 	}
@@ -184,10 +184,13 @@ class HealthIcon extends FlxSprite {
 					else if (type == 1) setGraphicSize(Std.int(width + (50 * ((2 - funny) + .1))), Std.int(height - (25 * ((2 - funny) + .1))));
 				case "goldenapple":
 					var iconAngle:Float = (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? -15 : 15);
-					if (type == 0) scale.set(1.1, (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? .8 : 1.3));
-					else if (type == 1) scale.set(1.1, (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? 1.3 : .8));
-		
-					FlxTween.angle(this, (type == 0 ? iconAngle : -iconAngle), 0, Conductor.crochet / 1300 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
+					if (type == 0) {
+						scale.set(1.1, (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? .8 : 1.3));
+						FlxTween.angle(this, iconAngle, 0, Conductor.crochet / 1300 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
+					} else if (type == 1) {
+						scale.set(1.1, (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? 1.3 : .8));
+						FlxTween.angle(this, -iconAngle, 0, Conductor.crochet / 1300 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
+					}
 					FlxTween.tween(this, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
 			}
 		}

@@ -2351,7 +2351,7 @@ class PlayState extends MusicBeatState {
 				playbackRate: playbackRate,
 				gfSpeed: gfSpeed,
 				healthBarPercent: healthBar.bounded
-			}, "ClientPrefs", Std.int(FlxMath.bound(i >> 1, 0, 2)));
+			}, "ClientPrefs", i);
 		}
 
 		if (curBeat > 0) charactersDance(curBeat);
