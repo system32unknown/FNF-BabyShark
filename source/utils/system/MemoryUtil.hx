@@ -34,6 +34,10 @@ import flixel.util.FlxDestroyUtil;
 class MemoryUtil {
 	public static var isGcOn:Bool = true;
 
+	/**
+	 * Triggers a garbage collection cycle.
+	 * @param minor If true, performs a minor collection; otherwise, does a major collection.
+	 */
 	public static function clearMajor(?minor:Bool = false):Void {
 		#if cpp
 		Gc.run(!minor);
@@ -111,6 +115,16 @@ class MemoryUtil {
 	#end
 	public static function getProcessMEM():Float return 0;
 
+	/**
+	 * Retrieves all "zombie" objects (dangling references) detected by the garbage collector.
+	 * 
+	 * In HXCPP, a "zombie" is an object that was freed but still has a reference.
+	 * This function collects all such objects that implement `IFlxDestroyable` and,
+	 * if `destroy` is `true`, immediately calls `FlxDestroyUtil.destroy` on them.
+	 * 
+	 * @param destroy Whether to automatically destroy found zombies.
+	 * @return An array of detected zombie objects.
+	 */
 	public static function getFlxZombies(destroy:Bool = false):Array<Dynamic> {
 		var _zombie:Dynamic = null;
 		var cotainedZombies:Array<Dynamic> = [];

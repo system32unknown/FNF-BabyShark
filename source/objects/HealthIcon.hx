@@ -2,6 +2,13 @@ package objects;
 
 import flixel.graphics.FlxGraphic;
 
+typedef BopInfo = {
+	var curBeat:Int;
+	var ?playbackRate:Float;
+	var ?gfSpeed:Int;
+	var ?healthBarPercent:Float;
+}
+
 class HealthIcon extends FlxSprite {
 	static final prefix:String = 'icons/';
 	static final defaultIcon:String = 'icon-face';
@@ -9,9 +16,10 @@ class HealthIcon extends FlxSprite {
 	public var iconZoom:Float = 1;
 	public var sprTracker:FlxSprite;
 	public var isPixelIcon(get, null):Bool;
-	var isPlayer:Bool = false;
 	public var animated:Bool;
+	public var enableUpdHitbox:Bool = false;
 
+	var isPlayer:Bool = false;
 	var char:String = '';
 	
 	public var iconType:String = 'vanilla';
@@ -138,6 +146,74 @@ class HealthIcon extends FlxSprite {
 		if (Std.isOfType(FlxG.state, PlayState) && (ClientPrefs.data.iconBounceType == 'Dave' || ClientPrefs.data.iconBounceType == 'GoldenApple'))
 			offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
 		if (sprTracker != null) setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
+	}
+
+	public var curBopType(default, set):String = "None";
+
+	public function bopUpdate(e:Float, rate:Float):Void {
+		switch (curBopType.toLowerCase()) {
+			case "Old": setGraphicSize(Std.int(FlxMath.lerp(150, width, .5)));
+			case "Psych":
+				var mult:Float = FlxMath.lerp(1, scale.x, Math.exp(-e * 9 * rate));
+				scale.set(mult, mult);
+			case "Dave": setGraphicSize(Std.int(FlxMath.lerp(150, width, .88)), Std.int(FlxMath.lerp(150, height, .88)));
+		}
+		if (enableUpdHitbox) updateHitbox();
+	}
+
+	/**
+	 * Internal function to animate the Icon.
+	 * @param bopInfo {curBeat, playbackRate, gfSpeed, healthBarPercent} curBeat is mandatory, the rest are limited to PlayState.
+	 * @param iconAnim The name of the Animation, set to "Client"
+	 * @param type (0 = BF, 1 = DAD, 2 = SECONDARY (P4 for example))
+	 * Values are necessary for proper calculations!!
+	 */
+	public function bop(bopInfo:BopInfo, iconAnim:String = "ClientPrefs", type:Int = 0):Void {
+		if (iconAnim == "None") return;
+		if (iconAnim.toLowerCase() == "clientprefs") iconAnim = ClientPrefs.data.iconBounceType;
+		if (curBopType != iconAnim) curBopType = iconAnim;
+
+		final info:BopInfo = checkInfo(bopInfo);
+		if (info.curBeat % info.gfSpeed == 0) {
+			switch (iconAnim.toLowerCase()) { // Messy Math hell jumpscare (it is more customizeable though)
+				case "old": setGraphicSize(Std.int(width + 30));
+				case "psych": scale.set(1.2, 1.2);
+				case "dave":
+					var funny:Float = Math.max(Math.min(info.healthBarPercent, 1.9), .1);
+					if (type == 0) setGraphicSize(Std.int(width + (50 * (funny + .1))), Std.int(height - (25 * funny)));
+					else if (type == 1) setGraphicSize(Std.int(width + (50 * ((2 - funny) + .1))), Std.int(height - (25 * ((2 - funny) + .1))));
+				case "goldenapple":
+					var iconAngle:Float = (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? -15 : 15);
+					if (type == 0) scale.set(1.1, (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? .8 : 1.3));
+					else if (type == 1) scale.set(1.1, (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? 1.3 : .8));
+		
+					FlxTween.angle(this, (type == 0 ? iconAngle : -iconAngle), 0, Conductor.crochet / 1300 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
+					FlxTween.tween(this, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
+			}
+		}
+		if (enableUpdHitbox) updateHitbox();
+	}
+
+	function set_curBopType(newType:String):String { // Resets values
+		curBopType = newType;
+		angle = 0;
+		scale.set(1, 1);
+		setGraphicSize(150, 150);
+		updateHitbox();
+		return curBopType;
+	}
+
+	inline function checkInfo(oldInfo:BopInfo):BopInfo {
+		final playbackRate:Float = oldInfo.playbackRate ?? 1;
+		final gfSpeed:Int = oldInfo.gfSpeed ?? 1;
+		final healthBarPercent:Float = oldInfo.healthBarPercent ?? 100;
+
+		return {
+			curBeat: oldInfo.curBeat,
+			playbackRate: playbackRate,
+			gfSpeed: gfSpeed,
+			healthBarPercent: healthBarPercent
+		};
 	}
 
 	function getIconAnims(file:String):Array<String> {

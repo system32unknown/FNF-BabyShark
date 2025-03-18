@@ -26,7 +26,6 @@ class ByteBeat {
 	 * Computed byte rate based on sample rate, channels, and bit depth.
 	 */
 	public var byteRate(get, never):Int;
-
 	@:noCompletion function get_byteRate():Int {
 		return Std.int(sampleRate * channels * bitsPerSample / 8);
 	}
@@ -35,7 +34,6 @@ class ByteBeat {
 	 * Computed block alignment for audio format.
 	 */
 	public var blockAlign(get, never):Int;
-
 	@:noCompletion function get_blockAlign():Int {
 		return Std.int(channels * bitsPerSample / 8);
 	}
@@ -44,7 +42,6 @@ class ByteBeat {
 	 * Computed length of the audio data in seconds.
 	 */
 	public var length(get, never):Float;
-
 	@:noCompletion function get_length():Float {
 		var numSamples:Float = totalSize / (bitsPerSample / 8 * channels);
 		return numSamples / sampleRate;

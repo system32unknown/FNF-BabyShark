@@ -1255,16 +1255,7 @@ class PlayState extends MusicBeatState {
 			else if (Controls.justPressed('debug_2')) openCharacterEditor();
 		}
 
-		for (icon in [iconP1, iconP2]) {
-			switch (ClientPrefs.data.iconBounceType) {
-				case "Old": icon.setGraphicSize(Std.int(FlxMath.lerp(150, icon.width, .5)));
-				case "Psych":
-					var mult:Float = FlxMath.lerp(1, icon.scale.x, Math.exp(-elapsed * 9 * playbackRate));
-					icon.scale.set(mult, mult);
-				case "Dave": icon.setGraphicSize(Std.int(FlxMath.lerp(150, icon.width, .88)), Std.int(FlxMath.lerp(150, icon.height, .88)));
-			}
-			icon.updateHitbox();
-		}
+		for (icon in [iconP1, iconP2]) icon.bopUpdate(elapsed, playbackRate);
 
 		if (startedCountdown && !paused) {
 			Conductor.songPosition += elapsed * 1000 * playbackRate;
@@ -2354,29 +2345,14 @@ class PlayState extends MusicBeatState {
 			camHUD.zoom += .03 * camZoomingMult;
 		}
 
-		switch (ClientPrefs.data.iconBounceType) {
-			case "Old":
-				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
-			case "Psych":
-				iconP1.scale.set(1.2, 1.2);
-				iconP2.scale.set(1.2, 1.2);
-			case "Dave":
-				var funny:Float = Math.max(Math.min(healthBar.bounded, 1.9), .1);
-				iconP1.setGraphicSize(Std.int(iconP1.width + (50 * (funny + .1))), Std.int(iconP1.height - (25 * funny)));
-				iconP2.setGraphicSize(Std.int(iconP2.width + (50 * ((2 - funny) + .1))), Std.int(iconP2.height - (25 * ((2 - funny) + .1))));
-			case "GoldenApple":
-				var iconAngle:Float = (curBeat % (gfSpeed * 2) == 0 * playbackRate ? -15 : 15);
-				iconP1.scale.set(1.1, (curBeat % (gfSpeed * 2) == 0 * playbackRate ? .8 : 1.3));
-				iconP2.scale.set(1.1, (curBeat % (gfSpeed * 2) == 0 * playbackRate ? 1.3 : .8));
-	
-				FlxTween.angle(iconP1, iconAngle, 0, Conductor.crochet / 1300 / playbackRate * gfSpeed, {ease: FlxEase.quadOut});
-				FlxTween.angle(iconP2, -iconAngle, 0, Conductor.crochet / 1300 / playbackRate * gfSpeed, {ease: FlxEase.quadOut});
-	
-				FlxTween.tween(iconP1, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 / playbackRate * gfSpeed, {ease: FlxEase.quadOut});
-				FlxTween.tween(iconP2, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 / playbackRate * gfSpeed, {ease: FlxEase.quadOut});
+		for (i => icon in [iconP1, iconP2]) {
+			icon.bop({
+				curBeat: curBeat,
+				playbackRate: playbackRate,
+				gfSpeed: gfSpeed,
+				healthBarPercent: healthBar.bounded
+			}, "ClientPrefs", Std.int(FlxMath.bound(i >> 1, 0, 2)));
 		}
-		iconP1.updateHitbox(); iconP2.updateHitbox();
 
 		if (curBeat > 0) charactersDance(curBeat);
 		super.beatHit();

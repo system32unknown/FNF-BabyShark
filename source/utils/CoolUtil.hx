@@ -20,7 +20,7 @@ class CoolUtil {
 				returnedData[0] = data.substring(0, verEndIdx);
 				returnedData[1] = data.substring(verEndIdx + 1, data.length); // Extract the changelog after the version number
 
-				var updateVersion:utils.GameVersion = returnedData[0];
+				var updateVersion:GameVersion = returnedData[0];
 				trace('version online: $updateVersion, your version: $version');
 				if (updateVersion != version) {
 					trace('versions arent matching! please update.');
