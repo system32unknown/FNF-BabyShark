@@ -38,6 +38,7 @@ class AdditionalClasses {
 			"lime.tools",
 		];
 
+		if (haxe.macro.Context.defined("sys")) Compiler.include("openfl.net");
 		for (inc in include) Compiler.include(inc, true, exc);
 	}
 }

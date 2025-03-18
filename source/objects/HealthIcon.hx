@@ -17,7 +17,6 @@ class HealthIcon extends FlxSprite {
 	public var sprTracker:FlxSprite;
 	public var isPixelIcon(get, null):Bool;
 	public var animated:Bool;
-	public var enableUpdHitbox:Bool = true;
 
 	var isPlayer:Bool = false;
 	var char:String = '';
@@ -150,7 +149,7 @@ class HealthIcon extends FlxSprite {
 
 	public var curBopType(default, set):String = "None";
 
-	public function bopUpdate(e:Float, rate:Float):Void {
+	public dynamic function bopUpdate(e:Float, rate:Float):Void {
 		switch (curBopType.toLowerCase()) {
 			case "old": setGraphicSize(Std.int(FlxMath.lerp(150, width, .5)));
 			case "psych":
@@ -158,7 +157,7 @@ class HealthIcon extends FlxSprite {
 				scale.set(mult, mult);
 			case "dave": setGraphicSize(Std.int(FlxMath.lerp(150, width, .88)), Std.int(FlxMath.lerp(150, height, .88)));
 		}
-		if (enableUpdHitbox) updateHitbox();
+		updateHitbox();
 	}
 
 	/**
@@ -168,9 +167,9 @@ class HealthIcon extends FlxSprite {
 	 * @param type (0 = BF, 1 = DAD, 2 = SECONDARY (P4 for example))
 	 * Values are necessary for proper calculations!!
 	 */
-	public function bop(bopInfo:BopInfo, iconAnim:String = "ClientPrefs", type:Int = 0):Void {
-		if (iconAnim == "None") return;
+	public dynamic function bop(bopInfo:BopInfo, iconAnim:String = "ClientPrefs", type:Int = 0):Void {
 		if (iconAnim.toLowerCase() == "clientprefs") iconAnim = ClientPrefs.data.iconBounceType;
+		if (iconAnim == "None") return;
 		if (curBopType != iconAnim) curBopType = iconAnim;
 
 		final info:BopInfo = checkInfo(bopInfo);
@@ -194,7 +193,7 @@ class HealthIcon extends FlxSprite {
 					FlxTween.tween(this, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
 			}
 		}
-		if (enableUpdHitbox) updateHitbox();
+		updateHitbox();
 	}
 
 	function set_curBopType(newType:String):String { // Resets values
