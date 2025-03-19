@@ -184,7 +184,7 @@ class Note extends FlxSprite {
 				scale.y *= Conductor.stepCrochet * .0105;
 
 				if (PlayState.isPixelStage) {
-					offsetX += 30 * EK.scalesPixel[PlayState.mania];
+					offsetX += calcPixelScale();
 					if (!isSustainEnds) scale.y *= 1.05 * (6 / height); // Auto adjust note size
 				} else sustainScale = SUSTAIN_SIZE / frameHeight;
 				updateHitbox();
@@ -316,7 +316,7 @@ class Note extends FlxSprite {
 			updateHitbox();
 			offsetX -= width * .5;
 
-			if (PlayState.isPixelStage) offsetX += 30 * EK.scalesPixel[PlayState.mania];
+			if (PlayState.isPixelStage) offsetX += calcPixelScale();
 			if (prevNote.isSustainNote) {
 				prevNote.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][prevNote.noteData]] + 'hold');
 				prevNote.scale.y *= Conductor.stepCrochet * .0105;
@@ -552,6 +552,17 @@ class Note extends FlxSprite {
 		clipRect = rect;
 		frame = frames?.frames[animation.frameIndex];
 		return rect;
+	}
+
+	function calcPixelScale():Float {
+		var pxNoteSize:Float = switch (ClientPrefs.data.noteSkin) {
+			case "Default": 30;
+			case "Future": 5;
+			case "Chip": 17.25;
+			default: 0;
+		};
+		pxNoteSize *= EK.scalesPixel[PlayState.mania];
+		return pxNoteSize;
 	}
 
 	override function kill() {

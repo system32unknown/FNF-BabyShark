@@ -158,13 +158,16 @@ class NoteOffsetState extends MusicBeatState {
 
 		Conductor.bpm = 128;
 		FlxG.sound.playMusic(Paths.music('offsetSong'));
+		Conductor.songPosition = 0;
 
 		super.create();
 	}
 
 	var acceptTime:Float = 0;
 	override function update(elapsed:Float) {
-		Conductor.songPosition = FlxG.sound.music.time;
+		Conductor.songPosition += elapsed;
+		if (Math.abs(FlxG.sound.music.time - Conductor.songPosition) > 20)
+			Conductor.songPosition = FlxG.sound.music.time;
 		super.update(elapsed);
 
 		camGame.zoom = FlxMath.lerp(defaultCamZoom, camGame.zoom, Math.exp(-elapsed * 3.125));
@@ -213,8 +216,8 @@ class NoteOffsetState extends MusicBeatState {
 		rating.gameCenter(Y).y -= 60 + comboOffset[0][1];
 		rating.x = placement - 40 + comboOffset[0][0];
 
+		comboNums.gameCenter(Y).y += 20 - comboOffset[1][1];
 		comboNums.x = placement - 50 + comboOffset[1][0];
-		comboNums.y = rating.y + 100 - comboOffset[1][1];
 
 		reloadTexts();
 	}

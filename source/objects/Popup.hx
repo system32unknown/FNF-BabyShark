@@ -41,7 +41,6 @@ class Popup extends FlxSprite {
 		else setGraphicSize(Std.int(width * (PlayState.isPixelStage ? PlayState.daPixelZoom : .5)));
 		updateHitbox();
 
-		var baseAccX:Float = i.ratingAcc.x * i.playbackRate * i.playbackRate;
 		if (popUptype == RATING) {
 			velocity.set(-FlxG.random.int(0, 10) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(140, 175) * i.playbackRate + i.ratingVel.y);
 			acceleration.set(baseAccX, 550 * i.playbackRate * i.playbackRate + i.ratingAcc.y);

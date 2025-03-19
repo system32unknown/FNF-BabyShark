@@ -1967,7 +1967,8 @@ class PlayState extends MusicBeatState {
 			for (i in seperatedScore) {
 				var numScore:Popup = popUpGroup.recycle(Popup);
 				numScore.setupPopupData(NUMBER, uiFolder + 'judgements/number/num$i' + uiPostfix);
-				numScore.setPosition(ratingPop.x + (43 * daloop) - 50 + comboOffset[1][0] - 43 / 2 * (Std.string(tempNotes).length - 1), ratingPop.y + 100 - comboOffset[1][1]);
+				numScore.x = placement + (43 * daloop) - 50 + comboOffset[1][0] - 43 / 2 * (Std.string(tempNotes).length - 1);
+				numScore.gameCenter(Y).y += 20 - comboOffset[1][1];
 				popUpGroup.add(numScore);
 				numScore.doTween();
 				++daloop;

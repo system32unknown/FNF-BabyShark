@@ -115,7 +115,7 @@ class TitleState extends MusicBeatState {
 	var enterPosition:FlxPoint = FlxPoint.get(125, 576);
 
 	var useIdle:Bool = false;
-	var musicBPM:Float = 148;
+	public static var musicBPM:Float = 148;
 	var danceLeftFrames:Array<Int> = [for (i in 15...30) i];
 	var danceRightFrames:Array<Int> = [30].concat([for (i in 0...15) i]);
 

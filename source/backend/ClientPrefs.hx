@@ -58,7 +58,7 @@ class SaveVariables {
 	var smoothHealth:Bool = false;
 	var noteDiffTypes:String = "Simple";
 	var accuracyType:String = 'Judgement';
-	var iconBounceType:String = 'Psych';
+	var iconBopType:String = 'Psych';
 	var ratingDisplay:String = 'World';
 	var cacheOnGPU:Bool = false;
 	var vsync:Bool = false;

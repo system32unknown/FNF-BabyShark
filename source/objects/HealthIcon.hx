@@ -142,7 +142,7 @@ class HealthIcon extends FlxSprite {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (Std.isOfType(FlxG.state, PlayState) && (ClientPrefs.data.iconBounceType == 'Dave' || ClientPrefs.data.iconBounceType == 'GoldenApple'))
+		if (Std.isOfType(FlxG.state, PlayState) && (ClientPrefs.data.iconBopType == 'Dave' || ClientPrefs.data.iconBopType == 'GoldenApple'))
 			offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
 		if (sprTracker != null) setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 	}
@@ -164,11 +164,11 @@ class HealthIcon extends FlxSprite {
 	 * Internal function to animate the Icon.
 	 * @param bopInfo {curBeat, playbackRate, gfSpeed, healthBarPercent} curBeat is mandatory, the rest are limited to PlayState.
 	 * @param iconAnim The name of the Animation, set to "Client"
-	 * @param type (0 = BF, 1 = DAD, 2 = SECONDARY (P4 for example))
+	 * @param type (0 = BF, 1 = DAD)
 	 * Values are necessary for proper calculations!!
 	 */
 	public dynamic function bop(bopInfo:BopInfo, iconAnim:String = "ClientPrefs", type:Int = 0):Void {
-		if (iconAnim.toLowerCase() == "clientprefs") iconAnim = ClientPrefs.data.iconBounceType;
+		if (iconAnim.toLowerCase() == "clientprefs") iconAnim = ClientPrefs.data.iconBopType;
 		if (iconAnim == "None") return;
 		if (curBopType != iconAnim) curBopType = iconAnim;
 

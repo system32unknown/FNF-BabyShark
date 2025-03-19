@@ -2,7 +2,7 @@ package options;
 
 import objects.Note;
 import objects.NoteSplash;
-import objects.NoteSplash.NoteSplashAnim;
+import objects.HealthIcon;
 import objects.StrumNote;
 
 class VisualsSettingsSubState extends BaseOptionsMenu {
@@ -10,9 +10,16 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 	var splashes:FlxTypedGroup<NoteSplash>;
 	var noteY:Float = 90;
 	var changedMusic:Bool = false;
+	var bfIcon:HealthIcon;
+	var iconOption:Option;
+
+	var notesShown:Bool = false;
+	var iconShown:Bool = false;
 	public function new() {
 		title = Language.getPhrase('visuals_menu', 'Visuals Settings');
-		rpcTitle = 'Visuals Settings Menu'; //for Discord Rich Presence
+		rpcTitle = 'Visuals Settings Menu'; // for Discord Rich Presence
+
+		if (!OptionsState.onPlayState) Conductor.bpm = states.TitleState.musicBPM;
 
 		// for note skins and splash skins
 		notes = new FlxTypedGroup<StrumNote>();
@@ -59,6 +66,12 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 			option.onChange = onChangeSplashSkin;
 		}
 
+		// HealthIcon for Bopping
+		bfIcon = new HealthIcon("bf", true);
+		bfIcon.x = FlxG.width + 100;
+		bfIcon.y = FlxG.height / 3;
+		bfIcon.iconType = ClientPrefs.data.healthTypes;
+
 		var option:Option = new Option('Note Splash Opacity:', 'How transparent should the Note Splashes be?', 'splashAlpha', PERCENT);
 		option.scrollSpeed = 1.6;
 		option.minValue = 0.0;
@@ -81,8 +94,14 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(new Option('Hide HUD', 'If checked, hides most HUD elements.', 'hideHud'));
 		addOption(new Option('Time Bar:', "What should the Time Bar display?", 'timeBarType', STRING, ['Time Left', 'Time Elapsed', 'Song Name', 'Time Position', 'Name Left', 'Name Elapsed', 'Name Time Position', 'Disabled']));
 		addOption(new Option('Flashing Lights', "Uncheck this if you're sensitive to flashing lights!", 'flashing'));
-		addOption(new Option('Icon Bounce:', "What should the Icon Bounces?", 'iconBounceType', STRING, ['Old', 'Psych', 'Dave', 'GoldenApple', 'Custom']));
-		addOption(new Option('Health Bar Type:', "What should the Health Bar Types?", 'healthTypes', STRING, ['Vanilla', 'Psych']));
+
+		var option:Option = new Option('Icon Bop:', "Select icon bop animation on a beat hit.", 'iconBopType', STRING, ['Old', 'Psych', 'Dave', 'GoldenApple', 'Custom']);
+		iconOption = option;
+		addOption(option);
+		var option:Option = new Option('Health Bar Type:', "What should the Health Bar Types?", 'healthTypes', STRING, ['Vanilla', 'Psych']);
+		addOption(option);
+		option.onChange = () -> bfIcon.iconType = (option.getValue() == "Vanilla" ? "vanilla" : "psych");
+
 		addOption(new Option('Smooth Health', '', 'smoothHealth'));
 		var option:Option = new Option('Health Bar Opacity', 'How transparent should the Health Bar and icons be?', 'healthBarAlpha', PERCENT);
 		option.scrollSpeed = 1.6;
@@ -107,12 +126,12 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		super();
 		add(notes);
 		add(splashes);
+		add(bfIcon);
 	}
 
-	var notesShown:Bool = false;
 	override function changeSelection(change:Int = 0) {
 		super.changeSelection(change);
-		
+
 		switch (curOption.variable) {
 			case 'noteSkin', 'splashSkin', 'splashAlpha', 'splashCount':
 				if (!notesShown) {
@@ -123,6 +142,12 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 				}
 				notesShown = true;
 				if (curOption.variable.startsWith('splash') && Math.abs(notes.members[0].y - noteY) < 25) playNoteSplashes();
+			case 'iconBopType', 'healthTypes':
+				if (!iconShown) {
+					FlxTween.cancelTweensOf(bfIcon);
+					FlxTween.tween(bfIcon, {x: FlxG.width - 250}, .25, {ease: FlxEase.quadInOut});
+				}
+				iconShown = true;
 			default:
 				if (notesShown) {
 					for (note in notes.members) {
@@ -131,7 +156,28 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 					}
 				}
 				notesShown = false;
+
+				if (iconShown) {
+					FlxTween.cancelTweensOf(bfIcon);
+					FlxTween.tween(bfIcon, {x: FlxG.width + 100}, .125, {ease: FlxEase.quadInOut});
+				}
+				iconShown = false;
 		}
+	}
+
+	override function beatHit() {
+		super.beatHit();
+		if (iconOption.getValue() == "Custom") return;
+		bfIcon.bop({curBeat: curBeat});
+	}
+
+	override function update(elapsed:Float) {
+		bfIcon.bopUpdate(elapsed, 1);
+
+		Conductor.songPosition += elapsed;
+		if (Math.abs(FlxG.sound.music.time - Conductor.songPosition) > 20) Conductor.songPosition = FlxG.sound.music.time;
+
+		super.update(elapsed);
 	}
 
 	function changeNoteSkin(note:StrumNote) {
