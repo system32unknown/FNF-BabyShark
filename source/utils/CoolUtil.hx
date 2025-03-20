@@ -178,9 +178,7 @@ class CoolUtil {
 		for (i in FileSystem.readDirectory(path)) returnFileName(i, ret, path);
 		if (erasePath) {
 			path += '/';
-			for (i in 0...ret.length) {
-				ret[i] = ret[i].replace(path, '');
-			}
+			for (i in 0...ret.length) ret[i] = ret[i].replace(path, '');
 		}
 		return ret;
 	}

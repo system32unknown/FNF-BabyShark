@@ -489,8 +489,7 @@ class LoadingState extends MusicBeatState {
 			#end
 
 			if (!isAnimateAtlas) {
-				var split:Array<String> = img.split(',');
-				for (file in split) imagesToPrepare.push(file.trim());
+				for (file in img.split(',')) imagesToPrepare.push(file.trim());
 			}
 			#if flxanimate
 			else {

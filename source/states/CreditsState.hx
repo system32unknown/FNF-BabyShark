@@ -106,7 +106,7 @@ class CreditsState extends MusicBeatState {
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		add(bg);
 		bg.gameCenter();
-		
+
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
 
 		#if MODS_ALLOWED
@@ -426,7 +426,7 @@ class CreditSectionState extends MusicBeatState {
 			descText.y = FlxG.height - descText.height + offsetThing - 60;
 
 			if (moveTween != null) moveTween.cancel();
-			moveTween = FlxTween.tween(descText, {y : descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
+			moveTween = FlxTween.tween(descText, {y: descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
 
 			descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
 			descBox.updateHitbox();

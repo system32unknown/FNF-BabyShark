@@ -74,7 +74,7 @@ class NativeUtil {
 		#if (windows && !hl)
 		if (foregroundColor == NONE) foregroundColor = LIGHTGRAY;
 		if (backgroundColor == NONE) backgroundColor = BLACK;
-		PlatformUtil.setConsoleColors((cast (backgroundColor, Int) * 16) + cast (foregroundColor, Int));
+		PlatformUtil.setConsoleColors((cast(backgroundColor, Int) * 16) + cast(foregroundColor, Int));
 		#elseif sys
 		Sys.print("\x1b[0m");
 		if (foregroundColor != NONE) Sys.print("\x1b[" + Std.int(consoleColorToANSI(foregroundColor)) + "m");
@@ -84,42 +84,42 @@ class NativeUtil {
 
 	public static function consoleColorToANSI(color:ConsoleColor):Int {
 		return switch (color) {
-			case BLACK:			30;
-			case DARKBLUE:		34;
-			case DARKGREEN:		32;
-			case DARKCYAN:		36;
-			case DARKRED:		31;
-			case DARKMAGENTA:	35;
-			case DARKYELLOW:	33;
-			case LIGHTGRAY:		37;
-			case GRAY:			90;
-			case BLUE:			94;
-			case GREEN:			92;
-			case CYAN:			96;
-			case RED:			91;
-			case MAGENTA:		95;
-			case YELLOW:		93;
-			case WHITE | _:		97;
+			case BLACK: 30;
+			case DARKBLUE: 34;
+			case DARKGREEN: 32;
+			case DARKCYAN: 36;
+			case DARKRED: 31;
+			case DARKMAGENTA: 35;
+			case DARKYELLOW: 33;
+			case LIGHTGRAY: 37;
+			case GRAY: 90;
+			case BLUE: 94;
+			case GREEN: 92;
+			case CYAN: 96;
+			case RED: 91;
+			case MAGENTA: 95;
+			case YELLOW: 93;
+			case WHITE | _: 97;
 		}
 	}
 	public static function consoleColorToOpenFL(color:ConsoleColor):FlxColor {
 		return switch (color) {
-			case BLACK:		 0xFF000000;
-			case DARKBLUE:	 0xFF000088;
-			case DARKGREEN:	 0xFF008800;
-			case DARKCYAN:	 0xFF008888;
-			case DARKRED:	 0xFF880000;
-			case DARKMAGENTA:0xFF880088;
+			case BLACK: 0xFF000000;
+			case DARKBLUE: 0xFF000088;
+			case DARKGREEN: 0xFF008800;
+			case DARKCYAN: 0xFF008888;
+			case DARKRED: 0xFF880000;
+			case DARKMAGENTA: 0xFF880088;
 			case DARKYELLOW: 0xFF888800;
-			case LIGHTGRAY:	 0xFFBBBBBB;
-			case GRAY:		 0xFF888888;
-			case BLUE:		 0xFF0000FF;
-			case GREEN:		 0xFF00FF00;
-			case CYAN:		 0xFF00FFFF;
-			case RED:		 0xFFFF0000;
-			case MAGENTA:	 0xFFFF00FF;
-			case YELLOW:	 0xFFFFFF00;
-			case WHITE | _:	 0xFFFFFFFF;
+			case LIGHTGRAY: 0xFFBBBBBB;
+			case GRAY: 0xFF888888;
+			case BLUE: 0xFF0000FF;
+			case GREEN: 0xFF00FF00;
+			case CYAN: 0xFF00FFFF;
+			case RED: 0xFFFF0000;
+			case MAGENTA: 0xFFFF00FF;
+			case YELLOW: 0xFFFFFF00;
+			case WHITE | _: 0xFFFFFFFF;
 		}
 	}
 }

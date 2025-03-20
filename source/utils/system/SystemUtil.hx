@@ -4,12 +4,12 @@ import haxe.io.Path as HxPath;
 import sys.io.Process;
 
 class SystemUtil {
-    /**
-     * Retrieves a system path based on the given identifier.
-     * 
-     * @param path The identifier for the system path. Can be "username", "userpath", or "temppath".
-     * @return The system path as a string.
-     */
+	/**
+	 * Retrieves a system path based on the given identifier.
+	 * 
+	 * @param path The identifier for the system path. Can be "username", "userpath", or "temppath".
+	 * @return The system path as a string.
+	 */
 	public static function getSysPath(path:String = ""):String {
 		return Sys.getEnv(switch (path.toLowerCase()) {
 			case "username": #if windows "USERNAME" #else "USER" #end;
@@ -18,31 +18,31 @@ class SystemUtil {
 		});
 	}
 
-    /**
-     * Gets the directory path of the currently running program.
-     * 
-     * @return The program's directory path with forward slashes.
-     */
+	/**
+	 * Gets the directory path of the currently running program.
+	 * 
+	 * @return The program's directory path with forward slashes.
+	 */
 	public static function getProgramPath():String {
 		return HxPath.directory(Sys.programPath()).replace("\\", "/");
 	}
 
-    /**
-     * Retrieves the name of the executable file.
-     * 
-     * @return The executable file name as a string.
-     */
+	/**
+	 * Retrieves the name of the executable file.
+	 * 
+	 * @return The executable file name as a string.
+	 */
 	public static function executableFileName():String {
 		var programPath:Array<String> = Sys.programPath().split(#if windows "\\" #else "/" #end);
 		return programPath[programPath.length - 1];
 	}
 
-    /**
-     * Generates a text file with the specified content and opens it.
-     * 
-     * @param fileContent The content to write to the file.
-     * @param fileName The name of the file (without extension).
-     */
+	/**
+	 * Generates a text file with the specified content and opens it.
+	 * 
+	 * @param fileContent The content to write to the file.
+	 * @param fileName The name of the file (without extension).
+	 */
 	public static function generateTextFile(fileContent:String, fileName:String) {
 		#if desktop
 		var path:String = '${getSysPath()}/$fileName.txt';
@@ -51,9 +51,9 @@ class SystemUtil {
 		#end
 	}
 
-    /**
-     * Indicates whether the console output is available.
-     */
+	/**
+	 * Indicates whether the console output is available.
+	 */
 	public static var isConsoleOn(get, never):Bool;
 	public static function get_isConsoleOn():Bool {
 		var available:Bool = false;

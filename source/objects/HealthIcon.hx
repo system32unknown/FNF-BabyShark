@@ -6,7 +6,7 @@ typedef BopInfo = {
 	var curBeat:Int;
 	var ?playbackRate:Float;
 	var ?gfSpeed:Int;
-	var ?healthBarPercent:Float;
+	var ?percent:Float;
 }
 
 class HealthIcon extends FlxSprite {
@@ -178,7 +178,7 @@ class HealthIcon extends FlxSprite {
 				case "old": setGraphicSize(Std.int(width + 30));
 				case "psych": scale.set(1.2, 1.2);
 				case "dave":
-					var funny:Float = Math.max(Math.min(info.healthBarPercent, 1.9), .1);
+					var funny:Float = Math.max(Math.min(info.percent, 1.9), .1);
 					if (type == 0) setGraphicSize(Std.int(width + (50 * (funny + .1))), Std.int(height - (25 * funny)));
 					else if (type == 1) setGraphicSize(Std.int(width + (50 * ((2 - funny) + .1))), Std.int(height - (25 * ((2 - funny) + .1))));
 				case "goldenapple":
@@ -206,15 +206,11 @@ class HealthIcon extends FlxSprite {
 	}
 
 	inline function checkInfo(oldInfo:BopInfo):BopInfo {
-		final playbackRate:Float = oldInfo.playbackRate ?? 1;
-		final gfSpeed:Int = oldInfo.gfSpeed ?? 1;
-		final healthBarPercent:Float = oldInfo.healthBarPercent ?? 100;
-
 		return {
 			curBeat: oldInfo.curBeat,
-			playbackRate: playbackRate,
-			gfSpeed: gfSpeed,
-			healthBarPercent: healthBarPercent
+			playbackRate: oldInfo.playbackRate ?? 1,
+			gfSpeed: oldInfo.gfSpeed ?? 1,
+			percent: oldInfo.percent ?? 50
 		};
 	}
 

@@ -112,7 +112,8 @@ class StringUtil {
 
 		while (digits > 0) {
 			str = Std.string(int % 2) + str;
-			int >>= 1; digits--;
+			int >>= 1;
+			digits--;
 		}
 		return str;
 	}

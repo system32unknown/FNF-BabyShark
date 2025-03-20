@@ -2351,7 +2351,7 @@ class PlayState extends MusicBeatState {
 				curBeat: curBeat,
 				playbackRate: playbackRate,
 				gfSpeed: gfSpeed,
-				healthBarPercent: healthBar.bounded
+				percent: healthBar.bounded
 			}, "ClientPrefs", i);
 		}
 
