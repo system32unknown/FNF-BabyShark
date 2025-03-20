@@ -31,9 +31,7 @@ class VectorHelpers {
 
 	public static function toArray(vec:Vector3, ?resultArray:Array<Float>):Array<Float> {
 		if (resultArray == null) resultArray = [];
-		resultArray[0] = vec.x;
-		resultArray[1] = vec.y;
-		resultArray[2] = vec.z;
+		else resultArray = [vec.x, vec.y, vec.z];
 		return resultArray;
 	}
 }

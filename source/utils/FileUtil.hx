@@ -12,7 +12,6 @@ import openfl.events.IOErrorEvent;
  * Utilities for reading and writing files on various platforms.
  */
 class FileUtil {
-
 	/**
 	 * Browses for a single file location, then writes the provided `haxe.io.Bytes` data and calls `onSave(path)` when done.
 	 *

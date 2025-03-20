@@ -21,22 +21,24 @@ class PauseSubState extends MusicBeatSubstate {
 	var missingText:FlxText;
 
 	public static var songName:String = null;
+	var pSte:PlayState;
 
 	override function create() {
+		pSte = PlayState.instance;
 		if (Difficulty.list.length < 2) menuItemsOG.remove('Change Difficulty'); // No need to change difficulty if there is only one!
 
 		if (PlayState.chartingMode) {
 			menuItemsOG.insert(2, 'Leave Charting Mode');
 
 			var num:Int = 0;
-			if (!PlayState.instance.startingSong) {
+			if (!pSte.startingSong) {
 				num = 1;
 				menuItemsOG.insert(3, 'Skip Time');
 			}
 			menuItemsOG.insert(3 + num, 'End Song');
 			menuItemsOG.insert(4 + num, 'Toggle Practice Mode');
 			menuItemsOG.insert(5 + num, 'Toggle Botplay');
-		} else if (PlayState.instance.practiceMode && !PlayState.instance.startingSong)
+		} else if (pSte.practiceMode && !pSte.startingSong)
 			menuItemsOG.insert(3, 'Skip Time');
 		menuItems = menuItemsOG;
 
@@ -74,7 +76,7 @@ class PauseSubState extends MusicBeatSubstate {
 			add(label);
 		}
 		chartingText.visible = PlayState.chartingMode;
-		practiceText.visible = PlayState.instance.practiceMode;
+		practiceText.visible = pSte.practiceMode;
 		FlxTween.tween(bg, {alpha: .2}, .4, {ease: FlxEase.quartInOut});
 
 		add(grpMenuShit = new FlxTypedGroup<Alphabet>());
@@ -194,9 +196,9 @@ class PauseSubState extends MusicBeatSubstate {
 					regenMenu();
 				case 'Change Character': FlxG.switchState(() -> new states.CharacterSelectionState());
 				case 'Toggle Practice Mode':
-					PlayState.instance.practiceMode = !PlayState.instance.practiceMode;
+					pSte.practiceMode = !pSte.practiceMode;
 					PlayState.changedDifficulty = true;
-					practiceText.visible = PlayState.instance.practiceMode;
+					practiceText.visible = pSte.practiceMode;
 				case "Restart Song": restartSong();
 				case "Leave Charting Mode":
 					restartSong();
@@ -207,37 +209,49 @@ class PauseSubState extends MusicBeatSubstate {
 						restartSong(true);
 					} else {
 						if (curTime != Conductor.songPosition) {
-							PlayState.instance.clearNotesBefore(curTime);
-							PlayState.instance.setSongTime(curTime);
+							pSte.clearNotesBefore(curTime);
+							pSte.setSongTime(curTime);
 						}
 						close();
 					}
 				case 'End Song':
 					close();
-					PlayState.instance.notes.clear();
-					PlayState.instance.unspawnNotes = [];
-					PlayState.instance.finishSong(true);
+					pSte.notes.clear();
+					pSte.unspawnNotes = [];
+					pSte.finishSong(true);
 				case 'Toggle Botplay':
-					PlayState.instance.cpuControlled = !PlayState.instance.cpuControlled;
+					pSte.cpuControlled = !pSte.cpuControlled;
 					PlayState.changedDifficulty = true;
-					PlayState.instance.botplayTxt.visible = PlayState.instance.cpuControlled;
-					PlayState.instance.botplayTxt.alpha = 1;
-					PlayState.instance.botplaySine = 0;
+					pSte.botplayTxt.visible = pSte.cpuControlled;
+					pSte.botplayTxt.alpha = 1;
+					pSte.botplaySine = 0;
 				case 'Options':
-					PlayState.instance.paused = true; // For lua
-					PlayState.instance.vocals.volume = 0;
+					pSte.paused = true; // For lua
+					pSte.vocals.volume = 0;
+					pSte.canResync = false;
 					FlxG.switchState(() -> new OptionsState());
 					if (ClientPrefs.data.pauseMusic != 'None') {
 						FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)), pauseMusic.volume);
-						FlxG.sound.music.fadeIn(.8, pauseMusic.volume);
+						FlxTween.tween(FlxG.sound.music, {volume: 1}, .8);
 						FlxG.sound.music.time = pauseMusic.time;
-						pauseMusic.stop();
+
+						Conductor.bpm = switch (ClientPrefs.data.pauseMusic) {
+							case 'Tea Time': 105.0;
+							case 'Breakfast': 160.0;
+							case 'Breakfast (Pico)': 88.0;
+							default: Conductor.bpm;
+						}
+					} else {
+						FlxG.sound.music.resume();
+						FlxTween.tween(FlxG.sound.music, {volume: 1}, .8);
+						FlxG.sound.music.looped = true;
 					}
 					OptionsState.onPlayState = true;
 				case "Exit to menu":
 					#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
+					pSte.canResync = false;
 
 					Mods.loadTopMod();
 					FlxG.switchState(() -> PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
@@ -260,9 +274,10 @@ class PauseSubState extends MusicBeatSubstate {
 	}
 
 	public static function restartSong(noTrans:Bool = false) {
-		PlayState.instance.paused = true; // For lua
+		var pSte:PlayState = PlayState.instance;
+		pSte.paused = true; // For lua
 		FlxG.sound.music.volume = 0;
-		PlayState.instance.vocals.volume = 0;
+		pSte.vocals.volume = 0;
 
 		if (noTrans) MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 		FlxG.resetState();
