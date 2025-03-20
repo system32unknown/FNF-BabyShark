@@ -239,6 +239,7 @@ class PauseSubState extends MusicBeatSubstate {
 							case 'Tea Time': 105.0;
 							case 'Breakfast': 160.0;
 							case 'Breakfast (Pico)': 88.0;
+							case 'Breakfast (Dave)': 80.0;
 							default: Conductor.bpm;
 						}
 					} else {
