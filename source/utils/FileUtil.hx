@@ -251,8 +251,6 @@ class FileUtil {
 	}
 
 	static var tempDir:String = null;
-	static final TEMP_ENV_VARS:Array<String> = ['TEMP', 'TMPDIR', 'TEMPDIR', 'TMP'];
-
 	/**
 	 * Get the path to a temporary directory we can use for writing files.
 	 * Only works on desktop.
@@ -264,7 +262,7 @@ class FileUtil {
 		#if sys
 		#if windows
 		var path:String = null;
-		for (envName in TEMP_ENV_VARS) {
+		for (envName in ['TEMP', 'TMPDIR', 'TEMPDIR', 'TMP']) {
 			path = Sys.getEnv(envName);
 			if (path == '') path = null;
 			if (path != null) break;

@@ -32,6 +32,10 @@ import flixel.util.FlxDestroyUtil;
  * @see cpp.vm.Gc
  */
 class MemoryUtil {
+	/**
+	 * Flag indicating whether the garbage collector is enabled.
+	 * When `true`, the GC is active; setting it to `false` may disable automatic collection.
+	 */
 	public static var isGcOn:Bool = true;
 
 	/**

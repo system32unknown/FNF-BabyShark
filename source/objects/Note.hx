@@ -8,11 +8,16 @@ import shaders.RGBPalette.RGBShaderReference;
 
 import backend.NoteLoader;
 
-typedef EventNote = {
-	strumTime:Float,
-	event:String,
-	value1:String,
-	value2:String
+@:structInit
+class EventNote {
+	public var strumTime:Float = 0.0;
+	public var event:String = '';
+	public var value1:String = '';
+	public var value2:String = '';
+
+	public function toString():String {
+		return 'Name: $event | Time: $strumTime | Arguments: [$value1, $value2]}';
+	}
 }
 
 typedef NoteSplashData = {

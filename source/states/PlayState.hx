@@ -1305,7 +1305,7 @@ class PlayState extends MusicBeatState {
 		if (!ClientPrefs.data.processFirst) {noteSpawn(); noteUpdate();}
 		else {noteUpdate(); noteSpawn();}
 		skipCnt = skipBf;
-		if (skipCnt > 0) combo += skipBf;
+		if (skipCnt > 0) {combo += skipBf; bfSideHit += skipBf;}
 		notes.sort(FlxSort.byY, downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 
 		if (healthBar.bounds != null && health > healthBar.bounds.max) health = healthBar.bounds.max;

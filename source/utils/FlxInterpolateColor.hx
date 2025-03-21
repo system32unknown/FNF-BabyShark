@@ -21,15 +21,15 @@ class FlxInterpolateColor {
 	}
 
 	public inline function toString():String return '[FlxInterpolateColor - (R:$red | G:$green | B:$blue | A:$alpha)]';
-	public function new(color:FlxColor) this.color = color;
+	public function new(color:FlxColor):Void this.color = color;
 
-	public function lerpTo(color:FlxColor, ratio:Float) {
+	public function lerpTo(color:FlxColor, ratio:Float):Void {
 		red = (color.redFloat - red) * ratio + red;
 		green = (color.greenFloat - green) * ratio + green;
 		blue = (color.blueFloat - blue) * ratio + blue;
 		alpha = (color.alphaFloat - alpha) * ratio + alpha;
 	}
 
-	public inline function fpsLerpTo(color:FlxColor, ratio:Float)
+	public inline function fpsLerpTo(color:FlxColor, ratio:Float):Void
 		lerpTo(color, ratio * 60 * FlxG.elapsed);
 }
