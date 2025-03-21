@@ -24,9 +24,9 @@ class FPSUtil {
 	/**
 	 * Updates the FPS calculations based on the given delta time.
 	 */
-	public function update(dt:Float):Void {
+	public function update(delta:Float):Void {
 		sliceCnt = 0;
-		var delta:Int = Math.round(dt);
+		var delta:Int = Math.round(delta);
 		times.push(delta);
 		sum += delta;
 

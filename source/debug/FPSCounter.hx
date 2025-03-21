@@ -48,13 +48,13 @@ class FPSCounter extends openfl.text.TextField {
 	}
 
 	var deltaTimeout:Float = .0;
-	override function __enterFrame(dt:Float) {
+	override function __enterFrame(delta:Float) {
 		if (!ClientPrefs.data.showFPS || !visible || FlxG.autoPause && !stage.nativeWindow.active) return;
-		fpsManager.update(dt);
+		fpsManager.update(delta);
 		preUpdateText();
 		if (memory > mempeak) mempeak = memory;
 
-		deltaTimeout += dt;
+		deltaTimeout += delta;
 		if (deltaTimeout < 1000 / updateRate) return;
 
 		updateText();
@@ -62,8 +62,24 @@ class FPSCounter extends openfl.text.TextField {
 	}
 
 	// so people can override it in hscript
+	var fpsStr:String = "";
 	public dynamic function updateText():Void {
-		text = '${fpsManager.curFPS}FPS\n';
-		if (memType == "MEM" || memType == "MEM/PEAK") text += '${FlxStringUtil.formatBytes(memory)}' + (memType == "MEM/PEAK" ? '/${FlxStringUtil.formatBytes(mempeak)}' : '');
+		fpsStr = '${fpsManager.curFPS}FPS\n';
+		if (memType == "MEM" || memType == "MEM/PEAK") {
+			fpsStr += FlxStringUtil.formatBytes(memory);
+			if (memType == "MEM/PEAK") fpsStr += ' / ' + FlxStringUtil.formatBytes(mempeak);
+		}
+		text = fpsStr;
+	}
+
+	public inline function positionFPS(X:Float, Y:Float, isWide:Bool = false, ?scale:Float = 1) {
+		scaleX = scaleY = (scale < 1 ? scale : 1);
+		if (isWide) {
+			x = X;
+			y = Y;
+		} else {
+			x = FlxG.game.x + X;
+			y = FlxG.game.y + Y;
+		}
 	}
 }

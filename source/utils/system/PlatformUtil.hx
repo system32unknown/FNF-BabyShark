@@ -166,12 +166,10 @@ class PlatformUtil {
 	#end
 	public static function setConsoleColors(color:Int):Bool return false;
 
-	#if windows
 	@:functionCode('
 		system("CLS");
 		std::cout << "" << std::flush;
 	')
-	#end
 	public static function clearScreen() {}
 
 	/**
