@@ -23,7 +23,7 @@ class MasterEditorMenu extends MusicBeatState {
 		FlxG.camera.bgColor = FlxColor.BLACK;
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Editors Main Menu"); #end
 
-		if (!ClientPrefs.data.disableGC && !MemoryUtil.isGcOn) {
+		if (!Settings.data.disableGC && !MemoryUtil.isGcOn) {
 			MemoryUtil.enable();
 			MemoryUtil.collect(true);
 			MemoryUtil.compact();

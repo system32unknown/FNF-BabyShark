@@ -110,7 +110,7 @@ class NoteSplash extends FlxSprite {
 		var fps:Array<Null<Int>> = [22, 26];
 		var offsets:Array<Array<Float>> = [[0, 0]];
 		if (Paths.fileExists('$path.txt')) { // Backwards compatibility with 0.7 splash txts
-			var configFile:Array<String> = CoolUtil.listFromString(Paths.getTextFromFile('$path.txt'));
+			var configFile:Array<String> = Util.listFromString(Paths.getTextFromFile('$path.txt'));
 			if (configFile.length > 0) {
 				anim = configFile[0];
 				if (configFile.length > 1) {
@@ -196,8 +196,8 @@ class NoteSplash extends FlxSprite {
 						for (i in 0...colors.length) {
 							if (i > 2) break;
 
-							var arr:Array<FlxColor> = ClientPrefs.data.arrowRGBExtra[noteData % EK.gfxIndex[PlayState.mania][noteData]];
-							if (PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixelExtra[noteData % EK.gfxIndex[PlayState.mania][noteData]];
+							var arr:Array<FlxColor> = Settings.data.arrowRGBExtra[noteData % EK.gfxIndex[PlayState.mania][noteData]];
+							if (PlayState.isPixelStage) arr = Settings.data.arrowRGBPixelExtra[noteData % EK.gfxIndex[PlayState.mania][noteData]];
 
 							var rgb:RGB = colors[i];
 							if (rgb == null) {
@@ -250,10 +250,10 @@ class NoteSplash extends FlxSprite {
 			spawned = false;
 		});
 		
-		alpha = ClientPrefs.data.splashAlpha;
+		alpha = Settings.data.splashAlpha;
 		if (note != null) alpha = note.noteSplashData.a;
 
-		antialiasing = ClientPrefs.data.antialiasing;
+		antialiasing = Settings.data.antialiasing;
 		if (note != null) antialiasing = note.noteSplashData.antialiasing;
 		if (PlayState.isPixelStage && config.allowPixel) antialiasing = false;
 
@@ -306,8 +306,8 @@ class NoteSplash extends FlxSprite {
 
 	public static function getSplashSkinPostfix():String {
 		var skin:String = '';
-		if (ClientPrefs.data.splashSkin != ClientPrefs.defaultData.splashSkin)
-			skin = '-' + ClientPrefs.data.splashSkin.trim().toLowerCase().replace(' ', '-');
+		if (Settings.data.splashSkin != Settings.defaultData.splashSkin)
+			skin = '-' + Settings.data.splashSkin.trim().toLowerCase().replace(' ', '-');
 		return skin;
 	}
 

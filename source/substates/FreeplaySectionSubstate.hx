@@ -37,7 +37,7 @@ class FreeplaySectionSubstate extends FlxSubState {
 				}
 			}
 		}
-		sectionArray = CoolUtil.removeDupString(sectionArray);
+		sectionArray = Util.removeDupString(sectionArray);
 		Mods.loadTopMod();
 
 		for (i in 0...sectionArray.length) {
@@ -52,17 +52,17 @@ class FreeplaySectionSubstate extends FlxSubState {
 		bg.scrollFactor.set();
 		bg.updateHitbox();
 		bg.gameCenter();
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		bg.alpha = 0;
 		add(bg);
 
-		grid = CoolUtil.createBackDrop(80, 80, 160, 160, true, 0x8FFFFFFF, 0x0);
+		grid = Util.createBackDrop(80, 80, 160, 160, true, 0x8FFFFFFF, 0x0);
 		grid.velocity.set(40, 40);
 		grid.alpha = 0;
 		add(grid);
 
 		sectionSpr = new FlxSprite(sectionImageMap.get(daSection.toLowerCase()));
-		sectionSpr.antialiasing = ClientPrefs.data.antialiasing;
+		sectionSpr.antialiasing = Settings.data.antialiasing;
 		sectionSpr.scrollFactor.set();
 		sectionSpr.gameCenter();
 		sectionSpr.alpha = 0;

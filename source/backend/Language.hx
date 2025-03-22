@@ -6,7 +6,7 @@ class Language {
 
 	public static function reloadPhrases() {
 		#if TRANSLATIONS_ALLOWED
-		var langFile:String = ClientPrefs.data.language;
+		var langFile:String = Settings.data.language;
 		var loadedText:Array<String> = Mods.mergeAllTextsNamed('data/$langFile.lang');
 
 		phrases.clear();
@@ -34,7 +34,7 @@ class Language {
 			hasPhrases = true;
 		}
 
-		if (!hasPhrases) ClientPrefs.data.language = ClientPrefs.defaultData.language;
+		if (!hasPhrases) Settings.data.language = Settings.defaultData.language;
 
 		var alphaPath:String = getFileTranslation('images/alphabet');
 		if (alphaPath.startsWith('images/')) alphaPath = alphaPath.substr('images/'.length);

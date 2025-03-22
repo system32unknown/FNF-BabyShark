@@ -105,7 +105,7 @@ class Note extends FlxSprite {
 		r: -1,
 		g: -1,
 		b: -1,
-		a: ClientPrefs.data.splashAlpha
+		a: Settings.data.splashAlpha
 	};
 
 	public var offsetX:Float = 0;
@@ -145,11 +145,11 @@ class Note extends FlxSprite {
 	public var hitsoundForce:Bool = false;
 	public var hitsoundVolume(get, default):Float = 1.0;
 	function get_hitsoundVolume():Float {
-		if (ClientPrefs.data.hitsoundVolume > 0)
-			return ClientPrefs.data.hitsoundVolume;
+		if (Settings.data.hitsoundVolume > 0)
+			return Settings.data.hitsoundVolume;
 		return hitsoundForce ? hitsoundVolume : 0.0;
 	}
-	public var hitsound:String = 'hitsounds/' + Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase();
+	public var hitsound:String = 'hitsounds/' + Std.string(Settings.data.hitsoundTypes).toLowerCase();
 
 	function set_multSpeed(value:Float):Float {
 		resizeByRatio(value / multSpeed);
@@ -222,7 +222,7 @@ class Note extends FlxSprite {
 				if (!NoteLoader.noteSkinFramesMap.exists(value)) inline NoteLoader.initNote(value);
 				frames = NoteLoader.noteSkinFramesMap.get(value);
 				animation.copyFrom(NoteLoader.noteSkinAnimsMap.get(value));
-				antialiasing = ClientPrefs.data.antialiasing;
+				antialiasing = Settings.data.antialiasing;
 				setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
 				updateHitbox();
 				originalWidth = width;
@@ -235,7 +235,7 @@ class Note extends FlxSprite {
 
 	public function defaultRGB() {
 		var noteIndex:Int = EK.gfxIndex[PlayState.mania][noteData];
-		var arr:Array<FlxColor> = (!PlayState.isPixelStage ? ClientPrefs.data.arrowRGBExtra : ClientPrefs.data.arrowRGBPixelExtra)[noteIndex];
+		var arr:Array<FlxColor> = (!PlayState.isPixelStage ? Settings.data.arrowRGBExtra : Settings.data.arrowRGBPixelExtra)[noteIndex];
 
 		if (arr != null && noteData > -1) rgbShader.setRGB(arr[0], arr[1], arr[2]);
 		else rgbShader.setRGB(FlxColor.RED, FlxColor.LIME, FlxColor.BLUE);
@@ -286,7 +286,7 @@ class Note extends FlxSprite {
 		super();
 
 		animation = new backend.animation.PsychAnimationController(this);
-		antialiasing = ClientPrefs.data.antialiasing;
+		antialiasing = Settings.data.antialiasing;
 
 		if (createdFrom == null) createdFrom = PlayState.instance;
 		prevNote ??= this;
@@ -295,11 +295,11 @@ class Note extends FlxSprite {
 		this.inEditor = inEditor;
 		this.moves = false;
 
-		x += (ClientPrefs.data.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50 - EK.posRest[PlayState.mania];
+		x += (Settings.data.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50 - EK.posRest[PlayState.mania];
 		y -= 2000;
 
 		this.strumTime = strumTime;
-		if (!inEditor) this.strumTime += ClientPrefs.data.noteOffset;
+		if (!inEditor) this.strumTime += Settings.data.noteOffset;
 		this.noteData = noteData;
 		if (noteData > -1) {
 			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
@@ -313,7 +313,7 @@ class Note extends FlxSprite {
 		if (isSustainNote && prevNote != null) {
 			alpha = multAlpha = .6;
 			hitsoundDisabled = true;
-			if (ClientPrefs.data.downScroll) flipY = true;
+			if (Settings.data.downScroll) flipY = true;
 
 			offsetX += width * .5;
 			copyAngle = false;
@@ -348,7 +348,7 @@ class Note extends FlxSprite {
 		if (globalRgbShaders[dataNum] == null) {
 			newRGB = null; // Memory deallocation
 			newRGB = new RGBPalette();
-			var arr:Array<FlxColor> = (!PlayState.isPixelStage ? ClientPrefs.data.arrowRGBExtra : ClientPrefs.data.arrowRGBPixelExtra)[dataNum];
+			var arr:Array<FlxColor> = (!PlayState.isPixelStage ? Settings.data.arrowRGBExtra : Settings.data.arrowRGBPixelExtra)[dataNum];
 			if (arr != null && noteData > -1) {
 				newRGB.r = arr[0];
 				newRGB.g = arr[1];
@@ -426,8 +426,8 @@ class Note extends FlxSprite {
 
 	public static function getNoteSkinPostfix():String {
 		var skin:String = '';
-		if (ClientPrefs.data.noteSkin != ClientPrefs.defaultData.noteSkin)
-			skin = '-' + ClientPrefs.data.noteSkin.trim().toLowerCase().replace(' ', '_');
+		if (Settings.data.noteSkin != Settings.defaultData.noteSkin)
+			skin = '-' + Settings.data.noteSkin.trim().toLowerCase().replace(' ', '_');
 		return skin;
 	}
 
@@ -504,7 +504,7 @@ class Note extends FlxSprite {
 		var strumDirection:Float = strum.direction;
 
 		if (isSustainNote) {
-			downScr = ClientPrefs.data.downScroll;
+			downScr = Settings.data.downScroll;
 			flipY = downScr;
 			if (prevDownScr != downScr) {
 				correctionOffset = isSustainNote && !downScr ? originalHeight * .5 : 0;
@@ -560,7 +560,7 @@ class Note extends FlxSprite {
 	}
 
 	function calcPixelScale():Float {
-		var pxNoteSize:Float = switch (ClientPrefs.data.noteSkin) {
+		var pxNoteSize:Float = switch (Settings.data.noteSkin) {
 			case "Default": 30;
 			case "Future": 5;
 			case "Chip": 17.25;

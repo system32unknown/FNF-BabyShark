@@ -47,10 +47,10 @@ class NotesColorSubState extends FlxSubState {
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFEA71FD;
 		bg.gameCenter();
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		add(bg);
 
-		var grid:flixel.addons.display.FlxBackdrop = CoolUtil.createBackDrop(80, 80, 160, 160, true, 0x33FFFFFF, 0x0);
+		var grid:flixel.addons.display.FlxBackdrop = Util.createBackDrop(80, 80, 160, 160, true, 0x33FFFFFF, 0x0);
 		grid.velocity.set(40, 40);
 		grid.alpha = 0;
 		FlxTween.tween(grid, {alpha: 1}, 0.5, {ease: FlxEase.quadOut});
@@ -331,7 +331,7 @@ class NotesColorSubState extends FlxSubState {
 				}
 			} 
 		} else if (Controls.justPressed('reset') && hexTypeNum < 0) {
-			var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? ClientPrefs.defaultData.arrowRGBExtra : ClientPrefs.defaultData.arrowRGBPixelExtra);
+			var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? Settings.defaultData.arrowRGBExtra : Settings.defaultData.arrowRGBPixelExtra);
 			if (FlxG.keys.pressed.SHIFT) {
 				for (i in 0...3) {
 					var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
@@ -405,7 +405,7 @@ class NotesColorSubState extends FlxSubState {
 	var myNotes:FlxTypedGroup<StrumNote>;
 	var bigNote:Note;
 	public function spawnNotes() {
-		dataArray = !onPixel ? ClientPrefs.data.arrowRGBExtra : ClientPrefs.data.arrowRGBPixelExtra;
+		dataArray = !onPixel ? Settings.data.arrowRGBExtra : Settings.data.arrowRGBPixelExtra;
 		if (onPixel) PlayState.stageUI = "pixel";
 
 		// clear groups
@@ -432,7 +432,7 @@ class NotesColorSubState extends FlxSubState {
 		// respawn stuff
 		var res:Int = onPixel ? 160 : 17;
 		skinNote = new FlxSprite(48, 24).loadGraphic(Paths.image('noteColorMenu/' + (onPixel ? 'note' : 'notePixel')), true, res, res);
-		skinNote.antialiasing = ClientPrefs.data.antialiasing;
+		skinNote.antialiasing = Settings.data.antialiasing;
 		skinNote.setGraphicSize(68);
 		skinNote.updateHitbox();
 		skinNote.animation.add('anim', [0], 24, true);
@@ -443,7 +443,7 @@ class NotesColorSubState extends FlxSubState {
 		var res:Int = !onPixel ? 160 : 17;
 		for (i in 0...3) {
 			var newNote:FlxSprite = new FlxSprite(230 + (100 * i), 100).loadGraphic(Paths.image('noteColorMenu/' + (!onPixel ? 'note' : 'notePixel')), true, res, res);
-			newNote.antialiasing = ClientPrefs.data.antialiasing;
+			newNote.antialiasing = Settings.data.antialiasing;
 			newNote.setGraphicSize(85);
 			newNote.updateHitbox();
 			newNote.animation.add('anim', [i], 24, true);
@@ -523,7 +523,7 @@ class NotesColorSubState extends FlxSubState {
 	}
 
 	function fixColors() {
-		var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? ClientPrefs.defaultData.arrowRGBExtra : ClientPrefs.defaultData.arrowRGBPixelExtra);
+		var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? Settings.defaultData.arrowRGBExtra : Settings.defaultData.arrowRGBPixelExtra);
 		for (i in 0...3) {
 			var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
 			var color:FlxColor = chosenRGB[curSelectedNote][i];

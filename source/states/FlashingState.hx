@@ -53,8 +53,8 @@ class FlashingState extends flixel.FlxState {
 			leftState = true;
 			MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 			if (!back) {
-				ClientPrefs.data.flashing = !isYes;
-				ClientPrefs.save();
+				Settings.data.flashing = !isYes;
+				Settings.save();
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 				final button:FlxText = texts.members[isYes ? 1 : 2];
 				FlxFlicker.flicker(button, 1, 0.1, false, true, (_:FlxFlicker) -> FlxTimer.wait(.5, () -> FlxTween.tween(texts, {alpha: 0}, .2, {onComplete: (_) -> FlxG.switchState(() -> new TitleState())})));

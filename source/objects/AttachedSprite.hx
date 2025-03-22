@@ -17,7 +17,7 @@ class AttachedSprite extends FlxSprite {
 			animation.addByPrefix('idle', anim, 24, loop);
 			animation.play('idle');
 		} else if (file != null) loadGraphic(Paths.image(file, parentFolder));
-		antialiasing = ClientPrefs.data.antialiasing;
+		antialiasing = Settings.data.antialiasing;
 		scrollFactor.set();
 	}
 

@@ -212,7 +212,7 @@ class Limo extends BaseStage {
 				limoCorpse.visible = false;
 				limoCorpseTwo.visible = false;
 				limoKillingState = KILLING;
-				Achievements.addScore("roadkill_enthusiast");
+				Awards.addScore("roadkill_enthusiast");
 			}
 		}
 	}

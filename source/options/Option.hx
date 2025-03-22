@@ -23,7 +23,7 @@ class Option {
 	public var type:OptionType = BOOL;
 
 	public var scrollSpeed:Float = 50; //Only works on int/float, defines how fast it scrolls per second while holding left/right
-	public var variable(default, null):String = null; //Variable from ClientPrefs.hx
+	public var variable(default, null):String = null; //Variable from Settings.hx
 	public var defaultValue:Dynamic = null;
 
 	public var curOption:Int = 0; //Don't change this
@@ -49,7 +49,7 @@ class Option {
 		this.type = type;
 		this.options = options;
 
-		if (this.type != KEYBIND) this.defaultValue = Reflect.getProperty(ClientPrefs.defaultData, variable);
+		if (this.type != KEYBIND) this.defaultValue = Reflect.getProperty(Settings.defaultData, variable);
 		switch (type) {
 			case BOOL:
 				if (defaultValue == null) defaultValue = false;
@@ -91,18 +91,18 @@ class Option {
 	}
 
 	dynamic public function getValue():Dynamic {
-		var value:Dynamic = Reflect.getProperty(ClientPrefs.data, variable);
+		var value:Dynamic = Reflect.getProperty(Settings.data, variable);
 		if (type == KEYBIND) return value.keyboard;
 		return value;
 	}
 
 	dynamic public function setValue(value:Dynamic) {
 		if (type == KEYBIND) {
-			var keys:Dynamic = Reflect.getProperty(ClientPrefs.data, variable);
+			var keys:Dynamic = Reflect.getProperty(Settings.data, variable);
 			keys.keyboard = value;
 			return;
 		}
-		Reflect.setProperty(ClientPrefs.data, variable, value);
+		Reflect.setProperty(Settings.data, variable, value);
 	}
 
 	var _name:String = null;

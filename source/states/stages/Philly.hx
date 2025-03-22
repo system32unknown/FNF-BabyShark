@@ -53,7 +53,7 @@ class Philly extends BaseStage
 				phillyGlowGradient = new PhillyGlowGradient(-400, 225); //This shit was refusing to properly load FlxGradient so fuck it
 				phillyGlowGradient.visible = false;
 				insert(members.indexOf(blammedLightsBlack) + 1, phillyGlowGradient);
-				if (!ClientPrefs.data.flashing) phillyGlowGradient.intendedAlpha = 0.7;
+				if (!Settings.data.flashing) phillyGlowGradient.intendedAlpha = 0.7;
 
 				Paths.image('philly/particle'); // precache philly glow particle image
 				phillyGlowParticles = new FlxTypedGroup<PhillyGlowParticle>();
@@ -87,7 +87,7 @@ class Philly extends BaseStage
 					case 0:
 						if (phillyGlowGradient.visible) {
 							doFlash();
-							if (ClientPrefs.data.camZooms) {
+							if (Settings.data.camZooms) {
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
 							}
@@ -108,7 +108,7 @@ class Philly extends BaseStage
 
 						if (!phillyGlowGradient.visible) {
 							doFlash();
-							if (ClientPrefs.data.camZooms) {
+							if (Settings.data.camZooms) {
 								FlxG.camera.zoom += 0.5;
 								camHUD.zoom += 0.1;
 							}
@@ -118,14 +118,14 @@ class Philly extends BaseStage
 							phillyWindowEvent.visible = true;
 							phillyGlowGradient.visible = true;
 							phillyGlowParticles.visible = true;
-						} else if (ClientPrefs.data.flashing) {
+						} else if (Settings.data.flashing) {
 							var colorButLower:FlxColor = color;
 							colorButLower.alphaFloat = 0.25;
 							FlxG.camera.flash(colorButLower, 0.5, null, true);
 						}
 
 						var charColor:FlxColor = color;
-						if (!ClientPrefs.data.flashing) charColor.saturation *= 0.5;
+						if (!Settings.data.flashing) charColor.saturation *= 0.5;
 						else charColor.saturation *= 0.75;
 
 						for (who in chars) who.color = charColor;
@@ -158,7 +158,7 @@ class Philly extends BaseStage
 
 	function doFlash() {
 		var color:FlxColor = FlxColor.WHITE;
-		if (!ClientPrefs.data.flashing) color.alphaFloat = 0.5;
+		if (!Settings.data.flashing) color.alphaFloat = 0.5;
 		FlxG.camera.flash(color, 0.15, null, true);
 	}
 }

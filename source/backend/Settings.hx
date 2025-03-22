@@ -106,7 +106,7 @@ class SaveVariables {
 	var language:String = 'en-US';
 }
 
-class ClientPrefs {
+class Settings {
 	public static var data:SaveVariables = {};
 	public static var defaultData:SaveVariables = {};
 
@@ -114,15 +114,18 @@ class ClientPrefs {
 		for (key in Reflect.fields(data))
 			Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
 
-		#if ACHIEVEMENTS_ALLOWED Achievements.save(); #end
+		#if AWARDS_ALLOWED Awards.save(); #end
 		FlxG.save.flush();
 	}
 
 	public static function load() {
-		FlxG.save.bind('funkin', CoolUtil.getSavePath());
+		FlxG.save.bind('funkin', Util.getSavePath());
+
 		final fields:Array<String> = Type.getInstanceFields(SaveVariables);
 		for (i in Reflect.fields(FlxG.save.data)) {
 			if (i == 'gameplaySettings' || !fields.contains(i)) continue;
+
+			if (Reflect.hasField(data, 'set_$i')) Reflect.setProperty(data, i, Reflect.field(FlxG.save.data, i));
 			Reflect.setField(data, i, Reflect.field(FlxG.save.data, i));
 		}
 

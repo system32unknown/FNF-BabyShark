@@ -110,7 +110,7 @@ class LoadingState extends MusicBeatState {
 		addBehindBar(bg);
 
 		var funkay:FlxSprite = new FlxSprite(Paths.image('funkay'));
-		funkay.antialiasing = ClientPrefs.data.antialiasing;
+		funkay.antialiasing = Settings.data.antialiasing;
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		addBehindBar(funkay);

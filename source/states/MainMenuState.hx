@@ -27,7 +27,7 @@ class MainMenuState extends MusicBeatState {
 		'credits'
 	];
 
-	var leftOption:String = #if ACHIEVEMENTS_ALLOWED 'achievements' #else null #end;
+	var leftOption:String = #if AWARDS_ALLOWED 'achievements' #else null #end;
 	var rightOption:String = 'options';
 
 	var magenta:FlxSprite;
@@ -44,7 +44,7 @@ class MainMenuState extends MusicBeatState {
 
 		var yScroll:Float = Math.max(0.25 - (.05 * (optionShit.length - 4)), .1);
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
@@ -55,7 +55,7 @@ class MainMenuState extends MusicBeatState {
 		add(camFollow = new FlxObject(FlxG.width / 2, 0, 1, 1));
 
 		magenta = new FlxSprite(bg.graphic);
-		magenta.antialiasing = ClientPrefs.data.antialiasing;
+		magenta.antialiasing = Settings.data.antialiasing;
 		magenta.scrollFactor.set(0, yScroll);
 		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
 		magenta.updateHitbox();
@@ -96,10 +96,10 @@ class MainMenuState extends MusicBeatState {
 		add(version);
 		changeItem();
 
-		#if (ACHIEVEMENTS_ALLOWED && MODS_ALLOWED) Achievements.reloadList(); #end
+		#if (AWARDS_ALLOWED && MODS_ALLOWED) Awards.reloadList(); #end
 
 		#if CHECK_FOR_UPDATES
-		if (showOutdatedWarning && ClientPrefs.data.checkForUpdates && OutdatedSubState.updateVersion[0] != Main.engineVer) {
+		if (showOutdatedWarning && Settings.data.checkForUpdates && OutdatedSubState.updateVersion[0] != Main.engineVer) {
 			persistentUpdate = showOutdatedWarning = false;
 			openSubState(new OutdatedSubState());
 		}
@@ -110,7 +110,7 @@ class MainMenuState extends MusicBeatState {
 
 	function createItem(name:String, x:Float, y:Float, looping:Bool = false):FlxSprite {
 		final item:FlxSprite = new FlxSprite(x, y);
-		item.antialiasing = ClientPrefs.data.antialiasing;
+		item.antialiasing = Settings.data.antialiasing;
 		item.scrollFactor.set();
 		item.frames = Paths.getSparrowAtlas('mainmenu/menu_$name');
 		item.animation.addByPrefix('idle', '$name idle', 24, true);
@@ -222,7 +222,7 @@ class MainMenuState extends MusicBeatState {
 			selectedSomethin = true;
 			FlxG.mouse.visible = false;
 
-			if (ClientPrefs.data.flashing) FlxFlicker.flicker(magenta, 1.1, .15, false);
+			if (Settings.data.flashing) FlxFlicker.flicker(magenta, 1.1, .15, false);
 
 			var item:FlxSprite;
 			var option:String;
@@ -244,7 +244,7 @@ class MainMenuState extends MusicBeatState {
 					case 'story_mode': FlxG.switchState(() -> new StoryMenuState());
 					case 'freeplay': FlxG.switchState(() -> new FreeplayState());
 					#if MODS_ALLOWED case 'mods': FlxG.switchState(() -> new ModsMenuState()); #end
-					#if ACHIEVEMENTS_ALLOWED case 'achievements': FlxG.switchState(() -> new AchievementsMenuState()); #end
+					#if AWARDS_ALLOWED case 'achievements': FlxG.switchState(() -> new AchievementsMenuState()); #end
 					case 'credits': FlxG.switchState(() -> new CreditsState());
 					case 'options':
 						FlxG.switchState(() -> new OptionsState());

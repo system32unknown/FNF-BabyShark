@@ -34,7 +34,7 @@ class Paths {
 			destroyGraphic(asset); // get rid of the graphic
 			currentTrackedAssets.remove(key); // and remove the key from local cache map
 		}
-		if (ClientPrefs.data.disableGC) {
+		if (Settings.data.disableGC) {
 			MemoryUtil.enable();
 			MemoryUtil.collect(true);
 			if ((cast FlxG.state) is PlayState) MemoryUtil.enable(false);
@@ -190,7 +190,7 @@ class Paths {
 			}
 		}
 
-		if (allowGPU && ClientPrefs.data.cacheOnGPU && bitmap.image != null) {
+		if (allowGPU && Settings.data.cacheOnGPU && bitmap.image != null) {
 			bitmap.lock();
 			if (bitmap.__texture == null) {
 				bitmap.image.premultiplied = true;

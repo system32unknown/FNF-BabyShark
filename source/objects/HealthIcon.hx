@@ -83,7 +83,7 @@ class HealthIcon extends FlxSprite {
 			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
 			updateHitbox();
-			antialiasing = iconZoom < 2.5 && ClientPrefs.data.antialiasing;
+			antialiasing = iconZoom < 2.5 && Settings.data.antialiasing;
 			return true;
 		}
 
@@ -107,7 +107,7 @@ class HealthIcon extends FlxSprite {
 		}
 
 		updateHitbox();
-		antialiasing = iconZoom < 2.5 && ClientPrefs.data.antialiasing;
+		antialiasing = iconZoom < 2.5 && Settings.data.antialiasing;
 		return true;
 	}
 
@@ -142,7 +142,7 @@ class HealthIcon extends FlxSprite {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (Std.isOfType(FlxG.state, PlayState) && (ClientPrefs.data.iconBopType == 'Dave' || ClientPrefs.data.iconBopType == 'GoldenApple'))
+		if (Std.isOfType(FlxG.state, PlayState) && (Settings.data.iconBopType == 'Dave' || Settings.data.iconBopType == 'GoldenApple'))
 			offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
 		if (sprTracker != null) setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 	}
@@ -167,8 +167,8 @@ class HealthIcon extends FlxSprite {
 	 * @param type (0 = BF, 1 = DAD)
 	 * Values are necessary for proper calculations!!
 	 */
-	public dynamic function bop(bopInfo:BopInfo, iconAnim:String = "ClientPrefs", type:Int = 0):Void {
-		if (iconAnim.toLowerCase() == "clientprefs") iconAnim = ClientPrefs.data.iconBopType;
+	public dynamic function bop(bopInfo:BopInfo, iconAnim:String = "Settings", type:Int = 0):Void {
+		if (iconAnim.toLowerCase() == "Settings") iconAnim = Settings.data.iconBopType;
 		if (iconAnim == "None") return;
 		if (curBopType != iconAnim) curBopType = iconAnim;
 
@@ -216,6 +216,6 @@ class HealthIcon extends FlxSprite {
 
 	function getIconAnims(file:String):Array<String> {
 		final regNum:EReg = ~/[\d-]/;
-		return CoolUtil.removeDupString([for (icon in new haxe.xml.Access(Xml.parse(Paths.getTextFromFile('images/$file.xml')).firstElement()).nodes.SubTexture) regNum.split(icon.att.name)[0]]);
+		return Util.removeDupString([for (icon in new haxe.xml.Access(Xml.parse(Paths.getTextFromFile('images/$file.xml')).firstElement()).nodes.SubTexture) regNum.split(icon.att.name)[0]]);
 	}
 }

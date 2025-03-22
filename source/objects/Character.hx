@@ -163,7 +163,7 @@ class Character extends FlxSprite {
 
 			// antialiasing
 			noAntialiasing = (json.no_antialiasing == true);
-			antialiasing = ClientPrefs.data.antialiasing ? !noAntialiasing : false;
+			antialiasing = Settings.data.antialiasing ? !noAntialiasing : false;
 
 			// animations
 			animationsArray = json.animations;
@@ -205,7 +205,7 @@ class Character extends FlxSprite {
 
 			// antialiasing
 			noAntialiasing = json.isPixel ?? false;
-			antialiasing = ClientPrefs.data.antialiasing ? !noAntialiasing : false;
+			antialiasing = Settings.data.antialiasing ? !noAntialiasing : false;
 
 			// animations
 			var base_animationsArray:Array<Dynamic> = [];

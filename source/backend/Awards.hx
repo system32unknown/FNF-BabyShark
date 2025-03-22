@@ -1,6 +1,6 @@
 package backend;
 
-#if ACHIEVEMENTS_ALLOWED
+#if AWARDS_ALLOWED
 import objects.AchievementPopup;
 import haxe.Exception;
 import flixel.util.FlxSave;
@@ -8,16 +8,16 @@ import flixel.util.FlxSave;
 import psychlua.FunkinLua;
 #end
 
-typedef Achievement = {
+typedef Award = {
 	var name:String;
 	var description:String;
-	@:optional var hidden:Bool;
-	@:optional var maxScore:Float;
-	@:optional var maxDecimals:Int;
+	var ?hidden:Bool;
+	var ?maxScore:Float;
+	var ?maxDecimals:Int;
 
-	// handled automatically, ignore these two
-	@:optional var mod:String;
-	@:optional var ID:Int;
+	//handled automatically, ignore these two
+	var ?mod:String;
+	var ?ID:Int; 
 }
 
 enum abstract AchievementOp(String) {
@@ -26,7 +26,7 @@ enum abstract AchievementOp(String) {
 	var ADD:AchievementOp = 'add';
 }
 
-class Achievements {
+class Awards {
 	public static function init() {
 		createAchievement('week1_nomiss', {name: "She Calls Me Daddy Too", description: "Beat Week 1 on Hard with no Misses."});
 		createAchievement('week2_nomiss', {name: "No More Tricks", description: "Beat Week 2 on Hard with no Misses."});
@@ -34,22 +34,19 @@ class Achievements {
 		createAchievement('week4_nomiss', {name: "Lady Killer", description: "Beat Week 4 on Hard with no Misses."});
 		createAchievement('week5_nomiss', {name: "Missless Christmas", description: "Beat Week 5 on Hard with no Misses."});
 		createAchievement('week6_nomiss', {name: "Highscore!!", description: "Beat Week 6 on Hard with no Misses."});
-		createAchievement('roadkill_enthusiast', {
-			name: "Roadkill Enthusiast",
-			description: "Watch the Henchmen die 50 times.",
-			maxScore: 50,
-			maxDecimals: 0
-		});
-		createAchievement('ur_bad', {name: "What a Funkin' Disaster!", description: "Complete a Song with a rating lower than 20%."});
+		createAchievement('week7_nomiss', {name: "God Effing Damn It!", description: "Beat Week 7 on Hard with no Misses."});
+		createAchievement('ur_bad',	{name: "What a Funkin' Disaster!", description: "Complete a Song with a rating lower than 20%."});
 		createAchievement('ur_good', {name: "Perfectionist", description: "Complete a Song with a rating of 100%."});
 		createAchievement('toastie', {name: "Toaster Gamer", description: "Have you tried to run the game on a toaster?"});
-		_originalLength = _sortID + 1; // dont delete this thing below
+		
+		//dont delete this thing below
+		_originalLength = _sortID + 1;
 	}
 
-	public static function get(name:String):Achievement return list[name];
+	public static function get(name:String):Award return list[name];
 	public static function exists(name:String):Bool return list.exists(name);
 
-	public static var list:Map<String, Achievement> = new Map<String, Achievement>();
+	public static var list:Map<String, Award> = [];
 	public static var variables:Map<String, Float> = [];
 	public static var unlocked:Array<String> = [];
 
@@ -61,7 +58,7 @@ class Achievements {
 		if (_originalLength < 0) init();
 
 		_save = new FlxSave();
-		_save.bind('achievements', CoolUtil.getSavePath());
+		_save.bind('awards', Util.getSavePath());
 
 		if (_save.data == null) return;
 		if (_save.data.unlocked != null) unlocked = _save.data.unlocked;
@@ -75,7 +72,7 @@ class Achievements {
 		_save.data.unlocked = unlocked;
 		_save.data.variables = variables;
 	}
-
+	
 	public static function getScore(name:String):Float
 		return _scoreFunc(name, GET);
 
@@ -89,18 +86,18 @@ class Achievements {
 		if (!variables.exists(name)) variables.set(name, 0);
 
 		if (list.exists(name)) {
-			var achievement:Achievement = list[name];
+			var achievement:Award = list[name];
 			if (achievement.maxScore < 1) {
-				throw new Exception('Achievement has score disabled or is incorrectly configured: $name');
+				Sys.println('Achievement has score disabled or is incorrectly configured: $name');
 				return 0.0;
 			}
 
 			if (unlocked.contains(name)) return achievement.maxScore;
 
 			var val:Float = addOrSet;
-			switch (mode) {
-				case GET: return variables[name]; // get
-				case ADD: val += variables[name]; // add
+			switch mode {
+				case GET: return variables[name]; //get
+				case ADD: val += variables[name]; //add
 				default:
 			}
 
@@ -118,15 +115,14 @@ class Achievements {
 	}
 
 	static var _lastUnlock:Int = -999;
-
 	public static function unlock(name:String, autoStartPopup:Bool = true):String {
 		if (!list.exists(name)) {
-			FlxG.log.error('Achievement "$name" does not exists!');
-			throw new Exception('Achievement "$name" does not exists!');
+			Sys.println('Achievement "$name" does not exist!');
 			return null;
 		}
 
 		if (isUnlocked(name)) return null;
+
 		trace('Completed achievement "$name"');
 		unlocked.push(name);
 
@@ -144,14 +140,14 @@ class Achievements {
 		return name;
 	}
 
-	inline public static function isUnlocked(name:String):Bool
+	public static function isUnlocked(name:String)
 		return unlocked.contains(name);
 
 	@:allow(objects.AchievementPopup)
-	private static var _popups:Array<AchievementPopup> = [];
-	public static var showingPopups(get, never):Bool;
+	static var _popups:Array<AchievementPopup> = [];
 
-	public static function get_showingPopups():Bool
+	public static var showingPopups(get, never):Bool;
+	public static function get_showingPopups()
 		return _popups.length > 0;
 
 	public static function startPopup(achieve:String) {
@@ -159,14 +155,14 @@ class Achievements {
 			if (popup == null) continue;
 			popup.intendedY += 150;
 		}
+
 		_popups.push(new AchievementPopup(achieve));
 	}
 
 	// Map sorting cuz haxe is physically incapable of doing that by itself
 	static var _sortID = 0;
 	static var _originalLength = -1;
-
-	public static function createAchievement(name:String, data:Achievement, ?mod:String = null) {
+	public static function createAchievement(name:String, data:Award, ?mod:String = null) {
 		data.ID = _sortID;
 		data.mod = mod;
 		list.set(name, data);

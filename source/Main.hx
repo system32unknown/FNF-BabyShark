@@ -94,10 +94,10 @@ class Main extends Sprite {
 		#end
 
 		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
-		ClientPrefs.load();
+		Settings.load();
 		addChild(fpsVar = new FPSCounter());
-		fpsVar.visible = ClientPrefs.data.showFPS;
-		fpsVar.memType = ClientPrefs.data.memCounterType;
+		fpsVar.visible = Settings.data.showFPS;
+		fpsVar.memType = Settings.data.memCounterType;
 
 		#if !MODS_ALLOWED
 		final path:String = 'mods';
@@ -107,10 +107,10 @@ class Main extends Sprite {
 		}
 		#end
 
-		FlxG.signals.preStateSwitch.add(() -> if (ClientPrefs.data.autoCleanAssets) Paths.clearStoredMemory());
+		FlxG.signals.preStateSwitch.add(() -> if (Settings.data.autoCleanAssets) Paths.clearStoredMemory());
 		FlxG.signals.postStateSwitch.add(() -> {
-			if (ClientPrefs.data.autoCleanAssets) Paths.clearUnusedMemory();
-			if (!ClientPrefs.data.disableGC) {
+			if (Settings.data.autoCleanAssets) Paths.clearUnusedMemory();
+			if (!Settings.data.disableGC) {
 				MemoryUtil.clearMajor();
 				MemoryUtil.clearMajor(true);
 				MemoryUtil.clearMajor();

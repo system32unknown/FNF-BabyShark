@@ -22,12 +22,12 @@ class DiscordClient {
 	public static var user:DUser = null;
 
 	public static function check() {
-		if (ClientPrefs.data.discordRPC) initialize();
+		if (Settings.data.discordRPC) initialize();
 		else if (isInitialized) shutdown();
 	}
 
 	public static function prepare() {
-		if (!isInitialized && ClientPrefs.data.discordRPC) initialize();
+		if (!isInitialized && Settings.data.discordRPC) initialize();
 		lime.app.Application.current.window.onClose.add(() -> if (isInitialized) shutdown());
 	}
 
@@ -86,7 +86,7 @@ class DiscordClient {
 	}
 
 	public static function changePresence(?details:String = 'In the Menus', ?state:Null<String>, ?hasStartTimestamp:Bool, ?endTimestamp:Float, ?largeImageKey:Null<String>) {
-		if (largeImageKey == null) largeImageKey = (ClientPrefs.data.altDiscordImg ? 'iconalt' + ClientPrefs.data.altDiscordImgCount : icon_img);
+		if (largeImageKey == null) largeImageKey = (Settings.data.altDiscordImg ? 'iconalt' + Settings.data.altDiscordImgCount : icon_img);
 
 		var startTimestamp:Float = hasStartTimestamp ? Date.now().getTime() : 0;
 		if (endTimestamp > 0) endTimestamp = startTimestamp + endTimestamp;

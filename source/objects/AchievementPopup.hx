@@ -1,6 +1,6 @@
 package objects;
 
-#if ACHIEVEMENTS_ALLOWED
+#if AWARDS_ALLOWED
 import openfl.display.BitmapData;
 import openfl.events.Event;
 import openfl.geom.Matrix;
@@ -12,16 +12,17 @@ class AchievementPopup extends openfl.display.Sprite {
 	public function new(achieve:String) {
 		super();
 
-		graphics.beginFill(FlxColor.BLACK); // bg
+		// bg
+		graphics.beginFill(FlxColor.BLACK);
 		graphics.drawRoundRect(0, 0, 420, 130, 16, 16);
 
 		// achievement icon
 		var graphic:flixel.graphics.FlxGraphic = null;
-		var hasAntialias:Bool = ClientPrefs.data.antialiasing;
+		var hasAntialias:Bool = Settings.data.antialiasing;
 		var image:String = 'achievements/$achieve';
 
-		var achievement:Achievement = null;
-		if (Achievements.exists(achieve)) achievement = Achievements.get(achieve);
+		var achievement:Award = null;
+		if (Awards.exists(achieve)) achievement = Awards.get(achieve);
 
 		#if MODS_ALLOWED
 		var lastMod:String = Mods.currentModDirectory;
@@ -134,7 +135,7 @@ class AchievementPopup extends openfl.display.Sprite {
 	}
 
 	public function destroy() {
-		Achievements._popups.remove(this);
+		Awards._popups.remove(this);
 
 		if (FlxG.game.contains(this)) FlxG.game.removeChild(this);
 		FlxG.stage.removeEventListener(Event.RESIZE, onResize);

@@ -1,7 +1,7 @@
 package substates;
 
 class OutdatedSubState extends MusicBeatSubstate {
-	public static var updateVersion:Array<String> = CoolUtil.checkForUpdates();
+	public static var updateVersion:Array<String> = Util.checkForUpdates();
 	public static var leftState:Bool = false;
 
 	var bg:FlxSprite;
@@ -44,7 +44,7 @@ class OutdatedSubState extends MusicBeatSubstate {
 
 		if (Controls.justPressed('accept')) {
 			leftState = true;
-			CoolUtil.browserLoad("https://github.com/system32unknown/FNF-BabyShark/releases");
+			Util.browserLoad("https://github.com/system32unknown/FNF-BabyShark/releases");
 		} else if (Controls.justPressed('back')) leftState = true;
 
 		if (leftState) {

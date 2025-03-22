@@ -139,7 +139,7 @@ class GameplayChangersSubstate extends FlxSubState {
 
 		if (Controls.justPressed('back')) {
 			close();
-			ClientPrefs.save();
+			Settings.save();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
@@ -300,7 +300,7 @@ class GameplayOption {
 
 	public var scrollSpeed:Float = 50; //Only works on int/float, defines how fast it scrolls per second while holding left/right
 
-	var variable:String = null; //Variable from ClientPrefs.hx's gameplaySettings
+	var variable:String = null; //Variable from Settings.hx's gameplaySettings
 	public var defaultValue:Dynamic = null;
 
 	public var curOption:Int = 0; //Don't change this
@@ -357,8 +357,8 @@ class GameplayOption {
 		if (onChange != null) onChange();
 	}
 
-	public function getValue():Dynamic return ClientPrefs.data.gameplaySettings.get(variable);
-	public function setValue(value:Dynamic) ClientPrefs.data.gameplaySettings.set(variable, value);
+	public function getValue():Dynamic return Settings.data.gameplaySettings.get(variable);
+	public function setValue(value:Dynamic) Settings.data.gameplaySettings.set(variable, value);
 
 	public function setChild(child:Alphabet)
 		this.child = child;

@@ -48,7 +48,7 @@ class Popup extends FlxSprite {
 			velocity.set(FlxG.random.float(-5, 5) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(130, 150) * i.playbackRate + i.ratingVel.y);
 			acceleration.set(baseAccX, FlxG.random.int(250, 300) * i.playbackRate * i.playbackRate + i.ratingAcc.y);
 		}
-		visible = !ClientPrefs.data.hideHud;
+		visible = !Settings.data.hideHud;
 		antialiasing = i.popupAntialias;
 	}
 

@@ -8,7 +8,7 @@ class BackgroundDancer extends FlxSprite {
 		animation.addByIndices('danceLeft', 'bg dancer sketch', [for (i in 0...14) i], "", 24, false);
 		animation.addByIndices('danceRight', 'bg dancer sketch', [for (i in 15...30) i], "", 24, false);
 		animation.play('danceLeft');
-		antialiasing = ClientPrefs.data.antialiasing;
+		antialiasing = Settings.data.antialiasing;
 	}
 
 	var danceDir:Bool = false;

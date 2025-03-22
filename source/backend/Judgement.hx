@@ -13,7 +13,7 @@ package backend;
 	public function new(name:String = '', ratingMod:Float = 1, score:Int = 500, noteSplash:Bool = true) {
 		this.name = image = name;
 		try {
-			timing = Reflect.field(ClientPrefs.data, name + 'Window');
+			timing = Reflect.field(Settings.data, name + 'Window');
 		} catch (e) FlxG.log.error(e);
 		this.ratingMod = ratingMod;
 		this.score = score;

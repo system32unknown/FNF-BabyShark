@@ -24,7 +24,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 			for (sprite in members) {
 				var sprite:FlxSprite = cast sprite;
 				if (sprite != null && (sprite is FlxSprite))
-					sprite.antialiasing = ClientPrefs.data.antialiasing;
+					sprite.antialiasing = Settings.data.antialiasing;
 			}
 		}; //Changing onChange is only needed if you want to make a special interaction after it changes the value
 		addOption(option);
@@ -54,16 +54,16 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 
 	function onChangeFramerate() {
 		fpsOption.scrollSpeed = utils.MathUtil.interpolate(30, 1000, (holdTime - .5) / 5, 3);
-		if (ClientPrefs.data.framerate > FlxG.drawFramerate)
-			FlxG.updateFramerate = FlxG.drawFramerate = ClientPrefs.data.framerate;
-		else FlxG.drawFramerate = FlxG.updateFramerate = ClientPrefs.data.framerate;
+		if (Settings.data.framerate > FlxG.drawFramerate)
+			FlxG.updateFramerate = FlxG.drawFramerate = Settings.data.framerate;
+		else FlxG.drawFramerate = FlxG.updateFramerate = Settings.data.framerate;
 	}
 
 	#if sys
 	function onChangeVSync() {
 		var file:String = lime.system.System.applicationStorageDirectory + "vsync.txt";
 		if (FileSystem.exists(file)) FileSystem.deleteFile(file);
-		File.saveContent(file, Std.string(ClientPrefs.data.vsync));
+		File.saveContent(file, Std.string(Settings.data.vsync));
 	}
 	#end
 

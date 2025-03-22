@@ -37,7 +37,7 @@ class OptionsState extends MusicBeatState {
 		PlayState.mania = 8;
 
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		bg.color = 0xFFea71fd;
 		bg.updateHitbox();
 		bg.gameCenter();
@@ -50,7 +50,7 @@ class OptionsState extends MusicBeatState {
 		add(selectorRight = new Alphabet(0, 0, '<'));
 
 		changeSelection();
-		ClientPrefs.save();
+		Settings.save();
 
 		super.create();
 	}
@@ -67,7 +67,7 @@ class OptionsState extends MusicBeatState {
 
 	override function closeSubState() {
 		super.closeSubState();
-		ClientPrefs.save();
+		Settings.save();
 	}
 
 	override function update(elapsed:Float) {
@@ -123,8 +123,8 @@ class OptionsState extends MusicBeatState {
 	override function destroy() {
 		PlayState.mania = lastMania;
 		Controls.save();
-		ClientPrefs.save();
-		if (!ClientPrefs.data.disableGC && !MemoryUtil.isGcOn) {
+		Settings.save();
+		if (!Settings.data.disableGC && !MemoryUtil.isGcOn) {
 			MemoryUtil.enable();
 			MemoryUtil.collect(true);
 			MemoryUtil.compact();

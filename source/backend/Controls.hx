@@ -102,7 +102,7 @@ class Controls {
 	public static function load() {
 		if (_save == null) {
 			_save = new FlxSave();
-			_save.bind('controls', CoolUtil.getSavePath());
+			_save.bind('controls', Util.getSavePath());
 		}
 
 		if (_save.data.binds != null) {

@@ -149,7 +149,7 @@ class StageData {
 							var dat:Dynamic = Reflect.getProperty(data, varName);
 							if (dat != null) Reflect.setProperty(spr, varName, dat);
 						}
-						if (!ClientPrefs.data.antialiasing) spr.antialiasing = false;
+						if (!Settings.data.antialiasing) spr.antialiasing = false;
 					} else {
 						spr.makeGraphic(1, 1);
 						spr.antialiasing = false;
@@ -160,7 +160,7 @@ class StageData {
 						spr.updateHitbox();
 					}
 					spr.scrollFactor.set(data.scroll[0], data.scroll[1]);
-					spr.color = CoolUtil.colorFromString(data.color);
+					spr.color = Util.colorFromString(data.color);
 					spr.blend = psychlua.LuaUtils.blendModeFromString(data.blend);
 
 					for (varName in ['alpha', 'angle']) {
@@ -181,6 +181,6 @@ class StageData {
 		if ((filters & STORY_MODE) == STORY_MODE) if (!PlayState.isStoryMode) return false;
 		else if ((filters & FREEPLAY) == FREEPLAY) if (PlayState.isStoryMode) return false;
 
-		return ((ClientPrefs.data.lowQuality && (filters & LOW_QUALITY) == LOW_QUALITY) || (!ClientPrefs.data.lowQuality && (filters & HIGH_QUALITY) == HIGH_QUALITY));
+		return ((Settings.data.lowQuality && (filters & LOW_QUALITY) == LOW_QUALITY) || (!Settings.data.lowQuality && (filters & HIGH_QUALITY) == HIGH_QUALITY));
 	}
 }

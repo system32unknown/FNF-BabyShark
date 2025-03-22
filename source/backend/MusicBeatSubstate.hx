@@ -61,7 +61,7 @@ class MusicBeatSubstate extends FlxSubState {
 	function updateCurStep():Void {
 		var lastChange:Conductor.BPMChangeEvent = Conductor.getBPMChangeFromMS(Conductor.songPosition);
 
-		var shit:Float = ((Conductor.songPosition - ClientPrefs.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
+		var shit:Float = ((Conductor.songPosition - Settings.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
 		curDecStep = lastChange.stepTime + shit;
 		curStep = lastChange.stepTime + Math.floor(shit);
 	}

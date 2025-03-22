@@ -18,8 +18,8 @@ class BaseStage extends FlxBasic {
 	var game(get, never):Dynamic;
 	public var onPlayState(get, never):Bool;
 
-	var lowQuality(default, null):Bool = ClientPrefs.data.lowQuality;
-	var antialiasing(default, null):Bool = ClientPrefs.data.antialiasing;
+	var lowQuality(default, null):Bool = Settings.data.lowQuality;
+	var antialiasing(default, null):Bool = Settings.data.antialiasing;
 
 	// some variables for convenience
 	public var paused(get, never):Bool;

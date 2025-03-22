@@ -224,8 +224,8 @@ class LuaUtils {
 	}
 
 	public static function setBarColors(bar:Bar, color1:String, color2:String) {
-		final left_color:Null<FlxColor> = (color1 != null && color1 != '' ? CoolUtil.colorFromString(color1) : null);
-		final right_color:Null<FlxColor> = (color2 != null && color2 != '' ? CoolUtil.colorFromString(color2) : null);
+		final left_color:Null<FlxColor> = (color1 != null && color1 != '' ? Util.colorFromString(color1) : null);
+		final right_color:Null<FlxColor> = (color2 != null && color2 != '' ? Util.colorFromString(color2) : null);
 		bar.setColors(left_color, right_color);
 	}
 

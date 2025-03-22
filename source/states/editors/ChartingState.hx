@@ -203,10 +203,10 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		FlxG.cameras.add(camUI, false);
 
 		chartEditorSave = new FlxSave();
-		chartEditorSave.bind('chart_editor_data', CoolUtil.getSavePath());
+		chartEditorSave.bind('chart_editor_data', Util.getSavePath());
 
 		bg = new FlxSprite(Paths.image('menuDesat'));
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		bg.scrollFactor.set();
 		add(bg);
 
@@ -286,7 +286,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var iconY:Float = 50;
 		if (SHOW_EVENT_COLUMN) {
 			eventIcon = new FlxSprite(0, iconY, Paths.image('editors/eventIcon'));
-			eventIcon.antialiasing = ClientPrefs.data.antialiasing;
+			eventIcon.antialiasing = Settings.data.antialiasing;
 			eventIcon.alpha = 0.6;
 			eventIcon.setGraphicSize(30, 30);
 			eventIcon.updateHitbox();
@@ -349,7 +349,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		autoSaveIcon = new FlxSprite(50, Paths.image('editors/autosave'));
 		autoSaveIcon.gameCenter(Y);
 		autoSaveIcon.scale.set(0.6, 0.6);
-		autoSaveIcon.antialiasing = ClientPrefs.data.antialiasing;
+		autoSaveIcon.antialiasing = Settings.data.antialiasing;
 		autoSaveIcon.scrollFactor.set();
 		autoSaveIcon.alpha = 0;
 		add(autoSaveIcon);
@@ -511,9 +511,9 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				gridColors = [0xFFD0D0D0, 0xFFAFAFAF];
 				gridColorsOther = [0xFF595959, 0xFF464646];
 			case CUSTOM:
-				bg.color = CoolUtil.colorFromString(chartEditorSave.data.customBgColor);
-				gridColors = [CoolUtil.colorFromString(chartEditorSave.data.customGridColors[0]), CoolUtil.colorFromString(chartEditorSave.data.customGridColors[1])];
-				gridColorsOther = [CoolUtil.colorFromString(chartEditorSave.data.customNextGridColors[0]), CoolUtil.colorFromString(chartEditorSave.data.customNextGridColors[1])];
+				bg.color = Util.colorFromString(chartEditorSave.data.customBgColor);
+				gridColors = [Util.colorFromString(chartEditorSave.data.customGridColors[0]), Util.colorFromString(chartEditorSave.data.customGridColors[1])];
+				gridColorsOther = [Util.colorFromString(chartEditorSave.data.customNextGridColors[0]), Util.colorFromString(chartEditorSave.data.customNextGridColors[1])];
 			default:
 				bg.color = 0xFF303030;
 				gridColors = [0xFFDFDFDF, 0xFFBFBFBF];
@@ -1199,7 +1199,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var hitSoundOpp:Bool = (hitsoundOpponentStepper.value > 0);
 
 		if (canPlayHitSound) {
-			var soundToPlay:String = 'hitsounds/${Std.string(ClientPrefs.data.hitsoundTypes).toLowerCase()}';
+			var soundToPlay:String = 'hitsounds/${Std.string(Settings.data.hitsoundTypes).toLowerCase()}';
 			if (hitSoundPlayer && note.mustPress) {
 				FlxG.sound.play(Paths.sound(soundToPlay), hitsoundPlayerStepper.value);
 				hitSoundPlayer = false;
@@ -2493,7 +2493,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			if (Song.chartPath != null && Song.chartPath.length > 0) {
 				var parentFolder:String = Song.chartPath.replace('\\', '/');
 				parentFolder = parentFolder.substr(0, Song.chartPath.lastIndexOf('/') + 1);
-				var notetypeFile:Array<String> = CoolUtil.coolTextFile(parentFolder + 'notetypes.txt');
+				var notetypeFile:Array<String> = Util.coolTextFile(parentFolder + 'notetypes.txt');
 				if (notetypeFile.length > 0) {
 					for (ntTyp in notetypeFile) {
 						var name:String = ntTyp.trim();
@@ -3434,7 +3434,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		var btnWid:Int = Std.int(tab.width);
 		if (chartEditorSave.data.waveformEnabled != null) waveformEnabled = chartEditorSave.data.waveformEnabled;
 		if (chartEditorSave.data.waveformTarget != null) waveformTarget = chartEditorSave.data.waveformTarget;
-		if (chartEditorSave.data.waveformColor != null) waveformSprite.color = CoolUtil.colorFromString(chartEditorSave.data.waveformColor);
+		if (chartEditorSave.data.waveformColor != null) waveformSprite.color = Util.colorFromString(chartEditorSave.data.waveformColor);
 		if (chartEditorSave.data.waveformAlpha != null) waveformSprite.alpha = chartEditorSave.data.waveformAlpha;
 
 		showLastGridButton = new PsychUIButton(btnX, btnY, '', () -> {
@@ -3506,7 +3506,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				var input:PsychUIInputText = new PsychUIInputText(check.x, check.y + 42, 60, waveformC, 10);
 				input.onChange = (old:String, cur:String) -> {
 					chartEditorSave.data.waveformColor = cur;
-					waveformSprite.color = CoolUtil.colorFromString(cur);
+					waveformSprite.color = Util.colorFromString(cur);
 				}
 				input.maxLength = 6;
 				input.filterMode = ONLY_HEXADECIMAL;

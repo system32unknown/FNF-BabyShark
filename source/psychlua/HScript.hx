@@ -169,12 +169,12 @@ class HScript extends AlterHscript {
 			"Conductor" => Conductor,
 			"Alphabet" => Alphabet,
 			"DeltaTrail" => objects.DeltaTrail,
-			#if ACHIEVEMENTS_ALLOWED
-			"Achievements" => Achievements,
+			#if AWARDS_ALLOWED
+			"Awards" => Awards,
 			#end
 
-			"CoolUtil" => CoolUtil,
-			"ClientPrefs" => ClientPrefs,
+			"Util" => Util,
+			"Settings" => Settings,
 
 			#if (!flash && sys)
 			"FlxRuntimeShader" => flixel.addons.display.FlxRuntimeShader, "ErrorHandledRuntimeShader" => shaders.ErrorHandledShader.ErrorHandledRuntimeShader,

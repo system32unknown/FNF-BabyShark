@@ -41,10 +41,10 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		// options
 		var noteSkins:Array<String> = Mods.mergeAllTextsNamed('images/noteSkins/list.txt');
 		if (noteSkins.length > 0) {
-			if (!noteSkins.contains(ClientPrefs.data.noteSkin))
-				ClientPrefs.data.noteSkin = ClientPrefs.defaultData.noteSkin; //Reset to default if saved noteskin couldnt be found
+			if (!noteSkins.contains(Settings.data.noteSkin))
+				Settings.data.noteSkin = Settings.defaultData.noteSkin; //Reset to default if saved noteskin couldnt be found
 
-			noteSkins.insert(0, ClientPrefs.defaultData.noteSkin); //Default skin always comes first
+			noteSkins.insert(0, Settings.defaultData.noteSkin); //Default skin always comes first
 			var option:Option = new Option('Note Skins:', "Select your prefered Note skin.", 'noteSkin', STRING, noteSkins);
 			addOption(option);
 			option.onChange = () -> notes.forEachAlive((note:StrumNote) -> {
@@ -57,10 +57,10 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		
 		var noteSplashes:Array<String> = Mods.mergeAllTextsNamed('images/noteSplashes/list.txt');
 		if (noteSplashes.length > 0) {
-			if (!noteSplashes.contains(ClientPrefs.data.splashSkin))
-				ClientPrefs.data.splashSkin = ClientPrefs.defaultData.splashSkin; //Reset to default if saved splashskin couldnt be found
+			if (!noteSplashes.contains(Settings.data.splashSkin))
+				Settings.data.splashSkin = Settings.defaultData.splashSkin; //Reset to default if saved splashskin couldnt be found
 
-			noteSplashes.insert(0, ClientPrefs.defaultData.splashSkin); //Default skin always comes first
+			noteSplashes.insert(0, Settings.defaultData.splashSkin); //Default skin always comes first
 			var option:Option = new Option('Note Splashes:', "Select your prefered Note Splash variation.", 'splashSkin', STRING, noteSplashes);
 			addOption(option);
 			option.onChange = onChangeSplashSkin;
@@ -70,7 +70,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		bfIcon = new HealthIcon("bf", true);
 		bfIcon.x = FlxG.width + 100;
 		bfIcon.y = FlxG.height / 3;
-		bfIcon.iconType = ClientPrefs.data.healthTypes;
+		bfIcon.iconType = Settings.data.healthTypes;
 
 		var option:Option = new Option('Note Splash Opacity:', 'How transparent should the Note Splashes be?', 'splashAlpha', PERCENT);
 		option.scrollSpeed = 1.6;
@@ -117,8 +117,8 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		var option:Option = new Option('Pause Music:', "What song do you prefer for the Pause Screen?", 'pauseMusic', STRING, ['None', 'Breakfast', 'Tea Time', 'Breakfast (Dave)', 'Breakfast (Pico)']);
 		addOption(option);
 		option.onChange = () -> {
-			if (ClientPrefs.data.pauseMusic == 'None') FlxG.sound.music.volume = 0;
-			else FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
+			if (Settings.data.pauseMusic == 'None') FlxG.sound.music.volume = 0;
+			else FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(Settings.data.pauseMusic)));
 			changedMusic = true;
 		};
 		#if CHECK_FOR_UPDATES addOption(new Option('Check for Updates', 'On Release builds, turn this on to check for updates when you start the game.', 'checkForUpdates')); #end

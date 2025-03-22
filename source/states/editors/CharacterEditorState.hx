@@ -76,13 +76,13 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		add(silhouettes = new FlxSpriteGroup());
 
 		var dad:FlxSprite = new FlxSprite(dadPosition.x, dadPosition.y, Paths.image('editors/silhouetteDad'));
-		dad.antialiasing = ClientPrefs.data.antialiasing;
+		dad.antialiasing = Settings.data.antialiasing;
 		dad.active = false;
 		dad.offset.set(-4, 1);
 		silhouettes.add(dad);
 
 		var boyfriend:FlxSprite = new FlxSprite(bfPosition.x, bfPosition.y + 350, Paths.image('editors/silhouetteBF'));
-		boyfriend.antialiasing = ClientPrefs.data.antialiasing;
+		boyfriend.antialiasing = Settings.data.antialiasing;
 		boyfriend.active = false;
 		boyfriend.offset.set(-6, 2);
 		silhouettes.add(boyfriend);
@@ -153,7 +153,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		updateHealthBar();
 		character.finishAnimation();
 
-		if (ClientPrefs.data.cacheOnGPU) Paths.clearUnusedMemory();
+		if (Settings.data.cacheOnGPU) Paths.clearUnusedMemory();
 		super.create();
 	}
 
@@ -571,7 +571,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		noAntialiasingCheckBox.checked = character.noAntialiasing;
 		noAntialiasingCheckBox.onClick = () -> {
 			character.antialiasing = false;
-			if (!noAntialiasingCheckBox.checked && ClientPrefs.data.antialiasing)
+			if (!noAntialiasingCheckBox.checked && Settings.data.antialiasing)
 				character.antialiasing = true;
 			character.noAntialiasing = noAntialiasingCheckBox.checked;
 		};

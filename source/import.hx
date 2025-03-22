@@ -9,8 +9,8 @@ import llua.Lua;
 #end
 import debug.Logs;
 
-#if ACHIEVEMENTS_ALLOWED
-import backend.Achievements;
+#if AWARDS_ALLOWED
+import backend.Awards;
 #end
 
 #if sys
@@ -23,7 +23,7 @@ import backend.Controls;
 import backend.MusicBeatState;
 import backend.MusicBeatSubstate;
 import backend.CustomFadeTransition;
-import backend.ClientPrefs;
+import backend.Settings;
 import backend.Conductor;
 import backend.BaseStage;
 import backend.Difficulty;
@@ -33,7 +33,7 @@ import backend.EK;
 
 import backend.ui.*; // Psych-UI
 
-import utils.CoolUtil;
+import utils.Util;
 import utils.SpriteUtil;
 
 import objects.Alphabet;

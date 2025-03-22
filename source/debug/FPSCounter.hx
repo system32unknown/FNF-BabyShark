@@ -38,8 +38,8 @@ class FPSCounter extends openfl.text.TextField {
 	}
 
 	public dynamic function preUpdateText():Void {
-		if (ClientPrefs.data.rainbowFps) {
-			timeColor = (timeColor % 360.) + (1. / (ClientPrefs.data.framerate / 120));
+		if (Settings.data.rainbowFps) {
+			timeColor = (timeColor % 360.) + (1. / (Settings.data.framerate / 120));
 			textColor = FlxColor.fromHSB(timeColor, 1, 1);
 		} else if (checkLag) {
 			if (fpsManager.lagged()) textColor = FlxColor.RED;
@@ -49,7 +49,7 @@ class FPSCounter extends openfl.text.TextField {
 
 	var deltaTimeout:Float = .0;
 	override function __enterFrame(delta:Float) {
-		if (!ClientPrefs.data.showFPS || !visible || FlxG.autoPause && !stage.nativeWindow.active) return;
+		if (!Settings.data.showFPS || !visible || FlxG.autoPause && !stage.nativeWindow.active) return;
 		fpsManager.update(delta);
 		preUpdateText();
 		if (memory > mempeak) mempeak = memory;

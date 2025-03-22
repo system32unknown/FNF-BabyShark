@@ -37,7 +37,7 @@ class DeprecatedFunctions {
 		funk.set("luaSpriteMakeGraphic", function(tag:String, width:Int, height:Int, color:String) {
 			FunkinLua.luaTrace("luaSpriteMakeGraphic is deprecated! Use makeGraphic instead", false, true);
 			if (MusicBeatState.getVariables().exists(tag))
-				MusicBeatState.getVariables().get(tag).makeGraphic(width, height, CoolUtil.colorFromString(color));
+				MusicBeatState.getVariables().get(tag).makeGraphic(width, height, Util.colorFromString(color));
 		});
 		funk.set("luaSpriteAddAnimationByPrefix", function(tag:String, name:String, prefix:String, framerate:Int = 24, loop:Bool = true) {
 			FunkinLua.luaTrace("luaSpriteAddAnimationByPrefix is deprecated! Use addAnimationByPrefix instead", false, true);

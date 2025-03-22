@@ -101,11 +101,11 @@ class ControlsSubState extends FlxSubState {
 
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xff7192fd;
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		bg.gameCenter();
 		add(bg);
 
-		var grid:flixel.addons.display.FlxBackdrop = CoolUtil.createBackDrop(80, 80, 160, 160, true, 0x33FFFFFF, 0x0);
+		var grid:flixel.addons.display.FlxBackdrop = Util.createBackDrop(80, 80, 160, 160, true, 0x33FFFFFF, 0x0);
 		grid.velocity.set(40, 40);
 		grid.alpha = 0;
 		FlxTween.tween(grid, {alpha: 1}, .5, {ease: FlxEase.quadOut});

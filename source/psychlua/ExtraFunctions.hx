@@ -74,14 +74,15 @@ class ExtraFunctions {
 				return false;
 			}
 			var save:FlxSave = new FlxSave();
-			save.bind(name, '${CoolUtil.getSavePath()}/$folder');
+			save.bind(name, '${Util.getSavePath()}/$folder');
 			variables.get('save_$name').set(name, save);
 			return true;
 		});
 		funk.set("flushSaveData", function(name:String) {
 			var variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 			if (variables.exists('save_$name')) {
-				variables.get('save_$name').flush();
+				var varSave:FlxSave = cast variables.get('save_$name');
+				varSave.flush();
 				return true;
 			}
 			FunkinLua.luaTrace('flushSaveData: Save file not initialized: ' + name, false, false, FlxColor.RED);

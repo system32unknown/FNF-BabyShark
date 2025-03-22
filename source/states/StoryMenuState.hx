@@ -139,7 +139,7 @@ class StoryMenuState extends MusicBeatState {
 		add(grpWeekCharacters);
 
 		var tracksSprite:FlxSprite = new FlxSprite(FlxG.width * .07 + 100, bgSprite.y + 425, Paths.image('Menu_Tracks'));
-		tracksSprite.antialiasing = ClientPrefs.data.antialiasing;
+		tracksSprite.antialiasing = Settings.data.antialiasing;
 		tracksSprite.x -= tracksSprite.width / 2;
 		add(tracksSprite);
 

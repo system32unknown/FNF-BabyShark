@@ -33,7 +33,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.gameCenter();
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		add(bg);
 
 		// avoids lagspikes while scrolling through menus!

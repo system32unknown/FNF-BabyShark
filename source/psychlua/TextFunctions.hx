@@ -63,7 +63,7 @@ class TextFunctions {
 			if (obj != null) {
 				LuaUtils.setTextBorderFromString(obj, (size > 0 ? style : 'none'));
 				if (size > 0) obj.borderSize = size;
-				obj.borderColor = CoolUtil.colorFromString(color);
+				obj.borderColor = Util.colorFromString(color);
 				return true;
 			}
 			FunkinLua.luaTrace("setTextBorder: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
@@ -72,7 +72,7 @@ class TextFunctions {
 		funk.set("setTextColor", function(tag:String, color:String) {
 			var obj:FlxText = LuaUtils.getObjectLoop(tag);
 			if (obj != null) {
-				obj.color = CoolUtil.colorFromString(color);
+				obj.color = Util.colorFromString(color);
 				return true;
 			}
 			FunkinLua.luaTrace("setTextColor: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);

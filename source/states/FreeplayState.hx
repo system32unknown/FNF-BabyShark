@@ -48,7 +48,7 @@ class FreeplayState extends MusicBeatState {
 	public static var section:String = '';
 
 	override function create() {
-		if (ClientPrefs.data.disableGC) {
+		if (Settings.data.disableGC) {
 			MemoryUtil.compact();
 			MemoryUtil.enable(false);
 		}
@@ -100,7 +100,7 @@ class FreeplayState extends MusicBeatState {
 		Mods.loadTopMod();
 
 		add(bg = new FlxSprite(Paths.image('menuDesat')));
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		bg.gameCenter();
 
 		add(grpSongs = new FlxTypedSpriteGroup<Alphabet>());
@@ -175,7 +175,7 @@ class FreeplayState extends MusicBeatState {
 		updateTexts();
 		super.create();
 
-		if (ClientPrefs.data.disableGC && !MemoryUtil.isGcOn) {
+		if (Settings.data.disableGC && !MemoryUtil.isGcOn) {
 			MemoryUtil.enable();
 			MemoryUtil.collect(true);
 		}
@@ -279,7 +279,7 @@ class FreeplayState extends MusicBeatState {
 				player.playingMusic = false;
 				player.switchPlayMusic();
 
-				if (ClientPrefs.data.disableGC) MemoryUtil.enable();
+				if (Settings.data.disableGC) MemoryUtil.enable();
 	
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 				FlxTween.tween(FlxG.sound.music, {volume: 1}, 1);
@@ -305,14 +305,14 @@ class FreeplayState extends MusicBeatState {
 				if (songLowercase == "enter terminal") return;
 
 				try {
-					if (ClientPrefs.data.disableGC) {
+					if (Settings.data.disableGC) {
 						MemoryUtil.enable();
 						MemoryUtil.collect(true);
 						MemoryUtil.enable(false);
 					}
 					Song.loadFromJson(poop, songLowercase);
 				} catch (e:Exception) {
-					if (ClientPrefs.data.disableGC) {
+					if (Settings.data.disableGC) {
 						MemoryUtil.enable();
 						MemoryUtil.collect(true);
 					}
@@ -366,7 +366,7 @@ class FreeplayState extends MusicBeatState {
 			}
 
 			try {
-				if (ClientPrefs.data.disableGC) {
+				if (Settings.data.disableGC) {
 					MemoryUtil.enable();
 					MemoryUtil.collect(true);
 					MemoryUtil.enable(false);
@@ -513,7 +513,7 @@ class FreeplayState extends MusicBeatState {
 	override function destroy():Void {
 		super.destroy();
 
-		FlxG.autoPause = ClientPrefs.data.autoPause;
+		FlxG.autoPause = Settings.data.autoPause;
 		if (!FlxG.sound.music.playing && !stopMusicPlay)
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 	}	

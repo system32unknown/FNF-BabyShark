@@ -12,7 +12,7 @@ class ShaderFunctions {
 
 	public static function implement(funk:FunkinLua) {
 		funk.addLocalCallback("initLuaShader", function(name:String) {
-			if (!ClientPrefs.data.shaders) return false;
+			if (!Settings.data.shaders) return false;
 
 			#if (!flash && MODS_ALLOWED && sys)
 			return funk.initLuaShader(name);
@@ -23,7 +23,7 @@ class ShaderFunctions {
 		});
 
 		funk.addLocalCallback("setSpriteShader", function(obj:String, shader:String) {
-			if (!ClientPrefs.data.shaders) return false;
+			if (!Settings.data.shaders) return false;
 
 			#if (!flash && MODS_ALLOWED && sys)
 			if (!funk.runtimeShaders.exists(shader) && !funk.initLuaShader(shader)) {
@@ -52,7 +52,7 @@ class ShaderFunctions {
 		});
 
 		funk.addLocalCallback("addShaderToCam", function(cam:String, shader:String, ?index:String) {
-			if (!ClientPrefs.data.shaders) return false;
+			if (!Settings.data.shaders) return false;
 			if (index == null || index.length < 1) index = shader;
 
 			#if (!flash && MODS_ALLOWED && sys)

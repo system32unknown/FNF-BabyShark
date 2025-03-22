@@ -55,7 +55,7 @@ class TitleState extends MusicBeatState {
 		introGroup.visible = false;
 
 		logo = new FlxSprite(logoPosition.x, logoPosition.y);
-		logo.antialiasing = ClientPrefs.data.antialiasing;
+		logo.antialiasing = Settings.data.antialiasing;
 		if (!FileSystem.exists(Paths.modsXml('logobumpin'))) {
 			logo.loadGraphic(Paths.image('logobumpin'));
 			logo.setGraphicSize(Std.int(logo.width * titleSize));
@@ -69,7 +69,7 @@ class TitleState extends MusicBeatState {
 		logo.angle = -4;
 
 		gf = new FlxSprite(gfPosition.x, gfPosition.y);
-		gf.antialiasing = ClientPrefs.data.antialiasing;
+		gf.antialiasing = Settings.data.antialiasing;
 		gf.frames = Paths.getSparrowAtlas(characterImage);
 		if (!useIdle) 	{
 			gf.animation.addByIndices('left', animationName, danceLeftFrames, '', 24, false);
@@ -89,7 +89,7 @@ class TitleState extends MusicBeatState {
 		}
 		if (newTitle = animFrames.length > 0) {
 			titleText.animation.addByPrefix('idle', "ENTER IDLE", 24);
-			titleText.animation.addByPrefix('press', ClientPrefs.data.flashing ? "ENTER PRESSED" : "ENTER FREEZE", 24);
+			titleText.animation.addByPrefix('press', Settings.data.flashing ? "ENTER PRESSED" : "ENTER FREEZE", 24);
 			FlxTween.num(0, 1, 2, {type: PINGPONG, ease: FlxEase.quadInOut}, num -> titleTextTimer = num);
 		} else {
 			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
@@ -144,7 +144,7 @@ class TitleState extends MusicBeatState {
 
 			if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.trim().length > 0) {
 				var bg:FlxSprite = new FlxSprite(Paths.image(titleJSON.backgroundSprite));
-				bg.antialiasing = ClientPrefs.data.antialiasing;
+				bg.antialiasing = Settings.data.antialiasing;
 				bg.active = false;
 				add(bg);
 			}
@@ -189,7 +189,7 @@ class TitleState extends MusicBeatState {
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
 
-				FlxG.camera.flash(ClientPrefs.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF);
+				FlxG.camera.flash(Settings.data.flashing ? FlxColor.WHITE : 0x4CFFFFFF);
 				FlxG.sound.play(Paths.sound('confirmMenu'), .7);
 				skipped = true;
 				transitionTmr = FlxTimer.wait(1.5, () -> FlxG.switchState(() -> new MainMenuState()));

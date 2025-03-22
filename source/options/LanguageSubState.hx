@@ -11,13 +11,13 @@ class LanguageSubState extends FlxSubState {
 
 		var bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		bg.gameCenter();
 		add(bg);
 		add(grpLanguages);
 
-		languages.push(ClientPrefs.defaultData.language); //English (US)
-		displayLanguages.set(ClientPrefs.defaultData.language, Language.defaultLangName);
+		languages.push(Settings.defaultData.language); //English (US)
+		displayLanguages.set(Settings.defaultData.language, Language.defaultLangName);
 		for (directory in Mods.directoriesWithFile(Paths.getSharedPath(), 'data/')) {
 			for (file in FileSystem.readDirectory(directory)) {
 				if (file.toLowerCase().endsWith('.lang')) {
@@ -46,10 +46,10 @@ class LanguageSubState extends FlxSubState {
 			return 0;
 		});
 
-		curSelected = languages.indexOf(ClientPrefs.data.language);
+		curSelected = languages.indexOf(Settings.data.language);
 		if (curSelected < 0) {
-			ClientPrefs.data.language = ClientPrefs.defaultData.language;
-			curSelected = Std.int(Math.max(0, languages.indexOf(ClientPrefs.data.language)));
+			Settings.data.language = Settings.defaultData.language;
+			curSelected = Std.int(Math.max(0, languages.indexOf(Settings.data.language)));
 		}
 
 		for (num => lang in languages) {
@@ -90,8 +90,8 @@ class LanguageSubState extends FlxSubState {
 
 		if (Controls.justPressed('accept')) {
 			FlxG.sound.play(Paths.sound('confirmMenu'), .6);
-			ClientPrefs.data.language = languages[curSelected];
-			ClientPrefs.save();
+			Settings.data.language = languages[curSelected];
+			Settings.save();
 			Language.reloadPhrases();
 			changedLanguage = true;
 		}

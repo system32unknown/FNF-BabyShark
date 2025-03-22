@@ -68,7 +68,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Selecting Character'); #end
-		unlockedChrs = ClientPrefs.data.unlockedCharacters;
+		unlockedChrs = Settings.data.unlockedCharacters;
 
 		persistentUpdate = true;
 
@@ -226,8 +226,8 @@ class CharacterSelectionState extends MusicBeatState {
 
 	public static function unlockCharacter(character:String, save:Bool = false) {
 		if (!unlockedChrs.contains(character)) unlockedChrs.push(character);
-		ClientPrefs.data.unlockedCharacters = unlockedChrs;
-		if (save) ClientPrefs.save();
+		Settings.data.unlockedCharacters = unlockedChrs;
+		if (save) Settings.save();
 	}
 
 	public static function isLocked(character:String):Bool {
@@ -235,8 +235,8 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	public static function reset() {
-		ClientPrefs.data.unlockedCharacters = ClientPrefs.defaultData.unlockedCharacters;
-		ClientPrefs.save();
+		Settings.data.unlockedCharacters = Settings.defaultData.unlockedCharacters;
+		Settings.save();
 	}
 
 	function UpdateBF() {

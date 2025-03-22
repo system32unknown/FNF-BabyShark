@@ -103,7 +103,7 @@ class CreditsState extends MusicBeatState {
 
 		persistentUpdate = true;
 		bg = new FlxSprite(Paths.image('menuDesat'));
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		add(bg);
 		bg.gameCenter();
 
@@ -189,7 +189,7 @@ class CreditsState extends MusicBeatState {
 				}
 			}
 
-			interpColor.fpsLerpTo(CoolUtil.colorFromString(sections[curSelected][3]), .0625);
+			interpColor.fpsLerpTo(Util.colorFromString(sections[curSelected][3]), .0625);
 			bg.color = interpColor.color;
 
 			if (Controls.justPressed('accept') && sections[curSelected][1] != null) {
@@ -241,7 +241,7 @@ class CreditsState extends MusicBeatState {
 	function pushModCredits(?folder:String = null):Void {
 		var creditsFile:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits.txt');
 		#if TRANSLATIONS_ALLOWED
-		var translatedCredits:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits-${ClientPrefs.data.language}.txt');
+		var translatedCredits:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits-${Settings.data.language}.txt');
 		#end
 		if (#if TRANSLATIONS_ALLOWED (FileSystem.exists(translatedCredits) && (creditsFile = translatedCredits) == translatedCredits) || #end FileSystem.exists(creditsFile)) {
 			var arr:Array<String> = File.getContent(creditsFile).split('\n');
@@ -285,7 +285,7 @@ class CreditSectionState extends MusicBeatState {
 		if (cSectionisMod) Mods.currentModDirectory = curCSection;
 
 		bg = new FlxSprite(Paths.image('menuDesat'));
-		bg.antialiasing = ClientPrefs.data.antialiasing;
+		bg.antialiasing = Settings.data.antialiasing;
 		add(bg);
 		bg.gameCenter();
 
@@ -372,11 +372,11 @@ class CreditSectionState extends MusicBeatState {
 				}
 			}
 
-			interpColor.fpsLerpTo(CoolUtil.colorFromString(creditsStuff[curSelected][4]), .0625);
+			interpColor.fpsLerpTo(Util.colorFromString(creditsStuff[curSelected][4]), .0625);
 			bg.color = interpColor.color;
 
 			if (Controls.justPressed('accept') && (creditsStuff[curSelected][3] == null || creditsStuff[curSelected][3].length > 4))
-				CoolUtil.browserLoad(creditsStuff[curSelected][3]);
+				Util.browserLoad(creditsStuff[curSelected][3]);
 
 			if (Controls.justPressed('back')) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -458,7 +458,7 @@ class CreditSectionState extends MusicBeatState {
 	function initializeModList(?folder:String = null) {
 		var creditsFile:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits.txt');
 		#if TRANSLATIONS_ALLOWED
-		var translatedCredits:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits-${ClientPrefs.data.language}.txt');
+		var translatedCredits:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits-${Settings.data.language}.txt');
 		#end
 
 		if (#if TRANSLATIONS_ALLOWED (FileSystem.exists(translatedCredits) && (creditsFile = translatedCredits) == translatedCredits) || #end FileSystem.exists(creditsFile)) {

@@ -42,7 +42,7 @@ class NoteOffsetState extends MusicBeatState {
 	var nativeHoldingObject:Bool = false;
 	var holdingObject:Int = -1;
 
-	var comboOffset:Array<Array<Int>> = ClientPrefs.data.comboOffset;
+	var comboOffset:Array<Array<Int>> = Settings.data.comboOffset;
 
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Adjusting Offsets and Combos'); #end
@@ -117,7 +117,7 @@ class NoteOffsetState extends MusicBeatState {
 		timeBar.gameCenter(X);
 		timeBar.leftBar.color = FlxColor.LIME;
 
-		barPercent = ClientPrefs.data.noteOffset;
+		barPercent = Settings.data.noteOffset;
 		updateNoteDelay();
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
@@ -138,7 +138,7 @@ class NoteOffsetState extends MusicBeatState {
 
 		modeConfigText = new FlxText(0, 4, FlxG.width, "", 32);
 		modeConfigText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
-		modeConfigText.antialiasing = ClientPrefs.data.antialiasing;
+		modeConfigText.antialiasing = Settings.data.antialiasing;
 		modeConfigText.scrollFactor.set();
 		modeConfigText.camera = camHUD;
 		add(modeConfigText);
@@ -187,8 +187,8 @@ class NoteOffsetState extends MusicBeatState {
 			persistentUpdate = false;
 			FlxG.switchState(() -> new options.OptionsState());
 			if (OptionsState.onPlayState) {
-				if (ClientPrefs.data.pauseMusic != 'None')
-					FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(ClientPrefs.data.pauseMusic)));
+				if (Settings.data.pauseMusic != 'None')
+					FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(Settings.data.pauseMusic)));
 				else FlxG.sound.music.volume = 0;
 			} else FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			FlxG.mouse.visible = false;
@@ -251,7 +251,7 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	function updateNoteDelay() {
-		ClientPrefs.data.noteOffset = Math.round(barPercent);
+		Settings.data.noteOffset = Math.round(barPercent);
 		timeTxt.text = 'Current offset: ' + Math.floor(barPercent) + ' ms';
 	}
 
@@ -336,7 +336,7 @@ class NoteOffsetState extends MusicBeatState {
 			mouse.visible = false;
 			if (left || right) {
 				holdTime = 0;
-				barPercent = Math.max(delayMin, Math.min(ClientPrefs.data.noteOffset - (Controls.pressed('ui_right') ? -1 : 1), delayMax));
+				barPercent = Math.max(delayMin, Math.min(Settings.data.noteOffset - (Controls.pressed('ui_right') ? -1 : 1), delayMax));
 				updateNoteDelay();
 			}
 

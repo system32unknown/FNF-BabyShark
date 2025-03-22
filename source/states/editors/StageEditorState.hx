@@ -1604,7 +1604,7 @@ class StageEditorMetaSprite {
 
 	public var color(default, set):String = 'FFFFFF';
 	function set_color(v:String) {
-		sprite.color = CoolUtil.colorFromString(v);
+		sprite.color = Util.colorFromString(v);
 		return (color = v);
 	}
 	public var image(default, set):String = 'unknown';
@@ -1629,7 +1629,7 @@ class StageEditorMetaSprite {
 	public var scale:Array<Float> = [1, 1];
 	public var antialiasing(default, set):Bool = true;
 	function set_antialiasing(v:Bool) {
-		sprite.antialiasing = (v && ClientPrefs.data.antialiasing);
+		sprite.antialiasing = (v && Settings.data.antialiasing);
 		return (antialiasing = v);
 	}
 
@@ -1727,7 +1727,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 	public function new() {
 		super();
 
-		add(CoolUtil.createBackDrop(50, 50, 100, 100, true, 0xFFAAAAAA, 0xFF666666));
+		add(Util.createBackDrop(50, 50, 100, 100, true, 0xFFAAAAAA, 0xFF666666));
 
 		animsTxtGroup = new FlxTypedGroup<FlxText>();
 		animsTxtGroup.cameras = [camHUD];

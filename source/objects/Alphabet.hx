@@ -244,7 +244,7 @@ class AlphabetGlyph extends FlxSprite {
 		image = 'alphabet';
 		@:bypassAccessor this.type = type;
 		this.char = char;
-		antialiasing = ClientPrefs.data.antialiasing;
+		antialiasing = Settings.data.antialiasing;
 	}
 
 	@:noCompletion inline function set_type(newType:String):String {

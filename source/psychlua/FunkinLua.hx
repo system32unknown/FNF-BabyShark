@@ -156,28 +156,28 @@ class FunkinLua {
 		}
 
 		// Other settings
-		set('downscroll', ClientPrefs.data.downScroll);
-		set('middlescroll', ClientPrefs.data.middleScroll);
-		set('framerate', ClientPrefs.data.framerate);
-		set('ghostTapping', ClientPrefs.data.ghostTapping);
-		set('hideHud', ClientPrefs.data.hideHud);
-		set('timeBarType', ClientPrefs.data.timeBarType);
-		set('cameraZoomOnBeat', ClientPrefs.data.camZooms);
-		set('flashingLights', ClientPrefs.data.flashing);
-		set('noteOffset', ClientPrefs.data.noteOffset);
-		set('healthBarAlpha', ClientPrefs.data.healthBarAlpha);
-		set('noResetButton', ClientPrefs.data.noReset);
-		set('lowQuality', ClientPrefs.data.lowQuality);
-		set('antialiasing', ClientPrefs.data.antialiasing);
-		set('shadersEnabled', ClientPrefs.data.shaders);
+		set('downscroll', Settings.data.downScroll);
+		set('middlescroll', Settings.data.middleScroll);
+		set('framerate', Settings.data.framerate);
+		set('ghostTapping', Settings.data.ghostTapping);
+		set('hideHud', Settings.data.hideHud);
+		set('timeBarType', Settings.data.timeBarType);
+		set('cameraZoomOnBeat', Settings.data.camZooms);
+		set('flashingLights', Settings.data.flashing);
+		set('noteOffset', Settings.data.noteOffset);
+		set('healthBarAlpha', Settings.data.healthBarAlpha);
+		set('noResetButton', Settings.data.noReset);
+		set('lowQuality', Settings.data.lowQuality);
+		set('antialiasing', Settings.data.antialiasing);
+		set('shadersEnabled', Settings.data.shaders);
 		set('scriptName', scriptName);
 		set('currentModDirectory', Mods.currentModDirectory);
 
-		set('noteSkin', ClientPrefs.data.noteSkin);
+		set('noteSkin', Settings.data.noteSkin);
 		set('noteSkinPostfix', objects.Note.getNoteSkinPostfix());
-		set('splashSkin', ClientPrefs.data.splashSkin);
+		set('splashSkin', Settings.data.splashSkin);
 		set('splashSkinPostfix', objects.NoteSplash.getSplashSkinPostfix());
-		set('splashAlpha', ClientPrefs.data.splashAlpha);
+		set('splashAlpha', Settings.data.splashAlpha);
 
 		set('buildTarget', LuaUtils.getTargetOS());
 
@@ -460,7 +460,7 @@ class FunkinLua {
 			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (penisExam != null) {
 				targetColor = targetColor.trim();
-				var newColor:FlxColor = CoolUtil.colorFromString(targetColor);
+				var newColor:FlxColor = Util.colorFromString(targetColor);
 				if (targetColor.startsWith('0x') && targetColor.length == 8 || !FlxColor.colorLookup.exists(targetColor.toUpperCase()) && targetColor.length == 6) newColor.alphaFloat = penisExam.alpha;
 
 				var curColor:FlxColor = penisExam.color;
@@ -477,7 +477,7 @@ class FunkinLua {
 						}
 					}));
 					return tag;
-				} else FlxTween.color(penisExam, duration, curColor, CoolUtil.colorFromString(targetColor), {ease: LuaUtils.getTweenEaseByString(ease)});
+				} else FlxTween.color(penisExam, duration, curColor, Util.colorFromString(targetColor), {ease: LuaUtils.getTweenEaseByString(ease)});
 			} else luaTrace('doTweenColor: Couldnt find object: ' + vars, false, false, FlxColor.RED);
 			return null;
 		});
@@ -674,8 +674,8 @@ class FunkinLua {
 		set("getCameraFollowX", () -> game.camFollow.x);
 		set("getCameraFollowY", () -> game.camFollow.y);
 		set("cameraShake", (camera:String, intensity:Float, duration:Float, axes:String = 'xy') -> LuaUtils.cameraFromString(camera).shake(intensity, duration * game.playbackRate, true, LuaUtils.axesFromString(axes)));
-		set("cameraFlash", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).flash(CoolUtil.colorFromString(color), duration * game.playbackRate, null, forced));
-		set("cameraFade", (camera:String, color:String, duration:Float, forced:Bool, ?fadeOut:Bool = false) -> LuaUtils.cameraFromString(camera).fade(CoolUtil.colorFromString(color), duration * game.playbackRate, fadeOut, null, forced));
+		set("cameraFlash", (camera:String, color:String, duration:Float, forced:Bool) -> LuaUtils.cameraFromString(camera).flash(Util.colorFromString(color), duration * game.playbackRate, null, forced));
+		set("cameraFade", (camera:String, color:String, duration:Float, forced:Bool, ?fadeOut:Bool = false) -> LuaUtils.cameraFromString(camera).fade(Util.colorFromString(color), duration * game.playbackRate, fadeOut, null, forced));
 
 		set("setRatingPercent", function(value:Float) {
 			game.ratingPercent = value;
@@ -722,7 +722,7 @@ class FunkinLua {
 
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
 			if (image != null && image.length > 0) leSprite.loadGraphic(Paths.image(image));
-			leSprite.antialiasing = ClientPrefs.data.antialiasing;
+			leSprite.antialiasing = Settings.data.antialiasing;
 			MusicBeatState.getVariables().set(tag, leSprite);
 		});
 		set("makeAnimatedLuaSprite", function(tag:String, image:String = null, x:Float = 0, y:Float = 0, ?spriteType:String = "auto") {
@@ -730,7 +730,7 @@ class FunkinLua {
 			LuaUtils.destroyObject(tag);
 
 			var leSprite:ModchartSprite = new ModchartSprite(x, y);
-			leSprite.antialiasing = ClientPrefs.data.antialiasing;
+			leSprite.antialiasing = Settings.data.antialiasing;
 			if (image != null && image.length > 0) LuaUtils.loadFrames(leSprite, image, spriteType);
 			MusicBeatState.getVariables().set(tag, leSprite);
 		});
@@ -749,11 +749,11 @@ class FunkinLua {
 
 		set("makeGraphic", function(obj:String, width:Int = 256, height:Int = 256, color:String = 'FFFFFF') {
 			var spr:FlxSprite = LuaUtils.getObjectLoop(obj);
-			if (spr != null) spr.makeGraphic(width, height, CoolUtil.colorFromString(color));
+			if (spr != null) spr.makeGraphic(width, height, Util.colorFromString(color));
 		});
 		set("makeSolid", function(obj:String, width:Int = 256, height:Int = 256, color:String = 'FFFFFF') {
 			var spr:FlxSprite = LuaUtils.getObjectLoop(obj);
-			if (spr != null) spr.makeSolid(width, height, CoolUtil.colorFromString(color));
+			if (spr != null) spr.makeSolid(width, height, Util.colorFromString(color));
 		});
 		set("addAnimationByPrefix", function(obj:String, name:String, prefix:String, framerate:Float = 24, loop:Bool = true) {
 			var obj:FlxSprite = cast LuaUtils.getObjectDirectly(obj, false);
@@ -958,7 +958,7 @@ class FunkinLua {
 			var path:String;
 			var songPath:String = Paths.formatToSongPath(Song.loadedSongName);
 			#if TRANSLATIONS_ALLOWED
-			path = Paths.getPath('data/${Paths.CHART_PATH}/$songPath/${dialogueFile}_${ClientPrefs.data.language}.json');
+			path = Paths.getPath('data/${Paths.CHART_PATH}/$songPath/${dialogueFile}_${Settings.data.language}.json');
 			if (!#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end)
 			#end
 				path = Paths.getPath('data/${Paths.CHART_PATH}/$songPath/$dialogueFile.json');
@@ -998,7 +998,7 @@ class FunkinLua {
 			return true;
 			#end
 		});
-		set("debugPrint", (text:Dynamic = '', color:String = 'WHITE') -> PlayState.instance.addTextToDebug(text, CoolUtil.colorFromString(color)));
+		set("debugPrint", (text:Dynamic = '', color:String = 'WHITE') -> PlayState.instance.addTextToDebug(text, Util.colorFromString(color)));
 		// mod settings
 		addLocalCallback("getModSetting", function(saveTag:String, ?modName:String = null) {
 			#if MODS_ALLOWED
@@ -1020,7 +1020,7 @@ class FunkinLua {
 		});
 
 		#if DISCORD_ALLOWED DiscordClient.addLuaCallbacks(this); #end
-		#if ACHIEVEMENTS_ALLOWED Achievements.addLuaCallbacks(this); #end
+		#if AWARDS_ALLOWED Awards.addLuaCallbacks(this); #end
 		#if TRANSLATIONS_ALLOWED Language.addLuaCallbacks(this); #end
 		#if VIDEOS_ALLOWED VideoFunctions.implement(this); #end
 		HScript.implement(this);
@@ -1233,7 +1233,7 @@ class FunkinLua {
 
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
 	public function initLuaShader(name:String):Bool {
-		if (!ClientPrefs.data.shaders) return false;
+		if (!Settings.data.shaders) return false;
 
 		#if (MODS_ALLOWED && !flash && sys)
 		if (runtimeShaders.exists(name)) {

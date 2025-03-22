@@ -33,8 +33,8 @@ class MusicBeatState extends flixel.FlxState {
 		if (!_psychCameraInitialized) initPsychCamera();
 		super.create();
 
-		curStepLimit = ClientPrefs.data.updateStepLimit;
-		if (curStepLimit > 0) maxBPM = curStepLimit * GameplaySettingsSubState.defaultBPM * ClientPrefs.data.framerate;
+		curStepLimit = Settings.data.updateStepLimit;
+		if (curStepLimit > 0) maxBPM = curStepLimit * GameplaySettingsSubState.defaultBPM * Settings.data.framerate;
 		else maxBPM = Math.POSITIVE_INFINITY;
 
 		if (!skipNextTransOut) openSubState(new CustomFadeTransition(.5, true));
@@ -42,7 +42,7 @@ class MusicBeatState extends flixel.FlxState {
 	}
 
 	override function destroy() {
-		if (!ClientPrefs.data.disableGC) utils.system.MemoryUtil.clearMajor();
+		if (!Settings.data.disableGC) utils.system.MemoryUtil.clearMajor();
 		super.destroy();
 	}
 
@@ -110,7 +110,7 @@ class MusicBeatState extends flixel.FlxState {
 	function updateCurStep():Void {
 		var lastChange:Conductor.BPMChangeEvent = Conductor.getBPMChangeFromMS(Conductor.songPosition);
 
-		var delayToFix:Float = ((Conductor.songPosition - ClientPrefs.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
+		var delayToFix:Float = ((Conductor.songPosition - Settings.data.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
 		curDecStep = lastChange.stepTime + delayToFix;
 		curStep = lastChange.stepTime + Math.floor(delayToFix);
 	}
@@ -135,7 +135,7 @@ class MusicBeatState extends flixel.FlxState {
 
 	public function stepHit():Void {
 		var nextStep:Float = curStep + 1;
-		if (curStepLimit > 0) maxBPM = curStepLimit * GameplaySettingsSubState.defaultBPM * ClientPrefs.data.framerate;
+		if (curStepLimit > 0) maxBPM = curStepLimit * GameplaySettingsSubState.defaultBPM * Settings.data.framerate;
 		else maxBPM = Math.POSITIVE_INFINITY;
 
 		if (Conductor.bpm <= maxBPM) {

@@ -23,7 +23,7 @@ class Mods {
 		'weeks',
 		'fonts',
 		'scripts',
-		'achievements'
+		'awards'
 	];
 
 	static var globalMods:Array<String> = [];
@@ -47,7 +47,7 @@ class Mods {
 		var remains:Array<String> = getModDirectories(true);
 
 		if (remains.length <= 0 || !FileSystem.exists(path)) return list;
-		var leMods:Array<String> = CoolUtil.coolTextFile(path);
+		var leMods:Array<String> = Util.coolTextFile(path);
 
 		for (i in 0...leMods.length) {
 			if (remains.length <= 0) break;
@@ -99,7 +99,7 @@ class Mods {
 		}
 
 		for (file in paths) {
-			for (value in CoolUtil.coolTextFile(file))
+			for (value in Util.coolTextFile(file))
 				if ((allowDuplicates || !mergedList.contains(value)) && value.length > 0)
 					mergedList.push(value);
 		}
@@ -151,7 +151,7 @@ class Mods {
 		if (!updatedOnState) updateModList();
 		var list:ModsList = {enabled: [], disabled: [], all: []};
 		try {
-			for (mod in CoolUtil.coolTextFile('modsList.txt')) {
+			for (mod in Util.coolTextFile('modsList.txt')) {
 				if (mod.trim().length < 1) continue;
 
 				var dat:Array<String> = mod.split("|");
@@ -169,7 +169,7 @@ class Mods {
 		var list:Array<Array<Dynamic>> = [];
 		var added:Array<String> = [];
 		try {
-			for (mod in CoolUtil.coolTextFile('modsList.txt')) {
+			for (mod in Util.coolTextFile('modsList.txt')) {
 				var dat:Array<String> = mod.split("|");
 				var folder:String = dat[0];
 				if (folder.trim().length > 0 && FileSystem.exists(Paths.mods(folder)) && FileSystem.isDirectory(Paths.mods(folder)) && !added.contains(folder)) {
