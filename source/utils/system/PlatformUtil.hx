@@ -3,6 +3,7 @@ package utils.system;
 import lime.app.Application;
 import lime.system.System;
 
+#if cpp
 #if windows
 @:buildXml('
 	<target id="haxe">
@@ -74,11 +75,13 @@ import lime.system.System;
 	#include <thread>
 ')
 #end
+#end
 class PlatformUtil {
 	public static function __init__():Void {
 		registerDPIAware();
 	}
 
+	#if cpp
 	#if windows
 	@:functionCode('
 		NOTIFYICONDATA m_NID;
@@ -115,9 +118,10 @@ class PlatformUtil {
 		system(cmd.c_str());
 	')
 	#end
+	#end
 	public static function sendWindowsNotification(title:String = "", desc:String = ""):Bool return false;
 
-	#if windows
+	#if (cpp && windows)
 	@:functionCode('
  		HWND window = GetActiveWindow();
  		SetWindowLongPtr(window, GWL_STYLE, GetWindowLongPtr(window, GWL_STYLE) & ~WS_SYSMENU); // Remove the WS_SYSMENU style
@@ -127,7 +131,7 @@ class PlatformUtil {
 	public static function removeWindowIcon() {}
 
 	// Thanks leer lol
-	#if windows
+	#if (cpp && windows)
 	@:functionCode('
 		POINT mousePos;
 		if (!GetCursorPos(&mousePos)) return 0;
@@ -135,12 +139,12 @@ class PlatformUtil {
 	#end
 	public static function getMousePos():Array<Float> return #if windows [untyped __cpp__("mousePos.x"), untyped __cpp__("mousePos.y")] #else [0, 0] #end;
 
-	#if windows
+	#if (cpp && windows)
 	@:functionCode('return MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);')
 	#end
 	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING):Int return 0;
 
-	#if windows
+	#if (cpp && windows)
 	@:functionCode('
 		if (!AllocConsole()) return;
 
@@ -151,7 +155,7 @@ class PlatformUtil {
 	#end
 	public static function allocConsole() {}
 
-	#if windows
+	#if (cpp && windows)
 	@:functionCode('return SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);')
 	#end
 	public static function setConsoleColors(color:Int):Bool return false;
@@ -261,19 +265,19 @@ class PlatformUtil {
 		return windowBorderColor = value;
 	}
 
-	#if windows
+	#if (cpp && windows)
 	@:functionCode('return FindWindowA(className.c_str(), windowName.c_str()) != NULL;')
 	#end
 	public static function findWindow(className:String = null, windowName:String = ''):Bool return false;
 
-	#if windows
+	#if (cpp && windows)
 	@:functionCode('return Beep(freq, duration);')
 	#end
 	public static function beep(freq:Int, duration:Int):Bool {
 		return false;
 	}
 
-	#if windows
+	#if (cpp && windows)
 	@:functionCode('
 		HWND win = FindWindowA(NULL, winName.c_str());
 		if (win == NULL) win = GetActiveWindow();
@@ -290,7 +294,7 @@ class PlatformUtil {
 	#end
 	public static function setTransparency(winName:String, alpha:Int, color:Int):Bool return false;
 
-	#if windows
+	#if (cpp && windows)
 	@:functionCode('		
 		// Get the current time
 		auto now = std::chrono::high_resolution_clock::now();
@@ -388,6 +392,25 @@ class PlatformUtil {
 	public static function detectWine():Bool {
 		return false;
 	}
+
+	#if (cpp && windows)
+	@:functionCode('
+		getHandle();
+		if (curHandle != (HWND)0) {
+			FLASHWINFO info;
+			info.cbSize = sizeof(info);
+			info.hwnd = curHandle;
+			info.uCount = count;
+			info.dwTimeout = timeout;
+			info.dwFlags = flag;
+			return FlashWindowEx(&info);
+		}
+		return false;
+	')
+	#end
+	public static function flashWindow(count:Int, timeout:Int, flag:FlashWFlags):Bool {
+		return false;
+	}
 }
 
 enum abstract MessageBoxIcon(Int) {
@@ -395,4 +418,13 @@ enum abstract MessageBoxIcon(Int) {
 	var MSG_QUESTION:MessageBoxIcon = 0x00000020;
 	var MSG_WARNING:MessageBoxIcon = 0x00000030;
 	var MSG_INFORMATION:MessageBoxIcon = 0x00000040;
+}
+
+enum abstract FlashWFlags(Int) {
+	var FLASHW_ALL:FlashWFlags = 0x00000003;
+	var FLASHW_CAPTION:FlashWFlags = 0x00000001;
+	var FLASHW_STOP:FlashWFlags = 0;
+	var FLASHW_TIMER:FlashWFlags = 0x00000004;
+	var FLASHW_TIMERNOFG:FlashWFlags = 0x0000000C;
+	var FLASHW_TRAY:FlashWFlags = 0x00000002;
 }
