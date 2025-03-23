@@ -168,7 +168,7 @@ class HealthIcon extends FlxSprite {
 	 * Values are necessary for proper calculations!!
 	 */
 	public dynamic function bop(bopInfo:BopInfo, iconAnim:String = "Settings", type:Int = 0):Void {
-		if (iconAnim.toLowerCase() == "Settings") iconAnim = Settings.data.iconBopType;
+		if (iconAnim.toLowerCase() == "settings" || iconAnim.toLowerCase() == "clientPrefs" || iconAnim.toLowerCase() == "client") iconAnim = Settings.data.iconBopType;
 		if (iconAnim == "None") return;
 		if (curBopType != iconAnim) curBopType = iconAnim;
 

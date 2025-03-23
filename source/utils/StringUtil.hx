@@ -149,4 +149,24 @@ class StringUtil {
 		for (i in 0...str.length) reversed = str.charAt(i) + reversed;
 		return reversed;
 	}
+
+	/**
+	 * Generates a snapshot version string based on the given date.
+	 * The format of the version string is "YYwWc", where:
+	 * - YY is the last two digits of the year.
+	 * - W is the week number of the year (starting from the first Sunday).
+	 * - c is a character suffix starting from 'a'.
+	 *
+	 * @param date The date from which to generate the version string.
+	 * @param suffix An optional integer that determines the suffix character (default is 0, corresponding to 'a').
+	 * @return A formatted string representing the snapshot version.
+	 */
+	public static function getSnapshotVer(date:Date, suffix:Int = 0):String {
+		var year:Int = date.getFullYear() % 100; // Get last two digits of the year
+		var startOfYear:Date = new Date(date.getFullYear(), 0, 1, 0, 0, 0); // Haxe Date expects hour, minute, and second as well
+		var pastDaysOfYear:Int = Math.floor((date.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
+		var week:Int = Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
+
+		return year + "w" + week + String.fromCharCode(97 + suffix);
+	}
 }

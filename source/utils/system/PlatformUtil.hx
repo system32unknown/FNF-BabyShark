@@ -119,16 +119,6 @@ class PlatformUtil {
 
 	#if windows
 	@:functionCode('
-		HWND window = GetActiveWindow();
-		HICON smallIcon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
-		HICON icon = (HICON)LoadImage(NULL, path, IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
-		SendMessage(window, WM_SETICON, ICON_SMALL, (LPARAM)smallIcon);
-		SendMessage(window, WM_SETICON, ICON_BIG, (LPARAM)icon);
-	')
-	#end
-	public static function setWindowIcon(path:String) {}
-	#if windows
-	@:functionCode('
  		HWND window = GetActiveWindow();
  		SetWindowLongPtr(window, GWL_STYLE, GetWindowLongPtr(window, GWL_STYLE) & ~WS_SYSMENU); // Remove the WS_SYSMENU style
  		SetWindowPos(window, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER); // Force the window to redraw

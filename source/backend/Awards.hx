@@ -2,7 +2,6 @@ package backend;
 
 #if AWARDS_ALLOWED
 import objects.AchievementPopup;
-import haxe.Exception;
 import flixel.util.FlxSave;
 #if LUA_ALLOWED
 import psychlua.FunkinLua;
@@ -46,7 +45,7 @@ class Awards {
 	public static function get(name:String):Award return list[name];
 	public static function exists(name:String):Bool return list.exists(name);
 
-	public static var list:Map<String, Award> = [];
+	public static var list:Map<String, Award> = new Map<String, Award>();
 	public static var variables:Map<String, Float> = [];
 	public static var unlocked:Array<String> = [];
 
@@ -72,7 +71,7 @@ class Awards {
 		_save.data.unlocked = unlocked;
 		_save.data.variables = variables;
 	}
-	
+
 	public static function getScore(name:String):Float
 		return _scoreFunc(name, GET);
 
@@ -95,9 +94,9 @@ class Awards {
 			if (unlocked.contains(name)) return achievement.maxScore;
 
 			var val:Float = addOrSet;
-			switch mode {
-				case GET: return variables[name]; //get
-				case ADD: val += variables[name]; //add
+			switch (mode) {
+				case GET: return variables[name]; // get
+				case ADD: val += variables[name]; // add
 				default:
 			}
 
@@ -122,7 +121,6 @@ class Awards {
 		}
 
 		if (isUnlocked(name)) return null;
-
 		trace('Completed achievement "$name"');
 		unlocked.push(name);
 
@@ -140,14 +138,14 @@ class Awards {
 		return name;
 	}
 
-	public static function isUnlocked(name:String)
+	public static function isUnlocked(name:String):Bool
 		return unlocked.contains(name);
 
 	@:allow(objects.AchievementPopup)
 	static var _popups:Array<AchievementPopup> = [];
 
 	public static var showingPopups(get, never):Bool;
-	public static function get_showingPopups()
+	public static function get_showingPopups():Bool
 		return _popups.length > 0;
 
 	public static function startPopup(achieve:String) {
@@ -155,13 +153,12 @@ class Awards {
 			if (popup == null) continue;
 			popup.intendedY += 150;
 		}
-
 		_popups.push(new AchievementPopup(achieve));
 	}
 
 	// Map sorting cuz haxe is physically incapable of doing that by itself
-	static var _sortID = 0;
-	static var _originalLength = -1;
+	static var _sortID:Int = 0;
+	static var _originalLength:Int = -1;
 	public static function createAchievement(name:String, data:Award, ?mod:String = null) {
 		data.ID = _sortID;
 		data.mod = mod;

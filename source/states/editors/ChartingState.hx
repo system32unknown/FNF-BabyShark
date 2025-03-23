@@ -1986,14 +1986,16 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			if (changed) {
 				var textureLoad:String = 'images/${noteTextureInputText.text}.png';
 				if (Paths.fileExists(textureLoad, IMAGE) || noteTextureInputText.text.trim() == '') {
-					for (note in notes) {
-						if (note == null) continue;
-						note.reloadNote(note.texture);
-		
-						if (note.width > note.height) note.setGraphicSize(GRID_SIZE);
-						else note.setGraphicSize(0, GRID_SIZE);
-		
-						note.updateHitbox();
+					for (renderNotes in [behindRenderedNotes, curRenderedNotes]) {
+						renderNotes.forEach((note:Note) -> {
+							if (note == null) return;
+							note.reloadNote(note.texture);
+				
+							if (note.width > note.height) note.setGraphicSize(GRID_SIZE);
+							else note.setGraphicSize(0, GRID_SIZE);
+			
+							note.updateHitbox();
+						});
 					}
 					for (strum in strumLineNotes) {
 						if (strum == null) continue;
@@ -3817,8 +3819,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	}
 
 	function updateGridVisibility() {
-		showLastGridButton.text.text = showPreviousSection	? '  Hide Last Section' : '  Show Last Section';
-		showNextGridButton.text.text = showNextSection		? '  Hide Next Section' : '  Show Next Section';
+		showLastGridButton.text.text = showPreviousSection ? '  Hide Last Section' : '  Show Last Section';
+		showNextGridButton.text.text = showNextSection ? '  Hide Next Section' : '  Show Next Section';
 
 		prevGridBg.visible = (curSec > 0 && showPreviousSection);
 		nextGridBg.visible = (curSec < PlayState.SONG.notes.length - 1 && showNextSection);

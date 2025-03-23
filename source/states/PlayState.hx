@@ -1939,8 +1939,6 @@ class PlayState extends MusicBeatState {
 		var tempCombo:Null<Int> = combo;
 		var tempNotes:Null<Int> = tempCombo;
 
-		var comboOffset:Array<Array<Int>> = Settings.data.comboOffset;
-		final placement:Float = FlxG.width * .35;
 		if (!Settings.data.comboStacking && popUpGroup.members.length > 0) {
 			for (spr in popUpGroup) {
 				spr.kill();
@@ -1952,8 +1950,6 @@ class PlayState extends MusicBeatState {
 		if (showRating) {
 			ratingPop = popUpGroup.recycle(Popup);
 			ratingPop.setupPopupData(RATING, uiFolder + 'judgements/${daRating.image}' + uiPostfix);
-			ratingPop.gameCenter(Y).y -= 60 + comboOffset[0][1];
-			ratingPop.x = placement - 40 + comboOffset[0][0];
 			popUpGroup.add(ratingPop);
 			ratingPop.doTween();
 		}
@@ -1966,9 +1962,7 @@ class PlayState extends MusicBeatState {
 			seperatedScore.push(tempNotes % 10);
 			for (i in seperatedScore) {
 				var numScore:Popup = popUpGroup.recycle(Popup);
-				numScore.setupPopupData(NUMBER, uiFolder + 'judgements/number/num$i' + uiPostfix);
-				numScore.x = placement + (43 * daloop) - 50 + comboOffset[1][0] - 43 / 2 * (Std.string(tempNotes).length - 1);
-				numScore.gameCenter(Y).y += 20 - comboOffset[1][1];
+				numScore.setupPopupData(NUMBER, uiFolder + 'judgements/number/num$i' + uiPostfix, daloop, tempNotes);
 				popUpGroup.add(numScore);
 				numScore.doTween();
 				++daloop;

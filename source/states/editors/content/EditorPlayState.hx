@@ -594,7 +594,7 @@ class EditorPlayState extends MusicBeatSubstate {
 	}
 
 	function updateScore() {
-		scoreTxt.text = '${!Settings.data.showNPS ? '' : 'NPS:$nps/$maxNPS | '}' + 'Hits:$songHits | Misses: $songMisses';
+		scoreTxt.text = '${!Settings.data.showNPS ? '' : 'NPS: $nps/$maxNPS | '}' + 'Hits: $songHits | Misses: $songMisses';
 	}
 	
 	function strumPlayAnim(isDad:Bool, id:Int, time:Float = 0) {

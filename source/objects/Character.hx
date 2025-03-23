@@ -32,7 +32,7 @@ class Character extends FlxSprite {
 	/**
 	 * In case a character is missing, it will use this on its place
 	**/
-	inline public static final DEFAULT_CHARACTER:String = 'bf';
+	public static inline final DEFAULT_CHARACTER:String = 'bf';
 
 	public var animOffsets:Map<String, Array<Float>>;
 	public var debugMode:Bool = false;
@@ -74,7 +74,8 @@ class Character extends FlxSprite {
 
 	final targetCrochet:Float = .075;
 
-	public function new(x:Float, y:Float, ?character:String = DEFAULT_CHARACTER, ?isPlayer:Bool = false, ?library:String) {
+	public function new(x:Float, y:Float, ?character:String, ?isPlayer:Bool = false, ?library:String) {
+		character ??= DEFAULT_CHARACTER;
 		super(x, y);
 
 		animation = new backend.animation.PsychAnimationController(this);
