@@ -4162,7 +4162,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			}
 		}
 
-		#if MODS_ALLOWED
 		for (directory in Mods.directoriesWithFile(Paths.getSharedPath(), mainFolder)) {
 			for (file in FileSystem.readDirectory(directory)) {
 				var path:String = haxe.io.Path.join([directory, file.trim()]);
@@ -4177,7 +4176,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				}
 			}
 		}
-		#end
 		return fileList;
 	}
 

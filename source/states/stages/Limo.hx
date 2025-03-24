@@ -169,7 +169,7 @@ class Limo extends BaseStage {
 		}
 	}
 
-	function dancersParenting() {
+	function dancersParenting():Void {
 		var dancers:Array<BackgroundDancer> = grpLimoDancers.members;
 		for (i in 0...dancers.length) dancers[i].x = (370 * i) + dancersDiff + bgLimo.x;
 	}
@@ -192,7 +192,7 @@ class Limo extends BaseStage {
 	}
 
 	var carTimer:FlxTimer;
-	function fastCarDrive() {
+	function fastCarDrive():Void {
 		FlxG.sound.play(Paths.soundRandom('carPass', 0, 1), 0.7);
 
 		fastCar.velocity.x = FlxG.random.int(30600, 39600);
@@ -207,12 +207,9 @@ class Limo extends BaseStage {
 		if (!lowQuality) {
 			if (limoKillingState == WAIT) {
 				limoMetalPole.x = -400;
-				limoMetalPole.visible = true;
-				limoLight.visible = true;
-				limoCorpse.visible = false;
-				limoCorpseTwo.visible = false;
+				limoMetalPole.visible = limoLight.visible = true;
+				limoCorpse.visible = limoCorpseTwo.visible = false;
 				limoKillingState = KILLING;
-				Awards.addScore("roadkill_enthusiast");
 			}
 		}
 	}

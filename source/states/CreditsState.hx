@@ -30,7 +30,6 @@ class CreditsState extends MusicBeatState {
 		['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',	'https://x.com/gedehari',			'E1843A'],
 		['EliteMasterEric',		'mastereric',		'Runtime Shaders support',										'https://x.com/EliteMasterEric',	'FFBD40'],
 		['Gabriela',			'gabriela',			'Playback Rate Modifier\nand other PRs',						'https://x.com/BeastlyGabi',		'5E99DF'],
-		["Tahir Toprak Karabekiroglu",	"tahir",	"Mac Support, Note Splash Editor\nand Other PRs",				"https://x.com/TahirKarabekir",		"A04397"],
 		['MAJigsaw77', 			'jigsaw', 			'.MP4 Video Loader Library (hxvlc)', 							'https://x.com/MAJigsaw77', 		'5F5F5F'],
 		['KadeDev',				'kade',				'Fixed Chart Editor\nand other PRs, Kade Engine Dev',			'https://x.com/kade0912',			'64A250'],
 		['superpowers04', 		'superpowers04', 	'LUA JIT Forks', 												'https://github.com/superpowers04',	'B957ED'],

@@ -1231,11 +1231,14 @@ class FunkinLua {
 		return null;
 	}
 
+	#if (!flash && sys)
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
+	#end
+
 	public function initLuaShader(name:String):Bool {
 		if (!Settings.data.shaders) return false;
 
-		#if (MODS_ALLOWED && !flash && sys)
+		#if (!flash && sys)
 		if (runtimeShaders.exists(name)) {
 			var shaderData:Array<String> = runtimeShaders.get(name);
 			if (shaderData != null && (shaderData[0] != null || shaderData[1] != null)) {
@@ -1244,12 +1247,15 @@ class FunkinLua {
 			}
 		}
 
-		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
+		var foldersToCheck:Array<String> = [Paths.getSharedPath('shaders/')];
+		#if MODS_ALLOWED
+		foldersToCheck.push(Paths.mods('shaders/'));
 		if (Mods.currentModDirectory != null && Mods.currentModDirectory.length > 0)
 			foldersToCheck.insert(0, Paths.mods(Mods.currentModDirectory + '/shaders/'));
 
 		for (mod in Mods.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods('$mod/shaders/'));
+			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
+		#end
 		
 		for (folder in foldersToCheck) {
 			if (FileSystem.exists(folder)) {

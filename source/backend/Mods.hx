@@ -108,9 +108,17 @@ class Mods {
 
 	inline public static function directoriesWithFile(path:String, fileToFind:String, mods:Bool = true):Array<String> {
 		var foldersToCheck:Array<String> = [];
-		#if sys if (FileSystem.exists(path + fileToFind)) #end
-		foldersToCheck.push(path + fileToFind);
+
+		// Main folder
+		if (FileSystem.exists(path + fileToFind))
+			foldersToCheck.push(path + fileToFind);
 		
+		// Week folder
+		if (Paths.currentLevel != null && Paths.currentLevel != path) {
+			var pth:String = Paths.getFolderPath(fileToFind, Paths.currentLevel);
+			if (!foldersToCheck.contains(pth) && FileSystem.exists(pth)) foldersToCheck.push(pth);
+		}
+
 		#if MODS_ALLOWED
 		if (mods) {
 			// Global mods first

@@ -1410,7 +1410,11 @@ class PlayState extends MusicBeatState {
 
 			if (notes.length > 0) {
 				if (startedCountdown) {
-					notes.forEach((daNote:Note) -> {
+					var i:Int = 0;
+					while (i < notes.length) {
+						var daNote:Note = notes.members[i];
+						if (daNote == null) continue;
+
 						if (daNote.exists && daNote.strum != null) {
 							var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
 							if (Settings.data.updateSpawnNote) daNote.strum = (!daNote.mustPress ? opponentStrums : playerStrums).members[daNote.noteData];
@@ -1436,7 +1440,8 @@ class PlayState extends MusicBeatState {
 								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 							}
 						} else if (daNote == null) invalidateNote(daNote);
-					});
+						if(daNote.exists) i++;
+					}
 				} else notes.forEachAlive((daNote:Note) -> daNote.canBeHit = daNote.wasGoodHit = false);
 			}
 		}
@@ -2613,10 +2618,11 @@ class PlayState extends MusicBeatState {
 
 	#if (!flash && sys)
 	public var runtimeShaders:Map<String, Array<String>> = new Map<String, Array<String>>();
+	#end
 	public function createRuntimeShader(shaderName:String):ErrorHandledRuntimeShader {
+		#if (!flash && sys)
 		if (!Settings.data.shaders) return new ErrorHandledRuntimeShader(shaderName);
 	
-		#if (!flash && MODS_ALLOWED && sys)
 		if (!runtimeShaders.exists(shaderName) && !initLuaShader(shaderName)) {
 			FlxG.log.warn('Shader $shaderName is missing!');
 			return new ErrorHandledRuntimeShader(shaderName);
@@ -2633,7 +2639,7 @@ class PlayState extends MusicBeatState {
 	public function initLuaShader(name:String):Bool {
 		if (!Settings.data.shaders) return false;
 
-		#if (MODS_ALLOWED && !flash && sys)
+		#if (!flash && sys)
 		if (runtimeShaders.exists(name)) {
 			FlxG.log.warn('Shader $name was already initialized!');
 			return true;
@@ -2668,5 +2674,4 @@ class PlayState extends MusicBeatState {
 		#end
 		return false;
 	}
-	#end
 }
