@@ -67,7 +67,7 @@ class FlxSprite3D extends FlxSprite {
 		var radYaw:Float = FlxAngle.TO_RAD * yaw;
 		var radRoll:Float = FlxAngle.TO_RAD * roll;
 
-		var spriteOrigin = FlxPoint.weak();
+		var spriteOrigin:FlxPoint = FlxPoint.weak();
 		spriteOrigin.set(origin.x - halfW, origin.y - halfH);
 
 		for (camera in cameras) {
@@ -86,7 +86,7 @@ class FlxSprite3D extends FlxSprite {
 			quad3.setTo(halfW, halfH, 0); // RB
 
 			for (i in 0...4) {
-				var vert:Null<Vector3> = switch(i) {
+				var vert:Null<Vector3> = switch (i) {
 					case 0: quad0;
 					case 1: quad1;
 					case 2: quad2;

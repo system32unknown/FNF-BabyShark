@@ -1410,11 +1410,7 @@ class PlayState extends MusicBeatState {
 
 			if (notes.length > 0) {
 				if (startedCountdown) {
-					var i:Int = 0;
-					while (i < notes.length) {
-						var daNote:Note = notes.members[i];
-						if (daNote == null) continue;
-
+					notes.forEach((daNote:Note) -> {
 						if (daNote.exists && daNote.strum != null) {
 							var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
 							if (Settings.data.updateSpawnNote) daNote.strum = (!daNote.mustPress ? opponentStrums : playerStrums).members[daNote.noteData];
@@ -1440,8 +1436,7 @@ class PlayState extends MusicBeatState {
 								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 							}
 						} else if (daNote == null) invalidateNote(daNote);
-						if(daNote.exists) i++;
-					}
+					});
 				} else notes.forEachAlive((daNote:Note) -> daNote.canBeHit = daNote.wasGoodHit = false);
 			}
 		}
@@ -2542,11 +2537,9 @@ class PlayState extends MusicBeatState {
 	var strumHitId:Int = -1;
 	function strumPlayAnim(isDad:Bool, id:Int) {
 		if (!Settings.data.lightStrum) return;
-		var strumSpr:StrumNote = null;
-		var strumART:Float = 0;
 		strumHitId = id + (isDad ? 0 : EK.keys(mania));
 		if (!Util.toBool(hit & 1 << strumHitId)) {
-			strumSpr = (isDad ? opponentStrums : playerStrums).members[id];
+			var strumSpr:StrumNote = (isDad ? opponentStrums : playerStrums).members[id];
 			if (strumSpr != null) {
 				strumSpr.playAnim('confirm', true);
 				var strumCurAnim:flixel.animation.FlxAnimation = strumSpr.animation.curAnim;

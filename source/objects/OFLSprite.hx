@@ -9,7 +9,7 @@ import openfl.display.Sprite;
 class OFLSprite extends FlxSprite {
 	public var flSprite:Sprite;
 
-	public function new(x, y, width, height, spr:Sprite) {
+	public function new(x:Float, y:Float, width:Int, height:Int, spr:Sprite) {
 		super(x, y);
 
 		makeGraphic(width, height, FlxColor.TRANSPARENT);

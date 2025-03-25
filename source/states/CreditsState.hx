@@ -146,7 +146,7 @@ class CreditsState extends MusicBeatState {
 		descBox.addPoint.set(-10, -10);
 		add(descBox);
 
-		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
+		descText = new FlxText(50, FlxG.height + offsetThing - 25, 0, "", 32);
 		descText.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
 		descText.scrollFactor.set();
 		descBox.sprTracker = descText;
@@ -223,7 +223,8 @@ class CreditsState extends MusicBeatState {
 		}
 
 		descText.text = sections[curSelected][2];
-		descText.y = FlxG.height - descText.height + offsetThing - 60;
+		descText.gameCenter(X).y = FlxG.height - descText.height + offsetThing - 60;
+		descText.updateHitbox();
 
 		if (moveTween != null) moveTween.cancel();
 		moveTween = FlxTween.tween(descText, {y : descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
@@ -329,7 +330,7 @@ class CreditSectionState extends MusicBeatState {
 		descBox.alpha = .6;
 		add(descBox);
 
-		descText = new FlxText(50, FlxG.height + offsetThing - 25, 1180, "", 32);
+		descText = new FlxText(50, FlxG.height + offsetThing - 25, 0, "", 32);
 		descText.setFormat(Paths.font("babyshark.ttf"), 32, FlxColor.WHITE, CENTER);
 		descText.scrollFactor.set();
 		descBox.sprTracker = descText;
@@ -420,9 +421,10 @@ class CreditSectionState extends MusicBeatState {
 		}
 
 		descText.text = creditsStuff[curSelected][2];
+		descText.updateHitbox();
 		if (descText.text.trim().length > 0) {
 			descText.visible = descBox.visible = true;
-			descText.y = FlxG.height - descText.height + offsetThing - 60;
+			descText.gameCenter(X).y = FlxG.height - descText.height + offsetThing - 60;
 
 			if (moveTween != null) moveTween.cancel();
 			moveTween = FlxTween.tween(descText, {y: descText.y + 75}, 0.25, {ease: FlxEase.sineOut});
