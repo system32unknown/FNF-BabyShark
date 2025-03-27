@@ -91,9 +91,6 @@ class Bar extends FlxSpriteGroup {
 		leftBar.clipRect.set(barOffset.x, barOffset.y, leftSize, barHeight);
 		rightBar.clipRect.set(barOffset.x + leftSize, barOffset.y, barWidth - leftSize, barHeight);
 		barCenter = leftBar.x + leftSize + barOffset.x;
-
-		leftBar.clipRect = leftBar.clipRect;
-		rightBar.clipRect = rightBar.clipRect;
 	}
 
 	public function regenerateClips() {

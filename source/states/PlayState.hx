@@ -59,7 +59,6 @@ class PlayState extends MusicBeatState {
 
 	public var songSpeedTween:FlxTween;
 	public var songSpeed(default, set):Float = 1;
-	public var songSpeedRate:Float = 1;
 	public var songSpeedType:String = "multiplicative";
 
 	public final noteKillTime:Float = 350;
@@ -89,6 +88,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public static var SONG:SwagSong = null;
+	public static var inPlayState:Bool = false;
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
@@ -231,12 +231,11 @@ class PlayState extends MusicBeatState {
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
 
-	var optimizeSpawnNote:Bool = Settings.data.optimizeSpawnNote;
-
 	static var _lastLoadedModDirectory:String = '';
 	public static var nextReloadAll:Bool = false;
 	override public function create() {
 		_lastLoadedModDirectory = Mods.currentModDirectory;
+		inPlayState = true;
 		Paths.clearStoredMemory();
 		if (nextReloadAll) {
 			Paths.clearUnusedMemory();
@@ -1061,7 +1060,7 @@ class PlayState extends MusicBeatState {
 
 		for (event in songData.events) for (i in 0...event[1].length) makeEvent(event, i);
 		for (usn in unspawnSustainNotes) unspawnNotes.push(usn);
-		unspawnSustainNotes.resize(0);
+		unspawnSustainNotes = [];
 		unspawnNotes.sort(sortByTime);
 		generatedMusic = true;
 	}
@@ -1371,7 +1370,7 @@ class PlayState extends MusicBeatState {
 				var noteJudge:Bool = castHold ? tooLate : canBeHit;
 
 				var isCanPass:Bool = !Settings.data.skipSpawnNote || Timer.stamp() - noteSpawnTimout < shownRealTime;
-				if ((!noteJudge || !optimizeSpawnNote) && isCanPass) {
+				if ((!noteJudge || !Settings.data.optimizeSpawnNote) && isCanPass) {
 					var dunceNote:Note = targetNote;
 					dunceNote.spawned = true;
 					dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
@@ -1396,7 +1395,7 @@ class PlayState extends MusicBeatState {
 				castMust = targetNote.mustPress;
 
 				shownTime = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
-				shownRealTime = shownTime * .001;
+				shownRealTime = shownTime / 1000;
 				isDisplay = targetNote.strumTime - fixedPosition < shownTime;
 			}
 		}
@@ -1414,7 +1413,6 @@ class PlayState extends MusicBeatState {
 						if (daNote.exists && daNote.strum != null) {
 							var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
 							if (Settings.data.updateSpawnNote) daNote.strum = (!daNote.mustPress ? opponentStrums : playerStrums).members[daNote.noteData];
-							daNote.followStrumNote(songSpeed);
 							if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
 								if (daNote.mustPress) {
 									if (cpuControlled) goodNoteHit(daNote);
@@ -1435,6 +1433,7 @@ class PlayState extends MusicBeatState {
 								} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
 								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 							}
+							if (daNote.exists) daNote.followStrumNote(songSpeed);
 						} else if (daNote == null) invalidateNote(daNote);
 					});
 				} else notes.forEachAlive((daNote:Note) -> daNote.canBeHit = daNote.wasGoodHit = false);
@@ -1723,8 +1722,8 @@ class PlayState extends MusicBeatState {
 					if (flValue2 == null) flValue2 = 0;
 
 					final newValue:Float = SONG.speed * Settings.getGameplaySetting('scrollspeed') * flValue1;
-					if (flValue2 <= 0) {songSpeed = newValue; songSpeedRate = flValue1;}
-					else songSpeedTween = FlxTween.tween(this, {songSpeed: newValue, songSpeedRate: flValue1}, flValue2 / playbackRate, {ease: FlxEase.linear, onComplete: (twn:FlxTween) -> songSpeedTween = null});
+					if (flValue2 <= 0) songSpeed = newValue;
+					else songSpeedTween = FlxTween.num(songSpeed, newValue, flValue2 / playbackRate, {ease: FlxEase.linear, onComplete: (_) -> songSpeedTween = null}, set_songSpeed);
 				}
 
 			case 'Set Property':
@@ -2316,8 +2315,14 @@ class PlayState extends MusicBeatState {
 		backend.NoteTypesConfig.clearNoteTypesData();
 		NoteSplash.configs.clear();
 		instance = null;
-		backend.NoteLoader.dispose(); Paths.popUpFramesMap.clear();
+		backend.NoteLoader.dispose();
+		Paths.popUpFramesMap.clear();
 
+		if (endingSong) SONG = null;
+		unspawnNotes = [];
+		notes.clear();
+
+		inPlayState = false;
 		super.destroy();
 	}
 

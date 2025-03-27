@@ -8,15 +8,16 @@ class FPSUtil {
 	/**
 	 * The current frame rate, expressed using frames-per-second.
 	 */
-	public var curFPS(default, null):Float;
+	public var curFPS(default, null):Int;
 
 	/**
 	 * The raw frame rate over a short period.
 	 */
-	public var curRawFPS(default, null):Float;
+	public var avgFPS(default, null):Float;
 
 	public function new() {
-		curFPS = curRawFPS = 0;
+		curFPS = 0;
+		avgFPS = 0.0;
 		sum = sliceCnt = 0;
 		times = [];
 	}
@@ -24,9 +25,9 @@ class FPSUtil {
 	/**
 	 * Updates the FPS calculations based on the given delta time.
 	 */
-	public function update(delta:Float):Void {
+	public function update(dt:Float):Void {
 		sliceCnt = 0;
-		var delta:Int = Math.round(delta);
+		var delta:Int = Math.round(dt);
 		times.push(delta);
 		sum += delta;
 
@@ -36,8 +37,8 @@ class FPSUtil {
 		}
 		if (sliceCnt > 0) times.splice(0, sliceCnt);
 
-		curRawFPS = times.length > 0 ? 1000 / (sum / times.length) : 0.0;
-		curFPS = Math.round(curRawFPS);
+		avgFPS = times.length > 0 ? 1000 / (sum / times.length) : 0.0;
+		curFPS = Math.round(avgFPS);
 	}
 
 	/**
