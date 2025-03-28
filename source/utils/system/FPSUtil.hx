@@ -17,7 +17,7 @@ class FPSUtil {
 
 	public function new() {
 		curFPS = 0;
-		avgFPS = 0.0;
+		avgFPS = 0;
 		sum = sliceCnt = 0;
 		times = [];
 	}

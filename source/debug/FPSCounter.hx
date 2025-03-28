@@ -12,7 +12,7 @@ class FPSCounter extends openfl.text.TextField {
 
 	var timeColor:Float = 0;
 	public var checkLag:Bool = true;
-	public var updateRate:Float = 50;
+	public var updateRate:Float = 60;
 	public var memType:String = "";
 
 	public var fpsManager:FPSUtil;
@@ -48,17 +48,17 @@ class FPSCounter extends openfl.text.TextField {
 	}
 
 	var deltaTimeout:Float = .0;
-	override function __enterFrame(delta:Float) {
+	override function __enterFrame(deltaTime:Float):Void {
 		if (!Settings.data.showFPS || !visible || FlxG.autoPause && !stage.nativeWindow.active) return;
-		fpsManager.update(delta);
+		fpsManager.update(deltaTime);
 		preUpdateText();
 		if (memory > mempeak) mempeak = memory;
 
-		deltaTimeout += delta;
+		deltaTimeout += deltaTime;
 		if (deltaTimeout < 1000 / updateRate) return;
 
 		updateText();
-		deltaTimeout = .0;
+		deltaTimeout = 0.0;
 	}
 
 	// so people can override it in hscript
