@@ -162,6 +162,7 @@ class PlayState extends MusicBeatState {
 	public var pressMissDamage:Float = .05;
 
 	public var botplaySine:Float = 0;
+	public var botplayFade:Bool = true;
 	public var botplayTxt:FlxText;
 
 	public var iconP1:HealthIcon;
@@ -797,7 +798,7 @@ class PlayState extends MusicBeatState {
 
 			startedCountdown = true;
 			Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
-			botplaySine = Conductor.songPosition * .18;
+			if (botplayFade) botplaySine = Conductor.songPosition * .18;
 			setOnScripts('startedCountdown', true);
 			callOnScripts('onCountdownStarted');
 
@@ -1243,7 +1244,7 @@ class PlayState extends MusicBeatState {
 		setOnScripts('curDecStep', curDecStep);
 		setOnScripts('curDecBeat', curDecBeat);
 
-		if (botplayTxt != null && botplayTxt.visible) {
+		if (botplayTxt != null && botplayTxt.visible && botplayFade) {
 			botplaySine += 180 * elapsed;
 			botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
 		}

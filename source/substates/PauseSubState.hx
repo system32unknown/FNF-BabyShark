@@ -224,7 +224,7 @@ class PauseSubState extends MusicBeatSubstate {
 					PlayState.changedDifficulty = true;
 					pSte.botplayTxt.visible = pSte.cpuControlled;
 					pSte.botplayTxt.alpha = 1;
-					pSte.botplaySine = 0;
+					if (pSte.botplayFade) pSte.botplaySine = 0;
 				case 'Options':
 					pSte.paused = true; // For lua
 					pSte.vocals.volume = 0;
