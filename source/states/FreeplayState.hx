@@ -300,7 +300,7 @@ class FreeplayState extends MusicBeatState {
 
 				Mods.currentModDirectory = songs[curSelected].folder;
 				var songLowercase:String = songs[curSelected].songName.toLowerCase();
-				var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+				var poop:String = Song.format(songLowercase, curDifficulty);
 
 				if (songLowercase == "enter terminal") return;
 
@@ -357,7 +357,7 @@ class FreeplayState extends MusicBeatState {
 		} else if (Controls.justPressed('accept') && !player.playingMusic) {
 			persistentUpdate = false;
 			var songFolder:String = Paths.formatToSongPath(songs[curSelected].songName);
-			var songLowercase:String = Highscore.formatSong(songFolder, curDifficulty);
+			var songLowercase:String = Song.format(songFolder, curDifficulty);
 			
 			if (songLowercase == "" || songLowercase.length < 1) return;
 			if (songLowercase == "enter-terminal-hard") {

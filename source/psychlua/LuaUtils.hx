@@ -174,7 +174,10 @@ class LuaUtils {
 
 	public static function getPropertyLoop(split:Array<String>, ?getProperty:Bool = true, ?allowMaps:Bool = false):Dynamic {
 		var obj:Dynamic = getObjectDirectly(split[0]);
-		for (i in 1...(getProperty ? split.length - 1 : split.length)) obj = getVarInArray(obj, split[i], allowMaps);
+		var end:Int = split.length;
+		if (getProperty) end = split.length - 1;
+
+		for (i in 1...end) obj = getVarInArray(obj, split[i], allowMaps);
 		return obj;
 	}
 
@@ -201,26 +204,6 @@ class LuaUtils {
 	public static inline function getTargetInstance():flixel.FlxState {
 		if (PlayState.instance != null) return PlayState.instance.isDead ? substates.GameOverSubstate.instance : PlayState.instance;
 		return MusicBeatState.getState();
-	}
-
-	static final _lePoint:FlxPoint = FlxPoint.get();
-
-	inline public static function getMousePoint(camera:String, axis:String):Float {
-		FlxG.mouse.getViewPosition(cameraFromString(camera), _lePoint);
-		return (axis == 'y' ? _lePoint.y : _lePoint.x);
-	}
-
-	inline public static function getPoint(leVar:String, type:String, axis:String, ?camera:String):Float {
-		var obj:FlxSprite = LuaUtils.getObjectLoop(leVar);
-		if (obj != null) {
-			switch (type) {
-				case 'graphic': obj.getGraphicMidpoint(_lePoint);
-				case 'screen': obj.getScreenPosition(_lePoint, cameraFromString(camera));
-				default: obj.getMidpoint(_lePoint);
-			}
-			return (axis == 'y' ? _lePoint.y : _lePoint.x);
-		}
-		return 0;
 	}
 
 	public static function setBarColors(bar:Bar, color1:String, color2:String) {

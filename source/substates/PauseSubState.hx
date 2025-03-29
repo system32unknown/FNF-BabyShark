@@ -2,6 +2,7 @@ package substates;
 
 import options.OptionsState;
 import utils.StringUtil;
+import backend.Song;
 
 class PauseSubState extends MusicBeatSubstate {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
@@ -160,10 +161,10 @@ class PauseSubState extends MusicBeatSubstate {
 		if (Controls.justPressed('accept') && cantUnpause <= 0) {
 			if (menuItems == difficultyChoices) {
 				var songLowercase:String = Paths.formatToSongPath(PlayState.SONG.song);
-				var poop:String = backend.Highscore.formatSong(songLowercase, curSelected);
+				var poop:String = Song.format(songLowercase, curSelected);
 				try {
 					if (menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected)) {
-						backend.Song.loadFromJson(poop, songLowercase);
+						Song.loadFromJson(poop, songLowercase);
 						PlayState.storyDifficulty = curSelected;
 						FlxG.resetState();
 						FlxG.sound.music.volume = 0;

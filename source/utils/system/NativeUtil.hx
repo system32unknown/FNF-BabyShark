@@ -33,29 +33,6 @@ class NativeUtil {
 	public static function hasVersion(ver:String):Bool
 		return System.platformLabel.toLowerCase().indexOf(ver.toLowerCase()) != -1;
 
-	public static function getWindowsVersion():Int {
-		#if windows
-		var windowsVersions:Map<String, Int> = [
-			"Windows 11" => 11,
-			"Windows 10" => 10,
-			"Windows 8.1" => 8,
-			"Windows 8" => 8,
-			"Windows 7" => 7,
-		];
-
-		var platformLabel:String = System.platformLabel;
-		var words:Array<String> = platformLabel.split(" ");
-		var windowsIndex:Int = words.indexOf("Windows");
-		var result:String = "";
-		if (windowsIndex != -1 && windowsIndex < words.length - 1) {
-			result = words[windowsIndex] + " " + words[windowsIndex + 1];
-		}
-
-		if (windowsVersions.exists(result)) return windowsVersions.get(result);
-		#end
-		return 0;
-	}
-
 	/**
 	 * Shows a message box
 	 */

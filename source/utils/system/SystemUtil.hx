@@ -1,7 +1,6 @@
 package utils.system;
 
-import haxe.io.Path as HxPath;
-import sys.io.Process;
+import haxe.io.Path;
 
 class SystemUtil {
 	/**
@@ -24,7 +23,7 @@ class SystemUtil {
 	 * @return The program's directory path with forward slashes.
 	 */
 	public static function getProgramPath():String {
-		return HxPath.directory(Sys.programPath()).replace("\\", "/");
+		return Path.directory(Sys.programPath()).replace("\\", "/");
 	}
 
 	/**
@@ -62,6 +61,12 @@ class SystemUtil {
 			available = true;
 		} catch (e:Dynamic) available = false;
 		return available;
+	}
+
+	public static function checkForOBS():Bool {
+		var tasklists:haxe.io.Bytes = new Process("tasklist").stdout.readAll();
+		var tasklist:String = tasklists.getString(0, tasklists.length);
+		return tasklist.contains("obs64.exe") || tasklist.contains("obs32.exe") || tasklist.contains("obs.exe");
 	}
 
 	/**

@@ -24,21 +24,6 @@ class FunkinLua {
 
 	#if HSCRIPT_ALLOWED
 	public var hscript:HScript = null;
-	public function initHaxeModule(code:String = '', ?varsToBring:Dynamic) {
-		@:privateAccess {
-			if (hscript == null) {
-				trace('initializing haxe interp for: $scriptName');
-				hscript = new HScript(this);
-			}
-			try {
-				if (hscript.scriptCode != code) {
-					hscript.scriptCode = code;
-					hscript.parse(true);
-				}
-			} catch (e:Dynamic) throw e;
-			hscript.varsToBring = varsToBring;
-		}
-	}
 	#end
 
 	public function new(script:String) {
@@ -224,10 +209,11 @@ class FunkinLua {
 			if (args == null) args = [];
 
 			var luaPath:String = findScript(luaFile);
-			if (luaPath != null)
-				for (luaInstance in game.luaArray)
-					if (luaInstance.scriptName == luaPath)
-						return luaInstance.call(funcName, args);
+			if (luaPath == null) return null;
+
+			for (luaInstance in game.luaArray)
+				if (luaInstance.scriptName == luaPath)
+					return luaInstance.call(funcName, args);
 			return null;
 		});
 
@@ -324,7 +310,7 @@ class FunkinLua {
 			if (name == null || name.length <= 0) name = Song.loadedSongName;
 			if (difficultyNum == -1) difficultyNum = PlayState.storyDifficulty;
 
-			Song.loadFromJson(Highscore.formatSong(name, difficultyNum), name);
+			Song.loadFromJson(Song.format(name, difficultyNum), name);
 			PlayState.storyDifficulty = difficultyNum;
 			FlxG.state.persistentUpdate = false;
 			LoadingState.loadAndSwitchState(() -> new PlayState());
@@ -354,15 +340,15 @@ class FunkinLua {
 				spr.frames = Paths.getMultiAtlas(images);
 		});
 
-		Lua_helper.add_callback(lua, "getObjectOrder", function(obj:String, ?group:String = null) {
+		set("getObjectOrder", function(obj:String, ?group:String = null) {
 			var leObj:FlxBasic = LuaUtils.getObjectDirectly(obj);
 			if (leObj != null) {
 				if (group != null) {
 					var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 					if (groupOrArray != null) {
 						switch (Type.typeof(groupOrArray)) {
-							case TClass(Array): return groupOrArray.indexOf(leObj); //Is Array
-							default: return Reflect.getProperty(groupOrArray, 'members').indexOf(leObj); //Has to use a Reflect here because of FlxTypedSpriteGroup
+							case TClass(Array): return groupOrArray.indexOf(leObj); // Is Array
+							default: return Reflect.getProperty(groupOrArray, 'members').indexOf(leObj); // Has to use a Reflect here because of FlxTypedSpriteGroup
 						}
 					} else {
 						luaTrace('getObjectOrder: Group $group doesn\'t exist!', false, false, FlxColor.RED);
@@ -375,7 +361,7 @@ class FunkinLua {
 			luaTrace('getObjectOrder: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
 			return -1;
 		});
-		Lua_helper.add_callback(lua, "setObjectOrder", function(obj:String, position:Int, ?group:String = null) {
+		set("setObjectOrder", function(obj:String, position:Int, ?group:String = null) {
 			var leObj:FlxBasic = LuaUtils.getObjectDirectly(obj);
 			if (leObj != null) {
 				if (group != null) {
@@ -400,7 +386,7 @@ class FunkinLua {
 			luaTrace('setObjectOrder: Object $obj doesn\'t exist!', false, false, FlxColor.RED);
 		});
 
-		// gay ass tweens
+		// Tweens
 		set("startTween", function(tag:String, vars:String, values:Any = null, duration:Float, ?options:Any = null) {
 			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (penisExam != null) {
@@ -438,6 +424,7 @@ class FunkinLua {
 			} else luaTrace('startTween: Couldnt find object: ' + vars, false, false, FlxColor.RED);
 			return null;
 		});
+
 		set("doTweenAdvAngle", function(tag:String, vars:String, value:Array<Float>, duration:Float, ease:String) {
 			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (penisExam != null) {
@@ -456,6 +443,23 @@ class FunkinLua {
 			} else luaTrace('doTweenAdvAngle: Couldnt find object: ' + vars, false, false, FlxColor.RED);
 			return null;
 		});
+
+		set("doTweenX", (tag:String, vars:String, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return oldTweenFunction(tag, vars, {x: value}, duration, ease, 'doTweenX'));
+		set("doTweenY", (tag:String, vars:String, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return oldTweenFunction(tag, vars, {y: value}, duration, ease, 'doTweenY'));
+		set("doTweenAngle", (tag:String, vars:String, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return oldTweenFunction(tag, vars, {angle: value}, duration, ease, 'doTweenAngle'));
+		set("doTweenAlpha", (tag:String, vars:String, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return oldTweenFunction(tag, vars, {alpha: value}, duration, ease, 'doTweenAlpha'));
+		set("doTweenZoom", function(tag:String, camera:String, value:Dynamic, duration:Float, ?ease:String = 'linear') {
+			switch(camera.toLowerCase()) {
+				case 'camgame' | 'game': camera = 'camGame';
+				case 'camhud' | 'hud': camera = 'camHUD';
+				case 'camother' | 'other': camera = 'camOther';
+				default:
+					var cam:FlxCamera = MusicBeatState.getVariables().get(camera);
+					if (cam == null || !Std.isOfType(cam, FlxCamera)) camera = 'camGame';
+			}
+			return oldTweenFunction(tag, camera, {zoom: value}, duration, ease, 'doTweenZoom');
+		});
+
 		set("doTweenColor", function(tag:String, vars:String, targetColor:String, duration:Float, ease:String) {
 			var penisExam:Dynamic = LuaUtils.tweenPrepare(tag, vars);
 			if (penisExam != null) {
@@ -482,7 +486,13 @@ class FunkinLua {
 			return null;
 		});
 
-		// bisexual note tween
+		// Tween shit, but for strums
+		set("noteTweenX", (tag:String, note:Int, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return noteTweenFunction(tag, note, {x: value}, duration, ease));
+		set("noteTweenY", (tag:String, note:Int, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return noteTweenFunction(tag, note, {y: value}, duration, ease));
+		set("noteTweenAngle", (tag:String, note:Int, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return noteTweenFunction(tag, note, {angle: value}, duration, ease));
+		set("noteTweenDirection", (tag:String, note:Int, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return noteTweenFunction(tag, note, {direction: value}, duration, ease));
+		set("noteTweenAlpha", (tag:String, note:Int, value:Dynamic, duration:Float, ?ease:String = 'linear') -> return noteTweenFunction(tag, note, {alpha: value}, duration, ease));
+
 		set("noteTween", function(tag:String, note:Int, fieldsNValues:Dynamic, duration:Float, ease:String) {
 			LuaUtils.cancelTween(tag);
 			var strumNote:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
@@ -500,6 +510,7 @@ class FunkinLua {
 				}));
 			} else FlxTween.tween(strumNote, fieldsNValues, duration, {ease: LuaUtils.getTweenEaseByString(ease)});
 		});
+
 		set("mouseClicked", function(button:String = 'left') {
 			return switch (button.trim().toLowerCase()) {
 				case 'middle': FlxG.mouse.justPressedMiddle;
@@ -614,11 +625,7 @@ class FunkinLua {
 			return true;
 		});
 		set("exitSong", function(?skipTransition:Bool = false) {
-			if (skipTransition) {
-				MusicBeatState.skipNextTransIn = true;
-				MusicBeatState.skipNextTransOut = true;
-			}
-
+			if (skipTransition) MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 			FlxG.switchState(() -> PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 			#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
@@ -699,14 +706,38 @@ class FunkinLua {
 		});
 		set("updateScoreText", game.updateScoreText);
 
-		set("getMouseX", (?camera:String = 'game') -> return LuaUtils.getMousePoint(camera, 'x'));
-		set("getMouseY", (?camera:String = 'game') -> return LuaUtils.getMousePoint(camera, 'y'));
-		set("getMidpointX", (variable:String) -> return LuaUtils.getPoint(variable, 'midpoint', 'x'));
-		set("getMidpointY", (variable:String) -> return LuaUtils.getPoint(variable, 'midpoint', 'y'));
-		set("getGraphicMidpointX", (variable:String) -> return LuaUtils.getPoint(variable, 'graphic', 'x'));
-		set("getGraphicMidpointY", (variable:String) -> return LuaUtils.getPoint(variable, 'graphic', 'y'));
-		set("getScreenPositionX", (variable:String, ?camera:String = 'game') -> return LuaUtils.getPoint(variable, 'screen', 'x', camera));
-		set("getScreenPositionY", (variable:String, ?camera:String = 'game') -> return LuaUtils.getPoint(variable, 'screen', 'y', camera));
+		set("getMouseX", (?camera:String = 'game') -> return FlxG.mouse.getViewPosition(LuaUtils.cameraFromString(camera)).x);
+		set("getMouseY", (?camera:String = 'game') -> return FlxG.mouse.getViewPosition(LuaUtils.cameraFromString(camera)).y);
+		set("getMidpointX", function(variable:String) {
+			var obj:FlxObject = LuaUtils.getObjectLoop(variable);
+			if (obj != null) return obj.getMidpoint().x;
+			return 0;
+		});
+		set("getMidpointY", function(variable:String) {
+			var obj:FlxObject = LuaUtils.getObjectLoop(variable);
+			if (obj != null) return obj.getMidpoint().y;
+			return 0;
+		});
+		set("getGraphicMidpointX", function(variable:String) {
+			var obj:FlxSprite = LuaUtils.getObjectLoop(variable);
+			if (obj != null) return obj.getGraphicMidpoint().x;
+			return 0;
+		});
+		set("getGraphicMidpointY", function(variable:String) {
+			var obj:FlxSprite = LuaUtils.getObjectLoop(variable);
+			if (obj != null) return obj.getGraphicMidpoint().y;
+			return 0;
+		});
+		set("getScreenPositionX", function(variable:String, ?camera:String = 'game') {
+			var obj:FlxObject = LuaUtils.getObjectLoop(variable);
+			if (obj != null) return obj.getScreenPosition(LuaUtils.cameraFromString(camera)).x;
+			return 0;
+		});
+		set("getScreenPositionY", function(variable:String, ?camera:String = 'game') {
+			var obj:FlxObject = LuaUtils.getObjectLoop(variable);
+			if (obj != null) return obj.getScreenPosition(LuaUtils.cameraFromString(camera)).y;
+			return 0;
+		});
 
 		set("characterDance", function(character:String, force:Bool = false) {
 			switch (character.toLowerCase()) {
@@ -743,7 +774,7 @@ class FunkinLua {
 			leSprite.active = true;
 		});
 		set("fixateParallaxSprite", function(obj:String, anchorX:Int = 0, anchorY:Int = 0, scrollOneX:Float = 1, scrollOneY:Float = 1, scrollTwoX:Float = 1.1, scrollTwoY:Float = 1.1, direct:String = 'horizontal') {
-			var spr:ParallaxSprite = LuaUtils.getObjectDirectly(obj, false);
+			var spr:ParallaxSprite = LuaUtils.getObjectDirectly(obj);
 			if (spr != null) spr.fixate(anchorX, anchorY, scrollOneX, scrollOneY, scrollTwoX, scrollTwoY, direct);
 		});
 
@@ -755,8 +786,9 @@ class FunkinLua {
 			var spr:FlxSprite = LuaUtils.getObjectLoop(obj);
 			if (spr != null) spr.makeSolid(width, height, Util.colorFromString(color));
 		});
+
 		set("addAnimationByPrefix", function(obj:String, name:String, prefix:String, framerate:Float = 24, loop:Bool = true) {
-			var obj:FlxSprite = cast LuaUtils.getObjectDirectly(obj, false);
+			var obj:FlxSprite = cast LuaUtils.getObjectDirectly(obj);
 			if (obj != null && obj.animation != null) {
 				obj.animation.addByPrefix(name, prefix, framerate, loop);
 				if (obj.animation.curAnim == null) {
@@ -773,7 +805,7 @@ class FunkinLua {
 		set("addAnimationByIndices", (obj:String, name:String, prefix:String, indices:Any, framerate:Float = 24, loop:Bool = false) -> return LuaUtils.addAnimByIndices(obj, name, prefix, indices, framerate, loop));
 
 		set("playAnim", function(obj:String, name:String, ?forced:Bool = false, ?reverse:Bool = false, ?startFrame:Int = 0) {
-			var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
+			var obj:Dynamic = LuaUtils.getObjectDirectly(obj);
 			if (obj.playAnim != null) {
 				obj.playAnim(name, forced, reverse, startFrame);
 				return true;
@@ -786,7 +818,7 @@ class FunkinLua {
 		});
 
 		set("addOffset", function(obj:String, anim:String, x:Float, y:Float) {
-			var obj:Dynamic = LuaUtils.getObjectDirectly(obj, false);
+			var obj:Dynamic = LuaUtils.getObjectDirectly(obj);
 			if (obj != null && obj.addOffset != null) {
 				obj.addOffset(anim, x, y);
 				return true;
@@ -849,12 +881,7 @@ class FunkinLua {
 		});
 
 		set("centerOffsets", function(obj:String) {
-			if (game.getLuaObject(obj) != null) {
-				game.getLuaObject(obj).centerOffsets();
-				return;
-			}
-
-			var poop:FlxSprite = Reflect.getProperty(LuaUtils.getTargetInstance(), obj);
+			var poop:FlxSprite = LuaUtils.getObjectLoop(obj);
 			if (poop != null) {
 				poop.centerOffsets();
 				return;
@@ -998,7 +1025,7 @@ class FunkinLua {
 			return true;
 			#end
 		});
-		set("debugPrint", (text:Dynamic = '', color:String = 'WHITE') -> PlayState.instance.addTextToDebug(text, Util.colorFromString(color)));
+
 		// mod settings
 		addLocalCallback("getModSetting", function(saveTag:String, ?modName:String = null) {
 			#if MODS_ALLOWED
@@ -1014,6 +1041,8 @@ class FunkinLua {
 			luaTrace("getModSetting: Mods are disabled in this build!", false, false, FlxColor.RED);
 			#end
 		});
+
+		set("debugPrint", (text:Dynamic = '', color:String = 'WHITE') -> PlayState.instance.addTextToDebug(text, Util.colorFromString(color)));
 		set("close", () -> {
 			trace('Closing script: $scriptName');
 			return closed = true;

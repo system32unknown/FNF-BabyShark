@@ -168,4 +168,8 @@ class Song {
 		}
 		return songJson;
 	}
+
+	public static function format(song:String, diff:Int):String {
+		return Paths.formatToSongPath(song) + Difficulty.getFilePath(diff);
+	}
 }

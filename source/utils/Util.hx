@@ -163,7 +163,7 @@ class Util {
 	inline public static function colorFromString(color:String):FlxColor {
 		var hideChars:EReg = ~/[\t\n\r]/;
 		var color:String = hideChars.split(color).join('').trim();
-		if (color.startsWith('0x')) color = color.substring(color.length - 6);
+		if (color.startsWith('0x')) color = color.substring(color.length - (color.length >= 10 ? 8 : 6));
 
 		var colorNum:Null<FlxColor> = FlxColor.fromString(color) ?? FlxColor.fromString('#$color');
 		return colorNum ?? FlxColor.WHITE;

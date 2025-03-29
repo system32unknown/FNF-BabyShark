@@ -130,21 +130,23 @@ class ReflectionFunctions {
 					return;
 				}
 			}
+
 			var groupOrArray:Dynamic = Reflect.getProperty(LuaUtils.getTargetInstance(), group);
 			if (groupOrArray == null) {
 				FunkinLua.luaTrace('removeFromGroup: Group/Array $group is not valid!', false, false, FlxColor.RED);
 				return;
 			}
+
 			switch (Type.typeof(groupOrArray)) {
-				default: //Is Array
-					if (obj == null) obj = Reflect.getProperty(groupOrArray, 'members')[index]; // Reflect here because of FlxTypedSpriteGroup
-						groupOrArray.remove(obj, true);
-						if (destroy) obj.destroy();
 				case TClass(Array): //Is Group
 					if (obj != null) {
 						groupOrArray.remove(obj);
 						if (destroy) obj.destroy();
 					} else groupOrArray.remove(groupOrArray[index]);
+				default: //Is Array
+					if (obj == null) obj = Reflect.getProperty(groupOrArray, 'members')[index]; // Reflect here because of FlxTypedSpriteGroup
+					groupOrArray.remove(obj, true);
+					if (destroy) obj.destroy();
 			}
 		});
 
@@ -204,9 +206,7 @@ class ReflectionFunctions {
 	}
 
 	static function parseInstanceArray(arg:Array<Dynamic>):Array<Dynamic> {
-		var newArray:Array<Dynamic> = [];
-		for (val in arg) newArray.push(parseInstances(val));
-		return newArray;
+		return [for (val in arg) parseInstances(val)];
 	}
 	public static function parseInstances(arg:Dynamic):Dynamic {
 		if (arg == null) return null;

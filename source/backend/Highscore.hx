@@ -11,19 +11,19 @@ class Highscore {
 	static var _save:FlxSave;
 
 	public static function resetSong(song:String, diff:Int = 0):Void {
-		var daSong:String = formatSong(song, diff);
+		var daSong:String = Song.format(song, diff);
 		setScore(daSong, 0);
 		setRating(daSong, 0);
 		setCombo(daSong, '');
 	}
 
 	public static function resetWeek(week:String, diff:Int = 0):Void {
-		setWeekScore(formatSong(week, diff), 0);
+		setWeekScore(Song.format(week, diff), 0);
 	}
 
 	public static function saveScore(song:String, score:Int = 0, ?diff:Int = 0, ?rating:Float = -1):Void {
 		if (song == null) return;
-		var daSong:String = formatSong(song, diff);
+		var daSong:String = Song.format(song, diff);
 
 		if (songScores.exists(daSong)) {
 			if (songScores.get(daSong) < score) {
@@ -37,7 +37,7 @@ class Highscore {
 	}
 
 	public static function saveWeekScore(week:String, score:Int = 0, ?diff:Int = 0):Void {
-		var daWeek:String = formatSong(week, diff);
+		var daWeek:String = Song.format(week, diff);
 
 		if (weekScores.exists(daWeek) && weekScores.get(daWeek) < score)
 			setWeekScore(daWeek, score);
@@ -46,7 +46,7 @@ class Highscore {
 
 	public static function saveCombo(song:String, combo:String, ?diff:Int = 0):Void {
 		if (song == null) return;
-		var daSong:String = formatSong(song, diff);
+		var daSong:String = Song.format(song, diff);
 		var finalCombo:String = combo;
 
 		if (songCombos.exists(daSong) && getComboInt(songCombos.get(daSong)) < getComboInt(finalCombo))
@@ -55,7 +55,7 @@ class Highscore {
 	}
 
 	/**
-	 * YOU SHOULD FORMAT SONG WITH formatSong() BEFORE TOSSING IN SONG VARIABLE
+	 * YOU SHOULD FORMAT SONG WITH Song.format() BEFORE TOSSING IN SONG VARIABLE
 	 */
 	static function setScore(song:String, score:Int):Void {
 		songScores.set(song, score);
@@ -79,10 +79,6 @@ class Highscore {
 		_save.flush();
 	}
 
-	public static function formatSong(song:String, diff:Int):String {
-		return Paths.formatToSongPath(song) + Difficulty.getFilePath(diff);
-	}
-
 	static function getComboInt(combo:String):Int {
 		combo = combo.split(',')[0];
 		for (i => item in ['Clear', 'SDCB', 'FC', 'GFC', 'SFC', 'PFC']) if (item == combo) return i + 1;
@@ -90,23 +86,23 @@ class Highscore {
 	}
 
 	public static function getScore(song:String, diff:Int):Int {
-		var daSong:String = formatSong(song, diff);
+		var daSong:String = Song.format(song, diff);
 		if (!songScores.exists(daSong)) setScore(daSong, 0);
 		return songScores.get(daSong);
 	}
 	public static function getCombo(song:String, diff:Int):String {
-		var daSong:String = formatSong(song, diff);
+		var daSong:String = Song.format(song, diff);
 		if (!songCombos.exists(daSong)) setCombo(daSong, '');
 		return songCombos.get(daSong);
 	}
 	public static function getRating(song:String, diff:Int):Float {
-		var daSong:String = formatSong(song, diff);
+		var daSong:String = Song.format(song, diff);
 		if (!songRating.exists(daSong)) setRating(daSong, 0);
 		return songRating.get(daSong);
 	}
 
 	public static function getWeekScore(week:String, diff:Int):Int {
-		var daWeek:String = formatSong(week, diff);
+		var daWeek:String = Song.format(week, diff);
 		if (!weekScores.exists(daWeek)) setWeekScore(daWeek, 0);
 		return weekScores.get(daWeek);
 	}

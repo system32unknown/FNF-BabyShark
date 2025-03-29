@@ -176,8 +176,13 @@ class HScript extends AlterHscript {
 			"Util" => Util,
 			"Settings" => Settings,
 
+			// Backward Support
+			"CoolUtil" => Util,
+			"ClientPrefs" => Settings,
+
 			#if (!flash && sys)
-			"FlxRuntimeShader" => flixel.addons.display.FlxRuntimeShader, "ErrorHandledRuntimeShader" => shaders.ErrorHandledShader.ErrorHandledRuntimeShader,
+			"FlxRuntimeShader" => flixel.addons.display.FlxRuntimeShader,
+			"ErrorHandledRuntimeShader" => shaders.ErrorHandledShader.ErrorHandledRuntimeShader,
 			#end
 			'ShaderFilter' => openfl.filters.ShaderFilter,
 
