@@ -54,14 +54,14 @@ class AchievementsMenuState extends MusicBeatState {
 			var graphic:flixel.graphics.FlxGraphic = null;
 			if (option.unlocked) {
 				#if MODS_ALLOWED Mods.currentModDirectory = option.mod; #end
-				var image:String = 'achievements/' + option.name;
+				var image:String = 'awards/' + option.name;
 				if (Paths.fileExists('images/$image-pixel.png', IMAGE)) {
 					graphic = Paths.image('$image-pixel');
 					hasAntialias = false;
 				} else graphic = Paths.image(image);
 
 				if (graphic == null) graphic = Paths.image('unknownMod');
-			} else graphic = Paths.image('achievements/lockedachievement');
+			} else graphic = Paths.image('awards/lockedachievement');
 
 			var spr:FlxSprite = new FlxSprite(0, Math.floor(grpOptions.members.length / MAX_PER_ROW) * 180, graphic);
 			spr.scrollFactor.x = 0;
