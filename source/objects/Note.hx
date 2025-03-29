@@ -299,7 +299,6 @@ class Note extends FlxSprite {
 		this.inEditor = inEditor;
 		this.moves = false;
 
-		x += (Settings.data.middleScroll ? PlayState.STRUM_X_MIDDLESCROLL : PlayState.STRUM_X) + 50 - EK.posRest[PlayState.mania];
 		y -= 2000;
 
 		this.strumTime = strumTime;

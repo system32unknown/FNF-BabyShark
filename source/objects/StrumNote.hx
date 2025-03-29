@@ -31,18 +31,19 @@ class StrumNote extends FlxSprite {
 	}
 
 	public var useRGBShader:Bool = true;
-	public function new(x:Float, y:Float, leData:Int, player:Int) {
+	public function new(x:Float, y:Float, strumData:Int, player:Int) {
 		direction = 90;
 		animation = new backend.animation.PsychAnimationController(this);
 		
-		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(leData));
+		var rgb = Note.initializeGlobalRGBShader(strumData);
+		rgbShader = new RGBShaderReference(this, rgb);
 		rgbShader.enabled = false;
 		if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB) useRGBShader = false;
 
-		var arr:Array<FlxColor> = Settings.data.arrowRGBExtra[EK.gfxIndex[PlayState.mania][leData]];
-		if (PlayState.isPixelStage) arr = Settings.data.arrowRGBPixelExtra[EK.gfxIndex[PlayState.mania][leData]];
+		var arr:Array<FlxColor> = Settings.data.arrowRGBExtra[EK.gfxIndex[PlayState.mania][strumData]];
+		if (PlayState.isPixelStage) arr = Settings.data.arrowRGBPixelExtra[EK.gfxIndex[PlayState.mania][strumData]];
 		
-		if (leData <= PlayState.mania) {
+		if (strumData <= PlayState.mania) {
 			@:bypassAccessor {
 				rgbShader.r = arr[0];
 				rgbShader.g = arr[1];
@@ -51,7 +52,7 @@ class StrumNote extends FlxSprite {
 		}
 
 		this.player = player;
-		noteData = leData;
+		noteData = strumData;
 		this.ID = noteData;
 		super(x, y);
 

@@ -43,7 +43,7 @@ class DiscordClient {
 			Logs.logText("Connected to User " + user.globalName + " ("),
 			Logs.logText(user.handle, GRAY),
 			Logs.logText(")")
-		]);
+		], INFO);
 
 		changePresence();
 	}
@@ -59,7 +59,7 @@ class DiscordClient {
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
 			Logs.logText('Disconnected ($errorCode:$message)', RED)
-		]);
+		], INFO);
 	}
 
 	public static function initialize() {
