@@ -34,7 +34,7 @@ class Language {
 			hasPhrases = true;
 		}
 
-		if (!hasPhrases) Settings.data.language = Settings.defaultData.language;
+		if (!hasPhrases) Settings.data.language = Settings.default_data.language;
 
 		var alphaPath:String = getFileTranslation('images/alphabet');
 		if (alphaPath.startsWith('images/')) alphaPath = alphaPath.substr('images/'.length);

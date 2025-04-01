@@ -8,7 +8,7 @@ import flixel.util.FlxStringUtil;
 	the current framerate of an OpenFL project
 **/
 class FPSCounter extends openfl.text.TextField {
-	public var fontName:String = Paths.font("Proggy.ttf");
+	public var fontName:String = "_sans";
 
 	var timeColor:Float = 0;
 	public var checkLag:Bool = true;
@@ -32,8 +32,8 @@ class FPSCounter extends openfl.text.TextField {
 
 		autoSize = LEFT;
 		selectable = mouseEnabled = false;
-		text = "0FPS";
-		defaultTextFormat = new openfl.text.TextFormat(fontName, 16, -1, JUSTIFY);
+		text = "FPS: 0";
+		defaultTextFormat = new openfl.text.TextFormat(fontName, 12, -1, JUSTIFY);
 		fpsManager = new FPSUtil();
 	}
 
@@ -52,7 +52,7 @@ class FPSCounter extends openfl.text.TextField {
 		if (!Settings.data.showFPS || !visible || FlxG.autoPause && !stage.nativeWindow.active) return;
 		fpsManager.update(deltaTime);
 		preUpdateText();
-		if (memory > mempeak) mempeak = memory;
+		if (memory > mempeak && memType == "MEM/PEAK") mempeak = memory;
 
 		deltaTimeout += deltaTime;
 		if (deltaTimeout < 1000 / updateRate) return;
@@ -64,10 +64,10 @@ class FPSCounter extends openfl.text.TextField {
 	// so people can override it in hscript
 	public var fpsStr:String = "";
 	public dynamic function updateText():Void {
-		fpsStr = '${fpsManager.curFPS}FPS\n';
+		fpsStr = 'FPS: ${fpsManager.curFPS}\n';
 		if (memType == "MEM" || memType == "MEM/PEAK") {
-			fpsStr += FlxStringUtil.formatBytes(memory);
-			if (memType == "MEM/PEAK") fpsStr += '/' + FlxStringUtil.formatBytes(mempeak);
+			fpsStr += 'MEM: ' + FlxStringUtil.formatBytes(memory);
+			if (memType == "MEM/PEAK") fpsStr += ' / ' + FlxStringUtil.formatBytes(mempeak);
 		}
 		text = fpsStr;
 	}

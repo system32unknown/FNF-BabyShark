@@ -16,8 +16,8 @@ class LanguageSubState extends FlxSubState {
 		add(bg);
 		add(grpLanguages);
 
-		languages.push(Settings.defaultData.language); //English (US)
-		displayLanguages.set(Settings.defaultData.language, Language.defaultLangName);
+		languages.push(Settings.default_data.language); //English (US)
+		displayLanguages.set(Settings.default_data.language, Language.defaultLangName);
 		for (directory in Mods.directoriesWithFile(Paths.getSharedPath(), 'data/')) {
 			for (file in FileSystem.readDirectory(directory)) {
 				if (file.toLowerCase().endsWith('.lang')) {
@@ -48,7 +48,7 @@ class LanguageSubState extends FlxSubState {
 
 		curSelected = languages.indexOf(Settings.data.language);
 		if (curSelected < 0) {
-			Settings.data.language = Settings.defaultData.language;
+			Settings.data.language = Settings.default_data.language;
 			curSelected = Std.int(Math.max(0, languages.indexOf(Settings.data.language)));
 		}
 

@@ -1,8 +1,8 @@
 package backend;
 
 class FunkinGame extends flixel.FlxGame {
-	public function new(gameWidth = 0, gameHeight = 0, ?initialState:flixel.util.typeLimit.NextState, updateFramerate = 60, drawFramerate = 60, skipSplash = false, startFullscreen = false) {
-		super(gameWidth, gameHeight, initialState, updateFramerate, drawFramerate, skipSplash, startFullscreen);
+	public function new(?initialState:flixel.util.typeLimit.NextState, ?gameWidth:Int = 0, ?gameHeight:Int = 0, ?framerate:Int = 60, ?skipSplash:Bool = false, ?startFullscreen:Bool = false) {
+		super(initialState, gameWidth, gameHeight, framerate, skipSplash, startFullscreen);
 		_customSoundTray = flixel.custom.CustomSoundTray;
 	}
 

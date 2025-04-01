@@ -235,7 +235,7 @@ class CharacterSelectionState extends MusicBeatState {
 	}
 
 	public static function reset() {
-		Settings.data.unlockedCharacters = Settings.defaultData.unlockedCharacters;
+		Settings.data.unlockedCharacters = Settings.default_data.unlockedCharacters;
 		Settings.save();
 	}
 

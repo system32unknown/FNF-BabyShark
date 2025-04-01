@@ -20,7 +20,9 @@ import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since
 #end
 class Main extends Sprite {
 	public static var engineVer:GameVersion = '0.1.5';
-	public static var fnfVer:GameVersion = '0.5.3';
+	public static var fnfVer:GameVersion = '0.6.2';
+
+	public static var noTerminalColor:Bool = false;
 
 	public static final game = {
 		width: 1280, // WINDOW width
@@ -93,8 +95,7 @@ class Main extends Sprite {
 		}
 		#end
 
-		addChild(new backend.FunkinGame(game.width, game.height, () -> new Init(), game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
-		Settings.load();
+		addChild(new backend.FunkinGame(() -> new Init(), game.width, game.height, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(fpsVar = new FPSCounter());
 		fpsVar.visible = Settings.data.showFPS;
 		fpsVar.memType = Settings.data.memCounterType;

@@ -49,7 +49,7 @@ class Option {
 		this.type = type;
 		this.options = options;
 
-		if (this.type != KEYBIND) this.defaultValue = Reflect.getProperty(Settings.defaultData, variable);
+		if (this.type != KEYBIND) this.defaultValue = Reflect.getProperty(Settings.default_data, variable);
 		switch (type) {
 			case BOOL:
 				if (defaultValue == null) defaultValue = false;

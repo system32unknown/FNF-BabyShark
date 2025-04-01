@@ -8,6 +8,7 @@ class Init extends flixel.FlxState {
 		#if AWARDS_ALLOWED Awards.load(); #end
 		Controls.load();
 		backend.Highscore.load();
+		Settings.load();
 
 		FlxTransitionableState.skipNextTransOut = true;
 		Paths.clearStoredMemory();
@@ -32,7 +33,7 @@ class Init extends flixel.FlxState {
 			if (FlxG.save.data.weekCompleted != null) states.StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
 
-		if (Settings.data.flashing == null && !FlashingState.leftState) {
+		if (FlxG.save.data.flashing == null && !FlashingState.leftState) {
 			MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 			FlxG.switchState(() -> new FlashingState());
 			return;

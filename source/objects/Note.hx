@@ -350,12 +350,12 @@ class Note extends FlxSprite {
 
 	public static function initializeGlobalRGBShader(noteData:Int):RGBPalette {
 		var dataNum:Int = EK.gfxIndex[PlayState.mania][noteData];
+		trace(EK.gfxIndex[PlayState.mania] + " " + dataNum);
 		if (globalRgbShaders[dataNum] == null) {
 			var newRGB:RGBPalette = new RGBPalette();
-			globalRgbShaders[noteData] = newRGB;
-
+			
 			var arr:Array<FlxColor> = (!PlayState.isPixelStage ? Settings.data.arrowRGBExtra : Settings.data.arrowRGBPixelExtra)[dataNum];
-			if (arr != null && noteData > -1) {
+			if (arr != null && noteData > -1 && noteData <= arr.length) {
 				newRGB.r = arr[0];
 				newRGB.g = arr[1];
 				newRGB.b = arr[2];
@@ -364,6 +364,7 @@ class Note extends FlxSprite {
 				newRGB.g = FlxColor.LIME;
 				newRGB.b = FlxColor.BLUE;
 			}
+			globalRgbShaders[noteData] = newRGB;
 		}
 		return globalRgbShaders[dataNum];
 	}
@@ -431,7 +432,7 @@ class Note extends FlxSprite {
 
 	public static function getNoteSkinPostfix():String {
 		var skin:String = '';
-		if (Settings.data.noteSkin != Settings.defaultData.noteSkin)
+		if (Settings.data.noteSkin != Settings.default_data.noteSkin)
 			skin = '-' + Settings.data.noteSkin.trim().toLowerCase().replace(' ', '_');
 		return skin;
 	}

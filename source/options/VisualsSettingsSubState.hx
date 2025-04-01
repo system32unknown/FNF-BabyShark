@@ -42,9 +42,9 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		var noteSkins:Array<String> = Mods.mergeAllTextsNamed('images/noteSkins/list.txt');
 		if (noteSkins.length > 0) {
 			if (!noteSkins.contains(Settings.data.noteSkin))
-				Settings.data.noteSkin = Settings.defaultData.noteSkin; //Reset to default if saved noteskin couldnt be found
+				Settings.data.noteSkin = Settings.default_data.noteSkin; //Reset to default if saved noteskin couldnt be found
 
-			noteSkins.insert(0, Settings.defaultData.noteSkin); //Default skin always comes first
+			noteSkins.insert(0, Settings.default_data.noteSkin); //Default skin always comes first
 			var option:Option = new Option('Note Skins:', "Select your prefered Note skin.", 'noteSkin', STRING, noteSkins);
 			addOption(option);
 			option.onChange = () -> notes.forEachAlive((note:StrumNote) -> {
@@ -58,9 +58,9 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		var noteSplashes:Array<String> = Mods.mergeAllTextsNamed('images/noteSplashes/list.txt');
 		if (noteSplashes.length > 0) {
 			if (!noteSplashes.contains(Settings.data.splashSkin))
-				Settings.data.splashSkin = Settings.defaultData.splashSkin; //Reset to default if saved splashskin couldnt be found
+				Settings.data.splashSkin = Settings.default_data.splashSkin; //Reset to default if saved splashskin couldnt be found
 
-			noteSplashes.insert(0, Settings.defaultData.splashSkin); //Default skin always comes first
+			noteSplashes.insert(0, Settings.default_data.splashSkin); //Default skin always comes first
 			var option:Option = new Option('Note Splashes:', "Select your prefered Note Splash variation.", 'splashSkin', STRING, noteSplashes);
 			addOption(option);
 			option.onChange = onChangeSplashSkin;

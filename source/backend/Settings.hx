@@ -43,10 +43,10 @@ class SaveVariables {
 		[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D]
 	];
 
-	var showFPS:Bool = false;
+	var showFPS:Bool = true;
 	var memCounterType:String = "MEM/PEAK";
 	var rainbowFps:Bool = false;
-	var camMovement:Bool = true;
+	var camMovement:Bool = false;
 	var ghostTapping:Bool = true;
 	var noReset:Bool = false;
 	var healthBarAlpha:Float = 1;
@@ -62,9 +62,8 @@ class SaveVariables {
 	var ratingDisplay:String = 'World';
 	var cacheOnGPU:Bool = false;
 	var vsync:Bool = false;
-	var autoCleanAssets:Bool = false;
+	var autoCleanAssets:Bool = true;
 	var healthTypes:String = 'Vanilla';
-	var updateSpawnNote:Bool = false;
 	var timeBarType:String = 'Name Time Position';
 	var altDiscordImg:Bool = false;
 	var altDiscordImgCount:Int = 0;
@@ -92,10 +91,11 @@ class SaveVariables {
 	var ratingOffset:Int = 0;
 
 	// Optimizer
-	var processFirst:Bool = false;
+	var processFirst:Bool = true;
 	var optimizeSpawnNote:Bool = true;
 	var skipSpawnNote:Bool = true;
 	var disableGC:Bool = false;
+	var updateSpawnNote:Bool = false;
 
 	var epicWindow:Int = 22;
 	var sickWindow:Int = 45;
@@ -107,26 +107,31 @@ class SaveVariables {
 }
 
 class Settings {
+	public static final default_data:SaveVariables = {};
 	public static var data:SaveVariables = {};
-	public static var defaultData:SaveVariables = {};
 
 	public static function save() {
-		for (key in Reflect.fields(data))
+		for (key in Reflect.fields(data)) {
+			// ignores variables with getters
+			if (Reflect.hasField(data, 'get_$key')) continue;
 			Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
-
-		#if AWARDS_ALLOWED Awards.save(); #end
+		}
 		FlxG.save.flush();
 	}
 
 	public static function load() {
-		FlxG.save.bind('funkin', Util.getSavePath());
+		FlxG.save.bind('settings', Util.getSavePath());
 
 		final fields:Array<String> = Type.getInstanceFields(SaveVariables);
-		for (i in Reflect.fields(FlxG.save.data)) {
-			if (i == 'gameplaySettings' || !fields.contains(i)) continue;
+		for (setting in Reflect.fields(FlxG.save.data)) {
+			if (setting == 'gameplaySettings' || !fields.contains(setting)) continue;
 
-			if (Reflect.hasField(data, 'set_$i')) Reflect.setProperty(data, i, Reflect.field(FlxG.save.data, i));
-			Reflect.setField(data, i, Reflect.field(FlxG.save.data, i));
+			if (Reflect.hasField(data, 'set_$setting')) Reflect.setProperty(data, setting, Reflect.field(FlxG.save.data, setting));
+			else Reflect.setField(data, setting, Reflect.field(FlxG.save.data, setting));
+		}
+		if (FlxG.save.data.gameplaySettings != null) {
+			final map:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
+			for (name => value in map) data.gameplaySettings.set(name, value);
 		}
 
 		if (Main.fpsVar != null) {
@@ -136,28 +141,20 @@ class Settings {
 		FlxG.autoPause = data.autoPause;
 
 		if (FlxG.save.data.framerate == null) data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate * 2, 60, 240));
-		if (data.framerate > FlxG.drawFramerate)
-			FlxG.updateFramerate = FlxG.drawFramerate = data.framerate;
-		else FlxG.drawFramerate = FlxG.updateFramerate = data.framerate;
-
-		if (FlxG.save.data.gameplaySettings != null) {
-			var savedMap:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
-			for (name => value in savedMap) data.gameplaySettings.set(name, value);
-		}
 
 		// flixel automatically saves your volume!
-		if (FlxG.save.data.volume != null) FlxG.sound.volume = FlxG.save.data.volume;
-		if (FlxG.save.data.mute != null) FlxG.sound.muted = FlxG.save.data.mute;
+		FlxG.sound.volume = FlxG.save.data.volume ?? 1;
+		FlxG.sound.muted = FlxG.save.data.muted ?? false;
 
 		#if DISCORD_ALLOWED DiscordClient.check(); #end
 	}
 
 	public static inline function reset() {
-		data = defaultData;
+		data = default_data;
 	}
 
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
-		if (!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
-		return (data.gameplaySettings.exists(name) ? data.gameplaySettings.get(name) : defaultValue);
+		if (!customDefaultValue) defaultValue = default_data.gameplaySettings[name];
+		return (data.gameplaySettings.exists(name) ? data.gameplaySettings[name] : defaultValue);
 	}
 }

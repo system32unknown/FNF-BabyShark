@@ -331,7 +331,7 @@ class NotesColorSubState extends FlxSubState {
 				}
 			} 
 		} else if (Controls.justPressed('reset') && hexTypeNum < 0) {
-			var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? Settings.defaultData.arrowRGBExtra : Settings.defaultData.arrowRGBPixelExtra);
+			var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? Settings.default_data.arrowRGBExtra : Settings.default_data.arrowRGBPixelExtra);
 			if (FlxG.keys.pressed.SHIFT) {
 				for (i in 0...3) {
 					var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
@@ -523,7 +523,7 @@ class NotesColorSubState extends FlxSubState {
 	}
 
 	function fixColors() {
-		var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? Settings.defaultData.arrowRGBExtra : Settings.defaultData.arrowRGBPixelExtra);
+		var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? Settings.default_data.arrowRGBExtra : Settings.default_data.arrowRGBPixelExtra);
 		for (i in 0...3) {
 			var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
 			var color:FlxColor = chosenRGB[curSelectedNote][i];
