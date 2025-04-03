@@ -126,8 +126,9 @@ class Settings {
 		for (setting in Reflect.fields(FlxG.save.data)) {
 			if (setting == 'gameplaySettings' || !fields.contains(setting)) continue;
 
-			if (Reflect.hasField(data, 'set_$setting')) Reflect.setProperty(data, setting, Reflect.field(FlxG.save.data, setting));
-			else Reflect.setField(data, setting, Reflect.field(FlxG.save.data, setting));
+			var dataField:Dynamic = Reflect.field(FlxG.save.data, setting);
+			if (Reflect.hasField(data, 'set_$setting')) Reflect.setProperty(data, setting, dataField);
+			else Reflect.setField(data, setting, dataField);
 		}
 		if (FlxG.save.data.gameplaySettings != null) {
 			final map:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
