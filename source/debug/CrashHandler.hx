@@ -1,6 +1,6 @@
 package debug;
 
-//crash handler stuff
+// crash handler stuff
 import openfl.events.UncaughtErrorEvent;
 import openfl.events.ErrorEvent;
 import openfl.errors.Error;
@@ -14,8 +14,10 @@ class CrashHandler {
 
 	static function onErrorOFL(e:UncaughtErrorEvent) {
 		var message:String = '';
-		if (Std.isOfType(e.error, Error)) message = cast (e.error, Error).message;
-		else if (Std.isOfType(e.error, ErrorEvent)) message = cast (e.error, ErrorEvent).text;
+		if (Std.isOfType(e.error, Error)) {
+			var err:Error = cast (e.error, Error);
+			message = err.getStackTrace() ?? err.message;
+		} else if (Std.isOfType(e.error, ErrorEvent)) message = cast (e.error, ErrorEvent).text;
 		else message = Std.string(e.error);
 
 		e.preventDefault();
@@ -33,7 +35,7 @@ class CrashHandler {
 		errMsg += '\nFlixel Current State: ${Type.getClassName(Type.getClass(FlxG.state))}';
 		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/system32unknown/FNF-BabyShark\n\nCustom Crash Handler written by: sqirra-rng and Codename Engine Team and Altertoriel';
 		errMsg += '\nHaxe: ${defines['haxe']} / Flixel: ${defines['flixel']}\nOpenFL: ${defines['openfl']} / Lime: ${defines['lime']}';
-		errMsg += '\nCurrent Active Mod: ${Mods.currentModDirectory == '' ? 'None' : Mods.currentModDirectory}';
+		if (Mods.currentModDirectory != '') errMsg += '\nCurrent Active Mod: ${Mods.currentModDirectory}';
 
 		try {
 			if (!FileSystem.exists("./crash/")) FileSystem.createDirectory("./crash/");
@@ -62,6 +64,7 @@ class CrashHandler {
 				case Module(c): error += 'Module $c';
 				case Method(cl, m): error += '$cl - $m';
 				case LocalFunction(v): error += 'Local Function $v';
+				default: Sys.println(stackItem);
 			}
 			error += '\n';
 		}

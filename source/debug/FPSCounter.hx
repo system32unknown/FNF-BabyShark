@@ -21,7 +21,11 @@ class FPSCounter extends openfl.text.TextField {
 		The current memory usage (WARNING: this is NOT your total program memory usage, rather it shows the garbage collector memory)
 	**/
 	public var memory(get, never):Float;
-	inline function get_memory():Float return openfl.system.System.totalMemoryNumber;
+	@:noCompletion function get_memory():Float {
+		var mem:Float = openfl.system.System.totalMemoryNumber;
+		if (mem > mempeak && memType == "MEM/PEAK") mempeak = mem;
+		return mem;
+	}
 	var mempeak:Float = 0;
 
 	public function new(x:Float = 0, y:Float = 0) {
@@ -52,7 +56,6 @@ class FPSCounter extends openfl.text.TextField {
 		if (!Settings.data.showFPS || !visible || FlxG.autoPause && !stage.nativeWindow.active) return;
 		fpsManager.update(deltaTime);
 		preUpdateText();
-		if (memory > mempeak && memType == "MEM/PEAK") mempeak = memory;
 
 		deltaTimeout += deltaTime;
 		if (deltaTimeout < 1000 / updateRate) return;
@@ -64,7 +67,7 @@ class FPSCounter extends openfl.text.TextField {
 	// so people can override it in hscript
 	public var fpsStr:String = "";
 	public dynamic function updateText():Void {
-		fpsStr = 'FPS: ${fpsManager.curFPS}\n';
+		fpsStr = 'FPS: ${fpsManager.curFPS}${Settings.data.disableGC ? ' - No GC' : ''}\n';
 		if (memType == "MEM" || memType == "MEM/PEAK") {
 			fpsStr += 'MEM: ' + FlxStringUtil.formatBytes(memory);
 			if (memType == "MEM/PEAK") fpsStr += ' / ' + FlxStringUtil.formatBytes(mempeak);

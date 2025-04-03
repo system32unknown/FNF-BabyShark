@@ -15,7 +15,7 @@ class FunkinGame extends flixel.FlxGame {
 		skipNextTickUpdate = true;
 	}
 
-	public override function onEnterFrame(t) {
+	public override function onEnterFrame(t:openfl.events.Event) {
 		if (skipNextTickUpdate != (skipNextTickUpdate = false))
 			_total = ticks = getTicks();
 		super.onEnterFrame(t);

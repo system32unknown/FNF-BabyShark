@@ -2,8 +2,12 @@ package backend;
 
 import haxe.io.Bytes;
 import haxe.io.BytesOutput;
-import openfl.media.Sound;
 
+/**
+ * The `ByteBeat` class generates audio using bytebeat formulas, 
+ * a method of creating sound through simple mathematical expressions.
+ * It allows real-time evaluation of formulas to produce dynamic audio output.
+ */
 class ByteBeat {
 	/**
 	 * Number of audio channels (1 = mono, 2 = stereo).
@@ -110,10 +114,7 @@ class ByteBeat {
 	 */
 	public function buildSoundFromBytes(input:Null<Bytes>):Null<FlxSound> {
 		if (input == null) return null;
-
-		var tmpSound:Sound = new Sound();
-		tmpSound.loadCompressedDataFromByteArray(openfl.utils.ByteArray.fromBytes(input), input.length);
-		return new FlxSound().loadEmbedded(tmpSound);
+		return new FlxSound().loadByteArray(openfl.utils.ByteArray.fromBytes(input));
 	}
 
 	/**
