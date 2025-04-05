@@ -34,9 +34,8 @@ class StrumNote extends FlxSprite {
 	public function new(x:Float, y:Float, strumData:Int, player:Int) {
 		direction = 90;
 		animation = new backend.animation.PsychAnimationController(this);
-		
-		var rgb = Note.initializeGlobalRGBShader(strumData);
-		rgbShader = new RGBShaderReference(this, rgb);
+
+		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(strumData));
 		rgbShader.enabled = false;
 		if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB) useRGBShader = false;
 

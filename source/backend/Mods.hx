@@ -167,7 +167,7 @@ class Mods {
 				if (dat[1] == "1") list.enabled.push(dat[0]);
 				else list.disabled.push(dat[0]);
 			}
-		} catch (e) Logs.trace('ERROR: $e', ERROR);
+		} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
 		return list;
 	}
 
@@ -185,7 +185,7 @@ class Mods {
 					list.push([folder, (dat[1] == "1")]);
 				}
 			}
-		} catch (e) Logs.trace('ERROR: $e', ERROR);
+		} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
 
 		// Scan for folders that aren't on modsList.txt yet
 		for (folder in getModDirectories()) {

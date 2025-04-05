@@ -40,7 +40,7 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 				try {
 					myData = Json.parse(myData);
 					isXml = false;
-				} catch (e) {
+				} catch (e:Dynamic) {
 					myData = Xml.parse(myData);
 					isXml = true;
 				}

@@ -73,7 +73,7 @@ typedef PsychPackage = {
 }
 
 class VSlice {
-	public static final metadataVersion:String = '2.2.3';
+	public static final metadataVersion:String = '2.2.4';
 	public static final chartVersion:String = '2.0.0';
 
 	public static function convertToPsych(chart:VSliceChart, metadata:VSliceMetadata):PsychPackage {
@@ -103,8 +103,7 @@ class VSlice {
 			notesMap.set(diff, notes);
 
 			var lastNote:VSliceNote = notes[notes.length - 1];
-			if (notes.length > 0 && lastNote.t > lastNoteTime)
-				lastNoteTime = lastNote.t;
+			if (notes.length > 0 && lastNote.t > lastNoteTime) lastNoteTime = lastNote.t;
 		}
 
 		var sectionMustHits:Array<Bool> = [];

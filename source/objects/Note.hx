@@ -308,7 +308,7 @@ class Note extends FlxSprite {
 			try {
 				rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
 				if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB) rgbShader.enabled = false;
-			} catch (e) rgbShader = null;
+			} catch (e:Dynamic) rgbShader = null;
 
 			texture = '';
 			if (PlayState.mania != 0) x += EK.swidths[PlayState.mania] * (noteData % EK.keys(PlayState.mania));

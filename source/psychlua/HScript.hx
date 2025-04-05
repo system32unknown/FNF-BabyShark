@@ -32,7 +32,7 @@ class HScript extends AlterHscript {
 	}
 
 	public static function initHaxeModuleCode(parent:FunkinLua, code:String, ?varsToBring:Any = null) {
-		var hs:HScript = try parent.hscript catch (e) null;
+		var hs:HScript = try parent.hscript catch (e:Dynamic) null;
 		if (hs == null) {
 			trace('initializing haxe interp for: ${parent.scriptName}');
 			try {

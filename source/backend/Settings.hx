@@ -45,7 +45,6 @@ class SaveVariables {
 
 	var showFPS:Bool = true;
 	var memCounterType:String = "MEM/PEAK";
-	var rainbowFps:Bool = false;
 	var camMovement:Bool = false;
 	var ghostTapping:Bool = true;
 	var noReset:Bool = false;

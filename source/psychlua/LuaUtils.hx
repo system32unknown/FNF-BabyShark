@@ -357,7 +357,7 @@ class LuaUtils {
 	inline public static function axesFromString(axe:String):FlxAxes {
 		try {
 			return FlxAxes.fromString(axe);
-		} catch (e) {
+		} catch (e:Dynamic) {
 			Logs.trace('axesFromString: invalid axes: $axe!', ERROR);
 			return FlxAxes.XY;
 		}

@@ -59,7 +59,7 @@ class NoteTypesConfig {
 
 				for (i in 0...split.length - 1) if (i < split.length - 1) obj = _propCheckArray(obj, split[i]);
 				_propCheckArray(obj, split[split.length - 1], true, line.value);
-			} catch (e) Logs.trace('Failed to applying notetype data: $e', ERROR);
+			} catch (e:Dynamic) Logs.trace('Failed to applying notetype data: $e', ERROR);
 		}
 	}
 

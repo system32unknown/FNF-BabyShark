@@ -3,7 +3,7 @@ package objects;
 /**
  * FlxTrail but it uses delta time.
  * @author Rozebud :]
-*/
+ */
 class DeltaTrail extends flixel.addons.effects.FlxTrail {
 	var _timer:Float = 0;
 	var timerMax:Float;
@@ -24,6 +24,16 @@ class DeltaTrail extends flixel.addons.effects.FlxTrail {
 		timerMax = delay;
 	}
 
+	/**
+	 * An offset applied to the target position whenever a new frame is saved.
+	 */
+	public final frameOffset:FlxPoint = FlxPoint.get();
+
+	override function destroy():Void {
+		super.destroy();
+		frameOffset.put();
+	}
+
 	override public function update(elapsed:Float):Void {
 		_timer += elapsed; // Count the frames
 
@@ -32,6 +42,17 @@ class DeltaTrail extends flixel.addons.effects.FlxTrail {
 			_timer = 0;
 			addTrailFrame();
 			redrawTrailSprites(); // Now we need to update the all the Trailsprites' values
+		}
+	}
+
+	override function addTrailFrame():Void {
+		super.addTrailFrame();
+
+		if (target is Character) {
+			var chr:Character = cast target;
+			@:privateAccess
+			frameOffset.set((chr.positionArray[0] - chr.cameraPosition[0]) * chr.scale.x, (chr.positionArray[1] - chr.cameraPosition[1]) * chr.scale.y);
+			_recentPositions[0]?.subtract(frameOffset.x, frameOffset.y);
 		}
 	}
 }

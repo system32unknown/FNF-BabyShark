@@ -400,7 +400,7 @@ class Paths {
 		var allFiles:Array<String> = null;
 		try {
 			allFiles = FileSystem.readDirectory(dir);
-		} catch (e) return null;
+		} catch (e:Dynamic) return null;
 
 		var allSearchies:Array<String> = allFiles.map(s -> s.toLowerCase());
 		for (i => name in allSearchies) {

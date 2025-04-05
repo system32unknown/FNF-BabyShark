@@ -103,7 +103,7 @@ class Character extends FlxSprite {
 
 		try {
 			loadCharacterFile(Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path)));
-		} catch (e) Logs.trace('Error loading character file of "$curCharacter": $e', ERROR);
+		} catch (e:Dynamic) Logs.trace('Error loading character file of "$curCharacter": $e', ERROR);
 
 		skipDance = false;
 		for (name => _ in animOffsets)

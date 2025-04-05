@@ -444,7 +444,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		curText.text += 'Current Animation: ${curAnim == null || curAnim.length < 1 ? "NONE" : curAnim}';
 
 		if (config != null && !curText.text.contains('NONE')) {
-			var offsets:Array<Float> = try config.animations.get(curAnim).offsets catch (e) [0, 0];
+			var offsets:Array<Float> = try config.animations.get(curAnim).offsets catch (e:Dynamic) [0, 0];
 			curText.text += ' ($offsets)'.replace(',', ', ');
 		}
 
@@ -673,7 +673,7 @@ class NoteSplashEditorState extends MusicBeatState {
 			#if MODS_ALLOWED
 			if (txtLoaded.__path != null) {
 				try txt = File.getContent(txtLoaded.__path)
-				catch (e) txt = null;
+				catch (e:Dynamic) txt = null;
 				file = txtLoaded.__path;
 				file = file.substring(0, file.length - 4) + ".json";
 			}
@@ -685,7 +685,7 @@ class NoteSplashEditorState extends MusicBeatState {
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(Json.stringify(conf, "\t"), file);
 			#end
-		} catch (e) Logs.trace("Loading Error:" + e.stack, ERROR);
+		} catch (e:Dynamic) Logs.trace("Loading Error:" + e.stack, ERROR);
 	}
 
 	/**

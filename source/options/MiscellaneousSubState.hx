@@ -12,7 +12,6 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 		addOption(opt);
 		opt.onChange = onChangeFPSCounter;
 
-		addOption(new Option('Rainbow FPS', '', 'rainbowFps'));
 		addOption(new Option('Clean Assets When State Switch', 'If checked, unused assets will be automatically removed from memory when switching states.\n[WARNING: THE GAME FREEZE ON SONG LOAD FOR LOW CHANCE.]', 'autoCleanAssets'));
 
 		addOption(new Option('Alternate Discord Large Image', '', 'altDiscordImg'));

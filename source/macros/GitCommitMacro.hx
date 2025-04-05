@@ -28,7 +28,7 @@ class GitCommitMacro {
 			var proc:Process = new Process('git', ['rev-parse', '--short', 'HEAD']);
 			if (proc.exitCode() != 0) Context.warning('Could not determine current git commit; is this a proper Git repository?', pos);
 			return macro $v{proc.stdout.readLine()};
-		} catch (e) Context.error(e.toString(), pos);
+		} catch (e:Dynamic) Context.error(e.toString(), pos);
 		#end
 		return macro $v{"-"};
 	}
@@ -39,7 +39,7 @@ class GitCommitMacro {
 			var proc:Process = new Process('git', ['rev-list', 'HEAD', '--count']);
 			if (proc.exitCode() != 0) Context.warning('Could not determine current git commit; is this a proper Git repository?', pos);
 			return macro $v{Std.parseInt(proc.stdout.readLine())};
-		} catch (e) Context.error(e.toString(), pos);
+		} catch (e:Dynamic) Context.error(e.toString(), pos);
 		#end
 		return macro $v{0};
 	}

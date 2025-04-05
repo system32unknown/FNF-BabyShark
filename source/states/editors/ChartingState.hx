@@ -2608,7 +2608,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			var loadedChart:SwagSong = try {
 				diff = true;
 				Song.getChart(curdiff, cur);
-			} catch (e) {
+			} catch (e:Dynamic) {
 				diff = false;
 				Song.getChart(cur, cur);
 			}
