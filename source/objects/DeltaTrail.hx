@@ -51,7 +51,7 @@ class DeltaTrail extends flixel.addons.effects.FlxTrail {
 		if (target is Character) {
 			var chr:Character = cast target;
 			@:privateAccess
-			frameOffset.set((chr.positionArray[0] - chr.cameraPosition[0]) * chr.scale.x, (chr.positionArray[1] - chr.cameraPosition[1]) * chr.scale.y);
+			frameOffset.set(chr.positionArray[0] * chr.scale.x, chr.positionArray[1] * chr.scale.y);
 			_recentPositions[0]?.subtract(frameOffset.x, frameOffset.y);
 		}
 	}

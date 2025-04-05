@@ -4,8 +4,8 @@ package backend;
 class CommandLineHandler {
 	public static function parseCommandLine(cmd:Array<String>) {
 		var i:Int = 0;
-		while(i < cmd.length) {
-			switch(cmd[i]) {
+		while (i < cmd.length) {
+			switch (cmd[i]) {
 				case null:
 					break;
 				case "-h" | "-help" | "help":
