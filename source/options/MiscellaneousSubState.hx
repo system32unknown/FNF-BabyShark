@@ -14,12 +14,8 @@ class MiscellaneousSubState extends BaseOptionsMenu {
 
 		addOption(new Option('Clean Assets When State Switch', 'If checked, unused assets will be automatically removed from memory when switching states.\n[WARNING: THE GAME FREEZE ON SONG LOAD FOR LOW CHANCE.]', 'autoCleanAssets'));
 
-		addOption(new Option('Alternate Discord Large Image', '', 'altDiscordImg'));
-		var option:Option = new Option('Alt. Discord Large Images:', '', 'altDiscordImgCount', INT);
-		option.scrollSpeed = 15;
-		option.minValue = 0;
-		option.maxValue = 5;
-		addOption(option);
+		#if CHECK_FOR_UPDATES addOption(new Option('Check for Updates', 'On Release builds, turn this on to check for updates when you start the game.', 'checkForUpdates')); #end
+		#if desktop addOption(new Option('Discord Rich Presence', "Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord", 'discordRPC')); #end
 
 		super();
 	}

@@ -28,8 +28,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		addOption(option);
 		stepRate = option;
 		addOption(new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping'));
-		addOption(new Option('Remove Overlapped Notes', "If checked, the game will remove notes which are hidden behind the others.\nRange is controlled by the option below.", 'skipGhostNotes'));
 
+		addOption(new Option('Remove Overlapped Notes', "If checked, the game will remove notes which are hidden behind the others.\nRange is controlled by the option below.", 'skipGhostNotes'));
 		var option:Option = new Option(' - Threshold', "Threshold of the option above.\nYou can set it in millisecond.", 'ghostRange', FLOAT);
 		option.displayFormat = '%v ms';
 		option.scrollSpeed = .1;

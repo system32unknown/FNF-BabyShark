@@ -3,23 +3,11 @@ package backend;
 @:structInit
 @:publicFields
 class SaveVariables {
-	var downScroll:Bool = false;
-	var middleScroll:Bool = false;
-	var opponentStrums:Bool = true;
-	var flashing:Null<Bool> = true;
-	var autoPause:Bool = true;
-	var antialiasing:Bool = true;
-	var noteSkin:String = 'Default';
-	var splashSkin:String = 'Psych';
-	var splashAlpha:Float = .6;
-	var splashCount:Int = 2;
-	var lowQuality:Bool = false;
-	var shaders:Bool = true;
-	var framerate:Int = 60;
-	var updateStepLimit:Int = 1;
-	var camZooms:Bool = true;
-	var hideHud:Bool = false;
+	// Note Offset And Combo Offsets
 	var noteOffset:Int = 0;
+	var comboOffset:Array<Array<Int>> = [[0, 0], [0, 0]];
+
+	// Note Colors
 	var arrowRGBExtra:Array<Array<FlxColor>> = [
 		[0xFFC24B99, 0xFFFFFFFF, 0xFF3C1F56],
 		[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
@@ -43,51 +31,65 @@ class SaveVariables {
 		[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D]
 	];
 
-	var showFPS:Bool = true;
-	var memCounterType:String = "MEM/PEAK";
-	var camMovement:Bool = false;
-	var ghostTapping:Bool = true;
-	var noReset:Bool = false;
-	var healthBarAlpha:Float = 1;
-	var hitsoundVolume:Float = 0;
-	var pauseMusic:String = 'Tea Time';
-	var comboStacking:Bool = false;
-	var showComboCounter:Bool = false;
-	var showNPS:Bool = false;
-	var smoothHealth:Bool = false;
-	var noteDiffTypes:String = "Simple";
-	var accuracyType:String = 'Judgement';
-	var iconBopType:String = 'Psych';
-	var ratingDisplay:String = 'World';
+	// Graphics
+	var lowQuality:Bool = false;
+	var antialiasing:Bool = true;
+	var shaders:Bool = true;
 	var cacheOnGPU:Bool = false;
 	var vsync:Bool = false;
-	var autoCleanAssets:Bool = true;
-	var healthTypes:String = 'Vanilla';
-	var timeBarType:String = 'Name Time Position';
-	var altDiscordImg:Bool = false;
-	var altDiscordImgCount:Int = 0;
-	var autoPausePlayState:Bool = true;
+	var framerate:Int = 60;
+
+	// Visuals
+	var noteSkin:String = 'Default';
+	var splashSkin:String = 'Psych';
+	var splashAlpha:Float = .6;
+	var splashCount:Int = 2;
 	var lightStrum:Bool = true;
-	var holdAnim:Bool = true;
-	var hitsoundTypes:String = 'Tick';
-	var checkForUpdates:Bool = true;
+	var holdAnim:Bool = false;
+	var hideHud:Bool = false;
+	var timeBarType:String = 'Name Time Position';
+	var flashing:Bool = true;
+	var iconBopType:String = 'Psych';
+	var healthTypes:String = 'Psych';
+	var smoothHealth:Bool = false;
+	var healthBarAlpha:Float = 1;
+	var camZooms:Bool = true;
+	var showNPS:Bool = false;
+	var ratingDisplay:String = 'Game';
+	var pauseMusic:String = 'Tea Time';
+
+	// Gameplay
+	var downScroll:Bool = false;
+	var middleScroll:Bool = false;
+	var opponentStrums:Bool = true;
+	var noteDiffTypes:String = "Simple";
+	var accuracyType:String = 'Judgement';
+	var updateStepLimit:Int = 1;
+	var ghostTapping:Bool = true;
 	var skipGhostNotes:Bool = false;
 	var ghostRange:Float = .01;
-	var unlockedCharacters:Array<String> = ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'];
-	var gameplaySettings:Map<String, Dynamic> = [
-		'scrollspeed' => 1.,
-		'scrolltype' => 'multiplicative',
-
-		'songspeed' => 1.,
-		'healthgain' => 1.,
-		'healthloss' => 1.,
-		'instakill' => false,
-		'practice' => false,
-		'botplay' => false,
-	];
-
-	var comboOffset:Array<Array<Int>> = [[0, 0], [0, 0]];
+	var autoPause:Bool = true;
+	var autoPausePlayState:Bool = true;
+	var noReset:Bool = false;
+	var camMovement:Bool = false;
+	var hitsoundTypes:String = 'Tick';
+	var hitsoundVolume:Float = 0;
 	var ratingOffset:Int = 0;
+	var epicWindow:Int = 22;
+	var sickWindow:Int = 45;
+	var goodWindow:Int = 90;
+	var okWindow:Int = 135;
+	var safeFrames:Float = 10;
+
+	// Miscellaneous
+	var showFPS:Bool = true;
+	var memCounterType:String = "MEM/PEAK";
+	var autoCleanAssets:Bool = true;
+	var checkForUpdates:Bool = true;
+	var discordRPC:Bool = false;
+
+	// Languages
+	var language:String = 'en-US';
 
 	// Optimizer
 	var processFirst:Bool = true;
@@ -95,14 +97,21 @@ class SaveVariables {
 	var skipSpawnNote:Bool = true;
 	var disableGC:Bool = false;
 	var updateSpawnNote:Bool = false;
+	var comboStacking:Bool = false;
+	var showComboCounter:Bool = false;
 
-	var epicWindow:Int = 22;
-	var sickWindow:Int = 45;
-	var goodWindow:Int = 90;
-	var okWindow:Int = 135;
-	var safeFrames:Float = 10;
-	var discordRPC:Bool = false;
-	var language:String = 'en-US';
+	var unlockedCharacters:Array<String> = ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'];
+	var gameplaySettings:Map<String, Dynamic> = [
+		'scrollspeed' => 1.,
+		'scrolltype' => 'multiplicative',
+		
+		'songspeed' => 1.,
+		'healthgain' => 1.,
+		'healthloss' => 1.,
+		'instakill' => false,
+		'practice' => false,
+		'botplay' => false,
+	];
 }
 
 class Settings {

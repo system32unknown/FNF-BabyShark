@@ -470,7 +470,7 @@ class PlayState extends MusicBeatState {
 		uiGroup.add(botplayTxt);
 
 		uiGroup.cameras = noteGroup.cameras = [camHUD];
-		if (showPopups) popUpGroup.cameras = (Settings.data.ratingDisplay == "Hud" ? [camHUD] : [camGame]);
+		if (showPopups) popUpGroup.cameras = (Settings.data.ratingDisplay == 'Hud' ? [camHUD] : [camGame]);
 		startingSong = true;
 
 		for (notetype in noteTypes) {

@@ -112,7 +112,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		addOption(option);
 		addOption(new Option('Camera Zooms', "If unchecked, the camera won't zoom in on a beat hit.", 'camZooms'));
 		addOption(new Option('Show NPS Display', 'If checked, Shows your current Notes Per Second on the info bar.', 'showNPS'));
-		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'ratingDisplay', STRING, ['Hud', 'World']));
+		addOption(new Option('Rating Display:', 'Choose the type of rating you want to see.', 'ratingDisplay', STRING, ['Hud', 'Game']));
 
 		var option:Option = new Option('Pause Music:', "What song do you prefer for the Pause Screen?", 'pauseMusic', STRING, ['None', 'Breakfast', 'Tea Time', 'Breakfast (Dave)', 'Breakfast (Pico)']);
 		addOption(option);
@@ -121,8 +121,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 			else FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(Settings.data.pauseMusic)));
 			changedMusic = true;
 		};
-		#if CHECK_FOR_UPDATES addOption(new Option('Check for Updates', 'On Release builds, turn this on to check for updates when you start the game.', 'checkForUpdates')); #end
-		#if desktop addOption(new Option('Discord Rich Presence', "Uncheck this to prevent accidental leaks, it will hide the Application from your \"Playing\" box on Discord", 'discordRPC')); #end
 		super();
 		add(notes);
 		add(splashes);
