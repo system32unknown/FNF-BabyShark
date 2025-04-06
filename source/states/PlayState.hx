@@ -1374,7 +1374,7 @@ class PlayState extends MusicBeatState {
 				if ((!noteJudge || !Settings.data.optimizeSpawnNote) && isCanPass) {
 					var dunceNote:Note = targetNote;
 					dunceNote.spawned = true;
-					dunceNote.strum = (!dunceNote.mustPress ? opponentStrums : playerStrums).members[dunceNote.noteData];
+					dunceNote.strum = (dunceNote.mustPress ? playerStrums : opponentStrums).members[dunceNote.noteData];
 					notes.add(dunceNote);
 					
 					callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
@@ -1404,6 +1404,7 @@ class PlayState extends MusicBeatState {
 
 	public function noteUpdate() {
 		if (!generatedMusic) return;
+		checkEventNote();
 		if (!inCutscene) {
 			if (!cpuControlled) keysCheck();
 			else playerDance();
@@ -1440,7 +1441,6 @@ class PlayState extends MusicBeatState {
 				} else notes.forEachAlive((daNote:Note) -> daNote.canBeHit = daNote.wasGoodHit = false);
 			}
 		}
-		checkEventNote();
 	}
 
 	var iconsAnimations:Bool = true;

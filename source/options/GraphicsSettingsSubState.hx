@@ -31,7 +31,8 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 		antialiasingOption = optionsArray.length - 1;
 
 		addOption(new Option('Shaders', 'If unchecked, disables shaders.\nIt\'s used for some visual effects, and also CPU intensive for weaker PCs.', 'shaders'));
-		#if desktop addOption(new Option('GPU Caching', 'If checked, allows the GPU to be used for caching textures, decreasing RAM usage.\nDon\'t turn this on if you have a shitty Graphics Card.', 'cacheOnGPU')); #end
+		addOption(new Option('Note Shaders', "If unchecked, disables note shaders.\nPlease use the noteSkin older than psych v0.6.x!", 'noteShaders'));
+		#if desktop addOption(new Option('GPU Caching', 'If checked, allows the GPU to be used for caching textures,\ndecreasing RAM usage. Don\'t turn this on if you have a shitty Graphics Card.', 'cacheOnGPU')); #end
 
 		#if sys
 		var option:Option = new Option('VSync', 'If checked, it enables VSync, fixing any screen tearing\nat the cost of capping the FPS to screen refresh rate.\n(Restart required)', 'vsync');

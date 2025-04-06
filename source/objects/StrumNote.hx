@@ -37,7 +37,7 @@ class StrumNote extends FlxSprite {
 
 		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(strumData));
 		rgbShader.enabled = false;
-		if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB) useRGBShader = false;
+		useRGBShader = !(PlayState.SONG != null && PlayState.SONG.disableNoteRGB || !Settings.data.noteShaders);
 
 		var arr:Array<FlxColor> = Settings.data.arrowRGBExtra[EK.gfxIndex[PlayState.mania][strumData]];
 		if (PlayState.isPixelStage) arr = Settings.data.arrowRGBPixelExtra[EK.gfxIndex[PlayState.mania][strumData]];

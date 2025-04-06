@@ -35,6 +35,7 @@ class SaveVariables {
 	var lowQuality:Bool = false;
 	var antialiasing:Bool = true;
 	var shaders:Bool = true;
+	var noteShaders:Bool = true;
 	var cacheOnGPU:Bool = false;
 	var vsync:Bool = false;
 	var framerate:Int = 60;

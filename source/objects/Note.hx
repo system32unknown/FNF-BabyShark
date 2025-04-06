@@ -99,7 +99,7 @@ class Note extends FlxSprite {
 		texture: null,
 		antialiasing: !PlayState.isPixelStage,
 		useGlobalShader: false,
-		useRGBShader: (PlayState.SONG != null) ? !(PlayState.SONG.disableNoteRGB == true) : true,
+		useRGBShader: PlayState.SONG != null && !PlayState.SONG.disableNoteRGB || Settings.data.noteShaders,
 		useNoteRGB: true,
 		r: -1,
 		g: -1,
@@ -255,7 +255,13 @@ class Note extends FlxSprite {
 					ignoreNote = mustPress;
 
 					// splash data and colors
-					rgbShader.setRGB(0xFF101010, FlxColor.RED, 0xFF990022);
+					if (rgbShader != null && rgbShader.enabled)
+						rgbShader.setRGB(0xFF101010, FlxColor.RED, 0xFF990022);
+					else {
+						try {
+							reloadNote('HURTNOTE_assets');
+						} catch (e) alpha = 0.5;
+					}
 
 					noteSplashData.r = 0xFFFF0000;
 					noteSplashData.g = 0xFF101010;
@@ -307,7 +313,7 @@ class Note extends FlxSprite {
 		if (noteData > -1) {
 			try {
 				rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
-				if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB) rgbShader.enabled = false;
+				if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB || !Settings.data.noteShaders) rgbShader.enabled = false;
 			} catch (e:Dynamic) rgbShader = null;
 
 			texture = '';
