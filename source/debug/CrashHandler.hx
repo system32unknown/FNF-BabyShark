@@ -9,7 +9,11 @@ import lime.system.System;
 class CrashHandler {
 	public static function init() {
 		FlxG.stage.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onErrorOFL);
-		#if cpp untyped __global__.__hxcpp_set_critical_error_handler(onError); #end
+		#if cpp
+		untyped __global__.__hxcpp_set_critical_error_handler(onError);
+		#elseif hl
+		hl.Api.setErrorHandler(onError);
+		#end
 	}
 
 	static function onErrorOFL(e:UncaughtErrorEvent) {

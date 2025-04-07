@@ -600,7 +600,6 @@ class System
 	@:noCompletion private static function __registerEntryPoint(projectName:String, entryPoint:Function):Void
 	{
         #if (sys && !macro)
-        utils.system.PlatformUtil.fixScaling();
         backend.CommandLineHandler.parseCommandLine(Sys.args());
         #end
 		if (__applicationEntryPoint == null)

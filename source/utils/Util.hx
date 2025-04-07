@@ -160,7 +160,7 @@ class Util {
 		return endResult;
 	}
 
-	inline public static function colorFromString(color:String):FlxColor {
+	public static inline function colorFromString(color:String):FlxColor {
 		var hideChars:EReg = ~/[\t\n\r]/;
 		var color:String = hideChars.split(color).join('').trim();
 		if (color.startsWith('0x')) color = color.substring(color.length - (color.length >= 10 ? 8 : 6));
@@ -188,5 +188,9 @@ class Util {
 		if (FileSystem.isDirectory(fullPath)) {
 			for (i in FileSystem.readDirectory(fullPath)) returnFileName(i, toAdd, fullPath);
 		} else toAdd.push(fullPath.replace('.json', ''));
+	}
+
+	public static inline function inRange(a:Float, b:Float, tolerance:Float):Bool {
+		return (a <= b + tolerance && a >= b - tolerance);
 	}
 }

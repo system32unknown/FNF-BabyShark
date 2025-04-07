@@ -43,6 +43,7 @@ class Main extends Sprite {
 		super();
 		#if (linux || mac) openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 
+		utils.system.PlatformUtil.fixScaling();
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 		debug.Logs.init();
 
