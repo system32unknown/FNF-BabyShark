@@ -68,7 +68,7 @@ class Popup extends FlxSprite {
 		antialiasing = i.popupAntialias;
 	}
 
-	public function doTween(speed:Float = .001) {
+	public dynamic function doTween(speed:Float = .001) {
 		FlxTween.cancelTweensOf(this);
 		FlxTween.tween(this, {alpha: 0}, .2 / i.playbackRate, {onComplete: (tween:FlxTween) -> kill(), startDelay: Conductor.crochet * speed / i.playbackRate});
 	}

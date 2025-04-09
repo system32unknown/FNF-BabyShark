@@ -3,8 +3,9 @@ package debug;
 import flixel.system.debug.log.LogStyle;
 import haxe.Log;
 import utils.system.NativeUtil;
+import utils.system.NativeUtil.ConsoleColor;
 
-//Credit by Codename Engine Team
+// Credit by Codename Engine Team
 class Logs {
 	static var __showing:Bool = false;
 
@@ -85,9 +86,9 @@ class Logs {
 		#end
 	}
 
-	public static function traceColored(text:Array<LogText>, level:Level = INFO) {
+	public static function traceColored(text:Array<LogText>, level:Level = INFO)
 		__showInConsole(prepareColoredTrace(text, level));
-	}
+
 	public static function trace(text:String, level:Level = INFO, color:ConsoleColor = LIGHTGRAY) {
 		traceColored([{text: text, color: color}], level);
 	}

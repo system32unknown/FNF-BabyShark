@@ -102,7 +102,7 @@ class AchievementPopup extends openfl.display.Sprite {
 
 	public var intendedY:Float = 0;
 
-	function update(e:Event) {
+	function update(_:Event) {
 		if (timePassed < 0) {
 			timePassed = Lib.getTimer();
 			return;
@@ -124,7 +124,7 @@ class AchievementPopup extends openfl.display.Sprite {
 		}
 	}
 
-	private function onResize(e:Event) {
+	function onResize(_:Event) {
 		var mult:Float = (FlxG.stage.stageHeight / FlxG.height);
 		scaleX = mult;
 		scaleY = mult;
