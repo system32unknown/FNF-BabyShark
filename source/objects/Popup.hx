@@ -9,6 +9,7 @@ enum PopupType {
 class Popup extends FlxSprite {
 	public var type:PopupType;
 	public var popUpTime:Float = 0;
+	public static var noVelocity:Bool = false;
 
 	final placement:Float = FlxG.width * .35;
 	var i:PlayState;
@@ -53,12 +54,14 @@ class Popup extends FlxSprite {
 
 		updateHitbox();
 
-		if (popUptype == RATING) {
-			velocity.set(-FlxG.random.int(0, 10) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(140, 175) * i.playbackRate + i.ratingVel.y);
-			acceleration.set(baseAccX, 550 * i.playbackRate * i.playbackRate + i.ratingAcc.y);
-		} else {
-			velocity.set(FlxG.random.float(-5, 5) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(130, 150) * i.playbackRate + i.ratingVel.y);
-			acceleration.set(baseAccX, FlxG.random.int(250, 300) * i.playbackRate * i.playbackRate + i.ratingAcc.y);
+		if (!noVelocity) {
+			if (popUptype == RATING) {
+				velocity.set(-FlxG.random.int(0, 10) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(140, 175) * i.playbackRate + i.ratingVel.y);
+				acceleration.set(baseAccX, 550 * i.playbackRate * i.playbackRate + i.ratingAcc.y);
+			} else {
+				velocity.set(FlxG.random.float(-5, 5) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(130, 150) * i.playbackRate + i.ratingVel.y);
+				acceleration.set(baseAccX, FlxG.random.int(250, 300) * i.playbackRate * i.playbackRate + i.ratingAcc.y);
+			}
 		}
 
 		visible = !Settings.data.hideHud;
