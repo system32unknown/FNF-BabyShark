@@ -389,7 +389,7 @@ class Paths {
 		for (x in targetDir) {
 			if (x == '') continue;
 			var newPart:String = findNode(searchDir, x);
-			if (newPart != null) { searchDir += '/$newPart';
+			if (newPart != null) searchDir += '/$newPart';
 			else return null;
 		}
 		return searchDir;
