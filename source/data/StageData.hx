@@ -3,6 +3,7 @@ package data;
 #if !MODS_ALLOWED import openfl.utils.Assets; #end
 import psychlua.ModchartSprite;
 import backend.Song;
+import tjson.TJSON;
 
 typedef StageFile = {
 	var directory:String;
@@ -34,6 +35,7 @@ enum abstract LoadFilters(Int) from Int from UInt to Int to UInt {
 	var STORY_MODE:Int = (1 << 2);
 	var FREEPLAY:Int = (1 << 3);
 }
+
 class StageData {
 	public static function dummy():StageFile {
 		return {
@@ -76,9 +78,9 @@ class StageData {
 		try {
 			var path:String = Paths.getPath('stages/$stage.json');
 			#if MODS_ALLOWED
-			if (FileSystem.exists(path)) return cast tjson.TJSON.parse(File.getContent(path));
+			if (FileSystem.exists(path)) return cast TJSON.parse(File.getContent(path));
 			#else
-			if (Assets.exists(path)) return cast tjson.TJSON.parse(Assets.getText(path));
+			if (Assets.exists(path)) return cast TJSON.parse(Assets.getText(path));
 			#end
 		}
 		return dummy();
@@ -127,8 +129,7 @@ class StageData {
 					var spr:ModchartSprite = new ModchartSprite(data.x, data.y);
 					spr.ID = num;
 					if (data.type != 'square') {
-						if (data.type == 'sprite')
-							spr.loadGraphic(Paths.image(data.image));
+						if (data.type == 'sprite') spr.loadGraphic(Paths.image(data.image));
 						else spr.frames = Paths.getAtlas(data.image);
 
 						if (data.type == 'animatedSprite' && data.animations != null) {

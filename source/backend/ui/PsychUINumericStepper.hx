@@ -130,7 +130,7 @@ class PsychUINumericStepper extends PsychUIInputText {
 		if (caretIndex > text.length) caretIndex = text.length;
 		if (selectIndex > text.length) selectIndex = text.length;
 	}
-	
+
 	function _updateFilter() {
 		if (min < 0) {
 			if (decimals > 0) {

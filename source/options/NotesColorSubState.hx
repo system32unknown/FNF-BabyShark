@@ -40,9 +40,9 @@ class NotesColorSubState extends FlxSubState {
 
 	public function new() {
 		super();
-		
+
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Note Colors Menu"); #end
-		
+
 		onPixel = PlayState.isPixelStage;
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFEA71FD;
@@ -75,7 +75,7 @@ class NotesColorSubState extends FlxSubState {
 		var bg:FlxSprite = new FlxSprite(750, 160).makeGraphic(FlxG.width - 780, 540, FlxColor.BLACK);
 		bg.alpha = .25;
 		add(bg);
-		
+
 		var text:Alphabet = new Alphabet(50, 86, 'CTRL', NORMAL);
 		text.alignment = CENTER;
 		text.updateScale(.4, .4);
@@ -102,7 +102,7 @@ class NotesColorSubState extends FlxSubState {
 		colorPalette.updateHitbox();
 		colorPalette.antialiasing = false;
 		add(colorPalette);
-		
+
 		colorWheel = new FlxSprite(860, 200, Paths.image('noteColorMenu/colorWheel'));
 		colorWheel.setGraphicSize(360, 360);
 		colorWheel.updateHitbox();
@@ -140,7 +140,7 @@ class NotesColorSubState extends FlxSubState {
 		tipTxt.borderSize = 2;
 		add(tipTxt);
 		tipTxt.text = Language.getPhrase('note_colors_hold_tip', 'Hold {1} + Press RESET key to fully reset the selected Note.', [Language.getPhrase('note_colors_shift', 'Shift')]);
-		
+
 		FlxG.mouse.visible = true;
 	}
 
@@ -169,7 +169,7 @@ class NotesColorSubState extends FlxSubState {
 		}
 
 		if (hexTypeNum > -1) {
-			var keyPressed:FlxKey = cast (FlxG.keys.firstJustPressed(), FlxKey);
+			var keyPressed:FlxKey = cast(FlxG.keys.firstJustPressed(), FlxKey);
 			hexTypeVisibleTimer += elapsed;
 			var changed:Bool = false;
 			if (changed = FlxG.keys.justPressed.LEFT)
@@ -184,7 +184,7 @@ class NotesColorSubState extends FlxSubState {
 				setShaderColor(colorHex);
 				_storedColor = getShaderColor();
 				updateColors();
-				
+
 				// move you to next letter
 				hexTypeNum++;
 				changed = true;
@@ -381,7 +381,7 @@ class NotesColorSubState extends FlxSubState {
 		curSelectedNote += change;
 		if (curSelectedNote < 0) curSelectedNote = dataArray.length - 1;
 		if (curSelectedNote >= dataArray.length) curSelectedNote = 0;
-		
+
 		modeBG.visible = false;
 		notesBG.visible = true;
 		bigNote.rgbShader.parent = Note.globalRgbShaders[curSelectedNote];

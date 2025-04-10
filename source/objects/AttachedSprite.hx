@@ -35,7 +35,7 @@ class AttachedSprite extends FlxSprite {
 	}
 
 	override function destroy() {
-		addPoint = flixel.util.FlxDestroyUtil.put(addPoint);
+		addPoint.put();
 		super.destroy();
 	}
 }

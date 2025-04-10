@@ -43,7 +43,7 @@ class MasterEditorMenu extends MusicBeatState {
 			grpTexts.add(leText);
 			leText.snapToPosition();
 		}
-		
+
 		#if MODS_ALLOWED
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 42).makeGraphic(FlxG.width, 42, FlxColor.BLACK);
 		textBG.alpha = 0.6;
@@ -53,7 +53,7 @@ class MasterEditorMenu extends MusicBeatState {
 		directoryTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		directoryTxt.scrollFactor.set();
 		add(directoryTxt);
-		
+
 		for (folder in Mods.getModDirectories()) directories.push(folder);
 		var found:Int = directories.indexOf(Mods.currentModDirectory);
 		if (found > -1) curDirectory = found;
@@ -91,7 +91,7 @@ class MasterEditorMenu extends MusicBeatState {
 			FlxG.sound.music.volume = 0;
 			states.FreeplayState.destroyFreeplayVocals();
 		}
-		
+
 		for (num => item in grpTexts.members) {
 			item.targetY = num - curSelected;
 			item.alpha = .6;
@@ -110,7 +110,7 @@ class MasterEditorMenu extends MusicBeatState {
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		curDirectory = FlxMath.wrap(curDirectory + change, 0, directories.length - 1);
-	
+
 		data.WeekData.setDirectoryFromWeek();
 		if (directories[curDirectory] == null || directories[curDirectory].length < 1)
 			directoryTxt.text = '< No Mod Directory Loaded >';

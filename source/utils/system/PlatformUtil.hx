@@ -123,9 +123,9 @@ class PlatformUtil {
 
 	#if (cpp && windows)
 	@:functionCode('
- 		HWND window = GetActiveWindow();
- 		SetWindowLongPtr(window, GWL_STYLE, GetWindowLongPtr(window, GWL_STYLE) & ~WS_SYSMENU); // Remove the WS_SYSMENU style
- 		SetWindowPos(window, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER); // Force the window to redraw
+		HWND window = GetActiveWindow();
+		SetWindowLongPtr(window, GWL_STYLE, GetWindowLongPtr(window, GWL_STYLE) & ~WS_SYSMENU); // Remove the WS_SYSMENU style
+		SetWindowPos(window, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER); // Force the window to redraw
 	')
 	#end
 	public static function removeWindowIcon() {}
@@ -295,7 +295,7 @@ class PlatformUtil {
 	public static function setTransparency(winName:String, alpha:Int, color:Int):Bool return false;
 
 	#if (cpp && windows)
-	@:functionCode('		
+	@:functionCode('
 		// Get the current time
 		auto now = std::chrono::high_resolution_clock::now();
 		
@@ -318,7 +318,7 @@ class PlatformUtil {
 		// this shouldn't be needed for other systems
 		// Credit to YoshiCrafter29 for finding this function
 		untyped __cpp__('
-			SetProcessDPIAware();	
+			SetProcessDPIAware();
 			#ifdef DPI_AWARENESS_CONTEXT
 			SetProcessDpiAwarenessContext(
 				#ifdef DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2

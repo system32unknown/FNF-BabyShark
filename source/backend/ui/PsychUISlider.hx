@@ -58,9 +58,8 @@ class PsychUISlider extends FlxSpriteGroup {
 
 		if (FlxG.mouse.justMoved || FlxG.mouse.justPressed || forceNextUpdate) {
 			forceNextUpdate = false;
-			if (FlxG.mouse.justPressed && (FlxG.mouse.overlaps(bar, camera) || FlxG.mouse.overlaps(handle, camera)))
-				movingHandle = true;
-			
+			if (FlxG.mouse.justPressed && (FlxG.mouse.overlaps(bar, camera) || FlxG.mouse.overlaps(handle, camera))) movingHandle = true;
+
 			if (movingHandle) {
 				var lastValue:Float = FlxMath.roundDecimal(value, decimals);
 				value = Math.max(min, Math.min(max, FlxMath.remapToRange(FlxG.mouse.getViewPosition(camera).x, bar.x, bar.x + bar.width, min, max)));
@@ -81,7 +80,7 @@ class PsychUISlider extends FlxSpriteGroup {
 
 		labelText.x = bar.x + bar.width / 2 - labelText.width / 2;
 		if (label.length > 0) bar.y = labelText.y + 24;
-		
+
 		minText.y = maxText.y = valueText.y = bar.y + 12;
 
 		_updateHandleX();

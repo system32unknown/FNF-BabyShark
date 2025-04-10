@@ -31,12 +31,12 @@ class CharacterSelectionState extends MusicBeatState {
 		new CharacterInSelect([new CharacterForm('dave-player', 'Dave'),]),
 		new CharacterInSelect([new CharacterForm('bambi-player', 'Bambi'),]),
 		new CharacterInSelect([new CharacterForm('tristan', 'Tristan'), new CharacterForm('tristan-golden', 'Golden Tristan')]),
-		new CharacterInSelect([new CharacterForm('cheating-player', 'Expunged (Cheating)'), new CharacterForm('unfair-player', 'Expunged (Unfair)'), new CharacterForm('true-expunged-player', 'Expunged (True form)'),]),
-		new CharacterInSelect([new CharacterForm('pico-player', 'Pico'),]),
-		new CharacterInSelect([new CharacterForm('nate-player', 'Nate'),]),
+		new CharacterInSelect([new CharacterForm('cheating-player', 'Expunged (Cheating)'), new CharacterForm('unfair-player', 'Expunged (Unfair)'), new CharacterForm('true-expunged-player', 'Expunged (True form)')]),
+		new CharacterInSelect([new CharacterForm('pico-player', 'Pico')]),
+		new CharacterInSelect([new CharacterForm('nate-player', 'Nate')]),
 	];
-	static var unlockedChrs:Array<String>;
-	
+	static var unlockedChrs:Array<String> = [];
+
 	var current:Int = 0;
 	var curForm:Int = 0;
 
@@ -89,7 +89,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 		gfGroup = new FlxSpriteGroup(GF_POS[0], GF_POS[1]);
 		boyfriendGroup = new FlxSpriteGroup(BF_POS[0], BF_POS[1]);
-		
+
 		gf = new Character(0, 0, 'gf');
 		gf.x += gf.positionArray[0];
 		gf.y += gf.positionArray[1];
@@ -104,7 +104,7 @@ class CharacterSelectionState extends MusicBeatState {
 
 		add(gfGroup);
 		add(boyfriendGroup);
-		
+
 		var tutorialThing:FlxSprite = new FlxSprite(-125, -100, Paths.image('charSelectGuide'));
 		tutorialThing.setGraphicSize(Std.int(tutorialThing.width * 1.25));
 		tutorialThing.scrollFactor.set();
@@ -210,7 +210,7 @@ class CharacterSelectionState extends MusicBeatState {
 				curForm = FlxMath.wrap(curForm += (downJustPressed ? -1 : 1), 0, characters[current].forms.length - 1);
 				UpdateBF();
 			}
-	
+
 			if (Controls.justPressed('reset')) {
 				reset();
 				FlxG.resetState();

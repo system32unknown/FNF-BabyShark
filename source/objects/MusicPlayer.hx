@@ -12,7 +12,6 @@ class MusicPlayer extends flixel.group.FlxGroup {
 	public var instance:FreeplayState;
 
 	public var playing(get, never):Bool;
-	public var paused(get, never):Bool;
 
 	public var playingMusic:Bool = false;
 	public var curTime:Float;
@@ -160,11 +159,13 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		}
 
 		if (playing) {
-			if (FreeplayState.vocals != null) FreeplayState.vocals.volume = (FreeplayState.vocals.length > FlxG.sound.music.time) ? .8 : 0;
-			if ((FreeplayState.vocals != null && FreeplayState.vocals.length > FlxG.sound.music.time && Math.abs(FlxG.sound.music.time - FreeplayState.vocals.time) >= 25)) {
-				pauseOrResume();
-				setVocalsTime(FlxG.sound.music.time);
-				pauseOrResume(true);
+			if (FreeplayState.vocals != null) {
+				FreeplayState.vocals.volume = (FreeplayState.vocals.length > FlxG.sound.music.time) ? .8 : 0;
+				if (FreeplayState.vocals.length > FlxG.sound.music.time && Math.abs(FlxG.sound.music.time - FreeplayState.vocals.time) >= 25) {
+					pauseOrResume();
+					setVocalsTime(FlxG.sound.music.time);
+					pauseOrResume(true);
+				}
 			}
 		}
 
@@ -180,7 +181,8 @@ class MusicPlayer extends flixel.group.FlxGroup {
 
 	public function pauseOrResume(resume:Bool = false) {
 		if (resume) {
-			FlxG.sound.music.resume();
+			if (!FlxG.sound.music.playing)
+				FlxG.sound.music.resume();
 			if (FreeplayState.vocals != null) FreeplayState.vocals.resume();
 		} else {
 			FlxG.sound.music.pause();
@@ -193,11 +195,11 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		FlxG.autoPause = (!playingMusic && Settings.data.autoPause);
 		active = visible = playingMusic;
 
-		instance.scoreBG.visible = instance.diffText.visible = instance.scoreText.visible = instance.comboText.visible = !playingMusic; //Hide Freeplay texts and boxes if playingMusic is true
+		instance.scoreBG.visible = instance.diffText.visible = instance.scoreText.visible = instance.comboText.visible = !playingMusic; // Hide Freeplay texts and boxes if playingMusic is true
 		songTxt.visible = timeTxt.visible = songBG.visible = playbackTxt.visible = playbackBG.visible = progressBar.visible = playingMusic; // Show Music Player texts and boxes if playingMusic is true
 
 		for (i in playbackSymbols) i.visible = playingMusic;
-		
+
 		holdPitchTime = 0;
 		instance.holdTime = 0;
 		playbackRate = 1;
@@ -206,7 +208,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 		if (playingMusic) {
 			instance.bottomText.text = Language.getPhrase('musicplayer_tip', "[SPACE] Pause • [ESCAPE] Exit • [R] Reset the Song");
 			positionSong();
-			
+
 			progressBar.setRange(0, FlxG.sound.music.length);
 			progressBar.setParent(FlxG.sound.music, "time");
 			progressBar.numDivisions = 1600;
@@ -277,7 +279,6 @@ class MusicPlayer extends flixel.group.FlxGroup {
 	}
 
 	function get_playing():Bool return FlxG.sound.music.playing;
-	function get_paused():Bool @:privateAccess return FlxG.sound.music._paused;
 
 	function set_playbackRate(value:Float):Float {
 		var value:Float = FlxMath.roundDecimal(value, 2);

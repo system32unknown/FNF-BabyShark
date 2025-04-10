@@ -18,7 +18,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 		this.saveCallback = saveCallback;
 		lockedList = (lockedList != null) ? locked : [];
 		preloadList = list ?? [];
-		
+
 		for (k => _ in preloadList)
 			preloadListKeys.push(k);
 
@@ -28,7 +28,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 	var outputTxt:FlxText;
 	var fileDialog:FileDialogHandler = new FileDialogHandler();
 	var radioGrp:PsychUIRadioGroup;
-	
+
 	var removeButton:PsychUIButton;
 	var lqCheckBox:PsychUICheckBox;
 	var hqCheckBox:PsychUICheckBox;
@@ -138,10 +138,10 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 			
 			fileDialog.open(null, 'Load a .PNG/.OGG File...', [new openfl.net.FileFilter('Image/Audio', '*.png;*.ogg')], () -> {
 				var path:Path = new Path(fileDialog.path.replace('\\', '/'));
-	
+
 				var ext:String = path.ext;
 				if (ext != null) ext = ext.toLowerCase();
-	
+
 				switch (ext) {
 					case 'png', 'ogg': addToList(path, false);
 					default: showOutput('Unsupported Extension: $ext', true);
@@ -184,7 +184,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 		outputTime = Math.max(0, outputTime - elapsed);
 		outputTxt.alpha = outputTime;
 		if (!fileDialog.completed) return;
-			
+
 		if (Controls.justPressed('back')) close();
 		
 		var checked:PsychUIRadioItem = radioGrp.checkedRadio;
@@ -226,7 +226,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 		outputTxt.color = isError ? FlxColor.RED : FlxColor.WHITE;
 		outputTxt.text = txt;
 		outputTime = 3;
-		
+
 		FlxG.sound.play(Paths.sound(isError ? 'cancelMenu' : 'scrollMenu'), .4);
 	}
 	

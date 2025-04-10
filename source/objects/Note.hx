@@ -37,7 +37,7 @@ typedef NoteSplashData = {
  * The note object used as a data structure to spawn and manage notes during gameplay.
  * 
  * If you want to make a custom note type, you should search for: "function set_noteType"
-**/
+ */
 class Note extends FlxSprite {
 	// This is needed for the hardcoded note types to appear on the Chart Editor,
 	// It's also used for backwards compatibility with 0.1 - 0.3.2 charts.
@@ -140,7 +140,7 @@ class Note extends FlxSprite {
 
 	/**
 	 * Forces the hitsound to be played even if the user's hitsound volume is set to 0
-	**/
+	 */
 	public var hitsoundForce:Bool = false;
 	public var hitsoundVolume(get, default):Float = 1.0;
 	function get_hitsoundVolume():Float {
@@ -180,7 +180,7 @@ class Note extends FlxSprite {
 				animation.play(noteGFX + (isSustainEnds ? 'holdend' : 'hold')); // isHoldEnd
 				updateHitbox();
 				offsetX -= width * .5;
-				
+
 				scale.y *= Conductor.stepCrochet * .0105;
 
 				if (PlayState.isPixelStage) {
@@ -275,6 +275,7 @@ class Note extends FlxSprite {
 				case 'No Animation': noAnimation = noMissAnimation = true;
 				case 'GF Sing': gfNote = true;
 			}
+
 			if (value != null && value.length > 1) backend.NoteTypesConfig.applyNoteTypeData(this, value);
 			if (hitsound != 'hitsound' && hitsoundVolume > 0) Paths.sound(hitsound); // precache new sound for being idiot-proof
 			noteType = value;
@@ -359,7 +360,7 @@ class Note extends FlxSprite {
 		if (globalRgbShaders[dataNum] == null) {
 			var newRGB:RGBPalette = new RGBPalette();
 			globalRgbShaders[dataNum] = newRGB;
-			
+
 			var arr:Array<FlxColor> = (!PlayState.isPixelStage ? Settings.data.arrowRGBExtra : Settings.data.arrowRGBPixelExtra)[dataNum];
 			if (arr != null && noteData > -1) {
 				newRGB.r = arr[0];

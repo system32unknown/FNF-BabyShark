@@ -83,7 +83,7 @@ class GameplayChangersSubstate extends FlxSubState {
 
 	public function new() {
 		super();
-		
+
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0.6;
 		add(bg);

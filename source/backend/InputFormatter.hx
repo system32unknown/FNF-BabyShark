@@ -9,6 +9,7 @@ class InputFormatter {
 			case CAPSLOCK: return "Caps";
 			case PAGEUP: return "PgUp";
 			case PAGEDOWN: return "PgDown";
+
 			// Number Keys
 			case ZERO: return "0";
 			case ONE: return "1";
@@ -20,6 +21,7 @@ class InputFormatter {
 			case SEVEN: return "7";
 			case EIGHT: return "8";
 			case NINE: return "9";
+
 			// Numpads
 			case NUMPADZERO: return "#0";
 			case NUMPADONE: return "#1";

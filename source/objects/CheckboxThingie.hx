@@ -57,7 +57,7 @@ class CheckboxThingie extends FlxSprite {
 	}
 
 	override function destroy() {
-		sprOffset = flixel.util.FlxDestroyUtil.put(sprOffset);
+		sprOffset.put();
 		super.destroy();
 	}
 }

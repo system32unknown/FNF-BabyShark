@@ -2,8 +2,7 @@ package states.stages;
 
 import states.stages.objects.*;
 
-class Philly extends BaseStage
-{
+class Philly extends BaseStage {
 	var phillyLightsColors:Array<FlxColor>;
 	var phillyWindow:BGSprite;
 	var phillyStreet:BGSprite;

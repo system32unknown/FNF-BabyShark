@@ -673,7 +673,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 	function reloadCharacterImage() {
 		var lastAnim:String = character.getAnimationName();
 		var anims:Array<AnimArray> = character.animationsArray.copy();
-		
+
 		character.atlas = flixel.util.FlxDestroyUtil.destroy(character.atlas);
 		character.isAnimateAtlas = false;
 		character.color = FlxColor.WHITE;

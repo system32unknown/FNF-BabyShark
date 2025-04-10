@@ -262,8 +262,8 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 			holdingEsc = 0;
 			var changed:Bool = false;
 			if (FlxG.keys.justPressed.ANY || FlxG.keys.justReleased.ANY) {
-				var keyPressed:FlxKey = cast (FlxG.keys.firstJustPressed(), FlxKey);
-				var keyReleased:FlxKey = cast (FlxG.keys.firstJustReleased(), FlxKey);
+				var keyPressed:FlxKey = cast(FlxG.keys.firstJustPressed(), FlxKey);
+				var keyReleased:FlxKey = cast(FlxG.keys.firstJustReleased(), FlxKey);
 
 				if (keyPressed != NONE && keyPressed != ESCAPE && keyPressed != BACKSPACE) {
 					changed = true;

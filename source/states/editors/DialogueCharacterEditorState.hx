@@ -132,7 +132,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		addEditorBox();
 		FlxG.mouse.visible = true;
 		updateCharTypeBox();
-		
+
 		super.create();
 	}
 
@@ -200,7 +200,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		animationInputText = new PsychUIInputText(15, 85, 80);
 		loopInputText = new PsychUIInputText(animationInputText.x, animationInputText.y + 35, 150);
 		idleInputText = new PsychUIInputText(loopInputText.x, loopInputText.y + 40, 150);
-		
+
 		var addUpdateButton:PsychUIButton = new PsychUIButton(10, idleInputText.y + 30, "Add/Update", () -> {
 			var theAnim:String = animationInputText.text.trim();
 			if (character.dialogueAnimations.exists(theAnim)) { // Update
@@ -299,7 +299,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 			character.jsonFile.no_antialiasing = noAntialiasingCheckbox.checked;
 			character.antialiasing = !character.jsonFile.no_antialiasing;
 		};
-		
+
 		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Image file name:'));
 		tab_group.add(new FlxText(10, xStepper.y - 18, 0, 'Position Offset:'));
 		tab_group.add(new FlxText(10, scaleStepper.y - 18, 0, 'Scale:'));
@@ -504,10 +504,10 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 					animText.visible = true;
 					updateTextBox();
 					daText.resetDialogue();
-					
+
 					if (curAnim < 0) curAnim = character.jsonFile.animations.length - 1;
 					else if (curAnim >= character.jsonFile.animations.length) curAnim = 0;
-					
+
 					character.playAnim(character.jsonFile.animations[curAnim].anim);
 					animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
 				}
@@ -549,7 +549,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 		}
 		super.update(elapsed);
 	}
-	
+
 	var _file:FileReference = null;
 	function loadCharacter() {
 		_file = new FileReference();
@@ -639,8 +639,8 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 	}
 
 	/**
-		* Called when the save file dialog is cancelled.
-	*/
+	 * Called when the save file dialog is cancelled.
+	 */
 	function onSaveCancel(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -649,8 +649,8 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 	}
 
 	/**
-		* Called if there is an error while saving the gameplay recording.
-	*/
+	 * Called if there is an error while saving the gameplay recording.
+	 */
 	function onSaveError(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);

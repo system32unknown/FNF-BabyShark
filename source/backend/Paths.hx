@@ -76,11 +76,13 @@ class Paths {
 				if (gfx != null) protectedGfx.push(gfx);
 			}
 		}
+
 		for (member in FlxG.state.members)
 			checkForGraphics(member);
 		if (FlxG.state.subState != null)
 			for (member in FlxG.state.subState.members)
 				checkForGraphics(member);
+
 		for (key in currentTrackedAssets.keys()) {
 			// if it is not currently contained within the used local assets
 			if (!dumpExclusions.contains(key)) {
@@ -249,7 +251,7 @@ class Paths {
 			return FlxAtlasFrames.fromSparrow(imageLoaded, #if MODS_ALLOWED (useMod ? File.getContent(myXml) : myXml) #else myXml #end);
 		else {
 			var myJson:Dynamic = getPath('images/$key.json', TEXT, parentFolder);
-			if (OpenFlAssets.exists(myJson) #if MODS_ALLOWED || (FileSystem.exists(myJson) && (useMod = true)) #end )
+			if (OpenFlAssets.exists(myJson) #if MODS_ALLOWED || (FileSystem.exists(myJson) && (useMod = true)) #end)
 				return FlxAtlasFrames.fromTexturePackerJson(imageLoaded, #if MODS_ALLOWED (useMod ? File.getContent(myJson) : myJson) #else myJson #end);
 		}
 		return getPackerAtlas(key, parentFolder);
@@ -273,7 +275,6 @@ class Paths {
 		var imageLoaded:FlxGraphic = image(key, parentFolder, allowGPU);
 		#if MODS_ALLOWED
 		var xmlExists:Bool = false;
-
 		var xml:String = modsXml(key);
 		if (FileSystem.exists(xml)) xmlExists = true;
 
@@ -287,7 +288,6 @@ class Paths {
 		var imageLoaded:FlxGraphic = image(key, parentFolder, allowGPU);
 		#if MODS_ALLOWED
 		var txtExists:Bool = false;
-		
 		var txt:String = modsTxt(key);
 		if (FileSystem.exists(txt)) txtExists = true;
 
@@ -301,7 +301,6 @@ class Paths {
 		var imageLoaded:FlxGraphic = image(key, parentFolder, allowGPU);
 		#if MODS_ALLOWED
 		var jsonExists:Bool = false;
-
 		var json:String = modsImagesJson(key);
 		if (FileSystem.exists(json)) jsonExists = true;
 
@@ -390,9 +389,8 @@ class Paths {
 		for (x in targetDir) {
 			if (x == '') continue;
 			var newPart:String = findNode(searchDir, x);
-			if (newPart != null) {
-				searchDir += '/$newPart';
-			} else return null;
+			if (newPart != null) { searchDir += '/$newPart';
+			else return null;
 		}
 		return searchDir;
 	}

@@ -406,8 +406,7 @@ class HScript extends AlterHscript {
 			else if (libName == null) libName = '';
 			var cls:Dynamic = funk.hscript.resolveClassOrEnum(str);
 
-			if (funk.hscript == null)
-				initHaxeModule(funk);
+			if (funk.hscript == null) initHaxeModule(funk);
 
 			var pos:HScriptInfos = cast funk.hscript.interp.posInfos();
 			pos.showLine = false;

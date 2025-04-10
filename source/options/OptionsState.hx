@@ -87,7 +87,7 @@ class OptionsState extends MusicBeatState {
 			} else FlxG.switchState(() -> new states.MainMenuState());
 		} else if (Controls.justPressed('accept')) openSelectedSubstate(options[curPage][curSelected]);
 	}
-	
+
 	function changeSelection(change:Int = 0) {
 		curSelected = FlxMath.wrap(curSelected + change, 0, options[curPage].length - 1);
 

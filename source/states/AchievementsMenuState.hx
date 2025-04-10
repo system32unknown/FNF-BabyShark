@@ -85,7 +85,7 @@ class AchievementsMenuState extends MusicBeatState {
 		box.alpha = 0.6;
 		box.scrollFactor.set();
 		add(box);
-		
+
 		nameText = new FlxText(50, box.y + 10, FlxG.width - 100, "", 32);
 		nameText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		nameText.scrollFactor.set();
@@ -98,7 +98,7 @@ class AchievementsMenuState extends MusicBeatState {
 		progressBar.gameCenter(X);
 		progressBar.scrollFactor.set();
 		progressBar.enabled = false;
-		
+
 		progressTxt = new FlxText(50, progressBar.y - 6, FlxG.width - 100, "", 32);
 		progressTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		progressTxt.scrollFactor.set();
@@ -172,7 +172,7 @@ class AchievementsMenuState extends MusicBeatState {
 					_changeSelection();
 				}
 			}
-			
+
 			if (Controls.justPressed('reset') && (options[curSelected].unlocked || options[curSelected].curProgress > 0))
 				openSubState(new ResetAchievementSubstate());
 		}
@@ -235,14 +235,14 @@ class ResetAchievementSubstate extends MusicBeatSubstate {
 		text.gameCenter(X);
 		text.scrollFactor.set();
 		add(text);
-		
+
 		var state:AchievementsMenuState = cast FlxG.state;
 		var text:FlxText = new FlxText(50, text.y + 90, FlxG.width - 100, state.options[state.curSelected].displayName, 40);
 		text.setFormat(Paths.font("babyshark.ttf"), 40, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		text.scrollFactor.set();
 		text.borderSize = 2;
 		add(text);
-		
+
 		yesText = new Alphabet(0, text.y + 120, Language.getPhrase('yes'));
 		yesText.gameCenter(X).x -= 200;
 		yesText.scrollFactor.set();

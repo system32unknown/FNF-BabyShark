@@ -56,6 +56,7 @@ package backend;
 		}
 		return value;
 	}
+
 	public static function getIDFromTiming(noteDev:Float):Int {
 		var value:Int = list.length - 1;
 		for (i in 0...list.length) {

@@ -39,7 +39,7 @@ class NoteTypesConfig {
 	public static function applyNoteTypeData(note:objects.Note, name:String) {
 		var data:Array<NoteTypeProperty> = loadNoteTypeData(name);
 		if (data == null || data.length < 1) return;
-		
+
 		for (line in data) {
 			var obj:Dynamic = note;
 			var split:Array<String> = line.property;
@@ -83,7 +83,7 @@ class NoteTypesConfig {
 	static function _interpretValue(value:String):Any {
 		if (value.charAt(0) == "'" || value.charAt(0) == '"')
 			return value.substring(1, value.length - 1); // is a string
-		
+
 		switch (value) {
 			case "true": return true;
 			case "false": return false;

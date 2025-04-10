@@ -25,8 +25,9 @@ typedef WeekFile = {
 class WeekData {
 	public static var weeksLoaded:Map<String, WeekData> = new Map<String, WeekData>();
 	public static var weeksList:Array<String> = [];
+
 	public var folder:String = '';
-	
+
 	// JSON variables
 	public var songs:Array<Array<EitherType<String, Array<Int>>>>;
 	public var difficulties:String;
@@ -52,7 +53,7 @@ class WeekData {
 				["Fresh", "daddyshark", [146, 113, 253]],
 				["Tooth", "daddyshark", [146, 113, 253]]
 			],
-			weekCharacters: ['', 'bf', 'gf'],
+			weekCharacters: ['bf', 'bf', 'gf'],
 			weekBackground: 'stage',
 			weekBefore: 'tutorial',
 			storyName: 'Your New Week',

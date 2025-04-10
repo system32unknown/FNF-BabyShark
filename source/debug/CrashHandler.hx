@@ -19,9 +19,9 @@ class CrashHandler {
 	static function onErrorOFL(e:UncaughtErrorEvent) {
 		var message:String = '';
 		if (Std.isOfType(e.error, Error)) {
-			var err:Error = cast (e.error, Error);
+			var err:Error = cast(e.error, Error);
 			message = err.getStackTrace() ?? err.message;
-		} else if (Std.isOfType(e.error, ErrorEvent)) message = cast (e.error, ErrorEvent).text;
+		} else if (Std.isOfType(e.error, ErrorEvent)) message = cast(e.error, ErrorEvent).text;
 		else message = Std.string(e.error);
 
 		e.preventDefault();

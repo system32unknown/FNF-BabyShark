@@ -57,7 +57,7 @@ class GlitchShader extends flixel.system.FlxAssets.FlxShader {
 		 * Number of waves over time
 		 */
 		uniform float uFrequency;
-				
+
 		/*
 		 * How much the pixels are going to stretch over the waves
 		 */

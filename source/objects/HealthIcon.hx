@@ -40,7 +40,7 @@ class HealthIcon extends FlxSprite {
 		return Paths.image(path, allowGPU);
 	}
 
-	public function new(?char:String = 'face', isPlayer:Bool = false, ?allowGPU:Bool = true) {
+	public function new(char:String = 'face', isPlayer:Bool = false, ?allowGPU:Bool = true) {
 		super();
 		this.isPlayer = isPlayer;
 		changeIcon(char, allowGPU);
@@ -54,7 +54,7 @@ class HealthIcon extends FlxSprite {
 
 	override function destroy():Void {
 		super.destroy();
-		_scale = flixel.util.FlxDestroyUtil.put(_scale);
+		_scale.put();
 	}
 
 	override function draw() {

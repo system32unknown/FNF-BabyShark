@@ -15,17 +15,17 @@ class ExtraFunctions {
 		funk.set("keyboardReleased", (name:String) -> return Reflect.getProperty(FlxG.keys.justReleased, name.toUpperCase()));
 
 		funk.set("firstKeyJustPressed", () -> {
-			var result:String = cast (FlxG.keys.firstJustPressed(), FlxKey).toString();
+			var result:String = cast(FlxG.keys.firstJustPressed(), FlxKey).toString();
 			if (result == null || result.length < 1) result = "NONE";
 			return result;
 		});
 		funk.set("firstKeyPressed", () -> {
-			var result:String = cast (FlxG.keys.firstPressed(), FlxKey).toString();
+			var result:String = cast(FlxG.keys.firstPressed(), FlxKey).toString();
 			if (result == null || result.length < 1) result = "NONE";
 			return result;
 		});
 		funk.set("firstKeyJustReleased", () -> {
-			var result:String = cast (FlxG.keys.firstJustReleased(), FlxKey).toString();
+			var result:String = cast(FlxG.keys.firstJustReleased(), FlxKey).toString();
 			if (result == null || result.length < 1) result = "NONE";
 			return result;
 		});

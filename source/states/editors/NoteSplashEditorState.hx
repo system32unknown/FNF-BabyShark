@@ -314,7 +314,7 @@ class NoteSplashEditorState extends MusicBeatState {
 			if (config != null) config.allowRGB = allowRGBCheck.checked;
 		}
 		allowRGBCheck.onClick = check;
-		allowRGBCheck.checked = config != null && cast (config.allowRGB, Null<Bool>) != null ? config.allowRGB : false;
+		allowRGBCheck.checked = config != null && cast(config.allowRGB, Null<Bool>) != null ? config.allowRGB : false;
 
 		var rgbText = new FlxText(allowRGBCheck.x + 20);
 		rgbText.text = "Allow RGB?";
@@ -328,7 +328,7 @@ class NoteSplashEditorState extends MusicBeatState {
 			if (config != null) config.allowPixel = allowPixelCheck.checked;
 		}
 		allowPixelCheck.onClick = check;
-		allowPixelCheck.checked = config != null && cast (config.allowPixel, Null<Bool>) != null ? config.allowPixel : false;
+		allowPixelCheck.checked = config != null && cast(config.allowPixel, Null<Bool>) != null ? config.allowPixel : false;
 
 		var pixelText = new FlxText(allowPixelCheck.x + 20);
 		pixelText.text = "Allow Pixel?";

@@ -14,7 +14,7 @@ class SoundFunctions {
 					oldSnd.stop();
 					oldSnd.destroy();
 				}
-	
+
 				variables.set(tag, FlxG.sound.play(Paths.sound(sound), volume, loop, null, true, () -> {
 					if (!loop) variables.remove(tag);
 					if (game != null) game.callOnLuas('onSoundFinished', [originalTag]);

@@ -29,7 +29,7 @@ class PhillyTrain extends BGSprite {
 						PlayState.instance.gf.specialAnim = true;
 					}
 				}
-		
+
 				if (startedMoving) {
 					x -= 400;
 					if (x < -2000 && !finishing) {
@@ -67,6 +67,7 @@ class PhillyTrain extends BGSprite {
 			PlayState.instance.gf.playAnim('hairFall');
 			PlayState.instance.gf.specialAnim = true;
 		}
+
 		x = FlxG.width + 200;
 		moving = false;
 		cars = 8;

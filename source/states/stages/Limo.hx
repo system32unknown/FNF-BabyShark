@@ -150,7 +150,6 @@ class Limo extends BaseStage {
 
 	override function beatHit() {
 		if (!lowQuality) grpLimoDancers.forEach((dancer:BackgroundDancer) -> dancer.dance());
-
 		if (FlxG.random.bool(10) && fastCarCanDrive) fastCarDrive();
 	}
 

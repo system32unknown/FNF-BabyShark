@@ -27,7 +27,7 @@ class TerminalState extends MusicBeatState {
 		PlayState.isStoryMode = false;
 
 		displayText = new FlxText(0, 0, FlxG.width, previousText, 16);
-		displayText.setFormat(Paths.font("CascadiaCode.ttf"), 16);
+		displayText.setFormat(Paths.font("CascadiaCode.ttf"), displayText.size);
 		displayText.antialiasing = false;
 		typeSound = FlxG.sound.load(Paths.sound('terminal_space'), .6);
 		FlxG.sound.playMusic(Paths.music('TheAmbience'), .7);
@@ -55,9 +55,9 @@ class TerminalState extends MusicBeatState {
 							updateText('\nUnlocked.');
 						}
 					case 'login':
-						//TODO
+						// TODO
 						updateText('\nNot Implemented.');
-							
+
 					default: updateText("\nInvalid Parameter"); // todo: translate.
 				}
 			}
@@ -125,7 +125,7 @@ class TerminalState extends MusicBeatState {
 	override function update(elapsed:Float):Void {
 		super.update(elapsed);
 
-		var keyJustPressed:FlxKey = cast (FlxG.keys.firstJustPressed(), FlxKey);
+		var keyJustPressed:FlxKey = cast(FlxG.keys.firstJustPressed(), FlxKey);
 		if (keyJustPressed == FlxKey.ENTER) {
 			var calledFunc:Bool = false;
 			var args:Array<String> = curCmd.split(" ");
@@ -179,7 +179,7 @@ class TerminalState extends MusicBeatState {
 
 class TerminalCommand {
 	public var commandName:String = "undefined";
-	public var commandHelp:String = "this is example text help";
+	public var commandHelp:String = "sample text";
 	public var funcToCall:Dynamic;
 	public var showInHelp:Bool;
 	public var oneCommand:Bool;

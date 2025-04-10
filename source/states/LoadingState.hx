@@ -91,7 +91,7 @@ class LoadingState extends MusicBeatState {
 				} catch (e:hscript.Expr.Error) {
 					var pos:HScriptInfos = cast {fileName: scriptPath, showLine: false};
 					AlterHscript.error(Printer.errorToString(e, false), pos);
-					hscript = cast (AlterHscript.instances.get(scriptPath), HScript);
+					hscript = cast(AlterHscript.instances.get(scriptPath), HScript);
 				}
 				if (hscript != null) hscript.destroy();
 				hscript = null;

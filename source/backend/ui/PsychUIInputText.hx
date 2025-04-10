@@ -96,7 +96,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 
 		// Fix missing cedilla
 		switch (keyCode) {
-			case 231: //ç and Ç
+			case 231: // ç and Ç
 				charCode = e.shiftKey ? 0xC7 : 0xE7;
 		}
 
@@ -257,7 +257,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 				
 				if (onChange != null) onChange(lastText, text);
 				if (broadcastInputTextEvent) PsychUIEventHandler.event(CHANGE_EVENT, this);
-			
+
 			case SPACE: // space or last accent pressed
 				if (_nextAccent != NONE) _typeLetter(getAccentCharCode(_nextAccent));
 				else _typeLetter(charCode);
@@ -377,7 +377,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 						drewSelection = true;
 					} else selection.visible = false;
 				}
-	
+
 				if (caret != null && caret.exists) {
 					if (!drewSelection && _caretTime < .5 && caret.x >= textObj.x) {
 						caret.visible = true;
@@ -409,7 +409,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 			caret.setPosition(textObj.x + 1 - textObj.textField.scrollH, textObj.y + 2);
 			if (caretIndex > 0) caret.x += _boundaries[Std.int(Math.max(0, Math.min(_boundaries.length - 1, caretIndex - 1)))];
 		}
-		
+
 		if (selection != null && selection.exists) {
 			selection.setPosition(textObj.x + 1 - textObj.textField.scrollH, textObj.y + 2);
 			if (selectIndex > 0) selection.x += _boundaries[Std.int(Math.max(0, Math.min(_boundaries.length - 1, selectIndex - 1)))];
@@ -441,8 +441,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 
 	function deleteSelection() {
 		var lastText:String = text;
-		if (selectIndex > caretIndex)
-			text = text.substring(0, caretIndex) + text.substring(selectIndex);
+		if (selectIndex > caretIndex) text = text.substring(0, caretIndex) + text.substring(selectIndex);
 		else {
 			text = text.substring(0, selectIndex) + text.substring(caretIndex);
 			caretIndex = selectIndex;
@@ -474,7 +473,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 			if (caret != null && caret.exists) caret.setGraphicSize(1, textObj.height - 4);
 		}
 	}
-	
+
 	override public function updateHitbox() {
 		super.updateHitbox();
 		bg.updateHitbox();
@@ -545,7 +544,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 	public var broadcastInputTextEvent:Bool = true;
 	function _typeLetter(charCode:Int) {
 		if (charCode < 1) return;
-		
+
 		if (selectIndex > -1 && selectIndex != caretIndex)
 			deleteSelection();
 
@@ -553,8 +552,7 @@ class PsychUIInputText extends FlxSpriteGroup {
 		letter = filter(letter);
 		if (letter.length > 0 && (maxLength == 0 || (text.length + letter.length) <= maxLength)) {
 			var lastText:String = text;
-			if (!inInsertMode)
-				text = text.substring(0, caretIndex) + letter + text.substring(caretIndex);
+			if (!inInsertMode) text = text.substring(0, caretIndex) + letter + text.substring(caretIndex);
 			else text = text.substring(0, caretIndex) + letter + text.substring(caretIndex + 1);
 
 			caretIndex += letter.length;

@@ -4,9 +4,9 @@ import utils.system.FPSUtil;
 import flixel.util.FlxStringUtil;
 
 /**
-	The FPS class provides an easy-to-use monitor to display
-	the current framerate of an OpenFL project
-**/
+ *The FPS class provides an easy-to-use monitor to display
+ *the current framerate of an OpenFL project
+ */
 class FPSCounter extends openfl.text.TextField {
 	public var fontName:String = "_sans";
 
@@ -17,8 +17,8 @@ class FPSCounter extends openfl.text.TextField {
 	public var fpsManager:FPSUtil;
 
 	/**
-		The current memory usage (WARNING: this is NOT your total program memory usage, rather it shows the garbage collector memory)
-	**/
+	 * The current memory usage (WARNING: this is NOT your total program memory usage, rather it shows the garbage collector memory)
+	 */
 	public var memory(get, never):Float;
 	@:noCompletion function get_memory():Float {
 		var mem:Float = openfl.system.System.totalMemoryNumber;

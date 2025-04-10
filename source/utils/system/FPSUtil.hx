@@ -11,9 +11,19 @@ class FPSUtil {
 	public var curFPS(default, null):Int;
 
 	/**
+	 * The total accumulated frame rate, potentially used for averaging over time.
+	 */
+	public var totalFPS(default, null):Int;
+
+	/**
 	 * The raw frame rate over a short period.
 	 */
 	public var avgFPS(default, null):Float;
+
+	/**
+	 * Internal counter used for frame rate calculations or caching.
+	 */
+	var cacheCount:Int;
 
 	public function new() {
 		curFPS = 0;
@@ -37,8 +47,13 @@ class FPSUtil {
 		}
 		if (sliceCnt > 0) times.splice(0, sliceCnt);
 
-		avgFPS = times.length > 0 ? 1000 / (sum / times.length) : 0.0;
-		curFPS = Math.round(avgFPS);
+		var curCount:Int = times.length;
+		totalFPS = Math.round(curFPS + curCount / 8);
+		if (curCount != cacheCount) {
+			avgFPS = curCount > 0 ? 1000 / (sum / curCount) : 0.0;
+			curFPS = Math.round(avgFPS);
+		}
+		cacheCount = curCount;
 	}
 
 	/**
@@ -70,7 +85,7 @@ class FPSUtil {
 	inline public static function fpsLerp(a:Float, b:Float, ratio:Float):Float
 		return FlxMath.lerp(b, a, getFPSAdjust('codename', ratio));
 
-	/*
+	/**
 	 * Adjusts the value based on the reference FPS.
 	 */
 	public static inline function fpsAdjust(value:Float, ?referenceFps:Float = 60):Float {
@@ -103,5 +118,7 @@ class FPSUtil {
 		return FlxMath.lerp(a, b, 1 - Math.pow(smoothing, FlxG.elapsed));
 	}
 
-	public function lagged():Bool return curFPS < FlxG.drawFramerate * .5;
+	public function lagged():Bool {
+		return curFPS < FlxG.drawFramerate * .5;
+	}
 }

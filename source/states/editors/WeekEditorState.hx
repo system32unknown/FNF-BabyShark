@@ -54,13 +54,13 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		lock.animation.play('lock');
 		lock.antialiasing = Settings.data.antialiasing;
 		add(lock);
-		
+
 		missingFileText = new FlxText(0, 0, FlxG.width, "");
 		missingFileText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		missingFileText.borderSize = 2;
 		missingFileText.visible = false;
 		add(missingFileText);
-		
+
 		var charArray:Array<String> = weekFile.weekCharacters;
 		for (char in 0...3) {
 			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, charArray[char]);
@@ -133,7 +133,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	
 	function addWeekUI() {
 		var tab_group:FlxSpriteGroup = UI_box.getTab('Week').menu;
-		
+
 		songsInputText = new PsychUIInputText(10, 30, 200);
 
 		opponentInputText = new PsychUIInputText(10, songsInputText.y + 40, 70);
@@ -220,7 +220,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		displayNameInputText.text = weekFile.storyName;
 		weekNameInputText.text = weekFile.weekName;
 		weekFileInputText.text = weekFileName;
-		
+
 		opponentInputText.text = weekFile.weekCharacters[0];
 		boyfriendInputText.text = weekFile.weekCharacters[1];
 		girlfriendInputText.text = weekFile.weekCharacters[2];
@@ -235,7 +235,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 
 		lockedCheckbox.checked = !weekFile.startUnlocked;
 		lock.visible = lockedCheckbox.checked;
-		
+
 		hiddenUntilUnlockCheckbox.checked = weekFile.hiddenUntilUnlocked;
 		hiddenUntilUnlockCheckbox.alpha = .4 + .6 * (lockedCheckbox.checked ? 1 : 0);
 
@@ -299,7 +299,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		DiscordClient.changePresence("Week Editor", 'Editing: $weekFileName');
 		#end
 	}
-	
+
 	public function UIEvent(id:String, sender:Dynamic) {
 		if (id == PsychUICheckBox.CLICK_EVENT) unsavedProgress = true;
 		if (id == PsychUIInputText.CHANGE_EVENT && (sender is PsychUIInputText)) {
@@ -354,7 +354,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 			}
 		}
 	}
-	
+
 	override function update(elapsed:Float) {
 		if (loadedWeek != null) {
 			weekFile = loadedWeek;
@@ -391,7 +391,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file.browse([new openfl.net.FileFilter('JSON', 'json')]);
 	}
-	
+
 	public static var loadedWeek:WeekFile = null;
 	static function onLoadComplete(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
@@ -426,8 +426,8 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	}
 
 	/**
-		* Called when the save file dialog is cancelled.
-	*/
+	 * Called when the save file dialog is cancelled.
+	 */
 	static function onLoadCancel(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
@@ -437,8 +437,8 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	}
 
 	/**
-		* Called if there is an error while saving the gameplay recording.
-	**/
+	 * Called if there is an error while saving the gameplay recording.
+	 */
 	static function onLoadError(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
@@ -457,7 +457,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 			_file.save(data, weekFileName + ".json");
 		}
 	}
-	
+
 	static function onSaveComplete(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -468,8 +468,8 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	}
 
 	/**
-		* Called when the save file dialog is cancelled.
-	**/
+	 * Called when the save file dialog is cancelled.
+	 */
 	static function onSaveCancel(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -478,8 +478,8 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	}
 
 	/**
-		* Called if there is an error while saving the gameplay recording.
-	**/
+	 * Called if there is an error while saving the gameplay recording.
+	 */
 	static function onSaveError(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -563,8 +563,7 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 			weekFile.songs[curSelected][1] = iconInputText.text;
 			iconArray[curSelected].changeIcon(iconInputText.text);
 		} else if (id == PsychUINumericStepper.CHANGE_EVENT && (sender is PsychUINumericStepper)) {
-			if (sender == bgColorStepperR || sender == bgColorStepperG || sender == bgColorStepperB)
-				updateBG();
+			if (sender == bgColorStepperR || sender == bgColorStepperG || sender == bgColorStepperB) updateBG();
 		}
 	}
 
@@ -671,7 +670,7 @@ class WeekEditorFreeplayState extends MusicBeatState implements PsychUIEventHand
 			WeekEditorState.loadedWeek = null;
 			return;
 		}
-		
+
 		if (PsychUIInputText.focusOn != null) Controls.toggleVolumeKeys(false);
 		else {
 			Controls.toggleVolumeKeys();

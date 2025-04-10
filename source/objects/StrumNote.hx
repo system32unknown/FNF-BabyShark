@@ -62,7 +62,7 @@ class StrumNote extends FlxSprite {
 		var customSkin:String = skin + Note.getNoteSkinPostfix();
 		if (Paths.fileExists('images/$customSkin.png', IMAGE)) skin = customSkin;
 
-		texture = skin; //Load texture and anims
+		texture = skin; // Load texture and anims
 		scrollFactor.set();
 		playAnim('static');
 	}
@@ -77,7 +77,7 @@ class StrumNote extends FlxSprite {
 
 			antialiasing = false;
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]));
-	
+
 			animation.add('purple', [9]);
 			animation.add('blue', [10]);
 			animation.add('green', [11]);

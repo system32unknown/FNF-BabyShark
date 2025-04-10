@@ -29,7 +29,7 @@ class FlxAnimateFunctions {
 
 			obj.anim.addBySymbol(name, symbol, framerate, loop, matX, matY);
 			if (obj.anim.curSymbol == null) {
-				var obj2:ModchartAnimateSprite = cast (obj, ModchartAnimateSprite);
+				var obj2:ModchartAnimateSprite = cast(obj, ModchartAnimateSprite);
 				if (obj2 != null) obj2.playAnim(name, true); //is ModchartAnimateSprite
 				else obj.anim.play(name, true);
 			}
@@ -42,13 +42,13 @@ class FlxAnimateFunctions {
 
 			if (indices == null) indices = [0];
 			else if (Std.isOfType(indices, String)) {
-				var strIndices:Array<String> = cast (indices, String).trim().split(',');
+				var strIndices:Array<String> = cast(indices, String).trim().split(',');
 				indices = [for (i in 0...strIndices.length) Std.parseInt(strIndices[i])];
 			}
 
 			obj.anim.addBySymbolIndices(name, symbol, indices, framerate, loop, matX, matY);
 			if (obj.anim.curSymbol == null) {
-				var obj2:ModchartAnimateSprite = cast (obj, ModchartAnimateSprite);
+				var obj2:ModchartAnimateSprite = cast(obj, ModchartAnimateSprite);
 				if (obj2 != null) obj2.playAnim(name, true); //is ModchartAnimateSprite
 				else obj.anim.play(name, true);
 			}

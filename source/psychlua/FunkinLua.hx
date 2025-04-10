@@ -112,21 +112,21 @@ class FunkinLua {
 			set('mustHitSection', curSection != null ? (curSection.mustHitSection == true) : false);
 			set('altAnim', curSection != null ? (curSection.altAnim == true) : false);
 			set('gfSection', curSection != null ? (curSection.gfSection == true) : false);
-	
+
 			set('healthGainMult', game.healthGain);
 			set('healthLossMult', game.healthLoss);
 			set('playbackRate', #if FLX_PITCH game.playbackRate #else 1 #end);
 			set('instakillOnMiss', game.instakillOnMiss);
 			set('botPlay', game.cpuControlled);
 			set('practice', game.practiceMode);
-	
+
 			for (i in 0...EK.keys(PlayState.mania)) {
 				set('defaultPlayerStrumX' + i, 0);
 				set('defaultPlayerStrumY' + i, 0);
 				set('defaultOpponentStrumX' + i, 0);
 				set('defaultOpponentStrumY' + i, 0);
 			}
-	
+
 			// Default character data
 			set('defaultBoyfriendX', game.BF_X);
 			set('defaultBoyfriendY', game.BF_Y);
@@ -134,7 +134,7 @@ class FunkinLua {
 			set('defaultOpponentY', game.DAD_Y);
 			set('defaultGirlfriendX', game.GF_X);
 			set('defaultGirlfriendY', game.GF_Y);
-	
+
 			set('boyfriendName', game.boyfriend != null ? game.boyfriend.curCharacter : PlayState.SONG.player1);
 			set('dadName', game.dad != null ? game.dad.curCharacter : PlayState.SONG.player2);
 			set('gfName', game.gf != null ? game.gf.curCharacter : PlayState.SONG.gfVersion);
@@ -991,7 +991,7 @@ class FunkinLua {
 				path = Paths.getPath('data/${Paths.CHART_PATH}/$songPath/$dialogueFile.json');
 
 			luaTrace('startDialogue: Trying to load dialogue: $path');
-			
+
 			if (#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end) {
 				var shit:DialogueFile = DialogueBoxPsych.parseDialogue(path);
 				if (shit.dialogue.length > 0) {
@@ -1285,7 +1285,7 @@ class FunkinLua {
 		for (mod in Mods.getGlobalMods())
 			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
 		#end
-		
+
 		for (folder in foldersToCheck) {
 			if (FileSystem.exists(folder)) {
 				var frag:String = '$folder$name.frag';

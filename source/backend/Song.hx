@@ -27,7 +27,7 @@ typedef SwagSong = {
 	@:optional var gameOverEnd:String;
 
 	@:optional var disableNoteRGB:Bool;
-	
+
 	@:optional var arrowSkin:String;
 	@:optional var splashSkin:String;
 }
@@ -126,7 +126,7 @@ class Song {
 	public static function getChart(jsonInput:String, ?folder:String):SwagSong {
 		if (folder == null) folder = jsonInput;
 		var rawData:String = null;
-		
+
 		var formattedFolder:String = Paths.formatToSongPath(folder);
 		var formattedSong:String = Paths.formatToSongPath(jsonInput);
 		_lastPath = Paths.json('${Paths.CHART_PATH}/$formattedFolder/$formattedSong');
@@ -142,6 +142,7 @@ class Song {
 
 	public static function parseJSON(rawData:String, ?nameForError:String = null, ?convertTo:String = 'psych_v1'):SwagSong {
 		var isOldVer:Vector<Bool> = new Vector<Bool>(2);
+
 		var songJson:SwagSong = cast haxe.Json.parse(rawData);
 		if (Reflect.hasField(songJson, 'song')) {
 			isOldVer[0] = true;

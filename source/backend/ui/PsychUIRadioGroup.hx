@@ -26,7 +26,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 	var _hitbox:FlxObject;
 	public function new(x:Float, y:Float, labels:Array<String>, space:Float = 25, maxItems:Int = 0, ?isHorizontal:Bool = false, ?textWidth:Int = 100) {
 		super(x, y);
-		
+
 		_hitbox = new FlxObject();
 
 		arrowUp = new FlxSprite().loadGraphic(Paths.image('psych-ui/arrow_up', 'embed'), true, 24, 18);
@@ -80,8 +80,7 @@ class PsychUIRadioGroup extends FlxSpriteGroup {
 				curScroll++;
 				arrowDown.animation.play('press');
 			}
-		}
-		else if (FlxG.mouse.released) {
+		} else if (FlxG.mouse.released) {
 			if (hasArrowUp && arrowUp.animation.curAnim != null && arrowUp.animation.curAnim.name != 'normal')
 				arrowUp.animation.play('normal');
 			if (hasArrowDown && arrowDown.animation.curAnim != null && arrowDown.animation.curAnim.name != 'normal')

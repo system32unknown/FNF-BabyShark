@@ -31,7 +31,7 @@ typedef AnimArray = {
 class Character extends FlxSprite {
 	/**
 	 * In case a character is missing, it will use this on its place
-	**/
+	 */
 	public static inline final DEFAULT_CHARACTER:String = 'bf';
 
 	public var animOffsets:Map<String, Array<Float>>;
@@ -224,6 +224,7 @@ class Character extends FlxSprite {
 				}
 			}
 		}
+
 		if (animationsArray != null && animationsArray.length > 0) {
 			for (anim in animationsArray) {
 				var animAnim:String = '' + anim.anim;
@@ -353,8 +354,8 @@ class Character extends FlxSprite {
 	}
 
 	/**
-		*FOR GF DANCING SHIT
-	**/
+	 * FOR GF DANCING SHIT
+	 */
 	public var danced:Bool = false;
 
 	public function dance(force:Bool = false, reversed:Bool = false, frame:Int = 0) {
@@ -450,6 +451,7 @@ class Character extends FlxSprite {
 			}
 			return;
 		}
+
 		super.draw();
 		if (missingCharacter && visible) {
 			alpha = lastAlpha;

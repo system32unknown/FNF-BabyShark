@@ -38,7 +38,6 @@ class MenuCharacter extends FlxSprite {
 			case '': visible = false;
 			default:
 				var path:String = Paths.getPath('images/menucharacters/$character.json');
-				
 				if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
 					path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 					color = FlxColor.BLACK;
@@ -57,7 +56,6 @@ class MenuCharacter extends FlxSprite {
 					animation.addByPrefix('confirm', confirmAnim, 24, false);
 					if (animation.getByName('confirm') != null) hasConfirmAnimation = true; // check for invalid animation
 				}
-
 				flipX = (charFile.flipX == true);
 
 				if (charFile.scale != 1) {

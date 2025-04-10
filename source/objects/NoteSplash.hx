@@ -234,14 +234,12 @@ class NoteSplash extends FlxSprite {
 			}
 		}
 		rgbShader.copyValues(tempShader);
-
 		if (!config.allowPixel) rgbShader.pixelAmount = 1;
 		else if (PlayState.isPixelStage) rgbShader.pixelAmount = 6;
 
 		offset.set(10, 10);
 		var conf:NoteSplashAnim = config.animations.get(anim);
 		var offsets:Array<Float> = [0, 0];
-
 		if (conf != null) offsets = conf.offsets;
 		if (offsets != null) offset.add(offsets[0], offsets[1]);
 
@@ -249,7 +247,7 @@ class NoteSplash extends FlxSprite {
 			PlayState.instance != null ? killLimit() : kill();
 			spawned = false;
 		});
-		
+
 		alpha = Settings.data.splashAlpha;
 		if (note != null) alpha = note.noteSplashData.a;
 

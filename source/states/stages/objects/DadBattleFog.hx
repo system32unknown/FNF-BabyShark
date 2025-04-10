@@ -3,7 +3,7 @@ package states.stages.objects;
 class DadBattleFog extends FlxSpriteGroup {
 	public function new() {
 		super();
-		
+
 		alpha = 0;
 		blend = ADD;
 

@@ -50,7 +50,7 @@ class PsychUIButton extends FlxSpriteGroup {
 	var _firstFrame:Bool = true;
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		
+
 		if (_firstFrame) {
 			bg.color = normalStyle.bgColor;
 			bg.alpha = normalStyle.bgAlpha;

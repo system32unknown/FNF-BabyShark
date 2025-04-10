@@ -24,7 +24,7 @@ class MusicBeatState extends flixel.FlxState {
 
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 	public static function getVariables():Map<String, Dynamic> return getState().variables;
-	
+
 	var maxBPM:Float = 0;
 	override function create() {
 		currentState = this;
@@ -152,7 +152,7 @@ class MusicBeatState extends flixel.FlxState {
 				++varStep; ++updateCount;
 				countJudge = (curStepLimit != 0 ? varStep < nextStep && updateCount < curStepLimit : varStep < nextStep);
 			}
-		} else {				
+		} else {
 			stagesFunc((stage:BaseStage) -> {
 				stage.curStep = varStep;
 				stage.curDecStep = curDecStep;

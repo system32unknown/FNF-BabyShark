@@ -275,12 +275,12 @@ class FreeplayState extends MusicBeatState {
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
 				instPlaying = -1;
-	
+
 				player.playingMusic = false;
 				player.switchPlayMusic();
 
 				if (Settings.data.disableGC) MemoryUtil.enable();
-	
+
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 				FlxTween.tween(FlxG.sound.music, {volume: 1}, 1);
 			} else {
@@ -316,11 +316,11 @@ class FreeplayState extends MusicBeatState {
 						MemoryUtil.enable();
 						MemoryUtil.collect(true);
 					}
-	
+
 					var errorStr:String = e.message;
 					if (errorStr.contains('There is no TEXT asset with an ID of')) errorStr = 'Missing file: ${errorStr.substring(errorStr.indexOf(songLowercase), errorStr.length - 1)}'; //Missing chart
 					else errorStr += '\n\n' + e.stack;
-	
+
 					missingText.text = 'ERROR WHILE LOADING SONG:\n$errorStr';
 					missingText.gameCenter(Y);
 					missingText.visible = missingTextBG.visible = true;
@@ -358,7 +358,7 @@ class FreeplayState extends MusicBeatState {
 			persistentUpdate = false;
 			var songFolder:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var songLowercase:String = Song.format(songFolder, curDifficulty);
-			
+
 			if (songLowercase == "" || songLowercase.length < 1) return;
 			if (songLowercase == "enter-terminal-hard") {
 				FlxG.switchState(() -> new TerminalState());
@@ -453,11 +453,11 @@ class FreeplayState extends MusicBeatState {
 			item.alpha = selectAlpha;
 			grpIcons.members[num].alpha = selectAlpha;
 		}
-		
+
 		Mods.currentModDirectory = songs[curSelected].folder;
 		PlayState.storyWeek = songs[curSelected].week;
 		Difficulty.loadFromWeek();
-		
+
 		var savedDiff:String = songs[curSelected].lastDifficulty;
 		var lastDiff:Int = Difficulty.list.indexOf(lastDifficultyName);
 		if (savedDiff != null && !Difficulty.list.contains(savedDiff) && Difficulty.list.contains(savedDiff))
@@ -516,7 +516,7 @@ class FreeplayState extends MusicBeatState {
 		FlxG.autoPause = Settings.data.autoPause;
 		if (!FlxG.sound.music.playing && !stopMusicPlay)
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
-	}	
+	}
 }
 
 class SongMetadata {

@@ -186,42 +186,42 @@ final class DiscordPresence {
 final class DUser {
 	/**
 	 * The username + discriminator if they have it
-	**/
+	 */
 	public var handle:String;
 
 	/**
 	 * The user id, aka 860561967383445535
-	**/
+	 */
 	public var userId:String;
 
 	/**
 	 * The user's username
-	**/
+	 */
 	public var username:String;
 
 	/**
 	 * The #number from before discord changed to usernames only, if the user has changed to a username them its just a 0
-	**/
+	 */
 	public var discriminator:Int;
 
 	/**
 	 * The user's avatar filename
-	**/
+	 */
 	public var avatar:String;
 
 	/**
 	 * The user's display name
-	**/
+	 */
 	public var globalName:String;
 
 	/**
 	 * If the user is a bot or not
-	**/
+	 */
 	public var bot:Bool;
 
 	/**
 	 * If the user has nitro
-	**/
+	 */
 	public var premiumType:NitroType;
 
 	function new() {}
@@ -247,7 +247,7 @@ final class DUser {
 
 	/**
 	 * Calling this function gets the BitmapData of the user
-	**/
+	 */
 	public function getAvatar(size:Int = 256):BitmapData
 		return BitmapData.fromBytes(utils.HttpUtil.requestBytes('https://cdn.discordapp.com/avatars/$userId/$avatar.png?size=$size'));
 }

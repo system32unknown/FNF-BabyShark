@@ -65,7 +65,7 @@ class CreditsState extends MusicBeatState {
 		['TheBuilderXD',		'TheBuilderXD',		'Page Manager, Tristan Sprite Creator, and more',				'https://x.com/TheBuilderXD',		'CC6600'],
 		['Erizur',				'Erizur',			'Programmer, Week Icon Artist',									'https://x.com/am_erizur',			'FFFFFF'],
 		['Pointy',				'pointy',			'Artist & Charter',												'https://x.com/PointyyESM',			'0700FE'], 
-		['Zmac',				'Zmac',				'3D Backgrounds, Intro text help',							 'https://www.youtube.com/@ZmacRavioli','FFFFFF'], 
+		['Zmac',				'Zmac',				'3D Backgrounds, Intro text help',								'https://www.youtube.com/@ZmacRavioli','FFFFFF'], 
 		['Billy Bobbo',			'billy',			'Moral Support & Idea Suggesting',								'https://x.com/BillyBobboLOL',		'FF0000'],
 		['Steph45',				'Steph45',			'Minor programming, Moral support',								'https://x.com/Stats451',			'FFF729'],
 		['T5mpler',				'T5mpler',			'Programmer & Supporter',										'https://x.com/RealT5mpler',		'363B59'],
@@ -130,7 +130,6 @@ class CreditsState extends MusicBeatState {
 			optionText.changeX = false;
 			optionText.targetY = i;
 			optionText.alignment = CENTER;
-
 			optionText.distancePerItem.y /= 1.2;
 
 			if (!isSelectable) optionText.spawnPos.y -= 47;
@@ -380,7 +379,7 @@ class CreditSectionState extends MusicBeatState {
 
 			if (Controls.justPressed('back')) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
-				
+
 				var state:CreditsState = new CreditsState();
 				state.curSelected = CreditsState.prevSelected;
 				FlxG.switchState(() -> state);
@@ -442,8 +441,7 @@ class CreditSectionState extends MusicBeatState {
 			var field:Array<Array<String>> = null;
 			if (Std.isOfType(dyn, Array)) {
 				field = cast dyn;
-				if (field == null || field.length <= 0 || !Std.isOfType(field[0], Array) || !Std.isOfType(field[0][0], String))
-					field = null;
+				if (field == null || field.length <= 0 || !Std.isOfType(field[0], Array) || !Std.isOfType(field[0][0], String)) field = null;
 			}
 
 			if (field == null || field.length <= 0) {

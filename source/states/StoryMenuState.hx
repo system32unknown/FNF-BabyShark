@@ -322,7 +322,7 @@ class StoryMenuState extends MusicBeatState {
 
 		Difficulty.loadFromWeek();
 		difficultySelectors.visible = unlocked;
-		
+
 		if (Difficulty.list.contains(Difficulty.getDefault()))
 			curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(Difficulty.getDefault())));
 		else curDifficulty = 0;

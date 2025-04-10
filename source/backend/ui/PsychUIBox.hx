@@ -12,7 +12,7 @@ class PsychUIBox extends FlxSpriteGroup {
 	public static final DRAG_EVENT = "uibox_drag";
 	public static final DROP_EVENT = "uibox_drop";
 	public var tabs(default, null):Array<PsychUITab> = [];
-	
+
 	public var selectedTab(default, set):PsychUITab = null;
 	public var selectedIndex(default, set):Int = -1;
 	public var selectedName(default, set):String = null;
@@ -102,7 +102,7 @@ class PsychUIBox extends FlxSpriteGroup {
 					tab.color = hoverStyle.bgColor;
 					tab.alpha = hoverStyle.bgAlpha;
 					tab.text.color = hoverStyle.textColor;
-	
+
 					if (FlxG.mouse.justPressed) _pressedBox = true;
 
 					if (!_draggingBox && canMove && _pressedBox && FlxG.mouse.pressed && (Math.abs(FlxG.mouse.deltaViewX) > 1 || Math.abs(FlxG.mouse.deltaViewY) > 1)) {
@@ -111,13 +111,13 @@ class PsychUIBox extends FlxSpriteGroup {
 						_draggingBox = true;
 						if (broadcastBoxEvents) PsychUIEventHandler.event(DRAG_EVENT, this);
 					}
-					
+
 					if (FlxG.mouse.justReleased && canMinimize && _lastClick < .15 && selectedTab == tab && _lastTab == selectedTab) {
 						_ignoreTabUpdate = true;
 						isMinimized = !isMinimized;
 						_lastClick = 0;
 					}
-					
+
 					if (FlxG.mouse.justPressed) {
 						if (selectedTab != tab) {
 							isMinimized = false;
@@ -129,7 +129,7 @@ class PsychUIBox extends FlxSpriteGroup {
 						if (broadcastBoxEvents) PsychUIEventHandler.event(CLICK_EVENT, this);
 					} else if (selectedTab != tab) continue;
 				}
-				
+
 				var style:UIStyleData = (selectedTab == tab) ? selectedStyle : unselectedStyle;
 				tab.color = style.bgColor;
 				tab.alpha = style.bgAlpha;
@@ -139,7 +139,7 @@ class PsychUIBox extends FlxSpriteGroup {
 
 		if (_ignoreTabUpdate && broadcastBoxEvents) PsychUIEventHandler.event(MINIMIZE_EVENT, this);
 		else if (selectedTab != null && !isMinimized) selectedTab.updateMenu(this, elapsed);
-	
+
 		if (minimizeOnFocusLost && FlxG.mouse.justPressed && !isMinimized && !FlxG.mouse.overlaps(bg, camera)) {
 			isMinimized = true;
 			if (broadcastBoxEvents) PsychUIEventHandler.event(MINIMIZE_EVENT, this);
@@ -155,7 +155,7 @@ class PsychUIBox extends FlxSpriteGroup {
 		for (tab in tabs) tab.camera = v;
 		return super.set_camera(v);
 	}
-			
+
 	override function draw() {
 		super.draw();
 		if (selectedTab != null && !isMinimized) selectedTab.drawMenu(this);

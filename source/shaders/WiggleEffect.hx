@@ -80,29 +80,19 @@ class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 		 */
 		uniform float uWaveAmplitude;
 
-		vec2 sineWave(vec2 pt)
-		{
+		vec2 sineWave(vec2 pt) {
 			float x = 0.0;
 			float y = 0.0;
 			
-			if (effectType == EFFECT_TYPE_DREAMY) 
-			{
+			if (effectType == EFFECT_TYPE_DREAMY)  {
 				pt.x += sin(pt.y * uFrequency + uTime * uSpeed) * uWaveAmplitude;
-			}
-			else if (effectType == EFFECT_TYPE_WAVY) 
-			{
+			} else if (effectType == EFFECT_TYPE_WAVY)  {
 				pt.y += sin(pt.x * uFrequency + uTime * uSpeed) * uWaveAmplitude;
-			}
-			else if (effectType == EFFECT_TYPE_HEAT_WAVE_HORIZONTAL)
-			{
+			} else if (effectType == EFFECT_TYPE_HEAT_WAVE_HORIZONTAL) {
 				x = sin(pt.x * uFrequency + uTime * uSpeed) * uWaveAmplitude;
-			}
-			else if (effectType == EFFECT_TYPE_HEAT_WAVE_VERTICAL)
-			{
+			} else if (effectType == EFFECT_TYPE_HEAT_WAVE_VERTICAL) {
 				y = sin(pt.y * uFrequency + uTime * uSpeed) * uWaveAmplitude;
-			}
-			else if (effectType == EFFECT_TYPE_FLAG)
-			{
+			} else if (effectType == EFFECT_TYPE_FLAG) {
 				y = sin(pt.y * uFrequency + 10.0 * pt.x + uTime * uSpeed) * uWaveAmplitude;
 				x = sin(pt.x * uFrequency + 5.0 * pt.y + uTime * uSpeed) * uWaveAmplitude;
 			}

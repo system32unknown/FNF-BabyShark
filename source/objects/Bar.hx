@@ -67,7 +67,7 @@ class Bar extends FlxSpriteGroup {
 
 	override public function destroy() {
 		bounds = null;
-		barOffset = flixel.util.FlxDestroyUtil.put(barOffset);
+		barOffset.put();
 		super.destroy();
 	}
 

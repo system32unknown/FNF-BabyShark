@@ -17,6 +17,7 @@ class EK {
 	public static var swidths:Array<Float> = [112, 112, 112, 112, 98, 84, 77, 70, 63];
 	public static var posRest:Array<Int> = [-168, -112, -56, 0, 15, 35, 45, 55, 60];
 	public static var midArray:Array<Int> = [0, 0, 1, 1, 2, 2, 3, 3, 4];
+
 	public static var gfxIndex:Array<Array<Int>> = [
 		[4],
 		[0, 3],

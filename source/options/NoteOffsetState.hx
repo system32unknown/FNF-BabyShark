@@ -373,8 +373,8 @@ class NoteOffsetState extends MusicBeatState {
 	}
 
 	override function destroy() {
-		holdingObjectOffset = FlxDestroyUtil.put(holdingObjectOffset);
-		mousePointer = FlxDestroyUtil.put(mousePointer);
+		holdingObjectOffset.put();
+		mousePointer.put();
 		super.destroy();
 	}
 }

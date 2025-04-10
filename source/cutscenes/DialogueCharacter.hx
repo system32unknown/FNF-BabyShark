@@ -29,6 +29,7 @@ class DialogueCharacter extends FlxSprite {
 	public var startingPos:Float = 0; // For center characters, it works as the starting Y, for everything else it works as starting X
 	public var isGhost:Bool = false; // For the editor
 	public var curCharacter:String = 'bf';
+
 	public function new(x:Float = 0, y:Float = 0, character:String = null) {
 		super(x, y);
 
@@ -55,7 +56,7 @@ class DialogueCharacter extends FlxSprite {
 		#else
 		rawJson = openfl.utils.Assets.getText(Paths.getSharedPath(characterPath));
 		#end
-		
+
 		jsonFile = cast haxe.Json.parse(rawJson);
 	}
 

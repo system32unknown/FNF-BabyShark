@@ -111,7 +111,7 @@ class RGBShaderReference {
 		setRGB(palette.r, palette.g, palette.b);
 	}
 
-	public var allowNew = true;
+	public var allowNew:Bool = true;
 	function cloneOriginal() {
 		if (!allowNew) return;
 		allowNew = false;

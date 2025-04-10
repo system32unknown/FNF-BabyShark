@@ -69,10 +69,10 @@ class ModSettingsSubState extends BaseOptionsMenu {
 					if (option.min != null) newOption.minValue = option.min;
 					if (option.max != null) newOption.maxValue = option.max;
 					if (option.step != null) newOption.changeValue = option.step;
-	
+
 					if (option.scroll != null) newOption.scrollSpeed = option.scroll;
 					if (option.decimals != null) newOption.decimals = option.decimals;
-	
+
 					var myValue:Dynamic = null;
 					if (save.get(option.save) != null) {
 						myValue = save.get(option.save);
@@ -82,14 +82,14 @@ class ModSettingsSubState extends BaseOptionsMenu {
 						myValue = newOption.getValue();
 						if (myValue == null) myValue = newOption.defaultValue;
 					}
-	
+
 					switch (newOption.type) {
 						case STRING:
 							var num:Int = newOption.options.indexOf(myValue);
 							if (num > -1) newOption.curOption = num;
 						default:
 					}
-	
+
 					save.set(option.save, myValue);
 				}
 				addOption(newOption);

@@ -104,7 +104,6 @@ class MainMenuState extends MusicBeatState {
 			openSubState(new OutdatedSubState());
 		}
 		#end
-
 		FlxG.camera.follow(camFollow, null, .15);
 	}
 
@@ -140,14 +139,14 @@ class MainMenuState extends MusicBeatState {
 			allowMouse = false;
 			FlxG.mouse.visible = true;
 			timeNotMoving = 0;
-	
+
 			var selectedItem:FlxSprite;
 			switch (curColumn) {
 				case CENTER: selectedItem = menuItems.members[curSelected];
 				case LEFT: selectedItem = leftItem;
 				case RIGHT: selectedItem = rightItem;
 			}
-	
+
 			if (leftItem != null && FlxG.mouse.overlaps(leftItem)) {
 				allowMouse = true;
 				if (selectedItem != leftItem) {
@@ -174,7 +173,7 @@ class MainMenuState extends MusicBeatState {
 						}
 					}
 				}
-	
+
 				if (distItem != -1 && selectedItem != menuItems.members[distItem]) {
 					curColumn = CENTER;
 					curSelected = distItem;
@@ -197,7 +196,6 @@ class MainMenuState extends MusicBeatState {
 					curColumn = RIGHT;
 					changeItem();
 				}
-
 			case LEFT:
 				if (rightJustpressed) {
 					curColumn = CENTER;
@@ -230,7 +228,6 @@ class MainMenuState extends MusicBeatState {
 				case CENTER:
 					option = optionShit[curSelected];
 					item = menuItems.members[curSelected];
-
 				case LEFT:
 					option = leftOption;
 					item = leftItem;

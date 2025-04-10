@@ -188,7 +188,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 	function reloadText(skipDialogue:Bool) {
 		var textToType:String = lineInputText.text;
 		if (textToType == null || textToType.length < 1) textToType = ' ';
-		
+
 		daText.text = textToType;
 
 		if (skipDialogue) daText.finishText();
@@ -266,9 +266,7 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 				if (character.animationIsLoop() && character.animation.curAnim.finished) {
 					character.playAnim(character.animation.curAnim.name, true);
 				}
-			} else if (character.animation.curAnim.finished) {
-				character.animation.curAnim.restart();
-			}
+			} else if (character.animation.curAnim.finished) character.animation.curAnim.restart();
 		}
 
 		if (PsychUIInputText.focusOn == null) {
@@ -402,8 +400,8 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 	}
 
 	/**
-		* Called when the save file dialog is cancelled.
-	*/
+	 * Called when the save file dialog is cancelled.
+	 */
 	function onLoadCancel(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
@@ -413,8 +411,8 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 	}
 
 	/**
-		* Called if there is an error while saving the gameplay recording.
-	*/
+	 * Called if there is an error while saving the gameplay recording.
+	 */
 	function onLoadError(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
@@ -443,8 +441,8 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 	}
 
 	/**
-		* Called when the save file dialog is cancelled.
-	*/
+	 * Called when the save file dialog is cancelled.
+	 */
 	function onSaveCancel(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
@@ -453,8 +451,8 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 	}
 
 	/**
-		* Called if there is an error while saving the gameplay recording.
-	*/
+	 * Called if there is an error while saving the gameplay recording.
+	 */
 	function onSaveError(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);

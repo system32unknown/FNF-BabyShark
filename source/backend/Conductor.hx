@@ -111,6 +111,6 @@ class Conductor {
 	public static function getBeatRounded(time:Float):Int {
 		return Math.floor(getStepRounded(time) / 4);
 	}
-	
+
 	inline static function getSectionBeats(section:SwagSection):Int return section?.sectionBeats ?? 4;
 }

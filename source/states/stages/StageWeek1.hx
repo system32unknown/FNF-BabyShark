@@ -6,6 +6,7 @@ class StageWeek1 extends BaseStage {
 	var dadbattleBlack:BGSprite;
 	var dadbattleLight:BGSprite;
 	var dadbattleFog:DadBattleFog;
+
 	override function create() {
 		add(new BGSprite('stageback', -600, -200, 0.9, 0.9));
 
@@ -29,6 +30,7 @@ class StageWeek1 extends BaseStage {
 		stageCurtains.updateHitbox();
 		add(stageCurtains);
 	}
+
 	override function eventPushed(event:objects.Note.EventNote) {
 		switch (event.event) {
 			case "Dadbattle Spotlight":

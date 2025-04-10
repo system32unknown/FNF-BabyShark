@@ -71,7 +71,7 @@ class TitleState extends MusicBeatState {
 		gf = new FlxSprite(gfPosition.x, gfPosition.y);
 		gf.antialiasing = Settings.data.antialiasing;
 		gf.frames = Paths.getSparrowAtlas(characterImage);
-		if (!useIdle) 	{
+		if (!useIdle) {
 			gf.animation.addByIndices('left', animationName, danceLeftFrames, '', 24, false);
 			gf.animation.addByIndices('right', animationName, danceRightFrames, '', 24, false);
 			gf.animation.play('right');
@@ -217,7 +217,7 @@ class TitleState extends MusicBeatState {
 	var sickBeats:Int = 0; // Basically curBeat but won't be skipped if you hold the tab or resize the screen
 	override function beatHit() {
 		super.beatHit();
-		
+
 		if (!useIdle) {
 			gf.animation.play(curBeat % 2 == 0 ? 'left' : 'right', true);
 		} else if (curBeat % 2 == 0) gf.animation.play('idle', true);

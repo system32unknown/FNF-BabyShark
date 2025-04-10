@@ -1723,7 +1723,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 	var animsTxtGroup:FlxTypedGroup<FlxText>;
 
 	var UI_animationbox:PsychUIBox;
-	var camHUD:FlxCamera = cast (FlxG.state, StageEditorState).camHUD;
+	var camHUD:FlxCamera = cast(FlxG.state, StageEditorState).camHUD;
 	public function new() {
 		super();
 
@@ -1830,7 +1830,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 			for (anim in target.animations)
 				if (animationInputText.text == anim.anim) {
 					lastOffsets = anim.offsets;
-					cast (target.sprite, ModchartSprite).animOffsets.remove(animationInputText.text);
+					cast(target.sprite, ModchartSprite).animOffsets.remove(animationInputText.text);
 					target.sprite.animation.remove(animationInputText.text);
 					target.animations.remove(anim);
 				}
@@ -1860,7 +1860,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 		var removeButton:PsychUIButton = new PsychUIButton(160, animationIndicesInputText.y + 35, 'Remove', () -> {
 			for (anim in target.animations) {
 				if (animationInputText.text == anim.anim) {
-					var targetSprite:ModchartSprite = cast (target.sprite, ModchartSprite);
+					var targetSprite:ModchartSprite = cast(target.sprite, ModchartSprite);
 					var resetAnim:Bool = false;
 					if (targetSprite.animation.curAnim != null && anim.anim == targetSprite.animation.curAnim.name) resetAnim = true;
 
@@ -1906,7 +1906,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 
 		for (text in animsTxtGroup) text.kill();
 
-		var spr:ModchartSprite = cast (target.sprite, ModchartSprite);
+		var spr:ModchartSprite = cast(target.sprite, ModchartSprite);
 		if (target.animations.length > 0) {
 			if (target.firstAnimation == null || !target.sprite.animation.exists(target.firstAnimation))
 				target.firstAnimation = target.animations[0].anim;
@@ -1951,7 +1951,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 	}
 
 	function playAnim(name:String, force:Bool = false) {
-		var spr:ModchartSprite = cast (target.sprite, ModchartSprite);
+		var spr:ModchartSprite = cast(target.sprite, ModchartSprite);
 		spr.playAnim(name, force);
 		if (!spr.animOffsets.exists(name)) spr.updateHitbox();
 	}
@@ -1990,7 +1990,7 @@ class StageEditorAnimationSubstate extends FlxSubState {
 
 		// OFFSET
 		if (target.sprite.animation.curAnim != null) {
-			var spr:ModchartSprite = cast (target.sprite, ModchartSprite);
+			var spr:ModchartSprite = cast(target.sprite, ModchartSprite);
 			var anim:String = spr.animation.curAnim.name;
 			var changedOffset:Bool = false;
 			var moveKeysP:Array<Bool> = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.DOWN];

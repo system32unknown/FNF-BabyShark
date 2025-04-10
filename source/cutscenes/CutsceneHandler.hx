@@ -18,10 +18,11 @@ class CutsceneHandler extends flixel.FlxBasic {
 
 	final _timeToSkip:Float = 1;
 	var _canSkip:Bool = false;
+
 	public var holdingTime:Float = 0;
 	public var skipSprite:FlxPieDial;
 	public var finishCallback:Void->Void = null;
-	
+
 	public function new(canSkip:Bool = true) {
 		super();
 
@@ -64,7 +65,7 @@ class CutsceneHandler extends flixel.FlxBasic {
 		if (_canSkip && cutsceneTime > 0.1) {
 			if (Controls.pressed('accept')) holdingTime = Math.max(0, Math.min(_timeToSkip, holdingTime + elapsed));
 			else if (holdingTime > 0) holdingTime = Math.max(0, FlxMath.lerp(holdingTime, -0.1, FlxMath.bound(elapsed * 3, 0, 1)));
-	
+
 			updateSkipAlpha();
 		}
 
@@ -73,13 +74,13 @@ class CutsceneHandler extends flixel.FlxBasic {
 				trace('skipped cutscene');
 				if (skipCallback != null) skipCallback();
 			} else finishCallback();
-	
+
 			for (spr in objects) {
 				spr.kill();
 				PlayState.instance.remove(spr);
 				spr.destroy();
 			}
-	
+
 			skipSprite = flixel.util.FlxDestroyUtil.destroy(skipSprite);
 			destroy();
 			PlayState.instance.remove(this);

@@ -85,8 +85,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 	}
 
 	public function snapToPosition() {
-		if (!isMenuItem)
-			return;
+		if (!isMenuItem) return;
 
 		if (changeX) x = (targetY * distancePerItem.x) + spawnPos.x;
 		if (changeY) y = (targetY * 1.3 * distancePerItem.y) + spawnPos.y;

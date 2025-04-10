@@ -354,18 +354,12 @@ class VSlice {
 
 		var stage:String = songData.stage;
 		switch (stage) { // Psych and VSlice use different names for some stages
-			case 'stage':
-				stage = 'mainStage';
-			case 'spooky':
-				stage = 'spookyMansion';
-			case 'philly':
-				stage = 'phillyTrain';
-			case 'limo':
-				stage = 'limoRide';
-			case 'mall':
-				stage = 'mallXmas';
-			case 'tank':
-				stage = 'tankmanBattlefield';
+			case 'stage': stage = 'mainStage';
+			case 'spooky': stage = 'spookyMansion';
+			case 'philly': stage = 'phillyTrain';
+			case 'limo': stage = 'limoRide';
+			case 'mall': stage = 'mallXmas';
+			case 'tank': stage = 'tankmanBattlefield';
 		}
 		var metadata:VSliceMetadata = {
 			songName: songData.song,

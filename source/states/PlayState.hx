@@ -33,17 +33,18 @@ class PlayState extends MusicBeatState {
 	public static var STRUM_X_MIDDLESCROLL = -271.5;
 
 	public static var ratingStuff:Array<Array<haxe.extern.EitherType<String, Float>>> = [
-		['Skill issue', .2], //From 0% to 19%
-		['Ok', .4], //From 20% to 39%
-		['Bad', .5], //From 40% to 49%
-		['Bruh', .6], //From 50% to 59%
-		['Meh', .69], //From 60% to 68%
-		['Nice', .7], //69%
-		['Good', .8], //From 70% to 79%
-		['Great', .9], //From 80% to 89%
-		['Sick!', 1.], //From 90% to 99%
+		['Skill issue', .2], // From 0% to 19%
+		['Ok', .4], // From 20% to 39%
+		['Bad', .5], // From 40% to 49%
+		['Bruh', .6], // From 50% to 59%
+		['Meh', .69], // From 60% to 68%
+		['Nice', .7], // 69%
+		['Good', .8], // From 70% to 79%
+		['Great', .9], // From 80% to 89%
+		['Sick!', 1.], // From 90% to 99%
 		['Superb!!', 1.]
 	];
+
 	//event variables
 	var isCameraOnForcedPos:Bool = false;
 	public var boyfriendMap:Map<String, Character> = new Map<String, Character>();
@@ -152,7 +153,7 @@ class PlayState extends MusicBeatState {
 	public static var changedDifficulty:Bool = false;
 	public static var chartingMode:Bool = false;
 
-	//Gameplay settings
+	// Gameplay settings
 	public var healthGain:Float = 1;
 	public var healthLoss:Float = 1;
 
@@ -188,8 +189,7 @@ class PlayState extends MusicBeatState {
 	public var defaultCamZoom:Float = 1.05;
 	public var defaultHudCamZoom:Float = 1.;
 
-	// how big to stretch the pixel art assets
-	public static var daPixelZoom:Float = 6;
+	public static var daPixelZoom:Float = 6; // how big to stretch the pixel art assets
 	var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT', 'singUP'];
 
 	public var inCutscene:Bool = false;
@@ -244,7 +244,7 @@ class PlayState extends MusicBeatState {
 		}
 		nextReloadAll = false;
 		noteKillOffset = noteKillTime;
-		
+
 		startCallback = startCountdown;
 		endCallback = endSong;
 
@@ -382,7 +382,7 @@ class PlayState extends MusicBeatState {
 			camPos.add(mid.x + gf.cameraPosition[0], mid.y + gf.cameraPosition[1]);
 			mid.put();
 		}
-		
+
 		if (dad.curCharacter.startsWith('gf')) {
 			dad.setPosition(GF_X, GF_Y);
 			if (gf != null) gf.visible = false;
@@ -511,7 +511,7 @@ class PlayState extends MusicBeatState {
 		if (PauseSubState.songName != null) Paths.music(PauseSubState.songName);
 		else if (Paths.formatToSongPath(Settings.data.pauseMusic) != 'none') Paths.music(Paths.formatToSongPath(Settings.data.pauseMusic));
 		resetRPC();
-	
+
 		stagesFunc((stage:BaseStage) -> stage.createPost());
 		callOnScripts('onCreatePost');
 
@@ -1733,7 +1733,7 @@ class PlayState extends MusicBeatState {
 					if (trueValue == 'true' || trueValue == 'false') trueValue = trueValue == 'true';
 					else if (flValue2 != null) trueValue = flValue2;
 					else trueValue = value2;
-	
+
 					var split:Array<String> = value1.split('.');
 					if (split.length > 1) LuaUtils.setVarInArray(LuaUtils.getPropertyLoop(split), split[split.length - 1], trueValue);
 					else LuaUtils.setVarInArray(this, value1, trueValue);
@@ -1747,6 +1747,7 @@ class PlayState extends MusicBeatState {
 					FlxG.log.warn('ERROR ("Set Property" Event) - ' + errorMsg.substr(0, len));
 					#end
 				}
+
 			case 'Play Sound':
 				if (flValue2 == null) flValue2 = 1;
 				FlxG.sound.play(Paths.sound(value1), flValue2);
@@ -2109,7 +2110,7 @@ class PlayState extends MusicBeatState {
 
 		var char:Character = boyfriend;
 		if ((note != null && note.gfNote) || (SONG.notes[curSection] != null && SONG.notes[curSection].gfSection)) char = gf;
-		
+
 		if (char != null && (note == null || !note.noMissAnimation) && char.hasMissAnimations) {
 			var postfix:String = '';
 			if (note != null) postfix = note.animSuffix;
@@ -2186,7 +2187,7 @@ class PlayState extends MusicBeatState {
 	function goodNoteHit(note:Note):Void {
 		if (note.wasGoodHit || (cpuControlled && note.ignoreNote)) return;
 
-		var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
+		var isSus:Bool = note.isSustainNote;
 		var leData:Int = Math.floor(Math.abs(note.noteData));
 		var leType:String = note.noteType;
 
@@ -2201,7 +2202,7 @@ class PlayState extends MusicBeatState {
 		if (Settings.data.camMovement && bfturn) moveCamOnNote(animToPlay);
 
 		if (!dontZoomCam) camZooming = true;
-		if (!note.hitCausesMiss) { //Common notes
+		if (!note.hitCausesMiss) { // Common notes
 			if (!note.noAnimation) {
 				var char:Character = boyfriend;
 				var animCheck:String = 'hey';
@@ -2414,7 +2415,7 @@ class PlayState extends MusicBeatState {
 		return false;
 	}
 	#end
-	
+
 	#if HSCRIPT_ALLOWED
 	public function startHScriptsNamed(scriptFile:String):Bool {
 		#if MODS_ALLOWED
@@ -2441,7 +2442,7 @@ class PlayState extends MusicBeatState {
 		} catch (e:hscript.Expr.Error) {
 			var pos:HScriptInfos = cast {fileName: file, showLine: false};
 			AlterHscript.error(Printer.errorToString(e, false), pos);
-			var newScript:HScript = cast (AlterHscript.instances.get(file), HScript);
+			var newScript:HScript = cast(AlterHscript.instances.get(file), HScript);
 			if (newScript != null) newScript.destroy();
 		}
 	}
@@ -2478,7 +2479,7 @@ class PlayState extends MusicBeatState {
 				returnVal = ret;
 				break;
 			}
-			
+
 			if (ret != null && !excludeValues.contains(ret)) returnVal = ret;
 			if (script.closed) arr.push(script);
 		}

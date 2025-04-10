@@ -14,7 +14,7 @@ typedef Award = {
 	var ?maxScore:Float;
 	var ?maxDecimals:Int;
 
-	//handled automatically, ignore these two
+	// handled automatically, ignore these two
 	var ?mod:String;
 	var ?ID:Int; 
 }
@@ -34,11 +34,11 @@ class Awards {
 		createAchievement('week5_nomiss', {name: "Missless Christmas", description: "Beat Week 5 on Hard with no Misses."});
 		createAchievement('week6_nomiss', {name: "Highscore!!", description: "Beat Week 6 on Hard with no Misses."});
 		createAchievement('week7_nomiss', {name: "God Effing Damn It!", description: "Beat Week 7 on Hard with no Misses."});
-		createAchievement('ur_bad',	{name: "What a Funkin' Disaster!", description: "Complete a Song with a rating lower than 20%."});
+		createAchievement('ur_bad', {name: "What a Funkin' Disaster!", description: "Complete a Song with a rating lower than 20%."});
 		createAchievement('ur_good', {name: "Perfectionist", description: "Complete a Song with a rating of 100%."});
 		createAchievement('toastie', {name: "Toaster Gamer", description: "Have you tried to run the game on a toaster?"});
-		
-		//dont delete this thing below
+
+		// dont delete this thing below
 		_originalLength = _sortID + 1;
 	}
 
@@ -191,6 +191,7 @@ class Awards {
 			utils.system.NativeUtil.showMessageBox(message, title);
 			Logs.trace('$title - $message', ERROR);
 		}
+
 		if (FileSystem.exists(path)) {
 			try {
 				var rawJson:String = File.getContent(path).trim();

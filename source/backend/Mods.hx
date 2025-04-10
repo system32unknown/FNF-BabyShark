@@ -39,13 +39,12 @@ class Mods {
 		}
 		return globalMods;
 	}
-	
+
 	inline public static function getActiveModDirectories(lowercase:Bool = false):Array<String> {
 		var list:Array<String> = [];
 		final path:String = 'modsList.txt';
 
 		var remains:Array<String> = getModDirectories(true);
-
 		if (remains.length <= 0 || !FileSystem.exists(path)) return list;
 		var leMods:Array<String> = Util.coolTextFile(path);
 
@@ -112,7 +111,7 @@ class Mods {
 		// Main folder
 		if (FileSystem.exists(path + fileToFind))
 			foldersToCheck.push(path + fileToFind);
-		
+
 		// Week folder
 		if (Paths.currentLevel != null && Paths.currentLevel != path) {
 			var pth:String = Paths.getFolderPath(fileToFind, Paths.currentLevel);
@@ -155,6 +154,7 @@ class Mods {
 	}
 
 	public static var updatedOnState:Bool = false;
+
 	inline public static function parseList():ModsList {
 		if (!updatedOnState) updateModList();
 		var list:ModsList = {enabled: [], disabled: [], all: []};
