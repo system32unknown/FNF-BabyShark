@@ -376,9 +376,8 @@ class Note extends FlxSprite {
 	}
 
 	var _lastNoteOffX:Float = 0;
-	static var _lastValidChecked:String; //optimization
-	public var pixelHeight:Float = 6;
-	public var correctionOffset:Float = 0; //dont mess with this
+	static var _lastValidChecked:String; // optimization
+	public var correctionOffset:Float = 0; // dont mess with this
 	public function reloadNote(texture:String = '', postfix:String = '') {
 		if (texture == null) texture = '';
 		if (postfix == null) postfix = '';
@@ -407,7 +406,6 @@ class Note extends FlxSprite {
 			if (isSustainNote) {
 				pixelGraphic = Paths.image(skinPixel + 'ENDS' + skinPostfix);
 				loadGraphic(pixelGraphic, true, Math.floor(pixelGraphic.width / 9), Math.floor(pixelGraphic.height / 2));
-				pixelHeight = pixelGraphic.height / 2;
 			} else {
 				pixelGraphic = Paths.image(skinPixel + skinPostfix);
 				loadGraphic(pixelGraphic, true, Math.floor(pixelGraphic.width / 9), Math.floor(pixelGraphic.height / 5));

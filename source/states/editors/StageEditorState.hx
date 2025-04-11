@@ -188,7 +188,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		bg.scale.set(FlxG.width, FlxG.height - bg.y);
 		bg.updateHitbox();
 		add(bg);
-		
+
 		var tipText:FlxText = new FlxText(0, FlxG.height - 44, 300, 'Press F1 for Help', 20);
 		tipText.alignment = CENTER;
 		tipText.cameras = [camHUD];
@@ -258,7 +258,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			updateSelectedUI();
 		}
 		tab_group.add(spriteListRadioGroup);
-		
+
 		var buttonX:Float = spriteList_box.x + spriteList_box.width - 10;
 		var buttonY:Float = spriteListRadioGroup.y - 30;
 		var buttonMoveUp:PsychUIButton = new PsychUIButton(buttonX, buttonY, 'Move Up', () -> {
@@ -294,7 +294,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		});
 		buttonMoveDown.cameras = [camHUD];
 		tab_group.add(buttonMoveDown);
-		
+
 		var buttonCreate:PsychUIButton = new PsychUIButton(buttonX, buttonY + 60, 'New', () -> createPopup.visible = createPopup.active = true);
 		buttonCreate.cameras = [camHUD];
 		buttonCreate.normalStyle.bgColor = FlxColor.GREEN;
@@ -347,14 +347,14 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			if (copiedMeta.animations != null) {
 				for (_ => anim in copiedMeta.animations) {
 					if (anim == null || anim.anim == null) continue;
-		
+
 					if (anim.indices != null && anim.indices.length > 0)
 						copiedSpr.animation.addByIndices(anim.anim, anim.name, anim.indices, '', anim.fps, anim.loop);
 					else copiedSpr.animation.addByPrefix(anim.anim, anim.name, anim.fps, anim.loop);
-		
+
 					if (anim.offsets != null && anim.offsets.length > 1)
 						copiedSpr.addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
-		
+
 					if (copiedSpr.animation.curAnim == null || copiedMeta.firstAnimation == anim.anim)
 						copiedSpr.playAnim(anim.anim, true);
 				}
@@ -368,7 +368,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		buttonDuplicate.normalStyle.bgColor = FlxColor.BLUE;
 		buttonDuplicate.normalStyle.textColor = FlxColor.WHITE;
 		tab_group.add(buttonDuplicate);
-	
+
 		var buttonDelete:PsychUIButton = new PsychUIButton(buttonX, buttonY + 120, 'Delete', () -> {
 			var selected:Int = spriteListRadioGroup.checked;
 			if (selected < 0) return;
@@ -704,7 +704,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 					showOutput('Sprite name cannot be empty!', true);
 					return;
 				}
-				
+
 				if (StageData.reservedNames.contains(changedName)) {
 					showOutput('To avoid conflicts, this name cannot be used!', true);
 					return;
@@ -1388,8 +1388,8 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	}
 
 	/**
-		* Called when the save file dialog is cancelled.
-		*/
+	 * Called when the save file dialog is cancelled.
+	 */
 	function onSaveCancel(_):Void {
 		if (_file == null) return;
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -1399,8 +1399,8 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	}
 
 	/**
-		* Called if there is an error while saving the gameplay recording.
-		*/
+	 * Called if there is an error while saving the gameplay recording.
+	 */
 	function onSaveError(_):Void {
 		if (_file == null) return;
 		_file.removeEventListener(Event.COMPLETE, onSaveComplete);
@@ -1445,7 +1445,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			}
 			var selected:StageEditorMetaSprite = getSelected();
 			tryLoadImage(selected, imageToLoad);
-			
+
 			if (_makeNewSprite != null) {
 				selected.sprite.x = Math.round(FlxG.camera.scroll.x + FlxG.width / 2 - selected.sprite.width / 2);
 				selected.sprite.y = Math.round(FlxG.camera.scroll.y + FlxG.height / 2 - selected.sprite.height / 2);
@@ -1476,7 +1476,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 				txt.gameCenter(X);
 				txt.cameras = state.cameras;
 				state.add(txt);
-				
+
 				var btnY:Int = 390;
 				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'OK', function() {
 					var fileName:String = fullPath.substring(fullPath.lastIndexOf('/') + 1, fullPath.lastIndexOf('.'));
@@ -1525,8 +1525,8 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	}
 
 	/**
-		* Called when the save file dialog is cancelled.
-		*/
+	 * Called when the save file dialog is cancelled.
+	 */
 	function onLoadCancel(_):Void {
 		if (_file == null) return;
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
@@ -1542,8 +1542,8 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	}
 
 	/**
-		* Called if there is an error while saving the gameplay recording.
-		*/
+	 * Called if there is an error while saving the gameplay recording.
+	 */
 	function onLoadError(_):Void {
 		if (_file == null) return;
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);

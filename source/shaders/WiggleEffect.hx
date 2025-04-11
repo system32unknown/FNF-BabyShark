@@ -56,25 +56,25 @@ class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 	@:glFragmentSource('
 		#pragma header
 		uniform float uTime;
-		
+
 		const int EFFECT_TYPE_DREAMY = 0;
 		const int EFFECT_TYPE_WAVY = 1;
 		const int EFFECT_TYPE_HEAT_WAVE_HORIZONTAL = 2;
 		const int EFFECT_TYPE_HEAT_WAVE_VERTICAL = 3;
 		const int EFFECT_TYPE_FLAG = 4;
-		
+
 		uniform int effectType;
-		
+
 		/**
 		 * How fast the waves move over time
 		 */
 		uniform float uSpeed;
-		
+
 		/**
 		 * Number of waves over time
 		 */
 		uniform float uFrequency;
-		
+
 		/**
 		 * How much the pixels are going to stretch over the waves
 		 */
@@ -83,7 +83,7 @@ class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 		vec2 sineWave(vec2 pt) {
 			float x = 0.0;
 			float y = 0.0;
-			
+
 			if (effectType == EFFECT_TYPE_DREAMY)  {
 				pt.x += sin(pt.y * uFrequency + uTime * uSpeed) * uWaveAmplitude;
 			} else if (effectType == EFFECT_TYPE_WAVY)  {
@@ -96,7 +96,7 @@ class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 				y = sin(pt.y * uFrequency + 10.0 * pt.x + uTime * uSpeed) * uWaveAmplitude;
 				x = sin(pt.x * uFrequency + 5.0 * pt.y + uTime * uSpeed) * uWaveAmplitude;
 			}
-			
+
 			return vec2(pt.x + x, pt.y + y);
 		}
 

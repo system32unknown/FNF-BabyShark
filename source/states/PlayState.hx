@@ -359,7 +359,7 @@ class PlayState extends MusicBeatState {
 		boyfriend = new Character(0, 0, SONG.player1, true);
 		startCharacterPos(boyfriend);
 		boyfriendGroup.add(boyfriend);
-	
+
 		if (stageData.objects != null && stageData.objects.length > 0) {
 			var list:Map<String, FlxSprite> = StageData.addObjectsToState(stageData.objects, !stageData.hide_girlfriend ? gfGroup : null, dadGroup, boyfriendGroup, this);
 			for (key => spr in list) if (!StageData.reservedNames.contains(key)) variables.set(key, spr);
@@ -662,7 +662,7 @@ class PlayState extends MusicBeatState {
 			scriptFile = Paths.getSharedPath(scriptFile);
 			if (FileSystem.exists(scriptFile)) doPush = true;
 		}
-		
+
 		if (doPush) {
 			if (AlterHscript.instances.exists(scriptFile)) doPush = false;
 			if (doPush) initHScript(scriptFile);
@@ -1376,7 +1376,7 @@ class PlayState extends MusicBeatState {
 					dunceNote.spawned = true;
 					dunceNote.strum = (dunceNote.mustPress ? playerStrums : opponentStrums).members[dunceNote.noteData];
 					notes.add(dunceNote);
-					
+
 					callOnLuas('onSpawnNote', [totalCnt, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
 					callOnHScript('onSpawnNote', [dunceNote]);
 					if (Settings.data.processFirst && dunceNote.strum != null) {
@@ -1589,7 +1589,6 @@ class PlayState extends MusicBeatState {
 				if (Settings.data.camZooms && FlxG.camera.zoom < 1.35) {
 					flValue1 ??= .015;
 					flValue2 ??= .03;
-
 					FlxG.camera.zoom += flValue1;
 					camHUD.zoom += flValue2;
 				}
@@ -2270,7 +2269,7 @@ class PlayState extends MusicBeatState {
 			var frameId:Int = noteSplashframes = -1;
 			var splashStrum:StrumNote = playerStrums.members[note.noteData];
 			if (note.strum != splashStrum) note.strum = splashStrum;
-			
+
 			if (splashUsing[splashNoteData].length >= splashCount) {
 				for (index => splash in splashUsing[splashNoteData]) {
 					if (splash.alive && noteSplashframes < splash.animation.curAnim.curFrame) {
@@ -2401,7 +2400,7 @@ class PlayState extends MusicBeatState {
 		#if MODS_ALLOWED
 		var luaToLoad:String = Paths.modFolders(luaFile);
 		if (!FileSystem.exists(luaToLoad)) luaToLoad = Paths.getSharedPath(luaFile);
-		
+
 		if (FileSystem.exists(luaToLoad))
 		#elseif sys
 		var luaToLoad:String = Paths.getSharedPath(luaFile);
@@ -2622,7 +2621,7 @@ class PlayState extends MusicBeatState {
 	public function createRuntimeShader(shaderName:String):ErrorHandledRuntimeShader {
 		#if (!flash && sys)
 		if (!Settings.data.shaders) return new ErrorHandledRuntimeShader(shaderName);
-	
+
 		if (!runtimeShaders.exists(shaderName) && !initLuaShader(shaderName)) {
 			FlxG.log.warn('Shader $shaderName is missing!');
 			return new ErrorHandledRuntimeShader(shaderName);

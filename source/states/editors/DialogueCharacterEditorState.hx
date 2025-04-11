@@ -196,7 +196,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 				idleInputText.text = animShit.idle_name;
 			}
 		});
-		
+
 		animationInputText = new PsychUIInputText(15, 85, 80);
 		loopInputText = new PsychUIInputText(animationInputText.x, animationInputText.y + 35, 150);
 		idleInputText = new PsychUIInputText(loopInputText.x, loopInputText.y + 40, 150);
@@ -237,7 +237,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 				animationDropDown.selectedLabel = lastSelected;
 			}
 		});
-		
+
 		var removeUpdateButton:PsychUIButton = new PsychUIButton(100, addUpdateButton.y, "Remove", () -> {
 			for (i in 0...character.jsonFile.animations.length) {
 				var animArray:DialogueAnimArray = character.jsonFile.animations[i];
@@ -595,8 +595,8 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 	}
 
 	/**
-		* Called when the save file dialog is cancelled.
-	*/
+	 * Called when the save file dialog is cancelled.
+	 */
 	function onLoadCancel(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
@@ -606,8 +606,8 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 	}
 
 	/**
-		* Called if there is an error while saving the gameplay recording.
-	*/
+	 * Called if there is an error while saving the gameplay recording.
+	 */
 	function onLoadError(_):Void {
 		_file.removeEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);

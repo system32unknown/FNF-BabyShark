@@ -123,7 +123,7 @@ class StoryMenuState extends MusicBeatState {
 		Difficulty.resetList();
 		if (lastDifficultyName == '') lastDifficultyName = Difficulty.getDefault();
 		curDifficulty = Math.round(Math.max(0, Difficulty.defaultList.indexOf(lastDifficultyName)));
-		
+
 		sprDifficulty = new FlxSprite(0, leftArrow.y);
 		difficultySelectors.add(sprDifficulty);
 
@@ -232,10 +232,10 @@ class StoryMenuState extends MusicBeatState {
 				PlayState.storyPlaylist = songArray;
 				PlayState.isStoryMode = true;
 				selectedWeek = true;
-	
+
 				var diffic:String = Difficulty.getFilePath(curDifficulty);
 				if (diffic == null) diffic = '';
-	
+
 				PlayState.storyDifficulty = curDifficulty;
 				Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
 				PlayState.campaignScore = PlayState.campaignMisses = 0;
@@ -247,7 +247,7 @@ class StoryMenuState extends MusicBeatState {
 
 			if (!stopspamming) {
 				FlxG.sound.play(Paths.sound('confirmMenu'));
-	
+
 				grpWeekText.members[curWeek].isFlashing = true;
 				for (char in grpWeekCharacters.members)
 					if (char.character != '' && char.hasConfirmAnimation)

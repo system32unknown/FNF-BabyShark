@@ -188,7 +188,6 @@ class DialogueEditorState extends MusicBeatState implements PsychUIEventHandler.
 	function reloadText(skipDialogue:Bool) {
 		var textToType:String = lineInputText.text;
 		if (textToType == null || textToType.length < 1) textToType = ' ';
-
 		daText.text = textToType;
 
 		if (skipDialogue) daText.finishText();

@@ -4,7 +4,7 @@ import haxe.Json;
 #if !MODS_ALLOWED import openfl.utils.Assets; #end
 
 // swordcube's alphabet but heavily modified to work with psych
-// since i had alignment issues getting it to work the other way around (psych alphabet working with swordcube's code
+// since i had alignment issues getting it to work the other way around (psych alphabet working with swordcube's code)
 class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 	public var type(default, set):AlphabetGlyphType;
 

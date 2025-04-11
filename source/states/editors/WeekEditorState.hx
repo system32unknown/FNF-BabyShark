@@ -130,7 +130,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	var hideCheckbox:PsychUICheckBox;
 
 	public static var weekFileName:String = 'week1';
-	
+
 	function addWeekUI() {
 		var tab_group:FlxSpriteGroup = UI_box.getTab('Week').menu;
 

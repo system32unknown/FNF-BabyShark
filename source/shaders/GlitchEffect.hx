@@ -48,22 +48,22 @@ class GlitchShader extends flixel.system.FlxAssets.FlxShader {
 		//modified version of the wave shader to create weird garbled corruption like messes
 		uniform float uTime;
 
-		/*
+		/**
 		 * How fast the waves move over time
 		 */
 		uniform float uSpeed;
 
-		/*
+		/**
 		 * Number of waves over time
 		 */
 		uniform float uFrequency;
 
-		/*
+		/**
 		 * How much the pixels are going to stretch over the waves
 		 */
 		uniform float uWaveAmplitude;
 
-		/*
+		/**
 		 * Distort BG?
 		 */
 		uniform bool uDistortBG;

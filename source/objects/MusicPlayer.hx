@@ -149,7 +149,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 				setPlaybackRate();
 			}
 		}
-	
+
 		if (Controls.justPressed('reset')) {
 			playbackRate = 1;
 			setPlaybackRate();

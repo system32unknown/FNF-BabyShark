@@ -5,7 +5,7 @@ import haxe.macro.Compiler;
 
 /**
  * Macros containing additional help functions to expand HScript capabilities.
-*/
+ */
 class AdditionalClasses {
 	public static function add() {
 		var include:Array<String> = [

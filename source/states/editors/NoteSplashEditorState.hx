@@ -796,8 +796,7 @@ class NoteSplashEditorHelpSubState extends FlxSubState {
 
 		var helpTexts:FlxSpriteGroup = new FlxSpriteGroup();
 		for (i => txt in str) {
-			if (txt.length < 1)
-				continue;
+			if (txt.length < 1) continue;
 
 			var helpText:FlxText = new FlxText(0, 0, 0, txt, 24);
 			helpText.setFormat(null, 24, FlxColor.WHITE, CENTER, OUTLINE_FAST, FlxColor.BLACK);

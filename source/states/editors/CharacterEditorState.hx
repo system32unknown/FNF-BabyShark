@@ -315,7 +315,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 				animateGhost.colorTransform.blueOffset = value;
 			}
 		};
-		
+
 		var ghostAlphaSlider:PsychUISlider = new PsychUISlider(10, makeGhostButton.y + 25, (v:Float) -> {
 			ghostAlpha = v;
 			ghost.alpha = ghostAlpha;
@@ -759,7 +759,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			FlxG.camera.zoom -= elapsed * FlxG.camera.zoom * shiftMult * ctrlMult;
 			if (FlxG.camera.zoom < 0.1) FlxG.camera.zoom = 0.1;
 		}
-		
+
 		if (lastZoom != FlxG.camera.zoom) cameraZoomText.text = 'Zoom: ' + FlxMath.roundDecimal(FlxG.camera.zoom, 2) + 'x';
 
 		// CHARACTER CONTROLS

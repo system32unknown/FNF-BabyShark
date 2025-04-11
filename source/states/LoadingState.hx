@@ -82,7 +82,7 @@ class LoadingState extends MusicBeatState {
 					hscript.set('getLoadMax', () -> return loadMax);
 					hscript.set('barBack', barBack);
 					hscript.set('bar', bar);
-	
+
 					if (hscript.exists('onCreate')) {
 						hscript.call('onCreate');
 						trace('initialized hscript interp successfully: $scriptPath');
@@ -322,7 +322,7 @@ class LoadingState extends MusicBeatState {
 					for (asset in Reflect.fields(json)) {
 						var filters:Int = Reflect.field(json, asset);
 						var asset:String = asset.trim();
-	
+
 						if (filters < 0 || StageData.validateVisibility(filters)) {
 							if (asset.startsWith('images/')) imgs.push(asset.substr('images/'.length));
 							else if (asset.startsWith('sounds/')) snds.push(asset.substr('sounds/'.length));
@@ -346,7 +346,7 @@ class LoadingState extends MusicBeatState {
 					for (asset in Reflect.fields(stageData.preload)) {
 						var filters:Int = Reflect.field(stageData.preload, asset);
 						var asset:String = asset.trim();
-	
+
 						if (filters < 0 || StageData.validateVisibility(filters)) {
 							if (asset.startsWith('images/')) imgs.push(asset.substr('images/'.length));
 							else if (asset.startsWith('sounds/')) snds.push(asset.substr('sounds/'.length));
@@ -448,8 +448,7 @@ class LoadingState extends MusicBeatState {
 		loadMax = imagesToPrepare.length + soundsToPrepare.length + musicToPrepare.length + songsToPrepare.length;
 		loaded = 0;
 
-		// then start threads
-		_threadFunc();
+		_threadFunc(); // then start threads
 	}
 	static function _threadFunc() {
 		_startPool();

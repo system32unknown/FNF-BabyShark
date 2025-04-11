@@ -39,6 +39,7 @@ class ModsMenuState extends MusicBeatState {
 		this.startMod = startMod;
 		super();
 	}
+
 	override function create() {
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
@@ -745,7 +746,7 @@ class MenuButton extends FlxSpriteGroup {
 			centerOnBg(textOn);
 			textOn.y -= 30;
 			add(textOn);
-			
+
 			textOff = new Alphabet();
 			textOff.updateScale(.52, .52);
 			textOff.text = text;

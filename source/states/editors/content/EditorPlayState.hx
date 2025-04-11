@@ -239,7 +239,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		super.beatHit();
 		lastBeatHit = curBeat;
 	}
-	
+
 	override function sectionHit() {
 		if (PlayState.SONG.notes[curSection] != null && PlayState.SONG.notes[curSection].changeBPM)
 			Conductor.bpm = PlayState.SONG.notes[curSection].bpm;
@@ -255,7 +255,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		flixel.util.FlxDestroyUtil.destroy(inst);
 		super.destroy();
 	}
-	
+
 	function startSong():Void {
 		startingSong = false;
 		@:privateAccess inst.loadEmbedded(FlxG.sound.music._sound);
