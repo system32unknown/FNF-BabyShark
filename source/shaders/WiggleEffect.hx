@@ -84,9 +84,9 @@ class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 			float x = 0.0;
 			float y = 0.0;
 
-			if (effectType == EFFECT_TYPE_DREAMY)  {
+			if (effectType == EFFECT_TYPE_DREAMY) {
 				pt.x += sin(pt.y * uFrequency + uTime * uSpeed) * uWaveAmplitude;
-			} else if (effectType == EFFECT_TYPE_WAVY)  {
+			} else if (effectType == EFFECT_TYPE_WAVY) {
 				pt.y += sin(pt.x * uFrequency + uTime * uSpeed) * uWaveAmplitude;
 			} else if (effectType == EFFECT_TYPE_HEAT_WAVE_HORIZONTAL) {
 				x = sin(pt.x * uFrequency + uTime * uSpeed) * uWaveAmplitude;

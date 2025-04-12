@@ -165,12 +165,14 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 
 	override function beatHit() {
 		super.beatHit();
-		if (iconOption.getValue() == "Custom") return;
-		bfIcon.bop({curBeat: curBeat});
+		if (bfIcon != null && iconShown) {
+			if (iconOption.getValue() == "Custom") return;
+			bfIcon.bop({curBeat: curBeat});
+		}
 	}
 
 	override function update(elapsed:Float) {
-		bfIcon.bopUpdate(elapsed, 1);
+		if (bfIcon != null && iconShown) bfIcon.bopUpdate(elapsed, 1);
 
 		Conductor.songPosition += elapsed;
 		if (Math.abs(FlxG.sound.music.time - Conductor.songPosition) > 20) Conductor.songPosition = FlxG.sound.music.time;

@@ -99,12 +99,6 @@ class LoadingState extends MusicBeatState {
 		}
 		#end
 
-		loadingText = new FlxText(520, 600, 450, Language.getPhrase('now_loading', 'Now Loading', ['...']), 32);
-		loadingText.setFormat(Paths.font("vcr.ttf"), loadingText.size, FlxColor.WHITE, CENTER);
-		loadingText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK, 2);
-		loadingText.gameCenter(X);
-		addBehindBar(loadingText);
-
 		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, 0xFFCAFF4D);
 		bg.gameCenter();
 		addBehindBar(bg);
@@ -114,6 +108,12 @@ class LoadingState extends MusicBeatState {
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		addBehindBar(funkay);
+
+		loadingText = new FlxText(520, 600, 450, Language.getPhrase('now_loading', 'Now Loading', ['...']), 32);
+		loadingText.setFormat(Paths.font("vcr.ttf"), loadingText.size, FlxColor.WHITE, CENTER);
+		loadingText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK, 2);
+		loadingText.gameCenter(X);
+		addBehindBar(loadingText);
 		super.create();
 
 		if (stateChangeDelay <= 0 && checkLoaded()) {

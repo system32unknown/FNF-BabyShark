@@ -3,6 +3,7 @@ package psychlua;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
 #if !MODS_ALLOWED import openfl.utils.Assets; #end
+import tjson.TJSON;
 
 //
 // Things to trivialize some dumb stuff like splitting strings on older Lua
@@ -162,8 +163,8 @@ class ExtraFunctions {
 		funk.set("parseJson", (location:String) -> {
 			var parsed:{} = {};
 			if (FileSystem.exists(Paths.getPath('data/$location')))
-				parsed = tjson.TJSON.parse(File.getContent(Paths.getPath('data/$location')));
-			else parsed = tjson.TJSON.parse(location);
+				parsed = TJSON.parse(File.getContent(Paths.getPath('data/$location')));
+			else parsed = TJSON.parse(location);
 			return parsed;
 		});
 

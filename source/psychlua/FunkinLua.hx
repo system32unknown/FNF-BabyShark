@@ -75,7 +75,7 @@ class FunkinLua {
 
 		set('difficultyName', Difficulty.getString(false));
 		set('difficultyPath', Difficulty.getFilePath());
-		set('difficultyNameTranslation', Difficulty.getString(true));
+		set('difficultyNameTranslation', Difficulty.getString());
 		set('weekRaw', PlayState.storyWeek);
 		set('week', data.WeekData.weeksList[PlayState.storyWeek]);
 		set('seenCutscene', PlayState.seenCutscene);
