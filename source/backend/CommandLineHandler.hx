@@ -13,7 +13,7 @@ class CommandLineHandler {
 					Sys.println("-nocolor			| Disables colors in the terminal");
 					Sys.exit(0);
 				case "-nocolor": Main.noTerminalColor = true;
-				case "-terminal": FlxG.switchState(() -> states.TerminalState());
+				case "-terminal": FlxG.switchState(() -> new states.TerminalState());
 				default: Sys.println("Unknown command");
 			}
 			i++;
