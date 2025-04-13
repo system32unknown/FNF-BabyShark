@@ -171,6 +171,7 @@ class Note extends FlxSprite {
 		var noteGFX:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
 		animation.play(noteGFX + 'Scroll', true);
 
+		if (PlayState.isPixelStage) offsetX = -5;
 		if (isSustainNote) {
 			if (isSustainNote && prevNote != null) {
 				flipY = Settings.data.downScroll;
@@ -311,16 +312,15 @@ class Note extends FlxSprite {
 		this.strumTime = strumTime;
 		if (!inEditor) this.strumTime += Settings.data.noteOffset;
 		this.noteData = noteData;
-		if (noteData > -1) {
-			try {
-				rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
-				if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB || !Settings.data.noteShaders) rgbShader.enabled = false;
-			} catch (e:Dynamic) rgbShader = null;
 
-			texture = '';
-			if (PlayState.mania != 0) x += EK.swidths[PlayState.mania] * (noteData % EK.keys(PlayState.mania));
-			if (!isSustainNote) animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
-		}
+		try {
+			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
+			if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB || !Settings.data.noteShaders) rgbShader.enabled = false;
+		} catch (e:Dynamic) rgbShader = null;
+
+		if (PlayState.mania != 0) x += EK.swidths[PlayState.mania] * (noteData % EK.keys(PlayState.mania));
+		if (!isSustainNote) animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
+		if (PlayState.isPixelStage) offsetX = -5;
 
 		if (prevNote != null) prevNote.nextNote = this;
 		if (isSustainNote && prevNote != null) {
@@ -569,7 +569,7 @@ class Note extends FlxSprite {
 
 	function calcPixelScale():Float {
 		var pxNoteSize:Float = switch (Settings.data.noteSkin) {
-			case "Default": 30;
+			case "Default": 35;
 			case "Future": 5;
 			case "Chip": 17.25;
 			default: 0;
