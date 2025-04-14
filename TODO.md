@@ -17,6 +17,7 @@
     - [ ] Chichi
 - [ ] New Credit Menu (Social Links)
 - [ ] Terminal and Character Selection Rework
+- [ ] Fix Pixel Note Offset X
 
 ### Characters List
 - [ ] Stariana
