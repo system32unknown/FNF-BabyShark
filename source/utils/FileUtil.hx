@@ -13,19 +13,65 @@ import openfl.events.IOErrorEvent;
  */
 class FileUtil {
 	/**
+	 * Paths which should not be deleted or modified by scripts.
+	 */
+	public static var PROTECTED_PATHS(get, never):Array<String>;
+
+	public static function get_PROTECTED_PATHS():Array<String> {
+		final protected:Array<String> = [
+			'',
+			'.',
+			'assets',
+			'assets/*',
+			'backups',
+			'backups/*',
+			'manifest',
+			'manifest/*',
+			'Funkin.exe',
+			'Funkin',
+			'icon.ico',
+			'libvlc.dll',
+			'libvlccore.dll',
+			'lime.ndll'
+		];
+
+		#if sys
+		for (i in 0...protected.length) protected[i] = FileSystem.fullPath(Path.join([gameDirectory, protected[i]]));
+		#end
+		return protected;
+	}
+
+	/**
+	 * Regex for invalid filesystem characters.
+	 */
+	public static final INVALID_CHARS:EReg = ~/[:*?"<>|\n\r\t]/g;
+
+	#if sys
+	private static var _gameDirectory:Null<String> = null;
+	public static var gameDirectory(get, never):String;
+
+	public static function get_gameDirectory():String {
+		if (_gameDirectory != null) return _gameDirectory;
+		return _gameDirectory = FileSystem.fullPath(Path.directory(Sys.programPath()));
+	}
+	#end
+
+	/**
 	 * Browses for a single file location, then writes the provided `haxe.io.Bytes` data and calls `onSave(path)` when done.
 	 *
 	 * @return Whether the file dialog was opened successfully.
 	 */
-	public static function saveFile(data:Bytes, ?typeFilter:Array<FileFilter>, ?onSave:String->Void, ?onCancel:Void->Void, ?defaultFileName:String, ?dialogTitle:String):Bool {
+	public static function saveFile(data:Bytes, ?typeFilter:Array<FileFilter>, onSave:(String)->Void, ?onCancel:()->Void, ?defaultFileName:String, ?dialogTitle:String):Bool {
 		#if desktop
+		var filter:Null<String> = convertTypeFilter(typeFilter);
 		var fileDialog:FileDialog = new FileDialog();
-		if (onSave != null) fileDialog.onSave.add(onSave);
+		fileDialog.onSave.add(onSave);
 		if (onCancel != null) fileDialog.onCancel.add(onCancel);
-		fileDialog.save(data, convertTypeFilter(typeFilter), defaultFileName, dialogTitle);
+		fileDialog.save(data, filter, defaultFileName, dialogTitle);
 		return true;
 		#else
-		onCancel();
+		Logs.trace('saveFile not implemented for this platform', WARNING);
+		if (onCancel != null) onCancel();
 		return false;
 		#end
 	}
@@ -43,15 +89,17 @@ class FileUtil {
 	 * @param typeFilter TODO What does this do?
 	 * @return Whether the file dialog was opened successfully.
 	 */
-	public static function browseForSaveFile(?typeFilter:Array<FileFilter>, ?onSelect:String->Void, ?onCancel:Void->Void, ?defaultPath:String, ?dialogTitle:String):Bool {
+	public static function browseForSaveFile(?typeFilter:Array<FileFilter>, onSelect:(String)->Void, ?onCancel:()->Void, ?defaultPath:String, ?dialogTitle:String):Bool {
 		#if desktop
+		var filter:Null<String> = convertTypeFilter(typeFilter);
 		var fileDialog:FileDialog = new FileDialog();
-		if (onSelect != null) fileDialog.onSelect.add(onSelect);
+		fileDialog.onSelect.add(onSelect);
 		if (onCancel != null) fileDialog.onCancel.add(onCancel);
-		fileDialog.browse(SAVE, convertTypeFilter(typeFilter), defaultPath, dialogTitle);
+		fileDialog.browse(SAVE, filter, defaultPath, dialogTitle);
 		return true;
 		#else
-		onCancel();
+		Logs.trace('browseForSaveFile not implemented for this platform', WARNING);
+		if (onCancel != null) onCancel();
 		return false;
 		#end
 	}
@@ -61,15 +109,17 @@ class FileUtil {
 	 *
 	 * @return Whether the file dialog was opened successfully.
 	 */
-	public static function browseForMultipleFiles(?typeFilter:Array<FileFilter>, ?onSelect:Array<String>->Void, ?onCancel:Void->Void, ?defaultPath:String, ?dialogTitle:String):Bool {
+	public static function browseForMultipleFiles(?typeFilter:Array<FileFilter>, onSelect:(Array<String>) -> Void, ?onCancel:() -> Void, ?defaultPath:String, ?dialogTitle:String):Bool {
 		#if desktop
+		var filter:Null<String> = convertTypeFilter(typeFilter);
 		var fileDialog:FileDialog = new FileDialog();
-		if (onSelect != null) fileDialog.onSelectMultiple.add(onSelect);
+		fileDialog.onSelectMultiple.add(onSelect);
 		if (onCancel != null) fileDialog.onCancel.add(onCancel);
-		fileDialog.browse(OPEN_MULTIPLE, convertTypeFilter(typeFilter), defaultPath, dialogTitle);
+		fileDialog.browse(OPEN_MULTIPLE, filter, defaultPath, dialogTitle);
 		return true;
 		#else
-		onCancel();
+		Logs.trace('browseForMultipleFiles not implemented for this platform', WARNING);
+		if (onCancel != null) onCancel();
 		return false;
 		#end
 	}
@@ -80,15 +130,17 @@ class FileUtil {
 	 * @param typeFilter TODO What does this do?
 	 * @return Whether the file dialog was opened successfully.
 	 */
-	public static function browseForDirectory(?typeFilter:Array<FileFilter>, ?onSelect:String->Void, ?onCancel:Void->Void, ?defaultPath:String, ?dialogTitle:String):Bool {
+	public static function browseForDirectory(?typeFilter:Array<FileFilter>, onSelect:(String) -> Void, ?onCancel:() -> Void, ?defaultPath:String, ?dialogTitle:String):Bool {
 		#if desktop
+		var filter:Null<String> = convertTypeFilter(typeFilter);
 		var fileDialog:FileDialog = new FileDialog();
-		if (onSelect != null) fileDialog.onSelect.add(onSelect);
+		fileDialog.onSelect.add(onSelect);
 		if (onCancel != null) fileDialog.onCancel.add(onCancel);
-		fileDialog.browse(OPEN_DIRECTORY, convertTypeFilter(typeFilter), defaultPath, dialogTitle);
+		fileDialog.browse(OPEN_DIRECTORY, filter, defaultPath, dialogTitle);
 		return true;
 		#else
-		onCancel();
+		Logs.trace('browseForDirectory not implemented for this platform', WARNING);
+		if (onCancel != null) onCancel();
 		return false;
 		#end
 	}
@@ -100,22 +152,19 @@ class FileUtil {
 	 * @param typeFilter TODO What does this do?
 	 * @return Whether the file dialog was opened successfully.
 	 */
-	public static function saveMultipleFiles(resources:Array<haxe.zip.Entry>, ?onSaveAll:Array<String>->Void, ?onCancel:Void->Void, ?defaultPath:String, force:Bool = false):Bool {
+	public static function saveMultipleFiles(resources:Array<haxe.zip.Entry>, ?onSaveAll:(Array<String>)->Void, ?onCancel:()->Void, ?defaultPath:String, force:Bool = false):Bool {
 		#if desktop
 		// Prompt the user for a directory, then write all of the files to there.
-		var onSelectDir:String->Void = (targetPath:String) -> {
-			var paths:Array<String> = [];
+		var onSelectDir:(String)->Void = (targetPath:String) -> {
+			var paths:Array<String> = new Array<String>();
 			for (resource in resources) {
-				var filePath:String = Path.join([targetPath, resource.fileName]);
-				try {
-					if (resource.data == null) {
-						Logs.trace('File $filePath has no data or content. Skipping.', WARNING);
-						continue;
-					} else writeBytesToPath(filePath, resource.data, force ? Force : Skip);
-				} catch (_) throw 'Failed to write file (probably already exists): $filePath';
-				paths.push(filePath);
+				if (resource.data == null) {
+					Logs.trace('File ${resource.fileName} has no data or content. Skipping.', WARNING);
+					continue;
+				}
+				paths.push(Path.join([targetPath, resource.fileName]));
 			}
-			onSaveAll(paths);
+			if (onSaveAll != null) onSaveAll(paths);
 		}
 		trace('Browsing for directory to save individual files to...');
 		#if mac
@@ -151,7 +200,7 @@ class FileUtil {
 	 *
 	 * @param	callback The function to call when the file is loaded.
 	 */
-	public static function browseFileReference(callback:FileReference->Void) {
+	public static function browseFileReference(callback:(FileReference)->Void):Void {
 		var file:FileReference = new FileReference();
 		file.addEventListener(Event.SELECT, (e:Event) -> {
 			var selectedFileRef:FileReference = e.target;
@@ -169,11 +218,11 @@ class FileUtil {
 	/**
 	 * Prompts the user to save a file to their computer.
 	 */
-	public static function writeFileReference(path:String, data:String) {
+	public static function writeFileReference(path:String, data:String):Void {
 		var file:FileReference = new FileReference();
-		file.addEventListener(Event.COMPLETE, (e:Event) -> trace('Successfully wrote file.'));
-		file.addEventListener(Event.CANCEL, (e:Event) -> trace('Cancelled writing file.'));
-		file.addEventListener(IOErrorEvent.IO_ERROR, (e:IOErrorEvent) -> trace('IO error writing file.'));
+		file.addEventListener(Event.COMPLETE, (e:Event) -> trace('Successfully wrote file: "$path"'));
+		file.addEventListener(Event.CANCEL, (e:Event) -> trace('Cancelled writing file: "$path"'));
+		file.addEventListener(IOErrorEvent.IO_ERROR, (e:IOErrorEvent) -> trace('IO error writing file: "$path"'));
 		file.save(data, path);
 	}
 
@@ -187,16 +236,18 @@ class FileUtil {
 	 */
 	public static function writeStringToPath(path:String, data:String, mode:FileWriteMode = Skip):Void {
 		#if sys
+		if (FileSystem.isDirectory(path)) throw 'Target path is a directory, not a file: "$path"';
 		createDirIfNotExists(Path.directory(path));
+
 		switch (mode) {
 			case Force: File.saveContent(path, data);
 			case Skip: if (!FileSystem.exists(path)) File.saveContent(path, data);
 			case Ask:
-				if (FileSystem.exists(path)) throw 'File already exists: $path'; // TODO: We don't have the technology to use native popups yet.
+				if (FileSystem.exists(path)) throw 'Entry at path already exists: $path'; // TODO: We don't have the technology to use native popups yet.
 				else File.saveContent(path, data);
 		}
 		#else
-		throw 'Direct file writing by path not supported on this platform.';
+		throw 'Direct file writing by path is not supported on this platform.';
 		#end
 	}
 
@@ -210,16 +261,24 @@ class FileUtil {
 	 */
 	public static function writeBytesToPath(path:String, data:Bytes, mode:FileWriteMode = Skip):Void {
 		#if sys
+		if (FileSystem.isDirectory(path)) throw 'Target path is a directory, not a file: "$path"';
 		createDirIfNotExists(Path.directory(path));
+
+		var shouldWrite:Bool = true;
 		switch (mode) {
-			case Force: File.saveBytes(path, data);
-			case Skip: if (!FileSystem.exists(path)) File.saveBytes(path, data);
+			case Force: shouldWrite = true;
+			case Skip: if (!FileSystem.exists(path)) shouldWrite = true;
 			case Ask:
-				if (FileSystem.exists(path)) throw 'File already exists: $path'; // TODO: We don't have the technology to use native popups yet.
-				else File.saveBytes(path, data);
+				if (FileSystem.exists(path)) throw 'Entry at path already exists: "$path"'; // TODO: We don't have the technology to use native popups yet.
+				else shouldWrite = true;
+		}
+
+		if (shouldWrite) {
+			createDirIfNotExists(Path.directory(path));
+			File.saveBytes(path, data);
 		}
 		#else
-		throw 'Direct file writing by path not supported on this platform.';
+		throw 'Direct file writing by path is not supported on this platform.';
 		#end
 	}
 
@@ -232,9 +291,22 @@ class FileUtil {
 	 */
 	public static function appendStringToPath(path:String, data:String):Void {
 		#if sys
-		File.append(path, false).writeString(data);
+		if (!FileSystem.exists(path)) {
+			writeStringToPath(path, data, Force);
+			return;
+		} else if (FileSystem.isDirectory(path)) throw 'Target path is a directory, not a file: "$path"';
+	
+		var output:Null<FileOutput> = null;
+		try {
+			output = File.append(path, false);
+			output.writeString(data);
+			output.close();
+		} catch (e:Dynamic) {
+			if (output != null) output.close();
+			throw 'Failed to append to file: "$path"';
+		}
 		#else
-		throw 'Direct file writing by path not supported on this platform.';
+		throw 'Direct file writing by path is not supported on this platform.';
 		#end
 	}
 
@@ -246,11 +318,11 @@ class FileUtil {
 	 */
 	public static function createDirIfNotExists(dir:String):Void {
 		#if sys
-		if (!FileSystem.exists(dir)) sys.FileSystem.createDirectory(dir);
+		if (!FileSystem.isDirectory(dir)) sys.FileSystem.createDirectory(dir);
 		#end
 	}
 
-	static var tempDir:String = null;
+	static var tempDir:Null<String> = null;
 	/**
 	 * Get the path to a temporary directory we can use for writing files.
 	 * Only works on desktop.
@@ -261,13 +333,13 @@ class FileUtil {
 		if (tempDir != null) return tempDir;
 		#if sys
 		#if windows
-		var path:String = null;
+		var path:Null<String> = null;
 		for (envName in ['TEMP', 'TMPDIR', 'TEMPDIR', 'TMP']) {
 			path = Sys.getEnv(envName);
 			if (path == '') path = null;
 			if (path != null) break;
 		}
-		tempDir = Path.join([path, 'funkin/']);
+		tempDir = Path.join([path ?? '', 'funkin/']);
 		return tempDir;
 		#else
 		tempDir = '/tmp/funkin/';
@@ -278,9 +350,14 @@ class FileUtil {
 		#end
 	}
 
-	static function convertTypeFilter(typeFilter:Array<FileFilter>):String {
-		if (typeFilter != null) return [for (type in typeFilter) type.extension.replace('*.', '').replace(';', ',')].join(';');
-		return null;
+	private static function convertTypeFilter(?typeFilter:Array<FileFilter>):Null<String> {
+		var filter:Null<String> = null;
+		if (typeFilter != null) {
+			var filters:Array<String> = new Array<String>();
+			for (type in typeFilter) filters.push(type.extension.replace('*.', '').replace(';', ','));
+			filter = filters.join(';');
+		}
+		return filter;
 	}
 }
 
@@ -299,4 +376,64 @@ enum FileWriteMode {
 	 * Skip the file if it already exists.
 	 */
 	Skip;
+}
+
+/**
+ * Utilities for reading and writing files on various platforms.
+ * Wrapper for `FileUtil` that sanitizes paths for script safety.
+ */
+@:nullSafety
+class FileUtilSandboxed {
+	/**
+	 * Prevent paths from exiting the root.
+	 *
+	 * @param path The path to sanitize.
+	 * @return The sanitized path.
+	 */
+	public static function sanitizePath(path:String):String {
+		path = (path ?? '').trim();
+		if (path == '') return #if sys FileUtil.gameDirectory #else '' #end;
+
+		if (path.contains(':')) path = path.substring(path.lastIndexOf(':') + 1);
+		path = path.replace('\\', '/');
+		while (path.contains('//')) path = path.replace('//', '/');
+
+		final parts:Array<String> = FileUtil.INVALID_CHARS.replace(path, '').split('/');
+		final sanitized:Array<String> = new Array<String>();
+		for (part in parts) {
+			switch (part) {
+				case '.' | '': continue;
+				case '..': sanitized.pop();
+				default: sanitized.push(part.trim());
+			}
+		}
+
+		if (sanitized.length == 0) return #if sys FileUtil.gameDirectory #else '' #end;
+
+		#if sys
+		// TODO: figure out how to get "real" path of symlinked paths
+		final realPath:String = sys.FileSystem.fullPath(Path.join([FileUtil.gameDirectory, sanitized.join('/')]));
+		if (!realPath.startsWith(FileUtil.gameDirectory)) {
+			return FileUtil.gameDirectory;
+		}
+		return realPath;
+		#else
+		return sanitized.join('/');
+		#end
+	}
+
+	/**
+	 * Check against protected paths.
+	 * @param path The path to check.
+	 * @return Whether the path is protected.
+	 */
+	public static function isProtected(path:String, sanitizeFirst:Bool = true):Bool {
+		if (sanitizeFirst) path = sanitizePath(path);
+		@:privateAccess for (protected in FileUtil.PROTECTED_PATHS) {
+			if (path == protected || (protected.contains('*') && path.startsWith(protected.substring(0, protected.indexOf('*'))))) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

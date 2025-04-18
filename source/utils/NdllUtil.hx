@@ -15,6 +15,7 @@ import lime.utils.Assets;
  * - The NDLL is not found
  * - The Function cannot be found in the NDLL
  * then an empty function will be returned instead, and a message will be shown in logs.
+ *
  * Ported to Alter Engine.
  * @author Codename Engine Team, Altertoriel
  */

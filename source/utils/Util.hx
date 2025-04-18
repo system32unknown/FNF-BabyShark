@@ -5,6 +5,28 @@ import openfl.utils.Assets;
 import flixel.addons.display.FlxBackdrop;
 
 class Util {
+	/**
+	 * A regex to match valid URLs.
+	 */
+	public static final URL_REGEX:EReg = ~/^https?:\/?\/?(?:www\.)?[-a-zA-Z0-9@:%_\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
+
+	/**
+	 * Sanitizes a URL via a regex.
+	 *
+	 * @param targetUrl The URL to sanitize.
+	 * @return The sanitized URL, or an empty string if the URL is invalid.
+	 */
+	public static function sanitizeURL(targetUrl:String):String {
+		targetUrl = (targetUrl ?? '').trim();
+		if (targetUrl == '') return '';
+
+		final lowerUrl:String = targetUrl.toLowerCase();
+		if (!lowerUrl.startsWith('http:') && !lowerUrl.startsWith('https:')) targetUrl = 'http://' + targetUrl;
+		if (URL_REGEX.match(targetUrl)) return URL_REGEX.matched(0);
+
+		return '';
+	}
+
 	public static function checkForUpdates(url:String = null):Array<String> {
 		if (url == null || url.length == 0)
 			url = "https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/CHANGELOG.md";
@@ -73,6 +95,9 @@ class Util {
 	 * @return Results URL status.
 	 */
 	public static function browserLoad(site:String):Int {
+		site = sanitizeURL(site);
+		if (site == '') throw 'Invalid URL: "$site"';
+
 		#if linux
 		var cmd:Int = Sys.command("xdg-open", [site]); // generally `xdg-open` should work in every distro
 		if (cmd != 0) cmd = Sys.command("/usr/bin/xdg-open", [site]); // run old command JUST IN CASE it fails, which it shouldn't
@@ -88,39 +113,45 @@ class Util {
 	 * @param folder The path to the folder to open.
 	 * @param absolute If true, uses the provided absolute path; otherwise, resolves the folder relative to the current working directory.
 	 */
-	inline public static function openFolder(folder:String, absolute:Bool = false):Void {
+	public static function openFolder(folder:String, absolute:Bool = false):Void {
 		#if sys
 		if (!absolute) folder = Sys.getCwd() + '$folder';
+		if (!FileSystem.exists(folder) || !FileSystem.isDirectory(folder))
+			throw 'openFolder should only be used to open existing folders.';
+
 		folder = folder.replace('/', '\\');
 		if (folder.endsWith('/')) folder.substr(0, folder.length - 1);
 
 		var commandOpen:String = '';
 		#if windows
 		commandOpen = 'explorer.exe';
-		#elseif mac
+		#elseif (mac || linux)
 		commandOpen = 'open';
-		#else
-		commandOpen = '/usr/bin/xdg-open';
 		#end
-
 		Sys.command(commandOpen, [folder]);
 		#else
-		FlxG.error("Platform is not supported for Util.openFolder");
+		throw 'External folder open is not supported on this platform.';
 		#end
 	}
 
-	/**
-	 * Runs platform-specific code to open a file explorer and select a specific file.
-	 * @param targetPath The path of the file to select.
-	 */
-	public static function openSelectFile(targetPath:String):Void {
+  	/**
+   	* Runs platform-specific code to open a file explorer and select a specific file.
+   	*
+   	* @param path The path of the file to select.
+   	*/
+   	public static function openSelectFile(path:String):Void {
+		#if sys
+		path = path.trim();
+		if (!FileSystem.exists(path)) throw 'Path does not exist: "$path"';
 		#if windows
-		Sys.command('explorer', ['/select,' + targetPath.replace('/', '\\')]);
+		Sys.command('explorer', ['/select,', path.replace('/', '\\')]);
 		#elseif mac
-		Sys.command('open', ['-R', targetPath]);
+		Sys.command('open', ['-R', path]);
 		#elseif linux
-		// TODO: unsure of the linux equivalent to opening a folder and then "selecting" a file.
-		Sys.command('open', [targetPath]);
+		Sys.command('open', [path]); // TODO: unsure of the linux equivalent to opening a folder and then "selecting" a file.
+		#end
+		#else
+		throw 'External file selection is not supported on this platform.';
 		#end
 	}
 
