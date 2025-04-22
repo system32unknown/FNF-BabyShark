@@ -168,7 +168,7 @@ class HScript extends AlterHscript {
 			"Paths" => Paths,
 			"Conductor" => Conductor,
 			"Alphabet" => Alphabet,
-			"DeltaTrail" => objects.DeltaTrail,
+			"DeltaTrail" => effects.DeltaTrail,
 			#if AWARDS_ALLOWED
 			"Awards" => Awards,
 			#end

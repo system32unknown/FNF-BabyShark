@@ -1,4 +1,6 @@
-package objects;
+package effects;
+
+import objects.Character;
 
 /**
  * FlxTrail but it uses delta time.
