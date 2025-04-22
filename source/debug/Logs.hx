@@ -3,7 +3,7 @@ package debug;
 import flixel.system.debug.log.LogStyle;
 import haxe.Log;
 import utils.system.NativeUtil;
-import utils.system.NativeUtil.ConsoleColor;
+import utils.system.Ansi.ConsoleColor;
 
 // Credit by Codename Engine Team
 class Logs {
