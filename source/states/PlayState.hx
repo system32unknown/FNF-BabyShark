@@ -879,7 +879,7 @@ class PlayState extends MusicBeatState {
 		while (daNote.strumTime - noteKillOffset < time) {
 			daNote.ignoreNote = true;
 			daNote.kill(); unspawnNotes.remove(daNote); daNote.destroy();
-			daNote = unspawnNotes[--i];
+			daNote = unspawnNotes[i--];
 		}
 
 		i = notes.length - 1;
@@ -887,7 +887,7 @@ class PlayState extends MusicBeatState {
 		while (daNote.strumTime - noteKillOffset < time) {
 			daNote.ignoreNote = true;
 			invalidateNote(daNote);
-			daNote = notes.members[--i];
+			daNote = notes.members[i--];
 		}
 	}
 	public dynamic function updateScore(miss:Bool = false) {
@@ -920,7 +920,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function setSongTime(time:Float) {
-		if (!inStarting) {
+		if (!inStarting || time > 0) {
 			FlxG.sound.music.pause(); vocals.pause();
 
 			FlxG.sound.music.time = time - Conductor.offset;

@@ -239,7 +239,7 @@ class GameplayChangersSubstate extends FlxSubState {
 					}
 
 					if (leOption.name == 'Scroll Speed') {
-						leOption.displayFormat = "%vX";
+						leOption.displayFormat = (optionsArray[0].getValue() == "constant") ? "%v" : "%vX";
 						leOption.maxValue = 3;
 						if (leOption.getValue() > 3) leOption.setValue(3);
 						updateTextFrom(leOption);

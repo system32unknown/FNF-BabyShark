@@ -51,8 +51,14 @@ class NativeUtil {
 	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
 		if (Main.noTerminalColor) return;
 
+		#if (windows && !hl)
+		if (foregroundColor == NONE) foregroundColor = LIGHTGRAY;
+		if (backgroundColor == NONE) backgroundColor = BLACK;
+		PlatformUtil.setConsoleColors((cast (backgroundColor, Int) * 16) + cast (foregroundColor, Int));
+		#elseif sys
 		Ansi.reset();
 		if (foregroundColor != NONE) Sys.print("\x1b[" + Std.int(Ansi.colorToANSI(foregroundColor)) + "m");
 		if (backgroundColor != NONE) Sys.print("\x1b[" + Std.int(Ansi.colorToANSI(backgroundColor) + 10) + "m");
+		#end
 	}
 }
