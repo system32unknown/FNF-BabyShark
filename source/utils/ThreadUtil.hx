@@ -44,7 +44,7 @@ class ThreadUtil {
 	 * @param autoRestart If true, the thread will restart itself after crashing.
 	 * @return The created thread.
 	 */
-	public static function createSafe(func:Void->Void, autoRestart:Bool = false) {
+	public static function createSafe(func:Void->Void, autoRestart:Bool = false):Thread {
 		return Thread.create(function() {
 			if (autoRestart) {
 				while (true) {

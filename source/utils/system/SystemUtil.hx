@@ -63,6 +63,12 @@ class SystemUtil {
 		return available;
 	}
 
+	/**
+	 * Checks if OBS (Open Broadcaster Software) is currently running on the system.
+	 * It runs the "tasklist" command and searches for OBS executables in the process list.
+	 *
+	 * @return True if any OBS process (obs64.exe, obs32.exe, or obs.exe) is found; otherwise, false.
+	 */
 	public static function checkForOBS():Bool {
 		var tasklists:haxe.io.Bytes = new Process("tasklist").stdout.readAll();
 		var tasklist:String = tasklists.getString(0, tasklists.length);

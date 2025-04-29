@@ -2494,7 +2494,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			if (Song.chartPath != null && Song.chartPath.length > 0) {
 				var parentFolder:String = Song.chartPath.replace('\\', '/');
 				parentFolder = parentFolder.substr(0, Song.chartPath.lastIndexOf('/') + 1);
-				var notetypeFile:Array<String> = Util.coolTextFile(parentFolder + 'notetypes.txt');
+				var notetypeFile:Array<String> = Util.readTextFiles(parentFolder + 'notetypes.txt');
 				if (notetypeFile.length > 0) {
 					for (ntTyp in notetypeFile) {
 						var name:String = ntTyp.trim();

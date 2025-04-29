@@ -86,7 +86,7 @@ class WeekData {
 		var originalLength:Int = directories.length;
 		#end
 
-		var sexList:Array<String> = Util.coolTextFile(Paths.getSharedPath('weeks/weekList.txt'));
+		var sexList:Array<String> = Util.readTextFiles(Paths.getSharedPath('weeks/weekList.txt'));
 		for (i in 0...sexList.length) {
 			for (j in 0...directories.length) {
 				var fileToCheck:String = '${directories[j]}weeks/${sexList[i]}.json';
@@ -109,7 +109,7 @@ class WeekData {
 		for (i in 0...directories.length) {
 			var directory:String = '${directories[i]}weeks/';
 			if (FileSystem.exists(directory)) {
-				for (daWeek in Util.coolTextFile(directory + 'weekList.txt')) {
+				for (daWeek in Util.readTextFiles(directory + 'weekList.txt')) {
 					var path:String = directory + '$daWeek.json';
 					if (FileSystem.exists(path)) addWeek(daWeek, path, directories[i], i, originalLength);
 				}

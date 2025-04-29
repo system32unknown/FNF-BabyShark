@@ -131,16 +131,16 @@ class MemoryUtil {
 	 */
 	public static function getFlxZombies(destroy:Bool = false):Array<Dynamic> {
 		var _zombie:Dynamic = null;
-		var cotainedZombies:Array<Dynamic> = [];
+		var containedZombies:Array<Dynamic> = [];
 		#if cpp
 		while ((_zombie = Gc.getNextZombie()) != null) {
 			if (_zombie is IFlxDestroyable) {
-				cotainedZombies.push(_zombie);
+				containedZombies.push(_zombie);
 				if (destroy) FlxDestroyUtil.destroy(cast(_zombie, IFlxDestroyable));
 			}
 		}
 		#end
 		_zombie = null;
-		return cotainedZombies;
+		return containedZombies;
 	}
 }

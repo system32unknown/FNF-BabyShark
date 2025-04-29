@@ -74,7 +74,7 @@ class Util {
 		if (sound != null) FlxG.sound.play(sound, volume);
 	}
 
-	public static function coolTextFile(path:String):Array<String> {
+	public static function readTextFiles(path:String):Array<String> {
 		var daList:String = null;
 		#if (sys && MODS_ALLOWED)
 		if (FileSystem.exists(path)) daList = File.getContent(path);
