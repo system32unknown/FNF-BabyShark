@@ -52,7 +52,7 @@ class MainMenuState extends MusicBeatState {
 		bg.color = 0xFFFDE871;
 		add(bg);
 		
-		add(camFollow = new FlxObject(FlxG.width / 2, 0, 1, 1));
+		add(camFollow = new FlxObject(FlxG.width * .5, 0, 1, 1));
 
 		magenta = new FlxSprite(bg.graphic);
 		magenta.antialiasing = Settings.data.antialiasing;
