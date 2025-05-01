@@ -1,5 +1,4 @@
 @echo off
-color 0a
 cd ..
 title BUILDING GAME
 haxelib run lime build windows -release
