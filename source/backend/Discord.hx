@@ -183,6 +183,7 @@ final class DiscordPresence {
 	@:noCompletion inline function set_endTimestamp(value:Int):Int {return __presence.endTimestamp = value;}
 }
 
+@:noCustomClass
 final class DUser {
 	/**
 	 * The username + discriminator if they have it

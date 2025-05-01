@@ -3,6 +3,7 @@ package backend;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
 
+@:noCustomClass
 class Controls {
 	// Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx
 	public static final default_binds:Map<String, Array<FlxKey>> = [
