@@ -70,7 +70,7 @@ class HealthIcon extends FlxSprite {
 		var graph:FlxGraphic = null;
 		var name:String = 'icons/$char';
 
-		animated = Paths.exists('images/$name.xml');
+		animated = Paths.exists(Paths.getPath('images/$name.xml'));
 
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing, allowGPU);
 		else {

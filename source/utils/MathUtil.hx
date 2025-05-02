@@ -7,9 +7,9 @@ class MathUtil {
 	 * @param decimals The number of decimal places.
 	 * @return The rounded down number.
 	 */
-	public static function floorDecimal(value:Float, decimals:Int):Float {
-		if (decimals < 1) return Math.floor(value);
-		return Math.floor(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
+	public static function floorDecimal(value:Float, precision:Float = 2):Float {
+		value *= (precision = Math.pow(10, precision));
+		return Math.floor(value) / precision;
 	}
 
 	/**
@@ -54,5 +54,19 @@ class MathUtil {
 	inline public static function interpolate(a:Float, b:Float, m:Float, e:Float = 1) {
 		m = FlxMath.bound(m, 0, 1);
 		return FlxMath.lerp(a, b, Math.pow(m, e));
+	}
+
+	public static function mean(values:Array<Float>):Float {
+		final amount:Int = values.length;
+		var result:Float = 0.0;
+
+		var value:Float = 0;
+		for (i in 0...amount) {
+			value = values[i];
+			if (value == 0) continue;
+			result += value;
+		}
+
+		return result / amount;
 	}
 }

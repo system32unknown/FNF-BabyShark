@@ -60,7 +60,7 @@ class PlayState extends MusicBeatState {
 
 	public var songSpeedTween:FlxTween;
 	public var songSpeed(default, set):Float = 1;
-	public var songSpeedType:String = "multiplicative";
+	public var songSpeedType:String = "multiplied";
 
 	public final noteKillTime:Float = 350;
 	public var noteKillOffset:Float = 0;
@@ -971,8 +971,8 @@ class PlayState extends MusicBeatState {
 	function generateSong():Void {
 		songSpeedType = Settings.getGameplaySetting('scrolltype');
 		songSpeed = switch (songSpeedType) {
-			case "constant": Settings.getGameplaySetting('scrollspeed');
-			case "multiplicative": SONG.speed * Settings.getGameplaySetting('scrollspeed');
+			case 'constant': Settings.getGameplaySetting('scrollspeed');
+			case 'multiplied': SONG.speed * Settings.getGameplaySetting('scrollspeed');
 			default: SONG.speed;
 		}
 
@@ -1930,8 +1930,8 @@ class PlayState extends MusicBeatState {
 		}
 	}
 
-	public var ratingAcc:FlxPoint = FlxPoint.get();
-	public var ratingVel:FlxPoint = FlxPoint.get();
+	var ratingPop:Popup = null;
+	var numScore:Popup = null;
 	function popUpScore(note:Note = null):Void {
 		var daloop:Null<Int> = 0;
 
@@ -1946,7 +1946,6 @@ class PlayState extends MusicBeatState {
 			}
 		}
 
-		var ratingPop:Popup = null;
 		if (showRating) {
 			ratingPop = popUpGroup.recycle(Popup);
 			ratingPop.setupPopupData(RATING, uiFolder + 'judgements/${daRating.image}' + uiPostfix);
@@ -1961,7 +1960,7 @@ class PlayState extends MusicBeatState {
 			}
 			seperatedScore.push(tempNotes % 10);
 			for (i in seperatedScore) {
-				var numScore:Popup = popUpGroup.recycle(Popup);
+				numScore = popUpGroup.recycle(Popup);
 				numScore.setupPopupData(NUMBER, uiFolder + 'judgements/number/num$i' + uiPostfix, daloop, tempNotes);
 				popUpGroup.add(numScore);
 				numScore.doTween();

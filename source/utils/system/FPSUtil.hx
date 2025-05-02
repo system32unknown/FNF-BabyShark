@@ -51,7 +51,8 @@ class FPSUtil {
 		totalFPS = Math.round(curFPS + curCount / 8);
 		if (curCount != cacheCount) {
 			avgFPS = curCount > 0 ? 1000 / (sum / curCount) : 0.0;
-			curFPS = Math.round(avgFPS);
+			var roundAvgFPS = Math.round(avgFPS);
+			curFPS = roundAvgFPS < FlxG.drawFramerate ? roundAvgFPS : FlxG.drawFramerate;
 		}
 		cacheCount = curCount;
 	}

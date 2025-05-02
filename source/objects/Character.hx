@@ -94,7 +94,7 @@ class Character extends FlxSprite {
 		curCharacter = character;
 
 		var path:String = Paths.getPath('characters/$curCharacter.json');
-		if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
+		if (!Paths.exists(path)) {
 			path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); // If a character couldn't be found, change him to BF just to prevent a crash
 			missingCharacter = true;
 			missingText = new FlxText(0, 0, 300, 'ERROR:\n$character.json', 16);

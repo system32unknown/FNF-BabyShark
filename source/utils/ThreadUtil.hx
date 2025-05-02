@@ -12,13 +12,16 @@ class ThreadUtil {
 	 * Array storing all threads used for game logic execution.
 	 */
 	public static var gameThreads:Array<Thread> = [];
+	static var initialized:Bool = false;
 
 	/**
 	 * Initializes a set of game threads with event loops for asynchronous task handling.
 	 * This setup creates 4 threads that can be used to distribute workload.
 	 */
 	public static function init() {
+		if (initialized) return;
 		for (i in 0...4) gameThreads.push(Thread.createWithEventLoop(() -> Thread.current().events.promise()));
+		initialized = true;
 	}
 
 	/**

@@ -22,7 +22,7 @@ class GameplayChangersSubstate extends FlxSubState {
 	final constMax:Float = 1024;
 	final multiMax:Float = 128;
 	function getOptions() {
-		var goption:GameplayOption = new GameplayOption('Scroll Type', 'scrolltype', STRING, 'multiplicative', ["multiplicative", "constant"]);
+		var goption:GameplayOption = new GameplayOption('Scroll Type', 'scrolltype', STRING, 'multiplied', ['multiplied', 'constant']);
 		optionsArray.push(goption);
 
 		var option:GameplayOption = new GameplayOption('Scroll Speed', 'scrollspeed', FLOAT, 1);

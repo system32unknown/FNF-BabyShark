@@ -38,7 +38,7 @@ class MenuCharacter extends FlxSprite {
 			case '': visible = false;
 			default:
 				var path:String = Paths.getPath('images/menucharacters/$character.json');
-				if (!#if MODS_ALLOWED FileSystem #else Assets #end.exists(path)) {
+				if (!Paths.exists(path)) {
 					path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 					color = FlxColor.BLACK;
 					alpha = 0.6;

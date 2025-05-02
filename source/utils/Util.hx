@@ -84,9 +84,8 @@ class Util {
 		return daList == null ? [] : listFromString(daList);
 	}
 
-	public static function listFromString(string:String):Array<String> {
-		final daList:Array<String> = string.trim().split('\n');
-		return [for (i in 0...daList.length) daList[i].trim()];
+	inline public static function listFromString(string:String):Array<String> {
+		return string.trim().split('\n');
 	}
 
 	/**

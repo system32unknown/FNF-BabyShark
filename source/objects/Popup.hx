@@ -5,26 +5,29 @@ enum PopupType {
 	RATING;
 	NUMBER;
 }
+enum VelocityType {
+	NONE;
+	NORMAL;
+	CUSTOM(velX:Float, accX:Float, velY:Float, accY:Float);
+}
 
 class Popup extends FlxSprite {
 	public var type:PopupType;
 	public var popUpTime:Float = 0;
-	public static var noVelocity:Bool = false;
+	public var velType:VelocityType = NORMAL;
 
 	final placement:Float = FlxG.width * .35;
 	var i:PlayState;
-	var baseAccX:Float = 0.0;
+	var baseRate:Float = 0.0;
 	var comboOffset:Array<Array<Int>> = [];
 
 	public function new() {
 		super();
 		type = NONE;
 		i = PlayState.instance;
-		baseAccX = i.ratingAcc.x * i.playbackRate * i.playbackRate;
+		baseRate = i.playbackRate * i.playbackRate;
 		comboOffset = Settings.data.comboOffset;
 	}
-
-	var texture:Popup;
 
 	public function reloadTexture(target:String):Popup {
 		popUpTime = Conductor.songPosition;
@@ -32,7 +35,7 @@ class Popup extends FlxSprite {
 			this.frames = Paths.popUpFramesMap.get(target);
 			return this;
 		} else {
-			texture = cast loadGraphic(Paths.image(target));
+			var texture:Popup = cast loadGraphic(Paths.image(target));
 			Paths.popUpFramesMap.set(target, this.frames);
 			return texture;
 		}
@@ -54,14 +57,19 @@ class Popup extends FlxSprite {
 
 		updateHitbox();
 
-		if (!noVelocity) {
-			if (popUptype == RATING) {
-				velocity.set(-FlxG.random.int(0, 10) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(140, 175) * i.playbackRate + i.ratingVel.y);
-				acceleration.set(baseAccX, 550 * i.playbackRate * i.playbackRate + i.ratingAcc.y);
-			} else {
-				velocity.set(FlxG.random.float(-5, 5) * i.playbackRate + i.ratingVel.x, -FlxG.random.int(130, 150) * i.playbackRate + i.ratingVel.y);
-				acceleration.set(baseAccX, FlxG.random.int(250, 300) * i.playbackRate * i.playbackRate + i.ratingAcc.y);
-			}
+		switch (velType) {
+			case NORMAL:
+				if (popUptype == RATING) {
+					velocity.set(-FlxG.random.int(0, 10) * i.playbackRate, -FlxG.random.int(140, 175) * i.playbackRate);
+					acceleration.set(baseRate, 550 * baseRate);
+				} else {
+					velocity.set(FlxG.random.float(-5, 5) * i.playbackRate, -FlxG.random.int(130, 150) * i.playbackRate);
+					acceleration.set(baseRate, FlxG.random.int(250, 300) * baseRate);
+				}
+			case CUSTOM(velX, accX, velY, accY):
+				velocity.set(-velX * i.playbackRate, -velY * i.playbackRate);
+				acceleration.set(accX * baseRate, accY * baseRate);
+			case _:
 		}
 
 		visible = !Settings.data.hideHud;

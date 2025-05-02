@@ -461,7 +461,7 @@ class Paths {
 	}
 	#end
 
-	public static function exists(file:String, ?type:AssetType = TEXT, ?parentFolder:String, ?modsAllowed:Bool = true):Bool {
-		return #if MODS_ALLOWED FileSystem #else Assets #end.exists(getPath(file, type, parentFolder, modsAllowed));
+	public static inline function exists(file:String):Bool {
+		return #if MODS_ALLOWED FileSystem #else Assets #end.exists(file);
 	}
 }

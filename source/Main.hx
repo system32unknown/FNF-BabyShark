@@ -15,9 +15,10 @@ import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since
 #end
 
 #if (linux && !debug)
-@:cppInclude('./external/gamemode_client.h')
+@:cppInclude('./_external/gamemode_client.h')
 @:cppFileCode('#define GAMEMODE_AUTO')
 #end
+
 class Main extends Sprite {
 	public static var engineVer:GameVersion = '0.1.5';
 	public static var fnfVer:GameVersion = '0.6.2';
@@ -40,12 +41,12 @@ class Main extends Sprite {
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
 	public function new() {
+		debug.Logs.init();
 		super();
 		#if (linux || mac) openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 
 		utils.system.PlatformUtil.fixScaling();
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
-		debug.Logs.init();
 
 		#if HSCRIPT_ALLOWED
 		AlterHscript.warn = function(x, ?pos:PosInfos) {

@@ -7,8 +7,6 @@ import utils.system.Ansi.ConsoleColor;
 
 // Credit by Codename Engine Team
 class Logs {
-	static var __showing:Bool = false;
-
 	#if !sys public static var nativeTrace = Log.trace; #end
 	public static function init() {
 		Log.trace = function(v:Dynamic, ?infos:Null<haxe.PosInfos>) {
@@ -71,15 +69,12 @@ class Logs {
 
 	public static function __showInConsole(text:Array<LogText>) {
 		#if sys
-		while (__showing) Sys.sleep(.05);
-		__showing = true;
 		for (t in text) {
 			NativeUtil.setConsoleColors(t.color);
 			Sys.print(t.text);
 		}
 		NativeUtil.setConsoleColors();
 		Sys.print("\r\n");
-		__showing = false;
 		#else
 		@:privateAccess
 		nativeTrace([for (t in text) t.text].join(""));

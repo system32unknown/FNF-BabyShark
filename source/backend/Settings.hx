@@ -104,7 +104,7 @@ class SaveVariables {
 	var unlockedCharacters:Array<String> = ['bf', 'bf-pixel', 'bf-christmas', 'bs', 'bs-pixel', 'alter-holding-bs', 'pico-player', 'nate-player'];
 	var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.,
-		'scrolltype' => 'multiplicative',
+		'scrolltype' => 'multiplied',
 		
 		'songspeed' => 1.,
 		'healthgain' => 1.,
