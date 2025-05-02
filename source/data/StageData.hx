@@ -1,7 +1,7 @@
 package data;
 
 #if !MODS_ALLOWED import openfl.utils.Assets; #end
-import psychlua.ModchartSprite;
+import scripting.ModchartSprite;
 import backend.Song;
 import tjson.TJSON;
 
@@ -162,7 +162,7 @@ class StageData {
 					}
 					spr.scrollFactor.set(data.scroll[0], data.scroll[1]);
 					spr.color = Util.colorFromString(data.color);
-					spr.blend = psychlua.LuaUtils.blendModeFromString(data.blend);
+					spr.blend = scripting.ScriptUtils.blendModeFromString(data.blend);
 
 					for (varName in ['alpha', 'angle']) {
 						var dat:Dynamic = Reflect.getProperty(data, varName);

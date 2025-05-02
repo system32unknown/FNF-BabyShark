@@ -7,7 +7,7 @@ import utils.GameVersion;
 import debug.FPSCounter;
 #if HSCRIPT_ALLOWED
 import alterhscript.AlterHscript;
-import psychlua.HScript.HScriptInfos;
+import scripting.HScript.HScriptInfos;
 import haxe.PosInfos;
 #end
 #if desktop
@@ -54,12 +54,6 @@ class Main extends Sprite {
 			var newPos:HScriptInfos = cast pos;
 			if (newPos.showLine == null) newPos.showLine = true;
 			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '') + '${newPos.fileName}:';
-			#if LUA_ALLOWED
-			if (newPos.isLua == true) {
-				msgInfo += 'HScript:';
-				newPos.showLine = false;
-			}
-			#end
 			if (newPos.showLine == true) msgInfo += '${newPos.lineNumber}:';
 			msgInfo += ' $x';
 			if (PlayState.instance != null) PlayState.instance.addTextToDebug('WARNING: $msgInfo', FlxColor.YELLOW);
@@ -69,12 +63,6 @@ class Main extends Sprite {
 			var newPos:HScriptInfos = cast pos;
 			if (newPos.showLine == null) newPos.showLine = true;
 			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '') + '${newPos.fileName}:';
-			#if LUA_ALLOWED
-			if (newPos.isLua == true) {
-				msgInfo += 'HScript:';
-				newPos.showLine = false;
-			}
-			#end
 			if (newPos.showLine == true) msgInfo += '${newPos.lineNumber}:';
 			msgInfo += ' $x';
 			if (PlayState.instance != null) PlayState.instance.addTextToDebug('ERROR: $msgInfo', FlxColor.RED);
@@ -84,12 +72,6 @@ class Main extends Sprite {
 			var newPos:HScriptInfos = cast pos;
 			if (newPos.showLine == null) newPos.showLine = true;
 			var msgInfo:String = (newPos.funcName != null ? '(${newPos.funcName}) - ' : '') + '${newPos.fileName}:';
-			#if LUA_ALLOWED
-			if (newPos.isLua == true) {
-				msgInfo += 'HScript:';
-				newPos.showLine = false;
-			}
-			#end
 			if (newPos.showLine == true) msgInfo += '${newPos.lineNumber}:';
 			msgInfo += ' $x';
 			if (PlayState.instance != null) PlayState.instance.addTextToDebug('FATAL: $msgInfo', 0xFFBB0000);

@@ -229,7 +229,7 @@ class PauseSubState extends MusicBeatSubstate {
 						pSte.botplaySine = 0;
 					}
 				case 'Options':
-					pSte.paused = true; // For lua
+					pSte.paused = true; // For Hscript
 					pSte.vocals.volume = 0;
 					pSte.canResync = false;
 					FlxG.switchState(() -> new OptionsState());
@@ -279,7 +279,7 @@ class PauseSubState extends MusicBeatSubstate {
 
 	public static function restartSong(noTrans:Bool = false) {
 		var pSte:PlayState = PlayState.instance;
-		pSte.paused = true; // For lua
+		pSte.paused = true; // For Hscript
 		FlxG.sound.music.volume = 0;
 		pSte.vocals.volume = 0;
 

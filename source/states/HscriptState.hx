@@ -1,7 +1,7 @@
 package states;
 
-import psychlua.HScript;
-import psychlua.LuaUtils;
+import scripting.HScript;
+import scripting.ScriptUtils;
 import alterhscript.AlterHscript;
 
 class HscriptState extends MusicBeatState {
@@ -37,10 +37,10 @@ class HscriptState extends MusicBeatState {
 	}
 
 	public function callOnHScript(funcToCall:String, ?args:Array<Dynamic>, ?ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
-		var returnVal:Dynamic = LuaUtils.Function_Continue;
+		var returnVal:Dynamic = ScriptUtils.Function_Continue;
 		#if HSCRIPT_ALLOWED
 		if (exclusions == null) exclusions = [];
-		if (excludeValues == null) excludeValues = [LuaUtils.Function_Continue];
+		if (excludeValues == null) excludeValues = [ScriptUtils.Function_Continue];
 
 		@:privateAccess
 		if (hscript == null || !hscript.exists(funcToCall) || exclusions.contains(hscript.origin)) return null;
@@ -48,7 +48,7 @@ class HscriptState extends MusicBeatState {
 		var callValue:AlterCall = hscript.call(funcToCall, args);
 		if (callValue != null) {
 			var myValue:Dynamic = callValue.returnValue;
-			if ((myValue == LuaUtils.Function_StopHScript || myValue == LuaUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops) returnVal = myValue;
+			if ((myValue == ScriptUtils.Function_StopHScript || myValue == ScriptUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops) returnVal = myValue;
 			if (myValue != null && !excludeValues.contains(myValue)) returnVal = myValue;
 		}
 		#end

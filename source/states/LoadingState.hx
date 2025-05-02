@@ -19,7 +19,7 @@ import objects.Note;
 import objects.NoteSplash;
 
 #if HSCRIPT_ALLOWED
-import psychlua.HScript;
+import scripting.HScript;
 import alterhscript.AlterHscript;
 import hscript.Printer;
 #end

@@ -17,6 +17,5 @@ body:
         - Useful feature
         - Actual feedback
         - A good idea
-        - Better LUA mod support idea
     validations:
       required: true

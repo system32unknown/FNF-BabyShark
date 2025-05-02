@@ -12,7 +12,6 @@ class AdditionalClasses {
 			// FLIXEL
 			"flixel", "lime", "haxe", "openfl", "funkin.vis",
 			#if VIDEOS_ALLOWED "hxvlc", #end
-			#if LUA_ALLOWED "llua", #end
 			#if (desktop && DISCORD_ALLOWED) "hxdiscord_rpc", #end
 			"hscript",
 			// OTHER LIBRARIES & STUFF

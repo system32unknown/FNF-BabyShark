@@ -4,17 +4,13 @@ enum PopupType {
 	NONE;
 	RATING;
 	NUMBER;
-}
-enum VelocityType {
-	NONE;
-	NORMAL;
-	CUSTOM(velX:Float, accX:Float, velY:Float, accY:Float);
+	CUSTOM(popX:Float, popY:Float, size:Float);
 }
 
 class Popup extends FlxSprite {
 	public var type:PopupType;
 	public var popUpTime:Float = 0;
-	public var velType:VelocityType = NORMAL;
+	public static var noVelocity:Bool = false;
 
 	final placement:Float = FlxG.width * .35;
 	var i:PlayState;
@@ -45,31 +41,32 @@ class Popup extends FlxSprite {
 		type = popUptype;
 		reloadTexture(img);
 
-		if (popUptype == NUMBER) {
-			x = placement + (43 * daloop) - 50 + comboOffset[1][0] - 43 / 2 * (Std.string(tempNotes).length - 1);
-			gameCenter(Y).y += 20 - comboOffset[1][1];
-			setGraphicSize(Std.int(width * (PlayState.isPixelStage ? PlayState.daPixelZoom : .5)));
-		} else {
-			x = placement - 40 + comboOffset[0][0];
-			gameCenter(Y).y -= 60 + comboOffset[0][1];
-			setGraphicSize(Std.int(width * (PlayState.isPixelStage ? .85 * PlayState.daPixelZoom : .7)));
+		switch (popUptype) {
+			case NUMBER:
+				x = placement + (43 * daloop) - 50 + comboOffset[1][0] - 43 / 2 * (Std.string(tempNotes).length - 1);
+				gameCenter(Y).y += 20 - comboOffset[1][1];
+				setGraphicSize(Std.int(width * (PlayState.isPixelStage ? PlayState.daPixelZoom : .5)));
+			case RATING:
+				x = placement - 40 + comboOffset[0][0];
+				gameCenter(Y).y -= 60 + comboOffset[0][1];
+				setGraphicSize(Std.int(width * (PlayState.isPixelStage ? .85 * PlayState.daPixelZoom : .7)));
+			case CUSTOM(popX, popY, size):
+				x = popX;
+				y = popY;
+				setGraphicSize(size);
+			case _:
 		}
 
 		updateHitbox();
 
-		switch (velType) {
-			case NORMAL:
-				if (popUptype == RATING) {
-					velocity.set(-FlxG.random.int(0, 10) * i.playbackRate, -FlxG.random.int(140, 175) * i.playbackRate);
-					acceleration.set(baseRate, 550 * baseRate);
-				} else {
-					velocity.set(FlxG.random.float(-5, 5) * i.playbackRate, -FlxG.random.int(130, 150) * i.playbackRate);
-					acceleration.set(baseRate, FlxG.random.int(250, 300) * baseRate);
-				}
-			case CUSTOM(velX, accX, velY, accY):
-				velocity.set(-velX * i.playbackRate, -velY * i.playbackRate);
-				acceleration.set(accX * baseRate, accY * baseRate);
-			case _:
+		if (!noVelocity) {
+			if (popUptype == RATING) {
+				velocity.set(-FlxG.random.int(0, 10) * i.playbackRate + i.popupVel.x, -FlxG.random.int(140, 175) * i.playbackRate + i.popupVel.y);
+				acceleration.set(i.popupAcc.x * baseRate, 550 * baseRate + i.popupAcc.y);
+			} else {
+				velocity.set(FlxG.random.float(-5, 5) * i.playbackRate + i.popupVel.x, -FlxG.random.int(130, 150) * i.playbackRate + i.popupVel.y);
+				acceleration.set(i.popupAcc.x * baseRate, FlxG.random.int(250, 300) * baseRate + i.popupAcc.y);
+			}
 		}
 
 		visible = !Settings.data.hideHud;

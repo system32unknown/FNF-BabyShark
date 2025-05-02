@@ -87,8 +87,8 @@ class GameOverSubstate extends MusicBeatSubstate {
 		FlxG.camera.follow(camFollow, LOCKON, 0.01);
 		add(camFollow);
 
-		PlayState.instance.setOnScripts('inGameOver', true);
-		PlayState.instance.callOnScripts('onGameOverStart');
+		PlayState.instance.setOnHScript('inGameOver', true);
+		PlayState.instance.callOnHScript('onGameOverStart');
 		FlxG.sound.music.loadEmbedded(Paths.music(loopSoundName), true);
 
 		super.create();
@@ -97,7 +97,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		PlayState.instance.callOnScripts('onUpdate', [elapsed]);
+		PlayState.instance.callOnHScript('onUpdate', [elapsed]);
 
 		var justPlayedLoop:Bool = false;
 		if (!boyfriend.isAnimationNull() && boyfriend.getAnimationName() == 'firstDeath' && boyfriend.isAnimationFinished()) {
@@ -119,13 +119,13 @@ class GameOverSubstate extends MusicBeatSubstate {
 				FlxG.switchState(() -> PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());
 
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-				PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
+				PlayState.instance.callOnHScript('onGameOverConfirm', [false]);
 			}
 
 			if (FlxG.sound.music.playing) Conductor.songPosition = FlxG.sound.music.time;
 		}
 
-		PlayState.instance.callOnScripts('onUpdatePost', [elapsed]);
+		PlayState.instance.callOnHScript('onUpdatePost', [elapsed]);
 	}
 
 	override function destroy() {
@@ -151,7 +151,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 			});
 		});
 
-		PlayState.instance.callOnScripts('onGameOverConfirm', [true]);
+		PlayState.instance.callOnHScript('onGameOverConfirm', [true]);
 	}
 
 	function getBoyfriend():Character {

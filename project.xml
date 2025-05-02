@@ -22,7 +22,6 @@
 	<section if="desktop">
 		<define name="MODS_ALLOWED" />
 		<define name="HSCRIPT_ALLOWED" />
-		<define name="LUA_ALLOWED" if="cpp" />
 		<define name="CRASH_HANDLER" if="release" />
 		<define name="CHECK_FOR_UPDATES" />
 	</section>
@@ -62,7 +61,6 @@
 	<haxelib name="hscript-improved" />
 	<haxelib name="tjson" />
 
-	<haxelib name="linc_luajit" if="LUA_ALLOWED" />
 	<haxelib name="hxvlc" if="VIDEOS_ALLOWED" />
 	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED" />
 	<haxelib name="grig.audio" />

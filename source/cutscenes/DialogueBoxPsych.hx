@@ -4,7 +4,7 @@ import haxe.Json;
 import openfl.utils.Assets;
 import objects.TypedAlphabet;
 import cutscenes.DialogueCharacter;
-import psychlua.LuaUtils;
+import scripting.ScriptUtils;
 
 typedef DialogueFile = {
 	var dialogue:Array<DialogueLine>;
@@ -58,7 +58,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 	override function update(elapsed:Float) {
 		if (ignoreThisFrame) {
-			PlayState.instance.callOnScripts('onDialogueStart'); // It's here, because scripts might want to access PlayState.instance.psychDialogue (aka this)
+			PlayState.instance.callOnHScript('onDialogueStart'); // It's here, because scripts might want to access PlayState.instance.psychDialogue (aka this)
 			startNextDialog();
 
 			ignoreThisFrame = false;
@@ -70,9 +70,9 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 			bgFade.alpha += .5 * elapsed;
 			if (bgFade.alpha > .5) bgFade.alpha = .5;
 
-			var ret:Dynamic = PlayState.instance.callOnScripts('onDialogueConfirm');
+			var ret:Dynamic = PlayState.instance.callOnHScript('onDialogueConfirm');
 			var back:Bool = Controls.justPressed('back');
-			if (confirmDialogue || (Controls.justPressed('accept') || back) && ret != LuaUtils.Function_Stop) {
+			if (confirmDialogue || (Controls.justPressed('accept') || back) && ret != ScriptUtils.Function_Stop) {
 				if (!typedText.finishedText && !back) {
 					typedText.finishText();
 					if (skipDialogueThing != null) skipDialogueThing();
@@ -168,7 +168,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		if (curDialogue.events != null) {
 			for (i in 0...curDialogue.events.length) {
 				var event:DialogueEvent = curDialogue.events[i];
-				PlayState.instance.callOnScripts('onDialogueEvent', [event.type, event.arguments]); // Call the current event
+				PlayState.instance.callOnHScript('onDialogueEvent', [event.type, event.arguments]); // Call the current event
 			}
 		}
 
@@ -444,8 +444,8 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		currentCharAlpha = char.alpha;
 
 		// Call Update
-		var ret:Dynamic = PlayState.instance.callOnScripts('onCharacterMove', [tag, char.curCharacter, char.startingPos, offsetPos, elapsed]);
-		if (ret != LuaUtils.Function_Stop) defaultMovement(char, elapsed);
+		var ret:Dynamic = PlayState.instance.callOnHScript('onCharacterMove', [tag, char.curCharacter, char.startingPos, offsetPos, elapsed]);
+		if (ret != ScriptUtils.Function_Stop) defaultMovement(char, elapsed);
 
 		// Set positions
 		char.setPosition(currentCharX, currentCharY);
@@ -527,7 +527,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 		// Text
 		typedText = new TypedAlphabet(DEFAULT_TEXT_X, DEFAULT_TEXT_Y);
 		typedText.updateScale(.7, .7);
-		typedText.onUpdate = (text:String) -> PlayState.instance.callOnScripts('onDialogueTextUpdate', [text]);
+		typedText.onUpdate = (text:String) -> PlayState.instance.callOnHScript('onDialogueTextUpdate', [text]);
 		add(typedText);
 
 		skipText = new FlxText(FlxG.width - 320, FlxG.height - 30, 300, Language.getPhrase('dialogue_skip', 'Press BACK to Skip'), 16);

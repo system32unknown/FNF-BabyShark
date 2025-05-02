@@ -3,10 +3,6 @@
 import backend.Discord;
 #end
 
-#if LUA_ALLOWED
-import llua.*;
-import llua.Lua;
-#end
 import debug.Logs;
 
 #if AWARDS_ALLOWED

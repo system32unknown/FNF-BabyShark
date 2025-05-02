@@ -14,7 +14,7 @@ class Init extends flixel.FlxState {
 		Paths.clearStoredMemory();
 		utils.FunkinCache.init();
 
-		#if LUA_ALLOWED Mods.pushGlobalMods(); #end
+		Mods.pushGlobalMods();
 		Mods.loadTopMod();
 
 		Language.reloadPhrases();
@@ -25,8 +25,6 @@ class Init extends flixel.FlxState {
 		FlxG.keys.preventDefaultKeys = [TAB];
 		FlxG.cameras.useBufferLocking = true;
 		FlxG.updateFramerate = FlxG.drawFramerate = Settings.data.framerate;
-
-		#if LUA_ALLOWED llua.Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 
 		if (FlxG.save.data != null) {
 			if (FlxG.save.data.fullscreen != null) FlxG.fullscreen = FlxG.save.data.fullscreen;

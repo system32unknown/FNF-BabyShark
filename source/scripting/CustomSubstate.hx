@@ -1,16 +1,10 @@
-package psychlua;
+package scripting;
 
 import flixel.FlxObject;
 
 class CustomSubstate extends MusicBeatSubstate {
 	public static var name:String = 'unnamed';
 	public static var instance:CustomSubstate;
-
-	public static function implement(funk:FunkinLua) {
-		funk.set("openCustomSubstate", openCustomSubstate);
-		funk.set("closeCustomSubstate", closeCustomSubstate);
-		funk.set("insertToCustomSubstate", insertToCustomSubstate);
-	}
 
 	public static function openCustomSubstate(name:String, ?pauseGame:Bool = false) {
 		if (pauseGame) {
@@ -50,9 +44,9 @@ class CustomSubstate extends MusicBeatSubstate {
 		instance = this;
 		PlayState.instance.setOnHScript('customSubstate', instance);
 
-		PlayState.instance.callOnScripts('onCustomSubstateCreate', [name]);
+		PlayState.instance.callOnHScript('onCustomSubstateCreate', [name]);
 		super.create();
-		PlayState.instance.callOnScripts('onCustomSubstateCreatePost', [name]);
+		PlayState.instance.callOnHScript('onCustomSubstateCreatePost', [name]);
 	}
 
 	public function new(name:String) {
@@ -63,13 +57,13 @@ class CustomSubstate extends MusicBeatSubstate {
 	}
 
 	override function update(elapsed:Float) {
-		PlayState.instance.callOnScripts('onCustomSubstateUpdate', [name, elapsed]);
+		PlayState.instance.callOnHScript('onCustomSubstateUpdate', [name, elapsed]);
 		super.update(elapsed);
-		PlayState.instance.callOnScripts('onCustomSubstateUpdatePost', [name, elapsed]);
+		PlayState.instance.callOnHScript('onCustomSubstateUpdatePost', [name, elapsed]);
 	}
 
 	override function destroy() {
-		PlayState.instance.callOnScripts('onCustomSubstateDestroy', [name]);
+		PlayState.instance.callOnHScript('onCustomSubstateDestroy', [name]);
 		instance = null;
 		name = 'unnamed';
 

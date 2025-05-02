@@ -1,3 +1,6 @@
+> [!NOTE]  
+> Lua Script isn't supported on this engine.
+
 # Baby Shark's Big Funkin!
 ![Baby Shark's Big Funkin Logo](assets/shared/images/logobumpin.png)
 
@@ -17,10 +20,9 @@ Refer to [the Build Instructions](/docs/BUILDING.md)
 
 # Customization:
 
-if you wish to disable things like *Lua Scripts* or *Video Cutscenes*, you can read over to `Project.xml`
+if you wish to disable things like *Video Cutscenes*, you can read over to `Project.xml`
 inside `Project.xml`, you will find several variables to customize Psych Engine to your liking
 to start you off, disabling Videos should be simple, simply Delete the line `"VIDEOS_ALLOWED"` or comment it out by wrapping the line in XML-like comments, like this `<!-- YOUR_LINE_HERE -->`
-same goes for *Lua Scripts*, comment out or delete the line with `LUA_ALLOWED`, this and other customization options are all available within the `Project.xml` file
 
 # Credits:
 
@@ -53,7 +55,6 @@ same goes for *Lua Scripts*, comment out or delete the line with `LUA_ALLOWED`, 
 * MAJigsaw77 - .MP4 Video Loader Library (hxvlc) and hxdiscord_rpc.
 * iFlicky - Composer of Psync, Tea Time and some sound effects.
 * KadeDev - Fixed some issues on Chart Editor and Other PRs, Programmer of Kade Engine.
-* superpowers04 - LUA JIT Fork.
 * CheemsAndFriends - Creator of FlxAnimate.
 * Raltyro - Maintainer of Psike Engine.
 * It'z_Miles - Linear GFX Transformations Library (ParallaxLT).

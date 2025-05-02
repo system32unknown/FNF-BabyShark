@@ -126,16 +126,6 @@ class DiscordClient {
 			clientID = pack.discordRPC;
 	}
 	#end
-
-	#if LUA_ALLOWED
-	public static function addLuaCallbacks(lua:psychlua.FunkinLua) {
-		lua.set("changeDiscordPresence", changePresence);
-		lua.set("changeDiscordClientID", (?newID:String) -> {
-			if (newID == null) newID = _defaultID;
-			clientID = newID;
-		});
-	}
-	#end
 }
 
 @:allow(backend.DiscordClient)

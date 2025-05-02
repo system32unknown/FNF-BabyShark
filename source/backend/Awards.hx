@@ -3,9 +3,6 @@ package backend;
 #if AWARDS_ALLOWED
 import objects.AchievementPopup;
 import flixel.util.FlxSave;
-#if LUA_ALLOWED
-import psychlua.FunkinLua;
-#end
 
 typedef Award = {
 	var name:String;
@@ -219,47 +216,6 @@ class Awards {
 			} catch (e:Dynamic) errorMessage('Mod name: ' + Mods.currentModDirectory ?? "None", 'Error loading achievements.json: $e');
 		}
 		return retVal;
-	}
-	#end
-
-	#if LUA_ALLOWED
-	public static function addLuaCallbacks(lua:FunkinLua) {
-		lua.set("getAchievementScore", function(name:String):Float {
-			if (!list.exists(name)) {
-				FunkinLua.luaTrace('getAchievementScore: Couldnt find achievement: $name', false, false, FlxColor.RED);
-				return -1;
-			}
-			return getScore(name);
-		});
-		lua.set("setAchievementScore", function(name:String, ?value:Float = 0, ?saveIfNotUnlocked:Bool = true):Float {
-			if (!list.exists(name)) {
-				FunkinLua.luaTrace('setAchievementScore: Couldnt find achievement: $name', false, false, FlxColor.RED);
-				return -1;
-			}
-			return setScore(name, value, saveIfNotUnlocked);
-		});
-		lua.set("addAchievementScore", function(name:String, ?value:Float = 1, ?saveIfNotUnlocked:Bool = true):Float {
-			if (!list.exists(name)) {
-				FunkinLua.luaTrace('addAchievementScore: Couldnt find achievement: $name', false, false, FlxColor.RED);
-				return -1;
-			}
-			return addScore(name, value, saveIfNotUnlocked);
-		});
-		lua.set("unlockAchievement", function(name:String):Dynamic {
-			if (!list.exists(name)) {
-				FunkinLua.luaTrace('unlockAchievement: Couldnt find achievement: $name', false, false, FlxColor.RED);
-				return null;
-			}
-			return unlock(name);
-		});
-		lua.set("isAchievementUnlocked", function(name:String):Dynamic {
-			if (!list.exists(name)) {
-				FunkinLua.luaTrace('isAchievementUnlocked: Couldnt find achievement: $name', false, false, FlxColor.RED);
-				return null;
-			}
-			return isUnlocked(name);
-		});
-		lua.set("achievementExists", (name:String) -> return list.exists(name));
 	}
 	#end
 }

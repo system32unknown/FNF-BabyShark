@@ -10,7 +10,7 @@ import openfl.net.FileReference;
 import openfl.net.FileFilter;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-import psychlua.ModchartSprite;
+import scripting.ModchartSprite;
 
 import states.editors.content.Prompt;
 
@@ -692,7 +692,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 
 		var objX:Int = 10;
 		var objY:Int = 30;
-		tab_group.add(new FlxText(objX, objY - 18, 150, 'Name (for Lua/HScript):'));
+		tab_group.add(new FlxText(objX, objY - 18, 150, 'Name (for HScript):'));
 		nameInputText = new PsychUIInputText(objX, objY, 120);
 		nameInputText.customFilterPattern = ~/[^a-zA-Z0-9_\-]*/g;
 		nameInputText.onChange = function(old:String, cur:String) {
@@ -1598,7 +1598,7 @@ class StageEditorMetaSprite {
 
 	public var blend(default, set):String = 'normal';
 	function set_blend(v:String) {
-		sprite.blend = psychlua.LuaUtils.blendModeFromString(v);
+		sprite.blend = scripting.ScriptUtils.blendModeFromString(v);
 		return (blend = v);
 	}
 

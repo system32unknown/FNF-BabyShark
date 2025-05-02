@@ -145,9 +145,6 @@ class Paths {
 	inline public static function shaderVertex(key:String, ?folder:String):String
 		return getPath('shaders/$key.vert', TEXT, folder, true);
 
-	inline public static function lua(key:String, ?folder:String):String
-		return getPath('$key.lua', TEXT, folder, true);
-
 	public static function video(key:String):String {
 		#if MODS_ALLOWED
 		var file:String = modsVideo(key);
