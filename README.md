@@ -1,6 +1,3 @@
-> [!NOTE]  
-> Lua Script isn't supported on this engine.
-
 # Baby Shark's Big Funkin!
 ![Baby Shark's Big Funkin Logo](assets/shared/images/logobumpin.png)
 

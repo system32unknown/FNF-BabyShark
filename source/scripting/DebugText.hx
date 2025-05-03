@@ -1,6 +1,6 @@
 package scripting;
 
-class DebugLuaText extends FlxText {
+class DebugText extends FlxText {
 	public var disableTime:Float = 6;
 	public function new() {
 		super(10, 10, 0, 'text', 16);

@@ -119,7 +119,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 			selectHoldTime += elapsed;
 			var checkNewHold:Int = Std.int((selectHoldTime - .5) * 10);
 	
-			if(selectHoldTime > 0.5 && checkNewHold - checkLastHold >= 1)
+			if (selectHoldTime > 0.5 && checkNewHold - checkLastHold >= 1)
 				changeSelection((checkNewHold - checkLastHold) * (upPressed ? -1 : 1));
 		}
 

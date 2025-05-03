@@ -41,8 +41,12 @@ class Main extends Sprite {
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
 	public function new() {
-		debug.Logs.init();
 		super();
+		#if sys
+		backend.CommandLineHandler.parse(Sys.args());
+		#end
+
+		debug.Logs.init();
 		#if (linux || mac) openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 
 		utils.system.PlatformUtil.fixScaling();

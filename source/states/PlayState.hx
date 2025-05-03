@@ -45,7 +45,7 @@ class PlayState extends MusicBeatState {
 		['Superb!!', 1.]
 	];
 
-	//event variables
+	// event variables
 	var isCameraOnForcedPos:Bool = false;
 	public var boyfriendMap:Map<String, Character> = new Map<String, Character>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
@@ -207,8 +207,8 @@ class PlayState extends MusicBeatState {
 	#end
 
 	public static var instance:PlayState;
-	public var hscriptArray:Array<HScript> = [];
-	var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
+	public var hxArray:Array<HScript> = [];
+	var hxDebugGroup:FlxTypedGroup<DebugText>;
 	public var introSoundsSuffix:String = '';
 	public var introSoundNames:Array<String> = [];
 
@@ -337,9 +337,9 @@ class PlayState extends MusicBeatState {
 		if (isPixelStage) introSoundsSuffix = '-pixel';
 
 		#if HSCRIPT_ALLOWED
-		luaDebugGroup = new FlxTypedGroup<DebugLuaText>();
-		luaDebugGroup.cameras = [camOther];
-		add(luaDebugGroup);
+		hxDebugGroup = new FlxTypedGroup<DebugText>();
+		hxDebugGroup.cameras = [camOther];
+		add(hxDebugGroup);
 		#end
 
 		if (!stageData.hide_girlfriend) {
@@ -469,12 +469,8 @@ class PlayState extends MusicBeatState {
 		if (showPopups) popUpGroup.cameras = (Settings.data.ratingDisplay == 'Hud' ? [camHUD] : [camGame]);
 		startingSong = true;
 
-		for (notetype in noteTypes) {
-			#if HSCRIPT_ALLOWED startHScriptsNamed('custom_notetypes/$notetype.hx'); #end
-		}
-		for (event in eventsPushed) {
-			#if HSCRIPT_ALLOWED startHScriptsNamed('custom_events/$event.hx'); #end
-		}
+		for (notetype in noteTypes) #if HSCRIPT_ALLOWED startHScriptsNamed('custom_notetypes/$notetype.hx'); #end
+		for (event in eventsPushed) #if HSCRIPT_ALLOWED startHScriptsNamed('custom_events/$event.hx'); #end
 		noteTypes = null; eventsPushed = null;
 
 		if (songName == 'tutorial') {
@@ -559,15 +555,15 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function addTextToDebug(text:String, color:FlxColor) {
-		var newText:DebugLuaText = luaDebugGroup.recycle(DebugLuaText);
+		var newText:DebugText = hxDebugGroup.recycle(DebugText);
 		newText.text = text;
 		newText.color = color;
 		newText.disableTime = 6;
 		newText.alpha = 1;
 		newText.setPosition(10, 8 - newText.height);
 
-		luaDebugGroup.forEachAlive((spr:DebugLuaText) -> spr.y += newText.height + 2);
-		luaDebugGroup.add(newText);
+		hxDebugGroup.forEachAlive((spr:DebugText) -> spr.y += newText.height + 2);
+		hxDebugGroup.add(newText);
 		Sys.println(text);
 	}
 
@@ -2263,11 +2259,11 @@ class PlayState extends MusicBeatState {
 			resetSubState();
 		}
 
-		for (script in hscriptArray) if (script != null) {
+		for (script in hxArray) if (script != null) {
 			if (script.exists('onDestroy')) script.call('onDestroy');
 			script.destroy();
 		}
-		hscriptArray = null;
+		hxArray = null;
 		stagesFunc((stage:BaseStage) -> stage.destroy());
 		#if VIDEOS_ALLOWED if (videoCutscene != null) {videoCutscene.destroy(); videoCutscene = null;} #end
 
@@ -2381,7 +2377,7 @@ class PlayState extends MusicBeatState {
 			newScript = new HScript(null, file);
 			if (newScript.exists('onCreate')) newScript.call('onCreate');
 			trace('initialized hscript interp successfully: $file');
-			hscriptArray.push(newScript);
+			hxArray.push(newScript);
 		} catch (e:hscript.Expr.Error) {
 			var pos:HScriptInfos = cast {fileName: file, showLine: false};
 			AlterHscript.error(Printer.errorToString(e, false), pos);
@@ -2396,10 +2392,10 @@ class PlayState extends MusicBeatState {
 		#if HSCRIPT_ALLOWED
 		if (exclusions == null) exclusions = [];
 		if (excludeValues == null) excludeValues = [ScriptUtils.Function_Continue];
-		var len:Int = hscriptArray.length;
+		var len:Int = hxArray.length;
 		if (len < 1) return returnVal;
 
-		for (script in hscriptArray) {
+		for (script in hxArray) {
 			@:privateAccess
 			if (script == null || !script.exists(funcToCall) || exclusions.contains(script.origin)) continue;
 
@@ -2420,7 +2416,7 @@ class PlayState extends MusicBeatState {
 	public function setOnHScript(variable:String, arg:Dynamic, ?exclusions:Array<String>) {
 		#if HSCRIPT_ALLOWED
 		if (exclusions == null) exclusions = [];
-		for (script in hscriptArray) {
+		for (script in hxArray) {
 			if (exclusions.contains(script.origin)) continue;
 			script.interp.setVar(variable, arg);
 		}
