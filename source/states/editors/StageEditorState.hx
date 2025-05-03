@@ -341,7 +341,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 					}
 
 					Reflect.setProperty(copiedMeta, field, fld);
-				} catch (e:Dynamic) Logs.trace(e, ERROR);
+				} catch (e:Dynamic) Logs.error(e);
 			}
 
 			if (copiedMeta.animations != null) {
@@ -1513,7 +1513,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		}
 		_file = null;
 		#else
-		Logs.trace('File couldn\'t be loaded! You aren\'t on Desktop, are you?', WARNING);
+		Logs.warn('File couldn\'t be loaded! You aren\'t on Desktop, are you?');
 		#end
 	}
 
@@ -1614,7 +1614,7 @@ class StageEditorMetaSprite {
 				case 'sprite': sprite.loadGraphic(Paths.image(v));
 				case 'animatedSprite': sprite.frames = Paths.getAtlas(v);
 			}
-		} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
+		} catch (e:Dynamic) Logs.error('ERROR: $e');
 		sprite.updateHitbox();
 		return (image = v);
 	}

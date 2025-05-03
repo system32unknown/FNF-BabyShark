@@ -70,7 +70,7 @@ class FileUtil {
 		fileDialog.save(data, filter, defaultFileName, dialogTitle);
 		return true;
 		#else
-		Logs.trace('saveFile not implemented for this platform', WARNING);
+		Logs.warn('saveFile not implemented for this platform');
 		if (onCancel != null) onCancel();
 		return false;
 		#end
@@ -98,7 +98,7 @@ class FileUtil {
 		fileDialog.browse(SAVE, filter, defaultPath, dialogTitle);
 		return true;
 		#else
-		Logs.trace('browseForSaveFile not implemented for this platform', WARNING);
+		Logs.warn('browseForSaveFile not implemented for this platform');
 		if (onCancel != null) onCancel();
 		return false;
 		#end
@@ -118,7 +118,7 @@ class FileUtil {
 		fileDialog.browse(OPEN_MULTIPLE, filter, defaultPath, dialogTitle);
 		return true;
 		#else
-		Logs.trace('browseForMultipleFiles not implemented for this platform', WARNING);
+		Logs.warn('browseForMultipleFiles not implemented for this platform');
 		if (onCancel != null) onCancel();
 		return false;
 		#end
@@ -139,7 +139,7 @@ class FileUtil {
 		fileDialog.browse(OPEN_DIRECTORY, filter, defaultPath, dialogTitle);
 		return true;
 		#else
-		Logs.trace('browseForDirectory not implemented for this platform', WARNING);
+		Logs.warn('browseForDirectory not implemented for this platform');
 		if (onCancel != null) onCancel();
 		return false;
 		#end
@@ -159,7 +159,7 @@ class FileUtil {
 			var paths:Array<String> = new Array<String>();
 			for (resource in resources) {
 				if (resource.data == null) {
-					Logs.trace('File ${resource.fileName} has no data or content. Skipping.', WARNING);
+					Logs.warn('File ${resource.fileName} has no data or content. Skipping.');
 					continue;
 				}
 				paths.push(Path.join([targetPath, resource.fileName]));

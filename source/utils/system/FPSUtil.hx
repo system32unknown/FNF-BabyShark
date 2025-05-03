@@ -20,6 +20,8 @@ class FPSUtil {
 	 */
 	public var avgFPS(default, null):Float;
 
+	public var clampFPS:Bool = true;
+
 	/**
 	 * Internal counter used for frame rate calculations or caching.
 	 */
@@ -52,7 +54,7 @@ class FPSUtil {
 		if (curCount != cacheCount) {
 			avgFPS = curCount > 0 ? 1000 / (sum / curCount) : 0.0;
 			var roundAvgFPS = Math.round(avgFPS);
-			curFPS = roundAvgFPS < FlxG.drawFramerate ? roundAvgFPS : FlxG.drawFramerate;
+			curFPS = clampFPS ? (roundAvgFPS < FlxG.drawFramerate ? roundAvgFPS : FlxG.drawFramerate) : roundAvgFPS;
 		}
 		cacheCount = curCount;
 	}

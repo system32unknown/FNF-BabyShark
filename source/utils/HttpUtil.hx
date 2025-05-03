@@ -67,7 +67,7 @@ class HttpUtil {
 			h.request(true);
 			return true;
 		} catch (e:Dynamic) {
-			Logs.trace("postParameters Error: " + e, ERROR);
+			Logs.error("postParameters Error: " + e);
 			return false;
 		}
 	}
@@ -81,7 +81,11 @@ class HttpUtil {
 	static function isRedirect(status:Int):Bool {
 		switch (status) {
 			case 301 | 302 | 307 | 308:
-				Logs.traceColored([Logs.logText('[Connection Status] ', BLUE), Logs.logText('Redirected with status code: ', YELLOW), Logs.logText(Std.string(status), GREEN)], WARNING);
+				Logs.traceColored([
+					{fgColor: BLUE, text: "[Connection Status] "},
+					{fgColor: YELLOW, text: "Redirected with status code: "},
+					{fgColor: GREEN, text: Std.string(status)}
+				], WARNING);
 				return true;
 		}
 		return false;

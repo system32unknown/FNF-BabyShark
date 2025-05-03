@@ -1,6 +1,5 @@
 package objects;
 
-import flixel.graphics.FlxGraphic;
 import shaders.RGBPalette.RGBShaderReference;
 
 class StrumNote extends FlxSprite {
@@ -72,7 +71,7 @@ class StrumNote extends FlxSprite {
 		if (animation.curAnim != null) lastAnim = animation.curAnim.name;
 
 		if (PlayState.isPixelStage) {
-			final graphic:FlxGraphic = Paths.image('pixelUI/$texture');
+			final graphic:flixel.graphics.FlxGraphic = Paths.image('pixelUI/$texture');
 			loadGraphic(Paths.image('pixelUI/$texture'), true, Math.floor(graphic.width / 9), Math.floor(graphic.height / 5));
 
 			antialiasing = false;

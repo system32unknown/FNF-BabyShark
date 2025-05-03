@@ -87,7 +87,7 @@ class LoadingState extends MusicBeatState {
 						hscript.call('onCreate');
 						trace('initialized hscript interp successfully: $scriptPath');
 						return super.create();
-					} else Logs.trace('"$scriptPath" contains no \"onCreate" function, stopping script.', ERROR);
+					} else Logs.error('"$scriptPath" contains no \"onCreate" function, stopping script.');
 				} catch (e:hscript.Expr.Error) {
 					var pos:HScriptInfos = cast {fileName: scriptPath, showLine: false};
 					AlterHscript.error(Printer.errorToString(e, false), pos);
@@ -202,7 +202,7 @@ class LoadingState extends MusicBeatState {
 	public static function checkLoaded():Bool {
 		for (key => bitmap in requestedBitmaps) {
 			if (bitmap != null && Paths.cacheBitmap(originalBitmapKeys.get(key), bitmap) != null) trace('finished preloading image $key');
-			else Logs.trace('failed to cache image $key', ERROR);
+			else Logs.error('failed to cache image $key');
 		}
 		requestedBitmaps.clear();
 		originalBitmapKeys.clear();
@@ -331,7 +331,7 @@ class LoadingState extends MusicBeatState {
 					}
 					prepare(imgs, snds, mscs);
 				}
-			} catch (e:Dynamic) Logs.trace("ERROR PREPARING SONG: " + e, ERROR);
+			} catch (e:Dynamic) Logs.error("ERROR PREPARING SONG: " + e);
 			return true;
 		}, isIntrusive).then((_) -> new Future<Bool>(() -> {
 			if (song.stage == null || song.stage.length < 1)
@@ -381,7 +381,7 @@ class LoadingState extends MusicBeatState {
 				threadPool.run(() -> {
 					try {
 						preloadCharacter(player2);
-					} catch (e:Dynamic) Logs.trace('Error preloading player2: ' + e.details(), ERROR);
+					} catch (e:Dynamic) Logs.error('Error preloading player2: ' + e.details());
 					completedThread();
 				});
 			}
@@ -390,7 +390,7 @@ class LoadingState extends MusicBeatState {
 				threadPool.run(() -> {
 					try {
 						preloadCharacter(gfVersion);
-					} catch (e:Dynamic) Logs.trace('Error preloading gf: ' + e.details(), ERROR);
+					} catch (e:Dynamic) Logs.error('Error preloading gf: ' + e.details());
 					completedThread();
 				});
 			}
@@ -401,7 +401,7 @@ class LoadingState extends MusicBeatState {
 				initialThreadCompleted = true;
 			}
 			return true;
-		}, isIntrusive)).onError((err:Dynamic) -> Logs.trace('ERROR! while preparing song: $err', ERROR));
+		}, isIntrusive)).onError((err:Dynamic) -> Logs.error('ERROR! while preparing song: $err'));
 	}
 
 	public static function clearInvalids() {
@@ -474,8 +474,8 @@ class LoadingState extends MusicBeatState {
 					var diff:Float = Sys.time() - threadStart;
 					trace('finished preloading $traceData in ${diff}s');
 					#end
-				} else Logs.trace('ERROR! fail on preloading $traceData', ERROR);
-			} catch (e:Dynamic) Logs.trace('ERROR! fail on preloading $traceData', ERROR);
+				} else Logs.error('ERROR! fail on preloading $traceData');
+			} catch (e:Dynamic) Logs.error('ERROR! fail on preloading $traceData');
 			loaded++;
 		});
 	}
@@ -509,7 +509,7 @@ class LoadingState extends MusicBeatState {
 				}
 			}
 			#end
-		} catch (e:Exception) Logs.trace("ERROR PRELOADING CHARACTER: " + e.details(), ERROR);
+		} catch (e:Exception) Logs.error("ERROR PRELOADING CHARACTER: " + e.details());
 	}
 
 	// thread safe sound loader
@@ -550,10 +550,10 @@ class LoadingState extends MusicBeatState {
 					originalBitmapKeys.set(file, requestKey);
 					mutex.release();
 					return bitmap;
-				} else Logs.trace('no such image $key exists', WARNING);
+				} else Logs.warn('no such image $key exists');
 			}
 			return Paths.currentTrackedAssets.get(requestKey).bitmap;
-		} catch (e:Exception) Logs.trace('fail on preloading image $key', ERROR);
+		} catch (e:Exception) Logs.error('fail on preloading image $key');
 
 		return null;
 	}

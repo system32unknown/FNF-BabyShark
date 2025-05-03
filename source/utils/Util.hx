@@ -27,6 +27,21 @@ class Util {
 		return '';
 	}
 
+	/**
+	 * Checks for available updates by sending an HTTP request to a remote changelog file.
+	 *
+	 * The function reads the version and changelog from the response and compares the remote version with the local one.
+	 *
+	 * The returned array contains:
+	 *   [0] The remote version as a string.
+	 *   [1] The changelog text.
+	 *
+	 * Note: This function uses asynchronous HTTP handling but returns the array immediately,
+	 * which means the data will not be populated at the time of return.
+	 *
+	 * @param url Optional URL pointing to the changelog file (defaults to GitHub repository).
+	 * @return An array of strings containing the remote version and changelog (data filled after async callback).
+	 */
 	public static function checkForUpdates(url:String = null):Array<String> {
 		if (url == null || url.length == 0)
 			url = "https://raw.githubusercontent.com/system32unknown/FNF-BabyShark/main/CHANGELOG.md";
@@ -50,7 +65,7 @@ class Util {
 					http = null;
 				}
 			}
-			http.onError = (error:String) -> Logs.trace('HTTP Error: $error', ERROR);
+			http.onError = (error:String) -> Logs.error('HTTP Error: $error');
 			http.request();
 		}
 		return returnedData;
@@ -74,6 +89,15 @@ class Util {
 		if (sound != null) FlxG.sound.play(sound, volume);
 	}
 
+	/**
+	* Reads the contents of a text file from the given path and returns it as an array of strings.
+	*
+	* On native platforms with MODS_ALLOWED, it uses the file system; otherwise, it reads from embedded assets.
+	*
+	* The resulting text is split into a list using `listFromString`.
+	* @param path The file path or asset path to read from.
+	* @return An array of strings derived from the file content, or an empty array if the file doesn't exist or can't be read.
+	*/
 	public static function readTextFiles(path:String):Array<String> {
 		var daList:String = null;
 		#if (sys && MODS_ALLOWED)
@@ -184,7 +208,6 @@ class Util {
 	}
 
 	inline public static function fixRGBColorArray(colors:Array<Int>, ?defColors:Array<Int>):Array<Int> {
-		// helper function used on characters n such
 		final endResult:Array<Int> = (defColors != null && defColors.length > 2) ? defColors : [255, 255, 255, 255]; // Red, Green, Blue, Alpha
 		for (i in 0...endResult.length) if (colors[i] > -1) endResult[i] = colors[i];
 		return endResult;
@@ -203,7 +226,18 @@ class Util {
 		return new FlxBackdrop(flixel.addons.display.FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
 	}
 
-	public static function recursivelyReadFolders(path:String, ?erasePath:Bool = true) {
+	/**
+	 * Recursively reads all files from a directory and its subdirectories.
+	 *
+	 * Optionally removes the base path from each returned file path.
+	 *
+	 * Files with `.json` extensions will have the extension removed in the result.
+	 *
+	 * @param path The root directory path to search.
+	 * @param erasePath If true (default), the base path will be removed from the returned file paths.
+	 * @return An array of file paths (without `.json` extension), relative or full depending on `erasePath`.
+	 */
+	public static function recursivelyReadFolders(path:String, ?erasePath:Bool = true):Array<String> {
 		var ret:Array<String> = [];
 		for (i in FileSystem.readDirectory(path)) returnFileName(i, ret, path);
 		if (erasePath) {
@@ -213,7 +247,16 @@ class Util {
 		return ret;
 	}
 
-	static function returnFileName(path:String, toAdd:Array<String>, full:String) {
+	/**
+	 * Helper function to recursively traverse a directory tree.
+	 *
+	 * Adds full file paths to the output list, removing `.json` extensions.
+	 *
+	 * @param path Current file or folder to evaluate.
+	 * @param toAdd The array to which valid file paths are added.
+	 * @param full The full base path used to resolve nested directories.
+	 */
+	static function returnFileName(path:String, toAdd:Array<String>, full:String):Void {
 		var fullPath:String = '$full/$path';
 		if (FileSystem.isDirectory(fullPath)) {
 			for (i in FileSystem.readDirectory(fullPath)) returnFileName(i, toAdd, fullPath);

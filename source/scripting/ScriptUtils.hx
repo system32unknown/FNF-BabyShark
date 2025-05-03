@@ -88,7 +88,7 @@ class ScriptUtils {
 					var errorTitle:String = 'Mod name: ' + Mods.currentModDirectory;
 					var errorMsg:String = 'An error occurred: $e';
 					utils.system.NativeUtil.showMessageBox(errorMsg, errorTitle);
-					Logs.trace('$errorTitle - $errorMsg', ERROR);
+					Logs.error('$errorTitle - $errorMsg');
 				}
 			}
 		} else {

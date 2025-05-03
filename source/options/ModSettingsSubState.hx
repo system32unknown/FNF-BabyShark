@@ -98,7 +98,7 @@ class ModSettingsSubState extends BaseOptionsMenu {
 			var errorTitle:String = 'Mod name: $folder';
 			var errorMsg:String = 'An error occurred: $e';
 			utils.system.NativeUtil.showMessageBox(errorMsg, errorTitle);
-			Logs.trace('$errorTitle - $errorMsg', ERROR);
+			Logs.error('$errorTitle - $errorMsg');
 			_crashed = true;
 			close();
 			return;

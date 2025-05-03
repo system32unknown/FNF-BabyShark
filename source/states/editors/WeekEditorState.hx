@@ -421,7 +421,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		_file = null;
 		unsavedProgress = false;
 		#else
-		Logs.trace("File couldn't be loaded! You aren't on Desktop, are you?", WARNING);
+		Logs.warn("File couldn't be loaded! You aren't on Desktop, are you?");
 		#end
 	}
 
@@ -444,7 +444,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
-		Logs.trace("Problem loading file", WARNING);
+		Logs.warn("Problem loading file");
 	}
 
 	public static function saveWeek(weekFile:WeekFile) {

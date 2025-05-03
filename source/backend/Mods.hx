@@ -147,7 +147,7 @@ class Mods {
 			try {
 				var rawJson:String = #if sys File.getContent #else openfl.utils.Assets.getText #end(path);
 				if (rawJson != null && rawJson.length > 0) return tjson.TJSON.parse(rawJson);
-			} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
+			} catch (e:Dynamic) Logs.error('ERROR: $e');
 		}
 		#end
 		return null;
@@ -167,7 +167,7 @@ class Mods {
 				if (dat[1] == "1") list.enabled.push(dat[0]);
 				else list.disabled.push(dat[0]);
 			}
-		} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
+		} catch (e:Dynamic) Logs.error('ERROR: $e');
 		return list;
 	}
 
@@ -185,7 +185,7 @@ class Mods {
 					list.push([folder, (dat[1] == "1")]);
 				}
 			}
-		} catch (e:Dynamic) Logs.trace('ERROR: $e', ERROR);
+		} catch (e:Dynamic) Logs.error('ERROR: $e');
 
 		// Scan for folders that aren't on modsList.txt yet
 		for (folder in getModDirectories()) {

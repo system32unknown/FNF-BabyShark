@@ -47,7 +47,7 @@ class MenuCharacter extends FlxSprite {
 				var charFile:MenuCharacterFile = null;
 				try {
 					charFile = haxe.Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
-				} catch (e:Dynamic) Logs.trace('Error loading menu character file of "$character": $e', ERROR);
+				} catch (e:Dynamic) Logs.error('Error loading menu character file of "$character": $e');
 				frames = Paths.getSparrowAtlas('menucharacters/' + charFile.image);
 				animation.addByPrefix('idle', charFile.idle_anim, 24);
 

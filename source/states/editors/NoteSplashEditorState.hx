@@ -685,7 +685,7 @@ class NoteSplashEditorState extends MusicBeatState {
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(Json.stringify(conf, "\t"), file);
 			#end
-		} catch (e:Dynamic) Logs.trace("Loading Error:" + e.stack, ERROR);
+		} catch (e:Dynamic) Logs.error("Loading Error:" + e.stack);
 	}
 
 	/**
@@ -707,7 +707,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file = null;
-		Logs.trace("Problem loading file", WARNING);
+		Logs.warn("Problem loading file");
 	}
 
 	override function destroy() {

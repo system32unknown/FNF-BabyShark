@@ -1,102 +1,119 @@
 package debug;
 
-import flixel.system.debug.log.LogStyle;
 import haxe.Log;
+import haxe.PosInfos;
+
+import flixel.system.debug.log.LogStyle;
+
 import utils.system.NativeUtil;
 import utils.system.Ansi.ConsoleColor;
 
 // Credit by Codename Engine Team
 class Logs {
-	#if !sys public static var nativeTrace = Log.trace; #end
 	public static function init() {
-		Log.trace = function(v:Dynamic, ?infos:Null<haxe.PosInfos>) {
-			var data:Array<LogText> = [logText('${infos.fileName}:${infos.lineNumber}: ', CYAN), logText(Std.string(v))];
-			if (infos.customParams != null) for (i in infos.customParams) data.push(logText("," + Std.string(i)));
-			__showInConsole(prepareColoredTrace(data, TRACE));
-		};
-
-		flixel.system.frontEnds.LogFrontEnd.onLogs = (Data:Dynamic, Style:LogStyle, FireOnce:Bool) -> {
-			var prefix:String = "[FLIXEL]";
-			var color:ConsoleColor = LIGHTGRAY;
-			var level:Level = INFO;
-			if (Style == LogStyle.CONSOLE) {
-				prefix = "> ";
-				color = WHITE;
-				level = INFO;
-			} else if (Style == LogStyle.ERROR) {
-				prefix = "[FLIXEL]";
-				color = RED;
-				level = ERROR;
-			} else if (Style == LogStyle.NORMAL) {
-				prefix = "[FLIXEL]";
-				color = WHITE;
-				level = INFO;
-			} else if (Style == LogStyle.NOTICE) {
-				prefix = "[FLIXEL]";
-				color = GREEN;
-				level = VERBOSE;
-			} else if (Style == LogStyle.WARNING) {
-				prefix = "[FLIXEL]";
-				color = YELLOW;
-				level = WARNING;
+		Log.trace = function(v:Dynamic, ?infos:Null<PosInfos>) {
+			final data = [{fgColor: CYAN, text: '${infos.fileName}:${infos.lineNumber}: '}, {text: Std.string(v)}];
+			if (infos.customParams != null) {
+				for (i in infos.customParams) data.push({text: ", " + Std.string(i)});
 			}
-
-			var d:Dynamic = Data;
-			if (!(d is Array)) d = [d];
-			var a:Array<Dynamic> = d;
-			for (e in [for (e in a) Std.string(e)]) Logs.trace('$prefix $e', level, color);
+			printChunks(prepareColoredTrace(data, TRACE));
 		};
+
+		LogStyle.NORMAL.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.NORMAL, d, pos));
+		LogStyle.WARNING.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.WARNING, d, pos));
+		LogStyle.ERROR.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.ERROR, d, pos));
+		LogStyle.NOTICE.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.NOTICE, d, pos));
+		LogStyle.CONSOLE.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.CONSOLE, d, pos));
 	}
 
-	public static function prepareColoredTrace(text:Array<LogText>, level:Level = INFO):Array<LogText> {
-		var superCoolText:Array<LogText> = [
-			logText('['),
+	public static function trace(text:String):Void {
+		traceColored([{text: text}]);
+	}
+	public static function warn(text:String):Void {
+		traceColored([{text: text, fgColor: YELLOW}], WARNING);
+	}
+	public static function error(text:String):Void {
+		traceColored([{text: text, fgColor: RED}], ERROR);
+	}
+	public static function verbose(text:String):Void {
+		traceColored([{text: text}], VERBOSE);
+	}
+
+	public static function traceColored(chunks:Array<LogChunk>, ?level:Level = TRACE):Void {
+		printChunks(prepareColoredTrace(chunks, level));
+	}
+
+	public static function prepareColoredTrace(chunks:Array<LogChunk>, ?level:Level = TRACE):Array<LogChunk> {
+		final newChunks:Array<LogChunk> = [
+			{text: '['},
 			switch (level) {
-				case WARNING: logText('WARNING', DARKYELLOW);
-				case ERROR: logText('ERROR', DARKRED);
-				case TRACE: logText('TRACE', GRAY);
-				case VERBOSE: logText('VERBOSE', DARKMAGENTA);
-				default: logText('INFORMATION', CYAN);
-			}, logText('] ')
+				case WARNING: {fgColor: YELLOW, text: "WARNING"}
+				case ERROR: {fgColor: RED, text: "ERROR"}
+				case VERBOSE: {fgColor: MAGENTA, text: "VERBOSE"}
+				default: {fgColor: CYAN, text: "TRACE"}
+			}, {text: '] '}
 		];
-		for (k => e in superCoolText) text.insert(k, e);
-		return text;
+		for (k => e in newChunks) chunks.insert(k, e);
+		return chunks;
 	}
 
-	public static function logText(text:String, color:ConsoleColor = LIGHTGRAY):LogText {
-		return {text: text, color: color};
-	}
+	public static function printChunks(chunks:Array<LogChunk>):Void {
+		while (_showing) Sys.sleep(.05);
 
-	public static function __showInConsole(text:Array<LogText>) {
-		#if sys
-		for (t in text) {
-			NativeUtil.setConsoleColors(t.color);
-			Sys.print(t.text);
+		_showing = true;
+
+		for (i in 0...chunks.length) {
+			final chunk:LogChunk = chunks[i];
+			NativeUtil.setConsoleColors(chunk.fgColor, chunk.bgColor);
+			Sys.print(chunk.text);
 		}
 		NativeUtil.setConsoleColors();
-		Sys.print("\r\n");
-		#else
-		@:privateAccess
-		nativeTrace([for (t in text) t.text].join(""));
-		#end
+		Sys.print("\n");
+
+		_showing = false;
 	}
 
-	public static function traceColored(text:Array<LogText>, level:Level = INFO)
-		__showInConsole(prepareColoredTrace(text, level));
+	//----------- [ Private API ] -----------//
 
-	public static function trace(text:String, level:Level = INFO, color:ConsoleColor = LIGHTGRAY) {
-		traceColored([{text: text, color: color}], level);
+	static var _showing:Bool = false;
+
+	static function onLog(Style:LogStyle, Data:Any, ?Pos:PosInfos):Void {
+		var prefix:String = "[FLIXEL]";
+		var level:Level = TRACE;
+
+		if (Style == LogStyle.CONSOLE) {
+			prefix = "";
+			level = TRACE;
+		} else if (Style == LogStyle.ERROR) {
+			prefix = "[FLIXEL]";
+			level = ERROR;
+		} else if (Style == LogStyle.NORMAL) {
+			prefix = "[FLIXEL]";
+			level = TRACE;
+		} else if (Style == LogStyle.NOTICE) {
+			prefix = "[FLIXEL]";
+			level = WARNING;
+		} else if (Style == LogStyle.WARNING) {
+			prefix = "[FLIXEL]";
+			level = WARNING;
+		}
+
+		var d:Dynamic = Data;
+		if(!(d is Array)) d = [d];
+
+		var a:Array<Dynamic> = d;
+		for (e in [for (e in a) Std.string(e)]) traceColored([{text: '$prefix ', fgColor: CYAN}, {text: e}], level);
 	}
 }
 
-enum abstract Level(Int) {
-	var INFO:Level = 0;
+enum abstract Level(Int) from Int to Int {
+	var TRACE:Level = 0;
 	var WARNING:Level = 1;
 	var ERROR:Level = 2;
-	var TRACE:Level = 3;
-	var VERBOSE:Level = 4;
+	var VERBOSE:Level = 3;
 }
-typedef LogText = {
+typedef LogChunk = {
+	var ?bgColor:ConsoleColor;
+	var ?fgColor:ConsoleColor;
 	var text:String;
-	var color:ConsoleColor;
 }

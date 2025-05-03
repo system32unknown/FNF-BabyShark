@@ -2744,7 +2744,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					else func();
 				} catch (e:Exception) {
 					showOutput('Error: ${e.message}', true);
-					Logs.trace(e.stack.toString(), ERROR);
+					Logs.error(e.stack.toString());
 				}
 			});
 		}, btnWid);
@@ -2888,7 +2888,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						}));
 					} catch (e:Exception) {
 						showOutput('Error: ${e.message}', true);
-						Logs.trace(e.stack.toString(), ERROR);
+						Logs.error(e.stack.toString());
 					}
 				});
 			}, btnWid);
@@ -2950,7 +2950,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						showOutput('Chart reloaded successfully!');
 					} catch (e:Exception) {
 						showOutput('Error: ${e.message}', true);
-						Logs.trace(e.stack.toString(), ERROR);
+						Logs.error(e.stack.toString());
 					}
 				} else showOutput('You must save/load a Chart first to Reload it!', true);
 			}
@@ -3022,7 +3022,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					}));
 				} catch (e:Exception) {
 					showOutput('Error: ${e.message}', true);
-					Logs.trace(e.stack.toString(), ERROR);
+					Logs.error(e.stack.toString());
 				}
 			});
 		}, btnWid);
@@ -3077,7 +3077,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 												pack.chart.notes.set(diff, diffNotes);
 											}
 										}
-									} else Logs.trace('File not found: $chartToFind', WARNING);
+									} else Logs.warn('File not found: $chartToFind');
 								}
 
 								var chartToFind:String = parentFolder + 'events.json';
@@ -3106,7 +3106,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							} else showOutput('Error: You need atleast one difficulty to export.', true);
 						} catch (e:Exception) {
 							showOutput('Error: ${e.message}', true);
-							Logs.trace(e.stack.toString(), ERROR);
+							Logs.error(e.stack.toString());
 						}
 						state.close();
 					});
@@ -3213,7 +3213,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						} else showOutput('Error: No difficulties found.', true);
 					} catch (e:Exception) {
 						showOutput('Error: ${e.message}', true);
-						Logs.trace(e.stack.toString(), ERROR);
+						Logs.error(e.stack.toString());
 					}
 				});
 			});
@@ -3249,7 +3249,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 					} else showOutput('Chart is already up-to-date! Format: "$fmt"', true);
 				} catch (e:Exception) {
 					showOutput('Error: ${e.message}', true);
-					Logs.trace(e.stack.toString(), ERROR);
+					Logs.error(e.stack.toString());
 				}
 			});
 		}, btnWid);
@@ -3852,7 +3852,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				curSectionTime = cachedSectionTimes[noteSec];
 
 				if (noteSec + 1 >= cachedSectionTimes.length) {
-					Logs.trace('failsafe, cancel early and delete notes after this', ERROR);
+					Logs.error('failsafe, cancel early and delete notes after this');
 					var changedSelected:Bool = false;
 					for (_ in num...notes.length) {
 						var n:MetaNote = notes[num];

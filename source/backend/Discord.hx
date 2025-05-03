@@ -39,27 +39,26 @@ class DiscordClient {
 	static function onReady(request:RawConstPointer<DiscordUser>):Void {
 		user = DUser.initRaw(request);
 		Logs.traceColored([
-			Logs.logText("[Discord] ", BLUE),
-			Logs.logText("Connected to User " + user.globalName + " ("),
-			Logs.logText(user.handle, GRAY),
-			Logs.logText(")")
-		], INFO);
-
+			{fgColor: BLUE, text: "[Discord Status] "},
+			{fgColor: YELLOW, text: "Connected to User " + user.globalName + " ("},
+			{fgColor: GRAY, text: user.handle},
+			{text: ")"},
+		]);
 		changePresence();
 	}
 
 	static function onError(errorCode:Int, message:ConstCharStar):Void {
 		Logs.traceColored([
-			Logs.logText("[Discord] ", BLUE),
-			Logs.logText('Error ($errorCode:$message)', RED)
+			{fgColor: BLUE, text: "[Discord] "},
+			{fgColor: RED, text: 'Error ($errorCode:$message)'},
 		], ERROR);
 	}
 
 	static function onDisconnected(errorCode:Int, message:ConstCharStar):Void {
 		Logs.traceColored([
-			Logs.logText("[Discord] ", BLUE),
-			Logs.logText('Disconnected ($errorCode:$message)', RED)
-		], INFO);
+			{fgColor: BLUE, text: "[Discord] "},
+			{fgColor: RED, text: 'Disconnected ($errorCode:$message)'},
+		]);
 	}
 
 	public static function initialize() {

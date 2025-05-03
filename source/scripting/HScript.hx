@@ -232,7 +232,7 @@ class HScript extends AlterHscript {
 					if (rawClass == null) return;
 					FlxG.switchState(() -> cast(Type.createInstance(rawClass, []), flixel.FlxState));
 				} catch (e:AlterError) {
-					Logs.trace('$e: Unspecified result for switching state "$name", could not switch states!', ERROR);
+					Logs.error('$e: Unspecified result for switching state "$name", could not switch states!');
 					return;
 				}
 			}
@@ -246,7 +246,7 @@ class HScript extends AlterHscript {
 					if (rawClass == null) return;
 					FlxG.state.openSubState(cast(Type.createInstance(rawClass, args), FlxSubState));
 				} catch (e:Dynamic) {
-					Logs.trace('$e: Unspecified result for opening substate "$name", could not be opened!', ERROR);
+					Logs.error('$e: Unspecified result for opening substate "$name", could not be opened!');
 					return;
 				}
 			}

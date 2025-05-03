@@ -558,7 +558,7 @@ class ModsMenuState extends MusicBeatState {
 		var minVisible:Float = Math.max(0, centerMod - 2);
 		for (i => mod in modsGroup.members) {
 			if (mod == null) {
-				Logs.trace('Mod #$i is null, maybe it was ${modsList.all[i]}', WARNING);
+				Logs.warn('Mod #$i is null, maybe it was ${modsList.all[i]}');
 				continue;
 			}
 
@@ -666,7 +666,7 @@ class ModItem extends FlxSpriteGroup {
 				var errorTitle:String = 'Mod name: ' + Mods.currentModDirectory;
 				var errorMsg:String = 'An error occurred: $e';
 				utils.system.NativeUtil.showMessageBox(errorMsg, errorTitle);
-				Logs.trace('$errorTitle - $errorMsg', ERROR);
+				Logs.error('$errorTitle - $errorMsg');
 			}
 		}
 
@@ -789,14 +789,14 @@ class MenuButton extends FlxSpriteGroup {
 		}
 	}
 
-	function set_onFocus(newValue:Bool) {
+	function set_onFocus(newValue:Bool):Bool {
 		var lastFocus:Bool = onFocus;
 		onFocus = newValue;
 		if (onFocus != lastFocus && enabled) setButtonVisibility(onFocus);
 		return newValue;
 	}
 
-	function set_enabled(newValue:Bool) {
+	function set_enabled(newValue:Bool):Bool {
 		enabled = newValue;
 		setButtonVisibility(false);
 		alpha = enabled ? 1 : 0.4;

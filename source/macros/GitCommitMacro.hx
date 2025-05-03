@@ -15,10 +15,15 @@ class GitCommitMacro {
 	 * Returns the current commit hash
 	 */
 	public static var commitHash(get, null):String;
+	/**
+	 * Returns the current commit branch
+	 */
+	public static var commitBranch(get, null):String;
 
 	// GETTERS
 	static inline function get_commitNumber():Int return __getCommitNumber();
 	static inline function get_commitHash():String return __getCommitHash();
+	static inline function get_commitBranch():String return __getCommitBranch();
 
 	// INTERNAL MACROS
 	static macro function __getCommitHash() {
@@ -42,5 +47,16 @@ class GitCommitMacro {
 		} catch (e:Dynamic) Context.error(e.toString(), pos);
 		#end
 		return macro $v{0};
+	}
+	static macro function __getCommitBranch() {
+		#if !display
+		var pos:Position = Context.currentPos();
+		try {
+			var proc:Process = new Process('git', ['branch', '--show-current'], false);
+			if (proc.exitCode() != 0) Context.warning('Could not determine current git commit; is this a proper Git repository?', pos);
+			return macro $v{Std.parseInt(proc.stdout.readLine())};
+		} catch (e:Dynamic) Context.error(e.toString(), pos);
+		#end
+		return macro $v{"-"};
 	}
 }

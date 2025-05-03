@@ -17,13 +17,13 @@ class Log {
 	public static function error(message:Dynamic, ?info:PosInfos):Void {
 		if (level >= LogLevel.ERROR) {
 			var message:String = '[${info.className}] ERROR: $message';
-			#if !macro FunkinLogs.trace(message, ERROR, RED); #else trace(message); #end
+			#if !macro FunkinLogs.error(message); #else trace(message); #end
 			throw message;
 		}
 	}
 
 	public static function info(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.INFO) #if !macro FunkinLogs.trace('[${info.className}] $message', INFO, RED); #else trace('[${info.className}] $message'); #end
+		if (level >= LogLevel.INFO) trace('[${info.className}] $message');
 	}
 
 	public static inline function print(message:Dynamic):Void {
@@ -51,11 +51,11 @@ class Log {
 	}
 
 	public static function verbose(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.VERBOSE) #if !macro FunkinLogs.trace('[${info.className}] $message', VERBOSE); #else trace('[${info.className}] $message'); #end
+		if (level >= LogLevel.VERBOSE) #if !macro FunkinLogs.verbose('[${info.className}] $message'); #else trace('[${info.className}] $message'); #end
 	}
 
 	public static function warn(message:Dynamic, ?info:PosInfos):Void {
-		if (level >= LogLevel.WARN) #if !macro FunkinLogs.trace('[${info.className}] $message', WARNING, YELLOW); #else trace('[${info.className}] $message'); #end
+		if (level >= LogLevel.WARN) #if !macro FunkinLogs.warn('[${info.className}] $message'); #else trace('[${info.className}] $message'); #end
 	}
 
 	static function __init__():Void {

@@ -7,7 +7,7 @@ class CreditsState extends MusicBeatState {
 	// Title, Variable, Description, Color
 	static var titles(default, never):Array<Array<String>> = [
 		['Credits Sections'],
-		['Psych Engine',				'psych',			'Developers of Psych Engine',						'D662EB'],
+		['Psych Engine Team',			'psych',			'Developers of Psych Engine',						'D662EB'],
 		["Funkin' Crew",			'funkin',				'The only cool kickers of Friday Night Funkin\'',	'FD40AB'],
 		["Vs Dave and Bambi Team",		'daveandbambi',		'Developers of Dave and Bambi',						'216AFF'],
 		["Baby Shark's Big Funkin Team",	'babyshark',	'Developers of Baby Shark\'s Big Funkin',			'F8CB23'],
@@ -32,8 +32,7 @@ class CreditsState extends MusicBeatState {
 		['Gabriela',			'gabriela',			'Playback Rate Modifier\nand other PRs',						'https://x.com/BeastlyGabi',		'5E99DF'],
 		['MAJigsaw77', 			'jigsaw', 			'.MP4 Video Loader Library (hxvlc)', 							'https://x.com/MAJigsaw77', 		'5F5F5F'],
 		['KadeDev',				'kade',				'Fixed Chart Editor\nand other PRs, Kade Engine Dev',			'https://x.com/kade0912',			'64A250'],
-		['superpowers04', 		'superpowers04', 	'LUA JIT Forks', 												'https://github.com/superpowers04',	'B957ED'],
-		['Raltyro',				'raltyro',			'Bunch of lua fixes, Psike Engine Dev',							'https://x.com/raltyro',			'F3F3F3'],
+		['Raltyro',				'raltyro',			'Psike Engine Dev',												'https://x.com/raltyro',			'F3F3F3'],
 		['UncertainProd',		'prod',				'Sampler2D in Runtime Shaders',									'https://github.com/UncertainProd',	'D2D2D2'],
 		['ACrazyTown',			'acrazytown',		'Optimized PNGs',												'https://x.com/acrazytown',			'A03E3D'],
 		['CheemsAndFriends', 	'cheems', 			'Creator of FlxAnimate', 										'https://x.com/CheemsnFriendos', 	'E1E1E1'],

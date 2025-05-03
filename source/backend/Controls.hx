@@ -80,7 +80,7 @@ class Controls {
 	static function _getKeyStatus(name:String, state:flixel.input.FlxInput.FlxInputState):Bool {
 		var binds:Array<FlxKey> = binds[name];
 		if (binds == null) {
-			Logs.trace('Keybind "$name" doesn\'t exist.', WARNING);
+			Logs.warn('Keybind "$name" doesn\'t exist.');
 			return false;
 		}
 

@@ -56,7 +56,17 @@ class MathUtil {
 		return FlxMath.lerp(a, b, Math.pow(m, e));
 	}
 
+	/**
+	 * Calculates the mean (average) of a list of float values.
+	 * Zero values are skipped in the summation, but still included in the count,
+	 * which may result in an inaccurate average if many zeros are present.
+	 *
+	 * @param values An array of Float values.
+	 * @return The arithmetic mean of the values, or 0.0 if the array is empty.
+	 */
 	public static function mean(values:Array<Float>):Float {
+		if (values.length == 0) return 0.0;
+
 		final amount:Int = values.length;
 		var result:Float = 0.0;
 

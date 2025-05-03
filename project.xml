@@ -73,7 +73,6 @@
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="cpp" />
 
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc" />
-	<haxedef name="NO_PRECOMPILED_HEADERS" />
 
 	<section if="HSCRIPT_ALLOWED">
 		<haxeflag name="--macro" value="macros.AdditionalClasses.add()" />

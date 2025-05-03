@@ -266,9 +266,11 @@ class Note extends FlxSprite {
 			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
 			if (PlayState.SONG != null && PlayState.SONG.disableNoteRGB || !Settings.data.noteShaders) rgbShader.enabled = false;
 		} catch (e:Dynamic) rgbShader = null;
+		var noteGFX:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
 
 		if (PlayState.mania != 0) x += EK.swidths[PlayState.mania] * (noteData % EK.keys(PlayState.mania));
-		if (!isSustainNote) animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'Scroll');
+		var scrollAnim:String = noteGFX + 'Scroll';
+		if (!isSustainNote && animation.exists(scrollAnim)) animation.play(scrollAnim);
 		if (PlayState.isPixelStage) offsetX = -5;
 
 		if (prevNote != null) prevNote.nextNote = this;
@@ -279,13 +281,15 @@ class Note extends FlxSprite {
 
 			offsetX += width * .5;
 			copyAngle = false;
-			animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][noteData]] + 'holdend');
+			var holdEndAnim:String = noteGFX + 'holdend';
+			if (animation.exists(holdEndAnim)) animation.play(holdEndAnim);
 			updateHitbox();
 			offsetX -= width * .5;
 
 			if (PlayState.isPixelStage) offsetX += calcPixelScale();
 			if (prevNote.isSustainNote) {
-				prevNote.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][prevNote.noteData]] + 'hold');
+				var holdAnim:String = noteGFX + 'hold';
+				if (prevNote.animation.exists(holdAnim)) prevNote.animation.play(holdAnim);
 				prevNote.scale.y *= Conductor.stepCrochet * .0105;
 				if (createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
 
@@ -540,7 +544,8 @@ class Note extends FlxSprite {
 
 		copyAngle = !isSustainNote;
 
-		animation.play(noteGFX + 'Scroll', true);
+		var scrollAnim:String = noteGFX + 'Scroll';
+		if (animation.exists(scrollAnim)) animation.play(scrollAnim, true);
 
 		if (PlayState.isPixelStage) offsetX = -5;
 		if (isSustainNote) {
@@ -549,7 +554,8 @@ class Note extends FlxSprite {
 				alpha = multAlpha = .6;
 
 				offsetX += width * .5;
-				animation.play(noteGFX + (isSustainEnds ? 'holdend' : 'hold')); // isHoldEnd
+				var holdAnim:String = noteGFX + (isSustainEnds ? 'holdend' : 'hold');
+				if (animation.exists(holdAnim)) animation.play(holdAnim); // isHoldEnd
 				updateHitbox();
 				offsetX -= width * .5;
 

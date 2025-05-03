@@ -358,7 +358,7 @@ class NoteSplash extends FlxSprite {
 		try {
 			if (targetId != -1) PlayState.splashUsing[noteData].splice(targetId, 1);
 			else PlayState.splashUsing[noteData].splice(0, 1);
-		} catch (e:Dynamic) Logs.trace("something went wrong? " + e.message, WARNING);
+		} catch (e:Dynamic) Logs.warn("something went wrong? " + e.message);
 		kill();
 	}
 }

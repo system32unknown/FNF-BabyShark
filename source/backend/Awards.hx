@@ -186,7 +186,7 @@ class Awards {
 		var retVal:Array<Dynamic> = null;
 		inline function errorMessage(title:String, message:String):Void {
 			utils.system.NativeUtil.showMessageBox(message, title);
-			Logs.trace('$title - $message', ERROR);
+			Logs.error('$title - $message');
 		}
 
 		if (FileSystem.exists(path)) {

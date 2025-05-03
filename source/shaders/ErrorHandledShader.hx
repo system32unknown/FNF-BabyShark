@@ -27,7 +27,7 @@ class ErrorHandledShader extends flixel.system.FlxAssets.FlxShader implements IE
 	public static function crashSave(shaderName:String, error:Dynamic, onError:Dynamic) { // prevent the app from dying immediately
 		if (shaderName == null) shaderName = 'unnamed';
 		var alertTitle:String = 'Error on Shader: "$shaderName"';
-		Logs.trace(error, ERROR);
+		Logs.error(error);
 		#if !debug
 		// Save a crash log on Release builds
 		var dateNow:String = Date.now().toString().replace(" ", "_").replace(":", "'");

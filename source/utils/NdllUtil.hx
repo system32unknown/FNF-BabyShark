@@ -46,7 +46,7 @@ class NdllUtil {
 		var func:Dynamic = getFunctionFromPath(path, name, args);
 		return Reflect.makeVarArgs((a:Array<Dynamic>) -> return macros.ReflectMacro.generateReflectionLike(25, "func", "a"));
 		#else
-		Logs.trace('NDLLs are not supported on this platform.', WARNING);
+		Logs.warn('NDLLs are not supported on this platform.');
 		return noop;
 		#end
 	}
@@ -61,17 +61,17 @@ class NdllUtil {
 	public static function getFunctionFromPath(ndll:String, name:String, args:Int):Dynamic {
 		#if NDLLS_ALLOWED
 		if (!Paths.exists(ndll)) {
-			Logs.trace('Couldn\'t find ndll at $ndll.', WARNING);
+			Logs.warn('Couldn\'t find ndll at $ndll.');
 			return noop;
 		}
 		var func:Dynamic = lime.system.CFFI.load(Assets.getPath(ndll), name, args);
 		if (func == null) {
-			Logs.trace('Method $name in ndll $ndll with $args args was not found.', ERROR);
+			Logs.error('Method $name in ndll $ndll with $args args was not found.');
 			return noop;
 		}
 		return func;
 		#else
-		Logs.trace('NDLLs are not supported on this platform.', WARNING);
+		Logs.warn('NDLLs are not supported on this platform.');
 		return noop;
 		#end
 	}
