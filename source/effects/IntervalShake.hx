@@ -1,7 +1,6 @@
 package effects;
 
 import flixel.FlxObject;
-import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.util.FlxPool;
 import flixel.util.FlxAxes;
 import flixel.tweens.FlxEase.EaseFunction;
@@ -10,7 +9,7 @@ import flixel.tweens.FlxEase.EaseFunction;
  * pretty much a copy of FlxFlicker geared towards making sprites
  * shake around at a set interval and slow down over time.
  */
-class IntervalShake implements IFlxDestroyable {
+class IntervalShake implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 	static var _pool:FlxPool<IntervalShake> = new FlxPool<IntervalShake>(IntervalShake.new);
 
 	/**

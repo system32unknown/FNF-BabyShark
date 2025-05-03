@@ -538,11 +538,11 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 	public function addText(tag:String):Void {
 		texts.push(tag);
-		add(PlayState.instance.getLuaObject(tag));
+		add(PlayState.instance.getObject(tag));
 	}
 
 	public function addSprite(tag:String, front:Bool = false):Void {
-		var obj:FlxSprite = PlayState.instance.getLuaObject(tag);
+		var obj:FlxSprite = PlayState.instance.getObject(tag);
 		if (front) add(obj);
 		else insert(0, obj);
 		sprites.push(tag);
@@ -554,7 +554,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 			var tag:String = tags[i];
 
 			// Get sprite
-			var sprite:FlxSprite = PlayState.instance.getLuaObject(tag);
+			var sprite:FlxSprite = PlayState.instance.getObject(tag);
 			if (sprite == null) continue;
 
 			// If exist, kill

@@ -633,7 +633,7 @@ class PlayState extends MusicBeatState {
 		#end
 	}
 
-	public function getLuaObject(tag:String):Dynamic return variables.get(tag);
+	public function getObject(tag:String):Dynamic return variables.get(tag);
 
 	function startCharacterPos(char:Character, ?gfCheck:Bool = false) {
 		if (gfCheck && char.curCharacter.startsWith('gf')) { // IF DAD IS GIRLFRIEND, HE GOES TO HER POSITION
@@ -715,7 +715,7 @@ class PlayState extends MusicBeatState {
 	var startTimer:FlxTimer;
 	var finishTimer:FlxTimer = null;
 
-	// For being able to mess with the sprites on Lua
+	// For being able to mess with the sprites on Hscript
 	public var countdownReady:FlxSprite;
 	public var countdownSet:FlxSprite;
 	public var countdownGo:FlxSprite;

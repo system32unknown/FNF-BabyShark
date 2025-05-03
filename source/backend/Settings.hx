@@ -153,8 +153,8 @@ class Settings {
 		if (FlxG.save.data.framerate == null) data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate * 2, 60, 240));
 
 		// flixel automatically saves your volume!
-		FlxG.sound.volume = FlxG.save.data.volume ?? 1;
-		FlxG.sound.muted = FlxG.save.data.muted ?? false;
+		if (FlxG.save.data.volume != null) FlxG.sound.volume = FlxG.save.data.volume;
+		if (FlxG.save.data.mute != null) FlxG.sound.muted = FlxG.save.data.mute;
 
 		#if DISCORD_ALLOWED DiscordClient.check(); #end
 	}

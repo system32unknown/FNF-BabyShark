@@ -273,6 +273,7 @@ class HScript extends AlterHscript {
 			set('addBehindDad', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.dadGroup) - order, obj));
 			set('addBehindBF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.boyfriendGroup) - order, obj));
 			set('addBehindObject', (obj:FlxBasic, target:FlxBasic, ?order:Int = 0) -> return psInstance.insert(psInstance.members.indexOf(target), obj));
+			set('addBehindCharacters', (obj:FlxBasic) -> return psInstance.insert(psInstance.members.indexOf(ScriptUtils.getLowestCharacterGroup()), obj));
 		}
 	}
 
