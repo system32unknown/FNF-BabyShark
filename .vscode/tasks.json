@@ -5,11 +5,6 @@
 			"type": "lime",
 			"command": "build",
 			"targetConfiguration": "Windows",
-			"problemMatcher": [
-				"$haxe-absolute",
-				"$haxe",
-				"$haxe-error"
-			],
 			"label": "lime: build windows",
 			"group": {
 				"kind": "build",
@@ -20,11 +15,6 @@
 			"type": "lime",
 			"command": "test",
 			"targetConfiguration": "cpp",
-			"problemMatcher": [
-				"$haxe-absolute",
-				"$haxe",
-				"$haxe-error"
-			],
 			"label": "lime: test cpp",
 			"group": {
 				"kind": "test",

@@ -78,8 +78,4 @@ class Ansi {
 			case WHITE | _: 0xFFFFFFFF;
 		}
 	}
-    
-    public static inline function reset():Void {
-        Sys.print("\x1b[0m");
-    }
 }

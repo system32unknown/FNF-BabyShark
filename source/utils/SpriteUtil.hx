@@ -63,4 +63,23 @@ class SpriteUtil {
 		countByColor.clear();
 		return FlxColor.fromInt(maxKey);
 	}
+
+	/**
+	 * Resets an FlxSprite.
+	 * 
+	 * @param  spr  Sprite to reset
+	 * @param  x    New X position
+	 * @param  y    New Y position
+	 */
+	public static function resetSprite(spr:FlxSprite, x:Float, y:Float):Void {
+	    spr.reset(x, y);
+	    spr.alpha = 1;
+	    spr.visible = true;
+	    spr.active = true;
+	    spr.acceleration.set();
+	    spr.velocity.set();
+	    spr.drag.set();
+	    spr.antialiasing = FlxSprite.defaultAntialiasing;
+	    FlxTween.cancelTweensOf(spr);
+	}
 }

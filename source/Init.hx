@@ -5,9 +5,9 @@ import states.FlashingState;
 
 class Init extends flixel.FlxState {
 	override function create():Void {
-        #if cpp
-        untyped __cpp__("setbuf(stdout, 0)");
-        #end
+		#if cpp
+		untyped __cpp__("setbuf(stdout, 0)");
+		#end
 
 		#if AWARDS_ALLOWED Awards.load(); #end
 		Controls.load();

@@ -54,9 +54,9 @@ class NativeUtil {
 		#if (windows && !hl)
 		if (foregroundColor == NONE) foregroundColor = LIGHTGRAY;
 		if (backgroundColor == NONE) backgroundColor = BLACK;
-		PlatformUtil.setConsoleColors((cast (backgroundColor, Int) * 16) + cast (foregroundColor, Int));
+		PlatformUtil.setConsoleColors((cast(backgroundColor, Int) * 16) + cast(foregroundColor, Int));
 		#elseif sys
-		Ansi.reset();
+		Sys.print("\x1b[0m");
 		if (foregroundColor != NONE) Sys.print("\x1b[" + Std.int(Ansi.colorToANSI(foregroundColor)) + "m");
 		if (backgroundColor != NONE) Sys.print("\x1b[" + Std.int(Ansi.colorToANSI(backgroundColor) + 10) + "m");
 		#end
