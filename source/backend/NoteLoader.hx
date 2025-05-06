@@ -13,8 +13,7 @@ class NoteLoader {
 		var spr:FlxSprite = new FlxSprite();
 
 		// Do this to be able to just copy over the note animations and not reallocate it
-		if (noteSkin == null || noteSkin.length == 0)
-			noteSkin = defaultSkin;
+		if (noteSkin == null || noteSkin.length == 0) noteSkin = defaultSkin;
 		spr.frames = Paths.getSparrowAtlas(noteSkin);
 		trace('Initalizing noteSkin: $noteSkin');
 

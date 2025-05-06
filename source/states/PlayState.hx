@@ -865,11 +865,12 @@ class PlayState extends MusicBeatState {
 		callOnHScript('onUpdateScore', [miss]);
 	}
 	public dynamic function updateScoreText() {
-		var tempText:String = '${!Settings.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [bfNpsVal, bfNpsMax])}' + Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
+		var tempText:String = '${!Settings.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [bfNpsVal, bfNpsMax])}';
 		if (!cpuControlled) {
+			tempText += Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
 			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses: {1} ', [songMisses]); 
 			tempText += Language.getPhrase('accuracy_text', '| Accuracy: {1}% |', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
-		} else tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
+		} else tempText += Language.getPhrase('hits_text', '| Notes: {1}', [combo]);
 		scoreTxt.text = tempText;
 	}
 
@@ -1267,7 +1268,7 @@ class PlayState extends MusicBeatState {
 		#end
 
 		if (!Settings.data.noReset && Controls.justPressed('reset') && canReset && !inCutscene && startedCountdown && !endingSong && !practiceMode) health = 0;
-		doDeathCheck();
+		if (!practiceMode) doDeathCheck();
 
 		if (!Settings.data.processFirst) {noteSpawn(); noteUpdate();}
 		else {noteUpdate(); noteSpawn();}
@@ -1378,31 +1379,29 @@ class PlayState extends MusicBeatState {
 			if (notes.length > 0) {
 				if (startedCountdown) {
 					notes.forEach((daNote:Note) -> {
-						if (daNote.exists && daNote.strum != null) {
-							var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
-							if (Settings.data.updateSpawnNote) daNote.strum = (!daNote.mustPress ? opponentStrums : playerStrums).members[daNote.noteData];
-							if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
-								if (daNote.mustPress) {
+						var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
+						if (Settings.data.updateSpawnNote) daNote.strum = (!daNote.mustPress ? opponentStrums : playerStrums).members[daNote.noteData];
+						if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
+							if (daNote.mustPress) {
+								if (cpuControlled) goodNoteHit(daNote);
+								else if (!daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
+							} else {
+								if (!daNote.hitByOpponent) opponentNoteHit(daNote);
+								if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
+							}
+							invalidateNote(daNote);
+							canBeHit = false;
+						}
+						if (canBeHit) {
+							if (daNote.mustPress) {
+								if (!daNote.blockHit || daNote.isSustainNote) {
 									if (cpuControlled) goodNoteHit(daNote);
-									else if (!daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
-								} else {
-									if (!daNote.hitByOpponent) opponentNoteHit(daNote);
-									if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
+									else if (!Util.toBool(pressHit & 1 << daNote.noteData) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet) noteMiss(daNote);
 								}
-								invalidateNote(daNote);
-								canBeHit = false;
-							}
-							if (canBeHit) {
-								if (daNote.mustPress) {
-									if (!daNote.blockHit || daNote.isSustainNote) {
-										if (cpuControlled) goodNoteHit(daNote);
-										else if (!Util.toBool(pressHit & 1 << daNote.noteData) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet) noteMiss(daNote);
-									}
-								} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
-								if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
-							}
-							if (daNote.exists) daNote.followStrumNote(songSpeed);
-						} else if (daNote == null) invalidateNote(daNote);
+							} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
+							if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
+						}
+						if (daNote.exists) daNote.followStrumNote(songSpeed);
 					});
 				} else notes.forEachAlive((daNote:Note) -> daNote.canBeHit = daNote.wasGoodHit = false);
 			}
@@ -1469,7 +1468,7 @@ class PlayState extends MusicBeatState {
 	public var isDead:Bool = false; // Don't mess with this on hscript!!!
 	public var gameOverTimer:FlxTimer;
 	function doDeathCheck(?skipHealthCheck:Bool = false):Bool {
-		if (((skipHealthCheck && instakillOnMiss) || health <= (healthBar.bounds != null ? healthBar.bounds.min : 0)) && !practiceMode && !isDead && gameOverTimer == null) {
+		if (((skipHealthCheck && instakillOnMiss) || health <= (healthBar.bounds != null ? healthBar.bounds.min : 0)) && !isDead && gameOverTimer == null) {
 			var ret:Dynamic = callOnHScript('onGameOver', null, true);
 			if (ret != ScriptUtils.Function_Stop) {
 				FlxG.animationTimeScale = 1;
@@ -2063,7 +2062,7 @@ class PlayState extends MusicBeatState {
 		var subtract:Float = pressMissDamage;
 		if (note != null) subtract = note.missHealth;
 
-		if (instakillOnMiss) doDeathCheck(true);
+		if (instakillOnMiss && !practiceMode) doDeathCheck(true);
 
 		health -= subtract * healthLoss;
 		songScore -= 10;
@@ -2196,7 +2195,7 @@ class PlayState extends MusicBeatState {
 			if (!isSus) {
 				++combo; ++bfSideHit;
 				if (showPopups) popUpHitNote = note;
-				addScore(note);
+				if (!cpuControlled) addScore(note);
 			}
 			health += note.hitHealth * healthGain;
 		} else { // Notes that count as a miss if you hit them (Hurt notes for example)
