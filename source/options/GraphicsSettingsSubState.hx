@@ -26,7 +26,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 				if (sprite != null && (sprite is FlxSprite))
 					sprite.antialiasing = Settings.data.antialiasing;
 			}
-		}; //Changing onChange is only needed if you want to make a special interaction after it changes the value
+		}; // Changing onChange is only needed if you want to make a special interaction after it changes the value
 		addOption(option);
 		antialiasingOption = optionsArray.length - 1;
 

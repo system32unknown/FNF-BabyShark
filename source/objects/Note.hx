@@ -341,7 +341,7 @@ class Note extends FlxSprite {
 
 		var skin:String = texture + postfix;
 		if (texture.length < 1) {
-			skin = PlayState.SONG?.arrowSkin;
+			skin = PlayState.SONG != null ? PlayState.SONG.arrowSkin : null;
 			if (skin == null || skin.length < 1) skin = defaultNoteSkin + postfix;
 		} else rgbShader.enabled = false;
 
@@ -353,6 +353,7 @@ class Note extends FlxSprite {
 		var lastScaleY:Float = scale.y;
 		var skinPostfix:String = getNoteSkinPostfix();
 		var customSkin:String = skin + skinPostfix;
+
 		if (customSkin == _lastValidChecked || Paths.fileExists('images/' + path + customSkin + '.png', IMAGE)) {
 			skin = customSkin;
 			_lastValidChecked = customSkin;
@@ -431,10 +432,7 @@ class Note extends FlxSprite {
 	}
 
 	override function update(elapsed:Float) {
-		if (PlayState.inPlayState && PlayState.instance.cpuControlled) {
-			super.update(elapsed);
-			return;
-		}
+		if (PlayState.inPlayState && PlayState.instance.cpuControlled) return;
 		super.update(elapsed);
 
 		if (mustPress) {
@@ -456,12 +454,6 @@ class Note extends FlxSprite {
 	}
 
 	public function followStrumNote(songSpeed:Float = 1) {
-		var strumX:Float = strum.x;
-		var strumY:Float = strum.y;
-		var strumAngle:Float = strum.angle;
-		var strumAlpha:Float = strum.alpha;
-		var strumDirection:Float = strum.direction;
-
 		if (isSustainNote) {
 			flipY = Settings.data.downScroll;
 
@@ -481,12 +473,12 @@ class Note extends FlxSprite {
 		distance = (.45 * (Conductor.songPosition - strumTime) * songSpeed * multSpeed);
 		if (!strum.downScroll) distance *= -1;
 
-		if (copyAngle) angle = strumDirection - 90 + strumAngle + offsetAngle;
-		if (copyAlpha) alpha = strumAlpha * multAlpha;
+		if (copyAngle) angle = strum.direction - 90 + strum.angle + offsetAngle;
+		if (copyAlpha) alpha = strum.alpha * multAlpha;
 
-		if (copyX) @:privateAccess x = strumX + offsetX + strum._dirCos * distance;
+		if (copyX) @:privateAccess x = strum.x + offsetX + strum._dirCos * distance;
 		if (copyY) {
-			@:privateAccess y = strumY + offsetY + correctionOffset + strum._dirSin * distance;
+			@:privateAccess y = strum.y + offsetY + correctionOffset + strum._dirSin * distance;
 			if (strum.downScroll && isSustainNote) {
 				if (PlayState.isPixelStage) y -= PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania] * 9.5;
 				y -= (frameHeight * scale.y) - (EK.swidths[PlayState.mania] * .5);
@@ -549,7 +541,6 @@ class Note extends FlxSprite {
 			offsetX = 0;
 		}
 
-		if (PlayState.isPixelStage) offsetX = -5;
 		if (isSustainNote) {
 			if (isSustainNote && prevNote != null) {
 				flipY = Settings.data.downScroll;
@@ -581,12 +572,6 @@ class Note extends FlxSprite {
 					centerOffsets(true);
 					centerOrigin();
 				} else scale.set(PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania], PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]);
-
-				width = originalWidth;
-				height = originalHeight;
-
-				centerOffsets(true);
-				centerOrigin();
 			}
 		}
 		correctionOffset = isSustainNote && !flipY ? originalHeight * .5 : 0;
