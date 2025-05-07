@@ -27,8 +27,8 @@ class FileUtil {
 			'backups/*',
 			'manifest',
 			'manifest/*',
-			'Funkin.exe',
-			'Funkin',
+			'AlterEngine.exe',
+			'AlterEngine',
 			'icon.ico',
 			'libvlc.dll',
 			'libvlccore.dll',
@@ -318,7 +318,7 @@ class FileUtil {
 	 */
 	public static function createDirIfNotExists(dir:String):Void {
 		#if sys
-		if (!FileSystem.isDirectory(dir)) sys.FileSystem.createDirectory(dir);
+		if (!FileSystem.isDirectory(dir)) FileSystem.createDirectory(dir);
 		#end
 	}
 
@@ -350,7 +350,7 @@ class FileUtil {
 		#end
 	}
 
-	private static function convertTypeFilter(?typeFilter:Array<FileFilter>):Null<String> {
+	static function convertTypeFilter(?typeFilter:Array<FileFilter>):Null<String> {
 		var filter:Null<String> = null;
 		if (typeFilter != null) {
 			var filters:Array<String> = new Array<String>();
@@ -358,6 +358,22 @@ class FileUtil {
 			filter = filters.join(';');
 		}
 		return filter;
+	}
+
+	public static function deleteDirectoryWithFiles(path:String) {
+		#if sys
+		if (FileSystem.exists(path) && FileSystem.isDirectory(path)) {
+			for (file in FileSystem.readDirectory(path)) {
+				var innerPath:String = FileSystem.fullPath(path + "/" + file).replace(#if windows "/", "\\" #else "\\", "/" #end);
+				if (FileSystem.isDirectory(innerPath)) {
+					deleteDirectoryWithFiles(innerPath);
+				} else FileSystem.deleteFile(innerPath);
+			}
+			FileSystem.deleteDirectory(path);
+		}
+		#else
+			throw "Platform is not supported for FileUtil.deleteDirectoryWithFiles";
+		#end
 	}
 }
 
@@ -412,10 +428,8 @@ class FileUtilSandboxed {
 
 		#if sys
 		// TODO: figure out how to get "real" path of symlinked paths
-		final realPath:String = sys.FileSystem.fullPath(Path.join([FileUtil.gameDirectory, sanitized.join('/')]));
-		if (!realPath.startsWith(FileUtil.gameDirectory)) {
-			return FileUtil.gameDirectory;
-		}
+		final realPath:String = FileSystem.fullPath(Path.join([FileUtil.gameDirectory, sanitized.join('/')]));
+		if (!realPath.startsWith(FileUtil.gameDirectory)) return FileUtil.gameDirectory;
 		return realPath;
 		#else
 		return sanitized.join('/');

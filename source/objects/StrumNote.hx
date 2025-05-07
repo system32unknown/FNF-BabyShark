@@ -120,9 +120,7 @@ class StrumNote extends FlxSprite {
 	}
 
 	public function playerPosition() {
-		x += EK.swidths[PlayState.mania] * noteData;
-		x += 50;
-		x += ((FlxG.width / 2) * player);
+		x += EK.swidths[PlayState.mania] * (noteData - 2);
 		x -= EK.posRest[PlayState.mania];
 	}
 

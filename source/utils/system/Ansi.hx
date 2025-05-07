@@ -1,43 +1,28 @@
 package utils.system;
 
-enum abstract ConsoleMode(Int) {
-	var INIT:ConsoleMode = 0;
-	var BOLD:ConsoleMode = 1;
-	var DIM:ConsoleMode = 2;
-	var ITALIC:ConsoleMode = 3;
-	var UNDERLINE:ConsoleMode = 4;
-	var BLINKING:ConsoleMode = 5;
-	var INVERT:ConsoleMode = 7;
-	var INVISIBLE:ConsoleMode = 8;
-	var STRIKETHROUGH:ConsoleMode = 9;
+enum abstract AnsiColor(Int) {
+	var BLACK:AnsiColor = 0;
+	var DARKBLUE:AnsiColor = 1;
+	var DARKGREEN:AnsiColor = 2;
+	var DARKCYAN:AnsiColor = 3;
+	var DARKRED:AnsiColor = 4;
+	var DARKMAGENTA:AnsiColor = 5;
+	var DARKYELLOW:AnsiColor = 6;
+	var LIGHTGRAY:AnsiColor = 7;
+	var GRAY:AnsiColor = 8;
+	var BLUE:AnsiColor = 9;
+	var GREEN:AnsiColor = 10;
+	var CYAN:AnsiColor = 11;
+	var RED:AnsiColor = 12;
+	var MAGENTA:AnsiColor = 13;
+	var YELLOW:AnsiColor = 14;
+	var WHITE:AnsiColor = 15;
 
-    public function format(?c:Int = 37):String return '\033[${this};${c}m';
-	public function asCol(?c:Int = 0):String return '\033[${0};${c}m';
-}
-
-enum abstract ConsoleColor(Int) {
-	var BLACK:ConsoleColor = 0;
-	var DARKBLUE:ConsoleColor = 1;
-	var DARKGREEN:ConsoleColor = 2;
-	var DARKCYAN:ConsoleColor = 3;
-	var DARKRED:ConsoleColor = 4;
-	var DARKMAGENTA:ConsoleColor = 5;
-	var DARKYELLOW:ConsoleColor = 6;
-	var LIGHTGRAY:ConsoleColor = 7;
-	var GRAY:ConsoleColor = 8;
-	var BLUE:ConsoleColor = 9;
-	var GREEN:ConsoleColor = 10;
-	var CYAN:ConsoleColor = 11;
-	var RED:ConsoleColor = 12;
-	var MAGENTA:ConsoleColor = 13;
-	var YELLOW:ConsoleColor = 14;
-	var WHITE:ConsoleColor = 15;
-
-	var NONE:ConsoleColor = -1;
+	var NONE:AnsiColor = -1;
 }
 
 class Ansi {
-    public static function colorToANSI(color:ConsoleColor):Int {
+    public static function colorToANSI(color:AnsiColor):Int {
 		return switch (color) {
 			case BLACK: 30;
 			case DARKBLUE: 34;
@@ -58,7 +43,7 @@ class Ansi {
 		}
 	}
 
-	public static function colorToOpenFL(color:ConsoleColor):FlxColor {
+	public static function colorToOpenFL(color:AnsiColor):FlxColor {
 		return switch (color) {
 			case BLACK: 0xFF000000;
 			case DARKBLUE: 0xFF000088;

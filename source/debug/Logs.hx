@@ -6,7 +6,7 @@ import haxe.PosInfos;
 import flixel.system.debug.log.LogStyle;
 
 import utils.system.NativeUtil;
-import utils.system.Ansi.ConsoleColor;
+import utils.system.Ansi.AnsiColor;
 
 // Credit by Codename Engine Team
 class Logs {
@@ -64,10 +64,10 @@ class Logs {
 
 		for (i in 0...chunks.length) {
 			final chunk:LogChunk = chunks[i];
-			NativeUtil.setConsoleColors(chunk.fgColor, chunk.bgColor);
+			NativeUtil.setAnsiColors(chunk.fgColor, chunk.bgColor);
 			Sys.print(chunk.text);
 		}
-		NativeUtil.setConsoleColors();
+		NativeUtil.setAnsiColors();
 		Sys.print("\n");
 
 		_showing = false;
@@ -113,7 +113,7 @@ enum abstract Level(Int) from Int to Int {
 	var VERBOSE:Level = 3;
 }
 typedef LogChunk = {
-	var ?bgColor:ConsoleColor;
-	var ?fgColor:ConsoleColor;
+	var ?bgColor:AnsiColor;
+	var ?fgColor:AnsiColor;
 	var text:String;
 }

@@ -158,7 +158,7 @@ class PlatformUtil {
 	#if (cpp && windows)
 	@:functionCode('return SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);')
 	#end
-	public static function setConsoleColors(color:Int):Bool return false;
+	public static function setAnsiColors(color:Int):Bool return false;
 
 	#if windows
 	@:functionCode('
