@@ -96,7 +96,6 @@ class Note extends FlxSprite {
 	public static var originalHeight:Float = 160 * .7;
 	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
 
-	public static var chartArrowSkin:String = null;
 	public static var pixelWidth:Vector<Int> = new Vector<Int>(2, 0);
 	public static var pixelHeight:Vector<Int> = new Vector<Int>(2, 0);
 
@@ -358,10 +357,12 @@ class Note extends FlxSprite {
 			skin = customSkin;
 			_lastValidChecked = customSkin;
 		} else skinPostfix = '';
+		trace(skin);
 
 		if (PlayState.isPixelStage) {
+			var pixelEK:Int = EK.keys(EK.maxMania);
 			var pixelGraphic:FlxGraphic = Paths.image(skinPixel + (isSustainNote ? 'ENDS' : '') + skinPostfix);
-			loadGraphic(pixelGraphic, true, Math.floor(pixelGraphic.width / 4), Math.floor(pixelGraphic.height / (isSustainNote ? 2 : 5)));
+			loadGraphic(pixelGraphic, true, Math.floor(pixelGraphic.width / pixelEK), Math.floor(pixelGraphic.height / (isSustainNote ? 2 : 5)));
 
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]));
 			loadPixelNoteAnims();
@@ -525,10 +526,10 @@ class Note extends FlxSprite {
 		super.kill();
 	}
 
-	public function updateSkin():Void {
+	public function updateSkin(tex:String):Void {
 		if (!PlayState.isPixelStage) {
-			if (chartArrowSkin != null && chartArrowSkin.length > 0) texture = chartArrowSkin = initSkin;
-			else if (chartArrowSkin != texture) texture = chartArrowSkin;
+			if (tex == null || tex.length == 0 && texture != initSkin) texture = initSkin;
+			else if (tex.length > 0 && tex != texture) texture = tex;
 		} else reloadNote(texture);
 
 		var noteGFX:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
@@ -542,37 +543,35 @@ class Note extends FlxSprite {
 		}
 
 		if (isSustainNote) {
-			if (isSustainNote && prevNote != null) {
-				flipY = Settings.data.downScroll;
-				alpha = multAlpha = .6;
+			flipY = Settings.data.downScroll;
+			alpha = multAlpha = .6;
 
-				var holdAnim:String = noteGFX + (isSustainEnds ? 'holdend' : 'hold');
-				if (PlayState.isPixelStage) {
-					offsetX += pixelWidth[0] * .5 * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania];
-					animation.play(holdAnim);  // isHoldEnd
-					offsetX -= pixelWidth[1] * .5 * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania];
+			var holdAnim:String = noteGFX + (isSustainEnds ? 'holdend' : 'hold');
+			if (PlayState.isPixelStage) {
+				offsetX += pixelWidth[0] * .5 * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania];
+				animation.play(holdAnim);  // isHoldEnd
+				offsetX -= pixelWidth[1] * .5 * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania];
 
-					if(!isSustainEnds) sustainScale = (PlayState.daPixelZoom / pixelHeight[1]); // Auto adjust note size
-				} else {
-					offsetX += width * .5;
-					if (animation.exists(holdAnim)) animation.play(holdAnim); // isHoldEnd
-					updateHitbox();
-					offsetX -= width * .5;
-	
-					sustainScale = SUSTAIN_SIZE / frameHeight;
-				}
+				if(!isSustainEnds) sustainScale = (PlayState.daPixelZoom / pixelHeight[1]); // Auto adjust note size
 			} else {
-				alpha = multAlpha = sustainScale = 1;
+				offsetX += width * .5;
+				if (animation.exists(holdAnim)) animation.play(holdAnim); // isHoldEnd
+				updateHitbox();
+				offsetX -= width * .5;
 
-				if (!PlayState.isPixelStage)  {
-					scale.set(EK.scales[PlayState.mania], EK.scales[PlayState.mania]);
-					width = originalWidth;
-					height = originalHeight;
-		
-					centerOffsets(true);
-					centerOrigin();
-				} else scale.set(PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania], PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]);
+				sustainScale = SUSTAIN_SIZE / frameHeight;
 			}
+		} else {
+			alpha = multAlpha = sustainScale = 1;
+
+			if (!PlayState.isPixelStage)  {
+				scale.set(EK.scales[PlayState.mania], EK.scales[PlayState.mania]);
+				width = originalWidth;
+				height = originalHeight;
+	
+				centerOffsets(true);
+				centerOrigin();
+			} else scale.set(PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania], PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]);
 		}
 		correctionOffset = isSustainNote && !flipY ? originalHeight * .5 : 0;
 

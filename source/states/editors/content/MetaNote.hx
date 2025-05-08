@@ -38,7 +38,8 @@ class MetaNote extends Note {
 		if (Note.globalRgbShaders.contains(rgbShader.parent)) // Is using a default shader
 			rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(noteData));
 
-		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'Scroll');
+		var scrollAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'Scroll';
+		if (animation.exists(scrollAnim)) animation.play(scrollAnim);
 		updateHitbox();
 		if (width > height) setGraphicSize(ChartingState.GRID_SIZE);
 		else setGraphicSize(0, ChartingState.GRID_SIZE);
@@ -124,6 +125,7 @@ class MetaNote extends Note {
 class EditorSustain extends Note {
 	var sustainTile:FlxSprite;
 	public var sustainHeight:Float = 0;
+	var ekIndex:Int = 0;
 
 	public function new(data:Int) {
 		sustainTile = new FlxSprite();
@@ -131,7 +133,8 @@ class EditorSustain extends Note {
 
 		super(0, data, null, true, true);
 
-		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend');
+		var holdendAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend';
+		if (animation.exists(holdendAnim)) animation.play(holdendAnim);
 		scale.set(scale.x, scale.x);
 		updateHitbox();
 		reloadSustainTile(); // fixes sustaintile scale problem
@@ -163,7 +166,8 @@ class EditorSustain extends Note {
 		sustainTile.frames = frames;
 		sustainTile.antialiasing = antialiasing;
 		sustainTile.animation.copyFrom(animation);
-		sustainTile.animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'hold');
+		var holdendAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'hold';
+		if (sustainTile.animation.exists(holdendAnim)) sustainTile.animation.play(holdendAnim);
 		sustainTile.clipRect = flixel.math.FlxRect.get(0, 1, sustainTile.frameWidth, 1);
 	}
 
@@ -174,7 +178,8 @@ class EditorSustain extends Note {
 		else loadPixelNoteAnims();
 
 		reloadSustainTile();
-		animation.play(EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend');
+		var holdendAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend';
+		if (animation.exists(holdendAnim)) animation.play(holdendAnim);
 	}
 
 	public override function reloadNote(tex:String = '', postfix:String = '') {

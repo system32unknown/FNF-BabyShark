@@ -29,8 +29,8 @@ import hscript.Printer;
 #end
 
 class PlayState extends MusicBeatState {
-	public static var STRUM_X = 0;
-	public static var STRUM_X_MIDDLESCROLL = FlxG.width / 2;
+	public static var STRUM_X = 48.5;
+	public static var STRUM_X_MIDDLESCROLL = -271.5;
 
 	public static var ratingStuff:Array<Array<haxe.extern.EitherType<String, Float>>> = [
 		['Skill issue', .2], // From 0% to 19%
@@ -755,23 +755,13 @@ class PlayState extends MusicBeatState {
 			canPause = true;
 			generateStaticArrows(0);
 			generateStaticArrows(1);
-			for (index => strums in [opponentStrums, playerStrums]) {
-				var length:Int = strums.length;
-				var lastStrum:StrumNote = strums.members[length - 1];
-				var laneWidth:Float = EK.swidths[mania] * (length - 1) + lastStrum.width;
-				for (i => strum in strums) {
-					strum.x += (EK.swidths[mania] * length - laneWidth + FlxG.width * (index + 0.5)) / 2;
-					if (middleScroll && index == 1) strum.x -= FlxG.width / 4;
-
-					switch (index) {
-						case 0:
-							setOnHScript('defaultOpponentStrumX' + i, strum.x);
-							setOnHScript('defaultOpponentStrumY' + i, strum.y);
-						case 1:
-							setOnHScript('defaultPlayerStrumX' + i, strum.x);
-							setOnHScript('defaultPlayerStrumY' + i, strum.y);
-					}
-				}
+			for (i in 0...playerStrums.length) {
+				setOnHScript('defaultPlayerStrumX$i', playerStrums.members[i].x);
+				setOnHScript('defaultPlayerStrumY$i', playerStrums.members[i].y);
+			}
+			for (i in 0...opponentStrums.length) {
+				setOnHScript('defaultOpponentStrumX$i', opponentStrums.members[i].x);
+				setOnHScript('defaultOpponentStrumY$i', opponentStrums.members[i].y);
 			}
 			setOnHScript('mania', SONG.mania);
 
@@ -876,11 +866,11 @@ class PlayState extends MusicBeatState {
 	}
 	public dynamic function updateScoreText() {
 		var tempText:String = '${!Settings.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [bfNpsVal, bfNpsMax])}';
+		tempText += Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
 		if (!cpuControlled) {
-			tempText += Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
 			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses: {1} ', [songMisses]); 
 			tempText += Language.getPhrase('accuracy_text', '| Accuracy: {1}% |', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
-		} else tempText += Language.getPhrase('hits_text', 'Hits: {1}', [combo]);
+		} else tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
 		scoreTxt.text = tempText;
 	}
 
@@ -973,8 +963,6 @@ class PlayState extends MusicBeatState {
 			var eventsChart:SwagSong = Song.getChart('events', songName);
 			if (eventsChart != null) for (event in eventsChart.events) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
 		} catch (e:Dynamic) {}
-
-		Note.chartArrowSkin = SONG.arrowSkin;
 		
 		var daBpm:Float = Conductor.bpm;
 		var strumTimeVector:Vector<Float> = new Vector<Float>(EK.strums(mania), 0.0);
@@ -1002,7 +990,8 @@ class PlayState extends MusicBeatState {
 				swagNote.mustPress = gottaHitNote;
 				swagNote.sustainLength = holdLength;
 				swagNote.noteType = noteType;
-				swagNote.scrollFactor.set(); swagNote.updateSkin();
+				swagNote.scrollFactor.set();
+				swagNote.updateSkin(SONG.arrowSkin ?? null);
 				unspawnNotes.push(swagNote);
 				oldNote = swagNote;
 
@@ -1020,7 +1009,7 @@ class PlayState extends MusicBeatState {
 						sustainNote.isSustainEnds = (susNote == roundSus);
 						unspawnSustainNotes.push(sustainNote);
 						swagNote.tail.push(sustainNote);
-						sustainNote.updateSkin();
+						sustainNote.updateSkin(SONG.arrowSkin ?? null);
 						sustainNote.correctionOffset = Note.originalHeight / 2;
 
 						if (!isPixelStage) {
@@ -1117,8 +1106,7 @@ class PlayState extends MusicBeatState {
 			} else babyArrow.alpha = targetAlpha;
 
 			if (player < 1 && middleScroll) {
-				babyArrow.x += 310;
-				if (i > EK.midArray[mania]) babyArrow.x += FlxG.width / 2 + 25; //Up and Right
+				if (i > EK.midArray[mania]) babyArrow.x += FlxG.width / 2; //Up and Right
 			}
 
 			(player == 1 ? playerStrums : opponentStrums).add(babyArrow);
@@ -2207,7 +2195,7 @@ class PlayState extends MusicBeatState {
 			if (!isSus) {
 				++combo; ++bfSideHit;
 				if (showPopups) popUpHitNote = note;
-				if (!cpuControlled) addScore(note);
+				addScore(note);
 			}
 			health += note.hitHealth * healthGain;
 		} else { // Notes that count as a miss if you hit them (Hurt notes for example)
@@ -2288,7 +2276,6 @@ class PlayState extends MusicBeatState {
 		NoteSplash.configs.clear();
 		instance = null;
 		backend.NoteLoader.dispose();
-		Note.chartArrowSkin = null;
 		Paths.popUpFramesMap.clear();
 
 		if (endingSong) SONG = null;
