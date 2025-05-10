@@ -151,6 +151,9 @@ class Settings {
 		FlxG.autoPause = data.autoPause;
 
 		if (FlxG.save.data.framerate == null) data.framerate = Std.int(FlxMath.bound(FlxG.stage.application.window.displayMode.refreshRate * 2, 60, 240));
+		if (data.framerate > FlxG.drawFramerate)
+			FlxG.updateFramerate = FlxG.drawFramerate = data.framerate;
+		else FlxG.drawFramerate = FlxG.updateFramerate = data.framerate;
 
 		// flixel automatically saves your volume!
 		if (FlxG.save.data.volume != null) FlxG.sound.volume = FlxG.save.data.volume;

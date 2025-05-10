@@ -158,13 +158,7 @@ class FileReferenceCustom extends FileReference {
 		__path = null;
 
 		#if desktop
-		var filter:Null<String> = null;
-
-		if (typeFilter != null) {
-			var filters:Array<String> = [];
-			for (type in typeFilter) filters.push(type.extension.replace("*.", "").replace(";", ","));
-			filter = filters.join(";");
-		}
+		var filter:Null<String> = utils.FileUtil.convertTypeFilter(typeFilter);
 
 		var openFileDialog:FileDialog = new FileDialog();
 		openFileDialog.onCancel.add(openFileDialog_onCancel);

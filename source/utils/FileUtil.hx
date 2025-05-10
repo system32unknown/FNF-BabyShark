@@ -350,7 +350,7 @@ class FileUtil {
 		#end
 	}
 
-	static function convertTypeFilter(?typeFilter:Array<FileFilter>):Null<String> {
+	public static function convertTypeFilter(?typeFilter:Array<FileFilter>):Null<String> {
 		var filter:Null<String> = null;
 		if (typeFilter != null) {
 			var filters:Array<String> = new Array<String>();

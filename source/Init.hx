@@ -28,7 +28,6 @@ class Init extends flixel.FlxState {
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.keys.preventDefaultKeys = [TAB];
 		FlxG.cameras.useBufferLocking = true;
-		FlxG.updateFramerate = FlxG.drawFramerate = Settings.data.framerate;
 
 		if (FlxG.save.data != null) {
 			if (FlxG.save.data.fullscreen != null) FlxG.fullscreen = FlxG.save.data.fullscreen;

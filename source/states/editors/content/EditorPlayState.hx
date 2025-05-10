@@ -227,7 +227,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			updateScore();
 		}
 
-		dataTxt.text = 'Section:$curSection\nBeat:$curBeat\nStep:$curStep\nBot:${(cpuControlled ? 'ON' : 'OFF')}';
+		dataTxt.text = 'Section:$curSection\nBeat:$curBeat\nStep:$curStep\nBotplay:${(cpuControlled ? 'ON' : 'OFF')}';
 		super.update(elapsed);
 	}
 
@@ -320,6 +320,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			swagNote.gfNote = note.gfNote;
 			swagNote.noteType = note.noteType;
 			swagNote.scrollFactor.set();
+			swagNote.updateSkin(PlayState.SONG.arrowSkin ?? null);
 			unspawnNotes.push(swagNote);
 
 			var curStepCrochet:Float = 60 / daBpm * 1000 / 4.;
@@ -335,18 +336,13 @@ class EditorPlayState extends MusicBeatSubstate {
 					sustainNote.parent = swagNote;
 					unspawnNotes.push(sustainNote);
 					swagNote.tail.push(sustainNote);
+					sustainNote.updateSkin(PlayState.SONG.arrowSkin ?? null);
 					sustainNote.correctionOffset = swagNote.height / 2;
-					if (!PlayState.isPixelStage) {
-						if (oldNote.isSustainNote) {
-							oldNote.scale.y *= Note.SUSTAIN_SIZE / oldNote.frameHeight;
-							oldNote.scale.y /= playbackRate;
-							oldNote.resizeByRatio(curStepCrochet / Conductor.stepCrochet);
-						}
-						if (downScroll) sustainNote.correctionOffset = 0;
-					} else if (oldNote.isSustainNote) {
-						oldNote.scale.y /= playbackRate;
-						oldNote.resizeByRatio(curStepCrochet / Conductor.stepCrochet);
+					if (oldNote.isSustainNote) {
+						oldNote.sustainScale = (Note.SUSTAIN_SIZE / oldNote.frameHeight) / playbackRate;
+						if (oldNote.sustainScale != 1) oldNote.resizeByRatio(curStepCrochet / Conductor.stepCrochet);
 					}
+					if (downScroll) sustainNote.correctionOffset = 0;
 					if (sustainNote.mustPress) sustainNote.x += FlxG.width / 2; // general offset
 					else if (middleScroll) {
 						sustainNote.x += 310;
