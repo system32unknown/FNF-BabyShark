@@ -544,7 +544,6 @@ class NotesColorSubState extends FlxSubState {
 
 	override function destroy() {
 		backend.NoteLoader.dispose();
-		Note.globalRgbShaders = [];
 		super.destroy();
 	}
 }
