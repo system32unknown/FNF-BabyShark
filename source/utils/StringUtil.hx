@@ -209,9 +209,8 @@ class StringUtil {
 		// Use the floor value for the compact representation
 		var compactValue:Float = Math.floor(num * 100) / 100;
 
-		if (compactValue <= .001) {
-			return "0"; // Return 0 if compactValue = null
-		} else {
+		if (compactValue <= .001) return "0";
+		else {
 			var illionRepresentation:String = "";
 			if (magnitude > 0) illionRepresentation += suffix + tenSuffix;
 			if (magnitude > 1) illionRepresentation += "llion";

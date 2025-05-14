@@ -151,17 +151,18 @@ class HScript extends AlterHscript {
 		for (key => type in getDefaultVariables()) set(key, type);
 
 		// Functions & Variables
+		var music_variables:Map<String, Dynamic> = MusicBeatState.getVariables();
 		set('setVar', (name:String, value:Dynamic) -> {
-			MusicBeatState.getVariables().set(name, value);
+			music_variables.set(name, value);
 			return value;
 		});
 		set('getVar', (name:String) -> {
-			if (MusicBeatState.getVariables().exists(name)) return MusicBeatState.getVariables().get(name);
+			if (music_variables.exists(name)) return music_variables.get(name);
 			return null;
 		});
 		set('removeVar', (name:String) -> {
-			if (MusicBeatState.getVariables().exists(name)) {
-				MusicBeatState.getVariables().remove(name);
+			if (music_variables.exists(name)) {
+				music_variables.remove(name);
 				return true;
 			}
 			return false;
@@ -232,7 +233,7 @@ class HScript extends AlterHscript {
 					if (rawClass == null) return;
 					FlxG.switchState(() -> cast(Type.createInstance(rawClass, []), flixel.FlxState));
 				} catch (e:AlterError) {
-					Logs.error('$e: Unspecified result for switching state "$name", could not switch states!');
+					Logs.error('$e: Unspecified result for switching state "$name", could not switch states');
 					return;
 				}
 			}
@@ -246,7 +247,7 @@ class HScript extends AlterHscript {
 					if (rawClass == null) return;
 					FlxG.state.openSubState(cast(Type.createInstance(rawClass, args), FlxSubState));
 				} catch (e:Dynamic) {
-					Logs.error('$e: Unspecified result for opening substate "$name", could not be opened!');
+					Logs.error('$e: Unspecified result for opening substate "$name", could not be opened');
 					return;
 				}
 			}
@@ -272,6 +273,7 @@ class HScript extends AlterHscript {
 			set('addBehindGF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.gfGroup) - order, obj));
 			set('addBehindDad', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.dadGroup) - order, obj));
 			set('addBehindBF', (obj:FlxBasic, ?order:Int = 0) -> psInstance.insert(psInstance.members.indexOf(psInstance.boyfriendGroup) - order, obj));
+
 			set('addBehindObject', (obj:FlxBasic, target:FlxBasic, ?order:Int = 0) -> return psInstance.insert(psInstance.members.indexOf(target), obj));
 			set('addBehindCharacters', (obj:FlxBasic) -> return psInstance.insert(psInstance.members.indexOf(ScriptUtils.getLowestCharacterGroup()), obj));
 		}
