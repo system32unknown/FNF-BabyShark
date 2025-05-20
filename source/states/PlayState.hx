@@ -985,7 +985,7 @@ class PlayState extends MusicBeatState {
 				}
 
 				var swagNote:Note = new Note(strumTime, noteColumn, oldNote);
-				swagNote.gfNote = (section.gfSection && (!songData.isOldVersion ? gottaHitNote : !gottaHitNote) == section.mustHitSection);
+				swagNote.gfNote = (section.gfSection && gottaHitNote == section.mustHitSection);
 				swagNote.animSuffix = section.altAnim && !gottaHitNote ? "-alt" : "";
 				swagNote.mustPress = gottaHitNote;
 				swagNote.sustainLength = holdLength;

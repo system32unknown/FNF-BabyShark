@@ -6,14 +6,10 @@ class DefinesMacro {
 	/**
 	 * Returns the defined values
 	 */
-	public static var defines(get, null):Map<String, Dynamic>;
+	public static var defines(get, never):Map<String, Dynamic>;
 
-	// GETTERS
-	static inline function get_defines()
-		return __getDefines();
-
-	// INTERNAL MACROS
-	static macro function __getDefines() {
+	static inline function get_defines():Map<String, Dynamic> return _get();
+	static macro function _get() {
 		return macro $v{#if display [] #else Context.getDefines() #end};
 	}
 }
