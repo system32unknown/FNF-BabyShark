@@ -65,7 +65,7 @@ class FPSCounter extends openfl.text.TextField {
 	public dynamic function updateText():Void {
 		fpsStr = '${fpsManager.curFPS}FPS\n';
 		if (memType == "MEM" || memType == "MEM/PEAK") {
-			fpsStr += 'MEM: ' + FlxStringUtil.formatBytes(memory);
+			fpsStr += FlxStringUtil.formatBytes(memory);
 			if (memType == "MEM/PEAK") fpsStr += ' / ' + FlxStringUtil.formatBytes(mempeak);
 		}
 		text = fpsStr;

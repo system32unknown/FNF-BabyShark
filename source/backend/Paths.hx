@@ -391,7 +391,7 @@ class Paths {
 		}
 		return searchDir;
 	}
-	static function findNode(dir:String, key:String):String {
+	static function findNode(dir:String, key:String):Null<String> {
 		var allFiles:Array<String> = null;
 		try {
 			allFiles = FileSystem.readDirectory(dir);
