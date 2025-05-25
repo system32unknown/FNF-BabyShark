@@ -245,13 +245,15 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	}
 
 	function updateText() {
-		for (i in 0...grpWeekCharacters.length) {
-			grpWeekCharacters.members[i].changeCharacter(weekFile.weekCharacters[i]);
-		}
+		for (idx => chr in grpWeekCharacters) chr.name = weekFile.weekCharacters[idx];
 
-		var stringThing:Array<String> = [for (i in 0...weekFile.songs.length) weekFile.songs[i][0]];
-		txtTracklist.text = '';
-		for (i in 0...stringThing.length) txtTracklist.text += stringThing[i] + '\n';
+		var tracks:String = '';
+		for (i in 0...weekFile.songs.length) {
+			var songName:String = weekFile.songs[i][0];
+			tracks += songName.toUpperCase();
+			if (i != weekFile.songs.length - 1) tracks += '\n';
+		}
+		txtTracklist.text = tracks;
 
 		txtTracklist.text = txtTracklist.text.toUpperCase();
 		txtTracklist.gameCenter(X).x -= FlxG.width * .35;

@@ -3,28 +3,32 @@ package objects;
 typedef MenuCharacterFile = {
 	var image:String;
 	var scale:Float;
-	var position:Array<Int>;
-	var idle_anim:String;
-	var confirm_anim:String;
-	var flipX:Bool;
-	var antialiasing:Null<Bool>;
+	var offset:Array<Float>;
+	var idle:String;
+	var confirm:String;
+	var ?flipX:Bool;
+	var ?antialiasing:Bool;
 }
 
 class MenuCharacter extends FlxSprite {
-	public var character:String;
+	public var name(default, set):String;
+	var _file:MenuCharacterFile;
 	public var hasConfirmAnimation:Bool = false;
-	inline static final DEFAULT_CHARACTER:String = 'bf';
+	static var DEFAULT_CHARACTER:String = 'bf';
 
-	public function new(x:Float, character:String = DEFAULT_CHARACTER) {
-		super(x);
-		changeCharacter(character);
+	public function new(?x:Float, ?y:Float, ?name:String = 'bf') {
+		super(x, y);
+		this.name = name;
 	}
 
-	public function changeCharacter(?character:String = DEFAULT_CHARACTER) {
-		if (character == null) character = '';
-		if (character == this.character) return;
+	function set_name(?value:String = 'bf'):String {
+		if (name == value) return value;
 
-		this.character = character;
+		if (value.length == 0) {
+			visible = false;
+			return name = value;
+		}
+
 		visible = true;
 
 		scale.set(1, 1);
@@ -34,37 +38,35 @@ class MenuCharacter extends FlxSprite {
 		alpha = 1;
 
 		hasConfirmAnimation = false;
-		switch (character) {
-			case '': visible = false;
-			default:
-				var path:String = Paths.getPath('images/menucharacters/$character.json');
-				if (!Paths.exists(path)) {
-					path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
-					color = FlxColor.BLACK;
-					alpha = 0.6;
-				}
-
-				var charFile:MenuCharacterFile = null;
-				try {
-					charFile = haxe.Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
-				} catch (e:Dynamic) Logs.error('Error loading menu character file of "$character": $e');
-				frames = Paths.getSparrowAtlas('menucharacters/' + charFile.image);
-				animation.addByPrefix('idle', charFile.idle_anim, 24);
-
-				var confirmAnim:String = charFile.confirm_anim;
-				if (confirmAnim != null && confirmAnim.length > 0 && confirmAnim != charFile.idle_anim) {
-					animation.addByPrefix('confirm', confirmAnim, 24, false);
-					if (animation.getByName('confirm') != null) hasConfirmAnimation = true; // check for invalid animation
-				}
-				flipX = (charFile.flipX == true);
-
-				if (charFile.scale != 1) {
-					scale.set(charFile.scale, charFile.scale);
-					updateHitbox();
-				}
-				offset.set(charFile.position[0] * scale.x, charFile.position[1] * scale.y);
-				animation.play('idle');
-				antialiasing = (charFile.antialiasing != false && Settings.data.antialiasing);
+		var path:String = Paths.getPath('images/menucharacters/$value.json');
+		if (!Paths.exists(path)) {
+			path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+			color = FlxColor.BLACK;
+			alpha = 0.6;
 		}
+
+		try {
+			_file = haxe.Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
+		} catch (e:Dynamic) Logs.error('Error loading menu character file of "$value": $e');
+		frames = Paths.getSparrowAtlas('menucharacters/${_file.image}');
+		animation.addByPrefix('idle', _file.idle, 24);
+
+		var confirmAnim:String = _file.confirm;
+		if (confirmAnim != null && confirmAnim.length > 0 && confirmAnim != _file.idle) {
+			animation.addByPrefix('confirm', confirmAnim, 24, false);
+			if (animation.getByName('confirm') != null) hasConfirmAnimation = true; // check for invalid animation
+		}
+		flipX = _file.flipX;
+
+		if (_file.scale != 1) {
+			scale.set(_file.scale, _file.scale);
+			updateHitbox();
+		}
+		offset.set(_file.offset[0], _file.offset[1]);
+		animation.play('idle');
+
+		antialiasing = _file.antialiasing != false && Settings.data.antialiasing;
+
+		return name = value;
 	}
 }

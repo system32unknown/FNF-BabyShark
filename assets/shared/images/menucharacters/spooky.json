@@ -1,13 +1,9 @@
 {
-	"idle_anim": "M Spooky Kids Idle",
+	"idle": "M Spooky Kids Idle",
 	"image": "Menu_Spooky_Kids",
-	"position": [
+	"offset": [
 		0,
 		-80
-	],
-	"confirmPosition": [
-		0,
-		0
 	],
 	"scale": 1
 }

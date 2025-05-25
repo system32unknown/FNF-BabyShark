@@ -19,9 +19,9 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 		characterFile = {
 			image: 'Menu_Dad',
 			scale: 1,
-			position: [0, 0],
-			idle_anim: 'M Dad Idle',
-			confirm_anim: 'M Dad Idle',
+			offset: [0, 0],
+			idle: 'M Dad Idle',
+			confirm: 'M Dad Idle',
 			flipX: false,
 			antialiasing: true
 		};
@@ -97,8 +97,8 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 		var tab_group:FlxSpriteGroup = UI_mainbox.getTab('Character').menu;
 
 		imageInputText = new PsychUIInputText(10, 20, 80, characterFile.image, 8);
-		idleInputText = new PsychUIInputText(10, imageInputText.y + 35, 100, characterFile.idle_anim, 8);
-		confirmInputText = new PsychUIInputText(10, idleInputText.y + 35, 100, characterFile.confirm_anim, 8);
+		idleInputText = new PsychUIInputText(10, imageInputText.y + 35, 100, characterFile.idle, 8);
+		confirmInputText = new PsychUIInputText(10, idleInputText.y + 35, 100, characterFile.confirm, 8);
 
 		flipXCheckbox = new PsychUICheckBox(10, confirmInputText.y + 30, "Flip X");
 		flipXCheckbox.onClick = () -> {
@@ -134,8 +134,7 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 		for (i in 0...3) {
 			var char:MenuCharacter = grpWeekCharacters.members[i];
 			char.alpha = 0.2;
-			char.character = '';
-			char.changeCharacter(defaultCharacters[i]);
+			char.name = defaultCharacters[i];
 		}
 		reloadSelectedCharacter();
 	}
@@ -145,8 +144,8 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 
 		char.alpha = 1;
 		char.frames = Paths.getSparrowAtlas('menucharacters/' + characterFile.image);
-		char.animation.addByPrefix('idle', characterFile.idle_anim, 24);
-		if (characterTypeRadio.checked == 1 && characterFile.confirm_anim != null && characterFile.confirm_anim != '' && characterFile.confirm_anim != characterFile.idle_anim) char.animation.addByPrefix('confirm', characterFile.confirm_anim, 24, false);
+		char.animation.addByPrefix('idle', characterFile.idle, 24);
+		if (characterTypeRadio.checked == 1 && characterFile.confirm != null && characterFile.confirm != '' && characterFile.confirm != characterFile.idle) char.animation.addByPrefix('confirm', characterFile.confirm, 24, false);
 		char.flipX = (characterFile.flipX == true);
 
 		char.scale.set(characterFile.scale, characterFile.scale);
@@ -165,10 +164,10 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 				characterFile.image = imageInputText.text;
 				unsavedProgress = true;
 			} else if (sender == idleInputText) {
-				characterFile.idle_anim = idleInputText.text;
+				characterFile.idle = idleInputText.text;
 				unsavedProgress = true;
 			} else if (sender == confirmInputText) {
-				characterFile.confirm_anim = confirmInputText.text;
+				characterFile.confirm = confirmInputText.text;
 				unsavedProgress = true;
 			}
 		} else if (id == PsychUINumericStepper.CHANGE_EVENT && (sender is PsychUINumericStepper)) {
@@ -194,19 +193,19 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 			var shiftMult:Int = 1;
 			if (FlxG.keys.pressed.SHIFT) shiftMult = 10;
 			if (FlxG.keys.justPressed.LEFT) {
-				characterFile.position[0] += shiftMult;
+				characterFile.offset[0] += shiftMult;
 				updateOffset();
 			}
 			if (FlxG.keys.justPressed.RIGHT) {
-				characterFile.position[0] -= shiftMult;
+				characterFile.offset[0] -= shiftMult;
 				updateOffset();
 			}
 			if (FlxG.keys.justPressed.UP) {
-				characterFile.position[1] += shiftMult;
+				characterFile.offset[1] += shiftMult;
 				updateOffset();
 			}
 			if (FlxG.keys.justPressed.DOWN) {
-				characterFile.position[1] -= shiftMult;
+				characterFile.offset[1] -= shiftMult;
 				updateOffset();
 			}
 
@@ -224,8 +223,8 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 
 	function updateOffset() {
 		var char:MenuCharacter = grpWeekCharacters.members[characterTypeRadio.checked];
-		char.offset.set(characterFile.position[0], characterFile.position[1]);
-		txtOffsets.text = '' + characterFile.position;
+		char.offset.set(characterFile.offset[0], characterFile.offset[1]);
+		txtOffsets.text = '' + characterFile.offset;
 	}
 
 	var _file:FileReference = null;
@@ -251,13 +250,13 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 			var rawJson:String = File.getContent(fullPath);
 			if (rawJson != null) {
 				var loadedChar:MenuCharacterFile = Json.parse(rawJson);
-				if (loadedChar.idle_anim != null && loadedChar.confirm_anim != null) { // Make sure it's really a character
+				if (loadedChar.idle != null && loadedChar.confirm != null) { // Make sure it's really a character
 					trace('Successfully loaded file: ${_file.name.substr(0, _file.name.length - 5)}');
 					characterFile = loadedChar;
 					reloadSelectedCharacter();
 					imageInputText.text = characterFile.image;
-					idleInputText.text = characterFile.idle_anim;
-					confirmInputText.text = characterFile.confirm_anim;
+					idleInputText.text = characterFile.idle;
+					confirmInputText.text = characterFile.confirm;
 					scaleStepper.value = characterFile.scale;
 					updateOffset();
 					_file = null;
@@ -294,7 +293,7 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 	}
 
 	function saveCharacter() {
-		var data:String = states.editors.content.PsychJsonPrinter.print(characterFile, ['position']);
+		var data:String = states.editors.content.PsychJsonPrinter.print(characterFile, ['offset']);
 		if (data.length > 0) {
 			var splittedImage:Array<String> = imageInputText.text.trim().split('_');
 			var characterName:String = splittedImage[splittedImage.length - 1].toLowerCase().replace(' ', '');
