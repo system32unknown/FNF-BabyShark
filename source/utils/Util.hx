@@ -109,7 +109,7 @@ class Util {
 	}
 
 	inline public static function listFromString(string:String):Array<String> {
-		return string.trim().split('\n');
+		return [for (txt in string.trim().split('\n')) txt.trim()];
 	}
 
 	/**
