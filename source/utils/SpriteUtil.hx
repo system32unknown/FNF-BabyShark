@@ -70,19 +70,19 @@ class SpriteUtil {
 	 * Resets an FlxSprite.
 	 * 
 	 * @param  spr  Sprite to reset
-	 * @param  x    New X position
-	 * @param  y    New Y position
+	 * @param  x	New X position
+	 * @param  y	New Y position
 	 */
 	public static function resetSprite(spr:FlxSprite, x:Float, y:Float):Void {
-	    spr.reset(x, y);
-	    spr.alpha = 1;
-	    spr.visible = true;
-	    spr.active = true;
-	    spr.acceleration.set();
-	    spr.velocity.set();
-	    spr.drag.set();
-	    spr.antialiasing = FlxSprite.defaultAntialiasing;
-	    FlxTween.cancelTweensOf(spr);
+		spr.reset(x, y);
+		spr.alpha = 1;
+		spr.visible = true;
+		spr.active = true;
+		spr.acceleration.set();
+		spr.velocity.set();
+		spr.drag.set();
+		spr.antialiasing = FlxSprite.defaultAntialiasing;
+		FlxTween.cancelTweensOf(spr);
 	}
 
 	public static function makeOutlinedGraphic(width:Int, height:Int, Color:Int, thickness:Int, color:Int) {

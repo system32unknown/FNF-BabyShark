@@ -22,7 +22,7 @@ enum abstract AnsiColor(Int) {
 }
 
 class Ansi {
-    public static function colorToANSI(color:AnsiColor):Int {
+	public static function colorToANSI(color:AnsiColor):Int {
 		return switch (color) {
 			case BLACK: 30;
 			case DARKBLUE: 34;

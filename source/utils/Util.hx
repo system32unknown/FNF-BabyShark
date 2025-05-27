@@ -33,8 +33,8 @@ class Util {
 	 * The function reads the version and changelog from the response and compares the remote version with the local one.
 	 *
 	 * The returned array contains:
-	 *   [0] The remote version as a string.
-	 *   [1] The changelog text.
+	 *	[0] The remote version as a string.
+	 *	[1] The changelog text.
 	 *
 	 * Note: This function uses asynchronous HTTP handling but returns the array immediately,
 	 * which means the data will not be populated at the time of return.
@@ -158,11 +158,11 @@ class Util {
 	}
 
   	/**
-   	* Runs platform-specific code to open a file explorer and select a specific file.
-   	*
-   	* @param path The path of the file to select.
-   	*/
-   	public static function openSelectFile(path:String):Void {
+	 * Runs platform-specific code to open a file explorer and select a specific file.
+	 *
+	 * @param path The path of the file to select.
+	 */
+	public static function openSelectFile(path:String):Void {
 		#if sys
 		path = path.trim();
 		if (!FileSystem.exists(path)) throw 'Path does not exist: "$path"';
