@@ -365,14 +365,13 @@ class FileUtil {
 		if (FileSystem.exists(path) && FileSystem.isDirectory(path)) {
 			for (file in FileSystem.readDirectory(path)) {
 				var innerPath:String = FileSystem.fullPath(path + "/" + file).replace(#if windows "/", "\\" #else "\\", "/" #end);
-				if (FileSystem.isDirectory(innerPath)) {
-					deleteDirectoryWithFiles(innerPath);
-				} else FileSystem.deleteFile(innerPath);
+				if (FileSystem.isDirectory(innerPath)) deleteDirectoryWithFiles(innerPath);
+				else FileSystem.deleteFile(innerPath);
 			}
 			FileSystem.deleteDirectory(path);
 		}
 		#else
-			throw "Platform is not supported for FileUtil.deleteDirectoryWithFiles";
+		throw "Platform is not supported for FileUtil.deleteDirectoryWithFiles";
 		#end
 	}
 }

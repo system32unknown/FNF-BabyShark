@@ -5,7 +5,6 @@ class CommandLineHandler {
 	public static function parse(args:Array<String>) {
 		for (arg in args) {
 			switch (arg) {
-				case null: break;
 				case "-h" | "-help" | "help":
 					Sys.println("-- Alter Engine Command Line help --");
 					Sys.println("-help				| Show this help");
@@ -13,6 +12,7 @@ class CommandLineHandler {
 					Sys.exit(0);
 				case "-nocolor": Main.noTerminalColor = true;
 				case "-terminal": FlxG.switchState(() -> new states.TerminalState());
+				default: Sys.println('Unknown argument command (${args[1]})');
 			}
 		}
 	}

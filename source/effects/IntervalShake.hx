@@ -146,8 +146,7 @@ class IntervalShake implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 	 */
 	public function stop():Void {
 		timer.cancel();
-		object.x = initialOffset.x;
-		object.y = initialOffset.y;
+		object.setPosition(initialOffset.x, initialOffset.y);
 		release();
 	}
 

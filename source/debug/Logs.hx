@@ -99,7 +99,7 @@ class Logs {
 		}
 
 		var d:Dynamic = Data;
-		if(!(d is Array)) d = [d];
+		if (!(d is Array)) d = [d];
 
 		var a:Array<Dynamic> = d;
 		for (e in [for (e in a) Std.string(e)]) traceColored([{text: '$prefix ', fgColor: CYAN}, {text: e}], level);

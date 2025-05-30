@@ -266,4 +266,14 @@ class Util {
 	public static inline function inRange(a:Float, b:Float, tolerance:Float):Bool {
 		return (a <= b + tolerance && a >= b - tolerance);
 	}
+
+	inline public static function changeFramerateCap(newFramerate:Int):Void {
+		if (newFramerate > FlxG.updateFramerate) {
+			FlxG.updateFramerate = newFramerate;
+			FlxG.drawFramerate = newFramerate;
+		} else {
+			FlxG.drawFramerate = newFramerate;
+			FlxG.updateFramerate = newFramerate;
+		}
+	}
 }

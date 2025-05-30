@@ -48,7 +48,7 @@ class AchievementsMenuState extends MusicBeatState {
 		grpOptions = new FlxSpriteGroup();
 		grpOptions.scrollFactor.x = 0;
 
-		options.sort(sortByID);
+		options.sort(utils.SortUtil.byID);
 		for (option in options) {
 			var hasAntialias:Bool = Settings.data.antialiasing;
 			var graphic:flixel.graphics.FlxGraphic = null;
@@ -129,9 +129,6 @@ class AchievementsMenuState extends MusicBeatState {
 			mod: mod
 		};
 	}
-
-	public static function sortByID(Obj1:Dynamic, Obj2:Dynamic):Int
-		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.ID, Obj2.ID);
 
 	var goingBack:Bool = false;
 	override function update(elapsed:Float) {

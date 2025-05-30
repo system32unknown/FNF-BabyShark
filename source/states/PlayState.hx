@@ -484,7 +484,7 @@ class PlayState extends MusicBeatState {
 
 		if (eventNotes.length > 1) {
 			for (event in eventNotes) event.strumTime -= eventEarlyTrigger(event);
-			eventNotes.sort(sortByTime);
+			eventNotes.sort(SortUtil.byStrumTime);
 		}
 		startCallback();
 		recalculateRating();
@@ -1032,7 +1032,7 @@ class PlayState extends MusicBeatState {
 		for (event in songData.events) for (i in 0...event[1].length) makeEvent(event, i);
 		for (usn in unspawnSustainNotes) unspawnNotes.push(usn);
 		unspawnSustainNotes = [];
-		unspawnNotes.sort(sortByTime);
+		unspawnNotes.sort(SortUtil.byStrumTime);
 		generatedMusic = true;
 	}
 
@@ -1071,8 +1071,6 @@ class PlayState extends MusicBeatState {
 			default: 0;
 		}
 	}
-
-	public static function sortByTime(Obj1:Dynamic, Obj2:Dynamic):Int return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 
 	function makeEvent(event:Array<Dynamic>, i:Int) {
 		var subEvent:EventNote = {

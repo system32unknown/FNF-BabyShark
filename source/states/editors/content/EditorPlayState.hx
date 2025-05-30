@@ -5,6 +5,7 @@ import backend.Judgement;
 
 import objects.*;
 import utils.StringUtil;
+import utils.SortUtil;
 
 import flixel.FlxBasic;
 import flixel.util.FlxSort;
@@ -357,7 +358,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			}
 			oldNote = swagNote;
 		}
-		unspawnNotes.sort(PlayState.sortByTime);
+		unspawnNotes.sort(SortUtil.byStrumTime);
 	}
 
 	function generateStaticArrows(player:Int):Void {

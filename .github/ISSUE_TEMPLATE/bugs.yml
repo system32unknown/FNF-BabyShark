@@ -35,7 +35,7 @@ body:
         - "Windows"
         - "Linux"
         - "Mac"
-        - "Neko, HashLink, or other build system"
+        - "HashLink, or other build system"
     validations:
       required: true
 

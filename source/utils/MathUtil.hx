@@ -51,7 +51,7 @@ class MathUtil {
 	 * @param e The exponent to apply for easing. Default is 1 (linear interpolation).
 	 * @return The interpolated value with applied easing.
 	 */
-	inline public static function interpolate(a:Float, b:Float, m:Float, e:Float = 1) {
+	inline public static function interpolate(a:Float, b:Float, m:Float, e:Float = 1):Float {
 		m = FlxMath.bound(m, 0, 1);
 		return FlxMath.lerp(a, b, Math.pow(m, e));
 	}
@@ -78,5 +78,14 @@ class MathUtil {
 		}
 
 		return result / amount;
+	}
+
+	public static function invSqrt(x:Float):Float {
+		var xt:Int = Std.int(x);
+		var half:Float = x * .5;
+		var i:Int = xt;
+		i = 0x5f3759df - (i >> 1);
+		var xt:Float = cast(i);
+		return xt * (1.5 - (half * xt * xt));
 	}
 }

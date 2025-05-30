@@ -53,12 +53,12 @@ class ThreadUtil {
 				while (true) {
 					try {
 						func();
-					} catch (e:Dynamic) trace(e.details(), ERROR);
+					} catch (e:Dynamic) Logs.error(e.details());
 				}
 			} else {
 				try {
 					func();
-				} catch (e:Dynamic) trace(e.details(), ERROR);
+				} catch (e:Dynamic) Logs.error(e.details());
 			}
 		});
 	}

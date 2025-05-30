@@ -7,7 +7,7 @@ import objects.Note;
 
 import shaders.RGBPalette;
 
-class NotesColorSubState extends FlxSubState {
+class NotesColorSubState extends MusicBeatSubstate {
 	var onModeColumn:Bool = true;
 	var curSelectedMode:Int = 0;
 	var curSelectedNote:Int = 0;
@@ -133,11 +133,13 @@ class NotesColorSubState extends FlxSubState {
 		var tip:FlxText = new FlxText(tipX, tipY, 0, Language.getPhrase('note_colors_tip', 'Press RESET to Reset the selected Note Part.'), 16);
 		tip.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		tip.borderSize = 2;
+		tip.antialiasing = Settings.data.antialiasing;
 		add(tip);
 
 		tipTxt = new FlxText(tipX, tipY + 24, 0, '', 16);
 		tipTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		tipTxt.borderSize = 2;
+		tipTxt.antialiasing = Settings.data.antialiasing;
 		add(tipTxt);
 		tipTxt.text = Language.getPhrase('note_colors_hold_tip', 'Hold {1} + Press RESET key to fully reset the selected Note.', [Language.getPhrase('note_colors_shift', 'Shift')]);
 
@@ -466,15 +468,14 @@ class NotesColorSubState extends FlxSubState {
 
 		bigNote = new Note(0, 0, false, true);
 		bigNote.setPosition(250, 325);
+		bigNote.updateSkin(null);
 		bigNote.setGraphicSize(250);
 		bigNote.updateHitbox();
 		bigNote.rgbShader.parent = Note.globalRgbShaders[curSelectedNote];
 		bigNote.shader = Note.globalRgbShaders[curSelectedNote].shader;
 		for (i in 0...EK.colArray.length) {
-			if (!onPixel) {
-				bigNote.animation.addByPrefix('note$i', EK.colArrayAlt[i] + '0', 24, true);
-				bigNote.animation.addByPrefix('note$i', EK.colArray[i] + '0', 24, true);
-			} else bigNote.animation.add('note$i', [i + 9], 24, true);
+			if (!onPixel) bigNote.animation.addByPrefix('note$i', EK.colArray[i] + '0', 24, true);
+			else bigNote.animation.add('note$i', [i + 9], 24, true);
 		}
 		insert(members.indexOf(myNotes) + 1, bigNote);
 		_storedColor = getShaderColor();

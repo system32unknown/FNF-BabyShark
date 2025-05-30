@@ -189,8 +189,6 @@ class ScriptUtils {
 		return 'C++';
 		#elseif hl
 		return 'Hashlink';
-		#elseif neko
-		return 'Neko';
 		#else
 		return 'Unknown';
 		#end

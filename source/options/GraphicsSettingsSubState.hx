@@ -55,9 +55,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu {
 
 	function onChangeFramerate() {
 		fpsOption.scrollSpeed = utils.MathUtil.interpolate(30, 1000, (holdTime - .5) / 5, 3);
-		if (Settings.data.framerate > FlxG.drawFramerate)
-			FlxG.updateFramerate = FlxG.drawFramerate = Settings.data.framerate;
-		else FlxG.drawFramerate = FlxG.updateFramerate = Settings.data.framerate;
+		Util.changeFramerateCap(Settings.data.framerate);
 	}
 
 	#if sys

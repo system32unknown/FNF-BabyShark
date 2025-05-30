@@ -41,10 +41,9 @@ class FPSCounter extends openfl.text.TextField {
 	}
 
 	public dynamic function preUpdateText():Void {
-		if (checkLag) {
-			if (fpsManager.lagged()) textColor = FlxColor.RED;
-			else textColor = FlxColor.WHITE;
-		}
+		if (!checkLag) return;
+		if (fpsManager.lagged()) textColor = FlxColor.RED;
+		else textColor = FlxColor.WHITE;
 	}
 
 	var deltaTimeout:Float = .0;
@@ -61,11 +60,10 @@ class FPSCounter extends openfl.text.TextField {
 	}
 
 	// so people can override it in hscript
-	public var fpsStr:String = "";
 	public dynamic function updateText():Void {
-		fpsStr = '${fpsManager.curFPS}FPS\n';
+		var fpsStr:String = '${fpsManager.curFPS}FPS';
 		if (memType == "MEM" || memType == "MEM/PEAK") {
-			fpsStr += FlxStringUtil.formatBytes(memory);
+			fpsStr += '\n' + FlxStringUtil.formatBytes(memory);
 			if (memType == "MEM/PEAK") fpsStr += ' / ' + FlxStringUtil.formatBytes(mempeak);
 		}
 		text = fpsStr;

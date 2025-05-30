@@ -85,7 +85,7 @@ class SpriteUtil {
 		FlxTween.cancelTweensOf(spr);
 	}
 
-	public static function makeOutlinedGraphic(width:Int, height:Int, Color:Int, thickness:Int, color:Int) {
+	public static function makeOutlinedGraphic(width:Int, height:Int, Color:Int, thickness:Int, color:Int):FlxGraphic {
 		var rectangle:FlxGraphic = FlxGraphic.fromRectangle(width, height, color, true);
 		rectangle.bitmap.fillRect(new openfl.geom.Rectangle(thickness, thickness, width - thickness * 2, height - thickness * 2), color);
 		return rectangle;
