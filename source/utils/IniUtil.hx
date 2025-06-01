@@ -1,4 +1,4 @@
-package utils;
+package utils.tools;
 
 /**
  * DOESNT SUPPORT CATEGORIES YET!!

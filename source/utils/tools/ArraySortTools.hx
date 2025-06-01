@@ -1,6 +1,6 @@
-package utils;
+package utils.tools;
 
-class ArraySortUtil {
+class ArraySortTools {
 	/**
 	 * Sorts the input array using the merge sort algorithm.
 	 * Stable and guaranteed to run in linearithmic time `O(n log n)`,
