@@ -468,7 +468,7 @@ class NotesColorSubState extends MusicBeatSubstate {
 
 		bigNote = new Note(0, 0, false, true);
 		bigNote.setPosition(250, 325);
-		bigNote.updateSkin(null);
+		bigNote.updateSkin();
 		bigNote.setGraphicSize(250);
 		bigNote.updateHitbox();
 		bigNote.rgbShader.parent = Note.globalRgbShaders[curSelectedNote];

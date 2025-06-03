@@ -276,4 +276,8 @@ class Util {
 			FlxG.updateFramerate = newFramerate;
 		}
 	}
+
+	inline public static function notBlank(s:String):Bool {
+		return s != null && s.length > 0;
+	}
 }

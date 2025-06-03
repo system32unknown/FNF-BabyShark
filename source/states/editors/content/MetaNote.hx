@@ -16,7 +16,7 @@ class MetaNote extends Note {
 	public function new(time:Float, data:Int, songData:Array<Dynamic>) {
 		super(time, data, null, false, true);
 
-		updateSkin(PlayState.SONG.arrowSkin ?? null);
+		updateSkin();
 		inEditor = true;
 		this.songData = songData;
 		this.strumTime = time;
@@ -134,7 +134,7 @@ class EditorSustain extends Note {
 		sustainTile.scrollFactor.x = 0;
 
 		super(0, data, null, true, true);
-		updateSkin(PlayState.SONG.arrowSkin ?? null);
+		updateSkin();
 
 		var holdendAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend';
 		if (animation.exists(holdendAnim)) animation.play(holdendAnim);

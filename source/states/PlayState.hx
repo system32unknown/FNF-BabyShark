@@ -963,6 +963,7 @@ class PlayState extends MusicBeatState {
 			var eventsChart:SwagSong = Song.getChart('events', songName);
 			if (eventsChart != null) for (event in eventsChart.events) for (i in 0...event[1].length) makeEvent(event, i); //Event Notes
 		} catch (e:Dynamic) {}
+		Note.chartArrowSkin = SONG.arrowSkin;
 		
 		var daBpm:Float = Conductor.bpm;
 		var strumTimeVector:Vector<Float> = new Vector<Float>(EK.strums(mania), 0.0);
@@ -991,7 +992,7 @@ class PlayState extends MusicBeatState {
 				swagNote.sustainLength = holdLength;
 				swagNote.noteType = noteType;
 				swagNote.scrollFactor.set();
-				swagNote.updateSkin(SONG.arrowSkin ?? null);
+				swagNote.updateSkin();
 				unspawnNotes.push(swagNote);
 				oldNote = swagNote;
 
@@ -1009,7 +1010,7 @@ class PlayState extends MusicBeatState {
 						sustainNote.isSustainEnds = (susNote == roundSus);
 						unspawnSustainNotes.push(sustainNote);
 						swagNote.tail.push(sustainNote);
-						sustainNote.updateSkin(SONG.arrowSkin ?? null);
+						sustainNote.updateSkin();
 						sustainNote.correctionOffset = Note.originalHeight / 2;
 
 						if (!isPixelStage) {
@@ -1320,7 +1321,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function noteSpawn() {
-		var noteSpawnTimout:Float = Timer.stamp();
+		var noteSpawnTimeout:Float = Timer.stamp();
 		if (unspawnNotes.length > totalCnt) {
 			var targetNote:Note = unspawnNotes[totalCnt];
 			var fixedPosition:Float = Conductor.songPosition - Settings.data.noteOffset;
@@ -1336,7 +1337,7 @@ class PlayState extends MusicBeatState {
 				var tooLate:Bool = fixedPosition > targetNote.strumTime + noteKillOffset;
 				var noteJudge:Bool = castHold ? tooLate : canBeHit;
 
-				var isCanPass:Bool = !Settings.data.skipSpawnNote || Timer.stamp() - noteSpawnTimout < shownRealTime;
+				var isCanPass:Bool = !Settings.data.skipSpawnNote || Timer.stamp() - noteSpawnTimeout < shownRealTime;
 				if ((!noteJudge || !Settings.data.optimizeSpawnNote) && isCanPass) {
 					var dunceNote:Note = targetNote;
 					dunceNote.spawned = true;
@@ -2275,6 +2276,7 @@ class PlayState extends MusicBeatState {
 		instance = null;
 		backend.NoteLoader.dispose();
 		Paths.popUpFramesMap.clear();
+		Note.chartArrowSkin = null;
 
 		if (endingSong) SONG = null;
 		unspawnNotes = [];

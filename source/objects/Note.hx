@@ -92,9 +92,12 @@ class Note extends FlxSprite {
 	public var lateHitMult:Float = 1;
 
 	public static var SUSTAIN_SIZE:Int = 44;
-	public static var originalWidth:Float = 160 * .7;
-	public static var originalHeight:Float = 160 * .7;
+	public static var swagWidth:Float = 160 * .7;
+	public static var originalWidth:Float = swagWidth;
+	public static var originalHeight:Float = swagWidth;
 	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
+
+	public static var chartArrowSkin:String = null;
 
 	public static var pixelWidth:Vector<Int> = new Vector<Int>(2, 0);
 	public static var pixelHeight:Vector<Int> = new Vector<Int>(2, 0);
@@ -356,7 +359,6 @@ class Note extends FlxSprite {
 			skin = customSkin;
 			_lastValidChecked = customSkin;
 		} else skinPostfix = '';
-		trace(skin);
 
 		if (PlayState.isPixelStage) {
 			var pixelEK:Int = EK.keys(EK.maxMania);
@@ -525,16 +527,18 @@ class Note extends FlxSprite {
 		super.kill();
 	}
 
-	public function updateSkin(tex:String):Void {
+	public function updateSkin():Void {
 		if (!PlayState.isPixelStage) {
-			if (tex == null || tex.length == 0 && texture != initSkin) texture = initSkin;
-			else if (tex.length > 0 && tex != texture) texture = tex;
+			if (!Util.notBlank(chartArrowSkin)) texture = chartArrowSkin = initSkin;
+			else if (chartArrowSkin != texture) texture = chartArrowSkin;
 		} else reloadNote(texture);
 
 		var noteGFX:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
-		animation.play(noteGFX + 'Scroll', true);
+		if (PlayState.isPixelStage || !isSustainNote) {
+			animation.play(noteGFX + 'Scroll', true);
+			offsetX = 0;
+		}
 
-		if (PlayState.isPixelStage) offsetX = -5;
 		if (isSustainNote) {
 			if (isSustainNote && prevNote != null) {
 				flipY = Settings.data.downScroll;

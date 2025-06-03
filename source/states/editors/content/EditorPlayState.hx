@@ -304,6 +304,8 @@ class EditorPlayState extends MusicBeatSubstate {
 			}
 		}
 
+		Note.chartArrowSkin = PlayState.SONG.arrowSkin;
+
 		// Load Notes
 		var section:SwagSection = songData.notes[0];
 		for (note in _noteList) {
@@ -321,7 +323,7 @@ class EditorPlayState extends MusicBeatSubstate {
 			swagNote.gfNote = note.gfNote;
 			swagNote.noteType = note.noteType;
 			swagNote.scrollFactor.set();
-			swagNote.updateSkin(PlayState.SONG.arrowSkin ?? null);
+			swagNote.updateSkin();
 			unspawnNotes.push(swagNote);
 
 			var curStepCrochet:Float = 60 / daBpm * 1000 / 4.;
@@ -337,7 +339,7 @@ class EditorPlayState extends MusicBeatSubstate {
 					sustainNote.parent = swagNote;
 					unspawnNotes.push(sustainNote);
 					swagNote.tail.push(sustainNote);
-					sustainNote.updateSkin(PlayState.SONG.arrowSkin ?? null);
+					sustainNote.updateSkin();
 					sustainNote.correctionOffset = swagNote.height / 2;
 					if (oldNote.isSustainNote) {
 						oldNote.sustainScale = (Note.SUSTAIN_SIZE / oldNote.frameHeight) / playbackRate;

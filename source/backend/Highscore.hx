@@ -63,7 +63,7 @@ class Highscore {
 		_save.flush();
 	}
 	static function setCombo(song:String, combo:String):Void {
-		songCombos.set(song, checkIfEmpty(combo) ? "Unclear, N/A" : combo);
+		songCombos.set(song, !Util.notBlank(combo) ? "Unclear, N/A" : combo);
 		_save.data.songCombos = songCombos;
 		_save.flush();
 	}
@@ -122,9 +122,5 @@ class Highscore {
 		_save.data.songRating = songRating;
 		_save.data.songCombos = songCombos;
 		_save.flush();
-	}
-
-	inline static function checkIfEmpty(s:String):Bool {
-		return s == null || s.length == 0 || s == '';
 	}
 }
