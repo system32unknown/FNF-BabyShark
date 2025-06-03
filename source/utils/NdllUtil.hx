@@ -1,4 +1,4 @@
-package utils.tools;
+package utils;
 
 import lime.utils.Assets;
 

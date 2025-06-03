@@ -1,4 +1,4 @@
-package utils.tools;
+package utils;
 
 /**
  * Utilities for performing math with bezier curves.

@@ -1,4 +1,4 @@
-package util.tools;
+package utils.tools;
 
 /**
  * A static extension which provides utility functions for Arrays.

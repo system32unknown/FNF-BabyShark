@@ -1,5 +1,8 @@
 package objects;
 
+import lime.app.Application;
+import lime.ui.KeyCode;
+
 class PlayField extends flixel.group.FlxGroup {
 
 	public var unspawnedNotes:Array<Note> = [];
@@ -14,12 +17,12 @@ class PlayField extends flixel.group.FlxGroup {
 	public dynamic function opponentMiss(note:Note):Void {}
 	public dynamic function ghostTap():Void {}
 
-	public var strumlines:FlxTypedGroup<StrumNote> = new FlxTypedGroup<StrumNote>();
+	public var strumlines:FlxTypedGroup<StrumNote>;
 
 	public function new() {
 		super();
 
-		add(this.strumlines = new FlxTypedSpriteGroup<StrumNote>());
+		add(this.strumlines = new FlxTypedGroup<StrumNote>());
 
 		Application.current.window.onKeyDown.add(input);
 		Application.current.window.onKeyUp.add(release);
@@ -32,7 +35,7 @@ class PlayField extends flixel.group.FlxGroup {
 		super.destroy();
 	}
 
-	var keysHeld:Array<Bool> = [for (_ in 0...4) false];
+	var keysHeld:Array<Bool> = [for (_ in 0...EK.keys(PlayState.mania)) false];
 	inline function input(key:KeyCode, _):Void {
 	}
 
