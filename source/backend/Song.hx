@@ -101,7 +101,7 @@ class Song {
 				note[1] = (note[1] % maniaKey) + (gottaHitNote ? 0 : maniaKey);
 
 				if (!Std.isOfType(note[3], String))
-					note[3] = Note.defaultNoteTypes[note[3]]; // compatibility with Week 7 and 0.1-0.3 psych charts
+					note[3] = Note.DEFAULT_NOTE_TYPES[note[3]]; // compatibility with Week 7 and 0.1-0.3 psych charts
 			}
 		}
 	}

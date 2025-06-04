@@ -977,7 +977,7 @@ class PlayState extends MusicBeatState {
 				var strumTime:Float = songNotes[0];
 				var noteColumn:Int = Std.int(songNotes[1] % EK.keys(mania));
 				var holdLength:Float = songNotes[2];
-				var noteType:String = !Std.isOfType(songNotes[3], String) ? Note.defaultNoteTypes[songNotes[3]] : songNotes[3];
+				var noteType:String = !Std.isOfType(songNotes[3], String) ? Note.DEFAULT_NOTE_TYPES[songNotes[3]] : songNotes[3];
 				var gottaHitNote:Bool = (songNotes[1] < EK.keys(mania));
 
 				if (Settings.data.skipGhostNotes && sectionNoteCnt != 0) {

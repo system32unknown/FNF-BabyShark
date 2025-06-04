@@ -43,7 +43,7 @@ typedef NoteSplashData = {
 class Note extends FlxSprite {
 	// This is needed for the hardcoded note types to appear on the Chart Editor,
 	// It's also used for backwards compatibility with 0.1 - 0.3.2 charts.
-	public static final defaultNoteTypes:Array<String> = [
+	public static final DEFAULT_NOTE_TYPES:Array<String> = [
 		'', // Always leave this one empty pls
 		'Alt Animation',
 		'Hey!',
@@ -91,7 +91,7 @@ class Note extends FlxSprite {
 	public var earlyHitMult:Float = 1;
 	public var lateHitMult:Float = 1;
 
-	public static var SUSTAIN_SIZE:Int = 44;
+	public static final SUSTAIN_SIZE:Int = 44;
 	public static var swagWidth:Float = 160 * .7;
 	public static var originalWidth:Float = swagWidth;
 	public static var originalHeight:Float = swagWidth;
@@ -101,6 +101,8 @@ class Note extends FlxSprite {
 
 	public static var pixelWidth:Vector<Int> = new Vector<Int>(2, 0);
 	public static var pixelHeight:Vector<Int> = new Vector<Int>(2, 0);
+
+	public var correctionOffset:Float = 55; // dont mess with this, it makes the hold notes look better
 
 	public var noteSplashData:NoteSplashData = {
 		disabled: false,
@@ -335,7 +337,6 @@ class Note extends FlxSprite {
 	}
 
 	static var _lastValidChecked:String; // optimization
-	public var correctionOffset:Float = 0; // dont mess with this
 	public function reloadNote(texture:String = '', postfix:String = '') {
 		if (texture == null) texture = '';
 		if (postfix == null) postfix = '';
@@ -464,7 +465,7 @@ class Note extends FlxSprite {
 				prevDownScr = flipY;
 			}
 
-			scale.y = (animation != null && animation.curAnim != null && animation.curAnim.name.endsWith('end') ? 1 : Conductor.stepCrochet * .0105 * (songSpeed * multSpeed) * sustainScale);
+			scale.y = (animation != null && animation.curAnim != null && animation.curAnim.name.endsWith('end') ? .7 : Conductor.stepCrochet * .0105 * (songSpeed * multSpeed) * sustainScale);
 			if (PlayState.isPixelStage) {
 				scale.x = PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania];
 				scale.y *= PlayState.daPixelZoom * 1.19;

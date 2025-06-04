@@ -2489,7 +2489,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			var exts:Array<String> = ['.txt'];
 			#if HSCRIPT_ALLOWED exts.push('.hx'); #end
 			noteTypes = loadFileList('custom_notetypes/', exts);
-			for (id => noteType in Note.defaultNoteTypes) if (!noteTypes.contains(noteType)) noteTypes.insert(id, noteType);
+			for (id => noteType in Note.DEFAULT_NOTE_TYPES) if (!noteTypes.contains(noteType)) noteTypes.insert(id, noteType);
 
 			if (Song.chartPath != null && Song.chartPath.length > 0) {
 				var parentFolder:String = Song.chartPath.replace('\\', '/');
