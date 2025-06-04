@@ -22,4 +22,8 @@
 
 	<!-- OpenFL (sets git version) -->
 	<git name="openfl" url="https://github.com/system32unknown/openfl"/>
+
+	<!-- THX Libraries -->
+	<git name="thx.core" url="https://github.com/fponticelli/thx.core"/>
+	<git name="thx.semver" url="https://github.com/fponticelli/thx.semver"/>
 </libraries>

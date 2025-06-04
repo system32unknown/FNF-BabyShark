@@ -94,9 +94,9 @@ class CutsceneHandler extends flixel.FlxBasic {
 		skipSprite.alpha = FlxMath.remapToRange(skipSprite.amount, 0.025, 1, 0, 1);
 	}
 
-	public function push(spr:FlxSprite) objects.push(spr);
+	public function push(spr:FlxSprite):Void objects.push(spr);
 
-	public function timer(time:Float, func:Void->Void) {
+	public function timer(time:Float, func:Void->Void):Void {
 		timedEvents.push({time: time, func: func});
 		timedEvents.sort((Obj1:CutsceneEvent, Obj2:CutsceneEvent) -> return FlxSort.byValues(FlxSort.ASCENDING, Obj1.time, Obj2.time));
 	}

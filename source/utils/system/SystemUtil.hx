@@ -44,7 +44,7 @@ class SystemUtil {
 	 */
 	public static function generateTextFile(fileContent:String, fileName:String) {
 		#if desktop
-		var path:String = '${getSysPath()}/$fileName.txt';
+		var path:String = getSysPath() + '/$fileName.txt';
 		File.saveContent(path, fileContent);
 		Sys.command(#if windows "start " #elseif linux "xdg-open " #else "open " #end + path);
 		#end

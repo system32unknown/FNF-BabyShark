@@ -544,7 +544,7 @@ class PlayState extends MusicBeatState {
 		playbackRate = value;
 		FlxG.animationTimeScale = value;
 		#if VIDEOS_ALLOWED if (videoCutscene != null && videoCutscene.videoSprite != null) videoCutscene.videoSprite.bitmap.rate = value; #end
-		Conductor.offset = Reflect.hasField(PlayState.SONG, 'offset') ? (PlayState.SONG.offset / value) : 0;
+		Conductor.offset = Reflect.hasField(SONG, 'offset') ? (SONG.offset / value) : 0;
 		Conductor.safeZoneOffset = (Settings.data.safeFrames / 60) * 1000 * value;
 		setOnHScript('playbackRate', playbackRate);
 		#else
@@ -970,7 +970,7 @@ class PlayState extends MusicBeatState {
 
 		var oldNote:Note = null;
 		var sectionNoteCnt:Float = 0;
-		for (section in PlayState.SONG.notes) {
+		for (section in SONG.notes) {
 			sectionNoteCnt = 0;
 			if (section.changeBPM != null && section.changeBPM && section.bpm != null && daBpm != section.bpm) daBpm = section.bpm;
 			for (songNotes in section.sectionNotes) {

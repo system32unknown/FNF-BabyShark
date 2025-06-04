@@ -23,7 +23,7 @@ class ArraySortTools {
 	 * Not stable; relative order of equal elements is not preserved.
 	 *
 	 * @see https://stackoverflow.com/questions/33884057/quick-sort-stackoverflow-error-for-large-arrays
-	 *      Fix for stack overflow issues.
+	 *Fix for stack overflow issues.
 	 * @param input The array to sort in-place.
 	 * @param compare The comparison function to use.
 	 */

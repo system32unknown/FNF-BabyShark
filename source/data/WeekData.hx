@@ -124,7 +124,7 @@ class WeekData {
 		#end
 	}
 
-	static function addWeek(weekToCheck:String, path:String, directory:String, i:Int, originalLength:Int) {
+	static function addWeek(weekToCheck:String, path:String, directory:String, i:Int, originalLength:Int):Void {
 		if (!weeksLoaded.exists(weekToCheck)) {
 			var week:WeekFile = getWeekFile(path);
 			if (week != null) {

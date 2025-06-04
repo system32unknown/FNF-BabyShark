@@ -1,5 +1,7 @@
 package utils.system;
 
+import _external.memory.Memory;
+
 #if cpp
 import cpp.vm.Gc;
 import flixel.util.FlxDestroyUtil;
@@ -85,39 +87,14 @@ class MemoryUtil {
 		#end
 	}
 
-	/**
-	 * Returns the current resident set size (physical memory use) measured
-	 * in bytes, or zero if the value cannot be determined on this OS.
-	 * @return gets Current Process Memory.
-	 */
-	#if cpp
-	#if windows
-	@:functionCode('
-		PROCESS_MEMORY_COUNTERS_EX pmc;
-		if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc))) return pmc.WorkingSetSize;
-	')
-	#elseif linux
-	@:functionCode('
-		long rss = 0L;
-		FILE* fp = NULL;
-
-		if ((fp = fopen("/proc/self/statm", "r")) == NULL) return 0L;
-		if (fscanf(fp, "%*s%ld", &rss) != 1) {
-			fclose(fp);
-			return 0L;
-		}
-		fclose(fp);
-		return rss * sysconf(_SC_PAGESIZE);
-	')
-	#elseif mac
-	@:functionCode("
-		struct mach_task_basic_info info;
-		mach_msg_type_number_t infoCount = MACH_TASK_BASIC_INFO_COUNT;
-		if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t)&info, &infoCount) == KERN_SUCCESS) return info.resident_size;
-	")
-	#end
-	#end
-	public static function getProcessMEM():Float return 0;
+	public static var appMemoryNumber(get, never):Float;
+	static inline function get_appMemoryNumber():Float {
+		#if cpp
+        return cast Memory.getCurrentUsage();
+        #else
+        return 0;
+        #end
+	}
 
 	/**
 	 * Retrieves all "zombie" objects (dangling references) detected by the garbage collector.
