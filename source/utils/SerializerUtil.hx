@@ -1,5 +1,6 @@
 package utils;
 
+import haxe.Json;
 import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.io.Bytes;

@@ -67,6 +67,10 @@
 	<haxelib name="funkin.vis" />
 	<haxelib name="parallaxlt" />
 
+	<!-- Versioning Libraries -->
+	<haxelib name="thx.core" />
+	<haxelib name="thx.semver" />
+
 	<!-- ______________________________Haxedefines_____________________________ -->
 	<haxedef name="FLX_NO_TOUCH" if="desktop" />
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
