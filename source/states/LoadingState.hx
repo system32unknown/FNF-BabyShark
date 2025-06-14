@@ -474,8 +474,8 @@ class LoadingState extends MusicBeatState {
 					var diff:Float = Sys.time() - threadStart;
 					trace('finished preloading $traceData in ${diff}s');
 					#end
-				} else Logs.error('ERROR! fail on preloading $traceData');
-			} catch (e:Dynamic) Logs.error('ERROR! fail on preloading $traceData');
+				} else Logs.error('fail on preloading $traceData');
+			} catch (e:Dynamic) Logs.error('fail on preloading $traceData');
 			loaded++;
 		});
 	}

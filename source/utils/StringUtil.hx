@@ -230,4 +230,41 @@ class StringUtil {
 		});
 		return arr;
 	}
+
+	public static function customNumberDelimiter(value:Dynamic, ?numFormat:Bool = false):String {
+		if (!numFormat || value == null) return value;
+
+		var defined:String = null;
+		if (value is String) {
+			if (Std.parseFloat(value) != Math.NaN) {
+				defined = value;
+			} else throw "Given string, but It cannot convert to number";
+		} else if (value is Float || value is Int) {
+			defined = Std.string(value);
+		} else throw "It's invalid type";
+
+		var cnt:Int = -1;
+		var decimal:Bool;
+		var pos:Int = 0;
+
+		decimal = defined.lastIndexOf(".") != -1;
+		cnt = 0;
+		pos = defined.length - 1;
+		for (i in 0...defined.length) {
+			var char:Int = defined.fastCodeAt(pos);
+			if (decimal) {
+				if (char == ".".code) {
+					decimal = false;
+				}
+			} else {
+				if (48 <= char && char < 58) ++cnt;
+				if (cnt > 3) {
+					cnt -= 3;
+					defined = defined.substr(0, pos + 1) + "," + defined.substr(pos + 1);
+				}
+			}
+			--pos;
+		}
+		return defined;
+	}
 }
