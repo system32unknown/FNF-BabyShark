@@ -1032,7 +1032,7 @@ class PlayState extends MusicBeatState {
 
 		for (event in songData.events) for (i in 0...event[1].length) makeEvent(event, i);
 		for (usn in unspawnSustainNotes) unspawnNotes.push(usn);
-		unspawnSustainNotes = [];
+		unspawnSustainNotes.resize(0);
 		unspawnNotes.sort(SortUtil.byStrumTime);
 		generatedMusic = true;
 	}
@@ -1345,7 +1345,7 @@ class PlayState extends MusicBeatState {
 					notes.add(dunceNote);
 
 					callOnHScript('onSpawnNote', [dunceNote]);
-					if (Settings.data.processFirst && dunceNote.strum != null) {
+					if (Settings.data.processFirst) {
 						dunceNote.followStrumNote(songSpeed);
 						if (canBeHit && dunceNote.isSustainNote && dunceNote.strum.sustainReduce) dunceNote.clipToStrumNote();
 					}
