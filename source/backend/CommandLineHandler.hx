@@ -12,6 +12,7 @@ class CommandLineHandler {
 					Sys.exit(0);
 				case "-nocolor": Main.noTerminalColor = true;
 				case "-terminal": FlxG.switchState(() -> new states.TerminalState());
+				case "-v" | "-verbose" | "--verbose": Main.verbose = true;
 				default: Sys.println('Unknown argument command (${args[1]})');
 			}
 		}

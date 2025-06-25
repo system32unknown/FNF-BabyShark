@@ -24,6 +24,7 @@ class Main extends Sprite {
 	public static var fnfVer:GameVersion = '0.6.2';
 
 	public static var noTerminalColor:Bool = false;
+	public static var verbose:Bool = false;
 
 	public static final game = {
 		width: 1280, // WINDOW width

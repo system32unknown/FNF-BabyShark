@@ -289,7 +289,7 @@ class HScript extends AlterHscript {
 		return defines;
 	}
 
-	inline function getClassHSC(className:String):Class<Dynamic> {
+	@:noUsing inline function getClassHSC(className:String):Class<Dynamic> {
 		return Type.resolveClass('${className}_HSC');
 	}
 

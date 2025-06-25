@@ -26,18 +26,17 @@ class Logs {
 		LogStyle.CONSOLE.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.CONSOLE, d, pos));
 	}
 
-	public static function trace(text:String):Void {
+	public static function trace(text:String):Void
 		traceColored([{text: text}]);
-	}
-	public static function warn(text:String):Void {
+
+	public static function warn(text:String):Void
 		traceColored([{text: text, fgColor: YELLOW}], WARNING);
-	}
-	public static function error(text:String):Void {
+
+	public static function error(text:String):Void
 		traceColored([{text: text, fgColor: RED}], ERROR);
-	}
-	public static function verbose(text:String):Void {
-		traceColored([{text: text}], VERBOSE);
-	}
+
+	public static function verbose(text:String):Void
+		if (Main.verbose) traceColored([{text: text}], VERBOSE);
 
 	public static function traceColored(chunks:Array<LogChunk>, ?level:Level = TRACE):Void {
 		printChunks(prepareColoredTrace(chunks, level));

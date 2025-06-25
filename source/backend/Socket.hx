@@ -8,7 +8,8 @@ class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 	public var socket:SysSocket;
 
 	public function new(?socket:SysSocket) {
-		this.socket = (this.socket == null ? new SysSocket() : socket);
+		this.socket = socket;
+		if (this.socket == null) this.socket = new SysSocket();
 		this.socket.setFastSend(true);
 		this.socket.setBlocking(false);
 	}

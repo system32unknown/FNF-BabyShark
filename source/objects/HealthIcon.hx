@@ -70,7 +70,7 @@ class HealthIcon extends FlxSprite {
 		var graph:FlxGraphic = null;
 		var name:String = 'icons/$char';
 
-		animated = Paths.exists(Paths.getPath('images/$name.xml'));
+		animated = Paths.fileExists('images/$name.xml', TEXT);
 
 		if (graph == null) graph = returnGraphic(char, defaultIfMissing, allowGPU);
 		else {
@@ -86,8 +86,8 @@ class HealthIcon extends FlxSprite {
 			antialiasing = iconZoom < 2.5 && Settings.data.antialiasing;
 			return true;
 		}
-
 		if (graph == null) return false;
+
 		iSize = Math.round(graph.width / graph.height);
 		this.char = char;
 		state = 0;

@@ -10,6 +10,9 @@
 #if defined(_WIN32)
 #include <windows.h>
 #include <psapi.h>
+#ifdef TRANSPARENT
+#undef TRANSPARENT
+#endif
 
 #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__))
 #include <unistd.h>
