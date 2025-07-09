@@ -88,12 +88,8 @@ class MemoryUtil {
 	}
 
 	public static var appMemoryNumber(get, never):Float;
-	static inline function get_appMemoryNumber():Float {
-		#if cpp
-        return cast Memory.getCurrentUsage();
-        #else
-        return 0;
-        #end
+	static function get_appMemoryNumber():Float {
+		return Memory.getCurrentUsage();
 	}
 
 	/**

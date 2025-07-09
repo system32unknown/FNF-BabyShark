@@ -69,8 +69,8 @@ class TitleState extends MusicBeatState {
 		logo.angle = -4;
 
 		gf = new FlxSprite(gfPosition.x, gfPosition.y);
-		gf.antialiasing = Settings.data.antialiasing;
 		gf.frames = Paths.getSparrowAtlas(characterImage);
+		gf.antialiasing = Settings.data.antialiasing;
 		if (!useIdle) {
 			gf.animation.addByIndices('left', animationName, danceLeftFrames, '', 24, false);
 			gf.animation.addByIndices('right', animationName, danceRightFrames, '', 24, false);
@@ -128,6 +128,7 @@ class TitleState extends MusicBeatState {
 
 		var titleRaw:String = Paths.getTextFromFile(titlefile);
 		if (titleRaw == null || titleRaw.length == 0) return;
+
 		try {
 			var titleJSON:TitleData = tjson.TJSON.parse(titleRaw);
 			gfPosition.set(titleJSON.gfx, titleJSON.gfy);
@@ -137,15 +138,14 @@ class TitleState extends MusicBeatState {
 			titleStartY = titleJSON.titlestarty;
 			musicBPM = titleJSON.bpm;
 
-			if (titleJSON.animation != null && titleJSON.animation.length > 0) animationName = titleJSON.animation;
-			if (titleJSON.dance_left != null && titleJSON.dance_left.length > 0) danceLeftFrames = titleJSON.dance_left;
-			if (titleJSON.dance_right != null && titleJSON.dance_right.length > 0) danceRightFrames = titleJSON.dance_right;
+			if (titleJSON?.animation.length > 0) animationName = titleJSON.animation;
+			if (titleJSON?.dance_left.length > 0) danceLeftFrames = titleJSON.dance_left;
+			if (titleJSON?.dance_right.length > 0) danceRightFrames = titleJSON.dance_right;
 			useIdle = (titleJSON.idle == true);
 
 			if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.trim().length > 0) {
 				var bg:FlxSprite = new FlxSprite(Paths.image(titleJSON.backgroundSprite));
 				bg.antialiasing = Settings.data.antialiasing;
-				bg.active = false;
 				add(bg);
 			}
 		} catch (e:haxe.Exception) Logs.warn('Title JSON might broken, ignoring issue...\n${e.details()}');
@@ -218,10 +218,11 @@ class TitleState extends MusicBeatState {
 	override function beatHit() {
 		super.beatHit();
 
-		if (!useIdle) {
-			gf.animation.play(curBeat % 2 == 0 ? 'left' : 'right', true);
-		} else if (curBeat % 2 == 0) gf.animation.play('idle', true);
 		if (foundXml) logo.animation.play('bump', true);
+
+		if (!useIdle) {
+			gf.animation.play(curBeat % 2 == 0 ? 'left' : 'right');
+		} else if (curBeat % 2 == 0) gf.animation.play('idle');
 
 		if (seenIntro) return;
 

@@ -10,7 +10,9 @@ class Compiler {
 
 	static function __build(args:Array<String>, arg:Array<String>) {
 		for (a in args) arg.push(a);
-		var errorlevel:Int = Sys.command("lime", arg);
+		arg = ['run', 'lime'].concat(arg);
+
+		var errorlevel:Int = Sys.command("haxelib", arg);
 		if (errorlevel == 1) trace("Failed Compiling Game!");
 		else trace("Compiling Game Done!");
 	}

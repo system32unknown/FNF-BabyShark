@@ -63,7 +63,7 @@ class PsychFlxAnimate extends OriginalFlxAnimate {
 		} catch (e:haxe.Exception) {
 			anim.stageInstance = FlxDestroyUtil.destroy(anim.stageInstance);
 			anim.metadata.destroy();
-			anim.symbolDictionary = null;
+			anim.library.destroy();
 		}
 	}
 

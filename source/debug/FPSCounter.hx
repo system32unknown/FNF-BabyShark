@@ -12,6 +12,7 @@ class FPSCounter extends openfl.text.TextField {
 
 	public var checkLag:Bool = true;
 	public var updateRate:Float = 60;
+	public var memDisplayType:String = "";
 	public var memType:String = "";
 
 	public var fpsManager:FPSUtil;
@@ -21,8 +22,8 @@ class FPSCounter extends openfl.text.TextField {
 	 */
 	public var memory(get, never):Float;
 	@:noCompletion function get_memory():Float {
-		var mem:Float = openfl.system.System.totalMemoryNumber;
-		if (mem > mempeak && memType == "MEM/PEAK") mempeak = mem;
+		var mem:Float = memType == 'GC' ? openfl.system.System.totalMemoryNumber : utils.system.MemoryUtil.appMemoryNumber;
+		if (mem > mempeak && memDisplayType == "MEM/PEAK") mempeak = mem;
 		return mem;
 	}
 	var mempeak:Float = 0;
@@ -62,9 +63,9 @@ class FPSCounter extends openfl.text.TextField {
 	// so people can override it in hscript
 	public dynamic function updateText():Void {
 		var fpsStr:String = '${fpsManager.curFPS}FPS';
-		if (memType == "MEM" || memType == "MEM/PEAK") {
+		if (memDisplayType == "MEM" || memDisplayType == "MEM/PEAK") {
 			fpsStr += '\n' + FlxStringUtil.formatBytes(memory);
-			if (memType == "MEM/PEAK") fpsStr += ' / ' + FlxStringUtil.formatBytes(mempeak);
+			if (memDisplayType == "MEM/PEAK") fpsStr += ' / ' + FlxStringUtil.formatBytes(mempeak);
 		}
 		text = fpsStr;
 	}
