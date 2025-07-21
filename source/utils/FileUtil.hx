@@ -147,7 +147,7 @@ class FileUtil {
 
 	/**
 	 * Prompts the user to save multiple files.
-	 * On desktop, this will prompt the user for a directory, then write all of the files to there.
+	 * On native, this will prompt the user for a directory, then write all of the files to there.
 	 *
 	 * @param typeFilter TODO What does this do?
 	 * @return Whether the file dialog was opened successfully.
@@ -180,7 +180,7 @@ class FileUtil {
 
 	/**
 	 * Read bytes file contents directly from a given path.
-	 * Only works on desktop.
+	 * Only works on native.
 	 *
 	 * @param path The path to the file.
 	 * @return The file contents.
@@ -196,7 +196,7 @@ class FileUtil {
 
 	/**
 	 * Browse for a file to read and execute a callback once we have a file reference.
-	 * Works great on desktop.
+	 * Works great on native.
 	 *
 	 * @param	callback The function to call when the file is loaded.
 	 */
@@ -218,17 +218,26 @@ class FileUtil {
 	/**
 	 * Prompts the user to save a file to their computer.
 	 */
-	public static function writeFileReference(path:String, data:String):Void {
+	public static function writeFileReference(path:String, data:String, callback:String->Void):Void {
 		var file:FileReference = new FileReference();
-		file.addEventListener(Event.COMPLETE, (e:Event) -> trace('Successfully wrote file: "$path"'));
-		file.addEventListener(Event.CANCEL, (e:Event) -> trace('Cancelled writing file: "$path"'));
-		file.addEventListener(IOErrorEvent.IO_ERROR, (e:IOErrorEvent) -> trace('IO error writing file: "$path"'));
+		file.addEventListener(Event.COMPLETE, (e:Event) -> {
+			trace('Successfully wrote file: "$path"');
+			callback("success");
+		});
+		file.addEventListener(Event.CANCEL, (e:Event) -> {
+			trace('Cancelled writing file: "$path"');
+			callback("info");
+		});
+		file.addEventListener(IOErrorEvent.IO_ERROR, (e:IOErrorEvent) -> {
+			trace('IO error writing file: "$path"');
+			callback("error");
+		});
 		file.save(data, path);
 	}
 
 	/**
 	 * Write string file contents directly to a given path.
-	 * Only works on desktop.
+	 * Only works on native.
 	 *
 	 * @param path The path to the file.
 	 * @param data The string to write.
@@ -253,7 +262,7 @@ class FileUtil {
 
 	/**
 	 * Write byte file contents directly to a given path.
-	 * Only works on desktop.
+	 * Only works on native.
 	 *
 	 * @param path The path to the file.
 	 * @param data The bytes to write.
@@ -284,7 +293,7 @@ class FileUtil {
 
 	/**
 	 * Write string file contents directly to the end of a file at the given path.
-	 * Only works on desktop.
+	 * Only works on native.
 	 *
 	 * @param path The path to the file.
 	 * @param data The string to append.
@@ -312,7 +321,7 @@ class FileUtil {
 
 	/**
 	 * Create a directory if it doesn't already exist.
-	 * Only works on desktop.
+	 * Only works on native.
 	 *
 	 * @param dir The path to the directory.
 	 */
@@ -325,7 +334,7 @@ class FileUtil {
 	static var tempDir:Null<String> = null;
 	/**
 	 * Get the path to a temporary directory we can use for writing files.
-	 * Only works on desktop.
+	 * Only works on native.
 	 *
 	 * @return The path to the temporary directory.
 	 */

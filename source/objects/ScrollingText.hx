@@ -3,6 +3,7 @@ package objects;
 import flixel.FlxObject;
 
 // its kinda like marqeee html lol!
+@:nullSafety
 class ScrollingText extends FlxSpriteGroup {
 	var grpTexts:FlxTypedSpriteGroup<FlxText>;
 
@@ -17,14 +18,14 @@ class ScrollingText extends FlxSpriteGroup {
 	public function new(x:Float, y:Float, text:String, widthShit:Float = 100, ?bold:Bool = false, ?size:Int = 48) {
 		super(x, y);
 
+		add(grpTexts = new FlxTypedSpriteGroup<FlxText>());
+
 		this.widthShit = widthShit;
 		if (size != null) this.size = size;
 
-		add(grpTexts = new FlxTypedSpriteGroup<FlxText>());
-
 		var testText:FlxText = new FlxText(0, 0, 0, text, this.size);
 		testText.font = font;
-		testText.bold = bold;
+		testText.bold = bold ?? false;
 		testText.updateHitbox();
 		grpTexts.add(testText);
 
@@ -33,7 +34,7 @@ class ScrollingText extends FlxSpriteGroup {
 
 			var coolText:FlxText = new FlxText((lmfao * testText.frameWidth) + (lmfao * 20), 0, 0, text, this.size);
 			coolText.font = font;
-			coolText.bold = bold;
+			coolText.bold = bold ?? false;
 			coolText.updateHitbox();
 			grpTexts.add(coolText);
 		}
@@ -52,6 +53,7 @@ class ScrollingText extends FlxSpriteGroup {
 
 	override public function update(elapsed:Float) {
 		for (txt in grpTexts.group) {
+			if (txt == null) continue;
 			txt.x -= 1 * (speed * (elapsed / (1 / 60)));
 
 			if (speed > 0) {

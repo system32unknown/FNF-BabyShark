@@ -23,27 +23,6 @@ class MathUtil {
 	}
 
 	/**
-	 * Perform a framerate-independent linear interpolation between the base value and the target.
-	 * @param current The current value.
-	 * @param target The target value.
-	 * @param elapsed The time elapsed since the last frame.
-	 * @param duration The total duration of the interpolation. Nominal duration until remaining distance is less than `precision`.
-	 * @param precision The target precision of the interpolation. Defaults to 1% of distance remaining.
-	 * @see https://x.com/FreyaHolmer/status/1757918211679650262
-	 *
-	 * @return A value between the current value and the target value.
-	 */
-	public static function smoothLerp(current:Float, target:Float, elapsed:Float, duration:Float, precision:Float = 1 / 100):Float {
-		if (current == target) return target;
-		var result:Float = FlxMath.lerp(current, target, 1 - Math.pow(precision, elapsed / duration));
-
-		// TODO: Is there a better way to ensure a lerp which actually reaches the target?
-		// Research a framerate-independent PID lerp.
-		if (Math.abs(result - target) < (precision * target)) result = target;
-		return result;
-	}
-
-	/**
 	 * Linearly interpolates between two values with an optional exponent for easing.
 	 * @param a The start value.
 	 * @param b The end value.
@@ -101,12 +80,8 @@ class MathUtil {
 	 * algorithm popularized by Quake III Arena. It uses bit-level manipulation to quickly 
 	 * estimate the result, followed by one iteration of Newton-Raphson refinement.
 	 * 
-	 * @param x The input value to compute the inverse square root of.
-	 * @return An approximation of 1 / sqrt(x).
-	 * 
-	 * Note: While this method is extremely fast, it is not as accurate as the standard 
-	 * Math.invSqrt or 1 / Math.sqrt(x) methods. Useful in performance-critical code 
-	 * where perfect accuracy is not essential.
+	 * @param x The input value to compute the inverse square root of
+	 * @return An approximation of 1 / sqrt(x)
 	 */
 	public static function invSqrt(x:Float):Float {
 		var xt:Int = Std.int(x);
@@ -118,40 +93,86 @@ class MathUtil {
 	}
 
 	/**
-	 * Mathematic Function for Decimal Array.
-	 * @param array Array of Float Type
-	 * @param type Maximum = 0, Minimum = 1, Average = 2
+	 * Snap a value to another if it's within a certain distance (inclusive).
+	 *
+	 * Helpful when using functions like `smoothLerpPrecision` to ensure the value actually reaches the target.
+	 *
+	 * @param base The base value to conditionally snap.
+	 * @param target The target value to snap to.
+	 * @param threshold Maximum distance between the two for snapping to occur.
+	 *
+	 * @return `target` if `base` is within `threshold` of it, otherwise `base`.
 	 */
-	inline public static function decimalArrayUtil(array:Array<Float>, type:Int):Null<Float> {
-		if (array.length == 0) return null;
-		var value:Float = array[0];
-		for (i in 1...array.length) {
-			switch (type) {
-				case 0: value = Math.max(value, array[i]);
-				case 1: value = Math.min(value, array[i]);
-				case 2: value += array[i];
-			}
-		}
-		if (type == 2) value /= array.length;
-		return value;
+	public static function snap(base:Float, target:Float, threshold:Float):Float {
+		return Math.abs(base - target) <= threshold ? target : base;
 	}
 
 	/**
-	 * Mathematic Function for Integer Array.
-	 * @param array Array of Integer Type
-	 * @param type Maximum = 0, Minimum = 1, Average = 2
+	 * Exponential decay interpolation.
+	 *
+	 * Framerate-independent because the rate-of-change is proportional to the difference, so you can
+	 * use the time elapsed since the last frame as `deltaTime` and the function will be consistent.
+	 *
+	 * Equivalent to `smoothLerpPrecision(base, target, deltaTime, halfLife, 0.5)`.
+	 *
+	 * @param base The starting or current value.
+	 * @param target The value this function approaches.
+	 * @param deltaTime The change in time along the function in seconds.
+	 * @param halfLife Time in seconds to reach halfway to `target`.
+	 *
+	 * @see https://twitter.com/FreyaHolmer/status/1757918211679650262
+	 *
+	 * @return The interpolated value.
 	 */
-	inline public static function integerArrayUtil(array:Array<Int>, type:Int):Null<Int> {
-		if (array.length == 0) return null;
-		var value:Float = array[0];
-		for (i in 1...array.length) {
-			switch (type) {
-				case 0: value = Math.max(value, array[i]);
-				case 1: value = Math.min(value, array[i]);
-				case 2: value += array[i];
-			}
-		}
-		if (type == 2) value /= array.length;
-		return Math.round(value);
+	public static function smoothLerpDecay(base:Float, target:Float, deltaTime:Float, halfLife:Float):Float {
+		if (deltaTime == 0) return base;
+		if (base == target) return target;
+		return FlxMath.lerp(target, base, Math.pow(2, (-deltaTime / halfLife)));
+	}
+
+	/**
+	 * Exponential decay interpolation.
+	 *
+	 * Framerate-independent because the rate-of-change is proportional to the difference, so you can
+	 * use the time elapsed since the last frame as `deltaTime` and the function will be consistent.
+	 *
+	 * Equivalent to `smoothLerpDecay(base, target, deltaTime, -duration / logBase(2, precision))`.
+	 *
+	 * @param base The starting or current value.
+	 * @param target The value this function approaches.
+	 * @param deltaTime The change in time along the function in seconds.
+	 * @param duration Time in seconds to reach `target` within `precision`, relative to the original distance.
+	 * @param precision Relative target precision of the interpolation. Defaults to 1% distance remaining.
+	 *
+	 * @see https://twitter.com/FreyaHolmer/status/1757918211679650262
+	 *
+	 * @return The interpolated value.
+	 */
+	public static function smoothLerpPrecision(base:Float, target:Float, deltaTime:Float, duration:Float, precision:Float = 1 / 100):Float {
+		if (deltaTime == 0) return base;
+		if (base == target) return target;
+		return FlxMath.lerp(target, base, Math.pow(precision, deltaTime / duration));
+	}
+
+	/**
+	 * GCD stands for Greatest Common Divisor
+	 * It's used in FullScreenScaleMode to prevent weird window resolutions from being counted as wide screen since those were causing issues positioning the game
+	 * It returns the greatest common divisor between m and n
+	 *
+	 * think it's from hxp..?
+	 * @param m
+	 * @param n
+	 * @return Int the common divisor between m and n
+	 */
+	public static function gcd(m:Int, n:Int):Int {
+		m = Math.floor(Math.abs(m));
+		n = Math.floor(Math.abs(n));
+		var t:Int;
+		do {
+			if (n == 0) return m;
+			t = m;
+			m = n;
+			n = t % m;
+		} while (true);
 	}
 }

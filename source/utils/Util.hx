@@ -132,26 +132,23 @@ class Util {
 	}
 
 	/**
-	 * Opens a specified folder in the system's default file explorer.
-	 * @param folder The path to the folder to open.
-	 * @param absolute If true, uses the provided absolute path; otherwise, resolves the folder relative to the current working directory.
+	 * Runs platform-specific code to open a path in the file explorer.
+	 *
+	 * @param pathFolder The path of the folder to open.
+	 * @param createIfNotExists If `true`, creates the folder if missing; otherwise, throws an error.
 	 */
-	public static function openFolder(folder:String, absolute:Bool = false):Void {
+	public static function openFolder(pathFolder:String, createIfNotExists:Bool = true):Void {
 		#if sys
-		if (!absolute) folder = Sys.getCwd() + '$folder';
-		if (!FileSystem.exists(folder) || !FileSystem.isDirectory(folder))
-			throw 'openFolder should only be used to open existing folders.';
+		pathFolder = pathFolder.trim();
+		if (createIfNotExists) {
+			FileUtil.createDirIfNotExists(pathFolder);
+		} else if (!FileSystem.isDirectory(pathFolder)) throw 'Path is not a directory: "$pathFolder"';
 
-		folder = folder.replace('/', '\\');
-		if (folder.endsWith('/')) folder.substr(0, folder.length - 1);
-
-		var commandOpen:String = '';
 		#if windows
-		commandOpen = 'explorer.exe';
-		#elseif (mac || linux)
-		commandOpen = 'open';
+		Sys.command('explorer', [pathFolder.replace('/', '\\')]);
+		#elseif mac
+		Sys.command('open', [pathFolder]);
 		#end
-		Sys.command(commandOpen, [folder]);
 		#else
 		throw 'External folder open is not supported on this platform.';
 		#end
