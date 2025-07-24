@@ -1,5 +1,4 @@
 package objects;
 
 class PlayField {
-    
 }
