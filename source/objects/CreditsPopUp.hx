@@ -34,7 +34,7 @@ class CreditsPopUp extends FlxSpriteGroup {
 		funnyText.y += ((yValues[0] - yValues[1]) / 2);
 	}
 
-	public function switchHeading(newHeading:SongHeading) {
+	public function switchHeading(newHeading:SongHeading):Void {
 		if (bg != null) remove(bg);
 		bg = new FlxSprite().makeGraphic(400, 50);
 		if (newHeading != null) {
@@ -52,12 +52,12 @@ class CreditsPopUp extends FlxSpriteGroup {
 		rescaleBG();
 	}
 
-	public function changeText(newText:String, rescaleHeading:Bool = true) {
+	public function changeText(newText:String, rescaleHeading:Bool = true):Void {
 		createHeadingText(newText);
 		if (rescaleHeading) rescaleBG();
 	}
 
-	function createHeadingText(text:String) {
+	function createHeadingText(text:String):Void {
 		if (funnyText != null) remove(funnyText);
 		funnyText = new FlxText(1, 0, 650, text, 30);
 		funnyText.setFormat(txtFont, 30);
@@ -66,7 +66,7 @@ class CreditsPopUp extends FlxSpriteGroup {
 		add(funnyText);
 	}
 
-	function rescaleBG() {
+	function rescaleBG():Void {
 		bg.setGraphicSize(Std.int((funnyText.textField.textWidth + .5)), Std.int(funnyText.height + .5));
 		bg.updateHitbox();
 	}
