@@ -115,7 +115,7 @@ class ControlsSubState extends FlxSubState {
 		add(grpOptions = new FlxTypedGroup<Alphabet>());
 		add(grpBlacks = new FlxTypedGroup<AttachedSprite>());
 		selectSpr = new AttachedSprite();
-		selectSpr.makeGraphic(250, 78);
+		selectSpr.makeGraphic(1, 1, FlxColor.WHITE);
 		selectSpr.copyAlpha = false;
 		selectSpr.alpha = 0.75;
 		add(selectSpr);
@@ -160,6 +160,7 @@ class ControlsSubState extends FlxSubState {
 					if (text.text.endsWith('KEY')) text.text = '$curNoteKeys KEY';
 					text.ID = myID;
 					lastID = myID;
+
 					if (!isDisplayKey) {
 						text.alignment = RIGHT;
 						text.x -= 200;
@@ -192,7 +193,7 @@ class ControlsSubState extends FlxSubState {
 		for (n in 0...2) {
 			var key:String = InputFormatter.getKeyName(keys[n] ?? NONE);
 
-			var attach:Alphabet = new Alphabet(560 + n * 300, 248, key, NORMAL);
+			var attach:Alphabet = new Alphabet(360 + n * 300, 248, key, NORMAL);
 			attach.isMenuItem = true;
 			attach.changeX = false;
 			attach.distancePerItem.y = 60;
@@ -202,7 +203,7 @@ class ControlsSubState extends FlxSubState {
 			attach.y += FlxG.height * 2;
 			grpBinds.add(attach);
 
-			attach.scaleX = Math.min(1, 230 / attach.width);
+			attach.scaleX = Math.min(attach.scaleY, (420 - 30) / attach.width);
 
 			// spawn black bars at the right of the key name
 			var black:AttachedSprite = new AttachedSprite();
@@ -396,8 +397,16 @@ class ControlsSubState extends FlxSubState {
 			curAlt = !curAlt;
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
-		selectSpr.sprTracker = grpBlacks.members[Math.floor(curSelected * 2) + (curAlt ? 1 : 0)];
-		selectSpr.visible = (selectSpr.sprTracker != null);
+
+		var selectedBG:AttachedSprite = grpBlacks.members[Math.floor(curSelected * 2) + (curAlt ? 1 : 0)];
+		selectSpr.sprTracker = selectedBG;
+		selectSpr.visible = false;
+		
+		if (selectSpr.sprTracker != null) {
+			selectSpr.scale.set(selectedBG.width, selectedBG.height);
+			selectSpr.updateHitbox();
+			selectSpr.visible = true;
+		}
 	}
 
 	override function destroy() {

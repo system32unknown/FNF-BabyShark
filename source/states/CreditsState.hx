@@ -125,6 +125,8 @@ class CreditsState extends MusicBeatState {
 		for (i in 0...sections.length) {
 			var isSelectable:Bool = !unselectableCheck(i);
 			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 335, sections[i][0]);
+			optionText.useNewCenter = true;
+			optionText.fieldWidth = FlxG.width;
 			optionText.isMenuItem = true;
 			optionText.changeX = false;
 			optionText.targetY = i;
@@ -292,6 +294,8 @@ class CreditSectionState extends MusicBeatState {
 		for (i => credit in creditsStuff) {
 			var isSelectable:Bool = !unselectableCheck(i);
 			var optionText:Alphabet = new Alphabet(FlxG.width / 2, 300, credit[0], isSelectable ? NORMAL : BOLD);
+			optionText.useNewCenter = true;
+			optionText.fieldWidth = FlxG.width;
 			optionText.isMenuItem = true;
 			optionText.targetY = i;
 			optionText.changeX = false;

@@ -77,6 +77,7 @@ class NotesColorSubState extends MusicBeatSubstate {
 		add(bg);
 
 		var text:Alphabet = new Alphabet(50, 86, 'CTRL', NORMAL);
+		text.fieldWidth = 100;
 		text.alignment = CENTER;
 		text.updateScale(.4, .4);
 		add(text);

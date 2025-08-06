@@ -1,14 +1,24 @@
 package commands;
 
 class Compiler {
+	public static function test(args:Array<String>) {
+		__runLime(args, ["test", getBuildTarget()]);
+	}
+	public static function build(args:Array<String>) {
+		__runLime(args, ["build", getBuildTarget()]);
+	}
 	public static function release(args:Array<String>) {
-		__build(args, ["build", getBuildTarget()]);
+		__runLime(args, ["build", getBuildTarget()]);
 	}
 	public static function testRelease(args:Array<String>) {
-		__build(args, ["test", getBuildTarget()]);
+		__runLime(args, ["test", getBuildTarget()]);
 	}
 
-	static function __build(args:Array<String>, arg:Array<String>) {
+	public static function run(args:Array<String>) {
+		__runLime(args, ["run", getBuildTarget()]);
+	}
+
+	static function __runLime(args:Array<String>, arg:Array<String>) {
 		for (a in args) arg.push(a);
 		arg = ['run', 'lime'].concat(arg);
 

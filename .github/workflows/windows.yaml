@@ -30,7 +30,7 @@ jobs:
 
       - name: Installing/Updating libraries
         run: |
-          haxe -cp commandline -D analyzer-optimize --run Main setup -s
+          haxe -cp commandline -D analyzer-optimize --run Main setup -s --no-vscheck
 
       - name: Compile hxcpp
         run: |

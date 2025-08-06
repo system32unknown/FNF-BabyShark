@@ -49,14 +49,11 @@ jobs:
         run: |
           haxelib run lime build linux
 
-      - name: Tar files
-        run: tar -zcvf AlterEngine.tar.gz -C export/release/linux/bin .
-
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
           name: Alter Engine (Linux)
-          path: AlterEngine.tar.gz
+          path: export/release/linux/bin/
           if-no-files-found: error
 
       - name: Clearing already existing cache
