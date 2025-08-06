@@ -19,7 +19,7 @@ import lime.utils.Assets;
  * Ported to Alter Engine.
  * @author Codename Engine Team, Altertoriel
  */
-class NdllUtil {
+final class NdllUtil {
 	#if NDLLS_ALLOWED
 	#if windows public static final os:String = "windows"; #end
 	#if linux public static final os:String = "linux"; #end

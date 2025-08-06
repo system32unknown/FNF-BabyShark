@@ -17,7 +17,7 @@ class SpriteUtil {
 		for (col in 0...sprite.frameWidth) {
 			for (row in 0...sprite.frameHeight) {
 				color = sprite.pixels.getPixel32(col, row);
-				fixedColor = FlxColor.BLACK + (color % 0x1000000);
+				fixedColor = 0xFF000000 + (color % 0x1000000);
 				if (colorMap[fixedColor] == null) colorMap[fixedColor] = 0;
 
 				if (saturated)
