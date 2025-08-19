@@ -27,7 +27,6 @@ typedef NoteSplashData = {
 	texture:String,
 	useGlobalShader:Bool, // breaks r/g/b/a but makes it copy default colors for your custom note
 	useRGBShader:Bool,
-	useNoteRGB:Bool,
 	antialiasing:Bool,
 	r:FlxColor,
 	g:FlxColor,
@@ -98,7 +97,6 @@ class Note extends FlxSprite {
 	public static var defaultNoteSkin(default, never):String = 'noteSkins/NOTE_assets';
 
 	public static var chartArrowSkin:String = null;
-
 	public static var pixelWidth:Vector<Int> = new Vector<Int>(2, 0);
 	public static var pixelHeight:Vector<Int> = new Vector<Int>(2, 0);
 
@@ -108,7 +106,6 @@ class Note extends FlxSprite {
 		antialiasing: !PlayState.isPixelStage,
 		useGlobalShader: false,
 		useRGBShader: PlayState.SONG != null && !PlayState.SONG.disableNoteRGB && Settings.data.noteShaders,
-		useNoteRGB: true,
 		r: -1,
 		g: -1,
 		b: -1,
@@ -134,7 +131,6 @@ class Note extends FlxSprite {
 
 	public var texture(default, set):String = null;
 	var initSkin:String = defaultNoteSkin + getNoteSkinPostfix();
-
 	public var prevDownScr:Bool = false;
 
 	public var noAnimation:Bool = false;
@@ -216,13 +212,15 @@ class Note extends FlxSprite {
 					else {
 						try {
 							reloadNote('HURTNOTE_assets');
-						} catch (e) alpha = 0.5;
+						} catch (_:Dynamic) alpha = 0.5;
 					}
 
+					// splash data and colors
 					noteSplashData.r = 0xFFFF0000;
 					noteSplashData.g = 0xFF101010;
 					noteSplashData.texture = 'noteSplashes/noteSplashes-electric';
 
+					// gameplay data
 					missHealth = isSustainNote ? .25 : .1;
 					hitCausesMiss = true;
 					hitsound = 'cancelMenu';
@@ -478,7 +476,10 @@ class Note extends FlxSprite {
 		if (copyAngle) angle = strum.direction - 90 + strum.angle + offsetAngle;
 		if (copyAlpha) alpha = strum.alpha * multAlpha;
 
-		if (copyX) @:privateAccess x = strum.x + offsetX + strum._dirCos * distance;
+		if (copyX) @:privateAccess {
+			x = strum.x + offsetX + strum._dirCos * distance;
+			if (isSustainNote) x += height * strum._dirCos * .5;
+		}
 		if (copyY) {
 			@:privateAccess y = strum.y + offsetY + correctionOffset + strum._dirSin * distance;
 			if (strum.downScroll && isSustainNote) {
@@ -545,7 +546,7 @@ class Note extends FlxSprite {
 				alpha = multAlpha = .6;
 
 				if (PlayState.isPixelStage) {
-					offsetX += pixelWidth[0] *0.5 * PlayState.daPixelZoom;
+					offsetX += pixelWidth[0] * .5 * PlayState.daPixelZoom;
 					animation.play(noteGFX + (isSustainEnds ? 'holdend' : 'hold')); // isHoldEnd
 					offsetX -= pixelWidth[1] * .5 * PlayState.daPixelZoom;
 					if (!isSustainEnds) sustainScale = (PlayState.daPixelZoom / pixelHeight[1]); // Auto adjust note size

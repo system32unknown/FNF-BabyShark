@@ -21,7 +21,7 @@ import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since
 
 class Main extends Sprite {
 	public static var engineVer:GameVersion = '0.1.5';
-	public static var fnfVer:GameVersion = '0.6.2';
+	public static var fnfVer:GameVersion = '0.7.3';
 
 	public static var noTerminalColor:Bool = false;
 	public static var verbose:Bool = false;
@@ -106,24 +106,9 @@ class Main extends Sprite {
 				MemoryUtil.clearMajor();
 			}
 		});
-		FlxG.signals.gameResized.add((w:Int, h:Int) -> {
-			if (FlxG.cameras != null)
-				for (cam in FlxG.cameras.list) {
-					if (cam != null && cam.filters != null)
-						resetSpriteCache(cam.flashSprite);
-				}
-			if (FlxG.game != null) resetSpriteCache(FlxG.game);
+		FlxG.signals.gameResized.add((w:Int, _:Int) -> {
 			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
 		});
 		#if VIDEOS_ALLOWED hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0") ['--no-lua'] #end); #end
-	}
-
-	static function resetSpriteCache(sprite:Sprite):Void {
-		if (sprite == null) return;
-		@:privateAccess {
-			sprite.__cacheBitmap = null;
-			sprite.__cacheBitmapData = sprite.__cacheBitmapData2 = sprite.__cacheBitmapData3 = null;
-			sprite.__cacheBitmapColorTransform = null;
-		}
 	}
 }

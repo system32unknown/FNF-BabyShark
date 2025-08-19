@@ -146,13 +146,11 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 						add(bindingBlack);
 
 						bindingText = new Alphabet(FlxG.width / 2, 160, Language.getPhrase('controls_rebinding', 'Rebinding {1}', [curOption.name]), NORMAL);
-						bindingText.useNewCenter = true;
 						bindingText.fieldWidth = FlxG.width;
 						bindingText.alignment = CENTER;
 						add(bindingText);
 
 						bindingText2 = new Alphabet(FlxG.width / 2, 340, Language.getPhrase('controls_rebinding2', 'Hold ESC to Cancel\nHold Backspace to Delete'));
-						bindingText.useNewCenter = true;
 						bindingText2.fieldWidth = FlxG.width;
 						bindingText2.alignment = CENTER;
 						add(bindingText2);

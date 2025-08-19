@@ -30,7 +30,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 	public var distancePerItem:FlxPoint = FlxPoint.get(20, 120);
 	public var spawnPos:FlxPoint = FlxPoint.get();
 	public var fieldWidth:Float = 0;
-	public var useNewCenter:Bool = false;
+	public var useNewCenter(get, never):Bool;
 
 	public static function loadData(?request:String = 'alphabet') {
 		var path:String = Paths.getPath('images/$request.json');
@@ -146,6 +146,10 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 				case RIGHT: x + (totalWidth - line.width);
 			}
 		}
+	}
+
+	@:noCompletion function get_useNewCenter():Bool {
+		return fieldWidth > 0;
 	}
 
 	@:noCompletion function set_scaleX(value:Float):Float {

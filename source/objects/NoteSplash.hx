@@ -58,7 +58,7 @@ class NoteSplash extends FlxSprite {
 		config = null;
 		maxAnims = 0;
 
-		if (splash == null) {
+		if(splash == null || splash.length < 1) {
 			splash = defaultNoteSplash + getSplashSkinPostfix();
 			if (PlayState.SONG != null && PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) splash = PlayState.SONG.splashSkin;
 		}
@@ -220,10 +220,7 @@ class NoteSplash extends FlxSprite {
 							else if (i == 1) tempShader.g = color;
 							else if (i == 2) tempShader.b = color;
 						}
-					} else {
-						tempShader.copyValues(Note.globalRgbShaders[noteData % EK.colArray.length]);
-						if (note != null && note.noteSplashData.useNoteRGB) tempShader = note.rgbShader.parent;
-					}
+					} else tempShader.copyValues(Note.globalRgbShaders[noteData % EK.colArray.length]);
 
 					if (note != null) {
 						if (note.noteSplashData.r != -1) tempShader.r = note.noteSplashData.r;

@@ -863,12 +863,13 @@ class PlayState extends MusicBeatState {
 		callOnHScript('onUpdateScore', [miss]);
 	}
 	public dynamic function updateScoreText() {
-		var tempText:String = '${!Settings.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2} | ', [bfNpsVal, bfNpsMax])}';
-		tempText += Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
+		var tempText:String = '${!Settings.data.showNPS ? '' : Language.getPhrase('nps_text', 'NPS: {1}/{2}', [bfNpsVal, bfNpsMax])}';
+		tempText += Settings.data.showNPS ? ' | ' : '';
 		if (!cpuControlled) {
+			tempText += Language.getPhrase('score_text', 'Score: {1} ', [flixel.util.FlxStringUtil.formatMoney(songScore, false)]);
 			if (!instakillOnMiss) tempText += Language.getPhrase('miss_text', '| Misses: {1} ', [songMisses]); 
 			tempText += Language.getPhrase('accuracy_text', '| Accuracy: {1}% |', [ratingAccuracy]) + (totalPlayed != 0 ? ' (${Language.getPhrase(ratingFC)}) ${Language.getPhrase('rating_$ratingName', ratingName)}' : ' ?');
-		} else tempText += Language.getPhrase('hits_text', '| Hits: {1}', [combo]);
+		} else tempText += Language.getPhrase('hits_text', 'Combos: {1}', [combo]);
 		scoreTxt.text = tempText;
 	}
 

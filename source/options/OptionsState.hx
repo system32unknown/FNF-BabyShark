@@ -7,7 +7,6 @@ class OptionsState extends MusicBeatState {
 		['Miscellaneous', #if TRANSLATIONS_ALLOWED 'Language', #end 'Optimizations'],
 	];
 	var grpOptions:FlxTypedGroup<Alphabet>;
-	static var curSelected:Int = 0;
 	public static var onPlayState:Bool = false;
 
 	function openSelectedSubstate(label:String) {
@@ -27,6 +26,7 @@ class OptionsState extends MusicBeatState {
 	var selectorLeft:Alphabet;
 	var selectorRight:Alphabet;
 
+	var curSelected:Int = 0;
 	var curPage:Int = 0;
 
 	var lastMania:Int = 3;
@@ -50,6 +50,7 @@ class OptionsState extends MusicBeatState {
 		add(selectorRight = new Alphabet(0, 0, '<'));
 
 		changeSelection();
+		changePage();
 		Settings.save();
 
 		super.create();
