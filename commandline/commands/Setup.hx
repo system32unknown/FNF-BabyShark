@@ -30,7 +30,7 @@ class Setup {
 	}
 
 	public static function main(args:Array<String>) {
-		var args = ArgParser.parse(args, [
+		var args:ArgParser = ArgParser.parse(args, [
 			"s" => "silent-progress",
 			"S" => "silent-progress",
 			"silent" => "silent-progress",
@@ -51,7 +51,7 @@ class Setup {
 			FileSystem.createDirectory('.haxelib');
 		}
 
-		var libFile = "./libs.xml";
+		var libFile:String = "./libs.xml";
 		if (args.existsOption("lib")) {
 			libFile = args.getOption("lib");
 			if (libFile == null) {
@@ -83,10 +83,7 @@ class Setup {
 							if (libNode.has.url) lib.url = libNode.att.url;
 							if (libNode.has.ref) lib.ref = libNode.att.ref;
 					}
-					events.push({
-						type: INSTALL,
-						data: lib
-					});
+					events.push({type: INSTALL, data: lib});
 				case "cmd":
 					events.push({
 						type: CMD,
@@ -94,15 +91,8 @@ class Setup {
 							inLib: libNode.has.inLib ? libNode.att.inLib : null,
 							dir: libNode.has.dir ? libNode.att.dir : null,
 							lines: {
-								if (Lambda.count(libNode.nodes.line) > 0)
-								[
-									for (line in libNode.nodes.line)
-										line.innerData
-								];
-								else
-								[
-									libNode.has.cmd ? libNode.att.cmd : "echo 'No command specified'"
-								];
+								if (Lambda.count(libNode.nodes.line) > 0) [for (line in libNode.nodes.line) line.innerData];
+								else [libNode.has.cmd ? libNode.att.cmd : "echo 'No command specified'"];
 							}
 						}
 					});
@@ -114,41 +104,36 @@ class Setup {
 							pretty: libNode.has.pretty && libNode.att.pretty == "true"
 						}
 					});
-				default:
-					Sys.println('Unknown library type ${libNode.name}');
+				default: Sys.println('Unknown library type ${libNode.name}');
 			}
 		}
 
-		final platform = switch(Sys.systemName()) {
+		final platform:String = switch(Sys.systemName()) {
 			case "Windows": "windows";
 			case "Mac": "mac";
 			case "Linux": "linux";
 			case def: def.toLowerCase();
 		}
 
-		final defines = args.args.copy();
+		final defines:Array<String> = args.args.copy();
 		defines.push(platform);
 		defines.push("true");
 		if (args.args.length == 0) defines.push("all");
 
 		function parse(libNode:Access) {
 			if (libNode.name == "if" || libNode.name == "unless") {
-				var cond = libNode.att.cond;
+				var cond:String = libNode.att.cond;
 				if (Utils.evaluateArgsCondition(cond, defines) != (libNode.name == "if")) {
 					return;
 				}
 
-				for (child in libNode.elements) {
-					parse(child);
-				}
+				for (child in libNode.elements) parse(child);
 			} else handleLib(libNode);
 		}
 
-		for (libNode in libsXML.elements) {
-			parse(libNode);
-		}
+		for (libNode in libsXML.elements) parse(libNode);
 
-		var commandSuffix = " --always";
+		var commandSuffix:String = " --always";
 		if (SILENT) commandSuffix += " --quiet";
 
 		function command(cmd:String) {
@@ -162,7 +147,7 @@ class Setup {
 					var lib:Library = event.data;
 					var globalSuffix:Null<String> = lib.global == "true" ? " --global" : "";
 					var skipDeps:String = lib.skipDeps ? " --skip-dependencies" : "";
-					var commandPrefix:String = commandSuffix + globalSuffix + skipDeps;// + " --no-timeout";
+					var commandPrefix:String = commandSuffix + globalSuffix + skipDeps;
 					switch(lib.type) {
 						case "lib":
 							prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}"...');
@@ -170,9 +155,9 @@ class Setup {
 						case "git":
 							prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}" from git url "${lib.url}"');
 							if (FAST) {
-								var oldcwd = Sys.getCwd();
-								var newCwd = oldcwd + "/.haxelib/" + lib.name + "/";
-								var newCwdGit = newCwd + "git/";
+								var oldcwd:String = Sys.getCwd();
+								var newCwd:String = oldcwd + "/.haxelib/" + lib.name + "/";
+								var newCwdGit:String = newCwd + "git/";
 								addMissingFolders(newCwdGit);
 								Sys.setCwd(newCwd);
 								File.saveContent(".current", "git");
@@ -180,9 +165,7 @@ class Setup {
 								command('git clone ${lib.url} ${lib.name} --depth 1${lib.ref != null ? " --branch " + lib.ref : ""} --progress');
 								FileSystem.rename(newCwd + lib.name, newCwdGit);
 								Sys.setCwd(oldcwd);
-							} else {
-								command('haxelib$commandPrefix git ${lib.name} ${lib.url}${lib.ref != null ? ' ${lib.ref}' : ''}');
-							}
+							} else command('haxelib$commandPrefix git ${lib.name} ${lib.url}${lib.ref != null ? ' ${lib.ref}' : ''}');
 						case "custom":
 							command('haxelib$commandPrefix dev ${lib.name} "./libraries/${lib.name}"');
 						default:
@@ -190,17 +173,15 @@ class Setup {
 					}
 				case CMD:
 					var cmd:CmdData = event.data;
-					var lib = cmd.inLib;
-					var dir = "";
-					if (cmd.dir != null) {
-						dir = "/" + cmd.dir;
-					}
-					var oldCwd = Sys.getCwd();
+					var lib:String = cmd.inLib;
+					var dir:String = "";
+					if (cmd.dir != null) dir = "/" + cmd.dir;
+					var oldCwd:String = Sys.getCwd();
 					if (lib != null) {
-						final libPrefix = '.haxelib/$lib';
+						final libPrefix:String = '.haxelib/$lib';
 						if (FileSystem.exists(libPrefix)) {
 							if (FileSystem.exists(libPrefix + '/.dev')) { // haxelib dev
-								final devPath = File.getContent(libPrefix + '/.dev');
+								final devPath:String = File.getContent(libPrefix + '/.dev');
 								if (!FileSystem.exists(devPath)) {
 									Sys.println('Cannot find dev path $devPath for $lib');
 									Sys.setCwd(oldCwd);
@@ -208,7 +189,7 @@ class Setup {
 								}
 								Sys.setCwd(devPath + dir);
 							} else if (FileSystem.exists(libPrefix + '/.current')) {
-								final version = StringTools.replace(File.getContent(libPrefix + '/.current'), ".", ",");
+								final version:String = StringTools.replace(File.getContent(libPrefix + '/.current'), ".", ",");
 								if (!FileSystem.exists(libPrefix + '/$version')) {
 									Sys.println('Cannot find version $version of $lib');
 									Sys.setCwd(oldCwd);
@@ -300,7 +281,7 @@ typedef PrintData = {
 }
 
 enum abstract EventType(Int) {
-	var INSTALL = 0;
-	var CMD = 1;
-	var PRINT = 2;
+	var INSTALL:EventType = 0;
+	var CMD:EventType = 1;
+	var PRINT:EventType = 2;
 }

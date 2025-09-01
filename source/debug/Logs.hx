@@ -10,7 +10,7 @@ import utils.system.Ansi.AnsiColor;
 
 // Credit by Codename Engine Team
 class Logs {
-	public static function init() {
+	public static function init():Void {
 		Log.trace = function(v:Dynamic, ?infos:Null<PosInfos>) {
 			final data = [{fgColor: CYAN, text: '${infos.fileName}:${infos.lineNumber}: '}, {text: Std.string(v)}];
 			if (infos.customParams != null) {

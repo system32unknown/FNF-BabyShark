@@ -37,13 +37,13 @@ class Popup extends FlxSprite {
 		}
 	}
 
-	public function setupPopupData(popUptype:PopupType = NONE, img:String, ?daloop:Int, ?tempNotes:Float) {
+	public function setupPopupData(popUptype:PopupType = NONE, img:String, ?index:Int, ?comboDigit:Int) {
 		type = popUptype;
 		reloadTexture(img);
 
 		switch (popUptype) {
 			case NUMBER:
-				x = placement + (43 * daloop) - 50 + comboOffset[1][0] - 43 / 2 * (Std.string(tempNotes).length - 1);
+				x = placement + (43 * index) - 50 + comboOffset[1][0] + (0 - (comboDigit + Std.int((comboDigit - 1) / 3) / 2 - 3)) * 22;
 				gameCenter(Y).y += 20 - comboOffset[1][1];
 				setGraphicSize(Std.int(width * (PlayState.isPixelStage ? PlayState.daPixelZoom : .5)));
 			case RATING:

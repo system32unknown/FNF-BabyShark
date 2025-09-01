@@ -137,7 +137,7 @@ class PlayState extends MusicBeatState {
 	public var health(default, set):Float = 1;
 	var healthLerp:Float = 1;
 
-	public var combo:Int = 0;
+	public var combo:Float = 0;
 
 	public var healthBar:Bar;
 	public var timeBar:Bar;
@@ -1896,11 +1896,9 @@ class PlayState extends MusicBeatState {
 	public var popupAcc:FlxPoint = FlxPoint.get();
 	public var popupVel:FlxPoint = FlxPoint.get();
 	function popUpScore(note:Note = null):Void {
-		var daloop:Null<Int> = 0;
-
 		var seperatedScore:Array<Null<Float>> = [];
-		var tempCombo:Null<Int> = combo;
-		var tempNotes:Null<Int> = tempCombo;
+		var tempCombo:Null<Float> = combo;
+		var tempNotes:Null<Float> = tempCombo;
 
 		if (!Settings.data.comboStacking && popUpGroup.members.length > 0) {
 			for (spr in popUpGroup) {
@@ -1919,15 +1917,15 @@ class PlayState extends MusicBeatState {
 		if (showComboNum) {
 			while (tempCombo >= 10) {
 				seperatedScore.unshift(Std.int(tempCombo / 10) % 10);
-				tempCombo = Std.int(tempCombo / 10);
+				tempCombo /= 10;
 			}
 			seperatedScore.push(tempNotes % 10);
-			for (i in seperatedScore) {
+			for (index => number in seperatedScore) {
+				var comboDigit = Std.string(tempNotes).length;
 				var numScore:Popup = popUpGroup.recycle(Popup);
-				numScore.setupPopupData(NUMBER, uiFolder + 'judgements/number/num$i' + uiPostfix, daloop, tempNotes);
+				numScore.setupPopupData(NUMBER, uiFolder + 'judgements/number/num${Std.int(number)}' + uiPostfix, index, comboDigit);
 				popUpGroup.add(numScore);
 				numScore.doTween();
-				++daloop;
 			}
 		}
 		popUpGroup.sort((_:Int, p1:Popup, p2:Popup) -> {
@@ -1935,10 +1933,10 @@ class PlayState extends MusicBeatState {
 			else return 0;
 		});
 		for (i in seperatedScore) i = null;
-		daloop = tempCombo = null;
+		tempCombo = null;
 	}
 
-	public static function getNoteDiff(note:Note = null):Float {
+	public static function getNoteDiff(note:Note):Float {
 		return switch (Settings.data.noteDiffTypes) {
 			case 'Psych': Math.abs(note.hitTime + Settings.data.ratingOffset);
 			case 'Simple' | _: note.hitTime;
@@ -2304,14 +2302,13 @@ class PlayState extends MusicBeatState {
 			camHUD.zoom += .03 * camZoomingMult;
 		}
 
-		for (i => icon in [iconP1, iconP2]) {
+		for (i => icon in [iconP1, iconP2])
 			icon.bop({
 				curBeat: curBeat,
 				playbackRate: playbackRate,
 				gfSpeed: gfSpeed,
 				percent: healthBar.bounded
 			}, "Settings", i);
-		}
 
 		if (curBeat > 0) charactersDance(curBeat);
 		super.beatHit();

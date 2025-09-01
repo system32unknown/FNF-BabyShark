@@ -5,11 +5,13 @@ import flixel.input.keyboard.FlxKey;
 import utils.system.MemoryUtil;
 import utils.GameVersion;
 import debug.FPSCounter;
+
 #if HSCRIPT_ALLOWED
 import alterhscript.AlterHscript;
 import scripting.HScript.HScriptInfos;
 import haxe.PosInfos;
 #end
+
 #if desktop
 import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since it's not directly referenced anywhere else.
 #end
@@ -43,9 +45,7 @@ class Main extends Sprite {
 
 	public function new() {
 		super();
-		#if sys
-		backend.CommandLineHandler.parse(Sys.args());
-		#end
+		#if sys backend.CommandLineHandler.parse(Sys.args()); #end
 
 		debug.Logs.init();
 		#if (linux || mac) openfl.Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
@@ -54,7 +54,7 @@ class Main extends Sprite {
 		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 
 		#if HSCRIPT_ALLOWED
-		AlterHscript.warn = function(x, ?pos:PosInfos) {
+		AlterHscript.warn = function(x:String, ?pos:PosInfos) {
 			AlterHscript.logLevel(WARN, x, pos);
 			var newPos:HScriptInfos = cast pos;
 			if (newPos.showLine == null) newPos.showLine = true;
@@ -63,7 +63,7 @@ class Main extends Sprite {
 			msgInfo += ' $x';
 			if (PlayState.instance != null) PlayState.instance.addTextToDebug('WARNING: $msgInfo', FlxColor.YELLOW);
 		}
-		AlterHscript.error = function(x, ?pos:PosInfos) {
+		AlterHscript.error = function(x:String, ?pos:PosInfos) {
 			AlterHscript.logLevel(ERROR, x, pos);
 			var newPos:HScriptInfos = cast pos;
 			if (newPos.showLine == null) newPos.showLine = true;
@@ -72,7 +72,7 @@ class Main extends Sprite {
 			msgInfo += ' $x';
 			if (PlayState.instance != null) PlayState.instance.addTextToDebug('ERROR: $msgInfo', FlxColor.RED);
 		}
-		AlterHscript.fatal = function(x, ?pos:PosInfos) {
+		AlterHscript.fatal = function(x:String, ?pos:PosInfos) {
 			AlterHscript.logLevel(FATAL, x, pos);
 			var newPos:HScriptInfos = cast pos;
 			if (newPos.showLine == null) newPos.showLine = true;

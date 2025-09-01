@@ -18,23 +18,21 @@ class Utils {
 		condition = condition.replace('&&', '&').replace('||', '|').replace(" ", "");
 
 		final stack:Array<Dynamic> = [];
-		var i = 0;
+		var i:Int = 0;
 
 		while (i < condition.length) {
-			final char = condition.charAt(i);
+			final char:String = condition.charAt(i);
 
 			switch (char) {
 				case '(':
-					var j = i;
-					var balance = 1;
+					var j:Int = i;
+					var balance:Int = 1;
 					while (balance != 0) {
 						j++;
-						if (condition.charAt(j) == '(')
-							balance++;
-						if (condition.charAt(j) == ')')
-							balance--;
+						if (condition.charAt(j) == '(') balance++;
+						if (condition.charAt(j) == ')') balance--;
 					}
-					final subExpr = condition.substr(i + 1, j - i - 1);
+					final subExpr:String = condition.substr(i + 1, j - i - 1);
 					stack.push(evaluateArgsCondition(subExpr, args));
 					i = j;
 				case '&', '|':
@@ -56,15 +54,13 @@ class Utils {
 	}
 
 	public static function evaluate(stack:Array<Dynamic>):Bool {
-		var result = stack.shift();
+		var result:Null<Dynamic> = stack.shift();
 		while (stack.length > 0) {
-			final op = stack.shift();
-			final next = stack.shift();
+			final op:Null<Dynamic> = stack.shift();
+			final next:Null<Dynamic> = stack.shift();
 			switch (op) {
-				case '&':
-					result = result && next;
-				case '|':
-					result = result || next;
+				case '&': result = result && next;
+				case '|': result = result || next;
 			}
 		}
 		return result;

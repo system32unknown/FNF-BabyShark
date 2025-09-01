@@ -8,33 +8,30 @@ class ArgParser {
 	}
 
 	private function new(args:Array<String>, ?renameMap:Map<String, String>) {
-		if (renameMap == null) {
-			renameMap = new Map();
-		}
-		function rename(name:String) {
+		if (renameMap == null) renameMap = new Map();
+		function rename(name:String):Null<String> {
 			return renameMap.exists(name) ? renameMap.get(name) : name;
 		}
 		this.args = args;
 
 		this.options = new Map();
-		final copy = args.copy();
-		var i = 0;
+		final copy:Array<String> = args.copy();
+		var i:Int = 0;
 		while(copy.length > 0) {
 			var arg = copy.shift();
 			// this parses the -NAME=VALUE
 			if (arg.startsWith("-")) {
-				var key = arg.substr(1);
-				final isLongKey = key.startsWith("-");
-				if (isLongKey) {
-					key = key.substr(1);
-				}
-				final split = key.split("=");
-				var longName = split.shift();
+				var key:String = arg.substr(1);
+				final isLongKey:Bool = key.startsWith("-");
+				if (isLongKey) key = key.substr(1);
+
+				final split:Array<String> = key.split("=");
+				var longName:Null<String> = split.shift();
 				if (!isLongKey) {
 					// Allow -ABC to be parsed as -A -B -C
 					// Values will only work for the last one
 					while(longName.length > 1) {
-						var name = rename(longName.charAt(0));
+						var name:Null<String> = rename(longName.charAt(0));
 						options.set(name, null);
 						longName = longName.substr(1);
 					}
@@ -43,8 +40,8 @@ class ArgParser {
 					// Parse the last option with value support
 				}
 
-				final name = rename(longName);
-				final value = (split.length > 0) ? split.join("=") : null;
+				final name:Null<String> = rename(longName);
+				final value:Null<Null<String>> = (split.length > 0) ? split.join("=") : null;
 				options.set(name, value);
 
 				args.splice(i, 1);

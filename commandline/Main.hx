@@ -146,6 +146,7 @@ class Main {
 
 			return;
 		}
+
 		// shows help
 		Sys.println("Alter Engine Command Line utility");
 		Sys.println('Available commands (${commands.length}):\n');

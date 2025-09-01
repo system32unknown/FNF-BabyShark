@@ -70,6 +70,7 @@ class StrumNote extends FlxSprite {
 		var lastAnim:String = null;
 		if (animation.curAnim != null) lastAnim = animation.curAnim.name;
 
+		var dataNum:Int = EK.gfxIndex[PlayState.mania][noteData];
 		if (PlayState.isPixelStage) {
 			final graphic:flixel.graphics.FlxGraphic = Paths.image('pixelUI/$texture');
 			loadGraphic(Paths.image('pixelUI/$texture'), true, Math.floor(graphic.width / 9), Math.floor(graphic.height / 5));
@@ -87,7 +88,6 @@ class StrumNote extends FlxSprite {
 			animation.add('black', [16]);
 			animation.add('dark', [17]);
 
-			var dataNum:Int = EK.gfxIndex[PlayState.mania][noteData];
 			animation.add('static', [dataNum]);
 			animation.add('pressed', [9 + dataNum, 18 + dataNum], 12, false);
 			animation.add('confirm', [27 + dataNum, 36 + dataNum], 12, false);
@@ -106,8 +106,8 @@ class StrumNote extends FlxSprite {
 			antialiasing = Settings.data.antialiasing;
 			setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
 
-			var pressName:String = EK.colArray[EK.gfxIndex[PlayState.mania][noteData]];
-			var pressNameAlt:String = EK.pressArrayAlt[EK.gfxIndex[PlayState.mania][noteData]];
+			var pressName:String = EK.colArray[dataNum];
+			var pressNameAlt:String = EK.pressArrayAlt[dataNum];
 			animation.addByPrefix('static', 'arrow' + EK.gfxDir[EK.gfxHud[PlayState.mania][noteData]]);
 			attemptToAddAnimationByPrefix('pressed', pressNameAlt + ' press', 24, false);
 			attemptToAddAnimationByPrefix('confirm', pressNameAlt + ' confirm', 24, false);

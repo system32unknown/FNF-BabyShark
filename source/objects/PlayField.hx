@@ -1,26 +1,34 @@
 package objects;
 
-import lime.app.Application;
-import lime.ui.KeyCode;
+import openfl.events.KeyboardEvent;
 
 class PlayField extends flixel.group.FlxSpriteGroup {
 	public function new() {
 		super();
 
-		Application.current.window.onKeyDown.add(input);
-		Application.current.window.onKeyUp.add(release);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 	}
 
 	override function destroy():Void {
-		Application.current.window.onKeyDown.remove(input);
-		Application.current.window.onKeyUp.remove(release);
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 
 		super.destroy();
 	}
 
-	override function update(delta:Float):Void {}
+	override function update(delta:Float):Void {
+		
+	}
 
-	inline function input(key:KeyCode, _):Void {}
+	function onKeyPress(e:KeyboardEvent):Void {
 
-	inline function release(key:KeyCode, _):Void {}
+	}
+
+	function onKeyRelease(e:KeyboardEvent):Void {
+
+	}
+
+	public dynamic function noteHit(note:Note):Void {}
+	public dynamic function noteMiss(note:Note):Void {}
 }
