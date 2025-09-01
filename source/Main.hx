@@ -101,9 +101,9 @@ class Main extends Sprite {
 		FlxG.signals.postStateSwitch.add(() -> {
 			if (Settings.data.autoCleanAssets) Paths.clearUnusedMemory();
 			if (!Settings.data.disableGC) {
-				MemoryUtil.clearMajor();
 				MemoryUtil.clearMajor(true);
 				MemoryUtil.clearMajor();
+				MemoryUtil.clearMajor(true);
 			}
 		});
 		FlxG.signals.gameResized.add((w:Int, _:Int) -> {

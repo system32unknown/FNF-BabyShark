@@ -44,7 +44,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 
 	override function create() {
 		instance = this;
-		if (!Settings.data.disableGC) utils.system.MemoryUtil.clearMajor();
+		if (!Settings.data.disableGC) utils.system.MemoryUtil.clearMajor(true);
 
 		FlxG.sound.play(Paths.sound(deathSoundName));
 

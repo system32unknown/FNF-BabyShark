@@ -4,7 +4,6 @@ import _external.memory.Memory;
 
 #if cpp
 import cpp.vm.Gc;
-import flixel.util.FlxDestroyUtil;
 
 #if windows
 @:cppFileCode('
@@ -20,6 +19,8 @@ import flixel.util.FlxDestroyUtil;
 	#include <mach/mach.h>
 ')
 #end
+#elseif hl
+import hl.Gc;
 #end
 
 /**
@@ -42,12 +43,16 @@ class MemoryUtil {
 
 	/**
 	 * Triggers a garbage collection cycle.
-	 * @param minor If true, performs a minor collection; otherwise, does a major collection.
+	 * @param major If true, performs a major collection; otherwise, does a major collection.
 	 */
-	public static function clearMajor(?minor:Bool = false):Void {
+	public static function clearMajor(major:Bool = false):Void {
 		#if cpp
-		Gc.run(!minor);
-		if (!minor) Gc.compact();
+		Gc.run(major);
+		if (major) Gc.compact();
+		#elseif hl
+		Gc.blocking(true);
+		Gc.major();
+		Gc.blocking(false);
 		#else
 		openfl.system.System.gc();
 		#end
@@ -57,10 +62,12 @@ class MemoryUtil {
 	 * Enable or disable garbage collection.
 	 */
 	public static function enable(on:Bool = true):Void {
-		#if cpp
 		isGcOn = on;
+		#if cpp
 		Gc.enable(isGcOn);
 		cpp.NativeGc.enable(isGcOn);
+		#elseif hl
+		Gc.enable(isGcOn);
 		#end
 	}
 
@@ -90,30 +97,5 @@ class MemoryUtil {
 	public static var appMemoryNumber(get, never):Float;
 	static function get_appMemoryNumber():Float {
 		return Memory.getCurrentUsage();
-	}
-
-	/**
-	 * Retrieves all "zombie" objects (dangling references) detected by the garbage collector.
-	 * 
-	 * In HXCPP, a "zombie" is an object that was freed but still has a reference.
-	 * This function collects all such objects that implement `IFlxDestroyable` and,
-	 * if `destroy` is `true`, immediately calls `FlxDestroyUtil.destroy` on them.
-	 * 
-	 * @param destroy Whether to automatically destroy found zombies.
-	 * @return An array of detected zombie objects.
-	 */
-	public static function getFlxZombies(destroy:Bool = false):Array<Dynamic> {
-		var _zombie:Dynamic = null;
-		var containedZombies:Array<Dynamic> = [];
-		#if cpp
-		while ((_zombie = Gc.getNextZombie()) != null) {
-			if (_zombie is IFlxDestroyable) {
-				containedZombies.push(_zombie);
-				if (destroy) FlxDestroyUtil.destroy(cast(_zombie, IFlxDestroyable));
-			}
-		}
-		#end
-		_zombie = null;
-		return containedZombies;
 	}
 }

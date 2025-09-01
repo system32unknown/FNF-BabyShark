@@ -38,7 +38,7 @@ class Paths {
 			MemoryUtil.enable();
 			MemoryUtil.collect(true);
 			if ((cast FlxG.state) is PlayState) MemoryUtil.enable(false);
-		} else MemoryUtil.clearMajor();
+		} else MemoryUtil.clearMajor(true);
 	}
 
 	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)

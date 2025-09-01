@@ -5,41 +5,6 @@ package utils.tools;
  */
 class ArrayTools {
 	/**
-	 * Push an element to the array if it is not already present.
-	 * @param input The array to push to
-	 * @param element The element to push
-	 * @return Whether the element was pushed
-	 */
-	public static function pushUnique<T>(input:Array<T>, element:T):Bool {
-		if (input.contains(element)) return false;
-		input.push(element);
-		return true;
-	}
-
-	/**
-	 * Remove all elements from the array, without creating a new array.
-	 * @param array The array to clear.
-	 */
-	public static function clear<T>(array:Array<T>):Void {
-		// This method is faster than array.splice(0, array.length)
-		while (array.length > 0) array.pop();
-	}
-
-	/**
-	 * Create a new array with all elements of the given array, to prevent modifying the original.
-	 */
-	public static function clone<T>(array:Array<T>):Array<T> {
-		return [for (element in array) element];
-	}
-
-	/**
-	 * Create a new array with clones of all elements of the given array, to prevent modifying the original.
-	 */
-	public static function deepClone<T, U:ICloneable<T>>(array:Array<U>):Array<T> {
-		return [for (element in array) element.clone()];
-	}
-
-	/**
 	 * Return true only if both arrays contain the same elements (possibly in a different order).
 	 * @param a The first array to compare.
 	 * @param b The second array to compare.
