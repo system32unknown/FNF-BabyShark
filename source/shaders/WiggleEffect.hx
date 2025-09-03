@@ -6,6 +6,7 @@ enum WiggleEffectType {
 	HEAT_WAVE_HORIZONTAL;
 	HEAT_WAVE_VERTICAL;
 	FLAG;
+	GLITCH;
 }
 
 class WiggleEffect {
@@ -14,6 +15,7 @@ class WiggleEffect {
 	public var waveSpeed(default, set):Float = 0;
 	public var waveFrequency(default, set):Float = 0;
 	public var waveAmplitude(default, set):Float = 0;
+	public var isDistortBG(default, set):Bool = false;
 
 	public function new():Void {
 		shader.uTime.value = [0];
@@ -50,6 +52,12 @@ class WiggleEffect {
 		shader.uWaveAmplitude.value = [waveAmplitude];
 		return v;
 	}
+
+	function set_isDistortBG(v:Bool):Bool {
+		isDistortBG = v;
+		shader.uDistortBG.value = [isDistortBG];
+		return v;
+	}
 }
 
 class WiggleShader extends flixel.system.FlxAssets.FlxShader {
@@ -62,6 +70,7 @@ class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 		const int EFFECT_TYPE_HEAT_WAVE_HORIZONTAL = 2;
 		const int EFFECT_TYPE_HEAT_WAVE_VERTICAL = 3;
 		const int EFFECT_TYPE_FLAG = 4;
+		const int EFFECT_TYPE_GLITCH = 5;
 
 		uniform int effectType;
 
@@ -80,6 +89,11 @@ class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 		 */
 		uniform float uWaveAmplitude;
 
+		/**
+		 * Distort BG?
+		 */
+		uniform bool uDistortBG;
+
 		vec2 sineWave(vec2 pt) {
 			float x = 0.0;
 			float y = 0.0;
@@ -95,6 +109,9 @@ class WiggleShader extends flixel.system.FlxAssets.FlxShader {
 			} else if (effectType == EFFECT_TYPE_FLAG) {
 				y = sin(pt.y * uFrequency + 10.0 * pt.x + uTime * uSpeed) * uWaveAmplitude;
 				x = sin(pt.x * uFrequency + 5.0 * pt.y + uTime * uSpeed) * uWaveAmplitude;
+			} else if (effectType == EFFECT_TYPE_GLITCH) {
+				pt.x += sin(pt.y * uFrequency + uTime * uSpeed) * (uWaveAmplitude / pt.x * pt.y);
+				pt.y += sin(pt.x * uFrequency - uTime * uSpeed) * (uDistortBG ? (uWaveAmplitude / pt.y * pt.x) : uWaveAmplitude);
 			}
 
 			return vec2(pt.x + x, pt.y + y);

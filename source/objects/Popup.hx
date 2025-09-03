@@ -17,7 +17,7 @@ class Popup extends FlxSprite {
 	var baseRate:Float = 0.0;
 	var comboOffset:Array<Array<Int>> = [];
 
-	public function new() {
+	public function new():Void {
 		super();
 		type = NONE;
 		i = PlayState.instance;
@@ -37,7 +37,7 @@ class Popup extends FlxSprite {
 		}
 	}
 
-	public function setupPopupData(popUptype:PopupType = NONE, img:String, ?index:Int, ?comboDigit:Int) {
+	public function setupPopupData(popUptype:PopupType = NONE, img:String, ?index:Int, ?comboDigit:Int):Void {
 		type = popUptype;
 		reloadTexture(img);
 
@@ -73,25 +73,22 @@ class Popup extends FlxSprite {
 		antialiasing = i.popupAntialias;
 	}
 
-	public dynamic function doTween(speed:Float = .001) {
+	public dynamic function doTween(speed:Float = .001):Void {
 		FlxTween.cancelTweensOf(this);
 		FlxTween.tween(this, {alpha: 0}, .2 / i.playbackRate, {onComplete: (tween:FlxTween) -> kill(), startDelay: Conductor.crochet * speed / i.playbackRate});
 	}
 
-	override public function kill() {
+	override public function kill():Void {
 		type = NONE;
-		super.kill();
+		exists = visible = false;
 	}
 
-	override public function revive() {
-		super.revive();
+	override public function revive():Void {
+		exists = visible = true;
 		initVars();
-
 		acceleration.set();
 		velocity.set();
 		setPosition();
-
 		alpha = 1;
-		visible = true;
 	}
 }
