@@ -2,130 +2,37 @@ package flixel.graphics.tile;
 
 import flixel.FlxCamera;
 import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.tile.FlxDrawBaseItem;
-import flixel.system.FlxAssets;
-import flixel.system.FlxBuffer;
+import flixel.graphics.tile.FlxDrawBaseItem.FlxDrawItemType;
 import flixel.math.FlxMatrix;
-import flixel.math.FlxRect;
-import openfl.geom.ColorTransform;
+import flixel.system.FlxAssets.FlxShader;
+import openfl.Vector;
 import openfl.display.ShaderParameter;
-
-typedef QuadRectRaw =
-{
-	x:Float,
-	y:Float,
-	width:Float,
-	height:Float
-};
-
-@:forward
-abstract QuadRect(QuadRectRaw) from QuadRectRaw to QuadRectRaw
-{
-	@:from
-	public static inline function fromFlxRect(rect:FlxRect):QuadRect
-	{
-		return {
-			x: rect.x,
-			y: rect.y,
-			width: rect.width,
-			height: rect.height
-		};
-	}
-	
-	@:from
-	public static inline function fromRect(rect:openfl.geom.Rectangle):QuadRect
-	{
-		return {
-			x: rect.x,
-			y: rect.y,
-			width: rect.width,
-			height: rect.height
-		};
-	}
-	
-	public inline function toFlxRect(rect:FlxRect):FlxRect
-	{
-		return rect.set(this.x, this.y, this.width, this.height);
-	}
-}
-
-typedef QuadTransformRaw =
-{
-	a:Float,
-	b:Float,
-	c:Float,
-	d:Float,
-	tx:Float,
-	ty:Float
-};
-
-@:forward
-abstract QuadTransform(QuadTransformRaw) from QuadTransformRaw to QuadTransformRaw
-{
-	@:from
-	public static inline function fromMatrix(matrix:FlxMatrix):QuadTransform
-	{
-		return {
-			a: matrix.a,
-			b: matrix.b,
-			c: matrix.c,
-			d: matrix.d,
-			tx: matrix.tx,
-			ty: matrix.ty
-		};
-	}
-	
-	public inline function toMatrix(matrix:FlxMatrix):FlxMatrix
-	{
-		matrix.setTo(this.a, this.b, this.c, this.d, this.tx, this.ty);
-		return matrix;
-	}
-}
-
-typedef QuadColorMult =
-{
-	r:Float,
-	g:Float,
-	b:Float,
-	a:Float
-};
-
-typedef QuadColorOffset =
-{
-	r:Float,
-	g:Float,
-	b:Float,
-	a:Float
-};
+import openfl.geom.ColorTransform;
 
 class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
-	static inline var VERTICES_PER_QUAD = 4;
+	static inline final VERTICES_PER_QUAD = 4;
 
 	public var shader:FlxShader;
 
-	var rects:FlxBuffer<QuadRect>;
-	var transforms:FlxBuffer<QuadTransform>;
-	var alphas:Array<Float>;
-	var colorMultipliers:FlxBufferArray<QuadColorMult>;
-	var colorOffsets:FlxBufferArray<QuadColorOffset>;
+	var rects:Vector<Float> = new Vector<Float>();
+	var transforms:Vector<Float> = new Vector<Float>();
+	var alphas:Array<Float> = [];
+	var colorMultipliers:Array<Float> = [];
+	var colorOffsets:Array<Float> = [];
 
 	public function new() {
 		super();
 		type = FlxDrawItemType.TILES;
-		rects = new FlxBuffer<QuadRect>();
-		transforms = new FlxBuffer<QuadTransform>();
-		alphas = [];
 	}
 
-	override public function reset():Void {
+	override public function reset():Void
+	{
 		super.reset();
-		rects.resize(0);
-		transforms.resize(0);
+		rects.length = 0;
+		transforms.length = 0;
 		alphas.resize(0);
-		if (colorMultipliers != null)
-			colorMultipliers.resize(0);
-		if (colorOffsets != null)
-			colorOffsets.resize(0);
+		colorMultipliers.resize(0);
+		colorOffsets.resize(0);
 	}
 
 	override public function dispose():Void {
@@ -138,24 +45,51 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
 	}
 
 	override public function addQuad(frame:FlxFrame, matrix:FlxMatrix, ?transform:ColorTransform):Void {
-		rects.push(frame.frame);
-		transforms.push(matrix);
-
-		var alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
-		for (i in 0...VERTICES_PER_QUAD) alphas.push(alphaMultiplier);
+		rects.push(frame.frame.x);
+		rects.push(frame.frame.y);
+		rects.push(frame.frame.width);
+		rects.push(frame.frame.height);
+		
+		transforms.push(matrix.a);
+		transforms.push(matrix.b);
+		transforms.push(matrix.c);
+		transforms.push(matrix.d);
+		transforms.push(matrix.tx);
+		transforms.push(matrix.ty);
+		
+		final alphaMultiplier = transform != null ? transform.alphaMultiplier : 1.0;
+		for (_ in 0...VERTICES_PER_QUAD) alphas.push(alphaMultiplier);
 
 		if (colored || hasColorOffsets) {
-			if (colorMultipliers == null) colorMultipliers = [];
-			if (colorOffsets == null) colorOffsets = [];
+			var redMultiplier = 1.0;
+			var greenMultiplier = 1.0;
+			var blueMultiplier = 1.0;
 
-			for (i in 0...VERTICES_PER_QUAD) {
-				if (transform != null) {
-					colorMultipliers.push(transform.redMultiplier, transform.greenMultiplier, transform.blueMultiplier, 1);
-					colorOffsets.push(transform.redOffset, transform.greenOffset, transform.blueOffset, transform.alphaOffset);
-				} else {
-					colorMultipliers.push(1, 1, 1, 1);
-					colorOffsets.push(0, 0, 0, 0);
-				}
+			var redOffset = 1.0;
+			var greenOffset = 1.0;
+			var blueOffset = 1.0;
+			var alphaOffset = 1.0;
+
+			if (transform != null) {
+				redMultiplier = transform.redMultiplier;
+				greenMultiplier = transform.greenMultiplier;
+				blueMultiplier = transform.blueMultiplier;
+
+				redOffset = transform.redOffset;
+				greenOffset = transform.greenOffset;
+				blueOffset = transform.blueOffset;
+				alphaOffset = transform.alphaOffset;
+			}
+			for (_ in 0...VERTICES_PER_QUAD) {
+				colorMultipliers.push(redMultiplier);
+				colorMultipliers.push(greenMultiplier);
+				colorMultipliers.push(blueMultiplier);
+				colorMultipliers.push(1);
+
+				colorOffsets.push(redOffset);
+				colorOffsets.push(greenOffset);
+				colorOffsets.push(blueOffset);
+				colorOffsets.push(alphaOffset);
 			}
 		}
 	}
@@ -176,6 +110,9 @@ class FlxDrawQuadsItem extends FlxDrawBaseItem<FlxDrawQuadsItem> {
 		if (colored || hasColorOffsets) {
 			shader.colorMultiplier.value = colorMultipliers;
 			shader.colorOffset.value = colorOffsets;
+		} else {
+			shader.colorMultiplier.value = null;
+			shader.colorOffset.value = null;
 		}
 
 		setParameterValue(shader.hasTransform, true);
