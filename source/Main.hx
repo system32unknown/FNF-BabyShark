@@ -86,8 +86,7 @@ class Main extends Sprite {
 		addChild(new backend.FunkinGame(() -> new Init(), game.width, game.height, game.framerate, game.skipSplash, game.startFullscreen));
 		addChild(fpsVar = new FPSCounter());
 		fpsVar.visible = Settings.data.showFPS;
-		fpsVar.memDisplayType = Settings.data.memCounterType;
-		fpsVar.memType = Settings.data.memModeType;
+		fpsVar.memDisplay = Settings.data.memCounterType;
 
 		#if !MODS_ALLOWED
 		final path:String = 'mods';

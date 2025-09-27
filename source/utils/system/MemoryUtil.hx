@@ -1,7 +1,5 @@
 package utils.system;
 
-import _external.memory.Memory;
-
 #if cpp
 import cpp.vm.Gc;
 
@@ -94,8 +92,11 @@ class MemoryUtil {
 		#end
 	}
 
-	public static var appMemoryNumber(get, never):Float;
-	static function get_appMemoryNumber():Float {
-		return Memory.getCurrentUsage();
+	public static function supportsTaskMem():Bool {
+		#if ((cpp && (windows || macos)) || linux)
+		return true;
+		#else
+		return false;
+		#end
 	}
 }

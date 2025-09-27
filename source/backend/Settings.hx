@@ -84,8 +84,7 @@ class SaveVariables {
 
 	// Miscellaneous
 	var showFPS:Bool = true;
-	var memCounterType:String = "MEM/PEAK";
-	var memModeType:String = 'GC';
+	var memCounterType:String = 'GC';
 	var autoCleanAssets:Bool = true;
 	var checkForUpdates:Bool = true;
 	var discordRPC:Bool = false;
@@ -147,8 +146,7 @@ class Settings {
 
 		if (Main.fpsVar != null) {
 			Main.fpsVar.visible = data.showFPS;
-			Main.fpsVar.memDisplayType = data.memCounterType;
-			Main.fpsVar.memType = data.memModeType;
+			Main.fpsVar.memDisplay = data.memCounterType;
 		}
 		FlxG.autoPause = data.autoPause;
 
