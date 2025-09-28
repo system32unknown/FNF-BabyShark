@@ -78,9 +78,12 @@ class FPSCounter extends openfl.text.TextField {
 	// so people can override it in hscript
 	public dynamic function updateText():Void {
 		var newStr:String = '${fpsManager.curFPS}FPS';
-		if (memDisplay != 'NONE') {
-			if (memDisplay == 'GC' || memDisplay == 'BOTH') newStr += '\nGC MEM: ' + FlxStringUtil.formatBytes(gcMEM) + ' / ' + FlxStringUtil.formatBytes(gcPeakMEM);
-			if (memDisplay == 'TASK' || memDisplay == 'BOTH') newStr += '\nTASK MEM: ' + FlxStringUtil.formatBytes(taskMEM) + ' / ' + FlxStringUtil.formatBytes(taskPeakMEM);
+		switch (memDisplay) {
+			case 'GC': newStr += '\n' + FlxStringUtil.formatBytes(gcMEM) + ' / ' + FlxStringUtil.formatBytes(gcPeakMEM);
+			case 'TASK': newStr += '\n' + FlxStringUtil.formatBytes(taskMEM) + ' / ' + FlxStringUtil.formatBytes(taskPeakMEM);
+			case 'BOTH':
+				newStr += '\nGC: ' + FlxStringUtil.formatBytes(gcMEM) + ' / ' + FlxStringUtil.formatBytes(gcPeakMEM);
+				newStr += '\nTASK: ' + FlxStringUtil.formatBytes(taskMEM) + ' / ' + FlxStringUtil.formatBytes(taskPeakMEM);
 		}
 
 		if (newStr != lastText) {
