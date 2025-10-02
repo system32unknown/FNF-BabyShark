@@ -11,6 +11,7 @@ import openfl.events.IOErrorEvent;
 /**
  * Utilities for reading and writing files on various platforms.
  */
+ @:nullSafety
 class FileUtil {
 	/**
 	 * Paths which should not be deleted or modified by scripts.
@@ -27,6 +28,8 @@ class FileUtil {
 			'backups/*',
 			'manifest',
 			'manifest/*',
+			'plugins',
+			'plugins/*',
 			'AlterEngine.exe',
 			'AlterEngine',
 			'icon.ico',
@@ -57,7 +60,72 @@ class FileUtil {
 	#end
 
 	/**
+	 * Browses for a directory, then calls `onSelect(path)` when a path chosen.
+	 * Note that on HTML5 this will immediately fail.
+	 *
+	 * @param typeFilter TODO What does this do?
+	 * @return Whether the file dialog was opened successfully.
+	 */
+	public static function browseForDirectory(?typeFilter:Array<FileFilter>, onSelect:(String) -> Void, ?onCancel:() -> Void, ?defaultPath:String, ?dialogTitle:String):Bool {
+		#if desktop
+		var filter:Null<String> = convertTypeFilter(typeFilter);
+		var fileDialog:FileDialog = new FileDialog();
+		fileDialog.onSelect.add(onSelect);
+		if (onCancel != null) fileDialog.onCancel.add(onCancel);
+		fileDialog.browse(OPEN_DIRECTORY, filter, defaultPath, dialogTitle);
+		return true;
+		#else
+		Logs.warn('browseForDirectory not implemented for this platform');
+		if (onCancel != null) onCancel();
+		return false;
+		#end
+	}
+
+	/**
+	 * Browses for multiple file, then calls `onSelect(paths)` when a path chosen.
+	 * Note that on HTML5 this will immediately fail.
+	 *
+	 * @return Whether the file dialog was opened successfully.
+	 */
+	public static function browseForMultipleFiles(?typeFilter:Array<FileFilter>, onSelect:(Array<String>) -> Void, ?onCancel:() -> Void, ?defaultPath:String, ?dialogTitle:String):Bool {
+		#if desktop
+		var filter:Null<String> = convertTypeFilter(typeFilter);
+		var fileDialog:FileDialog = new FileDialog();
+		fileDialog.onSelectMultiple.add(onSelect);
+		if (onCancel != null) fileDialog.onCancel.add(onCancel);
+		fileDialog.browse(OPEN_MULTIPLE, filter, defaultPath, dialogTitle);
+		return true;
+		#else
+		Logs.warn('browseForMultipleFiles not implemented for this platform');
+		if (onCancel != null) onCancel();
+		return false;
+		#end
+	}
+
+	/**
+	 * Browses for a file location to save to, then calls `onSave(path)` when a path chosen.
+	 *
+	 * @param typeFilter TODO What does this do?
+	 * @return Whether the file dialog was opened successfully.
+	 */
+	public static function browseForSaveFile(?typeFilter:Array<FileFilter>, onSelect:(String)->Void, ?onCancel:()->Void, ?defaultPath:String, ?dialogTitle:String):Bool {
+		#if desktop
+		var filter:Null<String> = convertTypeFilter(typeFilter);
+		var fileDialog:FileDialog = new FileDialog();
+		fileDialog.onSelect.add(onSelect);
+		if (onCancel != null) fileDialog.onCancel.add(onCancel);
+		fileDialog.browse(SAVE, filter, defaultPath, dialogTitle);
+		return true;
+		#else
+		Logs.warn('browseForSaveFile not implemented for this platform');
+		if (onCancel != null) onCancel();
+		return false;
+		#end
+	}
+
+	/**
 	 * Browses for a single file location, then writes the provided `haxe.io.Bytes` data and calls `onSave(path)` when done.
+	 * Works great on only desktop.
 	 *
 	 * @return Whether the file dialog was opened successfully.
 	 */
@@ -84,70 +152,8 @@ class FileUtil {
 	}
 
 	/**
-	 * Browses for a file location to save to, then calls `onSave(path)` when a path chosen.
-	 *
-	 * @param typeFilter TODO What does this do?
-	 * @return Whether the file dialog was opened successfully.
-	 */
-	public static function browseForSaveFile(?typeFilter:Array<FileFilter>, onSelect:(String)->Void, ?onCancel:()->Void, ?defaultPath:String, ?dialogTitle:String):Bool {
-		#if desktop
-		var filter:Null<String> = convertTypeFilter(typeFilter);
-		var fileDialog:FileDialog = new FileDialog();
-		fileDialog.onSelect.add(onSelect);
-		if (onCancel != null) fileDialog.onCancel.add(onCancel);
-		fileDialog.browse(SAVE, filter, defaultPath, dialogTitle);
-		return true;
-		#else
-		Logs.warn('browseForSaveFile not implemented for this platform');
-		if (onCancel != null) onCancel();
-		return false;
-		#end
-	}
-
-	/**
-	 * Browses for multiple file, then calls `onSelect(paths)` when a path chosen.
-	 *
-	 * @return Whether the file dialog was opened successfully.
-	 */
-	public static function browseForMultipleFiles(?typeFilter:Array<FileFilter>, onSelect:(Array<String>) -> Void, ?onCancel:() -> Void, ?defaultPath:String, ?dialogTitle:String):Bool {
-		#if desktop
-		var filter:Null<String> = convertTypeFilter(typeFilter);
-		var fileDialog:FileDialog = new FileDialog();
-		fileDialog.onSelectMultiple.add(onSelect);
-		if (onCancel != null) fileDialog.onCancel.add(onCancel);
-		fileDialog.browse(OPEN_MULTIPLE, filter, defaultPath, dialogTitle);
-		return true;
-		#else
-		Logs.warn('browseForMultipleFiles not implemented for this platform');
-		if (onCancel != null) onCancel();
-		return false;
-		#end
-	}
-
-	/**
-	 * Browses for a directory, then calls `onSelect(path)` when a path chosen.
-	 *
-	 * @param typeFilter TODO What does this do?
-	 * @return Whether the file dialog was opened successfully.
-	 */
-	public static function browseForDirectory(?typeFilter:Array<FileFilter>, onSelect:(String) -> Void, ?onCancel:() -> Void, ?defaultPath:String, ?dialogTitle:String):Bool {
-		#if desktop
-		var filter:Null<String> = convertTypeFilter(typeFilter);
-		var fileDialog:FileDialog = new FileDialog();
-		fileDialog.onSelect.add(onSelect);
-		if (onCancel != null) fileDialog.onCancel.add(onCancel);
-		fileDialog.browse(OPEN_DIRECTORY, filter, defaultPath, dialogTitle);
-		return true;
-		#else
-		Logs.warn('browseForDirectory not implemented for this platform');
-		if (onCancel != null) onCancel();
-		return false;
-		#end
-	}
-
-	/**
 	 * Prompts the user to save multiple files.
-	 * On native, this will prompt the user for a directory, then write all of the files to there.
+	 * On desktop, this will prompt the user for a directory, then write all of the files to there.
 	 *
 	 * @param typeFilter TODO What does this do?
 	 * @return Whether the file dialog was opened successfully.
@@ -155,7 +161,7 @@ class FileUtil {
 	public static function saveMultipleFiles(resources:Array<haxe.zip.Entry>, ?onSaveAll:(Array<String>)->Void, ?onCancel:()->Void, ?defaultPath:String, force:Bool = false):Bool {
 		#if desktop
 		// Prompt the user for a directory, then write all of the files to there.
-		var onSelectDir:(String)->Void = (targetPath:String) -> {
+		var onSelectDir:(String) -> Void = (targetPath:String) -> {
 			var paths:Array<String> = new Array<String>();
 			for (resource in resources) {
 				if (resource.data == null) {
@@ -173,7 +179,8 @@ class FileUtil {
 		browseForDirectory(null, onSelectDir, onCancel, defaultPath, 'Choose directory to save all files to...');
 		return true;
 		#else
-		onCancel();
+		Logs.warn('saveMultipleFiles not implemented for this platform');
+		if (onCancel != null) onCancel();
 		return false;
 		#end
 	}
@@ -187,16 +194,15 @@ class FileUtil {
 	 */
 	public static function readBytesFromPath(path:String):Bytes {
 		#if sys
-		if (!FileSystem.exists(path)) return null;
 		return File.getBytes(path);
 		#else
-		return null;
+		throw 'Direct file reading by path is not supported on this platform.';
 		#end
 	}
 
 	/**
 	 * Browse for a file to read and execute a callback once we have a file reference.
-	 * Works great on native.
+	 * Works great on only desktop.
 	 *
 	 * @param	callback The function to call when the file is loaded.
 	 */
@@ -252,8 +258,10 @@ class FileUtil {
 			case Force: File.saveContent(path, data);
 			case Skip: if (!FileSystem.exists(path)) File.saveContent(path, data);
 			case Ask:
-				if (FileSystem.exists(path)) throw 'Entry at path already exists: $path'; // TODO: We don't have the technology to use native popups yet.
-				else File.saveContent(path, data);
+				if (FileSystem.exists(path)) {
+					// TODO: We don't have the technology to use native popups yet.
+					throw 'Entry at path already exists: $path';
+				} else File.saveContent(path, data);
 		}
 		#else
 		throw 'Direct file writing by path is not supported on this platform.';
@@ -271,15 +279,16 @@ class FileUtil {
 	public static function writeBytesToPath(path:String, data:Bytes, mode:FileWriteMode = Skip):Void {
 		#if sys
 		if (FileSystem.isDirectory(path)) throw 'Target path is a directory, not a file: "$path"';
-		createDirIfNotExists(Path.directory(path));
 
 		var shouldWrite:Bool = true;
 		switch (mode) {
 			case Force: shouldWrite = true;
 			case Skip: if (!FileSystem.exists(path)) shouldWrite = true;
 			case Ask:
-				if (FileSystem.exists(path)) throw 'Entry at path already exists: "$path"'; // TODO: We don't have the technology to use native popups yet.
-				else shouldWrite = true;
+				if (FileSystem.exists(path)) {
+					// TODO: We don't have the technology to use native popups yet.
+					throw 'Entry at path already exists: "$path"';
+				} else shouldWrite = true;
 		}
 
 		if (shouldWrite) {
@@ -304,7 +313,7 @@ class FileUtil {
 			writeStringToPath(path, data, Force);
 			return;
 		} else if (FileSystem.isDirectory(path)) throw 'Target path is a directory, not a file: "$path"';
-	
+
 		var output:Null<FileOutput> = null;
 		try {
 			output = File.append(path, false);
@@ -326,8 +335,42 @@ class FileUtil {
 	 * @param dir The path to the directory.
 	 */
 	public static function createDirIfNotExists(dir:String):Void {
+		if (!FileSystem.isDirectory(dir)) {
+			#if sys
+			FileSystem.createDirectory(dir);
+			#else
+			throw 'Directory creation is not supported on this platform.';
+			#end
+		}
+	}
+	/**
+	 * Get a directory's total size in bytes. Max representable size is ~2.147 GB.
+	 * Only works on native.
+	 *
+	 * @param path The path to the directory.
+	 * @return The total size of the directory in bytes.
+	 */
+	public static function getDirSize(path:String):Int {
 		#if sys
-		if (!FileSystem.isDirectory(dir)) FileSystem.createDirectory(dir);
+		if (!FileSystem.isDirectory(path)) throw 'Path is not a valid directory path: $path';
+
+		var stack:Array<String> = [path];
+		var total:Int = 0;
+		while (stack.length > 0) {
+			var currentPath:Null<String> = stack.pop();
+			if (currentPath == null) continue;
+
+			for (entry in readDir(currentPath)) {
+				var entryPath:String = Path.join([currentPath, entry]);
+				if (FileSystem.isDirectory(entryPath))
+					stack.push(entryPath);
+				else total += getFileSize(entryPath);
+			}
+		}
+
+		return total;
+		#else
+		throw 'Directory size calculation not supported on this platform.';
 		#end
 	}
 
@@ -338,7 +381,7 @@ class FileUtil {
 	 *
 	 * @return The path to the temporary directory.
 	 */
-	public static function getTempDir():String {
+	public static function getTempDir():Null<String> {
 		if (tempDir != null) return tempDir;
 		#if sys
 		#if windows
@@ -359,6 +402,60 @@ class FileUtil {
 		#end
 	}
 
+
+	/**
+	 * Runs platform-specific code to open a path in the file explorer.
+	 *
+	 * @param pathFolder The path of the folder to open.
+	 * @param createIfNotExists If `true`, creates the folder if missing; otherwise, throws an error.
+	 */
+	public static function openFolder(pathFolder:String, createIfNotExists:Bool = true):Void {
+		#if sys
+		pathFolder = pathFolder.trim();
+		if (createIfNotExists) {
+			createDirIfNotExists(pathFolder);
+		} else if (!FileSystem.isDirectory(pathFolder)) throw 'Path is not a directory: "$pathFolder"';
+
+		#if windows
+		Sys.command('explorer', [pathFolder.replace('/', '\\')]);
+		#elseif mac
+		// mac could be fuckie with where the log folder is relative to the game file...
+		// if this comment is still here... it means it has NOT been verified on mac yet!
+		//
+		// FileUtil.hx note: this was originally used to open the logs specifically!
+		// thats why the above comment is there!
+		Sys.command('open', [pathFolder]);
+		#elseif linux
+		// TODO: implement linux
+		// some shit with xdg-open :thinking: emoji...
+		#end
+		#else
+		throw 'External folder open is not supported on this platform.';
+		#end
+	}
+
+	/**
+	 * Runs platform-specific code to open a file explorer and select a specific file.
+	 *
+	 * @param path The path of the file to select.
+	 */
+	public static function openSelectFile(path:String):Void {
+		#if sys
+		path = path.trim();
+		if (!FileSystem.exists(path)) throw 'Path does not exist: "$path"';
+		#if windows
+		Sys.command('explorer', ['/select,', path.replace('/', '\\')]);
+		#elseif mac
+		Sys.command('open', ['-R', path]);
+		#elseif linux
+		// TODO: unsure of the linux equivalent to opening a folder and then "selecting" a file.
+		Sys.command('open', [path]);
+		#end
+		#else
+		throw 'External file selection is not supported on this platform.';
+		#end
+	}
+
 	public static function convertTypeFilter(?typeFilter:Array<FileFilter>):Null<String> {
 		var filter:Null<String> = null;
 		if (typeFilter != null) {
@@ -368,38 +465,6 @@ class FileUtil {
 		}
 		return filter;
 	}
-
-	public static function deleteDirectoryWithFiles(path:String) {
-		#if sys
-		if (FileSystem.exists(path) && FileSystem.isDirectory(path)) {
-			for (file in FileSystem.readDirectory(path)) {
-				var innerPath:String = FileSystem.fullPath(path + "/" + file).replace(#if windows "/", "\\" #else "\\", "/" #end);
-				if (FileSystem.isDirectory(innerPath)) deleteDirectoryWithFiles(innerPath);
-				else FileSystem.deleteFile(innerPath);
-			}
-			FileSystem.deleteDirectory(path);
-		}
-		#else
-		throw "Platform is not supported for FileUtil.deleteDirectoryWithFiles";
-		#end
-	}
-}
-
-enum FileWriteMode {
-	/**
-	 * Forcibly overwrite the file if it already exists.
-	 */
-	Force;
-
-	/**
-	 * Ask the user if they want to overwrite the file if it already exists.
-	 */
-	Ask;
-
-	/**
-	 * Skip the file if it already exists.
-	 */
-	Skip;
 }
 
 /**
@@ -458,4 +523,21 @@ class FileUtilSandboxed {
 		}
 		return false;
 	}
+}
+
+enum FileWriteMode {
+	/**
+	 * Forcibly overwrite the file if it already exists.
+	 */
+	Force;
+
+	/**
+	 * Ask the user if they want to overwrite the file if it already exists.
+	 */
+	Ask;
+
+	/**
+	 * Skip the file if it already exists.
+	 */
+	Skip;
 }

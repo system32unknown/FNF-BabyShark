@@ -3,6 +3,7 @@ package utils;
 /**
  * Utilities for performing math with bezier curves.
  */
+@:nullSafety
 class BezierUtil {
 	/**
 	 * Linearly interpolate between two values.

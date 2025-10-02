@@ -1,5 +1,10 @@
 package utils.tools;
 
+/**
+ * Contains code for sorting arrays using various algorithms.
+ * @see https://algs4.cs.princeton.edu/20sorting/
+ */
+@:nullSafety
 class ArraySortTools {
 	/**
 	 * Sorts the input array using the merge sort algorithm.
@@ -23,7 +28,7 @@ class ArraySortTools {
 	 * Not stable; relative order of equal elements is not preserved.
 	 *
 	 * @see https://stackoverflow.com/questions/33884057/quick-sort-stackoverflow-error-for-large-arrays
-	 *Fix for stack overflow issues.
+	 * Fix for stack overflow issues.
 	 * @param input The array to sort in-place.
 	 * @param compare The comparison function to use.
 	 */
@@ -130,8 +135,19 @@ class ArraySortTools {
 	 * @param val Value to add
 	 * @param getVal Function that returns the value that needs to be sorted
 	 */
-	public static inline function addSorted<T>(array:Array<T>, val:T, getVal:T->Float) {
+	public static inline function addSorted<T>(array:Array<T>, val:T, getVal:T->Float):Void {
 		if (val != null) array.insert(binarySearch(array, getVal(val), getVal), val);
+	}
+
+	/**
+	 * Removes from a sorted array, using binary search.
+	 * @param array Array to remove from
+	 * @param val Value to remove
+	 * @param getVal Function that returns the value that needs to be sorted
+	 */
+	public static inline function removeSorted<T>(array:Array<T>, val:T, getVal:T->Float):Void {
+		var index = binarySearch(array, getVal(val), getVal);
+		if (index != -1) array.splice(index, 1);
 	}
 
 	/**

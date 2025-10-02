@@ -1,5 +1,9 @@
 package utils;
 
+/**
+ * Utilities for performing mathematical operations.
+ */
+@:nullSafety
 class MathUtil {
 	/**
 	 * Rounds a floating-point number down to a specified number of decimal places.

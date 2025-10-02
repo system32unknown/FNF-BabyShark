@@ -3,6 +3,7 @@ package utils.tools;
 /**
  * A static extension which provides utility functions for Arrays.
  */
+@:nullSafety
 class ArrayTools {
 	/**
 	 * Return true only if both arrays contain the same elements (possibly in a different order).
@@ -58,5 +59,18 @@ class ArrayTools {
 			else result.push(e);
 		}
 		return result;
+	}
+
+	/**
+	 * Like `join` but adds a word before the last element.
+	 * @param array The array to join.
+	 * @param separator The separator to use between elements.
+	 * @param andWord The word to use before the last element.
+	 * @return The joined string.
+	 */
+	public static function joinPlural(array:Array<String>, separator:String = ', ', andWord:String = 'and'):String {
+		if (array.length == 0) return '';
+		if (array.length == 1) return array[0];
+		return '${array.slice(0, array.length - 1).join(separator)} $andWord ${array[array.length - 1]}';
 	}
 }

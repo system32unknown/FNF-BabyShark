@@ -7,7 +7,7 @@ class StringUtil {
 	 * @param digits Integer
 	 * @param code Integer (use fastCodeAt)
 	 */
-	public static function fillNumber(value:Float, digits:Int, code:Int):String {
+	inline public static function fillNumber(value:Float, digits:Int, code:Int):String {
 		var length:Int = Std.string(value).length;
 		var str:String = null;
 		var format:StringBuf = new StringBuf();
@@ -87,7 +87,7 @@ class StringUtil {
 	 * @param str The hexadecimal input.
 	 * @return The binary representation of the input string.
 	 */
-	public static function hex2bin(str:String):String {
+	inline public static function hex2bin(str:String):String {
 		var returnVal:String = "";
 		var tmpStr:String = "";
 		var hex:Int = 0;
@@ -106,7 +106,7 @@ class StringUtil {
 	 * @param digits The number of binary digits to return.
 	 * @return The binary representation of the input number.
 	 */
-	public static function dec2bin(int:Int, digits:Int):String {
+	inline public static function dec2bin(int:Int, digits:Int):String {
 		var str:String = "";
 		digits = FlxMath.minInt(digits, 32);
 
@@ -231,7 +231,7 @@ class StringUtil {
 		return arr;
 	}
 
-	public static function customNumberDelimiter(value:Dynamic, ?numFormat:Bool = false):String {
+	inline public static function customNumberDelimiter(value:Dynamic, ?numFormat:Bool = false):String {
 		if (!numFormat || value == null) return value;
 
 		var defined:String = null;
@@ -266,5 +266,14 @@ class StringUtil {
 			--pos;
 		}
 		return defined;
+	}
+
+	/**
+	 * Replaces in a string any kind of IP with `[Your IP]` making the string safer to trace.
+	 * @param msg String to check and edit
+	 * @return String Result without any kind of IP
+	 */
+	public static inline function removeIP(msg:String):String {
+		return ~/\d+.\d+.\d+.\d+/.replace(msg, "[Your IP]");
 	}
 }

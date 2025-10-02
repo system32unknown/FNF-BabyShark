@@ -37,11 +37,6 @@ to start you off, disabling Videos should be simple, simply Delete the line `"VI
 * WizardMantis441 - Programmer.
 * YoshiCrafter29 - Ex-Programmer.
 
-### Denpa Engine:
-* BlueVapor1234 - Main Programmer & Creator.
-* Toadette8394 - Co-Programmer.
-* YanniZ06 - Co-Programmer.
-
 ### Special Thanks:
 * Rudyrue - Programmer of Custom-Psych.
 * bbpanzu - Ex-Team Member (Programmer).

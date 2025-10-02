@@ -1,5 +1,6 @@
 package utils;
 
+@:nullSafety
 class EaseUtil {
 	public static function easeInOutCirc(x:Float):Float {
 		if (x <= 0.0) return 0.0;

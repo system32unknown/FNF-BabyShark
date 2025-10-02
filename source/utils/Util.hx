@@ -131,50 +131,6 @@ class Util {
 		#end
 	}
 
-	/**
-	 * Runs platform-specific code to open a path in the file explorer.
-	 *
-	 * @param pathFolder The path of the folder to open.
-	 * @param createIfNotExists If `true`, creates the folder if missing; otherwise, throws an error.
-	 */
-	public static function openFolder(pathFolder:String, createIfNotExists:Bool = true):Void {
-		#if sys
-		pathFolder = pathFolder.trim();
-		if (createIfNotExists) {
-			FileUtil.createDirIfNotExists(pathFolder);
-		} else if (!FileSystem.isDirectory(pathFolder)) throw 'Path is not a directory: "$pathFolder"';
-
-		#if windows
-		Sys.command('explorer', [pathFolder.replace('/', '\\')]);
-		#elseif mac
-		Sys.command('open', [pathFolder]);
-		#end
-		#else
-		throw 'External folder open is not supported on this platform.';
-		#end
-	}
-
-  	/**
-	 * Runs platform-specific code to open a file explorer and select a specific file.
-	 *
-	 * @param path The path of the file to select.
-	 */
-	public static function openSelectFile(path:String):Void {
-		#if sys
-		path = path.trim();
-		if (!FileSystem.exists(path)) throw 'Path does not exist: "$path"';
-		#if windows
-		Sys.command('explorer', ['/select,', path.replace('/', '\\')]);
-		#elseif mac
-		Sys.command('open', ['-R', path]);
-		#elseif linux
-		Sys.command('open', [path]); // TODO: unsure of the linux equivalent to opening a folder and then "selecting" a file.
-		#end
-		#else
-		throw 'External file selection is not supported on this platform.';
-		#end
-	}
-
 	@:access(flixel.util.FlxSave.validate)
 	inline public static function getSavePath():String {
 		return '${FlxG.stage.application.meta.get('company')}/${flixel.util.FlxSave.validate(FlxG.stage.application.meta.get('file'))}';

@@ -13,6 +13,7 @@ import thx.Dynamics.DynamicsT;
  * increment the minor version (1.x.0) if you make a new feature (but previous content is still compatible),
  * and increment the major version (x.0.0) if you make a breaking change (e.g. new API or reorganized file format).
  */
+@:nullSafety
 class VersionUtil {
 	/**
 	 * Checks that a given verison number satisisfies a given version rule.
@@ -24,12 +25,13 @@ class VersionUtil {
 	public static function validateVersion(version:Version, versionRule:VersionRule):Bool {
 		try {
 			return version.satisfies(versionRule);
-		} catch (e) {
-			trace('[VERSIONUTIL] Invalid semantic version: ${version}');
+		} catch (e:Dynamic) {
+			Logs.warn('[VERSIONUTIL] Invalid semantic version: ${version}');
 			return false;
 		}
 	}
 
+	@:nullSafety(Off)
 	public static function repairVersion(version:Version):Version {
 		var versionData:SemVer = version;
 
@@ -50,10 +52,11 @@ class VersionUtil {
 			versionData.pre = preDataFixed;
 
 			var fixedVersion:Version = versionData;
-			trace('[SAVE] Fixed version: $fixedVersion');
+			trace('[SAVE] Fixed version: ${fixedVersion}');
 			return fixedVersion;
 		} else {
 			trace('[SAVE] Version data repair not required (got $version)');
+			// No need for repair.
 			return version;
 		}
 	}
@@ -70,8 +73,8 @@ class VersionUtil {
 			var version:Version = version;
 			var versionRule:VersionRule = versionRule;
 			return version.satisfies(versionRule);
-		} catch (e) {
-			trace('[VERSIONUTIL] Invalid semantic version: $version');
+		} catch (e:Dynamic) {
+			Logs.warn('[VERSIONUTIL] Invalid semantic version: $version');
 			return false;
 		}
 	}
@@ -98,7 +101,7 @@ class VersionUtil {
 	 * @param input The JSON string to parse.
 	 * @return The semantic version, or null if it could not be parsed.
 	 */
-	public static function parseVersion(input:Dynamic):Null<Version> {
+	public static function parseVersion(input:Null<Dynamic>):Null<Version> {
 		if (input == null) return null;
 
 		if (Std.isOfType(input, String)) {

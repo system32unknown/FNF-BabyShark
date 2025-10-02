@@ -32,6 +32,7 @@ class AdditionalClasses {
 			// OTHER LIBRARIES & STUFF
 			#if cpp "cpp", #end
 			#if sys "sys", #end
+			"json2object",
 			// BASE PATH LIBRARIES THAT DOESN'T INCLUDE
 			"backend", "shaders", "objects", "utils",
 			// BASE HAXE
