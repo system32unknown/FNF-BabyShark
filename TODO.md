@@ -2,7 +2,6 @@
 
 ### Future versions
 - [ ] Remake Character / New Characters
-- [ ] New Main Menu / Freeplay Menu / Options Menu
 - [ ] Some Songs / Charts
 - [ ] Get Character Vocals
     - [ ] Baby Shark Ollie (5 Various)
@@ -15,14 +14,23 @@
     - [ ] Chucks
     - [ ] Shadow
     - [ ] Chichi
-- [ ] New Credit Menu (Social Links)
-- [ ] Terminal and Character Selection Rework
 - [ ] Fix Pixel Note Offset X
+
+### Planned Content
+- [ ] Rewrite Some Menus
+    - [ ] Main Menu
+    - [ ] PlayState
+    - [ ] Terminal (Ubuntu Terminal Style)
+    - [ ] Character Selection
+    - [ ] Credits Menu
+    - [ ] Option Menu
+- [ ] Rewrite Objects
+    - [ ] Note and Strum Note
+    - [ ] Credits PopUp
 
 ### Characters List
 - [ ] Stariana
 - [ ] Rayna
 - [ ] Sharki L
-- [ ] ENHYPEN
 - [ ] Ersky Shark, Miku Shark, Kassie Shark
 - [ ] Pinkfong and Hogi

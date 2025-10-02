@@ -1,9 +1,6 @@
-package states;
+package scripting;
 
-import scripting.HScript;
-import scripting.ScriptUtils;
 import alterhscript.AlterHscript;
-
 class HscriptState extends MusicBeatState {
 	public var hscript:HScript;
 	public static var instance:HscriptState;

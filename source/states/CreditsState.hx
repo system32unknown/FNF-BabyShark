@@ -3,6 +3,7 @@ package states;
 import objects.AttachedSprite;
 import utils.FlxInterpolateColor;
 
+// TODO: REWRITE CREDITS MENU.
 class CreditsState extends MusicBeatState {
 	// Title, Variable, Description, Color
 	static var titles(default, never):Array<Array<String>> = [
@@ -59,7 +60,7 @@ class CreditsState extends MusicBeatState {
 		['Vs Dave and Bambi Team'],
 		['MoldyGH',				'MoldyGH',			'Creator / Main Dev',											'https://x.com/moldy_gh',			'FF2626'],
 		['MTM101',				'MTM10',			'Secondary Dev',												'https://x.com/OfficialMTM101',		'FF00FF'],
-		['rapparep lol',		'rapparep',			'Main Artist',													'https://x.com/rappareplol',		'FF0000'],
+		['Rapparep lol',		'rapparep',			'Main Artist',													'https://x.com/rappareplol',		'FF0000'],
 		['TheBuilderXD',		'TheBuilderXD',		'Page Manager, Tristan Sprite Creator, and more',				'https://x.com/TheBuilderXD',		'CC6600'],
 		['Erizur',				'Erizur',			'Programmer, Week Icon Artist',									'https://x.com/am_erizur',			'FFFFFF'],
 		['Pointy',				'pointy',			'Artist & Charter',												'https://x.com/PointyyESM',			'0700FE'], 

@@ -1,9 +1,6 @@
-package substates;
+package scripting;
 
-import scripting.HScript;
-import scripting.ScriptUtils;
 import alterhscript.AlterHscript;
-
 class HscriptSubstate extends MusicBeatSubstate {
 	public var hscript:HScript;
 
