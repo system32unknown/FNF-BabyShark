@@ -360,10 +360,9 @@ class FileUtil {
 			var currentPath:Null<String> = stack.pop();
 			if (currentPath == null) continue;
 
-			for (entry in readDir(currentPath)) {
+			for (entry in FileSystem.readDirectory(currentPath)) {
 				var entryPath:String = Path.join([currentPath, entry]);
-				if (FileSystem.isDirectory(entryPath))
-					stack.push(entryPath);
+				if (FileSystem.isDirectory(entryPath)) stack.push(entryPath);
 				else total += getFileSize(entryPath);
 			}
 		}
