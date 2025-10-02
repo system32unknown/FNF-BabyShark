@@ -363,7 +363,7 @@ class FileUtil {
 			for (entry in FileSystem.readDirectory(currentPath)) {
 				var entryPath:String = Path.join([currentPath, entry]);
 				if (FileSystem.isDirectory(entryPath)) stack.push(entryPath);
-				else total += getFileSize(entryPath);
+				else total += FileSystem.stat(entryPath).size;
 			}
 		}
 
