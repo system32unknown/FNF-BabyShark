@@ -226,7 +226,7 @@ class HScript extends AlterHscript {
 		set("openState", (name:String) -> {
 			FlxG.sound.music?.stop();
 			var hxFile:String = Paths.getPath('scripts/states/$name.hx');
-			if (FileSystem.exists(hxFile)) FlxG.switchState(() -> new states.HscriptState(hxFile));
+			if (FileSystem.exists(hxFile)) FlxG.switchState(() -> new HscriptState(hxFile));
 			else {
 				try {
 					final rawClass:Class<Dynamic> = Type.resolveClass(name);
@@ -240,7 +240,7 @@ class HScript extends AlterHscript {
 		});
 		set("openSubState", (name:String, args:Array<Dynamic>) -> {
 			var hxFile:String = Paths.getPath('scripts/substates/$name.hx');
-			if (FileSystem.exists(hxFile)) FlxG.state.openSubState(new substates.HscriptSubstate(hxFile, args));
+			if (FileSystem.exists(hxFile)) FlxG.state.openSubState(new HscriptSubstate(hxFile, args));
 			else {
 				try {
 					final rawClass:Class<Dynamic> = Type.resolveClass(name);

@@ -26,7 +26,7 @@ class VersionUtil {
 		try {
 			return version.satisfies(versionRule);
 		} catch (e:Dynamic) {
-			Logs.warn('[VERSIONUTIL] Invalid semantic version: ${version}');
+			Logs.warn('[VERSIONUTIL] Invalid semantic version: $version');
 			return false;
 		}
 	}
@@ -52,12 +52,11 @@ class VersionUtil {
 			versionData.pre = preDataFixed;
 
 			var fixedVersion:Version = versionData;
-			trace('[SAVE] Fixed version: ${fixedVersion}');
+			trace('[SAVE] Fixed version: $fixedVersion');
 			return fixedVersion;
 		} else {
 			trace('[SAVE] Version data repair not required (got $version)');
-			// No need for repair.
-			return version;
+			return version; // No need for repair.
 		}
 	}
 

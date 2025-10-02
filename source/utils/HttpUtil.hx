@@ -98,9 +98,10 @@ final class HttpUtil {
 		}
 	}
 
-	public static function hasInternet():Bool {
+	public static var isOnline(get, never):Bool;
+	public static function get_isOnline():Bool {
 		try {
-			var r:String = requestText("https://www.google.com/");
+			requestText("https://www.google.com/");
 			return true;
 		} catch (e:HttpError) {
 			Logs.warn('[HttpUtil.hasInternet] Failed: ${e.toString()}');

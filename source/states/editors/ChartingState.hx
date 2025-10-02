@@ -1133,7 +1133,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 							'\n\nSection: $curSec' +
 							'\nBeat: $curBeat' +
 							'\nStep: $curStep' +
-							'\n\nBeat Snap: ${curQuant} / 16' +
+							'\n\nBeat Snap: $curQuant / 16' +
 							'\nSelected: ${selectedNotes.length}' +
 							'\n\nRendered Notes: ' + FlxStringUtil.formatMoney(Math.abs(curRenderedNotes.length + behindRenderedNotes.length), false);
 
