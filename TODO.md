@@ -27,6 +27,7 @@
 - [ ] Rewrite Objects
     - [ ] Note and Strum Note
     - [ ] Credits PopUp
+- [ ] New Conductor
 
 ### Characters List
 - [ ] Stariana
