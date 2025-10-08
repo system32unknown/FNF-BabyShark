@@ -166,7 +166,7 @@ class PlatformUtil {
 		std::cout << "" << std::flush;
 	')
 	#end
-	public static function clearScreen() {}
+	public static function clearScreen():Void {}
 
 	/**
 	 * Enables or disables dark mode support for the title bar.

@@ -4,8 +4,9 @@ import flixel.FlxObject;
 
 // its kinda like marqeee html lol!
 @:nullSafety
-class ScrollingText extends FlxSpriteGroup {
-	var grpTexts:FlxTypedSpriteGroup<FlxText>;
+class BGScrollingText extends FlxSpriteGroup {
+	var grpTexts:FlxTypedSpriteGroup<FlxSprite>;
+	var sourceText:FlxText;
 
 	public var widthShit:Float = FlxG.width;
 	public var placementOffset:Float = 20;
@@ -13,43 +14,56 @@ class ScrollingText extends FlxSpriteGroup {
 	public var size(default, set):Int = 48;
 	public var font:String = "";
 
-	public var funnyColor(default, set):Int = 0xFFFFFFFF;
+	public var funnyColor(default, set):FlxColor = 0xFFFFFFFF;
 
 	public function new(x:Float, y:Float, text:String, widthShit:Float = 100, ?bold:Bool = false, ?size:Int = 48) {
 		super(x, y);
 
-		grpTexts = new FlxTypedSpriteGroup<FlxText>();
-		add(grpTexts);
+		grpTexts = new FlxTypedSpriteGroup<FlxSprite>();
 
 		this.widthShit = widthShit;
+
+		// Only keep one FlxText graphic at a time for batching
+		sourceText = new FlxText(0, 0, 0, text, size ?? this.size);
+		sourceText.font = font;
+		sourceText.bold = bold ?? false;
+
+		@:privateAccess
+		sourceText.regenGraphic();
+
+		for (i in 0...Math.ceil(widthShit / sourceText.frameWidth) + 1) {
+			var coolText:FlxSprite = new FlxSprite((i * sourceText.frameWidth) + (i * 20), 0);
+			grpTexts.add(coolText);
+		}
+
 		if (size != null) this.size = size;
 
-		var testText:FlxText = new FlxText(0, 0, 0, text, this.size);
-		testText.font = font;
-		testText.bold = bold ?? false;
-		testText.updateHitbox();
-		grpTexts.add(testText);
+		add(grpTexts);
+	}
 
-		for (i in 0...Math.ceil(widthShit / testText.frameWidth) + 1) {
-			var lmfao:Int = i + 1;
-
-			var coolText:FlxText = new FlxText((lmfao * testText.frameWidth) + (lmfao * 20), 0, 0, text, this.size);
-			coolText.font = font;
-			coolText.bold = bold ?? false;
-			coolText.updateHitbox();
-			grpTexts.add(coolText);
+	function reloadGraphics() {
+		if (grpTexts != null) {
+			@:privateAccess
+			sourceText.regenGraphic();
+			grpTexts.forEach((txt:FlxSprite) -> {
+				txt.loadGraphic(sourceText.graphic);
+				txt.updateHitbox();
+			});
 		}
 	}
 
 	function set_size(value:Int):Int {
-		if (grpTexts != null) grpTexts.forEach((txt:FlxText) -> txt.size = value);
+		sourceText.size = value;
+		reloadGraphics();
 		this.size = value;
 		return value;
 	}
 
-	function set_funnyColor(col:Int):Int {
-		grpTexts.forEach((txt:FlxText) -> txt.color = col);
-		return col;
+	function set_funnyColor(value:FlxColor):FlxColor {
+		sourceText.color = value;
+		reloadGraphics();
+		this.funnyColor = value;
+		return value;
 	}
 
 	override public function update(elapsed:Float) {
@@ -75,5 +89,10 @@ class ScrollingText extends FlxSpriteGroup {
 
 	function sortTextShit():Void {
 		grpTexts.sort((Order:Int, Obj1:FlxObject, Obj2:FlxObject) -> return flixel.util.FlxSort.byValues(Order, Obj1.x, Obj2.x));
+	}
+
+	override public function destroy():Void {
+		super.destroy();
+		sourceText = flixel.util.FlxDestroyUtil.destroy(sourceText);
 	}
 }

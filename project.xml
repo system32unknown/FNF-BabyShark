@@ -60,6 +60,7 @@
 	<haxelib name="flxanimate" />
 	<haxelib name="hscript-improved" />
 	<haxelib name="tjson" />
+	<haxelib name="json2object" />
 
 	<haxelib name="hxvlc" if="VIDEOS_ALLOWED" />
 	<haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED" />

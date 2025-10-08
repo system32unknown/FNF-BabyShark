@@ -15,6 +15,7 @@
 	<lib name="hxvlc" url="https://github.com/MAJigsaw77/hxvlc" skipDeps="true"/>
 	<lib name="tjson"/>
 	<lib name="parallaxlt"/>
+	<git name="json2object" url="https://github.com/FunkinCrew/json2object"/>
 
 	<!-- Audio Visualizers -->
 	<git name="funkin.vis" url="https://github.com/FunkinCrew/funkVis"/>
