@@ -11,7 +11,7 @@ import openfl.events.IOErrorEvent;
 /**
  * Utilities for reading and writing files on various platforms.
  */
- @:nullSafety
+@:nullSafety
 class FileUtil {
 	/**
 	 * Paths which should not be deleted or modified by scripts.

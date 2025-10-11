@@ -32,6 +32,7 @@ import hl.Gc;
  * @see https://github.com/HaxeFoundation/hxcpp/blob/master/docs/build_xml/Defines.md
  * @see cpp.vm.Gc
  */
+@:nullSafety
 class MemoryUtil {
 	/**
 	 * Flag indicating whether the garbage collector is enabled.
