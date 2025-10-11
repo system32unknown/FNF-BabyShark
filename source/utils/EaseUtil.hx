@@ -35,8 +35,25 @@ class EaseUtil {
 	 * @return Float->Float
 	 */
 	public static inline function stepped(steps:Int):Float->Float {
-		return function(t:Float):Float {
+		return (t:Float) -> {
 			return Math.floor(t * steps) / steps;
+		}
+	}
+
+	/**
+	 * Combines multiple easing functions into one composite function.
+	 * The resulting ease will blend the given array of easing functions sequentially.
+	 * @param eases An array of easing functions to combine.
+	 * @return A combined Float->Float, or null if no eases were provided.
+	 */
+	public static function easeCombine(eases:Array<Float->Float>):Null<Float->Float> {
+		if(eases.length < 1) return null;
+
+		return (v:Float) -> {
+			if(v * eases.length >= eases.length) return v;
+			var index:Int = Math.floor(v * eases.length);
+			v = (index / eases.length) + (eases[index]((v - (index / eases.length)) * eases.length) / eases.length);
+			return v;
 		}
 	}
 }

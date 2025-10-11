@@ -27,7 +27,7 @@ class MainMenuState extends MusicBeatState {
 		'credits'
 	];
 
-	var leftOption:String = #if AWARDS_ALLOWED 'achievements' #else null #end;
+	var leftOption:String = #if AWARDS_ALLOWED 'awards' #else null #end;
 	var rightOption:String = 'options';
 
 	var magenta:FlxSprite;
@@ -241,7 +241,7 @@ class MainMenuState extends MusicBeatState {
 					case 'story_mode': FlxG.switchState(() -> new StoryMenuState());
 					case 'freeplay': FlxG.switchState(() -> new FreeplayState());
 					#if MODS_ALLOWED case 'mods': FlxG.switchState(() -> new ModsMenuState()); #end
-					#if AWARDS_ALLOWED case 'achievements': FlxG.switchState(() -> new AchievementsMenuState()); #end
+					#if AWARDS_ALLOWED case 'awards': FlxG.switchState(() -> new AwardsState()); #end
 					case 'credits': FlxG.switchState(() -> new CreditsState());
 					case 'options':
 						FlxG.switchState(() -> new OptionsState());

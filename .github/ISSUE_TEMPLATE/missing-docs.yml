@@ -5,6 +5,6 @@ body:
   - type: textarea
     attributes:
       label: What needs to be documented?
-      description: 'For example: "There is no page explaining how to create an Achievement!"'
+      description: 'For example: "There is no page explaining how to create an Awards!"'
     validations:
       required: true

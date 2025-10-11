@@ -72,7 +72,7 @@ function onSongStart() {
 }
 
 function onEndSong() {
-	// Song ended/starting transition (Will be delayed if you're unlocking an achievement)
+	// Song ended/starting transition (Will be delayed if you're unlocking an award)
 	// return Function_Stop to stop the song from ending for playing a cutscene or something.
 	return Function_Continue;
 }

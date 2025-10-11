@@ -16,12 +16,16 @@
     - [ ] Chichi
 - [ ] Fix Pixel Note Offset X
 
-### Planned Content
-- [ ] Rewrite Some Menus
+### Planned Contents
+- [ ] Change Some Menus
+    - [ ] Title
     - [ ] Main Menu
     - [ ] PlayState
     - [ ] Terminal (Ubuntu Terminal Style)
     - [ ] Character Selection
+    - [ ] Mods Menu
+    - [ ] Freeplay Menu
+    - [ ] Awards Menu
     - [ ] Credits Menu
     - [ ] Option Menu
 - [ ] Rewrite Objects

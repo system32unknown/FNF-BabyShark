@@ -1,6 +1,7 @@
 package objects;
 
 import shaders.RGBPalette.RGBShaderReference;
+import flixel.math.FlxAngle;
 
 class StrumNote extends FlxSprite {
 	public var rgbShader:RGBShaderReference;
@@ -14,8 +15,8 @@ class StrumNote extends FlxSprite {
 	var _dirSin:Float;
 	var _dirCos:Float;
 	function set_direction(_fDir:Float):Float {
-		_dirSin = Math.sin(_fDir * .01745329251);
-		_dirCos = Math.cos(_fDir * .01745329251);
+		_dirSin = Math.sin(FlxAngle.asRadians(_fDir));
+		_dirCos = Math.cos(FlxAngle.asRadians(_fDir));
 
 		return direction = _fDir;
 	}

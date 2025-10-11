@@ -522,6 +522,34 @@ class FileUtilSandboxed {
 		}
 		return false;
 	}
+
+	public static function readBytesFromPath(path:String):Bytes {
+		return FileUtil.readBytesFromPath(sanitizePath(path));
+	}
+	public static function writeStringToPath(path:String, data:String, mode:FileWriteMode = Skip):Void {
+		if (isProtected(path = sanitizePath(path), false)) throw 'Cannot write to protected path: $path';
+		FileUtil.writeStringToPath(path, data, mode);
+	}
+	public static function writeBytesToPath(path:String, data:Bytes, mode:FileWriteMode = Skip):Void {
+		if (isProtected(path = sanitizePath(path), false)) throw 'Cannot write to protected path: $path';
+		FileUtil.writeBytesToPath(path, data, mode);
+	}
+	public static function appendStringToPath(path:String, data:String):Void {
+		if (isProtected(path = sanitizePath(path), false)) throw 'Cannot write to protected path: $path';
+		FileUtil.appendStringToPath(path, data);
+	}
+	public static function getDirSize(path:String):Int {
+		return FileUtil.getDirSize(sanitizePath(path));
+	}
+	public static function createDirIfNotExists(dir:String):Void {
+		FileUtil.createDirIfNotExists(sanitizePath(dir));
+	}
+	public static function openFolder(pathFolder:String, createIfNotExists:Bool = true):Void {
+		FileUtil.openFolder(sanitizePath(pathFolder), createIfNotExists);
+	}
+	public static function openSelectFile(path:String):Void {
+		FileUtil.openSelectFile(sanitizePath(path));
+	}
 }
 
 enum FileWriteMode {
