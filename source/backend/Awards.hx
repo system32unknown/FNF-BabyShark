@@ -118,6 +118,13 @@ class Awards {
 	public static function exists(name:String):Bool return list.exists(name);
 	public static function get(name:String):Award return list[name];
 
+	@:allow(states.AwardsState)
+	@:unreflective
+	static function remove(name:String):Void {
+		_unlocked.remove(name);
+		_scores.remove(name);
+	}
+
 	// Map sorting cuz haxe is physically incapable of doing that by itself
 	static var _sortID:Int = 0;
 	static var _originalLength:Int = -1;

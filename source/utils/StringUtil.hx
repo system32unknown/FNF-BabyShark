@@ -268,6 +268,19 @@ class StringUtil {
 		return defined;
 	}
 
+	inline public static function floatToStringPrecision(n:Float, prec:Int):String {
+		n = Math.round(n * Math.pow(10, prec));
+		var str:String = '' + n;
+		var len:Int = str.length;
+		if (len <= prec) {
+			while (len < prec) {
+				str = '0' + str;
+				len++;
+			}
+			return '0.' + str;
+		} else return str.substr(0, str.length - prec) + '.' + str.substr(str.length - prec);
+	}
+
 	/**
 	 * Replaces in a string any kind of IP with `[Your IP]` making the string safer to trace.
 	 * @param msg String to check and edit

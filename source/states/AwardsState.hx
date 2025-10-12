@@ -256,6 +256,7 @@ class ResetAwardSubstate extends MusicBeatSubstate {
 				var state:AwardsState = cast FlxG.state;
 				var option:Dynamic = state.options[state.curSelected];
 
+				Awards.remove(option.name);
 				option.unlocked = false;
 				option.curProgress = 0;
 				option.name = state.nameTxt.text = '???';
@@ -264,7 +265,7 @@ class ResetAwardSubstate extends MusicBeatSubstate {
 				state.grpAwards.members[state.curSelected].antialiasing = Settings.data.antialiasing;
 				state.progressBar.percent = 0;
 
-				Awards.reset(true);
+				Awards.save();
 
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 			}

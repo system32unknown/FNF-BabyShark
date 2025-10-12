@@ -122,10 +122,10 @@ class FreeplayState extends MusicBeatState {
 
 		add(scoreText);
 
-		add(diffText = new FlxText(scoreText.x, 0, 0, ''));
+		add(diffText = new FlxText(scoreText.x, 0, 0, '', 24));
 		diffText.y = scoreBG.height - diffText.height + 10;
 		diffText.font = scoreText.font;
-		add(comboText = new FlxText(scoreText.x, scoreBG.height / 2 - 6, 0, ""));
+		add(comboText = new FlxText(scoreText.x, scoreBG.height / 2 - 6, 0, '', 24));
 		comboText.font = diffText.font;
 
 		missingTextBG = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
