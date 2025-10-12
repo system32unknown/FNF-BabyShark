@@ -259,7 +259,7 @@ class EditorPlayState extends MusicBeatSubstate {
 
 	function startSong():Void {
 		startingSong = false;
-		@:privateAccess inst.loadEmbedded(FlxG.sound.music._sound);
+		@:privateAccess inst.load(FlxG.sound.music._sound);
 		inst.looped = false;
 		inst.onFinish.add(finishSong);
 		inst.volume = vocals.volume = 1;

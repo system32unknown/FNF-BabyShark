@@ -85,7 +85,6 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		option.scrollSpeed = 30;
 		option.minValue = 0;
 		option.maxValue = 15;
-		option.changeValue = 1;
 		addOption(option);
 		option.onChange = playNoteSplashes;
 

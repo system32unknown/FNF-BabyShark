@@ -74,7 +74,7 @@ class Conductor {
 		var curSteps:Int = 0;
 		var curTime:Float = 0.0;
 
-		for (i => section in song.notes) {
+		for (_ => section in song.notes) {
 			if (section.changeBPM && section.bpm != curBPM) {
 				curBPM = section.bpm;
 				bpmChanges.push({

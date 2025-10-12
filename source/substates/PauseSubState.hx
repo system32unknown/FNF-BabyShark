@@ -50,7 +50,7 @@ class PauseSubState extends MusicBeatSubstate {
 		pauseMusic = new FlxSound();
 		try {
 			var pauseSong:String = getPauseSong();
-			if (pauseSong != null) pauseMusic.loadEmbedded(Paths.music(pauseSong), true, true);
+			if (pauseSong != null) pauseMusic.load(Paths.music(pauseSong), true, true);
 		} catch (e:Dynamic) Logs.error('ERROR PAUSE MUSIC ON LOAD: $e');
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));

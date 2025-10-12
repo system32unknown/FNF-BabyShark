@@ -4,6 +4,9 @@ import utils.MathUtil;
 class GameplaySettingsSubState extends BaseOptionsMenu {
 	var stepRate:Option;
 	var ghostRate:Option;
+	var hitVolume:Option;
+	var rateHold:Float;
+
 	public static final defaultBPM:Float = 15;
 	public function new() {
 		title = Language.getPhrase('gameplay_menu', 'Gameplay Settings');
@@ -38,9 +41,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.changeValue = .001;
 		option.decimals = 3;
 		addOption(option);
-		option.onChange = () -> {
-			ghostRate.scrollSpeed = MathUtil.interpolate(.1, 1000., (holdTime - .5) / 8., 5.);
-		};
+		option.onChange = () -> ghostRate.scrollSpeed = MathUtil.interpolate(.1, 1000., (holdTime - .5) / 8., 5.);
 		ghostRate = option;
 
 		var option:Option = new Option('Auto Pause', "If checked, the game automatically pauses if the screen isn't on focus.", 'autoPause');
@@ -57,11 +58,13 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 
 		var option:Option = new Option('Hitsound Volume', 'Funny notes do a \"Tick!\" when you hit them.', 'hitsoundVolume', PERCENT);
 		addOption(option);
-		option.scrollSpeed = 1.6;
+		option.scrollSpeed = 1;
 		option.minValue = .0;
 		option.maxValue = 1;
-		option.changeValue = .1;
+		option.changeValue = .01;
+		option.decimals = 2;
 		option.onChange = onChangeHitsoundVolume;
+		hitVolume = option;
 
 		var option:Option = new Option('Rating Offset', 'Changes how late/early you have to hit for a "Sick!"\nHigher values mean you have to hit later.', 'ratingOffset', INT);
 		option.displayFormat = '%vms';
@@ -108,5 +111,10 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		super();
 	}
 
-	function onChangeHitsoundVolume() FlxG.sound.play(Paths.sound('hitsounds/${Std.string(Settings.data.hitsoundTypes).toLowerCase()}'), Settings.data.hitsoundVolume);
+	function onChangeHitsoundVolume():Void {
+		if (holdTime - rateHold > .05 || holdTime <= .5) {
+			rateHold = holdTime;
+			FlxG.sound.play(Paths.sound('hitsounds/${Std.string(Settings.data.hitsoundTypes).toLowerCase()}'), hitVolume.getValue());
+		}
+	}
 }

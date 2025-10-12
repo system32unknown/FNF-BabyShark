@@ -353,14 +353,14 @@ class GameplayOption {
 		}
 	}
 
-	public function change() {
+	public function change():Void {
 		if (onChange != null) onChange();
 	}
 
 	public function getValue():Dynamic return Settings.data.gameplaySettings.get(variable);
-	public function setValue(value:Dynamic) Settings.data.gameplaySettings.set(variable, value);
+	public function setValue(value:Dynamic):Void Settings.data.gameplaySettings.set(variable, value);
 
-	public function setChild(child:Alphabet)
+	public function setChild(child:Alphabet):Void
 		this.child = child;
 
 	var _name:String = null;

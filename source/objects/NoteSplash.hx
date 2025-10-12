@@ -58,7 +58,7 @@ class NoteSplash extends FlxSprite {
 		config = null;
 		maxAnims = 0;
 
-		if(splash == null || splash.length < 1) {
+		if (splash == null || splash.length < 1) {
 			splash = defaultNoteSplash + getSplashSkinPostfix();
 			if (PlayState.SONG != null && PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) splash = PlayState.SONG.splashSkin;
 		}

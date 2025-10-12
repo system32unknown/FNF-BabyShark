@@ -1460,7 +1460,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		@:privateAccess vocals.cleanup(true);
 		if (PlayState.SONG.needsVoices) {
 			try {
-				vocals.loadEmbedded(Paths.voices(PlayState.SONG.song));
+				vocals.load(Paths.voices(PlayState.SONG.song));
 				vocals.volume = 0;
 				vocals.play();
 				vocals.pause();
@@ -2916,7 +2916,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			upperBox.bg.visible = false;
 
 			saveChart(false);
-		},btnWid);
+		}, btnWid);
 		btn.text.alignment = LEFT;
 		tab_group.add(btn);
 

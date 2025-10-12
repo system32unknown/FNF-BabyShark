@@ -6,7 +6,7 @@ class PhillyTrain extends BGSprite {
 		super(image, x, y);
 		active = true; // Allow update
 
-		this.sound = new FlxSound().loadEmbedded(Paths.sound(sound));
+		this.sound = new FlxSound().load(Paths.sound(sound));
 		FlxG.sound.list.add(this.sound);
 	}
 

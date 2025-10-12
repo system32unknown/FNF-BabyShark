@@ -943,12 +943,12 @@ class PlayState extends MusicBeatState {
 		Conductor.bpm = songData.bpm;
 
 		vocals = new FlxSound();
-		try {if (SONG.needsVoices) vocals.loadEmbedded(Paths.voices(SONG.song));} catch (e:Dynamic) {}
+		try {if (SONG.needsVoices) vocals.load(Paths.voices(SONG.song));} catch (e:Dynamic) {}
 		vocals.pitch = playbackRate;
 		FlxG.sound.list.add(vocals);
 
 		inst = new FlxSound();
-		try {inst.loadEmbedded(Paths.inst(songData.song));} catch (e:Dynamic) {}
+		try {inst.load(Paths.inst(songData.song));} catch (e:Dynamic) {}
 		FlxG.sound.list.add(inst);
 
 		noteGroup.add(notes = new FlxTypedGroup<Note>());

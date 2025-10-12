@@ -89,7 +89,7 @@ class GameOverSubstate extends MusicBeatSubstate {
 
 		PlayState.instance.setOnHScript('inGameOver', true);
 		PlayState.instance.callOnHScript('onGameOverStart');
-		FlxG.sound.music.loadEmbedded(Paths.music(loopSoundName), true);
+		FlxG.sound.music.load(Paths.music(loopSoundName), true);
 
 		super.create();
 	}

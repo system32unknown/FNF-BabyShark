@@ -107,7 +107,7 @@ class NoteOffsetState extends MusicBeatState {
 			comboNums.add(numScore);
 		}
 
-		timeTxt = new FlxText(0, 600, FlxG.width, "", 32);
+		timeTxt = new FlxText(0, 600, FlxG.width, "");
 		timeTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		timeTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		timeTxt.scrollFactor.set();

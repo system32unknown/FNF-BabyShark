@@ -86,7 +86,7 @@ class Option {
 		} catch (e:Dynamic) {}
 	}
 
-	public function change() {
+	public function change():Void {
 		onChange();
 	}
 
@@ -96,7 +96,7 @@ class Option {
 		return value;
 	}
 
-	dynamic public function setValue(value:Dynamic) {
+	dynamic public function setValue(value:Dynamic):Void {
 		if (type == KEYBIND) {
 			var keys:Dynamic = Reflect.getProperty(Settings.data, variable);
 			keys.keyboard = value;

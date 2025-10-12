@@ -47,10 +47,10 @@ class EaseUtil {
 	 * @return A combined Float->Float, or null if no eases were provided.
 	 */
 	public static function easeCombine(eases:Array<Float->Float>):Null<Float->Float> {
-		if(eases.length < 1) return null;
+		if (eases.length < 1) return null;
 
 		return (v:Float) -> {
-			if(v * eases.length >= eases.length) return v;
+			if (v * eases.length >= eases.length) return v;
 			var index:Int = Math.floor(v * eases.length);
 			v = (index / eases.length) + (eases[index]((v - (index / eases.length)) * eases.length) / eases.length);
 			return v;
