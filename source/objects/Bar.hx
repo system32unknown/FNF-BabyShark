@@ -41,8 +41,9 @@ class Bar extends FlxSpriteGroup {
 
 		bg = new FlxSprite(Paths.image(image));
 		bg.setPosition(bg.x, bg.y);
-		barWidth = Std.int(bg.width - 6);
-		barHeight = Std.int(bg.height - 6);
+
+		@:bypassAccessor barWidth = Std.int(bg.width - 6);
+		@:bypassAccessor barHeight = Std.int(bg.height - 6);
 
 		leftBar = new FlxSprite().makeGraphic(Std.int(bg.width), Std.int(bg.height));
 		rightBar = new FlxSprite().makeGraphic(Std.int(bg.width), Std.int(bg.height));
@@ -76,7 +77,6 @@ class Bar extends FlxSpriteGroup {
 	}
 
 	override public function destroy() {
-		bounds = null;
 		barOffset.put();
 		super.destroy();
 	}
@@ -93,8 +93,8 @@ class Bar extends FlxSpriteGroup {
 	public function updateBar() {
 		if (leftBar == null || rightBar == null) return;
 
-		leftBar.setPosition(bg.x - bgOffset.x, bg.y - bgOffset.y);
-		rightBar.setPosition(bg.x - bgOffset.x, bg.y - bgOffset.y);
+		leftBar.setPosition(bg.x, bg.y);
+		rightBar.setPosition(bg.x, bg.y);
 
 		final leftSize:Float = FlxMath.lerp(0, barWidth, (leftToRight ? percent / 100 : 1 - percent / 100));
 
