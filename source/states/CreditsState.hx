@@ -37,15 +37,15 @@ class CreditsState extends MusicBeatState {
 		['UncertainProd',		'prod',				'Sampler2D in Runtime Shaders',									'https://github.com/UncertainProd',	'D2D2D2'],
 		['ACrazyTown',			'acrazytown',		'Optimized PNGs',												'https://x.com/acrazytown',			'A03E3D'],
 		['CheemsAndFriends', 	'cheems', 			'Creator of FlxAnimate', 										'https://x.com/CheemsnFriendos', 	'E1E1E1'],
-		["Itz_Miles", 			'miles', 			'Linear GFX Transformations Library (ParallaxLT)', 				'https://x.com/Itz_MilesDev', 		'7AAAFE'],
+		['Itz_Miles', 			'miles', 			'Linear GFX Transformations Library (ParallaxLT)', 				'https://x.com/Itz_MilesDev', 		'7AAAFE'],
 		[''],
 		['Extra Keys Team'],
 		['Magman03k7', 			'magman',			'Main Programmer of Psych Engine EK', 							'https://github.com/Magman03k7', 	'B9AF27'],
 		['SrPerez', 			'perez', 			'1-9 keys art', 												'https://x.com/newsrperez',			'FF9E00'],
 		[''],
 		['Special Thanks'],
-		['Codename Engine',		'codename',			'Some stuffs used for this engine',				'https://github.com/CodenameCrew/CodenameEngine',			'FF9300'],
-		['HRK-EXEX',			'hrk',				'Some stuffs used for this engine',				'https://github.com/HRK-EXEX',								'FF9300'],
+		['Codename Engine',		'codename',			'Some stuffs used for this engine',				'https://github.com/CodenameCrew/CodenameEngine',	'FF9300'],
+		['HRK-EXEX',			'hrk',				'Some stuffs used for this engine',				'https://github.com/HRK-EXEX',						'FF9300'],
 	];
 
 	static var funkin(default, never):Array<Array<String>> = [

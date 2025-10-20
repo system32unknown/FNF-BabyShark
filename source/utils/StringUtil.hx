@@ -243,14 +243,10 @@ class StringUtil {
 			defined = Std.string(value);
 		} else throw "It's invalid type";
 
-		var cnt:Int = -1;
-		var decimal:Bool;
-		var pos:Int = 0;
-
-		decimal = defined.lastIndexOf(".") != -1;
-		cnt = 0;
-		pos = defined.length - 1;
-		for (i in 0...defined.length) {
+		var decimal:Bool = defined.lastIndexOf(".") != -1;
+		var cnt:Int = 0;
+		var pos:Int = defined.length - 1;
+		for (_ in 0...defined.length) {
 			var char:Int = defined.fastCodeAt(pos);
 			if (decimal) {
 				if (char == ".".code) {

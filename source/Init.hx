@@ -34,7 +34,7 @@ class Init extends flixel.FlxState {
 			if (FlxG.save.data.weekCompleted != null) states.StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
 		}
 
-		if (FlxG.save.data.flashing == null && !FlashingState.leftState) {
+		if (Settings.data.flashing && !FlxG.save.data.seenFlashWarning) {
 			MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 			FlxG.switchState(() -> new FlashingState());
 			return;

@@ -3,9 +3,8 @@ package states;
 import flixel.effects.FlxFlicker;
 
 class FlashingState extends flixel.FlxState {
-	public static var leftState:Bool = false;
-
 	var isYes:Bool = true;
+	var pressedKey:Bool = false;
 	var texts:FlxTypedSpriteGroup<FlxText>;
 	var bg:FlxSprite;
 
@@ -39,33 +38,35 @@ class FlashingState extends flixel.FlxState {
 	}
 
 	override function update(elapsed:Float) {
-		if (leftState) {
-			super.update(elapsed);
-			return;
-		}
-		var back:Bool = Controls.justPressed('back');
+		super.update(elapsed);
+		if (pressedKey) return;
+
 		if (Controls.justPressed('ui_left') || Controls.justPressed('ui_right')) {
 			FlxG.sound.play(Paths.sound("scrollMenu"), .7);
 			isYes = !isYes;
 			updateItems();
 		}
-		if (Controls.justPressed('accept') || back) {
-			leftState = true;
+
+		var backJustPressed:Bool = Controls.justPressed('back');
+		if (backJustPressed || Controls.justPressed('accept')) {
 			MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
-			if (!back) {
-				Settings.data.flashing = !isYes;
-				Settings.save();
-				FlxG.sound.play(Paths.sound('confirmMenu'));
-				final button:FlxText = texts.members[isYes ? 1 : 2];
-				FlxFlicker.flicker(button, 1, 0.1, false, true, (_:FlxFlicker) -> FlxTimer.wait(.5, () -> FlxTween.tween(texts, {alpha: 0}, .2, {onComplete: (_) -> FlxG.switchState(() -> new TitleState())})));
-			} else {
+			pressedKey = true;
+			FlxG.save.data.seenFlashWarning = true;
+			if (backJustPressed) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				FlxTween.tween(texts, {alpha: 0}, 1, {onComplete: (_) -> FlxG.switchState(() -> new TitleState())});
+				return;
 			}
+
+			Settings.data.flashing = !isYes;
+			Settings.save();
+			FlxG.sound.play(Paths.sound('confirmMenu'));
+			final button:FlxText = texts.members[isYes ? 1 : 2];
+			FlxFlicker.flicker(button, 1, .1, false, true, (_:FlxFlicker) -> FlxTimer.wait(.5, () -> FlxTween.tween(texts, {alpha: 0}, .2, {onComplete: (_) -> FlxG.switchState(() -> new TitleState())})));
 		}
 	}
 
-	function updateItems() {
+	function updateItems():Void {
 		// it's clunky but it works.
 		texts.members[1].alpha = isYes ? 1. : .6;
 		texts.members[2].alpha = isYes ? .6 : 1.;

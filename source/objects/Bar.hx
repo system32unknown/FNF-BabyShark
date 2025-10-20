@@ -3,37 +3,44 @@ package objects;
 import flixel.util.helpers.FlxBounds;
 import flixel.math.FlxRect;
 
+@:nullSafety
 class Bar extends FlxSpriteGroup {
+	public var bg:FlxSprite;
 	public var leftBar:FlxSprite;
 	public var rightBar:FlxSprite;
-	public var bg:FlxSprite;
-	public var bgOffset(default, set):FlxPoint = FlxPoint.get();
-	public var valueFunction:Void->Float;
+	public var valueFunction:Null<Void->Float> = null;
 	public var percent(default, set):Float = 0;
 	public var bounded(default, null):Float = 0;
 	public var bounds:FlxBounds<Float> = new FlxBounds<Float>(0, 1);
 	public var leftToRight(default, set):Bool = true;
 	public var barCenter(default, null):Float = 0;
 
-	// you might need to change this if you want to use a custom bar
+	/**
+	 * Custom width set for the bars fill
+	 * 
+	 * default is bar frame width - 6
+	 */
 	public var barWidth(default, set):Int = 1;
-	public var barHeight(default, set):Int = 1;
-	public var barOffset:FlxPoint = FlxPoint.get(3, 3);
 
-	function set_bgOffset(value:FlxPoint):FlxPoint {
-		bgOffset = value;
-		bg.setPosition(bg.x + bgOffset.x, bg.y + bgOffset.y);
-		return value;
-	}
+	/**
+	 * Custom height set for the bars fill
+	 * 
+	 * default is bar frame height - 6
+	 */
+	public var barHeight(default, set):Int = 1;
+
+	/**
+	 * additive offset for the bar fill position
+	 */
+	public var barOffset:FlxPoint = FlxPoint.get(3, 3);
 
 	public function new(x:Float, y:Float, image:String = 'healthBar', ?valueFunction:Void->Float, boundX:Float = 0, boundY:Float = 1) {
 		super(x, y);
 
 		this.valueFunction = valueFunction;
-		setBounds(boundX, boundY);
 
 		bg = new FlxSprite(Paths.image(image));
-		bg.setPosition(bg.x + bgOffset.x, bg.y + bgOffset.y);
+		bg.setPosition(bg.x, bg.y);
 		barWidth = Std.int(bg.width - 6);
 		barHeight = Std.int(bg.height - 6);
 
@@ -46,6 +53,9 @@ class Bar extends FlxSpriteGroup {
 		add(leftBar);
 		add(rightBar);
 		add(bg);
+
+		setBounds(boundX, boundY);
+
 		regenerateClips();
 	}
 
@@ -99,13 +109,17 @@ class Bar extends FlxSpriteGroup {
 		final width:Int = Std.int(bg.width);
 		final height:Int = Std.int(bg.height);
 		if (leftBar != null) {
-			leftBar.setGraphicSize(width, height);
+			if (Std.int(leftBar.frameWidth) != Std.int(bg.frameWidth) || Std.int(leftBar.frameHeight) != Std.int(bg.frameHeight))
+				leftBar.makeGraphic(Std.int(width), Std.int(height), FlxColor.WHITE);
+			else leftBar.setGraphicSize(Std.int(width), Std.int(height));
 			leftBar.updateHitbox();
 			if (leftBar.clipRect == null) leftBar.clipRect = FlxRect.get(0, 0, width, height);
 			else leftBar.clipRect.set(0, 0, width, height);
 		}
 		if (rightBar != null) {
-			rightBar.setGraphicSize(width, height);
+			if (rightBar.frameWidth != Std.int(bg.frameWidth) || rightBar.frameHeight != Std.int(bg.frameHeight))
+				rightBar.makeGraphic(Std.int(width), Std.int(height), FlxColor.WHITE);
+			else rightBar.setGraphicSize(Std.int(width), Std.int(height));
 			rightBar.updateHitbox();
 			if (rightBar.clipRect == null) rightBar.clipRect = FlxRect.get(0, 0, width, height);
 			else rightBar.clipRect.set(0, 0, width, height);
