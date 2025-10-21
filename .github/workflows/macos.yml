@@ -10,7 +10,7 @@ jobs:
   build:
     name: MacOS Build
     permissions: write-all
-    runs-on: macos-14
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@main
