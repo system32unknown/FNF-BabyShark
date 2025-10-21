@@ -10,11 +10,11 @@ jobs:
   build:
     name: MacOS Build
     permissions: write-all
-    runs-on: macos-14
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@main
-      - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
+      - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
 
