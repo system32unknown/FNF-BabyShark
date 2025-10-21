@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@main
-      - uses: krdlab/setup-haxe@master
+      - uses: krdlab/setup-haxe@8f35d1215b93e940a76f9470e22e8a5ba6149598
         with:
           haxe-version: 4.3.7
 
