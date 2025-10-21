@@ -32,14 +32,6 @@ jobs:
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s
 
-      - name: Compile hxcpp
-        run: |
-          cd .haxelib/hxcpp/git/tools/run
-          haxe compile.hxml
-          cd ../hxcpp
-          haxe compile.hxml
-          cd ../../../../..
-
       - name: Compile
         run: |
           haxelib run lime build mac
