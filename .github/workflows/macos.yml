@@ -41,7 +41,8 @@ jobs:
           cd ../../../../..
 
       - name: Compile
-        run: haxelib run lime build mac
+        run: |
+          haxelib run lime build mac
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .

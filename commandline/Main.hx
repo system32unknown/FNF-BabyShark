@@ -78,32 +78,6 @@ class Main {
 					"If the last build was a debug build, you need to pass the -debug argument to run it.",
 					"Additional arguments will be sent to the lime compiler."
 				].join("\n")
-			}, {
-				names: ["release"],
-				doc: "Creates a final non debug build, containing all assets.",
-				func: Compiler.release,
-				dDoc: [
-					"Usage: release <optional arguments>",
-					"",
-					"This will create and run a final ready-for-release build,",
-					"which means this build will be able to be release on websites such as GameBanana without worrying about source-dependant stuff.",
-					"Additional arguments will be sent to the lime compiler.",
-					"",
-					"-clean : Compiled files will be deleted before compiling."
-				].join("\n")
-			}, {
-				names: ["test-release"],
-				doc: "Creates a final non debug build, containing all assets.",
-				func: Compiler.testRelease,
-				dDoc: [
-					"Usage: test-release <optional arguments>",
-					"",
-					"This will create and run a final ready-for-release build,",
-					"which means this build will be able to be release on websites such as GameBanana without worrying about source-dependant stuff.",
-					"Additional arguments will be sent to the lime compiler.",
-					"",
-					"-clean : Compiled files will be deleted before compiling."
-				].join("\n")
 			}
 		];
 	}

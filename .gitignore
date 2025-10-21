@@ -1,8 +1,8 @@
 #PSYCH FOLDERS
+export/
 dump/
 
 ### VS Code
-export/*
 .haxelib/
 # .github/
 .vscode/*

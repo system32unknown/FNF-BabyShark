@@ -41,7 +41,8 @@ jobs:
           cd ../../../../..
 
       - name: Compile
-        run: haxelib run lime build windows
+        run: |
+          haxelib run lime build windows
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main

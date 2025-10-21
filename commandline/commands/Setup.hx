@@ -131,6 +131,8 @@ class Setup {
 			} else handleLib(libNode);
 		}
 
+		final shouldCheckHaxeVersion:Bool = !libsXML.has.checkVersion || Utils.evaluateArgsCondition(libsXML.att.checkVersion, defines);
+
 		for (libNode in libsXML.elements) parse(libNode);
 
 		var commandSuffix:String = " --always";
@@ -212,8 +214,31 @@ class Setup {
 			}
 		}
 
-		// vswhere.exe its used to find any visual studio related installations on the system, including full visual studio ide installations, visual studio build tools installations, and other related components - Nex
-		if (CHECK_VSTUDIO && Compiler.getBuildTarget().toLowerCase() == "windows" && new Process('"C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -property catalog_productDisplayVersion').exitCode() == 1) {
+		if (shouldCheckHaxeVersion) {
+			final proc:Process = new Process('haxe --version');
+			proc.exitCode();
+			final haxeVer:String = proc.stdout.readLine();
+
+			// check for outdated haxe
+			final curHaxeVer:Array<Null<Int>> = [for(v in haxeVer.split(".")) Std.parseInt(v)];
+			final minumumVersion:Array<Int> = [4, 3, 7];
+			for (i in 0...minumumVersion.length) {
+				if (curHaxeVer[i] > minumumVersion[i]) break;
+				if (curHaxeVer[i] < minumumVersion[i]) {
+					prettyPrint([
+						"!! WARNING !!",
+						"Your current Haxe version is outdated.",
+						'You\'re using ${haxeVer}, whilst the required version is 4.3.7 or newer.',
+						'The engine may not compile with your current version of Haxe.',
+						'We recommend upgrading to 4.3.7 or newer'
+					].join("\n"));
+					break;
+				}
+			}
+		}
+
+		// vswhere.exe is used to find any visual studio related installations on the system, including full visual studio ide installations, visual studio build tools installations, and other related components - Nex
+		if (CHECK_VSTUDIO && Compiler.getBuildTarget().toLowerCase() == "windows" && new Process('"C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -requires Microsoft.VisualStudio.Component.Windows10SDK.19041 -property installationPath').exitCode() != 0) {
 			prettyPrint("Installing Microsoft Visual Studio Community (Dependency)");
 
 			// thanks to @crowplexus for these two lines! - Nex
@@ -221,7 +246,7 @@ class Setup {
 			command("vs_Community.exe --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows10SDK.19041 -p");
 
 			FileSystem.deleteFile("vs_Community.exe");
-			prettyPrint('If it didn\'t say it before: Because of this component if you want to compile you have to restart the device.');
+			prettyPrint("Because of this component, if you want to compile, you need to restart the device.");
 			Sys.print("Do you wish to do it now [y/n]? ");
 			if (Sys.stdin().readLine().toLowerCase() == "y") command("shutdown /r /t 0 /f");
 		}
