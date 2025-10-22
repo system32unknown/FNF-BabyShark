@@ -40,6 +40,7 @@
 		<print pretty="true">Rebuilding Hxcpp...</print>
 
 		<!-- Build hxcpp -->
+		<cmd inLib="hxcpp" dir="tools/run" cmd="haxe compile.hxml" />
 		<cmd inLib="hxcpp" dir="tools/hxcpp" cmd="haxe compile.hxml" />
 	</if>
 </libraries>
