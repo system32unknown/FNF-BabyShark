@@ -1,7 +1,5 @@
 package utils.system;
 
-import haxe.io.Path;
-
 class SystemUtil {
 	/**
 	 * Retrieves a system path based on the given identifier.
@@ -23,7 +21,7 @@ class SystemUtil {
 	 * @return The program's directory path with forward slashes.
 	 */
 	public static function getProgramPath():String {
-		return Path.directory(Sys.programPath()).replace("\\", "/");
+		return haxe.io.Path.directory(Sys.programPath()).replace("\\", "/");
 	}
 
 	/**
@@ -53,8 +51,7 @@ class SystemUtil {
 	/**
 	 * Indicates whether the console output is available.
 	 */
-	public static var isConsoleOn(get, never):Bool;
-	public static function get_isConsoleOn():Bool {
+	public static function isConsoleOn():Bool {
 		var available:Bool = false;
 		try {
 			Sys.stdout().writeString('');

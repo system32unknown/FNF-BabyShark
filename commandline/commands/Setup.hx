@@ -220,7 +220,7 @@ class Setup {
 			final haxeVer:String = proc.stdout.readLine();
 
 			// check for outdated haxe
-			final curHaxeVer:Array<Null<Int>> = [for(v in haxeVer.split(".")) Std.parseInt(v)];
+			final curHaxeVer:Array<Null<Int>> = [for (v in haxeVer.split(".")) Std.parseInt(v)];
 			final minumumVersion:Array<Int> = [4, 3, 7];
 			for (i in 0...minumumVersion.length) {
 				if (curHaxeVer[i] > minumumVersion[i]) break;
@@ -228,7 +228,7 @@ class Setup {
 					prettyPrint([
 						"!! WARNING !!",
 						"Your current Haxe version is outdated.",
-						'You\'re using ${haxeVer}, whilst the required version is 4.3.7 or newer.',
+						'You\'re using $haxeVer, whilst the required version is 4.3.7 or newer.',
 						'The engine may not compile with your current version of Haxe.',
 						'We recommend upgrading to 4.3.7 or newer'
 					].join("\n"));

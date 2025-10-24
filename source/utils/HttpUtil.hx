@@ -98,8 +98,7 @@ final class HttpUtil {
 		}
 	}
 
-	public static var isOnline(get, never):Bool;
-	public static function get_isOnline():Bool {
+	public static function hasInternet():Bool {
 		try {
 			requestText("https://www.google.com/");
 			return true;
