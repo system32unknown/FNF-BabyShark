@@ -5,9 +5,9 @@
 
 		<!-- OpenFL & Lime (Required for Flixel) -->
 		<git name="openfl" url="https://github.com/system32unknown/openfl"/>
-		<unless cond="macos">
+		<if cond="!macos">
 			<lib name="lime"/>
-		</unless>
+		</if>
 		<if cond="macos">
 			<lib name="lime" version="8.1.3" if="macos"/>
 		</if>
