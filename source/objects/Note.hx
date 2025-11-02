@@ -571,7 +571,7 @@ class Note extends FlxSprite {
 		}
 		correctionOffset = isSustainNote && !flipY ? originalHeight * .5 : 0;
 
-		if (isSustainNote && sustainScale != 1 && !isSustainEnds)
+		if (sustainScale != 1 && !isSustainEnds)
 			resizeByRatio(sustainScale);
 		clipRect = null;
 		x += offsetX;

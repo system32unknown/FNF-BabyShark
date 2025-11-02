@@ -41,7 +41,7 @@ class SpriteUtil {
 	 * @param sprite The sprite to analyze
 	 * @return The most frequent color with full opacity
 	 */
-	public static function dominantColor(sprite:flixel.FlxSprite):FlxColor {
+	public static function dominantColor(sprite:FlxSprite):FlxColor {
 		var countByColor:Map<Int, Int> = [];
 		for (col in 0...sprite.frameWidth) {
 			for (row in 0...sprite.frameHeight) {

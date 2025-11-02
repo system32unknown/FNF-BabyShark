@@ -14,7 +14,7 @@ class BGScrollingText extends FlxText {
 	public function new(x:Float, y:Float, text:String, widthShit:Float = 100, ?bold:Bool = false, ?size:Int = 48, ?font:String = "") {
 		super(x, y, 0, text, size);
 		_positionCache = FlxPoint.get(x, y);
-		this.font = font;
+		this.font = font ?? "";
 		this.bold = bold ?? false;
 
 		@:privateAccess

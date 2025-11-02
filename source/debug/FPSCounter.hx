@@ -15,7 +15,6 @@ class FPSCounter extends openfl.text.TextField {
 	public var checkLag:Bool = true;
 	public var updateRate:Float = 60;
 	public var memDisplay:String = "";
-	public var memType:String = "";
 
 	public var fpsManager:FPSUtil;
 
@@ -89,17 +88,6 @@ class FPSCounter extends openfl.text.TextField {
 		if (newStr != lastText) {
 			text = newStr;
 			lastText = newStr;
-		}
-	}
-
-	public inline function positionFPS(X:Float, Y:Float, isWide:Bool = false, ?scale:Float = 1) {
-		scaleX = scaleY = (scale < 1 ? scale : 1);
-		if (isWide) {
-			x = X;
-			y = Y;
-		} else {
-			x = FlxG.game.x + X;
-			y = FlxG.game.y + Y;
 		}
 	}
 }
