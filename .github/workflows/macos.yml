@@ -1,4 +1,4 @@
-name: MacOS (Intel) Build
+name: MacOS Build
 on:
   push:
     branches: [ main ]
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: MacOS (Intel) Build
+    name: MacOS Build
     permissions: write-all
     runs-on: macos-13
 
@@ -19,7 +19,7 @@ jobs:
           haxe-version: 4.3.7
 
       - name: Restore action cache
-        id: cache-build-macosintel-restore
+        id: cache-build-macos-restore
         uses: actions/cache/restore@main
         with:
           key: cache-build-macos
@@ -34,7 +34,7 @@ jobs:
 
       - name: Compile
         run: |
-          haxelib run lime build mac -64 -D HXCPP_M64
+          haxelib run lime build mac
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
@@ -73,7 +73,7 @@ jobs:
             }
 
       - name: Uploading new cache
-        id: cache-build-macosintel-save
+        id: cache-build-macos-save
         uses: actions/cache/save@main
         with:
           key: cache-build-macos
