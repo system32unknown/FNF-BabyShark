@@ -90,7 +90,7 @@
 	</section>
 
 	<!-- Used for Izzy Engine's crash handler-->
-	<section if="CRASH_HANDLER">
+	<section if="CRASH_HANDLER cpp">
 		<haxedef name="HXCPP_CHECK_POINTER" />
 		<haxedef name="HXCPP_STACK_LINE" />
 		<haxedef name="HXCPP_STACK_TRACE" />
@@ -102,6 +102,8 @@
 	<!-- Haxe 4.3.0+: Enable pretty syntax errors and stuff. -->
 	<!-- pretty (haxeflixel default), indent, classic (haxe compiler default) -->
 	<haxedef name="message.reporting" value="pretty" />
+
+	<haxedef name='no_ssl' if="hl" />
 
 	<!-- Macro fixes-->
 	<haxeflag name="--macro" value="allowPackage('flash')" />
@@ -122,9 +124,18 @@
 	<haxedef name="mac" if="mac"/>
 	<haxedef name="macos" if="macos"/>
 
+	<!--Tracy profiler stuff-->
+	<section if="FEATURE_DEBUG_TRACY">
+		<haxedef name="HXCPP_TELEMETRY"/>
+		<haxedef name="HXCPP_TRACY"/>
+		<haxedef name="HXCPP_TRACY_MEMORY"/>
+		<haxedef name="HXCPP_TRACY_ON_DEMAND"/>
+		<haxedef name="absolute-paths"/>
+	</section>
+
 	<!-- _________________________________Custom_______________________________ -->
 	<!-- Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	<assets path='icons/iconOG.png' rename='icon.png' if="linux || mac" />
+	<assets path='icons/iconOG.png' rename='icon.png' if="linux" />
 
 	<icon path="icons/icon16.png" size="16" />
 	<icon path="icons/icon32.png" size="32" />

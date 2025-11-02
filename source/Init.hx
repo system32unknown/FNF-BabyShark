@@ -3,6 +3,11 @@ package;
 import flixel.addons.transition.FlxTransitionableState;
 import states.FlashingState;
 
+#if FEATURE_DEBUG_TRACY
+import cpp.vm.tracy.TracyProfiler;
+import openfl.events.Event;
+#end
+
 class Init extends flixel.FlxState {
 	override function create():Void {
 		#if cpp
@@ -39,6 +44,11 @@ class Init extends flixel.FlxState {
 			FlxG.switchState(() -> new FlashingState());
 			return;
 		}
+
+		#if FEATURE_DEBUG_TRACY
+		openfl.Lib.current.stage.addEventListener(Event.EXIT_FRAME, (e:Event) -> TracyProfiler.frameMark());
+		TracyProfiler.setThreadName("main");
+		#end
 
 		FlxG.switchState(Main.game.initialState);
 	}
