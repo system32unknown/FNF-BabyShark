@@ -1,98 +1,60 @@
 package objects;
 
-import flixel.FlxObject;
+import flixel.util.FlxSort;
 
 // its kinda like marqeee html lol!
 @:nullSafety
-class BGScrollingText extends FlxSpriteGroup {
-	var grpTexts:FlxTypedSpriteGroup<FlxSprite>;
-	var sourceText:FlxText;
+class BGScrollingText extends FlxText {
+	var _textPositions:Array<FlxPoint> = [];
+	var _positionCache:FlxPoint = FlxPoint.get();
 
-	public var widthShit:Float = FlxG.width;
 	public var placementOffset:Float = 20;
 	public var speed:Float = 1;
-	public var size(default, set):Int = 48;
-	public var font:String = "";
 
-	public var funnyColor(default, set):FlxColor = 0xFFFFFFFF;
-
-	public function new(x:Float, y:Float, text:String, widthShit:Float = 100, ?bold:Bool = false, ?size:Int = 48) {
-		super(x, y);
-
-		grpTexts = new FlxTypedSpriteGroup<FlxSprite>();
-
-		this.widthShit = widthShit;
-
-		// Only keep one FlxText graphic at a time for batching
-		sourceText = new FlxText(0, 0, 0, text, size ?? this.size);
-		sourceText.font = font;
-		sourceText.bold = bold ?? false;
+	public function new(x:Float, y:Float, text:String, widthShit:Float = 100, ?bold:Bool = false, ?size:Int = 48, ?font:String = "") {
+		super(x, y, 0, text, size);
+		_positionCache = FlxPoint.get(x, y);
+		this.font = font;
+		this.bold = bold ?? false;
 
 		@:privateAccess
-		sourceText.regenGraphic();
+		regenGraphic();
 
-		for (i in 0...Math.ceil(widthShit / sourceText.frameWidth) + 1) {
-			var coolText:FlxSprite = new FlxSprite((i * sourceText.frameWidth) + (i * 20), 0);
-			grpTexts.add(coolText);
-		}
-
-		if (size != null) this.size = size;
-
-		add(grpTexts);
+		for (i in 0...Math.ceil(widthShit / frameWidth) + 1)
+			_textPositions.push(FlxPoint.get((i * frameWidth) + (i * 20), 0));
 	}
 
-	function reloadGraphics() {
-		if (grpTexts != null) {
-			@:privateAccess
-			sourceText.regenGraphic();
-			grpTexts.forEach((txt:FlxSprite) -> {
-				txt.loadGraphic(sourceText.graphic);
-				txt.updateHitbox();
-			});
-		}
-	}
+	override public function update(elapsed:Float):Void {
+		super.update(elapsed);
 
-	function set_size(value:Int):Int {
-		sourceText.size = value;
-		reloadGraphics();
-		this.size = value;
-		return value;
-	}
+		for (txtPosition in _textPositions) {
+			if (txtPosition == null) continue;
+			txtPosition.x -= 1 * (speed * (elapsed / (1 / 60)));
 
-	function set_funnyColor(value:FlxColor):FlxColor {
-		sourceText.color = value;
-		reloadGraphics();
-		this.funnyColor = value;
-		return value;
-	}
-
-	override public function update(elapsed:Float) {
-		for (txt in grpTexts.group) {
-			if (txt == null) continue;
-			txt.x -= 1 * (speed * (elapsed / (1 / 60)));
-
-			if (speed > 0) {
-				if (txt.x < -txt.frameWidth) {
-					txt.x = grpTexts.group.members[grpTexts.length - 1].x + grpTexts.group.members[grpTexts.length - 1].frameWidth + placementOffset;
+			if (speed > 0) { // Going left
+				if (txtPosition.x < -frameWidth) {
+					txtPosition.x = _textPositions[_textPositions.length - 1].x + frameWidth + placementOffset;
 					sortTextShit();
 				}
-			} else {
-				if (txt.x > txt.frameWidth * 2) {
-					txt.x = grpTexts.group.members[0].x - grpTexts.group.members[0].frameWidth - placementOffset;
+			} else { // Going right
+				if (txtPosition.x > frameWidth * 2) {
+					txtPosition.x = _textPositions[0].x - frameWidth - placementOffset;
 					sortTextShit();
 				}
 			}
 		}
+	}
 
-		super.update(elapsed);
+	override public function draw():Void {
+		_positionCache.set(x, y);
+		for (position in _textPositions) {
+			setPosition(_positionCache.x + position.x, _positionCache.y + position.y);
+			super.draw();
+		}
+		setPosition(_positionCache.x, _positionCache.y);
 	}
 
 	function sortTextShit():Void {
-		grpTexts.sort((Order:Int, Obj1:FlxObject, Obj2:FlxObject) -> return flixel.util.FlxSort.byValues(Order, Obj1.x, Obj2.x));
-	}
-
-	override public function destroy():Void {
-		super.destroy();
-		sourceText = flixel.util.FlxDestroyUtil.destroy(sourceText);
+		_textPositions.sort((Obj1:FlxPoint, Obj2:FlxPoint) -> return FlxSort.byValues(FlxSort.ASCENDING, Obj1.x, Obj2.x));
 	}
 }
