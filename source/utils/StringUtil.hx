@@ -215,7 +215,7 @@ class StringUtil {
 
 		var defined:String = null;
 		if (value is String) {
-			if (Std.parseFloat(value) != Math.NaN) {
+			if (!Math.isNaN(Std.parseFloat(value))) {
 				defined = value;
 			} else throw "Given string, but It cannot convert to number";
 		} else if (value is Float || value is Int) {

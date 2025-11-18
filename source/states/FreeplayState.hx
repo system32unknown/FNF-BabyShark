@@ -584,7 +584,6 @@ class SongMetadata {
 		this.week = week;
 		this.songCharacter = songCharacter;
 		this.color = color;
-		this.folder = Mods.currentModDirectory;
-		if (this.folder == null) this.folder = '';
+		this.folder = Mods.currentModDirectory ?? '';
 	}
 }
