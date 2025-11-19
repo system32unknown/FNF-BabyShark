@@ -78,7 +78,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 
 		if (!playingMusic) return;
 
-		var songName:String = instance.songs[FreeplayState.curSelected].songName;
+		var songName:String = instance.songs[FreeplayState.curSelected].name;
 		if (playing && !wasPlaying)
 			songTxt.text = Language.getPhrase('musicplayer_playing', 'PLAYING: {1}', [songName]);
 		else songTxt.text = Language.getPhrase('musicplayer_paused', 'PLAYING: {1} (PAUSED)', [songName]);
@@ -237,7 +237,7 @@ class MusicPlayer extends flixel.group.FlxGroup {
 	}
 
 	function positionSong() {
-		var length:Int = instance.songs[FreeplayState.curSelected].songName.length;
+		var length:Int = instance.songs[FreeplayState.curSelected].name.length;
 		var shortName:Bool = length < 5; // Fix for song names like Ugh, Guns
 		songTxt.x = FlxG.width - songTxt.width - 6;
 		if (shortName) songTxt.x -= 10 * length - length;

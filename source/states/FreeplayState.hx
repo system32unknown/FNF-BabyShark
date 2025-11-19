@@ -13,6 +13,15 @@ import objects.HealthIcon;
 import objects.MusicPlayer;
 import substates.FreeplaySectionSubstate;
 
+typedef SongMetadata = {
+	name:String,
+	week:Int,
+	icon:String,
+	color:Int,
+	folder:String,
+	lastDifficulty:String
+}
+
 class FreeplayState extends MusicBeatState {
 	var songs:Array<SongMetadata> = [];
 
@@ -191,14 +200,14 @@ class FreeplayState extends MusicBeatState {
 	function loadSong(index:Int):Void {
 		var song:SongMetadata = songs[index];
 
-		var songText:Alphabet = grpSongs.add(new Alphabet(90, 320, song.songName));
+		var songText:Alphabet = grpSongs.add(new Alphabet(90, 320, song.name));
 		songText.targetY = index;
 		songText.scaleX = Math.min(1, 980 / songText.width);
 		songText.snapToPosition();
 
 		Mods.currentModDirectory = song.folder;
 		
-		var icon:HealthIcon = new HealthIcon(song.songCharacter);
+		var icon:HealthIcon = new HealthIcon(song.icon);
 		icon.iconType = 'psych';
 		icon.autoOffset = true;
 		icon.sprTracker = songText;
@@ -208,8 +217,15 @@ class FreeplayState extends MusicBeatState {
 		grpIcons.add(icon);
 	}
 
-	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int) {
-		songs.push(new SongMetadata(songName, weekNum, songCharacter, color));
+	public function addSong(name:String, weekNum:Int, songCharacter:String, color:Int) {
+		songs.push({
+			name: name,
+			week: weekNum,
+			icon: songCharacter,
+			color: color,
+			folder: Mods.currentModDirectory ?? '',
+			lastDifficulty: null
+		});
 	}
 
 	function weekIsLocked(name:String):Bool {
@@ -350,7 +366,7 @@ class FreeplayState extends MusicBeatState {
 				FlxG.sound.music.volume = 0;
 
 				Mods.currentModDirectory = songs[curSelected].folder;
-				var songLowercase:String = songs[curSelected].songName.toLowerCase();
+				var songLowercase:String = songs[curSelected].name.toLowerCase();
 				var poop:String = Song.format(songLowercase, curDifficulty);
 
 				if (songLowercase == "enter terminal") return;
@@ -407,7 +423,7 @@ class FreeplayState extends MusicBeatState {
 			} else if (instPlaying == curSelected && player.playingMusic) player.pauseOrResume(!player.playing);
 		} else if (Controls.justPressed('accept') && !player.playingMusic) {
 			persistentUpdate = false;
-			var songFolder:String = Paths.formatToSongPath(songs[curSelected].songName);
+			var songFolder:String = Paths.formatToSongPath(songs[curSelected].name);
 			var songLowercase:String = Song.format(songFolder, curDifficulty);
 
 			if (songLowercase == "" || songLowercase.length < 1) return;
@@ -462,7 +478,7 @@ class FreeplayState extends MusicBeatState {
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		} else if (Controls.justPressed('reset') && !player.playingMusic) {
 			persistentUpdate = false;
-			openSubState(new substates.ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
+			openSubState(new substates.ResetScoreSubState(songs[curSelected].name, curDifficulty, songs[curSelected].icon));
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
 
@@ -479,9 +495,9 @@ class FreeplayState extends MusicBeatState {
 		if (player.playingMusic) return;
 		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, Difficulty.list.length - 1);
 
-		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
-		intendedcombo = Highscore.getCombo(songs[curSelected].songName, curDifficulty);
+		intendedScore = Highscore.getScore(songs[curSelected].name, curDifficulty);
+		intendedRating = Highscore.getRating(songs[curSelected].name, curDifficulty);
+		intendedcombo = Highscore.getCombo(songs[curSelected].name, curDifficulty);
 
 		lastDifficultyName = Difficulty.getString(curDifficulty, false);
 		var displayDiff:String = Difficulty.getString(curDifficulty);
@@ -568,22 +584,5 @@ class FreeplayState extends MusicBeatState {
 		FlxG.autoPause = Settings.data.autoPause;
 		if (!FlxG.sound.music.playing && !stopMusicPlay)
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
-	}
-}
-
-class SongMetadata {
-	public var songName:String = "";
-	public var week:Int = 0;
-	public var songCharacter:String = "";
-	public var color:Int = -7179779;
-	public var folder:String = "";
-	public var lastDifficulty:String = null;
-
-	public function new(song:String, week:Int, songCharacter:String, color:Int) {
-		this.songName = song;
-		this.week = week;
-		this.songCharacter = songCharacter;
-		this.color = color;
-		this.folder = Mods.currentModDirectory ?? '';
 	}
 }

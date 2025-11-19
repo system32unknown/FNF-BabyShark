@@ -32,7 +32,15 @@ jobs:
         run: |
           haxelib setup C:/haxelib
           haxelib install hxpkg
-          haxelib run hxpkg install
+          haxelib run hxpkg install --force
+
+      - name: Compile hxcpp
+        run: |
+          cd C:/haxelib/hxcpp/git/tools/run
+          haxe compile.hxml
+          cd ../hxcpp
+          haxe compile.hxml
+          cd ../..
 
       - name: Compile
         run: |
