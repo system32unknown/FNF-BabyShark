@@ -36,7 +36,7 @@ jobs:
 
       - name: Compile
         run: |
-          haxelib run lime build macos
+          haxelib run lime build macos -64 -D HXCPP_M64
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
