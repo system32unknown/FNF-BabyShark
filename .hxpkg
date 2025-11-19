@@ -7,9 +7,6 @@
 				"link": "https://github.com/system32unknown/openfl"
 			},
 			{
-				"name": "lime"
-			},
-			{
 				"name": "flixel",
 				"link": "https://github.com/system32unknown/flixel-alter"
 			},
@@ -63,6 +60,10 @@
 			{
 				"name": "hxcpp",
 				"link": "https://github.com/system32unknown/hxcpp"
+			},
+			{
+				"name": "lime",
+				"version": "8.1.3"
 			}
 		]
 	}
