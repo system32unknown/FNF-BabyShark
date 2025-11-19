@@ -33,9 +33,11 @@ jobs:
           sudo apt-get install libvlc-dev
           sudo apt-get install libvlccore-dev
 
-      - name: Installing/Updating libraries
+      - name: Install libraries
         run: |
-          haxe -cp commandline -D analyzer-optimize --run Main setup -s
+          haxelib setup C:/haxelib
+          haxelib install hxpkg
+          haxelib run hxpkg install
 
       - name: Compile
         run: |

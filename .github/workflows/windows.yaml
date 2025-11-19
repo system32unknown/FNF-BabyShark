@@ -28,9 +28,11 @@ jobs:
             export/release/windows/haxe/
             export/release/windows/obj/
 
-      - name: Installing/Updating libraries
+      - name: Install libraries
         run: |
-          haxe -cp commandline -D analyzer-optimize --run Main setup -s --no-vscheck
+          haxelib setup C:/haxelib
+          haxelib install hxpkg
+          haxelib run hxpkg install
 
       - name: Compile
         run: |

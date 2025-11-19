@@ -10,7 +10,7 @@ jobs:
   build:
     name: MacOS Build
     permissions: write-all
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@main
@@ -28,9 +28,11 @@ jobs:
             export/release/macos/haxe/
             export/release/macos/obj/
 
-      - name: Installing/Updating libraries
+      - name: Install libraries
         run: |
-          haxe -cp commandline -D analyzer-optimize --run Main setup -s
+          haxelib setup C:/haxelib
+          haxelib install hxpkg
+          haxelib run hxpkg install
 
       - name: Compile
         run: |

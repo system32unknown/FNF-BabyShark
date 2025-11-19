@@ -1,0 +1,69 @@
+[
+	{
+		"profile": "default",
+		"pkgs": [
+			{
+				"name": "openfl",
+				"link": "https://github.com/system32unknown/openfl"
+			},
+			{
+				"name": "lime"
+			},
+			{
+				"name": "flixel",
+				"link": "https://github.com/system32unknown/flixel-alter"
+			},
+			{
+				"name": "flixel-addons",
+				"link": "https://github.com/system32unknown/flixel-addons"
+			},
+			{
+				"name": "hscript-improved",
+				"link": "https://github.com/system32unknown/AlterHscript",
+				"branch": "custom-classes"
+			},
+			{
+				"name": "flxanimate",
+				"link": "https://github.com/Dot-Stuff/flxanimate"
+			},
+			{
+				"name": "hxdiscord_rpc",
+				"link": "https://github.com/MAJigsaw77/hxdiscord_rpc"
+			},
+			{
+				"name": "hxvlc"
+			},
+			{
+				"name": "tjson"
+			},
+			{
+				"name": "parallaxlt"
+			},
+			{
+				"name": "json2object",
+				"link": "https://github.com/FunkinCrew/json2object"
+			},
+			{
+				"name": "funkin.vis",
+				"link": "https://github.com/FunkinCrew/funkVis"
+			},
+			{
+				"name": "grig.audio",
+				"link": "https://github.com/FunkinCrew/grig.audio",
+				"branch": "refactor/fft-cam-version"
+			},
+			{
+				"name": "thx.core",
+				"link": "https://github.com/fponticelli/thx.core"
+			},
+			{
+				"name": "thx.semver",
+				"link": "https://github.com/fponticelli/thx.semver"
+			},
+			{
+				"name": "hxcpp",
+				"link": "https://github.com/system32unknown/hxcpp"
+			}
+		]
+	}
+]
