@@ -21,9 +21,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@main
-      - uses: krdlab/setup-haxe@master
+      - uses: krdlab/setup-haxe@v2
         with:
-          haxe-version: '4.3.7'
+          haxe-version: 4.3.7
 
       - name: Restore action cache
         id: cache-build-macosarm-restore
@@ -40,14 +40,10 @@ jobs:
           haxelib setup ~/haxelib
           haxelib install hxpkg
           haxelib run hxpkg install --force
-
-      - name: Downgrade Lime to 8.1.3
-        run: |
-          haxelib remove lime
-          haxelib install lime 8.1.3
+          haxelib run lime rebuild hxcpp
 
       - name: Compile
-        run: haxelib run lime build macos -64 -D HXCPP_M64
+        run: haxelib run lime build mac -64 -D HXCPP_M64
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .

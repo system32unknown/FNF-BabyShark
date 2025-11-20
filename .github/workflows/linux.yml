@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
         with:
-          haxe-version: '4.3.7'
+          haxe-version: 4.3.7
 
       - name: Restore action cache
         id: cache-build-linux-restore
