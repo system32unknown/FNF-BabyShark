@@ -7,11 +7,11 @@ on:
 
   workflow_dispatch:
 
- workflow_call:
-    inputs:
-      buildFlags:
-        required: false
-        type: string
+  workflow_call:
+      inputs:
+        buildFlags:
+          required: false
+          type: string
 
 jobs:
   build:
@@ -34,6 +34,11 @@ jobs:
             .haxelib/
             export/release/macos/haxe/
             export/release/macos/obj/
+
+      - name: Downgrade Lime to 8.1.3
+        run: |
+          haxelib remove lime
+          haxelib install lime 8.1.3
 
       - name: Install libraries
         run: |

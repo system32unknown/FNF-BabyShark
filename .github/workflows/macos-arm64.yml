@@ -35,11 +35,15 @@ jobs:
             export/release/macos/haxe/
             export/release/macos/obj/
 
+      - name: Downgrade Lime to 8.1.3
+        run: |
+          haxelib remove lime
+          haxelib install lime 8.1.3
+
       - name: Install libraries
         run: |
           haxelib install hxpkg
           haxelib run hxpkg install --force
-          haxelib list
 
       - name: Compile
         run: haxelib run lime build macos -64 -D HXCPP_M64

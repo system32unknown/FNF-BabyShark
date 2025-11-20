@@ -39,7 +39,6 @@ jobs:
         run: |
           haxelib install hxpkg
           haxelib run hxpkg install --force
-          haxelib list
 
       - name: Compile
         run: haxelib run lime build windows
