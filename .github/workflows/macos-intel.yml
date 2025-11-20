@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@main
-      - uses: krdlab/setup-haxe@v2
+      - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
 
@@ -35,13 +35,12 @@ jobs:
             export/release/macos/haxe/
             export/release/macos/obj/
 
-
       - name: Install libraries
         run: |
           haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null --quiet
           haxelib install hxpkg
           haxelib run hxpkg install --force
-          haxelib run lime rebuild hxcpp
 
       - name: Compile
         run: haxelib run lime build mac -64 -D HXCPP_M64
