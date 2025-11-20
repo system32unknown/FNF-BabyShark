@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.3.7
+          haxe-version: latest
 
       - name: Restore action cache
         id: cache-build-macosarm-restore

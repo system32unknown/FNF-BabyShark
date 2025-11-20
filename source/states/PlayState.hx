@@ -1314,18 +1314,29 @@ class PlayState extends MusicBeatState {
 		iconP2.x = (iconP2.iconType == 'psych' ? healthBar.barCenter - (150 * iconP2.scale.x) / 2 - iconOffset * 2 : healthBar.barCenter - (iconP2.width - iconOffset));
 	}
 
+	var castHold = false;
+	var castMust = false;
+	var isDisplay = false;
+	var shownRealTime:Float = 0;
+	var fixedPosition:Float = 0;
+	var shownTime:Float = 0;
+
+	inline function initSpawnInfo(target:Note):Void {
+		castHold = target.isSustainNote;
+		castMust = target.mustPress;
+
+		shownTime = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
+		shownRealTime = shownTime / 1000;
+		isDisplay = target.strumTime - fixedPosition < shownTime;
+	}
+
 	public function noteSpawn():Void {
 		var noteSpawnTimeout:Float = Timer.stamp();
 		if (unspawnNotes.length > totalCnt) {
 			var targetNote:Note = unspawnNotes[totalCnt];
-			var fixedPosition:Float = Conductor.songPosition - Settings.data.noteOffset;
+			fixedPosition = Conductor.songPosition - Settings.data.noteOffset;
+			initSpawnInfo(targetNote);
 
-			var castHold:Bool = targetNote.isSustainNote;
-			var castMust:Bool = targetNote.mustPress;
-
-			var shownTime:Float = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
-			var shownRealTime:Float = shownTime * .001;
-			var isDisplay:Bool = targetNote.strumTime - fixedPosition < shownTime;
 			while (isDisplay) {
 				var canBeHit:Bool = fixedPosition > targetNote.strumTime; // false is before, true is after
 				var tooLate:Bool = fixedPosition > targetNote.strumTime + noteKillOffset;
@@ -1349,15 +1360,8 @@ class PlayState extends MusicBeatState {
 						if (!castHold && castMust) ++skipBf;
 					} else if (castMust) noteMissCommon(targetNote.noteData);
 				}
-				unspawnNotes[totalCnt] = null; ++totalCnt;
-				if (unspawnNotes.length > totalCnt) targetNote = unspawnNotes[totalCnt]; else break;
-
-				castHold = targetNote.isSustainNote;
-				castMust = targetNote.mustPress;
-
-				shownTime = castHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
-				shownRealTime = shownTime / 1000;
-				isDisplay = targetNote.strumTime - fixedPosition < shownTime;
+				if (unspawnNotes.length > ++totalCnt) targetNote = unspawnNotes[totalCnt]; else break;
+				initSpawnInfo(targetNote);
 			}
 		}
 	}
