@@ -30,7 +30,6 @@ jobs:
 
       - name: Install libraries
         run: |
-          haxelib setup C:/haxelib
           haxelib install hxpkg
           haxelib run hxpkg install --force
 
