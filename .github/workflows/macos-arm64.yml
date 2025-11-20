@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: MacOS Build
+    name: MacOS Build (ARM64)
     permissions: write-all
     runs-on: macos-latest
 
@@ -35,8 +35,7 @@ jobs:
           haxelib run hxpkg install --force
 
       - name: Compile
-        run: |
-          haxelib run lime build mac -64 -D HXCPP_M64
+        run: haxelib run lime build macos -64 -D HXCPP_M64
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
