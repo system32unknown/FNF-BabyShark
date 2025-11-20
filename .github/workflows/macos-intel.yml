@@ -4,11 +4,18 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
   workflow_dispatch:
+
+ workflow_call:
+    inputs:
+      buildFlags:
+        required: false
+        type: string
 
 jobs:
   build:
-    name: MacOS Build (Inter)
+    name: MacOS Build (Intel)
     permissions: write-all
     runs-on: macos-latest
 

@@ -6,6 +6,12 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+  workflow_call:
+      inputs:
+        buildFlags:
+          required: false
+          type: string
+
 jobs:
   build:
     name: Linux Build
@@ -39,8 +45,7 @@ jobs:
           haxelib run hxpkg install --force
 
       - name: Compile
-        run: |
-          haxelib run lime build linux
+        run: haxelib run lime build linux
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
