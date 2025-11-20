@@ -42,11 +42,10 @@ jobs:
           sudo apt-get install libvlc-dev
           sudo apt-get install libvlccore-dev
 
-      - name: Install libraries
+      - name: Install libraries using hxpkg
         run: |
-          haxelib setup ~/haxelib
-          haxelib install hxpkg
-          haxelib run hxpkg install --force
+          haxelib install hxpkg --quiet
+          haxelib run hxpkg install
 
       - name: Compile
         run: haxelib run lime build linux

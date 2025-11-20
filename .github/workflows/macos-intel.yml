@@ -38,11 +38,10 @@ jobs:
             export/release/macos/haxe/
             export/release/macos/obj/
 
-      - name: Install libraries
+      - name: Install libraries using hxpkg
         run: |
-          haxelib setup ~/haxelib
-          haxelib install hxpkg
-          haxelib run hxpkg install --force
+          haxelib install hxpkg --quiet
+          haxelib run hxpkg install
 
       - name: Compile
         run: haxelib run lime build macos -64 -D HXCPP_M64

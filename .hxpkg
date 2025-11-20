@@ -3,6 +3,10 @@
 		"profile": "default",
 		"pkgs": [
 			{
+				"name": "lime",
+				"version": "8.2.2"
+			},
+			{
 				"name": "openfl",
 				"link": "https://github.com/system32unknown/openfl"
 			},
@@ -15,13 +19,13 @@
 				"link": "https://github.com/system32unknown/flixel-addons"
 			},
 			{
+				"name": "flxanimate",
+				"link": "https://github.com/Dot-Stuff/flxanimate"
+			},
+			{
 				"name": "hscript-improved",
 				"link": "https://github.com/system32unknown/AlterHscript",
 				"branch": "custom-classes"
-			},
-			{
-				"name": "flxanimate",
-				"link": "https://github.com/Dot-Stuff/flxanimate"
 			},
 			{
 				"name": "hxdiscord_rpc",
@@ -60,10 +64,6 @@
 			{
 				"name": "hxcpp",
 				"link": "https://github.com/system32unknown/hxcpp"
-			},
-			{
-				"name": "lime",
-				"version": "8.3.0"
 			},
 			{
 				"name": "hxjsonast"

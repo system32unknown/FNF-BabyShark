@@ -38,11 +38,10 @@ jobs:
             export/release/windows/haxe/
             export/release/windows/obj/
 
-      - name: Install libraries
+      - name: Install libraries using hxpkg
         run: |
-          haxelib setup C:/haxelib
-          haxelib install hxpkg
-          haxelib run hxpkg install --force
+          haxelib install hxpkg --quiet
+          haxelib run hxpkg install
 
       - name: Compile
         run: haxelib run lime build windows
