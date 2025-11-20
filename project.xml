@@ -117,17 +117,6 @@
 	<haxedef name="HXC_LIBVLC_LOGGING" if="VIDEOS_ALLOWED debug"/>
 	<haxedef name="HXVLC_NO_SHARE_DIRECTORY" if="VIDEOS_ALLOWED"/>
 
-	<define name="HXCPP_M32" if="32bit || 32"/>
-	<define name="32bit" if="HXCPP_M32"/>
-	<define name="32bits" if="32bit"/>
-	<define name="x86_BUILD" if="32bits"/>
-
-	<!-- fixes a bug with compiling on mac-->
-	<define name="mac" if="macos"/>
-	<define name="macos" if="mac"/>
-	<haxedef name="mac" if="mac"/>
-	<haxedef name="macos" if="macos"/>
-
 	<!--Tracy profiler stuff-->
 	<section if="FEATURE_DEBUG_TRACY">
 		<haxedef name="HXCPP_TELEMETRY"/>
