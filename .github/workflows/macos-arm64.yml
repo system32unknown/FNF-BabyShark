@@ -20,8 +20,11 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@main
-      - uses: krdlab/setup-haxe@master
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.7
 
@@ -38,12 +41,11 @@ jobs:
       - name: Install libraries
         run: |
           haxelib setup ~/haxelib
-          haxelib install hxcpp > /dev/null --quiet
           haxelib install hxpkg
           haxelib run hxpkg install --force
 
       - name: Compile
-        run: haxelib run lime build mac -64 -D HXCPP_M64
+        run: haxelib run lime build macos -64 -D HXCPP_ARM64
 
       - name: Tar files
         run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
