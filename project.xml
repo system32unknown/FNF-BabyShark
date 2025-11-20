@@ -89,6 +89,9 @@
 		<haxedef name="FLX_NO_DEBUG"/> <!-- Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	</section>
 
+	<!--Disable deprecated warnings-->
+	<haxedef name='no_ssl' if="hl"/>
+
 	<!-- Used for Izzy Engine's crash handler-->
 	<section if="CRASH_HANDLER cpp">
 		<haxedef name="HXCPP_CHECK_POINTER"/>
@@ -101,7 +104,8 @@
 
 	<!-- Haxe 4.3.0+: Enable pretty syntax errors and stuff. -->
 	<!-- pretty (haxeflixel default), indent, classic (haxe compiler default) -->
-	<haxedef name="message.reporting" value="pretty"/>
+	<haxedef name="message.reporting" value="pretty" unless="{haxe &lt; 4.3.1}"/>
+	<haxedef name="message.log-format" value="pretty" unless="{haxe &lt; 4.3.1}"/>
 
 	<haxedef name='no_ssl' if="hl"/>
 
@@ -130,11 +134,7 @@
 		<haxedef name="HXCPP_TRACY"/>
 		<haxedef name="HXCPP_TRACY_MEMORY"/>
 		<haxedef name="HXCPP_TRACY_ON_DEMAND"/>
-		<haxedef name="absolute-paths"/>
 	</section>
-
-	<!-- Fix compiling issues -->
-	<setenv name="HAXEPATH" value="./"/>
 
 	<!-- _________________________________Custom_______________________________ -->
 	<!-- Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
