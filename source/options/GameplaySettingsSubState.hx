@@ -49,6 +49,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.onChange = () -> FlxG.autoPause = Settings.data.autoPause;
 		addOption(new Option('Auto Pause Playstate', "If checked, in playstate, gameplay and notes will pause if it's unfocused.", 'autoPausePlayState'));
 
+		addOption(new Option('Remove Epic Judgement', "If checked, removes the Perfect judgement.", 'noEpic'));
+
 		addOption(new Option('Disable Reset Button', "If checked, pressing Reset won't do anything.", 'noReset'));
 		addOption(new Option('Dynamic Camera Movement', "If unchecked, \nthe camera won't move in the direction in which the characters sing.", 'camMovement'));
 
@@ -73,12 +75,14 @@ class GameplaySettingsSubState extends BaseOptionsMenu {
 		option.maxValue = 30;
 		addOption(option);
 
-		var option:Option = new Option('Epic Hit Window', 'Changes the amount of time you have\nfor hitting a "Epic!" in milliseconds.', 'epicWindow', INT);
-		option.displayFormat = '%vms';
-		option.scrollSpeed = 15;
-		option.minValue = 15;
-		option.maxValue = 22;
-		addOption(option);
+		if (!Settings.data.noEpic) {
+			var option:Option = new Option('Epic Hit Window', 'Changes the amount of time you have\nfor hitting a "Epic!" in milliseconds.', 'epicWindow', INT);
+			option.displayFormat = '%vms';
+			option.scrollSpeed = 15;
+			option.minValue = 15;
+			option.maxValue = 22;
+			addOption(option);
+		}
 		
 		var option:Option = new Option('Sick Hit Window', 'Changes the amount of time you have\nfor hitting a "Sick!" in milliseconds.', 'sickWindow', INT);
 		option.displayFormat = '%vms';

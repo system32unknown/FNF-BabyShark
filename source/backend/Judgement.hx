@@ -29,6 +29,7 @@ package backend;
 			new Judgement('ok', .4, 100, false),
 			new Judgement('bad', 0, 50, false),
 		];
+		if (Settings.data.noEpic) init_array.shift();
 		list = init_array;
 		return init_array;
 	}
@@ -49,7 +50,7 @@ package backend;
 		else {
 			for (i in 0...list.length - 1) {
 				if (diff <= list[i].timing) {
-					value = list[i]; // skips last window (Shit)
+					value = list[i]; // skips last window (Bad)
 					break;
 				}
 			}

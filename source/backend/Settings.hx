@@ -71,6 +71,7 @@ class SaveVariables {
 	var ghostRange:Float = .01;
 	var autoPause:Bool = true;
 	var autoPausePlayState:Bool = true;
+	var noEpic:Bool = false;
 	var noReset:Bool = false;
 	var camMovement:Bool = false;
 	var hitsoundTypes:String = 'Tick';

@@ -18,7 +18,7 @@ import backend.Paths;
 import backend.Controls;
 import backend.MusicBeatState;
 import backend.MusicBeatSubstate;
-import backend.CustomFadeTransition;
+import backend.Transition;
 import backend.Settings;
 import backend.Conductor;
 import backend.BaseStage;

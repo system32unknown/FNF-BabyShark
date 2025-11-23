@@ -37,7 +37,7 @@ class MusicBeatState extends flixel.FlxState {
 		if (curStepLimit > 0) maxBPM = curStepLimit * GameplaySettingsSubState.defaultBPM * Settings.data.framerate;
 		else maxBPM = Math.POSITIVE_INFINITY;
 
-		if (!skipNextTransOut) openSubState(new CustomFadeTransition(.5, true));
+		if (!skipNextTransOut) openSubState(new Transition(.5, true));
 		skipNextTransOut = false;
 	}
 
@@ -117,8 +117,8 @@ class MusicBeatState extends flixel.FlxState {
 
 	override function startOutro(onOutroComplete:()->Void):Void {
 		if (!skipNextTransIn) {
-			FlxG.state.openSubState(new CustomFadeTransition(.5, false));
-			CustomFadeTransition.finishCallback = onOutroComplete;
+			FlxG.state.openSubState(new Transition(.5, false));
+			Transition.finishCallback = onOutroComplete;
 			return;
 		}
 

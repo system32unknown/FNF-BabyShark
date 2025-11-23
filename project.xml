@@ -107,8 +107,6 @@
 	<haxedef name="message.reporting" value="pretty" unless="{haxe &lt; 4.3.1}"/>
 	<haxedef name="message.log-format" value="pretty" unless="{haxe &lt; 4.3.1}"/>
 
-	<haxedef name='no_ssl' if="hl"/>
-
 	<!-- Macro fixes-->
 	<haxeflag name="--macro" value="allowPackage('flash')"/>
 	<haxeflag name="--macro" value="include('my.pack')"/>

@@ -1,6 +1,6 @@
 package backend;
 
-class CustomFadeTransition extends FlxSubState {
+class Transition extends FlxSubState {
 	public static var finishCallback:Void->Void;
 	var isTransIn:Bool = false;
 	var transBlack:FlxSprite;
