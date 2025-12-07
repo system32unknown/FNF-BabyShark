@@ -27,8 +27,7 @@
 				"branch": "custom-classes"
 			},
 			{
-				"name": "hxdiscord_rpc",
-				"link": "https://github.com/MAJigsaw77/hxdiscord_rpc"
+				"name": "hxdiscord_rpc"
 			},
 			{
 				"name": "hxvlc"

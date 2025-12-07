@@ -75,9 +75,11 @@
 	<!-- ______________________________Haxedefines_____________________________ -->
 	<haxedef name="FLX_NO_TOUCH" if="desktop"/>
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN"/>
+
 	<haxedef name="HXCPP_GC_BIG_BLOCKS" if="cpp"/>
 
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc"/>
+	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux"/>
 
 	<section if="HSCRIPT_ALLOWED">
 		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
@@ -88,9 +90,6 @@
 		<haxedef name="no-deprecation-warnings"/> <!-- No deprecation warnings. -->
 		<haxedef name="FLX_NO_DEBUG"/> <!-- Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	</section>
-
-	<!--Disable deprecated warnings-->
-	<haxedef name='no_ssl' if="hl"/>
 
 	<!-- Used for Izzy Engine's crash handler-->
 	<section if="CRASH_HANDLER cpp">

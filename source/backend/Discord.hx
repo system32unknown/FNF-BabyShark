@@ -100,7 +100,7 @@ class DiscordClient {
 		updatePresence();
 	}
 	
-	public static function updatePresence()
+	public static function updatePresence():Void
 		Discord.UpdatePresence(RawConstPointer.addressOf(presence.__presence));
 
 	public static function resetClientID()
@@ -140,6 +140,7 @@ final class DiscordPresence {
 
 	function new() {
 		__presence = new DiscordRichPresence();
+		__presence.type = DiscordActivityType_Playing;
 	}
 
 	public function toString():String {
