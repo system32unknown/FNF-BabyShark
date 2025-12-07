@@ -42,11 +42,9 @@ jobs:
         run: |
           haxelib install hxpkg --quiet
           haxelib run hxpkg install --force
+
       - name: Compile
         run: haxelib run lime build macos -64 -D HXCPP_M64
-
-      - name: Tar files
-        run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main

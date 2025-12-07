@@ -1901,7 +1901,7 @@ class PlayState extends MusicBeatState {
 
 		if (!Settings.data.comboStacking && popUpGroup.members.length > 0) {
 			for (spr in popUpGroup) {
-				spr.kill();
+				if (spr.exists) spr.kill();
 				popUpGroup.remove(spr);
 			}
 		}

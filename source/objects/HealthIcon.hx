@@ -148,6 +148,7 @@ class HealthIcon extends FlxSprite {
 	}
 
 	public var curBopType(default, set):String = "None";
+	var iconSizeResetTime:Float = 0;
 
 	public dynamic function bopUpdate(e:Float, rate:Float):Void {
 		switch (curBopType.toLowerCase()) {
@@ -155,7 +156,10 @@ class HealthIcon extends FlxSprite {
 			case "psych":
 				var mult:Float = FlxMath.lerp(1, scale.x, Math.exp(-e * 9 * rate));
 				scale.set(mult, mult);
-			case "dave": setGraphicSize(Std.int(FlxMath.lerp(150, width, .88)), Std.int(FlxMath.lerp(150, height, .88)));
+			case "dave":
+				iconSizeResetTime = Math.max(0, iconSizeResetTime - e / rate);
+				var iconLerp:Float = FlxEase.quartIn(iconSizeResetTime / .8);
+				setGraphicSize(Std.int(FlxMath.lerp(frameWidth, width, iconLerp)), Std.int(FlxMath.lerp(frameHeight, height, iconLerp)));
 		}
 		updateHitbox();
 	}
@@ -181,6 +185,7 @@ class HealthIcon extends FlxSprite {
 					var funny:Float = Math.max(Math.min(info.percent, 1.9), .1);
 					if (type == 0) setGraphicSize(Std.int(width + (50 * (funny + .1))), Std.int(height - (25 * funny)));
 					else if (type == 1) setGraphicSize(Std.int(width + (50 * ((2 - funny) + .1))), Std.int(height - (25 * ((2 - funny) + .1))));
+					iconSizeResetTime = .8;
 				case "goldenapple":
 					var iconAngle:Float = (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? -15 : 15);
 					if (type == 0) {
