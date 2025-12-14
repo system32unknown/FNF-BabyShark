@@ -44,7 +44,7 @@ jobs:
           haxelib run hxpkg install --force
 
       - name: Compile
-        run: haxelib run lime build macos -64 -D HXCPP_M64
+        run: arch -x86_64 haxelib run lime build macos -64 -D HXCPP_M64
 
       - name: Uploading artifact
         uses: actions/upload-artifact@main
