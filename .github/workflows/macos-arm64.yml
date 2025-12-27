@@ -46,6 +46,9 @@ jobs:
       - name: Compile
         run: arch -x86_64 haxelib run lime build macos -64 -D HXCPP_ARM64
 
+      - name: Tar files
+        run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
+
       - name: Uploading artifact
         uses: actions/upload-artifact@main
         with:
