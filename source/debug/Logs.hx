@@ -3,7 +3,7 @@ package debug;
 import haxe.Log;
 import haxe.PosInfos;
 
-import flixel.system.debug.log.LogStyle;
+import flixel.system.debug.log.FlxLogStyle;
 
 import utils.system.NativeUtil;
 import utils.system.Ansi.AnsiColor;
@@ -19,11 +19,11 @@ class Logs {
 			printChunks(prepareColoredTrace(data, TRACE));
 		};
 
-		LogStyle.NORMAL.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.NORMAL, d, pos));
-		LogStyle.WARNING.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.WARNING, d, pos));
-		LogStyle.ERROR.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.ERROR, d, pos));
-		LogStyle.NOTICE.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.NOTICE, d, pos));
-		LogStyle.CONSOLE.onLog.add((d:Any, ?pos:PosInfos) -> onLog(LogStyle.CONSOLE, d, pos));
+		FlxG.log.styles.normal.onLog.add((d:Any, ?pos:PosInfos) -> onLog(FlxG.log.styles.normal, d, pos));
+		FlxG.log.styles.warning.onLog.add((d:Any, ?pos:PosInfos) -> onLog(FlxG.log.styles.warning, d, pos));
+		FlxG.log.styles.error.onLog.add((d:Any, ?pos:PosInfos) -> onLog(FlxG.log.styles.error, d, pos));
+		FlxG.log.styles.notice.onLog.add((d:Any, ?pos:PosInfos) -> onLog(FlxG.log.styles.notice, d, pos));
+		FlxG.log.styles.console.onLog.add((d:Any, ?pos:PosInfos) -> onLog(FlxG.log.styles.console, d, pos));
 	}
 
 	public static function trace(text:String):Void
@@ -76,23 +76,23 @@ class Logs {
 
 	static var _showing:Bool = false;
 
-	static function onLog(Style:LogStyle, Data:Any, ?Pos:PosInfos):Void {
+	static function onLog(Style:FlxLogStyle, Data:Any, ?Pos:PosInfos):Void {
 		var prefix:String = "[FLIXEL]";
 		var level:Level = TRACE;
 
-		if (Style == LogStyle.CONSOLE) {
+		if (Style == FlxG.log.styles.console) {
 			prefix = "";
 			level = TRACE;
-		} else if (Style == LogStyle.ERROR) {
+		} else if (Style == FlxG.log.styles.error) {
 			prefix = "[FLIXEL]";
 			level = ERROR;
-		} else if (Style == LogStyle.NORMAL) {
+		} else if (Style == FlxG.log.styles.normal) {
 			prefix = "[FLIXEL]";
 			level = TRACE;
-		} else if (Style == LogStyle.NOTICE) {
+		} else if (Style == FlxG.log.styles.notice) {
 			prefix = "[FLIXEL]";
 			level = WARNING;
-		} else if (Style == LogStyle.WARNING) {
+		} else if (Style == FlxG.log.styles.warning) {
 			prefix = "[FLIXEL]";
 			level = WARNING;
 		}

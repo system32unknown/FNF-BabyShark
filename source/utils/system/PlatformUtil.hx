@@ -151,6 +151,9 @@ class PlatformUtil {
 		freopen("CONIN$", "r", stdin);
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);
+
+		SetConsoleOutputCP(65001);
+		SetConsoleCP(65001);
 	')
 	#end
 	public static function allocConsole() {}

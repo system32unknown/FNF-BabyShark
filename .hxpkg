@@ -61,7 +61,7 @@
 			},
 			{
 				"name": "hxcpp",
-				"link": "https://github.com/system32unknown/hxcpp"
+				"link": "https://github.com/moxie-coder/hxcpp-funkin"
 			},
 			{
 				"name": "hxjsonast"
