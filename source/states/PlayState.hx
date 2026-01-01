@@ -313,9 +313,9 @@ class PlayState extends MusicBeatState {
 			introSoundNames[introSoundNames.indexOf(sndName)] = sndName.trim(); // trim trailing spaces in the sound, just in case, JUST in case.
 		}
 
-		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
-		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
-		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
+		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y); boyfriendGroup.zIndex = 300;
+		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y); dadGroup.zIndex = 200;
+		gfGroup = new FlxSpriteGroup(GF_X, GF_Y); gfGroup.zIndex = 100;
 
 		switch (curStage) {
 			case 'stage': new states.stages.StageWeek1(); //Week 1
@@ -514,6 +514,7 @@ class PlayState extends MusicBeatState {
 			MemoryUtil.collect(true);
 			MemoryUtil.enable(false);
 		}
+		refresh();
 	}
 
 	function set_songSpeed(value:Float):Float {

@@ -88,7 +88,7 @@ class MainMenuState extends MusicBeatState {
 			menuItems.add(rightItem);
 		}
 
-		var version:FlxText = new FlxText(0, 0, 0, 'Baby Shark\'s Big Funkin! v${FlxG.stage.application.meta.get('version')}\nAlter Engine v${Main.engineVer} (${Main.engineVer.COMMIT_HASH}, ${Main.engineVer.COMMIT_NUM}) - FNF v${Main.fnfVer}', 16);
+		var version:FlxText = new FlxText(0, 0, 0, 'BSBF v${FlxG.stage.application.meta.get('version')}\nAlter Engine v${Main.engineVer} (${Main.engineVer.COMMIT_HASH})\nFNF v${Main.fnfVer}', 16);
 		version.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, RIGHT);
 		version.setBorderStyle(OUTLINE, FlxColor.BLACK);
 		version.scrollFactor.set();

@@ -8,11 +8,14 @@ class StageWeek1 extends BaseStage {
 	var dadbattleFog:DadBattleFog;
 
 	override function create() {
-		add(new BGSprite('stageback', -600, -200, 0.9, 0.9));
+		var bg:BGSprite = new BGSprite('stageback', -600, -200, 0.9, 0.9);
+		bg.zIndex = 10;
+		add(bg);
 
 		final stageFront:BGSprite = new BGSprite('stagefront', -650, 600, 0.9, 0.9);
 		stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
 		stageFront.updateHitbox();
+		stageFront.zIndex = 20;
 		add(stageFront);
 
 		if (lowQuality) return;
@@ -22,12 +25,14 @@ class StageWeek1 extends BaseStage {
 			stageLight.setGraphicSize(Std.int(stageLight.width * 1.1));
 			stageLight.updateHitbox();
 			stageLight.flipX = (i == 2);
+			stageLight.zIndex = 30;
 			add(stageLight);
 		}
 
 		final stageCurtains:BGSprite = new BGSprite('stagecurtains', -500, -300, 1.3, 1.3);
 		stageCurtains.setGraphicSize(Std.int(stageCurtains.width * .9));
 		stageCurtains.updateHitbox();
+		stageCurtains.zIndex = 30;
 		add(stageCurtains);
 	}
 

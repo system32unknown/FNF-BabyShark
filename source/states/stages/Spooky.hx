@@ -73,6 +73,7 @@ class Spooky extends BaseStage {
 		var whiteScreen:FlxSprite = new FlxSprite().makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2));
 		whiteScreen.scrollFactor.set();
 		whiteScreen.blend = ADD;
+		whiteScreen.zIndex = 1000;
 		add(whiteScreen);
 		FlxTween.tween(whiteScreen, {alpha: 0}, 1, {
 			startDelay: 0.1,

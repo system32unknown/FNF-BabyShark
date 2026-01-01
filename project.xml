@@ -109,12 +109,14 @@
 	<haxeflag name="--macro" value="allowPackage('flash')"/>
 	<haxeflag name="--macro" value="include('my.pack')"/>
 
+	<haxeflag name="--macro" value="addMetadata('@:build(macros.FlxMacro.buildZindex())', 'flixel.FlxBasic')" />
+
 	<!-- hxVLC Defines-->
 	<haxedef name="HXC_LIBVLC_LOGGING" if="VIDEOS_ALLOWED debug"/>
 	<haxedef name="HXVLC_NO_SHARE_DIRECTORY" if="VIDEOS_ALLOWED"/>
 
 	<!--Tracy profiler stuff-->
-	<section if="FEATURE_DEBUG_TRACY">
+	<section if="DEBUG_TRACY">
 		<haxedef name="HXCPP_TELEMETRY"/>
 		<haxedef name="HXCPP_TRACY"/>
 		<haxedef name="HXCPP_TRACY_MEMORY"/>

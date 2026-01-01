@@ -34,13 +34,18 @@ class Bar extends FlxSpriteGroup {
 	 */
 	public var barOffset:FlxPoint = FlxPoint.get(3, 3);
 
+	/**
+	 * additive offset for the bg position
+	**/
+	public var bgOffset:FlxPoint = FlxPoint.get(0, 0);
+
 	public function new(x:Float, y:Float, image:String = 'healthBar', ?valueFunction:Void->Float, boundX:Float = 0, boundY:Float = 1) {
 		super(x, y);
 
 		this.valueFunction = valueFunction;
 
 		bg = new FlxSprite(Paths.image(image));
-		bg.setPosition(bg.x, bg.y);
+		bg.setPosition(bg.x + bgOffset.x, bg.y + bgOffset.y);
 
 		@:bypassAccessor barWidth = Std.int(bg.width - 6);
 		@:bypassAccessor barHeight = Std.int(bg.height - 6);
@@ -78,7 +83,14 @@ class Bar extends FlxSpriteGroup {
 
 	override public function destroy() {
 		barOffset.put();
+		bgOffset.put();
 		super.destroy();
+	}
+
+	public function setBGOffset(x:Float, y:Float) {
+		bgOffset.set(x, y);
+		bg.x += bgOffset.x;
+		bg.y += bgOffset.y;
 	}
 
 	public function setBounds(min:Float, max:Float):FlxBounds<Float> {
@@ -93,8 +105,8 @@ class Bar extends FlxSpriteGroup {
 	public function updateBar() {
 		if (leftBar == null || rightBar == null) return;
 
-		leftBar.setPosition(bg.x, bg.y);
-		rightBar.setPosition(bg.x, bg.y);
+		leftBar.setPosition(bg.x - bgOffset.x, bg.y - bgOffset.y);
+		rightBar.setPosition(bg.x - bgOffset.x, bg.y - bgOffset.y);
 
 		final leftSize:Float = FlxMath.lerp(0, barWidth, (leftToRight ? percent / 100 : 1 - percent / 100));
 

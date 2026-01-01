@@ -190,4 +190,12 @@ class MusicBeatState extends flixel.FlxState {
 			val = PlayState.SONG.notes[curSection].sectionBeats;
 		return val ?? 4;
 	}
+
+	/**
+	 * Refreshes the stage, by redoing the render order of all props.
+	 * It does this based on the `zIndex` of each prop.
+	 */
+	public function refresh():Void {
+		sort(utils.SortUtil.byZIndex, flixel.util.FlxSort.ASCENDING);
+	}
 }

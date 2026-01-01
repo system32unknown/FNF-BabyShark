@@ -3,7 +3,7 @@ package;
 import flixel.addons.transition.FlxTransitionableState;
 import states.FlashingState;
 
-#if FEATURE_DEBUG_TRACY
+#if DEBUG_TRACY
 import cpp.vm.tracy.TracyProfiler;
 import openfl.events.Event;
 #end
@@ -45,8 +45,9 @@ class Init extends flixel.FlxState {
 			return;
 		}
 
-		#if FEATURE_DEBUG_TRACY
-		openfl.Lib.current.stage.addEventListener(Event.EXIT_FRAME, (e:Event) -> TracyProfiler.frameMark());
+		
+		#if DEBUG_TRACY
+		FlxG.stage.addEventListener(Event.EXIT_FRAME, (e:Event) -> TracyProfiler.frameMark());
 		TracyProfiler.setThreadName("main");
 		#end
 
