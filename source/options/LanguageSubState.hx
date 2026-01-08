@@ -9,7 +9,7 @@ class LanguageSubState extends FlxSubState {
 	public function new() {
 		super();
 
-		var bg = new FlxSprite(Paths.image('menuDesat'));
+		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.antialiasing = Settings.data.antialiasing;
 		bg.gameCenter();

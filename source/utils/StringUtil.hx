@@ -220,7 +220,7 @@ class StringUtil {
 			} else throw "Given string, but It cannot convert to number";
 		} else if (value is Float || value is Int) {
 			defined = Std.string(value);
-		} else throw "It's invalid type";
+		} else throw "It's invalid type. You need the number or numerical string.";
 
 		var decimal:Bool = defined.lastIndexOf(".") != -1;
 		var cnt:Int = 0;

@@ -245,7 +245,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 	}
 
 	function updateText() {
-		for (idx => chr in grpWeekCharacters) chr.name = weekFile.weekCharacters[idx];
+		for (idx => chr in grpWeekCharacters) chr.changeCharacter(weekFile.weekCharacters[idx]);
 
 		var tracks:String = '';
 		for (i in 0...weekFile.songs.length) {

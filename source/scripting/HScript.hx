@@ -295,10 +295,12 @@ class HScript extends AlterHscript {
 
 	override function call(funcToRun:String, ?args:Array<Dynamic>):AlterCall {
 		if (funcToRun == null || interp == null) return null;
+
 		if (!exists(funcToRun)) {
 			AlterHscript.error('No function named: $funcToRun', this.interp.posInfos());
 			return null;
 		}
+
 		try {
 			var func:Dynamic = interp.variables.get(funcToRun); // function signature
 			final ret:Dynamic = Reflect.callMethod(null, func, args ?? []);
@@ -310,7 +312,7 @@ class HScript extends AlterHscript {
 		} catch (e:ValueException) {
 			var pos:HScriptInfos = cast this.interp.posInfos();
 			pos.funcName = funcToRun;
-			AlterHscript.error('$e', pos);
+			AlterHscript.error(e.toString(), pos);
 		}
 		return null;
 	}

@@ -124,9 +124,11 @@ class FreeplayState extends MusicBeatState {
 
 		scoreText = new FlxText(FlxG.width * .7, 5, 0, '', 32);
 		scoreText.font = Paths.font('babyshark.ttf');
-		scoreText.alignment = 'right';
+		scoreText.alignment = RIGHT;
+		scoreText.visible = false;
 
 		add(scoreBG = new FlxSprite(scoreText.x - 6).makeGraphic(1, 90, FlxColor.BLACK));
+		scoreBG.visible = false;
 		scoreBG.alpha = 0.6;
 
 		add(scoreText);
@@ -134,6 +136,7 @@ class FreeplayState extends MusicBeatState {
 		add(diffText = new FlxText(scoreText.x, 0, 0, '', 24));
 		diffText.y = scoreBG.height - diffText.height + 10;
 		diffText.font = scoreText.font;
+		diffText.visible = false;
 		add(comboText = new FlxText(scoreText.x, scoreBG.height / 2 - 6, 0, '', 24));
 		comboText.font = diffText.font;
 
@@ -169,14 +172,16 @@ class FreeplayState extends MusicBeatState {
 		bottomString = leText;
 		bottomText = new FlxText(0, 0, FlxG.width, leText, 18);
 		bottomText.font = Paths.font("babyshark.ttf");
-		bottomText.alignment = 'center';
+		bottomText.alignment = CENTER;
 		bottomText.scrollFactor.set();
 		bottomText.y = FlxG.height - bottomText.height;
+		bottomText.visible = false;
 		add(bottomText);
 
 		bottomBG = new FlxSprite().makeGraphic(FlxG.width, Std.int(bottomText.height), 0x7F000000);
 		bottomBG.scrollFactor.set();
 		bottomBG.y = FlxG.height - bottomBG.height;
+		bottomBG.visible = false;
 		insert(members.indexOf(bottomText), bottomBG);
 
 		add(player = new MusicPlayer(this));
@@ -184,11 +189,6 @@ class FreeplayState extends MusicBeatState {
 		changeSelection();
 		updateTexts();
 		super.create();
-
-		if (Settings.data.disableGC && !MemoryUtil.isGcOn) {
-			MemoryUtil.enable();
-			MemoryUtil.collect(true);
-		}
 	}
 
 	override function closeSubState() {
@@ -263,7 +263,13 @@ class FreeplayState extends MusicBeatState {
 				if (loading >= songs.length) {
 					WeekData.setDirectoryFromWeek();
 					loadingText.visible = loadingTextBG.visible = false;
-					
+					scoreText.visible = scoreBG.visible = diffText.visible = bottomBG.visible = bottomText.visible = true;
+
+					if (Settings.data.disableGC && !MemoryUtil.isGcOn) {
+						MemoryUtil.enable();
+						MemoryUtil.collect(true);
+					}
+
 					changeSelection(0, true);
 					updateTexts(delayTime);
 				}

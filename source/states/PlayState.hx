@@ -2382,11 +2382,13 @@ class PlayState extends MusicBeatState {
 	}
 	#end
 
-	public function callOnHScript(funcToCall:String, ?args:Array<Dynamic>, ?ignoreStops:Bool = false, ?exclusions:Array<String>, ?excludeValues:Array<Dynamic>):Dynamic {
+	public function callOnHScript(funcToCall:String, args:Array<Dynamic> = null, ?ignoreStops:Bool = false, exclusions:Array<String> = null, excludeValues:Array<Dynamic> = null):Dynamic {
 		var returnVal:Dynamic = ScriptUtils.Function_Continue;
 		#if HSCRIPT_ALLOWED
 		if (exclusions == null) exclusions = [];
-		if (excludeValues == null) excludeValues = [ScriptUtils.Function_Continue];
+		if (excludeValues == null) excludeValues = [];
+		excludeValues.push(ScriptUtils.Function_Continue);
+
 		var len:Int = hxArray.length;
 		if (len < 1) return returnVal;
 
