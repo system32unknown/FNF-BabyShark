@@ -57,7 +57,7 @@
 	<!-- _______________________________Libraries______________________________ -->
 	<haxelib name="flixel"/>
 	<haxelib name="flixel-addons"/>
-	<haxelib name="flxanimate"/>
+	<haxelib name="flixel-animate"/>
 	<haxelib name="hscript-improved"/>
 	<haxelib name="tjson"/>
 	<haxelib name="json2object"/>

@@ -213,7 +213,7 @@ class StoryMenuState extends MusicBeatState {
 
 				weekSprGroup.members[curWeek].isFlashing = true;
 				for (char in characters.members) {
-					if (char.character == '' || !char.hasConfirmAnimation) continue;
+					if (char.name == '' || !char.hasConfirmAnimation) continue;
 					char.animation.play('confirm');
 				}
 				stopspamming = true;
@@ -299,7 +299,7 @@ class StoryMenuState extends MusicBeatState {
 	}
 
 	function updateText() {
-		for (index => item in characters.members) item.changeCharacter(weekList[curWeek].weekCharacters[index]);
+		for (index => item in characters.members) item.name = weekList[curWeek].weekCharacters[index];
 
 		var tracks:String = '';
 		var leWeek:WeekData = weekList[curWeek];

@@ -134,7 +134,7 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 		for (i in 0...3) {
 			var char:MenuCharacter = grpWeekCharacters.members[i];
 			char.alpha = 0.2;
-			char.character = defaultCharacters[i];
+			char.name = defaultCharacters[i];
 		}
 		reloadSelectedCharacter();
 	}

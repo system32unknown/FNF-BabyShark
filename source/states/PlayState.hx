@@ -2327,7 +2327,7 @@ class PlayState extends MusicBeatState {
 	}
 	public function playerDance():Void {
 		var anim:String = boyfriend.getAnimationName();
-		if (boyfriend.holdTimer > boyfriend.charaCrochet * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss')) boyfriend.dance();
+		if (boyfriend.holdTimer > boyfriend.charCrochet * boyfriend.singDuration && anim.startsWith('sing') && !anim.endsWith('miss')) boyfriend.dance();
 	}
 
 	override function sectionHit():Void {

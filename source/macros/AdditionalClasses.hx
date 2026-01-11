@@ -22,7 +22,18 @@ class AdditionalClasses {
 			"lime.tools",
 		];
 
-		if (haxe.macro.Context.defined("sys")) Compiler.include("openfl.net");
+		var compathx4 = [
+			"sys.db.Sqlite",
+			"sys.db.Mysql",
+			"sys.db.Connection",
+			"sys.db.ResultSet",
+			"haxe.remoting.Proxy",
+		];
+
+		if (haxe.macro.Context.defined("sys"))
+			for (inc in ["sys", "openfl.net"])
+				Compiler.include(inc, compathx4);
+
 		for (inc in [
 			// FLIXEL
 			"flixel", "lime", "haxe", "openfl", "funkin.vis",

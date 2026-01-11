@@ -262,25 +262,24 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 				} else if (myAnim != null) { // This is VERY unoptimized and bad, I hope to find a better replacement that loads only a specific frame as bitmap in the future.
 					if (animateGhost == null) { // If I created the animateGhost on create() and you didn't load an atlas, it would crash the game on destroy, so we create it here
 						animateGhost = new FlxAnimate(ghost.x, ghost.y);
-						animateGhost.showPivot = false;
 						insert(members.indexOf(ghost), animateGhost);
 						animateGhost.active = false;
 					}
 
 					if (animateGhost == null || animateGhostImage != character.imageFile)
-						Paths.loadAnimateAtlas(animateGhost, character.imageFile);
+						animateGhost.frames = Paths.getTextureAtlas(character.imageFile);
 
 					if (myAnim.indices != null && myAnim.indices.length > 0)
 						animateGhost.anim.addBySymbolIndices('anim', myAnim.name, myAnim.indices, 0, false);
 					else animateGhost.anim.addBySymbol('anim', myAnim.name, 0, false);
 
-					animateGhost.anim.play('anim', true, false, character.atlas.anim.curFrame);
+					animateGhost.anim.play('anim', true, false, character.anim.curAnim.curFrame);
 					animateGhost.anim.pause();
 
 					animateGhostImage = character.imageFile;
 				}
 
-				var spr:FlxSprite = !character.isAnimateAtlas ? ghost : animateGhost;
+				var spr:FlxSprite = character.spriteType == TEXTURE_ATLAS ? animateGhost : ghost;
 				if (spr != null) {
 					spr.setPosition(character.x, character.y);
 					spr.antialiasing = character.antialiasing;
@@ -404,6 +403,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 
 	var animationDropDown:PsychUIDropDownMenu;
 	var animationInputText:PsychUIInputText;
+	var animationFrameLabelCheckBox:PsychUICheckBox;
 	var animationNameInputText:PsychUIInputText;
 	var animationIndicesInputText:PsychUIInputText;
 	var animationFramerate:PsychUINumericStepper;
@@ -412,6 +412,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		var tab_group:FlxSpriteGroup = UI_characterbox.getTab('Animations').menu;
 
 		animationInputText = new PsychUIInputText(15, 85, 80);
+		animationFrameLabelCheckBox = new PsychUICheckBox(185, animationInputText.y - 55, "Frame Label (Texture Atlas):");
 		animationNameInputText = new PsychUIInputText(animationInputText.x, animationInputText.y + 35, 150);
 		animationIndicesInputText = new PsychUIInputText(animationNameInputText.x, animationNameInputText.y + 40, 250);
 		animationFramerate = new PsychUINumericStepper(animationInputText.x + 170, animationInputText.y, 1, 24, 0, 240);
@@ -420,6 +421,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		animationDropDown = new PsychUIDropDownMenu(15, animationInputText.y - 55, [''], function(selectedAnimation:Int, pressed:String) {
 			var anim:AnimArray = character.animationsArray[selectedAnimation];
 			animationInputText.text = anim.anim;
+			animationFrameLabelCheckBox.checked = anim.isFrameLabel;
 			animationNameInputText.text = anim.name;
 			animationLoopCheckBox.checked = anim.loop;
 			animationFramerate.value = anim.fps;
@@ -456,19 +458,18 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			for (anim in character.animationsArray)
 				if (animationInputText.text == anim.anim) {
 					lastOffsets = anim.offsets;
-					if (character.hasAnimation(animationInputText.text)) {
-						if (!character.isAnimateAtlas) character.animation.remove(animationInputText.text);
-						else @:privateAccess character.atlas.anim.animsMap.remove(animationInputText.text);
-					}
+					if (character.hasAnimation(animationInputText.text)) character.animation.remove(animationInputText.text);
 					character.animationsArray.remove(anim);
 				}
 			var addedAnim:AnimArray = newAnim(animationInputText.text, animationNameInputText.text);
 			addedAnim.fps = Math.round(animationFramerate.value);
+			addedAnim.isFrameLabel = animationFrameLabelCheckBox.checked;
 			addedAnim.loop = animationLoopCheckBox.checked;
 			addedAnim.indices = indices;
 			addedAnim.offsets = lastOffsets;
-			addAnimation(addedAnim.anim, addedAnim.name, addedAnim.fps, addedAnim.loop, addedAnim.indices);
+			addAnimation(addedAnim.anim, addedAnim.name, addedAnim.fps, addedAnim.loop, addedAnim.indices, addedAnim.isFrameLabel);
 			character.animationsArray.push(addedAnim);
+
 			reloadAnimList();
 			@:arrayAccess curAnim = Std.int(Math.max(0, character.animationsArray.indexOf(addedAnim)));
 			character.playAnim(addedAnim.anim, true);
@@ -481,8 +482,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 					var resetAnim:Bool = false;
 					if (anim.anim == character.getAnimationName()) resetAnim = true;
 					if (character.hasAnimation(anim.anim)) {
-						if (!character.isAnimateAtlas) character.animation.remove(anim.anim);
-						else @:privateAccess character.atlas.anim.animsMap.remove(anim.anim);
+						character.animation.remove(anim.anim);
 						character.animOffsets.remove(anim.anim);
 						character.animationsArray.remove(anim);
 					}
@@ -506,6 +506,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		tab_group.add(new FlxText(animationIndicesInputText.x, animationIndicesInputText.y - 18, 170, 'ADVANCED - Animation Indices:'));
 
 		tab_group.add(animationInputText);
+		tab_group.add(animationFrameLabelCheckBox);
 		tab_group.add(animationNameInputText);
 		tab_group.add(animationIndicesInputText);
 		tab_group.add(animationFramerate);
@@ -670,19 +671,18 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		var lastAnim:String = character.getAnimationName();
 		var anims:Array<AnimArray> = character.animationsArray.copy();
 
-		character.atlas = flixel.util.FlxDestroyUtil.destroy(character.atlas);
 		character.isAnimateAtlas = false;
 		character.color = FlxColor.WHITE;
 		character.alpha = 1;
 
 		if (Paths.fileExists('images/${character.imageFile}/Animation.json')) {
-			character.atlas = new FlxAnimate();
-			character.atlas.showPivot = false;
-			try {
-				Paths.loadAnimateAtlas(character.atlas, character.imageFile);
-			} catch (e:Dynamic) FlxG.log.warn('Could not load atlas ${character.imageFile}: $e');
+			character.frames = Paths.getTextureAtlas(character.imageFile);
 			character.isAnimateAtlas = true;
-		} else character.frames = Paths.getMultiAtlas(character.imageFile.split(','));
+		} else if (Paths.fileExists('images/${character.imageFile}.txt'))
+			character.frames = Paths.getPackerAtlas(character.imageFile);
+		else if (Paths.fileExists('images/${character.imageFile}.json'))
+			character.frames = Paths.getAsepriteAtlas(character.imageFile);
+		else character.frames = Paths.getSparrowAtlas(character.imageFile);
 
 		for (anim in anims) {
 			var animAnim:String = '' + anim.anim;
@@ -690,7 +690,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			var animFps:Int = anim.fps;
 			var animLoop:Bool = !!anim.loop; // Bruh
 			var animIndices:Array<Int> = anim.indices;
-			addAnimation(animAnim, animName, animFps, animLoop, animIndices);
+			addAnimation(animAnim, animName, animFps, animLoop, animIndices, anim.isFrameLabel);
 		}
 
 		if (anims.length > 0) {
@@ -836,15 +836,8 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 			if (FlxG.keys.justPressed.SPACE)
 				character.playAnim(character.getAnimationName(), true);
 
-			var frames:Int = -1;
-			var length:Int = -1;
-			if (!character.isAnimateAtlas && character.animation.curAnim != null) {
-				frames = character.animation.curAnim.curFrame;
-				length = character.animation.curAnim.numFrames;
-			} else if (character.isAnimateAtlas && character.atlas.anim != null) {
-				frames = character.atlas.anim.curFrame;
-				length = character.atlas.anim.length;
-			}
+			var frames:Int = character.animation.curAnim.curFrame;
+			var length:Int = character.animation.curAnim.numFrames;
 
 			if (length >= 0) {
 				if (FlxG.keys.justPressed.A || FlxG.keys.justPressed.D || holdingFrameTime > .5) {
@@ -854,8 +847,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 
 					if (holdingFrameTime <= .5 || holdingFrameElapsed > .1) {
 						frames = FlxMath.wrap(frames + Std.int(isLeft ? -shiftMult : shiftMult), 0, length - 1);
-						if (!character.isAnimateAtlas) character.animation.curAnim.curFrame = frames;
-						else character.atlas.anim.curFrame = frames;
+						character.animation.curAnim.curFrame = frames;
 						holdingFrameElapsed -= .1;
 					}
 				}
@@ -968,15 +960,21 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		return (name != 'bf' && !name.startsWith('bf-') && !name.endsWith('-player') && !name.endsWith('-playable') && !name.endsWith('-dead')) || name.endsWith('-opponent') || name.startsWith('gf-') || name.endsWith('-gf') || name == 'gf';
 	}
 
-	function addAnimation(anim:String, name:String, fps:Float, loop:Bool, indices:Array<Int>) {
+	function addAnimation(anim:String, name:String, fps:Float, loop:Bool, indices:Array<Int>, frameLabel:Bool = false) {
 		if (!character.isAnimateAtlas) {
 			if (indices != null && indices.length > 0)
 				character.animation.addByIndices(anim, name, indices, "", fps, loop);
 			else character.animation.addByPrefix(anim, name, fps, loop);
 		} else {
-			if (indices != null && indices.length > 0)
-				character.atlas.anim.addBySymbolIndices(anim, name, indices, fps, loop);
-			else character.atlas.anim.addBySymbol(anim, name, fps, loop);
+			if (frameLabel) {
+				if (indices != null && indices.length > 0)
+					character.anim.addByFrameLabelIndices(anim, name, indices, fps, loop);
+				else character.anim.addBySymbol(anim, name, fps, loop);
+			} else {
+				if (indices != null && indices.length > 0)
+					character.anim.addBySymbolIndices(anim, name, indices, fps, loop);
+				else character.anim.addBySymbol(anim, name, fps, loop);
+			}
 		}
 
 		if (!character.hasAnimation(anim)) character.addOffset(anim);

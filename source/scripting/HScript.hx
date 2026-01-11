@@ -68,10 +68,6 @@ class HScript extends AlterHscript {
 			"EReg" => EReg,
 			"Lambda" => Lambda,
 
-			#if flxanimate
-			"FlxAnimate" => FlxAnimate,
-			#end
-
 			// Sys related stuff
 			#if sys
 			"File" => File,

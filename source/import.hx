@@ -29,6 +29,8 @@ import backend.EK;
 
 import backend.ui.*; // Psych-UI
 
+import animate.FlxAnimate;
+
 import utils.Util;
 import utils.SpriteUtil;
 
@@ -37,11 +39,6 @@ import objects.BGSprite;
 
 import states.PlayState;
 import states.LoadingState;
-
-#if flxanimate 
-import flxanimate.*;
-import flxanimate.PsychFlxAnimate as FlxAnimate;
-#end
 
 import flixel.FlxG;
 import flixel.FlxSprite;
