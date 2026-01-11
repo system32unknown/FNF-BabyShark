@@ -90,6 +90,8 @@ class Character extends FlxAnimate {
 		character ??= DEFAULT_CHARACTER;
 		super(x, y);
 
+		animation = new backend.animation.PsychAnimationController(this);
+
 		animOffsets = new Map<String, Array<Float>>();
 		this.isPlayer = isPlayer;
 		changeCharacter(character);
