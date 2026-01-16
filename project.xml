@@ -14,7 +14,6 @@
 	<!-- _____________________________Path Settings____________________________ -->
 	<set name="BUILD_DIR" value="export/debug" if="debug"/>
 	<set name="BUILD_DIR" value="export/release" unless="debug"/>
-	<set name="BUILD_DIR" value="export/32bit" if="32bit"/>
 
 	<source path="source"/>
 
@@ -67,6 +66,7 @@
 	<haxelib name="grig.audio"/>
 	<haxelib name="funkin.vis"/>
 	<haxelib name="parallaxlt"/>
+	<haxelib name="hxgamemode" if="linux !debug"/>
 
 	<!-- Versioning Libraries -->
 	<haxelib name="thx.core"/>
