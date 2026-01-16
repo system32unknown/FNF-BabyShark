@@ -2,7 +2,7 @@ package backend;
 
 #if sys
 class CommandLineHandler {
-	public static function parse(cmd:Array<String>) {
+	public static function parse(cmd:Array<String>):Void {
 		var i:Int = 0;
 		while (i < cmd.length) {
 			switch (cmd[i]) {

@@ -1,7 +1,5 @@
 package objects;
 
-import flixel.animation.FlxAnimationController;
-import openfl.utils.Assets;
 import haxe.Json;
 
 typedef CharacterFile = {
@@ -89,8 +87,6 @@ class Character extends FlxAnimate {
 	public function new(x:Float, y:Float, ?character:String, ?isPlayer:Bool = false, ?library:String) {
 		character ??= DEFAULT_CHARACTER;
 		super(x, y);
-
-		animation = new backend.animation.PsychAnimationController(this);
 
 		animOffsets = new Map<String, Array<Float>>();
 		this.isPlayer = isPlayer;

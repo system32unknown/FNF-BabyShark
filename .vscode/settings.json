@@ -7,5 +7,20 @@
     "*.hscript": "haxe",
     "*.hsc": "haxe",
     "*.hxs": "haxe"
-  }
+  },
+  "lime.targets": [
+    { "name": "windows", "enabled": true, "label": "Windows" },
+    { "name": "mac", "enabled": true, "label": "macOS" },
+    { "name": "linux", "enabled": true, "label": "Linux" },
+    { "name": "html5", "enabled": true, "label": "HTML5" },
+    { "name": "android", "enabled": true, "label": "Android" },
+    { "name": "ios", "enabled": true, "label": "iOS" },
+    // Disabled targets
+    { "name": "hl", "enabled": false, "label": "HashLink" },
+    { "name": "air", "enabled": false },
+    { "name": "electron", "enabled": false },
+    { "name": "flash", "enabled": false },
+    { "name": "neko", "enabled": false },
+    { "name": "tvos", "enabled": false }
+  ]
 }

@@ -82,6 +82,7 @@ class Bar extends FlxSpriteGroup {
 	}
 
 	override public function destroy() {
+		active = false;
 		barOffset.put();
 		bgOffset.put();
 		super.destroy();

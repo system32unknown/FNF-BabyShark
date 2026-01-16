@@ -412,7 +412,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		var tab_group:FlxSpriteGroup = UI_characterbox.getTab('Animations').menu;
 
 		animationInputText = new PsychUIInputText(15, 85, 80);
-		animationFrameLabelCheckBox = new PsychUICheckBox(185, animationInputText.y - 55, "Frame Label (Texture Atlas):");
+		animationFrameLabelCheckBox = new PsychUICheckBox(185, animationInputText.y - 55, "Frame Label (Texture Atlas)");
 		animationNameInputText = new PsychUIInputText(animationInputText.x, animationInputText.y + 35, 150);
 		animationIndicesInputText = new PsychUIInputText(animationNameInputText.x, animationNameInputText.y + 40, 250);
 		animationFramerate = new PsychUINumericStepper(animationInputText.x + 170, animationInputText.y, 1, 24, 0, 240);

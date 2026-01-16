@@ -29,6 +29,10 @@ class Init extends flixel.FlxState {
 		Language.reloadPhrases();
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 
+		// Flixel Plugins.
+		utils.plugins.EvacuateDebugPlugin.init();
+		utils.plugins.ForceCrashPlugin.init();
+
 		FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.keys.preventDefaultKeys = [TAB];
@@ -45,7 +49,6 @@ class Init extends flixel.FlxState {
 			return;
 		}
 
-		
 		#if DEBUG_TRACY
 		FlxG.stage.addEventListener(Event.EXIT_FRAME, (e:Event) -> TracyProfiler.frameMark());
 		TracyProfiler.setThreadName("main");

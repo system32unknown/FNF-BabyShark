@@ -50,7 +50,7 @@ class FileUtil {
 	public static final INVALID_CHARS:EReg = ~/[:*?"<>|\n\r\t]/g;
 
 	#if sys
-	private static var _gameDirectory:Null<String> = null;
+	static var _gameDirectory:Null<String> = null;
 	public static var gameDirectory(get, never):String;
 
 	public static function get_gameDirectory():String {

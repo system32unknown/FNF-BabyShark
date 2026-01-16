@@ -39,6 +39,9 @@
 				"name": "parallaxlt"
 			},
 			{
+				"name": "hxgamemode"
+			},
+			{
 				"name": "json2object",
 				"link": "https://github.com/FunkinCrew/json2object"
 			},

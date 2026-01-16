@@ -17,8 +17,7 @@ import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since
 #end
 
 #if (linux && !debug)
-@:cppInclude('./_external/gamemode_client.h')
-@:cppFileCode('#define GAMEMODE_AUTO')
+import hxgamemode.GamemodeClient;
 #end
 
 class Main extends Sprite {
@@ -42,6 +41,15 @@ class Main extends Sprite {
 	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
+
+	@:noCompletion
+	static function __init__():Void {
+		#if (linux && !debug)
+		if (GamemodeClient.request_start() != 0)
+			Sys.println('Failed to request gamemode start: ${GamemodeClient.error_string()}...');
+		else Sys.println('Succesfully requested gamemode to start...');
+		#end
+	}
 
 	public function new() {
 		super();

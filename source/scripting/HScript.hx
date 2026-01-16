@@ -30,6 +30,7 @@ class HScript extends AlterHscript {
 				this.modFolder = myFolder[1];
 			#end
 		}
+
 		var scriptThing:String = file;
 		var scriptName:String = null;
 		if (parent == null && file != null) {
@@ -40,6 +41,7 @@ class HScript extends AlterHscript {
 			}
 		}
 		super(scriptThing, new alterhscript.AlterConfig(scriptName, false, false));
+
 		preset();
 		this.varsToBring = varsToBring;
 		if (!manualRun) {

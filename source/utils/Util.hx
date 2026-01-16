@@ -3,6 +3,7 @@ package utils;
 import haxe.Http;
 import openfl.utils.Assets;
 import flixel.addons.display.FlxBackdrop;
+import flixel.input.keyboard.FlxKey;
 
 class Util {
 	/**
@@ -232,5 +233,24 @@ class Util {
 
 	inline public static function notBlank(s:String):Bool {
 		return s != null && s.length > 0;
+	}
+
+	/**
+	 * Returns if any key is not being pressed (or just pressed)
+	 * @param keyArray An array of FlxKeys
+	 * @return Bool True if there's any key in keyArray that isn't being pressed
+	 */
+	public static function anyNotPressed(keyArray:Array<FlxKey>):Bool {
+		var isKeyNotPressed:FlxKey->Bool = key -> return FlxG.keys.checkStatus(key, RELEASED) || FlxG.keys.checkStatus(key, JUST_RELEASED);
+		return Lambda.exists(keyArray, isKeyNotPressed);
+	}
+	/**
+	 * Returns true if all of the keys in keyArray are being pressed,
+	 * but also only fires once on the last key in the array being justPressed
+	 * @param keyArray An array of FlxKeys
+	 * @return Bool True if all of the keys in keyArray are being pressed, with at least one of them being in a JUST_PRESSED state
+	 */
+	public static function allPressedWithDebounce(keyArray:Array<FlxKey>):Bool {
+		return !anyNotPressed(keyArray) && FlxG.keys.anyJustPressed(keyArray);
 	}
 }
