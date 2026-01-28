@@ -6,7 +6,7 @@ class PsychAnimationController extends flixel.animation.FlxAnimationController {
 
 	public override function update(elapsed:Float):Void {
 		if (_curAnim != null) {
-            speed = speedType ? timeScale : FlxG.animationTimeScale;
+			speed = speedType ? timeScale : FlxG.animationTimeScale;
 			_curAnim.update(elapsed * speed);
 		} else if (_prerotated != null) _prerotated.angle = _sprite.angle;
 	}

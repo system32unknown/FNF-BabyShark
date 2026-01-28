@@ -1,6 +1,7 @@
 package objects;
 
 import haxe.Json;
+import flixel.graphics.frames.FlxAtlasFrames;
 
 typedef CharacterFile = {
 	var animations:Array<AnimArray>;
@@ -144,8 +145,8 @@ class Character extends FlxAnimate {
 			final split:Array<String> = json.image;
 			if (frames != null)
 				for (imgFile in split) {
-					final daAtlas = Paths.getAtlas(imgFile);
-					if (daAtlas != null) cast(frames, flixel.graphics.frames.FlxAtlasFrames).addAtlas(daAtlas);
+					final daAtlas:FlxAtlasFrames = Paths.getAtlas(imgFile);
+					if (daAtlas != null) cast(frames, FlxAtlasFrames).addAtlas(daAtlas);
 				}
 			imageFile = json.image[0];
 		} else {
@@ -214,8 +215,7 @@ class Character extends FlxAnimate {
 
 				if (anim.offsets != null && anim.offsets.length > 1)
 					addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
-				else
-					addOffset(anim.anim);
+				else addOffset(anim.anim);
 			}
 		}
 	}
@@ -268,19 +268,18 @@ class Character extends FlxAnimate {
 		super.update(elapsed);
 	}
 
-	inline public function isAnimationNull():Bool
+	public inline function isAnimationNull():Bool
 		return anim.curAnim == null;
 
-	inline public function getAnimationName():String {
+	public inline function getAnimationName():String {
 		var name:String = '';
-		@:privateAccess
 		if (!isAnimationNull()) name = anim.curAnim.name;
 		return name ?? '';
 	}
 
 	public function isAnimationFinished():Bool {
 		if (isAnimationNull()) return false;
-		return anim.curAnim.finished;
+		return anim.curAnim?.finished ?? true;
 	}
 
 	public function finishAnimation():Void {
@@ -288,20 +287,18 @@ class Character extends FlxAnimate {
 		animation.curAnim.finish();
 	}
 
-	inline public function hasAnimation(anim:String):Bool {
+	public inline function hasAnimation(anim:String):Bool {
 		return animOffsets.exists(anim);
 	}
 
 	public var animPaused(get, set):Bool;
 	function get_animPaused():Bool {
-		if (isAnimationNull()) return false;
-		return anim.curAnim.paused;
+		return anim.curAnim?.reversed ?? false;
 	}
 
 	function set_animPaused(value:Bool):Bool {
 		if (isAnimationNull()) return value;
 		anim.curAnim.paused = value;
-
 		return value;
 	}
 

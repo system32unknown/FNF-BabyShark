@@ -22,7 +22,7 @@ class AdditionalClasses {
 			"lime.tools",
 		];
 
-		var compathx4 = [
+		var compathx4:Array<String> = [
 			"sys.db.Sqlite",
 			"sys.db.Mysql",
 			"sys.db.Connection",

@@ -26,8 +26,8 @@ class TitleState extends MusicBeatState {
 		FlxG.mouse.visible = false;
 		persistentUpdate = true;
 
-		prepareIntro();
 		loadJsonData();
+		prepareIntro();
 		Conductor.bpm = musicBPM;
 
 		curWacky = getIntroTextShit();

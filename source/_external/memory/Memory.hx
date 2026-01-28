@@ -1,7 +1,6 @@
 package _external.memory;
 
 #if cpp
-import cpp.SizeT;
 /**
  * Memory class to properly get accurate memory counts
  * for the program.
@@ -11,18 +10,18 @@ import cpp.SizeT;
 @:include("Memory.h")
 extern class Memory {
 	/**
- 	 * Returns the current resident set size (physical memory use) measured
+ 	 * @return Returns the current resident set size (physical memory use) measured
  	 * in bytes, or zero if the value cannot be determined on this OS.
 	 */
 	@:native("getCurrentRSS")
-	public static function getCurrentUsage():SizeT;
+	public static function getCurrentUsage():cpp.SizeT;
 }
 #else
 /**
  * If you are not running on a CPP Platform, the code just will not work properly, sorry!
  * @author Leather128
  */
-class NativeMemory {
+class Memory {
 	/**
 	 * (Non cpp platform)
 	 * Returns 0.

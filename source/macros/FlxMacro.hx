@@ -17,7 +17,7 @@ class FlxMacro {
 		// The fields of the FlxClass.
 		var fields:Array<Field> = Context.getBuildFields();
 
-		var hasZIndex = false;
+		var hasZIndex:Bool = false;
 
 		for (f in fields) {
 			if (f.name == "zIndex") {
