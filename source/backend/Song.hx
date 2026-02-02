@@ -100,7 +100,7 @@ class Song {
 				var gottaHitNote:Bool = (note[1] < maniaKey) ? section.mustHitSection : !section.mustHitSection;
 				note[1] = (note[1] % maniaKey) + (gottaHitNote ? 0 : maniaKey);
 
-				if (!Std.isOfType(note[3], String))
+				if (note[3] != null && !Std.isOfType(note[3], String) && !Std.isOfType(note[3], Array))
 					note[3] = Note.DEFAULT_NOTE_TYPES[note[3]]; // compatibility with Week 7 and 0.1-0.3 psych charts
 			}
 		}
