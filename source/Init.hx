@@ -1,7 +1,7 @@
 package;
 
 import flixel.addons.transition.FlxTransitionableState;
-import states.FlashingState;
+import funkin.states.FlashingState;
 
 #if DEBUG_TRACY
 import cpp.vm.tracy.TracyProfiler;
@@ -31,7 +31,6 @@ class Init extends flixel.FlxState {
 
 		// Flixel Plugins.
 		utils.plugins.EvacuateDebugPlugin.init();
-		utils.plugins.ForceCrashPlugin.init();
 
 		FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 60;
