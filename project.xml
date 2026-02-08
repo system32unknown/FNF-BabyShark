@@ -82,7 +82,7 @@
 	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux"/>
 
 	<section if="HSCRIPT_ALLOWED">
-		<haxeflag name="--macro" value="funkin.macros.AdditionalClasses.add()"/>
+		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
 		<haxedef name="hscriptPos"/>
 	</section>
 
@@ -109,7 +109,7 @@
 	<haxeflag name="--macro" value="allowPackage('flash')"/>
 	<haxeflag name="--macro" value="include('my.pack')"/>
 
-	<haxeflag name="--macro" value="addMetadata('@:build(funkin.macros.FlxMacro.buildZindex())', 'flixel.FlxBasic')" />
+	<haxeflag name="--macro" value="addMetadata('@:build(macros.FlxMacro.buildZindex())', 'flixel.FlxBasic')" />
 
 	<!-- hxVLC Defines-->
 	<haxedef name="HXC_LIBVLC_LOGGING" if="VIDEOS_ALLOWED debug"/>
@@ -121,20 +121,6 @@
 		<haxedef name="HXCPP_TRACY"/>
 		<haxedef name="HXCPP_TRACY_MEMORY"/>
 		<haxedef name="HXCPP_TRACY_ON_DEMAND"/>
-	</section>
-
-
-	<!-- _______________________________ Display Server ______________________________ -->
-	<haxedef name="LIME_CMD" value="${project.command}"/>
-	<define name="LIME_DISPLAY" if="${project.command == update} || ${project.command == display} || display || display_details" />
-	<haxedef name="LIME_DISPLAY" if="LIME_DISPLAY" />
-
-	<section if="LIME_DISPLAY">
-		<undefine name="HSCRIPT_ABSTRACT_SUPPORT" />
-		<unset name="HSCRIPT_ABSTRACT_SUPPORT" />
-
-		<undefine name="CUSTOM_CLASSES" />
-		<unset name="CUSTOM_CLASSES" />
 	</section>
 
 	<!-- _________________________________Custom_______________________________ -->

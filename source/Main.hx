@@ -2,18 +2,18 @@ package;
 
 import openfl.display.Sprite;
 import flixel.input.keyboard.FlxKey;
-import funkin.utils.system.MemoryUtil;
-import funkin.utils.GameVersion;
-import funkin.debug.FPSCounter;
+import utils.system.MemoryUtil;
+import utils.GameVersion;
+import debug.FPSCounter;
 
 #if HSCRIPT_ALLOWED
 import alterhscript.AlterHscript;
-import funkin.scripting.HScript.HScriptInfos;
+import scripting.HScript.HScriptInfos;
 import haxe.PosInfos;
 #end
 
 #if desktop
-import funkin.backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since it's not directly referenced anywhere else.
+import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since it's not directly referenced anywhere else.
 #end
 
 #if (linux && !debug)

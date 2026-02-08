@@ -1,12 +1,12 @@
 #if !macro
 #if DISCORD_ALLOWED
-import funkin.backend.Discord;
+import backend.Discord;
 #end
 
-import funkin.debug.Logs;
+import debug.Logs;
 
 #if AWARDS_ALLOWED
-import funkin.backend.Awards;
+import backend.Awards;
 #end
 
 #if sys
@@ -14,31 +14,31 @@ import sys.*;
 import sys.io.*;
 #end
 
+import backend.Paths;
+import backend.Controls;
+import backend.MusicBeatState;
+import backend.MusicBeatSubstate;
+import backend.Transition;
+import backend.Settings;
+import backend.Conductor;
+import backend.BaseStage;
+import backend.Difficulty;
+import backend.Mods;
+import backend.Language;
+import backend.EK;
+
+import backend.ui.*; // Psych-UI
+
 import animate.FlxAnimate;
 
-import funkin.backend.Paths;
-import funkin.backend.Controls;
-import funkin.backend.MusicBeatState;
-import funkin.backend.MusicBeatSubstate;
-import funkin.backend.Transition;
-import funkin.backend.Settings;
-import funkin.backend.Conductor;
-import funkin.backend.BaseStage;
-import funkin.backend.Difficulty;
-import funkin.backend.Mods;
-import funkin.backend.Language;
-import funkin.backend.EK;
+import utils.Util;
+import utils.SpriteUtil;
 
-import funkin.backend.ui.*; // Psych-UI
+import objects.Alphabet;
+import objects.BGSprite;
 
-import funkin.utils.Util;
-import funkin.utils.SpriteUtil;
-
-import funkin.objects.Alphabet;
-import funkin.objects.BGSprite;
-
-import funkin.states.PlayState;
-import funkin.states.LoadingState;
+import states.PlayState;
+import states.LoadingState;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
