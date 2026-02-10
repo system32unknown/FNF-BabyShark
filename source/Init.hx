@@ -27,10 +27,9 @@ class Init extends flixel.FlxState {
 		Mods.pushGlobalMods();
 		Mods.loadTopMod();
 
+		NativeFileSystem.openFlAssets = openfl.Assets.list();
 		Language.reloadPhrases();
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
-
-		NativeFileSystem.openFlAssets = openfl.Assets.list();
 		#if linux
 		FlxG.signals.preStateCreate.add(state -> NativeFileSystem.excludePaths.resize(0));
 		#end

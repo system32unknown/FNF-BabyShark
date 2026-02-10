@@ -140,7 +140,7 @@ class RGBPaletteShader extends flixel.system.FlxAssets.FlxShader {
 			if (!hasTransform || color.a == 0. || mult == 0.) return color;
 
 			color.rgb = mix(color.rgb, min(r * color.r + g * color.g + b * color.b, vec3(1.)), mult);
-			if (color.a > 0.)  return color;
+			if (color.a > 0.) return color;
 
 			return vec4(0.);
 		}')

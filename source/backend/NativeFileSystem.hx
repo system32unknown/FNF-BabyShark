@@ -7,11 +7,11 @@ import openfl.utils.Assets as OpenFlAssets;
 import lime.utils.Assets;
 
 /**
-	**Works only on paths relative to game's root dorectory*
-
-	Basically NativeFileSystem, but we can emulate it on OpenFL.
-	It can either 
-**/
+ **Works only on paths relative to game's root directory.*
+ *
+ * Basically NativeFileSystem, but we can emulate it on OpenFL,
+ * It can either.
+ */
 class NativeFileSystem {
 	public static var openFlAssets:Array<String> = null;
 
@@ -27,14 +27,14 @@ class NativeFileSystem {
 
 	// Loads a given bitmap. Returns null if it doesn't exist
 	public static function getBitmap(path:String):Null<BitmapData> {
-		return openFlAssets.contains(path) ? OpenFlAssets.getBitmapData(path) : null;
+		if (!path.startsWith("mods") && openFlAssets.contains(path)) return OpenFlAssets.getBitmapData(path);
 
 		var sysPath:String = getPathLike(path);
 		return sysPath != null ? BitmapData.fromFile(sysPath) : null;
 	}
 
 	public static function getSound(path:String):Null<Sound> {
-		return openFlAssets.contains(path) ? OpenFlAssets.getSound(path) : null;
+		if (!path.startsWith("mods") && openFlAssets.contains(path)) return OpenFlAssets.getSound(path);
 
 		var sysPath:String = getPathLike(path);
 		return sysPath != null ? Sound.fromFile(sysPath) : null;

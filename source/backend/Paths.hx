@@ -5,7 +5,6 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.graphics.FlxGraphic;
 import animate.FlxAnimateFrames;
 import openfl.utils.AssetType;
-import openfl.utils.Assets as OpenFlAssets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
 import lime.utils.Assets;
@@ -58,7 +57,7 @@ class Paths {
 		}
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
-		OpenFlAssets.cache.clear("songs");
+		openfl.utils.Assets.cache.clear("songs");
 	}
 
 	public static function freeGraphicsFromMemory() {
